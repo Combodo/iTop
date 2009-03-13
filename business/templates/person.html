@@ -1,0 +1,18 @@
+<div class="page_header">
+	<itopblock blockclass="MenuBlock" type="popup" encoding="text/sibusql" label="Actions">$class$: pkey = $pkey$</itopblock>
+	<h1>$class$: <span class="hilite">$name$</span></h1>
+	<itopblock blockclass="HistoryBlock" type="toggle" encoding="text/sibusql">CMDBChangeOpSetAttribute: objkey = $pkey$</itopblock>
+</div>
+<img src="../images/users2-big.png" style="margin-top:-10px; margin-right:10px; float:right">
+<itopblock blockclass="DisplayBlock" asynchronous="true" type="bare_details" encoding="text/sibusql">bizPerson: pkey = $pkey$</itopblock>
+<itoptabs>
+	<itoptab name="Teams">
+		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">lnkContactRealObject: object_id = $pkey$</itopblock>
+	</itoptab>
+	<itoptab name="Infrastructure">
+		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">logRealObject: PKEY IS object_id IN (lnkContactRealObject: contact_id = $pkey$)</itopblock>
+	</itoptab>
+	<itoptab name="Documents">
+		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">bizDocument: PKEY IS doc_id IN (lnkDocumentRealObject: object_id = $pkey$)</itopblock>
+	</itoptab>
+</itoptabs>
