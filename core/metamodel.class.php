@@ -1843,7 +1843,6 @@ abstract class MetaModel
 
 	public static function DBExists()
 	{
-		return true; // Not enough rights to query for other DB
 		// returns true if at least one table exists (taking into account the DB sharing)
 		// then some tables might be missing, but that is made in DBCheckFormat
 		//

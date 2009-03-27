@@ -39,7 +39,7 @@ class CMDBSource
 		self::$m_sDBUser = $sUser;
 		self::$m_sDBPwd = $sPwd;
 		self::$m_sDBName = $sSource;
-		if (!self::$m_resDBLink = mysql_pconnect($sServer, $sUser, $sPwd))
+		if (!self::$m_resDBLink = @mysql_pconnect($sServer, $sUser, $sPwd))
 		{
 			throw new MySQLException('Could not connect to the DB server', array('host'=>$sServer, 'user'=>$sUser));
 		}
@@ -52,15 +52,37 @@ class CMDBSource
 		}
 	}
 
-	public static function IsDB($sSource)
+	public static function ListDB()
 	{
 		$aDBs = self::QueryToCol('SHOW DATABASES', 'Database');
-
 		// Show Database does return the DB names in lower case
-		$sSourceRef = strtolower($sSource);
-		return (in_array($sSourceRef, $aDBs));
+		return $aDBs;
 	}
 
+	public static function IsDB($sSource)
+	{
+		try
+		{
+			$aDBs = self::ListDB();
+			// Show Database does return the DB names in lower case
+			$sSourceRef = strtolower($sSource);
+			return (in_array($sSourceRef, $aDBs));
+		}
+		catch(Exception $e)
+		{
+			// In case we don't have rights to enumerate the databases
+			// Let's try to connect directly
+			return @mysql_select_db($sSource, self::$m_resDBLink);
+		}
+
+	}
+
+	public static function GetDBVersion()
+	{
+		$aVersions = self::QueryToCol('SELECT Version() as version', 'version');
+		return $aVersions[0];
+	}
+	
 	public static function SelectDB($sSource)
 	{
 		if (!mysql_select_db($sSource, self::$m_resDBLink))
