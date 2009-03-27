@@ -113,7 +113,7 @@ abstract class DBObject
 		$aRow = MetaModel::MakeSingleRow(get_class($this), $this->m_iKey);
 		if (empty($aRow))
 		{
-			trigger_error("Failed to reload object of class '".get_class($this)."', pkey = ".$this->m_iKey, E_USER_ERROR);
+			trigger_error("Failed to reload object of class '".get_class($this)."', id = ".$this->m_iKey, E_USER_ERROR);
 		}
 		$this->FromRow($aRow);
 
@@ -133,7 +133,7 @@ abstract class DBObject
 			$sMyClass = $oRemoteExtKeyAtt->GetTargetClass();
 
 			$oMyselfSearch = new DBObjectSearch($sMyClass);
-			$oMyselfSearch->AddCondition('pkey', $this->m_iKey, '=');
+			$oMyselfSearch->AddCondition('id', $this->m_iKey, '=');
 
 			$oLinkSearch = new DBObjectSearch($sLinkClass);
 			$oLinkSearch->AddCondition_PointingTo($oMyselfSearch, $sExtKeyToMe);
@@ -157,7 +157,7 @@ abstract class DBObject
 
 		// Get the key
 		//
-		$sKeyField = "pkey";
+		$sKeyField = "id";
 		if (!array_key_exists($sKeyField, $aRow))
 		{
 			// #@# Bug ?
@@ -168,7 +168,7 @@ abstract class DBObject
 			$iPKey = $aRow[$sKeyField];
 			if (!self::IsValidPKey($iPKey))
 			{
-				trigger_error("An object PKey must be an integer value ($iPKey)", E_USER_NOTICE);
+				trigger_error("An object id must be an integer value ($iPKey)", E_USER_NOTICE);
 			}
 			$this->m_iKey = $iPKey;
 		}
@@ -367,7 +367,7 @@ abstract class DBObject
 	{
 		if (!self::IsValidPKey($iNewKey))
 		{
-			trigger_error("An object PKey must be an integer value ($iNewKey)", E_USER_ERROR);
+			trigger_error("An object id must be an integer value ($iNewKey)", E_USER_ERROR);
 		}
 		
 		if ($this->m_bIsInDB && !empty($this->m_iKey) && ($this->m_iKey != $iNewKey))
@@ -660,7 +660,7 @@ abstract class DBObject
 		if (count($aChanges) != 0)
 		{
 			$oFilter = new DBObjectSearch(get_class($this));
-			$oFilter->AddCondition('pkey', $this->m_iKey, '=');
+			$oFilter->AddCondition('id', $this->m_iKey, '=');
 	
 			$sSQL = MetaModel::MakeUpdateQuery($oFilter, $aChanges);
 			CMDBSource::Query($sSQL);
@@ -691,7 +691,7 @@ abstract class DBObject
 	public function DBDelete()
 	{
 		$oFilter = new DBObjectSearch(get_class($this));
-		$oFilter->AddCondition('pkey', $this->m_iKey, '=');
+		$oFilter->AddCondition('id', $this->m_iKey, '=');
 
 		$sSQL = MetaModel::MakeDeleteQuery($oFilter);
 		CMDBSource::Query($sSQL);

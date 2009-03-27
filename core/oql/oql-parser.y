@@ -41,14 +41,25 @@ join_item(A) ::= JOIN class_name(X) ON join_condition(C).
 
 join_condition(A) ::= field_id(X) EQ field_id(Y). { A = new BinaryOqlExpression(X, '=', Y); }
 
-condition(A) ::= expression(X). { A = X; }
+condition(A) ::= expression_prio4(X). { A = X; }
 
-expression(A) ::= PAR_OPEN expression(X) PAR_CLOSE. { A = X; }
-expression(A) ::= expression(X) operator(Y) expression(Z). { A = new BinaryOqlExpression(X, Y, Z); }
-expression(A) ::= scalar(X). { A=X; } 
-expression(A) ::= field_id(X). { A = X; }
-expression(A) ::= expression(X) list_operator(Y) list(Z). { A = new BinaryOqlExpression(X, Y, Z); }
-expression(A) ::= func_name(X) PAR_OPEN arg_list(Y) PAR_CLOSE. { A = new FunctionOqlExpression(X, Y); }
+expression_basic(A) ::= scalar(X). { A = X; } 
+expression_basic(A) ::= field_id(X). { A = X; }
+expression_basic(A) ::= func_name(X) PAR_OPEN arg_list(Y) PAR_CLOSE. { A = new FunctionOqlExpression(X, Y); }
+expression_basic(A) ::= PAR_OPEN expression_prio4(X) PAR_CLOSE. { A = X; }
+expression_basic(A) ::= expression_basic(X) list_operator(Y) list(Z). { A = new BinaryOqlExpression(X, Y, Z); }
+
+expression_prio1(A) ::= expression_basic(X). { A = X; }
+expression_prio1(A) ::= expression_prio1(X) operator1(Y) expression_basic(Z). { A = new BinaryOqlExpression(X, Y, Z); }
+
+expression_prio2(A) ::= expression_prio1(X). { A = X; }
+expression_prio2(A) ::= expression_prio2(X) operator2(Y) expression_prio1(Z). { A = new BinaryOqlExpression(X, Y, Z); }
+
+expression_prio3(A) ::= expression_prio2(X). { A = X; }
+expression_prio3(A) ::= expression_prio3(X) operator3(Y) expression_prio2(Z). { A = new BinaryOqlExpression(X, Y, Z); }
+
+expression_prio4(A) ::= expression_prio3(X). { A = X; }
+expression_prio4(A) ::= expression_prio4(X) operator4(Y) expression_prio3(Z). { A = new BinaryOqlExpression(X, Y, Z); }
 
 
 list(A) ::= PAR_OPEN scalar_list(X) PAR_CLOSE. {
@@ -72,8 +83,8 @@ arg_list(A) ::= arg_list(L) COMA argument(X). {
 	array_push(L, X);
 	A = L;
 }
-argument(A) ::= expression(X). { A = X; }
-argument(A) ::= INTERVAL expression(X) interval_unit(Y). { A = new IntervalOqlExpression(X, Y); }
+argument(A) ::= expression_prio4(X). { A = X; }
+argument(A) ::= INTERVAL expression_prio4(X) interval_unit(Y). { A = new IntervalOqlExpression(X, Y); }
 
 interval_unit(A) ::= F_DAY(X). { A = X; }
 interval_unit(A) ::= F_MONTH(X). { A = X; }
@@ -85,40 +96,42 @@ scalar(A) ::= str_scalar(X). { A = X; }
 num_scalar(A) ::= num_value(X). { A = new ScalarOqlExpression(X); }
 str_scalar(A) ::= str_value(X). { A = new ScalarOqlExpression(X); }
 
-field_id(A) ::= class_name(X) DOT name(Y). { A = new FieldOqlExpression($this->m_iCol, Y, X); }
-class_name(A) ::= name(X). {A=X;}
+field_id(A) ::= name(X). { A = new FieldOqlExpression(X); }
+field_id(A) ::= class_name(X) DOT name(Y). { A = new FieldOqlExpression(Y, X); }
+class_name(A) ::= name(X). { A=X; }
 
 name(A) ::= NAME(X). {
 	if (X[0] == '`')
 	{
-		A = substr(X, 1, strlen(X) - 2);
+		$name = substr(X, 1, strlen(X) - 2);
 	}
 	else
 	{
-		A = X;
+		$name = X;
 	}
+	A = new OqlName($name, $this->m_iColPrev);
 }
 
 num_value(A) ::= NUMVAL(X). {A=X;}
 str_value(A) ::= STRVAL(X). {A=stripslashes(substr(X, 1, strlen(X) - 2));}
 
-operator(A) ::= log_operator(X). {A=X;}
-operator(A) ::= num_operator(X). {A=X;}
-operator(A) ::= str_operator(X). {A=X;}
-operator(A) ::= EQ(X). {A=X;}
-operator(A) ::= NOT_EQ(X). {A=X;}
 
-log_operator(A) ::= LOG_AND(X). {A=X;}
-log_operator(A) ::= LOG_OR(X). {A=X;}
+operator1(A) ::= num_operator1(X). {A=X;}
+operator2(A) ::= num_operator2(X). {A=X;}
+operator2(A) ::= str_operator(X). {A=X;}
+operator2(A) ::= EQ(X). {A=X;}
+operator2(A) ::= NOT_EQ(X). {A=X;}
+operator3(A) ::= LOG_AND(X). {A=X;}
+operator4(A) ::= LOG_OR(X). {A=X;}
 
-num_operator(A) ::= GT(X). {A=X;}
-num_operator(A) ::= LT(X). {A=X;}
-num_operator(A) ::= GE(X). {A=X;}
-num_operator(A) ::= LE(X). {A=X;}
-num_operator(A) ::= MATH_DIV(X). {A=X;}
-num_operator(A) ::= MATH_MULT(X). {A=X;}
-num_operator(A) ::= MATH_PLUS(X). {A=X;}
-num_operator(A) ::= MATH_MINUS(X). {A=X;}
+num_operator1(A) ::= MATH_DIV(X). {A=X;}
+num_operator1(A) ::= MATH_MULT(X). {A=X;}
+num_operator2(A) ::= MATH_PLUS(X). {A=X;}
+num_operator2(A) ::= MATH_MINUS(X). {A=X;}
+num_operator2(A) ::= GT(X). {A=X;}
+num_operator2(A) ::= LT(X). {A=X;}
+num_operator2(A) ::= GE(X). {A=X;}
+num_operator2(A) ::= LE(X). {A=X;}
 
 str_operator(A) ::= LIKE(X). {A=X;}
 str_operator(A) ::= NOT_LIKE(X). {A=X;}
@@ -175,18 +188,21 @@ class OQLParser extends OQLParserRaw
    // Data used when an exception is raised
 	protected $m_iLine; // still not used
 	protected $m_iCol;
+	protected $m_iColPrev; // this is the interesting one, because the parser will reduce on the next token
 	protected $m_sSourceQuery;
 
 	public function __construct($sQuery)
 	{
 		$this->m_iLine = 0;
 		$this->m_iCol = 0;
+		$this->m_iColPrev = 0;
 		$this->m_sSourceQuery = $sQuery;
 		// no constructor - parent::__construct();
 	}
 	
 	public function doParse($token, $value, $iCurrPosition = 0)
 	{
+		$this->m_iColPrev = $this->m_iCol;
 		$this->m_iCol = $iCurrPosition;
 
 		return parent::DoParse($token, $value);

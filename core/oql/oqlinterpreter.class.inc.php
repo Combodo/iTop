@@ -2,6 +2,10 @@
 
 class OqlNormalizeException extends OQLException
 {
+	public function __construct($sIssue, $sInput, OqlName $oName, $aExpecting = null)
+	{
+		parent::__construct($sIssue, $sInput, 0, $oName->GetPos(), $oName->GetValue(), $aExpecting);
+	}
 }
 
 class OqlInterpreterException extends OQLException

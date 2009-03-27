@@ -104,8 +104,9 @@ class SQLQuery
 				$oSQLQuery = $aJoinInfo["select"];
 				$sLeftField = $aJoinInfo["leftfield"];
 				$sRightField = $aJoinInfo["rightfield"];
+				$sRightTableAlias = $aJoinInfo["righttablealias"];
 
-				echo "<li>Join '$sJoinType', $sLeftField, $sRightField".$oSQLQuery->DisplayHtml()."</li>\n";
+				echo "<li>Join '$sJoinType', $sLeftField, $sRightTableAlias.$sRightField".$oSQLQuery->DisplayHtml()."</li>\n";
 			}
 			echo "</ul>";
 		}
@@ -131,28 +132,35 @@ class SQLQuery
 		$this->m_oConditionExpr->LogAnd($oConditionExpr);
 	}
 
-	private function AddJoin($sJoinType, $oSQLQuery, $sLeftField, $sRightField)
+	private function AddJoin($sJoinType, $oSQLQuery, $sLeftField, $sRightField, $sRightTableAlias = '')
 	{
 		assert((get_class($oSQLQuery) == __CLASS__) || is_subclass_of($oSQLQuery, __CLASS__));
 		if (!CMDBSource::IsField($this->m_sTable, $sLeftField))
 		{
 			trigger_error("Unknown field '$sLeftField' in table '".$this->m_sTable, E_USER_ERROR);
 		}
-		if (!CMDBSource::IsField($oSQLQuery->m_sTable, $sRightField))
+		if (empty($sRightTableAlias))
 		{
-			trigger_error("Unknown field '$sRightField' in table '".$oSQLQuery->m_sTable."'", E_USER_ERROR);
+			$sRightTableAlias = $oSQLQuery->m_sTableAlias;
 		}
+// #@# Could not be verified here because the namespace is unknown - do we need to check it there?
+//
+//		if (!CMDBSource::IsField($sRightTable, $sRightField))
+//		{
+//			trigger_error("Unknown field '$sRightField' in table '".$sRightTable."'", E_USER_ERROR);
+//		}
 
 		$this->m_aJoinSelects[] = array(
 			"jointype" => $sJoinType,
 			"select" => $oSQLQuery,
 			"leftfield" => $sLeftField,
-			"rightfield" => $sRightField
+			"rightfield" => $sRightField,
+			"righttablealias" => $sRightTableAlias
 		);
 	}
-	public function AddInnerJoin($oSQLQuery, $sLeftField, $sRightField)
+	public function AddInnerJoin($oSQLQuery, $sLeftField, $sRightField, $sRigthtTable = '')
 	{
-		$this->AddJoin("inner", $oSQLQuery, $sLeftField, $sRightField);
+		$this->AddJoin("inner", $oSQLQuery, $sLeftField, $sRightField, $sRigthtTable);
 	}
 	public function AddLeftJoin($oSQLQuery, $sLeftField, $sRightField)
 	{
@@ -259,9 +267,9 @@ class SQLQuery
 					$sFrom .= " ".self::ClauseFrom($aJoinInfo["subfrom"]);
 					break;
 				case "inner":
-					$sFrom .= " INNER JOIN `".$aJoinInfo["tablename"]."` AS `$sTableAlias`";
-					$sFrom .= " ON ".$aJoinInfo["joincondition"];
+					$sFrom .= " INNER JOIN (`".$aJoinInfo["tablename"]."` AS `$sTableAlias`";
 					$sFrom .= " ".self::ClauseFrom($aJoinInfo["subfrom"]);
+					$sFrom .= ") ON ".$aJoinInfo["joincondition"];
 					break;
 				case "left":
 					$sFrom .= " LEFT JOIN (`".$aJoinInfo["tablename"]."` AS `$sTableAlias`";
@@ -339,7 +347,7 @@ class SQLQuery
 		return $sTableAlias; 
 	}
 
-	private function privRenderSingleTable(&$aFrom, &$aFields, &$aDelTables, &$aSetValues, $sJoinType = "first", $sCallerAlias = "", $sLeftField = "", $sRightField = "")
+	private function privRenderSingleTable(&$aFrom, &$aFields, &$aDelTables, &$aSetValues, $sJoinType = 'first', $sCallerAlias = '', $sLeftField = '', $sRightField = '', $sRightTableAlias = '')
 	{
 		$aActualTableFields = CMDBSource::GetTableFieldsList($this->m_sTable);
 
@@ -347,7 +355,11 @@ class SQLQuery
 
 		// Handle the various kinds of join (or first table in the list)
 		//
-		$sJoinCond = "`$sCallerAlias`.`$sLeftField` = `{$this->m_sTableAlias}`.`$sRightField`";
+		if (empty($sRightTableAlias))
+		{
+			$sRightTableAlias = $this->m_sTableAlias;
+		}
+		$sJoinCond = "`$sCallerAlias`.`$sLeftField` = `$sRightTableAlias`.`$sRightField`";
 		switch ($sJoinType)
 		{
 			case "first":
@@ -355,6 +367,7 @@ class SQLQuery
 				break;
 			case "inner":
 			case "left":
+			// table or tablealias ???
 				$aFrom[$this->m_sTableAlias] = array("jointype"=>$sJoinType, "tablename"=>$this->m_sTable, "joincondition"=>"$sJoinCond");
 				break;
 		}
@@ -386,8 +399,9 @@ class SQLQuery
 			$oRightSelect = $aJoinData["select"];
 			$sLeftField = $aJoinData["leftfield"];
 			$sRightField = $aJoinData["rightfield"];
+			$sRightTableAlias = $aJoinData["righttablealias"];
 
-			$sJoinTableAlias = $oRightSelect->privRenderSingleTable($aTempFrom, $aFields, $aDelTables, $aSetValues, $sJoinType, $this->m_sTableAlias, $sLeftField, $sRightField);
+			$sJoinTableAlias = $oRightSelect->privRenderSingleTable($aTempFrom, $aFields, $aDelTables, $aSetValues, $sJoinType, $this->m_sTableAlias, $sLeftField, $sRightField, $sRightTableAlias);
 		}
 		$aFrom[$this->m_sTableAlias]['subfrom'] = $aTempFrom;
 

@@ -42,7 +42,7 @@ function ShowClass($sClass, $sBaseArgs)
 	$aProps["Subclasses (children + pure PHP)"] = sexyclasslist(MetaModel::GetSubclasses($sClass), $sBaseArgs);
 
 	$aProps["Description"] = MetaModel::GetClassDescription($sClass);
-	$aProps["Autoincrement pkey?"] = MetaModel::IsAutoIncrementKey($sClass);
+	$aProps["Autoincrement id?"] = MetaModel::IsAutoIncrementKey($sClass);
 	$aProps["Key label"] = MetaModel::GetKeyLabel($sClass);
 	$aProps["Name attribute"] = MetaModel::GetNameAttributeCode($sClass);
 	$aProps["Reconciliation keys"] = implode(", ", MetaModel::GetReconcKeys($sClass));
@@ -188,7 +188,8 @@ function DebugQuery($sConfigFile)
 	
 	echo "<h1>Follow up the query build</h1>\n";
 	MetaModel::StartDebugQuery();
-	$oFlt = DBObjectSearch::FromSibuSQL($sQuery);	
+	$oFlt = DBObjectSearch::FromOQL($sQuery);	
+	echo "<p>To OQL: ".$oFlt->ToOQL()."</p>";
 	$sSQL = MetaModel::MakeSelectQuery($oFlt);
 	MetaModel::StopDebugQuery();
 	

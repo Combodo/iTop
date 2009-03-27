@@ -162,7 +162,7 @@ class DBObjectSearch
 	
 	public function __DescribeHTML()
 	{
-		$sConditionDesc = $this->DescribeConditions();		
+		$sConditionDesc = $this->DescribeConditions();
 		if (!empty($sConditionDesc))
 		{
 			return "Objects of class '$this->m_sClass', $sConditionDesc";
@@ -179,8 +179,8 @@ class DBObjectSearch
 	public function ResetCondition()
 	{
 		$this->m_oSearchCondition = new TrueExpression();
-		// ? is that enough, do I need to rebuild the list after the subqueries ?
-		$this->m_aClasses = array($this->m_sClassAlias => $this->m_sClass);
+		// ? is that usefull/enough, do I need to rebuild the list after the subqueries ?
+		// $this->m_aClasses = array($this->m_sClassAlias => $this->m_sClass);
 	}
 
 	public function AddConditionExpression($oExpression)
@@ -190,6 +190,11 @@ class DBObjectSearch
 
 	public function AddCondition($sFilterCode, $value, $sOpCode = null)
 	{
+	// #@# backward compatibility for pkey/id
+	if (strtolower(trim($sFilterCode)) == 'pkey') $sFilterCode = 'id';
+// #@# todo - obsolete smoothly, first send exceptions
+//		throw new CoreException('SibusQL has been obsoleted, please update your queries', array('sibusql'=>$sQuery, 'oql'=>$oFilter->ToOQL()));
+
 		MyHelpers::CheckKeyInArray('filter code', $sFilterCode, MetaModel::GetClassFilterDefs($this->m_sClass));
 		$oFilterDef = MetaModel::GetClassFilterDef($this->m_sClass, $sFilterCode);
 
@@ -215,11 +220,13 @@ class DBObjectSearch
 			break;
 
 		case "IN":
+			if (!is_array($value)) $value = array($value);
 			$sListExpr = '('.implode(', ', CMDBSource::Quote($value)).')';
 			$sOQLCondition = $oField->Render()." IN $sListExpr";
 			break;
 
 		case "NOTIN":
+			if (!is_array($value)) $value = array($value);
 			$sListExpr = '('.implode(', ', CMDBSource::Quote($value)).')';
 			$sOQLCondition = $oField->Render()." NOT IN $sListExpr";
 			break;
@@ -271,7 +278,7 @@ class DBObjectSearch
 		$sOrigAlias = $this->m_sClassAlias;
 		if (array_key_exists($sOrigAlias, $aClassAliases))
 		{
-			$this->m_sClassAlias = MetaModel::GenerateUniqueAlias($aClassAliases, $sOrigAlias, $oFilter->GetClass());
+			$this->m_sClassAlias = MetaModel::GenerateUniqueAlias($aClassAliases, $sOrigAlias, $this->m_sClass);
 			// Translate the condition expression with the new alias
 			$aAliasTranslation[$sOrigAlias]['*'] = $this->m_sClassAlias;
 		}
@@ -316,19 +323,13 @@ class DBObjectSearch
 		}
 		else
 		{
-			$sOrigAlias = $oFilter->GetClassAlias();
-			$sKeyClassAlias = MetaModel::GenerateUniqueAlias($aClassAliases, $sOrigAlias, $oFilter->GetClass());
-			if ($sKeyClassAlias != $sOrigAlias)
-			{
-				// Translate the condition expression with the new alias
-				$aAliasTranslation[$sOrigAlias]['*'] = $sKeyClassAlias;
-			}
+			$oFilter->AddToNamespace($aClassAliases, $aAliasTranslation);
 
 			// #@# The condition expression found in that filter should not be used - could be another kind of structure like a join spec tree !!!!
-			$oNewFilter = clone $oFilter;
-			$oNewFilter->ResetCondition();
+			// $oNewFilter = clone $oFilter;
+			// $oNewFilter->ResetCondition();
 
-			$this->m_aPointingTo[$sExtKeyAttCode] = $oNewFilter;
+			$this->m_aPointingTo[$sExtKeyAttCode] = $oFilter;
 		}
 	}
 
@@ -340,7 +341,7 @@ class DBObjectSearch
 		return $res;
 	}
 
-	public function AddCondition_ReferencedBy_InNameSpace(DBObjectSearch $oFilter, $sForeignExtKeyAttCode, &$aClassAliases, &$aAliasTranslation)
+	protected function AddCondition_ReferencedBy_InNameSpace(DBObjectSearch $oFilter, $sForeignExtKeyAttCode, &$aClassAliases, &$aAliasTranslation)
 	{
 		$sForeignClass = $oFilter->GetClass();
 		$sForeignClassAlias = $oFilter->GetClassAlias();
@@ -359,19 +360,13 @@ class DBObjectSearch
 		}
 		else
 		{
-			$sOrigAlias = $oFilter->GetClassAlias();
-			$sKeyClassAlias = MetaModel::GenerateUniqueAlias($aClassAliases, $sOrigAlias, $oFilter->GetClass());
-			if ($sKeyClassAlias != $sOrigAlias)
-			{
-				// Translate the condition expression with the new alias
-				$aAliasTranslation[$sOrigAlias]['*'] = $sKeyClassAlias;
-			}
+			$oFilter->AddToNamespace($aClassAliases, $aAliasTranslation);
 
 			// #@# The condition expression found in that filter should not be used - could be another kind of structure like a join spec tree !!!!
-			$oNewFilter = clone $oFilter;
-			$oNewFilter->ResetCondition();
+			//$oNewFilter = clone $oFilter;
+			//$oNewFilter->ResetCondition();
 
-			$this->m_aReferencedBy[$sForeignClass][$sForeignExtKeyAttCode]= $oNewFilter;
+			$this->m_aReferencedBy[$sForeignClass][$sForeignExtKeyAttCode]= $oFilter;
 		}
 	}
 
@@ -593,47 +588,36 @@ class DBObjectSearch
 		return $retValue;
 	}
 
-	public function ToSibusQL()
+	public function ToOQL()
 	{
-		$aConds = array(); // string conditions, to be merged into a logical AND
-		foreach($this->m_aFullText as $sFullText)
-		{
-			$aConds[] = "* HAS ".self::Value2Expression($sFullText);
-		}
-		// #@# todo - changer ToSibusQL en ToOQL et l'implementer !
-		// $aConds[] = $this->m_oSearchCondition->ToSibusQL
-		/*
-		foreach($this->m_aCriteria as $aCritInfo)
-		{
-			$aConds[] = $aCritInfo["filtercode"]." ".$aCritInfo["opcode"]." ".self::Value2Expression($aCritInfo["value"]);
-		}
-		*/
+		$sRes = "SELECT ".$this->GetClass().' AS '.$this->GetClassAlias();
+		$sRes .= $this->ToOQL_Joins();
+		$sRes .= " WHERE ".$this->m_oSearchCondition->Render();
+		return $sRes;
+	}
+
+	protected function ToOQL_Joins()
+	{
+		$sRes = '';
 		foreach($this->m_aPointingTo as $sExtKey=>$oFilter)
 		{
-			$aConds[] = $sExtKey." IN (".$oFilter->ToSibusQL().")";
+			$sRes .= ' JOIN '.$oFilter->GetClass().' AS '.$oFilter->GetClassAlias().' ON '.$this->GetClassAlias().'.'.$sExtKey.' = '.$oFilter->GetClassAlias().'.id';
+			$sRes .= $oFilter->ToOQL_Joins();
 		}
 		foreach($this->m_aReferencedBy as $sForeignClass=>$aReferences)
 		{
 			foreach($aReferences as $sForeignExtKeyAttCode=>$oForeignFilter)
 			{
-				$aConds[] = "PKEY IS ".$sForeignExtKeyAttCode." IN (".$oForeignFilter->ToSibusQL().")";
+				$sRes .= ' JOIN '.$oForeignFilter->GetClass().' AS '.$oForeignFilter->GetClassAlias().' ON '.$oForeignFilter->GetClassAlias().'.'.$sForeignExtKeyAttCode.' = '.$this->GetClassAlias().'.id';
+				$sRes .= $oForeignFilter->ToOQL_Joins();
 			}
 		}
-		foreach($this->m_aRelatedTo as $aRelatedTo)
-		{
-			$oFilter = $aRelatedTo['flt'];
-			$sRelCode = $aRelatedTo['relcode'];
-			$iMaxDepth = $aRelatedTo['maxdepth'];
-			
-			$aConds[] = "RELATED ($sRelCode, $iMaxDepth) TO (".$oFilter->ToSibuSQL().")";
-		}
+		return $sRes;
+	}
 
-		$sValue = $this->GetClass();
-		if (count($aConds) > 0)
-		{
-			$sValue .= ": ".implode(" AND ", $aConds);
-		}
-		return $sValue;
+	public function ToSibusQL()
+	{
+		return "NONONO";
 	}
 
 	static private function privProcessParams($sQuery, array $aParams, $oDbObject)
@@ -659,7 +643,7 @@ class DBObjectSearch
 					if (strpos($sParameterName, "this.") === 0)
 					{
 						$sAttCode = substr($sParameterName, strlen("this."));
-						if ($sAttCode == 'pkey')
+						if ($sAttCode == 'id')
 						{
 							$sValue = $oDbObject->GetKey();
 						}
@@ -717,19 +701,37 @@ class DBObjectSearch
 			$sFltCode = $oExpression->GetName();
 			if (empty($sClassAlias))
 			{
-				$iPos = $oExpression->GetPosition();
-				throw new OqlNormalizeException('Missing class specification', $sQuery, 0, $iPos, '');
+				// Try to find an alias
+				// Build an array of field => array of aliases
+				$aFieldClasses = array();
+				foreach($aClassAliases as $sAlias => $sReal)
+				{
+					foreach(MetaModel::GetFiltersList($sReal) as $sAnFltCode)
+					{
+						$aFieldClasses[$sAnFltCode][] = $sAlias;
+					}
+				}
+				if (!array_key_exists($sFltCode, $aFieldClasses))
+				{
+					throw new OqlNormalizeException('Unknown filter code', $sQuery, $oExpression->GetNameDetails(), array_keys($aFieldClasses));
+				}
+				if (count($aFieldClasses[$sFltCode]) > 1)
+				{
+					throw new OqlNormalizeException('Ambiguous filter code', $sQuery, $oExpression->GetNameDetails());
+				}
+				$sClassAlias = $aFieldClasses[$sFltCode][0];
 			}
-			if (!array_key_exists($sClassAlias, $aClassAliases))
+			else
 			{
-				$iPos = $oExpression->GetPosition();
-				throw new OqlNormalizeException('Unknown class', $sQuery, 0, $iPos, $sClassAlias, array_keys($aClassAliases));
-			}
-			$sClass = $aClassAliases[$sClassAlias];
-			if (!MetaModel::IsValidFilterCode($sClass, $sFltCode))
-			{
-				$iPos = $oExpression->GetPosition();
-				throw new OqlNormalizeException('Unknown filter code', $sQuery, 0, $iPos, "$sFltCode in class $sClassAlias", MetaModel::GetFiltersList($sClass));
+				if (!array_key_exists($sClassAlias, $aClassAliases))
+				{
+					throw new OqlNormalizeException('Unknown class [alias]', $sQuery, $oExpression->GetParentDetails(), array_keys($aClassAliases));
+				}
+				$sClass = $aClassAliases[$sClassAlias];
+				if (!MetaModel::IsValidFilterCode($sClass, $sFltCode))
+				{
+					throw new OqlNormalizeException('Unknown filter code', $sQuery, $oExpression->GetNameDetails(), MetaModel::GetFiltersList($sClass));
+				}
 			}
 
 			return new FieldExpression($sFltCode, $sClassAlias);
@@ -768,11 +770,11 @@ class DBObjectSearch
 
 		if (!MetaModel::IsValidClass($sClass))
 		{
-			throw new OqlNormalizeException('Unknown class', $sQuery, 0, 0, $sClass, MetaModel::GetClasses());
+			throw new OqlNormalizeException('Unknown class', $sQuery, $oOqlQuery->GetClassDetails(), MetaModel::GetClasses());
 		}
 
 		$oResultFilter = new DBObjectSearch($sClass, $sClassAlias);
-		$oResultFilter->m_aClasses = array($sClassAlias => $sClass);
+		$aAliases = array($sClassAlias => $sClass);
 
 		// Maintain an array of filters, because the flat list is in fact referring to a tree
 		// And this will be an easy way to dispatch the conditions
@@ -788,17 +790,17 @@ class DBObjectSearch
 				$sJoinClassAlias = $oJoinSpec->GetClassAlias();
 				if (!MetaModel::IsValidClass($sJoinClass))
 				{
-					throw new OqlNormalizeException('Unknown class', $sQuery, 0, 0, $sJoinClass, MetaModel::GetClasses());
+					throw new OqlNormalizeException('Unknown class', $sQuery, $oJoinSpec->GetClassDetails(), MetaModel::GetClasses());
 				}
-				if (array_key_exists($sJoinClassAlias, $oResultFilter->m_aClasses))
+				if (array_key_exists($sJoinClassAlias, $aAliases))
 				{
 					if ($sJoinClassAlias != $sJoinClass)
 					{
-						throw new OqlNormalizeException('Duplicate class alias', $sQuery, 0, 0, $sJoinClassAlias);
+						throw new OqlNormalizeException('Duplicate class alias', $sQuery, $oJoinSpec->GetClassAliasDetails());
 					}
 					else
 					{
-						throw new OqlNormalizeException('Duplicate class name', $sQuery, 0, 0, $sJoinClass);
+						throw new OqlNormalizeException('Duplicate class name', $sQuery, $oJoinSpec->GetClassDetails());
 					}
 				} 
 
@@ -813,24 +815,24 @@ class DBObjectSearch
 				$sPKeyDescriptor = $oRightField->GetName();
 				if ($sPKeyDescriptor != 'id')
 				{
-					throw new OqlNormalizeException('Wrong format for Join clause (right hand), expecting an id', $sQuery, 0, $oRightField->GetPosition(), $sPKeyDescriptor, array('id'));
+					throw new OqlNormalizeException('Wrong format for Join clause (right hand), expecting an id', $sQuery, $oRightField->GetNameDetails(), array('id'));
 				}
 
-				$oResultFilter->m_aClasses[$sJoinClassAlias] = $sJoinClass;
+				$aAliases[$sJoinClassAlias] = $sJoinClass;
 				$aJoinItems[$sJoinClassAlias] = new DBObjectSearch($sJoinClass, $sJoinClassAlias);
 
 				if (!array_key_exists($sFromClass, $aJoinItems))
 				{
-					throw new OqlNormalizeException('Unknown class in join condition (left expression)', $sQuery, 0, $oLeftField->GetPosition(), $sFromClass, array_keys($aJoinItems));
+					throw new OqlNormalizeException('Unknown class in join condition (left expression)', $sQuery, $oLeftField->GetParentDetails(), array_keys($aJoinItems));
 				}
 				if (!array_key_exists($sToClass, $aJoinItems))
 				{
-					throw new OqlNormalizeException('Unknown class in join condition (right expression)', $sQuery, 0, $oRightField->GetPosition(), $sToClass, array_keys($aJoinItems));
+					throw new OqlNormalizeException('Unknown class in join condition (right expression)', $sQuery, $oRightField->GetParentDetails(), array_keys($aJoinItems));
 				}
-				$aExtKeys = array_keys(MetaModel::GetExternalKeys($oResultFilter->m_aClasses[$sFromClass]));
+				$aExtKeys = array_keys(MetaModel::GetExternalKeys($aAliases[$sFromClass]));
 				if (!in_array($sExtKeyAttCode, $aExtKeys))
 				{
-					throw new OqlNormalizeException('Unknown external key in join condition (left expression)', $sQuery, 0, $oLeftField->GetPosition(), $sExtKeyAttCode, $aExtKeys);
+					throw new OqlNormalizeException('Unknown external key in join condition (left expression)', $sQuery, $oLeftField->GetNameDetails(), $aExtKeys);
 				}
 
 				if ($sFromClass == $sJoinClassAlias)
@@ -847,7 +849,7 @@ class DBObjectSearch
 		$oConditionTree = $oOqlQuery->GetCondition();
 		if ($oConditionTree instanceof Expression)
 		{
-			$oResultFilter->m_oSearchCondition = $oResultFilter->OQLExpressionToCondition($sQuery, $oConditionTree, $oResultFilter->m_aClasses);
+			$oResultFilter->m_oSearchCondition = $oResultFilter->OQLExpressionToCondition($sQuery, $oConditionTree, $aAliases);
 		}
 
 		return $oResultFilter;
@@ -934,6 +936,10 @@ class DBObjectSearch
 				}
 			}
 		}
+
+// #@# todo - obsolete smoothly, first give the OQL version !
+//		throw new CoreException('SibusQL has been obsoleted, please update your queries', array('sibusql'=>$sQuery, 'oql'=>$oFilter->ToOQL()));
+
 		return $oFilter;
 	}
 

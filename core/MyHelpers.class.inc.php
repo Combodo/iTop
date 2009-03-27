@@ -94,6 +94,113 @@ class MyHelpers
 		echo "\n</pre>\n";
 	}
 
+	public static function var_dump_string($var)
+	{
+		ob_start();
+		print_r($var);
+		$sRet = ob_get_clean();
+		return $sRet;
+	}
+
+	protected static function first_diff_line($s1, $s2)
+	{
+		$aLines1 = explode("\n", $s1);
+		$aLines2 = explode("\n", $s2);
+		for ($i = 0 ; $i < min(count($aLines1), count($aLines2)) ; $i++)
+		{
+			if ($aLines1[$i] != $aLines2[$i]) return $i;
+		}
+		return false;
+	}
+
+	protected static function highlight_line($sMultiline, $iLine, $sHighlightStart = '<b>', $sHightlightEnd = '</b>')
+	{
+		$aLines = explode("\n", $sMultiline);
+		$aLines[$iLine] = $sHighlightStart.$aLines[$iLine].$sHightlightEnd;
+		return implode("\n", $aLines);
+	}
+
+	protected static function first_diff($s1, $s2)
+	{
+		// do not work fine with multiline strings
+		$iLen1 = strlen($s1);
+		$iLen2 = strlen($s2);
+		for ($i = 0 ; $i < min($iLen1, $iLen2) ; $i++)
+		{
+			if ($s1[$i] !== $s2[$i]) return $i;
+		}
+		return false;
+	}
+
+	protected static function last_diff($s1, $s2)
+	{
+		// do not work fine with multiline strings
+		$iLen1 = strlen($s1);
+		$iLen2 = strlen($s2);
+		for ($i = 0 ; $i < min(strlen($s1), strlen($s2)) ; $i++)
+		{
+			if ($s1[$iLen1 - $i - 1] !== $s2[$iLen2 - $i - 1]) return array($iLen1 - $i, $iLen2 - $i);
+		}
+		return false;
+	}
+
+	protected static function text_cmp_html($sText1, $sText2, $sHighlight)
+	{
+		$iDiffPos = self::first_diff_line($sText1, $sText2);
+		$sDisp1 = self::highlight_line($sText1, $iDiffPos, '<div style="'.$sHighlight.'">', '</div>');
+		$sDisp2 = self::highlight_line($sText2, $iDiffPos, '<div style="'.$sHighlight.'">', '</div>');
+		echo "<table style=\"valign=top;\">\n";
+		echo "<tr>\n";
+		echo "<td><pre>$sDisp1</pre></td>\n";
+		echo "<td><pre>$sDisp2</pre></td>\n";
+		echo "</tr>\n";
+		echo "</table>\n";
+	}
+
+	protected static function string_cmp_html($s1, $s2, $sHighlight)
+	{
+		$iDiffPos = self::first_diff($s1, $s2);
+		if ($iDiffPos === false)
+		{
+			echo "strings are identical";
+			return;
+		}
+		$sStart = substr($s1, 0, $iDiffPos);
+
+		$aLastDiff = self::last_diff($s1, $s2);
+		$sEnd = substr($s1, $aLastDiff[0]);
+
+		$sMiddle1 = substr($s1, $iDiffPos, $aLastDiff[0] - $iDiffPos);
+		$sMiddle2 = substr($s2, $iDiffPos, $aLastDiff[1] - $iDiffPos);
+		
+		echo "<p>$sStart<span style=\"$sHighlight\">$sMiddle1</span>$sEnd</p>\n";
+		echo "<p>$sStart<span style=\"$sHighlight\">$sMiddle2</span>$sEnd</p>\n";
+	}
+
+	protected static function object_cmp_html($oObj1, $oObj2, $sHighlight)
+	{
+		$sObj1 = self::var_dump_string($oObj1);
+		$sObj2 = self::var_dump_string($oObj2);
+		return self::text_cmp_html($sObj1, $sObj2, $sHighlight);
+	}
+
+	public static function var_cmp_html($var1, $var2, $sHighlight = 'color:red; font-weight:bold;')
+	{
+		if (is_object($var1))
+		{
+			return self::object_cmp_html($var1, $var2, $sHighlight);
+		}
+		else if (count(explode("\n", $var1)) > 1)
+		{
+			// multiline string
+			return self::text_cmp_html($var1, $var2, $sHighlight);
+		}
+		else
+		{
+			return self::string_cmp_html($var1, $var2, $sHighlight);
+		}
+	}
+
 	public static function get_callstack_html($iLevelsToIgnore = 0, $aCallStack = null)
 	{
 		if ($aCallStack == null) $aCallStack = debug_backtrace();
@@ -176,6 +283,7 @@ class MyHelpers
 	{
 		if (!is_array($aData)) trigger_error("make_table_from_assoc_array: Error - the passed argument is not an array", E_USER_ERROR);
 		$aFirstRow = reset($aData);
+		if (count($aData) == 0) return '';
 		if (!is_array($aFirstRow)) trigger_error("make_table_from_assoc_array: Error - the passed argument is not a bi-dimensional array", E_USER_ERROR);
 		$sOutput = "";
 		$sOutput .= "<TABLE WIDTH=\"100%\" BORDER=\"0\" CELLSPACING=\"1\" CELLPADDING=\"1\">\n";

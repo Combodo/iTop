@@ -22,6 +22,8 @@ abstract class Expression
 	// recursively builds an array of class => fieldname
 	abstract public function ListRequiredFields();
 
+	abstract public function IsTrue();
+
 	public function RequiresField($sClass, $sFieldName)
 	{
 		// #@# todo - optimize : this is called quite often when building a single query !
@@ -50,6 +52,8 @@ abstract class Expression
 
 	public function LogAnd($oExpr)
 	{
+		if ($this->IsTrue()) return clone $oExpr;
+		if ($oExpr->IsTrue()) return clone $this;
 		return new BinaryExpression($this, 'AND', $oExpr);
 	}
 
@@ -57,7 +61,6 @@ abstract class Expression
 	{
 		return new BinaryExpression($this, 'OR', $oExpr);
 	}
-
 }
 
 
@@ -88,6 +91,16 @@ class BinaryExpression extends Expression
 		$this->m_oLeftExpr  = $oLeftExpr;
 		$this->m_oRightExpr = $oRightExpr;
 		$this->m_sOperator  = $sOperator;
+	}
+
+	public function IsTrue()
+	{
+		// return true if we are certain that it will be true
+		if ($this->m_sOperator == 'AND')
+		{
+			if ($this->m_oLeftExpr->IsTrue() && $this->m_oLeftExpr->IsTrue()) return true;
+		}
+		return false;
 	}
 
 	public function GetLeftExpr()
@@ -139,6 +152,12 @@ class UnaryExpression extends Expression
 		$this->m_value = $value;
 	}
 
+	public function IsTrue()
+	{
+		// return true if we are certain that it will be true
+		return ($this->m_value == 1);
+	}
+
 	public function GetValue()
 	{
 		return $this->m_value;
@@ -179,6 +198,11 @@ class TrueExpression extends ScalarExpression
 	{
 		parent::__construct(1);
 	}
+
+	public function IsTrue()
+	{
+		return true;
+	}
 }
 
 class FieldExpression extends UnaryExpression
@@ -192,6 +216,12 @@ class FieldExpression extends UnaryExpression
 
 		$this->m_sParent = $sParent;
 		$this->m_sName = $sName;
+	}
+
+	public function IsTrue()
+	{
+		// return true if we are certain that it will be true
+		return false;
 	}
 
 	public function GetParent() {return $this->m_sParent;}
@@ -251,6 +281,12 @@ class ListExpression extends Expression
 		$this->m_aExpressions = $aExpressions;
 	}
 
+	public function IsTrue()
+	{
+		// return true if we are certain that it will be true
+		return false;
+	}
+
 	public function GetItems()
 	{
 		return $this->m_aExpressions;
@@ -298,6 +334,12 @@ class FunctionExpression extends Expression
 	{
 		$this->m_sVerb = $sVerb;
 		$this->m_aArgs = $aArgExpressions;
+	}
+
+	public function IsTrue()
+	{
+		// return true if we are certain that it will be true
+		return false;
 	}
 
 	public function GetVerb()
@@ -353,6 +395,12 @@ class IntervalExpression extends Expression
 		$this->m_sUnit = $sUnit;
 	}
 
+	public function IsTrue()
+	{
+		// return true if we are certain that it will be true
+		return false;
+	}
+
 	public function GetValue()
 	{
 		return $this->m_oValue;
@@ -387,6 +435,12 @@ class CharConcatExpression extends Expression
 	public function __construct($aExpressions)
 	{
 		$this->m_aExpressions = $aExpressions;
+	}
+
+	public function IsTrue()
+	{
+		// return true if we are certain that it will be true
+		return false;
 	}
 
 	public function GetItems()

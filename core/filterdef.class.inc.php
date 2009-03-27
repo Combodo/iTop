@@ -107,10 +107,10 @@ class FilterPrivateKey extends FilterDefinition
 {
 	static protected function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array("pkey_field"));
+		return array_merge(parent::ListExpectedParams(), array("id_field"));
 	}
 
-	public function GetType() {return "PKey";}
+	public function GetType() {return "PrivateKey";}
 	public function GetTypeDesc() {return "Match against object identifier";}
 
 	public function GetLabel()
@@ -139,7 +139,7 @@ class FilterPrivateKey extends FilterDefinition
 
 	public function GetFilterSQLExpr($sOpCode, $value)
 	{
-		$sFieldName = $this->Get("pkey_field");
+		$sFieldName = $this->Get("id_field");
 		// #@# not obliged to quote... these are numbers !!!
 		$sQValue = CMDBSource::Quote($value);
 		switch($sOpCode)
@@ -162,7 +162,7 @@ class FilterPrivateKey extends FilterDefinition
 	}
 	public function TemporaryGetSQLCol()
 	{
-		return $this->Get("pkey_field");
+		return $this->Get("id_field");
 	}
 }
 

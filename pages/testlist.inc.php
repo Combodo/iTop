@@ -706,6 +706,7 @@ class TestQueriesOnFarm extends TestBizModel
 			throw new UnitTestException("The query '$sQuery' was parsed with success, while it shouldn't (?)");
 			return false;
 		}
+		echo "<p>To OQL: ".$oMyFilter->ToOQL()."</p>";
 
 		$this->search_and_show_list($oMyFilter);
 		
@@ -721,25 +722,21 @@ class TestQueriesOnFarm extends TestBizModel
 		$oFilter2 = DBObjectSearch::unserialize($sSerialize);
 		try
 		{
-		$sQuery2 = MetaModel::MakeSelectQuery($oFilter2);
+			$sQuery2 = MetaModel::MakeSelectQuery($oFilter2);
 		}
 		catch (Exception $e)
 		{
 			echo "<p>Could not compute the query after unserialize</p>\n";
 			echo "<p>Query 1: $sQuery1</p>\n";
-			MyHelpers::var_dump_html($oMyFilter, true);
-			echo "<p>Query 2: FAILED</p>\n";
-			MyHelpers::var_dump_html($oFilter2, true);
+			MyHelpers::var_cmp_html($oMyFilter, $oFilter2);
 			throw $e;
 		}
 		//if ($oFilter2 != $oMyFilter) no, they may differ while the resulting query is the same!
 		if ($sQuery1 != $sQuery2)
 		{
 			echo "<p>serialize/unserialize mismatch :-(</p>\n";
-			echo "<p>Query 1: $sQuery1</p>\n";
-			MyHelpers::var_dump_html($oMyFilter, true);
-			echo "<p>Query 2: $sQuery2</p>\n";
-			MyHelpers::var_dump_html($oFilter2, true);
+			MyHelpers::var_cmp_html($sQuery1, $sQuery2);
+			MyHelpers::var_cmp_html($oMyFilter, $oFilter2);
 			return false;
 		}
 		return true;
@@ -782,10 +779,14 @@ class TestQueriesOnFarm extends TestBizModel
 
 		$aQueries = array(
 			'SELECT Animal' => true,
+			'SELECT Animal WHERE Animal.pkey = 1' => false,
+			'SELECT Animal WHERE Animal.id = 1' => true,
 			'SELECT Aniiimal' => false,
 			'SELECTe Animal' => false,
 			'SELECT * FROM Animal' => false,
 			'SELECT Animal AS zoo WHERE zoo.species = \'human\'' => true,
+			'SELECT Animal AS zoo WHERE species = \'human\'' => true,
+			'SELECT Animal AS zoo WHERE espece = \'human\'' => false,
 			'SELECT Animal AS zoo WHERE zoo.species IN (\'human\', "pig")' => true,
 			'SELECT Animal AS zoo WHERE CONCATENATION(zoo.species, zoo.sex) LIKE "hum%male"' => false,
 			'SELECT Animal AS zoo WHERE CONCAT(zoo.species, zoo.sex) LIKE "hum%male"' => true,
@@ -793,6 +794,7 @@ class TestQueriesOnFarm extends TestBizModel
 			'SELECT Animal AS zoo WHERE zoo.kind = \'human\'' => false,
 			'SELECT Animal WHERE Animal.species = \'human\' AND Animal.sex = \'female\'' => true,
 			'SELECT Mammal AS x WHERE (x.species = \'human\' AND x.name LIKE \'ro%\') OR (x.species = \'donkey\' AND x.name LIKE \'po%\')' => true,
+			'SELECT Mammal AS x WHERE x.species = \'human\' AND x.name LIKE \'ro%\' OR x.species = \'donkey\' AND x.name LIKE \'po%\'' => true,
 			'SELECT Mammal AS m WHERE MONTH(m.birth) = 7' => true,
 			'SELECT Mammal AS m WHERE DAY(m.birth) = 19' => true,
 			'SELECT Mammal AS m WHERE YEAR(m.birth) = 1971' => true,
@@ -802,6 +804,7 @@ class TestQueriesOnFarm extends TestBizModel
 			'SELECT Mammal AS m WHERE m.name = IF(FLOOR(ROUND(m.height)) > 2, "pomme", "romain")' => true,
 			'SELECT Mammal AS m WHERE (1 + 2' => false,
 			'SELECT Mammal AS m WHERE (1 + 2 * 4 / 23) > 0' => true,
+			'SELECT Mammal AS m WHERE (4 / 23 * 2 + 1) > 0' => true,
 			'SELECT Mammal AS m WHERE 1/0' => true,
 			'SELECT Mammal AS m WHERE MONTH(m.birth) = 7' => true,
 			'SELECT Animal JOIN Group ON Group.leader = Animal.id' => true,
@@ -813,20 +816,30 @@ class TestQueriesOnFarm extends TestBizModel
 			'SELECT Animal AS A JOIN Group AS G ON A.id = G.leader' => false,
 			'SELECT Animal AS A JOIN Group AS G ON G.leader = A.id WHERE A.sex=\'male\' OR G.qwerty = 123' => false,
 			'SELECT Animal AS A JOIN Group AS G ON G.leader = A.id WHERE A.sex=\'male\' OR G.name LIKE "a%"' => true,
+			'SELECT Animal AS A JOIN Group AS G ON G.leader = A.id WHERE A.id = 1' => true,
+			'SELECT Animal AS A JOIN Group AS G ON G.leader = A.id WHERE id = 1' => false,
 			'SELECT Animal AS A JOIN Group AS G ON A.member = G.id' => false,
 			'SELECT Mammal AS M JOIN Group AS G ON M.member = G.id' => true,
 			'SELECT Mammal AS M JOIN Group AS G ON A.member = G.id' => false,
+			'SELECT Mammal AS myAlias JOIN Group AS myAlias ON myAlias.member = myAlias.id' => false,
+			'SELECT Mammal AS Mammal JOIN Group AS Mammal ON Mammal.member = Mammal.id' => false,
 			'SELECT Group AS G WHERE G.leader_name LIKE "%"' => true,
 			'SELECT Group AS G WHERE G.leader_speed < 100000' => true,
 			'SELECT Mammal AS M JOIN Group AS G ON M.member = G.id WHERE G.leader_name LIKE "%"' => true,
 			'SELECT Mammal AS M JOIN Group AS G ON M.member = G.id WHERE G.leader_speed < 100000' => true,
+			'SELECT Mammal AS Child JOIN Mammal AS Dad ON Child.father = Dad.id' => true,
+			'SELECT Mammal AS Child JOIN Animal AS Dad ON Child.father = Dad.id' => true,
+			'SELECT Animal AS Child JOIN Mammal AS Dad ON Child.father = Dad.id' => true,
 			'SELECT Animal AS Child JOIN Animal AS Dad ON Child.father = Dad.id' => true,
 			'SELECT Animal AS Dad JOIN Animal AS Child ON Child.father = Dad.id' => true,
 			'SELECT Animal AS Child JOIN Animal AS Dad ON Child.father = Dad.id JOIN Animal AS Mum ON Child.mother = Mum.id' => true,
-			'SELECT Animal AS Child JOIN Animal AS Dad ON Child.father = Dad.id JOIN Animal AS Mum ON Child.mother = Mum.id WHERE Dad.pkey = 1' => true,
+			'SELECT Animal AS Child JOIN Animal AS Dad ON Child.father = Dad.id JOIN Animal AS Mum ON Child.mother = Mum.id WHERE Dad.id = 1' => true,
 			'SELECT Animal AS Child JOIN Animal AS Dad ON Child.father = Dad.id JOIN Animal AS Mum ON Child.mother = Mum.id WHERE Dad.name = \'romanoff\'' => false,
 			'SELECT Animal AS Child JOIN Mammal AS Dad ON Child.father = Dad.id' => true,
-			'SELECT Animal AS Child JOIN Mammal AS Dad ON Child.father = Dad.id JOIN Animal AS Mum ON Child.mother = Mum.id WHERE Dad.name = \'romanoff\'' => true,
+			'SELECT Animal AS Child JOIN Mammal AS Dad ON Child.father = Dad.id JOIN Animal AS Mum ON Child.mother = Mum.id WHERE Dad.name = \'romanoff\' OR Mum.speed = 0' => true,
+			'SELECT Animal AS Dad JOIN Animal AS Child ON Child.father = Dad.id JOIN Animal AS Mum ON Child.mother = Mum.id' => true,
+			'SELECT Mammal AS Dad JOIN Mammal AS Child ON Child.father = Dad.id' => true,
+			'SELECT Mammal AS Dad JOIN Mammal AS Child ON Child.father = Dad.id JOIN Mammal AS Mum ON Child.mother = Mum.id WHERE Dad.name = \'romanoff\' OR Mum.name=\'chloe\' OR Child.name=\'bizounours\'' => true,
 		);
 		//$aQueries = array(
 		//	'SELECT Mammal AS M JOIN Group AS G ON M.member = G.id WHERE G.leader_name LIKE "%"' => true,

@@ -337,15 +337,18 @@ abstract class TestBizModel extends TestHandler
 	static protected function show_list($oObjectSet)
 	{
 		$oObjectSet->Rewind();
+		$aData = array();
 		while ($oItem = $oObjectSet->Fetch())
 		{
 			$aValues = array();
 			foreach(MetaModel::GetAttributesList(get_class($oItem)) as $sAttCode)
 			{
-				$aValues[] = $oItem->GetAsHTML($sAttCode);
+				$aValues[$sAttCode] = $oItem->GetAsHTML($sAttCode);
 			}
-			echo $oItem->GetKey()." => ".implode(", ", $aValues)."</br>\n";
+			//echo $oItem->GetKey()." => ".implode(", ", $aValues)."</br>\n";
+			$aData[] = $aValues;
 		}
+		echo MyHelpers::make_table_from_assoc_array($aData);
 	}
 
 	static protected function search_and_show_list(DBObjectSearch $oMyFilter)

@@ -274,7 +274,7 @@ abstract class MetaModel
 	final static public function DBGetTable($sClass, $sAttCode = null)
 	{
 		self::_check_subclass($sClass);
-		if (empty($sAttCode) || ($sAttCode == "pkey"))
+		if (empty($sAttCode) || ($sAttCode == "id"))
 		{
 			$sTableRaw = self::$m_aClassParams[$sClass]["db_table"];
 			if (empty($sTableRaw))
@@ -801,19 +801,19 @@ abstract class MetaModel
 				}
 			}
 
-			// Add a 'pkey' filter
+			// Add a 'id' filter
 			//
-			if (array_key_exists('pkey', self::$m_aAttribDefs[$sClass]))
+			if (array_key_exists('id', self::$m_aAttribDefs[$sClass]))
 			{
-				trigger_error("Class $sClass, 'pkey' is a reserved keyword, it cannot be used as an attribute code", E_USER_ERROR);
+				trigger_error("Class $sClass, 'id' is a reserved keyword, it cannot be used as an attribute code", E_USER_ERROR);
 			}
-			if (array_key_exists('pkey', self::$m_aFilterDefs[$sClass]))
+			if (array_key_exists('id', self::$m_aFilterDefs[$sClass]))
 			{
-				trigger_error("Class $sClass, 'pkey' is a reserved keyword, it cannot be used as a filter code", E_USER_ERROR);
+				trigger_error("Class $sClass, 'id' is a reserved keyword, it cannot be used as a filter code", E_USER_ERROR);
 			}
-			$oFilter = new FilterPrivateKey('pkey', array('pkey_field' => self::DBGetKey($sClass)));
-			self::$m_aFilterDefs[$sClass]['pkey'] = $oFilter;
-			self::$m_aFilterOrigins[$sClass]['pkey'] = $sClass;
+			$oFilter = new FilterPrivateKey('id', array('id_field' => self::DBGetKey($sClass)));
+			self::$m_aFilterDefs[$sClass]['id'] = $oFilter;
+			self::$m_aFilterOrigins[$sClass]['id'] = $sClass;
 
 			// Add a 'class' attribute/filter to the root classes and their children
 			//
@@ -1270,8 +1270,8 @@ abstract class MetaModel
 
 		if (empty($aExpectedAtts) && $bIsOnQueriedClass)
 		{
-			// default to the whole list of attributes + the very std pkey/finalclass
-			$aExpectedAtts['pkey'] = 'pkey';
+			// default to the whole list of attributes + the very std id/finalclass
+			$aExpectedAtts['id'] = 'id';
 			foreach (self::GetAttributesList($sClass) as $sAttCode)
 			{
 				$aExpectedAtts[$sAttCode] = $sAttCode; // alias == attcode 
@@ -1337,7 +1337,6 @@ abstract class MetaModel
 		// Filter on objects referencing me
 		foreach ($oFilter->GetCriteria_ReferencedBy() as $sForeignClass => $aKeysAndFilters)
 		{
-			$sForeignClassAlias = $oFilter->GetClassAlias();
 			foreach ($aKeysAndFilters as $sForeignKeyAttCode => $oForeignFilter)
 			{
 				$oForeignKeyAttDef = self::GetAttributeDef($sForeignClass, $sForeignKeyAttCode);
@@ -1352,8 +1351,10 @@ abstract class MetaModel
 				//self::DbgTrace($oSelectForeign->RenderSelect(array()));
 				$oSelectForeign = self::MakeQuery($sGlobalTargetAlias, $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oForeignFilter, $aExpAtts);
 
-				$sForeignKeyField = $oForeignKeyAttDef->GetSQLExpr();
-				$oSelectBase->AddInnerJoin($oSelectForeign, $sKeyField, $sForeignKeyField);
+				$sForeignClassAlias = $oForeignFilter->GetClassAlias();
+				$sForeignKeyTable = $aTranslation[$sForeignClassAlias][$sForeignKeyAttCode][0];
+				$sForeignKeyColumn = $aTranslation[$sForeignClassAlias][$sForeignKeyAttCode][1];
+				$oSelectBase->AddInnerJoin($oSelectForeign, $sKeyField, $sForeignKeyColumn, $sForeignKeyTable);
 			}
 		}
 
@@ -1415,7 +1416,7 @@ abstract class MetaModel
 		$sTargetClass = $oFilter->GetClass();
 		$sTargetAlias = $oFilter->GetClassAlias();
 		$sTable = self::DBGetTable($sTableClass);
-		$sTableAlias = self::GenerateUniqueAlias($aTableAliases, $sTable, $sTable);
+		$sTableAlias = self::GenerateUniqueAlias($aTableAliases, $sTargetAlias.'_'.$sTable, $sTable);
 
 		$bIsOnQueriedClass = ($sTargetAlias == $sGlobalTargetAlias);
 		
@@ -1432,12 +1433,12 @@ abstract class MetaModel
 		//
 		if ($bIsOnQueriedClass)
 		{
-			$aSelect[$aExpectedAtts['pkey']] = new FieldExpression(self::DBGetKey($sTableClass), $sTableAlias);
+			$aSelect[$aExpectedAtts['id']] = new FieldExpression(self::DBGetKey($sTableClass), $sTableAlias);
 		}
 		// We need one pkey to be the key, let's take the one corresponding to the leaf
 		if ($sTableClass == $sTargetClass)
 		{
-			$aTranslation[$sTargetAlias]['pkey'] = array($sTableAlias, self::DBGetKey($sTableClass));
+			$aTranslation[$sTargetAlias]['id'] = array($sTableAlias, self::DBGetKey($sTableClass));
 		}
 	
 		// 1/b - Get the other attributes
@@ -1481,10 +1482,6 @@ abstract class MetaModel
 		//
 		foreach(self::$m_aFilterDefs[$sTargetClass] as $sFltCode => $oFltAtt)
 		{
-			// Skip pkey
-			// no, this is a bug now! ?!?!?
-			// if ($sFltCode == 'pkey') continue;
-
 			// Skip this filter if not defined in this table
 			if (self::$m_aFilterOrigins[$sTargetClass][$sFltCode] != $sTableClass) continue;
 
@@ -1579,23 +1576,25 @@ abstract class MetaModel
 		return $oSelectBase;
 	}
 
-	public static function GenerateUniqueAlias(&$aAliases, $sNewName, $sRealName, $iTentative = 0)
+	public static function GenerateUniqueAlias(&$aAliases, $sNewName, $sRealName)
 	{
-		// Algo: Build an alias, then check it amongst the contents of $aAliases
-		
-		if ($iTentative == 0) $sProposedAlias = $sNewName;
-		else                  $sProposedAlias = $sNewName.$iTentative;
-		
-		foreach($aAliases as $sAlias=>$sNameWeDontCare)
+		if (!array_key_exists($sNewName, $aAliases))
 		{
-			// If the name is already used, then recursively try to get another one
-			if ($sProposedAlias == $sAlias) return self::GenerateUniqueAlias($aAliases, $sNewName, $sRealName, $iTentative + 1);
+			$aAliases[$sNewName] = $sRealName;
+			return $sNewName;
 		}
-		
-		// The proposed alias has been proven to be unique
-		// Record it and return its value
-		$aAliases[$sProposedAlias] = $sRealName;
-		return $sProposedAlias;
+
+		for ($i = 1 ; $i < 100 ; $i++)
+		{
+			$sAnAlias = $sNewName.$i;
+			if (!array_key_exists($sAnAlias, $aAliases))
+			{
+				// Create that new alias
+				$aAliases[$sAnAlias] = $sRealName;
+				return $sAnAlias;
+			}
+		}
+		throw new CoreException('Failed to create an alias', array('aliases' => $aAliases, 'new'=>$sNewName));
 	}
 
 	public static function CheckDefinitions()
@@ -1630,7 +1629,7 @@ abstract class MetaModel
 			if (empty($sNameAttCode))
 			{
 			//  let's try this !!!
-				// $aErrors[$sClass][] = "Missing value for name definition: the framework will (should...) replace it by the pkey";
+				// $aErrors[$sClass][] = "Missing value for name definition: the framework will (should...) replace it by the id";
 				// $aSugFix[$sClass][] = "Expecting a value in ".implode(", ", self::GetAttributesList($sClass));
 			}
 			else if(!self::IsValidAttCode($sClass, $sNameAttCode))
@@ -2013,7 +2012,7 @@ abstract class MetaModel
 		{
 			$sSelWrongRecs .= " AND maintable.`$sKeyField` NOT IN ('".implode("', '", $aPlannedDel[$sTable])."')";
 		}
-		$aWrongRecords = CMDBSource::QueryToCol($sSelWrongRecs, "pkey");
+		$aWrongRecords = CMDBSource::QueryToCol($sSelWrongRecs, "id");
 		if (count($aWrongRecords) == 0) return;
 
 		if (!array_key_exists($sRootClass, $aErrorsAndFixes)) $aErrorsAndFixes[$sRootClass] = array();
@@ -2069,7 +2068,7 @@ abstract class MetaModel
 				// skip the current table
 				if ($sFriendTable == $sTable) continue; 
 	
-				$sFindRelatedRec = "SELECT DISTINCT maintable.`$sFriendKey` AS pkey FROM `$sFriendTable` AS maintable WHERE maintable.`$sFriendKey` IN ($sDeleteKeys)";
+				$sFindRelatedRec = "SELECT DISTINCT maintable.`$sFriendKey` AS id FROM `$sFriendTable` AS maintable WHERE maintable.`$sFriendKey` IN ($sDeleteKeys)";
 				self::DBCheckIntegrity_Check2Delete($sFindRelatedRec, "Cascading deletion of record in friend table `<em>$sTable</em>`", $sFriendClass, $aErrorsAndFixes, $iNewDelCount, $aPlannedDel, true);
 			}
 		}
@@ -2085,7 +2084,7 @@ abstract class MetaModel
 		{
 			$sSelWrongRecs .= " AND maintable.`$sKeyField` NOT IN ('".implode("', '", $aPlannedDel[$sTable])."')";
 		}
-		$aWrongRecords = CMDBSource::QueryToCol($sSelWrongRecs, "pkey");
+		$aWrongRecords = CMDBSource::QueryToCol($sSelWrongRecs, "id");
 		if (count($aWrongRecords) == 0) return;
 
 		if (!array_key_exists($sRootClass, $aErrorsAndFixes)) $aErrorsAndFixes[$sRootClass] = array();
@@ -2150,7 +2149,7 @@ abstract class MetaModel
 				$aAllowedValues = self::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL);
 				$sAllowedValues = implode(",", CMDBSource::Quote($aAllowedValues, true));
 
-				$sSelWrongRecs = "SELECT DISTINCT maintable.`$sKeyField` AS pkey FROM `$sTable` AS maintable WHERE `$sFinalClassField` NOT IN ($sAllowedValues)";
+				$sSelWrongRecs = "SELECT DISTINCT maintable.`$sKeyField` AS id FROM `$sTable` AS maintable WHERE `$sFinalClassField` NOT IN ($sAllowedValues)";
 				self::DBCheckIntegrity_Check2Delete($sSelWrongRecs, "final class (field `<em>$sFinalClassField</em>`) is wrong (expected a value in {".$sAllowedValues."})", $sClass, $aErrorsAndFixes, $iNewDelCount, $aPlannedDel);
 			}
 
@@ -2168,13 +2167,13 @@ abstract class MetaModel
 				// Check that any record found here has its counterpart in the root table
 				// and which refers to a child class
 				//
-				$sSelWrongRecs = "SELECT DISTINCT maintable.`$sKeyField` AS pkey FROM `$sTable` as maintable LEFT JOIN `$sRootTable` ON maintable.`$sKeyField` = `$sRootTable`.`$sRootKey` AND `$sRootTable`.`$sFinalClassField` IN ($sExpectedClasses) WHERE `$sRootTable`.`$sRootKey` IS NULL";
+				$sSelWrongRecs = "SELECT DISTINCT maintable.`$sKeyField` AS id FROM `$sTable` as maintable LEFT JOIN `$sRootTable` ON maintable.`$sKeyField` = `$sRootTable`.`$sRootKey` AND `$sRootTable`.`$sFinalClassField` IN ($sExpectedClasses) WHERE `$sRootTable`.`$sRootKey` IS NULL";
 				self::DBCheckIntegrity_Check2Delete($sSelWrongRecs, "Found a record in `<em>$sTable</em>`, but no counterpart in root table `<em>$sRootTable</em>` (inc. records pointing to a class in {".$sExpectedClasses."})", $sClass, $aErrorsAndFixes, $iNewDelCount, $aPlannedDel);
 
 				// Check that any record found in the root table and referring to a child class
 				// has its counterpart here (detect orphan nodes -root or in the middle of the hierarchy)
 				//
-				$sSelWrongRecs = "SELECT DISTINCT maintable.`$sRootKey` AS pkey FROM `$sRootTable` AS maintable LEFT JOIN `$sTable` ON maintable.`$sRootKey` = `$sTable`.`$sKeyField` WHERE `$sTable`.`$sKeyField` IS NULL AND maintable.`$sFinalClassField` IN ($sExpectedClasses)";
+				$sSelWrongRecs = "SELECT DISTINCT maintable.`$sRootKey` AS id FROM `$sRootTable` AS maintable LEFT JOIN `$sTable` ON maintable.`$sRootKey` = `$sTable`.`$sKeyField` WHERE `$sTable`.`$sKeyField` IS NULL AND maintable.`$sFinalClassField` IN ($sExpectedClasses)";
 				self::DBCheckIntegrity_Check2Delete($sSelWrongRecs, "Found a record in root table `<em>$sRootTable</em>`, but no counterpart in table `<em>$sTable</em>` (root records pointing to a class in {".$sExpectedClasses."})", $sRootClass, $aErrorsAndFixes, $iNewDelCount, $aPlannedDel);
 			}
 
@@ -2194,7 +2193,7 @@ abstract class MetaModel
 					$sExtKeyField = $oAttDef->GetSQLExpr();
 
 					// Note: a class/table may have an external key on itself
-					$sSelBase = "SELECT DISTINCT maintable.`$sKeyField` AS pkey, maintable.`$sExtKeyField` AS extkey FROM `$sTable` AS maintable LEFT JOIN `$sRemoteTable` ON maintable.`$sExtKeyField` = `$sRemoteTable`.`$sRemoteKey`";
+					$sSelBase = "SELECT DISTINCT maintable.`$sKeyField` AS id, maintable.`$sExtKeyField` AS extkey FROM `$sTable` AS maintable LEFT JOIN `$sRemoteTable` ON maintable.`$sExtKeyField` = `$sRemoteTable`.`$sRemoteKey`";
 
 					$sSelWrongRecs = $sSelBase." WHERE `$sRemoteTable`.`$sRemoteKey` IS NULL";
 					if ($oAttDef->IsNullAllowed())
@@ -2239,7 +2238,7 @@ abstract class MetaModel
 	
 						$sMyAttributeField = $oAttDef->GetSQLExpr();
 						$sDefaultValue = $oAttDef->GetDefaultValue();
-						$sSelWrongRecs = "SELECT DISTINCT maintable.`$sKeyField` AS pkey FROM `$sTable` AS maintable WHERE maintable.`$sMyAttributeField` NOT IN ($sExpectedValues)";
+						$sSelWrongRecs = "SELECT DISTINCT maintable.`$sKeyField` AS id FROM `$sTable` AS maintable WHERE maintable.`$sMyAttributeField` NOT IN ($sExpectedValues)";
 						self::DBCheckIntegrity_Check2Update($sSelWrongRecs, "Record having a column ('<em>$sAttCode</em>') with an unexpected value", $sMyAttributeField, CMDBSource::Quote($sDefaultValue), $sClass, $aErrorsAndFixes, $iNewDelCount, $aPlannedDel);
 					}
 				}
@@ -2464,7 +2463,7 @@ abstract class MetaModel
 	public static function MakeSingleRow($sClass, $iKey)
 	{
 		$oFilter = new DBObjectSearch($sClass);
-		$oFilter->AddCondition('pkey', $iKey, '=');
+		$oFilter->AddCondition('id', $iKey, '=');
 
 		$sSQL = self::MakeSelectQuery($oFilter);
 		//echo "$sSQL</br>\n";
@@ -2496,7 +2495,7 @@ abstract class MetaModel
 			// @#@ possible improvement: check that the class is valid !
 			$sRootClass = self::GetRootClass($sClass);
 			$sFinalClassField = self::DBGetClassField($sRootClass);
-			trigger_error("Empty class name for object $sClass::{$aRow["pkey"]} (root class '$sRootClass', field '{$sFinalClassField}' is empty)", E_USER_ERROR);
+			trigger_error("Empty class name for object $sClass::{$aRow["id"]} (root class '$sRootClass', field '{$sFinalClassField}' is empty)", E_USER_ERROR);
 		}
 		else
 		{
