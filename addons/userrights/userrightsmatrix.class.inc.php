@@ -165,6 +165,19 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 		UR_ACTION_BULK_DELETE => 'bulk delete',
 	);
 
+	// Installation: create the very first user
+	public function CreateAdministrator($sAdminUser, $sAdminPwd)
+	{
+		// Maybe we should check that no other user with userid == 0 exists
+		$oUser = new UserRightsMatrixUsers();
+		$oUser->Set('login', $sAdminUser);
+		$oUser->Set('password', $sAdminPwd);
+		$oUser->Set('userid', 1); // one is for root !
+		$oUser->DBInsert();
+		$this->Setup();
+		return true;
+	}
+
 	public function Setup()
 	{
 		// Users must be added manually
@@ -177,7 +190,7 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 			{
 				foreach (self::$m_aActionCodes as $iActionCode => $sAction)
 				{
-					$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixClassGrant AS cg WHERE cg.class = '$sClass' AND cg.action = '$sAction' AND cg.userid = $iUserId"));
+					$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixClassGrant AS cg WHERE (cg.class = '$sClass') AND (cg.action = '$sAction') AND (cg.userid = $iUserId)"));
 					if ($oSet->Count() < 1)
 					{
 						// Create a new entry
@@ -191,7 +204,7 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 				}
 				foreach (MetaModel::EnumStimuli($sClass) as $sStimulusCode => $oStimulus)
 				{
-					$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixClassStimulusGrant AS sg WHERE sg.class = '$sClass' AND sg.stimulus = '$sStimulusCode' AND sg.userid = $iUserId"));
+					$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixClassStimulusGrant AS sg WHERE (sg.class = '$sClass') AND (sg.stimulus = '$sStimulusCode') AND (sg.userid = $iUserId)"));
 					if ($oSet->Count() < 1)
 					{
 						// Create a new entry
@@ -205,7 +218,7 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 				}
 				foreach (MetaModel::GetAttributesList($sClass) as $sAttCode)
 				{
-					$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixAttributeGrant WHERE UserRightsMatrixAttributeGrant.class = '$sClass' AND UserRightsMatrixAttributeGrant.attcode = '$sAttCode' AND UserRightsMatrixAttributeGrant.userid = $iUserId"));
+					$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixAttributeGrant WHERE (UserRightsMatrixAttributeGrant.class = '$sClass') AND (UserRightsMatrixAttributeGrant.attcode = '$sAttCode') AND (UserRightsMatrixAttributeGrant.userid = $iUserId)"));
 					if ($oSet->Count() < 1)
 					{
 						foreach (array('read', 'modify') as $sAction)

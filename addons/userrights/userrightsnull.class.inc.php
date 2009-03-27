@@ -16,6 +16,12 @@
 
 class UserRightsNull extends UserRightsAddOnAPI
 {
+	// Installation: create the very first user
+	public function CreateAdministrator($sAdminUser, $sAdminPwd)
+	{
+		return true;
+	}
+
 	public function Setup()
 	{
 		return true;
