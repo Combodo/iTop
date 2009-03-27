@@ -1,3 +1,25 @@
+
+/*
+
+This is a LALR(1) grammar
+(seek for Lemon grammar to get some documentation from the Net)
+That doc was helpful: http://www.hwaci.com/sw/lemon/lemon.html
+
+To handle operators precedence we could have used the %left directive
+(we took another option, because that one was discovered right after...
+which option is the best for us?)
+Example:
+%left LOG_AND.
+%left LOG_OR.
+%nonassoc EQ NE GT GE LT LE.
+%left PLUS MINUS.
+%left TIMES DIVIDE MOD.
+%right EXP NOT.
+
+TODO : solve the 2 remaining shift-reduce conflicts (JOIN)
+
+*/
+
 %name OQLParser_
 %declare_class {class OQLParserRaw}
 %syntax_error { 
@@ -162,7 +184,6 @@ func_name(A) ::= F_FLOOR(X). { A=X; }
 
 
 %code {
-
 
 class OQLParserException extends OQLException
 {
