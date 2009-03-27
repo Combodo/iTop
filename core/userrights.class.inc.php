@@ -93,6 +93,12 @@ class UserRights
 		self::$m_iRealUserId = 0;
 	}
 
+	// Installation: create the very first user
+	public static function CreateAdministrator($sAdminUser, $sAdminPwd)
+	{
+		return self::$m_oAddOn->CreateAdministrator($sAdminUser, $sAdminPwd);
+	}
+	
 	// Installation (e.g: give default values for users)
 	public static function Setup()
 	{
