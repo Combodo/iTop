@@ -148,13 +148,15 @@ class lnkInfraContract extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("contract_id", array("targetclass"=>"bizContract", "jointype"=> '', "label"=>"Contract name", "description"=>"Contract id", "allowed_values"=>null, "sql"=>"contract_id", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("contract_name", array("label"=>"Contract name", "description"=>"Name of the contract", "allowed_values"=>null, "extkey_attcode"=> 'contract_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeString("coverage", array("label"=>"coverage", "description"=>"coverage for the given infra", "allowed_values"=>null, "sql"=>"coverage", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+    MetaModel::Init_AddAttribute(new AttributeString("service_level", array("label"=>"service level", "description"=>"service level for the given infra", "allowed_values"=>null, "sql"=>"sla", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+
 
 		MetaModel::Init_AddFilterFromAttribute("infra_id");
 		MetaModel::Init_AddFilterFromAttribute("contract_id");
 		
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('infra_id', 'contract_id', 'coverage')); // Attributes to be displayed for a list
-		MetaModel::Init_SetZListItems('list', array('infra_id', 'infra_status','contract_id' , 'coverage')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', array('infra_id', 'contract_id', 'coverage','service_level')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('list', array('infra_id', 'infra_status','contract_id' , 'coverage','service_level')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('infra_id', 'contract_id')); // Criteria of the std search form
 		MetaModel::Init_SetZListItems('advanced_search', array('infra_id', 'contract_id')); // Criteria of the advanced search form
@@ -181,7 +183,7 @@ class lnkContactContract extends cmdbAbstractObject
 			"name_attcode" => "role",  // ????
 			"state_attcode" => "",
 			"reconc_keys" => array("role"),  // ????
-			"db_table" => "contact_contract",
+			"db_table" => "contact_Contract",
 			"db_key_field" => "link_id",
 			"db_finalclass_field" => "",
 			"display_template" => "../business/templates/default.html",
