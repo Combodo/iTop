@@ -322,7 +322,7 @@ class DisplayBlock
 			
 			case 'pie_chart':
 			$sGroupBy = isset($aExtraParams['group_by']) ? $aExtraParams['group_by'] : '';
-			$sFilter = $this->m_oFilter->ToSibusQL();
+			$sFilter = $this->m_oFilter->ToOQL();
 			$sHtml .= "
 			<OBJECT classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\"
 				codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0\" 
@@ -330,11 +330,11 @@ class DisplayBlock
 				HEIGHT=\"250\" 
 				id=\"charts\" 
 				ALIGN=\"\">
-			<PARAM NAME=movie VALUE=\"../images/charts.swf?library_path=../images/charts_library&xml_source=".urlencode("../pages/ajax.render.php?operation=pie_chart&group_by=$sGroupBy&encoding=sibusql&filter=".urlencode($sFilter))."\">
+			<PARAM NAME=movie VALUE=\"../images/charts.swf?library_path=../images/charts_library&xml_source=".urlencode("../pages/ajax.render.php?operation=pie_chart&group_by=$sGroupBy&encoding=oql&filter=".urlencode($sFilter))."\">
 			<PARAM NAME=\"quality\" VALUE=\"high\">
 			<PARAM NAME=\"bgcolor\" VALUE=\"#ffffff\">
 			
-			<EMBED src=\"../images/charts.swf?library_path=../images/charts_library&xml_source=".urlencode("../pages/ajax.render.php?operation=pie_chart&group_by=$sGroupBy&encoding=sibusql&filter=".urlencode($sFilter))."\" 
+			<EMBED src=\"../images/charts.swf?library_path=../images/charts_library&xml_source=".urlencode("../pages/ajax.render.php?operation=pie_chart&group_by=$sGroupBy&encoding=oql&filter=".urlencode($sFilter))."\" 
 			       quality=\"high\"
 			       bgcolor=\"#ffffff\"  
 			       WIDTH=\"400\" 
@@ -413,10 +413,10 @@ class DisplayBlock
 			$sChartType = isset($aExtraParams['chart_type']) ? $aExtraParams['chart_type'] : 'pie';
 			$sTitle = isset($aExtraParams['chart_title']) ? $aExtraParams['chart_title'] : '';
 			$sGroupBy = isset($aExtraParams['group_by']) ? $aExtraParams['group_by'] : '';
-			$sFilter = $this->m_oFilter->ToSibusQL();
+			$sFilter = $this->m_oFilter->ToOQL();
 			$sHtml .= "<script>
 			swfobject.embedSWF(\"../images/open-flash-chart.swf\", \"my_chart_{$iChartCounter}\", \"400\", \"400\",\"9.0.0\", \"expressInstall.swf\",
-			{\"data-file\":\"".urlencode("../pages/ajax.render.php?operation=open_flash_chart&params[group_by]=$sGroupBy&params[chart_type]=$sChartType&params[chart_title]=$sTitle&encoding=sibusql&filter=".urlencode($sFilter))."\"});
+			{\"data-file\":\"".urlencode("../pages/ajax.render.php?operation=open_flash_chart&params[group_by]=$sGroupBy&params[chart_type]=$sChartType&params[chart_title]=$sTitle&encoding=oql&filter=".urlencode($sFilter))."\"});
 </script>\n";
 			$sHtml .= "<div id=\"my_chart_{$iChartCounter}\">Here goes the chart</div>\n";
 			$iChartCounter++;
