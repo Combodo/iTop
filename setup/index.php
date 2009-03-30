@@ -294,13 +294,13 @@ function DisplayStep2(setup_web_page $oP, Config $oConfig, $sDBServer, $sDBUser,
 		}
 		else
 		{
-			$aForm[] = array('label' => "<input id=\"current_db\" type=\"radio\" name=\"db_name\" value=\"-1\" /><label for=\"current_db\"> Use the existing database: <input type=\"text\" id=\"current_db_name\" name=\"current_db_name\" value=\"\"  maxlength=\"32\"/></label>");			
+			$aForm[] = array('label' => "<input id=\"current_db\" type=\"radio\" name=\"db_name\" value=\"-1\" /><label for=\"current_db\"> Use the existing database:</label> <input type=\"text\" id=\"current_db_name\" name=\"current_db_name\" value=\"\"  maxlength=\"32\"/>");			
 			$oP->add_ready_script("$('#current_db_name').click( function() { $('#current_db').attr('checked', true); });");
 		}
-		$aForm[] = array('label' => "<input id=\"new_db\" type=\"radio\" name=\"db_name\" value=\"\" /><label for=\"new_db\"> Create a new database: <input type=\"text\" id=\"new_db_name\" name=\"new_db_name\" value=\"\"  maxlength=\"32\"/></label>");
+		$aForm[] = array('label' => "<input id=\"new_db\" type=\"radio\" name=\"db_name\" value=\"\" /><label for=\"new_db\"> Create a new database:</label> <input type=\"text\" id=\"new_db_name\" name=\"new_db_name\" value=\"\"  maxlength=\"32\"/>");
 		$oP->form($aForm);
 
-		$oP->add_ready_script("$('#new_db_name').click( function() { $('#new_db').attr('checked', true); });");
+		$oP->add_ready_script("$('#new_db_name').click( function() { $('#new_db').attr('checked', true); })");
 		$oP->add("</fieldset>\n");
 		$aForm = array();
 		$aForm[] = array('label' => "Add a prefix to all the tables: <input id=\"db_prefix\" type=\"text\" name=\"db_prefix\" value=\"\" maxlength=\"32\"/>");
