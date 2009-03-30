@@ -1,5 +1,6 @@
 <?php
 require_once("../application/nicewebpage.class.inc.php");
+define(INSTALL_LOG_FILE, '../setup.log');
 /**
  * Web page used for displaying the login form
  */
@@ -8,6 +9,8 @@ class setup_web_page extends nice_web_page
     public function __construct($sTitle)
     {
         parent::__construct($sTitle);
+   		$this->add_linked_script("../js/jquery.blockUI.js");
+   		$this->add_linked_script("./setup.js");
         $this->add_style("
 body {
 	background-color: #eee;
@@ -92,21 +95,25 @@ table.formTable {
 	public function info($sText)
 	{
 		$this->add("<p class=\"info\">$sText</p>\n");
+		$this->log("Info - ".$sText);
 	}
 	
 	public function ok($sText)
 	{
 		$this->add("<p class=\"ok\">$sText</p>\n");
+		$this->log("Ok - ".$sText);
 	}
 	
 	public function warning($sText)
 	{
 		$this->add("<p class=\"warning\">$sText</p>\n");
+		$this->log("Warning - ".$sText);
 	}
 	
 	public function error($sText)
 	{
 		$this->add("<p class=\"error\">$sText</p>\n");
+		$this->log("Error - ".$sText);
 	}
 	
 	public function form($aData)
@@ -144,6 +151,17 @@ table.formTable {
 	{
 		$this->s_content = "<div id=\"setup\">{$this->s_content}\n</div>\n";
 		return parent::output();
+	}
+	
+	public function log($sText)
+	{
+		$hLogFile = @fopen(INSTALL_LOG_FILE, 'a');
+		if ($hLogFile !== false)
+		{
+			$sDate = date('Y-m-d H:i:s');
+			fwrite($hLogFile, "$sDate - $sText\n");
+			fclose($hLogFile);
+		}
 	}
 } // End of class
 ?>
