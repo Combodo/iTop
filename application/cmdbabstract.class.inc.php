@@ -291,7 +291,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 	
 	static function DisplaySetAsCSV(web_page $oPage, CMDBObjectSet $oSet, $aParams = array())
 	{
-		$oPage->add($oSet->GetAsHTML($aParams));
+		$oPage->add(self::GetSetAsCSV($oSet, $aParams));
 	}
 	
 	static function GetSetAsCSV(DBObjectSet $oSet, $aParams = array())
@@ -309,7 +309,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		{
 			$aHeader[] = MetaModel::GetLabel($sClassName, $sAttCode);
 		}
-		$sHtml = '#'.$oSet->GetFilter()->ToSibusQL()."\n";
+		$sHtml = '#'.$oSet->GetFilter()->ToOQL()."\n";
 		$sHtml .= implode($sSeparator, $aHeader)."\n";
 		$oSet->Seek(0);
 		while ($oObj = $oSet->Fetch())
