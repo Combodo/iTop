@@ -180,7 +180,7 @@ class Config
 
 	public function SetDBHost($sDBHost)
 	{
-		$this->m_sDBHost = $sHost;
+		$this->m_sDBHost = $sDBHost;
 	}
 	
 	public function SetDBName($sDBName)
