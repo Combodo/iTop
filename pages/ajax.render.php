@@ -87,9 +87,9 @@ switch($operation)
 	$sGroupBy = utils::ReadParam('group_by', '');
 	if ($sFilter != '')
 	{
-		if ($sEncoding == 'sibusql')
+		if ($sEncoding == 'oql')
 		{
-			$oFilter = CMDBSearchFilter::FromSibusQL($sFilter);
+			$oFilter = CMDBSearchFilter::FromOQL($sFilter);
 		}
 		else
 		{
@@ -109,9 +109,9 @@ switch($operation)
 	$aParams = utils::ReadParam('params', array());
 	if ($sFilter != '')
 	{
-		if ($sEncoding == 'sibusql')
+		if ($sEncoding == 'oql')
 		{
-			$oFilter = CMDBSearchFilter::FromSibusQL($sFilter);
+			$oFilter = CMDBSearchFilter::FromOQL($sFilter);
 		}
 		else
 		{

@@ -22,31 +22,40 @@ $oP = null;
 
 if (!empty($sExpression))
 {
-	$oFilter = DBObjectSearch::FromSibusQL($sExpression);
-	if ($oFilter)
+	try
 	{
-		$oSet = new CMDBObjectSet($oFilter);
-		switch($sFormat)
+		$oFilter = DBObjectSearch::FromOQL($sExpression);
+		if ($oFilter)
 		{
-			case 'html':
-			$oP = new web_page("iTop - Export");
-			cmdbAbstractObject::DisplaySet($oP, $oSet);
-			break;
-			
-			case 'csv':
-			$oP = new CSVPage("iTop - Export");
-			cmdbAbstractObject::DisplaySetAsCSV($oP, $oSet);
-			break;
-			
-			case 'xml':
-			$oP = new XMLPage("iTop - Export");
-			cmdbAbstractObject::DisplaySetAsXML($oP, $oSet);
-			break;
-			
-			default:
-			$oP = new web_page("iTop - Export");
-			$oP->add("Unsupported format '$sFormat'. Possible values are: html, csv or xml.");
+			$oSet = new CMDBObjectSet($oFilter);
+			switch($sFormat)
+			{
+				case 'html':
+				$oP = new web_page("iTop - Export");
+				cmdbAbstractObject::DisplaySet($oP, $oSet);
+				break;
+				
+				case 'csv':
+				$oP = new CSVPage("iTop - Export");
+				cmdbAbstractObject::DisplaySetAsCSV($oP, $oSet);
+				break;
+				
+				case 'xml':
+				$oP = new XMLPage("iTop - Export");
+				cmdbAbstractObject::DisplaySetAsXML($oP, $oSet);
+				break;
+				
+				default:
+				$oP = new web_page("iTop - Export");
+				$oP->add("Unsupported format '$sFormat'. Possible values are: html, csv or xml.");
+			}
 		}
+	}
+	catch(Exception $e)
+	{
+		$oP = new web_page("iTop - Export");
+		$oP->p("Error the query can not be executed.");		
+		$oP->p($e->GetHtmlDesc());		
 	}
 }
 if (!$oP)
@@ -55,7 +64,7 @@ if (!$oP)
 	$oP = new web_page("iTop - Export");
 	$oP->p("<strong>General purpose export page.</strong>");
 	$oP->p("<strong>Parameters:</strong>");
-	$oP->p("<ul><li>expression: a SibusQL expression</li>
+	$oP->p("<ul><li>expression: an OQL expression (URL encoded if needed)</li>
 			    <li>format: (optional, default is html) the desired output format. Can be one of 'html', 'csv' or 'xml'</li>
 		    </ul>");
 }
