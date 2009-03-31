@@ -64,9 +64,12 @@ class CMDBSource
 		try
 		{
 			$aDBs = self::ListDB();
-			// Show Database does return the DB names in lower case
-			$sSourceRef = strtolower($sSource);
-			return (in_array($sSourceRef, $aDBs));
+			foreach($aDBs as $sDBName)
+			{
+			// perform a case insensitive test because on Windows the table names become lowercase :-(
+				if (strtolower($sDBName) == strtolower($sSource)) return true;
+			}
+			return false;
 		}
 		catch(Exception $e)
 		{
@@ -395,11 +398,14 @@ class CMDBSource
 	{
 		self::_TablesInfoCacheInit();
 
-		// table names are transformed into lower case
-		// is that 100% specific to innodb and myISAM?
-		$sTableLC = strtolower($sTable);
-
-		if (array_key_exists($sTableLC, self::$m_aTablesInfo)) return self::$m_aTablesInfo[$sTableLC];
+		// perform a case insensitive match because on Windows the table names become lowercase :-(
+		foreach(self::$m_aTablesInfo as $sTableName => $aInfo)
+		{
+			if (strtolower($sTableName) == strtolower($sTable))
+			{
+				return $aInfo;
+			}
+		}
 		return null;
 	}
 }

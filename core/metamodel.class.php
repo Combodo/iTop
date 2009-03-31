@@ -755,8 +755,7 @@ abstract class MetaModel
 			return;
 		}
 
-		// Table names must be lower case
-		self::$m_sTablePrefix = strtolower($sTablePrefix);
+		self::$m_sTablePrefix = $sTablePrefix;
 
 		foreach(get_declared_classes() as $sPHPClass) {
 			if (is_subclass_of($sPHPClass, 'DBObject'))
@@ -1611,20 +1610,6 @@ abstract class MetaModel
 		{
 			if (self::IsAbstract($sClass)) continue;
 
-			// Check that SQL names are lower case (case is forced lowercase in the DB)
-			$sTable = self::DBGetTable($sClass);
-			$sKeyField = self::DBGetKey($sClass);
-			if (!Str::islowcase($sTable))
-			{
-				$aErrors[$sClass][] = "Table name must be lower case (current value is '$sTable')";
-				$aSugFix[$sClass][] = "";
-			}
-			//if (!Str::islowcase($sKeyField))
-			//{
-			//	$aErrors[$sClass][] = "Table name must be lower case (current value is '$sKeyField')";
-			//	$aSugFix[$sClass][] = "";
-			//}
-
 			$sNameAttCode = self::GetNameAttributeCode($sClass);
 			if (empty($sNameAttCode))
 			{
@@ -1860,7 +1845,8 @@ abstract class MetaModel
 		CMDBSource::SelectDB(self::$m_sDBName);
 		foreach (CMDBSource::EnumTables() as $sTable)
 		{
-			if (substr($sTable, 0, strlen(self::$m_sTablePrefix)) == self::$m_sTablePrefix) return true;
+			// perform a case insensitive test because on Windows the table names become lowercase :-(
+			if (strtolower(substr($sTable, 0, strlen(self::$m_sTablePrefix))) == strtolower(self::$m_sTablePrefix)) return true;
 		}
 		return false;
 	}
@@ -1875,7 +1861,8 @@ abstract class MetaModel
 			//           then possibly drop the DB itself (if no table remain)
 			foreach (CMDBSource::EnumTables() as $sTable)
 			{
-				if (substr($sTable, 0, strlen(self::$m_sTablePrefix)) == self::$m_sTablePrefix)
+				// perform a case insensitive test because on Windows the table names become lowercase :-(
+				if (strtolower(substr($sTable, 0, strlen(self::$m_sTablePrefix))) == strtolower(self::$m_sTablePrefix))
 				{
 					CMDBSource::DropTable($sTable);
 				}
