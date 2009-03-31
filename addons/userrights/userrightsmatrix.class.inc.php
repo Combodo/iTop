@@ -174,7 +174,7 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 		$oUser->Set('password', $sAdminPwd);
 		$oUser->Set('userid', 1); // one is for root !
 		$oUser->DBInsert();
-		$this->Setup();
+		$this->SetupUser($oUser, true);
 		return true;
 	}
 
@@ -185,59 +185,90 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 		$oUserSet = new DBObjectSet(DBObjectSearch::FromSibuSQL("UserRightsMatrixUsers"));
 		while ($oUser = $oUserSet->Fetch())
 		{
-			$iUserId = $oUser->GetKey();
-			foreach (MetaModel::GetClasses('bizmodel') as $sClass)
+			SetupUser($oUser);
+		}
+		return true;
+	}
+
+	protected function SetupUser($oUser, $bNewUser = false)
+	{
+		$iUserId = $oUser->GetKey();
+
+		foreach (MetaModel::GetClasses('bizmodel') as $sClass)
+		{
+			foreach (self::$m_aActionCodes as $iActionCode => $sAction)
 			{
-				foreach (self::$m_aActionCodes as $iActionCode => $sAction)
+				if ($bNewUser)
 				{
-					$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixClassGrant AS cg WHERE (cg.class = '$sClass') AND (cg.action = '$sAction') AND (cg.userid = $iUserId)"));
-					if ($oSet->Count() < 1)
+					$bAddCell = true;
+				}
+				else
+				{
+					$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixClassGrant WHERE class = '$sClass' AND action = '$sAction' AND userid = $iUserId)"));
+					$bAddCell = ($oSet->Count() < 1);
+				}
+				if ($bAddCell)
+				{
+					// Create a new entry
+					$oMyClassGrant = MetaModel::NewObject("UserRightsMatrixClassGrant");
+					$oMyClassGrant->Set("userid", $oUser->GetKey());
+					$oMyClassGrant->Set("class", $sClass);
+					$oMyClassGrant->Set("action", $sAction);
+					$oMyClassGrant->Set("permission", "yes");
+					$iId = $oMyClassGrant->DBInsert();
+				}
+			}
+			foreach (MetaModel::EnumStimuli($sClass) as $sStimulusCode => $oStimulus)
+			{
+				if ($bNewUser)
+				{
+					$bAddCell = true;
+				}
+				else
+				{
+					$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixClassStimulusGrant WHERE class = '$sClass' AND stimulus = '$sStimulusCode' AND userid = $iUserId"));
+					$bAddCell = ($oSet->Count() < 1);
+				}
+				if ($bAddCell)
+				{
+					// Create a new entry
+					$oMyClassGrant = MetaModel::NewObject("UserRightsMatrixClassStimulusGrant");
+					$oMyClassGrant->Set("userid", $oUser->GetKey());
+					$oMyClassGrant->Set("class", $sClass);
+					$oMyClassGrant->Set("stimulus", $sStimulusCode);
+					$oMyClassGrant->Set("permission", "yes");
+					$iId = $oMyClassGrant->DBInsert();
+				}
+			}
+			foreach (MetaModel::GetAttributesList($sClass) as $sAttCode)
+			{
+				if ($bNewUser)
+				{
+					$bAddCell = true;
+				}
+				else
+				{
+					$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixAttributeGrant WHERE class = '$sClass' AND attcode = '$sAttCode' AND userid = $iUserId"));
+					$bAddCell = ($oSet->Count() < 1);
+				}
+				if ($bAddCell)
+				{
+					foreach (array('read', 'modify') as $sAction)
 					{
 						// Create a new entry
-						$oMyClassGrant = MetaModel::NewObject("UserRightsMatrixClassGrant");
-						$oMyClassGrant->Set("userid", $oUser->GetKey());
-						$oMyClassGrant->Set("class", $sClass);
-						$oMyClassGrant->Set("action", $sAction);
-						$oMyClassGrant->Set("permission", "yes");
-						$iId = $oMyClassGrant->DBInsert();
-					}
-				}
-				foreach (MetaModel::EnumStimuli($sClass) as $sStimulusCode => $oStimulus)
-				{
-					$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixClassStimulusGrant AS sg WHERE (sg.class = '$sClass') AND (sg.stimulus = '$sStimulusCode') AND (sg.userid = $iUserId)"));
-					if ($oSet->Count() < 1)
-					{
-						// Create a new entry
-						$oMyClassGrant = MetaModel::NewObject("UserRightsMatrixClassStimulusGrant");
-						$oMyClassGrant->Set("userid", $oUser->GetKey());
-						$oMyClassGrant->Set("class", $sClass);
-						$oMyClassGrant->Set("stimulus", $sStimulusCode);
-						$oMyClassGrant->Set("permission", "yes");
-						$iId = $oMyClassGrant->DBInsert();
-					}
-				}
-				foreach (MetaModel::GetAttributesList($sClass) as $sAttCode)
-				{
-					$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixAttributeGrant WHERE (UserRightsMatrixAttributeGrant.class = '$sClass') AND (UserRightsMatrixAttributeGrant.attcode = '$sAttCode') AND (UserRightsMatrixAttributeGrant.userid = $iUserId)"));
-					if ($oSet->Count() < 1)
-					{
-						foreach (array('read', 'modify') as $sAction)
-						{
-							// Create a new entry
-							$oMyAttGrant = MetaModel::NewObject("UserRightsMatrixAttributeGrant");
-							$oMyAttGrant->Set("userid", $oUser->GetKey());
-							$oMyAttGrant->Set("class", $sClass);
-							$oMyAttGrant->Set("attcode", $sAttCode);
-							$oMyAttGrant->Set("action", $sAction);
-							$oMyAttGrant->Set("permission", "yes");
-							$iId = $oMyAttGrant->DBInsert();
-						}
+						$oMyAttGrant = MetaModel::NewObject("UserRightsMatrixAttributeGrant");
+						$oMyAttGrant->Set("userid", $oUser->GetKey());
+						$oMyAttGrant->Set("class", $sClass);
+						$oMyAttGrant->Set("attcode", $sAttCode);
+						$oMyAttGrant->Set("action", $sAction);
+						$oMyAttGrant->Set("permission", "yes");
+						$iId = $oMyAttGrant->DBInsert();
 					}
 				}
 			}
 		}
-		return true;
 	}
+
 
 	public function Init()
 	{
@@ -247,7 +278,7 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 
 	public function CheckCredentials($sUserName, $sPassword)
 	{
-		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixUsers WHERE UserRightsMatrixUsers.login = '$sUserName'"));
+		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixUsers WHERE login = '$sUserName'"));
 		if ($oSet->Count() < 1)
 		{
 		// todo: throw an exception?
@@ -277,7 +308,7 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 		}
 		$sAction = self::$m_aActionCodes[$iActionCode];
 
-		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixClassGrant AS cg WHERE cg.class = '$sClass' AND cg.action = '$sAction' AND cg.login = '$sUserName'"));
+		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixClassGrant WHERE class = '$sClass' AND action = '$sAction' AND login = '$sUserName'"));
 		if ($oSet->Count() < 1)
 		{
 			return UR_ALLOWED_NO;
@@ -327,7 +358,7 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 
 	public function IsStimulusAllowed($sUserName, $sClass, $sStimulusCode, dbObjectSet $aInstances)
 	{
-		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixClassStimulusGrant AS sg WHERE sg.class = '$sClass' AND sg.stimulus = '$sStimulusCode' AND sg.login = '$sUserName'"));
+		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixClassStimulusGrant WHERE class = '$sClass' AND stimulus = '$sStimulusCode' AND login = '$sUserName'"));
 		if ($oSet->Count() < 1)
 		{
 			return UR_ALLOWED_NO;
