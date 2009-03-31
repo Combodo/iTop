@@ -6,10 +6,10 @@ require_once('../application/utils.inc.php');
 require_once('../core/config.class.inc.php');
 require_once('../core/cmdbsource.class.inc.php');
 require_once('./setuppage.class.inc.php');
-define(TMP_CONFIG_FILE, '../tmp-config-itop.php');
-define(FINAL_CONFIG_FILE, '../config-itop.php');
-define(PHP_MIN_VERSION, '5.2.0');
-define(MYSQL_MIN_VERSION, '5.0.0');
+define('TMP_CONFIG_FILE', '../tmp-config-itop.php');
+define('FINAL_CONFIG_FILE', '../config-itop.php');
+define('PHP_MIN_VERSION', '5.2.0');
+define('MYSQL_MIN_VERSION', '5.0.0');
 
 $sOperation = Utils::ReadParam('operation', 'step1');
 $oP = new setup_web_page('iTop configuration wizard');

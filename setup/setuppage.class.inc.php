@@ -1,6 +1,7 @@
 <?php
 require_once("../application/nicewebpage.class.inc.php");
-define(INSTALL_LOG_FILE, '../setup.log');
+define('INSTALL_LOG_FILE', '../setup.log');
+
 /**
  * Web page used for displaying the login form
  */
