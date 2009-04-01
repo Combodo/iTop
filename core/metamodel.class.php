@@ -393,41 +393,6 @@ abstract class MetaModel
 	{
 		return (array_key_exists($sClass, self::$m_aAttribDefs));
 	}
-    /**
-     * isValidModelClass
-     *
-     * From Doctrine ! Un bon exemple d'utilisation de l'API Reflection...
-     *	      
-     * Checks if what is passed is a valid Doctrine_Record
-     *
-     * @param   mixed   $class Can be a string named after the class, an instance of the class, or an instance of the class reflected
-     * @return  boolean
-     */
-    public static function isValidModelClass($class)
-    {
-        if ($class instanceof Doctrine_Record) {
-            $class = get_class($class);
-        }
-
-        if (is_string($class) && class_exists($class)) {
-            $class = new ReflectionClass($class);
-        }
-
-        if ($class instanceof ReflectionClass) {
-            // Skip the following classes
-            // - abstract classes
-            // - not a subclass of Doctrine_Record
-            // - don't have a setTableDefinition method
-            if (!$class->isAbstract() &&
-                $class->isSubClassOf('Doctrine_Record') &&
-                $class->hasMethod('setTableDefinition')) {
-
-                return true;
-            }
-        }
-
-        return false;
-    }
 
 	public static function IsReconcKey($sClass, $sAttCode)
 	{
