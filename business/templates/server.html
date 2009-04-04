@@ -18,6 +18,12 @@
 	<itoptab name="Contacts">
 		<itopblock blockclass="DisplayBlock" type="list" linkage="object_id" encoding="text/sibusql">lnkContactRealObject: object_id = $pkey$</itopblock>
 	</itoptab>
+		<itoptab name="Incidents">
+		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">bizIncidentTicket: PKEY IS ticket_id IN (lnkInfraTicket: infra_id = $pkey$)</itopblock>
+	</itoptab>
+	<itoptab name="Changes">
+		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">bizChangeTicket: PKEY IS ticket_id IN (lnkInfraChangeTicket: infra_id = $pkey$)</itopblock>
+	</itoptab>
 	<itoptab name="Documents">
 		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">lnkDocumentRealObject: object_id = $pkey$</itopblock>
 	</itoptab>

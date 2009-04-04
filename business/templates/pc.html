@@ -18,6 +18,9 @@
 	<itoptab name="Interfaces">
 		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">bizInterface: device_id = $pkey$</itopblock>
 	</itoptab>
+		<itoptab name="Incidents">
+		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">bizIncidentTicket: PKEY IS ticket_id IN (lnkInfraTicket: infra_id = $pkey$)</itopblock>
+	</itoptab>
 	<itoptab name="Documents">
 		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">bizDocument: PKEY IS doc_id IN (lnkDocumentRealObject: object_id = $pkey$)</itopblock>
 	</itoptab>
