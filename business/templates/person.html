@@ -10,9 +10,9 @@
 		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">lnkContactRealObject: object_id = $pkey$</itopblock>
 	</itoptab>
 	<itoptab name="Infrastructure">
-		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">logRealObject: PKEY IS object_id IN (lnkContactRealObject: contact_id = $pkey$)</itopblock>
+		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">lnkContactRealObject: contact_id = $pkey$</itopblock>
 	</itoptab>
 	<itoptab name="Documents">
-		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">bizDocument: PKEY IS doc_id IN (lnkDocumentRealObject: object_id = $pkey$)</itopblock>
+		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">lnkDocumentRealObject: object_id = $pkey$</itopblock>
 	</itoptab>
 </itoptabs>

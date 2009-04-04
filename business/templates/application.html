@@ -7,10 +7,10 @@
 <itopblock blockclass="DisplayBlock" asynchronous="true" type="bare_details" encoding="text/sibusql">bizApplication: pkey = $pkey$</itopblock>
 <itoptabs>
 	<itoptab name="Impacted_Client_Application">
-		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">bizApplication: PKEY IS client_id IN (lnkClientServer: server_id = $pkey$)</itopblock>
+		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">lnkClientServer: server_id = $pkey$</itopblock>
 	</itoptab>
 	<itoptab name="Application_Server">
-		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">bizApplication: PKEY IS server_id IN (lnkClientServer: client_id = $pkey$)</itopblock>
+		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">lnkClientServer: client_id = $pkey$</itopblock>
 	</itoptab>
  	<itoptab name="Contracts">
 		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">lnkInfraContract: infra_id = $pkey$</itopblock>

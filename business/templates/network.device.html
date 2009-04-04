@@ -10,7 +10,7 @@
 		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">bizInterface: device_id = $pkey$</itopblock>
 	</itoptab>
 	<itoptab name="Contacts">
-		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">bizContact: PKEY IS contact_id IN (lnkContactRealObject: object_id = $pkey$)</itopblock>
+		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">lnkContactRealObject: object_id = $pkey$</itopblock>
 	</itoptab>
 
 	<itoptab name="Documents">
