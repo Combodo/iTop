@@ -83,7 +83,6 @@ class bizOrganization extends cmdbAbstractObject
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('name', 'code', 'status', 'parent_id')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('name', 'status', 'parent_id')); // Attributes to be displayed for a list
-		MetaModel::Init_SetZListItems('preview', array('name', 'status', 'parent_id')); // Attributes to be displayed for a preview
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'code', 'status')); // Criteria of the std search form
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'code', 'status')); // Criteria of the advanced search form
@@ -158,7 +157,6 @@ class logRealObject extends cmdbAbstractObject
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'name', 'status', 'org_id')); // Attributes to be displayed for a list
-		MetaModel::Init_SetZListItems('preview', array('name', 'status', 'org_id')); // Attributes to be displayed for a preview
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status')); // Criteria of the std search form
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'org_id')); // Criteria of the advanced search form
@@ -217,7 +215,6 @@ class bizContact extends logRealObject
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'email', 'location_id', 'phone')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'name', 'status', 'org_id', 'email', 'location_id', 'phone')); // Attributes to be displayed for a list
-		MetaModel::Init_SetZListItems('preview', array('name', 'status', 'org_id')); // Attributes to be displayed for a preview
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'email', 'location_id', 'phone')); // Criteria of the std search form
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'org_id')); // Criteria of the advanced search form
@@ -270,7 +267,6 @@ class bizPerson extends bizContact
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('first_name', 'name', 'status', 'org_id', 'email', 'location_id', 'phone', 'employe_number')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('first_name', 'name', 'status', 'org_id', 'email', 'location_id', 'phone')); // Attributes to be displayed for a list
-		MetaModel::Init_SetZListItems('preview', array('name', 'status', 'org_id')); // Attributes to be displayed for a preview
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('first_name', 'name', 'status', 'email', 'location_id', 'phone', 'employe_number')); // Criteria of the std search form
 		MetaModel::Init_SetZListItems('advanced_search', array('first_name', 'name', 'status', 'email', 'location_id', 'phone', 'employe_number')); // Criteria of the advanced search form
@@ -1163,11 +1159,11 @@ class bizServer extends bizDevice
 	
 		// Display lists
 
-  	MetaModel::Init_SetZListItems('details', array('name', 'mgmt_ip','default_gateway','status', 'severity','org_id', 'location_id', 'brand', 'model', 'os_family', 'os_version','serial_number','shipment_number', 'cpu', 'number_of_cpus', 'memory_size', 'hdd_size', 'hdd_free_size')); // Attributes to be displayed for the complete details
+  		MetaModel::Init_SetZListItems('details', array('name', 'mgmt_ip','default_gateway','status', 'severity','org_id', 'location_id', 'brand', 'model', 'os_family', 'os_version','serial_number','shipment_number', 'cpu', 'number_of_cpus', 'memory_size', 'hdd_size', 'hdd_free_size')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('name', 'status','severity', 'org_id', 'location_id', 'brand', 'model', 'os_family', 'os_version')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status','severity', 'brand', 'model', 'os_family', 'location_id')); // Criteria of the std search form
-		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status','brand', 'model', 'os_family', 'os_version', 'location_id', 'cpu', 'number_of_cpu', 'memory_size', 'hdd_size', 'hdd_free_size')); // Criteria of the advanced search form
+		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status','brand', 'model', 'os_family', 'os_version', 'location_id', 'cpu', 'number_of_cpus', 'memory_size', 'hdd_size', 'hdd_free_size')); // Criteria of the advanced search form
 	}
 	
 	function DisplayDetails(web_page $oPage)

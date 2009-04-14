@@ -105,7 +105,7 @@ class bizContract extends cmdbAbstractObject
 		MetaModel::Init_SetZListItems('list', array('name', 'status', 'customer_id', 'provider_id','service_name','service_level','type')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status','service_name','provider_id','team_name','service_level','type')); // Criteria of the std search form
-		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'service_name','provider_id','team_name', 'service_level', 'org_id')); // Criteria of the advanced search form
+		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'service_name','provider_id','team_name', 'service_level', 'customer_id')); // Criteria of the advanced search form
 
 	}
 	
