@@ -547,17 +547,13 @@ class HistoryBlock extends DisplayBlock
 		$aFilterCodes = array_keys(MetaModel::GetClassFilterDefs($this->m_oFilter->GetClass()));
 		foreach($aFilterCodes as $sFilterCode)
 		{
-			$sExternalFilterValue = utils::ReadParam($sFilterCode, '');
 			if (isset($aExtraParams[$sFilterCode]))
 			{
 				$this->m_oFilter->AddCondition($sFilterCode, $aExtraParams[$sFilterCode]); // Use the default 'loose' operator
 			}
-			else if ($sExternalFilterValue != "")
-			{
-				$this->m_oFilter->AddCondition($sFilterCode, $sExternalFilterValue); // Use the default 'loose' operator
-			}
 		}
 		$oSet = new CMDBObjectSet($this->m_oFilter, array('date'=>false));
+		$sHtml .= "<!-- filter: ".($this->m_oFilter->ToOQL())."-->\n";
 		switch($this->m_sStyle)
 		{
 			case 'toggle':

@@ -149,7 +149,7 @@ class DisplayTemplate
 				$oPage->EndCollapsibleSection();
 			break;
 			
-			case 'itopblock':
+			case 'itopblock': // TO DO: Use DisplayBlock::FromTemplate here
 				$sBlockClass = $aAttributes['blockclass'];
 				$sBlockType = $aAttributes['type'];
 				$aExtraParams = array();
@@ -164,6 +164,10 @@ class DisplayTemplate
 					$oFilter = CMDBSearchFilter::FromSibusQL($sContent);
 					break;
 
+					case 'text/oql':
+					$oFilter = CMDBSearchFilter::FromOQL($sContent);
+					break;
+
 					case 'text/serialize':
 					default:
 					$oFilter = CMDBSearchFilter::unserialize($sContent);
@@ -175,7 +179,7 @@ class DisplayTemplate
 			break;
 			
 			default:
-				// Unknown tab, just ignore it or now -- output an HTML comment
+				// Unknown tag, just ignore it or now -- output an HTML comment
 				$oPage->add("<!-- unsupported tag: $sTag -->");
 		}
 	}
