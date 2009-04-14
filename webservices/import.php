@@ -1,5 +1,17 @@
 <?php
 
+/**
+ * Import web service 
+ *
+ * @package     iTopORM
+ * @author      Romain Quetiez <romainquetiez@yahoo.fr>
+ * @author      Denis Flaven <denisflave@free.fr>
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.itop.com
+ * @since       1.0
+ * @version     1.1.1.1 $
+ */
+
 //
 // Test URLs
 //
@@ -20,7 +32,7 @@
 //
 // Known issues
 // - ALMOST impossible to troubleshoot when an externl key has a wrong value
-// - no character escaping in the xml output
+// - no character escaping in the xml output (yes !?!?!)
 // - not outputing xml when a wrong input is given (class, attribute names)
 // - for a bizIncidentTicket you may use the name as the reconciliation key,
 //   but that attribute is in fact recomputed by the application! An error should be raised somewhere
@@ -49,8 +61,7 @@ try
 {
 	$sClass = utils::ReadParam('class', '');
 	$sSep = utils::ReadParam('separator', ';');
-	//$sCSVData = utils::ReadPostedParam('csvdata');
-	$sCSVData = utils::ReadParam('csvdata');
+	$sCSVData = utils::ReadPostedParam('csvdata');
 
 	$oCSVParser = new CSVParser($sCSVData); 
 	$oCSVParser->SetSeparator($sSep);
@@ -82,7 +93,15 @@ try
 
 	$oMyChange = MetaModel::NewObject("CMDBChange");
 	$oMyChange->Set("date", time());
-	$oMyChange->Set("userinfo", "CSV Import Web Service");
+	if (UserRights::GetUser() != UserRights::GetRealUser())
+	{
+		$sUserString = UserRights::GetRealUser()." on behalf of ".UserRights::GetUser();
+	}
+	else
+	{
+		$sUserString = UserRights::GetUser();
+	}
+	$oMyChange->Set("userinfo", $sUserString.' (bulk load by web service)');
 	$iChangeId = $oMyChange->DBInsert();
 
 	$aRes = $oBulk->Process($oMyChange);
