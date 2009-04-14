@@ -91,6 +91,14 @@ table.formTable {
 	color: #333;
 	font-size: 8pt;
 }
+#progress { 
+    border:1px solid #000000; 
+    width: 180px; 
+    height: 20px; 
+    line-height: 20px; 
+    text-align: center;
+    margin: 5px;
+}
 		");
 	}
 	public function info($sText)
@@ -154,7 +162,7 @@ table.formTable {
 		return parent::output();
 	}
 	
-	public function log($sText)
+	public static function log($sText)
 	{
 		$hLogFile = @fopen(INSTALL_LOG_FILE, 'a');
 		if ($hLogFile !== false)

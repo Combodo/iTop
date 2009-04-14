@@ -8,6 +8,7 @@ require_once('../core/cmdbsource.class.inc.php');
 require_once('./setuppage.class.inc.php');
 define('TMP_CONFIG_FILE', '../tmp-config-itop.php');
 define('FINAL_CONFIG_FILE', '../config-itop.php');
+define('SETUP_DATA_DIR', './data');
 define('PHP_MIN_VERSION', '5.2.0');
 define('MYSQL_MIN_VERSION', '5.0.0');
 
@@ -173,60 +174,45 @@ function CreateAdminAccount(setup_web_page $oP, Config $oConfig, $sAdminUser, $s
 }
 
 /**
- * Helper function to load the standard menus into the database
- */
-function LoadStandardMenus(setup_web_page $oP)
+ * Scans the ./data directory for XML files and output them as a Javascript array
+ */ 
+function PopulateDataFilesList(setup_web_page $oP)
 {
-	$oP->log('Info - LoadStandardMenus');
-	
-	$oXml = simplexml_load_file('menus.xml');
-	$aReplicas  = array();
-	foreach($oXml as $oXmlMenu)
+	if ($hDir = @opendir(SETUP_DATA_DIR))
 	{
-		$iPreviousId = (integer)$oXmlMenu['id']; // Mandatory to cast
-		$iParentId = (integer)$oXmlMenu->parent_id; // Mandatory to cast
-		// echo "<p>PreviousId = $iPreviousId; parent_id: $iParentId</p>\n";
-		$oMenuNode = MetaModel::NewObject('menuNode');
-        $oMenuNode->Set('name', $oXmlMenu->name);
-        $oMenuNode->Set('label', $oXmlMenu->label);
-        $oMenuNode->Set('hyperlink', $oXmlMenu->hyperlink);
-        $oMenuNode->Set('template', $oXmlMenu->template);
-        $oMenuNode->Set('rank', $oXmlMenu->rank);
-        $oMenuNode->DBInsert();
-        $iDstId = $oMenuNode->GetKey();
-        $aReplicas[$iPreviousId] = array('dstObj' => $oMenuNode, 'parentId' => $iParentId); 
-	}
-
-	foreach($aReplicas as $iKey => $aReplica)
-	{
-		$iSrcParentId = $aReplica['parentId'];
-		if ($iSrcParentId != 0)
+		$aFilesToLoad = array();
+	    // This is the correct way to loop over the directory. (according the documentation)
+	    while (($sFile = readdir($hDir)) !== false)
 		{
-			if (isset($aReplicas[$iSrcParentId]))
+			$sExtension = pathinfo($sFile, PATHINFO_EXTENSION );
+			if (strcasecmp($sExtension, 'xml') == 0)
 			{
-				$oParentMenu = $aReplicas[$iSrcParentId]['dstObj'];
-				$oMenu = $aReplica['dstObj'];
-				$oMenu->Set('parent_id', $oParentMenu->GetKey());
-				$oMenu->DBUpdate();
+				$aFilesToLoad[] = SETUP_DATA_DIR.'/'.$sFile;
 			}
+	    }
+	    closedir($hDir);
+	    // Load order is important we expect the files to be ordered
+	    // like numbered 1.Organizations.xml 2.Locations.xml , etc.
+	    asort($aFilesToLoad);
+		// Menus can be loaded any time... like here at the end
+	    
+		$oP->add("<script type=\"text/javascript\">\n");
+		$oP->add("function PopulateDataFilesList()\n");
+		$oP->add("{\n");
+		$index = 0;
+	    foreach($aFilesToLoad as $sFile)
+	    {
+			$oP->add("aFilesToLoad[aFilesToLoad.length] = '$sFile';\n");
+			$index++;
 		}
+		$oP->add("}\n");
+		$oP->add("</script>\n");
 	}
-
-	$oP->ok("Standard menus have been created successfully.");
-	return true;
-} 
-
-/**
- * Helper function to load sample data into the database
- */
-function LoadSampleData(setup_web_page $oP)
-{
-	$oP->log('Info - LoadSampleData');
-	
-	$oP->ok("Sample data loaded into the database.");
-	return true;
-} 
-
+	else
+	{
+		$oP->error("Data directory (".SETUP_DATA_DIR.") no found or not readable.");
+	}
+}
 
 /**
  * Display the form for the first step of the configuration wizard
@@ -241,7 +227,7 @@ function DisplayStep1(setup_web_page $oP)
 	{
 		$sRedStar = '<span class="hilite">*</span>';
 		$oP->add("<h2>Step 1: Configuration of the database connection</h2>\n");
-		$oP->add("<form method=\"get\" onSubmit=\"return DoSubmit('Connection to the database...', 1)\">\n");
+		$oP->add("<form method=\"post\" onSubmit=\"return DoSubmit('Connection to the database...', 1)\">\n");
 		// Form goes here
 		$oP->add("<fieldset><legend>Database connection</legend>\n");
 		$aForm = array();
@@ -367,28 +353,34 @@ function DisplayStep4(setup_web_page $oP, Config $oConfig, $sAdminUser, $sAdminP
 	$oP->add("<h1>iTop configuration wizard</h1>\n");
 	$oP->add("<h2>Creation of the administrator account</h2>\n");
 
-	$oP->add("<form method=\"post\" onSubmit=\"return DoSubmit('Finalizing configuration and loading data...', 4);\">\n");
+	$oP->add("<form method=\"post\"\">\n");
 	if (CreateAdminAccount($oP, $oConfig, $sAdminUser, $sAdminPwd))
 	{
 		$oP->add("<h2>Step 4: Loading of sample data</h2>\n");
 		$oP->p("<fieldset><legend> Do you want to load sample data into the database ? </legend>\n");
-		$oP->p("<input type=\"radio\" name=\"sample_data\" checked value=\"yes\"> Yes, for testing purposes, populate the database with sample data.\n");
+		$oP->p("<input type=\"radio\" id=\"sample_data\" name=\"sample_data\" checked value=\"yes\"> Yes, for testing purposes, populate the database with sample data.\n");
 		$oP->p("<input type=\"radio\" name=\"sample_data\" unchecked value=\"no\"> No, this is a production system, I will load real data myself.\n");
 		$oP->p("</fieldset>\n");
-		$oP->add("<input type=\"hidden\" name=\"auth_user\" value=\"$sAdminUser\">\n"); // To be compatible with login page
-		$oP->add("<input type=\"hidden\" name=\"auth_pwd\" value=\"$sAdminPwd\">\n"); // To be compatible with login page
-		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
 		$oP->add("<button onClick=\"window.history.back();\"><< Back</button>\n");
 		$oP->add("&nbsp;&nbsp;&nbsp;&nbsp;\n");
-		$oP->add("<button type=\"submit\">Finish</button>\n");
+		$oP->add("<button onclick=\"DoSubmit('Finalizing configuration and loading data...', 4);\">Finish</button>\n");
 	}
 	else
 	{
 		// Creation failed
 		$oP->add("<button onClick=\"window.history.back();\"><< Back</button>\n");
 	}
-	// Form goes here
+	// End of visible form
 	$oP->add("</form>\n");
+	// Hidden form
+	$oP->add("<form id=\"GoToNextStep\" method=\"post\">\n");
+	$oP->add("<input type=\"hidden\" name=\"auth_user\" value=\"$sAdminUser\">\n"); // To be compatible with login page
+	$oP->add("<input type=\"hidden\" name=\"auth_pwd\" value=\"$sAdminPwd\">\n"); // To be compatible with login page
+	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
+	$oP->add("</form>\n");
+	$oP->add_linked_script('./jquery.progression.js');
+
+	PopulateDataFilesList($oP);
 }
 /**
  * Display the form for the fifth (and final) step of the configuration wizard
@@ -396,7 +388,7 @@ function DisplayStep4(setup_web_page $oP, Config $oConfig, $sAdminUser, $sAdminP
  * 1) Creating the final configuration file
  * 2) Prompting the user to make the file read-only  
  */  
-function DisplayStep5(setup_web_page $oP, Config $oConfig, $sAuthUser, $sAuthPwd, $bLoadSampleData)
+function DisplayStep5(setup_web_page $oP, Config $oConfig, $sAuthUser, $sAuthPwd)
 {
 	try
 	{
@@ -419,11 +411,7 @@ function DisplayStep5(setup_web_page $oP, Config $oConfig, $sAuthUser, $sAuthPwd
 			$oP->add("<h1>iTop configuration wizard</h1>\n");
 			$oP->add("<h2>Configuration completed</h2>\n");
 			$oP->add("<form method=\"get\" action=\"../index.php\">\n");
-			LoadStandardMenus($oP);
-			if ($bLoadSampleData)
-			{
-				LoadSampleData($oP);
-			}
+			$oP->ok("The initialization completed successfully.");
 			// Form goes here
 			$oP->add("<button onClick=\"window.history.back();\"><< Back</button>\n");
 			$oP->add("&nbsp;&nbsp;&nbsp;&nbsp;\n");
@@ -535,10 +523,9 @@ switch($sOperation)
 	case 'step5':
 	$oP->no_cache();
 	$oP->log("Info - ========= Wizard step 5 ========");
-	$bLoadSampleData = (Utils::ReadParam('sample_data', 'no') == 'yes');
 	$sAdminUser = Utils::ReadParam('auth_user');
 	$sAdminPwd = Utils::ReadParam('auth_pwd');
-	DisplayStep5($oP, $oConfig, $sAdminUser, $sAdminPwd, $bLoadSampleData);
+	DisplayStep5($oP, $oConfig, $sAdminUser, $sAdminPwd);
 	break;
 
 	default:

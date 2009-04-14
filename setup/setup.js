@@ -74,10 +74,65 @@ function DoSubmit(sMsg, iStep)
 			bResult = false;
 		}
 		break;
+		
+		case 4:
+		bResult = DoLoadDataAsynchronous();
 	}
 	if (bResult)
 	{
 		$('#setup').block({message: '<img src="../images/indicator.gif">&nbsp;'+sMsg});
 	}
 	return bResult;
+}
+
+var aFilesToLoad = new Array();
+
+function DoLoadDataAsynchronous()
+{
+	// Check if sample data must be loaded, or just the menus
+	aFilesToLoad[aFilesToLoad.length] = './menus.xml'; // First load the menus
+	if (($("#sample_data:checked").length == 1))
+	{
+		PopulateDataFilesList(); // Function created in PHP to get the list of XML files on the server
+	}
+	$('#setup').block({message: '<p>Loading data...<br/><div id=\"progress\">0%</div></p>'});
+	$('#progress').progression( {Current:0, Maximum: 100, aBackgroundImg: 'orange-progress.gif', aTextColor: '#000000'} );
+	LoadNextDataFile('', '');
+	return false; // Stop here for now
+}
+
+var iCounter = 0;
+
+function LoadNextDataFile(sData, sTextStatus)
+{
+	//$("#progress").html(sData);
+	if (iCounter < aFilesToLoad.length)
+	{
+		if (iCounter == (aFilesToLoad.length - 1))
+		{
+			// Last file in the list (or only 1 file), this completes the session
+			sSessionStatus = 'end';
+		}
+		else if (iCounter == 0)
+		{
+			// First file in the list, start the session
+			sSessionStatus = 'start';
+		}
+		else
+		{
+			sSessionStatus = 'continue';
+		}
+		iPercent = Math.round((100.0 * (1+iCounter)) / aFilesToLoad.length);
+		sFileName = aFilesToLoad[iCounter];
+		//alert('Loading file '+sFileName+' ('+iPercent+' %) - '+sSessionStatus);
+		$("#progress").progression({ Current: iPercent });
+		iCounter++;
+		$.get( 'ajax.dataloader.php', { 'file': sFileName, 'percent': iPercent, 'session_status': sSessionStatus }, LoadNextDataFile, 'html');
+	}
+	else
+	{
+		// We're done
+		$('#setup').unblock();
+		$('#GoToNextStep').submit(); // Use the hidden form to navigate to the next step
+	}
 }

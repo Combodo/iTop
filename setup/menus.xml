@@ -170,26 +170,33 @@
 <name>Change Management</name>
 <label>Change Management</label>
 <hyperlink>./UI.php</hyperlink>
-<template>&lt;img src=&quot;/images/imageChange.gif&quot; style=&quot;float:right&quot;&gt;
+<template>&lt;style&gt;
+.dashboard {
+vertical-align:top;
+width:50%;
+border:1px solid #000;
+-moz-border-radius:10px;
+padding:5px;
+text-align:center;
+}
+&lt;/style&gt;
 &lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:24px;&quot;&gt;Changes Overview&lt;/p&gt;
-&lt;table border=&quot;0&quot; padding=&quot;5&quot; class=&quot;layout&quot;&gt;
+&lt;table border=&quot;0&quot; padding=&quot;5&quot;&gt;
 &lt;tr&gt;
-&lt;td&gt;
-&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;&quot;&gt;Change by type&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizChangeTicket&quot; type=&quot;pie_chart&quot; parameters=&quot;group_by:type&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizChangeTicket&lt;/itopblock&gt;
+&lt;td class=&quot;dashboard&quot;&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizChangeTicket&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:bars;group_by:type;chart_title:Changes by type&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizChangeTicket&lt;/itopblock&gt;
 &lt;/td&gt;
-&lt;td&gt;
-&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;&quot;&gt;Changes by status&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizChangeTicket&quot; type=&quot;pie_chart&quot; parameters=&quot;group_by:ticket_status;chart_title:Incidents by status&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizChangeTicket&lt;/itopblock&gt;
+&lt;td class=&quot;dashboard&quot;&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizChangeTicket&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:pie;group_by:ticket_status;chart_title:Changes by status&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizChangeTicket&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;/tr&gt;&lt;tr&gt;
-&lt;td&gt;
+&lt;td class=&quot;dashboard&quot;&gt;
 &lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;&quot;&gt;Changes by Workgroup&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizChangeTicket&quot; type=&quot;count&quot; parameters=&quot;group_by:workgroup_name&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizChangeTicket&lt;/itopblock&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizChangeTicket&quot; type=&quot;count&quot; parameters=&quot;group_by:workgroup_name&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizChangeTicket&lt;/itopblock&gt;
 &lt;/td&gt;
-&lt;td&gt;
+&lt;td class=&quot;dashboard&quot;&gt;
 &lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;&quot;&gt;Changes not yet assigned&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizChangeTicket&quot; type=&quot;list&quot; parameters=&quot;dashboard:true&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizChangeTicket: ticket_status = &apos;New&apos;&lt;/itopblock&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizChangeTicket&quot; type=&quot;list&quot; parameters=&quot;dashboard:true&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizChangeTicket WHERE ticket_status = &apos;New&apos;&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;/tr&gt;
 &lt;/table&gt;
@@ -237,20 +244,20 @@
 &lt;tr&gt;
 &lt;td&gt;
 &lt;p style=&quot;text-align:left; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:18px;&quot;&gt;Servers&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizServer&quot; type=&quot;pie_chart&quot; parameters=&quot;group_by:severity&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizServer&lt;/itopblock&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizServer&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:pie;group_by:severity&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizServer&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;td&gt;
 &lt;p style=&quot;text-align:left; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:18px;&quot;&gt;PCs&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizPC&quot; type=&quot;pie_chart&quot; parameters=&quot;group_by:severity&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizPC&lt;/itopblock&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizPC&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:pie;group_by:severity&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizPC&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;/tr&gt;&lt;tr&gt;
 &lt;td&gt;
 &lt;p style=&quot;text-align:left; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:18px;&quot;&gt;Netword Devices&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizNetworDevice type=&quot;pie_chart&quot; parameters=&quot;group_by:severity&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizNetworkDevice&lt;/itopblock&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizNetworDevice type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:pie;group_by:severity&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizNetworkDevice&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;td&gt;
 &lt;p style=&quot;text-align:left; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:18px;&quot;&gt;Applications&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizApplication&quot; type=&quot;pie_chart&quot; parameters=&quot;group_by:severity&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizApplication&lt;/itopblock&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizApplication&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:pie;group_by:severity&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizApplication&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;/tr&gt;
 &lt;/table&gt;</template>
@@ -275,10 +282,10 @@ td.dashboard {
 &lt;table border=&quot;0&quot; padding=&quot;5&quot; class=&quot;layout&quot;&gt;
 &lt;tr&gt;
 &lt;td class=&quot;dashboard&quot;&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;logInfra&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:pie;group_by:status;chart_title:Infrastructure Objects by status&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT logInfra&lt;/itopblock&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;logInfra&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:pie;group_by:status;chart_title:Infrastructure Objects by status&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;logInfra&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;td class=&quot;dashboard&quot;&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;logInfra&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:bars;group_by:finalclass;chart_title:Infrastructure Objects by type&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT logInfra&lt;/itopblock&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;logInfra&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:bars;group_by:finalclass;chart_title:Infrastructure Objects by type&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;logInfra&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;/tr&gt;&lt;tr&gt;
 &lt;td class=&quot;dashboard&quot;&gt;
@@ -289,7 +296,9 @@ td.dashboard {
 &amp;nbsp;
 &lt;/td&gt;
 &lt;/tr&gt;
-&lt;/table&gt;</template>
+&lt;/table&gt;
+
+</template>
 <rank>2</rank>
 <type>application</type>
 </menuNode>
@@ -327,6 +336,15 @@ td.dashboard {
 <hyperlink>csvimport.php</hyperlink>
 <template></template>
 <rank>998</rank>
+<type>application</type>
+</menuNode>
+<menuNode id="18">
+<parent_id>17</parent_id>
+<name>Data Model</name>
+<label>Overview of the Data Model</label>
+<hyperlink>schema.php</hyperlink>
+<template></template>
+<rank>999</rank>
 <type>application</type>
 </menuNode>
 <menuNode id="12">
@@ -379,27 +397,37 @@ td.dashboard {
 <name>Incident Management</name>
 <label>Incident Management</label>
 <hyperlink>./UI.php</hyperlink>
-<template>&lt;img src=&quot;/images/messagebox_warning.png&quot; style=&quot;float:right&quot;&gt;
+<template>&lt;style&gt;
+.dashboard {
+vertical-align:top;
+width:50%;
+border:1px solid #000;
+-moz-border-radius:10px;
+padding:5px;
+text-align:center;
+}
+&lt;/style&gt;
 &lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:24px;&quot;&gt;Incidents Overview&lt;/p&gt;
-&lt;table border=&quot;0&quot; padding=&quot;5&quot; class=&quot;layout&quot;&gt;
+&lt;table border=&quot;0&quot; padding=&quot;5&quot;&gt;
 &lt;tr&gt;
-&lt;td&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizIncidentTicket&quot; type=&quot;open_flash_chart&quot; parameters=&quot;group_by:severity;chart_title:Incidents by Severity&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizIncidentTicket&lt;/itopblock&gt;
+&lt;td class=&quot;dashboard&quot;&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizIncidentTicket&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:pie;group_by:type;chart_title:Incidents by Type&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizIncidentTicket&lt;/itopblock&gt;
 &lt;/td&gt;
-&lt;td&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizIncidentTicket&quot; type=&quot;open_flash_chart&quot; parameters=&quot;group_by:ticket_status;chart_title:Incidents by status&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizIncidentTicket&lt;/itopblock&gt;
+&lt;td class=&quot;dashboard&quot;&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizIncidentTicket&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:bars;group_by:ticket_status;chart_title:Incidents by status&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizIncidentTicket&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;/tr&gt;&lt;tr&gt;
-&lt;td&gt;
+&lt;td class=&quot;dashboard&quot;&gt;
 &lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;&quot;&gt;Incidents by Workgroup&lt;/p&gt;
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizIncidentTicket&quot; type=&quot;count&quot; parameters=&quot;group_by:workgroup_name&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizIncidentTicket&lt;/itopblock&gt;
 &lt;/td&gt;
-&lt;td&gt;
+&lt;td class=&quot;dashboard&quot;&gt;
 &lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;&quot;&gt;Incidents not yet assigned&lt;/p&gt;
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizIncidentTicket&quot; type=&quot;list&quot; parameters=&quot;dashboard:true&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizIncidentTicket: ticket_status = &apos;New&apos;&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;/tr&gt;
-&lt;/table&gt;</template>
+&lt;/table&gt;
+</template>
 <rank>3</rank>
 <type>application</type>
 </menuNode>
@@ -432,51 +460,6 @@ td.dashboard {
 <rank>5</rank>
 <type>application</type>
 </menuNode>
-<menuNode id="57">
-<parent_id>0</parent_id>
-<name>My Bookmarks</name>
-<label>My Bookmarks</label>
-<hyperlink>UI.php</hyperlink>
-<template>&lt;p&gt;&lt;/p&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;p style=&quot;text-align:center; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:32px;&quot;&gt;My bookmark&lt;/p&gt;
-&lt;p style=&quot;text-align:center; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:14px;&quot;&gt;&lt;i&gt;This section contains my most favorite search&lt;/i&gt;&lt;/p&gt;
-
-
-</template>
-<rank>7</rank>
-<type>user</type>
-</menuNode>
-<menuNode id="71">
-<parent_id>57</parent_id>
-<name>My Cisco Devices</name>
-<label></label>
-<hyperlink>UI.php</hyperlink>
-<template>&lt;div id=&quot;TopPane&quot;&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContact&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizNetworkDevice: org_id = 3 AND brand Contains &apos;Cisco&apos;&lt;/itopblock&gt;
-&lt;/div&gt;
-&lt;div id=&quot;BottomPane&quot;&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContact&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizNetworkDevice: org_id = 3 AND brand Contains &apos;Cisco&apos;&lt;/itopblock&gt;
-&lt;/div&gt;</template>
-<rank>1</rank>
-<type>user</type>
-</menuNode>
-<menuNode id="69">
-<parent_id>57</parent_id>
-<name>My Client Server</name>
-<label>My Client Server</label>
-<hyperlink>UI.php</hyperlink>
-<template>&lt;div id=&quot;TopPane&quot;&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContact&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;lnkClientServer&lt;/itopblock&gt;
-&lt;/div&gt;
-&lt;div id=&quot;BottomPane&quot;&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContact&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;lnkClientServer&lt;/itopblock&gt;
-&lt;/div&gt;</template>
-<rank>1</rank>
-<type>user</type>
-</menuNode>
 <menuNode id="65">
 <parent_id>64</parent_id>
 <name>Negociating contracts</name>
@@ -488,15 +471,6 @@ td.dashboard {
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContact&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizContract: status = &apos;Negotiating&apos;&lt;/itopblock&gt;
 &lt;/div&gt;</template>
 <rank>1</rank>
-<type>application</type>
-</menuNode>
-<menuNode id="18">
-<parent_id>17</parent_id>
-<name>Objects Schema</name>
-<label>Displays the schema of all the objects</label>
-<hyperlink>schema.php</hyperlink>
-<template></template>
-<rank>999</rank>
 <type>application</type>
 </menuNode>
 <menuNode id="68">
@@ -565,28 +539,34 @@ td.dashboard {
 <name>Service Management</name>
 <label>Service Management</label>
 <hyperlink>./UI.php</hyperlink>
-<template>&lt;img src=&quot;/images/erwanContracts.jpg&quot; style=&quot;float:right&quot;&gt;
-&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:24px;&quot;&gt;Contracts Overview&lt;/p&gt;
-&lt;table border=&quot;0&quot; padding=&quot;5&quot; class=&quot;layout&quot;&gt;
+<template>&lt;style&gt;
+.dashboard {
+vertical-align:top;
+width:50%;
+border:1px solid #000;
+-moz-border-radius:10px;
+padding:5px;
+text-align:center;
+}
+&lt;/style&gt;
+&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:24px;&quot;&gt;Changes Overview&lt;/p&gt;
+&lt;table border=&quot;0&quot; padding=&quot;5&quot;&gt;
 &lt;tr&gt;
-&lt;td&gt;
-&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;&quot;&gt;Contracts by Service Level&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContract&quot; type=&quot;pie_chart&quot; parameters=&quot;group_by:service_level&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizContract&lt;/itopblock&gt;
+&lt;td class=&quot;dashboard&quot;&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContract&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:bars;group_by:type;chart_title:Contract by service level&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizContract&lt;/itopblock&gt;
 &lt;/td&gt;
-&lt;td&gt;
-&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;&quot;&gt;Contracts by Status&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContract&quot; type=&quot;pie_chart&quot; parameters=&quot;group_by:status&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizContract&lt;/itopblock&gt;
-&lt;/td&gt;
-&lt;/tr&gt;&lt;tr&gt;
-&lt;td&gt;
-&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;&quot;&gt;Contracts end in 30 days&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContract&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizContract AS C WHERE (TO_DAYS(NOW()) - TO_DAYS(C.end_prod)) &lt; 31&lt;/itopblock&gt;
-&lt;/td&gt;
-&lt;td&gt;
-
+&lt;td class=&quot;dashboard&quot;&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContract&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:pie;group_by:status;chart_title:Contracts by status&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizContract&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;/tr&gt;
-&lt;/table&gt;</template>
+&lt;tr&gt;
+&lt;td class=&quot;dashboard&quot;&gt;
+&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;&quot;&gt;Contracts ending in 30 days&lt;/p&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContract&quot; type=&quot;list&quot; parameters=&quot;dashboard:true&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizContract WHERE bizContract.end_prod = (TO_DAYS(NOW()) + TO_DAYS(30))&lt;/itopblock&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+</template>
 <rank>5</rank>
 <type>application</type>
 </menuNode>
@@ -610,6 +590,21 @@ td.dashboard {
 <hyperlink>UniversalSearch.php</hyperlink>
 <template></template>
 <rank>999</rank>
+<type>application</type>
+</menuNode>
+<menuNode id="76">
+<parent_id>0</parent_id>
+<name>Welcome</name>
+<label>Welcome</label>
+<hyperlink>./UI.php</hyperlink>
+<template>&lt;p&gt;&lt;/p&gt;
+&lt;p&gt;&lt;/p&gt;
+&lt;p style=&quot;text-align:center; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:32px;&quot;&gt;Welcome to iTop&lt;/p&gt;
+&lt;p&gt;&lt;/p&gt;
+&lt;p style=&quot;text-align:center; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:14px;&quot;&gt;&lt;i&gt;Version 0.7&lt;/i&gt;&lt;/p&gt;
+
+</template>
+<rank>1</rank>
 <type>application</type>
 </menuNode>
 </Set>
