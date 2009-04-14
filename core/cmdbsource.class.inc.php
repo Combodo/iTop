@@ -363,20 +363,20 @@ class CMDBSource
 	{
 		self::$m_aTablesInfo = array();
 	}
-	private static function _TablesInfoCacheInit()
+	private static function _TableInfoCacheInit($sTableName)
 	{
-		if (!empty(self::$m_aTablesInfo)) return;
+		if (isset(self::$m_aTablesInfo[strtolower($sTableName)])
+			&& (self::$m_aTablesInfo[strtolower($sTableName)] != null)) return;
 
-		$aTables = self::QueryToArray("SHOW TABLES FROM `".self::$m_sDBName."`", 0);
-		foreach ($aTables as $aTableData)
+		try
 		{
-			$sTableName = $aTableData[0];
+			// Check if the table exists
 			$aFields = self::QueryToArray("SHOW COLUMNS FROM `$sTableName`");
 			// Note: without backticks, you get an error with some table names (e.g. "group")
 			foreach ($aFields as $aFieldData)
 			{
 				$sFieldName = $aFieldData["Field"];
-				self::$m_aTablesInfo[$sTableName]["Fields"][$sFieldName] =
+				self::$m_aTablesInfo[strtolower($sTableName)]["Fields"][$sFieldName] =
 					array
 					(
 						"Name"=>$aFieldData["Field"],
@@ -388,25 +388,31 @@ class CMDBSource
 					);
 			}
 		}
+		catch(MySQLException $e)
+		{
+			// Table does not exist
+			self::$m_aTablesInfo[strtolower($sTableName)] = null;
+		}
 	}
-	public static function EnumTables()
-	{
-		self::_TablesInfoCacheInit();
-		return array_keys(self::$m_aTablesInfo);
-	}
+	//public static function EnumTables()
+	//{
+	//	self::_TablesInfoCacheInit();
+	//	return array_keys(self::$m_aTablesInfo);
+	//}
 	public static function GetTableInfo($sTable)
 	{
-		self::_TablesInfoCacheInit();
+		self::_TableInfoCacheInit($sTable);
 
 		// perform a case insensitive match because on Windows the table names become lowercase :-(
-		foreach(self::$m_aTablesInfo as $sTableName => $aInfo)
-		{
-			if (strtolower($sTableName) == strtolower($sTable))
-			{
-				return $aInfo;
-			}
-		}
-		return null;
+		//foreach(self::$m_aTablesInfo as $sTableName => $aInfo)
+		//{
+		//	if (strtolower($sTableName) == strtolower($sTable))
+		//	{
+		//		return $aInfo;
+		//	}
+		//}
+		return self::$m_aTablesInfo[strtolower($sTable)];
+		//return null;
 	}
 }
 

@@ -1808,12 +1808,11 @@ abstract class MetaModel
 			return false;
 		}
 		CMDBSource::SelectDB(self::$m_sDBName);
-		foreach (CMDBSource::EnumTables() as $sTable)
-		{
-			// perform a case insensitive test because on Windows the table names become lowercase :-(
-			if (strtolower(substr($sTable, 0, strlen(self::$m_sTablePrefix))) == strtolower(self::$m_sTablePrefix)) return true;
-		}
-		return false;
+
+		// If a table matches the prefix, then consider that the database already exists
+		$sSQL = "SHOW TABLES LIKE '".strtolower(self::$m_sTablePrefix)."%' ";
+		$result = CMDBSource::Query($sSQL);
+		return (CMDBSource::NbRows($result) > 0);
 	}
 
 	public static function DBDrop()
