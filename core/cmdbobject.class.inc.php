@@ -194,8 +194,9 @@ abstract class CMDBObject extends DBObject
 	public function DBInsertTracked(CMDBChange $oChange)
 	{
 		self::$m_oCurrChange = $oChange;
-		$this->DBInsertTracked_Internal();
+		$ret = $this->DBInsertTracked_Internal();
 		self::$m_oCurrChange = null;
+		return $ret;
 	}
 
 	protected function DBInsertTracked_Internal()
