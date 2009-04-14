@@ -64,12 +64,19 @@ function GraphvizLifecycle($sClass)
 }
 
 $sClass = utils::ReadParam('class', 'bizIncidentTicket');
-$sDotDescription = GraphvizLifecycle($sClass);
-$sDotFilePath = "F:/iTop/roots/81-iTop/tmp/fsm.dot";
-$rFile = fopen($sDotFilePath, "w");
-fwrite($rFile, $sDotDescription);
-fclose($rFile);
+$sDir = dirname(__FILE__);
+$sImageFilePath = realpath($sDir."/../images/lifecycle/$sClass.png");
+if (!file_exists($sImageFilePath))
+{
+	// create the file with Graphviz
+	$sDotDescription = GraphvizLifecycle($sClass);
+	$sDotFilePath = $sDir."/tmp-lifecycle.dot";
+	$rFile = fopen($sDotFilePath, "w");
+	fwrite($rFile, $sDotDescription);
+	fclose($rFile);
+	exec("/iTop/Graphviz/bin/dot.exe -Tpng < $sDotFilePath > $sImageFilePath");
+}
 
 header('Content-type: image/png');
-passthru("F:/iTop/Graphviz/bin/dot.exe -Tpng < $sDotFilePath");
+echo file_get_contents($sImageFilePath);
 ?>
