@@ -51,7 +51,7 @@ class UserRightsMatrixClassGrant extends DBObject
 		$aParams = array
 		(
 			"category" => "addon/userrights",
-			"name" => "change",
+			"name" => "class_permission",
 			"description" => "permissions on classes",
 			"key_type" => "autoincrement",
 			"key_label" => "",
@@ -86,8 +86,8 @@ class UserRightsMatrixClassStimulusGrant extends DBObject
 		$aParams = array
 		(
 			"category" => "addon/userrights",
-			"name" => "change",
-			"description" => "permissions on classes (stimulus on state machine)",
+			"name" => "stimulus_permission",
+			"description" => "permissions on stimilus in the life cycle of the object",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "",
@@ -121,8 +121,8 @@ class UserRightsMatrixAttributeGrant extends DBObject
 		$aParams = array
 		(
 			"category" => "addon/userrights",
-			"name" => "change",
-			"description" => "permissions on classes",
+			"name" => "attribute_permission",
+			"description" => "permissions at the attributes level",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "",
@@ -185,7 +185,7 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 		$oUserSet = new DBObjectSet(DBObjectSearch::FromSibuSQL("UserRightsMatrixUsers"));
 		while ($oUser = $oUserSet->Fetch())
 		{
-			SetupUser($oUser);
+			$this->SetupUser($oUser);
 		}
 		return true;
 	}
@@ -194,75 +194,78 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 	{
 		$iUserId = $oUser->GetKey();
 
-		foreach (MetaModel::GetClasses('bizmodel') as $sClass)
+		foreach(array('bizmodel', 'application', 'gui', 'core/cmdb') as $sCategory)
 		{
-			foreach (self::$m_aActionCodes as $iActionCode => $sAction)
+			foreach (MetaModel::GetClasses($sCategory) as $sClass)
 			{
-				if ($bNewUser)
+				foreach (self::$m_aActionCodes as $iActionCode => $sAction)
 				{
-					$bAddCell = true;
-				}
-				else
-				{
-					$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixClassGrant WHERE class = '$sClass' AND action = '$sAction' AND userid = $iUserId)"));
-					$bAddCell = ($oSet->Count() < 1);
-				}
-				if ($bAddCell)
-				{
-					// Create a new entry
-					$oMyClassGrant = MetaModel::NewObject("UserRightsMatrixClassGrant");
-					$oMyClassGrant->Set("userid", $oUser->GetKey());
-					$oMyClassGrant->Set("class", $sClass);
-					$oMyClassGrant->Set("action", $sAction);
-					$oMyClassGrant->Set("permission", "yes");
-					$iId = $oMyClassGrant->DBInsert();
-				}
-			}
-			foreach (MetaModel::EnumStimuli($sClass) as $sStimulusCode => $oStimulus)
-			{
-				if ($bNewUser)
-				{
-					$bAddCell = true;
-				}
-				else
-				{
-					$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixClassStimulusGrant WHERE class = '$sClass' AND stimulus = '$sStimulusCode' AND userid = $iUserId"));
-					$bAddCell = ($oSet->Count() < 1);
-				}
-				if ($bAddCell)
-				{
-					// Create a new entry
-					$oMyClassGrant = MetaModel::NewObject("UserRightsMatrixClassStimulusGrant");
-					$oMyClassGrant->Set("userid", $oUser->GetKey());
-					$oMyClassGrant->Set("class", $sClass);
-					$oMyClassGrant->Set("stimulus", $sStimulusCode);
-					$oMyClassGrant->Set("permission", "yes");
-					$iId = $oMyClassGrant->DBInsert();
-				}
-			}
-			foreach (MetaModel::GetAttributesList($sClass) as $sAttCode)
-			{
-				if ($bNewUser)
-				{
-					$bAddCell = true;
-				}
-				else
-				{
-					$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixAttributeGrant WHERE class = '$sClass' AND attcode = '$sAttCode' AND userid = $iUserId"));
-					$bAddCell = ($oSet->Count() < 1);
-				}
-				if ($bAddCell)
-				{
-					foreach (array('read', 'modify') as $sAction)
+					if ($bNewUser)
+					{
+						$bAddCell = true;
+					}
+					else
+					{
+						$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixClassGrant WHERE class = '$sClass' AND action = '$sAction' AND userid = $iUserId"));
+						$bAddCell = ($oSet->Count() < 1);
+					}
+					if ($bAddCell)
 					{
 						// Create a new entry
-						$oMyAttGrant = MetaModel::NewObject("UserRightsMatrixAttributeGrant");
-						$oMyAttGrant->Set("userid", $oUser->GetKey());
-						$oMyAttGrant->Set("class", $sClass);
-						$oMyAttGrant->Set("attcode", $sAttCode);
-						$oMyAttGrant->Set("action", $sAction);
-						$oMyAttGrant->Set("permission", "yes");
-						$iId = $oMyAttGrant->DBInsert();
+						$oMyClassGrant = MetaModel::NewObject("UserRightsMatrixClassGrant");
+						$oMyClassGrant->Set("userid", $oUser->GetKey());
+						$oMyClassGrant->Set("class", $sClass);
+						$oMyClassGrant->Set("action", $sAction);
+						$oMyClassGrant->Set("permission", "yes");
+						$iId = $oMyClassGrant->DBInsert();
+					}
+				}
+				foreach (MetaModel::EnumStimuli($sClass) as $sStimulusCode => $oStimulus)
+				{
+					if ($bNewUser)
+					{
+						$bAddCell = true;
+					}
+					else
+					{
+						$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixClassStimulusGrant WHERE class = '$sClass' AND stimulus = '$sStimulusCode' AND userid = $iUserId"));
+						$bAddCell = ($oSet->Count() < 1);
+					}
+					if ($bAddCell)
+					{
+						// Create a new entry
+						$oMyClassGrant = MetaModel::NewObject("UserRightsMatrixClassStimulusGrant");
+						$oMyClassGrant->Set("userid", $oUser->GetKey());
+						$oMyClassGrant->Set("class", $sClass);
+						$oMyClassGrant->Set("stimulus", $sStimulusCode);
+						$oMyClassGrant->Set("permission", "yes");
+						$iId = $oMyClassGrant->DBInsert();
+					}
+				}
+				foreach (MetaModel::GetAttributesList($sClass) as $sAttCode)
+				{
+					if ($bNewUser)
+					{
+						$bAddCell = true;
+					}
+					else
+					{
+						$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixAttributeGrant WHERE class = '$sClass' AND attcode = '$sAttCode' AND userid = $iUserId"));
+						$bAddCell = ($oSet->Count() < 1);
+					}
+					if ($bAddCell)
+					{
+						foreach (array('read', 'modify') as $sAction)
+						{
+							// Create a new entry
+							$oMyAttGrant = MetaModel::NewObject("UserRightsMatrixAttributeGrant");
+							$oMyAttGrant->Set("userid", $oUser->GetKey());
+							$oMyAttGrant->Set("class", $sClass);
+							$oMyAttGrant->Set("attcode", $sAttCode);
+							$oMyAttGrant->Set("action", $sAction);
+							$oMyAttGrant->Set("permission", "yes");
+							$iId = $oMyAttGrant->DBInsert();
+						}
 					}
 				}
 			}
