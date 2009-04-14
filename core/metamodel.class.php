@@ -2600,14 +2600,6 @@ abstract class MetaModel
 		return self::GetLabel($sLinkClass, $sAttCode);
 	}
 
-	// To be overloaded
-	protected static function MakeHyperLink($sObjClass, $sObjKey, $aAvailableFields)
-	{
-		$sLabel = htmlentities(implode(' / ', $aAvailableFields));
-		$sHint = htmlentities("$sObjClass::$sObjKey");
-		return "<a href=\"./?objclass=$sObjClass&objkey=$sObjKey\" title=\"$sHint\">$sLabel</a>";
-	}
-
 } // class MetaModel
 
 

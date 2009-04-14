@@ -58,12 +58,6 @@ class cmdbObjectHomeMade extends cmdbObject
 		);
 		MetaModel::Init_Params($aParams);
 	}
-	protected static function MakeHyperLink($sObjClass, $sObjKey, $aAvailableFields)
-	{
-		$sLabel = htmlentities(implode(' / ', $aAvailableFields));
-		$sHint = htmlentities("$sObjClass::$sObjKey");
-		return "<a href=\".blahforINFRA/?objclass=$sObjClass&objkey=$sObjKey\" title=\"$sHint\">$sLabel</a>";
-	}
 
 	public static function GetRelationQueries($sRelCode)
 	{

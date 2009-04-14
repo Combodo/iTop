@@ -852,4 +852,105 @@ class TestQueriesOnFarm extends TestBizModel
 	}
 }
 
+
+///////////////////////////////////////////////////////////////////////////
+// Test data load
+///////////////////////////////////////////////////////////////////////////
+
+class TestBulkChangeOnFarm extends TestBizModel
+{
+	static public function GetName()
+	{
+		return 'Farm test - data load';
+	}
+
+	static public function GetDescription()
+	{
+		return 'Bulk load';
+	}
+	
+	static public function GetConfigFile() {return '../config-test-farm.php';}
+
+	protected function DoPrepare()
+	{
+		parent::DoPrepare();
+		$this->ResetDB();
+		MetaModel::DBCheckIntegrity();
+	}
+
+	protected function DoExecute()
+	{
+//			$this->ReportError("Found two different SibuSQL expression out of the (same?) filter: <em>$sExpr1</em> != <em>$sExpr2</em>");
+//			$this->ReportSuccess('Found '.$oSet->Count()." objects of class $sClassName");
+
+		$oParser = new CSVParser("#denomination,hauteur,age
+		suzy,123,2009-01-01
+		chita,456,
+		");
+		$oParser->SetSeparator(',');
+		$aData = $oParser->ToArray(array('_name', '_height', '_birth'));
+		MyHelpers::var_dump_html($aData);
+
+		$oBulk = new BulkChange(
+			'Mammal',
+			$aData,
+			array('name' => '_name', 'height' => '_height', 'birth' => '_birth'),
+			array('name'),
+			array()
+		);
+
+		$oMyChange = MetaModel::NewObject("CMDBChange");
+		$oMyChange->Set("date", time());
+		$oMyChange->Set("userinfo", "Testor");
+		$iChangeId = $oMyChange->DBInsert();
+//		echo "Created new change: $iChangeId</br>";
+
+		echo "<h3>Planned for loading...</h3>";
+		$aRes = $oBulk->Process();
+		print_r($aRes);
+		echo "<h3>Go for loading...</h3>";
+		$aRes = $oBulk->Process($oMyChange);
+		print_r($aRes);
+
+		return true;
+
+		$oRawData = array(
+			'Mammal',
+			array('species', 'sex', 'speed', 'mother', 'father', 'name', 'height', 'birth'),
+			"human,male,23,0,0,romulus,192,1971
+			human,male,23,0,0,remus,154,-50
+			human,male,23,0,0,julius,160,-49
+			human,female,23,0,0,cleopatra,142,-50
+			pig,female,23,0,0,confucius,50,2003"
+		);
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////
+// Test data load
+///////////////////////////////////////////////////////////////////////////
+
+class TestItopWebServices extends TestWebServices
+{
+	static public function GetName()
+	{
+		return 'Itop - web services';
+	}
+
+	static public function GetDescription()
+	{
+		return 'Bulk load and ???';
+	}
+	
+	protected function DoExecute()
+	{
+		$aPostData = array('csvdata' => "name;code
+WorldCompany;WCY
+hp;HP");
+
+		$sRes = self::DoPostRequestAuth('webservices/import.php?class=bizOrganization', $aPostData);
+		echo "<div>$sRes</div>";
+		return true;
+	}
+}
 ?>

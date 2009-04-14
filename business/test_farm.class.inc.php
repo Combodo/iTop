@@ -26,7 +26,7 @@
 //todo MetaModel::RegisterZList("list3", array("description"=>"la variante qui tue", "type"=>"filters"));
 
 
-class Animal extends dbObject
+class Animal extends cmdbObject
 {
 	public static function Init()
 	{
@@ -84,7 +84,7 @@ class Mammal extends Animal
 		MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeString("name", array("label"=>"name", "description"=>"name", "allowed_values"=>null, "sql"=>"name", "default_value"=>"xxx", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeInteger("height", array("label"=>"height", "description"=>"size in centimeters", "allowed_values"=>null, "sql"=>"height", "default_value"=>1, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeDate("birth", array("label"=>"birth date", "description"=>"birth date", "allowed_values"=>null, "sql"=>"birth", "default_value"=>1, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeDate("birth", array("label"=>"birth date", "description"=>"birth date", "allowed_values"=>null, "sql"=>"birth", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("member", array("label"=>"member", "description"=>"leader", "allowed_values"=>null, "sql"=>"member", "targetclass"=>"Group", "is_null_allowed"=>true, "depends_on"=>array())));
 
 // ?		MetaModel::Init_AddAttribute(new AttributeLinkedSet("a2a", array("label"=>"animal to animal", "description"=>"interanimal relations", "depends_on"=>array(), "linked_class"=>"Animal2animal", "ext_key_to_me"=>"animal1", "count_min"=>0, "count_max"=>10, "allowed_values"=>null)));
@@ -176,7 +176,7 @@ class FlyingBird extends Bird
 	}
 }
 
-class AnimalRelation extends dbObject
+class AnimalRelation extends cmdbObject
 {
 	public static function Init()
 	{
@@ -235,7 +235,7 @@ class EaterToEaten extends AnimalRelation
 	}
 }
 
-class Group extends dbObject
+class Group extends cmdbObject
 {
 	public static function Init()
 	{

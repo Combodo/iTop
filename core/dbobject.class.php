@@ -287,6 +287,15 @@ abstract class DBObject
 		return $this->m_aCurrValues[$sAttCode];
 	}
 
+	public function GetOriginal($sAttCode)
+	{
+		if (!array_key_exists($sAttCode, MetaModel::ListAttributeDefs(get_class($this))))
+		{
+			trigger_error("Unknown attribute code '$sAttCode' for the class ".get_class($this), E_USER_ERROR);
+		}
+		return $this->m_aOrigValues[$sAttCode];
+	}
+
 	public function ComputeFields()
 	{
 		if (is_callable(array($this, 'ComputeValues')))
@@ -303,16 +312,6 @@ abstract class DBObject
 			
 			$this->ComputeValues();
 		}
-	}
-
-	public function GetHyperLink($sLabel = "")
-	{
-		if (empty($sLabel))
-		{
-			$sLabel = $this->GetName();
-		}
-		$aAvailableFields = array($sLabel);
-		return call_user_func(array(get_class($this), 'MakeHyperLink'), get_class($this), $this->GetKey(), $aAvailableFields);
 	}
 
 	public function GetAsHTML($sAttCode)
@@ -334,7 +333,15 @@ abstract class DBObject
 			}
 
 			$sTargetClass = $oAtt->GetTargetClass(EXTKEY_ABSOLUTE);
-			return call_user_func(array(get_class($this), 'MakeHyperLink'), $sTargetClass, $this->Get($sAttCode), $aAvailableFields);
+			$aMakeHLink = array(get_class($this), 'MakeHyperLink');
+			if (is_callable($aMakeHLink))
+			{
+				return call_user_func($aMakeHLink, $sTargetClass, $this->Get($sAttCode), $aAvailableFields);
+			}
+			else
+			{
+				return $this->Get($sAttCode);
+			}
 		}
 
 		// That's a standard attribute (might be an ext field or a direct field, etc.)

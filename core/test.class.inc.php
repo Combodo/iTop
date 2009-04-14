@@ -162,6 +162,9 @@ abstract class TestHandler
 	}
 }
 
+
+
+
 /**
  * Test to execute a piece of code (checks if an error occurs)  
  *
@@ -175,6 +178,68 @@ abstract class TestHandler
 abstract class TestFunction extends TestHandler
 {
 	// simply overload DoExecute (temporary)
+}
+
+
+/**
+ * Test to execute a piece of code (checks if an error occurs)  
+ *
+ * @package     iTopORM
+ * @author      Romain Quetiez <romainquetiez@yahoo.fr>
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.itop.com
+ * @since       1.0
+ * @version     $itopversion$
+ */
+abstract class TestWebServices extends TestHandler
+{
+	// simply overload DoExecute (temporary)
+
+	static protected function DoPostRequestAuth($sRelativeUrl, $aData, $sLogin = 'root', $sPassword = '', $sOptionnalHeaders = null)
+	{
+		$aDataAndAuth = $aData;
+		$aDataAndAuth['operation'] = 'login';
+		$aDataAndAuth['auth_user'] = $sLogin;
+		$aDataAndAuth['auth_pwd'] = $sPassword;
+
+		$sHost = $GLOBALS['_SERVER']['HTTP_HOST'];
+		$sUrl = "http://$sHost/$sRelativeUrl";
+
+		return self::DoPostRequest($sUrl, $aDataAndAuth, $sOptionnalHeaders);
+	}
+
+	// Source: http://netevil.org/blog/2006/nov/http-post-from-php-without-curl
+	// originaly named after do_post_request
+	// Partially adapted to our coding conventions
+	static protected function DoPostRequest($sUrl, $aData, $sOptionnalHeaders = null)
+	{
+		// $sOptionnalHeaders is a string containing additional HTTP headers that you would like to send in your request.
+
+		$sData = http_build_query($aData);
+
+		$aParams = array('http' => array(
+								'method' => 'POST',
+								'content' => $sData,
+								'header'=> "Content-type: application/x-www-form-urlencoded\r\nContent-Length: ".strlen($sData)."\r\n",
+								));
+		if ($sOptionnalHeaders !== null)
+		{
+			$aParams['http']['header'] .= $sOptionnalHeaders;
+		}
+		$ctx = stream_context_create($aParams);
+
+		$fp = @fopen($sUrl, 'rb', false, $ctx);
+		if (!$fp)
+		{
+			throw new Exception("Problem with $sUrl, $php_errormsg");
+		}
+		$response = @stream_get_contents($fp);
+		if ($response === false)
+		{
+			throw new Exception("Problem reading data from $sUrl, $php_errormsg");
+		}
+		return $response;
+	}
 }
 
 /**
