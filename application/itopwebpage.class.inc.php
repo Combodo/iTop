@@ -237,7 +237,7 @@ EOF
             }
             echo "</style>\n";
         }
-		echo "<link rel=\"search\" type=\"application/opensearchdescription+xml\" title=\"iTop\" href=\"./opensearch.xml\">\n";
+		echo "<link rel=\"search\" type=\"application/opensearchdescription+xml\" title=\"iTop\" href=\"./opensearch.xml.php\">\n";
         echo "</head>\n";
         echo "<body>\n";
 
