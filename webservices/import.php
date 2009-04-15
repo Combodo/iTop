@@ -13,17 +13,6 @@
  */
 
 //
-// Test URLs
-//
-// http://localhost:81/pages/importcsv_ws.php?class=bizOrganization&csvdata=name;code%0AWorldCompany;WCY
-// http://localhost:81/pages/importcsv_ws.php?class=bizLocation&csvdata=name;org_id;address%0AParis;1;Centre de la Franca
-// http://localhost:81/pages/importcsv_ws.php?class=bizPerson&csvdata=email;name;first_name;org_id;phone%0Ajohn.foo@starac.com;Foo;John;1;+33(1)23456789
-// http://localhost:81/pages/importcsv_ws.php?class=bizTeam&csvdata=name;org_id;location_id%0ASquadra Azzura;1;1
-// http://localhost:81/pages/importcsv_ws.php?class=bizWorkgroup&csvdata=name;org_id;team_id%0Atravailleurs alpins;1;3
-// this one is always creating a new ticket ?!?!?
-// http://localhost:81/pages/importcsv_ws.php?class=bizIncidentTicket&csvdata=name;title;type;customer_id;initial_situation;start_date;next_update;caller_id;workgroup_id;agent_id%0AOVSD-12345;server down;Network;1;server was found down;2009-04-10 12:00;2009-04-10 15:00;2;4;2
-//
-//
 // Known limitations
 // - output still in html, because the errors are not displayed in xml
 // - could not set the external keys by the mean of a reconciliation (the exact key must be given)

@@ -941,15 +941,54 @@ class TestItopWebServices extends TestWebServices
 	{
 		return 'Bulk load and ???';
 	}
+
+	protected function DoExecSingleLoad($aLoadSpec)
+	{
+		$sTitle = 'Load: '.$aLoadSpec['class'];
+		$sClass = $aLoadSpec['class'];
+		$sCsvData = $aLoadSpec['csvdata'];
+
+		$aPostData = array('class' => $sClass, 'csvdata' => $sCsvData);
+		$sRes = self::DoPostRequestAuth('webservices/import.php', $aPostData);
+
+		echo "<div><h3>$sTitle</h3><pre>$sCsvData</pre><div>$sRes</div></div>";
+	}
 	
 	protected function DoExecute()
 	{
-		$aPostData = array('csvdata' => "name;code
-WorldCompany;WCY
-hp;HP");
 
-		$sRes = self::DoPostRequestAuth('webservices/import.php?class=bizOrganization', $aPostData);
-		echo "<div>$sRes</div>";
+		$aLoads = array(
+			array(
+				'class' => 'bizOrganization',
+				'csvdata' => "name;code\nWorldCompany;WCY"
+			),
+			array(
+				'class' => 'bizLocation',
+				'csvdata' => "name;org_id;address\nParis;1;Centre de la Franca"
+			),
+			array(
+				'class' => 'bizPerson',
+				'csvdata' => "email;name;first_name;org_id;phone\njohn.foo@starac.com;Foo;John;1;+33(1)23456789"
+			),
+			array(
+				'class' => 'bizTeam',
+				'csvdata' => "name;org_id;location_id\nSquadra Azzura;1;1"
+			),
+			array(
+				'class' => 'bizWorkgroup',
+				'csvdata' => "name;org_id;team_id\ntravailleurs alpins;1;6"
+			),
+			array(
+				'class' => 'bizIncidentTicket',
+				'csvdata' => "name;title;type;customer_id;initial_situation;start_date;next_update;caller_id;workgroup_id;agent_id\nOVSD-12345;server down;Network;1;server was found down;2009-04-10 12:00;2009-04-10 15:00;3;317;5"
+			),
+		);  
+
+		foreach ($aLoads as $aLoadSpec)
+		{
+			$this->DoExecSingleLoad($aLoadSpec);
+		}
+
 		return true;
 	}
 }

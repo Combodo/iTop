@@ -195,7 +195,7 @@ abstract class TestWebServices extends TestHandler
 {
 	// simply overload DoExecute (temporary)
 
-	static protected function DoPostRequestAuth($sRelativeUrl, $aData, $sLogin = 'root', $sPassword = '', $sOptionnalHeaders = null)
+	static protected function DoPostRequestAuth($sRelativeUrl, $aData, $sLogin = 'admin', $sPassword = '', $sOptionnalHeaders = null)
 	{
 		$aDataAndAuth = $aData;
 		$aDataAndAuth['operation'] = 'login';
