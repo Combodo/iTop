@@ -1,5 +1,5 @@
 <?php
-define ('KEYS_CACHE_FILE', 'keyscache.tmp');
+define ('KEYS_CACHE_FILE', '../keyscache.tmp');
 /**
  * Class to load sets of objects from XML files into the database
  * XML files can be produced by the 'export' web service or by any other means
