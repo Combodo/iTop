@@ -57,8 +57,23 @@ abstract class DBObject
 		{
 			$this->m_aCurrValues[$sAttCode] = $oAttDef->GetDefaultValue();
 			$this->m_aOrigValues[$sAttCode] = null;
-			// ??? $this->m_aLoadedAtt[$sAttCode] = true;
+			if ($oAttDef->IsExternalField())
+			{
+				// This field has to be read from the DB 
+				$this->m_aLoadedAtt[$sAttCode] = false;
+			}
+			else
+			{
+				// No need to trigger a reload for that attribute
+				// Let's consider it as being already fully loaded
+				$this->m_aLoadedAtt[$sAttCode] = true;
+			}
 		}
+	}
+
+	public function IsNew()
+	{
+		return (!$this->m_bIsInDB);
 	}
 
 	// Returns an Id for memory objects
@@ -113,7 +128,7 @@ abstract class DBObject
 		$aRow = MetaModel::MakeSingleRow(get_class($this), $this->m_iKey);
 		if (empty($aRow))
 		{
-			trigger_error("Failed to reload object of class '".get_class($this)."', id = ".$this->m_iKey, E_USER_ERROR);
+			throw new CoreException("Failed to reload object of class '".get_class($this)."', id = ".$this->m_iKey);
 		}
 		$this->FromRow($aRow);
 
@@ -161,14 +176,14 @@ abstract class DBObject
 		if (!array_key_exists($sKeyField, $aRow))
 		{
 			// #@# Bug ?
-			trigger_error("Missing key for class '".get_class($this)."'", E_USER_ERROR);
+			throw new CoreException("Missing key for class '".get_class($this)."'");
 		}
 		else
 		{
 			$iPKey = $aRow[$sKeyField];
 			if (!self::IsValidPKey($iPKey))
 			{
-				trigger_error("An object id must be an integer value ($iPKey)", E_USER_NOTICE);
+				throw new CoreWarning("An object id must be an integer value ($iPKey)");
 			}
 			$this->m_iKey = $iPKey;
 		}
@@ -204,7 +219,7 @@ abstract class DBObject
 	{
 		if (!array_key_exists($sAttCode, MetaModel::ListAttributeDefs(get_class($this))))
 		{
-			trigger_error("Unknown attribute code '$sAttCode' for the class ".get_class($this), E_USER_ERROR);
+			throw new CoreException("Unknown attribute code '$sAttCode' for the class ".get_class($this));
 		}
 		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
 		if ($this->m_bIsInDB && !$this->m_bFullyLoaded)
@@ -216,7 +231,7 @@ abstract class DBObject
 		}
 		if($oAttDef->IsScalar() && !$oAttDef->IsNullAllowed() && is_null($value))
 		{
-			trigger_error("null not allowed for attribute '$sAttCode', setting default value", E_USER_NOTICE);
+			throw new CoreWarning("null not allowed for attribute '$sAttCode', setting default value");
 			$this->m_aCurrValues[$sAttCode] = $oAttDef->GetDefaultValue();
 			return;
 		}
@@ -227,7 +242,7 @@ abstract class DBObject
 			// (useful when building objects in memory and not from a query)
 			if ( (get_class($value) != $oAttDef->GetTargetClass()) && (!is_subclass_of($value, $oAttDef->GetTargetClass())))
 			{
-				trigger_error("Trying to set the value of '$sAttCode', to an object of class '".get_class($value)."', whereas it's an ExtKey to '".$oAttDef->GetTargetClass()."'. Ignored", E_USER_NOTICE);
+				throw new CoreWarning("Trying to set the value of '$sAttCode', to an object of class '".get_class($value)."', whereas it's an ExtKey to '".$oAttDef->GetTargetClass()."'. Ignored");
 				$this->m_aCurrValues[$sAttCode] = $oAttDef->GetDefaultValue();
 			}
 			else
@@ -245,7 +260,7 @@ abstract class DBObject
 		}
 		if(!$oAttDef->IsScalar() && !is_object($value))
 		{
-			trigger_error("scalar not allowed for attribute '$sAttCode', setting default value (empty list)", E_USER_NOTICE);
+			throw new CoreWarning("scalar not allowed for attribute '$sAttCode', setting default value (empty list)");
 			$this->m_aCurrValues[$sAttCode] = $oAttDef->GetDefaultValue();
 			return;
 		}
@@ -253,7 +268,7 @@ abstract class DBObject
 		{
 			if((get_class($value) != 'DBObjectSet') && !is_subclass_of($value, 'DBObjectSet'))
 			{
-				trigger_error("expecting a set of persistent objects (found a '".get_class($value)."'), setting default value (empty list)", E_USER_NOTICE);
+				throw new CoreWarning("expecting a set of persistent objects (found a '".get_class($value)."'), setting default value (empty list)");
 				$this->m_aCurrValues[$sAttCode] = $oAttDef->GetDefaultValue();
 				return;
 			}
@@ -264,7 +279,7 @@ abstract class DBObject
 			// not working fine :-(   if (!is_subclass_of($sSetClass, $sLinkClass))
 			if ($sSetClass != $sLinkClass)
 			{
-				trigger_error("expecting a set of '$sLinkClass' objects (found a set of '$sSetClass'), setting default value (empty list)", E_USER_NOTICE);
+				throw new CoreWarning("expecting a set of '$sLinkClass' objects (found a set of '$sSetClass'), setting default value (empty list)");
 				$this->m_aCurrValues[$sAttCode] = $oAttDef->GetDefaultValue();
 				return;
 			}
@@ -276,7 +291,7 @@ abstract class DBObject
 	{
 		if (!array_key_exists($sAttCode, MetaModel::ListAttributeDefs(get_class($this))))
 		{
-			trigger_error("Unknown attribute code '$sAttCode' for the class ".get_class($this), E_USER_ERROR);
+			throw new CoreException("Unknown attribute code '$sAttCode' for the class ".get_class($this));
 		}
 		if ($this->m_bIsInDB && !$this->m_aLoadedAtt[$sAttCode])
 		{
@@ -291,7 +306,7 @@ abstract class DBObject
 	{
 		if (!array_key_exists($sAttCode, MetaModel::ListAttributeDefs(get_class($this))))
 		{
-			trigger_error("Unknown attribute code '$sAttCode' for the class ".get_class($this), E_USER_ERROR);
+			throw new CoreException("Unknown attribute code '$sAttCode' for the class ".get_class($this));
 		}
 		return $this->m_aOrigValues[$sAttCode];
 	}
@@ -374,12 +389,12 @@ abstract class DBObject
 	{
 		if (!self::IsValidPKey($iNewKey))
 		{
-			trigger_error("An object id must be an integer value ($iNewKey)", E_USER_ERROR);
+			throw new CoreException("An object id must be an integer value ($iNewKey)");
 		}
 		
 		if ($this->m_bIsInDB && !empty($this->m_iKey) && ($this->m_iKey != $iNewKey))
 		{
-			trigger_error("Changing the key ({$this->m_iKey} to $iNewKey) on an object (class {".get_class($this).") wich already exists in the Database", E_USER_NOTICE);
+			throw new CoreException("Changing the key ({$this->m_iKey} to $iNewKey) on an object (class {".get_class($this).") wich already exists in the Database");
 		}
 		$this->m_iKey = $iNewKey;
 	}
@@ -431,15 +446,27 @@ abstract class DBObject
 	// check if the given (or current) value is suitable for the attribute
 	public function CheckValue($sAttCode, $value = null)
 	{
+		if (!is_null($value))
+		{
+			$toCheck = $value;
+		}
+		else
+		{
+			$toCheck = $this->Get($sAttCode);
+		}
+
 		$oAtt = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
 		if ($oAtt->IsExternalKey())
 		{
-			if (!$oAtt->IsNullAllowed() || ($this->Get($sAttCode) != 0) )
+			if (!$oAtt->IsNullAllowed() || ($toCheck != 0) )
 			{
-				$oTargetObj = MetaModel::GetObject($oAtt->GetTargetClass(), $this->Get($sAttCode));
-				if (!$oTargetObj)
+				try
 				{
-					echo "Invalid value (".$this->Get($sAttCode).") for ExtKey $sAttCode.";
+					$oTargetObj = MetaModel::GetObject($oAtt->GetTargetClass(), $toCheck);
+					return true;
+				}
+				catch (CoreException $e)
+				{
 					return false;
 				}
 			}
@@ -580,11 +607,11 @@ abstract class DBObject
 	
 	// Insert of record for the new object into the database
 	// Returns the key of the newly created object
-	public function DBInsert()
+	public function DBInsertNoReload()
 	{
 		if ($this->m_bIsInDB)
 		{
-			trigger_error("The object already exists into the Database, you may want to use the clone function", E_USER_ERROR);
+			throw new CoreException("The object already exists into the Database, you may want to use the clone function");
 		}
 
 		$sClass = get_class($this);
@@ -604,7 +631,7 @@ abstract class DBObject
 		{
 			if (empty($this->m_iKey))
 			{
-				trigger_error("Missing key for the object to write - This class is supposed to have a user defined key, not an autonumber", E_USER_NOTICE);
+				throw new CoreWarning("Missing key for the object to write - This class is supposed to have a user defined key, not an autonumber");
 			}
 		}
 
@@ -629,6 +656,12 @@ abstract class DBObject
 
 		// Reload to update the external attributes
 		$this->m_bIsInDB = true;
+		return $this->m_iKey;
+	}
+
+	public function DBInsert()
+	{
+		$this->DBInsertNoReload();
 		$this->Reload();
 		return $this->m_iKey;
 	}
@@ -647,12 +680,12 @@ abstract class DBObject
 	{
 		if (!$this->m_bIsInDB)
 		{
-			trigger_error("DBUpdate: could not update a newly created object, please call DBInsert instead", E_USER_ERROR);
+			throw new CoreException("DBUpdate: could not update a newly created object, please call DBInsert instead");
 		}
 		$aChanges = $this->ListChanges();
 		if (count($aChanges) == 0)
 		{
-			trigger_error("Attempting to update an unchanged object", E_USER_NOTICE);
+			throw new CoreWarning("Attempting to update an unchanged object");
 			return;
 		}
 		$bHasANewExternalKeyValue = false;
@@ -741,7 +774,7 @@ abstract class DBObject
 
 			if (!is_callable($aActionCallSpec))
 			{
-				trigger_error("Unable to call action: ".get_class($this)."::$sActionHandler", E_USER_ERROR);
+				throw new CoreException("Unable to call action: ".get_class($this)."::$sActionHandler");
 				return;
 			}
 			$bRet = call_user_func($aActionCallSpec, $sStimulusCode);

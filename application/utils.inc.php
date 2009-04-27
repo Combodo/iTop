@@ -39,7 +39,7 @@ class utils
 		self::$m_aConfig = array();
 
 		$sConfigContents = self::ReadFromFile(CONFIGFILE);
-		if (!$sConfigContents) trigger_error("Could not load file ".CONFIGFILE);
+		if (!$sConfigContents) throw new Exception("Could not load file ".CONFIGFILE);
 
 		foreach (explode("\n", $sConfigContents) as $sLine)
 		{

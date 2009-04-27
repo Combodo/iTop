@@ -170,11 +170,6 @@ class DBObjectSet
 		$this->m_aId2Row[$oObject->GetKey()] = $iNextPos;
 	}
 
-	public function RemoveObject($iRow)
-	{
-		trigger_error("#@# not implemented! ca sert a quoi ?");
-	}
-
 	public function AddObjectArray($aObjects)
 	{
 		foreach ($aObjects as $oObj)
@@ -187,7 +182,7 @@ class DBObjectSet
 	{
 		if ($this->GetRootClass() != $oObjectSet->GetRootClass())
 		{
-			trigger_error("Could not merge two objects sets if they don't have the same root class");
+			throw new CoreException("Could not merge two objects sets if they don't have the same root class");
 		}
 		if (!$this->m_bLoaded) $this->Load();
 
@@ -202,7 +197,7 @@ class DBObjectSet
 	{
 		if ($this->GetRootClass() != $oObjectSet->GetRootClass())
 		{
-			trigger_error("Could not 'intersect' two objects sets if they don't have the same root class");
+			throw new CoreException("Could not 'intersect' two objects sets if they don't have the same root class");
 		}
 		if (!$this->m_bLoaded) $this->Load();
 
@@ -223,7 +218,7 @@ class DBObjectSet
 	{
 		if ($this->GetRootClass() != $oObjectSet->GetRootClass())
 		{
-			trigger_error("Could not 'delta' two objects sets if they don't have the same root class");
+			throw new CoreException("Could not 'delta' two objects sets if they don't have the same root class");
 		}
 		if (!$this->m_bLoaded) $this->Load();
 

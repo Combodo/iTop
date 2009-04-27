@@ -108,7 +108,7 @@ abstract class MetaModel
 		// (it is not possible to guess it when called as myderived::...)
 		if (!array_key_exists($sClass, self::$m_aClassParams))
 		{
-			trigger_error("Unknown class '$sClass', expected a value in {".implode(', ', array_keys(self::$m_aClassParams))."}", E_USER_ERROR);
+			throw new CoreException("Unknown class '$sClass', expected a value in {".implode(', ', array_keys(self::$m_aClassParams))."}");
 		}
 	}
 
@@ -685,7 +685,7 @@ abstract class MetaModel
 		{
 			if (!array_key_exists($sParamName, $aListInfo))
 			{
-				trigger_error("Declaration of list $sListCode - missing parameter $sParamName", E_USER_ERROR);
+				throw new CoreException("Declaration of list $sListCode - missing parameter $sParamName");
 			}
 		}
 		
@@ -704,7 +704,7 @@ abstract class MetaModel
 		{
 			if (!array_key_exists($sParamName, $aRelationInfo))
 			{
-				trigger_error("Declaration of relation $sRelCode - missing parameter $sParamName", E_USER_ERROR);
+				throw new CoreException("Declaration of relation $sRelCode - missing parameter $sParamName");
 			}
 		}
 		
@@ -716,7 +716,7 @@ abstract class MetaModel
 	{
 		if (count(self::GetClasses()) > 0)
 		{
-			trigger_error("InitClasses should not be called more than once -skipped");
+			throw new CoreException("InitClasses should not be called more than once -skipped");
 			return;
 		}
 
@@ -769,11 +769,11 @@ abstract class MetaModel
 			//
 			if (array_key_exists('id', self::$m_aAttribDefs[$sClass]))
 			{
-				trigger_error("Class $sClass, 'id' is a reserved keyword, it cannot be used as an attribute code", E_USER_ERROR);
+				throw new CoreException("Class $sClass, 'id' is a reserved keyword, it cannot be used as an attribute code");
 			}
 			if (array_key_exists('id', self::$m_aFilterDefs[$sClass]))
 			{
-				trigger_error("Class $sClass, 'id' is a reserved keyword, it cannot be used as a filter code", E_USER_ERROR);
+				throw new CoreException("Class $sClass, 'id' is a reserved keyword, it cannot be used as a filter code");
 			}
 			$oFilter = new FilterPrivateKey('id', array('id_field' => self::DBGetKey($sClass)));
 			self::$m_aFilterDefs[$sClass]['id'] = $oFilter;
@@ -785,11 +785,11 @@ abstract class MetaModel
 			{
 				if (array_key_exists('finalclass', self::$m_aAttribDefs[$sClass]))
 				{
-					trigger_error("Class $sClass, 'finalclass' is a reserved keyword, it cannot be used as an attribute code", E_USER_ERROR);
+					throw new CoreException("Class $sClass, 'finalclass' is a reserved keyword, it cannot be used as an attribute code");
 				}
 				if (array_key_exists('finalclass', self::$m_aFilterDefs[$sClass]))
 				{
-					trigger_error("Class $sClass, 'finalclass' is a reserved keyword, it cannot be used as a filter code", E_USER_ERROR);
+					throw new CoreException("Class $sClass, 'finalclass' is a reserved keyword, it cannot be used as a filter code");
 				}
 				$sClassAttCode = 'finalclass';
 				$sRootClass = self::GetRootClass($sClass);
@@ -846,14 +846,14 @@ abstract class MetaModel
 		$sClass = self::GetCallersPHPClass("Init");
 		if (!array_key_exists("name", $aParams))
 		{
-			trigger_error("Declaration of class $sClass: missing name ({$aMandatParams["name"]})", E_USER_ERROR);
+			throw new CoreException("Declaration of class $sClass: missing name ({$aMandatParams["name"]})");
 		}
 
 		foreach($aMandatParams as $sParamName=>$sParamDesc)
 		{
 			if (!array_key_exists($sParamName, $aParams))
 			{
-				trigger_error("Declaration of class $sClass - missing parameter $sParamName", E_USER_ERROR);
+				throw new CoreException("Declaration of class $sClass - missing parameter $sParamName");
 			}
 		}
 		
@@ -938,7 +938,7 @@ abstract class MetaModel
 		
 		if (!self::IsValidAttCode($sTargetClass, $sAttCode))
 		{
-			trigger_error("Could not overload '$sAttCode', expecting a code from {".implode(", ", self::GetAttributesList($sTargetClass))."}");
+			throw new CoreException("Could not overload '$sAttCode', expecting a code from {".implode(", ", self::GetAttributesList($sTargetClass))."}");
 		}
 		self::$m_aAttribDefs[$sTargetClass][$sAttCode]->OverloadParams($aParams);
 	}
@@ -1000,7 +1000,7 @@ abstract class MetaModel
 		
 		if (!self::IsValidFilterCode($sTargetClass, $sFltCode))
 		{
-			trigger_error("Could not overload '$sFltCode', expecting a code from {".implode(", ", self::GetFiltersList($sTargetClass))."}");
+			throw new CoreException("Could not overload '$sFltCode', expecting a code from {".implode(", ", self::GetFiltersList($sTargetClass))."}");
 		}
 		self::$m_aFilterDefs[$sTargetClass][$sFltCode]->OverloadParams($aParams);
 	}
@@ -1150,7 +1150,7 @@ abstract class MetaModel
 
 		if (count(self::$m_Category2Class) > 0)
 		{
-			trigger_error("unkown class category '$sCategory', expecting a value in {".implode(', ', array_keys(self::$m_Category2Class))."}");
+			throw new CoreException("unkown class category '$sCategory', expecting a value in {".implode(', ', array_keys(self::$m_Category2Class))."}");
 		}
 		return array();
 	}
@@ -1175,7 +1175,7 @@ abstract class MetaModel
 			MyHelpers::CheckValueInArray('field name in ORDER BY spec', $sFieldAlias, self::GetAttributesList($oFilter->GetClass()));
 			if (!is_bool($bAscending))
 			{
-				trigger_error("Wrong direction in ORDER BY spec, found '$bAscending' and expecting a boolean value");
+				throw new CoreException("Wrong direction in ORDER BY spec, found '$bAscending' and expecting a boolean value");
 			}
 		}
 		if (empty($aOrderBy))
@@ -1565,8 +1565,7 @@ abstract class MetaModel
 	{
 		if (count(self::GetClasses()) == 0)
 		{
-			trigger_error("MetaModel::InitClasses() has not been called, or no class has been declared ?!?!");
-			exit;
+			throw new CoreException("MetaModel::InitClasses() has not been called, or no class has been declared ?!?!");
 		}
 
 		$aErrors = array();
@@ -2229,7 +2228,7 @@ abstract class MetaModel
 			}
 			if ($iPlannedDel > $iMaxDel)
 			{
-				trigger_error("DB Integrity Check safety net - Exceeding the limit of $iMaxDel planned record deletion", E_USER_WARNING);
+				throw new CoreWarning("DB Integrity Check safety net - Exceeding the limit of $iMaxDel planned record deletion");
 				break;
 			}
 			// Safety net #2 - limit the iterations
@@ -2238,7 +2237,7 @@ abstract class MetaModel
 			$iMaxLoops = 10;
 			if ($iLoopCount > $iMaxLoops)
 			{
-				trigger_error("DB Integrity Check safety net - Reached the limit of $iMaxLoops loops", E_USER_WARNING);
+				throw new CoreWarning("DB Integrity Check safety net - Reached the limit of $iMaxLoops loops");
 				break;
 			}
 		}
@@ -2410,21 +2409,50 @@ abstract class MetaModel
 	// Building an object
 	//
 	//
+	private static $aQueryCacheGetObject = array();
+	private static $aQueryCacheGetObjectHits = array();
+	public static function GetQueryCacheStatus()
+	{
+		$aRes = array();
+		$iTotalHits = 0;
+		foreach(self::$aQueryCacheGetObjectHits as $sClass => $iHits)
+		{
+			$aRes[] = "$sClass: $iHits";
+			$iTotalHits += $iHits;
+		}
+		return $iTotalHits.' ('.implode(', ', $aRes).')';
+	}
 
 	public static function MakeSingleRow($sClass, $iKey)
 	{
-		$oFilter = new DBObjectSearch($sClass);
-		$oFilter->AddCondition('id', $iKey, '=');
-
-		$sSQL = self::MakeSelectQuery($oFilter);
-		//echo "$sSQL</br>\n";
+		if (!array_key_exists($sClass, self::$aQueryCacheGetObject))
+		{
+			// NOTE: Quick and VERY dirty caching mechanism which relies on
+			//       the fact that the string '987654321' will never appear in the
+			//       standard query
+			//       This will be replaced for sure with a prepared statement
+			//       or a view... next optimization to come! 
+			$oFilter = new DBObjectSearch($sClass);
+			$oFilter->AddCondition('id', 987654321, '=');
+	
+			$sSQL = self::MakeSelectQuery($oFilter);
+			self::$aQueryCacheGetObject[$sClass] = $sSQL;
+			self::$aQueryCacheGetObjectHits[$sClass] = 0;
+		}
+		else
+		{
+			$sSQL = self::$aQueryCacheGetObject[$sClass];
+			self::$aQueryCacheGetObjectHits[$sClass] += 1;
+//			echo " -load $sClass/$iKey- ".self::$aQueryCacheGetObjectHits[$sClass]."<br/>\n";
+		}
+		$sSQL = str_replace('987654321', CMDBSource::Quote($iKey), $sSQL);
 		$res = CMDBSource::Query($sSQL);
 		
 		$aRow = CMDBSource::FetchArray($res);
 		CMDBSource::FreeResult($res);
 		if (empty($aRow))
 		{
-			trigger_error("No result for the single row query: '$sSQL'");
+			throw new CoreException("No result for the single row query: '$sSQL'");
 		}
 		return $aRow;
 	}
@@ -2446,7 +2474,7 @@ abstract class MetaModel
 			// @#@ possible improvement: check that the class is valid !
 			$sRootClass = self::GetRootClass($sClass);
 			$sFinalClassField = self::DBGetClassField($sRootClass);
-			trigger_error("Empty class name for object $sClass::{$aRow["id"]} (root class '$sRootClass', field '{$sFinalClassField}' is empty)", E_USER_ERROR);
+			throw new CoreException("Empty class name for object $sClass::{$aRow["id"]} (root class '$sRootClass', field '{$sFinalClassField}' is empty)");
 		}
 		else
 		{
@@ -2462,7 +2490,6 @@ abstract class MetaModel
 		$aRow = self::MakeSingleRow($sClass, $iKey);
 		if (empty($aRow))
 		{
-			// #@# exception ?
 			return null;
 		}
 		return self::GetObjectByRow($sClass, $aRow);

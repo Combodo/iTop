@@ -17,165 +17,6 @@ $oPage = new iTopWebPage("iTop - Bulk import", $currentOrganization);
 define ('EXTKEY_SEP', '::::');
 define ('EXTKEY_LABELSEP', ' -> ');
 
-class CSVParser
-{
-	private $m_sCSVData;
-	private $m_sSep;
-	private $m_iSkip;
-
-	public function __construct($sTxt)
-	{
-		$this->m_sCSVData = $sTxt;
-	}
-
-	public function SetSeparator($sSep)
-	{
-		$this->m_sSep = $sSep;
-	}
-	public function GetSeparator()
-	{
-		return $this->m_sSep;
-	}
-
-	public function SetSkipLines($iSkip)
-	{
-		$this->m_iSkip = $iSkip;
-	}
-	public function GetSkipLines()
-	{
-		return $this->m_iSkip;
-	}
-
-	public function GuessSeparator()
-	{
-		// Note: skip the first line anyway
-	
-		$aKnownSeps = array(';', ',', "\t"); // Use double quote for special chars!!!
-		$aStatsBySeparator = array();
-		foreach ($aKnownSeps as $sSep)
-		{
-			$aStatsBySeparator[$sSep] = array();
-		}
-	
-		foreach(split("\n", $this->m_sCSVData) as $sLine)
-		{
-			$sLine = trim($sLine);
-			if (substr($sLine, 0, 1) == '#') continue;
-			if (empty($sLine)) continue;
-	
-			$aLineCharsCount = count_chars($sLine, 0);
-			foreach ($aKnownSeps as $sSep)
-			{
-				$aStatsBySeparator[$sSep][] = $aLineCharsCount[ord($sSep)];
-			}
-		}
-	
-		// Default to ','
-		$this->SetSeparator(",");
-
-		foreach ($aKnownSeps as $sSep)
-		{
-			// Note: this function is NOT available :-( 
-			// stats_variance($aStatsBySeparator[$sSep]);
-			$iMin = min($aStatsBySeparator[$sSep]);
-			$iMax = max($aStatsBySeparator[$sSep]);
-			if (($iMin == $iMax) && ($iMax > 0))
-			{
-				$this->SetSeparator($sSep);
-				break;
-			}
-		}
-		return $this->GetSeparator();
-	}
-
-	public function GuessSkipLines()
-	{
-		// Take the FIRST -valuable- LINE ONLY
-		// If there is a number, then for sure this is not a header line
-		// Otherwise, we may consider that there is one line to skip
-		foreach(split("\n", $this->m_sCSVData) as $sLine)
-		{
-			$sLine = trim($sLine);
-			if (substr($sLine, 0, 1) == '#') continue;
-			if (empty($sLine)) continue;
-	
-			foreach (split($this->m_sSep, $sLine) as $value)
-			{
-				if (is_numeric($value))
-				{
-					$this->SetSkipLines(0);
-					return 0;
-				}
-			}
-			$this->SetSkipLines(1);
-			return 1;
-		}
-	}
-
-	function ToArray($aFieldMap, $iMax = 0)
-	{
-		// $aFieldMap is an array of col_index=>col_name
-		// $iMax is a limit
-		$aRes = array();
-	
-		$iCount = 0;
-		$iSkipped = 0;
-		foreach(split("\n", $this->m_sCSVData) as $sLine)
-		{
-			$sLine = trim($sLine);
-			if (substr($sLine, 0, 1) == '#') continue;
-			if (empty($sLine)) continue;
-	
-			if ($iSkipped < $this->m_iSkip)
-			{
-				$iSkipped++;
-				continue;
-			}
-	
-			foreach (split($this->m_sSep, $sLine) as $iCol=>$sValue)
-			{
-				if (is_array($aFieldMap)) $sColRef = $aFieldMap[$iCol];
-				else                      $sColRef = "field$iCol";
-				$aRes[$iCount][$sColRef] = $sValue;
-			}
-	
-			$iCount++;
-			if (($iMax > 0) && ($iCount >= $iMax)) break;
-		}
-		return $aRes;
-	}
-
-	public function ListFields()
-	{
-		// Take the first valuable line
-		foreach(split("\n", $this->m_sCSVData) as $sLine)
-		{
-			$sLine = trim($sLine);
-			if (substr($sLine, 0, 1) == '#') continue;
-			if (empty($sLine)) continue;
-			// We've got the first valuable line, that's it!
-			break;
-		}
-
-		$aRet = array();
-		foreach (split($this->m_sSep, $sLine) as $iCol=>$value)
-		{
-			if ($this->m_iSkip == 0)
-			{
-				// No header to help us
-				$sLabel = "field $iCol";
-			}
-			else
-			{
-				$sLabel = "$value";
-			}
-			$aRet[] = $sLabel;
-		}
-		return $aRet;
-	}
-}
-
-
 ///////////////////////////////////////////////////////////////////////////////
 // External key/field naming conventions (sharing the naming space with std attributes
 ///////////////////////////////////////////////////////////////////////////////
@@ -291,176 +132,11 @@ function ShowTableForm($oPage, $oCSVParser, $sClass)
 		$sSelField .= "&nbsp;<input type=\"checkbox\" name=\"iskey[field$iFieldIndex]\" value=\"yes\" $sCHECKED>";
 
 		$aFields["field$iFieldIndex"]["label"] = $sSelField;
-		$aFields["field$iFieldIndex"]["value"] = $aColToRow["field$iFieldIndex"];
+		$aFields["field$iFieldIndex"]["value"] = $aColToRow[$iFieldIndex];
 	}
 	$oPage->details($aFields);
 }
 
-function PrepareObject(&$oTargetObj, $aRowData, $aAttList, $aExtKeys, &$aWarnings, &$aErrors)
-{
-	$aResults = array();
-	$aWarnings = array();
-	$aErrors = array();
-
-	// External keys reconciliation
-	//
-	foreach($aExtKeys as $sAttCode=>$aKeyConfig)
-	{
-		$oExtKey = MetaModel::GetAttributeDef(get_class($oTargetObj), $sAttCode);
-		$oReconFilter = new CMDBSearchFilter($oExtKey->GetTargetClass());
-		foreach ($aKeyConfig as $iCol => $sForeignAttCode)
-		{
-			// The foreign attribute is one of our reconciliation key
-			$sFieldId = MakeExtFieldSelectValue($sAttCode, $sForeignAttCode);
-			$oReconFilter->AddCondition($sForeignAttCode, $aRowData[$sFieldId], '=');
-			$aResults["col$iCol"]= "<div class=\"csvimport_extreconkey\">".$aRowData[$sFieldId]."</div>";
-		}
-		$oExtObjects = new CMDBObjectSet($oReconFilter);
-		switch($oExtObjects->Count())
-		{
-		case 0:
-			$aErrors[$sAttCode] = "Object not found";
-			$aResults[$sAttCode]= "<div class=\"csvimport_error\">".$aErrors[$sAttCode]."</div>";
-			break;
-		case 1:
-			// Do change the external key attribute
-			$oForeignObj = $oExtObjects->Fetch();
-			$oTargetObj->Set($sAttCode, $oForeignObj->GetKey());
-
-			// Report it
-			if (array_key_exists($sAttCode, $oTargetObj->ListChanges()))
-			{
-				$aResults[$sAttCode]= "<div class=\"csvimport_ok\">".$oForeignObj->GetHyperLink()."</div>";
-			}
-			else
-			{
-				$aResults[$sAttCode]= "<div class=\"\">".$oForeignObj->GetHyperLink()."</div>";
-			}
-			break;
-		default:
-			$aErrors[$sAttCode] = "Found ".$oExtObjects->Count()." matches";
-			$aResults[$sAttCode]= "<div class=\"csvimport_error\">".$aErrors[$sAttCode]."</div>";
-		}
-	}	
-
-	// Set the object attributes
-	//
-	foreach ($aAttList as $iCol => $sAttCode)
-	{
-		$oTargetObj->Set($sAttCode, $aRowData[$sAttCode]);
-	}
-
-	// Reporting on fields
-	//
-	$aChangedFields = $oTargetObj->ListChanges();
-	foreach ($aAttList as $iCol => $sAttCode)
-	{
-		// By default... nothing happens
-		$sClass = "";
-		$sMoreInfo = "";
-
-		// Override if the attribute has changed
-		if (array_key_exists($sAttCode, $aChangedFields))
-		{
-			$sClass = "csvimport_ok";
-		}
-
-		// Override if a warning is found
-		if (isset($aWarnings[$sAttCode]))
-		{
-			$sClass = "csvimport_warning";
-			$sMoreInfo .= ", ".$aWarnings[$sAttCode];
-		}
-
-		// Override if an error is found
-		if (isset($aErrors[$sAttCode]))
-		{
-			$sClass = "csvimport_error";
-			$sMoreInfo = ", ".$aErrors[$sAttCode];
-		}
-
-		$aResults["col$iCol"]= "<div class=\"$sClass\">".$aRowData[$sAttCode].$sMoreInfo."</div>";
-	}
-
-	// Checks
-	//
-	if (!$oTargetObj->CheckConsistency())
-	{
-		$aErrors["GLOBAL"] = "Attributes not consistent with each others";
-	}
-	return $aResults;
-}
-
-
-function CreateObject(&$aResult, $iRow, $sClass, $aRowData, $aAttList, $aExtKeys, CMDBChange $oChange = null)
-{
-	$oTargetObj = MetaModel::NewObject($sClass);
-	$aResult[$iRow] = PrepareObject($oTargetObj, $aRowData, $aAttList, $aExtKeys, $aWarnings, $aErrors);
-
-	if (count($aErrors) > 0)
-	{
-		$sErrors = implode(', ', $aErrors);
-		$aResult[$iRow]["__STATUS__"] = "Unexpected attribute value(s)";
-		return;
-	}
-
-	// Check that any external key will have a value proposed
-	// Could be said once for all rows !!!
-	foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode=>$oAtt)
-	{
-		if (!$oAtt->IsExternalKey()) continue;
-		//if (!in_array($sAttCode, $aAttList))
-		//{
-		//	$aResult[$iRow]["__STATUS__"] = "Could not be created - Missing external key (".$oAtt->GetLabel().")";
-		//	return;
-		//}
-	}
-
-	// Optionaly record the results
-	//
-	if ($oChange)
-	{
-		$newID = $oTargetObj->DBInsertTracked($oChange);
-		$aResult[$iRow]["__STATUS__"] = "Created: ".$oTargetObj->GetHyperLink($newID);
-	}
-	else
-	{
-		$aResult[$iRow]["__STATUS__"] = "Create";
-	}
-
-}
-
-function UpdateObject(&$aResult, $iRow, $oTargetObj, $aRowData, $aAttList, $aExtKeys, CMDBChange $oChange = null)
-{
-	$aResult[$iRow] = PrepareObject($oTargetObj, $aRowData, $aAttList, $aExtKeys, $aWarnings, $aErrors);
-
-	// Reporting
-	//
-	if (count($aErrors) > 0)
-	{
-		$sErrors = implode(', ', $aErrors);
-		$aResult[$iRow]["__STATUS__"] = "Unexpected attribute value(s)";
-		return;
-	}
-
-	$aChangedFields = $oTargetObj->ListChanges();
-	if (count($aChangedFields) > 0)
-	{
-		$sVerb = $oChange ? "Updated" : "Update";
-		$aResult[$iRow]["__STATUS__"] = "$sVerb ".count($aChangedFields)." cols";
-
-		// Optionaly record the results
-		//
-		if ($oChange)
-		{
-			$oTargetObj->DBUpdateTracked($oChange);
-		}
-	}
-	else
-	{
-		$aResult[$iRow]["__STATUS__"] = "No change";
-	}
-}
 
 function ProcessData($oPage, $sClass, $oCSVParser, $aFieldMap, $aIsReconcKey, CMDBChange $oChange = null)
 {
@@ -487,18 +163,18 @@ function ProcessData($oPage, $sClass, $oCSVParser, $aFieldMap, $aIsReconcKey, CM
 		elseif (IsExtKeyField($sColDesc))
 		{
 			list($sExtKeyAttCode, $sExtReconcKeyAttCode) = GetExtKeyFieldCodes($sColDesc);
-			$aExtKeys[$sExtKeyAttCode][$iFieldId] = $sExtReconcKeyAttCode;
+			$aExtKeys[$sExtKeyAttCode][$sExtReconcKeyAttCode] = $iFieldId;
 		}
 		elseif (array_key_exists($sFieldId, $aIsReconcKey))
 		{
-			$aReconcilKeys[$iFieldId] = $sColDesc;
-			$aAttList[$iFieldId] = $sColDesc; // A reconciliation key is also a field
+			$aReconcilKeys[$sColDesc] = $iFieldId;
+			$aAttList[$sColDesc] = $iFieldId; // A reconciliation key is also a field
 		}
 		else
 		{
 			// $sColDesc is an attribute code
 			//
-			$aAttList[$iFieldId] = $sColDesc;
+			$aAttList[$sColDesc] = $iFieldId;
 		}
 	}
 
@@ -511,7 +187,7 @@ function ProcessData($oPage, $sClass, $oCSVParser, $aFieldMap, $aIsReconcKey, CM
 	{
 		$aDisplayConfig["col$iPKeyId"] = array("label"=>"<strong>pkey</strong>", "description"=>"");
 	}
-	foreach($aReconcilKeys as $iCol=>$sAttCode)
+	foreach($aReconcilKeys as $sAttCode => $iCol)
 	{
 		$sLabel = MetaModel::GetAttributeDef($sClass, $sAttCode)->GetLabel();
 		$aDisplayConfig["col$iCol"] = array("label"=>"$sLabel", "description"=>"");
@@ -521,7 +197,7 @@ function ProcessData($oPage, $sClass, $oCSVParser, $aFieldMap, $aIsReconcKey, CM
 		$oExtKeyAtt = MetaModel::GetAttributeDef($sClass, $sAttCode);
 		$sLabel = $oExtKeyAtt->GetLabel();
 		$aDisplayConfig[$sAttCode] = array("label"=>"$sLabel", "description"=>"");
-		foreach ($aKeyConfig as $iCol => $sForeignAttCode)
+		foreach ($aKeyConfig as $sForeignAttCode => $iCol)
 		{
 			// The foreign attribute is one of our reconciliation key
 			
@@ -529,7 +205,7 @@ function ProcessData($oPage, $sClass, $oCSVParser, $aFieldMap, $aIsReconcKey, CM
 			$aDisplayConfig["col$iCol"] = array("label"=>"$sLabel", "description"=>"");
 		}
 	}
-	foreach ($aAttList as $iCol => $sAttCode)
+	foreach ($aAttList as $sAttCode => $iCol)
 	{
 		$sLabel = MetaModel::GetAttributeDef($sClass, $sAttCode)->GetLabel();
 		$aDisplayConfig["col$iCol"] = array("label"=>"$sLabel", "description"=>"");
@@ -537,53 +213,58 @@ function ProcessData($oPage, $sClass, $oCSVParser, $aFieldMap, $aIsReconcKey, CM
 
 	// Compute the results
 	//
-	$aResult = array();
-	foreach($oCSVParser->ToArray(array_values($aFieldMap)) as $iRow => $aRowData)
-	{
-		$oReconciliationFilter = new CMDBSearchFilter($sClass);
-		if (isset($iPKeyId))
-		{
-			$oReconciliationFilter->AddCondition("pkey", $aRowData["pkey"], '=');
-		}
-		foreach($aReconcilKeys as $iCol=>$sAttCode)
-		{
-			$sSearchAttCode = $aFieldMap['field'.$iCol];
-			$oReconciliationFilter->AddCondition($sSearchAttCode, $aRowData[$sSearchAttCode], '=');
-		}
-		$oReconciliationSet = new CMDBObjectSet($oReconciliationFilter);
-		switch($oReconciliationSet->Count())
-		{
-		case 0:
-			CreateObject($aResult, $iRow, $sClass, $aRowData, $aAttList, $aExtKeys, $oChange);
-			// $aResult[$iRow]["__STATUS__"]=> set in CreateObject
-			$aResult[$iRow]["__RECONCILIATION__"] = "Object not found";
-			break;
-		case 1:
-			$oTargetObj = $oReconciliationSet->Fetch();
-			UpdateObject($aResult, $iRow, $oTargetObj, $aRowData, $aAttList, $aExtKeys, $oChange);
-			$aResult[$iRow]["__RECONCILIATION__"] = "Found a ".$oTargetObj->GetHyperLink("match");
-			// $aResult[$iRow]["__STATUS__"]=> set in UpdateObject
-			break;
-		default:
-			foreach ($aAttList as $iCol => $sAttCode)
-			{
-				$aResult[$iRow]["col$iCol"]= $aRowData[$sAttCode];
-			}
-			$aResult[$iRow]["__RECONCILIATION__"] = "Found ".$oReconciliationSet->Count()." matches";
-			$aResult[$iRow]["__STATUS__"]= "skipped";
-		}
+	$aData = $oCSVParser->ToArray();
 
-		// Whatever happened, do report the reconciliation values
-		if (isset($iPKeyId))
+	$oBulk = new BulkChange(
+		$sClass,
+		$aData,
+		$aAttList,
+		array_keys($aReconcilKeys),
+		$aExtKeys
+	);
+	$aRes = $oBulk->Process($oChange);
+
+	$aResultDisp = array(); // to be displayed
+	foreach($aRes as $iRow => $aRowData)
+	{
+		$aRowDisp = array();
+		$aRowDisp["__RECONCILIATION__"] = $aRowData["__RECONCILIATION__"];
+		$aRowDisp["__STATUS__"] = $aRowData["__STATUS__"]->GetDescription();
+		foreach($aRowData as $sKey => $value)
 		{
-			$aResult[$iRow]["col$iPKeyId"] = "<div class=\"csvimport_reconkey\">".$aRowData["pkey"]."</div>";
+			if ($sKey == '__RECONCILIATION__') continue;
+			if ($sKey == '__STATUS__') continue;
+			
+			switch (get_class($value))
+			{
+				case 'CellChangeSpec_Void':
+					$sClass = '';
+					break;
+				case 'CellChangeSpec_Unchanged':
+					$sClass = '';
+					break;
+				case 'CellChangeSpec_Modify':
+					$sClass = 'csvimport_ok';
+					break;
+				case 'CellChangeSpec_Init':
+					$sClass = 'csvimport_init';
+					break;
+				case 'CellChangeSpec_Issue':
+					$sClass = 'csvimport_error';
+					break;
+			}
+			if (empty($sClass))
+			{
+				$aRowDisp[$sKey] = $value->GetDescription();
+			}
+			else
+			{
+				$aRowDisp[$sKey] = "<div class=\"$sClass\">".$value->GetDescription()."</div>";
+			}
 		}
-		foreach($aReconcilKeys as $iCol=>$sAttCode)
-		{
-			$aResult[$iRow]["col$iCol"] = "<div class=\"csvimport_reconkey\">".$aRowData[$sAttCode]."</div>";
-		}
+		$aResultDisp[$iRow] = $aRowDisp;
 	}
-	$oPage->table($aDisplayConfig, $aResult);
+	$oPage->table($aDisplayConfig, $aResultDisp);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -710,7 +391,7 @@ function DoProcessOrVerify($oPage, $sClass, CMDBChange $oChange = null)
 	$oPage->p("<h2>Goal summary</h2>");
 	$oPage->p("Target: $iTarget rows");
 
-	$aSampleData = $oCSVParser->ToArray(null, 5);
+	$aSampleData = $oCSVParser->ToArray(array_keys($aFieldMap), 5);
 	$aDisplayConfig = array();
 	foreach ($aFieldMap as $sFieldId=>$sColDesc)
 	{

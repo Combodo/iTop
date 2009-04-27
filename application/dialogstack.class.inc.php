@@ -122,7 +122,7 @@ class dialogstack
 
 		if (self::$m_bCurrPageDeclared)
 		{
-			trigger_error("DeclareCaller() must not be called before StartDialog()", E_USER_ERROR);
+			throw new Exception("DeclareCaller() must not be called before StartDialog()");
 		}
 
 		$aCall = array(
@@ -242,7 +242,7 @@ class dialogstack
 		}
 		else
 		{
-			trigger_error("Wrong value for button style ($iButtonStyle)", E_USER_ERROR);		
+			throw new Exception("Wrong value for button style ($iButtonStyle)");		
 		}
 		$sRet .= "<input type=\"hidden\" name=\"dialogstackpop\" value=\"".count($_SESSION['dialogstack_currdlg'])."\">\n";
 		$sRet .= "</form>\n";

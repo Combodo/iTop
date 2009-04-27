@@ -44,7 +44,7 @@ class ObjectStimulus
 				$aBacktrace = debug_backtrace();
 				$sTargetClass = $aBacktrace[2]["class"];
 				$sCodeInfo = $aBacktrace[1]["file"]." - ".$aBacktrace[1]["line"];
-				trigger_error("ERROR missing parameter '$sParamName' in ".get_class($this)." declaration for class $sTargetClass ($sCodeInfo)</br>\n", E_USER_ERROR);
+				throw new CoreException("missing parameter '$sParamName' in ".get_class($this)." declaration for class $sTargetClass ($sCodeInfo)");
 			}
 		}
 	}

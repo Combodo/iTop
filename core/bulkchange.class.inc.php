@@ -62,6 +62,14 @@ class CellChangeSpec_Unchanged extends CellChangeSpec
 	}
 }
 
+class CellChangeSpec_Init extends CellChangeSpec
+{
+	public function GetDescription()
+	{
+		return $this->GetValue();
+	}
+}
+
 class CellChangeSpec_Modify extends CellChangeSpec
 {
 	protected $m_previousValue;
@@ -94,7 +102,7 @@ class CellChangeSpec_Issue extends CellChangeSpec_Modify
 		{
 			return 'Could not be changed - reason: '.$this->m_sReason;
 		}
-		return 'Could not be changed to "'.$this->GetValue().' - reason:'.$this->m_sReason.' (previous: '.$this->m_previousValue.')';
+		return 'Could not be changed to "'.$this->GetValue().'" - reason: '.$this->m_sReason.' (previous: '.$this->m_previousValue.')';
 	}
 }
 
@@ -168,7 +176,7 @@ class RowStatus_Issue extends RowStatus
 {
 	protected $m_sReason;
 
-	public function __construct($proposedValue, $previousValue, $sReason)
+	public function __construct($sReason)
 	{
 		$this->m_sReason = $sReason;
 	}
@@ -240,9 +248,16 @@ class BulkChange
 				$oTargetObj->Set($sAttCode, $oForeignObj->GetKey());
 	
 				// Report it
-				if (array_key_exists($sAttCode, $oTargetObj->ListChanges(false)))
+				if (array_key_exists($sAttCode, $oTargetObj->ListChanges()))
 				{
-					$aResults[$sAttCode]= new CellChangeSpec_Modify($oForeignObj->GetKey(), $oTargetObj->Get($sAttCode), $oTargetObj->GetOriginal($sAttCode));
+					if ($oTargetObj->IsNew())
+					{
+						$aResults[$sAttCode]= new CellChangeSpec_Init($oForeignObj->GetKey(), $oTargetObj->Get($sAttCode), $oTargetObj->GetOriginal($sAttCode));
+					}
+					else
+					{
+						$aResults[$sAttCode]= new CellChangeSpec_Modify($oForeignObj->GetKey(), $oTargetObj->Get($sAttCode), $oTargetObj->GetOriginal($sAttCode));
+					}
 				}
 				else
 				{
@@ -259,7 +274,14 @@ class BulkChange
 		//
 		foreach ($this->m_aAttList as $sAttCode => $iCol)
 		{
-			$oTargetObj->Set($sAttCode, $aRowData[$iCol]);
+			if (!$oTargetObj->CheckValue($sAttCode, $aRowData[$iCol]))
+			{
+				$aErrors[$sAttCode] = "Unexpected value";
+			}
+			else
+			{
+				$oTargetObj->Set($sAttCode, $aRowData[$iCol]);
+			}
 		}
 	
 		// Reporting on fields
@@ -269,11 +291,19 @@ class BulkChange
 		{
 			if (isset($aErrors[$sAttCode]))
 			{
-				$aResults["col$iCol"]= new CellChangeSpec_Issue($aRowData[$iCol], $previousValue, $sReason);
+				$aResults["col$iCol"]= new CellChangeSpec_Issue($aRowData[$iCol], $oTargetObj->Get($sAttCode), $aErrors[$sAttCode]);
 			}
 			elseif (array_key_exists($sAttCode, $aChangedFields))
 			{
-				$aResults["col$iCol"]= new CellChangeSpec_Modify($aRowData[$iCol], $oTargetObj->Get($sAttCode), $oTargetObj->GetOriginal($sAttCode));
+				$originalValue = $oTargetObj->GetOriginal($sAttCode);
+				if ($oTargetObj->IsNew())
+				{
+					$aResults["col$iCol"]= new CellChangeSpec_Init($aRowData[$iCol], $oTargetObj->Get($sAttCode), $originalValue);
+				}
+				else
+				{
+					$aResults["col$iCol"]= new CellChangeSpec_Modify($aRowData[$iCol], $oTargetObj->Get($sAttCode), $originalValue);
+				}
 			}
 			else
 			{
@@ -315,7 +345,7 @@ class BulkChange
 		//
 		if ($oChange)
 		{
-			$newID = $oTargetObj->DBInsertTracked($oChange);
+			$newID = $oTargetObj->DBInsertTrackedNoReload($oChange);
 			$aResult[$iRow]["__STATUS__"] = new RowStatus_NewObj($newID);
 		}
 		else

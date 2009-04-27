@@ -47,6 +47,17 @@ class CoreException extends Exception
 	{
 		return $this->getMessage();
 	}
+
+	public function getTraceAsHtml()
+	{
+		$aBackTrace = $this->getTrace();
+		return MyHelpers::get_callstack_html(0, $this->getTrace());
+		// return "<pre>\n".$this->getTraceAsString()."</pre>\n";
+	}
+}
+
+class CoreWarning extends CoreException
+{
 }
 
 ?>

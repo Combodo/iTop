@@ -150,15 +150,17 @@ class CMDBChangeOpSetAttribute extends CMDBChangeOp
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeString("attcode", array("label"=>"Attribute", "description"=>"code of the modified property", "allowed_values"=>null, "sql"=>"attcode", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("oldvalue", array("label"=>"Previous value", "description"=>"previous value of the attribute", "allowed_values"=>null, "sql"=>"oldvalue", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("newvalue", array("label"=>"New value", "description"=>"new value of the attribute", "allowed_values"=>null, "sql"=>"newvalue", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 
 		MetaModel::Init_InheritFilters();
 		MetaModel::Init_AddFilterFromAttribute("attcode");
+		MetaModel::Init_AddFilterFromAttribute("oldvalue");
 		MetaModel::Init_AddFilterFromAttribute("newvalue");
 		
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'attcode', 'newvalue')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('date', 'userinfo', 'attcode', 'newvalue')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'attcode', 'oldvalue', 'newvalue')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('date', 'userinfo', 'attcode', 'oldvalue', 'newvalue')); // Attributes to be displayed for a list
 	}
 }
 

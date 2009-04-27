@@ -310,7 +310,7 @@ class cmdbLiens extends cmdbObjectHomeMade
 
 	public static function GetRelationQueries($sRelCode)
 	{
-		trigger_error("GetRelationQueries: cmdbLiens");
+		throw new CoreException("GetRelationQueries: cmdbLiens");
 		return array("Relies on" => array("sQuery"=>"", "bPropagate"=>true, "iDistance"=>3));
 	}
 }
@@ -357,7 +357,7 @@ class cmdbWorkshop extends cmdbObjectHomeMade
 
 	public static function GetRelationQueries($sRelCode)
 	{
-		trigger_error("GetRelationQueries: cmdbWorkshop");
+		throw new CoreException("GetRelationQueries: cmdbWorkshop");
 		return array("Relies on" => array("sQuery"=>"", "bPropagate"=>true, "iDistance"=>3));
 	}
 }

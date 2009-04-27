@@ -46,7 +46,7 @@ class SQLQuery
 	{
 		if (!CMDBSource::IsTable($sTable))
 		{
-			trigger_error("Unknown table '$sTable'", E_USER_ERROR);
+			throw new CoreException("Unknown table '$sTable'");
 		}
 		// $aFields must be an array of "alias"=>"expr"
 		// $oConditionExpr must be a condition tree
@@ -137,7 +137,7 @@ class SQLQuery
 		assert((get_class($oSQLQuery) == __CLASS__) || is_subclass_of($oSQLQuery, __CLASS__));
 		if (!CMDBSource::IsField($this->m_sTable, $sLeftField))
 		{
-			trigger_error("Unknown field '$sLeftField' in table '".$this->m_sTable, E_USER_ERROR);
+			throw new CoreException("Unknown field '$sLeftField' in table '".$this->m_sTable);
 		}
 		if (empty($sRightTableAlias))
 		{
@@ -147,7 +147,7 @@ class SQLQuery
 //
 //		if (!CMDBSource::IsField($sRightTable, $sRightField))
 //		{
-//			trigger_error("Unknown field '$sRightField' in table '".$sRightTable."'", E_USER_ERROR);
+//			throw new CoreException("Unknown field '$sRightField' in table '".$sRightTable."'");
 //		}
 
 		$this->m_aJoinSelects[] = array(
@@ -187,7 +187,7 @@ class SQLQuery
 		if ($this->m_oConditionExpr->IsAny())
 		-- if (count($aConditions) == 0) --
 		{
-			trigger_error("Building a request wich will delete every object of a given table -looks suspicious- please use truncate instead...", E_USER_ERROR);
+			throw new CoreException("Building a request wich will delete every object of a given table -looks suspicious- please use truncate instead...");
 		}
 		*/
 		$sWhere  = self::ClauseWhere($oCondition);
@@ -277,7 +277,7 @@ class SQLQuery
 					$sFrom .= ") ON ".$aJoinInfo["joincondition"];
 					break;
 				default:
-					trigger_error("Unknown jointype: '".$aJoinInfo["jointype"]."'");
+					throw new CoreException("Unknown jointype: '".$aJoinInfo["jointype"]."'");
 			}
 		}
 		return $sFrom;

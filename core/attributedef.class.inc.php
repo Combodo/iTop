@@ -53,7 +53,7 @@ abstract class AttributeDefinition
 		{
 			if (!array_key_exists($sParam, $this->m_aParams))
 			{
-				trigger_error("Unknown attribute definition parameter '$sParam', please select a value in {".implode(", ", $this->m_aParams)."}");
+				throw new CoreException("Unknown attribute definition parameter '$sParam', please select a value in {".implode(", ", $this->m_aParams)."}");
 			}
 			else
 			{
@@ -90,7 +90,7 @@ abstract class AttributeDefinition
 				$aBacktrace = debug_backtrace();
 				$sTargetClass = $aBacktrace[2]["class"];
 				$sCodeInfo = $aBacktrace[1]["file"]." - ".$aBacktrace[1]["line"];
-				trigger_error("ERROR missing parameter '$sParamName' in ".get_class($this)." declaration for class $sTargetClass ($sCodeInfo)</br>\n", E_USER_ERROR);
+				throw new Exception("ERROR missing parameter '$sParamName' in ".get_class($this)." declaration for class $sTargetClass ($sCodeInfo)");
 			}
 		}
 	} 
@@ -390,7 +390,7 @@ class AttributeInteger extends AttributeDBField
 			return $this->GetSQLExpr()." <= $sQValue";
 			break;
 		case 'in':
-			if (!is_array($value)) trigger_error("Expected an array for argument value (sOpCode='$sOpCode')");
+			if (!is_array($value)) throw new CoreException("Expected an array for argument value (sOpCode='$sOpCode')");
 			return $this->GetSQLExpr()." IN ('".implode("', '", $value)."')"; 
 			break;
 
@@ -485,7 +485,7 @@ class AttributeString extends AttributeDBField
 		return (string)$proposedValue;
 		// if (!settype($proposedValue, "string"))
 		// {
-		// 	trigger_error("Failed to change the type of '$proposedValue' to a string", E_USER_WARNING);
+		// 	throw new CoreException("Failed to change the type of '$proposedValue' to a string");
 		// }
 	}
 	public function RealValueToSQLValue($value)
@@ -692,7 +692,7 @@ class AttributeDate extends AttributeDBField
 		{
 			return date("Y-m-d H:i:s", $proposedValue);
 		}
-		trigger_error("Invalid type for a date (found ".gettype($proposedValue)." and accepting string/int/DateTime)", E_USER_ERROR);
+		throw new CoreException("Invalid type for a date (found ".gettype($proposedValue)." and accepting string/int/DateTime)");
 		return null;
 	}
 	public function RealValueToSQLValue($value)
@@ -814,7 +814,7 @@ class AttributeExternalField extends AttributeDefinition
 	public function GetEditClass() {return "ExtField";}
 	public function GetDBFieldType()
 	{
-		trigger_error("external attribute: does it make any sense to request its type ?", E_USER_WARNING);  
+		// throw new CoreException("external attribute: does it make any sense to request its type ?");  
 		$oExtAttDef = $this->GetExtAttDef();
 		return $oExtAttDef->GetDBFieldType(); 
 	}
@@ -832,7 +832,7 @@ class AttributeExternalField extends AttributeDefinition
 			return false;
 
 		default:
-			trigger_error("Unexpected value for argument iType: '$iType'", E_USER_ERROR);
+			throw new CoreException("Unexpected value for argument iType: '$iType'");
 		}
 	}
 
@@ -866,7 +866,7 @@ class AttributeExternalField extends AttributeDefinition
 			return MetaModel::GetAttributeDef($this->GetHostClass(), $this->Get("extkey_attcode"));
 
 		default:
-			trigger_error("Unexpected value for argument iType: '$iType'", E_USER_ERROR);
+			throw new CoreException("Unexpected value for argument iType: '$iType'");
 		}
 	}
 

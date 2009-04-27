@@ -138,6 +138,9 @@ try
 				case 'CellChangeSpec_Modify':
 					$sClass = 'csvimport_ok';
 					break;
+				case 'CellChangeSpec_Init':
+					$sClass = 'csvimport_init';
+					break;
 				case 'CellChangeSpec_Issue':
 					$sClass = 'csvimport_error';
 					break;

@@ -77,12 +77,12 @@ class UserRights
 	{
 		if (!class_exists($sModuleName))
 		{
-			trigger_error("Could not select this module, '$sModuleName' in not a valid class name", E_USER_ERROR);
+			throw new CoreException("Could not select this module, '$sModuleName' in not a valid class name");
 			return;
 		}
 		if (!is_subclass_of($sModuleName, 'UserRightsAddOnAPI'))
 		{
-			trigger_error("Could not select this module, the class '$sModuleName' is not derived from UserRightsAddOnAPI", E_USER_ERROR);
+			throw new CoreException("Could not select this module, the class '$sModuleName' is not derived from UserRightsAddOnAPI");
 			return;
 		}
 		self::$m_oAddOn = new $sModuleName;

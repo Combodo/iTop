@@ -37,7 +37,7 @@ abstract class FilterDefinition
 		{
 			if (!array_key_exists($sParam, $this->m_aParams))
 			{
-				trigger_error("Unknown attribute definition parameter '$sParam', please select a value in {".implode(", ", $this->m_aParams)."}");
+				throw new CoreException("Unknown attribute definition parameter '$sParam', please select a value in {".implode(", ", $this->m_aParams)."}");
 			}
 			else
 			{
@@ -64,7 +64,7 @@ abstract class FilterDefinition
 				$aBacktrace = debug_backtrace();
 				$sTargetClass = $aBacktrace[2]["class"];
 				$sCodeInfo = $aBacktrace[1]["file"]." - ".$aBacktrace[1]["line"];
-				trigger_error("ERROR missing parameter '$sParamName' in ".get_class($this)." declaration for class $sTargetClass ($sCodeInfo)</br>\n", E_USER_ERROR);
+				throw new CoreException("ERROR missing parameter '$sParamName' in ".get_class($this)." declaration for class $sTargetClass ($sCodeInfo)");
 			}
 		}
 	} 
@@ -86,7 +86,7 @@ abstract class FilterDefinition
 		$aOperators = $this->GetOperators();
 		if (!array_key_exists($sOpCode, $aOperators))
 		{
-			trigger_error("Unknown operator '$sOpCode'", E_USER_ERROR);
+			throw new CoreException("Unknown operator '$sOpCode'");
 		}
 		
 		return $aOperators[$sOpCode];
@@ -145,11 +145,11 @@ class FilterPrivateKey extends FilterDefinition
 		switch($sOpCode)
 		{
 			case "IN":
-				if (!is_array($sQValue)) trigger_error("Expected an array for argument value (sOpCode='$sOpCode')");
+				if (!is_array($sQValue)) throw new CoreException("Expected an array for argument value (sOpCode='$sOpCode')");
 				return "$sFieldName IN (".implode(", ", $sQValue).")"; 
 
 			case "NOTIN":
-				if (!is_array($sQValue)) trigger_error("Expected an array for argument value (sOpCode='$sOpCode')");
+				if (!is_array($sQValue)) throw new CoreException("Expected an array for argument value (sOpCode='$sOpCode')");
 				return "$sFieldName NOT IN (".implode(", ", $sQValue).")"; 
 
 			case "!=":

@@ -150,11 +150,17 @@ abstract class TestHandler
 		{
 			$this->ReportError($e->getMessage().' - '.$e->getTraceAsHtml());
 		}
+		catch (CoreException $e)
+		{
+			//$this->ReportError($e->getMessage());
+			//$this->ReportError($e->__tostring());
+			$this->ReportError($e->getMessage().' - '.$e->getTraceAsHtml());
+		}
 		catch (Exception $e)
 		{
 			//$this->ReportError($e->getMessage());
 			//$this->ReportError($e->__tostring());
-			$this->ReportError($e->getMessage().' - '.$e->getTraceAsString());
+			$this->ReportError('class '.get_class($e).' --- '.$e->getMessage().' - '.$e->getTraceAsString());
 		}
 		restore_error_handler();
 		$this->m_sOutput = ob_get_clean();

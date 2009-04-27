@@ -144,7 +144,7 @@ abstract class CMDBObject extends DBObject
 		$oMyChangeOp->Set("change", $oChange->GetKey());
 		$oMyChangeOp->Set("objclass", get_class($this));
 		$oMyChangeOp->Set("objkey", $this->GetKey());
-		$iId = $oMyChangeOp->DBInsert();
+		$iId = $oMyChangeOp->DBInsertNoReload();
 	}
 	private function RecordObjDeletion(CMDBChange $oChange, $objkey)
 	{
@@ -152,22 +152,12 @@ abstract class CMDBObject extends DBObject
 		$oMyChangeOp->Set("change", $oChange->GetKey());
 		$oMyChangeOp->Set("objclass", get_class($this));
 		$oMyChangeOp->Set("objkey", $objkey);
-		$iId = $oMyChangeOp->DBInsert();
+		$iId = $oMyChangeOp->DBInsertNoReload();
 	}
-	private function RecordAttChanges(CMDBChange $oChange, array $aValues = array())
+	private function RecordAttChanges(CMDBChange $oChange, array $aValues)
 	{
 		// $aValues is an array of $sAttCode => $value
-		// ... some values...
 		//
-		if (empty($aValues))
-		{
-			// ... or every object values
-			foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode=>$oAttDef)
-			{
-				if ($oAttDef->IsLinkSet()) continue; // #@# temporary
-				$aValues[$sAttCode] = $this->Get($sAttCode); 
-			}
-		}
 		foreach ($aValues as $sAttCode=> $value)
 		{
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
@@ -177,8 +167,9 @@ abstract class CMDBObject extends DBObject
 			$oMyChangeOp->Set("objclass", get_class($this));
 			$oMyChangeOp->Set("objkey", $this->GetKey());
 			$oMyChangeOp->Set("attcode", $sAttCode);
+			$oMyChangeOp->Set("oldvalue", $this->GetOriginal($sAttCode));
 			$oMyChangeOp->Set("newvalue", $value);
-			$iId = $oMyChangeOp->DBInsert();
+			$iId = $oMyChangeOp->DBInsertNoReload();
 		}
 	}
 
@@ -186,7 +177,7 @@ abstract class CMDBObject extends DBObject
 	{
 		if(!is_object(self::$m_oCurrChange))
 		{
-			trigger_error("DBInsert() could not be used here, please use DBInsertTracked() instead", E_USER_ERROR);
+			throw new CoreException("DBInsert() could not be used here, please use DBInsertTracked() instead");
 		}
 		return $this->DBInsertTracked_Internal();
 	}
@@ -199,11 +190,25 @@ abstract class CMDBObject extends DBObject
 		return $ret;
 	}
 
-	protected function DBInsertTracked_Internal()
+	public function DBInsertTrackedNoReload(CMDBChange $oChange)
 	{
-		$ret = parent::DBInsert();
+		self::$m_oCurrChange = $oChange;
+		$ret = $this->DBInsertTracked_Internal(true);
+		self::$m_oCurrChange = null;
+		return $ret;
+	}
+
+	protected function DBInsertTracked_Internal($bDoNotReload = false)
+	{
+		if ($bDoNotReload)
+		{
+			$ret = parent::DBInsertNoReload();
+		}
+		else
+		{
+			$ret = parent::DBInsert();
+		}
 		$this->RecordObjCreation(self::$m_oCurrChange);
-		$this->RecordAttChanges(self::$m_oCurrChange);
 		return $ret;
 	}
 
@@ -211,7 +216,7 @@ abstract class CMDBObject extends DBObject
 	{
 		if(!self::$m_oCurrChange)
 		{
-			trigger_error("DBClone() could not be used here, please use DBCloneTracked() instead", E_USER_ERROR);
+			throw new CoreException("DBClone() could not be used here, please use DBCloneTracked() instead");
 		}
 		return $this->DBCloneTracked_Internal();
 	}
@@ -229,7 +234,6 @@ abstract class CMDBObject extends DBObject
 		$oClone = MetaModel::GetObject(get_class($this), $newKey); 
 
 		$oClone->RecordObjCreation(self::$m_oCurrChange);
-		$oClone->RecordAttChanges(self::$m_oCurrChange);
 		return $newKey;
 	}
 
@@ -237,7 +241,7 @@ abstract class CMDBObject extends DBObject
 	{
 		if(!self::$m_oCurrChange)
 		{
-			trigger_error("DBUpdate() could not be used here, please use DBUpdateTracked() instead", E_USER_ERROR);
+			throw new CoreException("DBUpdate() could not be used here, please use DBUpdateTracked() instead");
 		}
 		return $this->DBUpdateTracked_internal();
 	}
@@ -255,7 +259,7 @@ abstract class CMDBObject extends DBObject
 		$aChanges = $this->ListChanges();
 		if (count($aChanges) == 0)
 		{
-			trigger_error("Attempting to update an unchanged object", E_USER_NOTICE);
+			throw new CoreWarning("Attempting to update an unchanged object");
 			return;
 		}
 
@@ -268,7 +272,7 @@ abstract class CMDBObject extends DBObject
 	{
 		if(!self::$m_oCurrChange)
 		{
-			trigger_error("DBDelete() could not be used here, please use DBDeleteTracked() instead", E_USER_ERROR);
+			throw new CoreException("DBDelete() could not be used here, please use DBDeleteTracked() instead");
 		}
 		return $this->DBDeleteTracked_Internal();
 	}
@@ -292,7 +296,7 @@ abstract class CMDBObject extends DBObject
 	{
 		if(!self::$m_oCurrChange)
 		{
-			trigger_error("BulkDelete() could not be used here, please use BulkDeleteTracked() instead", E_USER_ERROR);
+			throw new CoreException("BulkDelete() could not be used here, please use BulkDeleteTracked() instead");
 		}
 		return $this->BulkDeleteTracked_Internal($oFilter);
 	}
@@ -306,7 +310,7 @@ abstract class CMDBObject extends DBObject
 
 	protected static function BulkDeleteTracked_Internal(DBObjectSearch $oFilter)
 	{
-		trigger_error("Change tracking not tested for bulk operations", E_USER_WARNING);
+		throw new CoreWarning("Change tracking not tested for bulk operations");
 
 		// Get the list of objects to delete (and record data before deleting the DB records)
 		$oObjSet = new CMDBObjectSet($oFilter);
@@ -331,7 +335,7 @@ abstract class CMDBObject extends DBObject
 	{
 		if(!self::$m_oCurrChange)
 		{
-			trigger_error("BulkUpdate() could not be used here, please use BulkUpdateTracked() instead", E_USER_ERROR);
+			throw new CoreException("BulkUpdate() could not be used here, please use BulkUpdateTracked() instead");
 		}
 		return $this->BulkUpdateTracked_Internal($oFilter, $aValues);
 	}

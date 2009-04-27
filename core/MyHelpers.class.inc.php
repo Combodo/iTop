@@ -42,7 +42,7 @@ class MyHelpers
 			$sArrayDesc = "{".implode(", ", $aData)."}";
 		}
 		// exit!
-		trigger_error("Wrong value for $sDescription, found '$value' while expecting a value in $sArrayDesc", E_USER_ERROR);
+		throw new CoreException("Wrong value for $sDescription, found '$value' while expecting a value in $sArrayDesc");
 	}
 
 	// getmicrotime()
@@ -281,10 +281,10 @@ class MyHelpers
 	///////////////////////////////////////////////////////////////////////////////
 	public static function make_table_from_assoc_array(&$aData)
 	{
-		if (!is_array($aData)) trigger_error("make_table_from_assoc_array: Error - the passed argument is not an array", E_USER_ERROR);
+		if (!is_array($aData)) throw new CoreException("make_table_from_assoc_array: Error - the passed argument is not an array");
 		$aFirstRow = reset($aData);
 		if (count($aData) == 0) return '';
-		if (!is_array($aFirstRow)) trigger_error("make_table_from_assoc_array: Error - the passed argument is not a bi-dimensional array", E_USER_ERROR);
+		if (!is_array($aFirstRow)) throw new CoreException("make_table_from_assoc_array: Error - the passed argument is not a bi-dimensional array");
 		$sOutput = "";
 		$sOutput .= "<TABLE WIDTH=\"100%\" BORDER=\"0\" CELLSPACING=\"1\" CELLPADDING=\"1\">\n";
 	
@@ -364,7 +364,7 @@ class MyHelpers
 	///////////////////////////////////////////////////////////////////////////////
 	public static function beautifulstr($sLongString, $iMaxLen, $bShowLen=false, $bShowTooltip=true)
 	{
-		if (!is_string($sLongString)) trigger_error("beautifulstr: expect a string as 1st argument", E_USER_ERROR);
+		if (!is_string($sLongString)) throw new CoreException("beautifulstr: expect a string as 1st argument");
 	
 		// Nothing to do if the string is short
 		if (strlen($sLongString) <= $iMaxLen) return $sLongString;

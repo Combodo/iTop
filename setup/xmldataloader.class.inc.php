@@ -163,10 +163,14 @@ class XMLDataLoader
 						{
 							$iExtKey = -$iDstObj; // Convention: Unresolved keys are stored as negative !
 						}
+						// tested by Romain, little impact on perf (not significant on the intial setup)
+						//$oTargetObj->CheckValue($sAttCode, $iExtKey);
 						$oTargetObj->Set($sAttCode, $iExtKey);
 					}
 					else
 					{
+						// tested by Romain, little impact on perf (not significant on the intial setup)
+						//$oTargetObj->CheckValue($sAttCode, (string)$oXmlObj->$sAttCode);
 						$oTargetObj->Set($sAttCode, (string)$oXmlObj->$sAttCode);
 					}
 				}
@@ -200,11 +204,11 @@ class XMLDataLoader
 		{
 			if (is_subclass_of($oTargetObj, 'CMDBObject'))
 			{
-		        $iObjId = $oTargetObj->DBInsertTracked($this->m_oChange);
+		        $iObjId = $oTargetObj->DBInsertTrackedNoReload($this->m_oChange);
 			}
 			else
 			{
-		        $iObjId = $oTargetObj->DBInsert();
+		        $iObjId = $oTargetObj->DBInsertNoReload();
 			}
 	        
 		}

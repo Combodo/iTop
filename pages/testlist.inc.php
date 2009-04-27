@@ -612,8 +612,23 @@ class TestQueriesOnFarm extends TestBizModel
 		MetaModel::DBCheckIntegrity();
 	}
 
+	protected $m_oChange;
+	protected function ObjectToDB(CMDBObject $oNew)
+	{
+		if (!isset($this->m_oChange))
+		{
+			 new CMDBChange();
+			$oMyChange = MetaModel::NewObject("CMDBChange");
+			$oMyChange->Set("date", time());
+			$oMyChange->Set("userinfo", "Administrator");
+			$iChangeId = $oMyChange->DBInsertNoReload();
+			$this->m_oChange = $oMyChange; 
+		}
+		$iId = $oNew->DBInsertTrackedNoReload($this->m_oChange);
+		return $iId;
+}
 
-	private function InsertMammal($sSpecies, $sSex, $iSpeed, $iMotherid, $iFatherId, $sName, $iHeight, $sBirth)
+	protected function InsertMammal($sSpecies, $sSex, $iSpeed, $iMotherid, $iFatherId, $sName, $iHeight, $sBirth)
 	{
 		$oNew = MetaModel::NewObject('Mammal');
 		$oNew->Set('species', $sSpecies);
@@ -624,11 +639,10 @@ class TestQueriesOnFarm extends TestBizModel
 		$oNew->Set('name', $sName);
 		$oNew->Set('height', $iHeight);
 		$oNew->Set('birth', $sBirth);
-		$iId = $oNew->DBInsert();
-		return $iId;
+		return $this->ObjectToDB($oNew);
 	}
 
-	private function InsertBird($sSpecies, $sSex, $iSpeed, $iMotherid, $iFatherId)
+	protected function InsertBird($sSpecies, $sSex, $iSpeed, $iMotherid, $iFatherId)
 	{
 		$oNew = MetaModel::NewObject('Bird');
 		$oNew->Set('species', $sSpecies);
@@ -636,11 +650,10 @@ class TestQueriesOnFarm extends TestBizModel
 		$oNew->Set('speed', $iSpeed);
 		$oNew->Set('mother', $iMotherid);
 		$oNew->Set('father', $iFatherId);
-		$iId = $oNew->DBInsert();
-		return $iId;
+		return $this->ObjectToDB($oNew);
 	}
 
-	private function InsertFlyingBird($sSpecies, $sSex, $iSpeed, $iMotherid, $iFatherId, $iFlyingSpeed)
+	protected function InsertFlyingBird($sSpecies, $sSex, $iSpeed, $iMotherid, $iFatherId, $iFlyingSpeed)
 	{
 		$oNew = MetaModel::NewObject('FlyingBird');
 		$oNew->Set('species', $sSpecies);
@@ -649,8 +662,7 @@ class TestQueriesOnFarm extends TestBizModel
 		$oNew->Set('mother', $iMotherid);
 		$oNew->Set('father', $iFatherId);
 		$oNew->Set('flyingspeed', $iFlyingSpeed);
-		$iId = $oNew->DBInsert();
-		return $iId;
+		return $this->ObjectToDB($oNew);
 	}
 
 	private function InsertGroup($sName, $iLeaderId)
@@ -658,7 +670,7 @@ class TestQueriesOnFarm extends TestBizModel
 		$oNew = MetaModel::NewObject('Group');
 		$oNew->Set('name', $sName);
 		$oNew->Set('leader', $iLeaderId);
-		$iId = $oNew->DBInsert();
+		$iId = $oNew->DBInsertNoReload();
 		return $iId;
 	}
 
@@ -923,6 +935,131 @@ class TestBulkChangeOnFarm extends TestBizModel
 			human,female,23,0,0,cleopatra,142,-50
 			pig,female,23,0,0,confucius,50,2003"
 		);
+	}
+}
+
+
+///////////////////////////////////////////////////////////////////////////
+// Benchmark queries
+///////////////////////////////////////////////////////////////////////////
+
+class TestItopEfficiency extends TestBizModel
+{
+	static public function GetName()
+	{
+		return 'Itop - benchmark';
+	}
+
+	static public function GetDescription()
+	{
+		return 'Measure time to perform the queries';
+	}
+
+	static public function GetConfigFile() {return '../config-itop.php';}
+
+	protected function DoBenchmark($sOqlQuery)
+	{
+		echo "<h3>Testing query: $sOqlQuery</h3>";
+
+		$fStart = MyHelpers::getmicrotime();
+		for($i=0 ; $i < COUNT_BENCHMARK ; $i++)
+		{
+			$oFilter = DBObjectSearch::FromOQL($sOqlQuery);
+		}
+		$fDuration = MyHelpers::getmicrotime() - $fStart;
+		$fParsingDuration = $fDuration / COUNT_BENCHMARK;
+
+		$fStart = MyHelpers::getmicrotime();
+		for($i=0 ; $i < COUNT_BENCHMARK ; $i++)
+		{
+			$sSQL = MetaModel::MakeSelectQuery($oFilter);
+		}
+		$fDuration = MyHelpers::getmicrotime() - $fStart;
+		$fBuildDuration = $fDuration / COUNT_BENCHMARK;
+
+		$fStart = MyHelpers::getmicrotime();
+		for($i=0 ; $i < COUNT_BENCHMARK ; $i++)
+		{
+			$res = CMDBSource::Query($sSQL);
+		}
+		$fDuration = MyHelpers::getmicrotime() - $fStart;
+		$fQueryDuration = $fDuration / COUNT_BENCHMARK;
+
+		// The fetch could not be repeated with the same results
+		// But we've seen so far that is was very very quick to exec
+		// So it makes sense to benchmark it a single time
+		$fStart = MyHelpers::getmicrotime();
+		$aRow = CMDBSource::FetchArray($res);
+		$fDuration = MyHelpers::getmicrotime() - $fStart;
+		$fFetchDuration = $fDuration;
+
+		$fStart = MyHelpers::getmicrotime();
+		for($i=0 ; $i < COUNT_BENCHMARK ; $i++)
+		{
+			$sOql = $oFilter->ToOQL();
+		}
+		$fDuration = MyHelpers::getmicrotime() - $fStart;
+		$fToOqlDuration = $fDuration / COUNT_BENCHMARK;
+
+		echo "<ul>\n";
+		echo "<li>Parsing: $fParsingDuration</li>\n";
+		echo "<li>Build: $fBuildDuration</li>\n";
+		echo "<li>Query: $fQueryDuration</li>\n";
+		echo "<li>Fetch: $fFetchDuration</li>\n";
+		echo "<li>ToOql: $fToOqlDuration</li>\n";
+		echo "</ul>\n";
+
+		// Everything but the ToOQL (wich is interesting, anyhow)
+		$fTotal = $fParsingDuration + $fBuildDuration + $fQueryDuration + $fFetchDuration; 
+
+		return array(
+			'rows' => CMDBSource::NbRows($res),
+			'duration (s)' => round($fTotal, 4),
+			'parsing (%)' => round(100 * $fParsingDuration / $fTotal, 1),
+			'build SQL (%)' => round(100 * $fBuildDuration / $fTotal, 1),
+			'query exec (%)' => round(100 * $fQueryDuration / $fTotal, 1),
+			'fetch (%)' => round(100 * $fFetchDuration / $fTotal, 1),
+			'to OQL (%)' => round(100 * $fToOqlDuration / $fTotal, 1),
+			'parsing+build (%)' => round(100 * ($fParsingDuration + $fBuildDuration) / $fTotal, 1),
+		);
+	}
+	
+	protected function DoExecute()
+	{
+		define ('COUNT_BENCHMARK', 3);
+		echo "<p>The test will be repeated ".COUNT_BENCHMARK." times</p>";
+
+		$aQueries = array(
+			'SELECT CMDBChangeOpSetAttribute',
+			'SELECT CMDBChangeOpSetAttribute WHERE id=10',
+			'SELECT CMDBChangeOpSetAttribute WHERE id=123456789',
+			'SELECT CMDBChangeOpSetAttribute WHERE CMDBChangeOpSetAttribute.id=10',
+			'SELECT bizIncidentTicket',
+			'SELECT bizIncidentTicket WHERE id=1',
+			'SELECT bizPerson',
+			'SELECT bizPerson WHERE id=1',
+			'SELECT bizIncidentTicket JOIN bizPerson ON bizIncidentTicket.agent_id = bizPerson.id WHERE bizPerson.id = 5',
+		);
+		$aStats  = array();
+		foreach ($aQueries as $sOQL)
+		{
+			$aStats[$sOQL] = $this->DoBenchmark($sOQL);
+		}
+
+		$aData = array();
+		foreach ($aStats as $sOQL => $aResults)
+		{
+			$aValues = array();
+			$aValues['OQL'] = htmlentities($sOQL);
+
+			foreach($aResults as $sDesc => $sInfo)
+			{
+				$aValues[$sDesc] = htmlentities($sInfo);
+			}
+			$aData[] = $aValues;
+		}
+		echo MyHelpers::make_table_from_assoc_array($aData);
+		return true;
 	}
 }
 

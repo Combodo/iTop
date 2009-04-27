@@ -173,8 +173,8 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 		$oUser->Set('login', $sAdminUser);
 		$oUser->Set('password', $sAdminPwd);
 		$oUser->Set('userid', 1); // one is for root !
-		$oUser->DBInsert();
-		$this->SetupUser($oUser, true);
+		$iUserId = $oUser->DBInsertNoReload();
+		$this->SetupUser($iUserId, true);
 		return true;
 	}
 
@@ -185,15 +185,13 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 		$oUserSet = new DBObjectSet(DBObjectSearch::FromSibuSQL("UserRightsMatrixUsers"));
 		while ($oUser = $oUserSet->Fetch())
 		{
-			$this->SetupUser($oUser);
+			$this->SetupUser($oUser->GetKey());
 		}
 		return true;
 	}
 
-	protected function SetupUser($oUser, $bNewUser = false)
+	protected function SetupUser($iUserId, $bNewUser = false)
 	{
-		$iUserId = $oUser->GetKey();
-
 		foreach(array('bizmodel', 'application', 'gui', 'core/cmdb') as $sCategory)
 		{
 			foreach (MetaModel::GetClasses($sCategory) as $sClass)
@@ -213,11 +211,11 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 					{
 						// Create a new entry
 						$oMyClassGrant = MetaModel::NewObject("UserRightsMatrixClassGrant");
-						$oMyClassGrant->Set("userid", $oUser->GetKey());
+						$oMyClassGrant->Set("userid", $iUserId);
 						$oMyClassGrant->Set("class", $sClass);
 						$oMyClassGrant->Set("action", $sAction);
 						$oMyClassGrant->Set("permission", "yes");
-						$iId = $oMyClassGrant->DBInsert();
+						$iId = $oMyClassGrant->DBInsertNoReload();
 					}
 				}
 				foreach (MetaModel::EnumStimuli($sClass) as $sStimulusCode => $oStimulus)
@@ -235,11 +233,11 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 					{
 						// Create a new entry
 						$oMyClassGrant = MetaModel::NewObject("UserRightsMatrixClassStimulusGrant");
-						$oMyClassGrant->Set("userid", $oUser->GetKey());
+						$oMyClassGrant->Set("userid", $iUserId);
 						$oMyClassGrant->Set("class", $sClass);
 						$oMyClassGrant->Set("stimulus", $sStimulusCode);
 						$oMyClassGrant->Set("permission", "yes");
-						$iId = $oMyClassGrant->DBInsert();
+						$iId = $oMyClassGrant->DBInsertNoReload();
 					}
 				}
 				foreach (MetaModel::GetAttributesList($sClass) as $sAttCode)
@@ -259,12 +257,12 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 						{
 							// Create a new entry
 							$oMyAttGrant = MetaModel::NewObject("UserRightsMatrixAttributeGrant");
-							$oMyAttGrant->Set("userid", $oUser->GetKey());
+							$oMyAttGrant->Set("userid", $iUserId);
 							$oMyAttGrant->Set("class", $sClass);
 							$oMyAttGrant->Set("attcode", $sAttCode);
 							$oMyAttGrant->Set("action", $sAction);
 							$oMyAttGrant->Set("permission", "yes");
-							$iId = $oMyAttGrant->DBInsert();
+							$iId = $oMyAttGrant->DBInsertNoReload();
 						}
 					}
 				}

@@ -309,12 +309,12 @@ class DBObjectSearch
 	{
 		if (!MetaModel::IsValidKeyAttCode($this->GetClass(), $sExtKeyAttCode))
 		{
-			trigger_error("The attribute code '$sExtKeyAttCode' is not an external key of the class '{$this->GetClass()}' - the condition will be ignored", E_USER_WARNING);
+			throw new CoreWarning("The attribute code '$sExtKeyAttCode' is not an external key of the class '{$this->GetClass()}' - the condition will be ignored");
 		}
 		$oAttExtKey = MetaModel::GetAttributeDef($this->GetClass(), $sExtKeyAttCode);
 		if(!MetaModel::IsSameFamilyBranch($oFilter->GetClass(), $oAttExtKey->GetTargetClass()))
 		{
-			trigger_error("The specified filter (pointing to {$oFilter->GetClass()}) is not compatible with the key '{$this->GetClass()}::$sExtKeyAttCode', which is pointing to {$oAttExtKey->GetTargetClass()}", E_USER_ERROR);
+			throw new CoreException("The specified filter (pointing to {$oFilter->GetClass()}) is not compatible with the key '{$this->GetClass()}::$sExtKeyAttCode', which is pointing to {$oAttExtKey->GetTargetClass()}");
 		}
 
 		if (array_key_exists($sExtKeyAttCode, $this->m_aPointingTo))
@@ -347,12 +347,12 @@ class DBObjectSearch
 		$sForeignClassAlias = $oFilter->GetClassAlias();
 		if (!MetaModel::IsValidKeyAttCode($sForeignClass, $sForeignExtKeyAttCode))
 		{
-			trigger_error("The attribute code '$sForeignExtKeyAttCode' is not an external key of the class '{$sForeignClass}' - the condition will be ignored", E_USER_WARNING);
+			throw new CoreException("The attribute code '$sForeignExtKeyAttCode' is not an external key of the class '{$sForeignClass}' - the condition will be ignored");
 		}
 		$oAttExtKey = MetaModel::GetAttributeDef($sForeignClass, $sForeignExtKeyAttCode);
 		if(!MetaModel::IsSameFamilyBranch($this->GetClass(), $oAttExtKey->GetTargetClass()))
 		{
-			trigger_error("The specified filter (objects referencing an object of class {$this->GetClass()}) is not compatible with the key '{$sForeignClass}::$sForeignExtKeyAttCode', which is pointing to {$oAttExtKey->GetTargetClass()}", E_USER_ERROR);
+			throw new CoreException("The specified filter (objects referencing an object of class {$this->GetClass()}) is not compatible with the key '{$sForeignClass}::$sForeignExtKeyAttCode', which is pointing to {$oAttExtKey->GetTargetClass()}");
 		}
 		if (array_key_exists($sForeignClass, $this->m_aReferencedBy) && array_key_exists($sForeignExtKeyAttCode, $this->m_aReferencedBy[$sForeignClass]))
 		{
@@ -396,7 +396,7 @@ class DBObjectSearch
 	{
 		if ($this->GetClass() != $oFilter->GetClass())
 		{
-			trigger_error("Attempting to merge a filter of class '{$this->GetClass()}' with a filter of class '{$oFilter->GetClass()}'", E_USER_ERROR);
+			throw new CoreException("Attempting to merge a filter of class '{$this->GetClass()}' with a filter of class '{$oFilter->GetClass()}'");
 		}
 
 		// Translate search condition into our aliasing scheme
@@ -546,7 +546,7 @@ class DBObjectSearch
 				$iMaxDepth = $aCondition[3];
 				$oFilter->AddCondition_RelatedTo($oSubFilter, $sRelCode, $iMaxDepth);
 			default:
-				trigger_error("invalid filter definition (cannot unserialize the data, clear text = '$sClearText')", E_USER_ERROR);
+				throw new CoreException("invalid filter definition (cannot unserialize the data, clear text = '$sClearText')");
 			}
 		}
 		return $oFilter;
@@ -662,7 +662,7 @@ class DBObjectSearch
 		}
 		if (count($aParams) > 0)
 		{
-			trigger_error("Unused parameter(s) for this SibusQL expression: (".implode(', ', array_keys($aParams)).")");
+			throw new CoreException("Unused parameter(s) for this SibusQL expression: (".implode(', ', array_keys($aParams)).")");
 		}
 		return $sQuery;
 	}
@@ -931,7 +931,7 @@ class DBObjectSearch
 					}
 					else
 					{
-						trigger_error("Wrong format for filter definition: '$sQuery'");
+						throw new CoreException("Wrong format for filter definition: '$sQuery'");
 					}
 				}
 			}
