@@ -58,14 +58,14 @@ if ($oFilter != null)
 	$oResultBlock->RenderContent($oP);
 	
 	// Menu node
-	$sFilter = $oFilter->ToSibusQL();
+	$sFilter = $oFilter->ToOQL();
 	$sMenuNodeContent = <<<EOF
 <div id="TopPane">
-<itopblock BlockClass="DisplayBlock" objectclass="bizContact" type="search" asynchronous="false" encoding="text/sibusql">$sFilter</itopblock>
+<itopblock BlockClass="DisplayBlock" type="search" asynchronous="false" encoding="text/oql">$sFilter</itopblock>
 </div>
 <div id="BottomPane">
 <p></p>
-<itopblock BlockClass="DisplayBlock" objectclass="bizContact" type="list" asynchronous="false" encoding="text/sibusql">$sFilter</itopblock>
+<itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql">$sFilter</itopblock>
 </div>
 EOF;
 
