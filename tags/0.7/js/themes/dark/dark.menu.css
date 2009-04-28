@@ -1,0 +1,9 @@
+.ui-menu-toolbar {background:#222; font:10pt Verdana;}
+.ui-menu-toolbar-button {border:1px solid #DDD; background:#000;}
+.ui-menu-toolbar-button:hover {border:1px solid #CCC; background:#333; }
+.ui-menu-toolbar-button a {color:#fff;}
+.ui-menu-items {background:#000; border:1px solid #CCC; opacity:0.95; font:10pt Verdana; min-width:80px; *width:80px;}
+.ui-menu-item a { color:#fff; }
+.ui-menu-item-parent { }
+.ui-menu-item-disabled {color: #aaa; background: transparent;}
+.ui-context-header {color: #fff;}

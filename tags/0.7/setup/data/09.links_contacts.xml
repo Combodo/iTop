@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<lnkContactRealObject id="1">
+<contact_id>8</contact_id>
+<object_id>7</object_id>
+<role>business model expert</role>
+</lnkContactRealObject>
+<lnkContactRealObject id="2">
+<contact_id>21</contact_id>
+<object_id>2</object_id>
+<role>owner</role>
+</lnkContactRealObject>
+<lnkContactRealObject id="5">
+<contact_id>7</contact_id>
+<object_id>5</object_id>
+<role>Server Owner</role>
+</lnkContactRealObject>
+<lnkContactRealObject id="4">
+<contact_id>8</contact_id>
+<object_id>21</object_id>
+<role>Team Leader</role>
+</lnkContactRealObject>
+</Set>
