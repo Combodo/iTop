@@ -6,10 +6,18 @@ require_once('../application/wizardhelper.class.inc.php');
 require_once('../application/ui.linkswidget.class.inc.php');
 
 require_once('../application/startup.inc.php');
-if (isset($_SERVER['PHP_AUTH_USER']))
+session_start();
+if (isset($_SESSION['auth_user']))
 {
+	$sAuthUser = $_SESSION['auth_user'];
+	$sAuthPwd = $_SESSION['auth_pwd'];
 	// Attempt to login, fails silently
-	UserRights::Login($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
+	UserRights::Login($sAuthUser, $sAuthPwd);
+}
+else
+{
+	// No session information
+	echo "<p>No session information</p>\n";
 }
 
 $oPage = new ajax_page("");

@@ -268,6 +268,29 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 				}
 			}
 		}
+		// Create the "My Bookmarks" menu item (parent_id = 0, rank = 6)
+		if ($bNewUser)
+		{
+			$bAddMenu = true;
+		}
+		else
+		{
+			$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT menuNode WHERE type = 'user' AND parent_id = 0 AND user_id = $iUserId"));
+			$bAddMenu = ($oSet->Count() < 1);
+		}
+		if ($bAddMenu)
+		{
+			$oMenu = MetaModel::NewObject('menuNode');
+			$oMenu->Set('type', 'user');
+			$oMenu->Set('parent_id', 0);	// It's a toplevel entry
+			$oMenu->Set('rank', 6);			// Located just above the Admin Tools section (=7)
+			$oMenu->Set('name', 'My Bookmarks');
+			$oMenu->Set('label', 'My Favorite Items');
+			$oMenu->Set('hyperlink', 'UI.php');
+			$oMenu->Set('template', '<p></p><p></p><p style="text-align:center; font-family:Georgia, Times, serif; font-size:32px;">My bookmarks</p><p style="text-align:center; font-family:Georgia, Times, serif; font-size:14px;"><i>This section contains my most favorite search results</i></p>');
+			$oMenu->Set('user_id', $iUserId);
+			$oMenu->DBInsert();
+		}
 	}
 
 
