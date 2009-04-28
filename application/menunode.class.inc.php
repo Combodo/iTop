@@ -89,14 +89,17 @@ class menuNode extends DBObject
 		return $this->Get('hyperlink')."?".implode("&", $aParams);
 	}
 
-	public function GetChildNodesSet($sType)
+	public function GetChildNodesSet($sType = null)
 	{
 		$oSearchFilter = new DBObjectSearch("menuNode");
 		$oSearchFilter->AddCondition('parent_id', $this->GetKey(), '=');
-		$oSearchFilter->AddCondition('type', $sType, '=');
-		if ($sType == 'user')
+		if ($sType != null)
 		{
-		    $oSearchFilter->AddCondition('user_id', UserRights::GetUserId(), '=');
+			$oSearchFilter->AddCondition('type', $sType, '=');
+			if ($sType == 'user')
+			{
+			    $oSearchFilter->AddCondition('user_id', UserRights::GetUserId(), '=');
+			}
 		}
 		$oSet = new CMDBObjectSet($oSearchFilter, array('rank' => true));
 		return $oSet;
@@ -184,10 +187,13 @@ class menuNode extends DBObject
 		{
 			$oSearchFilter = new DbObjectSearch("menuNode");
 			$oSearchFilter->AddCondition('parent_id', 0, '=');
-			$oSearchFilter->AddCondition('type', $sType, '=');
-			if ($sType == 'user')
+			if ($sType != null)
 			{
-			    $oSearchFilter->AddCondition('user_id', UserRights::GetUserId(), '=');
+				$oSearchFilter->AddCondition('type', $sType, '=');
+				if ($sType == 'user')
+				{
+				    $oSearchFilter->AddCondition('user_id', UserRights::GetUserId(), '=');
+				}
 			}
 			$oRootSet = new CMDBObjectSet($oSearchFilter, array('rank' => true));
 			while($oNode = $oRootSet->Fetch())
@@ -207,10 +213,13 @@ class menuNode extends DBObject
 		$oSearchFilter = new DBObjectSearch("menuNode");
 		$oSearchFilter->AddCondition('parent_id', $this->Get('parent_id'));
 		$oSearchFilter->AddCondition('rank', $this->Get('rank'), '>');
-		$oSearchFilter->AddCondition('type', $sType, '=');
-		if ($sType == 'user')
+		if ($sType != null)
 		{
-		    $oSearchFilter->AddCondition('user_id', UserRights::GetUserId(), '=');
+			$oSearchFilter->AddCondition('type', $sType, '=');
+			if ($sType == 'user')
+			{
+			    $oSearchFilter->AddCondition('user_id', UserRights::GetUserId(), '=');
+			}
 		}
 		$oSet = new DBObjectSet($oSearchFilter, array('rank'=> true)); // Order by rank (true means ascending)
 		return $oSet;
