@@ -1,0 +1,989 @@
+<?php
+
+require_once('MyHelpers.class.inc.php');
+
+
+/**
+ * add some description here... 
+ *
+ * @package     iTopORM
+ */
+define('EXTKEY_RELATIVE', 1);
+
+/**
+ * add some description here... 
+ *
+ * @package     iTopORM
+ */
+define('EXTKEY_ABSOLUTE', 2);
+
+
+/**
+ * Attribute definition API, implemented in and many flavours (Int, String, Enum, etc.) 
+ *
+ * @package     iTopORM
+ * @author      Romain Quetiez <romainquetiez@yahoo.fr>
+ * @author      Denis Flaven <denisflave@free.fr>
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.itop.com
+ * @since       1.0
+ * @version     1.1.1.1 $
+ */
+abstract class AttributeDefinition
+{
+	abstract public function GetType();
+	abstract public function GetTypeDesc();
+	abstract public function GetEditClass();
+	abstract public function GetDBFieldType();
+
+	protected $m_sCode;
+	private $m_aParams = array();
+	private $m_sHostClass = array();
+	protected function Get($sParamName) {return $this->m_aParams[$sParamName];}
+	
+	public function __construct($sCode, $aParams)
+	{
+		$this->m_sCode = $sCode;
+		$this->m_aParams = $aParams;
+		$this->ConsistencyCheck();
+	}
+	public function OverloadParams($aParams)
+	{
+		foreach ($aParams as $sParam => $value)
+		{
+			if (!array_key_exists($sParam, $this->m_aParams))
+			{
+				throw new CoreException("Unknown attribute definition parameter '$sParam', please select a value in {".implode(", ", $this->m_aParams)."}");
+			}
+			else
+			{
+				$this->m_aParams[$sParam] = $value;
+			}
+		}
+	}
+	public function SetHostClass($sHostClass)
+	{
+		$this->m_sHostClass = $sHostClass;
+	}
+	public function GetHostClass()
+	{
+		return $this->m_sHostClass;
+	}
+
+	// Note: I could factorize this code with the parameter management made for the AttributeDef class
+	// to be overloaded
+	static protected function ListExpectedParams()
+	{
+		return array("label", "description", "allowed_values");
+	}
+
+	private function ConsistencyCheck()
+	{
+
+		// Check that any mandatory param has been specified
+		//
+		$aExpectedParams = $this->ListExpectedParams();
+		foreach($aExpectedParams as $sParamName)
+		{
+			if (!array_key_exists($sParamName, $this->m_aParams))
+			{
+				$aBacktrace = debug_backtrace();
+				$sTargetClass = $aBacktrace[2]["class"];
+				$sCodeInfo = $aBacktrace[1]["file"]." - ".$aBacktrace[1]["line"];
+				throw new Exception("ERROR missing parameter '$sParamName' in ".get_class($this)." declaration for class $sTargetClass ($sCodeInfo)");
+			}
+		}
+	} 
+
+	// table, key field, name field
+	public function ListDBJoins()
+	{
+		return "";
+		// e.g: return array("Site", "infrid", "name");
+	} 
+	public function IsDirectField() {return false;} 
+	public function IsScalar() {return false;} 
+	public function IsLinkSet() {return false;} 
+	public function IsExternalKey($iType = EXTKEY_RELATIVE) {return false;} 
+	public function IsExternalField() {return false;} 
+	public function IsWritable() {return false;} 
+	public function GetCode() {return $this->m_sCode;} 
+	public function GetLabel() {return $this->Get("label");} 
+	public function GetDescription() {return $this->Get("description");} 
+	public function GetValuesDef() {return $this->Get("allowed_values");} 
+	public function GetPrerequisiteAttributes() {return $this->Get("depends_on");} 
+	//public function IsSearchableStd() {return $this->Get("search_std");} 
+	//public function IsSearchableGlobal() {return $this->Get("search_global");} 
+	//public function IsMandatory() {return $this->Get("is_mandatory");} 
+	//public function GetMinVal() {return $this->Get("min");} 
+	//public function GetMaxVal() {return $this->Get("max");} 
+	//public function GetSize() {return $this->Get("size");} 
+	//public function GetCheckRegExp() {return $this->Get("regexp");} 
+	//public function GetCheckFunc() {return $this->Get("checkfunc");} 
+
+	// Definition: real value is what will be stored in memory and maintained by MetaModel
+	// DBObject::Set()        relies on MakeRealValue()
+	// MetaModel::MakeQuery()  relies on RealValueToSQLValue()
+	// DBObject::FromRow()    relies on SQLToRealValue()
+	public function MakeRealValue($proposedValue) {return $proposedValue;} // force an allowed value (type conversion and possibly forces a value as mySQL would do upon writing!)
+	public function RealValueToSQLValue($value) {return $value;} // format value as a valuable SQL literal (quoted outside)
+	public function SQLValueToRealValue($value) {return $value;} // take the result of a fetch... and make it a PHP variable
+
+	public function GetJSCheckFunc()
+	{
+		$sRegExp = $this->Get("regexp");
+		if (empty($sRegExp)) return 'return true;';
+
+		return "return regexp('$sRegExp', myvalue);";
+	} 
+	public function CheckValue($value)
+	{
+		$sRegExp = $this->Get("regexp");
+		if (empty($sRegExp)) return true;
+		
+		return preg_match(preg_escape($this->Get("regexp")), $value);
+	}
+	 
+	public function MakeValue()
+	{
+		$sComputeFunc = $this->Get("compute_func");
+		if (empty($sComputeFunc)) return null;
+
+		return call_user_func($sComputeFunc);
+	}
+	
+	abstract public function DBGetUsedFields();
+	abstract public function GetDefaultValue();
+
+	//
+	// To be overloaded in subclasses
+	//
+	
+	abstract public function GetBasicFilterOperators(); // returns an array of "opCode"=>"description"
+	abstract public function GetBasicFilterLooseOperator(); // returns an "opCode"
+	//abstract protected GetBasicFilterHTMLInput();
+	abstract public function GetBasicFilterSQLExpr($sOpCode, $value); 
+
+	public function GetAsHTML($sValue)
+	{
+		return Str::pure2html($sValue);
+	}
+
+	public function GetAsXML($sValue)
+	{
+		return Str::pure2xml($sValue);
+	}
+
+	public function GetAsCSV($sValue, $sSeparator = ';', $sSepEscape = ',')
+	{
+		return str_replace($sSeparator, $sSepEscape, $sValue);
+	}
+}
+
+/**
+ * Set of objects directly linked to an object, and being part of its definition  
+ *
+ * @package     iTopORM
+ * @author      Romain Quetiez <romainquetiez@yahoo.fr>
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.itop.com
+ * @since       1.0
+ * @version     $itopversion$
+ */
+class AttributeLinkedSet extends AttributeDefinition
+{
+	static protected function ListExpectedParams()
+	{
+		return array_merge(parent::ListExpectedParams(), array("depends_on", "linked_class", "ext_key_to_me", "count_min", "count_max"));
+	}
+
+	public function GetType() {return "Array of objects";}
+	public function GetTypeDesc() {return "Any kind of objects [subclass] of the same class";}
+	public function GetEditClass() {return "List";}
+	public function GetDBFieldType() {return "N/A";} // should be moved out of the AttributeDef root class
+
+	public function IsWritable() {return true;} 
+	public function IsLinkSet() {return true;} 
+
+	public function GetDefaultValue() {return DBObjectSet::FromScratch($this->Get('linked_class'));}
+
+	public function GetLinkedClass() {return $this->Get('linked_class');}
+	public function GetExtKeyToMe() {return $this->Get('ext_key_to_me');}
+
+	public function DBGetUsedFields() {return array();}
+	public function GetBasicFilterOperators() {return array();}
+	public function GetBasicFilterLooseOperator() {return '';}
+	public function GetBasicFilterSQLExpr($sOpCode, $value) {return '';}
+
+	public function GetAsHTML($sValue)
+	{
+		return "ERROR: LIST OF OBJECTS";
+	}
+
+	public function GetAsXML($sValue)
+	{
+		return "ERROR: LIST OF OBJECTS";
+	}
+
+	public function GetAsCSV($sValue, $sSeparator = ';', $sSepEscape = ',')
+	{
+		return "ERROR: LIST OF OBJECTS";
+	}
+}
+
+/**
+ * Set of objects linked to an object (n-n), and being part of its definition  
+ *
+ * @package     iTopORM
+ * @author      Romain Quetiez <romainquetiez@yahoo.fr>
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.itop.com
+ * @since       1.0
+ * @version     $itopversion$
+ */
+class AttributeLinkedSetIndirect extends AttributeLinkedSet
+{
+	static protected function ListExpectedParams()
+	{
+		return array_merge(parent::ListExpectedParams(), array("ext_key_to_remote"));
+	}
+	public function GetExtKeyToRemote() { return $this->Get('ext_key_to_remote'); }
+}
+
+/**
+ * Abstract class implementing default filters for a DB column  
+ *
+ * @package     iTopORM
+ * @author      Romain Quetiez <romainquetiez@yahoo.fr>
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.itop.com
+ * @since       1.0
+ * @version     $itopversion$
+ */
+class AttributeDBFieldVoid extends AttributeDefinition
+{
+	static protected function ListExpectedParams()
+	{
+		return array_merge(parent::ListExpectedParams(), array("depends_on", "sql"));
+	}
+
+	public function GetType() {return "Void";}
+	public function GetTypeDesc() {return "Any kind of value, from the DB";}
+	public function GetEditClass() {return "String";}
+	public function GetDBFieldType() {return "VARCHAR(255)";}
+	
+	public function IsDirectField() {return true;} 
+	public function IsScalar() {return true;} 
+	public function IsWritable() {return true;} 
+	public function GetSQLExpr()    {return $this->Get("sql");}
+	public function GetDefaultValue() {return "";}
+	public function IsNullAllowed() {return false;}
+	public function DBGetUsedFields()
+	{
+		// #@# bugge a mort... a suivre...
+		return array($this->Get("sql"));
+	} 
+
+	public function GetBasicFilterOperators()
+	{
+		return array("="=>"equals", "!="=>"differs from");
+	}
+	public function GetBasicFilterLooseOperator()
+	{
+		return "=";
+	}
+
+	public function GetBasicFilterSQLExpr($sOpCode, $value)
+	{
+		$sQValue = CMDBSource::Quote($value);
+		switch ($sOpCode)
+		{
+		case '!=':
+			return $this->GetSQLExpr()." != $sQValue";
+			break;
+		case '=':
+		default:
+			return $this->GetSQLExpr()." = $sQValue";
+		}
+	} 
+}
+
+/**
+ * Base class for all kind of DB attributes, with the exception of external keys 
+ *
+ * @package     iTopORM
+ * @author      Romain Quetiez <romainquetiez@yahoo.fr>
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.itop.com
+ * @since       1.0
+ * @version     $itopversion$
+ */
+class AttributeDBField extends AttributeDBFieldVoid
+{
+	static protected function ListExpectedParams()
+	{
+		return array_merge(parent::ListExpectedParams(), array("default_value", "is_null_allowed"));
+	}
+	public function GetDefaultValue() {return $this->Get("default_value");}
+	public function IsNullAllowed() {return strtolower($this->Get("is_null_allowed"));}
+}
+
+/**
+ * Map an integer column to an attribute 
+ *
+ * @package     iTopORM
+ * @author      Romain Quetiez <romainquetiez@yahoo.fr>
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.itop.com
+ * @since       1.0
+ * @version     $itopversion$
+ */
+class AttributeInteger extends AttributeDBField
+{
+	static protected function ListExpectedParams()
+	{
+		return parent::ListExpectedParams();
+		//return array_merge(parent::ListExpectedParams(), array());
+	}
+
+	public function GetType() {return "Integer";}
+	public function GetTypeDesc() {return "Numeric value (could be negative)";}
+	public function GetEditClass() {return "String";}
+	public function GetDBFieldType() {return "INT";}
+	
+	public function GetBasicFilterOperators()
+	{
+		return array(
+			"!="=>"differs from",
+			"="=>"equals",
+			">"=>"greater (strict) than",
+			">="=>"greater than",
+			"<"=>"less (strict) than",
+			"<="=>"less than",
+			"in"=>"in"
+		);
+	}
+	public function GetBasicFilterLooseOperator()
+	{
+		// Unless we implement an "equals approximately..." or "same order of magnitude"
+		return "=";
+	}
+
+	public function GetBasicFilterSQLExpr($sOpCode, $value)
+	{
+		$sQValue = CMDBSource::Quote($value);
+		switch ($sOpCode)
+		{
+		case '!=':
+			return $this->GetSQLExpr()." != $sQValue";
+			break;
+		case '>':
+			return $this->GetSQLExpr()." > $sQValue";
+			break;
+		case '>=':
+			return $this->GetSQLExpr()." >= $sQValue";
+			break;
+		case '<':
+			return $this->GetSQLExpr()." < $sQValue";
+			break;
+		case '<=':
+			return $this->GetSQLExpr()." <= $sQValue";
+			break;
+		case 'in':
+			if (!is_array($value)) throw new CoreException("Expected an array for argument value (sOpCode='$sOpCode')");
+			return $this->GetSQLExpr()." IN ('".implode("', '", $value)."')"; 
+			break;
+
+		case '=':
+		default:
+			return $this->GetSQLExpr()." = \"$value\"";
+		}
+	} 
+
+	public function MakeRealValue($proposedValue)
+	{
+		//return intval($proposedValue); could work as well
+		return (int)$proposedValue;
+	}
+	public function RealValueToSQLValue($value)
+	{
+		assert(is_numeric($value));
+		return $value; // supposed to be an int
+	}
+	public function SQLValueToRealValue($value)
+	{
+		// Use cast (int) or intval() ?
+		return (int)$value;
+		
+	}
+}
+
+/**
+ * Map a varchar column (size < ?) to an attribute 
+ *
+ * @package     iTopORM
+ * @author      Romain Quetiez <romainquetiez@yahoo.fr>
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.itop.com
+ * @since       1.0
+ * @version     $itopversion$
+ */
+class AttributeString extends AttributeDBField
+{
+	static protected function ListExpectedParams()
+	{
+		return parent::ListExpectedParams();
+		//return array_merge(parent::ListExpectedParams(), array());
+	}
+
+	public function GetType() {return "String";}
+	public function GetTypeDesc() {return "Alphanumeric string";}
+	public function GetEditClass() {return "String";}
+	public function GetDBFieldType() {return "VARCHAR(255)";}
+
+	public function GetBasicFilterOperators()
+	{
+		return array(
+			"="=>"equals",
+			"!="=>"differs from",
+			"Like"=>"equals (no case)",
+			"NotLike"=>"differs from (no case)",
+			"Contains"=>"contains",
+			"Begins with"=>"begins with",
+			"Finishes with"=>"finishes with"
+		);
+	}
+	public function GetBasicFilterLooseOperator()
+	{
+		return "Contains";
+	}
+
+	public function GetBasicFilterSQLExpr($sOpCode, $value)
+	{
+		$sQValue = CMDBSource::Quote($value);
+		switch ($sOpCode)
+		{
+		case '=':
+		case '!=':
+			return $this->GetSQLExpr()." $sOpCode $sQValue";
+		case 'Begins with':
+			return $this->GetSQLExpr()." LIKE ".CMDBSource::Quote("$value%");
+		case 'Finishes with':
+			return $this->GetSQLExpr()." LIKE ".CMDBSource::Quote("%$value");
+		case 'Contains':
+			return $this->GetSQLExpr()." LIKE ".CMDBSource::Quote("%$value%");
+		case 'NotLike':
+			return $this->GetSQLExpr()." NOT LIKE $sQValue";
+		case 'Like':
+		default:
+			return $this->GetSQLExpr()." LIKE $sQValue";
+		}
+	} 
+
+	public function MakeRealValue($proposedValue)
+	{
+		return (string)$proposedValue;
+		// if (!settype($proposedValue, "string"))
+		// {
+		// 	throw new CoreException("Failed to change the type of '$proposedValue' to a string");
+		// }
+	}
+	public function RealValueToSQLValue($value)
+	{
+		assert(is_string($value));
+		return $value;
+	}
+	public function SQLValueToRealValue($value)
+	{
+		return $value;
+	}
+}
+
+/**
+ * Map a text column (size > ?) to an attribute 
+ *
+ * @package     iTopORM
+ * @author      Romain Quetiez <romainquetiez@yahoo.fr>
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.itop.com
+ * @since       1.0
+ * @version     $itopversion$
+ */
+class AttributeText extends AttributeString
+{
+	public function GetType() {return "Text";}
+	public function GetTypeDesc() {return "Multiline character string";}
+	public function GetEditClass() {return "Text";}
+	public function GetDBFieldType() {return "TEXT";}
+
+	public function GetAsHTML($sValue)
+	{
+		return str_replace("\n", "<br>\n", parent::GetAsHTML($sValue));
+	}
+
+	public function GetAsXML($value)
+	{
+		return Str::pure2xml($value);
+	}
+
+	public function GetAsCSV($value, $sSeparator = ';', $sSepEscape = ',')
+	{
+		return str_replace("\n", "[newline]", parent::GetAsCSV($sValue, $sSeparator, $sSepEscape));
+	}
+}
+
+/**
+ * Map a enum column to an attribute 
+ *
+ * @package     iTopORM
+ * @author      Romain Quetiez <romainquetiez@yahoo.fr>
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.itop.com
+ * @since       1.0
+ * @version     $itopversion$
+ */
+class AttributeEnum extends AttributeString
+{
+	static protected function ListExpectedParams()
+	{
+		return parent::ListExpectedParams();
+		//return array_merge(parent::ListExpectedParams(), array());
+	}
+
+	public function GetType() {return "Enum";}
+	public function GetTypeDesc() {return "List of predefined alphanumeric strings";}
+	public function GetEditClass() {return "String";}
+	public function GetDBFieldType()
+	{
+		$oValDef = $this->GetValuesDef();
+		if ($oValDef)
+		{
+			$aValues = CMDBSource::Quote($oValDef->GetValues(array(), ""), true);
+		}
+		else
+		{
+			$aValues = array();
+		}
+		if (count($aValues) > 0)
+		{
+			return "ENUM(".implode(", ", $aValues).")";
+		}
+		else
+		{
+			return "VARCHAR(255)"; // ENUM() is not an allowed syntax!
+		}
+	}
+
+	public function GetBasicFilterOperators()
+	{
+		return parent::GetBasicFilterOperators();
+	}
+	public function GetBasicFilterLooseOperator()
+	{
+		return parent::GetBasicFilterLooseOperator();
+	}
+
+	public function GetBasicFilterSQLExpr($sOpCode, $value)
+	{
+		return parent::GetBasicFilterSQLExpr($sOpCode, $value);
+	} 
+}
+
+/**
+ * Map a date+time column to an attribute 
+ *
+ * @package     iTopORM
+ * @author      Romain Quetiez <romainquetiez@yahoo.fr>
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.itop.com
+ * @since       1.0
+ * @version     $itopversion$
+ */
+class AttributeDate extends AttributeDBField
+{
+	const MYDATEFORMAT = "Y-m-d H:i:s";
+	//const MYDATETIMEZONE = "UTC";
+	const MYDATETIMEZONE = "Europe/Paris";
+	static protected $const_TIMEZONE = null; // set once for all upon object construct 
+
+	static public function InitStatics()
+	{
+		// Init static constant once for all (remove when PHP allows real static const)
+		self::$const_TIMEZONE = new DateTimeZone(self::MYDATETIMEZONE);
+
+		// #@# Init default timezone -> do not get a notice... to be improved !!!
+		date_default_timezone_set(self::MYDATETIMEZONE);
+	}
+
+	static protected function ListExpectedParams()
+	{
+		return parent::ListExpectedParams();
+		//return array_merge(parent::ListExpectedParams(), array());
+	}
+
+	public function GetType() {return "Date";}
+	public function GetTypeDesc() {return "Date and time";}
+	public function GetEditClass() {return "Date";}
+	public function GetDBFieldType() {return "TIMESTAMP";}
+
+	public function GetBasicFilterOperators()
+	{
+		return array(
+			"="=>"equals",
+			"!="=>"differs from",
+			"<"=>"before",
+			"<="=>"before",
+			">"=>"after (strictly)",
+			">="=>"after",
+			"SameDay"=>"same day (strip time)",
+			"SameMonth"=>"same year/month",
+			"SameYear"=>"same year",
+			"Today"=>"today",
+			">|"=>"after today + N days",
+			"<|"=>"before today + N days",
+			"=|"=>"equals today + N days",
+		);
+	}
+	public function GetBasicFilterLooseOperator()
+	{
+		// Unless we implement a "same xxx, depending on given precision" !
+		return "=";
+	}
+
+	public function GetBasicFilterSQLExpr($sOpCode, $value)
+	{
+		$sQValue = CMDBSource::Quote($value);
+
+		switch ($sOpCode)
+		{
+		case '=':
+		case '!=':
+		case '<':
+		case '<=':
+		case '>':
+		case '>=':
+			return $this->GetSQLExpr()." $sOpCode $sQValue";
+		case 'SameDay':
+			return "DATE(".$this->GetSQLExpr().") = DATE($sQValue)";
+		case 'SameMonth':
+			return "DATE_FORMAT(".$this->GetSQLExpr().", '%Y-%m') = DATE_FORMAT($sQValue, '%Y-%m')";
+		case 'SameYear':
+			return "MONTH(".$this->GetSQLExpr().") = MONTH($sQValue)";
+		case 'Today':
+			return "DATE(".$this->GetSQLExpr().") = CURRENT_DATE()";
+		case '>|':
+			return "DATE(".$this->GetSQLExpr().") > DATE_ADD(CURRENT_DATE(), INTERVAL $sQValue DAY)";
+		case '<|':
+			return "DATE(".$this->GetSQLExpr().") < DATE_ADD(CURRENT_DATE(), INTERVAL $sQValue DAY)";
+		case '=|':
+			return "DATE(".$this->GetSQLExpr().") = DATE_ADD(CURRENT_DATE(), INTERVAL $sQValue DAY)";
+		default:
+			return $this->GetSQLExpr()." = $sQValue";
+		}
+	}
+	
+	public function MakeRealValue($proposedValue)
+	{
+		if (!is_numeric($proposedValue))
+		{
+			return $proposedValue;
+		}
+		else
+		{
+			return date("Y-m-d H:i:s", $proposedValue);
+		}
+		throw new CoreException("Invalid type for a date (found ".gettype($proposedValue)." and accepting string/int/DateTime)");
+		return null;
+	}
+	public function RealValueToSQLValue($value)
+	{
+		if (empty($value))
+		{
+			// Make a valid date for MySQL. TO DO: support NULL as a literal value for fields that can be null.
+			return '0000-00-00 00:00:00';
+		}
+		return $value;
+	}
+	public function SQLValueToRealValue($value)
+	{
+		return $value;
+	}
+
+	public function GetAsHTML($value)
+	{
+		return Str::pure2html($value);
+	}
+
+	public function GetAsXML($value)
+	{
+		return Str::pure2xml($value);
+	}
+
+	public function GetAsCSV($value, $sSeparator = ';', $sSepEscape = ',')
+	{
+		return str_replace($sSeparator, $sSepEscape, $value);
+	}
+}
+
+// Init static constant once for all (remove when PHP allows real static const)
+AttributeDate::InitStatics();
+
+
+/**
+ * Map a foreign key to an attribute 
+ *  AttributeExternalKey and AttributeExternalField may be an external key
+ *  the difference is that AttributeExternalKey corresponds to a column into the defined table
+ *  where an AttributeExternalField corresponds to a column into another table (class)
+ *
+ * @package     iTopORM
+ * @author      Romain Quetiez <romainquetiez@yahoo.fr>
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.itop.com
+ * @since       1.0
+ * @version     $itopversion$
+ */
+class AttributeExternalKey extends AttributeDBFieldVoid
+{
+	static protected function ListExpectedParams()
+	{
+		return array_merge(parent::ListExpectedParams(), array("targetclass", "is_null_allowed"));
+	}
+
+	public function GetType() {return "Extkey";}
+	public function GetTypeDesc() {return "Link to another object";}
+	public function GetEditClass() {return "ExtKey";}
+	public function GetDBFieldType() {return "INT";}
+
+	public function IsExternalKey($iType = EXTKEY_RELATIVE) {return true;}
+	public function GetTargetClass($iType = EXTKEY_RELATIVE) {return $this->Get("targetclass");}
+	public function GetKeyAttDef($iType = EXTKEY_RELATIVE){return $this;}
+	public function GetKeyAttCode() {return $this->GetCode();} 
+	
+
+	public function GetDefaultValue() {return 0;}
+	public function IsNullAllowed() {return $this->Get("is_null_allowed");}
+
+	public function GetBasicFilterOperators()
+	{
+		return parent::GetBasicFilterOperators();
+	}
+	public function GetBasicFilterLooseOperator()
+	{
+		return parent::GetBasicFilterLooseOperator();
+	}
+
+	public function GetBasicFilterSQLExpr($sOpCode, $value)
+	{
+		return parent::GetBasicFilterSQLExpr($sOpCode, $value);
+	} 
+
+	// overloaded here so that an ext key always have the answer to
+	// "what are you possible values?"
+	public function GetValuesDef()
+	{
+		$oValSetDef = $this->Get("allowed_values");
+		if (!$oValSetDef)
+		{
+			// Let's propose every existing value
+			$oValSetDef = new ValueSetObjects($this->GetTargetClass());
+		}
+		return $oValSetDef;
+	} 
+}
+
+/**
+ * An attribute which corresponds to an external key (direct or indirect) 
+ *
+ * @package     iTopORM
+ * @author      Romain Quetiez <romainquetiez@yahoo.fr>
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.itop.com
+ * @since       1.0
+ * @version     $itopversion$
+ */
+class AttributeExternalField extends AttributeDefinition
+{
+
+	static protected function ListExpectedParams()
+	{
+		return array_merge(parent::ListExpectedParams(), array("extkey_attcode", "target_attcode"));
+	}
+
+	public function GetType() {return "ExtkeyField";}
+	public function GetTypeDesc() {return "Field of an object pointed to by the current object";}
+	public function GetEditClass() {return "ExtField";}
+	public function GetDBFieldType()
+	{
+		// throw new CoreException("external attribute: does it make any sense to request its type ?");  
+		$oExtAttDef = $this->GetExtAttDef();
+		return $oExtAttDef->GetDBFieldType(); 
+	}
+
+	public function IsExternalKey($iType = EXTKEY_RELATIVE)
+	{
+		switch($iType)
+		{
+		case EXTKEY_ABSOLUTE:
+			// see further
+			$oRemoteAtt = $this->GetExtAttDef();
+			return $oRemoteAtt->IsExternalKey($iType);
+
+		case EXTKEY_RELATIVE:
+			return false;
+
+		default:
+			throw new CoreException("Unexpected value for argument iType: '$iType'");
+		}
+	}
+
+	public function GetTargetClass($iType = EXTKEY_RELATIVE)
+	{
+		return $this->GetKeyAttDef($iType)->GetTargetClass();
+	}
+
+	public function IsExternalField() {return true;} 
+	public function GetKeyAttCode() {return $this->Get("extkey_attcode");} 
+	public function GetExtAttCode() {return $this->Get("target_attcode");} 
+
+	public function GetKeyAttDef($iType = EXTKEY_RELATIVE)
+	{
+		switch($iType)
+		{
+		case EXTKEY_ABSOLUTE:
+			// see further
+			$oRemoteAtt = $this->GetExtAttDef();
+			if ($oRemoteAtt->IsExternalField())
+			{
+				return $oRemoteAtt->GetKeyAttDef(EXTKEY_ABSOLUTE);
+			}
+			else if ($oRemoteAtt->IsExternalKey())
+			{
+				return $oRemoteAtt;
+			}
+			return $this->GetKeyAttDef(EXTKEY_RELATIVE); // which corresponds to the code hereafter !
+
+		case EXTKEY_RELATIVE:
+			return MetaModel::GetAttributeDef($this->GetHostClass(), $this->Get("extkey_attcode"));
+
+		default:
+			throw new CoreException("Unexpected value for argument iType: '$iType'");
+		}
+	}
+
+	public function GetExtAttDef()
+	{
+		$oKeyAttDef = $this->GetKeyAttDef();
+		$oExtAttDef = MetaModel::GetAttributeDef($oKeyAttDef->Get("targetclass"), $this->Get("target_attcode"));
+		return $oExtAttDef;
+	}
+
+	public function GetSQLExpr()
+	{
+		$oExtAttDef = $this->GetExtAttDef();
+		return $oExtAttDef->GetSQLExpr(); 
+	} 
+	public function DBGetUsedFields()
+	{
+		// No field is used but the one defined in the field of the external class
+		// #@# so what ?
+		return array();
+	} 
+
+	public function GetDefaultValue()
+	{
+		$oExtAttDef = $this->GetExtAttDef();
+		return $oExtAttDef->GetDefaultValue(); 
+	}
+	public function IsNullAllowed()
+	{
+		$oExtAttDef = $this->GetExtAttDef();
+		return $oExtAttDef->IsNullAllowed(); 
+	}
+
+	public function GetBasicFilterOperators()
+	{
+		$oExtAttDef = $this->GetExtAttDef();
+		return $oExtAttDef->GetBasicFilterOperators(); 
+	}
+	public function GetBasicFilterLooseOperator()
+	{
+		$oExtAttDef = $this->GetExtAttDef();
+		return $oExtAttDef->GetBasicFilterLooseOperator(); 
+	}
+
+	public function GetBasicFilterSQLExpr($sOpCode, $value)
+	{
+		$oExtAttDef = $this->GetExtAttDef();
+		return $oExtAttDef->GetBasicFilterSQLExpr($sOpCode, $value); 
+	} 
+
+	public function MakeRealValue($proposedValue)
+	{
+		$oExtAttDef = $this->GetExtAttDef();
+		return $oExtAttDef->MakeRealValue($proposedValue);
+	}
+	public function RealValueToSQLValue($value)
+	{
+		// This one could be used in case of filtering only
+		$oExtAttDef = $this->GetExtAttDef();
+		return $oExtAttDef->RealValueToSQLValue($value);
+	}
+	public function SQLValueToRealValue($value)
+	{
+		$oExtAttDef = $this->GetExtAttDef();
+		return $oExtAttDef->SQLValueToRealValue($value);
+	}
+	public function GetAsHTML($value)
+	{
+		$oExtAttDef = $this->GetExtAttDef();
+		return $oExtAttDef->GetAsHTML($value);
+	}
+	public function GetAsXML($value)
+	{
+		$oExtAttDef = $this->GetExtAttDef();
+		return $oExtAttDef->GetAsXML($value);
+	}
+	public function GetAsCSV($value, $sSeparator = ';', $sSepEscape = ',')
+	{
+		$oExtAttDef = $this->GetExtAttDef();
+		return $oExtAttDef->GetAsCSV($value);
+	}
+}
+
+/**
+ * Map a varchar column to an URL (formats the ouput in HMTL) 
+ *
+ * @package     iTopORM
+ * @author      Romain Quetiez <romainquetiez@yahoo.fr>
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.itop.com
+ * @since       1.0
+ * @version     $itopversion$
+ */
+class AttributeURL extends AttributeString
+{
+	static protected function ListExpectedParams()
+	{
+		//return parent::ListExpectedParams();
+		return array_merge(parent::ListExpectedParams(), array("target", "label"));
+	}
+
+	public function GetType() {return "Url";}
+	public function GetTypeDesc() {return "Absolute or relative URL as a text string";}
+	public function GetEditClass() {return "String";}
+
+	public function GetAsHTML($sValue)
+	{
+		$sTarget = $this->Get("target");
+		if (empty($sTarget)) $sTarget = "_blank";
+		$sLabel = Str::pure2html($sValue);
+		if (strlen($sLabel) > 40)
+		{
+			// Truncate the length to about 40 characters, by removing the middle
+			$sLabel = substr($sLabel, 0, 25).'...'.substr($sLabel, -15);
+		}
+		return "<a target=\"$sTarget\" href=\"$sValue\">$sLabel</a>";
+	}
+}
+
+?>
