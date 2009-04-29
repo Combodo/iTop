@@ -1,0 +1,16 @@
+<div class="page_header">
+	<itopblock blockclass="MenuBlock" type="popup" encoding="text/sibusql" label="Actions">$class$: pkey = $pkey$</itopblock>
+	<h1>$class$: <span class="hilite">$name$</span></h1>
+	<itopblock blockclass="HistoryBlock" type="toggle" encoding="text/oql">SELECT CMDBChangeOpSetAttribute WHERE objkey = $pkey$ AND objclass = '$class$'</itopblock>
+</div>
+<img src="../images/tar.png" style="margin-top:-10px; margin-right:10px; float:right">
+<itopblock blockclass="DisplayBlock" asynchronous="true" type="bare_details" encoding="text/sibusql">bizInfraGroup: pkey = $pkey$</itopblock>
+<itoptabs>
+	<itoptab name="Infrastructures">
+		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">lnkInfraGrouping: infra_group_id = $pkey$</itopblock>
+	</itoptab>
+		<itoptab name="Contacts">
+		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">lnkContactRealObject: object_id = $pkey$</itopblock>
+	</itoptab>
+	
+</itoptabs>

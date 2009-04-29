@@ -1,0 +1,25 @@
+<div class="page_header">
+	<itopblock blockclass="MenuBlock" type="popup" encoding="text/sibusql" label="Actions">$class$: pkey = $pkey$</itopblock>
+	<h1>$class$: <span class="hilite">$name$</span></h1>
+	<itopblock blockclass="HistoryBlock" type="toggle" encoding="text/oql">SELECT CMDBChangeOpSetAttribute WHERE objkey = $pkey$ AND objclass = '$class$'</itopblock>
+</div>
+<img src="../images/connect_to_network.png" style="margin-top:-10px; margin-right:10px; float:right">
+<itopblock blockclass="DisplayBlock" asynchronous="true" type="bare_details" encoding="text/sibusql">bizNetworkDevice: pkey = $pkey$</itopblock>
+<itoptabs>
+	<itoptab name="Interfaces">
+		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">bizInterface: device_id = $pkey$</itopblock>
+	</itoptab>
+	<itoptab name="Contacts">
+		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">lnkContactRealObject: object_id = $pkey$</itopblock>
+	</itoptab>
+	<itoptab name="Incidents">
+		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">bizIncidentTicket: PKEY IS ticket_id IN (lnkInfraTicket: infra_id = $pkey$)</itopblock>
+	</itoptab>
+	<itoptab name="Changes">
+		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">bizChangeTicket: PKEY IS ticket_id IN (lnkInfraChangeTicket: infra_id = $pkey$)</itopblock>
+	</itoptab>
+	<itoptab name="Documents">
+		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">lnkDocumentRealObject: object_id = $pkey$</itopblock>
+	</itoptab>
+</itoptabs>
+
