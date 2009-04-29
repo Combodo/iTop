@@ -248,10 +248,6 @@ class DisplayBlock
 			$bDashboardMode = isset($aExtraParams['dashboard']) ? ($aExtraParams['dashboard'] == 'true') : false;
 			if ( ($this->m_oSet->Count()> 0) && (UserRights::IsActionAllowed($this->m_oSet->GetClass(), UR_ACTION_READ, $this->m_oSet) == UR_ALLOWED_YES) )
 			{
-				if (!$bDashboardMode)
-				{
-					$sHtml .= $oPage->GetP($this->m_oSet->Count()." object(s).");
-				}
 				$sLinkage = isset($aExtraParams['linkage']) ? $aExtraParams['linkage'] : '';
 				$sHtml .= cmdbAbstractObject::GetDisplaySet($oPage, $this->m_oSet, $sLinkage, !$bDashboardMode /* bDisplayMenu */);
 			}

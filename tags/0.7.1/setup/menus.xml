@@ -156,15 +156,6 @@
 <rank>4</rank>
 <type>application</type>
 </menuNode>
-<menuNode id="44">
-<parent_id>17</parent_id>
-<name>Backup &amp; Restore</name>
-<label>Backup &amp; Restore the whole database</label>
-<hyperlink>./db_importer.php</hyperlink>
-<template></template>
-<rank>998</rank>
-<type>application</type>
-</menuNode>
 <menuNode id="66">
 <parent_id>0</parent_id>
 <name>Change Management</name>
@@ -367,7 +358,7 @@ td.dashboard {
 <parent_id>17</parent_id>
 <name>Export</name>
 <label>Export any filter in HTML, CSV or XML</label>
-<hyperlink>./export.php</hyperlink>
+<hyperlink>../webservices/export.php</hyperlink>
 <template></template>
 <rank>1000</rank>
 <type>application</type>
