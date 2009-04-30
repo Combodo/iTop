@@ -330,11 +330,11 @@ function PrepareObject(&$oTargetObj, $aRowData, $aAttList, $aExtKeys, &$aWarning
 			// Report it
 			if (array_key_exists($sAttCode, $oTargetObj->ListChanges()))
 			{
-				$aResults[$sAttCode]= "<div class=\"csvimport_ok\">".$oForeignObj->GetHyperLink()."</div>";
+				$aResults[$sAttCode]= "<div class=\"csvimport_ok\">".$oForeignObj->GetName()."</div>";
 			}
 			else
 			{
-				$aResults[$sAttCode]= "<div class=\"\">".$oForeignObj->GetHyperLink()."</div>";
+				$aResults[$sAttCode]= "<div class=\"\">".$oForeignObj->GetName()."</div>";
 			}
 			break;
 		default:
@@ -421,7 +421,7 @@ function CreateObject(&$aResult, $iRow, $sClass, $aRowData, $aAttList, $aExtKeys
 	if ($oChange)
 	{
 		$newID = $oTargetObj->DBInsertTracked($oChange);
-		$aResult[$iRow]["__STATUS__"] = "Created: ".$oTargetObj->GetHyperLink($newID);
+		$aResult[$iRow]["__STATUS__"] = "Created: ".$oTargetObj->GetName();
 	}
 	else
 	{
@@ -561,7 +561,7 @@ function ProcessData($oPage, $sClass, $oCSVParser, $aFieldMap, $aIsReconcKey, CM
 		case 1:
 			$oTargetObj = $oReconciliationSet->Fetch();
 			UpdateObject($aResult, $iRow, $oTargetObj, $aRowData, $aAttList, $aExtKeys, $oChange);
-			$aResult[$iRow]["__RECONCILIATION__"] = "Found a ".$oTargetObj->GetHyperLink("match");
+			$aResult[$iRow]["__RECONCILIATION__"] = "Found a match: ".$oTargetObj->GetName();
 			// $aResult[$iRow]["__STATUS__"]=> set in UpdateObject
 			break;
 		default:
