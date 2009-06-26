@@ -1,0 +1,61 @@
+body.dark { font:11pt Calibri; background:#111; color:snow; }
+
+.dark .ui-tree-nodes * { outline:none; }
+.dark .ui-tree-nodes {
+    position:relative;
+    list-style: none;
+    margin:0;
+    padding:0;
+    margin-left:0;
+    padding-left:0.8em;
+}
+
+.dark .ui-tree-node {
+    margin:0;
+    padding:0;
+    cursor: default;
+}
+
+.dark .ui-tree-node-text {
+    text-decoration:none;
+    color:snow;
+    padding:0 .3em; 
+}
+
+.dark .ui-tree-node-selected > .ui-tree-node-text {
+    background: #448;
+}
+
+.dark .ui-tree-node-button {
+    border: 1px solid #222;
+    padding-left:1px;
+    color: #666;
+    font:7pt Courier New,monospace;
+    margin-top: 0.5em;
+    position: absolute;
+    left: 0.2em;
+    width: 0.7em;
+    height: 0.8em;
+    line-height: 0.8em;
+    text-decoration: none;
+    display:none;
+}
+
+.dark .ui-tree-node-expanded > .ui-tree-node-button {
+    background: #181818;
+    display:block;
+}
+
+.dark .ui-tree-node-collapsed > .ui-tree-node-button {
+    background: #222;
+    display:block;
+}
+
+.dark .ui-tree-node-moving > .ui-tree-node-button {
+    background: #282828;
+}
+
+.dark .ui-tree-node-moving > .ui-tree-node-text {
+    background: #474; color:#FFF;
+}
+

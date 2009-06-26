@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<bizNetworkDevice id="6">
+<name>router01</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>high</severity>
+<location_id>1</location_id>
+<brand>Cisco</brand>
+<model>6500</model>
+<serial_number>S2345985</serial_number>
+<type>switch</type>
+<ip_address>10.25.3.45</ip_address>
+<default_gateway>10.25.3.1</default_gateway>
+<ios_version>8.2</ios_version>
+<memory>flash :1=16.48MB</memory>
+<snmp_read>public</snmp_read>
+<snmp_write>private</snmp_write>
+</bizNetworkDevice>
+<bizNetworkDevice id="323">
+<name>router02</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>high</severity>
+<location_id>1</location_id>
+<brand>Cisco</brand>
+<model>6500</model>
+<serial_number>S2345985</serial_number>
+<type>switch</type>
+<ip_address>10.25.3.46</ip_address>
+<default_gateway>10.25.3.1</default_gateway>
+<ios_version>8.2</ios_version>
+<memory>flash :1=16.48MB</memory>
+<snmp_read>public</snmp_read>
+<snmp_write>private</snmp_write>
+</bizNetworkDevice>
+<bizNetworkDevice id="324">
+<name>router03</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>high</severity>
+<location_id>1</location_id>
+<brand>Cisco</brand>
+<model>6500</model>
+<serial_number>S2345985</serial_number>
+<type>switch</type>
+<ip_address>10.25.3.47</ip_address>
+<default_gateway>10.25.3.1</default_gateway>
+<ios_version>8.2</ios_version>
+<memory>flash :1=16.48MB</memory>
+<snmp_read>public</snmp_read>
+<snmp_write>private</snmp_write>
+</bizNetworkDevice>
+<bizNetworkDevice id="17">
+<name>switch01</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>high</severity>
+<location_id>1</location_id>
+<brand></brand>
+<model></model>
+<serial_number></serial_number>
+<type>switch</type>
+<ip_address></ip_address>
+<default_gateway></default_gateway>
+<ios_version></ios_version>
+<memory></memory>
+<snmp_read></snmp_read>
+<snmp_write></snmp_write>
+</bizNetworkDevice>
+</Set>
