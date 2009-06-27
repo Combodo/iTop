@@ -612,7 +612,21 @@ class MenuBlock extends DisplayBlock
 			}
 			else
 			{
-				$aActions[] = array ('label' => 'eMail', 'url' => "mailto:?subject=".$oSet->GetFilter()->__DescribeHTML()."&body=".urlencode("http://localhost:81/pages/UI.php?operation=search&filter=$sFilter&$sContext"));
+				// Build an absolute URL to this page on this server/port
+				$sServerName = $_SERVER['SERVER_NAME'];
+				$sProtocol = isset($_SERVER['HTTPS']) ? 'https' : 'http';
+				if ($sProtocol == 'http')
+				{
+					$sPort = ($_SERVER['SERVER_PORT'] == 80) ? '' : ':'.$_SERVER['SERVER_PORT'];
+				}
+				else
+				{
+					$sPort = ($_SERVER['SERVER_PORT'] == 443) ? '' : ':'.$_SERVER['SERVER_PORT'];
+				}
+				$sPath = $_SERVER['REQUEST_URI'];
+				
+				$sUrl = "$sProtocol://{$sServerName}{$sPort}{$sPath}";
+				$aActions[] = array ('label' => 'eMail', 'url' => "mailto:?subject=".$oSet->GetFilter()->__DescribeHTML()."&body=".urlencode("$sUrl?operation=search&filter=$sFilter&$sContext"));
 				$aActions[] = array ('label' => 'CSV Export', 'url' => "../pages/$sUIPage?operation=search&filter=$sFilter&format=csv&$sContext");
 				$aActions[] = array ('label' => 'Bookmark...', 'url' => "../pages/ajax.render.php?operation=create&class=$sClass&filter=$sFilter", 'class' => 'jqmTrigger');
 				if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'New...', 'url' => "../pages/$sUIPage?operation=new&class=$sClass&$sContext"); }
