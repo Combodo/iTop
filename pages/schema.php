@@ -160,7 +160,7 @@ function DisplayLifecycle($oPage, $sClass)
 	{
 		$aStates = MetaModel::EnumStates($sClass);
 		$aStimuli = MetaModel::EnumStimuli($sClass);
-		$oPage->add("<img src=\"/pages/graphviz.php?class=$sClass\">\n");
+		$oPage->add("<img src=\"../pages/graphviz.php?class=$sClass\">\n");
 		$oPage->add("<h3>Transitions</h3>\n");
 		$oPage->add("<ul>\n");
 		foreach ($aStates as $sStateCode => $aStateDef)
