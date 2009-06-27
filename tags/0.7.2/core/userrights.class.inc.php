@@ -176,7 +176,7 @@ class UserRights
 
 	public static function GetFilter($sClass)
 	{
-		if (!MetaModel::HasCategory($sClass, 'bizModel')) return new DBObjectSearch($sClass);
+		if (!MetaModel::HasCategory($sClass, 'bizmodel')) return new DBObjectSearch($sClass);
 		if (!self::CheckLogin()) return false;
 
 		return self::$m_oAddOn->GetFilter(self::$m_iUserId, $sClass);
@@ -184,7 +184,7 @@ class UserRights
 
 	public static function IsActionAllowed($sClass, $iActionCode, dbObjectSet $aInstances)
 	{
-		if (!MetaModel::HasCategory($sClass, 'bizModel')) return true;
+		if (!MetaModel::HasCategory($sClass, 'bizmodel')) return true;
 		if (!self::CheckLogin()) return false;
 
 		return self::$m_oAddOn->IsActionAllowed(self::$m_iUserId, $sClass, $iActionCode, $aInstances);
@@ -192,7 +192,7 @@ class UserRights
 
 	public static function IsStimulusAllowed($sClass, $sStimulusCode, dbObjectSet $aInstances)
 	{
-		if (!MetaModel::HasCategory($sClass, 'bizModel')) return true;
+		if (!MetaModel::HasCategory($sClass, 'bizmodel')) return true;
 		if (!self::CheckLogin()) return false;
 
 		return self::$m_oAddOn->IsStimulusAllowed(self::$m_iUserId, $sClass, $sStimulusCode, $aInstances);
@@ -200,7 +200,7 @@ class UserRights
 
 	public static function IsActionAllowedOnAttribute($sClass, $sAttCode, $iActionCode, dbObjectSet $aInstances)
 	{
-		if (!MetaModel::HasCategory($sClass, 'bizModel')) return true;
+		if (!MetaModel::HasCategory($sClass, 'bizmodel')) return true;
 		if (!self::CheckLogin()) return false;
 
 		return self::$m_oAddOn->IsActionAllowedOnAttribute(self::$m_iUserId, $sClass, $sAttCode, $iActionCode, $aInstances);
