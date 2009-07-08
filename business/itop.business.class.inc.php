@@ -146,7 +146,7 @@ class logRealObject extends cmdbAbstractObject
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_AddAttribute(new AttributeString("name", array("label"=>"Name", "description"=>"Common name", "allowed_values"=>null, "sql"=>"name", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("label"=>"Status", "description"=>"Lifecycle status", "allowed_values"=>$oAllowedStatuses, "sql"=>"status", "default_value"=>"implementation", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("org_id", array("targetclass"=>"bizOrganization", "label"=>"Organization Id", "description"=>"ID of the object owner organization", "allowed_values"=>new ValueSetObjects("bizOrganization: status Contains 'implementation'", 'name', array('name'=>true)), "sql"=>"org_id", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("org_id", array("targetclass"=>"bizOrganization", "label"=>"Organization Id", "description"=>"ID of the object owner organization", "allowed_values"=>null, "sql"=>"org_id", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("org_name", array("label"=>"Organization", "description"=>"Company / Department owning this object", "allowed_values"=>null, "extkey_attcode"=> 'org_id', "target_attcode"=>"name")));
 
 		MetaModel::Init_AddFilterFromAttribute("name");
