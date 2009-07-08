@@ -151,7 +151,7 @@
 <parent_id>1</parent_id>
 <name>Audit</name>
 <label>Audit</label>
-<hyperlink>/pages/audit.php</hyperlink>
+<hyperlink>./audit.php</hyperlink>
 <template></template>
 <rank>4</rank>
 <type>application</type>
