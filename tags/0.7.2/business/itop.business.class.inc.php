@@ -1547,6 +1547,7 @@ class lnkClientServer extends logRealObject
 			"db_table" => "clientserver_links",
 			"db_key_field" => "link_id",
 			"db_finalclass_field" => "",
+			"display_template" => "../business/templates/default.html",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("client_id", array("targetclass"=>"bizApplication", "jointype"=> '', "label"=>"Client", "description"=>"The client part of the link", "allowed_values"=>null, "sql"=>"client_id", "is_null_allowed"=>false, "depends_on"=>array())));
