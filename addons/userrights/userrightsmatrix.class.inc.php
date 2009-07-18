@@ -312,7 +312,7 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 		$oLogin = $oSet->Fetch();
 		if ($oLogin->Get('password') == $sPassword)
 		{
-			return true;
+			return $oLogin->Get('userid');
 		}
 		// todo: throw an exception?
 		return false;
@@ -324,7 +324,7 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 		return $oNullFilter;
 	}
 
-	public function IsActionAllowed($sUserName, $sClass, $iActionCode, dbObjectSet $aInstances)
+	public function IsActionAllowed($iUserId, $sClass, $iActionCode, dbObjectSet $aInstances)
 	{
 		if (!array_key_exists($iActionCode, self::$m_aActionCodes))
 		{
@@ -332,7 +332,7 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 		}
 		$sAction = self::$m_aActionCodes[$iActionCode];
 
-		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixClassGrant WHERE class = '$sClass' AND action = '$sAction' AND login = '$sUserName'"));
+		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixClassGrant WHERE class = '$sClass' AND action = '$sAction' AND userid = '$iUserId'"));
 		if ($oSet->Count() < 1)
 		{
 			return UR_ALLOWED_NO;
@@ -352,7 +352,7 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 		return $iRetCode;
 	}
 
-	public function IsActionAllowedOnAttribute($sUserName, $sClass, $sAttCode, $iActionCode, dbObjectSet $aInstances)
+	public function IsActionAllowedOnAttribute($iUserId, $sClass, $sAttCode, $iActionCode, dbObjectSet $aInstances)
 	{
 		if (!array_key_exists($iActionCode, self::$m_aActionCodes))
 		{
@@ -360,7 +360,7 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 		}
 		$sAction = self::$m_aActionCodes[$iActionCode];
 
-		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixAttributeGrant WHERE UserRightsMatrixAttributeGrant.class = '$sClass' AND UserRightsMatrixAttributeGrant.attcode = '$sAttCode' AND UserRightsMatrixAttributeGrant.action = '$sAction' AND UserRightsMatrixAttributeGrant.login = '$sUserName'"));
+		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixAttributeGrant WHERE class = '$sClass' AND attcode = '$sAttCode' AND action = '$sAction' AND userid = '$iUserId'"));
 		if ($oSet->Count() < 1)
 		{
 			return UR_ALLOWED_NO;
@@ -380,9 +380,9 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 		return $iRetCode;
 	}
 
-	public function IsStimulusAllowed($sUserName, $sClass, $sStimulusCode, dbObjectSet $aInstances)
+	public function IsStimulusAllowed($iUserId, $sClass, $sStimulusCode, dbObjectSet $aInstances)
 	{
-		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixClassStimulusGrant WHERE class = '$sClass' AND stimulus = '$sStimulusCode' AND login = '$sUserName'"));
+		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixClassStimulusGrant WHERE class = '$sClass' AND stimulus = '$sStimulusCode' AND userid = '$iUserId'"));
 		if ($oSet->Count() < 1)
 		{
 			return UR_ALLOWED_NO;

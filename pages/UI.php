@@ -243,22 +243,17 @@ switch($operation)
 			$oP->add_linked_script("../js/jquery.blockUI.js");
 			$oWizard = new UIWizard($oP, $sClass, $sStateCode);
 			$sStateCode = $oWizard->GetTargetState(); // Will computes the default state if none was supplied
+			$sClassLabel = MetaModel::GetName($sClass);
+			$oP->p("<h2>Creation of a new $sClassLabel</h2>");
 			if (!empty($sStateCode))
 			{
 				$aStates = MetaModel::EnumStates($sClass);
 				$sStateLabel = $aStates[$sStateCode]['label'];
-				$oP->p("Wizard for creating an object of class '$sClass' in state '$sStateCode'.");
-			}
-			else
-			{
-				// Stateless object
-				$oP->p("Wizard for creating an object of class '$sClass'.");
 			}
 			$aWizardSteps = $oWizard->GetWizardStructure();
 			
 			// Display the structure of the wizard
 			$iStepIndex = 1;
-			$oP->p("<h2>Wizard Steps for creating an object of class '$sClass' in state '$sStateCode'</h2>\n");
 			$iMaxInputId = 0;
 			$aFieldsMap = array();
 			foreach($aWizardSteps['mandatory'] as $aSteps)

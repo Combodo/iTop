@@ -142,7 +142,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		if (!empty($sTemplate))
 		{
 			$oTemplate = new DisplayTemplate($sTemplate);
-			$oTemplate->Render($oPage, array('class'=> get_class($this),'pkey'=> $this->GetKey(), 'name' => $this->GetName()));
+			$oTemplate->Render($oPage, array('class_name'=> MetaModel::GetName(get_class($this)),'class'=> get_class($this),'pkey'=> $this->GetKey(), 'name' => $this->GetName()));
 		}
 		else
 		{
@@ -152,7 +152,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 			$oSingletonFilter->AddCondition('pkey', array($this->GetKey()));
 			$oBlock = new MenuBlock($oSingletonFilter, 'popup', false);
 			$oBlock->Display($oPage, -1);
-			$oPage->add("<h1>".Metamodel::GetName(get_class($this)).": <span class=\"hilite\">".$this->GetDisplayName()."</span></h1>\n");
+			$oPage->add("<h1>".Metamodel::GetName(MetaModel::GetName(get_class($this))).": <span class=\"hilite\">".$this->GetDisplayName()."</span></h1>\n");
 			$oHistoryFilter = new DBObjectSearch('CMDBChangeOpSetAttribute');
 			$oHistoryFilter->AddCondition('objkey', $this->GetKey());
 			$oBlock = new HistoryBlock($oHistoryFilter, 'toggle', false);
@@ -276,13 +276,15 @@ abstract class cmdbAbstractObject extends CMDBObject
 		}
 		$oMenuBlock = new MenuBlock($oSet->GetFilter());
 		$sHtml .= '<table class="listContainer">';
+		$sColspan = '';
 		if ($bDisplayMenu)
 		{
-			$sHtml .= '<tr class="containerHeader"><td>';
+			$sColspan = 'colspan="2"';
+			$sHtml .= '<tr class="containerHeader"><td>&nbsp;'.$oSet->Count().' object(s)</td><td>';
 			$sHtml .= $oMenuBlock->GetRenderContent($oPage, $sLinkageAttribute);
 			$sHtml .= '</td></tr>';
 		}
-		$sHtml .= '<tr><td>';
+		$sHtml .= "<tr><td $sColspan>";
 		$sHtml .= $oPage->GetTable($aAttribs, $aValues, array('class'=>$sClassName, 'filter'=>$oSet->GetFilter()->serialize(), 'preview' => true));
 		$sHtml .= '</td></tr>';
 		$sHtml .= '</table>';
@@ -519,14 +521,14 @@ abstract class cmdbAbstractObject extends CMDBObject
 					{
 						$sHTMLValue = "<input type=\"text\" size=\"70\" value=\"\" name=\"attr_$sAttCode\"  id=\"$iInputId\"/>";
 					}
-					else if (count($aAllowedValues) > 20)
+					else if (count($aAllowedValues) > 50)
 					{
 						// too many choices, use an autocomplete
 						// The input for the auto complete
-						$sHTMLValue = "<input type=\"text\" id=\"$iInputId\" size=\"50\" name=\"\" value=\"$sDisplayValue\" />";
+						$sHTMLValue = "<input type=\"text\" id=\"label_$iInputId\" size=\"50\" name=\"\" value=\"$sDisplayValue\" />";
 						// another hidden input to store & pass the object's Id
-						$sHTMLValue .= "<input type=\"hidden\" id=\"id_ac_$iInputId\" name=\"attr_$sAttCode\" value=\"$value\" />\n";
-						$oPage->add_ready_script("\$('#$iInputId').autocomplete('./ajax.render.php', { minChars:3, onItemSelect:selectItem, onFindValue:findValue, formatItem:formatItem, autoFill:true, keyHolder:'#id_ac_$iInputId', extraParams:{operation:'autocomplete', sclass:'$sClass',attCode:'".$sAttCode."'}});");
+						$sHTMLValue .= "<input type=\"hidden\" id=\"$iInputId\" name=\"attr_$sAttCode\" value=\"$value\" />\n";
+						$oPage->add_ready_script("\$('#label_$iInputId').autocomplete('./ajax.render.php', { minChars:3, onItemSelect:selectItem, onFindValue:findValue, formatItem:formatItem, autoFill:true, keyHolder:'#$iInputId', extraParams:{operation:'autocomplete', sclass:'$sClass',attCode:'".$sAttCode."'}});");
 					}
 					else
 					{

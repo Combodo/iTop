@@ -34,42 +34,45 @@ class UIWizard
 		$sJSHandlerCode = ''; // Javascript code to be executed each time this step of the wizard is entered
 		foreach($aStep as $sAttCode)
 		{
-			$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
-			$sAttLabel = $oAttDef->GetLabel();
-			$iOptions = isset($aStates[$this->m_sTargetState]['attribute_list'][$sAttCode]) ? $aStates[$this->m_sTargetState]['attribute_list'][$sAttCode] : 0;
-	
-			$aPrerequisites = $oAttDef->GetPrerequisiteAttributes();
-			if ($iOptions & (OPT_ATT_MANDATORY | OPT_ATT_MUSTCHANGE | OPT_ATT_MUSTPROMPT))
+			if ($sAttCode != 'finalclass') // Do not displa the attribute that stores the actual class name
 			{
-				$aFields[$sAttCode] = array();
-				foreach($aPrerequisites as $sCode)
+				$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
+				$sAttLabel = $oAttDef->GetLabel();
+				$iOptions = isset($aStates[$this->m_sTargetState]['attribute_list'][$sAttCode]) ? $aStates[$this->m_sTargetState]['attribute_list'][$sAttCode] : 0;
+		
+				$aPrerequisites = $oAttDef->GetPrerequisiteAttributes();
+				if ($iOptions & (OPT_ATT_MANDATORY | OPT_ATT_MUSTCHANGE | OPT_ATT_MUSTPROMPT))
 				{
-					$aFields[$sAttCode][$sCode] = '';
+					$aFields[$sAttCode] = array();
+					foreach($aPrerequisites as $sCode)
+					{
+						$aFields[$sAttCode][$sCode] = '';
+					}
 				}
+				if (count($aPrerequisites) > 0)
+				{
+					$aOptions[] = 'Prerequisites: '.implode(', ', $aPrerequisites);
+				}
+				
+				$sFieldFlag = ($iOptions & (OPT_ATT_MANDATORY | OPT_ATT_MUSTCHANGE)) ? ' <span class="hilite">*</span>' : '';
+				$oDefaultValuesSet = $oAttDef->GetDefaultValue(); // @@@ TO DO: get the object's current value if the object exists
+				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($this->m_oPage, $this->m_sClass, $sAttCode, $oAttDef, $oDefaultValuesSet, '', "att_$iMaxInputId");
+				$aFieldsMap[$iMaxInputId] = $sAttCode;
+				$aDetails[] = array('label' => $oAttDef->GetLabel().$sFieldFlag, 'value' => "<div id=\"field_$iMaxInputId\">$sHTMLValue</div>");
+				if ($oAttDef->GetValuesDef() != null)
+				{
+					$sJSHandlerCode .= "\toWizardHelper.RequestAllowedValues('$sAttCode');\n";
+				}
+				if ($oAttDef->GetDefaultValue() != null)
+				{
+					$sJSHandlerCode .= "\toWizardHelper.RequestDefaultValue('$sAttCode');\n";
+				}
+				if ($oAttDef->IsLinkSet())
+				{
+					$sJSHandlerCode .= "\toLinkWidgetatt_$iMaxInputId.Init();";
+				}
+				$iMaxInputId++;
 			}
-			if (count($aPrerequisites) > 0)
-			{
-				$aOptions[] = 'Prerequisites: '.implode(', ', $aPrerequisites);
-			}
-			
-			$sFieldFlag = ($iOptions & (OPT_ATT_MANDATORY | OPT_ATT_MUSTCHANGE)) ? ' <span class="hilite">*</span>' : '';
-			$oDefaultValuesSet = $oAttDef->GetDefaultValue(); // @@@ TO DO: get the object's current value if the object exists
-			$sHTMLValue = cmdbAbstractObject::GetFormElementForField($this->m_oPage, $this->m_sClass, $sAttCode, $oAttDef, $oDefaultValuesSet, '', "att_$iMaxInputId");
-			$aFieldsMap[$iMaxInputId] = $sAttCode;
-			$aDetails[] = array('label' => $oAttDef->GetLabel().$sFieldFlag, 'value' => "<div id=\"field_$iMaxInputId\">$sHTMLValue</div>");
-			if ($oAttDef->GetValuesDef() != null)
-			{
-				$sJSHandlerCode .= "\toWizardHelper.RequestAllowedValues('$sAttCode');\n";
-			}
-			if ($oAttDef->GetDefaultValue() != null)
-			{
-				$sJSHandlerCode .= "\toWizardHelper.RequestDefaultValue('$sAttCode');\n";
-			}
-			if ($oAttDef->IsLinkSet())
-			{
-				$sJSHandlerCode .= "\toLinkWidgetatt_$iMaxInputId.Init();";
-			}
-			$iMaxInputId++;
 		}
 		//$aDetails[] = array('label' => '', 'value' => '<input type="button" value="Next &gt;&gt;">');
 		$this->m_oPage->details($aDetails);

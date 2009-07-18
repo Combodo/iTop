@@ -61,7 +61,7 @@ class UILinksWidget
 		}
 
 		// Many values (or even a unknown list) display an autocomplete
-		if ( (count($aAllowedValues) == 0) || (count($aAllowedValues) > 20) )
+		if ( (count($aAllowedValues) == 0) || (count($aAllowedValues) > 50) )
 		{
 			// too many choices, use an autocomplete
 			// The input for the auto complete
