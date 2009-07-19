@@ -213,9 +213,9 @@ abstract class cmdbAbstractObject extends CMDBObject
 	
 	// Comment by Rom: this helper may be used to display objects of class DBObject
 	//                 -> I am using this to display the changes history 
-	public static function DisplaySet(web_page $oPage, CMDBObjectSet $oSet, $sLinkageAttribute = '')
+	public static function DisplaySet(web_page $oPage, CMDBObjectSet $oSet, $sLinkageAttribute = '', $bDisplayMenu = true)
 	{
-		$oPage->add(self::GetDisplaySet($oPage, $oSet, $sLinkageAttribute));
+		$oPage->add(self::GetDisplaySet($oPage, $oSet, $sLinkageAttribute, $bDisplayMenu));
 	}
 	
 	public static function GetDisplaySet(web_page $oPage, CMDBObjectSet $oSet, $sLinkageAttribute = '', $bDisplayMenu = true)

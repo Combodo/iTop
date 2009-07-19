@@ -1,6 +1,6 @@
 <?php
 require_once('../application/application.inc.php');
-require_once('../application/webpage.class.inc.php');
+require_once('../application/nicewebpage.class.inc.php');
 require_once('../application/csvpage.class.inc.php');
 require_once('../application/xmlpage.class.inc.php');
 
@@ -31,8 +31,8 @@ if (!empty($sExpression))
 			switch($sFormat)
 			{
 				case 'html':
-				$oP = new web_page("iTop - Export");
-				cmdbAbstractObject::DisplaySet($oP, $oSet);
+				$oP = new nice_web_page("iTop - Export");
+				cmdbAbstractObject::DisplaySet($oP, $oSet, '' /* linkage */, false /* don't display the menu */);
 				break;
 				
 				case 'csv':
