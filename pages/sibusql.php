@@ -19,38 +19,51 @@ $oP = new iTopWebPage("iTop - Expression Evaluation", $currentOrganization);
 $sExpression = utils::ReadParam('expression', '');
 $sEncoding = utils::ReadParam('encoding', 'oql');
 
-if ($sEncoding == 'crypted')
+try
 {
-	// Translate $sExpression into a oql expression
-	$sClearText = base64_decode($sExpression);
-	echo "<strong>FYI: '$sClearText'</strong><br/>\n";
-	$oFilter = DBObjectSearch::unserialize($sExpression);
-	$sExpression = $oFilter->ToOQL();
-	exit;
-}
-else
-{
-	// leave $sExpression as is
-}
-
-$oP->add('<form method="get">'."\n");
-$oP->add('Expression to evaluate:<br/>'."\n");
-$oP->add('<textarea cols="50" rows="20" name="expression">'.$sExpression.'</textarea>'."<p> Example:<br/>SELECT bizPerson AS B WHERE  B.name LIKE '%A%'</p>\n");
-$oP->add('<input type="submit" value=" Evaluate ">'."\n");
-$oP->add('</form>'."\n");
-
-if (!empty($sExpression))
-{
-	$oFilter = DBObjectSearch::FromOQL($sExpression);
-	if ($oFilter)
+	if ($sEncoding == 'crypted')
 	{
-		$oP->p('Query expression: '.$oFilter->ToOQL());
-		$oP->p('Serialized filter: '.$oFilter->serialize());
-		
-		$oSet = new CMDBObjectSet($oFilter);
-		$oP->p('The query returned '.$oSet->count().' results(s)');
-		cmdbAbstractObject::DisplaySet($oP, $oSet);
+		// Translate $sExpression into a oql expression
+		$sClearText = base64_decode($sExpression);
+		echo "<strong>FYI: '$sClearText'</strong><br/>\n";
+		$oFilter = DBObjectSearch::unserialize($sExpression);
+		$sExpression = $oFilter->ToOQL();
+		exit;
 	}
+	else
+	{
+		// leave $sExpression as is
+	}
+	
+	$oP->add('<form method="get">'."\n");
+	$oP->add('Expression to evaluate:<br/>'."\n");
+	$oP->add('<textarea cols="50" rows="20" name="expression">'.$sExpression.'</textarea>'."<p> Example:<br/>SELECT bizPerson AS B WHERE  B.name LIKE '%A%'</p>\n");
+	$oP->add('<input type="submit" value=" Evaluate ">'."\n");
+	$oP->add('</form>'."\n");
+	
+	if (!empty($sExpression))
+	{
+		$oFilter = DBObjectSearch::FromOQL($sExpression);
+		if ($oFilter)
+		{
+			$oP->p('Query expression: '.$oFilter->ToOQL());
+			$oP->p('Serialized filter: '.$oFilter->serialize());
+			
+			$oSet = new CMDBObjectSet($oFilter);
+			$oP->p('The query returned '.$oSet->count().' results(s)');
+			cmdbAbstractObject::DisplaySet($oP, $oSet);
+		}
+	}
+}
+catch(CoreException $e)
+{
+	$oP->p('<b>An error occured while running the query:</b>');
+	$oP->p($e->getHtmlDesc());
+}
+catch(Exception $e)
+{
+	$oP->p('<b>An error occured while running the query:</b>');
+	$oP->p($e->getMessage());
 }
 
 $oP->output();
