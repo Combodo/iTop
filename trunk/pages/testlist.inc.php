@@ -820,6 +820,7 @@ class TestQueriesOnFarm extends TestBizModel
 			'SELECT Mammal AS m WHERE 1/0' => true,
 			'SELECT Mammal AS m WHERE MONTH(m.birth) = 7' => true,
 			'SELECT Animal JOIN Group ON Group.leader = Animal.id' => true,
+			'SELECT Group JOIN Animal ON Group.leader = Animal.id' => true,
 			'SELECT Animal AS A JOIN Group AS G1 ON G1.leader = A.id' => true,
 			'SELECT Animal AS A JOIN Group AS G ON FooClass.leader = A.id' => false,
 			'SELECT Animal AS A JOIN Group AS G ON G.leader = FooClass.id' => false,
