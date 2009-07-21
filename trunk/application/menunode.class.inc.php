@@ -46,7 +46,7 @@ class menuNode extends DBObject
 		MetaModel::Init_AddAttribute(new AttributeInteger("rank", array("label"=>"Display rank", "description"=>"Sort order for displaying the menu", "allowed_values"=>null, "sql"=>"rank", "default_value" => 999, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("parent_id", array("label"=>"Parent Menu Item", "description"=>"Parent Menu Item", "allowed_values"=>null, "sql"=>"parent_id", "targetclass"=>"menuNode", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("parent_name", array("label"=>"Parent Menu Item", "description"=>"Parent Menu Item", "allowed_values"=>null, "extkey_attcode"=>"parent_id", "target_attcode"=>"name")));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("user_id", array("label"=>"Owner of the menu", "description"=>"User who owns this menu (for user defined menus)", "allowed_values"=>null, "sql"=>"user_id", "targetclass"=>"UserRightsMatrixUsers", "is_null_allowed"=>true, "depends_on"=>array('type'))));
+		MetaModel::Init_AddAttribute(new AttributeInteger("user_id", array("label"=>"Owner of the menu", "description"=>"User who owns this menu (for user defined menus)", "allowed_values"=>null, "sql"=>"user_id", "default_value" => 0, "is_null_allowed"=>false, "depends_on"=>array())));
 
 		MetaModel::Init_AddFilterFromAttribute("label");
 		MetaModel::Init_AddFilterFromAttribute("parent_id");

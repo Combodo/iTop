@@ -29,7 +29,7 @@ $MyModules = array(
 		// to be continued...
 	),
 	'addons' => array (
-		'user rights' => '../addons/userrights/userrightsmatrix.class.inc.php', 
+		'user rights' => '../addons/userrights/userrightsprofile.class.inc.php', 
 		// other modules to come later
 	)
 );
