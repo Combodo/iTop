@@ -42,6 +42,16 @@ class CMDBChangeOp extends DBObject
 		MetaModel::Init_AddFilterFromAttribute("objkey");
 		MetaModel::Init_AddFilterFromAttribute("date");
 		MetaModel::Init_AddFilterFromAttribute("userinfo");
+
+		MetaModel::Init_SetZListItems('details', array('change', 'date', 'userinfo')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('change', 'date', 'userinfo')); // Attributes to be displayed for the complete details
+	}
+	/**
+	 * Describe (as a text string) the modifications corresponding to this change
+	 */	 
+	public function GetDescription()
+	{
+		return '';
 	}
 }
 
@@ -80,6 +90,14 @@ class CMDBChangeOpCreate extends CMDBChangeOp
 
 		MetaModel::Init_InheritFilters();
 	}
+	
+	/**
+	 * Describe (as a text string) the modifications corresponding to this change
+	 */	 
+	public function GetDescription()
+	{
+		return 'Object created';
+	}
 }
 
 
@@ -115,6 +133,13 @@ class CMDBChangeOpDelete extends CMDBChangeOp
 		MetaModel::Init_InheritAttributes();
 
 		MetaModel::Init_InheritFilters();
+	}
+	/**
+	 * Describe (as a text string) the modifications corresponding to this change
+	 */	 
+	public function GetDescription()
+	{
+		return 'Object deleted';
 	}
 }
 
@@ -161,6 +186,24 @@ class CMDBChangeOpSetAttribute extends CMDBChangeOp
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'attcode', 'oldvalue', 'newvalue')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('date', 'userinfo', 'attcode', 'oldvalue', 'newvalue')); // Attributes to be displayed for a list
+	}
+	
+	/**
+	 * Describe (as a text string) the modifications corresponding to this change
+	 */	 
+	public function GetDescription()
+	{
+		$sResult = '';
+		$oEmptySet = new DBObjectSet($this->Get('objclass'));
+		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oEmptySet) == UR_ALLOWED_YES)
+		{
+			$oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
+			$sAttName = $oAttDef->GetLabel();
+			$sNewValue = $this->Get('newvalue');
+			$sOldValue = $this->Get('oldvalue');
+			$sResult = "$sAttName set to $sNewValue (previous value: $sOldValue)";
+		}
+		return $sResult;
 	}
 }
 
