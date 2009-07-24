@@ -260,7 +260,7 @@ class bizPerson extends bizContact
 		MetaModel::Init_AddAttribute(new AttributeString("first_name", array("label"=>"first Name", "description"=>"First name", "allowed_values"=>null, "sql"=>"first_name", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("employe_number", array("label"=>"Employe Number", "description"=>"employe number", "allowed_values"=>null, "sql"=>"employe_number", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("login_id", array("targetclass"=>"URP_Users", "label"=>"Login", "description"=>"Login information", "allowed_values"=>null, "sql"=>"login_id", "is_null_allowed"=>true, "depends_on"=>array())));
+//		MetaModel::Init_AddAttribute(new AttributeExternalKey("login_id", array("targetclass"=>"URP_Users", "label"=>"Login", "description"=>"Login information", "allowed_values"=>null, "sql"=>"login_id", "is_null_allowed"=>true, "depends_on"=>array())));
 
 		MetaModel::Init_InheritFilters();
 		MetaModel::Init_AddFilterFromAttribute("first_name");
@@ -1425,6 +1425,7 @@ class bizApplication extends logInfra
 		MetaModel::Init_AddFilterFromAttribute("function");
 		MetaModel::Init_AddFilterFromAttribute("version");
 		MetaModel::Init_AddFilterFromAttribute("device_id");
+		MetaModel::Init_AddFilterFromAttribute("device_name");
 
 		
 		

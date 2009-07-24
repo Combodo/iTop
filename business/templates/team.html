@@ -1,7 +1,7 @@
 <div class="page_header">
 	<itopblock blockclass="MenuBlock" type="popup" encoding="text/sibusql" label="Actions">$class$: pkey = $pkey$</itopblock>
 	<h1>$class_name$: <span class="hilite">$name$</span></h1>
-	<itopblock blockclass="HistoryBlock" type="toggle" encoding="text/oql">SELECT CMDBChangeOpSetAttribute WHERE objkey = $pkey$ AND objclass = '$class$'</itopblock>
+	<itopblock blockclass="HistoryBlock" type="toggle" encoding="text/oql">SELECT CMDBChangeOp WHERE objkey = $pkey$ AND objclass = '$class$'</itopblock>
 </div>
 <img src="../images/users2-big.png" style="margin-top:-10px; margin-right:10px; float:right">
 <itopblock blockclass="DisplayBlock" asynchronous="true" type="bare_details" encoding="text/sibusql">$class$: pkey = $pkey$</itopblock>

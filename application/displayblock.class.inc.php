@@ -553,7 +553,13 @@ class HistoryBlock extends DisplayBlock
 		switch($this->m_sStyle)
 		{
 			case 'toggle':
-			$oLatestChangeOp = $oSet->Fetch();
+			// First the latest change that the user is allowed to see
+			do
+			{
+				$oLatestChangeOp = $oSet->Fetch();
+			}
+			while(is_object($oLatestChangeOp) && ($oLatestChangeOp->GetDescription() == ''));
+			
 			if (is_object($oLatestChangeOp))
 			{
 				global $oContext; // User Context.. should be statis instead of global...
@@ -561,9 +567,36 @@ class HistoryBlock extends DisplayBlock
 				$sDate = $oLatestChangeOp->GetAsHTML('date');
 				$oChange = $oContext->GetObject('CMDBChange', $oLatestChangeOp->Get('change'));
 				$sUserInfo = $oChange->GetAsHTML('userinfo');
-				$oSet->Load(); // Reset the pointer to the beginning of the set: there should be a better way to do this...
+				$oSet->Rewind(); // Reset the pointer to the beginning of the set
 				$sHtml .= $oPage->GetStartCollapsibleSection("Last modified on $sDate by $sUserInfo.");
-				$sHtml .= cmdbAbstractObject::GetDisplaySet($oPage, $oSet);			
+				//$sHtml .= cmdbAbstractObject::GetDisplaySet($oPage, $oSet);
+				$aChanges = array();
+				while($oChangeOp = $oSet->Fetch())
+				{
+					$sChangeDescription = $oChangeOp->GetDescription();
+					if ($sChangeDescription != '')
+					{
+						// The change is visible for the current user
+						$changeId = $oChangeOp->Get('change');
+						$aChanges[$changeId]['date'] = $oChangeOp->Get('date');
+						$aChanges[$changeId]['userinfo'] = $oChangeOp->Get('userinfo');
+						if (!isset($aChanges[$changeId]['log']))
+						{
+							$aChanges[$changeId]['log'] = array();
+						}
+						$aChanges[$changeId]['log'][] = $sChangeDescription;
+					}
+				}
+				$aAttribs = array('date' => array('label' => 'Date', 'description' => 'Date of the change'),
+								  'userinfo' => array('label' => 'User', 'description' => 'User who made the change'),
+								  'log' => array('label' => 'Changes', 'description' => 'Changes made to the object'),
+								 );
+				$aValues = array();
+				foreach($aChanges as $aChange)
+				{
+					$aValues[] = array('date' => $aChange['date'], 'userinfo' => $aChange['userinfo'], 'log' => "<ul><li>".implode('</li><li>', $aChange['log'])."</li></ul>");
+				}
+				$sHtml .= $oPage->GetTable($aAttribs, $aValues);		
 				$sHtml .= $oPage->GetEndCollapsibleSection();
 			}
 			break;
@@ -605,10 +638,10 @@ class MenuBlock extends DisplayBlock
 			// Just one object in the set, possible actions are "new / clone / modify and delete"
 			if (isset($aExtraParams['linkage']))
 			{
-				if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'New...', 'url' => "#"); }
-				if ($bIsBulkModifyAllowed) { $aActions[] = array ('label' => 'Modify All...', 'url' => "#"); }
-				if ($bIsBulkDeleteAllowed) { $aActions[] = array ('label' => 'Remove All', 'url' => "#"); }
-				if ($bIsModifyAllowed | $bIsDeleteAllowed) { $aActions[] = array ('label' => 'Manage Links...', 'url' => "#"); }
+				if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'Add #...', 'url' => "../pages/$sUIPage?operation=new&class=$sClass&$sContext"); }
+				if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'Clone #...', 'url' => "../pages/$sUIPage?operation=clone&class=$sClass&id=$id&$sContext"); }
+				if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'Modify #...', 'url' => "../pages/$sUIPage?operation=modify&class=$sClass&id=$id&$sContext"); }
+				if ($bIsDeleteAllowed) { $aActions[] = array ('label' => 'Remove #', 'url' => "../pages/$sUIPage?operation=delete&class=$sClass&id=$id&$sContext"); }
 			}
 			else
 			{
@@ -652,10 +685,11 @@ class MenuBlock extends DisplayBlock
 			if (isset($aExtraParams['linkage']))
 			{
 				$bIsDeleteAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_DELETE, $oSet);
-				if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'New...', 'url' => "#"); }
-				if ($bIsBulkModifyAllowed) { $aActions[] = array ('label' => 'Modify All...', 'url' => "#"); }
-				if ($bIsBulkDeleteAllowed) { $aActions[] = array ('label' => 'Remove All', 'url' => "#"); }
-				if ($bIsModifyAllowed | $bIsDeleteAllowed) { $aActions[] = array ('label' => 'Manage Links...', 'url' => "#"); }
+				if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'Add #...', 'url' => "../pages/$sUIPage?operation=new&class=$sClass&$sContext"); }
+				if ($bIsDeleteAllowed) { $aActions[] = array ('label' => 'Remove #', 'url' => "../pages/$sUIPage?operation=delete&class=$sClass&id=$id&$sContext"); }
+				if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'Modify #...', 'url' => "../pages/$sUIPage?operation=modify&class=$sClass&id=$id&$sContext"); }
+				if ($bIsBulkModifyAllowed) { $aActions[] = array ('label' => 'Modify All #...', 'url' => "../pages/$sUIPage?operation=new&class=$sClass&$sContext"); }
+				if ($bIsBulkDeleteAllowed) { $aActions[] = array ('label' => 'Remove All #...', 'url' => "#"); }
 			}
 			else
 			{
