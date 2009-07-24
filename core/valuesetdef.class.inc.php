@@ -104,14 +104,15 @@ class ValueSetObjects extends ValueSetDefinition
 	{
 		$this->m_aValues = array();
 		
-		$oFilter = DBObjectSearch::FromSibuSQL($this->m_sFilterExpr, $aArgs);
+		$oFilter = DBObjectSearch::FromSibusQL($this->m_sFilterExpr, $aArgs);
 		if (!$oFilter) return false;
 
-        if (empty($this->m_sValueAttCode))
-        {
-            $this->m_sValueAttCode = MetaModel::GetNameAttributeCode($oFilter->GetClass());
-        }
-		$oObjects = new DBObjectSet($oFilter, $this->m_aOrderBy);
+		if (empty($this->m_sValueAttCode))
+		{
+		   $this->m_sValueAttCode = MetaModel::GetNameAttributeCode($oFilter->GetClass());
+		}
+
+		$oObjects = new DBObjectSet($oFilter, $this->m_aOrderBy, $aArgs);
 		while ($oObject = $oObjects->Fetch())
 		{
 			$this->m_aValues[$oObject->GetKey()] = $oObject->GetAsHTML($this->m_sValueAttCode);
@@ -227,6 +228,37 @@ class ValueSetEnum extends ValueSetDefinition
 			}
 		}
 		$this->m_aValues = $aValues;
+	}
+
+	protected function LoadValues($aArgs)
+	{
+		return true;
+	}
+}
+
+
+/**
+ * Data model classes 
+ *
+ * @package     iTopORM
+ * @author      Romain Quetiez <romainquetiez@yahoo.fr>
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.itop.com
+ * @since       1.0
+ * @version     $itopversion$
+ */
+class ValueSetEnumClasses extends ValueSetEnum
+{
+	public function __construct($sCategory = '', $sAdditionalValues = '')
+	{
+		// First, build it from the series of additional values
+		parent::__construct($sAdditionalValues);
+
+		// Second: add the list of classes
+		foreach (MetaModel::GetClasses($sCategory) as $sClass)
+		{
+			$this->m_aValues[$sClass] = MetaModel::GetName($sClass);
+		}
 	}
 
 	protected function LoadValues($aArgs)

@@ -55,7 +55,8 @@ class OQLLexerRaw
 %line    $this->line
 %matchlongest 1
 whitespace = /[ \t\n]+/
-select	  = "SELECT"
+select     = "SELECT"
+from       = "FROM"
 as_alias   = "AS"
 where	     = "WHERE"
 join	     = "JOIN"
@@ -103,6 +104,7 @@ f_floor    = "FLOOR"
 numval     = /[0-9]+|0x[0-9a-fA-F]+/
 strval     = /"([^\\"]|\\"|\\\\)*"|'.chr(94).chr(39).'([^\\'.chr(39).']|\\'.chr(39).'|\\\\)*'.chr(39).'/
 name       = /([_a-zA-Z][_a-zA-Z0-9]*|`[^`]+`)/
+varname    = /:([_a-zA-Z][_a-zA-Z0-9]*->[_a-zA-Z][_a-zA-Z0-9]*|[_a-zA-Z][_a-zA-Z0-9]*)/
 dot       = "."
 */
 
@@ -112,6 +114,9 @@ whitespace {
 }
 select {
 	$this->token = OQLParser::SELECT;
+}
+from {
+	$this->token = OQLParser::FROM;
 }
 as_alias {
 	$this->token = OQLParser::AS_ALIAS;
@@ -253,6 +258,9 @@ strval {
 }
 name {
 	$this->token = OQLParser::NAME;
+}
+varname {
+	$this->token = OQLParser::VARNAME;
 }
 dot {
 	$this->token = OQLParser::DOT;

@@ -35,15 +35,27 @@ class OqlInterpreter
 		return $res;
 	}
 
-	public function ParseQuery()
+	public function ParseObjectQuery()
 	{
 		$oRes = $this->Parse();
-		if (!$oRes instanceof OqlQuery)
+		if (!$oRes instanceof OqlObjectQuery)
 		{
-			throw new OqlException('Expecting an OQL query', $this->m_sQuery, 0, 0, get_class($oRes), array('OqlQuery'));
+			throw new OqlException('Expecting an OQL query', $this->m_sQuery, 0, 0, get_class($oRes), array('OqlObjectQuery'));
 		}
 		return $oRes;
 	}
+
+/*
+	public function ParseValueSetQuery()
+	{
+		$oRes = $this->Parse();
+		if (!$oRes instanceof OqlValueSetQuery)
+		{
+			throw new OqlException('Expecting a value set query', $this->m_sQuery, 0, 0, get_class($oRes), array('OqlValueSetQuery'));
+		}
+		return $oRes;
+	}
+*/
 
 	public function ParseExpression()
 	{

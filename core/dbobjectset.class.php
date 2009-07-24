@@ -21,10 +21,11 @@ class DBObjectSet
 	private $m_aId2Row;
 	private $m_iCurrRow;
 
-	public function __construct($oFilter, $aOrderBy = array())
+	public function __construct($oFilter, $aOrderBy = array(), $aArgs = array())
 	{
 		$this->m_oFilter = $oFilter;
 		$this->m_aOrderBy = $aOrderBy;
+		$this->m_aArgs = $aArgs;
 
 		$this->m_bLoaded = false;
 		$this->m_aData = array();
@@ -109,8 +110,8 @@ class DBObjectSet
 	public function Load()
 	{
 		if ($this->m_bLoaded) return;
-// #@# debug - echo "Loading (".$this->m_oFilter->ToSibuSQL().")....</br>\n";
-		$sSQL = MetaModel::MakeSelectQuery($this->m_oFilter, $this->m_aOrderBy);
+
+		$sSQL = MetaModel::MakeSelectQuery($this->m_oFilter, $this->m_aOrderBy, $this->m_aArgs);
 		$resQuery = CMDBSource::Query($sSQL);
 		if (!$resQuery) return;
 

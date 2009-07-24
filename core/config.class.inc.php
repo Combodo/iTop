@@ -256,7 +256,7 @@ class Config
 			fwrite($hFile, "\t\t// to be continued...\n");
 			fwrite($hFile, "\t),\n");
 			fwrite($hFile, "\t'addons' => array (\n");
-			fwrite($hFile, "\t\t'user rights' => '../addons/userrights/userrightsmatrix.class.inc.php',\n");
+			fwrite($hFile, "\t\t'user rights' => '../addons/userrights/userrightsprofile.class.inc.php',\n");
 			fwrite($hFile, "\t\t// other modules to come later\n");
 			fwrite($hFile, "\t)\n");
 			fwrite($hFile, ");\n");

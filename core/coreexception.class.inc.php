@@ -23,11 +23,11 @@ class CoreException extends Exception
 					{
 						if (is_array($val))
 						{
-							$aPairs[$key] = '('.implode(', ', $val).')';
+							$aPairs[] = $key.'=>('.implode(', ', $val).')';
 						}
 						else
 						{
-							$aPairs[$key] = $val;
+							$aPairs[] = $key.'=>'.$val;
 						}
 					}
 					$sValue = '{'.implode('; ', $aPairs).'}';

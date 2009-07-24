@@ -98,10 +98,81 @@ class URP_Dimensions extends DBObject
 		//MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeString("name", array("label"=>"name", "description"=>"label", "allowed_values"=>null, "sql"=>"name", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("description", array("label"=>"description", "description"=>"one line description", "allowed_values"=>null, "sql"=>"description", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("type", array("label"=>"type", "description"=>"class name or data type (projection unit)", "allowed_values"=>new ValueSetEnumClasses('bizmodel', 'String,Integer'), "sql"=>"type", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 
 		//MetaModel::Init_InheritFilters();
 		MetaModel::Init_AddFilterFromAttribute("name");
 		MetaModel::Init_AddFilterFromAttribute("description");
+		MetaModel::Init_AddFilterFromAttribute("type");
+	}
+
+	public function CheckProjectionSpec($oProjectionSpec)
+	{
+		$sExpression = $oProjectionSpec->Get('value');
+		$sAttribute = $oProjectionSpec->Get('attribute');
+
+		// Shortcut: "any value" or "no value" means no projection
+		if (empty($sExpression)) return;
+		if ($sExpression == '<any>') return;
+
+		// 1st - compute the data type for the dimension
+		//
+		$sType = $this->Get('type');
+		if (MetaModel::IsValidClass($sType))
+		{
+			$sExpectedType = $sType;
+		}
+		else
+		{
+			$sExpectedType = '_scalar_';
+		}
+
+		// 2nd - compute the data type for the projection
+		//
+		$bIsOql = true;
+		$sExpressionClass = '';
+		try
+		{
+			$oObjectSearch = DBObjectSearch::FromOQL($sExpression);
+			$sExpressionClass = $oObjectSearch->GetClass();
+		}
+		catch (OqlException $e)
+		{
+			$bIsOql = false;
+		}
+		if ($bIsOql)
+		{
+			if (empty($sAttribute))
+			{
+				$sFoundType = $sExpressionClass;
+			}
+			else
+			{
+				if (!MetaModel::IsValidAttCode($sExpressionClass, $sAttribute))
+				{
+					throw new CoreException('Unkown attribute code in projection specification', array('found' => $sAttribute, 'expecting' => MetaModel::GetAttributesList($sExpressionClass), 'class' => $sExpressionClass, 'projection' => $oProjectionSpec));
+				}
+				$oAttDef = MetaModel::GetAttributeDef($sExpressionClass, $sAttribute);
+				if ($oAttDef->IsExternalKey())
+				{
+					$sFoundType = $oAttDef->GetTargetClass();
+				}
+				else
+				{
+					$sFoundType = '_scalar_';
+				}
+			}
+		}
+		else
+		{
+			$sFoundType = '_scalar_';
+		}
+
+		// Compare the dimension type and projection type
+		if ($sFoundType != $sExpectedType)
+		{
+			throw new CoreException('Wrong type in projection specification', array('found' => $sFoundType, 'expecting' => $sExpectedType, 'expression' => $sExpression, 'attribute' => $sAttribute, 'projection' => $oProjectionSpec));
+		}
 	}
 }
 
@@ -163,7 +234,8 @@ class URP_ProfileProjection extends DBObject
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("profileid", array("targetclass"=>"URP_Profiles", "jointype"=> "", "label"=>"profile", "description"=>"usage profile", "allowed_values"=>null, "sql"=>"profileid", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("profile", array("label"=>"Profile", "description"=>"Profile name", "allowed_values"=>null, "extkey_attcode"=> 'profileid', "target_attcode"=>"name")));
 
-		MetaModel::Init_AddAttribute(new AttributeString("value", array("label"=>"Value expression", "description"=>"OQL expression (using \$user) | constant", "allowed_values"=>null, "sql"=>"value", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("value", array("label"=>"Value expression", "description"=>"OQL expression (using \$user) | constant | <any>", "allowed_values"=>null, "sql"=>"value", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("attribute", array("label"=>"Attribute", "description"=>"Target attribute code (optional)", "allowed_values"=>null, "sql"=>"attribute", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 
 		//MetaModel::Init_InheritFilters();
 		MetaModel::Init_AddFilterFromAttribute("dimensionid");
@@ -172,7 +244,25 @@ class URP_ProfileProjection extends DBObject
 
 	public function ProjectUser(URP_Users $oUser)
 	{
-		// #@# to be implemented
+		$sExpr = $this->Get('value');
+		if (preg_match('/^\s*([a-zA-Z0-9;]+)\s*$/', $sExpr, $aMatches))
+		{
+			// Constant value(s)
+			$aRes = explode(';', $aMatches[1]);
+		}
+		elseif ($sExpr == '<any>')
+		{
+			$aRes = array('<any>');
+		}
+		else
+		{
+			$sColumn = $this->Get('attribute');
+			// SELECT...
+			$oValueSetDef = new ValueSetObjects($sExpr, $sColumn);
+			$aValues = $oValueSetDef->GetValues(array('user' => $oUser), '');
+			$aRes = array_values($aValues);
+		}
+		return $aRes;
 	}
 }
 
@@ -201,29 +291,53 @@ class URP_ClassProjection extends DBObject
 
 		MetaModel::Init_AddAttribute(new AttributeString("class", array("label"=>"Class", "description"=>"Target class", "allowed_values"=>null, "sql"=>"class", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 
-		MetaModel::Init_AddAttribute(new AttributeString("value", array("label"=>"Value expression", "description"=>"OQL expression (using \$this) | constant", "allowed_values"=>null, "sql"=>"value", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("value", array("label"=>"Value expression", "description"=>"OQL expression (using \$this) | constant | <any>", "allowed_values"=>null, "sql"=>"value", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("attribute", array("label"=>"Attribute", "description"=>"Target attribute code (optional)", "allowed_values"=>null, "sql"=>"attribute", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 
 		//MetaModel::Init_InheritFilters();
 		MetaModel::Init_AddFilterFromAttribute("dimensionid");
 		MetaModel::Init_AddFilterFromAttribute("class");
 	}
+
+	public function ProjectObject($oObject)
+	{
+		$sExpr = $this->Get('value');
+		if (preg_match('/^\s*([a-zA-Z0-9;]+)\s*$/', $sExpr, $aMatches))
+		{
+			// Constant value(s)
+			$aRes = explode(';', $aMatches[1]);
+		}
+		elseif ($sExpr == '<any>')
+		{
+			$aRes = array('<any>');
+		}
+		else
+		{
+			$sColumn = $this->Get('attribute');
+			// SELECT...
+			$oValueSetDef = new ValueSetObjects($sExpr, $sColumn);
+			$aValues = $oValueSetDef->GetValues(array('this' => $oObject), '');
+			$aRes = array_values($aValues);
+		}
+		return $aRes;
+	}
 }
 
-class URP_ClassGrant extends DBObject
+class URP_ActionGrant extends DBObject
 {
 	public static function Init()
 	{
 		$aParams = array
 		(
 			"category" => "addon/userrights",
-			"name" => "class_permission",
+			"name" => "action_permission",
 			"description" => "permissions on classes",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
-			"db_table" => "priv_urp_grant_classes",
+			"db_table" => "priv_urp_grant_actions",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
 		);
@@ -308,23 +422,12 @@ class URP_AttributeGrant extends DBObject
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
 
-		// Common to all grant classes (could be factorized by class inheritence, but this has to be benchmarked)
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("profileid", array("targetclass"=>"URP_Profiles", "jointype"=> "", "label"=>"Profile", "description"=>"usage profile", "allowed_values"=>null, "sql"=>"profileid", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("profile", array("label"=>"Profile", "description"=>"usage profile", "allowed_values"=>null, "extkey_attcode"=> 'profileid', "target_attcode"=>"name")));
-		MetaModel::Init_AddAttribute(new AttributeString("class", array("label"=>"class", "description"=>"class name", "allowed_values"=>null, "sql"=>"class", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("permission", array("label"=>"permission", "description"=>"allowed or not allowed?", "allowed_values"=>new ValueSetEnum('yes,no'), "sql"=>"permission", "default_value"=>"yes", "is_null_allowed"=>false, "depends_on"=>array())));
-
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("actiongrantid", array("targetclass"=>"URP_ActionGrant", "jointype"=> "", "label"=>"Action grant", "description"=>"action grant", "allowed_values"=>null, "sql"=>"actiongrantid", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("attcode", array("label"=>"attribute", "description"=>"attribute code", "allowed_values"=>null, "sql"=>"attcode", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("action", array("label"=>"action", "description"=>"operations to perform on the given class", "allowed_values"=>null, "sql"=>"action", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 
 		//MetaModel::Init_InheritFilters();
-		// Common to all grant classes (could be factorized by class inheritence, but this has to be benchmarked)
-		MetaModel::Init_AddFilterFromAttribute("profileid");
-		MetaModel::Init_AddFilterFromAttribute("profile");
-		MetaModel::Init_AddFilterFromAttribute("class");
-
+		MetaModel::Init_AddFilterFromAttribute("actiongrantid");
 		MetaModel::Init_AddFilterFromAttribute("attcode");
-		MetaModel::Init_AddFilterFromAttribute("action");
 	}
 }
 
@@ -454,18 +557,18 @@ class UserRightsProfile extends UserRightsAddOnAPI
 					}
 					else
 					{
-						$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_ClassGrant WHERE class = '$sClass' AND action = '$sAction' AND profileid = $iProfileId"));
+						$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_ActionGrant WHERE class = '$sClass' AND action = '$sAction' AND profileid = $iProfileId"));
 						$bAddCell = ($oSet->Count() < 1);
 					}
 					if ($bAddCell)
 					{
 						// Create a new entry
-						$oMyClassGrant = MetaModel::NewObject("URP_ClassGrant");
-						$oMyClassGrant->Set("profileid", $iProfileId);
-						$oMyClassGrant->Set("class", $sClass);
-						$oMyClassGrant->Set("action", $sAction);
-						$oMyClassGrant->Set("permission", "yes");
-						$iId = $oMyClassGrant->DBInsertNoReload();
+						$oMyActionGrant = MetaModel::NewObject("URP_ActionGrant");
+						$oMyActionGrant->Set("profileid", $iProfileId);
+						$oMyActionGrant->Set("class", $sClass);
+						$oMyActionGrant->Set("action", $sAction);
+						$oMyActionGrant->Set("permission", "yes");
+						$iId = $oMyActionGrant->DBInsertNoReload();
 					}
 				}
 				foreach (MetaModel::EnumStimuli($sClass) as $sStimulusCode => $oStimulus)
@@ -482,38 +585,12 @@ class UserRightsProfile extends UserRightsAddOnAPI
 					if ($bAddCell)
 					{
 						// Create a new entry
-						$oMyClassGrant = MetaModel::NewObject("URP_StimulusGrant");
-						$oMyClassGrant->Set("profileid", $iProfileId);
-						$oMyClassGrant->Set("class", $sClass);
-						$oMyClassGrant->Set("stimulus", $sStimulusCode);
-						$oMyClassGrant->Set("permission", "yes");
-						$iId = $oMyClassGrant->DBInsertNoReload();
-					}
-				}
-				foreach (MetaModel::GetAttributesList($sClass) as $sAttCode)
-				{
-					if ($bNewProfile)
-					{
-						$bAddCell = true;
-					}
-					else
-					{
-						$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_AttributeGrant WHERE class = '$sClass' AND attcode = '$sAttCode' AND profileid = $iProfileId"));
-						$bAddCell = ($oSet->Count() < 1);
-					}
-					if ($bAddCell)
-					{
-						foreach (array('read', 'modify') as $sAction)
-						{
-							// Create a new entry
-							$oMyAttGrant = MetaModel::NewObject("URP_AttributeGrant");
-							$oMyAttGrant->Set("profileid", $iProfileId);
-							$oMyAttGrant->Set("class", $sClass);
-							$oMyAttGrant->Set("attcode", $sAttCode);
-							$oMyAttGrant->Set("action", $sAction);
-							$oMyAttGrant->Set("permission", "yes");
-							$iId = $oMyAttGrant->DBInsertNoReload();
-						}
+						$oMyStGrant = MetaModel::NewObject("URP_StimulusGrant");
+						$oMyStGrant->Set("profileid", $iProfileId);
+						$oMyStGrant->Set("class", $sClass);
+						$oMyStGrant->Set("stimulus", $sStimulusCode);
+						$oMyStGrant->Set("permission", "yes");
+						$iId = $oMyStGrant->DBInsertNoReload();
 					}
 				}
 			}
@@ -577,13 +654,15 @@ class UserRightsProfile extends UserRightsAddOnAPI
 
 	public function IsActionAllowed($sUserName, $sClass, $iActionCode, dbObjectSet $aInstances)
 	{
+		// #@# temporary
+		return true;
 		if (!array_key_exists($iActionCode, self::$m_aActionCodes))
 		{
 			return UR_ALLOWED_NO;
 		}
 		$sAction = self::$m_aActionCodes[$iActionCode];
 
-		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_ClassGrant WHERE class = '$sClass' AND action = '$sAction' AND login = '$sUserName'"));
+		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_ActionGrant WHERE class = '$sClass' AND action = '$sAction' AND login = '$sUserName'"));
 		if ($oSet->Count() < 1)
 		{
 			return UR_ALLOWED_NO;
@@ -605,6 +684,8 @@ class UserRightsProfile extends UserRightsAddOnAPI
 
 	public function IsActionAllowedOnAttribute($sUserName, $sClass, $sAttCode, $iActionCode, dbObjectSet $aInstances)
 	{
+		// #@# temporary
+		return true;
 		if (!array_key_exists($iActionCode, self::$m_aActionCodes))
 		{
 			return UR_ALLOWED_NO;
@@ -633,6 +714,8 @@ class UserRightsProfile extends UserRightsAddOnAPI
 
 	public function IsStimulusAllowed($sUserName, $sClass, $sStimulusCode, dbObjectSet $aInstances)
 	{
+		// #@# temporary
+		return true;
 		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_StimulusGrant WHERE class = '$sClass' AND stimulus = '$sStimulusCode' AND login = '$sUserName'"));
 		if ($oSet->Count() < 1)
 		{
