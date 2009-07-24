@@ -84,6 +84,7 @@ class OQLLexerRaw
 	    	$rules = array(
     			'/^[ \t\n]+/',
     			'/^SELECT/',
+    			'/^FROM/',
     			'/^AS/',
     			'/^WHERE/',
     			'/^JOIN/',
@@ -131,6 +132,7 @@ class OQLLexerRaw
     			'/^[0-9]+|0x[0-9a-fA-F]+/',
     			'/^\"([^\\\\\"]|\\\\\"|\\\\\\\\)*\"|'.chr(94).chr(39).'([^\\\\'.chr(39).']|\\\\'.chr(39).'|\\\\\\\\)*'.chr(39).'/',
     			'/^([_a-zA-Z][_a-zA-Z0-9]*|`[^`]+`)/',
+    			'/^:([_a-zA-Z][_a-zA-Z0-9]*->[_a-zA-Z][_a-zA-Z0-9]*|[_a-zA-Z][_a-zA-Z0-9]*)/',
     			'/^\\./',
 	    	);
 	    	$match = false;
@@ -237,239 +239,249 @@ class OQLLexerRaw
     function yy_r1_2($yy_subpatterns)
     {
 
-	$this->token = OQLParser::AS_ALIAS;
+	$this->token = OQLParser::FROM;
     }
     function yy_r1_3($yy_subpatterns)
     {
 
-	$this->token = OQLParser::WHERE;
+	$this->token = OQLParser::AS_ALIAS;
     }
     function yy_r1_4($yy_subpatterns)
     {
 
-	$this->token = OQLParser::JOIN;
+	$this->token = OQLParser::WHERE;
     }
     function yy_r1_5($yy_subpatterns)
     {
 
-	$this->token = OQLParser::ON;
+	$this->token = OQLParser::JOIN;
     }
     function yy_r1_6($yy_subpatterns)
     {
 
-	$this->token = OQLParser::MATH_DIV;
+	$this->token = OQLParser::ON;
     }
     function yy_r1_7($yy_subpatterns)
     {
 
-	$this->token = OQLParser::MATH_MULT;
+	$this->token = OQLParser::MATH_DIV;
     }
     function yy_r1_8($yy_subpatterns)
     {
 
-	$this->token = OQLParser::MATH_PLUS;
+	$this->token = OQLParser::MATH_MULT;
     }
     function yy_r1_9($yy_subpatterns)
     {
 
-	$this->token = OQLParser::MATH_MINUS;
+	$this->token = OQLParser::MATH_PLUS;
     }
     function yy_r1_10($yy_subpatterns)
     {
 
-	$this->token = OQLParser::LOG_AND;
+	$this->token = OQLParser::MATH_MINUS;
     }
     function yy_r1_11($yy_subpatterns)
     {
 
-	$this->token = OQLParser::LOG_OR;
+	$this->token = OQLParser::LOG_AND;
     }
     function yy_r1_12($yy_subpatterns)
     {
 
-	$this->token = OQLParser::COMA;
+	$this->token = OQLParser::LOG_OR;
     }
     function yy_r1_13($yy_subpatterns)
     {
 
-	$this->token = OQLParser::PAR_OPEN;
+	$this->token = OQLParser::COMA;
     }
     function yy_r1_14($yy_subpatterns)
     {
 
-	$this->token = OQLParser::PAR_CLOSE;
+	$this->token = OQLParser::PAR_OPEN;
     }
     function yy_r1_15($yy_subpatterns)
     {
 
-	$this->token = OQLParser::EQ;
+	$this->token = OQLParser::PAR_CLOSE;
     }
     function yy_r1_16($yy_subpatterns)
     {
 
-	$this->token = OQLParser::NOT_EQ;
+	$this->token = OQLParser::EQ;
     }
     function yy_r1_17($yy_subpatterns)
     {
 
-	$this->token = OQLParser::GT;
+	$this->token = OQLParser::NOT_EQ;
     }
     function yy_r1_18($yy_subpatterns)
     {
 
-	$this->token = OQLParser::LT;
+	$this->token = OQLParser::GT;
     }
     function yy_r1_19($yy_subpatterns)
     {
 
-	$this->token = OQLParser::GE;
+	$this->token = OQLParser::LT;
     }
     function yy_r1_20($yy_subpatterns)
     {
 
-	$this->token = OQLParser::LE;
+	$this->token = OQLParser::GE;
     }
     function yy_r1_21($yy_subpatterns)
     {
 
-	$this->token = OQLParser::LIKE;
+	$this->token = OQLParser::LE;
     }
     function yy_r1_22($yy_subpatterns)
     {
 
-	$this->token = OQLParser::NOT_LIKE;
+	$this->token = OQLParser::LIKE;
     }
     function yy_r1_23($yy_subpatterns)
     {
 
-	$this->token = OQLParser::IN;
+	$this->token = OQLParser::NOT_LIKE;
     }
     function yy_r1_24($yy_subpatterns)
     {
 
-	$this->token = OQLParser::NOT_IN;
+	$this->token = OQLParser::IN;
     }
     function yy_r1_25($yy_subpatterns)
     {
 
-	$this->token = OQLParser::INTERVAL;
+	$this->token = OQLParser::NOT_IN;
     }
     function yy_r1_26($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_IF;
+	$this->token = OQLParser::INTERVAL;
     }
     function yy_r1_27($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_ELT;
+	$this->token = OQLParser::F_IF;
     }
     function yy_r1_28($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_COALESCE;
+	$this->token = OQLParser::F_ELT;
     }
     function yy_r1_29($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_CONCAT;
+	$this->token = OQLParser::F_COALESCE;
     }
     function yy_r1_30($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_SUBSTR;
+	$this->token = OQLParser::F_CONCAT;
     }
     function yy_r1_31($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_TRIM;
+	$this->token = OQLParser::F_SUBSTR;
     }
     function yy_r1_32($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_DATE;
+	$this->token = OQLParser::F_TRIM;
     }
     function yy_r1_33($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_DATE_FORMAT;
+	$this->token = OQLParser::F_DATE;
     }
     function yy_r1_34($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_CURRENT_DATE;
+	$this->token = OQLParser::F_DATE_FORMAT;
     }
     function yy_r1_35($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_NOW;
+	$this->token = OQLParser::F_CURRENT_DATE;
     }
     function yy_r1_36($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_TIME;
+	$this->token = OQLParser::F_NOW;
     }
     function yy_r1_37($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_TO_DAYS;
+	$this->token = OQLParser::F_TIME;
     }
     function yy_r1_38($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_FROM_DAYS;
+	$this->token = OQLParser::F_TO_DAYS;
     }
     function yy_r1_39($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_YEAR;
+	$this->token = OQLParser::F_FROM_DAYS;
     }
     function yy_r1_40($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_MONTH;
+	$this->token = OQLParser::F_YEAR;
     }
     function yy_r1_41($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_DAY;
+	$this->token = OQLParser::F_MONTH;
     }
     function yy_r1_42($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_DATE_ADD;
+	$this->token = OQLParser::F_DAY;
     }
     function yy_r1_43($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_DATE_SUB;
+	$this->token = OQLParser::F_DATE_ADD;
     }
     function yy_r1_44($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_ROUND;
+	$this->token = OQLParser::F_DATE_SUB;
     }
     function yy_r1_45($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_FLOOR;
+	$this->token = OQLParser::F_ROUND;
     }
     function yy_r1_46($yy_subpatterns)
     {
 
-	$this->token = OQLParser::NUMVAL;
+	$this->token = OQLParser::F_FLOOR;
     }
     function yy_r1_47($yy_subpatterns)
     {
 
-	$this->token = OQLParser::STRVAL;
+	$this->token = OQLParser::NUMVAL;
     }
     function yy_r1_48($yy_subpatterns)
     {
 
-	$this->token = OQLParser::NAME;
+	$this->token = OQLParser::STRVAL;
     }
     function yy_r1_49($yy_subpatterns)
+    {
+
+	$this->token = OQLParser::NAME;
+    }
+    function yy_r1_50($yy_subpatterns)
+    {
+
+	$this->token = OQLParser::VARNAME;
+    }
+    function yy_r1_51($yy_subpatterns)
     {
 
 	$this->token = OQLParser::DOT;

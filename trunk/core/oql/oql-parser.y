@@ -30,11 +30,20 @@ result ::= query(X). { $this->my_result = X; }
 result ::= condition(X). { $this->my_result = X; }
 
 query(A) ::= SELECT class_name(X) join_statement(J) where_statement(W). {
-	A = new OqlQuery(X, X, W, J);
+	A = new OqlObjectQuery(X, X, W, J);
 }
 query(A) ::= SELECT class_name(X) AS_ALIAS class_name(Y) join_statement(J) where_statement(W). {
-	A = new OqlQuery(X, Y, W, J);
+	A = new OqlObjectQuery(X, Y, W, J);
 }
+
+/*
+query(A) ::= SELECT field_id(E) FROM class_name(X) join_statement(J) where_statement(W). {
+	A = new OqlValueSetQuery(E, X, X, W, J);
+}
+query(A) ::= SELECT field_id(E) FROM class_name(X) AS_ALIAS class_name(Y) join_statement(J) where_statement(W). {
+	A = new OqlValueSetQuery(E, X, Y, W, J);
+}
+*/
 
 where_statement(A) ::= WHERE condition(C). { A = C;}
 where_statement(A) ::= . { A = null;}
@@ -67,6 +76,7 @@ condition(A) ::= expression_prio4(X). { A = X; }
 
 expression_basic(A) ::= scalar(X). { A = X; } 
 expression_basic(A) ::= field_id(X). { A = X; }
+expression_basic(A) ::= var_name(X). { A = X; }
 expression_basic(A) ::= func_name(X) PAR_OPEN arg_list(Y) PAR_CLOSE. { A = new FunctionOqlExpression(X, Y); }
 expression_basic(A) ::= PAR_OPEN expression_prio4(X) PAR_CLOSE. { A = X; }
 expression_basic(A) ::= expression_basic(X) list_operator(Y) list(Z). { A = new BinaryOqlExpression(X, Y, Z); }
@@ -121,6 +131,9 @@ str_scalar(A) ::= str_value(X). { A = new ScalarOqlExpression(X); }
 field_id(A) ::= name(X). { A = new FieldOqlExpression(X); }
 field_id(A) ::= class_name(X) DOT name(Y). { A = new FieldOqlExpression(Y, X); }
 class_name(A) ::= name(X). { A=X; }
+
+
+var_name(A) ::= VARNAME(X). { A = new VariableOqlExpression(substr(X, 1)); }
 
 name(A) ::= NAME(X). {
 	if (X[0] == '`')

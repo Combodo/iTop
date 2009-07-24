@@ -111,6 +111,10 @@ class FieldOqlExpression extends FieldExpression
 	}
 }
 
+class VariableOqlExpression extends VariableExpression
+{
+}
+
 class ListOqlExpression extends ListExpression
 {
 }
@@ -122,19 +126,38 @@ class FunctionOqlExpression extends FunctionExpression
 class IntervalOqlExpression extends IntervalExpression
 {
 }
-class OqlQuery
+
+abstract class OqlQuery
+{
+	protected $m_aJoins; // array of OqlJoinSpec
+	protected $m_oCondition; // condition tree (expressions)
+
+	public function __construct($oCondition = null, $aJoins = null)
+	{
+		$this->m_aJoins = $aJoins;
+		$this->m_oCondition = $oCondition;
+	}
+
+	public function GetJoins()
+	{
+		return $this->m_aJoins;
+	}
+	public function GetCondition()
+	{
+		return $this->m_oCondition;
+	}
+}
+
+class OqlObjectQuery extends OqlQuery
 {
 	protected $m_oClass;
 	protected $m_oClassAlias;
-	protected $m_aJoins; // array of OqlJoinSpec
-	protected $m_oCondition; // condition tree (expressions)
 
 	public function __construct($oClass, $oClassAlias = '', $oCondition = null, $aJoins = null)
 	{
 		$this->m_oClass = $oClass;
 		$this->m_oClassAlias = $oClassAlias;
-		$this->m_aJoins = $aJoins;
-		$this->m_oCondition = $oCondition;
+		parent::__construct($oCondition, $aJoins);
 	}
 
 	public function GetClass()
@@ -154,15 +177,22 @@ class OqlQuery
 	{
 		return $this->m_oClassAlias;
 	}
-
-	public function GetJoins()
-	{
-		return $this->m_aJoins;
-	}
-	public function GetCondition()
-	{
-		return $this->m_oCondition;
-	}
 }
 
+
+class OqlValueSetQuery extends OqlObjectQuery
+{
+	protected $m_oSelectExpr;
+
+	public function __construct($oSelectExpr, $oClass, $oClassAlias = '', $oCondition = null, $aJoins = null)
+	{
+		$this->m_oSelectExpr = $oSelectExpr;
+		parent::__construct($oClass, $oClassAlias, $oCondition, $aJoins);
+	}
+
+	public function GetSelectExpression()
+	{
+		return $this->m_oSelectExpr;
+	}
+}
 ?>

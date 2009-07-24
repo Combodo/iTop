@@ -75,7 +75,7 @@ class TestOQLParser extends TestFunction
 		$oOql = new OqlInterpreter($sQuery);
 		try
 		{
-			$oTrash = $oOql->ParseQuery();
+			$oTrash = $oOql->Parse(); // Not expecting a given format, otherwise use ParseExpression/ParseObjectQuery/ParseValueSetQuery
 			MyHelpers::var_dump_html($oTrash, true);
 		}
 		catch (OQLException $OqlException)
@@ -687,7 +687,7 @@ class TestQueriesOnFarm extends TestBizModel
 		try
 		{
 			//$oOql = new OqlInterpreter($sQuery);
-			//$oTrash = $oOql->ParseQuery();
+			//$oTrash = $oOql->ParseObjectQuery();
 			//MyHelpers::var_dump_html($oTrash, true);
 			$oMyFilter = DBObjectSearch::FromOQL($sQuery);
 		}

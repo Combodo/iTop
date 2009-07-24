@@ -394,6 +394,12 @@ abstract class MetaModel
 		return (array_key_exists($sClass, self::$m_aAttribDefs));
 	}
 
+	public static function IsValidObject($oObject)
+	{
+		if (!is_object($oObject)) return false;
+		return (self::IsValidClass(get_class($oObject)));
+	}
+
 	public static function IsReconcKey($sClass, $sAttCode)
 	{
 		return (in_array($sAttCode, self::GetReconcKeys($sClass)));
@@ -1161,7 +1167,7 @@ abstract class MetaModel
 		return false;
 	}
 
-	public static function MakeSelectQuery(DBObjectSearch $oFilter, $aOrderBy = array())
+	public static function MakeSelectQuery(DBObjectSearch $oFilter, $aOrderBy = array(), $aArgs = array())
 	{
 		$aTranslation = array();
 		$aClassAliases = array();
@@ -1188,8 +1194,30 @@ abstract class MetaModel
 			}
 		}
 		
+		// Prepare arguments (translate any object into scalars)
+		//
+		$aScalarArgs = array();
+		foreach($aArgs as $sArgName => $value)
+		{
+			if (self::IsValidObject($value))
+			{
+				$aScalarArgs[$sArgName] = $value->GetKey();
+				$aScalarArgs[$sArgName.'->id'] = $value->GetKey();
+			
+				$sClass = get_class($value);
+				foreach(self::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+				{
+					$aScalarArgs[$sArgName.'->'.$sAttCode] = $value->Get($sAttCode);
+				}
+			}
+			else
+			{
+				$aScalarArgs[$sArgName] = (string) $value;
+			}
+		}
+		
 		//MyHelpers::var_dump_html($oSelect->RenderSelect($aOrderBy));
-		return $oSelect->RenderSelect($aOrderBy);
+		return $oSelect->RenderSelect($aOrderBy, $aScalarArgs);
 	}
 
 	public static function MakeDeleteQuery(DBObjectSearch $oFilter)

@@ -662,7 +662,7 @@ class DBObjectSearch
 		}
 		if (count($aParams) > 0)
 		{
-			throw new CoreException("Unused parameter(s) for this SibusQL expression: (".implode(', ', array_keys($aParams)).")");
+//			throw new CoreException("Unused parameter(s) for this SibusQL expression: (".implode(', ', array_keys($aParams)).")");
 		}
 		return $sQuery;
 	}
@@ -736,6 +736,10 @@ class DBObjectSearch
 
 			return new FieldExpression($sFltCode, $sClassAlias);
 		}
+		elseif ($oExpression instanceof VariableOqlExpression)
+		{
+			return new VariableExpression($oExpression->GetName());
+		}
 		elseif ($oExpression instanceof TrueOqlExpression)
 		{
 			return new TrueExpression;
@@ -763,7 +767,7 @@ class DBObjectSearch
 		if (empty($sQuery)) return null;
 
 		$oOql = new OqlInterpreter($sQuery);
-		$oOqlQuery = $oOql->ParseQuery();
+		$oOqlQuery = $oOql->ParseObjectQuery();
 		
 		$sClass = $oOqlQuery->GetClass();
 		$sClassAlias = $oOqlQuery->GetClassAlias();
@@ -860,13 +864,14 @@ class DBObjectSearch
 		if (empty($sQuery)) return null;
 		$sQuery = self::privProcessParams($sQuery, $aParams, $oObject);
 
+		if (preg_match('@^\\s*SELECT@', $sQuery))
+		{
+			return self::FromOQL($sQuery, $aParams, $oObject);
+		}
+
 		$iSepPos = strpos($sQuery, ":");
 		if ($iSepPos === false)
 		{
-			if (preg_match('@^\\s*SELECT@', $sQuery))
-			{
-				return self::FromOQL($sQuery, $aParams, $oObject);
-			}
 			// Only the class was specified -> all rows are required
 			$sClass = trim($sQuery);
 			$oFilter = new DBObjectSearch($sClass);

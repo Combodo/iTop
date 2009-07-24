@@ -17,7 +17,7 @@ abstract class Expression
 	abstract public function Translate($aTranslationData, $bMatchAll = true);
 
 	// recursive rendering
-	abstract public function Render();
+	abstract public function Render($aArgs = array());
 
 	// recursively builds an array of class => fieldname
 	abstract public function ListRequiredFields();
@@ -119,11 +119,11 @@ class BinaryExpression extends Expression
 	}
 
 	// recursive rendering
-	public function Render()
+	public function Render($aArgs = array())
 	{
 		$sOperator = $this->GetOperator();
-		$sLeft = $this->GetLeftExpr()->Render();
-		$sRight = $this->GetRightExpr()->Render();
+		$sLeft = $this->GetLeftExpr()->Render($aArgs);
+		$sRight = $this->GetRightExpr()->Render($aArgs);
 		return "($sLeft $sOperator $sRight)";
 	}
 
@@ -164,7 +164,7 @@ class UnaryExpression extends Expression
 	} 
 
 	// recursive rendering
-	public function Render()
+	public function Render($aArgs = array())
 	{
 		return CMDBSource::Quote($this->m_value);
 	}
@@ -228,7 +228,7 @@ class FieldExpression extends UnaryExpression
 	public function GetName() {return $this->m_sName;}
 
 	// recursive rendering
-	public function Render()
+	public function Render($aArgs = array())
 	{
 		if (empty($this->m_sParent))
 		{
@@ -270,6 +270,43 @@ class FieldExpression extends UnaryExpression
 }
 
 
+class VariableExpression extends UnaryExpression
+{
+	protected $m_sName;
+
+	public function __construct($sName)
+	{
+		parent::__construct($sName);
+
+		$this->m_sName = $sName;
+	}
+
+	public function IsTrue()
+	{
+		// return true if we are certain that it will be true
+		return false;
+	}
+
+	public function GetName() {return $this->m_sName;}
+
+	// recursive rendering
+	public function Render($aArgs = array())
+	{
+		if (array_key_exists($this->m_sName, $aArgs))
+		{
+			return $aArgs[$this->m_sName];
+		}
+		elseif (is_null($aArgs))
+		{
+			return ':'.$this->m_sName;
+		}
+		else
+		{
+			throw new CoreException('Missing query argument', array('expecting'=>$this->m_sName, 'available'=>$aArgs));
+		}
+	}
+}
+
 // Temporary, until we implement functions and expression casting!
 // ... or until we implement a real full text search based in the MATCH() expression
 class ListExpression extends Expression
@@ -293,12 +330,12 @@ class ListExpression extends Expression
 	}
 
 	// recursive rendering
-	public function Render()
+	public function Render($aArgs = array())
 	{
 		$aRes = array();
 		foreach ($this->m_aExpressions as $oExpr)
 		{
-			$aRes[] = $oExpr->Render();
+			$aRes[] = $oExpr->Render($aArgs);
 		}
 		return '('.implode(', ', $aRes).')';
 	}
@@ -353,12 +390,12 @@ class FunctionExpression extends Expression
 	}
 
 	// recursive rendering
-	public function Render()
+	public function Render($aArgs = array())
 	{
 		$aRes = array();
 		foreach ($this->m_aArgs as $oExpr)
 		{
-			$aRes[] = $oExpr->Render();
+			$aRes[] = $oExpr->Render($aArgs);
 		}
 		return $this->m_sVerb.'('.implode(', ', $aRes).')';
 	}
@@ -412,9 +449,9 @@ class IntervalExpression extends Expression
 	}
 
 	// recursive rendering
-	public function Render()
+	public function Render($aArgs = array())
 	{
-		return 'INTERVAL '.$this->m_oValue->Render().' '.$this->m_sUnit;
+		return 'INTERVAL '.$this->m_oValue->Render($aArgs).' '.$this->m_sUnit;
 	}
 
 	public function Translate($aTranslationData, $bMatchAll = true)
@@ -449,12 +486,12 @@ class CharConcatExpression extends Expression
 	}
 
 	// recursive rendering
-	public function Render()
+	public function Render($aArgs = array())
 	{
 		$aRes = array();
 		foreach ($this->m_aExpressions as $oExpr)
 		{
-			$sCol = $oExpr->Render();
+			$sCol = $oExpr->Render($aArgs);
 			// Concat will be globally NULL if one single argument is null ! 
 			$aRes[] = "COALESCE($sCol, '')";
 		}

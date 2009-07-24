@@ -28,6 +28,9 @@ class TrueSQLExpression extends TrueExpression
 class FieldSQLExpression extends FieldExpression
 {
 }
+class VariableSQLExpression extends VariableExpression
+{
+}
 
 
 
@@ -212,7 +215,7 @@ class SQLQuery
 	}
 
 	// Interface, build the SQL query
-	public function RenderSelect($aOrderBy = array())
+	public function RenderSelect($aOrderBy = array(), $aArgs = array())
 	{
 		// The goal will be to complete the lists as we build the Joins
 		$aFrom = array();
@@ -224,7 +227,7 @@ class SQLQuery
 
 		$sSelect = self::ClauseSelect($aFields);
 		$sFrom   = self::ClauseFrom($aFrom);
-		$sWhere  = self::ClauseWhere($oCondition);
+		$sWhere  = self::ClauseWhere($oCondition, $aArgs);
 		$sOrderBy = self::ClauseOrderBy($aOrderBy);
 		if (!empty($sOrderBy))
 		{
@@ -294,9 +297,9 @@ class SQLQuery
 		return $sSetValues;
 	}
 
-	private static function ClauseWhere($oConditionExpr)
+	private static function ClauseWhere($oConditionExpr, $aArgs = array())
 	{
-		return $oConditionExpr->Render();
+		return $oConditionExpr->Render($aArgs);
 	}
 
 	private static function ClauseOrderBy($aOrderBy)
