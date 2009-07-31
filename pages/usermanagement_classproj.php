@@ -55,7 +55,14 @@ function ComputeProjections($oPage, $sScope)
 			$oDimension->CheckProjectionSpec($aClassProjs[$sClass][$iDimension]);
 
 			$aValues = $aClassProjs[$sClass][$iDimension]->ProjectObject($oObject);
-			$sValues = implode(', ', $aValues);
+			if (is_null($aValues))
+			{
+				$sValues = '<any>';
+			}
+			else
+			{
+				$sValues = implode(', ', $aValues);
+			}
 			$oObjectProj['dim'.$oDimension->GetKey()] = htmlentities($sValues);
 		}
 	

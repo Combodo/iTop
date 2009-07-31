@@ -92,6 +92,24 @@ class DBObjectSet
 		return $aRet;
 	} 
 
+	public function GetColumnAsArray($sAttCode, $bWithId = true)
+	{
+		$aRet = array();
+		$this->Rewind();
+		while ($oObject = $this->Fetch())
+		{
+			if ($bWithId)
+			{
+				$aRet[$oObject->GetKey()] = $oObject->Get($sAttCode);
+			}
+			else
+			{
+				$aRet[] = $oObject->Get($sAttCode);
+			}
+		}
+		return $aRet;
+	}
+
 	public function GetFilter()
 	{
 		return $this->m_oFilter;

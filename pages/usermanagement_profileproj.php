@@ -65,7 +65,14 @@ function ComputeProjections($oPage)
 				$oDimension->CheckProjectionSpec($aProPros[$iProfile][$iDimension]);
 	
 				$aValues = $aProPros[$iProfile][$iDimension]->ProjectUser($oUser);
-				$sValues = implode(', ', $aValues);
+				if (is_null($aValues))
+				{
+					$sValues = '<any>';
+				}
+				else
+				{
+					$sValues = implode(', ', $aValues);
+				}
 				$aUserProfileProj['dim'.$oDimension->GetKey()] = htmlentities($sValues);
 			}
 		

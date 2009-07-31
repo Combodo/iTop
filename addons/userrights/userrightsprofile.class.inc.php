@@ -245,22 +245,22 @@ class URP_ProfileProjection extends DBObject
 	public function ProjectUser(URP_Users $oUser)
 	{
 		$sExpr = $this->Get('value');
-		if (preg_match('/^\s*([a-zA-Z0-9;]+)\s*$/', $sExpr, $aMatches))
-		{
-			// Constant value(s)
-			$aRes = explode(';', $aMatches[1]);
-		}
-		elseif ($sExpr == '<any>')
-		{
-			$aRes = array('<any>');
-		}
-		else
-		{
+		if (strtolower(substr($sExpr, 0, 6)) == 'select')
+		{ 
 			$sColumn = $this->Get('attribute');
 			// SELECT...
 			$oValueSetDef = new ValueSetObjects($sExpr, $sColumn);
 			$aValues = $oValueSetDef->GetValues(array('user' => $oUser), '');
 			$aRes = array_values($aValues);
+		}
+		elseif ($sExpr == '<any>')
+		{
+			$aRes = null;
+		}
+		else
+		{
+			// Constant value(s)
+			$aRes = explode(';', trim($sExpr));
 		}
 		return $aRes;
 	}
@@ -302,22 +302,22 @@ class URP_ClassProjection extends DBObject
 	public function ProjectObject($oObject)
 	{
 		$sExpr = $this->Get('value');
-		if (preg_match('/^\s*([a-zA-Z0-9;]+)\s*$/', $sExpr, $aMatches))
-		{
-			// Constant value(s)
-			$aRes = explode(';', $aMatches[1]);
-		}
-		elseif ($sExpr == '<any>')
-		{
-			$aRes = array('<any>');
-		}
-		else
-		{
+		if (strtolower(substr($sExpr, 0, 6)) == 'select')
+		{ 
 			$sColumn = $this->Get('attribute');
 			// SELECT...
 			$oValueSetDef = new ValueSetObjects($sExpr, $sColumn);
-			$aValues = $oValueSetDef->GetValues(array('this' => $oObject), '');
+			$aValues = $oValueSetDef->GetValues(array('user' => $oObject), '');
 			$aRes = array_values($aValues);
+		}
+		elseif ($sExpr == '<any>')
+		{
+			$aRes = null;
+		}
+		else
+		{
+			// Constant value(s)
+			$aRes = explode(';', trim($sExpr));
 		}
 		return $aRes;
 	}
@@ -389,7 +389,7 @@ class URP_StimulusGrant extends DBObject
 		MetaModel::Init_AddAttribute(new AttributeString("class", array("label"=>"class", "description"=>"class name", "allowed_values"=>null, "sql"=>"class", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("permission", array("label"=>"permission", "description"=>"allowed or not allowed?", "allowed_values"=>new ValueSetEnum('yes,no'), "sql"=>"permission", "default_value"=>"yes", "is_null_allowed"=>false, "depends_on"=>array())));
 
-		MetaModel::Init_AddAttribute(new AttributeString("stimulus", array("label"=>"action", "description"=>"operations to perform on the given class", "allowed_values"=>null, "sql"=>"action", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("stimulus", array("label"=>"stimulus", "description"=>"stimulus code", "allowed_values"=>null, "sql"=>"action", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 
 		//MetaModel::Init_InheritFilters();
 		// Common to all grant classes (could be factorized by class inheritence, but this has to be benchmarked)
@@ -498,7 +498,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 				}
 				else
 				{
-					$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_ClassProjection WHERE class = '$sClass' AND dimensionid = $iDimensionId"));
+					$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_ClassProjection WHERE class = :class AND dimensionid = :dimension"), array(), array('class'=>$sClass, 'dimension'=>$iDimensionId));
 					$bAddCell = ($oSet->Count() < 1);
 				}
 				if ($bAddCell)
@@ -524,7 +524,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 			}
 			else
 			{
-				$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_ProfileProjection WHERE dimensionid = $iDimensionId AND profileid = $iProfileId"));
+				$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_ProfileProjection WHERE dimensionid = :dimension AND profileid = :profile"), array(), array('dimension'=>$iDimensionId, 'profile'=>$iProfileId));
 				$bAddCell = ($oSet->Count() < 1);
 			}
 			if ($bAddCell)
@@ -557,7 +557,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 					}
 					else
 					{
-						$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_ActionGrant WHERE class = '$sClass' AND action = '$sAction' AND profileid = $iProfileId"));
+						$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_ActionGrant WHERE class = :class AND action = :action AND profileid = :profile"), array(), array('class'=>$sClass, 'action'=>$sAction, 'profile'=>$iProfileId));
 						$bAddCell = ($oSet->Count() < 1);
 					}
 					if ($bAddCell)
@@ -579,7 +579,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 					}
 					else
 					{
-						$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_StimulusGrant WHERE class = '$sClass' AND stimulus = '$sStimulusCode' AND profileid = $iProfileId"));
+						$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_StimulusGrant WHERE class = :class AND stimulus = :stimulus AND profileid = :profile"), array(), array('class'=>$sClass, 'stimulus'=>$sStimulusCode, 'profile'=>$iProfileId));
 						$bAddCell = ($oSet->Count() < 1);
 					}
 					if ($bAddCell)
@@ -621,29 +621,105 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		}
 	}
 
-
 	public function Init()
 	{
+		MetaModel::RegisterPlugin('userrights', 'ACbyProfile', array($this, 'CacheData'));
+	}
+
+	protected $m_aUsers = array(); // id -> object
+	protected $m_aDimensions = array(); // id -> object
+	protected $m_aClassProj = array(); // class,dimensionid -> object
+	protected $m_aProfiles = array(); // id -> object
+	protected $m_aUserProfiles = array(); // userid,profileid -> object
+	protected $m_aProPro = array(); // profileid,dimensionid -> object
+
+	protected $m_aClassActionGrants = array(); // profile, class, action -> permission
+	protected $m_aObjectActionGrants = array(); // userid, class, id, action -> permission, list of attributes
+
+	public function CacheData()
+	{
 		// Could be loaded in a shared memory (?)
+
+		$oUserSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_Users"));
+		while ($oUser = $oUserSet->Fetch())
+		{
+			$this->m_aUsers[$oUser->GetKey()] = $oUser; 
+		}
+
+		$oDimensionSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_Dimensions"));
+		while ($oDimension = $oDimensionSet->Fetch())
+		{
+			$this->m_aDimensions[$oDimension->GetKey()] = $oDimension; 
+		}
+		
+		$oClassProjSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_ClassProjection"));
+		while ($oClassProj = $oClassProjSet->Fetch())
+		{
+			$this->m_aClassProjs[$oClassProj->Get('class')][$oClassProj->Get('dimensionid')] = $oClassProj; 
+		}
+
+		$oProfileSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_Profiles"));
+		while ($oProfile = $oProfileSet->Fetch())
+		{
+			$this->m_aProfiles[$oProfile->GetKey()] = $oProfile; 
+		}
+
+		$oUserProfileSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_UserProfile"));
+		while ($oUserProfile = $oUserProfileSet->Fetch())
+		{
+			$this->m_aUserProfiles[$oUserProfile->Get('userid')][$oUserProfile->Get('profileid')] = $oUserProfile; 
+		}
+
+		$oProProSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_ProfileProjection"));
+		while ($oProPro = $oProProSet->Fetch())
+		{
+			$this->m_aProPros[$oProPro->Get('profileid')][$oProPro->Get('dimensionid')] = $oProPro; 
+		}
+
+/*
+		echo "<pre>\n";
+		print_r($this->m_aUsers);
+		print_r($this->m_aDimensions);
+		print_r($this->m_aClassProjs);
+		print_r($this->m_aProfiles);
+		print_r($this->m_aUserProfiles);
+		print_r($this->m_aProPros);
+		echo "</pre>\n";
+exit;
+*/
+
 		return true;
 	}
 
 	public function CheckCredentials($sUserName, $sPassword)
 	{
-		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_Users WHERE login = '$sUserName'"));
+		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_Users WHERE login = :login"), array(), array('login' => $sUserName));
 		if ($oSet->Count() < 1)
 		{
 		// todo: throw an exception?
 			return false;
 		}
 
-		$oLogin = $oSet->Fetch();
-		if ($oLogin->Get('password') == $sPassword)
+		$oUser = $oSet->Fetch();
+		if ($oUser->Get('password') == $sPassword)
 		{
-			return true;
+			return $oUser->GetKey();
 		}
 		// todo: throw an exception?
 		return false;
+	}
+
+	public function GetUserId($sUserName)
+	{
+		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_Users WHERE login = :login"), array(), array('login' => $sUserName));
+		if ($oSet->Count() < 1)
+		{
+		// todo: throw an exception?
+			return false;
+		}
+
+		$oUser = $oSet->Fetch();
+		return $oUser->GetKey();
 	}
 
 	public function GetFilter($sUserName, $sClass)
@@ -652,88 +728,261 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		return $oNullFilter;
 	}
 
-	public function IsActionAllowed($sUserName, $sClass, $iActionCode, dbObjectSet $aInstances)
+	protected function GetClassActionGrant($iProfile, $sClass, $sAction)
 	{
-		// #@# temporary
-		return true;
-		if (!array_key_exists($iActionCode, self::$m_aActionCodes))
-		{
-			return UR_ALLOWED_NO;
-		}
-		$sAction = self::$m_aActionCodes[$iActionCode];
+		$aTest = @$this->m_aClassActionGrants[$iProfile][$sClass][$sAction];
+		if (isset($aTest)) return $aTest;
 
-		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_ActionGrant WHERE class = '$sClass' AND action = '$sAction' AND login = '$sUserName'"));
+		// Get the permission for this profile/class/action
+		$oSearch = DBObjectSearch::FromOQL("SELECT URP_ActionGrant WHERE class = :class AND action = :action AND profileid = :profile");
+		$oSet = new DBObjectSet($oSearch, array(), array('class'=>$sClass, 'action'=>$sAction, 'profile'=>$iProfile));
 		if ($oSet->Count() < 1)
 		{
-			return UR_ALLOWED_NO;
+			return null;
 		}
-
 		$oGrantRecord = $oSet->Fetch();
-		switch ($oGrantRecord->Get('permission'))
-		{
-			case 'yes':
-				$iRetCode = UR_ALLOWED_YES;
-				break;
-			case 'no':
-			default:
-				$iRetCode = UR_ALLOWED_NO;
-				break;
-		}
-		return $iRetCode;
+
+		$this->m_aClassActionGrants[$iProfile][$sClass][$sAction] = $oGrantRecord;
+		return $oGrantRecord;
 	}
 
-	public function IsActionAllowedOnAttribute($sUserName, $sClass, $sAttCode, $iActionCode, dbObjectSet $aInstances)
+	protected function GetObjectActionGrant($oUser, $sClass, $iActionCode, $oObject)
 	{
-		// #@# temporary
-		return true;
-		if (!array_key_exists($iActionCode, self::$m_aActionCodes))
-		{
-			return UR_ALLOWED_NO;
-		}
+		// load and cache permissions for the current user on the given object
+		//
+		$aTest = @$this->m_aObjectActionGrants[$oUser->GetKey()][$sClass][$oObject->GetKey][$iActionCode];
+		if (is_array($aTest)) return $aTest;
+
 		$sAction = self::$m_aActionCodes[$iActionCode];
 
-		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_AttributeGrant WHERE URP_AttributeGrant.class = '$sClass' AND URP_AttributeGrant.attcode = '$sAttCode' AND URP_AttributeGrant.action = '$sAction' AND URP_AttributeGrant.login = '$sUserName'"));
-		if ($oSet->Count() < 1)
+		$iInstancePermission = UR_ALLOWED_NO;
+		$aAttributes = array();
+		foreach($this->GetMatchingProfiles($oUser, $oObject) as $iProfile)
+		{
+			$oGrantRecord = $this->GetClassActionGrant($iProfile, $sClass, $sAction);
+			if (is_null($oGrantRecord))
+			{
+				continue; // loop to the next profile
+			}
+			elseif ($oGrantRecord->Get('permission') == 'yes')
+			{
+				$iInstancePermission = UR_ALLOWED_YES;
+
+				// merge the list of attributes allowed for this profile
+				$oSearch = DBObjectSearch::FromOQL("SELECT URP_AttributeGrant WHERE actiongrantid = :actiongrantid");
+				$oSet = new DBObjectSet($oSearch, array(), array('actiongrantid' => $oGrantRecord->GetKey()));
+				$aAttributes = array_merge($aAttributes, $oSet->GetColumnAsArray('attcode', false));
+			}
+		}
+
+		$aRes = array(
+			'permission' => $iInstancePermission,
+			'attributes' => $aAttributes,
+		);
+		$this->m_aObjectActionGrants[$oUser->GetKey()][$sClass][$oObject->GetKey()][$iActionCode] = $aRes;
+		return $aRes;
+	}
+	
+	public function IsActionAllowed($iUserId, $sClass, $iActionCode, dbObjectSet $oInstances)
+	{
+		$oUser = $this->m_aUsers[$iUserId];
+
+		$oInstances->Rewind();
+		while($oObject = $oInstances->Fetch())
+		{
+			$aObjectPermissions = $this->GetObjectActionGrant($oUser, $sClass, $iActionCode, $oObject);
+
+			$iInstancePermission = $aObjectPermissions['permission'];
+			if (isset($iGlobalPermission))
+			{
+				if ($iInstancePermission != $iGlobalPermission)
+				{
+					$iGlobalPermission = UR_ALLOWED_DEPENDS;
+				}
+			}
+			else
+			{
+				$iGlobalPermission = $iInstancePermission;
+			}
+		}
+		if (isset($iGlobalPermission))
+		{
+			return $iGlobalPermission;
+		}
+		else
 		{
 			return UR_ALLOWED_NO;
 		}
-
-		$oGrantRecord = $oSet->Fetch();
-		switch ($oGrantRecord->Get('permission'))
-		{
-			case 'yes':
-				$iRetCode = UR_ALLOWED_YES;
-				break;
-			case 'no':
-			default:
-				$iRetCode = UR_ALLOWED_NO;
-				break;
-		}
-		return $iRetCode;
 	}
 
-	public function IsStimulusAllowed($sUserName, $sClass, $sStimulusCode, dbObjectSet $aInstances)
+	public function IsActionAllowedOnAttribute($iUserId, $sClass, $sAttCode, $iActionCode, dbObjectSet $oInstances)
 	{
-		// #@# temporary
-		return true;
-		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_StimulusGrant WHERE class = '$sClass' AND stimulus = '$sStimulusCode' AND login = '$sUserName'"));
-		if ($oSet->Count() < 1)
+		$oUser = $this->m_aUsers[$iUserId];
+
+		$oInstances->Rewind();
+		while($oObject = $oInstances->Fetch())
+		{
+			$aObjectPermissions = $this->GetObjectActionGrant($oUser, $sClass, $iActionCode, $oObject);
+
+			$aAttributes = $aObjectPermissions['attributes'];
+			if (in_array($sAttCode, $aAttributes))
+			{
+				$iInstancePermission = $aObjectPermissions['permission'];
+			}
+			else
+			{
+				$iInstancePermission = UR_ALLOWED_NO; 
+			}
+
+			if (isset($iGlobalPermission))
+			{
+				if ($iInstancePermission != $iGlobalPermission)
+				{
+					$iGlobalPermission = UR_ALLOWED_DEPENDS;
+				}
+			}
+			else
+			{
+				$iGlobalPermission = $iInstancePermission;
+			}
+		}
+		if (isset($iGlobalPermission))
+		{
+			return $iGlobalPermission;
+		}
+		else
 		{
 			return UR_ALLOWED_NO;
 		}
+	}
 
-		$oGrantRecord = $oSet->Fetch();
-		switch ($oGrantRecord->Get('permission'))
+	public function IsStimulusAllowed($iUserId, $sClass, $sStimulusCode, dbObjectSet $oInstances)
+	{
+		$oUser = $this->m_aUsers[$iUserId];
+
+		// Note: this code is VERY close to the code of IsActionAllowed()
+
+		$oInstances->Rewind();
+		while($oObject = $oInstances->Fetch())
 		{
-			case 'yes':
-				$iRetCode = UR_ALLOWED_YES;
-				break;
-			case 'no':
-			default:
-				$iRetCode = UR_ALLOWED_NO;
-				break;
+			$iInstancePermission = UR_ALLOWED_NO;
+			foreach($this->GetMatchingProfiles($oUser, $oObject) as $iProfile)
+			{
+				// Get the permission for this profile/class/stimulus
+				$oSearch = DBObjectSearch::FromOQL("SELECT URP_StimulusGrant WHERE class = :class AND stimulus = :stimulus AND profileid = :profile");
+				$oSet = new DBObjectSet($oSearch, array(), array('class'=>$sClass, 'stimulus'=>$sStimulusCode, 'profile'=>$iProfile));
+				if ($oSet->Count() < 1)
+				{
+					return UR_ALLOWED_NO;
+				}
+		
+				$oGrantRecord = $oSet->Fetch();
+				$sPermission = $oGrantRecord->Get('permission');
+				if ($sPermission == 'yes')
+				{
+					$iInstancePermission = UR_ALLOWED_YES;
+				}
+			}
+			if (isset($iGlobalPermission))
+			{
+				if ($iInstancePermission != $iGlobalPermission)
+				{
+					$iGlobalPermission = UR_ALLOWED_DEPENDS;
+				}
+			}
+			else
+			{
+				$iGlobalPermission = $iInstancePermission;
+			}
 		}
-		return $iRetCode;
+		if (isset($iGlobalPermission))
+		{
+			return $iGlobalPermission;
+		}
+		else
+		{
+			return UR_ALLOWED_NO;
+		}
+	}
+
+	protected function GetMatchingProfilesByDim($oUser, $oObject, $oDimension)
+	{
+		//
+		// List profiles for which the user projection overlaps the object projection in the given dimension
+		//
+		$iUser = $oUser->GetKey();
+		$sClass = get_class($oObject);
+		$iPKey = $oObject->GetKey();
+		$iDimension = $oDimension->GetKey();
+
+		$aObjectProjection = $this->m_aClassProjs[$sClass][$iDimension]->ProjectObject($oObject);
+
+		$aRes = array();
+		foreach ($this->m_aUserProfiles[$iUser] as $iProfile => $oProfile)
+		{
+			if (is_null($aObjectProjection))
+			{
+				$aRes[] = $iProfile;
+			}
+			else
+			{
+				// user projection to be cached on a given page !
+				$aUserProjection = $this->m_aProPros[$iProfile][$iDimension]->ProjectUser($oUser);
+				
+				if (is_null($aUserProjection))
+				{
+					$aRes[] = $iProfile;
+				}
+				else
+				{
+					$aMatchingValues = array_intersect($aObjectProjection, $aUserProjection);
+					if (count($aMatchingValues) > 0)
+					{
+						$aRes[] = $iProfile;
+					}
+				}
+			}
+		}
+		return $aRes;
+	}
+
+	protected $m_aMatchingProfiles = array(); // cache of the matching profiles for a given user/object
+	
+	protected function GetMatchingProfiles($oUser, $oObject)
+	{
+		$iUser = $oUser->GetKey();
+		$sClass = get_class($oObject);
+		$iObject = $oObject->GetKey();
+		//
+		// List profiles for which the user projection overlaps the object projection in each and every dimension
+		// Caches the result
+		//
+		$aTest = @$this->m_aMatchingProfiles[$iUser][$sClass][$iObject];
+		if (is_array($aTest))
+		{
+			return $aTest;
+		}
+
+		$aProfileRes = array();
+		foreach ($this->m_aDimensions as $iDimension => $oDimension)
+		{
+			foreach ($this->GetMatchingProfilesByDim($oUser, $oObject, $oDimension) as $iProfile)
+			{
+				@$aProfileRes[$iProfile] += 1;
+			}
+		}
+
+		$aRes = array();
+		$iDimCount = count($this->m_aDimensions);
+		foreach ($aProfileRes as $iProfile => $iMatches)
+		{
+			if ($iMatches == $iDimCount)
+			{
+				$aRes[] = $iProfile;
+			}
+		}
+		$this->m_aMatchingProfiles[$iUser][$sClass][$iObject] = $aRes;
+		return $aRes; 
 	}
 }
 
