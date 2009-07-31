@@ -48,6 +48,7 @@ class DBObjectSearch
 	private $m_sClassAlias;
 	private $m_aClasses; // queried classes (alias => class name)
 	private $m_oSearchCondition;
+	private $m_aParams;
 	private $m_aFullText;
 	private $m_aPointingTo;
 	private $m_aReferencedBy;
@@ -64,6 +65,7 @@ class DBObjectSearch
 		$this->m_sClassAlias = $sClassAlias;
 		$this->m_aClasses = array($sClassAlias => $sClass);
 		$this->m_oSearchCondition = new TrueExpression;
+		$this->m_aParams = array();
 		$this->m_aFullText = array();
 		$this->m_aPointingTo = array();
 		$this->m_aReferencedBy = array();
@@ -174,6 +176,8 @@ class DBObjectSearch
 	{
 		$oTranslated = $oFilter->GetCriteria()->Translate($aTranslation, false);
 		$this->AddConditionExpression($oTranslated);
+		// #@# what about collisions in parameter names ???
+		$this->m_aParams = array_merge($this->m_aParams, $oFilter->m_aParams);
 	}
 
 	public function ResetCondition()
@@ -232,22 +236,22 @@ class DBObjectSearch
 			break;
 
 		case 'Contains':
-			$oRightExpr = new ScalarExpression("%$value%");
+			$this->m_aParams[$sFilterCode] = "%$value%";
 			$sOperator = 'LIKE';
 			break;
 
 		case 'Begins with':
-			$oRightExpr = new ScalarExpression("$value%");
+			$this->m_aParams[$sFilterCode] = "$value%";
 			$sOperator = 'LIKE';
 			break;
 
 		case 'Finishes with':
-			$oRightExpr = new ScalarExpression("%$value");
+			$this->m_aParams[$sFilterCode] = "%$value";
 			$sOperator = 'LIKE';
 			break;
 
 		default:
-			$oRightExpr = new ScalarExpression($value);
+			$this->m_aParams[$sFilterCode] = $value;
 			$sOperator = $sOpCode;
 		}
 
@@ -262,6 +266,7 @@ class DBObjectSearch
 		case 'Begins with':
 		case 'Finishes with':
 		default:
+			$oRightExpr = new VariableExpression($sFilterCode);
 			$oNewCondition = new BinaryExpression($oField, $sOperator, $oRightExpr);
 		}
 
@@ -453,10 +458,14 @@ class DBObjectSearch
 	{
 		return $this->m_aRelatedTo;
 	}
+	public function GetInternalParams()
+	{
+		return $this->m_aParams;
+	}
 
 	public function RenderCondition()
 	{
-		return $this->m_oSearchCondition->Render();
+		return $this->m_oSearchCondition->Render($this->m_aParams);
 	}
 
 	public function serialize()
@@ -588,11 +597,13 @@ class DBObjectSearch
 		return $retValue;
 	}
 
-	public function ToOQL()
+	public function ToOQL(&$aParams = null)
 	{
+		$bRetrofitParams = (!is_null($aParams));
+
 		$sRes = "SELECT ".$this->GetClass().' AS '.$this->GetClassAlias();
 		$sRes .= $this->ToOQL_Joins();
-		$sRes .= " WHERE ".$this->m_oSearchCondition->Render();
+		$sRes .= " WHERE ".$this->m_oSearchCondition->Render($aParams, $bRetrofitParams);
 		return $sRes;
 	}
 
@@ -762,9 +773,19 @@ class DBObjectSearch
 		}
 	}
 
-	static public function FromOQL($sQuery, array $aParams = array(), $oObject = null)
+	static protected $m_aOQLQueries = array();
+
+	static public function FromOQL($sQuery)
 	{
 		if (empty($sQuery)) return null;
+
+		// Query caching
+		$bOQLCacheEnabled = true;
+		if ($bOQLCacheEnabled && array_key_exists($sQuery, self::$m_aOQLQueries))
+		{
+			// hit!
+			return clone self::$m_aOQLQueries[$sQuery];
+		}
 
 		$oOql = new OqlInterpreter($sQuery);
 		$oOqlQuery = $oOql->ParseObjectQuery();
@@ -854,6 +875,11 @@ class DBObjectSearch
 		if ($oConditionTree instanceof Expression)
 		{
 			$oResultFilter->m_oSearchCondition = $oResultFilter->OQLExpressionToCondition($sQuery, $oConditionTree, $aAliases);
+		}
+
+		if ($bOQLCacheEnabled)
+		{
+			self::$m_aOQLQueries[$sQuery] = clone $oResultFilter;
 		}
 
 		return $oResultFilter;

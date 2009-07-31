@@ -164,6 +164,10 @@ abstract class MetaModel
 		}
 	}
 
+	private static $m_bTraceQueries = true;
+	private static $m_aQueriesLog = array();
+	
+
 	private static $m_sDBName = "";
 	private static $m_sTablePrefix = ""; // table prefix for the current application instance (allow several applications on the same DB)
 	private static $m_Category2Class = array();
@@ -1167,15 +1171,36 @@ abstract class MetaModel
 		return false;
 	}
 
+	protected static $m_aQueryStructCache = array();
+
 	public static function MakeSelectQuery(DBObjectSearch $oFilter, $aOrderBy = array(), $aArgs = array())
 	{
-		$aTranslation = array();
-		$aClassAliases = array();
-		$aTableAliases = array();
-		$oConditionTree = $oFilter->GetCriteria();
-		$oSelect = self::MakeQuery($oFilter->GetClassAlias(), $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oFilter);
+		// Query caching
+		//
+		$bQueryCacheEnabled = true;
+		$sOqlQuery = $oFilter->ToOql();
+		if ($bQueryCacheEnabled)
+		{
+			if (array_key_exists($sOqlQuery, self::$m_aQueryStructCache))
+			{
+				// hit!
+				$oSelect = clone self::$m_aQueryStructCache[$sOqlQuery];
+			}
+		}
+
+		if (!isset($oSelect))
+		{
+			$aTranslation = array();
+			$aClassAliases = array();
+			$aTableAliases = array();
+			$oConditionTree = $oFilter->GetCriteria();
+			$oSelect = self::MakeQuery($oFilter->GetClassAlias(), $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oFilter);
+
+			self::$m_aQueryStructCache[$sOqlQuery] = clone $oSelect;
+		}
 
 		// Check the order by specification
+		//
 		foreach ($aOrderBy as $sFieldAlias => $bAscending)
 		{
 			MyHelpers::CheckValueInArray('field name in ORDER BY spec', $sFieldAlias, self::GetAttributesList($oFilter->GetClass()));
@@ -1196,7 +1221,7 @@ abstract class MetaModel
 		
 		// Prepare arguments (translate any object into scalars)
 		//
-		$aScalarArgs = array();
+		$aScalarArgs = $oFilter->GetInternalParams();
 		foreach($aArgs as $sArgName => $value)
 		{
 			if (self::IsValidObject($value))
@@ -1215,9 +1240,41 @@ abstract class MetaModel
 				$aScalarArgs[$sArgName] = (string) $value;
 			}
 		}
-		
-		//MyHelpers::var_dump_html($oSelect->RenderSelect($aOrderBy));
-		return $oSelect->RenderSelect($aOrderBy, $aScalarArgs);
+
+		// Go
+		//
+		$sRes = $oSelect->RenderSelect($aOrderBy, $aScalarArgs);
+
+		if (self::$m_bTraceQueries)
+		{
+			$aParams = array();
+			if (!array_key_exists($sOqlQuery, self::$m_aQueriesLog))
+			{
+				self::$m_aQueriesLog[$sOqlQuery] = array(
+					'sql' => array(),
+					'count' => 0,
+				);
+			}
+			self::$m_aQueriesLog[$sOqlQuery]['count']++;
+			self::$m_aQueriesLog[$sOqlQuery]['sql'][] = $sRes;
+		}
+
+		return $sRes;
+	}
+
+	public static function ShowQueryTrace()
+	{
+		$iTotal = 0;
+		foreach (self::$m_aQueriesLog as $sOql => $aQueryData)
+		{
+			echo "<h2>$sOql</h2>\n";
+			$iTotal += $aQueryData['count'];
+			echo '<p>'.$aQueryData['count'].'</p>';
+			echo '<p>Example: '.$aQueryData['sql'][0].'</p>';
+		}
+		echo "<h2>Total</h2>\n";
+		echo "<p>Count of executed queries: $iTotal</p>";
+		echo "<p>Count of built queries: ".count(self::$m_aQueriesLog)."</p>";
 	}
 
 	public static function MakeDeleteQuery(DBObjectSearch $oFilter)
@@ -2390,6 +2447,8 @@ abstract class MetaModel
 				throw new CoreException('Database not found, check your configuration file', array('config_file'=>$sConfigFile, 'db_name'=>self::$m_sDBName));
 			}
 		}
+		// Some of the init could not be done earlier (requiring classes to be declared and DB to be accessible)
+		self::InitPlugins();
 	}
 
 	public static function LoadConfig($sConfigFile)
@@ -2425,6 +2484,15 @@ abstract class MetaModel
 		CMDBSource::Init($sServer, $sUser, $sPwd); // do not select the DB (could not exist)
 	}
 
+	protected static $m_aPlugins = array();
+	public static function RegisterPlugin($sType, $sName, $aInitCallSpec = array())
+	{
+		self::$m_aPlugins[$sName] = array(
+			'type' => $sType,
+			'init' => $aInitCallSpec,
+		);
+	}
+
 	protected static function Plugin($sConfigFile, $sModuleType, $sToInclude)
 	{
 		if (!file_exists($sToInclude))
@@ -2432,6 +2500,22 @@ abstract class MetaModel
 			throw new CoreException('Wrong filename in configuration file', array('file' => $sConfigFile, 'module' => $sModuleType, 'filename' => $sToInclude));
 		}
 		require_once($sToInclude);
+	}
+
+	protected static function InitPlugins()
+	{
+		foreach(self::$m_aPlugins as $sName => $aData)
+		{
+			$aCallSpec = @$aData['init'];
+			if (count($aCallSpec) == 2)
+			{
+				if (!is_callable($aCallSpec))
+				{
+					throw new CoreException('Wrong declaration in plugin', array('plugin' => $aData['name'], 'type' => $aData['type'], 'class' => $aData['class'], 'init' => $aData['init'])); 
+				}
+				call_user_func($aCallSpec);
+			}
+		}
 	}
 
 	// Building an object

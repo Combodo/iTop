@@ -318,6 +318,19 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 		return false;
 	}
 
+	public function GetUserId($sUserName)
+	{
+		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixUsers WHERE login = '$sUserName'"));
+		if ($oSet->Count() < 1)
+		{
+		// todo: throw an exception?
+			return false;
+		}
+
+		$oLogin = $oSet->Fetch();
+		return $oLogin->Get('userid');
+	}
+
 	public function GetFilter($sUserName, $sClass)
 	{
 		$oNullFilter  = new DBObjectSearch($sClass);

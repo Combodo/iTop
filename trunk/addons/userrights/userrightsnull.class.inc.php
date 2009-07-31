@@ -34,7 +34,12 @@ class UserRightsNull extends UserRightsAddOnAPI
 
 	public function CheckCredentials($sUserName, $sPassword)
 	{
-		return true;
+		return 1;
+	}
+
+	public function GetUserId($sUserName)
+	{
+		return 1;
 	}
 
 	public function GetFilter($sUserName, $sClass)
@@ -43,17 +48,17 @@ class UserRightsNull extends UserRightsAddOnAPI
 		return $oNullFilter;
 	}
 
-	public function IsActionAllowed($sUserName, $sClass, $iActionCode, dbObjectSet $aInstances)
+	public function IsActionAllowed($iUserId, $sClass, $iActionCode, dbObjectSet $aInstances)
 	{
 		return UR_ALLOWED_YES;
 	}
 
-	public function IsStimulusAllowed($sUserName, $sClass, $sStimulusCode, dbObjectSet $aInstances)
+	public function IsStimulusAllowed($iUserId, $sClass, $sStimulusCode, dbObjectSet $aInstances)
 	{
 		return UR_ALLOWED_YES;
 	}
 
-	public function IsActionAllowedOnAttribute($sUserName, $sClass, $sAttCode, $iActionCode, dbObjectSet $aInstances)
+	public function IsActionAllowedOnAttribute($iUserId, $sClass, $sAttCode, $iActionCode, dbObjectSet $aInstances)
 	{
 		return UR_ALLOWED_YES;
 	}

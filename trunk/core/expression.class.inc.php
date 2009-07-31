@@ -16,8 +16,8 @@ abstract class Expression
 	// recursive translation of identifiers
 	abstract public function Translate($aTranslationData, $bMatchAll = true);
 
-	// recursive rendering
-	abstract public function Render($aArgs = array());
+	// recursive rendering (aArgs used as input by default, or used as output if bRetrofitParams set to True
+	abstract public function Render(&$aArgs = null, $bRetrofitParams = false);
 
 	// recursively builds an array of class => fieldname
 	abstract public function ListRequiredFields();
@@ -119,11 +119,11 @@ class BinaryExpression extends Expression
 	}
 
 	// recursive rendering
-	public function Render($aArgs = array())
+	public function Render(&$aArgs = null, $bRetrofitParams = false)
 	{
 		$sOperator = $this->GetOperator();
-		$sLeft = $this->GetLeftExpr()->Render($aArgs);
-		$sRight = $this->GetRightExpr()->Render($aArgs);
+		$sLeft = $this->GetLeftExpr()->Render($aArgs, $bRetrofitParams);
+		$sRight = $this->GetRightExpr()->Render($aArgs, $bRetrofitParams);
 		return "($sLeft $sOperator $sRight)";
 	}
 
@@ -164,9 +164,18 @@ class UnaryExpression extends Expression
 	} 
 
 	// recursive rendering
-	public function Render($aArgs = array())
+	public function Render(&$aArgs = null, $bRetrofitParams = false)
 	{
-		return CMDBSource::Quote($this->m_value);
+		if ($bRetrofitParams)
+		{
+			$iParamIndex = count($aArgs) + 1; // 1-based indexation
+			$aArgs['param'.$iParamIndex] = $this->m_value;
+			return ':param'.$iParamIndex;
+		}
+		else
+		{
+			return CMDBSource::Quote($this->m_value);
+		}
 	}
 
 	public function Translate($aTranslationData, $bMatchAll = true)
@@ -228,7 +237,7 @@ class FieldExpression extends UnaryExpression
 	public function GetName() {return $this->m_sName;}
 
 	// recursive rendering
-	public function Render($aArgs = array())
+	public function Render(&$aArgs = null, $bRetrofitParams = false)
 	{
 		if (empty($this->m_sParent))
 		{
@@ -290,15 +299,15 @@ class VariableExpression extends UnaryExpression
 	public function GetName() {return $this->m_sName;}
 
 	// recursive rendering
-	public function Render($aArgs = array())
+	public function Render(&$aArgs = null, $bRetrofitParams = false)
 	{
-		if (array_key_exists($this->m_sName, $aArgs))
-		{
-			return $aArgs[$this->m_sName];
-		}
-		elseif (is_null($aArgs))
+		if (is_null($aArgs) || $bRetrofitParams)
 		{
 			return ':'.$this->m_sName;
+		}
+		elseif (array_key_exists($this->m_sName, $aArgs))
+		{
+			return CMDBSource::Quote($aArgs[$this->m_sName]);
 		}
 		else
 		{
@@ -330,12 +339,12 @@ class ListExpression extends Expression
 	}
 
 	// recursive rendering
-	public function Render($aArgs = array())
+	public function Render(&$aArgs = null, $bRetrofitParams = false)
 	{
 		$aRes = array();
 		foreach ($this->m_aExpressions as $oExpr)
 		{
-			$aRes[] = $oExpr->Render($aArgs);
+			$aRes[] = $oExpr->Render($aArgs, $bRetrofitParams);
 		}
 		return '('.implode(', ', $aRes).')';
 	}
@@ -390,12 +399,12 @@ class FunctionExpression extends Expression
 	}
 
 	// recursive rendering
-	public function Render($aArgs = array())
+	public function Render(&$aArgs = null, $bRetrofitParams = false)
 	{
 		$aRes = array();
 		foreach ($this->m_aArgs as $oExpr)
 		{
-			$aRes[] = $oExpr->Render($aArgs);
+			$aRes[] = $oExpr->Render($aArgs, $bRetrofitParams);
 		}
 		return $this->m_sVerb.'('.implode(', ', $aRes).')';
 	}
@@ -449,9 +458,9 @@ class IntervalExpression extends Expression
 	}
 
 	// recursive rendering
-	public function Render($aArgs = array())
+	public function Render(&$aArgs = null, $bRetrofitParams = false)
 	{
-		return 'INTERVAL '.$this->m_oValue->Render($aArgs).' '.$this->m_sUnit;
+		return 'INTERVAL '.$this->m_oValue->Render($aArgs, $bRetrofitParams).' '.$this->m_sUnit;
 	}
 
 	public function Translate($aTranslationData, $bMatchAll = true)
@@ -486,12 +495,12 @@ class CharConcatExpression extends Expression
 	}
 
 	// recursive rendering
-	public function Render($aArgs = array())
+	public function Render(&$aArgs = null, $bRetrofitParams = false)
 	{
 		$aRes = array();
 		foreach ($this->m_aExpressions as $oExpr)
 		{
-			$sCol = $oExpr->Render($aArgs);
+			$sCol = $oExpr->Render($aArgs, $bRetrofitParams);
 			// Concat will be globally NULL if one single argument is null ! 
 			$aRes[] = "COALESCE($sCol, '')";
 		}
