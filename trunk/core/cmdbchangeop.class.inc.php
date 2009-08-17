@@ -201,7 +201,29 @@ class CMDBChangeOpSetAttribute extends CMDBChangeOp
 			$sAttName = $oAttDef->GetLabel();
 			$sNewValue = $this->Get('newvalue');
 			$sOldValue = $this->Get('oldvalue');
-			$sResult = "$sAttName set to $sNewValue (previous value: $sOldValue)";
+			if ( (($oAttDef->GetType() == 'String') || ($oAttDef->GetType() == 'Text')) &&
+				 (strlen($sNewValue) > strlen($sOldValue)) )
+			{
+				// Check if some text was not appended to the field
+				if (substr($sNewValue,0, strlen($sOldValue)) == $sOldValue) // Text added at the end
+				{
+					$sDelta = substr($sNewValue, strlen($sOldValue));
+					$sResult = "$sDelta appended to $sAttName";
+				}
+				else if (substr($sNewValue, -strlen($sOldValue)) == $sOldValue)   // Text added at the beginning
+				{
+					$sDelta = substr($sNewValue, 0, strlen($sNewValue) - strlen($sOldValue));
+					$sResult = "$sDelta appended to $sAttName";
+				}
+				else
+				{
+					$sResult = "$sAttName set to $sNewValue (previous value: $sOldValue)";
+				}
+			}
+			else
+			{
+				$sResult = "$sAttName set to $sNewValue (previous value: $sOldValue)";
+			}
 		}
 		return $sResult;
 	}
