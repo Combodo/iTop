@@ -631,3 +631,27 @@ div.HRDrawer {
 	border: 0;
 	display: block;
 }
+.mini_tabs a {
+	text-decoration: none;
+	font-weight:bold;
+	color: #ccc;
+	background-color:#333;
+	padding-left: 1em;
+	padding-right: 1em;
+	padding-bottom: 0.25em;
+}
+.mini_tabs a.selected {
+	color: #fff;
+	background-color:  #83b217;
+	padding-top: 0.25em;
+}
+.mini_tabs ul {
+	margin: -10px;
+}
+.mini_tabs ul li {
+	float: right;
+	list-style: none;
+	nopadding-left: 1em;
+	nopadding-right: 1em;
+	margin-top: 0;
+}

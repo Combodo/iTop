@@ -386,9 +386,19 @@ abstract class cmdbAbstractObject extends CMDBObject
 	
 	public static function GetSearchForm(web_page $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
+		static $iSearchFormId = 0;
 		$sHtml = '';
 		$numCols=4;
+		$iSearchFormId++;
 		$sClassName = $oSet->GetFilter()->GetClass();
+
+		$sHtml .= "<div class=\"mini_tabs\" id=\"mini_tabs{$iSearchFormId}\"><ul>
+				   <li><a href=\"#\" onClick=\"$('div.mini_tab{$iSearchFormId}').toggle();$('#mini_tabs{$iSearchFormId} ul li a').toggleClass('selected');\">OQL Query</a></li>
+				   <li><a class=\"selected\" href=\"#\" onClick=\"$('div.mini_tab{$iSearchFormId}').toggle();$('#mini_tabs{$iSearchFormId} ul li a').toggleClass('selected');\">Simple Search</a></li>
+				   </ul></div>\n";
+		// Simple search form
+		$sHtml .= "<div id=\"SimpleSearchForm{$iSearchFormId}\" class=\"mini_tab{$iSearchFormId}\">\n";
+		$sHtml .= "<h1>Search for ".MetaModel::GetName($sClassName)." Objects</h1>\n";
 		$oUnlimitedFilter = new DBObjectSearch($sClassName);
 		$sHtml .= "<form>\n";
 		$index = 0;
@@ -472,14 +482,34 @@ abstract class cmdbAbstractObject extends CMDBObject
 			$sHtml .= "<input type=\"hidden\" name=\"$sName\" value=\"$sValue\">\n";
 		}
 		$sHtml .= "<input type=\"hidden\" name=\"dosearch\" value=\"1\">\n";
-		$sHtml .= "</form>\n";
-		// Soem Debug dumps...
-		//$sHtml .= "<tt>".$oSet->GetFilter()->__DescribeHTML()."</tt><br/>\n";
-		//$sHtml .= "<tt>encoding=\"text/serialize\" : ".$oSet->GetFilter()->serialize()."</tt><br/>\n";
-		//$sHtml .= "<tt>encoding=\"text/sibusql\" : ".$oSet->GetFilter()->ToSibusQL()."</tt><br/>\n";
-		//$sHtml .= "<tt>(Unlimited) ".$oUnlimitedFilter->__DescribeHTML()."</tt><br/>\n";
-		//$sHtml .= "<tt>encoding=\"text/serialize\" : ".$oUnlimitedFilter->serialize()."</tt><br/>\n";
-		//$sHtml .= "<tt>encoding=\"text/sibusql\" : ".$oUnlimitedFilter->ToSibusQL()."</tt>\n";
+		$sHtml .= "</form>\n";		
+		$sHtml .= "</div><!-- Simple search form -->\n";
+
+		// OQL query builder
+		$sHtml .= "<div id=\"OQLQuery{$iSearchFormId}\" style=\"display:none\" class=\"mini_tab{$iSearchFormId}\">\n";
+		$sHtml .= "<h1>OQL Query Builder</h1>\n";
+		$sHtml .= "<form><table style=\"width:80%;\"><tr style=\"vertical-align:top\">\n";
+		$sHtml .= "<td style=\"text-align:right\"><label>SELECT&nbsp;</label><select name=\"oql_class\">";
+		$aClasses = MetaModel::EnumChildClasses($sClassName, ENUM_CHILD_CLASSES_ALL);
+		$sSelectedClass = utils::ReadParam('oql_class', $sClassName);
+		$sOQLClause = utils::ReadParam('oql_clause', '');
+		asort($aClasses);
+		foreach($aClasses as $sChildClass)
+		{
+			$sSelected = ($sChildClass == $sSelectedClass) ? 'selected' : '';
+			$sHtml.= "<option value=\"$sChildClass\" $sSelected>".MetaModel::GetName($sChildClass)."</option>\n";
+		}
+		$sHtml .= "</select>&nbsp;</td><td>\n";
+		$sHtml .= "<textarea name=\"oql_clause\" style=\"width:100%\">$sOQLClause</textarea></td></tr>\n";
+		$sHtml .= "<tr><td colspan=\"2\" style=\"text-align:right\"><input type=\"submit\" value=\" Query \"></td></tr>\n";
+		$sHtml .= "<input type=\"hidden\" name=\"dosearch\" value=\"1\">\n";
+		foreach($aExtraParams as $sName => $sValue)
+		{
+			$sHtml .= "<input type=\"hidden\" name=\"$sName\" value=\"$sValue\">\n";
+		}
+		$sHtml .= "<input type=\"hidden\" name=\"operation\" value=\"search_form\">\n";
+		$sHtml .= "</table></form>\n";
+		$sHtml .= "</div><!-- OQL query form -->\n";
 		return $sHtml;
 	}
 	

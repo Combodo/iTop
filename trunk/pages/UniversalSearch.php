@@ -18,12 +18,13 @@ $oP = new iTopWebPage("iTop - Universal search", $currentOrganization);
 // From now on the context is limited to the the selected organization ??
 
 // Now render the content of the page
-$sClassName = utils::ReadParam('class', 'bizOrganization');
+$sOQLClass = utils::ReadParam('oql_class', 'bizOrganization');
+$sOQLClause = utils::ReadParam('oql_clause', '');
+$sClassName = utils::ReadParam('class', $sOQLClass);
 $sFilter = utils::ReadParam('filter', '');
 $sOperation = utils::ReadParam('operation', '');
 
 // First part: select the class to search for
-$oP->add("<div id=\"TopPane\">");
 $oP->add("<form>");
 $oP->add("<input type=\"hidden\" name=\"org_id\" value=\"$currentOrganization\" />");
 $oP->add("Select the class to search: <select style=\"width: 150px;\" id=\"select_class\" name=\"class\" onChange=\"this.form.submit();\">");
@@ -31,29 +32,44 @@ foreach(MetaModel::GetClasses('bizmodel') as $sClass)
 {
 	$sDescription = MetaModel::GetClassDescription($sClass);
 	$sSelected = ($sClass == $sClassName) ? " SELECTED" : "";
-	$oP->add("<option value=\"$sClass\" title=\"$sDescription\"$sSelected>$sClass</option>");
+	$oP->add("<option value=\"$sClass\" title=\"$sDescription\"$sSelected>".MetaModel::GetName($sClass)."</option>");
 }
 $oP->add("</select></form>");
 
-// Second part: advanced search form:
-$oFilter = null;
-if (!empty($sFilter))
+try 
 {
-	$oFilter = CMDBSearchFilter::unserialize($sFilter);
+	if ($sOperation == 'search_form')
+	{
+			$sOQL = "SELECT $sOQLClass $sOQLClause";
+			$oFilter = DBObjectSearch::FromOQL($sOQL);
+	}
+	else
+	{
+		// Second part: advanced search form:
+		if (!empty($sFilter))
+		{
+			$oFilter = CMDBSearchFilter::unserialize($sFilter);
+		}
+		else if (!empty($sClassName))
+		{
+			$oFilter = new CMDBSearchFilter($sClassName);
+		}
+	}
 }
-else if (!empty($sClassName))
+catch (CoreException $e)
 {
 	$oFilter = new CMDBSearchFilter($sClassName);
+	$oP->P("<b>Error:</b>");
+	$oP->P($e->getHtmlDesc());
 }
 
 if ($oFilter != null)
 {
-	$oSet =new CMDBObjectSet($oFilter);
-	cmdbAbstractObject::DisplaySearchForm($oP, $oSet, array('org_id' => $currentOrganization, 'class' => $sClassName));
-	$oP->add("</div>\n");
+	$oSet = new CMDBObjectSet($oFilter);
+	$oBlock = new DisplayBlock($oFilter, 'search', false);
+	$oBlock->Display($oP, 0);
 
 	// Search results	
-	$oP->add("<div id=\"BottomPane\">");
 	$oResultBlock = new DisplayBlock($oFilter, 'list', false);
 	$oResultBlock->RenderContent($oP);
 	
