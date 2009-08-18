@@ -308,7 +308,6 @@ class DisplayBlock
 			$iSearchSectionId = 1;
 			$sStyle = (isset($aExtraParams['open']) && ($aExtraParams['open'] == 'true')) ? 'SearchDrawer' : 'SearchDrawer DrawerClosed';
 			$sHtml .= "<div id=\"Search_$iSearchSectionId\" class=\"$sStyle\">\n";
-			$sHtml .= "<h1>Search form for ".Metamodel::GetName($this->m_oSet->GetClass())."</h1>\n";
 			$oPage->add_ready_script("\$(\"#LnkSearch_$iSearchSectionId\").click(function() {\$(\"#Search_$iSearchSectionId\").slideToggle('normal'); $(\"#LnkSearch_$iSearchSectionId\").toggleClass('open');});");
 			$sHtml .= cmdbAbstractObject::GetSearchForm($oPage, $this->m_oSet, $aExtraParams);
 	 		$sHtml .= "</div>\n";

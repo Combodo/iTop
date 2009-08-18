@@ -73,6 +73,60 @@ switch($operation)
 		}
 	break;
 	
+	case 'search_form':
+		$sOQLClass = utils::ReadParam('oql_class', '');
+		$sOQLClause = utils::ReadParam('oql_clause', '');
+		$sFormat = utils::ReadParam('format', '');
+		$bSearchForm = utils::ReadParam('search_form', true);
+		if (empty($sOQLClass))
+		{
+			$oP->set_title("iTop - Error");
+			$oP->add("<p>'oql_class' must be specifed for this operation.</p>\n");
+		}
+		else
+		{
+			$oP->set_title("iTop - Search results");
+			$sOQL = "SELECT $sOQLClass $sOQLClause";
+			try
+			{
+				$oFilter = DBObjectSearch::FromOQL($sOQL); // To Do: Make sure we don't bypass security
+				$oSet = new DBObjectSet($oFilter);
+				if ($bSearchForm)
+				{
+					$oBlock = new DisplayBlock($oFilter, 'search', false);
+					$oBlock->Display($oP, 0);
+				}
+				if (strtolower($sFormat) == 'csv')
+				{
+					$oBlock = new DisplayBlock($oFilter, 'csv', false);
+					$oBlock->Display($oP, 0);
+				}
+				else
+				{
+					$oBlock = new DisplayBlock($oFilter, 'list', false);
+					$oBlock->Display($oP, 0);
+				}
+			}
+			catch(CoreException $e)
+			{
+				$oFilter = new DBObjectSearch($sOQLClass); // To Do: Make sure we don't bypass security
+				$oSet = new DBObjectSet($oFilter);
+				if ($bSearchForm)
+				{
+					$oBlock = new DisplayBlock($oFilter, 'search', false);
+					$oBlock->Display($oP, 0);
+				}
+				$oP->P("<b>Error incorrect OQL query:</b>");
+				$oP->P($e->getHtmlDesc());
+			}
+			catch(Exception $e)
+			{
+				$oP->p('<b>An error occured while running the query:</b>');
+				$oP->p($e->getMessage());
+			}
+		}
+	break;
+	
 	case 'search':
 		$sFilter = utils::ReadParam('filter', '');
 		$sFormat = utils::ReadParam('format', '');
