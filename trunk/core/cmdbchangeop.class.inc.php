@@ -194,8 +194,13 @@ class CMDBChangeOpSetAttribute extends CMDBChangeOp
 	public function GetDescription()
 	{
 		$sResult = '';
-		$oEmptySet = new DBObjectSet($this->Get('objclass'));
-		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oEmptySet) == UR_ALLOWED_YES)
+		$oTargetObjectClass = $this->Get('objclass');
+		$oTargetObjectKey = $this->Get('objkey');
+		$oTargetSearch = new DBObjectSearch($oTargetObjectClass);
+		$oTargetSearch->AddCondition('id', $oTargetObjectKey);
+
+		$oMonoObjectSet = new DBObjectSet($oTargetSearch);
+		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES)
 		{
 			$oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
 			$sAttName = $oAttDef->GetLabel();

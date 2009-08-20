@@ -1173,6 +1173,32 @@ abstract class MetaModel
 
 	protected static $m_aQueryStructCache = array();
 
+	protected static function PrepareQueryArguments($aArgs)
+	{
+		// Translate any object into scalars
+		//
+		$aScalarArgs = array();
+		foreach($aArgs as $sArgName => $value)
+		{
+			if (self::IsValidObject($value))
+			{
+				$aScalarArgs[$sArgName] = $value->GetKey();
+				$aScalarArgs[$sArgName.'->id'] = $value->GetKey();
+			
+				$sClass = get_class($value);
+				foreach(self::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+				{
+					$aScalarArgs[$sArgName.'->'.$sAttCode] = $value->Get($sAttCode);
+				}
+			}
+			else
+			{
+				$aScalarArgs[$sArgName] = (string) $value;
+			}
+		}
+		return $aScalarArgs;
+	}
+
 	public static function MakeSelectQuery(DBObjectSearch $oFilter, $aOrderBy = array(), $aArgs = array())
 	{
 		// Query caching
@@ -1219,30 +1245,9 @@ abstract class MetaModel
 			}
 		}
 		
-		// Prepare arguments (translate any object into scalars)
-		//
-		$aScalarArgs = $oFilter->GetInternalParams();
-		foreach($aArgs as $sArgName => $value)
-		{
-			if (self::IsValidObject($value))
-			{
-				$aScalarArgs[$sArgName] = $value->GetKey();
-				$aScalarArgs[$sArgName.'->id'] = $value->GetKey();
-			
-				$sClass = get_class($value);
-				foreach(self::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
-				{
-					$aScalarArgs[$sArgName.'->'.$sAttCode] = $value->Get($sAttCode);
-				}
-			}
-			else
-			{
-				$aScalarArgs[$sArgName] = (string) $value;
-			}
-		}
-
 		// Go
 		//
+		$aScalarArgs = array_merge(self::PrepareQueryArguments($aArgs), $oFilter->GetInternalParams());
 		$sRes = $oSelect->RenderSelect($aOrderBy, $aScalarArgs);
 
 		if (self::$m_bTraceQueries)
@@ -1277,17 +1282,18 @@ abstract class MetaModel
 		echo "<p>Count of built queries: ".count(self::$m_aQueriesLog)."</p>";
 	}
 
-	public static function MakeDeleteQuery(DBObjectSearch $oFilter)
+	public static function MakeDeleteQuery(DBObjectSearch $oFilter, $aArgs = array())
 	{
 		$aTranslation = array();
 		$aClassAliases = array();
 		$aTableAliases = array();
 		$oConditionTree = $oFilter->GetCriteria();
 		$oSelect = self::MakeQuery($oFilter->GetClassAlias(), $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oFilter);
-		return $oSelect->RenderDelete();
+		$aScalarArgs = array_merge(self::PrepareQueryArguments($aArgs), $oFilter->GetInternalParams());
+		return $oSelect->RenderDelete($aScalarArgs);
 	}
 
-	public static function MakeUpdateQuery(DBObjectSearch $oFilter, $aValues)
+	public static function MakeUpdateQuery(DBObjectSearch $oFilter, $aValues, $aArgs = array())
 	{
 		// $aValues is an array of $sAttCode => $value
 		$aTranslation = array();
@@ -1295,7 +1301,8 @@ abstract class MetaModel
 		$aTableAliases = array();
 		$oConditionTree = $oFilter->GetCriteria();
 		$oSelect = self::MakeQuery($oFilter->GetClassAlias(), $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oFilter, array(), $aValues);
-		return $oSelect->RenderUpdate();
+		$aScalarArgs = array_merge(self::PrepareQueryArguments($aArgs), $oFilter->GetInternalParams());
+		return $oSelect->RenderUpdate($aScalarArgs);
 	}
 
 	private static function MakeQuery($sGlobalTargetAlias, &$oConditionTree, &$aClassAliases, &$aTableAliases, &$aTranslation, DBObjectSearch $oFilter, $aExpectedAtts = array(), $aValues = array())
@@ -2439,6 +2446,9 @@ abstract class MetaModel
 		if (self::DBExists())
 		{
 			CMDBSource::SelectDB(self::$m_sDBName);
+
+			// Some of the init could not be done earlier (requiring classes to be declared and DB to be accessible)
+			self::InitPlugins();
 		}
 		else
 		{
@@ -2447,8 +2457,6 @@ abstract class MetaModel
 				throw new CoreException('Database not found, check your configuration file', array('config_file'=>$sConfigFile, 'db_name'=>self::$m_sDBName));
 			}
 		}
-		// Some of the init could not be done earlier (requiring classes to be declared and DB to be accessible)
-		self::InitPlugins();
 	}
 
 	public static function LoadConfig($sConfigFile)

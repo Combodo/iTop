@@ -249,7 +249,7 @@ class bizPerson extends bizContact
 			"name_attcode" => "name",
 			"state_attcode" => "",
 			"reconc_keys" => array("org_name", "first_name", "name"),  // comment en définir plusieurs
-			// "reconc_keys" => array("org_name", "employe_number"), 
+			// "reconc_keys" => array("org_name", "employee_number"), 
 			"db_table" => "persons",   // Can it use the same physical DB table as any contact ?
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -258,20 +258,21 @@ class bizPerson extends bizContact
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeString("first_name", array("label"=>"first Name", "description"=>"First name", "allowed_values"=>null, "sql"=>"first_name", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("employe_number", array("label"=>"Employe Number", "description"=>"employe number", "allowed_values"=>null, "sql"=>"employe_number", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("employee_number", array("label"=>"Employee Number", "description"=>"employee number", "allowed_values"=>null, "sql"=>"employee_number", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
-//		MetaModel::Init_AddAttribute(new AttributeExternalKey("login_id", array("targetclass"=>"URP_Users", "label"=>"Login", "description"=>"Login information", "allowed_values"=>null, "sql"=>"login_id", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("login_id", array("targetclass"=>"URP_Users", "label"=>"Login", "description"=>"Login information", "allowed_values"=>null, "sql"=>"login_id", "is_null_allowed"=>true, "depends_on"=>array())));
 
 		MetaModel::Init_InheritFilters();
 		MetaModel::Init_AddFilterFromAttribute("first_name");
-		MetaModel::Init_AddFilterFromAttribute("employe_number");
+		MetaModel::Init_AddFilterFromAttribute("employee_number");
+		MetaModel::Init_AddFilterFromAttribute("login_id");
 		
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('first_name', 'name', 'status', 'org_id', 'email', 'location_id', 'phone', 'employe_number')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('first_name', 'name', 'status', 'org_id', 'email', 'location_id', 'phone', 'employee_number', 'login_id')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('first_name', 'name', 'status', 'org_id', 'email', 'location_id', 'phone')); // Attributes to be displayed for a list
 		// Search criteria
-		MetaModel::Init_SetZListItems('standard_search', array('first_name', 'name', 'status', 'email', 'location_id', 'phone', 'employe_number')); // Criteria of the std search form
-		MetaModel::Init_SetZListItems('advanced_search', array('first_name', 'name', 'status', 'email', 'location_id', 'phone', 'employe_number')); // Criteria of the advanced search form
+		MetaModel::Init_SetZListItems('standard_search', array('first_name', 'name', 'status', 'email', 'location_id', 'phone', 'employee_number', 'login_id')); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('advanced_search', array('first_name', 'name', 'status', 'email', 'location_id', 'phone', 'employee_number', 'login_id')); // Criteria of the advanced search form
 	}
 
 	public function Generate(cmdbDataGenerator $oGenerator)
