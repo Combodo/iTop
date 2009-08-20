@@ -171,7 +171,7 @@ class SQLQuery
 	}
 	
 	// Interface, build the SQL query
-	public function RenderDelete()
+	public function RenderDelete($aArgs = array())
 	{
 		// The goal will be to complete the list as we build the Joins
 		$aFrom = array();
@@ -193,12 +193,12 @@ class SQLQuery
 			throw new CoreException("Building a request wich will delete every object of a given table -looks suspicious- please use truncate instead...");
 		}
 		*/
-		$sWhere  = self::ClauseWhere($oCondition);
+		$sWhere  = self::ClauseWhere($oCondition, $aArgs);
 		return "DELETE $sDelete FROM $sFrom WHERE $sWhere";
 	}
 
 	// Interface, build the SQL query
-	public function RenderUpdate()
+	public function RenderUpdate($aArgs = array())
 	{
 		// The goal will be to complete the list as we build the Joins
 		$aFrom = array();
@@ -210,7 +210,7 @@ class SQLQuery
 
 		$sFrom   = self::ClauseFrom($aFrom);
 		$sValues = self::ClauseValues($aSetValues);
-		$sWhere  = self::ClauseWhere($oCondition);
+		$sWhere  = self::ClauseWhere($oCondition, $aArgs);
 		return "UPDATE $sFrom SET $sValues WHERE $sWhere";
 	}
 

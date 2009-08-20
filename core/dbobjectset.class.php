@@ -21,7 +21,7 @@ class DBObjectSet
 	private $m_aId2Row;
 	private $m_iCurrRow;
 
-	public function __construct($oFilter, $aOrderBy = array(), $aArgs = array())
+	public function __construct(DBObjectSearch $oFilter, $aOrderBy = array(), $aArgs = array())
 	{
 		$this->m_oFilter = $oFilter;
 		$this->m_aOrderBy = $aOrderBy;

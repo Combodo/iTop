@@ -1,0 +1,555 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<URP_ClassProjection id="1">
+<dimensionid>1</dimensionid>
+<class>bizOrganization</class>
+<value>&lt;this&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="2">
+<dimensionid>1</dimensionid>
+<class>logRealObject</class>
+<value>&lt;this&gt;</value>
+<attribute>org_id</attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="3">
+<dimensionid>1</dimensionid>
+<class>bizContact</class>
+<value>&lt;this&gt;</value>
+<attribute>org_id</attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="4">
+<dimensionid>1</dimensionid>
+<class>bizPerson</class>
+<value>&lt;this&gt;</value>
+<attribute>org_id</attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="5">
+<dimensionid>1</dimensionid>
+<class>bizTeam</class>
+<value>&lt;this&gt;</value>
+<attribute>org_id</attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="6">
+<dimensionid>1</dimensionid>
+<class>bizDocument</class>
+<value>&lt;this&gt;</value>
+<attribute>org_id</attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="7">
+<dimensionid>1</dimensionid>
+<class>bizDocVersion</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="8">
+<dimensionid>1</dimensionid>
+<class>lnkDocumentRealObject</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="9">
+<dimensionid>1</dimensionid>
+<class>lnkContactRealObject</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="10">
+<dimensionid>1</dimensionid>
+<class>logInfra</class>
+<value>&lt;this&gt;</value>
+<attribute>org_id</attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="11">
+<dimensionid>1</dimensionid>
+<class>bizLocation</class>
+<value>&lt;this&gt;</value>
+<attribute>org_id</attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="12">
+<dimensionid>1</dimensionid>
+<class>bizCircuit</class>
+<value>&lt;this&gt;</value>
+<attribute>org_id</attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="13">
+<dimensionid>1</dimensionid>
+<class>bizInterface</class>
+<value>&lt;this&gt;</value>
+<attribute>org_id</attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="14">
+<dimensionid>1</dimensionid>
+<class>lnkInterfaces</class>
+<value>&lt;this&gt;</value>
+<attribute>org_id</attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="15">
+<dimensionid>1</dimensionid>
+<class>bizDevice</class>
+<value>&lt;this&gt;</value>
+<attribute>org_id</attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="16">
+<dimensionid>1</dimensionid>
+<class>bizPC</class>
+<value>&lt;this&gt;</value>
+<attribute>org_id</attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="17">
+<dimensionid>1</dimensionid>
+<class>bizServer</class>
+<value>&lt;this&gt;</value>
+<attribute>org_id</attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="18">
+<dimensionid>1</dimensionid>
+<class>bizNetworkDevice</class>
+<value>&lt;this&gt;</value>
+<attribute>org_id</attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="19">
+<dimensionid>1</dimensionid>
+<class>bizInfraGroup</class>
+<value>&lt;this&gt;</value>
+<attribute>org_id</attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="20">
+<dimensionid>1</dimensionid>
+<class>bizApplication</class>
+<value>&lt;this&gt;</value>
+<attribute>org_id</attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="21">
+<dimensionid>1</dimensionid>
+<class>lnkInfraGrouping</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="22">
+<dimensionid>1</dimensionid>
+<class>lnkClientServer</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="23">
+<dimensionid>1</dimensionid>
+<class>bizPatch</class>
+<value>&lt;this&gt;</value>
+<attribute>org_id</attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="24">
+<dimensionid>1</dimensionid>
+<class>bizIncidentTicket</class>
+<value>&lt;this&gt;</value>
+<attribute>customer_id</attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="25">
+<dimensionid>1</dimensionid>
+<class>lnkRelatedTicket</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="26">
+<dimensionid>1</dimensionid>
+<class>lnkInfraTicket</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="27">
+<dimensionid>1</dimensionid>
+<class>lnkContactTicket</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="28">
+<dimensionid>1</dimensionid>
+<class>bizWorkgroup</class>
+<value>&lt;this&gt;</value>
+<attribute>org_id</attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="29">
+<dimensionid>1</dimensionid>
+<class>bizContract</class>
+<value>&lt;this&gt;</value>
+<attribute>org_id</attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="30">
+<dimensionid>1</dimensionid>
+<class>lnkInfraContract</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="31">
+<dimensionid>1</dimensionid>
+<class>lnkContactContract</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="32">
+<dimensionid>1</dimensionid>
+<class>lnkDocumentContract</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="33">
+<dimensionid>1</dimensionid>
+<class>bizChangeTicket</class>
+<value>&lt;this&gt;</value>
+<attribute>customer_id</attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="34">
+<dimensionid>1</dimensionid>
+<class>lnkInfraChangeTicket</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="35">
+<dimensionid>1</dimensionid>
+<class>lnkContactChange</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="36">
+<dimensionid>1</dimensionid>
+<class>bizKnownError</class>
+<value>&lt;this&gt;</value>
+<attribute>cust_id</attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="37">
+<dimensionid>1</dimensionid>
+<class>lnkInfraError</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="38">
+<dimensionid>1</dimensionid>
+<class>lnkDocumentError</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="39">
+<dimensionid>1</dimensionid>
+<class>AuditCategory</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="40">
+<dimensionid>1</dimensionid>
+<class>AuditRule</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="41">
+<dimensionid>1</dimensionid>
+<class>menuNode</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="42">
+<dimensionid>1</dimensionid>
+<class>CMDBChange</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="43">
+<dimensionid>1</dimensionid>
+<class>CMDBChangeOp</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="44">
+<dimensionid>1</dimensionid>
+<class>CMDBChangeOpCreate</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="45">
+<dimensionid>1</dimensionid>
+<class>CMDBChangeOpDelete</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="46">
+<dimensionid>1</dimensionid>
+<class>CMDBChangeOpSetAttribute</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="47">
+<dimensionid>2</dimensionid>
+<class>bizOrganization</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="48">
+<dimensionid>2</dimensionid>
+<class>logRealObject</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="49">
+<dimensionid>2</dimensionid>
+<class>bizContact</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="50">
+<dimensionid>2</dimensionid>
+<class>bizPerson</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="51">
+<dimensionid>2</dimensionid>
+<class>bizTeam</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="52">
+<dimensionid>2</dimensionid>
+<class>bizDocument</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="53">
+<dimensionid>2</dimensionid>
+<class>bizDocVersion</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="54">
+<dimensionid>2</dimensionid>
+<class>lnkDocumentRealObject</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="55">
+<dimensionid>2</dimensionid>
+<class>lnkContactRealObject</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="56">
+<dimensionid>2</dimensionid>
+<class>logInfra</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="57">
+<dimensionid>2</dimensionid>
+<class>bizLocation</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="58">
+<dimensionid>2</dimensionid>
+<class>bizCircuit</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="59">
+<dimensionid>2</dimensionid>
+<class>bizInterface</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="60">
+<dimensionid>2</dimensionid>
+<class>lnkInterfaces</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="61">
+<dimensionid>2</dimensionid>
+<class>bizDevice</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="62">
+<dimensionid>2</dimensionid>
+<class>bizPC</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="63">
+<dimensionid>2</dimensionid>
+<class>bizServer</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="64">
+<dimensionid>2</dimensionid>
+<class>bizNetworkDevice</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="65">
+<dimensionid>2</dimensionid>
+<class>bizInfraGroup</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="66">
+<dimensionid>2</dimensionid>
+<class>bizApplication</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="67">
+<dimensionid>2</dimensionid>
+<class>lnkInfraGrouping</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="68">
+<dimensionid>2</dimensionid>
+<class>lnkClientServer</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="69">
+<dimensionid>2</dimensionid>
+<class>bizPatch</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="70">
+<dimensionid>2</dimensionid>
+<class>bizIncidentTicket</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="71">
+<dimensionid>2</dimensionid>
+<class>lnkRelatedTicket</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="72">
+<dimensionid>2</dimensionid>
+<class>lnkInfraTicket</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="73">
+<dimensionid>2</dimensionid>
+<class>lnkContactTicket</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="74">
+<dimensionid>2</dimensionid>
+<class>bizWorkgroup</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="75">
+<dimensionid>2</dimensionid>
+<class>bizContract</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="76">
+<dimensionid>2</dimensionid>
+<class>lnkInfraContract</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="77">
+<dimensionid>2</dimensionid>
+<class>lnkContactContract</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="78">
+<dimensionid>2</dimensionid>
+<class>lnkDocumentContract</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="79">
+<dimensionid>2</dimensionid>
+<class>bizChangeTicket</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="80">
+<dimensionid>2</dimensionid>
+<class>lnkInfraChangeTicket</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="81">
+<dimensionid>2</dimensionid>
+<class>lnkContactChange</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="82">
+<dimensionid>2</dimensionid>
+<class>bizKnownError</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="83">
+<dimensionid>2</dimensionid>
+<class>lnkInfraError</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="84">
+<dimensionid>2</dimensionid>
+<class>lnkDocumentError</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="85">
+<dimensionid>2</dimensionid>
+<class>AuditCategory</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="86">
+<dimensionid>2</dimensionid>
+<class>AuditRule</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="87">
+<dimensionid>2</dimensionid>
+<class>menuNode</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="88">
+<dimensionid>2</dimensionid>
+<class>CMDBChange</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="89">
+<dimensionid>2</dimensionid>
+<class>CMDBChangeOp</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="90">
+<dimensionid>2</dimensionid>
+<class>CMDBChangeOpCreate</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="91">
+<dimensionid>2</dimensionid>
+<class>CMDBChangeOpDelete</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+<URP_ClassProjection id="92">
+<dimensionid>2</dimensionid>
+<class>CMDBChangeOpSetAttribute</class>
+<value>&lt;any&gt;</value>
+<attribute></attribute>
+</URP_ClassProjection>
+</Set>

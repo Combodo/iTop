@@ -52,18 +52,18 @@ function ComputeProjections($oPage, $sScope)
 		foreach ($aDimensions as $iDimension => $oDimension)
 		{
 			// #@# to be moved, may be time consuming
-			$oDimension->CheckProjectionSpec($aClassProjs[$sClass][$iDimension]);
+			$oDimension->CheckProjectionSpec($aClassProjs[$sClass][$iDimension], $sClass);
 
 			$aValues = $aClassProjs[$sClass][$iDimension]->ProjectObject($oObject);
 			if (is_null($aValues))
 			{
-				$sValues = '<any>';
+				$sValues = htmlentities('<any>');
 			}
 			else
 			{
 				$sValues = implode(', ', $aValues);
 			}
-			$oObjectProj['dim'.$oDimension->GetKey()] = htmlentities($sValues);
+			$oObjectProj['dim'.$oDimension->GetKey()] = $sValues;
 		}
 	
 		$aDisplayData[] = $oObjectProj;
