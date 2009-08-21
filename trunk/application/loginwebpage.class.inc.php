@@ -68,7 +68,7 @@ h1 {
 		$operation = utils::ReadParam('operation', '');
 		session_start();
 		
-		if (!session_is_registered('auth_user') || !session_is_registered('auth_pwd'))
+		if (!isset($_SESSION['auth_user']) || !isset($_SESSION['auth_pwd']))
 		{
 			if ($operation == 'login')
 			{
