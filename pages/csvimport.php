@@ -393,6 +393,7 @@ function DoProcessOrVerify($oPage, $sClass, CMDBChange $oChange = null)
 
 	$aSampleData = $oCSVParser->ToArray(array_keys($aFieldMap), 5);
 	$aDisplayConfig = array();
+	$aExtKeys = array();
 	foreach ($aFieldMap as $sFieldId=>$sColDesc)
 	{
 		if (array_key_exists($sFieldId, $aIsReconcKey))
@@ -417,11 +418,16 @@ function DoProcessOrVerify($oPage, $sClass, CMDBChange $oChange = null)
 			$sAttCode = $sColDesc;
 			$sLabel = MetaModel::GetAttributeDef($sClass, $sAttCode)->GetLabel();
 			$aDisplayConfig[$sFieldId] = array("label"=>"$sLabel$sReconcKey", "description"=>"");
+			if (MetaModel::IsValidKeyAttCode($sClass, $sAttCode))
+			{
+				$aExtKeys[] = $sAttCode;
+			}
 		}
 		elseif (IsExtKeyField($sColDesc))
 		{
 			list($sExtKeyAttCode, $sForeignAttCode) = GetExtKeyFieldCodes($sColDesc);
 			$aDisplayConfig[$sFieldId] = array("label"=>MakeExtFieldLabel($sClass, $sExtKeyAttCode, $sForeignAttCode), "description"=>"");
+			$aExtKeys[] = $sExtKeyAttCode;
 		}
 		else
 		{
@@ -437,17 +443,39 @@ function DoProcessOrVerify($oPage, $sClass, CMDBChange $oChange = null)
 	}
 	else
 	{
+		$oPage->p("<h2>Column consistency</h2>");
+		$aMissingKeys = array();
+		foreach (MetaModel::GetExternalKeys($sClass) as $sExtKeyAttCode => $oExtKey)
+		{
+			if (!in_array($sExtKeyAttCode, $aExtKeys) && !$oExtKey->IsNullAllowed())
+			{
+				$aMissingKeys[$sExtKeyAttCode] = $oExtKey;
+			}
+		}
+		if (count($aMissingKeys) > 0)
+		{
+			$oPage->p("Warning: the objects could not be created, due to some missing mandatory external keys in the field list: ");
+			$oPage->p("<ul>");
+			foreach($aMissingKeys as $sAttCode => $oAttDef)
+			{
+				$oPage->p("<li>".$oAttDef->GetLabel()."</li>");
+			}
+			$oPage->p("</ul>");
+		}
+
 		$oPage->p("<h2>Check...</h2>");
 	}
 	ProcessData($oPage, $sClass, $oCSVParser, $aFieldMap, $aIsReconcKey, $oChange);
 
-    $oPage->add("<form method=\"post\" action=\"\">");
-    $oPage->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">");
-    $oPage->add("<input type=\"hidden\" name=\"csvdata\" value=\"$sCSVData\">");
-    $oPage->add("<input type=\"hidden\" name=\"separator\" value=\"$sSep\">");
-    $oPage->add("<input type=\"hidden\" name=\"skiplines\" value=\"$iSkip\">");
+	$oPage->add("<form method=\"post\" action=\"\">");
+	$oPage->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">");
+	$oPage->add("<input type=\"hidden\" name=\"csvdata\" value=\"$sCSVData\">");
+	$oPage->add("<input type=\"hidden\" name=\"separator\" value=\"$sSep\">");
+	$oPage->add("<input type=\"hidden\" name=\"skiplines\" value=\"$iSkip\">");
 	$oPage->add_input_hidden("fmap", $aFieldMap);
 	$oPage->add_input_hidden("iskey", $aIsReconcKey);
+
+	return;
 }
 
 function Do_Verify($oPage, $sClass)
@@ -459,8 +487,8 @@ function Do_Verify($oPage, $sClass)
 	// FORM started by DoProcessOrVerify...
 
 	$oPage->add("<input type=\"hidden\" name=\"fromwiztep\" value=\"$sWiztep\">");
-    $oPage->add("<input type=\"submit\" name=\"todo\" value=\"Back\">");
-    $oPage->add("<input type=\"submit\" name=\"todo\" value=\"Next\">");
+	$oPage->add("<input type=\"submit\" name=\"todo\" value=\"Back\">");
+	$oPage->add("<input type=\"submit\" name=\"todo\" value=\"Next\">");
 	$oPage->add("</form>");
 }
 
