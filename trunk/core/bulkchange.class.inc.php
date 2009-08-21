@@ -335,10 +335,22 @@ class BulkChange
 		}
 	
 		// Check that any external key will have a value proposed
-		// Could be said once for all rows !!!
-		foreach(MetaModel::ListAttributeDefs($this->m_sClass) as $sAttCode=>$oAtt)
+		$aMissingKeys = array();
+		foreach (MetaModel::GetExternalKeys($this->m_sClass) as $sExtKeyAttCode => $oExtKey)
 		{
-			if (!$oAtt->IsExternalKey()) continue;
+			if (!$oExtKey->IsNullAllowed())
+			{
+				if (!array_key_exists($sExtKeyAttCode, $this->m_aExtKeys) && !array_key_exists($sExtKeyAttCode, $this->m_aAttList))
+				{ 
+					$aMissingKeys[] = $oExtKey->GetLabel();
+				}
+			}
+		}
+		if (count($aMissingKeys) > 0)
+		{
+			$sMissingKeys = implode(', ', $aMissingKeys);
+			$aResult[$iRow]["__STATUS__"] = new RowStatus_Issue("Could not be created, due to missing external key(s): $sMissingKeys");
+			return;
 		}
 	
 		// Optionaly record the results
