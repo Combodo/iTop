@@ -484,53 +484,64 @@ catch(Exception $e)
 	// We'll end here when the tmp config file does not exist. It's normal
 	$oConfig = new Config(TMP_CONFIG_FILE, false /* Don't try to load it */);
 }
-switch($sOperation)
+try
 {
-	case 'step1':
-	$oP->log("Info - ========= Wizard step 1 ========");
-	DisplayStep1($oP);
-	break;
-	
-	case 'step2':
-	$oP->no_cache();
-	$oP->log("Info - ========= Wizard step 2 ========");
-	$sDBServer = Utils::ReadParam('db_server');
-	$sDBUser = Utils::ReadParam('db_user');
-	$sDBPwd = Utils::ReadParam('db_pwd');
-	DisplayStep2($oP, $oConfig, $sDBServer, $sDBUser, $sDBPwd);
-	break;
-
-	case 'step3':
-	$oP->no_cache();
-	$oP->log("Info - ========= Wizard step 3 ========");
-	$sDBName = Utils::ReadParam('db_name');
-	if (empty($sDBName))
+	switch($sOperation)
 	{
-		$sDBName = Utils::ReadParam('new_db_name');
-	}
-	$sDBPrefix = Utils::ReadParam('db_prefix');
-	DisplayStep3($oP, $oConfig, $sDBName, $sDBPrefix);
-	break;
-
-	case 'step4':
-	$oP->no_cache();
-	$oP->log("Info - ========= Wizard step 4 ========");
-	$sAdminUser = Utils::ReadParam('auth_user');
-	$sAdminPwd = Utils::ReadParam('auth_pwd');
-	DisplayStep4($oP, $oConfig, $sAdminUser, $sAdminPwd);
-	break;
-
-	case 'step5':
-	$oP->no_cache();
-	$oP->log("Info - ========= Wizard step 5 ========");
-	$sAdminUser = Utils::ReadParam('auth_user');
-	$sAdminPwd = Utils::ReadParam('auth_pwd');
-	DisplayStep5($oP, $oConfig, $sAdminUser, $sAdminPwd);
-	break;
-
-	default:
-	$oP->error("Error: unsupported operation '$sOperation'");
+		case 'step1':
+		$oP->log("Info - ========= Wizard step 1 ========");
+		DisplayStep1($oP);
+		break;
+		
+		case 'step2':
+		$oP->no_cache();
+		$oP->log("Info - ========= Wizard step 2 ========");
+		$sDBServer = Utils::ReadParam('db_server');
+		$sDBUser = Utils::ReadParam('db_user');
+		$sDBPwd = Utils::ReadParam('db_pwd');
+		DisplayStep2($oP, $oConfig, $sDBServer, $sDBUser, $sDBPwd);
+		break;
 	
+		case 'step3':
+		$oP->no_cache();
+		$oP->log("Info - ========= Wizard step 3 ========");
+		$sDBName = Utils::ReadParam('db_name');
+		if (empty($sDBName))
+		{
+			$sDBName = Utils::ReadParam('new_db_name');
+		}
+		$sDBPrefix = Utils::ReadParam('db_prefix');
+		DisplayStep3($oP, $oConfig, $sDBName, $sDBPrefix);
+		break;
+	
+		case 'step4':
+		$oP->no_cache();
+		$oP->log("Info - ========= Wizard step 4 ========");
+		$sAdminUser = Utils::ReadParam('auth_user');
+		$sAdminPwd = Utils::ReadParam('auth_pwd');
+		DisplayStep4($oP, $oConfig, $sAdminUser, $sAdminPwd);
+		break;
+	
+		case 'step5':
+		$oP->no_cache();
+		$oP->log("Info - ========= Wizard step 5 ========");
+		$sAdminUser = Utils::ReadParam('auth_user');
+		$sAdminPwd = Utils::ReadParam('auth_pwd');
+		DisplayStep5($oP, $oConfig, $sAdminUser, $sAdminPwd);
+		break;
+	
+		default:
+		$oP->error("Error: unsupported operation '$sOperation'");
+		
+	}
+}
+catch(Exception $e)
+{
+	$oP->error("Error: '".$e->getMessage()."'");	
+}
+catch(CoreException $e)
+{
+	$oP->error("Error: '".$e->getHtmlDesc()."'");	
 }
 $oP->output();
 ?>
