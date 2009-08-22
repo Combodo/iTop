@@ -1,4 +1,4 @@
-<?
+<?php
 
 // Position a string within an OQL query
 // This is a must if we want to be able to pinpoint an error at any stage of the query interpretation
