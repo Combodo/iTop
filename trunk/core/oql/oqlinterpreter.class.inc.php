@@ -1,4 +1,4 @@
-<?
+<?php
 
 class OqlNormalizeException extends OQLException
 {
