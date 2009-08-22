@@ -70,8 +70,7 @@ class Config
 		try
 		{
 			ob_start();
-			$sCode = str_replace('<'.'?php','<'.'?', $sConfigCode);
-			eval('?'.'>'.trim($sCode).'<'.'?');
+			eval('?'.'>'.trim($sConfigCode));
 			$sNoise = trim(ob_get_contents());
 			ob_end_clean();
 		}
@@ -84,7 +83,7 @@ class Config
 		if (strlen($sNoise) > 0)
 		{
 			// Note: sNoise is an html output, but so far it was ok for me (e.g. showing the entire call stack) 
-			throw new ConfigException('Syntax error in configuration file', array('file' => $sConfigFile, 'error' => $sNoise));
+			throw new ConfigException('Syntax error in configuration file', array('file' => $sConfigFile, 'error' => '<tt>'.htmlentities($sNoise).'</tt>'));
 		}
 
 		if (!isset($MySettings) || !is_array($MySettings))
@@ -235,7 +234,7 @@ class Config
 			fwrite($hFile, "\$MySettings = array(\n");
 			fwrite($hFile, "\t'db_host' => '{$this->m_sDBHost}',\n");
 			fwrite($hFile, "\t'db_user' => '{$this->m_sDBUser}',\n");
-			fwrite($hFile, "\t'db_pwd' => '{$this->m_sDBPwd}',\n");
+			fwrite($hFile, "\t'db_pwd' => '".addslashes($this->m_sDBPwd)."',\n");
 			fwrite($hFile, "\t'db_name' => '{$this->m_sDBName}',\n");
 			fwrite($hFile, "\t'db_subname' => '{$this->m_sDBSubname}',\n");
 			fwrite($hFile, ");\n");
