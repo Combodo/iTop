@@ -8,7 +8,8 @@ require_once('../core/cmdbsource.class.inc.php');
 require_once('./setuppage.class.inc.php');
 define('TMP_CONFIG_FILE', '../tmp-config-itop.php');
 define('FINAL_CONFIG_FILE', '../config-itop.php');
-define('SETUP_DATA_DIR', './data');
+define('SETUP_STRUCTURE_DATA_DIR', './data/structure');
+define('SETUP_SAMPLE_DATA_DIR', './data');
 define('PHP_MIN_VERSION', '5.2.0');
 define('MYSQL_MIN_VERSION', '5.0.0');
 
@@ -173,45 +174,66 @@ function CreateAdminAccount(setup_web_page $oP, Config $oConfig, $sAdminUser, $s
 	}
 }
 
+//aFilesToLoad[aFilesToLoad.length] = './menus.xml'; // First load the menus
+
+function ListDataFiles($sDirectory, setup_web_page $oP)
+{
+	$aFilesToLoad = array();
+	if ($hDir = @opendir($sDirectory))
+	{
+		// This is the correct way to loop over the directory. (according to the documentation)
+		while (($sFile = readdir($hDir)) !== false)
+		{
+			$sExtension = pathinfo($sFile, PATHINFO_EXTENSION );
+			if (strcasecmp($sExtension, 'xml') == 0)
+			{
+				$aFilesToLoad[] = $sDirectory.'/'.$sFile;
+			}
+		}
+		closedir($hDir);
+		// Load order is important we expect the files to be ordered
+		// like numbered 1.Organizations.xml 2.Locations.xml , etc.
+		asort($aFilesToLoad);
+	}
+	else
+	{
+		$oP->error("Data directory (".$sDirectory.") not found or not readable.");
+	}
+	return $aFilesToLoad;
+}
+
+
 /**
  * Scans the ./data directory for XML files and output them as a Javascript array
  */ 
 function PopulateDataFilesList(setup_web_page $oP)
 {
-	if ($hDir = @opendir(SETUP_DATA_DIR))
+
+	$oP->add("<script type=\"text/javascript\">\n");
+	$oP->add("function PopulateDataFilesList()\n");
+	$oP->add("{\n");
+
+	// Structure data
+	//
+	$aStructureDataFiles = ListDataFiles(SETUP_STRUCTURE_DATA_DIR, $oP);
+	foreach($aStructureDataFiles as $sFile)
 	{
-		$aFilesToLoad = array();
-	    // This is the correct way to loop over the directory. (according the documentation)
-	    while (($sFile = readdir($hDir)) !== false)
-		{
-			$sExtension = pathinfo($sFile, PATHINFO_EXTENSION );
-			if (strcasecmp($sExtension, 'xml') == 0)
-			{
-				$aFilesToLoad[] = SETUP_DATA_DIR.'/'.$sFile;
-			}
-	    }
-	    closedir($hDir);
-	    // Load order is important we expect the files to be ordered
-	    // like numbered 1.Organizations.xml 2.Locations.xml , etc.
-	    asort($aFilesToLoad);
-		// Menus can be loaded any time... like here at the end
-	    
-		$oP->add("<script type=\"text/javascript\">\n");
-		$oP->add("function PopulateDataFilesList()\n");
-		$oP->add("{\n");
-		$index = 0;
-	    foreach($aFilesToLoad as $sFile)
-	    {
-			$oP->add("aFilesToLoad[aFilesToLoad.length] = '$sFile';\n");
-			$index++;
-		}
-		$oP->add("}\n");
-		$oP->add("</script>\n");
+		$oP->add("aFilesToLoad[aFilesToLoad.length] = '$sFile';\n");
 	}
-	else
+
+	// Sample data - loaded IIF wished by the user
+	//
+	$oP->add("if (($(\"#sample_data:checked\").length == 1))");
+	$oP->add("{");
+	$aSampleDataFiles = ListDataFiles(SETUP_SAMPLE_DATA_DIR, $oP);
+	foreach($aSampleDataFiles as $sFile)
 	{
-		$oP->error("Data directory (".SETUP_DATA_DIR.") no found or not readable.");
+		$oP->add("aFilesToLoad[aFilesToLoad.length] = '$sFile';\n");
 	}
+	$oP->add("}\n");
+
+	$oP->add("}\n");
+	$oP->add("</script>\n");
 }
 
 /**
