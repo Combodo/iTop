@@ -89,12 +89,9 @@ var aFilesToLoad = new Array();
 
 function DoLoadDataAsynchronous()
 {
-	// Check if sample data must be loaded, or just the menus
-	aFilesToLoad[aFilesToLoad.length] = './menus.xml'; // First load the menus
-	if (($("#sample_data:checked").length == 1))
-	{
-		PopulateDataFilesList(); // Function created in PHP to get the list of XML files on the server
-	}
+	// The array aFilesToLoad is populated by this function dynamically written on the server
+	PopulateDataFilesList();
+
 	$('#setup').block({message: '<p>Loading data...<br/><div id=\"progress\">0%</div></p>'});
 	$('#progress').progression( {Current:0, Maximum: 100, aBackgroundImg: 'orange-progress.gif', aTextColor: '#000000'} );
 	LoadNextDataFile('', '');

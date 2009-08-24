@@ -26,11 +26,3 @@ wget --output-document=19.infracontracts.xml --post-data="auth_user=%USER%&auth_
 wget --output-document=20.contactcontracts.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT lnkContactContract&format=xml"
 wget --output-document=21.auditcategories.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT AuditCategory&format=xml"
 wget --output-document=22.auditrules.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT AuditRule&format=xml"
-wget --output-document=23.dimensions.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT URP_Dimensions&format=xml"
-wget --output-document=24.profiles.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT URP_Profiles&format=xml"
-wget --output-document=25.classprojection.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT URP_ClassProjection&format=xml"
-wget --output-document=26.profileprojection.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT URP_ProfileProjection&format=xml"
-wget --output-document=27.actiongrant.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT URP_ActionGrant&format=xml"
-wget --output-document=28.attributegrant.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT URP_AttributeGrant&format=xml"
-wget --output-document=29.stimulusgrant.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT URP_StimulusGrant&format=xml"
-pause
