@@ -533,6 +533,13 @@ abstract class DBObject
 		return $this->ListChangedValues($this->m_aCurrValues);
 	}
 
+	// Tells whether or not an object was modified
+	public function IsModified()
+	{
+		$aChanges = $this->ListChanges();
+		return (count($aChanges) != 0);
+	}
+
 	// used both by insert/update
 	private function DBWriteLinks()
 	{
