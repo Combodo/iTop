@@ -91,6 +91,7 @@ class iTopWebPage extends nice_web_page
 	$(".listResults").tablesorter( { headers: { 0:{sorter: false }}, widgets: ['zebra']} ); // sortable and zebra tables
 	$(".date-pick").datePicker( {clickInput: false, createButton: true, startDate: '2000-01-01'} ); // Date picker
 	$('#ModalDlg').jqm({ajax: '@href', trigger: 'a.jqmTrigger', overlay:70, modal:true, toTop:true}); // jqModal Window
+	
 	//$('.display_block').draggable(); // make the blocks draggable
 EOF
 );
@@ -198,6 +199,20 @@ EOF
         echo "<html>\n";
         echo "<head>\n";
         echo "<title>{$this->s_title}</title>\n";
+        // Stylesheets MUST be loaded before any scripts otherwise
+        // jQuery scripts may face some spurious problems (like failing on a 'reload')
+        foreach($this->a_linked_stylesheets as $a_stylesheet)
+        {
+			if ($a_stylesheet['condition'] != "")
+			{
+				echo "<!--[if {$a_stylesheet['condition']}]>\n";
+			}
+            echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$a_stylesheet['link']}\" />\n";
+			if ($a_stylesheet['condition'] != "")
+			{
+				echo "<![endif]-->\n";
+			}
+        }
         foreach($this->a_linked_scripts as $s_script)
         {
             echo "<script type=\"text/javascript\" src=\"$s_script\"></script>\n";
@@ -214,18 +229,6 @@ EOF
                 echo "$s_script\n";
             }
             echo "</script>\n";
-        }
-        foreach($this->a_linked_stylesheets as $a_stylesheet)
-        {
-			if ($a_stylesheet['condition'] != "")
-			{
-				echo "<!--[if {$a_stylesheet['condition']}]>\n";
-			}
-            echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$a_stylesheet['link']}\" />\n";
-			if ($a_stylesheet['condition'] != "")
-			{
-				echo "<![endif]-->\n";
-			}
         }
         
         if (count($this->a_styles)>0)
