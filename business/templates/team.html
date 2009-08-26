@@ -7,7 +7,7 @@
 <itopblock blockclass="DisplayBlock" asynchronous="true" type="bare_details" encoding="text/sibusql">$class$: pkey = $pkey$</itopblock>
 <itoptabs>
 	<itoptab name="Members">
-		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">bizContact: PKEY IS object_id IN (lnkContactRealObject: contact_id = $pkey$)</itopblock>
+		<itopblock blockclass="DisplayBlock" type="list" link_attr="contact_id" object_id="$pkey$" target_attr="object_id" encoding="text/oql">SELECT lnkContactRealObject WHERE contact_id=$pkey$</itopblock>
 	</itoptab>
 	<itoptab name="Teams">
 		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">bizTeam: PKEY IS object_id IN (lnkContactRealObject: contact_id = $pkey$)</itopblock>

@@ -32,6 +32,40 @@ $sStyle = utils::ReadParam('style', 'list');
 
 switch($operation)
 {
+	case 'addObjects':
+	require_once('../application/uilinkswizard.class.inc.php');
+	
+	$sClass = utils::ReadParam('class', '', 'get');
+	$sLinkedClass = utils::ReadParam('linkedClass', '', 'get');
+	$sLinkageAttr = utils::ReadParam('linkageAttr', '', 'get');
+	$iObjectId = utils::ReadParam('objectId', '', 'get');
+	$oLinksWizard = new UILinksWizard($sClass,  $sLinkageAttr, $iObjectId, $sLinkedClass);
+	$oLinksWizard->DisplayAddForm($oPage, $oContext);
+	break;
+	
+	case 'searchObjectsToAdd':
+	require_once('../application/uilinkswizard.class.inc.php');
+	
+	$sClass = utils::ReadParam('class', '', 'get');
+	$sLinkedClass = utils::ReadParam('linkedClass', '', 'get');
+	$sLinkageAttr = utils::ReadParam('linkageAttr', '', 'get');
+	$iObjectId = utils::ReadParam('objectId', '', 'get');
+	$oLinksWizard = new UILinksWizard($sClass,  $sLinkageAttr, $iObjectId, $sLinkedClass);
+	$oLinksWizard->SearchObjectsToAdd($oPage, $oContext);
+	break;
+	
+	case 'doAddObjects':
+	require_once('../application/uilinkswizard.class.inc.php');
+	
+	$sClass = utils::ReadParam('class', '', 'get');
+	$sLinkedClass = utils::ReadParam('linkedClass', '', 'get');
+	$sLinkageAttr = utils::ReadParam('linkageAttr', '', 'get');
+	$iObjectId = utils::ReadParam('objectId', '', 'get');
+	$aLinkedObjectIds = utils::ReadParam('selectObject', array(), 'get');
+	$oLinksWizard = new UILinksWizard($sClass,  $sLinkageAttr, $iObjectId, $sLinkedClass);
+	$oLinksWizard->DoAddObjects($oPage, $oContext, $aLinkedObjectIds);
+	break;
+	
 	case 'wizard_helper_preview':
 	$sJson = utils::ReadParam('json_obj', '', 'post');
 	$oWizardHelper = WizardHelper::FromJSON($sJson);

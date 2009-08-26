@@ -85,11 +85,15 @@ class DisplayBlock
 		{
 			$sEncoding = strtolower($aMatches[1]);
 		}
-		if (preg_match('/ linkage="(.*)"/U',$sITopTag, $aMatches))
+		if (preg_match('/ link_attr="(.*)"/U',$sITopTag, $aMatches))
 		{
 			// The list to display is a list of links to the specified object
-			$sExtKey = strtolower($aMatches[1]);
-			$aParams['linkage'] = $sExtKey; // Name of the Ext. Key that make this linkage
+			$aParams['link_attr'] = $aMatches[1]; // Name of the Ext. Key that make this linkage
+		}
+		if (preg_match('/ object_id="(.*)"/U',$sITopTag, $aMatches))
+		{
+			// The list to display is a list of links to the specified object
+			$aParams['object_id'] = $aMatches[1]; // Id of the object to be linked to
 		}
 		// Parameters contains a list of extra parameters for the block
 		// the syntax is param_name1:value1;param_name2:value2;...
@@ -105,6 +109,21 @@ class DisplayBlock
 					$aParams[trim($aMatches[1])] = trim($aMatches[2]);
 				}
 			}
+		}
+		if (!empty($aParams['link_attr']))
+		{
+			// Check that all mandatory parameters are present:
+			if(empty($aParams['object_id']))
+			{
+				// if 'links' mode is requested the d of the object to link to must be specified
+				throw new ApplicationException("Parameter object_id is mandatory when link_attr is specified. Check the definition of the display template.");
+			}
+			if(empty($aParams['target_attr']))
+			{
+				// if 'links' mode is requested the d of the object to link to must be specified
+				throw new ApplicationException("Parameter target_attr is mandatory when link_attr is specified. Check the definition of the display template.");
+			}
+
 		}
 		switch($sEncoding)
 		{
@@ -245,21 +264,45 @@ class DisplayBlock
 			break;
 			
 			case 'list':
-			$bDashboardMode = isset($aExtraParams['dashboard']) ? ($aExtraParams['dashboard'] == 'true') : false;
 			if ( ($this->m_oSet->Count()> 0) && (UserRights::IsActionAllowed($this->m_oSet->GetClass(), UR_ACTION_READ, $this->m_oSet) == UR_ALLOWED_YES) )
 			{
-				$sLinkage = isset($aExtraParams['linkage']) ? $aExtraParams['linkage'] : '';
-				$sHtml .= cmdbAbstractObject::GetDisplaySet($oPage, $this->m_oSet, $sLinkage, !$bDashboardMode /* bDisplayMenu */);
+				$sHtml .= cmdbAbstractObject::GetDisplaySet($oPage, $this->m_oSet, $aExtraParams);
 			}
 			else
 			{
 				$sHtml .= $oPage->GetP("No object to display.");
 				$sClass = $this->m_oFilter->GetClass();
-				if (!$bDashboardMode)
+				$bDisplayMenu = isset($this->m_aParams['menu']) ? $this->m_aParams['menu'] == true : true; 
+				if ($bDisplayMenu)
 				{
 					if (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $this->m_oSet) == UR_ALLOWED_YES)
 					{
 						$sHtml .= $oPage->GetP("<a href=\"./UI.php?operation=new&class=$sClass\">Click here to create a new ".Metamodel::GetName($sClass)."</a>\n");
+					}
+				}
+			}
+			break;
+			
+			case 'links':
+			//$bDashboardMode = isset($aExtraParams['dashboard']) ? ($aExtraParams['dashboard'] == 'true') : false;
+			//$bSelectMode = isset($aExtraParams['select']) ? ($aExtraParams['select'] == 'true') : false;
+			if ( ($this->m_oSet->Count()> 0) && (UserRights::IsActionAllowed($this->m_oSet->GetClass(), UR_ACTION_READ, $this->m_oSet) == UR_ALLOWED_YES) )
+			{
+				//$sLinkage = isset($aExtraParams['linkage']) ? $aExtraParams['linkage'] : '';
+				$sHtml .= cmdbAbstractObject::GetDisplaySet($oPage, $this->m_oSet, $aExtraParams);
+			}
+			else
+			{
+				$sHtml .= $oPage->GetP("No object to display.");
+				$sClass = $this->m_oFilter->GetClass();
+				$bDisplayMenu = isset($this->m_aParams['menu']) ? $this->m_aParams['menu'] == true : true; 
+				if ($bDisplayMenu)
+				{
+					if (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $this->m_oSet) == UR_ALLOWED_YES)
+					{
+						$oAttDef = MetaModel::GetAttributeDef($sClass, $this->m_aParams['target_attr']);
+						$sTargetClass = $oAttDef->GetTargetClass();
+						$sHtml .= $oPage->GetP("<a href=\"../pages/UI.php?operation=modify_links&class=$sClass&link_attr=".$aExtraParams['link_attr']."&id=".$aExtraParams['object_id']."&target_class=$sTargetClass&addObjects=true\">Click here to add new ".Metamodel::GetName($sTargetClass)."s</a>\n");
 					}
 				}
 			}
@@ -270,7 +313,7 @@ class DisplayBlock
 			{
 				while($oObj = $this->m_oSet->Fetch())
 				{
-					$sHtml .= $oObj->GetDetails($oPage);
+					$sHtml .= $oObj->GetDetails($oPage); // Still used ???
 				}
 			}
 			break;
@@ -311,7 +354,7 @@ class DisplayBlock
 			$oPage->add_ready_script("\$(\"#LnkSearch_$iSearchSectionId\").click(function() {\$(\"#Search_$iSearchSectionId\").slideToggle('normal'); $(\"#LnkSearch_$iSearchSectionId\").toggleClass('open');});");
 			$sHtml .= cmdbAbstractObject::GetSearchForm($oPage, $this->m_oSet, $aExtraParams);
 	 		$sHtml .= "</div>\n";
-	 		$sHtml .= "<div class=\"HRDrawer\"/></div>\n";
+	 		$sHtml .= "<div class=\"HRDrawer\"></div>\n";
 	 		$sHtml .= "<div id=\"LnkSearch_$iSearchSectionId\" class=\"DrawerHandle\">Search</div>\n";
 			break;
 			
@@ -635,12 +678,15 @@ class MenuBlock extends DisplayBlock
 			$bIsBulkModifyAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_MODIFY, $oSet);
 			$bIsBulkDeleteAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_DELETE, $oSet);
 			// Just one object in the set, possible actions are "new / clone / modify and delete"
-			if (isset($aExtraParams['linkage']))
+			if (isset($aExtraParams['link_attr']))
 			{
-				if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'Add #...', 'url' => "../pages/$sUIPage?operation=new&class=$sClass&$sContext"); }
-				if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'Clone #...', 'url' => "../pages/$sUIPage?operation=clone&class=$sClass&id=$id&$sContext"); }
-				if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'Modify #...', 'url' => "../pages/$sUIPage?operation=modify&class=$sClass&id=$id&$sContext"); }
-				if ($bIsDeleteAllowed) { $aActions[] = array ('label' => 'Remove #', 'url' => "../pages/$sUIPage?operation=delete&class=$sClass&id=$id&$sContext"); }
+				$id = $aExtraParams['object_id'];
+				$sTargetAttr = $aExtraParams['target_attr'];
+				$oAttDef = MetaModel::GetAttributeDef($sClass, $sTargetAttr);
+				$sTargetClass = $oAttDef->GetTargetClass();
+				if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'Add...', 'url' => "../pages/$sUIPage?operation=modify_links&class=$sClass&link_attr=".$aExtraParams['link_attr']."&target_class=$sTargetClass&id=$id&addObjects=true&$sContext"); }
+				if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'Manage...', 'url' => "../pages/$sUIPage?operation=modify_links&class=$sClass&link_attr=".$aExtraParams['link_attr']."&target_class=$sTargetClass&id=$id&sContext"); }
+				if ($bIsDeleteAllowed) { $aActions[] = array ('label' => 'Remove All', 'url' => "#"); }
 			}
 			else
 			{
@@ -681,14 +727,17 @@ class MenuBlock extends DisplayBlock
 			$bIsModifyAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet);
 			$bIsBulkModifyAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_MODIFY, $oSet);
 			$bIsBulkDeleteAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_DELETE, $oSet);
-			if (isset($aExtraParams['linkage']))
+			if (isset($aExtraParams['link_attr']))
 			{
+				$id = $aExtraParams['object_id'];
+				$sTargetAttr = $aExtraParams['target_attr'];
+				$oAttDef = MetaModel::GetAttributeDef($sClass, $sTargetAttr);
+				$sTargetClass = $oAttDef->GetTargetClass();
 				$bIsDeleteAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_DELETE, $oSet);
-				if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'Add #...', 'url' => "../pages/$sUIPage?operation=new&class=$sClass&$sContext"); }
-				if ($bIsDeleteAllowed) { $aActions[] = array ('label' => 'Remove #', 'url' => "../pages/$sUIPage?operation=delete&class=$sClass&id=$id&$sContext"); }
-				if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'Modify #...', 'url' => "../pages/$sUIPage?operation=modify&class=$sClass&id=$id&$sContext"); }
-				if ($bIsBulkModifyAllowed) { $aActions[] = array ('label' => 'Modify All #...', 'url' => "../pages/$sUIPage?operation=new&class=$sClass&$sContext"); }
-				if ($bIsBulkDeleteAllowed) { $aActions[] = array ('label' => 'Remove All #...', 'url' => "#"); }
+				if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'Add...', 'url' => "../pages/$sUIPage?operation=modify_links&class=$sClass&link_attr=".$aExtraParams['link_attr']."&target_class=$sTargetClass&id=$id&addObjects=true&$sContext"); }
+				//if ($bIsBulkModifyAllowed) { $aActions[] = array ('label' => 'Add...', 'url' => "../pages/$sUIPage?operation=modify_links&class=$sClass&linkage=".$aExtraParams['linkage']."&id=$id&addObjects=true&$sContext"); }
+				if ($bIsBulkModifyAllowed) { $aActions[] = array ('label' => 'Manage...', 'url' => "../pages/$sUIPage?operation=modify_links&class=$sClass&link_attr=".$aExtraParams['link_attr']."&target_class=$sTargetClass&id=$id&sContext"); }
+				if ($bIsBulkDeleteAllowed) { $aActions[] = array ('label' => 'Remove All...', 'url' => "#"); }
 			}
 			else
 			{

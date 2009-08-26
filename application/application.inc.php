@@ -9,4 +9,8 @@ require_once('../application/audit.category.class.inc.php');
 require_once('../application/audit.rule.class.inc.php');
 //require_once('../application/menunode.class.inc.php');
 require_once('../application/utils.inc.php');
+
+class ApplicationException extends CoreException
+{
+}
 ?>
