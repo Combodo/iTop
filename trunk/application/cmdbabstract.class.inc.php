@@ -51,6 +51,12 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$sHint = htmlentities("$sObjClass::$sObjKey");
 		return "<a href=\"$sPage?operation=details&class=$sObjClass&id=$sObjKey&".$oAppContext->GetForLink()."\" title=\"$sHint\">$sLabel</a>";
 	}
+	
+	public function GetHyperlink()
+	{
+		$aAvailableFields[MetaModel::GetNameAttributeCode(get_class($this))] = $this->GetName();
+		return $this->MakeHyperLink(get_class($this), $this->GetKey(), $aAvailableFields);
+	}
 
 	public function GetDisplayValue($sAttCode)
 	{
@@ -213,13 +219,37 @@ abstract class cmdbAbstractObject extends CMDBObject
 	
 	// Comment by Rom: this helper may be used to display objects of class DBObject
 	//                 -> I am using this to display the changes history 
-	public static function DisplaySet(web_page $oPage, CMDBObjectSet $oSet, $sLinkageAttribute = '', $bDisplayMenu = true)
+	public static function DisplaySet(web_page $oPage, CMDBObjectSet $oSet, $sLinkageAttribute = '', $bDisplayMenu = true, $bSelectMode = false, $iObjectId = 0)
 	{
-		$oPage->add(self::GetDisplaySet($oPage, $oSet, $sLinkageAttribute, $bDisplayMenu));
+		$oPage->add(self::GetDisplaySet($oPage, $oSet, array( 'link_attr' => $sLinkageAttribute, 'object_id' => $iObjectId, 'menu' => $bDisplayMenu, 'selection_mode' => $bSelectMode)));
 	}
 	
-	public static function GetDisplaySet(web_page $oPage, CMDBObjectSet $oSet, $sLinkageAttribute = '', $bDisplayMenu = true)
+	//public static function GetDisplaySet(web_page $oPage, CMDBObjectSet $oSet, $sLinkageAttribute = '', $bDisplayMenu = true, $bSelectMode = false)
+	public static function GetDisplaySet(web_page $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
+		static $iListId = 0;
+		$iListId++;
+		
+		// Initialize and check the parameters
+		$sLinkageAttribute = isset($aExtraParams['link_attr']) ? $aExtraParams['link_attr'] : '';
+		$iLinkedObjectId = isset($aExtraParams['object_id']) ? $aExtraParams['object_id'] : 0;
+		$sTargetAttr = isset($aExtraParams['target_attr']) ? $aExtraParams['target_attr'] : '';
+		if (!empty($sLinkageAttribute))
+		{
+			if($iLinkedObjectId == 0)
+			{
+				// if 'links' mode is requested the d of the object to link to must be specified
+				throw new ApplicationException("Parameter object_id is mandatory when link_attr is specified. Check the definition of the display template.");
+			}
+			if($sTargetAttr == '')
+			{
+				// if 'links' mode is requested the d of the object to link to must be specified
+				throw new ApplicationException("Parameter target_attr is mandatory when link_attr is specified. Check the definition of the display template.");
+			}
+		}
+		$bDisplayMenu = isset($aExtraParams['menu']) ? $aExtraParams['menu'] == true : true;
+		$bSelectMode = isset($aExtraParams['selection_mode']) ? $aExtraParams['selection_mode'] == true : false;
+		
 		$sHtml = '';
 		$oAppContext = new ApplicationContext();
 		$sClassName = $oSet->GetFilter()->GetClass();
@@ -260,6 +290,10 @@ abstract class cmdbAbstractObject extends CMDBObject
 		}
 		foreach($aList as $sAttCode)
 		{
+			if ($bSelectMode)
+			{
+				$aAttribs['form::select'] = array('label' => "<input type=\"checkbox\" onChange=\"var value = this.checked; $('.selectList{$iListId}').each( function() { this.checked = value; } );\"></input>", 'description' => 'Select / Deselect All');
+			}
 			$aAttribs['key'] = array('label' => '', 'description' => 'Click to display');
 			$aAttribs[$sAttCode] = array('label' => MetaModel::GetLabel($sClassName, $sAttCode), 'description' => MetaModel::GetDescription($sClassName, $sAttCode));
 		}
@@ -267,6 +301,11 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$oSet->Seek(0);
 		while ($oObj = $oSet->Fetch())
 		{
+			$aRow['key'] = $oObj->GetKey();
+			if ($bSelectMode)
+			{
+				$aRow['form::select'] = "<input type=\"checkBox\" class=\"selectList{$iListId}\" name=\"selectObject[]\" value=\"".$oObj->GetKey()."\"></input>";
+			}
 			$aRow['key'] = $oObj->GetKey();
 			foreach($aList as $sAttCode)
 			{
@@ -280,8 +319,14 @@ abstract class cmdbAbstractObject extends CMDBObject
 		if ($bDisplayMenu)
 		{
 			$sColspan = 'colspan="2"';
+			$aMenuExtraParams = array();
+			if (!empty($sLinkageAttribute))
+			{
+				//$aMenuExtraParams['linkage'] = $sLinkageAttribute;
+				$aMenuExtraParams = $aExtraParams;
+			}
 			$sHtml .= '<tr class="containerHeader"><td>&nbsp;'.$oSet->Count().' object(s)</td><td>';
-			$sHtml .= $oMenuBlock->GetRenderContent($oPage, $sLinkageAttribute);
+			$sHtml .= $oMenuBlock->GetRenderContent($oPage, $aMenuExtraParams);
 			$sHtml .= '</td></tr>';
 		}
 		$sHtml .= "<tr><td $sColspan>";
@@ -400,7 +445,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$sHtml .= "<div id=\"SimpleSearchForm{$iSearchFormId}\" class=\"mini_tab{$iSearchFormId}\">\n";
 		$sHtml .= "<h1>Search for ".MetaModel::GetName($sClassName)." Objects</h1>\n";
 		$oUnlimitedFilter = new DBObjectSearch($sClassName);
-		$sHtml .= "<form>\n";
+		$sHtml .= "<form id=\"form{$iSearchFormId}\">\n";
 		$index = 0;
 		$sHtml .= "<table>\n";
 		$aFilterCriteria = $oSet->GetFilter()->GetCriteria();
@@ -488,7 +533,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		// OQL query builder
 		$sHtml .= "<div id=\"OQLQuery{$iSearchFormId}\" style=\"display:none\" class=\"mini_tab{$iSearchFormId}\">\n";
 		$sHtml .= "<h1>OQL Query Builder</h1>\n";
-		$sHtml .= "<form><table style=\"width:80%;\"><tr style=\"vertical-align:top\">\n";
+		$sHtml .= "<form id=\"formOQL{$iSearchFormId}\"><table style=\"width:80%;\"><tr style=\"vertical-align:top\">\n";
 		$sHtml .= "<td style=\"text-align:right\"><label>SELECT&nbsp;</label><select name=\"oql_class\">";
 		$aClasses = MetaModel::EnumChildClasses($sClassName, ENUM_CHILD_CLASSES_ALL);
 		$sSelectedClass = utils::ReadParam('oql_class', $sClassName);
@@ -513,7 +558,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		return $sHtml;
 	}
 	
-	public static function GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $value = '', $sDisplayValue = '', $iId = '')
+	public static function GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $value = '', $sDisplayValue = '', $iId = '', $sNameSuffix = '')
 	{
 		static $iInputId = 0;
 		if (!empty($iId))
@@ -529,15 +574,15 @@ abstract class cmdbAbstractObject extends CMDBObject
 			switch($oAttDef->GetEditClass())
 			{
 				case 'Date':
-				$sHTMLValue = "<input type=\"text\" size=\"20\" name=\"attr_$sAttCode\" value=\"$value\" id=\"$iInputId\" class=\"date-pick\"/>";
+				$sHTMLValue = "<input type=\"text\" size=\"20\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iInputId\" class=\"date-pick\"/>";
 				break;
 				
 				case 'Text':
-					$sHTMLValue = "<textarea name=\"attr_$sAttCode\" rows=\"8\" cols=\"40\" id=\"$iInputId\">$value</textarea>";
+					$sHTMLValue = "<textarea name=\"attr_{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iInputId\">$value</textarea>";
 				break;
 	
 				case 'List':
-					$oWidget = new UILinksWidget($sClass, $sAttCode, $iInputId);
+					$oWidget = new UILinksWidget($sClass, $sAttCode, $iInputId, $sNameSuffix);
 					$sHTMLValue = $oWidget->Display($oPage, $value);
 				break;
 							
@@ -549,7 +594,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 					//Enum field or external key, display a combo
 					if (count($aAllowedValues) == 0)
 					{
-						$sHTMLValue = "<input type=\"text\" size=\"70\" value=\"\" name=\"attr_$sAttCode\"  id=\"$iInputId\"/>";
+						$sHTMLValue = "<input type=\"text\" size=\"70\" value=\"\" name=\"attr_{$sAttCode}{$sNameSuffix}\"  id=\"$iInputId\"/>";
 					}
 					else if (count($aAllowedValues) > 50)
 					{
@@ -557,13 +602,13 @@ abstract class cmdbAbstractObject extends CMDBObject
 						// The input for the auto complete
 						$sHTMLValue = "<input type=\"text\" id=\"label_$iInputId\" size=\"50\" name=\"\" value=\"$sDisplayValue\" />";
 						// another hidden input to store & pass the object's Id
-						$sHTMLValue .= "<input type=\"hidden\" id=\"$iInputId\" name=\"attr_$sAttCode\" value=\"$value\" />\n";
+						$sHTMLValue .= "<input type=\"hidden\" id=\"$iInputId\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" />\n";
 						$oPage->add_ready_script("\$('#label_$iInputId').autocomplete('./ajax.render.php', { minChars:3, onItemSelect:selectItem, onFindValue:findValue, formatItem:formatItem, autoFill:true, keyHolder:'#$iInputId', extraParams:{operation:'autocomplete', sclass:'$sClass',attCode:'".$sAttCode."'}});");
 					}
 					else
 					{
 						// Few choices, use a normal 'select'
-						$sHTMLValue = "<select name=\"attr_$sAttCode\"  id=\"$iInputId\">\n";
+						$sHTMLValue = "<select name=\"attr_{$sAttCode}{$sNameSuffix}\"  id=\"$iInputId\">\n";
 						foreach($aAllowedValues as $key => $display_value)
 						{
 							$sSelected = ($value == $key) ? ' selected' : '';
@@ -574,7 +619,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 				}
 				else
 				{
-					$sHTMLValue = "<input type=\"text\" size=\"50\" name=\"attr_$sAttCode\" value=\"$value\" id=\"$iInputId\">";
+					$sHTMLValue = "<input type=\"text\" size=\"50\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iInputId\">";
 				}
 			}
 		}

@@ -335,7 +335,7 @@ switch($operation)
 			}
 			if (!is_object($oObj))
 			{
-				// new object or or that can't be retrieved (corrupted id or object not allowed to this user)
+				// new object or that can't be retrieved (corrupted id or object not allowed to this user)
 				$id = '';
 				$oObj = MetaModel::NewObject($sClass);
 			}
@@ -701,6 +701,123 @@ switch($operation)
 	}
 	break;
 
+	case 'modify_links':
+	$sClass = utils::ReadParam('class', '');
+	$sLinkAttr = utils::ReadParam('link_attr', '');
+	$sTargetClass = utils::ReadParam('target_class', '');
+	$id = utils::ReadParam('id', '');
+	$bAddObjects = utils::ReadParam('addObjects', false);
+	if ( empty($sClass) || empty($id) || empty($sLinkAttr) || empty($sTargetClass)) // TO DO: check that the class name is valid !
+	{
+		$oP->set_title("iTop - Error");
+		$oP->add("<p>4 parameters are mandatory for this operation: class, id, target_class and link_attr.</p>\n");
+	}
+	else
+	{
+		require_once('../application/uilinkswizard.class.inc.php');
+		$oWizard = new UILinksWizard($sClass, $sLinkAttr, $id, $sTargetClass);
+		$oWizard->Display($oP, $oContext, array('StartWithAdd' => $bAddObjects));		
+	}
+	break;
+	
+	case 'do_modify_links':
+	$aLinks = utils::ReadParam('linkId', array(), 'post');
+	$sLinksToRemove = trim(utils::ReadParam('linksToRemove', '', 'post'));
+	$aLinksToRemove = array();
+	if (!empty($sLinksToRemove))
+	{
+		$aLinksToRemove = explode(' ', trim($sLinksToRemove));
+	}
+	$sClass = utils::ReadParam('class', '', 'post');
+	$sLinkageAtt = utils::ReadParam('linkage', '', 'post');
+	$iObjectId = utils::ReadParam('object_id', '', 'post');
+	$sLinkingAttCode = utils::ReadParam('linking_attcode', '', 'post');
+	$oMyChange = MetaModel::NewObject("CMDBChange");
+	$oMyChange->Set("date", time());
+	if (UserRights::GetUser() != UserRights::GetRealUser())
+	{
+		$sUserString = UserRights::GetRealUser()." on behalf of ".UserRights::GetUser();
+	}
+	else
+	{
+		$sUserString = UserRights::GetUser();
+	}
+	$oMyChange->Set("userinfo", $sUserString);
+	$iChangeId = $oMyChange->DBInsert();
+	
+	// Delete links that are to be deleted
+	foreach($aLinksToRemove as $iLinkId)
+	{
+		if ($iLinkId > 0) // Negative IDs are objects that were not even created
+		{
+			$oLink = $oContext->GetObject($sClass, $iLinkId);
+			$oLink->DBDeleteTracked($oMyChange);
+		}
+	}
+	
+	$aEditableFields = array();
+	$aData = array();
+	foreach(MetaModel::GetAttributesList($sClass) as $sAttCode)
+	{
+		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+		if ( (!$oAttDef->IsExternalKey()) && (!$oAttDef->IsExternalField()))
+		{
+			$aEditableFields[] = $sAttCode;
+			$aData[$sAttCode] = utils::ReadParam('attr_'.$sAttCode, array(), 'post');
+		}
+	}
+	
+	// Update existing links or create new links
+	foreach($aLinks as $iLinkId)
+	{
+		if ($iLinkId > 0)
+		{
+			// This is an existing link to be modified
+			$oLink = $oContext->GetObject($sClass, $iLinkId);
+			
+			// Update all the attributes of the link
+			foreach($aEditableFields as $sAttCode)
+			{
+				$value = $aData[$sAttCode][$iLinkId];
+				$oLink->Set($sAttCode, $value);
+			}
+			if ($oLink->IsModified())
+			{
+				$oLink->DBUpdateTracked($oMyChange);
+			}
+			//echo "Updated link:<br/>\n";
+			//var_dump($oLink);
+		}
+		else
+		{
+			// A new link must be created
+			$oLink = MetaModel::NewObject($sClass);
+			$oLinkedObjectId = -$iLinkId;
+			// Set all the attributes of the link
+			foreach($aEditableFields as $sAttCode)
+			{
+				$value = $aData[$sAttCode][$iLinkId];
+				$oLink->Set($sAttCode, $value);
+			}
+			// And the two external keys
+			$oLink->Set($sLinkageAtt, $iObjectId);
+			$oLink->Set($sLinkingAttCode, $oLinkedObjectId);
+			// then save it
+			//echo "Created link:<br/>\n";
+			//var_dump($oLink);
+			$oLink->DBInsertTracked($oMyChange);
+		}
+	}
+	// Display again the details of the linked object
+	$oAttDef = MetaModel::GetAttributeDef($sClass, $sLinkageAtt);
+	$sTargetClass = $oAttDef->GetTargetClass();
+	$oObj = $oContext->GetObject($sTargetClass, $iObjectId);
+	
+	$oSearch = $oContext->NewFilter(get_class($oObj));
+	$oBlock = new DisplayBlock($oSearch, 'search', false);
+	$oBlock->Display($oP, 0);
+	$oObj->DisplayDetails($oP);
+	break;
 	
 	default:
 	$oActiveNode->RenderContent($oP, $oAppContext->GetAsHash());

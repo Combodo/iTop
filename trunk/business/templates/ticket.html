@@ -10,7 +10,7 @@
 		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">lnkInfraTicket: ticket_id = $pkey$</itopblock>
 	</itoptab>
 	<itoptab name="Related_Incidents">
-		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">lnkRelatedTicket: ticket_id = $pkey$</itopblock>
+		<itopblock blockclass="DisplayBlock" type="links" link_attr="ticket_id" object_id="$pkey$" target_attr="rel_ticket_id" encoding="text/sibusql">lnkRelatedTicket: ticket_id = $pkey$</itopblock>
 	</itoptab>
 	<itoptab name="Contacts_to_Notify">
 		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">lnkContactTicket: ticket_id = $pkey$</itopblock>

@@ -134,7 +134,7 @@ class DisplayTemplate
 			break;
 			
 			case 'itoptab':
-				$oPage->SetCurrentTab($aAttributes['name']);
+				$oPage->SetCurrentTab(str_replace('_', ' ', $aAttributes['name']));
 				$oTemplate = new DisplayTemplate($sContent);
 				$oTemplate->Render($oPage, array()); // no params to apply, they have already been applied
 				//$oPage->p('iTop Tab Content:<pre>'.htmlentities($sContent).'</pre>');
@@ -153,9 +153,22 @@ class DisplayTemplate
 				$sBlockClass = $aAttributes['blockclass'];
 				$sBlockType = $aAttributes['type'];
 				$aExtraParams = array();
-				if (isset($aAttributes['linkage']))
+				if (isset($aAttributes['link_attr']))
 				{
-					$aExtraParams['linkage'] = $aAttributes['linkage'];
+					$aExtraParams['link_attr'] = $aAttributes['link_attr'];
+					// Check that all mandatory parameters are present:
+					if(empty($aAttributes['object_id']))
+					{
+						// if 'links' mode is requested the d of the object to link to must be specified
+						throw new ApplicationException("Parameter object_id is mandatory when link_attr is specified. Check the definition of the display template.");
+					}
+					if(empty($aAttributes['target_attr']))
+					{
+						// if 'links' mode is requested the d of the object to link to must be specified
+						throw new ApplicationException("Parameter target_attr is mandatory when link_attr is specified. Check the definition of the display template.");
+					}
+					$aExtraParams['object_id'] = $aAttributes['object_id'];
+					$aExtraParams['target_attr'] = $aAttributes['target_attr'];
 				}
 
 				switch($aAttributes['encoding'])

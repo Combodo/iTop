@@ -6,12 +6,14 @@ class UILinksWidget
 {
 	protected $m_sClass;
 	protected $m_sAttCode;
+	protected $m_sNameSuffix;
 	protected $m_iInputId;
 	
-	public function __construct($sClass, $sAttCode, $iInputId)
+	public function __construct($sClass, $sAttCode, $iInputId, $sNameSuffix = '')
 	{
 		$this->m_sClass = $sClass;
 		$this->m_sAttCode = $sAttCode;
+		$this->m_sNameSuffix = $sNameSuffix;
 		$this->m_iInputId = $iInputId;
 	}
 	
@@ -76,7 +78,7 @@ class UILinksWidget
 			$sHTMLValue .= "&nbsp;<input type=\"button\" value=\"Browse...\"  class=\"action\" onClick=\"return ManageObjects('$sTitle', '$sTargetClass', '$this->m_iInputId', '$sExtKeyToRemote');\"/>";
 			// another hidden input to store & pass the object's Id
 			$sHTMLValue .= "<input type=\"hidden\" id=\"id_ac_{$this->m_iInputId}\"/>\n";
-			$sHTMLValue .= "<input type=\"hidden\" id=\"{$this->m_iInputId}\" name=\"attr_{$this->m_sAttCode}\" value=\"\"/>\n";
+			$sHTMLValue .= "<input type=\"hidden\" id=\"{$this->m_iInputId}\" name=\"attr_{$this->m_sAttCode}{$this->m_sNameSuffix}\" value=\"\"/>\n";
 			$oPage->add_ready_script("\$('#{$this->m_iInputId}').val('$sJSON');\n\$('#ac_{$this->m_iInputId}').autocomplete('./ajax.render.php', { minChars:3, onItemSelect:selectItem, onFindValue:findValue, formatItem:formatItem, autoFill:true, keyHolder:'#id_ac_{$this->m_iInputId}', extraParams:{operation:'ui.linkswidget', sclass:'{$this->m_sClass}', attCode:'{$this->m_sAttCode}', max:30}});");
 		}
 		else
