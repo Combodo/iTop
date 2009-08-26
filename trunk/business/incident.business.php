@@ -186,6 +186,7 @@ class lnkRelatedTicket extends cmdbAbstractObject
 			"db_table" => "related_ticket",
 			"db_key_field" => "link_id",
 			"db_finalclass_field" => "",
+			"display_template" => "../business/templates/default.html",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("rel_ticket_id", array("targetclass"=>"bizIncidentTicket", "jointype"=> '', "label"=>"Related Ticket id", "description"=>"The related ticket", "allowed_values"=>null, "sql"=>"rel_ticket_id", "is_null_allowed"=>false, "depends_on"=>array())));
