@@ -482,7 +482,7 @@ ul.jd_menu_itop ul li.jd_menu_hover a.jd_menu_hover {
 }
 div.wizActiveStep {
 	height: 29px;
-	background: url(/images/wizActiveStepLeft.gif) no-repeat left;
+	background: url(../images/wizActiveStepLeft.gif) no-repeat left;
 	color: #d81515;
 	padding-left: 8px;
 	margin-top: 5px;
@@ -491,7 +491,7 @@ div.wizActiveStep {
 }
 div.wizActiveStep span {
 	height: 29px;
-	background: url(/images/wizActiveStepRight.gif) no-repeat top right;
+	background: url(../images/wizActiveStepRight.gif) no-repeat top right;
 	padding-right: 8px;
 	padding-top: 8px;
 	float:left;
@@ -499,7 +499,7 @@ div.wizActiveStep span {
 
 div.wizStep {
 	height: 29px;
-	background: url(/images/wizStepLeft.gif) no-repeat left;
+	background: url(../images/wizStepLeft.gif) no-repeat left;
 	padding-left: 8px;
 	vertical-align: middle;
 	margin-top: 5px;
@@ -507,7 +507,7 @@ div.wizStep {
 }
 div.wizStep span {
 	height: 29px;
-	background: url(/images/wizStepRight.gif) no-repeat top right;
+	background: url(../images/wizStepRight.gif) no-repeat top right;
 	padding-right: 8px;
 	padding-top: 8px;
 	float:left;

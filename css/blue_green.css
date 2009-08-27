@@ -151,15 +151,15 @@ ul.dir li {
 }
 
 .treeview li { background: url(../images/tv-item.gif) 0 0 no-repeat; }
-.treeview .collapsable { background-image: url(/images/tv-collapsable.gif); }
-.treeview .expandable { background-image: url(/images/tv-expandable.gif); }
-.treeview .last { background-image: url(/images/tv-item-last.gif); }
-.treeview .lastCollapsable { background-image: url(/images/tv-collapsable-last.gif); }
-.treeview .lastExpandable { background-image: url(/images/tv-expandable-last.gif); }
+.treeview .collapsable { background-image: url(../images/tv-collapsable.gif); }
+.treeview .expandable { background-image: url(../images/tv-expandable.gif); }
+.treeview .last { background-image: url(../images/tv-item-last.gif); }
+.treeview .lastCollapsable { background-image: url(../images/tv-collapsable-last.gif); }
+.treeview .lastExpandable { background-image: url(../images/tv-expandable-last.gif); }
 
-#Header { padding: 0; background:#ccc url(/images/bandeau2.gif) repeat-x center;}
+#Header { padding: 0; background:#ccc url(../images/bandeau2.gif) repeat-x center;}
 div.iTopLogo {
-	background:url(/images/iTop.gif) no-repeat center;
+	background:url(../images/iTop.gif) no-repeat center;
 	width:100px;
 	height:56px;
 }
@@ -208,15 +208,15 @@ div.iTopLogo span {
 #MySplitter .vsplitbar {
 	width: 7px;
 	height: 50px;
-	background: #68a url(/images/vgrabber2.gif) no-repeat  center;
+	background: #68a url(../images/vgrabber2.gif) no-repeat  center;
 }
 #MySplitter .vsplitbar.active, #MySplitter .vsplitbar:hover {
-	background: #68a url(/images/vgrabber2_active.gif) no-repeat  center;
+	background: #68a url(../images/vgrabber2_active.gif) no-repeat  center;
 }
 #MySplitter .hsplitbar {
 	height: 8px;
-	background: #68a url(/images/hgrabber2.gif) no-repeat center;
+	background: #68a url(../images/hgrabber2.gif) no-repeat center;
 }
 #MySplitter .hsplitbar.active, #MySplitter .hsplitbar:hover {
-	background: #68a url(/images/hgrabber2_active.gif) no-repeat center;
+	background: #68a url(../images/hgrabber2_active.gif) no-repeat center;
 }

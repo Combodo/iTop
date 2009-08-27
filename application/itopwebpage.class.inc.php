@@ -247,7 +247,7 @@ EOF
 		// Display the header
 		echo "<div id=\"Header\">\n";
 		echo "<div class=\"iTopLogo\"><span>iTop</span></div>\n";
-		//echo "<div id=\"GlobalSearch\"><div style=\"border: 1px solid #999; padding:1px; background-color:#fff;\"><img src=\"/images/magnifier.gif\"/><input style=\"border:0\" type=\"text\" size=\"15\" title=\"Global Search\"></input></div></div>\n";
+		//echo "<div id=\"GlobalSearch\"><div style=\"border: 1px solid #999; padding:1px; background-color:#fff;\"><img src=\"../images/magnifier.gif\"/><input style=\"border:0\" type=\"text\" size=\"15\" title=\"Global Search\"></input></div></div>\n";
 		$sText = Utils::ReadParam('text', '');
 		$sOnClick = "";
 		if (empty($sText))
