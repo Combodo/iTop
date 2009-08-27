@@ -775,7 +775,22 @@ class MenuBlock extends DisplayBlock
 		{
 			$sPort = ($_SERVER['SERVER_PORT'] == 443) ? '' : ':'.$_SERVER['SERVER_PORT'];
 		}
-		$sPath = $_SERVER['REQUEST_URI'];
+		// $_SERVER['REQUEST_URI'] is empty when running on IIS
+		// Let's use Ivan Tcholakov's fix (found on www.dokeos.com)
+		if (!empty($_SERVER['REQUEST_URI']))
+		{
+			$sPath = $_SERVER['REQUEST_URI'];
+		}
+		else
+		{
+			$sPath = $_SERVER['SCRIPT_NAME'];
+			if (!empty($_SERVER['QUERY_STRING']))
+			{
+				$sPath .= '?'.$_SERVER['QUERY_STRING'];
+			}
+			$_SERVER['REQUEST_URI'] = $sPath;
+		} 
+   		$sPath = $_SERVER['REQUEST_URI'];
 		$sUrl = "$sProtocol://{$sServerName}{$sPort}{$sPath}";
 		
 		return $sUrl;
