@@ -168,23 +168,10 @@ class CMDBSource
 	public static function Query($sSQLQuery)
 	{
 		// Add info into the query as a comment, for easier error tracking
-		//
-		//if ($user_contact)	$aTraceInf['userID'] = $user_contact->get_key();
-		//$aTraceInf['file'] = __FILE__;
-		if ($_SERVER['REQUEST_URI'])	$aTraceInf['requestURI'] = $_SERVER['REQUEST_URI'];
-		$i = 0;
-		foreach(debug_backtrace() as $aCallData) 
-		{
-			$sClass = key_exists("class", $aCallData) ? $aCallData["class"]."::" : "";
-	  		//if ($aCallData['function'] !== 'mysql_simple_query' AND $sClass !== 'r2_set::')
-	  		//{
-	  			if ($i == 3) break;
-				$aTraceInf['function'.$i] =  $sClass.$aCallData["function"]." on line ".$aCallData['line'];
-				$i++;
-	  		//}
-	  	}
 	  	// disabled until we need it really!
-		// $sSQLQuery = $sSQLQuery.MyHelpers::MakeSQLComment($aTraceInf);
+		//
+		//$aTraceInf['file'] = __FILE__;
+		// $sSQLQuery .= MyHelpers::MakeSQLComment($aTraceInf);
 	  
 		$mu_t1 = MyHelpers::getmicrotime();
 		$result = mysql_query($sSQLQuery, self::$m_resDBLink);
