@@ -24,7 +24,7 @@ class iTopWizardWebPage extends iTopWebPage
     		$sStyle = ($iIndex == $this->m_iCurrentStep) ? 'wizActiveStep' : 'wizStep';
     		$aSteps[] = "<div class=\"$sStyle\"><span>$sStepTitle</span></div>";
     	}
-    	$sWizardHeader = "<div class=\"wizHeader\"><h1>{$this->s_title}</h1>\n".implode("<div class=\"wizSeparator\"><img align=\"bottom\" src=\"/images/wizArrow.gif\"></div>", $aSteps)."<br style=\"clear:both;\"/></div>\n";
+    	$sWizardHeader = "<div class=\"wizHeader\"><h1>{$this->s_title}</h1>\n".implode("<div class=\"wizSeparator\"><img align=\"bottom\" src=\"../images/wizArrow.gif\"></div>", $aSteps)."<br style=\"clear:both;\"/></div>\n";
     	$this->s_content = "$sWizardHeader<div class=\"wizContainer\">".$this->s_content."</div>";
     	parent::output();
 	}
