@@ -151,7 +151,7 @@ function Page2_ConfigFilters($oPage, $oFilter)
 				$oSubFilter = new CMDBSearchFilter($sRemoteClass);
 			}
 			$oPage->add("<div>\n");
-			//$oPage->add(" ".MetaModel::GetClassLabel($sRemoteClass)." ");
+			//$oPage->add(" ".MetaModel::GetName($sRemoteClass)." ");
 			$oPage->add(" Linked to '".MetaModel::GetLinkLabel($sLinkClass, $sExtKeyAttCode)."' by ");
 			$oSubFilter = new CMDBSearchFilter($sRemoteClass);
 			$oPage->add($oSubFilter->__DescribeHTML());

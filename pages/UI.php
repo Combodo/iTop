@@ -49,6 +49,7 @@ switch($operation)
 {
 	case 'details':
 		$sClass = utils::ReadParam('class', '');
+		$sClassLabel = MetaModel::GetName($sClass);
 		$id = utils::ReadParam('id', '');
 		$oSearch = new DBObjectSearch($sClass);
 		$oBlock = new DisplayBlock($oSearch, 'search', false);
@@ -62,7 +63,7 @@ switch($operation)
 			$oObj = $oContext->GetObject($sClass, $id);
 			if ($oObj != null)
 			{
-				$oP->set_title("iTop - ".$oObj->GetDisplayName()." - $sClass details");
+				$oP->set_title("iTop - ".$oObj->GetDisplayName()." - $sClassLabel details");
 				$oObj->DisplayDetails($oP);
 			}
 			else
@@ -214,6 +215,7 @@ switch($operation)
 		$oP->add_linked_script("../js/linkswidget.js");
 		$oP->add_linked_script("../js/jquery.blockUI.js");
 		$sClass = utils::ReadParam('class', '');
+		$sClassLabel = MetaModel::GetName($sClass);
 		$id = utils::ReadParam('id', '');
 		if ( empty($sClass) || empty($id)) // TO DO: check that the class name is valid !
 		{
@@ -234,8 +236,8 @@ switch($operation)
 			$bIsReadAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_READ, $oSet) == UR_ALLOWED_YES);
 			if( ($oObj != null) && ($bIsModifiedAllowed) && ($bIsReadAllowed))
 			{
-				$oP->set_title("iTop - ".$oObj->GetName()." - $sClass modification");
-				$oP->add("<h1>".$oObj->GetName()." - $sClass modification</h1>\n");
+				$oP->set_title("iTop - ".$oObj->GetName()." - $sClassLabel modification");
+				$oP->add("<h1>".$oObj->GetName()." - $sClassLabel modification</h1>\n");
 				$oObj->DisplayModifyForm($oP);
 			}
 			else
@@ -248,6 +250,7 @@ switch($operation)
 	
 	case 'clone':
 	$sClass = utils::ReadParam('class', '');
+	$sClassLabel = MetaModel::GetName($sClass);
 	$id = utils::ReadParam('id', '');
 	if ( empty($sClass) || empty($id)) // TO DO: check that the class name is valid !
 	{
@@ -268,8 +271,8 @@ switch($operation)
 		$bIsReadAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_READ, $oSet) == UR_ALLOWED_YES);
 		if( ($oObjToClone != null) && ($bIsModifiedAllowed) && ($bIsReadAllowed))
 		{
-			$oP->set_title("iTop - ".$oObjToClone->GetName()." - $sClass clone");
-			$oP->add("<h1>".$oObjToClone->GetName()." - $sClass clone</h1>\n");
+			$oP->set_title("iTop - ".$oObjToClone->GetName()." - $sClassLabel clone");
+			$oP->add("<h1>".$oObjToClone->GetName()." - $sClassLabel clone</h1>\n");
 			cmdbAbstractObject::DisplayCreationForm($oP, $sClass, $oObjToClone);
 		}
 		else
@@ -361,6 +364,7 @@ switch($operation)
 	
 	case 'apply_modify':
 		$sClass = utils::ReadPostedParam('class', '');
+		$sClassLabel = MetaModel::GetName($sClass);
 		$id = utils::ReadPostedParam('id', '');
 		$sTransactionId = utils::ReadPostedParam('transaction_id', '');
 		if ( empty($sClass) || empty($id)) // TO DO: check that the class name is valid !
@@ -376,8 +380,8 @@ switch($operation)
 			$oObj = $oContext->GetObject($sClass, $id);
 			if ($oObj != null)
 			{
-				$oP->set_title("iTop - ".$oObj->GetName()." - $sClass modification");
-				$oP->add("<h1>".$oObj->GetName()." - $sClass modification</h1>\n");
+				$oP->set_title("iTop - ".$oObj->GetName()." - $sClassLabel modification");
+				$oP->add("<h1>".$oObj->GetName()." - $sClassLabel modification</h1>\n");
 				$bObjectModified = false;
 				foreach(MetaModel::ListAttributeDefs(get_class($oObj)) as $sAttCode=>$oAttDef)
 				{
@@ -411,7 +415,7 @@ switch($operation)
 				}
 				if (!$bObjectModified)
 				{
-					$oP->p("No modification detected. ".get_class($oObj)." has <strong>not</strong> been updated.\n");
+					$oP->p("No modification detected. ".MetaModel::GetName(get_class($oObj))." has <strong>not</strong> been updated.\n");
 				}
 				else if ($oObj->CheckToUpdate())
 				{
@@ -429,7 +433,7 @@ switch($operation)
 					$iChangeId = $oMyChange->DBInsert();
 					$oObj->DBUpdateTracked($oMyChange);
 			
-					$oP->p(get_class($oObj)." updated.\n");
+					$oP->p(MetaModel::GetName(get_class($oObj))." updated.\n");
 				}
 				else
 				{
@@ -448,6 +452,7 @@ switch($operation)
 	
 	case 'delete':
 	$sClass = utils::ReadParam('class', '');
+	$sClassLabel = MetaModel::GetName($sClass);
 	$id = utils::ReadParam('id', '');
 	$oObj = $oContext->GetObject($sClass, $id);
 	$sName = $oObj->GetName();
@@ -464,7 +469,7 @@ switch($operation)
 	$oMyChange->Set("userinfo", $sUserString);
 	$oMyChange->DBInsert();
 	$oObj->DBDeleteTracked($oMyChange);
-	$oP->add("<h1>".$sName." - $sClass deleted</h1>\n");
+	$oP->add("<h1>".$sName." - $sClassLabel deleted</h1>\n");
 	break;
 	
 	case 'apply_new':
@@ -474,6 +479,7 @@ switch($operation)
 	
 	case 'apply_clone':
 	$sClass = utils::ReadPostedParam('class', '');
+	$sClassLabel = MetaModel::GetName($sClass);
 	$iCloneId = utils::ReadPostedParam('clone_id', '');
 	$sTransactionId = utils::ReadPostedParam('transaction_id', '');
 	if (!utils::IsTransactionValid($sTransactionId))
@@ -507,7 +513,7 @@ switch($operation)
 				}
 			}
 			$oObj->DBCloneTracked($oMyChange);
-			$oP->add("<h1>".$oObj->GetName()." - $sClass created</h1>\n");
+			$oP->add("<h1>".$oObj->GetName()." - $sClassLabel created</h1>\n");
 			$oObj->DisplayDetails($oP);
 	}
 
@@ -527,6 +533,7 @@ switch($operation)
 		if (is_object($oObj))
 		{
 			$sClass = get_class($oObj);
+			$sClassLabel = MetaModel::GetName($sClass);
 			$oMyChange = MetaModel::NewObject("CMDBChange");
 			$oMyChange->Set("date", time());
 			if (UserRights::GetUser() != UserRights::GetRealUser())
@@ -540,8 +547,8 @@ switch($operation)
 			$oMyChange->Set("userinfo", $sUserString);
 			$iChangeId = $oMyChange->DBInsert();
 			$oObj->DBInsertTracked($oMyChange);
-			$oP->set_title("iTop - ".$oObj->GetName()." - $sClass created");
-			$oP->add("<h1>".$oObj->GetName()." - $sClass created</h1>\n");
+			$oP->set_title("iTop - ".$oObj->GetName()." - $sClassLabel created");
+			$oP->add("<h1>".$oObj->GetName()." - $sClassLabel created</h1>\n");
 			$oObj->DisplayDetails($oP);
 		}
 	}
@@ -645,7 +652,7 @@ switch($operation)
 			}
 			else if (!utils::IsTransactionValid($sTransactionId))
 			{
-				$oP->p("<strong>Error: object has already be updated!</strong>\n");
+				$oP->p("<strong>Error: object has already been updated!</strong>\n");
 			}
 			else
 			{
@@ -688,7 +695,7 @@ switch($operation)
 					$iChangeId = $oMyChange->DBInsert();
 					$oObj->DBUpdateTracked($oMyChange);
 			
-					$oP->p(get_class($oObj)." updated.\n");
+					$oP->p(MetaModel::GetName(get_class($oObj))." updated.\n");
 				}
 				$oObj->DisplayDetails($oP);
 			}
@@ -822,5 +829,6 @@ switch($operation)
 	default:
 	$oActiveNode->RenderContent($oP, $oAppContext->GetAsHash());
 }
+////MetaModel::ShowQueryTrace();
 $oP->output();
 ?>
