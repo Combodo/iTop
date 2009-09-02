@@ -21,13 +21,14 @@ class UILinksWidget
 	{
 		$sHTMLValue = '';
 		$sTargetClass = self::GetTargetClass($this->m_sClass, $this->m_sAttCode);
-	    $aAllowedValues = MetaModel::GetAllowedValues_att($this->m_sClass, $this->m_sAttCode, array(), '');
+		$aAllowedValues = MetaModel::GetAllowedValues_att($this->m_sClass, $this->m_sAttCode, array(), '');
 		$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $this->m_sAttCode);
 		$sExtKeyToRemote = $oAttDef->GetExtKeyToRemote();
 		$sExtKeyToMe = $oAttDef->GetExtKeyToMe();
 		$sStateAttCode = MetaModel::GetStateAttributeCode($this->m_sClass);
 		$sDefaultState = MetaModel::GetDefaultState($this->m_sClass);
 
+		$aAttributes = array();
 		$sLinkedClass = $oAttDef->GetLinkedClass();
 		foreach(MetaModel::ListAttributeDefs($sLinkedClass) as $sAttCode=>$oAttDef)
 		{
@@ -256,6 +257,7 @@ EOF;
 		$sHTML .= "<form>\n";
 		$index = 0;
 		$aAttrsMap = array();
+		$aDetails = array();
 		foreach(MetaModel::ListAttributeDefs($sLinkedClass) as $sAttCode=>$oAttDef)
 		{
 			if ($sStateAttCode == $sAttCode)
