@@ -14,12 +14,14 @@
  */
 
 
-// It is supposed that this profile does exist in the DB
-// Possible improvement: add it when executing the setup procedure
-//
 define('ADMIN_PROFILE_ID', 1);
 
-class URP_Users extends DBObject
+class UserRightsBaseClass extends cmdbAbstractObject
+{
+}
+
+
+class URP_Users extends UserRightsBaseClass
 {
 	public static function Init()
 	{
@@ -36,23 +38,38 @@ class URP_Users extends DBObject
 			"db_table" => "priv_urp_users",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
+			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeInteger("userid", array("label"=>"User id", "description"=>"User identifier (depends on the business model)", "allowed_values"=>null, "sql"=>"userid", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("login", array("label"=>"login", "description"=>"user identification string", "allowed_values"=>null, "sql"=>"login", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("password", array("label"=>"password", "description"=>"user authentication string", "allowed_values"=>null, "sql"=>"pwd", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("email", array("label"=>"email", "description"=>"email address", "allowed_values"=>null, "sql"=>"email", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("firstname", array("label"=>"firstname", "description"=>"first name", "allowed_values"=>null, "sql"=>"firstname", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("lastname", array("label"=>"lastname", "description"=>"last name", "allowed_values"=>null, "sql"=>"lastname", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", array("targetclass"=>"bizPerson", "label"=>"Contact (person)", "description"=>"Personal details from the business data", "allowed_values"=>null, "sql"=>"userid", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("last_name", array("label"=>"Last name", "description"=>"Name of the corresponding contact", "allowed_values"=>null, "extkey_attcode"=> 'userid', "target_attcode"=>"name")));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("first_name", array("label"=>"First name", "description"=>"First name of the corresponding contact", "allowed_values"=>null, "extkey_attcode"=> 'userid', "target_attcode"=>"first_name")));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("email", array("label"=>"Email", "description"=>"Email of the corresponding contact", "allowed_values"=>null, "extkey_attcode"=> 'userid', "target_attcode"=>"email")));
+
+		MetaModel::Init_AddAttribute(new AttributeString("login", array("label"=>"Login", "description"=>"user identification string", "allowed_values"=>null, "sql"=>"login", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributePassword("password", array("label"=>"Password", "description"=>"user authentication string", "allowed_values"=>null, "sql"=>"pwd", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+
+		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("profiles", array("label"=>"Profiles", "description"=>"roles, granting rights for that person", "linked_class"=>"URP_UserProfile", "ext_key_to_me"=>"userid", "ext_key_to_remote"=>"profileid", "allowed_values"=>null, "count_min"=>1, "count_max"=>0, "depends_on"=>array())));
 
 		//MetaModel::Init_InheritFilters();
 		MetaModel::Init_AddFilterFromAttribute("userid");
 		MetaModel::Init_AddFilterFromAttribute("login");
+		MetaModel::Init_AddFilterFromAttribute("password");
+
+		// Display lists
+		MetaModel::Init_SetZListItems('details', array('userid', 'first_name', 'email', 'login')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('first_name', 'last_name', 'login')); // Attributes to be displayed for a list
+		// Search criteria
+		MetaModel::Init_SetZListItems('standard_search', array('login', 'userid')); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('advanced_search', array('login', 'userid')); // Criteria of the advanced search form
 	}
+
 }
 
-class URP_Profiles extends DBObject
+
+class URP_Profiles extends UserRightsBaseClass
 {
 	public static function Init()
 	{
@@ -69,19 +86,93 @@ class URP_Profiles extends DBObject
 			"db_table" => "priv_urp_profiles",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
+			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeString("name", array("label"=>"name", "description"=>"label", "allowed_values"=>null, "sql"=>"name", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("description", array("label"=>"description", "description"=>"one line description", "allowed_values"=>null, "sql"=>"description", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("name", array("label"=>"Name", "description"=>"label", "allowed_values"=>null, "sql"=>"name", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("description", array("label"=>"Description", "description"=>"one line description", "allowed_values"=>null, "sql"=>"description", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+
+		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("users", array("label"=>"Users", "description"=>"persons having this role", "linked_class"=>"URP_UserProfile", "ext_key_to_me"=>"profileid", "ext_key_to_remote"=>"userid", "allowed_values"=>null, "count_min"=>1, "count_max"=>0, "depends_on"=>array())));
 
 		//MetaModel::Init_InheritFilters();
 		MetaModel::Init_AddFilterFromAttribute("name");
 		MetaModel::Init_AddFilterFromAttribute("description");
+
+		// Display lists
+		MetaModel::Init_SetZListItems('details', array('name', 'description')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('name', 'description')); // Attributes to be displayed for a list
+		// Search criteria
+		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
+	}
+
+	function GetGrantAsHtml($oUserRights, $sClass, $sAction)
+	{
+		$oGrant = $oUserRights->GetClassActionGrant($this->GetKey(), $sClass, $sAction);
+		if (is_object($oGrant) && ($oGrant->Get('permission') == 'yes')) 
+		{
+			return '<span style="background-color: #ddffdd;">yes</span>';
+		}
+		else
+		{
+			return '<span style="background-color: #ffdddd;">no</span>';
+		}
+	}
+	
+	function DoShowGrantSumary($oPage)
+	{
+	
+		// Note: for sure, we assume that the instance is derived from UserRightsProfile
+		$oUserRights = UserRights::GetModuleInstance();
+	
+		$aDisplayData = array();
+		foreach (MetaModel::GetClasses('bizmodel') as $sClass)
+		{
+			$aStimuli = array();
+			foreach (array_keys(MetaModel::EnumStimuli($sClass)) as $sStimulusCode)
+			{
+				$oGrant = $oUserRights->GetClassStimulusGrant($this->GetKey(), $sClass, $sStimulusCode);
+				if (is_object($oGrant) && ($oGrant->Get('permission') == 'yes'))
+				{ 
+					$aStimuli[] = $sStimulusCode;
+				}
+			}
+			$sStimuli = implode(', ', $aStimuli);
+			
+			$aDisplayData[] = array(
+				'class' => MetaModel::GetName($sClass),
+				'read' => $this->GetGrantAsHtml($oUserRights, $sClass, 'Read'),
+				'bulkread' => $this->GetGrantAsHtml($oUserRights, $sClass, 'Bulk Read'),
+				'write' => $this->GetGrantAsHtml($oUserRights, $sClass, 'Modify'),
+				'bulkwrite' => $this->GetGrantAsHtml($oUserRights, $sClass, 'Bulk Modify'),
+				'stimuli' => $sStimuli,
+			);
+		}
+	
+		$aDisplayConfig = array();
+		$aDisplayConfig['class'] = array('label' => 'Class', 'description' => '');
+		$aDisplayConfig['read'] = array('label' => 'Read', 'description' => '');
+		$aDisplayConfig['bulkread'] = array('label' => 'Bulk read', 'description' => 'List objects or export massively');
+		$aDisplayConfig['write'] = array('label' => 'Write', 'description' => 'Create and edit (modify)');
+		$aDisplayConfig['bulkwrite'] = array('label' => 'Bulk write', 'description' => 'Massively create/edit (CSV import)');
+		$aDisplayConfig['stimuli'] = array('label' => 'Stimuli', 'description' => 'Allowed (compound) actions');
+		$oPage->table($aDisplayConfig, $aDisplayData);
+	}
+
+	function DisplayBareRelations(web_page $oPage)
+	{
+		parent::DisplayBareRelations($oPage);
+
+		$oPage->SetCurrentTabContainer('Related Objects');
+
+		$oPage->SetCurrentTab('Grants matrix');
+		$this->DoShowGrantSumary($oPage);		
 	}
 }
 
-class URP_Dimensions extends DBObject
+
+class URP_Dimensions extends UserRightsBaseClass
 {
 	public static function Init()
 	{
@@ -98,17 +189,25 @@ class URP_Dimensions extends DBObject
 			"db_table" => "priv_urp_dimensions",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
+			"display_template" => "../business/templates/default.html",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeString("name", array("label"=>"name", "description"=>"label", "allowed_values"=>null, "sql"=>"name", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("description", array("label"=>"description", "description"=>"one line description", "allowed_values"=>null, "sql"=>"description", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("type", array("label"=>"type", "description"=>"class name or data type (projection unit)", "allowed_values"=>new ValueSetEnumClasses('bizmodel', 'String,Integer'), "sql"=>"type", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("name", array("label"=>"Name", "description"=>"label", "allowed_values"=>null, "sql"=>"name", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("description", array("label"=>"Description", "description"=>"one line description", "allowed_values"=>null, "sql"=>"description", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("type", array("label"=>"Type", "description"=>"class name or data type (projection unit)", "allowed_values"=>new ValueSetEnumClasses('bizmodel', 'String,Integer'), "sql"=>"type", "default_value"=>'String', "is_null_allowed"=>false, "depends_on"=>array())));
 
 		//MetaModel::Init_InheritFilters();
 		MetaModel::Init_AddFilterFromAttribute("name");
 		MetaModel::Init_AddFilterFromAttribute("description");
 		MetaModel::Init_AddFilterFromAttribute("type");
+
+		// Display lists
+		MetaModel::Init_SetZListItems('details', array('name', 'description', 'type')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('name', 'description')); // Attributes to be displayed for a list
+		// Search criteria
+		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
 	}
 
 	public function CheckProjectionSpec($oProjectionSpec, $sProjectedClass)
@@ -193,39 +292,51 @@ class URP_Dimensions extends DBObject
 	}
 }
 
-class URP_UserProfile extends DBObject
+
+class URP_UserProfile extends UserRightsBaseClass
 {
 	public static function Init()
 	{
 		$aParams = array
 		(
 			"category" => "addon/userrights",
-			"name" => "user_profile",
+			"name" => "User to profile",
 			"description" => "user profiles",
 			"key_type" => "autoincrement",
 			"key_label" => "",
-			"name_attcode" => "",
+			"name_attcode" => "userid",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
 			"db_table" => "priv_urp_userprofile",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
+			"display_template" => "../business/templates/default.html",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", array("targetclass"=>"URP_Users", "jointype"=> "", "label"=>"User", "description"=>"user account", "allowed_values"=>null, "sql"=>"userid", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("userlogin", array("label"=>"Login", "description"=>"User's login", "allowed_values"=>null, "extkey_attcode"=> 'userid', "target_attcode"=>"login")));
 
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("profileid", array("targetclass"=>"URP_Profiles", "jointype"=> "", "label"=>"profile", "description"=>"usage profile", "allowed_values"=>null, "sql"=>"profileid", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("profileid", array("targetclass"=>"URP_Profiles", "jointype"=> "", "label"=>"Profile", "description"=>"usage profile", "allowed_values"=>null, "sql"=>"profileid", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("profile", array("label"=>"Profile", "description"=>"Profile name", "allowed_values"=>null, "extkey_attcode"=> 'profileid', "target_attcode"=>"name")));
+
+		MetaModel::Init_AddAttribute(new AttributeString("reason", array("label"=>"Reason", "description"=>"explain why this person may have this role", "allowed_values"=>null, "sql"=>"description", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 
 		//MetaModel::Init_InheritFilters();
 		MetaModel::Init_AddFilterFromAttribute("userid");
 		MetaModel::Init_AddFilterFromAttribute("profileid");
+
+		// Display lists
+		MetaModel::Init_SetZListItems('details', array('userid', 'profileid', 'reason')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('userid', 'profileid', 'reason')); // Attributes to be displayed for a list
+		// Search criteria
+		MetaModel::Init_SetZListItems('standard_search', array('userid', 'profileid')); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('advanced_search', array('userid', 'profileid')); // Criteria of the advanced search form
 	}
 }
 
-class URP_ProfileProjection extends DBObject
+
+class URP_ProfileProjection extends UserRightsBaseClass
 {
 	public static function Init()
 	{
@@ -236,19 +347,20 @@ class URP_ProfileProjection extends DBObject
 			"description" => "profile projections",
 			"key_type" => "autoincrement",
 			"key_label" => "",
-			"name_attcode" => "",
+			"name_attcode" => "profileid",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
 			"db_table" => "priv_urp_profileprojection",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
+			"display_template" => "../business/templates/default.html",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("dimensionid", array("targetclass"=>"URP_Dimensions", "jointype"=> "", "label"=>"Dimension", "description"=>"application dimension", "allowed_values"=>null, "sql"=>"dimensionid", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("dimension", array("label"=>"Dimension", "description"=>"application dimension", "allowed_values"=>null, "extkey_attcode"=> 'dimensionid', "target_attcode"=>"name")));
 
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("profileid", array("targetclass"=>"URP_Profiles", "jointype"=> "", "label"=>"profile", "description"=>"usage profile", "allowed_values"=>null, "sql"=>"profileid", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("profileid", array("targetclass"=>"URP_Profiles", "jointype"=> "", "label"=>"Profile", "description"=>"usage profile", "allowed_values"=>null, "sql"=>"profileid", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("profile", array("label"=>"Profile", "description"=>"Profile name", "allowed_values"=>null, "extkey_attcode"=> 'profileid', "target_attcode"=>"name")));
 
 		MetaModel::Init_AddAttribute(new AttributeString("value", array("label"=>"Value expression", "description"=>"OQL expression (using \$user) | constant | <any> | <user>+attribute code", "allowed_values"=>null, "sql"=>"value", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
@@ -257,6 +369,13 @@ class URP_ProfileProjection extends DBObject
 		//MetaModel::Init_InheritFilters();
 		MetaModel::Init_AddFilterFromAttribute("dimensionid");
 		MetaModel::Init_AddFilterFromAttribute("profileid");
+
+		// Display lists
+		MetaModel::Init_SetZListItems('details', array('dimensionid', 'profileid', 'value', 'attribute')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('dimensionid', 'profileid', 'value', 'attribute')); // Attributes to be displayed for a list
+		// Search criteria
+		MetaModel::Init_SetZListItems('standard_search', array('dimensionid', 'profileid')); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('advanced_search', array('dimensionid', 'profileid')); // Criteria of the advanced search form
 	}
 
 	public function ProjectUser(URP_Users $oUser)
@@ -296,7 +415,8 @@ class URP_ProfileProjection extends DBObject
 	}
 }
 
-class URP_ClassProjection extends DBObject
+
+class URP_ClassProjection extends UserRightsBaseClass
 {
 	public static function Init()
 	{
@@ -307,12 +427,13 @@ class URP_ClassProjection extends DBObject
 			"description" => "class projections",
 			"key_type" => "autoincrement",
 			"key_label" => "",
-			"name_attcode" => "",
+			"name_attcode" => "dimensionid",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
 			"db_table" => "priv_urp_classprojection",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
+			"display_template" => "../business/templates/default.html",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -328,6 +449,13 @@ class URP_ClassProjection extends DBObject
 		MetaModel::Init_AddFilterFromAttribute("dimensionid");
 		// #@# verifier
 		MetaModel::Init_AddFilterFromAttribute("class");
+
+		// Display lists
+		MetaModel::Init_SetZListItems('details', array('dimensionid', 'class', 'value', 'attribute')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('dimensionid', 'class', 'value', 'attribute')); // Attributes to be displayed for a list
+		// Search criteria
+		MetaModel::Init_SetZListItems('standard_search', array('dimensionid', 'class')); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('advanced_search', array('dimensionid', 'class')); // Criteria of the advanced search form
 	}
 
 	public function ProjectObject($oObject)
@@ -371,7 +499,8 @@ class URP_ClassProjection extends DBObject
 	}
 }
 
-class URP_ActionGrant extends DBObject
+
+class URP_ActionGrant extends UserRightsBaseClass
 {
 	public static function Init()
 	{
@@ -382,12 +511,13 @@ class URP_ActionGrant extends DBObject
 			"description" => "permissions on classes",
 			"key_type" => "autoincrement",
 			"key_label" => "",
-			"name_attcode" => "",
+			"name_attcode" => "profileid",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
 			"db_table" => "priv_urp_grant_actions",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
+			"display_template" => "../business/templates/default.html",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -395,10 +525,10 @@ class URP_ActionGrant extends DBObject
 		// Common to all grant classes (could be factorized by class inheritence, but this has to be benchmarked)
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("profileid", array("targetclass"=>"URP_Profiles", "jointype"=> "", "label"=>"Profile", "description"=>"usage profile", "allowed_values"=>null, "sql"=>"profileid", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("profile", array("label"=>"Profile", "description"=>"usage profile", "allowed_values"=>null, "extkey_attcode"=> 'profileid', "target_attcode"=>"name")));
-		MetaModel::Init_AddAttribute(new AttributeString("class", array("label"=>"class", "description"=>"class name", "allowed_values"=>null, "sql"=>"class", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("permission", array("label"=>"permission", "description"=>"allowed or not allowed?", "allowed_values"=>new ValueSetEnum('yes,no'), "sql"=>"permission", "default_value"=>"yes", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("class", array("label"=>"Class", "description"=>"class name", "allowed_values"=>null, "sql"=>"class", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("permission", array("label"=>"Permission", "description"=>"allowed or not allowed?", "allowed_values"=>new ValueSetEnum('yes,no'), "sql"=>"permission", "default_value"=>"yes", "is_null_allowed"=>false, "depends_on"=>array())));
 
-		MetaModel::Init_AddAttribute(new AttributeString("action", array("label"=>"action", "description"=>"operations to perform on the given class", "allowed_values"=>null, "sql"=>"action", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("action", array("label"=>"Action", "description"=>"operations to perform on the given class", "allowed_values"=>null, "sql"=>"action", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 
 		//MetaModel::Init_InheritFilters();
 		// Common to all grant classes (could be factorized by class inheritence, but this has to be benchmarked)
@@ -408,10 +538,18 @@ class URP_ActionGrant extends DBObject
 		MetaModel::Init_AddFilterFromAttribute("permission");
 
 		MetaModel::Init_AddFilterFromAttribute("action");
+
+		// Display lists
+		MetaModel::Init_SetZListItems('details', array('profileid', 'class', 'permission', 'action')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('profileid', 'class', 'permission', 'action')); // Attributes to be displayed for a list
+		// Search criteria
+		MetaModel::Init_SetZListItems('standard_search', array('profileid', 'class', 'permission', 'action')); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('advanced_search', array('profileid', 'class', 'permission', 'action')); // Criteria of the advanced search form
 	}
 }
 
-class URP_StimulusGrant extends DBObject
+
+class URP_StimulusGrant extends UserRightsBaseClass
 {
 	public static function Init()
 	{
@@ -422,12 +560,13 @@ class URP_StimulusGrant extends DBObject
 			"description" => "permissions on stimilus in the life cycle of the object",
 			"key_type" => "autoincrement",
 			"key_label" => "",
-			"name_attcode" => "",
+			"name_attcode" => "profileid",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
 			"db_table" => "priv_urp_grant_stimulus",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
+			"display_template" => "../business/templates/default.html",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -435,10 +574,10 @@ class URP_StimulusGrant extends DBObject
 		// Common to all grant classes (could be factorized by class inheritence, but this has to be benchmarked)
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("profileid", array("targetclass"=>"URP_Profiles", "jointype"=> "", "label"=>"Profile", "description"=>"usage profile", "allowed_values"=>null, "sql"=>"profileid", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("profile", array("label"=>"Profile", "description"=>"usage profile", "allowed_values"=>null, "extkey_attcode"=> 'profileid', "target_attcode"=>"name")));
-		MetaModel::Init_AddAttribute(new AttributeString("class", array("label"=>"class", "description"=>"class name", "allowed_values"=>null, "sql"=>"class", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("permission", array("label"=>"permission", "description"=>"allowed or not allowed?", "allowed_values"=>new ValueSetEnum('yes,no'), "sql"=>"permission", "default_value"=>"yes", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("class", array("label"=>"Class", "description"=>"class name", "allowed_values"=>null, "sql"=>"class", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("permission", array("label"=>"Permission", "description"=>"allowed or not allowed?", "allowed_values"=>new ValueSetEnum('yes,no'), "sql"=>"permission", "default_value"=>"yes", "is_null_allowed"=>false, "depends_on"=>array())));
 
-		MetaModel::Init_AddAttribute(new AttributeString("stimulus", array("label"=>"stimulus", "description"=>"stimulus code", "allowed_values"=>null, "sql"=>"action", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("stimulus", array("label"=>"Stimulus", "description"=>"stimulus code", "allowed_values"=>null, "sql"=>"action", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 
 		//MetaModel::Init_InheritFilters();
 		// Common to all grant classes (could be factorized by class inheritence, but this has to be benchmarked)
@@ -448,10 +587,18 @@ class URP_StimulusGrant extends DBObject
 		MetaModel::Init_AddFilterFromAttribute("permission");
 
 		MetaModel::Init_AddFilterFromAttribute("stimulus");
+
+		// Display lists
+		MetaModel::Init_SetZListItems('details', array('profileid', 'class', 'permission', 'stimulus')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('profileid', 'class', 'permission', 'stimulus')); // Attributes to be displayed for a list
+		// Search criteria
+		MetaModel::Init_SetZListItems('standard_search', array('profileid', 'class', 'permission', 'stimulus')); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('advanced_search', array('profileid', 'class', 'permission', 'stimulus')); // Criteria of the advanced search form
 	}
 }
 
-class URP_AttributeGrant extends DBObject
+
+class URP_AttributeGrant extends UserRightsBaseClass
 {
 	public static function Init()
 	{
@@ -462,22 +609,30 @@ class URP_AttributeGrant extends DBObject
 			"description" => "permissions at the attributes level",
 			"key_type" => "autoincrement",
 			"key_label" => "",
-			"name_attcode" => "",
+			"name_attcode" => "actiongrantid",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
 			"db_table" => "priv_urp_grant_attributes",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
+			"display_template" => "../business/templates/default.html",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
 
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("actiongrantid", array("targetclass"=>"URP_ActionGrant", "jointype"=> "", "label"=>"Action grant", "description"=>"action grant", "allowed_values"=>null, "sql"=>"actiongrantid", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("attcode", array("label"=>"attribute", "description"=>"attribute code", "allowed_values"=>null, "sql"=>"attcode", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("attcode", array("label"=>"Attribute", "description"=>"attribute code", "allowed_values"=>null, "sql"=>"attcode", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 
 		//MetaModel::Init_InheritFilters();
 		MetaModel::Init_AddFilterFromAttribute("actiongrantid");
 		MetaModel::Init_AddFilterFromAttribute("attcode");
+
+		// Display lists
+		MetaModel::Init_SetZListItems('details', array('actiongrantid', 'attcode')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('actiongrantid', 'attcode')); // Attributes to be displayed for a list
+		// Search criteria
+		MetaModel::Init_SetZListItems('standard_search', array('actiongrantid', 'attcode')); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('advanced_search', array('actiongrantid', 'attcode')); // Criteria of the advanced search form
 	}
 }
 
@@ -498,180 +653,66 @@ class UserRightsProfile extends UserRightsAddOnAPI
 	// Installation: create the very first user
 	public function CreateAdministrator($sAdminUser, $sAdminPwd)
 	{
+		$oOrg = new bizOrganization();
+		$oOrg->Set('name', 'My Company/Department');
+		$oOrg->Set('code', 'SOMECODE');
+		$oOrg->Set('status', 'implementation');
+		//$oOrg->Set('parent_id', xxx);
+		$iOrgId = $oOrg->DBInsertNoReload();
+
+		// Location : optional
+		//$oLocation = new bizLocation();
+		//$oLocation->Set('name', 'MyOffice');
+		//$oLocation->Set('status', 'implementation');
+		//$oLocation->Set('org_id', $iOrgId);
+		//$oLocation->Set('severity', 'high');
+		//$oLocation->Set('address', 'my building in my city');
+		//$oLocation->Set('country', 'my country');
+		//$oLocation->Set('parent_location_id', xxx);
+		//$iLocationId = $oLocation->DBInsertNoReload();
+
+		$oContact = new bizPerson();
+		$oContact->Set('name', 'My last name');
+		$oContact->Set('first_name', 'My first name');
+		$oContact->Set('status', 'production');
+		$oContact->Set('org_id', $iOrgId);
+		$oContact->Set('email', 'my.email@foo.org');
+		$oContact->Set('phone', '');
+		//$oContact->Set('location_id', $iLocationId);
+		$oContact->Set('employee_number', '');
+		$iContactId = $oContact->DBInsertNoReload();
+		
 		$oUser = new URP_Users();
 		$oUser->Set('login', $sAdminUser);
 		$oUser->Set('password', $sAdminPwd);
-		$oUser->Set('email', 'n/a');
-		$oUser->Set('firstname', 'administrator');
-		$oUser->Set('lastname', 'itop');
-		$oUser->Set('userid', 1); // let's mark it as #1 (for what purpose?)
+		$oUser->Set('userid', $iContactId);
 		$iUserId = $oUser->DBInsertNoReload();
 		
 		// Add this user to the very specific 'admin' profile
 		$oUserProfile = new URP_UserProfile();
 		$oUserProfile->Set('userid', $iUserId);
 		$oUserProfile->Set('profileid', ADMIN_PROFILE_ID);
+		$oUserProfile->Set('reason', 'By definition, the administrator must have the administrator profile');
 		$oUserProfile->DBInsertNoReload();
 		return true;
 	}
 
-	public function Setup()
+	public function IsAdministrator($iUserId)
 	{
-		// Dimensions/Profiles/Classes/Attributes/Stimuli could be added anytime
-		// This procedure will then update the matrix with expected default values
-		//
-
-		$oProfileSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_Profiles"));
-		while ($oProfile = $oProfileSet->Fetch())
+		if (in_array($iUserId, $this->m_aAdmins))
 		{
-			$this->SetupProfile($oProfile);
-		}
-
-		$oDimensionSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_Dimensions"));
-		while ($oDimension = $oDimensionSet->Fetch())
-		{
-			$this->SetupDimension($oDimension);
-		}
-		return true;
-	}
-
-	protected function SetupDimension($oDimension, $bNewDimension = false)
-	{
-		$iDimensionId = $oDimension->GetKey();
-
-		// Create projections, for any class where it applies
-		//
-		foreach(array('bizmodel', 'application', 'gui', 'core/cmdb') as $sCategory)
-		{
-			foreach (MetaModel::GetClasses($sCategory) as $sClass)
-			{
-				if ($bNewDimension)
-				{
-					$bAddCell = true;
-				}
-				else
-				{
-					$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_ClassProjection WHERE class = :class AND dimensionid = :dimension"), array(), array('class'=>$sClass, 'dimension'=>$iDimensionId));
-					$bAddCell = ($oSet->Count() < 1);
-				}
-				if ($bAddCell)
-				{
-					// Create a new entry
-					$oCProj = MetaModel::NewObject("URP_ClassProjection");
-					$oCProj->Set("dimensionid", $iDimensionId);
-					$oCProj->Set("class", $sClass);
-					$oCProj->Set("value", "true");
-					$iId = $oCProj->DBInsertNoReload();
-				}
-			}
-		}
-		// Create projections, for any existing profile
-		//
-		$oProfileSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_Profiles"));
-		while ($oProfile = $oProfileSet->Fetch())
-		{
-			$iProfileId = $oProfile->GetKey();
-			if ($bNewDimension)
-			{
-				$bAddCell = true;
-			}
-			else
-			{
-				$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_ProfileProjection WHERE dimensionid = :dimension AND profileid = :profile"), array(), array('dimension'=>$iDimensionId, 'profile'=>$iProfileId));
-				$bAddCell = ($oSet->Count() < 1);
-			}
-			if ($bAddCell)
-			{
-				// Create a new entry
-				$oDProj = MetaModel::NewObject("URP_ProfileProjection");
-				$oDProj->Set("dimensionid", $iDimensionId);
-				$oDProj->Set("profileid", $iProfileId);
-				$oDProj->Set("value", "true");
-				$iId = $oDProj->DBInsertNoReload();
-			}
-		}
-	}
-
-	protected function SetupProfile($oProfile, $bNewProfile = false)
-	{
-		$iProfileId = $oProfile->GetKey();
-
-		// Create grant records, for any class where it matters (the rest could be done later on)
-		//
-		foreach(array('bizmodel') as $sCategory)
-		{
-			foreach (MetaModel::GetClasses($sCategory) as $sClass)
-			{
-				foreach (self::$m_aActionCodes as $iActionCode => $sAction)
-				{
-					if ($bNewProfile)
-					{
-						$bAddCell = true;
-					}
-					else
-					{
-						$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_ActionGrant WHERE class = :class AND action = :action AND profileid = :profile"), array(), array('class'=>$sClass, 'action'=>$sAction, 'profile'=>$iProfileId));
-						$bAddCell = ($oSet->Count() < 1);
-					}
-					if ($bAddCell)
-					{
-						// Create a new entry
-						$oMyActionGrant = MetaModel::NewObject("URP_ActionGrant");
-						$oMyActionGrant->Set("profileid", $iProfileId);
-						$oMyActionGrant->Set("class", $sClass);
-						$oMyActionGrant->Set("action", $sAction);
-						$oMyActionGrant->Set("permission", "yes");
-						$iId = $oMyActionGrant->DBInsertNoReload();
-					}
-				}
-				foreach (MetaModel::EnumStimuli($sClass) as $sStimulusCode => $oStimulus)
-				{
-					if ($bNewProfile)
-					{
-						$bAddCell = true;
-					}
-					else
-					{
-						$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_StimulusGrant WHERE class = :class AND stimulus = :stimulus AND profileid = :profile"), array(), array('class'=>$sClass, 'stimulus'=>$sStimulusCode, 'profile'=>$iProfileId));
-						$bAddCell = ($oSet->Count() < 1);
-					}
-					if ($bAddCell)
-					{
-						// Create a new entry
-						$oMyStGrant = MetaModel::NewObject("URP_StimulusGrant");
-						$oMyStGrant->Set("profileid", $iProfileId);
-						$oMyStGrant->Set("class", $sClass);
-						$oMyStGrant->Set("stimulus", $sStimulusCode);
-						$oMyStGrant->Set("permission", "yes");
-						$iId = $oMyStGrant->DBInsertNoReload();
-					}
-				}
-			}
-		}
-		// Create the "My Bookmarks" menu item (parent_id = 0, rank = 6)
-		if ($bNewProfile)
-		{
-			$bAddMenu = true;
+			return true;
 		}
 		else
 		{
-			//$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT menuNode WHERE type = 'user' AND parent_id = 0 AND user_id = $iUserId"));
-			//$bAddMenu = ($oSet->Count() < 1);
+			return false;
 		}
-		$bAddMenu = false;
-		if ($bAddMenu)
-		{
-			$oMenu = MetaModel::NewObject('menuNode');
-			$oMenu->Set('type', 'user');
-			$oMenu->Set('parent_id', 0);	// It's a toplevel entry
-			$oMenu->Set('rank', 6);			// Located just above the Admin Tools section (=7)
-			$oMenu->Set('name', 'My Bookmarks');
-			$oMenu->Set('label', 'My Favorite Items');
-			$oMenu->Set('hyperlink', 'UI.php');
-			$oMenu->Set('template', '<p></p><p></p><p style="text-align:center; font-family:Georgia, Times, serif; font-size:32px;">My bookmarks</p><p style="text-align:center; font-family:Georgia, Times, serif; font-size:14px;"><i>This section contains my most favorite search results</i></p>');
-			$oMenu->Set('user_id', $iUserId);
-			$oMenu->DBInsert();
-		}
+	}
+
+	public function Setup()
+	{
+		SetupITILProfiles::DoCreateProfiles();
+		return true;
 	}
 
 	public function Init()
@@ -689,6 +730,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 	protected $m_aAdmins = array(); // id of users being linked to the profile #ADMIN_PROFILE_ID
 
 	protected $m_aClassActionGrants = array(); // profile, class, action -> permission
+	protected $m_aClassStimulusGrants = array(); // profile, class, stimulus -> permission
 	protected $m_aObjectActionGrants = array(); // userid, class, id, action -> permission, list of attributes
 
 	public function CacheData()
@@ -787,19 +829,33 @@ exit;
 		return $oNullFilter;
 	}
 
-	protected function GetClassActionGrant($iProfile, $sClass, $sAction)
+	// This verb has been made public to allow the development of an accurate feedback for the current configuration
+	public function GetClassActionGrant($iProfile, $sClass, $sAction)
 	{
-		$aTest = @$this->m_aClassActionGrants[$iProfile][$sClass][$sAction];
-		if (isset($aTest)) return $aTest;
+		if (isset($this->m_aClassActionGrants[$iProfile][$sClass][$sAction]))
+		{
+			return $this->m_aClassActionGrants[$iProfile][$sClass][$sAction];
+		}
 
 		// Get the permission for this profile/class/action
 		$oSearch = DBObjectSearch::FromOQL("SELECT URP_ActionGrant WHERE class = :class AND action = :action AND profileid = :profile AND permission = 'yes'");
 		$oSet = new DBObjectSet($oSearch, array(), array('class'=>$sClass, 'action'=>$sAction, 'profile'=>$iProfile));
-		if ($oSet->Count() < 1)
+		if ($oSet->Count() >= 1)
 		{
-			return null;
+			$oGrantRecord = $oSet->Fetch();
 		}
-		$oGrantRecord = $oSet->Fetch();
+		else
+		{
+			$sParentClass = MetaModel::GetParentPersistentClass($sClass);
+			if (empty($sParentClass))
+			{
+				$oGrantRecord = null;
+			}
+			else
+			{
+				$oGrantRecord = $this->GetClassActionGrant($iProfile, $sParentClass, $sAction);
+			}
+		}
 
 		$this->m_aClassActionGrants[$iProfile][$sClass][$sAction] = $oGrantRecord;
 		return $oGrantRecord;
@@ -854,8 +910,7 @@ exit;
 	
 	public function IsActionAllowed($iUserId, $sClass, $iActionCode, dbObjectSet $oInstances)
 	{
-		// super admin rights
-		if (in_array($iUserId, $this->m_aAdmins)) return true;
+		if ($this->IsAdministrator($iUserId)) return true;
 
 		$oUser = $this->m_aUsers[$iUserId];
 
@@ -892,8 +947,7 @@ exit;
 
 	public function IsActionAllowedOnAttribute($iUserId, $sClass, $sAttCode, $iActionCode, dbObjectSet $oInstances)
 	{
-		// super admin rights
-		if (in_array($iUserId, $this->m_aAdmins)) return true;
+		if ($this->IsAdministrator($iUserId)) return true;
 
 		$oUser = $this->m_aUsers[$iUserId];
 
@@ -936,10 +990,33 @@ exit;
 		}
 	}
 
+	// This verb has been made public to allow the development of an accurate feedback for the current configuration
+	public function GetClassStimulusGrant($iProfile, $sClass, $sStimulusCode)
+	{
+		if (isset($this->m_aClassStimulusGrants[$iProfile][$sClass][$sStimulusCode]))
+		{
+			return $this->m_aClassStimulusGrants[$iProfile][$sClass][$sStimulusCode];
+		}
+
+		// Get the permission for this profile/class/stimulus
+		$oSearch = DBObjectSearch::FromOQL("SELECT URP_StimulusGrant WHERE class = :class AND stimulus = :stimulus AND profileid = :profile AND permission = 'yes'");
+		$oSet = new DBObjectSet($oSearch, array(), array('class'=>$sClass, 'stimulus'=>$sStimulusCode, 'profile'=>$iProfile));
+		if ($oSet->Count() >= 1)
+		{
+			$oGrantRecord = $oSet->Fetch();
+		}
+		else
+		{
+			$oGrantRecord = null;
+		}
+
+		$this->m_aClassStimulusGrants[$iProfile][$sClass][$sStimulusCode] = $oGrantRecord;
+		return $oGrantRecord;
+	}
+
 	public function IsStimulusAllowed($iUserId, $sClass, $sStimulusCode, dbObjectSet $oInstances)
 	{
-		// super admin rights
-		if (in_array($iUserId, $this->m_aAdmins)) return true;
+		if ($this->IsAdministrator($iUserId)) return true;
 
 		$oUser = $this->m_aUsers[$iUserId];
 
@@ -1066,6 +1143,274 @@ exit;
 		}
 		$this->m_aMatchingProfiles[$iUser][$sClass][$iObject] = $aRes;
 		return $aRes; 
+	}
+}
+
+//
+// Here is the code that will create some profiles into our user management model, given an ITIL representation of the user profiles
+//
+class SetupITILProfiles
+{
+	/*
+	Later, maybe ?
+
+	protected static $m_aDimensions = array(
+		'organization' => array(
+			'description' => '',
+			'type' => 'bizOrganization',
+		),
+		'site' => array(
+			'description' => '',
+			'type' => '',
+		),
+	);
+	*/
+	protected static $m_aActions = array(
+		UR_ACTION_READ => 'Read',
+		UR_ACTION_MODIFY => 'Modify',
+		UR_ACTION_DELETE => 'Delete',
+		UR_ACTION_BULK_READ => 'Bulk Read',
+		UR_ACTION_BULK_MODIFY => 'Bulk Modify',
+		UR_ACTION_BULK_DELETE => 'Bulk Delete',
+	);
+
+	// It is possible to specify the same class in several modules
+	// 
+	protected static $m_aModules = array(
+		'General' => array(
+			'bizOrganization',
+		),
+		'Documentation' => array(
+			'bizDocVersion',
+			'lnkDocumentRealObject',
+			'lnkDocumentContract',
+			'lnkDocumentError',
+		),
+		'Configuration' => array(
+			'logRealObject',
+			'lnkContactRealObject',
+			'lnkInterfaces',
+			'ClientServerLinks',
+			'lnkInfraGrouping',
+		),
+		'Incident' => array(
+			'bizIncidentTicket',
+			'lnkRelatedTicket',
+			'lnkInfraTicket',
+			'lnkContactTicket',
+		),
+		'Problem' => array(
+			'bizKnownError',
+			'lnkInfraError',
+			'lnkDocumentError',
+		),
+		'Change' => array(
+			'bizChangeTicket',
+			'lnkInfraChangeTicket',
+			'lnkContactChange',
+		),
+		'Service' => array(
+			'bizContract',
+			'lnkInfraContract',
+			'lnkContactContract',
+			'lnkDocumentContract',
+		),
+	);
+	
+	protected static $m_aProfiles = array(
+		'Configuration Manager' => array(
+			'description' => 'Person in charge of the documentation of the managed CIs',
+			'write_modules' => 'Documentation,Configuration',
+			'stimuli' => array(
+				'bizServer' => 'any',
+				//'bizServer' => 'ev_store,ev_ship,ev_plug,ev_configuration_finished,ev_val_failed,ev_mtp,ev_start_change,ev_end_change,ev_decomission,ev_obsolete,ev_recycle',
+				'bizContract' => 'none',
+				'bizIncidentTicket' => 'none',
+				'bizChangeTicket' => 'none',
+			),
+		),
+	/*	'Requestor pb granularite actions (create/delete)' => array(
+			'description' => 'Person notifying an incident',
+			'write_modules' => 'Incident',
+			'stimuli' => array(
+				'bizServer' => 'none',
+				'bizContract' => 'none',
+				'bizIncidentTicket' => 'none',
+				'bizChangeTicket' => 'none',
+			),
+		),
+	*/
+		'Service Desk Agent' => array(
+			'description' => 'Person in charge of creating incident reports',
+			'write_modules' => 'Documentation,Incident',
+			'stimuli' => array(
+				'bizServer' => 'none',
+				'bizContract' => 'none',
+				'bizIncidentTicket' => 'ev_assign',
+				'bizChangeTicket' => 'none',
+			),
+		),
+		'Support Agent' => array(
+			'description' => 'Person analyzing and solving the current incidents or problems',
+			'write_modules' => 'Documentation,Incident,Problem',
+			'stimuli' => array(
+				'bizIncidentTicket' => 'any',
+				//'bizIncidentTicket' => 'ev_assign,ev_reassign,ev_start_working,ev_close',
+			),
+		),
+		'Change Implementor' => array(
+			'description' => 'Person executing the changes',
+			'write_modules' => 'Documentation,Configuration,Change',
+			'stimuli' => array(
+				'bizServer' => 'none',
+				'bizContract' => 'none',
+				'bizIncidentTicket' => 'none',
+				'bizChangeTicket' => 'ev_plan,ev_replan,ev_implement,ev_monitor',
+			),
+		),
+		'Change Supervisor' => array(
+			'description' => 'Person responsible for the overall change execution',
+			'write_modules' => 'Documentation,Change',
+			'stimuli' => array(
+				'bizServer' => 'none',
+				'bizContract' => 'none',
+				'bizIncidentTicket' => 'none',
+				'bizChangeTicket' => 'ev_validate,ev_reject,ev_reopen,ev_finish',
+			),
+		),
+		'Change Approver' => array(
+			'description' => 'Person who could be impacted by some changes',
+			'write_modules' => 'Documentation,Change',
+			'stimuli' => array(
+				'bizServer' => 'none',
+				'bizContract' => 'none',
+				'bizIncidentTicket' => 'none',
+				'bizChangeTicket' => 'ev_approve,ev_notapprove',
+			),
+		),
+		'Service Manager' => array(
+			'description' => 'Person responsible for the service delivered to the [internal] customer',
+			'write_modules' => 'Documentation,Service',
+			'stimuli' => array(
+				'bizServer' => 'none',
+				'bizContract' => 'any',
+				//'bizContract' => 'ev_freeze_version,ev_sign,ev_begin,ev_notice,ev_terminate,ev_elapsed',
+				'bizIncidentTicket' => 'none',
+				'bizChangeTicket' => 'none',
+			),
+		),
+	);
+	
+	
+	protected static function DoCreateProfileProjection($iProfile, $iDimension)
+	{
+		$oNewObj = MetaModel::NewObject("URP_ProfileProjection");
+		$oNewObj->Set('profileid', $iProfile);
+		$oNewObj->Set('dimensionid', $iDimension);
+		$oNewObj->Set('value', '<any>');
+		$oNewObj->Set('attribute', '');
+		$iId = $oNewObj->DBInsertNoReload();
+		return $iId;
+	}
+	
+	
+	protected static function DoCreateActionGrant($iProfile, $iAction, $sClass)
+	{
+		$oNewObj = MetaModel::NewObject("URP_ActionGrant");
+		$oNewObj->Set('profileid', $iProfile);
+		$oNewObj->Set('permission', true);
+		$oNewObj->Set('class', $sClass);
+		$oNewObj->Set('action', self::$m_aActions[$iAction]);
+		$iId = $oNewObj->DBInsertNoReload();
+		return $iId;
+	}
+	
+	protected static function DoCreateStimulusGrant($iProfile, $sStimulusCode, $sClass)
+	{
+		$oNewObj = MetaModel::NewObject("URP_StimulusGrant");
+		$oNewObj->Set('profileid', $iProfile);
+		$oNewObj->Set('permission', true);
+		$oNewObj->Set('class', $sClass);
+		$oNewObj->Set('stimulus', $sStimulusCode);
+		$iId = $oNewObj->DBInsertNoReload();
+		return $iId;
+	}
+	
+	protected static function DoCreateOneProfile($sName, $aProfileData)
+	{
+		$sDescription = $aProfileData['description'];
+		$aWriteModules = explode(',', $aProfileData['write_modules']);
+		$aStimuli = $aProfileData['stimuli'];
+		
+		$oNewObj = MetaModel::NewObject("URP_Profiles");
+		$oNewObj->Set('name', $sName);
+		$oNewObj->Set('description', $sDescription);
+		$iProfile = $oNewObj->DBInsertNoReload();
+	
+		// Project in every dimension
+		//
+		$oDimensionSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_Dimensions"));
+		while ($oDimension = $oDimensionSet->Fetch())
+		{
+			$iDimension = $oDimension->GetKey();
+			self::DoCreateProfileProjection($iProfile, $iDimension);
+		}
+	
+		// Grant read rights for everything
+		//
+		foreach (MetaModel::GetClasses('bizmodel') as $sClass)
+		{
+			self::DoCreateActionGrant($iProfile, UR_ACTION_READ, $sClass);
+			self::DoCreateActionGrant($iProfile, UR_ACTION_BULK_READ, $sClass);
+		}
+	
+		// Grant write for given modules
+		// Start by compiling the information, because some modules may overlap
+		$aWriteableClasses = array();
+		foreach ($aWriteModules as $sModule)
+		{
+//			$oPage->p('Granting write access for the module"'.$sModule.'" - '.count(self::$m_aModules[$sModule]).' classes');
+			foreach (self::$m_aModules[$sModule] as $sClass)
+			{
+				$aWriteableClasses[] = $sClass;
+			}
+		}
+		foreach ($aWriteableClasses as $sClass)
+		{
+			self::DoCreateActionGrant($iProfile, UR_ACTION_MODIFY, $sClass);
+			self::DoCreateActionGrant($iProfile, UR_ACTION_DELETE, $sClass);
+			self::DoCreateActionGrant($iProfile, UR_ACTION_BULK_MODIFY, $sClass);
+			self::DoCreateActionGrant($iProfile, UR_ACTION_BULK_DELETE, $sClass);
+		}
+		
+		// Grant stimuli for given classes
+		foreach ($aStimuli as $sClass => $sAllowedStimuli)
+		{
+			if ($sAllowedStimuli == 'any')
+			{
+				$aAllowedStimuli = array_keys(MetaModel::EnumStimuli($sClass));
+			}
+			elseif ($sAllowedStimuli == 'none')
+			{
+				$aAllowedStimuli = array();
+			}
+			else
+			{
+				$aAllowedStimuli = explode(',', $sAllowedStimuli);
+			}
+			foreach ($aAllowedStimuli as $sStimulusCode)
+			{
+				self::DoCreateStimulusGrant($iProfile, $sStimulusCode, $sClass);
+			}
+		}
+	}
+	
+	public static function DoCreateProfiles()
+	{
+		foreach(self::$m_aProfiles as $sName => $aProfileData)
+		{
+			self::DoCreateOneProfile($sName, $aProfileData);
+		}
 	}
 }
 

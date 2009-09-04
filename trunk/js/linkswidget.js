@@ -29,7 +29,7 @@ function LinksWidget(id, sLinkedClass, sExtKeyToMe, sExtKeyToRemote, aAttributes
 		{
 			sLinks = JSON.stringify(this.aLinks);
 			$('#'+this.id).val(sLinks);
-			$('#'+this.id+'_values').load('ajax.render.php?operation=ui.linkswidget.linkedset&sclass='+this.sLinkedClass+'&sextkeytome='+this.sExtKeyToMe,
+			$('#'+this.id+'_values').load('ajax.render.php?operation=ui.linkswidget.linkedset&sclass='+this.sLinkedClass+'&sextkeytome='+this.sExtKeyToMe+'&sextkeytoremote='+this.sExtKeyToRemote+'&myid='+this.id,
 			{'sset' : sLinks});		
 		}
 	}

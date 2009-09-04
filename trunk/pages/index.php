@@ -87,7 +87,7 @@ function DisplayDetails(web_page $oPage, $sClassName, $sKey)
 	global $oContext;
     //$oObj = MetaModel::GetObject($sClassName, $sKey);
     $oObj = $oContext->GetObject($sClassName, $sKey);
-    $oPage->p("Details of ".get_class($oObj)." - $sKey");
+    $oPage->p("Details of ".MetaModel::GetName($sClassName)." - $sKey");
 
 	$oObj->DisplayDetails($oPage);
 	
@@ -140,7 +140,7 @@ function DisplayChangesLog(web_page $oPage, $sClassName, $sKey)
 	global $oContext;
     //$oObj = MetaModel::GetObject($sClassName, $sKey);
     $oObj = $oContext->GetObject($sClassName, $sKey);
-    $oPage->p("Changes log for ".get_class($oObj)." - $sKey");
+    $oPage->p("Changes log for ".MetaModel::GetName($sClassName)." - $sKey");
 
 	$oObj->DisplayChangesLog($oPage);
 	
@@ -219,7 +219,7 @@ function DisplayEditForm(web_page $oPage, $sClassName, $sKey)
     	$oPage->p("You are not allowed to edit this object.");
 		return;
 	}
-    $oPage->p("Edition of ".get_class($oObj)." - $sKey\n");
+    $oPage->p("Edition of ".MetaModel::GetName($sClassName)." - $sKey\n");
 	
 	$aDetails = array();
     $oPage->add("<form method=\"post\">\n");
@@ -332,7 +332,7 @@ function UpdateObject(web_page $oPage, $sClassName, $sKey, $aAttributes)
 		$iChangeId = $oMyChange->DBInsert();
 		$oObj->DBUpdateTracked($oMyChange);
 
-		$oPage->p(get_class($oObj)." updated\n");
+		$oPage->p(MetaModel::GetName($sClassName)." updated\n");
 	}
 	else
 	{
@@ -342,13 +342,14 @@ function UpdateObject(web_page $oPage, $sClassName, $sKey, $aAttributes)
 	// By Rom
 	// $oObj->DisplayDetails($oPage);
 	// replaced by...	
-	DisplayDetails($oPage, get_class($oObj), $oObj->GetKey());
+	DisplayDetails($oPage, $sClassName, $sKey);
 	$oPage->p("<a href=\"\">Return to main page</a>");
 }
 
 function DeleteObject(web_page $oPage, $sClassName, $sKey)
 {
 	global $oContext;
+	$sClassLabel = MetaModel::GetName($sClassName);
     //$oObj = MetaModel::GetObject($sClassName, $sKey);
     $oObj = $oContext->GetObject($sClassName, $sKey);
 	if ($oObj == null)
@@ -356,7 +357,7 @@ function DeleteObject(web_page $oPage, $sClassName, $sKey)
     	$oPage->p("You are not allowed to delete this object.");
 		return;
 	}
-    $oPage->p("Deletion of $sClassName - $sKey");
+    $oPage->p("Deletion of $sClassLabel - $sKey");
 
 	if ($oObj->CheckToDelete())
 	{
@@ -368,13 +369,13 @@ function DeleteObject(web_page $oPage, $sClassName, $sKey)
 		$iChangeId = $oMyChange->DBInsert();
 		$oObj->DBDeleteTracked($oMyChange);
 
-		$oPage->p("$sClassName deleted\n");
+		$oPage->p("$sClassLabel deleted\n");
 	}
 	else
 	{
 		$oPage->p("<strong>Error: object can not be deleted!</strong>\n");
 		// By Rom
-		DisplayDetails($oPage, get_class($oObj), $oObj->GetKey());
+		DisplayDetails($oPage, $sClassName, $sKey);
 	}
 	$oPage->p("<a href=\"\">Return to main page</a>");
 }
@@ -382,7 +383,8 @@ function DeleteObject(web_page $oPage, $sClassName, $sKey)
 function CreateObject(web_page $oPage, $sClassName, $aAttributes)
 {
     $oObj = MetaModel::NewObject($sClassName);
-    $oPage->p("Creation of ".get_class($oObj)." object.");
+    $sClassLabel = MetaModel::GetName(get_class($oObj));
+    $oPage->p("Creation of $sClassLabel object.");
 
 	foreach(MetaModel::ListAttributeDefs(get_class($oObj)) as $sAttCode=>$oAttDef)
 	{
@@ -401,7 +403,7 @@ function CreateObject(web_page $oPage, $sClassName, $aAttributes)
 		$iChangeId = $oMyChange->DBInsert();
 		$oObj->DBInsertTracked($oMyChange);
 
-		$oPage->p(get_class($oObj)." created\n");
+		$oPage->p($sClassLabel." created\n");
 
 		// By Rom
 		// $oObj->DisplayDetails($oPage);
@@ -419,6 +421,7 @@ function CreateObject(web_page $oPage, $sClassName, $aAttributes)
 function AddLinks($oPage, $sClassName, $sKey, $sLinkClass, $sExtKeyToMe, $sExtKeyToPartner, $sFilter)
 {
 	global $oContext;
+	$sClassLabel = MetaModel::GetName($sClassName);
     //$oObj = MetaModel::GetObject($sClassName, $sKey);
     $oObj = $oContext->GetObject($sClassName, $sKey);
 	if ($oObj == null)
@@ -426,7 +429,7 @@ function AddLinks($oPage, $sClassName, $sKey, $sLinkClass, $sExtKeyToMe, $sExtKe
     	$oPage->p("You are not allowed to modify (create links on) this object.");
 		return;
 	}
-    $oPage->p("Creating links for $sClassName - $sKey");
+    $oPage->p("Creating links for $sClassLabel - $sKey");
 
 	$oFilter = CMDBSearchFilter::unserialize($sFilter);
 	$oPage->p("Linking to ".$oFilter->__DescribeHTML()); 
@@ -447,7 +450,7 @@ function AddLinks($oPage, $sClassName, $sKey, $sLinkClass, $sExtKeyToMe, $sExtKe
 				$iChangeId = $oMyChange->DBInsert();
 				$oNewLink->DBInsertTracked($oMyChange);
 		
-				$oPage->p(get_class($oNewLink)." created\n");
+				$oPage->p(MetaModel::GetName($sLinkClass)." created\n");
 			}
 			else
 			{
@@ -595,19 +598,21 @@ switch($operation)
 		$oPage->add("</ul>\n");
 		foreach( $aTopLevelClasses as $sClassName)
 		{
+			$sClassLabel = MetaModel::GetName($sClassName);
 			$oPage->add("<div id=\"tab_$sClassName\">");
 			if (count(MetaModel::GetSubclasses($sClassName)) > 0)
 			{
 				$sActiveSubclass = ReadParam('subclassname', '');
 				foreach(MetaModel::GetSubclasses($sClassName) as $sSubclassName)
 				{
+					$sSubclassLabel = MetaModel::GetName($sSubclassName);
 					//$oSearchFilter = new CMDBSearchFilter($sSubclassName);
 					$oSearchFilter = $oContext->NewFilter($sSubclassName);
 					$oSearchFilter ->AddCondition('org_id', $sCurrentOrganization, '=');
 
 					$oPage->add("<div style=\"border:1px solid #97a5b0; margin-top:0.5em;\">\n");
 					$oPage->add("<div style=\"padding:0.25em;background-color:#f0f0f0\">\n");
-					$oPage->p("<strong>$sSubclassName</strong> - ".MetaModel::GetClassDescription($sSubclassName));
+					$oPage->p("<strong>$sSubclassLabel</strong> - ".MetaModel::GetClassDescription($sSubclassName));
 					$oPage->add("<form method=\"get\">\n");
 					$oPage->add("<input type=\"hidden\" name=\"classname\" value=\"$sClassName\">\n");
 					$oPage->add("<input type=\"hidden\" name=\"subclassname\" value=\"$sSubclassName\">\n");
@@ -634,7 +639,7 @@ switch($operation)
 					$iMatchesCount = $oSet->Count();
 					if ($iMatchesCount == 0)
 					{
-						$oPage->p("No $sSubclassName matches these criteria.");
+						$oPage->p("No $sSubclassLabel matches these criteria.");
 						$oPage->small_p("(".$oSearchFilter->__DescribeHTML().")");
 					}
 					else
@@ -642,7 +647,7 @@ switch($operation)
 						$oPage->p("$iMatchesCount item(s) found.");
 						cmdbAbstractObject::DisplaySet($oPage, $oSet);
 					}
-					$oPage->p("<a href=\"?operation=new&class=$sSubclassName\">Create a new $sSubclassName</a>\n");
+					$oPage->p("<a href=\"?operation=new&class=$sSubclassName\">Create a new $sSubclassLabel</a>\n");
 					$oPage->add("</div>\n");
 				}
 			}
@@ -655,7 +660,7 @@ switch($operation)
 
 				$oPage->add("<div style=\"border:1px solid #97a5b0; margin-top:0.5em;\">\n");
 				$oPage->add("<div style=\"padding:0.25em;background-color:#f0f0f0\">\n");
-				$oPage->p("<strong>$sClassName</strong> - ".MetaModel::GetClassDescription($sClassName));
+				$oPage->p("<strong>$sClassLabel</strong> - ".MetaModel::GetClassDescription($sClassName));
 				$oPage->add("<form method=\"get\">\n");
 				$oPage->add("<input type=\"hidden\" name=\"classname\" value=\"$sClassName\">\n");
 				$oPage->add("<input type=\"hidden\" name=\"org\" value=\"$sCurrentOrganization\">\n");
@@ -681,7 +686,7 @@ switch($operation)
 				$iMatchesCount = $oSet->Count();
 				if ($iMatchesCount == 0)
 				{
-					$oPage->p("No $sClassName matches these criteria.");
+					$oPage->p("No $sClassLabel matches these criteria.");
 					$oPage->small_p("(".$oSearchFilter->__DescribeHTML().")");
 				}
 				else
@@ -690,7 +695,7 @@ switch($operation)
 					cmdbAbstractObject::DisplaySet($oPage, $oSet);
 					$oPage->small_p("(".$oSearchFilter->__DescribeHTML().")");
 				}
-				$oPage->p("<a href=\"?operation=new&ctx=$iContext&class=$sClassName\">Create a new $sClassName</a>\n");
+				$oPage->p("<a href=\"?operation=new&ctx=$iContext&class=$sClassName\">Create a new $sClassLabel</a>\n");
 				$oPage->add("</div>\n");
 				$oPage->add("</div>\n");
 			}

@@ -178,6 +178,11 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 		return true;
 	}
 
+	public function IsAdministrator($iUserId)
+	{
+		return ($iUserId == 1);
+	}
+
 	public function Setup()
 	{
 		// Users must be added manually

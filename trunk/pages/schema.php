@@ -333,8 +333,8 @@ function DisplayClassDetails($oPage, $sClass)
 		{
 		   $sValue = $oAttDef->GetDescription();
 		}
-        $sType = $oAttDef->GetType().' ('.$oAttDef->GetTypeDesc().')';
-        $sOrigin = MetaModel::GetAttributeOrigin($sClass, $sAttCode);
+		$sType = $oAttDef->GetType().' ('.$oAttDef->GetTypeDesc().')';
+		$sOrigin = MetaModel::GetAttributeOrigin($sClass, $sAttCode);
 		$sAllowedValues = "";
 		$oAllowedValuesDef = $oAttDef->GetValuesDef();
 		$sMoreInfo = "";

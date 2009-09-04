@@ -376,7 +376,7 @@ function DisplayStep4(setup_web_page $oP, Config $oConfig, $sAdminUser, $sAdminP
 	$oP->add("<h2>Creation of the administrator account</h2>\n");
 
 	$oP->add("<form method=\"post\"\">\n");
-	if (CreateAdminAccount($oP, $oConfig, $sAdminUser, $sAdminPwd))
+	if (CreateAdminAccount($oP, $oConfig, $sAdminUser, $sAdminPwd) && UserRights::Setup())
 	{
 		$oP->add("<h2>Step 4: Loading of sample data</h2>\n");
 		$oP->p("<fieldset><legend> Do you want to load sample data into the database ? </legend>\n");

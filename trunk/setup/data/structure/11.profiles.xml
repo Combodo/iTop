@@ -4,8 +4,4 @@
 <name>Administrator</name>
 <description>Has the rights on everything (ignores the grant records)</description>
 </URP_Profiles>
-<URP_Profiles id="2">
-<name>Delivery Manager France</name>
-<description>Persons in charge of the operations for French customers</description>
-</URP_Profiles>
 </Set>

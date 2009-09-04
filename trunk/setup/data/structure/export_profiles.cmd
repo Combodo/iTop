@@ -1,4 +1,6 @@
-SET WEBROOT=http://localhost:81
+SET WEBROOT=http://localhost:81/trunk
+SET EXPORT="%WEBROOT%/webservices/export.php"
+
 SET USER=admin
 SET PWD=admin
 
@@ -11,3 +13,4 @@ wget --output-document=13.profileprojection.xml --post-data="auth_user=%USER%&au
 wget --output-document=14.actiongrant.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT URP_ActionGrant&format=xml"
 wget --output-document=15.attributegrant.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT URP_AttributeGrant&format=xml"
 wget --output-document=16.stimulusgrant.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT URP_StimulusGrant&format=xml"
+pause

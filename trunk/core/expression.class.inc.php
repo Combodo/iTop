@@ -11,6 +11,11 @@
  * @since       1.0
  * @version     1.1.1.1 $
  */
+
+class MissingQueryArgument extends CoreException
+{
+}
+
 abstract class Expression
 {
 	// recursive translation of identifiers
@@ -301,7 +306,7 @@ class VariableExpression extends UnaryExpression
 	// recursive rendering
 	public function Render(&$aArgs = null, $bRetrofitParams = false)
 	{
-		if (is_null($aArgs) || $bRetrofitParams)
+		if (is_null($aArgs))
 		{
 			return ':'.$this->m_sName;
 		}
@@ -309,9 +314,14 @@ class VariableExpression extends UnaryExpression
 		{
 			return CMDBSource::Quote($aArgs[$this->m_sName]);
 		}
+		elseif ($bRetrofitParams)
+		{
+			//$aArgs[$this->m_sName] = null;
+			return ':'.$this->m_sName;
+		}
 		else
 		{
-			throw new CoreException('Missing query argument', array('expecting'=>$this->m_sName, 'available'=>$aArgs));
+			throw new MissingQueryArgument('Missing query argument', array('expecting'=>$this->m_sName, 'available'=>$aArgs));
 		}
 	}
 }

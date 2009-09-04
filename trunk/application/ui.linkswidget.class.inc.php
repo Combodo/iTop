@@ -21,6 +21,7 @@ class UILinksWidget
 	{
 		$sHTMLValue = '';
 		$sTargetClass = self::GetTargetClass($this->m_sClass, $this->m_sAttCode);
+		// #@# todo - add context information, otherwise any value will be authorized for external keys
 		$aAllowedValues = MetaModel::GetAllowedValues_att($this->m_sClass, $this->m_sAttCode, array(), '');
 		$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $this->m_sAttCode);
 		$sExtKeyToRemote = $oAttDef->GetExtKeyToRemote();
@@ -120,6 +121,7 @@ class UILinksWidget
 	 */	 	 	  	 	 	 	
 	static public function Autocomplete(web_page $oPage, UserContext $oContext, $sClass, $sAttCode, $sName, $iMaxCount)
 	{
+		// #@# todo - add context information, otherwise any value will be authorized for external keys
 		$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, array() /* $aArgs */, $sName);
 		if ($aAllowedValues != null)
 		{
@@ -154,12 +156,13 @@ class UILinksWidget
 	 * This static function is called by the Ajax Page display a set of objects being linked
 	 * to the object being created	 
 	 * @param $oPage web_page The ajax page used for the put^put (sent back to the browser
-	 * @param $sClass string The name of the class 'linking class' which is the class of the objects to display
-	 * @param $sAttCode string The name of the attribute is the main object being created
+	 * @param $sClass string The name of the 'linking class' which is the class of the objects to display
 	 * @param $sSet JSON serialized set of objects
+	 * @param $sExtKeyToMe Name of the attribute in sClass that is pointing to a given object
+	 * @param $iObjectId The id of the object $sExtKeyToMe is pointing to
 	 * @return void
 	 */	 	 	  	 	 	 	
-	static public function RenderSet($oPage, $sClass, $sJSONSet, $sExtKeyToMe)
+	static public function RenderSet($oPage, $sClass, $sJSONSet, $sExtKeyToMe, $sExtKeyToRemote, $iObjectId)
 	{
 		$aSet = json_decode($sJSONSet, true); // true means hash array instead of object
 		$oSet = CMDBObjectSet::FromScratch($sClass);
@@ -182,7 +185,7 @@ class UILinksWidget
 			}
 			$oSet->AddObject($oObj);
 		}
-		cmdbAbstractObject::DisplaySet($oPage, $oSet, $sExtKeyToMe);
+		cmdbAbstractObject::DisplaySet($oPage, $oSet, $sExtKeyToMe, true /*menu*/, false /*select*/, $iObjectId, $sExtKeyToRemote);
 	}
 
 	

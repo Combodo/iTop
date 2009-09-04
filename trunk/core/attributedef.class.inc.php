@@ -178,6 +178,13 @@ abstract class AttributeDefinition
 	{
 		return str_replace($sSeparator, $sSepEscape, $sValue);
 	}
+
+	public function GetAllowedValues($aArgs = array(), $sBeginsWith = '')
+	{
+		$oValSetDef = $this->GetValuesDef();
+		if (!$oValSetDef) return null;
+		return $oValSetDef->GetValues($aArgs, $sBeginsWith);
+	}
 }
 
 /**
@@ -490,13 +497,39 @@ class AttributeString extends AttributeDBField
 	}
 	public function RealValueToSQLValue($value)
 	{
-		assert(is_string($value));
+		if (!is_string($value))
+		{
+			throw new CoreWarning('Expected the attribute value to be a string', array('found_type' => gettype($value), 'value' => $value, 'class' => $this->GetCode(), 'attribute' => $this->GetHostClass()));
+		}
 		return $value;
 	}
 	public function SQLValueToRealValue($value)
 	{
 		return $value;
 	}
+}
+
+
+/**
+ * Map a varchar column (size < ?) to an attribute that must never be shown to the user 
+ *
+ * @package     iTopORM
+ * @author      Romain Quetiez <romainquetiez@yahoo.fr>
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.itop.com
+ * @since       1.0
+ * @version     $itopversion$
+ */
+class AttributePassword extends AttributeString
+{
+	static protected function ListExpectedParams()
+	{
+		return parent::ListExpectedParams();
+		//return array_merge(parent::ListExpectedParams(), array());
+	}
+
+	public function GetEditClass() {return "Password";}
+	public function GetDBFieldType() {return "VARCHAR(64)";}
 }
 
 /**
@@ -778,7 +811,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 	} 
 
 	// overloaded here so that an ext key always have the answer to
-	// "what are you possible values?"
+	// "what are your possible values?"
 	public function GetValuesDef()
 	{
 		$oValSetDef = $this->Get("allowed_values");
@@ -788,7 +821,21 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 			$oValSetDef = new ValueSetObjects($this->GetTargetClass());
 		}
 		return $oValSetDef;
-	} 
+	}
+
+	public function GetAllowedValues($aArgs = array(), $sBeginsWith = '')
+	{
+		try
+		{
+			return parent::GetAllowedValues($aArgs, $sBeginsWith);
+		}
+		catch (MissingQueryArgument $e)
+		{
+			// Some required arguments could not be found, enlarge to any existing value
+			$oValSetDef = new ValueSetObjects($this->GetTargetClass());
+			return $oValSetDef->GetValues($aArgs, $sBeginsWith);
+		}
+	}
 }
 
 /**

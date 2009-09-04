@@ -209,7 +209,13 @@ class FilterFromAttribute extends FilterDefinition
 	{
 		$oAttDef = $this->Get("refattribute");
 		return $oAttDef->GetValuesDef();
-	} 
+	}
+
+	public function GetAllowedValues($aArgs = array(), $sBeginsWith = '')
+	{
+		$oAttDef = $this->Get("refattribute");
+		return $oAttDef->GetAllowedValues($aArgs, $sBeginsWith);
+	}
 
 	public function GetOperators()
 	{
@@ -232,64 +238,6 @@ class FilterFromAttribute extends FilterDefinition
 	{
 		$oAttDef = $this->Get("refattribute");
 		return $oAttDef->GetSQLExpr();
-	}
-}
-
-/**
- * Match against a given column (experimental -to be cleaned up later) 
- *
- * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
- */
-class FilterDBValues extends FilterDefinition
-{
-	static protected function ListExpectedParams()
-	{
-		return array_merge(parent::ListExpectedParams(), array("dbfield"));
-	}
-
-	public function GetType() {return "Values from DB";}
-	public function GetTypeDesc() {return "Match against the existing values in a field";}
-
-	public function GetLabel()
-	{
-		return "enum de valeurs DB";
-	} 
-
-	public function GetValuesDef()
-	{
-		return null;
-	}
-
-	public function GetOperators()
-	{
-		return array(
-			"IN"=>"in",
-		);
-	}
-	public function GetLooseOperator()
-	{
-		return "IN";
-	}
-
-	public function GetFilterSQLExpr($sOpCode, $value)
-	{
-		$sFieldName = $this->Get("dbfield");
-		if (is_array($value) && !empty($value))
-		{
-			$sValueList = "'".implode("', '", $value)."'";
-			return "$sFieldName IN ($sValueList)";
-		}
-		return "1=1";
-	}
-
-	public function TemporaryGetSQLCol()
-	{
-		return $this->Get("dbfield");
 	}
 }
 
