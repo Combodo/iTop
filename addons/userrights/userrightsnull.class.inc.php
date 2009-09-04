@@ -22,6 +22,11 @@ class UserRightsNull extends UserRightsAddOnAPI
 		return true;
 	}
 
+	public function IsAdministrator($iUserId)
+	{
+		return true;
+	}
+
 	public function Setup()
 	{
 		return true;

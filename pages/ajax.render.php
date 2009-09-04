@@ -84,6 +84,8 @@ switch($operation)
 	}
 	foreach($oWizardHelper->GetFieldsForAllowedValues() as $sAttCode)
 	{
+		// MetaModel::GetAllowedValues_att() => array(id => value)
+		// Improvement: what if the list is too long?
 		$oWizardHelper->SetAllowedValuesHtml($sAttCode, "Possible values ($sAttCode)");
 	}
 	$oPage->add($oWizardHelper->ToJSON());
@@ -192,7 +194,9 @@ switch($operation)
 	$sClass = utils::ReadParam('sclass', 'bizContact');
 	$sJSONSet = stripslashes(utils::ReadParam('sset', ''));
 	$sExtKeyToMe = utils::ReadParam('sextkeytome', '');
-	UILinksWidget::RenderSet($oPage, $sClass, $sJSONSet, $sExtKeyToMe);
+	$sExtKeyToRemote = utils::ReadParam('sextkeytoremote', '');
+	$iObjectId = utils::ReadParam('id', -1);
+	UILinksWidget::RenderSet($oPage, $sClass, $sJSONSet, $sExtKeyToMe, $sExtKeyToRemote, $iObjectId);
 	break;
 	
 	case 'autocomplete':
@@ -208,6 +212,7 @@ switch($operation)
 		if ($oThis = MetaModel::GetObject($sClass, $key))
 		{
 			$aArgs['*this*'] = $oThis;
+			$aArgs['this'] = $oThis;
 		}
 	} 
 	$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, $aArgs, $sName);

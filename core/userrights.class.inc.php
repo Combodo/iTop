@@ -45,6 +45,8 @@ define('UR_ACTION_APPLICATION_DEFINED', 10000); // Application specific actions 
 abstract class UserRightsAddOnAPI
 {
 	abstract public function Setup(); // initial installation
+	abstract public function CreateAdministrator($sAdminUser, $sAdminPwd); // could be used during initial installation
+
 	abstract public function Init(); // loads data (possible optimizations)
 	abstract public function CheckCredentials($sLogin, $sPassword); // returns the id of the user or false
 	abstract public function GetUserId($sLogin); // returns the id of the user or false
@@ -52,6 +54,7 @@ abstract class UserRightsAddOnAPI
 	abstract public function IsActionAllowed($iUserId, $sClass, $iActionCode, dbObjectSet $oInstances);
 	abstract public function IsStimulusAllowed($iUserId, $sClass, $sStimulusCode, dbObjectSet $oInstances);
 	abstract public function IsActionAllowedOnAttribute($iUserId, $sClass, $sAttCode, $iActionCode, dbObjectSet $oInstances);
+	abstract public function IsAdministrator($iUserId);
 }
 
 
@@ -92,6 +95,11 @@ class UserRights
 		self::$m_sRealUser = '';
 		self::$m_iUserId = 0;
 		self::$m_iRealUserId = 0;
+	}
+
+	public static function GetModuleInstance()
+	{
+		return self::$m_oAddOn;
 	}
 
 	// Installation: create the very first user
@@ -234,6 +242,20 @@ class UserRights
 		else
 		{
 			return self::$m_oAddOn->IsActionAllowedOnAttribute($iUserId, $sClass, $sAttCode, $iActionCode, $oInstances);
+		}
+	}
+
+	public static function IsAdministrator($iUserId = null)
+	{
+		if (!self::CheckLogin()) return false;
+
+		if (is_null($iUserId))
+		{
+			return self::$m_oAddOn->IsAdministrator(self::$m_iUserId);
+		}
+		else
+		{
+			return self::$m_oAddOn->IsAdministrator($iUserId);
 		}
 	}
 }

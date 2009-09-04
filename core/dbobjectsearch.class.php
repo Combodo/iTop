@@ -16,7 +16,6 @@
 /**
  * Sibusql - value set start 
  * @package     iTopORM
- * @info        zis is private 
  */
 define('VS_START', '{');
 /**
@@ -465,7 +464,7 @@ class DBObjectSearch
 
 	public function RenderCondition()
 	{
-		return $this->m_oSearchCondition->Render($this->m_aParams);
+		return $this->m_oSearchCondition->Render($this->m_aParams, true);
 	}
 
 	public function serialize()
@@ -507,7 +506,15 @@ class DBObjectSearch
 			$sRelCode = $aRelatedTo['relcode'];
 			$iMaxDepth = $aRelatedTo['maxdepth'];
 			
-			$sValue .= "T:".$oFilter->serialize().":$sRelCode:$iMaxDepth";
+			$sValue .= "T:".$oFilter->serialize().":$sRelCode:$iMaxDepth\n";
+		}
+		if (count($this->m_aParams) > 0)
+		{
+			foreach($this->m_aParams as $sName => $sArgValue)
+			{
+				// G stands for arGument
+				$sValue .= "G:$sName:$sArgValue\n";
+			}
 		}
 		return base64_encode($sValue);
 	}
@@ -554,6 +561,11 @@ class DBObjectSearch
 				$sRelCode = $aCondition[2];
 				$iMaxDepth = $aCondition[3];
 				$oFilter->AddCondition_RelatedTo($oSubFilter, $sRelCode, $iMaxDepth);
+				break;
+			case "G":
+				$oFilter->m_aParams[$aCondition[1]] = $aCondition[2];
+				break;
+
 			default:
 				throw new CoreException("invalid filter definition (cannot unserialize the data, clear text = '$sClearText')");
 			}
@@ -600,6 +612,22 @@ class DBObjectSearch
 	public function ToOQL(&$aParams = null)
 	{
 		$bRetrofitParams = (!is_null($aParams));
+		if (is_null($aParams))
+		{
+			if (count($this->m_aParams) > 0)
+			{
+				$aParams = $this->m_aParams;
+			}
+			$bRetrofitParams = false;
+		}
+		else
+		{
+			if (count($this->m_aParams) > 0)
+			{
+				$aParams = array_merge($aParams, $this->m_aParams);
+			}
+			$bRetrofitParams = true;
+		}
 
 		$sRes = "SELECT ".$this->GetClass().' AS '.$this->GetClassAlias();
 		$sRes .= $this->ToOQL_Joins();

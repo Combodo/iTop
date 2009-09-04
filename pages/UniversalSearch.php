@@ -96,7 +96,7 @@ EOF;
 		$bChildItem = utils::ReadPostedParam('child_item', false);
 		$oMenuNode->Set('label', $sDescription);
 		$oMenuNode->Set('name', $sLabel);
-		$oMenuNode->Set('icon_path', '/images/std_view.gif');
+		$oMenuNode->Set('icon_path', '../images/std_view.gif');
 		$oMenuNode->Set('template', $sMenuNodeContent);
 		$oMenuNode->Set('hyperlink', 'UI.php');
 		$oMenuNode->Set('type', 'user');

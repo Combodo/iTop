@@ -665,19 +665,13 @@ abstract class MetaModel
 	public static function GetAllowedValues_att($sClass, $sAttCode, $aArgs = array(), $sBeginsWith = '')
 	{
 		$oAttDef = self::GetAttributeDef($sClass, $sAttCode);
-		if (!$oAttDef) return null;
-		$oValSetDef = $oAttDef->GetValuesDef();
-		if (!$oValSetDef) return null;
-		return $oValSetDef->GetValues($aArgs, $sBeginsWith);
+		return $oAttDef->GetAllowedValues($aArgs, $sBeginsWith);
 	}
 
 	public static function GetAllowedValues_flt($sClass, $sFltCode, $aArgs = array(), $sBeginsWith = '')
 	{
 		$oFltDef = self::GetClassFilterDef($sClass, $sFltCode);
-		if (!$oFltDef) return null;
-		$oValSetDef = $oFltDef->GetValuesDef();
-		if (!$oValSetDef) return null;
-		return $oValSetDef->GetValues($aArgs, $sBeginsWith);
+		return $oFltDef->GetAllowedValues($aArgs, $sBeginsWith);
 	}
 
 	//
@@ -819,6 +813,18 @@ abstract class MetaModel
 				$oClassFlt = new FilterFromAttribute($oClassAtt);
 				self::$m_aFilterDefs[$sClass][$sClassAttCode] = $oClassFlt;
 				self::$m_aFilterOrigins[$sClass][$sClassAttCode] = self::GetRootClass($sClass);
+			}
+
+			// Define defaults values for the standard ZLists
+			//
+			foreach (self::$m_aListInfos as $sListCode => $aListConfig)
+			{
+				if (!isset(self::$m_aListData[$sClass][$sListCode]))
+				{
+					$aAllAttributes = array_keys(self::$m_aAttribDefs[$sClass]);
+					self::$m_aListData[$sClass][$sListCode] = $aAllAttributes;
+					//echo "<p>$sClass: $sListCode (".count($aAllAttributes)." attributes)</p>\n";
+				}
 			}
 		}
 

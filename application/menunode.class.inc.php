@@ -42,7 +42,7 @@ class menuNode extends DBObject
 		MetaModel::Init_AddAttribute(new AttributeString("hyperlink", array("label"=>"Hyperlink", "description"=>"Hyperlink to the page", "allowed_values"=>null, "sql"=>"hyperlink", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("icon_path", array("label"=>"Menu Icon", "description"=>"Path to the icon o the menu", "allowed_values"=>null, "sql"=>"icon_path", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("template", array("label"=>"Template", "description"=>"HTML template for the view", "allowed_values"=>null, "sql"=>"template", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("type", array("label"=>"Type", "description"=>"Type of menu", "allowed_values"=>new ValueSetEnum('application,user'), "sql"=>"type", "default_value"=>"application", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("type", array("label"=>"Type", "description"=>"Type of menu", "allowed_values"=>new ValueSetEnum('application,user,administrator'), "sql"=>"type", "default_value"=>"application", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeInteger("rank", array("label"=>"Display rank", "description"=>"Sort order for displaying the menu", "allowed_values"=>null, "sql"=>"rank", "default_value" => 999, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("parent_id", array("label"=>"Parent Menu Item", "description"=>"Parent Menu Item", "allowed_values"=>null, "sql"=>"parent_id", "targetclass"=>"menuNode", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("parent_name", array("label"=>"Parent Menu Item", "description"=>"Parent Menu Item", "allowed_values"=>null, "extkey_attcode"=>"parent_id", "target_attcode"=>"name")));
@@ -91,17 +91,25 @@ class menuNode extends DBObject
 
 	public function GetChildNodesSet($sType = null)
 	{
-		$oSearchFilter = new DBObjectSearch("menuNode");
-		$oSearchFilter->AddCondition('parent_id', $this->GetKey(), '=');
-		if ($sType != null)
+		$aParams = array();
+
+		if ($sType == 'user')
 		{
-			$oSearchFilter->AddCondition('type', $sType, '=');
-			if ($sType == 'user')
-			{
-			    $oSearchFilter->AddCondition('user_id', UserRights::GetUserId(), '=');
-			}
+			$sSelectChilds = 'SELECT menuNode AS m WHERE m.parent_id = :parent AND type = :type AND m.user_id = :user';
+			$aParams = array('parent' => $this->GetKey(), 'type' => $sType, 'user' => UserRights::GetUserId());
 		}
-		$oSet = new CMDBObjectSet($oSearchFilter, array('rank' => true));
+		elseif ($sType != null)
+		{
+			$sSelectChilds = 'SELECT menuNode AS m WHERE m.parent_id = :parent AND type = :type';
+			$aParams = array('parent' => $this->GetKey(), 'type' => $sType);
+		}
+		else
+		{
+			$sSelectChilds = 'SELECT menuNode AS m WHERE m.parent_id = :parent';
+			$aParams = array('parent' => $this->GetKey());
+		}
+		$oSearchFilter = DBObjectSearch::FromOQL($sSelectChilds);
+		$oSet = new CMDBObjectSet($oSearchFilter, array('rank' => true), $aParams);
 		return $oSet;
 	}
 

@@ -1,6 +1,8 @@
 SET WEBROOT=http://localhost:81
-SET USER=Erwan
-SET PWD=Taloc
+SET EXPORT=%WEBROOT%/webservices/export.php
+
+SET USER=admin
+SET PWD=admin
 
 REM The order (numbering) of the files is important since
 REM it dictates the order to import them back

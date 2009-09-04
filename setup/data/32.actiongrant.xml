@@ -1,0 +1,1659 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<URP_ActionGrant id="1">
+<profileid>100</profileid>
+<class>bizOrganization</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="2">
+<profileid>100</profileid>
+<class>bizOrganization</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="3">
+<profileid>100</profileid>
+<class>bizOrganization</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="4">
+<profileid>100</profileid>
+<class>bizOrganization</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="5">
+<profileid>100</profileid>
+<class>bizOrganization</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="6">
+<profileid>100</profileid>
+<class>bizOrganization</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="7">
+<profileid>100</profileid>
+<class>logRealObject</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="8">
+<profileid>100</profileid>
+<class>logRealObject</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="9">
+<profileid>100</profileid>
+<class>logRealObject</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="10">
+<profileid>100</profileid>
+<class>logRealObject</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="11">
+<profileid>100</profileid>
+<class>logRealObject</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="12">
+<profileid>100</profileid>
+<class>logRealObject</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="13">
+<profileid>100</profileid>
+<class>bizContact</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="14">
+<profileid>100</profileid>
+<class>bizContact</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="15">
+<profileid>100</profileid>
+<class>bizContact</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="16">
+<profileid>100</profileid>
+<class>bizContact</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="17">
+<profileid>100</profileid>
+<class>bizContact</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="18">
+<profileid>100</profileid>
+<class>bizContact</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="19">
+<profileid>100</profileid>
+<class>bizPerson</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="20">
+<profileid>100</profileid>
+<class>bizPerson</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="21">
+<profileid>100</profileid>
+<class>bizPerson</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="22">
+<profileid>100</profileid>
+<class>bizPerson</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="23">
+<profileid>100</profileid>
+<class>bizPerson</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="24">
+<profileid>100</profileid>
+<class>bizPerson</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="25">
+<profileid>100</profileid>
+<class>bizTeam</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="26">
+<profileid>100</profileid>
+<class>bizTeam</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="27">
+<profileid>100</profileid>
+<class>bizTeam</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="28">
+<profileid>100</profileid>
+<class>bizTeam</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="29">
+<profileid>100</profileid>
+<class>bizTeam</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="30">
+<profileid>100</profileid>
+<class>bizTeam</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="31">
+<profileid>100</profileid>
+<class>bizDocument</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="32">
+<profileid>100</profileid>
+<class>bizDocument</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="33">
+<profileid>100</profileid>
+<class>bizDocument</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="34">
+<profileid>100</profileid>
+<class>bizDocument</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="35">
+<profileid>100</profileid>
+<class>bizDocument</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="36">
+<profileid>100</profileid>
+<class>bizDocument</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="37">
+<profileid>100</profileid>
+<class>bizDocVersion</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="38">
+<profileid>100</profileid>
+<class>bizDocVersion</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="39">
+<profileid>100</profileid>
+<class>bizDocVersion</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="40">
+<profileid>100</profileid>
+<class>bizDocVersion</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="41">
+<profileid>100</profileid>
+<class>bizDocVersion</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="42">
+<profileid>100</profileid>
+<class>bizDocVersion</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="43">
+<profileid>100</profileid>
+<class>lnkDocumentRealObject</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="44">
+<profileid>100</profileid>
+<class>lnkDocumentRealObject</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="45">
+<profileid>100</profileid>
+<class>lnkDocumentRealObject</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="46">
+<profileid>100</profileid>
+<class>lnkDocumentRealObject</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="47">
+<profileid>100</profileid>
+<class>lnkDocumentRealObject</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="48">
+<profileid>100</profileid>
+<class>lnkDocumentRealObject</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="49">
+<profileid>100</profileid>
+<class>lnkContactRealObject</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="50">
+<profileid>100</profileid>
+<class>lnkContactRealObject</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="51">
+<profileid>100</profileid>
+<class>lnkContactRealObject</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="52">
+<profileid>100</profileid>
+<class>lnkContactRealObject</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="53">
+<profileid>100</profileid>
+<class>lnkContactRealObject</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="54">
+<profileid>100</profileid>
+<class>lnkContactRealObject</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="55">
+<profileid>100</profileid>
+<class>logInfra</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="56">
+<profileid>100</profileid>
+<class>logInfra</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="57">
+<profileid>100</profileid>
+<class>logInfra</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="58">
+<profileid>100</profileid>
+<class>logInfra</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="59">
+<profileid>100</profileid>
+<class>logInfra</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="60">
+<profileid>100</profileid>
+<class>logInfra</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="61">
+<profileid>100</profileid>
+<class>bizLocation</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="62">
+<profileid>100</profileid>
+<class>bizLocation</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="63">
+<profileid>100</profileid>
+<class>bizLocation</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="64">
+<profileid>100</profileid>
+<class>bizLocation</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="65">
+<profileid>100</profileid>
+<class>bizLocation</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="66">
+<profileid>100</profileid>
+<class>bizLocation</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="67">
+<profileid>100</profileid>
+<class>bizCircuit</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="68">
+<profileid>100</profileid>
+<class>bizCircuit</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="69">
+<profileid>100</profileid>
+<class>bizCircuit</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="70">
+<profileid>100</profileid>
+<class>bizCircuit</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="71">
+<profileid>100</profileid>
+<class>bizCircuit</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="72">
+<profileid>100</profileid>
+<class>bizCircuit</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="73">
+<profileid>100</profileid>
+<class>bizInterface</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="74">
+<profileid>100</profileid>
+<class>bizInterface</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="75">
+<profileid>100</profileid>
+<class>bizInterface</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="76">
+<profileid>100</profileid>
+<class>bizInterface</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="77">
+<profileid>100</profileid>
+<class>bizInterface</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="78">
+<profileid>100</profileid>
+<class>bizInterface</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="79">
+<profileid>100</profileid>
+<class>lnkInterfaces</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="80">
+<profileid>100</profileid>
+<class>lnkInterfaces</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="81">
+<profileid>100</profileid>
+<class>lnkInterfaces</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="82">
+<profileid>100</profileid>
+<class>lnkInterfaces</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="83">
+<profileid>100</profileid>
+<class>lnkInterfaces</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="84">
+<profileid>100</profileid>
+<class>lnkInterfaces</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="85">
+<profileid>100</profileid>
+<class>bizDevice</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="86">
+<profileid>100</profileid>
+<class>bizDevice</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="87">
+<profileid>100</profileid>
+<class>bizDevice</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="88">
+<profileid>100</profileid>
+<class>bizDevice</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="89">
+<profileid>100</profileid>
+<class>bizDevice</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="90">
+<profileid>100</profileid>
+<class>bizDevice</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="91">
+<profileid>100</profileid>
+<class>bizPC</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="92">
+<profileid>100</profileid>
+<class>bizPC</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="93">
+<profileid>100</profileid>
+<class>bizPC</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="94">
+<profileid>100</profileid>
+<class>bizPC</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="95">
+<profileid>100</profileid>
+<class>bizPC</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="96">
+<profileid>100</profileid>
+<class>bizPC</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="97">
+<profileid>100</profileid>
+<class>bizServer</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="98">
+<profileid>100</profileid>
+<class>bizServer</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="99">
+<profileid>100</profileid>
+<class>bizServer</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="100">
+<profileid>100</profileid>
+<class>bizServer</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="101">
+<profileid>100</profileid>
+<class>bizServer</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="102">
+<profileid>100</profileid>
+<class>bizServer</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="103">
+<profileid>100</profileid>
+<class>bizNetworkDevice</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="104">
+<profileid>100</profileid>
+<class>bizNetworkDevice</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="105">
+<profileid>100</profileid>
+<class>bizNetworkDevice</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="106">
+<profileid>100</profileid>
+<class>bizNetworkDevice</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="107">
+<profileid>100</profileid>
+<class>bizNetworkDevice</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="108">
+<profileid>100</profileid>
+<class>bizNetworkDevice</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="109">
+<profileid>100</profileid>
+<class>bizInfraGroup</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="110">
+<profileid>100</profileid>
+<class>bizInfraGroup</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="111">
+<profileid>100</profileid>
+<class>bizInfraGroup</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="112">
+<profileid>100</profileid>
+<class>bizInfraGroup</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="113">
+<profileid>100</profileid>
+<class>bizInfraGroup</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="114">
+<profileid>100</profileid>
+<class>bizInfraGroup</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="115">
+<profileid>100</profileid>
+<class>bizApplication</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="116">
+<profileid>100</profileid>
+<class>bizApplication</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="117">
+<profileid>100</profileid>
+<class>bizApplication</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="118">
+<profileid>100</profileid>
+<class>bizApplication</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="119">
+<profileid>100</profileid>
+<class>bizApplication</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="120">
+<profileid>100</profileid>
+<class>bizApplication</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="121">
+<profileid>100</profileid>
+<class>lnkInfraGrouping</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="122">
+<profileid>100</profileid>
+<class>lnkInfraGrouping</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="123">
+<profileid>100</profileid>
+<class>lnkInfraGrouping</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="124">
+<profileid>100</profileid>
+<class>lnkInfraGrouping</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="125">
+<profileid>100</profileid>
+<class>lnkInfraGrouping</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="126">
+<profileid>100</profileid>
+<class>lnkInfraGrouping</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="127">
+<profileid>100</profileid>
+<class>lnkClientServer</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="128">
+<profileid>100</profileid>
+<class>lnkClientServer</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="129">
+<profileid>100</profileid>
+<class>lnkClientServer</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="130">
+<profileid>100</profileid>
+<class>lnkClientServer</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="131">
+<profileid>100</profileid>
+<class>lnkClientServer</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="132">
+<profileid>100</profileid>
+<class>lnkClientServer</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="133">
+<profileid>100</profileid>
+<class>bizPatch</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="134">
+<profileid>100</profileid>
+<class>bizPatch</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="135">
+<profileid>100</profileid>
+<class>bizPatch</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="136">
+<profileid>100</profileid>
+<class>bizPatch</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="137">
+<profileid>100</profileid>
+<class>bizPatch</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="138">
+<profileid>100</profileid>
+<class>bizPatch</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="139">
+<profileid>100</profileid>
+<class>bizIncidentTicket</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="140">
+<profileid>100</profileid>
+<class>bizIncidentTicket</class>
+<permission>no</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="141">
+<profileid>100</profileid>
+<class>bizIncidentTicket</class>
+<permission>no</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="142">
+<profileid>100</profileid>
+<class>bizIncidentTicket</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="143">
+<profileid>100</profileid>
+<class>bizIncidentTicket</class>
+<permission>no</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="144">
+<profileid>100</profileid>
+<class>bizIncidentTicket</class>
+<permission>no</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="145">
+<profileid>100</profileid>
+<class>lnkRelatedTicket</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="146">
+<profileid>100</profileid>
+<class>lnkRelatedTicket</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="147">
+<profileid>100</profileid>
+<class>lnkRelatedTicket</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="148">
+<profileid>100</profileid>
+<class>lnkRelatedTicket</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="149">
+<profileid>100</profileid>
+<class>lnkRelatedTicket</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="150">
+<profileid>100</profileid>
+<class>lnkRelatedTicket</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="151">
+<profileid>100</profileid>
+<class>lnkInfraTicket</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="152">
+<profileid>100</profileid>
+<class>lnkInfraTicket</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="153">
+<profileid>100</profileid>
+<class>lnkInfraTicket</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="154">
+<profileid>100</profileid>
+<class>lnkInfraTicket</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="155">
+<profileid>100</profileid>
+<class>lnkInfraTicket</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="156">
+<profileid>100</profileid>
+<class>lnkInfraTicket</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="157">
+<profileid>100</profileid>
+<class>lnkContactTicket</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="158">
+<profileid>100</profileid>
+<class>lnkContactTicket</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="159">
+<profileid>100</profileid>
+<class>lnkContactTicket</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="160">
+<profileid>100</profileid>
+<class>lnkContactTicket</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="161">
+<profileid>100</profileid>
+<class>lnkContactTicket</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="162">
+<profileid>100</profileid>
+<class>lnkContactTicket</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="163">
+<profileid>100</profileid>
+<class>bizWorkgroup</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="164">
+<profileid>100</profileid>
+<class>bizWorkgroup</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="165">
+<profileid>100</profileid>
+<class>bizWorkgroup</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="166">
+<profileid>100</profileid>
+<class>bizWorkgroup</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="167">
+<profileid>100</profileid>
+<class>bizWorkgroup</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="168">
+<profileid>100</profileid>
+<class>bizWorkgroup</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="169">
+<profileid>100</profileid>
+<class>bizContract</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="170">
+<profileid>100</profileid>
+<class>bizContract</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="171">
+<profileid>100</profileid>
+<class>bizContract</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="172">
+<profileid>100</profileid>
+<class>bizContract</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="173">
+<profileid>100</profileid>
+<class>bizContract</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="174">
+<profileid>100</profileid>
+<class>bizContract</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="175">
+<profileid>100</profileid>
+<class>lnkInfraContract</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="176">
+<profileid>100</profileid>
+<class>lnkInfraContract</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="177">
+<profileid>100</profileid>
+<class>lnkInfraContract</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="178">
+<profileid>100</profileid>
+<class>lnkInfraContract</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="179">
+<profileid>100</profileid>
+<class>lnkInfraContract</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="180">
+<profileid>100</profileid>
+<class>lnkInfraContract</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="181">
+<profileid>100</profileid>
+<class>lnkContactContract</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="182">
+<profileid>100</profileid>
+<class>lnkContactContract</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="183">
+<profileid>100</profileid>
+<class>lnkContactContract</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="184">
+<profileid>100</profileid>
+<class>lnkContactContract</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="185">
+<profileid>100</profileid>
+<class>lnkContactContract</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="186">
+<profileid>100</profileid>
+<class>lnkContactContract</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="187">
+<profileid>100</profileid>
+<class>lnkDocumentContract</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="188">
+<profileid>100</profileid>
+<class>lnkDocumentContract</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="189">
+<profileid>100</profileid>
+<class>lnkDocumentContract</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="190">
+<profileid>100</profileid>
+<class>lnkDocumentContract</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="191">
+<profileid>100</profileid>
+<class>lnkDocumentContract</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="192">
+<profileid>100</profileid>
+<class>lnkDocumentContract</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="193">
+<profileid>100</profileid>
+<class>bizChangeTicket</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="194">
+<profileid>100</profileid>
+<class>bizChangeTicket</class>
+<permission>no</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="195">
+<profileid>100</profileid>
+<class>bizChangeTicket</class>
+<permission>no</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="196">
+<profileid>100</profileid>
+<class>bizChangeTicket</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="197">
+<profileid>100</profileid>
+<class>bizChangeTicket</class>
+<permission>no</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="198">
+<profileid>100</profileid>
+<class>bizChangeTicket</class>
+<permission>no</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="199">
+<profileid>100</profileid>
+<class>lnkInfraChangeTicket</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="200">
+<profileid>100</profileid>
+<class>lnkInfraChangeTicket</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="201">
+<profileid>100</profileid>
+<class>lnkInfraChangeTicket</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="202">
+<profileid>100</profileid>
+<class>lnkInfraChangeTicket</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="203">
+<profileid>100</profileid>
+<class>lnkInfraChangeTicket</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="204">
+<profileid>100</profileid>
+<class>lnkInfraChangeTicket</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="205">
+<profileid>100</profileid>
+<class>lnkContactChange</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="206">
+<profileid>100</profileid>
+<class>lnkContactChange</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="207">
+<profileid>100</profileid>
+<class>lnkContactChange</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="208">
+<profileid>100</profileid>
+<class>lnkContactChange</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="209">
+<profileid>100</profileid>
+<class>lnkContactChange</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="210">
+<profileid>100</profileid>
+<class>lnkContactChange</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="211">
+<profileid>100</profileid>
+<class>bizKnownError</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="212">
+<profileid>100</profileid>
+<class>bizKnownError</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="213">
+<profileid>100</profileid>
+<class>bizKnownError</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="214">
+<profileid>100</profileid>
+<class>bizKnownError</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="215">
+<profileid>100</profileid>
+<class>bizKnownError</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="216">
+<profileid>100</profileid>
+<class>bizKnownError</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="217">
+<profileid>100</profileid>
+<class>lnkInfraError</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="218">
+<profileid>100</profileid>
+<class>lnkInfraError</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="219">
+<profileid>100</profileid>
+<class>lnkInfraError</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="220">
+<profileid>100</profileid>
+<class>lnkInfraError</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="221">
+<profileid>100</profileid>
+<class>lnkInfraError</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="222">
+<profileid>100</profileid>
+<class>lnkInfraError</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="223">
+<profileid>100</profileid>
+<class>lnkDocumentError</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="224">
+<profileid>100</profileid>
+<class>lnkDocumentError</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="225">
+<profileid>100</profileid>
+<class>lnkDocumentError</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="226">
+<profileid>100</profileid>
+<class>lnkDocumentError</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="227">
+<profileid>100</profileid>
+<class>lnkDocumentError</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="228">
+<profileid>100</profileid>
+<class>lnkDocumentError</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="229">
+<profileid>100</profileid>
+<class>AuditCategory</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="230">
+<profileid>100</profileid>
+<class>AuditCategory</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="231">
+<profileid>100</profileid>
+<class>AuditCategory</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="232">
+<profileid>100</profileid>
+<class>AuditCategory</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="233">
+<profileid>100</profileid>
+<class>AuditCategory</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="234">
+<profileid>100</profileid>
+<class>AuditCategory</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="235">
+<profileid>100</profileid>
+<class>AuditRule</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="236">
+<profileid>100</profileid>
+<class>AuditRule</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="237">
+<profileid>100</profileid>
+<class>AuditRule</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="238">
+<profileid>100</profileid>
+<class>AuditRule</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="239">
+<profileid>100</profileid>
+<class>AuditRule</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="240">
+<profileid>100</profileid>
+<class>AuditRule</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="241">
+<profileid>100</profileid>
+<class>menuNode</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="242">
+<profileid>100</profileid>
+<class>menuNode</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="243">
+<profileid>100</profileid>
+<class>menuNode</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="244">
+<profileid>100</profileid>
+<class>menuNode</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="245">
+<profileid>100</profileid>
+<class>menuNode</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="246">
+<profileid>100</profileid>
+<class>menuNode</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="247">
+<profileid>100</profileid>
+<class>CMDBChange</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="248">
+<profileid>100</profileid>
+<class>CMDBChange</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="249">
+<profileid>100</profileid>
+<class>CMDBChange</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="250">
+<profileid>100</profileid>
+<class>CMDBChange</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="251">
+<profileid>100</profileid>
+<class>CMDBChange</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="252">
+<profileid>100</profileid>
+<class>CMDBChange</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="253">
+<profileid>100</profileid>
+<class>CMDBChangeOp</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="254">
+<profileid>100</profileid>
+<class>CMDBChangeOp</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="255">
+<profileid>100</profileid>
+<class>CMDBChangeOp</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="256">
+<profileid>100</profileid>
+<class>CMDBChangeOp</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="257">
+<profileid>100</profileid>
+<class>CMDBChangeOp</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="258">
+<profileid>100</profileid>
+<class>CMDBChangeOp</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="259">
+<profileid>100</profileid>
+<class>CMDBChangeOpCreate</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="260">
+<profileid>100</profileid>
+<class>CMDBChangeOpCreate</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="261">
+<profileid>100</profileid>
+<class>CMDBChangeOpCreate</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="262">
+<profileid>100</profileid>
+<class>CMDBChangeOpCreate</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="263">
+<profileid>100</profileid>
+<class>CMDBChangeOpCreate</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="264">
+<profileid>100</profileid>
+<class>CMDBChangeOpCreate</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="265">
+<profileid>100</profileid>
+<class>CMDBChangeOpDelete</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="266">
+<profileid>100</profileid>
+<class>CMDBChangeOpDelete</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="267">
+<profileid>100</profileid>
+<class>CMDBChangeOpDelete</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="268">
+<profileid>100</profileid>
+<class>CMDBChangeOpDelete</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="269">
+<profileid>100</profileid>
+<class>CMDBChangeOpDelete</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="270">
+<profileid>100</profileid>
+<class>CMDBChangeOpDelete</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="271">
+<profileid>100</profileid>
+<class>CMDBChangeOpSetAttribute</class>
+<permission>yes</permission>
+<action>read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="272">
+<profileid>100</profileid>
+<class>CMDBChangeOpSetAttribute</class>
+<permission>yes</permission>
+<action>modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="273">
+<profileid>100</profileid>
+<class>CMDBChangeOpSetAttribute</class>
+<permission>yes</permission>
+<action>delete</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="274">
+<profileid>100</profileid>
+<class>CMDBChangeOpSetAttribute</class>
+<permission>yes</permission>
+<action>bulk read</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="275">
+<profileid>100</profileid>
+<class>CMDBChangeOpSetAttribute</class>
+<permission>yes</permission>
+<action>bulk modify</action>
+</URP_ActionGrant>
+<URP_ActionGrant id="276">
+<profileid>100</profileid>
+<class>CMDBChangeOpSetAttribute</class>
+<permission>yes</permission>
+<action>bulk delete</action>
+</URP_ActionGrant>
+</Set>

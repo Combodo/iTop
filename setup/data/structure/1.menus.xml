@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Set>
-<menuNode id="17">
-<parent_id>0</parent_id>
-<name>Admin Tools</name>
-<label>iTop consultant tools</label>
+<menuNode id="1">
+<name>Tools</name>
+<label>Advanced tools</label>
 <hyperlink>UI.php</hyperlink>
+<icon_path></icon_path>
 <template>&lt;p&gt;&lt;/p&gt;
 &lt;p&gt;&lt;/p&gt;
 &lt;p style=&quot;text-align:center; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:32px;&quot;&gt;Tools for the iTop consultant&lt;/p&gt;
 &lt;p style=&quot;text-align:center; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:14px;&quot;&gt;&lt;i&gt;This section contains links to useful tools for extending or debugging iTop&lt;/i&gt;&lt;/p&gt;
-
-
 </template>
-<rank>7</rank>
 <type>application</type>
+<rank>7</rank>
+<parent_id>0</parent_id>
+<user_id>0</user_id>
 </menuNode>
-<menuNode id="59">
-<parent_id>5</parent_id>
+<menuNode id="2">
 <name>All Applications</name>
 <label>All Applications</label>
 <hyperlink>UI.php</hyperlink>
+<icon_path></icon_path>
 <template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizApplication&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizApplication&lt;/itopblock&gt;
 &lt;div id=&quot;BottomPane&quot;&gt;
 &lt;p&gt;&lt;/p&gt;
@@ -29,14 +29,16 @@
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizApplication&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizApplication&lt;/itopblock&gt;
 &lt;/div&gt;
 </template>
-<rank>999</rank>
 <type>application</type>
+<rank>999</rank>
+<parent_id>14</parent_id>
+<user_id>0</user_id>
 </menuNode>
-<menuNode id="47">
-<parent_id>5</parent_id>
+<menuNode id="3">
 <name>All Circuits</name>
 <label>All Circuits</label>
 <hyperlink>UI.php</hyperlink>
+<icon_path></icon_path>
 <template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizCircuit&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizCircuit&lt;/itopblock&gt;
 &lt;div id=&quot;BottomPane&quot;&gt;
 &lt;p&gt;&lt;/p&gt;
@@ -46,27 +48,31 @@
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizCircuit&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizCircuit&lt;/itopblock&gt;
 &lt;/div&gt;
 </template>
-<rank>999</rank>
 <type>application</type>
+<rank>999</rank>
+<parent_id>14</parent_id>
+<user_id>0</user_id>
 </menuNode>
-<menuNode id="75">
-<parent_id>64</parent_id>
+<menuNode id="4">
 <name>All Contracts</name>
 <label>All Contracts</label>
 <hyperlink>./UI.php</hyperlink>
+<icon_path></icon_path>
 <template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContact&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizContract&lt;/itopblock&gt;
 &lt;div id=&quot;BottomPane&quot;&gt;
 &lt;p&gt;&lt;/p&gt;
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContact&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizContract&lt;/itopblock&gt;
 &lt;/div&gt;</template>
-<rank>2</rank>
 <type>application</type>
+<rank>2</rank>
+<parent_id>31</parent_id>
+<user_id>0</user_id>
 </menuNode>
-<menuNode id="48">
-<parent_id>5</parent_id>
+<menuNode id="5">
 <name>All Interfaces</name>
 <label>All Interfaces</label>
 <hyperlink>UI.php</hyperlink>
+<icon_path></icon_path>
 <template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContact&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizInterface&lt;/itopblock&gt;
 &lt;div id=&quot;BottomPane&quot;&gt;
 &lt;p&gt;&lt;/p&gt;
@@ -76,14 +82,16 @@
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContact&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizInterface&lt;/itopblock&gt;
 &lt;/div&gt;
 </template>
-<rank>999</rank>
 <type>application</type>
+<rank>999</rank>
+<parent_id>14</parent_id>
+<user_id>0</user_id>
 </menuNode>
-<menuNode id="46">
-<parent_id>5</parent_id>
+<menuNode id="6">
 <name>All Network devices</name>
 <label>All Network devices</label>
 <hyperlink>UI.php</hyperlink>
+<icon_path></icon_path>
 <template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizNetworkDevice&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizNetworkDevice&lt;/itopblock&gt;
 &lt;div id=&quot;BottomPane&quot;&gt;
 &lt;p&gt;&lt;/p&gt;
@@ -93,14 +101,16 @@
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizNetworkDevice&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizNetworkDevice&lt;/itopblock&gt;
 &lt;/div&gt;
 </template>
-<rank>999</rank>
 <type>application</type>
+<rank>999</rank>
+<parent_id>14</parent_id>
+<user_id>0</user_id>
 </menuNode>
-<menuNode id="60">
-<parent_id>5</parent_id>
+<menuNode id="7">
 <name>All Patches</name>
 <label>All Patches</label>
 <hyperlink>UI.php</hyperlink>
+<icon_path></icon_path>
 <template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizPatch&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizPatch&lt;/itopblock&gt;
 &lt;div id=&quot;BottomPane&quot;&gt;
 &lt;p&gt;&lt;/p&gt;
@@ -110,14 +120,16 @@
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizPatch&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizPatch&lt;/itopblock&gt;
 &lt;/div&gt;
 </template>
-<rank>999</rank>
 <type>application</type>
+<rank>999</rank>
+<parent_id>14</parent_id>
+<user_id>0</user_id>
 </menuNode>
-<menuNode id="6">
-<parent_id>5</parent_id>
+<menuNode id="8">
 <name>All PCs</name>
 <label>All PCs</label>
 <hyperlink>UI.php</hyperlink>
+<icon_path></icon_path>
 <template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContact&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizPC&lt;/itopblock&gt;
 &lt;div id=&quot;BottomPane&quot;&gt;
 &lt;p&gt;&lt;/p&gt;
@@ -127,14 +139,16 @@
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContact&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizPC&lt;/itopblock&gt;
 &lt;/div&gt;
 </template>
-<rank>999</rank>
 <type>application</type>
+<rank>999</rank>
+<parent_id>14</parent_id>
+<user_id>0</user_id>
 </menuNode>
-<menuNode id="45">
-<parent_id>5</parent_id>
+<menuNode id="9">
 <name>All Servers</name>
 <label>All Servers</label>
 <hyperlink>UI.php</hyperlink>
+<icon_path></icon_path>
 <template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContact&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizServer&lt;/itopblock&gt;
 &lt;div id=&quot;BottomPane&quot;&gt;
 &lt;p&gt;&lt;/p&gt;
@@ -144,23 +158,27 @@
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContact&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizServer&lt;/itopblock&gt;
 &lt;/div&gt;
 </template>
-<rank>999</rank>
 <type>application</type>
+<rank>999</rank>
+<parent_id>14</parent_id>
+<user_id>0</user_id>
 </menuNode>
-<menuNode id="58">
-<parent_id>1</parent_id>
+<menuNode id="10">
 <name>Audit</name>
 <label>Audit</label>
 <hyperlink>./audit.php</hyperlink>
+<icon_path></icon_path>
 <template></template>
-<rank>4</rank>
 <type>application</type>
+<rank>4</rank>
+<parent_id>15</parent_id>
+<user_id>0</user_id>
 </menuNode>
-<menuNode id="66">
-<parent_id>0</parent_id>
+<menuNode id="11">
 <name>Change Management</name>
 <label>Change Management</label>
 <hyperlink>./UI.php</hyperlink>
+<icon_path></icon_path>
 <template>&lt;style&gt;
 .dashboard {
 vertical-align:top;
@@ -192,43 +210,49 @@ text-align:center;
 &lt;/tr&gt;
 &lt;/table&gt;
 </template>
-<rank>4</rank>
 <type>application</type>
+<rank>4</rank>
+<parent_id>0</parent_id>
+<user_id>0</user_id>
 </menuNode>
-<menuNode id="74">
-<parent_id>66</parent_id>
+<menuNode id="12">
 <name>Closed Changes</name>
 <label>Closed Changes</label>
 <hyperlink>UI.php</hyperlink>
+<icon_path></icon_path>
 <template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContact&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizChangeTicket: ticket_status = &apos;Closed&apos;&lt;/itopblock&gt;
 &lt;div id=&quot;BottomPane&quot;&gt;
 &lt;p&gt;&lt;/p&gt;
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContact&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizChangeTicket: ticket_status = &apos;Closed&apos;&lt;/itopblock&gt;
 &lt;/div&gt;</template>
-<rank>2</rank>
 <type>application</type>
+<rank>2</rank>
+<parent_id>11</parent_id>
+<user_id>0</user_id>
 </menuNode>
-<menuNode id="63">
-<parent_id>61</parent_id>
+<menuNode id="13">
 <name>Closed Incident</name>
 <label>List of closed ticket</label>
 <hyperlink>./UI.php</hyperlink>
+<icon_path></icon_path>
 <template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContact&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizIncidentTicket: ticket_status Contains &apos;Open&apos; AND severity Contains &apos;critical&apos;&lt;/itopblock&gt;
 &lt;div id=&quot;BottomPane&quot;&gt;
 &lt;p&gt;&lt;/p&gt;
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContact&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizIncidentTicket: ticket_status = &apos;Closed&apos;&lt;/itopblock&gt;
 &lt;/div&gt;</template>
-<rank>2</rank>
 <type>application</type>
+<rank>2</rank>
+<parent_id>22</parent_id>
+<user_id>0</user_id>
 </menuNode>
-<menuNode id="5">
-<parent_id>1</parent_id>
+<menuNode id="14">
 <name>Configuration Items</name>
 <label>All about devices</label>
 <hyperlink>UI.php</hyperlink>
+<icon_path></icon_path>
 <template>&lt;p&gt;&lt;/p&gt;
 &lt;p&gt;&lt;/p&gt;
-&lt;p style=&quot;text-align:left; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:40px;&quot;&gt;&lt;img src=&quot;/images/devices_big.gif&quot; align=&quot;baseline&quot;&gt;Devices Overview&lt;/p&gt;
+&lt;p style=&quot;text-align:left; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:40px;&quot;&gt;&lt;img src=&quot;../images/devices_big.gif&quot; align=&quot;baseline&quot;&gt;Devices Overview&lt;/p&gt;
 &lt;p&gt;&lt;/p&gt;
 &lt;p&gt;&lt;/p&gt;
 &lt;table border=&quot;0&quot; padding=&quot;5&quot; class=&quot;layout&quot;&gt;
@@ -252,14 +276,16 @@ text-align:center;
 &lt;/td&gt;
 &lt;/tr&gt;
 &lt;/table&gt;</template>
-<rank>2</rank>
 <type>application</type>
+<rank>2</rank>
+<parent_id>15</parent_id>
+<user_id>0</user_id>
 </menuNode>
-<menuNode id="1">
-<parent_id>0</parent_id>
+<menuNode id="15">
 <name>Configuration Management</name>
 <label>Configuration Management</label>
 <hyperlink>UI.php</hyperlink>
+<icon_path></icon_path>
 <template>&lt;style&gt;
 td.dashboard {
  vertical-align:top;
@@ -290,15 +316,17 @@ td.dashboard {
 &lt;/table&gt;
 
 </template>
-<rank>2</rank>
 <type>application</type>
+<rank>2</rank>
+<parent_id>0</parent_id>
+<user_id>0</user_id>
 </menuNode>
-<menuNode id="2">
-<parent_id>1</parent_id>
+<menuNode id="16">
 <name>Contacts</name>
 <label>Everything about Contacts</label>
 <hyperlink>UI.php</hyperlink>
-<template>&lt;img src=&quot;/images/users2-big.png&quot; style=&quot;float:right&quot;&gt;
+<icon_path></icon_path>
+<template>&lt;img src=&quot;../images/users2-big.png&quot; style=&quot;float:right&quot;&gt;
 &lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:24px;&quot;&gt;Contacts Overview&lt;/p&gt;
 &lt;table border=&quot;0&quot; padding=&quot;5&quot; class=&quot;layout&quot;&gt;
 &lt;tr&gt;
@@ -317,32 +345,27 @@ td.dashboard {
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContact&quot; type=&quot;count&quot; parameters=&quot;group_by:status&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizContact&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;/table&gt;</template>
-<rank>1</rank>
 <type>application</type>
+<rank>1</rank>
+<parent_id>15</parent_id>
+<user_id>0</user_id>
 </menuNode>
-<menuNode id="19">
-<parent_id>17</parent_id>
+<menuNode id="17">
 <name>CSV import</name>
 <label>Bulk creation or update</label>
 <hyperlink>csvimport.php</hyperlink>
+<icon_path></icon_path>
 <template></template>
-<rank>998</rank>
 <type>application</type>
-</menuNode>
-<menuNode id="18">
-<parent_id>17</parent_id>
-<name>Data Model</name>
-<label>Overview of the Data Model</label>
-<hyperlink>schema.php</hyperlink>
-<template></template>
 <rank>999</rank>
-<type>application</type>
-</menuNode>
-<menuNode id="12">
 <parent_id>1</parent_id>
+<user_id>0</user_id>
+</menuNode>
+<menuNode id="19">
 <name>Document</name>
 <label>Any object of class &apos;Document&apos;</label>
 <hyperlink>UI.php</hyperlink>
+<icon_path></icon_path>
 <template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContact&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizDocument&lt;/itopblock&gt;
 &lt;div id=&quot;BottomPane&quot;&gt;
 &lt;p&gt;&lt;/p&gt;
@@ -351,23 +374,17 @@ td.dashboard {
 &lt;p&gt;&lt;/p&gt;
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContact&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizDocument&lt;/itopblock&gt;
 &lt;/div&gt;</template>
+<type>application</type>
 <rank>6</rank>
-<type>application</type>
+<parent_id>15</parent_id>
+<user_id>0</user_id>
 </menuNode>
-<menuNode id="50">
-<parent_id>17</parent_id>
-<name>Export</name>
-<label>Export any filter in HTML, CSV or XML</label>
-<hyperlink>../webservices/export.php</hyperlink>
-<template></template>
-<rank>1000</rank>
-<type>application</type>
-</menuNode>
-<menuNode id="49">
-<parent_id>1</parent_id>
+
+<menuNode id="21">
 <name>Grouping</name>
 <label>All Groups</label>
 <hyperlink>UI.php</hyperlink>
+<icon_path></icon_path>
 <template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizInfraGroup&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizInfraGroup&lt;/itopblock&gt;
 &lt;div id=&quot;BottomPane&quot;&gt;
 &lt;p&gt;&lt;/p&gt;
@@ -380,14 +397,16 @@ td.dashboard {
 
 
 </template>
-<rank>3</rank>
 <type>application</type>
+<rank>3</rank>
+<parent_id>15</parent_id>
+<user_id>0</user_id>
 </menuNode>
-<menuNode id="61">
-<parent_id>0</parent_id>
+<menuNode id="22">
 <name>Incident Management</name>
 <label>Incident Management</label>
 <hyperlink>./UI.php</hyperlink>
+<icon_path></icon_path>
 <template>&lt;style&gt;
 .dashboard {
 vertical-align:top;
@@ -419,27 +438,31 @@ text-align:center;
 &lt;/tr&gt;
 &lt;/table&gt;
 </template>
-<rank>3</rank>
 <type>application</type>
+<rank>3</rank>
+<parent_id>0</parent_id>
+<user_id>0</user_id>
 </menuNode>
-<menuNode id="72">
-<parent_id>61</parent_id>
+<menuNode id="23">
 <name>Known Errors</name>
 <label>Known Errors</label>
 <hyperlink>./UI.php</hyperlink>
+<icon_path></icon_path>
 <template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizKnownErrort&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizKnownError&lt;/itopblock&gt;
 &lt;div id=&quot;BottomPane&quot;&gt;
 &lt;p&gt;&lt;/p&gt;
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizKnownError&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizKnownError&lt;/itopblock&gt;
 &lt;/div&gt;</template>
-<rank>999</rank>
 <type>application</type>
+<rank>999</rank>
+<parent_id>22</parent_id>
+<user_id>0</user_id>
 </menuNode>
-<menuNode id="9">
-<parent_id>1</parent_id>
+<menuNode id="24">
 <name>Locations</name>
 <label>Any locations</label>
 <hyperlink>UI.php</hyperlink>
+<icon_path></icon_path>
 <template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizLocation&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizLocation&lt;/itopblock&gt;
 &lt;div id=&quot;BottomPane&quot;&gt;
 &lt;p&gt;&lt;/p&gt;
@@ -448,88 +471,92 @@ text-align:center;
 &lt;p&gt;&lt;/p&gt;
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizLocation&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizLocation&lt;/itopblock&gt;
 &lt;/div&gt;</template>
-<rank>5</rank>
 <type>application</type>
+<rank>5</rank>
+<parent_id>15</parent_id>
+<user_id>0</user_id>
 </menuNode>
-<menuNode id="65">
-<parent_id>64</parent_id>
+<menuNode id="25">
 <name>Negociating contracts</name>
 <label>Negociating contracts</label>
 <hyperlink>UI.php</hyperlink>
+<icon_path></icon_path>
 <template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContact&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizContract: status = &apos;Negotiating&apos;&lt;/itopblock&gt;
 &lt;div id=&quot;BottomPane&quot;&gt;
 &lt;p&gt;&lt;/p&gt;
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContact&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizContract: status = &apos;Negotiating&apos;&lt;/itopblock&gt;
 &lt;/div&gt;</template>
-<rank>1</rank>
 <type>application</type>
+<rank>1</rank>
+<parent_id>31</parent_id>
+<user_id>0</user_id>
 </menuNode>
-<menuNode id="68">
-<parent_id>66</parent_id>
+<menuNode id="26">
 <name>Open Changes</name>
 <label>Open Changes</label>
 <hyperlink>./UI.php</hyperlink>
+<icon_path></icon_path>
 <template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContact&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizChangeTicket: ticket_status != &apos;Closed&apos;&lt;/itopblock&gt;
 &lt;div id=&quot;BottomPane&quot;&gt;
 &lt;p&gt;&lt;/p&gt;
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContact&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizChangeTicket: ticket_status != &apos;Closed&apos;&lt;/itopblock&gt;
 &lt;/div&gt;</template>
-<rank>1</rank>
 <type>application</type>
+<rank>1</rank>
+<parent_id>11</parent_id>
+<user_id>0</user_id>
 </menuNode>
-<menuNode id="62">
-<parent_id>61</parent_id>
+<menuNode id="27">
 <name>Open Incidents</name>
 <label>List of open incidents</label>
 <hyperlink>UI.php</hyperlink>
+<icon_path></icon_path>
 <template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContact&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizIncidentTicket: ticket_status Contains &apos;Open&apos; AND severity Contains &apos;critical&apos;&lt;/itopblock&gt;
 &lt;div id=&quot;BottomPane&quot;&gt;
 &lt;p&gt;&lt;/p&gt;
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContact&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizIncidentTicket: ticket_status != &apos;Closed&apos;&lt;/itopblock&gt;
 &lt;/div&gt;</template>
-<rank>1</rank>
 <type>application</type>
+<rank>1</rank>
+<parent_id>22</parent_id>
+<user_id>0</user_id>
 </menuNode>
-<menuNode id="14">
-<parent_id>2</parent_id>
+<menuNode id="28">
 <name>Persons</name>
 <label>Any contact of class &apos;Person&apos;</label>
 <hyperlink>UI.php</hyperlink>
+<icon_path></icon_path>
 <template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContact&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizPerson&lt;/itopblock&gt;
 &lt;div id=&quot;BottomPane&quot;&gt;
 &lt;p&gt;&lt;/p&gt;
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContact&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizPerson&lt;/itopblock&gt;
 &lt;/div&gt;</template>
+<type>application</type>
 <rank>7</rank>
-<type>application</type>
+<parent_id>16</parent_id>
+<user_id>0</user_id>
 </menuNode>
-<menuNode id="51">
-<parent_id>17</parent_id>
-<name>Run queries</name>
-<label>Run any query</label>
-<hyperlink>./sibusql.php</hyperlink>
-<template></template>
-<rank>1001</rank>
-<type>application</type>
-</menuNode>
-<menuNode id="73">
-<parent_id>66</parent_id>
+
+<menuNode id="30">
 <name>Scheduled Outages</name>
 <label>Scheduled Outages</label>
 <hyperlink>./UI.php</hyperlink>
+<icon_path></icon_path>
 <template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizChangeTicket&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizChangeTicket: outage = &apos;Yes&apos; AND ticket_status != &apos;Closed&apos;&lt;/itopblock&gt;
 &lt;div id=&quot;BottomPane&quot;&gt;
 &lt;p&gt;&lt;/p&gt;
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizChangeTicket&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizChangeTicket: outage = &apos;Yes&apos; AND ticket_status != &apos;Closed&apos;&lt;/itopblock&gt;
 &lt;/div&gt;</template>
-<rank>999</rank>
 <type>application</type>
+<rank>999</rank>
+<parent_id>11</parent_id>
+<user_id>0</user_id>
 </menuNode>
-<menuNode id="64">
-<parent_id>0</parent_id>
+<menuNode id="31">
 <name>Service Management</name>
 <label>Service Management</label>
 <hyperlink>./UI.php</hyperlink>
+<icon_path></icon_path>
 <template>&lt;style&gt;
 .dashboard {
 vertical-align:top;
@@ -558,44 +585,160 @@ text-align:center;
 &lt;/tr&gt;
 &lt;/table&gt;
 </template>
-<rank>5</rank>
 <type>application</type>
+<rank>5</rank>
+<parent_id>0</parent_id>
+<user_id>0</user_id>
 </menuNode>
-<menuNode id="43">
-<parent_id>2</parent_id>
+<menuNode id="32">
 <name>Teams</name>
 <label>Any contact of class &apos;team&apos;</label>
 <hyperlink>UI.php</hyperlink>
+<icon_path></icon_path>
 <template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContact&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizTeam&lt;/itopblock&gt;
 &lt;div id=&quot;BottomPane&quot;&gt;
 &lt;p&gt;&lt;/p&gt;
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContact&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizTeam&lt;/itopblock&gt;
 &lt;/div&gt;</template>
+<type>application</type>
 <rank>8</rank>
-<type>application</type>
+<parent_id>16</parent_id>
+<user_id>0</user_id>
 </menuNode>
-<menuNode id="16">
-<parent_id>17</parent_id>
-<name>Universal Search</name>
-<label>Search for anything...</label>
-<hyperlink>UniversalSearch.php</hyperlink>
-<template></template>
-<rank>999</rank>
-<type>application</type>
-</menuNode>
-<menuNode id="76">
-<parent_id>0</parent_id>
+
+<menuNode id="34">
 <name>Welcome</name>
 <label>Welcome</label>
 <hyperlink>./UI.php</hyperlink>
+<icon_path></icon_path>
 <template>&lt;p&gt;&lt;/p&gt;
 &lt;p&gt;&lt;/p&gt;
 &lt;p style=&quot;text-align:center; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:32px;&quot;&gt;Welcome to iTop&lt;/p&gt;
 &lt;p&gt;&lt;/p&gt;
 &lt;p style=&quot;text-align:center; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:14px;&quot;&gt;&lt;i&gt;Version 0.8&lt;/i&gt;&lt;/p&gt;
-
 </template>
-<rank>1</rank>
 <type>application</type>
+<rank>1</rank>
+<parent_id>0</parent_id>
+<user_id>0</user_id>
 </menuNode>
+
+<menuNode id="100">
+<name>Admin tools</name>
+<label>Admin tools</label>
+<hyperlink>UI.php</hyperlink>
+<icon_path></icon_path>
+<template>&lt;p&gt;&lt;/p&gt;
+&lt;p&gt;&lt;/p&gt;
+&lt;p style=&quot;text-align:center; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:32px;&quot;&gt;User management&lt;/p&gt;
+&lt;p&gt;&lt;/p&gt;
+&lt;p style=&quot;text-align:center; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:14px;&quot;&gt;&lt;i&gt;User management by profiles&lt;/i&gt;&lt;/p&gt;
+</template>
+<type>administrator</type>
+<rank>1000</rank>
+<parent_id>0</parent_id>
+<user_id>0</user_id>
+</menuNode>
+
+<menuNode id="101">
+<name>Data Model</name>
+<label>Overview of the Data Model</label>
+<hyperlink>schema.php</hyperlink>
+<icon_path></icon_path>
+<template></template>
+<type>administrator</type>
+<rank>1500</rank>
+<parent_id>100</parent_id>
+<user_id>0</user_id>
+</menuNode>
+
+<menuNode id="102">
+<name>Universal Search</name>
+<label>Search for anything...</label>
+<hyperlink>UniversalSearch.php</hyperlink>
+<icon_path></icon_path>
+<template></template>
+<type>administrator</type>
+<rank>1600</rank>
+<parent_id>100</parent_id>
+<user_id>0</user_id>
+</menuNode>
+
+<menuNode id="110">
+<name>User management</name>
+<label>User management</label>
+<hyperlink>UI.php</hyperlink>
+<icon_path></icon_path>
+<template>&lt;p&gt;&lt;/p&gt;
+&lt;p&gt;&lt;/p&gt;
+&lt;p style=&quot;text-align:center; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:32px;&quot;&gt;User management&lt;/p&gt;
+&lt;p&gt;&lt;/p&gt;
+&lt;p style=&quot;text-align:center; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:14px;&quot;&gt;&lt;i&gt;User management by profiles&lt;/i&gt;&lt;/p&gt;
+</template>
+<type>administrator</type>
+<rank>1</rank>
+<parent_id>100</parent_id>
+<user_id>0</user_id>
+</menuNode>
+
+<menuNode id="111">
+<name>User logins</name>
+<label>User logins</label>
+<hyperlink>UI.php</hyperlink>
+<icon_path>../images/std_view.gif</icon_path>
+<template>&lt;div id=&quot;TopPane&quot;&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT URP_Users AS URP_Users WHERE 1&lt;/itopblock&gt;
+&lt;/div&gt;
+&lt;div id=&quot;BottomPane&quot;&gt;
+&lt;p&gt;&lt;/p&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT URP_Users AS URP_Users WHERE 1&lt;/itopblock&gt;
+&lt;/div&gt;</template>
+<type>administrator</type>
+<rank>10</rank>
+<parent_id>110</parent_id>
+<user_id>0</user_id>
+</menuNode>
+
+<menuNode id="112">
+<name>Profiles</name>
+<label>User profiles</label>
+<hyperlink>UI.php</hyperlink>
+<icon_path>../images/std_view.gif</icon_path>
+<template>&lt;div id=&quot;TopPane&quot;&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT URP_Profiles AS URP_Profiles WHERE 1&lt;/itopblock&gt;
+&lt;/div&gt;
+&lt;div id=&quot;BottomPane&quot;&gt;
+&lt;p&gt;&lt;/p&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT URP_Profiles AS URP_Profiles WHERE 1&lt;/itopblock&gt;
+&lt;/div&gt;</template>
+<type>administrator</type>
+<rank>11</rank>
+<parent_id>110</parent_id>
+<user_id>0</user_id>
+</menuNode>
+
+<menuNode id="113">
+<name>Export</name>
+<label>Export any filter in HTML, CSV or XML</label>
+<hyperlink>../webservices/export.php</hyperlink>
+<icon_path></icon_path>
+<template></template>
+<type>application</type>
+<rank>1001</rank>
+<parent_id>100</parent_id>
+<user_id>0</user_id>
+</menuNode>
+
+<menuNode id="114">
+<name>Run queries</name>
+<label>Run any query</label>
+<hyperlink>./sibusql.php</hyperlink>
+<icon_path></icon_path>
+<template></template>
+<type>application</type>
+<rank>1002</rank>
+<parent_id>100</parent_id>
+<user_id>0</user_id>
+</menuNode>
+
 </Set>

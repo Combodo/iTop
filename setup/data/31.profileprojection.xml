@@ -2,14 +2,14 @@
 <Set>
 <URP_ProfileProjection id="1">
 <dimensionid>1</dimensionid>
-<profileid>1</profileid>
-<value>true</value>
+<profileid>100</profileid>
+<value>1;2</value>
 <attribute></attribute>
 </URP_ProfileProjection>
-<URP_ProfileProjection id="2">
+<URP_ProfileProjection id="3">
 <dimensionid>2</dimensionid>
-<profileid>1</profileid>
-<value>true</value>
+<profileid>100</profileid>
+<value>&lt;any&gt;</value>
 <attribute></attribute>
 </URP_ProfileProjection>
 </Set>

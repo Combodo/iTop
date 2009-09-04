@@ -158,29 +158,44 @@ EOF
 		$this->AddToMenu("</select></form>\n");
 		$this->AddToMenu("</div>\n");
 		$this->AddToMenu("<ul id=\"browser\" class=\"dir\">\n");
-        $oAppContext = new ApplicationContext();
-        // Display the menu
-        // 1) Application defined menus
-        $oSearchFilter = $oContext->NewFilter("menuNode");
-        $oSearchFilter->AddCondition('parent_id', 0, '=');
-        $oSearchFilter->AddCondition('type', 'application', '=');
-        // There may be more criteria added later to have a specific menu based on the user's profile
-        $oSet = new CMDBObjectSet($oSearchFilter, array('rank' => true));
-        while ($oRootMenuNode = $oSet->Fetch())
-        {
-        	$oRootMenuNode->DisplayMenu($this, 'application', $oAppContext->GetAsHash());
-        }
-        // 2) User defined menus (Bookmarks)
-        $oSearchFilter = $oContext->NewFilter("menuNode");
-        $oSearchFilter->AddCondition('parent_id', 0, '=');
-        $oSearchFilter->AddCondition('type', 'user', '=');
-        $oSearchFilter->AddCondition('user_id', UserRights::GetUserId(), '=');
-        // There may be more criteria added later to have a specific menu based on the user's profile
-        $oSet = new CMDBObjectSet($oSearchFilter, array('rank' => true));
-        while ($oRootMenuNode = $oSet->Fetch())
-        {
-        	$oRootMenuNode->DisplayMenu($this, 'user', $oAppContext->GetAsHash());
-        }
+
+		// Display the menu
+		$oAppContext = new ApplicationContext();
+		// 1) Application defined menus
+		$oSearchFilter = $oContext->NewFilter("menuNode");
+		$oSearchFilter->AddCondition('parent_id', 0, '=');
+		$oSearchFilter->AddCondition('type', 'application', '=');
+		// There may be more criteria added later to have a specific menu based on the user's profile
+		$oSet = new CMDBObjectSet($oSearchFilter, array('rank' => true));
+		while ($oRootMenuNode = $oSet->Fetch())
+		{
+			$oRootMenuNode->DisplayMenu($this, 'application', $oAppContext->GetAsHash());
+		}
+		// 2) User defined menus (Bookmarks)
+		$oSearchFilter = $oContext->NewFilter("menuNode");
+		$oSearchFilter->AddCondition('parent_id', 0, '=');
+		$oSearchFilter->AddCondition('type', 'user', '=');
+		$oSearchFilter->AddCondition('user_id', UserRights::GetUserId(), '=');
+		// There may be more criteria added later to have a specific menu based on the user's profile
+		$oSet = new CMDBObjectSet($oSearchFilter, array('rank' => true));
+		while ($oRootMenuNode = $oSet->Fetch())
+		{
+			$oRootMenuNode->DisplayMenu($this, 'user', $oAppContext->GetAsHash());
+		}
+		// 3) Administrator menu
+		if (userRights::IsAdministrator())
+		{
+			$oSearchFilter = $oContext->NewFilter("menuNode");
+			$oSearchFilter->AddCondition('parent_id', 0, '=');
+			$oSearchFilter->AddCondition('type', 'administrator', '=');
+			// There may be more criteria added later to have a specific menu based on the user's profile
+			$oSet = new CMDBObjectSet($oSearchFilter, array('rank' => true));
+			while ($oRootMenuNode = $oSet->Fetch())
+			{
+				$oRootMenuNode->DisplayMenu($this, 'administrator', $oAppContext->GetAsHash());
+			}
+		}
+
 		$this->AddToMenu("</ul>\n");
     }
 

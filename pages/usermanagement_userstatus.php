@@ -263,6 +263,23 @@ if ($iUser == -1)
 }
 else
 {
+	$oPage->p('<h2>How is it computing the user rights?</h2>');
+
+	$oPage->p('<h3>1st, find the profiles that apply</h3>');
+	$oPage->p('<p>Project the current object in every existing dimension</p>');
+	$oPage->p('<p>Project the observed profile in every existing dimension (might depend on the user)</p>');
+	$oPage->p('<p>If an overlap is found in any dimension, then the profile applies</p>');
+
+	$oPage->p('<h3>2nd, interpret the profiles</h3>');
+	$oPage->p('<p>Note: granting rights for specific attributes is not fully implemented. It is still not taking into account the inheritance of rights AND the UI will not take that information into account!</p>');
+	$oPage->p('<p>Actions: looks into URP_ActionGrant for a permission (yes or no) and goes up into the class hierarchy until an answer is found, defaults to <em>no</em></p>');
+	$oPage->p('<p>Stimuli: looks into URP_StimulusGrant for a permission (yes or no), defaults to <em>no</em></p>');
+	
+
+	$oPage->p('<h3>3rd, keep the most permissive one</h3>');
+	$oPage->p('<p>If one profile says YES, then the answer is YES</p>');
+	
+
 	$oUser = MetaModel::GetObject('URP_Users', $iUser);
 
 	$oPage->p('<h2>Projections for user '.$oUser->GetName().'</h2>');
