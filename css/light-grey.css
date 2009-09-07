@@ -187,6 +187,11 @@ input.textSearch {
 	color:#000000;
 }
 
+.ac_input {
+	border: 1px solid #7f9db9;
+	background: url(../images/ac-background.gif) no-repeat right;
+}
+
 /* By Rom */
 .csvimport_createobj {
     color: #AA0000;
