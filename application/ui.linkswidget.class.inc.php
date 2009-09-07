@@ -75,7 +75,7 @@ class UILinksWidget
 			$sHTMLValue .= "</script>\n";
 			$sHTMLValue .= $this->GetObjectPickerDialog($oPage, $sTargetClass, 'oLinkWidget'.$this->m_iInputId.'.OnOk');
 			$sHTMLValue .= $this->GetLinkObjectDialog($oPage, $this->m_iInputId);
-			$sHTMLValue .= "<input type=\"text\" id=\"ac_{$this->m_iInputId}\" size=\"35\" name=\"\" value=\"\" style=\"border: 1px solid red;\" />";
+			$sHTMLValue .= "<input type=\"text\" id=\"ac_{$this->m_iInputId}\" size=\"35\" name=\"\" value=\"\" title=\"Type the first 3 characters\" />";
 			$sHTMLValue .= "<input type=\"button\" value=\" Add... \"  class=\"action\" onClick=\"oLinkWidget{$this->m_iInputId}.AddObject();\"/>";
 			$sHTMLValue .= "&nbsp;<input type=\"button\" value=\"Browse...\"  class=\"action\" onClick=\"return ManageObjects('$sTitle', '$sTargetClass', '$this->m_iInputId', '$sExtKeyToRemote');\"/>";
 			// another hidden input to store & pass the object's Id
