@@ -13,4 +13,7 @@ wget --output-document=13.profileprojection.xml --post-data="auth_user=%USER%&au
 wget --output-document=14.actiongrant.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT URP_ActionGrant&format=xml"
 wget --output-document=15.attributegrant.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT URP_AttributeGrant&format=xml"
 wget --output-document=16.stimulusgrant.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT URP_StimulusGrant&format=xml"
+wget --output-document=21.auditcategories.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT AuditCategory&format=xml"
+wget --output-document=22.auditrules.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT AuditRule&format=xml"
+
 pause
