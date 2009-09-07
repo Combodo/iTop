@@ -723,7 +723,7 @@ text-align:center;
 <hyperlink>../webservices/export.php</hyperlink>
 <icon_path></icon_path>
 <template></template>
-<type>application</type>
+<type>administrator</type>
 <rank>1001</rank>
 <parent_id>100</parent_id>
 <user_id>0</user_id>
@@ -735,7 +735,7 @@ text-align:center;
 <hyperlink>./sibusql.php</hyperlink>
 <icon_path></icon_path>
 <template></template>
-<type>application</type>
+<type>administrator</type>
 <rank>1002</rank>
 <parent_id>100</parent_id>
 <user_id>0</user_id>

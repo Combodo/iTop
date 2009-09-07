@@ -1,18 +1,18 @@
 <div class="page_header">
-	<itopblock blockclass="MenuBlock" type="popup" encoding="text/sibusql" label="Actions">$class$: pkey = $pkey$</itopblock>
+	<itopblock blockclass="MenuBlock" type="popup" encoding="text/oql" label="Actions">SELECT $class$ WHERE id = $pkey$</itopblock>
 	<h1>$class_name$: <span class="hilite">$name$</span></h1>
 	<itopblock blockclass="HistoryBlock" type="toggle" encoding="text/oql">SELECT CMDBChangeOp WHERE objkey = $pkey$ AND objclass = '$class$'</itopblock>
 </div>
 <img src="../images/erwanContracts.jpg" style="margin-top:-10px; margin-right:10px; float:right">
-<itopblock blockclass="DisplayBlock" asynchronous="true" type="bare_details" encoding="text/sibusql">bizContract: pkey = $pkey$</itopblock>
+<itopblock blockclass="DisplayBlock" asynchronous="true" type="bare_details" encoding="text/oql">SELECT bizContract WHERE id = $pkey$</itopblock>
 <itoptabs>
 	<itoptab name="Covered_Infrastructures">
-		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">lnkInfraContract: contract_id = $pkey$</itopblock>
+		<itopblock blockclass="DisplayBlock" type="list" link_attr="contract_id" object_id="$pkey$" target_attr="infra_id" encoding="text/oql">SELECT lnkInfraContract WHERE contract_id = $pkey$</itopblock>
 	</itoptab>
-	<itoptab name="Contact">
-		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">lnkContactContract: contract_id = $pkey$</itopblock>
+	<itoptab name="Contacts">
+		<itopblock blockclass="DisplayBlock" type="list" link_attr="contract_id" object_id="$pkey$" target_attr="contact_id" encoding="text/oql">SELECT lnkContactContract WHERE contract_id = $pkey$</itopblock>
 	</itoptab>	
-	<itoptab name="Document">
-		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">lnkDocumentContract: contract_id = $pkey$</itopblock>
+	<itoptab name="Documents">
+		<itopblock blockclass="DisplayBlock" type="list" link_attr="contract_id" object_id="$pkey$" target_attr="doc_id" encoding="text/oql">SELECT lnkDocumentContract WHERE contract_id = $pkey$</itopblock>
 	</itoptab>
 </itoptabs>

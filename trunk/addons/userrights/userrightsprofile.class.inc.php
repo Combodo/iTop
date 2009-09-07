@@ -122,7 +122,13 @@ class URP_Profiles extends UserRightsBaseClass
 	
 	function DoShowGrantSumary($oPage)
 	{
-	
+		if ($this->GetName() == "Administrator")
+		{
+			// Looks dirty, but ok that's THE ONE
+			$oPage->p('Has Read/Write access to any object in the database.');
+			return;
+		}
+
 		// Note: for sure, we assume that the instance is derived from UserRightsProfile
 		$oUserRights = UserRights::GetModuleInstance();
 	
@@ -674,7 +680,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		$oContact = new bizPerson();
 		$oContact->Set('name', 'My last name');
 		$oContact->Set('first_name', 'My first name');
-		$oContact->Set('status', 'production');
+		$oContact->Set('status', 'available');
 		$oContact->Set('org_id', $iOrgId);
 		$oContact->Set('email', 'my.email@foo.org');
 		$oContact->Set('phone', '');
@@ -1215,6 +1221,11 @@ class SetupITILProfiles
 			'lnkContactContract',
 			'lnkDocumentContract',
 		),
+		'Call' => array(
+			'bizServiceCall',
+			'lnkCallTicket',
+			'lnkInfraCall',
+		),
 	);
 	
 	protected static $m_aProfiles = array(
@@ -1242,12 +1253,13 @@ class SetupITILProfiles
 	*/
 		'Service Desk Agent' => array(
 			'description' => 'Person in charge of creating incident reports',
-			'write_modules' => 'Documentation,Incident',
+			'write_modules' => 'Documentation,Incident,Call',
 			'stimuli' => array(
 				'bizServer' => 'none',
 				'bizContract' => 'none',
 				'bizIncidentTicket' => 'ev_assign',
 				'bizChangeTicket' => 'none',
+				'bizServiceCall' => 'any',
 			),
 		),
 		'Support Agent' => array(

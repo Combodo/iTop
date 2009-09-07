@@ -9,7 +9,6 @@
 <location_id>29</location_id>
 <first_name>Jules</first_name>
 <employee_number></employee_number>
-<login_id></login_id>
 </bizPerson>
 <bizPerson id="20">
 <name>Dumas</name>
@@ -20,7 +19,6 @@
 <location_id>1</location_id>
 <first_name>Dumas</first_name>
 <employee_number></employee_number>
-<login_id></login_id>
 </bizPerson>
 <bizPerson id="7">
 <name>Hugo</name>
@@ -31,6 +29,5 @@
 <location_id>1</location_id>
 <first_name>Victor</first_name>
 <employee_number>e12345</employee_number>
-<login_id></login_id>
 </bizPerson>
 </Set>

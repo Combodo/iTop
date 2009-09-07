@@ -122,7 +122,7 @@ $sJSHandlerCode
 		$this->m_oPage->add("</script>\n");
 		$this->m_oPage->add("<div id=\"object_preview\">\n");
 		$this->m_oPage->add("</div>\n");
-		$this->m_oPage->add("<input type=\"submit\" value=\"Create {$this->m_sClass}\">\n");
+		$this->m_oPage->add("<input type=\"submit\" value=\"Create ".MetaModel::GetName($this->m_sClass)."\">\n");
 		$this->m_oPage->add("</form>\n");
 		$this->m_oPage->add("</div>\n");
 	}	

@@ -39,12 +39,12 @@ class bizIncidentTicket extends cmdbAbstractObject
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeString("name", array("label"=>"TicketID", "description"=>"Refence number ofr this incident", "allowed_values"=>null, "sql"=>"name", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("name", array("label"=>"Ticket Ref", "description"=>"Refence number ofr this incident", "allowed_values"=>null, "sql"=>"name", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("title", array("label"=>"Title", "description"=>"Overview of the Incident", "allowed_values"=>null, "sql"=>"title", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
    	
     MetaModel::Init_AddAttribute(new AttributeEnum("type", array("label"=>"Type", "description"=>"Type of the Incident", "allowed_values"=>new ValueSetEnum("Network,Server,Desktop,Application"), "sql"=>"type", "default_value"=>"Server", "is_null_allowed"=>false, "depends_on"=>array())));
-     MetaModel::Init_AddAttribute(new AttributeExternalKey("customer_id", array("targetclass"=>"bizOrganization", "label"=>"Customer", "description"=>"who is impacted by the ticket", "allowed_values"=>null, "sql"=>"customer", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("customer_name", array("label"=>"Customer", "description"=>"Name of the customer impacted by this ticket", "allowed_values"=>null, "extkey_attcode"=> 'customer_id', "target_attcode"=>"name")));
+     MetaModel::Init_AddAttribute(new AttributeExternalKey("org_id", array("targetclass"=>"bizOrganization", "label"=>"Customer", "description"=>"who is impacted by the ticket", "allowed_values"=>null, "sql"=>"customer", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("customer_name", array("label"=>"Customer", "description"=>"Name of the customer impacted by this ticket", "allowed_values"=>null, "extkey_attcode"=> 'org_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeEnum("ticket_status", array("label"=>"Status", "description"=>"Status of the ticket", "allowed_values"=>new ValueSetEnum("New, Assigned, WorkInProgress, Closed"), "sql"=>"ticket_status", "default_value"=>"New", "is_null_allowed"=>false, "depends_on"=>array())));
 		// SetPossibleValues("status",array("Open","Monitored","Closed"));
 		MetaModel::Init_AddAttribute(new AttributeText("initial_situation", array("label"=>"Initial Situation", "description"=>"Initial situation of the Incident", "allowed_values"=>null, "sql"=>"initial_situation", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
@@ -55,9 +55,7 @@ class bizIncidentTicket extends cmdbAbstractObject
 	      MetaModel::Init_AddAttribute(new AttributeDate("next_update", array("label"=>"Next update", "description"=>"next time the Ticket is expected to be  modified", "allowed_values"=>null, "sql"=>"next_update", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
 		MetaModel::Init_AddAttribute(new AttributeDate("end_date", array("label"=>"Closed Date", "description"=>"Date when the Ticket was closed", "allowed_values"=>null, "sql"=>"closed_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-	  //MetaModel::Init_AddAttribute(new AttributeExternalKey("caller_id", array("targetclass"=>"bizPerson", "jointype"=> "", "label"=>"Caller", "description"=>"person that trigger incident", "allowed_values"=>null, "sql"=>"caller_id", "is_null_allowed"=>false, "depends_on"=>array())));
-	  MetaModel::Init_AddAttribute(new AttributeExternalKey("caller_id", array("targetclass"=>"bizPerson", "jointype"=> "", "label"=>"Caller", "description"=>"person that trigger incident", "allowed_values"=>new ValueSetObjects('SELECT bizPerson AS p WHERE p.org_id = :this->customer_id'), "sql"=>"caller_id", "is_null_allowed"=>false, "depends_on"=>array('customer_id'))));
-	  //MetaModel::Init_AddAttribute(new AttributeExternalKey("caller_id", array("targetclass"=>"bizPerson", "jointype"=> "", "label"=>"Caller", "description"=>"person that trigger incident", "allowed_values"=>new ValueSetObjects('SELECT bizPerson AS p WHERE p.org_id = 1'), "sql"=>"caller_id", "is_null_allowed"=>false, "depends_on"=>array('customer_id'))));
+	  MetaModel::Init_AddAttribute(new AttributeExternalKey("caller_id", array("targetclass"=>"bizPerson", "jointype"=> "", "label"=>"Caller", "description"=>"person that trigger incident", "allowed_values"=>new ValueSetObjects('SELECT bizPerson AS p WHERE p.org_id = :this->org_id'), "sql"=>"caller_id", "is_null_allowed"=>false, "depends_on"=>array('org_id'))));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("caller_mail", array("label"=>"Caller", "description"=>"Person that trigger this incident", "allowed_values"=>null, "extkey_attcode"=> 'caller_id', "target_attcode"=>"email")));
 	
   	MetaModel::Init_AddAttribute(new AttributeString("impact", array("label"=>"Impact", "description"=>"Impact of the Incident", "allowed_values"=>null, "sql"=>"impact", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
@@ -67,7 +65,7 @@ class bizIncidentTicket extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalField("agent_mail", array("label"=>"Managed by Agent", "description"=>"mail of agent managing the Ticket", "allowed_values"=>null, "extkey_attcode"=> 'agent_id', "target_attcode"=>"email")));
 		// Comment afficher le first + last name de l'agent ? Est-ce utile d'ajouter ce champ?
 		MetaModel::Init_AddAttribute(new AttributeText("action_log", array("label"=>"Action Logs", "description"=>"List all action performed during the incident", "allowed_values"=>null, "sql"=>"action_log", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-				MetaModel::Init_AddAttribute(new AttributeEnum("severity", array("label"=>"Severity", "description"=>"Field defining the criticity if the incident", "allowed_values"=>new ValueSetEnum("critical,medium,low"), "sql"=>"criticity", "default_value"=>"low", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("severity", array("label"=>"Severity", "description"=>"Field defining the criticity if the incident", "allowed_values"=>new ValueSetEnum("critical,medium,low"), "sql"=>"criticity", "default_value"=>"low", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeInteger("assignment_count", array("label"=>"Assignment Count", "description"=>"Number of times this ticket was assigned or reassigned", "allowed_values"=>null, "sql"=>"assignment_count", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("resolution", array("label"=>"Resolution", "description"=>"Description of the resolution", "allowed_values"=>null, "sql"=>"resolution", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
@@ -79,7 +77,7 @@ class bizIncidentTicket extends cmdbAbstractObject
 		MetaModel::Init_AddFilterFromAttribute("name");
 		MetaModel::Init_AddFilterFromAttribute("title");
 		MetaModel::Init_AddFilterFromAttribute("type");
-		MetaModel::Init_AddFilterFromAttribute("customer_id");
+		MetaModel::Init_AddFilterFromAttribute("org_id");
 		MetaModel::Init_AddFilterFromAttribute("caller_id");
 		MetaModel::Init_AddFilterFromAttribute("ticket_status");
 		MetaModel::Init_AddFilterFromAttribute("start_date");
@@ -93,20 +91,20 @@ class bizIncidentTicket extends cmdbAbstractObject
 		// doit-on aussi ajouter un filtre sur les extfields lié à une extkey ? ici le name de l'agent?
 		
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('name','title', 'customer_id', 'type','ticket_status', 'severity','start_date', 'initial_situation', 'current_situation','caller_id', 'impact', 'last_update', 'next_update','end_date', 'assignment_count', 'workgroup_id','agent_id','action_log','resolution')); // Attributes to be displayed for a list
-		MetaModel::Init_SetZListItems('list', array('name', 'title', 'customer_id', 'type','ticket_status','severity','start_date', 'initial_situation')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', array('name','title', 'org_id', 'type','ticket_status', 'severity','start_date', 'initial_situation', 'current_situation','caller_id', 'impact', 'last_update', 'next_update','end_date', 'assignment_count', 'workgroup_id','agent_id','action_log','resolution')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('list', array('name', 'title', 'org_id', 'type','ticket_status','severity','start_date', 'initial_situation')); // Attributes to be displayed for a list
 		// Search criteria
-		MetaModel::Init_SetZListItems('standard_search', array('name', 'title', 'customer_id', 'caller_id','type', 'ticket_status', 'severity','start_date', 'last_update','end_date','agent_id')); // Criteria of the std search form
-		MetaModel::Init_SetZListItems('advanced_search', array('name', 'title', 'customer_id','caller_id','type','ticket_status', 'severity','start_date', 'last_update', 'end_date','agent_id')); // Criteria of the advanced search form
+		MetaModel::Init_SetZListItems('standard_search', array('name', 'title', 'org_id', 'caller_id','type', 'ticket_status', 'severity','start_date', 'last_update','end_date','agent_id')); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('advanced_search', array('name', 'title', 'org_id','caller_id','type','ticket_status', 'severity','start_date', 'last_update', 'end_date','agent_id')); // Criteria of the advanced search form
 
 		// State machine
 		MetaModel::Init_DefineState("New", array("label"=>"New (Unassigned)", "description"=>"Newly created ticket", "attribute_inherit"=>null,
 												 "attribute_list"=>array('name' => OPT_ATT_READONLY, 'assignment_count' => OPT_ATT_HIDDEN, 'end_date' => OPT_ATT_HIDDEN, 'next_update' => OPT_ATT_HIDDEN, 'last_update' =>  OPT_ATT_HIDDEN,
-												 "title"=>OPT_ATT_MANDATORY, "customer_id"=>OPT_ATT_MANDATORY, "caller_id"=>OPT_ATT_MANDATORY, "initial_situation"=>OPT_ATT_MANDATORY, "start_date"=>OPT_ATT_MANDATORY, "workgroup_id"=>OPT_ATT_MANDATORY,
+												 "title"=>OPT_ATT_MANDATORY, "org_id"=>OPT_ATT_MANDATORY, "caller_id"=>OPT_ATT_MANDATORY, "initial_situation"=>OPT_ATT_MANDATORY, "start_date"=>OPT_ATT_MANDATORY, "workgroup_id"=>OPT_ATT_MANDATORY,
 												 "severity"=>OPT_ATT_MANDATORY, "agent_id"=>OPT_ATT_HIDDEN,"impacted_infra_manual"=>OPT_ATT_MANDATORY, "related_tickets"=>OPT_ATT_MUSTPROMPT)));
 		MetaModel::Init_DefineState("Assigned", array("label"=>"Assigned", "description"=>"Ticket is assigned to somebody", "attribute_inherit"=>null,
-												"attribute_list"=>array('name' => OPT_ATT_READONLY, "title"=>OPT_ATT_READONLY, "customer_id"=>OPT_ATT_READONLY, "caller_id"=>OPT_ATT_READONLY, "initial_situation"=>OPT_ATT_READONLY, "start_date"=>OPT_ATT_READONLY,'assignment_count' => OPT_ATT_READONLY,'end_date' => OPT_ATT_HIDDEN, "workgroup_id"=>OPT_ATT_MUSTCHANGE, "agent_id"=>OPT_ATT_MUSTCHANGE)));
-		MetaModel::Init_DefineState("WorkInProgress", array("label"=>"Work In Progress", "description"=>"Work is in progress", "attribute_inherit"=>null, "attribute_list"=>array("title"=>OPT_ATT_READONLY, "customer_id"=>OPT_ATT_READONLY, "caller_id"=>OPT_ATT_READONLY, "initial_situation"=>OPT_ATT_READONLY,'end_date' => OPT_ATT_HIDDEN, "start_date"=>OPT_ATT_READONLY,"workgroup_id"=>OPT_ATT_MANDATORY, "agent_id"=>OPT_ATT_MANDATORY)));
+												"attribute_list"=>array('name' => OPT_ATT_READONLY, "title"=>OPT_ATT_READONLY, "org_id"=>OPT_ATT_READONLY, "caller_id"=>OPT_ATT_READONLY, "initial_situation"=>OPT_ATT_READONLY, "start_date"=>OPT_ATT_READONLY,'assignment_count' => OPT_ATT_READONLY,'end_date' => OPT_ATT_HIDDEN, "workgroup_id"=>OPT_ATT_MUSTCHANGE, "agent_id"=>OPT_ATT_MUSTCHANGE)));
+		MetaModel::Init_DefineState("WorkInProgress", array("label"=>"Work In Progress", "description"=>"Work is in progress", "attribute_inherit"=>null, "attribute_list"=>array("title"=>OPT_ATT_READONLY, "org_id"=>OPT_ATT_READONLY, "caller_id"=>OPT_ATT_READONLY, "initial_situation"=>OPT_ATT_READONLY,'end_date' => OPT_ATT_HIDDEN, "start_date"=>OPT_ATT_READONLY,"workgroup_id"=>OPT_ATT_MANDATORY, "agent_id"=>OPT_ATT_MANDATORY)));
 		MetaModel::Init_DefineState("Closed", array("label"=>"Closed", "description"=>"Ticket is closed", "attribute_inherit"=>null, "attribute_list"=>array("workgroup_id"=>OPT_ATT_MANDATORY, "agent_id"=>OPT_ATT_MANDATORY, "resolution"=>OPT_ATT_MANDATORY, "end_date"=>OPT_ATT_MANDATORY)));
 
 		MetaModel::Init_DefineStimulus("ev_assign", new StimulusUserAction(array("label"=>"Assign this ticket", "description"=>"Assign this ticket to a group and an agent")));
@@ -124,7 +122,7 @@ class bizIncidentTicket extends cmdbAbstractObject
 
 	public function Generate(cmdbDataGenerator $oGenerator)
 	{
-		$this->Set('customer_id', $oGenerator->GetOrganizationId());
+		$this->Set('org_id', $oGenerator->GetOrganizationId());
 		$this->Set('title', $oGenerator->GenerateString("enum(Site,Server,Line)| |enum(is down,is flip-flopping,is not responding)"));
 		$this->Set('agent_id', $oGenerator->GenerateKey("bizPerson", array('org_id' =>$oGenerator->GetOrganizationId() )));
 		$this->Set('ticket_status', $oGenerator->GenerateString("enum(Open,Closed,Closed,Monitored)"));
@@ -191,9 +189,9 @@ class lnkRelatedTicket extends cmdbAbstractObject
 			"display_template" => "../business/templates/default.html",
 		);
 		MetaModel::Init_Params($aParams);
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("rel_ticket_id", array("targetclass"=>"bizIncidentTicket", "jointype"=> '', "label"=>"Related Ticket id", "description"=>"The related ticket", "allowed_values"=>null, "sql"=>"rel_ticket_id", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("rel_ticket_id", array("targetclass"=>"bizIncidentTicket", "jointype"=> '', "label"=>"Related Ticket", "description"=>"The related ticket", "allowed_values"=>null, "sql"=>"rel_ticket_id", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("rel_ticket_name", array("label"=>"Related ticket", "description"=>"Name of the related ticket", "allowed_values"=>null, "extkey_attcode"=> 'rel_ticket_id', "target_attcode"=>"title")));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("ticket_id", array("targetclass"=>"bizIncidentTicket", "jointype"=> '', "label"=>"Ticket #", "description"=>"Ticket number", "allowed_values"=>null, "sql"=>"ticket_id", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("ticket_id", array("targetclass"=>"bizIncidentTicket", "jointype"=> '', "label"=>"Ticket", "description"=>"Ticket number", "allowed_values"=>null, "sql"=>"ticket_id", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("ticket_name", array("label"=>"Ticket name", "description"=>"Name of the ticket", "allowed_values"=>null, "extkey_attcode"=> 'ticket_id', "target_attcode"=>"title")));
 		MetaModel::Init_AddAttribute(new AttributeString("impact", array("label"=>"Impact", "description"=>"Impact on the related ticket", "allowed_values"=>null, "sql"=>"impact", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 

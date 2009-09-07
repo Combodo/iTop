@@ -1210,7 +1210,8 @@ abstract class MetaModel
 		// Query caching
 		//
 		$bQueryCacheEnabled = true;
-		$sOqlQuery = $oFilter->ToOql();
+		$aParams = array();
+		$sOqlQuery = $oFilter->ToOql($aParams); // Render with arguments in clear
 		if ($bQueryCacheEnabled)
 		{
 			if (array_key_exists($sOqlQuery, self::$m_aQueryStructCache))
@@ -1254,7 +1255,17 @@ abstract class MetaModel
 		// Go
 		//
 		$aScalarArgs = array_merge(self::PrepareQueryArguments($aArgs), $oFilter->GetInternalParams());
-		$sRes = $oSelect->RenderSelect($aOrderBy, $aScalarArgs);
+
+		try
+		{
+			$sRes = $oSelect->RenderSelect($aOrderBy, $aScalarArgs);
+		}
+		catch (MissingQueryArgument $e)
+		{
+			// Add some information...
+			$e->addInfo('OQL', $sOqlQuery);
+			throw $e;
+		}
 
 		if (self::$m_bTraceQueries)
 		{

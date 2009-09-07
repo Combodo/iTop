@@ -25,7 +25,7 @@ class bizChangeTicket extends cmdbAbstractObject
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeString("name", array("label"=>"TicketID", "description"=>"Refence number ofr this change", "allowed_values"=>null, "sql"=>"name", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("name", array("label"=>"Ticket Ref", "description"=>"Refence number ofr this change", "allowed_values"=>null, "sql"=>"name", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("title", array("label"=>"Title", "description"=>"Overview of the Change", "allowed_values"=>null, "sql"=>"title", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
     MetaModel::Init_AddAttribute(new AttributeString("type", array("label"=>"Change Type", "description"=>"Type of the Change", "allowed_values"=>new ValueSetEnum("Routine, Normal, Emergency"), "sql"=>"type", "default_value"=>"Routine", "is_null_allowed"=>false, "depends_on"=>array())));
     MetaModel::Init_AddAttribute(new AttributeString("domain", array("label"=>"Domain", "description"=>"Domain for the Change", "allowed_values"=>new ValueSetEnum("Network,Server,Desktop,Application"), "sql"=>"domain", "default_value"=>"Desktop", "is_null_allowed"=>false, "depends_on"=>array())));
@@ -36,8 +36,8 @@ class bizChangeTicket extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalField("requestor_mail", array("label"=>"Requested by", "description"=>"mail of user requesting this change", "allowed_values"=>null, "extkey_attcode"=> 'requestor_id', "target_attcode"=>"email")));
 
     
-    MetaModel::Init_AddAttribute(new AttributeExternalKey("customer_id", array("targetclass"=>"bizOrganization", "label"=>"Customer", "description"=>"who is impacted by the ticket", "allowed_values"=>null, "sql"=>"customer", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("customer_name", array("label"=>"Customer", "description"=>"Name of the customer impacted by this ticket", "allowed_values"=>null, "extkey_attcode"=> 'customer_id', "target_attcode"=>"name")));
+    MetaModel::Init_AddAttribute(new AttributeExternalKey("org_id", array("targetclass"=>"bizOrganization", "label"=>"Customer", "description"=>"who is impacted by the ticket", "allowed_values"=>null, "sql"=>"customer", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("customer_name", array("label"=>"Customer", "description"=>"Name of the customer impacted by this ticket", "allowed_values"=>null, "extkey_attcode"=> 'org_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeEnum("ticket_status", array("label"=>"Status", "description"=>"Status of the ticket", "allowed_values"=>new ValueSetEnum("New, Validated,Rejected,PlannedScheduled,Approved,NotApproved,Implemented,Monitored, Closed"), "sql"=>"change_status", "default_value"=>"New", "is_null_allowed"=>false, "depends_on"=>array())));
 		// SetPossibleValues("status",array("Open","Monitored","Closed"));
 
@@ -51,17 +51,17 @@ class bizChangeTicket extends cmdbAbstractObject
     MetaModel::Init_AddAttribute(new AttributeExternalKey("workgroup_id", array("targetclass"=>"bizWorkgroup", "jointype"=> "", "label"=>"Workgroup", "description"=>"which workgroup is owning ticket", "allowed_values"=>null, "sql"=>"workgroup_id", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("workgroup_name", array("label"=>"Managed by Workgroup", "description"=>"name of workgroup managing the Ticket", "allowed_values"=>null, "extkey_attcode"=> 'workgroup_id', "target_attcode"=>"name")));  
     MetaModel::Init_AddAttribute(new AttributeExternalKey("agent_id", array("targetclass"=>"bizPerson", "jointype"=> "", "label"=>"Agent", "description"=>"who is managing the ticket", "allowed_values"=>null, "sql"=>"agent_id", "is_null_allowed"=>true, "depends_on"=>array('workgroup_id'))));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("agent_name", array("label"=>"Managed by Agent", "description"=>"name of agent managing the Ticket", "allowed_values"=>null, "extkey_attcode"=> 'agent_id', "target_attcode"=>"name")));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("agent_mail", array("label"=>"Managed by Agent", "description"=>"name of agent managing the Ticket", "allowed_values"=>null, "extkey_attcode"=> 'agent_id', "target_attcode"=>"email")));
 
     MetaModel::Init_AddAttribute(new AttributeExternalKey("supervisorgroup_id", array("targetclass"=>"bizWorkgroup", "jointype"=> "", "label"=>"Supervisor group", "description"=>"which workgroup is supervising ticket", "allowed_values"=>null, "sql"=>"supervisorgroup_id", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("supervisorgroup_name", array("label"=>"Supervise by Workgroup", "description"=>"name of the group supervising the Ticket", "allowed_values"=>null, "extkey_attcode"=> 'supervisorgroup_id', "target_attcode"=>"name")));  
     MetaModel::Init_AddAttribute(new AttributeExternalKey("supervisor_id", array("targetclass"=>"bizPerson", "jointype"=> "", "label"=>"Supervisor", "description"=>"who is managing the ticket", "allowed_values"=>null, "sql"=>"supervisor_id", "is_null_allowed"=>true, "depends_on"=>array('supervisorgroup_id'))));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("supervisor_name", array("label"=>"Managed by Supervisor", "description"=>"name of agent supervising the Ticket", "allowed_values"=>null, "extkey_attcode"=> 'supervisor_id', "target_attcode"=>"name")));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("supervisor_mail", array("label"=>"Managed by Supervisor", "description"=>"name of agent supervising the Ticket", "allowed_values"=>null, "extkey_attcode"=> 'supervisor_id', "target_attcode"=>"email")));
 
     MetaModel::Init_AddAttribute(new AttributeExternalKey("managergroup_id", array("targetclass"=>"bizWorkgroup", "jointype"=> "", "label"=>"Manager group", "description"=>"which workgroup is approving ticket", "allowed_values"=>null, "sql"=>"managergroup_id", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("managergroup_name", array("label"=>"Approved by group", "description"=>"name of workgroup approving the Ticket", "allowed_values"=>null, "extkey_attcode"=> 'managergroup_id', "target_attcode"=>"name")));  
     MetaModel::Init_AddAttribute(new AttributeExternalKey("manager_id", array("targetclass"=>"bizPerson", "jointype"=> "", "label"=>"Manager", "description"=>"who is approving the ticket", "allowed_values"=>null, "sql"=>"manager_id", "is_null_allowed"=>true, "depends_on"=>array('managergroup_id'))));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("manager_name", array("label"=>"Approved by Agent", "description"=>"name of agent approving the Ticket", "allowed_values"=>null, "extkey_attcode"=> 'manager_id', "target_attcode"=>"name")));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("manager_mail", array("label"=>"Approved by Agent", "description"=>"name of agent approving the Ticket", "allowed_values"=>null, "extkey_attcode"=> 'manager_id', "target_attcode"=>"email")));
 		MetaModel::Init_AddAttribute(new AttributeEnum("outage", array("label"=>"Planned Outage", "description"=>"Flag to define if there is a planned outage", "allowed_values"=>new ValueSetEnum("Yes,No"), "sql"=>"outage", "default_value"=>"No", "is_null_allowed"=>false, "depends_on"=>array())));
 
 
@@ -77,7 +77,7 @@ class bizChangeTicket extends cmdbAbstractObject
 		MetaModel::Init_AddFilterFromAttribute("title");
 		MetaModel::Init_AddFilterFromAttribute("type");
 		MetaModel::Init_AddFilterFromAttribute("domain");
-		MetaModel::Init_AddFilterFromAttribute("customer_id");
+		MetaModel::Init_AddFilterFromAttribute("org_id");
 		MetaModel::Init_AddFilterFromAttribute("requestor_id");
 		MetaModel::Init_AddFilterFromAttribute("ticket_status");
 		MetaModel::Init_AddFilterFromAttribute("creation_date");
@@ -99,31 +99,31 @@ class bizChangeTicket extends cmdbAbstractObject
 		// doit-on aussi ajouter un filtre sur les extfields lié à une extkey ? ici le name de l'agent?
 		
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('name','title', 'customer_id','type','domain','requestor_id','change_request','ticket_status', 'outage','impact', 'last_update', 'start_date','end_date', 'assignment_count', 'workgroup_id','agent_id','supervisorgroup_id','supervisor_id','managergroup_id','manager_id','change_log','fallback')); // Attributes to be displayed for a list
-		MetaModel::Init_SetZListItems('list', array('name', 'title', 'customer_id', 'ticket_status','outage','start_date','type')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', array('name','title', 'org_id','type','domain','requestor_id','change_request','ticket_status', 'outage','impact', 'last_update', 'start_date','end_date', 'assignment_count', 'workgroup_id','agent_id','supervisorgroup_id','supervisor_id','managergroup_id','manager_id','change_log','fallback')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('list', array('name', 'title', 'org_id', 'ticket_status','outage','start_date','type')); // Attributes to be displayed for a list
 		// Search criteria
-		MetaModel::Init_SetZListItems('standard_search', array('name', 'title', 'customer_id', 'ticket_status','type', 'outage','requestor_id','workgroup_id','agent_id')); // Criteria of the std search form
-		MetaModel::Init_SetZListItems('advanced_search', array('name', 'title', 'customer_id', 'ticket_status','type', 'outage','workgroup_id','agent_id')); // Criteria of the advanced search form
+		MetaModel::Init_SetZListItems('standard_search', array('name', 'title', 'org_id', 'ticket_status','type', 'outage','requestor_id','workgroup_id','agent_id')); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('advanced_search', array('name', 'title', 'org_id', 'ticket_status','type', 'outage','workgroup_id','agent_id')); // Criteria of the advanced search form
 
 		// State machine
 		MetaModel::Init_DefineState("New", array("label"=>"New (Unassigned)", "description"=>"Newly created ticket", "attribute_inherit"=>null,
-												 "attribute_list"=>array('name' => OPT_ATT_READONLY,'customer_id' => OPT_ATT_MANDATORY, 'title' => OPT_ATT_MANDATORY, 'reason' => OPT_ATT_MANDATORY, 'impacted_infra_manual' => OPT_ATT_MANDATORY,
+												 "attribute_list"=>array('name' => OPT_ATT_READONLY,'org_id' => OPT_ATT_MANDATORY, 'title' => OPT_ATT_MANDATORY, 'reason' => OPT_ATT_MANDATORY, 'impacted_infra_manual' => OPT_ATT_MANDATORY,
 												 'assignment_count' => OPT_ATT_HIDDEN, 'end_date' => OPT_ATT_HIDDEN)));
 		MetaModel::Init_DefineState("Validated", array("label"=>"Validated", "description"=>"Ticket is approved", "attribute_inherit"=>null,
-												"attribute_list"=>array('name' => OPT_ATT_READONLY, 'customer_id' => OPT_ATT_READONLY,'assignment_count' => OPT_ATT_READONLY,'managergroup_id' => OPT_ATT_MANDATORY, 'supervisorgroup_id' => OPT_ATT_MANDATORY)));
+												"attribute_list"=>array('name' => OPT_ATT_READONLY, 'org_id' => OPT_ATT_READONLY,'assignment_count' => OPT_ATT_READONLY,'managergroup_id' => OPT_ATT_MANDATORY, 'supervisorgroup_id' => OPT_ATT_MANDATORY)));
 		MetaModel::Init_DefineState("Rejected", array("label"=>"Rejected", "description"=>"This ticket is not approved", "attribute_inherit"=>null,
-												 "attribute_list"=>array('name' => OPT_ATT_READONLY, 'customer_id' => OPT_ATT_READONLY,'assignment_count' => OPT_ATT_HIDDEN, 'end_date' => OPT_ATT_HIDDEN)));
+												 "attribute_list"=>array('name' => OPT_ATT_READONLY, 'org_id' => OPT_ATT_READONLY,'assignment_count' => OPT_ATT_HIDDEN, 'end_date' => OPT_ATT_HIDDEN)));
 		MetaModel::Init_DefineState("PlannedScheduled", array("label"=>"Planned&Scheduled", "description"=>"Evaluation is done for this change", "attribute_inherit"=>null,
-												 "attribute_list"=>array('name' => OPT_ATT_READONLY, 'customer_id' => OPT_ATT_READONLY,'assignment_count' => OPT_ATT_HIDDEN, 'end_date' => OPT_ATT_MANDATORY, 'impact' => OPT_ATT_MANDATORY, 'workgroup_id' => OPT_ATT_MANDATORY, 'change_log' => OPT_ATT_MUSTCHANGE,'fallback' => OPT_ATT_MANDATORY)));
+												 "attribute_list"=>array('name' => OPT_ATT_READONLY, 'org_id' => OPT_ATT_READONLY,'assignment_count' => OPT_ATT_HIDDEN, 'end_date' => OPT_ATT_MANDATORY, 'impact' => OPT_ATT_MANDATORY, 'workgroup_id' => OPT_ATT_MANDATORY, 'change_log' => OPT_ATT_MUSTCHANGE,'fallback' => OPT_ATT_MANDATORY)));
 		MetaModel::Init_DefineState("Approved", array("label"=>"Approved", "description"=>"Ticket is approved by CAB", "attribute_inherit"=>null,
-												 "attribute_list"=>array('name' => OPT_ATT_READONLY,'customer_id' => OPT_ATT_READONLY, 'assignment_count' => OPT_ATT_HIDDEN, 'end_date' => OPT_ATT_HIDDEN)));
+												 "attribute_list"=>array('name' => OPT_ATT_READONLY,'org_id' => OPT_ATT_READONLY, 'assignment_count' => OPT_ATT_HIDDEN, 'end_date' => OPT_ATT_HIDDEN)));
 		MetaModel::Init_DefineState("NotApproved", array("label"=>"Not Approved", "description"=>"Ticket has not been approved by CAB", "attribute_inherit"=>null,
-												 "attribute_list"=>array('name' => OPT_ATT_READONLY,'customer_id' => OPT_ATT_READONLY, 'assignment_count' => OPT_ATT_HIDDEN, 'end_date' => OPT_ATT_HIDDEN)));
+												 "attribute_list"=>array('name' => OPT_ATT_READONLY,'org_id' => OPT_ATT_READONLY, 'assignment_count' => OPT_ATT_HIDDEN, 'end_date' => OPT_ATT_HIDDEN)));
 		MetaModel::Init_DefineState("Implemented", array("label"=>"Implementation", "description"=>"Work is in progress for this ticket", "attribute_inherit"=>null,
-												 "attribute_list"=>array('name' => OPT_ATT_READONLY,'customer_id' => OPT_ATT_READONLY, 'assignment_count' => OPT_ATT_HIDDEN, 'end_date' => OPT_ATT_HIDDEN)));
+												 "attribute_list"=>array('name' => OPT_ATT_READONLY,'org_id' => OPT_ATT_READONLY, 'assignment_count' => OPT_ATT_HIDDEN, 'end_date' => OPT_ATT_HIDDEN)));
 		MetaModel::Init_DefineState("Monitored", array("label"=>"Monitored", "description"=>"Change performed is now monitored", "attribute_inherit"=>null,
-												 "attribute_list"=>array('name' => OPT_ATT_READONLY,'customer_id' => OPT_ATT_READONLY,'assignment_count' => OPT_ATT_HIDDEN, 'end_date' => OPT_ATT_HIDDEN)));
-	  	MetaModel::Init_DefineState("Closed", array("label"=>"Closed", "description"=>"Ticket is closed", "attribute_inherit"=>null, "attribute_list"=>array('customer_id' => OPT_ATT_READONLY,"workgroup_id"=>OPT_ATT_MANDATORY, "agent_id"=>OPT_ATT_MANDATORY)));
+												 "attribute_list"=>array('name' => OPT_ATT_READONLY,'org_id' => OPT_ATT_READONLY,'assignment_count' => OPT_ATT_HIDDEN, 'end_date' => OPT_ATT_HIDDEN)));
+	  	MetaModel::Init_DefineState("Closed", array("label"=>"Closed", "description"=>"Ticket is closed", "attribute_inherit"=>null, "attribute_list"=>array('org_id' => OPT_ATT_READONLY,"workgroup_id"=>OPT_ATT_MANDATORY, "agent_id"=>OPT_ATT_MANDATORY)));
 
 		MetaModel::Init_DefineStimulus("ev_validate", new StimulusUserAction(array("label"=>"Validate this change", "description"=>"Make sure it is a valid change request")));
 		MetaModel::Init_DefineStimulus("ev_reject", new StimulusUserAction(array("label"=>"Reject this change", "description"=>"This change request is rejected because it is a non valid one")));
@@ -151,7 +151,7 @@ class bizChangeTicket extends cmdbAbstractObject
 
 	public function Generate(cmdbDataGenerator $oGenerator)
 	{
-		$this->Set('customer_id', $oGenerator->GetOrganizationId());
+		$this->Set('org_id', $oGenerator->GetOrganizationId());
 		$this->Set('title', $oGenerator->GenerateString("enum(Site,Server,Line)| |enum(is down,is flip-flopping,is not responding)"));
 		$this->Set('agent_id', $oGenerator->GenerateKey("bizPerson", array('org_id' =>$oGenerator->GetOrganizationId() )));
 		$this->Set('ticket_status', $oGenerator->GenerateString("enum(Open,Closed,Closed,Monitored)"));
@@ -208,7 +208,7 @@ class lnkInfraChangeTicket extends cmdbAbstractObject
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("infra_id", array("targetclass"=>"logInfra", "jointype"=> '', "label"=>"Infrastructure", "description"=>"The infrastructure impacted", "allowed_values"=>null, "sql"=>"infra_id", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("infra_name", array("label"=>"Infrastructure name", "description"=>"Name of the impacted infrastructure", "allowed_values"=>null, "extkey_attcode"=> 'infra_id', "target_attcode"=>"name")));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("ticket_id", array("targetclass"=>"bizChangeTicket", "jointype"=> '', "label"=>"Ticket #", "description"=>"Ticket number", "allowed_values"=>null, "sql"=>"ticket_id", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("ticket_id", array("targetclass"=>"bizChangeTicket", "jointype"=> '', "label"=>"Ticket", "description"=>"Ticket number", "allowed_values"=>null, "sql"=>"ticket_id", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("ticket_name", array("label"=>"Ticket name", "description"=>"Name of the ticket", "allowed_values"=>null, "extkey_attcode"=> 'ticket_id', "target_attcode"=>"title")));
 		MetaModel::Init_AddAttribute(new AttributeString("impact", array("label"=>"Impact", "description"=>"Level of impact of the infra by the related ticket", "allowed_values"=>null, "sql"=>"impact", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
