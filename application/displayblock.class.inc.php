@@ -218,17 +218,20 @@ class DisplayBlock
 		$bDoSearch = utils::ReadParam('dosearch', false);
 		if ($this->m_oSet == null)
 		{
-			$aFilterCodes = array_keys(MetaModel::GetClassFilterDefs($this->m_oFilter->GetClass()));
-			foreach($aFilterCodes as $sFilterCode)
+			if ($this->m_sStyle != 'links')
 			{
-				$sExternalFilterValue = utils::ReadParam($sFilterCode, '');
-				if (isset($aExtraParams[$sFilterCode]))
+				$aFilterCodes = array_keys(MetaModel::GetClassFilterDefs($this->m_oFilter->GetClass()));
+				foreach($aFilterCodes as $sFilterCode)
 				{
-					$this->m_oFilter->AddCondition($sFilterCode, $aExtraParams[$sFilterCode]); // Use the default 'loose' operator
-				}
-				else if ($bDoSearch && $sExternalFilterValue != "")
-				{
-					$this->m_oFilter->AddCondition($sFilterCode, $sExternalFilterValue); // Use the default 'loose' operator
+					$sExternalFilterValue = utils::ReadParam($sFilterCode, '');
+					if (isset($aExtraParams[$sFilterCode]))
+					{
+						$this->m_oFilter->AddCondition($sFilterCode, $aExtraParams[$sFilterCode]); // Use the default 'loose' operator
+					}
+					else if ($bDoSearch && $sExternalFilterValue != "")
+					{
+						$this->m_oFilter->AddCondition($sFilterCode, $sExternalFilterValue); // Use the default 'loose' operator
+					}
 				}
 			}
 			$this->m_oSet = new CMDBObjectSet($this->m_oFilter);
@@ -293,15 +296,15 @@ class DisplayBlock
 			}
 			else
 			{
-				$sHtml .= $oPage->GetP("No object to display.");
 				$sClass = $this->m_oFilter->GetClass();
+				$oAttDef = MetaModel::GetAttributeDef($sClass, $this->m_aParams['target_attr']);
+				$sTargetClass = $oAttDef->GetTargetClass();
+				$sHtml .= $oPage->GetP("No ".MetaModel::GetName($sTargetClass)." to display.");
 				$bDisplayMenu = isset($this->m_aParams['menu']) ? $this->m_aParams['menu'] == true : true; 
 				if ($bDisplayMenu)
 				{
 					if (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $this->m_oSet) == UR_ALLOWED_YES)
 					{
-						$oAttDef = MetaModel::GetAttributeDef($sClass, $this->m_aParams['target_attr']);
-						$sTargetClass = $oAttDef->GetTargetClass();
 						$sHtml .= $oPage->GetP("<a href=\"../pages/UI.php?operation=modify_links&class=$sClass&link_attr=".$aExtraParams['link_attr']."&id=".$aExtraParams['object_id']."&target_class=$sTargetClass&addObjects=true\">Click here to add new ".Metamodel::GetName($sTargetClass)."s</a>\n");
 					}
 				}
@@ -331,7 +334,7 @@ class DisplayBlock
 			case 'csv':
 			if (UserRights::IsActionAllowed($this->m_oSet->GetClass(), UR_ACTION_READ, $this->m_oSet) == UR_ALLOWED_YES)
 			{
-				$sHtml .= "<textarea style=\"width:100%;height:98%\">\n";
+				$sHtml .= "<textarea style=\"width:95%;height:98%\">\n";
 				$sHtml .= cmdbAbstractObject::GetSetAsCSV($this->m_oSet);
 				$sHtml .= "</textarea>\n";
 			}
