@@ -100,12 +100,13 @@ switch($operation)
 				if (strtolower($sFormat) == 'csv')
 				{
 					$oBlock = new DisplayBlock($oFilter, 'csv', false);
-					$oBlock->Display($oP, 0);
+					$oBlock->Display($oP, 'csv');
+					$oPage->add_ready_script(" $('#csv').css('height', '95%');"); // adjust the size of the block
 				}
 				else
 				{
 					$oBlock = new DisplayBlock($oFilter, 'list', false);
-					$oBlock->Display($oP, 0);
+					$oBlock->Display($oP, 1);
 				}
 			}
 			catch(CoreException $e)
@@ -151,7 +152,8 @@ switch($operation)
 			if (strtolower($sFormat) == 'csv')
 			{
 				$oBlock = new DisplayBlock($oFilter, 'csv', false);
-				$oBlock->Display($oP, 0);
+				$oBlock->Display($oP, 'csv');
+				$oP->add_ready_script(" $('#csv').css('height', '95%');"); // adjust the size of the block
 			}
 			else
 			{
@@ -237,8 +239,15 @@ switch($operation)
 			if( ($oObj != null) && ($bIsModifiedAllowed) && ($bIsReadAllowed))
 			{
 				$oP->set_title("iTop - ".$oObj->GetName()." - $sClassLabel modification");
-				$oP->add("<h1>".$oObj->GetName()." - $sClassLabel modification</h1>\n");
+				$oP->add("<div class=\"page_header\">\n");
+				$oP->add("<h1>Modification of $sClassLabel: <span class=\"hilite\">".$oObj->GetName()."</span></h1>\n");
+				$oP->add("</div>\n");
+
+				$oP->add("<div class=\"wizHeader\">\n");
+				$oP->add("<div class=\"wizContainer\">\n");
 				$oObj->DisplayModifyForm($oP);
+				$oP->add("</div>\n");
+				$oP->add("</div>\n");
 			}
 			else
 			{
