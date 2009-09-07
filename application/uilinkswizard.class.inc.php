@@ -146,6 +146,13 @@ class UILinksWizard
 				function(data)
 				{
 					$('#SearchResultsToAdd').html(data);
+					nb_rows = $('#SearchResultsToAdd table.listResults tr').length;
+					if(nb_rows > 10)
+					{
+						$('#SearchResultsToAdd table.listResults tbody').attr('height', '300px');
+						$('#SearchResultsToAdd .listResults tbody').css('overflow', 'auto');
+					}
+					
 				},
 				'html'
 			);
