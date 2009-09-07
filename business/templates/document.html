@@ -4,10 +4,10 @@
 	<itopblock blockclass="HistoryBlock" type="toggle" encoding="text/oql">SELECT CMDBChangeOp WHERE objkey = $pkey$ AND objclass = '$class$'</itopblock>
 </div>
 <img src="../images/folder_documents.png" style="margin-top:-10px; margin-right:10px; float:right">
-<itopblock blockclass="DisplayBlock" asynchronous="true" type="bare_details" encoding="text/sibusql">$class$: pkey = $pkey$</itopblock>
+<itopblock blockclass="DisplayBlock" asynchronous="true" type="bare_details" encoding="text/oql">SELECT $class$ WHERE id = $pkey$</itopblock>
 <itoptabs>
-	<itoptab name="Version">
-		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">bizDocVersion: document = $pkey$</itopblock>
+	<itoptab name="Versions">
+		<itopblock blockclass="DisplayBlock" type="list" encoding="text/oql">SELECT bizDocVersion WHERE document = $pkey$</itopblock>
 	</itoptab>
 
 </itoptabs>

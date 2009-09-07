@@ -35,6 +35,8 @@ abstract class cmdbAbstractObject extends CMDBObject
 
 	protected static function MakeHyperLink($sObjClass, $sObjKey, $aAvailableFields)
 	{
+		if ($sObjKey == 0) return '<em>undefined</em>';
+
 		$oAppContext = new ApplicationContext();	
 		$sExtClassNameAtt = MetaModel::GetNameAttributeCode($sObjClass);
 		$sPage = self::ComputeUIPage($sObjClass);
@@ -48,10 +50,30 @@ abstract class cmdbAbstractObject extends CMDBObject
 		{
 			$sLabel = implode(' / ', $aAvailableFields);
 		}
-		$sHint = htmlentities("$sObjClass::$sObjKey");
+		// Safety belt
+		//
+		if (empty($sLabel))
+		{
+			// Developer's note:
+			// This is doing the job for you, but that is just there in case
+			// the external fields associated to the external key are blanks
+			// The ultimate solution will be to query the name automatically
+			// and independantly from the data model (automatic external field)
+			// AND make the name be a mandatory field
+			//
+			$sObject = MetaModel::GetObject($sObjClass, $sObjKey);
+			$sLabel = $sObject->GetDisplayName();
+		}
+		// Safety net
+		//
+		if (empty($sLabel))
+		{
+			$sLabel = MetaModel::GetName($sObjClass)." #$sObjKey";
+		}
+		$sHint = MetaModel::GetName($sObjClass)."::$sObjKey";
 		return "<a href=\"$sPage?operation=details&class=$sObjClass&id=$sObjKey&".$oAppContext->GetForLink()."\" title=\"$sHint\">$sLabel</a>";
 	}
-	
+
 	public function GetHyperlink()
 	{
 		$aAvailableFields[MetaModel::GetNameAttributeCode(get_class($this))] = $this->GetName();

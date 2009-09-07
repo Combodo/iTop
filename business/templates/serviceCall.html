@@ -3,15 +3,16 @@
 	<h1>$class_name$: <span class="hilite">$name$</span></h1>
 	<itopblock blockclass="HistoryBlock" type="toggle" encoding="text/oql">SELECT CMDBChangeOp WHERE objkey = $pkey$ AND objclass = '$class$'</itopblock>
 </div>
-<img src="../images/imageChange.gif" style="margin-top:-10px; margin-right:10px; float:right">
+<img src="../images/messagebox_warning.png" style="margin-top:-10px; margin-right:10px; float:right">
 <itopblock blockclass="DisplayBlock" asynchronous="true" type="bare_details" encoding="text/oql">SELECT $class$ WHERE id = $pkey$</itopblock>
 <itoptabs>
 	<itoptab name="Impacted_Infrastructures">
-		<itopblock blockclass="DisplayBlock" type="list" link_attr="ticket_id" object_id="$pkey$" target_attr="infra_id" encoding="text/oql">SELECT lnkInfraChangeTicket WHERE ticket_id = $pkey$</itopblock>
+		<itopblock blockclass="DisplayBlock" type="list" link_attr="call_id" object_id="$pkey$" target_attr="infra_id" encoding="text/oql">SELECT lnkInfraCall WHERE call_id = $pkey$</itopblock>
 	</itoptab>
-	<itoptab name="Contacts_to_Notify">
-		<itopblock blockclass="DisplayBlock" type="list" link_attr="change_id" object_id="$pkey$" target_attr="contact_id"  encoding="text/oql">SELECT lnkContactChange WHERE change_id = $pkey$</itopblock>
+	<itoptab name="Related_Incidents">
+		<itopblock blockclass="DisplayBlock" type="links" link_attr="call_id" object_id="$pkey$" target_attr="ticket_id" encoding="text/oql">SELECT lnkCallTicket WHERE call_id = $pkey$</itopblock>
 	</itoptab>
+	
 
 </itoptabs>
 <br style="clear:both"/>

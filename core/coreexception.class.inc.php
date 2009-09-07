@@ -54,6 +54,11 @@ class CoreException extends Exception
 		return MyHelpers::get_callstack_html(0, $this->getTrace());
 		// return "<pre>\n".$this->getTraceAsString()."</pre>\n";
 	}
+
+	public function addInfo($sKey, $value)
+	{
+		$this->m_aContextData[$sKey] = $value;
+	}
 }
 
 class CoreWarning extends CoreException

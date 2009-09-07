@@ -1,21 +1,18 @@
 <div class="page_header">
-	<itopblock blockclass="MenuBlock" type="popup" encoding="text/sibusql" label="Actions">$class$: pkey = $pkey$</itopblock>
+	<itopblock blockclass="MenuBlock" type="popup" encoding="text/oql" label="Actions">SELECT $class$ WHERE id = $pkey$</itopblock>
 	<h1>$class_name$: <span class="hilite">$name$</span></h1>
 	<itopblock blockclass="HistoryBlock" type="toggle" encoding="text/oql">SELECT CMDBChangeOp WHERE objkey = $pkey$ AND objclass = '$class$'</itopblock>
 </div>
 <img src="../images/users2-big.png" style="margin-top:-10px; margin-right:10px; float:right">
-<itopblock blockclass="DisplayBlock" asynchronous="true" type="bare_details" encoding="text/sibusql">$class$: pkey = $pkey$</itopblock>
+<itopblock blockclass="DisplayBlock" asynchronous="true" type="bare_details" encoding="text/oql">SELECT $class$ WHERE id = $pkey$</itopblock>
 <itoptabs>
 	<itoptab name="Members">
-		<itopblock blockclass="DisplayBlock" type="list" link_attr="contact_id" object_id="$pkey$" target_attr="object_id" encoding="text/oql">SELECT lnkContactRealObject WHERE contact_id=$pkey$</itopblock>
+		<itopblock blockclass="DisplayBlock" type="list" link_attr="team_id" object_id="$pkey$" target_attr="contact_id" encoding="text/oql">SELECT lnkContactTeam WHERE team_id=$pkey$</itopblock>
 	</itoptab>
-	<itoptab name="Teams">
-		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">bizTeam: PKEY IS object_id IN (lnkContactRealObject: contact_id = $pkey$)</itopblock>
-	</itoptab>
-	<itoptab name="Infrastructure">
-		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">logInfra: PKEY IS object_id IN (lnkContactRealObject: contact_id = $pkey$)</itopblock>
+	<itoptab name="Infrastructures">
+		<itopblock blockclass="DisplayBlock" type="list" link_attr="contact_id" object_id="$pkey$" target_attr="infra_id" encoding="text/oql">SELECT lnkContactInfra WHERE contact_id = $pkey$</itopblock>
 	</itoptab>
 	<itoptab name="Documents">
-		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">bizDocument: PKEY IS doc_id IN (lnkDocumentRealObject: object_id = $pkey$)</itopblock>
+		<itopblock blockclass="DisplayBlock" type="list" link_attr="object_id" object_id="$pkey$" target_attr="doc_id" encoding="text/oql">SELECT lnkDocumentRealObject WHERE object_id = $pkey$</itopblock>
 	</itoptab>
 </itoptabs>

@@ -28,11 +28,17 @@ $sOperation = utils::ReadParam('operation', '');
 $oP->add("<form>");
 $oP->add("<input type=\"hidden\" name=\"org_id\" value=\"$currentOrganization\" />");
 $oP->add("Select the class to search: <select style=\"width: 150px;\" id=\"select_class\" name=\"class\" onChange=\"this.form.submit();\">");
+$aClassLabels = array();
 foreach(MetaModel::GetClasses('bizmodel') as $sClass)
+{
+	$aClassLabels[$sClass] = MetaModel::GetName($sClass);
+}
+asort($aClassLabels);
+foreach($aClassLabels as $sClass => $sLabel)
 {
 	$sDescription = MetaModel::GetClassDescription($sClass);
 	$sSelected = ($sClass == $sClassName) ? " SELECTED" : "";
-	$oP->add("<option value=\"$sClass\" title=\"$sDescription\"$sSelected>".MetaModel::GetName($sClass)."</option>");
+	$oP->add("<option value=\"$sClass\" title=\"$sDescription\"$sSelected>$sLabel</option>");
 }
 $oP->add("</select></form>");
 

@@ -20,7 +20,7 @@ class bizKnownError extends cmdbAbstractObject
 			"key_label" => "id",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("cust_id", "name"), // inherited attributes
+			"reconc_keys" => array("org_id", "name"), // inherited attributes
 			"db_table" => "known_error",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -30,8 +30,8 @@ class bizKnownError extends cmdbAbstractObject
 		MetaModel::Init_InheritAttributes();
     MetaModel::Init_AddAttribute(new AttributeString("name", array("label"=>"Name", "description"=>"Name to identify this error", "allowed_values"=>null, "sql"=>"name", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 
-    MetaModel::Init_AddAttribute(new AttributeExternalKey("cust_id", array("targetclass"=>"bizOrganization", "label"=>"Organization", "description"=>"Organization for this known error", "allowed_values"=>null, "sql"=>"cust_id", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("cust_name", array("label"=>"Organization", "description"=>"Company / Department owning this object", "allowed_values"=>null, "extkey_attcode"=> 'cust_id', "target_attcode"=>"name")));
+    MetaModel::Init_AddAttribute(new AttributeExternalKey("org_id", array("targetclass"=>"bizOrganization", "label"=>"Organization", "description"=>"Organization for this known error", "allowed_values"=>null, "sql"=>"cust_id", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("cust_name", array("label"=>"Organization", "description"=>"Company / Department owning this object", "allowed_values"=>null, "extkey_attcode"=> 'org_id', "target_attcode"=>"name")));
 
    	MetaModel::Init_AddAttribute(new AttributeText("symptom", array("label"=>"Symptom", "description"=>"Description of this error", "allowed_values"=>null, "sql"=>"symptom", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
  	 	MetaModel::Init_AddAttribute(new AttributeText("root_cause", array("label"=>"Root cause", "description"=>"Original cause for this known error", "allowed_values"=>null, "sql"=>"rootcause", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
@@ -48,7 +48,7 @@ class bizKnownError extends cmdbAbstractObject
 
 		MetaModel::Init_InheritFilters();
 		MetaModel::Init_AddFilterFromAttribute("name");
-		MetaModel::Init_AddFilterFromAttribute("cust_id");
+		MetaModel::Init_AddFilterFromAttribute("org_id");
 		MetaModel::Init_AddFilterFromAttribute("cust_name");
 		MetaModel::Init_AddFilterFromAttribute("error_code");
 		MetaModel::Init_AddFilterFromAttribute("domain");
@@ -57,11 +57,11 @@ class bizKnownError extends cmdbAbstractObject
 
 		
 
-		MetaModel::Init_SetZListItems('details', array('name', 'cust_id','error_code','domain','vendor','model','version', 'symptom','root_cause','workaround','solution')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('name', 'cust_id','error_code', 'symptom')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', array('name', 'org_id','error_code','domain','vendor','model','version', 'symptom','root_cause','workaround','solution')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('name', 'org_id','error_code', 'symptom')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'error_code','domain')); // Criteria of the std search form
-		MetaModel::Init_SetZListItems('advanced_search', array('name', 'cust_id','error_code', 'error_code','symptom')); // Criteria of the advanced search form
+		MetaModel::Init_SetZListItems('advanced_search', array('name', 'org_id','error_code', 'error_code','symptom')); // Criteria of the advanced search form
 
 	}
 	
