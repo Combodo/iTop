@@ -125,6 +125,9 @@ class OQLLexerRaw
     			'/^YEAR/',
     			'/^MONTH/',
     			'/^DAY/',
+    			'/^HOUR/',
+    			'/^MINUTE/',
+    			'/^SECOND/',
     			'/^DATE_ADD/',
     			'/^DATE_SUB/',
     			'/^ROUND/',
@@ -444,44 +447,59 @@ class OQLLexerRaw
     function yy_r1_43($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_DATE_ADD;
+	$this->token = OQLParser::F_HOUR;
     }
     function yy_r1_44($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_DATE_SUB;
+	$this->token = OQLParser::F_MINUTE;
     }
     function yy_r1_45($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_ROUND;
+	$this->token = OQLParser::F_SECOND;
     }
     function yy_r1_46($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_FLOOR;
+	$this->token = OQLParser::F_DATE_ADD;
     }
     function yy_r1_47($yy_subpatterns)
     {
 
-	$this->token = OQLParser::NUMVAL;
+	$this->token = OQLParser::F_DATE_SUB;
     }
     function yy_r1_48($yy_subpatterns)
     {
 
-	$this->token = OQLParser::STRVAL;
+	$this->token = OQLParser::F_ROUND;
     }
     function yy_r1_49($yy_subpatterns)
     {
 
-	$this->token = OQLParser::NAME;
+	$this->token = OQLParser::F_FLOOR;
     }
     function yy_r1_50($yy_subpatterns)
     {
 
-	$this->token = OQLParser::VARNAME;
+	$this->token = OQLParser::NUMVAL;
     }
     function yy_r1_51($yy_subpatterns)
+    {
+
+	$this->token = OQLParser::STRVAL;
+    }
+    function yy_r1_52($yy_subpatterns)
+    {
+
+	$this->token = OQLParser::NAME;
+    }
+    function yy_r1_53($yy_subpatterns)
+    {
+
+	$this->token = OQLParser::VARNAME;
+    }
+    function yy_r1_54($yy_subpatterns)
     {
 
 	$this->token = OQLParser::DOT;

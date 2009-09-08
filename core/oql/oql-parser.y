@@ -118,6 +118,9 @@ arg_list(A) ::= arg_list(L) COMA argument(X). {
 argument(A) ::= expression_prio4(X). { A = X; }
 argument(A) ::= INTERVAL expression_prio4(X) interval_unit(Y). { A = new IntervalOqlExpression(X, Y); }
 
+interval_unit(A) ::= F_SECOND(X). { A = X; }
+interval_unit(A) ::= F_MINUTE(X). { A = X; }
+interval_unit(A) ::= F_HOUR(X). { A = X; }
 interval_unit(A) ::= F_DAY(X). { A = X; }
 interval_unit(A) ::= F_MONTH(X). { A = X; }
 interval_unit(A) ::= F_YEAR(X). { A = X; }

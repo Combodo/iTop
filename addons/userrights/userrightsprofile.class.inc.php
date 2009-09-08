@@ -733,6 +733,8 @@ class UserRightsProfile extends UserRightsAddOnAPI
 	protected $m_aUserProfiles = array(); // userid,profileid -> object
 	protected $m_aProPro = array(); // profileid,dimensionid -> object
 
+	protected $m_aLogin2UserId = array(); // login -> id
+
 	protected $m_aAdmins = array(); // id of users being linked to the profile #ADMIN_PROFILE_ID
 
 	protected $m_aClassActionGrants = array(); // profile, class, action -> permission
@@ -746,7 +748,8 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		$oUserSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_Users"));
 		while ($oUser = $oUserSet->Fetch())
 		{
-			$this->m_aUsers[$oUser->GetKey()] = $oUser; 
+			$this->m_aUsers[$oUser->GetKey()] = $oUser;
+			$this->m_aLogin2UserId[$oUser->Get('login')] = $oUser->GetKey();  
 		}
 
 		$oDimensionSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_Dimensions"));
@@ -818,15 +821,25 @@ exit;
 
 	public function GetUserId($sUserName)
 	{
-		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_Users WHERE login = :login"), array(), array('login' => $sUserName));
-		if ($oSet->Count() < 1)
+		if (array_key_exists($sUserName, $this->m_aLogin2UserId))
 		{
-		// todo: throw an exception?
-			return false;
+			// This happens really when the list of users is being loaded into the cache!!!
+			$iUserId = $this->m_aLogin2UserId[$sUserName];  
+			return $iUserId;
 		}
+		return null;
+	}
 
-		$oUser = $oSet->Fetch();
-		return $oUser->GetKey();
+	public function GetContactId($sUserName)
+	{
+		if (array_key_exists($sUserName, $this->m_aLogin2UserId))
+		{
+			// This happens really when the list of users is being loaded into the cache!!!
+			$iUserId = $this->m_aLogin2UserId[$sUserName];  
+			$oUser = $this->m_aUsers[$iUserId];
+			return $oUser->Get('userid');
+		}
+		return null;
 	}
 
 	public function GetFilter($sUserName, $sClass)
