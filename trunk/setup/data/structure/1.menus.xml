@@ -732,7 +732,7 @@ text-align:center;
 <menuNode id="114">
 <name>Run queries</name>
 <label>Run any query</label>
-<hyperlink>./sibusql.php</hyperlink>
+<hyperlink>./run_query.php</hyperlink>
 <icon_path></icon_path>
 <template></template>
 <type>administrator</type>
