@@ -35,7 +35,7 @@ class bizKnownError extends cmdbAbstractObject
 
    	MetaModel::Init_AddAttribute(new AttributeText("symptom", array("label"=>"Symptom", "description"=>"Description of this error", "allowed_values"=>null, "sql"=>"symptom", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
  	 	MetaModel::Init_AddAttribute(new AttributeText("root_cause", array("label"=>"Root cause", "description"=>"Original cause for this known error", "allowed_values"=>null, "sql"=>"rootcause", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
- 	  MetaModel::Init_AddAttribute(new AttributeText("workaround", array("label"=>"Work around", "description"=>"Work around to fix this error", "allowed_values"=>null, "sql"=>"workaround", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+ 	  MetaModel::Init_AddAttribute(new AttributeText("workaround", array("label"=>"Workaround", "description"=>"Work around to fix this error", "allowed_values"=>null, "sql"=>"workaround", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
  		MetaModel::Init_AddAttribute(new AttributeText("solution", array("label"=>"Solution", "description"=>"Description of this contract", "allowed_values"=>null, "sql"=>"solution", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
  
     MetaModel::Init_AddAttribute(new AttributeString("error_code", array("label"=>"Error Code", "description"=>"Key word to identify error", "allowed_values"=>null, "sql"=>"error_code", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
@@ -99,10 +99,10 @@ class lnkInfraError extends cmdbAbstractObject
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("infra_id", array("targetclass"=>"logInfra", "jointype"=> '', "label"=>"Infrastructure", "description"=>"The infrastructure impacted", "allowed_values"=>null, "sql"=>"infra_id", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("infra_name", array("label"=>"Infrastructure name", "description"=>"Name of the impacted infrastructure", "allowed_values"=>null, "extkey_attcode"=> 'infra_id', "target_attcode"=>"name")));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("infra_name", array("label"=>"Infrastructure Name", "description"=>"Name of the impacted infrastructure", "allowed_values"=>null, "extkey_attcode"=> 'infra_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("infra_status", array("label"=>"Status", "description"=>"Status of the impacted infrastructure", "allowed_values"=>null, "extkey_attcode"=> 'infra_id', "target_attcode"=>"status")));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("error_id", array("targetclass"=>"bizKnownError", "jointype"=> '', "label"=>"Error name", "description"=>"Error id", "allowed_values"=>null, "sql"=>"error_id", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("error_name", array("label"=>"Error name", "description"=>"Name of the error", "allowed_values"=>null, "extkey_attcode"=> 'error_id', "target_attcode"=>"name")));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("error_id", array("targetclass"=>"bizKnownError", "jointype"=> '', "label"=>"Error", "description"=>"Error id", "allowed_values"=>null, "sql"=>"error_id", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("error_name", array("label"=>"Error Name", "description"=>"Name of the error", "allowed_values"=>null, "extkey_attcode"=> 'error_id', "target_attcode"=>"name")));
 
 		MetaModel::Init_AddFilterFromAttribute("infra_id");
 		MetaModel::Init_AddFilterFromAttribute("error_id");
@@ -143,11 +143,11 @@ class lnkDocumentError extends cmdbAbstractObject
 			"display_template" => "../business/templates/default.html",
 		);
 		MetaModel::Init_Params($aParams);
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("doc_id", array("targetclass"=>"bizDocument", "label"=>"Document Name", "description"=>"id of the Document", "allowed_values"=>null, "sql"=>"doc_id", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("doc_name", array("label"=>"Document", "description"=>"name of the document", "allowed_values"=>null, "extkey_attcode"=> 'doc_id', "target_attcode"=>"name")));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("doc_id", array("targetclass"=>"bizDocument", "label"=>"Document", "description"=>"id of the Document", "allowed_values"=>null, "sql"=>"doc_id", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("doc_name", array("label"=>"Document Name", "description"=>"name of the document", "allowed_values"=>null, "extkey_attcode"=> 'doc_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("error_id", array("targetclass"=>"bizKnownError", "label"=>"Error", "description"=>"Error linked to this document", "allowed_values"=>null, "sql"=>"error_id", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("error_name", array("label"=>"Error name", "description"=>"name of the linked error", "allowed_values"=>null, "extkey_attcode"=> 'error_id', "target_attcode"=>"name")));
-		MetaModel::Init_AddAttribute(new AttributeString("link_type", array("label"=>"link_type", "description"=>"Type of the link", "allowed_values"=>null, "sql"=>"link_type", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("error_name", array("label"=>"Error Name", "description"=>"name of the linked error", "allowed_values"=>null, "extkey_attcode"=> 'error_id', "target_attcode"=>"name")));
+		MetaModel::Init_AddAttribute(new AttributeString("link_type", array("label"=>"Link Type", "description"=>"More information", "allowed_values"=>null, "sql"=>"link_type", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
 		MetaModel::Init_AddFilterFromAttribute("doc_id");
 		MetaModel::Init_AddFilterFromAttribute("doc_name");
