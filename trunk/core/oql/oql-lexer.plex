@@ -97,6 +97,9 @@ f_from_days = "FROM_DAYS"
 f_year     = "YEAR"
 f_month    = "MONTH"
 f_day      = "DAY"
+f_hour     = "HOUR"
+f_minute   = "MINUTE"
+f_second   = "SECOND"
 f_date_add = "DATE_ADD"
 f_date_sub = "DATE_SUB"
 f_round    = "ROUND"
@@ -237,6 +240,15 @@ f_month {
 }
 f_day {
 	$this->token = OQLParser::F_DAY;
+}
+f_hour {
+	$this->token = OQLParser::F_HOUR;
+}
+f_minute {
+	$this->token = OQLParser::F_MINUTE;
+}
+f_second {
+	$this->token = OQLParser::F_SECOND;
 }
 f_date_add {
 	$this->token = OQLParser::F_DATE_ADD;

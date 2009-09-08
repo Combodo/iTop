@@ -7,48 +7,21 @@ require_once('../application/startup.inc.php');
 require_once('../application/loginwebpage.class.inc.php');
 login_web_page::DoLogin(); // Check user rights and prompt if needed
 
-$sOperation = utils::ReadParam('operation', 'menu');
-$oContext = new UserContext();
-$oAppContext = new ApplicationContext();
-$iActiveNodeId = utils::ReadParam('menu', -1);
-$currentOrganization = utils::ReadParam('org_id', '');
 
-$oP = new iTopWebPage("iTop - Expression Evaluation", $currentOrganization);
-
-// Main program
-$sExpression = utils::ReadParam('expression', '');
-$sEncoding = utils::ReadParam('encoding', 'oql');
-
-try
+function ShowExamples($oP, $sExpression)
 {
-	if ($sEncoding == 'crypted')
-	{
-		// Translate $sExpression into a oql expression
-		$sClearText = base64_decode($sExpression);
-		echo "<strong>FYI: '$sClearText'</strong><br/>\n";
-		$oFilter = DBObjectSearch::unserialize($sExpression);
-		$sExpression = $oFilter->ToOQL();
-		exit;
-	}
-	else
-	{
-		// leave $sExpression as is
-	}
-
 	$aExamples = array(
 		"Applications" => "SELECT bizApplication",
 		"Changes planned on new year's day" => "SELECT bizChangeTicket AS ch WHERE ch.start_date >= '2009-12-31' AND ch.end_date <= '2010-01-01'",
 		"Person having an 'A' in their name" => "SELECT bizPerson AS B WHERE B.name LIKE '%A%'",
-		"NW interfaces of equipment in production for customer 'Demo'" => "SELECT bizInterface AS if JOIN bizDevice AS dev ON if.device_id = dev.id WHERE if.status = 'production' AND dev.status = 'production' AND dev.org_name = 'Demo' AND if.physical_type = 'ethernet'"
+		"NW interfaces of equipment in production for customer 'Demo'" => "SELECT bizInterface AS if JOIN bizDevice AS dev ON if.device_id = dev.id WHERE if.status = 'production' AND dev.status = 'production' AND dev.org_name = 'Demo' AND if.physical_type = 'ethernet'",
+		"My tickets" => "SELECT bizIncidentTicket AS i WHERE i.agent_id = :current_contact_id",
+		"People being owner of an active ticket" => "SELECT bizPerson AS p JOIN bizIncidentTicket AS i ON i.agent_id = p.id WHERE i.ticket_status != 'Closed'",
+		"Contracts terminating in the next thirty days" => "SELECT bizContract AS c WHERE c.end_prod > NOW() AND c.end_prod < DATE_ADD(NOW(), INTERVAL 30 DAY)",
+		"Orphan tickets (opened one hour ago, still not assigned)" => "SELECT bizIncidentTicket AS i WHERE i.start_date < DATE_SUB(NOW(), INTERVAL 60 MINUTE) AND i.ticket_status = 'New'",
+		"Long lasting incidents (duration > 8 hours)" => "SELECT bizIncidentTicket AS i WHERE i.end_date > DATE_ADD(i.start_date, INTERVAL 8 HOUR)", 
 	);
 
-	$oP->add("<form method=\"get\">\n");
-	$oP->add("Expression to evaluate:<br/>\n");
-	$oP->add("<textarea cols=\"50\" rows=\"20\" name=\"expression\">$sExpression</textarea>\n");
-	$oP->add("<input type=\"submit\" value=\" Evaluate \">\n");
-	$oP->add("</form>\n");
-
-	$oP->add("<h3>Examples</h3>\n");
 	$aDisplayData = array();
 	foreach($aExamples as $sDescription => $sOql)
 	{
@@ -70,8 +43,54 @@ try
 	$aDisplayConfig['desc'] = array('label' => 'Target', 'description' => '');
 	$aDisplayConfig['oql'] = array('label' => 'OQL Expression', 'description' => '');
 	$aDisplayConfig['go'] = array('label' => '', 'description' => '');
+
+	$sStyle = "SearchDrawer DrawerClosed";
+	$oP->add_ready_script("\$(\"#examples_drawer_handle_id\").click(function() {\$(\"#examples_contents_id\").slideToggle('normal'); $(\"#examples_drawer_handle_id\").toggleClass('open');});");
+	$oP->add("<div id=\"examples_contents_id\" class=\"$sStyle\">\n");
+
 	$oP->table($aDisplayConfig, $aDisplayData);
-	
+
+	$oP->add("</div>\n");
+	$oP->add("<div class=\"HRDrawer\"></div>\n");
+	$oP->add("<div id=\"examples_drawer_handle_id\" class=\"DrawerHandle\">Some examples</div>\n");
+}
+
+$sOperation = utils::ReadParam('operation', 'menu');
+$oContext = new UserContext();
+$oAppContext = new ApplicationContext();
+$iActiveNodeId = utils::ReadParam('menu', -1);
+$currentOrganization = utils::ReadParam('org_id', '');
+
+$oP = new iTopWebPage("iTop - Expression Evaluation", $currentOrganization);
+
+// Main program
+$sExpression = utils::ReadParam('expression', '');
+$sEncoding = utils::ReadParam('encoding', 'oql');
+
+ShowExamples($oP, $sExpression);
+
+try
+{
+	if ($sEncoding == 'crypted')
+	{
+		// Translate $sExpression into a oql expression
+		$sClearText = base64_decode($sExpression);
+		echo "<strong>FYI: '$sClearText'</strong><br/>\n";
+		$oFilter = DBObjectSearch::unserialize($sExpression);
+		$sExpression = $oFilter->ToOQL();
+		exit;
+	}
+	else
+	{
+		// leave $sExpression as is
+	}
+
+	$oP->add("<form method=\"get\">\n");
+	$oP->add("Expression to evaluate:<br/>\n");
+	$oP->add("<textarea cols=\"80\" rows=\"15\" name=\"expression\">$sExpression</textarea>\n");
+	$oP->add("<input type=\"submit\" value=\" Evaluate \">\n");
+	$oP->add("</form>\n");
+
 	if (!empty($sExpression))
 	{
 		$oFilter = DBObjectSearch::FromOQL($sExpression);
@@ -82,7 +101,6 @@ try
 			$oP->p('Serialized filter: '.$oFilter->serialize());
 			
 			$oSet = new CMDBObjectSet($oFilter);
-			$oP->p('The query returned '.$oSet->count().' results(s)');
 			cmdbAbstractObject::DisplaySet($oP, $oSet);
 		}
 	}

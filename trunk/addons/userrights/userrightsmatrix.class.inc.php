@@ -336,6 +336,12 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 		return $oLogin->Get('userid');
 	}
 
+	public function GetContactId($sUserName)
+	{
+		// this module has no link with the business data
+		return null;
+	}
+
 	public function GetFilter($sUserName, $sClass)
 	{
 		$oNullFilter  = new DBObjectSearch($sClass);

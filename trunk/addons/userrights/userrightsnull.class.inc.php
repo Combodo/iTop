@@ -47,6 +47,12 @@ class UserRightsNull extends UserRightsAddOnAPI
 		return 1;
 	}
 
+	public function GetContactId($sUserName)
+	{
+		// this module has no link with the business data
+		return null;
+	}
+
 	public function GetFilter($sUserName, $sClass)
 	{
 		$oNullFilter  = new DBObjectSearch($sClass);

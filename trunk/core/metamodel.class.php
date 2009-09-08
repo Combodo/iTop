@@ -1202,6 +1202,10 @@ abstract class MetaModel
 				$aScalarArgs[$sArgName] = (string) $value;
 			}
 		}
+		// Add standard contextual arguments
+		//
+		$aScalarArgs['current_contact_id'] = UserRights::GetContactId();
+		
 		return $aScalarArgs;
 	}
 

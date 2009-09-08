@@ -50,6 +50,7 @@ abstract class UserRightsAddOnAPI
 	abstract public function Init(); // loads data (possible optimizations)
 	abstract public function CheckCredentials($sLogin, $sPassword); // returns the id of the user or false
 	abstract public function GetUserId($sLogin); // returns the id of the user or false
+	abstract public function GetContactId($sLogin); // returns the id of the "business" user or false
 	abstract public function GetFilter($sLogin, $sClass); // returns a filter object
 	abstract public function IsActionAllowed($iUserId, $sClass, $iActionCode, dbObjectSet $oInstances);
 	abstract public function IsStimulusAllowed($iUserId, $sClass, $sStimulusCode, dbObjectSet $oInstances);
@@ -169,6 +170,16 @@ class UserRights
 			// find the id out of the login string
 			return self::$m_oAddOn->GetUserId($sName);
 		}
+	}
+
+	public static function GetContactId($sName = '')
+	{
+		// note: returns null if the user management module is not related to the business data model
+		if (empty($sName))
+		{
+			$sName = self::$m_sUser;
+		}
+		return self::$m_oAddOn->GetContactId($sName);
 	}
 
 	public static function GetRealUser()
