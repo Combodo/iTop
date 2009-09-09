@@ -10,49 +10,60 @@ login_web_page::DoLogin(); // Check user rights and prompt if needed
 
 function ShowExamples($oP, $sExpression)
 {
+	$bUsingExample = false;
+
 	$aExamples = array(
-		"Applications" => "SELECT bizApplication",
-		"Changes planned on new year's day" => "SELECT bizChangeTicket AS ch WHERE ch.start_date >= '2009-12-31' AND ch.end_date <= '2010-01-01'",
-		"Person having an 'A' in their name" => "SELECT bizPerson AS B WHERE B.name LIKE '%A%'",
-		"NW interfaces of equipment in production for customer 'Demo'" => "SELECT bizInterface AS if JOIN bizDevice AS dev ON if.device_id = dev.id WHERE if.status = 'production' AND dev.status = 'production' AND dev.org_name = 'Demo' AND if.physical_type = 'ethernet'",
-		"My tickets" => "SELECT bizIncidentTicket AS i WHERE i.agent_id = :current_contact_id",
-		"People being owner of an active ticket" => "SELECT bizPerson AS p JOIN bizIncidentTicket AS i ON i.agent_id = p.id WHERE i.ticket_status != 'Closed'",
-		"Contracts terminating in the next thirty days" => "SELECT bizContract AS c WHERE c.end_prod > NOW() AND c.end_prod < DATE_ADD(NOW(), INTERVAL 30 DAY)",
-		"Orphan tickets (opened one hour ago, still not assigned)" => "SELECT bizIncidentTicket AS i WHERE i.start_date < DATE_SUB(NOW(), INTERVAL 60 MINUTE) AND i.ticket_status = 'New'",
-		"Long lasting incidents (duration > 8 hours)" => "SELECT bizIncidentTicket AS i WHERE i.end_date > DATE_ADD(i.start_date, INTERVAL 8 HOUR)", 
+		'Pedagogic examples' => array(
+			"Applications" => "SELECT bizApplication",
+			"Person having an 'A' in their name" => "SELECT bizPerson AS B WHERE B.name LIKE '%A%'",
+			"Changes planned on new year's day" => "SELECT bizChangeTicket AS ch WHERE ch.start_date >= '2009-12-31' AND ch.end_date <= '2010-01-01'",
+		),
+		'Usefull examples' => array(
+			"Applications" => "SELECT bizApplication",
+			"NW interfaces of equipment in production for customer 'Demo'" => "SELECT bizInterface AS if JOIN bizDevice AS dev ON if.device_id = dev.id WHERE if.status = 'production' AND dev.status = 'production' AND dev.org_name = 'Demo' AND if.physical_type = 'ethernet'",
+			"My tickets" => "SELECT bizIncidentTicket AS i WHERE i.agent_id = :current_contact_id",
+			"People being owner of an active ticket" => "SELECT bizPerson AS p JOIN bizIncidentTicket AS i ON i.agent_id = p.id WHERE i.ticket_status != 'Closed'",
+			"Contracts terminating in the next thirty days" => "SELECT bizContract AS c WHERE c.end_prod > NOW() AND c.end_prod < DATE_ADD(NOW(), INTERVAL 30 DAY)",
+			"Orphan tickets (opened one hour ago, still not assigned)" => "SELECT bizIncidentTicket AS i WHERE i.start_date < DATE_SUB(NOW(), INTERVAL 60 MINUTE) AND i.ticket_status = 'New'",
+			"Long lasting incidents (duration > 8 hours)" => "SELECT bizIncidentTicket AS i WHERE i.end_date > DATE_ADD(i.start_date, INTERVAL 8 HOUR)",
+		),
 	);
 
 	$aDisplayData = array();
-	foreach($aExamples as $sDescription => $sOql)
+	foreach($aExamples as $sTopic => $aQueries)
 	{
-		$sHighlight = '';
-		$sDisable = '';
-		if ($sOql == $sExpression)
+		foreach($aQueries as $sDescription => $sOql)
 		{
-			// this one is currently being tested, highlight it
-			$sHighlight = "background-color:yellow;";
-			$sDisable = 'disabled';
+			$sHighlight = '';
+			$sDisable = '';
+			if ($sOql == $sExpression)
+			{
+				// this one is currently being tested, highlight it
+				$sHighlight = "background-color:yellow;";
+				$sDisable = 'disabled';
+				// and remember we are testing a query of the list
+				$bUsingExample = true;
+			}
+			//$aDisplayData[$sTopic][] = array(
+			$aDisplayData['Query examples'][] = array(
+				'desc' => "<div style=\"$sHighlight\">".htmlentities($sDescription)."</div>",
+				'oql' => "<div style=\"$sHighlight\">".htmlentities($sOql)."</div>",
+				'go' => "<form method=\"get\"><input type=\"hidden\" name=\"expression\" value=\"$sOql\"><input type=\"submit\" value=\"Test!\" $sDisable></form>\n",
+			);
 		}
-		$aDisplayData[] = array(
-			'desc' => "<div style=\"$sHighlight\">$sDescription</div>",
-			'oql' => "<div style=\"$sHighlight\">$sOql</div>",
-			'go' => "<form method=\"get\"><input type=\"hidden\" name=\"expression\" value=\"$sOql\"><input type=\"submit\" value=\"Test!\" $sDisable></form>\n",
-		);
 	}
 	$aDisplayConfig = array();
 	$aDisplayConfig['desc'] = array('label' => 'Target', 'description' => '');
 	$aDisplayConfig['oql'] = array('label' => 'OQL Expression', 'description' => '');
 	$aDisplayConfig['go'] = array('label' => '', 'description' => '');
 
-	$sStyle = "SearchDrawer DrawerClosed";
-	$oP->add_ready_script("\$(\"#examples_drawer_handle_id\").click(function() {\$(\"#examples_contents_id\").slideToggle('normal'); $(\"#examples_drawer_handle_id\").toggleClass('open');});");
-	$oP->add("<div id=\"examples_contents_id\" class=\"$sStyle\">\n");
-
-	$oP->table($aDisplayConfig, $aDisplayData);
-
-	$oP->add("</div>\n");
-	$oP->add("<div class=\"HRDrawer\"></div>\n");
-	$oP->add("<div id=\"examples_drawer_handle_id\" class=\"DrawerHandle\">Some examples</div>\n");
+	foreach ($aDisplayData as $sTopic => $aQueriesDisplayData)
+	{
+		$bShowOpened = $bUsingExample;
+		$oP->StartCollapsibleSection($sTopic, $bShowOpened);
+		$oP->table($aDisplayConfig, $aQueriesDisplayData);
+		$oP->EndCollapsibleSection();
+	}
 }
 
 $sOperation = utils::ReadParam('operation', 'menu');
@@ -87,7 +98,7 @@ try
 
 	$oP->add("<form method=\"get\">\n");
 	$oP->add("Expression to evaluate:<br/>\n");
-	$oP->add("<textarea cols=\"80\" rows=\"15\" name=\"expression\">$sExpression</textarea>\n");
+	$oP->add("<textarea cols=\"120\" rows=\"8\" name=\"expression\">$sExpression</textarea>\n");
 	$oP->add("<input type=\"submit\" value=\" Evaluate \">\n");
 	$oP->add("</form>\n");
 
