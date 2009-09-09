@@ -274,7 +274,11 @@ EOF
 			$sOnClick = " onclick=\"this.value='';this.onclick=null;\"";
 		}
 		$sUserName = UserRights::GetUser();
-		echo "<div id=\"OrganizationSelection\" style=\"position:absolute; top:18px; right:16px; width:400px;\">Logged as '$sUserName'&nbsp;&nbsp;&nbsp;";
+		echo "<div id=\"OrganizationSelection\" style=\"position:absolute; top:18px; right:16px; width:400px;\">Logged in as '$sUserName'&nbsp;&nbsp;&nbsp;";
+		echo "<form action=\"../pages/UI.php\" method=\"post\" style=\"display:inline\">\n";
+		echo "<input type=\"Submit\" value=\"Log off\">\n";
+		echo "<input type=\"hidden\" name=\"operation\" value=\"logoff\">\n";
+		echo "</form>\n";
 		echo "<form action=\"../pages/UI.php\" style=\"display:inline\"><div style=\"padding:1px; background-color:#fff;display:inline;\"><img src=\"../images/magnifier.gif\"/><input style=\"border:0\" type=\"text\" size=\"15\" title=\"Global Search\" name=\"text\" value=\"$sText\"$sOnClick></input></div><input type=\"Submit\" value=\"Search\">
 			  <input type=\"hidden\" name=\"operation\" value=\"full_text\"></form>\n";
 		echo "</div>\n";

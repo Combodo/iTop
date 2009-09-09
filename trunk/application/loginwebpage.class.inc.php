@@ -62,11 +62,30 @@ h1 {
 		$this->add("</form>\n");
 		$this->add("</div>\n");
 	}
+
+	static protected function ResetSession()
+	{
+		// Unset all of the session variables.
+		$_SESSION = array();
+		// If it's desired to kill the session, also delete the session cookie.
+		// Note: This will destroy the session, and not just the session data!
+		if (isset($_COOKIE[session_name()]))
+		{
+			setcookie(session_name(), '', time()-3600, '/');
+		}		
+		// Finally, destroy the session.
+		session_destroy();
+	}
 	
 	static function DoLogin()
 	{
 		$operation = utils::ReadParam('operation', '');
 		session_start();
+
+		if ($operation == 'logoff')
+		{
+			self::ResetSession();
+		}
 		
 		if (!isset($_SESSION['auth_user']) || !isset($_SESSION['auth_pwd']))
 		{
@@ -78,9 +97,9 @@ h1 {
 			else
 			{
 				$oPage = new login_web_page();
-			    $oPage->DisplayLoginForm();
-			    $oPage->output();
-			    exit;
+				$oPage->DisplayLoginForm();
+				$oPage->output();
+				exit;
 			}
 		}
 		else
@@ -90,21 +109,11 @@ h1 {
 		}
 		if (!UserRights::Login($sAuthUser, $sAuthPwd))
 		{
-			// Unset all of the session variables.
-			$_SESSION = array();
-			// If it's desired to kill the session, also delete the session cookie.
-			// Note: This will destroy the session, and not just the session data!
-			if (isset($_COOKIE[session_name()]))
-			{
-				setcookie(session_name(), '', time()-3600, '/');
-			}		
-			// Finally, destroy the session.
-			session_destroy();
-
+			self::ResetSession();
 			$oPage = new login_web_page();
-		    $oPage->DisplayLoginForm( true /* failed attempt */);
-		    $oPage->output();
-		    exit;
+			$oPage->DisplayLoginForm( true /* failed attempt */);
+			$oPage->output();
+			exit;
 		}
 		else
 		{
