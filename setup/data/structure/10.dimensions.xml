@@ -1,13 +1,3 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Set>
-<URP_Dimensions id="1">
-<name>organization</name>
-<description></description>
-<type>bizOrganization</type>
-</URP_Dimensions>
-<URP_Dimensions id="2">
-<name>site</name>
-<description></description>
-<type></type>
-</URP_Dimensions>
 </Set>

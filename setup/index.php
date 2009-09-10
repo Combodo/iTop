@@ -381,7 +381,7 @@ function DisplayStep4(setup_web_page $oP, Config $oConfig, $sAdminUser, $sAdminP
 		$oP->add("<h2>Step 4: Loading of sample data</h2>\n");
 		$oP->p("<fieldset><legend> Do you want to load sample data into the database ? </legend>\n");
 		$oP->p("<input type=\"radio\" id=\"sample_data\" name=\"sample_data\" checked value=\"yes\"> Yes, for testing purposes, populate the database with sample data.\n");
-		$oP->p("<input type=\"radio\" name=\"sample_data\" unchecked value=\"no\"> No, this is a production system, I will load real data myself.\n");
+		$oP->p("<input type=\"radio\" name=\"sample_data\" unchecked value=\"no\"> No, this is a production system, load only the data required by the application.\n");
 		$oP->p("</fieldset>\n");
 		$oP->add("<button onClick=\"window.history.back();\"><< Back</button>\n");
 		$oP->add("&nbsp;&nbsp;&nbsp;&nbsp;\n");
