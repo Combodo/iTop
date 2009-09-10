@@ -100,12 +100,13 @@ class UILinksWidget
 		{
 		 	// transform the DBObjectSet into a CMDBObjectSet !!!
 			$aLinkedObjects = $oCurrentValuesSet->ToArray(false);
-			if (count($aLinkedObjects) > 0)
-			{
-				$oSet = CMDBObjectSet::FromArray($sLinkedClass, $aLinkedObjects);
-				$oDisplayBlock = DisplayBlock::FromObjectSet($oSet, 'list');
-				$sHTMLValue .= $oDisplayBlock->GetDisplay($oPage, $this->m_iInputId.'_current', array('linkage' => $sExtKeyToMe));
-			}
+			// Actual values will be displayed asynchronously, no need to display them here
+			//if (count($aLinkedObjects) > 0)
+			//{
+			//	$oSet = CMDBObjectSet::FromArray($sLinkedClass, $aLinkedObjects);
+			//	$oDisplayBlock = DisplayBlock::FromObjectSet($oSet, 'list');
+			//	$sHTMLValue .= $oDisplayBlock->GetDisplay($oPage, $this->m_iInputId.'_current', array('linkage' => $sExtKeyToMe, 'menu' => false));
+			//}
 		}
 		$sHTMLValue .= "</div>\n";
 		return $sHTMLValue;
@@ -186,7 +187,14 @@ class UILinksWidget
 			}
 			$oSet->AddObject($oObj);
 		}
-		cmdbAbstractObject::DisplaySet($oPage, $oSet, $sExtKeyToMe, true /*menu*/, false /*select*/, $iObjectId, $sExtKeyToRemote);
+		$aExtraParams = array();
+		$aExtraParams['link_attr'] = $sExtKeyToMe;
+		$aExtraParams['object_id'] = $iObjectId;
+		$aExtraParams['target_attr'] = $sExtKeyToRemote;
+		$aExtraParams['menu'] = false;
+		$aExtraParams['select'] = false;
+		
+		cmdbAbstractObject::DisplaySet($oPage, $oSet, $aExtraParams);
 	}
 
 	
