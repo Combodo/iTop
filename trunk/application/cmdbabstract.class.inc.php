@@ -256,7 +256,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 	
 	// Comment by Rom: this helper may be used to display objects of class DBObject
 	//                 -> I am using this to display the changes history
-	public static function DisplaySet(web_page $oPage, CMDBObjectSet $oSet, $aExtraParams)
+	public static function DisplaySet(web_page $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
 		$oPage->add(self::GetDisplaySet($oPage, $oSet, $aExtraParams));
 	}
