@@ -179,6 +179,19 @@ class bizChangeTicket extends cmdbAbstractObject
 		$this->Set('last_update', time());
 		return true;
 	}
+
+	public function ComputeFields()
+	{
+		if ($this->GetKey() > 0)
+		{
+			$sName = sprintf('C-%06d', $this->GetKey());
+		}
+		else
+		{
+			$sName = "Id not set";
+		}
+		$this->Set('name', $sName);
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////
