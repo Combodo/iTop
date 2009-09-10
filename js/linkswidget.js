@@ -30,7 +30,13 @@ function LinksWidget(id, sLinkedClass, sExtKeyToMe, sExtKeyToRemote, aAttributes
 			sLinks = JSON.stringify(this.aLinks);
 			$('#'+this.id).val(sLinks);
 			$('#'+this.id+'_values').load('ajax.render.php?operation=ui.linkswidget.linkedset&sclass='+this.sLinkedClass+'&sextkeytome='+this.sExtKeyToMe+'&sextkeytoremote='+this.sExtKeyToRemote+'&myid='+this.id,
-			{'sset' : sLinks});		
+			{'sset' : sLinks}, function()
+				{
+					// Refresh the style of the loaded table
+					$('#'+this.id+' table.listResults').tableHover();	
+		 			$('#'+this.id+' .listResults').tablesorter( { headers: { 0:{sorter: false }}, widgets: ['zebra']} ); // sortable and zebra tables
+				}
+			);
 		}
 	}
 	
