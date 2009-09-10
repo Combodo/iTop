@@ -552,7 +552,10 @@ abstract class DBObject
 			while ($oLinkedObject = $oLinks->Fetch())
 			{
 				$oLinkedObject->Set($oAttDef->GetExtKeyToMe(), $this->m_iKey);
-				$oLinkedObject->DBWrite();
+				if ($oLinkedObject->IsModified())
+				{
+					$oLinkedObject->DBWrite();
+				}
 			}
 
 			// Delete the objects that were initialy present and disappeared from the list
