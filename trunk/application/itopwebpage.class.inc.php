@@ -274,7 +274,8 @@ EOF
 			$sOnClick = " onclick=\"this.value='';this.onclick=null;\"";
 		}
 		$sUserName = UserRights::GetUser();
-		echo "<div id=\"OrganizationSelection\" style=\"position:absolute; top:18px; right:16px; width:400px;\">Logged in as '$sUserName'&nbsp;&nbsp;&nbsp;";
+		$sIsAdmin = UserRights::IsAdministrator() ? '(Administrator)' : '';
+		echo "<div id=\"OrganizationSelection\" style=\"position:absolute; top:18px; right:16px; width:500px;\">Logged in as '$sUserName'&nbsp;$sIsAdmin&nbsp;&nbsp;";
 		echo "<form action=\"../pages/UI.php\" method=\"post\" style=\"display:inline\">\n";
 		echo "<input type=\"Submit\" value=\"Log off\">\n";
 		echo "<input type=\"hidden\" name=\"operation\" value=\"logoff\">\n";

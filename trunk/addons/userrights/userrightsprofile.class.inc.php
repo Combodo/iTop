@@ -717,6 +717,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 
 	public function Setup()
 	{
+		SetupITILProfiles::DoCreateDimensions();
 		SetupITILProfiles::DoCreateProfiles();
 		return true;
 	}
@@ -735,7 +736,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 
 	protected $m_aLogin2UserId = array(); // login -> id
 
-	protected $m_aAdmins = array(); // id of users being linked to the profile #ADMIN_PROFILE_ID
+	protected $m_aAdmins = array(); // id of users being linked to the well-known admin profile
 
 	protected $m_aClassActionGrants = array(); // profile, class, action -> permission
 	protected $m_aClassStimulusGrants = array(); // profile, class, stimulus -> permission
@@ -1106,7 +1107,7 @@ exit;
 				{
 					// user projection to be cached on a given page !
 					$aUserProjection = $this->m_aProPros[$iProfile][$iDimension]->ProjectUser($oUser);
-					
+
 					if (is_null($aUserProjection))
 					{
 						$aRes[] = $iProfile;
@@ -1184,6 +1185,14 @@ class SetupITILProfiles
 		),
 	);
 	*/
+
+	protected static $m_aDimensions = array(
+		'organization' => array(
+			'description' => '',
+			'type' => 'bizOrganization',
+		),
+	);
+
 	protected static $m_aActions = array(
 		UR_ACTION_READ => 'Read',
 		UR_ACTION_MODIFY => 'Modify',
@@ -1325,6 +1334,26 @@ class SetupITILProfiles
 			),
 		),
 	);
+
+	protected static function DoCreateClassProjection($iDimension, $sClass)
+	{
+		$oNewObj = MetaModel::NewObject("URP_ClassProjection");
+		$oNewObj->Set('dimensionid', $iDimension);
+		$oNewObj->Set('class', $sClass);
+		$oNewObj->Set('attribute', '');
+		$iId = $oNewObj->DBInsertNoReload();
+		return $iId;
+	}
+
+	protected static function DoCreateDimension($sName, $aDimensionData)
+	{
+		$oNewObj = MetaModel::NewObject("URP_Dimensions");
+		$oNewObj->Set('name', $sName);
+		$oNewObj->Set('description', $aDimensionData['description']);
+		$oNewObj->Set('type', $aDimensionData['type']);
+		$iId = $oNewObj->DBInsertNoReload();
+		return $iId;
+	}
 	
 	
 	protected static function DoCreateProfileProjection($iProfile, $iDimension)
@@ -1361,6 +1390,18 @@ class SetupITILProfiles
 		return $iId;
 	}
 	
+	protected static function DoCreateAdminProfile()
+	{
+		$oNewObj = MetaModel::NewObject("URP_Profiles");
+		$oNewObj->Set('name', 'Administrator');
+		$oNewObj->Set('description', 'Has the rights on everything (bypassing any control)');
+		$iNewId = $oNewObj->DBInsertNoReload();
+		if ($iNewId != ADMIN_PROFILE_ID)
+		{
+			throw new CoreException('Admin profile could not be created with its standard id', array('requested'=>ADMIN_PROFILE_ID, 'obtained'=>$iNewId));
+		}
+	}
+
 	protected static function DoCreateOneProfile($sName, $aProfileData)
 	{
 		$sDescription = $aProfileData['description'];
@@ -1430,8 +1471,25 @@ class SetupITILProfiles
 		}
 	}
 	
+	public static function DoCreateDimensions()
+	{
+		$aClass = MetaModel::GetClasses();
+		foreach(self::$m_aDimensions as $sName => $aDimensionData)
+		{
+			$iDimension = self::DoCreateDimension($sName, $aDimensionData);
+			
+			foreach($aClass as $sClass)
+			{
+				self::DoCreateClassProjection($iDimension, $sClass);
+			}
+		}
+	}
+	
+
 	public static function DoCreateProfiles()
 	{
+		self::DoCreateAdminProfile();
+	
 		foreach(self::$m_aProfiles as $sName => $aProfileData)
 		{
 			self::DoCreateOneProfile($sName, $aProfileData);
