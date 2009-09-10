@@ -51,9 +51,9 @@ class UILinksWidget
 		{
 			// Serialize the link set into a JSon object
 			$aCurrentValues = array();
-			$sRow = '{';
 			while($oLinkObj = $oCurrentValuesSet->Fetch())
 			{
+				$sRow = '{';
 				foreach($aAttributes as $sLinkAttCode)
 				{
 					$sRow.= "\"$sLinkAttCode\": \"".addslashes($oLinkObj->Get($sLinkAttCode))."\", ";
@@ -70,7 +70,7 @@ class UILinksWidget
 			// too many choices, use an autocomplete
 			// The input for the auto complete
 			$sTitle = $oAttDef->GetDescription();
-			$sHTMLValue .= "<script>\n";
+			$sHTMLValue .= "<script type=\"text/javascript\">\n";
 			$sHTMLValue .= "oLinkWidget{$this->m_iInputId} = new LinksWidget('{$this->m_iInputId}', '$sLinkedClass', '$sExtKeyToMe', '$sExtKeyToRemote', $sAttributes);\n";
 			$sHTMLValue .= "</script>\n";
 			$sHTMLValue .= $this->GetObjectPickerDialog($oPage, $sTargetClass, 'oLinkWidget'.$this->m_iInputId.'.OnOk');
@@ -81,7 +81,8 @@ class UILinksWidget
 			// another hidden input to store & pass the object's Id
 			$sHTMLValue .= "<input type=\"hidden\" id=\"id_ac_{$this->m_iInputId}\"/>\n";
 			$sHTMLValue .= "<input type=\"hidden\" id=\"{$this->m_iInputId}\" name=\"attr_{$this->m_sAttCode}{$this->m_sNameSuffix}\" value=\"\"/>\n";
-			$oPage->add_ready_script("\$('#{$this->m_iInputId}').val('$sJSON');\n\$('#ac_{$this->m_iInputId}').autocomplete('./ajax.render.php', { minChars:3, onItemSelect:selectItem, onFindValue:findValue, formatItem:formatItem, autoFill:true, keyHolder:'#id_ac_{$this->m_iInputId}', extraParams:{operation:'ui.linkswidget', sclass:'{$this->m_sClass}', attCode:'{$this->m_sAttCode}', max:30}});");
+			$oPage->add_ready_script("\$('#{$this->m_iInputId}').val('$sJSON');\noLinkWidget{$this->m_iInputId}.Init();\n\$('#ac_{$this->m_iInputId}').autocomplete('./ajax.render.php', { minChars:3, onItemSelect:selectItem, onFindValue:findValue, formatItem:formatItem, autoFill:true, keyHolder:'#id_ac_{$this->m_iInputId}', extraParams:{operation:'ui.linkswidget', sclass:'{$this->m_sClass}', attCode:'{$this->m_sAttCode}', max:30}});");
+			$oPage->add_ready_script("\$('#ac_{$this->m_iInputId}').result( function(event, data, formatted) { if (data) { $('#id_ac_{$this->m_iInputId}').val(data[1]); } } );");
 		}
 		else
 		{
