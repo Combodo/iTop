@@ -32,7 +32,7 @@ if (!empty($sExpression))
 			{
 				case 'html':
 				$oP = new nice_web_page("iTop - Export");
-				cmdbAbstractObject::DisplaySet($oP, $oSet, '' /* linkage */, false /* don't display the menu */);
+				cmdbAbstractObject::DisplaySet($oP, $oSet, array('menu' => false));
 				break;
 				
 				case 'csv':
