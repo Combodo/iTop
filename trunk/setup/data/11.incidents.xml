@@ -4,7 +4,7 @@
 <name>I-000001</name>
 <title>PC issue</title>
 <type>Desktop</type>
-<customer_id>3</customer_id>
+<org_id>3</org_id>
 <ticket_status>WorkInProgress</ticket_status>
 <initial_situation>there is an issue with my PC</initial_situation>
 <current_situation></current_situation>
@@ -27,7 +27,7 @@ Then we will try to contact Microsoft to understand if it is a known issue</acti
 <name>I-000002</name>
 <title>Network issue</title>
 <type>Network</type>
-<customer_id>3</customer_id>
+<org_id>3</org_id>
 <ticket_status>Assigned</ticket_status>
 <initial_situation>No more access to the network</initial_situation>
 <current_situation>Network connectivity lost</current_situation>
@@ -48,7 +48,7 @@ Then we will try to contact Microsoft to understand if it is a known issue</acti
 <name>I-000003</name>
 <title>Disk Failure on Server01</title>
 <type>Server</type>
-<customer_id>3</customer_id>
+<org_id>3</org_id>
 <ticket_status>WorkInProgress</ticket_status>
 <initial_situation>Partition /var is no more accessible.
 It seems that hard disk is broken</initial_situation>
@@ -70,7 +70,7 @@ It seems that hard disk is broken</initial_situation>
 <name>I-000004</name>
 <title>Oracle Database down on domino</title>
 <type>Server</type>
-<customer_id>3</customer_id>
+<org_id>3</org_id>
 <ticket_status>New</ticket_status>
 <initial_situation>Database Oracle is no more accessible on Server01</initial_situation>
 <current_situation>Customer cannot access Order web site.</current_situation>
@@ -91,7 +91,7 @@ It seems that hard disk is broken</initial_situation>
 <name>I-000005</name>
 <title>Issue with my pc</title>
 <type>Desktop</type>
-<customer_id>3</customer_id>
+<org_id>3</org_id>
 <ticket_status>Assigned</ticket_status>
 <initial_situation>My PC is locked</initial_situation>
 <current_situation>We have to analyze</current_situation>
@@ -112,7 +112,7 @@ It seems that hard disk is broken</initial_situation>
 <name>I-000006</name>
 <title>Demo</title>
 <type>Server</type>
-<customer_id>3</customer_id>
+<org_id>3</org_id>
 <ticket_status>New</ticket_status>
 <initial_situation>gdfgl</initial_situation>
 <current_situation></current_situation>
