@@ -565,7 +565,7 @@ th.orange {
 /* For Date Picker: Creates a little calendar icon
  * instead of a text link for "Choose date"
  */
-a.dp-choose-date, a.dp-choose-date:hover {
+td a.dp-choose-date, a.dp-choose-date, td a.dp-choose-date:hover, a.dp-choose-date:hover {
 	float: left;
 	width: 16px;
 	height: 16px;
@@ -576,7 +576,7 @@ a.dp-choose-date, a.dp-choose-date:hover {
 	overflow: hidden;
 	background: url(../images/calendar.png) no-repeat; 
 }
-a.dp-choose-date.dp-disabled {
+td a.dp-choose-date.dp-disabled, a.dp-choose-date.dp-disabled {
 	background-position: 0 -20px;
 	cursor: default;
 }
