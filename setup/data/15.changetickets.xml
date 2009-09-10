@@ -7,7 +7,7 @@
 <domain>Desktop</domain>
 <reason>reason</reason>
 <requestor_id>20</requestor_id>
-<customer_id>3</customer_id>
+<org_id>3</org_id>
 <ticket_status>PlannedScheduled</ticket_status>
 <creation_date>2009-02-19 21:35:47</creation_date>
 <last_update>2009-02-18 18:33:14</last_update>
@@ -35,7 +35,7 @@ Could you make it please</change_request>
 <domain>Application</domain>
 <reason>Patch Installation for Oracle</reason>
 <requestor_id>21</requestor_id>
-<customer_id>3</customer_id>
+<org_id>3</org_id>
 <ticket_status>Approved</ticket_status>
 <creation_date>2009-03-17 14:50:34</creation_date>
 <last_update>2009-03-17 14:50:34</last_update>
@@ -62,7 +62,7 @@ Could you make it please</change_request>
 <domain>Desktop</domain>
 <reason>security issue</reason>
 <requestor_id>21</requestor_id>
-<customer_id>3</customer_id>
+<org_id>3</org_id>
 <ticket_status>New</ticket_status>
 <creation_date>2009-04-04 23:23:37</creation_date>
 <last_update>0000-00-00 00:00:00</last_update>

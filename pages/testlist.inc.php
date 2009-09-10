@@ -1118,7 +1118,7 @@ class TestItopWebServices extends TestWebServices
 			),
 			array(
 				'class' => 'bizIncidentTicket',
-				'csvdata' => "name;title;type;customer_id;initial_situation;start_date;next_update;caller_id;workgroup_id;agent_id\nOVSD-12345;server down;Network;1;server was found down;2009-04-10 12:00;2009-04-10 15:00;3;317;5"
+				'csvdata' => "name;title;type;org_id;initial_situation;start_date;next_update;caller_id;workgroup_id;agent_id\nOVSD-12345;server down;Network;1;server was found down;2009-04-10 12:00;2009-04-10 15:00;3;317;5"
 			),
 		);  
 

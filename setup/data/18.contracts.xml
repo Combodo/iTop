@@ -2,7 +2,7 @@
 <Set>
 <bizContract id="1">
 <name>Oracle Support</name>
-<customer_id>3</customer_id>
+<org_id>3</org_id>
 <provider_id>6</provider_id>
 <service_name>Software support</service_name>
 <team_id>8</team_id>
