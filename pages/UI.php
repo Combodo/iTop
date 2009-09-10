@@ -243,10 +243,8 @@ switch($operation)
 				$oP->add("<h1>Modification of $sClassLabel: <span class=\"hilite\">".$oObj->GetName()."</span></h1>\n");
 				$oP->add("</div>\n");
 
-				$oP->add("<div class=\"wizHeader\">\n");
 				$oP->add("<div class=\"wizContainer\">\n");
 				$oObj->DisplayModifyForm($oP);
-				$oP->add("</div>\n");
 				$oP->add("</div>\n");
 			}
 			else
