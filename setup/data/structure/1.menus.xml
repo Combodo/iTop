@@ -630,9 +630,8 @@ text-align:center;
 <icon_path></icon_path>
 <template>&lt;p&gt;&lt;/p&gt;
 &lt;p&gt;&lt;/p&gt;
-&lt;p style=&quot;text-align:center; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:32px;&quot;&gt;User management&lt;/p&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;p style=&quot;text-align:center; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:14px;&quot;&gt;&lt;i&gt;User management by profiles&lt;/i&gt;&lt;/p&gt;
+&lt;p style=&quot;text-align:center; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:32px;&quot;&gt;Administration tools&lt;/p&gt;
+&lt;p&gt;Tools accessible only to logins having the administrator profile&lt;/p&gt;
 </template>
 <type>administrator</type>
 <rank>1000</rank>
@@ -686,13 +685,13 @@ text-align:center;
 <label>User logins</label>
 <hyperlink>UI.php</hyperlink>
 <icon_path>../images/std_view.gif</icon_path>
-<template>&lt;div id=&quot;TopPane&quot;&gt;
+<template>
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT URP_Users AS URP_Users WHERE 1&lt;/itopblock&gt;
-&lt;/div&gt;
 &lt;div id=&quot;BottomPane&quot;&gt;
 &lt;p&gt;&lt;/p&gt;
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT URP_Users AS URP_Users WHERE 1&lt;/itopblock&gt;
-&lt;/div&gt;</template>
+&lt;/div&gt;
+</template>
 <type>administrator</type>
 <rank>10</rank>
 <parent_id>110</parent_id>
@@ -704,13 +703,13 @@ text-align:center;
 <label>User profiles</label>
 <hyperlink>UI.php</hyperlink>
 <icon_path>../images/std_view.gif</icon_path>
-<template>&lt;div id=&quot;TopPane&quot;&gt;
+<template>
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT URP_Profiles AS URP_Profiles WHERE 1&lt;/itopblock&gt;
-&lt;/div&gt;
 &lt;div id=&quot;BottomPane&quot;&gt;
 &lt;p&gt;&lt;/p&gt;
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT URP_Profiles AS URP_Profiles WHERE 1&lt;/itopblock&gt;
-&lt;/div&gt;</template>
+&lt;/div&gt;
+</template>
 <type>administrator</type>
 <rank>11</rank>
 <parent_id>110</parent_id>
