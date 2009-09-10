@@ -659,6 +659,31 @@ class AttributeDate extends AttributeDBField
 	public function GetEditClass() {return "Date";}
 	public function GetDBFieldType() {return "TIMESTAMP";}
 
+	// #@# THIS HAS TO REVISED
+	// Having null not allowed was interpreted by mySQL
+	// which was creating the field with the flag 'ON UPDATE CURRENT_TIMESTAMP'
+	// Then, on each update of the record, the field was modified.
+	// We will have to specify the default value if we want to restore this option
+	// In fact, we could also have more verbs dedicated to the DB:
+	// GetDBDefaultValue()... or GetDBFieldCreationStatement()....
+	public function IsNullAllowed() {return true;}
+	public function GetDefaultValue()
+	{
+		$default = parent::GetDefaultValue();
+
+		if (!parent::IsNullAllowed())
+		{
+			if (empty($default))
+			{
+				$default = date("Y-m-d H:i");
+			}
+		}
+
+		return $default;
+	}
+	// END OF THE WORKAROUND
+	///////////////////////////////////////////////////////////////
+
 	public function GetBasicFilterOperators()
 	{
 		return array(
