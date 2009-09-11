@@ -197,6 +197,8 @@ func_name(A) ::= F_DATE_ADD(X). { A=X; }
 func_name(A) ::= F_DATE_SUB(X). { A=X; }
 func_name(A) ::= F_ROUND(X). { A=X; }
 func_name(A) ::= F_FLOOR(X). { A=X; }
+func_name(A) ::= F_INET_ATON(X). { A=X; }
+func_name(A) ::= F_INET_NTOA(X). { A=X; }
 
 
 %code {

@@ -17,9 +17,9 @@ function ShowExamples($oP, $sExpression)
 			"Applications" => "SELECT bizApplication",
 			"Person having an 'A' in their name" => "SELECT bizPerson AS B WHERE B.name LIKE '%A%'",
 			"Changes planned on new year's day" => "SELECT bizChangeTicket AS ch WHERE ch.start_date >= '2009-12-31' AND ch.end_date <= '2010-01-01'",
+			"IPs in a range" => "SELECT bizDevice AS dev WHERE INET_ATON(dev.mgmt_ip) > INET_ATON('10.22.32.33') AND INET_ATON(dev.mgmt_ip) < INET_ATON('10.22.32.40')"
 		),
 		'Usefull examples' => array(
-			"Applications" => "SELECT bizApplication",
 			"NW interfaces of equipment in production for customer 'Demo'" => "SELECT bizInterface AS if JOIN bizDevice AS dev ON if.device_id = dev.id WHERE if.status = 'production' AND dev.status = 'production' AND dev.org_name = 'Demo' AND if.physical_type = 'ethernet'",
 			"My tickets" => "SELECT bizIncidentTicket AS i WHERE i.agent_id = :current_contact_id",
 			"People being owner of an active ticket" => "SELECT bizPerson AS p JOIN bizIncidentTicket AS i ON i.agent_id = p.id WHERE i.ticket_status != 'Closed'",
@@ -108,11 +108,15 @@ try
 		if ($oFilter)
 		{
 			$oP->add("<h3>Query results</h3>\n");
-			$oP->p('Query expression: '.$oFilter->ToOQL());
-			$oP->p('Serialized filter: '.$oFilter->serialize());
 			
 			$oSet = new CMDBObjectSet($oFilter);
 			cmdbAbstractObject::DisplaySet($oP, $oSet);
+
+			$oP->p('');
+			$oP->StartCollapsibleSection('More info on the query', false);
+			$oP->p('Query expression redevelopped: '.$oFilter->ToOQL());
+			$oP->p('Serialized filter: '.$oFilter->serialize());
+			$oP->EndCollapsibleSection();
 		}
 	}
 }

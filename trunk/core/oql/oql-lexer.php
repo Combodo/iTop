@@ -82,7 +82,7 @@ class OQLLexerRaw
         }
     	do {
 	    	$rules = array(
-    			'/^[ \t\n]+/',
+    			'/^[ \t\n\r]+/',
     			'/^SELECT/',
     			'/^FROM/',
     			'/^AS/',
@@ -132,6 +132,8 @@ class OQLLexerRaw
     			'/^DATE_SUB/',
     			'/^ROUND/',
     			'/^FLOOR/',
+    			'/^INET_ATON/',
+    			'/^INET_NTOA/',
     			'/^[0-9]+|0x[0-9a-fA-F]+/',
     			'/^\"([^\\\\\"]|\\\\\"|\\\\\\\\)*\"|'.chr(94).chr(39).'([^\\\\'.chr(39).']|\\\\'.chr(39).'|\\\\\\\\)*'.chr(39).'/',
     			'/^([_a-zA-Z][_a-zA-Z0-9]*|`[^`]+`)/',
@@ -482,24 +484,34 @@ class OQLLexerRaw
     function yy_r1_50($yy_subpatterns)
     {
 
-	$this->token = OQLParser::NUMVAL;
+	$this->token = OQLParser::F_INET_ATON;
     }
     function yy_r1_51($yy_subpatterns)
     {
 
-	$this->token = OQLParser::STRVAL;
+	$this->token = OQLParser::F_INET_NTOA;
     }
     function yy_r1_52($yy_subpatterns)
     {
 
-	$this->token = OQLParser::NAME;
+	$this->token = OQLParser::NUMVAL;
     }
     function yy_r1_53($yy_subpatterns)
     {
 
-	$this->token = OQLParser::VARNAME;
+	$this->token = OQLParser::STRVAL;
     }
     function yy_r1_54($yy_subpatterns)
+    {
+
+	$this->token = OQLParser::NAME;
+    }
+    function yy_r1_55($yy_subpatterns)
+    {
+
+	$this->token = OQLParser::VARNAME;
+    }
+    function yy_r1_56($yy_subpatterns)
     {
 
 	$this->token = OQLParser::DOT;
