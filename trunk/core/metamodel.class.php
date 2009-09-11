@@ -2681,7 +2681,7 @@ abstract class MetaModel
 		}
 		return $aResult;
 	}
-	public static function EnumReferencingClasses($sClass, $bSkipLinkingClasses = false)
+	public static function EnumReferencingClasses($sClass, $bSkipLinkingClasses = false, $bInnerJoinsOnly = false)
 	{
 		self::_check_subclass($sClass);	
 
@@ -2699,6 +2699,8 @@ abstract class MetaModel
 				if (self::$m_aAttribOrigins[$sSomeClass][$sAttCode] != $sSomeClass) continue;
 				if ($oAttDef->IsExternalKey() && ($oAttDef->GetTargetClass() == $sClass))
 				{
+					if ($bInnerJoinsOnly && $oAttDef->IsNullAllowed()) continue;
+					// Ok, I want this one
 					$aExtKeys[] = $sAttCode;
 				}
 			}
