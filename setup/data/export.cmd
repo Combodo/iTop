@@ -26,3 +26,4 @@ wget --output-document=17.contactchangetickets.xml --post-data="auth_user=%USER%
 wget --output-document=18.contracts.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT bizContract&format=xml"
 wget --output-document=19.infracontracts.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT lnkInfraContract&format=xml"
 wget --output-document=20.contactcontracts.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT lnkContactContract&format=xml"
+wget --output-document=21.subnets.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT bizSubnet&format=xml"
