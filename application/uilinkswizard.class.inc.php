@@ -115,6 +115,8 @@ class UILinksWizard
 				function(data)
 				{
 					$('#ModalDlg').html(data);
+					dlgWidth = $(document).width() - 100;
+					$('#ModalDlg').css('width', dlgWidth);
 					$('#ModalDlg').jqmShow();
 				},
 				'html'
@@ -149,8 +151,13 @@ class UILinksWizard
 					nb_rows = $('#SearchResultsToAdd table.listResults tr').length;
 					if(nb_rows > 10)
 					{
-						$('#SearchResultsToAdd table.listResults tbody').attr('height', '300px');
-						$('#SearchResultsToAdd .listResults tbody').css('overflow', 'auto');
+						yOffset = $('#ModalDlg').height() - $('#SearchResultsToAdd table.listResults tbody').height();
+						tbodyHeight = $(document).height() - 100 - yOffset;
+						if ($('#ModalDlg').height() > ($(document).height() - 100))
+						{
+							$('#SearchResultsToAdd table.listResults tbody').attr('height', tbodyHeight);
+							$('#SearchResultsToAdd .listResults tbody').css('overflow', 'auto');
+						}
 					}
 					
 				},
