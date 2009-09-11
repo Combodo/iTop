@@ -11,11 +11,12 @@
     display: none;
     
     position: fixed;
-    top: 10%;
-    left: 20%;
+    top: 25px;
+    left: 25px;
     
-    margin-left: -100px;
-    width: 800px;
+    nomargin-left: 25px;
+    nomargin-right: 25px;
+    nowidth: 800px;
     
     background-color: #FFF;
     color: #333;

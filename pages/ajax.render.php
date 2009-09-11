@@ -94,7 +94,7 @@ switch($operation)
 
 		$oWizardHelper->SetAllowedValuesHtml($sAttCode, $sHTMLValue);
 	}
-	$oPage->add($oWizardHelper->ToJSON());
+	$oPage->add("<script>oWizardHelper.FromJSON(".$oWizardHelper->ToJSON().")</script>\n");
 	break;
 		
 	case 'ajax':

@@ -75,14 +75,15 @@ class UILinksWidget
 			$sHTMLValue .= "</script>\n";
 			$sHTMLValue .= $this->GetObjectPickerDialog($oPage, $sTargetClass, 'oLinkWidget'.$this->m_iInputId.'.OnOk');
 			$sHTMLValue .= $this->GetLinkObjectDialog($oPage, $this->m_iInputId);
-			$sHTMLValue .= "<input type=\"text\" id=\"ac_{$this->m_iInputId}\" size=\"35\" name=\"\" value=\"\" title=\"Type the first 3 characters\" />";
-			$sHTMLValue .= "<input type=\"button\" value=\" Add... \"  class=\"action\" onClick=\"oLinkWidget{$this->m_iInputId}.AddObject();\"/>";
+			$sHTMLValue .= "<input type=\"text\" id=\"ac_{$this->m_iInputId}\" size=\"35\" name=\"\" value=\"\" title=\"Type the first 3 characters\"/>";
+			$sHTMLValue .= "<input type=\"button\" id=\"ac_add_{$this->m_iInputId}\" value=\" Add... \"  class=\"action\" onClick=\"oLinkWidget{$this->m_iInputId}.AddObject();\"/>";
 			$sHTMLValue .= "&nbsp;<input type=\"button\" value=\"Browse...\"  class=\"action\" onClick=\"return ManageObjects('$sTitle', '$sTargetClass', '$this->m_iInputId', '$sExtKeyToRemote');\"/>";
 			// another hidden input to store & pass the object's Id
-			$sHTMLValue .= "<input type=\"hidden\" id=\"id_ac_{$this->m_iInputId}\"/>\n";
+			$sHTMLValue .= "<input type=\"hidden\" id=\"id_ac_{$this->m_iInputId}\" onChange=\"EnableAddButton('{$this->m_iInputId}');\"/>\n";
 			$sHTMLValue .= "<input type=\"hidden\" id=\"{$this->m_iInputId}\" name=\"attr_{$this->m_sAttCode}{$this->m_sNameSuffix}\" value=\"\"/>\n";
 			$oPage->add_ready_script("\$('#{$this->m_iInputId}').val('$sJSON');\noLinkWidget{$this->m_iInputId}.Init();\n\$('#ac_{$this->m_iInputId}').autocomplete('./ajax.render.php', { minChars:3, onItemSelect:selectItem, onFindValue:findValue, formatItem:formatItem, autoFill:true, keyHolder:'#id_ac_{$this->m_iInputId}', extraParams:{operation:'ui.linkswidget', sclass:'{$this->m_sClass}', attCode:'{$this->m_sAttCode}', max:30}});");
-			$oPage->add_ready_script("\$('#ac_{$this->m_iInputId}').result( function(event, data, formatted) { if (data) { $('#id_ac_{$this->m_iInputId}').val(data[1]); } } );");
+			$oPage->add_ready_script("\$('#ac_add_{$this->m_iInputId}').attr('disabled', 'disabled');");
+			$oPage->add_ready_script("\$('#ac_{$this->m_iInputId}').result( function(event, data, formatted) { if (data) { $('#id_ac_{$this->m_iInputId}').val(data[1]); $('#ac_add_{$this->m_iInputId}').attr('disabled', ''); } else { $('#ac_add_{$this->m_iInputId}').attr('disabled', 'disabled'); } } );");
 		}
 		else
 		{
@@ -221,6 +222,7 @@ class UILinksWidget
 	{
 		$sHTML = <<< EOF
 		<div class="jqmWindow" id="ManageObjectsDlg_{$this->m_iInputId}">
+		<div class="wizContainer">
 		<div class="page_header"><h1 id="Manage_DlgTitle_{$this->m_iInputId}">Selected Objects</h1></div>
 		<table width="100%">
 			<tr>
@@ -248,6 +250,7 @@ class UILinksWidget
 			</tr>
 		</table>
 		</div>
+		</div>
 EOF;
 		$oPage->add_ready_script("$('#ManageObjectsDlg_$this->m_iInputId').jqm({overlay:70, modal:true, toTop:true});"); // jqModal Window
 		//$oPage->add_ready_script("UpdateObjectList('$sClass');");
@@ -265,6 +268,7 @@ EOF;
 		$sExtKeyToRemote = $oAttDef->GetExtKeyToRemote();
 		
 		$sHTML = "<div class=\"jqmWindow\" id=\"LinkDlg_$sId\">\n";
+		$sHTML .= "<div class=\"wizContainer\">\n";
 		$sHTML .= "<div class=\"page_header\"><h1 id=\"LinkObject_DlgTitle\">$sLinkedClass attributes</h1></div>\n";
 		$sHTML .= "<form>\n";
 		$index = 0;
@@ -306,8 +310,9 @@ EOF;
 			}
 		}
 		$sHTML .= $oPage->GetDetails($aDetails);
-		$sHTML .= "<button type=\"button\" class=\"jqmClose\" onClick=\"oLinkWidget$sId.OnLinkOk()\"> Ok </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type=\"button\" class=\"jqmClose\"  onClick=\"LinkWidget$sId.OnLinkCancel()\"> Cancel</button>\n";
+		$sHTML .= "<button type=\"button\" class=\"jqmClose\" onClick=\"oLinkWidget$sId.OnLinkOk()\"> Ok </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type=\"button\" class=\"jqmClose\"  onClick=\"oLinkWidget$sId.OnLinkCancel()\"> Cancel</button>\n";
 		$sHTML .= "</form>\n";
+		$sHTML .= "</div>\n";
 		$sHTML .= "</div>\n";
 		$oPage->add_ready_script("$('#LinkDlg_$sId').jqm({overlay:70, modal:true, toTop:true});"); // jqModal Window
 		//$oPage->add_ready_script("UpdateObjectList('$sClass');");
