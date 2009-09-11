@@ -469,25 +469,88 @@ switch($operation)
 	break;
 	
 	case 'delete':
+	case 'delete_confirmed':
 	$sClass = utils::ReadParam('class', '');
 	$sClassLabel = MetaModel::GetName($sClass);
 	$id = utils::ReadParam('id', '');
 	$oObj = $oContext->GetObject($sClass, $id);
 	$sName = $oObj->GetName();
-	$oMyChange = MetaModel::NewObject("CMDBChange");
-	$oMyChange->Set("date", time());
-	if (UserRights::GetUser() != UserRights::GetRealUser())
+	if ($operation == 'delete_confirmed')
 	{
-		$sUserString = UserRights::GetRealUser()." on behalf of ".UserRights::GetUser();
+		$oMyChange = MetaModel::NewObject("CMDBChange");
+		$oMyChange->Set("date", time());
+		if (UserRights::GetUser() != UserRights::GetRealUser())
+		{
+			$sUserString = UserRights::GetRealUser()." on behalf of ".UserRights::GetUser();
+		}
+		else
+		{
+			$sUserString = UserRights::GetUser();
+		}
+		$oMyChange->Set("userinfo", $sUserString);
+		$oMyChange->DBInsert();
+		$oObj->DBDeleteTracked($oMyChange);
+		$oP->add("<h1>".$sName." - $sClassLabel deleted</h1>\n");
 	}
 	else
 	{
-		$sUserString = UserRights::GetUser();
+		// Evaluate the consequences onto the DB integrity
+		//
+		$aDependentObjects = array();
+		$iTotalThreat = 0;
+		$aRererencingMe = MetaModel::EnumReferencingClasses($sClass, false /*include N-N links*/, true /*inner joins*/);
+		foreach($aRererencingMe as $sRemoteClass => $aExtKeys)
+		{
+			foreach($aExtKeys as $sExtKeyAttCode)
+			{
+				//$oAttDef = MetaModel::GetAttributeDef($sClass, $sExtKeyAttCode);
+
+				$oSearch = new DBObjectSearch($sRemoteClass);
+				$oSearch->AddCondition($sExtKeyAttCode, $id);
+				$oSet = new CMDBObjectSet($oSearch);
+				//if ($oSet->Count() > 0)
+				while ($oDependentObj = $oSet->fetch())
+				{
+					$aDependentObjects[$sRemoteClass][] = $oDependentObj;
+					$iTotalThreat++;
+				}
+			}
+		}
+		// Ask for a confirmation, or cancel (back to the object details)
+		//
+		if ($iTotalThreat > 0)
+		{
+			$oP->p("Warning: $iTotalThreat object(s) are pointing to the object that you would like to delete");
+			
+			foreach ($aDependentObjects as $sRemoteClass => $aPotentialDeletes)
+			{
+				$oP->add("<p>".MetaModel::GetName($sRemoteClass)."\n");
+				$oP->add("<ul>\n");
+				foreach ($aPotentialDeletes as $oDependentObj)
+				{
+					$oP->add("<li>".$oDependentObj->GetHyperLink()."</li>");
+				}
+				$oP->add("</ul>\n");
+			}
+			$oP->p("You have to delete those objects prior to deleting ".$oObj->GetHyperLink());
+			$oP->add("<form method=\"post\">\n");
+			$oP->add("<input DISABLED type=\"submit\" name=\"\" value=\" Delete! \">\n");
+			$oP->add("<input type=\"button\" onclick=\"window.history.back();\" value=\" Cancel \">\n");
+			$oP->add("</form>\n");
+		}
+		else
+		{
+			$oP->p("Please confirm that you want to delete this object");
+			$oP->add("<form method=\"post\">\n");
+			$oP->add("<input type=\"hidden\" name=\"menu\" value=\"$iActiveNodeId\">\n");
+			$oP->add("<input type=\"hidden\" name=\"operation\" value=\"delete_confirmed\">\n");
+			$oP->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
+			$oP->add("<input type=\"hidden\" name=\"id\" value=\"$id\">\n");
+			$oP->add("<input type=\"submit\" name=\"\" value=\" Delete! \">\n");
+			$oP->add("<input type=\"button\" onclick=\"window.history.back();\" value=\" Cancel \">\n");
+			$oP->add("</form>\n");
+		}
 	}
-	$oMyChange->Set("userinfo", $sUserString);
-	$oMyChange->DBInsert();
-	$oObj->DBDeleteTracked($oMyChange);
-	$oP->add("<h1>".$sName." - $sClassLabel deleted</h1>\n");
 	break;
 	
 	case 'apply_new':
