@@ -104,7 +104,7 @@ function WizardHelper(sClass)
 		   { operation: 'wizard_helper' },
 			function(json_data){
 				//console.log('data received:', json_data);
-				oWizardHelper.FromJSON(json_data);
+				//oWizardHelper.FromJSON(json_data);
 				oWizardHelper.UpdateFields();
 				//console.log(oWizardHelper);
 				$('#wizStep'+ G_iCurrentStep).unblock( {fadeOut: 0} );

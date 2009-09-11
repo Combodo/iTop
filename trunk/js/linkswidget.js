@@ -74,12 +74,16 @@ function LinksWidget(id, sLinkedClass, sExtKeyToMe, sExtKeyToRemote, aAttributes
 			this.aLinks.push(oLink);
 		}
 		this.Refresh();
+		// Grey out the 'Add...' button
+		$('#ac_add_'+this.id).attr('disabled', 'disabled');
 	}
 	
 	this.OnLinkCancel = function()
 	{
 		// Restore the links to their previous value (just in case)
 		this.aLinks = this.aPreviousLinks;
+		// Grey out the 'Add...' button
+		$('#ac_add_'+this.id).attr('disabled', 'disabled');
 	}
 	
 	this.RemoveLink = function(index)

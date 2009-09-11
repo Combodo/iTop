@@ -24,22 +24,6 @@ function AddObject(sClass, sId, sExtKeyToRemote)
 	// Display the additional dialog
 	$('#LinkDlg_'+sId).jqmShow();
 	return;
-	
-	// TO BE REWRITTEN
-	var sRelatedObjectIds = new String($('#related_object_ids_'+sId).val());
-	if (sRelatedObjectIds.length > 0)
-	{
-		aRelatedObjectIds = sRelatedObjectIds.split(' ');
-	}
-	else
-	{
-		aRelatedObjectIds = new Array();
-	}
-	// To do: check if the ID is not already in the list...
-	aRelatedObjectIds[aRelatedObjectIds.length] = sCurrentObjectId;
-	// Update the form & reload the list
-	$('#related_object_ids').val(aRelatedObjectIds.join(' '));
-	UpdateObjectList(sClass, sExtKeyToRemote);
 }
 
 function ManageObjects(sTitle, sClass, sId, sExtKeyToRemote)
@@ -158,6 +142,5 @@ function GetObjectIds(sInputId, sExtKeyToRemote)
 		}
 	}
 	return aLinkedIds;
-	
 }
 
