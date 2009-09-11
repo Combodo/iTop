@@ -89,6 +89,7 @@ class UIWizard
 function OnEnterStep{$iStepIndex}()
 {
 	oWizardHelper.ResetQuery();
+	oWizardHelper.UpdateWizard();
 	
 $sJSHandlerCode
 

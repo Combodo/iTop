@@ -9,6 +9,7 @@ function WizardHelper(sClass)
 					 'm_aAllowedValuesRequested': [],
 					 'm_aDefaultValue': [],
 					 'm_aAllowedValues': [],
+					 'm_iFieldsCount' : 0,
 					};
 	this.m_oData.m_sClass = sClass;
 	
@@ -18,6 +19,12 @@ function WizardHelper(sClass)
 		this.m_oData.m_oFieldsMap = oFieldsMap;
 		
 	}
+	this.SetFieldsCount = function (count)
+	{
+		this.m_oData.m_iFieldsCount = count;
+		
+	}
+
 	this.RequestDefaultValue = function (sFieldName)
 	{
 		currentValue = this.UpdateCurrentValue(sFieldName);
@@ -50,12 +57,20 @@ function WizardHelper(sClass)
 	this.ResetQuery = function ()
 	{
 		this.m_oData.m_aDefaultValueRequested = [];
+		this.m_oData.m_aDefaultValue = [];
 		this.m_oData.m_aAllowedValuesRequested = [];
+		this.m_oData.m_aAllowedValues = [];
 	}
 	
 	this.UpdateFields = function ()
 	{
 		//console.log('** UpdateFields **')
+		for(i=0; i< this.m_oData.m_aAllowedValuesRequested.length; i++)
+		{
+			sAttCode = this.m_oData.m_aAllowedValuesRequested[i];
+			sFieldId = this.m_oData.m_oFieldsMap[sAttCode];
+			$('#field_'+sFieldId).html(this.m_oData.m_aAllowedValues[sFieldId]);
+		}
 		for(i=0; i< this.m_oData.m_aDefaultValueRequested.length; i++)
 		{
 			sAttCode = this.m_oData.m_aDefaultValueRequested[i];
@@ -67,10 +82,24 @@ function WizardHelper(sClass)
 		}
 	}
 	
+	this.UpdateWizard = function ()
+	{
+		//console.log('** UpdateWizard **')
+		for(i=0; i< this.m_oData.m_iFieldsCount; i++)
+		{
+			value = $('#att_'+i).val();
+			if (value == '')
+			{
+				value = null;
+			}
+			this.m_oData.m_aCurrentValues[i] = value;
+		}
+	}
+	
 	this.AjaxQueryServer = function ()
 	{
 		//console.log('data sent:', this.ToJSON());
-		//console.log('oWizard:', this);
+		console.log('oWizard:', this);
 		$.get('ajax.render.php?json_obj=' + this.ToJSON(),
 		   { operation: 'wizard_helper' },
 			function(json_data){

@@ -57,7 +57,16 @@ function ReloadObjectFromServer(sJSON)
 function GoToStep(iCurrentStep, iNextStep)
 {
 	var oCurrentStep = document.getElementById('wizStep'+iCurrentStep);
-	if (CheckMandatoryFields('wizStep'+iCurrentStep))
+	if (iNextStep > iCurrentStep)
+	{
+		// Check the values when moving forward
+		if (CheckMandatoryFields('wizStep'+iCurrentStep))
+		{
+			oCurrentStep.style.display = 'none';
+			ActivateStep(iNextStep);
+		}
+	}
+	else
 	{
 		oCurrentStep.style.display = 'none';
 		ActivateStep(iNextStep);

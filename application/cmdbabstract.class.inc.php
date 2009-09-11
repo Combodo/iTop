@@ -601,7 +601,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		return $sHtml;
 	}
 	
-	public static function GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $value = '', $sDisplayValue = '', $iId = '', $sNameSuffix = '', $iFlags = 0)
+	public static function GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $value = '', $sDisplayValue = '', $iId = '', $sNameSuffix = '', $iFlags = 0, $aArgs = array())
 	{
 		static $iInputId = 0;
 		if (!empty($iId))
@@ -630,7 +630,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 				break;
 				
 				case 'Password':
-				$sHTMLValue = "<input type=\"password\" size=\"20\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iInputId\"{$sCSSClasses}/>";
+				$sHTMLValue = "<input type=\"password\" size=\"30\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iInputId\"{$sCSSClasses}/>";
 				break;
 				
 				case 'Text':
@@ -645,19 +645,19 @@ abstract class cmdbAbstractObject extends CMDBObject
 				case 'String':
 				default:
 					// #@# todo - add context information (depending on dimensions)
-					$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, array());
+					$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, $aArgs);
 					if ($aAllowedValues !== null)
 					{
 						//Enum field or external key, display a combo
 						if (count($aAllowedValues) == 0)
 						{
-							$sHTMLValue = "<input type=\"text\" size=\"70\" value=\"\" name=\"attr_{$sAttCode}{$sNameSuffix}\" id=\"$iInputId\"{$sCSSClasses}/>";
+							$sHTMLValue = "<input type=\"text\" size=\"30\" value=\"\" name=\"attr_{$sAttCode}{$sNameSuffix}\" id=\"$iInputId\"{$sCSSClasses}/>";
 						}
 						else if (count($aAllowedValues) > 50)
 						{
 							// too many choices, use an autocomplete
 							// The input for the auto complete
-							$sHTMLValue = "<input type=\"text\" id=\"label_$iInputId\" size=\"50\" name=\"\" value=\"$sDisplayValue\"{$sCSSClasses}/>";
+							$sHTMLValue = "<input type=\"text\" id=\"label_$iInputId\" size=\"30\" name=\"\" value=\"$sDisplayValue\"{$sCSSClasses}/>";
 							// another hidden input to store & pass the object's Id
 							$sHTMLValue .= "<input type=\"hidden\" id=\"$iInputId\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" />\n";
 							$oPage->add_ready_script("\$('#label_$iInputId').autocomplete('./ajax.render.php', { minChars:3, onItemSelect:selectItem, onFindValue:findValue, formatItem:formatItem, autoFill:true, keyHolder:'#$iInputId', extraParams:{operation:'autocomplete', sclass:'$sClass',attCode:'".$sAttCode."'}});");
@@ -678,7 +678,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 					}
 					else
 					{
-						$sHTMLValue = "<input type=\"text\" size=\"50\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iInputId\"{$sCSSClasses}>";
+						$sHTMLValue = "<input type=\"text\" size=\"30\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iInputId\"{$sCSSClasses}>";
 					}
 					break;
 			}

@@ -77,25 +77,21 @@ switch($operation)
 	$sJson = utils::ReadParam('json_obj', '');
 	$oWizardHelper = WizardHelper::FromJSON($sJson);
 	$oObj = $oWizardHelper->GetTargetObject(); 
+	$sClass = $oWizardHelper->GetTargetClass();
 	foreach($oWizardHelper->GetFieldsForDefaultValue() as $sAttCode)
 	{
-		$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
-		$oWizardHelper->SetDefaultValue($sAttCode, $oAttDef->GetDefaultValue());
+		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+		$defaultValue = $oAttDef->GetDefaultValue();
+		$oWizardHelper->SetDefaultValue($sAttCode, $defaultValue);
+		$oObj->Set($sAttCode, $defaultValue);
 	}
 	foreach($oWizardHelper->GetFieldsForAllowedValues() as $sAttCode)
 	{
-		 $aAllowedValues = MetaModel::GetAllowedValues_att(get_class($oObj), $sAttCode, array('this' => $oObj));
-		// Few choices, use a normal 'select'
-		$sHTMLValue = "<select name=\"attr_{$sAttCode}\"\n";
-		$sHTMLValue .= "<option value=\"0\">-- select one --</option>\n";
-		foreach($aAllowedValues as $key => $display_value)
-		{
-			$sSelected = ''; //($value == $key) ? ' selected' : '';
-			$sHTMLValue .= "<option value=\"$key\"$sSelected>$display_value</option>\n";
-		}
-		$sHTMLValue .= "</select>\n";
+		$sId = $oWizardHelper->GetIdForField($sAttCode);
+		$value = $oObj->Get($sAttCode);
+		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+		$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $value, '', 'att_'.$sId, '', 0, array('this' => $oObj));
 
-		// Improvement: what if the list is too long?
 		$oWizardHelper->SetAllowedValuesHtml($sAttCode, $sHTMLValue);
 	}
 	$oPage->add($oWizardHelper->ToJSON());
