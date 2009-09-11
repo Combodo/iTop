@@ -661,6 +661,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 							// another hidden input to store & pass the object's Id
 							$sHTMLValue .= "<input type=\"hidden\" id=\"$iInputId\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" />\n";
 							$oPage->add_ready_script("\$('#label_$iInputId').autocomplete('./ajax.render.php', { minChars:3, onItemSelect:selectItem, onFindValue:findValue, formatItem:formatItem, autoFill:true, keyHolder:'#$iInputId', extraParams:{operation:'autocomplete', sclass:'$sClass',attCode:'".$sAttCode."'}});");
+							$oPage->add_ready_script("\$('#label_$iInputId').result( function(event, data, formatted) { if (data) { $('#{$iInputId}').val(data[1]); } } );");
 						}
 						else
 						{
