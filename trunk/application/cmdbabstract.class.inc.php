@@ -596,7 +596,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		return $sHtml;
 	}
 	
-	public static function GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $value = '', $sDisplayValue = '', $iId = '', $sNameSuffix = '')
+	public static function GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $value = '', $sDisplayValue = '', $iId = '', $sNameSuffix = '', $iFlags = 0)
 	{
 		static $iInputId = 0;
 		if (!empty($iId))
@@ -607,20 +607,29 @@ abstract class cmdbAbstractObject extends CMDBObject
 		{
 			$iInputId++;
 		}
+
 		if (!$oAttDef->IsExternalField())
 		{
+			$aCSSClasses = array();
+			if ( (!$oAttDef->IsNullAllowed()) || ($iFlags & OPT_ATT_MANDATORY))
+			{
+				$aCSSClasses[] = 'mandatory';
+			}
+			$sCSSClasses = self::GetCSSClasses($aCSSClasses);
 			switch($oAttDef->GetEditClass())
 			{
 				case 'Date':
-				$sHTMLValue = "<input type=\"text\" size=\"20\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iInputId\" class=\"date-pick\"/>";
+				$aCSSClasses[] = 'date-pick';
+				$sCSSClasses = self::GetCSSClasses($aCSSClasses);
+				$sHTMLValue = "<input type=\"text\" size=\"20\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iInputId\"{$sCSSClasses}/>";
 				break;
 				
 				case 'Password':
-				$sHTMLValue = "<input type=\"password\" size=\"20\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iInputId\"/>";
+				$sHTMLValue = "<input type=\"password\" size=\"20\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iInputId\"{$sCSSClasses}/>";
 				break;
 				
 				case 'Text':
-					$sHTMLValue = "<textarea name=\"attr_{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iInputId\">$value</textarea>";
+					$sHTMLValue = "<textarea name=\"attr_{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iInputId\"{$sCSSClasses}>$value</textarea>";
 				break;
 	
 				case 'List':
@@ -637,13 +646,13 @@ abstract class cmdbAbstractObject extends CMDBObject
 						//Enum field or external key, display a combo
 						if (count($aAllowedValues) == 0)
 						{
-							$sHTMLValue = "<input type=\"text\" size=\"70\" value=\"\" name=\"attr_{$sAttCode}{$sNameSuffix}\" id=\"$iInputId\"/>";
+							$sHTMLValue = "<input type=\"text\" size=\"70\" value=\"\" name=\"attr_{$sAttCode}{$sNameSuffix}\" id=\"$iInputId\"{$sCSSClasses}/>";
 						}
 						else if (count($aAllowedValues) > 50)
 						{
 							// too many choices, use an autocomplete
 							// The input for the auto complete
-							$sHTMLValue = "<input type=\"text\" id=\"label_$iInputId\" size=\"50\" name=\"\" value=\"$sDisplayValue\" />";
+							$sHTMLValue = "<input type=\"text\" id=\"label_$iInputId\" size=\"50\" name=\"\" value=\"$sDisplayValue\"{$sCSSClasses}/>";
 							// another hidden input to store & pass the object's Id
 							$sHTMLValue .= "<input type=\"hidden\" id=\"$iInputId\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" />\n";
 							$oPage->add_ready_script("\$('#label_$iInputId').autocomplete('./ajax.render.php', { minChars:3, onItemSelect:selectItem, onFindValue:findValue, formatItem:formatItem, autoFill:true, keyHolder:'#$iInputId', extraParams:{operation:'autocomplete', sclass:'$sClass',attCode:'".$sAttCode."'}});");
@@ -651,7 +660,8 @@ abstract class cmdbAbstractObject extends CMDBObject
 						else
 						{
 							// Few choices, use a normal 'select'
-							$sHTMLValue = "<select name=\"attr_{$sAttCode}{$sNameSuffix}\" id=\"$iInputId\">\n";
+							$sHTMLValue = "<select name=\"attr_{$sAttCode}{$sNameSuffix}\" id=\"$iInputId\"{$sCSSClasses}>\n";
+							$sHTMLValue .= "<option value=\"0\">-- select one --</option>\n";
 							foreach($aAllowedValues as $key => $display_value)
 							{
 								$sSelected = ($value == $key) ? ' selected' : '';
@@ -662,7 +672,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 					}
 					else
 					{
-						$sHTMLValue = "<input type=\"text\" size=\"50\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iInputId\">";
+						$sHTMLValue = "<input type=\"text\" size=\"50\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iInputId\"{$sCSSClasses}>";
 					}
 					break;
 			}
@@ -672,11 +682,13 @@ abstract class cmdbAbstractObject extends CMDBObject
 	
 	public function DisplayModifyForm(web_page $oPage)
 	{
+		static $iFormId = 0;
+		$iFormId++;
 		$oAppContext = new ApplicationContext();
 		$sStateAttCode = MetaModel::GetStateAttributeCode(get_class($this));
 		$iKey = $this->GetKey();
 		$aDetails = array();
-		$oPage->add("<form method=\"post\">\n");
+		$oPage->add("<form id=\"form_{$iFormId}\" method=\"post\" onSubmit=\"return CheckMandatoryFields('form_{$iFormId}')\">\n");
 		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode=>$oAttDef)
 		{
 			if ('finalclass' == $sAttCode) // finalclass is a reserved word, hardcoded !
@@ -707,7 +719,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 					{
 						$sValue = $this->Get($sAttCode);
 						$sDisplayValue = $this->GetDisplayValue($sAttCode);
-						$sHTMLValue = self::GetFormElementForField($oPage, get_class($this), $sAttCode, $oAttDef, $sValue, $sDisplayValue);
+						$sHTMLValue = self::GetFormElementForField($oPage, get_class($this), $sAttCode, $oAttDef, $sValue, $sDisplayValue, '', '', $iFlags);
 					}
 					$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $sHTMLValue);
 				}
@@ -726,11 +738,24 @@ abstract class cmdbAbstractObject extends CMDBObject
 	
 	public static function DisplayCreationForm(web_page $oPage, $sClass, $oObjectToClone = null)
 	{
+		static $iCreationFormId = 0;
+
+		$iCreationFormId++;
 		$oAppContext = new ApplicationContext();
 		$aDetails = array();
 		$sOperation = ($oObjectToClone == null) ? 'apply_new' : 'apply_clone';
 		$sStateAttCode = MetaModel::GetStateAttributeCode(get_class($oObjectToClone));
-		$oPage->add("<form method=\"post\">\n");
+		$oPage->add("<form id=\"creation_form_{$iCreationFormId}\" method=\"post\" onSubmit=\"return CheckMandatoryFields('creation_form_{$iCreationFormId}')\">\n");
+		$aStates = MetaModel::EnumStates($sClass);
+		if ($oObjectToClone == null)
+		{
+			$sTargetState = MetaModel::GetDefaultState($sClass);
+		}
+		else
+		{
+			$sTargetState = $oObjectToClone->GetState();
+		}
+
 		foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode=>$oAttDef)
 		{
 			if ('finalclass' == $sAttCode) // finalclass is a reserved word, hardcoded !
@@ -747,7 +772,9 @@ abstract class cmdbAbstractObject extends CMDBObject
 			{
 				$sValue = ($oObjectToClone == null) ? '' : $oObjectToClone->Get($sAttCode);
 				$sDisplayValue = ($oObjectToClone == null) ? '' : $oObjectToClone->GetDisplayValue($sAttCode);
-				$sHTMLValue = self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue);
+				$iOptions = isset($aStates[$sTargetState]['attribute_list'][$sAttCode]) ? $aStates[$sTargetState]['attribute_list'][$sAttCode] : 0;
+				
+				$sHTMLValue = self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, '', '', $iOptions);
 				$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $sHTMLValue);
 			}
 		}
@@ -763,6 +790,16 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$oPage->add("<button type=\"button\" class=\"action\" onClick=\"goBack()\"><span>Cancel</span></button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
 		$oPage->add("<button type=\"submit\" class=\"action\"><span>Apply</span></button>\n");
 		$oPage->add("</form>\n");
+	}
+
+	protected static function GetCSSClasses($aCSSClasses)
+	{
+		$sCSSClasses = '';
+		if (!empty($aCSSClasses))
+		{
+			$sCSSClasses = ' class="'.implode(' ', $aCSSClasses).'" ';
+		}
+		return $sCSSClasses;
 	}
 }
 ?>

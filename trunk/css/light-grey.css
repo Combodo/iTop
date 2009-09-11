@@ -660,3 +660,6 @@ div.HRDrawer {
 	nopadding-right: 1em;
 	margin-top: 0;
 }
+.mandatory {
+	border: 1px solid #f00;
+}

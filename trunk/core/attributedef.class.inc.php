@@ -107,6 +107,7 @@ abstract class AttributeDefinition
 	public function IsExternalKey($iType = EXTKEY_RELATIVE) {return false;} 
 	public function IsExternalField() {return false;} 
 	public function IsWritable() {return false;} 
+	public function IsNullAllowed() {return true;} 
 	public function GetCode() {return $this->m_sCode;} 
 	public function GetLabel() {return $this->Get("label");} 
 	public function GetDescription() {return $this->Get("description");} 
