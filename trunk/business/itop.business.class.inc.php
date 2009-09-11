@@ -982,6 +982,89 @@ class lnkInterfaces extends cmdbAbstractObject
 
 ////////////////////////////////////////////////////////////////////////////////////
 /**
+* A subnet
+*/
+////////////////////////////////////////////////////////////////////////////////////
+class bizSubnet extends logInfra
+{
+	public static function Init()
+	{
+		$aParams = array
+		(
+			"category" => "bizmodel,searchable",
+			"name" => "Subnet",
+			"description" => "Logical or physical subnet",
+			"key_type" => "",
+			"key_label" => "id",
+			"name_attcode" => "name",
+			"state_attcode" => "",
+			"reconc_keys" => array("org_name", "name"), // inherited attributes
+			"db_table" => "subnets",
+			"db_key_field" => "id",
+			"db_finalclass_field" => "",
+			"display_template" => "",
+		);
+		MetaModel::Init_Params($aParams);
+		MetaModel::Init_InheritAttributes();
+		MetaModel::Init_AddAttribute(new AttributeString("ip", array("label"=>"IP", "description"=>"IP", "allowed_values"=>null, "sql"=>"ip", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("mask", array("label"=>"IP mask", "description"=>"IP mask", "allowed_values"=>null, "sql"=>"mask", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+
+		MetaModel::Init_InheritFilters();
+		MetaModel::Init_AddFilterFromAttribute("ip");
+		MetaModel::Init_AddFilterFromAttribute("mask");
+
+		// Display lists
+		MetaModel::Init_SetZListItems('details', array('name', 'ip','mask')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('name', 'ip', 'mask')); // Attributes to be displayed for a list
+		// Search criteria
+		MetaModel::Init_SetZListItems('standard_search', array('name', 'ip','mask')); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('advanced_search', array('name', 'ip','mask')); // Criteria of the advanced search form
+	}
+
+	function DisplayBareRelations(web_page $oPage)
+	{
+		parent::DisplayBareRelations($oPage);
+
+		$oPage->SetCurrentTabContainer('Related Objects');
+
+		$oPage->SetCurrentTab('IP Usage');
+
+		$bit_ip = ip2long($this->Get('ip'));
+		$bit_mask = ip2long($this->Get('mask'));
+		$sIPMin = long2ip($bit_ip & $bit_mask);
+		$sIPMax = long2ip(($bit_ip | (~$bit_mask)) - 1);
+
+		$oPage->p("Interfaces having an IP in the range: <em>$sIPMin</em> to <em>$sIPMax</em>");
+		
+		$oIfSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT bizInterface AS if WHERE INET_ATON(if.ip_address) >= INET_ATON('$sIPMin') AND INET_ATON(if.ip_address) <= INET_ATON('$sIPMax')"));
+		self::DisplaySet($oPage, $oIfSet);
+
+		$iCountUsed = $oIfSet->Count();
+		$iCountRange = ip2long($sIPMax) - ip2long($sIPMin);
+		$iFreeCount =  $iCountRange - $iCountUsed;
+
+		$oPage->SetCurrentTab('Free IPs');
+		$oPage->p("Free IPs: $iFreeCount");
+		$oPage->p("Here is an extract of 10 free IP addresses");
+
+		$aUsedIPs = $oIfSet->GetColumnAsArray('ip_address', false);
+		$i = 0;
+		while ($i < min($iFreeCount, 10))
+		{
+			$i++;
+
+			$iAnIP = ip2long($sIPMin) + $i;
+			if (in_array($iAnIP, $aUsedIPs)) continue;
+
+			$sAnIP = long2ip($iAnIP);
+			$oPage->p($sAnIP);
+		}
+		
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////////
+/**
 * Any electronic device
 */
 ////////////////////////////////////////////////////////////////////////////////////

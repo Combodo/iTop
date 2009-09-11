@@ -155,7 +155,26 @@
 &lt;p&gt;&lt;/p&gt;
 &lt;p style=&quot;text-align:center; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:24px;&quot;&gt;All Servers&lt;/p&gt;
 &lt;p&gt;&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContact&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizServer&lt;/itopblock&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizServer&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizServer&lt;/itopblock&gt;
+&lt;/div&gt;
+</template>
+<type>application</type>
+<rank>999</rank>
+<parent_id>14</parent_id>
+<user_id>0</user_id>
+</menuNode>
+<menuNode id="90">
+<name>All Subnets</name>
+<label>All subnets</label>
+<hyperlink>UI.php</hyperlink>
+<icon_path></icon_path>
+<template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizSubnet&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizSubnet&lt;/itopblock&gt;
+&lt;div id=&quot;BottomPane&quot;&gt;
+&lt;p&gt;&lt;/p&gt;
+&lt;p&gt;&lt;/p&gt;
+&lt;p style=&quot;text-align:center; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:24px;&quot;&gt;All Subnets&lt;/p&gt;
+&lt;p&gt;&lt;/p&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizSubnet&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizSubnet&lt;/itopblock&gt;
 &lt;/div&gt;
 </template>
 <type>application</type>
