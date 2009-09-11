@@ -54,7 +54,7 @@ class OQLLexerRaw
 %value   $this->value
 %line    $this->line
 %matchlongest 1
-whitespace = /[ \t\n]+/
+whitespace = /[ \t\n\r]+/
 select     = "SELECT"
 from       = "FROM"
 as_alias   = "AS"
@@ -104,6 +104,8 @@ f_date_add = "DATE_ADD"
 f_date_sub = "DATE_SUB"
 f_round    = "ROUND"
 f_floor    = "FLOOR"
+f_inet_aton = "INET_ATON"
+f_inet_ntoa = "INET_NTOA"
 numval     = /[0-9]+|0x[0-9a-fA-F]+/
 strval     = /"([^\\"]|\\"|\\\\)*"|'.chr(94).chr(39).'([^\\'.chr(39).']|\\'.chr(39).'|\\\\)*'.chr(39).'/
 name       = /([_a-zA-Z][_a-zA-Z0-9]*|`[^`]+`)/
@@ -261,6 +263,12 @@ f_round {
 }
 f_floor {
 	$this->token = OQLParser::F_FLOOR;
+}
+f_inet_aton {
+	$this->token = OQLParser::F_INET_ATON;
+}
+f_inet_ntoa {
+	$this->token = OQLParser::F_INET_NTOA;
 }
 numval {
 	$this->token = OQLParser::NUMVAL;
