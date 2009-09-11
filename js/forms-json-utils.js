@@ -57,8 +57,11 @@ function ReloadObjectFromServer(sJSON)
 function GoToStep(iCurrentStep, iNextStep)
 {
 	var oCurrentStep = document.getElementById('wizStep'+iCurrentStep);
-	oCurrentStep.style.display = 'none';
-	ActivateStep(iNextStep);
+	if (CheckMandatoryFields('wizStep'+iCurrentStep))
+	{
+		oCurrentStep.style.display = 'none';
+		ActivateStep(iNextStep);
+	}
 }
 
 function ActivateStep(iTargetStep)
@@ -103,4 +106,40 @@ function AjaxGetDefaultValue(oObj, sClass, sAttCode, iFieldId)
 			}
 		);
 	}
+}
+
+function CheckMandatoryFields(sFormId)
+{
+	$('#'+sFormId+' :submit').attr('disable', 'disabled');
+	$('#'+sFormId+' :button[type=submit]').attr('disable', 'disabled');
+	firstErrorId = '';
+	
+	var iErrorsCount = 0;
+	$('#'+sFormId+' :input.mandatory').each( function() {
+		if (( this.value == '') || (this.value == 0))
+		{
+			this.style.background = '#fcc';
+			iErrorsCount++;
+			if (iErrorsCount == 1)
+			{
+				firstErrorId = this.id;
+			}
+		}
+		else
+		{
+			this.style.background = '#fff';
+		}
+	}
+	);
+	if(iErrorsCount > 0)
+	{
+		alert('Please fill-in all mandatory fields before continuing.');
+		$('#'+sFormId+' :submit').attr('disable', '');
+		$('#'+sFormId+' :button[type=submit]').attr('disable', '');
+		if (firstErrorId != '')
+		{
+			$('#'+firstErrorId).focus();
+		}
+	}
+	return(iErrorsCount == 0);
 }

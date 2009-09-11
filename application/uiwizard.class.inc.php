@@ -56,7 +56,7 @@ class UIWizard
 				
 				$sFieldFlag = ($iOptions & (OPT_ATT_MANDATORY | OPT_ATT_MUSTCHANGE)) ? ' <span class="hilite">*</span>' : '';
 				$oDefaultValuesSet = $oAttDef->GetDefaultValue(); // @@@ TO DO: get the object's current value if the object exists
-				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($this->m_oPage, $this->m_sClass, $sAttCode, $oAttDef, $oDefaultValuesSet, '', "att_$iMaxInputId");
+				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($this->m_oPage, $this->m_sClass, $sAttCode, $oAttDef, $oDefaultValuesSet, '', "att_$iMaxInputId", '', $iOptions);
 				$aFieldsMap[$iMaxInputId] = $sAttCode;
 				$aDetails[] = array('label' => $oAttDef->GetLabel().$sFieldFlag, 'value' => "<div id=\"field_$iMaxInputId\">$sHTMLValue</div>");
 				if ($oAttDef->GetValuesDef() != null)

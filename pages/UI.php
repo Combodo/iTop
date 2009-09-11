@@ -278,9 +278,20 @@ switch($operation)
 		$bIsReadAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_READ, $oSet) == UR_ALLOWED_YES);
 		if( ($oObjToClone != null) && ($bIsModifiedAllowed) && ($bIsReadAllowed))
 		{
+			$oP->add_linked_script("../js/json.js");
+			$oP->add_linked_script("../js/forms-json-utils.js");
+			$oP->add_linked_script("../js/wizardhelper.js");
+			$oP->add_linked_script("../js/wizard.utils.js");
+			$oP->add_linked_script("../js/linkswidget.js");
+			$oP->add_linked_script("../js/jquery.blockUI.js");
 			$oP->set_title("iTop - ".$oObjToClone->GetName()." - $sClassLabel clone");
-			$oP->add("<h1>".$oObjToClone->GetName()." - $sClassLabel clone</h1>\n");
+			$oP->add("<div class=\"page_header\">\n");
+			$oP->add("<h1>Clone of $sClassLabel: <span class=\"hilite\">".$oObjToClone->GetName()."</span></h1>\n");
+			$oP->add("</div>\n");
+
+			$oP->add("<div class=\"wizContainer\">\n");
 			cmdbAbstractObject::DisplayCreationForm($oP, $sClass, $oObjToClone);
+			$oP->add("</div>\n");
 		}
 		else
 		{
@@ -611,7 +622,7 @@ switch($operation)
 					{
 						$aAttributesDef = MetaModel::ListAttributeDefs($sClass);
 						$oAttDef = $aAttributesDef[$sAttCode];
-						$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, $sClass, $sAttCode, $oAttDef, $oObj->Get($sAttCode), $oObj->GetDisplayValue($sAttCode));
+						$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, $sClass, $sAttCode, $oAttDef, $oObj->Get($sAttCode), $oObj->GetDisplayValue($sAttCode), '', '', $iExpectCode);
 						$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $sHTMLValue);
 					}
 				}
