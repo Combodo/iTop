@@ -368,12 +368,14 @@ switch($operation)
 			{
 				$aNewFieldsMap[$sFieldCode] = $id;
 			}
+			$iFieldsCount = count($aFieldsMap);
 			$sJsonFieldsMap = json_encode($aNewFieldsMap);
 		
 			$oP->add("
 			// Initializes the object once at the beginning of the page...
 			var oWizardHelper = new WizardHelper('$sClass');
 			oWizardHelper.SetFieldsMap($sJsonFieldsMap);
+			oWizardHelper.SetFieldsCount($iFieldsCount);
 		
 			ActivateStep(1);
 			</script>\n");

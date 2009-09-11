@@ -60,7 +60,7 @@ class WizardHelper
 					$oSet = DBObjectSet::FromArray($sLinkedClass, $aLinkedObjectsArray);
 					$oObj->Set($sAttCode, $oSet);
 				}
-				else if (($oAttDef->IsExternalKey()) && ($value != '') )
+				else if (($oAttDef->IsExternalKey()) && (!empty($value)) )
 				{
 					// For external keys: load the target object so that external fields
 					// get filled too
@@ -174,6 +174,16 @@ class WizardHelper
 			}
 		}
 		return $aFields;
+	}
+	
+	public function GetTargetClass()
+	{
+		return $this->m_aData['m_sClass'];
+	}
+	
+	public function GetIdForField($sFieldName)
+	{
+		return $this->m_aData['m_oFieldsMap'][$sFieldName];
 	}
 	
 	static function ParseJsonSet($oMe, $sLinkClass, $sExtKeyToMe, $sJsonSet)
