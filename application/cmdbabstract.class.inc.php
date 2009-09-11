@@ -179,7 +179,12 @@ abstract class cmdbAbstractObject extends CMDBObject
 					if (count($aLinkedObjects) > 0)
 					{
 						$oSet = CMDBObjectSet::FromArray($sLinkClass, $aLinkedObjects);
-						$this->DisplaySet($oPage, $oSet, $oAttDef->GetExtKeyToMe(), true, false, $this->GetKey(), $oAttDef->GetExtKeyToRemote());
+						$aParams = array(
+							'link_attr' => $oAttDef->GetExtKeyToMe(),
+							'object_id' => $this->GetKey(),
+							'target_attr' => $oAttDef->GetExtKeyToRemote(),
+						); 
+						self::DisplaySet($oPage, $oSet, $aParams);
 					}
 				}
 			}
