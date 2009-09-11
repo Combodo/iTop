@@ -84,9 +84,19 @@ switch($operation)
 	}
 	foreach($oWizardHelper->GetFieldsForAllowedValues() as $sAttCode)
 	{
-		// MetaModel::GetAllowedValues_att() => array(id => value)
+		 $aAllowedValues = MetaModel::GetAllowedValues_att(get_class($oObj), $sAttCode, array('this' => $oObj));
+		// Few choices, use a normal 'select'
+		$sHTMLValue = "<select name=\"attr_{$sAttCode}\"\n";
+		$sHTMLValue .= "<option value=\"0\">-- select one --</option>\n";
+		foreach($aAllowedValues as $key => $display_value)
+		{
+			$sSelected = ''; //($value == $key) ? ' selected' : '';
+			$sHTMLValue .= "<option value=\"$key\"$sSelected>$display_value</option>\n";
+		}
+		$sHTMLValue .= "</select>\n";
+
 		// Improvement: what if the list is too long?
-		$oWizardHelper->SetAllowedValuesHtml($sAttCode, "Possible values ($sAttCode)");
+		$oWizardHelper->SetAllowedValuesHtml($sAttCode, $sHTMLValue);
 	}
 	$oPage->add($oWizardHelper->ToJSON());
 	break;

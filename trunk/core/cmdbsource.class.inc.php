@@ -191,9 +191,6 @@ class CMDBSource
 		$result = self::Query($sSQL);
 		$aRow = mysql_fetch_assoc($result);
 		$iNextInsertId = $aRow['Auto_increment'];
-		echo "<pre>\n";
-		print_r($aRow);
-		echo "</pre>\n";
 		return $iNextInsertId;
 	}
 
