@@ -127,7 +127,7 @@ function CheckMandatoryFields(sFormId)
 	$('#'+sFormId+' :input.mandatory').each( function() {
 		if (( this.value == '') || (this.value == 0))
 		{
-			this.style.background = '#fcc';
+			this.style.backgroundColor = '#fcc';
 			iErrorsCount++;
 			if (iErrorsCount == 1)
 			{
@@ -136,7 +136,7 @@ function CheckMandatoryFields(sFormId)
 		}
 		else
 		{
-			this.style.background = '#fff';
+			this.style.backgroundColor = '#fff';
 		}
 	}
 	);
