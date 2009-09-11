@@ -149,16 +149,15 @@ class bizIncidentTicket extends cmdbAbstractObject
 		return true;
 	}
 	
-	public function ComputeFields()
+	public function ComputeValues()
 	{
-		if ($this->GetKey() > 0)
+		$iKey = $this->GetKey();
+		if ($iKey < 0)
 		{
-			$sName = sprintf('I-%06d', $this->GetKey());
+			// Object not yet in the Database
+			$iKey = MetaModel::GetNextKey(get_class($this));
 		}
-		else
-		{
-			$sName = "Id not set";
-		}
+		$sName = sprintf('I-%06d', $iKey);
 		$this->Set('name', $sName);
 	}
 }

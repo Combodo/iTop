@@ -185,6 +185,18 @@ class CMDBSource
 		return $result;
 	}
 
+	public static function GetNextInsertId($sTable)
+	{
+		$sSQL = "SHOW TABLE STATUS LIKE '$sTable'";
+		$result = self::Query($sSQL);
+		$aRow = mysql_fetch_assoc($result);
+		$iNextInsertId = $aRow['Auto_increment'];
+		echo "<pre>\n";
+		print_r($aRow);
+		echo "</pre>\n";
+		return $iNextInsertId;
+	}
+
 	public static function GetInsertId()
 	{
 		return mysql_insert_id(self::$m_resDBLink);

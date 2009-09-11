@@ -2642,6 +2642,14 @@ abstract class MetaModel
 		return new $sClass();
 	}	
 
+	public static function GetNextKey($sClass)
+	{
+		$sRootClass = MetaModel::GetRootClass($sClass);
+		$sRootTable = MetaModel::DBGetTable($sRootClass);
+		$iNextKey = CMDBSource::GetNextInsertId($sRootTable);
+		return $iNextKey;
+	}
+
 	public static function BulkDelete(DBObjectSearch $oFilter)
 	{
 		$sSQL = self::MakeDeleteQuery($oFilter);
