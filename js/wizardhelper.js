@@ -99,7 +99,7 @@ function WizardHelper(sClass)
 	this.AjaxQueryServer = function ()
 	{
 		//console.log('data sent:', this.ToJSON());
-		console.log('oWizard:', this);
+		//console.log('oWizard:', this);
 		$.get('ajax.render.php?json_obj=' + this.ToJSON(),
 		   { operation: 'wizard_helper' },
 			function(json_data){
