@@ -817,15 +817,15 @@ abstract class MetaModel
 
 			// Define defaults values for the standard ZLists
 			//
-			foreach (self::$m_aListInfos as $sListCode => $aListConfig)
-			{
-				if (!isset(self::$m_aListData[$sClass][$sListCode]))
-				{
-					$aAllAttributes = array_keys(self::$m_aAttribDefs[$sClass]);
-					self::$m_aListData[$sClass][$sListCode] = $aAllAttributes;
-					//echo "<p>$sClass: $sListCode (".count($aAllAttributes)." attributes)</p>\n";
-				}
-			}
+			//foreach (self::$m_aListInfos as $sListCode => $aListConfig)
+			//{
+			//	if (!isset(self::$m_aListData[$sClass][$sListCode]))
+			//	{
+			//		$aAllAttributes = array_keys(self::$m_aAttribDefs[$sClass]);
+			//		self::$m_aListData[$sClass][$sListCode] = $aAllAttributes;
+			//		//echo "<p>$sClass: $sListCode (".count($aAllAttributes)." attributes)</p>\n";
+			//	}
+			//}
 		}
 
 	}
