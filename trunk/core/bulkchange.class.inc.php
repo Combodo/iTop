@@ -172,7 +172,7 @@ class RowStatus_NewObj extends RowStatus
 		}
 		else
 		{
-			if (empty($this->m_sClass))
+			if (!empty($this->m_sClass))
 			{
 				$oObj = MetaModel::GetObject($this->m_sClass, $this->m_iObjKey);
 				return 'Created '.$oObj->GetHyperLink();
@@ -281,7 +281,7 @@ class BulkChange
 			{
 			case 0:
 				$aErrors[$sAttCode] = "Object not found";
-				$aResults[$sAttCode]= new CellChangeSpec_Issue(null, $oTargetObj->Get($sAttCode), 'Object not found');
+				$aResults[$sAttCode]= new CellChangeSpec_Issue(null, $oTargetObj->Get($sAttCode), 'Object not found - check the spelling (no space before/after)');
 				break;
 			case 1:
 				// Do change the external key attribute

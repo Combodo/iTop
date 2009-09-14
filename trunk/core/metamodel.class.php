@@ -2564,7 +2564,7 @@ abstract class MetaModel
 		return $iTotalHits.' ('.implode(', ', $aRes).')';
 	}
 
-	public static function MakeSingleRow($sClass, $iKey)
+	public static function MakeSingleRow($sClass, $iKey, $bMustBeFound = true)
 	{
 		if (!array_key_exists($sClass, self::$aQueryCacheGetObject))
 		{
@@ -2591,7 +2591,7 @@ abstract class MetaModel
 		
 		$aRow = CMDBSource::FetchArray($res);
 		CMDBSource::FreeResult($res);
-		if (empty($aRow))
+		if ($bMustBeFound && empty($aRow))
 		{
 			throw new CoreException("No result for the single row query: '$sSQL'");
 		}
@@ -2625,10 +2625,10 @@ abstract class MetaModel
 		return new $sClass($aRow);
 	}
 
-	public static function GetObject($sClass, $iKey)
+	public static function GetObject($sClass, $iKey, $bMustBeFound = true)
 	{
 		self::_check_subclass($sClass);	
-		$aRow = self::MakeSingleRow($sClass, $iKey);
+		$aRow = self::MakeSingleRow($sClass, $iKey, $bMustBeFound);
 		if (empty($aRow))
 		{
 			return null;
@@ -2636,9 +2636,17 @@ abstract class MetaModel
 		return self::GetObjectByRow($sClass, $aRow);
 	}
 
-	public static function GetHyperLink($sTargetClass, $sOldValue)
+	public static function GetHyperLink($sTargetClass, $iKey)
 	{
-		$oObj = self::GetObject($sTargetClass, $sOldValue);
+		if ($iKey < 0)
+		{
+			return "$sTargetClass: $iKey (invalid value)";
+		}
+		$oObj = self::GetObject($sTargetClass, $iKey, false);
+		if (is_null($oObj))
+		{
+			return "$sTargetClass: $iKey (not found)";
+		}
 		return $oObj->GetHyperLink();
 	}
 

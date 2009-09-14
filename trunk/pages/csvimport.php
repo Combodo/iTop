@@ -75,6 +75,8 @@ function ShowTableForm($oPage, $oCSVParser, $sClass)
 	$aFields = array();
 	foreach($oCSVParser->ListFields() as $iFieldIndex=>$sFieldName)
 	{
+		$sFieldName = trim($sFieldName);
+
 		$aOptions = array();
 		$aOptions['id'] = array(
 			'LabelHtml' => "Private key",
@@ -336,18 +338,17 @@ function Do_Welcome($oPage, $sClass)
 
 	$sCSVData = utils::ReadPostedParam('csvdata');
 
-    $oPage->add("<form method=\"post\" action=\"\">");
-    $oPage->MakeClassesSelect("class", $sClass, 50);
-    //$oPage->Add("<input type=\"text\" size=\"40\" name=\"initialsituation\" value=\"\">");
-    $oPage->add("</br>");
-    $oPage->add("<textarea rows=\"25\" cols=\"80\" name=\"csvdata\" wrap=\"soft\">$sCSVData</textarea>");
-    $oPage->add("</br>");
-    $oPage->add("<input type=\"hidden\" name=\"fromwiztep\" value=\"$sWiztep\">");
-    $oPage->add("<input type=\"submit\" name=\"todo\" value=\"Next\"><br/>\n");
-    $oPage->add("</form>");
+	$oPage->add("<form method=\"post\" action=\"\">");
+	$oPage->MakeClassesSelect("class", $sClass, 50);
+	$oPage->add("<br/>");
+	$oPage->add("<textarea rows=\"25\" cols=\"100\" name=\"csvdata\" wrap=\"soft\">$sCSVData</textarea>");
+	$oPage->add("<br/>");
+	$oPage->add("<input type=\"hidden\" name=\"fromwiztep\" value=\"$sWiztep\">");
+	$oPage->add("<input type=\"submit\" name=\"todo\" value=\"Next\"><br/>\n");
+	$oPage->add("</form>");
 
-    // As a help to the end-user, let's display the list of possible fields
-    // for a class, that can be copied/pasted into the CSV area.
+	// As a help to the end-user, let's display the list of possible fields
+	// for a class, that can be copied/pasted into the CSV area.
 	$sCurrentList = "";
 	$aHeadersList = array();
 	foreach(MetaModel::GetClasses('bizmodel') as $sClassName)
@@ -385,8 +386,8 @@ function Do_Welcome($oPage, $sClass)
 	</script>\n");
 	
 	$oPage->add_ready_script("$('#select_class').change( function() {DisplayFields(this.value);} );");
-	
-    $oPage->add("Fields for this object: <textarea readonly id=fields rows=\"3\" cols=\"60\" wrap=\"soft\">$sCurrentList</textarea>");
+	$oPage->add("<br/>");
+	$oPage->add("Fields for this object<br/><textarea readonly id=fields rows=\"3\" cols=\"100\" wrap=\"soft\">$sCurrentList</textarea>");
 
 }
 
@@ -436,6 +437,15 @@ function DoProcessOrVerify($oPage, $sClass, CMDBChange $oChange = null)
 	$iSkip = utils::ReadPostedParam('skiplines'); 
 	$aFieldMap = utils::ReadPostedParam('fmap');
 	$aIsReconcKey = utils::ReadPostedParam('iskey');
+
+	if (empty($aIsReconcKey))
+	{
+		$oPage->p("Error: no reconciliation key has been specified. Please specify which field(s) will be used to identify the object");
+
+		$oPage->add("<button onClick=\"window.history.back();\">Back</button>\n");
+		$oPage->add("<button disabled>Next</button>\n");
+		return;
+	}
 
 	$oCSVParser = new CSVParser($sCSVData);
 	$oCSVParser->SetSeparator($sSep);
@@ -521,6 +531,7 @@ function DoProcessOrVerify($oPage, $sClass, CMDBChange $oChange = null)
 		{
 			$oPage->p("ok - required external keys (if any) have been found in the field list");
 		}
+		$oPage->p("Note: the procedure will fail if any line has not the same number of columns as the first line");
 
 		$oPage->p("<h2>Check...</h2>");
 	}
@@ -534,7 +545,7 @@ function DoProcessOrVerify($oPage, $sClass, CMDBChange $oChange = null)
 	$oPage->add_input_hidden("fmap", $aFieldMap);
 	$oPage->add_input_hidden("iskey", $aIsReconcKey);
 
-	return;
+	return true;
 }
 
 function Do_Verify($oPage, $sClass)
@@ -542,13 +553,14 @@ function Do_Verify($oPage, $sClass)
 	$oPage->p("<h1>Bulk load from CSV data / step 3</h1>");
 	$sWiztep = "3_verify";
 
-	DoProcessOrVerify($oPage, $sClass, null);
-	// FORM started by DoProcessOrVerify...
-
-	$oPage->add("<input type=\"hidden\" name=\"fromwiztep\" value=\"$sWiztep\">");
-	$oPage->add("<input type=\"submit\" name=\"todo\" value=\"Back\">");
-	$oPage->add("<input type=\"submit\" name=\"todo\" value=\"Next\">");
-	$oPage->add("</form>");
+	if (DoProcessOrVerify($oPage, $sClass, null))
+	{
+		// FORM started by DoProcessOrVerify...
+		$oPage->add("<input type=\"hidden\" name=\"fromwiztep\" value=\"$sWiztep\">");
+		$oPage->add("<input type=\"submit\" name=\"todo\" value=\"Back\">");
+		$oPage->add("<input type=\"submit\" name=\"todo\" value=\"Next\">");
+		$oPage->add("</form>");
+	}
 }
 
 function Do_Execute($oPage, $sClass)
@@ -558,15 +570,27 @@ function Do_Execute($oPage, $sClass)
 
 	$oMyChange = MetaModel::NewObject("CMDBChange");
 	$oMyChange->Set("date", time());
-	$oMyChange->Set("userinfo", "CSV Import");
+	$iUser = UserRights::GetContactId();
+	if ($iUser != null)
+	{
+		// Ok, that's dirty, I admit :-)
+		$oUser = MetaModel::GetObject('bizContact', $iUser);
+		$sUser = $oUser->GetName();
+		$oMyChange->Set("userinfo", "CSV Import, by ".$sUser);
+	}
+	else
+	{
+		$oMyChange->Set("userinfo", "CSV Import");
+	}
 	$iChangeId = $oMyChange->DBInsert();
 	
-	DoProcessOrVerify($oPage, $sClass, $oMyChange);
-
-	// FORM started by DoProcessOrVerify...
-	$oPage->add("<input type=\"hidden\" name=\"fromwiztep\" value=\"$sWiztep\">");
-    $oPage->add("<input type=\"submit\" name=\"todo\" value=\"Back\">");
-	$oPage->add("</form>");
+	if (DoProcessOrVerify($oPage, $sClass, $oMyChange))
+	{
+		// FORM started by DoProcessOrVerify...
+		$oPage->add("<input type=\"hidden\" name=\"fromwiztep\" value=\"$sWiztep\">");
+		$oPage->add("<input type=\"submit\" name=\"todo\" value=\"Back\">");
+		$oPage->add("</form>");
+	}
 }
 
 
