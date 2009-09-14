@@ -65,8 +65,8 @@ function GraphvizLifecycle($sClass)
 
 $sClass = utils::ReadParam('class', 'bizIncidentTicket');
 $sDir = dirname(__FILE__);
-$sImageFilePath = realpath($sDir."/../images/lifecycle/$sClass.png");
-if (!file_exists($sImageFilePath))
+$sImageFilePath = $sDir."\\..\\images\\lifecycle\\".$sClass.".png";
+if (file_exists("/iTop/Graphviz/bin/dot.exe"))
 {
 	// create the file with Graphviz
 	$sDotDescription = GraphvizLifecycle($sClass);
