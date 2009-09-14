@@ -33,7 +33,7 @@ abstract class DBObject
 	private $m_bIsInDB = false; // true IIF the object is mapped to a DB record
 	private $m_iKey = null;
 	private $m_aCurrValues = array();
-	private $m_aOrigValues = array();
+	protected $m_aOrigValues = array();
 
 	private $m_bFullyLoaded = false; // Compound objects can be partially loaded
 	private $m_aLoadedAtt = array(); // Compound objects can be partially loaded, array of sAttCode
@@ -217,6 +217,12 @@ abstract class DBObject
 	
 	public function Set($sAttCode, $value)
 	{
+		if ($sAttCode == 'finalclass')
+		{
+			// Ignore it - this attribute is set upon object creation and that's it
+			//throw new CoreWarning('Attempting to set the value for the internal attribute \"finalclass\"', array('current value'=>$this->Get('finalclass'), 'new value'=>$value));
+			return;
+		}
 		if (!array_key_exists($sAttCode, MetaModel::ListAttributeDefs(get_class($this))))
 		{
 			throw new CoreException("Unknown attribute code '$sAttCode' for the class ".get_class($this));
@@ -348,15 +354,7 @@ abstract class DBObject
 			}
 
 			$sTargetClass = $oAtt->GetTargetClass(EXTKEY_ABSOLUTE);
-			$aMakeHLink = array(get_class($this), 'MakeHyperLink');
-			if (is_callable($aMakeHLink))
-			{
-				return call_user_func($aMakeHLink, $sTargetClass, $this->Get($sAttCode), $aAvailableFields);
-			}
-			else
-			{
-				return $this->Get($sAttCode);
-			}
+			return $this->MakeHyperLink($sTargetClass, $this->Get($sAttCode), $aAvailableFields);
 		}
 
 		// That's a standard attribute (might be an ext field or a direct field, etc.)
@@ -374,6 +372,20 @@ abstract class DBObject
 		$oAtt = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
 		return $oAtt->GetAsCSV($this->Get($sAttCode), $sSeparator, $sSepEscape);
 	}
+
+	protected static function MakeHyperLink($sObjClass, $sObjKey, $aAvailableFields)
+	{
+		if ($sObjKey == 0) return '<em>undefined</em>';
+
+		return MetaModel::GetName($sObjClass)."::$sObjKey";
+	}
+
+	public function GetHyperlink()
+	{
+		$aAvailableFields[MetaModel::GetNameAttributeCode(get_class($this))] = $this->GetName();
+		return $this->MakeHyperLink(get_class($this), $this->GetKey(), $aAvailableFields);
+	}
+
 
 	// could be in the metamodel ?
 	public static function IsValidPKey($value)

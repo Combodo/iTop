@@ -154,7 +154,7 @@ abstract class CMDBObject extends DBObject
 		$oMyChangeOp->Set("objkey", $objkey);
 		$iId = $oMyChangeOp->DBInsertNoReload();
 	}
-	private function RecordAttChanges(CMDBChange $oChange, array $aValues)
+	private function RecordAttChanges(CMDBChange $oChange, array $aValues, array $aOrigValues)
 	{
 		// $aValues is an array of $sAttCode => $value
 		//
@@ -167,7 +167,15 @@ abstract class CMDBObject extends DBObject
 			$oMyChangeOp->Set("objclass", get_class($this));
 			$oMyChangeOp->Set("objkey", $this->GetKey());
 			$oMyChangeOp->Set("attcode", $sAttCode);
-			$oMyChangeOp->Set("oldvalue", $this->GetOriginal($sAttCode));
+			if (array_key_exists($sAttCode, $aOrigValues))
+			{
+				$sOriginalValue = $aOrigValues[$sAttCode];
+			}
+			else
+			{
+				$sOriginalValue = 'undefined';
+			}
+			$oMyChangeOp->Set("oldvalue", $sOriginalValue);
 			$oMyChangeOp->Set("newvalue", $value);
 			$iId = $oMyChangeOp->DBInsertNoReload();
 		}
@@ -262,9 +270,11 @@ abstract class CMDBObject extends DBObject
 			throw new CoreWarning("Attempting to update an unchanged object");
 			return;
 		}
-
+		
+		// Save the original values (will be reset to the new values when the object get written to the DB)
+		$aOriginalValues = $this->m_aOrigValues;
 		$ret = parent::DBUpdate();
-		$this->RecordAttChanges(self::$m_oCurrChange, $aChanges);
+		$this->RecordAttChanges(self::$m_oCurrChange, $aChanges, $aOriginalValues);
 		return $ret;
 	}
 
@@ -355,14 +365,23 @@ abstract class CMDBObject extends DBObject
 		$oObjSet = new CMDBObjectSet($oFilter);
 		$oObjSet->Load();
 
+		// Keep track of the previous values (will be overwritten when the objects are synchronized with the DB)
+		$aOriginalValues = array();
+		$oObjSet->Rewind();
+		while ($oItem = $oObjSet->Fetch())
+		{
+			$aOriginalValues[$oItem->GetKey()] = $oItem->m_aOrigValues;
+		}
+
 		// Update in one single efficient query
 		$ret = parent::BulkUpdate($oFilter, $aValues);
 
 		// Record... in many queries !!!
+		$oObjSet->Rewind();
 		while ($oItem = $oObjSet->Fetch())
 		{
 			$aChangedValues = $oItem->ListChangedValues($aValues);
-			$oItem->RecordAttChanges(self::$m_oCurrChange, $aChangedValues);
+			$oItem->RecordAttChanges(self::$m_oCurrChange, $aChangedValues, $aOriginalValues[$oItem->GetKey()]);
 		}
 		return $ret;
 	}

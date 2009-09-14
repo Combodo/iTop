@@ -74,12 +74,6 @@ abstract class cmdbAbstractObject extends CMDBObject
 		return "<a href=\"$sPage?operation=details&class=$sObjClass&id=$sObjKey&".$oAppContext->GetForLink()."\" title=\"$sHint\">$sLabel</a>";
 	}
 
-	public function GetHyperlink()
-	{
-		$aAvailableFields[MetaModel::GetNameAttributeCode(get_class($this))] = $this->GetName();
-		return $this->MakeHyperLink(get_class($this), $this->GetKey(), $aAvailableFields);
-	}
-
 	public function GetDisplayValue($sAttCode)
 	{
 		$sDisplayValue = "";

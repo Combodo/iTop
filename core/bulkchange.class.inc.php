@@ -37,36 +37,55 @@ abstract class CellChangeSpec
 		$this->m_proposedValue = $proposedValue;
 	}
 
-	public function GetValue()
+	static protected function ValueAsHtml($value)
 	{
-		return $this->m_proposedValue; 
+		if (MetaModel::IsValidObject($value))
+		{
+			return $value->GetHyperLink();
+		}
+		else
+		{
+			return htmlentities($value);
+		}
 	}
 
-	abstract public function GetDescription();
+	public function GetValue($bHtml = false)
+	{
+		if ($bHtml)
+		{
+			return self::ValueAsHtml($this->m_proposedValue);
+		}
+		else
+		{
+			return $this->m_proposedValue;
+		}
+	}
+
+	abstract public function GetDescription($bHtml = false);
 }
 
 
 class CellChangeSpec_Void extends CellChangeSpec
 {
-	public function GetDescription()
+	public function GetDescription($bHtml = false)
 	{
-		return $this->GetValue();
+		return $this->GetValue($bHtml);
 	}
 }
 
 class CellChangeSpec_Unchanged extends CellChangeSpec
 {
-	public function GetDescription()
+	public function GetDescription($bHtml = false)
 	{
-		return $this->GetValue()." (unchanged)";
+		return $this->GetValue($bHtml)." (unchanged)";
 	}
 }
 
 class CellChangeSpec_Init extends CellChangeSpec
 {
-	public function GetDescription()
+	public function GetDescription($bHtml = false)
 	{
-		return $this->GetValue();
+		return $this->GetValue($bHtml);
 	}
 }
 
@@ -80,9 +99,9 @@ class CellChangeSpec_Modify extends CellChangeSpec
 		parent::__construct($proposedValue);
 	}
 
-	public function GetDescription()
+	public function GetDescription($bHtml = false)
 	{
-		return $this->GetValue()." (previous: ".$this->m_previousValue.")";
+		return $this->GetValue($bHtml)." (previous: ".self::ValueAsHtml($this->m_previousValue).")";
 	}
 }
 
@@ -96,13 +115,13 @@ class CellChangeSpec_Issue extends CellChangeSpec_Modify
 		parent::__construct($proposedValue, $previousValue);
 	}
 
-	public function GetDescription()
+	public function GetDescription($bHtml = false)
 	{
 		if (is_null($this->m_proposedValue))
 		{
 			return 'Could not be changed - reason: '.$this->m_sReason;
 		}
-		return 'Could not be changed to "'.$this->GetValue().'" - reason: '.$this->m_sReason.' (previous: '.$this->m_previousValue.')';
+		return 'Could not be changed to "'.$this->GetValue($bHtml).'" - reason: '.$this->m_sReason.' (previous: '.$this->m_previousValue.')';
 	}
 }
 
@@ -124,12 +143,12 @@ abstract class RowStatus
 	{
 	}
 
-	abstract public function GetDescription();
+	abstract public function GetDescription($bHtml = false);
 }
 
 class RowStatus_NoChange extends RowStatus
 {
-	public function GetDescription()
+	public function GetDescription($bHtml = false)
 	{
 		return "unchanged";
 	}
@@ -139,12 +158,13 @@ class RowStatus_NewObj extends RowStatus
 {
 	protected $m_iObjKey;
 
-	public function __construct($iObjKey = null)
+	public function __construct($sClass = '', $iObjKey = null)
 	{
 		$this->m_iObjKey = $iObjKey;
+		$this->m_sClass = $sClass;
 	}
 
-	public function GetDescription()
+	public function GetDescription($bHtml = false)
 	{
 		if (is_null($this->m_iObjKey))
 		{
@@ -152,7 +172,15 @@ class RowStatus_NewObj extends RowStatus
 		}
 		else
 		{
-			return 'Created ('.$this->m_iObjKey.')';
+			if (empty($this->m_sClass))
+			{
+				$oObj = MetaModel::GetObject($this->m_sClass, $this->m_iObjKey);
+				return 'Created '.$oObj->GetHyperLink();
+			}
+			else
+			{
+				return 'Created (id: '.$this->m_iObjKey.')';
+			}
 		}	
 	}
 }
@@ -166,7 +194,7 @@ class RowStatus_Modify extends RowStatus
 		$this->m_iChanged = $iChanged;
 	}
 
-	public function GetDescription()
+	public function GetDescription($bHtml = false)
 	{
 		return "update ".$this->m_iChanged." cols";
 	}
@@ -181,7 +209,7 @@ class RowStatus_Issue extends RowStatus
 		$this->m_sReason = $sReason;
 	}
 
-	public function GetDescription()
+	public function GetDescription($bHtml = false)
 	{
 		return 'Skipped - reason:'.$this->m_sReason;
 	}
@@ -217,6 +245,19 @@ class BulkChange
 		$this->m_aExtKeys = $aExtKeys;
 	}
 
+	static protected function MakeSpecObject($sClass, $iId)
+	{
+		$oObj = MetaModel::GetObject($sClass, $iId);
+		if (is_null($oObj))
+		{
+			return $iId;
+		}
+		else
+		{
+			return $oObj;
+		}
+	}
+
 	protected function PrepareObject(&$oTargetObj, $aRowData, &$aErrors)
 	{
 		$aResults = array();
@@ -250,23 +291,26 @@ class BulkChange
 				// Report it
 				if (array_key_exists($sAttCode, $oTargetObj->ListChanges()))
 				{
+
 					if ($oTargetObj->IsNew())
 					{
-						$aResults[$sAttCode]= new CellChangeSpec_Init($oForeignObj->GetKey(), $oTargetObj->Get($sAttCode), $oTargetObj->GetOriginal($sAttCode));
+						$aResults[$sAttCode]= new CellChangeSpec_Init($oForeignObj);
 					}
 					else
 					{
-						$aResults[$sAttCode]= new CellChangeSpec_Modify($oForeignObj->GetKey(), $oTargetObj->Get($sAttCode), $oTargetObj->GetOriginal($sAttCode));
+						$previousValue = self::MakeSpecObject($oExtKey->GetTargetClass(), $oTargetObj->GetOriginal($sAttCode));
+						$aResults[$sAttCode]= new CellChangeSpec_Modify($oForeignObj, $previousValue);
 					}
 				}
 				else
 				{
-					$aResults[$sAttCode]= new CellChangeSpec_Unchanged($oTargetObj->Get($sAttCode));
+					$aResults[$sAttCode]= new CellChangeSpec_Unchanged($oForeignObj);
 				}
 				break;
 			default:
 				$aErrors[$sAttCode] = "Found ".$oExtObjects->Count()." matches";
-				$aResults[$sAttCode]= new CellChangeSpec_Issue(null, $oTargetObj->Get($sAttCode), "Found ".$oExtObjects->Count()." matches");
+				$previousValue = self::MakeSpecObject($oExtKey->GetTargetClass(), $oTargetObj->Get($sAttCode));
+				$aResults[$sAttCode]= new CellChangeSpec_Issue(null, $previousValue, "Found ".$oExtObjects->Count()." matches");
 			}
 		}	
 	
@@ -291,18 +335,17 @@ class BulkChange
 		{
 			if (isset($aErrors[$sAttCode]))
 			{
-				$aResults["col$iCol"]= new CellChangeSpec_Issue($aRowData[$iCol], $oTargetObj->Get($sAttCode), $aErrors[$sAttCode]);
+				$aResults["col$iCol"]= new CellChangeSpec_Issue($oTargetObj->Get($sAttCode), $oTargetObj->GetOriginal($sAttCode), $aErrors[$sAttCode]);
 			}
 			elseif (array_key_exists($sAttCode, $aChangedFields))
 			{
-				$originalValue = $oTargetObj->GetOriginal($sAttCode);
 				if ($oTargetObj->IsNew())
 				{
-					$aResults["col$iCol"]= new CellChangeSpec_Init($aRowData[$iCol], $oTargetObj->Get($sAttCode), $originalValue);
+					$aResults["col$iCol"]= new CellChangeSpec_Init($oTargetObj->Get($sAttCode));
 				}
 				else
 				{
-					$aResults["col$iCol"]= new CellChangeSpec_Modify($aRowData[$iCol], $oTargetObj->Get($sAttCode), $originalValue);
+					$aResults["col$iCol"]= new CellChangeSpec_Modify($oTargetObj->Get($sAttCode), $oTargetObj->GetOriginal($sAttCode));
 				}
 			}
 			else
@@ -358,7 +401,7 @@ class BulkChange
 		if ($oChange)
 		{
 			$newID = $oTargetObj->DBInsertTrackedNoReload($oChange);
-			$aResult[$iRow]["__STATUS__"] = new RowStatus_NewObj($newID);
+			$aResult[$iRow]["__STATUS__"] = new RowStatus_NewObj($this->m_sClass, $newID);
 		}
 		else
 		{
@@ -424,7 +467,7 @@ class BulkChange
 			case 1:
 				$oTargetObj = $oReconciliationSet->Fetch();
 				$this->UpdateObject($aResult, $iRow, $oTargetObj, $aRowData, $oChange);
-				$aResult[$iRow]["__RECONCILIATION__"] = "Found a match ".$oTargetObj->GetKey();
+				$aResult[$iRow]["__RECONCILIATION__"] = "Found a match ".$oTargetObj->GetHyperLink();
 				// $aResult[$iRow]["__STATUS__"]=> set in UpdateObject
 				break;
 			default:
