@@ -24,12 +24,11 @@
 	<itoptab name="Changes">
 		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">bizChangeTicket: PKEY IS ticket_id IN (lnkInfraChangeTicket: infra_id = $pkey$)</itopblock>
 	</itoptab>
+	<itoptab name="Groups">
+		<itopblock blockclass="DisplayBlock" type="list" link_attr="infra_id" object_id="$pkey$" target_attr="infra_group_id" encoding="text/oql">SELECT lnkInfraGrouping WHERE infra_id = $pkey$</itopblock>
+	</itoptab>
 	<itoptab name="Documents">
 		<itopblock blockclass="DisplayBlock" type="list" link_attr="object_id" object_id="$pkey$" target_attr="doc_id" encoding="text/oql">SELECT lnkDocumentRealObject WHERE object_id = $pkey$</itopblock>
-	</itoptab>
-	</itoptab>
-		<itoptab name="Inventory">
-		<iframe width="100%" height="400" src="http://erwan.gre.hp.com/ocsreports/itop-direct.php?name=$name$"></iframe>
 	</itoptab>
 
 </itoptabs>

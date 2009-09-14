@@ -110,17 +110,17 @@ class bizContract extends cmdbAbstractObject
     MetaModel::Init_AddAttribute(new AttributeExternalKey("service_id", array("targetclass"=>"bizService", "label"=>"Service", "description"=>"Provider for this contract", "allowed_values"=>null, "sql"=>"service_id", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("provider_name", array("label"=>"Provider", "description"=>"name of the service provider", "allowed_values"=>null, "extkey_attcode"=> 'service_id', "target_attcode"=>"provider_name")));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("service_name", array("label"=>"Service", "description"=>"name of the service", "allowed_values"=>null, "extkey_attcode"=> 'service_id', "target_attcode"=>"name")));
- 		MetaModel::Init_AddAttribute(new AttributeExternalKey("team_id", array("targetclass"=>"bizTeam", "label"=>"Team", "description"=>"Team managing this contract", "allowed_values"=>null, "sql"=>"team_id", "is_null_allowed"=>false, "depends_on"=>array())));
+ 		MetaModel::Init_AddAttribute(new AttributeExternalKey("team_id", array("targetclass"=>"bizTeam", "label"=>"Team", "description"=>"Team managing this contract", "allowed_values"=>null, "sql"=>"team_id", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("team_name", array("label"=>"Team", "description"=>"name of the team managing this contract", "allowed_values"=>null, "extkey_attcode"=> 'team_id', "target_attcode"=>"name")));
-		MetaModel::Init_AddAttribute(new AttributeEnum("service_level", array("label"=>"Service Level", "description"=>"Level of service for this contract", "allowed_values"=>new ValueSetEnum("Gold,Silver,Bronze"), "sql"=>"service_level", "default_value"=>"Bronze", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("cost_unit", array("label"=>"Cost Unit", "description"=>"Cost unit to compute global cost for this contract", "allowed_values"=>new ValueSetEnum("Devices,Persons,Applications,Global"), "sql"=>"cost_unit", "default_value"=>"Global", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("cost_freq", array("label"=>"Billing frequency", "description"=>"Frequency of cost for this contract", "allowed_values"=>new ValueSetEnum("Monthly,Yearly,Once"), "sql"=>"cost_freq", "default_value"=>"Once", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("service_level", array("label"=>"Service Level", "description"=>"Level of service for this contract", "allowed_values"=>new ValueSetEnum("Gold,Silver,Bronze"), "sql"=>"service_level", "default_value"=>"Bronze", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("cost_unit", array("label"=>"Cost Unit", "description"=>"Cost unit to compute global cost for this contract", "allowed_values"=>new ValueSetEnum("Devices,Persons,Applications,Global"), "sql"=>"cost_unit", "default_value"=>"Global", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("cost_freq", array("label"=>"Billing frequency", "description"=>"Frequency of cost for this contract", "allowed_values"=>new ValueSetEnum("Monthly,Yearly,Once"), "sql"=>"cost_freq", "default_value"=>"Once", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("cost", array("label"=>"Cost", "description"=>"Cost of this contract", "allowed_values"=>null, "sql"=>"cost", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("currency", array("label"=>"Currency", "description"=>"Currency of cost for this contract", "allowed_values"=>new ValueSetEnum("Euros,Dollars"), "sql"=>"currency", "default_value"=>"Euros", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("currency", array("label"=>"Currency", "description"=>"Currency of cost for this contract", "allowed_values"=>new ValueSetEnum("Euros,Dollars"), "sql"=>"currency", "default_value"=>"Euros", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("description", array("label"=>"Description", "description"=>"Description of this contract", "allowed_values"=>null, "sql"=>"description", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeDate("move2prod_date", array("label"=>"Date of Move To Production", "description"=>"Date when the contract is on production", "allowed_values"=>null, "sql"=>"move2prod_date", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeDate("move2prod_date", array("label"=>"Date of Move To Production", "description"=>"Date when the contract is on production", "allowed_values"=>null, "sql"=>"move2prod_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDate("end_prod", array("label"=>"Date of End Of Production", "description"=>"Date when the contract is stopped", "allowed_values"=>null, "sql"=>"end_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("label"=>"Status", "description"=>"Status of the contract", "allowed_values"=>new ValueSetEnum("New, Negotiating, Signed, Production, Notice, Finished"), "sql"=>"status", "default_value"=>"New", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("label"=>"Status", "description"=>"Status of the contract", "allowed_values"=>new ValueSetEnum("New, Negotiating, Signed, Production,Finished"), "sql"=>"status", "default_value"=>"New", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("type", array("label"=>"Type", "description"=>"Type of the contract", "allowed_values"=>new ValueSetEnum("Hardware,Software,Support,Licence"), "sql"=>"type", "default_value"=>"Support", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeInteger("version_number", array("label"=>"Version", "description"=>"Revision number for this contract", "allowed_values"=>null, "sql"=>"version_number", "default_value"=>1, "is_null_allowed"=>false, "depends_on"=>array())));
 
@@ -141,37 +141,27 @@ class bizContract extends cmdbAbstractObject
 
 		// Life cycle
 		MetaModel::Init_DefineState("New", array("label"=>"New", "description"=>"Newly created contract", "attribute_inherit"=>null,
-												 "attribute_list"=>array()));
+												 "attribute_list"=>array('name' => OPT_ATT_MANDATORY,'org_id' => OPT_ATT_MANDATORY, 'service_id' => OPT_ATT_MANDATORY,'type' => OPT_ATT_MANDATORY, 'description' => OPT_ATT_MANDATORY)));
 		MetaModel::Init_DefineState("Negotiating", array("label"=>"Negotiating", "description"=>"The contract is being worked on", "attribute_inherit"=>null,
-												"attribute_list"=>array()));
+												"attribute_list"=>array('name' => OPT_ATT_READONLY,'org_id' => OPT_ATT_READONLY)));
 		MetaModel::Init_DefineState("Signed", array("label"=>"Signed", "description"=>"The contract has been signed", "attribute_inherit"=>null,
-													"attribute_list"=>array()));
+													"attribute_list"=>array( 'name' => OPT_ATT_READONLY,'org_id' => OPT_ATT_READONLY, 'service_id' => OPT_ATT_READONLY,'type' => OPT_ATT_READONLY, 'service_level' => OPT_ATT_MANDATORY , 'cost_unit' => OPT_ATT_MANDATORY , 'cost_freq' => OPT_ATT_MANDATORY , 'cost' => OPT_ATT_MANDATORY, 'currency' => OPT_ATT_MANDATORY)));
 		MetaModel::Init_DefineState("Production", array("label"=>"Production", "description"=>"The contract is effective in production", "attribute_inherit"=>null,
-												"attribute_list"=>array()));
-		MetaModel::Init_DefineState("Notice", array("label"=>"Notice", "description"=>"The contract is about to be terminated", "attribute_inherit"=>null,
-												"attribute_list"=>array()));
+												"attribute_list"=>array('name' => OPT_ATT_READONLY,'org_id' => OPT_ATT_READONLY, 'service_id' => OPT_ATT_READONLY,'type' => OPT_ATT_READONLY, 'service_level' => OPT_ATT_READONLY , 'cost_unit' => OPT_ATT_READONLY , 'cost_freq' => OPT_ATT_READONLY , 'cost' => OPT_ATT_READONLY, 'currency' => OPT_ATT_READONLY,'move2prod_date' => OPT_ATT_MANDATORY,'end_prod' => OPT_ATT_MANDATORY)));
 		MetaModel::Init_DefineState("Finished", array("label"=>"Finished", "description"=>"The contract is terminated", "attribute_inherit"=>null,
-												"attribute_list"=>array()));
+												"attribute_list"=>array('name' => OPT_ATT_READONLY,'org_id' => OPT_ATT_READONLY, 'service_id' => OPT_ATT_READONLY,'type' => OPT_ATT_READONLY, 'service_level' => OPT_ATT_READONLY , 'cost_unit' => OPT_ATT_READONLY , 'cost_freq' => OPT_ATT_READONLY , 'cost' => OPT_ATT_READONLY, 'currency' => OPT_ATT_READONLY,'move2prod_date' => OPT_ATT_READONLY,'end_prod' => OPT_ATT_READONLY,'team_id' => OPT_ATT_READONLY,'description' => OPT_ATT_READONLY)));
 
-		MetaModel::Init_DefineStimulus("ev_freeze_version", new StimulusUserAction(array("label"=>"Freeze this version", "description"=>"This version of the contract is published")));
+		MetaModel::Init_DefineStimulus("ev_negociate", new StimulusUserAction(array("label"=>"Negociate this contract", "description"=>"This version of the contract is published")));
 		MetaModel::Init_DefineStimulus("ev_sign", new StimulusUserAction(array("label"=>"Sign this contract", "description"=>"This contract is being signed")));
 		MetaModel::Init_DefineStimulus("ev_begin", new StimulusUserAction(array("label"=>"Move to production", "description"=>"The contract becomes applicable in production")));
-		MetaModel::Init_DefineStimulus("ev_notice", new StimulusUserAction(array("label"=>"Start notice period", "description"=>"The end date of the contract is approaching")));
 		MetaModel::Init_DefineStimulus("ev_terminate", new StimulusUserAction(array("label"=>"Ends this contract", "description"=>"The contract is ending")));
-		MetaModel::Init_DefineStimulus("ev_elapsed", new StimulusUserAction(array("label"=>"Times up [Do not click!]", "description"=>"The contract over")));
 
-		MetaModel::Init_DefineTransition("New", "ev_freeze_version", array("target_state"=>"Negotiating", "actions"=>array('IncrementVersion'), "user_restriction"=>null));
-		MetaModel::Init_DefineTransition("Negotiating", "ev_freeze_version", array("target_state"=>"Negotiating", "actions"=>array('IncrementVersion'), "user_restriction"=>null));
+		MetaModel::Init_DefineTransition("New", "ev_negociate", array("target_state"=>"Negotiating", "actions"=>array('IncrementVersion'), "user_restriction"=>null));
 		MetaModel::Init_DefineTransition("Negotiating", "ev_sign", array("target_state"=>"Signed", "actions"=>array(), "user_restriction"=>null));
 		MetaModel::Init_DefineTransition("Negotiating", "ev_terminate", array("target_state"=>"Finished", "actions"=>array(), "user_restriction"=>null));
-		MetaModel::Init_DefineTransition("Signed", "ev_freeze_version", array("target_state"=>"Signed", "actions"=>array('IncrementVersion'), "user_restriction"=>null));
-		MetaModel::Init_DefineTransition("Signed", "ev_begin", array("target_state"=>"Production", "actions"=>array(), "user_restriction"=>null));
+		MetaModel::Init_DefineTransition("Signed", "ev_begin", array("target_state"=>"Production", "actions"=>array('SetProdDate'), "user_restriction"=>null));
 		MetaModel::Init_DefineTransition("Signed", "ev_terminate", array("target_state"=>"Finished", "actions"=>array(), "user_restriction"=>null));
-		MetaModel::Init_DefineTransition("Production", "ev_freeze_version", array("target_state"=>"Production", "actions"=>array('IncrementVersion'), "user_restriction"=>null));
-		MetaModel::Init_DefineTransition("Production", "ev_elapsed", array("target_state"=>"Notice", "actions"=>array(), "user_restriction"=>null));
 		MetaModel::Init_DefineTransition("Production", "ev_terminate", array("target_state"=>"Finished", "actions"=>array(), "user_restriction"=>null));
-		MetaModel::Init_DefineTransition("Notice", "ev_elapsed", array("target_state"=>"Finished", "actions"=>array(), "user_restriction"=>null));
-		MetaModel::Init_DefineTransition("Notice", "ev_terminate", array("target_state"=>"Finished", "actions"=>array(), "user_restriction"=>null));
 
 
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'service_id','provider_name','type','description','team_id','service_level','cost','currency','cost_unit','cost_freq','move2prod_date','end_prod', 'version_number')); // Attributes to be displayed for the complete details
@@ -186,6 +176,12 @@ class bizContract extends cmdbAbstractObject
 	public function IncrementVersion($sStimulusCode)
 	{
 		$this->Set('version_number', $this->Get('version_number') + 1);
+		return true;
+	}
+	
+		public function SetProdDate($sStimulusCode)
+	{
+		$this->Set('move2prod_date', time());
 		return true;
 	}
 }

@@ -879,7 +879,10 @@ class bizInterface extends logInfra
 	  MetaModel::Init_AddAttribute(new AttributeString("mac", array("label"=>"MAC address", "description"=>"MAC address for this interface", "allowed_values"=>null, "sql"=>"mac", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 	  MetaModel::Init_AddAttribute(new AttributeString("speed", array("label"=>"Speed (Kb/s)", "description"=>"speed of this interface", "allowed_values"=>null, "sql"=>"speed", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 	  MetaModel::Init_AddAttribute(new AttributeEnum("duplex", array("label"=>"Duplex", "description"=>"Duplex configured for this interface", "allowed_values"=>new ValueSetEnum("half,full,unknown"), "sql"=>"duplex", "default_value"=>"unknown", "is_null_allowed"=>true, "depends_on"=>array())));
-	
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("if_connected_id", array("targetclass"=>"bizInterface", "label"=>"Connected interface", "description"=>"interface connected to this one", "allowed_values"=>null, "sql"=>"ext_if_id", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("if_connected_name", array("label"=>"Connected interface", "description"=>"name of the interface connected to this one", "allowed_values"=>null, "extkey_attcode"=> 'if_connected_id', "target_attcode"=>"name")));
+  	MetaModel::Init_AddAttribute(new AttributeExternalField("if_connected_device", array("label"=>"Connected device", "description"=>"name of the device connected to this interface", "allowed_values"=>null, "extkey_attcode"=> 'if_connected_id', "target_attcode"=>"device_name")));
+
 		MetaModel::Init_InheritFilters();
 		MetaModel::Init_AddFilterFromAttribute("device_id");
 		MetaModel::Init_AddFilterFromAttribute("device_name");
@@ -888,8 +891,10 @@ class bizInterface extends logInfra
 		MetaModel::Init_AddFilterFromAttribute("physical_type");
     MetaModel::Init_AddFilterFromAttribute("ip_address");
     MetaModel::Init_AddFilterFromAttribute("mac");		
+    MetaModel::Init_AddFilterFromAttribute("if_connected_id");	
+    
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'device_id', 'device_location_id','severity','logical_type','physical_type','ip_address','mask','mac','speed','duplex')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'device_id', 'device_location_id','severity','logical_type','physical_type','ip_address','mask','mac','speed','duplex','if_connected_name','if_connected_device')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('name', 'status', 'org_id', 'device_id','severity')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'ip_address','mac','device_id')); // Criteria of the std search form
@@ -937,6 +942,7 @@ class bizInterface extends logInfra
 * n-n link between any Interfaces
 */
 ////////////////////////////////////////////////////////////////////////////////////
+/*
 class lnkInterfaces extends cmdbAbstractObject
 {
 	public static function Init()
@@ -979,6 +985,7 @@ class lnkInterfaces extends cmdbAbstractObject
 		MetaModel::Init_SetZListItems('list', array('interface1_id', 'interface1_device_id', 'interface2_id', 'interface2_device_id', 'link_type')); // Attributes to be displayed for the complete details
 	}
 }
+*/
 
 ////////////////////////////////////////////////////////////////////////////////////
 /**
