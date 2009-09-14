@@ -136,12 +136,12 @@ class URP_Profiles extends UserRightsBaseClass
 		foreach (MetaModel::GetClasses('bizmodel') as $sClass)
 		{
 			$aStimuli = array();
-			foreach (array_keys(MetaModel::EnumStimuli($sClass)) as $sStimulusCode)
+			foreach (MetaModel::EnumStimuli($sClass) as $sStimulusCode => $oStimulus)
 			{
 				$oGrant = $oUserRights->GetClassStimulusGrant($this->GetKey(), $sClass, $sStimulusCode);
 				if (is_object($oGrant) && ($oGrant->Get('permission') == 'yes'))
 				{ 
-					$aStimuli[] = $sStimulusCode;
+					$aStimuli[] = '<span title="'.$sStimulusCode.': '.htmlentities($oStimulus->Get('description')).'">'.htmlentities($oStimulus->Get('label')).'</span>';
 				}
 			}
 			$sStimuli = implode(', ', $aStimuli);
