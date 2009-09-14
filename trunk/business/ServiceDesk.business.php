@@ -45,7 +45,7 @@ class bizServiceCall extends cmdbAbstractObject
     MetaModel::Init_AddAttribute(new AttributeEnum("type", array("label"=>"Type", "description"=>"Type of the Incident", "allowed_values"=>new ValueSetEnum("Network,Server,Desktop,Application"), "sql"=>"type", "default_value"=>"Server", "is_null_allowed"=>false, "depends_on"=>array())));
      MetaModel::Init_AddAttribute(new AttributeExternalKey("org_id", array("targetclass"=>"bizOrganization", "label"=>"Customer", "description"=>"Customer concerned by this service call", "allowed_values"=>null, "sql"=>"customer", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("customer_name", array("label"=>"Customer", "description"=>"Name of the customer raising this service call", "allowed_values"=>null, "extkey_attcode"=> 'org_id', "target_attcode"=>"name")));
-		MetaModel::Init_AddAttribute(new AttributeEnum("call_status", array("label"=>"Status", "description"=>"Status of the ticket", "allowed_values"=>new ValueSetEnum("New, Assigned, WorkInProgress,Closed"), "sql"=>"call_status", "default_value"=>"New", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("call_status", array("label"=>"Status", "description"=>"Status of the ticket", "allowed_values"=>new ValueSetEnum("New, Assigned, WorkInProgress,Resolved,Closed"), "sql"=>"call_status", "default_value"=>"New", "is_null_allowed"=>false, "depends_on"=>array())));
 		// SetPossibleValues("status",array("Open","Monitored","Closed"));
 		MetaModel::Init_AddAttribute(new AttributeText("call_description", array("label"=>"Description", "description"=>"Description of the call as describe by caller", "allowed_values"=>null, "sql"=>"call_description", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDate("creation_date", array("label"=>"Creation date", "description"=>"Call creation date", "allowed_values"=>null, "sql"=>"creation_date", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
@@ -104,18 +104,21 @@ class bizServiceCall extends cmdbAbstractObject
 		MetaModel::Init_DefineState("Assigned", array("label"=>"Assigned", "description"=>"Call is assigned to somebody", "attribute_inherit"=>null,
 												"attribute_list"=>array('name' => OPT_ATT_READONLY, "title"=>OPT_ATT_READONLY, "org_id"=>OPT_ATT_READONLY, "caller_id"=>OPT_ATT_READONLY, "call_description"=>OPT_ATT_READONLY, "creation_date"=>OPT_ATT_READONLY,'end_date' => OPT_ATT_HIDDEN, "workgroup_id"=>OPT_ATT_MUSTCHANGE, "agent_id"=>OPT_ATT_MUSTCHANGE)));
 		MetaModel::Init_DefineState("WorkInProgress", array("label"=>"Work In Progress", "description"=>"Work is in progress", "attribute_inherit"=>null, "attribute_list"=>array("title"=>OPT_ATT_READONLY, "org_id"=>OPT_ATT_READONLY, "caller_id"=>OPT_ATT_READONLY, "call_description"=>OPT_ATT_READONLY,'end_date' => OPT_ATT_HIDDEN, "creation_date"=>OPT_ATT_READONLY,"workgroup_id"=>OPT_ATT_MANDATORY, "agent_id"=>OPT_ATT_MANDATORY)));
-		MetaModel::Init_DefineState("Closed", array("label"=>"Closed", "description"=>"Call is closed", "attribute_inherit"=>null, "attribute_list"=>array("workgroup_id"=>OPT_ATT_MANDATORY, "agent_id"=>OPT_ATT_MANDATORY, "resolution"=>OPT_ATT_MANDATORY, "end_date"=>OPT_ATT_MANDATORY)));
+		MetaModel::Init_DefineState("Resolved", array("label"=>"Resolved", "description"=>"Call is resolved", "attribute_inherit"=>null, "attribute_list"=>array("workgroup_id"=>OPT_ATT_MANDATORY, "agent_id"=>OPT_ATT_MANDATORY, "resolution"=>OPT_ATT_MANDATORY, "end_date"=>OPT_ATT_MANDATORY,"resolution"=>OPT_ATT_MANDATORY)));
+		MetaModel::Init_DefineState("Closed", array("label"=>"Closed", "description"=>"Call is closed", "attribute_inherit"=>null, "attribute_list"=>array("workgroup_id"=>OPT_ATT_READONLY, "agent_id"=>OPT_ATT_READONLY, "resolution"=>OPT_ATT_READONLY, "end_date"=>OPT_ATT_READONLY)));
 
 		MetaModel::Init_DefineStimulus("ev_assign", new StimulusUserAction(array("label"=>"Assign this call", "description"=>"Assign this call to a group and an agent")));
 		MetaModel::Init_DefineStimulus("ev_reassign", new StimulusUserAction(array("label"=>"Reassign this call", "description"=>"Reassign this call to a different group and agent")));
 		MetaModel::Init_DefineStimulus("ev_start_working", new StimulusUserAction(array("label"=>"Work on this call", "description"=>"Start working on this call")));
-		MetaModel::Init_DefineStimulus("ev_close", new StimulusUserAction(array("label"=>"Close this call", "description"=>"Close/resolve this call")));
+		MetaModel::Init_DefineStimulus("ev_resolve", new StimulusUserAction(array("label"=>"Resolve this call", "description"=>"Resolve this call")));
+		MetaModel::Init_DefineStimulus("ev_close", new StimulusUserAction(array("label"=>"Close this call", "description"=>"Close this call")));
 
 		MetaModel::Init_DefineTransition("New", "ev_assign", array("target_state"=>"Assigned", "actions"=>array(), "user_restriction"=>null));
 		MetaModel::Init_DefineTransition("Assigned", "ev_reassign", array("target_state"=>"Assigned", "actions"=>array(), "user_restriction"=>null));
 		MetaModel::Init_DefineTransition("Assigned", "ev_start_working", array("target_state"=>"WorkInProgress", "actions"=>array(), "user_restriction"=>null));
 		MetaModel::Init_DefineTransition("WorkInProgress", "ev_reassign", array("target_state"=>"Assigned", "actions"=>array(), "user_restriction"=>null));
-		MetaModel::Init_DefineTransition("WorkInProgress", "ev_close", array("target_state"=>"Closed", "actions"=>array('SetClosureDate'), "user_restriction"=>null));
+		MetaModel::Init_DefineTransition("WorkInProgress", "ev_resolve", array("target_state"=>"Resolved", "actions"=>array(), "user_restriction"=>null));
+		MetaModel::Init_DefineTransition("Resolved", "ev_close", array("target_state"=>"Closed", "actions"=>array('SetClosureDate'), "user_restriction"=>null));
 		
 	}
 

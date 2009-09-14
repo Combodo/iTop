@@ -45,21 +45,21 @@ class bizIncidentTicket extends cmdbAbstractObject
     MetaModel::Init_AddAttribute(new AttributeEnum("type", array("label"=>"Type", "description"=>"Type of the Incident", "allowed_values"=>new ValueSetEnum("Network,Server,Desktop,Application"), "sql"=>"type", "default_value"=>"Server", "is_null_allowed"=>false, "depends_on"=>array())));
      MetaModel::Init_AddAttribute(new AttributeExternalKey("org_id", array("targetclass"=>"bizOrganization", "label"=>"Customer", "description"=>"who is impacted by the ticket", "allowed_values"=>null, "sql"=>"customer", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("customer_name", array("label"=>"Customer", "description"=>"Name of the customer impacted by this ticket", "allowed_values"=>null, "extkey_attcode"=> 'org_id', "target_attcode"=>"name")));
-		MetaModel::Init_AddAttribute(new AttributeEnum("ticket_status", array("label"=>"Status", "description"=>"Status of the ticket", "allowed_values"=>new ValueSetEnum("New, Assigned, WorkInProgress, Closed"), "sql"=>"ticket_status", "default_value"=>"New", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("ticket_status", array("label"=>"Status", "description"=>"Status of the ticket", "allowed_values"=>new ValueSetEnum("New, Assigned, WorkInProgress, Resolved, Closed"), "sql"=>"ticket_status", "default_value"=>"New", "is_null_allowed"=>false, "depends_on"=>array())));
 		// SetPossibleValues("status",array("Open","Monitored","Closed"));
 		MetaModel::Init_AddAttribute(new AttributeText("initial_situation", array("label"=>"Initial Situation", "description"=>"Initial situation of the Incident", "allowed_values"=>null, "sql"=>"initial_situation", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("current_situation", array("label"=>"Current Situation", "description"=>"Current situation of the Incident", "allowed_values"=>null, "sql"=>"current_situation", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDate("start_date", array("label"=>"Starting date", "description"=>"Incident starting date", "allowed_values"=>null, "sql"=>"start_date", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
     // définir une date de défaut à maintenant, alias creation ou modification du ticket
-		MetaModel::Init_AddAttribute(new AttributeDate("last_update", array("label"=>"Last update", "description"=>"last time the Ticket was modified", "allowed_values"=>null, "sql"=>"last_update", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeDate("last_update", array("label"=>"Last update", "description"=>"last time the Ticket was modified", "allowed_values"=>null, "sql"=>"last_update", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 	      MetaModel::Init_AddAttribute(new AttributeDate("next_update", array("label"=>"Next update", "description"=>"next time the Ticket is expected to be  modified", "allowed_values"=>null, "sql"=>"next_update", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
 		MetaModel::Init_AddAttribute(new AttributeDate("end_date", array("label"=>"Closure Date", "description"=>"Date when the Ticket was closed", "allowed_values"=>null, "sql"=>"closed_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-	  MetaModel::Init_AddAttribute(new AttributeExternalKey("caller_id", array("targetclass"=>"bizPerson", "jointype"=> "", "label"=>"Caller", "description"=>"person that trigger incident", "allowed_values"=>new ValueSetObjects('SELECT bizPerson AS p WHERE p.org_id = :this->org_id'), "sql"=>"caller_id", "is_null_allowed"=>false, "depends_on"=>array('org_id'))));
+	  MetaModel::Init_AddAttribute(new AttributeExternalKey("caller_id", array("targetclass"=>"bizPerson", "jointype"=> "", "label"=>"Caller", "description"=>"person that trigger incident", "allowed_values"=>new ValueSetObjects('SELECT bizPerson AS p WHERE p.org_id = :this->org_id'), "sql"=>"caller_id", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("caller_mail", array("label"=>"Caller", "description"=>"Person that trigger this incident", "allowed_values"=>null, "extkey_attcode"=> 'caller_id', "target_attcode"=>"email")));
 	
   	MetaModel::Init_AddAttribute(new AttributeString("impact", array("label"=>"Impact", "description"=>"Impact of the Incident", "allowed_values"=>null, "sql"=>"impact", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-  	MetaModel::Init_AddAttribute(new AttributeExternalKey("workgroup_id", array("targetclass"=>"bizWorkgroup", "jointype"=> "", "label"=>"Workgroup", "description"=>"which workgroup is owning ticket", "allowed_values"=>null, "sql"=>"workgroup_id", "is_null_allowed"=>false, "depends_on"=>array())));
+  	MetaModel::Init_AddAttribute(new AttributeExternalKey("workgroup_id", array("targetclass"=>"bizWorkgroup", "jointype"=> "", "label"=>"Workgroup", "description"=>"which workgroup is owning ticket", "allowed_values"=>null, "sql"=>"workgroup_id", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("workgroup_name", array("label"=>"Workgroup", "description"=>"name of workgroup managing the Ticket", "allowed_values"=>null, "extkey_attcode"=> 'workgroup_id', "target_attcode"=>"name")));  
     MetaModel::Init_AddAttribute(new AttributeExternalKey("agent_id", array("targetclass"=>"bizPerson", "jointype"=> "", "label"=>"Agent", "description"=>"who is managing the ticket", "allowed_values"=>null, "sql"=>"agent_id", "is_null_allowed"=>true, "depends_on"=>array("workgroup_id"))));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("agent_mail", array("label"=>"Agent", "description"=>"mail of agent managing the Ticket", "allowed_values"=>null, "extkey_attcode"=> 'agent_id', "target_attcode"=>"email")));
@@ -101,22 +101,25 @@ class bizIncidentTicket extends cmdbAbstractObject
 		MetaModel::Init_DefineState("New", array("label"=>"New (Unassigned)", "description"=>"Newly created ticket", "attribute_inherit"=>null,
 												 "attribute_list"=>array('name' => OPT_ATT_READONLY, 'assignment_count' => OPT_ATT_HIDDEN, 'end_date' => OPT_ATT_HIDDEN, 'next_update' => OPT_ATT_HIDDEN, 'last_update' =>  OPT_ATT_HIDDEN,
 												 "title"=>OPT_ATT_MANDATORY, "org_id"=>OPT_ATT_MANDATORY, "caller_id"=>OPT_ATT_MANDATORY, "initial_situation"=>OPT_ATT_MANDATORY, "start_date"=>OPT_ATT_MANDATORY, "workgroup_id"=>OPT_ATT_MANDATORY,
-												 "severity"=>OPT_ATT_MANDATORY, "agent_id"=>OPT_ATT_HIDDEN,"impacted_infra_manual"=>OPT_ATT_MANDATORY, "related_tickets"=>OPT_ATT_MUSTPROMPT)));
+												 "severity"=>OPT_ATT_MANDATORY, "agent_id"=>OPT_ATT_HIDDEN,"impacted_infra_manual"=>OPT_ATT_MANDATORY, "related_tickets"=>OPT_ATT_MUSTPROMPT,"resolution"=>OPT_ATT_HIDDEN)));
 		MetaModel::Init_DefineState("Assigned", array("label"=>"Assigned", "description"=>"Ticket is assigned to somebody", "attribute_inherit"=>null,
-												"attribute_list"=>array('name' => OPT_ATT_READONLY, "title"=>OPT_ATT_READONLY, "org_id"=>OPT_ATT_READONLY, "caller_id"=>OPT_ATT_READONLY, "initial_situation"=>OPT_ATT_READONLY, "start_date"=>OPT_ATT_READONLY,'assignment_count' => OPT_ATT_READONLY,'end_date' => OPT_ATT_HIDDEN, "workgroup_id"=>OPT_ATT_MUSTCHANGE, "agent_id"=>OPT_ATT_MUSTCHANGE)));
-		MetaModel::Init_DefineState("WorkInProgress", array("label"=>"Work In Progress", "description"=>"Work is in progress", "attribute_inherit"=>null, "attribute_list"=>array("title"=>OPT_ATT_READONLY, "org_id"=>OPT_ATT_READONLY, "caller_id"=>OPT_ATT_READONLY, "initial_situation"=>OPT_ATT_READONLY,'end_date' => OPT_ATT_HIDDEN, "start_date"=>OPT_ATT_READONLY,"workgroup_id"=>OPT_ATT_MANDATORY, "agent_id"=>OPT_ATT_MANDATORY)));
-		MetaModel::Init_DefineState("Closed", array("label"=>"Closed", "description"=>"Ticket is closed", "attribute_inherit"=>null, "attribute_list"=>array("workgroup_id"=>OPT_ATT_MANDATORY, "agent_id"=>OPT_ATT_MANDATORY, "resolution"=>OPT_ATT_MANDATORY, "end_date"=>OPT_ATT_MANDATORY)));
+												"attribute_list"=>array('name' => OPT_ATT_READONLY, "title"=>OPT_ATT_READONLY, "org_id"=>OPT_ATT_READONLY, "caller_id"=>OPT_ATT_READONLY, "initial_situation"=>OPT_ATT_READONLY, "start_date"=>OPT_ATT_READONLY,'assignment_count' => OPT_ATT_READONLY,'end_date' => OPT_ATT_HIDDEN, "workgroup_id"=>OPT_ATT_MUSTCHANGE, "agent_id"=>OPT_ATT_MUSTCHANGE,"resolution"=>OPT_ATT_HIDDEN)));
+		MetaModel::Init_DefineState("WorkInProgress", array("label"=>"Work In Progress", "description"=>"Work is in progress", "attribute_inherit"=>null, "attribute_list"=>array("title"=>OPT_ATT_READONLY, "org_id"=>OPT_ATT_READONLY, "caller_id"=>OPT_ATT_READONLY, "initial_situation"=>OPT_ATT_READONLY,'end_date' => OPT_ATT_HIDDEN, "start_date"=>OPT_ATT_READONLY,"workgroup_id"=>OPT_ATT_MANDATORY, "agent_id"=>OPT_ATT_MANDATORY,"action_log"=>OPT_ATT_MANDATORY,"impact"=>OPT_ATT_READONLY,"severity"=>OPT_ATT_READONLY)));
+		MetaModel::Init_DefineState("Resolved", array("label"=>"Resolved", "description"=>"Ticket is resolved", "attribute_inherit"=>null, "attribute_list"=>array('name' => OPT_ATT_READONLY,'type' => OPT_ATT_READONLY, "title"=>OPT_ATT_READONLY, "org_id"=>OPT_ATT_READONLY, "caller_id"=>OPT_ATT_READONLY, "initial_situation"=>OPT_ATT_READONLY,"current_situation"=>OPT_ATT_READONLY,'end_date' => OPT_ATT_READONLY,'last_update' => OPT_ATT_READONLY,'next_update' => OPT_ATT_READONLY, "start_date"=>OPT_ATT_READONLY,"workgroup_id"=>OPT_ATT_READONLY, "agent_id"=>OPT_ATT_READONLY,"action_log"=>OPT_ATT_READONLY,"impact"=>OPT_ATT_READONLY,"severity"=>OPT_ATT_READONLY,"resolution"=>OPT_ATT_MUSTCHANGE)));
+		MetaModel::Init_DefineState("Closed", array("label"=>"Closed", "description"=>"Ticket is closed", "attribute_inherit"=>null, "attribute_list"=>array('name' => OPT_ATT_READONLY,'type' => OPT_ATT_READONLY, "title"=>OPT_ATT_READONLY, "org_id"=>OPT_ATT_READONLY, "caller_id"=>OPT_ATT_READONLY, "initial_situation"=>OPT_ATT_READONLY,"current_situation"=>OPT_ATT_READONLY,'end_date' => OPT_ATT_READONLY,'last_update' => OPT_ATT_READONLY,'next_update' => OPT_ATT_READONLY, "start_date"=>OPT_ATT_READONLY,"workgroup_id"=>OPT_ATT_READONLY, "agent_id"=>OPT_ATT_READONLY,"action_log"=>OPT_ATT_READONLY,"impact"=>OPT_ATT_READONLY,"severity"=>OPT_ATT_READONLY,"resolution"=>OPT_ATT_READONLY)));
 
 		MetaModel::Init_DefineStimulus("ev_assign", new StimulusUserAction(array("label"=>"Assign this ticket", "description"=>"Assign this ticket to a group and an agent")));
 		MetaModel::Init_DefineStimulus("ev_reassign", new StimulusUserAction(array("label"=>"Reassign this ticket", "description"=>"Reassign this ticket to a different group and agent")));
 		MetaModel::Init_DefineStimulus("ev_start_working", new StimulusUserAction(array("label"=>"Work on this ticket", "description"=>"Start working on this ticket")));
-		MetaModel::Init_DefineStimulus("ev_close", new StimulusUserAction(array("label"=>"Close this ticket", "description"=>"Close/resolve this ticket")));
+		MetaModel::Init_DefineStimulus("ev_resolve", new StimulusUserAction(array("label"=>"Resolve this ticket", "description"=>"Resolve this ticket")));
+		MetaModel::Init_DefineStimulus("ev_close", new StimulusUserAction(array("label"=>"Close this ticket", "description"=>"Close this ticket")));
 
 		MetaModel::Init_DefineTransition("New", "ev_assign", array("target_state"=>"Assigned", "actions"=>array('IncrementAssignmentCount'), "user_restriction"=>null));
-		MetaModel::Init_DefineTransition("Assigned", "ev_reassign", array("target_state"=>"Assigned", "actions"=>array('IncrementAssignmentCount'), "user_restriction"=>null));
-		MetaModel::Init_DefineTransition("Assigned", "ev_start_working", array("target_state"=>"WorkInProgress", "actions"=>array(), "user_restriction"=>null));
-		MetaModel::Init_DefineTransition("WorkInProgress", "ev_reassign", array("target_state"=>"Assigned", "actions"=>array('IncrementAssignmentCount'), "user_restriction"=>null));
-		MetaModel::Init_DefineTransition("WorkInProgress", "ev_close", array("target_state"=>"Closed", "actions"=>array('SetClosureDate'), "user_restriction"=>null));
+		MetaModel::Init_DefineTransition("Assigned", "ev_reassign", array("target_state"=>"Assigned", "actions"=>array('IncrementAssignmentCount','SetLastUpdate'), "user_restriction"=>null));
+		MetaModel::Init_DefineTransition("Assigned", "ev_start_working", array("target_state"=>"WorkInProgress", "actions"=>array('SetLastUpdate'), "user_restriction"=>null));
+		MetaModel::Init_DefineTransition("WorkInProgress", "ev_reassign", array("target_state"=>"Assigned", "actions"=>array('IncrementAssignmentCount','SetLastUpdate'), "user_restriction"=>null));
+		MetaModel::Init_DefineTransition("WorkInProgress", "ev_resolve", array("target_state"=>"Resolved", "actions"=>array('SetLastUpdate'), "user_restriction"=>null));
+		MetaModel::Init_DefineTransition("Resolved", "ev_close", array("target_state"=>"Closed", "actions"=>array('SetClosureDate','SetLastUpdate'), "user_restriction"=>null));
 		
 	}
 
@@ -146,6 +149,12 @@ class bizIncidentTicket extends cmdbAbstractObject
 	public function SetClosureDate($sStimulusCode)
 	{
 		$this->Set('end_date', time());
+		return true;
+	}
+	
+		public function SetLastUpdate($sStimulusCode)
+	{
+		$this->Set('last_update', time());
 		return true;
 	}
 	

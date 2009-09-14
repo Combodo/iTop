@@ -7,7 +7,11 @@
 <itopblock blockclass="DisplayBlock" asynchronous="true" type="bare_details" encoding="text/oql">SELECT bizInterface WHERE id = $pkey$</itopblock>
 <itoptabs>
 	<itoptab name="Linked_interfaces">
-		<itopblock blockclass="DisplayBlock" type="list" link_attr="interface1_id" object_id="$pkey$" target_attr="interface2_id" encoding="text/oql">SELECT lnkInterfaces WHERE interface1_id = $pkey$</itopblock>
+		<itopblock blockclass="DisplayBlock" type="list" encoding="text/oql">SELECT bizInterface WHERE if_connected_id = $pkey$</itopblock>
 	</itoptab>
+	<itoptab name="Groups">
+		<itopblock blockclass="DisplayBlock" type="list" link_attr="infra_id" object_id="$pkey$" target_attr="infra_group_id" encoding="text/oql">SELECT lnkInfraGrouping WHERE infra_id = $pkey$</itopblock>
+	</itoptab>
+
 	
 </itoptabs>

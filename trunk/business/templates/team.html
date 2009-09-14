@@ -12,6 +12,10 @@
 	<itoptab name="Infrastructures">
 		<itopblock blockclass="DisplayBlock" type="list" link_attr="contact_id" object_id="$pkey$" target_attr="infra_id" encoding="text/oql">SELECT lnkContactInfra WHERE contact_id = $pkey$</itopblock>
 	</itoptab>
+	<itoptab name="Workgroups">
+		<itopblock blockclass="DisplayBlock" type="list" encoding="text/oql">SELECT bizWorkgroup WHERE team_id = $pkey$</itopblock>
+	</itoptab>
+
 	<itoptab name="Documents">
 		<itopblock blockclass="DisplayBlock" type="list" link_attr="object_id" object_id="$pkey$" target_attr="doc_id" encoding="text/oql">SELECT lnkDocumentRealObject WHERE object_id = $pkey$</itopblock>
 	</itoptab>
