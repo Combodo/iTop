@@ -410,6 +410,10 @@ switch($operation)
 					{
 						// Non-visible, or read-only attribute, do nothing
 					}
+					else if ($sAttCode == 'finalclass')
+					{
+						// This very specific field is read-only
+					}
 					else if ($oAttDef->IsLinkSet())
 					{
 						// Link set, the data is a set of link objects, encoded in JSON
@@ -424,9 +428,9 @@ switch($operation)
 					}
 					else if (!$oAttDef->IsExternalField())
 					{
-						$aAttributes[$sAttCode] = trim(utils::ReadPostedParam("attr_$sAttCode", ''));
+						$aAttributes[$sAttCode] = trim(utils::ReadPostedParam("attr_$sAttCode", null));
 						$previousValue = $oObj->Get($sAttCode);
-						if (!empty($aAttributes[$sAttCode]) && ($previousValue != $aAttributes[$sAttCode]))
+						if (!is_null($aAttributes[$sAttCode]) && ($previousValue != $aAttributes[$sAttCode]))
 						{
 							$oObj->Set($sAttCode, $aAttributes[$sAttCode]);
 							$bObjectModified = true;
