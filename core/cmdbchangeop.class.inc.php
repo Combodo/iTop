@@ -193,6 +193,9 @@ class CMDBChangeOpSetAttribute extends CMDBChangeOp
 	 */	 
 	public function GetDescription()
 	{
+		// Temporary, until we change the options of GetDescription() -needs a more global revision
+		$bIsHtml = true;
+		
 		$sResult = '';
 		$oTargetObjectClass = $this->Get('objclass');
 		$oTargetObjectKey = $this->Get('objkey');
@@ -225,9 +228,16 @@ class CMDBChangeOpSetAttribute extends CMDBChangeOp
 					$sResult = "$sAttName set to $sNewValue (previous value: $sOldValue)";
 				}
 			}
+			elseif($bIsHtml && $oAttDef->IsExternalKey())
+			{
+				$sTargetClass = $oAttDef->GetTargetClass();
+				$sFrom = MetaModel::GetHyperLink($sTargetClass, $sOldValue);
+				$sTo = MetaModel::GetHyperLink($sTargetClass, $sNewValue);
+				$sResult = "$sAttName set to $sTo (previous: $sFrom)";
+			}
 			else
 			{
-				$sResult = "$sAttName set to $sNewValue (previous value: $sOldValue)";
+				$sResult = "$sAttName set too $sNewValue (previous value: $sOldValue)";
 			}
 		}
 		return $sResult;
