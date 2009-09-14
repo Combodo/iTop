@@ -2636,6 +2636,12 @@ abstract class MetaModel
 		return self::GetObjectByRow($sClass, $aRow);
 	}
 
+	public static function GetHyperLink($sTargetClass, $sOldValue)
+	{
+		$oObj = self::GetObject($sTargetClass, $sOldValue);
+		return $oObj->GetHyperLink();
+	}
+
 	public static function NewObject($sClass)
 	{
 		self::_check_subclass($sClass);

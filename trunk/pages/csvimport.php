@@ -38,9 +38,17 @@ function GetExtKeyFieldCodes($sColDesc)
 function MakeExtFieldLabel($sClass, $sExtKeyAttCode, $sForeignAttCode)
 {
 	$oExtKeyAtt = MetaModel::GetAttributeDef($sClass, $sExtKeyAttCode);
-	$oForeignAtt = MetaModel::GetAttributeDef($oExtKeyAtt->GetTargetClass(), $sForeignAttCode);
+	if ($sForeignAttCode == 'id')
+	{
+		$sForeignAttLabel = 'id';
+	}
+	else
+	{
+		$oForeignAtt = MetaModel::GetAttributeDef($oExtKeyAtt->GetTargetClass(), $sForeignAttCode);
+		$sForeignAttLabel = $oForeignAtt->GetLabel();
+	}
 	
-	return $oExtKeyAtt->GetLabel().EXTKEY_LABELSEP.$oForeignAtt->GetLabel();
+	return $oExtKeyAtt->GetLabel().EXTKEY_LABELSEP.$sForeignAttLabel;
 }
 
 function MakeExtFieldSelectValue($sAttCode, $sExtAttCode)
@@ -67,27 +75,33 @@ function ShowTableForm($oPage, $oCSVParser, $sClass)
 	$aFields = array();
 	foreach($oCSVParser->ListFields() as $iFieldIndex=>$sFieldName)
 	{
-		$sSelField = "<select name=\"fmap[field$iFieldIndex]\">";
-		$sSelField .= "<option value=\"__none__\">None (ignore)</option>";
-		$sSELECTED = (strcasecmp($sFieldName, "pkey") == 0) ? " SELECTED" : "";
-		$sSelField .= "<option value=\"pkey\"$sSELECTED>Private Key</option>";
+		$aOptions = array();
+		$aOptions['id'] = array(
+			'LabelHtml' => "Private key",
+			'LabelRef' => "Private key",
+			'IsReconcKey' => false,
+			'Tip' => '',
+		);
+
 		$sFoundAttCode = ""; // quick and dirty way to remind if a match has been found and suggest a reconciliation key if possible
 		foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode=>$oAtt)
 		{
 			if ($oAtt->IsExternalField()) continue;
 
 			$bIsThatField = (strcasecmp($sFieldName, $oAtt->GetLabel()) == 0);
-			//$sIsReconcKey = (MetaModel::IsValidFilterCode($sClass, $sAttCode)) ? " [key]" : "";
-			$sIsReconcKey = MetaModel::IsReconcKey($sClass, $sAttCode) ? " [rk!]" : "";
 			$sFoundAttCode = (MetaModel::IsValidFilterCode($sClass, $sAttCode) && $bIsThatField) ? $sAttCode : $sFoundAttCode; 
-			$sSELECTED = $bIsThatField ? " SELECTED" : "";
 
 			if ($oAtt->IsExternalKey())
 			{
 				// An external key might be loaded by
 				// the pkey or a reconciliation key
 				//
-				$sSelField .= "<option value=\"$sAttCode\"$sSELECTED><em>".$oAtt->GetLabel()."</em> (pkey)$sIsReconcKey</option>";
+				$aOptions[MakeExtFieldSelectValue($sAttCode, 'id')] = array(
+					'LabelHtml' => "<em>".$oAtt->GetLabel()."</em> (id)",
+					'LabelRef' => $oAtt->GetLabel()." (id)",
+					'IsReconcKey' => MetaModel::IsReconcKey($sClass, $sAttCode),
+					'Tip' => '',
+				);
 
 				$sRemoteClass = $oAtt->GetTargetClass();
 				foreach(MetaModel::GetReconcKeys($sRemoteClass) as $sExtAttCode)
@@ -104,35 +118,79 @@ function ShowTableForm($oPage, $oCSVParser, $sClass)
 					{
 						if ($oExtFieldAtt->GetExtAttCode() == $sExtAttCode)
 						{
-							$sLabel2 = $oExtFieldAtt->GetLabel();
-
-							$bIsThatField = (strcasecmp($sFieldName, $sLabel2) == 0);
-							$sSELECTED = $bIsThatField ? " SELECTED" : "";
-							$sTITLE = " title=\"equivalent to '".htmlentities($sLabel1)."'\"";
-							$sSelField .= "<option value=\"$sValue\"$sTITLE $sSELECTED>".htmlentities($sLabel2)."</option>";
+							$aOptions[$sValue] = array(
+								'LabelHtml' => htmlentities($oExtFieldAtt->GetLabel()),
+								'LabelRef' => $oExtFieldAtt->GetLabel(),
+								'IsReconcKey' => false,
+								'Tip' => "equivalent to '".htmlentities($sLabel1)."'",
+							);
 							$bFoundTwin = true;
+							$sLabel2 = $oExtFieldAtt->GetLabel();
 							break;
 						}
 					}
 
-					$bIsThatField = (strcasecmp($sFieldName, $sLabel1) == 0);
-					$sSELECTED = $bIsThatField ? " SELECTED" : "";
-					$sTITLE = $bFoundTwin ? " title=\"equivalent to '".htmlentities($sLabel2)."'\"" : "";
-					$sSelField .= "<option value=\"$sValue\"$sTITLE $sSELECTED>".htmlentities($sLabel1)."</option>";
+					$aOptions[$sValue] = array(
+						'LabelHtml' => htmlentities($sLabel1),
+						'LabelRef' => $sLabel1,
+						'IsReconcKey' => false,
+						'Tip' => $bFoundTwin ? "equivalent to '".htmlentities($sLabel2)."'" : "",
+					);
 				}
 			}
 			else
 			{
-				$sSelField .= "<option value=\"$sAttCode\"$sSELECTED>".$oAtt->GetLabel()."$sIsReconcKey</option>";
+				$aOptions[$sAttCode] = array(
+					'LabelHtml' => htmlentities($oAtt->GetLabel()),
+					'LabelRef' => $oAtt->GetLabel(),
+					'IsReconcKey' => MetaModel::IsReconcKey($sClass, $sAttCode),
+					'Tip' => '',
+				);
 			}
 		}
-		$sSelField .= "</select>";
-		
-		$sCHECKED = ($sFieldName == "pkey" || MetaModel::IsReconcKey($sClass, $sFoundAttCode)) ? " CHECKED" : "";
-		$sSelField .= "&nbsp;<input type=\"checkbox\" name=\"iskey[field$iFieldIndex]\" value=\"yes\" $sCHECKED>";
 
-		$aFields["field$iFieldIndex"]["label"] = $sSelField;
-		$aFields["field$iFieldIndex"]["value"] = $aColToRow[$iFieldIndex];
+		// Find the best match
+		$iMin = strlen($sFieldName);
+		$sBestValue = null;
+		foreach ($aOptions as $sValue => $aData)
+		{
+			$iDist = levenshtein(strtolower($sFieldName), strtolower($aData['LabelRef']));
+			if (($iDist != -1) && ($iDist < $iMin))
+			{
+				$iMin = $iDist;
+				$sBestValue = $sValue;
+			}
+		}
+
+		$sSelField = "<select name=\"fmap[field$iFieldIndex]\">";
+		foreach ($aOptions as $sValue => $aData)
+		{
+			$sStyle = '';
+			$sComment = '';
+			$sSELECTED = '';
+			if ($sValue == $sBestValue)
+			{
+				$sSELECTED = ' SELECTED';
+				if ($iMin > 0)
+				{
+					$sStyle = " style=\"background-color: #ffdddd;\"";
+					$sComment = '- suggested';
+				}
+			}
+
+			$sIsRecondKey = $aData['IsReconcKey'] ? " [rk!]" : "";
+			$sSelField .= "<option value=\"$sValue\" title=\"".$aData['Tip']."\"$sStyle$sSELECTED>".$aData['LabelHtml']."$sComment$sIsRecondKey</option>\n";
+		}
+		$sSelField .= "</select>";
+		$aFields["field$iFieldIndex"]["label"] = $sSelField; 
+
+		$sCHECKED = ($sFieldName == "id" || MetaModel::IsReconcKey($sClass, $sFoundAttCode)) ? " CHECKED" : "";
+		$aFields["field$iFieldIndex"]["label"] .= "<input type=\"checkbox\" name=\"iskey[field$iFieldIndex]\" value=\"yes\" $sCHECKED>";
+
+		if (array_key_exists($iFieldIndex, $aColToRow))
+		{
+			$aFields["field$iFieldIndex"]["value"] = $aColToRow[$iFieldIndex];
+		}
 	}
 	$oPage->details($aFields);
 }
@@ -151,7 +209,7 @@ function ProcessData($oPage, $sClass, $oCSVParser, $aFieldMap, $aIsReconcKey, CM
 	foreach($aFieldMap as $sFieldId=>$sColDesc)
 	{
 		$iFieldId = (int) substr($sFieldId, strlen("field"));
-		if ($sColDesc == "pkey")
+		if ($sColDesc == "id")
 		{
 			// Skip !
 			$iPKeyId = $iFieldId;
@@ -162,18 +220,19 @@ function ProcessData($oPage, $sClass, $oCSVParser, $aFieldMap, $aIsReconcKey, CM
 		}
 		elseif (IsExtKeyField($sColDesc))
 		{
+			// This field is value to search on, to find a value for an external key
 			list($sExtKeyAttCode, $sExtReconcKeyAttCode) = GetExtKeyFieldCodes($sColDesc);
 			$aExtKeys[$sExtKeyAttCode][$sExtReconcKeyAttCode] = $iFieldId;
 		}
 		elseif (array_key_exists($sFieldId, $aIsReconcKey))
 		{
+			// This value is a reconciliation key
 			$aReconcilKeys[$sColDesc] = $iFieldId;
 			$aAttList[$sColDesc] = $iFieldId; // A reconciliation key is also a field
 		}
 		else
 		{
 			// $sColDesc is an attribute code
-			//
 			$aAttList[$sColDesc] = $iFieldId;
 		}
 	}
@@ -182,10 +241,10 @@ function ProcessData($oPage, $sClass, $oCSVParser, $aFieldMap, $aIsReconcKey, CM
 	//
 	$aDisplayConfig = array();
 	$aDisplayConfig["__RECONCILIATION__"] = array("label"=>"Reconciliation", "description"=>"");
-	$aDisplayConfig["__STATUS__"] = array("label"=>"Status", "description"=>"");
+	$aDisplayConfig["__STATUS__"] = array("label"=>"Import status", "description"=>"");
 	if (isset($iPKeyId))
 	{
-		$aDisplayConfig["col$iPKeyId"] = array("label"=>"<strong>pkey</strong>", "description"=>"");
+		$aDisplayConfig["col$iPKeyId"] = array("label"=>"<strong>id</strong>", "description"=>"");
 	}
 	foreach($aReconcilKeys as $sAttCode => $iCol)
 	{
@@ -223,13 +282,12 @@ function ProcessData($oPage, $sClass, $oCSVParser, $aFieldMap, $aIsReconcKey, CM
 		$aExtKeys
 	);
 	$aRes = $oBulk->Process($oChange);
-
 	$aResultDisp = array(); // to be displayed
 	foreach($aRes as $iRow => $aRowData)
 	{
 		$aRowDisp = array();
 		$aRowDisp["__RECONCILIATION__"] = $aRowData["__RECONCILIATION__"];
-		$aRowDisp["__STATUS__"] = $aRowData["__STATUS__"]->GetDescription();
+		$aRowDisp["__STATUS__"] = $aRowData["__STATUS__"]->GetDescription(true);
 		foreach($aRowData as $sKey => $value)
 		{
 			if ($sKey == '__RECONCILIATION__') continue;
@@ -255,11 +313,11 @@ function ProcessData($oPage, $sClass, $oCSVParser, $aFieldMap, $aIsReconcKey, CM
 			}
 			if (empty($sClass))
 			{
-				$aRowDisp[$sKey] = $value->GetDescription();
+				$aRowDisp[$sKey] = $value->GetDescription(true);
 			}
 			else
 			{
-				$aRowDisp[$sKey] = "<div class=\"$sClass\">".$value->GetDescription()."</div>";
+				$aRowDisp[$sKey] = "<div class=\"$sClass\">".$value->GetDescription(true)."</div>";
 			}
 		}
 		$aResultDisp[$iRow] = $aRowDisp;
@@ -297,7 +355,7 @@ function Do_Welcome($oPage, $sClass)
 		$aList = MetaModel::GetZListItems($sClassName, 'details');
 		$aHeader = array();
 		// $aHeader[] = MetaModel::GetKeyLabel($sClassName);
-		$aHeader[] = 'pkey'; // Should be what's coded on the line above... but there is a bug
+		$aHeader[] = 'id'; // Should be what's coded on the line above... but there is a bug
 		foreach($aList as $sAttCode)
 		{
 			$aHeader[] = MetaModel::GetLabel($sClassName, $sAttCode);
@@ -347,12 +405,9 @@ function Do_Format($oPage, $sClass)
 	$iTarget = count($aData);
 	if ($iTarget == 0)
 	{
-	    $oPage->add("Empty data set...");
-	    $oPage->add("<form method=\"post\" action=\"\">");
-	    $oPage->add("<input type=\"hidden\" name=\"csvdata\" value=\"$sCSVData\">");
-	    $oPage->add("<input type=\"hidden\" name=\"fromwiztep\" value=\"$sWiztep\">");
-	    $oPage->add("<input type=\"submit\" name=\"todo\" value=\"Back\">");
-		$oPage->add("</form>");
+	   $oPage->p("Empty data set..., please provide some data!");
+		$oPage->add("<button onClick=\"window.history.back();\">Back</button>\n");
+		return;
 	}
 
 	// Guess the format :
@@ -405,9 +460,9 @@ function DoProcessOrVerify($oPage, $sClass, CMDBChange $oChange = null)
 			$sReconcKey = "";
 		}
 
-		if ($sColDesc == "pkey")
+		if ($sColDesc == "id")
 		{
-			$aDisplayConfig[$sFieldId] = array("label"=>"Private key $sReconcKey", "description"=>"blah pkey");
+			$aDisplayConfig[$sFieldId] = array("label"=>"Private key $sReconcKey", "description"=>"");
 		}
 		elseif ($sColDesc == "__none__")
 		{
@@ -455,12 +510,16 @@ function DoProcessOrVerify($oPage, $sClass, CMDBChange $oChange = null)
 		if (count($aMissingKeys) > 0)
 		{
 			$oPage->p("Warning: the objects could not be created, due to some missing mandatory external keys in the field list: ");
-			$oPage->p("<ul>");
+			$oPage->add("<ul>");
 			foreach($aMissingKeys as $sAttCode => $oAttDef)
 			{
-				$oPage->p("<li>".$oAttDef->GetLabel()."</li>");
+				$oPage->add("<li>".$oAttDef->GetLabel()."</li>");
 			}
-			$oPage->p("</ul>");
+			$oPage->add("</ul>");
+		}
+		else
+		{
+			$oPage->p("ok - required external keys (if any) have been found in the field list");
 		}
 
 		$oPage->p("<h2>Check...</h2>");
