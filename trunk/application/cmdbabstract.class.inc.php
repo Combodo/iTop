@@ -523,8 +523,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 					}
 				}
 			}
-			// #@# todo - add context information, otherwise any value will be authorized for external keys
-			$aAllowedValues = MetaModel::GetAllowedValues_flt($sClassName, $sFilterCode, array());
+			$aAllowedValues = MetaModel::GetAllowedValues_flt($sClassName, $sFilterCode, $aExtraParams);
 			if ($aAllowedValues != null)
 			{
 				//Enum field or external key, display a combo
