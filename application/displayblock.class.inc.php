@@ -689,16 +689,16 @@ class MenuBlock extends DisplayBlock
 				$sTargetClass = $oAttDef->GetTargetClass();
 				if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'Add...', 'url' => "../pages/$sUIPage?operation=modify_links&class=$sClass&link_attr=".$aExtraParams['link_attr']."&target_class=$sTargetClass&id=$id&addObjects=true&$sContext"); }
 				if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'Manage...', 'url' => "../pages/$sUIPage?operation=modify_links&class=$sClass&link_attr=".$aExtraParams['link_attr']."&target_class=$sTargetClass&id=$id&sContext"); }
-				if ($bIsDeleteAllowed) { $aActions[] = array ('label' => 'Remove All', 'url' => "#"); }
+				//if ($bIsDeleteAllowed) { $aActions[] = array ('label' => 'Remove All', 'url' => "#"); }
 			}
 			else
 			{
 				$sUrl = self::GetAbsoluteUrl();
 				$aActions[] = array ('label' => 'eMail', 'url' => "mailto:?subject=".$oSet->GetFilter()->__DescribeHTML()."&body=".urlencode("$sUrl?operation=search&filter=$sFilter&$sContext"));
 				$aActions[] = array ('label' => 'CSV Export', 'url' => "../pages/$sUIPage?operation=search&filter=$sFilter&format=csv&$sContext");
-				$aActions[] = array ('label' => 'Bookmark...', 'url' => "../pages/ajax.render.php?operation=create&class=$sClass&filter=$sFilter", 'class' => 'jqmTrigger');
+				//$aActions[] = array ('label' => 'Bookmark...', 'url' => "../pages/ajax.render.php?operation=create&class=$sClass&filter=$sFilter", 'class' => 'jqmTrigger');
 				if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'New...', 'url' => "../pages/$sUIPage?operation=new&class=$sClass&$sContext"); }
-				if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'Clone...', 'url' => "../pages/$sUIPage?operation=clone&class=$sClass&id=$id&$sContext"); }
+				//if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'Clone...', 'url' => "../pages/$sUIPage?operation=clone&class=$sClass&id=$id&$sContext"); }
 				if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'Modify...', 'url' => "../pages/$sUIPage?operation=modify&class=$sClass&id=$id&$sContext"); }
 				if ($bIsDeleteAllowed) { $aActions[] = array ('label' => 'Delete', 'url' => "../pages/$sUIPage?operation=delete&class=$sClass&id=$id&$sContext"); }
 			}
@@ -740,7 +740,7 @@ class MenuBlock extends DisplayBlock
 				if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'Add...', 'url' => "../pages/$sUIPage?operation=modify_links&class=$sClass&link_attr=".$aExtraParams['link_attr']."&target_class=$sTargetClass&id=$id&addObjects=true&$sContext"); }
 				//if ($bIsBulkModifyAllowed) { $aActions[] = array ('label' => 'Add...', 'url' => "../pages/$sUIPage?operation=modify_links&class=$sClass&linkage=".$aExtraParams['linkage']."&id=$id&addObjects=true&$sContext"); }
 				if ($bIsBulkModifyAllowed) { $aActions[] = array ('label' => 'Manage...', 'url' => "../pages/$sUIPage?operation=modify_links&class=$sClass&link_attr=".$aExtraParams['link_attr']."&target_class=$sTargetClass&id=$id&sContext"); }
-				if ($bIsBulkDeleteAllowed) { $aActions[] = array ('label' => 'Remove All...', 'url' => "#"); }
+				//if ($bIsBulkDeleteAllowed) { $aActions[] = array ('label' => 'Remove All...', 'url' => "#"); }
 			}
 			else
 			{
@@ -748,10 +748,10 @@ class MenuBlock extends DisplayBlock
 				$sUrl = self::GetAbsoluteUrl();
 				$aActions[] = array ('label' => 'eMail', 'url' => "mailto:?subject=".$oSet->GetFilter()->__DescribeHTML()."&body=".urlencode("$sUrl?operation=search&filter=$sFilter&$sContext"));
 				$aActions[] = array ('label' => 'CSV Export', 'url' => "../pages/$sUIPage?operation=search&filter=$sFilter&format=csv&$sContext");
-				$aActions[] = array ('label' => 'Bookmark...', 'url' => "../pages/ajax.render.php?operation=create&class=$sClass&filter=$sFilter", 'class' => 'jqmTrigger');
+				//$aActions[] = array ('label' => 'Bookmark...', 'url' => "../pages/ajax.render.php?operation=create&class=$sClass&filter=$sFilter", 'class' => 'jqmTrigger');
 				if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'New...', 'url' => "../pages/$sUIPage?operation=new&class=$sClass&$sContext"); }
-				if ($bIsBulkModifyAllowed) { $aActions[] = array ('label' => 'Modify All...', 'url' => "../pages/$sUIPage?operation=modify_all&filter=$sFilter&$sContext"); }
-				if ($bIsBulkDeleteAllowed) { $aActions[] = array ('label' => 'Delete All', 'url' => "../pages/$sUIPage?operation=delete_all&filter=$sFilter&$sContext"); }
+				//if ($bIsBulkModifyAllowed) { $aActions[] = array ('label' => 'Modify All...', 'url' => "../pages/$sUIPage?operation=modify_all&filter=$sFilter&$sContext"); }
+				//if ($bIsBulkDeleteAllowed) { $aActions[] = array ('label' => 'Delete All', 'url' => "../pages/$sUIPage?operation=delete_all&filter=$sFilter&$sContext"); }
 			}
 		}
 		$sHtml .= "<div class=\"jd_menu_itop\"><ul class=\"jd_menu jd_menu_itop\">\n<li>Actions\n<ul>\n";
