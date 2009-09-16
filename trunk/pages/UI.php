@@ -360,7 +360,7 @@ switch($operation)
 				$id = '';
 				$oObj = MetaModel::NewObject($sClass);
 			}
-			$oP->add("<script>
+			$oP->add("<script type=\"text/javascript\">
 			// Fill the map between the fields of the form and the attributes of the object\n");
 			
 			$aNewFieldsMap = array();
