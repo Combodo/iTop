@@ -1,5 +1,4 @@
 // Wizard Helper JavaScript class to communicate with the WizardHelper PHP class
-
 function WizardHelper(sClass)
 {
 	this.m_oData = { 'm_sClass' : '',
@@ -9,7 +8,7 @@ function WizardHelper(sClass)
 					 'm_aAllowedValuesRequested': [],
 					 'm_aDefaultValue': [],
 					 'm_aAllowedValues': [],
-					 'm_iFieldsCount' : 0,
+					 'm_iFieldsCount' : 0
 					};
 	this.m_oData.m_sClass = sClass;
 	
