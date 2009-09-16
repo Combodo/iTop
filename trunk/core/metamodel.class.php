@@ -649,6 +649,10 @@ abstract class MetaModel
 		if (!empty($sStateAttCode))
 		{
 			$aStates = MetaModel::EnumStates($sClass);
+			if (!array_key_exists($sState, $aStates))
+			{
+				throw new CoreException("Invalid state '$sState' for class '$sClass', expecting a value in {".implode(', ', array_keys($aStates))."}");
+			}
 			$aCurrentState = $aStates[$sState];
 			if ( (array_key_exists('attribute_list', $aCurrentState)) && (array_key_exists($sAttCode, $aCurrentState['attribute_list'])) )
 			{
