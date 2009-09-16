@@ -428,12 +428,16 @@ switch($operation)
 					}
 					else if (!$oAttDef->IsExternalField())
 					{
-						$aAttributes[$sAttCode] = trim(utils::ReadPostedParam("attr_$sAttCode", null));
-						$previousValue = $oObj->Get($sAttCode);
-						if (!is_null($aAttributes[$sAttCode]) && ($previousValue != $aAttributes[$sAttCode]))
+						$rawValue = utils::ReadPostedParam("attr_$sAttCode", null);
+						if (!is_null($rawValue))
 						{
-							$oObj->Set($sAttCode, $aAttributes[$sAttCode]);
-							$bObjectModified = true;
+							$aAttributes[$sAttCode] = trim($rawValue);
+							$previousValue = $oObj->Get($sAttCode);
+							if ($previousValue != $aAttributes[$sAttCode])
+							{
+								$oObj->Set($sAttCode, $aAttributes[$sAttCode]);
+								$bObjectModified = true;
+							}
 						}
 					}
 				}
