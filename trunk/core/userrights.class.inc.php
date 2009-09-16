@@ -52,9 +52,9 @@ abstract class UserRightsAddOnAPI
 	abstract public function GetUserId($sLogin); // returns the id of the user or false
 	abstract public function GetContactId($sLogin); // returns the id of the "business" user or false
 	abstract public function GetFilter($sLogin, $sClass); // returns a filter object
-	abstract public function IsActionAllowed($iUserId, $sClass, $iActionCode, dbObjectSet $oInstances);
-	abstract public function IsStimulusAllowed($iUserId, $sClass, $sStimulusCode, dbObjectSet $oInstances);
-	abstract public function IsActionAllowedOnAttribute($iUserId, $sClass, $sAttCode, $iActionCode, dbObjectSet $oInstances);
+	abstract public function IsActionAllowed($iUserId, $sClass, $iActionCode, /*dbObjectSet*/ $oInstanceSet = null);
+	abstract public function IsStimulusAllowed($iUserId, $sClass, $sStimulusCode, /*dbObjectSet*/ $oInstanceSet = null);
+	abstract public function IsActionAllowedOnAttribute($iUserId, $sClass, $sAttCode, $iActionCode, /*dbObjectSet*/ $oInstanceSet = null);
 	abstract public function IsAdministrator($iUserId);
 }
 
@@ -211,48 +211,48 @@ class UserRights
 		return self::$m_oAddOn->GetFilter(self::$m_iUserId, $sClass);
 	}
 
-	public static function IsActionAllowed($sClass, $iActionCode, dbObjectSet $oInstances, $iUserId = null)
+	public static function IsActionAllowed($sClass, $iActionCode, /*dbObjectSet*/ $oInstanceSet = null, $iUserId = null)
 	{
 		if (!MetaModel::HasCategory($sClass, 'bizmodel')) return true;
 		if (!self::CheckLogin()) return false;
 
 		if (is_null($iUserId))
 		{
-			return self::$m_oAddOn->IsActionAllowed(self::$m_iUserId, $sClass, $iActionCode, $oInstances);
+			return self::$m_oAddOn->IsActionAllowed(self::$m_iUserId, $sClass, $iActionCode, $oInstanceSet);
 		}
 		else
 		{
-			return self::$m_oAddOn->IsActionAllowed($iUserId, $sClass, $iActionCode, $oInstances);
+			return self::$m_oAddOn->IsActionAllowed($iUserId, $sClass, $iActionCode, $oInstanceSet);
 		}
 	}
 
-	public static function IsStimulusAllowed($sClass, $sStimulusCode, dbObjectSet $oInstances, $iUserId = null)
+	public static function IsStimulusAllowed($sClass, $sStimulusCode, /*dbObjectSet*/ $oInstanceSet = null, $iUserId = null)
 	{
 		if (!MetaModel::HasCategory($sClass, 'bizmodel')) return true;
 		if (!self::CheckLogin()) return false;
 
 		if (is_null($iUserId))
 		{
-			return self::$m_oAddOn->IsStimulusAllowed(self::$m_iUserId, $sClass, $sStimulusCode, $oInstances);
+			return self::$m_oAddOn->IsStimulusAllowed(self::$m_iUserId, $sClass, $sStimulusCode, $oInstanceSet);
 		}
 		else
 		{
-			return self::$m_oAddOn->IsStimulusAllowed($iUserId, $sClass, $sStimulusCode, $oInstances);
+			return self::$m_oAddOn->IsStimulusAllowed($iUserId, $sClass, $sStimulusCode, $oInstanceSet);
 		}
 	}
 
-	public static function IsActionAllowedOnAttribute($sClass, $sAttCode, $iActionCode, dbObjectSet $oInstances, $iUserId = null)
+	public static function IsActionAllowedOnAttribute($sClass, $sAttCode, $iActionCode, /*dbObjectSet*/ $oInstanceSet = null, $iUserId = null)
 	{
 		if (!MetaModel::HasCategory($sClass, 'bizmodel')) return true;
 		if (!self::CheckLogin()) return false;
 
 		if (is_null($iUserId))
 		{
-			return self::$m_oAddOn->IsActionAllowedOnAttribute(self::$m_iUserId, $sClass, $sAttCode, $iActionCode, $oInstances);
+			return self::$m_oAddOn->IsActionAllowedOnAttribute(self::$m_iUserId, $sClass, $sAttCode, $iActionCode, $oInstanceSet);
 		}
 		else
 		{
-			return self::$m_oAddOn->IsActionAllowedOnAttribute($iUserId, $sClass, $sAttCode, $iActionCode, $oInstances);
+			return self::$m_oAddOn->IsActionAllowedOnAttribute($iUserId, $sClass, $sAttCode, $iActionCode, $oInstanceSet);
 		}
 	}
 

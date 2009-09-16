@@ -30,15 +30,18 @@ class nice_web_page extends web_page
 	}	
 
 	// By Rom, used by CSVImport and Advanced search
-	public function MakeClassesSelect($sName, $sDefaultValue, $iWidthPx)
+	public function MakeClassesSelect($sName, $sDefaultValue, $iWidthPx, $iActionCode = null)
 	{
 		// $aTopLevelClasses = array('bizService', 'bizContact', 'logInfra', 'bizDocument');
 		// These are classes wich root class is cmdbAbstractObject ! 
 		$this->add("<select id=\"select_$sName\" name=\"$sName\">");
 		foreach(MetaModel::GetClasses('bizmodel') as $sClassName)
 		{
-			$sSelected = ($sClassName == $sDefaultValue) ? " SELECTED" : "";
-			$this->add("<option style=\"width: ".$iWidthPx." px;\" value=\"$sClassName\"$sSelected>$sClassName - ".MetaModel::GetClassDescription($sClassName)."</option>");
+			if (is_null($iActionCode) || UserRights::IsActionAllowed($sClassName, $iActionCode))
+			{
+				$sSelected = ($sClassName == $sDefaultValue) ? " SELECTED" : "";
+				$this->add("<option style=\"width: ".$iWidthPx." px;\" value=\"$sClassName\"$sSelected>$sClassName - ".MetaModel::GetClassDescription($sClassName)."</option>");
+			}
 		}
 		$this->add("</select>");
 	}

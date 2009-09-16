@@ -339,7 +339,7 @@ function Do_Welcome($oPage, $sClass)
 	$sCSVData = utils::ReadPostedParam('csvdata');
 
 	$oPage->add("<form method=\"post\" action=\"\">");
-	$oPage->MakeClassesSelect("class", $sClass, 50);
+	$oPage->MakeClassesSelect("class", $sClass, 50, UR_ACTION_MODIFY);
 	$oPage->add("<br/>");
 	$oPage->add("<textarea rows=\"25\" cols=\"100\" name=\"csvdata\" wrap=\"soft\">$sCSVData</textarea>");
 	$oPage->add("<br/>");

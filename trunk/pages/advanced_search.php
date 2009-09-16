@@ -31,7 +31,7 @@ function Page1_AskClass($oPage)
     $oPage->add("<form method=\"post\" action=\"\">\n");
 	//$oPage->add("<input type=\"hidden\" name=\"tnut\" value=\"blah\">");
 	$oPage->p("Please select the type of object that you want to look for:");
-    $oPage->MakeClassesSelect("class", "", 50);
+    $oPage->MakeClassesSelect("class", "", 50, UR_ACTION_READ);
     $oPage->add("<input type=\"submit\" name=\"userconfig\" value=\"Configure filters\">\n");
 	$oPage->add("</form>\n");
 }
