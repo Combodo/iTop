@@ -303,7 +303,7 @@ EOF;
 						$sSubId = $sId.'_'.$index;
 						$aAttrsMap[$sAttCode] = $sSubId;
 						$index++;
-						$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oPage, $sLinkedClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sSubId);
+						$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oPage, $sLinkedClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sSubId, $this->m_sAttCode);
 					}
 					$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $sHTMLValue);
 				}
