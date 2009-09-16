@@ -106,7 +106,7 @@ function WizardHelper(sClass)
 		   { operation: 'wizard_helper' },
 			function(html){
 				$('body').append(html);
-				console.log('data received:', oWizardHelper);
+				//console.log('data received:', oWizardHelper);
 				//oWizardHelper.FromJSON(json_data);
 				oWizardHelper.UpdateFields();
 				//console.log(oWizardHelper);
