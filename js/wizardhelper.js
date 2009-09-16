@@ -64,7 +64,8 @@ function WizardHelper(sClass)
 	
 	this.UpdateFields = function ()
 	{
-		//console.log('** UpdateFields **')
+		//console.log('** UpdateFields **');
+		//console.log(this.m_oData);
 		for(i=0; i< this.m_oData.m_aAllowedValuesRequested.length; i++)
 		{
 			sAttCode = this.m_oData.m_aAllowedValuesRequested[i];
@@ -79,6 +80,7 @@ function WizardHelper(sClass)
 			//console.log('Setting field:'+sFieldId+' ('+sAttCode+') to: '+defaultValue);
 			var oElement = document.getElementById('att_'+sFieldId);
 			oElement.value = defaultValue;
+			//console.log('att_'+sFieldId+', set to '+defaultValue);
 		}
 	}
 	
@@ -102,8 +104,9 @@ function WizardHelper(sClass)
 		//console.log('oWizard:', this);
 		$.get('ajax.render.php?json_obj=' + this.ToJSON(),
 		   { operation: 'wizard_helper' },
-			function(json_data){
-				//console.log('data received:', json_data);
+			function(html){
+				$('body').append(html);
+				console.log('data received:', oWizardHelper);
 				//oWizardHelper.FromJSON(json_data);
 				oWizardHelper.UpdateFields();
 				//console.log(oWizardHelper);
