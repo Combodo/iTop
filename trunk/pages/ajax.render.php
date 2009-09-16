@@ -94,7 +94,7 @@ switch($operation)
 
 		$oWizardHelper->SetAllowedValuesHtml($sAttCode, $sHTMLValue);
 	}
-	$oPage->add("<script type=\"text/javascript\">\noWizardHelper.m_oData=".$oWizardHelper->ToJSON().";\n</script>\n");
+	$oPage->add("<script type=\"text/javascript\">\noWizardHelper.m_oData=".$oWizardHelper->ToJSON().";\noWizardHelper.UpdateFields();\n</script>\n");
 	break;
 		
 	case 'ajax':

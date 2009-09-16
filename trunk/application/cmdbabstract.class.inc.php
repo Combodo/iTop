@@ -645,13 +645,13 @@ abstract class cmdbAbstractObject extends CMDBObject
 						//Enum field or external key, display a combo
 						if (count($aAllowedValues) == 0)
 						{
-							$sHTMLValue = "<input type=\"text\" size=\"30\" value=\"\" name=\"attr_{$sAttCode}{$sNameSuffix}\" id=\"$iInputId\"{$sCSSClasses}/>";
+							$sHTMLValue = "<input count=\"0\" type=\"text\" size=\"30\" value=\"\" name=\"attr_{$sAttCode}{$sNameSuffix}\" id=\"$iInputId\"{$sCSSClasses}/>";
 						}
 						else if (count($aAllowedValues) > 50)
 						{
 							// too many choices, use an autocomplete
 							// The input for the auto complete
-							$sHTMLValue = "<input type=\"text\" id=\"label_$iInputId\" size=\"30\" name=\"\" value=\"$sDisplayValue\"{$sCSSClasses}/>";
+							$sHTMLValue = "<input count=\"".count($aAllowedValues)."\" type=\"text\" id=\"label_$iInputId\" size=\"30\" name=\"\" value=\"$sDisplayValue\"{$sCSSClasses}/>";
 							// another hidden input to store & pass the object's Id
 							$sHTMLValue .= "<input type=\"hidden\" id=\"$iInputId\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" />\n";
 							$oPage->add_ready_script("\$('#label_$iInputId').autocomplete('./ajax.render.php', { minChars:3, onItemSelect:selectItem, onFindValue:findValue, formatItem:formatItem, autoFill:true, keyHolder:'#$iInputId', extraParams:{operation:'autocomplete', sclass:'$sClass',attCode:'".$sAttCode."'}});");

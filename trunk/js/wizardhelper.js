@@ -108,7 +108,7 @@ function WizardHelper(sClass)
 				$('body').append(html);
 				//console.log('data received:', oWizardHelper);
 				//oWizardHelper.FromJSON(json_data);
-				oWizardHelper.UpdateFields();
+				//oWizardHelper.UpdateFields(); // Is done directly in the html provided by ajax.render.php
 				//console.log(oWizardHelper);
 				$('#wizStep'+ G_iCurrentStep).unblock( {fadeOut: 0} );
 			});
