@@ -59,17 +59,17 @@ class UserRightsNull extends UserRightsAddOnAPI
 		return $oNullFilter;
 	}
 
-	public function IsActionAllowed($iUserId, $sClass, $iActionCode, dbObjectSet $aInstances)
+	public function IsActionAllowed($iUserId, $sClass, $iActionCode, $oInstanceSet = null)
 	{
 		return UR_ALLOWED_YES;
 	}
 
-	public function IsStimulusAllowed($iUserId, $sClass, $sStimulusCode, dbObjectSet $aInstances)
+	public function IsStimulusAllowed($iUserId, $sClass, $sStimulusCode, $oInstanceSet = null)
 	{
 		return UR_ALLOWED_YES;
 	}
 
-	public function IsActionAllowedOnAttribute($iUserId, $sClass, $sAttCode, $iActionCode, dbObjectSet $aInstances)
+	public function IsActionAllowedOnAttribute($iUserId, $sClass, $sAttCode, $iActionCode, $oInstanceSet = null)
 	{
 		return UR_ALLOWED_YES;
 	}

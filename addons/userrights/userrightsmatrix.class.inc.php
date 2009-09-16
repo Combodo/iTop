@@ -348,7 +348,7 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 		return $oNullFilter;
 	}
 
-	public function IsActionAllowed($iUserId, $sClass, $iActionCode, dbObjectSet $aInstances)
+	public function IsActionAllowed($iUserId, $sClass, $iActionCode, $oInstanceSet = null)
 	{
 		if (!array_key_exists($iActionCode, self::$m_aActionCodes))
 		{
@@ -376,7 +376,7 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 		return $iRetCode;
 	}
 
-	public function IsActionAllowedOnAttribute($iUserId, $sClass, $sAttCode, $iActionCode, dbObjectSet $aInstances)
+	public function IsActionAllowedOnAttribute($iUserId, $sClass, $sAttCode, $iActionCode, $oInstanceSet = null)
 	{
 		if (!array_key_exists($iActionCode, self::$m_aActionCodes))
 		{
@@ -404,7 +404,7 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 		return $iRetCode;
 	}
 
-	public function IsStimulusAllowed($iUserId, $sClass, $sStimulusCode, dbObjectSet $aInstances)
+	public function IsStimulusAllowed($iUserId, $sClass, $sStimulusCode, $oInstanceSet = null)
 	{
 		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixClassStimulusGrant WHERE class = '$sClass' AND stimulus = '$sStimulusCode' AND userid = '$iUserId'"));
 		if ($oSet->Count() < 1)

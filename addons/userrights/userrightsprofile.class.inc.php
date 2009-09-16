@@ -66,6 +66,70 @@ class URP_Users extends UserRightsBaseClass
 		MetaModel::Init_SetZListItems('advanced_search', array('login', 'userid')); // Criteria of the advanced search form
 	}
 
+	function GetGrantAsHtml($sClass, $iAction)
+	{
+		if (UserRights::IsActionAllowed($sClass, $iAction, null, $this->GetKey())) 
+		{
+			return '<span style="background-color: #ddffdd;">yes</span>';
+		}
+		else
+		{
+			return '<span style="background-color: #ffdddd;">no</span>';
+		}
+	}
+	
+	function DoShowGrantSumary($oPage)
+	{
+		$iUserId = $this->GetKey();
+		if (UserRights::IsAdministrator($iUserId))
+		{
+			// Looks dirty, but ok that's THE ONE
+			$oPage->p('Has Read/Write access to any object in the database.');
+			return;
+		}
+
+		$aDisplayData = array();
+		foreach (MetaModel::GetClasses('bizmodel') as $sClass)
+		{
+			$aStimuli = array();
+			foreach (MetaModel::EnumStimuli($sClass) as $sStimulusCode => $oStimulus)
+			{
+				if (UserRights::IsStimulusAllowed($sClass, $sStimulusCode, null, $iUserId))
+				{
+					$aStimuli[] = '<span title="'.$sStimulusCode.': '.htmlentities($oStimulus->Get('description')).'">'.htmlentities($oStimulus->Get('label')).'</span>';
+				}
+			}
+			$sStimuli = implode(', ', $aStimuli);
+			
+			$aDisplayData[] = array(
+				'class' => MetaModel::GetName($sClass),
+				'read' => $this->GetGrantAsHtml($sClass, UR_ACTION_READ),
+				'bulkread' => $this->GetGrantAsHtml($sClass, UR_ACTION_BULK_READ),
+				'write' => $this->GetGrantAsHtml($sClass, UR_ACTION_MODIFY),
+				'bulkwrite' => $this->GetGrantAsHtml($sClass, UR_ACTION_BULK_MODIFY),
+				'stimuli' => $sStimuli,
+			);
+		}
+	
+		$aDisplayConfig = array();
+		$aDisplayConfig['class'] = array('label' => 'Class', 'description' => '');
+		$aDisplayConfig['read'] = array('label' => 'Read', 'description' => '');
+		$aDisplayConfig['bulkread'] = array('label' => 'Bulk read', 'description' => 'List objects or export massively');
+		$aDisplayConfig['write'] = array('label' => 'Write', 'description' => 'Create and edit (modify)');
+		$aDisplayConfig['bulkwrite'] = array('label' => 'Bulk write', 'description' => 'Massively create/edit (CSV import)');
+		$aDisplayConfig['stimuli'] = array('label' => 'Stimuli', 'description' => 'Allowed (compound) actions');
+		$oPage->table($aDisplayConfig, $aDisplayData);
+	}
+
+	function DisplayBareRelations(web_page $oPage)
+	{
+		parent::DisplayBareRelations($oPage);
+
+		$oPage->SetCurrentTabContainer('Related Objects');
+
+		$oPage->SetCurrentTab('Grants matrix');
+		$this->DoShowGrantSumary($oPage);		
+	}
 }
 
 
@@ -881,18 +945,26 @@ exit;
 		return $oGrantRecord;
 	}
 
-	protected function GetObjectActionGrant($oUser, $sClass, $iActionCode, $oObject)
+	protected function GetObjectActionGrant($oUser, $sClass, $iActionCode, /*DBObject*/ $oObject = null)
 	{
+		if(is_null($oObject))
+		{
+			$iObjectRef = -999;
+		}
+		else
+		{
+			$iObjectRef = $oObject->GetKey();
+		}
 		// load and cache permissions for the current user on the given object
 		//
-		$aTest = @$this->m_aObjectActionGrants[$oUser->GetKey()][$sClass][$oObject->GetKey][$iActionCode];
+		$aTest = @$this->m_aObjectActionGrants[$oUser->GetKey()][$sClass][$iObjectRef][$iActionCode];
 		if (is_array($aTest)) return $aTest;
 
 		$sAction = self::$m_aActionCodes[$iActionCode];
 
 		$iInstancePermission = UR_ALLOWED_NO;
 		$aAttributes = array();
-		foreach($this->GetMatchingProfiles($oUser, $oObject) as $iProfile)
+		foreach($this->GetMatchingProfiles($oUser, $sClass, $oObject) as $iProfile)
 		{
 			$oGrantRecord = $this->GetClassActionGrant($iProfile, $sClass, $sAction);
 			if (is_null($oGrantRecord))
@@ -924,18 +996,24 @@ exit;
 			'permission' => $iInstancePermission,
 			'attributes' => $aAttributes,
 		);
-		$this->m_aObjectActionGrants[$oUser->GetKey()][$sClass][$oObject->GetKey()][$iActionCode] = $aRes;
+		$this->m_aObjectActionGrants[$oUser->GetKey()][$sClass][$iObjectRef][$iActionCode] = $aRes;
 		return $aRes;
 	}
 	
-	public function IsActionAllowed($iUserId, $sClass, $iActionCode, dbObjectSet $oInstances)
+	public function IsActionAllowed($iUserId, $sClass, $iActionCode, $oInstanceSet = null)
 	{
 		if ($this->IsAdministrator($iUserId)) return true;
 
 		$oUser = $this->m_aUsers[$iUserId];
 
-		$oInstances->Rewind();
-		while($oObject = $oInstances->Fetch())
+		if (is_null($oInstanceSet))
+		{
+			$aObjectPermissions = $this->GetObjectActionGrant($oUser, $sClass, $iActionCode);
+			return $aObjectPermissions['permission'];
+		}
+
+		$oInstanceSet->Rewind();
+		while($oObject = $oInstanceSet->Fetch())
 		{
 			$aObjectPermissions = $this->GetObjectActionGrant($oUser, $sClass, $iActionCode, $oObject);
 
@@ -953,7 +1031,7 @@ exit;
 				$iGlobalPermission = $iInstancePermission;
 			}
 		}
-		$oInstances->Rewind();
+		$oInstanceSet->Rewind();
 
 		if (isset($iGlobalPermission))
 		{
@@ -965,14 +1043,28 @@ exit;
 		}
 	}
 
-	public function IsActionAllowedOnAttribute($iUserId, $sClass, $sAttCode, $iActionCode, dbObjectSet $oInstances)
+	public function IsActionAllowedOnAttribute($iUserId, $sClass, $sAttCode, $iActionCode, $oInstanceSet = null)
 	{
 		if ($this->IsAdministrator($iUserId)) return true;
 
 		$oUser = $this->m_aUsers[$iUserId];
 
-		$oInstances->Rewind();
-		while($oObject = $oInstances->Fetch())
+		if (is_null($oInstanceSet))
+		{
+			$aObjectPermissions = $this->GetObjectActionGrant($oUser, $sClass, $iActionCode);
+			$aAttributes = $aObjectPermissions['attributes'];
+			if (in_array($sAttCode, $aAttributes))
+			{
+				return $aObjectPermissions['permission'];
+			}
+			else
+			{
+				return UR_ALLOWED_NO;
+			}
+		}
+
+		$oInstanceSet->Rewind();
+		while($oObject = $oInstanceSet->Fetch())
 		{
 			$aObjectPermissions = $this->GetObjectActionGrant($oUser, $sClass, $iActionCode, $oObject);
 
@@ -998,7 +1090,7 @@ exit;
 				$iGlobalPermission = $iInstancePermission;
 			}
 		}
-		$oInstances->Rewind();
+		$oInstanceSet->Rewind();
 
 		if (isset($iGlobalPermission))
 		{
@@ -1034,7 +1126,7 @@ exit;
 		return $oGrantRecord;
 	}
 
-	public function IsStimulusAllowed($iUserId, $sClass, $sStimulusCode, dbObjectSet $oInstances)
+	public function IsStimulusAllowed($iUserId, $sClass, $sStimulusCode, $oInstanceSet = null)
 	{
 		if ($this->IsAdministrator($iUserId)) return true;
 
@@ -1042,21 +1134,33 @@ exit;
 
 		// Note: this code is VERY close to the code of IsActionAllowed()
 
-		$oInstances->Rewind();
-		while($oObject = $oInstances->Fetch())
+		if (is_null($oInstanceSet))
 		{
 			$iInstancePermission = UR_ALLOWED_NO;
-			foreach($this->GetMatchingProfiles($oUser, $oObject) as $iProfile)
+			foreach($this->GetMatchingProfiles($oUser, $sClass) as $iProfile)
 			{
-				// Get the permission for this profile/class/stimulus
-				$oSearch = DBObjectSearch::FromOQL("SELECT URP_StimulusGrant WHERE class = :class AND stimulus = :stimulus AND profileid = :profile AND permission = 'yes'");
-				$oSet = new DBObjectSet($oSearch, array(), array('class'=>$sClass, 'stimulus'=>$sStimulusCode, 'profile'=>$iProfile));
-				if ($oSet->Count() < 1)
+				$oGrantRecord = $this->GetClassStimulusGrant($iProfile, $sClass, $sStimulusCode);
+				if (!is_null($oGrantRecord))
 				{
-					return UR_ALLOWED_NO;
+					// no need to fetch the record, we've requested the records having permission = 'yes'
+					$iInstancePermission = UR_ALLOWED_YES;
 				}
-				// no need to fetch the record, we've requested the records having permission = 'yes'
-				$iInstancePermission = UR_ALLOWED_YES;
+			}
+			return $iInstancePermission;
+		}
+
+		$oInstanceSet->Rewind();
+		while($oObject = $oInstanceSet->Fetch())
+		{
+			$iInstancePermission = UR_ALLOWED_NO;
+			foreach($this->GetMatchingProfiles($oUser, $sClass, $oObject) as $iProfile)
+			{
+				$oGrantRecord = $this->GetClassStimulusGrant($iProfile, $sClass, $sStimulusCode);
+				if (is_null($oGrantRecord))
+				{
+					// no need to fetch the record, we've requested the records having permission = 'yes'
+					$iInstancePermission = UR_ALLOWED_YES;
+				}
 			}
 			if (isset($iGlobalPermission))
 			{
@@ -1070,7 +1174,7 @@ exit;
 				$iGlobalPermission = $iInstancePermission;
 			}
 		}
-		$oInstances->Rewind();
+		$oInstanceSet->Rewind();
 
 		if (isset($iGlobalPermission))
 		{
@@ -1095,7 +1199,7 @@ exit;
 		$aObjectProjection = $this->m_aClassProjs[$sClass][$iDimension]->ProjectObject($oObject);
 
 		$aRes = array();
-		if (array_key_exists($iUser, $this->m_aUserProfiles) > 0)
+		if (array_key_exists($iUser, $this->m_aUserProfiles))
 		{
 			foreach ($this->m_aUserProfiles[$iUser] as $iProfile => $oProfile)
 			{
@@ -1128,40 +1232,65 @@ exit;
 
 	protected $m_aMatchingProfiles = array(); // cache of the matching profiles for a given user/object
 	
-	protected function GetMatchingProfiles($oUser, $oObject)
+	protected function GetMatchingProfiles($oUser, $sClass, /*DBObject*/ $oObject = null)
 	{
 		$iUser = $oUser->GetKey();
-		$sClass = get_class($oObject);
-		$iObject = $oObject->GetKey();
+
+		if(is_null($oObject))
+		{
+			$iObjectRef = -999;
+		}
+		else
+		{
+			$iObjectRef = $oObject->GetKey();
+		}
+
 		//
 		// List profiles for which the user projection overlaps the object projection in each and every dimension
 		// Caches the result
 		//
-		$aTest = @$this->m_aMatchingProfiles[$iUser][$sClass][$iObject];
+		$aTest = @$this->m_aMatchingProfiles[$iUser][$sClass][$iObjectRef];
 		if (is_array($aTest))
 		{
 			return $aTest;
 		}
 
-		$aProfileRes = array();
-		foreach ($this->m_aDimensions as $iDimension => $oDimension)
+		if (is_null($oObject))
 		{
-			foreach ($this->GetMatchingProfilesByDim($oUser, $oObject, $oDimension) as $iProfile)
+			if (array_key_exists($iUser, $this->m_aUserProfiles))
 			{
-				@$aProfileRes[$iProfile] += 1;
+				$aRes = array_keys($this->m_aUserProfiles[$iUser]);
+			}
+			else
+			{
+				// no profile has been defined for this user
+				$aRes = array();
+			}
+		}
+		else
+		{
+			$aProfileRes = array();
+			foreach ($this->m_aDimensions as $iDimension => $oDimension)
+			{
+				foreach ($this->GetMatchingProfilesByDim($oUser, $oObject, $oDimension) as $iProfile)
+				{
+					@$aProfileRes[$iProfile] += 1;
+				}
+			}
+	
+			$aRes = array();
+			$iDimCount = count($this->m_aDimensions);
+			foreach ($aProfileRes as $iProfile => $iMatches)
+			{
+				if ($iMatches == $iDimCount)
+				{
+					$aRes[] = $iProfile;
+				}
 			}
 		}
 
-		$aRes = array();
-		$iDimCount = count($this->m_aDimensions);
-		foreach ($aProfileRes as $iProfile => $iMatches)
-		{
-			if ($iMatches == $iDimCount)
-			{
-				$aRes[] = $iProfile;
-			}
-		}
-		$this->m_aMatchingProfiles[$iUser][$sClass][$iObject] = $aRes;
+		// store into the cache
+		$this->m_aMatchingProfiles[$iUser][$sClass][$iObjectRef] = $aRes;
 		return $aRes; 
 	}
 }
