@@ -425,6 +425,10 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 		}
 		return $iRetCode;
 	}
+
+	public function FlushPrivileges()
+	{
+	}
 }
 
 UserRights::SelectModule('UserRightsMatrix');

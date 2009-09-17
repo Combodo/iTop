@@ -123,6 +123,9 @@ class URP_Users extends UserRightsBaseClass
 
 	function DisplayBareRelations(web_page $oPage)
 	{
+		// We may have just added a user, then we have to reset any existing cache
+		UserRights::FlushPrivileges();
+
 		parent::DisplayBareRelations($oPage);
 
 		$oPage->SetCurrentTabContainer('Related Objects');
@@ -232,6 +235,9 @@ class URP_Profiles extends UserRightsBaseClass
 
 	function DisplayBareRelations(web_page $oPage)
 	{
+		// We may have just added a user, then we have to reset any existing cache
+		UserRights::FlushPrivileges();
+
 		parent::DisplayBareRelations($oPage);
 
 		$oPage->SetCurrentTabContainer('Related Objects');
@@ -1293,6 +1299,11 @@ exit;
 		$this->m_aMatchingProfiles[$iUser][$sClass][$iObjectRef] = $aRes;
 		return $aRes; 
 	}
+
+	public function FlushPrivileges()
+	{
+		$this->CacheData();
+	}
 }
 
 //
@@ -1614,7 +1625,6 @@ class SetupITILProfiles
 		}
 	}
 	
-
 	public static function DoCreateProfiles()
 	{
 		self::DoCreateAdminProfile();
