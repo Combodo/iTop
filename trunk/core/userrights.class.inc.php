@@ -206,16 +206,28 @@ class UserRights
 
 	public static function GetFilter($sClass)
 	{
-		if (!MetaModel::HasCategory($sClass, 'bizmodel')) return new DBObjectSearch($sClass);
 		if (!self::CheckLogin()) return false;
+		if (self::IsAdministrator()) return new DBObjectSearch($sClass);
+
+		// this module is forbidden for non admins
+		if (MetaModel::HasCategory($sClass, 'addon/userrights')) return false;
+
+		// the rest is allowed (#@# to be improved)
+		if (!MetaModel::HasCategory($sClass, 'bizmodel')) return new DBObjectSearch($sClass);
 
 		return self::$m_oAddOn->GetFilter(self::$m_iUserId, $sClass);
 	}
 
 	public static function IsActionAllowed($sClass, $iActionCode, /*dbObjectSet*/ $oInstanceSet = null, $iUserId = null)
 	{
-		if (!MetaModel::HasCategory($sClass, 'bizmodel')) return true;
 		if (!self::CheckLogin()) return false;
+		if (self::IsAdministrator($iUserId)) return true;
+
+		// this module is forbidden for non admins
+		if (MetaModel::HasCategory($sClass, 'addon/userrights')) return false;
+
+		// the rest is allowed (#@# to be improved)
+		if (!MetaModel::HasCategory($sClass, 'bizmodel')) return true;
 
 		if (is_null($iUserId))
 		{
@@ -229,8 +241,14 @@ class UserRights
 
 	public static function IsStimulusAllowed($sClass, $sStimulusCode, /*dbObjectSet*/ $oInstanceSet = null, $iUserId = null)
 	{
-		if (!MetaModel::HasCategory($sClass, 'bizmodel')) return true;
 		if (!self::CheckLogin()) return false;
+		if (self::IsAdministrator($iUserId)) return true;
+
+		// this module is forbidden for non admins
+		if (MetaModel::HasCategory($sClass, 'addon/userrights')) return false;
+
+		// the rest is allowed (#@# to be improved)
+		if (!MetaModel::HasCategory($sClass, 'bizmodel')) return true;
 
 		if (is_null($iUserId))
 		{
@@ -244,8 +262,14 @@ class UserRights
 
 	public static function IsActionAllowedOnAttribute($sClass, $sAttCode, $iActionCode, /*dbObjectSet*/ $oInstanceSet = null, $iUserId = null)
 	{
-		if (!MetaModel::HasCategory($sClass, 'bizmodel')) return true;
 		if (!self::CheckLogin()) return false;
+		if (self::IsAdministrator($iUserId)) return true;
+
+		// this module is forbidden for non admins
+		if (MetaModel::HasCategory($sClass, 'addon/userrights')) return false;
+
+		// the rest is allowed (#@# to be improved)
+		if (!MetaModel::HasCategory($sClass, 'bizmodel')) return true;
 
 		if (is_null($iUserId))
 		{
