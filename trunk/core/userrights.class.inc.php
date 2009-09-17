@@ -56,6 +56,7 @@ abstract class UserRightsAddOnAPI
 	abstract public function IsStimulusAllowed($iUserId, $sClass, $sStimulusCode, /*dbObjectSet*/ $oInstanceSet = null);
 	abstract public function IsActionAllowedOnAttribute($iUserId, $sClass, $sAttCode, $iActionCode, /*dbObjectSet*/ $oInstanceSet = null);
 	abstract public function IsAdministrator($iUserId);
+	abstract public function FlushPrivileges();
 }
 
 
@@ -269,6 +270,12 @@ class UserRights
 			return self::$m_oAddOn->IsAdministrator($iUserId);
 		}
 	}
+
+	public static function FlushPrivileges()
+	{
+		return self::$m_oAddOn->FlushPrivileges();
+	}
+
 }
 
 

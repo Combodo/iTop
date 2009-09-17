@@ -73,6 +73,10 @@ class UserRightsNull extends UserRightsAddOnAPI
 	{
 		return UR_ALLOWED_YES;
 	}
+
+	public static function FlushPrivileges()
+	{
+	}
 }
 
 UserRights::SelectModule('UserRightsNull');
