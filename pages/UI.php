@@ -695,7 +695,8 @@ switch($operation)
 					{
 						$aAttributesDef = MetaModel::ListAttributeDefs($sClass);
 						$oAttDef = $aAttributesDef[$sAttCode];
-						$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, $sClass, $sAttCode, $oAttDef, $oObj->Get($sAttCode), $oObj->GetDisplayValue($sAttCode), '', '', $iExpectCode);
+						$aArgs = array('this' => $oObj);
+						$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, $sClass, $sAttCode, $oAttDef, $oObj->Get($sAttCode), $oObj->GetDisplayValue($sAttCode), '', '', $iExpectCode, $aArgs);
 						$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $sHTMLValue);
 					}
 				}
