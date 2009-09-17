@@ -78,7 +78,7 @@ class URP_Users extends UserRightsBaseClass
 		}
 	}
 	
-	function DoShowGrantSumary($oPage)
+	function DoShowGrantSumary($oPage, $sClassCategory)
 	{
 		$iUserId = $this->GetKey();
 		if (UserRights::IsAdministrator($iUserId))
@@ -89,17 +89,25 @@ class URP_Users extends UserRightsBaseClass
 		}
 
 		$aDisplayData = array();
-		foreach (MetaModel::GetClasses('bizmodel') as $sClass)
+		foreach (MetaModel::GetClasses($sClassCategory) as $sClass)
 		{
-			$aStimuli = array();
-			foreach (MetaModel::EnumStimuli($sClass) as $sStimulusCode => $oStimulus)
+			$aClassStimuli = MetaModel::EnumStimuli($sClass);
+			if (count($aClassStimuli) > 0)
 			{
-				if (UserRights::IsStimulusAllowed($sClass, $sStimulusCode, null, $iUserId))
+				$aStimuli = array();
+				foreach ($aClassStimuli as $sStimulusCode => $oStimulus)
 				{
-					$aStimuli[] = '<span title="'.$sStimulusCode.': '.htmlentities($oStimulus->Get('description')).'">'.htmlentities($oStimulus->Get('label')).'</span>';
+					if (UserRights::IsStimulusAllowed($sClass, $sStimulusCode, null, $iUserId))
+					{
+						$aStimuli[] = '<span title="'.$sStimulusCode.': '.htmlentities($oStimulus->Get('description')).'">'.htmlentities($oStimulus->Get('label')).'</span>';
+					}
 				}
+				$sStimuli = implode(', ', $aStimuli);
 			}
-			$sStimuli = implode(', ', $aStimuli);
+			else
+			{
+				$sStimuli = '<em title="no lifecycle has been defined for this class">n/a</em>';
+			}
 			
 			$aDisplayData[] = array(
 				'class' => MetaModel::GetName($sClass),
@@ -131,7 +139,22 @@ class URP_Users extends UserRightsBaseClass
 		$oPage->SetCurrentTabContainer('Related Objects');
 
 		$oPage->SetCurrentTab('Grants matrix');
-		$this->DoShowGrantSumary($oPage);		
+		$this->DoShowGrantSumary($oPage, 'bizmodel');
+
+		// debug
+		if (false)
+		{
+			$oPage->SetCurrentTab('More on user rigths (dev only)');
+			$oPage->add("<h3>User rights</h3>\n");
+			$this->DoShowGrantSumary($oPage, 'addon/userrights');
+			$oPage->add("<h3>Change log</h3>\n");
+			$this->DoShowGrantSumary($oPage, 'core/cmdb');
+			$oPage->add("<h3>Application</h3>\n");
+			$this->DoShowGrantSumary($oPage, 'application');
+			$oPage->add("<h3>GUI</h3>\n");
+			$this->DoShowGrantSumary($oPage, 'gui');
+			
+		}		
 	}
 }
 
@@ -1008,8 +1031,6 @@ exit;
 	
 	public function IsActionAllowed($iUserId, $sClass, $iActionCode, $oInstanceSet = null)
 	{
-		if ($this->IsAdministrator($iUserId)) return true;
-
 		$oUser = $this->m_aUsers[$iUserId];
 
 		if (is_null($oInstanceSet))
@@ -1051,8 +1072,6 @@ exit;
 
 	public function IsActionAllowedOnAttribute($iUserId, $sClass, $sAttCode, $iActionCode, $oInstanceSet = null)
 	{
-		if ($this->IsAdministrator($iUserId)) return true;
-
 		$oUser = $this->m_aUsers[$iUserId];
 
 		if (is_null($oInstanceSet))
@@ -1134,8 +1153,6 @@ exit;
 
 	public function IsStimulusAllowed($iUserId, $sClass, $sStimulusCode, $oInstanceSet = null)
 	{
-		if ($this->IsAdministrator($iUserId)) return true;
-
 		$oUser = $this->m_aUsers[$iUserId];
 
 		// Note: this code is VERY close to the code of IsActionAllowed()
@@ -1508,11 +1525,11 @@ class SetupITILProfiles
 	}
 	
 	
-	protected static function DoCreateActionGrant($iProfile, $iAction, $sClass)
+	protected static function DoCreateActionGrant($iProfile, $iAction, $sClass, $bPermission = true)
 	{
 		$oNewObj = MetaModel::NewObject("URP_ActionGrant");
 		$oNewObj->Set('profileid', $iProfile);
-		$oNewObj->Set('permission', true);
+		$oNewObj->Set('permission', $bPermission);
 		$oNewObj->Set('class', $sClass);
 		$oNewObj->Set('action', self::$m_aActions[$iAction]);
 		$iId = $oNewObj->DBInsertNoReload();
