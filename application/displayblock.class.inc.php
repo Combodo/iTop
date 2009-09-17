@@ -700,7 +700,7 @@ class MenuBlock extends DisplayBlock
 				if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'New...', 'url' => "../pages/$sUIPage?operation=new&class=$sClass&$sContext"); }
 				//if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'Clone...', 'url' => "../pages/$sUIPage?operation=clone&class=$sClass&id=$id&$sContext"); }
 				if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'Modify...', 'url' => "../pages/$sUIPage?operation=modify&class=$sClass&id=$id&$sContext"); }
-				if ($bIsDeleteAllowed) { $aActions[] = array ('label' => 'Delete', 'url' => "../pages/$sUIPage?operation=delete&class=$sClass&id=$id&$sContext"); }
+				if ($bIsDeleteAllowed) { $aActions[] = array ('label' => 'Delete...', 'url' => "../pages/$sUIPage?operation=delete&class=$sClass&id=$id&$sContext"); }
 			}
 			$aTransitions = $oObj->EnumTransitions();
 			$aStimuli = Metamodel::EnumStimuli($sClass);
@@ -751,7 +751,7 @@ class MenuBlock extends DisplayBlock
 				//$aActions[] = array ('label' => 'Bookmark...', 'url' => "../pages/ajax.render.php?operation=create&class=$sClass&filter=$sFilter", 'class' => 'jqmTrigger');
 				if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'New...', 'url' => "../pages/$sUIPage?operation=new&class=$sClass&$sContext"); }
 				//if ($bIsBulkModifyAllowed) { $aActions[] = array ('label' => 'Modify All...', 'url' => "../pages/$sUIPage?operation=modify_all&filter=$sFilter&$sContext"); }
-				//if ($bIsBulkDeleteAllowed) { $aActions[] = array ('label' => 'Delete All', 'url' => "../pages/$sUIPage?operation=delete_all&filter=$sFilter&$sContext"); }
+				//if ($bIsBulkDeleteAllowed) { $aActions[] = array ('label' => 'Delete All...', 'url' => "../pages/$sUIPage?operation=delete_all&filter=$sFilter&$sContext"); }
 			}
 		}
 		$sHtml .= "<div class=\"jd_menu_itop\"><ul class=\"jd_menu jd_menu_itop\">\n<li>Actions\n<ul>\n";
