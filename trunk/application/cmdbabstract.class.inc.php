@@ -718,7 +718,8 @@ abstract class cmdbAbstractObject extends CMDBObject
 					{
 						$sValue = $this->Get($sAttCode);
 						$sDisplayValue = $this->GetDisplayValue($sAttCode);
-						$sHTMLValue = self::GetFormElementForField($oPage, get_class($this), $sAttCode, $oAttDef, $sValue, $sDisplayValue, '', '', $iFlags);
+						$aArgs = array('this' => $this);
+						$sHTMLValue = self::GetFormElementForField($oPage, get_class($this), $sAttCode, $oAttDef, $sValue, $sDisplayValue, '', '', $iFlags, $aArgs);
 					}
 					$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $sHTMLValue);
 				}
