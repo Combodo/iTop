@@ -278,7 +278,7 @@ class DisplayBlock
 				$bDisplayMenu = isset($this->m_aParams['menu']) ? $this->m_aParams['menu'] == true : true; 
 				if ($bDisplayMenu)
 				{
-					if (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $this->m_oSet) == UR_ALLOWED_YES)
+					if (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES)
 					{
 						$sHtml .= $oPage->GetP("<a href=\"./UI.php?operation=new&class=$sClass\">Click here to create a new ".Metamodel::GetName($sClass)."</a>\n");
 					}
@@ -303,7 +303,7 @@ class DisplayBlock
 				$bDisplayMenu = isset($this->m_aParams['menu']) ? $this->m_aParams['menu'] == true : true; 
 				if ($bDisplayMenu)
 				{
-					if (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $this->m_oSet) == UR_ALLOWED_YES)
+					if (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES)
 					{
 						$sHtml .= $oPage->GetP("<a href=\"../pages/UI.php?operation=modify_links&class=$sClass&link_attr=".$aExtraParams['link_attr']."&id=".$aExtraParams['object_id']."&target_class=$sTargetClass&addObjects=true\">Click here to add new ".Metamodel::GetName($sTargetClass)."s</a>\n");
 					}
@@ -669,7 +669,7 @@ class MenuBlock extends DisplayBlock
 		{
 			case 0:
 			// No object in the set, the only possible action is "new"
-			$bIsModifyAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet);
+			$bIsModifyAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY);
 			if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'New', 'url' => "../page/$sUIPage?operation=new&class=$sClass&$sContext"); }
 			break;
 			
