@@ -386,7 +386,7 @@ class URP_UserProfile extends UserRightsBaseClass
 			"db_table" => "priv_urp_userprofile",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "../business/templates/default.html",
+			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -396,7 +396,7 @@ class URP_UserProfile extends UserRightsBaseClass
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("profileid", array("targetclass"=>"URP_Profiles", "jointype"=> "", "label"=>"Profile", "description"=>"usage profile", "allowed_values"=>null, "sql"=>"profileid", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("profile", array("label"=>"Profile", "description"=>"Profile name", "allowed_values"=>null, "extkey_attcode"=> 'profileid', "target_attcode"=>"name")));
 
-		MetaModel::Init_AddAttribute(new AttributeString("reason", array("label"=>"Reason", "description"=>"explain why this person may have this role", "allowed_values"=>null, "sql"=>"description", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("reason", array("label"=>"Reason", "description"=>"explain why this person may have this role", "allowed_values"=>null, "sql"=>"description", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 
 		//MetaModel::Init_InheritFilters();
 		MetaModel::Init_AddFilterFromAttribute("userid");
@@ -1162,7 +1162,7 @@ exit;
 			foreach($this->GetMatchingProfiles($oUser, $sClass, $oObject) as $iProfile)
 			{
 				$oGrantRecord = $this->GetClassStimulusGrant($iProfile, $sClass, $sStimulusCode);
-				if (is_null($oGrantRecord))
+				if (!is_null($oGrantRecord))
 				{
 					// no need to fetch the record, we've requested the records having permission = 'yes'
 					$iInstancePermission = UR_ALLOWED_YES;
