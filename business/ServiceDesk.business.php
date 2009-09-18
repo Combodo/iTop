@@ -43,7 +43,7 @@ class bizServiceCall extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeString("title", array("label"=>"Title", "description"=>"Overview of the service call", "allowed_values"=>null, "sql"=>"title", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
    	
     MetaModel::Init_AddAttribute(new AttributeEnum("type", array("label"=>"Type", "description"=>"Type of the Incident", "allowed_values"=>new ValueSetEnum("Network,Server,Desktop,Application"), "sql"=>"type", "default_value"=>"Server", "is_null_allowed"=>false, "depends_on"=>array())));
-     MetaModel::Init_AddAttribute(new AttributeExternalKey("org_id", array("targetclass"=>"bizOrganization", "label"=>"Customer", "description"=>"Customer concerned by this service call", "allowed_values"=>null, "sql"=>"customer", "is_null_allowed"=>false, "depends_on"=>array())));
+     MetaModel::Init_AddAttribute(new AttributeExternalKey("org_id", array("targetclass"=>"bizOrganization", "label"=>"Customer", "description"=>"Customer concerned by this service call", "allowed_values"=>null, "sql"=>"customer", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("customer_name", array("label"=>"Customer", "description"=>"Name of the customer raising this service call", "allowed_values"=>null, "extkey_attcode"=> 'org_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeEnum("call_status", array("label"=>"Status", "description"=>"Status of the ticket", "allowed_values"=>new ValueSetEnum("New, Assigned, WorkInProgress,Resolved,Closed"), "sql"=>"call_status", "default_value"=>"New", "is_null_allowed"=>false, "depends_on"=>array())));
 		// SetPossibleValues("status",array("Open","Monitored","Closed"));
@@ -54,13 +54,13 @@ class bizServiceCall extends cmdbAbstractObject
 	  MetaModel::Init_AddAttribute(new AttributeDate("next_update", array("label"=>"Next update", "description"=>"next time the Ticket is expected to be  modified", "allowed_values"=>null, "sql"=>"next_update", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
 		MetaModel::Init_AddAttribute(new AttributeDate("end_date", array("label"=>"Closure Date", "description"=>"Date when the call was closed", "allowed_values"=>null, "sql"=>"closed_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-	  MetaModel::Init_AddAttribute(new AttributeExternalKey("caller_id", array("targetclass"=>"bizPerson", "jointype"=> "", "label"=>"Caller", "description"=>"person that trigger this call", "allowed_values"=>null, "sql"=>"caller_id", "is_null_allowed"=>false, "depends_on"=>array())));
+	  MetaModel::Init_AddAttribute(new AttributeExternalKey("caller_id", array("targetclass"=>"bizPerson", "jointype"=> "", "label"=>"Caller", "description"=>"person that trigger this call", "allowed_values"=>null, "sql"=>"caller_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("caller_mail", array("label"=>"Caller", "description"=>"Person that trigger this call", "allowed_values"=>null, "extkey_attcode"=> 'caller_id', "target_attcode"=>"email")));
 	
   	MetaModel::Init_AddAttribute(new AttributeString("impact", array("label"=>"Impact", "description"=>"Impact for this call", "allowed_values"=>null, "sql"=>"impact", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-  	MetaModel::Init_AddAttribute(new AttributeExternalKey("workgroup_id", array("targetclass"=>"bizWorkgroup", "jointype"=> "", "label"=>"Workgroup", "description"=>"which workgroup is owning call", "allowed_values"=>null, "sql"=>"workgroup_id", "is_null_allowed"=>false, "depends_on"=>array())));
+  	MetaModel::Init_AddAttribute(new AttributeExternalKey("workgroup_id", array("targetclass"=>"bizWorkgroup", "jointype"=> "", "label"=>"Workgroup", "description"=>"which workgroup is owning call", "allowed_values"=>null, "sql"=>"workgroup_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("workgroup_name", array("label"=>"Workgroup", "description"=>"name of workgroup managing the call", "allowed_values"=>null, "extkey_attcode"=> 'workgroup_id', "target_attcode"=>"name")));  
-    MetaModel::Init_AddAttribute(new AttributeExternalKey("agent_id", array("targetclass"=>"bizPerson", "jointype"=> "", "label"=>"Agent", "description"=>"who is managing the call", "allowed_values"=>null, "sql"=>"agent_id", "is_null_allowed"=>true, "depends_on"=>array("workgroup_id"))));
+    MetaModel::Init_AddAttribute(new AttributeExternalKey("agent_id", array("targetclass"=>"bizPerson", "jointype"=> "", "label"=>"Agent", "description"=>"who is managing the call", "allowed_values"=>null, "sql"=>"agent_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array("workgroup_id"))));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("agent_mail", array("label"=>"Agent", "description"=>"mail of agent managing the call", "allowed_values"=>null, "extkey_attcode"=> 'agent_id', "target_attcode"=>"email")));
 		// Comment afficher le first + last name de l'agent ? Est-ce utile d'ajouter ce champ?
 		MetaModel::Init_AddAttribute(new AttributeText("action_log", array("label"=>"Action Logs", "description"=>"List all action performed during the call", "allowed_values"=>null, "sql"=>"action_log", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
@@ -186,9 +186,9 @@ class lnkCallTicket extends cmdbAbstractObject
 			"display_template" => "../business/templates/default.html",
 		);
 		MetaModel::Init_Params($aParams);
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("ticket_id", array("targetclass"=>"bizIncidentTicket", "jointype"=> '', "label"=>"Related Ticket", "description"=>"The related ticket", "allowed_values"=>null, "sql"=>"ticket_id", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("ticket_id", array("targetclass"=>"bizIncidentTicket", "jointype"=> '', "label"=>"Related Ticket", "description"=>"The related ticket", "allowed_values"=>null, "sql"=>"ticket_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("ticket_name", array("label"=>"Related ticket", "description"=>"Name of the related ticket", "allowed_values"=>null, "extkey_attcode"=> 'ticket_id', "target_attcode"=>"title")));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("call_id", array("targetclass"=>"bizServiceCall", "jointype"=> '', "label"=>"Call", "description"=>"Ticket number", "allowed_values"=>null, "sql"=>"call_id", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("call_id", array("targetclass"=>"bizServiceCall", "jointype"=> '', "label"=>"Call", "description"=>"Ticket number", "allowed_values"=>null, "sql"=>"call_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("call_name", array("label"=>"Call name", "description"=>"Name of the call", "allowed_values"=>null, "extkey_attcode"=> 'call_id', "target_attcode"=>"title")));
 		MetaModel::Init_AddAttribute(new AttributeString("impact", array("label"=>"Impact", "description"=>"Impact on the call", "allowed_values"=>null, "sql"=>"impact", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
@@ -237,9 +237,9 @@ class lnkInfraCall extends cmdbAbstractObject
 			"display_template" => "../business/templates/default.html",
 		);
 		MetaModel::Init_Params($aParams);
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("infra_id", array("targetclass"=>"logInfra", "jointype"=> '', "label"=>"Infrastructure", "description"=>"The infrastructure impacted", "allowed_values"=>null, "sql"=>"infra_id", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("infra_id", array("targetclass"=>"logInfra", "jointype"=> '', "label"=>"Infrastructure", "description"=>"The infrastructure impacted", "allowed_values"=>null, "sql"=>"infra_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("infra_name", array("label"=>"Infrastructure Name", "description"=>"Name of the impacted infrastructure", "allowed_values"=>null, "extkey_attcode"=> 'infra_id', "target_attcode"=>"name")));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("call_id", array("targetclass"=>"bizServiceCall", "jointype"=> '', "label"=>"Call", "description"=>"Call number", "allowed_values"=>null, "sql"=>"call_id", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("call_id", array("targetclass"=>"bizServiceCall", "jointype"=> '', "label"=>"Call", "description"=>"Call number", "allowed_values"=>null, "sql"=>"call_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("call_name", array("label"=>"Call name", "description"=>"Name of the call", "allowed_values"=>null, "extkey_attcode"=> 'call_id', "target_attcode"=>"title")));
 		MetaModel::Init_AddAttribute(new AttributeString("impact", array("label"=>"Impact", "description"=>"Level of impact of the infra by the related ticket", "allowed_values"=>null, "sql"=>"impact", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 

@@ -49,8 +49,8 @@ class Animal extends cmdbObject
 		MetaModel::Init_AddAttribute(new AttributeEnum("sex", array("label"=>"sex", "description"=>"sex", "allowed_values"=>new ValueSetEnum('male, female'), "sql"=>"sex", "default_value"=>"male", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("species", array("label"=>"species", "description"=>"species", "allowed_values"=>null, "sql"=>"species", "default_value"=>"xxx", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeInteger("speed", array("label"=>"walk speed", "description"=>"maximum possible speed m.s-1", "allowed_values"=>null, "sql"=>"speed", "default_value"=>4, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("mother", array("label"=>"mother", "description"=>"mother", "allowed_values"=>null, "sql"=>"mother", "targetclass"=>"Animal", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("father", array("label"=>"father", "description"=>"father", "allowed_values"=>null, "sql"=>"father", "targetclass"=>"Animal", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("mother", array("label"=>"mother", "description"=>"mother", "allowed_values"=>null, "sql"=>"mother", "targetclass"=>"Animal", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("father", array("label"=>"father", "description"=>"father", "allowed_values"=>null, "sql"=>"father", "targetclass"=>"Animal", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 
 		//MetaModel::Init_InheritFilters();
 		MetaModel::Init_AddFilterFromAttribute("sex");
@@ -85,7 +85,7 @@ class Mammal extends Animal
 		MetaModel::Init_AddAttribute(new AttributeString("name", array("label"=>"name", "description"=>"name", "allowed_values"=>null, "sql"=>"name", "default_value"=>"xxx", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeInteger("height", array("label"=>"height", "description"=>"size in centimeters", "allowed_values"=>null, "sql"=>"height", "default_value"=>1, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDate("birth", array("label"=>"birth date", "description"=>"birth date", "allowed_values"=>null, "sql"=>"birth", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("member", array("label"=>"member", "description"=>"leader", "allowed_values"=>null, "sql"=>"member", "targetclass"=>"Group", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("member", array("label"=>"member", "description"=>"leader", "allowed_values"=>null, "sql"=>"member", "targetclass"=>"Group", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 
 // ?		MetaModel::Init_AddAttribute(new AttributeLinkedSet("a2a", array("label"=>"animal to animal", "description"=>"interanimal relations", "depends_on"=>array(), "linked_class"=>"Animal2animal", "ext_key_to_me"=>"animal1", "count_min"=>0, "count_max"=>10, "allowed_values"=>null)));
 
@@ -198,8 +198,8 @@ class AnimalRelation extends cmdbObject
 		//MetaModel::Init_InheritAttributes();
 
 		// What makes it being a link...
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("animal1", array("label"=>"source", "description"=>"the animal which does ...", "allowed_values"=>null, "sql"=>"a1", "targetclass"=>"Animal", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("animal2", array("label"=>"target", "description"=>"the animal to which something is done...", "allowed_values"=>null, "sql"=>"a2", "targetclass"=>"Animal", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("animal1", array("label"=>"source", "description"=>"the animal which does ...", "allowed_values"=>null, "sql"=>"a1", "targetclass"=>"Animal", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("animal2", array("label"=>"target", "description"=>"the animal to which something is done...", "allowed_values"=>null, "sql"=>"a2", "targetclass"=>"Animal", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 
 		//MetaModel::Init_InheritFilters();
 		MetaModel::Init_AddFilterFromAttribute("animal1");
@@ -256,7 +256,7 @@ class Group extends cmdbObject
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeString("name", array("label"=>"name", "description"=>"name", "allowed_values"=>null, "sql"=>"name", "default_value"=>"xxx", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("leader", array("label"=>"leader", "description"=>"leader", "allowed_values"=>null, "sql"=>"leader", "targetclass"=>"Mammal", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("leader", array("label"=>"leader", "description"=>"leader", "allowed_values"=>null, "sql"=>"leader", "targetclass"=>"Mammal", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("leader_name", array("label"=>"Leader Name", "description"=>"Name of the leader (defined on Mammal)", "allowed_values"=>null, "extkey_attcode"=> 'leader', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("leader_speed", array("label"=>"Leader Name", "description"=>"Speed of the leader (defined on Animal)", "allowed_values"=>null, "extkey_attcode"=> 'leader', "target_attcode"=>"speed")));
 

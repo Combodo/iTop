@@ -134,10 +134,10 @@ class cmdbSubcontractor extends cmdbPerson
 		MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeString("att_contractinfo", array("label"=>"contract info", "description"=>"blah", "allowed_values"=>null, "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array(), "sql"=>"contractinfo")));
 
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("ext_subcontractor_provider", array("label"=>"ssii", "description"=>"blah", "allowed_values"=>null, "sql"=>"provider", "targetclass"=>"cmdbProvider", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("ext_subcontractor_provider", array("label"=>"ssii", "description"=>"blah", "allowed_values"=>null, "sql"=>"provider", "targetclass"=>"cmdbProvider", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("extatt_subcontractor_provider_ref", array("label"=>"ref", "description"=>"blah", "allowed_values"=>null, "extkey_attcode"=>"ext_subcontractor_provider", "target_attcode"=>"att_provider_ref")));
 
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("ext_subcontractor_tutor", array("label"=>"tutor", "description"=>"blah", "allowed_values"=>null, "sql"=>"tutor", "targetclass"=>"cmdbPerson", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("ext_subcontractor_tutor", array("label"=>"tutor", "description"=>"blah", "allowed_values"=>null, "sql"=>"tutor", "targetclass"=>"cmdbPerson", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("extatt_subcontractor_tutor_email", array("label"=>"tutor email", "description"=>"blah", "allowed_values"=>null, "extkey_attcode"=>"ext_subcontractor_tutor", "target_attcode"=>"att_person_email")));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("extatt_subcontractor_tutor_secondname", array("label"=>"2ndname (ext field)", "description"=>"blah", "allowed_values"=>null, "extkey_attcode"=>"ext_subcontractor_tutor", "target_attcode"=>"att_person_name")));
 

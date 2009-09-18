@@ -17,6 +17,20 @@ define('EXTKEY_RELATIVE', 1);
  */
 define('EXTKEY_ABSOLUTE', 2);
 
+/**
+ * Propagation of the deletion through an external key - ask the user to delete the referencing object 
+ *
+ * @package     iTopORM
+ */
+define('DEL_MANUAL', 1);
+
+/**
+ * Propagation of the deletion through an external key - ask the user to delete the referencing object 
+ *
+ * @package     iTopORM
+ */
+define('DEL_AUTO', 2);
+
 
 /**
  * Attribute definition API, implemented in and many flavours (Int, String, Enum, etc.) 
@@ -805,7 +819,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 {
 	static protected function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array("targetclass", "is_null_allowed"));
+		return array_merge(parent::ListExpectedParams(), array("targetclass", "is_null_allowed", "on_target_delete"));
 	}
 
 	public function GetType() {return "Extkey";}
@@ -861,6 +875,11 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 			$oValSetDef = new ValueSetObjects($this->GetTargetClass());
 			return $oValSetDef->GetValues($aArgs, $sBeginsWith);
 		}
+	}
+
+	public function GetDeletionPropagationOption()
+	{
+		return $this->Get("on_target_delete");
 	}
 }
 

@@ -105,7 +105,7 @@ class cmdbContact extends cmdbObjectHomeMade
 		MetaModel::Init_AddAttribute(new AttributeString("etat", array("label"=>"l'etat", "description"=>"les etats d'ame d'eric", "allowed_values"=>new ValueSetEnum('justborn, 15, 21'), "sql"=>"etat", "default_value"=>"justborn", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("name", array("label"=>"nom", "description"=>"ze equipe", "allowed_values"=>null, "sql"=>"name", "default_value"=>"XXXX", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("email", array("label"=>"iMaile", "description"=>"imelle", "allowed_values"=>null, "sql"=>"email", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("owner", array("label"=>"owned by", "description"=>"organization owning the team", "allowed_values"=>null, "sql"=>"ownerorg", "targetclass"=>"cmdbOrga", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("owner", array("label"=>"owned by", "description"=>"organization owning the team", "allowed_values"=>null, "sql"=>"ownerorg", "targetclass"=>"cmdbOrga", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("ownername", array("label"=>"owned by", "description"=>"name of organization owning the team", "allowed_values"=>null, "extkey_attcode"=>"owner", "target_attcode"=>"_name_")));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("ownertnut", array("label"=>"owntnut", "description"=>"blah tnut blah", "allowed_values"=>null, "extkey_attcode"=>"owner", "target_attcode"=>"_dunsnumber_")));
 
@@ -295,9 +295,9 @@ class cmdbLiens extends cmdbObjectHomeMade
 		MetaModel::Init_AddAttribute(new AttributeString("a2", array("label"=>"a1", "description"=>"a2", "allowed_values"=>null, "sql"=>"a2", "default_value"=>"XXXX", "is_null_allowed"=>true, "depends_on"=>array())));
 
 		// What makes it being a link...
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("toworkshop", array("label"=>"participates in", "description"=>"workshop in wich the person is participating", "allowed_values"=>null, "sql"=>"ws_id", "targetclass"=>"cmdbWorkshop", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("toworkshop", array("label"=>"participates in", "description"=>"workshop in wich the person is participating", "allowed_values"=>null, "sql"=>"ws_id", "targetclass"=>"cmdbWorkshop", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("ws_info", array("label"=>"name", "description"=>"namedescription", "allowed_values"=>null, "extkey_attcode"=>"toworkshop", "target_attcode"=>"namitus")));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("tocontact", array("label"=>"is held by", "description"=>"people involved in that mess", "allowed_values"=>null, "sql"=>"contactid", "targetclass"=>"cmdbContact", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("tocontact", array("label"=>"is held by", "description"=>"people involved in that mess", "allowed_values"=>null, "sql"=>"contactid", "targetclass"=>"cmdbContact", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("contact_info", array("label"=>"name", "description"=>"namedescription", "allowed_values"=>null, "extkey_attcode"=>"tocontact", "target_attcode"=>"name")));
 
 		MetaModel::Init_InheritFilters();
