@@ -847,6 +847,29 @@ abstract class DBObject
 		}
 		return $aResults;
 	}
+
+	public function GetReferencingObjects()
+	{
+		$aDependentObjects = array();
+		$aRererencingMe = MetaModel::EnumReferencingClasses(get_class($this));
+		foreach($aRererencingMe as $sRemoteClass => $aExtKeys)
+		{
+			foreach($aExtKeys as $sExtKeyAttCode => $oExtKeyAttDef)
+			{
+				//$oAttDef = MetaModel::GetAttributeDef($sClass, $sExtKeyAttCode);
+
+				$oSearch = new DBObjectSearch($sRemoteClass);
+				$oSearch->AddCondition($sExtKeyAttCode, $this->GetKey());
+				$oSet = new CMDBObjectSet($oSearch);
+				//if ($oSet->Count() > 0)
+				while ($oDependentObj = $oSet->fetch())
+				{
+					$aDependentObjects[$sRemoteClass][] = $oDependentObj;
+				}
+			}
+		}
+		return $aDependentObjects;
+	}
 }
 
 

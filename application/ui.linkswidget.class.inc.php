@@ -63,6 +63,11 @@ class UILinksWidget
 			}
 			$sJSON = '['.implode(',', $aCurrentValues).']';
 		}
+		else
+		{
+//echo "JSON VA IECH<br/>\n";
+		}
+//echo "JASON: $sJSON<br/>\n";;
 
 		// Many values (or even a unknown list) display an autocomplete
 		if ( (count($aAllowedValues) == 0) || (count($aAllowedValues) > 50) )
@@ -269,7 +274,7 @@ EOF;
 		
 		$sHTML = "<div class=\"jqmWindow\" id=\"LinkDlg_$sId\">\n";
 		$sHTML .= "<div class=\"wizContainer\">\n";
-		$sHTML .= "<div class=\"page_header\"><h1 id=\"LinkObject_DlgTitle\">$sLinkedClass attributes</h1></div>\n";
+		$sHTML .= "<div class=\"page_header\"><h1 id=\"LinkObject_DlgTitle\">".MetaModel::GetName($sLinkedClass)." attributes</h1></div>\n";
 		$sHTML .= "<form>\n";
 		$index = 0;
 		$aAttrsMap = array();
