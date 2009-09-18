@@ -317,6 +317,14 @@ abstract class MetaModel
 		$sRootClass = self::GetRootClass($sClass);
 		return (!self::HasFinalClassField($sRootClass));
 	}
+	final static public function IsParentClass($sParentClass, $sChildClass)
+	{
+		self::_check_subclass($sChildClass);
+		self::_check_subclass($sParentClass);
+		if (in_array($sParentClass, self::$m_aParentClasses[$sChildClass])) return true;
+		if ($sChildClass == $sParentClass) return true;
+		return false;
+	}
 	final static public function IsSameFamilyBranch($sClassA, $sClassB)
 	{
 		self::_check_subclass($sClassA);	
@@ -2703,7 +2711,10 @@ abstract class MetaModel
 	{
 		self::_check_subclass($sClass);	
 
-		$aLinksClasses = self::EnumLinksClasses();
+		if ($bSkipLinkingClasses)
+		{
+			$aLinksClasses = self::EnumLinksClasses();
+		}
 
 		// 1-N links (referencing my class), array of sClass => array of sAttcode
 		$aResult = array();
@@ -2715,11 +2726,11 @@ abstract class MetaModel
 			foreach ($aClassAttributes as $sAttCode=>$oAttDef)
 			{
 				if (self::$m_aAttribOrigins[$sSomeClass][$sAttCode] != $sSomeClass) continue;
-				if ($oAttDef->IsExternalKey() && ($oAttDef->GetTargetClass() == $sClass))
+				if ($oAttDef->IsExternalKey() && (self::IsParentClass($oAttDef->GetTargetClass(), $sClass)))
 				{
 					if ($bInnerJoinsOnly && $oAttDef->IsNullAllowed()) continue;
 					// Ok, I want this one
-					$aExtKeys[] = $sAttCode;
+					$aExtKeys[$sAttCode] = $oAttDef;
 				}
 			}
 			if (count($aExtKeys) != 0)

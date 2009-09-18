@@ -117,7 +117,7 @@ function Page2_ConfigFilters($oPage, $oFilter)
 	//
 	foreach (MetaModel::EnumReferencingClasses($sClass, true) as $sRemoteClass => $aRemoteKeys)
 	{
-		foreach ($aRemoteKeys as $sExtKeyAttCode)
+		foreach ($aRemoteKeys as $sExtKeyAttCode => $oExtKeyAttDef)
 		{
 			// Set its current values
 			$oSubFilter = $oFilter->GetCriteria_ReferencedBy($sRemoteClass, $sExtKeyAttCode);

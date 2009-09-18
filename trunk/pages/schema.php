@@ -59,7 +59,7 @@ function DisplayReferencingClasses($oPage, $sClass)
 		$oPage->add("<ul>\n");
 		foreach ($aRefs as $sRemoteClass => $aRemoteKeys)
 		{
-			foreach ($aRemoteKeys as $sExtKeyAttCode)
+			foreach ($aRemoteKeys as $sExtKeyAttCode => $oExtKeyAttDef)
 			{
 				$oPage->add("<li>".MakeClassHLink($sRemoteClass)." by <em>$sExtKeyAttCode</em></li>\n");
 			}
@@ -117,7 +117,7 @@ function DisplayRelatedClassesBestInClass($oPage, $sClass, $iLevels = 20, &$aVis
 	}
 	foreach (MetaModel::EnumReferencingClasses($sClass) as $sRemoteClass => $aRemoteKeys)
 	{
-		foreach ($aRemoteKeys as $sExtKeyAttCode)
+		foreach ($aRemoteKeys as $sExtKeyAttCode => $oExtKeyAttDef)
 		{
 			$sVisited = (array_key_exists($sRemoteClass, $aVisitedClasses)) ? " ..." : "";
 			$oPage->add("<li>$sClass| &lt;=".MakeClassHLink($sRemoteClass)."::<em>$sExtKeyAttCode</em>$sVisited</li>\n");

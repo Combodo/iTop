@@ -504,30 +504,14 @@ switch($operation)
 	}
 	else
 	{
-		// Evaluate the consequences onto the DB integrity
-		//
-		$aDependentObjects = array();
-		$iTotalThreat = 0;
-		$aRererencingMe = MetaModel::EnumReferencingClasses($sClass, false /*include N-N links*/, true /*inner joins*/);
-		foreach($aRererencingMe as $sRemoteClass => $aExtKeys)
-		{
-			foreach($aExtKeys as $sExtKeyAttCode)
-			{
-				//$oAttDef = MetaModel::GetAttributeDef($sClass, $sExtKeyAttCode);
-
-				$oSearch = new DBObjectSearch($sRemoteClass);
-				$oSearch->AddCondition($sExtKeyAttCode, $id);
-				$oSet = new CMDBObjectSet($oSearch);
-				//if ($oSet->Count() > 0)
-				while ($oDependentObj = $oSet->fetch())
-				{
-					$aDependentObjects[$sRemoteClass][] = $oDependentObj;
-					$iTotalThreat++;
-				}
-			}
-		}
+		$aDependentObjects = $oObj->GetReferencingObjects();
 		// Ask for a confirmation, or cancel (back to the object details)
 		//
+		$iTotalThreat = 0;
+		foreach ($aDependentObjects as $sRemoteClass => $aPotentialDeletes)
+		{
+			$iTotalThreat += count($aPotentialDeletes);
+		}
 		if ($iTotalThreat > 0)
 		{
 			$oP->p("Warning: $iTotalThreat object(s) are pointing to the object that you would like to delete");
@@ -550,7 +534,7 @@ switch($operation)
 		}
 		else
 		{
-			$oP->p("Please confirm that you want to delete this object");
+			$oP->p("Please confirm that you want to delete ".$oObj->GetHyperLink());
 			$oP->add("<form method=\"post\">\n");
 			$oP->add("<input type=\"hidden\" name=\"menu\" value=\"$iActiveNodeId\">\n");
 			$oP->add("<input type=\"hidden\" name=\"operation\" value=\"delete_confirmed\">\n");
