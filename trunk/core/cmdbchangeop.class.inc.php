@@ -32,7 +32,7 @@ class CMDBChangeOp extends DBObject
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("change", array("label"=>"change", "description"=>"change", "allowed_values"=>null, "sql"=>"changeid", "targetclass"=>"CMDBChange", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("change", array("label"=>"change", "description"=>"change", "allowed_values"=>null, "sql"=>"changeid", "targetclass"=>"CMDBChange", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("date", array("label"=>"date", "description"=>"date and time of the change", "allowed_values"=>null, "extkey_attcode"=>"change", "target_attcode"=>"date")));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("userinfo", array("label"=>"user", "description"=>"who made this change", "allowed_values"=>null, "extkey_attcode"=>"change", "target_attcode"=>"userinfo")));
 		MetaModel::Init_AddAttribute(new AttributeString("objclass", array("label"=>"object class", "description"=>"object class", "allowed_values"=>null, "sql"=>"objclass", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));

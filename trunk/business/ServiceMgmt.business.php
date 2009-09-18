@@ -28,7 +28,7 @@ class bizService extends cmdbAbstractObject
 		MetaModel::Init_InheritAttributes();
     MetaModel::Init_AddAttribute(new AttributeString("name", array("label"=>"Name", "description"=>"Name of the service", "allowed_values"=>null, "sql"=>"name", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 
-    MetaModel::Init_AddAttribute(new AttributeExternalKey("org_id", array("targetclass"=>"bizOrganization", "label"=>"Provider", "description"=>"Provider for this service", "allowed_values"=>null, "sql"=>"customer_id", "is_null_allowed"=>false, "depends_on"=>array())));
+    MetaModel::Init_AddAttribute(new AttributeExternalKey("org_id", array("targetclass"=>"bizOrganization", "label"=>"Provider", "description"=>"Provider for this service", "allowed_values"=>null, "sql"=>"customer_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("provider_name", array("label"=>"Provider", "description"=>"name of the Provider", "allowed_values"=>null, "extkey_attcode"=> 'org_id', "target_attcode"=>"name")));
  	  MetaModel::Init_AddAttribute(new AttributeEnum("service_category", array("label"=>"Service Category", "description"=>"Category for this contract", "allowed_values"=>new ValueSetEnum("Server,Network,End-User,Desktop,Application"), "sql"=>"service_category", "default_value"=>"End-User", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("description", array("label"=>"Description", "description"=>"Description of this service", "allowed_values"=>null, "sql"=>"description", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
@@ -105,12 +105,12 @@ class bizContract extends cmdbAbstractObject
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
     MetaModel::Init_AddAttribute(new AttributeString("name", array("label"=>"Name", "description"=>"Name of the contract", "allowed_values"=>null, "sql"=>"name", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-    MetaModel::Init_AddAttribute(new AttributeExternalKey("org_id", array("targetclass"=>"bizOrganization", "label"=>"Customer", "description"=>"Customer for this contract", "allowed_values"=>null, "sql"=>"customer_id", "is_null_allowed"=>false, "depends_on"=>array())));
+    MetaModel::Init_AddAttribute(new AttributeExternalKey("org_id", array("targetclass"=>"bizOrganization", "label"=>"Customer", "description"=>"Customer for this contract", "allowed_values"=>null, "sql"=>"customer_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("customer_name", array("label"=>"Customer", "description"=>"name of the Customer", "allowed_values"=>null, "extkey_attcode"=> 'org_id', "target_attcode"=>"name")));
-    MetaModel::Init_AddAttribute(new AttributeExternalKey("service_id", array("targetclass"=>"bizService", "label"=>"Service", "description"=>"Provider for this contract", "allowed_values"=>null, "sql"=>"service_id", "is_null_allowed"=>false, "depends_on"=>array())));
+    MetaModel::Init_AddAttribute(new AttributeExternalKey("service_id", array("targetclass"=>"bizService", "label"=>"Service", "description"=>"Provider for this contract", "allowed_values"=>null, "sql"=>"service_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("provider_name", array("label"=>"Provider", "description"=>"name of the service provider", "allowed_values"=>null, "extkey_attcode"=> 'service_id', "target_attcode"=>"provider_name")));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("service_name", array("label"=>"Service", "description"=>"name of the service", "allowed_values"=>null, "extkey_attcode"=> 'service_id', "target_attcode"=>"name")));
- 		MetaModel::Init_AddAttribute(new AttributeExternalKey("team_id", array("targetclass"=>"bizTeam", "label"=>"Team", "description"=>"Team managing this contract", "allowed_values"=>null, "sql"=>"team_id", "is_null_allowed"=>true, "depends_on"=>array())));
+ 		MetaModel::Init_AddAttribute(new AttributeExternalKey("team_id", array("targetclass"=>"bizTeam", "label"=>"Team", "description"=>"Team managing this contract", "allowed_values"=>null, "sql"=>"team_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("team_name", array("label"=>"Team", "description"=>"name of the team managing this contract", "allowed_values"=>null, "extkey_attcode"=> 'team_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeEnum("service_level", array("label"=>"Service Level", "description"=>"Level of service for this contract", "allowed_values"=>new ValueSetEnum("Gold,Silver,Bronze"), "sql"=>"service_level", "default_value"=>"Bronze", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("cost_unit", array("label"=>"Cost Unit", "description"=>"Cost unit to compute global cost for this contract", "allowed_values"=>new ValueSetEnum("Devices,Persons,Applications,Global"), "sql"=>"cost_unit", "default_value"=>"Global", "is_null_allowed"=>true, "depends_on"=>array())));
@@ -214,10 +214,10 @@ class lnkInfraContract extends cmdbAbstractObject
 			"display_template" => "../business/templates/default.html",
 		);
 		MetaModel::Init_Params($aParams);
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("infra_id", array("targetclass"=>"logInfra", "jointype"=> '', "label"=>"Infrastructure", "description"=>"The infrastructure impacted", "allowed_values"=>null, "sql"=>"infra_id", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("infra_id", array("targetclass"=>"logInfra", "jointype"=> '', "label"=>"Infrastructure", "description"=>"The infrastructure impacted", "allowed_values"=>null, "sql"=>"infra_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("infra_name", array("label"=>"Infrastructure Name", "description"=>"Name of the impacted infrastructure", "allowed_values"=>null, "extkey_attcode"=> 'infra_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("infra_status", array("label"=>"Status", "description"=>"Status of the impacted infrastructure", "allowed_values"=>null, "extkey_attcode"=> 'infra_id', "target_attcode"=>"status")));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("contract_id", array("targetclass"=>"bizContract", "jointype"=> '', "label"=>"Contract", "description"=>"Contract id", "allowed_values"=>null, "sql"=>"contract_id", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("contract_id", array("targetclass"=>"bizContract", "jointype"=> '', "label"=>"Contract", "description"=>"Contract id", "allowed_values"=>null, "sql"=>"contract_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("contract_name", array("label"=>"Contract Name", "description"=>"Name of the contract", "allowed_values"=>null, "extkey_attcode"=> 'contract_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeString("coverage", array("label"=>"Coverage", "description"=>"coverage for the given infra", "allowed_values"=>null, "sql"=>"coverage", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
     MetaModel::Init_AddAttribute(new AttributeString("service_level", array("label"=>"Service Level", "description"=>"service level for the given infra", "allowed_values"=>null, "sql"=>"sla", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
@@ -261,9 +261,9 @@ class lnkContactContract extends cmdbAbstractObject
 			"display_template" => "../business/templates/default.html",
 		);
 		MetaModel::Init_Params($aParams);
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("contact_id", array("targetclass"=>"bizContact", "jointype"=> '', "label"=>"Contact", "description"=>"The contact linked to contract", "allowed_values"=>null, "sql"=>"contact_id", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("contact_id", array("targetclass"=>"bizContact", "jointype"=> '', "label"=>"Contact", "description"=>"The contact linked to contract", "allowed_values"=>null, "sql"=>"contact_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("contact_mail", array("label"=>"Contact E-mail", "description"=>"Mail for the contact", "allowed_values"=>null, "extkey_attcode"=> 'contact_id', "target_attcode"=>"email")));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("contract_id", array("targetclass"=>"bizContract", "jointype"=> '', "label"=>"Contract", "description"=>"Contract ID", "allowed_values"=>null, "sql"=>"contract_id", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("contract_id", array("targetclass"=>"bizContract", "jointype"=> '', "label"=>"Contract", "description"=>"Contract ID", "allowed_values"=>null, "sql"=>"contract_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("contract_name", array("label"=>"Contract Name", "description"=>"Name of the contract", "allowed_values"=>null, "extkey_attcode"=> 'contract_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeString("role", array("label"=>"Role", "description"=>"Role of this contact for this contract", "allowed_values"=>null, "sql"=>"role", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
@@ -311,9 +311,9 @@ class lnkDocumentContract extends cmdbAbstractObject
 			"display_template" => "../business/templates/default.html",
 		);
 		MetaModel::Init_Params($aParams);
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("doc_id", array("targetclass"=>"bizDocument", "label"=>"Document", "description"=>"id of the Document", "allowed_values"=>null, "sql"=>"doc_id", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("doc_id", array("targetclass"=>"bizDocument", "label"=>"Document", "description"=>"id of the Document", "allowed_values"=>null, "sql"=>"doc_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("doc_name", array("label"=>"Document Name", "description"=>"name of the document", "allowed_values"=>null, "extkey_attcode"=> 'doc_id', "target_attcode"=>"name")));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("contract_id", array("targetclass"=>"bizContract", "label"=>"Contract", "description"=>"Contract linked to this document", "allowed_values"=>null, "sql"=>"contract_id", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("contract_id", array("targetclass"=>"bizContract", "label"=>"Contract", "description"=>"Contract linked to this document", "allowed_values"=>null, "sql"=>"contract_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("contract_name", array("label"=>"Contract Name", "description"=>"name of the linked contract", "allowed_values"=>null, "extkey_attcode"=> 'contract_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeString("link_type", array("label"=>"Link Type", "description"=>"More information", "allowed_values"=>null, "sql"=>"link_type", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 

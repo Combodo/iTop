@@ -1,5 +1,10 @@
 <?php
 
+
+class SecurityException extends CoreException
+{
+}
+
 class CoreException extends Exception
 {
 	public function __construct($sIssue, $aContextData = null, $sImpact = '')

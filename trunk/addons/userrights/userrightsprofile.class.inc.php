@@ -43,7 +43,7 @@ class URP_Users extends UserRightsBaseClass
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
 
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", array("targetclass"=>"bizPerson", "label"=>"Contact (person)", "description"=>"Personal details from the business data", "allowed_values"=>null, "sql"=>"userid", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", array("targetclass"=>"bizPerson", "label"=>"Contact (person)", "description"=>"Personal details from the business data", "allowed_values"=>null, "sql"=>"userid", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("last_name", array("label"=>"Last name", "description"=>"Name of the corresponding contact", "allowed_values"=>null, "extkey_attcode"=> 'userid', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("first_name", array("label"=>"First name", "description"=>"First name of the corresponding contact", "allowed_values"=>null, "extkey_attcode"=> 'userid', "target_attcode"=>"first_name")));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("email", array("label"=>"Email", "description"=>"Email of the corresponding contact", "allowed_values"=>null, "extkey_attcode"=> 'userid', "target_attcode"=>"email")));
@@ -413,10 +413,10 @@ class URP_UserProfile extends UserRightsBaseClass
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", array("targetclass"=>"URP_Users", "jointype"=> "", "label"=>"User", "description"=>"user account", "allowed_values"=>null, "sql"=>"userid", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", array("targetclass"=>"URP_Users", "jointype"=> "", "label"=>"User", "description"=>"user account", "allowed_values"=>null, "sql"=>"userid", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("userlogin", array("label"=>"Login", "description"=>"User's login", "allowed_values"=>null, "extkey_attcode"=> 'userid', "target_attcode"=>"login")));
 
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("profileid", array("targetclass"=>"URP_Profiles", "jointype"=> "", "label"=>"Profile", "description"=>"usage profile", "allowed_values"=>null, "sql"=>"profileid", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("profileid", array("targetclass"=>"URP_Profiles", "jointype"=> "", "label"=>"Profile", "description"=>"usage profile", "allowed_values"=>null, "sql"=>"profileid", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("profile", array("label"=>"Profile", "description"=>"Profile name", "allowed_values"=>null, "extkey_attcode"=> 'profileid', "target_attcode"=>"name")));
 
 		MetaModel::Init_AddAttribute(new AttributeString("reason", array("label"=>"Reason", "description"=>"explain why this person may have this role", "allowed_values"=>null, "sql"=>"description", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
@@ -431,6 +431,11 @@ class URP_UserProfile extends UserRightsBaseClass
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('userid', 'profileid')); // Criteria of the std search form
 		MetaModel::Init_SetZListItems('advanced_search', array('userid', 'profileid')); // Criteria of the advanced search form
+	}
+
+	public function GetName()
+	{
+		return "link between ".$this->Get('userlogin')." and ".$this->Get('profile');
 	}
 }
 
@@ -456,10 +461,10 @@ class URP_ProfileProjection extends UserRightsBaseClass
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("dimensionid", array("targetclass"=>"URP_Dimensions", "jointype"=> "", "label"=>"Dimension", "description"=>"application dimension", "allowed_values"=>null, "sql"=>"dimensionid", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("dimensionid", array("targetclass"=>"URP_Dimensions", "jointype"=> "", "label"=>"Dimension", "description"=>"application dimension", "allowed_values"=>null, "sql"=>"dimensionid", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("dimension", array("label"=>"Dimension", "description"=>"application dimension", "allowed_values"=>null, "extkey_attcode"=> 'dimensionid', "target_attcode"=>"name")));
 
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("profileid", array("targetclass"=>"URP_Profiles", "jointype"=> "", "label"=>"Profile", "description"=>"usage profile", "allowed_values"=>null, "sql"=>"profileid", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("profileid", array("targetclass"=>"URP_Profiles", "jointype"=> "", "label"=>"Profile", "description"=>"usage profile", "allowed_values"=>null, "sql"=>"profileid", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("profile", array("label"=>"Profile", "description"=>"Profile name", "allowed_values"=>null, "extkey_attcode"=> 'profileid', "target_attcode"=>"name")));
 
 		MetaModel::Init_AddAttribute(new AttributeString("value", array("label"=>"Value expression", "description"=>"OQL expression (using \$user) | constant | <any> | <user>+attribute code", "allowed_values"=>null, "sql"=>"value", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
@@ -536,7 +541,7 @@ class URP_ClassProjection extends UserRightsBaseClass
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("dimensionid", array("targetclass"=>"URP_Dimensions", "jointype"=> "", "label"=>"Dimension", "description"=>"application dimension", "allowed_values"=>null, "sql"=>"dimensionid", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("dimensionid", array("targetclass"=>"URP_Dimensions", "jointype"=> "", "label"=>"Dimension", "description"=>"application dimension", "allowed_values"=>null, "sql"=>"dimensionid", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("dimension", array("label"=>"Dimension", "description"=>"application dimension", "allowed_values"=>null, "extkey_attcode"=> 'dimensionid', "target_attcode"=>"name")));
 
 		MetaModel::Init_AddAttribute(new AttributeString("class", array("label"=>"Class", "description"=>"Target class", "allowed_values"=>null, "sql"=>"class", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
@@ -622,7 +627,7 @@ class URP_ActionGrant extends UserRightsBaseClass
 		//MetaModel::Init_InheritAttributes();
 
 		// Common to all grant classes (could be factorized by class inheritence, but this has to be benchmarked)
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("profileid", array("targetclass"=>"URP_Profiles", "jointype"=> "", "label"=>"Profile", "description"=>"usage profile", "allowed_values"=>null, "sql"=>"profileid", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("profileid", array("targetclass"=>"URP_Profiles", "jointype"=> "", "label"=>"Profile", "description"=>"usage profile", "allowed_values"=>null, "sql"=>"profileid", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("profile", array("label"=>"Profile", "description"=>"usage profile", "allowed_values"=>null, "extkey_attcode"=> 'profileid', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeString("class", array("label"=>"Class", "description"=>"class name", "allowed_values"=>null, "sql"=>"class", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("permission", array("label"=>"Permission", "description"=>"allowed or not allowed?", "allowed_values"=>new ValueSetEnum('yes,no'), "sql"=>"permission", "default_value"=>"yes", "is_null_allowed"=>false, "depends_on"=>array())));
@@ -671,7 +676,7 @@ class URP_StimulusGrant extends UserRightsBaseClass
 		//MetaModel::Init_InheritAttributes();
 
 		// Common to all grant classes (could be factorized by class inheritence, but this has to be benchmarked)
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("profileid", array("targetclass"=>"URP_Profiles", "jointype"=> "", "label"=>"Profile", "description"=>"usage profile", "allowed_values"=>null, "sql"=>"profileid", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("profileid", array("targetclass"=>"URP_Profiles", "jointype"=> "", "label"=>"Profile", "description"=>"usage profile", "allowed_values"=>null, "sql"=>"profileid", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("profile", array("label"=>"Profile", "description"=>"usage profile", "allowed_values"=>null, "extkey_attcode"=> 'profileid', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeString("class", array("label"=>"Class", "description"=>"class name", "allowed_values"=>null, "sql"=>"class", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("permission", array("label"=>"Permission", "description"=>"allowed or not allowed?", "allowed_values"=>new ValueSetEnum('yes,no'), "sql"=>"permission", "default_value"=>"yes", "is_null_allowed"=>false, "depends_on"=>array())));
@@ -719,7 +724,7 @@ class URP_AttributeGrant extends UserRightsBaseClass
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
 
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("actiongrantid", array("targetclass"=>"URP_ActionGrant", "jointype"=> "", "label"=>"Action grant", "description"=>"action grant", "allowed_values"=>null, "sql"=>"actiongrantid", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("actiongrantid", array("targetclass"=>"URP_ActionGrant", "jointype"=> "", "label"=>"Action grant", "description"=>"action grant", "allowed_values"=>null, "sql"=>"actiongrantid", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("attcode", array("label"=>"Attribute", "description"=>"attribute code", "allowed_values"=>null, "sql"=>"attcode", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 
 		//MetaModel::Init_InheritFilters();

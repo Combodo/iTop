@@ -73,7 +73,7 @@ class bizOrganization extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeString("name", array("label"=>"Name", "description"=>"Common name", "allowed_values"=>null, "sql"=>"name", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array() )));
 		MetaModel::Init_AddAttribute(new AttributeString("code", array("label"=>"Code", "description"=>"Organization code (Siret, DUNS,...)", "allowed_values"=>null, "sql"=>"code", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array() )));
 		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("label"=>"Status", "description"=>"Lifecycle status", "allowed_values"=>$oAllowedStatuses, "sql"=>"status", "default_value"=>"implementation", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("parent_id", array("targetclass"=>"bizOrganization", "label"=>"Parent", "description"=>"Parent organization", "allowed_values"=>null, "sql"=>"parent_id", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("parent_id", array("targetclass"=>"bizOrganization", "label"=>"Parent", "description"=>"Parent organization", "allowed_values"=>null, "sql"=>"parent_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("parent_name", array("label"=>"Parent Name", "description"=>"Name of the parent organization", "allowed_values"=>null, "extkey_attcode"=> 'parent_id', "target_attcode"=>"name")));
 
 		MetaModel::Init_AddFilterFromAttribute("name");
@@ -146,7 +146,7 @@ class logRealObject extends cmdbAbstractObject
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_AddAttribute(new AttributeString("name", array("label"=>"Name", "description"=>"Common name", "allowed_values"=>null, "sql"=>"name", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("label"=>"Status", "description"=>"Lifecycle status", "allowed_values"=>$oAllowedStatuses, "sql"=>"status", "default_value"=>"implementation", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("org_id", array("targetclass"=>"bizOrganization", "label"=>"Organization", "description"=>"ID of the object owner organization", "allowed_values"=>null, "sql"=>"org_id", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("org_id", array("targetclass"=>"bizOrganization", "label"=>"Organization", "description"=>"ID of the object owner organization", "allowed_values"=>null, "sql"=>"org_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("org_name", array("label"=>"Organization", "description"=>"Company / Department owning this object", "allowed_values"=>null, "extkey_attcode"=> 'org_id', "target_attcode"=>"name")));
 
 		MetaModel::Init_AddFilterFromAttribute("name");
@@ -202,7 +202,7 @@ class bizContact extends logRealObject
 		MetaModel::Init_AddAttribute(new AttributeExternalField("org_name", array("label"=>"Organization", "description"=>"Company / Department of the contact", "allowed_values"=>null, "extkey_attcode"=> 'org_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeString("email", array("label"=>"eMail", "description"=>"Email address", "allowed_values"=>null, "sql"=>"email", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("phone", array("label"=>"Phone", "description"=>"Telephone", "allowed_values"=>null, "sql"=>"telephone", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("location_id", array("targetclass"=>"bizLocation", "label"=>"Location", "description"=>"Id of the location where the contact is located", "allowed_values"=>null, "sql"=>"location_id", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("location_id", array("targetclass"=>"bizLocation", "label"=>"Location", "description"=>"Id of the location where the contact is located", "allowed_values"=>null, "sql"=>"location_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("location_name", array("label"=>"Location Name", "description"=>"Name of the location where the contact is located", "allowed_values"=>null, "extkey_attcode"=> 'location_id', "target_attcode"=>"name")));
 
 		MetaModel::Init_InheritFilters();
@@ -347,11 +347,11 @@ class lnkContactTeam extends cmdbAbstractObject
 			"display_template" => "../business/templates/default.html",
 		);
 		MetaModel::Init_Params($aParams);
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("contact_id", array("targetclass"=>"bizPerson", "label"=>"Contact", "description"=>"The contact", "allowed_values"=>null, "sql"=>"contact_id", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("contact_id", array("targetclass"=>"bizPerson", "label"=>"Contact", "description"=>"The contact", "allowed_values"=>null, "sql"=>"contact_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("contact_name", array("label"=>"Contact Name", "description"=>"name of the contact", "allowed_values"=>null, "extkey_attcode"=> 'contact_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("contact_phone", array("label"=>"Phone", "description"=>"Phone number of the contact", "allowed_values"=>null, "extkey_attcode"=> 'contact_id', "target_attcode"=>"phone")));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("contact_email", array("label"=>"eMail", "description"=>"eMail address of the contact", "allowed_values"=>null, "extkey_attcode"=> 'contact_id', "target_attcode"=>"email")));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("team_id", array("targetclass"=>"bizTeam", "label"=>"Team", "description"=>"Team linked", "allowed_values"=>null, "sql"=>"team_id", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("team_id", array("targetclass"=>"bizTeam", "label"=>"Team", "description"=>"Team linked", "allowed_values"=>null, "sql"=>"team_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("team_name", array("label"=>"Team", "description"=>"name of the Team", "allowed_values"=>null, "extkey_attcode"=> 'team_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeString("role", array("label"=>"Role", "description"=>"Role of the contact", "allowed_values"=>null, "sql"=>"role", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 
@@ -439,7 +439,7 @@ class bizDocVersion extends cmdbAbstractObject
 			"display_template" => "../business/templates/default.html",
 		);
 		MetaModel::Init_Params($aParams);
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("document", array("targetclass"=>"bizDocument", "label"=>"Document", "description"=>"The main document", "allowed_values"=>null, "sql"=>"document_id", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("document", array("targetclass"=>"bizDocument", "label"=>"Document", "description"=>"The main document", "allowed_values"=>null, "sql"=>"document_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("docname", array("label"=>"Document Name", "description"=>"name of the document", "allowed_values"=>null, "extkey_attcode"=> 'document', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeString("version_number", array("label"=>"Version", "description"=>"Version identifier", "allowed_values"=>null, "sql"=>"version_number", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("label"=>"Status", "description"=>"Status", "allowed_values"=>$oAllowedStatuses, "sql"=>"status", "default_value"=>"implementation", "is_null_allowed"=>false, "depends_on"=>array())));
@@ -487,9 +487,9 @@ class lnkDocumentRealObject extends cmdbAbstractObject
 			"display_template" => "../business/templates/default.html",
 		);
 		MetaModel::Init_Params($aParams);
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("doc_id", array("targetclass"=>"bizDocument", "label"=>"Document", "description"=>"id of the Document", "allowed_values"=>null, "sql"=>"doc_id", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("doc_id", array("targetclass"=>"bizDocument", "label"=>"Document", "description"=>"id of the Document", "allowed_values"=>null, "sql"=>"doc_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("doc_name", array("label"=>"Document Name", "description"=>"name of the document", "allowed_values"=>null, "extkey_attcode"=> 'doc_id', "target_attcode"=>"name")));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("object_id", array("targetclass"=>"logRealObject", "label"=>"Object", "description"=>"Object linked", "allowed_values"=>null, "sql"=>"object_id", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("object_id", array("targetclass"=>"logRealObject", "label"=>"Object", "description"=>"Object linked", "allowed_values"=>null, "sql"=>"object_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("object_name", array("label"=>"Object Name", "description"=>"name of the linked object", "allowed_values"=>null, "extkey_attcode"=> 'object_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeString("link_type", array("label"=>"Link Type", "description"=>"More information", "allowed_values"=>null, "sql"=>"link_type", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
@@ -533,11 +533,11 @@ class lnkContactRealObject extends cmdbAbstractObject
 			"display_template" => "../business/templates/default.html",
 		);
 		MetaModel::Init_Params($aParams);
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("contact_id", array("targetclass"=>"bizContact", "label"=>"Contact", "description"=>"The contact", "allowed_values"=>null, "sql"=>"contact_id", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("contact_id", array("targetclass"=>"bizContact", "label"=>"Contact", "description"=>"The contact", "allowed_values"=>null, "sql"=>"contact_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("contact_name", array("label"=>"Contact Name", "description"=>"name of the contact", "allowed_values"=>null, "extkey_attcode"=> 'contact_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("contact_phone", array("label"=>"Phone", "description"=>"Phone number of the contact", "allowed_values"=>null, "extkey_attcode"=> 'contact_id', "target_attcode"=>"phone")));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("contact_email", array("label"=>"eMail", "description"=>"eMail address of the contact", "allowed_values"=>null, "extkey_attcode"=> 'contact_id', "target_attcode"=>"email")));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("object_id", array("targetclass"=>"logRealObject", "label"=>"Object", "description"=>"Object linked", "allowed_values"=>null, "sql"=>"object_id", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("object_id", array("targetclass"=>"logRealObject", "label"=>"Object", "description"=>"Object linked", "allowed_values"=>null, "sql"=>"object_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("object_name", array("label"=>"Object Name", "description"=>"name of the linked object", "allowed_values"=>null, "extkey_attcode"=> 'object_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeString("role", array("label"=>"Role", "description"=>"Role of the contact", "allowed_values"=>null, "sql"=>"role", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 
@@ -615,11 +615,11 @@ class lnkContactInfra extends cmdbAbstractObject
 			"display_template" => "../business/templates/default.html",
 		);
 		MetaModel::Init_Params($aParams);
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("contact_id", array("targetclass"=>"bizContact", "label"=>"Contact", "description"=>"The contact", "allowed_values"=>null, "sql"=>"contact_id", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("contact_id", array("targetclass"=>"bizContact", "label"=>"Contact", "description"=>"The contact", "allowed_values"=>null, "sql"=>"contact_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("contact_name", array("label"=>"Contact Name", "description"=>"name of the contact", "allowed_values"=>null, "extkey_attcode"=> 'contact_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("contact_phone", array("label"=>"Phone", "description"=>"Phone number of the contact", "allowed_values"=>null, "extkey_attcode"=> 'contact_id', "target_attcode"=>"phone")));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("contact_email", array("label"=>"eMail", "description"=>"eMail address of the contact", "allowed_values"=>null, "extkey_attcode"=> 'contact_id', "target_attcode"=>"email")));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("infra_id", array("targetclass"=>"logInfra", "label"=>"Infrastructure", "description"=>"Infrastructure linked", "allowed_values"=>null, "sql"=>"infra_id", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("infra_id", array("targetclass"=>"logInfra", "label"=>"Infrastructure", "description"=>"Infrastructure linked", "allowed_values"=>null, "sql"=>"infra_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("infra_name", array("label"=>"Infrastructure", "description"=>"name of the linked infrastructure", "allowed_values"=>null, "extkey_attcode"=> 'infra_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeString("role", array("label"=>"Role", "description"=>"Role of the contact", "allowed_values"=>null, "sql"=>"role", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 
@@ -665,7 +665,7 @@ class bizLocation extends logInfra
 		MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeText("address", array("label"=>"Address", "description"=>"The postal address of the location", "allowed_values"=>null, "sql"=>"address", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("country", array("label"=>"Country", "description"=>"Country of the location", "allowed_values"=>null, "sql"=>"country", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("parent_location_id", array("targetclass"=>"bizLocation", "label"=>"Parent Location", "description"=>"where is the real object physically located", "allowed_values"=>null, "sql"=>"parent_location_id", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("parent_location_id", array("targetclass"=>"bizLocation", "label"=>"Parent Location", "description"=>"where is the real object physically located", "allowed_values"=>null, "sql"=>"parent_location_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("parent_location_name", array("label"=>"Parent location (Name)", "description"=>"name of the parent location", "allowed_values"=>null, "extkey_attcode"=> 'parent_location_id', "target_attcode"=>"name")));
 
     //  on veut pouvoir rechercher une location qui soit un descendant (pas obligatoirement direct) d'une Location, on fait comment ?
@@ -797,11 +797,11 @@ class bizCircuit extends logInfra
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeString("speed", array("label"=>"speed", "description"=>"speed of the circuit", "allowed_values"=>null, "sql"=>"speed", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("location_id", array("targetclass"=>"bizLocation", "label"=>"Location ID", "description"=>"Id of the location", "allowed_values"=>null, "sql"=>"location_id", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("location_id", array("targetclass"=>"bizLocation", "label"=>"Location ID", "description"=>"Id of the location", "allowed_values"=>null, "sql"=>"location_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("location_name", array("label"=>"Location", "description"=>"Name of the location", "allowed_values"=>null, "extkey_attcode"=> 'location_id', "target_attcode"=>"name")));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("interface_id", array("targetclass"=>"bizInterface", "label"=>"Interface Id", "description"=>"id of the interface", "allowed_values"=>null, "sql"=>"interface_id", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("interface_id", array("targetclass"=>"bizInterface", "label"=>"Interface Id", "description"=>"id of the interface", "allowed_values"=>null, "sql"=>"interface_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("interface_name", array("label"=>"Interface", "description"=>"Name of the interface", "allowed_values"=>null, "extkey_attcode"=> 'interface_id', "target_attcode"=>"name")));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("provider_id", array("targetclass"=>"bizOrganization", "label"=>"Carrier ID", "description"=>"Organization ID of the provider of the Circuit", "allowed_values"=>null, "sql"=>"provider_id", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("provider_id", array("targetclass"=>"bizOrganization", "label"=>"Carrier ID", "description"=>"Organization ID of the provider of the Circuit", "allowed_values"=>null, "sql"=>"provider_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("carrier_name", array("label"=>"Carrier", "description"=>"Name of the carrier", "allowed_values"=>null, "extkey_attcode"=> 'provider_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeString("carrier_ref", array("label"=>"Carrier reference", "description"=>"reference of the circuit used by the carrier", "allowed_values"=>null, "sql"=>"carrier_ref", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
@@ -867,7 +867,7 @@ class bizInterface extends logInfra
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("device_id", array("targetclass"=>"bizDevice", "label"=>"Device", "description"=>"Device on which the interface is physically located", "allowed_values"=>null, "sql"=>"device_id", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("device_id", array("targetclass"=>"bizDevice", "label"=>"Device", "description"=>"Device on which the interface is physically located", "allowed_values"=>null, "sql"=>"device_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("device_name", array("label"=>"Device", "description"=>"name of the device on which the interface is located", "allowed_values"=>null, "extkey_attcode"=> 'device_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("device_location_id", array("label"=>"Device location", "description"=>"location of the device on which the interface is located", "allowed_values"=>null, "extkey_attcode"=> 'device_id', "target_attcode"=>"location_id")));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("device_location_name", array("label"=>"Device location", "description"=>"name of the location of the device on which the interface is located", "allowed_values"=>null, "extkey_attcode"=> 'device_id', "target_attcode"=>"location_name")));
@@ -879,7 +879,7 @@ class bizInterface extends logInfra
 	  MetaModel::Init_AddAttribute(new AttributeString("mac", array("label"=>"MAC address", "description"=>"MAC address for this interface", "allowed_values"=>null, "sql"=>"mac", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 	  MetaModel::Init_AddAttribute(new AttributeString("speed", array("label"=>"Speed (Kb/s)", "description"=>"speed of this interface", "allowed_values"=>null, "sql"=>"speed", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 	  MetaModel::Init_AddAttribute(new AttributeEnum("duplex", array("label"=>"Duplex", "description"=>"Duplex configured for this interface", "allowed_values"=>new ValueSetEnum("half,full,unknown"), "sql"=>"duplex", "default_value"=>"unknown", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("if_connected_id", array("targetclass"=>"bizInterface", "label"=>"Connected interface", "description"=>"interface connected to this one", "allowed_values"=>null, "sql"=>"ext_if_id", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("if_connected_id", array("targetclass"=>"bizInterface", "label"=>"Connected interface", "description"=>"interface connected to this one", "allowed_values"=>null, "sql"=>"ext_if_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("if_connected_name", array("label"=>"Connected interface", "description"=>"name of the interface connected to this one", "allowed_values"=>null, "extkey_attcode"=> 'if_connected_id', "target_attcode"=>"name")));
   	MetaModel::Init_AddAttribute(new AttributeExternalField("if_connected_device", array("label"=>"Connected device", "description"=>"name of the device connected to this interface", "allowed_values"=>null, "extkey_attcode"=> 'if_connected_id', "target_attcode"=>"device_name")));
 
@@ -963,9 +963,9 @@ class lnkInterfaces extends cmdbAbstractObject
 			"display_template" => "../business/templates/default.html",
 		);
 		MetaModel::Init_Params($aParams);
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("interface1_id", array("targetclass"=>"bizInterface", "label"=>"Interface", "description"=>"The interface1", "sql"=>"interface1_id", "allowed_values"=> null, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("interface1_id", array("targetclass"=>"bizInterface", "label"=>"Interface", "description"=>"The interface1", "sql"=>"interface1_id", "allowed_values"=> null, "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("interface1_name", array("label"=>"Interface1 Name", "description"=>"name of the interface1", "extkey_attcode"=> 'interface1_id', "allowed_values"=> null, "target_attcode"=>"name")));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("interface2_id", array("targetclass"=>"bizInterface", "label"=>"Interface", "description"=>"The interface2", "sql"=>"interface2_id", "allowed_values"=> null, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("interface2_id", array("targetclass"=>"bizInterface", "label"=>"Interface", "description"=>"The interface2", "sql"=>"interface2_id", "allowed_values"=> null, "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("interface2_name", array("label"=>"Interface2 Name", "description"=>"name of the interface2", "extkey_attcode"=> 'interface2_id', "allowed_values"=> null, "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("interface1_device_id", array("label"=>"Device", "description"=>"device", "extkey_attcode"=> 'interface1_id', "allowed_values"=> null, "target_attcode"=>"device_id")));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("interface1_device_name", array("label"=>"Device Name", "description"=>"name of the device", "extkey_attcode"=> 'interface1_id', "allowed_values"=> null, "target_attcode"=>"device_name")));
@@ -1096,7 +1096,7 @@ class bizDevice extends logInfra
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("location_id", array("targetclass"=>"bizLocation", "label"=>"Location", "description"=>"where is the located object physically located", "allowed_values"=>null, "sql"=>"location_id", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("location_id", array("targetclass"=>"bizLocation", "label"=>"Location", "description"=>"where is the located object physically located", "allowed_values"=>null, "sql"=>"location_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("location_name", array("label"=>"Location Name", "description"=>"name of the location", "allowed_values"=>null, "extkey_attcode"=> 'location_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("country", array("label"=>"Country", "description"=>"country where the device is located", "allowed_values"=>null, "extkey_attcode"=> 'location_id', "target_attcode"=>"country")));
 		MetaModel::Init_AddAttribute(new AttributeString("brand", array("label"=>"Brand", "description"=>"The manufacturer of the device", "allowed_values"=>null, "sql"=>"brand", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
@@ -1503,7 +1503,7 @@ class bizInfraGroup extends logInfra
 		MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeEnum("type", array("label"=>"Type", "description"=>"Type of groupe", "allowed_values"=>new ValueSetEnum("Monitoring,Reporting,list"), "sql"=>"type", "default_value"=>"list", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("description", array("label"=>"Description", "description"=>"usage of the Group", "allowed_values"=>null, "sql"=>"description", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("parent_group_id", array("targetclass"=>"bizInfraGroup", "label"=>"Parent Group", "description"=>"including group", "allowed_values"=>null, "sql"=>"parent_group_id", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("parent_group_id", array("targetclass"=>"bizInfraGroup", "label"=>"Parent Group", "description"=>"including group", "allowed_values"=>null, "sql"=>"parent_group_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("parent_group_name", array("label"=>"Parent Group (Name)", "description"=>"name of the parent group", "allowed_values"=>null, "extkey_attcode"=> 'parent_group_id', "target_attcode"=>"name")));
 
 
@@ -1584,7 +1584,7 @@ class bizApplication extends logInfra
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("device_id", array("targetclass"=>"bizDevice", "jointype"=> '', "label"=>"Hosting device", "description"=>"The device where application is installed", "allowed_values"=>null, "sql"=>"device_id", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("device_id", array("targetclass"=>"bizDevice", "jointype"=> '', "label"=>"Hosting device", "description"=>"The device where application is installed", "allowed_values"=>null, "sql"=>"device_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("device_name", array("label"=>"Hosting device", "description"=>"Name of the device where application is installed", "allowed_values"=>null, "extkey_attcode"=> 'device_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeDate("install_date", array("label"=>"Installation Date", "description"=>"Date when application was installed", "allowed_values"=>null, "sql"=>"install_date", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 
@@ -1666,10 +1666,10 @@ class lnkInfraGrouping extends cmdbAbstractObject
 			"display_template" => "../business/templates/default.html",
 		);
 		MetaModel::Init_Params($aParams);
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("infra_id", array("targetclass"=>"logInfra", "jointype"=> '', "label"=>"Infrastructure", "description"=>"Infrastructure part of the group", "allowed_values"=>null, "sql"=>"infra_id", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("infra_id", array("targetclass"=>"logInfra", "jointype"=> '', "label"=>"Infrastructure", "description"=>"Infrastructure part of the group", "allowed_values"=>null, "sql"=>"infra_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("infra_name", array("label"=>"Infrastructure Name", "description"=>"Name of the impacted infrastructure", "allowed_values"=>null, "extkey_attcode"=> 'infra_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("infra_status", array("label"=>"Status", "description"=>"Status of the impacted infrastructure", "allowed_values"=>null, "extkey_attcode"=> 'infra_id', "target_attcode"=>"status")));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("infra_group_id", array("targetclass"=>"bizInfraGroup", "jointype"=> '', "label"=>"Group", "description"=>"Name of the group", "allowed_values"=>null, "sql"=>"infra_group_id", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("infra_group_id", array("targetclass"=>"bizInfraGroup", "jointype"=> '', "label"=>"Group", "description"=>"Name of the group", "allowed_values"=>null, "sql"=>"infra_group_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("group_name", array("label"=>"Group Name", "description"=>"Name of the group containing infrastructure", "allowed_values"=>null, "extkey_attcode"=> 'infra_group_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeString("impact", array("label"=>"Relation", "description"=>"Relation between this group and infra", "allowed_values"=>null, "sql"=>"impact", "default_value"=>"none", "is_null_allowed"=>true, "depends_on"=>array())));
     // impact should modelized: enum (eg: if the group si dead when infra is dead)
@@ -1725,9 +1725,9 @@ class lnkClientServer extends logRealObject
 	
 		);
 		MetaModel::Init_Params($aParams);
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("client_id", array("targetclass"=>"bizApplication", "jointype"=> '', "label"=>"Client", "description"=>"The client part of the link", "allowed_values"=>null, "sql"=>"client_id", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("client_id", array("targetclass"=>"bizApplication", "jointype"=> '', "label"=>"Client", "description"=>"The client part of the link", "allowed_values"=>null, "sql"=>"client_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("client_name", array("label"=>"Client", "description"=>"Name of the client", "allowed_values"=>null, "extkey_attcode"=> 'client_id', "target_attcode"=>"name")));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("server_id", array("targetclass"=>"bizApplication", "jointype"=> '', "label"=>"Server", "description"=>"the server part of the link", "allowed_values"=>null, "sql"=>"server_id", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("server_id", array("targetclass"=>"bizApplication", "jointype"=> '', "label"=>"Server", "description"=>"the server part of the link", "allowed_values"=>null, "sql"=>"server_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("server_name", array("label"=>"Server", "description"=>"Name of the server", "allowed_values"=>null, "extkey_attcode"=> 'server_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeString("relation", array("label"=>"Relation", "description"=>"Type of relation between both application", "allowed_values"=>null, "sql"=>"relation", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
@@ -1771,7 +1771,7 @@ class bizPatch extends logRealObject
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("device_id", array("targetclass"=>"bizDevice", "jointype"=> '', "label"=>"Device", "description"=>"The Device where patch is installed", "allowed_values"=>null, "sql"=>"device_id", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("device_id", array("targetclass"=>"bizDevice", "jointype"=> '', "label"=>"Device", "description"=>"The Device where patch is installed", "allowed_values"=>null, "sql"=>"device_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("device_name", array("label"=>"Device Name", "description"=>"Name of the impacted device", "allowed_values"=>null, "extkey_attcode"=> 'device_id', "target_attcode"=>"name")));
    	MetaModel::Init_AddAttribute(new AttributeDate("install_date", array("label"=>"Installation Date", "description"=>"Date when application was installed", "allowed_values"=>null, "sql"=>"install_date", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		

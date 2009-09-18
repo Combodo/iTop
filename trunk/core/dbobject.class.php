@@ -856,19 +856,78 @@ abstract class DBObject
 		{
 			foreach($aExtKeys as $sExtKeyAttCode => $oExtKeyAttDef)
 			{
-				//$oAttDef = MetaModel::GetAttributeDef($sClass, $sExtKeyAttCode);
+				// skip if this external key is behind an external field
+				if (!$oExtKeyAttDef->IsExternalKey(EXTKEY_ABSOLUTE)) continue;
 
 				$oSearch = new DBObjectSearch($sRemoteClass);
 				$oSearch->AddCondition($sExtKeyAttCode, $this->GetKey());
 				$oSet = new CMDBObjectSet($oSearch);
-				//if ($oSet->Count() > 0)
-				while ($oDependentObj = $oSet->fetch())
+				if ($oSet->Count() > 0)
 				{
-					$aDependentObjects[$sRemoteClass][] = $oDependentObj;
+					$aDependentObjects[$sRemoteClass][$sExtKeyAttCode] = array(
+						'attribute' => $oExtKeyAttDef,
+						'objects' => $oSet,
+					);
 				}
 			}
 		}
 		return $aDependentObjects;
+	}
+
+	public function GetDeletionScheme()
+	{
+		$aDependentObjects = $this->GetReferencingObjects();
+		$aDeletedObjs = array(); // [class][key] => structure
+		$aResetedObjs = array(); // [class][key] => object
+		foreach ($aDependentObjects as $sRemoteClass => $aPotentialDeletes)
+		{
+			foreach ($aPotentialDeletes as $sRemoteExtKey => $aData)
+			{
+				$oAttDef = $aData['attribute'];
+				$iDeletePropagationOption = $oAttDef->GetDeletionPropagationOption();
+				$oDepSet = $aData['objects'];
+				$oDepSet->Rewind();
+				while ($oDependentObj = $oDepSet->fetch())
+				{
+					$iId = $oDependentObj->GetKey();
+					if ($oAttDef->IsNullAllowed())
+					{
+						// Optional external key, list to reset
+						if (!array_key_exists($sRemoteClass, $aResetedObjs) || !array_key_exists($iId, $aResetedObjs[$sRemoteClass]))
+						{
+							$aResetedObjs[$sRemoteClass][$iId]['to_reset'] = $oDependentObj;
+						}
+						$aResetedObjs[$sRemoteClass][$iId]['attributes'][$sRemoteExtKey] = $oAttDef;
+					}
+					else
+					{
+						// Mandatory external key, list to delete
+						if (array_key_exists($sRemoteClass, $aDeletedObjs) && array_key_exists($iId, $aDeletedObjs[$sRemoteClass]))
+						{
+							$iCurrentOption = $aDeletedObjs[$sRemoteClass][$iId];
+							if ($iCurrentOption == DEL_AUTO)
+							{
+								// be conservative, take the new option
+								// (DEL_MANUAL has precedence over DEL_AUTO)
+								$aDeletedObjs[$sRemoteClass][$iId]['auto_delete'] = ($iDeletePropagationOption == DEL_AUTO); 
+							}
+							else
+							{
+								// DEL_MANUAL... leave it as is, it HAS to be verified anyway
+							}
+						}
+						else
+						{
+							// First time we find the given object in the list
+							// (and most likely case is that no other occurence will be found)
+							$aDeletedObjs[$sRemoteClass][$iId]['to_delete'] = $oDependentObj;
+							$aDeletedObjs[$sRemoteClass][$iId]['auto_delete'] = ($iDeletePropagationOption == DEL_AUTO); 
+						}
+					}
+				}
+			}
+		}
+		return array($aDeletedObjs, $aResetedObjs);
 	}
 }
 

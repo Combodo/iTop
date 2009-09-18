@@ -64,7 +64,7 @@ class UserRightsMatrixClassGrant extends DBObject
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", array("targetclass"=>"UserRightsMatrixUsers", "jointype"=> "", "label"=>"user", "description"=>"user account", "allowed_values"=>null, "sql"=>"userid", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", array("targetclass"=>"UserRightsMatrixUsers", "jointype"=> "", "label"=>"user", "description"=>"user account", "allowed_values"=>null, "sql"=>"userid", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("login", array("label"=>"Login", "description"=>"Login", "allowed_values"=>null, "extkey_attcode"=> 'userid', "target_attcode"=>"login")));
 		MetaModel::Init_AddAttribute(new AttributeString("class", array("label"=>"class", "description"=>"class name", "allowed_values"=>null, "sql"=>"class", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 
@@ -99,7 +99,7 @@ class UserRightsMatrixClassStimulusGrant extends DBObject
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", array("targetclass"=>"UserRightsMatrixUsers", "jointype"=> "", "label"=>"user", "description"=>"user account", "allowed_values"=>null, "sql"=>"userid", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", array("targetclass"=>"UserRightsMatrixUsers", "jointype"=> "", "label"=>"user", "description"=>"user account", "allowed_values"=>null, "sql"=>"userid", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("login", array("label"=>"Login", "description"=>"Login", "allowed_values"=>null, "extkey_attcode"=> 'userid', "target_attcode"=>"login")));
 		MetaModel::Init_AddAttribute(new AttributeString("class", array("label"=>"class", "description"=>"class name", "allowed_values"=>null, "sql"=>"class", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 
@@ -134,7 +134,7 @@ class UserRightsMatrixAttributeGrant extends DBObject
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", array("targetclass"=>"UserRightsMatrixUsers", "jointype"=> "", "label"=>"user", "description"=>"user account", "allowed_values"=>null, "sql"=>"userid", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", array("targetclass"=>"UserRightsMatrixUsers", "jointype"=> "", "label"=>"user", "description"=>"user account", "allowed_values"=>null, "sql"=>"userid", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("login", array("label"=>"Login", "description"=>"Login", "allowed_values"=>null, "extkey_attcode"=> 'userid', "target_attcode"=>"login")));
 		MetaModel::Init_AddAttribute(new AttributeString("class", array("label"=>"class", "description"=>"class name", "allowed_values"=>null, "sql"=>"class", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("attcode", array("label"=>"attribute", "description"=>"attribute code", "allowed_values"=>null, "sql"=>"attcode", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));

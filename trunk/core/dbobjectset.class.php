@@ -57,6 +57,13 @@ class DBObjectSet
 		return $sRet;
 	}
 
+	static public function FromObject($oObject)
+	{
+		$oRetSet = self::FromScratch(get_class($oObject));
+		$oRetSet->AddObject($oObject);
+		return $oRetSet;
+	}
+
 	static public function FromScratch($sClass)
 	{
 		$oFilter = new CMDBSearchFilter($sClass);
