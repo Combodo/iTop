@@ -100,7 +100,7 @@ function ShowTableForm($oPage, $oCSVParser, $sClass)
 				//
 				$aOptions[MakeExtFieldSelectValue($sAttCode, 'id')] = array(
 					'LabelHtml' => "<em>".$oAtt->GetLabel()."</em> (id)",
-					'LabelRef' => $oAtt->GetLabel()." (id)",
+					'LabelRef' => $oAtt->GetLabel(),
 					'IsReconcKey' => MetaModel::IsReconcKey($sClass, $sAttCode),
 					'Tip' => '',
 				);
@@ -204,7 +204,6 @@ function ProcessData($oPage, $sClass, $oCSVParser, $aFieldMap, $aIsReconcKey, CM
 
 	// Setup field mapping: sort out between values and other specific columns
 	//
-	$iPKeyId = null;
 	$aReconcilKeys = array();
 	$aAttList = array();
 	$aExtKeys = array();
@@ -213,8 +212,11 @@ function ProcessData($oPage, $sClass, $oCSVParser, $aFieldMap, $aIsReconcKey, CM
 		$iFieldId = (int) substr($sFieldId, strlen("field"));
 		if ($sColDesc == "id")
 		{
-			// Skip !
-			$iPKeyId = $iFieldId;
+			$aAttList['id'] = $iFieldId;
+			if (array_key_exists($sFieldId, $aIsReconcKey))
+			{
+				$aReconcilKeys['id'] = $iFieldId;
+			}
 		}
 		elseif ($sColDesc == "__none__")
 		{
@@ -244,12 +246,15 @@ function ProcessData($oPage, $sClass, $oCSVParser, $aFieldMap, $aIsReconcKey, CM
 	$aDisplayConfig = array();
 	$aDisplayConfig["__RECONCILIATION__"] = array("label"=>"Reconciliation", "description"=>"");
 	$aDisplayConfig["__STATUS__"] = array("label"=>"Import status", "description"=>"");
-	if (isset($iPKeyId))
+	if (array_key_exists('id', $aAttList))
 	{
-		$aDisplayConfig["col$iPKeyId"] = array("label"=>"<strong>id</strong>", "description"=>"");
+		$sPKeyCol = 'col'.$aAttList['id'];
+		$aDisplayConfig[$sPKeyCol] = array("label"=>"<strong>id</strong>", "description"=>"");
 	}
 	foreach($aReconcilKeys as $sAttCode => $iCol)
 	{
+		if ($sAttCode == 'id') continue;
+
 		$sLabel = MetaModel::GetAttributeDef($sClass, $sAttCode)->GetLabel();
 		$aDisplayConfig["col$iCol"] = array("label"=>"$sLabel", "description"=>"");
 	}
@@ -268,8 +273,11 @@ function ProcessData($oPage, $sClass, $oCSVParser, $aFieldMap, $aIsReconcKey, CM
 	}
 	foreach ($aAttList as $sAttCode => $iCol)
 	{
-		$sLabel = MetaModel::GetAttributeDef($sClass, $sAttCode)->GetLabel();
-		$aDisplayConfig["col$iCol"] = array("label"=>"$sLabel", "description"=>"");
+		if ($sAttCode != 'id')
+		{
+			$sLabel = MetaModel::GetAttributeDef($sClass, $sAttCode)->GetLabel();
+			$aDisplayConfig["col$iCol"] = array("label"=>"$sLabel", "description"=>"");
+		}
 	}
 
 	// Compute the results
@@ -294,12 +302,8 @@ function ProcessData($oPage, $sClass, $oCSVParser, $aFieldMap, $aIsReconcKey, CM
 		{
 			if ($sKey == '__RECONCILIATION__') continue;
 			if ($sKey == '__STATUS__') continue;
-			
 			switch (get_class($value))
 			{
-				case 'CellChangeSpec_Void':
-					$sClass = '';
-					break;
 				case 'CellChangeSpec_Unchanged':
 					$sClass = '';
 					break;
@@ -312,6 +316,10 @@ function ProcessData($oPage, $sClass, $oCSVParser, $aFieldMap, $aIsReconcKey, CM
 				case 'CellChangeSpec_Issue':
 					$sClass = 'csvimport_error';
 					break;
+
+				case 'CellChangeSpec_Void':
+				default:
+					$sClass = '';
 			}
 			if (empty($sClass))
 			{
