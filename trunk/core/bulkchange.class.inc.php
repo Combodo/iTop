@@ -217,24 +217,20 @@ class RowStatus_Issue extends RowStatus
 
 
 /**
- * BulkChange
- *
- * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
- */
+ ** BulkChange *
+ ** @package iTopORM
+ ** @author Romain Quetiez <romainquetiez@yahoo.fr>
+ ** @license http://www.opensource.org/licenses/lgpl-license.php LGPL
+ ** @link www.itop.com
+ ** @since 1.0
+ ** @version $itopversion$ */
 class BulkChange
 {
-	protected $m_sClass;
-	protected $m_aData;
-	// Note: hereafter, iCol maybe actually be any acceptable key (string)
+	protected $m_sClass; 
+	protected $m_aData; // Note: hereafter, iCol maybe actually be any acceptable key (string)
 	// #@# todo: rename the variables to sColIndex
-	protected $m_aAttList; // attcode => iCol
-	protected $m_aReconcilKeys;// iCol => attcode
-	protected $m_aExtKeys;	// aExtKeys[sExtKeyAttCode][sExtReconcKeyAttCode] = iCol;
+	protected $m_aAttList; // attcode => iCol protected $m_aReconcilKeys;// iCol => attcode (attcode = 'id' for the pkey) 
+	protected $m_aExtKeys; // aExtKeys[sExtKeyAttCode][sExtReconcKeyAttCode] = iCol;
 
 	public function __construct($sClass, $aData, $aAttList, $aReconcilKeys, $aExtKeys)
 	{
@@ -318,6 +314,9 @@ class BulkChange
 		//
 		foreach ($this->m_aAttList as $sAttCode => $iCol)
 		{
+			// skip the private key, if any
+			if ($sAttCode == 'id') continue;
+
 			if (!$oTargetObj->CheckValue($sAttCode, $aRowData[$iCol]))
 			{
 				$aErrors[$sAttCode] = "Unexpected value";
@@ -333,6 +332,18 @@ class BulkChange
 		$aChangedFields = $oTargetObj->ListChanges();
 		foreach ($this->m_aAttList as $sAttCode => $iCol)
 		{
+			if ($sAttCode == 'id')
+			{
+				if ($aRowData[$iCol] == $oTargetObj->GetKey())
+				{
+					$aResults["col$iCol"]= new CellChangeSpec_Void($aRowData[$iCol]);
+				}
+				else
+				{
+					$aResults["col$iCol"]= new CellChangeSpec_Init($aRowData[$iCol]);
+				}
+				
+			}
 			if (isset($aErrors[$sAttCode]))
 			{
 				$aResults["col$iCol"]= new CellChangeSpec_Issue($oTargetObj->Get($sAttCode), $oTargetObj->GetOriginal($sAttCode), $aErrors[$sAttCode]);
@@ -413,7 +424,7 @@ class BulkChange
 	protected function UpdateObject(&$aResult, $iRow, $oTargetObj, $aRowData, CMDBChange $oChange = null)
 	{
 		$aResult[$iRow] = $this->PrepareObject($oTargetObj, $aRowData, $aErrors);
-	
+
 		// Reporting
 		//
 		if (count($aErrors) > 0)
@@ -471,9 +482,19 @@ class BulkChange
 				// $aResult[$iRow]["__STATUS__"]=> set in UpdateObject
 				break;
 			default:
+				// Found several matches, ambiguous
+				// Render "void" results on any column
+				foreach($this->m_aExtKeys as $sAttCode => $aKeyConfig)
+				{
+					foreach ($aKeyConfig as $sForeignAttCode => $iCol)
+					{
+						$aResult[$iRow]["col$iCol"] = new CellChangeSpec_Void($aRowData[$iCol]);
+					}
+					$aResult[$iRow][$sAttCode] = new CellChangeSpec_Void('n/a');
+				}
 				foreach ($this->m_aAttList as $sAttCode => $iCol)
 				{
-					$aResult[$iRow]["col$iCol"]= $aRowData[$iCol];
+					$aResult[$iRow]["col$iCol"]= new CellChangeSpec_Void($aRowData[$iCol]);
 				}
 				$aResult[$iRow]["__RECONCILIATION__"] = "Found ".$oReconciliationSet->Count()." matches";
 				$aResult[$iRow]["__STATUS__"]= new RowStatus_Issue("ambiguous reconciliation");
