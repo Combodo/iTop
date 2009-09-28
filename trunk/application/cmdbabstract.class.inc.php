@@ -473,10 +473,14 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$iSearchFormId++;
 		$sClassName = $oSet->GetFilter()->GetClass();
 
+		// Romain: temporariy removed the tab "OQL query" because it was not finalized
+		// (especially when used to add a link)
+		/*
 		$sHtml .= "<div class=\"mini_tabs\" id=\"mini_tabs{$iSearchFormId}\"><ul>
 					<li><a href=\"#\" onClick=\"$('div.mini_tab{$iSearchFormId}').toggle();$('#mini_tabs{$iSearchFormId} ul li a').toggleClass('selected');\">OQL Query</a></li>
 					<li><a class=\"selected\" href=\"#\" onClick=\"$('div.mini_tab{$iSearchFormId}').toggle();$('#mini_tabs{$iSearchFormId} ul li a').toggleClass('selected');\">Simple Search</a></li>
 					</ul></div>\n";
+		*/
 		// Simple search form
 		$sHtml .= "<div id=\"SimpleSearchForm{$iSearchFormId}\" class=\"mini_tab{$iSearchFormId}\">\n";
 		$sHtml .= "<h1>Search for ".MetaModel::GetName($sClassName)." Objects</h1>\n";
