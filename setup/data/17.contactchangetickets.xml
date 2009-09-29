@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Set>
-<lnkContactChange id="3">
-<contact_id>7</contact_id>
+<lnkContactChange id="1">
+<contact_id>6</contact_id>
 <change_id>1</change_id>
 <role>DB admin</role>
 </lnkContactChange>
-<lnkContactChange id="4">
-<contact_id>20</contact_id>
+<lnkContactChange id="2">
+<contact_id>5</contact_id>
 <change_id>2</change_id>
 <role>Db administrator</role>
 </lnkContactChange>
-<lnkContactChange id="1">
-<contact_id>21</contact_id>
+<lnkContactChange id="3">
+<contact_id>4</contact_id>
 <change_id>1</change_id>
 <role>notify me</role>
 </lnkContactChange>
-<lnkContactChange id="5">
-<contact_id>7</contact_id>
+<lnkContactChange id="4">
+<contact_id>6</contact_id>
 <change_id>2</change_id>
 <role>Server Owner for reboot</role>
 </lnkContactChange>
