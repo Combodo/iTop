@@ -7,7 +7,7 @@
 <itopblock blockclass="DisplayBlock" asynchronous="true" type="bare_details" encoding="text/oql">SELECT bizPerson WHERE id = $pkey$</itopblock>
 <itoptabs>
 	<itoptab name="Teams">
-		<itopblock blockclass="DisplayBlock" type="list" link_attr="contact_id" object_id="$pkey$" target_attr="team_id" encoding="text/oql">SELECT lnkContactTeam WHERE contact_id = $pkey$</itopblock>
+		<itopblock blockclass="DisplayBlock" type="links" link_attr="contact_id" object_id="$pkey$" target_attr="team_id" encoding="text/oql">SELECT lnkContactTeam WHERE contact_id = $pkey$</itopblock>
 	</itoptab>
 	<itoptab name="Infrastructure">	
 		<itopblock blockclass="DisplayBlock" type="links" link_attr="contact_id" object_id="$pkey$" target_attr="object_id" encoding="text/oql">SELECT lnkContactRealObject WHERE contact_id = $pkey$</itopblock>	
@@ -17,6 +17,6 @@
 	</itoptab>
 
 	<itoptab name="Documents">
-		<itopblock blockclass="DisplayBlock" type="list" link_attr="object_id" object_id="$pkey$" target_attr="doc_id" encoding="text/oql">SELECT lnkDocumentRealObject WHERE object_id = $pkey$</itopblock>
+		<itopblock blockclass="DisplayBlock" type="links" link_attr="object_id" object_id="$pkey$" target_attr="doc_id" encoding="text/oql">SELECT lnkDocumentRealObject WHERE object_id = $pkey$</itopblock>
 	</itoptab>
 </itoptabs>

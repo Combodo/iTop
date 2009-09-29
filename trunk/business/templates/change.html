@@ -7,10 +7,10 @@
 <itopblock blockclass="DisplayBlock" asynchronous="true" type="bare_details" encoding="text/oql">SELECT $class$ WHERE id = $pkey$</itopblock>
 <itoptabs>
 	<itoptab name="Impacted_Infrastructures">
-		<itopblock blockclass="DisplayBlock" type="list" link_attr="ticket_id" object_id="$pkey$" target_attr="infra_id" encoding="text/oql">SELECT lnkInfraChangeTicket WHERE ticket_id = $pkey$</itopblock>
+		<itopblock blockclass="DisplayBlock" type="links" link_attr="ticket_id" object_id="$pkey$" target_attr="infra_id" encoding="text/oql">SELECT lnkInfraChangeTicket WHERE ticket_id = $pkey$</itopblock>
 	</itoptab>
 	<itoptab name="Contacts_to_Notify">
-		<itopblock blockclass="DisplayBlock" type="list" link_attr="change_id" object_id="$pkey$" target_attr="contact_id"  encoding="text/oql">SELECT lnkContactChange WHERE change_id = $pkey$</itopblock>
+		<itopblock blockclass="DisplayBlock" type="links" link_attr="change_id" object_id="$pkey$" target_attr="contact_id"  encoding="text/oql">SELECT lnkContactChange WHERE change_id = $pkey$</itopblock>
 	</itoptab>
 
 </itoptabs>

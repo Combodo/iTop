@@ -4,18 +4,18 @@
 <name>I-000001</name>
 <title>PC issue</title>
 <type>Desktop</type>
-<org_id>3</org_id>
+<org_id>2</org_id>
 <ticket_status>WorkInProgress</ticket_status>
 <initial_situation>there is an issue with my PC</initial_situation>
 <current_situation></current_situation>
 <start_date>2009-02-10 21:30:55</start_date>
-<last_update></last_update>
-<next_update></next_update>
-<end_date></end_date>
-<caller_id>21</caller_id>
+<last_update>0000-00-00 00:00:00</last_update>
+<next_update>0000-00-00 00:00:00</next_update>
+<end_date>0000-00-00 00:00:00</end_date>
+<caller_id>4</caller_id>
 <impact>not able to start IE</impact>
-<workgroup_id>19</workgroup_id>
-<agent_id>7</agent_id>
+<workgroup_id>317</workgroup_id>
+<agent_id>6</agent_id>
 <action_log>We are about to connect to your PC via Netmeeting and troubleshoot what&apos;s up.
 
 Then we will try to contact Microsoft to understand if it is a known issue</action_log>
@@ -27,7 +27,7 @@ Then we will try to contact Microsoft to understand if it is a known issue</acti
 <name>I-000002</name>
 <title>Network issue</title>
 <type>Network</type>
-<org_id>3</org_id>
+<org_id>2</org_id>
 <ticket_status>Assigned</ticket_status>
 <initial_situation>No more access to the network</initial_situation>
 <current_situation>Network connectivity lost</current_situation>
@@ -35,10 +35,10 @@ Then we will try to contact Microsoft to understand if it is a known issue</acti
 <last_update>0000-00-00 00:00:00</last_update>
 <next_update>0000-00-00 00:00:00</next_update>
 <end_date>0000-00-00 00:00:00</end_date>
-<caller_id>7</caller_id>
-<impact>high</impact>
-<workgroup_id>24</workgroup_id>
-<agent_id>21</agent_id>
+<caller_id>6</caller_id>
+<impact>not important</impact>
+<workgroup_id>318</workgroup_id>
+<agent_id>6</agent_id>
 <action_log>need to investigate the network</action_log>
 <severity>low</severity>
 <assignment_count>2</assignment_count>
@@ -48,7 +48,7 @@ Then we will try to contact Microsoft to understand if it is a known issue</acti
 <name>I-000003</name>
 <title>Disk Failure on Server01</title>
 <type>Server</type>
-<org_id>3</org_id>
+<org_id>2</org_id>
 <ticket_status>WorkInProgress</ticket_status>
 <initial_situation>Partition /var is no more accessible.
 It seems that hard disk is broken</initial_situation>
@@ -57,10 +57,10 @@ It seems that hard disk is broken</initial_situation>
 <last_update>2009-02-10 22:25:00</last_update>
 <next_update>2009-02-10 00:25:00</next_update>
 <end_date>0000-00-00 00:00:00</end_date>
-<caller_id>20</caller_id>
+<caller_id>5</caller_id>
 <impact>Really important for the business</impact>
-<workgroup_id>19</workgroup_id>
-<agent_id>7</agent_id>
+<workgroup_id>317</workgroup_id>
+<agent_id>6</agent_id>
 <action_log>There are lot of logs file to be trimed</action_log>
 <severity>medium</severity>
 <assignment_count>2</assignment_count>
@@ -70,7 +70,7 @@ It seems that hard disk is broken</initial_situation>
 <name>I-000004</name>
 <title>Oracle Database down on domino</title>
 <type>Server</type>
-<org_id>3</org_id>
+<org_id>2</org_id>
 <ticket_status>New</ticket_status>
 <initial_situation>Database Oracle is no more accessible on Server01</initial_situation>
 <current_situation>Customer cannot access Order web site.</current_situation>
@@ -78,9 +78,9 @@ It seems that hard disk is broken</initial_situation>
 <last_update>0000-00-00 00:00:00</last_update>
 <next_update>0000-00-00 00:00:00</next_update>
 <end_date>0000-00-00 00:00:00</end_date>
-<caller_id>7</caller_id>
+<caller_id>6</caller_id>
 <impact>Very critical</impact>
-<workgroup_id>19</workgroup_id>
+<workgroup_id>317</workgroup_id>
 <agent_id>0</agent_id>
 <action_log></action_log>
 <severity>low</severity>
@@ -91,7 +91,7 @@ It seems that hard disk is broken</initial_situation>
 <name>I-000005</name>
 <title>Issue with my pc</title>
 <type>Desktop</type>
-<org_id>3</org_id>
+<org_id>2</org_id>
 <ticket_status>Assigned</ticket_status>
 <initial_situation>My PC is locked</initial_situation>
 <current_situation>We have to analyze</current_situation>
@@ -99,10 +99,10 @@ It seems that hard disk is broken</initial_situation>
 <last_update>0000-00-00 00:00:00</last_update>
 <next_update>0000-00-00 00:00:00</next_update>
 <end_date>0000-00-00 00:00:00</end_date>
-<caller_id>7</caller_id>
+<caller_id>6</caller_id>
 <impact></impact>
-<workgroup_id>19</workgroup_id>
-<agent_id>20</agent_id>
+<workgroup_id>317</workgroup_id>
+<agent_id>5</agent_id>
 <action_log></action_log>
 <severity>medium</severity>
 <assignment_count>1</assignment_count>
@@ -111,22 +111,45 @@ It seems that hard disk is broken</initial_situation>
 <bizIncidentTicket id="6">
 <name>I-000006</name>
 <title>Demo</title>
-<type>Server</type>
-<org_id>3</org_id>
-<ticket_status>New</ticket_status>
+<type>Desktop</type>
+<org_id>2</org_id>
+<ticket_status>WorkInProgress</ticket_status>
 <initial_situation>gdfgl</initial_situation>
 <current_situation></current_situation>
 <start_date>2009-03-18 22:00:00</start_date>
-<last_update>0000-00-00 00:00:00</last_update>
+<last_update>2009-09-17 18:41:44</last_update>
 <next_update>0000-00-00 00:00:00</next_update>
 <end_date>0000-00-00 00:00:00</end_date>
-<caller_id>20</caller_id>
+<caller_id>5</caller_id>
 <impact>personne ne peut acceder au site de paris</impact>
-<workgroup_id>19</workgroup_id>
-<agent_id>0</agent_id>
-<action_log></action_log>
+<workgroup_id>317</workgroup_id>
+<agent_id>6</agent_id>
+<action_log>posjgsrkg
+jgmklerjg
+gejrg</action_log>
 <severity>low</severity>
-<assignment_count>0</assignment_count>
+<assignment_count>1</assignment_count>
+<resolution></resolution>
+</bizIncidentTicket>
+<bizIncidentTicket id="9">
+<name>I-000009</name>
+<title>Issue on WAN</title>
+<type>Server</type>
+<org_id>2</org_id>
+<ticket_status>Assigned</ticket_status>
+<initial_situation>no access to Grenoble From Paris</initial_situation>
+<current_situation></current_situation>
+<start_date>2009-09-19 10:51:00</start_date>
+<last_update>2009-09-19 10:52:00</last_update>
+<next_update>0000-00-00 00:00:00</next_update>
+<end_date>0000-00-00 00:00:00</end_date>
+<caller_id>5</caller_id>
+<impact>Site isolated</impact>
+<workgroup_id>318</workgroup_id>
+<agent_id>6</agent_id>
+<action_log></action_log>
+<severity>critical</severity>
+<assignment_count>1</assignment_count>
 <resolution></resolution>
 </bizIncidentTicket>
 </Set>

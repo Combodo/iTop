@@ -10,7 +10,7 @@
 		<itopblock blockclass="DisplayBlock" type="list" encoding="text/oql" linkage="device_id">SELECT bizInterface WHERE device_id = $pkey$</itopblock>
 	</itoptab>
 	<itoptab name="Contacts">
-		<itopblock blockclass="DisplayBlock" type="list" link_attr="infra_id" object_id="$pkey$" target_attr="contact_id" encoding="text/oql">SELECT lnkContactInfra WHERE infra_id = $pkey$</itopblock>
+		<itopblock blockclass="DisplayBlock" type="links" link_attr="infra_id" object_id="$pkey$" target_attr="contact_id" encoding="text/oql">SELECT lnkContactInfra WHERE infra_id = $pkey$</itopblock>
 	</itoptab>
 	<itoptab name="Incidents">
 		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">bizIncidentTicket:PKEY IS ticket_id IN (lnkInfraTicket: infra_id = $pkey$)</itopblock>
@@ -19,10 +19,10 @@
 		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">bizChangeTicket: PKEY IS ticket_id IN (lnkInfraChangeTicket: infra_id = $pkey$)</itopblock>
 	</itoptab>
 	<itoptab name="Groups">
-		<itopblock blockclass="DisplayBlock" type="list" link_attr="infra_id" object_id="$pkey$" target_attr="infra_group_id" encoding="text/oql">SELECT lnkInfraGrouping WHERE infra_id = $pkey$</itopblock>
+		<itopblock blockclass="DisplayBlock" type="links" link_attr="infra_id" object_id="$pkey$" target_attr="infra_group_id" encoding="text/oql">SELECT lnkInfraGrouping WHERE infra_id = $pkey$</itopblock>
 	</itoptab>
 	<itoptab name="Documents">
-		<itopblock blockclass="DisplayBlock" type="list" link_attr="object_id" object_id="$pkey$" target_attr="doc_id" encoding="text/oql">SELECT lnkDocumentRealObject WHERE object_id = $pkey$</itopblock>
+		<itopblock blockclass="DisplayBlock" type="links" link_attr="object_id" object_id="$pkey$" target_attr="doc_id" encoding="text/oql">SELECT lnkDocumentRealObject WHERE object_id = $pkey$</itopblock>
 	</itoptab>
  </itoptabs>
 

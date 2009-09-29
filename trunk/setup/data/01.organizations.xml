@@ -1,15 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Set>
-<bizOrganization id="3">
+<bizOrganization id="2">
 <name>Demo</name>
 <code>MCO</code>
 <status>implementation</status>
-<parent_id>3</parent_id>
+<parent_id>2</parent_id>
 </bizOrganization>
-<bizOrganization id="6">
+<bizOrganization id="4">
+<name>France Telecom</name>
+<code>FT</code>
+<status>production</status>
+<parent_id>0</parent_id>
+</bizOrganization>
+<bizOrganization id="1">
+<name>My Company/Department</name>
+<code>SOMECODE</code>
+<status>implementation</status>
+<parent_id>0</parent_id>
+</bizOrganization>
+<bizOrganization id="3">
 <name>Oracle</name>
 <code>ORA</code>
 <status>production</status>
-<parent_id>6</parent_id>
+<parent_id>3</parent_id>
 </bizOrganization>
 </Set>

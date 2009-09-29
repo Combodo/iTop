@@ -54,13 +54,13 @@ class bizServiceCall extends cmdbAbstractObject
 	  MetaModel::Init_AddAttribute(new AttributeDate("next_update", array("label"=>"Next update", "description"=>"next time the Ticket is expected to be  modified", "allowed_values"=>null, "sql"=>"next_update", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
 		MetaModel::Init_AddAttribute(new AttributeDate("end_date", array("label"=>"Closure Date", "description"=>"Date when the call was closed", "allowed_values"=>null, "sql"=>"closed_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-	  MetaModel::Init_AddAttribute(new AttributeExternalKey("caller_id", array("targetclass"=>"bizPerson", "jointype"=> "", "label"=>"Caller", "description"=>"person that trigger this call", "allowed_values"=>null, "sql"=>"caller_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
+	  MetaModel::Init_AddAttribute(new AttributeExternalKey("caller_id", array("targetclass"=>"bizPerson", "jointype"=> "", "label"=>"Caller", "description"=>"person that trigger this call", "allowed_values"=>new ValueSetObjects('SELECT bizPerson AS p WHERE p.org_id = :this->org_id'), "sql"=>"caller_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array('org_id'))));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("caller_mail", array("label"=>"Caller", "description"=>"Person that trigger this call", "allowed_values"=>null, "extkey_attcode"=> 'caller_id', "target_attcode"=>"email")));
 	
   	MetaModel::Init_AddAttribute(new AttributeString("impact", array("label"=>"Impact", "description"=>"Impact for this call", "allowed_values"=>null, "sql"=>"impact", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
   	MetaModel::Init_AddAttribute(new AttributeExternalKey("workgroup_id", array("targetclass"=>"bizWorkgroup", "jointype"=> "", "label"=>"Workgroup", "description"=>"which workgroup is owning call", "allowed_values"=>null, "sql"=>"workgroup_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("workgroup_name", array("label"=>"Workgroup", "description"=>"name of workgroup managing the call", "allowed_values"=>null, "extkey_attcode"=> 'workgroup_id', "target_attcode"=>"name")));  
-    MetaModel::Init_AddAttribute(new AttributeExternalKey("agent_id", array("targetclass"=>"bizPerson", "jointype"=> "", "label"=>"Agent", "description"=>"who is managing the call", "allowed_values"=>null, "sql"=>"agent_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array("workgroup_id"))));
+    MetaModel::Init_AddAttribute(new AttributeExternalKey("agent_id", array("targetclass"=>"bizPerson", "jointype"=> "", "label"=>"Agent", "description"=>"who is managing the call", "allowed_values"=>new ValueSetObjects('SELECT bizPerson AS p JOIN lnkContactTeam AS l ON l.contact_id=p.id JOIN bizTeam AS t ON l.team_id=t.id JOIN bizWorkgroup AS w ON w.team_id=t.id WHERE w.id = :this->workgroup_id'), "sql"=>"agent_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array("workgroup_id"))));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("agent_mail", array("label"=>"Agent", "description"=>"mail of agent managing the call", "allowed_values"=>null, "extkey_attcode"=> 'agent_id', "target_attcode"=>"email")));
 		// Comment afficher le first + last name de l'agent ? Est-ce utile d'ajouter ce champ?
 		MetaModel::Init_AddAttribute(new AttributeText("action_log", array("label"=>"Action Logs", "description"=>"List all action performed during the call", "allowed_values"=>null, "sql"=>"action_log", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
@@ -98,14 +98,20 @@ class bizServiceCall extends cmdbAbstractObject
 
 		// State machine
 		MetaModel::Init_DefineState("New", array("label"=>"New (Unassigned)", "description"=>"Newly created call", "attribute_inherit"=>null,
-												 "attribute_list"=>array('name' => OPT_ATT_READONLY, 'end_date' => OPT_ATT_HIDDEN, 'last_update' =>  OPT_ATT_HIDDEN,
+												 "attribute_list"=>array('name' => OPT_ATT_READONLY, 'end_date' => OPT_ATT_HIDDEN, 'last_update' =>  OPT_ATT_READONLY,
 												 "title"=>OPT_ATT_MANDATORY, "org_id"=>OPT_ATT_MANDATORY, "caller_id"=>OPT_ATT_MANDATORY, "call_description"=>OPT_ATT_MANDATORY, "creation_date"=>OPT_ATT_MANDATORY, "workgroup_id"=>OPT_ATT_MANDATORY,
 												 "severity"=>OPT_ATT_MANDATORY, "agent_id"=>OPT_ATT_HIDDEN,"impacted_infra_manual"=>OPT_ATT_MANDATORY, "related_tickets"=>OPT_ATT_MUSTPROMPT)));
 		MetaModel::Init_DefineState("Assigned", array("label"=>"Assigned", "description"=>"Call is assigned to somebody", "attribute_inherit"=>null,
-												"attribute_list"=>array('name' => OPT_ATT_READONLY, "title"=>OPT_ATT_READONLY, "org_id"=>OPT_ATT_READONLY, "caller_id"=>OPT_ATT_READONLY, "call_description"=>OPT_ATT_READONLY, "creation_date"=>OPT_ATT_READONLY,'end_date' => OPT_ATT_HIDDEN, "workgroup_id"=>OPT_ATT_MUSTCHANGE, "agent_id"=>OPT_ATT_MUSTCHANGE)));
-		MetaModel::Init_DefineState("WorkInProgress", array("label"=>"Work In Progress", "description"=>"Work is in progress", "attribute_inherit"=>null, "attribute_list"=>array("title"=>OPT_ATT_READONLY, "org_id"=>OPT_ATT_READONLY, "caller_id"=>OPT_ATT_READONLY, "call_description"=>OPT_ATT_READONLY,'end_date' => OPT_ATT_HIDDEN, "creation_date"=>OPT_ATT_READONLY,"workgroup_id"=>OPT_ATT_MANDATORY, "agent_id"=>OPT_ATT_MANDATORY)));
-		MetaModel::Init_DefineState("Resolved", array("label"=>"Resolved", "description"=>"Call is resolved", "attribute_inherit"=>null, "attribute_list"=>array("workgroup_id"=>OPT_ATT_MANDATORY, "agent_id"=>OPT_ATT_MANDATORY, "resolution"=>OPT_ATT_MANDATORY, "end_date"=>OPT_ATT_MANDATORY,"resolution"=>OPT_ATT_MANDATORY)));
-		MetaModel::Init_DefineState("Closed", array("label"=>"Closed", "description"=>"Call is closed", "attribute_inherit"=>null, "attribute_list"=>array("workgroup_id"=>OPT_ATT_READONLY, "agent_id"=>OPT_ATT_READONLY, "resolution"=>OPT_ATT_READONLY, "end_date"=>OPT_ATT_READONLY)));
+												"attribute_list"=>array('name' => OPT_ATT_READONLY, "title"=>OPT_ATT_READONLY, "org_id"=>OPT_ATT_READONLY,"source"=>OPT_ATT_READONLY, "caller_id"=>OPT_ATT_READONLY, "call_description"=>OPT_ATT_READONLY, "creation_date"=>OPT_ATT_READONLY,'end_date' => OPT_ATT_HIDDEN, "workgroup_id"=>OPT_ATT_READONLY, "agent_id"=>OPT_ATT_MUSTCHANGE)));
+		MetaModel::Init_DefineState("WorkInProgress", array("label"=>"Work In Progress", "description"=>"Work is in progress", "attribute_inherit"=>null, "attribute_list"=>array('name' => OPT_ATT_READONLY, 'end_date' => OPT_ATT_HIDDEN, 'last_update' =>  OPT_ATT_READONLY,
+												 "title"=>OPT_ATT_READONLY, "org_id"=>OPT_ATT_READONLY,"source"=>OPT_ATT_READONLY, "caller_id"=>OPT_ATT_READONLY, "call_description"=>OPT_ATT_READONLY, "creation_date"=>OPT_ATT_READONLY, "workgroup_id"=>OPT_ATT_READONLY,
+												 "severity"=>OPT_ATT_MANDATORY, "agent_id"=>OPT_ATT_MANDATORY,"action_log"=>OPT_ATT_MUSTPROMPT,"impacted_infra_manual"=>OPT_ATT_MANDATORY, "related_tickets"=>OPT_ATT_MUSTPROMPT)));
+		MetaModel::Init_DefineState("Resolved", array("label"=>"Resolved", "description"=>"Call is resolved", "attribute_inherit"=>null, "attribute_list"=>array('name' => OPT_ATT_READONLY, 'end_date' => OPT_ATT_HIDDEN, 'last_update' =>  OPT_ATT_READONLY,
+												 "title"=>OPT_ATT_READONLY, "org_id"=>OPT_ATT_READONLY, "source"=>OPT_ATT_READONLY,"caller_id"=>OPT_ATT_READONLY, "call_description"=>OPT_ATT_READONLY, "creation_date"=>OPT_ATT_READONLY, "workgroup_id"=>OPT_ATT_READONLY,
+												 "severity"=>OPT_ATT_READONLY, "agent_id"=>OPT_ATT_READONLY,"action_log"=>OPT_ATT_READONLY,"impacted_infra_manual"=>OPT_ATT_MANDATORY, "related_tickets"=>OPT_ATT_MUSTPROMPT, "resolution"=>OPT_ATT_MUSTCHANGE)));
+		MetaModel::Init_DefineState("Closed", array("label"=>"Closed", "description"=>"Call is closed", "attribute_inherit"=>null, "attribute_list"=>array('name' => OPT_ATT_READONLY, 'end_date' => OPT_ATT_READONLY, 'last_update' =>  OPT_ATT_READONLY,"next_update"=>OPT_ATT_READONLY,
+												 "title"=>OPT_ATT_READONLY, "org_id"=>OPT_ATT_READONLY,"source"=>OPT_ATT_READONLY, "caller_id"=>OPT_ATT_READONLY, "call_description"=>OPT_ATT_READONLY, "creation_date"=>OPT_ATT_READONLY,"impact"=>OPT_ATT_READONLY,"type"=>OPT_ATT_READONLY, "workgroup_id"=>OPT_ATT_READONLY,
+												 "severity"=>OPT_ATT_READONLY, "agent_id"=>OPT_ATT_READONLY,"action_log"=>OPT_ATT_READONLY,"impacted_infra_manual"=>OPT_ATT_READONLY, "related_tickets"=>OPT_ATT_READONLY, "resolution"=>OPT_ATT_READONLY)));
 
 		MetaModel::Init_DefineStimulus("ev_assign", new StimulusUserAction(array("label"=>"Assign this call", "description"=>"Assign this call to a group and an agent")));
 		MetaModel::Init_DefineStimulus("ev_reassign", new StimulusUserAction(array("label"=>"Reassign this call", "description"=>"Reassign this call to a different group and agent")));
@@ -113,12 +119,12 @@ class bizServiceCall extends cmdbAbstractObject
 		MetaModel::Init_DefineStimulus("ev_resolve", new StimulusUserAction(array("label"=>"Resolve this call", "description"=>"Resolve this call")));
 		MetaModel::Init_DefineStimulus("ev_close", new StimulusUserAction(array("label"=>"Close this call", "description"=>"Close this call")));
 
-		MetaModel::Init_DefineTransition("New", "ev_assign", array("target_state"=>"Assigned", "actions"=>array(), "user_restriction"=>null));
-		MetaModel::Init_DefineTransition("Assigned", "ev_reassign", array("target_state"=>"Assigned", "actions"=>array(), "user_restriction"=>null));
-		MetaModel::Init_DefineTransition("Assigned", "ev_start_working", array("target_state"=>"WorkInProgress", "actions"=>array(), "user_restriction"=>null));
-		MetaModel::Init_DefineTransition("WorkInProgress", "ev_reassign", array("target_state"=>"Assigned", "actions"=>array(), "user_restriction"=>null));
-		MetaModel::Init_DefineTransition("WorkInProgress", "ev_resolve", array("target_state"=>"Resolved", "actions"=>array(), "user_restriction"=>null));
-		MetaModel::Init_DefineTransition("Resolved", "ev_close", array("target_state"=>"Closed", "actions"=>array('SetClosureDate'), "user_restriction"=>null));
+		MetaModel::Init_DefineTransition("New", "ev_assign", array("target_state"=>"Assigned", "actions"=>array('SetLastUpdate'), "user_restriction"=>null));
+		MetaModel::Init_DefineTransition("Assigned", "ev_reassign", array("target_state"=>"Assigned", "actions"=>array('SetLastUpdate'), "user_restriction"=>null));
+		MetaModel::Init_DefineTransition("Assigned", "ev_start_working", array("target_state"=>"WorkInProgress", "actions"=>array('SetLastUpdate'), "user_restriction"=>null));
+		MetaModel::Init_DefineTransition("WorkInProgress", "ev_reassign", array("target_state"=>"Assigned", "actions"=>array('SetLastUpdate'), "user_restriction"=>null));
+		MetaModel::Init_DefineTransition("WorkInProgress", "ev_resolve", array("target_state"=>"Resolved", "actions"=>array('SetLastUpdate'), "user_restriction"=>null));
+		MetaModel::Init_DefineTransition("Resolved", "ev_close", array("target_state"=>"Closed", "actions"=>array('SetLastUpdate','SetClosureDate'), "user_restriction"=>null));
 		
 	}
 
@@ -144,6 +150,12 @@ class bizServiceCall extends cmdbAbstractObject
 	public function SetClosureDate($sStimulusCode)
 	{
 		$this->Set('end_date', time());
+		return true;
+	}
+	
+			public function SetLastUpdate($sStimulusCode)
+	{
+		$this->Set('last_update', time());
 		return true;
 	}
 	

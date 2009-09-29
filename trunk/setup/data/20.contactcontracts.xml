@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Set>
-<lnkContactContract id="1">
-<contact_id>21</contact_id>
-<contract_id>1</contract_id>
-<role>Contract Manager</role>
-</lnkContactContract>
-<lnkContactContract id="2">
-<contact_id>8</contact_id>
-<contract_id>1</contract_id>
-<role>Team in charge to manage Oracle</role>
+<lnkContactContract id="3">
+<contact_id>6</contact_id>
+<contract_id>2</contract_id>
+<role>contract manager</role>
 </lnkContactContract>
 </Set>

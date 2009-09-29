@@ -7,10 +7,10 @@
 <itopblock blockclass="DisplayBlock" asynchronous="true" type="bare_details" encoding="text/oql">SELECT bizApplication WHERE id = $pkey$</itopblock>
 <itoptabs>
 	<itoptab name="Impacted_Client_Applications">
-		<itopblock blockclass="DisplayBlock" type="list" link_attr="server_id" object_id="$pkey$" target_attr="client_id" encoding="text/oql">SELECT lnkClientServer WHERE server_id = $pkey$</itopblock>
+		<itopblock blockclass="DisplayBlock" type="links" link_attr="server_id" object_id="$pkey$" target_attr="client_id" encoding="text/oql">SELECT lnkClientServer WHERE server_id = $pkey$</itopblock>
 	</itoptab>
 	<itoptab name="Application_Server">
-		<itopblock blockclass="DisplayBlock" type="list" link_attr="client_id" object_id="$pkey$" target_attr="server_id" encoding="text/oql">SELECT lnkClientServer WHERE client_id = $pkey$</itopblock>
+		<itopblock blockclass="DisplayBlock" type="links" link_attr="client_id" object_id="$pkey$" target_attr="server_id" encoding="text/oql">SELECT lnkClientServer WHERE client_id = $pkey$</itopblock>
 	</itoptab>
 	<itoptab name="Incidents">
 		<itopblock blockclass="DisplayBlock" type="links" link_attr="infra_id" object_id="$pkey$" target_attr="ticket_id" encoding="text/sibusql">lnkInfraTicket: infra_id = $pkey$</itopblock>
@@ -20,10 +20,10 @@
 	</itoptab>
 
  	<itoptab name="Contracts">
-		<itopblock blockclass="DisplayBlock" type="list" link_attr="infra_id" object_id="$pkey$" target_attr="contract_id" encoding="text/oql">SELECT lnkInfraContract WHERE infra_id = $pkey$</itopblock>
+		<itopblock blockclass="DisplayBlock" type="links" link_attr="infra_id" object_id="$pkey$" target_attr="contract_id" encoding="text/oql">SELECT lnkInfraContract WHERE infra_id = $pkey$</itopblock>
 	</itoptab>
  	<itoptab name="Groups">
-		<itopblock blockclass="DisplayBlock" type="list" link_attr="infra_id" object_id="$pkey$" target_attr="infra_group_id" encoding="text/oql">SELECT lnkInfraGrouping WHERE infra_id = $pkey$</itopblock>
+		<itopblock blockclass="DisplayBlock" type="links" link_attr="infra_id" object_id="$pkey$" target_attr="infra_group_id" encoding="text/oql">SELECT lnkInfraGrouping WHERE infra_id = $pkey$</itopblock>
 	</itoptab>
 
 

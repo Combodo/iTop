@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Set>
+<lnkRelatedTicket id="2">
+<rel_ticket_id>1</rel_ticket_id>
+<ticket_id>5</ticket_id>
+<impact></impact>
+</lnkRelatedTicket>
 <lnkRelatedTicket id="1">
 <rel_ticket_id>2</rel_ticket_id>
 <ticket_id>1</ticket_id>

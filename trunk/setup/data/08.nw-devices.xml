@@ -1,67 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Set>
-<bizNetworkDevice id="6">
+<bizNetworkDevice id="313">
 <name>router01</name>
 <status>production</status>
-<org_id>3</org_id>
+<org_id>2</org_id>
 <severity>high</severity>
-<location_id>1</location_id>
+<location_id>3</location_id>
 <brand>Cisco</brand>
 <model>6500</model>
 <serial_number>S2345985</serial_number>
-<type>switch</type>
-<ip_address>10.25.3.45</ip_address>
-<default_gateway>10.25.3.1</default_gateway>
+<mgmt_ip>10.2.22.1</mgmt_ip>
+<type>router</type>
+<default_gateway></default_gateway>
 <ios_version>8.2</ios_version>
 <memory>flash :1=16.48MB</memory>
 <snmp_read>public</snmp_read>
 <snmp_write>private</snmp_write>
 </bizNetworkDevice>
-<bizNetworkDevice id="323">
+<bizNetworkDevice id="314">
 <name>router02</name>
 <status>production</status>
-<org_id>3</org_id>
+<org_id>2</org_id>
 <severity>high</severity>
-<location_id>1</location_id>
+<location_id>2</location_id>
 <brand>Cisco</brand>
 <model>6500</model>
 <serial_number>S2345985</serial_number>
+<mgmt_ip></mgmt_ip>
 <type>switch</type>
-<ip_address>10.25.3.46</ip_address>
 <default_gateway>10.25.3.1</default_gateway>
 <ios_version>8.2</ios_version>
 <memory>flash :1=16.48MB</memory>
 <snmp_read>public</snmp_read>
 <snmp_write>private</snmp_write>
 </bizNetworkDevice>
-<bizNetworkDevice id="324">
+<bizNetworkDevice id="315">
 <name>router03</name>
 <status>production</status>
-<org_id>3</org_id>
+<org_id>2</org_id>
 <severity>high</severity>
-<location_id>1</location_id>
+<location_id>3</location_id>
 <brand>Cisco</brand>
 <model>6500</model>
 <serial_number>S2345985</serial_number>
+<mgmt_ip></mgmt_ip>
 <type>switch</type>
-<ip_address>10.25.3.47</ip_address>
-<default_gateway>10.25.3.1</default_gateway>
+<default_gateway>10.25.3.6</default_gateway>
 <ios_version>8.2</ios_version>
 <memory>flash :1=16.48MB</memory>
-<snmp_read>public</snmp_read>
+<snmp_read>toto</snmp_read>
 <snmp_write>private</snmp_write>
 </bizNetworkDevice>
-<bizNetworkDevice id="17">
+<bizNetworkDevice id="316">
 <name>switch01</name>
 <status>production</status>
-<org_id>3</org_id>
+<org_id>2</org_id>
 <severity>high</severity>
-<location_id>1</location_id>
+<location_id>3</location_id>
 <brand></brand>
 <model></model>
 <serial_number></serial_number>
+<mgmt_ip></mgmt_ip>
 <type>switch</type>
-<ip_address></ip_address>
 <default_gateway></default_gateway>
 <ios_version></ios_version>
 <memory></memory>
