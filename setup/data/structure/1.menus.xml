@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Set>
-<menuNode id="37">
+<menuNode id="1">
 <name>Admin tools</name>
 <label>Admin tools</label>
 <hyperlink>UI.php</hyperlink>
@@ -15,7 +15,7 @@
 <parent_id>0</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="1">
+<menuNode id="2">
 <name>All Applications</name>
 <label>All Applications</label>
 <hyperlink>UI.php</hyperlink>
@@ -31,10 +31,10 @@
 </template>
 <type>application</type>
 <rank>999</rank>
-<parent_id>15</parent_id>
+<parent_id>16</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="2">
+<menuNode id="3">
 <name>All Circuits</name>
 <label>All Circuits</label>
 <hyperlink>UI.php</hyperlink>
@@ -50,10 +50,10 @@
 </template>
 <type>application</type>
 <rank>999</rank>
-<parent_id>15</parent_id>
+<parent_id>16</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="3">
+<menuNode id="4">
 <name>All Contracts</name>
 <label>All Contracts</label>
 <hyperlink>./UI.php</hyperlink>
@@ -65,10 +65,10 @@
 &lt;/div&gt;</template>
 <type>application</type>
 <rank>2</rank>
-<parent_id>33</parent_id>
+<parent_id>38</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="4">
+<menuNode id="5">
 <name>All Interfaces</name>
 <label>All Interfaces</label>
 <hyperlink>UI.php</hyperlink>
@@ -84,10 +84,10 @@
 </template>
 <type>application</type>
 <rank>999</rank>
-<parent_id>15</parent_id>
+<parent_id>16</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="5">
+<menuNode id="6">
 <name>All Network devices</name>
 <label>All Network devices</label>
 <hyperlink>UI.php</hyperlink>
@@ -103,10 +103,10 @@
 </template>
 <type>application</type>
 <rank>999</rank>
-<parent_id>15</parent_id>
+<parent_id>16</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="6">
+<menuNode id="7">
 <name>All Patches</name>
 <label>All Patches</label>
 <hyperlink>UI.php</hyperlink>
@@ -122,10 +122,10 @@
 </template>
 <type>application</type>
 <rank>999</rank>
-<parent_id>15</parent_id>
+<parent_id>16</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="7">
+<menuNode id="8">
 <name>All PCs</name>
 <label>All PCs</label>
 <hyperlink>UI.php</hyperlink>
@@ -141,10 +141,10 @@
 </template>
 <type>application</type>
 <rank>999</rank>
-<parent_id>15</parent_id>
+<parent_id>16</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="8">
+<menuNode id="9">
 <name>All Servers</name>
 <label>All Servers</label>
 <hyperlink>UI.php</hyperlink>
@@ -160,10 +160,10 @@
 </template>
 <type>application</type>
 <rank>999</rank>
-<parent_id>15</parent_id>
+<parent_id>16</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="9">
+<menuNode id="10">
 <name>All Services</name>
 <label>All Services</label>
 <hyperlink>UI.php</hyperlink>
@@ -175,10 +175,10 @@
 &lt;/div&gt;</template>
 <type>application</type>
 <rank>1</rank>
-<parent_id>33</parent_id>
+<parent_id>38</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="10">
+<menuNode id="11">
 <name>All Subnets</name>
 <label>All subnets</label>
 <hyperlink>UI.php</hyperlink>
@@ -194,10 +194,10 @@
 </template>
 <type>application</type>
 <rank>999</rank>
-<parent_id>15</parent_id>
+<parent_id>16</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="11">
+<menuNode id="12">
 <name>Audit</name>
 <label>Audit</label>
 <hyperlink>./audit.php</hyperlink>
@@ -205,10 +205,10 @@
 <template></template>
 <type>application</type>
 <rank>4</rank>
-<parent_id>16</parent_id>
+<parent_id>17</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="12">
+<menuNode id="13">
 <name>Change Management</name>
 <label>Change Management</label>
 <hyperlink>./UI.php</hyperlink>
@@ -249,7 +249,7 @@ text-align:center;
 <parent_id>0</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="13">
+<menuNode id="14">
 <name>Closed Changes</name>
 <label>Closed Changes</label>
 <hyperlink>UI.php</hyperlink>
@@ -261,10 +261,10 @@ text-align:center;
 &lt;/div&gt;</template>
 <type>application</type>
 <rank>5</rank>
-<parent_id>12</parent_id>
+<parent_id>13</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="14">
+<menuNode id="15">
 <name>Closed Incident</name>
 <label>List of closed ticket</label>
 <hyperlink>./UI.php</hyperlink>
@@ -276,10 +276,10 @@ text-align:center;
 &lt;/div&gt;</template>
 <type>application</type>
 <rank>5</rank>
-<parent_id>21</parent_id>
+<parent_id>24</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="15">
+<menuNode id="16">
 <name>Configuration Items</name>
 <label>All about devices</label>
 <hyperlink>UI.php</hyperlink>
@@ -312,10 +312,10 @@ text-align:center;
 &lt;/table&gt;</template>
 <type>application</type>
 <rank>2</rank>
-<parent_id>16</parent_id>
+<parent_id>17</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="16">
+<menuNode id="17">
 <name>Configuration Management</name>
 <label>Configuration Management</label>
 <hyperlink>UI.php</hyperlink>
@@ -355,7 +355,7 @@ td.dashboard {
 <parent_id>0</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="17">
+<menuNode id="18">
 <name>Contacts</name>
 <label>Everything about Contacts</label>
 <hyperlink>UI.php</hyperlink>
@@ -381,10 +381,10 @@ td.dashboard {
 &lt;/table&gt;</template>
 <type>application</type>
 <rank>1</rank>
-<parent_id>16</parent_id>
+<parent_id>17</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="18">
+<menuNode id="19">
 <name>CSV import</name>
 <label>Bulk creation or update</label>
 <hyperlink>csvimport.php</hyperlink>
@@ -392,10 +392,10 @@ td.dashboard {
 <template></template>
 <type>application</type>
 <rank>999</rank>
-<parent_id>35</parent_id>
+<parent_id>40</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="38">
+<menuNode id="20">
 <name>Data Model</name>
 <label>Overview of the Data Model</label>
 <hyperlink>schema.php</hyperlink>
@@ -403,10 +403,10 @@ td.dashboard {
 <template></template>
 <type>administrator</type>
 <rank>1500</rank>
-<parent_id>37</parent_id>
+<parent_id>1</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="19">
+<menuNode id="21">
 <name>Document</name>
 <label>Any object of class &apos;Document&apos;</label>
 <hyperlink>UI.php</hyperlink>
@@ -421,10 +421,10 @@ td.dashboard {
 &lt;/div&gt;</template>
 <type>application</type>
 <rank>6</rank>
-<parent_id>16</parent_id>
+<parent_id>17</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="43">
+<menuNode id="22">
 <name>Export</name>
 <label>Export any filter in HTML, CSV or XML</label>
 <hyperlink>../webservices/export.php</hyperlink>
@@ -432,10 +432,10 @@ td.dashboard {
 <template></template>
 <type>administrator</type>
 <rank>1001</rank>
-<parent_id>37</parent_id>
+<parent_id>1</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="20">
+<menuNode id="23">
 <name>Grouping</name>
 <label>All Groups</label>
 <hyperlink>UI.php</hyperlink>
@@ -454,10 +454,10 @@ td.dashboard {
 </template>
 <type>application</type>
 <rank>3</rank>
-<parent_id>16</parent_id>
+<parent_id>17</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="21">
+<menuNode id="24">
 <name>Incident Management</name>
 <label>Incident Management</label>
 <hyperlink>./UI.php</hyperlink>
@@ -498,7 +498,7 @@ text-align:center;
 <parent_id>0</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="22">
+<menuNode id="25">
 <name>Known Errors</name>
 <label>Known Errors</label>
 <hyperlink>./UI.php</hyperlink>
@@ -510,10 +510,10 @@ text-align:center;
 &lt;/div&gt;</template>
 <type>application</type>
 <rank>999</rank>
-<parent_id>21</parent_id>
+<parent_id>24</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="23">
+<menuNode id="26">
 <name>Locations</name>
 <label>Any locations</label>
 <hyperlink>UI.php</hyperlink>
@@ -528,10 +528,10 @@ text-align:center;
 &lt;/div&gt;</template>
 <type>application</type>
 <rank>5</rank>
-<parent_id>16</parent_id>
+<parent_id>17</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="24">
+<menuNode id="27">
 <name>My Changes</name>
 <label>My changes</label>
 <hyperlink>UI.php</hyperlink>
@@ -547,10 +547,10 @@ text-align:center;
 </template>
 <type>application</type>
 <rank>1</rank>
-<parent_id>12</parent_id>
+<parent_id>13</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="25">
+<menuNode id="28">
 <name>My Incidents</name>
 <label>My Incidents</label>
 <hyperlink>UI.php</hyperlink>
@@ -567,10 +567,10 @@ text-align:center;
 </template>
 <type>application</type>
 <rank>1</rank>
-<parent_id>21</parent_id>
+<parent_id>24</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="26">
+<menuNode id="29">
 <name>My Service calls</name>
 <label>My Service calls</label>
 <hyperlink>UI.php</hyperlink>
@@ -586,10 +586,10 @@ text-align:center;
 </template>
 <type>application</type>
 <rank>1</rank>
-<parent_id>32</parent_id>
+<parent_id>37</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="27">
+<menuNode id="30">
 <name>Open Changes</name>
 <label>Open Changes</label>
 <hyperlink>./UI.php</hyperlink>
@@ -601,10 +601,10 @@ text-align:center;
 &lt;/div&gt;</template>
 <type>application</type>
 <rank>3</rank>
-<parent_id>12</parent_id>
+<parent_id>13</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="28">
+<menuNode id="31">
 <name>Open Incidents</name>
 <label>List of open incidents</label>
 <hyperlink>UI.php</hyperlink>
@@ -616,10 +616,10 @@ text-align:center;
 &lt;/div&gt;</template>
 <type>application</type>
 <rank>3</rank>
-<parent_id>21</parent_id>
+<parent_id>24</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="29">
+<menuNode id="32">
 <name>Open Service calls</name>
 <label>Open Service calls</label>
 <hyperlink>UI.php</hyperlink>
@@ -631,10 +631,10 @@ text-align:center;
 &lt;/div&gt;</template>
 <type>application</type>
 <rank>2</rank>
-<parent_id>32</parent_id>
+<parent_id>37</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="30">
+<menuNode id="33">
 <name>Persons</name>
 <label>Any contact of class &apos;Person&apos;</label>
 <hyperlink>UI.php</hyperlink>
@@ -646,10 +646,10 @@ text-align:center;
 &lt;/div&gt;</template>
 <type>application</type>
 <rank>7</rank>
-<parent_id>17</parent_id>
+<parent_id>18</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="42">
+<menuNode id="34">
 <name>Profiles</name>
 <label>User profiles</label>
 <hyperlink>UI.php</hyperlink>
@@ -663,10 +663,10 @@ text-align:center;
 </template>
 <type>administrator</type>
 <rank>11</rank>
-<parent_id>40</parent_id>
+<parent_id>43</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="44">
+<menuNode id="35">
 <name>Run queries</name>
 <label>Run any query</label>
 <hyperlink>./run_query.php</hyperlink>
@@ -674,10 +674,10 @@ text-align:center;
 <template></template>
 <type>administrator</type>
 <rank>1002</rank>
-<parent_id>37</parent_id>
+<parent_id>1</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="31">
+<menuNode id="36">
 <name>Scheduled Outages</name>
 <label>Scheduled Outages</label>
 <hyperlink>./UI.php</hyperlink>
@@ -689,10 +689,10 @@ text-align:center;
 &lt;/div&gt;</template>
 <type>application</type>
 <rank>7</rank>
-<parent_id>12</parent_id>
+<parent_id>13</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="32">
+<menuNode id="37">
 <name>Service Desk</name>
 <label>Service Desk</label>
 <hyperlink>UI.php</hyperlink>
@@ -732,7 +732,7 @@ text-align:center;
 <parent_id>0</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="33">
+<menuNode id="38">
 <name>Service Management</name>
 <label>Service Management</label>
 <hyperlink>./UI.php</hyperlink>
@@ -770,7 +770,7 @@ text-align:center;
 <parent_id>0</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="34">
+<menuNode id="39">
 <name>Teams</name>
 <label>Any contact of class &apos;team&apos;</label>
 <hyperlink>UI.php</hyperlink>
@@ -782,10 +782,10 @@ text-align:center;
 &lt;/div&gt;</template>
 <type>application</type>
 <rank>8</rank>
-<parent_id>17</parent_id>
+<parent_id>18</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="35">
+<menuNode id="40">
 <name>Tools</name>
 <label>Advanced tools</label>
 <hyperlink>UI.php</hyperlink>
@@ -800,7 +800,7 @@ text-align:center;
 <parent_id>0</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="39">
+<menuNode id="41">
 <name>Universal Search</name>
 <label>Search for anything...</label>
 <hyperlink>UniversalSearch.php</hyperlink>
@@ -808,10 +808,10 @@ text-align:center;
 <template></template>
 <type>administrator</type>
 <rank>1600</rank>
-<parent_id>37</parent_id>
+<parent_id>1</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="41">
+<menuNode id="42">
 <name>User logins</name>
 <label>User logins</label>
 <hyperlink>UI.php</hyperlink>
@@ -825,10 +825,10 @@ text-align:center;
 </template>
 <type>administrator</type>
 <rank>10</rank>
-<parent_id>40</parent_id>
+<parent_id>43</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="40">
+<menuNode id="43">
 <name>User management</name>
 <label>User management</label>
 <hyperlink>UI.php</hyperlink>
@@ -841,20 +841,78 @@ text-align:center;
 </template>
 <type>administrator</type>
 <rank>1</rank>
-<parent_id>37</parent_id>
+<parent_id>1</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="36">
+<menuNode id="44">
 <name>Welcome</name>
 <label>Welcome</label>
 <hyperlink>./UI.php</hyperlink>
 <icon_path></icon_path>
-<template>&lt;p&gt;&lt;/p&gt;
+<template>&lt;style&gt;
+.dashboard {
+vertical-align:top;
+width:50%;
+border:0px solid #000;
+-moz-border-radius:10px;
+background-color:#F2F2F2;
+padding:5px;
+text-align:left;
+}
+.dashboard2 {
+vertical-align:top;
+width:50%;
+border:0px solid #000;
+-moz-border-radius:10px;
+padding:5px;
+text-align:left;
+}
+
+&lt;/style&gt;
+
+&lt;p&gt;&lt;/p&gt;
 &lt;p&gt;&lt;/p&gt;
 &lt;p style=&quot;text-align:center; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:32px;&quot;&gt;Welcome to iTop&lt;/p&gt;
 &lt;p&gt;&lt;/p&gt;
 &lt;p style=&quot;text-align:center; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:14px;&quot;&gt;&lt;i&gt;Version 0.8&lt;/i&gt;&lt;/p&gt;
-</template>
+&lt;table border=&quot;0&quot; padding=&quot;5&quot;&gt;
+&lt;tr&gt;
+&lt;td class=&quot;dashboard&quot;&gt;
+&lt;p style&quot;font-size:20px&quot;&gt;ITOP is the first complete IT Operational Portal. It includes:&lt;/p&gt;
+- A complete CMDB (Configuration management database) allowing IT operations to document the IT inventory.
+&lt;br&gt;- An Incident management module allowing IT operations to track and communicate about all issues occurring in the IT.
+&lt;br&gt;- A change management module allowing IT operations to better deal with all the changes occurring.
+&lt;br&gt;- A service management module allowing IT operations to document all the contracts and services they have under their control.
+&lt;br&gt;- A known error database allows IT operations to document fixes for known issues in order to speed up the resolution processes.
+&lt;br&gt;- An outage module allows IT operations to document all planned outages and notify concerned contacts.
+&lt;br&gt;- Dashboards allow you to quickly get an overview of your IT.
+
+&lt;br&gt;&lt;br&gt;Each module can be set up little by little, independently.
+&lt;/td&gt;
+&lt;td class=&quot;dashboard&quot;&gt;
+&lt;p&gt;ITOP is service provider oriented, it allows IT engineers to manage easily multiple customers or organizations. ITOP, a robust OpenSource Web 2.0 application, delivers a feature-rich set of business processes that:&lt;/p&gt;
+- enhances IT management effectiveness, 
+&lt;br&gt;  - drives IT operations performance, 
+&lt;br&gt;  - improves customer satisfaction and provides executives with insights into business performance. 
+&lt;br&gt;&lt;br&gt;ITOP is completely opened to be integrated within your current IT Management infrastructure.
+&lt;br&gt;&lt;br&gt;Adopting this new generation of IT Operational portal will help you to:
+&lt;br&gt;  - Better manage a more and more complex IT environment.
+&lt;br&gt;  - Move step by step to an ITIL oriented way to manage your customers.
+&lt;br&gt;  - Manage the most important asset of your IT:  Documentation.
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td class=&quot;dashboard2&quot;&gt;
+&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;&quot;&gt;My Service calls&lt;/p&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizServiceCall&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizServiceCall AS i WHERE i.caller_id = :current_contact_id&lt;/itopblock&gt;
+&lt;/td&gt;
+&lt;td class=&quot;dashboard2&quot;&gt;
+&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;&quot;&gt;My Incident tickets&lt;/p&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizIncidentTicket&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizIncidentTicket AS i WHERE i.caller_id = :current_contact_id&lt;/itopblock&gt;
+&lt;/td&gt;
+
+&lt;/tr&gt;
+&lt;/table&gt;</template>
 <type>application</type>
 <rank>1</rank>
 <parent_id>0</parent_id>
