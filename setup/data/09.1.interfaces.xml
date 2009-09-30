@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<bizInterface id="322">
+<name>ethernet0/1</name>
+<status>implementation</status>
+<org_id>2</org_id>
+<severity>low</severity>
+<device_id>313</device_id>
+<logical_type>port</logical_type>
+<physical_type>ethernet</physical_type>
+<ip_address>15.128.3.2</ip_address>
+<mask></mask>
+<mac></mac>
+<speed></speed>
+<duplex>unknown</duplex>
+<if_connected_id>0</if_connected_id>
+</bizInterface>
+<bizInterface id="324">
+<name>ethernet0/2</name>
+<status>implementation</status>
+<org_id>2</org_id>
+<severity>low</severity>
+<device_id>314</device_id>
+<logical_type>port</logical_type>
+<physical_type>ethernet</physical_type>
+<ip_address>15.128.3.1</ip_address>
+<mask></mask>
+<mac></mac>
+<speed></speed>
+<duplex>unknown</duplex>
+<if_connected_id>0</if_connected_id>
+</bizInterface>
+<bizInterface id="330">
+<name>ethernet0/3</name>
+<status>implementation</status>
+<org_id>2</org_id>
+<severity>low</severity>
+<device_id>11</device_id>
+<logical_type>port</logical_type>
+<physical_type>ethernet</physical_type>
+<ip_address>15.128.3.4</ip_address>
+<mask></mask>
+<mac></mac>
+<speed></speed>
+<duplex>unknown</duplex>
+<if_connected_id>0</if_connected_id>
+</bizInterface>
+</Set>
