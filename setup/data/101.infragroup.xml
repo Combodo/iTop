@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<lnkInfraGrouping id="1">
+<infra_id>107</infra_id>
+<infra_group_id>326</infra_group_id>
+<impact>monitored</impact>
+</lnkInfraGrouping>
+<lnkInfraGrouping id="2">
+<infra_id>306</infra_id>
+<infra_group_id>326</infra_group_id>
+<impact>monitoring server</impact>
+</lnkInfraGrouping>
+</Set>

@@ -19,6 +19,7 @@ wget --output-document=09.1.interfaces.xml --post-data="auth_user=%USER%&auth_pw
 wget --output-document=09.2.circuits.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT bizCircuit&format=xml"
 wget --output-document=10.workgroups.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT bizWorkgroup&format=xml"
 wget --output-document=11.incidents.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT bizIncidentTicket&format=xml"
+wget --output-document=11.1.servicecall.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT bizServiceCall&format=xml"
 wget --output-document=12.relatedtickets.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT lnkRelatedTicket&format=xml"
 wget --output-document=13.infratickets.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT lnkInfraTicket&format=xml"
 wget --output-document=14.contacttickets.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT lnkContactTicket&format=xml"
@@ -29,6 +30,17 @@ wget --output-document=18.contracts.xml --post-data="auth_user=%USER%&auth_pwd=%
 wget --output-document=18.1.services.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT bizService&format=xml"
 wget --output-document=19.infracontracts.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT lnkInfraContract&format=xml"
 wget --output-document=20.contactcontracts.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT lnkContactContract&format=xml"
+
+REM ----------- to be moved (or move the links at the end)
 wget --output-document=21.subnets.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT bizSubnet&format=xml"
+
+wget --output-document=50.knownerror.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT bizKnownError&format=xml"
+
+REM ----------- what about hierarchies?
+wget --output-document=60.group.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT bizInfraGroup&format=xml"
+
+wget --output-document=99.contactteam.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT lnkContactTeam&format=xml"
+wget --output-document=100.contactobject.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT lnkContactRealObject&format=xml"
+wget --output-document=101.infragroup.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT lnkInfraGrouping&format=xml"
 
 pause
