@@ -108,29 +108,6 @@ It seems that hard disk is broken</initial_situation>
 <assignment_count>1</assignment_count>
 <resolution></resolution>
 </bizIncidentTicket>
-<bizIncidentTicket id="6">
-<name>I-000006</name>
-<title>Demo</title>
-<type>Desktop</type>
-<org_id>2</org_id>
-<ticket_status>WorkInProgress</ticket_status>
-<initial_situation>gdfgl</initial_situation>
-<current_situation></current_situation>
-<start_date>2009-03-18 22:00:00</start_date>
-<last_update>2009-09-17 18:41:44</last_update>
-<next_update>0000-00-00 00:00:00</next_update>
-<end_date>0000-00-00 00:00:00</end_date>
-<caller_id>5</caller_id>
-<impact>personne ne peut acceder au site de paris</impact>
-<workgroup_id>317</workgroup_id>
-<agent_id>6</agent_id>
-<action_log>posjgsrkg
-jgmklerjg
-gejrg</action_log>
-<severity>low</severity>
-<assignment_count>1</assignment_count>
-<resolution></resolution>
-</bizIncidentTicket>
 <bizIncidentTicket id="9">
 <name>I-000009</name>
 <title>Issue on WAN</title>
