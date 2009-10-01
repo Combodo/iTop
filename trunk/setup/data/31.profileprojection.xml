@@ -1,15 +1,3 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Set>
-<URP_ProfileProjection id="1">
-<dimensionid>1</dimensionid>
-<profileid>100</profileid>
-<value>1;2</value>
-<attribute></attribute>
-</URP_ProfileProjection>
-<URP_ProfileProjection id="3">
-<dimensionid>2</dimensionid>
-<profileid>100</profileid>
-<value>&lt;any&gt;</value>
-<attribute></attribute>
-</URP_ProfileProjection>
 </Set>
