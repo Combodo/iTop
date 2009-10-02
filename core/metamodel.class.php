@@ -294,6 +294,28 @@ abstract class MetaModel
 		// This attribute has been inherited (compound objects)
 		return self::DBGetTable(self::$m_aAttribOrigins[$sClass][$sAttCode]);
 	}
+
+	final static protected function DBEnumTables()
+	{
+		// This API do not rely on our capability to query the DB and retrieve
+		// the list of existing tables
+		// Rather, it uses the list of expected tables, corresponding to the data model
+		$aTables = array();
+		foreach (self::GetClasses() as $sClass)
+		{
+			if (self::IsAbstract($sClass)) continue;
+			$sTable = self::DBGetTable($sClass);
+
+			// Could be completed later with all the classes that are using a given table 
+			if (!array_key_exists($sTable, $aTables))
+			{
+				$aTables[$sTable] = array();
+			}
+			$aTables[$sTable][] = $sClass;
+		}
+		return $aTables;
+	} 
+
 	final static public function DBGetKey($sClass)
 	{
 		self::_check_subclass($sClass);	
@@ -1996,6 +2018,17 @@ abstract class MetaModel
 		}
 		// does not work -how to have multiple statements in a single query?
 		// $sDoCreateAll = implode(" ; ", $aSQL);
+	}
+
+	public static function DBDump()
+	{
+		$aDataDump = array();
+		foreach (self::DBEnumTables() as $sTable => $aClasses)
+		{
+			$aRows = CMDBSource::DumpTable($sTable);
+			$aDataDump[$sTable] = $aRows;
+		}
+		return $aDataDump;
 	}
 
 	public static function DBCheckFormat()

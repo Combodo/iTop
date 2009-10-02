@@ -207,6 +207,46 @@ function DebugQuery($sConfigFile)
 	$oSet = new CMDBObjectSet($oFlt);
 	echo $oSet; // __toString()
 }
+
+function DumpDatabase()
+{
+	$aData = MetaModel::DBDump();
+	foreach ($aData as $sTable => $aRows)
+	{
+		echo "<h1>".htmlentities($sTable)."</h1>\n";
+
+		if (count($aRows) == 0)
+		{
+			echo "<p>no data</p>\n";
+		}
+		else
+		{
+			echo "<p>".count($aRows)." row(s)</p>\n";
+		// Table header
+			echo "<table border=\"1\">\n";
+			echo "<tr>\n";
+			foreach (reset($aRows) as $key => $value)
+			{
+				echo "<th>".htmlentities($key)."</th>";
+			}
+			echo "</tr>\n";
+	
+			// Table body
+			foreach ($aRows as $aRow)
+			{
+				echo "<tr>\n";
+				foreach ($aRow as $key => $value)
+				{
+					echo "<td>".htmlentities($value)."</td>";
+				}
+				echo "</tr>\n";
+			}
+	
+			echo "</table>\n";
+		}
+	}
+}
+
 /////////////////////////////////////////////////////////////////////////////////////
 // Helper functions
 /////////////////////////////////////////////////////////////////////////////////////
@@ -234,6 +274,7 @@ function printMenu($sConfigFile)
 		echo "   <li><a href=\"$sUrl&todo=checkall\">Check business model, DB format and data integrity</a></li>";
 		echo "   <li><a href=\"$sUrl&todo=showtables\">Show Tables</a></li>";
 		echo "   <li><a href=\"$sUrl&todo=debugquery\">Test an OQL query (debug)</a></li>";
+		echo "   <li><a href=\"$sUrl&todo=dumpdb\">Dump database</a></li>";
 //		echo "   <li>".htmlentities($sUrl)."&amp;<b>todo=execsql</b>&amp;<b>sql=xxx</b>, to execute a specific sql request</li>";
 	}
 	else
@@ -441,6 +482,11 @@ else
 		case "checkdb":
 			echo "Check DB integrity...</br>\n";
 			MetaModel::DBCheckIntegrity($sBaseUrl, "sql");
+			echo "done...</br>\n";
+			break;
+		case "dumpdb":
+			echo "Dump DB data...</br>\n";
+			DumpDatabase();
 			echo "done...</br>\n";
 			break;
 		case "userrightssetup":
