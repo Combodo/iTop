@@ -410,6 +410,24 @@ class CMDBSource
 		return self::$m_aTablesInfo[strtolower($sTable)];
 		//return null;
 	}
+
+	public static function DumpTable($sTable)
+	{
+		$sSql = "SELECT * FROM `$sTable`";
+		$result = mysql_query($sSql, self::$m_resDBLink);
+		if (!$result)
+		{
+			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql));
+		}
+
+		$aRows = array();
+		while ($aRow = mysql_fetch_array($result, MYSQL_ASSOC))
+		{
+			$aRows[] = $aRow;
+		}
+		mysql_free_result($result);
+		return $aRows;
+	}
 }
 
 
