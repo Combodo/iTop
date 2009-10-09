@@ -9,7 +9,7 @@ define ('KEYS_CACHE_FILE', '../keyscache.tmp');
  * $oLoader->LoadFile('./organizations.xml');
  * $oLoader->LoadFile('./locations.xml');
  * $oLoader->EndSession();
- */ 
+ */
 class XMLDataLoader
 {
 	protected $m_aKeys;
@@ -32,6 +32,9 @@ class XMLDataLoader
 	
 	public function StartSession($oChange)
 	{
+		// Do cleanup any existing cache file (shall not be necessary unless a setup was interrupted abruptely)
+		$this->ClearKeysCache();
+
 		$this->m_oChange = $oChange;
 		$this->m_bSessionActive  = true;
 	}
@@ -91,7 +94,7 @@ class XMLDataLoader
 		}
 		else
 		{
-			echo "<p><strong>Error: Cannot write to file: '{$this->m_sCacheFileName}'!</strong></p>";
+			throw new Exception("Cannot write to file: '{$this->m_sCacheFileName}'");
 		}
 	}
 		 	
@@ -158,10 +161,12 @@ class XMLDataLoader
 					if ($oAttDef->IsExternalKey())
 					{
 						$iDstObj = (integer)($oXmlObj->$sAttCode);
+						// Attempt to find the object in the list of loaded objects
 						$iExtKey = $this->GetObjectKey($oAttDef->GetTargetClass(), $iDstObj);
 						if ($iExtKey == 0)
 						{
 							$iExtKey = -$iDstObj; // Convention: Unresolved keys are stored as negative !
+							$oTargetObj->RegisterAsDirty();
 						}
 						// tested by Romain, little impact on perf (not significant on the intial setup)
 						//$oTargetObj->CheckValue($sAttCode, $iExtKey);
@@ -240,12 +245,17 @@ class XMLDataLoader
 				{
 					if ( ($oAttDef->IsExternalKey()) && ($oTargetObj->Get($sAttCode) < 0) ) // Convention unresolved key = negative
 					{
-						$iExtKey = $this->GetObjectKey($oAttDef->GetTargetClass(), -$oTargetObj->Get($sAttCode));
+						$sTargetClass = $oAttDef->GetTargetClass();
+						$iTempKey = $oTargetObj->Get($sAttCode);
+
+						$iExtKey = $this->GetObjectKey($sTargetClass, -$iTempKey);
 						if ($iExtKey == 0)
 						{
-							echo "Warning: unresolved extkey in $sClass::".$oTargetObj->GetName()."(".$oTargetObj->GetKey().")::$sAttCode=".$oAttDef->GetTargetClass()."[".$oTargetObj->Get($sAttCode)."]<br/>\n";
-							echo "<pre>aKeys[".$oAttDef->GetTargetClass()."]:\n";
-							print_r($this->m_aKeys[$oAttDef->GetTargetClass()]);
+							$sMsg = "unresolved extkey in $sClass::".$oTargetObj->GetName()."(".$oTargetObj->GetKey().")::$sAttCode=$sTargetClass[$iTempKey]";
+							setup_web_page::log("Warning - $sMsg");
+							echo "Warning: $sMsg<br/>\n";
+							echo "<pre>aKeys[".$sTargetClass."]:\n";
+							print_r($this->m_aKeys[$sTargetClass]);
 							echo "</pre>\n";
 						}
 						else
