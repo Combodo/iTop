@@ -35,6 +35,7 @@ abstract class DBObject
 	private $m_aCurrValues = array();
 	protected $m_aOrigValues = array();
 
+	private $m_bDirty = false; // The object may have incorrect external keys, then any attempt of reload must be avoided
 	private $m_bFullyLoaded = false; // Compound objects can be partially loaded
 	private $m_aLoadedAtt = array(); // Compound objects can be partially loaded, array of sAttCode
 
@@ -69,6 +70,13 @@ abstract class DBObject
 				$this->m_aLoadedAtt[$sAttCode] = true;
 			}
 		}
+	}
+
+	public function RegisterAsDirty()
+	{
+		// While the object may be written to the DB, it is NOT possible to reload it
+		// or at least not possible to reload it the same way
+		$this->m_bDirty = true;	
 	}
 
 	public function IsNew()
@@ -228,7 +236,7 @@ abstract class DBObject
 			throw new CoreException("Unknown attribute code '$sAttCode' for the class ".get_class($this));
 		}
 		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-		if ($this->m_bIsInDB && !$this->m_bFullyLoaded)
+		if ($this->m_bIsInDB && !$this->m_bFullyLoaded && !$this->m_bDirty)
 		{
 			// First time Set is called... ensure that the object gets fully loaded
 			// Otherwise we would lose the values on a further Reload
