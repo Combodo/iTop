@@ -1,0 +1,45 @@
+.light .ui-form-textarea,
+.light.ui-form-textarea,
+.light .ui-form-fieldset,
+.light.ui-form-fieldset {
+  display:block;
+  border:1px solid #CCC;
+  padding:0;
+}
+.light .ui-form-fieldset,
+.light.ui-form-fieldset {
+  margin-top:1.6em;
+}
+.light textarea.ui-form,
+.light fieldset.ui-form {
+  margin:0;
+  border:1px solid #FFF;
+}
+.light textarea.ui-form { background:#F3F3F3; }
+.light fieldset.ui-form { background:#F6F6F6; }
+.light .ui-form-textarea.focus,
+.light.ui-form-textarea.focus {
+  border:1px solid #AAA;
+}
+.light textarea.ui-form:focus {
+  background:#F5F5F5;
+}
+.light .ui-form-legend,
+.light.ui-form-legend {
+  display:block;
+  text-align:left;
+  border:1px solid #CCC;
+  background:#F4F4F4;
+  margin:-1.05em 0 0 0;
+}
+.light legend.ui-form {
+  display:block;
+  font-weight:bold;
+  background:#F4F4F4;
+  border-top:1px dotted #EEE;
+  border-bottom:1px dotted #EEE;
+  margin:-1px 2px;
+  padding:0 2px 2px;
+}
+
+

@@ -1,0 +1,91 @@
+.light .ui-modal .top.pane,
+.light.ui-modal .top.pane {
+  position: relative;
+  cursor:move;
+}
+
+.light .ui-modal .top.pane .ui-modal-title-bar,
+.light.ui-modal .top.pane .ui-modal-title-bar {
+  background:#333;
+  color:snow;
+  padding:2px 4px;
+  border-bottom:1px solid #000;
+  font-weight:bold;
+}
+
+.light .ui-modal .top.pane .ui-modal-buttons-right,
+.light.ui-modal .top.pane .ui-modal-buttons-right {
+  position: absolute;
+  right: 5px;
+}
+
+.light .ui-modal .top.pane .ui-modal-button-close,
+.light.ui-modal .top.pane .ui-modal-button-close {
+  font:10pt Verdana;
+  font-weight:bold;
+  color:snow;
+  cursor:pointer;
+}
+
+.light .ui-modal .middle.pane,
+.light.ui-modal .middle.pane {
+  position:relative;
+  height: 100%;
+  background:#F3F3F3;
+  padding-top:4px;
+}
+.light .ui-modal .middle.pane .center.pane,
+.light.ui-modal .middle.pane .center.pane{
+  position:relative;
+  overflow: auto;
+  height: 100%;
+  margin:0 4px;
+  background:#FFF;
+}
+.light .ui-modal.noOverflow .middle.pane .center.pane,
+.light.ui-modal.noOverflow .middle.pane .center.pane{
+  overflow: visible;
+}
+
+.light .ui-modal .middle.pane .left.pane,
+.light.ui-modal .middle.pane .left.pane {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  border-left:1px solid #DDD;
+  height:100%;
+  width: 2px;
+}
+
+.light .ui-modal .middle.pane .right.pane,
+.light.ui-modal .middle.pane .right.pane {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  border-right:1px solid #DDD;
+  height:100%;
+  width: 2px;
+  cursor:e-resize;
+}
+
+.light .ui-modal .bottom.pane,
+.light.ui-modal .bottom.pane {
+  position: relative;
+  height:3px;
+  background:#F3F3F3;
+  border:1px solid #DDD;
+  border-top:none;
+  cursor:s-resize;
+}
+
+
+.light .ui-modal .bottom.pane .ui-modal-resize-se,
+.light.ui-modal .bottom.pane .ui-modal-resize-se {
+  position: absolute;
+  bottom:-1px;
+  right:-1px;
+  height:4px;
+  width:4px;
+  cursor:se-resize;
+}
+

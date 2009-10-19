@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<bizOrganization id="3">
+<name>Demo</name>
+<code>MCO</code>
+<status>implementation</status>
+<parent_id>3</parent_id>
+</bizOrganization>
+<bizOrganization id="6">
+<name>Oracle</name>
+<code>ORA</code>
+<status>production</status>
+<parent_id>6</parent_id>
+</bizOrganization>
+</Set>

@@ -1,0 +1,80 @@
+@media projection, screen { .ui-tabs-hide { display:none; } }
+@media print { .ui-tabs-nav { display: none; } }
+
+.ui-tabs-nav {
+  padding-left:10px;
+  float:left;
+  width:98%;
+  border-bottom:1px solid #FFF;
+  margin:0;
+}
+.ui-tabs-nav li {
+  list-style:none;
+  float:left;
+ }
+.ui-tabs-nav a {
+  background:url(i/tabs.gif) no-repeat left 4px;
+  display:block;
+  height:27px;
+  padding:0 0 0 4px;
+  text-decoration:none!important;
+  margin:1px 5px -2px 0;
+  font:9pt Verdana;
+  outline:none;
+}
+.ui-tabs-nav span {
+  background:url(i/tabs.gif) no-repeat right 4px;
+  display:block;
+  height:27px;
+  line-height:29px;
+  padding:0px 13px 0 10px;
+  margin-right:-3px;
+  color:#FFF;
+}
+.ui-tabs-nav .ui-tabs-selected a {
+  background-position:left -23px;
+}
+.ui-tabs-nav .ui-tabs-selected a span {
+  background-position:right -23px;
+  margin-bottom:0;
+  cursor:default;
+  }
+.ui-tabs-nav .ui-tabs-disabled a,
+.ui-tabs-nav .ui-tabs-disabled a span {
+  color:#000;
+  opacity:0.4;
+  filter:alpha(opacity=40);
+  cursor:default;
+}
+.ui-tabs-container {
+  background:#FFF;
+  border:1px solid #519E2D;
+  clear:left;
+  padding:10px 10px 8px 10px;
+  *padding-top:3px;
+  *margin-top:-24px;
+}
+
+/* hacks to get it working in IE */
+.ui-tabs-nav li {
+  display: inline !important;
+  position: relative;
+  _top: -3px;
+}
+.ui-tabs-nav li a {
+  display: inline !important;
+  float: left;
+  _padding-left: 2px;
+}
+.ui-tabs-nav li a span {
+  display: inline !important;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  _padding-bottom: 0px;
+  position: relative;
+  top: -2px;
+  _top: 0px;
+  _left: 3px;
+  _padding-bottom: 2px;
+  _padding-right: 13px;
+}

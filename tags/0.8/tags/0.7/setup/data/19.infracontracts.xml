@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<lnkInfraContract id="1">
+<infra_id>22</infra_id>
+<contract_id>1</contract_id>
+<coverage>Office Hour</coverage>
+<service_level>Gold</service_level>
+</lnkInfraContract>
+</Set>

@@ -1,0 +1,413 @@
+<?php
+
+/**
+ * SQLQuery
+ * build an mySQL compatible SQL query
+ *
+ * @package     iTopORM
+ * @author      Romain Quetiez <romainquetiez@yahoo.fr>
+ * @author      Denis Flaven <denisflave@free.fr>
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.itop.com
+ * @since       1.0
+ * @version     1.1.1.1 $
+ */
+
+require_once('cmdbsource.class.inc.php');
+
+
+class SQLExpression extends BinaryExpression
+{
+}
+class ScalarSQLExpression extends ScalarExpression
+{
+}
+class TrueSQLExpression extends TrueExpression
+{
+}
+class FieldSQLExpression extends FieldExpression
+{
+}
+
+
+
+class SQLQuery
+{
+	private $m_sTable = '';
+	private $m_sTableAlias = '';
+	private $m_aFields = array();
+	private $m_oConditionExpr = null;
+	private $m_aFullTextNeedles = array();
+	private $m_bToDelete = true; // The current table must be listed for deletion ?
+	private $m_aValues = array(); // Values to set in case of an update query
+	private $m_aJoinSelects = array();
+
+	public function __construct($sTable, $sTableAlias, $aFields, $oConditionExpr, $aFullTextNeedles, $bToDelete = true, $aValues = array())
+	{
+		if (!CMDBSource::IsTable($sTable))
+		{
+			trigger_error("Unknown table '$sTable'", E_USER_ERROR);
+		}
+		// $aFields must be an array of "alias"=>"expr"
+		// $oConditionExpr must be a condition tree
+		// $aValues is an array of "alias"=>value
+
+		$this->m_sTable = $sTable;
+		$this->m_sTableAlias = $sTableAlias;
+		$this->m_aFields = $aFields;
+		$this->m_oConditionExpr = $oConditionExpr;
+		if (is_null($oConditionExpr))
+		{
+			$this->m_oConditionExpr = new TrueExpression;
+		}
+		else if (!$oConditionExpr instanceof Expression)
+		{
+			throw new CoreException('Invalid type for condition, expecting an Expression', array('class' => get_class($oConditionExpr)));
+		}
+		$this->m_aFullTextNeedles = $aFullTextNeedles;
+		$this->m_bToDelete = $bToDelete;
+		$this->m_aValues = $aValues;
+	}
+
+	public function DisplayHtml()
+	{
+		if (count($this->m_aFields) == 0) $sFields = "";
+		else
+		{
+			$aFieldDesc = array();
+			foreach ($this->m_aFields as $sAlias => $oExpression)
+			{
+				$aFieldDesc[] = $oExpression->Render()." as <em>$sAlias</em>";
+			}
+			$sFields = " =&gt; ".implode(', ', $aFieldDesc);
+		}
+		echo "<b>$this->m_sTable</b>$sFields<br/>\n";
+		// #@# todo - display html of an expression tree
+		//$this->m_oConditionExpr->DisplayHtml()
+		if (count($this->m_aFullTextNeedles) > 0)
+		{
+			echo "Full text criteria...<br/>\n";
+			echo "<ul class=\"treeview\">\n";
+			foreach ($this->m_aFullTextNeedles as $sFTNeedle)
+			{
+				echo "<li>$sFTNeedle</li>\n";
+			}
+			echo "</ul>";
+		}
+		if (count($this->m_aJoinSelects) > 0)
+		{
+			echo "Joined to...<br/>\n";
+			echo "<ul class=\"treeview\">\n";
+			foreach ($this->m_aJoinSelects as $aJoinInfo)
+			{
+				$sJoinType = $aJoinInfo["jointype"];
+				$oSQLQuery = $aJoinInfo["select"];
+				$sLeftField = $aJoinInfo["leftfield"];
+				$sRightField = $aJoinInfo["rightfield"];
+				$sRightTableAlias = $aJoinInfo["righttablealias"];
+
+				echo "<li>Join '$sJoinType', $sLeftField, $sRightTableAlias.$sRightField".$oSQLQuery->DisplayHtml()."</li>\n";
+			}
+			echo "</ul>";
+		}
+		$aFrom = array();
+		$aFields = array();
+		$oCondition = null;
+		$aDelTables = array();
+		$aSetValues = array();
+		$this->privRender($aFrom, $aFields, $oCondition, $aDelTables, $aSetValues);
+		echo "From ...<br/>\n";
+		echo "<pre style=\"font-size: smaller;\">\n";
+		print_r($aFrom);
+		echo "</pre>";
+	}
+
+	public function SetCondition($oConditionExpr)
+	{
+		$this->m_oConditionExpr = $oConditionExpr;
+	}
+
+	public function AddCondition($oConditionExpr)
+	{
+		$this->m_oConditionExpr->LogAnd($oConditionExpr);
+	}
+
+	private function AddJoin($sJoinType, $oSQLQuery, $sLeftField, $sRightField, $sRightTableAlias = '')
+	{
+		assert((get_class($oSQLQuery) == __CLASS__) || is_subclass_of($oSQLQuery, __CLASS__));
+		if (!CMDBSource::IsField($this->m_sTable, $sLeftField))
+		{
+			trigger_error("Unknown field '$sLeftField' in table '".$this->m_sTable, E_USER_ERROR);
+		}
+		if (empty($sRightTableAlias))
+		{
+			$sRightTableAlias = $oSQLQuery->m_sTableAlias;
+		}
+// #@# Could not be verified here because the namespace is unknown - do we need to check it there?
+//
+//		if (!CMDBSource::IsField($sRightTable, $sRightField))
+//		{
+//			trigger_error("Unknown field '$sRightField' in table '".$sRightTable."'", E_USER_ERROR);
+//		}
+
+		$this->m_aJoinSelects[] = array(
+			"jointype" => $sJoinType,
+			"select" => $oSQLQuery,
+			"leftfield" => $sLeftField,
+			"rightfield" => $sRightField,
+			"righttablealias" => $sRightTableAlias
+		);
+	}
+	public function AddInnerJoin($oSQLQuery, $sLeftField, $sRightField, $sRigthtTable = '')
+	{
+		$this->AddJoin("inner", $oSQLQuery, $sLeftField, $sRightField, $sRigthtTable);
+	}
+	public function AddLeftJoin($oSQLQuery, $sLeftField, $sRightField)
+	{
+		return $this->AddJoin("left", $oSQLQuery, $sLeftField, $sRightField);
+	}
+	
+	// Interface, build the SQL query
+	public function RenderDelete()
+	{
+		// The goal will be to complete the list as we build the Joins
+		$aFrom = array();
+		$aFields = array();
+		$oCondition = null;
+		$aDelTables = array();
+		$aSetValues = array();
+		$this->privRender($aFrom, $aFields, $oCondition, $aDelTables, $aSetValues);
+
+		// Target: DELETE myAlias1, myAlias2 FROM t1 as myAlias1, t2 as myAlias2, t3 as topreserve WHERE ...
+
+		$sDelete = self::ClauseDelete($aDelTables);
+		$sFrom   = self::ClauseFrom($aFrom);
+		// #@# safety net to redo ?
+		/*
+		if ($this->m_oConditionExpr->IsAny())
+		-- if (count($aConditions) == 0) --
+		{
+			trigger_error("Building a request wich will delete every object of a given table -looks suspicious- please use truncate instead...", E_USER_ERROR);
+		}
+		*/
+		$sWhere  = self::ClauseWhere($oCondition);
+		return "DELETE $sDelete FROM $sFrom WHERE $sWhere";
+	}
+
+	// Interface, build the SQL query
+	public function RenderUpdate()
+	{
+		// The goal will be to complete the list as we build the Joins
+		$aFrom = array();
+		$aFields = array();
+		$oCondition = null;
+		$aDelTables = array();
+		$aSetValues = array();
+		$this->privRender($aFrom, $aFields, $oCondition, $aDelTables, $aSetValues);
+
+		$sFrom   = self::ClauseFrom($aFrom);
+		$sValues = self::ClauseValues($aSetValues);
+		$sWhere  = self::ClauseWhere($oCondition);
+		return "UPDATE $sFrom SET $sValues WHERE $sWhere";
+	}
+
+	// Interface, build the SQL query
+	public function RenderSelect($aOrderBy = array())
+	{
+		// The goal will be to complete the lists as we build the Joins
+		$aFrom = array();
+		$aFields = array();
+		$oCondition = null;
+		$aDelTables = array();
+		$aSetValues = array();
+		$this->privRender($aFrom, $aFields, $oCondition, $aDelTables, $aSetValues);
+
+		$sSelect = self::ClauseSelect($aFields);
+		$sFrom   = self::ClauseFrom($aFrom);
+		$sWhere  = self::ClauseWhere($oCondition);
+		$sOrderBy = self::ClauseOrderBy($aOrderBy);
+		if (!empty($sOrderBy))
+		{
+			$sOrderBy = "ORDER BY $sOrderBy";
+		}
+		return "SELECT DISTINCT $sSelect FROM $sFrom WHERE $sWhere $sOrderBy";
+	}
+
+	private static function ClauseSelect($aFields)
+	{
+		$aSelect = array();
+		foreach ($aFields as $sFieldAlias => $sSQLExpr)
+		{
+			$aSelect[] = "$sSQLExpr AS $sFieldAlias";
+		}
+		$sSelect = implode(', ', $aSelect);
+		return $sSelect;
+	}
+
+	private static function ClauseDelete($aDelTableAliases)
+	{
+		$aDelTables = array();
+		foreach ($aDelTableAliases as $sTableAlias)
+		{
+			$aDelTables[] = "$sTableAlias";
+		}
+		$sDelTables = implode(', ', $aDelTables);
+		return $sDelTables;
+	}
+
+	private static function ClauseFrom($aFrom)
+	{
+		$sFrom = "";
+		foreach ($aFrom as $sTableAlias => $aJoinInfo)
+		{
+			switch ($aJoinInfo["jointype"])
+			{
+				case "first":
+					$sFrom .= "`".$aJoinInfo["tablename"]."` AS `$sTableAlias`";
+					$sFrom .= " ".self::ClauseFrom($aJoinInfo["subfrom"]);
+					break;
+				case "inner":
+					$sFrom .= " INNER JOIN (`".$aJoinInfo["tablename"]."` AS `$sTableAlias`";
+					$sFrom .= " ".self::ClauseFrom($aJoinInfo["subfrom"]);
+					$sFrom .= ") ON ".$aJoinInfo["joincondition"];
+					break;
+				case "left":
+					$sFrom .= " LEFT JOIN (`".$aJoinInfo["tablename"]."` AS `$sTableAlias`";
+					$sFrom .= " ".self::ClauseFrom($aJoinInfo["subfrom"]);
+					$sFrom .= ") ON ".$aJoinInfo["joincondition"];
+					break;
+				default:
+					trigger_error("Unknown jointype: '".$aJoinInfo["jointype"]."'");
+			}
+		}
+		return $sFrom;
+	}
+
+	private static function ClauseValues($aValues)
+	{
+		$aSetValues = array();
+		foreach ($aValues as $sFieldSpec => $value)
+		{
+			$aSetValues[] = "$sFieldSpec = ".CMDBSource::Quote($value);
+		}
+		$sSetValues = implode(', ', $aSetValues);
+		return $sSetValues;
+	}
+
+	private static function ClauseWhere($oConditionExpr)
+	{
+		return $oConditionExpr->Render();
+	}
+
+	private static function ClauseOrderBy($aOrderBy)
+	{
+		$aOrderBySpec = array();
+		foreach($aOrderBy as $sFieldAlias => $bAscending)
+		{
+			$aOrderBySpec[] = '`'.$sFieldAlias.'`'.($bAscending ? " ASC" : " DESC");
+		}
+		$sOrderBy = implode(", ", $aOrderBySpec);
+		return $sOrderBy;
+	}
+
+	// Purpose: prepare the query data, once for all
+	private function privRender(&$aFrom, &$aFields, &$oCondition, &$aDelTables, &$aSetValues)
+	{
+		$sTableAlias = $this->privRenderSingleTable($aFrom, $aFields, $aDelTables, $aSetValues);
+
+		// Add the full text search condition, based on each and every requested field
+		//
+		// To be updated with a real full text search based on the mySQL settings
+		// (then it might move somewhere else !)
+		//
+		$oCondition = $this->m_oConditionExpr;
+		if ((count($aFields) > 0) && (count($this->m_aFullTextNeedles) > 0))
+		{
+			$aFieldExp = array();
+			foreach ($aFields as $sField)
+			{
+				// This is TEMPORARY (that's why it is weird, actually)
+				// Full text match will be done as an expression in the filter condition
+
+				// $sField is already a string `table`.`column`
+				// Let's make an expression out of it (again !)
+				$aFieldExp[] = Expression::FromOQL($sField);
+			}
+			$oFullTextExpr = new CharConcatExpression($aFieldExp);
+			// The cast is necessary because the CONCAT result in a binary string:
+			// if any of the field is a binary string => case sensitive comparison
+			//
+			foreach($this->m_aFullTextNeedles as $sFTNeedle)
+			{
+				$oNewCond = new BinaryExpression($oFullTextExpr, 'LIKE', new ScalarExpression("%$sFTNeedle%"));
+				$oCondition = $oCondition->LogAnd($oNewCond);
+			}
+		}
+
+		return $sTableAlias; 
+	}
+
+	private function privRenderSingleTable(&$aFrom, &$aFields, &$aDelTables, &$aSetValues, $sJoinType = 'first', $sCallerAlias = '', $sLeftField = '', $sRightField = '', $sRightTableAlias = '')
+	{
+		$aActualTableFields = CMDBSource::GetTableFieldsList($this->m_sTable);
+
+		$aTranslationTable[$this->m_sTable]['*'] = $this->m_sTableAlias;
+
+		// Handle the various kinds of join (or first table in the list)
+		//
+		if (empty($sRightTableAlias))
+		{
+			$sRightTableAlias = $this->m_sTableAlias;
+		}
+		$sJoinCond = "`$sCallerAlias`.`$sLeftField` = `$sRightTableAlias`.`$sRightField`";
+		switch ($sJoinType)
+		{
+			case "first":
+				$aFrom[$this->m_sTableAlias] = array("jointype"=>"first", "tablename"=>$this->m_sTable, "joincondition"=>"");
+				break;
+			case "inner":
+			case "left":
+			// table or tablealias ???
+				$aFrom[$this->m_sTableAlias] = array("jointype"=>$sJoinType, "tablename"=>$this->m_sTable, "joincondition"=>"$sJoinCond");
+				break;
+		}
+
+		// Given the alias, modify the fields and conditions
+		// before adding them into the current lists
+		//
+		foreach($this->m_aFields as $sAlias => $oExpression)
+		{
+			$sTable = $oExpression->GetParent();
+			$sColumn = $oExpression->GetName();
+			$aFields["`$sAlias`"] = $oExpression->Render();
+		}
+		if ($this->m_bToDelete)
+		{
+			$aDelTables[] = "`{$this->m_sTableAlias}`";
+		}
+		foreach($this->m_aValues as $sFieldName=>$value)
+		{
+			$aSetValues["`{$this->m_sTableAlias}`.`$sFieldName`"] = $value; // quoted further!
+		}
+
+		// loop on joins, to complete the list of tables/fields/conditions
+		//
+		$aTempFrom = array(); // temporary subset of 'from' specs, to be grouped in the final query
+		foreach ($this->m_aJoinSelects as $aJoinData)
+		{
+			$sJoinType = $aJoinData["jointype"];
+			$oRightSelect = $aJoinData["select"];
+			$sLeftField = $aJoinData["leftfield"];
+			$sRightField = $aJoinData["rightfield"];
+			$sRightTableAlias = $aJoinData["righttablealias"];
+
+			$sJoinTableAlias = $oRightSelect->privRenderSingleTable($aTempFrom, $aFields, $aDelTables, $aSetValues, $sJoinType, $this->m_sTableAlias, $sLeftField, $sRightField, $sRightTableAlias);
+		}
+		$aFrom[$this->m_sTableAlias]['subfrom'] = $aTempFrom;
+
+		return $this->m_sTableAlias;
+	}
+
+}
+
+?>

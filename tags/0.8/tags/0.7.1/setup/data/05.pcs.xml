@@ -1,0 +1,1865 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<bizPC id="2">
+<name>PC01</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>high</severity>
+<location_id>1</location_id>
+<brand>Compaq</brand>
+<model>nc6005</model>
+<serial_number></serial_number>
+<type>desktop PC</type>
+<memory_size>2048</memory_size>
+<cpu>Celeron 2x 1.6Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.32.14</mgmt_ip>
+<default_gateway>10.22.31.1</default_gateway>
+</bizPC>
+<bizPC id="28">
+<name>PC02</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>high</severity>
+<location_id>1</location_id>
+<brand>Compaq</brand>
+<model>nc6000</model>
+<serial_number></serial_number>
+<type>desktop PC</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.32.15</mgmt_ip>
+<default_gateway>10.22.31.1</default_gateway>
+</bizPC>
+<bizPC id="30">
+<name>PC03</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>high</severity>
+<location_id>1</location_id>
+<brand>Compaq</brand>
+<model>nc6000</model>
+<serial_number></serial_number>
+<type>desktop PC</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.32.16</mgmt_ip>
+<default_gateway>10.22.31.1</default_gateway>
+</bizPC>
+<bizPC id="31">
+<name>PC04</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>high</severity>
+<location_id>1</location_id>
+<brand>Compaq</brand>
+<model>nc6000</model>
+<serial_number></serial_number>
+<type>desktop PC</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.32.17</mgmt_ip>
+<default_gateway>10.22.31.1</default_gateway>
+</bizPC>
+<bizPC id="32">
+<name>PC05</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>high</severity>
+<location_id>1</location_id>
+<brand>Compaq</brand>
+<model>nc6000</model>
+<serial_number></serial_number>
+<type>desktop PC</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.32.18</mgmt_ip>
+<default_gateway>10.22.31.1</default_gateway>
+</bizPC>
+<bizPC id="33">
+<name>PC06</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>high</severity>
+<location_id>1</location_id>
+<brand>Compaq</brand>
+<model>nc6000</model>
+<serial_number></serial_number>
+<type>desktop PC</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.32.19</mgmt_ip>
+<default_gateway>10.22.31.1</default_gateway>
+</bizPC>
+<bizPC id="34">
+<name>PC07</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>high</severity>
+<location_id>1</location_id>
+<brand>Compaq</brand>
+<model>nc6000</model>
+<serial_number></serial_number>
+<type>desktop PC</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.32.20</mgmt_ip>
+<default_gateway>10.22.31.1</default_gateway>
+</bizPC>
+<bizPC id="35">
+<name>PC08</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>high</severity>
+<location_id>1</location_id>
+<brand>Compaq</brand>
+<model>nc6000</model>
+<serial_number></serial_number>
+<type>desktop PC</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.32.21</mgmt_ip>
+<default_gateway>10.22.31.1</default_gateway>
+</bizPC>
+<bizPC id="36">
+<name>PC09</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>high</severity>
+<location_id>1</location_id>
+<brand>Compaq</brand>
+<model>nc6000</model>
+<serial_number></serial_number>
+<type>desktop PC</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.32.22</mgmt_ip>
+<default_gateway>10.22.31.1</default_gateway>
+</bizPC>
+<bizPC id="37">
+<name>PC10</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>high</severity>
+<location_id>1</location_id>
+<brand>Compaq</brand>
+<model>nc6000</model>
+<serial_number></serial_number>
+<type>desktop PC</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.32.23</mgmt_ip>
+<default_gateway>10.22.31.1</default_gateway>
+</bizPC>
+<bizPC id="38">
+<name>PC11</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>high</severity>
+<location_id>1</location_id>
+<brand>Compaq</brand>
+<model>nc6000</model>
+<serial_number></serial_number>
+<type>desktop PC</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.32.24</mgmt_ip>
+<default_gateway>10.22.31.1</default_gateway>
+</bizPC>
+<bizPC id="39">
+<name>PC12</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>high</severity>
+<location_id>1</location_id>
+<brand>Compaq</brand>
+<model>nc6008</model>
+<serial_number></serial_number>
+<type>desktop PC</type>
+<memory_size>2048</memory_size>
+<cpu>Celeron 2x 1.6Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.32.25</mgmt_ip>
+<default_gateway>10.22.31.1</default_gateway>
+</bizPC>
+<bizPC id="40">
+<name>PC13</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>high</severity>
+<location_id>1</location_id>
+<brand>Compaq</brand>
+<model>nc6000</model>
+<serial_number></serial_number>
+<type>desktop PC</type>
+<memory_size>2048</memory_size>
+<cpu>Celeron 2x 1.6Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.32.26</mgmt_ip>
+<default_gateway>10.22.31.1</default_gateway>
+</bizPC>
+<bizPC id="41">
+<name>PC14</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>high</severity>
+<location_id>1</location_id>
+<brand>Compaq</brand>
+<model>nc6000</model>
+<serial_number></serial_number>
+<type>desktop PC</type>
+<memory_size>2048</memory_size>
+<cpu>Celeron 2x 1.6Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.32.27</mgmt_ip>
+<default_gateway>10.22.31.1</default_gateway>
+</bizPC>
+<bizPC id="42">
+<name>PC15</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>high</severity>
+<location_id>1</location_id>
+<brand>Compaq</brand>
+<model>nc6000</model>
+<serial_number></serial_number>
+<type>desktop PC</type>
+<memory_size>2048</memory_size>
+<cpu>Celeron 2x 1.6Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.32.28</mgmt_ip>
+<default_gateway>10.22.31.1</default_gateway>
+</bizPC>
+<bizPC id="43">
+<name>PC16</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>high</severity>
+<location_id>1</location_id>
+<brand>Compaq</brand>
+<model>nc6000</model>
+<serial_number></serial_number>
+<type>desktop PC</type>
+<memory_size>2048</memory_size>
+<cpu>Celeron 2x 1.6Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.32.29</mgmt_ip>
+<default_gateway>10.22.31.1</default_gateway>
+</bizPC>
+<bizPC id="44">
+<name>PC17</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>high</severity>
+<location_id>1</location_id>
+<brand>Compaq</brand>
+<model>nc6000</model>
+<serial_number></serial_number>
+<type>desktop PC</type>
+<memory_size>2048</memory_size>
+<cpu>Celeron 2x 1.6Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.32.30</mgmt_ip>
+<default_gateway>10.22.31.1</default_gateway>
+</bizPC>
+<bizPC id="45">
+<name>PC18</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>high</severity>
+<location_id>1</location_id>
+<brand>Compaq</brand>
+<model>nc6000</model>
+<serial_number></serial_number>
+<type>desktop PC</type>
+<memory_size>2048</memory_size>
+<cpu>Celeron 2x 1.6Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.32.31</mgmt_ip>
+<default_gateway>10.22.31.1</default_gateway>
+</bizPC>
+<bizPC id="46">
+<name>PC19</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>high</severity>
+<location_id>1</location_id>
+<brand>Compaq</brand>
+<model>nc6000</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.32.32</mgmt_ip>
+<default_gateway>10.22.31.1</default_gateway>
+</bizPC>
+<bizPC id="47">
+<name>PC20</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>high</severity>
+<location_id>1</location_id>
+<brand>Compaq</brand>
+<model>nc6000</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.32.33</mgmt_ip>
+<default_gateway>10.22.31.1</default_gateway>
+</bizPC>
+<bizPC id="48">
+<name>PC21</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>high</severity>
+<location_id>1</location_id>
+<brand>Compaq</brand>
+<model>nc6000</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.32.34</mgmt_ip>
+<default_gateway>10.22.31.1</default_gateway>
+</bizPC>
+<bizPC id="49">
+<name>PC22</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>high</severity>
+<location_id>1</location_id>
+<brand>Compaq</brand>
+<model>nc6000</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.32.35</mgmt_ip>
+<default_gateway>10.22.31.1</default_gateway>
+</bizPC>
+<bizPC id="50">
+<name>PC23</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>1</location_id>
+<brand>Compaq</brand>
+<model>nc6000</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.32.36</mgmt_ip>
+<default_gateway>10.22.31.1</default_gateway>
+</bizPC>
+<bizPC id="51">
+<name>PC24</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>1</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.32.37</mgmt_ip>
+<default_gateway>10.22.31.1</default_gateway>
+</bizPC>
+<bizPC id="52">
+<name>PC25</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>1</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.32.38</mgmt_ip>
+<default_gateway>10.22.31.1</default_gateway>
+</bizPC>
+<bizPC id="53">
+<name>PC26</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>1</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.32.39</mgmt_ip>
+<default_gateway>10.22.31.1</default_gateway>
+</bizPC>
+<bizPC id="54">
+<name>PC27</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>1</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.32.40</mgmt_ip>
+<default_gateway>10.22.31.1</default_gateway>
+</bizPC>
+<bizPC id="55">
+<name>PC28</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>1</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.32.41</mgmt_ip>
+<default_gateway>10.22.31.1</default_gateway>
+</bizPC>
+<bizPC id="56">
+<name>PC29</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>1</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.32.42</mgmt_ip>
+<default_gateway>10.22.31.1</default_gateway>
+</bizPC>
+<bizPC id="57">
+<name>PC30</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>1</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.32.43</mgmt_ip>
+<default_gateway>10.22.31.1</default_gateway>
+</bizPC>
+<bizPC id="58">
+<name>PC31</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>1</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.32.44</mgmt_ip>
+<default_gateway>10.22.31.1</default_gateway>
+</bizPC>
+<bizPC id="59">
+<name>PC32</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>1</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.32.45</mgmt_ip>
+<default_gateway>10.22.31.1</default_gateway>
+</bizPC>
+<bizPC id="60">
+<name>PC33</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>1</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.32.46</mgmt_ip>
+<default_gateway>10.22.31.1</default_gateway>
+</bizPC>
+<bizPC id="61">
+<name>PC34</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.5</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="62">
+<name>PC35</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.6</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="63">
+<name>PC36</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.7</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="64">
+<name>PC37</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.8</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="65">
+<name>PC38</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.9</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="66">
+<name>PC39</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.10</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="67">
+<name>PC40</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.11</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="68">
+<name>PC41</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.12</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="69">
+<name>PC42</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.13</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="70">
+<name>PC43</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.14</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="71">
+<name>PC44</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.15</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="72">
+<name>PC45</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.16</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="73">
+<name>PC46</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.17</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="74">
+<name>PC47</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.18</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="75">
+<name>PC48</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.19</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="76">
+<name>PC49</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.20</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="77">
+<name>PC50</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.21</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="330">
+<name>PC5000</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Celeron 2x 1.6Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.33</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="78">
+<name>PC51</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Celeron 2x 1.6Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.22</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="79">
+<name>PC52</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Celeron 2x 1.6Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.23</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="80">
+<name>PC53</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Celeron 2x 1.6Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.24</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="81">
+<name>PC54</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Celeron 2x 1.6Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.25</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="82">
+<name>PC55</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Celeron 2x 1.6Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.26</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="83">
+<name>PC56</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Celeron 2x 1.6Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.27</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="84">
+<name>PC57</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Celeron 2x 1.6Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.28</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="85">
+<name>PC58</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Celeron 2x 1.6Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.29</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="86">
+<name>PC59</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Celeron 2x 1.6Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.30</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="87">
+<name>PC60</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Celeron 2x 1.6Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.31</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="88">
+<name>PC61</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Celeron 2x 1.6Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.32</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="89">
+<name>PC62</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Celeron 2x 1.6Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.33</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="90">
+<name>PC63</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Celeron 2x 1.6Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.34</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="91">
+<name>PC64</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Celeron 2x 1.6Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.35</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="92">
+<name>PC65</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Celeron 2x 1.6Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.36</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="93">
+<name>PC66</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.37</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="94">
+<name>PC67</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.38</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="95">
+<name>PC68</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.39</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="96">
+<name>PC69</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.40</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="97">
+<name>PC70</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.41</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="98">
+<name>PC71</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.42</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="99">
+<name>PC72</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.43</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="100">
+<name>PC73</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>medium</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.44</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="101">
+<name>PC74</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>high</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.45</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="102">
+<name>PC75</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>high</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.46</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="103">
+<name>PC76</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>high</severity>
+<location_id>29</location_id>
+<brand>Dell</brand>
+<model>Studio 15 laptop</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.47</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="104">
+<name>PC77</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>high</severity>
+<location_id>29</location_id>
+<brand>Toshiba</brand>
+<model>Satelite L300D</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.48</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="105">
+<name>PC78</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>high</severity>
+<location_id>29</location_id>
+<brand>Toshiba</brand>
+<model>Satelite L300D</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>XP</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.49</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="106">
+<name>PC79</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>high</severity>
+<location_id>29</location_id>
+<brand>Toshiba</brand>
+<model>Satelite L300D</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>Vista</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.50</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="107">
+<name>PC80</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>high</severity>
+<location_id>29</location_id>
+<brand>Toshiba</brand>
+<model>Satelite L300D</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>Vista</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.51</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="108">
+<name>PC81</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>high</severity>
+<location_id>29</location_id>
+<brand>Toshiba</brand>
+<model>Satelite L300D</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>Vista</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.52</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="109">
+<name>PC82</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>high</severity>
+<location_id>29</location_id>
+<brand>Toshiba</brand>
+<model>Satelite L300D</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>Vista</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.53</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="110">
+<name>PC83</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>high</severity>
+<location_id>29</location_id>
+<brand>Toshiba</brand>
+<model>Satelite L300D</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>Vista</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.54</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="111">
+<name>PC84</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>high</severity>
+<location_id>29</location_id>
+<brand>Toshiba</brand>
+<model>Satelite L300D</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>Vista</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.55</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="112">
+<name>PC85</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>high</severity>
+<location_id>29</location_id>
+<brand>Toshiba</brand>
+<model>Satelite L300D</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>Vista</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.56</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="113">
+<name>PC86</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>low</severity>
+<location_id>29</location_id>
+<brand>Toshiba</brand>
+<model>Satelite L300D</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>Vista</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.57</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="114">
+<name>PC87</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>low</severity>
+<location_id>29</location_id>
+<brand>Toshiba</brand>
+<model>Satelite L300D</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>Vista</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.58</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="115">
+<name>PC88</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>low</severity>
+<location_id>29</location_id>
+<brand>Toshiba</brand>
+<model>Satelite L300D</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>Vista</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.59</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="116">
+<name>PC89</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>low</severity>
+<location_id>29</location_id>
+<brand>Toshiba</brand>
+<model>Satelite L300D</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>Vista</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.60</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="117">
+<name>PC90</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>low</severity>
+<location_id>29</location_id>
+<brand>Toshiba</brand>
+<model>Satelite L300D</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>Vista</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.61</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="118">
+<name>PC91</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>low</severity>
+<location_id>29</location_id>
+<brand>Toshiba</brand>
+<model>Satelite L300D</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>Vista</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.62</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="119">
+<name>PC92</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>low</severity>
+<location_id>29</location_id>
+<brand>Toshiba</brand>
+<model>Satelite L300D</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>Vista</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.63</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="120">
+<name>PC93</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>low</severity>
+<location_id>29</location_id>
+<brand>Toshiba</brand>
+<model>Satelite L300D</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>Vista</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.64</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="121">
+<name>PC94</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>low</severity>
+<location_id>29</location_id>
+<brand>Toshiba</brand>
+<model>Satelite L300D</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>Vista</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.65</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="122">
+<name>PC95</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>low</severity>
+<location_id>29</location_id>
+<brand>Toshiba</brand>
+<model>Satelite L300D</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>Vista</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.66</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="123">
+<name>PC96</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>low</severity>
+<location_id>29</location_id>
+<brand>Toshiba</brand>
+<model>Satelite L300D</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>Vista</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.67</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+<bizPC id="124">
+<name>PC97</name>
+<status>production</status>
+<org_id>3</org_id>
+<severity>low</severity>
+<location_id>29</location_id>
+<brand>Toshiba</brand>
+<model>Satelite L300D</model>
+<serial_number></serial_number>
+<type>laptop</type>
+<memory_size>2048</memory_size>
+<cpu>Pentium Dual Core 1.8Ghz</cpu>
+<hdd_size>60Gb</hdd_size>
+<os_family>Windows</os_family>
+<os_version>Vista</os_version>
+<shipment_number></shipment_number>
+<mgmt_ip>10.22.30.68</mgmt_ip>
+<default_gateway>10.22.30.1</default_gateway>
+</bizPC>
+</Set>

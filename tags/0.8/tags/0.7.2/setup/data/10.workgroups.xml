@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<bizWorkgroup id="19">
+<name>FLS Desktop</name>
+<status>production</status>
+<org_id>3</org_id>
+<team_id>8</team_id>
+<role>1st level support</role>
+</bizWorkgroup>
+<bizWorkgroup id="24">
+<name>FLS Network</name>
+<status>production</status>
+<org_id>3</org_id>
+<team_id>8</team_id>
+<role>2nd level support</role>
+</bizWorkgroup>
+</Set>

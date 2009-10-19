@@ -1,0 +1,25 @@
+<div class="page_header">
+	<itopblock blockclass="MenuBlock" type="popup" encoding="text/sibusql" label="Actions">$class$: pkey = $pkey$</itopblock>
+	<h1>$class_name$: <span class="hilite">$name$</span></h1>
+	<itopblock blockclass="HistoryBlock" type="toggle" encoding="text/oql">SELECT CMDBChangeOpSetAttribute WHERE objkey = $pkey$ AND objclass = '$class$'</itopblock>
+</div>
+<img src="../images/starthere.png" style="margin-top:-20px; margin-right:10px; float:right">
+<itopblock blockclass="DisplayBlock" asynchronous="true" type="bare_details" encoding="text/sibusql">bizLocation: pkey = $pkey$</itopblock>
+<itoptabs>
+	<itoptab name="Contacts">
+		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">bizContact: location_id = $pkey$</itopblock>
+	</itoptab>
+	<itoptab name="Servers">
+		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">bizServer: location_id = $pkey$</itopblock>
+	</itoptab>
+	<itoptab name="PCs">
+		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">bizPC: location_id = $pkey$</itopblock>
+	</itoptab>
+	<itoptab name="Network_Devices">
+		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">bizNetworkDevice: location_id = $pkey$</itopblock>
+	</itoptab>
+
+	<itoptab name="Documents">
+		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">lnkDocumentRealObject: object_id = $pkey$</itopblock>
+	</itoptab>
+</itoptabs>

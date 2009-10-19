@@ -1,0 +1,28 @@
+<div class="page_header">
+	<itopblock blockclass="MenuBlock" type="popup" encoding="text/oql" label="Actions">SELECT $class$ WHERE id = $pkey$</itopblock>
+	<h1>$class_name$: <span class="hilite">$name$</span></h1>
+	<itopblock blockclass="HistoryBlock" type="toggle" encoding="text/oql">SELECT CMDBChangeOp WHERE objkey = $pkey$ AND objclass = '$class$'</itopblock>
+</div>
+<img src="../images/connect_to_network.png" style="margin-top:-10px; margin-right:10px; float:right">
+<itopblock blockclass="DisplayBlock" asynchronous="true" type="bare_details" encoding="text/oql">SELECT bizNetworkDevice WHERE id = $pkey$</itopblock>
+<itoptabs>
+	<itoptab name="Interfaces">
+		<itopblock blockclass="DisplayBlock" type="list" encoding="text/oql" linkage="device_id">SELECT bizInterface WHERE device_id = $pkey$</itopblock>
+	</itoptab>
+	<itoptab name="Contacts">
+		<itopblock blockclass="DisplayBlock" type="links" link_attr="infra_id" object_id="$pkey$" target_attr="contact_id" encoding="text/oql">SELECT lnkContactInfra WHERE infra_id = $pkey$</itopblock>
+	</itoptab>
+	<itoptab name="Incidents">
+		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">bizIncidentTicket:PKEY IS ticket_id IN (lnkInfraTicket: infra_id = $pkey$)</itopblock>
+	</itoptab>
+	<itoptab name="Changes">
+		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">bizChangeTicket: PKEY IS ticket_id IN (lnkInfraChangeTicket: infra_id = $pkey$)</itopblock>
+	</itoptab>
+	<itoptab name="Groups">
+		<itopblock blockclass="DisplayBlock" type="links" link_attr="infra_id" object_id="$pkey$" target_attr="infra_group_id" encoding="text/oql">SELECT lnkInfraGrouping WHERE infra_id = $pkey$</itopblock>
+	</itoptab>
+	<itoptab name="Documents">
+		<itopblock blockclass="DisplayBlock" type="links" link_attr="object_id" object_id="$pkey$" target_attr="doc_id" encoding="text/oql">SELECT lnkDocumentRealObject WHERE object_id = $pkey$</itopblock>
+	</itoptab>
+ </itoptabs>
+

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<AuditRule id="1">
+<name>Devices in production on a Location not in production</name>
+<description></description>
+<query>bizDevice: location_id IN (bizLocation: status != &apos;production&apos;)</query>
+<valid_flag>false</valid_flag>
+<category_id>1</category_id>
+</AuditRule>
+<AuditRule id="2">
+<name>Devices not attached to a monitoring group</name>
+<description></description>
+<query>bizDevice: PKEY IS infra_id IN (lnkInfraGrouping: infra_group_id IN (bizInfraGroup: type = &apos;Monitoring&apos;))</query>
+<valid_flag>true</valid_flag>
+<category_id>1</category_id>
+</AuditRule>
+</Set>

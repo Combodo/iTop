@@ -1,0 +1,11 @@
+.light { background:#FFF; color:#111; font:10pt Verdana, Arial, sans-serif; }
+.light a, a.light { color:#46C; outline:none; }
+.light a:visited, a.light:visited { color:#C44; }
+.light a:hover, a.light:hover { color:#000; }
+.light fieldset { border:1px solid #CCC; }
+.light legend { color:#555; font:.8em Verdana, san-serif; }
+.light button, button.light, .light input, input.light { padding:2px 4px; font:.9em Consolas, Verdana, san-serif; }
+.light textarea, textarea.light { padding:2px 4px; font:.9em Consolas, Courier New, san-serif; width:20em; height:5em; overflow:auto; }
+.light select, select.light { padding:3px 0 3px 4px; font:.9em Verdana, san-serif; }
+.light label { font-weight:bold; }
+

@@ -1,0 +1,192 @@
+.dark .ui-form-hide { position:absolute; left:-2000em; }
+
+
+/*(  fieldset  )*/
+.dark .ui-form-fieldset,
+.dark.ui-form-fieldset {
+  display:block;
+  border:1px solid #333;
+  padding:0;
+}
+.dark .ui-form-fieldset,
+.dark.ui-form-fieldset {
+  margin-top:1.6em;
+}
+.dark fieldset.ui-form {
+  margin:0;
+  border:1px solid #111;
+  color:snow;
+}
+.dark fieldset.ui-form { background:#181818; }
+.dark .ui-form-legend,
+.dark.ui-form-legend {
+  display:block;
+  text-align:left;
+  border:1px solid #333;
+  background:#222;
+  margin:-1.05em 0 0 0;
+}
+.dark legend.ui-form {
+  display:block;
+  color:snow;
+  font-weight:bold;
+  background:#222;
+  border-top:1px dotted #282828;
+  border-bottom:1px dotted #282828;
+  margin:-1px 2px;
+  padding:0 2px 2px;
+}
+
+
+/*(  inputs  )*/
+.dark .ui-form-text,
+.dark .ui-form-password,
+.dark.ui-form-text,
+.dark.ui-form-password {
+  border:1px solid #333;
+  padding:2px 0 3px;
+}
+
+.dark .ui-form-textarea,
+.dark.ui-form-textarea {
+  display:block;
+  border:1px solid #333;
+  padding:0;
+}
+.dark .ui-form-textarea .ui-form-inner,
+.dark.ui-form-textarea .ui-form-inner {
+  display:block;
+  border:1px solid #111;
+  overflow:hidden;
+}
+.dark .ui-form-text.focus,
+.dark .ui-form-password.focus,
+.dark .ui-form-textarea.focus,
+.dark.ui-form-text.focus,
+.dark.ui-form-password.focus,
+.dark.ui-form-textarea.focus {
+  border:1px solid #444;
+}
+
+.dark .ui-form-text input,
+.dark .ui-form-password input,
+.dark textarea.ui-form {
+  margin:0;
+  border:1px solid #111;
+  background:#222; color:snow;
+}
+.dark textarea.ui-form { border:none; }
+.dark .ui-form-text input:focus,
+.dark .ui-form-password input:focus,
+.dark textarea.ui-form:focus { background:#1D1D1D; }
+
+
+/*(  buttons  )*/
+.dark .ui-form-buttons,
+.dark.ui-form-buttons {
+  display:block; float:left;
+  height:40px;
+  background:url(dark.form.png) left -40px;
+  border:none;
+  color:#CCC;
+  padding-left:25px;
+  margin:0 4px;
+}
+.dark .ui-form-buttons .ui-form-inner,
+.dark.ui-form-buttons .ui-form-inner {
+  display:block; float:left;
+  height:40px;
+  background:url(dark.form.png) right -40px;
+  margin-right:-5px;
+  padding-right:5px;
+}
+.dark .ui-form-buttons .ui-form,
+.dark.ui-form-buttons .ui-form {
+  background:transparent;
+  border:none;
+  color:#DDD;
+  padding:9px 25px 10px 25px;
+  *padding:9px 15px 10px 15px;
+  margin-left:-25px;
+}
+.dark .ui-form-buttons.hover,
+.dark.ui-form-buttons.hover {
+  background-position:left -80px;
+}
+.dark .ui-form-buttons.hover .ui-form-inner,
+.dark.ui-form-buttons.hover .ui-form-inner {
+  background-position:right -80px;
+}
+.dark .ui-form-buttons.hover .ui-form,
+.dark.ui-form-buttons.hover .ui-form {
+  color:#FFF;
+}
+.dark .ui-form-buttons.focus,
+.dark.ui-form-buttons.focus {
+  background-position:left -80px;
+}
+.dark .ui-form-buttons.focus .ui-form-inner,
+.dark.ui-form-buttons.focus .ui-form-inner {
+  background-position:right -80px;
+}
+.dark .ui-form-buttons.focus .ui-form,
+.dark.ui-form-buttons.focus .ui-form {
+  color:#FFF;
+}
+.dark .ui-form-buttons.active,
+.dark.ui-form-buttons.active {
+  background-position:left -120px;
+}
+.dark .ui-form-buttons.active .ui-form-inner,
+.dark.ui-form-buttons.active .ui-form-inner {
+  background-position:right -120px;
+}
+.dark .ui-form-buttons.active .ui-form,
+.dark.ui-form-buttons.active .ui-form {
+  background-position:right -120px;
+}
+
+
+/*(  checkbox  )*/
+.dark .ui-form-checkbox {
+  background:url(dark.form.png) -221px 0;
+  padding:2px 0 1px 0;
+}
+.dark .ui-form-checkbox .ui-form-content {
+  padding:0 7px 1px 7px;
+  color:#222;
+  cursor:default;
+}
+.dark .ui-form-checkbox.hover,
+.dark .ui-form-checkbox.focus,
+.dark .ui-form-checkbox.active {
+  background-position: -221px -20px;
+}
+.dark .ui-form-checkbox.selected .ui-form-inner {
+  background:url(dark.form.png) -201px -2px;
+}
+
+
+/*(  radio  )*/
+.dark .ui-form-radio {
+  padding:2px 1px;
+  background:url(dark.form.png) -1px -1px;
+}
+.dark .ui-form-radio .ui-form-content {
+  padding:1px 6px 1px 7px;
+  *padding:0 6px 0 7px;
+  color:#222;
+  cursor:default;
+}
+.dark .ui-form-radio.hover,
+.dark .ui-form-radio.focus,
+.dark .ui-form-radio.active {
+  background-position: -1px -21px;
+}
+.dark .ui-form-radio.selected .ui-form-inner {
+  background:url(dark.form.png) -22px -3px;
+}
+.dark .ui-form-radio.selected .ui-form-content {
+  color:#CDD6E7;
+}
+

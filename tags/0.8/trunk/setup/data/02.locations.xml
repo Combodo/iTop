@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<bizLocation id="2">
+<name>Grenoble</name>
+<status>production</status>
+<org_id>2</org_id>
+<severity>high</severity>
+<address>5 Avenue de la Poste</address>
+<country>France</country>
+<parent_location_id>3</parent_location_id>
+</bizLocation>
+<bizLocation id="3">
+<name>Paris</name>
+<status>implementation</status>
+<org_id>2</org_id>
+<severity>high</severity>
+<address>5 rue de la Paroisse
+15eme arrondissement</address>
+<country>France</country>
+<parent_location_id>3</parent_location_id>
+</bizLocation>
+</Set>

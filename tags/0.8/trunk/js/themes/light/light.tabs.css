@@ -1,0 +1,71 @@
+@media projection, screen { .ui-tabs-hide { display:none; } }
+@media print { .ui-tabs-nav { display: none; } }
+
+.light .ui-tabs-nav,
+.light.ui-tabs-nav {
+  padding-left:6px;
+  border-bottom:1px solid #444;
+  float:left;
+  width:99%;
+  margin:0;
+}
+.light .ui-tabs-nav li,
+.light.ui-tabs-nav li {
+  list-style:none;
+  float:left;
+}
+.light .ui-tabs-nav a,
+.light.ui-tabs-nav a {
+  display:block;
+  padding:2px 0 1px;
+  text-decoration:none!important;
+  border:1px solid #444;
+  margin:1px 1px 0 0;
+  font:9pt Verdana;
+  color:#FFF;
+  background:#444;
+}
+.light .ui-tabs-nav span,
+.light.ui-tabs-nav span {
+  padding:2px 13px 2px;
+  color:#FFF;
+  background:#444;
+}
+.light .ui-tabs-nav a:hover,
+.light .ui-tabs-nav a:hover span,
+.light.ui-tabs-nav a:hover,
+.light.ui-tabs-nav a:hover span {
+  border-color:#222;
+  color:#FFF;
+  background:#222;
+  }
+.light .ui-tabs-nav .ui-tabs-selected a,
+.light.ui-tabs-nav .ui-tabs-selected a {
+  background:#AAA;
+  border-color:#666;
+}
+.light .ui-tabs-nav .ui-tabs-selected a span,
+.light.ui-tabs-nav .ui-tabs-selected a span {
+  margin-bottom:0;
+  color:#000;
+  background:snow;
+  border-bottom:1px solid #FFF;
+  cursor:default;
+  }
+.light .ui-tabs-nav .ui-tabs-disabled a,
+.light .ui-tabs-nav .ui-tabs-disabled a span,
+.light.ui-tabs-nav .ui-tabs-disabled a,
+.light.ui-tabs-nav .ui-tabs-disabled a span {
+  background:#EEE;
+  color:#BBB;
+  border-color:#DDD;
+  cursor:default;
+}
+.light .ui-tabs-container {
+  clear:both;
+  padding:10px 10px 8px 10px;
+  removedpadding-top:3px;
+  removedmargin-top:-24px;
+  clear:left;
+}
+

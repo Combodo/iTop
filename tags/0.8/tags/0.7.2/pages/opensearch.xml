@@ -1,0 +1,8 @@
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/" xmlns:moz="http://www.mozilla.org/2006/browser/search/">
+<ShortName>iTop</ShortName>
+<Contact>webmaster@itop.com</Contact>
+<Description>Recherche dans iTop</Description>
+<InputEncoding>ISO-8859-1</InputEncoding>
+<Url type="text/html" method="get" template="http://localhost:81/pages/UI.php?text={searchTerms}&amp;operation=full_text"/>
+<moz:SearchForm>http://localhost:81/pages/UI.php</moz:SearchForm>
+</OpenSearchDescription>

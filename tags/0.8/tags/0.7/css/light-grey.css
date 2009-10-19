@@ -1,0 +1,633 @@
+/* CSS Document */
+body {
+    font-family: Tahoma, Verdana, Arial, Helevtica;
+    font-size: 8pt;
+    background-color: #fff;
+    color:#000000;
+	margin: 0;			/* Remove body margin/padding */
+	padding: 0;
+	overflow: hidden;	/* Remove scroll bars on browser window */
+}
+
+.raw_output {
+    font-family: Courier-New, Courier, Arial, Helevtica;
+    font-size: 8pt;
+    background-color: #eeeeee;
+    color: #000000;
+    border: 1px dashed #000000;
+    padding: 0.25em;
+    margin-top: 1em;
+}
+
+h1 {
+    font-family: Tahoma, Verdana, Arial, Helvetica;
+    font-size: 10pt;
+    color: #000;
+    font-weight:10px;
+}
+.hilite {
+    color: #d81515;
+}
+table.listResults {
+    padding: 0px;
+	border-top: 3px solid #f6f6f1;
+	border-left: 3px solid #f6f6f1;
+	border-bottom: 3px solid #e6e6e1;  
+	border-right: 3px solid #e6e6e1;
+	width: 100%;
+}
+
+table.listResults td {
+	padding: 2px;
+}
+
+table.listContainer {
+    border: 0;
+	padding: 0;
+	margin:0;
+	width: 97%;
+}
+
+tr.containerHeader, tr.containerHeader td {
+	background: transparent;
+} 
+
+tr.even td {
+	background-color: #f9f9f1;
+} 
+
+tr td.hover, tr.even td.hover, .hover a, .hover a:visited, .hover a:hover {
+	background-color: #E8FFD3;
+}
+
+th {
+    font-family: Tahoma, Verdana, Arial, Helvetica;
+    font-size: 8pt;
+    color: #d81515;
+    height:20px;
+    background: #f6f6f1 url(../images/grey-header.gif) bottom repeat-x;	
+}
+th.header {
+	cursor: pointer;
+}
+
+th.headerSortUp, th.headerSortDown {
+	
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+td {
+    font-family: Tahoma, Verdana, Arial, Helvetica;
+    font-size: 8pt;
+    color:#696969;
+	background-color: #ffffff;
+	padding: 0px;
+}
+
+tr.clicked td {
+    font-family: Tahoma, Verdana, Arial, Helvetica;
+    font-size: smaller;
+	background-color: #ffcfe8;
+}
+
+td.label {
+    font-family: Tahoma, Verdana, Arial, Helvetica;
+    font-size: 8pt;
+    color: #000000;
+    background-color:#f6f6f6;
+    padding: 0.25em;
+    font-weight:bold;	
+}
+
+td a, td a:visited {
+	text-decoration:none;
+	color:#000000;
+	padding-left:14px;
+	background: url(../images/red-arrow.gif) no-repeat left;
+}
+td a:hover {
+	text-decoration:underline;
+	color:#d81515;
+	padding-left:14px;
+	background: url(../images/red-arrow.gif) no-repeat left;
+}
+
+td a.no-arrow, td a.no-arrow:visited {
+	text-decoration:none;
+	color:#000000;
+	padding-left:0px;
+	background: inherit;
+}
+td a.no-arrow:hover {
+	text-decoration:underline;
+	color:#d81515;
+	padding-left:0px;
+	background: inherit;
+}
+
+a.small_action {
+    font-family: Tahoma, Verdana, Arial, Helvetica;
+    font-size: 8pt;
+    color: #000000;
+	text-decoration:none;
+}
+
+.display_block {
+	noborder: 1px dashed #CCC;
+	padding:0.25em;
+}
+div#TopPane .display_block {
+	background: #fff;
+	padding:0.25em;
+	text-align:center;
+}
+div#TopPane label {
+	color:#000;
+	background: #fff;
+}
+
+div#TopPane td {
+	color:#000;
+	background: #fff;
+}
+
+.actions_details {
+	float:right;
+	margin-top:10px;
+	margin-right:10px;
+	padding-left: 5px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	background: url(../images/actions_left.png) no-repeat left;
+}
+
+.actions_details span{
+	background: url(../images/actions_right.png) no-repeat right;
+	color: #fff;
+	font-weight: bold;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-right: 12px;
+}
+.actions_details a {
+	text-decoration:none;
+}
+.loading {
+	noborder: 1px dashed #CCC;
+	background: #b9c1c8;
+	padding:0.25em;
+}
+
+input.textSearch {
+	border:1px solid #000;
+	noheight:1.2em;
+	font-size:8pt;
+	font-family:Tahoma,Verdana, Arial, Helvetica, sans-serif;
+	color:#000000;
+}
+
+/* By Rom */
+.csvimport_createobj {
+    color: #AA0000;
+    background-color:#EEEEEE;
+}
+.csvimport_error {
+    font-weight: bold;
+    color: #FF0000;
+    background-color:#EEEEEE;
+}
+.csvimport_warning {
+    color: #CC8888;
+    background-color:#EEEEEE;
+}
+.csvimport_ok {
+    color: #00000;
+    background-color:#BBFFBB;
+}
+.csvimport_reconkey {
+    font-style: italic;
+    color: #888888;
+    background-color:#FFFFF;
+}
+.csvimport_extreconkey {
+    color: #888888;
+    background-color:#FFFFFF;
+}
+
+ul.dir {
+    list-style:none;
+}	
+
+ul.dir ul {
+	padding: 8px 0px 8px 16px;
+	margin:0;
+    list-style:none;
+    border: 0;
+}	
+
+ul.dir li a,  ul.dir li a:visited, ul.dir li a:hover{
+    noborder-top: 1px solid #8b8b8b;
+    padding: 4px 0px 0px 16px;   	
+	font-size:8pt;
+    background: url(../images/green-square.gif) no-repeat bottom left;
+    color:#83b217;
+    font-weight:bold;
+	text-decoration:none;
+}
+
+ul.dir li li a, ul.dir li li a:visited, ul.dir li li a:hover { 
+	color:#8b8b8b;
+	text-decoration:none;
+	margin: 0;
+	padding: 0px 0pt 0px 16px;
+	font-size:8pt;
+    background: url(../images/mini-arrow-green.gif) no-repeat left;
+    font-weight:normal;
+    border: 0;
+}
+
+a.CollapsibleLabel, td a.CollapsibleLabel { 
+	margin: 0;
+	padding: 0px 0pt 0px 16px;
+	font-size:8pt;
+	text-decoration:none;
+	color:#8b8b8b;
+    background: url(../images/mini-arrow-green.gif) no-repeat left;
+}
+
+a.CollapsibleLabel.open,  td a.CollapsibleLabel.open { 
+	margin: 0;
+	padding: 0px 0pt 0px 16px;
+	font-size:8pt;
+	text-decoration:none;
+	color:red;
+    background: url(../images/mini-arrow-green-open.gif) no-repeat left;
+}
+
+.page_header {
+	background-color:#f6f6f1;
+	padding:5px;
+}
+
+.notreeview li { background: url(../images/tv-item.gif) 0 0 no-repeat; }
+.notreeview .collapsable { background-image: url(../images/tv-collapsable.gif); }
+.notreeview .expandable { background-image: url(../images/tv-expandable.gif); }
+.notreeview .last { background-image: url(../images/tv-item-last.gif); }
+.notreeview .lastCollapsable { background-image: url(../images/tv-collapsable-last.gif); }
+.notreeview .lastExpandable { background-image: url(../images/tv-expandable-last.gif); }
+
+#Header { padding: 0; background:#ccc url(../images/bandeau3.gif) repeat-x center;}
+div.iTopLogo {
+	background:url(../images/iTop2.gif) no-repeat center;
+	width:150px;
+	height:56px;
+}
+div.iTopLogo span {
+	display:none;
+}
+
+#MySplitter {
+	/* Height is set to match window size in $().ready() below */
+	border:0px;
+	margin:4px;
+	padding:0px;
+	min-width: 100px;	/* Splitter can't be too thin ... */
+	min-height: 100px;	/* ... or too flat */
+}
+#LeftPane {
+	background: #f6f6f1 url(../images/left-border.gif) repeat-y top left;
+	padding: 16px;
+	overflow: auto;		/* Scroll bars appear as needed */
+	color:#000;
+}
+#TopPane {				/* Top nested in right pane */
+	background: #fff;
+	padding: 4px;
+	height: 150px;		/* Initial height */
+	min-height: 75px;	/* Minimum height */
+	overflow: auto;	
+	color:#000;
+}
+#RightPane {			/* Bottom nested in right pane */
+	background: #fff;
+	height:150px;		/* Initial height */
+	min-height:130px;
+	no.padding:15px;
+	no.margin:10px;
+	overflow:auto;
+	color:#000000;
+	padding-left:10px;
+}
+
+#BottomPane {			/* Bottom nested in right pane */
+	background: #fff;
+	padding: 4px;
+	overflow: auto;
+	color:#000;
+}
+#MySplitter .vsplitbar {
+	width: 9px;
+	height: 50px;
+	background: url(../images/vsplitter-grey.gif) repeat top;
+}
+#MySplitter .vsplitbar.active, #MySplitter .vsplitbar:hover {
+	background-color: #fff;
+}
+#MySplitter .hsplitbar {
+	height: 8px;
+	background-color: #fff;
+}
+#MySplitter .hsplitbar.active, #MySplitter .hsplitbar:hover {
+	background-color: #fff;
+}
+#OrganizationSelection {
+    padding:5px 0px 16px 40px;
+}
+
+/* jdMenu popup menus */
+ul.jd_menu, 
+ul.jd_menu_vertical {
+	margin: 0px;
+	padding: 0px;
+	list-style-type: none;
+}
+ul.jd_menu ul,
+ul.jd_menu_vertical ul {
+	display: none;
+}
+ul.jd_menu li {
+	float: left;
+}
+
+/* -- Sub-Menus -- */
+ul.jd_menu ul,
+ul.jd_menu_vertical ul {
+	position: absolute;
+	display: none;
+	list-style-type: none;
+	margin: 0px;
+	padding: 0px;
+	z-index: 10000;
+}
+ul.jd_menu ul li,
+ul.jd_menu_vertical ul li {
+	float: none;
+	margin: 0px;
+}
+
+/* jdMenu popup menus styling */
+div.jd_menu_itop {
+	height:19px;
+	float:right;
+	display:inline;
+	width:70px; /* Nasty work-around for IE... en attendant mieux */
+	padding-left: 5px;
+	background: url(../images/actions_left.png) no-repeat left;
+}
+
+ul.jd_menu_itop {
+	height: 19px;
+	padding-right:16px;
+	background: url(../images/actions_right.png) no-repeat right;
+	font-weight: bold;
+}
+
+ul.jd_menu_vertical {
+	width: 200px;
+	height: auto;
+	clear: both;
+	background: url(gradient-vertical.png) repeat-x;
+	background-color: #A5AFB8;
+}
+
+
+ul.jd_menu_itop a, 
+ul.jd_menu_itop a:active,
+ul.jd_menu_itop a:link,
+ul.jd_menu_itop a:visited {
+	text-decoration: none;
+	color: #FFF;
+}
+ul.jd_menu_itop ul li a,
+ul.jd_menu_itop ul li a:active,
+ul.jd_menu_itop ul li a:link,
+ul.jd_menu_itop ul li a:visited {
+	color: #000;
+}
+ul.jd_menu_itop li {
+	font-family: Tahoma, sans-serif;
+	font-size: 11px;
+	padding: 2px 6px 4px 6px;
+	cursor: pointer;
+	white-space: nowrap;
+	color: #FFF;
+}
+ul.jd_menu_itop li.jd_menu_active_menubar,
+ul.jd_menu_itop li.jd_menu_hover_menubar {
+	color: #FFF;
+}
+
+ul.jd_menu_vertical li.jd_menu_active_menubar,
+ul.jd_menu_vertical li.jd_menu_hover_menubar {
+	padding-left: 6px;
+	padding-top: 1px;
+	border-top: 1px solid #70777D;
+	border-left: 0px;
+	border-right: 0px;
+}
+
+ul.jd_menu_itop ul {
+	background: #d81515;
+	border: 1px solid #70777D;
+}
+ul.jd_menu_itop ul li {
+	padding: 3px 10px 3px 4px;
+	background: #FFF;
+	border: none;
+	color: #000;
+}
+ul.jd_menu_itop ul li.jd_menu_active,
+ul.jd_menu_itop ul li.jd_menu_hover {
+	background: #d81515;
+	padding-top: 2px;
+	border-top: 1px solid #ABB5BC;
+	padding-bottom: 2px;
+	border-bottom: 1px solid #929AA1;
+	color: #FFF;
+}
+
+ul.jd_menu_itop li ul li a {
+	padding: 0;
+	background: #fff;
+	padding-left:0;
+}
+
+ul.jd_menu_itop ul li.jd_menu_active a.jd_menu_active,
+ul.jd_menu_itop ul li.jd_menu_hover a.jd_menu_hover {
+	color: #FFF;
+	background: #d81515;
+	padding-left:0;
+}
+
+.wizHeader {
+	background: #83b217;
+	padding: 15px;
+}
+.wizSeparator {
+	float:left;
+	background: #83b217;
+	height: 29px;
+	margin-top: 5px;
+}
+div.wizActiveStep {
+	height: 29px;
+	background: url(/images/wizActiveStepLeft.gif) no-repeat left;
+	color: #d81515;
+	padding-left: 8px;
+	margin-top: 5px;
+	vertical-align: middle;
+	float: left;
+}
+div.wizActiveStep span {
+	height: 29px;
+	background: url(/images/wizActiveStepRight.gif) no-repeat top right;
+	padding-right: 8px;
+	padding-top: 8px;
+	float:left;
+}
+
+div.wizStep {
+	height: 29px;
+	background: url(/images/wizStepLeft.gif) no-repeat left;
+	padding-left: 8px;
+	vertical-align: middle;
+	margin-top: 5px;
+	float:left;
+}
+div.wizStep span {
+	height: 29px;
+	background: url(/images/wizStepRight.gif) no-repeat top right;
+	padding-right: 8px;
+	padding-top: 8px;
+	float:left;
+}
+.wizContainer {
+	border: 5px solid #83b217;
+	background: #e8f3cf;
+	padding: 5px;
+}
+
+.alignRight {
+	text-align: right;
+	padding: 3px;
+}
+
+.alignLeft {
+	text-align: left;
+	padding: 3px;
+}
+
+.red {
+	background-color: #ff6000;
+	color: #000;
+}
+
+th.red {
+	background: url(../images/red-header.gif) bottom left repeat-x;
+	color: #000;
+}
+
+.green {
+	background-color: #00cc00;
+	color: #000;
+}
+th.green {
+	background: url(../images/green-header.gif) bottom left repeat-x;
+	color: #000;
+}
+
+.orange {
+	background-color: #ffde00;
+	color: #000;
+}
+
+th.orange {
+	background: url(../images/orange-header.gif) bottom left repeat-x;
+	color: #000;
+}
+
+/* For Date Picker: Creates a little calendar icon
+ * instead of a text link for "Choose date"
+ */
+a.dp-choose-date, a.dp-choose-date:hover {
+	float: left;
+	width: 16px;
+	height: 16px;
+	padding: 0;
+	margin: 5px 3px 0;
+	display: block;
+	text-indent: -2000px;
+	overflow: hidden;
+	background: url(../images/calendar.png) no-repeat; 
+}
+a.dp-choose-date.dp-disabled {
+	background-position: 0 -20px;
+	cursor: default;
+}
+/* For Date Picker: makes the input field shorter once the date picker code
+ * has run (to allow space for the calendar icon)
+ */
+input.dp-applied {
+	width: 140px;
+	float: left;
+}
+
+/* For search forms */
+.SearchDrawer {
+	background: #83b217 url(../images/green-corner.png) top left no-repeat;
+	color: #fff;
+	padding: 10px;
+	margin: 0;
+}
+.SearchDrawer form table tbody tr td {
+	background: #83b217;
+	color: #fff;
+}
+.SearchDrawer label {
+	background: #83b217;
+	color: #fff;
+	padding-left: 10px;
+}
+.SearchDrawer h1 {
+	color: #fff;
+}
+.DrawerClosed {
+	display: none;
+}
+.DrawerHandle {
+	margin: 0;
+	padding: 5px;
+	background: #fff url(../images/drawer-handle.gif) bottom no-repeat;
+	color: #fff;
+	cursor: pointer;
+	text-align: center;
+	/* center the block */
+	width: 100px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 0;
+	margin-bottom: 0;
+	display: block;
+}
+
+div.HRDrawer {
+	height: 5px;
+	width: 100%;
+	margin: 0;
+	background-color:  #83b217;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	display: block;
+}

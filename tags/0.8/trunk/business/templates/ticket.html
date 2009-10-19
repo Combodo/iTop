@@ -1,0 +1,21 @@
+<div class="page_header">
+	<itopblock blockclass="MenuBlock" type="popup" encoding="text/sibusql" label="Actions">$class$: pkey = $pkey$</itopblock>
+	<h1>$class_name$: <span class="hilite">$name$</span></h1>
+	<itopblock blockclass="HistoryBlock" type="toggle" encoding="text/oql">SELECT CMDBChangeOp WHERE objkey = $pkey$ AND objclass = '$class$'</itopblock>
+</div>
+<img src="../images/messagebox_warning.png" style="margin-top:-10px; margin-right:10px; float:right">
+<itopblock blockclass="DisplayBlock" asynchronous="true" type="bare_details" encoding="text/sibusql">$class$: pkey = $pkey$</itopblock>
+<itoptabs>
+	<itoptab name="Impacted_Infrastructures">
+		<itopblock blockclass="DisplayBlock" type="list" link_attr="ticket_id" object_id="$pkey$" target_attr="infra_id" encoding="text/oql">SELECT lnkInfraTicket WHERE ticket_id = $pkey$</itopblock>
+	</itoptab>
+	<itoptab name="Related_Incidents">
+		<itopblock blockclass="DisplayBlock" type="links" link_attr="ticket_id" object_id="$pkey$" target_attr="rel_ticket_id" encoding="text/oql">SELECT lnkRelatedTicket WHERE ticket_id = $pkey$</itopblock>
+	</itoptab>
+	<itoptab name="Contacts_to_Notify">
+		<itopblock blockclass="DisplayBlock" type="list" link_attr="ticket_id" object_id="$pkey$" target_attr="contact_id" encoding="text/oql">SELECT lnkContactTicket WHERE ticket_id = $pkey$</itopblock>
+	</itoptab>
+
+
+</itoptabs>
+<br style="clear:both"/>
