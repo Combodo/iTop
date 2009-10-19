@@ -1274,7 +1274,7 @@ class bizServer extends bizDevice
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("label"=>"Status", "description"=>"Status of the server", "allowed_values"=>new ValueSetEnum("InStore,Shipped,Plugged,ProductionCandidate,InProduction,Being Deconfigured,Obsolete"), "sql"=>"status", "default_value"=>"In Store", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("label"=>"Status", "description"=>"Status of the server", "allowed_values"=>new ValueSetEnum("InStore,Shipped,Plugged,ProductionCandidate,InProduction,Being Deconfigured,Obsolete"), "sql"=>"status", "default_value"=>"InStore", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("memory_size", array("label"=>"Memory Size", "description"=>"Size of the memory", "allowed_values"=>null, "sql"=>"memory_size", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("cpu", array("label"=>"CPU type", "description"=>"CPU type", "allowed_values"=>null, "sql"=>"cpu_type", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("number_of_cpus", array("label"=>"Number of CPUs", "description"=>"Number of CPUs", "allowed_values"=>null, "sql"=>"number_of_cpus", "default_value"=>"1", "is_null_allowed"=>true, "depends_on"=>array())));
