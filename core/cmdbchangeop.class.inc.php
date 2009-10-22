@@ -145,7 +145,7 @@ class CMDBChangeOpDelete extends CMDBChangeOp
 
 
 /**
- * Record the modification of an attribute 
+ * Record the modification of an attribute (abstract)
  *
  * @package     iTopORM
  * @author      Romain Quetiez <romainquetiez@yahoo.fr>
@@ -175,11 +175,50 @@ class CMDBChangeOpSetAttribute extends CMDBChangeOp
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeString("attcode", array("label"=>"Attribute", "description"=>"code of the modified property", "allowed_values"=>null, "sql"=>"attcode", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+
+		MetaModel::Init_InheritFilters();
+		MetaModel::Init_AddFilterFromAttribute("attcode");
+		
+		// Display lists
+		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for a list
+	}
+}
+
+/**
+ * Record the modification of a scalar attribute 
+ *
+ * @package     iTopORM
+ * @author      Romain Quetiez <romainquetiez@yahoo.fr>
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.itop.com
+ * @since       1.0
+ * @version     $itopversion$
+ */
+class CMDBChangeOpSetAttributeScalar extends CMDBChangeOpSetAttribute
+{
+	public static function Init()
+	{
+		$aParams = array
+		(
+			"category" => "core/cmdb",
+			"name" => "property change",
+			"description" => "Object scalar properties change tracking",
+			"key_type" => "",
+			"key_label" => "",
+			"name_attcode" => "change",
+			"state_attcode" => "",
+			"reconc_keys" => array(),
+			"db_table" => "priv_changeop_setatt_scalar",
+			"db_key_field" => "id",
+			"db_finalclass_field" => "",
+		);
+		MetaModel::Init_Params($aParams);
+		MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeString("oldvalue", array("label"=>"Previous value", "description"=>"previous value of the attribute", "allowed_values"=>null, "sql"=>"oldvalue", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("newvalue", array("label"=>"New value", "description"=>"new value of the attribute", "allowed_values"=>null, "sql"=>"newvalue", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 
 		MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("attcode");
 		MetaModel::Init_AddFilterFromAttribute("oldvalue");
 		MetaModel::Init_AddFilterFromAttribute("newvalue");
 		
@@ -235,13 +274,84 @@ class CMDBChangeOpSetAttribute extends CMDBChangeOp
 				$sTo = MetaModel::GetHyperLink($sTargetClass, $sNewValue);
 				$sResult = "$sAttName set to $sTo (previous: $sFrom)";
 			}
+			elseif ($oAttDef instanceOf AttributeBlob)
+			{
+				$sResult = "#@# Issue... found an attribute for which other type of tracking should be made";
+			}
 			else
 			{
-				$sResult = "$sAttName set too $sNewValue (previous value: $sOldValue)";
+				$sResult = "$sAttName set to $sNewValue (previous value: $sOldValue)";
 			}
 		}
 		return $sResult;
 	}
 }
+
+/**
+ * Record the modification of a blob
+ *
+ * @package     iTopORM
+ * @author      Romain Quetiez <romainquetiez@yahoo.fr>
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.itop.com
+ * @since       1.0
+ * @version     $itopversion$
+ */
+class CMDBChangeOpSetAttributeBlob extends CMDBChangeOpSetAttribute
+{
+	public static function Init()
+	{
+		$aParams = array
+		(
+			"category" => "core/cmdb",
+			"name" => "object data change",
+			"description" => "Object data change tracking",
+			"key_type" => "",
+			"key_label" => "",
+			"name_attcode" => "change",
+			"state_attcode" => "",
+			"reconc_keys" => array(),
+			"db_table" => "priv_changeop_setatt_data",
+			"db_key_field" => "id",
+			"db_finalclass_field" => "",
+		);
+		MetaModel::Init_Params($aParams);
+		MetaModel::Init_InheritAttributes();
+		MetaModel::Init_AddAttribute(new AttributeBlob("prevdata", array("label"=>"Previous data", "description"=>"previous contents of the attribute", "depends_on"=>array())));
+
+		MetaModel::Init_InheritFilters();
+		
+		// Display lists
+		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for a list
+	}
+	
+	/**
+	 * Describe (as a text string) the modifications corresponding to this change
+	 */	 
+	public function GetDescription()
+	{
+		// Temporary, until we change the options of GetDescription() -needs a more global revision
+		$bIsHtml = true;
+		
+		$sResult = '';
+		$oTargetObjectClass = $this->Get('objclass');
+		$oTargetObjectKey = $this->Get('objkey');
+		$oTargetSearch = new DBObjectSearch($oTargetObjectClass);
+		$oTargetSearch->AddCondition('id', $oTargetObjectKey);
+
+		$oMonoObjectSet = new DBObjectSet($oTargetSearch);
+		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES)
+		{
+			$oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
+			$sAttName = $oAttDef->GetLabel();
+			$oPrevDoc = $this->Get('prevdata');
+			$sDocView = $oPrevDoc->GetAsHtml();
+			$sResult = "$sAttName changed (previous value: $sDocView)";
+		}
+		return $sResult;
+	}
+}
+
 
 ?>

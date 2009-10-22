@@ -399,11 +399,13 @@ class bizDocument extends logRealObject
 		MetaModel::Init_AddAttribute(new AttributeEnum("scope", array("label"=>"scope", "description"=>"Scope of this document", "allowed_values"=>new ValueSetEnum("organization,hardware support"), "sql"=>"scope", "default_value"=>"organization", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("description", array("label"=>"Description", "description"=>"Service Description", "allowed_values"=>null, "sql"=>"description", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 
+		MetaModel::Init_AddAttribute(new AttributeBlob("contents", array("label"=>"Contents", "description"=>"File content", "depends_on"=>array())));
+
 		MetaModel::Init_InheritFilters();
 		MetaModel::Init_AddFilterFromAttribute("scope");
 		MetaModel::Init_AddFilterFromAttribute("description");
 
-		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'scope','description')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'scope', 'description', 'contents')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('name', 'status', 'org_id', 'scope')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'scope')); // Criteria of the std search form

@@ -1560,15 +1560,17 @@ abstract class MetaModel
 			if (self::$m_aAttribOrigins[$sTargetClass][$sAttCode] != $sTableClass) continue;
 
 			// Skip this attribute if not writable (means that it does not correspond 
-			if (count($oAttDef->DBGetUsedFields()) == 0) continue;
+			if (count($oAttDef->GetSQLExpressions()) == 0) continue;
 
 			// Update...
 			//
 			if ($bIsOnQueriedClass && array_key_exists($sAttCode, $aValues))
 			{
 				assert ($oAttDef->IsDirectField());
-				// Later, we'll have to use $oAttDef->GetDBField();
-				$aUpdateValues[$oAttDef->GetSQLExpr()] = $oAttDef->RealValueToSQLValue($aValues[$sAttCode]);
+				foreach ($oAttDef->GetSQLValues($aValues[$sAttCode]) as $sColumn => $sValue)
+				{
+					$aUpdateValues[$sColumn] = $sValue;
+				}
 			}
 
 			// Select...
@@ -1585,7 +1587,10 @@ abstract class MetaModel
 			{
 				// standard field, or external key
 				// add it to the output
-				$aSelect[$sAttAlias] = new FieldExpression($oAttDef->GetSQLExpr(), $sTableAlias);
+				foreach ($oAttDef->GetSQLExpressions() as $sColId => $sSQLExpr)
+				{
+					$aSelect[$sAttAlias.$sColId] = new FieldExpression($sSQLExpr, $sTableAlias); 
+				}
 			}
 		}
 
@@ -1597,8 +1602,12 @@ abstract class MetaModel
 			if (self::$m_aFilterOrigins[$sTargetClass][$sFltCode] != $sTableClass) continue;
 
 			// #@# todo - aller plus loin... a savoir que la table de translation doit contenir une "Expression"
-			// non-sens: $aTranslation[$sTargetAlias][$sFltCode] = array($sTableAlias, $oFltAtt->GetFilterSQLExpr(opcode, operand));
-			$aTranslation[$sTargetAlias][$sFltCode] = array($sTableAlias, $oFltAtt->TemporaryGetSQLCol());
+			foreach($oFltAtt->GetSQLExpressions() as $sColID => $sFltExpr)
+			{
+				// Note: I did not test it with filters relying on several expressions...
+				//       as long as sColdID is empty, this is working, otherwise... ?
+				$aTranslation[$sTargetAlias][$sFltCode.$sColID] = array($sTableAlias, $sFltExpr);
+			}
 		}
 
 		// #@# todo - See what a full text search condition should be
@@ -1660,8 +1669,10 @@ abstract class MetaModel
 					}
 					// Translate mainclass.extfield => remoteclassalias.remotefieldcode
 					$oRemoteAttDef = self::GetAttributeDef($sKeyClass, $sExtAttCode);
-					$sRemoteAttExpr = $oRemoteAttDef->GetSQLExpr(); 
-					$aIntermediateTranslation[$sTargetAlias][$sAttCode] = array($sKeyClassAlias, $sRemoteAttExpr);
+					foreach ($oRemoteAttDef->GetSQLExpressions() as $sColID => $sRemoteAttExpr)
+					{
+						$aIntermediateTranslation[$sTargetAlias.$sColID][$sAttCode] = array($sKeyClassAlias, $sRemoteAttExpr);
+					}
 					//#@# debug - echo "<p>$sTargetAlias.$sAttCode to $sKeyClassAlias.$sRemoteAttExpr (class: $sKeyClass)</p>\n";
 				}
 				$oConditionTree = $oConditionTree->Translate($aIntermediateTranslation, false);
@@ -1669,7 +1680,7 @@ abstract class MetaModel
 				self::DbgTrace("External key $sKeyAttCode (class: $sKeyClass), call MakeQuery()");
 				$oSelectExtKey = self::MakeQuery($sGlobalTargetAlias, $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oExtFilter, $aExpAtts);
 
-				$sLocalKeyField = $oKeyAttDef->GetSQLExpr();
+				$sLocalKeyField = current($oKeyAttDef->GetSQLExpressions()); // get the first column for an external key
 				$sExternalKeyField = self::DBGetKey($sKeyClass);
 				self::DbgTrace("External key $sKeyAttCode, Join on $sLocalKeyField = $sExternalKeyField");
 				if ($oKeyAttDef->IsNullAllowed())
@@ -2081,9 +2092,8 @@ abstract class MetaModel
 				// Skip this attribute if not originaly defined in this class
 				if (self::$m_aAttribOrigins[$sClass][$sAttCode] != $sClass) continue;
 
-				foreach($oAttDef->DBGetUsedFields() as $sField)
+				foreach($oAttDef->GetSQLColumns() as $sField => $sDBFieldType)
 				{
-					$sDBFieldType = $oAttDef->GetDBFieldType();
 					$sFieldSpecs = $oAttDef->IsNullAllowed() ? "$sDBFieldType NULL" : "$sDBFieldType NOT NULL";
 					if (!CMDBSource::IsField($sTable, $sField))
 					{
@@ -2298,7 +2308,7 @@ abstract class MetaModel
 					$sRemoteTable = self::DBGetTable($sRemoteClass);
 					$sRemoteKey = self::DBGetKey($sRemoteClass);
 
-					$sExtKeyField = $oAttDef->GetSQLExpr();
+					$sExtKeyField = current($oAttDef->GetSQLExpressions()); // get the first column for an external key
 
 					// Note: a class/table may have an external key on itself
 					$sSelBase = "SELECT DISTINCT maintable.`$sKeyField` AS id, maintable.`$sExtKeyField` AS extkey FROM `$sTable` AS maintable LEFT JOIN `$sRemoteTable` ON maintable.`$sExtKeyField` = `$sRemoteTable`.`$sRemoteKey`";
@@ -2344,7 +2354,7 @@ abstract class MetaModel
 					{
 						$sExpectedValues = implode(",", CMDBSource::Quote(array_keys($aAllowedValues), true));
 	
-						$sMyAttributeField = $oAttDef->GetSQLExpr();
+						$sMyAttributeField = current($oAttDef->GetSQLExpressions()); // get the first column for the moment
 						$sDefaultValue = $oAttDef->GetDefaultValue();
 						$sSelWrongRecs = "SELECT DISTINCT maintable.`$sKeyField` AS id FROM `$sTable` AS maintable WHERE maintable.`$sMyAttributeField` NOT IN ($sExpectedValues)";
 						self::DBCheckIntegrity_Check2Update($sSelWrongRecs, "Record having a column ('<em>$sAttCode</em>') with an unexpected value", $sMyAttributeField, CMDBSource::Quote($sDefaultValue), $sClass, $aErrorsAndFixes, $iNewDelCount, $aPlannedDel);

@@ -77,8 +77,7 @@ abstract class FilterDefinition
 	abstract public function GetOperators();
 	// returns an opcode
 	abstract public function GetLooseOperator();
-	abstract public function GetFilterSQLExpr($sOpCode, $value);
-	abstract public function TemporaryGetSQLCol();
+	abstract public function GetSQLExpressions();
 
 	// Wrapper - no need for overloading this one
 	public function GetOpDescription($sOpCode)
@@ -137,32 +136,11 @@ class FilterPrivateKey extends FilterDefinition
 		return "IN";
 	}
 
-	public function GetFilterSQLExpr($sOpCode, $value)
+	public function GetSQLExpressions()
 	{
-		$sFieldName = $this->Get("id_field");
-		// #@# not obliged to quote... these are numbers !!!
-		$sQValue = CMDBSource::Quote($value);
-		switch($sOpCode)
-		{
-			case "IN":
-				if (!is_array($sQValue)) throw new CoreException("Expected an array for argument value (sOpCode='$sOpCode')");
-				return "$sFieldName IN (".implode(", ", $sQValue).")"; 
-
-			case "NOTIN":
-				if (!is_array($sQValue)) throw new CoreException("Expected an array for argument value (sOpCode='$sOpCode')");
-				return "$sFieldName NOT IN (".implode(", ", $sQValue).")"; 
-
-			case "!=":
-				return $sFieldName." != ".$sQValue;
-
-			case "=":
-			default:
-				return $sFieldName." = ".$sQValue;
-		}
-	}
-	public function TemporaryGetSQLCol()
-	{
-		return $this->Get("id_field");
+		return array(
+			'' => $this->Get("id_field"),
+		);
 	}
 }
 
@@ -228,16 +206,10 @@ class FilterFromAttribute extends FilterDefinition
 		return $oAttDef->GetBasicFilterLooseOperator();
 	}
 
-	public function GetFilterSQLExpr($sOpCode, $value)
+	public function GetSQLExpressions()
 	{
 		$oAttDef = $this->Get("refattribute");
-		return $oAttDef->GetBasicFilterSQLExpr($sOpCode, $value);
-	}
-
-	public function TemporaryGetSQLCol()
-	{
-		$oAttDef = $this->Get("refattribute");
-		return $oAttDef->GetSQLExpr();
+		return $oAttDef->GetSQLExpressions();
 	}
 }
 

@@ -1,7 +1,15 @@
 <?php
 
 require_once('MyHelpers.class.inc.php');
+require_once('ormdocument.class.inc.php');
 
+/**
+ * MissingColumnException - sent if an attribute is being created but the column is missing in the row 
+ *
+ * @package     iTopORM
+ */
+class MissingColumnException extends Exception
+{}
 
 /**
  * add some description here... 
@@ -48,7 +56,6 @@ abstract class AttributeDefinition
 	abstract public function GetType();
 	abstract public function GetTypeDesc();
 	abstract public function GetEditClass();
-	abstract public function GetDBFieldType();
 
 	protected $m_sCode;
 	private $m_aParams = array();
@@ -88,7 +95,7 @@ abstract class AttributeDefinition
 	// to be overloaded
 	static protected function ListExpectedParams()
 	{
-		return array("label", "description", "allowed_values");
+		return array("label", "description");
 	}
 
 	private function ConsistencyCheck()
@@ -125,8 +132,8 @@ abstract class AttributeDefinition
 	public function GetCode() {return $this->m_sCode;} 
 	public function GetLabel() {return $this->Get("label");} 
 	public function GetDescription() {return $this->Get("description");} 
-	public function GetValuesDef() {return $this->Get("allowed_values");} 
-	public function GetPrerequisiteAttributes() {return $this->Get("depends_on");} 
+	public function GetValuesDef() {return null;} 
+	public function GetPrerequisiteAttributes() {return array();} 
 	//public function IsSearchableStd() {return $this->Get("search_std");} 
 	//public function IsSearchableGlobal() {return $this->Get("search_global");} 
 	//public function IsMandatory() {return $this->Get("is_mandatory");} 
@@ -136,13 +143,12 @@ abstract class AttributeDefinition
 	//public function GetCheckRegExp() {return $this->Get("regexp");} 
 	//public function GetCheckFunc() {return $this->Get("checkfunc");} 
 
-	// Definition: real value is what will be stored in memory and maintained by MetaModel
-	// DBObject::Set()        relies on MakeRealValue()
-	// MetaModel::MakeQuery()  relies on RealValueToSQLValue()
-	// DBObject::FromRow()    relies on SQLToRealValue()
 	public function MakeRealValue($proposedValue) {return $proposedValue;} // force an allowed value (type conversion and possibly forces a value as mySQL would do upon writing!)
-	public function RealValueToSQLValue($value) {return $value;} // format value as a valuable SQL literal (quoted outside)
-	public function SQLValueToRealValue($value) {return $value;} // take the result of a fetch... and make it a PHP variable
+
+	public function GetSQLExpressions() {return array();} // returns suffix/expression pairs (1 in most of the cases), for READING (Select)
+	public function FromSQLToValue($aCols, $sPrefix = '') {return null;} // returns a value out of suffix/value pairs, for SELECT result interpretation
+	public function GetSQLColumns() {return array();} // returns column/spec pairs (1 in most of the cases), for STRUCTURING (DB creation)
+	public function GetSQLValues($value) {return array();} // returns column/value pairs (1 in most of the cases), for WRITING (Insert, Update)
 
 	public function GetJSCheckFunc()
 	{
@@ -167,7 +173,6 @@ abstract class AttributeDefinition
 		return call_user_func($sComputeFunc);
 	}
 	
-	abstract public function DBGetUsedFields();
 	abstract public function GetDefaultValue();
 
 	//
@@ -181,17 +186,17 @@ abstract class AttributeDefinition
 
 	public function GetAsHTML($sValue)
 	{
-		return Str::pure2html($sValue);
+		return Str::pure2html((string)$sValue);
 	}
 
 	public function GetAsXML($sValue)
 	{
-		return Str::pure2xml($sValue);
+		return Str::pure2xml((string)$sValue);
 	}
 
 	public function GetAsCSV($sValue, $sSeparator = ';', $sSepEscape = ',')
 	{
-		return str_replace($sSeparator, $sSepEscape, $sValue);
+		return str_replace($sSeparator, $sSepEscape, (string)$sValue);
 	}
 
 	public function GetAllowedValues($aArgs = array(), $sBeginsWith = '')
@@ -216,23 +221,23 @@ class AttributeLinkedSet extends AttributeDefinition
 {
 	static protected function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array("depends_on", "linked_class", "ext_key_to_me", "count_min", "count_max"));
+		return array_merge(parent::ListExpectedParams(), array("allowed_values", "depends_on", "linked_class", "ext_key_to_me", "count_min", "count_max"));
 	}
 
 	public function GetType() {return "Array of objects";}
 	public function GetTypeDesc() {return "Any kind of objects [subclass] of the same class";}
 	public function GetEditClass() {return "List";}
-	public function GetDBFieldType() {return "N/A";} // should be moved out of the AttributeDef root class
 
 	public function IsWritable() {return true;} 
 	public function IsLinkSet() {return true;} 
 
+	public function GetValuesDef() {return $this->Get("allowed_values");} 
+	public function GetPrerequisiteAttributes() {return $this->Get("depends_on");} 
 	public function GetDefaultValue() {return DBObjectSet::FromScratch($this->Get('linked_class'));}
 
 	public function GetLinkedClass() {return $this->Get('linked_class');}
 	public function GetExtKeyToMe() {return $this->Get('ext_key_to_me');}
 
-	public function DBGetUsedFields() {return array();}
 	public function GetBasicFilterOperators() {return array();}
 	public function GetBasicFilterLooseOperator() {return '';}
 	public function GetBasicFilterSQLExpr($sOpCode, $value) {return '';}
@@ -286,25 +291,55 @@ class AttributeDBFieldVoid extends AttributeDefinition
 {
 	static protected function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array("depends_on", "sql"));
+		return array_merge(parent::ListExpectedParams(), array("allowed_values", "depends_on", "sql"));
 	}
+
+	// To be overriden, used in GetSQLColumns
+	protected function GetSQLCol() {return "VARCHAR(255)";}
 
 	public function GetType() {return "Void";}
 	public function GetTypeDesc() {return "Any kind of value, from the DB";}
 	public function GetEditClass() {return "String";}
-	public function GetDBFieldType() {return "VARCHAR(255)";}
 	
+	public function GetValuesDef() {return $this->Get("allowed_values");} 
+	public function GetPrerequisiteAttributes() {return $this->Get("depends_on");} 
+
 	public function IsDirectField() {return true;} 
 	public function IsScalar() {return true;} 
 	public function IsWritable() {return true;} 
 	public function GetSQLExpr()    {return $this->Get("sql");}
 	public function GetDefaultValue() {return "";}
 	public function IsNullAllowed() {return false;}
-	public function DBGetUsedFields()
+
+	protected function ScalarToSQL($value) {return $value;} // format value as a valuable SQL literal (quoted outside)
+	protected function SQLToScalar($value) {return $value;} // take the result of a fetch... and make it a PHP variable
+
+	public function GetSQLExpressions()
 	{
-		// #@# bugge a mort... a suivre...
-		return array($this->Get("sql"));
-	} 
+		$aColumns = array();
+		// Note: to optimize things, the existence of the attribute is determine by the existence of one column with an empty suffix
+		$aColumns[''] = $this->Get("sql");
+		return $aColumns;
+	}
+
+	public function FromSQLToValue($aCols, $sPrefix = '')
+	{
+		$value = $this->MakeRealValue($aCols[$sPrefix.'']);
+		return $value;
+	}
+	public function GetSQLValues($value)
+	{
+		$aValues = array();
+		$aValues[$this->Get("sql")] = $this->ScalarToSQL($value);
+		return $aValues;
+	}
+
+	public function GetSQLColumns()
+	{
+		$aColumns = array();
+		$aColumns[$this->Get("sql")] = $this->GetSQLCol();
+		return $aColumns;
+	}
 
 	public function GetBasicFilterOperators()
 	{
@@ -371,7 +406,7 @@ class AttributeInteger extends AttributeDBField
 	public function GetType() {return "Integer";}
 	public function GetTypeDesc() {return "Numeric value (could be negative)";}
 	public function GetEditClass() {return "String";}
-	public function GetDBFieldType() {return "INT";}
+	protected function GetSQLCol() {return "INT";}
 	
 	public function GetBasicFilterOperators()
 	{
@@ -427,12 +462,12 @@ class AttributeInteger extends AttributeDBField
 		//return intval($proposedValue); could work as well
 		return (int)$proposedValue;
 	}
-	public function RealValueToSQLValue($value)
+	public function ScalarToSQL($value)
 	{
 		assert(is_numeric($value));
 		return $value; // supposed to be an int
 	}
-	public function SQLValueToRealValue($value)
+	public function SQLToScalar($value)
 	{
 		// Use cast (int) or intval() ?
 		return (int)$value;
@@ -461,7 +496,7 @@ class AttributeString extends AttributeDBField
 	public function GetType() {return "String";}
 	public function GetTypeDesc() {return "Alphanumeric string";}
 	public function GetEditClass() {return "String";}
-	public function GetDBFieldType() {return "VARCHAR(255)";}
+	protected function GetSQLCol() {return "VARCHAR(255)";}
 
 	public function GetBasicFilterOperators()
 	{
@@ -510,7 +545,7 @@ class AttributeString extends AttributeDBField
 		// 	throw new CoreException("Failed to change the type of '$proposedValue' to a string");
 		// }
 	}
-	public function RealValueToSQLValue($value)
+	public function ScalarToSQL($value)
 	{
 		if (!is_string($value))
 		{
@@ -518,7 +553,7 @@ class AttributeString extends AttributeDBField
 		}
 		return $value;
 	}
-	public function SQLValueToRealValue($value)
+	public function SQLToScalar($value)
 	{
 		return $value;
 	}
@@ -544,7 +579,7 @@ class AttributePassword extends AttributeString
 	}
 
 	public function GetEditClass() {return "Password";}
-	public function GetDBFieldType() {return "VARCHAR(64)";}
+	protected function GetSQLCol() {return "VARCHAR(64)";}
 }
 
 /**
@@ -562,7 +597,7 @@ class AttributeText extends AttributeString
 	public function GetType() {return "Text";}
 	public function GetTypeDesc() {return "Multiline character string";}
 	public function GetEditClass() {return "Text";}
-	public function GetDBFieldType() {return "TEXT";}
+	protected function GetSQLCol() {return "TEXT";}
 
 	public function GetAsHTML($sValue)
 	{
@@ -601,7 +636,7 @@ class AttributeEnum extends AttributeString
 	public function GetType() {return "Enum";}
 	public function GetTypeDesc() {return "List of predefined alphanumeric strings";}
 	public function GetEditClass() {return "String";}
-	public function GetDBFieldType()
+	protected function GetSQLCol()
 	{
 		$oValDef = $this->GetValuesDef();
 		if ($oValDef)
@@ -672,7 +707,7 @@ class AttributeDate extends AttributeDBField
 	public function GetType() {return "Date";}
 	public function GetTypeDesc() {return "Date and time";}
 	public function GetEditClass() {return "Date";}
-	public function GetDBFieldType() {return "TIMESTAMP";}
+	protected function GetSQLCol() {return "TIMESTAMP";}
 
 	// #@# THIS HAS TO REVISED
 	// Having null not allowed was interpreted by mySQL
@@ -768,7 +803,7 @@ class AttributeDate extends AttributeDBField
 		throw new CoreException("Invalid type for a date (found ".gettype($proposedValue)." and accepting string/int/DateTime)");
 		return null;
 	}
-	public function RealValueToSQLValue($value)
+	public function ScalarToSQL($value)
 	{
 		if (empty($value))
 		{
@@ -777,7 +812,7 @@ class AttributeDate extends AttributeDBField
 		}
 		return $value;
 	}
-	public function SQLValueToRealValue($value)
+	public function SQLToScalar($value)
 	{
 		return $value;
 	}
@@ -825,7 +860,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 	public function GetType() {return "Extkey";}
 	public function GetTypeDesc() {return "Link to another object";}
 	public function GetEditClass() {return "ExtKey";}
-	public function GetDBFieldType() {return "INT";}
+	protected function GetSQLCol() {return "INT";}
 
 	public function IsExternalKey($iType = EXTKEY_RELATIVE) {return true;}
 	public function GetTargetClass($iType = EXTKEY_RELATIVE) {return $this->Get("targetclass");}
@@ -904,11 +939,11 @@ class AttributeExternalField extends AttributeDefinition
 	public function GetType() {return "ExtkeyField";}
 	public function GetTypeDesc() {return "Field of an object pointed to by the current object";}
 	public function GetEditClass() {return "ExtField";}
-	public function GetDBFieldType()
+	protected function GetSQLCol()
 	{
 		// throw new CoreException("external attribute: does it make any sense to request its type ?");  
 		$oExtAttDef = $this->GetExtAttDef();
-		return $oExtAttDef->GetDBFieldType(); 
+		return $oExtAttDef->GetSQLCol(); 
 	}
 
 	public function IsExternalKey($iType = EXTKEY_RELATIVE)
@@ -974,12 +1009,6 @@ class AttributeExternalField extends AttributeDefinition
 		$oExtAttDef = $this->GetExtAttDef();
 		return $oExtAttDef->GetSQLExpr(); 
 	} 
-	public function DBGetUsedFields()
-	{
-		// No field is used but the one defined in the field of the external class
-		// #@# so what ?
-		return array();
-	} 
 
 	public function GetDefaultValue()
 	{
@@ -1006,7 +1035,7 @@ class AttributeExternalField extends AttributeDefinition
 	public function GetBasicFilterSQLExpr($sOpCode, $value)
 	{
 		$oExtAttDef = $this->GetExtAttDef();
-		return $oExtAttDef->GetBasicFilterSQLExpr($sOpCode, $value); 
+		return $oExtAttDef->GetBasicFilterSQLExpr($sOpCode, $value);
 	} 
 
 	public function MakeRealValue($proposedValue)
@@ -1014,17 +1043,29 @@ class AttributeExternalField extends AttributeDefinition
 		$oExtAttDef = $this->GetExtAttDef();
 		return $oExtAttDef->MakeRealValue($proposedValue);
 	}
-	public function RealValueToSQLValue($value)
+	public function ScalarToSQL($value)
 	{
 		// This one could be used in case of filtering only
 		$oExtAttDef = $this->GetExtAttDef();
-		return $oExtAttDef->RealValueToSQLValue($value);
+		return $oExtAttDef->ScalarToSQL($value);
 	}
-	public function SQLValueToRealValue($value)
+	public function SQLToScalar($value)
 	{
 		$oExtAttDef = $this->GetExtAttDef();
-		return $oExtAttDef->SQLValueToRealValue($value);
+		return $oExtAttDef->SQLToScalar($value);
 	}
+
+
+	// Do not overload GetSQLExpression here because this is handled in the joins
+	//public function GetSQLExpressions() {return array();}
+
+	// Here, we get the data...
+	public function FromSQLToValue($aCols, $sPrefix = '')
+	{
+		$oExtAttDef = $this->GetExtAttDef();
+		return $oExtAttDef->FromSQLToValue($aCols, $sPrefix);
+	}
+
 	public function GetAsHTML($value)
 	{
 		$oExtAttDef = $this->GetExtAttDef();
@@ -1077,5 +1118,124 @@ class AttributeURL extends AttributeString
 		return "<a target=\"$sTarget\" href=\"$sValue\">$sLabel</a>";
 	}
 }
+
+/**
+ * Data column, consisting in TWO columns in the DB  
+ *
+ * @package     iTopORM
+ * @author      Romain Quetiez <romainquetiez@yahoo.fr>
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.itop.com
+ * @since       1.0
+ * @version     $itopversion$
+ */
+class AttributeBlob extends AttributeDefinition
+{
+	static protected function ListExpectedParams()
+	{
+		return array_merge(parent::ListExpectedParams(), array("depends_on"));
+	}
+
+	public function GetType() {return "Blob";}
+	public function GetTypeDesc() {return "Document";}
+	public function GetEditClass() {return "Document";}
+	
+	public function IsDirectField() {return true;} 
+	public function IsScalar() {return true;} 
+	public function IsWritable() {return true;} 
+	public function GetDefaultValue() {return "";}
+	public function IsNullAllowed() {return false;}
+
+	// Facilitate things: allow the user to Set the value from a string
+	public function MakeRealValue($proposedValue)
+	{
+		if (!is_object($proposedValue))
+		{
+			return new ormDocument($proposedValue, 'text/plain');
+		}
+		return $proposedValue;
+	}
+
+	public function GetSQLExpressions()
+	{
+		$aColumns = array();
+		// Note: to optimize things, the existence of the attribute is determined by the existence of one column with an empty suffix
+		$aColumns[''] = $this->GetCode().'_mimetype';
+		$aColumns['_data'] = $this->GetCode().'_data';
+		$aColumns['_filename'] = $this->GetCode().'_filename';
+		return $aColumns;
+	}
+
+	public function FromSQLToValue($aCols, $sPrefix = '')
+	{
+		if (!isset($aCols[$sPrefix]))
+		{
+			$sAvailable = implode(', ', array_keys($aCols));
+			throw new MissingColumnException("Missing column '$sPrefix' from {$sAvailable}");
+		} 
+		$sMimeType = $aCols[$sPrefix];
+
+		if (!isset($aCols[$sPrefix.'_data'])) 
+		{
+			$sAvailable = implode(', ', array_keys($aCols));
+			throw new MissingColumnException("Missing column '".$sPrefix."_data' from {$sAvailable}");
+		} 
+		$data = $aCols[$sPrefix.'_data'];
+
+		if (!isset($aCols[$sPrefix.'_filename'])) 
+		{
+			$sAvailable = implode(', ', array_keys($aCols));
+			throw new MissingColumnException("Missing column '".$sPrefix."_filename' from {$sAvailable}");
+		} 
+		$sFileName = $aCols[$sPrefix.'_filename'];
+
+		$value = new ormDocument($data, $sMimeType, $sFileName);
+		return $value;
+	}
+
+	public function GetSQLValues($value)
+	{
+		// #@# Optimization: do not load blobs anytime
+		//     As per mySQL doc, selecting blob columns will prevent mySQL from
+		//     using memory in case a temporary table has to be created
+		//     (temporary tables created on disk)
+		//     We will have to remove the blobs from the list of attributes when doing the select
+		//     then the use of Get() should finalize the load
+		$aValues = array();
+		$aValues[$this->GetCode().'_data'] = $value->GetData();
+		$aValues[$this->GetCode().'_mimetype'] = $value->GetMimeType();
+		$aValues[$this->GetCode().'_filename'] = $value->GetFileName();
+		return $aValues;
+	}
+
+	public function GetSQLColumns()
+	{
+		$aColumns = array();
+		$aColumns[$this->GetCode().'_data'] = 'LONGBLOB'; // 2^32 (4 Gb)
+		$aColumns[$this->GetCode().'_mimetype'] = 'VARCHAR(255)';
+		$aColumns[$this->GetCode().'_filename'] = 'VARCHAR(255)';
+		return $aColumns;
+	}
+
+	public function GetBasicFilterOperators()
+	{
+		return array();
+	}
+	public function GetBasicFilterLooseOperator()
+	{
+		return '=';
+	}
+
+	public function GetBasicFilterSQLExpr($sOpCode, $value)
+	{
+		return 'true';
+	} 
+
+	public function GetAsHTML($value)
+	{
+		return $value->GetAsHTML();
+	}
+}
+
 
 ?>

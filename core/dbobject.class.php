@@ -207,11 +207,14 @@ abstract class DBObject
 			// Skip links (could not be loaded by the mean of this query)
 			if ($oAttDef->IsLinkSet()) continue;
 
-			if (array_key_exists($sAttCode, $aRow))
+			// Note: we assume that, for a given attribute, if it can be loaded,
+			// then one column will be found with an empty suffix, the others have a suffix
+			if (isset($aRow[$sAttCode]))
 			{
-				$sValue = $oAttDef->SQLValueToRealValue($aRow[$sAttCode]);
-				$this->m_aCurrValues[$sAttCode] = $sValue;
-				$this->m_aOrigValues[$sAttCode] = $sValue;
+				$value = $oAttDef->FromSQLToValue($aRow, $sAttCode);
+
+				$this->m_aCurrValues[$sAttCode] = $value;
+				$this->m_aOrigValues[$sAttCode] = $value;
 				$this->m_aLoadedAtt[$sAttCode] = true;
 			}
 			else
@@ -613,11 +616,12 @@ abstract class DBObject
 		{
 			// Skip this attribute if not defined in this table
 			if (!MetaModel::IsAttributeOrigin($sTableClass, $sAttCode)) continue;
-			if ($oAttDef->IsDirectField())
+			$aAttColumns = $oAttDef->GetSQLValues($this->m_aCurrValues[$sAttCode]);
+			foreach($aAttColumns as $sColumn => $sValue)
 			{
-				$aFieldsToWrite[] = $oAttDef->GetSQLExpr(); 
-				$aValuesToWrite[] = CMDBSource::Quote($oAttDef->RealValueToSQLValue($this->m_aCurrValues[$sAttCode]));
-			} 
+				$aFieldsToWrite[] = $sColumn; 
+				$aValuesToWrite[] = CMDBSource::Quote($sValue);
+			}
 		}
 
 		if (count($aValuesToWrite) == 0) return false;

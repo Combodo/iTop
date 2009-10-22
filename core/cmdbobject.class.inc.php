@@ -162,22 +162,49 @@ abstract class CMDBObject extends DBObject
 		{
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
 			if ($oAttDef->IsLinkSet()) continue; // #@# temporary
-			$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttribute");
-			$oMyChangeOp->Set("change", $oChange->GetKey());
-			$oMyChangeOp->Set("objclass", get_class($this));
-			$oMyChangeOp->Set("objkey", $this->GetKey());
-			$oMyChangeOp->Set("attcode", $sAttCode);
-			if (array_key_exists($sAttCode, $aOrigValues))
+
+			if ($oAttDef instanceOf AttributeBlob)
 			{
-				$sOriginalValue = $aOrigValues[$sAttCode];
+				// Data blobs
+				$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeBlob");
+				$oMyChangeOp->Set("change", $oChange->GetKey());
+				$oMyChangeOp->Set("objclass", get_class($this));
+				$oMyChangeOp->Set("objkey", $this->GetKey());
+				$oMyChangeOp->Set("attcode", $sAttCode);
+
+				if (array_key_exists($sAttCode, $aOrigValues))
+				{
+					$original = $aOrigValues[$sAttCode];
+				}
+				else
+				{
+					$original = new ormDocument();
+				}
+				$oMyChangeOp->Set("prevdata", $original);
+				$iId = $oMyChangeOp->DBInsertNoReload();
 			}
 			else
 			{
-				$sOriginalValue = 'undefined';
+				// Scalars
+				//
+				$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeScalar");
+				$oMyChangeOp->Set("change", $oChange->GetKey());
+				$oMyChangeOp->Set("objclass", get_class($this));
+				$oMyChangeOp->Set("objkey", $this->GetKey());
+				$oMyChangeOp->Set("attcode", $sAttCode);
+
+				if (array_key_exists($sAttCode, $aOrigValues))
+				{
+					$sOriginalValue = $aOrigValues[$sAttCode];
+				}
+				else
+				{
+					$sOriginalValue = 'undefined';
+				}
+				$oMyChangeOp->Set("oldvalue", $sOriginalValue);
+				$oMyChangeOp->Set("newvalue", $value);
+				$iId = $oMyChangeOp->DBInsertNoReload();
 			}
-			$oMyChangeOp->Set("oldvalue", $sOriginalValue);
-			$oMyChangeOp->Set("newvalue", $value);
-			$iId = $oMyChangeOp->DBInsertNoReload();
 		}
 	}
 

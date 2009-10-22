@@ -338,13 +338,20 @@ function DisplayClassDetails($oPage, $sClass)
 		$sAllowedValues = "";
 		$oAllowedValuesDef = $oAttDef->GetValuesDef();
 		$sMoreInfo = "";
-		if (is_subclass_of($oAttDef, 'AttributeDBFieldVoid'))
+
+		$aCols = array();
+		foreach($oAttDef->GetSQLColumns() as $sCol => $sFieldDesc)
 		{
+			$aCols[] = "$sCol: $sFieldDesc";
+		}
+		if (count($aCols) > 0)
+		{
+			$sCols = implode(', ', $aCols);
+	
 			$aMoreInfo = array();
-			$aMoreInfo[] = "Column: <em>".$oAttDef->GetSQLExpr()."</em>";
+			$aMoreInfo[] = "Column(s): <em>$sCols</em>";
 			$aMoreInfo[] = "Default: '".$oAttDef->GetDefaultValue()."'";
 			$aMoreInfo[] = $oAttDef->IsNullAllowed() ? "Null allowed" : "Null NOT allowed";
-			//$aMoreInfo[] = $oAttDef->DBGetUsedFields();
 			$sMoreInfo .= implode(', ', $aMoreInfo);
 		}
 
