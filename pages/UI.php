@@ -8,7 +8,7 @@ require_once('../application/startup.inc.php');
 $oContext = new UserContext();
 $oAppContext = new ApplicationContext();
 $iActiveNodeId = utils::ReadParam('menu', '');
-if (empty($iActiveNodeId))
+if (empty($iActiveNodeId) && !is_numeric($iActiveNodeId))
 {
 	// No menu specified, let's get the default one:
 	// 1) It's a root menu item (parent_id == 0)
@@ -319,7 +319,7 @@ switch($operation)
 			$oWizard = new UIWizard($oP, $sClass, $sStateCode);
 			$sStateCode = $oWizard->GetTargetState(); // Will computes the default state if none was supplied
 			$sClassLabel = MetaModel::GetName($sClass);
-			$oP->p("<h2>Creation of a new $sClassLabel</h2>");
+			$oP->add("<h2>Creation of a new $sClassLabel</h2>");
 			if (!empty($sStateCode))
 			{
 				$aStates = MetaModel::EnumStates($sClass);
@@ -1092,7 +1092,10 @@ switch($operation)
 	break;
 	
 	default:
-	$oActiveNode->RenderContent($oP, $oAppContext->GetAsHash());
+	if (is_object($oActiveNode))
+	{
+		$oActiveNode->RenderContent($oP, $oAppContext->GetAsHash());
+	}
 }
 ////MetaModel::ShowQueryTrace();
 $oP->output();
