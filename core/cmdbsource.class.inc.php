@@ -41,7 +41,7 @@ class CMDBSource
 		self::$m_sDBName = $sSource;
 		if (!self::$m_resDBLink = @mysql_pconnect($sServer, $sUser, $sPwd))
 		{
-			throw new MySQLException('Could not connect to the DB server', array('host'=>$sServer, 'user'=>$sUser));
+			throw new MySQLException('Could not connect to the DB server', array('host'=>$sServer));
 		}
 		if (!empty($sSource))
 		{

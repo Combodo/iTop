@@ -134,7 +134,7 @@ EOF
     {
         // Combo box to select the organization
 		$this->AddToMenu("<div id=\"OrganizationSelection\">
-			  <form style=\"display:inline\"><select style=\"width:150px;font-size:x-small\" name=\"org_id\" \"title=\"Pick an organization\" onChange=\"this.form.submit();\">\n");
+			  <form style=\"display:inline\" action=\"./UI.php\"><select style=\"width:150px;font-size:x-small\" name=\"org_id\" title=\"Pick an organization\" onChange=\"this.form.submit();\">\n");
 		// List of visible Organizations
 		$oContext = new UserContext();
 		$oSearchFilter = $oContext->NewFilter("bizOrganization");
@@ -255,7 +255,7 @@ EOF
             }
             echo "</style>\n";
         }
-		echo "<link rel=\"search\" type=\"application/opensearchdescription+xml\" title=\"iTop\" href=\"./opensearch.xml.php\">\n";
+		echo "<link rel=\"search\" type=\"application/opensearchdescription+xml\" title=\"iTop\" href=\"./opensearch.xml.php\" />\n";
         echo "</head>\n";
         echo "<body>\n";
 
@@ -275,13 +275,13 @@ EOF
 		}
 		$sUserName = UserRights::GetUser();
 		$sIsAdmin = UserRights::IsAdministrator() ? '(Administrator)' : '';
-		echo "<div id=\"OrganizationSelection\" style=\"position:absolute; top:18px; right:16px; width:500px;\">Logged in as '$sUserName'&nbsp;$sIsAdmin&nbsp;&nbsp;";
+		echo "<div id=\"Login\" style=\"position:absolute; top:18px; right:16px; width:500px;\">Logged in as '$sUserName'&nbsp;$sIsAdmin&nbsp;&nbsp;";
 		echo "<form action=\"../pages/UI.php\" method=\"post\" style=\"display:inline\">\n";
-		echo "<input type=\"Submit\" value=\"Log off\">\n";
-		echo "<input type=\"hidden\" name=\"operation\" value=\"logoff\">\n";
+		echo "<input type=\"submit\" value=\"Log off\" />\n";
+		echo "<input type=\"hidden\" name=\"operation\" value=\"logoff\" />\n";
 		echo "</form>\n";
-		echo "<form action=\"../pages/UI.php\" style=\"display:inline\"><div style=\"padding:1px; background-color:#fff;display:inline;\"><img src=\"../images/magnifier.gif\"/><input style=\"border:0\" type=\"text\" size=\"15\" title=\"Global Search\" name=\"text\" value=\"$sText\"$sOnClick></input></div><input type=\"Submit\" value=\"Search\">
-			  <input type=\"hidden\" name=\"operation\" value=\"full_text\"></form>\n";
+		echo "<form action=\"../pages/UI.php\" style=\"display:inline\"><div style=\"padding:1px; background-color:#fff;display:inline;\"><img src=\"../images/magnifier.gif\"/><input style=\"border:0\" type=\"text\" size=\"15\" title=\"Global Search\" name=\"text\" value=\"$sText\"$sOnClick></input></div><input type=\"submit\" value=\"Search\" />
+			  <input type=\"hidden\" name=\"operation\" value=\"full_text\" /></form>\n";
 		echo "</div>\n";
 
 		echo "</div>\n";

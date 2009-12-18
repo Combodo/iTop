@@ -80,12 +80,12 @@ class UIWizard
 		$sDisabled = $bFinishEnabled ? '' : 'disabled';
 		$nbSteps = count($this->m_aWizardSteps['mandatory']) + count($this->m_aWizardSteps['optional']);
 		$this->m_oPage->add("<div style=\"text-align:center\">
-		<input type=\"button\" value=\"&lt;&lt; Back \" $sBackButtonDisabled onClick=\"GoToStep($iStepIndex, $iStepIndex - 1)\">
-		<input type=\"button\" value=\" Next &gt;&gt;\" onClick=\"GoToStep($iStepIndex, 1+$iStepIndex)\">
-		<input type=\"button\" value=\" Finish \" $sDisabled onClick=\"GoToStep($iStepIndex, 1+$nbSteps)\">
+		<input type=\"button\" value=\"&lt;&lt; Back \" $sBackButtonDisabled onClick=\"GoToStep($iStepIndex, $iStepIndex - 1)\" />
+		<input type=\"button\" value=\" Next &gt;&gt;\" onClick=\"GoToStep($iStepIndex, 1+$iStepIndex)\" />
+		<input type=\"button\" value=\" Finish \" $sDisabled onClick=\"GoToStep($iStepIndex, 1+$nbSteps)\" />
 		</div>\n");
 		$this->m_oPage->add("
-<script>
+<script type=\"text/javascript\">
 function OnEnterStep{$iStepIndex}()
 {
 	oWizardHelper.ResetQuery();
@@ -108,10 +108,10 @@ $sJSHandlerCode
 		$this->m_oPage->add("<a name=\"step$iStepIndex\" />\n");
 		$this->m_oPage->P("Final step: confirmation");
 		$this->m_oPage->add("<form method=\"post\" action=\"../pages/UI.php\">\n");
-		$this->m_oPage->add("<input type=\"hidden\" name=\"operation\" value=\"wizard_apply_new\">\n");
-		$this->m_oPage->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
-		$this->m_oPage->add("<input type=\"hidden\" id=\"wizard_json_obj\" name=\"json_obj\" value=\"\">\n");
-		$this->m_oPage->add("<script>\n");
+		$this->m_oPage->add("<input type=\"hidden\" name=\"operation\" value=\"wizard_apply_new\" />\n");
+		$this->m_oPage->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\" />\n");
+		$this->m_oPage->add("<input type=\"hidden\" id=\"wizard_json_obj\" name=\"json_obj\" value=\"\" />\n");
+		$this->m_oPage->add("<script type=\"text/javascript\">\n");
 		$this->m_oPage->add("function OnEnterStep$iStepIndex() {\n");
 		foreach($aFieldsMap as $iInputId => $sAttCode)
 		{
@@ -123,7 +123,7 @@ $sJSHandlerCode
 		$this->m_oPage->add("</script>\n");
 		$this->m_oPage->add("<div id=\"object_preview\">\n");
 		$this->m_oPage->add("</div>\n");
-		$this->m_oPage->add("<input type=\"submit\" value=\"Create ".MetaModel::GetName($this->m_sClass)."\">\n");
+		$this->m_oPage->add("<input type=\"submit\" value=\"Create ".MetaModel::GetName($this->m_sClass)."\" />\n");
 		$this->m_oPage->add("</form>\n");
 		$this->m_oPage->add("</div>\n");
 	}	

@@ -80,7 +80,7 @@ class UILinksWidget
 			$sHTMLValue .= "</script>\n";
 			$sHTMLValue .= $this->GetObjectPickerDialog($oPage, $sTargetClass, 'oLinkWidget'.$this->m_iInputId.'.OnOk');
 			$sHTMLValue .= $this->GetLinkObjectDialog($oPage, $this->m_iInputId);
-			$sHTMLValue .= "<input type=\"text\" id=\"ac_{$this->m_iInputId}\" size=\"35\" name=\"\" value=\"\" title=\"Type the first 3 characters\"/>";
+			$sHTMLValue .= "<input type=\"text\" id=\"ac_{$this->m_iInputId}\" size=\"35\" value=\"\" title=\"Type the first 3 characters\"/>";
 			$sHTMLValue .= "<input type=\"button\" id=\"ac_add_{$this->m_iInputId}\" value=\" Add... \"  class=\"action\" onClick=\"oLinkWidget{$this->m_iInputId}.AddObject();\"/>";
 			$sHTMLValue .= "&nbsp;<input type=\"button\" value=\"Browse...\"  class=\"action\" onClick=\"return ManageObjects('$sTitle', '$sTargetClass', '$this->m_iInputId', '$sExtKeyToRemote');\"/>";
 			// another hidden input to store & pass the object's Id
@@ -275,7 +275,7 @@ EOF;
 		$sHTML = "<div class=\"jqmWindow\" id=\"LinkDlg_$sId\">\n";
 		$sHTML .= "<div class=\"wizContainer\">\n";
 		$sHTML .= "<div class=\"page_header\"><h1 id=\"LinkObject_DlgTitle\">".MetaModel::GetName($sLinkedClass)." attributes</h1></div>\n";
-		$sHTML .= "<form>\n";
+		$sHTML .= "<form action=\"./UI.php\" onSubmit=\"return oLinkWidget$sId.OnLinkOk();\">\n";
 		$index = 0;
 		$aAttrsMap = array();
 		$aDetails = array();

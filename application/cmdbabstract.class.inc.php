@@ -587,12 +587,12 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$sHtml .= "</select>&nbsp;</td><td>\n";
 		$sHtml .= "<textarea name=\"oql_clause\" style=\"width:100%\">$sOQLClause</textarea></td></tr>\n";
 		$sHtml .= "<tr><td colspan=\"2\" style=\"text-align:right\"><input type=\"submit\" value=\" Query \"></td></tr>\n";
-		$sHtml .= "<input type=\"hidden\" name=\"dosearch\" value=\"1\">\n";
+		$sHtml .= "<input type=\"hidden\" name=\"dosearch\" value=\"1\" />\n";
 		foreach($aExtraParams as $sName => $sValue)
 		{
-			$sHtml .= "<input type=\"hidden\" name=\"$sName\" value=\"$sValue\">\n";
+			$sHtml .= "<input type=\"hidden\" name=\"$sName\" value=\"$sValue\" />\n";
 		}
-		$sHtml .= "<input type=\"hidden\" name=\"operation\" value=\"search_form\">\n";
+		$sHtml .= "<input type=\"hidden\" name=\"operation\" value=\"search_form\" />\n";
 		$sHtml .= "</table></form>\n";
 		$sHtml .= "</div><!-- OQL query form -->\n";
 		return $sHtml;
@@ -654,7 +654,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 						{
 							// too many choices, use an autocomplete
 							// The input for the auto complete
-							$sHTMLValue = "<input count=\"".count($aAllowedValues)."\" type=\"text\" id=\"label_$iInputId\" size=\"30\" name=\"\" value=\"$sDisplayValue\"{$sCSSClasses}/>";
+							$sHTMLValue = "<input count=\"".count($aAllowedValues)."\" type=\"text\" id=\"label_$iInputId\" size=\"30\" value=\"$sDisplayValue\"{$sCSSClasses}/>";
 							// another hidden input to store & pass the object's Id
 							$sHTMLValue .= "<input type=\"hidden\" id=\"$iInputId\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" />\n";
 							$oPage->add_ready_script("\$('#label_$iInputId').autocomplete('./ajax.render.php', { minChars:3, onItemSelect:selectItem, onFindValue:findValue, formatItem:formatItem, autoFill:true, keyHolder:'#$iInputId', extraParams:{operation:'autocomplete', sclass:'$sClass',attCode:'".$sAttCode."'}});");
@@ -675,7 +675,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 					}
 					else
 					{
-						$sHTMLValue = "<input type=\"text\" size=\"30\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iInputId\"{$sCSSClasses}>";
+						$sHTMLValue = "<input type=\"text\" size=\"30\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iInputId\"{$sCSSClasses} />";
 					}
 					break;
 			}

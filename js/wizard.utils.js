@@ -54,6 +54,7 @@ function Manage_LoadSelect(sSelectedId, sFilter)
 
 function Manage_SwapSelectedObjects(oSourceSelect, oDestinationSelect, sId)
 {
+	j = oDestinationSelect.options.length;
 	for (i=oSourceSelect.length-1;i>=0;i--) // Count down because we are removing the indexes from the combo
 	{
 		if (oSourceSelect.options[i].selected)
@@ -61,7 +62,7 @@ function Manage_SwapSelectedObjects(oSourceSelect, oDestinationSelect, sId)
 			var newOption = document.createElement('option');
 			newOption.text = oSourceSelect.options[i].text;
 			newOption.value = oSourceSelect.options[i].value;
-			oDestinationSelect.add(newOption, null);
+			oDestinationSelect.options[j++] = newOption;
 			oSourceSelect.remove(i);
 		}
 	}

@@ -117,6 +117,8 @@ class UILinksWizard
 					$('#ModalDlg').html(data);
 					dlgWidth = $(document).width() - 100;
 					$('#ModalDlg').css('width', dlgWidth);
+					$('#ModalDlg').css('left', 50);
+					$('#ModalDlg').css('top', 50);
 					$('#ModalDlg').jqmShow();
 				},
 				'html'
@@ -355,7 +357,7 @@ class UILinksWizard
 		$oP->add("<input type=\"button\" value=\"Cancel\" onClick=\"$('#ModalDlg').jqmHide();\">&nbsp;&nbsp;<input type=\"submit\" value=\" Add \">");
 		$oP->Add("</div>\n");
 		$oP->Add("</form>\n");
-		$oP->add_ready_script("$('div#SearchFormToAdd form').attr('onSubmit', 'var the_form = this; return SearchObjectsToAdd(the_form.id);');");
+		$oP->add_ready_script("$('div#SearchFormToAdd form').bind('submit', function() {var the_form = this; SearchObjectsToAdd(the_form.id); return false;});");
 	}
 
 	public function SearchObjectsToAdd(web_page $oP, UserContext $oContext)
