@@ -189,7 +189,12 @@ abstract class cmdbAbstractObject extends CMDBObject
 
 	function GetDisplayName()
 	{
-		return $this->GetAsHTML(MetaModel::GetNameAttributeCode(get_class($this)));
+		$sDisplayName = '';
+		if (MetaModel::GetNameAttributeCode(get_class($this)) != '')
+		{
+			$sDisplayName = $this->GetAsHTML(MetaModel::GetNameAttributeCode(get_class($this)));
+		}
+		return $sDisplayName;
 	}
 
 	function GetBareDetails(web_page $oPage)
