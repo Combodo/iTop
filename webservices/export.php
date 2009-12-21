@@ -32,6 +32,21 @@ if (!empty($sExpression))
 			{
 				case 'html':
 				$oP = new nice_web_page("iTop - Export");
+				// The HTML output is made for pages located in the /pages/ folder
+				// since this page is in a different folder, let's adjust the HTML 'base' attribute
+				// to make the relative hyperlinks in the page work
+				$sServerName = $_SERVER['SERVER_NAME'];
+				$sProtocol = isset($_SERVER['HTTPS']) ? 'https' : 'http';
+				if ($sProtocol == 'http')
+				{
+					$sPort = ($_SERVER['SERVER_PORT'] == 80) ? '' : ':'.$_SERVER['SERVER_PORT'];
+				}
+				else
+				{
+					$sPort = ($_SERVER['SERVER_PORT'] == 443) ? '' : ':'.$_SERVER['SERVER_PORT'];
+				}
+				$sUrl = "$sProtocol://{$sServerName}{$sPort}/pages/";
+				$oP->set_base($sUrl);
 				cmdbAbstractObject::DisplaySet($oP, $oSet, array('menu' => false));
 				break;
 				

@@ -19,6 +19,7 @@ class web_page
     protected $a_include_scripts;
     protected $a_include_stylesheets;
     protected $a_headers;
+    protected $a_base;
     
     public function __construct($s_title)
     {
@@ -29,6 +30,7 @@ class web_page
         $this->a_linked_scripts = array();
         $this->a_linked_stylesheets = array();
         $this->a_headers = array();
+        $this->a_base = array( 'href' => '', 'target' => '');
         ob_start(); // Start capturing the output
     }
 	
@@ -38,6 +40,15 @@ class web_page
     public function set_title($s_title)
     {
         $this->s_title = $s_title;
+    }
+    
+	/**
+	 * Specify a default URL and a default target for all links on a page
+	 */
+    public function set_base($s_href = '', $s_target = '')
+    {
+        $this->a_base['href'] = $s_href;
+        $this->a_base['target'] = $s_target;
     }
     
 	/**
@@ -227,6 +238,7 @@ class web_page
         echo "<html>\n";
         echo "<head>\n";
         echo "<title>{$this->s_title}</title>\n";
+        echo $this->get_base_tag();
         foreach($this->a_linked_scripts as $s_script)
         {
             echo "<script type=\"text/javascript\" src=\"$s_script\"></script>\n";
@@ -284,6 +296,25 @@ class web_page
 		{
 			$this->add("<input type=\"hidden\" name=\"".$sLabel."[$sKey]\" value=\"$sValue\">");
 		}
+	}
+
+	protected function get_base_tag()
+	{
+		$sTag = '';
+        if (($this->a_base['href'] != '') || ($this->a_base['target'] != ''))
+        {
+        	$sTag = '<base ';
+        	if (($this->a_base['href'] != ''))
+        	{
+        		$sTag .= "href =\"{$this->a_base['href']}\" ";
+			}
+        	if (($this->a_base['target'] != ''))
+        	{
+        		$sTag .= "target =\"{$this->a_base['target']}\" ";
+			}
+			$sTag .= " />\n";
+		}
+		return $sTag;
 	}
 }
 ?>

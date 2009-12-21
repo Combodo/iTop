@@ -214,6 +214,7 @@ EOF
         echo "<html>\n";
         echo "<head>\n";
         echo "<title>{$this->s_title}</title>\n";
+        echo $this->get_base_tag();
         // Stylesheets MUST be loaded before any scripts otherwise
         // jQuery scripts may face some spurious problems (like failing on a 'reload')
         foreach($this->a_linked_stylesheets as $a_stylesheet)
