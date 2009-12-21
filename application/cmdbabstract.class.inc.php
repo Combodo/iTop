@@ -133,6 +133,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		// history block (with toggle)
 		$oHistoryFilter = new DBObjectSearch('CMDBChangeOpSetAttribute');
 		$oHistoryFilter->AddCondition('objkey', $this->GetKey());
+		$oHistoryFilter->AddCondition('objclass', get_class($this));
 		$oBlock = new HistoryBlock($oHistoryFilter, 'toggle', false);
 		$oBlock->Display($oPage, -1);
 
