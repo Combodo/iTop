@@ -302,6 +302,7 @@ abstract class DBObject
 			}
 		}
 		$this->m_aCurrValues[$sAttCode] = $oAttDef->MakeRealValue($value);
+		$this->RegisterAsDirty(); // Make sure we do not reload it anymore... before saving it
 	}
 	
 	public function Get($sAttCode)
@@ -310,13 +311,13 @@ abstract class DBObject
 		{
 			throw new CoreException("Unknown attribute code '$sAttCode' for the class ".get_class($this));
 		}
-		if ($this->m_bIsInDB && !$this->m_aLoadedAtt[$sAttCode])
+		if ($this->m_bIsInDB && !$this->m_aLoadedAtt[$sAttCode] && !$this->m_bDirty)
 		{
 			// #@# non-scalar attributes.... handle that differentely
 			$this->Reload();
 		}
 		$this->ComputeFields();
-		return $this->m_aCurrValues[$sAttCode];
+		return isset($this->m_aCurrValues[$sAttCode]) ? $this->m_aCurrValues[$sAttCode] : '';
 	}
 
 	public function GetOriginal($sAttCode)
@@ -696,6 +697,7 @@ abstract class DBObject
 	public function DBInsert()
 	{
 		$this->DBInsertNoReload();
+		$this->m_bDirty = false;
 		$this->Reload();
 		return $this->m_iKey;
 	}
@@ -741,9 +743,13 @@ abstract class DBObject
 		}
 
 		$this->DBWriteLinks();
+		$this->m_bDirty = false;
 
 		// Reload to get the external attributes
-		if ($bHasANewExternalKeyValue) $this->Reload();
+		if ($bHasANewExternalKeyValue)
+		{
+			$this->Reload();
+		}
 
 		return $this->m_iKey;
 	}
