@@ -275,6 +275,8 @@ class DBObjectSearch
 	public function AddCondition_FullText($sFullText)
 	{
 		$this->m_aFullText[] = $sFullText;
+		$index = count($this->m_aParams) + 1;
+		$this->m_aParams['param'.$index] = 1;
 	}
 
 	protected function AddToNameSpace(&$aClassAliases, &$aAliasTranslation)
