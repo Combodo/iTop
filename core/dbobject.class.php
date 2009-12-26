@@ -209,7 +209,9 @@ abstract class DBObject
 
 			// Note: we assume that, for a given attribute, if it can be loaded,
 			// then one column will be found with an empty suffix, the others have a suffix
-			if (isset($aRow[$sAttCode]))
+			// Take care: the function isset will return false in case the value is null,
+			// which is something that could happen on open joins
+			if (array_key_exists($sAttCode, $aRow))
 			{
 				$value = $oAttDef->FromSQLToValue($aRow, $sAttCode);
 
@@ -317,7 +319,7 @@ abstract class DBObject
 			$this->Reload();
 		}
 		$this->ComputeFields();
-		return isset($this->m_aCurrValues[$sAttCode]) ? $this->m_aCurrValues[$sAttCode] : '';
+		return $this->m_aCurrValues[$sAttCode];
 	}
 
 	public function GetOriginal($sAttCode)
