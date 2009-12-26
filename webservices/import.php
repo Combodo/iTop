@@ -15,7 +15,7 @@
 //
 // Known limitations
 // - output still in html, because the errors are not displayed in xml
-// - could not set the external keys by the mean of a reconciliation (the exact key must be given)
+// - only external fields attributes could be used as reconciliation keys for external keys
 // - reconciliation is made on the first column
 // - no option to force 'always create' or 'never create'
 //
@@ -35,6 +35,11 @@ require_once('../application/xmlpage.class.inc.php');
 require_once('../application/startup.inc.php');
 
 require_once('../application/loginwebpage.class.inc.php');
+
+class WebServiceException extends Exception
+{
+}
+
 login_web_page::DoLogin(); // Check user rights and prompt if needed
 
 $oContext = new UserContext();
@@ -46,6 +51,7 @@ $oAppContext = new ApplicationContext();
 
 //$oP = new XMLPage("iTop - Bulk import");
 $oP = new web_page("iTop - Bulk import");
+$oP->add('<warning>This is a prototype, I repeat: PRO-TO-TYPE, therefore it suffers bugs and limitations, documented in the code. Next step: specify...</warning>');		
 try
 {
 	$sClass = utils::ReadParam('class', '');
@@ -59,11 +65,30 @@ try
 	// Limitation: as the attribute list is in the first line, we can not match external key by an third-party attribute
 	$sRawFieldList = $oCSVParser->ListFields();
 	$aAttList = array();
-	foreach($sRawFieldList as $iField => $sFieldName)
-	{
-		$aAttList[$sFieldName] = $iField;
-	}
 	$aExtKeys = array();
+	foreach($sRawFieldList as $iFieldId => $sFieldName)
+	{
+		if (!MetaModel::IsValidAttCode($sClass, $sFieldName))
+		{
+			throw new WebServiceException("Unknown attribute '$sFieldName' (class: '$sClass')");
+		}
+		$oAtt = MetaModel::GetAttributeDef($sClass, $sFieldName);
+		if ($oAtt->IsExternalKey())
+		{
+			$aExtKeys[$sFieldName]['id'] = $iFieldId;
+			$aAttList[$sFieldName] = $iFieldId;
+		}
+		elseif ($oAtt->IsExternalField())
+		{
+			$sExtKeyAttCode = $oAtt->GetKeyAttCode();
+			$sRemoteAttCode = $oAtt->GetExtAttCode();
+			$aExtKeys[$sExtKeyAttCode][$sRemoteAttCode] = $iFieldId;
+		}
+		else
+		{
+			$aAttList[$sFieldName] = $iFieldId;
+		}
+	}
 
 	// Limitation: the reconciliation key is the first attribute
 	$aReconcilKeys = array($sRawFieldList[0]);

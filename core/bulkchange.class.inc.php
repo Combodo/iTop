@@ -229,7 +229,8 @@ class BulkChange
 	protected $m_sClass; 
 	protected $m_aData; // Note: hereafter, iCol maybe actually be any acceptable key (string)
 	// #@# todo: rename the variables to sColIndex
-	protected $m_aAttList; // attcode => iCol protected $m_aReconcilKeys;// iCol => attcode (attcode = 'id' for the pkey) 
+	protected $m_aAttList; // attcode => iCol
+	protected $m_aReconcilKeys;// iCol => attcode (attcode = 'id' for the pkey) 
 	protected $m_aExtKeys; // aExtKeys[sExtKeyAttCode][sExtReconcKeyAttCode] = iCol;
 
 	public function __construct($sClass, $aData, $aAttList, $aReconcilKeys, $aExtKeys)
@@ -268,7 +269,6 @@ class BulkChange
 			foreach ($aKeyConfig as $sForeignAttCode => $iCol)
 			{
 				// The foreign attribute is one of our reconciliation key
-				$sFieldId = MakeExtFieldSelectValue($sAttCode, $sForeignAttCode);
 				$oReconFilter->AddCondition($sForeignAttCode, $aRowData[$iCol], '=');
 				$aResults["col$iCol"] = new CellChangeSpec_Void($aRowData[$iCol]);
 			}
