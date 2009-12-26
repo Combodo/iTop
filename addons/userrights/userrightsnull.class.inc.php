@@ -74,7 +74,7 @@ class UserRightsNull extends UserRightsAddOnAPI
 		return UR_ALLOWED_YES;
 	}
 
-	public static function FlushPrivileges()
+	public function FlushPrivileges()
 	{
 	}
 }
