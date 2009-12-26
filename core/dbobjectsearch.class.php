@@ -275,8 +275,6 @@ class DBObjectSearch
 	public function AddCondition_FullText($sFullText)
 	{
 		$this->m_aFullText[] = $sFullText;
-		$index = count($this->m_aParams) + 1;
-		$this->m_aParams['param'.$index] = 1;
 	}
 
 	protected function AddToNameSpace(&$aClassAliases, &$aAliasTranslation)
@@ -466,7 +464,7 @@ class DBObjectSearch
 
 	public function RenderCondition()
 	{
-		return $this->m_oSearchCondition->Render($this->m_aParams, true);
+		return $this->m_oSearchCondition->Render($this->m_aParams, false);
 	}
 
 	public function serialize()
@@ -634,6 +632,12 @@ class DBObjectSearch
 		$sRes = "SELECT ".$this->GetClass().' AS '.$this->GetClassAlias();
 		$sRes .= $this->ToOQL_Joins();
 		$sRes .= " WHERE ".$this->m_oSearchCondition->Render($aParams, $bRetrofitParams);
+
+		// Temporary: add more info about other conditions, necessary to avoid strange behaviors with the cache
+		foreach($this->m_aFullText as $sFullText)
+		{
+			$sRes .= " AND MATCHES '$sFullText'";
+		}
 		return $sRes;
 	}
 
