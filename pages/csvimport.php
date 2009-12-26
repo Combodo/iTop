@@ -210,13 +210,25 @@ function ProcessData($oPage, $sClass, $oCSVParser, $aFieldMap, $aIsReconcKey, CM
 	foreach($aFieldMap as $sFieldId=>$sColDesc)
 	{
 		$iFieldId = (int) substr($sFieldId, strlen("field"));
+
+		if (array_key_exists($sFieldId, $aIsReconcKey))
+		{
+			// This column will be used as a reconciliation key
+
+			if (IsExtKeyField($sColDesc))
+			{
+				list($sAttCode, $sExtReconcKeyAttCode) = GetExtKeyFieldCodes($sColDesc);
+			}
+			else
+			{
+				$sAttCode = $sColDesc;
+			}
+			$aReconcilKeys[$sAttCode] = $iFieldId;
+		}
+
 		if ($sColDesc == "id")
 		{
 			$aAttList['id'] = $iFieldId;
-			if (array_key_exists($sFieldId, $aIsReconcKey))
-			{
-				$aReconcilKeys['id'] = $iFieldId;
-			}
 		}
 		elseif ($sColDesc == "__none__")
 		{
@@ -226,13 +238,11 @@ function ProcessData($oPage, $sClass, $oCSVParser, $aFieldMap, $aIsReconcKey, CM
 		{
 			// This field is value to search on, to find a value for an external key
 			list($sExtKeyAttCode, $sExtReconcKeyAttCode) = GetExtKeyFieldCodes($sColDesc);
+			if ($sExtKeyAttCode == $sExtReconcKeyAttCode)
+			{
+				$aAttList[$sExtKeyAttCode] = $iFieldId;
+			}
 			$aExtKeys[$sExtKeyAttCode][$sExtReconcKeyAttCode] = $iFieldId;
-		}
-		elseif (array_key_exists($sFieldId, $aIsReconcKey))
-		{
-			// This value is a reconciliation key
-			$aReconcilKeys[$sColDesc] = $iFieldId;
-			$aAttList[$sColDesc] = $iFieldId; // A reconciliation key is also a field
 		}
 		else
 		{
@@ -471,7 +481,7 @@ function DoProcessOrVerify($oPage, $sClass, CMDBChange $oChange = null)
 	{
 		if (array_key_exists($sFieldId, $aIsReconcKey))
 		{
-			$sReconcKey = " [search]";
+			$sReconcKey = " <br/><span title=\"the value found in this column will be used as a search condition for the reconciliation\" style=\"background-color: #aaaa00; color: #dddddd;\">[key]</span>";
 		}
 		else
 		{
@@ -499,7 +509,8 @@ function DoProcessOrVerify($oPage, $sClass, CMDBChange $oChange = null)
 		elseif (IsExtKeyField($sColDesc))
 		{
 			list($sExtKeyAttCode, $sForeignAttCode) = GetExtKeyFieldCodes($sColDesc);
-			$aDisplayConfig[$sFieldId] = array("label"=>MakeExtFieldLabel($sClass, $sExtKeyAttCode, $sForeignAttCode), "description"=>"");
+			$sLabel = MakeExtFieldLabel($sClass, $sExtKeyAttCode, $sForeignAttCode);
+			$aDisplayConfig[$sFieldId] = array("label"=>"$sLabel$sReconcKey", "description"=>"");
 			$aExtKeys[] = $sExtKeyAttCode;
 		}
 		else

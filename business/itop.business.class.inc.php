@@ -191,7 +191,7 @@ class bizContact extends logRealObject
 			"key_label" => "id",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("org_name", "name"), // inherited attributes
+			"reconc_keys" => array("org_id", "name"), // inherited attributes
 			"db_table" => "contacts",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -249,8 +249,8 @@ class bizPerson extends bizContact
 			"key_label" => "id",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("org_name", "first_name", "name"),  // comment en définir plusieurs
-			// "reconc_keys" => array("org_name", "employee_number"), 
+			"reconc_keys" => array("org_id", "first_name", "name"),  // comment en définir plusieurs
+			// "reconc_keys" => array("org_id", "employee_number"), 
 			"db_table" => "persons",   // Can it use the same physical DB table as any contact ?
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -260,7 +260,7 @@ class bizPerson extends bizContact
 		MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeString("first_name", array("label"=>"First Name", "description"=>"First name", "allowed_values"=>null, "sql"=>"first_name", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("employee_number", array("label"=>"Employee Number", "description"=>"employee number", "allowed_values"=>null, "sql"=>"employee_number", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("label"=>"Status", "description"=>"Lifecycle status", "allowed_values"=>$oAllowedEmployeeStatuses, "sql"=>"status", "default_value"=>"implementation", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("label"=>"Status", "description"=>"Lifecycle status", "allowed_values"=>$oAllowedEmployeeStatuses, "sql"=>"status", "default_value"=>"available", "is_null_allowed"=>false, "depends_on"=>array())));
 
 		MetaModel::Init_InheritFilters();
 		MetaModel::Init_AddFilterFromAttribute("first_name");
@@ -303,7 +303,7 @@ class bizTeam extends bizContact
 			"key_label" => "id",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("org_name", "name"), // inherited attributes
+			"reconc_keys" => array("org_id", "name"), // inherited attributes
 			"db_table" => "teams",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -340,7 +340,7 @@ class lnkContactTeam extends cmdbAbstractObject
 			"key_label" => "link_id",
 			"name_attcode" => "role",
 			"state_attcode" => "",
-			"reconc_keys" => array("contact_name", "team_name"),
+			"reconc_keys" => array("contact_id", "team_name"),
 			"db_table" => "teams_links",
 			"db_key_field" => "link_id",
 			"db_finalclass_field" => "",
@@ -387,7 +387,7 @@ class bizDocument extends logRealObject
 			"key_label" => "id",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("org_name", "name"), // inherited attributes
+			"reconc_keys" => array("org_id", "name"), // inherited attributes
 			"db_table" => "documents",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -434,7 +434,7 @@ class bizDocVersion extends cmdbAbstractObject
 			"key_label" => "id",
 			"name_attcode" => "version_number",
 			"state_attcode" => "",
-			"reconc_keys" => array("docname", "version_number"),
+			"reconc_keys" => array("document", "version_number"),
 			"db_table" => "document_versions",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -482,7 +482,7 @@ class lnkDocumentRealObject extends cmdbAbstractObject
 			"key_label" => "link_id",
 			"name_attcode" => "link_type",
 			"state_attcode" => "",
-			"reconc_keys" => array("doc_name", "object_name"),
+			"reconc_keys" => array("doc_id", "object_name"),
 			"db_table" => "documents_links",
 			"db_key_field" => "link_id",
 			"db_finalclass_field" => "",
@@ -528,7 +528,7 @@ class lnkContactRealObject extends cmdbAbstractObject
 			"key_label" => "link_id",
 			"name_attcode" => "role",
 			"state_attcode" => "",
-			"reconc_keys" => array("contact_name", "object_name"),
+			"reconc_keys" => array("contact_id", "object_name"),
 			"db_table" => "contacts_links",
 			"db_key_field" => "link_id",
 			"db_finalclass_field" => "",
@@ -577,7 +577,7 @@ class logInfra extends logRealObject
 			"key_label" => "id",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("org_name", "name"), // inherited attributes
+			"reconc_keys" => array("org_id", "name"), // inherited attributes
 			"db_table" => "infra",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -610,7 +610,7 @@ class lnkContactInfra extends cmdbAbstractObject
 			"key_label" => "link_id",
 			"name_attcode" => "role",
 			"state_attcode" => "",
-			"reconc_keys" => array("contact_name", "object_name"),
+			"reconc_keys" => array("contact_id", "infra_id"),
 			"db_table" => "contacts_infra_links",
 			"db_key_field" => "link_id",
 			"db_finalclass_field" => "",
@@ -657,7 +657,7 @@ class bizLocation extends logInfra
 			"key_label" => "id",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("org_name", "name"), // inherited attributes
+			"reconc_keys" => array("org_id", "name"), // inherited attributes
 			"db_table" => "location",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -789,7 +789,7 @@ class bizCircuit extends logInfra
 			"key_label" => "id",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("org_name", "carrier_name", "carrier_ref", "name"), // inherited attributes
+			"reconc_keys" => array("org_id", "provider_id", "carrier_ref", "name"), // inherited attributes
 			"db_table" => "circuits",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -872,7 +872,7 @@ class bizInterface extends logInfra
 			"key_label" => "id",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("org_name", "device_name", "name"),
+			"reconc_keys" => array("org_id", "device_id", "name"),
 			"db_table" => "interfaces",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -1018,7 +1018,7 @@ class bizSubnet extends logInfra
 			"key_label" => "id",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("org_name", "name"), // inherited attributes
+			"reconc_keys" => array("org_id", "name"), // inherited attributes
 			"db_table" => "subnets",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -1101,7 +1101,7 @@ class bizDevice extends logInfra
 			"key_label" => "id",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("org_name", "name"), // inherited attributes
+			"reconc_keys" => array("org_id", "name"), // inherited attributes
 			"db_table" => "devices",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -1174,7 +1174,7 @@ class bizPC extends bizDevice
 			"key_label" => "id",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("org_name", "name"), // inherited attributes
+			"reconc_keys" => array("org_id", "name"), // inherited attributes
 			"db_table" => "pcs",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -1268,7 +1268,7 @@ class bizServer extends bizDevice
 			"key_label" => "id",
 			"name_attcode" => "name",
 			"state_attcode" => "status",
-			"reconc_keys" => array("org_name", "name"), // inherited attributes
+			"reconc_keys" => array("org_id", "name"), // inherited attributes
 			"db_table" => "servers",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -1276,7 +1276,7 @@ class bizServer extends bizDevice
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("label"=>"Status", "description"=>"Status of the server", "allowed_values"=>new ValueSetEnum("InStore,Shipped,Plugged,ProductionCandidate,InProduction,Being Deconfigured,Obsolete"), "sql"=>"status", "default_value"=>"InStore", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("label"=>"Status", "description"=>"Status of the server", "allowed_values"=>new ValueSetEnum("InStore,Shipped,Plugged,ProductionCandidate,InProduction,BeingDeconfigured,Obsolete"), "sql"=>"status", "default_value"=>"InStore", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("memory_size", array("label"=>"Memory Size", "description"=>"Size of the memory", "allowed_values"=>null, "sql"=>"memory_size", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("cpu", array("label"=>"CPU type", "description"=>"CPU type", "allowed_values"=>null, "sql"=>"cpu_type", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("number_of_cpus", array("label"=>"Number of CPUs", "description"=>"Number of CPUs", "allowed_values"=>null, "sql"=>"number_of_cpus", "default_value"=>"1", "is_null_allowed"=>true, "depends_on"=>array())));
@@ -1442,7 +1442,7 @@ class bizNetworkDevice extends bizDevice
 			"key_label" => "id",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("org_name", "name"), // inherited attributes
+			"reconc_keys" => array("org_id", "name"), // inherited attributes
 			"db_table" => "network_devices",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -1506,7 +1506,7 @@ class bizInfraGroup extends logInfra
 			"key_label" => "id",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("org_name", "name"), // inherited attributes
+			"reconc_keys" => array("org_id", "name"), // inherited attributes
 			"db_table" => "infra_group",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -1589,7 +1589,7 @@ class bizApplication extends logInfra
 			"key_label" => "id",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("device_name", "name"), // inherited attributes
+			"reconc_keys" => array("device_id", "name"), // inherited attributes
 			"db_table" => "applications",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -1776,7 +1776,7 @@ class bizPatch extends logRealObject
 			"key_label" => "id",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("device_name", "name"), // inherited attributes
+			"reconc_keys" => array("device_id", "name"), // inherited attributes
 			"db_table" => "patches",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
