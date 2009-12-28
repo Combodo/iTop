@@ -591,18 +591,8 @@ class TestMyBizModel extends TestBizModel
 // Test a complex biz model on the fly
 ///////////////////////////////////////////////////////////////////////////
 
-class TestQueriesOnFarm extends TestBizModel
+abstract class MyFarm extends TestBizModel
 {
-	static public function GetName()
-	{
-		return 'Farm test';
-	}
-
-	static public function GetDescription()
-	{
-		return 'A series of tests on the farm business model (SQL generation)';
-	}
-	
 	static public function GetConfigFile() {return '../config-test-farm.php';}
 
 	protected function DoPrepare()
@@ -672,6 +662,20 @@ class TestQueriesOnFarm extends TestBizModel
 		$oNew->Set('leader', $iLeaderId);
 		$iId = $oNew->DBInsertNoReload();
 		return $iId;
+	}
+}
+
+
+class TestQueriesOnFarm extends MyFarm
+{
+	static public function GetName()
+	{
+		return 'Farm test';
+	}
+
+	static public function GetDescription()
+	{
+		return 'A series of tests on the farm business model (SQL generation)';
 	}
 
 	protected function CheckQuery($sQuery, $bIsCorrectQuery)
@@ -941,6 +945,45 @@ class TestBulkChangeOnFarm extends TestBizModel
 
 
 ///////////////////////////////////////////////////////////////////////////
+// Test data load
+///////////////////////////////////////////////////////////////////////////
+
+class TestFullTextSearchOnFarm extends MyFarm
+{
+	static public function GetName()
+	{
+		return 'Farm test - full text search';
+	}
+
+	static public function GetDescription()
+	{
+		return 'Focus on the full text search feature';
+	}
+	
+	protected function DoExecute()
+	{
+		echo "<h3>Create protagonists...</h3>";
+
+		$iId1 = $this->InsertMammal('human', 'male', 10, 0, 0, 'romanoff', 192, '1971-07-19');
+		$iId2 = $this->InsertMammal('human', 'female', 9, 0, 0, 'rouanita', 165, '1983-01-23');
+		$this->InsertMammal('human', 'female', 3, $iId2, $iId1, 'pomme', 169, '2008-02-23');
+		$this->InsertMammal('pig', 'female', 3, 0, 0, 'grouinkette', 85, '2006-06-01');
+		$this->InsertMammal('donkey', 'female', 3, 0, 0, 'muleta', 124, '2003-11-11');
+
+		$this->InsertBird('rooster', 'male', 12, 0, 0);
+		$this->InsertFlyingBird('pie', 'female', 11, 0, 0, 35);
+
+		echo "<h3>Search...</h3>";
+		$oSearch = new DBObjectSearch('Mammal');
+		$oSearch->AddCondition_FullText('manof');
+		//$oResultSet = new DBObjectSet($oSearch);
+		$this->search_and_show_list($oSearch);
+		return true;
+	}
+}
+
+
+///////////////////////////////////////////////////////////////////////////
 // Benchmark queries
 ///////////////////////////////////////////////////////////////////////////
 
@@ -1087,7 +1130,7 @@ class TestItopWebServices extends TestWebServices
 		$sCsvData = $aLoadSpec['csvdata'];
 
 		$aPostData = array('class' => $sClass, 'csvdata' => $sCsvData);
-		$sRes = self::DoPostRequestAuth('webservices/import.php', $aPostData);
+		$sRes = self::DoPostRequestAuth('../webservices/import.php', $aPostData);
 
 		echo "<div><h3>$sTitle</h3><pre>$sCsvData</pre><div>$sRes</div></div>";
 	}
@@ -1110,7 +1153,7 @@ class TestItopWebServices extends TestWebServices
 			),
 			array(
 				'class' => 'bizTeam',
-				'csvdata' => "name;org_id;location_id\nSquadra Azzura;1;1"
+				'csvdata' => "name;org_id;location_name\nSquadra Azzura2;1;Paris"
 			),
 			array(
 				'class' => 'bizWorkgroup',
@@ -1127,6 +1170,93 @@ class TestItopWebServices extends TestWebServices
 			$this->DoExecSingleLoad($aLoadSpec);
 		}
 
+		return true;
+	}
+}
+
+$aWebServices = array(
+	array(
+		'verb' => 'CreateIncidentTicket',
+		'args' => array(
+			'desc of ticket', /* sDescription */
+			'initial situation blah blah blah', /* sInitialSituation */
+			array('id' => 1), /* aCallerDesc */
+			array('id' => 2), /* aCustomerDesc */
+			array('id' => 1), /* aWorkgroupDesc */ 
+			array(
+				array(
+					'class' => 'logInfra',
+					'search' => array('id' => 108),
+					'link_values' => array('impactoche' => 'plus que critique'),
+				),
+				array(
+					'class' => 'bizDevice',
+					'search' => array('name' => 'Router03'),
+					'link_values' => array('impact' => 'ouais bof'),
+				),
+			), /* aImpact */
+			'low' /* sSeverity */
+		),
+	),
+);
+
+class TestSoap extends TestSoapWebService
+{
+	static public function GetName() {return 'Test SOAP';}
+	static public function GetDescription() {return 'Do basic stuff to test the SOAP capability';}
+
+	protected function DoExecute()
+	{
+		$this->m_SoapClient = new SoapClient(
+//			null,
+			"http://localhost:81/trunk/webservices/Itop.wsdl",
+			array(
+				//'location' => 'http://localhost:81/trunk/webservices/soapserver.php',
+				//'uri' => 'http://test-itop/',
+				'login' => 'admin',
+				'password' => 'admin',
+				// note: using the classmap functionality lead to APACHE fault on the server side
+				//'classmap' => array('stdClass' => 'ItopError'),
+				'trace' => 1,
+			)
+		);
+
+		global $aWebServices;
+		$aWebService = $aWebServices[0];
+
+//		$oRes = $this->m_SoapClient->CreateIncidentTicket();
+		$oRes = call_user_func_array(array($this->m_SoapClient, $aWebService['verb']), $aWebService['args']);
+
+		echo "<pre>\n";
+		print_r($oRes);
+		echo "</pre>\n";
+
+print "<pre>\n"; 
+print "Request: \n".htmlspecialchars($this->m_SoapClient->__getLastRequest()) ."\n"; 
+print "Response: \n".htmlspecialchars($this->m_SoapClient->__getLastResponse())."\n"; 
+print "</pre>"; 
+
+		return true;
+	}
+}
+
+class TestWebServicesDirect extends TestBizModel
+{
+	static public function GetName() {return 'Test web services locally';}
+	static public function GetDescription() {return 'Invoke the service directly (troubleshooting)';}
+
+	static public function GetConfigFile() {return '../config-itop.php';}
+
+	protected function DoExecute()
+	{
+		global $aWebServices;
+		$aWebService = $aWebServices[0];
+
+		$oWebServices = new WebServices();
+		$oRes = call_user_func_array(array($oWebServices, $aWebService['verb']), $aWebService['args']);
+		echo "<pre>\n";
+		print_r($oRes);
+		echo "</pre>\n";
 		return true;
 	}
 }

@@ -16,6 +16,7 @@ require_once('dbobjectset.class.php');
 
 require_once('userrights.class.inc.php');
 
+require_once('../webservices/webservices.class.inc.php');
 
 
 // Just to differentiate programmatically triggered exceptions and other kind of errors (usefull?)
@@ -201,15 +202,16 @@ abstract class TestWebServices extends TestHandler
 {
 	// simply overload DoExecute (temporary)
 
-	static protected function DoPostRequestAuth($sRelativeUrl, $aData, $sLogin = 'admin', $sPassword = '', $sOptionnalHeaders = null)
+	static protected function DoPostRequestAuth($sRelativeUrl, $aData, $sLogin = 'admin', $sPassword = 'admin', $sOptionnalHeaders = null)
 	{
 		$aDataAndAuth = $aData;
 		$aDataAndAuth['operation'] = 'login';
 		$aDataAndAuth['auth_user'] = $sLogin;
 		$aDataAndAuth['auth_pwd'] = $sPassword;
-
-		$sHost = $GLOBALS['_SERVER']['HTTP_HOST'];
-		$sUrl = "http://$sHost/$sRelativeUrl";
+		$sHost = $_SERVER['HTTP_HOST'];
+		$sRawPath = $_SERVER['SCRIPT_NAME'];
+		$sPath = dirname($sRawPath);
+		$sUrl = "http://$sHost/$sPath/$sRelativeUrl";
 
 		return self::DoPostRequest($sUrl, $aDataAndAuth, $sOptionnalHeaders);
 	}
@@ -245,6 +247,26 @@ abstract class TestWebServices extends TestHandler
 			throw new Exception("Problem reading data from $sUrl, $php_errormsg");
 		}
 		return $response;
+	}
+}
+
+/**
+ * Test to execute a piece of code (checks if an error occurs)  
+ *
+ * @package     iTopORM
+ * @author      Romain Quetiez <romainquetiez@yahoo.fr>
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.itop.com
+ * @since       1.0
+ * @version     $itopversion$
+ */
+abstract class TestSoapWebService extends TestHandler
+{
+	// simply overload DoExecute (temporary)
+
+	function __construct()
+	{
+		parent::__construct();
 	}
 }
 
