@@ -238,7 +238,7 @@ function ProcessData($oPage, $sClass, $oCSVParser, $aFieldMap, $aIsReconcKey, CM
 		{
 			// This field is value to search on, to find a value for an external key
 			list($sExtKeyAttCode, $sExtReconcKeyAttCode) = GetExtKeyFieldCodes($sColDesc);
-			if ($sExtKeyAttCode == $sExtReconcKeyAttCode)
+			if ($sExtReconcKeyAttCode == 'id')
 			{
 				$aAttList[$sExtKeyAttCode] = $iFieldId;
 			}
