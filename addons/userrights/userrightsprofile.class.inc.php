@@ -757,12 +757,18 @@ class UserRightsProfile extends UserRightsAddOnAPI
 	// Installation: create the very first user
 	public function CreateAdministrator($sAdminUser, $sAdminPwd)
 	{
+		// Create a change to record the history of the User object
+		$oChange = MetaModel::NewObject("CMDBChange");
+		$oChange->Set("date", time());
+		$oChange->Set("userinfo", "Initialization");
+		$iChangeId = $oChange->DBInsert();
+
 		$oOrg = new bizOrganization();
 		$oOrg->Set('name', 'My Company/Department');
 		$oOrg->Set('code', 'SOMECODE');
 		$oOrg->Set('status', 'implementation');
 		//$oOrg->Set('parent_id', xxx);
-		$iOrgId = $oOrg->DBInsertNoReload();
+		$iOrgId = $oOrg->DBInsertTrackedNoReload($oChange);
 
 		// Location : optional
 		//$oLocation = new bizLocation();
@@ -784,20 +790,20 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		$oContact->Set('phone', '');
 		//$oContact->Set('location_id', $iLocationId);
 		$oContact->Set('employee_number', '');
-		$iContactId = $oContact->DBInsertNoReload();
+		$iContactId = $oContact->DBInsertTrackedNoReload($oChange);
 		
 		$oUser = new URP_Users();
 		$oUser->Set('login', $sAdminUser);
 		$oUser->Set('password', $sAdminPwd);
 		$oUser->Set('userid', $iContactId);
-		$iUserId = $oUser->DBInsertNoReload();
+		$iUserId = $oUser->DBInsertTrackedNoReload($oChange);
 		
 		// Add this user to the very specific 'admin' profile
 		$oUserProfile = new URP_UserProfile();
 		$oUserProfile->Set('userid', $iUserId);
 		$oUserProfile->Set('profileid', ADMIN_PROFILE_ID);
 		$oUserProfile->Set('reason', 'By definition, the administrator must have the administrator profile');
-		$oUserProfile->DBInsertNoReload();
+		$oUserProfile->DBInsertTrackedNoReload($oChange);
 		return true;
 	}
 

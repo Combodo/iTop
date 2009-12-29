@@ -173,7 +173,15 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 		$oUser->Set('login', $sAdminUser);
 		$oUser->Set('password', $sAdminPwd);
 		$oUser->Set('userid', 1); // one is for root !
-		$iUserId = $oUser->DBInsertNoReload();
+
+		// Create a change to record the history of the User object
+		$oChange = MetaModel::NewObject("CMDBChange");
+		$oChange->Set("date", time());
+		$oChange->Set("userinfo", "Initialization");
+		$iChangeId = $oChange->DBInsert();
+
+		// Now record the admin user object
+		$iUserId = $oUser->DBInsertTrackedNoReload($oChange);
 		$this->SetupUser($iUserId, true);
 		return true;
 	}
