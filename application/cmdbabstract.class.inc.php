@@ -681,11 +681,12 @@ abstract class cmdbAbstractObject extends CMDBObject
 					if ($aAllowedValues !== null)
 					{
 						//Enum field or external key, display a combo
-						if (count($aAllowedValues) == 0)
-						{
-							$sHTMLValue = "<input count=\"0\" type=\"text\" size=\"30\" value=\"\" name=\"attr_{$sAttCode}{$sNameSuffix}\" id=\"$iInputId\"{$sCSSClasses}/>";
-						}
-						else if (count($aAllowedValues) > 50)
+						//if (count($aAllowedValues) == 0)
+						//{
+						//	$sHTMLValue = "<input count=\"0\" type=\"text\" size=\"30\" value=\"\" name=\"attr_{$sAttCode}{$sNameSuffix}\" id=\"$iInputId\"{$sCSSClasses}/>";
+						//}
+						//else if (count($aAllowedValues) > 50)
+						if (count($aAllowedValues) > 50)
 						{
 							// too many choices, use an autocomplete
 							// The input for the auto complete
@@ -698,6 +699,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 						else
 						{
 							// Few choices, use a normal 'select'
+							// In case there are no valid values, the select will be empty, thus blocking the user from validating the form
 							$sHTMLValue = "<select name=\"attr_{$sAttCode}{$sNameSuffix}\" id=\"$iInputId\"{$sCSSClasses}>\n";
 							$sHTMLValue .= "<option value=\"0\">-- select one --</option>\n";
 							foreach($aAllowedValues as $key => $display_value)
