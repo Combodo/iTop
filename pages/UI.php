@@ -74,7 +74,7 @@ switch($operation)
 		}
 	break;
 	
-	case 'search_form':
+	case 'search_oql':
 		$sOQLClass = utils::ReadParam('oql_class', '');
 		$sOQLClause = utils::ReadParam('oql_clause', '');
 		$sFormat = utils::ReadParam('format', '');
@@ -128,7 +128,39 @@ switch($operation)
 			}
 		}
 	break;
-	
+	case 'search_form':
+		$sClass = utils::ReadParam('class', '');
+		$sFormat = utils::ReadParam('format', 'html');
+		$bSearchForm = utils::ReadParam('search_form', true);
+		if (empty($sClass))
+		{
+			$oP->set_title("iTop - Error");
+			$oP->add("<p>'class' must be specifed for this operation.</p>\n");
+		}
+		else
+		{
+			$oP->set_title("iTop - Search results");
+			$oFilter =  $oContext->NewFilter($sClass);
+			$oSet = new DBObjectSet($oFilter);
+			if ($bSearchForm)
+			{
+				$oBlock = new DisplayBlock($oFilter, 'search', false /* Asynchronous */, array('open' => true));
+				$oBlock->Display($oP, 0);
+			}
+			if (strtolower($sFormat) == 'csv')
+			{
+				$oBlock = new DisplayBlock($oFilter, 'csv', false);
+				$oBlock->Display($oP, 1);
+				$oP->add_ready_script(" $('#csv').css('height', '95%');"); // adjust the size of the block
+			}
+			else
+			{
+				$oBlock = new DisplayBlock($oFilter, 'list', false);
+				$oBlock->Display($oP, 1);
+			}
+		}
+	break;
+		
 	case 'search':
 		$sFilter = utils::ReadParam('filter', '');
 		$sFormat = utils::ReadParam('format', '');
@@ -158,7 +190,7 @@ switch($operation)
 			else
 			{
 				$oBlock = new DisplayBlock($oFilter, 'list', false);
-				$oBlock->Display($oP, 0);
+				$oBlock->Display($oP, 1);
 			}
 		}
 	break;
@@ -173,6 +205,7 @@ switch($operation)
 		{
 			$oP->p("<h2>Results for '$sFullText':</h2>\n");
 			$iCount = 0;
+			$iBlock = 0;
 			// Search in full text mode in all the classes
 			foreach(MetaModel::GetClasses('bizmodel') as $sClassName)
 			{
@@ -198,7 +231,7 @@ switch($operation)
 						$oP->add("</div>\n");
 						$oLeafsFilter->AddCondition('pkey', $aLeafs, 'IN');
 						$oBlock = new DisplayBlock($oLeafsFilter, 'list', false);
-						$oBlock->Display($oP, 0);
+						$oBlock->Display($oP, $iBlock++);
 					}
 				}
 			}

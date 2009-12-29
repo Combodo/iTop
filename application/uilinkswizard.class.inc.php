@@ -159,6 +159,7 @@ class UILinksWizard
 						{
 							$('#SearchResultsToAdd table.listResults tbody').attr('height', tbodyHeight);
 							$('#SearchResultsToAdd .listResults tbody').css('overflow', 'auto');
+							$('#SearchResultsToAdd .listResults').tablesorter( { headers: { 0:{sorter: false }}, widgets: ['zebra']} ); // sortable and zebra tables
 						}
 					}
 					
@@ -214,7 +215,7 @@ class UILinksWizard
 					}
 					$('.listResults tbody').append(data);
 					$('.listResults').trigger('update');
-					$('.listResults').tablesorter( { headers: { 0:{sorter: false }}, widgets: ['zebra']} ); // sortable and zebra tables 
+					$('.listResults').tablesorter( { headers: { 0:{sorter: false }}, widgets: ['zebra']} ); // sortable and zebra tables
 				},
 				'html'
 			);
@@ -362,12 +363,12 @@ class UILinksWizard
 
 	public function SearchObjectsToAdd(web_page $oP, UserContext $oContext)
 	{
-		$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $this->m_sLinkageAttr);
+		//$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $this->m_sLinkageAttr);
 
 		$oFilter = $oContext->NewFilter($this->m_sLinkedClass);
 		$oSet = new CMDBObjectSet($oFilter);
 		$oBlock = new DisplayBlock($oFilter, 'list', false);
-		$oBlock->Display($oP, 'ResultsToAdd', array('menu' => false, 'selection_mode' => true)); // Don't display the 'Actions' menu on the results
+		$oBlock->Display($oP, 'ResultsToAdd', array('menu' => false, 'selection_mode' => true, 'display_limit' => false)); // Don't display the 'Actions' menu on the results
 	}
 	
 	public function DoAddObjects(web_page $oP, UserContext $oContext, $aLinkedObjectIds = array())

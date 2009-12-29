@@ -73,11 +73,11 @@ if ($oFilter != null)
 {
 	$oSet = new CMDBObjectSet($oFilter);
 	$oBlock = new DisplayBlock($oFilter, 'search', false);
-	$oBlock->Display($oP, 0);
+	$oBlock->Display($oP, 0, array('open' => true));
 
 	// Search results	
 	$oResultBlock = new DisplayBlock($oFilter, 'list', false);
-	$oResultBlock->RenderContent($oP);
+	$oResultBlock->Display($oP, 1);
 	
 	// Menu node
 	$sFilter = $oFilter->ToOQL();

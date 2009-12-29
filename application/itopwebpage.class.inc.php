@@ -35,6 +35,7 @@ class iTopWebPage extends nice_web_page
 		$this->add_linked_script("../js/date.js");
 		$this->add_linked_script("../js/jquery.date.picker.js");
 		$this->add_linked_script("../js/jquery.tablesorter.min.js");
+		$this->add_linked_script("../js/utils.js");
 		//$this->add_linked_script("../js/jquery-ui-personalized-1.5.3.js");
 		$this->add_linked_script("../js/swfobject.js");
 		$this->add_linked_stylesheet("../css/jquery.treeview.css");

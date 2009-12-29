@@ -131,7 +131,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$oPage->add("<h1>".MetaModel::GetName(get_class($this)).": <span class=\"hilite\">".$this->GetDisplayName()."</span></h1>\n");
 
 		// history block (with toggle)
-		$oHistoryFilter = new DBObjectSearch('CMDBChangeOpSetAttribute');
+		$oHistoryFilter = new DBObjectSearch('CMDBChangeOp');
 		$oHistoryFilter->AddCondition('objkey', $this->GetKey());
 		$oHistoryFilter->AddCondition('objclass', get_class($this));
 		$oBlock = new HistoryBlock($oHistoryFilter, 'toggle', false);
@@ -269,6 +269,8 @@ abstract class cmdbAbstractObject extends CMDBObject
 	//public static function GetDisplaySet(web_page $oPage, CMDBObjectSet $oSet, $sLinkageAttribute = '', $bDisplayMenu = true, $bSelectMode = false)
 	public static function GetDisplaySet(web_page $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
+		global $g_oConfig;
+
 		static $iListId = 0;
 		$iListId++;
 		
@@ -341,7 +343,16 @@ abstract class cmdbAbstractObject extends CMDBObject
 		}
 		$aValues = array();
 		$oSet->Seek(0);
-		while ($oObj = $oSet->Fetch())
+		$bDisplayLimit = isset($aExtraParams['display_limit']) ? $aExtraParams['display_limit'] : true;
+		$iMaxObjects = -1;
+		if ($bDisplayLimit)
+		{
+			if ($oSet->Count() > $g_oConfig->GetMaxDisplayLimit())
+			{
+				$iMaxObjects = $g_oConfig->GetMinDisplayLimit();
+			}
+		}
+		while (($oObj = $oSet->Fetch()) && ($iMaxObjects != 0))
 		{
 			$aRow['key'] = $oObj->GetKey();
 			if ($bSelectMode)
@@ -354,6 +365,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 				$aRow[$sAttCode] = $oObj->GetAsHTML($sAttCode);
 			}
 			$aValues[] = $aRow;
+			$iMaxObjects--;
 		}
 		$oMenuBlock = new MenuBlock($oSet->GetFilter());
 		$sHtml .= '<table class="listContainer">';
@@ -367,7 +379,22 @@ abstract class cmdbAbstractObject extends CMDBObject
 				//$aMenuExtraParams['linkage'] = $sLinkageAttribute;
 				$aMenuExtraParams = $aExtraParams;
 			}
-			$sHtml .= '<tr class="containerHeader"><td>&nbsp;'.$oSet->Count().' object(s)</td><td>';
+			if ($bDisplayLimit && ($oSet->Count() > $g_oConfig->GetMaxDisplayLimit()))
+			{
+				// list truncated
+				$divId = $aExtraParams['block_id'];
+				$sFilter = $oSet->GetFilter()->serialize();
+				$aExtraParams['display_limit'] = false; // To expand the full list
+				$sExtraParams = addslashes(str_replace('"', "'", json_encode($aExtraParams))); // JSON encode, change the style of the quotes and escape them
+				$sHtml .= '<tr class="containerHeader"><td>'.$g_oConfig->GetMinDisplayLimit().' object(s) displayed out of '.$oSet->Count().'&nbsp;&nbsp;<a href="Javascript:ReloadTruncatedList(\''.$divId.'\', \''.$sFilter.'\', \''.$sExtraParams.'\');">Display All</a></td><td>';
+				$oPage->add_ready_script("$('#{$divId} table.listResults').addClass('truncated');");
+				$oPage->add_ready_script("$('#{$divId} table.listResults tr:last td').addClass('truncated');");
+			}
+			else
+			{
+				// Full list
+				$sHtml .= '<tr class="containerHeader"><td>&nbsp;'.$oSet->Count().' object(s)</td><td>';
+			}
 			$sHtml .= $oMenuBlock->GetRenderContent($oPage, $aMenuExtraParams);
 			$sHtml .= '</td></tr>';
 		}
@@ -570,9 +597,11 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$sHtml .= "</table>\n";
 		foreach($aExtraParams as $sName => $sValue)
 		{
-			$sHtml .= "<input type=\"hidden\" name=\"$sName\" value=\"$sValue\">\n";
+			$sHtml .= "<input type=\"hidden\" name=\"$sName\" value=\"$sValue\" />\n";
 		}
-		$sHtml .= "<input type=\"hidden\" name=\"dosearch\" value=\"1\">\n";
+		$sHtml .= "<input type=\"hidden\" name=\"class\" value=\"$sClassName\" />\n";
+		$sHtml .= "<input type=\"hidden\" name=\"dosearch\" value=\"1\" />\n";
+		$sHtml .= "<input type=\"hidden\" name=\"operation\" value=\"search_form\" />\n";
 		$sHtml .= "</form>\n";		
 		$sHtml .= "</div><!-- Simple search form -->\n";
 
@@ -598,7 +627,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		{
 			$sHtml .= "<input type=\"hidden\" name=\"$sName\" value=\"$sValue\" />\n";
 		}
-		$sHtml .= "<input type=\"hidden\" name=\"operation\" value=\"search_form\" />\n";
+		$sHtml .= "<input type=\"hidden\" name=\"operation\" value=\"search_oql\" />\n";
 		$sHtml .= "</table></form>\n";
 		$sHtml .= "</div><!-- OQL query form -->\n";
 		return $sHtml;

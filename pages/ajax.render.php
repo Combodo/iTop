@@ -100,6 +100,12 @@ switch($operation)
 	case 'ajax':
 	if ($sFilter != "")
 	{
+		$sExtraParams = stripslashes(utils::ReadParam('extra_params', ''));
+		$aExtraParams = array();
+		if (!empty($sExtraParams))
+		{
+			$aExtraParams = json_decode(str_replace("'", '"', $sExtraParams), true /* associative array */);
+		}
 		if ($sEncoding == 'sibusql')
 		{
 			$oFilter = CMDBSearchFilter::FromSibusQL($sFilter);
@@ -109,7 +115,7 @@ switch($operation)
 			$oFilter = CMDBSearchFilter::unserialize($sFilter);
 		}
 		$oDisplayBlock = new DisplayBlock($oFilter, $sStyle, false);
-		$oDisplayBlock->RenderContent($oPage);
+		$oDisplayBlock->RenderContent($oPage, $aExtraParams);
 	}
 	else
 	{

@@ -144,7 +144,10 @@ class DisplayBlock
 	
 	public function Display(web_page $oPage, $sId, $aExtraParams = array())
 	{
+		$oPage->add($this->GetDisplay($oPage, $sId, $aExtraParams));
+		/*
 		$aExtraParams = array_merge($aExtraParams, $this->m_aParams);
+		$aExtraParams['block_id'] = $sId;
 		if (!$this->m_bAsynchronous)
 		{
 			// render now
@@ -171,12 +174,14 @@ class DisplayBlock
 			 );
 			 </script>'); // TO DO: add support for $aExtraParams in asynchronous/Ajax mode
 		}
+		*/
 	}
 	
 	public function GetDisplay(web_page $oPage, $sId, $aExtraParams = array())
 	{
 		$sHtml = '';
 		$aExtraParams = array_merge($aExtraParams, $this->m_aParams);
+		$aExtraParams['block_id'] = $sId;
 		if (!$this->m_bAsynchronous)
 		{
 			// render now
@@ -188,17 +193,19 @@ class DisplayBlock
 		{
 			// render it as an Ajax (asynchronous) call
 			$sFilter = $this->m_oFilter->serialize();
+			$sExtraParams = addslashes(str_replace('"', "'", json_encode($aExtraParams))); // JSON encode, change the style of the quotes and escape them
 			$sHtml .= "<div id=\"$sId\" class=\"display_block loading\">\n";
 			$sHtml .= $oPage->GetP("<img src=\"../images/indicator_arrows.gif\"> Loading...");
 			$sHtml .= "</div>\n";
 			$sHtml .= '
 			<script language="javascript">
 			$.get("ajax.render.php?filter='.$sFilter.'&style='.$this->m_sStyle.'",
-			   { operation: "ajax" },
+			   { operation: "ajax", extra_params: "'.$sExtraParams.'" },
 			   function(data){
 				 $("#'.$sId.'").empty();
 				 $("#'.$sId.'").append(data);
 				 $("#'.$sId.'").removeClass("loading");
+				 $("#'.$sId.' .listResults").tablesorter( { headers: { 0:{sorter: false }}, widgets: [\'zebra\']} ); // sortable and zebra tables
 				}
 			 );
 			 </script>'; // TO DO: add support for $aExtraParams in asynchronous/Ajax mode

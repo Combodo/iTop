@@ -109,8 +109,8 @@ try
 		{
 			$oP->add("<h3>Query results</h3>\n");
 			
-			$oSet = new CMDBObjectSet($oFilter);
-			cmdbAbstractObject::DisplaySet($oP, $oSet);
+			$oResultBlock = new DisplayBlock($oFilter, 'list', false);
+			$oResultBlock->Display($oP, 1);
 
 			$oP->p('');
 			$oP->StartCollapsibleSection('More info on the query', false);

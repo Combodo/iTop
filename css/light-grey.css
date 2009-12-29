@@ -663,3 +663,24 @@ div.HRDrawer {
 .mandatory {
 	border: 1px solid #f00;
 }
+table.listResults tr td.truncated {
+	background: transparent;
+}
+
+table.listResults tr td.truncated {
+	background: url(../images/truncated.png) bottom  repeat-x;
+	margin-bottom: -3px;
+}
+
+table.listResults tr.even td.truncated {
+	background: #f9f9f1 url(../images/truncated.png) bottom  repeat-x;
+}
+
+table.listResults tr.even td.truncated.hover {
+	background: #E8FFD3 url(../images/truncated.png) bottom  repeat-x;
+}
+
+table.listResults.truncated {
+	border-bottom: 0;
+	padding-bottom: 0;
+}
