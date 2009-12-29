@@ -16,6 +16,9 @@ class ConfigException extends CoreException
 {
 }
 
+define ('DEFAULT_MIN_DISPLAY_LIMIT', 10);
+define ('DEFAULT_MAX_DISPLAY_LIMIT', 15);
+
 class Config
 {
 	//protected $m_bIsLoaded = false;
@@ -31,6 +34,15 @@ class Config
 	protected $m_sDBName;
 	protected $m_sDBSubname;
 
+	/**
+	 * @var integer Number of elements to be displayed when there are more than m_iMaxDisplayLimit elements
+	 */	 	
+	protected $m_iMinDisplayLimit;
+	/**
+	 * @var integer Max number of elements before truncating the display
+	 */	 	
+	protected $m_iMaxDisplayLimit;
+
 	public function __construct($sConfigFile, $bLoadConfig = true)
 	{
 		$this->m_sFile = $sConfigFile;
@@ -43,6 +55,8 @@ class Config
 		$this->m_sDBPwd = '';
 		$this->m_sDBName = '';
 		$this->m_sDBSubname = '';
+		$this->m_iMinDisplayLimit = DEFAULT_MIN_DISPLAY_LIMIT;
+		$this->m_iMaxDisplayLimit = DEFAULT_MAX_DISPLAY_LIMIT;
 		if ($bLoadConfig)
 		{
 			$this->Load($sConfigFile);
@@ -119,6 +133,9 @@ class Config
 		$this->m_sDBPwd = trim($MySettings['db_pwd']);
 		$this->m_sDBName = trim($MySettings['db_name']);
 		$this->m_sDBSubname = trim($MySettings['db_subname']);
+
+		$this->m_iMinDisplayLimit = isset($MySettings['min_display_limit']) ? trim($MySettings['min_display_limit']) : DEFAULT_MIN_DISPLAY_LIMIT;
+		$this->m_iMaxDisplayLimit = isset($MySettings['max_display_limit']) ? trim($MySettings['max_display_limit']) : DEFAULT_MAX_DISPLAY_LIMIT;
 	}
 
 	protected function Verify()
@@ -177,6 +194,16 @@ class Config
 		return $this->m_sDBPwd;
 	}
 
+	public function GetMinDisplayLimit()
+	{
+		return $this->m_iMinDisplayLimit;
+	}
+
+	public function GetMaxDisplayLimit()
+	{
+		return $this->m_iMaxDisplayLimit;
+	}
+
 	public function SetDBHost($sDBHost)
 	{
 		$this->m_sDBHost = $sDBHost;
@@ -201,6 +228,17 @@ class Config
 	{
 		$this->m_sDBPwd = $sPwd;
 	}
+
+	public function SetMinDisplayLimit($iMinDisplayLimit)
+	{
+		$this->m_iMinDisplayLimit = $iMinDisplayLimit;
+	}
+
+	public function SetMaxDisplayLimit($iMaxDisplayLimit)
+	{
+		$this->m_iMaxDisplayLimit = $iMaxDisplayLimit;
+	}
+
 	public function FileIsWritable()
 	{
 		return is_writable($this->m_sFile);
@@ -237,6 +275,9 @@ class Config
 			fwrite($hFile, "\t'db_pwd' => '".addslashes($this->m_sDBPwd)."',\n");
 			fwrite($hFile, "\t'db_name' => '{$this->m_sDBName}',\n");
 			fwrite($hFile, "\t'db_subname' => '{$this->m_sDBSubname}',\n");
+			fwrite($hFile, "\n");
+			fwrite($hFile, "\t'min_display_limit' => {$this->m_iMinDisplayLimit},\n");
+			fwrite($hFile, "\t'max_display_limit' => {$this->m_iMaxDisplayLimit},\n");
 			fwrite($hFile, ");\n");
 			
 			fwrite($hFile, "\n/**\n");
