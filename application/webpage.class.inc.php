@@ -14,6 +14,7 @@ class web_page
 {
     protected $s_title;
     protected $s_content;
+    protected $s_deferred_content;
     protected $a_scripts;
     protected $a_styles;
     protected $a_include_scripts;
@@ -25,6 +26,7 @@ class web_page
     {
         $this->s_title = $s_title;
         $this->s_content = "";
+        $this->s_deferred_content = '';
         $this->a_scripts = array();
         $this->a_styles = array();
         $this->a_linked_scripts = array();
@@ -57,6 +59,16 @@ class web_page
     public function add($s_html)
     {
         $this->s_content .= $s_html;
+    }
+    
+	/**
+	 * Add any text or HTML fragment at the end of the body of the page
+	 * This is useful to add hidden content, DIVs or FORMs that should not
+	 * be embedded into each other.	 	 
+	 */
+    public function add_at_the_end($s_html)
+    {
+        $this->s_deferred_content .= $s_html;
     }
     
 	/**
@@ -281,6 +293,7 @@ class web_page
         {
             echo "<div class=\"raw_output\">$s_captured_output</div>\n";
         }
+        echo $this->s_deferred_content;
         echo "</body>\n";
         echo "</html>\n";
     }

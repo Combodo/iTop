@@ -78,8 +78,8 @@ class UILinksWidget
 			$sHTMLValue .= "<script type=\"text/javascript\">\n";
 			$sHTMLValue .= "oLinkWidget{$this->m_iInputId} = new LinksWidget('{$this->m_iInputId}', '$sLinkedClass', '$sExtKeyToMe', '$sExtKeyToRemote', $sAttributes);\n";
 			$sHTMLValue .= "</script>\n";
-			$sHTMLValue .= $this->GetObjectPickerDialog($oPage, $sTargetClass, 'oLinkWidget'.$this->m_iInputId.'.OnOk');
-			$sHTMLValue .= $this->GetLinkObjectDialog($oPage, $this->m_iInputId);
+			$oPage->add_at_the_end($this->GetObjectPickerDialog($oPage, $sTargetClass, 'oLinkWidget'.$this->m_iInputId.'.OnOk')); // Forms should not be inside forms
+			$oPage->add_at_the_end($this->GetLinkObjectDialog($oPage, $this->m_iInputId)); // Forms should not be inside forms
 			$sHTMLValue .= "<input type=\"text\" id=\"ac_{$this->m_iInputId}\" size=\"35\" value=\"\" title=\"Type the first 3 characters\"/>";
 			$sHTMLValue .= "<input type=\"button\" id=\"ac_add_{$this->m_iInputId}\" value=\" Add... \"  class=\"action\" onClick=\"oLinkWidget{$this->m_iInputId}.AddObject();\"/>";
 			$sHTMLValue .= "&nbsp;<input type=\"button\" value=\"Browse...\"  class=\"action\" onClick=\"return ManageObjects('$sTitle', '$sTargetClass', '$this->m_iInputId', '$sExtKeyToRemote');\"/>";
@@ -94,10 +94,13 @@ class UILinksWidget
 		{
 			// Few choices, use a normal 'select'
 			$sHTMLValue = "<select name=\"attr_{$this->m_sAttCode}\"  id=\"{$this->m_iInputId}\">\n";
-			
-			foreach($aAllowedValues as $key => $value)
+			$sHTMLValue .= "<option value=\"0\">--- select a value ---</option>\n";
+			if (count($aAllowedValues) > 0)
 			{
-				$sHTMLValue .= "<option value=\"$key\"$sSelected>$value</option>\n";
+				foreach($aAllowedValues as $key => $value)
+				{
+					$sHTMLValue .= "<option value=\"$key\"$sSelected>$value</option>\n";
+				}
 			}
 			$sHTMLValue .= "</select>\n";
 		}
@@ -274,7 +277,7 @@ EOF;
 		
 		$sHTML = "<div class=\"jqmWindow\" id=\"LinkDlg_$sId\">\n";
 		$sHTML .= "<div class=\"wizContainer\">\n";
-		$sHTML .= "<div class=\"page_header\"><h1 id=\"LinkObject_DlgTitle\">".MetaModel::GetName($sLinkedClass)." attributes</h1></div>\n";
+		$sHTML .= "<div class=\"page_header\"><h1>".MetaModel::GetName($sLinkedClass)." attributes</h1></div>\n";
 		$sHTML .= "<form action=\"./UI.php\" onSubmit=\"return oLinkWidget$sId.OnLinkOk();\">\n";
 		$index = 0;
 		$aAttrsMap = array();

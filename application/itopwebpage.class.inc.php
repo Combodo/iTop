@@ -332,6 +332,7 @@ EOF
         {
             echo "<div class=\"raw_output\">$s_captured_output</div>\n";
         }
+        echo $this->s_deferred_content;
 		echo "<div class=\"jqmWindow\" id=\"ex2\">Please wait...</div>\n"; // jqModal Window
 		echo "</div> <!-- RightPane -->\n";
 		echo "</div> <!-- Splitter -->\n";
