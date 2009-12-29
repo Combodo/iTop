@@ -18,6 +18,25 @@ define('ADMIN_PROFILE_ID', 1);
 
 class UserRightsBaseClass extends cmdbAbstractObject
 {
+	// Whenever something changes, reload the privileges
+	
+	public function DBInsertTracked(CMDBChange $oChange)
+	{
+		parent::DBInsertTracked($oChange);
+		UserRights::FlushPrivileges();
+	}
+
+	public function DBUpdateTracked(CMDBChange $oChange)
+	{
+		parent::DBUpdateTracked($oChange);
+		UserRights::FlushPrivileges();
+	}
+
+	public function DBDeleteTracked(CMDBChange $oChange)
+	{
+		parent::DBDeleteTracked($oChange);
+		UserRights::FlushPrivileges();
+	}
 }
 
 
@@ -131,9 +150,6 @@ class URP_Users extends UserRightsBaseClass
 
 	function DisplayBareRelations(web_page $oPage)
 	{
-		// We may have just added a user, then we have to reset any existing cache
-		UserRights::FlushPrivileges();
-
 		parent::DisplayBareRelations($oPage);
 
 		$oPage->SetCurrentTabContainer('Related Objects');
@@ -258,9 +274,6 @@ class URP_Profiles extends UserRightsBaseClass
 
 	function DisplayBareRelations(web_page $oPage)
 	{
-		// We may have just added a user, then we have to reset any existing cache
-		UserRights::FlushPrivileges();
-
 		parent::DisplayBareRelations($oPage);
 
 		$oPage->SetCurrentTabContainer('Related Objects');
@@ -851,6 +864,8 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		// Could be loaded in a shared memory (?)
 
 		$oUserSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_Users"));
+		$this->m_aUsers = array();
+		$this->m_aLogin2UserId = array();  
 		while ($oUser = $oUserSet->Fetch())
 		{
 			$this->m_aUsers[$oUser->GetKey()] = $oUser;
@@ -858,24 +873,29 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		}
 
 		$oDimensionSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_Dimensions"));
+		$this->m_aDimensions = array(); 
 		while ($oDimension = $oDimensionSet->Fetch())
 		{
 			$this->m_aDimensions[$oDimension->GetKey()] = $oDimension; 
 		}
 		
 		$oClassProjSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_ClassProjection"));
+		$this->m_aClassProjs = array(); 
 		while ($oClassProj = $oClassProjSet->Fetch())
 		{
 			$this->m_aClassProjs[$oClassProj->Get('class')][$oClassProj->Get('dimensionid')] = $oClassProj; 
 		}
 
 		$oProfileSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_Profiles"));
+		$this->m_aProfiles = array(); 
 		while ($oProfile = $oProfileSet->Fetch())
 		{
 			$this->m_aProfiles[$oProfile->GetKey()] = $oProfile; 
 		}
 
 		$oUserProfileSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_UserProfile"));
+		$this->m_aUserProfiles = array();
+		$this->m_aAdmins = array();
 		while ($oUserProfile = $oUserProfileSet->Fetch())
 		{
 			$this->m_aUserProfiles[$oUserProfile->Get('userid')][$oUserProfile->Get('profileid')] = $oUserProfile;
@@ -886,6 +906,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		}
 
 		$oProProSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_ProfileProjection"));
+		$this->m_aProPros = array(); 
 		while ($oProPro = $oProProSet->Fetch())
 		{
 			$this->m_aProPros[$oProPro->Get('profileid')][$oProPro->Get('dimensionid')] = $oProPro; 
