@@ -253,7 +253,7 @@ class UILinksWidget
 			</tr>
 			<tr>
 				<td colspan="3">
-				<button type="button" class="jqmClose" onClick="$('#ManageObjectsDlg_{$this->m_iInputId}').jqmHide(); $sOkFunction('$sTargetClass', 'selected_objects')"> Ok </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="jqmClose"> Cancel</button>
+				<input type="submit" class="jqmClose" onClick="$('#ManageObjectsDlg_{$this->m_iInputId}').jqmHide(); $sOkFunction('$sTargetClass', 'selected_objects')" value=" Ok " />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="jqmClose"> Cancel</button>
 				</td>
 			</tr>
 		</table>
@@ -318,7 +318,7 @@ EOF;
 			}
 		}
 		$sHTML .= $oPage->GetDetails($aDetails);
-		$sHTML .= "<button type=\"button\" class=\"jqmClose\" onClick=\"oLinkWidget$sId.OnLinkOk()\"> Ok </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type=\"button\" class=\"jqmClose\"  onClick=\"oLinkWidget$sId.OnLinkCancel()\"> Cancel</button>\n";
+		$sHTML .= "<input type=\"submit\" class=\"jqmClose\" onClick=\"oLinkWidget$sId.OnLinkOk()\" value=\" Ok \" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type=\"button\" class=\"jqmClose\"  onClick=\"oLinkWidget$sId.OnLinkCancel()\"> Cancel</button>\n";
 		$sHTML .= "</form>\n";
 		$sHTML .= "</div>\n";
 		$sHTML .= "</div>\n";
