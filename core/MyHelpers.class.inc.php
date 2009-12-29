@@ -434,9 +434,10 @@ class Str
 	}
 	public static function pure2html($pure, $maxLength = false)
 	{
+		// Check for HTML entities, but be careful the DB is in UTF-8
 		return $maxLength
-			? htmlentities(substr($pure, 0, $maxLength))
-			: htmlentities($pure);
+			? htmlentities(substr($pure, 0, $maxLength), ENT_COMPAT, 'UTF-8')
+			: htmlentities($pure, ENT_COMPAT, 'UTF-8');
 	}
 	public static function pure2sql($pure, $maxLength = false)
 	{
