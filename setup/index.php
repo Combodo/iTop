@@ -73,6 +73,25 @@ function CheckPHPVersion(setup_web_page $oP)
 		$oP->error("Temporary directory for files upload is not defined (upload_tmp_dir)");
 		$bResult = false;
 	}
+	// check that the upload directory is indeed writable from PHP
+  	if (!empty($sUploadTmpDir))
+  	{
+  		if (!file_exists($sUploadTmpDir))
+  		{
+			$oP->error("Temporary directory for files upload ($sUploadTmpDir) does not exist or cannot be read by PHP.");
+			$bResult = false;
+		}
+  		else if (!is_writable($sUploadTmpDir))
+  		{
+			$oP->error("Temporary directory for files upload ($sUploadTmpDir) is not writable.");
+			$bResult = false;
+		}
+		else
+		{
+			$oP->log("Info - Temporary directory for files upload ($sUploadTmpDir) is writable.");
+		}
+	}
+	
 
   	if (!ini_get('upload_max_filesize'))
   	{
@@ -86,7 +105,6 @@ function CheckPHPVersion(setup_web_page $oP)
 		$bResult = false;
 	}
 	$oP->log("Info - upload_max_filesize: ".ini_get('upload_max_filesize'));
-	$oP->log("Info - upload_tmp_dir: $sUploadTmpDir");
 	$oP->log("Info - max_file_uploads: ".ini_get('max_file_uploads'));
 
 	return $bResult;
