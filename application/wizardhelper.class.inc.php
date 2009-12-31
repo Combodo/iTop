@@ -8,8 +8,12 @@ class WizardHelper
 	public function __construct()
 	{
 	}
-	
-	public function GetTargetObject()
+	/**
+	 * Constructs the PHP target object from the parameters sent to the web page by the wizard
+	 * @param boolean $bReadUploadedFiles True to also ready any uploaded file (for blob/document fields)
+	 * @return object
+	 */	 	 	 	
+	public function GetTargetObject($bReadUploadedFiles = false)
 	{
 		$oObj = MetaModel::NewObject($this->m_aData['m_sClass']);
 		foreach($this->m_aData['m_aCurrentValues'] as $iIndex => $value)
@@ -59,6 +63,20 @@ class WizardHelper
 					}
 					$oSet = DBObjectSet::FromArray($sLinkedClass, $aLinkedObjectsArray);
 					$oObj->Set($sAttCode, $oSet);
+				}
+				else if ( $oAttDef->GetEditClass() == 'Document' )
+				{
+					if ($bReadUploadedFiles)
+					{
+						$oDocument = utils::ReadPostedDocument('file_'.$sAttCode);
+						$oObj->Set($sAttCode, $oDocument);
+					}
+					else
+					{
+						// Create a new empty document, just for displaying the file name
+						$oDocument = new ormDocument(null, '', $value);
+						$oObj->Set($sAttCode, $oDocument);
+					}
 				}
 				else if (($oAttDef->IsExternalKey()) && (!empty($value)) )
 				{

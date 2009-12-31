@@ -1233,7 +1233,20 @@ class AttributeBlob extends AttributeDefinition
 
 	public function GetAsHTML($value)
 	{
-		return $value->GetAsHTML();
+		if (is_object($value))
+		{
+			return $value->GetAsHTML();
+		}
+	}
+
+	public function GetAsCSV($sValue, $sSeparator = ';', $sSepEscape = ',')
+	{
+		return ''; // Not exportable in CSV !
+	}
+	
+	public function GetAsXML($value)
+	{
+		return ''; // Not exportable in XML, or as CDATA + some subtags ??
 	}
 }
 

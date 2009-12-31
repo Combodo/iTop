@@ -33,6 +33,11 @@ class ormDocument
 		return MyHelpers::beautifulstr($this->m_data, 100, true);
 	}
 
+	public function IsEmpty()
+	{
+		return ($this->m_data == null);
+	}
+	
 	public function GetMimeType()
 	{
 		return $this->m_sMimeType;
@@ -59,20 +64,72 @@ class ormDocument
 
 	public function GetAsHTML()
 	{
-		$data = $this->GetData();
-
+		$sResult = '';
+		if ($this->IsEmpty())
+		{
+			// If the filename is not empty, display it, this is used
+			// by the creation wizard while the file has not yet been uploaded
+			$sResult = $this->GetFileName();
+		}
+		else
+		{
+			$data = $this->GetData();
+			$sResult = $this->GetFileName().' [ '.$this->GetMimeType().', size: '.strlen($data).' byte(s) ]';
+		}
+		return $sResult;
+	}
+	
+	/**
+	 * Returns an HTML fragment that will display the document *inline* (if possible)
+	 * @return string
+	 */	 	 	
+	public function GetDisplayInline($sClass, $Id, $sAttCode)
+	{
 		switch ($this->GetMainMimeType())
 		{
-		case 'text':
-			return "<pre>".htmlentities(MyHelpers::beautifulstr($data, 1000, true))."</pre>\n";
+			case 'text':
+			case 'html':
+			$data = $this->GetData();
+			switch($this->GetMimeType())
+			{
+				case 'text/html':
+				case 'text/xml':
+				return "<iframe src=\"../pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode\" width=\"100%\" height=\"400\">Loading...</iframe>\n";
+				
+				default:
+				return "<pre>".htmlentities(MyHelpers::beautifulstr($data, 1000, true))."</pre>\n";			
+			}
+			break; // Not really needed, but...
 
-		case 'application':
-			return "binary data for ".$this->GetMimeType().', size: '.strlen($data).' byte(s).';
-
-		case 'html':
-		default:
-			return "<div>".htmlentities(MyHelpers::beautifulstr($data, 1000, true))."</div>\n";
+			case 'application':
+			switch($this->GetMimeType())
+			{
+				case 'application/pdf':
+				return "<iframe src=\"../pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode\" width=\"100%\" height=\"400\">Loading...</iframe>\n";
+			}
+			break;
+			
+			case 'image':
+			return "<img src=\"../pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode\" />\n";
 		}
+	}
+	
+	/**
+	 * Returns an hyperlink to display the document *inline*
+	 * @return string
+	 */	 	 	
+	public function GetDisplayLink($sClass, $Id, $sAttCode)
+	{
+		return "<a href=\"../pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode\" target=\"_blank\" >".$this->GetFileName()."</a>\n";
+	}
+	
+	/**
+	 * Returns an hyperlink to download the document (content-disposition: attachment)
+	 * @return string
+	 */	 	 	
+	public function GetDownloadLink($sClass, $Id, $sAttCode)
+	{
+		return "<a href=\"../pages/ajax.render.php?operation=download_document&class=$sClass&id=$Id&field=$sAttCode\">".$this->GetFileName()."</a>\n";
 	}
 }
 ?>

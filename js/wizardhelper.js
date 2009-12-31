@@ -18,6 +18,7 @@ function WizardHelper(sClass)
 		this.m_oData.m_oFieldsMap = oFieldsMap;
 		
 	}
+	
 	this.SetFieldsCount = function (count)
 	{
 		this.m_oData.m_iFieldsCount = count;

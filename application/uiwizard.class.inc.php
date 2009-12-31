@@ -27,6 +27,10 @@ class UIWizard
 	 */	 
 	public function DisplayWizardStep($aStep, $iStepIndex, &$iMaxInputId, &$aFieldsMap, $bFinishEnabled = false)
 	{
+		if ($iStepIndex == 1) // one big form that contains everything, to make sure that the uploaded files are posted too
+		{
+			$this->m_oPage->add("<form method=\"post\" enctype=\"multipart/form-data\" action=\"../pages/UI.php\">\n");
+		}
 		$this->m_oPage->add("<div class=\"wizContainer\" id=\"wizStep$iStepIndex\" style=\"display:none;\">\n");
 		$this->m_oPage->add("<a name=\"step$iStepIndex\" />\n");
 		$aStates = MetaModel::EnumStates($this->m_sClass);
@@ -34,7 +38,7 @@ class UIWizard
 		$sJSHandlerCode = ''; // Javascript code to be executed each time this step of the wizard is entered
 		foreach($aStep as $sAttCode)
 		{
-			if ($sAttCode != 'finalclass') // Do not displa the attribute that stores the actual class name
+			if ($sAttCode != 'finalclass') // Do not display the attribute that stores the actual class name
 			{
 				$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
 				$sAttLabel = $oAttDef->GetLabel();
@@ -107,7 +111,6 @@ $sJSHandlerCode
 		$this->m_oPage->add("<div class=\"wizContainer\" id=\"wizStep$iStepIndex\" style=\"display:none;\">\n");
 		$this->m_oPage->add("<a name=\"step$iStepIndex\" />\n");
 		$this->m_oPage->P("Final step: confirmation");
-		$this->m_oPage->add("<form method=\"post\" action=\"../pages/UI.php\">\n");
 		$this->m_oPage->add("<input type=\"hidden\" name=\"operation\" value=\"wizard_apply_new\" />\n");
 		$this->m_oPage->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\" />\n");
 		$this->m_oPage->add("<input type=\"hidden\" id=\"wizard_json_obj\" name=\"json_obj\" value=\"\" />\n");
@@ -124,8 +127,8 @@ $sJSHandlerCode
 		$this->m_oPage->add("<div id=\"object_preview\">\n");
 		$this->m_oPage->add("</div>\n");
 		$this->m_oPage->add("<input type=\"submit\" value=\"Create ".MetaModel::GetName($this->m_sClass)."\" />\n");
-		$this->m_oPage->add("</form>\n");
 		$this->m_oPage->add("</div>\n");
+		$this->m_oPage->add("</form>\n");
 	}	
 	/**
 	 * Compute the order of the fields & pages in the wizard

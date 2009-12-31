@@ -428,6 +428,23 @@ class CMDBSource
 		mysql_free_result($result);
 		return $aRows;
 	}
+	
+	/**
+	 * Returns the value of the specified server variable
+	 * @param string $sVarName Name of the server variable
+	 * @return mixed Current value of the variable
+	 */	   	
+	public static function GetServerVariable($sVarName)
+	{
+		$result = '';
+		$sSql = "SELECT @@$sVarName as theVar";
+		$aRows = self::QueryToArray($sSql);
+		if (count($aRows) > 0)
+		{
+			$result = $aRows[0]['theVar'];
+		}
+		return $result;
+	}
 }
 
 

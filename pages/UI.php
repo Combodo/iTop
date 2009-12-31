@@ -459,6 +459,17 @@ switch($operation)
 							$bObjectModified = true;
 						}
 					}
+					else if ($oAttDef->GetEditClass() == 'Document')
+					{
+						// There should be an uploaded file with the named attr_<attCode>
+						$oDocument = utils::ReadPostedDocument('file_'.$sAttCode);
+						if (!$oDocument->IsEmpty())
+						{
+							// A new file has been uploaded
+							$oObj->Set($sAttCode, $oDocument);
+							$bObjectModified = true;
+						}
+					}
 					else if (!$oAttDef->IsExternalField())
 					{
 						$rawValue = utils::ReadPostedParam("attr_$sAttCode", null);
@@ -826,7 +837,7 @@ switch($operation)
 	}
 	else
 	{
-		$oObj = $oWizardHelper->GetTargetObject();
+		$oObj = $oWizardHelper->GetTargetObject(true /* read uploaded files */);
 		if (is_object($oObj))
 		{
 			$sClass = get_class($oObj);

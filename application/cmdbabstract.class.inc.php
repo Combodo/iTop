@@ -225,6 +225,21 @@ abstract class cmdbAbstractObject extends CMDBObject
 			}
 		}
 		$sHtml .= $oPage->GetDetails($aDetails);
+		// Documents displayed inline (when possible: images, html...)
+		foreach($aList as $sAttCode)
+		{
+			$oAttDef = Metamodel::GetAttributeDef($sClass, $sAttCode);
+			if ( $oAttDef->GetEditClass() == 'Document')
+			{
+				$oDoc = $this->Get($sAttCode);
+				if (is_object($oDoc) && !$oDoc->IsEmpty())
+				{
+					$sHtml .= "<p>Open in New Window: ".$oDoc->GetDisplayLink($sClass, $this->GetKey(), $sAttCode).", \n";
+					$sHtml .= "Download: ".$oDoc->GetDownloadLink($sClass, $this->GetKey(), $sAttCode)."</p>\n";
+					$sHtml .= "<div>".$oDoc->GetDisplayInline($sClass, $this->GetKey(), $sAttCode)."</div>\n";
+				}
+			}
+		}
 		return $sHtml;		
 	}
 
@@ -269,8 +284,6 @@ abstract class cmdbAbstractObject extends CMDBObject
 	//public static function GetDisplaySet(web_page $oPage, CMDBObjectSet $oSet, $sLinkageAttribute = '', $bDisplayMenu = true, $bSelectMode = false)
 	public static function GetDisplaySet(web_page $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
-		global $g_oConfig;
-
 		static $iListId = 0;
 		$iListId++;
 		
@@ -347,9 +360,9 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$iMaxObjects = -1;
 		if ($bDisplayLimit)
 		{
-			if ($oSet->Count() > $g_oConfig->GetMaxDisplayLimit())
+			if ($oSet->Count() > utils::GetConfig()->GetMaxDisplayLimit())
 			{
-				$iMaxObjects = $g_oConfig->GetMinDisplayLimit();
+				$iMaxObjects = utils::GetConfig()->GetMinDisplayLimit();
 			}
 		}
 		while (($oObj = $oSet->Fetch()) && ($iMaxObjects != 0))
@@ -379,14 +392,14 @@ abstract class cmdbAbstractObject extends CMDBObject
 				//$aMenuExtraParams['linkage'] = $sLinkageAttribute;
 				$aMenuExtraParams = $aExtraParams;
 			}
-			if ($bDisplayLimit && ($oSet->Count() > $g_oConfig->GetMaxDisplayLimit()))
+			if ($bDisplayLimit && ($oSet->Count() > utils::GetConfig()->GetMaxDisplayLimit()))
 			{
 				// list truncated
 				$divId = $aExtraParams['block_id'];
 				$sFilter = $oSet->GetFilter()->serialize();
 				$aExtraParams['display_limit'] = false; // To expand the full list
 				$sExtraParams = addslashes(str_replace('"', "'", json_encode($aExtraParams))); // JSON encode, change the style of the quotes and escape them
-				$sHtml .= '<tr class="containerHeader"><td>'.$g_oConfig->GetMinDisplayLimit().' object(s) displayed out of '.$oSet->Count().'&nbsp;&nbsp;<a href="Javascript:ReloadTruncatedList(\''.$divId.'\', \''.$sFilter.'\', \''.$sExtraParams.'\');">Display All</a></td><td>';
+				$sHtml .= '<tr class="containerHeader"><td>'.utils::GetConfig()->GetMinDisplayLimit().' object(s) displayed out of '.$oSet->Count().'&nbsp;&nbsp;<a href="Javascript:ReloadTruncatedList(\''.$divId.'\', \''.$sFilter.'\', \''.$sExtraParams.'\');">Display All</a></td><td>';
 				$oPage->add_ready_script("$('#{$divId} table.listResults').addClass('truncated');");
 				$oPage->add_ready_script("$('#{$divId} table.listResults tr:last td').addClass('truncated');");
 			}
@@ -434,14 +447,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 			$aRow[] = $oObj->GetKey();
 			foreach($aList as $sAttCode)
 			{
-				if (strstr($oObj->Get($sAttCode), $sSeparator)) // Escape the text only when it contains the separator
-				{
-					$aRow[] = $sTextQualifier.$oObj->Get($sAttCode).$sTextQualifier;
-				}
-				else
-				{
-					$aRow[] = $oObj->Get($sAttCode);
-				}
+				$aRow[] = $oObj->GetAsCSV($sAttCode, $sSeparator, '\\');
 			}
 			$sHtml .= implode($sSeparator, $aRow)."\n";
 		}
@@ -674,6 +680,20 @@ abstract class cmdbAbstractObject extends CMDBObject
 					$sHTMLValue = $oWidget->Display($oPage, $value);
 				break;
 							
+				case 'Document':
+					$oDocument = $value; // Value is an ormDocument object
+					$sFileName = '';
+					if (is_object($oDocument))
+					{
+						$sFileName = $oDocument->GetFileName();
+					}
+					$iMaxFileSize = utils::ConvertToBytes(ini_get('upload_max_filesize'));
+					$sHTMLValue = "<input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"$iMaxFileSize\" />\n";
+				    $sHTMLValue .= "<input name=\"attr_{$sAttCode}{$sNameSuffix}\" type=\"hidden\" id=\"$iInputId\" \" value=\"$sFileName\"/>\n";
+				    $sHTMLValue .= "<span id=\"name_$iInputId\">$sFileName</span><br/>\n";
+				    $sHTMLValue .= "<input name=\"file_{$sAttCode}{$sNameSuffix}\" type=\"file\" id=\"file_$iInputId\" onChange=\"UpdateFileName('$iInputId', this.value);\"/>\n";
+				break;
+				
 				case 'String':
 				default:
 					// #@# todo - add context information (depending on dimensions)
@@ -728,7 +748,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$sStateAttCode = MetaModel::GetStateAttributeCode(get_class($this));
 		$iKey = $this->GetKey();
 		$aDetails = array();
-		$oPage->add("<form id=\"form_{$iFormId}\" method=\"post\" onSubmit=\"return CheckMandatoryFields('form_{$iFormId}')\">\n");
+		$oPage->add("<form id=\"form_{$iFormId}\" enctype=\"multipart/form-data\" method=\"post\" onSubmit=\"return CheckMandatoryFields('form_{$iFormId}')\">\n");
 		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode=>$oAttDef)
 		{
 			if ('finalclass' == $sAttCode) // finalclass is a reserved word, hardcoded !

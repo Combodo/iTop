@@ -406,62 +406,13 @@ class bizDocument extends logRealObject
 		MetaModel::Init_AddFilterFromAttribute("description");
 
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'scope', 'description', 'contents')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('name', 'status', 'org_id', 'scope')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('list', array('name', 'status', 'org_id', 'scope', 'contents')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'scope')); // Criteria of the std search form
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'scope')); // Criteria of the advanced search form
 
 	}
 
-}
-
-////////////////////////////////////////////////////////////////////////////////////
-/**
-* A version of an electronic document
-*/
-////////////////////////////////////////////////////////////////////////////////////
-class bizDocVersion extends cmdbAbstractObject
-{
-	public static function Init()
-	{
-		global $oAllowedStatuses;
-		$aParams = array
-		(
-			"category" => "bizmodel,searchable",
-			"name" => "DocumentVersion",
-			"description" => "A version of a document",
-			"key_type" => "autoincrement",
-			"key_label" => "id",
-			"name_attcode" => "version_number",
-			"state_attcode" => "",
-			"reconc_keys" => array("document", "version_number"),
-			"db_table" => "document_versions",
-			"db_key_field" => "id",
-			"db_finalclass_field" => "",
-			"display_template" => "../business/templates/default.html",
-		);
-		MetaModel::Init_Params($aParams);
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("document", array("targetclass"=>"bizDocument", "label"=>"Document", "description"=>"The main document", "allowed_values"=>null, "sql"=>"document_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("docname", array("label"=>"Document Name", "description"=>"name of the document", "allowed_values"=>null, "extkey_attcode"=> 'document', "target_attcode"=>"name")));
-		MetaModel::Init_AddAttribute(new AttributeString("version_number", array("label"=>"Version", "description"=>"Version identifier", "allowed_values"=>null, "sql"=>"version_number", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("label"=>"Status", "description"=>"Status", "allowed_values"=>$oAllowedStatuses, "sql"=>"status", "default_value"=>"implementation", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("type", array("label"=>"Type", "description"=>"Type", "allowed_values"=>new ValueSetEnum("local,draft"), "sql"=>"type", "default_value"=>"local", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeURL("url", array("label"=>"URL", "description"=>"Hyperlink to the version", "allowed_values"=>null, "target"=>"_blank", "sql"=>"url", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("description", array("label"=>"Description", "description"=>"Service Description", "allowed_values"=>null, "sql"=>"description", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-
-		MetaModel::Init_AddFilterFromAttribute("document");
-		MetaModel::Init_AddFilterFromAttribute("docname");
-		MetaModel::Init_AddFilterFromAttribute("version_number");
-		MetaModel::Init_AddFilterFromAttribute("status");
-		MetaModel::Init_AddFilterFromAttribute("type");
-		MetaModel::Init_AddFilterFromAttribute("description");
-
-		MetaModel::Init_SetZListItems('details', array('document', 'status', 'version_number', 'type','url','description')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('version_number', 'status', 'type', 'url')); // Attributes to be displayed for a list
-		// Search criteria
-		MetaModel::Init_SetZListItems('standard_search', array('docname', 'type')); // Criteria of the std search form
-		MetaModel::Init_SetZListItems('advanced_search', array('docname', 'type')); // Criteria o
-	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////

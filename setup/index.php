@@ -23,6 +23,7 @@ $oP = new setup_web_page('iTop configuration wizard');
  */
 function CheckPHPVersion(setup_web_page $oP)
 {
+	$bResult = true;
 	$oP->log('Info - CheckPHPVersion');
 	if (version_compare(phpversion(), PHP_MIN_VERSION, '>='))
 	{
@@ -57,9 +58,38 @@ function CheckPHPVersion(setup_web_page $oP)
 	if (count($aMissingExtensions) > 0)
 	{
 		$oP->error("Missing PHP extension(s): ".implode(', ', $aMissingExtensionsLinks).".");
-		return false;
+		$bResult = false;
 	}
-	return true;
+	// Check some ini settings here
+  	if (!ini_get('file_uploads'))
+  	{
+		$oP->error("Files upload is not allowed on this server (file_uploads = ".ini_get('file_uploads').").");
+		$bResult = false;
+	}
+
+	$sUploadTmpDir = ini_get('upload_tmp_dir');
+  	if (empty($sUploadTmpDir))
+  	{
+		$oP->error("Temporary directory for files upload is not defined (upload_tmp_dir)");
+		$bResult = false;
+	}
+
+  	if (!ini_get('upload_max_filesize'))
+  	{
+		$oP->error("File upload is not allowed on this server (file_uploads = ".ini_get('file_uploads').").");
+	}
+
+	$iMaxFileUploads = ini_get('max_file_uploads');
+  	if (!empty($iMaxFileUploads) && ($iMaxFileUploads < 1))
+  	{
+		$oP->error("File upload is not allowed on this server (max_file_uploads = ".ini_get('max_file_uploads').").");
+		$bResult = false;
+	}
+	$oP->log("Info - upload_max_filesize: ".ini_get('upload_max_filesize'));
+	$oP->log("Info - upload_tmp_dir: $sUploadTmpDir");
+	$oP->log("Info - max_file_uploads: ".ini_get('max_file_uploads'));
+
+	return $bResult;
 }
   
 /**
@@ -80,6 +110,26 @@ function CheckServerConnection(setup_web_page $oP, $sDBServer, $sDBUser, $sDBPwd
 		if (version_compare($sDBVersion, MYSQL_MIN_VERSION, '>='))
 		{
 			$oP->ok("Current MySQL version ($sDBVersion), greater than minimum required version (".MYSQL_MIN_VERSION.")");
+			// Check some server variables
+			$iMaxAllowedPacket = $oDBSource->GetServerVariable('max_allowed_packet');
+			$iMaxUploadSize = utils::ConvertToBytes(ini_get('upload_max_filesize'));
+			if ($iMaxAllowedPacket >= (500 + $iMaxUploadSize)) // Allow some space for the query + the file to upload
+			{
+				$oP->ok("MySQL server's max_allowed_packet is big enough.");
+			}
+			else if($iMaxAllowedPacket < $iMaxUploadSize)
+			{
+				$oP->warning("MySQL server's max_allowed_packet ($iMaxAllowedPacket) is not big enough.");
+				$oP->warning("Consider setting it to at least ".(500 + $iMaxUploadSize).".");
+			}
+			$oP->log("Info - MySQL max_allowed_packet: $iMaxAllowedPacket");
+			$iMaxConnections = $oDBSource->GetServerVariable('max_connections');
+			if ($iMaxConnections < 5)
+			{
+				$oP->warning("MySQL server's max_connections ($iMaxConnections) is not enough.");
+				$oP->warning("Consider setting it to at least 5.");
+			}
+			$oP->log("Info - MySQL max_connections: ".($oDBSource->GetServerVariable('max_connections')));
 		}
 		else
 		{

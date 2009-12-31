@@ -17,3 +17,15 @@ function ReloadTruncatedList(divId, sSerializedFilter, sExtraParams)
 		}
 	 );
 }
+
+/**
+ * Update the display and value of a file input widget when the user picks a new file
+ */ 
+function UpdateFileName(id, sNewFileName)
+{
+	var aPath = sNewFileName.split('\\');
+	var sNewFileName = aPath[aPath.length-1];
+
+	$('#'+id).val(sNewFileName);
+	$('#name_'+id).text(sNewFileName);
+}

@@ -269,9 +269,60 @@ switch($operation)
 		$oPage->add('<option title="Here is more information..." value="'.$oObj->GetKey().'">'.$oObj->GetDisplayName().'</option>');
 	}
 	break;
+	
+	case 'display_document':
+	$id = utils::ReadParam('id', '');
+	$sField = utils::ReadParam('field', '');
+	if (!empty($sClass) && !empty($id) && !empty($sField))
+	{
+		DownloadDocument($oPage, $oContext, $sClass, $id, $sField, 'inline');
+	}
+	break;
+	
+	case 'download_document':
+	$id = utils::ReadParam('id', '');
+	$sField = utils::ReadParam('field', '');
+	if (!empty($sClass) && !empty($id) && !empty($sField))
+	{
+		DownloadDocument($oPage, $oContext, $sClass, $id, $sField, 'attachement');
+	}
+	break;
 
 	default:
 	$oPage->p("Invalid query.");
 }
 $oPage->output();
+
+/**
+ * Downloads a document to the browser, either as 'inline' or 'attachment'
+ *  
+ * @param web_page $oPage The web page for the output
+ * @param UserContext $oContext The current User/security context to retreive the objects
+ * @param string $sClass Class name of the object
+ * @param mixed $id Identifier of the object
+ * @param string $sAttCode Name of the attribute containing the document to download
+ * @param string $sContentDisposition Either 'inline' or 'attachment'
+ * @return none
+ */   
+function DownloadDocument(web_page $oPage, UserContext $oContext, $sClass, $id, $sAttCode, $sContentDisposition = 'attachement')
+{
+	try
+	{
+		$oObj = $oContext->GetObject($sClass, $id);
+		if (is_object($oObj))
+		{
+			$oDocument = $oObj->Get($sAttCode);
+			if (is_object($oDocument))
+			{
+				$oPage->add_header('Content-type: '.$oDocument->GetMimeType());
+				$oPage->add_header('Content-Disposition: '.$sContentDisposition.'; filename="'.$oDocument->GetFileName().'"');
+				$oPage->add($oDocument->GetData());
+			}
+		}
+	}
+	catch(Exception $e)
+	{
+		$oPage->p($e->getMessage());
+	}
+}
 ?>
