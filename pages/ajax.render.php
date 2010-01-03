@@ -262,7 +262,7 @@ switch($operation)
 	break;
 
 	case 'combo_options':
-	$oFilter = CMDBSearchFilter::FromSibusQL($sFilter);
+	$oFilter = CMDBSearchFilter::FromOQL($sFilter);
 	$oSet = new CMDBObjectSet($oFilter);
 	while( $oObj = $oSet->fetch())
 	{

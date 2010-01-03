@@ -34,8 +34,8 @@ function ManageObjects(sTitle, sClass, sId, sExtKeyToRemote)
 	{
 		aObjList[0] = 0;
 	}
-	Manage_LoadSelect('selected_objects_'+sId, sClass+': pkey IN {' + aObjList.join(', ') + '}');
-	Manage_LoadSelect('available_objects_'+sId, sClass);
+	Manage_LoadSelect('selected_objects_'+sId, 'SELECT '+sClass+' WHERE id IN (' + aObjList.join(', ') + ')'); // id is a reserved keyword always representing the primary key
+	Manage_LoadSelect('available_objects_'+sId, 'SELECT '+sClass+' WHERE id NOT IN (' + aObjList.join(', ') + ')');
 	$('#ManageObjectsDlg_'+sId).jqmShow();
 }
 
