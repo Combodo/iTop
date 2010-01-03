@@ -507,12 +507,13 @@ abstract class cmdbAbstractObject extends CMDBObject
 	public static function GetSearchForm(web_page $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
 		static $iSearchFormId = 0;
+		$oAppContext = new ApplicationContext();
 		$sHtml = '';
 		$numCols=4;
 		$iSearchFormId++;
 		$sClassName = $oSet->GetFilter()->GetClass();
 
-		// Romain: temporariy removed the tab "OQL query" because it was not finalized
+		// Romain: temporarily removed the tab "OQL query" because it was not finalized
 		// (especially when used to add a link)
 		/*
 		$sHtml .= "<div class=\"mini_tabs\" id=\"mini_tabs{$iSearchFormId}\"><ul>
@@ -536,6 +537,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$aList = MetaModel::GetZListItems($sClassName, 'standard_search');
 		foreach($aList as $sFilterCode)
 		{
+			$oAppContext->Reset($sFilterCode); // Make sure the same parameter will not be passed twice
 			if (($index % $numCols) == 0)
 			{
 				if ($index != 0)
@@ -608,6 +610,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$sHtml .= "<input type=\"hidden\" name=\"class\" value=\"$sClassName\" />\n";
 		$sHtml .= "<input type=\"hidden\" name=\"dosearch\" value=\"1\" />\n";
 		$sHtml .= "<input type=\"hidden\" name=\"operation\" value=\"search_form\" />\n";
+		$sHtml .= $oAppContext->GetForForm();
 		$sHtml .= "</form>\n";		
 		$sHtml .= "</div><!-- Simple search form -->\n";
 
@@ -634,6 +637,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 			$sHtml .= "<input type=\"hidden\" name=\"$sName\" value=\"$sValue\" />\n";
 		}
 		$sHtml .= "<input type=\"hidden\" name=\"operation\" value=\"search_oql\" />\n";
+		$sHtml .= $oAppContext->GetForForm();
 		$sHtml .= "</table></form>\n";
 		$sHtml .= "</div><!-- OQL query form -->\n";
 		return $sHtml;
@@ -642,6 +646,12 @@ abstract class cmdbAbstractObject extends CMDBObject
 	public static function GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $value = '', $sDisplayValue = '', $iId = '', $sNameSuffix = '', $iFlags = 0, $aArgs = array())
 	{
 		static $iInputId = 0;
+		if (isset($aArgs[$sAttCode]) && empty($value))
+		{
+			// default value passed by the context (either the app context of the operation)
+			$value = $aArgs[$sAttCode];
+		}
+
 		if (!empty($iId))
 		{
 			$iInputId = $iId;
@@ -797,7 +807,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$oPage->add("</form>\n");
 	}
 	
-	public static function DisplayCreationForm(web_page $oPage, $sClass, $oObjectToClone = null)
+	public static function DisplayCreationForm(web_page $oPage, $sClass, $oObjectToClone = null, $aArgs = array())
 	{
 		static $iCreationFormId = 0;
 
@@ -835,7 +845,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 				$sDisplayValue = ($oObjectToClone == null) ? '' : $oObjectToClone->GetDisplayValue($sAttCode);
 				$iOptions = isset($aStates[$sTargetState]['attribute_list'][$sAttCode]) ? $aStates[$sTargetState]['attribute_list'][$sAttCode] : 0;
 				
-				$sHTMLValue = self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, '', '', $iOptions);
+				$sHTMLValue = self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, '', '', $iOptions, $aArgs);
 				$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $sHTMLValue);
 			}
 		}

@@ -257,10 +257,12 @@ class DisplayBlock
 				}
 				$sFilter = urlencode($this->m_oFilter->serialize());
 				$aData = array();
+				$oAppContext = new ApplicationContext();
+				$sParams = $oAppContext->GetForLink();
 				foreach($aGroupBy as $sValue => $iCount)
 				{
 					$aData[] = array ( 'group' => $sValue,
-									  'value' => "<a href=\"./UI.php?operation=search&dosearch=1&filter=$sFilter&$sGroupByField=".urlencode($sValue)."\">$iCount</a>"); // TO DO: add the context information
+									  'value' => "<a href=\"./UI.php?operation=search&dosearch=1&$sParams&filter=$sFilter&$sGroupByField=".urlencode($sValue)."\">$iCount</a>"); // TO DO: add the context information
 				}
 				$sHtml .= $oPage->GetTable(array('group' => array('label' => MetaModel::GetLabel($this->m_oFilter->GetClass(), $sGroupByField), 'description' => ''), 'value' => array('label'=>'Count', 'description' => 'Number of elements')), $aData);
 			}
@@ -287,7 +289,9 @@ class DisplayBlock
 				{
 					if (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES)
 					{
-						$sHtml .= $oPage->GetP("<a href=\"./UI.php?operation=new&class=$sClass\">Click here to create a new ".Metamodel::GetName($sClass)."</a>\n");
+						$oAppContext = new ApplicationContext();
+						$sParams = $oAppContext->GetForLink();
+						$sHtml .= $oPage->GetP("<a href=\"./UI.php?operation=new&class=$sClass&$sParams\">Click here to create a new ".Metamodel::GetName($sClass)."</a>\n");
 					}
 				}
 			}
@@ -312,7 +316,9 @@ class DisplayBlock
 				{
 					if (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES)
 					{
-						$sHtml .= $oPage->GetP("<a href=\"../pages/UI.php?operation=modify_links&class=$sClass&link_attr=".$aExtraParams['link_attr']."&id=".$aExtraParams['object_id']."&target_class=$sTargetClass&addObjects=true\">Click here to add new ".Metamodel::GetName($sTargetClass)."s</a>\n");
+						$oAppContext = new ApplicationContext();
+						$sParams = $oAppContext->GetForLink();
+						$sHtml .= $oPage->GetP("<a href=\"../pages/UI.php?operation=modify_links&class=$sClass&sParams&link_attr=".$aExtraParams['link_attr']."&id=".$aExtraParams['object_id']."&target_class=$sTargetClass&addObjects=true\">Click here to add new ".Metamodel::GetName($sTargetClass)."s</a>\n");
 					}
 				}
 			}

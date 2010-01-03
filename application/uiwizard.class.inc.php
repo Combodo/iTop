@@ -25,7 +25,7 @@ class UIWizard
 	/**
 	 * Displays one step of the wizard
 	 */	 
-	public function DisplayWizardStep($aStep, $iStepIndex, &$iMaxInputId, &$aFieldsMap, $bFinishEnabled = false)
+	public function DisplayWizardStep($aStep, $iStepIndex, &$iMaxInputId, &$aFieldsMap, $bFinishEnabled = false, $aArgs = array())
 	{
 		if ($iStepIndex == 1) // one big form that contains everything, to make sure that the uploaded files are posted too
 		{
@@ -60,7 +60,7 @@ class UIWizard
 				
 				$sFieldFlag = ($iOptions & (OPT_ATT_MANDATORY | OPT_ATT_MUSTCHANGE)) ? ' <span class="hilite">*</span>' : '';
 				$oDefaultValuesSet = $oAttDef->GetDefaultValue(); // @@@ TO DO: get the object's current value if the object exists
-				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($this->m_oPage, $this->m_sClass, $sAttCode, $oAttDef, $oDefaultValuesSet, '', "att_$iMaxInputId", '', $iOptions);
+				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($this->m_oPage, $this->m_sClass, $sAttCode, $oAttDef, $oDefaultValuesSet, '', "att_$iMaxInputId", '', $iOptions, $aArgs);
 				$aFieldsMap[$iMaxInputId] = $sAttCode;
 				$aDetails[] = array('label' => $oAttDef->GetLabel().$sFieldFlag, 'value' => "<div id=\"field_$iMaxInputId\">$sHTMLValue</div>");
 				if ($oAttDef->GetValuesDef() != null)
@@ -108,6 +108,7 @@ $sJSHandlerCode
 	 */	 	
 	public function DisplayFinalStep($iStepIndex, $aFieldsMap)
 	{
+		$oAppContext = new ApplicationContext();
 		$this->m_oPage->add("<div class=\"wizContainer\" id=\"wizStep$iStepIndex\" style=\"display:none;\">\n");
 		$this->m_oPage->add("<a name=\"step$iStepIndex\" />\n");
 		$this->m_oPage->P("Final step: confirmation");
@@ -126,6 +127,7 @@ $sJSHandlerCode
 		$this->m_oPage->add("</script>\n");
 		$this->m_oPage->add("<div id=\"object_preview\">\n");
 		$this->m_oPage->add("</div>\n");
+		$this->m_oPage->add($oAppContext->GetForForm());		
 		$this->m_oPage->add("<input type=\"submit\" value=\"Create ".MetaModel::GetName($this->m_sClass)."\" />\n");
 		$this->m_oPage->add("</div>\n");
 		$this->m_oPage->add("</form>\n");

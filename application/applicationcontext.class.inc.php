@@ -14,6 +14,7 @@ class ApplicationContext
 {
 	protected $aNames;
 	protected $aValues;
+	protected static $aDefaultValues; // Cache shared among all instances
 	
 	public function __construct()
 	{
@@ -29,16 +30,20 @@ class ApplicationContext
 	 */
 	protected function ReadContext()
 	{
-		$this->aValues = array();
-		foreach($this->aNames as $sName)
+		if (empty(self::$aDefaultValues))
 		{
-			$sValue = utils::ReadParam($sName, '');
-			// TO DO: check if some of the context parameters are mandatory (or have default values)
-			if (!empty($sValue))
+			self::$aDefaultValues = array();
+			foreach($this->aNames as $sName)
 			{
-				$this->aValues[$sName] = $sValue;
+				$sValue = utils::ReadParam($sName, '');
+				// TO DO: check if some of the context parameters are mandatory (or have default values)
+				if (!empty($sValue))
+				{
+					self::$aDefaultValues[$sName] = $sValue;
+				}
 			}
 		}
+		$this->aValues = self::$aDefaultValues;
 	}
 	
 	/**
@@ -76,6 +81,19 @@ class ApplicationContext
 	public function GetAsHash()
 	{
 		return $this->aValues;
+	}
+	/**
+	 * Removes the specified parameter from the context, for example when the same parameter
+	 * is already a search parameter
+	 * @param string $sParamName Name of the parameter to remove	 	 
+	 * @return none
+	 */	
+	public function Reset($sParamName)
+	{
+		if (isset($this->aValues[$sParamName]))
+		{
+			unset($this->aValues[$sParamName]);
+		}
 	}
 }
 ?>

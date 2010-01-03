@@ -350,6 +350,8 @@ switch($operation)
 			$oP->add_linked_script("../js/linkswidget.js");
 			$oP->add_linked_script("../js/jquery.blockUI.js");
 			$oWizard = new UIWizard($oP, $sClass, $sStateCode);
+			$oContext = new UserContext();
+			$aArgs = array_merge($oAppContext->GetAsHash(), utils::ReadParam('default', array()));
 			$sStateCode = $oWizard->GetTargetState(); // Will computes the default state if none was supplied
 			$sClassLabel = MetaModel::GetName($sClass);
 			$oP->add("<h2>Creation of a new $sClassLabel</h2>");
@@ -367,21 +369,19 @@ switch($operation)
 			foreach($aWizardSteps['mandatory'] as $aSteps)
 			{
 				$oP->SetCurrentTab("Step $iStepIndex *");
-				$oWizard->DisplayWizardStep($aSteps, $iStepIndex, $iMaxInputId, $aFieldsMap);
+				$oWizard->DisplayWizardStep($aSteps, $iStepIndex, $iMaxInputId, $aFieldsMap, false /* no finish button */, $aArgs);
 				//$oP->add("</div>\n");
 				$iStepIndex++;
 			}	
 			foreach($aWizardSteps['optional'] as $aSteps)
 			{
 				$oP->SetCurrentTab("Step $iStepIndex *");
-				$oWizard->DisplayWizardStep($aSteps, $iStepIndex, $iMaxInputId, $aFieldsMap, true); // true means enable the finish button
+				$oWizard->DisplayWizardStep($aSteps, $iStepIndex, $iMaxInputId, $aFieldsMap, true, $aArgs); // true means enable the finish button
 				//$oP->add("</div>\n");
 				$iStepIndex++;
 			}
 			$oWizard->DisplayFinalStep($iStepIndex, $aFieldsMap);	
 			
-			$oAppContext = new ApplicationContext();
-			$oContext = new UserContext();
 			$oObj = null;
 			if (!empty($id))
 			{
