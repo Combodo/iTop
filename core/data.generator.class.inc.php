@@ -206,7 +206,7 @@ class cmdbDataGenerator
 	function GenerateString($sTemplate)
 	{
 		$sResult = "";
-		$aParts = split("\|", $sTemplate);
+		$aParts = explode("\|", $sTemplate);
 		foreach($aParts as $sPart)
 		{
 			if (preg_match("/domain\(\)/", $sPart, $aMatches))
@@ -216,7 +216,7 @@ class cmdbDataGenerator
 			elseif (preg_match("/enum\((.+)\)/", $sPart, $aMatches))
 			{
 				$sEnumValues = $aMatches[1];
-				$aEnumValues = split(",", $sEnumValues);
+				$aEnumValues = explode(",", $sEnumValues);
 				$sResult .= $aEnumValues[rand(0, count($aEnumValues) - 1)];
 			}
 			elseif (preg_match("/number\((\d+)-(\d+)\)/", $sPart, $aMatches))

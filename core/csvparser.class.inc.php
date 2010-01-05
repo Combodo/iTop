@@ -70,7 +70,7 @@ class CSVParser
 			$aStatsBySeparator[$sSep] = array();
 		}
 	
-		foreach(split("\n", $this->m_sCSVData) as $sLine)
+		foreach(explode("\n", $this->m_sCSVData) as $sLine)
 		{
 			$sLine = trim($sLine);
 			if (substr($sLine, 0, 1) == '#') continue;
@@ -106,13 +106,13 @@ class CSVParser
 		// Take the FIRST -valuable- LINE ONLY
 		// If there is a number, then for sure this is not a header line
 		// Otherwise, we may consider that there is one line to skip
-		foreach(split("\n", $this->m_sCSVData) as $sLine)
+		foreach(explode("\n", $this->m_sCSVData) as $sLine)
 		{
 			$sLine = trim($sLine);
 			if (substr($sLine, 0, 1) == '#') continue;
 			if (empty($sLine)) continue;
 	
-			foreach (split($this->m_sSep, $sLine) as $value)
+			foreach (explode($this->m_sSep, $sLine) as $value)
 			{
 				if (is_numeric($value))
 				{
@@ -133,7 +133,7 @@ class CSVParser
 	
 		$iCount = 0;
 		$iSkipped = 0;
-		foreach(split("\n", $this->m_sCSVData) as $sLine)
+		foreach(explode("\n", $this->m_sCSVData) as $sLine)
 		{
 			$sLine = trim($sLine);
 			if (substr($sLine, 0, 1) == '#') continue;
@@ -145,7 +145,7 @@ class CSVParser
 				continue;
 			}
 	
-			foreach (split($this->m_sSep, $sLine) as $iCol=>$sValue)
+			foreach (explode($this->m_sSep, $sLine) as $iCol=>$sValue)
 			{
 				if (is_array($aFieldMap)) $sColRef = $aFieldMap[$iCol];
 				else                      $sColRef = $iCol;

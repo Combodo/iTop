@@ -163,7 +163,14 @@ class DBObjectSearch
 	
 	public function __DescribeHTML()
 	{
-		$sConditionDesc = $this->DescribeConditions();
+		try
+		{
+			$sConditionDesc = $this->DescribeConditions();
+		}
+		catch (MissingQueryArgument $e)
+		{
+			$sConditionDesc = '?missing query argument?';
+		}
 		if (!empty($sConditionDesc))
 		{
 			return "Objects of class '$this->m_sClass', $sConditionDesc";
@@ -525,14 +532,14 @@ class DBObjectSearch
 		// -> return (unserialize(base64_decode($sValue)));
 
 		$sClearText = base64_decode($sValue);
-		$aValues = split("\n", $sClearText);
+		$aValues = explode("\n", $sClearText);
 		$i = 0;
 		$sClass = $aValues[$i++];
 		$sClassAlias = $aValues[$i++];
 		$oFilter = new DBObjectSearch($sClass, $sClassAlias);
 		while($i < count($aValues) && !empty($aValues[$i]))
 		{
-			$aCondition = split(":", $aValues[$i++]);
+			$aCondition = explode(":", $aValues[$i++]);
 			switch ($aCondition[0])
 			{
 			case "A":
@@ -940,7 +947,7 @@ class DBObjectSearch
 		{
 			$sClass = trim(substr($sQuery, 0, $iSepPos));
 			$sConds = trim(substr($sQuery, $iSepPos + 1));
-			$aValues = split(" AND ", $sConds);
+			$aValues = explode(" AND ", $sConds);
 	
 			$oFilter = new DBObjectSearch($sClass);
 	
