@@ -547,7 +547,7 @@ class AttributeString extends AttributeDBField
 	}
 	public function ScalarToSQL($value)
 	{
-		if (!is_string($value))
+		if (!is_string($value) && !is_null($value))
 		{
 			throw new CoreWarning('Expected the attribute value to be a string', array('found_type' => gettype($value), 'value' => $value, 'class' => $this->GetCode(), 'attribute' => $this->GetHostClass()));
 		}
@@ -613,6 +613,66 @@ class AttributeText extends AttributeString
 	{
 		return str_replace("\n", "[newline]", parent::GetAsCSV($sValue, $sSeparator, $sSepEscape));
 	}
+}
+
+/**
+ * Specialization of a string: email 
+ *
+ * @package     iTopORM
+ * @author      Romain Quetiez <romainquetiez@yahoo.fr>
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.itop.com
+ * @since       1.0
+ * @version     $itopversion$
+ */
+class AttributeEmailAddress extends AttributeString
+{
+	public function GetTypeDesc() {return "Email address(es)";}
+}
+
+/**
+ * Specialization of a string: OQL expression 
+ *
+ * @package     iTopORM
+ * @author      Romain Quetiez <romainquetiez@yahoo.fr>
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.itop.com
+ * @since       1.0
+ * @version     $itopversion$
+ */
+class AttributeOQL extends AttributeString
+{
+	public function GetTypeDesc() {return "OQL expression";}
+}
+
+/**
+ * Specialization of a string: template 
+ *
+ * @package     iTopORM
+ * @author      Romain Quetiez <romainquetiez@yahoo.fr>
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.itop.com
+ * @since       1.0
+ * @version     $itopversion$
+ */
+class AttributeTemplateString extends AttributeString
+{
+	public function GetTypeDesc() {return "Template string";}
+}
+
+/**
+ * Specialization of a text: template 
+ *
+ * @package     iTopORM
+ * @author      Romain Quetiez <romainquetiez@yahoo.fr>
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.itop.com
+ * @since       1.0
+ * @version     $itopversion$
+ */
+class AttributeTemplateText extends AttributeText
+{
+	public function GetTypeDesc() {return "Multiline template string";}
 }
 
 /**

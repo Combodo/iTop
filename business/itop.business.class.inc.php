@@ -200,7 +200,7 @@ class bizContact extends logRealObject
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeExternalField("org_name", array("label"=>"Organization", "description"=>"Company / Department of the contact", "allowed_values"=>null, "extkey_attcode"=> 'org_id', "target_attcode"=>"name")));
-		MetaModel::Init_AddAttribute(new AttributeString("email", array("label"=>"eMail", "description"=>"Email address", "allowed_values"=>null, "sql"=>"email", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEmailAddress("email", array("label"=>"eMail", "description"=>"Email address", "allowed_values"=>null, "sql"=>"email", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("phone", array("label"=>"Phone", "description"=>"Telephone", "allowed_values"=>null, "sql"=>"telephone", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("location_id", array("targetclass"=>"bizLocation", "label"=>"Location", "description"=>"Id of the location where the contact is located", "allowed_values"=>null, "sql"=>"location_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("location_name", array("label"=>"Location Name", "description"=>"Name of the location where the contact is located", "allowed_values"=>null, "extkey_attcode"=> 'location_id', "target_attcode"=>"name")));

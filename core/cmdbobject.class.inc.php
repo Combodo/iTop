@@ -37,8 +37,18 @@ require_once('dbobject.class.php');
 require_once('dbobjectsearch.class.php');
 require_once('dbobjectset.class.php');
 
+// db change tracking data model
 require_once('cmdbchange.class.inc.php');
 require_once('cmdbchangeop.class.inc.php');
+
+// customization data model
+// Romain: temporary moved into application.inc.php (see explanations there)
+//require_once('trigger.class.inc.php');
+//require_once('action.class.inc.php');
+
+// application log
+// Romain: temporary moved into application.inc.php (see explanations there)
+//require_once('event.class.inc.php');
 
 require_once('csvparser.class.inc.php');
 require_once('bulkchange.class.inc.php');

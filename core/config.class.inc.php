@@ -289,6 +289,14 @@ class Config
 			fwrite($hFile, "\t'application' => array (\n");
 			fwrite($hFile, "\t\t'../application/menunode.class.inc.php',\n");
 			fwrite($hFile, "\t\t'../application/audit.rule.class.inc.php',\n");
+// Romain - That's dirty, because those 3 classes are in fact part of the core
+//          but I needed those classes to be derived from cmdbAbstractObject
+//          (to be managed via the GUI) and this class in not really known from
+//          the core, PLUS I needed the includes to be there also for the setup
+//          to create the tables.
+			fwrite($hFile, "\t\t'../core/event.class.inc.php',\n");
+			fwrite($hFile, "\t\t'../core/action.class.inc.php',\n");
+			fwrite($hFile, "\t\t'../core/trigger.class.inc.php',\n");
 			fwrite($hFile, "\t\t// to be continued...\n");
 			fwrite($hFile, "\t),\n");
 			fwrite($hFile, "\t'business' => array (\n");

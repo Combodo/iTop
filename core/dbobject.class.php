@@ -611,7 +611,7 @@ abstract class DBObject
 		if (!empty($this->m_iKey) && ($this->m_iKey >= 0))
 		{
 			// Add it to the list of fields to write
-			$aFieldsToWrite[] = MetaModel::DBGetKey($sTableClass);
+			$aFieldsToWrite[] = '`'.MetaModel::DBGetKey($sTableClass).'`';
 			$aValuesToWrite[] = CMDBSource::Quote($this->m_iKey);
 		}
 
@@ -622,7 +622,7 @@ abstract class DBObject
 			$aAttColumns = $oAttDef->GetSQLValues($this->m_aCurrValues[$sAttCode]);
 			foreach($aAttColumns as $sColumn => $sValue)
 			{
-				$aFieldsToWrite[] = $sColumn; 
+				$aFieldsToWrite[] = "`$sColumn`"; 
 				$aValuesToWrite[] = CMDBSource::Quote($sValue);
 			}
 		}
@@ -803,7 +803,9 @@ abstract class DBObject
 
 		// Change the state before proceeding to the actions, this is necessary because an action might
 		// trigger another stimuli (alternative: push the stimuli into a queue)
-		$this->Set($sStateAttCode, $aTransitionDef['target_state']);
+		$sPreviousState = $this->Get($sStateAttCode);
+		$sNewState = $aTransitionDef['target_state'];
+		$this->Set($sStateAttCode, $sNewState);
 
 		// $aTransitionDef is an
 		//    array('target_state'=>..., 'actions'=>array of handlers procs, 'user_restriction'=>TBD
@@ -824,8 +826,38 @@ abstract class DBObject
 			if (!$bRet) $bSuccess = false;
 		}
 
+		// Change state triggers...
+		$sClass = get_class($this);
+		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnStateLeave AS t WHERE t.target_class='$sClass' AND t.state='$sPreviousState'"));
+		while ($oTrigger = $oSet->Fetch())
+		{
+			$oTrigger->DoActivate($this->ToArgs('this'));
+		}
+
+		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnStateEnter AS t WHERE t.target_class='$sClass' AND t.state='$sNewState'"));
+		while ($oTrigger = $oSet->Fetch())
+		{
+			$oTrigger->DoActivate($this->ToArgs('this'));
+		}
+
 		return $bSuccess;
 	}
+
+	// Make standard context arguments
+	public function ToArgs($sArgName)
+	{
+		$aScalarArgs = array();
+		$aScalarArgs[$sArgName] = $this->GetKey();
+		$aScalarArgs[$sArgName.'->id'] = $this->GetKey();
+	
+		$sClass = get_class($this);
+		foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+		{
+			$aScalarArgs[$sArgName.'->'.$sAttCode] = $this->Get($sAttCode);
+		}
+		return $aScalarArgs;
+	}
+
 
 	// Return an empty set for the parent of all
 	public static function GetRelationQueries($sRelCode)

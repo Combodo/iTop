@@ -16,7 +16,7 @@ class DisplayTemplate
 	
 	public function Render(web_page $oPage, $aParams = array())
 	{
-		$this->ApplyParams($aParams);
+		$this->m_sTemplate = MetaModel::ApplyParams($this->m_sTemplate, $aParams);
 		$iStart = 0;
 		$iEnd = strlen($this->m_sTemplate);
 		$iCount = 0;
@@ -38,21 +38,6 @@ class DisplayTemplate
 			if ($iCount > 10) break;
 		}
 		$oPage->add(substr($this->m_sTemplate, $iAfterTagPos));
-	}
-	
-	/**
-	 * Replaces all the parameters by the values passed in the hash array
-	 */
-	public function ApplyParams($aParams)
-	{
-		$aSearches = array();
-		$aReplacements = array();
-		foreach($aParams as $sSearch => $sReplace)
-		{
-			$aSearches[] = '$'.$sSearch.'$';
-			$aReplacements[] = $sReplace;
-		}
-		$this->m_sTemplate = str_replace($aSearches, $aReplacements, $this->m_sTemplate);
 	}
 	
 	public function GetNextTag(&$iStartPos, &$iEndPos)

@@ -918,4 +918,83 @@ text-align:left;
 <parent_id>0</parent_id>
 <user_id>0</user_id>
 </menuNode>
+<menuNode id="500">
+<name>Customization</name>
+<label>Customization</label>
+<hyperlink>UI.php</hyperlink>
+<icon_path></icon_path>
+<template></template>
+<type>administrator</type>
+<rank>2</rank>
+<parent_id>1</parent_id>
+<user_id>0</user_id>
+</menuNode>
+<menuNode id="501">
+<name>Triggers - entering</name>
+<label>Triggers - On entering state</label>
+<hyperlink>UI.php</hyperlink>
+<icon_path>../images/std_view.gif</icon_path>
+<template>
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT TriggerOnStateEnter&lt;/itopblock&gt;
+&lt;div id=&quot;BottomPane&quot;&gt;
+&lt;p&gt;&lt;/p&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT TriggerOnStateEnter&lt;/itopblock&gt;
+&lt;/div&gt;
+</template>
+<type>administrator</type>
+<rank>2</rank>
+<parent_id>500</parent_id>
+<user_id>0</user_id>
+</menuNode>
+<menuNode id="502">
+<name>Triggers - leaving</name>
+<label>Triggers - On leaving state</label>
+<hyperlink>UI.php</hyperlink>
+<icon_path>../images/std_view.gif</icon_path>
+<template>
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT TriggerOnStateLeave&lt;/itopblock&gt;
+&lt;div id=&quot;BottomPane&quot;&gt;
+&lt;p&gt;&lt;/p&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT TriggerOnStateLeave&lt;/itopblock&gt;
+&lt;/div&gt;
+</template>
+<type>administrator</type>
+<rank>2</rank>
+<parent_id>500</parent_id>
+<user_id>0</user_id>
+</menuNode>
+<menuNode id="505">
+<name>Actions</name>
+<label>Actions - Send an email</label>
+<hyperlink>UI.php</hyperlink>
+<icon_path>../images/std_view.gif</icon_path>
+<template>
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT ActionEmail&lt;/itopblock&gt;
+&lt;div id=&quot;BottomPane&quot;&gt;
+&lt;p&gt;&lt;/p&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT ActionEmail&lt;/itopblock&gt;
+&lt;/div&gt;
+</template>
+<type>administrator</type>
+<rank>2</rank>
+<parent_id>500</parent_id>
+<user_id>0</user_id>
+</menuNode>
+<menuNode id="510">
+<name>Application log</name>
+<label>Application log</label>
+<hyperlink>UI.php</hyperlink>
+<icon_path>../images/std_view.gif</icon_path>
+<template>
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT Event&lt;/itopblock&gt;
+&lt;div id=&quot;BottomPane&quot;&gt;
+&lt;p&gt;&lt;/p&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT Event&lt;/itopblock&gt;
+&lt;/div&gt;
+</template>
+<type>administrator</type>
+<rank>2</rank>
+<parent_id>1</parent_id>
+<user_id>0</user_id>
+</menuNode>
 </Set>

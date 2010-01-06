@@ -232,6 +232,16 @@ function DisplayLifecycle($oPage, $sClass)
 
 
 /**
+ * Helper for the trigger
+ */
+function DisplayTriggers($oPage, $sClass)
+{
+	$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnStateChange WHERE target_class = '$sClass'"));
+	cmdbAbstractObject::DisplaySet($oPage, $oSet);
+}
+
+
+/**
  * Display the list of classes from the business model
  */
 function DisplayClassesList($oPage)
@@ -401,6 +411,9 @@ function DisplayClassDetails($oPage, $sClass)
 
 	$oPage->SetCurrentTab('Lifecycle');
 	DisplayLifecycle($oPage, $sClass);
+
+	$oPage->SetCurrentTab('Triggers');
+	DisplayTriggers($oPage, $sClass);
 
 	$oPage->SetCurrentTab();
 	$oPage->SetCurrentTabContainer();

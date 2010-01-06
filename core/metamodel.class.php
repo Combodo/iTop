@@ -1222,14 +1222,7 @@ abstract class MetaModel
 		{
 			if (self::IsValidObject($value))
 			{
-				$aScalarArgs[$sArgName] = $value->GetKey();
-				$aScalarArgs[$sArgName.'->id'] = $value->GetKey();
-			
-				$sClass = get_class($value);
-				foreach(self::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
-				{
-					$aScalarArgs[$sArgName.'->'.$sAttCode] = $value->Get($sAttCode);
-				}
+				$aScalarArgs = array_merge($aScalarArgs, $value->ToArgs($sArgName));
 			}
 			else
 			{
@@ -2847,6 +2840,21 @@ abstract class MetaModel
 
 		// e.g. "supported by" (later: $this->GetLinkLabel(), computed on link data!)
 		return self::GetLabel($sLinkClass, $sAttCode);
+	}
+
+	/**
+	 * Replaces all the parameters by the values passed in the hash array
+	 */
+	static public function ApplyParams($aInput, $aParams)
+	{
+		$aSearches = array();
+		$aReplacements = array();
+		foreach($aParams as $sSearch => $sReplace)
+		{
+			$aSearches[] = '$'.$sSearch.'$';
+			$aReplacements[] = $sReplace;
+		}
+		return str_replace($aSearches, $aReplacements, $aInput);
 	}
 
 } // class MetaModel
