@@ -42,7 +42,7 @@ class ajax_page extends web_page
         }
         $s_captured_output = ob_get_contents();
         ob_end_clean();
-        echo trim($this->s_content);
+        echo $this->s_content;
         if (!empty($this->m_sReadyScript))
         {
 	        echo "<script>\n";

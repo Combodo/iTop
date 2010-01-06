@@ -61,6 +61,15 @@ function CheckPHPVersion(setup_web_page $oP)
 		$bResult = false;
 	}
 	// Check some ini settings here
+	if (function_exists('php_ini_loaded_file')) // PHP >= 5.2.4
+	{
+		$sPhpIniFile = php_ini_loaded_file();
+		$oP->log("Info - php.ini path: '$sPhpIniFile'");
+	}
+	else
+	{
+		$sPhpIniFile = 'php.ini';
+	}
   	if (!ini_get('file_uploads'))
   	{
 		$oP->error("Files upload is not allowed on this server (file_uploads = ".ini_get('file_uploads').").");
@@ -107,6 +116,13 @@ function CheckPHPVersion(setup_web_page $oP)
 	$oP->log("Info - upload_max_filesize: ".ini_get('upload_max_filesize'));
 	$oP->log("Info - max_file_uploads: ".ini_get('max_file_uploads'));
 
+	// Check some more ini settings here, needed for file upload
+  	if (get_magic_quotes_gpc())
+  	{
+		$oP->error("'magic_quotes_gpc' is set to On in '$sPhpIniFile', please turn if Off before continuing.");
+		$bResult = false;
+	}
+	
 	return $bResult;
 }
   
