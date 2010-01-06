@@ -12,6 +12,7 @@ function ReloadTruncatedList(divId, sSerializedFilter, sExtraParams)
 		 $('#'+divId).empty();
 		 $('#'+divId).append(data);
 		 $('#'+divId).removeClass('loading');
+		 $('#'+divId+' .listResults').tableHover(); // hover tables
 		 $('#'+divId+' .listResults').tablesorter( { headers: { 0:{sorter: false }}, widgets: ['zebra']} ); // sortable and zebra tables
 		 //$('#'+divId).unblockUI();
 		}

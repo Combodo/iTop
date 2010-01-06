@@ -680,6 +680,10 @@ table.listResults tr.even td.truncated.hover {
 	background: #E8FFD3 url(../images/truncated.png) bottom  repeat-x;
 }
 
+table.listResults tr.odd td.truncated.hover {
+	background: #E8FFD3 url(../images/truncated.png) bottom  repeat-x;
+}
+
 table.listResults.truncated {
 	border-bottom: 0;
 	padding-bottom: 0;
