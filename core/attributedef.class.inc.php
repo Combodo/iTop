@@ -476,6 +476,47 @@ class AttributeInteger extends AttributeDBField
 }
 
 /**
+ * Map a boolean column to an attribute 
+ *
+ * @package     iTopORM
+ * @author      Romain Quetiez <romainquetiez@yahoo.fr>
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.itop.com
+ * @since       1.0
+ * @version     $itopversion$
+ */
+class AttributeBoolean extends AttributeInteger
+{
+	static protected function ListExpectedParams()
+	{
+		return parent::ListExpectedParams();
+		//return array_merge(parent::ListExpectedParams(), array());
+	}
+
+	public function GetType() {return "Boolean";}
+	public function GetTypeDesc() {return "Boolean";}
+	public function GetEditClass() {return "Integer";}
+	protected function GetSQLCol() {return "TINYINT(1)";}
+	
+	public function MakeRealValue($proposedValue)
+	{
+		if ((int)$proposedValue) return true;
+		return false;
+	}
+	public function ScalarToSQL($value)
+	{
+		assert(is_bool($value));
+		if ($value) return 1;
+		return 0;
+	}
+	public function SQLToScalar($value)
+	{
+		// Use cast (int) or intval() ?
+		return (int)$value;
+	}
+}
+
+/**
  * Map a varchar column (size < ?) to an attribute 
  *
  * @package     iTopORM

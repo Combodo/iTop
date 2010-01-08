@@ -20,18 +20,17 @@ require_once('../application/startup.inc.php');
 
 require('./webservices.class.inc.php');
 
+// this file is generated dynamically with location = here
+$sWsdlUri = 'http'.(empty($_SERVER['HTTPS']) ? '' : 's').'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname($_SERVER['SCRIPT_NAME']).'/../webservices/itop.wsdl.php';
 
-// pb ? - login_web_page::DoLogin(); // Check user rights and prompt if needed
 
-// Main program
+ini_set("soap.wsdl_cache_enabled","0");
 
-$oSoapServer = new SoapServer(
-	null,
-	//"http://localhost:81/trunk/webservices/Itop.wsdl", // to be a file generated dynamically with location = here
+$oSoapServer = new SoapServer
+(
+	$sWsdlUri,
 	array(
-		'uri' => 'http://test-itop/',
-		// note: using the classmap and no WSDL spec causes a fault in APACHE (looks like an infinite loop)
-		//'classmap' => array('ItopErrorSOAP' => 'ItopError')
+		'classmap' => $aSOAPMapping
 	)
 );
 // $oSoapServer->setPersistence(SOAP_PERSISTENCE_SESSION);
@@ -51,6 +50,6 @@ else
 		echo "<li>$sFunc</li>\n";
 	}
 	echo "</ul>\n";
-	echo "";
+	echo "<p>Here the <a href=\"$sWsdlUri\">WSDL file</a><p>";
 }
 ?>

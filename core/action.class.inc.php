@@ -72,7 +72,7 @@ abstract class ActionNotification extends Action
 			"description" => "Notification (abstract)",
 			"key_type" => "autoincrement",
 			"key_label" => "",
-			"name_attcode" => "",
+			"name_attcode" => "name",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
 			"db_table" => "priv_action_notification",
@@ -116,7 +116,7 @@ class ActionEmail extends ActionNotification
 			"description" => "Action: Email notification",
 			"key_type" => "autoincrement",
 			"key_label" => "",
-			"name_attcode" => "",
+			"name_attcode" => "name",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
 			"db_table" => "priv_action_email",
@@ -215,18 +215,19 @@ class ActionEmail extends ActionNotification
 			$sHeaders .= "Bcc: $sBCC\r\n";
 		}
 
-		$sOverview = "TO:$sTo, FROM:$sFrom, REPLY-TO:$sReplyTo, CC:$sCC, BCC:$sBCC, SUBJECT:$sSubject, BODY:$sBody";
-
 		// Mail it
 		if (mail($sTo, $sSubject, $sBody, $sHeaders))
 		{
-			$oLog = new EventNotification();
-			$oLog->Set('message', 'Email sent successfully');
+			$oLog = new EventNotificationEmail();
 			$oLog->Set('userinfo', UserRights::GetUser());
 			$oLog->Set('trigger_id', $oTrigger->GetKey());
 			$oLog->Set('action_id', $this->GetKey());
 			$oLog->Set('object_id', $aContextArgs['this->id']);
-			$oLog->Set('overview', $sOverview);
+			$oLog->Set('to', $sTo);
+			$oLog->Set('cc', $sCC);
+			$oLog->Set('bcc', $sBCC);
+			$oLog->Set('subject', $sSubject);
+			$oLog->Set('body', $sBody);
 			$oLog->DBInsertNoReload();
 		}
 		else

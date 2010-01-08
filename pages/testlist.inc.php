@@ -1174,31 +1174,145 @@ class TestItopWebServices extends TestWebServices
 	}
 }
 
+
 $aWebServices = array(
 	array(
+		'verb' => 'GetVersion',
+		'expected result' => true,
+		'explain result' => 'n/a',
+		'args' => array(),
+	),
+	array(
 		'verb' => 'CreateIncidentTicket',
+		'expected result' => true,
+		'explain result' => 'ok, but link attribute unknown',
 		'args' => array(
+			'admin', /* sLogin */
+			'admin', /* sPassword */
+			'Server', /* sType */
 			'desc of ticket', /* sDescription */
 			'initial situation blah blah blah', /* sInitialSituation */
-			array('id' => 1), /* aCallerDesc */
-			array('id' => 2), /* aCustomerDesc */
-			array('id' => 1), /* aWorkgroupDesc */ 
+			'very grave', /* sImpact */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 2))), /* aCustomerDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aWorkgroupDesc */
 			array(
-				array(
-					'class' => 'logInfra',
-					'search' => array('id' => 108),
-					'link_values' => array('impactoche' => 'plus que critique'),
+				new SOAPLinkCreationSpec(
+					'logInfra',
+					array(new SOAPSearchCondition('id', 108)),
+					array(new SOAPAttributeValue('impacting', 'very critical'))
 				),
-				array(
-					'class' => 'bizDevice',
-					'search' => array('name' => 'Router03'),
-					'link_values' => array('impact' => 'ouais bof'),
+				new SOAPLinkCreationSpec(
+					'bizDevice',
+					array(new SOAPSearchCondition('name', 'Router03')),
+					array(new SOAPAttributeValue('impact', 'who cares'))
 				),
 			), /* aImpact */
 			'low' /* sSeverity */
 		),
 	),
+	array(
+		'verb' => 'CreateIncidentTicket',
+		'expected result' => true,
+		'explain result' => 'ok, but CI unknown',
+		'args' => array(
+			'admin', /* sLogin */
+			'admin', /* sPassword */
+			'Desktop', /* sType */
+			'PC burning', /* sDescription */
+			'The power supply suddenly started to warm up', /* sInitialSituation */
+			'The agent could not do his job', /* sImpact */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 2))), /* aCustomerDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aWorkgroupDesc */
+			array(
+				new SOAPLinkCreationSpec(
+					'logInfra',
+					array(new SOAPSearchCondition('id', 99999)),
+					array(new SOAPAttributeValue('impact', 'very critical'))
+				),
+			), /* aImpact */
+			'low' /* sSeverity */
+		),
+	),
+	array(
+		'verb' => 'CreateIncidentTicket',
+		'expected result' => false,
+		'explain result' => 'ok, no CI to attach',
+		'args' => array(
+			'admin', /* sLogin */
+			'admin', /* sPassword */
+			'Network', /* sType */
+			'Houston not reachable', /* sDescription */
+			'Tried to join the shuttle', /* sInitialSituation */
+			'Could not talk to my wife', /* sImpact */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 2))), /* aCustomerDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aWorkgroupDesc */
+			array(
+			), /* aImpact */
+			'low' /* sSeverity */
+		),
+	),
+	array(
+		'verb' => 'CreateIncidentTicket',
+		'expected result' => false,
+		'explain result' => 'caller unknown',
+		'args' => array(
+			'admin', /* sLogin */
+			'admin', /* sPassword */
+			'Network', /* sType */
+			'Houston not reachable', /* sDescription */
+			'Tried to join the shuttle', /* sInitialSituation */
+			'Could not talk to my wife', /* sImpact */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1000))), /* aCallerDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 2))), /* aCustomerDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aWorkgroupDesc */
+			array(
+			), /* aImpact */
+			'low' /* sSeverity */
+		),
+	),
+	array(
+		'verb' => 'CreateIncidentTicket',
+		'expected result' => false,
+		'explain result' => 'wrong password',
+		'args' => array(
+			'admin', /* sLogin */
+			'xxxxx', /* sPassword */
+			'Network', /* sType */
+			'Houston not reachable', /* sDescription */
+			'Tried to join the shuttle', /* sInitialSituation */
+			'Could not talk to my wife', /* sImpact */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 2))), /* aCustomerDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aWorkgroupDesc */
+			array(
+			), /* aImpact */
+			'low' /* sSeverity */
+		),
+	),
+	array(
+		'verb' => 'CreateIncidentTicket',
+		'expected result' => false,
+		'explain result' => 'wrong login',
+		'args' => array(
+			'xxxxx', /* sLogin */
+			'yyyyy', /* sPassword */
+			'Network', /* sType */
+			'Houston not reachable', /* sDescription */
+			'Tried to join the shuttle', /* sInitialSituation */
+			'Could not talk to my wife', /* sImpact */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 2))), /* aCustomerDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aWorkgroupDesc */
+			array(
+			), /* aImpact */
+			'low' /* sSeverity */
+		),
+	),
 );
+
 
 class TestSoap extends TestSoapWebService
 {
@@ -1207,34 +1321,56 @@ class TestSoap extends TestSoapWebService
 
 	protected function DoExecute()
 	{
-		$this->m_SoapClient = new SoapClient(
-//			null,
-			"http://localhost:81/trunk/webservices/Itop.wsdl",
+		global $aSOAPMapping;
+
+		// this file is generated dynamically with location = here
+		$sWsdlUri = 'http'.(empty($_SERVER['HTTPS']) ? '' : 's').'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname($_SERVER['SCRIPT_NAME']).'/../webservices/itop.wsdl.php';
+
+		ini_set("soap.wsdl_cache_enabled","0");
+		$this->m_SoapClient = new SoapClient
+		(
+			$sWsdlUri,
 			array(
-				//'location' => 'http://localhost:81/trunk/webservices/soapserver.php',
-				//'uri' => 'http://test-itop/',
-				'login' => 'admin',
-				'password' => 'admin',
-				// note: using the classmap functionality lead to APACHE fault on the server side
-				//'classmap' => array('stdClass' => 'ItopError'),
+				//'uri' => 'http://soap-itop/',
+				'classmap' => $aSOAPMapping,
 				'trace' => 1,
 			)
 		);
 
+		if (false)
+		{
+			print "<pre>\n"; 
+			print_r($this->m_SoapClient->__getTypes());
+			print "</pre>\n";
+		} 
+
 		global $aWebServices;
-		$aWebService = $aWebServices[0];
+		foreach ($aWebServices as $iPos => $aWebService)
+		{
+			echo "<h4>SOAP call #$iPos ".$aWebService['explain result']."</h4>\n";
+			try
+			{
+				$oRes = call_user_func_array(array($this->m_SoapClient, $aWebService['verb']), $aWebService['args']);
+			}
+			catch(SoapFault $e)
+			{
+				print "<pre>\n"; 
+				print "Request: \n".htmlspecialchars($this->m_SoapClient->__getLastRequest()) ."\n"; 
+				print "Response: \n".htmlspecialchars($this->m_SoapClient->__getLastResponse())."\n"; 
+				print "</pre>";
+				print "Response in HTML: <p>".$this->m_SoapClient->__getLastResponse()."</p>"; 
+				return false;
+			}
 
-//		$oRes = $this->m_SoapClient->CreateIncidentTicket();
-		$oRes = call_user_func_array(array($this->m_SoapClient, $aWebService['verb']), $aWebService['args']);
-
-		echo "<pre>\n";
-		print_r($oRes);
-		echo "</pre>\n";
-
-print "<pre>\n"; 
-print "Request: \n".htmlspecialchars($this->m_SoapClient->__getLastRequest()) ."\n"; 
-print "Response: \n".htmlspecialchars($this->m_SoapClient->__getLastResponse())."\n"; 
-print "</pre>"; 
+			echo "<pre>\n";
+			print_r($oRes);
+			echo "</pre>\n";
+	
+			print "<pre>\n"; 
+			print "Request: \n".htmlspecialchars($this->m_SoapClient->__getLastRequest()) ."\n"; 
+			print "Response: \n".htmlspecialchars($this->m_SoapClient->__getLastResponse())."\n"; 
+			print "</pre>";
+		} 
 
 		return true;
 	}
@@ -1249,14 +1385,16 @@ class TestWebServicesDirect extends TestBizModel
 
 	protected function DoExecute()
 	{
-		global $aWebServices;
-		$aWebService = $aWebServices[0];
-
 		$oWebServices = new WebServices();
-		$oRes = call_user_func_array(array($oWebServices, $aWebService['verb']), $aWebService['args']);
-		echo "<pre>\n";
-		print_r($oRes);
-		echo "</pre>\n";
+
+		global $aWebServices;
+		foreach ($aWebServices as $aWebService)
+		{
+			$oRes = call_user_func_array(array($oWebServices, $aWebService['verb']), $aWebService['args']);
+			echo "<pre>\n";
+			print_r($oRes);
+			echo "</pre>\n";
+		}
 		return true;
 	}
 }
