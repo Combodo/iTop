@@ -493,7 +493,7 @@ class DisplayBlock
 			swfobject.embedSWF(\"../images/open-flash-chart.swf\", \"my_chart_{$iChartCounter}\", \"400\", \"400\",\"9.0.0\", \"expressInstall.swf\",
 			{\"data-file\":\"".urlencode("../pages/ajax.render.php?operation=open_flash_chart&params[group_by]=$sGroupBy&params[chart_type]=$sChartType&params[chart_title]=$sTitle&encoding=oql&filter=".urlencode($sFilter))."\"});
 </script>\n";
-			$sHtml .= "<div id=\"my_chart_{$iChartCounter}\">Here goes the chart</div>\n";
+			$sHtml .= "<div id=\"my_chart_{$iChartCounter}\">If the chart does not display, <a href=\"http://get.adobe.com/flash/\" target=\"_blank\">install Flash</a></div>\n";
 			$iChartCounter++;
 			break;
 			
