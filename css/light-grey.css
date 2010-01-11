@@ -222,10 +222,11 @@ input.textSearch {
 
 ul.dir {
     list-style:none;
+    padding-left:16px;
 }	
 
 ul.dir ul {
-	padding: 8px 0px 8px 16px;
+	padding: 8px 0px 8px 8px;
 	margin:0;
     list-style:none;
     border: 0;
@@ -347,7 +348,7 @@ div.iTopLogo span {
 	background-color: #fff;
 }
 #OrganizationSelection {
-    padding:5px 0px 16px 40px;
+    padding:5px 0px 16px 20px;
 }
 
 /* jdMenu popup menus */
