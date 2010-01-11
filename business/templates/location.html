@@ -4,10 +4,10 @@
 	<itopblock blockclass="HistoryBlock" type="toggle" encoding="text/oql">SELECT CMDBChangeOp WHERE objkey = $pkey$ AND objclass = '$class$'</itopblock>
 </div>
 <img src="../images/starthere.png" style="margin-top:-20px; margin-right:10px; float:right">
-<itopblock blockclass="DisplayBlock" asynchronous="true" type="bare_details" encoding="text/oql">SELECT bizLocation WHERE id = $pkey$</itopblock>
+<itopblock blockclass="DisplayBlock" asynchronous="false" type="bare_details" encoding="text/oql">SELECT bizLocation WHERE id = $pkey$</itopblock>
 <itoptabs>
 	<itoptab name="Contacts">
-		<itopblock blockclass="DisplayBlock" type="list" encoding="text/oql">SELECT bizContact WHERE location_id = $pkey$</itopblock>
+		<itopblock blockclass="DisplayBlock" type="list" object_id="$pkey$" target_attr="location_id" encoding="text/oql">SELECT bizContact WHERE location_id = $pkey$</itopblock>
 	</itoptab>
 	<itoptab name="Servers">
 		<itopblock blockclass="DisplayBlock" type="list" encoding="text/oql">SELECT bizServer WHERE location_id = $pkey$</itopblock>

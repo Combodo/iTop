@@ -7,6 +7,7 @@ class DisplayTemplate
 {
 	protected $m_sTemplate;
 	protected $m_aTags;
+	static protected $iBlockCount = 0;
 	
 	public function __construct($sTemplate)
 	{
@@ -25,17 +26,31 @@ class DisplayTemplate
 		while($sTag = $this->GetNextTag($iStart, $iEnd))
 		{
 			$sContent = $this->GetTagContent($sTag, $iStart, $iEnd);
-			$aAttributes = $this->GetTagAttributes($sTag, $iStart, $iEnd);
-			//$oPage->p("Tag: $sTag - ($iStart, $iEnd)");
+			$iAfterTagPos = $iEnd + strlen('</'.$sTag.'>');
+			$sOuterTag = substr($this->m_sTemplate, $iStart, $iAfterTagPos - $iStart);
 			$oPage->add(substr($this->m_sTemplate, $iBeforeTagPos, $iStart - $iBeforeTagPos));
-			$this->RenderTag($oPage, $sTag, $aAttributes, $sContent);
-
+			if ($sTag == DisplayBlock::TAG_BLOCK)
+			{
+				$oBlock = DisplayBlock::FromTemplate($sOuterTag);
+				if (is_object($oBlock))
+				{
+					$oBlock->Display($oPage, 'block_'.self::$iBlockCount);
+				}
+				self::$iBlockCount++;
+			}
+			else
+			{
+				$aAttributes = $this->GetTagAttributes($sTag, $iStart, $iEnd);
+				//$oPage->p("Tag: $sTag - ($iStart, $iEnd)");
+				$this->RenderTag($oPage, $sTag, $aAttributes, $sContent);
+	
+			}
 			$iAfterTagPos = $iEnd + strlen('</'.$sTag.'>');
 			$iBeforeTagPos = $iAfterTagPos;
 			$iStart = $iEnd;
 			$iEnd = strlen($this->m_sTemplate); 
 			$iCount++;
-			if ($iCount > 10) break;
+			if ($iCount > 10) break; //@@@ Why ?? Debug ??
 		}
 		$oPage->add(substr($this->m_sTemplate, $iAfterTagPos));
 	}
@@ -105,7 +120,6 @@ class DisplayTemplate
 	protected function RenderTag($oPage, $sTag, $aAttributes, $sContent)
 	{
 		static $iTabContainerCount = 0;
-		static $iBlockCount = 0;
 		switch($sTag)
 		{
 			case 'itoptabs':
@@ -134,46 +148,8 @@ class DisplayTemplate
 				$oPage->EndCollapsibleSection();
 			break;
 			
-			case 'itopblock': // TO DO: Use DisplayBlock::FromTemplate here
-				$sBlockClass = $aAttributes['blockclass'];
-				$sBlockType = $aAttributes['type'];
-				$aExtraParams = array();
-				if (isset($aAttributes['link_attr']))
-				{
-					$aExtraParams['link_attr'] = $aAttributes['link_attr'];
-					// Check that all mandatory parameters are present:
-					if(empty($aAttributes['object_id']))
-					{
-						// if 'links' mode is requested the d of the object to link to must be specified
-						throw new ApplicationException("Parameter object_id is mandatory when link_attr is specified. Check the definition of the display template.");
-					}
-					if(empty($aAttributes['target_attr']))
-					{
-						// if 'links' mode is requested the d of the object to link to must be specified
-						throw new ApplicationException("Parameter target_attr is mandatory when link_attr is specified. Check the definition of the display template.");
-					}
-					$aExtraParams['object_id'] = $aAttributes['object_id'];
-					$aExtraParams['target_attr'] = $aAttributes['target_attr'];
-				}
-
-				switch($aAttributes['encoding'])
-				{
-					case 'text/sibusql':
-					$oFilter = CMDBSearchFilter::FromSibusQL($sContent);
-					break;
-
-					case 'text/oql':
-					$oFilter = CMDBSearchFilter::FromOQL($sContent);
-					break;
-
-					case 'text/serialize':
-					default:
-					$oFilter = CMDBSearchFilter::unserialize($sContent);
-					break;
-				}
-				$oBlock = new $sBlockClass($oFilter, $sBlockType, false, $aExtraParams);
-				$oBlock->Display($oPage, 'block_'.$iBlockCount);
-				$iBlockCount++;
+			case 'itopblock': // No longer used, handled by DisplayBlock::FromTemplate see above
+				$oPage->add("<!-- Application Error: should be handled by DisplayBlock::FromTemplate -->");
 			break;
 			
 			default:
@@ -196,7 +172,7 @@ class DisplayTemplate
 		<itopblock blockclass="HistoryBlock" type="toggle" encoding="text/oql">SELECT CMDBChangeOp WHERE objkey = $pkey$ AND objclass = \'$class$\'</itopblock>
 		</div>
 		<img src="../../images/connect_to_network.png" style="margin-top:-10px; margin-right:10px; float:right">
-		<itopblock blockclass="DisplayBlock" asynchronous="true" type="bare_details" encoding="text/sibusql">bizNetworkDevice: pkey = $pkey$</itopblock>
+		<itopblock blockclass="DisplayBlock" asynchronous="false" type="bare_details" encoding="text/sibusql">bizNetworkDevice: pkey = $pkey$</itopblock>
 		<itoptabs>
 			<itoptab name="Interfaces">
 				<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">bizInterface: device_id = $pkey$</itopblock>

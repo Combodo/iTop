@@ -4,7 +4,7 @@
 	<itopblock blockclass="HistoryBlock" type="toggle" encoding="text/oql">SELECT CMDBChangeOp WHERE objkey = $pkey$ AND objclass = '$class$'</itopblock>
 </div>
 <img src="../images/software.jpg" style="margin-top:-10px; margin-right:10px; float:right">
-<itopblock blockclass="DisplayBlock" asynchronous="true" type="bare_details" encoding="text/oql">SELECT bizApplication WHERE id = $pkey$</itopblock>
+<itopblock blockclass="DisplayBlock" asynchronous="false" type="bare_details" encoding="text/oql">SELECT bizApplication WHERE id = $pkey$</itopblock>
 <itoptabs>
 	<itoptab name="Impacted_Client_Applications">
 		<itopblock blockclass="DisplayBlock" type="links" link_attr="server_id" object_id="$pkey$" target_attr="client_id" encoding="text/oql">SELECT lnkClientServer WHERE server_id = $pkey$</itopblock>

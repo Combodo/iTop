@@ -386,7 +386,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		if ($bDisplayMenu)
 		{
 			$sColspan = 'colspan="2"';
-			$aMenuExtraParams = array();
+			$aMenuExtraParams = $aExtraParams;
 			if (!empty($sLinkageAttribute))
 			{
 				//$aMenuExtraParams['linkage'] = $sLinkageAttribute;
@@ -725,6 +725,11 @@ abstract class cmdbAbstractObject extends CMDBObject
 							$sHTMLValue .= "<input type=\"hidden\" id=\"$iInputId\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" />\n";
 							$oPage->add_ready_script("\$('#label_$iInputId').autocomplete('./ajax.render.php', { minChars:3, onItemSelect:selectItem, onFindValue:findValue, formatItem:formatItem, autoFill:true, keyHolder:'#$iInputId', extraParams:{operation:'autocomplete', sclass:'$sClass',attCode:'".$sAttCode."'}});");
 							$oPage->add_ready_script("\$('#label_$iInputId').result( function(event, data, formatted) { if (data) { $('#{$iInputId}').val(data[1]); } } );");
+							// Prepopulate with a default value -- but no display value...
+							//if (!empty($value))
+							//{
+							//	$oPage->add_ready_script("\$('#label_$iInputId').search( 'domino.combodo.com' );");
+							//}
 						}
 						else
 						{

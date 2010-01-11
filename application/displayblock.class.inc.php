@@ -55,11 +55,14 @@ class DisplayBlock
 	{
 		$iStartPos = stripos($sTemplate, '<'.self::TAG_BLOCK.' ',0);
 		$iEndPos = stripos($sTemplate, '</'.self::TAG_BLOCK.'>', $iStartPos); 
+		$iEndTag = stripos($sTemplate, '>', $iStartPos);
+		$aParams = array();
 		
 		if (($iStartPos === false) || ($iEndPos === false)) return null; // invalid template		
-		$sITopBlock = substr($sTemplate,$iStartPos, $iEndPos-$iStartPos);
-		$sITopData = substr($sITopBlock, 1+stripos($sITopBlock, ">"));
-		$sITopTag = substr($sITopBlock, 0, stripos($sITopBlock, ">"));
+		$sITopBlock = substr($sTemplate,$iStartPos, $iEndPos-$iStartPos+strlen('</'.self::TAG_BLOCK.'>'));
+		$sITopData = substr($sTemplate, 1+$iEndTag, $iEndPos - $iEndTag - 1);
+		$sITopTag = substr($sTemplate, $iStartPos + strlen('<'.self::TAG_BLOCK), $iEndTag - $iStartPos - strlen('<'.self::TAG_BLOCK));
+
 		$aMatches = array();
 		$sBlockClass = "DisplayBlock";
 		$bAsynchronous = false;
@@ -88,7 +91,12 @@ class DisplayBlock
 		if (preg_match('/ link_attr="(.*)"/U',$sITopTag, $aMatches))
 		{
 			// The list to display is a list of links to the specified object
-			$aParams['link_attr'] = $aMatches[1]; // Name of the Ext. Key that make this linkage
+			$aParams['link_attr'] = $aMatches[1]; // Name of the Ext. Key that makes this linkage
+		}
+		if (preg_match('/ target_attr="(.*)"/U',$sITopTag, $aMatches))
+		{
+			// The list to display is a list of links to the specified object
+			$aParams['target_attr'] = $aMatches[1]; // Name of the Ext. Key that make this linkage
 		}
 		if (preg_match('/ object_id="(.*)"/U',$sITopTag, $aMatches))
 		{
@@ -97,7 +105,6 @@ class DisplayBlock
 		}
 		// Parameters contains a list of extra parameters for the block
 		// the syntax is param_name1:value1;param_name2:value2;...
-		$aParams = array();
 		if (preg_match('/ parameters="(.*)"/U',$sITopTag, $aMatches))
 		{
 			$sParameters = $aMatches[1];
@@ -120,7 +127,7 @@ class DisplayBlock
 			}
 			if(empty($aParams['target_attr']))
 			{
-				// if 'links' mode is requested the d of the object to link to must be specified
+				// if 'links' mode is requested the id of the object to link to must be specified
 				throw new ApplicationException("Parameter target_attr is mandatory when link_attr is specified. Check the definition of the display template.");
 			}
 
@@ -291,7 +298,21 @@ class DisplayBlock
 					{
 						$oAppContext = new ApplicationContext();
 						$sParams = $oAppContext->GetForLink();
-						$sHtml .= $oPage->GetP("<a href=\"./UI.php?operation=new&class=$sClass&$sParams\">Click here to create a new ".Metamodel::GetName($sClass)."</a>\n");
+						// 1:n links, populate the target object as a default value when creating a new linked object
+						if (isset($aExtraParams['target_attr']))
+						{
+							$aExtraParams['default'][$aExtraParams['target_attr']] = $aExtraParams['object_id'];
+						}
+						$sDefault = '';
+						if (!empty($aExtraParams['default']))
+						{
+							foreach($aExtraParams['default'] as $sKey => $sValue)
+							{
+								$sDefault.= "&default[$sKey]=$sValue";
+							}
+						}
+						
+						$sHtml .= $oPage->GetP("<a href=\"./UI.php?operation=new&class=$sClass&$sParams{$sDefault}\">Click here to create a new ".Metamodel::GetName($sClass)."</a>\n");
 					}
 				}
 			}
@@ -678,12 +699,25 @@ class MenuBlock extends DisplayBlock
 		$sFilter = $this->m_oFilter->serialize();
 		$aActions = array();
 		$sUIPage = cmdbAbstractObject::ComputeUIPage($sClass);
+		// 1:n links, populate the target object as a default value when creating a new linked object
+		if (isset($aExtraParams['target_attr']))
+		{
+			$aExtraParams['default'][$aExtraParams['target_attr']] = $aExtraParams['object_id'];
+		}
+		$sDefault = '';
+		if (!empty($aExtraParams['default']))
+		{
+			foreach($aExtraParams['default'] as $sKey => $sValue)
+			{
+				$sDefault.= "&default[$sKey]=$sValue";
+			}
+		}
 		switch($oSet->Count())
 		{
 			case 0:
 			// No object in the set, the only possible action is "new"
 			$bIsModifyAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY);
-			if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'New', 'url' => "../page/$sUIPage?operation=new&class=$sClass&$sContext"); }
+			if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'New', 'url' => "../page/$sUIPage?operation=new&class=$sClass&$sContext{$sDefault}"); }
 			break;
 			
 			case 1:
@@ -710,7 +744,7 @@ class MenuBlock extends DisplayBlock
 				$aActions[] = array ('label' => 'eMail', 'url' => "mailto:?subject=".$oSet->GetFilter()->__DescribeHTML()."&body=".urlencode("$sUrl?operation=search&filter=$sFilter&$sContext"));
 				$aActions[] = array ('label' => 'CSV Export', 'url' => "../pages/$sUIPage?operation=search&filter=$sFilter&format=csv&$sContext");
 				//$aActions[] = array ('label' => 'Bookmark...', 'url' => "../pages/ajax.render.php?operation=create&class=$sClass&filter=$sFilter", 'class' => 'jqmTrigger');
-				if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'New...', 'url' => "../pages/$sUIPage?operation=new&class=$sClass&$sContext"); }
+				if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'New...', 'url' => "../pages/$sUIPage?operation=new&class=$sClass&$sContext{$sDefault}"); }
 				//if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'Clone...', 'url' => "../pages/$sUIPage?operation=clone&class=$sClass&id=$id&$sContext"); }
 				if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'Modify...', 'url' => "../pages/$sUIPage?operation=modify&class=$sClass&id=$id&$sContext"); }
 				if ($bIsDeleteAllowed) { $aActions[] = array ('label' => 'Delete...', 'url' => "../pages/$sUIPage?operation=delete&class=$sClass&id=$id&$sContext"); }
@@ -762,7 +796,7 @@ class MenuBlock extends DisplayBlock
 				$aActions[] = array ('label' => 'eMail', 'url' => "mailto:?subject=".$oSet->GetFilter()->__DescribeHTML()."&body=".urlencode("$sUrl?operation=search&filter=$sFilter&$sContext"));
 				$aActions[] = array ('label' => 'CSV Export', 'url' => "../pages/$sUIPage?operation=search&filter=$sFilter&format=csv&$sContext");
 				//$aActions[] = array ('label' => 'Bookmark...', 'url' => "../pages/ajax.render.php?operation=create&class=$sClass&filter=$sFilter", 'class' => 'jqmTrigger');
-				if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'New...', 'url' => "../pages/$sUIPage?operation=new&class=$sClass&$sContext"); }
+				if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'New...', 'url' => "../pages/$sUIPage?operation=new&class=$sClass&$sContext{$sDefault}"); }
 				//if ($bIsBulkModifyAllowed) { $aActions[] = array ('label' => 'Modify All...', 'url' => "../pages/$sUIPage?operation=modify_all&filter=$sFilter&$sContext"); }
 				//if ($bIsBulkDeleteAllowed) { $aActions[] = array ('label' => 'Delete All...', 'url' => "../pages/$sUIPage?operation=delete_all&filter=$sFilter&$sContext"); }
 			}

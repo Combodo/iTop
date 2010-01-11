@@ -3,7 +3,7 @@
 	<h1>$class_name$: <span class="hilite">$name$</span></h1>
 	<itopblock blockclass="HistoryBlock" type="toggle" encoding="text/oql">SELECT CMDBChangeOp WHERE objkey = $pkey$ AND objclass = '$class$'</itopblock>
 </div>
-<itopblock blockclass="DisplayBlock" asynchronous="true" type="bare_details" encoding="text/oql">SELECT bizKnownError WHERE id = $pkey$</itopblock>
+<itopblock blockclass="DisplayBlock" asynchronous="false" type="bare_details" encoding="text/oql">SELECT bizKnownError WHERE id = $pkey$</itopblock>
 <itoptabs>
 	<itoptab name="Related_Intrastructures">
 		<itopblock blockclass="DisplayBlock" type="links" link_attr="error_id" object_id="$pkey$" target_attr="infra_id" encoding="text/oql">SELECT lnkInfraError WHERE error_id = $pkey$</itopblock>
