@@ -396,20 +396,20 @@ class bizDocument extends logRealObject
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeExternalField("org_name", array("label"=>"Organization", "description"=>"Company / Department owning the document", "allowed_values"=>null, "extkey_attcode"=> 'org_id', "target_attcode"=>"name")));
-		MetaModel::Init_AddAttribute(new AttributeEnum("scope", array("label"=>"scope", "description"=>"Scope of this document", "allowed_values"=>new ValueSetEnum("organization,hardware support"), "sql"=>"scope", "default_value"=>"organization", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("description", array("label"=>"Description", "description"=>"Service Description", "allowed_values"=>null, "sql"=>"description", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("type", array("label"=>"type", "description"=>"type of this document", "allowed_values"=>new ValueSetEnum("documentation,contract,working instruction,network maps,white paper,presentation,training"), "sql"=>"type", "default_value"=>"documentation", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeText("description", array("label"=>"Description", "description"=>"Service Description", "allowed_values"=>null, "sql"=>"description", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
 		MetaModel::Init_AddAttribute(new AttributeBlob("contents", array("label"=>"Contents", "description"=>"File content", "depends_on"=>array())));
 
 		MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("scope");
+		MetaModel::Init_AddFilterFromAttribute("type");
 		MetaModel::Init_AddFilterFromAttribute("description");
 
-		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'scope', 'description', 'contents')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('name', 'status', 'org_id', 'scope', 'contents')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'type', 'description', 'contents')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('name', 'status', 'org_id', 'type', 'contents')); // Attributes to be displayed for a list
 		// Search criteria
-		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'scope')); // Criteria of the std search form
-		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'scope')); // Criteria of the advanced search form
+		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'type')); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'type')); // Criteria of the advanced search form
 
 	}
 
