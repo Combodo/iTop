@@ -1139,6 +1139,7 @@ switch($operation)
 	if (is_object($oActiveNode))
 	{
 		$oActiveNode->RenderContent($oP, $oAppContext->GetAsHash());
+		$oP->set_title($oActiveNode->Get('label'));
 	}
 }
 ////MetaModel::ShowQueryTrace();
