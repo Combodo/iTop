@@ -141,7 +141,9 @@ class DisplayTemplate
 			break;
 			
 			case 'itoptoggle':
-				$oPage->StartCollapsibleSection($aAttributes['name']);
+				$sName = isset($aAttributes['name']) ? $aAttributes['name'] : 'Tagada';
+				$bOpen = isset($aAttributes['open']) ? $aAttributes['open'] : true;
+				$oPage->StartCollapsibleSection($sName, $bOpen);
 				$oTemplate = new DisplayTemplate($sContent);
 				$oTemplate->Render($oPage, array()); // no params to apply, they have already been applied
 				//$oPage->p('iTop Tab Content:<pre>'.htmlentities($sContent).'</pre>');
