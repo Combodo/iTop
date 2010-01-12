@@ -6,7 +6,7 @@ SET PWD=admin
 
 REM The order (numbering) of the files is important since
 REM it dictates the order to import them back
-wget --output-document=01.organizations.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT bizOrganization&format=xml"
+wget --output-document=01.organizations.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT bizOrganization WHERE name !='My Company/Department'&format=xml"
 wget --output-document=02.locations.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT bizLocation&format=xml"
 wget --output-document=03.persons.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT bizPerson WHERE id !%%3D 1&format=xml"
 wget --output-document=04.teams.xml --post-data="auth_user=%USER%&auth_pwd=%PWD%&operation=login" "%EXPORT%?expression=SELECT bizTeam&format=xml"
