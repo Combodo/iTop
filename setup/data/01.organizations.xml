@@ -4,24 +4,18 @@
 <name>Demo</name>
 <code>MCO</code>
 <status>implementation</status>
-<parent_id>2</parent_id>
+<parent_id>0</parent_id>
 </bizOrganization>
-<bizOrganization id="4">
+<bizOrganization id="3">
 <name>France Telecom</name>
 <code>FT</code>
 <status>production</status>
 <parent_id>0</parent_id>
 </bizOrganization>
-<bizOrganization id="1">
-<name>My Company/Department</name>
-<code>SOMECODE</code>
-<status>implementation</status>
-<parent_id>0</parent_id>
-</bizOrganization>
-<bizOrganization id="3">
+<bizOrganization id="5">
 <name>Oracle</name>
 <code>ORA</code>
 <status>production</status>
-<parent_id>3</parent_id>
+<parent_id>0</parent_id>
 </bizOrganization>
 </Set>
