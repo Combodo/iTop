@@ -262,8 +262,18 @@ EOF
         echo "<body>\n";
 
 		// Display the header
+		if (ITOP_REVISION == '$WCREV$')
+		{
+			// This is NOT a version built using the buil system, just display the main version
+			$sVersionString = "iTop Version ".ITOP_VERSION;
+		}
+		else
+		{
+			// This is a build made from SVN, let display the full information
+			$sVersionString = "iTop Version ".ITOP_VERSION." revision ".ITOP_REVISION.", built on: ".ITOP_BUILD_DATE;
+		}
 		echo "<div id=\"Header\">\n";
-		echo "<div class=\"iTopLogo\"><span>iTop</span></div>\n";
+		echo "<div class=\"iTopLogo\" title=\"$sVersionString\"><span>iTop</span></div>\n";
 		//echo "<div id=\"GlobalSearch\"><div style=\"border: 1px solid #999; padding:1px; background-color:#fff;\"><img src=\"../images/magnifier.gif\"/><input style=\"border:0\" type=\"text\" size=\"15\" title=\"Global Search\"></input></div></div>\n";
 		$sText = Utils::ReadParam('text', '');
 		$sOnClick = "";
@@ -384,7 +394,8 @@ EOF
 	{
 		$sHtml = '';
 		static $iSectionId = 0;
-		$sHtml .= "<a id=\"LnkCollapse_$iSectionId\" class=\"CollapsibleLabel\" href=\"#\">$sSectionLabel</a></br>\n";
+		$sImgStyle = $bOpen ? ' open' : '';
+		$sHtml .= "<a id=\"LnkCollapse_$iSectionId\" class=\"CollapsibleLabel{$sImgStyle}\" href=\"#\">$sSectionLabel</a></br>\n";
 		$sStyle = $bOpen ? '' : 'style="display:none" ';
 		$sHtml .= "<div id=\"Collapse_$iSectionId\" $sStyle>";
 		$this->add_ready_script("\$(\"#LnkCollapse_$iSectionId\").click(function() {\$(\"#Collapse_$iSectionId\").slideToggle('normal'); $(\"#LnkCollapse_$iSectionId\").toggleClass('open');});");
