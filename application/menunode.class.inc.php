@@ -116,30 +116,9 @@ class menuNode extends DBObject
 	public function RenderContent(web_page $oPage, $aExtraParams = array())
 	{
 		$sTemplate = $this->Get('template');
-		$this->ProcessTemplate($sTemplate, $oPage, $aExtraParams);
-	}
-	
-	protected function ProcessTemplate($sTemplate, web_page $oPage, $aExtraParams = array())
-	{
-		$iStartPos = stripos($sTemplate, '<'.DisplayBlock::TAG_BLOCK.' ',0);
-		$index = 0;
-		while(($iStartPos = stripos($sTemplate, '<'.DisplayBlock::TAG_BLOCK.' ',0)) !== false)
-		{
-			$iEndPos = stripos($sTemplate, '</'.DisplayBlock::TAG_BLOCK.'>', $iStartPos); 
-			
-			$sBlockDefinition = substr($sTemplate, $iStartPos, $iEndPos - $iStartPos + strlen('</'.DisplayBlock::TAG_BLOCK.'>'));
-			$oBlock = DisplayBlock::FromTemplate($sBlockDefinition);
-
-			$oPage->add(substr($sTemplate, 0, $iStartPos));		
-			if ($oBlock) // Protects agains invalid XML templates
-			{
-				$oBlock->Display($oPage, "block{$index}", $aExtraParams); // Values from $aExtraParams have precedence over $aParams
-			}
-			$index++;
-			$sTemplate = substr($sTemplate, $iEndPos + strlen('</'.DisplayBlock::TAG_BLOCK.'>'));
-		}
-		// What remains is purely static (without any block inside), just output as it is
-		$oPage->add($sTemplate);
+		$oTemplate = new DisplayTemplate($sTemplate);
+		$oTemplate->Render($oPage, $aExtraParams);
+		//$this->ProcessTemplate($sTemplate, $oPage, $aExtraParams);
 	}
 	
 	public function DisplayMenu(iTopWebPage $oP, $sType, $aExtraParams)
