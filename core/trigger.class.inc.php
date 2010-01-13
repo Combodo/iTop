@@ -82,7 +82,7 @@ class TriggerOnStateChange extends Trigger
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeString("target_class", array("label"=>"Target class", "description"=>"label", "allowed_values"=>null, "sql"=>"target_class", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeClass("target_class", array("label"=>"Target class", "description"=>"label", "class_category"=>"bizmodel", "more_values"=>null, "sql"=>"target_class", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("state", array("label"=>"State", "description"=>"label", "allowed_values"=>null, "sql"=>"state", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));	
 
 		MetaModel::Init_InheritFilters();
@@ -96,7 +96,6 @@ class TriggerOnStateChange extends Trigger
 //		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
 //		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
 	}
-
 }
 
 class TriggerOnStateEnter extends TriggerOnStateChange
@@ -162,6 +161,41 @@ class TriggerOnStateLeave extends TriggerOnStateChange
 		// Search criteria
 //		MetaModel::Init_SetZListItems('standard_search', array('')); // Criteria of the std search form
 //		MetaModel::Init_SetZListItems('advanced_search', array('')); // Criteria of the advanced search form
+	}
+}
+
+class TriggerOnObjectCreate extends Trigger
+{
+	public static function Init()
+	{
+		$aParams = array
+		(
+			"category" => "core/cmdb",
+			"name" => "Trigger on object creation",
+			"description" => "Trigger on object creation of [a child class of] the given class",
+			"key_type" => "autoincrement",
+			"key_label" => "",
+			"name_attcode" => "",
+			"state_attcode" => "",
+			"reconc_keys" => array(),
+			"db_table" => "priv_trigger_onobjcreate",
+			"db_key_field" => "id",
+			"db_finalclass_field" => "",
+			"display_template" => "",
+		);
+		MetaModel::Init_Params($aParams);
+		MetaModel::Init_InheritAttributes();
+		MetaModel::Init_AddAttribute(new AttributeClass("target_class", array("label"=>"Target class", "description"=>"label", "class_category"=>"bizmodel", "more_values"=>null, "sql"=>"target_class", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+
+		MetaModel::Init_InheritFilters();
+		MetaModel::Init_AddFilterFromAttribute("target_class");
+
+		// Display lists
+		MetaModel::Init_SetZListItems('details', array('description', 'target_class')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('finalclass', 'target_class')); // Attributes to be displayed for a list
+		// Search criteria
+//		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
+//		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
 	}
 }
 

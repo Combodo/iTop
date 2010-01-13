@@ -307,7 +307,7 @@ class URP_Dimensions extends UserRightsBaseClass
 		//MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeString("name", array("label"=>"Name", "description"=>"label", "allowed_values"=>null, "sql"=>"name", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("description", array("label"=>"Description", "description"=>"one line description", "allowed_values"=>null, "sql"=>"description", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("type", array("label"=>"Type", "description"=>"class name or data type (projection unit)", "allowed_values"=>new ValueSetEnumClasses('bizmodel', 'String,Integer'), "sql"=>"type", "default_value"=>'String', "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeClass("type", array("label"=>"Type", "description"=>"class name or data type (projection unit)", "class_category"=>"bizmodel", "more_values"=>"String,Integer", "sql"=>"type", "default_value"=>'String', "is_null_allowed"=>false, "depends_on"=>array())));
 
 		//MetaModel::Init_InheritFilters();
 		MetaModel::Init_AddFilterFromAttribute("name");

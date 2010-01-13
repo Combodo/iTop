@@ -342,6 +342,16 @@ class CMDBSource
 		return (strtolower($aFieldData["Null"]) == "yes");
 	}
 
+	public static function HasIndex($sTable, $sField)
+	{
+		$aTableInfo = self::GetTableInfo($sTable);
+		if (empty($aTableInfo)) return false;
+		if (!array_key_exists($sField, $aTableInfo["Fields"])) return false;
+		$aFieldData = $aTableInfo["Fields"][$sField];
+		// $aFieldData could be 'PRI' for the primary key, or 'MUL', or ?
+		return (strlen($aFieldData["Key"]) > 0);
+	}
+
 	// Returns an array of (fieldname => array of field info)
 	public static function GetTableFieldsList($sTable)
 	{

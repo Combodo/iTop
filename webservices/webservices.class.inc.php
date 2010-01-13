@@ -223,6 +223,14 @@ class WebServices
 	protected function LogUsage($sVerb, $oRes)
 	{
 		$oLog = new EventWebService();
+		if ($oRes->IsOk())
+		{
+			$oLog->Set('message', $sVerb.' was successfully invoked');
+		}
+		else
+		{
+			$oLog->Set('message', $sVerb.' returned errors');
+		}
 		$oLog->Set('userinfo', UserRights::GetUser());
 		$oLog->Set('verb', $sVerb);
 		$oLog->Set('result', $oRes->IsOk());
@@ -234,6 +242,29 @@ class WebServices
 	}
 
 	/**
+	 * Helper to set a scalar attribute
+	 *
+	 * @param string sAttCode
+	 * @param scalar value
+	 * @param DBObject oTargetObj
+	 * @param WebServiceResult oRes
+	 *
+	 */
+	protected function MyObjectSetScalar($sAttCode, $sParamName, $value, &$oTargetObj, &$oRes)
+	{
+		if ($oTargetObj->CheckValue($sAttCode, $value))
+		{
+			$oTargetObj->Set($sAttCode, $value);
+		}
+		else
+		{
+			$aAllowedValues = MetaModel::GetAllowedValues_att(get_class($oTargetObj), $sAttCode);
+			$sValues = implode(', ', $aAllowedValues);
+			$oRes->LogError("Parameter $sParamName: found '$value' while expecting a value in {".$sValues."}");
+		}
+	}
+
+	/**
 	 * Helper to set an external key
 	 *
 	 * @param string sAttCode
@@ -242,14 +273,28 @@ class WebServices
 	 * @param WebServiceResult oRes
 	 *
 	 */
-	protected function SetExternalKey($sAttCode, $aExtKeyDesc, &$oTargetObj, &$oRes)
+	protected function MyObjectSetExternalKey($sAttCode, $sParamName, $aExtKeyDesc, &$oTargetObj, &$oRes)
 	{
 		$oExtKey = MetaModel::GetAttributeDef(get_class($oTargetObj), $sAttCode);
 
 		$bIsMandatory = !$oExtKey->IsNullAllowed();
+
+		if (is_null($aExtKeyDesc))
+		{
+			if ($bIsMandatory)
+			{
+				$oRes->LogError("Parameter $sParamName: found null for a mandatory key");
+			}
+			else
+			{
+				// skip silently
+				return;
+			}
+		}
+
 		if (count($aExtKeyDesc) == 0)
 		{
-			$oRes->LogIssue("Ext key $sAttCode: no data was given to give a value to the key", $bIsMandatory);
+			$oRes->LogIssue("Parameter $sParamName: no search condition has been specified", $bIsMandatory);
 			return;
 		}
 
@@ -259,7 +304,8 @@ class WebServices
 		{
 			if (!MetaModel::IsValidFilterCode($sKeyClass, $sForeignAttCode))
 			{
-				$sMsg = "Ext key $sAttCode: '$sForeignAttCode' is not a valid filter code for class '$sKeyClass'";
+				$aCodes = array_keys(MetaModel::GetClassFilterDefs($sKeyClass));
+				$sMsg = "Parameter $sParamName: '$sForeignAttCode' is not a valid filter code for class '$sKeyClass', expecting a value in {".implode(', ', $aCodes)."}";
 				$oRes->LogIssue($sMsg, $bIsMandatory);
 			}
 			// The foreign attribute is one of our reconciliation key
@@ -269,7 +315,7 @@ class WebServices
 		switch($oExtObjects->Count())
 		{
 		case 0:
-			$sMsg = "External key $sAttCode could not be found (searched: '".$oReconFilter->ToOQL()."')";
+			$sMsg = "Parameter $sParamName: no match (searched: '".$oReconFilter->ToOQL()."')";
 			$oRes->LogIssue($sMsg, $bIsMandatory);
 			break;
 		case 1:
@@ -280,11 +326,11 @@ class WebServices
 			// Report it (no need to report if the object already had this value
 			if (array_key_exists($sAttCode, $oTargetObj->ListChanges()))
 			{
-				$oRes->LogInfo("$sAttCode has been set to ".$oForeignObj->GetKey());
+				$oRes->LogInfo("Parameter $sParamName: found match ".get_class($oForeignObj)."::".$oForeignObj->GetKey()." '".$oForeignObj->GetName()."'");
 			}
 			break;
 		default:
-			$sMsg = "Found ".$oExtObjects->Count()." matches for external key $sAttCode (searched: '".$oReconFilter->ToOQL()."')";
+			$sMsg = "Parameter $sParamName: Found ".$oExtObjects->Count()." matches (searched: '".$oReconFilter->ToOQL()."')";
 			$oRes->LogIssue($sMsg, $bIsMandatory);
 		}
 	}
@@ -300,7 +346,7 @@ class WebServices
 	 *
 	 * @return array List of objects that could not be found
 	 */
-	protected function AddLinkedObjects($sLinkAttCode, $sLinkedClass, $aLinkList, &$oTargetObj, &$oRes)
+	protected function AddLinkedObjects($sLinkAttCode, $sParamName, $sLinkedClass, $aLinkList, &$oTargetObj, &$oRes)
 	{
 		$oLinkAtt = MetaModel::GetAttributeDef(get_class($oTargetObj), $sLinkAttCode);
 		$sLinkClass = $oLinkAtt->GetLinkedClass();
@@ -308,22 +354,28 @@ class WebServices
 
 		$aItemsFound = array();
 		$aItemsNotFound = array();
+		
+		if (is_null($aLinkList))
+		{
+			return $aItemsNotFound;
+		}
+
 		foreach ($aLinkList as $aItemData)
 		{
 			if (!array_key_exists('class', $aItemData))
 			{
-				$oRes->LogWarning("Linked object descriptor: missing 'class' specification");
+				$oRes->LogWarning("Parameter $sParamName: missing 'class' specification");
 				continue; // skip
 			}
 			$sTargetClass = $aItemData['class'];
 			if (!MetaModel::IsValidClass($sTargetClass))
 			{
-				$oRes->LogError("Invalid class $sTargetClass for impacted item");
+				$oRes->LogError("Parameter $sParamName: invalid class '$sTargetClass'");
 				continue; // skip
 			}
 			if (!MetaModel::IsParentClass($sLinkedClass, $sTargetClass))
 			{
-				$oRes->LogError("$sTargetClass is not a child class of $sLinkedClass");
+				$oRes->LogError("Parameter $sParamName: '$sTargetClass' is not a child class of '$sLinkedClass'");
 				continue; // skip
 			}
 			$oReconFilter = new CMDBSearchFilter($sTargetClass);
@@ -332,8 +384,9 @@ class WebServices
 			{
 				if (!MetaModel::IsValidFilterCode($sTargetClass, $sAttCode))
 				{
-					$oRes->LogError("Invalid filter code $sAttCode for class $sTargetClass");
-					continue; // skip
+					$aCodes = array_keys(MetaModel::GetClassFilterDefs($sTargetClass));
+					$oRes->LogError("Parameter $sParamName: '$sAttCode' is not a valid filter code for class '$sTargetClass', expecting a value in {".implode(', ', $aCodes)."}");
+					continue 2; // skip the entire item
 				}
 				$aCIStringDesc[] = "$sAttCode: $value";
 
@@ -355,7 +408,7 @@ class WebServices
 			switch($oExtObjects->Count())
 			{
 			case 0:
-				$oRes->LogWarning("Object to link $sLinkedClass / $sItemDesc could not be found (searched: '".$oReconFilter->ToOQL()."')");
+				$oRes->LogWarning("Parameter $sParamName: object to link $sLinkedClass / $sItemDesc could not be found (searched: '".$oReconFilter->ToOQL()."')");
 				$aItemsNotFound[] = $sItemDesc;
 				break;
 			case 1:
@@ -366,7 +419,7 @@ class WebServices
 				);
 				break;
 			default:
-				$oRes->LogWarning("Found ".$oExtObjects->Count()." matches for external key $sAttCode (searched: '".$oReconFilter->ToOQL()."')");
+				$oRes->LogWarning("Parameter $sParamName: Found ".$oExtObjects->Count()." matches for item '$sItemDesc' (searched: '".$oReconFilter->ToOQL()."')");
 				$aItemsNotFound[] = $sItemDesc;
 			}
 		}
@@ -382,7 +435,7 @@ class WebServices
 				{
 					if(!MetaModel::IsValidAttCode($sLinkClass, $sKey))
 					{
-						$oRes->LogWarning("Attaching item '".$aItemData['desc']."', the attribute code '$sKey' is not valid ; check the class '$sLinkClass'");
+						$oRes->LogWarning("Parameter $sParamName: Attaching item '".$aItemData['desc']."', the attribute code '$sKey' is not valid ; check the class '$sLinkClass'");
 					}
 					else
 					{
@@ -398,9 +451,28 @@ class WebServices
 		return $aItemsNotFound;
 	}
 
+	protected function MyObjectInsert($oTargetObj, $sResultLabel, $oChange, &$oRes)
+	{
+		if ($oRes->IsOk())
+		{
+			if ($oTargetObj->CheckToInsert())
+			{
+				$iId = $oTargetObj->DBInsertTrackedNoReload($oChange);
+				$oRes->LogInfo("Created object ".get_class($$oTargetObj)."::$iId");
+				$oRes->AddResultObject($sResultLabel, $oTargetObj);
+			}
+			else
+			{
+				$oRes->LogError("The ticket could not be created due to forbidden values (or inconsistent values)");
+			}
+		}
+	}
+
 
 	static protected function SoapStructToExternalKeySearch(SoapExternalKeySearch $oExternalKeySearch)
 	{
+		if (is_null($oExternalKeySearch)) return null;
+
 		$aRes = array();
 		foreach($oExternalKeySearch->conditions as $oSearchCondition)
 		{
@@ -504,36 +576,26 @@ class WebServices
 			$iChangeId = $oMyChange->DBInsertNoReload();
 	
 			$oNewTicket = MetaModel::NewObject('bizIncidentTicket');
-			$oNewTicket->Set('type', $sType);
-			$oNewTicket->Set('title', $sDescription);
-			$oNewTicket->Set('initial_situation', $sInitialSituation);
-			$oNewTicket->Set('severity', $sSeverity);
+			$this->MyObjectSetScalar('type', 'type', $sType, $oNewTicket, $oRes);
+			$this->MyObjectSetScalar('title', 'title', $sDescription, $oNewTicket, $oRes);
+			$this->MyObjectSetScalar('initial_situation', 'initialsituation', $sInitialSituation, $oNewTicket, $oRes);
+			$this->MyObjectSetScalar('severity', 'severity', $sSeverity, $oNewTicket, $oRes);
 	
-			$this->SetExternalKey('org_id', $aCustomerDesc, $oNewTicket, $oRes);
-			$this->SetExternalKey('caller_id', $aCallerDesc, $oNewTicket, $oRes);
-			$this->SetExternalKey('workgroup_id', $aWorkgroupDesc, $oNewTicket, $oRes);
+			$this->MyObjectSetExternalKey('org_id', 'customer', $aCustomerDesc, $oNewTicket, $oRes);
+			$this->MyObjectSetExternalKey('caller_id', 'caller', $aCallerDesc, $oNewTicket, $oRes);
+			$this->MyObjectSetExternalKey('workgroup_id', 'workgroup', $aWorkgroupDesc, $oNewTicket, $oRes);
 	
-			$aDevicesNotFound = $this->AddLinkedObjects('impacted_infra_manual', 'logInfra', $aImpactedCIs, $oNewTicket, $oRes);
+			$aDevicesNotFound = $this->AddLinkedObjects('impacted_infra_manual', 'impacted_cis', 'logInfra', $aImpactedCIs, $oNewTicket, $oRes);
 			if (count($aDevicesNotFound) > 0)
 			{
-				$oNewTicket->Set('impact', $sImpact.' - Related CIs: '.implode(', ', $aDevicesNotFound));
+				$this->MyObjectSetScalar('impact', 'n/a', $sImpact.' - Related CIs: '.implode(', ', $aDevicesNotFound), $oNewTicket, $oRes);
 			}
 			else
 			{
-				$oNewTicket->Set('impact', $sImpact);
+				$this->MyObjectSetScalar('impact', 'n/a', $sImpact, $oNewTicket, $oRes);
 			}
-	
-			if (!$oNewTicket->CheckToInsert())
-			{
-				$oRes->LogError("The ticket could not be created due to forbidden values (or inconsistent values)");
-			}
-	
-			if ($oRes->IsOk())
-			{
-				$iId = $oNewTicket->DBInsertTrackedNoReload($oMyChange);
-				$oRes->LogInfo("Created ticket #$iId");
-				$oRes->AddResultObject('created', $oNewTicket);
-			}
+
+			$this->MyObjectInsert($oNewTicket, 'created', $oMyChange, $oRes);
 		}
 		catch (CoreException $e)
 		{

@@ -497,6 +497,17 @@ abstract class DBObject
 				}
 			}
 		}
+		elseif ($oAtt->IsWritable() && $oAtt->IsScalar())
+		{
+			$aValues = $oAtt->GetAllowedValues();
+			if (count($aValues) > 0)
+			{
+				if (!array_key_exists($toCheck, $aValues))
+				{
+					return false;
+				}
+			}
+		}
 		return true;
 	}
 	
@@ -690,9 +701,19 @@ abstract class DBObject
 		}
 
 		$this->DBWriteLinks();
-
-		// Reload to update the external attributes
 		$this->m_bIsInDB = true;
+
+		// Activate any existing trigger 
+		$sClass = get_class($this);
+		$oSet = new DBObjectSet(new DBObjectSearch('TriggerOnObjectCreate'));
+		while ($oTrigger = $oSet->Fetch())
+		{
+			if (MetaModel::IsParentClass($oTrigger->Get('target_class'), $sClass))
+			{
+				$oTrigger->DoActivate($this->ToArgs('this'));
+			}
+		}
+
 		return $this->m_iKey;
 	}
 
@@ -849,6 +870,8 @@ abstract class DBObject
 		$aScalarArgs = array();
 		$aScalarArgs[$sArgName] = $this->GetKey();
 		$aScalarArgs[$sArgName.'->id'] = $this->GetKey();
+		$aScalarArgs[$sArgName.'->hyperlink()'] = $this->GetHyperlink();
+		$aScalarArgs[$sArgName.'->name()'] = $this->GetName();
 	
 		$sClass = get_class($this);
 		foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)

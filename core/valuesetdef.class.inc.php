@@ -128,16 +128,23 @@ class ValueSetObjects extends ValueSetDefinition
  */
 class ValueSetEnum extends ValueSetDefinition
 {
+	protected $m_values;
+
 	public function __construct($Values)
 	{
-		if (is_array($Values))
+		$this->m_values = $Values;
+	}
+
+	protected function LoadValues($aArgs)
+	{
+		if (is_array($this->m_values))
 		{
-			$aValues = $Values;
+			$aValues = $this->m_values;
 		}
 		else
 		{
 			$aValues = array();
-			foreach (explode(",", $Values) as $sVal)
+			foreach (explode(",", $this->m_values) as $sVal)
 			{
 				$sVal = trim($sVal);
 				$sKey = $sVal; 
@@ -145,10 +152,6 @@ class ValueSetEnum extends ValueSetDefinition
 			}
 		}
 		$this->m_aValues = $aValues;
-	}
-
-	protected function LoadValues($aArgs)
-	{
 		return true;
 	}
 }
@@ -166,20 +169,25 @@ class ValueSetEnum extends ValueSetDefinition
  */
 class ValueSetEnumClasses extends ValueSetEnum
 {
-	public function __construct($sCategory = '', $sAdditionalValues = '')
-	{
-		// First, build it from the series of additional values
-		parent::__construct($sAdditionalValues);
+	protected $m_sCategories;
 
-		// Second: add the list of classes
-		foreach (MetaModel::GetClasses($sCategory) as $sClass)
-		{
-			$this->m_aValues[$sClass] = MetaModel::GetName($sClass);
-		}
+	public function __construct($sCategories = '', $sAdditionalValues = '')
+	{
+		$this->m_sCategories = $sCategories;
+		parent::__construct($sAdditionalValues);
 	}
 
 	protected function LoadValues($aArgs)
-	{
+	{	
+		// First, get the additional values
+		parent::LoadValues($aArgs);
+
+		// Then, add the classes from the category definition
+		foreach (MetaModel::GetClasses($this->m_sCategories) as $sClass)
+		{
+			$this->m_aValues[$sClass] = MetaModel::GetName($sClass);
+		}
+
 		return true;
 	}
 }

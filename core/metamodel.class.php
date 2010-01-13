@@ -2092,18 +2092,30 @@ abstract class MetaModel
 					{
 						$aErrors[$sClass][] = "field '$sField' could not be found in table '$sTable'";
 						$aSugFix[$sClass][] = "ALTER TABLE `$sTable` ADD `$sField` $sFieldSpecs";
-					}
-					elseif ($oAttDef->IsNullAllowed() != CMDBSource::IsNullAllowed($sTable, $sField))
-					{
-						if ($oAttDef->IsNullAllowed())
+						if ($oAttDef->IsExternalKey())
 						{
-							$aErrors[$sClass][] = "field '$sField' in table '$sTable' could be NULL";
-							$aSugFix[$sClass][] = "ALTER TABLE `$sTable` CHANGE `$sField` `$sField` $sFieldSpecs";
+							$aSugFix[$sClass][] = "ALTER TABLE `$sTable` ADD INDEX (`$sField`)";
 						}
-						else
+					}
+					else
+					{
+						if ($oAttDef->IsNullAllowed() != CMDBSource::IsNullAllowed($sTable, $sField))
 						{
-							$aErrors[$sClass][] = "field '$sField' in table '$sTable' could NOT be NULL";
-							$aSugFix[$sClass][] = "ALTER TABLE `$sTable` CHANGE `$sField` `$sField` $sFieldSpecs";
+							if ($oAttDef->IsNullAllowed())
+							{
+								$aErrors[$sClass][] = "field '$sField' in table '$sTable' could be NULL";
+								$aSugFix[$sClass][] = "ALTER TABLE `$sTable` CHANGE `$sField` `$sField` $sFieldSpecs";
+							}
+							else
+							{
+								$aErrors[$sClass][] = "field '$sField' in table '$sTable' could NOT be NULL";
+								$aSugFix[$sClass][] = "ALTER TABLE `$sTable` CHANGE `$sField` `$sField` $sFieldSpecs";
+							}
+						}
+						if ($oAttDef->IsExternalKey() && !CMDBSource::HasIndex($sTable, $sField))
+						{
+							$aErrors[$sClass][] = "Foreign key '$sField' in table '$sTable' should have an index";
+							$aSugFix[$sClass][] = "ALTER TABLE `$sTable` ADD INDEX (`$sField`)";
 						}
 					}
 				}

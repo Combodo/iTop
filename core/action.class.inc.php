@@ -215,25 +215,28 @@ class ActionEmail extends ActionNotification
 			$sHeaders .= "Bcc: $sBCC\r\n";
 		}
 
-		// Mail it
+		$oLog = new EventNotificationEmail();
 		if (mail($sTo, $sSubject, $sBody, $sHeaders))
 		{
-			$oLog = new EventNotificationEmail();
-			$oLog->Set('userinfo', UserRights::GetUser());
-			$oLog->Set('trigger_id', $oTrigger->GetKey());
-			$oLog->Set('action_id', $this->GetKey());
-			$oLog->Set('object_id', $aContextArgs['this->id']);
-			$oLog->Set('to', $sTo);
-			$oLog->Set('cc', $sCC);
-			$oLog->Set('bcc', $sBCC);
-			$oLog->Set('subject', $sSubject);
-			$oLog->Set('body', $sBody);
-			$oLog->DBInsertNoReload();
+			$oLog->Set('message', 'Notification sent');
 		}
 		else
 		{
-			throw new CoreException('mail not sent', array('action'=>$this->GetKey(), 'to'=>$sTo, 'subject'=>$sSubject, 'headers'=>$sHeaders));
+			$aLastError = error_get_last();
+			$oLog->Set('message', 'Mail could not be sent: '.$aLastError['message']);
+			//throw new CoreException('mail not sent', array('action'=>$this->GetKey(), 'to'=>$sTo, 'subject'=>$sSubject, 'headers'=>$sHeaders));
 		}
+
+		$oLog->Set('userinfo', UserRights::GetUser());
+		$oLog->Set('trigger_id', $oTrigger->GetKey());
+		$oLog->Set('action_id', $this->GetKey());
+		$oLog->Set('object_id', $aContextArgs['this->id']);
+		$oLog->Set('to', $sTo);
+		$oLog->Set('cc', $sCC);
+		$oLog->Set('bcc', $sBCC);
+		$oLog->Set('subject', $sSubject);
+		$oLog->Set('body', $sBody);
+		$oLog->DBInsertNoReload();
 	}
 }
 ?>

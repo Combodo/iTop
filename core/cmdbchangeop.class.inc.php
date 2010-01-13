@@ -304,8 +304,8 @@ class CMDBChangeOpSetAttributeBlob extends CMDBChangeOpSetAttribute
 		$aParams = array
 		(
 			"category" => "core/cmdb",
-			"name" => "object data change",
-			"description" => "Object data change tracking",
+			"name" => "data change",
+			"description" => "data change tracking",
 			"key_type" => "",
 			"key_label" => "",
 			"name_attcode" => "change",
@@ -357,5 +357,71 @@ class CMDBChangeOpSetAttributeBlob extends CMDBChangeOpSetAttribute
 	}
 }
 
+/**
+ * Record the modification of a multiline string (text)
+ *
+ * @package     iTopORM
+ * @author      Romain Quetiez <romainquetiez@yahoo.fr>
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.itop.com
+ * @since       1.0
+ * @version     $itopversion$
+ */
+class CMDBChangeOpSetAttributeText extends CMDBChangeOpSetAttribute
+{
+	public static function Init()
+	{
+		$aParams = array
+		(
+			"category" => "core/cmdb",
+			"name" => "text change",
+			"description" => "text change tracking",
+			"key_type" => "",
+			"key_label" => "",
+			"name_attcode" => "change",
+			"state_attcode" => "",
+			"reconc_keys" => array(),
+			"db_table" => "priv_changeop_setatt_text",
+			"db_key_field" => "id",
+			"db_finalclass_field" => "",
+		);
+		MetaModel::Init_Params($aParams);
+		MetaModel::Init_InheritAttributes();
+		MetaModel::Init_AddAttribute(new AttributeText("prevdata", array("label"=>"Previous data", "description"=>"previous contents of the attribute", "allowed_values"=>null, "sql"=>"prevdata", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+
+		MetaModel::Init_InheritFilters();
+		
+		// Display lists
+		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for a list
+	}
+	
+	/**
+	 * Describe (as a text string) the modifications corresponding to this change
+	 */	 
+	public function GetDescription()
+	{
+		// Temporary, until we change the options of GetDescription() -needs a more global revision
+		$bIsHtml = true;
+		
+		$sResult = '';
+		$oTargetObjectClass = $this->Get('objclass');
+		$oTargetObjectKey = $this->Get('objkey');
+		$oTargetSearch = new DBObjectSearch($oTargetObjectClass);
+		$oTargetSearch->AddCondition('id', $oTargetObjectKey);
+
+		$oMonoObjectSet = new DBObjectSet($oTargetSearch);
+		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES)
+		{
+			$oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
+			$sAttName = $oAttDef->GetLabel();
+			$sTextView = '<div>'.$this->GetAsHtml('prevdata').'</div>';
+
+			//$sDocView = $oPrevDoc->GetDisplayInline(get_class($this), $this->GetKey(), 'prevdata');
+			$sResult = "$sAttName changed, previous value: $sTextView";
+		}
+		return $sResult;
+	}
+}
 
 ?>

@@ -32,15 +32,17 @@ class Event extends cmdbAbstractObject
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
+		MetaModel::Init_AddAttribute(new AttributeString("message", array("label"=>"message", "description"=>"short description of the event", "allowed_values"=>null, "sql"=>"message", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDate("date", array("label"=>"date", "description"=>"date and time at which the changes have been recorded", "allowed_values"=>null, "sql"=>"date", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("userinfo", array("label"=>"user info", "description"=>"identification of the user that was doing the action that triggered this event", "allowed_values"=>null, "sql"=>"userinfo", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 
 		//MetaModel::Init_InheritFilters();
+		MetaModel::Init_AddFilterFromAttribute("message");
 		MetaModel::Init_AddFilterFromAttribute("date");
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('finalclass', 'date', 'userinfo')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('finalclass', 'date')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', array('message', 'date', 'userinfo')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('date', 'finalclass', 'message')); // Attributes to be displayed for a list
 		// Search criteria
 //		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
 //		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form

@@ -582,7 +582,6 @@ class TestMyBizModel extends TestBizModel
 		$this->test_relations();
 		$this->test_linkedset();
 		$this->test_object_lifecycle();
-		return true;
 	}
 }
 
@@ -929,7 +928,7 @@ class TestBulkChangeOnFarm extends TestBizModel
 		$aRes = $oBulk->Process($oMyChange);
 		print_r($aRes);
 
-		return true;
+		return;
 
 		$oRawData = array(
 			'Mammal',
@@ -978,7 +977,6 @@ class TestFullTextSearchOnFarm extends MyFarm
 		$oSearch->AddCondition_FullText('manof');
 		//$oResultSet = new DBObjectSet($oSearch);
 		$this->search_and_show_list($oSearch);
-		return true;
 	}
 }
 
@@ -1103,7 +1101,6 @@ class TestItopEfficiency extends TestBizModel
 			$aData[] = $aValues;
 		}
 		echo MyHelpers::make_table_from_assoc_array($aData);
-		return true;
 	}
 }
 
@@ -1169,8 +1166,6 @@ class TestItopWebServices extends TestWebServices
 		{
 			$this->DoExecSingleLoad($aLoadSpec);
 		}
-
-		return true;
 	}
 }
 
@@ -1178,14 +1173,14 @@ class TestItopWebServices extends TestWebServices
 $aWebServices = array(
 	array(
 		'verb' => 'GetVersion',
-		'expected result' => true,
+		'expected result' => '0.8',
 		'explain result' => 'n/a',
 		'args' => array(),
 	),
 	array(
 		'verb' => 'CreateIncidentTicket',
 		'expected result' => true,
-		'explain result' => 'ok, but link attribute unknown',
+		'explain result' => 'link attribute unknown + a CI not found',
 		'args' => array(
 			'admin', /* sLogin */
 			'admin', /* sPassword */
@@ -1195,7 +1190,7 @@ $aWebServices = array(
 			'very grave', /* sImpact */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 2))), /* aCustomerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aWorkgroupDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'FLS Desktop'))), /* aWorkgroupDesc */
 			array(
 				new SOAPLinkCreationSpec(
 					'logInfra',
@@ -1207,14 +1202,38 @@ $aWebServices = array(
 					array(new SOAPSearchCondition('name', 'Router03')),
 					array(new SOAPAttributeValue('impact', 'who cares'))
 				),
+				new SOAPLinkCreationSpec(
+					'bizDevice',
+					array(new SOAPSearchCondition('name', 'thisone')),
+					array(new SOAPAttributeValue('impact', 'our lives'))
+				),
 			), /* aImpact */
 			'low' /* sSeverity */
 		),
 	),
 	array(
 		'verb' => 'CreateIncidentTicket',
-		'expected result' => true,
-		'explain result' => 'ok, but CI unknown',
+		'expected result' => false,
+		'explain result' => 'caller not specified',
+		'args' => array(
+			'admin', /* sLogin */
+			'admin', /* sPassword */
+			'Desktop', /* sType */
+			'PC burning', /* sDescription */
+			'The power supply suddenly started to warm up', /* sInitialSituation */
+			'The agent could not do his job', /* sImpact */
+			null, /* aCallerDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 2))), /* aCustomerDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'FLS Desktop'))), /* aWorkgroupDesc */
+			array(
+			), /* aImpact */
+			'low' /* sSeverity */
+		),
+	),
+	array(
+		'verb' => 'CreateIncidentTicket',
+		'expected result' => false,
+		'explain result' => 'wrong condition on CI to attach',
 		'args' => array(
 			'admin', /* sLogin */
 			'admin', /* sPassword */
@@ -1224,11 +1243,11 @@ $aWebServices = array(
 			'The agent could not do his job', /* sImpact */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 2))), /* aCustomerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aWorkgroupDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'FLS Desktop'))), /* aWorkgroupDesc */
 			array(
 				new SOAPLinkCreationSpec(
 					'logInfra',
-					array(new SOAPSearchCondition('id', 99999)),
+					array(new SOAPSearchCondition('dummyfiltercode', 2)),
 					array(new SOAPAttributeValue('impact', 'very critical'))
 				),
 			), /* aImpact */
@@ -1237,8 +1256,8 @@ $aWebServices = array(
 	),
 	array(
 		'verb' => 'CreateIncidentTicket',
-		'expected result' => false,
-		'explain result' => 'ok, no CI to attach',
+		'expected result' => true,
+		'explain result' => 'no CI to attach (empty array)',
 		'args' => array(
 			'admin', /* sLogin */
 			'admin', /* sPassword */
@@ -1248,9 +1267,27 @@ $aWebServices = array(
 			'Could not talk to my wife', /* sImpact */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 2))), /* aCustomerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aWorkgroupDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'FLS Desktop'))), /* aWorkgroupDesc */
 			array(
 			), /* aImpact */
+			'low' /* sSeverity */
+		),
+	),
+	array(
+		'verb' => 'CreateIncidentTicket',
+		'expected result' => true,
+		'explain result' => 'no CI to attach (null)',
+		'args' => array(
+			'admin', /* sLogin */
+			'admin', /* sPassword */
+			'Network', /* sType */
+			'Houston not reachable', /* sDescription */
+			'Tried to join the shuttle', /* sInitialSituation */
+			'Could not talk to my wife', /* sImpact */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 2))), /* aCustomerDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'FLS Desktop'))), /* aWorkgroupDesc */
+			null, /* aImpact */
 			'low' /* sSeverity */
 		),
 	),
@@ -1267,10 +1304,29 @@ $aWebServices = array(
 			'Could not talk to my wife', /* sImpact */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1000))), /* aCallerDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 2))), /* aCustomerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aWorkgroupDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'FLS Desktop'))), /* aWorkgroupDesc */
 			array(
 			), /* aImpact */
 			'low' /* sSeverity */
+		),
+	),
+	array(
+		'verb' => 'CreateIncidentTicket',
+		'expected result' => false,
+		'explain result' => 'wrong values for type and severity',
+		'args' => array(
+			'admin', /* sLogin */
+			'admin', /* sPassword */
+			'my type', /* sType */
+			'Houston not reachable', /* sDescription */
+			'Tried to join the shuttle', /* sInitialSituation */
+			'Could not talk to my wife', /* sImpact */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 2))), /* aCustomerDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'FLS Desktop'))), /* aWorkgroupDesc */
+			array(
+			), /* aImpact */
+			'my severity' /* sSeverity */
 		),
 	),
 	array(
@@ -1286,7 +1342,7 @@ $aWebServices = array(
 			'Could not talk to my wife', /* sImpact */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 2))), /* aCustomerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aWorkgroupDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'FLS Desktop'))), /* aWorkgroupDesc */
 			array(
 			), /* aImpact */
 			'low' /* sSeverity */
@@ -1305,7 +1361,7 @@ $aWebServices = array(
 			'Could not talk to my wife', /* sImpact */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 2))), /* aCustomerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aWorkgroupDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'FLS Desktop'))), /* aWorkgroupDesc */
 			array(
 			), /* aImpact */
 			'low' /* sSeverity */
@@ -1321,6 +1377,8 @@ class TestSoap extends TestSoapWebService
 
 	protected function DoExecute()
 	{
+		echo "<p>Note: You may also want to try the sample SOAP client <a href=\"../webservices/itopsoap.examples.php\">itopsoap.examples.php</a></p>\n";
+
 		global $aSOAPMapping;
 
 		// this file is generated dynamically with location = here
@@ -1331,7 +1389,6 @@ class TestSoap extends TestSoapWebService
 		(
 			$sWsdlUri,
 			array(
-				//'uri' => 'http://soap-itop/',
 				'classmap' => $aSOAPMapping,
 				'trace' => 1,
 			)
@@ -1348,6 +1405,7 @@ class TestSoap extends TestSoapWebService
 		foreach ($aWebServices as $iPos => $aWebService)
 		{
 			echo "<h4>SOAP call #$iPos ".$aWebService['explain result']."</h4>\n";
+
 			try
 			{
 				$oRes = call_user_func_array(array($this->m_SoapClient, $aWebService['verb']), $aWebService['args']);
@@ -1359,7 +1417,7 @@ class TestSoap extends TestSoapWebService
 				print "Response: \n".htmlspecialchars($this->m_SoapClient->__getLastResponse())."\n"; 
 				print "</pre>";
 				print "Response in HTML: <p>".$this->m_SoapClient->__getLastResponse()."</p>"; 
-				return false;
+				throw $e;
 			}
 
 			echo "<pre>\n";
@@ -1370,9 +1428,20 @@ class TestSoap extends TestSoapWebService
 			print "Request: \n".htmlspecialchars($this->m_SoapClient->__getLastRequest()) ."\n"; 
 			print "Response: \n".htmlspecialchars($this->m_SoapClient->__getLastResponse())."\n"; 
 			print "</pre>";
-		} 
 
-		return true;
+			if ($oRes instanceof SOAPResult)
+			{
+				$res = $oRes->status;
+			}
+			else
+			{
+				$res = $oRes;
+			}
+			if ($res != $aWebService['expected result'])
+			{
+				throw new UnitTestException("Expecting result '{$aWebService['expected result']}', but got '$res'");
+			}
+		} 
 	}
 }
 

@@ -600,6 +600,30 @@ class AttributeString extends AttributeDBField
 	}
 }
 
+/**
+ * An attibute that matches an object class 
+ *
+ * @package     iTopORM
+ * @author      Romain Quetiez <romainquetiez@yahoo.fr>
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.itop.com
+ * @since       1.0
+ * @version     $itopversion$
+ */
+class AttributeClass extends AttributeString
+{
+	static protected function ListExpectedParams()
+	{
+		return array_merge(parent::ListExpectedParams(), array("class_category", "more_values"));
+	}
+
+	public function __construct($sCode, $aParams)
+	{
+		$this->m_sCode = $sCode;
+		$aParams["allowed_values"] = new ValueSetEnumClasses($aParams['class_category'], $aParams['more_values']);
+		parent::__construct($sCode, $aParams);
+	}
+}
 
 /**
  * Map a varchar column (size < ?) to an attribute that must never be shown to the user 
