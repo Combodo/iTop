@@ -557,7 +557,7 @@ class URP_ClassProjection extends UserRightsBaseClass
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("dimensionid", array("targetclass"=>"URP_Dimensions", "jointype"=> "", "label"=>"Dimension", "description"=>"application dimension", "allowed_values"=>null, "sql"=>"dimensionid", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("dimension", array("label"=>"Dimension", "description"=>"application dimension", "allowed_values"=>null, "extkey_attcode"=> 'dimensionid', "target_attcode"=>"name")));
 
-		MetaModel::Init_AddAttribute(new AttributeString("class", array("label"=>"Class", "description"=>"Target class", "allowed_values"=>null, "sql"=>"class", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeClass("class", array("label"=>"Class", "description"=>"Target class", "class_category"=>"", "more_values"=>"", "sql"=>"class", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 
 		MetaModel::Init_AddAttribute(new AttributeString("value", array("label"=>"Value expression", "description"=>"OQL expression (using \$this) | constant | <any> | <this>+attribute code", "allowed_values"=>null, "sql"=>"value", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("attribute", array("label"=>"Attribute", "description"=>"Target attribute code (optional)", "allowed_values"=>null, "sql"=>"attribute", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
@@ -642,7 +642,7 @@ class URP_ActionGrant extends UserRightsBaseClass
 		// Common to all grant classes (could be factorized by class inheritence, but this has to be benchmarked)
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("profileid", array("targetclass"=>"URP_Profiles", "jointype"=> "", "label"=>"Profile", "description"=>"usage profile", "allowed_values"=>null, "sql"=>"profileid", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("profile", array("label"=>"Profile", "description"=>"usage profile", "allowed_values"=>null, "extkey_attcode"=> 'profileid', "target_attcode"=>"name")));
-		MetaModel::Init_AddAttribute(new AttributeString("class", array("label"=>"Class", "description"=>"class name", "allowed_values"=>null, "sql"=>"class", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeClass("class", array("label"=>"Class", "description"=>"Target class", "class_category"=>"", "more_values"=>"", "sql"=>"class", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("permission", array("label"=>"Permission", "description"=>"allowed or not allowed?", "allowed_values"=>new ValueSetEnum('yes,no'), "sql"=>"permission", "default_value"=>"yes", "is_null_allowed"=>false, "depends_on"=>array())));
 
 		MetaModel::Init_AddAttribute(new AttributeString("action", array("label"=>"Action", "description"=>"operations to perform on the given class", "allowed_values"=>null, "sql"=>"action", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
@@ -691,7 +691,7 @@ class URP_StimulusGrant extends UserRightsBaseClass
 		// Common to all grant classes (could be factorized by class inheritence, but this has to be benchmarked)
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("profileid", array("targetclass"=>"URP_Profiles", "jointype"=> "", "label"=>"Profile", "description"=>"usage profile", "allowed_values"=>null, "sql"=>"profileid", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("profile", array("label"=>"Profile", "description"=>"usage profile", "allowed_values"=>null, "extkey_attcode"=> 'profileid', "target_attcode"=>"name")));
-		MetaModel::Init_AddAttribute(new AttributeString("class", array("label"=>"Class", "description"=>"class name", "allowed_values"=>null, "sql"=>"class", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeClass("class", array("label"=>"Class", "description"=>"Target class", "class_category"=>"", "more_values"=>"", "sql"=>"class", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("permission", array("label"=>"Permission", "description"=>"allowed or not allowed?", "allowed_values"=>new ValueSetEnum('yes,no'), "sql"=>"permission", "default_value"=>"yes", "is_null_allowed"=>false, "depends_on"=>array())));
 
 		MetaModel::Init_AddAttribute(new AttributeString("stimulus", array("label"=>"Stimulus", "description"=>"stimulus code", "allowed_values"=>null, "sql"=>"action", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
@@ -1398,7 +1398,7 @@ class SetupITILProfiles
 			'bizOrganization',
 		),
 		'Documentation' => array(
-			'bizDocVersion',
+			'bizDocument',
 			'lnkDocumentRealObject',
 			'lnkDocumentContract',
 			'lnkDocumentError',
@@ -1406,8 +1406,8 @@ class SetupITILProfiles
 		'Configuration' => array(
 			'logRealObject',
 			'lnkContactRealObject',
-			'lnkInterfaces',
-			'ClientServerLinks',
+//			'lnkInterfaces',
+			'lnkClientServer',
 			'lnkInfraGrouping',
 		),
 		'Incident' => array(
@@ -1464,7 +1464,7 @@ class SetupITILProfiles
 	*/
 		'Service Desk Agent' => array(
 			'description' => 'Person in charge of creating incident reports',
-			'write_modules' => 'Documentation,Incident,Call',
+			'write_modules' => 'Incident,Call',
 			'stimuli' => array(
 				'bizServer' => 'none',
 				'bizContract' => 'none',
@@ -1475,7 +1475,7 @@ class SetupITILProfiles
 		),
 		'Support Agent' => array(
 			'description' => 'Person analyzing and solving the current incidents or problems',
-			'write_modules' => 'Documentation,Incident,Problem',
+			'write_modules' => 'Incident,Problem',
 			'stimuli' => array(
 				'bizIncidentTicket' => 'any',
 				//'bizIncidentTicket' => 'ev_assign,ev_reassign,ev_start_working,ev_close',
@@ -1483,7 +1483,7 @@ class SetupITILProfiles
 		),
 		'Change Implementor' => array(
 			'description' => 'Person executing the changes',
-			'write_modules' => 'Documentation,Configuration,Change',
+			'write_modules' => 'Change',
 			'stimuli' => array(
 				'bizServer' => 'none',
 				'bizContract' => 'none',
@@ -1493,7 +1493,7 @@ class SetupITILProfiles
 		),
 		'Change Supervisor' => array(
 			'description' => 'Person responsible for the overall change execution',
-			'write_modules' => 'Documentation,Change',
+			'write_modules' => 'Change',
 			'stimuli' => array(
 				'bizServer' => 'none',
 				'bizContract' => 'none',
@@ -1503,7 +1503,7 @@ class SetupITILProfiles
 		),
 		'Change Approver' => array(
 			'description' => 'Person who could be impacted by some changes',
-			'write_modules' => 'Documentation,Change',
+			'write_modules' => 'Change',
 			'stimuli' => array(
 				'bizServer' => 'none',
 				'bizContract' => 'none',
@@ -1513,13 +1513,19 @@ class SetupITILProfiles
 		),
 		'Service Manager' => array(
 			'description' => 'Person responsible for the service delivered to the [internal] customer',
-			'write_modules' => 'Documentation,Service',
+			'write_modules' => 'Service',
 			'stimuli' => array(
 				'bizServer' => 'none',
 				'bizContract' => 'any',
 				//'bizContract' => 'ev_freeze_version,ev_sign,ev_begin,ev_notice,ev_terminate,ev_elapsed',
 				'bizIncidentTicket' => 'none',
 				'bizChangeTicket' => 'none',
+			),
+		),
+		'Document author' => array(
+			'description' => 'Any person who could contribute to documentation',
+			'write_modules' => 'Documentation',
+			'stimuli' => array(
 			),
 		),
 	);
@@ -1632,6 +1638,10 @@ class SetupITILProfiles
 		}
 		foreach ($aWriteableClasses as $sClass)
 		{
+			if (!MetaModel::IsValidClass($sClass))
+			{
+				throw new CoreException("Invalid class name '$sClass'");
+			}
 			self::DoCreateActionGrant($iProfile, UR_ACTION_MODIFY, $sClass);
 			self::DoCreateActionGrant($iProfile, UR_ACTION_DELETE, $sClass);
 			self::DoCreateActionGrant($iProfile, UR_ACTION_BULK_MODIFY, $sClass);
@@ -1641,6 +1651,11 @@ class SetupITILProfiles
 		// Grant stimuli for given classes
 		foreach ($aStimuli as $sClass => $sAllowedStimuli)
 		{
+			if (!MetaModel::IsValidClass($sClass))
+			{
+				throw new CoreException("Invalid class name '$sClass'");
+			}
+
 			if ($sAllowedStimuli == 'any')
 			{
 				$aAllowedStimuli = array_keys(MetaModel::EnumStimuli($sClass));
@@ -1669,6 +1684,10 @@ class SetupITILProfiles
 			
 			foreach($aClass as $sClass)
 			{
+				if (!MetaModel::IsValidClass($sClass))
+				{
+					throw new CoreException("Invalid class name '$sClass'");
+				}
 				self::DoCreateClassProjection($iDimension, $sClass);
 			}
 		}
