@@ -1498,7 +1498,7 @@ class SetupITILProfiles
 				'bizServer' => 'none',
 				'bizContract' => 'none',
 				'bizIncidentTicket' => 'none',
-				'bizChangeTicket' => 'ev_validate,ev_reject,ev_reopen,ev_finish',
+				'bizChangeTicket' => 'ev_assign,ev_validate,ev_reject,ev_reopen,ev_finish',
 			),
 		),
 		'Change Approver' => array(
