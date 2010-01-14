@@ -153,15 +153,13 @@ function CheckServerConnection(setup_web_page $oP, $sDBServer, $sDBUser, $sDBPwd
 			}
 			else if($iMaxAllowedPacket < $iMaxUploadSize)
 			{
-				$oP->warning("MySQL server's max_allowed_packet ($iMaxAllowedPacket) is not big enough.");
-				$oP->warning("Consider setting it to at least ".(500 + $iMaxUploadSize).".");
+				$oP->warning("MySQL server's max_allowed_packet ($iMaxAllowedPacket) is not big enough. Please, consider setting it to at least ".(500 + $iMaxUploadSize).".");
 			}
 			$oP->log("Info - MySQL max_allowed_packet: $iMaxAllowedPacket");
 			$iMaxConnections = $oDBSource->GetServerVariable('max_connections');
 			if ($iMaxConnections < 5)
 			{
-				$oP->warning("MySQL server's max_connections ($iMaxConnections) is not enough.");
-				$oP->warning("Consider setting it to at least 5.");
+				$oP->warning("MySQL server's max_connections ($iMaxConnections) is not enough. Please, consider setting it to at least 5.");
 			}
 			$oP->log("Info - MySQL max_connections: ".($oDBSource->GetServerVariable('max_connections')));
 		}

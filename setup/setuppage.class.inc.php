@@ -18,6 +18,7 @@ body {
 	margin: 0;
 	padding: 0;
 	font-size: 10pt;
+	overflow-y: auto;
 }
 #setup {
 	width: 600px;
@@ -50,27 +51,23 @@ button {
 }
 p.info {
 	padding-left: 50px;
-	background: url(../images/info-mid.png) no-repeat top left;
+	background: url(../images/info-mid.png) no-repeat left -5px;
 	height: 48px;
-	line-height: 48px;
 }
 p.ok {
 	padding-left: 50px;
-	background: url(../images/clean-mid.png) no-repeat top left;
+	background: url(../images/clean-mid.png) no-repeat left -8px;
 	height: 48px;
-	line-height: 48px;
 }
 p.warning {
 	padding-left: 50px;
-	background: url(../images/messagebox_warning-mid.png) no-repeat top left;
+	background: url(../images/messagebox_warning-mid.png) no-repeat left -5px;
 	height: 48px;
-	line-height: 48px;
 }
 p.error {
 	padding-left: 50px;
-	background: url(../images/stop-mid.png) no-repeat top left;
+	background: url(../images/stop-mid.png) no-repeat left -5px;
 	height: 48px;
-	line-height: 48px;
 }
 td.label {
 	text-align: left;
