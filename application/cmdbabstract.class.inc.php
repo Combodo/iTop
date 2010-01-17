@@ -110,6 +110,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 					}
 					// Use the "name" of the target class as the label of the hyperlink
 					// unless it's not available in the external fields...
+					$sExtClassNameAtt = MetaModel::GetNameAttributeCode($sTargetClass);
 					if (isset($aAvailableFields[$sExtClassNameAtt]))
 					{
 						$sDisplayValue = $aAvailableFields[$sExtClassNameAtt];
@@ -357,13 +358,13 @@ abstract class cmdbAbstractObject extends CMDBObject
 			// Then display all the attributes linked to the other end of the relationship
 			$aList = $aDisplayList;
 		}
+		if ($bSelectMode)
+		{
+			$aAttribs['form::select'] = array('label' => "<input type=\"checkbox\" onChange=\"var value = this.checked; $('.selectList{$iListId}').each( function() { this.checked = value; } );\"></input>", 'description' => 'Select / Deselect All');
+		}
+		$aAttribs['key'] = array('label' => '', 'description' => 'Click to display');
 		foreach($aList as $sAttCode)
 		{
-			if ($bSelectMode)
-			{
-				$aAttribs['form::select'] = array('label' => "<input type=\"checkbox\" onChange=\"var value = this.checked; $('.selectList{$iListId}').each( function() { this.checked = value; } );\"></input>", 'description' => 'Select / Deselect All');
-			}
-			$aAttribs['key'] = array('label' => '', 'description' => 'Click to display');
 			$aAttribs[$sAttCode] = array('label' => MetaModel::GetLabel($sClassName, $sAttCode), 'description' => MetaModel::GetDescription($sClassName, $sAttCode));
 		}
 		$aValues = array();
@@ -379,6 +380,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		}
 		while (($oObj = $oSet->Fetch()) && ($iMaxObjects != 0))
 		{
+			$aRow = array();
 			$aRow['key'] = $oObj->GetKey();
 			if ($bSelectMode)
 			{
