@@ -5,7 +5,7 @@ require_once("../application/applicationcontext.class.inc.php");
 /**
  * Web page with some associated CSS and scripts (jquery) for a fancier display
  */
-class iTopWebPage extends nice_web_page
+class iTopWebPage extends NiceWebPage
 {
 	private $m_sMenu;
 	private $m_currentOrganization;
@@ -156,7 +156,12 @@ EOF
 			}
 			$this->AddToMenu("<option value=\"".$oOrg->GetKey()."\"$sSelected>".$oOrg->Get('name')."</option>\n");
 		}
-		$this->AddToMenu("</select></form>\n");
+		$this->AddToMenu("</select>\n");
+		// Add other dimensions/context information to this form
+		$oAppContext = new ApplicationContext();
+		$oAppContext->Reset('org_id'); // Org id is handled above and we want to be able to change it here !
+		$this->AddToMenu($oAppContext->GetForForm());		
+		$this->AddToMenu("</form>\n");
 		$this->AddToMenu("</div>\n");
 		$this->AddToMenu("<ul id=\"browser\" class=\"dir\">\n");
 
