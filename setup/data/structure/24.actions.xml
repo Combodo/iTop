@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<ActionEmail id="1">
+<name>Simple eMail</name>
+<description>Default eMail action, tailor it to fit your needs</description>
+<from></from>
+<reply_to></reply_to>
+<to>SELECT bizContact AS C WHERE C.id = :this-&gt;caller_id</to>
+<cc></cc>
+<bcc></bcc>
+<subject>New iTop ticket [$this-&gt;severity$]: $this-&gt;name$, $this-&gt;title$</subject>
+<body>&lt;h1&gt;A new iTop incident has been created: $this-&gt;name$&lt;/h1&gt;
+&lt;p&gt;Description: $this-&gt;title$&lt;/p&gt;
+&lt;p&gt;Initial situation: &lt;pre&gt;$this-&gt;initial_situation$&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;Ticket Type: $this-&gt;type$&lt;/p&gt;
+&lt;p&gt;Ticket assigned to: $this-&gt;workgroup_name$&lt;/p&gt;
+&lt;hr/&gt;
+&lt;p&gt;More information: $this-&gt;hyperlink()$&lt;/p&gt;</body>
+<importance>normal</importance>
+</ActionEmail>
+</Set>
