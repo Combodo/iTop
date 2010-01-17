@@ -35,7 +35,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 
 	protected static function MakeHyperLink($sObjClass, $sObjKey, $aAvailableFields)
 	{
-		if ($sObjKey == 0) return '<em>undefined</em>';
+		if ($sObjKey <= 0) return '<em>undefined</em>'; // Objects built in memory have negative IDs
 
 		$oAppContext = new ApplicationContext();	
 		$sExtClassNameAtt = MetaModel::GetNameAttributeCode($sObjClass);
@@ -89,23 +89,35 @@ abstract class cmdbAbstractObject extends CMDBObject
 			
 			if ($oAtt->IsExternalKey())
 			{
-				// retrieve the "external fields" linked to this external key
 				$sTargetClass = $oAtt->GetTargetClass();
-				$aAvailableFields = array();
-				foreach (MetaModel::GetExternalFields(get_class($this), $sAttCode) as $oExtField)
+				if ($this->IsNew())
 				{
-					$aAvailableFields[$oExtField->GetExtAttCode()] = $oExtField->GetAsHTML($this->Get($oExtField->GetCode()));
-				}
-				$sExtClassNameAtt = MetaModel::GetNameAttributeCode($sTargetClass);
-				// Use the "name" of the target class as the label of the hyperlink
-				// unless it's not available in the external fields...
-				if (isset($aAvailableFields[$sExtClassNameAtt]))
-				{
-					$sDisplayValue = $aAvailableFields[$sExtClassNameAtt];
+					// The current object exists only in memory, don't try to query it in the DB !
+					// instead let's query for the object pointed by the external key, and get its name
+					$targetObjId = $this->Get($sAttCode);
+					$oTargetObj = MetaModel::GetObject($sTargetClass, $targetObjId, false); // false => not sure it exists
+					if (is_object($oTargetObj))
+					{
+						$sDisplayValue = $oTargetObj->GetName();
+					}					
 				}
 				else
 				{
-					$sDisplayValue = implode(' / ', $aAvailableFields);
+					// retrieve the "external fields" linked to this external key
+					foreach (MetaModel::GetExternalFields(get_class($this), $sAttCode) as $oExtField)
+					{
+						$aAvailableFields[$oExtField->GetExtAttCode()] = $oExtField->GetAsHTML($this->Get($oExtField->GetCode()));
+					}
+					// Use the "name" of the target class as the label of the hyperlink
+					// unless it's not available in the external fields...
+					if (isset($aAvailableFields[$sExtClassNameAtt]))
+					{
+						$sDisplayValue = $aAvailableFields[$sExtClassNameAtt];
+					}
+					else
+					{
+						$sDisplayValue = implode(' / ', $aAvailableFields);
+					}
 				}
 			}
 			else
