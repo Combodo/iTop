@@ -7,7 +7,7 @@
 <itopblock blockclass="DisplayBlock" asynchronous="false" type="bare_details" encoding="text/oql">SELECT bizNetworkDevice WHERE id = $pkey$</itopblock>
 <itoptabs>
 	<itoptab name="Interfaces">
-		<itopblock blockclass="DisplayBlock" type="list" encoding="text/oql" linkage="device_id">SELECT bizInterface WHERE device_id = $pkey$</itopblock>
+		<itopblock blockclass="DisplayBlock" type="list" encoding="text/oql" nolinkage="device_id" object_id="$pkey$" target_attr="device_id">SELECT bizInterface WHERE device_id = $pkey$</itopblock>
 	</itoptab>
 	<itoptab name="Contacts">
 		<itopblock blockclass="DisplayBlock" type="links" link_attr="infra_id" object_id="$pkey$" target_attr="contact_id" encoding="text/oql">SELECT lnkContactInfra WHERE infra_id = $pkey$</itopblock>

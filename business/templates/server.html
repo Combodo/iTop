@@ -7,10 +7,10 @@
 <itopblock blockclass="DisplayBlock" asynchronous="false" type="bare_details" encoding="text/oql">SELECT bizServer WHERE id = $pkey$</itopblock>
 <itoptabs>
 	<itoptab name="Applications">
-		<itopblock blockclass="DisplayBlock" type="list" encoding="text/oql">SELECT bizApplication WHERE device_id = $pkey$</itopblock>
+		<itopblock blockclass="DisplayBlock" type="list" encoding="text/oql" object_id="$pkey$" target_attr="device_id">SELECT bizApplication WHERE device_id = $pkey$</itopblock>
 	</itoptab>
 	<itoptab name="Patches">
-		<itopblock blockclass="DisplayBlock" type="list" encoding="text/oql">SELECT bizPatch WHERE device_id = $pkey$</itopblock>
+		<itopblock blockclass="DisplayBlock" type="list" encoding="text/oql" object_id="$pkey$" target_attr="device_id">SELECT bizPatch WHERE device_id = $pkey$</itopblock>
 	</itoptab>
 	<itoptab name="Interfaces">
 		<itopblock blockclass="DisplayBlock" type="list" encoding="text/oql" object_id="$pkey$" target_attr="device_id">SELECT bizInterface WHERE device_id = $pkey$</itopblock>
@@ -22,7 +22,7 @@
 		<itopblock blockclass="DisplayBlock" type="links" link_attr="infra_id" object_id="$pkey$" target_attr="ticket_id" encoding="text/oql">SELECT lnkInfraTicket WHERE infra_id = $pkey$</itopblock>
 	</itoptab>
 	<itoptab name="Changes">
-		<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">bizChangeTicket: PKEY IS ticket_id IN (lnkInfraChangeTicket: infra_id = $pkey$)</itopblock>
+		<itopblock blockclass="DisplayBlock" type="list" encoding="text/oql">SELECT bizChangeTicket AS Change JOIN lnkInfraChangeTicket AS Link ON Link.ticket_id = Change.id WHERE Link.infra_id = $pkey$</itopblock>
 	</itoptab>
 	<itoptab name="Groups">
 		<itopblock blockclass="DisplayBlock" type="links" link_attr="infra_id" object_id="$pkey$" target_attr="infra_group_id" encoding="text/oql">SELECT lnkInfraGrouping WHERE infra_id = $pkey$</itopblock>
