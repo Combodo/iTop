@@ -68,6 +68,8 @@ class Config
 		$this->m_sDBSubname = '';
 		$this->m_iMinDisplayLimit = DEFAULT_MIN_DISPLAY_LIMIT;
 		$this->m_iMaxDisplayLimit = DEFAULT_MAX_DISPLAY_LIMIT;
+		$this->m_iStandardReloadInterval = DEFAULT_STANDARD_RELOAD_INTERVAL;
+		$this->m_iFastReloadInterval = DEFAULT_FAST_RELOAD_INTERVAL;
 		if ($bLoadConfig)
 		{
 			$this->Load($sConfigFile);
