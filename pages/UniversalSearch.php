@@ -6,7 +6,7 @@ require_once('../application/applicationcontext.class.inc.php');
 require_once('../application/startup.inc.php');
 
 require_once('../application/loginwebpage.class.inc.php');
-login_web_page::DoLogin(); // Check user rights and prompt if needed
+LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
 $oContext = new UserContext();
 $oAppContext = new ApplicationContext();
@@ -20,14 +20,14 @@ $oP = new iTopWebPage("iTop - Universal search", $currentOrganization);
 // Now render the content of the page
 $sOQLClass = utils::ReadParam('oql_class', 'bizOrganization');
 $sOQLClause = utils::ReadParam('oql_clause', '');
-$sClassName = utils::ReadParam('class', $sOQLClass);
+$sClassName = $sOQLClass; //utils::ReadParam('class', $sOQLClass);
 $sFilter = utils::ReadParam('filter', '');
 $sOperation = utils::ReadParam('operation', '');
 
 // First part: select the class to search for
 $oP->add("<form>");
 $oP->add("<input type=\"hidden\" name=\"org_id\" value=\"$currentOrganization\" />");
-$oP->add("Select the class to search: <select style=\"width: 150px;\" id=\"select_class\" name=\"class\" onChange=\"this.form.submit();\">");
+$oP->add("Select the class to search: <select style=\"width: 150px;\" id=\"select_class\" name=\"oql_class\" onChange=\"this.form.submit();\">");
 $aClassLabels = array();
 foreach(MetaModel::GetClasses('bizmodel') as $sClass)
 {
@@ -73,7 +73,11 @@ if ($oFilter != null)
 {
 	$oSet = new CMDBObjectSet($oFilter);
 	$oBlock = new DisplayBlock($oFilter, 'search', false);
-	$oBlock->Display($oP, 0, array('open' => true));
+	$aExtraParams = $oAppContext->GetAsHash();
+	$aExtraParams['open'] = true;
+	$aExtraParams['oql_class'] = $sOQLClass;
+	//$aExtraParams['class'] = $sClassName;
+	$oBlock->Display($oP, 0, $aExtraParams);
 
 	// Search results	
 	$oResultBlock = new DisplayBlock($oFilter, 'list', false);
