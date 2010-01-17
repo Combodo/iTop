@@ -112,13 +112,14 @@ class EventNotificationEmail extends EventNotification
 		MetaModel::Init_AddAttribute(new AttributeText("to", array("label"=>"TO", "description"=>"TO", "allowed_values"=>null, "sql"=>"to", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("cc", array("label"=>"CC", "description"=>"CC", "allowed_values"=>null, "sql"=>"cc", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("bcc", array("label"=>"BCC", "description"=>"BCC", "allowed_values"=>null, "sql"=>"bcc", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeText("from", array("label"=>"From", "description"=>"Sender of the message", "allowed_values"=>null, "sql"=>"from", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("subject", array("label"=>"Subject", "description"=>"Subject", "allowed_values"=>null, "sql"=>"subject", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("body", array("label"=>"Body", "description"=>"Body", "allowed_values"=>null, "sql"=>"body", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 
 		MetaModel::Init_InheritFilters();
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'trigger_id', 'action_id', 'object_id', 'to', 'cc', 'bcc', 'subject', 'body')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'trigger_id', 'action_id', 'object_id', 'from', 'to', 'cc', 'bcc', 'subject', 'body')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('date', 'userinfo', 'subject')); // Attributes to be displayed for a list
 		// Search criteria
 //		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form

@@ -231,6 +231,7 @@ class ActionEmail extends ActionNotification
 		$oLog->Set('trigger_id', $oTrigger->GetKey());
 		$oLog->Set('action_id', $this->GetKey());
 		$oLog->Set('object_id', $aContextArgs['this->id']);
+		$oLog->Set('from', $sFrom);
 		$oLog->Set('to', $sTo);
 		$oLog->Set('cc', $sCC);
 		$oLog->Set('bcc', $sBCC);
