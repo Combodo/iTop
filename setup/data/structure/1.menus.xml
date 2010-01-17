@@ -954,7 +954,7 @@ display: list-item;
 &lt;h1&gt;Configuration of the &lt;span class=&quot;hilite&quot;&gt;Notifications&lt;/span&gt;&lt;/h1&gt;
 &lt;/div&gt;
 &lt;itoptoggle name=&quot;Help&quot; open=&quot;true&quot;&gt;
-&lt;div style=&quot;padding: 1em; font-size:1.25em;background: #E8F3CF;margin-top: 0.25em;&quot;&gt;
+&lt;div style=&quot;padding: 1em; font-size:1.25em;background:#E8F3CF;margin-top: 0.25em;&quot;&gt;
 &lt;img src=&quot;../images/bell.png&quot; style=&quot;margin-top: -60px; margin-right: 10px; float: right;&quot;&gt;
 &lt;p&gt;In iTop the notifications are fully customizable. They are based on two sets of objects: &lt;i&gt;triggers and actions&lt;/i&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;i&gt;&lt;b&gt;Triggers&lt;/b&gt;&lt;/i&gt; define when a notification will be executed. There are 3 types of triggers for covering 3 differents phases of an object life cycle:
@@ -976,14 +976,18 @@ When associated with a trigger, each action is given an &apos;order&apos; number
 &lt;itoptabs&gt;
 	&lt;itoptab name=&quot;Triggers&quot;&gt;
 		&lt;h3&gt;Available Triggers&lt;/h3&gt;
-		&lt;table&gt;
+		&lt;table style=&quot;border:0;border-spacing:10px;width:100%;&quot;&gt;
 		&lt;tr&gt;
-		&lt;td style=&quot;vertical-align:top;width:50%;padding:1em;&quot;&gt;
-		&lt;h4&gt;When entering a state&lt;/h4&gt;
+		&lt;td style=&quot;vertical-align:top;width:33%;padding:10px;background:#f8f8f8;&quot;&gt;
+		&lt;h4&gt;When an object is created&lt;/h4&gt;
+		&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT TriggerOnObjectCreate&lt;/itopblock&gt;
+		&lt;/td&gt;
+		&lt;td style=&quot;vertical-align:top;width:33%;padding:10px;background:#f8f8f8;&quot;&gt;
+		&lt;h4&gt;When an object enters a state&lt;/h4&gt;
 		&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT TriggerOnStateEnter&lt;/itopblock&gt;
 		&lt;/td&gt;
-		&lt;td style=&quot;vertical-align:top;width:50%;padding:1em;&quot;&gt;
-		&lt;h4&gt;When leaving a state&lt;/h4&gt;
+		&lt;td style=&quot;vertical-align:top;width:33%;padding:10px;background:#f8f8f8;&quot;&gt;
+		&lt;h4&gt;When an object leaves a state&lt;/h4&gt;
 		&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT TriggerOnStateLeave&lt;/itopblock&gt;
 		&lt;/td&gt;
 		&lt;/tr&gt;
@@ -993,8 +997,7 @@ When associated with a trigger, each action is given an &apos;order&apos; number
 		&lt;h3&gt;Available Actions&lt;/h3&gt;
 		&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT ActionEmail&lt;/itopblock&gt;
 	&lt;/itoptab&gt;
-&lt;/itoptabs&gt;
-</template>
+&lt;/itoptabs&gt;</template>
 <type>administrator</type>
 <rank>2</rank>
 <parent_id>1</parent_id>
