@@ -116,7 +116,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		return $sDisplayValue;
 	}
 
-	function DisplayBareHeader(web_page $oPage)
+	function DisplayBareHeader(WebPage $oPage)
 	{
 		// Standard Header with name, actions menu and history block
 		//
@@ -140,12 +140,12 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$oPage->add("</div>\n");
 	}
 
-	function DisplayBareDetails(web_page $oPage)
+	function DisplayBareDetails(WebPage $oPage)
 	{
 		$oPage->add($this->GetBareDetails($oPage));		
 	}
 
-	function DisplayBareRelations(web_page $oPage)
+	function DisplayBareRelations(WebPage $oPage)
 	{
 		// Related objects
 		$oPage->AddTabContainer('Related Objects');
@@ -197,7 +197,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		return $sDisplayName;
 	}
 
-	function GetBareDetails(web_page $oPage)
+	function GetBareDetails(WebPage $oPage)
 	{
 		$sHtml = '';
 		$oAppContext = new ApplicationContext();	
@@ -244,7 +244,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 	}
 
 	
-	function DisplayDetails(web_page $oPage)
+	function DisplayDetails(WebPage $oPage)
 	{
 		$sTemplate = Utils::ReadFromFile(MetaModel::GetDisplayTemplate(get_class($this)));
 		if (!empty($sTemplate))
@@ -262,7 +262,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		}
 	}
 	
-	function DisplayPreview(web_page $oPage)
+	function DisplayPreview(WebPage $oPage)
 	{
 		$aDetails = array();
 		$sClass = get_class($this);
@@ -276,13 +276,13 @@ abstract class cmdbAbstractObject extends CMDBObject
 	
 	// Comment by Rom: this helper may be used to display objects of class DBObject
 	//                 -> I am using this to display the changes history
-	public static function DisplaySet(web_page $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
+	public static function DisplaySet(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
 		$oPage->add(self::GetDisplaySet($oPage, $oSet, $aExtraParams));
 	}
 	
-	//public static function GetDisplaySet(web_page $oPage, CMDBObjectSet $oSet, $sLinkageAttribute = '', $bDisplayMenu = true, $bSelectMode = false)
-	public static function GetDisplaySet(web_page $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
+	//public static function GetDisplaySet(WebPage $oPage, CMDBObjectSet $oSet, $sLinkageAttribute = '', $bDisplayMenu = true, $bSelectMode = false)
+	public static function GetDisplaySet(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
 		static $iListId = 0;
 		$iListId++;
@@ -418,7 +418,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		return $sHtml;
 	}
 	
-	static function DisplaySetAsCSV(web_page $oPage, CMDBObjectSet $oSet, $aParams = array())
+	static function DisplaySetAsCSV(WebPage $oPage, CMDBObjectSet $oSet, $aParams = array())
 	{
 		$oPage->add(self::GetSetAsCSV($oSet, $aParams));
 	}
@@ -455,7 +455,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		return $sHtml;
 	}
 	
-	static function DisplaySetAsXML(web_page $oPage, CMDBObjectSet $oSet, $aParams = array())
+	static function DisplaySetAsXML(WebPage $oPage, CMDBObjectSet $oSet, $aParams = array())
 	{
 		$oAppContext = new ApplicationContext();
 		$sClassName = $oSet->GetFilter()->GetClass();
@@ -480,7 +480,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 	}
 
 	// By rom
-	function DisplayChangesLog(web_page $oPage)
+	function DisplayChangesLog(WebPage $oPage)
 	{
 		$oFltChangeOps = new CMDBSearchFilter('CMDBChangeOpSetAttribute');
 		$oFltChangeOps->AddCondition('objkey', $this->GetKey(), '=');
@@ -498,13 +498,13 @@ abstract class cmdbAbstractObject extends CMDBObject
 		}
 	}
 	
-	public static function DisplaySearchForm(web_page $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
+	public static function DisplaySearchForm(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
 
 		$oPage->add(self::GetSearchForm($oPage, $oSet, $aExtraParams));
 	}
 	
-	public static function GetSearchForm(web_page $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
+	public static function GetSearchForm(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
 		static $iSearchFormId = 0;
 		$oAppContext = new ApplicationContext();
@@ -755,7 +755,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		return $sHTMLValue;
 	}
 	
-	public function DisplayModifyForm(web_page $oPage)
+	public function DisplayModifyForm(WebPage $oPage)
 	{
 		static $iFormId = 0;
 		$iFormId++;
@@ -812,7 +812,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$oPage->add("</form>\n");
 	}
 	
-	public static function DisplayCreationForm(web_page $oPage, $sClass, $oObjectToClone = null, $aArgs = array())
+	public static function DisplayCreationForm(WebPage $oPage, $sClass, $oObjectToClone = null, $aArgs = array())
 	{
 		static $iCreationFormId = 0;
 

@@ -296,7 +296,7 @@ $oPage->output();
 /**
  * Downloads a document to the browser, either as 'inline' or 'attachment'
  *  
- * @param web_page $oPage The web page for the output
+ * @param WebPage $oPage The web page for the output
  * @param UserContext $oContext The current User/security context to retreive the objects
  * @param string $sClass Class name of the object
  * @param mixed $id Identifier of the object
@@ -304,7 +304,7 @@ $oPage->output();
  * @param string $sContentDisposition Either 'inline' or 'attachment'
  * @return none
  */   
-function DownloadDocument(web_page $oPage, UserContext $oContext, $sClass, $id, $sAttCode, $sContentDisposition = 'attachement')
+function DownloadDocument(WebPage $oPage, UserContext $oContext, $sClass, $id, $sAttCode, $sContentDisposition = 'attachement')
 {
 	try
 	{

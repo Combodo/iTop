@@ -9,7 +9,7 @@ function ReadParam($sName, $defaultValue = "")
 	return isset($_REQUEST[$sName]) ? $_REQUEST[$sName] : $defaultValue;
 }
 
-$oPage = new nice_web_page("Asynchronous versus asynchronous DisplayBlocks");
+$oPage = new NiceWebPage("Asynchronous versus asynchronous DisplayBlocks");
 $oPage->no_cache();
 $oPage->add("<h1>Asynchronous versus asynchronous DisplayBlocks</h1>\n");
 

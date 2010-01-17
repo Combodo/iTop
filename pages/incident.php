@@ -24,7 +24,7 @@ abstract class DialogWizard
 		return $this->m_aSteps[$sStep];
 	}
 
-	protected function AddContextToForm(web_page $oPage)
+	protected function AddContextToForm(WebPage $oPage)
 	{
 		// Store as hidden fields in the page all the variables from the previous steps
 		foreach($this->m_aSteps as $sStep => $aFields)
@@ -37,7 +37,7 @@ abstract class DialogWizard
 		}
 	}
 	
-	function GetObjectPicker(web_page $oPage, $sTitle, $sFieldName, $sClass)
+	function GetObjectPicker(WebPage $oPage, $sTitle, $sFieldName, $sClass)
 	{
 		$sScript =
 <<<EOF
@@ -226,7 +226,7 @@ EOF;
 		return $sHTML;
 	}
 	
-	function DisplayObjectPickerList(web_page $oPage, $sClass)
+	function DisplayObjectPickerList(WebPage $oPage, $sClass)
 	{
 		$oFilter = new CMDBSearchFilter($sClass);
 		$oFilter->AddCondition('pkey', array(0), 'IN');
@@ -258,7 +258,7 @@ class IncidentCreationWizard extends DialogWizard
 		$oPage->add("<input type=\"hidden\" name=\"step\" value=\"".$this->m_sNextStep."\" />\n");
 	}
 
-	public function DisplayNewTicketForm(web_page $oPage)
+	public function DisplayNewTicketForm(WebPage $oPage)
 	{
 		assert($this->m_sCurrentStep == '1');
 		$this->m_sNextStep = '2';
@@ -280,7 +280,7 @@ class IncidentCreationWizard extends DialogWizard
 		$oPage->add('</form>');
 	}
 
-	public function DisplayImpactedInfraForm(web_page $oPage)
+	public function DisplayImpactedInfraForm(WebPage $oPage)
 	{
 		assert($this->m_sCurrentStep == '2');
 		$this->m_sNextStep = '3';
@@ -296,7 +296,7 @@ class IncidentCreationWizard extends DialogWizard
 		$oPage->add('</form>');
 	}
 
-	public function DisplayAdditionalImpactedObjectForm(web_page $oPage)
+	public function DisplayAdditionalImpactedObjectForm(WebPage $oPage)
 	{
 		assert($this->m_sCurrentStep == '3');
 		$this->m_sNextStep = '4';
@@ -344,7 +344,7 @@ class IncidentCreationWizard extends DialogWizard
 		$oPage->add('</form>');
 	}
 
-	public function DisplayRelatedTicketsForm(web_page $oPage)
+	public function DisplayRelatedTicketsForm(WebPage $oPage)
 	{
 		assert($this->m_sCurrentStep == '4');
 		$this->m_sNextStep = '5';
@@ -380,7 +380,7 @@ class IncidentCreationWizard extends DialogWizard
 		$oPage->add('</form>');
 	}
 	
-	public function DisplayContactsToNotifyForm(web_page $oPage)
+	public function DisplayContactsToNotifyForm(WebPage $oPage)
 	{
 		assert($this->m_sCurrentStep == '5');
 		$this->m_sNextStep = '6';
@@ -395,7 +395,7 @@ class IncidentCreationWizard extends DialogWizard
 		$oPage->add('</form>');
 	}
 	
-	function DisplayFinalForm(web_page $oPage)
+	function DisplayFinalForm(WebPage $oPage)
 	{
 		$oAppContext = new ApplicationContext();
 		assert($this->m_sCurrentStep == '6');
@@ -483,7 +483,7 @@ class IncidentCreationWizard extends DialogWizard
 		$oPage->add('</form>');
 	}
 	
-	public function CreateIncident(web_page $oPage)
+	public function CreateIncident(WebPage $oPage)
 	{
 		$oAppContext = new ApplicationContext();
 		assert($this->m_sCurrentStep == '7');

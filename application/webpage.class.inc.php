@@ -6,11 +6,11 @@
  * and renders the full web page by putting the elements in the proper place & order
  * when the output() method is called.
  * Usage:
- * 	$oPage = new web_page("Title of my page");
+ * 	$oPage = new WebPage("Title of my page");
  *	$oPage->p("Hello World !");
  *	$oPage->output();
  */
-class web_page
+class WebPage
 {
     protected $s_title;
     protected $s_content;

@@ -90,7 +90,7 @@ function ComputeProjections($oPage)
 
 
 require_once('../application/loginwebpage.class.inc.php');
-login_web_page::DoLogin(); // Check user rights and prompt if needed
+LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
 // Display the menu on the left
 $oContext = new UserContext();

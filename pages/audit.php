@@ -8,7 +8,7 @@ $operation = utils::ReadParam('operation', '');
 $oAppContext = new ApplicationContext();
 
 require_once('../application/loginwebpage.class.inc.php');
-login_web_page::DoLogin(); // Check user rights and prompt if needed
+LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
 $oP = new iTopWebPage("iTop - CMDB Audit", $currentOrganization);
 

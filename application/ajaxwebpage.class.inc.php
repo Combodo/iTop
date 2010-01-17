@@ -11,7 +11,7 @@ require_once("../application/webpage.class.inc.php");
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  */
  
-class ajax_page extends web_page
+class ajax_page extends WebPage
 {
     /**
      * Jquery style ready script

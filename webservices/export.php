@@ -7,7 +7,7 @@ require_once('../application/xmlpage.class.inc.php');
 require_once('../application/startup.inc.php');
 
 require_once('../application/loginwebpage.class.inc.php');
-login_web_page::DoLogin(); // Check user rights and prompt if needed
+LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
 $sOperation = utils::ReadParam('operation', 'menu');
 $oContext = new UserContext();
@@ -31,7 +31,7 @@ if (!empty($sExpression))
 			switch($sFormat)
 			{
 				case 'html':
-				$oP = new nice_web_page("iTop - Export");
+				$oP = new NiceWebPage("iTop - Export");
 				// The HTML output is made for pages located in the /pages/ folder
 				// since this page is in a different folder, let's adjust the HTML 'base' attribute
 				// to make the relative hyperlinks in the page work
@@ -61,14 +61,14 @@ if (!empty($sExpression))
 				break;
 				
 				default:
-				$oP = new web_page("iTop - Export");
+				$oP = new WebPage("iTop - Export");
 				$oP->add("Unsupported format '$sFormat'. Possible values are: html, csv or xml.");
 			}
 		}
 	}
 	catch(Exception $e)
 	{
-		$oP = new web_page("iTop - Export");
+		$oP = new WebPage("iTop - Export");
 		$oP->p("Error the query can not be executed.");		
 		$oP->p($e->GetHtmlDesc());		
 	}
@@ -76,7 +76,7 @@ if (!empty($sExpression))
 if (!$oP)
 {
 	// Display a short message about how to use this page
-	$oP = new web_page("iTop - Export");
+	$oP = new WebPage("iTop - Export");
 	$oP->p("<strong>General purpose export page.</strong>");
 	$oP->p("<strong>Parameters:</strong>");
 	$oP->p("<ul><li>expression: an OQL expression (URL encoded if needed)</li>

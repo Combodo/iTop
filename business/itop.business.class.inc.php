@@ -646,7 +646,7 @@ class bizLocation extends logInfra
   */
 	}
 
-	function DisplayDetails(web_page $oPage)
+	function DisplayDetails(WebPage $oPage)
 	{
 		parent::DisplayDetails($oPage);
 /*
@@ -865,7 +865,7 @@ class bizInterface extends logInfra
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'device_id', 'org_id')); // Criteria of the advanced search form
 	}
 
-	function DisplayDetails(web_page $oPage)
+	function DisplayDetails(WebPage $oPage)
 	{
 		parent::DisplayDetails($oPage);
     /*
@@ -942,7 +942,7 @@ class bizSubnet extends logInfra
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'ip','mask')); // Criteria of the advanced search form
 	}
 
-	function DisplayBareRelations(web_page $oPage)
+	function DisplayBareRelations(WebPage $oPage)
 	{
 		parent::DisplayBareRelations($oPage);
 
@@ -1109,7 +1109,7 @@ class bizPC extends bizDevice
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'type', 'brand', 'model', 'cpu', 'memory_size', 'hdd_size')); // Criteria of the advanced search form
 	}
 
-	function DisplayDetails(web_page $oPage)
+	function DisplayDetails(WebPage $oPage)
 	{
 		parent::DisplayDetails($oPage);
 		/*
@@ -1256,7 +1256,7 @@ class bizServer extends bizDevice
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status','brand', 'model', 'os_family', 'os_version', 'location_id', 'cpu', 'number_of_cpus', 'memory_size', 'hdd_size', 'hdd_free_size')); // Criteria of the advanced search form
 	}
 	
-	function DisplayDetails(web_page $oPage)
+	function DisplayDetails(WebPage $oPage)
 	{
 		parent::DisplayDetails($oPage);
 		/*
@@ -1436,7 +1436,7 @@ class bizInfraGroup extends logInfra
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'type', 'description', 'org_id')); // Criteria of the advanced search form
 	}
 
-	function DisplayDetails(web_page $oPage)
+	function DisplayDetails(WebPage $oPage)
 	{
 		parent::DisplayDetails($oPage);
 	/*
@@ -1537,7 +1537,7 @@ class bizApplication extends logInfra
 		}
 	}
 
-	function DisplayDetails(web_page $oPage)
+	function DisplayDetails(WebPage $oPage)
 	{
 		parent::DisplayDetails($oPage);
 	/*

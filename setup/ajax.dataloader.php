@@ -26,7 +26,7 @@ header("Expires: Fri, 17 Jul 1970 05:00:00 GMT");    // Date in the past
 $sFileName = Utils::ReadParam('file', '');
 $sSessionStatus = Utils::ReadParam('session_status', '');
 $iPercent = (integer)Utils::ReadParam('percent', 0);
-setup_web_page::log("Info - Loading file: $sFileName");
+SetupWebPage::log("Info - Loading file: $sFileName");
 
 try
 {
@@ -42,26 +42,26 @@ try
 		$oChange->Set("date", time());
 		$oChange->Set("userinfo", "Initialization");
 		$iChangeId = $oChange->DBInsert();
-		setup_web_page::log("Info - starting data load session");
+		SetupWebPage::log("Info - starting data load session");
 		$oDataLoader->StartSession($oChange);
 	}
 
 	$oDataLoader->LoadFile($sFileName);
 	$sResult = sprintf("Info - loading of %s done. (Overall %d %% completed).", basename($sFileName), $iPercent);
 	echo $sResult;
-	setup_web_page::log($sResult);
+	SetupWebPage::log($sResult);
 
 	if ($sSessionStatus == 'end')
 	{
 	    $oDataLoader->EndSession();
-	    setup_web_page::log("Info - ending data load session");
+	    SetupWebPage::log("Info - ending data load session");
 	}
 }
 catch(Exception $e)
 {
 	echo "<p>An error happened while loading the data</p>\n";
 	echo '<p>'.$e."</p>\n";
-	setup_web_page::log("Error - An error happened while loading the data. ".$e);
+	SetupWebPage::log("Error - An error happened while loading the data. ".$e);
 }
 
 ?>

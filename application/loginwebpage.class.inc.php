@@ -3,7 +3,7 @@ require_once("../application/nicewebpage.class.inc.php");
 /**
  * Web page used for displaying the login form
  */
-class login_web_page extends nice_web_page
+class LoginWebPage extends NiceWebPage
 {
     public function __construct()
     {
@@ -96,7 +96,7 @@ h1 {
 			}
 			else
 			{
-				$oPage = new login_web_page();
+				$oPage = new LoginWebPage();
 				$oPage->DisplayLoginForm();
 				$oPage->output();
 				exit;
@@ -110,7 +110,7 @@ h1 {
 		if (!UserRights::Login($sAuthUser, $sAuthPwd))
 		{
 			self::ResetSession();
-			$oPage = new login_web_page();
+			$oPage = new LoginWebPage();
 			$oPage->DisplayLoginForm( true /* failed attempt */);
 			$oPage->output();
 			exit;

@@ -40,7 +40,7 @@ class WebServiceException extends Exception
 {
 }
 
-login_web_page::DoLogin(); // Check user rights and prompt if needed
+LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
 $oContext = new UserContext();
 $oAppContext = new ApplicationContext();
@@ -50,7 +50,7 @@ $oAppContext = new ApplicationContext();
 // Main program
 
 //$oP = new XMLPage("iTop - Bulk import");
-$oP = new web_page("iTop - Bulk import");
+$oP = new WebPage("iTop - Bulk import");
 $oP->add('<warning>This is a prototype, I repeat: PRO-TO-TYPE, therefore it suffers bugs and limitations, documented in the code. Next step: specify...</warning>');		
 try
 {

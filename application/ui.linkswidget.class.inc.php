@@ -17,7 +17,7 @@ class UILinksWidget
 		$this->m_iInputId = $iInputId;
 	}
 	
-	public function Display(web_page $oPage, $oCurrentValuesSet = null)
+	public function Display(WebPage $oPage, $oCurrentValuesSet = null)
 	{
 		$sHTMLValue = '';
 		$sTargetClass = self::GetTargetClass($this->m_sClass, $this->m_sAttCode);
@@ -122,7 +122,7 @@ class UILinksWidget
 	}
 	/**
 	 * This static function is called by the Ajax Page when there is a need to fill an autocomplete combo
-	 * @param $oPage web_page The ajax page used for the put^put (sent back to the browser
+	 * @param $oPage WebPage The ajax page used for the put^put (sent back to the browser
 	 * @param $oContext UserContext The context of the user (for limiting the search)
 	 * @param $sClass string The name of the class of the current object being edited
 	 * @param $sAttCode string The name of the attribute being edited
@@ -130,7 +130,7 @@ class UILinksWidget
 	 * @param $iMaxCount integer The maximum number of items to return
 	 * @return void
 	 */	 	 	  	 	 	 	
-	static public function Autocomplete(web_page $oPage, UserContext $oContext, $sClass, $sAttCode, $sName, $iMaxCount)
+	static public function Autocomplete(WebPage $oPage, UserContext $oContext, $sClass, $sAttCode, $sName, $iMaxCount)
 	{
 		// #@# todo - add context information, otherwise any value will be authorized for external keys
 		$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, array() /* $aArgs */, $sName);
@@ -166,7 +166,7 @@ class UILinksWidget
 	/**
 	 * This static function is called by the Ajax Page display a set of objects being linked
 	 * to the object being created	 
-	 * @param $oPage web_page The ajax page used for the put^put (sent back to the browser
+	 * @param $oPage WebPage The ajax page used for the put^put (sent back to the browser
 	 * @param $sClass string The name of the 'linking class' which is the class of the objects to display
 	 * @param $sSet JSON serialized set of objects
 	 * @param $sExtKeyToMe Name of the attribute in sClass that is pointing to a given object

@@ -62,11 +62,11 @@ $aClassesToGenerate = array('bizOrganization' /* This one is special and must go
 /**
  * Populate an organization with objects of each class listed in the (global) $aClassesToGenerate array
  *
- * @param web_page $oPage The object used for the HTML output
+ * @param WebPage $oPage The object used for the HTML output
  * @param cmdbGenerator $oGenerator The object used for the generation of the objects
  * @param string $sSize An enum specifying (roughly) how many objects of each class to create: one of 'small', 'medium', 'big', 'huge' or 'max'
  */
-function PopulateOrganization(CMDBChange $oMyChange, web_page $oPage, cmdbDataGenerator $oGenerator, $sSize = 'small')
+function PopulateOrganization(CMDBChange $oMyChange, WebPage $oPage, cmdbDataGenerator $oGenerator, $sSize = 'small')
 {
 	global $aClassesToGenerate;
 	
@@ -111,7 +111,7 @@ function PopulateOrganization(CMDBChange $oMyChange, web_page $oPage, cmdbDataGe
 /**
  * Delete an organization and all the instances of 'Object' belonging to this organization
  *
- * @param web_page $oPage The object used for the HTML output
+ * @param WebPage $oPage The object used for the HTML output
  * @param string $sOrganizationCode The code (pkey) of the organization to delete
  */
 function DeleteOrganization($oMyChange, $oPage, $sOrganizationCode)

@@ -148,7 +148,7 @@ class URP_Users extends UserRightsBaseClass
 		$oPage->table($aDisplayConfig, $aDisplayData);
 	}
 
-	function DisplayBareRelations(web_page $oPage)
+	function DisplayBareRelations(WebPage $oPage)
 	{
 		parent::DisplayBareRelations($oPage);
 
@@ -272,7 +272,7 @@ class URP_Profiles extends UserRightsBaseClass
 		$oPage->table($aDisplayConfig, $aDisplayData);
 	}
 
-	function DisplayBareRelations(web_page $oPage)
+	function DisplayBareRelations(WebPage $oPage)
 	{
 		parent::DisplayBareRelations($oPage);
 

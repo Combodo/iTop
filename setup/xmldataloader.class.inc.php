@@ -252,7 +252,7 @@ class XMLDataLoader
 						if ($iExtKey == 0)
 						{
 							$sMsg = "unresolved extkey in $sClass::".$oTargetObj->GetKey()."(".$oTargetObj->GetName().")::$sAttCode=$sTargetClass::$iTempKey";
-							setup_web_page::log("Warning - $sMsg");
+							SetupWebPage::log("Warning - $sMsg");
 							echo "Warning: $sMsg<br/>\n";
 							echo "<pre>aKeys[".$sTargetClass."]:\n";
 							print_r($this->m_aKeys[$sTargetClass]);

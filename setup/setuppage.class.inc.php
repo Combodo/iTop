@@ -5,7 +5,7 @@ define('INSTALL_LOG_FILE', '../setup.log');
 /**
  * Web page used for displaying the login form
  */
-class setup_web_page extends nice_web_page
+class SetupWebPage extends NiceWebPage
 {
     public function __construct($sTitle)
     {

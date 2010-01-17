@@ -55,7 +55,7 @@ class UILinksWizard
 		}
 	}
 
-	public function Display(web_page $oP, UserContext $oContext, $aExtraParams = array())
+	public function Display(WebPage $oP, UserContext $oContext, $aExtraParams = array())
 	{
 		$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $this->m_sLinkageAttr);
 		$sTargetClass = $oAttDef->GetTargetClass();
@@ -295,7 +295,7 @@ class UILinksWizard
 		return $aRow;
 	}
 	
-	protected function DisplayFormTable(web_page $oP, $aConfig, $aData)
+	protected function DisplayFormTable(WebPage $oP, $aConfig, $aData)
 	{
 		$oP->add("<table class=\"listResults\">\n");
 		// Header
@@ -327,7 +327,7 @@ class UILinksWizard
 		$oP->add("</table>\n");
 	}
 	
-	protected function DisplayFormRow(web_page $oP, $aConfig, $aRow, $iRowId)
+	protected function DisplayFormRow(WebPage $oP, $aConfig, $aRow, $iRowId)
 	{
 		$oP->add("<tr id=\"row_$iRowId\">\n");
 		foreach($aConfig as $sName=>$void)
@@ -337,7 +337,7 @@ class UILinksWizard
 		$oP->add("</tr>\n");
 	}
 	
-	public function DisplayAddForm(web_page $oP, UserContext $oContext)
+	public function DisplayAddForm(WebPage $oP, UserContext $oContext)
 	{
 		$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $this->m_sLinkageAttr);
 		$sTargetClass = $oAttDef->GetTargetClass();
@@ -361,7 +361,7 @@ class UILinksWizard
 		$oP->add_ready_script("$('div#SearchFormToAdd form').bind('submit', function() {var the_form = this; SearchObjectsToAdd(the_form.id); return false;});");
 	}
 
-	public function SearchObjectsToAdd(web_page $oP, UserContext $oContext)
+	public function SearchObjectsToAdd(WebPage $oP, UserContext $oContext)
 	{
 		//$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $this->m_sLinkageAttr);
 
@@ -371,7 +371,7 @@ class UILinksWizard
 		$oBlock->Display($oP, 'ResultsToAdd', array('menu' => false, 'selection_mode' => true, 'display_limit' => false)); // Don't display the 'Actions' menu on the results
 	}
 	
-	public function DoAddObjects(web_page $oP, UserContext $oContext, $aLinkedObjectIds = array())
+	public function DoAddObjects(WebPage $oP, UserContext $oContext, $aLinkedObjectIds = array())
 	{
 		//$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $this->m_sLinkageAttr);
 		//$sTargetClass = $oAttDef->GetTargetClass();

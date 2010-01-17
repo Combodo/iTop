@@ -14,14 +14,14 @@ define('PHP_MIN_VERSION', '5.2.0');
 define('MYSQL_MIN_VERSION', '5.0.0');
 
 $sOperation = Utils::ReadParam('operation', 'step1');
-$oP = new setup_web_page('iTop configuration wizard');
+$oP = new SetupWebPage('iTop configuration wizard');
 
 /**
  * Helper function to check if the current version of PHP
  * is compatible with the application
  * @return boolean true if this is Ok, false otherwise
  */
-function CheckPHPVersion(setup_web_page $oP)
+function CheckPHPVersion(SetupWebPage $oP)
 {
 	$bResult = true;
 	$oP->log('Info - CheckPHPVersion');
@@ -131,7 +131,7 @@ function CheckPHPVersion(setup_web_page $oP)
  * the existing databases
  * @return Array The list of databases found in the server
  */
-function CheckServerConnection(setup_web_page $oP, $sDBServer, $sDBUser, $sDBPwd)
+function CheckServerConnection(SetupWebPage $oP, $sDBServer, $sDBUser, $sDBPwd)
 {
 	$aResult = array();
 	$oP->log('Info - CheckServerConnection');
@@ -194,7 +194,7 @@ function CheckServerConnection(setup_web_page $oP, $sDBServer, $sDBUser, $sDBPwd
  * @param $bAllowMissingDatabase boolean Whether or not to allow loading a data model with no corresponding DB 
  * @return none
  */    
-function InitDataModel(setup_web_page $oP, $sConfigFileName, $bAllowMissingDatabase = true)
+function InitDataModel(SetupWebPage $oP, $sConfigFileName, $bAllowMissingDatabase = true)
 {
 	require_once('../core/coreexception.class.inc.php');
 	require_once('../core/attributedef.class.inc.php');
@@ -215,7 +215,7 @@ function InitDataModel(setup_web_page $oP, $sConfigFileName, $bAllowMissingDatab
  * Helper function to create the database structure
  * @return boolean true on success, false otherwise
  */
-function CreateDatabaseStructure(setup_web_page $oP, Config $oConfig, $sDBName, $sDBPrefix)
+function CreateDatabaseStructure(SetupWebPage $oP, Config $oConfig, $sDBName, $sDBPrefix)
 {
 	InitDataModel($oP, TMP_CONFIG_FILE, true); // Allow the DB to NOT exist since we're about to create it !
 	$oP->log('Info - CreateDatabaseStructure');
@@ -240,7 +240,7 @@ function CreateDatabaseStructure(setup_web_page $oP, Config $oConfig, $sDBName, 
  * Helper function to create and administrator account for iTop
  * @return boolean true on success, false otherwise 
  */
-function CreateAdminAccount(setup_web_page $oP, Config $oConfig, $sAdminUser, $sAdminPwd)
+function CreateAdminAccount(SetupWebPage $oP, Config $oConfig, $sAdminUser, $sAdminPwd)
 {
 	$oP->log('Info - CreateAdminAccount');
 	InitDataModel($oP, TMP_CONFIG_FILE, true);  // allow missing DB
@@ -258,7 +258,7 @@ function CreateAdminAccount(setup_web_page $oP, Config $oConfig, $sAdminUser, $s
 
 //aFilesToLoad[aFilesToLoad.length] = './menus.xml'; // First load the menus
 
-function ListDataFiles($sDirectory, setup_web_page $oP)
+function ListDataFiles($sDirectory, SetupWebPage $oP)
 {
 	$aFilesToLoad = array();
 	if ($hDir = @opendir($sDirectory))
@@ -288,7 +288,7 @@ function ListDataFiles($sDirectory, setup_web_page $oP)
 /**
  * Scans the ./data directory for XML files and output them as a Javascript array
  */ 
-function PopulateDataFilesList(setup_web_page $oP)
+function PopulateDataFilesList(SetupWebPage $oP)
 {
 
 	$oP->add("<script type=\"text/javascript\">\n");
@@ -322,7 +322,7 @@ function PopulateDataFilesList(setup_web_page $oP)
  * Display the form for the first step of the configuration wizard
  * which consists in the database server selection
  */  
-function DisplayStep1(setup_web_page $oP)
+function DisplayStep1(SetupWebPage $oP)
 {
 	$sNextOperation = 'step2';
 	$oP->add("<h1>iTop configuration wizard</h1>\n");
@@ -353,7 +353,7 @@ function DisplayStep1(setup_web_page $oP)
  * 1) Validating the parameters by connecting to the database server
  * 2) Prompting to select an existing database or to create a new one  
  */  
-function DisplayStep2(setup_web_page $oP, Config $oConfig, $sDBServer, $sDBUser, $sDBPwd)
+function DisplayStep2(SetupWebPage $oP, Config $oConfig, $sDBServer, $sDBUser, $sDBPwd)
 {
 	$sNextOperation = 'step3';
 	$oP->add("<h1>iTop configuration wizard</h1>\n");
@@ -411,7 +411,7 @@ function DisplayStep2(setup_web_page $oP, Config $oConfig, $sDBServer, $sDBUser,
  * 2) Creating the database structure  
  * 3) Prompting for the admin account to be created  
  */  
-function DisplayStep3(setup_web_page $oP, Config $oConfig, $sDBName, $sDBPrefix)
+function DisplayStep3(SetupWebPage $oP, Config $oConfig, $sDBName, $sDBPrefix)
 {
 	$sNextOperation = 'step4';
 	$oP->add("<h1>iTop configuration wizard</h1>\n");
@@ -451,7 +451,7 @@ function DisplayStep3(setup_web_page $oP, Config $oConfig, $sDBName, $sDBPrefix)
  * 1) Creating the admin user account
  * 2) Prompting to load some sample data  
  */  
-function DisplayStep4(setup_web_page $oP, Config $oConfig, $sAdminUser, $sAdminPwd)
+function DisplayStep4(SetupWebPage $oP, Config $oConfig, $sAdminUser, $sAdminPwd)
 {
 	$sNextOperation = 'step5';
 	$oP->add("<h1>iTop configuration wizard</h1>\n");
@@ -492,7 +492,7 @@ function DisplayStep4(setup_web_page $oP, Config $oConfig, $sAdminUser, $sAdminP
  * 1) Creating the final configuration file
  * 2) Prompting the user to make the file read-only  
  */  
-function DisplayStep5(setup_web_page $oP, Config $oConfig, $sAuthUser, $sAuthPwd)
+function DisplayStep5(SetupWebPage $oP, Config $oConfig, $sAuthUser, $sAuthPwd)
 {
 	try
 	{

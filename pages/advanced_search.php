@@ -9,7 +9,7 @@ require_once('../application/dialogstack.class.inc.php');
 require_once('../application/startup.inc.php');
 
 // #@# not used, but... require_once('../classes/usercontext.class.inc.php');
-$oPage = new nice_web_page("ITop finder");
+$oPage = new NiceWebPage("ITop finder");
 $oPage->no_cache();
 
 

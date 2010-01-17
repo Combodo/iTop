@@ -149,7 +149,7 @@ class DisplayBlock
 		return new $sBlockClass($oFilter, $sBlockType, $bAsynchronous, $aParams);		
 	}
 	
-	public function Display(web_page $oPage, $sId, $aExtraParams = array())
+	public function Display(WebPage $oPage, $sId, $aExtraParams = array())
 	{
 		$oPage->add($this->GetDisplay($oPage, $sId, $aExtraParams));
 		/*
@@ -184,7 +184,7 @@ class DisplayBlock
 		*/
 	}
 	
-	public function GetDisplay(web_page $oPage, $sId, $aExtraParams = array())
+	public function GetDisplay(WebPage $oPage, $sId, $aExtraParams = array())
 	{
 		$sHtml = '';
 		$aExtraParams = array_merge($aExtraParams, $this->m_aParams);
@@ -220,12 +220,12 @@ class DisplayBlock
 		return $sHtml;
 	}
 	
-	public function RenderContent(web_page $oPage, $aExtraParams = array())
+	public function RenderContent(WebPage $oPage, $aExtraParams = array())
 	{
 		$oPage->add($this->GetRenderContent($oPage, $aExtraParams));
 	}
 	
-	public function GetRenderContent(web_page $oPage, $aExtraParams = array())
+	public function GetRenderContent(WebPage $oPage, $aExtraParams = array())
 	{
 		$sHtml = '';
 		// Add the extra params into the filter if they make sense for such a filter
@@ -615,7 +615,7 @@ class DisplayBlock
  */
 class HistoryBlock extends DisplayBlock
 {
-	public function GetRenderContent(web_page $oPage, $aExtraParams = array())
+	public function GetRenderContent(WebPage $oPage, $aExtraParams = array())
 	{
 		$sHtml = '';
 		// Add the extra params into the filter if they make sense for such a filter
@@ -689,7 +689,7 @@ class HistoryBlock extends DisplayBlock
 
 class MenuBlock extends DisplayBlock
 {
-	public function GetRenderContent(web_page $oPage, $aExtraParams = array())
+	public function GetRenderContent(WebPage $oPage, $aExtraParams = array())
 	{
 		$sHtml = '';
 		$oAppContext = new ApplicationContext();

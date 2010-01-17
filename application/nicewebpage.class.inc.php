@@ -3,7 +3,7 @@ require_once("../application/webpage.class.inc.php");
 /**
  * Web page with some associated CSS and scripts (jquery) for a fancier display
  */
-class nice_web_page extends web_page
+class NiceWebPage extends WebPage
 {
 	var $m_aReadyScripts;
 	

@@ -30,7 +30,7 @@ $currentOrganization = utils::ReadParam('org_id', '');
 $operation = utils::ReadParam('operation', '');
 
 require_once('../application/loginwebpage.class.inc.php');
-login_web_page::DoLogin(); // Check user rights and prompt if needed
+LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
 
 $oP = new iTopWebPage("Welcome to ITop", $currentOrganization);

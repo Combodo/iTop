@@ -5,7 +5,7 @@ require_once('../application/dialogstack.class.inc.php');
 
 require_once('../application/startup.inc.php');
 
-$oPage = new nice_web_page("The very first iTop page");
+$oPage = new NiceWebPage("The very first iTop page");
 $oPage->no_cache();
 
 
@@ -82,7 +82,7 @@ function DisplaySelectOrg($oPage, $sCurrentOrganization, $iContext)
 	}
 }
 
-function DisplayDetails(web_page $oPage, $sClassName, $sKey)
+function DisplayDetails(WebPage $oPage, $sClassName, $sKey)
 {
 	global $oContext;
     //$oObj = MetaModel::GetObject($sClassName, $sKey);
@@ -135,7 +135,7 @@ function DisplayDetails(web_page $oPage, $sClassName, $sKey)
 }
 
 // By Rom
-function DisplayChangesLog(web_page $oPage, $sClassName, $sKey)
+function DisplayChangesLog(WebPage $oPage, $sClassName, $sKey)
 {
 	global $oContext;
     //$oObj = MetaModel::GetObject($sClassName, $sKey);
@@ -149,7 +149,7 @@ function DisplayChangesLog(web_page $oPage, $sClassName, $sKey)
 	$oPage->p("<a href=\"?operation=delete&class=$sClassName&key=$sKey\">Delete this object (no confirmation!)</a>");
 }
 
-function DumpObjectsAsCSV(web_page $oPage, $sClassName, $oSearchFilter = null,  $sSeparator = ",")
+function DumpObjectsAsCSV(WebPage $oPage, $sClassName, $oSearchFilter = null,  $sSeparator = ",")
 {
 	global $oContext;
 	
@@ -179,7 +179,7 @@ function DumpObjectsAsCSV(web_page $oPage, $sClassName, $oSearchFilter = null,  
 	}
 }
 
-function DumpObjects(web_page $oPage, $sClassName, CMDBSearchFilter $oSearchFilter = null)
+function DumpObjects(WebPage $oPage, $sClassName, CMDBSearchFilter $oSearchFilter = null)
 {
 	global $oContext;
 
@@ -209,7 +209,7 @@ function DumpObjects(web_page $oPage, $sClassName, CMDBSearchFilter $oSearchFilt
 	$oPage->table($aAttribs, $aValues);
 }
 
-function DisplayEditForm(web_page $oPage, $sClassName, $sKey)
+function DisplayEditForm(WebPage $oPage, $sClassName, $sKey)
 {
 	global $oContext;
     //$oObj = MetaModel::GetObject($sClassName, $sKey);
@@ -264,7 +264,7 @@ function DisplayEditForm(web_page $oPage, $sClassName, $sKey)
     $oPage->add("<form method=\"post\">\n");
 }
 
-function DisplayCreationForm(web_page $oPage, $sClassName)
+function DisplayCreationForm(WebPage $oPage, $sClassName)
 {
 	global $oContext;
     $oPage->p("New $sClassName\n");
@@ -303,7 +303,7 @@ function DisplayCreationForm(web_page $oPage, $sClassName)
     $oPage->add("<form method=\"post\">\n");
 }
 
-function UpdateObject(web_page $oPage, $sClassName, $sKey, $aAttributes)
+function UpdateObject(WebPage $oPage, $sClassName, $sKey, $aAttributes)
 {
 	global $oContext;
     //$oObj = MetaModel::GetObject($sClassName, $sKey);
@@ -346,7 +346,7 @@ function UpdateObject(web_page $oPage, $sClassName, $sKey, $aAttributes)
 	$oPage->p("<a href=\"\">Return to main page</a>");
 }
 
-function DeleteObject(web_page $oPage, $sClassName, $sKey)
+function DeleteObject(WebPage $oPage, $sClassName, $sKey)
 {
 	global $oContext;
 	$sClassLabel = MetaModel::GetName($sClassName);
@@ -380,7 +380,7 @@ function DeleteObject(web_page $oPage, $sClassName, $sKey)
 	$oPage->p("<a href=\"\">Return to main page</a>");
 }
 
-function CreateObject(web_page $oPage, $sClassName, $aAttributes)
+function CreateObject(WebPage $oPage, $sClassName, $aAttributes)
 {
     $oObj = MetaModel::NewObject($sClassName);
     $sClassLabel = MetaModel::GetName(get_class($oObj));

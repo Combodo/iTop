@@ -113,7 +113,7 @@ class menuNode extends DBObject
 		return $oSet;
 	}
 
-	public function RenderContent(web_page $oPage, $aExtraParams = array())
+	public function RenderContent(WebPage $oPage, $aExtraParams = array())
 	{
 		$sTemplate = $this->Get('template');
 		$oTemplate = new DisplayTemplate($sTemplate);
@@ -136,7 +136,7 @@ class menuNode extends DBObject
 		}
 		$oP->AddToMenu("</li>\n");
 	}
-	static public function DisplayCreationForm(web_page $oP, $sClass, $sFilter, $aExtraParams = array())
+	static public function DisplayCreationForm(WebPage $oP, $sClass, $sFilter, $aExtraParams = array())
 	{
 		$oFilter = DBObjectSearch::unserialize($sFilter);
 		$oP->p('Create a new menu item for: '.$oFilter->__DescribeHTML());

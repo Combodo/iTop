@@ -15,7 +15,7 @@ class DisplayTemplate
 		$this->m_sTemplate = $sTemplate;
 	}
 	
-	public function Render(web_page $oPage, $aParams = array())
+	public function Render(WebPage $oPage, $aParams = array())
 	{
 		$this->m_sTemplate = MetaModel::ApplyParams($this->m_sTemplate, $aParams);
 		$iStart = 0;
