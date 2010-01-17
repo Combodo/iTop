@@ -18,6 +18,25 @@ function ReloadTruncatedList(divId, sSerializedFilter, sExtraParams)
 		}
 	 );
 }
+/**
+ * Reload any block -- used for periodic auto-reload
+ */ 
+function ReloadBlock(divId, sStyle, sSerializedFilter, sExtraParams)
+{
+	$('#'+divId).addClass('loading');
+	//$('#'+divId).blockUI();
+	$.get('ajax.render.php?filter='+sSerializedFilter+'&style='+sStyle,
+	   { operation: 'ajax', extra_params: sExtraParams },
+	   function(data){
+		 $('#'+divId).empty();
+		 $('#'+divId).append(data);
+		 $('#'+divId).removeClass('loading');
+		 $('#'+divId+' .listResults').tableHover(); // hover tables
+		 $('#'+divId+' .listResults').tablesorter( { headers: { 0:{sorter: false }}, widgets: ['zebra']} ); // sortable and zebra tables
+		 //$('#'+divId).unblockUI();
+		}
+	 );
+}
 
 /**
  * Update the display and value of a file input widget when the user picks a new file

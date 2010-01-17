@@ -18,6 +18,8 @@ class ConfigException extends CoreException
 
 define ('DEFAULT_MIN_DISPLAY_LIMIT', 10);
 define ('DEFAULT_MAX_DISPLAY_LIMIT', 15);
+define ('DEFAULT_STANDARD_RELOAD_INTERVAL', 5*60);
+define ('DEFAULT_FAST_RELOAD_INTERVAL', 1*60);
 
 class Config
 {
@@ -43,6 +45,15 @@ class Config
 	 */	 	
 	protected $m_iMaxDisplayLimit;
 
+	/**
+	 * @var integer Number of seconds between two reloads of the display (standard)
+	 */	 	
+	protected $m_iStandardReloadInterval;
+	/**
+	 * @var integer Number of seconds between two reloads of the display (fast)
+	 */	 	
+	protected $m_iFastReloadInterval;
+	
 	public function __construct($sConfigFile, $bLoadConfig = true)
 	{
 		$this->m_sFile = $sConfigFile;
@@ -136,6 +147,8 @@ class Config
 
 		$this->m_iMinDisplayLimit = isset($MySettings['min_display_limit']) ? trim($MySettings['min_display_limit']) : DEFAULT_MIN_DISPLAY_LIMIT;
 		$this->m_iMaxDisplayLimit = isset($MySettings['max_display_limit']) ? trim($MySettings['max_display_limit']) : DEFAULT_MAX_DISPLAY_LIMIT;
+		$this->m_iStandardReloadInterval = isset($MySettings['standard_reload_interval']) ? trim($MySettings['standard_reload_interval']) : DEFAULT_STANDARD_RELOAD_INTERVAL;
+		$this->m_iFastReloadInterval = isset($MySettings['fast_reload_interval']) ? trim($MySettings['fast_reload_interval']) : DEFAULT_FAST_RELOAD_INTERVAL;
 	}
 
 	protected function Verify()
@@ -204,6 +217,16 @@ class Config
 		return $this->m_iMaxDisplayLimit;
 	}
 
+	public function GetStandardReloadInterval()
+	{
+		return $this->m_iStandardReloadInterval;
+	}
+
+	public function GetFastReloadInterval()
+	{
+		return $this->m_iFastReloadInterval;
+	}
+
 	public function SetDBHost($sDBHost)
 	{
 		$this->m_sDBHost = $sDBHost;
@@ -237,6 +260,16 @@ class Config
 	public function SetMaxDisplayLimit($iMaxDisplayLimit)
 	{
 		$this->m_iMaxDisplayLimit = $iMaxDisplayLimit;
+	}
+
+	public function SetStandardReloadInterval($iStandardReloadInterval)
+	{
+		$this->m_iStandardReloadInterval = $iStandardReloadInterval;
+	}
+
+	public function SetFastReloadInterval($iFastReloadInterval)
+	{
+		$this->m_iFastReloadInterval = $iFastReloadInterval;
 	}
 
 	public function FileIsWritable()
@@ -278,6 +311,8 @@ class Config
 			fwrite($hFile, "\n");
 			fwrite($hFile, "\t'min_display_limit' => {$this->m_iMinDisplayLimit},\n");
 			fwrite($hFile, "\t'max_display_limit' => {$this->m_iMaxDisplayLimit},\n");
+			fwrite($hFile, "\t'standard_reload_interval' => {$this->m_iStandardReloadInterval},\n");
+			fwrite($hFile, "\t'fast_reload_interval' => {$this->m_iFastReloadInterval},\n");
 			fwrite($hFile, ");\n");
 			
 			fwrite($hFile, "\n/**\n");

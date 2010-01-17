@@ -189,6 +189,40 @@ class DisplayBlock
 		$sHtml = '';
 		$aExtraParams = array_merge($aExtraParams, $this->m_aParams);
 		$aExtraParams['block_id'] = $sId;
+		$sExtraParams = addslashes(str_replace('"', "'", json_encode($aExtraParams))); // JSON encode, change the style of the quotes and escape them
+		
+		$bAutoReload = false;
+		if (isset($aExtraParams['auto_reload']))
+		{
+			switch($aExtraParams['auto_reload'])
+			{
+				case 'fast':
+				$bAutoReload = true;
+				$iReloadInterval = utils::GetConfig()->GetFastReloadInterval()*1000;
+				break;
+				
+				case 'standard':
+				case 'true':
+				case true:
+				$bAutoReload = true;
+				$iReloadInterval = utils::GetConfig()->GetStandardReloadInterval()*1000;
+				break;
+				
+				default:
+				if (is_numeric($aExtraParams['auto_reload']))
+				{
+					$bAutoReload = true;
+					$iReloadInterval = $aExtraParams['auto_reload']*1000;
+				}
+				else
+				{
+					// incorrect config, ignore it
+					$bAutoReload = false;
+				}
+			}
+		}
+
+		$sFilter = $this->m_oFilter->serialize(); // Used either for asynchronous or auto_reload
 		if (!$this->m_bAsynchronous)
 		{
 			// render now
@@ -199,8 +233,6 @@ class DisplayBlock
 		else
 		{
 			// render it as an Ajax (asynchronous) call
-			$sFilter = $this->m_oFilter->serialize();
-			$sExtraParams = addslashes(str_replace('"', "'", json_encode($aExtraParams))); // JSON encode, change the style of the quotes and escape them
 			$sHtml .= "<div id=\"$sId\" class=\"display_block loading\">\n";
 			$sHtml .= $oPage->GetP("<img src=\"../images/indicator_arrows.gif\"> Loading...");
 			$sHtml .= "</div>\n";
@@ -215,7 +247,14 @@ class DisplayBlock
 				 $("#'.$sId.' .listResults").tablesorter( { headers: { 0:{sorter: false }}, widgets: [\'zebra\']} ); // sortable and zebra tables
 				}
 			 );
-			 </script>'; // TO DO: add support for $aExtraParams in asynchronous/Ajax mode
+			 </script>';
+		}
+		if ($bAutoReload)
+		{
+			$sHtml .= '
+			<script language="javascript">
+			setInterval("ReloadBlock(\''.$sId.'\', \''.$this->m_sStyle.'\', \''.$sFilter.'\', \"'.$sExtraParams.'\")", '.$iReloadInterval.');
+			 </script>';
 		}
 		return $sHtml;
 	}
