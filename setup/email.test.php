@@ -26,7 +26,7 @@ function CheckEmailSetting($oP)
 		$sPhpIniFile = 'php.ini';
 	}
 
-	$bIsWindows = (array_key_exists('WINDIR', $_SERVER)); 
+	$bIsWindows = (array_key_exists('WINDIR', $_SERVER));
 	if ($bIsWindows)
 	{	
 		$sSmtpServer = ini_get('SMTP');
@@ -62,6 +62,16 @@ function CheckEmailSetting($oP)
 	else
 	{
 		// Not a windows system
+		$sSendMail = ini_get('sendmail_path');
+		if (empty($sSendMail))
+		{
+			$oP->error("The command to send mail is not defined. Please add the 'sendmail_path' directive into $sPhpIniFile. A recommended setting is <em>sendmail_path=sendmail -t -i</em>");
+			$bRet = false;
+		}
+		else
+		{
+			$oP->info("The command to send mail: <strong>$sSendMail</strong>. To change this value, modify the 'sendmail_path' directive into $sPhpIniFile");
+		}
 	}
 	if ($bRet)
 	{
