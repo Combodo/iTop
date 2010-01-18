@@ -143,7 +143,7 @@ class logRealObject extends cmdbAbstractObject
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_AddAttribute(new AttributeString("name", array("label"=>"Name", "description"=>"Common name", "allowed_values"=>null, "sql"=>"name", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("label"=>"Status", "description"=>"Lifecycle status", "allowed_values"=>new ValueSetEnum(STANDARD_STATUSES), "sql"=>"status", "default_value"=>"implementation", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("label"=>"Status", "description"=>"Lifecycle status", "allowed_values"=>new ValueSetEnum('production,implementation,obsolete,off,left company,available'), "sql"=>"status", "default_value"=>"implementation", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("org_id", array("targetclass"=>"bizOrganization", "label"=>"Organization", "description"=>"ID of the object owner organization", "allowed_values"=>null, "sql"=>"org_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("org_name", array("label"=>"Organization", "description"=>"Company / Department owning this object", "allowed_values"=>null, "extkey_attcode"=> 'org_id', "target_attcode"=>"name")));
 
@@ -197,6 +197,7 @@ class bizContact extends logRealObject
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
+		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("label"=>"Status", "description"=>"Lifecycle status", "allowed_values"=>new ValueSetEnum('off,left company,available'), "sql"=>"status", "default_value"=>"available", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("org_name", array("label"=>"Organization", "description"=>"Company / Department of the contact", "allowed_values"=>null, "extkey_attcode"=> 'org_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeEmailAddress("email", array("label"=>"eMail", "description"=>"Email address", "allowed_values"=>null, "sql"=>"email", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("phone", array("label"=>"Phone", "description"=>"Telephone", "allowed_values"=>null, "sql"=>"telephone", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
@@ -237,7 +238,6 @@ class bizPerson extends bizContact
 {
 	public static function Init()
 	{
-		$oAllowedEmployeeStatuses = new ValueSetEnum('off,left company,available');
     $aParams = array
 		(
 			"category" => "bizmodel,searchable",
@@ -258,7 +258,6 @@ class bizPerson extends bizContact
 		MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeString("first_name", array("label"=>"First Name", "description"=>"First name", "allowed_values"=>null, "sql"=>"first_name", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("employee_number", array("label"=>"Employee Number", "description"=>"employee number", "allowed_values"=>null, "sql"=>"employee_number", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("label"=>"Status", "description"=>"Lifecycle status", "allowed_values"=>$oAllowedEmployeeStatuses, "sql"=>"status", "default_value"=>"available", "is_null_allowed"=>false, "depends_on"=>array())));
 
 		MetaModel::Init_InheritFilters();
 		MetaModel::Init_AddFilterFromAttribute("first_name");
@@ -393,6 +392,7 @@ class bizDocument extends logRealObject
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
+		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("label"=>"Status", "description"=>"Lifecycle status", "allowed_values"=>new ValueSetEnum('production,implementation,obsolete'), "sql"=>"status", "default_value"=>"implementation", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("org_name", array("label"=>"Organization", "description"=>"Company / Department owning the document", "allowed_values"=>null, "extkey_attcode"=> 'org_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeEnum("type", array("label"=>"type", "description"=>"usage of the document", "allowed_values"=>new ValueSetEnum("documentation,contract,working instructions,network map,white paper,presentation,training"), "sql"=>"type", "default_value"=>"documentation", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("description", array("label"=>"Description", "description"=>"Service Description", "allowed_values"=>null, "sql"=>"description", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
@@ -534,6 +534,7 @@ class logInfra extends logRealObject
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
+		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("label"=>"Status", "description"=>"Lifecycle status", "allowed_values"=>new ValueSetEnum('production,implementation,obsolete'), "sql"=>"status", "default_value"=>"implementation", "is_null_allowed"=>false, "depends_on"=>array())));
     MetaModel::Init_AddAttribute(new AttributeEnum("severity", array("label"=>"Business Criticity", "description"=>"Severity for this infrastructure", "allowed_values"=>new ValueSetEnum("high,medium,low"), "sql"=>"severity", "default_value"=>"low", "is_null_allowed"=>false, "depends_on"=>array())));
   
 		MetaModel::Init_InheritFilters();
@@ -1637,6 +1638,7 @@ class lnkClientServer extends logRealObject
 	
 		);
 		MetaModel::Init_Params($aParams);
+		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("label"=>"Status", "description"=>"Lifecycle status", "allowed_values"=>new ValueSetEnum('production,implementation,obsolete'), "sql"=>"status", "default_value"=>"production", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("client_id", array("targetclass"=>"bizApplication", "jointype"=> '', "label"=>"Client", "description"=>"The client part of the link", "allowed_values"=>null, "sql"=>"client_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("client_name", array("label"=>"Client", "description"=>"Name of the client", "allowed_values"=>null, "extkey_attcode"=> 'client_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("server_id", array("targetclass"=>"bizApplication", "jointype"=> '', "label"=>"Server", "description"=>"the server part of the link", "allowed_values"=>null, "sql"=>"server_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
@@ -1683,6 +1685,7 @@ class bizPatch extends logRealObject
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
+		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("label"=>"Status", "description"=>"Lifecycle status", "allowed_values"=>new ValueSetEnum('production,obsolete'), "sql"=>"status", "default_value"=>"production", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("device_id", array("targetclass"=>"bizDevice", "jointype"=> '', "label"=>"Device", "description"=>"The Device where patch is installed", "allowed_values"=>new ValueSetObjects('SELECT bizDevice AS p WHERE p.org_id = :this->org_id'), "sql"=>"device_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array("org_id"))));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("device_name", array("label"=>"Device Name", "description"=>"Name of the impacted device", "allowed_values"=>null, "extkey_attcode"=> 'device_id', "target_attcode"=>"name")));
    	MetaModel::Init_AddAttribute(new AttributeDate("install_date", array("label"=>"Installation Date", "description"=>"Date when application was installed", "allowed_values"=>null, "sql"=>"install_date", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));

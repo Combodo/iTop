@@ -345,6 +345,7 @@ class bizWorkgroup extends logRealObject
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
+		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("label"=>"Status", "description"=>"Lifecycle status", "allowed_values"=>new ValueSetEnum('production,implementation,obsolete'), "sql"=>"status", "default_value"=>"implementation", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("org_name", array("label"=>"Organization", "description"=>"Company / Department owning this object", "allowed_values"=>null, "extkey_attcode"=> 'org_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("team_id", array("targetclass"=>"bizTeam", "label"=>"Team", "description"=>"Team owning the workgroup", "allowed_values"=>null, "sql"=>"team_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("team_name", array("label"=>"Team Name", "description"=>"name of the team", "allowed_values"=>null, "extkey_attcode"=> 'team_id', "target_attcode"=>"name")));
