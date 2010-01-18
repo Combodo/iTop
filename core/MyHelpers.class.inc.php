@@ -332,15 +332,6 @@ class MyHelpers
 	}
 
 	/**
-	* utf8... converts non ASCII chars into '?'
-	* Decided after some complex investigations, to have the tools work fine (Oracle+Perl vs mySQL+PHP...)
-	*/
-	public static function utf8($strText)
-	{
-		return iconv("WINDOWS-1252", "ASCII//TRANSLIT", $strText);
-	}	
-
-	/**
 	* xmlentities()
 	* ... same as htmlentities, but designed for xml !
 	*/

@@ -522,14 +522,27 @@ abstract class DBObject
 	// Note: checks the values and consistency
 	public function CheckToInsert()
 	{
+		$aIssues = array();
 		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode=>$oAttDef)
 		{
-			if (!$this->CheckValue($sAttCode)) return false;
+			if (!$this->CheckValue($sAttCode))
+			{
+				$aIssues[$sAttCode] = array(
+					'issue' => 'unexpected value'
+				);
+			}
 		}
-		if (!$this->CheckConsistency()) return false;
-		return true;
+		if (count($aIssues) > 0)
+		{
+			return array(false, $aIssues);
+		}
+		if (!$this->CheckConsistency())
+		{
+			return array(false, $aIssues);
+		}
+		return array(true, $aIssues);
 	}
-	
+
 	// check if it is allowed to update the existing object into the database
 	// a displayable error is returned
 	// Note: checks the values and consistency

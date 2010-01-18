@@ -601,22 +601,6 @@ abstract class MyFarm extends TestBizModel
 		MetaModel::DBCheckIntegrity();
 	}
 
-	protected $m_oChange;
-	protected function ObjectToDB(CMDBObject $oNew)
-	{
-		if (!isset($this->m_oChange))
-		{
-			 new CMDBChange();
-			$oMyChange = MetaModel::NewObject("CMDBChange");
-			$oMyChange->Set("date", time());
-			$oMyChange->Set("userinfo", "Administrator");
-			$iChangeId = $oMyChange->DBInsertNoReload();
-			$this->m_oChange = $oMyChange; 
-		}
-		$iId = $oNew->DBInsertTrackedNoReload($this->m_oChange);
-		return $iId;
-}
-
 	protected function InsertMammal($sSpecies, $sSex, $iSpeed, $iMotherid, $iFatherId, $sName, $iHeight, $sBirth)
 	{
 		$oNew = MetaModel::NewObject('Mammal');
@@ -1464,6 +1448,142 @@ class TestWebServicesDirect extends TestBizModel
 			print_r($oRes);
 			echo "</pre>\n";
 		}
+		return true;
+	}
+}
+
+class TestTriggerAndEmail extends TestBizModel
+{
+	static public function GetName() {return 'Test trigger and email';}
+	static public function GetDescription() {return 'Create a trigger and an email, then activates the trigger';}
+
+	static public function GetConfigFile() {return '../config-itop.php';}
+
+	protected function CreateEmailSpec($oTrigger, $sStatus, $sTo, $sCC, $sTesterEmail)
+	{
+		$oAction = MetaModel::NewObject("ActionEmail");
+		$oAction->Set("status", $sStatus);
+		$oAction->Set("name", "New server");
+		$oAction->Set("test_recipient", $sTesterEmail);
+		$oAction->Set("from", $sTesterEmail);
+		$oAction->Set("reply_to", $sTesterEmail);
+		$oAction->Set("to", $sTo);
+		$oAction->Set("cc", $sCC);
+		$oAction->Set("bcc", "");
+		$oAction->Set("subject", "New server: '\$this->name()$'");
+		$oAction->Set("body", "<html><body><p>Dear customer,</p><p>We have created the server \$this->hyperlink()$ in the IT infrastructure database.</p><p>You will be further notified when it is in <strong>Production</strong>.</p><p>The IT infrastructure management team.</p><p>Here are some accentuated characters for french people: 'ייא'</p></body></html>");
+		$oAction->Set("importance", "low");
+		$iActionId = $this->ObjectToDB($oAction, true);
+
+		$oLink = MetaModel::NewObject("lnkTriggerAction");
+		$oLink->Set("trigger_id", $oTrigger->GetKey());
+		$oLink->Set("action_id", $iActionId);
+		$oLink->Set("order", "1");
+		$iLink = $this->ObjectToDB($oLink, true);
+	}
+
+	protected function DoExecute()
+	{
+		$oMyPerson = MetaModel::NewObject("bizPerson");
+		$oMyPerson->Set("name", "testemail1");
+		$oMyPerson->Set("org_id", "1");
+		$oMyPerson->Set("email", "romain.quetiez@hp.com");
+		$iPersonId = $this->ObjectToDB($oMyPerson, true);
+
+		$oMyPerson = MetaModel::NewObject("bizPerson");
+		$oMyPerson->Set("name", "testemail2");
+		$oMyPerson->Set("org_id", "1");
+		$oMyPerson->Set("email", "denis.flaven@hp.com");
+		$iPersonId = $this->ObjectToDB($oMyPerson, true);
+
+		$oMyPerson = MetaModel::NewObject("bizPerson");
+		$oMyPerson->Set("name", "testemail3");
+		$oMyPerson->Set("org_id", "1");
+		$oMyPerson->Set("email", "erwan.taloc@hp.com");
+		$iPersonId = $this->ObjectToDB($oMyPerson, true);
+
+		$oMyServer = MetaModel::NewObject("bizServer");
+		$oMyServer->Set("name", "wfr.terminator.com");
+		$oMyServer->Set("severity", "low");
+		$oMyServer->Set("status", "InStore");
+		$oMyServer->Set("org_id", 2);
+		$oMyServer->Set("location_id", 2);
+		$iServerId = $this->ObjectToDB($oMyServer, true);
+
+		$oMyTrigger = MetaModel::NewObject("TriggerOnStateEnter");
+		$oMyTrigger->Set("description", "Testor");
+		$oMyTrigger->Set("target_class", "bizServer");
+		$oMyTrigger->Set("state", "Shipped");
+		$iTriggerId = $this->ObjectToDB($oMyTrigger, true);
+
+		// Error in OQL field(s)
+		//
+		$this->CreateEmailSpec
+		(
+			$oMyTrigger,
+			'test',
+			"SELECT bizPerson WHERE naime = 'Dali'",
+			"SELECT bizServer",
+			'romain.quetiez@hp.com'
+		);
+
+		// Error: no recipient
+		//
+		$this->CreateEmailSpec
+		(
+			$oMyTrigger,
+			'test',
+			"",
+			"",
+			'romain.quetiez@hp.com'
+		);
+
+		// Test
+		//
+		$this->CreateEmailSpec
+		(
+			$oMyTrigger,
+			'test',
+			"SELECT bizPerson WHERE name LIKE 'testemail%'",
+			"SELECT bizPerson",
+			'romain.quetiez@hp.com'
+		);
+
+		// Test failing because of a wrong test recipient address
+		//
+		$this->CreateEmailSpec
+		(
+			$oMyTrigger,
+			'test',
+			"SELECT bizPerson WHERE name LIKE 'testemail%'",
+			"",
+			'toto@walibi.bg'
+		);
+
+		// Normal behavior
+		//
+		$this->CreateEmailSpec
+		(
+			$oMyTrigger,
+			'enabled',
+			"SELECT bizPerson WHERE name LIKE 'testemail%'",
+			"",
+			'romain.quetiez@hp.com'
+		);
+
+		// Does nothing, because it is disabled
+		//
+		$this->CreateEmailSpec
+		(
+			$oMyTrigger,
+			'disabled',
+			"SELECT bizPerson WHERE name = 'testemail%'",
+			"",
+			'romain.quetiez@hp.com'
+		);
+
+		$oMyTrigger->DoActivate($oMyServer->ToArgs('this'));
+
 		return true;
 	}
 }

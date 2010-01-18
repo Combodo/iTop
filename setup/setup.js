@@ -77,6 +77,15 @@ function DoSubmit(sMsg, iStep)
 		
 		case 4:
 		bResult = DoLoadDataAsynchronous();
+		break;
+
+		// Email test page
+		case 10:
+		if ($('#to').val() == '')
+		{
+			alert('Please specify a destination address');
+			bResult = false;
+		}
 	}
 	if (bResult)
 	{

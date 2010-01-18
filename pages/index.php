@@ -393,7 +393,8 @@ function CreateObject(WebPage $oPage, $sClassName, $aAttributes)
 			$oObj->Set($sAttCode, $aAttributes[$sAttCode]);
 		}
 	}
-	if ($oObj->CheckToInsert())
+	list($bRes, $aIssues) = $oObj->CheckToInsert();
+	if ($bRes)
 	{
 		// By rom
 		// $oObj->DBInsert();
@@ -413,6 +414,12 @@ function CreateObject(WebPage $oPage, $sClassName, $aAttributes)
 	else
 	{
 		$oPage->p("<strong>Error: object can not be created!</strong>\n");
+		$oPage->add("<ul>Issues:");
+		foreach($aIssues as $sErrorMsg)
+		{
+			$oPage->add("<li>$sErrorMsg</li>");
+		}
+		$oPage->add("</ul>");
 	}
 	$oPage->p("<a href=\"\">Return to main page</a>");
 }
@@ -442,7 +449,8 @@ function AddLinks($oPage, $sClassName, $sKey, $sLinkClass, $sExtKeyToMe, $sExtKe
 			$oNewLink = MetaModel::NewObject($sLinkClass);
 			$oNewLink->Set($sExtKeyToMe, $sKey);
 			$oNewLink->Set($sExtKeyToPartner, $oPartnerObj->GetKey());
-			if ($oNewLink->CheckToInsert())
+			list($bRes, $aIssues) = $oNewLink->CheckToInsert();
+			if ($bRes)
 			{
 				$oMyChange = MetaModel::NewObject("CMDBChange");
 				$oMyChange->Set("date", time());
@@ -455,6 +463,12 @@ function AddLinks($oPage, $sClassName, $sKey, $sLinkClass, $sExtKeyToMe, $sExtKe
 			else
 			{
 				$oPage->p("<strong>Error: link can not be created!</strong>\n");
+				$oPage->add("<ul>Issues:");
+				foreach($aIssues as $sErrorMsg)
+				{
+					$oPage->add("<li>$sErrorMsg</li>");
+				}
+				$oPage->add("</ul>");
 			}
 		}
 	}

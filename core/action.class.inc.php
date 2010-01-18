@@ -1,5 +1,7 @@
 <?php
 
+require_once('../core/email.class.inc.php');
+
 /**
  * A user defined action, to customize the application  
  *
@@ -34,6 +36,7 @@ abstract class Action extends cmdbAbstractObject
 		//MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeString("name", array("label"=>"Name", "description"=>"label", "allowed_values"=>null, "sql"=>"name", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("description", array("label"=>"Description", "description"=>"one line description", "allowed_values"=>null, "sql"=>"description", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("label"=>"Status", "description"=>"In production or ?", "allowed_values"=>new ValueSetEnum(array('test'=>'Being tested' ,'enabled'=>'In production', 'disabled'=>'Inactive')), "sql"=>"status", "default_value"=>"test", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("related_triggers", array("label"=>"Related Triggers", "description"=>"Triggers linked to this action", "linked_class"=>"lnkTriggerAction", "ext_key_to_me"=>"action_id", "ext_key_to_remote"=>"trigger_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 
 		//MetaModel::Init_InheritFilters();
@@ -41,14 +44,39 @@ abstract class Action extends cmdbAbstractObject
 		MetaModel::Init_AddFilterFromAttribute("description");
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('name', 'description')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('name', 'description')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', array('name', 'description', 'status')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('finalclass', 'name', 'description', 'status')); // Attributes to be displayed for a list
 		// Search criteria
 //		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
 //		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
 	}
 
 	abstract public function DoExecute($oTrigger, $aContextArgs);
+
+	public function IsActive()
+	{
+		switch($this->Get('status'))
+		{
+			case 'enabled':
+			case 'test':
+				return true;
+
+			default:
+				return false;
+		}
+	}
+
+	public function IsBeingTested()
+	{
+		switch($this->Get('status'))
+		{
+			case 'test':
+				return true;
+
+			default:
+				return false;
+		}
+	}
 }
 
 /**
@@ -87,8 +115,8 @@ abstract class ActionNotification extends Action
 		MetaModel::Init_InheritFilters();
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('name', 'description')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('finalclass', 'name', 'description')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', array('name', 'description', 'status')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('finalclass', 'name', 'description', 'status')); // Attributes to be displayed for a list
 		// Search criteria
 //		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
 //		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
@@ -128,6 +156,8 @@ class ActionEmail extends ActionNotification
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 
+		MetaModel::Init_AddAttribute(new AttributeEmailAddress("test_recipient", array("label"=>"Test recipient", "description"=>"Detination in case status is set to \"Test\"", "allowed_values"=>null, "sql"=>"test_recipient", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+
 		MetaModel::Init_AddAttribute(new AttributeString("from", array("label"=>"From", "description"=>"Will be sent into the email header", "allowed_values"=>null, "sql"=>"from", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("reply_to", array("label"=>"Reply to", "description"=>"Will be sent into the email header", "allowed_values"=>null, "sql"=>"reply_to", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeOQL("to", array("label"=>"To", "description"=>"Destination of the email", "allowed_values"=>null, "sql"=>"to", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
@@ -140,21 +170,36 @@ class ActionEmail extends ActionNotification
 		MetaModel::Init_InheritFilters();
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('name', 'description', 'from', 'reply_to', 'to', 'cc', 'bcc', 'subject', 'body', 'importance')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('name', 'to', 'subject')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', array('name', 'description', 'status', 'test_recipient', 'from', 'reply_to', 'to', 'cc', 'bcc', 'subject', 'body', 'importance')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('name', 'status', 'to', 'subject')); // Attributes to be displayed for a list
 		// Search criteria
 //		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
 //		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
 	}
 
-	// args: a search object
-	// returns an array of emails
-	protected function FindRecipients($sAttCode, $aArgs)
+	// count the recipients found
+	protected $m_iRecipients;
+
+	// Errors management : not that simple because we need that function to be
+	// executed in the background, while making sure that any issue would be reported clearly
+	protected $m_aMailErrors; //array of strings explaining the issue
+
+	// returns a the list of emails as a string, or a detailed error description
+	protected function FindRecipients($sRecipAttCode, $aArgs)
 	{
-		$sOQL = $this->Get($sAttCode);
+		$sOQL = $this->Get($sRecipAttCode);
 		if (strlen($sOQL) == '') return '';
 
-		$oSearch = DBObjectSearch::FromOQL($sOQL);
+		try
+		{
+			$oSearch = DBObjectSearch::FromOQL($sOQL);
+		}
+		catch (OqlException $e)
+		{
+			$this->m_aMailErrors[] = "query syntax error for recipient '$sRecipAttCode'";
+			return $e->getMessage();
+		}
+
 		$sClass = $oSearch->GetClass();
 		// Determine the email attribute (the first one will be our choice)
 		foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
@@ -166,78 +211,138 @@ class ActionEmail extends ActionNotification
 				break;
 			}
 		}
+		if (!isset($sEmailAttCode))
+		{
+			$this->m_aMailErrors[] = "wrong target for recipient '$sRecipAttCode'";
+			return "The objects of the class '$sClass' do not have any email attribute";
+		}
 
 		$oSet = new DBObjectSet($oSearch, array() /* order */, $aArgs);
 		$aRecipients = array();
 		while ($oObj = $oSet->Fetch())
 		{
 			$aRecipients[] = $oObj->Get($sEmailAttCode);
+			$this->m_iRecipients++;
 		}
 		return implode(', ', $aRecipients);
 	}
 
+
 	public function DoExecute($oTrigger, $aContextArgs)
 	{
-		// Determine recicipients
-		//
-		$sTo = $this->FindRecipients('to', $aContextArgs);
-		$sCC = $this->FindRecipients('cc', $aContextArgs);
-		$sBCC = $this->FindRecipients('bcc', $aContextArgs);
-
-		$sFrom = $this->Get('from');
-		$sReplyTo = $this->Get('reply_to');
-
-		$sSubject = MetaModel::ApplyParams($this->Get('subject'), $aContextArgs);
-		$sBody = MetaModel::ApplyParams($this->Get('body'), $aContextArgs);
-
-		// To send HTML mail, the Content-type header must be set
-		$sHeaders  = 'MIME-Version: 1.0' . "\r\n";
-		$sHeaders .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-
-		// Additional headers
-		if (strlen($sFrom) > 0)
+		$this->m_iRecipients = 0;
+		$this->m_aMailErrors = array();
+		$bRes = false; // until we do succeed in sending the email
+		try
 		{
-			$sHeaders .= "From: $sFrom\r\n";
-			// This is required on Windows because otherwise I would get the error
-			// "sendmail_from" not set in php.ini" even if it is correctly working
-			// (apparently, once it worked the SMTP server won't claim anymore for it)
-			ini_set("sendmail_from", $sFrom);
+			// Determine recicipients
+			//
+			$sTo = $this->FindRecipients('to', $aContextArgs);
+			$sCC = $this->FindRecipients('cc', $aContextArgs);
+			$sBCC = $this->FindRecipients('bcc', $aContextArgs);
+
+			$sFrom = $this->Get('from');
+			$sReplyTo = $this->Get('reply_to');
+	
+			$sSubject = MetaModel::ApplyParams($this->Get('subject'), $aContextArgs);
+			$sBody = MetaModel::ApplyParams($this->Get('body'), $aContextArgs);
+
+			$oEmail = new Email();
+
+			if ($this->IsBeingTested())
+			{
+				$oEmail->SetSubject('TEST['.$sSubject.']');
+				$sTestBody = $sBody;
+				$sTestBody .= "<div style=\"border: dashed;\">\n";
+				$sTestBody .= "<h1>Testing email notification ".$this->GetHyperlink()."</h1>\n";
+				$sTestBody .= "<p>The email should be sent with the following properties\n";
+				$sTestBody .= "<ul>\n";
+				$sTestBody .= "<li>TO: $sTo</li>\n";
+				$sTestBody .= "<li>CC: $sCC</li>\n";
+				$sTestBody .= "<li>BCC: $sBCC</li>\n";
+				$sTestBody .= "<li>From: $sFrom</li>\n";
+				$sTestBody .= "<li>Reply-To: $sReplyTo</li>\n";
+				$sTestBody .= "</ul>\n";
+				$sTestBody .= "</p>\n";
+				$sTestBody .= "</div>\n";
+				$oEmail->SetBody($sTestBody);
+				$oEmail->SetRecipientTO($this->Get('test_recipient'));
+				$oEmail->SetRecipientFrom($this->Get('test_recipient'));
+			}
+			else
+			{
+				$oEmail->SetSubject($sSubject);
+				$oEmail->SetBody($sBody);
+				$oEmail->SetRecipientTO($sTo);
+				$oEmail->SetRecipientCC($sCC);
+				$oEmail->SetRecipientBCC($sBCC);
+				$oEmail->SetRecipientFrom($sFrom);
+				$oEmail->SetRecipientReplyTo($sReplyTo);
+			}
+	
+			if (empty($this->m_aMailErrors))
+			{
+				if ($this->m_iRecipients == 0)
+				{
+					$this->m_aMailErrors[] = 'No recipient';
+				}
+				else
+				{
+					$this->m_aMailErrors = array_merge($this->m_aMailErrors, $oEmail->Send());
+				}
+			}
 		}
-		if (strlen($sReplyTo) > 0)
+		catch (Exception $e)
 		{
-			$sHeaders .= "Reply-To: $sReplyTo\r\n";
-		}
-		if (strlen($sCC) > 0)
-		{
-			$sHeaders .= "Cc: $sCC\r\n";
-		}
-		if (strlen($sBCC) > 0)
-		{
-			$sHeaders .= "Bcc: $sBCC\r\n";
+			$this->m_aMailErrors[] = $e->getMessage();
 		}
 
 		$oLog = new EventNotificationEmail();
-		if (mail($sTo, $sSubject, $sBody, $sHeaders))
+		if (empty($this->m_aMailErrors))
 		{
-			$oLog->Set('message', 'Notification sent');
+			if ($this->IsBeingTested())
+			{
+				$oLog->Set('message', 'TEST - Notification sent ('.$this->Get('test_recipient').')');
+			}
+			else
+			{
+				$oLog->Set('message', 'Notification sent');
+			}
 		}
 		else
 		{
-			$aLastError = error_get_last();
-			$oLog->Set('message', 'Mail could not be sent: '.$aLastError['message']);
-			//throw new CoreException('mail not sent', array('action'=>$this->GetKey(), 'to'=>$sTo, 'subject'=>$sSubject, 'headers'=>$sHeaders));
+			if (is_array($this->m_aMailErrors) && count($this->m_aMailErrors) > 0)
+			{
+				$sError = implode(', ', $this->m_aMailErrors);
+			}
+			else
+			{
+				$sError = 'Unknown reason';
+			}
+			if ($this->IsBeingTested())
+			{
+				$oLog->Set('message', 'TEST - Notification was not sent: '.$sError);
+			}
+			else
+			{
+				$oLog->Set('message', 'Notification was not sent: '.$sError);
+			}
 		}
 
 		$oLog->Set('userinfo', UserRights::GetUser());
 		$oLog->Set('trigger_id', $oTrigger->GetKey());
 		$oLog->Set('action_id', $this->GetKey());
 		$oLog->Set('object_id', $aContextArgs['this->id']);
-		$oLog->Set('from', $sFrom);
-		$oLog->Set('to', $sTo);
-		$oLog->Set('cc', $sCC);
-		$oLog->Set('bcc', $sBCC);
-		$oLog->Set('subject', $sSubject);
-		$oLog->Set('body', $sBody);
+
+		// Note: we have to secure this because those values are calculated
+		// inside the try statement, and we would like to keep track of as
+		// many data as we could while some variables may still be undefined
+		if (isset($sTo))       $oLog->Set('to', $sTo);
+		if (isset($sCC))       $oLog->Set('cc', $sCC);
+		if (isset($sBCC))      $oLog->Set('bcc', $sBCC);
+		if (isset($sFrom))     $oLog->Set('from', $sFrom);
+		if (isset($sSubject))  $oLog->Set('subject', $sSubject);
+		if (isset($sBody))     $oLog->Set('body', $sBody);
 		$oLog->DBInsertNoReload();
 	}
 }

@@ -145,7 +145,8 @@ EOF;
 			}
 
 		}
-		if ($oMenuNode->CheckToInsert())
+		list($bRes, $aIssues) = $oMenuNode->CheckToInsert();
+		if ($bRes)
 		{
 			$oMenuNode->DBInsert();
 			$oP->add("<form method=\"get\">");

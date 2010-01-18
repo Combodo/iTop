@@ -56,7 +56,10 @@ class Trigger extends cmdbAbstractObject
 		{
 			$iActionId = $oLink->Get('action_id');
 			$oAction = MetaModel::GetObject('Action', $iActionId);
-			$oAction->DoExecute($this, $aContextArgs);
+			if ($oAction->IsActive())
+			{
+				$oAction->DoExecute($this, $aContextArgs);
+			}
 		}
 	}
 }

@@ -455,7 +455,8 @@ class WebServices
 	{
 		if ($oRes->IsOk())
 		{
-			if ($oTargetObj->CheckToInsert())
+			list($bRes, $aIssues) = $oTargetObj->CheckToInsert();
+			if ($bRes)
 			{
 				$iId = $oTargetObj->DBInsertTrackedNoReload($oChange);
 				$oRes->LogInfo("Created object ".get_class($$oTargetObj)."::$iId");

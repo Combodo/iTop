@@ -130,9 +130,8 @@ abstract class TestHandler
 			$this->ReportWarning($errstr);
 			break;
 		default:
-			throw new ExceptionFromError("Fatal warning in line $errline of file $errfile: $errstr");
-			$this->ReportWarning("Unknown error type: [$errno] $errstr");
-			echo "Unknown error type: [$errno] $errstr<br />\n";
+			$this->ReportWarning("Unknown error type: [$errno] $errstr in $errfile at $errline");
+			echo "Unknown error type: [$errno] $errstr in $errfile at $errline<br />\n";
 			break;
 		}
 		return true; // do not call the default handler
@@ -416,6 +415,48 @@ abstract class TestBizModel extends TestHandler
 		MetaModel::CheckDefinitions();
 
 		// something here to create records... but that's another story
+	}
+
+	protected $m_oChange;
+	protected function ObjectToDB($oNew, $bReload = false)
+	{
+		list($bRes, $aIssues) = $oNew->CheckToInsert();
+		if (!$bRes)
+		{
+			throw new CoreException('Could not create object, unexpected values', array('attributes' => $aIssues));
+		}
+		if ($oNew instanceof CMDBObject)
+		{
+			if (!isset($this->m_oChange))
+			{
+				 new CMDBChange();
+				$oMyChange = MetaModel::NewObject("CMDBChange");
+				$oMyChange->Set("date", time());
+				$oMyChange->Set("userinfo", "Someone doing some tests");
+				$iChangeId = $oMyChange->DBInsertNoReload();
+				$this->m_oChange = $oMyChange; 
+			}
+			if ($bReload)
+			{
+				$iId = $oNew->DBInsertTracked($this->m_oChange);
+			}
+			else
+			{
+				$iId = $oNew->DBInsertTrackedNoReload($this->m_oChange);
+			}
+		}
+		else
+		{
+			if ($bReload)
+			{
+				$iId = $oNew->DBInsert();
+			}
+			else
+			{
+				$iId = $oNew->DBInsertNoReload();
+			}
+		}
+		return $iId;
 	}
 
 	protected function ResetDB()
