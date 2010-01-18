@@ -406,7 +406,7 @@ class AttributeInteger extends AttributeDBField
 	public function GetType() {return "Integer";}
 	public function GetTypeDesc() {return "Numeric value (could be negative)";}
 	public function GetEditClass() {return "String";}
-	protected function GetSQLCol() {return "INT";}
+	protected function GetSQLCol() {return "INT(11)";}
 	
 	public function GetBasicFilterOperators()
 	{
@@ -766,7 +766,7 @@ class AttributeEnum extends AttributeString
 		$oValDef = $this->GetValuesDef();
 		if ($oValDef)
 		{
-			$aValues = CMDBSource::Quote($oValDef->GetValues(array(), ""), true);
+			$aValues = CMDBSource::Quote(array_keys($oValDef->GetValues(array(), "")), true);
 		}
 		else
 		{
@@ -774,7 +774,11 @@ class AttributeEnum extends AttributeString
 		}
 		if (count($aValues) > 0)
 		{
-			return "ENUM(".implode(", ", $aValues).")";
+			// The syntax used here is matters
+			// In particular, I had to remove unnecessary spaces to stick to
+			// make sure that this string will match the field type returned by the DB
+			// (used to perform a comparison between the current DB format and the data model)
+			return "ENUM(".implode(",", $aValues).")";
 		}
 		else
 		{
@@ -795,6 +799,25 @@ class AttributeEnum extends AttributeString
 	{
 		return parent::GetBasicFilterSQLExpr($sOpCode, $value);
 	} 
+
+	public function GetAsHTML($sValue)
+	{
+		$oValDef = $this->GetValuesDef();
+		if ($oValDef)
+		{
+			$aValues = $oValDef->GetValues(array(), "");
+		}
+		if (!empty($aValues) && array_key_exists($sValue, $aValues))
+		{
+			$sLabel = $aValues[$sValue];
+		}
+		else
+		{
+			$sLabel = $sValue.' ERROR could not find';
+		}
+		// later, we could imagine a detailed description in the title
+		return "<span title=\"\">".parent::GetAsHtml($sLabel)."</span>";
+	}
 }
 
 /**
@@ -985,7 +1008,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 	public function GetType() {return "Extkey";}
 	public function GetTypeDesc() {return "Link to another object";}
 	public function GetEditClass() {return "ExtKey";}
-	protected function GetSQLCol() {return "INT";}
+	protected function GetSQLCol() {return "INT(11)";}
 
 	public function IsExternalKey($iType = EXTKEY_RELATIVE) {return true;}
 	public function GetTargetClass($iType = EXTKEY_RELATIVE) {return $this->Get("targetclass");}

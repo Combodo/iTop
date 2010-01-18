@@ -2099,19 +2099,34 @@ abstract class MetaModel
 					}
 					else
 					{
+						// The field already exists, does it have the relevant properties?
+						//
+						$bToBeChanged = false;
 						if ($oAttDef->IsNullAllowed() != CMDBSource::IsNullAllowed($sTable, $sField))
 						{
+							$bToBeChanged  = true;
 							if ($oAttDef->IsNullAllowed())
 							{
 								$aErrors[$sClass][] = "field '$sField' in table '$sTable' could be NULL";
-								$aSugFix[$sClass][] = "ALTER TABLE `$sTable` CHANGE `$sField` `$sField` $sFieldSpecs";
 							}
 							else
 							{
 								$aErrors[$sClass][] = "field '$sField' in table '$sTable' could NOT be NULL";
-								$aSugFix[$sClass][] = "ALTER TABLE `$sTable` CHANGE `$sField` `$sField` $sFieldSpecs";
 							}
 						}
+						$sActualFieldType = CMDBSource::GetFieldType($sTable, $sField);
+						if (strcasecmp($sDBFieldType, $sActualFieldType) != 0)
+						{
+							$bToBeChanged  = true;
+							$aErrors[$sClass][] = "field '$sField' in table '$sTable' has a wrong type: found '$sActualFieldType' while expecting '$sDBFieldType'";
+						} 
+						if ($bToBeChanged)
+						{
+							$aSugFix[$sClass][] = "ALTER TABLE `$sTable` CHANGE `$sField` `$sField` $sFieldSpecs";
+						}
+
+						// Create indexes (external keys only... so far)
+						//
 						if ($oAttDef->IsExternalKey() && !CMDBSource::HasIndex($sTable, $sField))
 						{
 							$aErrors[$sClass][] = "Foreign key '$sField' in table '$sTable' should have an index";
