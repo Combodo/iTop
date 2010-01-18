@@ -1409,6 +1409,8 @@ class SetupITILProfiles
 //			'lnkInterfaces',
 			'lnkClientServer',
 			'lnkInfraGrouping',
+			'lnkContactInfra',
+			'lnkContactTeam',
 		),
 		'Incident' => array(
 			'bizIncidentTicket',
