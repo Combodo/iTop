@@ -77,6 +77,7 @@ class EventNotification extends Event
 		MetaModel::Init_InheritFilters();
 		MetaModel::Init_AddFilterFromAttribute("trigger_id");
 		MetaModel::Init_AddFilterFromAttribute("action_id");
+		MetaModel::Init_AddFilterFromAttribute("object_id");
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'trigger_id', 'action_id', 'object_id')); // Attributes to be displayed for the complete details
