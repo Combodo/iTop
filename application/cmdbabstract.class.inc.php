@@ -482,6 +482,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$oSet->Seek(0);
 		while ($oObj = $oSet->Fetch())
 		{
+		    $sClassName = get_class($oObj);
 			$oPage->add("<$sClassName id=\"".$oObj->GetKey()."\">\n");
 			foreach(MetaModel::ListAttributeDefs($sClassName) as $sAttCode=>$oAttDef)
 			{
