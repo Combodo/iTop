@@ -1505,7 +1505,7 @@ class TestTriggerAndEmail extends TestBizModel
 		$oMyServer = MetaModel::NewObject("bizServer");
 		$oMyServer->Set("name", "wfr.terminator.com");
 		$oMyServer->Set("severity", "low");
-		$oMyServer->Set("status", "InStore");
+		$oMyServer->Set("status", "production");
 		$oMyServer->Set("org_id", 2);
 		$oMyServer->Set("location_id", 2);
 		$iServerId = $this->ObjectToDB($oMyServer, true);
