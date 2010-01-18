@@ -968,6 +968,7 @@ display: list-item;
 &lt;i&gt;&lt;b&gt;Actions&lt;/b&gt;&lt;/i&gt; define the actions to be performed when the triggers execute. For now there is only one kind of action consisting in sending an email message.
 Such actions also define the template to be used for sending the email as well as the other parameters of the message like the recipients, importance, etc.
 &lt;/p&gt;
+&lt;p&gt;A special page: &lt;a href=&quot;../setup/email.test.php&quot; target=&quot;_blank&quot;&gt;email.test.php&lt;/a&gt; is available for testing and troubleshooting your PHP mail configuration.&lt;/p&gt;
 &lt;p&gt;To be executed, actions must be associated to triggers.
 When associated with a trigger, each action is given an &apos;order&apos; number, specifying in which order the actions are to be executed.&lt;/p&gt;
 &lt;/div&gt;
