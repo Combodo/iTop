@@ -15,6 +15,9 @@
 	<itoptab name="Contacts_to_Notify">
 		<itopblock blockclass="DisplayBlock" type="list" link_attr="ticket_id" object_id="$pkey$" target_attr="contact_id" encoding="text/oql">SELECT lnkContactTicket WHERE ticket_id = $pkey$</itopblock>
 	</itoptab>
+	<itoptab name="Email_Notifications">
+		<itopblock blockclass="DisplayBlock" type="list" parameters="menu:0;" encoding="text/oql">SELECT EventNotificationEmail AS Ev JOIN TriggerOnObject AS T ON Ev.trigger_id = T.id WHERE T.target_class = 'bizIncidentTicket' AND Ev.object_id = $pkey$</itopblock>
+	</itoptab>
 
 
 </itoptabs>
