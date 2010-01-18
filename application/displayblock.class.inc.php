@@ -330,7 +330,7 @@ class DisplayBlock
 			{
 				$sHtml .= $oPage->GetP("No object to display.");
 				$sClass = $this->m_oFilter->GetClass();
-				$bDisplayMenu = isset($this->m_aParams['menu']) ? $this->m_aParams['menu'] == true : true; 
+				$bDisplayMenu = isset($aExtraParams['menu']) ? $aExtraParams['menu'] == true : true; 
 				if ($bDisplayMenu)
 				{
 					if (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES)
@@ -779,7 +779,7 @@ class MenuBlock extends DisplayBlock
 			}
 			else
 			{
-				$sUrl = self::GetAbsoluteUrl();
+				$sUrl = utils::GetAbsoluteUrl();
 				$aActions[] = array ('label' => 'eMail', 'url' => "mailto:?subject=".$oSet->GetFilter()->__DescribeHTML()."&body=".urlencode("$sUrl?operation=search&filter=$sFilter&$sContext"));
 				$aActions[] = array ('label' => 'CSV Export', 'url' => "../pages/$sUIPage?operation=search&filter=$sFilter&format=csv&$sContext");
 				//$aActions[] = array ('label' => 'Bookmark...', 'url' => "../pages/ajax.render.php?operation=create&class=$sClass&filter=$sFilter", 'class' => 'jqmTrigger');
@@ -831,7 +831,7 @@ class MenuBlock extends DisplayBlock
 			else
 			{
 				// many objects in the set, possible actions are: new / modify all / delete all
-				$sUrl = self::GetAbsoluteUrl();
+				$sUrl = utils::GetAbsoluteUrl();
 				$aActions[] = array ('label' => 'eMail', 'url' => "mailto:?subject=".$oSet->GetFilter()->__DescribeHTML()."&body=".urlencode("$sUrl?operation=search&filter=$sFilter&$sContext"));
 				$aActions[] = array ('label' => 'CSV Export', 'url' => "../pages/$sUIPage?operation=search&filter=$sFilter&format=csv&$sContext");
 				//$aActions[] = array ('label' => 'Bookmark...', 'url' => "../pages/ajax.render.php?operation=create&class=$sClass&filter=$sFilter", 'class' => 'jqmTrigger');
@@ -850,39 +850,5 @@ class MenuBlock extends DisplayBlock
 		$oPage->add_ready_script("$(\"ul.jd_menu\").jdMenu();\n");
 		return $sHtml;
 	}	
-	
-	static public function GetAbsoluteUrl()
-	{
-		// Build an absolute URL to this page on this server/port
-		$sServerName = $_SERVER['SERVER_NAME'];
-		$sProtocol = isset($_SERVER['HTTPS']) ? 'https' : 'http';
-		if ($sProtocol == 'http')
-		{
-			$sPort = ($_SERVER['SERVER_PORT'] == 80) ? '' : ':'.$_SERVER['SERVER_PORT'];
-		}
-		else
-		{
-			$sPort = ($_SERVER['SERVER_PORT'] == 443) ? '' : ':'.$_SERVER['SERVER_PORT'];
-		}
-		// $_SERVER['REQUEST_URI'] is empty when running on IIS
-		// Let's use Ivan Tcholakov's fix (found on www.dokeos.com)
-		if (!empty($_SERVER['REQUEST_URI']))
-		{
-			$sPath = $_SERVER['REQUEST_URI'];
-		}
-		else
-		{
-			$sPath = $_SERVER['SCRIPT_NAME'];
-			if (!empty($_SERVER['QUERY_STRING']))
-			{
-				$sPath .= '?'.$_SERVER['QUERY_STRING'];
-			}
-			$_SERVER['REQUEST_URI'] = $sPath;
-		} 
-   		$sPath = $_SERVER['REQUEST_URI'];
-		$sUrl = "$sProtocol://{$sServerName}{$sPort}{$sPath}";
-		
-		return $sUrl;
-	}
 }
 ?>

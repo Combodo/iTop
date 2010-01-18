@@ -147,5 +147,53 @@ class utils
 	    }
         return $iReturn;
     }
+
+    /**
+     * Returns an absolute URL to the current page
+     * @param $bQueryString bool True to also get the query string, false otherwise
+     * @return string The absolute URL to the current page
+     */                   
+	static public function GetAbsoluteUrl($bQueryString = true)
+	{
+		// Build an absolute URL to this page on this server/port
+		$sServerName = $_SERVER['SERVER_NAME'];
+		$sProtocol = isset($_SERVER['HTTPS']) ? 'https' : 'http';
+		if ($sProtocol == 'http')
+		{
+			$sPort = ($_SERVER['SERVER_PORT'] == 80) ? '' : ':'.$_SERVER['SERVER_PORT'];
+		}
+		else
+		{
+			$sPort = ($_SERVER['SERVER_PORT'] == 443) ? '' : ':'.$_SERVER['SERVER_PORT'];
+		}
+		// $_SERVER['REQUEST_URI'] is empty when running on IIS
+		// Let's use Ivan Tcholakov's fix (found on www.dokeos.com)
+		if (!empty($_SERVER['REQUEST_URI']))
+		{
+			$sPath = $_SERVER['REQUEST_URI'];
+		}
+		else
+		{
+			$sPath = $_SERVER['SCRIPT_NAME'];
+			if (!empty($_SERVER['QUERY_STRING']))
+			{
+				$sPath .= '?'.$_SERVER['QUERY_STRING'];
+			}
+			$_SERVER['REQUEST_URI'] = $sPath;
+		}
+   		$sPath = $_SERVER['REQUEST_URI'];
+        if (!$bQueryString)
+        {
+            // remove all the parameters from the query string
+            $iQuestionMarkPos = strpos($sPath, '?');
+            if ($iQuestionMarkPos !== false)
+            {
+                $sPath = substr($sPath, 0, $iQuestionMarkPos);
+            }
+        } 
+		$sUrl = "$sProtocol://{$sServerName}{$sPort}{$sPath}";
+		
+		return $sUrl;
+	}
 }
 ?>

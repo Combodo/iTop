@@ -14,7 +14,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 	
 	public static function GetUIPage()
 	{
-		return './UI.php';
+		return '../pages/UI.php';
 	}
 	
 	public static function ComputeUIPage($sClass)
@@ -40,6 +40,9 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$oAppContext = new ApplicationContext();	
 		$sExtClassNameAtt = MetaModel::GetNameAttributeCode($sObjClass);
 		$sPage = self::ComputeUIPage($sObjClass);
+        $sAbsoluteUrl = utils::GetAbsoluteUrl(false); // False => Don't get the query string
+        $sAbsoluteUrl = substr($sAbsoluteUrl, 0, 1+strrpos($sAbsoluteUrl, '/')); // remove the current page, keep just the path, up to the last /
+
 		// Use the "name" of the target class as the label of the hyperlink
 		// unless it's not available in the external attributes...
 		if (isset($aAvailableFields[$sExtClassNameAtt]))
@@ -71,7 +74,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 			$sLabel = MetaModel::GetName($sObjClass)." #$sObjKey";
 		}
 		$sHint = MetaModel::GetName($sObjClass)."::$sObjKey";
-		return "<a href=\"$sPage?operation=details&class=$sObjClass&id=$sObjKey&".$oAppContext->GetForLink()."\" title=\"$sHint\">$sLabel</a>";
+		return "<a href=\"{$sAbsoluteUrl}{$sPage}?operation=details&class=$sObjClass&id=$sObjKey&".$oAppContext->GetForLink()."\" title=\"$sHint\">$sLabel</a>";
 	}
 
 	public function GetDisplayValue($sAttCode)

@@ -139,11 +139,6 @@ class bizServiceCall extends cmdbAbstractObject
 		$this->Set('end_date', $oGenerator->GenerateString("2007-|number(07-12)|-|number(01-30)| |number(07-12)|:|number(00-59)|:|number(00-59)"));
 	}
 	
-	public static function GetUIPage()
-	{
-		return './UI.php';
-	}
-	
 	// State machine actions
 
 	
