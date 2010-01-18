@@ -1,7 +1,5 @@
 <?php
 
-$oAllowedStatuses = new ValueSetEnum('production,implementation,obsolete');
-
 ////////////////////////////////////////////////////////////////////////////////////
 /**
 * Description of known error

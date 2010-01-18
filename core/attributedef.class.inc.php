@@ -813,7 +813,8 @@ class AttributeEnum extends AttributeString
 		}
 		else
 		{
-			$sLabel = $sValue.' ERROR could not find';
+			// #@# todo - record an error silently... 
+			$sLabel = $sValue;
 		}
 		// later, we could imagine a detailed description in the title
 		return "<span title=\"\">".parent::GetAsHtml($sLabel)."</span>";
@@ -843,6 +844,7 @@ class AttributeDate extends AttributeDBField
 		self::$const_TIMEZONE = new DateTimeZone(self::MYDATETIMEZONE);
 
 		// #@# Init default timezone -> do not get a notice... to be improved !!!
+		// duplicated in the email test page (the mail function does trigger a notice as well)
 		date_default_timezone_set(self::MYDATETIMEZONE);
 	}
 

@@ -19,7 +19,7 @@ require_once('../application/template.class.inc.php');
 /**
  * Possible values for the statuses of objects
  */
-$oAllowedStatuses = new ValueSetEnum('production,implementation,obsolete');
+define('STANDARD_STATUSES', 'production,implementation,obsolete');
 
 /**
  * Relation graphs
@@ -72,7 +72,7 @@ class bizOrganization extends cmdbAbstractObject
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_AddAttribute(new AttributeString("name", array("label"=>"Name", "description"=>"Common name", "allowed_values"=>null, "sql"=>"name", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array() )));
 		MetaModel::Init_AddAttribute(new AttributeString("code", array("label"=>"Code", "description"=>"Organization code (Siret, DUNS,...)", "allowed_values"=>null, "sql"=>"code", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array() )));
-		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("label"=>"Status", "description"=>"Lifecycle status", "allowed_values"=>$oAllowedStatuses, "sql"=>"status", "default_value"=>"implementation", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("label"=>"Status", "description"=>"Lifecycle status", "allowed_values"=>new ValueSetEnum(STANDARD_STATUSES), "sql"=>"status", "default_value"=>"implementation", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("parent_id", array("targetclass"=>"bizOrganization", "label"=>"Parent", "description"=>"Parent organization", "allowed_values"=>null, "sql"=>"parent_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("parent_name", array("label"=>"Parent Name", "description"=>"Name of the parent organization", "allowed_values"=>null, "extkey_attcode"=> 'parent_id', "target_attcode"=>"name")));
 
@@ -126,8 +126,6 @@ class logRealObject extends cmdbAbstractObject
 {
 	public static function Init()
 	{
-		global $oAllowedStatuses;
-		
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
@@ -145,7 +143,7 @@ class logRealObject extends cmdbAbstractObject
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_AddAttribute(new AttributeString("name", array("label"=>"Name", "description"=>"Common name", "allowed_values"=>null, "sql"=>"name", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("label"=>"Status", "description"=>"Lifecycle status", "allowed_values"=>$oAllowedStatuses, "sql"=>"status", "default_value"=>"implementation", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("label"=>"Status", "description"=>"Lifecycle status", "allowed_values"=>new ValueSetEnum(STANDARD_STATUSES), "sql"=>"status", "default_value"=>"implementation", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("org_id", array("targetclass"=>"bizOrganization", "label"=>"Organization", "description"=>"ID of the object owner organization", "allowed_values"=>null, "sql"=>"org_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("org_name", array("label"=>"Organization", "description"=>"Company / Department owning this object", "allowed_values"=>null, "extkey_attcode"=> 'org_id', "target_attcode"=>"name")));
 
