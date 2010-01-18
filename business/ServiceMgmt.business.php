@@ -17,7 +17,8 @@ class bizService extends cmdbAbstractObject
 			"key_type" => "autoincrement",
 			"key_label" => "id",
 			"name_attcode" => "name",
-			"state_attcode" => "status",
+			//"state_attcode" => "status",
+			"state_attcode" => "",
 			"reconc_keys" => array("org_id", "name"), // inherited attributes
 			"db_table" => "services",
 			"db_key_field" => "id",
@@ -42,6 +43,7 @@ class bizService extends cmdbAbstractObject
 		MetaModel::Init_AddFilterFromAttribute("type");
 		MetaModel::Init_AddFilterFromAttribute("status");
 
+/*
 		// Life cycle
 		MetaModel::Init_DefineState("New", array("label"=>"New", "description"=>"Newly created service", "attribute_inherit"=>null,
 												 "attribute_list"=>array()));
@@ -59,7 +61,7 @@ class bizService extends cmdbAbstractObject
 		MetaModel::Init_DefineTransition("New", "ev_implement", array("target_state"=>"Implementation", "actions"=>array(), "user_restriction"=>null));
 		MetaModel::Init_DefineTransition("Implementation", "ev_move2prod", array("target_state"=>"Production", "actions"=>array(), "user_restriction"=>null));
 		MetaModel::Init_DefineTransition("Production", "ev_obsolete", array("target_state"=>"Obsolete", "actions"=>array('IncrementVersion'), "user_restriction"=>null));
-	
+*/	
 
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id','service_category','type','status','description')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('name', 'status', 'org_id','service_category','type')); // Attributes to be displayed for a list
@@ -95,7 +97,8 @@ class bizContract extends cmdbAbstractObject
 			"key_type" => "autoincrement",
 			"key_label" => "id",
 			"name_attcode" => "name",
-			"state_attcode" => "status",
+			//"state_attcode" => "status",
+			"state_attcode" => "",
 			"reconc_keys" => array("org_id", "name"), // inherited attributes
 			"db_table" => "contracts",
 			"db_key_field" => "id",
@@ -139,6 +142,7 @@ class bizContract extends cmdbAbstractObject
 		MetaModel::Init_AddFilterFromAttribute("type");
 
 
+/*
 		// Life cycle
 		MetaModel::Init_DefineState("New", array("label"=>"New", "description"=>"Newly created contract", "attribute_inherit"=>null,
 												 "attribute_list"=>array('name' => OPT_ATT_MANDATORY,'org_id' => OPT_ATT_MANDATORY, 'service_id' => OPT_ATT_MANDATORY,'type' => OPT_ATT_MANDATORY, 'description' => OPT_ATT_MANDATORY)));
@@ -162,7 +166,7 @@ class bizContract extends cmdbAbstractObject
 		MetaModel::Init_DefineTransition("Signed", "ev_begin", array("target_state"=>"Production", "actions"=>array('SetProdDate'), "user_restriction"=>null));
 		MetaModel::Init_DefineTransition("Signed", "ev_terminate", array("target_state"=>"Finished", "actions"=>array(), "user_restriction"=>null));
 		MetaModel::Init_DefineTransition("Production", "ev_terminate", array("target_state"=>"Finished", "actions"=>array(), "user_restriction"=>null));
-
+*/
 
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'service_id','provider_name','type','description','team_id','service_level','cost','currency','cost_unit','cost_freq','move2prod_date','end_prod', 'version_number')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('name', 'status', 'org_id', 'service_id','provider_name','service_name','service_level','type')); // Attributes to be displayed for a list

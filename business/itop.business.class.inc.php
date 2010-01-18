@@ -249,7 +249,7 @@ class bizPerson extends bizContact
 			"key_label" => "id",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("org_id", "first_name", "name"),  // comment en définir plusieurs
+			"reconc_keys" => array("org_id", "first_name", "name"),  // comment en dÃ©finir plusieurs
 			// "reconc_keys" => array("org_id", "employee_number"), 
 			"db_table" => "persons",   // Can it use the same physical DB table as any contact ?
 			"db_key_field" => "id",
@@ -591,7 +591,7 @@ class lnkContactInfra extends cmdbAbstractObject
 ////////////////////////////////////////////////////////////////////////////////////
 /**
 * bizLocation (Region, Country, City, Site, Building, Floor, Room, Rack,...)
-* pourrait être mis en plusieurs sous objects, puisqu'une adresse sur region n'a pas trop de sens
+* pourrait Ãªtre mis en plusieurs sous objects, puisqu'une adresse sur region n'a pas trop de sens
 * 
 */
 ////////////////////////////////////////////////////////////////////////////////////
@@ -1170,6 +1170,7 @@ class bizServer extends bizDevice
 			"key_label" => "id",
 			"name_attcode" => "name",
 			"state_attcode" => "status",
+			"state_attcode" => "",
 			"reconc_keys" => array("org_id", "name"), // inherited attributes
 			"db_table" => "servers",
 			"db_key_field" => "id",
@@ -1190,6 +1191,7 @@ class bizServer extends bizDevice
 		MetaModel::Init_AddAttribute(new AttributeString("default_gateway", array("label"=>"Default Gateway", "description"=>"Default Gateway for this device", "allowed_values"=>null, "sql"=>"default_gateway", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
 		MetaModel::Init_InheritFilters();
+		MetaModel::Init_AddFilterFromAttribute("status");
 		MetaModel::Init_AddFilterFromAttribute("memory_size");
 		MetaModel::Init_AddFilterFromAttribute("cpu");
 		MetaModel::Init_AddFilterFromAttribute("number_of_cpus");
@@ -1199,6 +1201,7 @@ class bizServer extends bizDevice
 		MetaModel::Init_AddFilterFromAttribute("os_version");
 	
  
+/*
 		// Life cycle
 		MetaModel::Init_DefineState("InStore", array("label"=>"InStore", "description"=>"Device in store", "attribute_inherit"=>null,
 												 "attribute_list"=>array()));
@@ -1214,7 +1217,6 @@ class bizServer extends bizDevice
 												"attribute_list"=>array()));
 		MetaModel::Init_DefineState("Obsolete", array("label"=>"Obsolete", "description"=>"The device is no more used", "attribute_inherit"=>null,
 												"attribute_list"=>array()));
-
 
 		MetaModel::Init_DefineStimulus("ev_store", new StimulusUserAction(array("label"=>"Store this server", "description"=>"This server is move to storage")));
 		MetaModel::Init_DefineStimulus("ev_ship", new StimulusUserAction(array("label"=>"Ship this server", "description"=>"This server is shipped to futur location")));
@@ -1242,14 +1244,11 @@ class bizServer extends bizDevice
 		MetaModel::Init_DefineTransition("BeingDeconfigured", "ev_store", array("target_state"=>"InStore", "actions"=>array(), "user_restriction"=>null));
 		MetaModel::Init_DefineTransition("BeingDeconfigured", "ev_obsolete", array("target_state"=>"Obsolete", "actions"=>array(), "user_restriction"=>null));
 		MetaModel::Init_DefineTransition("Obsolete", "ev_recycle", array("target_state"=>"BeingDeconfigured", "actions"=>array(), "user_restriction"=>null));
-		
-
-
-		
+*/
 	
 		// Display lists
 
-  		MetaModel::Init_SetZListItems('details', array('name', 'mgmt_ip','default_gateway','status', 'severity','org_id', 'location_id', 'brand', 'model', 'os_family', 'os_version','serial_number','shipment_number', 'cpu', 'number_of_cpus', 'memory_size', 'hdd_size', 'hdd_free_size')); // Attributes to be displayed for the complete details
+  		MetaModel::Init_SetZListItems('details', array('name', 'status', 'mgmt_ip','default_gateway', 'severity','org_id', 'location_id', 'brand', 'model', 'os_family', 'os_version','serial_number','shipment_number', 'cpu', 'number_of_cpus', 'memory_size', 'hdd_size', 'hdd_free_size')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('name', 'status','severity', 'org_id', 'location_id', 'brand', 'model', 'os_family', 'os_version')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status','severity', 'brand', 'model', 'os_family', 'location_id')); // Criteria of the std search form
