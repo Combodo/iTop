@@ -168,14 +168,18 @@ class XMLDataLoader
 							$iExtKey = -$iDstObj; // Convention: Unresolved keys are stored as negative !
 							$oTargetObj->RegisterAsDirty();
 						}
-						// tested by Romain, little impact on perf (not significant on the intial setup)
+						// here we allow external keys to be invalid because we will resolve them later on...
 						//$oTargetObj->CheckValue($sAttCode, $iExtKey);
 						$oTargetObj->Set($sAttCode, $iExtKey);
 					}
 					else
 					{
 						// tested by Romain, little impact on perf (not significant on the intial setup)
-						//$oTargetObj->CheckValue($sAttCode, (string)$oXmlObj->$sAttCode);
+						if (!$oTargetObj->CheckValue($sAttCode, (string)$oXmlObj->$sAttCode))
+						{
+							SetupWebPage::log("Error - Value not allowed - $sClass/$iSrcId - $sAttCode: '".$oXmlObj->$sAttCode."'");
+							echo "Wrong value for attribute $sAttCode: '".$oXmlObj->$sAttCode."'";
+						}
 						$oTargetObj->Set($sAttCode, (string)$oXmlObj->$sAttCode);
 					}
 				}
@@ -219,6 +223,7 @@ class XMLDataLoader
 		}
 		catch(Exception $e)
 		{
+			SetupWebPage::log("Error - An object could not be loaded - $sClass/$iSrcId - ".$e->getMessage());
 			echo $e->GetHtmlDesc();
 		}
 		$aParentClasses = MetaModel::EnumParentClasses($sClass);
