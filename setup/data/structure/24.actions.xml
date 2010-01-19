@@ -3,7 +3,7 @@
 <ActionEmail id="4">
 <name>Incident Notification to a Workgroup</name>
 <description>This action informs a team that a ticket has been assigned their workgroup</description>
-<status>enabled</status>
+<status>disabled</status>
 <test_recipient></test_recipient>
 <from></from>
 <reply_to></reply_to>
@@ -25,7 +25,7 @@
 <ActionEmail id="2">
 <name>Incident notification to Agent</name>
 <description>This action informs an agent that a ticket has been assigned to her/him</description>
-<status>enabled</status>
+<status>disabled</status>
 <test_recipient></test_recipient>
 <from></from>
 <reply_to></reply_to>
@@ -47,7 +47,7 @@
 <ActionEmail id="3">
 <name>Incident Notification to caller</name>
 <description>This action is used to inform the caller</description>
-<status>enabled</status>
+<status>disabled</status>
 <test_recipient></test_recipient>
 <from></from>
 <reply_to></reply_to>
