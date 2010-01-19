@@ -1364,7 +1364,7 @@ class bizNetworkDevice extends bizDevice
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('name', 'status','severity','org_id', 'location_id', 'brand','model','type','mgmt_ip','default_gateway','serial_number','ios_version','memory','snmp_read','snmp_write')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('name', 'status','brand','model','type','mgmt_ip')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('list', array('name', 'status','org_id','brand','model','type','mgmt_ip')); // Attributes to be displayed for a list
 		
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'location_id', 'brand','model','type','mgmt_ip')); // Criteria of the std search form
