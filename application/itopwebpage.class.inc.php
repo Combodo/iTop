@@ -135,7 +135,7 @@ EOF
     {
         // Combo box to select the organization
 		$this->AddToMenu("<div id=\"OrganizationSelection\">
-			  <form style=\"display:inline\" action=\"./UI.php\"><select style=\"width:150px;font-size:x-small\" name=\"org_id\" title=\"Pick an organization\" onChange=\"this.form.submit();\">\n");
+			  <form style=\"display:inline\" action=\"{$_SERVER['PHP_SELF']}\"><select style=\"width:150px;font-size:x-small\" name=\"org_id\" title=\"Pick an organization\" onChange=\"this.form.submit();\">\n");
 		// List of visible Organizations
 		$oContext = new UserContext();
 		$oSearchFilter = $oContext->NewFilter("bizOrganization");

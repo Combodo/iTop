@@ -34,7 +34,7 @@ class DisplayTemplate
 				$oBlock = DisplayBlock::FromTemplate($sOuterTag);
 				if (is_object($oBlock))
 				{
-					$oBlock->Display($oPage, 'block_'.self::$iBlockCount);
+					$oBlock->Display($oPage, 'block_'.self::$iBlockCount, $aParams);
 				}
 				self::$iBlockCount++;
 			}
