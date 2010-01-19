@@ -2,7 +2,7 @@
 <Set>
 <bizServer id="107">
 <name>domino.combodo.com</name>
-<status>InProduction</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -22,7 +22,7 @@
 </bizServer>
 <bizServer id="108">
 <name>server02</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -42,7 +42,7 @@
 </bizServer>
 <bizServer id="109">
 <name>server03</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -62,7 +62,7 @@
 </bizServer>
 <bizServer id="110">
 <name>server04</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -82,7 +82,7 @@
 </bizServer>
 <bizServer id="111">
 <name>server05</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -102,7 +102,7 @@
 </bizServer>
 <bizServer id="112">
 <name>server06</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>medium</severity>
 <location_id>3</location_id>
@@ -122,7 +122,7 @@
 </bizServer>
 <bizServer id="113">
 <name>server07</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -142,7 +142,7 @@
 </bizServer>
 <bizServer id="114">
 <name>server08</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -162,7 +162,7 @@
 </bizServer>
 <bizServer id="115">
 <name>server09</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -182,7 +182,7 @@
 </bizServer>
 <bizServer id="116">
 <name>server10</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -202,7 +202,7 @@
 </bizServer>
 <bizServer id="117">
 <name>server100</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -222,7 +222,7 @@
 </bizServer>
 <bizServer id="118">
 <name>server101</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -242,7 +242,7 @@
 </bizServer>
 <bizServer id="119">
 <name>server102</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -262,7 +262,7 @@
 </bizServer>
 <bizServer id="120">
 <name>server103</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -282,7 +282,7 @@
 </bizServer>
 <bizServer id="121">
 <name>server104</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -302,7 +302,7 @@
 </bizServer>
 <bizServer id="122">
 <name>server105</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -322,7 +322,7 @@
 </bizServer>
 <bizServer id="123">
 <name>server106</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -342,7 +342,7 @@
 </bizServer>
 <bizServer id="124">
 <name>server107</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -362,7 +362,7 @@
 </bizServer>
 <bizServer id="125">
 <name>server108</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -382,7 +382,7 @@
 </bizServer>
 <bizServer id="126">
 <name>server109</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -402,7 +402,7 @@
 </bizServer>
 <bizServer id="127">
 <name>server11</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -422,7 +422,7 @@
 </bizServer>
 <bizServer id="128">
 <name>server110</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -442,7 +442,7 @@
 </bizServer>
 <bizServer id="129">
 <name>server111</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -462,7 +462,7 @@
 </bizServer>
 <bizServer id="130">
 <name>server112</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -482,7 +482,7 @@
 </bizServer>
 <bizServer id="131">
 <name>server113</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -502,7 +502,7 @@
 </bizServer>
 <bizServer id="132">
 <name>server114</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -522,7 +522,7 @@
 </bizServer>
 <bizServer id="133">
 <name>server115</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -542,7 +542,7 @@
 </bizServer>
 <bizServer id="134">
 <name>server116</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -562,7 +562,7 @@
 </bizServer>
 <bizServer id="135">
 <name>server117</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -582,7 +582,7 @@
 </bizServer>
 <bizServer id="136">
 <name>server118</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -602,7 +602,7 @@
 </bizServer>
 <bizServer id="137">
 <name>server119</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -622,7 +622,7 @@
 </bizServer>
 <bizServer id="138">
 <name>server12</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -642,7 +642,7 @@
 </bizServer>
 <bizServer id="139">
 <name>server120</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -662,7 +662,7 @@
 </bizServer>
 <bizServer id="140">
 <name>server121</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -682,7 +682,7 @@
 </bizServer>
 <bizServer id="141">
 <name>server122</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -702,7 +702,7 @@
 </bizServer>
 <bizServer id="142">
 <name>server123</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -722,7 +722,7 @@
 </bizServer>
 <bizServer id="143">
 <name>server124</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -742,7 +742,7 @@
 </bizServer>
 <bizServer id="144">
 <name>server125</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -762,7 +762,7 @@
 </bizServer>
 <bizServer id="145">
 <name>server126</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -782,7 +782,7 @@
 </bizServer>
 <bizServer id="146">
 <name>server127</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -802,7 +802,7 @@
 </bizServer>
 <bizServer id="147">
 <name>server128</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -822,7 +822,7 @@
 </bizServer>
 <bizServer id="148">
 <name>server129</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -842,7 +842,7 @@
 </bizServer>
 <bizServer id="149">
 <name>server13</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -862,7 +862,7 @@
 </bizServer>
 <bizServer id="150">
 <name>server130</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -882,7 +882,7 @@
 </bizServer>
 <bizServer id="151">
 <name>server131</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -902,7 +902,7 @@
 </bizServer>
 <bizServer id="152">
 <name>server132</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -922,7 +922,7 @@
 </bizServer>
 <bizServer id="153">
 <name>server133</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -942,7 +942,7 @@
 </bizServer>
 <bizServer id="154">
 <name>server134</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -962,7 +962,7 @@
 </bizServer>
 <bizServer id="155">
 <name>server135</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -982,7 +982,7 @@
 </bizServer>
 <bizServer id="156">
 <name>server136</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1002,7 +1002,7 @@
 </bizServer>
 <bizServer id="157">
 <name>server137</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1022,7 +1022,7 @@
 </bizServer>
 <bizServer id="158">
 <name>server138</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1042,7 +1042,7 @@
 </bizServer>
 <bizServer id="159">
 <name>server139</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1062,7 +1062,7 @@
 </bizServer>
 <bizServer id="160">
 <name>server14</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -1082,7 +1082,7 @@
 </bizServer>
 <bizServer id="161">
 <name>server140</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1102,7 +1102,7 @@
 </bizServer>
 <bizServer id="162">
 <name>server141</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1122,7 +1122,7 @@
 </bizServer>
 <bizServer id="163">
 <name>server142</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1142,7 +1142,7 @@
 </bizServer>
 <bizServer id="164">
 <name>server143</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1162,7 +1162,7 @@
 </bizServer>
 <bizServer id="165">
 <name>server144</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1182,7 +1182,7 @@
 </bizServer>
 <bizServer id="166">
 <name>server145</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1202,7 +1202,7 @@
 </bizServer>
 <bizServer id="167">
 <name>server146</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1222,7 +1222,7 @@
 </bizServer>
 <bizServer id="168">
 <name>server147</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1242,7 +1242,7 @@
 </bizServer>
 <bizServer id="169">
 <name>server148</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1262,7 +1262,7 @@
 </bizServer>
 <bizServer id="170">
 <name>server149</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1282,7 +1282,7 @@
 </bizServer>
 <bizServer id="171">
 <name>server15</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -1302,7 +1302,7 @@
 </bizServer>
 <bizServer id="172">
 <name>server150</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1322,7 +1322,7 @@
 </bizServer>
 <bizServer id="173">
 <name>server151</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1342,7 +1342,7 @@
 </bizServer>
 <bizServer id="174">
 <name>server152</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1362,7 +1362,7 @@
 </bizServer>
 <bizServer id="175">
 <name>server153</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1382,7 +1382,7 @@
 </bizServer>
 <bizServer id="176">
 <name>server154</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1402,7 +1402,7 @@
 </bizServer>
 <bizServer id="177">
 <name>server155</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1422,7 +1422,7 @@
 </bizServer>
 <bizServer id="178">
 <name>server156</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1442,7 +1442,7 @@
 </bizServer>
 <bizServer id="179">
 <name>server157</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1462,7 +1462,7 @@
 </bizServer>
 <bizServer id="180">
 <name>server158</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1482,7 +1482,7 @@
 </bizServer>
 <bizServer id="181">
 <name>server159</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1502,7 +1502,7 @@
 </bizServer>
 <bizServer id="182">
 <name>server16</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -1522,7 +1522,7 @@
 </bizServer>
 <bizServer id="183">
 <name>server160</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1542,7 +1542,7 @@
 </bizServer>
 <bizServer id="184">
 <name>server161</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1562,7 +1562,7 @@
 </bizServer>
 <bizServer id="185">
 <name>server162</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1582,7 +1582,7 @@
 </bizServer>
 <bizServer id="186">
 <name>server163</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1602,7 +1602,7 @@
 </bizServer>
 <bizServer id="187">
 <name>server164</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1622,7 +1622,7 @@
 </bizServer>
 <bizServer id="188">
 <name>server165</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1642,7 +1642,7 @@
 </bizServer>
 <bizServer id="189">
 <name>server166</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1662,7 +1662,7 @@
 </bizServer>
 <bizServer id="190">
 <name>server167</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1682,7 +1682,7 @@
 </bizServer>
 <bizServer id="191">
 <name>server168</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1702,7 +1702,7 @@
 </bizServer>
 <bizServer id="192">
 <name>server169</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1722,7 +1722,7 @@
 </bizServer>
 <bizServer id="193">
 <name>server17</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -1742,7 +1742,7 @@
 </bizServer>
 <bizServer id="194">
 <name>server170</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1762,7 +1762,7 @@
 </bizServer>
 <bizServer id="195">
 <name>server171</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1782,7 +1782,7 @@
 </bizServer>
 <bizServer id="196">
 <name>server172</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1802,7 +1802,7 @@
 </bizServer>
 <bizServer id="197">
 <name>server173</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1822,7 +1822,7 @@
 </bizServer>
 <bizServer id="198">
 <name>server174</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1842,7 +1842,7 @@
 </bizServer>
 <bizServer id="199">
 <name>server175</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1862,7 +1862,7 @@
 </bizServer>
 <bizServer id="200">
 <name>server176</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1882,7 +1882,7 @@
 </bizServer>
 <bizServer id="201">
 <name>server177</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1902,7 +1902,7 @@
 </bizServer>
 <bizServer id="202">
 <name>server178</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1922,7 +1922,7 @@
 </bizServer>
 <bizServer id="203">
 <name>server179</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1942,7 +1942,7 @@
 </bizServer>
 <bizServer id="204">
 <name>server18</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -1962,7 +1962,7 @@
 </bizServer>
 <bizServer id="205">
 <name>server180</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -1982,7 +1982,7 @@
 </bizServer>
 <bizServer id="206">
 <name>server181</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -2002,7 +2002,7 @@
 </bizServer>
 <bizServer id="207">
 <name>server182</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -2022,7 +2022,7 @@
 </bizServer>
 <bizServer id="208">
 <name>server183</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -2042,7 +2042,7 @@
 </bizServer>
 <bizServer id="209">
 <name>server184</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -2062,7 +2062,7 @@
 </bizServer>
 <bizServer id="210">
 <name>server185</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -2082,7 +2082,7 @@
 </bizServer>
 <bizServer id="211">
 <name>server186</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -2102,7 +2102,7 @@
 </bizServer>
 <bizServer id="212">
 <name>server187</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -2122,7 +2122,7 @@
 </bizServer>
 <bizServer id="213">
 <name>server188</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -2142,7 +2142,7 @@
 </bizServer>
 <bizServer id="214">
 <name>server189</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -2162,7 +2162,7 @@
 </bizServer>
 <bizServer id="215">
 <name>server19</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -2182,7 +2182,7 @@
 </bizServer>
 <bizServer id="216">
 <name>server190</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -2202,7 +2202,7 @@
 </bizServer>
 <bizServer id="217">
 <name>server191</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -2222,7 +2222,7 @@
 </bizServer>
 <bizServer id="218">
 <name>server192</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -2242,7 +2242,7 @@
 </bizServer>
 <bizServer id="219">
 <name>server193</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -2262,7 +2262,7 @@
 </bizServer>
 <bizServer id="220">
 <name>server194</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -2282,7 +2282,7 @@
 </bizServer>
 <bizServer id="221">
 <name>server195</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -2302,7 +2302,7 @@
 </bizServer>
 <bizServer id="222">
 <name>server196</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -2322,7 +2322,7 @@
 </bizServer>
 <bizServer id="223">
 <name>server197</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -2342,7 +2342,7 @@
 </bizServer>
 <bizServer id="224">
 <name>server198</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -2362,7 +2362,7 @@
 </bizServer>
 <bizServer id="225">
 <name>server199</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -2382,7 +2382,7 @@
 </bizServer>
 <bizServer id="226">
 <name>server20</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -2402,7 +2402,7 @@
 </bizServer>
 <bizServer id="227">
 <name>server21</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -2422,7 +2422,7 @@
 </bizServer>
 <bizServer id="228">
 <name>server22</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -2442,7 +2442,7 @@
 </bizServer>
 <bizServer id="229">
 <name>server23</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -2462,7 +2462,7 @@
 </bizServer>
 <bizServer id="230">
 <name>server24</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -2482,7 +2482,7 @@
 </bizServer>
 <bizServer id="231">
 <name>server25</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -2502,7 +2502,7 @@
 </bizServer>
 <bizServer id="232">
 <name>server26</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -2522,7 +2522,7 @@
 </bizServer>
 <bizServer id="233">
 <name>server27</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -2542,7 +2542,7 @@
 </bizServer>
 <bizServer id="234">
 <name>server28</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -2562,7 +2562,7 @@
 </bizServer>
 <bizServer id="235">
 <name>server29</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -2582,7 +2582,7 @@
 </bizServer>
 <bizServer id="236">
 <name>server30</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -2602,7 +2602,7 @@
 </bizServer>
 <bizServer id="237">
 <name>server31</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -2622,7 +2622,7 @@
 </bizServer>
 <bizServer id="238">
 <name>server32</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -2642,7 +2642,7 @@
 </bizServer>
 <bizServer id="239">
 <name>server33</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -2662,7 +2662,7 @@
 </bizServer>
 <bizServer id="240">
 <name>server34</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -2682,7 +2682,7 @@
 </bizServer>
 <bizServer id="241">
 <name>server35</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -2702,7 +2702,7 @@
 </bizServer>
 <bizServer id="242">
 <name>server36</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -2722,7 +2722,7 @@
 </bizServer>
 <bizServer id="243">
 <name>server37</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -2742,7 +2742,7 @@
 </bizServer>
 <bizServer id="244">
 <name>server38</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -2762,7 +2762,7 @@
 </bizServer>
 <bizServer id="245">
 <name>server39</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -2782,7 +2782,7 @@
 </bizServer>
 <bizServer id="246">
 <name>server40</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -2802,7 +2802,7 @@
 </bizServer>
 <bizServer id="247">
 <name>server41</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -2822,7 +2822,7 @@
 </bizServer>
 <bizServer id="248">
 <name>server42</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -2842,7 +2842,7 @@
 </bizServer>
 <bizServer id="249">
 <name>server43</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -2862,7 +2862,7 @@
 </bizServer>
 <bizServer id="250">
 <name>server44</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -2882,7 +2882,7 @@
 </bizServer>
 <bizServer id="251">
 <name>server45</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -2902,7 +2902,7 @@
 </bizServer>
 <bizServer id="252">
 <name>server46</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -2922,7 +2922,7 @@
 </bizServer>
 <bizServer id="253">
 <name>server47</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -2942,7 +2942,7 @@
 </bizServer>
 <bizServer id="254">
 <name>server48</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -2962,7 +2962,7 @@
 </bizServer>
 <bizServer id="255">
 <name>server49</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -2982,7 +2982,7 @@
 </bizServer>
 <bizServer id="256">
 <name>server50</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -3002,7 +3002,7 @@
 </bizServer>
 <bizServer id="257">
 <name>server51</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -3022,7 +3022,7 @@
 </bizServer>
 <bizServer id="258">
 <name>server52</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -3042,7 +3042,7 @@
 </bizServer>
 <bizServer id="259">
 <name>server53</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -3062,7 +3062,7 @@
 </bizServer>
 <bizServer id="260">
 <name>server54</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -3082,7 +3082,7 @@
 </bizServer>
 <bizServer id="261">
 <name>server55</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -3102,7 +3102,7 @@
 </bizServer>
 <bizServer id="262">
 <name>server56</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -3122,7 +3122,7 @@
 </bizServer>
 <bizServer id="263">
 <name>server57</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -3142,7 +3142,7 @@
 </bizServer>
 <bizServer id="264">
 <name>server58</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -3162,7 +3162,7 @@
 </bizServer>
 <bizServer id="265">
 <name>server59</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -3182,7 +3182,7 @@
 </bizServer>
 <bizServer id="266">
 <name>server60</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -3202,7 +3202,7 @@
 </bizServer>
 <bizServer id="267">
 <name>server61</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -3222,7 +3222,7 @@
 </bizServer>
 <bizServer id="268">
 <name>server62</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -3242,7 +3242,7 @@
 </bizServer>
 <bizServer id="269">
 <name>server63</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -3262,7 +3262,7 @@
 </bizServer>
 <bizServer id="270">
 <name>server64</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -3282,7 +3282,7 @@
 </bizServer>
 <bizServer id="271">
 <name>server65</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -3302,7 +3302,7 @@
 </bizServer>
 <bizServer id="272">
 <name>server66</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -3322,7 +3322,7 @@
 </bizServer>
 <bizServer id="273">
 <name>server67</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -3342,7 +3342,7 @@
 </bizServer>
 <bizServer id="274">
 <name>server68</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -3362,7 +3362,7 @@
 </bizServer>
 <bizServer id="275">
 <name>server69</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -3382,7 +3382,7 @@
 </bizServer>
 <bizServer id="276">
 <name>server70</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -3402,7 +3402,7 @@
 </bizServer>
 <bizServer id="277">
 <name>server71</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -3422,7 +3422,7 @@
 </bizServer>
 <bizServer id="278">
 <name>server72</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -3442,7 +3442,7 @@
 </bizServer>
 <bizServer id="279">
 <name>server73</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -3462,7 +3462,7 @@
 </bizServer>
 <bizServer id="280">
 <name>server74</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -3482,7 +3482,7 @@
 </bizServer>
 <bizServer id="281">
 <name>server75</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -3502,7 +3502,7 @@
 </bizServer>
 <bizServer id="282">
 <name>server76</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -3522,7 +3522,7 @@
 </bizServer>
 <bizServer id="283">
 <name>server77</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -3542,7 +3542,7 @@
 </bizServer>
 <bizServer id="284">
 <name>server78</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -3562,7 +3562,7 @@
 </bizServer>
 <bizServer id="285">
 <name>server79</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -3582,7 +3582,7 @@
 </bizServer>
 <bizServer id="286">
 <name>server80</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -3602,7 +3602,7 @@
 </bizServer>
 <bizServer id="287">
 <name>server81</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -3622,7 +3622,7 @@
 </bizServer>
 <bizServer id="288">
 <name>server82</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -3642,7 +3642,7 @@
 </bizServer>
 <bizServer id="289">
 <name>server83</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -3662,7 +3662,7 @@
 </bizServer>
 <bizServer id="290">
 <name>server84</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -3682,7 +3682,7 @@
 </bizServer>
 <bizServer id="291">
 <name>server85</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -3702,7 +3702,7 @@
 </bizServer>
 <bizServer id="292">
 <name>server86</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -3722,7 +3722,7 @@
 </bizServer>
 <bizServer id="293">
 <name>server87</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -3742,7 +3742,7 @@
 </bizServer>
 <bizServer id="294">
 <name>server88</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -3762,7 +3762,7 @@
 </bizServer>
 <bizServer id="295">
 <name>server89</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -3782,7 +3782,7 @@
 </bizServer>
 <bizServer id="296">
 <name>server90</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -3802,7 +3802,7 @@
 </bizServer>
 <bizServer id="297">
 <name>server91</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -3822,7 +3822,7 @@
 </bizServer>
 <bizServer id="298">
 <name>server92</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -3842,7 +3842,7 @@
 </bizServer>
 <bizServer id="299">
 <name>server93</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -3862,7 +3862,7 @@
 </bizServer>
 <bizServer id="300">
 <name>server94</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -3882,7 +3882,7 @@
 </bizServer>
 <bizServer id="301">
 <name>server95</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -3902,7 +3902,7 @@
 </bizServer>
 <bizServer id="302">
 <name>server96</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -3922,7 +3922,7 @@
 </bizServer>
 <bizServer id="303">
 <name>server97</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -3942,7 +3942,7 @@
 </bizServer>
 <bizServer id="304">
 <name>server98</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -3962,7 +3962,7 @@
 </bizServer>
 <bizServer id="305">
 <name>server99</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>2</location_id>
@@ -3982,7 +3982,7 @@
 </bizServer>
 <bizServer id="329">
 <name>srv01</name>
-<status>Plugged</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>low</severity>
 <location_id>3</location_id>
@@ -4002,7 +4002,7 @@
 </bizServer>
 <bizServer id="306">
 <name>srv01.combodo.com</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -4022,7 +4022,7 @@
 </bizServer>
 <bizServer id="307">
 <name>srv02.combodo.com</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -4042,7 +4042,7 @@
 </bizServer>
 <bizServer id="308">
 <name>srv03.combodo.com</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>
@@ -4062,7 +4062,7 @@
 </bizServer>
 <bizServer id="309">
 <name>srv04.combodo.com</name>
-<status>ProductionCandidate</status>
+<status>production</status>
 <org_id>2</org_id>
 <severity>high</severity>
 <location_id>3</location_id>

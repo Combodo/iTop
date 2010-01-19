@@ -2,7 +2,7 @@
 <Set>
 <bizTeam id="7">
 <name>Application support</name>
-<status>implementation</status>
+<status>available</status>
 <org_id>2</org_id>
 <email>application@mecanorama.com</email>
 <phone>33456456788</phone>
@@ -10,7 +10,7 @@
 </bizTeam>
 <bizTeam id="8">
 <name>ITOP admin team</name>
-<status>production</status>
+<status>available</status>
 <org_id>2</org_id>
 <email>combodo@gmail.com</email>
 <phone>33123453612</phone>
