@@ -75,7 +75,10 @@ switch($operation)
 	$oAuditRule = $oContext->GetObject('AuditRule', $iRuleIndex);
 	$oP->add('<div class="page_header"><h1>Audit Errors: <span class="hilite">'.$oAuditRule->Get('description').'</span></h1><img style="margin-top: -20px; margin-right: 10px; float: right;" src="../images/stop.png"/></div>');
 	$oP->p('<a href="./audit.php?'.$oAppContext->GetForLink().'">[Back to audit results]</a>');
-	cmdbAbstractObject::DisplaySet($oP, $oErrorObjectSet);
+    $sBlockId = 'audit_errors';
+	$oP->p("<div id=\"$sBlockId\" style=\"clear:both\">\n");    
+    cmdbAbstractObject::DisplaySet($oP, $oErrorObjectSet, array('block_id' => $sBlockId));
+	$oP->p("</div>\n");    
 	break;
 	
 	case 'audit':
