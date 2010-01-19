@@ -1429,6 +1429,7 @@ class SetupITILProfiles
 			'lnkContactChange',
 		),
 		'Service' => array(
+			'bizService',
 			'bizContract',
 			'lnkInfraContract',
 			'lnkContactContract',
