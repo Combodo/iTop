@@ -17,6 +17,50 @@ $sOperation = Utils::ReadParam('operation', 'step1');
 $oP = new SetupWebPage('iTop configuration wizard');
 
 /**
+ * Helper function to retrieve the system's temporary directory
+ * Emulates sys_get_temp_dir if neeed (PHP < 5.2.1) 
+ * @return string Path to the system's temp directory 
+ */
+function GetTmpDir()
+{
+    // try to figure out what is the temporary directory
+    // prior to PHP 5.2.1 the function sys_get_temp_dir
+    // did not exist
+    if ( !function_exists('sys_get_temp_dir'))
+    {
+        if( $temp=getenv('TMP') ) return realpath($temp);
+        if( $temp=getenv('TEMP') ) return realpath($temp);
+        if( $temp=getenv('TMPDIR') ) return realpath($temp);
+        $temp=tempnam(__FILE__,'');
+        if (file_exists($temp))
+        {
+            unlink($temp);
+            return realpath(dirname($temp));
+        }
+        return null;
+    }
+    else
+    {
+        return realpath(sys_get_temp_dir());
+    }
+}
+
+
+/**
+ * Helper function to retrieve the directory where files are to be uploaded
+ * @return string Path to the temp directory used for uploading files 
+ */
+function GetUploadTmpDir()
+{
+    $sPath = ini_get('upload_tmp_dir');
+    if (empty($sPath))
+    {
+        $sPath = GetTmpDir();   
+    }    
+    return $sPath;
+}
+ 
+/**
  * Helper function to check if the current version of PHP
  * is compatible with the application
  * @return boolean true if this is Ok, false otherwise
@@ -34,7 +78,7 @@ function CheckPHPVersion(SetupWebPage $oP)
 		$oP->error("Error: The current PHP Version (".phpversion().") is lower than the minimum required version (".PHP_MIN_VERSION.")");
 		return false;
 	}
-	$aMandatoryExtensions = array('mysql', 'iconv', 'simplexml');
+	$aMandatoryExtensions = array('mysql', 'iconv', 'simplexml', 'soap');
 	asort($aMandatoryExtensions); // Sort the list to look clean !
 	$aExtensionsOk = array();
 	$aMissingExtensions = array();
@@ -76,11 +120,11 @@ function CheckPHPVersion(SetupWebPage $oP)
 		$bResult = false;
 	}
 
-	$sUploadTmpDir = ini_get('upload_tmp_dir');
-  	if (empty($sUploadTmpDir))
-  	{
-		$oP->error("Temporary directory for files upload is not defined (upload_tmp_dir)");
-		$bResult = false;
+	$sUploadTmpDir = GetUploadTmpDir();
+	if (empty($sUploadTmpDir))
+	{
+        $sUploadTmpDir = '/tmp';
+		$oP->warning("Temporary directory for files upload is not defined (upload_tmp_dir), assuming that $sUploadTmpDir is used.");
 	}
 	// check that the upload directory is indeed writable from PHP
   	if (!empty($sUploadTmpDir))
