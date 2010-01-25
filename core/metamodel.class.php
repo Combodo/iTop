@@ -832,10 +832,11 @@ abstract class MetaModel
 				$sClassAttCode = 'finalclass';
 				$sRootClass = self::GetRootClass($sClass);
 				$sDbFinalClassField = self::DBGetClassField($sRootClass);
-				$oClassAtt = new AttributeString($sClassAttCode, array(
+				$oClassAtt = new AttributeClass($sClassAttCode, array(
 						"label"=>"Class",
 						"description"=>"Real (final) object class",
-						"allowed_values"=>null,
+						"class_category"=>null,
+						"more_values"=>'',
 						"sql"=>$sDbFinalClassField,
 						"default_value"=>$sClass,
 						"is_null_allowed"=>false,

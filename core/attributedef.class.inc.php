@@ -623,6 +623,11 @@ class AttributeClass extends AttributeString
 		$aParams["allowed_values"] = new ValueSetEnumClasses($aParams['class_category'], $aParams['more_values']);
 		parent::__construct($sCode, $aParams);
 	}
+
+	public function GetAsHTML($sValue)
+	{
+		return MetaModel::GetName($sValue);
+	}
 }
 
 /**
