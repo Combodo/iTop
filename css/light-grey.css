@@ -262,6 +262,7 @@ a.CollapsibleLabel, td a.CollapsibleLabel {
     background: url(../images/mini-arrow-green.gif) no-repeat left;
 }
 
+/* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
 a.CollapsibleLabel.open,  td a.CollapsibleLabel.open { 
 	margin: 0;
 	padding: 0px 0pt 0px 16px;
@@ -337,6 +338,7 @@ div.iTopLogo span {
 	height: 50px;
 	background: url(../images/vsplitter-grey.gif) repeat top;
 }
+/* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
 #MySplitter .vsplitbar.active, #MySplitter .vsplitbar:hover {
 	background-color: #fff;
 }
@@ -344,6 +346,7 @@ div.iTopLogo span {
 	height: 8px;
 	background-color: #fff;
 }
+/* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
 #MySplitter .hsplitbar.active, #MySplitter .hsplitbar:hover {
 	background-color: #fff;
 }
@@ -566,7 +569,7 @@ th.orange {
 /* For Date Picker: Creates a little calendar icon
  * instead of a text link for "Choose date"
  */
-td a.dp-choose-date, a.dp-choose-date, td a.dp-choose-date:hover, a.dp-choose-date:hover {
+td a.dp-choose-date, a.dp-choose-date, td a.dp-choose-date:hover, a.dp-choose-date:hover, td a.dp-choose-date:visited, a.dp-choose-date:visited {
 	float: left;
 	width: 16px;
 	height: 16px;
@@ -664,24 +667,24 @@ div.HRDrawer {
 .mandatory {
 	border: 1px solid #f00;
 }
-table.listResults tr td.truncated {
-	background: transparent;
-}
 
-table.listResults tr td.truncated {
+/* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
+table.listResults tr.odd td.truncated {
 	background: url(../images/truncated.png) bottom  repeat-x;
-	margin-bottom: -3px;
 }
 
+/* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
 table.listResults tr.even td.truncated {
 	background: #f9f9f1 url(../images/truncated.png) bottom  repeat-x;
 }
 
-table.listResults tr.even td.truncated.hover {
+/* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
+table.listResults tr.even td.hover.truncated {
 	background: #E8FFD3 url(../images/truncated.png) bottom  repeat-x;
 }
 
-table.listResults tr.odd td.truncated.hover {
+/* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
+table.listResults tr.odd td.hover.truncated {
 	background: #E8FFD3 url(../images/truncated.png) bottom  repeat-x;
 }
 
