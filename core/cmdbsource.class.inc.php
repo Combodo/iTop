@@ -20,6 +20,7 @@ class MySQLException extends CoreException
 	public function __construct($sIssue, $aContext)
 	{
 		$aContext['mysql_error'] = mysql_error();
+		$aContext['mysql_errno'] = mysql_errno();
 		parent::__construct($sIssue, $aContext);
 	}
 }
@@ -41,13 +42,13 @@ class CMDBSource
 		self::$m_sDBName = $sSource;
 		if (!self::$m_resDBLink = @mysql_pconnect($sServer, $sUser, $sPwd))
 		{
-			throw new MySQLException('Could not connect to the DB server', array('host'=>$sServer));
+			throw new MySQLException('Could not connect to the DB server', array('host'=>$sServer, 'user'=>$sUser));
 		}
 		if (!empty($sSource))
 		{
 			if (!mysql_select_db($sSource, self::$m_resDBLink))
 			{
-				throw new MySQLException('Could not select DB', array('db_name'=>$sSource));
+				throw new MySQLException('Could not select DB', array('host'=>$sServer, 'user'=>$sUser, 'db_name'=>$sSource));
 			}
 		}
 	}
@@ -463,6 +464,33 @@ class CMDBSource
 			$result = $aRows[0]['theVar'];
 		}
 		return $result;
+	}
+
+
+	/**
+	 * Returns the privileges of the current user
+	 * @return string privileges in a raw format
+	 */	   	
+	public static function GetRawPrivileges()
+	{
+		try
+		{
+			$result = self::Query('SHOW GRANTS'); // [ FOR CURRENT_USER()]
+		}
+		catch(MySQLException $e)
+		{
+			return "Current user not allowed to see his own privileges (could not access to the database 'mysql' - $iCode)";
+		}
+
+		$aRes = array();
+		while ($aRow = mysql_fetch_array($result, MYSQL_NUM))
+		{
+			// so far, only one column...
+			$aRes[] = implode('/', $aRow);
+		}
+		mysql_free_result($result);
+		// so far, only one line...
+		return implode(', ', $aRes);
 	}
 }
 

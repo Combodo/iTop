@@ -1941,29 +1941,56 @@ abstract class MetaModel
 		echo "</form>\n";
 	}
 
-	public static function DBExists()
+	public static function DBExists($bMustBeComplete = true)
 	{
-		// returns true if at least one table exists (taking into account the DB sharing)
-		// then some tables might be missing, but that is made in DBCheckFormat
+		// returns true if at least one table exists
 		//
-		if (empty(self::$m_sTablePrefix))
-		{
-			return CMDBSource::IsDB(self::$m_sDBName);
-		}
 
-		// DB sharing
-		// Check if there is at least one table with the prefix
-		//
 		if (!CMDBSource::IsDB(self::$m_sDBName))
 		{
 			return false;
 		}
 		CMDBSource::SelectDB(self::$m_sDBName);
 
-		// If a table matches the prefix, then consider that the database already exists
-		$sSQL = "SHOW TABLES LIKE '".strtolower(self::$m_sTablePrefix)."%' ";
-		$result = CMDBSource::Query($sSQL);
-		return (CMDBSource::NbRows($result) > 0);
+		$aFound = array();
+		$aMissing = array();
+		foreach (self::DBEnumTables() as $sTable => $aClasses)
+		{
+			if (CMDBSource::IsTable($sTable))
+			{
+				$aFound[] = $sTable;
+			}
+			else
+			{
+				$aMissing[] = $sTable;
+			}
+		}
+
+		if (count($aFound) == 0)
+		{
+			// no expected table has been found
+			return false;
+		}
+		else
+		{
+			if (count($aMissing) == 0)
+			{
+				// the database is complete (still, could be some fields missing!)
+				return true;
+			}
+			else
+			{
+				// not all the tables, could be an older version
+				if ($bMustBeComplete)
+				{
+					return false;
+				}
+				else
+				{
+					return true;
+				}
+			}
+		}
 	}
 
 	public static function DBDrop()

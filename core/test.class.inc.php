@@ -461,7 +461,7 @@ abstract class TestBizModel extends TestHandler
 
 	protected function ResetDB()
 	{
-		if (MetaModel::DBExists())
+		if (MetaModel::DBExists(false))
 		{
 			MetaModel::DBDrop();
 		}
@@ -527,7 +527,7 @@ abstract class TestBizModelGeneric extends TestBizModel
 	{
 		parent::DoPrepare();
 
-		if (!MetaModel::DBExists())
+		if (!MetaModel::DBExists(false))
 		{
 			MetaModel::DBCreate();
 		}

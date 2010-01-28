@@ -184,6 +184,9 @@ function CheckServerConnection(SetupWebPage $oP, $sDBServer, $sDBUser, $sDBPwd)
 		$oDBSource = new CMDBSource;
 		$oDBSource->Init($sDBServer, $sDBUser, $sDBPwd);
 		$oP->ok("Connection to '$sDBServer' as '$sDBUser' successful.");
+
+		$oP->log("Info - User privileges: ".($oDBSource->GetRawPrivileges()));
+
 		$sDBVersion = $oDBSource->GetDBVersion();
 		if (version_compare($sDBVersion, MYSQL_MIN_VERSION, '>='))
 		{
@@ -262,19 +265,33 @@ function InitDataModel(SetupWebPage $oP, $sConfigFileName, $bAllowMissingDatabas
 function CreateDatabaseStructure(SetupWebPage $oP, Config $oConfig, $sDBName, $sDBPrefix)
 {
 	InitDataModel($oP, TMP_CONFIG_FILE, true); // Allow the DB to NOT exist since we're about to create it !
+
 	$oP->log('Info - CreateDatabaseStructure');
-	$oP->info("Creating the structure in '$sDBName' (prefix = '$sDBPrefix').");
-	//MetaModel::CheckDefinitions();
-	if (!MetaModel::DBExists())
+	if (strlen($sDBPrefix) > 0)
 	{
-		MetaModel::DBCreate();
-		$oP->ok("Database structure created in '$sDBName' (prefix = '$sDBPrefix').");
+		$oP->info("Creating the structure in '$sDBName' (table names prefixed by '$sDBPrefix').");
 	}
 	else
 	{
-		$oP->error("Error: database '$sDBName' (prefix = '$sDBPrefix') already exists.");
-		$oP->p("Tables with conflicting names already exist in the database.
-				Try selecting another database instance or specifiy a prefix to prevent conflicting table names.");
+		$oP->info("Creating the structure in '$sDBName'.");
+	}
+
+	//MetaModel::CheckDefinitions();
+	if (!MetaModel::DBExists(/* bMustBeComplete */ false))
+	{
+		MetaModel::DBCreate();
+		$oP->ok("Database structure successfuly created.");
+	}
+	else
+	{
+		if (strlen($sDBPrefix) > 0)
+		{
+			$oP->error("Error: found iTop tables into the database '$sDBName' (prefix: '$sDBPrefix'). Please, try selecting another database instance or specify another prefix to prevent conflicting table names.");
+		}
+		else
+		{
+			$oP->error("Error: found iTop tables into the database '$sDBName'. Please, try selecting another database instance or specify a prefix to prevent conflicting table names.");
+		}
 		return false;
 	}
 	return true;
@@ -380,8 +397,9 @@ function DisplayStep1(SetupWebPage $oP)
 		$oP->add("<fieldset><legend>Database connection</legend>\n");
 		$aForm = array();
 		$aForm[] = array('label' => "Server name$sRedStar:", 'input' => "<input id=\"db_server\" type=\"text\" name=\"db_server\" value=\"\">",
-						 'help' => 'E.g. "localhost", "dbserver.mycompany.com" or "192.142.10.23".');
-		$aForm[] = array('label' => "User name$sRedStar:", 'input' => "<input id=\"db_user\" type=\"text\" name=\"db_user\" value=\"\">");
+						'help' => 'E.g. "localhost", "dbserver.mycompany.com" or "192.142.10.23"');
+		$aForm[] = array('label' => "User name$sRedStar:", 'input' => "<input id=\"db_user\" type=\"text\" name=\"db_user\" value=\"\">",
+						'help' => 'The account must have the following privileges: SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER');
 		$aForm[] = array('label' => 'Password:', 'input' => "<input id=\"db_pwd\" type=\"password\" name=\"db_pwd\" value=\"\">");
 		$oP->form($aForm);
 		$oP->add("</fieldset>\n");
@@ -407,7 +425,7 @@ function DisplayStep2(SetupWebPage $oP, Config $oConfig, $sDBServer, $sDBUser, $
 	if ($aDatabases === false)
 	{
 		// Connection failed, invalid credentials ? Go back
-		$oP->add("<button onClick=\"window.history.back();\"><< Back</button>\n");
+		$oP->add("<button type=\"button\" onClick=\"window.history.back();\"><< Back</button>\n");
 	}
 	else
 	{
@@ -441,7 +459,7 @@ function DisplayStep2(SetupWebPage $oP, Config $oConfig, $sDBServer, $sDBUser, $
 		$oP->form($aForm);
 
 		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
-		$oP->add("<button onClick=\"window.history.back();\"><< Back</button>\n");
+		$oP->add("<button type=\"button\" onClick=\"window.history.back();\"><< Back</button>\n");
 		$oP->add("&nbsp;&nbsp;&nbsp;&nbsp;\n");
 		$oP->add("<button type=\"submit\">Next >></button>\n");
 	}
@@ -477,13 +495,13 @@ function DisplayStep3(SetupWebPage $oP, Config $oConfig, $sDBName, $sDBPrefix)
 		$oP->form($aForm);
 		$oP->add("</fieldset>\n");
 		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
-		$oP->add("<button onClick=\"window.history.back();\"><< Back</button>\n");
+		$oP->add("<button type=\"button\" onClick=\"window.history.back();\"><< Back</button>\n");
 		$oP->add("&nbsp;&nbsp;&nbsp;&nbsp;\n");
 		$oP->add("<button type=\"submit\">Next >></button>\n");
 	}
 	else
 	{
-		$oP->add("<button onClick=\"window.history.back();\"><< Back</button>\n");
+		$oP->add("<button type=\"button\" onClick=\"window.history.back();\"><< Back</button>\n");
 	}
 	// Form goes here
 	$oP->add("</form>\n");
@@ -509,14 +527,14 @@ function DisplayStep4(SetupWebPage $oP, Config $oConfig, $sAdminUser, $sAdminPwd
 		$oP->p("<input type=\"radio\" id=\"sample_data\" name=\"sample_data\" checked value=\"yes\"> Yes, for testing purposes, populate the database with sample data.\n");
 		$oP->p("<input type=\"radio\" name=\"sample_data\" unchecked value=\"no\"> No, this is a production system, load only the data required by the application.\n");
 		$oP->p("</fieldset>\n");
-		$oP->add("<button onClick=\"window.history.back();\"><< Back</button>\n");
+		$oP->add("<button type=\"button\" onClick=\"window.history.back();\"><< Back</button>\n");
 		$oP->add("&nbsp;&nbsp;&nbsp;&nbsp;\n");
 		$oP->add("<button onclick=\"DoSubmit('Finalizing configuration and loading data...', 4);\">Finish</button>\n");
 	}
 	else
 	{
 		// Creation failed
-		$oP->add("<button onClick=\"window.history.back();\"><< Back</button>\n");
+		$oP->add("<button type=\"button\" onClick=\"window.history.back();\"><< Back</button>\n");
 	}
 	// End of visible form
 	$oP->add("</form>\n");
@@ -561,7 +579,7 @@ function DisplayStep5(SetupWebPage $oP, Config $oConfig, $sAuthUser, $sAuthPwd)
 			$oP->add("<form method=\"get\" action=\"../index.php\">\n");
 			$oP->ok("The initialization completed successfully.");
 			// Form goes here
-			$oP->add("<button onClick=\"window.history.back();\"><< Back</button>\n");
+			$oP->add("<button type=\"button\" onClick=\"window.history.back();\"><< Back</button>\n");
 			$oP->add("&nbsp;&nbsp;&nbsp;&nbsp;\n");
 			$oP->add("<button type=\"submit\">Enter iTop</button>\n");
 			$oP->add("</form>\n");
@@ -575,7 +593,7 @@ function DisplayStep5(SetupWebPage $oP, Config $oConfig, $sAuthUser, $sAuthPwd)
 			$oP->error("Error: Failed to login for user: '$sAuthUser'\n");
 
 			$oP->add("<form method=\"get\" action=\"../index.php\">\n");
-			$oP->add("<button onClick=\"window.history.back();\"><< Back</button>\n");
+			$oP->add("<button type=\"button\" onClick=\"window.history.back();\"><< Back</button>\n");
 			$oP->add("&nbsp;&nbsp;&nbsp;&nbsp;\n");
 			$oP->add("</form>\n");
 		}
@@ -585,6 +603,7 @@ function DisplayStep5(SetupWebPage $oP, Config $oConfig, $sAuthUser, $sAuthPwd)
 		$oP->error("Error: unable to create the configuration file.");
 		$oP->p($e->getHtmlDesc());
 		$oP->p("Did you forget to remove the previous (read-only) configuration file ?");
+		$oP->add("<button type=\"button\" onClick=\"window.history.back();\"><< Back</button>\n");
 	}
 }
 /**
@@ -686,10 +705,12 @@ try
 catch(Exception $e)
 {
 	$oP->error("Error: '".$e->getMessage()."'");	
+	$oP->add("<button type=\"button\" onClick=\"window.history.back();\"><< Back</button>\n");
 }
 catch(CoreException $e)
 {
 	$oP->error("Error: '".$e->getHtmlDesc()."'");	
+	$oP->add("<button type=\"button\" onClick=\"window.history.back();\"><< Back</button>\n");
 }
 $oP->output();
 ?>

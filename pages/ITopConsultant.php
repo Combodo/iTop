@@ -151,9 +151,9 @@ function ShowDatabaseInfo()
 function CreateDB()
 {
 	$sRes = "<p>Creating the DB...</p>\n";
-	if (MetaModel::DBExists())
+	if (MetaModel::DBExists(false))
 	{
-		$sRes .= "<p>It appears that the DB already exists.</p>\n";
+		$sRes .= "<p>It appears that the DB already exists (at least one table).</p>\n";
 	}
 	else
 	{
