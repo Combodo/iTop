@@ -2079,7 +2079,7 @@ abstract class MetaModel
 			if (!CMDBSource::IsTable($sTable))
 			{
 				$aErrors[$sClass][] = "table '$sTable' could not be found into the DB";
-				$aSugFix[$sClass][] = "CREATE TABLE `$sTable` (`$sKeyField` INT(11) NOT NULL $sAutoIncrement PRIMARY KEY) ENGINE = innodb";
+				$aSugFix[$sClass][] = "CREATE TABLE `$sTable` (`$sKeyField` INT(11) NOT NULL $sAutoIncrement PRIMARY KEY) ENGINE = innodb CHARACTER SET utf8 COLLATE utf8_unicode_ci";
 			}
 			// Check that the key field exists
 			//

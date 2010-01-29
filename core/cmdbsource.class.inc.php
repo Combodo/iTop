@@ -98,7 +98,7 @@ class CMDBSource
 
 	public static function CreateDB($sSource)
 	{
-		self::Query("CREATE DATABASE `$sSource`");
+		self::Query("CREATE DATABASE `$sSource` CHARACTER SET utf8 COLLATE utf8_unicode_ci");
 		self::SelectDB($sSource);
 	}
 
