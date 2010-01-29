@@ -1471,7 +1471,7 @@ class TestTriggerAndEmail extends TestBizModel
 		$oAction->Set("cc", $sCC);
 		$oAction->Set("bcc", "");
 		$oAction->Set("subject", "New server: '\$this->name()$'");
-		$oAction->Set("body", "<html><body><p>Dear customer,</p><p>We have created the server \$this->hyperlink()$ in the IT infrastructure database.</p><p>You will be further notified when it is in <strong>Production</strong>.</p><p>The IT infrastructure management team.</p><p>Here are some accentuated characters for french people: 'ÈÈ‡'</p></body></html>");
+		$oAction->Set("body", "<html><body><p>Dear customer,</p><p>We have created the server \$this->hyperlink()$ in the IT infrastructure database.</p><p>You will be further notified when it is in <strong>Production</strong>.</p><p>The IT infrastructure management team.</p><p>Here are some accentuated characters for french people: '√©√©√†'</p></body></html>");
 		$oAction->Set("importance", "low");
 		$iActionId = $this->ObjectToDB($oAction, true);
 
