@@ -58,7 +58,7 @@ h1 {
 		$this->add("<tr><td><label for=\"pwd\">Password:</label></td><td><input id=\"pwd\" type=\"password\" name=\"auth_pwd\" value=\"$sAuthPwd\" /></td></tr>\n");
 		$this->add("<tr><td colspan=\"2\" class=\"center v-spacer\"> <input type=\"submit\" value=\"Enter iTop\" /></td></tr>\n");
 		$this->add("</table>\n");
-		$this->add("<input type=\"hidden\" name=\"operation\" value=\"login\" />\n");
+		$this->add("<input type=\"hidden\" name=\"loginop\" value=\"login\" />\n");
 		$this->add("</form>\n");
 		$this->add("</div>\n");
 	}
@@ -79,7 +79,7 @@ h1 {
 	
 	static function DoLogin()
 	{
-		$operation = utils::ReadParam('operation', '');
+		$operation = utils::ReadParam('loginop', '');
 		session_start();
 
 		if ($operation == 'logoff')
