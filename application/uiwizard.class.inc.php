@@ -146,58 +146,85 @@ $sJSHandlerCode
 	
 		$aStates = MetaModel::EnumStates($this->m_sClass);
 		
-		if ( (!empty($this->m_sTargetState)) && (count($aStates[$this->m_sTargetState]['attribute_list']) > 0) )
+		$aMandatoryAttributes = array();
+		// Some attributes are always mandatory independently of the state machine (if any)
+        foreach(MetaModel::GetAttributesList($this->m_sClass) as $sAttCode)
+        {
+            $oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
+            if (!$oAttDef->IsExternalField() && !$oAttDef->IsNullAllowed())
+            {
+                $aMandatoryAttributes[$sAttCode] = OPT_ATT_MANDATORY;
+            }
+        }
+
+        // Now check the attributes that are mandatory in the specified state
+   		if ( (!empty($this->m_sTargetState)) && (count($aStates[$this->m_sTargetState]['attribute_list']) > 0) )
 		{
 			// Check all the fields that *must* be included in the wizard for this
 			// particular target state
 			$aFields = array();
 			foreach($aStates[$this->m_sTargetState]['attribute_list'] as $sAttCode => $iOptions)
 			{
-				$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
-				$sAttLabel = $oAttDef->GetLabel();
-		
-				if ($iOptions & (OPT_ATT_MANDATORY | OPT_ATT_MUSTCHANGE | OPT_ATT_MUSTPROMPT))
-				{
-					$aPrerequisites = $oAttDef->GetPrerequisiteAttributes();
-					$aFields[$sAttCode] = array();
-					foreach($aPrerequisites as $sCode)
-					{
-						$aFields[$sAttCode][$sCode] = '';
-					}
-				}
-			}
-			
-			// Now use the dependencies between the fields to order them
-			while(count($aFields) > 0)
+                if (isset($aMandatoryAttributes[$sAttCode]))
+                {
+                    $aMandatoryAttributes[$sAttCode] |= $iOptions;
+                }
+			    else
+			    {
+                    $aMandatoryAttributes[$sAttCode] = $iOptions;
+                }
+            }
+        }
+            
+		// Check all the fields that *must* be included in the wizard 
+		$aFields = array();
+		foreach($aMandatoryAttributes as $sAttCode => $iOptions)
+		{
+			$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
+			$sAttLabel = $oAttDef->GetLabel();
+	
+			if ( ($iOptions & (OPT_ATT_MANDATORY | OPT_ATT_MUSTCHANGE | OPT_ATT_MUSTPROMPT)) )
 			{
-				$aCurrentStep = array();
-				foreach($aFields as $sAttCode => $aDependencies)
+				$aPrerequisites = $oAttDef->GetPrerequisiteAttributes();
+				$aFields[$sAttCode] = array();
+				foreach($aPrerequisites as $sCode)
 				{
-					// All fields with no remaining dependencies can be entered at this
-					// step of the wizard
-					if (count($aDependencies) == 0)
-					{
-						$aCurrentStep[] = $sAttCode;
-						$aFieldsDone[$sAttCode] = '';
-						unset($aFields[$sAttCode]);
-						// Remove this field from the dependencies of the other fields
-						foreach($aFields as $sUpdatedCode => $aDummy)
-						{
-							// remove the dependency
-							unset($aFields[$sUpdatedCode][$sAttCode]);
-						}
-					}
+					$aFields[$sAttCode][$sCode] = '';
 				}
-				if (count($aCurrentStep) == 0)
-				{
-					// This step of the wizard would contain NO field !
-					echo "<strong>Error:</strong> Circular reference in the dependencies between the fields.";
-					print_r($aFields);
-					break;
-				}
-				$aWizardSteps['mandatory'][] = $aCurrentStep;
 			}
 		}
+			
+		// Now use the dependencies between the fields to order them
+		while(count($aFields) > 0)
+		{
+			$aCurrentStep = array();
+			foreach($aFields as $sAttCode => $aDependencies)
+			{
+				// All fields with no remaining dependencies can be entered at this
+				// step of the wizard
+				if (count($aDependencies) == 0)
+				{
+					$aCurrentStep[] = $sAttCode;
+					$aFieldsDone[$sAttCode] = '';
+					unset($aFields[$sAttCode]);
+					// Remove this field from the dependencies of the other fields
+					foreach($aFields as $sUpdatedCode => $aDummy)
+					{
+						// remove the dependency
+						unset($aFields[$sUpdatedCode][$sAttCode]);
+					}
+				}
+			}
+			if (count($aCurrentStep) == 0)
+			{
+				// This step of the wizard would contain NO field !
+				echo "<strong>Error:</strong> Circular reference in the dependencies between the fields.";
+				print_r($aFields);
+				break;
+			}
+			$aWizardSteps['mandatory'][] = $aCurrentStep;
+		}
+
 
 		// Now computes the steps to fill the optional fields
 		$sStateAttCode = MetaModel::GetStateAttributeCode($this->m_sClass);
@@ -258,7 +285,6 @@ $sJSHandlerCode
 			}
 			$aWizardSteps['optional'][] = $aCurrentStep;
 		}
-		
 		return $aWizardSteps;
 	
 	} 
