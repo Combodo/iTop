@@ -544,6 +544,7 @@ function DisplayStep4(SetupWebPage $oP, Config $oConfig, $sAdminUser, $sAdminPwd
 	$oP->add("<input type=\"hidden\" name=\"auth_pwd\" value=\"$sAdminPwd\">\n"); // To be compatible with login page
 	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
 	$oP->add("</form>\n");
+	$oP->add("<div id=\"log\" style=\"color:#F00;\"></div>\n");
 	$oP->add_linked_script('./jquery.progression.js');
 
 	PopulateDataFilesList($oP);

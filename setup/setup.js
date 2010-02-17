@@ -103,7 +103,8 @@ function DoLoadDataAsynchronous()
 
 	$('#setup').block({message: '<p>Loading data...<br/><div id=\"progress\">0%</div></p>'});
 	$('#progress').progression( {Current:0, Maximum: 100, aBackgroundImg: 'orange-progress.gif', aTextColor: '#000000'} );
-	LoadNextDataFile('', '');
+	$('#log').ajaxError(function(e, xhr, settings, exception) {	alert('Fatal error detected: '+ xhr.responseText); $('#log').append(xhr.responseText); $('#setup').unblock(); } );
+   LoadNextDataFile('', '');
 	return false; // Stop here for now
 }
 

@@ -6,10 +6,50 @@
  * 'session_status' string 'start', 'continue' or 'end'
  * 'percent' integer 0..100 the percentage of completion once the file has been loaded 
  */ 
+define('SAFE_MINIMUM_MEMORY', 32*1024*1024);
 require_once('../application/utils.inc.php');
+require_once('./setuppage.class.inc.php');
+
+$iMemoryLimit = utils::ConvertToBytes(ini_get('memory_limit'));
+if ($iMemoryLimit < SAFE_MINIMUM_MEMORY)
+{
+	if (ini_set('memory_limit', SAFE_MINIMUM_MEMORY) === FALSE)
+	{
+		SetupWebPage::error("memory_limit is too small: $iMemoryLimit and can not be increased by the script itself.");		
+	}
+	else
+	{
+		SetupWebPage::log("memory_limit increased from $iMemoryLimit to ".SAFE_MINIMUM_MEMORY.".");		
+	}
+}
+
+function FatalErrorCatcher($sOutput)
+{ 
+	if ( preg_match('|<phpfatalerror>.*</phpfatalerror>|s', $sOutput, &$aMatches) )
+	{
+		header("HTTP/1.0 500 Internal server error.");
+		foreach ($aMatches as $sMatch)
+		{
+			$errors .= strip_tags($sMatch)."\n";
+		}
+		$sOutput = "$errors\n";
+		// Logging to a file does not work if the whole memory is exhausted...		
+		//SetupWebPage::error("Fatal error - in $__FILE__ , $errors");
+	}
+	return $sOutput;
+}
+	
+//Define some bogus, invalid HTML tags that no sane
+//person would ever put in an actual document and tell
+//PHP to delimit fatal error warnings with them.
+ini_set('error_prepend_string', '<phpfatalerror>');
+ini_set('error_append_string', '</phpfatalerror>');
+
+// Starts the capture of the ouput, and sets a filter to capture the fatal errors.
+ob_start('FatalErrorCatcher'); // Start capturing the output, and pass it through the fatal error catcher
+
 require_once('../core/config.class.inc.php');
 require_once('../core/cmdbsource.class.inc.php');
-require_once('./setuppage.class.inc.php');
 require_once('./xmldataloader.class.inc.php');
 
 define('TMP_CONFIG_FILE', '../tmp-config-itop.php');
@@ -18,7 +58,6 @@ define('TMP_CONFIG_FILE', '../tmp-config-itop.php');
 // Never cache this page
 header("Cache-Control: no-cache, must-revalidate");  // HTTP/1.1
 header("Expires: Fri, 17 Jul 1970 05:00:00 GMT");    // Date in the past
-
 
 /**
  * Main program
@@ -64,4 +103,8 @@ catch(Exception $e)
 	SetupWebPage::log("Error - An error happened while loading the data. ".$e);
 }
 
+if (function_exists('memory_get_peak_usage'))
+{
+	SetupWebPage::log("Info - loading file '$sFileName', peak memory usage. ".memory_get_peak_usage());
+}
 ?>
