@@ -86,7 +86,7 @@ class UILinksWidget
 			// another hidden input to store & pass the object's Id
 			$sHTMLValue .= "<input type=\"hidden\" id=\"id_ac_{$this->m_iInputId}\" onChange=\"EnableAddButton('{$this->m_iInputId}');\"/>\n";
 			$sHTMLValue .= "<input type=\"hidden\" id=\"{$this->m_iInputId}\" name=\"attr_{$this->m_sAttCode}{$this->m_sNameSuffix}\" value=\"\"/>\n";
-			$oPage->add_ready_script("\$('#{$this->m_iInputId}').val('$sJSON');\noLinkWidget{$this->m_iInputId}.Init();\n\$('#ac_{$this->m_iInputId}').autocomplete('./ajax.render.php', { minChars:3, onItemSelect:selectItem, onFindValue:findValue, formatItem:formatItem, autoFill:true, keyHolder:'#id_ac_{$this->m_iInputId}', extraParams:{operation:'ui.linkswidget', sclass:'{$this->m_sClass}', attCode:'{$this->m_sAttCode}', max:30}});");
+			$oPage->add_ready_script("\$('#{$this->m_iInputId}').val('$sJSON');\noLinkWidget{$this->m_iInputId}.Init();\n\$('#ac_{$this->m_iInputId}').autocomplete('./ajax.render.php', { scroll:true, minChars:3, onItemSelect:selectItem, onFindValue:findValue, formatItem:formatItem, autoFill:true, keyHolder:'#id_ac_{$this->m_iInputId}', extraParams:{operation:'ui.linkswidget', sclass:'{$this->m_sClass}', attCode:'{$this->m_sAttCode}', max:30}});");
 			$oPage->add_ready_script("\$('#ac_add_{$this->m_iInputId}').attr('disabled', 'disabled');");
 			$oPage->add_ready_script("\$('#ac_{$this->m_iInputId}').result( function(event, data, formatted) { if (data) { $('#id_ac_{$this->m_iInputId}').val(data[1]); $('#ac_add_{$this->m_iInputId}').attr('disabled', ''); } else { $('#ac_add_{$this->m_iInputId}').attr('disabled', 'disabled'); } } );");
 		}

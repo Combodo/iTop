@@ -233,7 +233,6 @@ switch($operation)
 	foreach($aAllowedValues as $key => $value)
 	{
 		$oPage->add($value."|".$key."\n");
-		if ($iCount++) break;
 	}
 	break;
 	
