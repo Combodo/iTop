@@ -743,7 +743,7 @@ class bizCircuit extends logInfra
 			"db_table" => "circuits",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "../business/templates/Circuits.html",
+			"display_template" => "../business/templates/circuit.html",
 		);
 
 		MetaModel::Init_Params($aParams);
@@ -754,11 +754,11 @@ class bizCircuit extends logInfra
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("location2_id", array("targetclass"=>"bizLocation", "label"=>"Location 2", "description"=>"Id of the location 2", "allowed_values"=>new ValueSetObjects('SELECT bizLocation AS p WHERE p.org_id = :this->org_id'), "sql"=>"location2_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL,"depends_on"=>array("org_id"))));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("location2_name", array("label"=>"Location 2", "description"=>"Name of the location", "allowed_values"=>null, "extkey_attcode"=> 'location2_id', "target_attcode"=>"name")));
 
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("interface1_id", array("targetclass"=>"bizInterface", "label"=>"Interface 1", "description"=>"id of the interface 1", "allowed_values"=>new ValueSetObjects('SELECT bizInterface AS p WHERE p.org_id = :this->org_id'), "sql"=>"interface1_id", "is_null_allowed"=>false,"on_target_delete"=>DEL_MANUAL, "depends_on"=>array("org_id"))));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("interface1_id", array("targetclass"=>"bizInterface", "label"=>"Interface 1", "description"=>"id of the interface 1", "allowed_values"=>new ValueSetObjects('SELECT bizInterface AS Intf JOIN bizDevice AS Dev ON Intf.device_id = Dev.id WHERE Intf.org_id = :this->org_id AND Dev.location_id = :this->location1_id'), "sql"=>"interface1_id", "is_null_allowed"=>false,"on_target_delete"=>DEL_MANUAL, "depends_on"=>array("org_id", "location1_id"))));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("interface1_name", array("label"=>"Interface", "description"=>"Name of the interface 1", "allowed_values"=>null, "extkey_attcode"=> 'interface1_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("device1_name", array("label"=>"Device 1", "description"=>"Name of the device 1", "allowed_values"=>null, "extkey_attcode"=> 'interface1_id', "target_attcode"=>"device_name")));
 	
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("interface2_id", array("targetclass"=>"bizInterface", "label"=>"Interface 2", "description"=>"id of the interface 2", "allowed_values"=>new ValueSetObjects('SELECT bizInterface AS p WHERE p.org_id = :this->org_id'), "sql"=>"interface2_id", "is_null_allowed"=>false,"on_target_delete"=>DEL_MANUAL, "depends_on"=>array("org_id"))));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("interface2_id", array("targetclass"=>"bizInterface", "label"=>"Interface 2", "description"=>"id of the interface 2", "allowed_values"=>new ValueSetObjects('SELECT bizInterface AS Intf JOIN bizDevice AS Dev ON Intf.device_id = Dev.id WHERE Intf.org_id = :this->org_id AND Dev.location_id = :this->location2_id'), "sql"=>"interface2_id", "is_null_allowed"=>false,"on_target_delete"=>DEL_MANUAL, "depends_on"=>array("org_id", "location2_id"))));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("interface2_name", array("label"=>"Interface", "description"=>"Name of the interface 2", "allowed_values"=>null, "extkey_attcode"=> 'interface2_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("device2_name", array("label"=>"Interface", "description"=>"Name of the device 2", "allowed_values"=>null, "extkey_attcode"=> 'interface2_id', "target_attcode"=>"device_name")));
 

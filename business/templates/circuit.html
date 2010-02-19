@@ -1,0 +1,21 @@
+<div class="page_header">
+	<itopblock blockclass="MenuBlock" type="popup" encoding="text/sibusql" label="Actions">$class$: pkey = $pkey$</itopblock>
+	<h1>$class_name$: <span class="hilite">$name$</span></h1>
+	<itopblock blockclass="HistoryBlock" type="toggle" encoding="text/oql">SELECT CMDBChangeOp WHERE objkey = $pkey$ AND objclass = '$class$'</itopblock>
+</div>
+<img src="../images/WanLinks.jpg" style="margin-top:-10px; margin-right:10px; float:right">
+<itopblock blockclass="DisplayBlock" asynchronous="false" type="bare_details" encoding="text/sibusql">$class$: pkey = $pkey$</itopblock>
+<itoptabs>
+	<itoptab name="Contacts">
+		<itopblock blockclass="DisplayBlock" type="links" link_attr="object_id" object_id="$pkey$" target_attr="contact_id" encoding="text/oql">SELECT lnkContactRealObject WHERE object_id = $pkey$</itopblock>
+	</itoptab>
+		<itoptab name="Incidents">
+		<itopblock blockclass="DisplayBlock" type="links" link_attr="infra_id" object_id="$pkey$" target_attr="ticket_id" encoding="text/oql">SELECT lnkInfraTicket WHERE infra_id = $pkey$</itopblock>
+	</itoptab>
+	<itoptab name="Changes">
+		<itopblock blockclass="DisplayBlock" type="list" encoding="text/oql">SELECT bizChangeTicket AS Change JOIN lnkInfraChangeTicket AS Link ON Link.ticket_id = Change.id WHERE Link.infra_id = $pkey$</itopblock>
+	</itoptab>
+	<itoptab name="Documents">
+		<itopblock blockclass="DisplayBlock" type="links" link_attr="object_id" object_id="$pkey$" target_attr="doc_id" encoding="text/oql">SELECT lnkDocumentRealObject WHERE object_id = $pkey$</itopblock>
+	</itoptab>
+</itoptabs>
