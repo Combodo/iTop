@@ -197,6 +197,23 @@
 <parent_id>16</parent_id>
 <user_id>0</user_id>
 </menuNode>
+<menuNode id="45">
+<name>Application log</name>
+<label>Application log</label>
+<hyperlink>UI.php</hyperlink>
+<icon_path>../images/std_view.gif</icon_path>
+<template>
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT Event&lt;/itopblock&gt;
+&lt;div id=&quot;BottomPane&quot;&gt;
+&lt;p&gt;&lt;/p&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT Event&lt;/itopblock&gt;
+&lt;/div&gt;
+</template>
+<type>administrator</type>
+<rank>2</rank>
+<parent_id>1</parent_id>
+<user_id>0</user_id>
+</menuNode>
 <menuNode id="12">
 <name>Audit</name>
 <label>Audit</label>
@@ -284,29 +301,30 @@ text-align:center;
 <label>All about devices</label>
 <hyperlink>UI.php</hyperlink>
 <icon_path></icon_path>
-<template>&lt;p&gt;&lt;/p&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;p style=&quot;text-align:left; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:40px;&quot;&gt;&lt;img src=&quot;../images/devices_big.gif&quot; align=&quot;baseline&quot;&gt;Devices Overview&lt;/p&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;p&gt;&lt;/p&gt;
+<template>&lt;style&gt;
+td.dashboard {
+ vertical-align:top;
+ text-align: center;
+ border: 1px solid #ccc;
+ -moz-border-radius: 10px;
+ padding: 10px;
+}
+&lt;/style&gt;
+&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:24px;&quot;&gt;Configuration Items&lt;/p&gt;
 &lt;table border=&quot;0&quot; padding=&quot;5&quot; class=&quot;layout&quot;&gt;
 &lt;tr&gt;
-&lt;td&gt;
-&lt;p style=&quot;text-align:left; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:18px;&quot;&gt;Servers&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizServer&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:pie;group_by:severity&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizServer&lt;/itopblock&gt;
+&lt;td class=&quot;dashboard&quot;&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizServer&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:pie;chart_title:All servers by business criticity;group_by:severity&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizServer&lt;/itopblock&gt;
 &lt;/td&gt;
-&lt;td&gt;
-&lt;p style=&quot;text-align:left; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:18px;&quot;&gt;PCs&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizPC&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:pie;group_by:severity&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizPC&lt;/itopblock&gt;
+&lt;td class=&quot;dashboard&quot;&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizPC&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:pie;chart_title:All PCs by business criticity;group_by:severity&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizPC&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;/tr&gt;&lt;tr&gt;
-&lt;td&gt;
-&lt;p style=&quot;text-align:left; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:18px;&quot;&gt;Netword Devices&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizNetworDevice type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:pie;group_by:severity&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizNetworkDevice&lt;/itopblock&gt;
+&lt;td class=&quot;dashboard&quot;&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizNetworDevice type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:pie;chart_title:All network devices by business criticity;group_by:severity&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizNetworkDevice&lt;/itopblock&gt;
 &lt;/td&gt;
-&lt;td&gt;
-&lt;p style=&quot;text-align:left; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:18px;&quot;&gt;Applications&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizApplication&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:pie;group_by:severity&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizApplication&lt;/itopblock&gt;
+&lt;td class=&quot;dashboard&quot;&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizApplication&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:pie;chart_title:All applications by business criticity;group_by:severity&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizApplication&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;/tr&gt;
 &lt;/table&gt;</template>
@@ -360,24 +378,36 @@ td.dashboard {
 <label>Everything about Contacts</label>
 <hyperlink>UI.php</hyperlink>
 <icon_path></icon_path>
-<template>&lt;img src=&quot;../images/users2-big.png&quot; style=&quot;float:right&quot;&gt;
+<template>&lt;style&gt;
+td.dashboard {
+ vertical-align:top;
+ text-align: center;
+ border: 1px solid #ccc;
+ -moz-border-radius: 10px;
+ padding: 10px;
+}
+&lt;/style&gt;
 &lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:24px;&quot;&gt;Contacts Overview&lt;/p&gt;
 &lt;table border=&quot;0&quot; padding=&quot;5&quot; class=&quot;layout&quot;&gt;
 &lt;tr&gt;
-&lt;td&gt;
-&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;&quot;&gt;Contacts by Type&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContact&quot; type=&quot;count&quot; parameters=&quot;group_by:finalclass&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizContact&lt;/itopblock&gt;
-&lt;/td&gt;
-&lt;td&gt;
+&lt;td class=&quot;dashboard&quot;&gt;
 &lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;&quot;&gt;Contacts by Location&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContact&quot; type=&quot;count&quot; parameters=&quot;group_by:location_name&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizContact&lt;/itopblock&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContact&quot; type=&quot;count&quot; parameters=&quot;group_by:location_name&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizContact&lt;/itopblock&gt;
+&lt;/td&gt;
+&lt;td class=&quot;dashboard&quot;&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContact&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:pie;chart_title:Contacts by location;group_by:location_name&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizContact&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;
-&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;&quot;&gt;Contacts by status&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContact&quot; type=&quot;count&quot; parameters=&quot;group_by:status&quot; asynchronous=&quot;false&quot; encoding=&quot;text/sibusql&quot;&gt;bizContact&lt;/itopblock&gt;
+&lt;td class=&quot;dashboard&quot;&gt;
+&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;&quot;&gt;Contacts by Type&lt;/p&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContact&quot; type=&quot;count&quot; parameters=&quot;group_by:finalclass&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizContact&lt;/itopblock&gt;
 &lt;/td&gt;
+&lt;td class=&quot;dashboard&quot;&gt;
+&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;&quot;&gt;Contacts by Status&lt;/p&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContact&quot; type=&quot;count&quot; parameters=&quot;group_by:status&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizContact&lt;/itopblock&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
 &lt;/table&gt;</template>
 <type>application</type>
 <rank>1</rank>
@@ -589,6 +619,65 @@ text-align:center;
 <parent_id>37</parent_id>
 <user_id>0</user_id>
 </menuNode>
+<menuNode id="46">
+<name>Notifications</name>
+<label>Configuration of the Notifications</label>
+<hyperlink>UI.php</hyperlink>
+<icon_path></icon_path>
+<template>&lt;div class=&quot;page_header&quot; style=&quot;padding:0.5em;&quot;&gt;
+&lt;h1&gt;Configuration of the &lt;span class=&quot;hilite&quot;&gt;Notifications&lt;/span&gt;&lt;/h1&gt;
+&lt;/div&gt;
+&lt;itoptoggle name=&quot;Help&quot; open=&quot;true&quot;&gt;
+&lt;div style=&quot;padding: 1em; font-size:1.25em;background:#E8F3CF;margin-top: 0.25em;&quot;&gt;
+&lt;img src=&quot;../images/bell.png&quot; style=&quot;margin-top: -60px; margin-right: 10px; float: right;&quot;&gt;
+&lt;p&gt;In iTop the notifications are fully customizable. They are based on two sets of objects: &lt;i&gt;triggers and actions&lt;/i&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;i&gt;&lt;b&gt;Triggers&lt;/b&gt;&lt;/i&gt; define when a notification will be executed. There are 3 types of triggers for covering 3 differents phases of an object life cycle:
+&lt;ol&gt;
+	&lt;li&gt;the &apos;OnCreate&apos; triggers get executed when an object of the specified class is created&lt;/li&gt;
+	&lt;li&gt;the &apos;OnStateEnter&apos; triggers get executed before an object of the given class enters a specified state (coming from another state)&lt;/li&gt;
+	&lt;li&gt;the &apos;OnStateLeave&apos; triggers get executed when an object of the given class is leaving a specified state&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/p&gt;
+&lt;p&gt;
+&lt;i&gt;&lt;b&gt;Actions&lt;/b&gt;&lt;/i&gt; define the actions to be performed when the triggers execute. For now there is only one kind of action consisting in sending an email message.
+Such actions also define the template to be used for sending the email as well as the other parameters of the message like the recipients, importance, etc.
+&lt;/p&gt;
+&lt;p&gt;A special page: &lt;a href=&quot;../setup/email.test.php&quot; target=&quot;_blank&quot;&gt;email.test.php&lt;/a&gt; is available for testing and troubleshooting your PHP mail configuration.&lt;/p&gt;
+&lt;p&gt;To be executed, actions must be associated to triggers.
+When associated with a trigger, each action is given an &apos;order&apos; number, specifying in which order the actions are to be executed.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/itoptoggle&gt;
+&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+&lt;itoptabs&gt;
+	&lt;itoptab name=&quot;Triggers&quot;&gt;
+		&lt;h3&gt;Available Triggers&lt;/h3&gt;
+		&lt;table style=&quot;border:0;border-spacing:10px;width:100%;&quot;&gt;
+		&lt;tr&gt;
+		&lt;td style=&quot;vertical-align:top;width:33%;padding:10px;background:#f8f8f8;&quot;&gt;
+		&lt;h4&gt;When an object is created&lt;/h4&gt;
+		&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT TriggerOnObjectCreate&lt;/itopblock&gt;
+		&lt;/td&gt;
+		&lt;td style=&quot;vertical-align:top;width:33%;padding:10px;background:#f8f8f8;&quot;&gt;
+		&lt;h4&gt;When an object enters a state&lt;/h4&gt;
+		&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT TriggerOnStateEnter&lt;/itopblock&gt;
+		&lt;/td&gt;
+		&lt;td style=&quot;vertical-align:top;width:33%;padding:10px;background:#f8f8f8;&quot;&gt;
+		&lt;h4&gt;When an object leaves a state&lt;/h4&gt;
+		&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT TriggerOnStateLeave&lt;/itopblock&gt;
+		&lt;/td&gt;
+		&lt;/tr&gt;
+		&lt;/table&gt;
+	&lt;/itoptab&gt;
+	&lt;itoptab name=&quot;Actions&quot;&gt;
+		&lt;h3&gt;Available Actions&lt;/h3&gt;
+		&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT ActionEmail&lt;/itopblock&gt;
+	&lt;/itoptab&gt;
+&lt;/itoptabs&gt;</template>
+<type>administrator</type>
+<rank>2</rank>
+<parent_id>1</parent_id>
+<user_id>0</user_id>
+</menuNode>
 <menuNode id="30">
 <name>Open Changes</name>
 <label>Open Changes</label>
@@ -747,11 +836,11 @@ padding:5px;
 text-align:center;
 }
 &lt;/style&gt;
-&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:24px;&quot;&gt;Changes Overview&lt;/p&gt;
+&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:24px;&quot;&gt;Service Management Overview&lt;/p&gt;
 &lt;table border=&quot;0&quot; padding=&quot;5&quot;&gt;
 &lt;tr&gt;
 &lt;td class=&quot;dashboard&quot;&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContract&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:bars;group_by:type;chart_title:Contract by service level&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizContract&lt;/itopblock&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContract&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:bars;group_by:type;chart_title:Contracts by service level&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizContract&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;td class=&quot;dashboard&quot;&gt;
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; objectclass=&quot;bizContract&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:pie;group_by:status;chart_title:Contracts by status&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizContract&lt;/itopblock&gt;
@@ -926,82 +1015,6 @@ display: list-item;
 <type>application</type>
 <rank>1</rank>
 <parent_id>0</parent_id>
-<user_id>0</user_id>
-</menuNode>
-<menuNode id="510">
-<name>Application log</name>
-<label>Application log</label>
-<hyperlink>UI.php</hyperlink>
-<icon_path>../images/std_view.gif</icon_path>
-<template>
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT Event&lt;/itopblock&gt;
-&lt;div id=&quot;BottomPane&quot;&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT Event&lt;/itopblock&gt;
-&lt;/div&gt;
-</template>
-<type>administrator</type>
-<rank>2</rank>
-<parent_id>1</parent_id>
-<user_id>0</user_id>
-</menuNode>
-<menuNode id="45">
-<name>Notifications</name>
-<label>Configuration of the Notifications</label>
-<hyperlink>UI.php</hyperlink>
-<icon_path></icon_path>
-<template>&lt;div class=&quot;page_header&quot; style=&quot;padding:0.5em;&quot;&gt;
-&lt;h1&gt;Configuration of the &lt;span class=&quot;hilite&quot;&gt;Notifications&lt;/span&gt;&lt;/h1&gt;
-&lt;/div&gt;
-&lt;itoptoggle name=&quot;Help&quot; open=&quot;true&quot;&gt;
-&lt;div style=&quot;padding: 1em; font-size:1.25em;background:#E8F3CF;margin-top: 0.25em;&quot;&gt;
-&lt;img src=&quot;../images/bell.png&quot; style=&quot;margin-top: -60px; margin-right: 10px; float: right;&quot;&gt;
-&lt;p&gt;In iTop the notifications are fully customizable. They are based on two sets of objects: &lt;i&gt;triggers and actions&lt;/i&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;i&gt;&lt;b&gt;Triggers&lt;/b&gt;&lt;/i&gt; define when a notification will be executed. There are 3 types of triggers for covering 3 differents phases of an object life cycle:
-&lt;ol&gt;
-	&lt;li&gt;the &apos;OnCreate&apos; triggers get executed when an object of the specified class is created&lt;/li&gt;
-	&lt;li&gt;the &apos;OnStateEnter&apos; triggers get executed before an object of the given class enters a specified state (coming from another state)&lt;/li&gt;
-	&lt;li&gt;the &apos;OnStateLeave&apos; triggers get executed when an object of the given class is leaving a specified state&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/p&gt;
-&lt;p&gt;
-&lt;i&gt;&lt;b&gt;Actions&lt;/b&gt;&lt;/i&gt; define the actions to be performed when the triggers execute. For now there is only one kind of action consisting in sending an email message.
-Such actions also define the template to be used for sending the email as well as the other parameters of the message like the recipients, importance, etc.
-&lt;/p&gt;
-&lt;p&gt;A special page: &lt;a href=&quot;../setup/email.test.php&quot; target=&quot;_blank&quot;&gt;email.test.php&lt;/a&gt; is available for testing and troubleshooting your PHP mail configuration.&lt;/p&gt;
-&lt;p&gt;To be executed, actions must be associated to triggers.
-When associated with a trigger, each action is given an &apos;order&apos; number, specifying in which order the actions are to be executed.&lt;/p&gt;
-&lt;/div&gt;
-&lt;/itoptoggle&gt;
-&lt;p&gt;&amp;nbsp;&lt;/p&gt;
-&lt;itoptabs&gt;
-	&lt;itoptab name=&quot;Triggers&quot;&gt;
-		&lt;h3&gt;Available Triggers&lt;/h3&gt;
-		&lt;table style=&quot;border:0;border-spacing:10px;width:100%;&quot;&gt;
-		&lt;tr&gt;
-		&lt;td style=&quot;vertical-align:top;width:33%;padding:10px;background:#f8f8f8;&quot;&gt;
-		&lt;h4&gt;When an object is created&lt;/h4&gt;
-		&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT TriggerOnObjectCreate&lt;/itopblock&gt;
-		&lt;/td&gt;
-		&lt;td style=&quot;vertical-align:top;width:33%;padding:10px;background:#f8f8f8;&quot;&gt;
-		&lt;h4&gt;When an object enters a state&lt;/h4&gt;
-		&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT TriggerOnStateEnter&lt;/itopblock&gt;
-		&lt;/td&gt;
-		&lt;td style=&quot;vertical-align:top;width:33%;padding:10px;background:#f8f8f8;&quot;&gt;
-		&lt;h4&gt;When an object leaves a state&lt;/h4&gt;
-		&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT TriggerOnStateLeave&lt;/itopblock&gt;
-		&lt;/td&gt;
-		&lt;/tr&gt;
-		&lt;/table&gt;
-	&lt;/itoptab&gt;
-	&lt;itoptab name=&quot;Actions&quot;&gt;
-		&lt;h3&gt;Available Actions&lt;/h3&gt;
-		&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT ActionEmail&lt;/itopblock&gt;
-	&lt;/itoptab&gt;
-&lt;/itoptabs&gt;</template>
-<type>administrator</type>
-<rank>2</rank>
-<parent_id>1</parent_id>
 <user_id>0</user_id>
 </menuNode>
 </Set>
