@@ -552,7 +552,7 @@ class DisplayBlock
 					$aGroupBy = array();
 					while($oObj = $this->m_oSet->Fetch())
 					{
-						$sValue = $oObj->GetAsHtml($sGroupByField);
+						$sValue = $oObj->Get($sGroupByField);
 						$aGroupBy[$sValue] = isset($aGroupBy[$sValue]) ? $aGroupBy[$sValue]+1 : 1;
 					}
 					$sFilter = urlencode($this->m_oFilter->serialize());
