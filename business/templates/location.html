@@ -10,13 +10,13 @@
 		<itopblock blockclass="DisplayBlock" type="list" object_id="$pkey$" target_attr="location_id" encoding="text/oql">SELECT bizContact WHERE location_id = $pkey$</itopblock>
 	</itoptab>
 	<itoptab name="Servers">
-		<itopblock blockclass="DisplayBlock" type="list" encoding="text/oql">SELECT bizServer WHERE location_id = $pkey$</itopblock>
+		<itopblock blockclass="DisplayBlock" type="list" encoding="text/oql" object_id="$pkey$" target_attr="location_id">SELECT bizServer WHERE location_id = $pkey$</itopblock>
 	</itoptab>
 	<itoptab name="PCs">
-		<itopblock blockclass="DisplayBlock" type="list" encoding="text/oql">SELECT bizPC WHERE location_id = $pkey$</itopblock>
+		<itopblock blockclass="DisplayBlock" type="list" encoding="text/oql" object_id="$pkey$" target_attr="location_id">SELECT bizPC WHERE location_id = $pkey$</itopblock>
 	</itoptab>
 	<itoptab name="Network_Devices">
-		<itopblock blockclass="DisplayBlock" type="list" encoding="text/oql">SELECT bizNetworkDevice WHERE location_id = $pkey$</itopblock>
+		<itopblock blockclass="DisplayBlock" type="list" encoding="text/oql" object_id="$pkey$" target_attr="location_id">SELECT bizNetworkDevice WHERE location_id = $pkey$</itopblock>
 	</itoptab>
 
 	<itoptab name="Documents">
