@@ -1,0 +1,33 @@
+/*
+.ui-shadow {
+background:transparent url(i/shadow.png) no-repeat scroll right bottom;
+height: 100px;
+margin: 10px;
+position: relative;
+}
+
+.ui-shadow-ne {
+background:transparent url(i/shadow.png) no-repeat scroll right top;
+width: 6px;
+height: 6px;
+position: absolute;
+top: -6px;
+right: 0px;
+}
+
+.ui-shadow-sw {
+background:transparent url(i/shadow.png) no-repeat scroll left bottom;
+width: 6px;
+height: 6px;
+position: absolute;
+bottom: 0px;
+left: -6px;
+}
+*/
+
+
+
+
+.ui-shadow { position:relative; }
+.ui-shadow-color { background:#030; position:absolute; } /* Can be overidden via js */
+

@@ -1,0 +1,12 @@
+<div class="page_header">
+	<itopblock blockclass="MenuBlock" type="popup" encoding="text/oql" label="Actions">SELECT $class$ WHERE id = $pkey$</itopblock>
+	<h1>$class_name$: <span class="hilite">$name$</span></h1>
+	<itopblock blockclass="HistoryBlock" type="toggle" encoding="text/oql">SELECT CMDBChangeOp WHERE objkey = $pkey$ AND objclass = '$class$'</itopblock>
+</div>
+<img src="../images/erwanContracts.jpg" style="margin-top:-10px; margin-right:10px; float:right">
+<itopblock blockclass="DisplayBlock" asynchronous="false" type="bare_details" encoding="text/oql">SELECT $class$  WHERE id = $pkey$</itopblock>
+<itoptabs>
+	<itoptab name="Service_Items">
+		<itopblock blockclass="DisplayBlock" type="list" encoding="text/oql">SELECT bizServiceItem WHERE request_id = $pkey$</itopblock>
+	</itoptab>
+</itoptabs>
