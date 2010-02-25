@@ -58,7 +58,7 @@ class UIWizard
 					$aOptions[] = 'Prerequisites: '.implode(', ', $aPrerequisites);
 				}
 				
-				$sFieldFlag = ($iOptions & (OPT_ATT_MANDATORY | OPT_ATT_MUSTCHANGE)) ? ' <span class="hilite">*</span>' : '';
+				$sFieldFlag = (($iOptions & (OPT_ATT_MANDATORY | OPT_ATT_MUSTCHANGE)) || (!$oAttDef->IsNullAllowed()) )? ' <span class="hilite">*</span>' : '';
 				$oDefaultValuesSet = $oAttDef->GetDefaultValue(); // @@@ TO DO: get the object's current value if the object exists
 				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($this->m_oPage, $this->m_sClass, $sAttCode, $oAttDef, $oDefaultValuesSet, '', "att_$iMaxInputId", '', $iOptions, $aArgs);
 				$aFieldsMap[$iMaxInputId] = $sAttCode;
@@ -158,33 +158,37 @@ $sJSHandlerCode
         }
 
         // Now check the attributes that are mandatory in the specified state
-   		if ( (!empty($this->m_sTargetState)) && (count($aStates[$this->m_sTargetState]['attribute_list']) > 0) )
+		if ( (!empty($this->m_sTargetState)) && (count($aStates[$this->m_sTargetState]['attribute_list']) > 0) )
 		{
 			// Check all the fields that *must* be included in the wizard for this
 			// particular target state
 			$aFields = array();
 			foreach($aStates[$this->m_sTargetState]['attribute_list'] as $sAttCode => $iOptions)
 			{
-                if (isset($aMandatoryAttributes[$sAttCode]))
-                {
-                    $aMandatoryAttributes[$sAttCode] |= $iOptions;
-                }
-			    else
-			    {
-                    $aMandatoryAttributes[$sAttCode] = $iOptions;
-                }
-            }
-        }
-            
-		// Check all the fields that *must* be included in the wizard 
+				if ( (isset($aMandatoryAttributes[$sAttCode])) && 
+					 ($aMandatoryAttributes[$sAttCode] & (OPT_ATT_MANDATORY | OPT_ATT_MUSTCHANGE | OPT_ATT_MUSTPROMPT)) )
+				{
+					$aMandatoryAttributes[$sAttCode] |= $iOptions;
+				}
+				else
+				{
+					$aMandatoryAttributes[$sAttCode] = $iOptions;
+				}
+			}
+		}
+        
+		// Check all the fields that *must* be included in the wizard
+		// i.e. all mandatory, must-change or must-prompt fields that are
+		// not also read-only or hidden.
+		// Some fields may be required (null not allowed) from the database
+		// perspective, but hidden or read-only from the user interface perspective 
 		$aFields = array();
 		foreach($aMandatoryAttributes as $sAttCode => $iOptions)
 		{
-			$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
-			$sAttLabel = $oAttDef->GetLabel();
-	
-			if ( ($iOptions & (OPT_ATT_MANDATORY | OPT_ATT_MUSTCHANGE | OPT_ATT_MUSTPROMPT)) )
+			if ( ($iOptions & (OPT_ATT_MANDATORY | OPT_ATT_MUSTCHANGE | OPT_ATT_MUSTPROMPT)) &&
+				 !($iOptions & (OPT_ATT_READONLY | OPT_ATT_HIDDEN)) )
 			{
+				$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
 				$aPrerequisites = $oAttDef->GetPrerequisiteAttributes();
 				$aFields[$sAttCode] = array();
 				foreach($aPrerequisites as $sCode)
