@@ -568,7 +568,7 @@ abstract class DBObject
 		$aDelta = array();
 		foreach ($aProposal as $sAtt => $proposedValue)
 		{
-			if (!array_key_exists($sAtt, $this->m_aOrigValues) || ($this->m_aOrigValues[$sAtt] != $proposedValue))
+			if (!array_key_exists($sAtt, $this->m_aOrigValues) || ($this->m_aOrigValues[$sAtt] !== $proposedValue))
 			{
 				$aDelta[$sAtt] = $proposedValue;
 			}

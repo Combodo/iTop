@@ -159,7 +159,7 @@ class CMDBSource
 			$value = stripslashes($value);
 		}
 		// Quote if not a number or a numeric string
-		if ($bAlways || !is_numeric($value))
+		if ($bAlways || is_string($value))
 		{
 			$value = $cQuoteStyle . mysql_real_escape_string($value, self::$m_resDBLink) . $cQuoteStyle;
 		}
