@@ -18,6 +18,7 @@
 // - only external fields attributes could be used as reconciliation keys for external keys
 // - reconciliation is made on the first column
 // - no option to force 'always create' or 'never create'
+// - text qualifier hardcoded to "
 //
 // Known issues
 // - ALMOST impossible to troubleshoot when an externl key has a wrong value
@@ -58,11 +59,9 @@ try
 	$sSep = utils::ReadParam('separator', ';');
 	$sCSVData = utils::ReadPostedParam('csvdata');
 
-	$oCSVParser = new CSVParser($sCSVData); 
-	$oCSVParser->SetSeparator($sSep);
-	$oCSVParser->SetSkipLines(1);
+	$oCSVParser = new CSVParser($sCSVData, $sSep, $sDelimiter = '"'); 
 
-	// Limitation: as the attribute list is in the first line, we can not match external key by an third-party attribute
+	// Limitation: as the attribute list is in the first line, we can not match external key by a third-party attribute
 	$sRawFieldList = $oCSVParser->ListFields();
 	$aAttList = array();
 	$aExtKeys = array();
@@ -92,9 +91,6 @@ try
 
 	// Limitation: the reconciliation key is the first attribute
 	$aReconcilKeys = array($sRawFieldList[0]);
-
-//	print_r($oCSVParser->ListFields());
-//	print_r($oCSVParser->ToArray($oCSVParser->ListFields()));
 
 	$aData = $oCSVParser->ToArray();
 	$oBulk = new BulkChange(

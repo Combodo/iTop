@@ -177,7 +177,7 @@ class XMLDataLoader
 						// tested by Romain, little impact on perf (not significant on the intial setup)
 						if (!$oTargetObj->CheckValue($sAttCode, (string)$oXmlObj->$sAttCode))
 						{
-							SetupWebPage::log("Error - Value not allowed - $sClass/$iSrcId - $sAttCode: '".$oXmlObj->$sAttCode."'");
+							SetupWebPage::log_error("Value not allowed - $sClass/$iSrcId - $sAttCode: '".$oXmlObj->$sAttCode."'");
 							echo "Wrong value for attribute $sAttCode: '".$oXmlObj->$sAttCode."'";
 						}
 						$oTargetObj->Set($sAttCode, (string)$oXmlObj->$sAttCode);
@@ -223,7 +223,7 @@ class XMLDataLoader
 		}
 		catch(Exception $e)
 		{
-			SetupWebPage::log("Error - An object could not be loaded - $sClass/$iSrcId - ".$e->getMessage());
+			SetupWebPage::log_error("An object could not be loaded - $sClass/$iSrcId - ".$e->getMessage());
 			echo $e->GetHtmlDesc();
 		}
 		$aParentClasses = MetaModel::EnumParentClasses($sClass);
@@ -257,7 +257,7 @@ class XMLDataLoader
 						if ($iExtKey == 0)
 						{
 							$sMsg = "unresolved extkey in $sClass::".$oTargetObj->GetKey()."(".$oTargetObj->GetName().")::$sAttCode=$sTargetClass::$iTempKey";
-							SetupWebPage::log("Warning - $sMsg");
+							SetupWebPage::log_warning($sMsg);
 							echo "Warning: $sMsg<br/>\n";
 							echo "<pre>aKeys[".$sTargetClass."]:\n";
 							print_r($this->m_aKeys[$sTargetClass]);

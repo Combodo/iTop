@@ -1,8 +1,7 @@
 <?php
-
 /**
  * CSVParser
- * CSV interpreter helper, optionaly tries to guess column mapping and the separator, check the consistency 
+ * CSV interpreter helper 
  *
  * @package     iTopORM
  * @author      Romain Quetiez <romainquetiez@yahoo.fr>
@@ -19,6 +18,16 @@ class CSVParserException extends CoreException
 
 
 
+define('stSTARTING', 1); //grey zone: the type is undetermined
+define('stRAW', 2); //building a non-qualified string
+define('stQUALIFIED', 3); //building qualified string
+define('stESCAPED', 4); //just encountered an escape char
+
+define('evSEPARATOR', 1);
+define('evNEWLINE', 2);
+define('evTEXTQUAL', 3); // used for escaping as well
+define('evOTHERCHAR', 4);
+
 
 /**
  * CSVParser
@@ -34,157 +43,148 @@ class CSVParser
 {
 	private $m_sCSVData;
 	private $m_sSep;
-	private $m_iSkip;
+	private $m_sTextQualifier;
 
-	public function __construct($sTxt)
+	public function __construct($sTxt, $sSep = ',', $sTextQualifier = '"')
 	{
-		$this->m_sCSVData = $sTxt;
-	}
-
-	public function SetSeparator($sSep)
-	{
+		$this->m_sCSVData = str_replace("\r\n", "\n", $sTxt);
 		$this->m_sSep = $sSep;
-	}
-	public function GetSeparator()
-	{
-		return $this->m_sSep;
+		$this->m_sTextQualifier = $sTextQualifier;
 	}
 
-	public function SetSkipLines($iSkip)
-	{
-		$this->m_iSkip = $iSkip;
-	}
-	public function GetSkipLines()
-	{
-		return $this->m_iSkip;
-	}
+	protected $m_sCurrCell = '';
+	protected $m_aCurrRow = array();
+	protected $m_iToSkip = 0;
+	protected $m_aDataSet = array();
 
-	public function GuessSeparator()
+	protected function __AddChar($c)
 	{
-		// Note: skip the first line anyway
-	
-		$aKnownSeps = array(';', ',', "\t"); // Use double quote for special chars!!!
-		$aStatsBySeparator = array();
-		foreach ($aKnownSeps as $sSep)
+		$this->m_sCurrCell .= $c;
+	}
+	protected function __ClearCell()
+	{
+		$this->m_sCurrCell = '';
+	}
+	protected function __AddCell($c = null, $aFieldMap = null)
+	{
+		if (!is_null($aFieldMap))
 		{
-			$aStatsBySeparator[$sSep] = array();
+			$iNextCol = count($this->m_aCurrRow);
+			$iNextName = $aFieldMap[$iNextCol];
+			$this->m_aCurrRow[$iNextName] = $this->m_sCurrCell;
 		}
-	
-		foreach(explode("\n", $this->m_sCSVData) as $sLine)
+		else
 		{
-			$sLine = trim($sLine);
-			if (substr($sLine, 0, 1) == '#') continue;
-			if (empty($sLine)) continue;
-	
-			$aLineCharsCount = count_chars($sLine, 0);
-			foreach ($aKnownSeps as $sSep)
+			$this->m_aCurrRow[] = $this->m_sCurrCell;
+		}
+		$this->m_sCurrCell = '';
+	}
+	protected function __AddRow($c = null, $aFieldMap = null)
+	{
+		$this->__AddCell($c, $aFieldMap);
+
+		if ($this->m_iToSkip > 0)
+		{
+			$this->m_iToSkip--;
+		}
+		elseif (count($this->m_aCurrRow) > 1)
+		{
+			$this->m_aDataSet[] = $this->m_aCurrRow;
+		}
+		elseif ((count($this->m_aCurrRow) == 1) && (strlen($this->m_aCurrRow[0]) > 0))
+		{
+			$this->m_aDataSet[] = $this->m_aCurrRow;
+		}
+		else
+		{
+			// blank line, skip silently
+		}
+		$this->m_aCurrRow = array();
+	}
+
+	function ToArray($iToSkip = 1, $aFieldMap = null, $iMax = 0)
+	{
+		$aTransitions = array();
+
+		$aTransitions[stSTARTING][evSEPARATOR] = array('__AddCell', stSTARTING);
+		$aTransitions[stSTARTING][evNEWLINE] = array('__AddRow', stSTARTING);
+		$aTransitions[stSTARTING][evTEXTQUAL] = array('', stQUALIFIED);
+		$aTransitions[stSTARTING][evOTHERCHAR] = array('__AddChar', stRAW);
+
+		$aTransitions[stRAW][evSEPARATOR] = array('__AddCell', stSTARTING);
+		$aTransitions[stRAW][evNEWLINE] = array('__AddRow', stSTARTING);
+		$aTransitions[stRAW][evTEXTQUAL] = array('__AddChar', stRAW);
+		$aTransitions[stRAW][evOTHERCHAR] = array('__AddChar', stRAW);
+
+		$aTransitions[stQUALIFIED][evSEPARATOR] = array('__AddChar', stQUALIFIED);
+		$aTransitions[stQUALIFIED][evNEWLINE] = array('__AddChar', stQUALIFIED);
+		$aTransitions[stQUALIFIED][evTEXTQUAL] = array('', stESCAPED);
+		$aTransitions[stQUALIFIED][evOTHERCHAR] = array('__AddChar', stQUALIFIED);
+
+		$aTransitions[stESCAPED][evSEPARATOR] = array('__AddCell', stSTARTING);
+		$aTransitions[stESCAPED][evNEWLINE] = array('__AddRow', stSTARTING);
+		$aTransitions[stESCAPED][evTEXTQUAL] = array('__AddChar', stQUALIFIED);
+		$aTransitions[stESCAPED][evOTHERCHAR] = array('__AddChar', stSTARTING);
+
+		// Reset parser variables
+		$this->m_sCurrCell = '';
+		$this->m_aCurrRow = array();
+		$this->m_iToSkip = $iToSkip;
+		$this->m_aDataSet = array();
+
+		$iState = stSTARTING;
+		for($i = 0; $i < strlen($this->m_sCSVData) ; $i++)
+		{
+			$c = $this->m_sCSVData[$i];
+
+//			// Note: I did that because the unit test was not working fine (file edited with notepad: \n chars padded :-(
+//			if (ord($c) == 0) continue;
+
+			if ($c == $this->m_sSep)
 			{
-				$aStatsBySeparator[$sSep][] = $aLineCharsCount[ord($sSep)];
+				$iEvent = evSEPARATOR;
 			}
-		}
-	
-		// Default to ','
-		$this->SetSeparator(",");
-
-		foreach ($aKnownSeps as $sSep)
-		{
-			// Note: this function is NOT available :-( 
-			// stats_variance($aStatsBySeparator[$sSep]);
-			$iMin = min($aStatsBySeparator[$sSep]);
-			$iMax = max($aStatsBySeparator[$sSep]);
-			if (($iMin == $iMax) && ($iMax > 0))
+			elseif ($c == "\n")
 			{
-				$this->SetSeparator($sSep);
-				break;
+				$iEvent = evNEWLINE;
 			}
-		}
-		return $this->GetSeparator();
-	}
-
-	public function GuessSkipLines()
-	{
-		// Take the FIRST -valuable- LINE ONLY
-		// If there is a number, then for sure this is not a header line
-		// Otherwise, we may consider that there is one line to skip
-		foreach(explode("\n", $this->m_sCSVData) as $sLine)
-		{
-			$sLine = trim($sLine);
-			if (substr($sLine, 0, 1) == '#') continue;
-			if (empty($sLine)) continue;
-	
-			foreach (explode($this->m_sSep, $sLine) as $value)
+			elseif ($c == $this->m_sTextQualifier)
 			{
-				if (is_numeric($value))
+				$iEvent = evTEXTQUAL;
+			}
+			else
+			{
+				$iEvent = evOTHERCHAR;
+			}
+
+			$sAction = $aTransitions[$iState][$iEvent][0];
+			$iState = $aTransitions[$iState][$iEvent][1];
+
+			if (!empty($sAction))
+			{
+				$aCallSpec = array($this, $sAction);
+				if (is_callable($aCallSpec))
 				{
-					$this->SetSkipLines(0);
-					return 0;
+					call_user_func($aCallSpec, $c, $aFieldMap);
+				}
+				else
+				{
+					throw new CSVParserException("CSVParser: unknown verb '$sAction'");
 				}
 			}
-			$this->SetSkipLines(1);
-			return 1;
-		}
-	}
 
-	function ToArray($aFieldMap = null, $iMax = 0)
-	{
-		// $aFieldMap is an array of col_index=>col_name
-		// $iMax is to limit the count of rows computed
-		$aRes = array();
-	
-		$iCount = 0;
-		$iSkipped = 0;
-		foreach(explode("\n", $this->m_sCSVData) as $sLine)
-		{
-			$sLine = trim($sLine);
-			if (substr($sLine, 0, 1) == '#') continue;
-			if (empty($sLine)) continue;
-	
-			if ($iSkipped < $this->m_iSkip)
-			{
-				$iSkipped++;
-				continue;
-			}
-	
-			foreach (explode($this->m_sSep, $sLine) as $iCol=>$sValue)
-			{
-				if (is_array($aFieldMap)) $sColRef = $aFieldMap[$iCol];
-				else                      $sColRef = $iCol;
-				$aRes[$iCount][$sColRef] = $sValue;
-			}
-	
-			$iCount++;
-			if (($iMax > 0) && ($iCount >= $iMax)) break;
+			$iLineCount = count($this->m_aDataSet);
+			if (($iMax > 0) && ($iLineCount >= $iMax)) break;
 		}
-		return $aRes;
+		// Close the final line
+		$this->__AddRow(null, $aFieldMap);
+		return $this->m_aDataSet;
 	}
 
 	public function ListFields()
 	{
-		// Take the first valuable line
-		foreach(explode("\n", $this->m_sCSVData) as $sLine)
-		{
-			$sLine = trim($sLine);
-			if (substr($sLine, 0, 1) == '#') continue;
-			if (empty($sLine)) continue;
-			// We've got the first valuable line, that's it!
-			break;
-		}
-
-		$aRet = array();
-		foreach (explode($this->m_sSep, $sLine) as $iCol=>$value)
-		{
-			if ($this->m_iSkip == 0)
-			{
-				// No header to help us
-				$sLabel = "field $iCol";
-			}
-			else
-			{
-				$sLabel = "$value";
-			}
-			$aRet[] = $sLabel;
-		}
-		return $aRet;
+		$aHeader = $this->ToArray(0, null, 1);
+		return $aHeader[0];
 	}
 }
 

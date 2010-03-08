@@ -177,6 +177,99 @@ class TestOQLParser extends TestFunction
 }
 
 
+class TestCSVParser extends TestFunction
+{
+	static public function GetName() {return 'Check CSV parsing';}
+	static public function GetDescription() {return 'Loads a set of CSV data';}
+
+	public function DoExecute()
+	{
+		$sDataFile = '"field1","field2","field3"
+"a","b","c"
+a,b,c
+"","",""
+,,
+"a""","b","c"
+"a1
+a2","b","c"
+"a1,a2","b","c"
+"a","b","c1,"",c2
+,c3"
+"a","b","ouf !"
+';
+
+		$sDataFile = '?field1?;?field2?;?field3?
+?a?;?b?;?c?
+a;b;c
+??;??;??
+;;
+?a"?;?b?;?c?
+?a1
+a2?;?b?;?c?
+?a1,a2?;?b?;?c?
+?a?;?b?;?c1,",c2
+,c3?
+?a?;?b?;?ouf !?
+';
+
+		echo "<pre style=\"font-style:italic;\">\n";
+		print_r($sDataFile);
+		echo "</pre>\n";
+
+		$aExpectedResult = array(
+			//array('field1', 'field2', 'field3'),
+			array('a', 'b', 'c'),
+			array('a', 'b', 'c'),
+			array('', '', ''),
+			array('', '', ''),
+			array('a"', 'b', 'c'),
+			array("a1\na2", 'b', 'c'),
+			array('a1,a2', 'b', 'c'),
+			array('a', 'b', "c1,\",c2\n,c3"),
+			array('a', 'b', 'ouf !'),
+			array('a', 'b', 'a'),
+		);
+	
+		$oCSVParser = new CSVParser($sDataFile, ';', '?');
+		$aData = $oCSVParser->ToArray(1, null, 0);
+
+		$iIssues = 0;
+
+		echo "<table border=\"1\">\n";
+		foreach ($aData as $iRow => $aRow)
+		{
+			echo "<tr>\n";
+			foreach ($aRow as $iCol => $sCell)
+			{
+				if (empty($sCell))
+				{
+					$sCellValue = '&nbsp;';
+				}
+				else
+				{
+					$sCellValue = htmlentities($sCell);
+				}
+
+				if (!isset($aExpectedResult[$iRow][$iCol]))
+				{
+					$iIssues++;
+					$sCellValue = "<span style =\"color: red; background-color: grey;\">$sCellValue</span>";
+				}
+				elseif ($aExpectedResult[$iRow][$iCol] != $sCell)
+				{
+					$iIssues++;
+					$sCellValue = "<span style =\"color: red; background-color: lightgrey;\">$sCellValue</span>, expecting '<span style =\"color: green; background-color: lightgrey;\">".$aExpectedResult[$iRow][$iCol]."</span>'";
+				}
+
+				echo "<td><pre>$sCellValue</pre></td>";
+			}
+			echo "</tr>\n";
+		}
+		echo "</table>\n";
+		return ($iIssues > 0);
+	}
+}
+
 class TestGenericItoMyModel extends TestBizModelGeneric
 {
 	static public function GetName()
@@ -883,12 +976,11 @@ class TestBulkChangeOnFarm extends TestBizModel
 //			$this->ReportError("Found two different SibuSQL expression out of the (same?) filter: <em>$sExpr1</em> != <em>$sExpr2</em>");
 //			$this->ReportSuccess('Found '.$oSet->Count()." objects of class $sClassName");
 
-		$oParser = new CSVParser("#denomination,hauteur,age
+		$oParser = new CSVParser("denomination,hauteur,age
 		suzy,123,2009-01-01
 		chita,456,
 		");
-		$oParser->SetSeparator(',');
-		$aData = $oParser->ToArray(array('_name', '_height', '_birth'));
+		$aData = $oParser->ToArray(array('_name', '_height', '_birth'), ',');
 		MyHelpers::var_dump_html($aData);
 
 		$oBulk = new BulkChange(

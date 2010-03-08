@@ -226,8 +226,8 @@ function Page3_ViewResults($oPage, $oFilter)
 		$oSet = new CMDBObjectSet($oFilter);
 		$oPage->p("Found ".$oSet->Count()." items");
 	
-		$sFilterPhrase = $oFilter->serialize();
-		$oPage->p("<a href=\"/pages/index.php?operation=direct&filter=$sFilterPhrase\">See detailed results</a>"); 
+		$sFilterPhrase = urlencode($oFilter->serialize());
+		$oPage->p("<a href=\"/pages/index.php?operation=search&filter=$sFilterPhrase\">See detailed results</a>"); 
 	}
 }
 

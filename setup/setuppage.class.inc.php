@@ -101,25 +101,25 @@ table.formTable {
 	public function info($sText)
 	{
 		$this->add("<p class=\"info\">$sText</p>\n");
-		$this->log("Info - ".$sText);
+		$this->log_info($sText);
 	}
 	
 	public function ok($sText)
 	{
 		$this->add("<p class=\"ok\">$sText</p>\n");
-		$this->log("Ok - ".$sText);
+		$this->log_ok($sText);
 	}
 	
 	public function warning($sText)
 	{
 		$this->add("<p class=\"warning\">$sText</p>\n");
-		$this->log("Warning - ".$sText);
+		$this->log_warning($sText);
 	}
 	
 	public function error($sText)
 	{
 		$this->add("<p class=\"error\">$sText</p>\n");
-		$this->log("Error - ".$sText);
+		$this->log_error($sText);
 	}
 	
 	public function form($aData)
@@ -159,6 +159,26 @@ table.formTable {
 		return parent::output();
 	}
 	
+	public static function log_error($sText)
+	{
+		self::log("Error - ".$sText);
+	}
+
+	public static function log_warning($sText)
+	{
+		self::log("Warning - ".$sText);
+	}
+
+	public static function log_info($sText)
+	{
+		self::log("Info - ".$sText);
+	}
+
+	public static function log_ok($sText)
+	{
+		self::log("Ok - ".$sText);
+	}
+
 	public static function log($sText)
 	{
 		$hLogFile = @fopen(INSTALL_LOG_FILE, 'a');

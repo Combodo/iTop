@@ -455,8 +455,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		{
 			$aHeader[] = MetaModel::GetLabel($sClassName, $sAttCode);
 		}
-		$sHtml = '#'.$oSet->GetFilter()->ToOQL()."\n";
-		$sHtml .= implode($sSeparator, $aHeader)."\n";
+		$sHtml = implode($sSeparator, $aHeader)."\n";
 		$oSet->Seek(0);
 		while ($oObj = $oSet->Fetch())
 		{
@@ -464,7 +463,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 			$aRow[] = $oObj->GetKey();
 			foreach($aList as $sAttCode)
 			{
-				$aRow[] = $oObj->GetAsCSV($sAttCode, $sSeparator, '\\');
+				$aRow[] = $oObj->GetAsCSV($sAttCode, $sSeparator, $sTextQualifier);
 			}
 			$sHtml .= implode($sSeparator, $aRow)."\n";
 		}

@@ -254,7 +254,7 @@ function DumpDatabase()
 function printMenu($sConfigFile)
 {
 	$sClassCount = count(MetaModel::GetClasses());
-	$bHasDB = MetaModel::DBExists();
+	$bHasDB = MetaModel::DBExists(false); // no need to be complete to consider that something already exists
 	$sUrl = "?config=".urlencode($sConfigFile);
 
 	echo "<div style=\"background-color:eeeeee; padding:10px;\">\n";
@@ -345,22 +345,25 @@ function DisplayDBFormatIssues($aErrors, $aSugFix, $sRepairUrl = "", $sSQLStatem
 		echo "<div style=\"width:100%;padding:10px;background:#FFAAAA;display:;\">";
 		echo "<h1>Wrong Database format</h1>\n";
 		echo "<p>The current database is not consistent with the given business model. Please investigate.</p>\n";
-		foreach ($aErrors as $sClass => $aMessages)
+		foreach ($aErrors as $sClass => $aTarget)
 		{
 			echo "<p>Wrong declaration (or DB format ?) for class <b>$sClass</b></p>\n";
 			echo "<ul class=\"treeview\">\n";
 			$i = 0;
-			foreach ($aMessages as $sMsg)
+			foreach ($aTarget as $sTarget => $aMessages)
 			{
+				echo "<p>Wrong declaration for attribute <b>$sTarget</b></p>\n";
+				$sMsg = implode(' AND ', $aMessages);
 				if (!empty($sRepairUrl))
 				{
-					$aSQLFixes[] = $aSugFix[$sClass][$i];
-					$sUrl = "$sRepairUrl&$sSQLStatementArgName=".urlencode($aSugFix[$sClass][$i]);
-					echo "<li>$sMsg (<a href=\"$sUrl\" title=\"".$aSugFix[$sClass][$i]."\" target=\"_blank\">fix it now!</a>)</li>\n";
+					$aSQLFixes = array_merge($aSQLFixes, $aSugFix[$sClass][$sTarget]);
+					$sSQLFixes = implode('; ', $aSugFix[$sClass][$sTarget]);
+					$sUrl = "$sRepairUrl&$sSQLStatementArgName=".urlencode($sSQLFixes);
+					echo "<li>$sMsg (<a href=\"$sUrl\" title=\"".htmlentities($sSQLFixes)."\" target=\"_blank\">fix it now!</a>)</li>\n";
 				}
 				else
 				{
-					echo "<li>$sMsg ({$aSugFix[$sClass][$i]})</li>\n";
+					echo "<li>$sMsg (".htmlentities($sSQLFixes).")</li>\n";
 				}
 				$i++;
 			}

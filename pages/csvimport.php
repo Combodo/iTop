@@ -62,7 +62,7 @@ function MakeExtFieldSelectValue($sAttCode, $sExtAttCode)
 
 function ShowTableForm($oPage, $oCSVParser, $sClass)
 {
-	$aData = $oCSVParser->ToArray(null, 3);
+	$aData = $oCSVParser->ToArray(1, null, 3);
 	$aColToRow = array();
 	foreach($aData as $aRow)
 	{
@@ -192,6 +192,10 @@ function ShowTableForm($oPage, $oCSVParser, $sClass)
 		if (array_key_exists($iFieldIndex, $aColToRow))
 		{
 			$aFields["field$iFieldIndex"]["value"] = $aColToRow[$iFieldIndex];
+		}
+		else
+		{
+			// Houston... 		
 		}
 	}
 	$oPage->details($aFields);
@@ -354,12 +358,24 @@ function Do_Welcome($oPage, $sClass)
 	$sWiztep = "1_welcome";
 	$oPage->p("<h1>Bulk load from CSV data / step 1</h1>");
 
+	// Reload values (in case we are reaching this page from the next one
 	$sCSVData = utils::ReadPostedParam('csvdata');
+	$sSep = utils::ReadPostedParam('separator', ',');
+	$sTQualif = utils::ReadPostedParam('textqualifier', '"');
+
+	$aSeparators = array(',' => ', (coma)', ';' => ';', ';' => ';', '|' => '|', '#' => '#', '@' => '@', ':' => ':');
+	$aTextQualifiers = array('"' => '"', "'" => "'", '`' => '`', '/' => '/');
 
 	$oPage->add("<form method=\"post\" action=\"\">");
 	$oPage->MakeClassesSelect("class", $sClass, 50, UR_ACTION_BULK_MODIFY);
 	$oPage->add("<br/>");
-	$oPage->add("<textarea rows=\"25\" cols=\"100\" name=\"csvdata\" wrap=\"soft\">$sCSVData</textarea>");
+	$oPage->add("<textarea rows=\"25\" cols=\"100\" name=\"csvdata\" wrap=\"soft\">".htmlentities($sCSVData)."</textarea>");
+	$oPage->add("<br/>");
+	$oPage->add("Separator: ");
+	$oPage->add_select($aSeparators, 'separator', $sSep, 50);
+	$oPage->add("<br/>");
+	$oPage->add("Text qualifier: ");
+	$oPage->add_select($aTextQualifiers, 'textqualifier', $sTQualif, 50);
 	$oPage->add("<br/>");
 	$oPage->add("<input type=\"hidden\" name=\"fromwiztep\" value=\"$sWiztep\">");
 	$oPage->add("<input type=\"submit\" name=\"todo\" value=\"Next\"><br/>\n");
@@ -415,12 +431,13 @@ function Do_Format($oPage, $sClass)
 	$sWiztep = "2_format";
 
 	$sCSVData = utils::ReadPostedParam('csvdata');
-	$oCSVParser = new CSVParser($sCSVData); 
-	$sSep = $oCSVParser->GuessSeparator();
-	$iSkip = $oCSVParser->GuessSkipLines();
+	$sSep = utils::ReadPostedParam('separator');
+	$sTQualif = utils::ReadPostedParam('textqualifier');
+	$oCSVParser = new CSVParser($sCSVData, $sSep, $sTQualif); 
+	$iSkip = 1;
 
 	// No data ?
-	$aData = $oCSVParser->ToArray(null);
+	$aData = $oCSVParser->ToArray();
 	$iTarget = count($aData);
 	if ($iTarget == 0)
 	{
@@ -429,29 +446,32 @@ function Do_Format($oPage, $sClass)
 		return;
 	}
 
-	// Guess the format :
-	$oPage->p("Guessed separator: '<strong>$sSep</strong>' (ASCII=".ord($sSep).")");
-	$oPage->p("Guessed # of lines to skip: $iSkip");
+	// Expected format - to be improved
+	$oPage->p("Separator: '<strong>$sSep</strong>'");
+	$oPage->p("Text qualifier: '<strong>$sTQualif</strong>'");
+	$oPage->p("The first line will be skipped (considered as being the list of fields)");
 
 	$oPage->p("Target: $iTarget rows");
 
-    $oPage->Add("<form method=\"post\" action=\"\">");
+	$oPage->add("<form method=\"post\" action=\"\">");
 	ShowTableForm($oPage, $oCSVParser, $sClass);
-    $oPage->Add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">");
-    $oPage->Add("<input type=\"hidden\" name=\"csvdata\" value=\"$sCSVData\">");
-    $oPage->Add("<input type=\"hidden\" name=\"separator\" value=\"$sSep\">");
-    $oPage->Add("<input type=\"hidden\" name=\"skiplines\" value=\"$iSkip\">");
+	$oPage->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">");
+	$oPage->add("<input type=\"hidden\" name=\"csvdata\" value=\"".htmlentities($sCSVData)."\">");
+	$oPage->add("<input type=\"hidden\" name=\"separator\" value=\"".htmlentities($sSep)."\">");
+	$oPage->add("<input type=\"hidden\" name=\"textqualifier\" value=\"".htmlentities($sTQualif)."\">");
+	$oPage->add("<input type=\"hidden\" name=\"skiplines\" value=\"$iSkip\">");
 
-    $oPage->Add("<input type=\"hidden\" name=\"fromwiztep\" value=\"$sWiztep\">");
-    $oPage->add("<input type=\"submit\" name=\"todo\" value=\"Back\">");
-    $oPage->Add("<input type=\"submit\" name=\"todo\" value=\"Next\">");
-	$oPage->Add("</form>");
+	$oPage->add("<input type=\"hidden\" name=\"fromwiztep\" value=\"$sWiztep\">");
+	$oPage->add("<input type=\"submit\" name=\"todo\" value=\"Back\">");
+	$oPage->add("<input type=\"submit\" name=\"todo\" value=\"Next\">");
+	$oPage->add("</form>");
 }
 
 function DoProcessOrVerify($oPage, $sClass, CMDBChange $oChange = null)
 {
 	$sCSVData = utils::ReadPostedParam('csvdata'); 
 	$sSep = utils::ReadPostedParam('separator');
+	$sTQualif = utils::ReadPostedParam('textqualifier');
 	$iSkip = utils::ReadPostedParam('skiplines'); 
 	$aFieldMap = utils::ReadPostedParam('fmap');
 	$aIsReconcKey = utils::ReadPostedParam('iskey');
@@ -465,16 +485,15 @@ function DoProcessOrVerify($oPage, $sClass, CMDBChange $oChange = null)
 		return;
 	}
 
-	$oCSVParser = new CSVParser($sCSVData);
-	$oCSVParser->SetSeparator($sSep);
-	$oCSVParser->SetSkipLines($iSkip);
-	$aData = $oCSVParser->ToArray(null);
+	$oCSVParser = new CSVParser($sCSVData, $sSep, $sTQualif);
+	$aData = $oCSVParser->ToArray($iSkip, null);
 	$iTarget = count($aData);
 
 	$oPage->p("<h2>Goal summary</h2>");
 	$oPage->p("Target: $iTarget rows");
 
-	$aSampleData = $oCSVParser->ToArray(array_keys($aFieldMap), 5);
+	$aSampleData = $oCSVParser->ToArray($iSkip, array_keys($aFieldMap), 5);
+
 	$aDisplayConfig = array();
 	$aExtKeys = array();
 	foreach ($aFieldMap as $sFieldId=>$sColDesc)
@@ -519,6 +538,7 @@ function DoProcessOrVerify($oPage, $sClass, CMDBChange $oChange = null)
 			$aDisplayConfig[$sFieldId] = array("label"=>"-?-?-$sColDesc-?-?-", "description"=>"");
 		}
 	}
+	
 	$oPage->table($aDisplayConfig, $aSampleData);
 
 	if ($oChange)
@@ -558,8 +578,9 @@ function DoProcessOrVerify($oPage, $sClass, CMDBChange $oChange = null)
 
 	$oPage->add("<form method=\"post\" action=\"\">");
 	$oPage->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">");
-	$oPage->add("<input type=\"hidden\" name=\"csvdata\" value=\"$sCSVData\">");
-	$oPage->add("<input type=\"hidden\" name=\"separator\" value=\"$sSep\">");
+	$oPage->add("<input type=\"hidden\" name=\"csvdata\" value=\"".htmlentities($sCSVData)."\">");
+	$oPage->add("<input type=\"hidden\" name=\"separator\" value=\"".htmlentities($sSep)."\">");
+	$oPage->add("<input type=\"hidden\" name=\"textqualifier\" value=\"".htmlentities($sTQualif)."\">");
 	$oPage->add("<input type=\"hidden\" name=\"skiplines\" value=\"$iSkip\">");
 	$oPage->add_input_hidden("fmap", $aFieldMap);
 	$oPage->add_input_hidden("iskey", $aIsReconcKey);

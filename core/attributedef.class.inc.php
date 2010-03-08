@@ -61,6 +61,7 @@ abstract class AttributeDefinition
 	private $m_aParams = array();
 	private $m_sHostClass = array();
 	protected function Get($sParamName) {return $this->m_aParams[$sParamName];}
+	protected function IsParam($sParamName) {return (array_key_exists($sParamName, $this->m_aParams));}
 	
 	public function __construct($sCode, $aParams)
 	{
@@ -194,9 +195,9 @@ abstract class AttributeDefinition
 		return Str::pure2xml((string)$sValue);
 	}
 
-	public function GetAsCSV($sValue, $sSeparator = ';', $sSepEscape = ',')
+	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"')
 	{
-		return str_replace($sSeparator, $sSepEscape, (string)$sValue);
+		return (string)$sValue;
 	}
 
 	public function GetAllowedValues($aArgs = array(), $sBeginsWith = '')
@@ -233,7 +234,34 @@ class AttributeLinkedSet extends AttributeDefinition
 
 	public function GetValuesDef() {return $this->Get("allowed_values");} 
 	public function GetPrerequisiteAttributes() {return $this->Get("depends_on");} 
-	public function GetDefaultValue() {return DBObjectSet::FromScratch($this->Get('linked_class'));}
+	public function GetDefaultValue($aArgs = array())
+	{
+		// Note: so far, this feature is a prototype,
+		//       later, the argument 'this' should always be present in the arguments
+		//       
+		if (($this->IsParam('default_value')) && array_key_exists('this', $aArgs))
+		{
+			$oSet = $this->Get('default_value');
+			return $oSet->GetValues($aArgs);
+		}
+		else
+		{
+			return DBObjectSet::FromScratch($this->Get('linked_class'));
+		}
+	}
+
+	public function GetSupportedRelations()
+	{
+		if (array_key_exists('supported_relations', $this->m_aParams))
+		{
+			$aSupportedRelations = $this->Get('supported_relations');
+			return $aSupportedRelations;
+		}
+		else
+		{
+			return array();
+		}
+	}
 
 	public function GetLinkedClass() {return $this->Get('linked_class');}
 	public function GetExtKeyToMe() {return $this->Get('ext_key_to_me');}
@@ -252,7 +280,7 @@ class AttributeLinkedSet extends AttributeDefinition
 		return "ERROR: LIST OF OBJECTS";
 	}
 
-	public function GetAsCSV($sValue, $sSeparator = ';', $sSepEscape = ',')
+	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"')
 	{
 		return "ERROR: LIST OF OBJECTS";
 	}
@@ -598,6 +626,14 @@ class AttributeString extends AttributeDBField
 	{
 		return $value;
 	}
+
+	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"')
+	{
+		$sFrom = array("\r\n", $sTextQualifier);
+		$sTo = array("\n", $sTextQualifier.$sTextQualifier);
+		$sEscaped = str_replace($sFrom, $sTo, (string)$sValue);
+		return '"'.$sEscaped.'"';
+	}
 }
 
 /**
@@ -677,11 +713,6 @@ class AttributeText extends AttributeString
 	public function GetAsXML($value)
 	{
 		return Str::pure2xml($value);
-	}
-
-	public function GetAsCSV($value, $sSeparator = ';', $sSepEscape = ',')
-	{
-		return str_replace("\n", "[newline]", parent::GetAsCSV($sValue, $sSeparator, $sSepEscape));
 	}
 }
 
@@ -982,9 +1013,12 @@ class AttributeDate extends AttributeDBField
 		return Str::pure2xml($value);
 	}
 
-	public function GetAsCSV($value, $sSeparator = ';', $sSepEscape = ',')
+	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"')
 	{
-		return str_replace($sSeparator, $sSepEscape, $value);
+		$sFrom = array("\r\n", $sTextQualifier);
+		$sTo = array("\n", $sTextQualifier.$sTextQualifier);
+		$sEscaped = str_replace($sFrom, $sTo, (string)$sValue);
+		return '"'.$sEscaped.'"';
 	}
 }
 
@@ -1231,10 +1265,10 @@ class AttributeExternalField extends AttributeDefinition
 		$oExtAttDef = $this->GetExtAttDef();
 		return $oExtAttDef->GetAsXML($value);
 	}
-	public function GetAsCSV($value, $sSeparator = ';', $sSepEscape = ',')
+	public function GetAsCSV($value, $sSeparator = ',', $sTestQualifier = '"')
 	{
 		$oExtAttDef = $this->GetExtAttDef();
-		return $oExtAttDef->GetAsCSV($value);
+		return $oExtAttDef->GetAsCSV($value, $sSeparator, $sTestQualifier);
 	}
 }
 
@@ -1394,7 +1428,7 @@ class AttributeBlob extends AttributeDefinition
 		}
 	}
 
-	public function GetAsCSV($sValue, $sSeparator = ';', $sSepEscape = ',')
+	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"')
 	{
 		return ''; // Not exportable in CSV !
 	}

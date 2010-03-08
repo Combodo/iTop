@@ -35,7 +35,7 @@ abstract class ValueSetDefinition
 	}
 
 
-	public function GetValues($aArgs, $sBeginsWith)
+	public function GetValues($aArgs, $sBeginsWith = '')
 	{
 		if (!$this->m_bIsLoaded)
 		{
@@ -105,6 +105,55 @@ class ValueSetObjects extends ValueSetDefinition
 		while ($oObject = $oObjects->Fetch())
 		{
 			$this->m_aValues[$oObject->GetKey()] = $oObject->GetAsHTML($this->m_sValueAttCode);
+		}
+		return true;
+	}
+	
+	public function GetValuesDescription()
+	{
+		return 'Filter: '.$this->m_sFilterExpr;
+	}
+}
+
+
+/**
+ * Set of existing values for a link set attribute, given a relation code 
+ *
+ * @package     iTopORM
+ * @author      Romain Quetiez <romainquetiez@yahoo.fr>
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.itop.com
+ * @since       1.0
+ * @version     $itopversion$
+ */
+class ValueSetRelatedObjects extends ValueSetDefinition
+{
+	protected $m_sRelationCode;
+	protected $m_iMaxDepth;
+//	protected $m_aOrderBy;
+
+	public function __construct($sRelationCode, $iMaxDepth = 99)
+	{
+		$this->m_sRelationCode = $sRelationCode;
+		$this->m_iMaxDepth = $iMaxDepth;
+//		$this->m_aOrderBy = $aOrderBy;
+	}
+
+	protected function LoadValues($aArgs)
+	{
+		$this->m_aValues = array();
+
+		if (!array_key_exists('this', $aArgs))
+		{
+			throw new CoreException("Missing 'this' in arguments", array('args' => $aArgs));
+		}		
+
+		$oTarget = $aArgs['this->object()'];
+
+		$oTargetNeighbors = $oTarget->GetRelatedObjects($this->m_sRelationCode, $this->m_iMaxDepth);
+		while ($oObject = $oTargetNeighbors->Fetch())
+		{
+			$this->m_aValues[$oObject->GetKey()] = $oObject->GetAsHTML($oObject->GetName());
 		}
 		return true;
 	}

@@ -10,22 +10,37 @@ define('SAFE_MINIMUM_MEMORY', 32*1024*1024);
 require_once('../application/utils.inc.php');
 require_once('./setuppage.class.inc.php');
 
-$iMemoryLimit = utils::ConvertToBytes(ini_get('memory_limit'));
-if ($iMemoryLimit < SAFE_MINIMUM_MEMORY)
+$sMemoryLimit = trim(ini_get('memory_limit'));
+if (empty($sMemoryLimit))
 {
-	if (ini_set('memory_limit', SAFE_MINIMUM_MEMORY) === FALSE)
-	{
-		SetupWebPage::error("memory_limit is too small: $iMemoryLimit and can not be increased by the script itself.");		
-	}
-	else
-	{
-		SetupWebPage::log("memory_limit increased from $iMemoryLimit to ".SAFE_MINIMUM_MEMORY.".");		
-	}
+	// On some PHP installations, memory_limit does not exist as a PHP setting!
+	// (encountered on a 5.2.0 under Windows)
+	// In that case, ini_set will not work, let's keep track of this and proceed with the data load
+	SetupWebPage::log_info("No memory limit has been defined in this instance of PHP");		
 }
+else
+{
+	// Check that the limit will allow us to load the data
+	//
+	$iMemoryLimit = utils::ConvertToBytes($sMemoryLimit);
+	if ($iMemoryLimit < SAFE_MINIMUM_MEMORY)
+	{
+		if (ini_set('memory_limit', SAFE_MINIMUM_MEMORY) === FALSE)
+		{
+			SetupWebPage::log_error("memory_limit is too small: $iMemoryLimit and can not be increased by the script itself.");		
+		}
+		else
+		{
+			SetupWebPage::log_info("memory_limit increased from $iMemoryLimit to ".SAFE_MINIMUM_MEMORY.".");		
+		}
+	}
+
+}
+
 
 function FatalErrorCatcher($sOutput)
 { 
-	if ( preg_match('|<phpfatalerror>.*</phpfatalerror>|s', $sOutput, &$aMatches) )
+	if ( preg_match('|<phpfatalerror>.*</phpfatalerror>|s', $sOutput, $aMatches) )
 	{
 		header("HTTP/1.0 500 Internal server error.");
 		foreach ($aMatches as $sMatch)
@@ -34,7 +49,7 @@ function FatalErrorCatcher($sOutput)
 		}
 		$sOutput = "$errors\n";
 		// Logging to a file does not work if the whole memory is exhausted...		
-		//SetupWebPage::error("Fatal error - in $__FILE__ , $errors");
+		//SetupWebPage::log_error("Fatal error - in $__FILE__ , $errors");
 	}
 	return $sOutput;
 }
@@ -65,7 +80,7 @@ header("Expires: Fri, 17 Jul 1970 05:00:00 GMT");    // Date in the past
 $sFileName = Utils::ReadParam('file', '');
 $sSessionStatus = Utils::ReadParam('session_status', '');
 $iPercent = (integer)Utils::ReadParam('percent', 0);
-SetupWebPage::log("Info - Loading file: $sFileName");
+SetupWebPage::log_info("Loading file: $sFileName");
 
 try
 {
@@ -81,30 +96,30 @@ try
 		$oChange->Set("date", time());
 		$oChange->Set("userinfo", "Initialization");
 		$iChangeId = $oChange->DBInsert();
-		SetupWebPage::log("Info - starting data load session");
+		SetupWebPage::log_info("starting data load session");
 		$oDataLoader->StartSession($oChange);
 	}
 
 	$oDataLoader->LoadFile($sFileName);
-	$sResult = sprintf("Info - loading of %s done. (Overall %d %% completed).", basename($sFileName), $iPercent);
+	$sResult = sprintf("loading of %s done. (Overall %d %% completed).", basename($sFileName), $iPercent);
 	echo $sResult;
-	SetupWebPage::log($sResult);
+	SetupWebPage::log_info($sResult);
 
 	if ($sSessionStatus == 'end')
 	{
 	    $oDataLoader->EndSession();
-	    SetupWebPage::log("Info - ending data load session");
+	    SetupWebPage::log_info("ending data load session");
 	}
 }
 catch(Exception $e)
 {
 	echo "<p>An error happened while loading the data</p>\n";
 	echo '<p>'.$e."</p>\n";
-	SetupWebPage::log("Error - An error happened while loading the data. ".$e);
+	SetupWebPage::log_error("An error happened while loading the data. ".$e);
 }
 
 if (function_exists('memory_get_peak_usage'))
 {
-	SetupWebPage::log("Info - loading file '$sFileName', peak memory usage. ".memory_get_peak_usage());
+	SetupWebPage::log_info("loading file '$sFileName', peak memory usage. ".memory_get_peak_usage());
 }
 ?>

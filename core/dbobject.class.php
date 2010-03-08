@@ -381,10 +381,10 @@ abstract class DBObject
 		return $oAtt->GetAsXML($this->Get($sAttCode));
 	}
 
-	public function GetAsCSV($sAttCode, $sSeparator = ';', $sSepEscape = ',')
+	public function GetAsCSV($sAttCode, $sSeparator = ',', $sTextQualifier = '"')
 	{
 		$oAtt = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-		return $oAtt->GetAsCSV($this->Get($sAttCode), $sSeparator, $sSepEscape);
+		return $oAtt->GetAsCSV($this->Get($sAttCode), $sSeparator, $sTextQualifier);
 	}
 
 	protected static function MakeHyperLink($sObjClass, $sObjKey, $aAvailableFields)
@@ -883,6 +883,7 @@ abstract class DBObject
 		$aScalarArgs = array();
 		$aScalarArgs[$sArgName] = $this->GetKey();
 		$aScalarArgs[$sArgName.'->id'] = $this->GetKey();
+		$aScalarArgs[$sArgName.'->object()'] = $this;
 		$aScalarArgs[$sArgName.'->hyperlink()'] = $this->GetHyperlink();
 		$aScalarArgs[$sArgName.'->name()'] = $this->GetName();
 	
@@ -903,6 +904,38 @@ abstract class DBObject
 	
 	public function GetRelatedObjects($sRelCode, $iMaxDepth = 99, &$aResults = array())
 	{
+		foreach (MetaModel::GetLinkedSets($sClass) as $sAttCode => $oAttDef)
+		{
+			$aSupportedRelations = $oAttDef->GetSupportedRelations();
+			if (!array_key_exists($sRelCode, $aSupportedRelations)) continue; //skip
+
+			$bPropagate = true; // #@# Todo: discuss that setting
+			$iDepth = $bPropagate ? $iMaxDepth - 1 : 0;
+
+			$oNeighbors = $this->Get($sAttCode);
+			while ($oObj = $oObjSet->Fetch())
+			{
+				$sRootClass = MetaModel::GetRootClass(get_class($oObj));
+				$sObjKey = $oObj->GetKey();
+				if (array_key_exists($sRootClass, $aResults))
+				{
+					if (array_key_exists($sObjKey, $aResults[$sRootClass]))
+					{
+						continue; // already visited, skip
+					}
+				}
+
+				$aResults[$sRootClass][$sObjKey] = $oObj;
+				if ($iDepth > 0)
+				{
+					$oObj->GetRelatedObjects($sRelCode, $iDepth, $aResults);
+				}
+			}
+		}
+		
+		return;
+		
+		// #@# todo : Discuss the Relations and the way they are defined (do we deprecate the queries ? what are the properties -e.g. depth- and where do we set them ?)
 		foreach (MetaModel::EnumRelationQueries(get_class($this), $sRelCode) as $sDummy => $aQueryInfo)
 		{
 			MetaModel::DbgTrace("object=".$this->GetKey().", depth=$iMaxDepth, rel=".$aQueryInfo["sQuery"]);

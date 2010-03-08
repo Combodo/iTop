@@ -149,36 +149,6 @@ function DisplayChangesLog(WebPage $oPage, $sClassName, $sKey)
 	$oPage->p("<a href=\"?operation=delete&class=$sClassName&key=$sKey\">Delete this object (no confirmation!)</a>");
 }
 
-function DumpObjectsAsCSV(WebPage $oPage, $sClassName, $oSearchFilter = null,  $sSeparator = ",")
-{
-	global $oContext;
-	
-	$aHeader = array();
-	$aHeader[] = 'pkey';
-	foreach(MetaModel::ListAttributeDefs($sClassName) as $sAttCode=>$oAttDef)
-	{
-		$aHeader[] = $oAttDef->GetLabel();
-	}
-	$oPage->Add(join($sSeparator, $aHeader)."\n");
-	
-	if ($oSearchFilter == null)
-	{
-		$oSearchFilter = $oContext->NewFilter($sClassName);
-	}
-	$oObjectSet = new CMDBObjectSet($oSearchFilter);
-	
-	while ($oObj = $oObjectSet->Fetch())
-	{
-		$aRow = array();
-		$aRow[] = $oObj->GetKey();
-		foreach($oObj->GetAttributesList($sClassName) as $sAttCode)
-		{
-			$aRow[] = $oObj->GetAsCSV($sAttCode);
-		}
-		$oPage->Add(join($sSeparator, $aRow)."\n");
-	}
-}
-
 function DumpObjects(WebPage $oPage, $sClassName, CMDBSearchFilter $oSearchFilter = null)
 {
 	global $oContext;
@@ -553,32 +523,6 @@ switch($operation)
         $sKey = ReadParam('key');
         DeleteObject($oPage, $sClass, $sKey);
     break;
-
-	case 'direct':
-        $sFilter = ReadParam('filter');
-        $sFormat = ReadParam('format', 'html');
-		$oSearchFilter = CMDBSearchFilter::unserialize($sFilter);
-		switch($sFormat)
-		{
-			case 'csv':
-			$oPage->small_p($oSearchFilter->__DescribeHTML());
-			$oPage->Add("<TEXTAREA ROWS=\"30\" COLS=\"100\">");
-			DumpObjectsAsCSV($oPage, $oSearchFilter->GetClass(), $oSearchFilter);
-			$oPage->Add("</TEXTAREA>");
-			break;
-			
-			case 'xls':
-			$oPage->add_header('Content-disposition: attachment;filename=served.xls');  // Will fool Excel
-			$oPage->add_header('Content-Type: application/vnd.ms-excel');  // Will fool Excel
-			DumpObjects($oPage, $oSearchFilter->GetClass(), $oSearchFilter);
-			break;
-			
-			case 'html':
-			default:
-			$oSet = new CMDBObjectSet($oSearchFilter);
-			cmdbAbstractObject::DisplaySet($oPage, $oSet);
-		}
-	break;
 
 	case 'addlinks':
 		$sClass = ReadParam('class');

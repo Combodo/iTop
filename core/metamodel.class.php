@@ -458,6 +458,19 @@ abstract class MetaModel
 		return $aExtKeys;
 	}
 
+	final static public function GetLinkedSets($sClass)
+	{
+		$aLinkedSets = array();
+		foreach (self::ListAttributeDefs($sClass) as $sAttCode => $oAtt)
+		{
+			if (is_subclass_of($oAtt, 'AttributeLinkedSet'))
+			{
+				$aLinkedSets[$sAttCode] = $oAtt;
+			}
+		}
+		return $aLinkedSets;
+	}
+
 	final static public function GetExternalFields($sClass, $sKeyAttCode)
 	{
 		$aExtFields = array();
@@ -2039,13 +2052,16 @@ abstract class MetaModel
 		list($aErrors, $aSugFix) = self::DBCheckFormat();
 
 		$aSQL = array();
-		foreach ($aSugFix as $sClass => $aQueries)
+		foreach ($aSugFix as $sClass => $aTarget)
 		{
-			foreach ($aQueries as $sQuery)
+			foreach ($aTarget as $aQueries)
 			{
-				//$aSQL[] = $sQuery;
-				// forces a refresh of cached information
-				CMDBSource::CreateTable($sQuery);
+				foreach ($aQueries as $sQuery)
+				{
+					//$aSQL[] = $sQuery;
+					// forces a refresh of cached information
+					CMDBSource::CreateTable($sQuery);
+				}
 			}
 		}
 		// does not work -how to have multiple statements in a single query?
@@ -2078,15 +2094,15 @@ abstract class MetaModel
 			$sAutoIncrement = (self::IsAutoIncrementKey($sClass) ? "AUTO_INCREMENT" : "");
 			if (!CMDBSource::IsTable($sTable))
 			{
-				$aErrors[$sClass][] = "table '$sTable' could not be found into the DB";
-				$aSugFix[$sClass][] = "CREATE TABLE `$sTable` (`$sKeyField` INT(11) NOT NULL $sAutoIncrement PRIMARY KEY) ENGINE = innodb CHARACTER SET utf8 COLLATE utf8_unicode_ci";
+				$aErrors[$sClass]['*'][] = "table '$sTable' could not be found into the DB";
+				$aSugFix[$sClass]['*'][] = "CREATE TABLE `$sTable` (`$sKeyField` INT(11) NOT NULL $sAutoIncrement PRIMARY KEY) ENGINE = innodb CHARACTER SET utf8 COLLATE utf8_unicode_ci";
 			}
 			// Check that the key field exists
 			//
 			elseif (!CMDBSource::IsField($sTable, $sKeyField))
 			{
-				$aErrors[$sClass][] = "key '$sKeyField' (table $sTable) could not be found";
-				$aSugFix[$sClass][] = "ALTER TABLE `$sTable` ADD `$sKeyField` INT(11) NOT NULL $sAutoIncrement PRIMARY KEY";
+				$aErrors[$sClass]['id'][] = "key '$sKeyField' (table $sTable) could not be found";
+				$aSugFix[$sClass]['id'][] = "ALTER TABLE `$sTable` ADD `$sKeyField` INT(11) NOT NULL $sAutoIncrement PRIMARY KEY";
 			}
 			else
 			{
@@ -2094,13 +2110,13 @@ abstract class MetaModel
 				//
 				if (!CMDBSource::IsKey($sTable, $sKeyField))
 				{
-					$aErrors[$sClass][] = "key '$sKeyField' is not a key for table '$sTable'";
-					$aSugFix[$sClass][] = "ALTER TABLE `$sTable`, DROP PRIMARY KEY, ADD PRIMARY key(`$sKeyField`)";
+					$aErrors[$sClass]['id'][] = "key '$sKeyField' is not a key for table '$sTable'";
+					$aSugFix[$sClass]['id'][] = "ALTER TABLE `$sTable`, DROP PRIMARY KEY, ADD PRIMARY key(`$sKeyField`)";
 				}
 				if (self::IsAutoIncrementKey($sClass) && !CMDBSource::IsAutoIncrement($sTable, $sKeyField))
 				{
-					$aErrors[$sClass][] = "key '$sKeyField' (table $sTable) is not automatically incremented";
-					$aSugFix[$sClass][] = "ALTER TABLE `$sTable` CHANGE `$sKeyField` `$sKeyField` INT(11) NOT NULL AUTO_INCREMENT";
+					$aErrors[$sClass]['id'][] = "key '$sKeyField' (table $sTable) is not automatically incremented";
+					$aSugFix[$sClass]['id'][] = "ALTER TABLE `$sTable` CHANGE `$sKeyField` `$sKeyField` INT(11) NOT NULL AUTO_INCREMENT";
 				}
 			}
 			
@@ -2118,11 +2134,11 @@ abstract class MetaModel
 					$sFieldSpecs = $oAttDef->IsNullAllowed() ? "$sDBFieldType NULL" : "$sDBFieldType NOT NULL";
 					if (!CMDBSource::IsField($sTable, $sField))
 					{
-						$aErrors[$sClass][] = "field '$sField' could not be found in table '$sTable'";
-						$aSugFix[$sClass][] = "ALTER TABLE `$sTable` ADD `$sField` $sFieldSpecs";
+						$aErrors[$sClass][$sAttCode][] = "field '$sField' could not be found in table '$sTable'";
+						$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` ADD `$sField` $sFieldSpecs";
 						if ($oAttDef->IsExternalKey())
 						{
-							$aSugFix[$sClass][] = "ALTER TABLE `$sTable` ADD INDEX (`$sField`)";
+							$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` ADD INDEX (`$sField`)";
 						}
 					}
 					else
@@ -2135,30 +2151,30 @@ abstract class MetaModel
 							$bToBeChanged  = true;
 							if ($oAttDef->IsNullAllowed())
 							{
-								$aErrors[$sClass][] = "field '$sField' in table '$sTable' could be NULL";
+								$aErrors[$sClass][$sAttCode][] = "field '$sField' in table '$sTable' could be NULL";
 							}
 							else
 							{
-								$aErrors[$sClass][] = "field '$sField' in table '$sTable' could NOT be NULL";
+								$aErrors[$sClass][$sAttCode][] = "field '$sField' in table '$sTable' could NOT be NULL";
 							}
 						}
 						$sActualFieldType = CMDBSource::GetFieldType($sTable, $sField);
 						if (strcasecmp($sDBFieldType, $sActualFieldType) != 0)
 						{
 							$bToBeChanged  = true;
-							$aErrors[$sClass][] = "field '$sField' in table '$sTable' has a wrong type: found '$sActualFieldType' while expecting '$sDBFieldType'";
+							$aErrors[$sClass][$sAttCode][] = "field '$sField' in table '$sTable' has a wrong type: found '$sActualFieldType' while expecting '$sDBFieldType'";
 						} 
 						if ($bToBeChanged)
 						{
-							$aSugFix[$sClass][] = "ALTER TABLE `$sTable` CHANGE `$sField` `$sField` $sFieldSpecs";
+							$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` CHANGE `$sField` `$sField` $sFieldSpecs";
 						}
 
 						// Create indexes (external keys only... so far)
 						//
 						if ($oAttDef->IsExternalKey() && !CMDBSource::HasIndex($sTable, $sField))
 						{
-							$aErrors[$sClass][] = "Foreign key '$sField' in table '$sTable' should have an index";
-							$aSugFix[$sClass][] = "ALTER TABLE `$sTable` ADD INDEX (`$sField`)";
+							$aErrors[$sClass][$sAttCode][] = "Foreign key '$sField' in table '$sTable' should have an index";
+							$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` ADD INDEX (`$sField`)";
 						}
 					}
 				}
