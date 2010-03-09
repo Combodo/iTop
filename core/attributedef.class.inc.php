@@ -241,25 +241,15 @@ class AttributeLinkedSet extends AttributeDefinition
 		//       
 		if (($this->IsParam('default_value')) && array_key_exists('this', $aArgs))
 		{
-			$oSet = $this->Get('default_value');
-			return $oSet->GetValues($aArgs);
+echo "### this est la <br/>\n";
+			$aValues = $this->Get('default_value')->GetValues($aArgs);
+			$oSet = DBObjectSet::FromArray($this->Get('linked_class'), $aValues);
+			return $oSet;
 		}
 		else
 		{
+echo "### this manque a l'appel<br/>\n";
 			return DBObjectSet::FromScratch($this->Get('linked_class'));
-		}
-	}
-
-	public function GetSupportedRelations()
-	{
-		if (array_key_exists('supported_relations', $this->m_aParams))
-		{
-			$aSupportedRelations = $this->Get('supported_relations');
-			return $aSupportedRelations;
-		}
-		else
-		{
-			return array();
 		}
 	}
 

@@ -126,16 +126,25 @@ class ValueSetObjects extends ValueSetDefinition
  * @since       1.0
  * @version     $itopversion$
  */
-class ValueSetRelatedObjects extends ValueSetDefinition
+class ValueSetRelatedObjectsFromLinkSet extends ValueSetDefinition
 {
+	protected $m_sLinkSetAttCode;
+	protected $m_sExtKeyToRemote;
 	protected $m_sRelationCode;
 	protected $m_iMaxDepth;
+	protected $m_sTargetClass;
+	protected $m_sTargetExtKey;
 //	protected $m_aOrderBy;
 
-	public function __construct($sRelationCode, $iMaxDepth = 99)
+	public function __construct($sLinkSetAttCode, $sExtKeyToRemote, $sRelationCode, $iMaxDepth, $sTargetClass, $sTargetLinkClass, $sTargetExtKey)
 	{
+		$this->m_sLinkSetAttCode = $sLinkSetAttCode;
+		$this->m_sExtKeyToRemote = $sExtKeyToRemote;
 		$this->m_sRelationCode = $sRelationCode;
 		$this->m_iMaxDepth = $iMaxDepth;
+		$this->m_sTargetClass = $sTargetClass;
+		$this->m_sTargetLinkClass = $sTargetLinkClass;
+		$this->m_sTargetExtKey = $sTargetExtKey;
 //		$this->m_aOrderBy = $aOrderBy;
 	}
 
@@ -150,11 +159,31 @@ class ValueSetRelatedObjects extends ValueSetDefinition
 
 		$oTarget = $aArgs['this->object()'];
 
-		$oTargetNeighbors = $oTarget->GetRelatedObjects($this->m_sRelationCode, $this->m_iMaxDepth);
-		while ($oObject = $oTargetNeighbors->Fetch())
+		// Nodes from which we will start the search for neighbourhood
+		$oNodes = DBObjectSet::FromLinkSet($oTarget, $this->m_sLinkSetAttCode, $this->m_sExtKeyToRemote);
+
+		// Neighbours, whatever their class
+		$aRelated = $oNodes->GetRelatedObjects($this->m_sRelationCode, $this->m_iMaxDepth);
+
+		$sRootClass = MetaModel::GetRootClass($this->m_sTargetClass);
+		if (array_key_exists($sRootClass, $aRelated))
 		{
+			$aLinksToCreate = array();
+			foreach($aRelated[$sRootClass] as $iKey => $oObject)
+			{
+				if (MetaModel::IsParentClass($this->m_sTargetClass, get_class($oObject)))
+				{
+					$oNewLink = MetaModel::NewObject($this->m_sTargetLinkClass);
+					$oNewLink->Set($this->m_sTargetExtKey, $iKey);
+					//$oNewLink->Set('role', 'concerned by an impacted CI');
+
+					$aLinksToCreate[] = $oNewLink;
+				}
+			}
+			$oSetToCreate = DBObjectSet::FromArray($this->m_sTargetLinkClass, $aLinksToCreate);
 			$this->m_aValues[$oObject->GetKey()] = $oObject->GetAsHTML($oObject->GetName());
 		}
+
 		return true;
 	}
 	

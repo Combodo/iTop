@@ -665,6 +665,11 @@ abstract class DBObject
 		}
 		return $this->m_iKey;
 	}
+
+	// To be optionaly overloaded
+	public function OnInsert()
+	{
+	}
 	
 	// Insert of record for the new object into the database
 	// Returns the key of the newly created object
@@ -680,6 +685,7 @@ abstract class DBObject
 
 		// Ensure the update of the values (we are accessing the data directly)
 		$this->ComputeFields();
+		$this->OnInsert();
 
 		if ($this->m_iKey < 0)
 		{
@@ -878,7 +884,7 @@ abstract class DBObject
 	}
 
 	// Make standard context arguments
-	public function ToArgs($sArgName)
+	public function ToArgs($sArgName = 'this')
 	{
 		$aScalarArgs = array();
 		$aScalarArgs[$sArgName] = $this->GetKey();
@@ -904,38 +910,6 @@ abstract class DBObject
 	
 	public function GetRelatedObjects($sRelCode, $iMaxDepth = 99, &$aResults = array())
 	{
-		foreach (MetaModel::GetLinkedSets($sClass) as $sAttCode => $oAttDef)
-		{
-			$aSupportedRelations = $oAttDef->GetSupportedRelations();
-			if (!array_key_exists($sRelCode, $aSupportedRelations)) continue; //skip
-
-			$bPropagate = true; // #@# Todo: discuss that setting
-			$iDepth = $bPropagate ? $iMaxDepth - 1 : 0;
-
-			$oNeighbors = $this->Get($sAttCode);
-			while ($oObj = $oObjSet->Fetch())
-			{
-				$sRootClass = MetaModel::GetRootClass(get_class($oObj));
-				$sObjKey = $oObj->GetKey();
-				if (array_key_exists($sRootClass, $aResults))
-				{
-					if (array_key_exists($sObjKey, $aResults[$sRootClass]))
-					{
-						continue; // already visited, skip
-					}
-				}
-
-				$aResults[$sRootClass][$sObjKey] = $oObj;
-				if ($iDepth > 0)
-				{
-					$oObj->GetRelatedObjects($sRelCode, $iDepth, $aResults);
-				}
-			}
-		}
-		
-		return;
-		
-		// #@# todo : Discuss the Relations and the way they are defined (do we deprecate the queries ? what are the properties -e.g. depth- and where do we set them ?)
 		foreach (MetaModel::EnumRelationQueries(get_class($this), $sRelCode) as $sDummy => $aQueryInfo)
 		{
 			MetaModel::DbgTrace("object=".$this->GetKey().", depth=$iMaxDepth, rel=".$aQueryInfo["sQuery"]);
@@ -945,8 +919,8 @@ abstract class DBObject
 
 			$iDepth = $bPropagate ? $iMaxDepth - 1 : 0;
 
-			$oFlt = DBObjectSearch::FromSibusQL($sQuery, array(), $this);
-			$oObjSet = new DBObjectSet($oFlt);
+			$oFlt = DBObjectSearch::FromOQL($sQuery);
+			$oObjSet = new DBObjectSet($oFlt, array(), $this->ToArgs());
 			while ($oObj = $oObjSet->Fetch())
 			{
 				$sRootClass = MetaModel::GetRootClass(get_class($oObj));

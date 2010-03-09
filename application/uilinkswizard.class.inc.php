@@ -285,7 +285,7 @@ class UILinksWizard
 			foreach($this->m_aEditableFields as $sFieldCode)
 			{
 				$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $sFieldCode);
-				$aRow[$sFieldCode] = cmdbAbstractObject::GetFormElementForField($oP, $this->m_sClass, $sFieldCode, $oAttDef, '' /* TO DO/ call GetDefaultValue */, '' /* DisplayValue */, '' /* id */, $sNameSuffix);
+				$aRow[$sFieldCode] = cmdbAbstractObject::GetFormElementForField($oP, $this->m_sClass, $sFieldCode, $oAttDef, '' /* TO DO/ call GetDefaultValue($oObject->ToArgs()) */, '' /* DisplayValue */, '' /* id */, $sNameSuffix);
 			}
 		}
 		foreach(MetaModel::GetZListItems($this->m_sLinkedClass, 'list') as $sFieldCode)

@@ -81,6 +81,22 @@ class DBObjectSet
 		return $oRetSet;
 	} 
 
+	static public function FromLinkSet($oObject, $sLinkSetAttCode, $sExtKeyToRemote)
+	{
+		$oLinkAttCode = MetaModel::GetAttributeDef(get_class($oObject), $sLinkSetAttCode);
+		$oExtKeyAttDef = MetaModel::GetAttributeDef($oLinkAttCode->GetLinkedClass(), $sExtKeyToRemote);
+		$sTargetClass = $oExtKeyAttDef->GetTargetClass();
+
+		$oLinkSet = $oObject->Get($sLinkSetAttCode);
+		$aTargets = array();
+		while ($oLink = $oLinkSet->Fetch())
+		{
+			$aTargets[] = MetaModel::GetObject($sTargetClass, $oLink->Get($sExtKeyToRemote));
+		}
+
+		return self::FromArray($sTargetClass, $aTargets);
+	} 
+
 	public function ToArray($bWithId = true)
 	{
 		$aRet = array();
@@ -263,11 +279,14 @@ class DBObjectSet
 
 	public function GetRelatedObjects($sRelCode, $iMaxDepth = 99)
 	{
+		$aRelatedObjs = array();
+
 		$aVisited = array(); // optimization for consecutive calls of MetaModel::GetRelatedObjects
 		$this->Seek(0);
 		while ($oObject = $this->Fetch())
 		{
-			$aRelatedObjs = $oObject->GetRelatedObjects($sRelCode, $iMaxDepth, $aVisited);
+			// #@# todo - actually merge !
+			$aRelatedObjs = array_merge_recursive($aRelatedObjs, $oObject->GetRelatedObjects($sRelCode, $iMaxDepth, $aVisited));
 		}
 		return $aRelatedObjs;
 	}

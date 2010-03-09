@@ -933,7 +933,7 @@ class DBObjectSearch
 
 		if (preg_match('@^\\s*SELECT@', $sQuery))
 		{
-			return self::FromOQL($sQuery, $aParams, $oObject);
+			return self::FromOQL($sQuery);
 		}
 
 		$iSepPos = strpos($sQuery, ":");
