@@ -214,6 +214,7 @@ class DBObjectSet
 
 	public function AddObjectArray($aObjects)
 	{
+		// #@# todo - add a check on the object class ?
 		foreach ($aObjects as $oObj)
 		{
 			$this->AddObject($oObj);

@@ -180,6 +180,7 @@ class ValueSetRelatedObjectsFromLinkSet extends ValueSetDefinition
 					$aLinksToCreate[] = $oNewLink;
 				}
 			}
+			// #@# or AddObjectArray($aObjects) ?
 			$oSetToCreate = DBObjectSet::FromArray($this->m_sTargetLinkClass, $aLinksToCreate);
 			$this->m_aValues[$oObject->GetKey()] = $oObject->GetAsHTML($oObject->GetName());
 		}
