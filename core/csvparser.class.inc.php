@@ -91,9 +91,15 @@ class CSVParser
 		{
 			$this->m_aDataSet[] = $this->m_aCurrRow;
 		}
-		elseif ((count($this->m_aCurrRow) == 1) && (strlen($this->m_aCurrRow[0]) > 0))
+		elseif (count($this->m_aCurrRow) == 1)
 		{
-			$this->m_aDataSet[] = $this->m_aCurrRow;
+			// Get the unique value
+			$aValues = array_values($this->m_aCurrRow);
+			$sValue = $aValues[0]; 
+			if (strlen($sValue) > 0)
+			{
+				$this->m_aDataSet[] = $this->m_aCurrRow;
+			}
 		}
 		else
 		{

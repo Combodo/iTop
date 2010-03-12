@@ -130,6 +130,7 @@ abstract class AttributeDefinition
 	public function IsExternalField() {return false;} 
 	public function IsWritable() {return false;} 
 	public function IsNullAllowed() {return true;} 
+	public function GetNullValue() {return null;} 
 	public function GetCode() {return $this->m_sCode;} 
 	public function GetLabel() {return $this->Get("label");} 
 	public function GetDescription() {return $this->Get("description");} 
@@ -328,7 +329,6 @@ class AttributeDBFieldVoid extends AttributeDefinition
 	public function IsNullAllowed() {return false;}
 
 	protected function ScalarToSQL($value) {return $value;} // format value as a valuable SQL literal (quoted outside)
-	protected function SQLToScalar($value) {return $value;} // take the result of a fetch... and make it a PHP variable
 
 	public function GetSQLExpressions()
 	{
@@ -483,12 +483,6 @@ class AttributeInteger extends AttributeDBField
 		assert(is_numeric($value));
 		return $value; // supposed to be an int
 	}
-	public function SQLToScalar($value)
-	{
-		// Use cast (int) or intval() ?
-		return (int)$value;
-		
-	}
 }
 
 /**
@@ -524,11 +518,6 @@ class AttributeBoolean extends AttributeInteger
 		assert(is_bool($value));
 		if ($value) return 1;
 		return 0;
-	}
-	public function SQLToScalar($value)
-	{
-		// Use cast (int) or intval() ?
-		return (int)$value;
 	}
 }
 
@@ -608,10 +597,6 @@ class AttributeString extends AttributeDBField
 		{
 			throw new CoreWarning('Expected the attribute value to be a string', array('found_type' => gettype($value), 'value' => $value, 'class' => $this->GetCode(), 'attribute' => $this->GetHostClass()));
 		}
-		return $value;
-	}
-	public function SQLToScalar($value)
-	{
 		return $value;
 	}
 
@@ -986,10 +971,6 @@ class AttributeDate extends AttributeDBField
 		}
 		return $value;
 	}
-	public function SQLToScalar($value)
-	{
-		return $value;
-	}
 
 	public function GetAsHTML($value)
 	{
@@ -1047,6 +1028,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 
 	public function GetDefaultValue() {return 0;}
 	public function IsNullAllowed() {return $this->Get("is_null_allowed");}
+	public function GetNullValue() {return 0;} 
 
 	public function GetBasicFilterOperators()
 	{
@@ -1092,6 +1074,11 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 	public function GetDeletionPropagationOption()
 	{
 		return $this->Get("on_target_delete");
+	}
+
+	public function MakeRealValue($proposedValue)
+	{
+		return (int)$proposedValue;
 	}
 }
 
@@ -1225,11 +1212,6 @@ class AttributeExternalField extends AttributeDefinition
 		// This one could be used in case of filtering only
 		$oExtAttDef = $this->GetExtAttDef();
 		return $oExtAttDef->ScalarToSQL($value);
-	}
-	public function SQLToScalar($value)
-	{
-		$oExtAttDef = $this->GetExtAttDef();
-		return $oExtAttDef->SQLToScalar($value);
 	}
 
 

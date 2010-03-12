@@ -244,15 +244,16 @@ class BulkChange
 
 	static protected function MakeSpecObject($sClass, $iId)
 	{
-		$oObj = MetaModel::GetObject($sClass, $iId);
-		if (is_null($oObj))
+		try
 		{
+			$oObj = MetaModel::GetObject($sClass, $iId);
+		}
+		catch(CoreException $e)
+		{
+			// in case an ext key is 0 (which is currently acceptable)
 			return $iId;
 		}
-		else
-		{
-			return $oObj;
-		}
+		return $oObj;
 	}
 
 	protected function PrepareObject(&$oTargetObj, $aRowData, &$aErrors)
@@ -276,18 +277,33 @@ class BulkChange
 			switch($oExtObjects->Count())
 			{
 			case 0:
-				$aErrors[$sAttCode] = "Object not found";
-				$aResults[$sAttCode]= new CellChangeSpec_Issue(null, $oTargetObj->Get($sAttCode), 'Object not found - check the spelling (no space before/after)');
+				if ($oExtKey->IsNullAllowed())
+				{
+					$oTargetObj->Set($sAttCode, $oExtKey->GetNullValue());
+				}
+				else
+				{
+					$aErrors[$sAttCode] = "Object not found";
+					$aResults[$sAttCode]= new CellChangeSpec_Issue(null, $oTargetObj->Get($sAttCode), 'Object not found - check the spelling (no space before/after)');
+				}
 				break;
 			case 1:
 				// Do change the external key attribute
 				$oForeignObj = $oExtObjects->Fetch();
 				$oTargetObj->Set($sAttCode, $oForeignObj->GetKey());
-	
-				// Report it
+				break;
+			default:
+				$aErrors[$sAttCode] = "Found ".$oExtObjects->Count()." matches";
+				$previousValue = self::MakeSpecObject($oExtKey->GetTargetClass(), $oTargetObj->Get($sAttCode));
+				$aResults[$sAttCode]= new CellChangeSpec_Issue(null, $previousValue, "Found ".$oExtObjects->Count()." matches");
+			}
+
+			// Report
+			if (!array_key_exists($sAttCode, $aResults))
+			{
+				$oForeignObj = $oTargetObj->Get($sAttCode);
 				if (array_key_exists($sAttCode, $oTargetObj->ListChanges()))
 				{
-
 					if ($oTargetObj->IsNew())
 					{
 						$aResults[$sAttCode]= new CellChangeSpec_Init($oForeignObj);
@@ -302,11 +318,6 @@ class BulkChange
 				{
 					$aResults[$sAttCode]= new CellChangeSpec_Unchanged($oForeignObj);
 				}
-				break;
-			default:
-				$aErrors[$sAttCode] = "Found ".$oExtObjects->Count()." matches";
-				$previousValue = self::MakeSpecObject($oExtKey->GetTargetClass(), $oTargetObj->Get($sAttCode));
-				$aResults[$sAttCode]= new CellChangeSpec_Issue(null, $previousValue, "Found ".$oExtObjects->Count()." matches");
 			}
 		}	
 	

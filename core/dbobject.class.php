@@ -568,9 +568,31 @@ abstract class DBObject
 		$aDelta = array();
 		foreach ($aProposal as $sAtt => $proposedValue)
 		{
-			if (!array_key_exists($sAtt, $this->m_aOrigValues) || ($this->m_aOrigValues[$sAtt] !== $proposedValue))
+			if (!array_key_exists($sAtt, $this->m_aOrigValues))
 			{
+				// The value was not set
 				$aDelta[$sAtt] = $proposedValue;
+			}
+			elseif(is_object($proposedValue))
+			{
+				// The value is an object, the comparison is not strict
+				// #@# todo - should be even less strict => add verb on AttributeDefinition: Compare($a, $b)
+				if ($this->m_aOrigValues[$sAtt] != $proposedValue)
+				{
+					$aDelta[$sAtt] = $proposedValue;
+				}
+			}
+			else
+			{
+				// The value is a scalar, the comparison must be 100% strict
+				if($this->m_aOrigValues[$sAtt] !== $proposedValue)
+				{	
+					//echo "$sAtt:<pre>\n";
+					//var_dump($this->m_aOrigValues[$sAtt]);
+					//var_dump($proposedValue);
+					//echo "</pre>\n";
+					$aDelta[$sAtt] = $proposedValue;
+				}
 			}
 		}
 		return $aDelta;
