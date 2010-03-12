@@ -296,10 +296,12 @@ class DisplayBlock
 			{
 				$sGroupByField = $aExtraParams['group_by'];
 				$aGroupBy = array();
+				$sLabels = array();
 				while($oObj = $this->m_oSet->Fetch())
 				{
-					$sValue = $oObj->GetAsHtml($sGroupByField);
+					$sValue = $oObj->Get($sGroupByField);
 					$aGroupBy[$sValue] = isset($aGroupBy[$sValue]) ? $aGroupBy[$sValue]+1 : 1;
+					$sLabels[$sValue] = $oObj->GetAsHtml($sGroupByField);
 				}
 				$sFilter = urlencode($this->m_oFilter->serialize());
 				$aData = array();
@@ -307,7 +309,7 @@ class DisplayBlock
 				$sParams = $oAppContext->GetForLink();
 				foreach($aGroupBy as $sValue => $iCount)
 				{
-					$aData[] = array ( 'group' => $sValue,
+					$aData[] = array ( 'group' => $sLabels[$sValue],
 									  'value' => "<a href=\"./UI.php?operation=search&dosearch=1&$sParams&filter=$sFilter&$sGroupByField=".urlencode($sValue)."\">$iCount</a>"); // TO DO: add the context information
 				}
 				$sHtml .= $oPage->GetTable(array('group' => array('label' => MetaModel::GetLabel($this->m_oFilter->GetClass(), $sGroupByField), 'description' => ''), 'value' => array('label'=>'Count', 'description' => 'Number of elements')), $aData);
