@@ -283,7 +283,7 @@ $sJSHandlerCode
 			if (count($aCurrentStep) == 0)
 			{
 				// This step of the wizard would contain NO field !
-				$oPage->add("<strong>Error:</strong> Circular reference in the dependencies between the fields.");
+				$this->m_oPage->add("<strong>Error:</strong> Circular reference in the dependencies between the fields.");
 				print_r($aFields);
 				break;
 			}
