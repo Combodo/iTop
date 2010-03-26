@@ -145,13 +145,15 @@ $sJSHandlerCode
 		$aFieldsDone = array(); // Store all the fields that are already covered by a previous step of the wizard
 	
 		$aStates = MetaModel::EnumStates($this->m_sClass);
+		$sStateAttCode = MetaModel::GetStateAttributeCode($this->m_sClass);
 		
 		$aMandatoryAttributes = array();
 		// Some attributes are always mandatory independently of the state machine (if any)
         foreach(MetaModel::GetAttributesList($this->m_sClass) as $sAttCode)
         {
             $oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
-            if (!$oAttDef->IsExternalField() && !$oAttDef->IsNullAllowed())
+            if (!$oAttDef->IsExternalField() && !$oAttDef->IsNullAllowed() && 
+			    ($sAttCode != 'finalclass') && ($sAttCode != $sStateAttCode) )
             {
                 $aMandatoryAttributes[$sAttCode] = OPT_ATT_MANDATORY;
             }
@@ -231,7 +233,6 @@ $sJSHandlerCode
 
 
 		// Now computes the steps to fill the optional fields
-		$sStateAttCode = MetaModel::GetStateAttributeCode($this->m_sClass);
 		$aFields = array(); // reset
 		foreach(MetaModel::ListAttributeDefs($this->m_sClass) as $sAttCode=>$oAttDef)
 		{
