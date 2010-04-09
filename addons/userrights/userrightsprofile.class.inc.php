@@ -834,8 +834,12 @@ class UserRightsProfile extends UserRightsAddOnAPI
 
 	public function Setup()
 	{
-		SetupITILProfiles::DoCreateDimensions();
-		SetupITILProfiles::DoCreateProfiles();
+		SetupProfiles::ComputeITILProfiles();
+		//SetupProfiles::ComputeBasicProfiles();
+
+		SetupProfiles::DoCreateDimensions();
+		SetupProfiles::DoCreateDimensions();
+		SetupProfiles::DoCreateProfiles();
 		return true;
 	}
 
@@ -1356,25 +1360,13 @@ exit;
 }
 
 //
-// Here is the code that will create some profiles into our user management model, given an ITIL representation of the user profiles
+// Create simple profiles into our user management model:
+// - administrator
+// - readers
+// - contributors
 //
-class SetupITILProfiles
+class SetupProfiles
 {
-	/*
-	Later, maybe ?
-
-	protected static $m_aDimensions = array(
-		'organization' => array(
-			'description' => '',
-			'type' => 'bizOrganization',
-		),
-		'site' => array(
-			'description' => '',
-			'type' => '',
-		),
-	);
-	*/
-
 	protected static $m_aDimensions = array(
 		'organization' => array(
 			'description' => '',
@@ -1391,147 +1383,10 @@ class SetupITILProfiles
 		UR_ACTION_BULK_DELETE => 'Bulk Delete',
 	);
 
-	// It is possible to specify the same class in several modules
-	// 
-	protected static $m_aModules = array(
-		'General' => array(
-			'bizOrganization',
-		),
-		'Documentation' => array(
-			'bizDocument',
-			'lnkDocumentRealObject',
-			'lnkDocumentContract',
-			'lnkDocumentError',
-		),
-		'Configuration' => array(
-			'logRealObject',
-			'lnkContactRealObject',
-//			'lnkInterfaces',
-			'lnkClientServer',
-			'lnkInfraGrouping',
-			'lnkContactInfra',
-			'lnkContactTeam',
-		),
-		'Incident' => array(
-			'bizIncidentTicket',
-			'lnkRelatedTicket',
-			'lnkInfraTicket',
-			'lnkContactTicket',
-		),
-		'Problem' => array(
-			'bizKnownError',
-			'lnkInfraError',
-			'lnkDocumentError',
-		),
-		'Change' => array(
-			'bizChangeTicket',
-			'lnkInfraChangeTicket',
-			'lnkContactChange',
-		),
-		'Service' => array(
-			'bizService',
-			'bizContract',
-			'lnkInfraContract',
-			'lnkContactContract',
-			'lnkDocumentContract',
-		),
-		'Call' => array(
-			'bizServiceCall',
-			'lnkCallTicket',
-			'lnkInfraCall',
-		),
-	);
-	
-	protected static $m_aProfiles = array(
-		'Configuration Manager' => array(
-			'description' => 'Person in charge of the documentation of the managed CIs',
-			'write_modules' => 'Documentation,Configuration',
-			'stimuli' => array(
-				'bizServer' => 'any',
-				//'bizServer' => 'ev_store,ev_ship,ev_plug,ev_configuration_finished,ev_val_failed,ev_mtp,ev_start_change,ev_end_change,ev_decomission,ev_obsolete,ev_recycle',
-				'bizContract' => 'none',
-				'bizIncidentTicket' => 'none',
-				'bizChangeTicket' => 'none',
-			),
-		),
-	/*	'Requestor pb granularite actions (create/delete)' => array(
-			'description' => 'Person notifying an incident',
-			'write_modules' => 'Incident',
-			'stimuli' => array(
-				'bizServer' => 'none',
-				'bizContract' => 'none',
-				'bizIncidentTicket' => 'none',
-				'bizChangeTicket' => 'none',
-			),
-		),
-	*/
-		'Service Desk Agent' => array(
-			'description' => 'Person in charge of creating incident reports',
-			'write_modules' => 'Incident,Call',
-			'stimuli' => array(
-				'bizServer' => 'none',
-				'bizContract' => 'none',
-				'bizIncidentTicket' => 'ev_assign',
-				'bizChangeTicket' => 'none',
-				'bizServiceCall' => 'any',
-			),
-		),
-		'Support Agent' => array(
-			'description' => 'Person analyzing and solving the current incidents or problems',
-			'write_modules' => 'Incident,Problem',
-			'stimuli' => array(
-				'bizIncidentTicket' => 'any',
-				//'bizIncidentTicket' => 'ev_assign,ev_reassign,ev_start_working,ev_close',
-			),
-		),
-		'Change Implementor' => array(
-			'description' => 'Person executing the changes',
-			'write_modules' => 'Change',
-			'stimuli' => array(
-				'bizServer' => 'none',
-				'bizContract' => 'none',
-				'bizIncidentTicket' => 'none',
-				'bizChangeTicket' => 'ev_plan,ev_replan,ev_implement,ev_monitor',
-			),
-		),
-		'Change Supervisor' => array(
-			'description' => 'Person responsible for the overall change execution',
-			'write_modules' => 'Change',
-			'stimuli' => array(
-				'bizServer' => 'none',
-				'bizContract' => 'none',
-				'bizIncidentTicket' => 'none',
-				'bizChangeTicket' => 'ev_assign,ev_validate,ev_reject,ev_reopen,ev_finish',
-			),
-		),
-		'Change Approver' => array(
-			'description' => 'Person who could be impacted by some changes',
-			'write_modules' => 'Change',
-			'stimuli' => array(
-				'bizServer' => 'none',
-				'bizContract' => 'none',
-				'bizIncidentTicket' => 'none',
-				'bizChangeTicket' => 'ev_approve,ev_notapprove',
-			),
-		),
-		'Service Manager' => array(
-			'description' => 'Person responsible for the service delivered to the [internal] customer',
-			'write_modules' => 'Service',
-			'stimuli' => array(
-				'bizServer' => 'none',
-				'bizContract' => 'any',
-				//'bizContract' => 'ev_freeze_version,ev_sign,ev_begin,ev_notice,ev_terminate,ev_elapsed',
-				'bizIncidentTicket' => 'none',
-				'bizChangeTicket' => 'none',
-			),
-		),
-		'Document author' => array(
-			'description' => 'Any person who could contribute to documentation',
-			'write_modules' => 'Documentation',
-			'stimuli' => array(
-			),
-		),
-	);
+	// Note: It is possible to specify the same class in several modules
+	//
+	protected static $m_aModules = array();
+	protected static $m_aProfiles = array();
 
 	protected static function DoCreateClassProjection($iDimension, $sClass)
 	{
@@ -1603,7 +1458,14 @@ class SetupITILProfiles
 	protected static function DoCreateOneProfile($sName, $aProfileData)
 	{
 		$sDescription = $aProfileData['description'];
-		$aWriteModules = explode(',', $aProfileData['write_modules']);
+		if (strlen(trim($aProfileData['write_modules'])) == 0)
+		{
+			$aWriteModules = array(); 
+		}
+		else
+		{
+			$aWriteModules = explode(',', trim($aProfileData['write_modules']));
+		}
 		$aStimuli = $aProfileData['stimuli'];
 		
 		$oNewObj = MetaModel::NewObject("URP_Profiles");
@@ -1633,13 +1495,13 @@ class SetupITILProfiles
 		$aWriteableClasses = array();
 		foreach ($aWriteModules as $sModule)
 		{
-//			$oPage->p('Granting write access for the module"'.$sModule.'" - '.count(self::$m_aModules[$sModule]).' classes');
+			//$oPage->p('Granting write access for the module"'.$sModule.'" - '.count(self::$m_aModules[$sModule]).' classes');
 			foreach (self::$m_aModules[$sModule] as $sClass)
 			{
-				$aWriteableClasses[] = $sClass;
+				$aWriteableClasses[$sClass] = true;
 			}
 		}
-		foreach ($aWriteableClasses as $sClass)
+		foreach ($aWriteableClasses as $sClass => $foo)
 		{
 			if (!MetaModel::IsValidClass($sClass))
 			{
@@ -1704,6 +1566,165 @@ class SetupITILProfiles
 		{
 			self::DoCreateOneProfile($sName, $aProfileData);
 		}
+	}
+
+	public static function ComputeBasicProfiles()
+	{
+		// In this profiling scheme, one single module represents all the classes
+		//
+		self::$m_aModules = array(
+			'UserData' => MetaModel::GetClasses('bizmodel'),
+		);
+
+		self::$m_aProfiles = array(
+			'Reader' => array(
+				'description' => 'Person having a ready-only access to the data',
+				'write_modules' => '',
+				'stimuli' => array(
+				),
+			),
+			'Writer' => array(
+				'description' => 'Contributor to the contents (read + write access)',
+				'write_modules' => 'UserData',
+				'stimuli' => array(
+					// any class => 'any'
+				),
+			),
+		);
+	}
+
+	public static function ComputeITILProfiles()
+	{
+		// In this profiling scheme, modules are based on ITIL recommendations
+		//
+		self::$m_aModules = array(
+			'General' => array(
+				'bizOrganization',
+			),
+			'Documentation' => array(
+				'bizDocument',
+				'lnkDocumentRealObject',
+				'lnkDocumentContract',
+				'lnkDocumentError',
+			),
+			'Configuration' => array(
+				'logRealObject',
+				'lnkContactRealObject',
+	//			'lnkInterfaces',
+				'lnkClientServer',
+				'lnkInfraGrouping',
+				'lnkContactInfra',
+				'lnkContactTeam',
+			),
+			'Incident' => array(
+				'bizIncidentTicket',
+				'lnkRelatedTicket',
+				'lnkInfraTicket',
+				'lnkContactTicket',
+			),
+			'Problem' => array(
+				'bizKnownError',
+				'lnkInfraError',
+				'lnkDocumentError',
+			),
+			'Change' => array(
+				'bizChangeTicket',
+				'lnkInfraChangeTicket',
+				'lnkContactChange',
+			),
+			'Service' => array(
+				'bizService',
+				'bizContract',
+				'lnkInfraContract',
+				'lnkContactContract',
+				'lnkDocumentContract',
+			),
+			'Call' => array(
+				'bizServiceCall',
+				'lnkCallTicket',
+				'lnkInfraCall',
+			),
+		);
+		
+		self::$m_aProfiles = array(
+			'Configuration Manager' => array(
+				'description' => 'Person in charge of the documentation of the managed CIs',
+				'write_modules' => 'Documentation,Configuration',
+				'stimuli' => array(
+					'bizServer' => 'any',
+					//'bizServer' => 'ev_store,ev_ship,ev_plug,ev_configuration_finished,ev_val_failed,ev_mtp,ev_start_change,ev_end_change,ev_decomission,ev_obsolete,ev_recycle',
+					'bizContract' => 'none',
+					'bizIncidentTicket' => 'none',
+					'bizChangeTicket' => 'none',
+				),
+			),
+			'Service Desk Agent' => array(
+				'description' => 'Person in charge of creating incident reports',
+				'write_modules' => 'Incident,Call',
+				'stimuli' => array(
+					'bizServer' => 'none',
+					'bizContract' => 'none',
+					'bizIncidentTicket' => 'ev_assign',
+					'bizChangeTicket' => 'none',
+					'bizServiceCall' => 'any',
+				),
+			),
+			'Support Agent' => array(
+				'description' => 'Person analyzing and solving the current incidents or problems',
+				'write_modules' => 'Incident,Problem',
+				'stimuli' => array(
+					'bizIncidentTicket' => 'any',
+					//'bizIncidentTicket' => 'ev_assign,ev_reassign,ev_start_working,ev_close',
+				),
+			),
+			'Change Implementor' => array(
+				'description' => 'Person executing the changes',
+				'write_modules' => 'Change',
+				'stimuli' => array(
+					'bizServer' => 'none',
+					'bizContract' => 'none',
+					'bizIncidentTicket' => 'none',
+					'bizChangeTicket' => 'ev_plan,ev_replan,ev_implement,ev_monitor',
+				),
+			),
+			'Change Supervisor' => array(
+				'description' => 'Person responsible for the overall change execution',
+				'write_modules' => 'Change',
+				'stimuli' => array(
+					'bizServer' => 'none',
+					'bizContract' => 'none',
+					'bizIncidentTicket' => 'none',
+					'bizChangeTicket' => 'ev_assign,ev_validate,ev_reject,ev_reopen,ev_finish',
+				),
+			),
+			'Change Approver' => array(
+				'description' => 'Person who could be impacted by some changes',
+				'write_modules' => 'Change',
+				'stimuli' => array(
+					'bizServer' => 'none',
+					'bizContract' => 'none',
+					'bizIncidentTicket' => 'none',
+					'bizChangeTicket' => 'ev_approve,ev_notapprove',
+				),
+			),
+			'Service Manager' => array(
+				'description' => 'Person responsible for the service delivered to the [internal] customer',
+				'write_modules' => 'Service',
+				'stimuli' => array(
+					'bizServer' => 'none',
+					'bizContract' => 'any',
+					//'bizContract' => 'ev_freeze_version,ev_sign,ev_begin,ev_notice,ev_terminate,ev_elapsed',
+					'bizIncidentTicket' => 'none',
+					'bizChangeTicket' => 'none',
+				),
+			),
+			'Document author' => array(
+				'description' => 'Any person who could contribute to documentation',
+				'write_modules' => 'Documentation',
+				'stimuli' => array(
+				),
+			),
+		);
 	}
 }
 
