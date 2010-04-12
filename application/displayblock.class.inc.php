@@ -323,6 +323,44 @@ class DisplayBlock
 			
 			break;
 			
+			case 'join':
+			if (!isset($aExtraParams['oql2']))
+			{
+				$sHtml .= $oPage->GetP("parameter oql2 is mandatory.");
+			}
+			else
+			{
+				$sOql2 = $aExtraParams['oql2'];
+				$sGroupByField = $aExtraParams['group_by'];
+				$aExtraParams['menu'] = false;
+				$oFilter1 = CMDBSearchFilter::FromOQL($sOql2);
+				$oSet1 = new CMDBObjectSet($oFilter1);
+				if (!isset($aExtraParams['group_by']))
+				{
+					// No "group by" specified, use the name of the second class
+					$sGroupByField = MetaModel::GetNameAttributeCode($oFilter1->GetClass());
+				}
+				$aResults = array();
+				while($oObj = $oSet1->Fetch())
+				{
+					$aResult[$oObj->Get($sGroupByField)] = array();
+					$oSet2 = new CMDBObjectSet($this->m_oFilter, array(), array('oql2' => $oObj->GetKey()));
+					while($oObj2 = $oSet2->Fetch())
+					{
+						$aResults[$oObj->Get($sGroupByField)][$oObj2->GetKey()] = $oObj2;
+					}
+				}
+				$sHtml .= "<table>\n";
+				foreach($aResults as $sCategory => $aObjects)
+				{
+					$sHtml .= "<tr><td><h1>$sCategory</h1></td></tr>\n";
+					$oSet = CMDBObjectSet::FromArray($this->m_oFilter->GetClass(), $aObjects);
+					$sHtml .= "<tr><td>".cmdbAbstractObject::GetDisplaySet($oPage, $oSet, $aExtraParams)."</td></tr>\n";
+				}				
+				$sHtml .= "</table>\n";
+			}
+			break;
+
 			case 'list':
 			if ( ($this->m_oSet->Count()> 0) && (UserRights::IsActionAllowed($this->m_oSet->GetClass(), UR_ACTION_READ, $this->m_oSet) == UR_ALLOWED_YES) )
 			{
@@ -426,7 +464,7 @@ class DisplayBlock
 			break;
 			
 			case 'search':
-			$iSearchSectionId = 1;
+			static $iSearchSectionId = 1;
 			$sStyle = (isset($aExtraParams['open']) && ($aExtraParams['open'] == 'true')) ? 'SearchDrawer' : 'SearchDrawer DrawerClosed';
 			$sHtml .= "<div id=\"Search_$iSearchSectionId\" class=\"$sStyle\">\n";
 			$oPage->add_ready_script("\$(\"#LnkSearch_$iSearchSectionId\").click(function() {\$(\"#Search_$iSearchSectionId\").slideToggle('normal'); $(\"#LnkSearch_$iSearchSectionId\").toggleClass('open');});");
@@ -434,6 +472,7 @@ class DisplayBlock
 	 		$sHtml .= "</div>\n";
 	 		$sHtml .= "<div class=\"HRDrawer\"></div>\n";
 	 		$sHtml .= "<div id=\"LnkSearch_$iSearchSectionId\" class=\"DrawerHandle\">Search</div>\n";
+			$iSearchSectionId++;
 			break;
 			
 			case 'pie_chart':
