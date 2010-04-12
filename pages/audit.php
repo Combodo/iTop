@@ -98,7 +98,10 @@ switch($operation)
 		$aObjectsWithErrors = array();
 		if (!empty($currentOrganization))
 		{
-			$oDefinitionFilter->AddCondition('org_id', $currentOrganization);
+			if (MetaModel::IsValidFilterCode($oDefinitionFilter->GetClass(), 'org_id'))
+			{
+				$oDefinitionFilter->AddCondition('org_id', $currentOrganization);
+			}
 		}
 		$aResults = array();
 		$oDefinitionSet = new CMDBObjectSet($oDefinitionFilter);
