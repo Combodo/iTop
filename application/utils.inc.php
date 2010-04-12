@@ -153,18 +153,26 @@ class utils
      * @param $bQueryString bool True to also get the query string, false otherwise
      * @return string The absolute URL to the current page
      */                   
-	static public function GetAbsoluteUrl($bQueryString = true)
+	static public function GetAbsoluteUrl($bQueryString = true, $bForceHTTPS = false)
 	{
 		// Build an absolute URL to this page on this server/port
 		$sServerName = $_SERVER['SERVER_NAME'];
-		$sProtocol = isset($_SERVER['HTTPS']) ? 'https' : 'http';
-		if ($sProtocol == 'http')
+		if ($bForceHTTPS)
 		{
-			$sPort = ($_SERVER['SERVER_PORT'] == 80) ? '' : ':'.$_SERVER['SERVER_PORT'];
+			$sProtocol = 'https';
+			$sPort = '';
 		}
 		else
 		{
-			$sPort = ($_SERVER['SERVER_PORT'] == 443) ? '' : ':'.$_SERVER['SERVER_PORT'];
+			$sProtocol = isset($_SERVER['HTTPS']) ? 'https' : 'http';
+			if ($sProtocol == 'http')
+			{
+				$sPort = ($_SERVER['SERVER_PORT'] == 80) ? '' : ':'.$_SERVER['SERVER_PORT'];
+			}
+			else
+			{
+				$sPort = ($_SERVER['SERVER_PORT'] == 443) ? '' : ':'.$_SERVER['SERVER_PORT'];
+			}
 		}
 		// $_SERVER['REQUEST_URI'] is empty when running on IIS
 		// Let's use Ivan Tcholakov's fix (found on www.dokeos.com)

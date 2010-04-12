@@ -76,9 +76,33 @@ h1 {
 		// Finally, destroy the session.
 		session_destroy();
 	}
+
+	static function SecureConnectionRequired()
+	{
+		$oConfig = new Config(ITOP_CONFIG_FILE);
+		return $oConfig->GetSecureConnectionRequired();
+	}
+
+	static function IsConnectionSecure()
+	{
+		$bSecured = false;
+
+		if ( !empty($_SERVER['HTTPS']) && ($_SERVER['HTTPS']!= 'off') )
+		{
+			$bSecured = true;
+		}
+		return $bSecured;
+	}
 	
 	static function DoLogin()
 	{
+		if (self::SecureConnectionRequired() && !self::IsConnectionSecure())
+		{
+			// Non secured URL... redirect to a secured one
+			$sUrl = Utils::GetAbsoluteUrl(true /* query string */, true /* force HTTPS */);
+			header("Location: $sUrl");			
+			exit;
+		}
 		$operation = utils::ReadParam('loginop', '');
 		session_start();
 
@@ -86,10 +110,15 @@ h1 {
 		{
 			self::ResetSession();
 		}
-		
+	
 		if (!isset($_SESSION['auth_user']) || !isset($_SESSION['auth_pwd']))
 		{
-			if ($operation == 'login')
+			if ($operation == 'loginurl')
+			{
+				$sAuthUser = utils::ReadParam('auth_user', '', 'get');
+				$sAuthPwd = utils::ReadParam('auth_pwd', '', 'get');
+			}
+			else if ($operation == 'login')
 			{
 				$sAuthUser = utils::ReadParam('auth_user', '', 'post');
 				$sAuthPwd = utils::ReadParam('auth_pwd', '', 'post');
@@ -119,7 +148,7 @@ h1 {
 		{
 			$_SESSION['auth_user'] = $sAuthUser ;
 			$_SESSION['auth_pwd'] = $sAuthPwd;
-			
+		
 		}
 	}
 } // End of class

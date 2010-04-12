@@ -20,6 +20,7 @@ define ('DEFAULT_MIN_DISPLAY_LIMIT', 10);
 define ('DEFAULT_MAX_DISPLAY_LIMIT', 15);
 define ('DEFAULT_STANDARD_RELOAD_INTERVAL', 5*60);
 define ('DEFAULT_FAST_RELOAD_INTERVAL', 1*60);
+define ('DEFAULT_SECURE_CONNECTION_REQUIRED', false);
 
 class Config
 {
@@ -54,6 +55,11 @@ class Config
 	 */	 	
 	protected $m_iFastReloadInterval;
 	
+	/**
+	 * @var boolean Whether or not a secure connection is required for using the application
+	 */	 	
+	protected $m_bSecureConnectionRequired;
+
 	public function __construct($sConfigFile, $bLoadConfig = true)
 	{
 		$this->m_sFile = $sConfigFile;
@@ -70,6 +76,7 @@ class Config
 		$this->m_iMaxDisplayLimit = DEFAULT_MAX_DISPLAY_LIMIT;
 		$this->m_iStandardReloadInterval = DEFAULT_STANDARD_RELOAD_INTERVAL;
 		$this->m_iFastReloadInterval = DEFAULT_FAST_RELOAD_INTERVAL;
+		$this->m_bSecureConnectionRequired = DEFAULT_SECURE_CONNECTION_REQUIRED;
 		if ($bLoadConfig)
 		{
 			$this->Load($sConfigFile);
@@ -151,6 +158,7 @@ class Config
 		$this->m_iMaxDisplayLimit = isset($MySettings['max_display_limit']) ? trim($MySettings['max_display_limit']) : DEFAULT_MAX_DISPLAY_LIMIT;
 		$this->m_iStandardReloadInterval = isset($MySettings['standard_reload_interval']) ? trim($MySettings['standard_reload_interval']) : DEFAULT_STANDARD_RELOAD_INTERVAL;
 		$this->m_iFastReloadInterval = isset($MySettings['fast_reload_interval']) ? trim($MySettings['fast_reload_interval']) : DEFAULT_FAST_RELOAD_INTERVAL;
+		$this->m_bSecureConnectionRequired = isset($MySettings['secure_connection_required']) ? trim($MySettings['secure_connection_required']) : DEFAULT_SECURE_CONNECTION_REQUIRED;
 	}
 
 	protected function Verify()
@@ -229,6 +237,11 @@ class Config
 		return $this->m_iFastReloadInterval;
 	}
 
+	public function GetSecureConnectionRequired()
+	{
+		return $this->m_bSecureConnectionRequired;
+	}
+
 	public function SetDBHost($sDBHost)
 	{
 		$this->m_sDBHost = $sDBHost;
@@ -274,6 +287,11 @@ class Config
 		$this->m_iFastReloadInterval = $iFastReloadInterval;
 	}
 
+	public function SetSecureConnectionRequired($bSecureConnectionRequired)
+	{
+		$this->m_bSecureConnectionRequired = $bSecureConnectionRequired;
+	}
+
 	public function FileIsWritable()
 	{
 		return is_writable($this->m_sFile);
@@ -315,6 +333,7 @@ class Config
 			fwrite($hFile, "\t'max_display_limit' => {$this->m_iMaxDisplayLimit},\n");
 			fwrite($hFile, "\t'standard_reload_interval' => {$this->m_iStandardReloadInterval},\n");
 			fwrite($hFile, "\t'fast_reload_interval' => {$this->m_iFastReloadInterval},\n");
+			fwrite($hFile, "\t'secure_connection_required' => ".($this->m_bSecureConnectionRequired ? 'true' : 'false').",\n");
 			fwrite($hFile, ");\n");
 			
 			fwrite($hFile, "\n/**\n");
