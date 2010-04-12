@@ -96,15 +96,17 @@ class ValueSetObjects extends ValueSetDefinition
 		$oFilter = DBObjectSearch::FromSibusQL($this->m_sFilterExpr, $aArgs);
 		if (!$oFilter) return false;
 
-		if (empty($this->m_sValueAttCode))
-		{
-			$this->m_sValueAttCode = MetaModel::GetNameAttributeCode($oFilter->GetClass());
-		}
-
 		$oObjects = new DBObjectSet($oFilter, $this->m_aOrderBy, $aArgs);
 		while ($oObject = $oObjects->Fetch())
 		{
-			$this->m_aValues[$oObject->GetKey()] = $oObject->GetAsHTML($this->m_sValueAttCode);
+			if (empty($this->m_sValueAttCode))
+			{
+				$this->m_aValues[$oObject->GetKey()] = $oObject->GetName();
+			}
+			else
+			{
+				$this->m_aValues[$oObject->GetKey()] = $oObject->GetAsHTML($this->m_sValueAttCode);
+			}
 		}
 		return true;
 	}

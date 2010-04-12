@@ -266,7 +266,8 @@ abstract class cmdbAbstractObject extends CMDBObject
 		if (!empty($sTemplate))
 		{
 			$oTemplate = new DisplayTemplate($sTemplate);
-			$oTemplate->Render($oPage, array('class_name'=> MetaModel::GetName(get_class($this)),'class'=> get_class($this),'pkey'=> $this->GetKey(), 'name' => $this->GetName()));
+			$sNameAttCode = MetaModel::GetNameAttributeCode(get_class($this));
+			$oTemplate->Render($oPage, array('class_name'=> MetaModel::GetName(get_class($this)),'class'=> get_class($this),'pkey'=> $this->GetKey(), 'name' => $this->Get($sNameAttCode)));
 		}
 		else
 		{
