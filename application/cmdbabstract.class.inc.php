@@ -599,24 +599,45 @@ abstract class cmdbAbstractObject extends CMDBObject
 	static function DisplaySetAsXML(WebPage $oPage, CMDBObjectSet $oSet, $aParams = array())
 	{
 		$oAppContext = new ApplicationContext();
-		$sClassName = $oSet->GetFilter()->GetClass();
+		$aClasses = $oSet->GetFilter()->GetSelectedClasses();
+		$aAuthorizedClasses = array();
+		foreach($aClasses as $sAlias => $sClassName)
+		{
+			if (UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $oSet) == UR_ALLOWED_YES)
+			{
+				$aAuthorizedClasses[$sAlias] = $sClassName;
+			}
+		}
 		$aAttribs = array();
-		$aList = MetaModel::GetZListItems($sClassName, 'details');
+		$aList = array();
+		$aList[$sClassName] = MetaModel::GetZListItems($sClassName, 'details');
 		$oPage->add("<Set>\n");
 		$oSet->Seek(0);
-		while ($oObj = $oSet->Fetch())
+		while ($aObjects = $oSet->FetchAssoc())
 		{
-		    $sClassName = get_class($oObj);
-			$oPage->add("<$sClassName id=\"".$oObj->GetKey()."\">\n");
-			foreach(MetaModel::ListAttributeDefs($sClassName) as $sAttCode=>$oAttDef)
+			if (count($aAuthorizedClasses) > 1)
 			{
-				if (($oAttDef->IsWritable()) && ($oAttDef->IsScalar()) && ($sAttCode != 'finalclass') )
-				{
-					$sValue = $oObj->GetAsXML($sAttCode);
-					$oPage->add("<$sAttCode>$sValue</$sAttCode>\n");
-				}
+				$oPage->add("<Row>\n");				
 			}
-			$oPage->add("</$sClassName>\n");
+			foreach($aAuthorizedClasses as $sAlias => $sClassName)
+			{
+				$oObj = $aObjects[$sAlias];
+			    $sClassName = get_class($oObj);
+				$oPage->add("<$sClassName alias=\"$sAlias\" id=\"".$oObj->GetKey()."\">\n");
+				foreach(MetaModel::ListAttributeDefs($sClassName) as $sAttCode=>$oAttDef)
+				{
+					if (($oAttDef->IsWritable()) && ($oAttDef->IsScalar()) && ($sAttCode != 'finalclass') )
+					{
+						$sValue = $oObj->GetAsXML($sAttCode);
+						$oPage->add("<$sAttCode>$sValue</$sAttCode>\n");
+					}
+				}
+				$oPage->add("</$sClassName>\n");
+			}
+			if (count($aAuthorizedClasses) > 1)
+			{
+				$oPage->add("</Row>\n");				
+			}
 		}
 		$oPage->add("</Set>\n");
 	}
