@@ -22,7 +22,8 @@ class OqlInterpreter
 		$this->m_sQuery = $sQuery;
 	}
 
-	protected function Parse()
+	// Note: this function is left public for unit test purposes
+	public function Parse()
 	{
 		$oLexer = new OQLLexer($this->m_sQuery);
 		$oParser = new OQLParser($this->m_sQuery);
@@ -44,18 +45,6 @@ class OqlInterpreter
 		}
 		return $oRes;
 	}
-
-/*
-	public function ParseValueSetQuery()
-	{
-		$oRes = $this->Parse();
-		if (!$oRes instanceof OqlValueSetQuery)
-		{
-			throw new OqlException('Expecting a value set query', $this->m_sQuery, 0, 0, get_class($oRes), array('OqlValueSetQuery'));
-		}
-		return $oRes;
-	}
-*/
 
 	public function ParseExpression()
 	{

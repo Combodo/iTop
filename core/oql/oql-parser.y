@@ -30,20 +30,27 @@ result ::= query(X). { $this->my_result = X; }
 result ::= condition(X). { $this->my_result = X; }
 
 query(A) ::= SELECT class_name(X) join_statement(J) where_statement(W). {
-	A = new OqlObjectQuery(X, X, W, J);
+	A = new OqlObjectQuery(X, X, W, J, array(X));
 }
 query(A) ::= SELECT class_name(X) AS_ALIAS class_name(Y) join_statement(J) where_statement(W). {
-	A = new OqlObjectQuery(X, Y, W, J);
+	A = new OqlObjectQuery(X, Y, W, J, array(Y));
 }
 
-/*
-query(A) ::= SELECT field_id(E) FROM class_name(X) join_statement(J) where_statement(W). {
-	A = new OqlValueSetQuery(E, X, X, W, J);
+query(A) ::= SELECT class_list(E) FROM class_name(X) join_statement(J) where_statement(W). {
+	A = new OqlObjectQuery(X, X, W, J, E);
 }
-query(A) ::= SELECT field_id(E) FROM class_name(X) AS_ALIAS class_name(Y) join_statement(J) where_statement(W). {
-	A = new OqlValueSetQuery(E, X, Y, W, J);
+query(A) ::= SELECT class_list(E) FROM class_name(X) AS_ALIAS class_name(Y) join_statement(J) where_statement(W). {
+	A = new OqlObjectQuery(X, Y, W, J, E);
 }
-*/
+
+
+class_list(A) ::= class_name(X). {
+	A = array(X);
+}
+class_list(A) ::= class_list(L) COMA class_name(X). {
+	array_push(L, X);
+	A = L;
+}
 
 where_statement(A) ::= WHERE condition(C). { A = C;}
 where_statement(A) ::= . { A = null;}

@@ -43,9 +43,8 @@ define('SIBUSQLTHISREGEXP', "/this\\.(.*)/U");
  */
 class DBObjectSearch
 {
-	private $m_sClass;
-	private $m_sClassAlias;
 	private $m_aClasses; // queried classes (alias => class name)
+	private $m_aSelectedClasses; // selected for the output (alias => class name)
 	private $m_oSearchCondition;
 	private $m_aParams;
 	private $m_aFullText;
@@ -59,9 +58,10 @@ class DBObjectSearch
 		assert('is_string($sClass)');
 		assert('MetaModel::IsValidClass($sClass)'); // #@# could do better than an assert, or at least give the caller's reference
 		// => idee d'un assert avec call stack (autre utilisation = echec sur query SQL)
+
 		if (empty($sClassAlias)) $sClassAlias = $sClass;
-		$this->m_sClass = $sClass;
-		$this->m_sClassAlias = $sClassAlias;
+
+		$this->m_aSelectedClasses = array($sClassAlias => $sClass);
 		$this->m_aClasses = array($sClassAlias => $sClass);
 		$this->m_oSearchCondition = new TrueExpression;
 		$this->m_aParams = array();
@@ -70,6 +70,38 @@ class DBObjectSearch
 		$this->m_aReferencedBy = array();
 		$this->m_aRelatedTo = array();
 	}
+
+	public function GetClassName($sAlias) {return $this->m_aClasses[$sAlias];}
+	public function GetJoinedClasses() {return $this->m_aClasses;}
+
+	public function GetClass()
+	{
+		return reset($this->m_aSelectedClasses);
+	}
+	public function GetClassAlias()
+	{
+		reset($this->m_aSelectedClasses);
+		return key($this->m_aSelectedClasses);
+	}
+
+	public function SetSelectedClasses($aNewSet)
+	{
+		$this->m_aSelectedClasses = array();
+		foreach ($aNewSet as $sAlias => $sClass)
+		{
+			if (!array_key_exists($sAlias, $this->m_aClasses))
+			{
+				throw new CoreException('Unexpected class alias', array('alias'=>$sAlias, 'expected'=>$this->m_aClasses));
+			}
+			$this->m_aSelectedClasses[$sAlias] = $sClass;
+		}
+	}
+
+	public function GetSelectedClasses()
+	{
+		return $this->m_aSelectedClasses;
+	}
+
 
 	public function IsAny()
 	{
@@ -173,9 +205,9 @@ class DBObjectSearch
 		}
 		if (!empty($sConditionDesc))
 		{
-			return "Objects of class '$this->m_sClass', $sConditionDesc";
+			return "Objects of class '".$this->GetClass()."', $sConditionDesc";
 		}
-		return "Any object of class '$this->m_sClass'";
+		return "Any object of class '".$this->GetClass()."'";
 	}
 
 	protected function TransferConditionExpression($oFilter, $aTranslation)
@@ -190,7 +222,6 @@ class DBObjectSearch
 	{
 		$this->m_oSearchCondition = new TrueExpression();
 		// ? is that usefull/enough, do I need to rebuild the list after the subqueries ?
-		// $this->m_aClasses = array($this->m_sClassAlias => $this->m_sClass);
 	}
 
 	public function AddConditionExpression($oExpression)
@@ -205,8 +236,8 @@ class DBObjectSearch
 // #@# todo - obsolete smoothly, first send exceptions
 //		throw new CoreException('SibusQL has been obsoleted, please update your queries', array('sibusql'=>$sQuery, 'oql'=>$oFilter->ToOQL()));
 
-		MyHelpers::CheckKeyInArray('filter code', $sFilterCode, MetaModel::GetClassFilterDefs($this->m_sClass));
-		$oFilterDef = MetaModel::GetClassFilterDef($this->m_sClass, $sFilterCode);
+		MyHelpers::CheckKeyInArray('filter code', $sFilterCode, MetaModel::GetClassFilterDefs($this->GetClass()));
+		$oFilterDef = MetaModel::GetClassFilterDef($this->GetClass(), $sFilterCode);
 
 		if (empty($sOpCode))
 		{
@@ -216,7 +247,7 @@ class DBObjectSearch
 
 		// Preserve backward compatibility - quick n'dirty way to change that API semantic
 		//
-		$oField = new FieldExpression($sFilterCode, $this->m_sClassAlias);
+		$oField = new FieldExpression($sFilterCode, $this->GetClassAlias());
 		switch($sOpCode)
 		{
 		case 'SameDay':
@@ -286,14 +317,20 @@ class DBObjectSearch
 
 	protected function AddToNameSpace(&$aClassAliases, &$aAliasTranslation)
 	{
-		$sOrigAlias = $this->m_sClassAlias;
+		$sOrigAlias = $this->GetClassAlias();
 		if (array_key_exists($sOrigAlias, $aClassAliases))
 		{
-			$this->m_sClassAlias = MetaModel::GenerateUniqueAlias($aClassAliases, $sOrigAlias, $this->m_sClass);
+			$sNewAlias = MetaModel::GenerateUniqueAlias($aClassAliases, $sOrigAlias, $this->GetClass());
+			$this->m_aSelectedClasses[$sNewAlias] = $this->GetClass();
+			unset($sOrigAlias, $this->m_aSelectedClasses[$sNewAlias]);
+
 			// Translate the condition expression with the new alias
-			$aAliasTranslation[$sOrigAlias]['*'] = $this->m_sClassAlias;
+			$aAliasTranslation[$sOrigAlias]['*'] = $sNewAlias;
 		}
 
+		// add the alias into the filter aliases list
+		$aClassAliases[$this->GetClassAlias()] = $this->GetClass();
+		
 		foreach($this->m_aPointingTo as $sExtKeyAttCode=>$oFilter)
 		{
 			$oFilter->AddToNameSpace($aClassAliases, $aAliasTranslation);
@@ -429,12 +466,6 @@ class DBObjectSearch
 		}
 	}
 
-
-	public function GetClassName($sAlias) {return $this->m_aClasses[$sAlias];}
-	public function GetClasses() {return $this->m_aClasses;}
-
-	public function GetClass() {return $this->m_sClass;}
-	public function GetClassAlias() {return $this->m_sClassAlias;}
 	public function GetCriteria() {return $this->m_oSearchCondition;}
 	public function GetCriteria_FullText() {return $this->m_aFullText;}
 	public function GetCriteria_PointingTo($sKeyAttCode = "")
@@ -636,7 +667,10 @@ class DBObjectSearch
 			$bRetrofitParams = true;
 		}
 
-		$sRes = "SELECT ".$this->GetClass().' AS '.$this->GetClassAlias();
+		$sSelectedClasses = implode(', ', array_keys($this->m_aSelectedClasses));
+		$sRes = 'SELECT '.$sSelectedClasses.' FROM';
+
+		$sRes .= ' '.$this->GetClass().' AS '.$this->GetClassAlias();
 		$sRes .= $this->ToOQL_Joins();
 		$sRes .= " WHERE ".$this->m_oSearchCondition->Render($aParams, $bRetrofitParams);
 
@@ -911,6 +945,19 @@ class DBObjectSearch
 				}
 			}
 		}
+
+		// Check and prepare the select information
+		$aSelected = array();
+		foreach ($oOqlQuery->GetSelectedClasses() as $oClassDetails)
+		{
+			$sClassToSelect = $oClassDetails->GetValue();
+			if (!array_key_exists($sClassToSelect, $aAliases))
+			{
+				throw new OqlNormalizeException('Unknown class [alias]', $sQuery, $oClassDetails, array_keys($aAliases));
+			}
+			$aSelected[$sClassToSelect] = $aAliases[$sClassToSelect];
+		}
+		$oResultFilter->SetSelectedClasses($aSelected);
 
 		$oConditionTree = $oOqlQuery->GetCondition();
 		if ($oConditionTree instanceof Expression)

@@ -40,11 +40,11 @@ abstract class DBObject
 	private $m_aLoadedAtt = array(); // Compound objects can be partially loaded, array of sAttCode
 
 	// Use the MetaModel::NewObject to build an object (do we have to force it?)
-	public function __construct($aRow = null)
+	public function __construct($aRow = null, $sClassAlias = '')
 	{
 		if (!empty($aRow))
 		{
-			$this->FromRow($aRow);
+			$this->FromRow($aRow, $sClassAlias);
 			$this->m_bFullyLoaded = $this->IsFullyLoaded();
 			return;
 		}
@@ -170,8 +170,14 @@ abstract class DBObject
 		$this->m_bFullyLoaded = true;
 	}
 
-	protected function FromRow($aRow)
+	protected function FromRow($aRow, $sClassAlias = '')
 	{
+		if (strlen($sClassAlias) == 0)
+		{
+			// Default to the current class
+			$sClassAlias = get_class($this);
+		}
+
 		$this->m_iKey = null;
 		$this->m_bIsInDB = true;
 		$this->m_aCurrValues = array();
@@ -180,7 +186,7 @@ abstract class DBObject
 
 		// Get the key
 		//
-		$sKeyField = "id";
+		$sKeyField = $sClassAlias."id";
 		if (!array_key_exists($sKeyField, $aRow))
 		{
 			// #@# Bug ?
@@ -211,9 +217,10 @@ abstract class DBObject
 			// then one column will be found with an empty suffix, the others have a suffix
 			// Take care: the function isset will return false in case the value is null,
 			// which is something that could happen on open joins
-			if (array_key_exists($sAttCode, $aRow))
+			$sAttRef = $sClassAlias.$sAttCode;
+			if (array_key_exists($sAttRef, $aRow))
 			{
-				$value = $oAttDef->FromSQLToValue($aRow, $sAttCode);
+				$value = $oAttDef->FromSQLToValue($aRow, $sAttRef);
 
 				$this->m_aCurrValues[$sAttCode] = $value;
 				$this->m_aOrigValues[$sAttCode] = $value;

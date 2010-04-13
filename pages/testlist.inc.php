@@ -6,7 +6,7 @@ class TestSQLQuery extends TestScenarioOnDB
 	static public function GetDescription() {return 'SQLQuery does not depend on the rest of the framework, therefore it makes sense to have a separate test framework for it';}
 
 	static public function GetDBHost() {return 'localhost';}
-	static public function GetDBUser() {return 'RomainDBLogin';}
+	static public function GetDBUser() {return 'root';}
 	static public function GetDBPwd() {return '';}
 	static public function GetDBName() {return 'TestSQLQuery';}
 	static public function GetDBSubName() {return 'taratata';}
@@ -160,6 +160,18 @@ class TestOQLParser extends TestFunction
 			"SELECT A JOIN B ON A.myB = B.id WHERE (A.col1 + B.col2) * B.col1 = A.col2" => true,
 
 			'SELECT Device AS D_ JOIN Site AS S_ ON D_.site = S_.id WHERE S_.country = "Francia"' => true,
+
+			// Several objects in a row...
+			//
+			'SELECT A FROM A' => true,
+			'SELECT A JOIN B ON A.myB = B.id WHERE A.col1 = 2' => true,
+			'SELECT A FROM A JOIN B ON A.myB = B.id WHERE A.col1 = 2' => true,
+			'SELECT B FROM A JOIN B ON A.myB = B.id WHERE A.col1 = 2' => true,
+			'SELECT A,B FROM A JOIN B ON A.myB = B.id WHERE A.col1 = 2' => true,
+			'SELECT A, B FROM A JOIN B ON A.myB = B.id WHERE A.col1 = 2' => true,
+			'SELECT B,A FROM A JOIN B ON A.myB = B.id WHERE A.col1 = 2' => true,
+			'SELECT  A, B,C FROM A JOIN B ON A.myB = B.id' => false,
+			'SELECT C FROM A JOIN B ON A.myB = B.id WHERE A.col1 = 2' => false,
 		);
 
 		$iErrors = 0;
@@ -933,6 +945,11 @@ class TestQueriesOnFarm extends MyFarm
 			'SELECT Animal AS Dad JOIN Animal AS Child ON Child.father = Dad.id JOIN Animal AS Mum ON Child.mother = Mum.id' => true,
 			'SELECT Mammal AS Dad JOIN Mammal AS Child ON Child.father = Dad.id' => true,
 			'SELECT Mammal AS Dad JOIN Mammal AS Child ON Child.father = Dad.id JOIN Mammal AS Mum ON Child.mother = Mum.id WHERE Dad.name = \'romanoff\' OR Mum.name=\'chloe\' OR Child.name=\'bizounours\'' => true,
+			// Specifying multiple objects
+			'SELECT Animal FROM Animal' => true,
+			'SELECT yelele FROM Animal' => false,
+			'SELECT Animal FROM Animal AS A' => false,
+			'SELECT A FROM Animal AS A' => true,
 		);
 		//$aQueries = array(
 		//	'SELECT Mammal AS M JOIN Group AS G ON M.member = G.id WHERE G.leader_name LIKE "%"' => true,

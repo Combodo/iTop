@@ -150,16 +150,22 @@ abstract class OqlQuery
 
 class OqlObjectQuery extends OqlQuery
 {
+	protected $m_aSelect; // array of selected classes
 	protected $m_oClass;
 	protected $m_oClassAlias;
 
-	public function __construct($oClass, $oClassAlias = '', $oCondition = null, $aJoins = null)
+	public function __construct($oClass, $oClassAlias, $oCondition = null, $aJoins = null, $aSelect = null)
 	{
+		$this->m_aSelect = $aSelect;
 		$this->m_oClass = $oClass;
 		$this->m_oClassAlias = $oClassAlias;
 		parent::__construct($oCondition, $aJoins);
 	}
 
+	public function GetSelectedClasses()
+	{
+		return $this->m_aSelect;
+	}
 	public function GetClass()
 	{
 		return $this->m_oClass->GetValue();
@@ -179,20 +185,4 @@ class OqlObjectQuery extends OqlQuery
 	}
 }
 
-
-class OqlValueSetQuery extends OqlObjectQuery
-{
-	protected $m_oSelectExpr;
-
-	public function __construct($oSelectExpr, $oClass, $oClassAlias = '', $oCondition = null, $aJoins = null)
-	{
-		$this->m_oSelectExpr = $oSelectExpr;
-		parent::__construct($oClass, $oClassAlias, $oCondition, $aJoins);
-	}
-
-	public function GetSelectExpression()
-	{
-		return $this->m_oSelectExpr;
-	}
-}
 ?>

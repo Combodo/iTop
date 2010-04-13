@@ -1272,13 +1272,15 @@ abstract class MetaModel
 			$aClassAliases = array();
 			$aTableAliases = array();
 			$oConditionTree = $oFilter->GetCriteria();
-			$oSelect = self::MakeQuery($oFilter->GetClassAlias(), $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oFilter);
+
+			$oSelect = self::MakeQuery($oFilter->GetSelectedClasses(), $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oFilter);
 
 			self::$m_aQueryStructCache[$sOqlQuery] = clone $oSelect;
 		}
 
-		// Check the order by specification
+		// Check the order by specification, and prefix with the class alias
 		//
+		$aOrderSpec = array();
 		foreach ($aOrderBy as $sFieldAlias => $bAscending)
 		{
 			MyHelpers::CheckValueInArray('field name in ORDER BY spec', $sFieldAlias, self::GetAttributesList($oFilter->GetClass()));
@@ -1286,14 +1288,17 @@ abstract class MetaModel
 			{
 				throw new CoreException("Wrong direction in ORDER BY spec, found '$bAscending' and expecting a boolean value");
 			}
+			$aOrderSpec[$oFilter->GetClassAlias().$sFieldAlias] = $bAscending;
 		}
-		if (empty($aOrderBy))
+		// By default, force the name attribute to be the ordering key
+		//
+		if (empty($aOrderSpec))
 		{
 			$sNameAttCode = self::GetNameAttributeCode($oFilter->GetClass());
 			if (!empty($sNameAttCode))
 			{
 				// By default, simply order on the "name" attribute, ascending
-				$aOrderBy = array($sNameAttCode => true);
+				$aOrderSpec[$oFilter->GetClassAlias().$sNameAttCode] = true;
 			}
 		}
 		
@@ -1303,7 +1308,7 @@ abstract class MetaModel
 
 		try
 		{
-			$sRes = $oSelect->RenderSelect($aOrderBy, $aScalarArgs);
+			$sRes = $oSelect->RenderSelect($aOrderSpec, $aScalarArgs);
 		}
 		catch (MissingQueryArgument $e)
 		{
@@ -1350,7 +1355,7 @@ abstract class MetaModel
 		$aClassAliases = array();
 		$aTableAliases = array();
 		$oConditionTree = $oFilter->GetCriteria();
-		$oSelect = self::MakeQuery($oFilter->GetClassAlias(), $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oFilter);
+		$oSelect = self::MakeQuery($oFilter->GetSelectedClasses(), $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oFilter);
 		$aScalarArgs = array_merge(self::PrepareQueryArguments($aArgs), $oFilter->GetInternalParams());
 		return $oSelect->RenderDelete($aScalarArgs);
 	}
@@ -1362,37 +1367,37 @@ abstract class MetaModel
 		$aClassAliases = array();
 		$aTableAliases = array();
 		$oConditionTree = $oFilter->GetCriteria();
-		$oSelect = self::MakeQuery($oFilter->GetClassAlias(), $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oFilter, array(), $aValues);
+		$oSelect = self::MakeQuery($oFilter->GetSelectedClasses(), $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oFilter, array(), $aValues);
 		$aScalarArgs = array_merge(self::PrepareQueryArguments($aArgs), $oFilter->GetInternalParams());
 		return $oSelect->RenderUpdate($aScalarArgs);
 	}
 
-	private static function MakeQuery($sGlobalTargetAlias, &$oConditionTree, &$aClassAliases, &$aTableAliases, &$aTranslation, DBObjectSearch $oFilter, $aExpectedAtts = array(), $aValues = array())
+	private static function MakeQuery($aSelectedClasses, &$oConditionTree, &$aClassAliases, &$aTableAliases, &$aTranslation, DBObjectSearch $oFilter, $aExpectedAtts = array(), $aValues = array())
 	{
 		// Note: query class might be different than the class of the filter
 		// -> this occurs when we are linking our class to an external class (referenced by, or pointing to)
-		// $aExpectedAtts is an array of sAttCode=>sAlias
+		// $aExpectedAtts is an array of sAttCode=>array of columns
 		$sClass = $oFilter->GetClass();
 		$sClassAlias = $oFilter->GetClassAlias();
 
-		$bIsOnQueriedClass = ($sClassAlias == $sGlobalTargetAlias);
+		$bIsOnQueriedClass = array_key_exists($sClassAlias, $aSelectedClasses);
 		if ($bIsOnQueriedClass)
 		{
-			$aClassAliases = array_merge($aClassAliases, $oFilter->GetClasses());
+			$aClassAliases = array_merge($aClassAliases, $oFilter->GetJoinedClasses());
 		}
 
-		self::DbgTrace("Entering: ".$oFilter->ToSibuSQL().", ".($bIsOnQueriedClass ? "MAIN" : "SECONDARY").", expectedatts=".count($aExpectedAtts).": ".implode(",", $aExpectedAtts));
+		self::DbgTrace("Entering: ".$oFilter->ToSibuSQL().", ".($bIsOnQueriedClass ? "MAIN" : "SECONDARY").", expectedatts=".count($aExpectedAtts).": ".implode(",", array_keys($aExpectedAtts)));
 
 		$sRootClass = self::GetRootClass($sClass);
 		$sKeyField = self::DBGetKey($sClass);
 
-		if (empty($aExpectedAtts) && $bIsOnQueriedClass)
+		if ($bIsOnQueriedClass)
 		{
 			// default to the whole list of attributes + the very std id/finalclass
-			$aExpectedAtts['id'] = 'id';
+			$aExpectedAtts['id'][] = $sClassAlias.'id';
 			foreach (self::GetAttributesList($sClass) as $sAttCode)
 			{
-				$aExpectedAtts[$sAttCode] = $sAttCode; // alias == attcode 
+				$aExpectedAtts[$sAttCode][] = $sClassAlias.$sAttCode; // alias == class and attcode
 			}
 		}
 
@@ -1441,14 +1446,14 @@ abstract class MetaModel
 		// First query built upon on the leaf (ie current) class
 		//
 		self::DbgTrace("Main (=leaf) class, call MakeQuerySingleTable()");
-		$oSelectBase = self::MakeQuerySingleTable($sGlobalTargetAlias, $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oFilter, $sClass, $aExpectedAtts, $aExtKeys, $aValues);
+		$oSelectBase = self::MakeQuerySingleTable($aSelectedClasses, $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oFilter, $sClass, $aExpectedAtts, $aExtKeys, $aValues);
 
 		// Then we join the queries of the eventual parent classes (compound model)
 		foreach(self::EnumParentClasses($sClass) as $sParentClass)
 		{
 			if (self::DBGetTable($sParentClass) == "") continue;
 			self::DbgTrace("Parent class: $sParentClass... let's call MakeQuerySingleTable()");
-			$oSelectParentTable = self::MakeQuerySingleTable($sGlobalTargetAlias, $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oFilter, $sParentClass, $aExpectedAtts, $aExtKeys, $aValues);
+			$oSelectParentTable = self::MakeQuerySingleTable($aSelectedClasses, $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oFilter, $sParentClass, $aExpectedAtts, $aExtKeys, $aValues);
 			$oSelectBase->AddInnerJoin($oSelectParentTable, $sKeyField, self::DBGetKey($sParentClass));
 		}
 
@@ -1467,7 +1472,7 @@ abstract class MetaModel
 				//self::DbgTrace($oForeignFilter->ToSibuSQL());
 				//self::DbgTrace($oSelectForeign);
 				//self::DbgTrace($oSelectForeign->RenderSelect(array()));
-				$oSelectForeign = self::MakeQuery($sGlobalTargetAlias, $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oForeignFilter, $aExpAtts);
+				$oSelectForeign = self::MakeQuery($aSelectedClasses, $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oForeignFilter, $aExpAtts);
 
 				$sForeignClassAlias = $oForeignFilter->GetClassAlias();
 				$sForeignKeyTable = $aTranslation[$sForeignClassAlias][$sForeignKeyAttCode][0];
@@ -1520,7 +1525,7 @@ abstract class MetaModel
 		return $oSelectBase;
 	}
 
-	protected static function MakeQuerySingleTable($sGlobalTargetAlias, &$oConditionTree, &$aClassAliases, &$aTableAliases, &$aTranslation, $oFilter, $sTableClass, $aExpectedAtts, $aExtKeys, $aValues)
+	protected static function MakeQuerySingleTable($aSelectedClasses, &$oConditionTree, &$aClassAliases, &$aTableAliases, &$aTranslation, $oFilter, $sTableClass, $aExpectedAtts, $aExtKeys, $aValues)
 	{
 		// $aExpectedAtts is an array of sAttCode=>sAlias
 		// $aExtKeys is an array of sTableClass => array of (sAttCode (keys) => array of sAttCode (fields))
@@ -1536,9 +1541,9 @@ abstract class MetaModel
 		$sTable = self::DBGetTable($sTableClass);
 		$sTableAlias = self::GenerateUniqueAlias($aTableAliases, $sTargetAlias.'_'.$sTable, $sTable);
 
-		$bIsOnQueriedClass = ($sTargetAlias == $sGlobalTargetAlias);
+		$bIsOnQueriedClass = array_key_exists($sTargetAlias, $aSelectedClasses);
 		
-		self::DbgTrace("Entering: tableclass=$sTableClass, filter=".$oFilter->ToSibuSQL().", ".($bIsOnQueriedClass ? "MAIN" : "SECONDARY").", expectedatts=".count($aExpectedAtts).": ".implode(",", $aExpectedAtts));
+		self::DbgTrace("Entering: tableclass=$sTableClass, filter=".$oFilter->ToSibuSQL().", ".($bIsOnQueriedClass ? "MAIN" : "SECONDARY").", expectedatts=".count($aExpectedAtts).": ".implode(",", array_keys($aExpectedAtts)));
 
 		// 1 - SELECT and UPDATE
 		//
@@ -1551,7 +1556,7 @@ abstract class MetaModel
 		//
 		if ($bIsOnQueriedClass)
 		{
-			$aSelect[$aExpectedAtts['id']] = new FieldExpression(self::DBGetKey($sTableClass), $sTableAlias);
+			$aSelect[$aExpectedAtts['id'][0]] = new FieldExpression(self::DBGetKey($sTableClass), $sTableAlias);
 		}
 		// We need one pkey to be the key, let's take the one corresponding to the leaf
 		if ($sTableClass == $sTargetClass)
@@ -1584,7 +1589,6 @@ abstract class MetaModel
 			//
 			// Skip, if a list of fields has been specified and it is not there
 			if (!array_key_exists($sAttCode, $aExpectedAtts)) continue;
-			$sAttAlias = $aExpectedAtts[$sAttCode];
 
 			if ($oAttDef->IsExternalField())
 			{
@@ -1596,7 +1600,10 @@ abstract class MetaModel
 				// add it to the output
 				foreach ($oAttDef->GetSQLExpressions() as $sColId => $sSQLExpr)
 				{
-					$aSelect[$sAttAlias.$sColId] = new FieldExpression($sSQLExpr, $sTableAlias); 
+					foreach ($aExpectedAtts[$sAttCode] as $sAttAlias)
+					{
+						$aSelect[$sAttAlias.$sColId] = new FieldExpression($sSQLExpr, $sTableAlias);
+					} 
 				}
 			}
 		}
@@ -1685,7 +1692,7 @@ abstract class MetaModel
 				$oConditionTree = $oConditionTree->Translate($aIntermediateTranslation, false);
 
 				self::DbgTrace("External key $sKeyAttCode (class: $sKeyClass), call MakeQuery()");
-				$oSelectExtKey = self::MakeQuery($sGlobalTargetAlias, $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oExtFilter, $aExpAtts);
+				$oSelectExtKey = self::MakeQuery($aSelectedClasses, $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oExtFilter, $aExpAtts);
 
 				$sLocalKeyField = current($oKeyAttDef->GetSQLExpressions()); // get the first column for an external key
 				$sExternalKeyField = self::DBGetKey($sKeyClass);
@@ -2717,7 +2724,7 @@ abstract class MetaModel
 		return $aRow;
 	}
 
-	public static function GetObjectByRow($sClass, $aRow)
+	public static function GetObjectByRow($sClass, $aRow, $sClassAlias = '')
 	{
 		self::_check_subclass($sClass);	
 
@@ -2741,7 +2748,7 @@ abstract class MetaModel
 			// do the job for the real target class
 			$sClass = $aRow["finalclass"];
 		}
-		return new $sClass($aRow);
+		return new $sClass($aRow, $sClassAlias);
 	}
 
 	public static function GetObject($sClass, $iKey, $bMustBeFound = true)

@@ -28,7 +28,7 @@ class DBObjectSet
 		$this->m_aArgs = $aArgs;
 
 		$this->m_bLoaded = false;
-		$this->m_aData = array();
+		$this->m_aData = array(); // array of (row => array of (classalias) => object)
 		$this->m_aId2Row = array();
 		$this->m_iCurrRow = 0;
 	}
@@ -143,6 +143,11 @@ class DBObjectSet
 		return $this->m_oFilter->GetClass();
 	}
 
+	public function GetSelectedClasses()
+	{
+		return $this->m_oFilter->GetSelectedClasses();
+	}
+
 	public function GetRootClass()
 	{
 		return MetaModel::GetRootClass($this->GetClass());
@@ -156,11 +161,16 @@ class DBObjectSet
 		$resQuery = CMDBSource::Query($sSQL);
 		if (!$resQuery) return;
 
+		$sClass = $this->m_oFilter->GetClass();
 		while ($aRow = CMDBSource::FetchArray($resQuery))
 		{
-			$sClass = $this->m_oFilter->GetClass();
-			$oObject = MetaModel::GetObjectByRow($sClass, $aRow);
-			$this->AddObject($oObject);
+			$aObjects = array();
+			foreach ($this->m_oFilter->GetSelectedClasses() as $sClassAlias => $sClass)
+			{
+				$oObject = MetaModel::GetObjectByRow($sClass, $aRow, $sClassAlias);
+				$aObjects[$sClassAlias] = $oObject;
+			}
+			$this->AddObjectExtended($aObjects);
 		}
 		CMDBSource::FreeResult($resQuery);
 
@@ -173,7 +183,7 @@ class DBObjectSet
 		return count($this->m_aData);
 	}
 
-	public function Fetch()
+	public function Fetch($sClassAlias = '')
 	{
 		if (!$this->m_bLoaded) $this->Load();
 
@@ -181,9 +191,30 @@ class DBObjectSet
 		{
 			return null;
 		}
-		$oRetObj = $this->m_aData[$this->m_iCurrRow];
+	
+		if (strlen($sClassAlias) == 0)
+		{
+			$sClassAlias = $this->m_oFilter->GetClassAlias();
+		}
+		$oRetObj = $this->m_aData[$this->m_iCurrRow][$sClassAlias];
 		$this->m_iCurrRow++;
 		return $oRetObj;
+	}
+
+	// Return the whole line if several classes have been specified in the query
+	//
+	public function FetchAssoc()
+	{
+		if (!$this->m_bLoaded) $this->Load();
+
+		if ($this->m_iCurrRow >= count($this->m_aData))
+		{
+			return null;
+		}
+	
+		$aRetObjects = $this->m_aData[$this->m_iCurrRow];
+		$this->m_iCurrRow++;
+		return $aRetObjects;
 	}
 
 	public function Rewind()
@@ -199,25 +230,36 @@ class DBObjectSet
 		return $this->m_iCurrRow;
 	}
 
-	public function AddObject($oObject)
+	public function AddObject($oObject, $sClassAlias = '')
 	{
-		// ?usefull? if ($oObject->GetClass() != $this->GetClass()) return;
+		$sObjClass = get_class($oObject);
+		if (strlen($sClassAlias) == 0)
+		{
+			$sClassAlias = $sObjClass;
+		}
 
-		// it is mandatory to avoid duplicates
-		if (array_key_exists($oObject->GetKey(), $this->m_aId2Row)) return;
-
-		// Do not load here, because the load uses that method too
 		$iNextPos = count($this->m_aData);
-		$this->m_aData[$iNextPos] = $oObject;
-		$this->m_aId2Row[$oObject->GetKey()] = $iNextPos;
+		$this->m_aData[$iNextPos][$sClassAlias] = $oObject;
+		$this->m_aId2Row[$sObjClass][$oObject->GetKey()] = $iNextPos;
 	}
 
-	public function AddObjectArray($aObjects)
+	protected function AddObjectExtended($aObjectArray)
+	{
+		$iNextPos = count($this->m_aData);
+
+		foreach ($aObjectArray as $sClassAlias => $oObject)
+		{
+			$this->m_aData[$iNextPos][$sClassAlias] = $oObject;
+			$this->m_aId2Row[get_class($oObject)][$oObject->GetKey()] = $iNextPos;
+		}
+	}
+
+	public function AddObjectArray($aObjects, $sClassAlias = '')
 	{
 		// #@# todo - add a check on the object class ?
 		foreach ($aObjects as $oObj)
 		{
-			$this->AddObject($oObj);
+			$this->AddObject($oObj, $sClassAlias);
 		}
 	}
 
