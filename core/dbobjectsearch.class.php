@@ -43,7 +43,7 @@ define('SIBUSQLTHISREGEXP', "/this\\.(.*)/U");
  */
 class DBObjectSearch
 {
-	private $m_aClasses; // queried classes (alias => class name)
+	private $m_aClasses; // queried classes (alias => class name), the first item is the class corresponding to this filter (the rest is coming from subfilters)
 	private $m_aSelectedClasses; // selected for the output (alias => class name)
 	private $m_oSearchCondition;
 	private $m_aParams;
@@ -82,6 +82,16 @@ class DBObjectSearch
 	{
 		reset($this->m_aSelectedClasses);
 		return key($this->m_aSelectedClasses);
+	}
+
+	public function GetFirstJoinedClass()
+	{
+		return reset($this->m_aClasses);
+	}
+	public function GetFirstJoinedClassAlias()
+	{
+		reset($this->m_aClasses);
+		return key($this->m_aClasses);
 	}
 
 	public function SetSelectedClasses($aNewSet)
@@ -322,7 +332,7 @@ class DBObjectSearch
 		{
 			$sNewAlias = MetaModel::GenerateUniqueAlias($aClassAliases, $sOrigAlias, $this->GetClass());
 			$this->m_aSelectedClasses[$sNewAlias] = $this->GetClass();
-			unset($sOrigAlias, $this->m_aSelectedClasses[$sNewAlias]);
+			unset($this->m_aSelectedClasses[$sOrigAlias]);
 
 			// Translate the condition expression with the new alias
 			$aAliasTranslation[$sOrigAlias]['*'] = $sNewAlias;
@@ -513,6 +523,11 @@ class DBObjectSearch
 		$sValue = $this->GetClass()."\n";
 		$sValue .= $this->GetClassAlias()."\n";
 
+		foreach($this->m_aSelectedClasses as $sClassAlias => $sClass)
+		{
+			// A stands for "Aliases"
+			$sValue .= "S:$sClassAlias:$sClass\n";
+		}
 		foreach($this->m_aClasses as $sClassAlias => $sClass)
 		{
 			// A stands for "Aliases"
@@ -573,6 +588,9 @@ class DBObjectSearch
 			$aCondition = explode(":", $aValues[$i++]);
 			switch ($aCondition[0])
 			{
+			case "S":
+				$oFilter->m_aSelectedClasses[$aCondition[1]] = $aCondition[2];
+				break;
 			case "A":
 				$oFilter->m_aClasses[$aCondition[1]] = $aCondition[2];
 				break;

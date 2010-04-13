@@ -1283,22 +1283,25 @@ abstract class MetaModel
 		$aOrderSpec = array();
 		foreach ($aOrderBy as $sFieldAlias => $bAscending)
 		{
-			MyHelpers::CheckValueInArray('field name in ORDER BY spec', $sFieldAlias, self::GetAttributesList($oFilter->GetClass()));
+			MyHelpers::CheckValueInArray('field name in ORDER BY spec', $sFieldAlias, self::GetAttributesList($oFilter->GetFirstJoinedClass()));
 			if (!is_bool($bAscending))
 			{
 				throw new CoreException("Wrong direction in ORDER BY spec, found '$bAscending' and expecting a boolean value");
 			}
-			$aOrderSpec[$oFilter->GetClassAlias().$sFieldAlias] = $bAscending;
+			$aOrderSpec[$oFilter->GetFirstJoinedClassAlias().$sFieldAlias] = $bAscending;
 		}
 		// By default, force the name attribute to be the ordering key
 		//
 		if (empty($aOrderSpec))
 		{
-			$sNameAttCode = self::GetNameAttributeCode($oFilter->GetClass());
-			if (!empty($sNameAttCode))
+			foreach ($oFilter->GetSelectedClasses() as $sSelectedAlias => $sSelectedClass)
 			{
-				// By default, simply order on the "name" attribute, ascending
-				$aOrderSpec[$oFilter->GetClassAlias().$sNameAttCode] = true;
+				$sNameAttCode = self::GetNameAttributeCode($sSelectedClass);
+				if (!empty($sNameAttCode))
+				{
+					// By default, simply order on the "name" attribute, ascending
+					$aOrderSpec[$sSelectedAlias.$sNameAttCode] = true;
+				}
 			}
 		}
 		
@@ -1377,8 +1380,8 @@ abstract class MetaModel
 		// Note: query class might be different than the class of the filter
 		// -> this occurs when we are linking our class to an external class (referenced by, or pointing to)
 		// $aExpectedAtts is an array of sAttCode=>array of columns
-		$sClass = $oFilter->GetClass();
-		$sClassAlias = $oFilter->GetClassAlias();
+		$sClass = $oFilter->GetFirstJoinedClass();
+		$sClassAlias = $oFilter->GetFirstJoinedClassAlias();
 
 		$bIsOnQueriedClass = array_key_exists($sClassAlias, $aSelectedClasses);
 		if ($bIsOnQueriedClass)
@@ -1474,7 +1477,7 @@ abstract class MetaModel
 				//self::DbgTrace($oSelectForeign->RenderSelect(array()));
 				$oSelectForeign = self::MakeQuery($aSelectedClasses, $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oForeignFilter, $aExpAtts);
 
-				$sForeignClassAlias = $oForeignFilter->GetClassAlias();
+				$sForeignClassAlias = $oForeignFilter->GetFirstJoinedClassAlias();
 				$sForeignKeyTable = $aTranslation[$sForeignClassAlias][$sForeignKeyAttCode][0];
 				$sForeignKeyColumn = $aTranslation[$sForeignClassAlias][$sForeignKeyAttCode][1];
 				$oSelectBase->AddInnerJoin($oSelectForeign, $sKeyField, $sForeignKeyColumn, $sForeignKeyTable);
@@ -1536,8 +1539,8 @@ abstract class MetaModel
 		//
 		// Returns an SQLQuery
 		//
-		$sTargetClass = $oFilter->GetClass();
-		$sTargetAlias = $oFilter->GetClassAlias();
+		$sTargetClass = $oFilter->GetFirstJoinedClass();
+		$sTargetAlias = $oFilter->GetFirstJoinedClassAlias();
 		$sTable = self::DBGetTable($sTableClass);
 		$sTableAlias = self::GenerateUniqueAlias($aTableAliases, $sTargetAlias.'_'.$sTable, $sTable);
 
@@ -1662,8 +1665,8 @@ abstract class MetaModel
 				else
 				{
 					// The aliases should not conflict because normalization occured while building the filter
-					$sKeyClass =  $oExtFilter->GetClass();
-					$sKeyClassAlias = $oExtFilter->GetClassAlias();
+					$sKeyClass =  $oExtFilter->GetFirstJoinedClass();
+					$sKeyClassAlias = $oExtFilter->GetFirstJoinedClassAlias();
 					
 					// Note: there is no search condition in $oExtFilter, because normalization did merge the condition onto the top of the filter tree 
 				}
