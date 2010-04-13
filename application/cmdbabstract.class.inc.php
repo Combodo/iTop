@@ -323,6 +323,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		}
 		$bDisplayMenu = isset($aExtraParams['menu']) ? $aExtraParams['menu'] == true : true;
 		$bSelectMode = isset($aExtraParams['selection_mode']) ? $aExtraParams['selection_mode'] == true : false;
+		$bSingleSelectMode = isset($aExtraParams['selection_type']) ? ($aExtraParams['selection_type'] == 'single') : false;
 		
 		$sHtml = '';
 		$oAppContext = new ApplicationContext();
@@ -364,7 +365,14 @@ abstract class cmdbAbstractObject extends CMDBObject
 		}
 		if ($bSelectMode)
 		{
+			if (!$bSingleSelectMode)
+			{
 			$aAttribs['form::select'] = array('label' => "<input type=\"checkbox\" onChange=\"var value = this.checked; $('.selectList{$iListId}').each( function() { this.checked = value; } );\"></input>", 'description' => 'Select / Deselect All');
+		}
+			else
+			{
+				$aAttribs['form::select'] = array('label' => "", 'description' => '');
+			}
 		}
 		$aAttribs['key'] = array('label' => '', 'description' => 'Click to display');
 		foreach($aList as $sAttCode)
@@ -388,7 +396,14 @@ abstract class cmdbAbstractObject extends CMDBObject
 			$aRow['key'] = $oObj->GetKey();
 			if ($bSelectMode)
 			{
+				if ($bSingleSelectMode)
+				{
+					$aRow['form::select'] = "<input type=\"radio\" class=\"selectList{$iListId}\" name=\"selectObject\" value=\"".$oObj->GetKey()."\"></input>";
+				}
+				else
+				{
 				$aRow['form::select'] = "<input type=\"checkBox\" class=\"selectList{$iListId}\" name=\"selectObject[]\" value=\"".$oObj->GetKey()."\"></input>";
+			}
 			}
 			$aRow['key'] = $oObj->GetKey();
 			foreach($aList as $sAttCode)
@@ -398,11 +413,11 @@ abstract class cmdbAbstractObject extends CMDBObject
 			$aValues[] = $aRow;
 			$iMaxObjects--;
 		}
-		$oMenuBlock = new MenuBlock($oSet->GetFilter());
 		$sHtml .= '<table class="listContainer">';
 		$sColspan = '';
 		if ($bDisplayMenu)
 		{
+			$oMenuBlock = new MenuBlock($oSet->GetFilter());
 			$sColspan = 'colspan="2"';
 			$aMenuExtraParams = $aExtraParams;
 			if (!empty($sLinkageAttribute))
@@ -436,6 +451,98 @@ abstract class cmdbAbstractObject extends CMDBObject
 		return $sHtml;
 	}
 	
+	public static function GetDisplayExtendedSet(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
+	{
+		static $iListId = 0;
+		$iListId++;
+		$aList = array();
+		
+		// Initialize and check the parameters
+		$bDisplayMenu = isset($aExtraParams['menu']) ? $aExtraParams['menu'] == true : true;
+		
+		$sHtml = '';
+		$oAppContext = new ApplicationContext();
+		$aClasses = $oSet->GetFilter()->GetSelectedClasses();
+		$aAuthorizedClasses = array();
+		foreach($aClasses as $sAlias => $sClassName)
+		{
+			if (UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $oSet) == UR_ALLOWED_YES)
+			{
+				$aAuthorizedClasses[$sAlias] = $sClassName;
+			}
+		}
+		$aAttribs = array();
+		foreach($aAuthorizedClasses as $sAlias => $sClassName) // TO DO: check if the user has enough rights to view the classes of the list...
+		{
+			$aList[$sClassName] = MetaModel::GetZListItems($sClassName, 'list');
+			$aAttribs['key_'.$sAlias] = array('label' => '', 'description' => 'Click to display');
+			foreach($aList[$sClassName] as $sAttCode)
+			{
+				$aAttribs[$sAttCode.'_'.$sAlias] = array('label' => MetaModel::GetLabel($sClassName, $sAttCode), 'description' => MetaModel::GetDescription($sClassName, $sAttCode));
+			}
+		}
+		$aValues = array();
+		$oSet->Seek(0);
+		$bDisplayLimit = isset($aExtraParams['display_limit']) ? $aExtraParams['display_limit'] : true;
+		$iMaxObjects = -1;
+		if ($bDisplayLimit)
+		{
+			if ($oSet->Count() > utils::GetConfig()->GetMaxDisplayLimit())
+			{
+				$iMaxObjects = utils::GetConfig()->GetMinDisplayLimit();
+			}
+		}
+		while (($aObjects = $oSet->FetchAssoc()) && ($iMaxObjects != 0))
+		{
+			$aRow = array();
+			foreach($aAuthorizedClasses as $sAlias => $sClassName) // TO DO: check if the user has enough rights to view the classes of the list...
+			{
+				$aRow['key_'.$sAlias] = $aObjects[$sAlias]->GetKey();
+				foreach($aList[$sClassName] as $sAttCode)
+				{
+					$aRow[$sAttCode.'_'.$sAlias] = $aObjects[$sAlias]->GetAsHTML($sAttCode);
+				}
+			}
+			$aValues[] = $aRow;
+			$iMaxObjects--;
+		}
+		$sHtml .= '<table class="listContainer">';
+		$sColspan = '';
+		if ($bDisplayMenu)
+		{
+			$oMenuBlock = new MenuBlock($oSet->GetFilter());
+			$sColspan = 'colspan="2"';
+			$aMenuExtraParams = $aExtraParams;
+			if (!empty($sLinkageAttribute))
+			{
+				$aMenuExtraParams = $aExtraParams;
+			}
+			if ($bDisplayLimit && ($oSet->Count() > utils::GetConfig()->GetMaxDisplayLimit()))
+			{
+				// list truncated
+				$divId = $aExtraParams['block_id'];
+				$sFilter = $oSet->GetFilter()->serialize();
+				$aExtraParams['display_limit'] = false; // To expand the full list
+				$sExtraParams = addslashes(str_replace('"', "'", json_encode($aExtraParams))); // JSON encode, change the style of the quotes and escape them
+				$sHtml .= '<tr class="containerHeader"><td>'.utils::GetConfig()->GetMinDisplayLimit().' object(s) displayed out of '.$oSet->Count().'&nbsp;&nbsp;<a href="Javascript:ReloadTruncatedList(\''.$divId.'\', \''.$sFilter.'\', \''.$sExtraParams.'\');">Display All</a></td><td>';
+				$oPage->add_ready_script("$('#{$divId} table.listResults').addClass('truncated');");
+				$oPage->add_ready_script("$('#{$divId} table.listResults tr:last td').addClass('truncated');");
+			}
+			else
+			{
+				// Full list
+				$sHtml .= '<tr class="containerHeader"><td>&nbsp;'.$oSet->Count().' object(s)</td><td>';
+			}
+			$sHtml .= $oMenuBlock->GetRenderContent($oPage, $aMenuExtraParams);
+			$sHtml .= '</td></tr>';
+		}
+		$sHtml .= "<tr><td $sColspan>";
+		$sHtml .= $oPage->GetTable($aAttribs, $aValues, array('class'=>$aAuthorizedClasses, 'filter'=>$oSet->GetFilter()->serialize(), 'preview' => true));
+		$sHtml .= '</td></tr>';
+		$sHtml .= '</table>';
+		return $sHtml;
+	}
+	
 	static function DisplaySetAsCSV(WebPage $oPage, CMDBObjectSet $oSet, $aParams = array())
 	{
 		$oPage->add(self::GetSetAsCSV($oSet, $aParams));
@@ -445,26 +552,43 @@ abstract class cmdbAbstractObject extends CMDBObject
 	{
 		$sSeparator = isset($aParams['separator']) ? $aParams['separator'] : ','; // default separator is comma
 		$sTextQualifier = isset($aParams['text_qualifier']) ? $aParams['text_qualifier'] : '"'; // default text qualifier is double quote
+		$aList = array();
 
 		$oAppContext = new ApplicationContext();
-		$sClassName = $oSet->GetFilter()->GetClass();
+		$aClasses = $oSet->GetFilter()->GetSelectedClasses();
+		$aAuthorizedClasses = array();
+		foreach($aClasses as $sAlias => $sClassName)
+		{
+			if (UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $oSet) == UR_ALLOWED_YES)
+			{
+				$aAuthorizedClasses[$sAlias] = $sClassName;
+			}
+		}
 		$aAttribs = array();
-		$aList = MetaModel::GetZListItems($sClassName, 'details');
 		$aHeader = array();
+		foreach($aAuthorizedClasses as $sAlias => $sClassName)
+		{
+			$aList[$sClassName] = MetaModel::GetZListItems($sClassName, 'details');
 		$aHeader[] = MetaModel::GetKeyLabel($sClassName);
-		foreach($aList as $sAttCode)
+			foreach($aList[$sClassName] as $sAttCode)
 		{
 			$aHeader[] = MetaModel::GetLabel($sClassName, $sAttCode);
 		}
-		$sHtml = implode($sSeparator, $aHeader)."\n";
+		}
+		$sHtml = '#'.$oSet->GetFilter()->ToOQL()."\n";
+		$sHtml .= implode($sSeparator, $aHeader)."\n";
 		$oSet->Seek(0);
-		while ($oObj = $oSet->Fetch())
+		while ($aObjects = $oSet->FetchAssoc())
 		{
 			$aRow = array();
-			$aRow[] = $oObj->GetKey();
-			foreach($aList as $sAttCode)
+			foreach($aAuthorizedClasses as $sAlias => $sClassName)
 			{
-				$aRow[] = $oObj->GetAsCSV($sAttCode, $sSeparator, $sTextQualifier);
+				$oObj = $aObjects[$sAlias];
+			$aRow[] = $oObj->GetKey();
+				foreach($aList[$sClassName] as $sAttCode)
+			{
+					$aRow[] = $oObj->GetAsCSV($sAttCode, $sSeparator, '\\');
+				}
 			}
 			$sHtml .= implode($sSeparator, $aRow)."\n";
 		}
@@ -773,7 +897,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		return $sHTMLValue;
 	}
 	
-	public function DisplayModifyForm(WebPage $oPage)
+	public function DisplayModifyForm(WebPage $oPage, $aExtraParams = array())
 	{
 		static $iFormId = 0;
 		$iFormId++;
@@ -824,13 +948,17 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$oPage->add("<input type=\"hidden\" name=\"class\" value=\"".get_class($this)."\">\n");
 		$oPage->add("<input type=\"hidden\" name=\"operation\" value=\"apply_modify\">\n");
 		$oPage->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
+		foreach($aExtraParams as $sName => $value)
+		{
+			$oPage->add("<input type=\"hidden\" name=\"$sName\" value=\"$value\">\n");
+		}
 		$oPage->add($oAppContext->GetForForm());
 		$oPage->add("<button type=\"button\" class=\"action\" onClick=\"goBack()\"><span>Cancel</span></button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
 		$oPage->add("<button type=\"submit\" class=\"action\"><span>Apply</span></button>\n");
 		$oPage->add("</form>\n");
 	}
 	
-	public static function DisplayCreationForm(WebPage $oPage, $sClass, $oObjectToClone = null, $aArgs = array())
+	public static function DisplayCreationForm(WebPage $oPage, $sClass, $oObjectToClone = null, $aArgs = array(), $aExtraParams = array())
 	{
 		static $iCreationFormId = 0;
 
@@ -838,7 +966,8 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$oAppContext = new ApplicationContext();
 		$aDetails = array();
 		$sOperation = ($oObjectToClone == null) ? 'apply_new' : 'apply_clone';
-		$sStateAttCode = MetaModel::GetStateAttributeCode(get_class($oObjectToClone));
+		$sClass = ($oObjectToClone == null) ? $sClass : get_class($oObjectToClone);
+		$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
 		$oPage->add("<form id=\"creation_form_{$iCreationFormId}\" method=\"post\" onSubmit=\"return CheckMandatoryFields('creation_form_{$iCreationFormId}')\">\n");
 		$aStates = MetaModel::EnumStates($sClass);
 		if ($oObjectToClone == null)
@@ -881,6 +1010,10 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$oPage->add("<input type=\"hidden\" name=\"operation\" value=\"$sOperation\">\n");
 		$oPage->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
 		$oPage->add($oAppContext->GetForForm());
+		foreach($aExtraParams as $sName => $value)
+		{
+			$oPage->add("<input type=\"hidden\" name=\"$sName\" value=\"$value\">\n");
+		}
 		$oPage->add("<button type=\"button\" class=\"action\" onClick=\"goBack()\"><span>Cancel</span></button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
 		$oPage->add("<button type=\"submit\" class=\"action\"><span>Apply</span></button>\n");
 		$oPage->add("</form>\n");

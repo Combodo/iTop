@@ -362,36 +362,70 @@ class DisplayBlock
 			break;
 
 			case 'list':
-			if ( ($this->m_oSet->Count()> 0) && (UserRights::IsActionAllowed($this->m_oSet->GetClass(), UR_ACTION_READ, $this->m_oSet) == UR_ALLOWED_YES) )
+			$aClasses = $this->m_oSet->GetSelectedClasses();
+			$aAuthorizedClasses = array();
+			if (count($aClasses) > 1)
 			{
-				$sHtml .= cmdbAbstractObject::GetDisplaySet($oPage, $this->m_oSet, $aExtraParams);
+				// Check the classes that can be read (i.e authorized) by this user...
+				foreach($aClasses as $sAlias => $sClassName)
+				{
+					if (UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $this->m_oSet) == UR_ALLOWED_YES)
+					{
+						$aAuthorizedClasses[$sAlias] = $sClassName;
+					}
+				}
+				if (count($aAuthorizedClasses) > 0)
+				{
+					if($this->m_oSet->Count() > 0)
+					{
+						$sHtml .= cmdbAbstractObject::GetDisplayExtendedSet($oPage, $this->m_oSet, $aExtraParams);
+					}
+					else
+					{
+						// Empty set	
+						$sHtml .= $oPage->GetP("No object to display.");					
+					}
+				}
+				else
+				{
+					// Not authorized
+					$sHtml .= $oPage->GetP("No object to display.");					
+				}
 			}
 			else
 			{
-				$sHtml .= $oPage->GetP("No object to display.");
-				$sClass = $this->m_oFilter->GetClass();
-				$bDisplayMenu = isset($aExtraParams['menu']) ? $aExtraParams['menu'] == true : true; 
-				if ($bDisplayMenu)
+				// The list is made of only 1 class of objects, actions on the list are possible
+				if ( ($this->m_oSet->Count()> 0) && (UserRights::IsActionAllowed($this->m_oSet->GetClass(), UR_ACTION_READ, $this->m_oSet) == UR_ALLOWED_YES) )
 				{
-					if (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES)
+					$sHtml .= cmdbAbstractObject::GetDisplaySet($oPage, $this->m_oSet, $aExtraParams);
+				}
+				else
+				{
+					$sHtml .= $oPage->GetP("No object to display.");
+					$sClass = $this->m_oFilter->GetClass();
+					$bDisplayMenu = isset($aExtraParams['menu']) ? $aExtraParams['menu'] == true : true; 
+					if ($bDisplayMenu)
 					{
-						$oAppContext = new ApplicationContext();
-						$sParams = $oAppContext->GetForLink();
-						// 1:n links, populate the target object as a default value when creating a new linked object
-						if (isset($aExtraParams['target_attr']))
+						if (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES)
 						{
-							$aExtraParams['default'][$aExtraParams['target_attr']] = $aExtraParams['object_id'];
-						}
-						$sDefault = '';
-						if (!empty($aExtraParams['default']))
-						{
-							foreach($aExtraParams['default'] as $sKey => $sValue)
+							$oAppContext = new ApplicationContext();
+							$sParams = $oAppContext->GetForLink();
+							// 1:n links, populate the target object as a default value when creating a new linked object
+							if (isset($aExtraParams['target_attr']))
 							{
-								$sDefault.= "&default[$sKey]=$sValue";
+								$aExtraParams['default'][$aExtraParams['target_attr']] = $aExtraParams['object_id'];
 							}
+							$sDefault = '';
+							if (!empty($aExtraParams['default']))
+							{
+								foreach($aExtraParams['default'] as $sKey => $sValue)
+								{
+									$sDefault.= "&default[$sKey]=$sValue";
+								}
+							}
+							
+							$sHtml .= $oPage->GetP("<a href=\"./UI.php?operation=new&class=$sClass&$sParams{$sDefault}\">Click here to create a new ".Metamodel::GetName($sClass)."</a>\n");
 						}
-						
-						$sHtml .= $oPage->GetP("<a href=\"./UI.php?operation=new&class=$sClass&$sParams{$sDefault}\">Click here to create a new ".Metamodel::GetName($sClass)."</a>\n");
 					}
 				}
 			}
@@ -464,7 +498,7 @@ class DisplayBlock
 			break;
 			
 			case 'search':
-			static $iSearchSectionId = 1;
+			$iSearchSectionId = 1;
 			$sStyle = (isset($aExtraParams['open']) && ($aExtraParams['open'] == 'true')) ? 'SearchDrawer' : 'SearchDrawer DrawerClosed';
 			$sHtml .= "<div id=\"Search_$iSearchSectionId\" class=\"$sStyle\">\n";
 			$oPage->add_ready_script("\$(\"#LnkSearch_$iSearchSectionId\").click(function() {\$(\"#Search_$iSearchSectionId\").slideToggle('normal'); $(\"#LnkSearch_$iSearchSectionId\").toggleClass('open');});");
@@ -472,7 +506,6 @@ class DisplayBlock
 	 		$sHtml .= "</div>\n";
 	 		$sHtml .= "<div class=\"HRDrawer\"></div>\n";
 	 		$sHtml .= "<div id=\"LnkSearch_$iSearchSectionId\" class=\"DrawerHandle\">Search</div>\n";
-			$iSearchSectionId++;
 			break;
 			
 			case 'pie_chart':

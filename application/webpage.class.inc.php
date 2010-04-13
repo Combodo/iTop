@@ -125,16 +125,24 @@ class WebPage
 			}
 			foreach($aConfig as $sName=>$aAttribs)
 			{
+				$aMatches = array();
 				$sClass = isset($aAttribs['class']) ? 'class="'.$aAttribs['class'].'"' : '';
-				if ($sName != 'key')
+				if (preg_match('/^key_(.+)$/', $sName, $aMatches) > 0)
 				{
-					$sValue = ($aRow[$sName] === '') ? '&nbsp;' : $aRow[$sName];
-					$sHtml .= "<td $sClass>$sValue</td>\n";
+					$sAlias = $aMatches[1];
+					$sClass = $aParams['class'][$sAlias];
+					$sUIPage = cmdbAbstractObject::ComputeUIPage($sClass);
+					$sHtml .= "<td><a class=\"no-arrow\" href=\"$sUIPage?operation=details&id=".$aRow[$sName]."&class=".$sClass."&".$oAppContext->GetForLink()."\"><img src=\"../images/zoom.gif\" title=\"Details\" border=\"0\"></a></td>\n";
 				}
-				else
+				else if ($sName == 'key')
 				{
 					$sUIPage = cmdbAbstractObject::ComputeUIPage($aParams['class']);
 					$sHtml .= "<td><a class=\"no-arrow\" href=\"$sUIPage?operation=details&id=".$aRow['key']."&class=".$aParams['class']."&".$oAppContext->GetForLink()."\"><img src=\"../images/zoom.gif\" title=\"Details\" border=\"0\"></a></td>\n";
+				}
+				else
+				{
+					$sValue = ($aRow[$sName] === '') ? '&nbsp;' : $aRow[$sName];
+					$sHtml .= "<td $sClass>$sValue</td>\n";
 				}
 			}
 			$sHtml .= "</tr>\n";
