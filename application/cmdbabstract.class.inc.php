@@ -459,6 +459,8 @@ abstract class cmdbAbstractObject extends CMDBObject
 		
 		// Initialize and check the parameters
 		$bDisplayMenu = isset($aExtraParams['menu']) ? $aExtraParams['menu'] == true : true;
+		// Check if there is a list of aliases to limit the display to...
+		$aDisplayAliases = isset($aExtraParams['display_aliases']) ? explode(',', $aExtraParams['display_aliases']) : array();
 		
 		$sHtml = '';
 		$oAppContext = new ApplicationContext();
@@ -466,7 +468,8 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$aAuthorizedClasses = array();
 		foreach($aClasses as $sAlias => $sClassName)
 		{
-			if (UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $oSet) == UR_ALLOWED_YES)
+			if ((UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $oSet) == UR_ALLOWED_YES) &&
+			( (count($aDisplayAliases) == 0) || (in_array($sAlias, $aDisplayAliases))) )
 			{
 				$aAuthorizedClasses[$sAlias] = $sClassName;
 			}

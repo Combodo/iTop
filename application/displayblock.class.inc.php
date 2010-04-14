@@ -324,40 +324,84 @@ class DisplayBlock
 			break;
 			
 			case 'join':
-			if (!isset($aExtraParams['oql2']))
+			$aDisplayAliases = isset($aExtraParams['display_aliases']) ? explode(',', $aExtraParams['display_aliases']): array();
+			if (!isset($aExtraParams['group_by']))
 			{
-				$sHtml .= $oPage->GetP("parameter oql2 is mandatory.");
+				$sHtml .= $oPage->GetP("parameter group_by is mandatory.");
 			}
 			else
 			{
-				$sOql2 = $aExtraParams['oql2'];
-				$sGroupByField = $aExtraParams['group_by'];
-				$aExtraParams['menu'] = false;
-				$oFilter1 = CMDBSearchFilter::FromOQL($sOql2);
-				$oSet1 = new CMDBObjectSet($oFilter1);
-				if (!isset($aExtraParams['group_by']))
+				$aGroupByFields = array();
+				$aGroupBy = explode(',', $aExtraParams['group_by']);
+				foreach($aGroupBy as $sGroupBy)
 				{
-					// No "group by" specified, use the name of the second class
-					$sGroupByField = MetaModel::GetNameAttributeCode($oFilter1->GetClass());
-				}
-				$aResults = array();
-				while($oObj = $oSet1->Fetch())
-				{
-					$aResult[$oObj->Get($sGroupByField)] = array();
-					$oSet2 = new CMDBObjectSet($this->m_oFilter, array(), array('oql2' => $oObj->GetKey()));
-					while($oObj2 = $oSet2->Fetch())
+					$aMatches = array();
+					if (preg_match('/^(.+)\.(.+)$/', $sGroupBy, $aMatches) > 0)
 					{
-						$aResults[$oObj->Get($sGroupByField)][$oObj2->GetKey()] = $oObj2;
+						$aGroupByFields[] = array('alias' => $aMatches[1], 'att_code' => $aMatches[2]);
 					}
 				}
-				$sHtml .= "<table>\n";
-				foreach($aResults as $sCategory => $aObjects)
+				if (count($aGroupByFields) == 0)
 				{
-					$sHtml .= "<tr><td><h1>$sCategory</h1></td></tr>\n";
-					$oSet = CMDBObjectSet::FromArray($this->m_oFilter->GetClass(), $aObjects);
-					$sHtml .= "<tr><td>".cmdbAbstractObject::GetDisplaySet($oPage, $oSet, $aExtraParams)."</td></tr>\n";
-				}				
-				$sHtml .= "</table>\n";
+					$sHtml .= $oPage->GetP("Invalid list of fields to group by: '".$aExtraParams['group_by']."'.");
+				}
+				else
+				{
+					$aResults = array();
+					$aCriteria = array();
+					while($aObjects = $this->m_oSet->FetchAssoc())
+					{
+						$aKeys = array();
+						foreach($aGroupByFields as $aField)
+						{
+							$aKeys[$aField['alias'].'.'.$aField['att_code']] = $aObjects[$aField['alias']]->Get($aField['att_code']);
+						}
+						$sCategory = implode($aKeys, ' ');
+						$aResults[$sCategory][] = $aObjects;
+						$aCriteria[$sCategory] = $aKeys;						
+					}
+
+					$sHtml .= "<table>\n";
+					// Construct a new (parametric) query that will return the content of this block
+					$oBlockFilter = clone $this->m_oFilter;
+					$aExpressions = array();
+					$index = 0;
+					foreach($aGroupByFields as $aField)
+					{
+						$aExpressions[] = '`'.$aField['alias'].'`.`'.$aField['att_code'].'` = :param'.$index++;
+					}
+					$sExpression = implode(' AND ', $aExpressions);
+					$oExpression = Expression::FromOQL($sExpression);
+					$oBlockFilter->AddConditionExpression($oExpression);
+					$aExtraParams['menu'] = false;
+					foreach($aResults as $sCategory => $aObjects)
+					{
+						$sHtml .= "<tr><td><h1>$sCategory</h1></td></tr>\n";
+						if (count($aDisplayAliases) == 1)
+						{
+							$aSimpleArray = array();
+							foreach($aObjects as $aRow)
+							{
+								$aSimpleArray[] = $aRow[$aDisplayAliases[0]];
+							}
+							$oSet = CMDBObjectSet::FromArray($this->m_oFilter->GetClass(), $aSimpleArray);
+							$sHtml .= "<tr><td>".cmdbAbstractObject::GetDisplaySet($oPage, $oSet, $aExtraParams)."</td></tr>\n";
+						}
+						else
+						{
+							$index = 0;
+							$aArgs = array();
+							foreach($aGroupByFields as $aField)
+							{
+								$aArgs['param'.$index] = $aCriteria[$sCategory][$aField['alias'].'.'.$aField['att_code']];
+								$index++;
+							}
+							$oSet = new CMDBObjectSet($oBlockFilter, array(), $aArgs);
+							$sHtml .= "<tr><td>".cmdbAbstractObject::GetDisplayExtendedSet($oPage, $oSet, $aExtraParams)."</td></tr>\n";
+						}
+					}				
+					$sHtml .= "</table>\n";
+				}
 			}
 			break;
 
