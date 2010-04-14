@@ -72,12 +72,36 @@ class DBObjectSet
 		return $oRetSet;
 	} 
 
+	// create an object set ex nihilo
+	// input = array of objects
 	static public function FromArray($sClass, $aObjects)
 	{
 		$oFilter = new CMDBSearchFilter($sClass);
 		$oRetSet = new self($oFilter);
 		$oRetSet->m_bLoaded = true; // no DB load
 		$oRetSet->AddObjectArray($aObjects);
+		return $oRetSet;
+	} 
+
+	// create an object set ex nihilo
+	// aClasses = array of (alias => class)
+	// input = array of (array of (classalias => object))
+	static public function FromArrayAssoc($aClasses, $aObjects)
+	{
+		// In a perfect world, we should create a complete tree of DBObjectSearch,
+		// but as we lack most of the information related to the objects,
+		// let's create one search definition
+		$sClass = reset($this->m_aClasses);
+		$sAlias = key($this->m_aClasses);
+		$oFilter = new CMDBSearchFilter($sClass, $sAlias);
+
+		$oRetSet = new self($oFilter);
+		$oRetSet->m_bLoaded = true; // no DB load
+
+		foreach($aObjects as $rowIndex => $aObjectsByClassAlias)
+		{
+			$oRetSet->AddObjectExtended($aObjectsByClassAlias);
+		}
 		return $oRetSet;
 	} 
 
