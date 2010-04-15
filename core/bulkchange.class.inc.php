@@ -428,13 +428,13 @@ class BulkChange
 			$newID = $oTargetObj->DBInsertTrackedNoReload($oChange);
 			$aResult[$iRow]["__STATUS__"] = new RowStatus_NewObj($this->m_sClass, $newID);
 			$aResult[$iRow]["finalclass"] = get_class($oTargetObj);
-			$aResult[$iRow]["id"] = CellStatus_Void($newID);
+			$aResult[$iRow]["id"] = new CellStatus_Void($newID);
 		}
 		else
 		{
 			$aResult[$iRow]["__STATUS__"] = new RowStatus_NewObj();
 			$aResult[$iRow]["finalclass"] = get_class($oTargetObj);
-			$aResult[$iRow]["id"] = CellStatus_Void(0);
+			$aResult[$iRow]["id"] = new CellStatus_Void(0);
 		}
 	}
 	
@@ -445,7 +445,7 @@ class BulkChange
 		// Reporting
 		//
 		$aResult[$iRow]["finalclass"] = get_class($oTargetObj);
-		$aResult[$iRow]["id"] = CellStatus_Void($aRowData[$iCol]);
+		$aResult[$iRow]["id"] = new CellStatus_Void($oTargetObj->GetKey());
 
 		if (count($aErrors) > 0)
 		{
