@@ -31,10 +31,12 @@ class BulkChangeException extends CoreException
 abstract class CellChangeSpec
 {
 	protected $m_proposedValue;
+	protected $m_sOql; // in case of ambiguity
 
-	public function __construct($proposedValue)
+	public function __construct($proposedValue, $sOql = '')
 	{
 		$this->m_proposedValue = $proposedValue;
+		$this->m_sOql = $sOql;
 	}
 
 	static protected function ValueAsHtml($value)
@@ -49,47 +51,29 @@ abstract class CellChangeSpec
 		}
 	}
 
-	public function GetValue($bHtml = false)
+	public function GetValue()
 	{
-		if ($bHtml)
-		{
-			return self::ValueAsHtml($this->m_proposedValue);
-		}
-		else
-		{
-			return $this->m_proposedValue;
-		}
+		return $this->m_proposedValue;
 	}
 
-	abstract public function GetDescription($bHtml = false);
+	public function GetOql()
+	{
+		return $this->m_proposedValue;
+	}
+
+	abstract public function GetDescription();
 }
 
 
-class CellChangeSpec_Void extends CellChangeSpec
+class CellStatus_Void extends CellChangeSpec
 {
-	public function GetDescription($bHtml = false)
+	public function GetDescription()
 	{
-		return $this->GetValue($bHtml);
+		return '';
 	}
 }
 
-class CellChangeSpec_Unchanged extends CellChangeSpec
-{
-	public function GetDescription($bHtml = false)
-	{
-		return $this->GetValue($bHtml)." (unchanged)";
-	}
-}
-
-class CellChangeSpec_Init extends CellChangeSpec
-{
-	public function GetDescription($bHtml = false)
-	{
-		return $this->GetValue($bHtml);
-	}
-}
-
-class CellChangeSpec_Modify extends CellChangeSpec
+class CellStatus_Modify extends CellChangeSpec
 {
 	protected $m_previousValue;
 
@@ -99,13 +83,18 @@ class CellChangeSpec_Modify extends CellChangeSpec
 		parent::__construct($proposedValue);
 	}
 
-	public function GetDescription($bHtml = false)
+	public function GetDescription()
 	{
-		return $this->GetValue($bHtml)." (previous: ".self::ValueAsHtml($this->m_previousValue).")";
+		return 'Modified';
+	}
+
+	public function GetPreviousValue()
+	{
+		return $this->m_previousValue;
 	}
 }
 
-class CellChangeSpec_Issue extends CellChangeSpec_Modify
+class CellStatus_Issue extends CellStatus_Modify
 {
 	protected $m_sReason;
 
@@ -115,38 +104,30 @@ class CellChangeSpec_Issue extends CellChangeSpec_Modify
 		parent::__construct($proposedValue, $previousValue);
 	}
 
-	public function GetDescription($bHtml = false)
+	public function GetDescription()
 	{
 		if (is_null($this->m_proposedValue))
 		{
 			return 'Could not be changed - reason: '.$this->m_sReason;
 		}
-		return 'Could not be changed to "'.$this->GetValue($bHtml).'" - reason: '.$this->m_sReason.' (previous: '.$this->m_previousValue.')';
+		return 'Could not be changed to '.$this->m_proposedValue.' - reason: '.$this->m_sReason;
 	}
 }
 
-class CellChangeSpec_Ambiguous extends CellChangeSpec_Modify
+class CellStatus_Ambiguous extends CellStatus_Issue
 {
 	protected $m_iCount;
-	protected $m_sOql;
 
 	public function __construct($previousValue, $iCount, $sOql)
 	{
 		$this->m_iCount = $iCount;
 		$this->m_sQuery = $sOql;
-		parent::__construct(null, $previousValue);
+		parent::__construct(null, $previousValue, '');
 	}
 
-	public function GetDescription($bHtml = false)
+	public function GetDescription()
 	{
-		if ($bHtml)
-		{
-			$sCount = '<a href="'.$this->m_sQuery.'">'.$this->m_iCount.'</a>';
-		}
-		else
-		{
-			$sCount = $this->m_iCount;
-		}
+		$sCount = $this->m_iCount;
 		return "Ambiguous: found $sCount objects";
 	}
 }
@@ -169,12 +150,12 @@ abstract class RowStatus
 	{
 	}
 
-	abstract public function GetDescription($bHtml = false);
+	abstract public function GetDescription();
 }
 
 class RowStatus_NoChange extends RowStatus
 {
-	public function GetDescription($bHtml = false)
+	public function GetDescription()
 	{
 		return "unchanged";
 	}
@@ -182,32 +163,9 @@ class RowStatus_NoChange extends RowStatus
 
 class RowStatus_NewObj extends RowStatus
 {
-	protected $m_iObjKey;
-
-	public function __construct($sClass = '', $iObjKey = null)
+	public function GetDescription()
 	{
-		$this->m_iObjKey = $iObjKey;
-		$this->m_sClass = $sClass;
-	}
-
-	public function GetDescription($bHtml = false)
-	{
-		if (is_null($this->m_iObjKey))
-		{
-			return "Create";
-		}
-		else
-		{
-			if (!empty($this->m_sClass))
-			{
-				$oObj = MetaModel::GetObject($this->m_sClass, $this->m_iObjKey);
-				return 'Created '.$oObj->GetHyperLink();
-			}
-			else
-			{
-				return 'Created (id: '.$this->m_iObjKey.')';
-			}
-		}	
+		return "created";
 	}
 }
 
@@ -220,9 +178,9 @@ class RowStatus_Modify extends RowStatus
 		$this->m_iChanged = $iChanged;
 	}
 
-	public function GetDescription($bHtml = false)
+	public function GetDescription()
 	{
-		return "update ".$this->m_iChanged." cols";
+		return "updated ".$this->m_iChanged." cols";
 	}
 }
 
@@ -235,9 +193,9 @@ class RowStatus_Issue extends RowStatus
 		$this->m_sReason = $sReason;
 	}
 
-	public function GetDescription($bHtml = false)
+	public function GetDescription()
 	{
-		return 'Skipped - reason:'.$this->m_sReason;
+		return 'Issue: '.$this->m_sReason;
 	}
 }
 
@@ -290,12 +248,12 @@ class BulkChange
 		{
 			// The foreign attribute is one of our reconciliation key
 			$oReconFilter->AddCondition($sForeignAttCode, $aRowData[$iCol], '=');
-			$aResults["col$iCol"] = new CellChangeSpec_Void($aRowData[$iCol]);
+			$aResults[$iCol] = new CellStatus_Void($aRowData[$iCol]);
 		}
 
 		$oExtObjects = new CMDBObjectSet($oReconFilter);
 		$aKeys = $oExtObjects->ToArray();
-		return $aKeys;
+		return array($oReconFilter->ToOql(), $aKeys);
 	}
 
 	protected function PrepareObject(&$oTargetObj, $aRowData, &$aErrors)
@@ -316,7 +274,7 @@ class BulkChange
 			{
 				// The foreign attribute is one of our reconciliation key
 				$oReconFilter->AddCondition($sForeignAttCode, $aRowData[$iCol], '=');
-				$aResults["col$iCol"] = new CellChangeSpec_Void($aRowData[$iCol]);
+				$aResults[$iCol] = new CellStatus_Void($aRowData[$iCol]);
 			}
 			$oExtObjects = new CMDBObjectSet($oReconFilter);
 			switch($oExtObjects->Count())
@@ -329,7 +287,7 @@ class BulkChange
 				else
 				{
 					$aErrors[$sAttCode] = "Object not found";
-					$aResults[$sAttCode]= new CellChangeSpec_Issue(null, $oTargetObj->Get($sAttCode), 'Object not found - check the spelling (no space before/after)');
+					$aResults[$sAttCode]= new CellStatus_Issue(null, $oTargetObj->Get($sAttCode), 'Object not found - check the spelling (no space before/after)');
 				}
 				break;
 			case 1:
@@ -340,7 +298,7 @@ class BulkChange
 			default:
 				$aErrors[$sAttCode] = "Found ".$oExtObjects->Count()." matches";
 				$previousValue = self::MakeSpecObject($oExtKey->GetTargetClass(), $oTargetObj->Get($sAttCode));
-				$aResults[$sAttCode]= new CellChangeSpec_Ambiguous($previousValue, $oExtObjects->Count(), $oExtObjects->ToOql());
+				$aResults[$sAttCode]= new CellStatus_Ambiguous($previousValue, $oExtObjects->Count(), $oExtObjects->ToOql());
 			}
 
 			// Report
@@ -351,17 +309,17 @@ class BulkChange
 				{
 					if ($oTargetObj->IsNew())
 					{
-						$aResults[$sAttCode]= new CellChangeSpec_Init($oForeignObj);
+						$aResults[$sAttCode]= new CellStatus_Void($oForeignObj);
 					}
 					else
 					{
 						$previousValue = self::MakeSpecObject($oExtKey->GetTargetClass(), $oTargetObj->GetOriginal($sAttCode));
-						$aResults[$sAttCode]= new CellChangeSpec_Modify($oForeignObj, $previousValue);
+						$aResults[$sAttCode]= new CellStatus_Modify($oForeignObj, $previousValue);
 					}
 				}
 				else
 				{
-					$aResults[$sAttCode]= new CellChangeSpec_Unchanged($oForeignObj);
+					$aResults[$sAttCode]= new CellStatus_Void($oForeignObj);
 				}
 			}
 		}	
@@ -392,33 +350,33 @@ class BulkChange
 			{
 				if ($aRowData[$iCol] == $oTargetObj->GetKey())
 				{
-					$aResults["col$iCol"]= new CellChangeSpec_Void($aRowData[$iCol]);
+					$aResults[$iCol]= new CellStatus_Void($aRowData[$iCol]);
 				}
 				else
 				{
-					$aResults["col$iCol"]= new CellChangeSpec_Init($aRowData[$iCol]);
+					$aResults[$iCol]= new CellStatus_Void($aRowData[$iCol]);
 				}
 				
 			}
 			if (isset($aErrors[$sAttCode]))
 			{
-				$aResults["col$iCol"]= new CellChangeSpec_Issue($oTargetObj->Get($sAttCode), $oTargetObj->GetOriginal($sAttCode), $aErrors[$sAttCode]);
+				$aResults[$iCol]= new CellStatus_Issue($oTargetObj->Get($sAttCode), $oTargetObj->GetOriginal($sAttCode), $aErrors[$sAttCode]);
 			}
 			elseif (array_key_exists($sAttCode, $aChangedFields))
 			{
 				if ($oTargetObj->IsNew())
 				{
-					$aResults["col$iCol"]= new CellChangeSpec_Init($oTargetObj->Get($sAttCode));
+					$aResults[$iCol]= new CellStatus_Void($oTargetObj->Get($sAttCode));
 				}
 				else
 				{
-					$aResults["col$iCol"]= new CellChangeSpec_Modify($oTargetObj->Get($sAttCode), $oTargetObj->GetOriginal($sAttCode));
+					$aResults[$iCol]= new CellStatus_Modify($oTargetObj->Get($sAttCode), $oTargetObj->GetOriginal($sAttCode));
 				}
 			}
 			else
 			{
 				// By default... nothing happens
-				$aResults["col$iCol"]= new CellChangeSpec_Void($aRowData[$iCol]);
+				$aResults[$iCol]= new CellStatus_Void($aRowData[$iCol]);
 			}
 		}
 	
@@ -469,12 +427,15 @@ class BulkChange
 		{
 			$newID = $oTargetObj->DBInsertTrackedNoReload($oChange);
 			$aResult[$iRow]["__STATUS__"] = new RowStatus_NewObj($this->m_sClass, $newID);
+			$aResult[$iRow]["finalclass"] = get_class($oTargetObj);
+			$aResult[$iRow]["id"] = CellStatus_Void($newID);
 		}
 		else
 		{
 			$aResult[$iRow]["__STATUS__"] = new RowStatus_NewObj();
+			$aResult[$iRow]["finalclass"] = get_class($oTargetObj);
+			$aResult[$iRow]["id"] = CellStatus_Void(0);
 		}
-	
 	}
 	
 	protected function UpdateObject(&$aResult, $iRow, $oTargetObj, $aRowData, CMDBChange $oChange = null)
@@ -483,6 +444,9 @@ class BulkChange
 
 		// Reporting
 		//
+		$aResult[$iRow]["finalclass"] = get_class($oTargetObj);
+		$aResult[$iRow]["id"] = CellStatus_Void($aRowData[$iCol]);
+
 		if (count($aErrors) > 0)
 		{
 			$sErrors = implode(', ', $aErrors);
@@ -525,23 +489,21 @@ class BulkChange
 				if (array_key_exists($sAttCode, $this->m_aExtKeys))
 				{
 					// The value has to be found or verified
-					$aMatches = $this->ResolveExternalKey($aRowData, $sAttCode, $aResult[$iRow]);
+					list($sQuery, $aMatches) = $this->ResolveExternalKey($aRowData, $sAttCode, $aResult[$iRow]);
 
 					if (count($aMatches) == 1)
 					{
 						$oRemoteObj = reset($aMatches); // first item
 						$valuecondition = $oRemoteObj->GetKey();
-						$aResult[$iRow][$sAttCode] = new CellChangeSpec_Void($oRemoteObj->GetKey());
+						$aResult[$iRow][$sAttCode] = new CellStatus_Void($oRemoteObj->GetKey());
 					} 					
 					elseif (count($aMatches) == 0)
 					{
-						$aResult[$iRow]["__RECONCILIATION__"] = "Could not find a match for external key '$sAttCode'";
-						$aResult[$iRow][$sAttCode] = new CellChangeSpec_Issue(null, null, 'object not found');
+						$aResult[$iRow][$sAttCode] = new CellStatus_Issue(null, null, 'object not found');
 					} 					
 					else
 					{
-						$aResult[$iRow]["__RECONCILIATION__"] = "Ambiguous external key '$sAttCode'";
-						$aResult[$iRow][$sAttCode] = new CellChangeSpec_Issue(null, null, 'found '.count($aMatches).' matches');
+						$aResult[$iRow][$sAttCode] = new CellStatus_Ambiguous(null, count($aMatches), $sQuery);
 					} 					
 				}
 				else
@@ -571,12 +533,10 @@ class BulkChange
 				case 0:
 					$this->CreateObject($aResult, $iRow, $aRowData, $oChange);
 					// $aResult[$iRow]["__STATUS__"]=> set in CreateObject
-					$aResult[$iRow]["__RECONCILIATION__"] = "Object not found";
 					break;
 				case 1:
 					$oTargetObj = $oReconciliationSet->Fetch();
 					$this->UpdateObject($aResult, $iRow, $oTargetObj, $aRowData, $oChange);
-					$aResult[$iRow]["__RECONCILIATION__"] = "Found a match ".$oTargetObj->GetHyperLink();
 					// $aResult[$iRow]["__STATUS__"]=> set in UpdateObject
 					break;
 				default:
@@ -586,16 +546,17 @@ class BulkChange
 					{
 						foreach ($aKeyConfig as $sForeignAttCode => $iCol)
 						{
-							$aResult[$iRow]["col$iCol"] = new CellChangeSpec_Void($aRowData[$iCol]);
+							$aResult[$iRow][$iCol] = new CellStatus_Void($aRowData[$iCol]);
 						}
-						$aResult[$iRow][$sAttCode] = new CellChangeSpec_Void('n/a');
+						$aResult[$iRow][$sAttCode] = new CellStatus_Void('n/a');
 					}
 					foreach ($this->m_aAttList as $sAttCode => $iCol)
 					{
-						$aResult[$iRow]["col$iCol"]= new CellChangeSpec_Void($aRowData[$iCol]);
+						$aResult[$iRow][$iCol]= new CellStatus_Void($aRowData[$iCol]);
 					}
-					$aResult[$iRow]["__RECONCILIATION__"] = "Found ".$oReconciliationSet->Count()." matches";
 					$aResult[$iRow]["__STATUS__"]= new RowStatus_Issue("ambiguous reconciliation");
+					$aResult[$iRow]["id"]= new CellStatus_Ambiguous(0, $oReconciliationSet->Count(), $oReconciliationFilter->ToOql());
+					$aResult[$iRow]["finalclass"]= 'n/a';
 				}
 			}
 	
@@ -604,18 +565,18 @@ class BulkChange
 			{
 				if (!array_key_exists($iCol, $aResult[$iRow]))
 				{
-					$aResult[$iRow]["col$iCol"] = new CellChangeSpec_Void($aRowData[$iCol]);
+					$aResult[$iRow][$iCol] = new CellStatus_Void($aRowData[$iCol]);
 				}
 			}
 			foreach($this->m_aExtKeys as $sAttCode => $aForeignAtts)
 			{
 				if (!array_key_exists($sAttCode, $aResult[$iRow]))
 				{
-					$aResult[$iRow][$sAttCode] = new CellChangeSpec_Void('n/a');
+					$aResult[$iRow][$sAttCode] = new CellStatus_Void('n/a');
 					foreach ($aForeignAtts as $sForeignAttCode => $iCol)
 					{
 						// The foreign attribute is one of our reconciliation key
-						$aResult[$iRow]["col$iCol"] = new CellChangeSpec_Void($aRowData[$iCol]);
+						$aResult[$iRow][$iCol] = new CellStatus_Void($aRowData[$iCol]);
 					}
 				}
 			}
