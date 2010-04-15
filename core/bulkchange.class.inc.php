@@ -125,6 +125,32 @@ class CellChangeSpec_Issue extends CellChangeSpec_Modify
 	}
 }
 
+class CellChangeSpec_Ambiguous extends CellChangeSpec_Modify
+{
+	protected $m_iCount;
+	protected $m_sOql;
+
+	public function __construct($previousValue, $iCount, $sOql)
+	{
+		$this->m_iCount = $iCount;
+		$this->m_sQuery = $sOql;
+		parent::__construct(null, $previousValue);
+	}
+
+	public function GetDescription($bHtml = false)
+	{
+		if ($bHtml)
+		{
+			$sCount = '<a href="'.$this->m_sQuery.'">'.$this->m_iCount.'</a>';
+		}
+		else
+		{
+			$sCount = $this->m_iCount;
+		}
+		return "Ambiguous: found $sCount objects";
+	}
+}
+
 
 /**
  * RowStatus
@@ -230,10 +256,10 @@ class BulkChange
 	protected $m_aData; // Note: hereafter, iCol maybe actually be any acceptable key (string)
 	// #@# todo: rename the variables to sColIndex
 	protected $m_aAttList; // attcode => iCol
-	protected $m_aReconcilKeys;// iCol => attcode (attcode = 'id' for the pkey) 
 	protected $m_aExtKeys; // aExtKeys[sExtKeyAttCode][sExtReconcKeyAttCode] = iCol;
+	protected $m_aReconcilKeys;// attcode (attcode = 'id' for the pkey) 
 
-	public function __construct($sClass, $aData, $aAttList, $aReconcilKeys, $aExtKeys)
+	public function __construct($sClass, $aData, $aAttList, $aExtKeys, $aReconcilKeys)
 	{
 		$this->m_sClass = $sClass;
 		$this->m_aData = $aData;
@@ -256,6 +282,22 @@ class BulkChange
 		return $oObj;
 	}
 
+	protected function ResolveExternalKey($aRowData, $sAttCode, &$aResults)
+	{
+		$oExtKey = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
+		$oReconFilter = new CMDBSearchFilter($oExtKey->GetTargetClass());
+		foreach ($this->m_aExtKeys[$sAttCode] as $sForeignAttCode => $iCol)
+		{
+			// The foreign attribute is one of our reconciliation key
+			$oReconFilter->AddCondition($sForeignAttCode, $aRowData[$iCol], '=');
+			$aResults["col$iCol"] = new CellChangeSpec_Void($aRowData[$iCol]);
+		}
+
+		$oExtObjects = new CMDBObjectSet($oReconFilter);
+		$aKeys = $oExtObjects->ToArray();
+		return $aKeys;
+	}
+
 	protected function PrepareObject(&$oTargetObj, $aRowData, &$aErrors)
 	{
 		$aResults = array();
@@ -265,6 +307,9 @@ class BulkChange
 		//
 		foreach($this->m_aExtKeys as $sAttCode => $aKeyConfig)
 		{
+			// Skip external keys used for the reconciliation process
+			if (!array_key_exists($sAttCode, $this->m_aAttList)) continue;
+
 			$oExtKey = MetaModel::GetAttributeDef(get_class($oTargetObj), $sAttCode);
 			$oReconFilter = new CMDBSearchFilter($oExtKey->GetTargetClass());
 			foreach ($aKeyConfig as $sForeignAttCode => $iCol)
@@ -295,7 +340,7 @@ class BulkChange
 			default:
 				$aErrors[$sAttCode] = "Found ".$oExtObjects->Count()." matches";
 				$previousValue = self::MakeSpecObject($oExtKey->GetTargetClass(), $oTargetObj->Get($sAttCode));
-				$aResults[$sAttCode]= new CellChangeSpec_Issue(null, $previousValue, "Found ".$oExtObjects->Count()." matches");
+				$aResults[$sAttCode]= new CellChangeSpec_Ambiguous($previousValue, $oExtObjects->Count(), $oExtObjects->ToOql());
 			}
 
 			// Report
@@ -473,49 +518,106 @@ class BulkChange
 		foreach($this->m_aData as $iRow => $aRowData)
 		{
 			$oReconciliationFilter = new CMDBSearchFilter($this->m_sClass);
+			$bSkipQuery = false;
 			foreach($this->m_aReconcilKeys as $sAttCode)
 			{
-				$iCol = $this->m_aAttList[$sAttCode];
-				$oReconciliationFilter->AddCondition($sAttCode, $aRowData[$iCol], '=');
-			}
-			$oReconciliationSet = new CMDBObjectSet($oReconciliationFilter);
-			switch($oReconciliationSet->Count())
-			{
-			case 0:
-				$this->CreateObject($aResult, $iRow, $aRowData, $oChange);
-				// $aResult[$iRow]["__STATUS__"]=> set in CreateObject
-				$aResult[$iRow]["__RECONCILIATION__"] = "Object not found";
-				break;
-			case 1:
-				$oTargetObj = $oReconciliationSet->Fetch();
-				$this->UpdateObject($aResult, $iRow, $oTargetObj, $aRowData, $oChange);
-				$aResult[$iRow]["__RECONCILIATION__"] = "Found a match ".$oTargetObj->GetHyperLink();
-				// $aResult[$iRow]["__STATUS__"]=> set in UpdateObject
-				break;
-			default:
-				// Found several matches, ambiguous
-				// Render "void" results on any column
-				foreach($this->m_aExtKeys as $sAttCode => $aKeyConfig)
+				$valuecondition = null;
+				if (array_key_exists($sAttCode, $this->m_aExtKeys))
 				{
-					foreach ($aKeyConfig as $sForeignAttCode => $iCol)
+					// The value has to be found or verified
+					$aMatches = $this->ResolveExternalKey($aRowData, $sAttCode, $aResult[$iRow]);
+
+					if (count($aMatches) == 1)
 					{
-						$aResult[$iRow]["col$iCol"] = new CellChangeSpec_Void($aRowData[$iCol]);
-					}
-					$aResult[$iRow][$sAttCode] = new CellChangeSpec_Void('n/a');
+						$oRemoteObj = reset($aMatches); // first item
+						$valuecondition = $oRemoteObj->GetKey();
+						$aResult[$iRow][$sAttCode] = new CellChangeSpec_Void($oRemoteObj->GetKey());
+					} 					
+					elseif (count($aMatches) == 0)
+					{
+						$aResult[$iRow]["__RECONCILIATION__"] = "Could not find a match for external key '$sAttCode'";
+						$aResult[$iRow][$sAttCode] = new CellChangeSpec_Issue(null, null, 'object not found');
+					} 					
+					else
+					{
+						$aResult[$iRow]["__RECONCILIATION__"] = "Ambiguous external key '$sAttCode'";
+						$aResult[$iRow][$sAttCode] = new CellChangeSpec_Issue(null, null, 'found '.count($aMatches).' matches');
+					} 					
 				}
-				foreach ($this->m_aAttList as $sAttCode => $iCol)
+				else
 				{
-					$aResult[$iRow]["col$iCol"]= new CellChangeSpec_Void($aRowData[$iCol]);
+					// The value is given in the data row
+					$iCol = $this->m_aAttList[$sAttCode];
+					$valuecondition = $aRowData[$iCol];
 				}
-				$aResult[$iRow]["__RECONCILIATION__"] = "Found ".$oReconciliationSet->Count()." matches";
-				$aResult[$iRow]["__STATUS__"]= new RowStatus_Issue("ambiguous reconciliation");
+				if (is_null($valuecondition))
+				{
+					$bSkipQuery = true;
+				}
+				else
+				{
+					$oReconciliationFilter->AddCondition($sAttCode, $valuecondition, '=');
+				}
+			}
+			if ($bSkipQuery)
+			{
+				$aResult[$iRow]["__STATUS__"]= new RowStatus_Issue("failed to reconcile");
+			}
+			else
+			{
+				$oReconciliationSet = new CMDBObjectSet($oReconciliationFilter);
+				switch($oReconciliationSet->Count())
+				{
+				case 0:
+					$this->CreateObject($aResult, $iRow, $aRowData, $oChange);
+					// $aResult[$iRow]["__STATUS__"]=> set in CreateObject
+					$aResult[$iRow]["__RECONCILIATION__"] = "Object not found";
+					break;
+				case 1:
+					$oTargetObj = $oReconciliationSet->Fetch();
+					$this->UpdateObject($aResult, $iRow, $oTargetObj, $aRowData, $oChange);
+					$aResult[$iRow]["__RECONCILIATION__"] = "Found a match ".$oTargetObj->GetHyperLink();
+					// $aResult[$iRow]["__STATUS__"]=> set in UpdateObject
+					break;
+				default:
+					// Found several matches, ambiguous
+					// Render "void" results on any column
+					foreach($this->m_aExtKeys as $sAttCode => $aKeyConfig)
+					{
+						foreach ($aKeyConfig as $sForeignAttCode => $iCol)
+						{
+							$aResult[$iRow]["col$iCol"] = new CellChangeSpec_Void($aRowData[$iCol]);
+						}
+						$aResult[$iRow][$sAttCode] = new CellChangeSpec_Void('n/a');
+					}
+					foreach ($this->m_aAttList as $sAttCode => $iCol)
+					{
+						$aResult[$iRow]["col$iCol"]= new CellChangeSpec_Void($aRowData[$iCol]);
+					}
+					$aResult[$iRow]["__RECONCILIATION__"] = "Found ".$oReconciliationSet->Count()." matches";
+					$aResult[$iRow]["__STATUS__"]= new RowStatus_Issue("ambiguous reconciliation");
+				}
 			}
 	
 			// Whatever happened, do report the reconciliation values
-			foreach($this->m_aReconcilKeys as $sAttCode)
+			foreach($this->m_aAttList as $iCol)
 			{
-				$iCol = $this->m_aAttList[$sAttCode];
-				$aResult[$iRow]["col$iCol"] = new CellChangeSpec_Void($aRowData[$iCol]);
+				if (!array_key_exists($iCol, $aResult[$iRow]))
+				{
+					$aResult[$iRow]["col$iCol"] = new CellChangeSpec_Void($aRowData[$iCol]);
+				}
+			}
+			foreach($this->m_aExtKeys as $sAttCode => $aForeignAtts)
+			{
+				if (!array_key_exists($sAttCode, $aResult[$iRow]))
+				{
+					$aResult[$iRow][$sAttCode] = new CellChangeSpec_Void('n/a');
+					foreach ($aForeignAtts as $sForeignAttCode => $iCol)
+					{
+						// The foreign attribute is one of our reconciliation key
+						$aResult[$iRow]["col$iCol"] = new CellChangeSpec_Void($aRowData[$iCol]);
+					}
+				}
 			}
 		}
 		return $aResult;

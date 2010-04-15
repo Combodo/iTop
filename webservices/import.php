@@ -97,8 +97,8 @@ try
 		$sClass,
 		$aData,
 		$aAttList,
-		$aReconcilKeys,
-		$aExtKeys
+		$aExtKeys,
+		$aReconcilKeys
 	);
 
 	$oMyChange = MetaModel::NewObject("CMDBChange");
