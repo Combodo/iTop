@@ -1185,6 +1185,12 @@ class AttributeExternalField extends AttributeDefinition
 		return $oExtAttDef->IsNullAllowed(); 
 	}
 
+	public function IsScalar()
+	{
+		$oExtAttDef = $this->GetExtAttDef();
+		return $oExtAttDef->IsScalar(); 
+	} 
+
 	public function GetBasicFilterOperators()
 	{
 		$oExtAttDef = $this->GetExtAttDef();

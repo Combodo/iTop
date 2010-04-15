@@ -571,12 +571,27 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$aHeader = array();
 		foreach($aAuthorizedClasses as $sAlias => $sClassName)
 		{
-			$aList[$sClassName] = MetaModel::GetZListItems($sClassName, 'details');
-		$aHeader[] = MetaModel::GetKeyLabel($sClassName);
-			foreach($aList[$sClassName] as $sAttCode)
-		{
-			$aHeader[] = MetaModel::GetLabel($sClassName, $sAttCode);
-		}
+			foreach(MetaModel::ListAttributeDefs($sClassName) as $sAttCode => $oAttDef)
+			{
+				if ($oAttDef->IsScalar())
+				{
+					$aList[$sClassName][$sAttCode] = $oAttDef;
+				}
+			}
+			$aHeader[] = MetaModel::GetKeyLabel($sClassName);
+			foreach($aList[$sClassName] as $sAttCode => $oAttDef)
+			{
+				if ($oAttDef->IsExternalField())
+				{
+					$sExtKeyLabel = MetaModel::GetLabel($sClassName, $oAttDef->GetKeyAttCode());
+					$sRemoteAttLabel = MetaModel::GetLabel($oAttDef->GetTargetClass(), $oAttDef->GetExtAttCode());
+					$aHeader[] = $sExtKeyLabel.'->'.$sRemoteAttLabel;
+				}
+				else
+				{
+					$aHeader[] = MetaModel::GetLabel($sClassName, $sAttCode);
+				}
+			}
 		}
 		$sHtml = '#'.$oSet->GetFilter()->ToOQL()."\n";
 		$sHtml .= implode($sSeparator, $aHeader)."\n";
@@ -587,9 +602,9 @@ abstract class cmdbAbstractObject extends CMDBObject
 			foreach($aAuthorizedClasses as $sAlias => $sClassName)
 			{
 				$oObj = $aObjects[$sAlias];
-			$aRow[] = $oObj->GetKey();
-				foreach($aList[$sClassName] as $sAttCode)
-			{
+				$aRow[] = $oObj->GetKey();
+				foreach($aList[$sClassName] as $sAttCode => $oAttDef)
+				{
 					$aRow[] = $oObj->GetAsCSV($sAttCode, $sSeparator, '\\');
 				}
 			}
