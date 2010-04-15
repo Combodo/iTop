@@ -226,20 +226,6 @@ class BulkChange
 		$this->m_aExtKeys = $aExtKeys;
 	}
 
-	static protected function MakeSpecObject($sClass, $iId)
-	{
-		try
-		{
-			$oObj = MetaModel::GetObject($sClass, $iId);
-		}
-		catch(CoreException $e)
-		{
-			// in case an ext key is 0 (which is currently acceptable)
-			return $iId;
-		}
-		return $oObj;
-	}
-
 	protected function ResolveExternalKey($aRowData, $sAttCode, &$aResults)
 	{
 		$oExtKey = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
@@ -287,7 +273,7 @@ class BulkChange
 				else
 				{
 					$aErrors[$sAttCode] = "Object not found";
-					$aResults[$sAttCode]= new CellStatus_Issue(null, $oTargetObj->Get($sAttCode), 'Object not found - check the spelling (no space before/after)');
+					$aResults[$sAttCode]= new CellStatus_Issue(null, $oTargetObj->Get($sAttCode), 'Object not found');
 				}
 				break;
 			case 1:
@@ -297,32 +283,30 @@ class BulkChange
 				break;
 			default:
 				$aErrors[$sAttCode] = "Found ".$oExtObjects->Count()." matches";
-				$previousValue = self::MakeSpecObject($oExtKey->GetTargetClass(), $oTargetObj->Get($sAttCode));
-				$aResults[$sAttCode]= new CellStatus_Ambiguous($previousValue, $oExtObjects->Count(), $oExtObjects->ToOql());
+				$aResults[$sAttCode]= new CellStatus_Ambiguous($oTargetObj->Get($sAttCode), $oExtObjects->Count(), $oExtObjects->ToOql());
 			}
 
 			// Report
 			if (!array_key_exists($sAttCode, $aResults))
 			{
-				$oForeignObj = $oTargetObj->Get($sAttCode);
+				$iForeignObj = $oTargetObj->Get($sAttCode);
 				if (array_key_exists($sAttCode, $oTargetObj->ListChanges()))
 				{
 					if ($oTargetObj->IsNew())
 					{
-						$aResults[$sAttCode]= new CellStatus_Void($oForeignObj);
+						$aResults[$sAttCode]= new CellStatus_Void($iForeignObj);
 					}
 					else
 					{
-						$previousValue = self::MakeSpecObject($oExtKey->GetTargetClass(), $oTargetObj->GetOriginal($sAttCode));
-						$aResults[$sAttCode]= new CellStatus_Modify($oForeignObj, $previousValue);
+						$aResults[$sAttCode]= new CellStatus_Modify($iForeignObj, $oTargetObj->GetOriginal($sAttCode));
 					}
 				}
 				else
 				{
-					$aResults[$sAttCode]= new CellStatus_Void($oForeignObj);
+					$aResults[$sAttCode]= new CellStatus_Void($iForeignObj);
 				}
 			}
-		}	
+		}
 	
 		// Set the object attributes
 		//
@@ -348,15 +332,7 @@ class BulkChange
 		{
 			if ($sAttCode == 'id')
 			{
-				if ($aRowData[$iCol] == $oTargetObj->GetKey())
-				{
-					$aResults[$iCol]= new CellStatus_Void($aRowData[$iCol]);
-				}
-				else
-				{
-					$aResults[$iCol]= new CellStatus_Void($aRowData[$iCol]);
-				}
-				
+				$aResults[$iCol]= new CellStatus_Void($aRowData[$iCol]);
 			}
 			if (isset($aErrors[$sAttCode]))
 			{
@@ -541,19 +517,6 @@ class BulkChange
 					break;
 				default:
 					// Found several matches, ambiguous
-					// Render "void" results on any column
-					foreach($this->m_aExtKeys as $sAttCode => $aKeyConfig)
-					{
-						foreach ($aKeyConfig as $sForeignAttCode => $iCol)
-						{
-							$aResult[$iRow][$iCol] = new CellStatus_Void($aRowData[$iCol]);
-						}
-						$aResult[$iRow][$sAttCode] = new CellStatus_Void('n/a');
-					}
-					foreach ($this->m_aAttList as $sAttCode => $iCol)
-					{
-						$aResult[$iRow][$iCol]= new CellStatus_Void($aRowData[$iCol]);
-					}
 					$aResult[$iRow]["__STATUS__"]= new RowStatus_Issue("ambiguous reconciliation");
 					$aResult[$iRow]["id"]= new CellStatus_Ambiguous(0, $oReconciliationSet->Count(), $oReconciliationFilter->ToOql());
 					$aResult[$iRow]["finalclass"]= 'n/a';
