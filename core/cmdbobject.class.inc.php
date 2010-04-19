@@ -17,6 +17,8 @@ require_once('coreexception.class.inc.php');
 
 require_once('config.class.inc.php');
 
+require_once('dict.class.inc.php');
+
 require_once('attributedef.class.inc.php');
 require_once('filterdef.class.inc.php');
 require_once('stimulus.class.inc.php');

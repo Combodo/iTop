@@ -12,14 +12,40 @@
  * @version     1.1.1.1 $
  */
 
+// #@# Really dirty !!!
+// #@# TO BE CLEANED -> ALIGN WITH OTHER METAMODEL DECLARATIONS
+
 class ObjectStimulus
 {
 	private $m_aParams = array();
+	private $m_sHostClass = null;
+	private $m_sCode = null;
 
 	public function __construct($aParams)
 	{
-		$this->m_aParams = $aParams;
+		// obsolete: $this->m_aParams = $aParams;
+		$this->m_aParams['label'] = 'foo';
+		$this->m_aParams['description'] = 'foo';
 		$this->ConsistencyCheck();
+	}
+
+	public function SetHostClass($sHostClass)
+	{
+		$this->m_sHostClass = $sHostClass;
+	}
+	public function GetHostClass()
+	{
+		return $this->m_sHostClass;
+	}
+	public function SetCode($sCode)
+	{
+		$this->m_sCode = $sCode;
+		$this->m_aParams['label'] = Dict::S('Class:'.$this->m_sHostClass.'/Stimulus:'.$this->m_sCode, $this->m_sCode); 
+		$this->m_aParams['description'] = Dict::S('Class:'.$this->m_sHostClass.'/Stimulus:'.$this->m_sCode.'+', '');
+	}
+	public function GetCode()
+	{
+		return $this->m_sCode;
 	}
 
 	public function Get($sParamName) {return $this->m_aParams[$sParamName];}

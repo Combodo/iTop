@@ -194,7 +194,13 @@ abstract class MetaModel
 
 	final static public function GetName($sClass)
 	{
-		self::_check_subclass($sClass);	
+		self::_check_subclass($sClass);
+		$sStringCode = 'Class:'.$sClass;
+		return Dict::S($sStringCode, $sClass);
+	}
+	final static public function Obsolete_GetName($sClass)
+	{
+		self::_check_subclass($sClass);
 		return self::$m_aClassParams[$sClass]["name"];
 	}
 	final static public function GetCategory($sClass)
@@ -208,6 +214,12 @@ abstract class MetaModel
 		return (strpos(self::$m_aClassParams[$sClass]["category"], $sCategory) !== false); 
 	}
 	final static public function GetClassDescription($sClass)
+	{
+		self::_check_subclass($sClass);	
+		$sStringCode = 'Class:'.$sClass.'+';
+		return Dict::S($sStringCode, '');
+	}
+	final static public function Obsolete_GetClassDescription($sClass)
 	{
 		self::_check_subclass($sClass);	
 		return self::$m_aClassParams[$sClass]["description"];
@@ -1130,6 +1142,11 @@ abstract class MetaModel
 	{
 		$sTargetClass = self::GetCallersPHPClass("Init");
 		self::$m_aStimuli[$sTargetClass][$sStimulusCode] = $oStimulus;
+
+		// I wanted to simplify the syntax of the declaration of objects in the biz model
+		// Therefore, the reference to the host class is set there 
+		$oStimulus->SetHostClass($sTargetClass);
+		$oStimulus->SetCode($sStimulusCode);
 	}
 
 	public static function Init_DefineTransition($sStateCode, $sStimulusCode, $aTransitionDef)
@@ -2089,6 +2106,83 @@ abstract class MetaModel
 		return $aDataDump;
 	}
 
+	public static function MakeDictionaryTemplate()
+	{
+		$sRes = '';
+
+		foreach (Dict::GetLanguages() as $sLanguageCode => $aLanguageData)
+		{
+			list($aMissing, $aUnexpected, $aNotTranslated, $aOK) = Dict::MakeStats($sLanguageCode, 'EN US');
+			echo "<p>Stats for language: $sLanguageCode</p>\n"; 
+			echo "<ul><li>Missing:".count($aMissing)."</li><li>Unexpected:".count($aUnexpected)."</li><li>NotTranslated:".count($aNotTranslated)."</li><li>OK:".count($aOK)."</li></ul>\n";
+		}
+		$sRes .= "// Dictionnay conventions\n";
+		$sRes .= htmlentities("// Class:<class_name>\n");
+		$sRes .= htmlentities("// Class:<class_name>+\n");
+		$sRes .= htmlentities("// Class:<class_name>/Attribute:<attribute_code>\n");
+		$sRes .= htmlentities("// Class:<class_name>/Attribute:<attribute_code>+\n");
+		$sRes .= htmlentities("// Class:<class_name>/Attribute:<attribute_code>/Value:<value>\n");
+		$sRes .= htmlentities("// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+\n");
+		$sRes .= htmlentities("// Class:<class_name>/Stimulus:<stimulus_code>\n");
+		$sRes .= htmlentities("// Class:<class_name>/Stimulus:<stimulus_code>+\n");
+		$sRes .= "\n";
+
+		// Note: I did not use EnumCategories(), because a given class maybe found in several categories
+		// Need to invent the "module", to characterize the origins of a class
+		$aModules = array('bizmodel', 'core/cmdb', 'gui' , 'application', 'addon/userrights');
+
+		$sRes .= "//////////////////////////////////////////////////////////////////////\n";
+		$sRes .= "// Note: The classes have been grouped by categories: ".implode(', ', $aModules)."\n";
+		$sRes .= "//////////////////////////////////////////////////////////////////////\n";
+
+		foreach ($aModules as $sCategory)
+		{
+			$sRes .= "//////////////////////////////////////////////////////////////////////\n";
+			$sRes .= "// Classes in '<em>$sCategory</em>'\n";
+			$sRes .= "//////////////////////////////////////////////////////////////////////\n";
+			$sRes .= "//\n";
+			$sRes .= "\n";
+			foreach (self::GetClasses($sCategory) as $sClass)
+			{
+				if (self::IsAbstract($sClass)) continue;
+	
+				$sRes .= "//\n";
+				$sRes .= "// Class: $sClass\n";
+				$sRes .= "//\n";
+				$sRes .= "\n";
+				$sRes .= "Dict::Add('EN US', 'English', 'English', array(\n";
+				$sRes .= "	'Class:$sClass' => '".self::GetName($sClass)."',\n";
+				$sRes .= "	'Class:$sClass+' => '".self::GetClassDescription($sClass)."',\n";
+				foreach(self::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+				{
+					// Skip this attribute if not originaly defined in this class
+					if (self::$m_aAttribOrigins[$sClass][$sAttCode] != $sClass) continue;
+	
+					$sRes .= "	'Class:$sClass/Attribute:$sAttCode' => '".$oAttDef->GetLabel()."',\n";
+					$sRes .= "	'Class:$sClass/Attribute:$sAttCode+' => '".$oAttDef->GetDescription()."',\n";
+					if ($oAttDef instanceof AttributeEnum)
+					{
+						foreach ($oAttDef->GetAllowedValues() as $sKey => $value)
+						{
+							$sValue = str_replace("'", "\\'", $value);
+							$sRes .= "	'Class:$sClass/Attribute:$sAttCode/Value:$sKey' => '$sValue',\n";
+							$sRes .= "	'Class:$sClass/Attribute:$sAttCode/Value:$sKey+' => '$sValue',\n";
+						}
+					}
+				}
+				foreach(self::EnumStimuli($sClass) as $sStimulusCode => $oStimulus)
+				{
+					$sRes .= "	'Class:$sClass/Stimulus:$sStimulusCode' => '".$oStimulus->Get('label')."',\n";
+					$sRes .= "	'Class:$sClass/Stimulus:$sStimulusCode+' => '".$oStimulus->Get('description')."',\n";
+				}
+	
+				$sRes .= "));\n";
+				$sRes .= "\n";
+			}
+		}
+		return $sRes;
+	}
+
 	public static function DBCheckFormat()
 	{
 		$aErrors = array();
@@ -2625,6 +2719,12 @@ abstract class MetaModel
 		{
 			self::Plugin($sConfigFile, 'addons', $sToInclude);
 		}
+		foreach ($oConfig->GetDictionaries() as $sModule => $sToInclude)
+		{
+			self::Plugin($sConfigFile, 'dictionaries', $sToInclude);
+		}
+		// Set the language... after the dictionaries have been loaded!
+		Dict::SetLanguage($oConfig->GetDefaultLanguage());
 
 		$sServer = $oConfig->GetDBHost();
 		$sUser = $oConfig->GetDBUser();

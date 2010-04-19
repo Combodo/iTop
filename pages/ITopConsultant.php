@@ -263,6 +263,7 @@ function printMenu($sConfigFile)
 	echo "<h4>Target database: $sConfigFile</h4>\n";
 	echo "<p>$sClassCount classes referenced in the model</p>\n";
 	echo "<ul>";
+	echo "   <li><a href=\"$sUrl&todo=checkdictionary\">Dictionary</a></li>";
 	echo "   <li><a href=\"$sUrl&todo=checkmodel\">Biz model consistency</a></li>";
 	echo "   <li><a href=\"$sUrl&todo=showzlists\">Show ZLists</a></li>";
 	echo "   <li><a href=\"$sUrl&todo=showbizmodel\">Browse business model</a></li>";
@@ -470,6 +471,12 @@ else
 			// As the menu depends on the existence of the DB, we have to do display it right after the job is done
 			printMenu($sConfigFile);
 			echo $sRes;
+			break;
+		case "checkdictionary":
+			echo "Dictionary template...</br>\n";
+			echo "<pre>\n";
+			echo MetaModel::MakeDictionaryTemplate();
+			echo "</pre>\n";
 			break;
 		case "checkmodel":
 			echo "Check definitions...</br>\n";

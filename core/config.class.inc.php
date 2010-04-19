@@ -2,7 +2,7 @@
 require_once('coreexception.class.inc.php');
 /**
  * Config
- * configuration data
+ * configuration data (this class cannot not be localized, because it is responsible for loading the dictionaries)
  *
  * @package     iTopORM
  * @author      Romain Quetiez <romainquetiez@yahoo.fr>
@@ -30,6 +30,7 @@ class Config
 	protected $m_aAppModules;
 	protected $m_aDataModels;
 	protected $m_aAddons;
+	protected $m_aDictionaries;
 
 	protected $m_sDBHost;
 	protected $m_sDBUser;
@@ -60,12 +61,18 @@ class Config
 	 */	 	
 	protected $m_bSecureConnectionRequired;
 
+	/**
+	 * @var string Langage code, default if the user language is undefined
+	 */	 	
+	protected $m_sDefaultLanguage;
+
 	public function __construct($sConfigFile, $bLoadConfig = true)
 	{
 		$this->m_sFile = $sConfigFile;
 		$this->m_aAppModules = array();
 		$this->m_aDataModels = array();
 		$this->m_aAddons = array();
+		$this->m_aDictionaries = array();
 
 		$this->m_sDBHost = '';
 		$this->m_sDBUser = '';
@@ -77,6 +84,7 @@ class Config
 		$this->m_iStandardReloadInterval = DEFAULT_STANDARD_RELOAD_INTERVAL;
 		$this->m_iFastReloadInterval = DEFAULT_FAST_RELOAD_INTERVAL;
 		$this->m_bSecureConnectionRequired = DEFAULT_SECURE_CONNECTION_REQUIRED;
+		$this->m_sDefaultLanguage = 'EN US';
 		if ($bLoadConfig)
 		{
 			$this->Load($sConfigFile);
@@ -144,9 +152,14 @@ class Config
 		{
 			$MyModules['addons']['user rights'] = '../addons/userrights/userrightsnull.class.inc.php';
 		}
+		if (!array_key_exists('dictionaries', $MyModules))
+		{
+			throw new ConfigException('Missing item in configuration file', array('file' => $sConfigFile, 'expected' => '$MyModules[\'dictionaries\']'));
+		}
 		$this->m_aAppModules = $MyModules['application'];
 		$this->m_aDataModels = $MyModules['business'];
 		$this->m_aAddons = $MyModules['addons'];
+		$this->m_aDictionaries = $MyModules['dictionaries'];
 
 		$this->m_sDBHost = trim($MySettings['db_host']);
 		$this->m_sDBUser = trim($MySettings['db_user']);
@@ -159,6 +172,8 @@ class Config
 		$this->m_iStandardReloadInterval = isset($MySettings['standard_reload_interval']) ? trim($MySettings['standard_reload_interval']) : DEFAULT_STANDARD_RELOAD_INTERVAL;
 		$this->m_iFastReloadInterval = isset($MySettings['fast_reload_interval']) ? trim($MySettings['fast_reload_interval']) : DEFAULT_FAST_RELOAD_INTERVAL;
 		$this->m_bSecureConnectionRequired = isset($MySettings['secure_connection_required']) ? trim($MySettings['secure_connection_required']) : DEFAULT_SECURE_CONNECTION_REQUIRED;
+
+		$this->m_sDefaultLanguage = isset($MySettings['default_language']) ? trim($MySettings['default_language']) : 'EN US';
 	}
 
 	protected function Verify()
@@ -175,6 +190,10 @@ class Config
 		{
 			$this->CheckFile('addon module', $sToInclude);
 		}
+		foreach ($this->m_aDictionaries as $sModule => $sToInclude)
+		{
+			$this->CheckFile('dictionary', $sToInclude);
+		}
 	}
 
 	public function GetAppModules()
@@ -190,6 +209,11 @@ class Config
 	public function GetAddons()
 	{
 		return $this->m_aAddons;
+	}
+
+	public function GetDictionaries()
+	{
+		return $this->m_aDictionaries;
 	}
 
 	public function GetDBHost()
@@ -242,6 +266,11 @@ class Config
 		return $this->m_bSecureConnectionRequired;
 	}
 
+	public function GetDefaultLanguage()
+	{
+		return $this->m_sDefaultLanguage;
+	}
+
 	public function SetDBHost($sDBHost)
 	{
 		$this->m_sDBHost = $sDBHost;
@@ -292,6 +321,11 @@ class Config
 		$this->m_bSecureConnectionRequired = $bSecureConnectionRequired;
 	}
 
+	public function SetDefaultLanguage($sLanguageCode)
+	{
+		$this->m_sDefaultLanguage = $sLanguageCode;
+	}
+
 	public function FileIsWritable()
 	{
 		return is_writable($this->m_sFile);
@@ -334,6 +368,7 @@ class Config
 			fwrite($hFile, "\t'standard_reload_interval' => {$this->m_iStandardReloadInterval},\n");
 			fwrite($hFile, "\t'fast_reload_interval' => {$this->m_iFastReloadInterval},\n");
 			fwrite($hFile, "\t'secure_connection_required' => ".($this->m_bSecureConnectionRequired ? 'true' : 'false').",\n");
+			fwrite($hFile, "\t'default_language' => '{$this->m_sDefaultLanguage}',\n");
 			fwrite($hFile, ");\n");
 			
 			fwrite($hFile, "\n/**\n");
@@ -362,7 +397,13 @@ class Config
 			fwrite($hFile, "\t'addons' => array (\n");
 			fwrite($hFile, "\t\t'user rights' => '../addons/userrights/userrightsprofile.class.inc.php',\n");
 			fwrite($hFile, "\t\t// other modules to come later\n");
-			fwrite($hFile, "\t)\n");
+			fwrite($hFile, "\t),\n");
+			fwrite($hFile, "\t'dictionaries' => array (\n");
+			fwrite($hFile, "\t\t'../dictionaries/dictionary.itop.model.php',\n");
+			fwrite($hFile, "\t\t'../dictionaries/dictionary.itop.core.php',\n");
+			fwrite($hFile, "\t\t'../dictionaries/dictionary.itop.ui.php',\n");
+			fwrite($hFile, "\t\t// to be continued...\n");
+			fwrite($hFile, "\t),\n");
 			fwrite($hFile, ");\n");
 			fwrite($hFile, '?'.'>'); // Avoid perturbing the syntax highlighting !
 			return fclose($hFile);

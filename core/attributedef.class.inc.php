@@ -132,8 +132,10 @@ abstract class AttributeDefinition
 	public function IsNullAllowed() {return true;} 
 	public function GetNullValue() {return null;} 
 	public function GetCode() {return $this->m_sCode;} 
-	public function GetLabel() {return $this->Get("label");} 
-	public function GetDescription() {return $this->Get("description");} 
+	public function GetLabel() {return Dict::S('Class:'.$this->m_sHostClass.'/Attribute:'.$this->m_sCode, $this->m_sCode);} 
+	public function Obsolete_GetLabel() {return $this->Get("label");} 
+	public function GetDescription() {return Dict::S('Class:'.$this->m_sHostClass.'/Attribute:'.$this->m_sCode.'+', '');} 
+	public function Obsolete_GetDescription() {return $this->Get("description");} 
 	public function GetValuesDef() {return null;} 
 	public function GetPrerequisiteAttributes() {return array();} 
 	//public function IsSearchableStd() {return $this->Get("search_std");} 
@@ -828,6 +830,17 @@ class AttributeEnum extends AttributeString
 		// later, we could imagine a detailed description in the title
 		return "<span title=\"\">".parent::GetAsHtml($sLabel)."</span>";
 	}
+
+	public function GetAllowedValues($aArgs = array(), $sBeginsWith = '')
+	{
+		$aRawValues = parent::GetAllowedValues($aArgs, $sBeginsWith);
+		$aLocalizedValues = array();
+		foreach ($aRawValues as $sKey => $sValue)
+		{
+			$aLocalizedValues[$sKey] = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sKey, $sKey);
+		}
+  		return $aLocalizedValues;
+  }
 }
 
 /**
