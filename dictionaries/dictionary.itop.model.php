@@ -11,9 +11,6 @@
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
 //////////////////////////////////////////////////////////////////////
-// Note: The classes have been grouped by categories: bizmodel, core/cmdb, gui, application, addon/userrights
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
 // Classes in 'bizmodel'
 //////////////////////////////////////////////////////////////////////
 //
@@ -70,8 +67,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:logRealObject/Attribute:org_id+' => 'ID of the object owner organization',
 	'Class:logRealObject/Attribute:org_name' => 'Organization',
 	'Class:logRealObject/Attribute:org_name+' => 'Company / Department owning this object',
-	'Class:logRealObject/Attribute:finalclass' => 'Class',
-	'Class:logRealObject/Attribute:finalclass+' => 'Real (final) object class',
+	'Class:logRealObject/Attribute:finalclass' => 'finalclass',
+	'Class:logRealObject/Attribute:finalclass+' => '',
 ));
 
 //
@@ -657,12 +654,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:bizIncidentTicket/Attribute:customer_name+' => 'Name of the customer impacted by this ticket',
 	'Class:bizIncidentTicket/Attribute:ticket_status' => 'Status',
 	'Class:bizIncidentTicket/Attribute:ticket_status+' => 'Status of the ticket',
-	'Class:bizIncidentTicket/Attribute:ticket_status/Value:New' => 'New',
-	'Class:bizIncidentTicket/Attribute:ticket_status/Value:New+' => 'New',
+	'Class:bizIncidentTicket/Attribute:ticket_status/Value:New' => 'New (Unassigned)',
+	'Class:bizIncidentTicket/Attribute:ticket_status/Value:New+' => 'New (Unassigned)',
 	'Class:bizIncidentTicket/Attribute:ticket_status/Value:Assigned' => 'Assigned',
 	'Class:bizIncidentTicket/Attribute:ticket_status/Value:Assigned+' => 'Assigned',
-	'Class:bizIncidentTicket/Attribute:ticket_status/Value:WorkInProgress' => 'WorkInProgress',
-	'Class:bizIncidentTicket/Attribute:ticket_status/Value:WorkInProgress+' => 'WorkInProgress',
+	'Class:bizIncidentTicket/Attribute:ticket_status/Value:WorkInProgress' => 'Work In Progress',
+	'Class:bizIncidentTicket/Attribute:ticket_status/Value:WorkInProgress+' => 'Work In Progress',
 	'Class:bizIncidentTicket/Attribute:ticket_status/Value:Resolved' => 'Resolved',
 	'Class:bizIncidentTicket/Attribute:ticket_status/Value:Resolved+' => 'Resolved',
 	'Class:bizIncidentTicket/Attribute:ticket_status/Value:Closed' => 'Closed',
@@ -1031,22 +1028,22 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:bizChangeTicket/Attribute:customer_name+' => 'Name of the customer impacted by this ticket',
 	'Class:bizChangeTicket/Attribute:ticket_status' => 'Status',
 	'Class:bizChangeTicket/Attribute:ticket_status+' => 'Status of the ticket',
-	'Class:bizChangeTicket/Attribute:ticket_status/Value:New' => 'New',
-	'Class:bizChangeTicket/Attribute:ticket_status/Value:New+' => 'New',
+	'Class:bizChangeTicket/Attribute:ticket_status/Value:New' => 'New (Unassigned)',
+	'Class:bizChangeTicket/Attribute:ticket_status/Value:New+' => 'New (Unassigned)',
 	'Class:bizChangeTicket/Attribute:ticket_status/Value:Validated' => 'Validated',
 	'Class:bizChangeTicket/Attribute:ticket_status/Value:Validated+' => 'Validated',
 	'Class:bizChangeTicket/Attribute:ticket_status/Value:Rejected' => 'Rejected',
 	'Class:bizChangeTicket/Attribute:ticket_status/Value:Rejected+' => 'Rejected',
 	'Class:bizChangeTicket/Attribute:ticket_status/Value:Assigned' => 'Assigned',
 	'Class:bizChangeTicket/Attribute:ticket_status/Value:Assigned+' => 'Assigned',
-	'Class:bizChangeTicket/Attribute:ticket_status/Value:PlannedScheduled' => 'PlannedScheduled',
-	'Class:bizChangeTicket/Attribute:ticket_status/Value:PlannedScheduled+' => 'PlannedScheduled',
+	'Class:bizChangeTicket/Attribute:ticket_status/Value:PlannedScheduled' => 'Planned&Scheduled',
+	'Class:bizChangeTicket/Attribute:ticket_status/Value:PlannedScheduled+' => 'Planned&Scheduled',
 	'Class:bizChangeTicket/Attribute:ticket_status/Value:Approved' => 'Approved',
 	'Class:bizChangeTicket/Attribute:ticket_status/Value:Approved+' => 'Approved',
-	'Class:bizChangeTicket/Attribute:ticket_status/Value:NotApproved' => 'NotApproved',
-	'Class:bizChangeTicket/Attribute:ticket_status/Value:NotApproved+' => 'NotApproved',
-	'Class:bizChangeTicket/Attribute:ticket_status/Value:Implemented' => 'Implemented',
-	'Class:bizChangeTicket/Attribute:ticket_status/Value:Implemented+' => 'Implemented',
+	'Class:bizChangeTicket/Attribute:ticket_status/Value:NotApproved' => 'Not Approved',
+	'Class:bizChangeTicket/Attribute:ticket_status/Value:NotApproved+' => 'Not Approved',
+	'Class:bizChangeTicket/Attribute:ticket_status/Value:Implemented' => 'Implementation',
+	'Class:bizChangeTicket/Attribute:ticket_status/Value:Implemented+' => 'Implementation',
 	'Class:bizChangeTicket/Attribute:ticket_status/Value:Monitored' => 'Monitored',
 	'Class:bizChangeTicket/Attribute:ticket_status/Value:Monitored+' => 'Monitored',
 	'Class:bizChangeTicket/Attribute:ticket_status/Value:Closed' => 'Closed',
@@ -1271,12 +1268,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:bizServiceCall/Attribute:customer_name+' => 'Name of the customer raising this service call',
 	'Class:bizServiceCall/Attribute:call_status' => 'Status',
 	'Class:bizServiceCall/Attribute:call_status+' => 'Status of the ticket',
-	'Class:bizServiceCall/Attribute:call_status/Value:New' => 'New',
-	'Class:bizServiceCall/Attribute:call_status/Value:New+' => 'New',
+	'Class:bizServiceCall/Attribute:call_status/Value:New' => 'New (Unassigned)',
+	'Class:bizServiceCall/Attribute:call_status/Value:New+' => 'New (Unassigned)',
 	'Class:bizServiceCall/Attribute:call_status/Value:Assigned' => 'Assigned',
 	'Class:bizServiceCall/Attribute:call_status/Value:Assigned+' => 'Assigned',
-	'Class:bizServiceCall/Attribute:call_status/Value:WorkInProgress' => 'WorkInProgress',
-	'Class:bizServiceCall/Attribute:call_status/Value:WorkInProgress+' => 'WorkInProgress',
+	'Class:bizServiceCall/Attribute:call_status/Value:WorkInProgress' => 'Work In Progress',
+	'Class:bizServiceCall/Attribute:call_status/Value:WorkInProgress+' => 'Work In Progress',
 	'Class:bizServiceCall/Attribute:call_status/Value:Resolved' => 'Resolved',
 	'Class:bizServiceCall/Attribute:call_status/Value:Resolved+' => 'Resolved',
 	'Class:bizServiceCall/Attribute:call_status/Value:Closed' => 'Closed',

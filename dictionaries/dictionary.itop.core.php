@@ -35,8 +35,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:CMDBChangeOp/Attribute:objclass+' => 'object class',
 	'Class:CMDBChangeOp/Attribute:objkey' => 'object id',
 	'Class:CMDBChangeOp/Attribute:objkey+' => 'object id',
-	'Class:CMDBChangeOp/Attribute:finalclass' => 'Class',
-	'Class:CMDBChangeOp/Attribute:finalclass+' => 'Real (final) object class',
+	'Class:CMDBChangeOp/Attribute:finalclass' => 'finalclass',
+	'Class:CMDBChangeOp/Attribute:finalclass+' => '',
 ));
 
 //
@@ -116,8 +116,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Event/Attribute:date+' => 'date and time at which the changes have been recorded',
 	'Class:Event/Attribute:userinfo' => 'user info',
 	'Class:Event/Attribute:userinfo+' => 'identification of the user that was doing the action that triggered this event',
-	'Class:Event/Attribute:finalclass' => 'Class',
-	'Class:Event/Attribute:finalclass+' => 'Real (final) object class',
+	'Class:Event/Attribute:finalclass' => 'finalclass',
+	'Class:Event/Attribute:finalclass+' => '',
 ));
 
 //
@@ -221,8 +221,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Action/Attribute:status/Value:disabled+' => 'Inactive',
 	'Class:Action/Attribute:related_triggers' => 'Related Triggers',
 	'Class:Action/Attribute:related_triggers+' => 'Triggers linked to this action',
-	'Class:Action/Attribute:finalclass' => 'Class',
-	'Class:Action/Attribute:finalclass+' => 'Real (final) object class',
+	'Class:Action/Attribute:finalclass' => 'finalclass',
+	'Class:Action/Attribute:finalclass+' => '',
 ));
 
 //
@@ -278,8 +278,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Trigger/Attribute:description+' => 'one line description',
 	'Class:Trigger/Attribute:linked_actions' => 'Triggered actions',
 	'Class:Trigger/Attribute:linked_actions+' => 'Actions performed when the trigger is activated',
-	'Class:Trigger/Attribute:finalclass' => 'Class',
-	'Class:Trigger/Attribute:finalclass+' => 'Real (final) object class',
+	'Class:Trigger/Attribute:finalclass' => 'finalclass',
+	'Class:Trigger/Attribute:finalclass+' => '',
 ));
 
 //
