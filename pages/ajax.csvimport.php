@@ -221,7 +221,7 @@ switch($sOperation)
 	{
 		$oPage = new ajax_page("");
 		$oPage->no_cache();
-		$oPage->add('<p style="text-align:center"><a style="text-decoration:none" href="../pages/ajax.csvimport?operation=get_csv_template&disposition=attachment&class_name='.$sClassName.'"><img border="0" src="../images/csv.png"><br/>'.$sClassDisplayName.'.csv</a></p>');		
+		$oPage->add('<p style="text-align:center"><a style="text-decoration:none" href="../pages/ajax.csvimport.php?operation=get_csv_template&disposition=attachment&class_name='.$sClassName.'"><img border="0" src="../images/csv.png"><br/>'.$sClassDisplayName.'.csv</a></p>');		
 		$oPage->add('<p><textarea rows="5" cols="100">'.$sResult.'</textarea></p>');
 	}
 	break;
