@@ -2240,8 +2240,8 @@ abstract class MetaModel
 						{
 							foreach ($oAttDef->GetAllowedValues() as $sKey => $value)
 							{
-								$sClassRes .= self::MakeDictEntry("Class:$sClass/Attribute:$sAttCode/Value:$sKey", $sValue, '', $bNotInDico);
-								$sClassRes .= self::MakeDictEntry("Class:$sClass/Attribute:$sAttCode/Value:$sKey+", $sValue, '', $bNotInDico);
+								$sClassRes .= self::MakeDictEntry("Class:$sClass/Attribute:$sAttCode/Value:$sKey", $value, '', $bNotInDico);
+								$sClassRes .= self::MakeDictEntry("Class:$sClass/Attribute:$sAttCode/Value:$sKey+", $value, '', $bNotInDico);
 							}
 						}
 					}
