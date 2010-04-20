@@ -58,11 +58,14 @@ function GetClassesSelect($sName, $sDefaultValue, $iWidthPx, $iActionCode = null
  * Helper to 'check' an input in an HTML form if the current value equals the value given
  * @param mixed $sCurrentValue The current value to be chacked against the value of the input
  * @param mixed $sProposedValue The value of the input
+ * @param bool $bInverseCondition Set to true to perform the reversed comparison
  * @return string Either ' checked' or an empty string
  */
-function IsChecked($sCurrentValue, $sProposedValue)
+function IsChecked($sCurrentValue, $sProposedValue, $bInverseCondition  = false)
 {
-	return ($sCurrentValue == $sProposedValue) ? ' checked' : '';
+	$bCondition = ($sCurrentValue == $sProposedValue);
+	
+	return ($bCondition xor $bInverseCondition) ? ' checked' : '';
 }
 
 /**
@@ -443,6 +446,7 @@ function ProcessCSVData(WebPage $oPage, UserContext $oContext, $bSimulate = true
 	$oPage->add('<input type="hidden" name="separator" value="'.htmlentities($sSeparator).'"/>');
 	$oPage->add('<input type="hidden" name="text_qualifier" value="'.htmlentities($sTextQualifier).'"/>');
 	$oPage->add('<input type="hidden" name="header_line" value="'.$bHeaderLine.'"/>');
+	$oPage->add('<input type="hidden" name="box_skiplines" value="'.(($iSkippedLines > 0) ? 1 : 0).'"/>');
 	$oPage->add('<input type="hidden" name="nb_skipped_lines" value="'.$iSkippedLines.'"/>');
 	$oPage->add('<input type="hidden" name="csvdata" value="'.htmlentities($sCSVData).'"/>');
 	$oPage->add('<input type="hidden" name="csvdata_truncated" value="'.htmlentities($sCSVDataTruncated).'"/>');
@@ -585,6 +589,7 @@ function SelectMapping(WebPage $oPage)
 	$oPage->add('<input type="hidden" name="separator" value="'.htmlentities($sSeparator).'"/>');
 	$oPage->add('<input type="hidden" name="text_qualifier" value="'.htmlentities($sTextQualifier).'"/>');
 	$oPage->add('<input type="hidden" name="header_line" value="'.$bHeaderLine.'"/>');
+	$oPage->add('<input type="hidden" name="box_skiplines" value="'.(($iSkippedLines > 0) ? 1 : 0).'"/>');
 	$oPage->add('<input type="hidden" name="nb_skipped_lines" value="'.$iSkippedLines.'"/>');
 	$oPage->add('<input type="hidden" name="csvdata_truncated" id="csvdata_truncated" value="'.htmlentities($sCSVDataTruncated).'"/>');
 	$oPage->add('<input type="hidden" name="csvdata" value="'.htmlentities($sCSVData).'"/>');
@@ -704,8 +709,12 @@ function SelectOptions(WebPage $oPage)
 	$aGuesses = GuessParameters($sCSVData); // Try to predict the parameters, based on the input data
 	
 	$sSeparator = utils::ReadParam('separator', $aGuesses['separator']);
+	$iSkippedLines = utils::ReadParam('nb_skipped_lines', '');
+	$bBoxSkipLines = utils::ReadParam('box_skiplines', 0);
 	if ($sSeparator == 'tab') $sSeparator = "\t";
-	$sTextQualifier = utils::ReadParam('qualifier', $aGuesses['qualifier']);
+	$sOtherSeparator = in_array($sSeparator, array(',', ';', "\t")) ? '' : $sSeparator;
+	$sTextQualifier = utils::ReadParam('text_qualifier', $aGuesses['qualifier']);
+	$sOtherTextQualifier = in_array($sTextQualifier, array('"', "'")) ? '' : $sTextQualifier;
 	$bHeaderLine = utils::ReadParam('header_line', 0);
 	// Create a truncated version of the data used for the fast preview
 	// Take about 20 lines of data... knowing that some lines may contain carriage returns
@@ -736,18 +745,18 @@ function SelectOptions(WebPage $oPage)
 	$oPage->add('<p><input type="radio" name="separator" value="," onChange="DoPreview()"'.IsChecked($sSeparator, ',').'/> , (comma)<br/>');
 	$oPage->add('<input type="radio" name="separator" value=";" onChange="DoPreview()"'.IsChecked($sSeparator, ';').'/> ; (semicolon)<br/>');
 	$oPage->add('<input type="radio" name="separator" value="tab" onChange="DoPreview()"'.IsChecked($sSeparator, "\t").'/> tab<br/>');
-	$oPage->add('<input type="radio" name="separator" value="other" /> other: <input type="text" size="3" maxlength="1" name="other_separator" id="other_separator" onChange="DoPreview()"/>');
+	$oPage->add('<input type="radio" name="separator" value="other"  onChange="DoPreview()"'.IsChecked($sOtherSeparator, '', true).'/> other: <input type="text" size="3" maxlength="1" name="other_separator" id="other_separator" value="'.$sOtherSeparator.'" onChange="DoPreview()"/>');
 	$oPage->add('</p>');
 	$oPage->add('</td><td style="vertical-align:top;padding-right:50px;background:#E8F3CF">');
 	$oPage->add('<h3>Text qualifier character:</h3>');
 	$oPage->add('<p><input type="radio" name="text_qualifier" value="&#34;" onChange="DoPreview()"'.IsChecked($sTextQualifier, '"').'/> " (double quote)<br/>');
 	$oPage->add('<input type="radio" name="text_qualifier" value="&#39;"  onChange="DoPreview()"'.IsChecked($sTextQualifier, "'").'/> \' (simple quote)<br/>');
-	$oPage->add('<input type="radio" name="text_qualifier" value="other"  onChange="DoPreview()"/> other: <input type="text" size="3" maxlength="1" name="other_qualifier"  onChange="DoPreview()"/>');
+	$oPage->add('<input type="radio" name="text_qualifier" value="other"  onChange="DoPreview()"'.IsChecked($sOtherTextQualifier, '', true).'/> other: <input type="text" size="3" maxlength="1" name="other_qualifier"  value="'.htmlentities($sOtherTextQualifier).'" onChange="DoPreview()"/>');
 	$oPage->add('</p>');
 	$oPage->add('</td><td style="vertical-align:top;background:#E8F3CF">');
 	$oPage->add('<h3>Comments and header:</h3>');
 	$oPage->add('<p><input type="checkbox" name="header_line" id="box_header" value="1" onChange="DoPreview()"'.IsChecked($bHeaderLine, 1).'/> Treat the first line as a header (column names)<p>');
-	$oPage->add('<p><input type="checkbox" name="box_skiplines" value="1" id="box_skiplines" onChange="DoPreview()"/> Skip <input type="text" size=2 name="nb_skipped_lines" id="nb_skipped_lines" onChange="DoPreview()"> line(s) at the beginning of the file<p>');
+	$oPage->add('<p><input type="checkbox" name="box_skiplines" value="1" id="box_skiplines" onChange="DoPreview()"'.IsChecked($bBoxSkipLines, 1).'/> Skip <input type="text" size=2 name="nb_skipped_lines" id="nb_skipped_lines" onChange="DoPreview()" value="'.$iSkippedLines.'"> line(s) at the beginning of the file<p>');
 	$oPage->add('</td></tr></table>');
 	$oPage->add('<input type="hidden" name="csvdata_truncated" id="csvdata_truncated" value="'.htmlentities($sCSVDataTruncated).'"/>');
 	$oPage->add('<input type="hidden" name="csvdata" id="csvdata" value="'.htmlentities($sCSVData).'"/>');
