@@ -914,11 +914,11 @@ class MenuBlock extends DisplayBlock
 				switch($iActionAllowed)
 				{
 					case UR_ALLOWED_YES:
-					$aActions[] = array('label' => $aStimuli[$sStimulusCode]->Get('label'), 'url' => "../pages/UI.php?operation=stimulus&stimulus=$sStimulusCode&class=$sClass&id=$id&$sContext");
+					$aActions[] = array('label' => $aStimuli[$sStimulusCode]->GetLabel(), 'url' => "../pages/UI.php?operation=stimulus&stimulus=$sStimulusCode&class=$sClass&id=$id&$sContext");
 					break;
 					
 					case UR_ALLOWED_DEPENDS:
-					$aActions[] = array('label' => $aStimuli[$sStimulusCode]->Get('label').' (*)', 'url' => "../pages/UI.php?operation=stimulus&stimulus=$sStimulusCode&class=$sClass&id=$id&$sContext");
+					$aActions[] = array('label' => $aStimuli[$sStimulusCode]->GetLabel().' (*)', 'url' => "../pages/UI.php?operation=stimulus&stimulus=$sStimulusCode&class=$sClass&id=$id&$sContext");
 					break;
 					
 					default:

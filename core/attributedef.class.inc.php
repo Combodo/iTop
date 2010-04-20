@@ -96,7 +96,7 @@ abstract class AttributeDefinition
 	// to be overloaded
 	static protected function ListExpectedParams()
 	{
-		return array("label", "description");
+		return array();
 	}
 
 	private function ConsistencyCheck()
@@ -133,9 +133,7 @@ abstract class AttributeDefinition
 	public function GetNullValue() {return null;} 
 	public function GetCode() {return $this->m_sCode;} 
 	public function GetLabel() {return Dict::S('Class:'.$this->m_sHostClass.'/Attribute:'.$this->m_sCode, $this->m_sCode);} 
-	public function Obsolete_GetLabel() {return $this->Get("label");} 
 	public function GetDescription() {return Dict::S('Class:'.$this->m_sHostClass.'/Attribute:'.$this->m_sCode.'+', '');} 
-	public function Obsolete_GetDescription() {return $this->Get("description");} 
 	public function GetValuesDef() {return null;} 
 	public function GetPrerequisiteAttributes() {return array();} 
 	//public function IsSearchableStd() {return $this->Get("search_std");} 
@@ -1276,7 +1274,7 @@ class AttributeURL extends AttributeString
 	static protected function ListExpectedParams()
 	{
 		//return parent::ListExpectedParams();
-		return array_merge(parent::ListExpectedParams(), array("target", "label"));
+		return array_merge(parent::ListExpectedParams(), array("target"));
 	}
 
 	public function GetType() {return "Url";}

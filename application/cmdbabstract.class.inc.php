@@ -83,8 +83,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$sStateAttCode = MetaModel::GetStateAttributeCode(get_class($this));
 		if ($sStateAttCode == $sAttCode)
 		{
-			$aStates = MetaModel::EnumStates(get_class($this));
-			$sDisplayValue = $aStates[$this->Get($sAttCode)]['label'];
+			$sDisplayValue = MetaModel::GetStateLabel(get_class($this), $this->Get($sAttCode));
 		}
 		else
 		{
@@ -231,7 +230,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 				if ($sStateAttCode == $sAttCode)
 				{
 					// Special display for the 'state' attribute itself
-					$sDisplayValue = $this->GetState();
+					$sDisplayValue = $this->GetStateLabel();
 				}
 				else
 				{
@@ -954,7 +953,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 			else if ($sStateAttCode == $sAttCode)
 			{
 				// State attribute is always read-only from the UI
-				$sHTMLValue = $this->GetState();
+				$sHTMLValue = $this->GetStateLabel();
 				$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $sHTMLValue);
 			}
 			else if (!$oAttDef->IsExternalField())
@@ -1027,7 +1026,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 			else if ($sStateAttCode == $sAttCode)
 			{
 				// State attribute is always read-only from the UI
-				$sHTMLValue = $oObjectToClone->GetState();
+				$sHTMLValue = $oObjectToClone->GetStateLabel();
 				$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $sHTMLValue);
 			}
 			else if (!$oAttDef->IsExternalField())

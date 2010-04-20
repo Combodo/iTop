@@ -1003,9 +1003,12 @@ class TestBulkChangeOnFarm extends TestBizModel
 		$oBulk = new BulkChange(
 			'Mammal',
 			$aData,
+			// attributes
 			array('name' => '_name', 'height' => '_height', 'birth' => '_birth'),
-			array('name'),
+			// ext keys
 			array()
+			// reconciliation
+			array('name'),
 		);
 
 		$oMyChange = MetaModel::NewObject("CMDBChange");

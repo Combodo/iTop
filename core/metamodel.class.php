@@ -198,11 +198,6 @@ abstract class MetaModel
 		$sStringCode = 'Class:'.$sClass;
 		return Dict::S($sStringCode, $sClass);
 	}
-	final static public function Obsolete_GetName($sClass)
-	{
-		self::_check_subclass($sClass);
-		return self::$m_aClassParams[$sClass]["name"];
-	}
 	final static public function GetCategory($sClass)
 	{
 		self::_check_subclass($sClass);	
@@ -218,11 +213,6 @@ abstract class MetaModel
 		self::_check_subclass($sClass);	
 		$sStringCode = 'Class:'.$sClass.'+';
 		return Dict::S($sStringCode, '');
-	}
-	final static public function Obsolete_GetClassDescription($sClass)
-	{
-		self::_check_subclass($sClass);	
-		return self::$m_aClassParams[$sClass]["description"];
 	}
 	final static public function IsAutoIncrementKey($sClass)
 	{
@@ -686,6 +676,25 @@ abstract class MetaModel
 		}
 	}
 
+	public static function GetStateLabel($sClass, $sStateValue)
+	{
+		$sStateAttrCode = self::GetStateAttributeCode($sClass);
+		return Dict::S("Class:$sClass/Attribute:$sStateAttrCode/Value:$sStateValue+");
+
+		// I've decided the current implementation, because I need
+		// to get the description as well -GetAllowedValues does not render the description,
+		// so far...
+		// Could have been implemented the following way (not tested
+		// $oStateAttrDef = self::GetAttributeDef($sClass, $sStateAttrCode);
+		// $aAllowedValues = $oStateAttrDef->GetAllowedValues();
+		// return $aAllowedValues[$sStateValue];
+	}
+	public static function GetStateDescription($sClass, $sStateValue)
+	{
+		$sStateAttrCode = self::GetStateAttributeCode($sClass);
+		return Dict::S("Class:$sClass/Attribute:$sStateAttrCode/Value:$sStateValue+");
+	}
+
 	public static function EnumTransitions($sClass, $sStateCode)
 	{
 		if (array_key_exists($sClass, self::$m_aTransitions))
@@ -858,8 +867,6 @@ abstract class MetaModel
 				$sRootClass = self::GetRootClass($sClass);
 				$sDbFinalClassField = self::DBGetClassField($sRootClass);
 				$oClassAtt = new AttributeClass($sClassAttCode, array(
-						"label"=>"Class",
-						"description"=>"Real (final) object class",
 						"class_category"=>null,
 						"more_values"=>'',
 						"sql"=>$sDbFinalClassField,
@@ -1138,15 +1145,14 @@ abstract class MetaModel
 		self::$m_aTransitions[$sTargetClass][$sStateCode] = array();
 	}
 
-	public static function Init_DefineStimulus($sStimulusCode, $oStimulus)
+	public static function Init_DefineStimulus($oStimulus)
 	{
 		$sTargetClass = self::GetCallersPHPClass("Init");
-		self::$m_aStimuli[$sTargetClass][$sStimulusCode] = $oStimulus;
+		self::$m_aStimuli[$sTargetClass][$oStimulus->GetCode()] = $oStimulus;
 
 		// I wanted to simplify the syntax of the declaration of objects in the biz model
 		// Therefore, the reference to the host class is set there 
 		$oStimulus->SetHostClass($sTargetClass);
-		$oStimulus->SetCode($sStimulusCode);
 	}
 
 	public static function Init_DefineTransition($sStateCode, $sStimulusCode, $aTransitionDef)
@@ -2162,18 +2168,31 @@ abstract class MetaModel
 					$sRes .= "	'Class:$sClass/Attribute:$sAttCode+' => '".$oAttDef->GetDescription()."',\n";
 					if ($oAttDef instanceof AttributeEnum)
 					{
-						foreach ($oAttDef->GetAllowedValues() as $sKey => $value)
+						if (self::GetStateAttributeCode($sClass) == $sAttCode)
 						{
-							$sValue = str_replace("'", "\\'", $value);
-							$sRes .= "	'Class:$sClass/Attribute:$sAttCode/Value:$sKey' => '$sValue',\n";
-							$sRes .= "	'Class:$sClass/Attribute:$sAttCode/Value:$sKey+' => '$sValue',\n";
+							foreach (self::EnumStates($sClass) as $sStateCode => $aStateData)
+							{
+								$sValue = str_replace("'", "\\'", $aStateData['label']);
+								$sValuePlus = str_replace("'", "\\'", $aStateData['description']);
+								$sRes .= "	'Class:$sClass/Attribute:$sAttCode/Value:$sStateCode' => '$sValue',\n";
+								$sRes .= "	'Class:$sClass/Attribute:$sAttCode/Value:$sStateCode+' => '$sValuePlus',\n";
+							}
+						}
+						else
+						{
+							foreach ($oAttDef->GetAllowedValues() as $sKey => $value)
+							{
+								$sValue = str_replace("'", "\\'", $value);
+								$sRes .= "	'Class:$sClass/Attribute:$sAttCode/Value:$sKey' => '$sValue',\n";
+								$sRes .= "	'Class:$sClass/Attribute:$sAttCode/Value:$sKey+' => '$sValue',\n";
+							}
 						}
 					}
 				}
 				foreach(self::EnumStimuli($sClass) as $sStimulusCode => $oStimulus)
 				{
-					$sRes .= "	'Class:$sClass/Stimulus:$sStimulusCode' => '".$oStimulus->Get('label')."',\n";
-					$sRes .= "	'Class:$sClass/Stimulus:$sStimulusCode+' => '".$oStimulus->Get('description')."',\n";
+					$sRes .= "	'Class:$sClass/Stimulus:$sStimulusCode' => '".$oStimulus->GetLabel()."',\n";
+					$sRes .= "	'Class:$sClass/Stimulus:$sStimulusCode+' => '".$oStimulus->GetDescription()."',\n";
 				}
 	
 				$sRes .= "));\n";
@@ -2831,14 +2850,19 @@ abstract class MetaModel
 	{
 		self::_check_subclass($sClass);	
 
+		if (strlen($sClassAlias) == 0)
+		{
+			$sClassAlias = $sClass;
+		}
+
 		// Compound objects: if available, get the final object class
 		//
-		if (!array_key_exists("finalclass", $aRow))
+		if (!array_key_exists($sClassAlias."finalclass", $aRow))
 		{
 			// Either this is a bug (forgot to specify a root class with a finalclass field
 			// Or this is the expected behavior, because the object is not made of several tables
 		}
-		elseif (empty($aRow["finalclass"]))
+		elseif (empty($aRow[$sClassAlias."finalclass"]))
 		{
 			// The data is missing in the DB
 			// @#@ possible improvement: check that the class is valid !
@@ -2849,7 +2873,7 @@ abstract class MetaModel
 		else
 		{
 			// do the job for the real target class
-			$sClass = $aRow["finalclass"];
+			$sClass = $aRow[$sClassAlias."finalclass"];
 		}
 		return new $sClass($aRow, $sClassAlias);
 	}

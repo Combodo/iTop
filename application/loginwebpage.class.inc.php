@@ -103,6 +103,39 @@ h1 {
 			header("Location: $sUrl");			
 			exit;
 		}
+		$bHTTPBasicAuthentication  = (utils::ReadParam('auth', '', 'get') == 'http_basic');
+		if ($bHTTPBasicAuthentication)
+		{
+			// Basic HTTP/PHP authentication mecanism
+			//
+			// meme avec ca c'est pourri - return;
+			if (!isset($_SERVER['PHP_AUTH_USER']))
+			{
+				header('WWW-Authenticate: Basic realm="iTop access is restricted"');
+				header('HTTP/1.0 401 Unauthorized');
+					// Note: accessed when the user will click on Cancel
+				echo '<p><strong>iTop access is restricted</strong>. Please, contact an iTop administrator.</p>';
+				exit;
+			}
+			else
+			{
+				$sAuthUser = $_SERVER['PHP_AUTH_USER'];
+				$sAuthPwd = $_SERVER['PHP_AUTH_PW'];
+				if (!UserRights::Login($sAuthUser, $sAuthPwd))
+				{
+					header('WWW-Authenticate: Basic realm="Unknown user \''.$sAuthUser.'\'"');
+					header('HTTP/1.0 401 Unauthorized');
+					// Note: accessed when the user will click on Cancel
+					// Todo: count the attempts
+					echo '<p><strong>iTop access is restricted</strong>. Please, contact an iTop administrator.</p>';
+					exit;
+				}
+			}
+			return;
+		}
+
+		// Home-made authentication mecanism
+		//
 		$operation = utils::ReadParam('loginop', '');
 		session_start();
 
@@ -110,7 +143,7 @@ h1 {
 		{
 			self::ResetSession();
 		}
-	
+		
 		if (!isset($_SESSION['auth_user']) || !isset($_SESSION['auth_pwd']))
 		{
 			if ($operation == 'loginurl')
@@ -148,7 +181,6 @@ h1 {
 		{
 			$_SESSION['auth_user'] = $sAuthUser ;
 			$_SESSION['auth_pwd'] = $sAuthPwd;
-		
 		}
 	}
 } // End of class

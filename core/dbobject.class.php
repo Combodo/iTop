@@ -454,11 +454,38 @@ abstract class DBObject
 		}
 		else
 		{
-			$aStates = MetaModel::EnumStates(get_class($this));
-			return $aStates[$this->Get($sStateAttCode)]['label'];
+			return $this->Get($sStateAttCode);
+			return MetaModel::GetStateLabel(get_class($this), $sStateAttCode);
 		}
 	}
 
+	public function GetStateLabel()
+	{
+		$sStateAttCode = MetaModel::GetStateAttributeCode(get_class($this));
+		if (empty($sStateAttCode))
+		{
+			return '';
+		}
+		else
+		{
+			$sStateValue = $this->Get($sStateAttCode);
+			return MetaModel::GetStateLabel(get_class($this), $sStateValue);
+		}
+	}
+
+	public function GetStateDescription()
+	{
+		$sStateAttCode = MetaModel::GetStateAttributeCode(get_class($this));
+		if (empty($sStateAttCode))
+		{
+			return '';
+		}
+		else
+		{
+			$sStateValue = $this->Get($sStateAttCode);
+			return MetaModel::GetStateDescription(get_class($this), $sStateValue);
+		}
+	}
 	/**
 	 * Returns the set of flags (OPT_ATT_HIDDEN, OPT_ATT_READONLY, OPT_ATT_MANDATORY...)
 	 * for the given attribute in the current state of the object

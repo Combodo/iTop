@@ -35,18 +35,18 @@ class menuNode extends DBObject
 			"db_finalclass_field" => "",
 		);
 		MetaModel::Init_Params($aParams);
-//		MetaModel::Init_AddAttribute(new AttributeExternalKey("change", array("label"=>"change", "description"=>"change", "allowed_values"=>null, "sql"=>"changeid", "targetclass"=>"CMDBChange", "jointype"=>"closed")));
-//		MetaModel::Init_AddAttribute(new AttributeExternalField("date", array("label"=>"date", "description"=>"date and time of the change", "allowed_values"=>null, "extkey_attcode"=>"change", "target_attcode"=>"date")));
-		MetaModel::Init_AddAttribute(new AttributeString("name", array("label"=>"Menu Name", "description"=>"Short name for this menu", "allowed_values"=>null, "sql"=>"name", "default_value"=>"", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("label", array("label"=>"Menu Description", "description"=>"Long description for this menu", "allowed_values"=>null, "sql"=>"label", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("hyperlink", array("label"=>"Hyperlink", "description"=>"Hyperlink to the page", "allowed_values"=>null, "sql"=>"hyperlink", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("icon_path", array("label"=>"Menu Icon", "description"=>"Path to the icon o the menu", "allowed_values"=>null, "sql"=>"icon_path", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeText("template", array("label"=>"Template", "description"=>"HTML template for the view", "allowed_values"=>null, "sql"=>"template", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("type", array("label"=>"Type", "description"=>"Type of menu", "allowed_values"=>new ValueSetEnum('application,user,administrator'), "sql"=>"type", "default_value"=>"application", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeInteger("rank", array("label"=>"Display rank", "description"=>"Sort order for displaying the menu", "allowed_values"=>null, "sql"=>"rank", "default_value" => 999, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("parent_id", array("label"=>"Parent Menu Item", "description"=>"Parent Menu Item", "allowed_values"=>null, "sql"=>"parent_id", "targetclass"=>"menuNode", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("parent_name", array("label"=>"Parent Menu Item", "description"=>"Parent Menu Item", "allowed_values"=>null, "extkey_attcode"=>"parent_id", "target_attcode"=>"name")));
-		MetaModel::Init_AddAttribute(new AttributeInteger("user_id", array("label"=>"Owner of the menu", "description"=>"User who owns this menu (for user defined menus)", "allowed_values"=>null, "sql"=>"user_id", "default_value" => 0, "is_null_allowed"=>false, "depends_on"=>array())));
+//		MetaModel::Init_AddAttribute(new AttributeExternalKey("change", array("allowed_values"=>null, "sql"=>"changeid", "targetclass"=>"CMDBChange", "jointype"=>"closed")));
+//		MetaModel::Init_AddAttribute(new AttributeExternalField("date", array("allowed_values"=>null, "extkey_attcode"=>"change", "target_attcode"=>"date")));
+		MetaModel::Init_AddAttribute(new AttributeString("name", array("allowed_values"=>null, "sql"=>"name", "default_value"=>"", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("label", array("allowed_values"=>null, "sql"=>"label", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("hyperlink", array("allowed_values"=>null, "sql"=>"hyperlink", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("icon_path", array("allowed_values"=>null, "sql"=>"icon_path", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeText("template", array("allowed_values"=>null, "sql"=>"template", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("type", array("allowed_values"=>new ValueSetEnum('application,user,administrator'), "sql"=>"type", "default_value"=>"application", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeInteger("rank", array("allowed_values"=>null, "sql"=>"rank", "default_value" => 999, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("parent_id", array("allowed_values"=>null, "sql"=>"parent_id", "targetclass"=>"menuNode", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("parent_name", array("allowed_values"=>null, "extkey_attcode"=>"parent_id", "target_attcode"=>"name")));
+		MetaModel::Init_AddAttribute(new AttributeInteger("user_id", array("allowed_values"=>null, "sql"=>"user_id", "default_value" => 0, "is_null_allowed"=>false, "depends_on"=>array())));
 
 		MetaModel::Init_AddFilterFromAttribute("label");
 		MetaModel::Init_AddFilterFromAttribute("parent_id");

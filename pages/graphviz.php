@@ -35,20 +35,20 @@ function GraphvizLifecycle($sClass)
 		
 		foreach ($aStates as $sStateCode => $aStateDef)
 		{
-			$sStateLabel = $aStates[$sStateCode]['label'];
-			$sStateDescription = $aStates[$sStateCode]['description'];
+			$sStateLabel = MetaModel::GetStateLabel($sClass, $sStateCode);
+			$sStateDescription = MetaModel::GetStateDescription($sClass, $sStateCode);
 			foreach(MetaModel::EnumTransitions($sClass, $sStateCode) as $sStimulusCode => $aTransitionDef)
 			{
 				$aStatesLinks[$sStateCode]['out']++;
 				$aStatesLinks[$aTransitionDef['target_state']]['in']++;
-				$sStimulusLabel = $aStimuli[$sStimulusCode]->Get('label');
-				$sTargetStateLabel = $aStates[$aTransitionDef['target_state']]['label'];
+				$sStimulusLabel = $aStimuli[$sStimulusCode]->GetLabel();
+				$sTargetStateLabel = MetaModel::GetStateLabel($sClass, $aTransitionDef['target_state']);
 				$sDotFileContent .= "\t$sStateCode -> {$aTransitionDef['target_state']} [ label=\"$sStimulusLabel\"];\n";
 			}
 		}
 		foreach($aStates as $sStateCode => $aStateDef)
 		{
-			$sStateLabel = str_replace(' ', '\n', $aStates[$sStateCode]['label']);
+			$sStateLabel = str_replace(' ', '\n', MetaModel::GetStateLabel($sClass, $sStateCode));
 			if ( ($aStatesLinks[$sStateCode]['in'] == 0) || ($aStatesLinks[$sStateCode]['out'] == 0))
 			{
 				$sDotFileContent .= "\t$sStateCode [ shape=doublecircle,label=\"$sStateLabel\"];\n";

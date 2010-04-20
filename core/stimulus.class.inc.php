@@ -21,11 +21,10 @@ class ObjectStimulus
 	private $m_sHostClass = null;
 	private $m_sCode = null;
 
-	public function __construct($aParams)
+	public function __construct($sCode, $aParams)
 	{
-		// obsolete: $this->m_aParams = $aParams;
-		$this->m_aParams['label'] = 'foo';
-		$this->m_aParams['description'] = 'foo';
+		$this->m_sCode = $sCode;
+		$this->m_aParams = $aParams;
 		$this->ConsistencyCheck();
 	}
 
@@ -37,24 +36,27 @@ class ObjectStimulus
 	{
 		return $this->m_sHostClass;
 	}
-	public function SetCode($sCode)
-	{
-		$this->m_sCode = $sCode;
-		$this->m_aParams['label'] = Dict::S('Class:'.$this->m_sHostClass.'/Stimulus:'.$this->m_sCode, $this->m_sCode); 
-		$this->m_aParams['description'] = Dict::S('Class:'.$this->m_sHostClass.'/Stimulus:'.$this->m_sCode.'+', '');
-	}
 	public function GetCode()
 	{
 		return $this->m_sCode;
 	}
 
-	public function Get($sParamName) {return $this->m_aParams[$sParamName];}
+	public function GetLabel()
+	{
+		return Dict::S('Class:'.$this->m_sHostClass.'/Stimulus:'.$this->m_sCode, $this->m_sCode); 
+	}
+	public function GetDescription()
+	{
+		return Dict::S('Class:'.$this->m_sHostClass.'/Stimulus:'.$this->m_sCode.'+', '');
+	}
+
+// obsolete-	public function Get($sParamName) {return $this->m_aParams[$sParamName];}
 
 	// Note: I could factorize this code with the parameter management made for the AttributeDef class
 	// to be overloaded
 	static protected function ListExpectedParams()
 	{
-		return array("label", "description");
+		return array();
 	}
 
 	private function ConsistencyCheck()

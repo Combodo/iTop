@@ -358,8 +358,7 @@ try
 				$oP->add("<h2>Creation of a new $sClassLabel</h2>");
 				if (!empty($sStateCode))
 				{
-					$aStates = MetaModel::EnumStates($sClass);
-					$sStateLabel = $aStates[$sStateCode]['label'];
+					$sStateLabel = MetaModel::GetStateLabel($sClass, $sStateCode);
 				}
 				$aWizardSteps = $oWizard->GetWizardStructure();
 			
@@ -880,18 +879,18 @@ try
 				$aStimuli = MetaModel::EnumStimuli($sClass);
 				if (!isset($aTransitions[$sStimulus]))
 				{
-					$oP->add("<p><strong>Error:</strong> Invalid stimulus: '$sStimulus' on object: {$oObj->GetName()} in state {$oObj->GetState()}.</p>\n");
+					$oP->add("<p><strong>Error:</strong> Invalid stimulus: '$sStimulus' on object: {$oObj->GetName()} in state {$oObj->GetStateLabel()}.</p>\n");
 				}
 				else
 				{
-					$sActionLabel = $aStimuli[$sStimulus]->Get('label');
-					$sActionDetails = $aStimuli[$sStimulus]->Get('description');
+					$sActionLabel = $aStimuli[$sStimulus]->GetLabel();
+					$sActionDetails = $aStimuli[$sStimulus]->GetDescription();
 					$aTransition = $aTransitions[$sStimulus];
 					$sTargetState = $aTransition['target_state'];
 					$aTargetStates = MetaModel::EnumStates($sClass);
 					$oP->add("<div class=\"page_header\">\n");
 					$oP->add("<h1>$sActionLabel - <span class=\"hilite\">{$oObj->GetName()}</span></h1>\n");
-					//$oP->add("<p>Applying '$sActionLabel' on object: {$oObj->GetName()} in state {$oObj->GetState()} to target state: $sTargetState.</p>\n");
+					//$oP->add("<p>Applying '$sActionLabel' on object: {$oObj->GetName()} in state {$oObj->GetStateLabel()} to target state: $sTargetState.</p>\n");
 					$oP->add("</div>\n");
 					$oObj->DisplayBareDetails($oP);
 					$aTargetState = $aTargetStates[$sTargetState];
@@ -958,7 +957,7 @@ try
 				$aStimuli = MetaModel::EnumStimuli($sClass);
 				if (!isset($aTransitions[$sStimulus]))
 				{
-					$oP->add("<p><strong>Error:</strong> Invalid stimulus: '$sStimulus' on object: {$oObj->GetName()} in state {$oObj->GetState()}.</p>\n");
+					$oP->add("<p><strong>Error:</strong> Invalid stimulus: '$sStimulus' on object: {$oObj->GetName()} in state {$oObj->GetStateLabel()}.</p>\n");
 				}
 				else if (!utils::IsTransactionValid($sTransactionId))
 				{
@@ -966,15 +965,15 @@ try
 				}
 				else
 				{
-					$sActionLabel = $aStimuli[$sStimulus]->Get('label');
-					$sActionDetails = $aStimuli[$sStimulus]->Get('description');
+					$sActionLabel = $aStimuli[$sStimulus]->GetLabel();
+					$sActionDetails = $aStimuli[$sStimulus]->GetDescription();
 					$aTransition = $aTransitions[$sStimulus];
 					$sTargetState = $aTransition['target_state'];
 					$aTargetStates = MetaModel::EnumStates($sClass);
 					$oP->add("<div class=\"page_header\">\n");
 					$oP->add("<h1>$sActionLabel - <span class=\"hilite\">{$oObj->GetName()}</span></h1>\n");
 					$oP->add("<p>$sActionDetails</p>\n");
-					$oP->add("<p>Applying '$sActionLabel' on object: {$oObj->GetName()} in state {$oObj->GetState()} to target state: $sTargetState.</p>\n");
+					$oP->add("<p>Applying '$sActionLabel' on object: {$oObj->GetName()} in state {$oObj->GetStateLabel()} to target state: $sTargetState.</p>\n");
 					$oP->add("</div>\n");
 					$aTargetState = $aTargetStates[$sTargetState];
 					//print_r($aTransitions[$sStimulus]);

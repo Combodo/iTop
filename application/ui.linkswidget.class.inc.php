@@ -287,7 +287,7 @@ EOF;
 			if ($sStateAttCode == $sAttCode)
 			{
 				// State attribute is always hidden from the UI
-				//$sHTMLValue = $this->GetState();
+				//$sHTMLValue = $this->GetStateLabel();
 				//$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $sHTMLValue);
 			}
 			else if (!$oAttDef->IsExternalField() && ($sAttCode != $sExtKeyToMe) && ($sAttCode != $sExtKeyToRemote))
