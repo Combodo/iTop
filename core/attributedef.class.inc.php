@@ -811,20 +811,7 @@ class AttributeEnum extends AttributeString
 
 	public function GetAsHTML($sValue)
 	{
-		$oValDef = $this->GetValuesDef();
-		if ($oValDef)
-		{
-			$aValues = $oValDef->GetValues(array(), "");
-		}
-		if (!empty($aValues) && array_key_exists($sValue, $aValues))
-		{
-			$sLabel = $aValues[$sValue];
-		}
-		else
-		{
-			// #@# todo - record an error silently... 
-			$sLabel = $sValue;
-		}
+		$sLabel = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue, $sValue);
 		// later, we could imagine a detailed description in the title
 		return "<span title=\"\">".parent::GetAsHtml($sLabel)."</span>";
 	}
