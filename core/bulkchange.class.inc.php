@@ -252,7 +252,7 @@ class BulkChange
 		foreach($this->m_aExtKeys as $sAttCode => $aKeyConfig)
 		{
 			// Skip external keys used for the reconciliation process
-			if (!array_key_exists($sAttCode, $this->m_aAttList)) continue;
+			// if (!array_key_exists($sAttCode, $this->m_aAttList)) continue;
 
 			$oExtKey = MetaModel::GetAttributeDef(get_class($oTargetObj), $sAttCode);
 			$oReconFilter = new CMDBSearchFilter($oExtKey->GetTargetClass());
