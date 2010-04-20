@@ -91,8 +91,8 @@ class DBObjectSet
 		// In a perfect world, we should create a complete tree of DBObjectSearch,
 		// but as we lack most of the information related to the objects,
 		// let's create one search definition
-		$sClass = reset($this->m_aClasses);
-		$sAlias = key($this->m_aClasses);
+		$sClass = reset($aClasses);
+		$sAlias = key($aClasses);
 		$oFilter = new CMDBSearchFilter($sClass, $sAlias);
 
 		$oRetSet = new self($oFilter);
