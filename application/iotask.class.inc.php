@@ -12,8 +12,6 @@ class InputOutputTask extends cmdbAbstractObject
 		$aParams = array
 		(
 			"category" => "application",
-			"name" => "IOTask",
-			"description" => "Input / Output Task for synchronizing information with external data sources",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "name",

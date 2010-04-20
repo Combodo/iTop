@@ -25,8 +25,6 @@ class bizServiceCall extends cmdbAbstractObject
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "ServiceCall",
-			"description" => "Service Call from customer",
 			"key_type" => "autoincrement",
 			"key_label" => "id",
 			"name_attcode" => "name",  
@@ -180,8 +178,6 @@ class lnkCallTicket extends cmdbAbstractObject
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "Call Ticket",
-			"description" => "Ticket related to a call",
 			"key_type" => "autoincrement",
 			"key_label" => "link_id",
 			"name_attcode" => "impact",  // ????
@@ -231,8 +227,6 @@ class lnkInfraCall extends cmdbAbstractObject
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "Infra Call",
-			"description" => "Infra concerned by a call",
 			"key_type" => "autoincrement",
 			"key_label" => "link_id",
 			"name_attcode" => "impact",  // ????

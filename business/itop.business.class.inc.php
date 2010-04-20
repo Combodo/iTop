@@ -57,8 +57,6 @@ class bizOrganization extends cmdbAbstractObject
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "Organization",
-			"description" => "Organizational structure: can be Company and/or Department",
 			"key_type" => "autoincrement",
 			"key_label" => "id",
 			"name_attcode" => "name",
@@ -129,8 +127,6 @@ class logRealObject extends cmdbAbstractObject
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "Object",
-			"description" => "Any CMDB object",
 			"key_type" => "autoincrement",
 			"key_label" => "id",
 			"name_attcode" => "name",
@@ -183,8 +179,6 @@ class bizContact extends logRealObject
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "Contact",
-			"description" => "Contact",
 			"key_type" => "",
 			"key_label" => "id",
 			"name_attcode" => "name",
@@ -241,8 +235,6 @@ class bizPerson extends bizContact
     $aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "Person",
-			"description" => "Person",
 			"key_type" => "",
 			"key_label" => "id",
 			"name_attcode" => "name",
@@ -294,8 +286,6 @@ class bizTeam extends bizContact
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "Team",
-			"description" => "A group of contacts",
 			"key_type" => "",
 			"key_label" => "id",
 			"name_attcode" => "name",
@@ -331,8 +321,6 @@ class lnkContactTeam extends cmdbAbstractObject
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "TeamsLinks",
-			"description" => "A link between a contact and a Team",
 			"key_type" => "autoincrement",
 			"key_label" => "link_id",
 			"name_attcode" => "role",
@@ -378,8 +366,6 @@ class bizDocument extends logRealObject
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "Document",
-			"description" => "Document",
 			"key_type" => "",
 			"key_label" => "id",
 			"name_attcode" => "name",
@@ -425,8 +411,6 @@ class lnkDocumentRealObject extends cmdbAbstractObject
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "DocumentsLinks",
-			"description" => "A link between a document and another object",
 			"key_type" => "autoincrement",
 			"key_label" => "link_id",
 			"name_attcode" => "link_type",
@@ -471,8 +455,6 @@ class lnkContactRealObject extends cmdbAbstractObject
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "ContactsLinks",
-			"description" => "A link between a contact and another object",
 			"key_type" => "autoincrement",
 			"key_label" => "link_id",
 			"name_attcode" => "role",
@@ -520,8 +502,6 @@ class logInfra extends logRealObject
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "Infra",
-			"description" => "Infrastructure real object",
 			"key_type" => "",
 			"key_label" => "id",
 			"name_attcode" => "name",
@@ -554,8 +534,6 @@ class lnkContactInfra extends cmdbAbstractObject
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "ContactsInfraLinks",
-			"description" => "A link between a contact and an infrastructure",
 			"key_type" => "autoincrement",
 			"key_label" => "link_id",
 			"name_attcode" => "role",
@@ -601,8 +579,6 @@ class bizLocation extends logInfra
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "Location",
-			"description" => "Any type of location: Region, Country, City, Site, Building, Floor, Room, Rack,...",
 			"key_type" => "",
 			"key_label" => "id",
 			"name_attcode" => "name",
@@ -733,8 +709,6 @@ class bizCircuit extends logInfra
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "Circuit",
-			"description" => "Any type of circuit",
 			"key_type" => "",
 			"key_label" => "id",
 			"name_attcode" => "name",
@@ -816,8 +790,6 @@ class bizInterface extends logInfra
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "Interface",
-			"description" => "Interface",
 			"key_type" => "",
 			"key_label" => "id",
 			"name_attcode" => "name",
@@ -912,8 +884,6 @@ class bizSubnet extends logInfra
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "Subnet",
-			"description" => "Logical or physical subnet",
 			"key_type" => "",
 			"key_label" => "id",
 			"name_attcode" => "name",
@@ -995,8 +965,6 @@ class bizDevice extends logInfra
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "Device",
-			"description" => "Electronic devices",
 			"key_type" => "",
 			"key_label" => "id",
 			"name_attcode" => "name",
@@ -1066,8 +1034,6 @@ class bizPC extends bizDevice
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "PC",
-			"description" => "Personal Computers",
 			"key_type" => "",
 			"key_label" => "id",
 			"name_attcode" => "name",
@@ -1160,8 +1126,6 @@ class bizServer extends bizDevice
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "Server",
-			"description" => "Computer Servers",
 			"key_type" => "",
 			"key_label" => "id",
 			"name_attcode" => "name",
@@ -1332,8 +1296,6 @@ class bizNetworkDevice extends bizDevice
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "Network Device",
-			"description" => "A network device",
 			"key_type" => "",
 			"key_label" => "id",
 			"name_attcode" => "name",
@@ -1396,8 +1358,6 @@ class bizInfraGroup extends logInfra
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "Infra Group",
-			"description" => "A group of infrastructure elements",
 			"key_type" => "",
 			"key_label" => "id",
 			"name_attcode" => "name",
@@ -1479,8 +1439,6 @@ class bizApplication extends logInfra
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "Application",
-			"description" => "General application",
 			"key_type" => "",
 			"key_label" => "id",
 			"name_attcode" => "name",
@@ -1561,8 +1519,6 @@ class lnkInfraGrouping extends cmdbAbstractObject
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "Infra Grouping",
-			"description" => "Infra part of an Infra Group",
 			"key_type" => "autoincrement",
 			"key_label" => "link_id",
 			"name_attcode" => "impact", 
@@ -1619,8 +1575,6 @@ class lnkClientServer extends logRealObject
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "ClientServerLinks",
-			"description" => "Link between client server application",
 			"key_type" => "autoincrement",
 			"key_label" => "link_id",
 			"name_attcode" => "relation",  // ????
@@ -1666,8 +1620,6 @@ class bizPatch extends logRealObject
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "Patch",
-			"description" => "Patch installed on infrastucture",
 			"key_type" => "",
 			"key_label" => "id",
 			"name_attcode" => "name",

@@ -33,8 +33,6 @@ class Animal extends cmdbObject
 		$aParams = array
 		(
 			"category" => "blah",
-			"name" => "Animal",
-			"description" => "An animal",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "",
@@ -69,8 +67,6 @@ class Mammal extends Animal
 		$aParams = array
 		(
 			"category" => "blah",
-			"name" => "Mammal",
-			"description" => "An animal with some characteristics",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "name",
@@ -104,8 +100,6 @@ class Bird extends Animal
 		$aParams = array
 		(
 			"category" => "blah",
-			"name" => "Bird",
-			"description" => "Un regroupement de gens",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "",
@@ -130,8 +124,6 @@ class WalkingBird extends Bird
 		$aParams = array
 		(
 			"category" => "blah",
-			"name" => "WalkingBird",
-			"description" => "A bird which nevers flies",
 			"key_type" => "",
 			"key_label" => "",
 			"name_attcode" => "",
@@ -155,8 +147,6 @@ class FlyingBird extends Bird
 		$aParams = array
 		(
 			"category" => "blah",
-			"name" => "FlyingBird",
-			"description" => "A bird which nevers flies",
 			"key_type" => "",
 			"key_label" => "",
 			"name_attcode" => "",
@@ -183,8 +173,6 @@ class AnimalRelation extends cmdbObject
 		$aParams = array
 		(
 			"category" => "blah",
-			"name" => "AnimalRelation",
-			"description" => "Link between two animals",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "",
@@ -215,8 +203,6 @@ class EaterToEaten extends AnimalRelation
 		$aParams = array
 		(
 			"category" => "blah",
-			"name" => "EaterToEaten",
-			"description" => "Animal 1 eats animal 2",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "",
@@ -242,8 +228,6 @@ class Group extends cmdbObject
 		$aParams = array
 		(
 			"category" => "blah",
-			"name" => "Group",
-			"description" => "Group of animals",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "name",

@@ -18,8 +18,6 @@ class Event extends cmdbAbstractObject
 		$aParams = array
 		(
 			"category" => "core/cmdb",
-			"name" => "Log Event",
-			"description" => "An application internal event",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "",
@@ -56,8 +54,6 @@ class EventNotification extends Event
 		$aParams = array
 		(
 			"category" => "core/cmdb",
-			"name" => "Notification event",
-			"description" => "Trace of a notification that has been sent",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "",
@@ -96,8 +92,6 @@ class EventNotificationEmail extends EventNotification
 		$aParams = array
 		(
 			"category" => "core/cmdb",
-			"name" => "Email emission event",
-			"description" => "Trace of an email that has been sent",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "",
@@ -136,8 +130,6 @@ class EventIssue extends Event
 		$aParams = array
 		(
 			"category" => "core/cmdb",
-			"name" => "Issue event",
-			"description" => "Trace of an issue (warning, error, etc.)",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "",
@@ -179,8 +171,6 @@ class EventWebService extends Event
 		$aParams = array
 		(
 			"category" => "core/cmdb",
-			"name" => "Web service event",
-			"description" => "Trace of an web service call",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "",

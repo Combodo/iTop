@@ -940,8 +940,6 @@ abstract class MetaModel
 		// Check mandatory params
 		$aMandatParams = array(
 			"category" => "group classes by modules defining their visibility in the UI",
-			"name" => "internal class name, may be different than the PHP class name",
-			"description" => "detailed (though one line) description of the class",
 			"key_type" => "autoincrement | string",
 			"key_label" => "if set, then display the key as an attribute",
 			"name_attcode" => "define wich attribute is the class name, may be an inherited attribute",
@@ -953,10 +951,6 @@ abstract class MetaModel
 		);		
 
 		$sClass = self::GetCallersPHPClass("Init");
-		if (!array_key_exists("name", $aParams))
-		{
-			throw new CoreException("Declaration of class $sClass: missing name ({$aMandatParams["name"]})");
-		}
 
 		foreach($aMandatParams as $sParamName=>$sParamDesc)
 		{

@@ -18,8 +18,6 @@ class CMDBChange extends DBObject
 		$aParams = array
 		(
 			"category" => "core/cmdb",
-			"name" => "change",
-			"description" => "Changes tracking",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "date",

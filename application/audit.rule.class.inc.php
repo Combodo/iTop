@@ -14,8 +14,6 @@ class AuditRule extends cmdbAbstractObject
 		$aParams = array
 		(
 			"category" => "application",
-			"name" => "AuditRule",
-			"description" => "A rule to check for a given Audit category",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "name",

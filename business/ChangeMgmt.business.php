@@ -11,8 +11,6 @@ class bizChangeTicket extends cmdbAbstractObject
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "Change",
-			"description" => "Change ticket",
 			"key_type" => "autoincrement",
 			"key_label" => "id",
 			"name_attcode" => "name",  
@@ -214,8 +212,6 @@ class lnkInfraChangeTicket extends cmdbAbstractObject
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "Infra Change Ticket",
-			"description" => "Infra impacted by a Change ticket",
 			"key_type" => "autoincrement",
 			"key_label" => "link_id",
 			"name_attcode" => "impact",  // ????
@@ -263,8 +259,6 @@ class lnkContactChange extends cmdbAbstractObject
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "ContactChangeLink",
-			"description" => "Contact associated to a change",
 			"key_type" => "autoincrement",
 			"key_label" => "link_id",
 			"name_attcode" => "role",  // ????

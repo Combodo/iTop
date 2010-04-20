@@ -13,8 +13,6 @@ class AuditCategory extends cmdbAbstractObject
 		$aParams = array
 		(
 			"category" => "application",
-			"name" => "AuditCategory",
-			"description" => "A section inside the overall audit",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "name",

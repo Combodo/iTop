@@ -15,8 +15,6 @@ class bizServiceRequest extends cmdbAbstractObject
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "ServiceRequest",
-			"description" => "Service request",
 			"key_type" => "autoincrement",
 			"key_label" => "id",
 			"name_attcode" => "name",
@@ -106,8 +104,6 @@ class bizServiceItem extends cmdbAbstractObject
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "ServiceItem",
-			"description" => "Service Item",
 			"key_type" => "autoincrement",
 			"key_label" => "id",
 			"name_attcode" => "name",

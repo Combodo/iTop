@@ -25,8 +25,6 @@ class bizIncidentTicket extends cmdbAbstractObject
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "Incident",
-			"description" => "Incident ticket",
 			"key_type" => "autoincrement",
 			"key_label" => "id",
 			"name_attcode" => "name",  
@@ -222,8 +220,6 @@ class lnkRelatedTicket extends cmdbAbstractObject
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "Related Ticket",
-			"description" => "Ticket related to a ticket",
 			"key_type" => "autoincrement",
 			"key_label" => "link_id",
 			"name_attcode" => "impact",  // ????
@@ -273,8 +269,6 @@ class lnkInfraTicket extends cmdbAbstractObject
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "Infra Ticket",
-			"description" => "Infra impacted by a ticket",
 			"key_type" => "autoincrement",
 			"key_label" => "link_id",
 			"name_attcode" => "impact",  // ????
@@ -324,8 +318,6 @@ class lnkContactTicket extends cmdbAbstractObject
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "Contact Ticket",
-			"description" => "Contacts to be notify for a ticket",
 			"key_type" => "autoincrement",
 			"key_label" => "link_id",
 			"name_attcode" => "role",  // ????
@@ -374,8 +366,6 @@ class bizWorkgroup extends logRealObject
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "Workgroup",
-			"description" => "Call tracking workgroup",
 			"key_type" => "",
 			"key_label" => "id",
 			"name_attcode" => "name",

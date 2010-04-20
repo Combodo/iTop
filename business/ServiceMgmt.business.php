@@ -12,8 +12,6 @@ class bizService extends cmdbAbstractObject
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "Service",
-			"description" => "Service provided by an organization",
 			"key_type" => "autoincrement",
 			"key_label" => "id",
 			"name_attcode" => "name",
@@ -92,8 +90,6 @@ class bizContract extends cmdbAbstractObject
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "Contract",
-			"description" => "Contract signed by an organization",
 			"key_type" => "autoincrement",
 			"key_label" => "id",
 			"name_attcode" => "name",
@@ -205,8 +201,6 @@ class lnkInfraContract extends cmdbAbstractObject
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "InfraContractLinks",
-			"description" => "Infra covered by a contract",
 			"key_type" => "autoincrement",
 			"key_label" => "link_id",
 			"name_attcode" => "coverage",  // ????
@@ -252,8 +246,6 @@ class lnkContactContract extends cmdbAbstractObject
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "ContactContractLink",
-			"description" => "Contact associated to a contract",
 			"key_type" => "autoincrement",
 			"key_label" => "link_id",
 			"name_attcode" => "role",  // ????
@@ -302,8 +294,6 @@ class lnkDocumentContract extends cmdbAbstractObject
 		$aParams = array
 		(
 			"category" => "bizmodel,searchable",
-			"name" => "DocumentsContractLinks",
-			"description" => "A link between a document and another contract",
 			"key_type" => "autoincrement",
 			"key_label" => "link_id",
 			"name_attcode" => "link_type",

@@ -47,8 +47,6 @@ class URP_Users extends UserRightsBaseClass
 		$aParams = array
 		(
 			"category" => "addon/userrights",
-			"name" => "user",
-			"description" => "users and credentials",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "login",
@@ -182,8 +180,6 @@ class URP_Profiles extends UserRightsBaseClass
 		$aParams = array
 		(
 			"category" => "addon/userrights",
-			"name" => "profile",
-			"description" => "usage profiles",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "name",
@@ -291,8 +287,6 @@ class URP_Dimensions extends UserRightsBaseClass
 		$aParams = array
 		(
 			"category" => "addon/userrights",
-			"name" => "dimension",
-			"description" => "application dimension (defining silos)",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "name",
@@ -412,8 +406,6 @@ class URP_UserProfile extends UserRightsBaseClass
 		$aParams = array
 		(
 			"category" => "addon/userrights",
-			"name" => "User to profile",
-			"description" => "user profiles",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "userid",
@@ -460,8 +452,6 @@ class URP_ProfileProjection extends UserRightsBaseClass
 		$aParams = array
 		(
 			"category" => "addon/userrights",
-			"name" => "profile_projection",
-			"description" => "profile projections",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "profileid",
@@ -540,8 +530,6 @@ class URP_ClassProjection extends UserRightsBaseClass
 		$aParams = array
 		(
 			"category" => "addon/userrights",
-			"name" => "class_projection",
-			"description" => "class projections",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "dimensionid",
@@ -624,8 +612,6 @@ class URP_ActionGrant extends UserRightsBaseClass
 		$aParams = array
 		(
 			"category" => "addon/userrights",
-			"name" => "action_permission",
-			"description" => "permissions on classes",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "profileid",
@@ -673,8 +659,6 @@ class URP_StimulusGrant extends UserRightsBaseClass
 		$aParams = array
 		(
 			"category" => "addon/userrights",
-			"name" => "stimulus_permission",
-			"description" => "permissions on stimilus in the life cycle of the object",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "profileid",
@@ -722,8 +706,6 @@ class URP_AttributeGrant extends UserRightsBaseClass
 		$aParams = array
 		(
 			"category" => "addon/userrights",
-			"name" => "attribute_permission",
-			"description" => "permissions at the attributes level",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "actiongrantid",

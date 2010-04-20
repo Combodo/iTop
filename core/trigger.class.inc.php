@@ -19,8 +19,6 @@ class Trigger extends cmdbAbstractObject
 		$aParams = array
 		(
 			"category" => "core/cmdb",
-			"name" => "trigger",
-			"description" => "Custom event handler",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "description",
@@ -71,8 +69,6 @@ class TriggerOnObject extends Trigger
 		$aParams = array
 		(
 			"category" => "core/cmdb",
-			"name" => "Trigger on a class of objects",
-			"description" => "Trigger on a given class of objects",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "",
@@ -106,8 +102,6 @@ class TriggerOnStateChange extends TriggerOnObject
 		$aParams = array
 		(
 			"category" => "core/cmdb",
-			"name" => "Trigger on object state change",
-			"description" => "Trigger on object state change",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "",
@@ -141,8 +135,6 @@ class TriggerOnStateEnter extends TriggerOnStateChange
 		$aParams = array
 		(
 			"category" => "core/cmdb",
-			"name" => "Trigger on object entering a state",
-			"description" => "Trigger on object state change - entering",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "",
@@ -174,8 +166,6 @@ class TriggerOnStateLeave extends TriggerOnStateChange
 		$aParams = array
 		(
 			"category" => "core/cmdb",
-			"name" => "Trigger on object leaving a state",
-			"description" => "Trigger on object state change - leaving",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "",
@@ -207,8 +197,6 @@ class TriggerOnObjectCreate extends TriggerOnObject
 		$aParams = array
 		(
 			"category" => "core/cmdb",
-			"name" => "Trigger on object creation",
-			"description" => "Trigger on object creation of [a child class of] the given class",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "",
@@ -240,8 +228,6 @@ class lnkTriggerAction extends cmdbAbstractObject
 		$aParams = array
 		(
 			"category" => "core/cmdb",
-			"name" => "Actions-Trigger",
-			"description" => "Link between a trigger and an action",
 			"key_type" => "autoincrement",
 			"key_label" => "Link ID",
 			"name_attcode" => "",

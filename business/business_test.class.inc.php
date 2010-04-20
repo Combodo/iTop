@@ -45,8 +45,6 @@ class cmdbObjectHomeMade extends cmdbObject
 		$aParams = array
 		(
 			"category" => "blah",
-			"name" => "anyObject",
-			"description" => "std object",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "",
@@ -89,8 +87,6 @@ class cmdbContact extends cmdbObjectHomeMade
 		$aParams = array
 		(
 			"category" => "blah",
-			"name" => "Contact",
-			"description" => "Un object que l'on peut communiquer avec",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "name",
@@ -174,8 +170,6 @@ class cmdbTeam extends cmdbContact
 		$aParams = array
 		(
 			"category" => "blah",
-			"name" => "Equipado",
-			"description" => "Un regroupement de gens",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "email",
@@ -232,8 +226,6 @@ class cmdbOrga extends cmdbObjectHomeMade
 		$aParams = array
 		(
 			"category" => "blah",
-			"name" => "Organization",
-			"description" => "Une entite qui possede des choses",
 			"key_type" => "",
 			"key_label" => "",
 			"name_attcode" => "_name_",
@@ -277,8 +269,6 @@ class cmdbLiens extends cmdbObjectHomeMade
 		$aParams = array
 		(
 			"category" => "blah",
-			"name" => "Liens_entre_contacts_et_workshop",
-			"description" => "Une entite qui lie des contacts et workshops",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "function",
@@ -332,8 +322,6 @@ class cmdbWorkshop extends cmdbObjectHomeMade
 		$aParams = array
 		(
 			"category" => "blah",
-			"name" => "Workshop",
-			"description" => "Une entite qui pond des theories insensees",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "namitus",

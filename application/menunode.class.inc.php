@@ -23,8 +23,6 @@ class menuNode extends DBObject
 		$aParams = array
 		(
 			"category" => "gui",
-			"name" => "menuNode",
-			"description" => "Main menu configuration elements",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "name",

@@ -19,8 +19,6 @@ class CMDBChangeOp extends DBObject
 		$aParams = array
 		(
 			"category" => "core/cmdb",
-			"name" => "change operation",
-			"description" => "Change operations tracking",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "change",
@@ -74,8 +72,6 @@ class CMDBChangeOpCreate extends CMDBChangeOp
 		$aParams = array
 		(
 			"category" => "core/cmdb",
-			"name" => "object creation",
-			"description" => "Object creation tracking",
 			"key_type" => "",
 			"key_label" => "",
 			"name_attcode" => "change",
@@ -118,8 +114,6 @@ class CMDBChangeOpDelete extends CMDBChangeOp
 		$aParams = array
 		(
 			"category" => "core/cmdb",
-			"name" => "object deletion",
-			"description" => "Object deletion tracking",
 			"key_type" => "",
 			"key_label" => "",
 			"name_attcode" => "change",
@@ -161,8 +155,6 @@ class CMDBChangeOpSetAttribute extends CMDBChangeOp
 		$aParams = array
 		(
 			"category" => "core/cmdb",
-			"name" => "object change",
-			"description" => "Object properties change tracking",
 			"key_type" => "",
 			"key_label" => "",
 			"name_attcode" => "change",
@@ -202,8 +194,6 @@ class CMDBChangeOpSetAttributeScalar extends CMDBChangeOpSetAttribute
 		$aParams = array
 		(
 			"category" => "core/cmdb",
-			"name" => "property change",
-			"description" => "Object scalar properties change tracking",
 			"key_type" => "",
 			"key_label" => "",
 			"name_attcode" => "change",
@@ -304,8 +294,6 @@ class CMDBChangeOpSetAttributeBlob extends CMDBChangeOpSetAttribute
 		$aParams = array
 		(
 			"category" => "core/cmdb",
-			"name" => "data change",
-			"description" => "data change tracking",
 			"key_type" => "",
 			"key_label" => "",
 			"name_attcode" => "change",
@@ -374,8 +362,6 @@ class CMDBChangeOpSetAttributeText extends CMDBChangeOpSetAttribute
 		$aParams = array
 		(
 			"category" => "core/cmdb",
-			"name" => "text change",
-			"description" => "text change tracking",
 			"key_type" => "",
 			"key_label" => "",
 			"name_attcode" => "change",

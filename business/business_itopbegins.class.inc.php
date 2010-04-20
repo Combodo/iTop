@@ -39,8 +39,6 @@ class cmdbContact extends CMDBObject
 		$aParams = array
 		(
 			"category" => "blah",
-			"name" => "klassContact",
-			"description" => "klass contact description",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "att_contact_name",
@@ -81,8 +79,6 @@ class cmdbPerson extends cmdbContact
 		$aParams = array
 		(
 			"category" => "blah",
-			"name" => "klassPerson",
-			"description" => "klass person description",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "att_contact_name",
@@ -119,8 +115,6 @@ class cmdbSubcontractor extends cmdbPerson
 		$aParams = array
 		(
 			"category" => "blah",
-			"name" => "klassSubcontractor",
-			"description" => "klass subcontractor description",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "att_contact_name",
@@ -163,8 +157,6 @@ class cmdbCrowd extends cmdbObject
 		$aParams = array
 		(
 			"category" => "blah",
-			"name" => "klassCrowd",
-			"description" => "klass crowd description",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "att_crowd_peoplecount",
@@ -200,8 +192,6 @@ class cmdbCompany extends cmdbCrowd
 		$aParams = array
 		(
 			"category" => "blah",
-			"name" => "klassCompany",
-			"description" => "klass company description",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "att_company_dunsnumber",
@@ -237,8 +227,6 @@ class cmdbProvider extends cmdbCompany
 		$aParams = array
 		(
 			"category" => "blah",
-			"name" => "klassProvider",
-			"description" => "klass provider description",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "att_provider_ref",

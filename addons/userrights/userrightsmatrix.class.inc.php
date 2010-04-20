@@ -21,8 +21,6 @@ class UserRightsMatrixUsers extends DBObject
 		$aParams = array
 		(
 			"category" => "addon/userrights",
-			"name" => "user",
-			"description" => "users and credentials",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "login",
@@ -51,8 +49,6 @@ class UserRightsMatrixClassGrant extends DBObject
 		$aParams = array
 		(
 			"category" => "addon/userrights",
-			"name" => "class_permission",
-			"description" => "permissions on classes",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "",
@@ -86,8 +82,6 @@ class UserRightsMatrixClassStimulusGrant extends DBObject
 		$aParams = array
 		(
 			"category" => "addon/userrights",
-			"name" => "stimulus_permission",
-			"description" => "permissions on stimilus in the life cycle of the object",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "",
@@ -121,8 +115,6 @@ class UserRightsMatrixAttributeGrant extends DBObject
 		$aParams = array
 		(
 			"category" => "addon/userrights",
-			"name" => "attribute_permission",
-			"description" => "permissions at the attributes level",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "",

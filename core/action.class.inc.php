@@ -20,8 +20,6 @@ abstract class Action extends cmdbAbstractObject
 		$aParams = array
 		(
 			"category" => "core/cmdb",
-			"name" => "action",
-			"description" => "Custom action",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "name",
@@ -97,8 +95,6 @@ abstract class ActionNotification extends Action
 		$aParams = array
 		(
 			"category" => "core/cmdb",
-			"name" => "notification",
-			"description" => "Notification (abstract)",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "name",
@@ -141,8 +137,6 @@ class ActionEmail extends ActionNotification
 		$aParams = array
 		(
 			"category" => "core/cmdb",
-			"name" => "email notification",
-			"description" => "Action: Email notification",
 			"key_type" => "autoincrement",
 			"key_label" => "",
 			"name_attcode" => "name",
