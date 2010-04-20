@@ -50,6 +50,32 @@ class ObjectStimulus
 		return Dict::S('Class:'.$this->m_sHostClass.'/Stimulus:'.$this->m_sCode.'+', '');
 	}
 
+	public function GetLabel_Obsolete()
+	{
+		// Written for compatibility with a data model written prior to version 0.9.1
+		if (array_key_exists('label', $this->m_aParams))
+		{
+			return $this->m_aParams['label'];
+		}
+		else
+		{
+			return $this->GetLabel();
+		}
+	}
+
+	public function GetDescription_Obsolete()
+	{
+		// Written for compatibility with a data model written prior to version 0.9.1
+		if (array_key_exists('description', $this->m_aParams))
+		{
+			return $this->m_aParams['description'];
+		}
+		else
+		{
+			return $this->GetDescription();
+		}
+	}
+
 // obsolete-	public function Get($sParamName) {return $this->m_aParams[$sParamName];}
 
 	// Note: I could factorize this code with the parameter management made for the AttributeDef class

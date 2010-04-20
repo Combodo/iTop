@@ -198,6 +198,19 @@ abstract class MetaModel
 		$sStringCode = 'Class:'.$sClass;
 		return Dict::S($sStringCode, $sClass);
 	}
+	final static public function GetName_Obsolete($sClass)
+	{
+		// Written for compatibility with a data model written prior to version 0.9.1
+		self::_check_subclass($sClass);
+		if (array_key_exists('name', self::$m_aClassParams[$sClass]))
+		{
+			return self::$m_aClassParams[$sClass]['name'];
+		}
+		else
+		{
+			return self::GetName($sClass);
+		}
+	}
 	final static public function GetCategory($sClass)
 	{
 		self::_check_subclass($sClass);	
@@ -213,6 +226,19 @@ abstract class MetaModel
 		self::_check_subclass($sClass);	
 		$sStringCode = 'Class:'.$sClass.'+';
 		return Dict::S($sStringCode, '');
+	}
+	final static public function GetClassDescription_Obsolete($sClass)
+	{
+		// Written for compatibility with a data model written prior to version 0.9.1
+		self::_check_subclass($sClass);
+		if (array_key_exists('description', self::$m_aClassParams[$sClass]))
+		{
+			return self::$m_aClassParams[$sClass]['description'];
+		}
+		else
+		{
+			return self::GetDescription($sClass);
+		}
 	}
 	final static public function IsAutoIncrementKey($sClass)
 	{
@@ -679,7 +705,7 @@ abstract class MetaModel
 	public static function GetStateLabel($sClass, $sStateValue)
 	{
 		$sStateAttrCode = self::GetStateAttributeCode($sClass);
-		return Dict::S("Class:$sClass/Attribute:$sStateAttrCode/Value:$sStateValue+");
+		return Dict::S("Class:$sClass/Attribute:$sStateAttrCode/Value:$sStateValue", $sStateValue);
 
 		// I've decided the current implementation, because I need
 		// to get the description as well -GetAllowedValues does not render the description,
@@ -692,7 +718,7 @@ abstract class MetaModel
 	public static function GetStateDescription($sClass, $sStateValue)
 	{
 		$sStateAttrCode = self::GetStateAttributeCode($sClass);
-		return Dict::S("Class:$sClass/Attribute:$sStateAttrCode/Value:$sStateValue+");
+		return Dict::S("Class:$sClass/Attribute:$sStateAttrCode/Value:$sStateValue+", '');
 	}
 
 	public static function EnumTransitions($sClass, $sStateCode)
@@ -2112,16 +2138,25 @@ abstract class MetaModel
 		return $aDataDump;
 	}
 
-	public static function MakeDictionaryTemplate()
+	protected static function MakeDictEntry($sKey, $sValueFromOldSystem, $sDefaultValue, &$bNotInDico)
+	{
+		$sValue = Dict::S($sKey, 'x-no-nothing');
+		if ($sValue == 'x-no-nothing')
+		{
+			$bNotInDico = true;
+			$sValue = $sValueFromOldSystem;
+			if (strlen($sValue) == 0)
+			{
+				$sValue = $sDefaultValue;
+			}
+		}
+		return "	'$sKey' => '".str_replace("'", "\\'", $sValue)."',\n";
+	}
+
+	public static function MakeDictionaryTemplate($sModules = '', $sOutputFilter = 'NotInDictionary')
 	{
 		$sRes = '';
 
-		foreach (Dict::GetLanguages() as $sLanguageCode => $aLanguageData)
-		{
-			list($aMissing, $aUnexpected, $aNotTranslated, $aOK) = Dict::MakeStats($sLanguageCode, 'EN US');
-			echo "<p>Stats for language: $sLanguageCode</p>\n"; 
-			echo "<ul><li>Missing:".count($aMissing)."</li><li>Unexpected:".count($aUnexpected)."</li><li>NotTranslated:".count($aNotTranslated)."</li><li>OK:".count($aOK)."</li></ul>\n";
-		}
 		$sRes .= "// Dictionnay conventions\n";
 		$sRes .= htmlentities("// Class:<class_name>\n");
 		$sRes .= htmlentities("// Class:<class_name>+\n");
@@ -2135,7 +2170,14 @@ abstract class MetaModel
 
 		// Note: I did not use EnumCategories(), because a given class maybe found in several categories
 		// Need to invent the "module", to characterize the origins of a class
-		$aModules = array('bizmodel', 'core/cmdb', 'gui' , 'application', 'addon/userrights');
+		if (strlen($sModules) == 0)
+		{
+			$aModules = array('bizmodel', 'core/cmdb', 'gui' , 'application', 'addon/userrights');
+		}
+		else
+		{
+			$aModules = explode(', ', $sModules);
+		}
 
 		$sRes .= "//////////////////////////////////////////////////////////////////////\n";
 		$sRes .= "// Note: The classes have been grouped by categories: ".implode(', ', $aModules)."\n";
@@ -2152,51 +2194,71 @@ abstract class MetaModel
 			{
 				if (self::IsAbstract($sClass)) continue;
 	
-				$sRes .= "//\n";
-				$sRes .= "// Class: $sClass\n";
-				$sRes .= "//\n";
-				$sRes .= "\n";
-				$sRes .= "Dict::Add('EN US', 'English', 'English', array(\n";
-				$sRes .= "	'Class:$sClass' => '".self::GetName($sClass)."',\n";
-				$sRes .= "	'Class:$sClass+' => '".self::GetClassDescription($sClass)."',\n";
+				$bNotInDico = false;
+
+				$sClassRes = "//\n";
+				$sClassRes .= "// Class: $sClass\n";
+				$sClassRes .= "//\n";
+				$sClassRes .= "\n";
+				$sClassRes .= "Dict::Add('EN US', 'English', 'English', array(\n";
+				$sClassRes .= self::MakeDictEntry("Class:$sClass", self::GetName_Obsolete($sClass), $sClass, $bNotInDico);
+				$sClassRes .= self::MakeDictEntry("Class:$sClass+", self::GetClassDescription_Obsolete($sClass), '', $bNotInDico);
 				foreach(self::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
 				{
 					// Skip this attribute if not originaly defined in this class
 					if (self::$m_aAttribOrigins[$sClass][$sAttCode] != $sClass) continue;
 	
-					$sRes .= "	'Class:$sClass/Attribute:$sAttCode' => '".$oAttDef->GetLabel()."',\n";
-					$sRes .= "	'Class:$sClass/Attribute:$sAttCode+' => '".$oAttDef->GetDescription()."',\n";
+					$sClassRes .= self::MakeDictEntry("Class:$sClass/Attribute:$sAttCode", $oAttDef->GetLabel_Obsolete(), $sAttCode, $bNotInDico);
+					$sClassRes .= self::MakeDictEntry("Class:$sClass/Attribute:$sAttCode+", $oAttDef->GetDescription_Obsolete(), '', $bNotInDico);
 					if ($oAttDef instanceof AttributeEnum)
 					{
 						if (self::GetStateAttributeCode($sClass) == $sAttCode)
 						{
 							foreach (self::EnumStates($sClass) as $sStateCode => $aStateData)
 							{
-								$sValue = str_replace("'", "\\'", $aStateData['label']);
-								$sValuePlus = str_replace("'", "\\'", $aStateData['description']);
-								$sRes .= "	'Class:$sClass/Attribute:$sAttCode/Value:$sStateCode' => '$sValue',\n";
-								$sRes .= "	'Class:$sClass/Attribute:$sAttCode/Value:$sStateCode+' => '$sValuePlus',\n";
+								if (array_key_exists('label', $aStateData))
+								{
+									$sValue = $aStateData['label'];
+								}
+								else
+								{
+									$sValue = MetaModel::GetStateLabel($sClass, $sStateCode);
+								}
+								if (array_key_exists('description', $aStateData))
+								{
+									$sValuePlus = $aStateData['description'];
+								}
+								else
+								{
+									$sValuePlus = MetaModel::GetStateDescription($sClass, $sStateCode);
+								}
+								$sClassRes .= self::MakeDictEntry("Class:$sClass/Attribute:$sAttCode/Value:$sStateCode", $sValue, '', $bNotInDico);
+								$sClassRes .= self::MakeDictEntry("Class:$sClass/Attribute:$sAttCode/Value:$sStateCode+", $sValuePlus, '', $bNotInDico);
 							}
 						}
 						else
 						{
 							foreach ($oAttDef->GetAllowedValues() as $sKey => $value)
 							{
-								$sValue = str_replace("'", "\\'", $value);
-								$sRes .= "	'Class:$sClass/Attribute:$sAttCode/Value:$sKey' => '$sValue',\n";
-								$sRes .= "	'Class:$sClass/Attribute:$sAttCode/Value:$sKey+' => '$sValue',\n";
+								$sClassRes .= self::MakeDictEntry("Class:$sClass/Attribute:$sAttCode/Value:$sKey", $sValue, '', $bNotInDico);
+								$sClassRes .= self::MakeDictEntry("Class:$sClass/Attribute:$sAttCode/Value:$sKey+", $sValue, '', $bNotInDico);
 							}
 						}
 					}
 				}
 				foreach(self::EnumStimuli($sClass) as $sStimulusCode => $oStimulus)
 				{
-					$sRes .= "	'Class:$sClass/Stimulus:$sStimulusCode' => '".$oStimulus->GetLabel()."',\n";
-					$sRes .= "	'Class:$sClass/Stimulus:$sStimulusCode+' => '".$oStimulus->GetDescription()."',\n";
+					$sClassRes .= self::MakeDictEntry("Class:$sClass/Stimulus:$sStimulusCode", $oStimulus->GetLabel_Obsolete(), '', $bNotInDico);
+					$sClassRes .= self::MakeDictEntry("Class:$sClass/Stimulus:$sStimulusCode+", $oStimulus->GetDescription_Obsolete(), '', $bNotInDico);
 				}
 	
-				$sRes .= "));\n";
-				$sRes .= "\n";
+				$sClassRes .= "));\n";
+				$sClassRes .= "\n";
+
+				if ($bNotInDico  || ($sOutputFilter != 'NotInDictionary'))
+				{
+					$sRes .= $sClassRes;
+				}
 			}
 		}
 		return $sRes;

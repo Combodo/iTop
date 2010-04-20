@@ -263,7 +263,8 @@ function printMenu($sConfigFile)
 	echo "<h4>Target database: $sConfigFile</h4>\n";
 	echo "<p>$sClassCount classes referenced in the model</p>\n";
 	echo "<ul>";
-	echo "   <li><a href=\"$sUrl&todo=checkdictionary\">Dictionary</a></li>";
+	echo "   <li><a href=\"$sUrl&todo=checkdictionary&categories=bizmodel&outputfilter=NotInDictionary\">Dictionary - missing entries (EN US)</a></li>";
+	echo "   <li><a href=\"$sUrl&todo=dictionarystats\">Dictionary - statistics by language</a></li>";
 	echo "   <li><a href=\"$sUrl&todo=checkmodel\">Biz model consistency</a></li>";
 	echo "   <li><a href=\"$sUrl&todo=showzlists\">Show ZLists</a></li>";
 	echo "   <li><a href=\"$sUrl&todo=showbizmodel\">Browse business model</a></li>";
@@ -472,10 +473,21 @@ else
 			printMenu($sConfigFile);
 			echo $sRes;
 			break;
+		case "dictionarystats":
+			echo "Dictionary: statistics by language<br/>\n";
+			foreach (Dict::GetLanguages() as $sLanguageCode => $aLanguageData)
+			{
+				list($aMissing, $aUnexpected, $aNotTranslated, $aOK) = Dict::MakeStats($sLanguageCode, 'EN US');
+				echo "<p>Stats for language: $sLanguageCode</p>\n"; 
+				echo "<ul><li>Missing:".count($aMissing)."</li><li>Unexpected:".count($aUnexpected)."</li><li>NotTranslated:".count($aNotTranslated)."</li><li>OK:".count($aOK)."</li></ul>\n";
+			}
+			break;
 		case "checkdictionary":
-			echo "Dictionary template...</br>\n";
+			$sCategories = ReadMandatoryParam("categories");
+			$sOutputFilter = ReadParam("outputfilter", '');
+			echo "Dictionary: missing entries (categories: $sCategories, output: '$sOutputFilter')</br>\n";
 			echo "<pre>\n";
-			echo MetaModel::MakeDictionaryTemplate();
+			echo MetaModel::MakeDictionaryTemplate($sCategories, $sOutputFilter);
 			echo "</pre>\n";
 			break;
 		case "checkmodel":

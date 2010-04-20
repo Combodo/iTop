@@ -133,7 +133,31 @@ abstract class AttributeDefinition
 	public function GetNullValue() {return null;} 
 	public function GetCode() {return $this->m_sCode;} 
 	public function GetLabel() {return Dict::S('Class:'.$this->m_sHostClass.'/Attribute:'.$this->m_sCode, $this->m_sCode);} 
+	public function GetLabel_Obsolete()
+	{
+		// Written for compatibility with a data model written prior to version 0.9.1
+		if (array_key_exists('label', $this->m_aParams))
+		{
+			return $this->m_aParams['label'];
+		}
+		else
+		{
+			return $this->GetLabel();
+		}
+	}
 	public function GetDescription() {return Dict::S('Class:'.$this->m_sHostClass.'/Attribute:'.$this->m_sCode.'+', '');} 
+	public function GetDescription_Obsolete()
+	{
+		// Written for compatibility with a data model written prior to version 0.9.1
+		if (array_key_exists('description', $this->m_aParams))
+		{
+			return $this->m_aParams['description'];
+		}
+		else
+		{
+			return $this->GetDescription();
+		}
+	}
 	public function GetValuesDef() {return null;} 
 	public function GetPrerequisiteAttributes() {return array();} 
 	//public function IsSearchableStd() {return $this->Get("search_std");} 
