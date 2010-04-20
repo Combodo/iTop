@@ -488,6 +488,24 @@ class CMDBObjectSet extends DBObjectSet
 		return $oRetSet;
 	} 
 	
+	static public function FromArrayAssoc($aClasses, $aObjects)
+	{
+		// In a perfect world, we should create a complete tree of DBObjectSearch,
+		// but as we lack most of the information related to the objects,
+		// let's create one search definition
+		$sClass = reset($aClasses);
+		$sAlias = key($aClasses);
+		$oFilter = new CMDBSearchFilter($sClass, $sAlias);
+
+		$oRetSet = new CMDBObjectSet($oFilter);
+		$oRetSet->m_bLoaded = true; // no DB load
+
+		foreach($aObjects as $rowIndex => $aObjectsByClassAlias)
+		{
+			$oRetSet->AddObjectExtended($aObjectsByClassAlias);
+		}
+		return $oRetSet;
+	} 
 }
 
 /**
