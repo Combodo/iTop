@@ -294,7 +294,8 @@ function ProcessCSVData(WebPage $oPage, UserContext $oContext, $bSimulate = true
 		{
 			$sUserString = UserRights::GetUser();
 		}
-		$oMyChange->Set("userinfo", $sUserString);		
+		$oMyChange->Set("userinfo", $sUserString);
+		$iChangeId = $oMyChange->DBInsert();		
 	}
 
 	$oBulk = new BulkChange(
