@@ -692,3 +692,40 @@ table.listResults.truncated {
 	border-bottom: 0;
 	padding-bottom: 0;
 }
+
+tr.csv_row0 td {
+	padding-top:5px;
+	padding-bottom:5px;
+	padding-left:10px;
+	padding-right:10px;
+	background: #fff;
+	border-left: #000 1px solid;
+	
+}
+tr.csv_row1 td {
+	padding-top:5px;
+	padding-bottom:5px;
+	padding-left:10px;
+	padding-right:10px;
+	background: #f9f9f1;
+	border-left: #000 1px solid;
+	
+}
+tr.csv_row1 th, tr.csv_row0 th {
+	padding-top:5px;
+	padding-bottom:5px;
+	padding-left:10px;
+	padding-right:10px;
+	border-left: #000 1px solid;
+	
+}
+
+td.cell_modified {
+	font-weight: bold;
+	color: #000;
+}
+
+td.cell_error {
+	font-weight: bold;
+	color: #D81515;
+}
