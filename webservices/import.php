@@ -150,19 +150,13 @@ try
 			
 			switch (get_class($value))
 			{
-				case 'CellChangeSpec_Void':
+				case 'CellStatus_Void':
 					$sClass = '';
 					break;
-				case 'CellChangeSpec_Unchanged':
-					$sClass = '';
-					break;
-				case 'CellChangeSpec_Modify':
+				case 'CellStatus_Modify':
 					$sClass = 'csvimport_ok';
 					break;
-				case 'CellChangeSpec_Init':
-					$sClass = 'csvimport_init';
-					break;
-				case 'CellChangeSpec_Issue':
+				case 'CellStatus_Issue':
 					$sClass = 'csvimport_error';
 					break;
 			}
