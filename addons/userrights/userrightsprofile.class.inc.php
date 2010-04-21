@@ -68,6 +68,8 @@ class URP_Users extends UserRightsBaseClass
 		MetaModel::Init_AddAttribute(new AttributeString("login", array("allowed_values"=>null, "sql"=>"login", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributePassword("password", array("allowed_values"=>null, "sql"=>"pwd", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 
+		MetaModel::Init_AddAttribute(new AttributeEnum("language", array("allowed_values"=>new ValueSetEnum('EN US,FR FR'), "sql"=>"language", "default_value"=>"EN US", "is_null_allowed"=>false, "depends_on"=>array())));
+
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("profiles", array("linked_class"=>"URP_UserProfile", "ext_key_to_me"=>"userid", "ext_key_to_remote"=>"profileid", "allowed_values"=>null, "count_min"=>1, "count_max"=>0, "depends_on"=>array())));
 
 		//MetaModel::Init_InheritFilters();
@@ -76,7 +78,7 @@ class URP_Users extends UserRightsBaseClass
 		MetaModel::Init_AddFilterFromAttribute("password");
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('userid', 'first_name', 'email', 'login')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('userid', 'first_name', 'email', 'login', 'language')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('first_name', 'last_name', 'login')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('login', 'userid')); // Criteria of the std search form
@@ -940,6 +942,18 @@ exit;
 			return $iUserId;
 		}
 		return null;
+	}
+
+	public function GetUserLanguage($sUserName)
+	{
+		if (array_key_exists($sUserName, $this->m_aLogin2UserId))
+		{
+			// This happens really when the list of users is being loaded into the cache!!!
+			$iUserId = $this->m_aLogin2UserId[$sUserName];  
+			$oUser = $this->m_aUsers[$iUserId];
+			return $oUser->Get('language');
+		}
+		return 'EN US';
 	}
 
 	public function GetContactId($sUserName)

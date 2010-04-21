@@ -47,6 +47,11 @@ class UserRightsNull extends UserRightsAddOnAPI
 		return 1;
 	}
 
+	public function GetUserLanguage($sUserName)
+	{
+		return 'EN US';
+	}
+
 	public function GetContactId($sUserName)
 	{
 		// this module has no link with the business data

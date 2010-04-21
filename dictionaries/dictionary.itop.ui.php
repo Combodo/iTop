@@ -109,6 +109,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:URP_Users/Attribute:login+' => 'user identification string',
 	'Class:URP_Users/Attribute:password' => 'Password',
 	'Class:URP_Users/Attribute:password+' => 'user authentication string',
+	'Class:URP_Users/Attribute:language' => 'Language',
+	'Class:URP_Users/Attribute:language+' => 'user language',
+	'Class:URP_Users/Attribute:language/Value:EN US' => 'English',
+	'Class:URP_Users/Attribute:language/Value:EN US+' => 'English U.S.',
+	'Class:URP_Users/Attribute:language/Value:FR FR' => 'French',
+	'Class:URP_Users/Attribute:language/Value:FR FR+' => 'FR FR',
 	'Class:URP_Users/Attribute:profiles' => 'Profiles',
 	'Class:URP_Users/Attribute:profiles+' => 'roles, granting rights for that person',
 ));

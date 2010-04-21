@@ -47,13 +47,23 @@ define('DICT_ERR_EXCEPTION', 2); // when a string is missing, throw an exception
 class Dict
 {
 	protected static $m_iErrorMode = DICT_ERR_STRING;
+	protected static $m_sDefaultLanguage = 'EN US';
 	protected static $m_sCurrentLanguage = 'EN US';
 
 	protected static $m_aLanguages = array(); // array( code => array( 'description' => '...', 'localized_description' => '...') ...)
 	protected static $m_aData = array();
 
 
-	public static function SetLanguage($sLanguageCode)
+	public static function SetDefaultLanguage($sLanguageCode)
+	{
+		if (!array_key_exists($sLanguageCode, self::$m_aLanguages))
+		{
+			throw new DictExceptionUnknownLanguage($sLanguageCode);
+		}
+		self::$m_sDefaultLanguage = $sLanguageCode;
+	}
+
+	public static function SetUserLanguage($sLanguageCode)
 	{
 		if (!array_key_exists($sLanguageCode, self::$m_aLanguages))
 		{
@@ -78,29 +88,41 @@ class Dict
 
 	public static function S($sStringCode, $sDefault = null)
 	{
+		// Attempt to find the string in the user language
+		//
 		$aCurrentDictionary = self::$m_aData[self::$m_sCurrentLanguage];
-		if (!array_key_exists($sStringCode, $aCurrentDictionary))
+		if (array_key_exists($sStringCode, $aCurrentDictionary))
 		{
-			switch (self::$m_iErrorMode)
-			{
-				case DICT_ERR_STRING:
-					if (is_null($sDefault))
-					{
-						return $sStringCode;
-					}
-					else
-					{
-						return $sDefault;
-					}
-					break;
-
-				case DICT_ERR_EXCEPTION:
-				default:
-					throw new DictExceptionMissingString(self::$m_sCurrentLanguage, $sStringCode);
-					break;
-			}
+			return $aCurrentDictionary[$sStringCode];
 		}
-		return $aCurrentDictionary[$sStringCode];
+		// Attempt to find the string in the default language
+		//
+		$aDefaultDictionary = self::$m_aData[self::$m_sDefaultLanguage];
+		if (array_key_exists($sStringCode, $aDefaultDictionary))
+		{
+			return $aDefaultDictionary[$sStringCode];
+		}
+		// Could not find the string...
+		//
+		switch (self::$m_iErrorMode)
+		{
+			case DICT_ERR_STRING:
+				if (is_null($sDefault))
+				{
+					return $sStringCode;
+				}
+				else
+				{
+					return $sDefault;
+				}
+				break;
+
+			case DICT_ERR_EXCEPTION:
+			default:
+				throw new DictExceptionMissingString(self::$m_sCurrentLanguage, $sStringCode);
+				break;
+		}
+		return 'bug!';
 	}
 
 

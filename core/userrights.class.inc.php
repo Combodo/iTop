@@ -49,6 +49,7 @@ abstract class UserRightsAddOnAPI
 
 	abstract public function Init(); // loads data (possible optimizations)
 	abstract public function CheckCredentials($sLogin, $sPassword); // returns the id of the user or false
+	abstract public function GetUserLanguage($sLogin); // returns the language code (e.g "EN US")
 	abstract public function GetUserId($sLogin); // returns the id of the user or false
 	abstract public function GetContactId($sLogin); // returns the id of the "business" user or false
 	abstract public function GetFilter($sLogin, $sClass); // returns a filter object
@@ -78,6 +79,7 @@ class UserRights
 	protected static $m_sRealUser;
 	protected static $m_iUserId;
 	protected static $m_iRealUserId;
+	protected static $m_sUserLanguage;
 
 	public static function SelectModule($sModuleName)
 	{
@@ -97,6 +99,7 @@ class UserRights
 		self::$m_sRealUser = '';
 		self::$m_iUserId = 0;
 		self::$m_iRealUserId = 0;
+		self::$m_sUserLanguage = 'EN US';
 	}
 
 	public static function GetModuleInstance()
@@ -125,11 +128,13 @@ class UserRights
 	public static function Login($sName, $sPassword)
 	{
 		self::$m_iUserId = self::$m_oAddOn->CheckCredentials($sName, $sPassword);
-		if ( self::$m_iUserId !== false )
+		if (self::$m_iUserId !== false)
 		{
 			self::$m_sUser = $sName;
 			self::$m_iRealUserId = self::$m_iUserId;
 			self::$m_sRealUser = $sName;
+			self::$m_sUserLanguage = self::$m_oAddOn->GetUserLanguage($sName);
+			Dict::SetUserLanguage(self::GetUserLanguage());
 			return true;
 		}
 		else
@@ -143,9 +148,11 @@ class UserRights
 		if (!self::CheckLogin()) return false;
 
 		self::$m_iRealUserId = self::$m_oAddOn->CheckCredentials($sName, $sPassword);
-		if ( self::$m_iRealUserId !== false)
+		if (self::$m_iRealUserId !== false)
 		{
 			self::$m_sUser = $sName;
+			self::$m_sUserLanguage = self::$m_oAddOn->GetUserLanguage($sName);
+			Dict::SetUserLanguage(self::GetUserLanguage());
 			return true;
 		}
 		else
@@ -157,6 +164,11 @@ class UserRights
 	public static function GetUser()
 	{
 		return self::$m_sUser;
+	}
+
+	public static function GetUserLanguage()
+	{
+		return self::$m_sUserLanguage;
 	}
 
 	public static function GetUserId($sName = '')

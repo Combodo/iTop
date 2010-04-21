@@ -237,7 +237,7 @@ abstract class MetaModel
 		}
 		else
 		{
-			return self::GetDescription($sClass);
+			return self::GetClassDescription($sClass);
 		}
 	}
 	final static public function IsAutoIncrementKey($sClass)
@@ -2799,7 +2799,7 @@ abstract class MetaModel
 			self::Plugin($sConfigFile, 'dictionaries', $sToInclude);
 		}
 		// Set the language... after the dictionaries have been loaded!
-		Dict::SetLanguage($oConfig->GetDefaultLanguage());
+		Dict::SetDefaultLanguage($oConfig->GetDefaultLanguage());
 
 		$sServer = $oConfig->GetDBHost();
 		$sUser = $oConfig->GetDBUser();

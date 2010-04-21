@@ -336,6 +336,12 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 		return $oLogin->Get('userid');
 	}
 
+	// this module does not handle localization
+	public function GetUserLanguage($sUserName)
+	{
+		return 'EN US';
+	}
+
 	public function GetContactId($sUserName)
 	{
 		// this module has no link with the business data
