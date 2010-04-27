@@ -132,7 +132,7 @@ class Dict
 
 		$aArguments = func_get_args();
 		array_shift($aArguments);
-		return vsprintf($sFormat, $aArguments);
+		return vsprintf($sLocalizedFormat, $aArguments);
 	}
 
 
