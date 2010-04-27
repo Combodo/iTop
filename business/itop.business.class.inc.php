@@ -74,6 +74,7 @@ class bizOrganization extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("parent_id", array("targetclass"=>"bizOrganization", "allowed_values"=>null, "sql"=>"parent_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("parent_name", array("allowed_values"=>null, "extkey_attcode"=> 'parent_id', "target_attcode"=>"name")));
 
+		MetaModel::Init_AddFilterFromAttribute("parent_id");
 		MetaModel::Init_AddFilterFromAttribute("name");
 		MetaModel::Init_AddFilterFromAttribute("code");
 		MetaModel::Init_AddFilterFromAttribute("status");
