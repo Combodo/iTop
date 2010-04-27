@@ -1117,7 +1117,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:bizChangeTicket/Stimulus:ev_notapprove' => 'Not approve this change',
 	'Class:bizChangeTicket/Stimulus:ev_notapprove+' => 'This change is not approved by CAB',
 	'Class:bizChangeTicket/Stimulus:ev_implement' => 'Implement this change',
-	'Class:bizChangeTicket/Stimulus:ev_implement+' => 'Implementation pahse for current change',
+	'Class:bizChangeTicket/Stimulus:ev_implement+' => 'Implementation phase for current change',
 	'Class:bizChangeTicket/Stimulus:ev_monitor' => 'Monitor this change',
 	'Class:bizChangeTicket/Stimulus:ev_monitor+' => 'Starting monitoring period for this change',
 	'Class:bizChangeTicket/Stimulus:ev_finish' => 'Close change',
