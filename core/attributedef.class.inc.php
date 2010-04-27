@@ -210,6 +210,11 @@ abstract class AttributeDefinition
 	//abstract protected GetBasicFilterHTMLInput();
 	abstract public function GetBasicFilterSQLExpr($sOpCode, $value); 
 
+	public function GetEditValue($sValue)
+	{
+		return (string)$sValue;
+	}
+
 	public function GetAsHTML($sValue)
 	{
 		return Str::pure2html((string)$sValue);
@@ -838,6 +843,12 @@ class AttributeEnum extends AttributeString
 		$sLabel = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue, $sValue);
 		// later, we could imagine a detailed description in the title
 		return "<span title=\"\">".parent::GetAsHtml($sLabel)."</span>";
+	}
+
+	public function GetEditValue($sValue)
+	{
+		$sLabel = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue, $sValue);
+		return $sLabel;
 	}
 
 	public function GetAllowedValues($aArgs = array(), $sBeginsWith = '')

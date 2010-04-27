@@ -89,7 +89,7 @@ switch($operation)
 	{
 		$sId = $oWizardHelper->GetIdForField($sAttCode);
 		$value = $oObj->Get($sAttCode);
-		$displayValue = $oObj->GetDisplayValue($sAttCode);
+		$displayValue = $oObj->GetEditValue($sAttCode);
 		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 		$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $value, $displayValue, 'att_'.$sId, '', 0, array('this' => $oObj));
 

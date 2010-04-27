@@ -913,7 +913,7 @@ try
 							$aAttributesDef = MetaModel::ListAttributeDefs($sClass);
 							$oAttDef = $aAttributesDef[$sAttCode];
 							$aArgs = array('this' => $oObj);
-							$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, $sClass, $sAttCode, $oAttDef, $oObj->Get($sAttCode), $oObj->GetDisplayValue($sAttCode), '', '', $iExpectCode, $aArgs);
+							$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, $sClass, $sAttCode, $oAttDef, $oObj->Get($sAttCode), $oObj->GetEditValue($sAttCode), '', '', $iExpectCode, $aArgs);
 							$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $sHTMLValue);
 						}
 					}

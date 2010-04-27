@@ -77,60 +77,6 @@ abstract class cmdbAbstractObject extends CMDBObject
 		return "<a href=\"{$sAbsoluteUrl}{$sPage}?operation=details&class=$sObjClass&id=$sObjKey&".$oAppContext->GetForLink()."\" title=\"$sHint\">$sLabel</a>";
 	}
 
-	public function GetDisplayValue($sAttCode)
-	{
-		$sDisplayValue = "";
-		$sStateAttCode = MetaModel::GetStateAttributeCode(get_class($this));
-		if ($sStateAttCode == $sAttCode)
-		{
-			$sDisplayValue = MetaModel::GetStateLabel(get_class($this), $this->Get($sAttCode));
-		}
-		else
-		{
-			$oAtt = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-			
-			if ($oAtt->IsExternalKey())
-			{
-				$sTargetClass = $oAtt->GetTargetClass();
-				if ($this->IsNew())
-				{
-					// The current object exists only in memory, don't try to query it in the DB !
-					// instead let's query for the object pointed by the external key, and get its name
-					$targetObjId = $this->Get($sAttCode);
-					$oTargetObj = MetaModel::GetObject($sTargetClass, $targetObjId, false); // false => not sure it exists
-					if (is_object($oTargetObj))
-					{
-						$sDisplayValue = $oTargetObj->GetName();
-					}					
-				}
-				else
-				{
-					// retrieve the "external fields" linked to this external key
-					foreach (MetaModel::GetExternalFields(get_class($this), $sAttCode) as $oExtField)
-					{
-						$aAvailableFields[$oExtField->GetExtAttCode()] = $oExtField->GetAsHTML($this->Get($oExtField->GetCode()));
-					}
-					// Use the "name" of the target class as the label of the hyperlink
-					// unless it's not available in the external fields...
-					$sExtClassNameAtt = MetaModel::GetNameAttributeCode($sTargetClass);
-					if (isset($aAvailableFields[$sExtClassNameAtt]))
-					{
-						$sDisplayValue = $aAvailableFields[$sExtClassNameAtt];
-					}
-					else
-					{
-						$sDisplayValue = implode(' / ', $aAvailableFields);
-					}
-				}
-			}
-			else
-			{
-				$sDisplayValue = $this->GetAsHTML($sAttCode);
-			}
-		}
-		return $sDisplayValue;
-	}
-
 	function DisplayBareHeader(WebPage $oPage)
 	{
 		// Standard Header with name, actions menu and history block
@@ -592,8 +538,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 				}
 			}
 		}
-		$sHtml = '#'.$oSet->GetFilter()->ToOQL()."\n";
-		$sHtml .= implode($sSeparator, $aHeader)."\n";
+		$sHtml = implode($sSeparator, $aHeader)."\n";
 		$oSet->Seek(0);
 		while ($aObjects = $oSet->FetchAssoc())
 		{
@@ -973,7 +918,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 					else
 					{
 						$sValue = $this->Get($sAttCode);
-						$sDisplayValue = $this->GetDisplayValue($sAttCode);
+						$sDisplayValue = $this->GetEditValue($sAttCode);
 						$aArgs = array('this' => $this);
 						$sHTMLValue = self::GetFormElementForField($oPage, get_class($this), $sAttCode, $oAttDef, $sValue, $sDisplayValue, '', '', $iFlags, $aArgs);
 					}
@@ -1032,7 +977,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 			else if (!$oAttDef->IsExternalField())
 			{
 				$sValue = ($oObjectToClone == null) ? '' : $oObjectToClone->Get($sAttCode);
-				$sDisplayValue = ($oObjectToClone == null) ? '' : $oObjectToClone->GetDisplayValue($sAttCode);
+				$sDisplayValue = ($oObjectToClone == null) ? '' : $oObjectToClone->GetEditValue($sAttCode);
 				$iOptions = isset($aStates[$sTargetState]['attribute_list'][$sAttCode]) ? $aStates[$sTargetState]['attribute_list'][$sAttCode] : 0;
 				
 				$sHTMLValue = self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, '', '', $iOptions, $aArgs);

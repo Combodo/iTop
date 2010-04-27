@@ -382,6 +382,52 @@ abstract class DBObject
 		return $oAtt->GetAsHTML($this->Get($sAttCode));
 	}
 
+	public function GetEditValue($sAttCode)
+	{
+		$sClass = get_class($this);
+		$oAtt = MetaModel::GetAttributeDef($sClass, $sAttCode);
+
+		if ($oAtt->IsExternalKey())
+		{
+			$sTargetClass = $oAtt->GetTargetClass();
+			if ($this->IsNew())
+			{
+				// The current object exists only in memory, don't try to query it in the DB !
+				// instead let's query for the object pointed by the external key, and get its name
+				$targetObjId = $this->Get($sAttCode);
+				$oTargetObj = MetaModel::GetObject($sTargetClass, $targetObjId, false); // false => not sure it exists
+				if (is_object($oTargetObj))
+				{
+					$sEditValue = $oTargetObj->GetName();
+				}					
+			}
+			else
+			{
+				// retrieve the "external fields" linked to this external key
+				foreach (MetaModel::GetExternalFields(get_class($this), $sAttCode) as $oExtField)
+				{
+					$aAvailableFields[$oExtField->GetExtAttCode()] = $oExtField->GetAsHTML($this->Get($oExtField->GetCode()));
+				}
+				// Use the "name" of the target class as the label of the hyperlink
+				// unless it's not available in the external fields...
+				$sExtClassNameAtt = MetaModel::GetNameAttributeCode($sTargetClass);
+				if (isset($aAvailableFields[$sExtClassNameAtt]))
+				{
+					$sEditValue = $aAvailableFields[$sExtClassNameAtt];
+				}
+				else
+				{
+					$sEditValue = implode(' / ', $aAvailableFields);
+				}
+			}
+		}
+		else
+		{
+			$sEditValue = $oAtt->GetEditValue($this->Get($sAttCode));
+		}
+		return $sEditValue;
+	}
+
 	public function GetAsXML($sAttCode)
 	{
 		$oAtt = MetaModel::GetAttributeDef(get_class($this), $sAttCode);

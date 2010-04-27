@@ -307,7 +307,7 @@ EOF;
 					else
 					{
 						$sValue = ""; //$this->Get($sAttCode);
-						$sDisplayValue = ""; //$this->GetDisplayValue($sAttCode);
+						$sDisplayValue = ""; //$this->GetEditValue($sAttCode);
 						$sSubId = $sId.'_'.$index;
 						$aAttrsMap[$sAttCode] = $sSubId;
 						$index++;
