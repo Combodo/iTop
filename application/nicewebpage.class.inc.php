@@ -35,14 +35,20 @@ class NiceWebPage extends WebPage
 		// $aTopLevelClasses = array('bizService', 'bizContact', 'logInfra', 'bizDocument');
 		// These are classes wich root class is cmdbAbstractObject ! 
 		$this->add("<select id=\"select_$sName\" name=\"$sName\">");
+		$aValidClasses = array();
 		foreach(MetaModel::GetClasses('bizmodel') as $sClassName)
 		{
 			if (is_null($iActionCode) || UserRights::IsActionAllowed($sClassName, $iActionCode))
 			{
 				$sSelected = ($sClassName == $sDefaultValue) ? " SELECTED" : "";
-				$this->add("<option style=\"width: ".$iWidthPx." px;\" value=\"$sClassName\"$sSelected>$sClassName - ".MetaModel::GetClassDescription($sClassName)."</option>");
+				$sDescription = MetaModel::GetClassDescription($sClassName);
+				$sDisplayName = MetaModel::GetName($sClassName);
+				$aValidClasses[$sDisplayName] = "<option style=\"width: ".$iWidthPx." px;\" title=\"$sDescription\" value=\"$sClassName\"$sSelected>$sDisplayName</option>";
 			}
 		}
+		ksort($aValidClasses);
+		$this->add(implode("\n", $aValidClasses));
+		
 		$this->add("</select>");
 	}
 

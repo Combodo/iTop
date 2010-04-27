@@ -951,7 +951,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$sOperation = ($oObjectToClone == null) ? 'apply_new' : 'apply_clone';
 		$sClass = ($oObjectToClone == null) ? $sClass : get_class($oObjectToClone);
 		$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
-		$oPage->add("<form id=\"creation_form_{$iCreationFormId}\" method=\"post\" onSubmit=\"return CheckMandatoryFields('creation_form_{$iCreationFormId}')\">\n");
+		$oPage->add("<form id=\"creation_form_{$iCreationFormId}\" method=\"post\" enctype=\"multipart/form-data\" onSubmit=\"return CheckMandatoryFields('creation_form_{$iCreationFormId}')\">\n");
 		$aStates = MetaModel::EnumStates($sClass);
 		if ($oObjectToClone == null)
 		{

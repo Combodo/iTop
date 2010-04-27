@@ -123,12 +123,12 @@ class DisplayBlock
 			if(empty($aParams['object_id']))
 			{
 				// if 'links' mode is requested the d of the object to link to must be specified
-				throw new ApplicationException("Parameter object_id is mandatory when link_attr is specified. Check the definition of the display template.");
+				throw new ApplicationException(Dict::S('UI:Error:MandatoryTemplateParameter_object_id'));
 			}
 			if(empty($aParams['target_attr']))
 			{
 				// if 'links' mode is requested the id of the object to link to must be specified
-				throw new ApplicationException("Parameter target_attr is mandatory when link_attr is specified. Check the definition of the display template.");
+				throw new ApplicationException(Dict::S('UI:Error:MandatoryTemplateParameter_link_attr'));
 			}
 
 		}
@@ -234,7 +234,7 @@ class DisplayBlock
 		{
 			// render it as an Ajax (asynchronous) call
 			$sHtml .= "<div id=\"$sId\" class=\"display_block loading\">\n";
-			$sHtml .= $oPage->GetP("<img src=\"../images/indicator_arrows.gif\"> Loading...");
+			$sHtml .= $oPage->GetP("<img src=\"../images/indicator_arrows.gif\"> ".Dict::S('UI:Loading'));
 			$sHtml .= "</div>\n";
 			$sHtml .= '
 			<script language="javascript">
@@ -312,13 +312,13 @@ class DisplayBlock
 					$aData[] = array ( 'group' => $sLabels[$sValue],
 									  'value' => "<a href=\"./UI.php?operation=search&dosearch=1&$sParams&filter=$sFilter&$sGroupByField=".urlencode($sValue)."\">$iCount</a>"); // TO DO: add the context information
 				}
-				$sHtml .= $oPage->GetTable(array('group' => array('label' => MetaModel::GetLabel($this->m_oFilter->GetClass(), $sGroupByField), 'description' => ''), 'value' => array('label'=>'Count', 'description' => 'Number of elements')), $aData);
+				$sHtml .= $oPage->GetTable(array('group' => array('label' => MetaModel::GetLabel($this->m_oFilter->GetClass(), $sGroupByField), 'description' => ''), 'value' => array('label'=> Dict::S('UI:GroupBy:Count'), 'description' => Dict::S('UI:GroupBy:Count+'))), $aData);
 			}
 			else
 			{
 				// Simply count the number of elements in the set
 				$iCount = $oSet->Count();
-				$sHtml .= $oPage->GetP("$iCount objects matching the criteria.");
+				$sHtml .= $oPage->GetP(Dict::Format('UI:CountOfObjects', $iCount));
 			}
 			
 			break;
@@ -327,7 +327,7 @@ class DisplayBlock
 			$aDisplayAliases = isset($aExtraParams['display_aliases']) ? explode(',', $aExtraParams['display_aliases']): array();
 			if (!isset($aExtraParams['group_by']))
 			{
-				$sHtml .= $oPage->GetP("parameter group_by is mandatory.");
+				$sHtml .= $oPage->GetP(Dict::S('UI:Error:MandatoryTemplateParameter_group_by'));
 			}
 			else
 			{
@@ -343,7 +343,7 @@ class DisplayBlock
 				}
 				if (count($aGroupByFields) == 0)
 				{
-					$sHtml .= $oPage->GetP("Invalid list of fields to group by: '".$aExtraParams['group_by']."'.");
+					$sHtml .= $oPage->GetP(Dict::Format('UI:Error:InvalidGroupByFields', $aExtraParams['group_by']));
 				}
 				else
 				{
@@ -427,13 +427,13 @@ class DisplayBlock
 					else
 					{
 						// Empty set	
-						$sHtml .= $oPage->GetP("No object to display.");					
+						$sHtml .= $oPage->GetP(Dict::S('UI:NoObjectToDisplay'));					
 					}
 				}
 				else
 				{
 					// Not authorized
-					$sHtml .= $oPage->GetP("No object to display.");					
+					$sHtml .= $oPage->GetP(Dict::S('UI:NoObjectToDisplay'));					
 				}
 			}
 			else
@@ -445,7 +445,7 @@ class DisplayBlock
 				}
 				else
 				{
-					$sHtml .= $oPage->GetP("No object to display.");
+					$sHtml .= $oPage->GetP(Dict::S('UI:NoObjectToDisplay'));
 					$sClass = $this->m_oFilter->GetClass();
 					$bDisplayMenu = isset($aExtraParams['menu']) ? $aExtraParams['menu'] == true : true; 
 					if ($bDisplayMenu)
@@ -468,7 +468,7 @@ class DisplayBlock
 								}
 							}
 							
-							$sHtml .= $oPage->GetP("<a href=\"./UI.php?operation=new&class=$sClass&$sParams{$sDefault}\">Click here to create a new ".Metamodel::GetName($sClass)."</a>\n");
+							$sHtml .= $oPage->GetP("<a href=\"./UI.php?operation=new&class=$sClass&$sParams{$sDefault}\">".Dict::Format('UI:ClickToCreateNew', Metamodel::GetName($sClass))."</a>\n");
 						}
 					}
 				}
@@ -488,7 +488,7 @@ class DisplayBlock
 				$sClass = $this->m_oFilter->GetClass();
 				$oAttDef = MetaModel::GetAttributeDef($sClass, $this->m_aParams['target_attr']);
 				$sTargetClass = $oAttDef->GetTargetClass();
-				$sHtml .= $oPage->GetP("No ".MetaModel::GetName($sTargetClass)." to display.");
+				$sHtml .= $oPage->GetP(Dict::Format('UI:NoObject_Class_ToDisplay', MetaModel::GetName($sTargetClass)));
 				$bDisplayMenu = isset($this->m_aParams['menu']) ? $this->m_aParams['menu'] == true : true; 
 				if ($bDisplayMenu)
 				{
@@ -496,7 +496,7 @@ class DisplayBlock
 					{
 						$oAppContext = new ApplicationContext();
 						$sParams = $oAppContext->GetForLink();
-						$sHtml .= $oPage->GetP("<a href=\"../pages/UI.php?operation=modify_links&class=$sClass&sParams&link_attr=".$aExtraParams['link_attr']."&id=".$aExtraParams['object_id']."&target_class=$sTargetClass&addObjects=true\">Click here to add new ".Metamodel::GetName($sTargetClass)."s</a>\n");
+						$sHtml .= $oPage->GetP("<a href=\"../pages/UI.php?operation=modify_links&class=$sClass&sParams&link_attr=".$aExtraParams['link_attr']."&id=".$aExtraParams['object_id']."&target_class=$sTargetClass&addObjects=true\">".Dict::Format('UI:ClickToCreateNew', Metamodel::GetName($sClass))."</a>\n");
 					}
 				}
 			}
@@ -753,7 +753,7 @@ class DisplayBlock
 			
 			default:
 			// Unsupported style, do nothing.
-			$sHtml .= "Error: unsupported style of block: ".$this->m_sStyle;
+			$sHtml .= Dict::format('UI:Error:UnsupportedStyleOfBlock', $this->m_sStyle);
 		}
 		return $sHtml;
 	}
@@ -804,7 +804,7 @@ class HistoryBlock extends DisplayBlock
 				$oChange = $oContext->GetObject('CMDBChange', $oLatestChangeOp->Get('change'));
 				$sUserInfo = $oChange->GetAsHTML('userinfo');
 				$oSet->Rewind(); // Reset the pointer to the beginning of the set
-				$sHtml .= $oPage->GetStartCollapsibleSection("Last modified on $sDate by $sUserInfo.");
+				$sHtml .= $oPage->GetStartCollapsibleSection(Dict::Format('UI:History:LastModified_On_By', $sDate, $sUserInfo));
 				//$sHtml .= cmdbAbstractObject::GetDisplaySet($oPage, $oSet);
 				$aChanges = array();
 				while($oChangeOp = $oSet->Fetch())
@@ -823,9 +823,9 @@ class HistoryBlock extends DisplayBlock
 						$aChanges[$changeId]['log'][] = $sChangeDescription;
 					}
 				}
-				$aAttribs = array('date' => array('label' => 'Date', 'description' => 'Date of the change'),
-								  'userinfo' => array('label' => 'User', 'description' => 'User who made the change'),
-								  'log' => array('label' => 'Changes', 'description' => 'Changes made to the object'),
+				$aAttribs = array('date' => array('label' => Dict::S('UI:History:Date'), 'description' => Dict::S('UI:History:Date+')),
+								  'userinfo' => array('label' => Dict::S('UI:History:User'), 'description' => Dict::S('UI:History:User+')),
+								  'log' => array('label' => Dict::S('UI:History:Changes'), 'description' => Dict::S('UI:History:Changes+')),
 								 );
 				$aValues = array();
 				foreach($aChanges as $aChange)
@@ -874,7 +874,7 @@ class MenuBlock extends DisplayBlock
 			case 0:
 			// No object in the set, the only possible action is "new"
 			$bIsModifyAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY);
-			if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'New', 'url' => "../page/$sUIPage?operation=new&class=$sClass&$sContext{$sDefault}"); }
+			if ($bIsModifyAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:New'), 'url' => "../page/$sUIPage?operation=new&class=$sClass&$sContext{$sDefault}"); }
 			break;
 			
 			case 1:
@@ -891,20 +891,20 @@ class MenuBlock extends DisplayBlock
 				$sTargetAttr = $aExtraParams['target_attr'];
 				$oAttDef = MetaModel::GetAttributeDef($sClass, $sTargetAttr);
 				$sTargetClass = $oAttDef->GetTargetClass();
-				if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'Add...', 'url' => "../pages/$sUIPage?operation=modify_links&class=$sClass&link_attr=".$aExtraParams['link_attr']."&target_class=$sTargetClass&id=$id&addObjects=true&$sContext"); }
-				if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'Manage...', 'url' => "../pages/$sUIPage?operation=modify_links&class=$sClass&link_attr=".$aExtraParams['link_attr']."&target_class=$sTargetClass&id=$id&sContext"); }
+				if ($bIsModifyAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:Add'), 'url' => "../pages/$sUIPage?operation=modify_links&class=$sClass&link_attr=".$aExtraParams['link_attr']."&target_class=$sTargetClass&id=$id&addObjects=true&$sContext"); }
+				if ($bIsModifyAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:Manage'), 'url' => "../pages/$sUIPage?operation=modify_links&class=$sClass&link_attr=".$aExtraParams['link_attr']."&target_class=$sTargetClass&id=$id&sContext"); }
 				//if ($bIsDeleteAllowed) { $aActions[] = array ('label' => 'Remove All', 'url' => "#"); }
 			}
 			else
 			{
 				$sUrl = utils::GetAbsoluteUrl();
-				$aActions[] = array ('label' => 'eMail', 'url' => "mailto:?subject=".$oSet->GetFilter()->__DescribeHTML()."&body=".urlencode("$sUrl?operation=search&filter=$sFilter&$sContext"));
-				$aActions[] = array ('label' => 'CSV Export', 'url' => "../pages/$sUIPage?operation=search&filter=$sFilter&format=csv&$sContext");
+				$aActions[] = array ('label' => Dict::S('UI:Menu:EMail'), 'url' => "mailto:?subject=".$oSet->GetFilter()->__DescribeHTML()."&body=".urlencode("$sUrl?operation=search&filter=$sFilter&$sContext"));
+				$aActions[] = array ('label' => Dict::S('UI:Menu:CSVExport'), 'url' => "../pages/$sUIPage?operation=search&filter=$sFilter&format=csv&$sContext");
 				//$aActions[] = array ('label' => 'Bookmark...', 'url' => "../pages/ajax.render.php?operation=create&class=$sClass&filter=$sFilter", 'class' => 'jqmTrigger');
-				if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'New...', 'url' => "../pages/$sUIPage?operation=new&class=$sClass&$sContext{$sDefault}"); }
+				if ($bIsModifyAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:New'), 'url' => "../pages/$sUIPage?operation=new&class=$sClass&$sContext{$sDefault}"); }
 				//if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'Clone...', 'url' => "../pages/$sUIPage?operation=clone&class=$sClass&id=$id&$sContext"); }
-				if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'Modify...', 'url' => "../pages/$sUIPage?operation=modify&class=$sClass&id=$id&$sContext"); }
-				if ($bIsDeleteAllowed) { $aActions[] = array ('label' => 'Delete...', 'url' => "../pages/$sUIPage?operation=delete&class=$sClass&id=$id&$sContext"); }
+				if ($bIsModifyAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:Modify'), 'url' => "../pages/$sUIPage?operation=modify&class=$sClass&id=$id&$sContext"); }
+				if ($bIsDeleteAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:Delete'), 'url' => "../pages/$sUIPage?operation=delete&class=$sClass&id=$id&$sContext"); }
 			}
 			$aTransitions = $oObj->EnumTransitions();
 			$aStimuli = Metamodel::EnumStimuli($sClass);
@@ -941,19 +941,19 @@ class MenuBlock extends DisplayBlock
 				$oAttDef = MetaModel::GetAttributeDef($sClass, $sTargetAttr);
 				$sTargetClass = $oAttDef->GetTargetClass();
 				$bIsDeleteAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_DELETE, $oSet);
-				if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'Add...', 'url' => "../pages/$sUIPage?operation=modify_links&class=$sClass&link_attr=".$aExtraParams['link_attr']."&target_class=$sTargetClass&id=$id&addObjects=true&$sContext"); }
+				if ($bIsModifyAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:Add'), 'url' => "../pages/$sUIPage?operation=modify_links&class=$sClass&link_attr=".$aExtraParams['link_attr']."&target_class=$sTargetClass&id=$id&addObjects=true&$sContext"); }
 				//if ($bIsBulkModifyAllowed) { $aActions[] = array ('label' => 'Add...', 'url' => "../pages/$sUIPage?operation=modify_links&class=$sClass&linkage=".$aExtraParams['linkage']."&id=$id&addObjects=true&$sContext"); }
-				if ($bIsBulkModifyAllowed) { $aActions[] = array ('label' => 'Manage...', 'url' => "../pages/$sUIPage?operation=modify_links&class=$sClass&link_attr=".$aExtraParams['link_attr']."&target_class=$sTargetClass&id=$id&sContext"); }
+				if ($bIsBulkModifyAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:Manage'), 'url' => "../pages/$sUIPage?operation=modify_links&class=$sClass&link_attr=".$aExtraParams['link_attr']."&target_class=$sTargetClass&id=$id&sContext"); }
 				//if ($bIsBulkDeleteAllowed) { $aActions[] = array ('label' => 'Remove All...', 'url' => "#"); }
 			}
 			else
 			{
 				// many objects in the set, possible actions are: new / modify all / delete all
 				$sUrl = utils::GetAbsoluteUrl();
-				$aActions[] = array ('label' => 'eMail', 'url' => "mailto:?subject=".$oSet->GetFilter()->__DescribeHTML()."&body=".urlencode("$sUrl?operation=search&filter=$sFilter&$sContext"));
-				$aActions[] = array ('label' => 'CSV Export', 'url' => "../pages/$sUIPage?operation=search&filter=$sFilter&format=csv&$sContext");
+				$aActions[] = array ('label' => Dict::S('UI:Menu:EMail'), 'url' => "mailto:?subject=".$oSet->GetFilter()->__DescribeHTML()."&body=".urlencode("$sUrl?operation=search&filter=$sFilter&$sContext"));
+				$aActions[] = array ('label' => Dict::S('UI:Menu:CSVExport'), 'url' => "../pages/$sUIPage?operation=search&filter=$sFilter&format=csv&$sContext");
 				//$aActions[] = array ('label' => 'Bookmark...', 'url' => "../pages/ajax.render.php?operation=create&class=$sClass&filter=$sFilter", 'class' => 'jqmTrigger');
-				if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'New...', 'url' => "../pages/$sUIPage?operation=new&class=$sClass&$sContext{$sDefault}"); }
+				if ($bIsModifyAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:New'), 'url' => "../pages/$sUIPage?operation=new&class=$sClass&$sContext{$sDefault}"); }
 				//if ($bIsBulkModifyAllowed) { $aActions[] = array ('label' => 'Modify All...', 'url' => "../pages/$sUIPage?operation=modify_all&filter=$sFilter&$sContext"); }
 				//if ($bIsBulkDeleteAllowed) { $aActions[] = array ('label' => 'Delete All...', 'url' => "../pages/$sUIPage?operation=delete_all&filter=$sFilter&$sContext"); }
 			}

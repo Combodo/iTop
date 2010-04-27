@@ -63,7 +63,7 @@ class menuNode extends DBObject
 	
 	public function GetMenuName()
 	{
-		return $this->Get('name');
+		return Dict::S($this->Get('name'));
 	}
 
 	public function GetMenuIcon()
@@ -73,7 +73,7 @@ class menuNode extends DBObject
 
 	public function GetMenuLabel()
 	{
-		return $this->Get('label');
+		return Dict::S($this->Get('label'));
 	}
 	
 	public function GetMenuLink($aExtraParams)

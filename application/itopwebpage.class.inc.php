@@ -142,7 +142,7 @@ EOF
 		$oSearchFilter = $oContext->NewFilter("bizOrganization");
 		$oSet = new CMDBObjectSet($oSearchFilter);
 		$sSelected = ($this->m_currentOrganization == '') ? ' selected' : '';
-		$this->AddToMenu("<option value=\"\"$sSelected> All Organizations </option>");
+		$this->AddToMenu("<option value=\"\"$sSelected>".Dict::S('UI:AllOrganizations')."</option>");
 		if ($oSet->Count() > 0)
 		while($oOrg = $oSet->Fetch())
 		{
@@ -289,17 +289,27 @@ EOF
 			// if no search text is supplied then
 			// 1) the search text is filled with "your search"
 			// 2) clicking on it will erase it
-			$sText = "Your search";
+			$sText = Dict::S("UI:YourSearch");
 			$sOnClick = " onclick=\"this.value='';this.onclick=null;\"";
 		}
 		$sUserName = UserRights::GetUser();
 		$sIsAdmin = UserRights::IsAdministrator() ? '(Administrator)' : '';
-		echo "<div id=\"Login\" style=\"position:absolute; top:18px; right:16px; width:500px;\">Logged in as '$sUserName'&nbsp;$sIsAdmin&nbsp;&nbsp;";
+		if (UserRights::IsAdministrator())
+		{
+			$sLogonMessage = Dict::Format('UI:LoggedAsMessage+Admin', $sUserName);
+		}
+		else
+		{
+			$sLogonMessage = Dict::Format('UI:LoggedAsMessage', $sUserName);		
+		}
+		$sLogOffBtn = Dict::S('UI:Button:Logoff');
+		$sSearchBtn = Dict::S('UI:Button:Search');
+		echo "<div id=\"Login\" style=\"position:absolute; top:18px; right:16px; width:600px;\">{$sLogonMessage}&nbsp;&nbsp;";
 		echo "<form action=\"../pages/UI.php\" method=\"post\" style=\"display:inline\">\n";
-		echo "<input type=\"submit\" value=\"Log off\" />\n";
+		echo "<input type=\"submit\" value=\"$sLogOffBtn\" />\n";
 		echo "<input type=\"hidden\" name=\"loginop\" value=\"logoff\" />\n";
 		echo "</form>\n";
-		echo "<form action=\"../pages/UI.php\" style=\"display:inline\"><div style=\"padding:1px; background-color:#fff;display:inline;\"><img src=\"../images/magnifier.gif\"/><input style=\"border:0\" type=\"text\" size=\"15\" title=\"Global Search\" name=\"text\" value=\"$sText\"$sOnClick></input></div><input type=\"submit\" value=\"Search\" />
+		echo "<form action=\"../pages/UI.php\" style=\"display:inline\"><div style=\"padding:1px; background-color:#fff;display:inline;\"><img src=\"../images/magnifier.gif\"/><input style=\"border:0\" type=\"text\" size=\"15\" title=\"Global Search\" name=\"text\" value=\"$sText\"$sOnClick></input></div><input type=\"submit\" value=\"$sSearchBtn\" />
 			  <input type=\"hidden\" name=\"operation\" value=\"full_text\" /></form>\n";
 		echo "</div>\n";
 

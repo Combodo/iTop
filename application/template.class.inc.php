@@ -11,7 +11,7 @@ class DisplayTemplate
 	
 	public function __construct($sTemplate)
 	{
-		$this->m_aTags = array('itopblock', 'itoptabs', 'itoptab', 'itoptoggle');
+		$this->m_aTags = array('itopblock', 'itoptabs', 'itoptab', 'itoptoggle', 'itopstring');
 		$this->m_sTemplate = $sTemplate;
 	}
 	
@@ -148,6 +148,10 @@ class DisplayTemplate
 				$oTemplate->Render($oPage, array()); // no params to apply, they have already been applied
 				//$oPage->p('iTop Tab Content:<pre>'.htmlentities($sContent).'</pre>');
 				$oPage->EndCollapsibleSection();
+			break;
+			
+			case 'itopstring':
+				$oPage->add(Dict::S($sContent));
 			break;
 			
 			case 'itopblock': // No longer used, handled by DisplayBlock::FromTemplate see above
