@@ -518,7 +518,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		{
 			foreach(MetaModel::ListAttributeDefs($sClassName) as $sAttCode => $oAttDef)
 			{
-				if ($oAttDef->IsScalar())
+				if (($sAttCode != 'finalclass') && $oAttDef->IsScalar())
 				{
 					$aList[$sClassName][$sAttCode] = $oAttDef;
 				}
