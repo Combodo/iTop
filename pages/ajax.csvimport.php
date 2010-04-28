@@ -182,8 +182,8 @@ switch($sOperation)
 			$oPage->add('<td>'.GetMappingForField($sClassName, $sField, $index).'</td>');
 			$oPage->add('<td>&nbsp;</td>');
 			$oPage->add('<td><input id="search_'.$index.'" type="checkbox" name="search_field['.$index.']" value="1" /></td>');
-			$oPage->add('<td>'.(isset($aData[$iStartLine][$index]) ? htmlentities($aData[$iStartLine][$index-1]) : '&nbsp;').'</td>');
-			$oPage->add('<td>'.(isset($aData[$iStartLine+1][$index]) ? htmlentities($aData[$iStartLine+1][$index-1]) : '&nbsp;').'</td>');
+			$oPage->add('<td>'.(isset($aData[$iStartLine][$index-1]) ? htmlentities($aData[$iStartLine][$index-1]) : '&nbsp;').'</td>');
+			$oPage->add('<td>'.(isset($aData[$iStartLine+1][$index-1]) ? htmlentities($aData[$iStartLine+1][$index-1]) : '&nbsp;').'</td>');
 			$oPage->add('</tr>');
 			$index++;
 		}
