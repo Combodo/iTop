@@ -10,7 +10,7 @@
 
 $MySettings = array(
 	'db_host' => 'localhost',
-	'db_user' => 'RomainDBLogin',
+	'db_user' => 'root',
 	'db_pwd' => '',
 	'db_name' => 'TestFarm',
 	'db_subname' => '', // use it to differentiate two applications instances running on the same DB
@@ -20,6 +20,9 @@ $MySettings = array(
 
 $MyModules = array(
 	'application' => array (
+//		'../core/event.class.inc.php',
+//		'../core/action.class.inc.php',
+//		'../core/trigger.class.inc.php',
 		// to be continued...
 	),
 	'business' => array (
