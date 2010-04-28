@@ -267,6 +267,90 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:URP_AttributeGrant/Attribute:attcode+' => 'attribute code',
 ));
 
+//
+// String from the User Interface: menu, messages, buttons, etc...
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'UI:WelcomeMenu' => 'Welcome',
+	'UI:WelcomeMenu+' => 'Welcome to iTop',
+	'UI:WelcomeMenu:Title' => 'Welcome to iTop',
+
+	'UI:WelcomeMenu:LeftBlock' => '<p>iTop is a complete, OpenSource, IT Operational Portal.</p>
+<ul>It includes:
+<li>A complete CMDB (Configuration management database) to document and manage the IT inventory.</li>
+<li>An Incident management module to track and communicate about all issues occurring in the IT.</li>
+<li>A change management module to plan and track the changes to the IT environment.</li>
+<li>A known error database to speed up the resolution of incidents.</li>
+<li>An outage module to document all planned outages and notify the appropriate contacts.</li>
+<li>Dashboards to quickly get an overview of your IT.</li>
+</ul>
+<p>All the modules can be setup, step by step, indepently of each other.</p>',
+
+	'UI:WelcomeMenu:RightBlock' => '<p>iTop is service provider oriented, it allows IT engineers to manage easily multiple customers or organizations.
+<ul>iTop, delivers a feature-rich set of business processes that:
+<li>Enhances IT management effectiveness</li> 
+<li>Drives IT operations performance</li> 
+<li>Improves customer satisfaction and provides executives with insights into business performance.</li>
+</ul>
+</p>
+<p>iTop is completely opened to be integrated within your current IT Management infrastructure.</p>
+<p>
+<ul>Adopting this new generation of IT Operational portal will help you to:
+<li>Better manage a more and more complex IT environment.</li>
+<li>Implement ITIL processes at your own pace.</li>
+<li>Manage the most important asset of your IT: Documentation.</li>
+</ul>
+</p>',
+
+	'UI:WelcomeMenu:MyCalls' => 'My Service Calls',
+	'UI:WelcomeMenu:MyIncidents' => 'My Incidents',
+	'UI:AllOrganizations' => ' All Organizations ',
+	'UI:YourSearch' => 'Your Search',
+	'UI:LoggedAsMessage' => 'Logged in as %1$s',
+	'UI:LoggedAsMessage+Admin' => 'Logged in as %1$s (Administrator)',
+	'UI:Button:Logoff' => 'Log off',
+	'UI:Button:Search' => 'Search',
+	'UI:ClickToCreateNew' => 'Click here to create a new %1$s',
+	'UI:NoObjectToDisplay' => 'No object to display.',
+	'UI:Error:MandatoryTemplateParameter_object_id' => 'Parameter object_id is mandatory when link_attr is specified. Check the definition of the display template.',
+	'UI:Error:MandatoryTemplateParameter_target_attr' => 'Parameter target_attr is mandatory when link_attr is specified. Check the definition of the display template.',
+	'UI:Error:MandatoryTemplateParameter_group_by' => 'Parameter group_by is mandatory. Check the definition of the display template.',
+	'UI:Error:InvalidGroupByFields' => 'Invalid list of fields to group by: "%1$s".',
+	'UI:Error:UnsupportedStyleOfBlock' => 'Error: unsupported style of block: "%1$s".',
+	'UI:GroupBy:Count' => 'Count',
+	'UI:GroupBy:Count+' => 'Number of elements',
+	'UI:CountOfObjects' => '%1$d objects matching the criteria.',
+	'UI:NoObject_Class_ToDisplay' => 'No %1$s to display',
+	'UI:History:LastModified_On_By' => 'Last modified on %1$s by %2$s.',
+	'UI:History:Date' => 'Date',
+	'UI:History:Date+' => 'Date of the change',
+	'UI:History:User' => 'User',
+	'UI:History:User+' => 'User who made the change',
+	'UI:History:Changes' => 'Changes',
+	'UI:History:Changes+' => 'Changes made to the object',
+	'UI:Loading' => 'Loading...',
+	'UI:Menu:New' => 'New...',
+	'UI:Menu:Add' => 'Add...',
+	'UI:Menu:Manage' => 'Manage...',
+	'UI:Menu:EMail' => 'eMail',
+	'UI:Menu:CSVExport' => 'CSV Export',
+	'UI:Menu:Modify' => 'Modify...',
+	'UI:Menu:Delete' => 'Delete...',
+	'UI:Menu:Manage' => 'Manage...',
+	'UI:Menu:BulkDelete' => 'Delete...',
+	'UI:UndefinedObject' => 'undefined',
+	'UI:Document:OpenInNewWindow:Download' => 'Open in new window: %1$s, Download: %2$s',
+	'UI:SelectAllToggle+' => 'Select / Deselect All',
+	'UI:ClickToDisplay+' => 'Click to display',
+	'UI:TruncatedResults' => '%1$d objects displayed out of %2%d',
+	'UI:DisplayAll' => 'Display All',
+	'UI:CountOfResults' => '%1$d object(s)',
+	'UI:ChangesLogTitle' => 'Changes log (%1$d):',
+	'UI:EmptyChangesLogTitle' => 'Changes log is empty',
+	'UI:SearchFor_Class_Objects' => 'Search for %1$s Objects',
+));
+
 
 
 ?>
