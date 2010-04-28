@@ -655,7 +655,7 @@ class DisplayBlock
 			break;
 			
 			case 'open_flash_chart_ajax':
-			include './php-ofc-library/open-flash-chart.php';
+			include '../pages/php-ofc-library/open-flash-chart.php';
 			$sChartType = isset($aExtraParams['chart_type']) ? $aExtraParams['chart_type'] : 'pie';
 
 			$oChart = new open_flash_chart();
