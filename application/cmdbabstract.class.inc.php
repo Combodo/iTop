@@ -35,7 +35,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 
 	protected static function MakeHyperLink($sObjClass, $sObjKey, $aAvailableFields)
 	{
-		if ($sObjKey <= 0) return '<em>undefined</em>'; // Objects built in memory have negative IDs
+		if ($sObjKey <= 0) return '<em>'.Dict::S('UI:UndefinedObject').'</em>'; // Objects built in memory have negative IDs
 
 		$oAppContext = new ApplicationContext();	
 		$sExtClassNameAtt = MetaModel::GetNameAttributeCode($sObjClass);
@@ -195,8 +195,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 				$oDoc = $this->Get($sAttCode);
 				if (is_object($oDoc) && !$oDoc->IsEmpty())
 				{
-					$sHtml .= "<p>Open in New Window: ".$oDoc->GetDisplayLink($sClass, $this->GetKey(), $sAttCode).", \n";
-					$sHtml .= "Download: ".$oDoc->GetDownloadLink($sClass, $this->GetKey(), $sAttCode)."</p>\n";
+					$sHtml .= "<p>".Dict::Format('UI:Document:OpenInNewWindow:Download', $oDoc->GetDisplayLink($sClass, $this->GetKey(), $sAttCode), $oDoc->GetDownloadLink($sClass, $this->GetKey(), $sAttCode))."</p>\n";
 					$sHtml .= "<div>".$oDoc->GetDisplayInline($sClass, $this->GetKey(), $sAttCode)."</div>\n";
 				}
 			}
@@ -258,12 +257,12 @@ abstract class cmdbAbstractObject extends CMDBObject
 			if($iLinkedObjectId == 0)
 			{
 				// if 'links' mode is requested the id of the object to link to must be specified
-				throw new ApplicationException("Parameter object_id is mandatory when link_attr is specified. Check the definition of the display template.");
+				throw new ApplicationException(Dict::S('UI:Error:MandatoryTemplateParameter_object_id'));
 			}
 			if($sTargetAttr == '')
 			{
 				// if 'links' mode is requested the d of the object to link to must be specified
-				throw new ApplicationException("Parameter target_attr is mandatory when link_attr is specified. Check the definition of the display template.");
+				throw new ApplicationException(Dict::S('UI:Error:MandatoryTemplateParameter_target_attr'));
 			}
 		}
 		$bDisplayMenu = isset($aExtraParams['menu']) ? $aExtraParams['menu'] == true : true;
@@ -312,14 +311,14 @@ abstract class cmdbAbstractObject extends CMDBObject
 		{
 			if (!$bSingleSelectMode)
 			{
-			$aAttribs['form::select'] = array('label' => "<input type=\"checkbox\" onChange=\"var value = this.checked; $('.selectList{$iListId}').each( function() { this.checked = value; } );\"></input>", 'description' => 'Select / Deselect All');
-		}
+				$aAttribs['form::select'] = array('label' => "<input type=\"checkbox\" onChange=\"var value = this.checked; $('.selectList{$iListId}').each( function() { this.checked = value; } );\"></input>", 'description' => Dict::S('UI:SelectAllToggle+'));
+			}
 			else
 			{
 				$aAttribs['form::select'] = array('label' => "", 'description' => '');
 			}
 		}
-		$aAttribs['key'] = array('label' => '', 'description' => 'Click to display');
+		$aAttribs['key'] = array('label' => '', 'description' => Dict::S('UI:ClickToDisplay+'));
 		foreach($aList as $sAttCode)
 		{
 			$aAttribs[$sAttCode] = array('label' => MetaModel::GetLabel($sClassName, $sAttCode), 'description' => MetaModel::GetDescription($sClassName, $sAttCode));
@@ -377,14 +376,14 @@ abstract class cmdbAbstractObject extends CMDBObject
 				$sFilter = $oSet->GetFilter()->serialize();
 				$aExtraParams['display_limit'] = false; // To expand the full list
 				$sExtraParams = addslashes(str_replace('"', "'", json_encode($aExtraParams))); // JSON encode, change the style of the quotes and escape them
-				$sHtml .= '<tr class="containerHeader"><td>'.utils::GetConfig()->GetMinDisplayLimit().' object(s) displayed out of '.$oSet->Count().'&nbsp;&nbsp;<a href="Javascript:ReloadTruncatedList(\''.$divId.'\', \''.$sFilter.'\', \''.$sExtraParams.'\');">Display All</a></td><td>';
+				$sHtml .= '<tr class="containerHeader"><td>'.Dict::Format('UI:TruncatedResults', utils::GetConfig()->GetMinDisplayLimit(), $oSet->Count()).'&nbsp;&nbsp;<a href="Javascript:ReloadTruncatedList(\''.$divId.'\', \''.$sFilter.'\', \''.$sExtraParams.'\');">'.Dict::S('UI:DisplayAll').'</a></td><td>';
 				$oPage->add_ready_script("$('#{$divId} table.listResults').addClass('truncated');");
 				$oPage->add_ready_script("$('#{$divId} table.listResults tr:last td').addClass('truncated');");
 			}
 			else
 			{
 				// Full list
-				$sHtml .= '<tr class="containerHeader"><td>&nbsp;'.$oSet->Count().' object(s)</td><td>';
+				$sHtml .= '<tr class="containerHeader"><td>&nbsp;'.Dict::Format('UI:CountOfResults').'</td><td>';
 			}
 			$sHtml .= $oMenuBlock->GetRenderContent($oPage, $aMenuExtraParams);
 			$sHtml .= '</td></tr>';
@@ -423,7 +422,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		foreach($aAuthorizedClasses as $sAlias => $sClassName) // TO DO: check if the user has enough rights to view the classes of the list...
 		{
 			$aList[$sClassName] = MetaModel::GetZListItems($sClassName, 'list');
-			$aAttribs['key_'.$sAlias] = array('label' => '', 'description' => 'Click to display');
+			$aAttribs['key_'.$sAlias] = array('label' => '', 'description' => Dict::S('UI:ClickToDisplay+'));
 			foreach($aList[$sClassName] as $sAttCode)
 			{
 				$aAttribs[$sAttCode.'_'.$sAlias] = array('label' => MetaModel::GetLabel($sClassName, $sAttCode), 'description' => MetaModel::GetDescription($sClassName, $sAttCode));
@@ -472,14 +471,14 @@ abstract class cmdbAbstractObject extends CMDBObject
 				$sFilter = $oSet->GetFilter()->serialize();
 				$aExtraParams['display_limit'] = false; // To expand the full list
 				$sExtraParams = addslashes(str_replace('"', "'", json_encode($aExtraParams))); // JSON encode, change the style of the quotes and escape them
-				$sHtml .= '<tr class="containerHeader"><td>'.utils::GetConfig()->GetMinDisplayLimit().' object(s) displayed out of '.$oSet->Count().'&nbsp;&nbsp;<a href="Javascript:ReloadTruncatedList(\''.$divId.'\', \''.$sFilter.'\', \''.$sExtraParams.'\');">Display All</a></td><td>';
+				$sHtml .= '<tr class="containerHeader"><td>'.Dict::Format('UI:TruncatedResults', utils::GetConfig()->GetMinDisplayLimit(), $oSet->Count()).'&nbsp;&nbsp;<a href="Javascript:ReloadTruncatedList(\''.$divId.'\', \''.$sFilter.'\', \''.$sExtraParams.'\');">'.Dict::S('UI:DisplayAll').'</a></td><td>';
 				$oPage->add_ready_script("$('#{$divId} table.listResults').addClass('truncated');");
 				$oPage->add_ready_script("$('#{$divId} table.listResults tr:last td').addClass('truncated');");
 			}
 			else
 			{
 				// Full list
-				$sHtml .= '<tr class="containerHeader"><td>&nbsp;'.$oSet->Count().' object(s)</td><td>';
+				$sHtml .= '<tr class="containerHeader"><td>&nbsp;'.Dict::Format('UI:CountOfResults').'</td><td>';
 			}
 			$sHtml .= $oMenuBlock->GetRenderContent($oPage, $aMenuExtraParams);
 			$sHtml .= '</td></tr>';
@@ -614,12 +613,12 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$count = $oSet->Count();
 		if ($count > 0)
 		{
-			$oPage->p("Changes log ($count):");
+			$oPage->p(Dict::Format('UI:ChangesLogTitle', $count));
 			self::DisplaySet($oPage, $oSet);
 		}
 		else
 		{
-			$oPage->p("Changes log is empty");
+			$oPage->p(Dict::S('UI:EmptyChangesLogTitle'));
 		}
 	}
 	
@@ -642,13 +641,13 @@ abstract class cmdbAbstractObject extends CMDBObject
 		// (especially when used to add a link)
 		/*
 		$sHtml .= "<div class=\"mini_tabs\" id=\"mini_tabs{$iSearchFormId}\"><ul>
-					<li><a href=\"#\" onClick=\"$('div.mini_tab{$iSearchFormId}').toggle();$('#mini_tabs{$iSearchFormId} ul li a').toggleClass('selected');\">OQL Query</a></li>
-					<li><a class=\"selected\" href=\"#\" onClick=\"$('div.mini_tab{$iSearchFormId}').toggle();$('#mini_tabs{$iSearchFormId} ul li a').toggleClass('selected');\">Simple Search</a></li>
+					<li><a href=\"#\" onClick=\"$('div.mini_tab{$iSearchFormId}').toggle();$('#mini_tabs{$iSearchFormId} ul li a').toggleClass('selected');\">".Dict::S('UI:OQLQueryTab')."</a></li>
+					<li><a class=\"selected\" href=\"#\" onClick=\"$('div.mini_tab{$iSearchFormId}').toggle();$('#mini_tabs{$iSearchFormId} ul li a').toggleClass('selected');\">".Dict::S('UI:SimpleSearchTab')."</a></li>
 					</ul></div>\n";
 		*/
 		// Simple search form
 		$sHtml .= "<div id=\"SimpleSearchForm{$iSearchFormId}\" class=\"mini_tab{$iSearchFormId}\">\n";
-		$sHtml .= "<h1>Search for ".MetaModel::GetName($sClassName)." Objects</h1>\n";
+		$sHtml .= "<h1>".Dict::Format('UI:SearchFor_Class_Objects', $sClassName)."</h1>\n";
 		$oUnlimitedFilter = new DBObjectSearch($sClassName);
 		$sHtml .= "<form id=\"form{$iSearchFormId}\">\n";
 		$index = 0;
@@ -726,7 +725,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 			$sHtml .= "<td colspan=\"".(2*($numCols - ($index % $numCols)))."\"></td>\n";
 		}
 		$sHtml .= "</tr>\n";
-		$sHtml .= "<tr><td colspan=\"".(2*$numCols)."\" align=\"right\"><input type=\"submit\" value=\" Search \"></td></tr>\n";
+		$sHtml .= "<tr><td colspan=\"".(2*$numCols)."\" align=\"right\"><input type=\"submit\" value=\"".Dict::S('UI:Button:Search')."\"></td></tr>\n";
 		$sHtml .= "</table>\n";
 		foreach($aExtraParams as $sName => $sValue)
 		{
@@ -741,7 +740,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 
 		// OQL query builder
 		$sHtml .= "<div id=\"OQLQuery{$iSearchFormId}\" style=\"display:none\" class=\"mini_tab{$iSearchFormId}\">\n";
-		$sHtml .= "<h1>OQL Query Builder</h1>\n";
+		$sHtml .= "<h1>".Dict::S('UI:OQLQueryBuilderTitle')."</h1>\n";
 		$sHtml .= "<form id=\"formOQL{$iSearchFormId}\"><table style=\"width:80%;\"><tr style=\"vertical-align:top\">\n";
 		$sHtml .= "<td style=\"text-align:right\"><label>SELECT&nbsp;</label><select name=\"oql_class\">";
 		$aClasses = MetaModel::EnumChildClasses($sClassName, ENUM_CHILD_CLASSES_ALL);
@@ -755,7 +754,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		}
 		$sHtml .= "</select>&nbsp;</td><td>\n";
 		$sHtml .= "<textarea name=\"oql_clause\" style=\"width:100%\">$sOQLClause</textarea></td></tr>\n";
-		$sHtml .= "<tr><td colspan=\"2\" style=\"text-align:right\"><input type=\"submit\" value=\" Query \"></td></tr>\n";
+		$sHtml .= "<tr><td colspan=\"2\" style=\"text-align:right\"><input type=\"submit\" value=\"".Dict::S('UI:Button:Query')."\"></td></tr>\n";
 		$sHtml .= "<input type=\"hidden\" name=\"dosearch\" value=\"1\" />\n";
 		foreach($aExtraParams as $sName => $sValue)
 		{
@@ -936,8 +935,8 @@ abstract class cmdbAbstractObject extends CMDBObject
 			$oPage->add("<input type=\"hidden\" name=\"$sName\" value=\"$value\">\n");
 		}
 		$oPage->add($oAppContext->GetForForm());
-		$oPage->add("<button type=\"button\" class=\"action\" onClick=\"goBack()\"><span>Cancel</span></button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
-		$oPage->add("<button type=\"submit\" class=\"action\"><span>Apply</span></button>\n");
+		$oPage->add("<button type=\"button\" class=\"action\" onClick=\"goBack()\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
+		$oPage->add("<button type=\"submit\" class=\"action\"><span>".Dict::S('UI:Button:Apply')."</span></button>\n");
 		$oPage->add("</form>\n");
 	}
 	
@@ -997,8 +996,8 @@ abstract class cmdbAbstractObject extends CMDBObject
 		{
 			$oPage->add("<input type=\"hidden\" name=\"$sName\" value=\"$value\">\n");
 		}
-		$oPage->add("<button type=\"button\" class=\"action\" onClick=\"goBack()\"><span>Cancel</span></button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
-		$oPage->add("<button type=\"submit\" class=\"action\"><span>Apply</span></button>\n");
+		$oPage->add("<button type=\"button\" class=\"action\" onClick=\"goBack()\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
+		$oPage->add("<button type=\"submit\" class=\"action\"><span>".Dict::S('UI:Button:Apply')."</span></button>\n");
 		$oPage->add("</form>\n");
 	}
 

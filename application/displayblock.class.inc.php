@@ -128,7 +128,7 @@ class DisplayBlock
 			if(empty($aParams['target_attr']))
 			{
 				// if 'links' mode is requested the id of the object to link to must be specified
-				throw new ApplicationException(Dict::S('UI:Error:MandatoryTemplateParameter_link_attr'));
+				throw new ApplicationException(Dict::S('UI:Error:MandatoryTemplateParameter_target_attr'));
 			}
 
 		}
@@ -549,7 +549,7 @@ class DisplayBlock
 			$sHtml .= cmdbAbstractObject::GetSearchForm($oPage, $this->m_oSet, $aExtraParams);
 	 		$sHtml .= "</div>\n";
 	 		$sHtml .= "<div class=\"HRDrawer\"></div>\n";
-	 		$sHtml .= "<div id=\"LnkSearch_$iSearchSectionId\" class=\"DrawerHandle\">Search</div>\n";
+	 		$sHtml .= "<div id=\"LnkSearch_$iSearchSectionId\" class=\"DrawerHandle\">".Dict::S('UI:SearchToggle')."</div>\n";
 			break;
 			
 			case 'pie_chart':
@@ -955,10 +955,10 @@ class MenuBlock extends DisplayBlock
 				//$aActions[] = array ('label' => 'Bookmark...', 'url' => "../pages/ajax.render.php?operation=create&class=$sClass&filter=$sFilter", 'class' => 'jqmTrigger');
 				if ($bIsModifyAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:New'), 'url' => "../pages/$sUIPage?operation=new&class=$sClass&$sContext{$sDefault}"); }
 				//if ($bIsBulkModifyAllowed) { $aActions[] = array ('label' => 'Modify All...', 'url' => "../pages/$sUIPage?operation=modify_all&filter=$sFilter&$sContext"); }
-				//if ($bIsBulkDeleteAllowed) { $aActions[] = array ('label' => 'Delete All...', 'url' => "../pages/$sUIPage?operation=delete_all&filter=$sFilter&$sContext"); }
+				if ($bIsBulkDeleteAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:BulkDelete'), 'url' => "../pages/$sUIPage?operation=select_for_deletion&filter=$sFilter&$sContext"); }
 			}
 		}
-		$sHtml .= "<div class=\"jd_menu_itop\"><ul class=\"jd_menu jd_menu_itop\">\n<li>Actions\n<ul>\n";
+		$sHtml .= "<div class=\"jd_menu_itop\"><ul class=\"jd_menu jd_menu_itop\">\n<li>".Dict::S('UI:Menu:Actions')."\n<ul>\n";
 		foreach ($aActions as $aAction)
 		{
 			$sClass = isset($aAction['class']) ? " class=\"{$aAction['class']}\"" : "";

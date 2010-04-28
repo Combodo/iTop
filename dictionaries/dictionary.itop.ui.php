@@ -310,7 +310,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:LoggedAsMessage' => 'Logged in as %1$s',
 	'UI:LoggedAsMessage+Admin' => 'Logged in as %1$s (Administrator)',
 	'UI:Button:Logoff' => 'Log off',
-	'UI:Button:Search' => 'Search',
+	'UI:Button:GlobalSearch' => 'Search',
+	'UI:Button:Search' => ' Search ',
+	'UI:Button:Query' => ' Query ',
+	'UI:Button:Cancel' => 'Cancel',
+	'UI:Button:Apply' => 'Apply',
+	'UI:SearchToggle' => 'Search',
 	'UI:ClickToCreateNew' => 'Click here to create a new %1$s',
 	'UI:NoObjectToDisplay' => 'No object to display.',
 	'UI:Error:MandatoryTemplateParameter_object_id' => 'Parameter object_id is mandatory when link_attr is specified. Check the definition of the display template.',
@@ -330,6 +335,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:History:Changes' => 'Changes',
 	'UI:History:Changes+' => 'Changes made to the object',
 	'UI:Loading' => 'Loading...',
+	'UI:Menu:Actions' => 'Actions',
 	'UI:Menu:New' => 'New...',
 	'UI:Menu:Add' => 'Add...',
 	'UI:Menu:Manage' => 'Manage...',
@@ -349,6 +355,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:ChangesLogTitle' => 'Changes log (%1$d):',
 	'UI:EmptyChangesLogTitle' => 'Changes log is empty',
 	'UI:SearchFor_Class_Objects' => 'Search for %1$s Objects',
+	'UI:OQLQueryBuilderTitle' => 'OQL Query Builder',
+	'UI:OQLQueryTab' => 'OQL Query',
+	'UI:SimpleSearchTab' => 'Simple Search',
 ));
 
 

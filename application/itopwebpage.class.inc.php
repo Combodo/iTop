@@ -303,7 +303,7 @@ EOF
 			$sLogonMessage = Dict::Format('UI:LoggedAsMessage', $sUserName);		
 		}
 		$sLogOffBtn = Dict::S('UI:Button:Logoff');
-		$sSearchBtn = Dict::S('UI:Button:Search');
+		$sSearchBtn = Dict::S('UI:Button:GlobalSearch');
 		echo "<div id=\"Login\" style=\"position:absolute; top:18px; right:16px; width:600px;\">{$sLogonMessage}&nbsp;&nbsp;";
 		echo "<form action=\"../pages/UI.php\" method=\"post\" style=\"display:inline\">\n";
 		echo "<input type=\"submit\" value=\"$sLogOffBtn\" />\n";
