@@ -358,6 +358,14 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:OQLQueryBuilderTitle' => 'OQL Query Builder',
 	'UI:OQLQueryTab' => 'OQL Query',
 	'UI:SimpleSearchTab' => 'Simple Search',
+	'UI:Details+' => 'Details',
+	'UI:Login:Welcome' => 'Welcome to iTop!',
+	'UI:Login:IncorrectLoginPassword' => 'Incorrect login/password, please try again.',
+	'UI:Login:IdentifyYourself' => 'Identify yourself before continuing',
+	'UI:Login:UserNamePrompt' => 'User Name:',
+	'UI:Login:PasswordPrompt' => 'Password:',
+	'UI:Button:Login' => 'Enter iTop',
+	'UI:Login:Error:AccessRestricted' => 'iTop access is restricted. Please, contact an iTop administrator.',
 ));
 
 

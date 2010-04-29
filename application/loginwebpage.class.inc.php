@@ -43,20 +43,20 @@ h1 {
 		$sAuthPwd = utils::ReadParam('suggest_pwd', '');
 
 		$this->add("<div id=\"login\">\n");
-		$this->add("<h1>Welcome to iTop!</h1>\n");
+		$this->add("<h1>".Dict::S('UI:Login:Welcome')."</h1>\n");
 		if ($bFailedLogin)
 		{
-			$this->add("<p class=\"hilite\">Incorrect login/password, please try again.</p>\n");
+			$this->add("<p class=\"hilite\">".Dict::S('UI:Login:IncorrectLoginPassword')."</p>\n");
 		}
 		else
 		{
-			$this->add("<p>Please identify yourself before continuing.</p>\n");
+			$this->add("<p>".Dict::S('UI:Login:IdentifyYourself')."</p>\n");
 		}
 		$this->add("<form method=\"post\">\n");
 		$this->add("<table>\n");
-		$this->add("<tr><td><label for=\"user\">User Name:</label></td><td><input id=\"user\" type=\"text\" name=\"auth_user\" value=\"$sAuthUser\" /></td></tr>\n");
-		$this->add("<tr><td><label for=\"pwd\">Password:</label></td><td><input id=\"pwd\" type=\"password\" name=\"auth_pwd\" value=\"$sAuthPwd\" /></td></tr>\n");
-		$this->add("<tr><td colspan=\"2\" class=\"center v-spacer\"> <input type=\"submit\" value=\"Enter iTop\" /></td></tr>\n");
+		$this->add("<tr><td><label for=\"user\">".Dict::S('UI:Login:UserNamePrompt')."</label></td><td><input id=\"user\" type=\"text\" name=\"auth_user\" value=\"$sAuthUser\" /></td></tr>\n");
+		$this->add("<tr><td><label for=\"pwd\">".Dict::S('UI:Login:PasswordPrompt').":</label></td><td><input id=\"pwd\" type=\"password\" name=\"auth_pwd\" value=\"$sAuthPwd\" /></td></tr>\n");
+		$this->add("<tr><td colspan=\"2\" class=\"center v-spacer\"> <input type=\"submit\" value=\"".Dict::S('UI:Button:Login')."\" /></td></tr>\n");
 		$this->add("</table>\n");
 		$this->add("<input type=\"hidden\" name=\"loginop\" value=\"login\" />\n");
 		$this->add("</form>\n");
@@ -114,7 +114,7 @@ h1 {
 				header('WWW-Authenticate: Basic realm="iTop access is restricted"');
 				header('HTTP/1.0 401 Unauthorized');
 					// Note: accessed when the user will click on Cancel
-				echo '<p><strong>iTop access is restricted</strong>. Please, contact an iTop administrator.</p>';
+				echo '<p><strong>'.Dict::S('UI:Login:Error:AccessRestricted').'</strong></p>';
 				exit;
 			}
 			else
@@ -127,7 +127,7 @@ h1 {
 					header('HTTP/1.0 401 Unauthorized');
 					// Note: accessed when the user will click on Cancel
 					// Todo: count the attempts
-					echo '<p><strong>iTop access is restricted</strong>. Please, contact an iTop administrator.</p>';
+					echo '<p><strong>'.Dict::S('UI:Login:Error:AccessRestricted').'</strong></p>';
 					exit;
 				}
 			}
