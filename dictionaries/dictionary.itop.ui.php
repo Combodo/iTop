@@ -349,7 +349,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Document:OpenInNewWindow:Download' => 'Open in new window: %1$s, Download: %2$s',
 	'UI:SelectAllToggle+' => 'Select / Deselect All',
 	'UI:ClickToDisplay+' => 'Click to display',
-	'UI:TruncatedResults' => '%1$d objects displayed out of %2%d',
+	'UI:TruncatedResults' => '%1$d objects displayed out of %2$d',
 	'UI:DisplayAll' => 'Display All',
 	'UI:CountOfResults' => '%1$d object(s)',
 	'UI:ChangesLogTitle' => 'Changes log (%1$d):',
