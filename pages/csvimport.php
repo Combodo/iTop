@@ -9,6 +9,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-3.0.html LGPL
  * @link        http://www.combodo.com/itop iTop
  */
+ini_set('memory_limit', '256M');
 require_once('../application/application.inc.php');
 require_once('../application/itopwebpage.class.inc.php');
 
@@ -309,7 +310,7 @@ function ProcessCSVData(WebPage $oPage, UserContext $oContext, $bSimulate = true
 		array_keys($aSearchKeys)		
 	);
 	
-	$oPage->add('<input type="hidden" name="csvdata_truncated" id="csvdata_truncated" value="'.htmlentities($sCSVDataTruncated).'"/>');
+	$oPage->add('<input type="hidden" name="csvdata_truncated" id="csvdata_truncated" value="'.htmlentities($sCSVDataTruncated, ENT_QUOTES, 'UTF-8').'"/>');
 	$aRes = $oBulk->Process($oMyChange);
 	
 	$sHtml = '<table id="bulk_preview">';
@@ -418,20 +419,20 @@ function ProcessCSVData(WebPage $oPage, UserContext $oContext, $bSimulate = true
 				{
 					case 'CellStatus_Issue':
 					$sCellMessage .= $oPage->GetP($oCellStatus->GetDescription());
-					$sHtml .= '<td class="cell_error">ERROR: '.htmlentities($aData[$iLine][$iNumber-1]).$sCellMessage.'</td>';
+					$sHtml .= '<td class="cell_error">ERROR: '.htmlentities($aData[$iLine][$iNumber-1], ENT_QUOTES, 'UTF-8').$sCellMessage.'</td>';
 					break;
 					
 					case 'CellStatus_Ambiguous':
 					$sCellMessage .= $oPage->GetP($oCellStatus->GetDescription());
-					$sHtml .= '<td class="cell_error">AMBIGUOUS: '.htmlentities($aData[$iLine][$iNumber-1]).$sCellMessage.'</td>';
+					$sHtml .= '<td class="cell_error">AMBIGUOUS: '.htmlentities($aData[$iLine][$iNumber-1], ENT_QUOTES, 'UTF-8').$sCellMessage.'</td>';
 					break;
 					
 					case 'CellStatus_Modify':
-					$sHtml .= '<td class="cell_modified"><b>'.htmlentities($aData[$iLine][$iNumber-1]).'</b></td>';
+					$sHtml .= '<td class="cell_modified"><b>'.htmlentities($aData[$iLine][$iNumber-1], ENT_QUOTES, 'UTF-8').'</b></td>';
 					break;
 					
 					default:
-					$sHtml .= '<td class="cell_ok">'.htmlentities($aData[$iLine][$iNumber-1]).$sCellMessage.'</td>';
+					$sHtml .= '<td class="cell_ok">'.htmlentities($aData[$iLine][$iNumber-1], ENT_QUOTES, 'UTF-8').$sCellMessage.'</td>';
 				}
 			}
 		}
@@ -441,16 +442,17 @@ function ProcessCSVData(WebPage $oPage, UserContext $oContext, $bSimulate = true
 	}
 	$sHtml .= '</table>';
 	$oPage->add('<div class="wizContainer">');
-	$oPage->add('<form id="wizForm" method="post" onSubmit="return CheckValues()">');
+	$oPage->add('<form enctype="multipart/form-data" id="wizForm" method="post" onSubmit="return CheckValues()">');
 	$oPage->add('<input type="hidden" name="step" value="'.($iCurrentStep+1).'"/>');
-	$oPage->add('<input type="hidden" name="separator" value="'.htmlentities($sSeparator).'"/>');
-	$oPage->add('<input type="hidden" name="text_qualifier" value="'.htmlentities($sTextQualifier).'"/>');
+	$oPage->add('<input type="hidden" name="separator" value="'.htmlentities($sSeparator, ENT_QUOTES, 'UTF-8').'"/>');
+	$oPage->add('<input type="hidden" name="text_qualifier" value="'.htmlentities($sTextQualifier, ENT_QUOTES, 'UTF-8').'"/>');
 	$oPage->add('<input type="hidden" name="header_line" value="'.$bHeaderLine.'"/>');
 	$oPage->add('<input type="hidden" name="box_skiplines" value="'.(($iSkippedLines > 0) ? 1 : 0).'"/>');
 	$oPage->add('<input type="hidden" name="nb_skipped_lines" value="'.$iSkippedLines.'"/>');
-	$oPage->add('<input type="hidden" name="csvdata" value="'.htmlentities($sCSVData).'"/>');
-	$oPage->add('<input type="hidden" name="csvdata_truncated" value="'.htmlentities($sCSVDataTruncated).'"/>');
-	$oPage->add('<input type="hidden" name="class_name" value="'.$sClassName.'"r/>');
+	$oPage->add('<input type="hidden" name="csvdata" value="'.htmlentities($sCSVData, ENT_QUOTES, 'UTF-8').'"/>');
+	$oPage->add('<input type="hidden" name="csvdata_truncated" value="'.htmlentities($sCSVDataTruncated, ENT_QUOTES, 'UTF-8').'"/>');
+	$oPage->add('<input type="hidden" name="class_name" value="'.$sClassName.'"/>');
+	$oPage->add('<input type="hidden" name="_charset_"/>');
 	foreach($aFieldsMapping as $iNumber => $sAttCode)
 	{
 		$oPage->add('<input type="hidden" name="field['.$iNumber.']" value="'.$sAttCode.'"/>');
@@ -534,7 +536,7 @@ function LoadData(WebPage $oPage, UserContext $oContext)
 		$oPage->StartCollapsibleSection("Lines that could not be loaded:", false);
 		$oPage->p('The following lines have not been imported because they contain errors');
 		$oPage->add('<textarea rows="30" cols="100">');
-		$oPage->add(htmlentities(implode("\n", $aResult)));
+		$oPage->add(htmlentities(implode("\n", $aResult), ENT_QUOTES, 'UTF-8'));
 		$oPage->add('</textarea>');
 		$oPage->EndCollapsibleSection();
 	}
@@ -582,17 +584,18 @@ function SelectMapping(WebPage $oPage)
 
 	$oPage->add('<h2>Step 3 of 5: Data mapping</h2>');
 	$oPage->add('<div class="wizContainer">');
-	$oPage->add('<form id="wizForm" method="post" onSubmit="return CheckValues()"><p>Select the class to import: ');
+	$oPage->add('<form enctype="multipart/form-data" id="wizForm" method="post" onSubmit="return CheckValues()"><p>Select the class to import: ');
 	$oPage->add(GetClassesSelect('class_name', $sClassName, 300, UR_ACTION_BULK_MODIFY).'</p>');
 	$oPage->add('<div id="mapping"><p><br/>Select a class to configure the mapping<br/></p></div>');
 	$oPage->add('<input type="hidden" name="step" value="4"/>');
-	$oPage->add('<input type="hidden" name="separator" value="'.htmlentities($sSeparator).'"/>');
-	$oPage->add('<input type="hidden" name="text_qualifier" value="'.htmlentities($sTextQualifier).'"/>');
+	$oPage->add('<input type="hidden" name="separator" value="'.htmlentities($sSeparator, ENT_QUOTES, 'UTF-8').'"/>');
+	$oPage->add('<input type="hidden" name="text_qualifier" value="'.htmlentities($sTextQualifier, ENT_QUOTES, 'UTF-8').'"/>');
 	$oPage->add('<input type="hidden" name="header_line" value="'.$bHeaderLine.'"/>');
 	$oPage->add('<input type="hidden" name="box_skiplines" value="'.(($iSkippedLines > 0) ? 1 : 0).'"/>');
 	$oPage->add('<input type="hidden" name="nb_skipped_lines" value="'.$iSkippedLines.'"/>');
-	$oPage->add('<input type="hidden" name="csvdata_truncated" id="csvdata_truncated" value="'.htmlentities($sCSVDataTruncated).'"/>');
-	$oPage->add('<input type="hidden" name="csvdata" value="'.htmlentities($sCSVData).'"/>');
+	$oPage->add('<input type="hidden" name="csvdata_truncated" id="csvdata_truncated" value="'.htmlentities($sCSVDataTruncated, ENT_QUOTES, 'UTF-8').'"/>');
+	$oPage->add('<input type="hidden" name="csvdata" value="'.htmlentities($sCSVData, ENT_QUOTES, 'UTF-8').'"/>');
+	$oPage->add('<input type="hidden" name="_charset_"/>');
 	$oPage->add('<p><input type="button" value=" << Back " onClick="CSVGoBack()"/>&nbsp;&nbsp;');
 	$oPage->add('<input type="submit" value=" Simulate Import >> "/></p>');
 	$oPage->add('</form>');
@@ -637,7 +640,7 @@ EOF
 		}
 
 		ajax_request = $.post('ajax.csvimport.php',
-			   { operation: 'display_mapping_form', csvdata: csv_data, separator: separator, qualifier: text_qualifier, nb_lines_skipped: nb_lines_skipped, header_line: header_line, class_name: class_name },
+			   { operation: 'display_mapping_form', enctype: 'multipart/form-data', csvdata: csv_data, separator: separator, qualifier: text_qualifier, nb_lines_skipped: nb_lines_skipped, header_line: header_line, class_name: class_name },
 			   function(data) {
 				 $('#mapping').empty();
 				 $('#mapping').append(data);
@@ -708,14 +711,23 @@ function SelectOptions(WebPage $oPage)
 	
 	$aGuesses = GuessParameters($sCSVData); // Try to predict the parameters, based on the input data
 	
-	$sSeparator = utils::ReadParam('separator', $aGuesses['separator']);
+	$sSeparator = utils::ReadParam('separator', '');
+	if ($sSeparator == '') // May be set to an empty value by the previous page
+	{
+		$sSeparator = $aGuesses['separator'];	
+	}
 	$iSkippedLines = utils::ReadParam('nb_skipped_lines', '');
 	$bBoxSkipLines = utils::ReadParam('box_skiplines', 0);
 	if ($sSeparator == 'tab') $sSeparator = "\t";
 	$sOtherSeparator = in_array($sSeparator, array(',', ';', "\t")) ? '' : $sSeparator;
-	$sTextQualifier = utils::ReadParam('text_qualifier', $aGuesses['qualifier']);
+	$sTextQualifier = utils::ReadParam('text_qualifier', '');
+	if ($sTextQualifier == '') // May be set to an empty value by the previous page
+	{
+		$sTextQualifier = $aGuesses['qualifier'];	
+	}
 	$sOtherTextQualifier = in_array($sTextQualifier, array('"', "'")) ? '' : $sTextQualifier;
 	$bHeaderLine = utils::ReadParam('header_line', 0);
+	$sClassName = utils::ReadParam('class_name', '');
 	// Create a truncated version of the data used for the fast preview
 	// Take about 20 lines of data... knowing that some lines may contain carriage returns
 	$iMaxLines = 20;
@@ -740,7 +752,7 @@ function SelectOptions(WebPage $oPage)
 	$oPage->add('<h2>Step 2 of 5: CSV data options</h2>');
 	$oPage->add('<div class="wizContainer">');
 	$oPage->add('<table><tr><td style="vertical-align:top;padding-right:50px;background:#E8F3CF">');
-	$oPage->add('<form id="wizForm" method="post" id="csv_options">');
+	$oPage->add('<form enctype="multipart/form-data" id="wizForm" method="post" id="csv_options">');
 	$oPage->add('<h3>Separator character:</h3>');
 	$oPage->add('<p><input type="radio" name="separator" value="," onChange="DoPreview()"'.IsChecked($sSeparator, ',').'/> , (comma)<br/>');
 	$oPage->add('<input type="radio" name="separator" value=";" onChange="DoPreview()"'.IsChecked($sSeparator, ';').'/> ; (semicolon)<br/>');
@@ -751,15 +763,16 @@ function SelectOptions(WebPage $oPage)
 	$oPage->add('<h3>Text qualifier character:</h3>');
 	$oPage->add('<p><input type="radio" name="text_qualifier" value="&#34;" onChange="DoPreview()"'.IsChecked($sTextQualifier, '"').'/> " (double quote)<br/>');
 	$oPage->add('<input type="radio" name="text_qualifier" value="&#39;"  onChange="DoPreview()"'.IsChecked($sTextQualifier, "'").'/> \' (simple quote)<br/>');
-	$oPage->add('<input type="radio" name="text_qualifier" value="other"  onChange="DoPreview()"'.IsChecked($sOtherTextQualifier, '', true).'/> other: <input type="text" size="3" maxlength="1" name="other_qualifier"  value="'.htmlentities($sOtherTextQualifier).'" onChange="DoPreview()"/>');
+	$oPage->add('<input type="radio" name="text_qualifier" value="other"  onChange="DoPreview()"'.IsChecked($sOtherTextQualifier, '', true).'/> other: <input type="text" size="3" maxlength="1" name="other_qualifier"  value="'.htmlentities($sOtherTextQualifier, ENT_QUOTES, 'UTF-8').'" onChange="DoPreview()"/>');
 	$oPage->add('</p>');
 	$oPage->add('</td><td style="vertical-align:top;background:#E8F3CF">');
 	$oPage->add('<h3>Comments and header:</h3>');
 	$oPage->add('<p><input type="checkbox" name="header_line" id="box_header" value="1" onChange="DoPreview()"'.IsChecked($bHeaderLine, 1).'/> Treat the first line as a header (column names)<p>');
 	$oPage->add('<p><input type="checkbox" name="box_skiplines" value="1" id="box_skiplines" onChange="DoPreview()"'.IsChecked($bBoxSkipLines, 1).'/> Skip <input type="text" size=2 name="nb_skipped_lines" id="nb_skipped_lines" onChange="DoPreview()" value="'.$iSkippedLines.'"> line(s) at the beginning of the file<p>');
 	$oPage->add('</td></tr></table>');
-	$oPage->add('<input type="hidden" name="csvdata_truncated" id="csvdata_truncated" value="'.htmlentities($sCSVDataTruncated).'"/>');
-	$oPage->add('<input type="hidden" name="csvdata" id="csvdata" value="'.htmlentities($sCSVData).'"/>');
+	$oPage->add('<input type="hidden" name="csvdata_truncated" id="csvdata_truncated" value="'.htmlentities($sCSVDataTruncated, ENT_QUOTES, 'UTF-8').'"/>');
+	$oPage->add('<input type="hidden" name="csvdata" id="csvdata" value="'.htmlentities($sCSVData, ENT_QUOTES, 'UTF-8').'"/>');
+	$oPage->add('<input type="hidden" name="class_name" value="'.$sClassName.'"/>');
 	$oPage->add('<input type="hidden" name="step" value="3"/>');
 	$oPage->add('<div id="preview">');
 	$oPage->add('<p style="text-align:center">Data Preview</p>');
@@ -814,7 +827,7 @@ function SelectOptions(WebPage $oPage)
 		}
 		
 		ajax_request = $.post('ajax.csvimport.php',
-			   { operation: 'parser_preview', csvdata: $("#csvdata_truncated").val(), separator: separator, qualifier: text_qualifier, nb_lines_skipped: nb_lines_skipped, header_line: header_line },
+			   { operation: 'parser_preview', enctype: 'multipart/form-data', csvdata: $("#csvdata_truncated").val(), separator: separator, qualifier: text_qualifier, nb_lines_skipped: nb_lines_skipped, header_line: header_line },
 			   function(data) {
 				 $('#preview').empty();
 				 $('#preview').append(data);
@@ -837,7 +850,7 @@ function Welcome(iTopWebPage $oPage)
 	$oPage->add("<div><p><h1>CSV import wizard</h1></p></div>\n");
 	$oPage->AddTabContainer('tabs1');	
 
-	$sFileLoadHtml = '<div><form method="post" enctype="multipart/form-data"><p>Select the file to import:</p>'.
+	$sFileLoadHtml = '<div><form enctype="multipart/form-data" method="post"><p>Select the file to import:</p>'.
 			'<p><input type="file" name="csvdata"/></p>'.
 			'<p><input type="submit" value=" Next >> "/></p>'.
 			'<p><input type="hidden" name="step" value="2"/></p>'.
@@ -846,11 +859,22 @@ function Welcome(iTopWebPage $oPage)
 	
 	$oPage->AddToTab('tabs1', "Load from a file", $sFileLoadHtml);	
 	$sCSVData = utils::ReadParam('csvdata', '');
-	$sPasteDataHtml = '<div><form method="post"><p>Paste the data to import:</p>'.
-			'<p><textarea cols="100" rows="30" name="csvdata">'.htmlentities($sCSVData).'</textarea></p>'.
+	$sSeparator = utils::ReadParam('separator', '');
+	$sTextQualifier = utils::ReadParam('text_qualifier', '');
+	$bHeaderLine = utils::ReadParam('header_line', true);
+	$iSkippedLines = utils::ReadParam('nb_skipped_lines', '');
+	$sClassName = utils::ReadParam('class_name', '');
+	$sCSVData = utils::ReadParam('csvdata', '');
+	$sPasteDataHtml = '<div><form enctype="multipart/form-data" method="post"><p>Paste the data to import:</p>'.
+			'<p><textarea cols="100" rows="30" name="csvdata">'.htmlentities($sCSVData, ENT_QUOTES, 'UTF-8').'</textarea></p>'.
 			'<p><input type="submit" value=" Next >> "/></p>'.
-			'<p><input type="hidden" name="step" value="2"/></p>'.
-			'<p><input type="hidden" name="operation" value="csv_data"/></p>'.
+			'<input type="hidden" name="step" value="2"/>'.
+			'<input type="hidden" name="operation" value="csv_data"/>'.
+			'<input type="hidden" name="separator" value="'.htmlentities($sSeparator, ENT_QUOTES, 'UTF-8').'"/>'.
+			'<input type="hidden" name="text_qualifier" value="'.htmlentities($sTextQualifier, ENT_QUOTES, 'UTF-8').'"/>'.
+			'<input type="hidden" name="header_line" value="'.$bHeaderLine.'"/>'.
+			'<input type="hidden" name="nb_skipped_lines" value="'.$iSkippedLines.'"/>'.
+			'<input type="hidden" name="class_name" value="'.$sClassName.'"/>'.
 			'</form></div>';
 	$oPage->AddToTab('tabs1', "Copy and paste data", $sPasteDataHtml);	
 	

@@ -182,8 +182,8 @@ switch($sOperation)
 			$oPage->add('<td>'.GetMappingForField($sClassName, $sField, $index).'</td>');
 			$oPage->add('<td>&nbsp;</td>');
 			$oPage->add('<td><input id="search_'.$index.'" type="checkbox" name="search_field['.$index.']" value="1" /></td>');
-			$oPage->add('<td>'.(isset($aData[$iStartLine][$index-1]) ? htmlentities($aData[$iStartLine][$index-1]) : '&nbsp;').'</td>');
-			$oPage->add('<td>'.(isset($aData[$iStartLine+1][$index-1]) ? htmlentities($aData[$iStartLine+1][$index-1]) : '&nbsp;').'</td>');
+			$oPage->add('<td>'.(isset($aData[$iStartLine][$index-1]) ? htmlentities($aData[$iStartLine][$index-1], ENT_QUOTES, 'UTF-8') : '&nbsp;').'</td>');
+			$oPage->add('<td>'.(isset($aData[$iStartLine+1][$index-1]) ? htmlentities($aData[$iStartLine+1][$index-1], ENT_QUOTES, 'UTF-8') : '&nbsp;').'</td>');
 			$oPage->add('</tr>');
 			$index++;
 		}
@@ -196,17 +196,17 @@ switch($sOperation)
 	$oSearch = new DBObjectSearch($sClassName);
 	$oSearch->AddCondition('id', 0); // Make sure we create an empty set
 	$oSet = new CMDBObjectSet($oSearch);
-	$sCSV = cmdbAbstractObject::GetSetAsCSV($oSet);
-	$aCSV = explode("\n", $sCSV);
+	$sResult = cmdbAbstractObject::GetSetAsCSV($oSet);
+	//$aCSV = explode("\n", $sCSV);
 	// If there are more than one line, let's assume that the first line is a comment and skip it.
-	if (count($aCSV) > 1)
-	{
-		$sResult = $aCSV[1];
-	}
-	else
-	{
-		$sResult = $sCSV;
-	}
+	//if (count($aCSV) > 1)
+	//{
+	//	$sResult = $aCSV[0];
+	//}
+	//else
+	//{
+	//	$sResult = $sCSV;
+	//}
 
 	$sClassDisplayName = MetaModel::GetName($sClassName);
 	$sDisposition = utils::ReadParam('disposition', 'inline');
