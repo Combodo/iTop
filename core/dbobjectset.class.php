@@ -41,7 +41,7 @@ class DBObjectSet
 	{
 		$sRet = '';
 		$this->Rewind();
-		$sRet .= "Set (".$this->m_oFilter->ToSibuSQL().")<br/>\n";
+		$sRet .= "Set (".$this->m_oFilter->ToOQL().")<br/>\n";
 		$sRet .= "Query: <pre style=\"font-size: smaller; display:inline;\">".MetaModel::MakeSelectQuery($this->m_oFilter, array()).")</pre>\n";
 		
 		$sRet .= $this->Count()." records<br/>\n";

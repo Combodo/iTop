@@ -17,8 +17,8 @@ function GetRuleResultSet($iRuleId, $oDefinitionFilter)
 	$oContext = new UserContext();
 	
 	$oRule = $oContext->GetObject('AuditRule', $iRuleId);
-	$sSibusql = $oRule->Get('query');
-	$oRuleFilter = DBObjectSearch::FromSibusQL($sSibusql);
+	$sOql = $oRule->Get('query');
+	$oRuleFilter = DBObjectSearch::FromOQL($sOql);
 	if ($oRule->Get('valid_flag') == 'false')
 	{
 		// The query returns directly the invalid elements
@@ -37,7 +37,7 @@ function GetRuleResultSet($iRuleId, $oDefinitionFilter)
 			$aValidIds[] = $oObj->GetKey(); 
 		}
 		$oFilter = $oDefinitionFilter;
-		$oFilter->AddCondition('pkey', $aValidIds, 'NOTIN');
+		$oFilter->AddCondition('id', $aValidIds, 'NOTIN');
 		$oErrorObjectSet = new CMDBObjectSet($oFilter);
 	}
 	return $oErrorObjectSet;
@@ -65,7 +65,7 @@ switch($operation)
 
 	$oContext = new UserContext();
 	$oAuditCategory = $oContext->GetObject('AuditCategory', $iCategory);
-	$oDefinitionFilter = DBObjectSearch::FromSibusQL($oAuditCategory->Get('definition_set'));
+	$oDefinitionFilter = DBObjectSearch::FromOQL($oAuditCategory->Get('definition_set'));
 	if (!empty($currentOrganization))
 	{
 		$oDefinitionFilter->AddCondition('org_id', $currentOrganization);
@@ -94,7 +94,7 @@ switch($operation)
 	$oP->add("</tr>\n");
 	while($oAuditCategory = $oCategoriesSet->fetch())
 	{
-		$oDefinitionFilter = DBObjectSearch::FromSibusQL($oAuditCategory->Get('definition_set'));
+		$oDefinitionFilter = DBObjectSearch::FromOQL($oAuditCategory->Get('definition_set'));
 		$aObjectsWithErrors = array();
 		if (!empty($currentOrganization))
 		{
@@ -122,7 +122,7 @@ switch($operation)
 			}
 			else
 			{
-				$oRuleFilter = DBObjectSearch::FromSibusQL($oAuditRule->Get('query'));
+				$oRuleFilter = DBObjectSearch::FromOQL($oAuditRule->Get('query'));
 				$oErrorObjectSet = GetRuleResultSet($oAuditRule->GetKey(), $oDefinitionFilter);
 				$iErrorsCount = $oErrorObjectSet->Count();
 				while($oObj = $oErrorObjectSet->Fetch())

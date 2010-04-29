@@ -1432,7 +1432,7 @@ abstract class MetaModel
 			$aClassAliases = array_merge($aClassAliases, $oFilter->GetJoinedClasses());
 		}
 
-		self::DbgTrace("Entering: ".$oFilter->ToSibuSQL().", ".($bIsOnQueriedClass ? "MAIN" : "SECONDARY").", expectedatts=".count($aExpectedAtts).": ".implode(",", array_keys($aExpectedAtts)));
+		self::DbgTrace("Entering: ".$oFilter->ToOQL().", ".($bIsOnQueriedClass ? "MAIN" : "SECONDARY").", expectedatts=".count($aExpectedAtts).": ".implode(",", array_keys($aExpectedAtts)));
 
 		$sRootClass = self::GetRootClass($sClass);
 		$sKeyField = self::DBGetKey($sClass);
@@ -1515,7 +1515,7 @@ abstract class MetaModel
 	
 				self::DbgTrace("Referenced by foreign key: $sForeignKeyAttCode... let's call MakeQuery()");
 				//self::DbgTrace($oForeignFilter);
-				//self::DbgTrace($oForeignFilter->ToSibuSQL());
+				//self::DbgTrace($oForeignFilter->ToOQL());
 				//self::DbgTrace($oSelectForeign);
 				//self::DbgTrace($oSelectForeign->RenderSelect(array()));
 				$oSelectForeign = self::MakeQuery($aSelectedClasses, $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oForeignFilter, $aExpAtts);
@@ -1589,7 +1589,7 @@ abstract class MetaModel
 
 		$bIsOnQueriedClass = array_key_exists($sTargetAlias, $aSelectedClasses);
 		
-		self::DbgTrace("Entering: tableclass=$sTableClass, filter=".$oFilter->ToSibuSQL().", ".($bIsOnQueriedClass ? "MAIN" : "SECONDARY").", expectedatts=".count($aExpectedAtts).": ".implode(",", array_keys($aExpectedAtts)));
+		self::DbgTrace("Entering: tableclass=$sTableClass, filter=".$oFilter->ToOQL().", ".($bIsOnQueriedClass ? "MAIN" : "SECONDARY").", expectedatts=".count($aExpectedAtts).": ".implode(",", array_keys($aExpectedAtts)));
 
 		// 1 - SELECT and UPDATE
 		//

@@ -230,7 +230,7 @@ try
 							$oP->add("<div class=\"page_header\">\n");
 							$oP->add("<h1><span class=\"hilite\">".Metamodel::GetName($sClassName).":</span> ".count($aLeafs)." object(s) found.</h1>\n");
 							$oP->add("</div>\n");
-							$oLeafsFilter->AddCondition('pkey', $aLeafs, 'IN');
+							$oLeafsFilter->AddCondition('id', $aLeafs, 'IN');
 							$oBlock = new DisplayBlock($oLeafsFilter, 'list', false);
 							$oBlock->Display($oP, $iBlock++);
 						}
@@ -261,7 +261,7 @@ try
 			{
 				// Check if the user can modify this object
 				$oSearch = new DBObjectSearch($sClass);
-				$oSearch->AddCondition('pkey', $id, '=');
+				$oSearch->AddCondition('id', $id, '=');
 				$oSet = new CMDBObjectSet($oSearch);
 				if ($oSet->Count() > 0)
 				{
@@ -301,7 +301,7 @@ try
 		{
 			// Check if the user can modify this object
 			$oSearch = new DBObjectSearch($sClass);
-			$oSearch->AddCondition('pkey', $id, '=');
+			$oSearch->AddCondition('id', $id, '=');
 			$oSet = new CMDBObjectSet($oSearch);
 			if ($oSet->Count() > 0)
 			{

@@ -3,7 +3,7 @@ require_once('../application/audit.category.class.inc.php');
 
 /**
  * This class manages the audit "rule" linked to a given audit category.
- * Each rule is based ona SibusQL expression that returns either the "good" objects
+ * Each rule is based on an OQL expression that returns either the "good" objects
  * or the "bad" ones. The core audit engines computes the complement to the definition
  * set when needed to obtain either the valid objects, or the ones with an error
  */

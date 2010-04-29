@@ -78,7 +78,7 @@ abstract class ValueSetDefinition
  */
 class ValueSetObjects extends ValueSetDefinition
 {
-	protected $m_sFilterExpr; // in SibuSQL
+	protected $m_sFilterExpr; // in OQL
 	protected $m_sValueAttCode;
 	protected $m_aOrderBy;
 
@@ -93,7 +93,7 @@ class ValueSetObjects extends ValueSetDefinition
 	{
 		$this->m_aValues = array();
 		
-		$oFilter = DBObjectSearch::FromSibusQL($this->m_sFilterExpr, $aArgs);
+		$oFilter = DBObjectSearch::FromOQL($this->m_sFilterExpr, $aArgs);
 		if (!$oFilter) return false;
 
 		$oObjects = new DBObjectSet($oFilter, $this->m_aOrderBy, $aArgs);

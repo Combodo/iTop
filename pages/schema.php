@@ -446,7 +446,7 @@ function DisplayRelationDetails($oPage, $sRelCode)
 				$bPropagate = $aQuery['bPropagate'] ? "Propagate" : "Do not propagate";
 				$iDistance = $aQuery['iDistance'];
 
-				$oPage->add("<li>$sRelKey: $bPropagate ($iDistance) ".DBObjectSearch::SibuSQLAsHtml($sQuery)."</li>\n");
+				$oPage->add("<li>$sRelKey: $bPropagate ($iDistance) ".$sQuery."</li>\n");
 			}
 			$oPage->add("</ul>\n");
 			$oPage->add("</li>\n");

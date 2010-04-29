@@ -188,7 +188,7 @@ class ActionEmail extends ActionNotification
 		{
 			$oSearch = DBObjectSearch::FromOQL($sOQL);
 		}
-		catch (OqlException $e)
+		catch (OQLException $e)
 		{
 			$this->m_aMailErrors[] = "query syntax error for recipient '$sRecipAttCode'";
 			return $e->getMessage();

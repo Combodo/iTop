@@ -8,8 +8,8 @@ function UpdateObjectList(sClass, sId, sExtKeyToRemote)
 	{
 		aRelatedObjectIds[0] = 0;
 	}
-	var sibusql = sClass+": pkey IN {" + aRelatedObjectIds.join(", ") + "}";
-	$.get("ajax.render.php?filter=" + sibusql + "&style=list&encoding=sibusql",
+	var oql = "SELECT "+sClass+" AS c WHERE c.id IN (" + aRelatedObjectIds.join(", ") + ")";
+	$.get("ajax.render.php?filter=" + oql + "&style=list&encoding=oql",
 	   { operation: "ajax" },
 	   function(data){
 		 $("#related_objects_"+sId).empty();

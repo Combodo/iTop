@@ -123,7 +123,7 @@ try
 	$aDisplayConfig["__STATUS__"] = array("label"=>"Status", "description"=>"");
 	if (isset($iPKeyId))
 	{
-		$aDisplayConfig["col$iPKeyId"] = array("label"=>"<strong>pkey</strong>", "description"=>"");
+		$aDisplayConfig["col$iPKeyId"] = array("label"=>"<strong>id</strong>", "description"=>"");
 	}
 	foreach($aReconcilKeys as $iCol => $sAttCode)
 	{

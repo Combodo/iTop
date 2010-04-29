@@ -68,7 +68,7 @@ function Page2_ConfigFilters($oPage, $oFilter)
 		$sValue = "";
 		foreach($oFilter->GetCriteria() as $aCritInfo)
 		{
-			if ($aCritInfo["filtercode"] == "pkey")
+			if ($aCritInfo["filtercode"] == "id")
 			{
 				// ???
 			}

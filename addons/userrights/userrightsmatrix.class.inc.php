@@ -187,7 +187,7 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 	{
 		// Users must be added manually
 		// This procedure will then update the matrix when a new user is found or a new class/attribute appears
-		$oUserSet = new DBObjectSet(DBObjectSearch::FromSibuSQL("UserRightsMatrixUsers"));
+		$oUserSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixUsers"));
 		while ($oUser = $oUserSet->Fetch())
 		{
 			$this->SetupUser($oUser->GetKey());

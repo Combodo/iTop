@@ -57,7 +57,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:AuditCategory/Attribute:description' => 'Audit Category Description',
 	'Class:AuditCategory/Attribute:description+' => 'Long description for this audit category',
 	'Class:AuditCategory/Attribute:definition_set' => 'Definition Set',
-	'Class:AuditCategory/Attribute:definition_set+' => 'SibusQL expression defining the set of objects to audit',
+	'Class:AuditCategory/Attribute:definition_set+' => 'OQL expression defining the set of objects to audit',
 ));
 
 //
@@ -72,7 +72,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:AuditRule/Attribute:description' => 'Audit Rule Description',
 	'Class:AuditRule/Attribute:description+' => 'Long description for this audit rule',
 	'Class:AuditRule/Attribute:query' => 'Query to Run',
-	'Class:AuditRule/Attribute:query+' => 'The SibusQL expression to run',
+	'Class:AuditRule/Attribute:query+' => 'The OQL expression to run',
 	'Class:AuditRule/Attribute:valid_flag' => 'Valid objects?',
 	'Class:AuditRule/Attribute:valid_flag+' => 'True if the rule returns the valid objects, false otherwise',
 	'Class:AuditRule/Attribute:valid_flag/Value:true' => 'true',

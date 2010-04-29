@@ -85,7 +85,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 
 		// action menu
 		$oSingletonFilter = new DBObjectSearch(get_class($this));
-		$oSingletonFilter->AddCondition('pkey', array($this->GetKey()));
+		$oSingletonFilter->AddCondition('id', array($this->GetKey()));
 		$oBlock = new MenuBlock($oSingletonFilter, 'popup', false);
 		$oBlock->Display($oPage, -1);
 
@@ -211,7 +211,9 @@ abstract class cmdbAbstractObject extends CMDBObject
 		{
 			$oTemplate = new DisplayTemplate($sTemplate);
 			$sNameAttCode = MetaModel::GetNameAttributeCode(get_class($this));
-			$oTemplate->Render($oPage, array('class_name'=> MetaModel::GetName(get_class($this)),'class'=> get_class($this),'pkey'=> $this->GetKey(), 'name' => $this->Get($sNameAttCode)));
+			// Note: to preserve backward compatibility with home-made templates, the placeholder '$pkey$' has been preserved
+			//       but the preferred method is to use '$id$'
+			$oTemplate->Render($oPage, array('class_name'=> MetaModel::GetName(get_class($this)),'class'=> get_class($this), 'pkey'=> $this->GetKey(), 'id'=> $this->GetKey(), 'name' => $this->Get($sNameAttCode)));
 		}
 		else
 		{

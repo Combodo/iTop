@@ -138,10 +138,6 @@ class DisplayBlock
 			$oFilter = CMDBSearchFilter::unserialize($sITopData);
 			break;
 			
-			case 'text/sibusql':
-			$oFilter = CMDBSearchFilter::FromSibusQL($sITopData);
-			break;
-			
 			case 'text/oql':
 			$oFilter = CMDBSearchFilter::FromOQL($sITopData);
 			break;

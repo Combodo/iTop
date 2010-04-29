@@ -63,7 +63,7 @@ class cmdbObjectHomeMade extends cmdbObject
 		switch ($sRelCode)
 		{
 		case "Potes":
-			$aRels = array("xxxx" => array("sQuery"=>"cmdbContact: pkey = 40", "bPropagate"=>true, "iDistance"=>3));
+			$aRels = array("xxxx" => array("sQuery"=>"SELECT cmdbContact AS c WHERE c.id = 40", "bPropagate"=>true, "iDistance"=>3));
 			return $aRels;
 		}
 	}
@@ -134,8 +134,8 @@ class cmdbContact extends cmdbObjectHomeMade
 		{
 		case "Potes":
 			$aRels = array(
-				"zz1" => array("sQuery"=>"cmdbContact: name Begins with '\$[this.name::]' AND pkey != \$[this.pkey::]", "bPropagate"=>false, "iDistance"=>3),
-				"zz2" => array("sQuery"=>"cmdbContact: owner = \$[this.owner::] AND owner != 2", "bPropagate"=>false, "iDistance"=>3),
+				"zz1" => array("sQuery"=>"SELECT cmdbContact AS c WHERE c.name = '\$[this.name::]'", "bPropagate"=>false, "iDistance"=>3),
+				"zz2" => array("sQuery"=>"SELECT cmdbContact AS c WHERE c.owner = \$[this.owner::] AND c.owner != 2", "bPropagate"=>false, "iDistance"=>3),
 			);
 			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
 		}

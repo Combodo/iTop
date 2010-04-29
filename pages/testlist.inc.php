@@ -537,35 +537,17 @@ class TestMyBizModel extends TestBizModel
 	
 	}
 	
-	function test_SibuSQL()
-	{
-		echo "<h4>Simple But Structured Query Language</h4>";
-	
-		$oMyFilter = new DBObjectSearch("cmdbContact");
-		echo "Tous les contacts: ".$oMyFilter->ToSibuSQL()."<br/>\n";
-		$oNewFilter = DBObjectSearch::FromSibuSQL($oMyFilter->ToSibuSQL());
-		echo "En passant par un filtre, ca revient en : ".$oNewFilter->ToSibuSQL()."</br>\n";
-		$this->search_and_show_list($oNewFilter);
-	
-		$sFilterDesc = "cmdbContact: name Begins with '$[debutnom:as:debut du nom]' AND ownername NotLike $[ddd::]"; 
-		echo "Construction d'un filtre a partir de sa description en SibuSQL: $sFilterDesc<br/>\n";
-	
-		MyHelpers::var_dump_html(DBObjectSearch::ListSibusQLParams($sFilterDesc));
-		$oNewFilter = DBObjectSearch::FromSibuSQL($sFilterDesc, array('ddd'=>123));
-		echo "Ca revient en: ".$oNewFilter->ToSibuSQL();
-	}
-	
 	function test_pkey()
 	{
 		echo "<h4>Test search on pkey</h4>";
-		$sExpr1 = "cmdbContact: pkey IN {40, 42}";
-		$sExpr2 = "cmdbContact: pkey NOTIN {40, 42}";
-		$this->search_and_show_list_from_sibusql($sExpr1);
-		$this->search_and_show_list_from_sibusql($sExpr2);
+		$sExpr1 = "SELECT cmdbContact WHERE id IN (40, 42)";
+		$sExpr2 = "SELECT cmdbContact WHERE IN NOT IN (40, 42)";
+		$this->search_and_show_list_from_oql($sExpr1);
+		$this->search_and_show_list_from_oql($sExpr2);
 	
 		echo "Et maintenant, on fusionne....</br>\n";
-		$oSet1 = new CMDBObjectSet(DBObjectSearch::FromSibuSQL($sExpr1));
-		$oSet2 = new CMDBObjectSet(DBObjectSearch::FromSibuSQL($sExpr2));
+		$oSet1 = new CMDBObjectSet(DBObjectSearch::FromOQL($sExpr1));
+		$oSet2 = new CMDBObjectSet(DBObjectSearch::FromOQL($sExpr2));
 		$oIntersect = $oSet1->CreateIntersect($oSet2);
 		$oDelta = $oSet1->CreateDelta($oSet2);
 	
@@ -601,8 +583,8 @@ class TestMyBizModel extends TestBizModel
 			$this->show_list($oObjectSet);
 		}
 	
-		echo "<h4>Test relations - same results, by the mean of a SibuSQL</h4>";
-		$this->search_and_show_list_from_sibusql("cmdbContact: RELATED (Potes, $iMaxDepth) TO (cmdbContact: pkey = 18)");
+		echo "<h4>Test relations - same results, by the mean of a OQL</h4>";
+		$this->search_and_show_list_from_oql("cmdbContact: RELATED (Potes, $iMaxDepth) TO (cmdbContact: pkey = 18)");
 		
 	}
 	
@@ -670,7 +652,7 @@ class TestMyBizModel extends TestBizModel
 
 	protected function DoExecute()
 	{
-//				$this->ReportError("Found two different SibuSQL expression out of the (same?) filter: <em>$sExpr1</em> != <em>$sExpr2</em>");
+//				$this->ReportError("Found two different OQL expression out of the (same?) filter: <em>$sExpr1</em> != <em>$sExpr2</em>");
 //			$this->ReportSuccess('Found '.$oSet->Count()." objects of class $sClassName");
 		//$this->test_linksinfo();
 		//$this->test_list_attributes();
@@ -682,7 +664,7 @@ class TestMyBizModel extends TestBizModel
 		//$this->test_error();
 		//$this->test_changetracking();
 		$this->test_zlist();
-		$this->test_SibuSQL();
+		$this->test_OQL();
 		//$this->test_pkey();
 		$this->test_relations();
 		$this->test_linkedset();
@@ -848,7 +830,7 @@ class TestQueriesOnFarm extends MyFarm
 
 	protected function DoExecute()
 	{
-//			$this->ReportError("Found two different SibuSQL expression out of the (same?) filter: <em>$sExpr1</em> != <em>$sExpr2</em>");
+//			$this->ReportError("Found two different OQL expression out of the (same?) filter: <em>$sExpr1</em> != <em>$sExpr2</em>");
 //			$this->ReportSuccess('Found '.$oSet->Count()." objects of class $sClassName");
 		echo "<h3>Create protagonists...</h3>";
 
@@ -917,7 +899,6 @@ class TestQueriesOnFarm extends MyFarm
 			'SELECT Animal AS A JOIN Group AS G ON FooClass.leader = A.id' => false,
 			'SELECT Animal AS A JOIN Group AS G ON G.leader = FooClass.id' => false,
 			'SELECT Animal AS A JOIN Group AS G ON G.masterchief = A.id' => false,
-			'SELECT Animal AS A JOIN Group AS G ON G.leader = A.pkey' => false,
 			'SELECT Animal AS A JOIN Group AS G ON A.id = G.leader' => false,
 			'SELECT Animal AS A JOIN Group AS G ON G.leader = A.id WHERE A.sex=\'male\' OR G.qwerty = 123' => false,
 			'SELECT Animal AS A JOIN Group AS G ON G.leader = A.id WHERE A.sex=\'male\' OR G.name LIKE "a%"' => true,
@@ -990,7 +971,7 @@ class TestBulkChangeOnFarm extends TestBizModel
 
 	protected function DoExecute()
 	{
-//			$this->ReportError("Found two different SibuSQL expression out of the (same?) filter: <em>$sExpr1</em> != <em>$sExpr2</em>");
+//			$this->ReportError("Found two different OQL expression out of the (same?) filter: <em>$sExpr1</em> != <em>$sExpr2</em>");
 //			$this->ReportSuccess('Found '.$oSet->Count()." objects of class $sClassName");
 
 		$oParser = new CSVParser("denomination,hauteur,age

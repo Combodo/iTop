@@ -64,7 +64,7 @@ class UserContext
 	{
 		$oObject = null;
 		$oFilter = $this->NewFilter($sClass);
-		$oFilter->AddCondition('pkey', $sKey, '=');
+		$oFilter->AddCondition('id', $sKey, '=');
 		$oSet = new CMDBObjectSet($oFilter);
 		if ($oSet->Count() > 0)
 		{

@@ -31,11 +31,23 @@ class DisplayTemplate
 			$oPage->add(substr($this->m_sTemplate, $iBeforeTagPos, $iStart - $iBeforeTagPos));
 			if ($sTag == DisplayBlock::TAG_BLOCK)
 			{
-				$oBlock = DisplayBlock::FromTemplate($sOuterTag);
-				if (is_object($oBlock))
+				try
 				{
-					$oBlock->Display($oPage, 'block_'.self::$iBlockCount, $aParams);
+					$oBlock = DisplayBlock::FromTemplate($sOuterTag);
+					if (is_object($oBlock))
+					{
+						$oBlock->Display($oPage, 'block_'.self::$iBlockCount, $aParams);
+					}
 				}
+				catch(OQLException $e)
+				{
+					$oPage->p('Error in template (please contact your administrator) - Invalid query<!--'.$sOuterTag.'-->');
+				}
+				catch(Exception $e)
+				{
+					$oPage->p('Error in template (please contact your administrator)<!--'.$sOuterTag.'-->');
+				}
+				
 				self::$iBlockCount++;
 			}
 			else
@@ -175,19 +187,19 @@ class DisplayTemplate
 		$sTemplate = '<div class="page_header">
 		<div class="actions_details"><a href="#"><span>Actions</span></a></div>
 		<h1>$class$: <span class="hilite">$name$</span></h1>
-		<itopblock blockclass="HistoryBlock" type="toggle" encoding="text/oql">SELECT CMDBChangeOp WHERE objkey = $pkey$ AND objclass = \'$class$\'</itopblock>
+		<itopblock blockclass="HistoryBlock" type="toggle" encoding="text/oql">SELECT CMDBChangeOp WHERE objkey = $id$ AND objclass = \'$class$\'</itopblock>
 		</div>
 		<img src="../../images/connect_to_network.png" style="margin-top:-10px; margin-right:10px; float:right">
-		<itopblock blockclass="DisplayBlock" asynchronous="false" type="bare_details" encoding="text/sibusql">bizNetworkDevice: pkey = $pkey$</itopblock>
+		<itopblock blockclass="DisplayBlock" asynchronous="false" type="bare_details" encoding="text/oql">SELECT bizNetworkDevice AS d WHERE d.id = $id$</itopblock>
 		<itoptabs>
 			<itoptab name="Interfaces">
-				<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">bizInterface: device_id = $pkey$</itopblock>
+				<itopblock blockclass="DisplayBlock" type="list" encoding="text/oql">SELECT bizInterface AS i WHERE i.device_id = $id$</itopblock>
 			</itoptab>
 			<itoptab name="Contacts">
-				<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">bizContact: PKEY IS contact_id IN (ContactsLinks: object_id = $pkey$)</itopblock>
+				<itopblock blockclass="DisplayBlock" type="list" encoding="text/oql">SELECT bizContact AS c JOIN ContactsLinks AS l ON l.contact_id = c.id WHERE l.object_id = $id$</itopblock>
 			</itoptab>
 			<itoptab name="Documents">
-				<itopblock blockclass="DisplayBlock" type="list" encoding="text/sibusql">bizDocument: PKEY IS doc_id IN (lnkDocumentRealObject: object_id = $pkey$)</itopblock>
+				<itopblock blockclass="DisplayBlock" type="list" encoding="text/oql">SELECT bizDocument AS d JOIN lnkDocumentRealObject as l ON l.document_id = d.id WHERE l.object_id = $id$)</itopblock>
 			</itoptab>
 		</itoptabs>';
 		

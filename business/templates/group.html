@@ -1,16 +1,16 @@
 <div class="page_header">
-	<itopblock blockclass="MenuBlock" type="popup" encoding="text/oql" label="Actions">SELECT $class$ WHERE id = $pkey$</itopblock>
+	<itopblock blockclass="MenuBlock" type="popup" encoding="text/oql" label="Actions">SELECT $class$ WHERE id = $id$</itopblock>
 	<h1>$class_name$: <span class="hilite">$name$</span></h1>
-	<itopblock blockclass="HistoryBlock" type="toggle" encoding="text/oql">SELECT CMDBChangeOp WHERE objkey = $pkey$ AND objclass = '$class$'</itopblock>
+	<itopblock blockclass="HistoryBlock" type="toggle" encoding="text/oql">SELECT CMDBChangeOp WHERE objkey = $id$ AND objclass = '$class$'</itopblock>
 </div>
 <img src="../images/tar.png" style="margin-top:-10px; margin-right:10px; float:right">
-<itopblock blockclass="DisplayBlock" asynchronous="false" type="bare_details" encoding="text/oql">SELECT bizInfraGroup WHERE id = $pkey$</itopblock>
+<itopblock blockclass="DisplayBlock" asynchronous="false" type="bare_details" encoding="text/oql">SELECT bizInfraGroup WHERE id = $id$</itopblock>
 <itoptabs>
 	<itoptab name="Infrastructures">
-		<itopblock blockclass="DisplayBlock" type="links" link_attr="infra_group_id" object_id="$pkey$" target_attr="infra_id"  encoding="text/oql">SELECT lnkInfraGrouping WHERE infra_group_id = $pkey$</itopblock>
+		<itopblock blockclass="DisplayBlock" type="links" link_attr="infra_group_id" object_id="$id$" target_attr="infra_id"  encoding="text/oql">SELECT lnkInfraGrouping WHERE infra_group_id = $id$</itopblock>
 	</itoptab>
 		<itoptab name="Contacts">
-		<itopblock blockclass="DisplayBlock" type="links" link_attr="object_id" object_id="$pkey$" target_attr="contact_id"  encoding="text/oql">SELECT lnkContactRealObject WHERE object_id = $pkey$</itopblock>
+		<itopblock blockclass="DisplayBlock" type="links" link_attr="object_id" object_id="$id$" target_attr="contact_id"  encoding="text/oql">SELECT lnkContactRealObject WHERE object_id = $id$</itopblock>
 	</itoptab>
 	
 </itoptabs>

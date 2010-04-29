@@ -492,10 +492,10 @@ abstract class TestBizModel extends TestHandler
 		self::show_list($oObjSet);
 	}
 
-	static protected function search_and_show_list_from_sibusql($sSibuSQL)
+	static protected function search_and_show_list_from_oql($sOQL)
 	{
-		echo $sSibuSQL."...<br/>\n"; 
-		$oNewFilter = DBObjectSearch::FromSibuSQL($sSibuSQL);
+		echo $sOQL."...<br/>\n"; 
+		$oNewFilter = DBObjectSearch::FromOQL($sOQL);
 		self::search_and_show_list($oNewFilter);
 	}
 }
@@ -544,14 +544,14 @@ abstract class TestBizModelGeneric extends TestBizModel
 			$oBaby = new $sClassName;
 			$oFilter = new DBObjectSearch($sClassName);
 
-			// Challenge reversibility of SibusQL / filter object
+			// Challenge reversibility of OQL / filter object
 			//
-			$sExpr1 = $oFilter->ToSibuSQL();
-			$oNewFilter = DBObjectSearch::FromSibuSQL($sExpr1);
-			$sExpr2 = $oNewFilter->ToSibuSQL();
+			$sExpr1 = $oFilter->ToOQL();
+			$oNewFilter = DBObjectSearch::FromOQL($sExpr1);
+			$sExpr2 = $oNewFilter->ToOQL();
 			if ($sExpr1 != $sExpr2)
 			{
-				$this->ReportError("Found two different SibuSQL expression out of the (same?) filter: <em>$sExpr1</em> != <em>$sExpr2</em>");
+				$this->ReportError("Found two different OQL expression out of the (same?) filter: <em>$sExpr1</em> != <em>$sExpr2</em>");
 			}
 
 			// Use the filter (perform the query)

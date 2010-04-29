@@ -14,22 +14,6 @@
 
 
 /**
- * Sibusql - value set start 
- * @package     iTopORM
- */
-define('VS_START', '{');
-/**
- * Sibusql - value set end 
- * @package     iTopORM
- */
-define('VS_END', '}');
-
-
-define('SIBUSQLPARAMREGEXP', "/\\$\\[(.*)\\:(.*)\\:(.*)\\]/U");
-define('SIBUSQLTHISREGEXP', "/this\\.(.*)/U");
-
-
-/**
  * Define filters for a given class of objects (formerly named "filter") 
  *
  * @package     iTopORM
@@ -241,11 +225,6 @@ class DBObjectSearch
 
 	public function AddCondition($sFilterCode, $value, $sOpCode = null)
 	{
-	// #@# backward compatibility for pkey/id
-	if (strtolower(trim($sFilterCode)) == 'pkey') $sFilterCode = 'id';
-// #@# todo - obsolete smoothly, first send exceptions
-//		throw new CoreException('SibusQL has been obsoleted, please update your queries', array('sibusql'=>$sQuery, 'oql'=>$oFilter->ToOQL()));
-
 		MyHelpers::CheckKeyInArray('filter code', $sFilterCode, MetaModel::GetClassFilterDefs($this->GetClass()));
 		$oFilterDef = MetaModel::GetClassFilterDef($this->GetClass(), $sFilterCode);
 
@@ -719,77 +698,6 @@ class DBObjectSearch
 		return $sRes;
 	}
 
-	public function ToSibusQL()
-	{
-		return "NONONO";
-	}
-
-	static private function privProcessParams($sQuery, array $aParams, $oDbObject)
-	{
-		$iPlaceHoldersCount = preg_match_all(SIBUSQLPARAMREGEXP, $sQuery, $aMatches, PREG_SET_ORDER);
-		if ($iPlaceHoldersCount > 0)
-		{
-			foreach($aMatches as $aMatch)
-			{
-				$sStringToSearch = $aMatch[0];
-				$sParameterName = $aMatch[1];
-				$sDefaultValue = $aMatch[2];
-				$sDescription = $aMatch[3];
-				
-				$sValue = $sDefaultValue;
-				if (array_key_exists($sParameterName, $aParams))
-				{
-					$sValue = $aParams[$sParameterName];
-					unset($aParams[$sParameterName]);
-				}
-				else if (is_object($oDbObject))
-				{
-					if (strpos($sParameterName, "this.") === 0)
-					{
-						$sAttCode = substr($sParameterName, strlen("this."));
-						if ($sAttCode == 'id')
-						{
-							$sValue = $oDbObject->GetKey();
-						}
-						else if ($sAttCode == 'class')
-						{
-							$sValue = get_class($oDbObject);
-						}
-						else if (MetaModel::IsValidAttCode(get_class($oDbObject), $sAttCode))
-						{
-							$sValue = $oDbObject->Get($sAttCode);
-						}
-					}
-				}
-				$sQuery = str_replace($sStringToSearch, $sValue, $sQuery);
-			}
-		}
-		if (count($aParams) > 0)
-		{
-//			throw new CoreException("Unused parameter(s) for this SibusQL expression: (".implode(', ', array_keys($aParams)).")");
-		}
-		return $sQuery;
-	}
-
-	static public function ListSibusQLParams($sQuery)
-	{
-		$aRet = array();
-		$iPlaceHoldersCount = preg_match_all(SIBUSQLPARAMREGEXP, $sQuery, $aMatches, PREG_SET_ORDER);
-		if ($iPlaceHoldersCount > 0)
-		{
-			foreach($aMatches as $aMatch)
-			{
-				$sStringToSearch = $aMatch[0];
-				$sParameterName = $aMatch[1];
-				$sDefaultValue = $aMatch[2];
-				$sDescription = $aMatch[3];
-				$aRet[$sParameterName]["description"] = $sDescription;
-				$aRet[$sParameterName]["default"] = $sDefaultValue;
-			}
-		}
-		return $aRet;
-	}
-
 	protected function OQLExpressionToCondition($sQuery, $oExpression, $aClassAliases)
 	{
 		if ($oExpression instanceof BinaryOqlExpression)
@@ -989,111 +897,6 @@ class DBObjectSearch
 		}
 
 		return $oResultFilter;
-	}
-
-	static public function FromSibusQL($sQuery, array $aParams = array(), $oObject = null)
-	{
-		if (empty($sQuery)) return null;
-		$sQuery = self::privProcessParams($sQuery, $aParams, $oObject);
-
-		if (preg_match('@^\\s*SELECT@', $sQuery))
-		{
-			return self::FromOQL($sQuery);
-		}
-
-		$iSepPos = strpos($sQuery, ":");
-		if ($iSepPos === false)
-		{
-			// Only the class was specified -> all rows are required
-			$sClass = trim($sQuery);
-			$oFilter = new DBObjectSearch($sClass);
-		}
-		else
-		{
-			$sClass = trim(substr($sQuery, 0, $iSepPos));
-			$sConds = trim(substr($sQuery, $iSepPos + 1));
-			$aValues = explode(" AND ", $sConds);
-	
-			$oFilter = new DBObjectSearch($sClass);
-	
-			foreach ($aValues as $sCond)
-			{
-				$sCond = trim($sCond);
-				
-				if (strpos($sCond, "* HAS ") === 0)
-				{
-					$sValue = self::Expression2Value(substr($sCond, strlen("* HAS ")));
-					$oFilter->AddCondition_FullText($sValue);
-				}
-				else if (preg_match("@^(\S+) IN \\((.+)\\)$@", $sCond, $aMatches))
-				{
-					$sExtKeyAttCode = $aMatches[1];
-					$sFilterExp = $aMatches[2];
-
-					$oSubFilter = self::FromSibuSQL($sFilterExp);
-					$oFilter->AddCondition_PointingTo($oSubFilter, $sExtKeyAttCode);
-				}
-				else if (strpos($sCond, "PKEY IS ") === 0)
-				{
-					if (preg_match("@^PKEY IS (\S+) IN \\((.+)\\)$@", $sCond, $aMatches))
-					{
-						$sExtKeyAttCodeToMe = $aMatches[1];
-						$sFilterExp = $aMatches[2];
-						$oRemoteFilter = self::FromSibuSQL($sFilterExp);
-						$oFilter->AddCondition_ReferencedBy($oRemoteFilter, $sExtKeyAttCodeToMe);
-					}
-				}
-				else if (strpos($sCond, "RELATED") === 0)
-				{
-					if (preg_match("@^RELATED\s*\\((.+)\\)\s*TO\s*\\((.+)\\)@", trim($sCond), $aMatches))
-					{
-						$aRelation = explode(',', trim($aMatches[1]));
-						$sRelCode = trim($aRelation[0]);
-						$iMaxDepth = intval(trim($aRelation[1]));
-						$sFilterExp = trim($aMatches[2]);
-
-						$oSubFilter = self::FromSibuSQL($sFilterExp);
-						$oFilter->AddCondition_RelatedTo($oSubFilter, $sRelCode, $iMaxDepth);
-					}
-				}
-				else
-				{
-					$sOperandExpr = "'.*'|\d+|-\d+|".VS_START.".+".VS_END;
-					if (preg_match("@^(\S+)\s+(.*)\s+($sOperandExpr)$@", $sCond, $aMatches))
-					{
-						$sFltCode = trim($aMatches[1]);
-						$sOpCode = trim($aMatches[2]);
-						$value = self::Expression2Value($aMatches[3]);
-						$oFilter->AddCondition($sFltCode, $value, $sOpCode);
-					}
-					else
-					{
-						throw new CoreException("Wrong format for filter definition: '$sQuery'");
-					}
-				}
-			}
-		}
-
-// #@# todo - obsolete smoothly, first give the OQL version !
-//		throw new CoreException('SibusQL has been obsoleted, please update your queries', array('sibusql'=>$sQuery, 'oql'=>$oFilter->ToOQL()));
-
-		return $oFilter;
-	}
-
-	// Sexy display of a SibuSQL expression
-	static public function SibuSQLAsHtml($sQuery)
-	{
-		$sQuery = htmlentities($sQuery);
-		$aParams = self::ListSibusQLParams($sQuery);
-		$aParamValues = array();
-		foreach ($aParams as $sParamName => $aParamInfo)
-		{
-			$sDescription = $aParamInfo["description"];
-			$sDefaultValue = $aParamInfo["default"];
-			$aParamValues[$sParamName] = "<span style=\"background-color:#aaa;\" title\"$sDescription (default to '$sDefaultValue')\">$sParamName</span>";
-		}
-		$sQuery = self::privProcessParams($sQuery, $aParamValues, null);
-		return $sQuery;
 	}
 
 	public function toxpath()

@@ -41,7 +41,7 @@ class OqlInterpreter
 		$oRes = $this->Parse();
 		if (!$oRes instanceof OqlObjectQuery)
 		{
-			throw new OqlException('Expecting an OQL query', $this->m_sQuery, 0, 0, get_class($oRes), array('OqlObjectQuery'));
+			throw new OQLException('Expecting an OQL query', $this->m_sQuery, 0, 0, get_class($oRes));
 		}
 		return $oRes;
 	}
@@ -51,7 +51,7 @@ class OqlInterpreter
 		$oRes = $this->Parse();
 		if (!$oRes instanceof Expression)
 		{
-			throw new OqlException('Expecting an OQL expression', $this->m_sQuery, 0, 0, get_class($oRes), array('Expression'));
+			throw new OQLException('Expecting an OQL expression', $this->m_sQuery, 0, 0, get_class($oRes), array('Expression'));
 		}
 		return $oRes;
 	}

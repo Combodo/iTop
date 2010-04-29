@@ -383,7 +383,7 @@ abstract class CMDBObject extends DBObject
 
 		// Get the list of objects to delete (and record data before deleting the DB records)
 		$oObjSet = new CMDBObjectSet($oFilter);
-		$aObjAndKeys = array(); // array of pkey=>object
+		$aObjAndKeys = array(); // array of id=>object
 		while ($oItem = $oObjSet->Fetch())
 		{
 			$aObjAndKeys[$oItem->GetKey()] = $oItem;

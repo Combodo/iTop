@@ -1085,7 +1085,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		if (!$oValSetDef)
 		{
 			// Let's propose every existing value
-			$oValSetDef = new ValueSetObjects($this->GetTargetClass());
+			$oValSetDef = new ValueSetObjects('SELECT '.$this->GetTargetClass());
 		}
 		return $oValSetDef;
 	}
@@ -1099,7 +1099,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		catch (MissingQueryArgument $e)
 		{
 			// Some required arguments could not be found, enlarge to any existing value
-			$oValSetDef = new ValueSetObjects($this->GetTargetClass());
+			$oValSetDef = new ValueSetObjects('SELECT '.$this->GetTargetClass());
 			return $oValSetDef->GetValues($aArgs, $sBeginsWith);
 		}
 	}

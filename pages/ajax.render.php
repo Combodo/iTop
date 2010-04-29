@@ -107,9 +107,9 @@ switch($operation)
 		{
 			$aExtraParams = json_decode(str_replace("'", '"', $sExtraParams), true /* associative array */);
 		}
-		if ($sEncoding == 'sibusql')
+		if ($sEncoding == 'oql')
 		{
-			$oFilter = CMDBSearchFilter::FromSibusQL($sFilter);
+			$oFilter = CMDBSearchFilter::FromOQL($sFilter);
 		}
 		else
 		{
@@ -127,7 +127,7 @@ switch($operation)
 	case 'details':
 	$key = utils::ReadParam('id', 0);
 	$oFilter = $oContext->NewFilter($sClass);
-	$oFilter->AddCondition('pkey', $key, '=');
+	$oFilter->AddCondition('id', $key, '=');
 	$oDisplayBlock = new DisplayBlock($oFilter, 'details', false);
 	$oDisplayBlock->RenderContent($oPage);
 	break;
@@ -135,7 +135,7 @@ switch($operation)
 	case 'preview':
 	$key = utils::ReadParam('id', 0);
 	$oFilter = $oContext->NewFilter($sClass);
-	$oFilter->AddCondition('pkey', $key, '=');
+	$oFilter->AddCondition('id', $key, '=');
 	$oDisplayBlock = new DisplayBlock($oFilter, 'preview', false);
 	$oDisplayBlock->RenderContent($oPage);
 	break;
@@ -187,7 +187,7 @@ switch($operation)
 	case 'modal_details':
 	$key = utils::ReadParam('id', 0);
 	$oFilter = $oContext->NewFilter($sClass);
-	$oFilter->AddCondition('pkey', $key, '=');
+	$oFilter->AddCondition('id', $key, '=');
 	$oPage->Add("<p style=\"width:100%; margin-top:-5px;padding:3px; background-color:#33f; color:#fff;\">Object Details</p>\n");
 	$oDisplayBlock = new DisplayBlock($oFilter, 'details', false);
 	$oDisplayBlock->RenderContent($oPage);

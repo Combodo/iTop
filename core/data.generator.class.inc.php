@@ -350,7 +350,7 @@ class cmdbDataGenerator
 	{
 		$oOrg = null;
 		$oFilter = new CMDBSearchFilter('bizOrganization');
-		$oFilter->AddCondition('pkey', $sId, '=');
+		$oFilter->AddCondition('id', $sId, '=');
 		$oSet = new CMDBObjectSet($oFilter);
 		if ($oSet->Count() > 0)
 		{

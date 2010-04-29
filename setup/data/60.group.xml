@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Set>
 <bizInfraGroup id="326">
-<name>Monitroing Nagios server1</name>
+<name>Monitoring Nagios server1</name>
 <status>production</status>
 <org_id>2</org_id>
 <severity>low</severity>
