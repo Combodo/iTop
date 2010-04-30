@@ -385,7 +385,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 			else
 			{
 				// Full list
-				$sHtml .= '<tr class="containerHeader"><td>&nbsp;'.Dict::Format('UI:CountOfResults').'</td><td>';
+				$sHtml .= '<tr class="containerHeader"><td>&nbsp;'.Dict::Format('UI:CountOfResults', $oSet->Count()).'</td><td>';
 			}
 			$sHtml .= $oMenuBlock->GetRenderContent($oPage, $aMenuExtraParams);
 			$sHtml .= '</td></tr>';
@@ -480,7 +480,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 			else
 			{
 				// Full list
-				$sHtml .= '<tr class="containerHeader"><td>&nbsp;'.Dict::Format('UI:CountOfResults').'</td><td>';
+				$sHtml .= '<tr class="containerHeader"><td>&nbsp;'.Dict::Format('UI:CountOfResults', $oSet->Count()).'</td><td>';
 			}
 			$sHtml .= $oMenuBlock->GetRenderContent($oPage, $aMenuExtraParams);
 			$sHtml .= '</td></tr>';
