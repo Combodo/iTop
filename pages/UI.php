@@ -1,4 +1,332 @@
 <?php
+/**
+ * Perform all the needed checks to delete one (or more) objects
+ */
+function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
+{
+	$bFoundManual = false;
+	$bFoundStopper = false;
+	$iTotalDelete = 0; // count of object that must be deleted
+	$iTotalReset = 0; // count of object for which an ext key will be reset (to 0)
+	$aTotalDeletedObjs = array();
+	$aTotalResetedObjs = array();
+	foreach($aObjects as $oObj)
+	{
+		// Evaluate the impact on the DB integrity
+		//
+		list ($aDeletedObjs, $aResetedObjs) = $oObj->GetDeletionScheme();
+	
+		// Evaluate feasibility (user access control)
+		//
+		foreach ($aDeletedObjs as $sRemoteClass => $aDeletes)
+		{
+			$iTotalDelete += count($aDeletes);
+			foreach ($aDeletes as $iId => $aData)
+			{
+				$oToDelete = $aData['to_delete'];
+				$bDeleteAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_DELETE, DBObjectSet::FromObject($oToDelete));
+				$aTotalDeletedObjs[$sRemoteClass][$iId]['auto_delete'] = $aData['auto_delete'];
+				if (!$bDeleteAllowed)
+				{
+					$aTotalDeletedObjs[$sRemoteClass][$iId]['issue'] = 'not allowed to delete this object';
+					$bFoundStopper = true;
+				}
+				else
+				{
+					$aTotalDeletedObjs[$sRemoteClass][$iId]['to_delete'] = $oToDelete;
+				}
+	
+				$bAutoDel = $aData['auto_delete'];
+				if (!$bAutoDel)
+				{
+					$bFoundManual = true;
+				}
+			}
+		}
+		
+		foreach ($aResetedObjs as $sRemoteClass => $aToReset)
+		{
+			$iTotalReset += count($aToReset);
+			foreach ($aToReset as $iId => $aData)
+			{
+				$oToReset = $aData['to_reset'];
+				$aExtKeyLabels = array();
+				$aForbiddenKeys = array(); // keys on which the current user is not allowed to write
+				foreach ($aData['attributes'] as $sRemoteExtKey => $aRemoteAttDef)
+				{
+					$bUpdateAllowed = UserRights::IsActionAllowedOnAttribute($sClass, $sRemoteExtKey, UR_ACTION_MODIFY, DBObjectSet::FromObject($oToReset));
+					if (!$bUpdateAllowed)
+					{
+						$bFoundStopper = true;
+						$aForbiddenKeys[] = $aRemoteAttDef->GetLabel();
+					}
+					$aExtKeyLabels[] = $aRemoteAttDef->GetLabel();
+				}
+				$aResetedObjs[$sRemoteClass][$iId]['attributes_list'] = implode(', ', $aExtKeyLabels); 
+				if (count($aForbiddenKeys) > 0)
+				{
+					$aTotalResetedObjs[$sRemoteClass][$iId]['issue'] = 'you are not allowed to update some fields: '.implode(', ', $aForbiddenKeys);
+				}
+				else
+				{
+					$aTotalResetedObjs[$sRemoteClass][$iId]['to_reset'] = $oToReset;
+				}
+			}
+		}
+		// Count of dependent objects (+ the current one)
+		$iTotalTargets = $iTotalDelete + $iTotalReset;
+	}
+	
+	if ($bDeleteConfirmed)
+	{
+		if (count($aObjects) == 1)
+		{
+			$oObj = $aObjects[0];
+			$oP->add("<h1>Deletion of ".$oObj->GetName()."</h1>\n");		
+		}
+		else
+		{
+			$oP->add("<h1>Deletion of ".count($aObjects)." objects of class $sClass.</h1>\n");		
+		}
+		// Security - do not allow the user to force a forbidden delete by the mean of page arguments...
+		if ($bFoundStopper)
+		{
+			throw new SecurityException('This object could not be deleted because the current user do not have sufficient rights');
+		}
+		if ($bFoundManual)
+		{
+			throw new SecurityException('This object could not be deleted because some manual operations must be performed prior to that');
+		}
+
+		// Prepare the change reporting
+		//
+		$oMyChange = MetaModel::NewObject("CMDBChange");
+		$oMyChange->Set("date", time());
+		if (UserRights::GetUser() != UserRights::GetRealUser())
+		{
+			$sUserString = UserRights::GetRealUser()." on behalf of ".UserRights::GetUser();
+		}
+		else
+		{
+			$sUserString = UserRights::GetUser();
+		}
+		$oMyChange->Set("userinfo", $sUserString);
+		$oMyChange->DBInsert();
+
+		// Delete dependencies
+		//
+		$aDisplayData = array();
+		foreach ($aTotalDeletedObjs as $sRemoteClass => $aDeletes)
+		{
+			foreach ($aDeletes as $iId => $aData)
+			{
+				$oToDelete = $aData['to_delete'];
+
+				$aDisplayData[] = array(
+					'class' => MetaModel::GetName(get_class($oToDelete)),
+					'object' => $oToDelete->GetHyperLink(),
+					'consequence' => 'automatically deleted',
+				);
+
+				$oToDelete->DBDeleteTracked($oMyChange);
+			}
+		}
+	
+		// Update dependencies
+		//
+		foreach ($aTotalResetedObjs as $sRemoteClass => $aToReset)
+		{
+			foreach ($aToReset as $iId => $aData)
+			{
+				$oToReset = $aData['to_reset'];
+				$aDisplayData[] = array(
+					'class' => MetaModel::GetName(get_class($oToReset)),
+					'object' => $oToReset->GetHyperLink(),
+					'consequence' => 'automatic reset of: '.$aData['attributes_list'],
+				);
+
+				foreach ($aData['attributes'] as $sRemoteExtKey => $aRemoteAttDef)
+				{
+					$oToReset->Set($sRemoteExtKey, 0);
+					$oToReset->DBUpdateTracked($oMyChange);
+				}
+			}
+		}
+
+		// Report automatic jobs
+		//
+		if ($iTotalTargets > 0)
+		{
+			if (count($aObjects) == 1)
+			{
+				$oObj = $aObjects[0];
+				$oP->p('Cleaning up any reference to '.$oObj->GetName().'...');
+			}
+			else
+			{
+				$oP->p("Cleaning up any reference to the ".count($aObjects)." objects of class $sClass.\n");		
+			}
+			$aDisplayConfig = array();
+			$aDisplayConfig['class'] = array('label' => 'Class', 'description' => '');
+			$aDisplayConfig['object'] = array('label' => 'Object', 'description' => '');
+			$aDisplayConfig['consequence'] = array('label' => 'Done', 'description' => 'What has been done');
+			$oP->table($aDisplayConfig, $aDisplayData);
+		}
+
+		foreach($aObjects as $oObj)
+		{
+			$sName = $oObj->GetName();
+			$sClassLabel = MetaModel::GetName(get_class($oObj));
+			$oObj->DBDeleteTracked($oMyChange);
+			$oP->add("<h1>".$sName." - $sClassLabel deleted</h1>\n");
+		}
+	}
+	else
+	{
+		if (count($aObjects) == 1)
+		{
+			$oObj = $aObjects[0];
+			$oP->add("<h1>Deletion of ".$oObj->GetHyperLink()."</h1>\n");
+		}
+		else
+		{
+			$oP->add("<h1>Deletion of ".count($aObjects)." objects of class $sClass.</h1>\n");		
+		}
+		// Explain what should be done
+		//
+		$aDisplayData = array();
+		foreach ($aTotalDeletedObjs as $sRemoteClass => $aDeletes)
+		{
+			foreach ($aDeletes as $iId => $aData)
+			{
+				$oToDelete = $aData['to_delete'];
+				$bAutoDel = $aData['auto_delete'];
+				if (array_key_exists('issue', $aData))
+				{
+					if ($bAutoDel)
+					{
+						$sConsequence = 'Should be automaticaly deleted, but you are not allowed to do so';
+					}
+					else
+					{
+						$sConsequence = 'Must be deleted manually - you are not allowed to delete this object, please contact your application admin';
+					}
+				}
+				else
+				{
+					if ($bAutoDel)
+					{
+						$sConsequence = 'Will be automaticaly deleted';
+					}
+					else
+					{
+						$sConsequence = 'Must be deleted manually';
+					}
+				}
+				$aDisplayData[] = array(
+					'class' => MetaModel::GetName(get_class($oToDelete)),
+					'object' => $oToDelete->GetHyperLink(),
+					'consequence' => $sConsequence,
+				);
+			}
+		}
+		foreach ($aTotalResetedObjs as $sRemoteClass => $aToReset)
+		{
+			foreach ($aToReset as $iId => $aData)
+			{
+				$oToReset = $aData['to_reset'];
+				if (array_key_exists('issue', $aData))
+				{
+					$sConsequence = "Should be automatically updated, but: ".$aData['issue'];
+				}
+				else
+				{
+					$sConsequence = "will be automaticaly updated (reset: ".$aData['attributes_list'].")";
+				}
+				$aDisplayData[] = array(
+					'class' => MetaModel::GetName(get_class($oToReset)),
+					'object' => $oToReset->GetHyperLink(),
+					'consequence' => $sConsequence,
+				);
+			}
+		}
+
+		if ($iTotalTargets > 0)
+		{
+			if (count($aObjects) == 1)
+			{
+				$oObj = $aObjects[0];
+				$oP->p("$iTotalTargets objects/links are referencing ".$oObj->GetName());
+			}
+			else
+			{
+				$oP->p("$iTotalTargets objects/links are referencing some of the objects to be deleted");	
+			}
+			$oP->p('To ensure Database integrity, any reference should be further eliminated');
+
+			$aDisplayConfig = array();
+			$aDisplayConfig['class'] = array('label' => 'Class', 'description' => '');
+			$aDisplayConfig['object'] = array('label' => 'Object', 'description' => '');
+			$aDisplayConfig['consequence'] = array('label' => 'Consequence', 'description' => 'What will happen to this object');
+			$oP->table($aDisplayConfig, $aDisplayData);
+		}
+
+		if ($iTotalTargets > 0 && ($bFoundManual || $bFoundStopper))
+		{
+			if ($bFoundStopper)
+			{
+				$oP->p("Sorry, you are not allowed to delete this object, please see detailed explanations above");
+			}
+			elseif ($bFoundManual)
+			{
+				$oP->p("Please do the manual operations requested above prior to requesting the deletion of this object");
+			}		
+			$oP->add("<form method=\"post\">\n");
+			$oP->add("<input DISABLED type=\"submit\" name=\"\" value=\" Delete! \">\n");
+			$oP->add("<input type=\"button\" onclick=\"window.history.back();\" value=\" Cancel \">\n");
+			$oP->add("</form>\n");
+		}
+		else
+		{
+			if (count($aObjects) == 1)
+			{
+				$oObj = $aObjects[0];
+				$id = $oObj->GetKey();
+				$oP->p("Please confirm that you want to delete ".$oObj->GetHyperLink());
+				$oP->add("<form method=\"post\">\n");
+				$oP->add("<input type=\"hidden\" name=\"operation\" value=\"delete_confirmed\">\n");
+				$oP->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
+				$oP->add("<input type=\"hidden\" name=\"id\" value=\"$id\">\n");
+				$oP->add("<input type=\"submit\" name=\"\" value=\" Delete! \">\n");
+				$oP->add("<input type=\"button\" onclick=\"window.history.back();\" value=\" Cancel \">\n");
+				$oP->add("</form>\n");
+			}
+			else
+			{
+				$oP->add("<h1>Please confirm that you want to delete the following ".count($aObjects)." objects of class $sClass.</h1>\n");
+				$oSet = CMDBobjectSet::FromArray($sClass, $aObjects);
+				CMDBAbstractObject::DisplaySet($oP, $oSet, array('display_limit' => false, 'menu' => false));
+				$oP->add("<form method=\"post\">\n");
+				$oP->add("<input type=\"hidden\" name=\"operation\" value=\"bulk_delete_confirmed\">\n");
+				$oP->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
+				foreach($aObjects as $oObj)
+				{
+					$oP->add("<input type=\"hidden\" name=\"selectObject[]\" value=\"".$oObj->GetKey()."\">\n");
+				}
+				$oP->add("<input type=\"submit\" name=\"\" value=\" Delete! \">\n");
+				$oP->add("<input type=\"button\" onclick=\"window.history.back();\" value=\" Cancel \">\n");
+				$oP->add("</form>\n");
+			}
+		}
+	}
+
+}
+
+/***********************************************************************************
+ * 
+ * Main user interface page, starts here
+ *
+ * ***********************************************************************************/
 try
 {
 	require_once('../application/application.inc.php');
@@ -521,263 +849,77 @@ try
 			}
 			$oObj->DisplayDetails($oP);
 		break;
-	
+
+		case 'select_for_deletion':
+			$sFilter = utils::ReadParam('filter', '');
+			$sFormat = utils::ReadParam('format', '');
+			$bSearchForm = utils::ReadParam('search_form', true);
+			if (empty($sFilter))
+			{
+				$oP->set_title("iTop - Error");
+				$oP->add("<p>'filter' must be specifed for this operation.</p>\n");
+			}
+			else
+			{
+				$oP->set_title("iTop - mass delete");
+				$oP->add("<h1> Select the objects you want to delete</h1>\n");
+				// TO DO: limit the search filter by the user context
+				$oFilter = CMDBSearchFilter::unserialize($sFilter); // TO DO : check that the filter is valid
+				$oSet = new DBObjectSet($oFilter);
+				if ($bSearchForm)
+				{
+					$oBlock = new DisplayBlock($oFilter, 'search', false);
+					$oBlock->Display($oP, 0);
+				}
+				$oBlock = new DisplayBlock($oFilter, 'list', false);
+				$oP->add("<form method=\"post\">\n");
+				$oP->add("<input type=\"hidden\" name=\"operation\" value=\"bulk_delete\">\n");
+				$oP->add("<input type=\"hidden\" name=\"class\" value=\"".$oFilter->GetClass()."\">\n");
+				$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
+				$oBlock->Display($oP, 1, array('selection_type' => 'multiple', 'selection_mode' => true, 'display_limit' => false));
+				$oP->add("<input type=\"button\" value=\" Cancel \" onClick=\"window.history.back()\">&nbsp;&nbsp;<input type=\"submit\" value=\" Next >>\">\n");
+				$oP->add("</form>\n");
+			}
+		break;
+		
+		case 'bulk_delete':
+		case 'bulk_delete_confirmed':
+			$sClass = utils::ReadPostedParam('class', '');
+			$sClassLabel = MetaModel::GetName($sClass);
+			$aSelectObject = utils::ReadPostedParam('selectObject', '');
+			$aObjects = array();
+			$sTransactionId = utils::ReadPostedParam('transaction_id', '');
+			if ( empty($sClass) || empty($aSelectObject)) // TO DO: check that the class name is valid !
+			{
+				throw new ApplicationException('Error: \'class\' and \'selectObject[]\' parameters must be specifed for this operation.');
+			}
+			if (!utils::IsTransactionValid($sTransactionId))
+			{
+				throw new ApplicationException('Error: objects have already been deleted!');
+			}
+			foreach($aSelectObject as $iId)
+			{
+				$aObjects[] = $oContext->GetObject($sClass, $iId);
+			}
+			if (!UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_DELETE, DBObjectSet::FromArray($sClass, $aObjects)))
+			{
+				throw new SecurityException('You are not allowed to perform a bulk delete of objects of class '.$sClass);
+			}
+			DeleteObjects($oP, $sClass, $aObjects, ($operation == 'bulk_delete_confirmed'));
+		break;
+			
 		case 'delete':
 		case 'delete_confirmed':
 		$sClass = utils::ReadParam('class', '');
 		$sClassLabel = MetaModel::GetName($sClass);
 		$id = utils::ReadParam('id', '');
 		$oObj = $oContext->GetObject($sClass, $id);
-		$sName = $oObj->GetName();
-
+	
 		if (!UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, DBObjectSet::FromObject($oObj)))
 		{
 			throw new SecurityException('You are not allowed to do delete objects of class '.$sClass);
 		}
-
-		// Evaluate the impact on the DB integrity
-		//
-		list ($aDeletedObjs, $aResetedObjs) = $oObj->GetDeletionScheme();
-
-		// Evaluate feasibility (user access control)
-		//
-		$bFoundManual = false;
-		$bFoundStopper = false;
-		$iTotalDelete = 0; // count of object that must be deleted
-		$iTotalReset = 0; // count of object for which an ext key will be reset (to 0)
-		foreach ($aDeletedObjs as $sRemoteClass => $aDeletes)
-		{
-			$iTotalDelete += count($aDeletes);
-			foreach ($aDeletes as $iId => $aData)
-			{
-				$oToDelete = $aData['to_delete'];
-				$bDeleteAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, DBObjectSet::FromObject($oToDelete));
-				if (!$bDeleteAllowed)
-				{
-					$aDeletedObjs[$sRemoteClass][$iId]['issue'] = 'not allowed to delete this object';
-					$bFoundStopper = true;
-				}
-
-				$bAutoDel = $aData['auto_delete'];
-				if (!$bAutoDel)
-				{
-					$bFoundManual = true;
-				}
-			}
-		}
-		foreach ($aResetedObjs as $sRemoteClass => $aToReset)
-		{
-			$iTotalReset += count($aToReset);
-			foreach ($aToReset as $iId => $aData)
-			{
-				$oToReset = $aData['to_reset'];
-				$aExtKeyLabels = array();
-				$aForbiddenKeys = array(); // keys on which the current user is not allowed to write
-				foreach ($aData['attributes'] as $sRemoteExtKey => $aRemoteAttDef)
-				{
-					$bUpdateAllowed = UserRights::IsActionAllowedOnAttribute($sClass, $sRemoteExtKey, UR_ACTION_MODIFY, DBObjectSet::FromObject($oToReset));
-					if (!$bUpdateAllowed)
-					{
-						$bFoundStopper = true;
-						$aForbiddenKeys[] = $aRemoteAttDef->GetLabel();
-					}
-					$aExtKeyLabels[] = $aRemoteAttDef->GetLabel();
-				}
-				$aResetedObjs[$sRemoteClass][$iId]['attributes_list'] = implode(', ', $aExtKeyLabels); 
-				if (count($aForbiddenKeys) > 0)
-				{
-					$aResetedObjs[$sRemoteClass][$iId]['issue'] = 'you are not allowed to update some fields: '.implode(', ', $aForbiddenKeys);
-				}
-			}
-		}
-		// Count of dependent objects (+ the current one)
-		$iTotalTargets = $iTotalDelete + $iTotalReset;
-
-		if ($operation == 'delete_confirmed')
-		{
-			$oP->add("<h1>Deletion of ".$oObj->GetName()."</h1>\n");
-			// Security - do not allow the user to force a forbidden delete by the mean of page arguments...
-			if ($bFoundStopper)
-			{
-				throw new SecurityException('This object could not be deleted because the current user do not have sufficient rights');
-			}
-			if ($bFoundManual)
-			{
-				throw new SecurityException('This object could not be deleted because some manual operations must be performed prior to that');
-			}
-
-			// Prepare the change reporting
-			//
-			$oMyChange = MetaModel::NewObject("CMDBChange");
-			$oMyChange->Set("date", time());
-			if (UserRights::GetUser() != UserRights::GetRealUser())
-			{
-				$sUserString = UserRights::GetRealUser()." on behalf of ".UserRights::GetUser();
-			}
-			else
-			{
-				$sUserString = UserRights::GetUser();
-			}
-			$oMyChange->Set("userinfo", $sUserString);
-			$oMyChange->DBInsert();
-
-			// Delete dependencies
-			//
-			$aDisplayData = array();
-			foreach ($aDeletedObjs as $sRemoteClass => $aDeletes)
-			{
-				foreach ($aDeletes as $iId => $aData)
-				{
-					$oToDelete = $aData['to_delete'];
-
-					$aDisplayData[] = array(
-						'class' => MetaModel::GetName(get_class($oToDelete)),
-						'object' => $oToDelete->GetHyperLink(),
-						'consequence' => 'automatically deleted',
-					);
-
-					$oToDelete->DBDeleteTracked($oMyChange);
-				}
-			}
-		
-			// Update dependencies
-			//
-			foreach ($aResetedObjs as $sRemoteClass => $aToReset)
-			{
-				foreach ($aToReset as $iId => $aData)
-				{
-					$oToReset = $aData['to_reset'];
-					$aDisplayData[] = array(
-						'class' => MetaModel::GetName(get_class($oToReset)),
-						'object' => $oToReset->GetHyperLink(),
-						'consequence' => 'automatic reset of: '.$aData['attributes_list'],
-					);
-
-					foreach ($aData['attributes'] as $sRemoteExtKey => $aRemoteAttDef)
-					{
-						$oToReset->Set($sRemoteExtKey, 0);
-						$oToReset->DBUpdateTracked($oMyChange);
-					}
-				}
-			}
-
-			// Report automatic jobs
-			//
-			if ($iTotalTargets > 0)
-			{
-				$oP->p('Cleaning up any reference to '.$oObj->GetName().'...');
-				$aDisplayConfig = array();
-				$aDisplayConfig['class'] = array('label' => 'Class', 'description' => '');
-				$aDisplayConfig['object'] = array('label' => 'Object', 'description' => '');
-				$aDisplayConfig['consequence'] = array('label' => 'Done', 'description' => 'What has been done');
-				$oP->table($aDisplayConfig, $aDisplayData);
-			}
-
-			$oObj->DBDeleteTracked($oMyChange);
-			$oP->add("<h1>".$sName." - $sClassLabel deleted</h1>\n");
-		}
-		else
-		{
-			$oP->add("<h1>Deletion of ".$oObj->GetHyperLink()."</h1>\n");
-			// Explain what should be done
-			//
-			$aDisplayData = array();
-			foreach ($aDeletedObjs as $sRemoteClass => $aDeletes)
-			{
-				foreach ($aDeletes as $iId => $aData)
-				{
-					$oToDelete = $aData['to_delete'];
-					$bAutoDel = $aData['auto_delete'];
-					if (array_key_exists('issue', $aData))
-					{
-						if ($bAutoDel)
-						{
-							$sConsequence = 'Should be automaticaly deleted, but you are not allowed to do so';
-						}
-						else
-						{
-							$sConsequence = 'Must be deleted manually - you are not allowed to delete this object, please contact your application admin';
-						}
-					}
-					else
-					{
-						if ($bAutoDel)
-						{
-							$sConsequence = 'Will be automaticaly deleted';
-						}
-						else
-						{
-							$sConsequence = 'Must be deleted manually';
-						}
-					}
-					$aDisplayData[] = array(
-						'class' => MetaModel::GetName(get_class($oToDelete)),
-						'object' => $oToDelete->GetHyperLink(),
-						'consequence' => $sConsequence,
-					);
-				}
-			}
-			foreach ($aResetedObjs as $sRemoteClass => $aToReset)
-			{
-				foreach ($aToReset as $iId => $aData)
-				{
-					$oToReset = $aData['to_reset'];
-					if (array_key_exists('issue', $aData))
-					{
-						$sConsequence = "Should be automatically updated, but: ".$aData['issue'];
-					}
-					else
-					{
-						$sConsequence = "will be automaticaly updated (reset: ".$aData['attributes_list'].")";
-					}
-					$aDisplayData[] = array(
-						'class' => MetaModel::GetName(get_class($oToReset)),
-						'object' => $oToReset->GetHyperLink(),
-						'consequence' => $sConsequence,
-					);
-				}
-			}
-
-			if ($iTotalTargets > 0)
-			{
-				$oP->p("$iTotalTargets objects/links are referencing ".$oObj->GetName());
-				$oP->p('To ensure Database integrity, any reference should be further eliminated');
-
-				$aDisplayConfig = array();
-				$aDisplayConfig['class'] = array('label' => 'Class', 'description' => '');
-				$aDisplayConfig['object'] = array('label' => 'Object', 'description' => '');
-				$aDisplayConfig['consequence'] = array('label' => 'Consequence', 'description' => 'What will happen to this object');
-				$oP->table($aDisplayConfig, $aDisplayData);
-			}
-
-			if ($iTotalTargets > 0 && ($bFoundManual || $bFoundStopper))
-			{
-				if ($bFoundStopper)
-				{
-					$oP->p("Sorry, you are not allowed to delete this object, please see detailed explanations above");
-				}
-				elseif ($bFoundManual)
-				{
-					$oP->p("Please do the manual operations requested above prior to requesting the deletion of this object");
-				}		
-				$oP->add("<form method=\"post\">\n");
-				$oP->add("<input DISABLED type=\"submit\" name=\"\" value=\" Delete! \">\n");
-				$oP->add("<input type=\"button\" onclick=\"window.history.back();\" value=\" Cancel \">\n");
-				$oP->add("</form>\n");
-			}
-			else
-			{
-				$oP->p("Please confirm that you want to delete ".$oObj->GetHyperLink());
-				$oP->add("<form method=\"post\">\n");
-				$oP->add("<input type=\"hidden\" name=\"menu\" value=\"$iActiveNodeId\">\n");
-				$oP->add("<input type=\"hidden\" name=\"operation\" value=\"delete_confirmed\">\n");
-				$oP->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
-				$oP->add("<input type=\"hidden\" name=\"id\" value=\"$id\">\n");
-				$oP->add("<input type=\"submit\" name=\"\" value=\" Delete! \">\n");
-				$oP->add("<input type=\"button\" onclick=\"window.history.back();\" value=\" Cancel \">\n");
-				$oP->add("</form>\n");
-			}
-		}
+		DeleteObjects($oP, $sClass, array($oObj), ($operation == 'delete_confirmed'));
 		break;
 	
 		case 'apply_new':
@@ -1139,7 +1281,7 @@ try
 		if (is_object($oActiveNode))
 		{
 			$oActiveNode->RenderContent($oP, $oAppContext->GetAsHash());
-			$oP->set_title($oActiveNode->Get('label'));
+			$oP->set_title($oActiveNode->GetMenuLabel());
 		}
 	}
 	////MetaModel::ShowQueryTrace();
