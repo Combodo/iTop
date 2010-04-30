@@ -538,7 +538,7 @@ abstract class TestBizModelGeneric extends TestBizModel
 	{
 		foreach(MetaModel::GetClasses() as $sClassName)
 		{
-			if (MetaModel::IsAbstract($sClassName)) continue;
+			if (MetaModel::HasTable($sClassName)) continue;
 
 			$oNobody = MetaModel::GetObject($sClassName, 123);
 			$oBaby = new $sClassName;

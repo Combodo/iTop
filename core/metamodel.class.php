@@ -331,7 +331,7 @@ abstract class MetaModel
 		$aTables = array();
 		foreach (self::GetClasses() as $sClass)
 		{
-			if (self::IsAbstract($sClass)) continue;
+			if (!self::HasTable($sClass)) continue;
 			$sTable = self::DBGetTable($sClass);
 
 			// Could be completed later with all the classes that are using a given table 
@@ -1262,10 +1262,16 @@ abstract class MetaModel
 		return array();
 	}
 
+	public static function HasTable($sClass)
+	{
+		if (strlen(self::DBGetTable($sClass)) == 0) return false;
+		return true;
+	}
+
 	public static function IsAbstract($sClass)
 	{
-		if (strlen(self::DBGetTable($sClass)) == 0) return true;
-		return false;
+		$oReflection = new ReflectionClass($sClass);
+		return $oReflection->isAbstract();
 	}
 
 	protected static $m_aQueryStructCache = array();
@@ -1790,8 +1796,6 @@ abstract class MetaModel
 		$aSugFix = array();
 		foreach (self::GetClasses() as $sClass)
 		{
-			if (self::IsAbstract($sClass)) continue;
-
 			$sNameAttCode = self::GetNameAttributeCode($sClass);
 			if (empty($sNameAttCode))
 			{
@@ -1806,12 +1810,15 @@ abstract class MetaModel
 			}
 
 			foreach(self::GetReconcKeys($sClass) as $sReconcKeyAttCode)
-			if (!empty($sReconcKeyAttCode) && !self::IsValidAttCode($sClass, $sReconcKeyAttCode))
 			{
-				$aErrors[$sClass][] = "Unkown attribute code '".$sReconcKeyAttCode."' in the list of reconciliation keys";
-				$aSugFix[$sClass][] = "Expecting a value in ".implode(", ", self::GetAttributesList($sClass));
+				if (!empty($sReconcKeyAttCode) && !self::IsValidAttCode($sClass, $sReconcKeyAttCode))
+				{
+					$aErrors[$sClass][] = "Unkown attribute code '".$sReconcKeyAttCode."' in the list of reconciliation keys";
+					$aSugFix[$sClass][] = "Expecting a value in ".implode(", ", self::GetAttributesList($sClass));
+				}
 			}
 
+			$bHasWritableAttribute = false;
 			foreach(self::ListAttributeDefs($sClass) as $sAttCode=>$oAttDef)
 			{
 				// It makes no sense to check the attributes again and again in the subclasses
@@ -1872,6 +1879,7 @@ abstract class MetaModel
 				// Check dependencies
 				if ($oAttDef->IsWritable())
 				{
+					$bHasWritableAttribute = true;
 					foreach ($oAttDef->GetPrerequisiteAttributes() as $sDependOnAttCode)
 					{
 						if (!self::IsValidAttCode($sClass, $sDependOnAttCode))
@@ -1958,6 +1966,16 @@ abstract class MetaModel
 					}
 				}
 			}
+
+			if ($bHasWritableAttribute)
+			{
+				if (!self::HasTable($sClass))
+				{
+					$aErrors[$sClass][] = "No table has been defined for this class";
+					$aSugFix[$sClass][] = "Either define a table name or move the attributes elsewhere";
+				}
+			}
+
 
 			// ZList
 			//
@@ -2186,7 +2204,7 @@ abstract class MetaModel
 			$sRes .= "\n";
 			foreach (self::GetClasses($sCategory) as $sClass)
 			{
-				if (self::IsAbstract($sClass)) continue;
+				if (!self::HasTable($sClass)) continue;
 	
 				$bNotInDico = false;
 
@@ -2264,7 +2282,7 @@ abstract class MetaModel
 		$aSugFix = array();
 		foreach (self::GetClasses() as $sClass)
 		{
-			if (self::IsAbstract($sClass)) continue;
+			if (!self::HasTable($sClass)) continue;
 
 			// Check that the table exists
 			//
@@ -2496,7 +2514,7 @@ abstract class MetaModel
 	{
 		foreach (self::GetClasses() as $sClass)
 		{
-			if (self::IsAbstract($sClass)) continue;
+			if (!self::HasTable($sClass)) continue;
 			$sRootClass = self::GetRootClass($sClass);
 			$sTable = self::DBGetTable($sClass);
 			$sKeyField = self::DBGetKey($sClass);
@@ -2705,7 +2723,7 @@ abstract class MetaModel
 			$aTable2ClassProp = array();
 			foreach (self::GetClasses() as $sClass)
 			{
-				if (self::IsAbstract($sClass)) continue;
+				if (!self::HasTable($sClass)) continue;
 
 				$sRootClass = self::GetRootClass($sClass);
 				$sTable = self::DBGetTable($sClass);

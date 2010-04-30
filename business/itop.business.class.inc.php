@@ -496,7 +496,7 @@ class lnkContactRealObject extends cmdbAbstractObject
 *   can be part of an GroupInfra
 */
 ////////////////////////////////////////////////////////////////////////////////////
-class logInfra extends logRealObject
+abstract class logInfra extends logRealObject
 {
 	public static function Init()
 	{

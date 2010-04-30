@@ -302,6 +302,14 @@ function DisplayClassesList($oPage)
 function DisplayClassDetails($oPage, $sClass)
 {
 	$oPage->p("<h2>$sClass</h2><br/>\n".MetaModel::GetClassDescription($sClass)."<br/>\n");
+	if (MetaModel::IsAbstract($sClass))
+	{
+		$oPage->p("Abstract class: could not be instantiated");
+	}
+	else
+	{
+		$oPage->p("Not abstract: could be instantiated");
+	}
 	$oPage->p("<h3>Class Hierarchy</h3>");
 	$oPage->p("[<a href=\"?operation='list'\">All classes</a>]");
 	// List the parent classes
