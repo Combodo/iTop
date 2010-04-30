@@ -54,7 +54,7 @@ h1 {
 		}
 		$this->add("<form method=\"post\">\n");
 		$this->add("<table>\n");
-		$this->add("<tr><td><label for=\"user\">".Dict::S('UI:Login:UserNamePrompt')."</label></td><td><input id=\"user\" type=\"text\" name=\"auth_user\" value=\"$sAuthUser\" /></td></tr>\n");
+		$this->add("<tr><td><label for=\"user\">".Dict::S('UI:Login:UserNamePrompt').":</label></td><td><input id=\"user\" type=\"text\" name=\"auth_user\" value=\"$sAuthUser\" /></td></tr>\n");
 		$this->add("<tr><td><label for=\"pwd\">".Dict::S('UI:Login:PasswordPrompt').":</label></td><td><input id=\"pwd\" type=\"password\" name=\"auth_pwd\" value=\"$sAuthPwd\" /></td></tr>\n");
 		$this->add("<tr><td colspan=\"2\" class=\"center v-spacer\"> <input type=\"submit\" value=\"".Dict::S('UI:Button:Login')."\" /></td></tr>\n");
 		$this->add("</table>\n");
