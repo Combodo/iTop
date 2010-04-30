@@ -256,6 +256,8 @@ class URP_Profiles extends UserRightsBaseClass
 				'bulkread' => $this->GetGrantAsHtml($oUserRights, $sClass, 'Bulk Read'),
 				'write' => $this->GetGrantAsHtml($oUserRights, $sClass, 'Modify'),
 				'bulkwrite' => $this->GetGrantAsHtml($oUserRights, $sClass, 'Bulk Modify'),
+				'delete' => $this->GetGrantAsHtml($oUserRights, $sClass, 'Delete'),
+				'bulkdelete' => $this->GetGrantAsHtml($oUserRights, $sClass, 'Bulk Delete'),
 				'stimuli' => $sStimuli,
 			);
 		}
@@ -266,6 +268,8 @@ class URP_Profiles extends UserRightsBaseClass
 		$aDisplayConfig['bulkread'] = array('label' => 'Bulk read', 'description' => 'List objects or export massively');
 		$aDisplayConfig['write'] = array('label' => 'Write', 'description' => 'Create and edit (modify)');
 		$aDisplayConfig['bulkwrite'] = array('label' => 'Bulk write', 'description' => 'Massively create/edit (CSV import)');
+		$aDisplayConfig['delete'] = array('label' => 'Write', 'description' => 'Delete');
+		$aDisplayConfig['bulkdelete'] = array('label' => 'Bulk delete', 'description' => 'Massively delete');
 		$aDisplayConfig['stimuli'] = array('label' => 'Stimuli', 'description' => 'Allowed (compound) actions');
 		$oPage->table($aDisplayConfig, $aDisplayData);
 	}
@@ -1506,7 +1510,8 @@ class SetupProfiles
 			self::DoCreateActionGrant($iProfile, UR_ACTION_MODIFY, $sClass);
 			self::DoCreateActionGrant($iProfile, UR_ACTION_DELETE, $sClass);
 			self::DoCreateActionGrant($iProfile, UR_ACTION_BULK_MODIFY, $sClass);
-			self::DoCreateActionGrant($iProfile, UR_ACTION_BULK_DELETE, $sClass);
+			// By default, do not allow bulk deletion operations for standard users
+			// self::DoCreateActionGrant($iProfile, UR_ACTION_BULK_DELETE, $sClass);
 		}
 		
 		// Grant stimuli for given classes
