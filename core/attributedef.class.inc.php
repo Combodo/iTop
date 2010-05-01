@@ -685,11 +685,22 @@ class AttributeFinalClass extends AttributeString
 		$this->m_sCode = $sCode;
 		$aParams["allowed_values"] = null;
 		parent::__construct($sCode, $aParams);
+
+		$this->m_sValue = $this->Get("default_value");
 	}
 
 	public function IsWritable()
 	{
 		return false;
+	}
+
+	public function SetFixedValue($sValue)
+	{
+		$this->m_sValue = $sValue;
+	}
+	public function GetDefaultValue()
+	{
+		return $this->m_sValue;
 	}
 
 	public function GetAsHTML($sValue)
