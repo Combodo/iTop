@@ -1498,7 +1498,19 @@ abstract class MetaModel
 		// First query built upon on the leaf (ie current) class
 		//
 		self::DbgTrace("Main (=leaf) class, call MakeQuerySingleTable()");
-		$oSelectBase = self::MakeQuerySingleTable($aSelectedClasses, $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oFilter, $sClass, $aExpectedAtts, $aExtKeys, $aValues);
+		if (self::HasTable($sClass))
+		{
+			$oSelectBase = self::MakeQuerySingleTable($aSelectedClasses, $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oFilter, $sClass, $aExpectedAtts, $aExtKeys, $aValues);
+		}
+		else
+		{
+			$oSelectBase = null;
+
+			// As the join will not filter on the expected classes, we have to specify it explicitely
+			$sExpectedClasses = implode("', '", self::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL));
+			$oFinalClassRestriction = Expression::FromOQL("`$sClassAlias`.finalclass IN ('$sExpectedClasses')");
+			$oConditionTree = $oConditionTree->LogAnd($oFinalClassRestriction);
+		}
 
 		// Then we join the queries of the eventual parent classes (compound model)
 		foreach(self::EnumParentClasses($sClass) as $sParentClass)
@@ -1506,7 +1518,14 @@ abstract class MetaModel
 			if (self::DBGetTable($sParentClass) == "") continue;
 			self::DbgTrace("Parent class: $sParentClass... let's call MakeQuerySingleTable()");
 			$oSelectParentTable = self::MakeQuerySingleTable($aSelectedClasses, $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oFilter, $sParentClass, $aExpectedAtts, $aExtKeys, $aValues);
-			$oSelectBase->AddInnerJoin($oSelectParentTable, $sKeyField, self::DBGetKey($sParentClass));
+			if (is_null($oSelectBase))
+			{
+				$oSelectBase = $oSelectParentTable;
+			}
+			else
+			{
+				$oSelectBase->AddInnerJoin($oSelectParentTable, $sKeyField, self::DBGetKey($sParentClass));
+			}
 		}
 
 		// Filter on objects referencing me
@@ -1610,8 +1629,10 @@ abstract class MetaModel
 		{
 			$aSelect[$aExpectedAtts['id'][0]] = new FieldExpression(self::DBGetKey($sTableClass), $sTableAlias);
 		}
-		// We need one pkey to be the key, let's take the one corresponding to the leaf
-		if ($sTableClass == $sTargetClass)
+		// We need one pkey to be the key, let's take the one corresponding to the root class
+		// (used to be based on the leaf, but it may happen that this one has no table defined)
+		$sRootClass = self::GetRootClass($sTargetClass);
+		if ($sTableClass == $sRootClass)
 		{
 			$aTranslation[$sTargetAlias]['id'] = array($sTableAlias, self::DBGetKey($sTableClass));
 		}
