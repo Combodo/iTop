@@ -156,7 +156,7 @@ class XMLDataLoader
 			$oTargetObj = MetaModel::NewObject($sClass);
 			foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode=>$oAttDef)
 			{
-				if (($oAttDef->IsWritable()) && ($oAttDef->IsScalar()) && ($sAttCode != 'finalclass') )
+				if (($oAttDef->IsWritable()) && ($oAttDef->IsScalar()))
 				{
 					if ($oAttDef->IsExternalKey())
 					{

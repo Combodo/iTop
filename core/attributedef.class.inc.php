@@ -59,7 +59,7 @@ abstract class AttributeDefinition
 
 	protected $m_sCode;
 	private $m_aParams = array();
-	private $m_sHostClass = array();
+	private $m_sHostClass = '!undefined!';
 	protected function Get($sParamName) {return $this->m_aParams[$sParamName];}
 	protected function IsParam($sParamName) {return (array_key_exists($sParamName, $this->m_aParams));}
 	
@@ -132,7 +132,7 @@ abstract class AttributeDefinition
 	public function IsNullAllowed() {return true;} 
 	public function GetNullValue() {return null;} 
 	public function GetCode() {return $this->m_sCode;} 
-	public function GetLabel() {return Dict::S('Class:'.$this->m_sHostClass.'/Attribute:'.$this->m_sCode, $this->m_sCode);} 
+	public function GetLabel() {return Dict::S('Class:'.$this->m_sHostClass.'/Attribute:'.$this->m_sCode, $this->m_sCode);}
 	public function GetLabel_Obsolete()
 	{
 		// Written for compatibility with a data model written prior to version 0.9.1
@@ -660,6 +660,36 @@ class AttributeClass extends AttributeString
 		$this->m_sCode = $sCode;
 		$aParams["allowed_values"] = new ValueSetEnumClasses($aParams['class_category'], $aParams['more_values']);
 		parent::__construct($sCode, $aParams);
+	}
+
+	public function GetAsHTML($sValue)
+	{
+		return MetaModel::GetName($sValue);
+	}
+}
+
+/**
+ * The attribute dedicated to the finalclass automatic attribute 
+ *
+ * @package     iTopORM
+ * @author      Romain Quetiez <romainquetiez@yahoo.fr>
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.itop.com
+ * @since       1.0
+ * @version     $itopversion$
+ */
+class AttributeFinalClass extends AttributeString
+{
+	public function __construct($sCode, $aParams)
+	{
+		$this->m_sCode = $sCode;
+		$aParams["allowed_values"] = null;
+		parent::__construct($sCode, $aParams);
+	}
+
+	public function IsWritable()
+	{
+		return false;
 	}
 
 	public function GetAsHTML($sValue)

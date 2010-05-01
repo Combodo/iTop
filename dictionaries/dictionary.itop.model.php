@@ -67,7 +67,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:logRealObject/Attribute:org_id+' => 'ID of the object owner organization',
 	'Class:logRealObject/Attribute:org_name' => 'Organization',
 	'Class:logRealObject/Attribute:org_name+' => 'Company / Department owning this object',
-	'Class:logRealObject/Attribute:finalclass' => 'finalclass',
+	'Class:logRealObject/Attribute:finalclass' => 'Type',
 	'Class:logRealObject/Attribute:finalclass+' => '',
 ));
 

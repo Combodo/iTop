@@ -29,7 +29,7 @@ function GetMappingForField($sClassName, $sFieldName, $iFieldIndex)
 				}
 			}
 		}
-		else if ($oAttDef->IsWritable() && ($sAttCode != 'finalclass')) // finalclass should not be considered as 'writable' isn't it ?
+		else if ($oAttDef->IsWritable())
 		{
 			$aChoices[$sAttCode] = $oAttDef->GetLabel();
 		}

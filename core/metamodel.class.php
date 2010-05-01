@@ -354,18 +354,18 @@ abstract class MetaModel
 		self::_check_subclass($sClass);	
 		return self::$m_aClassParams[$sClass]["db_finalclass_field"];
 	}
-	final static public function HasFinalClassField($sClass)
-	{
-		self::_check_subclass($sClass);	
-		if (!array_key_exists("db_finalclass_field", self::$m_aClassParams[$sClass])) return false;
-		return (self::$m_aClassParams[$sClass]["db_finalclass_field"]);
-	}
 	final static public function IsStandaloneClass($sClass)
 	{
 		self::_check_subclass($sClass);
 
-		$sRootClass = self::GetRootClass($sClass);
-		return (!self::HasFinalClassField($sRootClass));
+		if (count(self::$m_aChildClasses[$sClass]) == 0)
+		{
+			if (count(self::$m_aParentClasses[$sClass]) == 0)
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 	final static public function IsParentClass($sParentClass, $sChildClass)
 	{
@@ -877,37 +877,6 @@ abstract class MetaModel
 			self::$m_aFilterDefs[$sClass]['id'] = $oFilter;
 			self::$m_aFilterOrigins[$sClass]['id'] = $sClass;
 
-			// Add a 'class' attribute/filter to the root classes and their children
-			//
-			if (!self::IsStandaloneClass($sClass))
-			{
-				if (array_key_exists('finalclass', self::$m_aAttribDefs[$sClass]))
-				{
-					throw new CoreException("Class $sClass, 'finalclass' is a reserved keyword, it cannot be used as an attribute code");
-				}
-				if (array_key_exists('finalclass', self::$m_aFilterDefs[$sClass]))
-				{
-					throw new CoreException("Class $sClass, 'finalclass' is a reserved keyword, it cannot be used as a filter code");
-				}
-				$sClassAttCode = 'finalclass';
-				$sRootClass = self::GetRootClass($sClass);
-				$sDbFinalClassField = self::DBGetClassField($sRootClass);
-				$oClassAtt = new AttributeClass($sClassAttCode, array(
-						"class_category"=>null,
-						"more_values"=>'',
-						"sql"=>$sDbFinalClassField,
-						"default_value"=>$sClass,
-						"is_null_allowed"=>false,
-						"depends_on"=>array()
-				));
-				self::$m_aAttribDefs[$sClass][$sClassAttCode] = $oClassAtt;
-				self::$m_aAttribOrigins[$sClass][$sClassAttCode] = $sRootClass;
-
-				$oClassFlt = new FilterFromAttribute($oClassAtt);
-				self::$m_aFilterDefs[$sClass][$sClassAttCode] = $oClassFlt;
-				self::$m_aFilterOrigins[$sClass][$sClassAttCode] = self::GetRootClass($sClass);
-			}
-
 			// Define defaults values for the standard ZLists
 			//
 			//foreach (self::$m_aListInfos as $sListCode => $aListConfig)
@@ -921,6 +890,50 @@ abstract class MetaModel
 			//}
 		}
 
+		// Add a 'class' attribute/filter to the root classes and their children
+		//
+		foreach(self::EnumRootClasses() as $sRootClass)
+		{
+			if (self::IsStandaloneClass($sRootClass)) continue;
+			
+			$sDbFinalClassField = self::DBGetClassField($sRootClass);
+			if (strlen($sDbFinalClassField) == 0)
+			{
+				$sDbFinalClassField = 'finalclass';
+				self::$m_aClassParams[$sClass]["db_finalclass_field"] = 'finalclass';
+			}
+			$oClassAtt = new AttributeFinalClass('finalclass', array(
+					"sql"=>$sDbFinalClassField,
+					"default_value"=>$sRootClass,
+					"is_null_allowed"=>false,
+					"depends_on"=>array()
+			));
+			$oClassAtt->SetHostClass($sRootClass);
+			self::$m_aAttribDefs[$sRootClass]['finalclass'] = $oClassAtt;
+			self::$m_aAttribOrigins[$sRootClass]['finalclass'] = $sRootClass;
+
+			$oClassFlt = new FilterFromAttribute($oClassAtt);
+			self::$m_aFilterDefs[$sRootClass]['finalclass'] = $oClassFlt;
+			self::$m_aFilterOrigins[$sRootClass]['finalclass'] = $sRootClass;
+
+			foreach(self::EnumChildClasses($sRootClass, ENUM_CHILD_CLASSES_EXCLUDETOP) as $sChildClass)
+			{
+				if (array_key_exists('finalclass', self::$m_aAttribDefs[$sChildClass]))
+				{
+					throw new CoreException("Class $sChildClass, 'finalclass' is a reserved keyword, it cannot be used as an attribute code");
+				}
+				if (array_key_exists('finalclass', self::$m_aFilterDefs[$sChildClass]))
+				{
+					throw new CoreException("Class $sChildClass, 'finalclass' is a reserved keyword, it cannot be used as a filter code");
+				}
+				self::$m_aAttribDefs[$sChildClass]['finalclass'] = clone $oClassAtt;
+				self::$m_aAttribOrigins[$sChildClass]['finalclass'] = $sRootClass;
+
+				$oClassFlt = new FilterFromAttribute($oClassAtt);
+				self::$m_aFilterDefs[$sChildClass]['finalclass'] = $oClassFlt;
+				self::$m_aFilterOrigins[$sChildClass]['finalclass'] = self::GetRootClass($sChildClass);
+			}
+		}
 	}
 
 	// To be overriden, must be called for any object class (optimization)
@@ -1014,18 +1027,17 @@ abstract class MetaModel
 			self::$m_aAttribDefs[$sTargetClass] = self::object_array_mergeclone(self::$m_aAttribDefs[$sTargetClass], self::$m_aAttribDefs[$sSourceClass]);
 			self::$m_aAttribOrigins[$sTargetClass] = array_merge(self::$m_aAttribOrigins[$sTargetClass], self::$m_aAttribOrigins[$sSourceClass]);
 		}
-		// later on, we might consider inheritance in different ways !!!
-		//if (strlen(self::DBGetTable($sSourceClass)) != 0)
-		if (self::HasFinalClassField(self::$m_aRootClasses[$sSourceClass]))
+		// Build root class information
+		if (array_key_exists($sSourceClass, self::$m_aRootClasses))
 		{
-			// Inherit the root class
+			// Inherit...
 			self::$m_aRootClasses[$sTargetClass] = self::$m_aRootClasses[$sSourceClass];
 		}
 		else
 		{
-			// I am a root class, standalone as well !
-			// ????
-			//self::$m_aRootClasses[$sTargetClass] = $sTargetClass;
+			// This class will be the root class
+			self::$m_aRootClasses[$sSourceClass] = $sSourceClass;
+			self::$m_aRootClasses[$sTargetClass] = $sSourceClass;
 		}
 		self::$m_aParentClasses[$sTargetClass] += self::$m_aParentClasses[$sSourceClass];
 		self::$m_aParentClasses[$sTargetClass][] = $sSourceClass;
@@ -1211,6 +1223,10 @@ abstract class MetaModel
 	{
 		self::_check_subclass($sClass);
 		return (self::GetRootClass($sClass) == $sClass);
+	}
+	public static function EnumRootClasses()
+	{
+		return array_unique(self::$m_aRootClasses);
 	}
 	public static function EnumParentClasses($sClass)
 	{
@@ -2540,41 +2556,41 @@ abstract class MetaModel
 			$sTable = self::DBGetTable($sClass);
 			$sKeyField = self::DBGetKey($sClass);
 
-			// Check that the final class field contains the name of a class which inherited from the current class
-			//
-			if (self::HasFinalClassField($sClass))
+			if (!self::IsStandaloneClass($sClass))
 			{
-				$sFinalClassField = self::DBGetClassField($sClass);
-
-				$aAllowedValues = self::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL);
-				$sAllowedValues = implode(",", CMDBSource::Quote($aAllowedValues, true));
-
-				$sSelWrongRecs = "SELECT DISTINCT maintable.`$sKeyField` AS id FROM `$sTable` AS maintable WHERE `$sFinalClassField` NOT IN ($sAllowedValues)";
-				self::DBCheckIntegrity_Check2Delete($sSelWrongRecs, "final class (field `<em>$sFinalClassField</em>`) is wrong (expected a value in {".$sAllowedValues."})", $sClass, $aErrorsAndFixes, $iNewDelCount, $aPlannedDel);
-			}
-
-			// Compound objects model - node/leaf classes (not the root itself)
-			//
-			if (!self::IsStandaloneClass($sClass) && !self::HasFinalClassField($sClass))
-			{
-				$sRootTable = self::DBGetTable($sRootClass);
-				$sRootKey = self::DBGetKey($sRootClass);
-				$sFinalClassField = self::DBGetClassField($sRootClass);
-
-				$aExpectedClasses = self::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL);
-				$sExpectedClasses = implode(",", CMDBSource::Quote($aExpectedClasses, true));
-
-				// Check that any record found here has its counterpart in the root table
-				// and which refers to a child class
-				//
-				$sSelWrongRecs = "SELECT DISTINCT maintable.`$sKeyField` AS id FROM `$sTable` as maintable LEFT JOIN `$sRootTable` ON maintable.`$sKeyField` = `$sRootTable`.`$sRootKey` AND `$sRootTable`.`$sFinalClassField` IN ($sExpectedClasses) WHERE `$sRootTable`.`$sRootKey` IS NULL";
-				self::DBCheckIntegrity_Check2Delete($sSelWrongRecs, "Found a record in `<em>$sTable</em>`, but no counterpart in root table `<em>$sRootTable</em>` (inc. records pointing to a class in {".$sExpectedClasses."})", $sClass, $aErrorsAndFixes, $iNewDelCount, $aPlannedDel);
-
-				// Check that any record found in the root table and referring to a child class
-				// has its counterpart here (detect orphan nodes -root or in the middle of the hierarchy)
-				//
-				$sSelWrongRecs = "SELECT DISTINCT maintable.`$sRootKey` AS id FROM `$sRootTable` AS maintable LEFT JOIN `$sTable` ON maintable.`$sRootKey` = `$sTable`.`$sKeyField` WHERE `$sTable`.`$sKeyField` IS NULL AND maintable.`$sFinalClassField` IN ($sExpectedClasses)";
-				self::DBCheckIntegrity_Check2Delete($sSelWrongRecs, "Found a record in root table `<em>$sRootTable</em>`, but no counterpart in table `<em>$sTable</em>` (root records pointing to a class in {".$sExpectedClasses."})", $sRootClass, $aErrorsAndFixes, $iNewDelCount, $aPlannedDel);
+				if (self::IsRootClass($sClass))
+				{
+					// Check that the final class field contains the name of a class which inherited from the current class
+					//
+					$sFinalClassField = self::DBGetClassField($sClass);
+	
+					$aAllowedValues = self::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL);
+					$sAllowedValues = implode(",", CMDBSource::Quote($aAllowedValues, true));
+	
+					$sSelWrongRecs = "SELECT DISTINCT maintable.`$sKeyField` AS id FROM `$sTable` AS maintable WHERE `$sFinalClassField` NOT IN ($sAllowedValues)";
+					self::DBCheckIntegrity_Check2Delete($sSelWrongRecs, "final class (field `<em>$sFinalClassField</em>`) is wrong (expected a value in {".$sAllowedValues."})", $sClass, $aErrorsAndFixes, $iNewDelCount, $aPlannedDel);
+				}
+				else
+				{
+					$sRootTable = self::DBGetTable($sRootClass);
+					$sRootKey = self::DBGetKey($sRootClass);
+					$sFinalClassField = self::DBGetClassField($sRootClass);
+	
+					$aExpectedClasses = self::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL);
+					$sExpectedClasses = implode(",", CMDBSource::Quote($aExpectedClasses, true));
+	
+					// Check that any record found here has its counterpart in the root table
+					// and which refers to a child class
+					//
+					$sSelWrongRecs = "SELECT DISTINCT maintable.`$sKeyField` AS id FROM `$sTable` as maintable LEFT JOIN `$sRootTable` ON maintable.`$sKeyField` = `$sRootTable`.`$sRootKey` AND `$sRootTable`.`$sFinalClassField` IN ($sExpectedClasses) WHERE `$sRootTable`.`$sRootKey` IS NULL";
+					self::DBCheckIntegrity_Check2Delete($sSelWrongRecs, "Found a record in `<em>$sTable</em>`, but no counterpart in root table `<em>$sRootTable</em>` (inc. records pointing to a class in {".$sExpectedClasses."})", $sClass, $aErrorsAndFixes, $iNewDelCount, $aPlannedDel);
+	
+					// Check that any record found in the root table and referring to a child class
+					// has its counterpart here (detect orphan nodes -root or in the middle of the hierarchy)
+					//
+					$sSelWrongRecs = "SELECT DISTINCT maintable.`$sRootKey` AS id FROM `$sRootTable` AS maintable LEFT JOIN `$sTable` ON maintable.`$sRootKey` = `$sTable`.`$sKeyField` WHERE `$sTable`.`$sKeyField` IS NULL AND maintable.`$sFinalClassField` IN ($sExpectedClasses)";
+					self::DBCheckIntegrity_Check2Delete($sSelWrongRecs, "Found a record in root table `<em>$sRootTable</em>`, but no counterpart in table `<em>$sTable</em>` (root records pointing to a class in {".$sExpectedClasses."})", $sRootClass, $aErrorsAndFixes, $iNewDelCount, $aPlannedDel);
+				}
 			}
 
 			foreach(self::ListAttributeDefs($sClass) as $sAttCode=>$oAttDef)

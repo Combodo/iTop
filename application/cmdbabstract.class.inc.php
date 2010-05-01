@@ -589,7 +589,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 				$oPage->add("<$sClassName alias=\"$sAlias\" id=\"".$oObj->GetKey()."\">\n");
 				foreach(MetaModel::ListAttributeDefs($sClassName) as $sAttCode=>$oAttDef)
 				{
-					if (($oAttDef->IsWritable()) && ($oAttDef->IsScalar()) && ($sAttCode != 'finalclass') )
+					if (($oAttDef->IsWritable()) && ($oAttDef->IsScalar()))
 					{
 						$sValue = $oObj->GetAsXML($sAttCode);
 						$oPage->add("<$sAttCode>$sValue</$sAttCode>\n");
