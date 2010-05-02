@@ -287,6 +287,16 @@ switch($operation)
 		DownloadDocument($oPage, $oContext, $sClass, $id, $sField, 'attachement');
 	}
 	break;
+	
+	case 'search_form':
+	$sClass = utils::ReadParam('className', '', 'get');
+	$sRootClass = utils::ReadParam('baseClass', '', 'get');
+	$currentId = utils::ReadParam('currentId', '', 'get');
+	$oFilter = $oContext->NewFilter($sClass);
+	$oSet = new CMDBObjectSet($oFilter); 
+	$sHtml = cmdbAbstractObject::GetSearchForm($oPage, $oSet, array('currentId' => $currentId, 'baseClass' => $sRootClass));
+	$oPage->add($sHtml);
+	break;
 
 	default:
 	$oPage->p("Invalid query.");

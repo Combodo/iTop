@@ -636,7 +636,6 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$oAppContext = new ApplicationContext();
 		$sHtml = '';
 		$numCols=4;
-		$iSearchFormId++;
 		$sClassName = $oSet->GetFilter()->GetClass();
 
 		// Romain: temporarily removed the tab "OQL query" because it was not finalized
@@ -648,10 +647,46 @@ abstract class cmdbAbstractObject extends CMDBObject
 					</ul></div>\n";
 		*/
 		// Simple search form
-		$sHtml .= "<div id=\"SimpleSearchForm{$iSearchFormId}\" class=\"mini_tab{$iSearchFormId}\">\n";
-		$sHtml .= "<h1>".Dict::Format('UI:SearchFor_Class_Objects', $sClassName)."</h1>\n";
+		if (isset($aExtraParams['currentId']))
+		{
+			$sSearchFormId = $aExtraParams['currentId'];
+			$iSearchFormId++;
+		}
+		else
+		{
+			$iSearchFormId++;
+			$sSearchFormId = 'SimpleSearchForm'.$iSearchFormId;
+			$sHtml .= "<div id=\"$sSearchFormId\" class=\"mini_tab{$iSearchFormId}\">\n";			
+		}
+		// Check if the current class has some sub-classes
+		if (isset($aExtraParams['baseClass']))
+		{
+			$sRootClass = $aExtraParams['baseClass'];
+		}
+		else
+		{
+			$sRootClass = $sClassName;
+		}
+		$aSubClasses = MetaModel::GetSubclasses($sRootClass);
+		if (count($aSubClasses) > 0)
+		{
+			$aOptions = array();
+			$aOptions[MetaModel::GetName($sRootClass)] = "<option value=\"$sRootClass\">".MetaModel::GetName($sRootClass)."</options>\n";
+			foreach($aSubClasses as $sSubclassName)
+			{
+				$aOptions[MetaModel::GetName($sSubclassName)] = "<option value=\"$sSubclassName\">".MetaModel::GetName($sSubclassName)."</options>\n";
+			}
+			$aOptions[MetaModel::GetName($sClassName)] = "<option selected value=\"$sClassName\">".MetaModel::GetName($sClassName)."</options>\n";
+			ksort($aOptions);
+			$sClassesCombo = "<select name=\"class\" onChange=\"ReloadSearchForm('$sSearchFormId', this.value, '$sRootClass')\">\n".implode('', $aOptions)."</select>\n";
+		}
+		else
+		{
+			$sClassesCombo = MetaModel::GetName($sClassName);
+		}
 		$oUnlimitedFilter = new DBObjectSearch($sClassName);
 		$sHtml .= "<form id=\"form{$iSearchFormId}\">\n";
+		$sHtml .= "<h1>".Dict::Format('UI:SearchFor_Class_Objects', $sClassesCombo)."</h1>\n";
 		$index = 0;
 		$sHtml .= "<table>\n";
 		$aFilterCriteria = $oSet->GetFilter()->GetCriteria();
@@ -738,7 +773,10 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$sHtml .= "<input type=\"hidden\" name=\"operation\" value=\"search_form\" />\n";
 		$sHtml .= $oAppContext->GetForForm();
 		$sHtml .= "</form>\n";		
-		$sHtml .= "</div><!-- Simple search form -->\n";
+		if (!isset($aExtraParams['currentId']))
+		{
+			$sHtml .= "</div><!-- Simple search form -->\n";
+		}
 
 		// OQL query builder
 		$sHtml .= "<div id=\"OQLQuery{$iSearchFormId}\" style=\"display:none\" class=\"mini_tab{$iSearchFormId}\">\n";

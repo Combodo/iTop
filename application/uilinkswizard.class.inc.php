@@ -74,7 +74,9 @@ class UILinksWizard
 		$oP->add("<h1>Manage ".MetaModel::GetName($this->m_sLinkedClass)."s linked with ".MetaModel::GetName(get_class($oTargetObj)).": <span class=\"hilite\">".$oTargetObj->GetHyperlink()."</span></h1>\n");
 		$oP->add("</div>\n");
 		$oP->add("<script type=\"text/javascript\">\n");
-		$oP->add("function OnSelectChange()
+		$oP->add(
+<<<EOF
+		function OnSelectChange()
 		{
 			var nbChecked = $('.selection:checked').length;
 			if (nbChecked > 0)
@@ -132,7 +134,10 @@ class UILinksWizard
 						   'linkedClass': '{$this->m_sLinkedClass}',
 						   'objectId': '{$this->m_iObjectId}'
 						 }
-			
+			if ($('#'+currentFormId+' :input[name=class]').val() != undefined)
+			{
+				theMap.linkedClass = $('#'+currentFormId+' :input[name=class]').val();
+			}
 			// Gather the parameters from the search form
 			$('#'+currentFormId+' :input').each(
 				function(i)
@@ -230,7 +235,15 @@ class UILinksWizard
 			$('#btnRemove').attr('disabled','disabled');
 			$('#linksToRemove').val('');
 		}
-		");
+		
+		function SubmitHook() 
+		{
+			var the_form = this;
+			SearchObjectsToAdd(the_form.id);
+			return false;
+		}
+EOF
+);
 		$oP->Add("</script>\n");
 		$oP->add_ready_script("InitForm();");
 		$oFilter = $oContext->NewFilter($this->m_sClass);
@@ -358,7 +371,7 @@ class UILinksWizard
 		$oP->add("<input type=\"button\" value=\"Cancel\" onClick=\"$('#ModalDlg').jqmHide();\">&nbsp;&nbsp;<input type=\"submit\" value=\" Add \">");
 		$oP->Add("</div>\n");
 		$oP->Add("</form>\n");
-		$oP->add_ready_script("$('div#SearchFormToAdd form').bind('submit', function() {var the_form = this; SearchObjectsToAdd(the_form.id); return false;});");
+		$oP->add_ready_script("$('div#SearchFormToAdd form').bind('submit.uilinksWizard', SubmitHook);");
 	}
 
 	public function SearchObjectsToAdd(WebPage $oP, UserContext $oContext)

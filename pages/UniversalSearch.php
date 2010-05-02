@@ -18,7 +18,8 @@ $oP = new iTopWebPage("iTop - Universal search", $currentOrganization);
 // From now on the context is limited to the the selected organization ??
 
 // Now render the content of the page
-$sOQLClass = utils::ReadParam('oql_class', 'bizOrganization');
+$sClass = utils::ReadParam('class', 'bizOrganization');
+$sOQLClass = utils::ReadParam('oql_class', $sClass);
 $sOQLClause = utils::ReadParam('oql_clause', '');
 $sClassName = $sOQLClass; //utils::ReadParam('class', $sOQLClass);
 $sFilter = utils::ReadParam('filter', '');
@@ -85,85 +86,8 @@ if ($oFilter != null)
 	
 	// Menu node
 	$sFilter = $oFilter->ToOQL();
-	$sMenuNodeContent = <<<EOF
-<div id="TopPane">
-<itopblock BlockClass="DisplayBlock" type="search" asynchronous="false" encoding="text/oql">$sFilter</itopblock>
-</div>
-<div id="BottomPane">
-<p></p>
-<itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql">$sFilter</itopblock>
-</div>
-EOF;
-
-
-	if ($sOperation == "add_menu")
-	{
-		$oMenuNode = MetaModel::NewObject('menuNode');
-		$sClass = utils::ReadPostedParam('class', '');
-		$sLabel = utils::ReadPostedParam('label', '');
-		$sDescription = utils::ReadPostedParam('description', '');
-		$iPreviousNodeId = utils::ReadPostedParam('previous_node_id', 1);
-		$bChildItem = utils::ReadPostedParam('child_item', false);
-		$oMenuNode->Set('label', $sDescription);
-		$oMenuNode->Set('name', $sLabel);
-		$oMenuNode->Set('icon_path', '../images/std_view.gif');
-		$oMenuNode->Set('template', $sMenuNodeContent);
-		$oMenuNode->Set('hyperlink', 'UI.php');
-		$oMenuNode->Set('type', 'user');
-		$oMenuNode->Set('user_id', UserRights::GetUserId());
-		$oPreviousNode = MetaModel::GetObject('menuNode', $iPreviousNodeId);
-		if ($bChildItem)
-		{
-			// Insert the new item as a child of the previous one
-			$oMenuNode->Set('parent_id', $iPreviousNodeId);
-			$oMenuNode->Set('rank', 1); // A new child item is the first one, so let's start the numbering at 1
-			// If there are already child nodes, shift their rank by one
-			// to make room for the newly inserted child node
-			$oNextNodeSet = $oPreviousNode->GetChildNodesSet(null); // null => don't limit ourselves to the user context
-																	// since we need to update all children in order to keep
-																	// the database consistent 
-			while($oNextNode = $oNextNodeSet->Fetch())
-			{
-				$oNextNode->Set('rank', 1 + $oNextNode->Get('rank'));
-				$oNextNode->DBUpdate();
-			}
-		}
-		else
-		{
-			// Insert the new item as the next sibling of the previous one
-			$oMenuNode->Set('parent_id', $oPreviousNode->Get('parent_id'));
-			$oMenuNode->Set('rank', 1 +  $oPreviousNode->Get('rank')); // the new item comes immediatly after the selected one
-			// Add 1 to the rank of all the nodes currently following the 'selected' one
-			// to make room for the newly inserted node
-			$oNextNodeSet = $oPreviousNode->GetNextNodesSet(null);	// null => don't limit ourselves to the user context
-																	// since we need to update all children in order to keep
-																	// the database consistent 
-			while($oNextNode = $oNextNodeSet->Fetch())
-			{
-				$oNextNode->Set('rank', 1 + $oNextNode->Get('rank'));
-				$oNextNode->DBUpdate();
-			}
-
-		}
-		list($bRes, $aIssues) = $oMenuNode->CheckToInsert();
-		if ($bRes)
-		{
-			$oMenuNode->DBInsert();
-			$oP->add("<form method=\"get\">");
-			$oP->add("<p>Menu item created !</p>");
-			$oP->add("<input type=\"hidden\" name=\"filter\" value=\"$sFilter\">");
-			$oP->add("<input type=\"hidden\" name=\"class\" value=\"$sClassName\">");
-			$oP->add("<input type=\"submit\" name=\"\" value=\"Reload Page\">");
-			$oP->add("<form>");
-		}
-	}
-	
-	$oP->add("</div>\n");
+	$oP->add("\n<!-- $sFilter -->\n");
 }
-else
-{
-	$oP->add("</div>\n");
-}
-
+$oP->add("</div>\n");
 $oP->output();
 ?>
