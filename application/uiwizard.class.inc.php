@@ -38,9 +38,9 @@ class UIWizard
 		$sJSHandlerCode = ''; // Javascript code to be executed each time this step of the wizard is entered
 		foreach($aStep as $sAttCode)
 		{
-			if ($sAttCode != 'finalclass') // Do not display the attribute that stores the actual class name
+			$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
+			if ($oAttDef->IsWritable())
 			{
-				$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
 				$sAttLabel = $oAttDef->GetLabel();
 				$iOptions = isset($aStates[$this->m_sTargetState]['attribute_list'][$sAttCode]) ? $aStates[$this->m_sTargetState]['attribute_list'][$sAttCode] : 0;
 		
@@ -153,7 +153,7 @@ $sJSHandlerCode
         {
             $oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
             if (!$oAttDef->IsExternalField() && !$oAttDef->IsNullAllowed() && 
-			    ($sAttCode != 'finalclass') && ($sAttCode != $sStateAttCode) )
+			    $oAttDef->IsWritable() && ($sAttCode != $sStateAttCode) )
             {
                 $aMandatoryAttributes[$sAttCode] = OPT_ATT_MANDATORY;
             }

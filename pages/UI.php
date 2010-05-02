@@ -766,16 +766,7 @@ try
 					$bObjectModified = false;
 					foreach(MetaModel::ListAttributeDefs(get_class($oObj)) as $sAttCode=>$oAttDef)
 					{
-						$iFlags = $oObj->GetAttributeFlags($sAttCode);
-						if ($iFlags & (OPT_ATT_HIDDEN | OPT_ATT_READONLY))
-						{
-							// Non-visible, or read-only attribute, do nothing
-						}
-						else if ($sAttCode == 'finalclass')
-						{
-							// This very specific field is read-only
-						}
-						else if ($oAttDef->IsLinkSet())
+						if ($oAttDef->IsLinkSet())
 						{
 							// Link set, the data is a set of link objects, encoded in JSON
 							$aAttributes[$sAttCode] = trim(utils::ReadPostedParam("attr_$sAttCode", ''));
@@ -784,17 +775,6 @@ try
 								$oLinkSet = WizardHelper::ParseJsonSet($oObj, $oAttDef->GetLinkedClass(), $oAttDef->GetExtKeyToMe(), $aAttributes[$sAttCode]);
 								$oObj->Set($sAttCode, $oLinkSet);
 								// TO DO: detect a real modification, for now always update !!
-								$bObjectModified = true;
-							}
-						}
-						else if ($oAttDef->GetEditClass() == 'Document')
-						{
-							// There should be an uploaded file with the named attr_<attCode>
-							$oDocument = utils::ReadPostedDocument('file_'.$sAttCode);
-							if (!$oDocument->IsEmpty())
-							{
-								// A new file has been uploaded
-								$oObj->Set($sAttCode, $oDocument);
 								$bObjectModified = true;
 							}
 						}
@@ -808,6 +788,25 @@ try
 								if ($previousValue !== $aAttributes[$sAttCode])
 								{
 									$oObj->Set($sAttCode, $aAttributes[$sAttCode]);
+									$bObjectModified = true;
+								}
+							}
+						}
+						else if ($oAttDef->IsWritable())
+						{
+							$iFlags = $oObj->GetAttributeFlags($sAttCode);
+							if ($iFlags & (OPT_ATT_HIDDEN | OPT_ATT_READONLY))
+							{
+								// Non-visible, or read-only attribute, do nothing
+							}
+							else if ($oAttDef->GetEditClass() == 'Document')
+							{
+								// There should be an uploaded file with the named attr_<attCode>
+								$oDocument = utils::ReadPostedDocument('file_'.$sAttCode);
+								if (!$oDocument->IsEmpty())
+								{
+									// A new file has been uploaded
+									$oObj->Set($sAttCode, $oDocument);
 									$bObjectModified = true;
 								}
 							}
@@ -954,9 +953,7 @@ try
 				$sStateAttCode = MetaModel::GetStateAttributeCode(get_class($oObj));
 				foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode=>$oAttDef)
 				{
-					if ( ('finalclass' != $sAttCode) && // finalclass is a reserved word, hardcoded !
-					     ($sStateAttCode != $sAttCode) &&
-						  (!$oAttDef->IsExternalField()) )
+					if ( ($oAttDef->IsWritable()) )
 					{
 						$value = utils::ReadPostedParam('attr_'.$sAttCode, '');
 						$oObj->Set($sAttCode, $value);

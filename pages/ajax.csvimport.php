@@ -9,11 +9,14 @@ require_once('../application/csvpage.class.inc.php');
 /**
  * Helper function to build the mapping drop-down list for a field
  */
-function GetMappingForField($sClassName, $sFieldName, $iFieldIndex)
+function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMode = false)
 {
-	$aChoices = array('' => '-- select one --');
-	$aChoices[':none:'] = '------ n/a ------';
-	$aChoices['id'] = 'id (Primary Key)';
+	$aChoices = array('' => Dict::S('UI:CSVImport:MappingSelectOne'));
+	$aChoices[':none:'] = Dict::S('UI:CSVImport:MappingNotApplicable');
+	if ($bAdvancedMode)
+	{
+		$aChoices['id'] = Dict::S('UI:CSVImport:idField');
+	}
 	foreach(MetaModel::ListAttributeDefs($sClassName) as $sAttCode => $oAttDef)
 	{
 		if ($oAttDef->IsExternalKey())
@@ -41,6 +44,10 @@ function GetMappingForField($sClassName, $sFieldName, $iFieldIndex)
 	{
 		$sSelected = '';
 		if ( ($sFieldName == $sAttCode) || ($sFieldName == $sLabel))
+		{
+			$sSelected = ' selected';
+		}
+		if ((!$bAdvancedMode) && ($sAttCode == ':none:') && ($sFieldName == 'id'))
 		{
 			$sSelected = ' selected';
 		}
@@ -85,13 +92,13 @@ switch($sOperation)
 	$iTarget = count($aData);
 	if ($iTarget == 0)
 	{
-		$oPage->p("Empty data set..., please provide some data!");
+		$oPage->p(Dict::S('UI:CSVImport:NoData'));
 	}
 	else
 	{
 		$sMaxLen = (strlen(''.$iTarget) < 3) ? 3 : strlen(''.$iTarget); // Pad line numbers to the appropriate number of chars, but at least 3
 		$sFormat = '%0'.$sMaxLen.'d';
-		$oPage->p("<h3>Data Preview</h3>\n");
+		$oPage->p("<h3>".Dict::S('UI:Title:DataPreview')."</h3>\n");
 		$oPage->p("<div style=\"overflow-y:auto\">\n");
 		$oPage->add("<table cellspacing=\"0\" style=\"overflow-y:auto\">");
 		$iMaxIndex= 10; // Display maximum 10 lines for the preview
@@ -121,7 +128,7 @@ switch($sOperation)
 		$oPage->add("</div>\n");
 		if($iNbCols == 1)
 		{
-			$oPage->p('<img src="../images/error.png">&nbsp;Error: The data contains only one column. Did you select the appropriate separator character ?');
+			$oPage->p('<img src="../images/error.png">&nbsp;'.Dict::S('UI:CSVImport:ErrorOnlyOneColumn'));
 		}
 		else
 		{
@@ -139,13 +146,14 @@ switch($sOperation)
 	$bFirstLineAsHeader = utils::ReadParam('header_line', true);
 	$sData = stripslashes(utils::ReadParam('csvdata', true));
 	$sClassName = utils::ReadParam('class_name', '');
+	$bAdvanced = utils::ReadParam('advanced', false);
 	
 	$oCSVParser = new CSVParser($sData, $sSeparator, $sTextQualifier);
 	$aData = $oCSVParser->ToArray($iLinesToSkip);
 	$iTarget = count($aData);
 	if ($iTarget == 0)
 	{
-		$oPage->p("Empty data set..., please provide some data!");
+		$oPage->p(Dict::S('UI:CSVImport:NoData'));
 	}
 	else
 	{
@@ -167,19 +175,19 @@ switch($sOperation)
 			$index= 1;
 			foreach($aFirstLine as $sField)
 			{
-				$aHeader[] = 'Field'+$index;
+				$aHeader[] = Dict::Format('UI:CSVImport:FieldName', $index);
 				$index++;
 			}
 		}
 		$oPage->add("<table>\n");
 		$oPage->add('<tr>');
-		$oPage->add("<th>Fields</th><th>Mapping</th><th>&nbsp;</th><th>Search ?</th><th>Data line 1</th><th>Data line 2</th>");
+		$oPage->add('<th>'.Dict::S('UI:CSVImport:HeaderFields').'</th><th>'.Dict::S('UI:CSVImport:HeaderMappings').'</th><th>&nbsp;</th><th>'.Dict::S('UI:CSVImport:HeaderSearch').'</th><th>'.Dict::S('UI:CSVImport:DataLine1').'</th><th>'.Dict::S('UI:CSVImport:DataLine2').'</th>');
 		$oPage->add('</tr>');
 		foreach($aHeader as $sField)
 		{
 			$oPage->add('<tr>');
 			$oPage->add("<th>$sField</th>");
-			$oPage->add('<td>'.GetMappingForField($sClassName, $sField, $index).'</td>');
+			$oPage->add('<td>'.GetMappingForField($sClassName, $sField, $index, $bAdvanced).'</td>');
 			$oPage->add('<td>&nbsp;</td>');
 			$oPage->add('<td><input id="search_'.$index.'" type="checkbox" name="search_field['.$index.']" value="1" /></td>');
 			$oPage->add('<td>'.(isset($aData[$iStartLine][$index-1]) ? htmlentities($aData[$iStartLine][$index-1], ENT_QUOTES, 'UTF-8') : '&nbsp;').'</td>');
@@ -188,6 +196,15 @@ switch($sOperation)
 			$index++;
 		}
 		$oPage->add("</table>\n");
+		$aReconciliationKeys = MetaModel::GetReconcKeys($sClassName);
+		$sDefaultKeys = '"'.implode('", "',$aReconciliationKeys).'"';
+		$oPage->add_ready_script(
+<<<EOF
+		$('select[name^=field]').change( DoCheckMapping );
+		aDefaultKeys = new Array($sDefaultKeys);
+		DoCheckMapping();
+EOF
+);	
 	}
 	break;
 	

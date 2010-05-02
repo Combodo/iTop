@@ -519,7 +519,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		{
 			foreach(MetaModel::ListAttributeDefs($sClassName) as $sAttCode => $oAttDef)
 			{
-				if (($sAttCode != 'finalclass') && $oAttDef->IsScalar())
+				if ((($oAttDef->IsExternalField()) || ($oAttDef->IsWritable())) && $oAttDef->IsScalar())
 				{
 					$aList[$sClassName][$sAttCode] = $oAttDef;
 				}
@@ -892,38 +892,37 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$oPage->add("<form id=\"form_{$iFormId}\" enctype=\"multipart/form-data\" method=\"post\" onSubmit=\"return CheckMandatoryFields('form_{$iFormId}')\">\n");
 		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode=>$oAttDef)
 		{
-			if ('finalclass' == $sAttCode) // finalclass is a reserved word, hardcoded !
+			if ($oAttDef->IsWritable())
 			{
-				// Do nothing, the class field is always hidden, it cannot be edited
-			}
-			else if ($sStateAttCode == $sAttCode)
-			{
-				// State attribute is always read-only from the UI
-				$sHTMLValue = $this->GetStateLabel();
-				$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $sHTMLValue);
-			}
-			else if (!$oAttDef->IsExternalField())
-			{
-				$iFlags = $this->GetAttributeFlags($sAttCode);				
-				if ($iFlags & OPT_ATT_HIDDEN)
+				if ($sStateAttCode == $sAttCode)
 				{
-					// Attribute is hidden, do nothing
+					// State attribute is always read-only from the UI
+					$sHTMLValue = $this->GetStateLabel();
+					$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $sHTMLValue);
 				}
 				else
 				{
-					if ($iFlags & OPT_ATT_READONLY)
+					$iFlags = $this->GetAttributeFlags($sAttCode);				
+					if ($iFlags & OPT_ATT_HIDDEN)
 					{
-						// Attribute is read-only
-						$sHTMLValue = $this->GetAsHTML($sAttCode);
+						// Attribute is hidden, do nothing
 					}
 					else
 					{
-						$sValue = $this->Get($sAttCode);
-						$sDisplayValue = $this->GetEditValue($sAttCode);
-						$aArgs = array('this' => $this);
-						$sHTMLValue = self::GetFormElementForField($oPage, get_class($this), $sAttCode, $oAttDef, $sValue, $sDisplayValue, '', '', $iFlags, $aArgs);
+						if ($iFlags & OPT_ATT_READONLY)
+						{
+							// Attribute is read-only
+							$sHTMLValue = $this->GetAsHTML($sAttCode);
+						}
+						else
+						{
+							$sValue = $this->Get($sAttCode);
+							$sDisplayValue = $this->GetEditValue($sAttCode);
+							$aArgs = array('this' => $this);
+							$sHTMLValue = self::GetFormElementForField($oPage, get_class($this), $sAttCode, $oAttDef, $sValue, $sDisplayValue, '', '', $iFlags, $aArgs);
+						}
+						$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $sHTMLValue);
 					}
-					$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $sHTMLValue);
 				}
 			}
 		}
@@ -965,17 +964,13 @@ abstract class cmdbAbstractObject extends CMDBObject
 
 		foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode=>$oAttDef)
 		{
-			if ('finalclass' == $sAttCode) // finalclass is a reserved word, hardcoded !
-			{
-				// Do nothing, the class field is always hidden, it cannot be edited
-			}
-			else if ($sStateAttCode == $sAttCode)
+			if ($sStateAttCode == $sAttCode)
 			{
 				// State attribute is always read-only from the UI
 				$sHTMLValue = $oObjectToClone->GetStateLabel();
 				$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $sHTMLValue);
 			}
-			else if (!$oAttDef->IsExternalField())
+			else if ((!$oAttDef->IsExternalField()) && ($oAttDef->IsWritable()) )
 			{
 				$sValue = ($oObjectToClone == null) ? '' : $oObjectToClone->Get($sAttCode);
 				$sDisplayValue = ($oObjectToClone == null) ? '' : $oObjectToClone->GetEditValue($sAttCode);
