@@ -23,7 +23,7 @@ $oAppContext = new ApplicationContext();
 $currentOrganization = utils::ReadParam('org_id', 1);
 $iStep = utils::ReadParam('step', 1);
 
-$oPage = new iTopWebPage("iTop - Bulk import", $currentOrganization);
+$oPage = new iTopWebPage(Dict::S('UI:Title:BulkImport'), $currentOrganization);
 
 /**
  * Helper function to build a select from the list of valid classes for a given action
@@ -36,13 +36,13 @@ $oPage = new iTopWebPage("iTop - Bulk import", $currentOrganization);
 function GetClassesSelect($sName, $sDefaultValue, $iWidthPx, $iActionCode = null)
 {
 	$sHtml = "<select id=\"select_$sName\" name=\"$sName\">";
-	$sHtml .= "<option tyle=\"width: ".$iWidthPx."px;\" title=\"Select the class you want to load\" value=\"\">--- select one ---</option>\n";
+	$sHtml .= "<option tyle=\"width: ".$iWidthPx."px;\" title=\"Select the class you want to load\" value=\"\">".Dict::S('UI:CSVImport:ClassesSelectOne')."</option>\n";
 	$aValidClasses = array();
 	foreach(MetaModel::GetClasses('bizmodel') as $sClassName)
 	{
 		if (is_null($iActionCode) || UserRights::IsActionAllowed($sClassName, $iActionCode))
 		{
-			$sSelected = ($sClassName == $sDefaultValue) ? " SELECTED" : "";
+			$sSelected = ($sClassName == $sDefaultValue) ? " selected" : "";
 			$sDescription = MetaModel::GetClassDescription($sClassName);
 			$sDisplayName = MetaModel::GetName($sClassName);
 			$aValidClasses[$sDisplayName] = "<option style=\"width: ".$iWidthPx."px;\" title=\"$sDescription\" value=\"$sClassName\"$sSelected>$sDisplayName</option>";
@@ -80,9 +80,9 @@ function GetFriendlyAttCodeName($sClassName, $sAttCodeEx)
 	$sFriendlyName = '';
 	if (preg_match('/(.+)->(.+)/', $sAttCodeEx, $aMatches) > 0)
 	{
-		$Attribute = $aMatches[1];
+		$sAttribute = $aMatches[1];
 		$sField = $aMatches[2];
-		$oAttDef = MetaModel::GetAttributeDef($sClassName, $Attribute);
+		$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttribute);
 		if ($oAttDef->IsExternalKey())
 		{
 			$sTargetClass = $oAttDef->GetTargetClass();
@@ -92,7 +92,7 @@ function GetFriendlyAttCodeName($sClassName, $sAttCodeEx)
 		else
 		{
 			 // hum, hum... should never happen, we'd better raise an exception
-			 throw(new Exception("Internal error: '$sAttCodeEx' is an incorrect code because '$sAttribute' is NOT an external key of the class '$sClassName'."));
+			 throw(new Exception(Dict::Format('UI:CSVImport:ErrorExtendedAttCode', $sAttCodeEx, $sAttribute, $sClassName)));
 		}
 
 	}
@@ -100,7 +100,7 @@ function GetFriendlyAttCodeName($sClassName, $sAttCodeEx)
 	{
 		if ($sAttCodeEx == 'id')
 		{
-			$sFriendlyName = 'id (Primary Key)';
+			$sFriendlyName = Dict::S('UI:CSVImport:idField');
 		}
 		else
 		{
@@ -209,6 +209,7 @@ function ProcessCSVData(WebPage $oPage, UserContext $oContext, $bSimulate = true
 	$aFieldsMapping = utils::ReadParam('field', array());
 	$aSearchFields = utils::ReadParam('search_field', array());
 	$iCurrentStep = $bSimulate ? 4 : 5;
+	$bAdvanced = utils::ReadParam('advanced', 0);
 	
 	// Parse the data set
 	$oCSVParser = new CSVParser($sCSVData, $sSeparator, $sTextQualifier);
@@ -452,7 +453,7 @@ function ProcessCSVData(WebPage $oPage, UserContext $oContext, $bSimulate = true
 	$oPage->add('<input type="hidden" name="csvdata" value="'.htmlentities($sCSVData, ENT_QUOTES, 'UTF-8').'"/>');
 	$oPage->add('<input type="hidden" name="csvdata_truncated" value="'.htmlentities($sCSVDataTruncated, ENT_QUOTES, 'UTF-8').'"/>');
 	$oPage->add('<input type="hidden" name="class_name" value="'.$sClassName.'"/>');
-	$oPage->add('<input type="hidden" name="_charset_"/>');
+	$oPage->add('<input type="hidden" name="advanced" value="'.$bAdvanced.'"/>');
 	foreach($aFieldsMapping as $iNumber => $sAttCode)
 	{
 		$oPage->add('<input type="hidden" name="field['.$iNumber.']" value="'.$sAttCode.'"/>');
@@ -466,17 +467,17 @@ function ProcessCSVData(WebPage $oPage, UserContext $oContext, $bSimulate = true
 	$aDisplayFilters = array();
 	if ($bSimulate)
 	{
-		$aDisplayFilters['unchanged'] = '%d objects(s) will stay unchanged.';
-		$aDisplayFilters['modified'] = '%d objects(s) will stay be modified.';
-		$aDisplayFilters['added'] = '%d objects(s) will be added.';
-		$aDisplayFilters['errors'] = '%d objects(s) will have errors.';
+		$aDisplayFilters['unchanged'] = Dict::S('UI:CSVImport:ObjectsWillStayUnchanged');
+		$aDisplayFilters['modified'] = Dict::S('UI:CSVImport:ObjectsWillBeModified');
+		$aDisplayFilters['added'] = Dict::S('UI:CSVImport:ObjectsWillBeAdded');
+		$aDisplayFilters['errors'] = Dict::S('UI:CSVImport:ObjectsWillHaveErrors');
 	}
 	else
 	{
-		$aDisplayFilters['unchanged'] = '%d objects(s) remained unchanged.';
-		$aDisplayFilters['modified'] = '%d objects(s) were modified.';
-		$aDisplayFilters['added'] = '%d objects(s) were added.';
-		$aDisplayFilters['errors'] = '%d objects(s) had errors.';
+		$aDisplayFilters['unchanged'] = Dict::S('UI:CSVImport:ObjectsRemainedUnchanged');
+		$aDisplayFilters['modified'] = Dict::S('UI:CSVImport:ObjectsWereModified');
+		$aDisplayFilters['added'] = Dict::S('UI:CSVImport:ObjectsWereAdded');
+		$aDisplayFilters['errors'] = Dict::S('UI:CSVImport:ObjectsHadErrors');
 	}
 	$oPage->add('<p><input type="checkbox" checked id="show_unchanged" onClick="ToggleRows(\'row_unchanged\')"/>&nbsp;<img src="../images/unchanged.png">&nbsp;'.sprintf($aDisplayFilters['unchanged'], $iUnchanged).'&nbsp&nbsp;');
 	$oPage->add('<input type="checkbox" checked id="show_modified" onClick="ToggleRows(\'row_modified\')"/>&nbsp;<img src="../images/modified.png">&nbsp;'.sprintf($aDisplayFilters['modified'], $iModified).'&nbsp&nbsp;');
@@ -485,14 +486,14 @@ function ProcessCSVData(WebPage $oPage, UserContext $oContext, $bSimulate = true
 	$oPage->add('<div style="overflow-y:auto">');
 	$oPage->add($sHtml);
 	$oPage->add('</div> <!-- end of preview -->');
-	$oPage->add('<p><input type="button" value=" << Back " onClick="CSVGoBack()"/>&nbsp;&nbsp;');
+	$oPage->add('<p><input type="button" value="'.Dict::S('UI:Button:Back').'" onClick="CSVGoBack()"/>&nbsp;&nbsp;');
 	if ($bSimulate)
 	{
-		$oPage->add('<input type="submit" value=" Run the Import ! "/></p>');
+		$oPage->add('<input type="submit" value="'.Dict::S('UI:Button:DoImport').'"/></p>');
 	}
 	else
 	{
-		$oPage->add('<input type="submit" value=" Done "/></p>');
+		$oPage->add('<input type="submit" value="'.Dict::S('UI:Button:Done').'"/></p>');
 	}
 	$oPage->add('</form>');
 	$oPage->add('</div> <!-- end of wizForm -->');
@@ -529,12 +530,12 @@ EOF
  */
 function LoadData(WebPage $oPage, UserContext $oContext)
 {
-	$oPage->add('<h2>Step 5 of 5: Import completed</h2>');
+	$oPage->add('<h2>'.Dict::S('UI:Title:CSVImportStep5').'</h2>');
 	$aResult = ProcessCSVData($oPage, $oContext, false /* simulate = false */);
 	if (is_array($aResult))
 	{
-		$oPage->StartCollapsibleSection("Lines that could not be loaded:", false);
-		$oPage->p('The following lines have not been imported because they contain errors');
+		$oPage->StartCollapsibleSection(Dict::S('UI:CSVImport:LinesNotImported'), false);
+		$oPage->p(Dict::S('UI:CSVImport:LinesNotImported+'));
 		$oPage->add('<textarea rows="30" cols="100">');
 		$oPage->add(htmlentities(implode("\n", $aResult), ENT_QUOTES, 'UTF-8'));
 		$oPage->add('</textarea>');
@@ -550,7 +551,7 @@ function LoadData(WebPage $oPage, UserContext $oContext)
  */
 function Preview(WebPage $oPage, UserContext $oContext)
 {
-	$oPage->add('<h2>Step 4 of 5: Import simulation</h2>');
+	$oPage->add('<h2>'.Dict::S('UI:Title:CSVImportStep4').'</h2>');
 	ProcessCSVData($oPage, $oContext, true /* simulate */);
 }
 
@@ -581,12 +582,15 @@ function SelectMapping(WebPage $oPage)
 		$iSkippedLines = utils::ReadParam('nb_skipped_lines', '0');
 	}
 	$sClassName = utils::ReadParam('class_name', '');
+	$bAdvanced = utils::ReadParam('advanced', 0);
 
-	$oPage->add('<h2>Step 3 of 5: Data mapping</h2>');
+	$oPage->add('<h2>'.Dict::S('UI:Title:CSVImportStep3').'</h2>');
 	$oPage->add('<div class="wizContainer">');
-	$oPage->add('<form enctype="multipart/form-data" id="wizForm" method="post" onSubmit="return CheckValues()"><p>Select the class to import: ');
-	$oPage->add(GetClassesSelect('class_name', $sClassName, 300, UR_ACTION_BULK_MODIFY).'</p>');
-	$oPage->add('<div id="mapping"><p><br/>Select a class to configure the mapping<br/></p></div>');
+	$oPage->add('<form enctype="multipart/form-data" id="wizForm" method="post" onSubmit="return CheckValues()"><table style="width:100%" class="transparent"><tr><td>'.Dict::S('UI:CSVImport:SelectClass').' ');
+	$oPage->add(GetClassesSelect('class_name', $sClassName, 300, UR_ACTION_BULK_MODIFY));
+	$oPage->add('</td><td style="text-align:right"><input type="checkbox" name="advanced" value="1" '.IsChecked($bAdvanced, 1).' onChange="DoMapping()">&nbsp;'.Dict::S('UI:CSVImport:AdvancedMode').'</td></tr></table>');
+	$oPage->add('<div style="padding:1em;display:none" id="advanced_help" style="display:none">'.Dict::S('UI:CSVImport:AdvancedMode+').'</div>');
+	$oPage->add('<div id="mapping"><p><br/>'.Dict::S('UI:CSVImport:SelectAClassFirst').'<br/></p></div>');
 	$oPage->add('<input type="hidden" name="step" value="4"/>');
 	$oPage->add('<input type="hidden" name="separator" value="'.htmlentities($sSeparator, ENT_QUOTES, 'UTF-8').'"/>');
 	$oPage->add('<input type="hidden" name="text_qualifier" value="'.htmlentities($sTextQualifier, ENT_QUOTES, 'UTF-8').'"/>');
@@ -596,10 +600,14 @@ function SelectMapping(WebPage $oPage)
 	$oPage->add('<input type="hidden" name="csvdata_truncated" id="csvdata_truncated" value="'.htmlentities($sCSVDataTruncated, ENT_QUOTES, 'UTF-8').'"/>');
 	$oPage->add('<input type="hidden" name="csvdata" value="'.htmlentities($sCSVData, ENT_QUOTES, 'UTF-8').'"/>');
 	$oPage->add('<input type="hidden" name="_charset_"/>');
-	$oPage->add('<p><input type="button" value=" << Back " onClick="CSVGoBack()"/>&nbsp;&nbsp;');
-	$oPage->add('<input type="submit" value=" Simulate Import >> "/></p>');
+	$oPage->add('<p><input type="button" value="'.Dict::S('UI:Button:Back').'" onClick="CSVGoBack()"/>&nbsp;&nbsp;');
+	$oPage->add('<input type="submit" value="'.Dict::S('UI:Button:SimulateImport').'"/></p>');
 	$oPage->add('</form>');
 	$oPage->add('</div>');
+	
+	$sAlertIncompleteMapping = Dict::S('UI:CSVImport:AlertIncompleteMapping');
+	$sAlertNoSearchCriteria = Dict::S('UI:CSVImport:AlertNoSearchCriteria');
+	
 	$oPage->add_ready_script(
 <<<EOF
 	$('#select_class_name').change( DoMapping );
@@ -612,6 +620,8 @@ EOF
 
 	$oPage->add_script(
 <<<EOF
+	var aDefaultKeys = new Array();
+	
 	function CSVGoBack()
 	{
 		$('input[name=step]').val(2);
@@ -623,30 +633,48 @@ EOF
 	
 	function DoMapping()
 	{
-		var separator = $('input[name=separator]').val();
-		var text_qualifier = $('input[name=text_qualifier]').val();
-		var header_line = $('input[name=header_line]').val();
-		var nb_lines_skipped = $('input[name=nb_skipped_lines]').val();
-		var csv_data = $('input[name=csvdata]').val();
 		var class_name = $('select[name=class_name]').val();
-		$('#mapping').block();
-
-		// Make sure that we cancel any pending request before issuing another
-		// since responses may arrive in arbitrary order
-		if (ajax_request != null)
+		var advanced = $('input[name=advanced]:checked').val();
+		if (advanced != 1)
 		{
-			ajax_request.abort();
-			ajax_request = null;
+			$('#advanced_help').hide();
 		}
-
-		ajax_request = $.post('ajax.csvimport.php',
-			   { operation: 'display_mapping_form', enctype: 'multipart/form-data', csvdata: csv_data, separator: separator, qualifier: text_qualifier, nb_lines_skipped: nb_lines_skipped, header_line: header_line, class_name: class_name },
-			   function(data) {
-				 $('#mapping').empty();
-				 $('#mapping').append(data);
-				 $('#mapping').unblock();
-				}
-			 );
+		else
+		{
+			$('#advanced_help').show();
+		}
+		if (class_name != '')
+		{
+			var separator = $('input[name=separator]').val();
+			var text_qualifier = $('input[name=text_qualifier]').val();
+			var header_line = $('input[name=header_line]').val();
+			var nb_lines_skipped = $('input[name=nb_skipped_lines]').val();
+			var csv_data = $('input[name=csvdata]').val();
+			if (advanced != 1)
+			{
+				advanced = 0;
+			}
+			$('#mapping').block();
+	
+			// Make sure that we cancel any pending request before issuing another
+			// since responses may arrive in arbitrary order
+			if (ajax_request != null)
+			{
+				ajax_request.abort();
+				ajax_request = null;
+			}
+	
+			ajax_request = $.post('ajax.csvimport.php',
+				   { operation: 'display_mapping_form', enctype: 'multipart/form-data', csvdata: csv_data, separator: separator, 
+				   	 qualifier: text_qualifier, nb_lines_skipped: nb_lines_skipped, header_line: header_line, class_name: class_name,
+				   	 advanced: advanced },
+				   function(data) {
+					 $('#mapping').empty();
+					 $('#mapping').append(data);
+					 $('#mapping').unblock();
+					}
+				 );
+		}
 	}
 	
 	function CheckValues()
@@ -657,13 +685,13 @@ EOF
 		$('select[name^=field]').each( function() {
 			if ($(this).val() == '')
 			{
-				this.style.backgroundColor = '#fcc';
+				$(this).parent().css({'border': '2px #D81515 solid'});
 				bMappingOk = false;
 				bResult = false; 
 			}
 			else
 			{
-				this.style.backgroundColor = 'ThreeDFace';				
+				$(this).parent().css({'border': '0'});
 			}
 		});
 		// At least one search field must be checked
@@ -672,15 +700,82 @@ EOF
 		});
 		if (!bMappingOk)
 		{
-			alert("Please select a mapping for every field.");
+			alert("$sAlertIncompleteMapping");
 		}
 		if (!bSearchOk)
 		{
 				bResult = false; 
-				alert("Please select at least one search criteria.");
+				alert("$sAlertNoSearchCriteria");
 		}
 		
+		if (bResult)
+		{
+			$('#mapping').block();
+			// Re-enable all search_xxx checkboxes so that their value gets posted
+			$('input[name^=search]').each(function() {
+				$(this).attr('disabled', false);
+			});
+		}
 		return bResult;
+	}
+
+	function DoCheckMapping()
+	{
+		// Check if there is a field mapped to 'id'
+		// In which case, it's the only possible search key
+		var idSelected = 0;
+		var nbSearchKeys = $('input[name^=search]:checked').length;
+		var nbMappings = $('select[name^=field]').length;
+		for(index=1; index <= nbMappings; index++)
+		{
+			var selectedValue = $('#mapping_'+index).val();
+			 
+			if (selectedValue == 'id')
+			{
+				idSelected = index;
+			}
+		}
+		
+		for (index=1; index <= nbMappings; index++)
+		{
+			sMappingValue = $('#mapping_'+index).val();
+			if ((sMappingValue == '') || (sMappingValue == ':none:'))
+			{
+				// Non-mapped field, uncheck and disabled
+				$('#search_'+index).attr('checked', false);
+				$('#search_'+index).attr('disabled', true);
+			}
+			else if (index == idSelected)
+			{
+				// The 'id' field was mapped, it's the only possible reconciliation key
+				$('#search_'+index).attr('checked', true);
+				$('#search_'+index).attr('disabled', true);
+			}
+			else
+			{
+				if (idSelected > 0)
+				{
+					// The 'id' field was mapped, it's the only possible reconciliation key
+					$('#search_'+index).attr('checked', false);
+					$('#search_'+index).attr('disabled', true);
+				}
+				else
+				{
+					$('#search_'+index).attr('disabled', false);
+					if (nbSearchKeys == 0)
+					{
+						// No search key was selected, select the default ones
+						for(j =0; j < aDefaultKeys.length; j++)
+						{
+							if (sMappingValue == aDefaultKeys[j])
+							{
+								$('#search_'+index).attr('checked', true);
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 EOF
 );
@@ -728,6 +823,8 @@ function SelectOptions(WebPage $oPage)
 	$sOtherTextQualifier = in_array($sTextQualifier, array('"', "'")) ? '' : $sTextQualifier;
 	$bHeaderLine = utils::ReadParam('header_line', 0);
 	$sClassName = utils::ReadParam('class_name', '');
+	$bAdvanced = utils::ReadParam('advanced', 0);
+	
 	// Create a truncated version of the data used for the fast preview
 	// Take about 20 lines of data... knowing that some lines may contain carriage returns
 	$iMaxLines = 20;
@@ -749,36 +846,37 @@ function SelectOptions(WebPage $oPage)
 	}
 	$sCSVDataTruncated = substr($sCSVData, 0, $iCurPos);
 	
-	$oPage->add('<h2>Step 2 of 5: CSV data options</h2>');
+	$oPage->add('<h2>'.Dict::S('UI:Title:CSVImportStep2').'</h2>');
 	$oPage->add('<div class="wizContainer">');
 	$oPage->add('<table><tr><td style="vertical-align:top;padding-right:50px;background:#E8F3CF">');
 	$oPage->add('<form enctype="multipart/form-data" id="wizForm" method="post" id="csv_options">');
-	$oPage->add('<h3>Separator character:</h3>');
-	$oPage->add('<p><input type="radio" name="separator" value="," onChange="DoPreview()"'.IsChecked($sSeparator, ',').'/> , (comma)<br/>');
-	$oPage->add('<input type="radio" name="separator" value=";" onChange="DoPreview()"'.IsChecked($sSeparator, ';').'/> ; (semicolon)<br/>');
-	$oPage->add('<input type="radio" name="separator" value="tab" onChange="DoPreview()"'.IsChecked($sSeparator, "\t").'/> tab<br/>');
-	$oPage->add('<input type="radio" name="separator" value="other"  onChange="DoPreview()"'.IsChecked($sOtherSeparator, '', true).'/> other: <input type="text" size="3" maxlength="1" name="other_separator" id="other_separator" value="'.$sOtherSeparator.'" onChange="DoPreview()"/>');
+	$oPage->add('<h3>'.Dict::S('UI:CSVImport:SeparatorCharacter').'</h3>');
+	$oPage->add('<p><input type="radio" name="separator" value="," onChange="DoPreview()"'.IsChecked($sSeparator, ',').'/> '.Dict::S('UI:CSVImport:SeparatorComma+').'<br/>');
+	$oPage->add('<input type="radio" name="separator" value=";" onChange="DoPreview()"'.IsChecked($sSeparator, ';').'/> '.Dict::S('UI:CSVImport:SeparatorSemicolon+').'<br/>');
+	$oPage->add('<input type="radio" name="separator" value="tab" onChange="DoPreview()"'.IsChecked($sSeparator, "\t").'/> '.Dict::S('UI:CSVImport:SeparatorTab+').'<br/>');
+	$oPage->add('<input type="radio" name="separator" value="other"  onChange="DoPreview()"'.IsChecked($sOtherSeparator, '', true).'/> '.Dict::S('UI:CSVImport:SeparatorOther').' <input type="text" size="3" maxlength="1" name="other_separator" id="other_separator" value="'.$sOtherSeparator.'" onChange="DoPreview()"/>');
 	$oPage->add('</p>');
 	$oPage->add('</td><td style="vertical-align:top;padding-right:50px;background:#E8F3CF">');
-	$oPage->add('<h3>Text qualifier character:</h3>');
-	$oPage->add('<p><input type="radio" name="text_qualifier" value="&#34;" onChange="DoPreview()"'.IsChecked($sTextQualifier, '"').'/> " (double quote)<br/>');
-	$oPage->add('<input type="radio" name="text_qualifier" value="&#39;"  onChange="DoPreview()"'.IsChecked($sTextQualifier, "'").'/> \' (simple quote)<br/>');
-	$oPage->add('<input type="radio" name="text_qualifier" value="other"  onChange="DoPreview()"'.IsChecked($sOtherTextQualifier, '', true).'/> other: <input type="text" size="3" maxlength="1" name="other_qualifier"  value="'.htmlentities($sOtherTextQualifier, ENT_QUOTES, 'UTF-8').'" onChange="DoPreview()"/>');
+	$oPage->add('<h3>'.Dict::S('UI:CSVImport:TextQualifierCharacter').'</h3>');
+	$oPage->add('<p><input type="radio" name="text_qualifier" value="&#34;" onChange="DoPreview()"'.IsChecked($sTextQualifier, '"').'/> '.Dict::S('UI:CSVImport:QualifierDoubleQuote+').'<br/>');
+	$oPage->add('<input type="radio" name="text_qualifier" value="&#39;"  onChange="DoPreview()"'.IsChecked($sTextQualifier, "'").'/> '.Dict::S('UI:CSVImport:QualifierSimpleQuote+').'<br/>');
+	$oPage->add('<input type="radio" name="text_qualifier" value="other"  onChange="DoPreview()"'.IsChecked($sOtherTextQualifier, '', true).'/> '.Dict::S('UI:CSVImport:QualifierOther').' <input type="text" size="3" maxlength="1" name="other_qualifier"  value="'.htmlentities($sOtherTextQualifier, ENT_QUOTES, 'UTF-8').'" onChange="DoPreview()"/>');
 	$oPage->add('</p>');
 	$oPage->add('</td><td style="vertical-align:top;background:#E8F3CF">');
-	$oPage->add('<h3>Comments and header:</h3>');
-	$oPage->add('<p><input type="checkbox" name="header_line" id="box_header" value="1" onChange="DoPreview()"'.IsChecked($bHeaderLine, 1).'/> Treat the first line as a header (column names)<p>');
-	$oPage->add('<p><input type="checkbox" name="box_skiplines" value="1" id="box_skiplines" onChange="DoPreview()"'.IsChecked($bBoxSkipLines, 1).'/> Skip <input type="text" size=2 name="nb_skipped_lines" id="nb_skipped_lines" onChange="DoPreview()" value="'.$iSkippedLines.'"> line(s) at the beginning of the file<p>');
+	$oPage->add('<h3>'.Dict::S('UI:CSVImport:CommentsAndHeader').'</h3>');
+	$oPage->add('<p><input type="checkbox" name="header_line" id="box_header" value="1" onChange="DoPreview()"'.IsChecked($bHeaderLine, 1).'/> '.Dict::S('UI:CSVImport:TreatFirstLineAsHeader').'<p>');
+	$oPage->add('<p><input type="checkbox" name="box_skiplines" value="1" id="box_skiplines" onChange="DoPreview()"'.IsChecked($bBoxSkipLines, 1).'/> '.Dict::Format('UI:CSVImport:Skip_N_LinesAtTheBeginning', '<input type="text" size=2 name="nb_skipped_lines" id="nb_skipped_lines" onChange="DoPreview()" value="'.$iSkippedLines.'">').'<p>');
 	$oPage->add('</td></tr></table>');
 	$oPage->add('<input type="hidden" name="csvdata_truncated" id="csvdata_truncated" value="'.htmlentities($sCSVDataTruncated, ENT_QUOTES, 'UTF-8').'"/>');
 	$oPage->add('<input type="hidden" name="csvdata" id="csvdata" value="'.htmlentities($sCSVData, ENT_QUOTES, 'UTF-8').'"/>');
 	$oPage->add('<input type="hidden" name="class_name" value="'.$sClassName.'"/>');
+	$oPage->add('<input type="hidden" name="advanced" value="'.$bAdvanced.'"/>');
 	$oPage->add('<input type="hidden" name="step" value="3"/>');
 	$oPage->add('<div id="preview">');
-	$oPage->add('<p style="text-align:center">Data Preview</p>');
+	$oPage->add('<p style="text-align:center">'.Dict::S('UI:CSVImport:CSVDataPreview').'</p>');
 	$oPage->add('</div>');
-	$oPage->add('<input type="button" value=" << Back " onClick="GoBack()"/>');
-	$oPage->add('<input type="submit" value=" Next >> "/>');
+	$oPage->add('<input type="button" value="'.Dict::S('UI:Button:Back').'" onClick="GoBack()"/>');
+	$oPage->add('<input type="submit" value="'.Dict::S('UI:Button:Next').'"/>');
 	$oPage->add('</form>');
 	$oPage->add('</div>');
 	
@@ -847,27 +945,28 @@ EOF
  */
 function Welcome(iTopWebPage $oPage)
 {
-	$oPage->add("<div><p><h1>CSV import wizard</h1></p></div>\n");
+	$oPage->add("<div><p><h1>".Dict::S('UI:Title:BulkImport+')."</h1></p></div>\n");
 	$oPage->AddTabContainer('tabs1');	
 
-	$sFileLoadHtml = '<div><form enctype="multipart/form-data" method="post"><p>Select the file to import:</p>'.
+	$sFileLoadHtml = '<div><form enctype="multipart/form-data" method="post"><p>'.Dict::S('UI:CSVImport:SelectFile').'</p>'.
 			'<p><input type="file" name="csvdata"/></p>'.
-			'<p><input type="submit" value=" Next >> "/></p>'.
+			'<p><input type="submit" value="'.Dict::S('UI:Button:Next').'"/></p>'.
 			'<p><input type="hidden" name="step" value="2"/></p>'.
 			'<p><input type="hidden" name="operation" value="file_upload"/></p>'.
 			'</form></div>';
 	
-	$oPage->AddToTab('tabs1', "Load from a file", $sFileLoadHtml);	
+	$oPage->AddToTab('tabs1', Dict::S('UI:CSVImport:Tab:LoadFromFile'), $sFileLoadHtml);	
 	$sCSVData = utils::ReadParam('csvdata', '');
 	$sSeparator = utils::ReadParam('separator', '');
 	$sTextQualifier = utils::ReadParam('text_qualifier', '');
 	$bHeaderLine = utils::ReadParam('header_line', true);
 	$iSkippedLines = utils::ReadParam('nb_skipped_lines', '');
 	$sClassName = utils::ReadParam('class_name', '');
+	$bAdvanced = utils::ReadParam('advanced', 0);
 	$sCSVData = utils::ReadParam('csvdata', '');
-	$sPasteDataHtml = '<div><form enctype="multipart/form-data" method="post"><p>Paste the data to import:</p>'.
+	$sPasteDataHtml = '<div><form enctype="multipart/form-data" method="post"><p>'.Dict::S('UI:CSVImport:PasteData').'</p>'.
 			'<p><textarea cols="100" rows="30" name="csvdata">'.htmlentities($sCSVData, ENT_QUOTES, 'UTF-8').'</textarea></p>'.
-			'<p><input type="submit" value=" Next >> "/></p>'.
+			'<p><input type="submit" value="'.Dict::S('UI:Button:Next').'"/></p>'.
 			'<input type="hidden" name="step" value="2"/>'.
 			'<input type="hidden" name="operation" value="csv_data"/>'.
 			'<input type="hidden" name="separator" value="'.htmlentities($sSeparator, ENT_QUOTES, 'UTF-8').'"/>'.
@@ -875,15 +974,17 @@ function Welcome(iTopWebPage $oPage)
 			'<input type="hidden" name="header_line" value="'.$bHeaderLine.'"/>'.
 			'<input type="hidden" name="nb_skipped_lines" value="'.$iSkippedLines.'"/>'.
 			'<input type="hidden" name="class_name" value="'.$sClassName.'"/>'.
+			'<input type="hidden" name="advanced" value="'.$bAdvanced.'"/>'.
 			'</form></div>';
-	$oPage->AddToTab('tabs1', "Copy and paste data", $sPasteDataHtml);	
-	
-	$sTemplateHtml = '<div><p>Pick the template do download: ';
+			
+	$oPage->AddToTab('tabs1', Dict::S('UI:CSVImport:Tab:CopyPaste'), $sPasteDataHtml);		
+	$sTemplateHtml = '<div><p>'.Dict::S('UI:CSVImport:PickClassForTemplate').' ';
 	$sTemplateHtml .= GetClassesSelect('template_class', '', 300, UR_ACTION_BULK_MODIFY);
 	$sTemplateHtml .= '</div>';
 	$sTemplateHtml .= '<div id="template" style="text-align:center">';
 	$sTemplateHtml .= '</div>';
-	$oPage->AddToTab('tabs1', "Templates", $sTemplateHtml);
+
+	$oPage->AddToTab('tabs1', Dict::S('UI:CSVImport:Tab:Templates'), $sTemplateHtml);		
 	$oPage->add_script(
 <<<EOF
 	var ajax_request = null;
