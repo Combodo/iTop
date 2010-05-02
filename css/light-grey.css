@@ -729,3 +729,6 @@ td.cell_error {
 	font-weight: bold;
 	color: #D81515;
 }
+table.transparent, table.transparent td {
+	background: transparent;
+}
