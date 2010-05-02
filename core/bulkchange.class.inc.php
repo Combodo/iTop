@@ -47,7 +47,7 @@ abstract class CellChangeSpec
 		}
 		else
 		{
-			return htmlentities($value);
+			return htmlentities($value, ENT_QUOTES, 'UTF-8');
 		}
 	}
 

@@ -59,7 +59,7 @@ class NiceWebPage extends WebPage
 		foreach($aChoices as $sKey => $sValue)
 		{
 			$sSelected = ($sKey == $sDefaultValue) ? " SELECTED" : "";
-			$this->add("<option style=\"width: ".$iWidthPx." px;\" value=\"".htmlspecialchars($sKey)."\"$sSelected>".htmlentities($sValue)."</option>");
+			$this->add("<option style=\"width: ".$iWidthPx." px;\" value=\"".htmlspecialchars($sKey)."\"$sSelected>".htmlentities($sValue, ENT_QUOTES, 'UTF-8')."</option>");
 		}
 		$this->add("</select>");
 	}
