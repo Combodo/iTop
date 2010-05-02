@@ -352,7 +352,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:SelectAllToggle+' => 'Tout Sélectionner / Tout Désélectionner',
 	'UI:ClickToDisplay+' => 'Cliquer pour afficher',
 	'UI:TruncatedResults' => '%1$d objets affichés sur %2$d',
-	'UI:DisplayAll' => 'Tout affichier',
+	'UI:DisplayAll' => 'Tout afficher',
 	'UI:CountOfResults' => '%1$d objet(s)',
 	'UI:ChangesLogTitle' => 'Liste de modifications (%1$d):',
 	'UI:EmptyChangesLogTitle' => 'Aucune modification',
