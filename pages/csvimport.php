@@ -40,7 +40,8 @@ function GetClassesSelect($sName, $sDefaultValue, $iWidthPx, $iActionCode = null
 	$aValidClasses = array();
 	foreach(MetaModel::GetClasses('bizmodel') as $sClassName)
 	{
-		if (is_null($iActionCode) || UserRights::IsActionAllowed($sClassName, $iActionCode))
+		if ( (is_null($iActionCode) || UserRights::IsActionAllowed($sClassName, $iActionCode)) &&
+		     (!MetaModel::IsAbstract($sClassName)) )
 		{
 			$sSelected = ($sClassName == $sDefaultValue) ? " selected" : "";
 			$sDescription = MetaModel::GetClassDescription($sClassName);

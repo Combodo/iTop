@@ -869,16 +869,16 @@ class MenuBlock extends DisplayBlock
 		{
 			case 0:
 			// No object in the set, the only possible action is "new"
-			$bIsModifyAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY);
+			$bIsModifyAllowed = (!MetaModel::IsAbstract($sClass)) && UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY);
 			if ($bIsModifyAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:New'), 'url' => "../page/$sUIPage?operation=new&class=$sClass&$sContext{$sDefault}"); }
 			break;
 			
 			case 1:
 			$oObj = $oSet->Fetch();
 			$id = $oObj->GetKey();
-			$bIsModifyAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet);
+			$bIsModifyAllowed = (!MetaModel::IsAbstract($sClass)) && UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet);
 			$bIsDeleteAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_DELETE, $oSet);
-			$bIsBulkModifyAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_MODIFY, $oSet);
+			$bIsBulkModifyAllowed = (!MetaModel::IsAbstract($sClass)) && UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_MODIFY, $oSet);
 			$bIsBulkDeleteAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_DELETE, $oSet);
 			// Just one object in the set, possible actions are "new / clone / modify and delete"
 			if (isset($aExtraParams['link_attr']))
@@ -927,8 +927,8 @@ class MenuBlock extends DisplayBlock
 			default:
 			// Check rights
 			// New / Modify
-			$bIsModifyAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet);
-			$bIsBulkModifyAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_MODIFY, $oSet);
+			$bIsModifyAllowed = (!MetaModel::IsAbstract($sClass)) && UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet);
+			$bIsBulkModifyAllowed = (!MetaModel::IsAbstract($sClass)) && UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_MODIFY, $oSet);
 			$bIsBulkDeleteAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_DELETE, $oSet);
 			if (isset($aExtraParams['link_attr']))
 			{
