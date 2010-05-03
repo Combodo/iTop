@@ -1239,6 +1239,7 @@ class AttributeExternalField extends AttributeDefinition
 	{
 		$oKeyAttDef = $this->GetKeyAttDef();
 		$oExtAttDef = MetaModel::GetAttributeDef($oKeyAttDef->Get("targetclass"), $this->Get("target_attcode"));
+		if (!is_object($oExtAttDef)) throw new CoreException("Invalid external field ".$this->GetCode()." in class ".$this->GetHostClass().". The class ".$oKeyAttDef->Get("targetclass")." has no attribute ".$this->Get("target_attcode"));
 		return $oExtAttDef;
 	}
 
