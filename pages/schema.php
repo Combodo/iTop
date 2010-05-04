@@ -61,7 +61,7 @@ function DisplayReferencingClasses($oPage, $sClass)
 		{
 			foreach ($aRemoteKeys as $sExtKeyAttCode => $oExtKeyAttDef)
 			{
-				$oPage->add("<li>".MakeClassHLink($sRemoteClass)." by <em>$sExtKeyAttCode</em></li>\n");
+				$oPage->add("<li>".Dict::Format('UI:Schema:Class_ReferencingClasses_From_By', $sClass, MakeClassHLink($sRemoteClass), $sExtKeyAttCode)."</li>\n");
 			}
 		}
 		$oPage->add("</ul>\n");
@@ -82,7 +82,7 @@ function DisplayLinkingClasses($oPage, $sClass)
 		{
 			foreach($aRemoteClasses as $sExtKeyAttCode => $sRemoteClass)
 			{
-				$oPage->add("<li>".MakeClassHLink($sRemoteClass)." by <em>".MakeClassHLink($sLinkClass)."::$sExtKeyAttCode</em></li>\n");
+				$oPage->add("<li>".Dict::Format('UI:Schema:Class_IsLinkedTo_Class_Via_ClassAndAttribute', $sClass, MakeClassHLink($sRemoteClass), MakeClassHLink($sLinkClass), $sExtKeyAttCode));
 			}
 		}
 		$oPage->add("</ul>\n");
@@ -133,16 +133,13 @@ function DisplayRelatedClassesBestInClass($oPage, $sClass, $iLevels = 20, &$aVis
  */
 function DisplayRelatedClasses($oPage, $sClass)
 {
-	$oPage->add("<h3>Childs</h3>\n");
-	DisplaySubclasses($oPage, $sClass);
-
-	$oPage->add("<h3>Pointed to by...</h3>\n");
+	$oPage->add("<h3>".Dict::Format('UI:Schema:Links:1-n', $sClass)."</h3>\n");
 	DisplayReferencingClasses($oPage, $sClass);
 
-	$oPage->add("<h3>Linked to ...</h3>\n");
+	$oPage->add("<h3>".Dict::Format('UI:Schema:Links:n-n', $sClass)."</h3>\n");
 	DisplayLinkingClasses($oPage, $sClass);
 
-	$oPage->add("<h3>ZE Graph ...</h3>\n");
+	$oPage->add("<h3>".Dict::S('UI:Schema:Links:All')."</h3>\n");
 	DisplayRelatedClassesBestInClass($oPage, $sClass, 4);
 }
 
@@ -154,14 +151,14 @@ function DisplayLifecycle($oPage, $sClass)
 	$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
 	if (empty($sStateAttCode))
 	{
-		$oPage->p("no lifecycle for this class");
+		$oPage->p(Dict::S('UI:Schema:NoLifeCyle'));
 	}
 	else
 	{
 		$aStates = MetaModel::EnumStates($sClass);
 		$aStimuli = MetaModel::EnumStimuli($sClass);
 		$oPage->add("<img src=\"../pages/graphviz.php?class=$sClass\">\n");
-		$oPage->add("<h3>Transitions</h3>\n");
+		$oPage->add("<h3>".Dict::S('UI:Schema:LifeCycleTransitions')."</h3>\n");
 		$oPage->add("<ul>\n");
 		foreach ($aStates as $sStateCode => $aStateDef)
 		{
@@ -187,7 +184,7 @@ function DisplayLifecycle($oPage, $sClass)
 		}
 		$oPage->add("</ul>\n");
 
-		$oPage->add("<h3>Attribute options</h3>\n");
+		$oPage->add("<h3>".Dict::S('UI:Schema:LifeCyleAttributeOptions')."</h3>\n");
 		$oPage->add("<ul>\n");
 		foreach ($aStates as $sStateCode => $aStateDef)
 		{
@@ -203,11 +200,11 @@ function DisplayLifecycle($oPage, $sClass)
 					$sAttLabel = $oAttDef->GetLabel();
 	
 					$aOptions = array();
-					if ($iOptions & OPT_ATT_HIDDEN) $aOptions[] = 'Hidden';
-					if ($iOptions & OPT_ATT_READONLY) $aOptions[] = 'Read-only';
-					if ($iOptions & OPT_ATT_MANDATORY) $aOptions[] = 'Mandatory';
-					if ($iOptions & OPT_ATT_MUSTCHANGE) $aOptions[] = 'Must change';
-					if ($iOptions & OPT_ATT_MUSTPROMPT) $aOptions[] = 'Must be proposed for changing';
+					if ($iOptions & OPT_ATT_HIDDEN) $aOptions[] = Dict::S('UI:Schema:LifeCycleHiddenAttribute');
+					if ($iOptions & OPT_ATT_READONLY) $aOptions[] = Dict::S('UI:Schema:LifeCycleReadOnlyAttribute');
+					if ($iOptions & OPT_ATT_MANDATORY) $aOptions[] = Dict::S('UI:Schema:LifeCycleMandatoryAttribute');
+					if ($iOptions & OPT_ATT_MUSTCHANGE) $aOptions[] = Dict::S('UI:Schema:LifeCycleAttributeMustChange');
+					if ($iOptions & OPT_ATT_MUSTPROMPT) $aOptions[] = Dict::S('UI:Schema:LifeCycleAttributeMustPrompt');
 					if (count($aOptions))
 					{
 						$sOptions = implode(', ', $aOptions);
@@ -223,7 +220,7 @@ function DisplayLifecycle($oPage, $sClass)
 			}
 			else
 			{
-				$oPage->p("<em>empty list</em>");
+				$oPage->p("<em>".Dict::S('UI:Schema:LifeCycleEmptyList')."</em>");
 			}
 		}
 		$oPage->add("</ul>\n");
@@ -246,7 +243,7 @@ function DisplayTriggers($oPage, $sClass)
  */
 function DisplayClassesList($oPage)
 {
-	$oPage->add("<h1>iTop objects schema</h1>\n");
+	$oPage->add("<h1>".Dict::S('UI:Schema:Title')."</h1>\n");
 
 	$oPage->add("<ul id=\"ClassesList\" class=\"treeview fileview\">\n");
 	foreach(MetaModel::EnumCategories() as $sCategory)
@@ -254,7 +251,7 @@ function DisplayClassesList($oPage)
 		if (empty($sCategory)) continue; // means 'all' -> skip
 
 		$sClosed = ($sCategory == 'bizmodel') ? '' : ' class="closed"';
-		$oPage->add("<li$sClosed>Category <b>$sCategory</b>\n");
+		$oPage->add("<li$sClosed>".Dict::Format('UI:Schema:CategoryMenuItem', $sCategory)."\n");
 
 		$oPage->add("<ul>\n");
 		foreach(MetaModel::GetClasses($sCategory) as $sClassName)
@@ -277,7 +274,7 @@ function DisplayClassesList($oPage)
 	$oPage->add("</ul>\n");
 
 
-	$oPage->add("<h1>Relationships</h1>\n");
+	$oPage->add("<h1>".Dict::S('UI:Schema:Relationships')."</h1>\n");
 
 	$oPage->add("<ul id=\"ClassesRelationships\" class=\"treeview\">\n");
 	foreach (MetaModel::EnumRelations() as $sRelCode)
@@ -304,14 +301,14 @@ function DisplayClassDetails($oPage, $sClass)
 	$oPage->p("<h2>$sClass</h2><br/>\n".MetaModel::GetClassDescription($sClass)."<br/>\n");
 	if (MetaModel::IsAbstract($sClass))
 	{
-		$oPage->p("Abstract class: could not be instantiated");
+		$oPage->p(Dict::S('UI:Schema:AbstractClass'));
 	}
 	else
 	{
-		$oPage->p("Not abstract: could be instantiated");
+		$oPage->p(Dict::S('UI:Schema:NonAbstractClass'));
 	}
-	$oPage->p("<h3>Class Hierarchy</h3>");
-	$oPage->p("[<a href=\"?operation='list'\">All classes</a>]");
+	$oPage->p("<h3>".Dict::S('UI:Schema:ClassHierarchyTitle')."</h3>");
+	$oPage->p("[<a href=\"?operation='list'\">".Dict::S('UI:Schema:AllClasses')."</a>]");
 	// List the parent classes
 	$sParent = MetaModel::GetParentPersistentClass($sClass);
 	$aParents = array();
@@ -345,7 +342,7 @@ function DisplayClassDetails($oPage, $sClass)
 	{
 		if ($oAttDef->IsExternalKey())
 		{
-		   $sValue = "External key to ".MakeClassHLink($oAttDef->GetTargetClass());
+		   $sValue = Dict::Format('UI:Schema:ExternalKey_To',MakeClassHLink($oAttDef->GetTargetClass()));
 		}
 		else
 		{
@@ -367,9 +364,9 @@ function DisplayClassDetails($oPage, $sClass)
 			$sCols = implode(', ', $aCols);
 	
 			$aMoreInfo = array();
-			$aMoreInfo[] = "Column(s): <em>$sCols</em>";
-			$aMoreInfo[] = "Default: '".$oAttDef->GetDefaultValue()."'";
-			$aMoreInfo[] = $oAttDef->IsNullAllowed() ? "Null allowed" : "Null NOT allowed";
+			$aMoreInfo[] = Dict::Format('UI:Schema:Columns_Description', $sCols);
+			$aMoreInfo[] =  Dict::Format('UI:Schema:Default_Description', $oAttDef->GetDefaultValue());
+			$aMoreInfo[] = $oAttDef->IsNullAllowed() ? Dict::S('UI:Schema:NullAllowed') : Dict::S('UI:Schema:NullNotAllowed');
 			$sMoreInfo .= implode(', ', $aMoreInfo);
 		}
 
@@ -378,14 +375,14 @@ function DisplayClassDetails($oPage, $sClass)
 
 		$aDetails[] = array('code' => $oAttDef->GetCode(), 'type' => $sType, 'origin' => $sOrigin, 'label' => $oAttDef->GetLabel(), 'description' => $sValue, 'values' => $sAllowedValues, 'moreinfo' => $sMoreInfo);
 	}
-	$oPage->SetCurrentTab('Attributes');
-	$aConfig = array( 'code' => array('label' => 'Attribute code', 'description' => 'Code of this attribute'),
-					  'label' => array('label' => 'Label', 'description' => 'Label of this attribute'),
-					  'type' => array('label' => 'Type', 'description' => 'Data type of this attribute'),
-					  'origin' => array('label' => 'Origin', 'description' => 'The base class for this attribute'),
-					  'description' => array('label' => 'Description', 'description' => 'Description of this attribute'),
-					  'values' => array('label' => 'Allowed Values', 'description' => 'Restrictions on the possible values for this attribute'),
-					  'moreinfo' => array('label' => 'More info', 'description' => 'More info for the fields related to a Database field'),
+	$oPage->SetCurrentTab(Dict::S('UI:Schema:Attributes'));
+	$aConfig = array( 'code' => array('label' => Dict::S('UI:Schema:AttributeCode'), 'description' => Dict::S('UI:Schema:AttributeCode+')),
+					  'label' => array('label' => Dict::S('UI:Schema:Label'), 'description' => Dict::S('UI:Schema:Label+')),
+					  'type' => array('label' => Dict::S('UI:Schema:Type'), 'description' => Dict::S('UI:Schema:Type+')),
+					  'origin' => array('label' => Dict::S('UI:Schema:Origin'), 'description' => Dict::S('UI:Schema:Origin+')),
+					  'description' => array('label' => Dict::S('UI:Schema:Description'), 'description' => Dict::S('UI:Schema:Description+')),
+					  'values' => array('label' => Dict::S('UI:Schema:AllowedValues'), 'description' => Dict::S('UI:Schema:AllowedValues+')),
+					  'moreinfo' => array('label' => Dict::S('UI:Schema:MoreInfo'), 'description' => Dict::S('UI:Schema:MoreInfo+')),
 	);
 	$oPage->table($aConfig, $aDetails);
 
@@ -401,26 +398,26 @@ function DisplayClassDetails($oPage, $sClass)
 		}
 		$aDetails[] = array( 'code' => $sFilterCode, 'description' => $oFilterDef->GetLabel(),'operators' => implode(" / ", $aOpDescs));	
 	}
-	$oPage->SetCurrentTab('Search criteria');
-	$aConfig = array( 'code' => array('label' => 'Filter code', 'description' => 'Code of this search criteria'),
-					  'description' => array('label' => 'Description', 'description' => 'Description of this search criteria'),
-					  'operators' => array('label' => 'Available operators', 'description' => 'Possible operators for this search criteria')
+	$oPage->SetCurrentTab(Dict::S('UI:Schema:SearchCriteria'));
+	$aConfig = array( 'code' => array('label' => Dict::S('UI:Schema:FilterCode'), 'description' => Dict::S('UI:Schema:FilterCode+')),
+					  'description' => array('label' => Dict::S('UI:Schema:FilterDescription'), 'description' => Dict::S('UI:Schema:FilterDescription+')),
+					  'operators' => array('label' => Dict::S('UI:Schema:AvailOperators'), 'description' => Dict::S('UI:Schema:AvailOperators+'))
 	);
 	$oPage->table($aConfig, $aDetails);
 
-	$oPage->SetCurrentTab('Child classes');
+	$oPage->SetCurrentTab(Dict::S('UI:Schema:ChildClasses'));
 	DisplaySubclasses($oPage, $sClass);
 
-	$oPage->SetCurrentTab('Referencing classes');
+	$oPage->SetCurrentTab(Dict::S('UI:Schema:ReferencingClasses'));
 	DisplayReferencingClasses($oPage, $sClass);
 
-	$oPage->SetCurrentTab('Related classes');
+	$oPage->SetCurrentTab(Dict::S('UI:Schema:RelatedClasses'));
 	DisplayRelatedClasses($oPage, $sClass);
 
-	$oPage->SetCurrentTab('Lifecycle');
+	$oPage->SetCurrentTab(Dict::S('UI:Schema:LifeCycle'));
 	DisplayLifecycle($oPage, $sClass);
 
-	$oPage->SetCurrentTab('Triggers');
+	$oPage->SetCurrentTab(Dict::S('UI:Schema:Triggers'));
 	DisplayTriggers($oPage, $sClass);
 
 	$oPage->SetCurrentTab();
@@ -436,9 +433,9 @@ function DisplayRelationDetails($oPage, $sRelCode)
 	$sDesc = MetaModel::GetRelationProperty($sRelCode, 'description');
 	$sVerbDown = MetaModel::GetRelationProperty($sRelCode, 'verb_down');
 	$sVerbUp = MetaModel::GetRelationProperty($sRelCode, 'verb_up');
-	$oPage->add("<h1>Relation <em>$sRelCode</em> ($sDesc)</h1>");
-	$oPage->p("Down: $sVerbDown");
-	$oPage->p("Up: $sVerbUp");
+	$oPage->add("<h1>".Dict::Format('UI:Schema:Relation_Code_Description', $sRelCode, $sDesc)."</h1>");
+	$oPage->p(Dict::Format('UI:Schema:RelationDown_Description', $sVerbDown));
+	$oPage->p(Dict::Format('UI:Schema:RelationUp_Description', $sVerbUp));
 
 	$oPage->add("<ul id=\"RelationshipDetails\" class=\"treeview\">\n");
 	foreach(MetaModel::GetClasses() as $sClass)
@@ -451,10 +448,15 @@ function DisplayRelationDetails($oPage, $sRelCode)
 			foreach ($aRelQueries as $sRelKey => $aQuery)
 			{
 				$sQuery = $aQuery['sQuery'];
-				$bPropagate = $aQuery['bPropagate'] ? "Propagate" : "Do not propagate";
 				$iDistance = $aQuery['iDistance'];
-
-				$oPage->add("<li>$sRelKey: $bPropagate ($iDistance) ".$sQuery."</li>\n");
+				if ($aQuery['bPropagate'])
+				{
+					$oPage->add("<li>".Dict::Format('UI:Schema:RelationPropagates', $sRelKey, $iDistance, $sQuery)."</li>\n");
+				}
+				else
+				{
+					$oPage->add("<li>".Dict::Format('UI:Schema:RelationDoesNotPropagate', $sRelKey, $iDistance, $sQuery)."</li>\n");
+				}
 			}
 			$oPage->add("</ul>\n");
 			$oPage->add("</li>\n");
@@ -474,7 +476,7 @@ $iActiveNodeId = utils::ReadParam('menu', -1);
 $currentOrganization = utils::ReadParam('org_id', 1);
 $operation = utils::ReadParam('operation', '');
 
-$oPage = new iTopWebPage("iTop objects schema", $currentOrganization);
+$oPage = new iTopWebPage(Dict::S('UI:Schema:Title'), $currentOrganization);
 $oPage->no_cache();
 
 $operation = utils::ReadParam('operation', '');
@@ -491,9 +493,6 @@ switch($operation)
 	DisplayRelationDetails($oPage, $sRelCode);
 	break;
 	
-	case 'details':
-	$oPage->p('operation=details has been deprecated, please use details_class');
-	break;
 	case 'list':
 	default:
 	DisplayClassesList($oPage);
