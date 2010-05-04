@@ -49,3 +49,31 @@ function UpdateFileName(id, sNewFileName)
 	$('#'+id).val(sNewFileName);
 	$('#name_'+id).text(sNewFileName);
 }
+/**
+ * Reload a search form for the specified class
+ */
+function ReloadSearchForm(divId, sClassName, sBaseClass)
+{
+	$('#'+divId).block();
+	var formEvents = $('#'+divId+' form').data('events');
+	var bSubmitHookIsUsed = false;
+	if ( (formEvents != undefined) && (SubmitHook != undefined))
+	{
+		// Assume that we're using the function submit hook...
+		bSubmitHookIsUsed = true;
+	}
+	$('#'+divId+' form').unbind('submit');
+	$.get('ajax.render.php',
+	   { operation: 'search_form', className: sClassName, baseClass: sBaseClass, currentId: divId },
+	   function(data){
+		   $('#'+divId).empty();
+		   $('#'+divId).append(data);
+		   if (bSubmitHookIsUsed)
+		   {
+			   $('#'+divId+' form').bind('submit', SubmitHook);
+		   }
+		   $('#'+divId).unblock();
+	   }
+	 );
+
+}
