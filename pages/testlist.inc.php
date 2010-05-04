@@ -987,9 +987,9 @@ class TestBulkChangeOnFarm extends TestBizModel
 			// attributes
 			array('name' => '_name', 'height' => '_height', 'birth' => '_birth'),
 			// ext keys
-			array()
+			array(),
 			// reconciliation
-			array('name'),
+			array('name')
 		);
 
 		$oMyChange = MetaModel::NewObject("CMDBChange");
