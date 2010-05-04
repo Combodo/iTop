@@ -427,6 +427,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:CSVImport:HeaderSearch' => 'Search?',
 	'UI:CSVImport:AlertIncompleteMapping' => 'Please select a mapping for every field.',
 	'UI:CSVImport:AlertNoSearchCriteria' => 'Please select at least one search criteria',
+	
+	'UI:UniversalSearchTitle' => 'iTop - Universal Search',
+	'UI:UniversalSearch:Error' => 'Error: %1$s',
+	'UI:UniversalSearch:LabelSelectTheClass' => 'Select the class to search: ',
 
 ));
 

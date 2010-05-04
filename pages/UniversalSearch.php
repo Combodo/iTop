@@ -11,35 +11,34 @@ LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 $oContext = new UserContext();
 $oAppContext = new ApplicationContext();
 $iActiveNodeId = utils::ReadParam('menu', -1);
-$currentOrganization = utils::ReadParam('org_id', 1);
+$currentOrganization = utils::ReadParam('org_id', '');
 
-$oP = new iTopWebPage("iTop - Universal search", $currentOrganization);
+$oP = new iTopWebPage(Dict::S('UI:UniversalSearchTitle'), $currentOrganization);
 
 // From now on the context is limited to the the selected organization ??
 
 // Now render the content of the page
-$sClass = utils::ReadParam('class', 'bizOrganization');
-$sOQLClass = utils::ReadParam('oql_class', $sClass);
+$sBaseClass = utils::ReadParam('baseClass', 'bizOrganization');
+$sClass = utils::ReadParam('class', $sBaseClass);
 $sOQLClause = utils::ReadParam('oql_clause', '');
-$sClassName = $sOQLClass; //utils::ReadParam('class', $sOQLClass);
 $sFilter = utils::ReadParam('filter', '');
 $sOperation = utils::ReadParam('operation', '');
 
 // First part: select the class to search for
 $oP->add("<form>");
 $oP->add("<input type=\"hidden\" name=\"org_id\" value=\"$currentOrganization\" />");
-$oP->add("Select the class to search: <select style=\"width: 150px;\" id=\"select_class\" name=\"oql_class\" onChange=\"this.form.submit();\">");
+$oP->add(Dict::S('UI:UniversalSearch:LabelSelectTheClass')."<select style=\"width: 150px;\" id=\"select_class\" name=\"baseClass\" onChange=\"this.form.submit();\">");
 $aClassLabels = array();
-foreach(MetaModel::GetClasses('bizmodel') as $sClass)
+foreach(MetaModel::GetClasses('bizmodel') as $sCurrentClass)
 {
-	$aClassLabels[$sClass] = MetaModel::GetName($sClass);
+	$aClassLabels[$sCurrentClass] = MetaModel::GetName($sCurrentClass);
 }
 asort($aClassLabels);
-foreach($aClassLabels as $sClass => $sLabel)
+foreach($aClassLabels as $sCurrentClass => $sLabel)
 {
-	$sDescription = MetaModel::GetClassDescription($sClass);
-	$sSelected = ($sClass == $sClassName) ? " SELECTED" : "";
-	$oP->add("<option value=\"$sClass\" title=\"$sDescription\"$sSelected>$sLabel</option>");
+	$sDescription = MetaModel::GetClassDescription($sCurrentClass);
+	$sSelected = ($sCurrentClass == $sBaseClass) ? " SELECTED" : "";
+	$oP->add("<option value=\"$sCurrentClass\" title=\"$sDescription\"$sSelected>$sLabel</option>");
 }
 $oP->add("</select></form>");
 
@@ -47,7 +46,7 @@ try
 {
 	if ($sOperation == 'search_form')
 	{
-			$sOQL = "SELECT $sOQLClass $sOQLClause";
+			$sOQL = "SELECT $sClass $sOQLClause";
 			$oFilter = DBObjectSearch::FromOQL($sOQL);
 	}
 	else
@@ -57,17 +56,16 @@ try
 		{
 			$oFilter = CMDBSearchFilter::unserialize($sFilter);
 		}
-		else if (!empty($sClassName))
+		else if (!empty($sClass))
 		{
-			$oFilter = new CMDBSearchFilter($sClassName);
+			$oFilter = new CMDBSearchFilter($sClass);
 		}
 	}
 }
 catch (CoreException $e)
 {
-	$oFilter = new CMDBSearchFilter($sClassName);
-	$oP->P("<b>Error:</b>");
-	$oP->P($e->getHtmlDesc());
+	$oFilter = new CMDBSearchFilter($sClass);
+	$oP->P("<b>".Dict::Format('UI:UniversalSearch:Error', $e->getHtmlDesc())."</b>");
 }
 
 if ($oFilter != null)
@@ -76,7 +74,7 @@ if ($oFilter != null)
 	$oBlock = new DisplayBlock($oFilter, 'search', false);
 	$aExtraParams = $oAppContext->GetAsHash();
 	$aExtraParams['open'] = true;
-	$aExtraParams['oql_class'] = $sOQLClass;
+	$aExtraParams['baseClass'] = $sBaseClass;
 	//$aExtraParams['class'] = $sClassName;
 	$oBlock->Display($oP, 0, $aExtraParams);
 
