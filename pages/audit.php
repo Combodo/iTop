@@ -10,7 +10,7 @@ $oAppContext = new ApplicationContext();
 require_once('../application/loginwebpage.class.inc.php');
 LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
-$oP = new iTopWebPage("iTop - CMDB Audit", $currentOrganization);
+$oP = new iTopWebPage(Dict::S('UI:Audit:Title'), $currentOrganization);
 
 function GetRuleResultSet($iRuleId, $oDefinitionFilter)
 {
@@ -83,14 +83,14 @@ switch($operation)
 	
 	case 'audit':
 	default:
-	$oP->add('<div class="page_header"><h1>Interactive Audit</h1><img style="margin-top: -20px; margin-right: 10px; float: right;" src="../images/clean.png"/></div>');
+	$oP->add('<div class="page_header"><h1>'.Dict::S('UI:Audit:InteractiveAudit').'</h1><img style="margin-top: -20px; margin-right: 10px; float: right;" src="../images/clean.png"/></div>');
 	$oAuditFilter = new CMDBSearchFilter('AuditCategory');
 	$oCategoriesSet = new DBObjectSet($oAuditFilter);
 	$oP->add("<table style=\"margin-top: 1em; padding: 0px; border-top: 3px solid #f6f6f1; border-left: 3px solid #f6f6f1; border-bottom: 3px solid #e6e6e1;	border-right: 3px solid #e6e6e1;\">\n");
 	$oP->add("<tr><td>\n");
 	$oP->add("<table>\n");
 	$oP->add("<tr>\n");
-	$oP->add("<th><img src=\"../images/minus.gif\"></th><th class=\"alignLeft\">Audit Rule</th><th># Objects</th><th># Errors</th><th>% Ok</th>\n");
+	$oP->add("<th><img src=\"../images/minus.gif\"></th><th class=\"alignLeft\">".Dict::S('UI:Audit:HeaderAuditRule')."</th><th>".Dict::S('UI:Audit:HeaderNbObjects')."</th><th>".Dict::S('UI:Audit:HeaderNbErrors')."</th><th>".Dict::S('UI:Audit:PercentageOk')."</th>\n");
 	$oP->add("</tr>\n");
 	while($oAuditCategory = $oCategoriesSet->fetch())
 	{

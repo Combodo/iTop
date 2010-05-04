@@ -432,6 +432,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:UniversalSearch:Error' => 'Erreur : %1$s',
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Sélectionnez le type d\'objets à rechercher : ',
 
+	'UI:Audit:Title' => 'iTop - Audit de la CMDB',
+	'UI:Audit:InteractiveAudit' => 'Audit Interactif',
+	'UI:Audit:HeaderAuditRule' => 'Règle d\'audit',
+	'UI:Audit:HeaderNbObjects' => 'Nb d\'Objets',
+	'UI:Audit:HeaderNbErrors' => 'Nb d\'Erreurs',
+	'UI:Audit:PercentageOk' => '% Ok',
+
 ));
 
 ?>

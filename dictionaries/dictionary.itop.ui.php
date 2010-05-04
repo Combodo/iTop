@@ -431,6 +431,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:UniversalSearchTitle' => 'iTop - Universal Search',
 	'UI:UniversalSearch:Error' => 'Error: %1$s',
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Select the class to search: ',
+	
+	'UI:Audit:Title' => 'iTop - CMDB Audit',
+	'UI:Audit:InteractiveAudit' => 'Interactive Audit',
+	'UI:Audit:HeaderAuditRule' => 'Audit Rule',
+	'UI:Audit:HeaderNbObjects' => '# Objects',
+	'UI:Audit:HeaderNbErrors' => '# Errors',
+	'UI:Audit:PercentageOk' => '% Ok',
 
 ));
 
