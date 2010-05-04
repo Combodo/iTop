@@ -320,6 +320,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Button:DoImport' => ' Run the Import ! ',
 	'UI:Button:Done' => ' Done ',
 	'UI:Button:SimulateImport' => ' Simulate the Import ',
+	'UI:Button:Test' => 'Test!',
+	'UI:Button:Evaluate' => ' Evaluate ',
 	'UI:SearchToggle' => 'Search',
 	'UI:ClickToCreateNew' => 'Click here to create a new %1$s',
 	'UI:NoObjectToDisplay' => 'No object to display.',
@@ -438,6 +440,18 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Audit:HeaderNbObjects' => '# Objects',
 	'UI:Audit:HeaderNbErrors' => '# Errors',
 	'UI:Audit:PercentageOk' => '% Ok',
+	
+	'UI:RunQuery:Title' => 'iTop - OQL Query Evaluation',
+	'UI:RunQuery:QueryExamples' => 'Query Examples',
+	'UI:RunQuery:HeaderPurpose' => 'Purpose',
+	'UI:RunQuery:HeaderPurpose+' => 'Explanation about the query',
+	'UI:RunQuery:HeaderOQLExpression' => 'OQL Expression',
+	'UI:RunQuery:HeaderOQLExpression+' => 'The query in OQL syntax',
+	'UI:RunQuery:ExpressionToEvaluate' => 'Expression to evaluate: ',
+	'UI:RunQuery:MoreInfo' => 'More information about the query: ',
+	'UI:RunQuery:DevelopedQuery' => 'Redevelopped query expression: ',
+	'UI:RunQuery:SerializedFilter' => 'Serialized filter: ',
+	'UI:RunQuery:Error' => 'An error occured while running the query: %1$s',
 
 ));
 

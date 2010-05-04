@@ -315,6 +315,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Button:DoImport' => ' Lancer l\'import ! ',
 	'UI:Button:Done' => ' Terminé ',
 	'UI:Button:SimulateImport' => ' Simuler l\'import ',
+	'UI:Button:Test' => 'Tester !',
+	'UI:Button:Evaluate' => ' Exécuter ',
 	
 	'UI:SearchToggle' => 'Recherche',
 
@@ -438,6 +440,18 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Audit:HeaderNbObjects' => 'Nb d\'Objets',
 	'UI:Audit:HeaderNbErrors' => 'Nb d\'Erreurs',
 	'UI:Audit:PercentageOk' => '% Ok',
+
+	'UI:RunQuery:Title' => 'iTop - Evaluation de requêtes OQL',
+	'UI:RunQuery:QueryExamples' => 'Exemples de requêtes',
+	'UI:RunQuery:HeaderPurpose' => 'Objectif',
+	'UI:RunQuery:HeaderPurpose+' => 'But de la requête',
+	'UI:RunQuery:HeaderOQLExpression' => 'Requête OQL',
+	'UI:RunQuery:HeaderOQLExpression+' => 'La requête en OQL',
+	'UI:RunQuery:ExpressionToEvaluate' => 'Requête à exécuter : ',
+	'UI:RunQuery:MoreInfo' => 'Plus d\'information sur le requête: ',
+	'UI:RunQuery:DevelopedQuery' => 'Requête OQL décompilée : ',
+	'UI:RunQuery:SerializedFilter' => 'Version sérialisée : ',
+	'UI:RunQuery:Error' => 'Une erreur s\'est produite durant l\'exécution de la requête: %1$s',
 
 ));
 

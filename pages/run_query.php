@@ -45,16 +45,16 @@ function ShowExamples($oP, $sExpression)
 				$bUsingExample = true;
 			}
 			//$aDisplayData[$sTopic][] = array(
-			$aDisplayData['Query examples'][] = array(
+			$aDisplayData[Dict::S('UI:RunQuery:QueryExamples')][] = array(
 				'desc' => "<div style=\"$sHighlight\">".htmlentities($sDescription)."</div>",
 				'oql' => "<div style=\"$sHighlight\">".htmlentities($sOql)."</div>",
-				'go' => "<form method=\"get\"><input type=\"hidden\" name=\"expression\" value=\"$sOql\"><input type=\"submit\" value=\"Test!\" $sDisable></form>\n",
+				'go' => "<form method=\"get\"><input type=\"hidden\" name=\"expression\" value=\"$sOql\"><input type=\"submit\" value=\"".Dict::S('UI:Button:Test')."\" $sDisable></form>\n",
 			);
 		}
 	}
 	$aDisplayConfig = array();
-	$aDisplayConfig['desc'] = array('label' => 'Target', 'description' => '');
-	$aDisplayConfig['oql'] = array('label' => 'OQL Expression', 'description' => '');
+	$aDisplayConfig['desc'] = array('label' => Dict::S('UI:RunQuery:HeaderPurpose'), 'description' => Dict::S('UI:RunQuery:HeaderPurpose+'));
+	$aDisplayConfig['oql'] = array('label' => Dict::S('UI:RunQuery:HeaderOQLExpression'), 'description' => Dict::S('UI:RunQuery:HeaderOQLExpression+'));
 	$aDisplayConfig['go'] = array('label' => '', 'description' => '');
 
 	foreach ($aDisplayData as $sTopic => $aQueriesDisplayData)
@@ -72,7 +72,7 @@ $oAppContext = new ApplicationContext();
 $iActiveNodeId = utils::ReadParam('menu', -1);
 $currentOrganization = utils::ReadParam('org_id', '');
 
-$oP = new iTopWebPage("iTop - Expression Evaluation", $currentOrganization);
+$oP = new iTopWebPage(Dict::S('UI:RunQuery:Title'), $currentOrganization);
 
 // Main program
 $sExpression = utils::ReadParam('expression', '');
@@ -97,9 +97,9 @@ try
 	}
 
 	$oP->add("<form method=\"get\">\n");
-	$oP->add("Expression to evaluate:<br/>\n");
+	$oP->add(Dict::S('UI:RunQuery:ExpressionToEvaluate')."<br/>\n");
 	$oP->add("<textarea cols=\"120\" rows=\"8\" name=\"expression\">$sExpression</textarea>\n");
-	$oP->add("<input type=\"submit\" value=\" Evaluate \">\n");
+	$oP->add("<input type=\"submit\" value=\"".Dict::S('UI:Button:Evaluate')."\">\n");
 	$oP->add("</form>\n");
 
 	if (!empty($sExpression))
@@ -113,22 +113,20 @@ try
 			$oResultBlock->Display($oP, 1);
 
 			$oP->p('');
-			$oP->StartCollapsibleSection('More info on the query', false);
-			$oP->p('Query expression redevelopped: '.$oFilter->ToOQL());
-			$oP->p('Serialized filter: '.$oFilter->serialize());
+			$oP->StartCollapsibleSection(Dict::S('UI:RunQuery:MoreInfo'), false);
+			$oP->p(Dict::S('UI:RunQuery:DevelopedQuery').$oFilter->ToOQL());
+			$oP->p(Dict::S('UI:RunQuery:SerializedFilter').$oFilter->serialize());
 			$oP->EndCollapsibleSection();
 		}
 	}
 }
 catch(CoreException $e)
 {
-	$oP->p('<b>An error occured while running the query:</b>');
-	$oP->p($e->getHtmlDesc());
+	$oP->p('<b>'.Dict::Format('UI:RunQuery:Error', $e->getHtmlDesc()).'</b>');
 }
 catch(Exception $e)
 {
-	$oP->p('<b>An error occured while running the query:</b>');
-	$oP->p($e->getMessage());
+	$oP->p('<b>'.Dict::Format('UI:RunQuery:Error', $e->getMessage()).'</b>');
 }
 
 $oP->output();
