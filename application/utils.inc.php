@@ -51,7 +51,7 @@ class utils
 					        $sMimeType = $sType;
 					   }
 					}
-					@finfo_close($finfo);
+					@finfo_close($rInfo);
 				}
 				$oDocument = new ormDocument($doc_content, $sMimeType, $_FILES[$sName]['name']);
 				break;
