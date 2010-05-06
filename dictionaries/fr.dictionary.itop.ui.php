@@ -308,6 +308,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Button:Search' => 'Rechercher',
 
 	'UI:Button:Query' => ' Lancer la requête ',
+	'UI:Button:Ok' => 'Ok',
 	'UI:Button:Cancel' => 'Annuler',
 	'UI:Button:Apply' => 'Appliquer',
 	'UI:Button:Back' => ' << Retour ',
@@ -317,6 +318,12 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Button:SimulateImport' => ' Simuler l\'import ',
 	'UI:Button:Test' => 'Tester !',
 	'UI:Button:Evaluate' => ' Exécuter ',
+	'UI:Button:AddObject' => ' Ajouter... ',
+	'UI:Button:BrowseObjects' => ' Naviguer... ',
+	'UI:Button:Add' => ' Ajouter ',
+	'UI:Button:AddToList' => ' << Ajouter ',
+	'UI:Button:RemoveFromList' => ' Enlever >> ',
+	'UI:Button:FilterList' => ' Filtrer... ',
 	
 	'UI:SearchToggle' => 'Recherche',
 
@@ -327,6 +334,16 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Error:MandatoryTemplateParameter_group_by' => 'Le paramètre group_by est obligatoire. Vérifiez la définition du modèle.',
 	'UI:Error:InvalidGroupByFields' => 'Liste des champs "group by" incorrecte: "%1$s".',
 	'UI:Error:UnsupportedStyleOfBlock' => 'Erreur: style de bloc("%1$s") inconnu.',
+	'UI:Error:IncorrectLinkDefinition_LinkedClass_Class' => 'la définition du lien est incorrecte: la classe d\'objets à gérer: %1$s n\'est référencée par aucune clef externe de la classe %2$s',
+	'UI:Error:Object_Class_Id_NotFound' => 'L\'objet: %1$s:%2$d est introuvable.',
+	'UI:Error:WizardCircularReferenceInDependencies' => 'Erreur: Référence circulaire entre les dépendences entre champs, vérifiez le modèle de données.',
+	'UI:Error:UploadedFileTooBig' => 'Le fichier téléchargé est trop gros. (La taille maximale autorisée est %1$s). Vérifiez la valeur de la variable upload_max_filesize dans la configuration PHP.',
+	'UI:Error:UploadedFileTruncated.' => 'Le fichier téléchargé a été tronqué !',
+	'UI:Error:NoTmpDir' => 'Il n\'y a aucun répertoire temporaire de défini.',
+	'UI:Error:CannotWriteToTmp_Dir' => 'Impossible d\'écrire le fichier temporaire sur disque. upload_tmp_dir = "%1$s".',
+	'UI:Error:UploadStoppedByExtension_FileName' => 'Téléchargement arrêté à cause de l\'extension. (Nom du fichier original = "%1$s").',
+	'UI:Error:UploadFailedUnknownCause_Code' => 'Le téléchargement a échoué pour une raison inconnue. (Code d\'erreur = "%1$s").',
+	
 	'UI:GroupBy:Count' => 'Nombre',
 	'UI:GroupBy:Count+' => 'Nombre d\'éléments',
 	'UI:CountOfObjects' => '%1$d objets correspondants aux critères.',
@@ -512,6 +529,20 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Schema:LifeCycleAttributeMustPrompt' => 'L\'utilisateur se verra proposer de changer la valeur',
 	'UI:Schema:LifeCycleEmptyList' => 'liste vide',
 
+	'UI:LinksWidget:Autocomplete+' => 'Tapez les 3 premiers caractères...',
+	'UI:Combo:SelectValue' => '--- choisissez une valeur ---',
+	'UI:Label:SelectedObjects' => 'Objets sélectionnés: ',
+	'UI:Label:AvailableObjects' => 'Objets disponibles: ',
+	'UI:Link_Class_Attributes' => 'Attributs du type %1$s',
+	'UI:SelectAllToggle+' => 'Tout sélectionner / Tout déselectionner',
+	'UI:AddObjectsOf_Class_LinkedWith_Class_Instance' => 'Ajouter des objets de type %1$s liés à %3$s (%2$s)',
+	'UI:ManageObjectsOf_Class_LinkedWith_Class_Instance' => 'Gérer les objets de type %1$s liés à %3$s (%2$s)',
+	'UI:AddLinkedObjectsOf_Class' => 'Ajouter des objets de type %1$s...',
+	'UI:RemoveLinkedObjectsOf_Class' => 'Enlever les objets sélectionnés',
+	'UI:Message:EmptyList:UseAdd' => 'La liste est vide, utilisez le bouton "Ajouter..." pour ajouter des objets.',
+	'UI:Message:EmptyList:UseSearchForm' => 'Utilisez le formulaire de recherche ci-dessus pour trouver les objets à ajouter.',
+
+	'UI:Wizard:FinalStepTitle' => 'Dernière étape: confirmation'
 ));
 
 ?>

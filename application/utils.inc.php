@@ -62,27 +62,27 @@ class utils
 				
 				case UPLOAD_ERR_FORM_SIZE:
 				case UPLOAD_ERR_INI_SIZE:
-				throw new FileUploadException("Uploaded file is too big. (Max allowed size is ".ini_get('upload_max_filesize').". Check you PHP configuration for upload_max_filesize.");
+				throw new FileUploadException(Dict::Format('UI:Error:UploadedFileTooBig'), ini_get('upload_max_filesize'));
 				break;
 
 				case UPLOAD_ERR_PARTIAL:
-				throw new FileUploadException("File upload failed, file has been truncated.");
+				throw new FileUploadException(Dict::S('UI:Error:UploadedFileTruncated.'));
 				break;
 				
 				case UPLOAD_ERR_NO_TMP_DIR:
-				throw new FileUploadException("Missing a temporary folder.");
+				throw new FileUploadException(Dict::S('UI:Error:NoTmpDir'));
 				break;
 
 				case UPLOAD_ERR_CANT_WRITE:
-				throw new FileUploadException("Unable to write the temporary file to the disk (upload_tmp_dir = ".ini_get('upload_tmp_dir').")");
+				throw new FileUploadException(Dict::Format('UI:Error:CannotWriteToTmp_Dir', ini_get('upload_tmp_dir')));
 				break;
 
 				case UPLOAD_ERR_EXTENSION:
-				throw new FileUploadException("File upload stopped by extension. (Original file name: ".$_FILES[$sName]['name'].")");
+				throw new FileUploadException(Dict::Format('UI:Error:UploadStoppedByExtension_FileName', $_FILES[$sName]['name']));
 				break;
 				
 				default:
-				throw new FileUploadException("File upload failed, unknown cause (Error code = ".$_FILES[$sName]['error'].")");
+				throw new FileUploadException(Dict::Format('UI:Error:UploadFailedUnknownCause_Code', $_FILES[$sName]['error']));
 				break;
 
 			}

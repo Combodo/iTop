@@ -80,9 +80,9 @@ class UILinksWidget
 			$sHTMLValue .= "</script>\n";
 			$oPage->add_at_the_end($this->GetObjectPickerDialog($oPage, $sTargetClass, 'oLinkWidget'.$this->m_iInputId.'.OnOk')); // Forms should not be inside forms
 			$oPage->add_at_the_end($this->GetLinkObjectDialog($oPage, $this->m_iInputId)); // Forms should not be inside forms
-			$sHTMLValue .= "<input type=\"text\" id=\"ac_{$this->m_iInputId}\" size=\"35\" value=\"\" title=\"Type the first 3 characters\"/>";
-			$sHTMLValue .= "<input type=\"button\" id=\"ac_add_{$this->m_iInputId}\" value=\" Add... \"  class=\"action\" onClick=\"oLinkWidget{$this->m_iInputId}.AddObject();\"/>";
-			$sHTMLValue .= "&nbsp;<input type=\"button\" value=\"Browse...\"  class=\"action\" onClick=\"return ManageObjects('$sTitle', '$sTargetClass', '$this->m_iInputId', '$sExtKeyToRemote');\"/>";
+			$sHTMLValue .= "<input type=\"text\" id=\"ac_{$this->m_iInputId}\" size=\"35\" value=\"\" title=\"".Dict::S('UI:LinksWidget:Autocomplete+')."\"/>";
+			$sHTMLValue .= "<input type=\"button\" id=\"ac_add_{$this->m_iInputId}\" value=\"".Dict::S('UI:Button:AddObject')."\"  class=\"action\" onClick=\"oLinkWidget{$this->m_iInputId}.AddObject();\"/>";
+			$sHTMLValue .= "&nbsp;<input type=\"button\" value=\"".Dict::S('UI:Button:BrowseObjects')."\"  class=\"action\" onClick=\"return ManageObjects('$sTitle', '$sTargetClass', '$this->m_iInputId', '$sExtKeyToRemote');\"/>";
 			// another hidden input to store & pass the object's Id
 			$sHTMLValue .= "<input type=\"hidden\" id=\"id_ac_{$this->m_iInputId}\" onChange=\"EnableAddButton('{$this->m_iInputId}');\"/>\n";
 			$sHTMLValue .= "<input type=\"hidden\" id=\"{$this->m_iInputId}\" name=\"attr_{$this->m_sAttCode}{$this->m_sNameSuffix}\" value=\"\"/>\n";
@@ -94,7 +94,7 @@ class UILinksWidget
 		{
 			// Few choices, use a normal 'select'
 			$sHTMLValue = "<select name=\"attr_{$this->m_sAttCode}\"  id=\"{$this->m_iInputId}\">\n";
-			$sHTMLValue .= "<option value=\"0\">--- select a value ---</option>\n";
+			$sHTMLValue .= "<option value=\"0\">".Dict::S('UI:Combo:SelectValue')."</option>\n";
 			if (count($aAllowedValues) > 0)
 			{
 				foreach($aAllowedValues as $key => $value)
@@ -228,6 +228,13 @@ class UILinksWidget
 	
 	protected function GetObjectPickerDialog($oPage, $sTargetClass, $sOkFunction)
 	{
+		$sOkBtnLabel = Dict::S('UI:Button:Ok');
+		$sCancelBtnLabel = Dict::S('UI:Button:Cancel');
+		$sAddBtnLabel = Dict::S('UI:Button:AddToList');
+		$sRemoveBtnLabel = Dict::S('UI:Button:RemoveFromList');
+		$sFilterBtnLabel = Dict::S('UI:Button:FilterList');
+		$sLabelSelectedObjects = Dict::S('UI:Label:SelectedObjects');
+		$sLabelAvailableObjects = Dict::S('UI:Label:AvailableObjects');
 		$sHTML = <<< EOF
 		<div class="jqmWindow" id="ManageObjectsDlg_{$this->m_iInputId}">
 		<div class="wizContainer">
@@ -235,25 +242,25 @@ class UILinksWidget
 		<table width="100%">
 			<tr>
 				<td>
-					<p>Selected objects:</p>
-					<button type="button" class="action" onClick="FilterLeft('$sTargetClass');"><span> Filter... </span></button>
+					<p>$sLabelSelectedObjects</p>
+					<button type="button" class="action" onClick="FilterLeft('$sTargetClass');"><span>$sFilterBtnLabel</span></button>
 					<p><select id="selected_objects_{$this->m_iInputId}" size="10" multiple onChange="Manage_UpdateButtons('$this->m_iInputId')" style="width:300px;">
 					</select></p>
 				</td>
 				<td style="text-align:center; valign:middle;">
-					<p><button type="button" id="btn_add_objects_{$this->m_iInputId}" onClick="Manage_AddObjects('$this->m_iInputId');"> &lt;&lt; Add </button></p>
-					<p><button type="button" id="btn_remove_objects_{$this->m_iInputId}" onClick="Manage_RemoveObjects('$this->m_iInputId');"> Remove &gt;&gt; </button></p>
+					<p><button type="button" id="btn_add_objects_{$this->m_iInputId}" onClick="Manage_AddObjects('$this->m_iInputId');">$sAddBtnLabel</button></p>
+					<p><button type="button" id="btn_remove_objects_{$this->m_iInputId}" onClick="Manage_RemoveObjects('$this->m_iInputId');">$sRemoveBtnLabel</button></p>
 				</td>
 				<td>
-					<p>Available objects:</p>
-					<button type="button" class="action" onClick="FilterRight('$sTargetClass');"><span> Filter... </span></button>
+					<p>$sLabelAvailableObjects</p>
+					<button type="button" class="action" onClick="FilterRight('$sTargetClass');"><span>$sFilterBtnLabel</span></button>
 					<p><select id="available_objects_{$this->m_iInputId}" size="10" multiple onChange="Manage_UpdateButtons('$this->m_iInputId')" style="width:300px;">
 					</select></p>
 				</td>
 			</tr>
 			<tr>
 				<td colspan="3">
-				<input type="submit" class="jqmClose" onClick="$('#ManageObjectsDlg_{$this->m_iInputId}').jqmHide(); $sOkFunction('$sTargetClass', 'selected_objects')" value=" Ok " />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="jqmClose"> Cancel</button>
+				<input type="submit" class="jqmClose" onClick="$('#ManageObjectsDlg_{$this->m_iInputId}').jqmHide(); $sOkFunction('$sTargetClass', 'selected_objects')" value="$sOkBtnLabel" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="jqmClose">$sCancelBtnLabel</button>
 				</td>
 			</tr>
 		</table>
@@ -277,7 +284,7 @@ EOF;
 		
 		$sHTML = "<div class=\"jqmWindow\" id=\"LinkDlg_$sId\">\n";
 		$sHTML .= "<div class=\"wizContainer\">\n";
-		$sHTML .= "<div class=\"page_header\"><h1>".MetaModel::GetName($sLinkedClass)." attributes</h1></div>\n";
+		$sHTML .= "<div class=\"page_header\"><h1>".Dict::Format('UI:Link_Class_Attributes', MetaModel::GetName($sLinkedClass))."</h1></div>\n";
 		$sHTML .= "<form action=\"./UI.php\" onSubmit=\"return oLinkWidget$sId.OnLinkOk();\">\n";
 		$index = 0;
 		$aAttrsMap = array();
@@ -318,7 +325,7 @@ EOF;
 			}
 		}
 		$sHTML .= $oPage->GetDetails($aDetails);
-		$sHTML .= "<input type=\"submit\" class=\"jqmClose\" onClick=\"oLinkWidget$sId.OnLinkOk()\" value=\" Ok \" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type=\"button\" class=\"jqmClose\"  onClick=\"oLinkWidget$sId.OnLinkCancel()\"> Cancel</button>\n";
+		$sHTML .= "<input type=\"submit\" class=\"jqmClose\" onClick=\"oLinkWidget$sId.OnLinkOk()\" value=\"".Dict::S('UI:Button:Ok')."\" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type=\"button\" class=\"jqmClose\"  onClick=\"oLinkWidget$sId.OnLinkCancel()\">".Dict::S('UI:Button:Cancel')."</button>\n";
 		$sHTML .= "</form>\n";
 		$sHTML .= "</div>\n";
 		$sHTML .= "</div>\n";

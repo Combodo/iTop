@@ -313,15 +313,24 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Button:GlobalSearch' => 'Search',
 	'UI:Button:Search' => ' Search ',
 	'UI:Button:Query' => ' Query ',
+	'UI:Button:Ok' => 'Ok',
 	'UI:Button:Cancel' => 'Cancel',
 	'UI:Button:Apply' => 'Apply',
 	'UI:Button:Back' => ' << Back ',
 	'UI:Button:Next' => ' Next >> ',
+	'UI:Button:Next' => ' Finish ',
 	'UI:Button:DoImport' => ' Run the Import ! ',
 	'UI:Button:Done' => ' Done ',
 	'UI:Button:SimulateImport' => ' Simulate the Import ',
 	'UI:Button:Test' => 'Test!',
 	'UI:Button:Evaluate' => ' Evaluate ',
+	'UI:Button:AddObject' => ' Add... ',
+	'UI:Button:BrowseObjects' => ' Browse... ',
+	'UI:Button:Add' => ' Add ',
+	'UI:Button:AddToList' => ' << Add ',
+	'UI:Button:RemoveFromList' => ' Remove >> ',
+	'UI:Button:FilterList' => ' Filter... ',
+
 	'UI:SearchToggle' => 'Search',
 	'UI:ClickToCreateNew' => 'Click here to create a new %1$s',
 	'UI:NoObjectToDisplay' => 'No object to display.',
@@ -330,6 +339,16 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Error:MandatoryTemplateParameter_group_by' => 'Parameter group_by is mandatory. Check the definition of the display template.',
 	'UI:Error:InvalidGroupByFields' => 'Invalid list of fields to group by: "%1$s".',
 	'UI:Error:UnsupportedStyleOfBlock' => 'Error: unsupported style of block: "%1$s".',
+	'UI:Error:IncorrectLinkDefinition_LinkedClass_Class' => 'Incorrect link definition: the class of objects to manage: %1$s was not found as an external key in the class %2$s',
+	'UI:Error:Object_Class_Id_NotFound' => 'Object: %1$s:%2$d not found.',
+	'UI:Error:WizardCircularReferenceInDependencies' => 'Error: Circular reference in the dependencies between the fields, check the data model.',
+	'UI:Error:UploadedFileTooBig' => 'Uploaded file is too big. (Max allowed size is %1$s. Check you PHP configuration for upload_max_filesize.',
+	'UI:Error:UploadedFileTruncated.' => 'Uploaded file has been truncated !',
+	'UI:Error:NoTmpDir' => 'The temporary directory is not defined.',
+	'UI:Error:CannotWriteToTmp_Dir' => 'Unable to write the temporary file to the disk. upload_tmp_dir = "%1$s".',
+	'UI:Error:UploadStoppedByExtension_FileName' => 'Upload stopped  by extension. (Original file name = "%1$s").',
+	'UI:Error:UploadFailedUnknownCause_Code' => 'File upload failed, unknown cause. (Error code = "%1$s").',
+	
 	'UI:GroupBy:Count' => 'Count',
 	'UI:GroupBy:Count+' => 'Number of elements',
 	'UI:CountOfObjects' => '%1$d objects matching the criteria.',
@@ -471,6 +490,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Schema:Label' => 'Label',
 	'UI:Schema:Label+' => 'Label of the attribute',
 	'UI:Schema:Type' => 'Type',
+	
 	'UI:Schema:Type+' => 'Data type of the attribute',
 	'UI:Schema:Origin' => 'Origin',
 	'UI:Schema:Origin+' => 'The base class in which this attribute is defined',
@@ -511,7 +531,21 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Schema:LifeCycleAttributeMustChange' => 'Must change',
 	'UI:Schema:LifeCycleAttributeMustPrompt' => 'User will be prompted to change the value',
 	'UI:Schema:LifeCycleEmptyList' => 'empty list',
-
+	
+	'UI:LinksWidget:Autocomplete+' => 'Type the first 3 characters...',
+	'UI:Combo:SelectValue' => '--- select a value ---',
+	'UI:Label:SelectedObjects' => 'Selected objects: ',
+	'UI:Label:AvailableObjects' => 'Available objects: ',
+	'UI:Link_Class_Attributes' => '%1$s attributes',
+	'UI:SelectAllToggle+' => 'Select All / Deselect All',
+	'UI:AddObjectsOf_Class_LinkedWith_Class_Instance' => 'Add %1$s objects linked with %2$s: %3$s',
+	'UI:ManageObjectsOf_Class_LinkedWith_Class_Instance' => 'Manage %1$s objects linked with %2$s: %3$s',
+	'UI:AddLinkedObjectsOf_Class' => 'Add %1$ss...',
+	'UI:RemoveLinkedObjectsOf_Class' => 'Remove selected objects',
+	'UI:Message:EmptyList:UseAdd' => 'The list is empty, use the "Add..." button to add elements.',
+	'UI:Message:EmptyList:UseSearchForm' => 'Use the search form above to search for objects to be added.',
+	
+	'UI:Wizard:FinalStepTitle' => 'Final step: confirmation'
 ));
 
 

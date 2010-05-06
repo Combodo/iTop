@@ -84,9 +84,9 @@ class UIWizard
 		$sDisabled = $bFinishEnabled ? '' : 'disabled';
 		$nbSteps = count($this->m_aWizardSteps['mandatory']) + count($this->m_aWizardSteps['optional']);
 		$this->m_oPage->add("<div style=\"text-align:center\">
-		<input type=\"button\" value=\"&lt;&lt; Back \" $sBackButtonDisabled onClick=\"GoToStep($iStepIndex, $iStepIndex - 1)\" />
-		<input type=\"button\" value=\" Next &gt;&gt;\" onClick=\"GoToStep($iStepIndex, 1+$iStepIndex)\" />
-		<input type=\"button\" value=\" Finish \" $sDisabled onClick=\"GoToStep($iStepIndex, 1+$nbSteps)\" />
+		<input type=\"button\" value=\"".Dict::S('UI:Button:Back')."\" $sBackButtonDisabled onClick=\"GoToStep($iStepIndex, $iStepIndex - 1)\" />
+		<input type=\"button\" value=\"".Dict::S('UI:Button:Next')."\" onClick=\"GoToStep($iStepIndex, 1+$iStepIndex)\" />
+		<input type=\"button\" value=\"".Dict::S('UI:Button:Finish')."\" $sDisabled onClick=\"GoToStep($iStepIndex, 1+$nbSteps)\" />
 		</div>\n");
 		$this->m_oPage->add("
 <script type=\"text/javascript\">
@@ -111,7 +111,7 @@ $sJSHandlerCode
 		$oAppContext = new ApplicationContext();
 		$this->m_oPage->add("<div class=\"wizContainer\" id=\"wizStep$iStepIndex\" style=\"display:none;\">\n");
 		$this->m_oPage->add("<a name=\"step$iStepIndex\" />\n");
-		$this->m_oPage->P("Final step: confirmation");
+		$this->m_oPage->P(Dict::S('UI:Wizard:FinalStepTitle'));
 		$this->m_oPage->add("<input type=\"hidden\" name=\"operation\" value=\"wizard_apply_new\" />\n");
 		$this->m_oPage->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\" />\n");
 		$this->m_oPage->add("<input type=\"hidden\" id=\"wizard_json_obj\" name=\"json_obj\" value=\"\" />\n");
@@ -284,7 +284,7 @@ $sJSHandlerCode
 			if (count($aCurrentStep) == 0)
 			{
 				// This step of the wizard would contain NO field !
-				$this->m_oPage->add("<strong>Error:</strong> Circular reference in the dependencies between the fields.");
+				$this->m_oPage->add(Dict::S('UI:Error:WizardCircularReferenceInDependencies'));
 				print_r($aFields);
 				break;
 			}

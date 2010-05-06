@@ -19,7 +19,7 @@ class UILinksWizard
 		
 		$this->m_aEditableFields = array();
 		$this->m_aTableConfig = array();
-		$this->m_aTableConfig['form::checkbox'] = array( 'label' => "<input class=\"select_all\" type=\"checkbox\" value=\"1\" onChange=\"var value = this.checked; $('.selection').each( function() { this.checked = value; } );OnSelectChange();\">", 'description' => "Select / Deselect All");
+		$this->m_aTableConfig['form::checkbox'] = array( 'label' => "<input class=\"select_all\" type=\"checkbox\" value=\"1\" onChange=\"var value = this.checked; $('.selection').each( function() { this.checked = value; } );OnSelectChange();\">", 'description' => Dict::S('UI:SelectAllToggle+'));
 		foreach(MetaModel::GetAttributesList($this->m_sClass) as $sAttCode)
 		{
 			$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
@@ -46,7 +46,7 @@ class UILinksWizard
 		}
 		if (empty($this->m_sLinkedClass))
 		{
-			throw( new Exception("Incorrect link definition: the class of objects to manage: '$sLinkedClass' was not found as an external key in the class '$sClass'"));
+			throw( new Exception(Dict::Format('UI:Error:IncorrectLinkDefinition_LinkedClass_Class', $sLinkedClass, $sClass)));
 		}
 		foreach(MetaModel::GetZListItems($this->m_sLinkedClass, 'list') as $sFieldCode)
 		{
@@ -71,7 +71,7 @@ class UILinksWizard
 		$oP->add("<input type=\"hidden\" name=\"linkage\" value=\"{$this->m_sLinkageAttr}\">\n");
 		$oP->add("<input type=\"hidden\" name=\"object_id\" value=\"{$this->m_iObjectId}\">\n");
 		$oP->add("<input type=\"hidden\" name=\"linking_attcode\" value=\"{$this->m_sLinkingAttCode}\">\n");
-		$oP->add("<h1>Manage ".MetaModel::GetName($this->m_sLinkedClass)."s linked with ".MetaModel::GetName(get_class($oTargetObj)).": <span class=\"hilite\">".$oTargetObj->GetHyperlink()."</span></h1>\n");
+		$oP->add("<h1>".Dict::Format('UI:ManageObjectsOf_Class_LinkedWith_Class_Instance', MetaModel::GetName($this->m_sLinkedClass), MetaModel::GetName(get_class($oTargetObj)), "<span class=\"hilite\">".$oTargetObj->GetHyperlink()."</span>")."</h1>\n");
 		$oP->add("</div>\n");
 		$oP->add("<script type=\"text/javascript\">\n");
 		$oP->add(
@@ -261,10 +261,10 @@ EOF
 		//var_dump($aTableLabels);
 		//var_dump($aForm);
 		$this->DisplayFormTable($oP, $this->m_aTableConfig, $aForm);
-		$oP->add("<span style=\"float:left;\">&nbsp;&nbsp;&nbsp;<img src=\"../images/tv-item-last.gif\">&nbsp;&nbsp;<input id=\"btnRemove\" type=\"button\" value=\" Remove ".MetaModel::GetName($this->m_sLinkedClass)."s \" onClick=\"RemoveSelected();\" >");
-		$oP->add("&nbsp;&nbsp;&nbsp;<input id=\"btnAdd\" type=\"button\" value=\" Add ".MetaModel::GetName($this->m_sLinkedClass)."s... \" onClick=\"AddObjects();\"></span>\n");
-		$oP->add("<span style=\"float:right;\"><input id=\"btnCancel\" type=\"button\" value=\" Cancel \" onClick=\"goBack();\">");
-		$oP->add("&nbsp;&nbsp;&nbsp;<input id=\"btnOk\" type=\"submit\" value=\" Ok \"></span>\n");
+		$oP->add("<span style=\"float:left;\">&nbsp;&nbsp;&nbsp;<img src=\"../images/tv-item-last.gif\">&nbsp;&nbsp;<input id=\"btnRemove\" type=\"button\" value=\"".Dict::S('UI:RemoveLinkedObjectsOf_Class')."\" onClick=\"RemoveSelected();\" >");
+		$oP->add("&nbsp;&nbsp;&nbsp;<input id=\"btnAdd\" type=\"button\" value=\"".Dict::Format('UI:AddLinkedObjectsOf_Class', MetaModel::GetName($this->m_sLinkedClass))."\" onClick=\"AddObjects();\"></span>\n");
+		$oP->add("<span style=\"float:right;\"><input id=\"btnCancel\" type=\"button\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"goBack();\">");
+		$oP->add("&nbsp;&nbsp;&nbsp;<input id=\"btnOk\" type=\"submit\" value=\"".Dict::S('UI:Button:Ok')."\"></span>\n");
 		$oP->add("<span style=\"clear:both;\"><p>&nbsp;</p></span>\n");
 		$oP->add("</div>\n");
 		$oP->add("</form>\n");
@@ -325,7 +325,7 @@ EOF
 		$oP->add("</tbody>\n");
 		if (count($aData) == 0)
 		{
-			$oP->add("<tr id=\"empty_row\"><td colspan=\"".count($aConfig)."\" style=\"text-align:center;\">The list is empty, use 'Add...' to add elements.</td></td>");
+			$oP->add("<tr id=\"empty_row\"><td colspan=\"".count($aConfig)."\" style=\"text-align:center;\">".Dict::S('UI:Message:EmptyList:UseAdd')."</td></td>");
 		}
 		else
 		{
@@ -357,7 +357,7 @@ EOF
 		$oTargetObj = $oContext->GetObject($sTargetClass, $this->m_iObjectId);
 		$oP->add("<div class=\"wizContainer\">\n");
 		$oP->add("<div class=\"page_header\">\n");
-		$oP->add("<h1>Add ".MetaModel::GetName($this->m_sLinkedClass)."s to ".MetaModel::GetName(get_class($oTargetObj)).": <span class=\"hilite\">".$oTargetObj->GetHyperlink()."</span></h1>\n");
+		$oP->add("<h1>".Dict::Format('UI:AddObjectsOf_Class_LinkedWith_Class_Instance', MetaModel::GetName($this->m_sLinkedClass), MetaModel::GetName(get_class($oTargetObj)), "<span class=\"hilite\">".$oTargetObj->GetHyperlink()."</span>")."</h1>\n");
 		$oP->add("</div>\n");
 
 		$oFilter = $oContext->NewFilter($this->m_sLinkedClass);
@@ -366,9 +366,9 @@ EOF
 		$oBlock->Display($oP, 'SearchFormToAdd', array('open' => true));
 		$oP->Add("<form id=\"ObjectsAddForm\" OnSubmit=\"return DoAddObjects(this.id);\">\n");
 		$oP->Add("<div id=\"SearchResultsToAdd\">\n");
-		$oP->Add("<div style=\"height: 100px; background: #fff;border-color:#F6F6F1 #E6E6E1 #E6E6E1 #F6F6F1; border-style:solid; border-width:3px; text-align: center; vertical-align: center;\"><p>Use the search form above to search for objects to be added.</p></div>\n");
+		$oP->Add("<div style=\"height: 100px; background: #fff;border-color:#F6F6F1 #E6E6E1 #E6E6E1 #F6F6F1; border-style:solid; border-width:3px; text-align: center; vertical-align: center;\"><p>".Dict::S('UI:Message:EmptyList:UseSearchForm')."</p></div>\n");
 		$oP->Add("</div>\n");
-		$oP->add("<input type=\"button\" value=\"Cancel\" onClick=\"$('#ModalDlg').jqmHide();\">&nbsp;&nbsp;<input type=\"submit\" value=\" Add \">");
+		$oP->add("<input type=\"button\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"$('#ModalDlg').jqmHide();\">&nbsp;&nbsp;<input type=\"submit\" value=\"".Dict::S('UI:Button:Add')."\">");
 		$oP->Add("</div>\n");
 		$oP->Add("</form>\n");
 		$oP->add_ready_script("$('div#SearchFormToAdd form').bind('submit.uilinksWizard', SubmitHook);");
@@ -400,7 +400,7 @@ EOF
 			}
 			else
 			{
-				echo "Object: $sTargetClass - Id: $iObjectId not found <br/>\n";
+				echo Dict::Format('UI:Error:Object_Class_Id_NotFound', $this->m_sLinkedClass, $iObjectId);
 			}
 		}
 		//var_dump($aTable);
