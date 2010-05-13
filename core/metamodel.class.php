@@ -167,6 +167,22 @@ abstract class MetaModel
 	private static $m_bTraceQueries = true;
 	private static $m_aQueriesLog = array();
 	
+	private static $m_bLogIssue = false;
+	private static $m_bLogNotification = false;
+	private static $m_bLogWebService = false;
+
+	public static function IsLogEnabledIssue()
+	{
+		return self::$m_bLogIssue;
+	}
+	public static function IsLogEnabledNotification()
+	{
+		return self::$m_bLogNotification;
+	}
+	public static function IsLogEnabledWebService()
+	{
+		return self::$m_bLogWebService;
+	}
 
 	private static $m_sDBName = "";
 	private static $m_sTablePrefix = ""; // table prefix for the current application instance (allow several applications on the same DB)
@@ -2838,6 +2854,24 @@ abstract class MetaModel
 	public static function LoadConfig($sConfigFile)
 	{
 		$oConfig = new Config($sConfigFile);
+
+		// Set log ASAP
+		if ($oConfig->GetLogGlobal())
+		{
+			if ($oConfig->GetLogIssue())
+			{
+				self::$m_bLogIssue = true;
+				IssueLog::Enable('../error.log');
+			}
+			self::$m_bLogNotification = $oConfig->GetLogNotification();
+			self::$m_bLogWebService = $oConfig->GetLogWebService();
+		}
+		else
+		{
+			self::$m_bLogIssue = false;
+			self::$m_bLogNotification = false;
+			self::$m_bLogWebService = false;
+		}
 
 		foreach ($oConfig->GetAppModules() as $sModule => $sToInclude)
 		{

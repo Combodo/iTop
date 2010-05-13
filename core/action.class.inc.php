@@ -291,53 +291,55 @@ class ActionEmail extends ActionNotification
 			$this->m_aMailErrors[] = $e->getMessage();
 		}
 
-		$oLog = new EventNotificationEmail();
-		if (empty($this->m_aMailErrors))
+		if (MetaModel::IsLogEnabledNotification())
 		{
-			if ($this->IsBeingTested())
+			$oLog = new EventNotificationEmail();
+			if (empty($this->m_aMailErrors))
 			{
-				$oLog->Set('message', 'TEST - Notification sent ('.$this->Get('test_recipient').')');
+				if ($this->IsBeingTested())
+				{
+					$oLog->Set('message', 'TEST - Notification sent ('.$this->Get('test_recipient').')');
+				}
+				else
+				{
+					$oLog->Set('message', 'Notification sent');
+				}
 			}
 			else
 			{
-				$oLog->Set('message', 'Notification sent');
+				if (is_array($this->m_aMailErrors) && count($this->m_aMailErrors) > 0)
+				{
+					$sError = implode(', ', $this->m_aMailErrors);
+				}
+				else
+				{
+					$sError = 'Unknown reason';
+				}
+				if ($this->IsBeingTested())
+				{
+					$oLog->Set('message', 'TEST - Notification was not sent: '.$sError);
+				}
+				else
+				{
+					$oLog->Set('message', 'Notification was not sent: '.$sError);
+				}
 			}
-		}
-		else
-		{
-			if (is_array($this->m_aMailErrors) && count($this->m_aMailErrors) > 0)
-			{
-				$sError = implode(', ', $this->m_aMailErrors);
-			}
-			else
-			{
-				$sError = 'Unknown reason';
-			}
-			if ($this->IsBeingTested())
-			{
-				$oLog->Set('message', 'TEST - Notification was not sent: '.$sError);
-			}
-			else
-			{
-				$oLog->Set('message', 'Notification was not sent: '.$sError);
-			}
-		}
+			$oLog->Set('userinfo', UserRights::GetUser());
+			$oLog->Set('trigger_id', $oTrigger->GetKey());
+			$oLog->Set('action_id', $this->GetKey());
+			$oLog->Set('object_id', $aContextArgs['this->id']);
 
-		$oLog->Set('userinfo', UserRights::GetUser());
-		$oLog->Set('trigger_id', $oTrigger->GetKey());
-		$oLog->Set('action_id', $this->GetKey());
-		$oLog->Set('object_id', $aContextArgs['this->id']);
-
-		// Note: we have to secure this because those values are calculated
-		// inside the try statement, and we would like to keep track of as
-		// many data as we could while some variables may still be undefined
-		if (isset($sTo))       $oLog->Set('to', $sTo);
-		if (isset($sCC))       $oLog->Set('cc', $sCC);
-		if (isset($sBCC))      $oLog->Set('bcc', $sBCC);
-		if (isset($sFrom))     $oLog->Set('from', $sFrom);
-		if (isset($sSubject))  $oLog->Set('subject', $sSubject);
-		if (isset($sBody))     $oLog->Set('body', $sBody);
-		$oLog->DBInsertNoReload();
+			// Note: we have to secure this because those values are calculated
+			// inside the try statement, and we would like to keep track of as
+			// many data as we could while some variables may still be undefined
+			if (isset($sTo))       $oLog->Set('to', $sTo);
+			if (isset($sCC))       $oLog->Set('cc', $sCC);
+			if (isset($sBCC))      $oLog->Set('bcc', $sBCC);
+			if (isset($sFrom))     $oLog->Set('from', $sFrom);
+			if (isset($sSubject))  $oLog->Set('subject', $sSubject);
+			if (isset($sBody))     $oLog->Set('body', $sBody);
+			$oLog->DBInsertNoReload();
+		}
 	}
 }
 ?>

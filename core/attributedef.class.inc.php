@@ -1441,10 +1441,20 @@ class AttributeBlob extends AttributeDefinition
 		//     (temporary tables created on disk)
 		//     We will have to remove the blobs from the list of attributes when doing the select
 		//     then the use of Get() should finalize the load
-		$aValues = array();
-		$aValues[$this->GetCode().'_data'] = $value->GetData();
-		$aValues[$this->GetCode().'_mimetype'] = $value->GetMimeType();
-		$aValues[$this->GetCode().'_filename'] = $value->GetFileName();
+		if ($value instanceOf ormDocument)
+		{
+			$aValues = array();
+			$aValues[$this->GetCode().'_data'] = $value->GetData();
+			$aValues[$this->GetCode().'_mimetype'] = $value->GetMimeType();
+			$aValues[$this->GetCode().'_filename'] = $value->GetFileName();
+		}
+		else
+		{
+			$aValues = array();
+			$aValues[$this->GetCode().'_data'] = '';
+			$aValues[$this->GetCode().'_mimetype'] = '';
+			$aValues[$this->GetCode().'_filename'] = '';
+		}
 		return $aValues;
 	}
 
@@ -1490,5 +1500,121 @@ class AttributeBlob extends AttributeDefinition
 	}
 }
 
+// Indexed array having two dimensions
+class AttributeTable extends AttributeText
+{
+	public function GetType() {return "Table";}
+	public function GetTypeDesc() {return "Array with 2 dimensions";}
+	public function GetEditClass() {return "Text";}
+	protected function GetSQLCol() {return "TEXT";}
+
+
+	// Facilitate things: allow the user to Set the value from a string
+	public function MakeRealValue($proposedValue)
+	{
+		if (!is_array($proposedValue))
+		{
+			return array(0 => array(0 => $proposedValue));
+		}
+		return $proposedValue;
+	}
+
+	public function FromSQLToValue($aCols, $sPrefix = '')
+	{
+		try
+		{
+			$value = @unserialize($aCols[$sPrefix.'']);
+			if ($value === false)
+			{
+				$value = $this->MakeRealValue($aCols[$sPrefix.'']);
+			}
+		}
+		catch(Exception $e)
+		{
+			$value = $this->MakeRealValue($aCols[$sPrefix.'']);
+		}
+
+		return $value;
+	}
+
+	public function GetSQLValues($value)
+	{
+		$aValues = array();
+		$aValues[$this->Get("sql")] = serialize($value);
+		return $aValues;
+	}
+
+	public function GetAsHTML($value)
+	{
+		if (!is_array($value))
+		{
+			throw new CoreException('Expecting an array', array('found' => get_class($value)));
+		}
+		if (count($value) == 0)
+		{
+			return "";
+		}
+
+		$sRes = "<TABLE class=\"listResults\">";
+		$sRes .= "<TBODY>";
+		foreach($value as $iRow => $aRawData)
+		{
+			$sRes .= "<TR>";
+			foreach ($aRawData as $iCol => $cell)
+			{
+				$sCell = str_replace("\n", "<br>\n", Str::pure2html((string)$cell));
+				$sRes .= "<TD>$sCell</TD>";
+			}
+			$sRes .= "</TR>";
+		}
+		$sRes .= "</TBODY>";
+		$sRes .= "</TABLE>";
+		return $sRes;
+	}
+}
+
+// The PHP value is a hash array, it is stored as a TEXT column
+class AttributePropertySet extends AttributeTable
+{
+	public function GetType() {return "PropertySet";}
+	public function GetTypeDesc() {return "List of properties (name and value)";}
+	public function GetEditClass() {return "Text";}
+	protected function GetSQLCol() {return "TEXT";}
+
+	// Facilitate things: allow the user to Set the value from a string
+	public function MakeRealValue($proposedValue)
+	{
+		if (!is_array($proposedValue))
+		{
+			return array('?' => (string)$proposedValue);
+		}
+		return $proposedValue;
+	}
+
+	public function GetAsHTML($value)
+	{
+		if (!is_array($value))
+		{
+			throw new CoreException('Expecting an array', array('found' => get_class($value)));
+		}
+		if (count($value) == 0)
+		{
+			return "";
+		}
+
+		$sRes = "<TABLE class=\"listResults\">";
+		$sRes .= "<TBODY>";
+		foreach($value as $sProperty => $sValue)
+		{
+			$sRes .= "<TR>";
+			$sCell = str_replace("\n", "<br>\n", Str::pure2html((string)$sValue));
+			$sRes .= "<TD class=\"label\">$sProperty</TD><TD>$sCell</TD>";
+			$sRes .= "</TR>";
+		}
+		$sRes .= "</TBODY>";
+		$sRes .= "</TABLE>";
+		return $sRes;
+	}
+}
 
 ?>

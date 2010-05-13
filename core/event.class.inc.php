@@ -145,10 +145,10 @@ class EventIssue extends Event
 		MetaModel::Init_AddAttribute(new AttributeString("issue", array("allowed_values"=>null, "sql"=>"issue", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("impact", array("allowed_values"=>null, "sql"=>"impact", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("page", array("allowed_values"=>null, "sql"=>"page", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeText("arguments_post", array("allowed_values"=>null, "sql"=>"arguments_post", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeText("arguments_get", array("allowed_values"=>null, "sql"=>"arguments_get", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeText("callstack", array("allowed_values"=>null, "sql"=>"callstack", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeBlob("data", array("allowed_values"=>null, "sql"=>"data", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributePropertySet("arguments_post", array("allowed_values"=>null, "sql"=>"arguments_post", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributePropertySet("arguments_get", array("allowed_values"=>null, "sql"=>"arguments_get", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeTable("callstack", array("allowed_values"=>null, "sql"=>"callstack", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributePropertySet("data", array("allowed_values"=>null, "sql"=>"data", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 
 		MetaModel::Init_InheritFilters();
 		MetaModel::Init_AddFilterFromAttribute("issue");
@@ -160,6 +160,43 @@ class EventIssue extends Event
 		// Search criteria
 //		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
 //		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
+	}
+
+	public function OnInsert()
+	{
+		// Init page information: name, arguments
+		//
+		$this->Set('page', @$GLOBALS['_SERVER']['SCRIPT_NAME']);
+
+		if (array_key_exists('_GET', $GLOBALS) && is_array($GLOBALS['_GET']))
+		{
+			$this->Set('arguments_get', $GLOBALS['_GET']);
+		}
+		else
+		{
+			$this->Set('arguments_get', array());
+		}
+
+		if (array_key_exists('_POST', $GLOBALS) && is_array($GLOBALS['_POST']))
+		{
+			$aPost = array();
+			foreach($GLOBALS['_POST'] as $sKey => $sValue)
+			{
+				if (strlen($sValue) < 256)
+				{
+					$aPost[$sKey] = $sValue;
+				}
+				else
+				{
+					$aPost[$sKey] = "!long string: ".strlen($sValue). " chars";
+				}
+			}
+			$this->Set('arguments_post', $aPost);
+		}
+		else
+		{
+			$this->Set('arguments_post', array());
+		}
 	}
 }
 

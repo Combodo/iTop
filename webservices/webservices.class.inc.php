@@ -222,6 +222,8 @@ class WebServices
 	 */
 	protected function LogUsage($sVerb, $oRes)
 	{
+		if (!MetaModel::IsLogEnabledWebService()) return;
+
 		$oLog = new EventWebService();
 		if ($oRes->IsOk())
 		{

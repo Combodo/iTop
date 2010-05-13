@@ -64,6 +64,19 @@ class CoreException extends Exception
 	{
 		$this->m_aContextData[$sKey] = $value;
 	}
+
+	public function getIssue()
+	{
+		return $this->m_sIssue;
+	}
+	public function getImpact()
+	{
+		return $this->m_sImpact;
+	}
+	public function getContextData()
+	{
+		return $this->m_aContextData;
+	}
 }
 
 class CoreWarning extends CoreException

@@ -4,6 +4,7 @@
  */
 require_once('../application/utils.inc.php');
 require_once('../core/config.class.inc.php');
+require_once('../core/log.class.inc.php');
 require_once('../core/cmdbsource.class.inc.php');
 require_once('./setuppage.class.inc.php');
 define('TMP_CONFIG_FILE', '../tmp-config-itop.php');
@@ -243,6 +244,7 @@ function CheckServerConnection(SetupWebPage $oP, $sDBServer, $sDBUser, $sDBPwd)
  */    
 function InitDataModel(SetupWebPage $oP, $sConfigFileName, $bAllowMissingDatabase = true)
 {
+	require_once('../core/log.class.inc.php');
 	require_once('../core/coreexception.class.inc.php');
 	require_once('../core/attributedef.class.inc.php');
 	require_once('../core/filterdef.class.inc.php');

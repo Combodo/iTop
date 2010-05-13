@@ -16,6 +16,11 @@ class ConfigException extends CoreException
 {
 }
 
+define ('DEFAULT_LOG_GLOBAL', true);
+define ('DEFAULT_LOG_NOTIFICATION', true);
+define ('DEFAULT_LOG_ISSUE', true);
+define ('DEFAULT_LOG_WEB_SERVICE', true);
+
 define ('DEFAULT_MIN_DISPLAY_LIMIT', 10);
 define ('DEFAULT_MAX_DISPLAY_LIMIT', 15);
 define ('DEFAULT_STANDARD_RELOAD_INTERVAL', 5*60);
@@ -37,6 +42,14 @@ class Config
 	protected $m_sDBPwd;
 	protected $m_sDBName;
 	protected $m_sDBSubname;
+
+	/**
+	 * @var integer Event log options (see LOG_... definition)
+	 */	 	
+	protected $m_bLogGlobal;
+	protected $m_bLogNotification;
+	protected $m_bLogIssue;
+	protected $m_bLogWebService;
 
 	/**
 	 * @var integer Number of elements to be displayed when there are more than m_iMaxDisplayLimit elements
@@ -79,6 +92,10 @@ class Config
 		$this->m_sDBPwd = '';
 		$this->m_sDBName = '';
 		$this->m_sDBSubname = '';
+		$this->m_bLogGlobal = DEFAULT_LOG_GLOBAL;
+		$this->m_bLogNotification = DEFAULT_LOG_NOTIFICATION;
+		$this->m_bLogIssue = DEFAULT_LOG_ISSUE;
+		$this->m_bLogWebService = DEFAULT_LOG_WEB_SERVICE;
 		$this->m_iMinDisplayLimit = DEFAULT_MIN_DISPLAY_LIMIT;
 		$this->m_iMaxDisplayLimit = DEFAULT_MAX_DISPLAY_LIMIT;
 		$this->m_iStandardReloadInterval = DEFAULT_STANDARD_RELOAD_INTERVAL;
@@ -167,6 +184,10 @@ class Config
 		$this->m_sDBName = trim($MySettings['db_name']);
 		$this->m_sDBSubname = trim($MySettings['db_subname']);
 
+		$this->m_bLogGlobal = isset($MySettings['log_global']) ? trim($MySettings['log_global']) : DEFAULT_LOG_GLOBAL;
+		$this->m_bLogNotification = isset($MySettings['log_notification']) ? trim($MySettings['log_notification']) : DEFAULT_LOG_NOTIFICATION;
+		$this->m_bLogIssue = isset($MySettings['log_issue']) ? trim($MySettings['log_issue']) : DEFAULT_LOG_ISSUE;
+		$this->m_bLogWebService = isset($MySettings['log_web_service']) ? trim($MySettings['log_web_service']) : DEFAULT_LOG_WEB_SERVICE;
 		$this->m_iMinDisplayLimit = isset($MySettings['min_display_limit']) ? trim($MySettings['min_display_limit']) : DEFAULT_MIN_DISPLAY_LIMIT;
 		$this->m_iMaxDisplayLimit = isset($MySettings['max_display_limit']) ? trim($MySettings['max_display_limit']) : DEFAULT_MAX_DISPLAY_LIMIT;
 		$this->m_iStandardReloadInterval = isset($MySettings['standard_reload_interval']) ? trim($MySettings['standard_reload_interval']) : DEFAULT_STANDARD_RELOAD_INTERVAL;
@@ -241,6 +262,26 @@ class Config
 		return $this->m_sDBPwd;
 	}
 
+	public function GetLogGlobal()
+	{
+		return $this->m_bLogGlobal;
+	}
+
+	public function GetLogNotification()
+	{
+		return $this->m_bLogNotification;
+	}
+
+	public function GetLogIssue()
+	{
+		return $this->m_bLogIssue;
+	}
+
+	public function GetLogWebService()
+	{
+		return $this->m_bLogWebService;
+	}
+
 	public function GetMinDisplayLimit()
 	{
 		return $this->m_iMinDisplayLimit;
@@ -294,6 +335,26 @@ class Config
 	public function SetDBPwd($sPwd)
 	{
 		$this->m_sDBPwd = $sPwd;
+	}
+
+	public function SetLogGlobal($iLogGlobal)
+	{
+		$this->m_iLogGlobal = $iLogGlobal;
+	}
+
+	public function SetLogNotification($iLogNotification)
+	{
+		$this->m_iLogNotification = $iLogNotification;
+	}
+
+	public function SetLogIssue($iLogIssue)
+	{
+		$this->m_iLogIssue = $iLogIssue;
+	}
+
+	public function SetLogWebService($iLogWebService)
+	{
+		$this->m_iLogWebService = $iLogWebService;
 	}
 
 	public function SetMinDisplayLimit($iMinDisplayLimit)
@@ -363,6 +424,10 @@ class Config
 			fwrite($hFile, "\t'db_name' => '{$this->m_sDBName}',\n");
 			fwrite($hFile, "\t'db_subname' => '{$this->m_sDBSubname}',\n");
 			fwrite($hFile, "\n");
+			fwrite($hFile, "\t'log_global' => {$this->m_bLogGlobal},\n");
+			fwrite($hFile, "\t'log_notification' => {$this->m_bLogNotification},\n");
+			fwrite($hFile, "\t'log_issue' => {$this->m_bLogIssue},\n");
+			fwrite($hFile, "\t'log_web_service' => {$this->m_bLogWebService},\n");
 			fwrite($hFile, "\t'min_display_limit' => {$this->m_iMinDisplayLimit},\n");
 			fwrite($hFile, "\t'max_display_limit' => {$this->m_iMaxDisplayLimit},\n");
 			fwrite($hFile, "\t'standard_reload_interval' => {$this->m_iStandardReloadInterval},\n");

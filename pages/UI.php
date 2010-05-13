@@ -337,6 +337,7 @@ try
 	$oContext = new UserContext();
 	$oAppContext = new ApplicationContext();
 	$iActiveNodeId = utils::ReadParam('menu', '');
+
 	if (empty($iActiveNodeId) && !is_numeric($iActiveNodeId))
 	{
 		// No menu specified, let's get the default one:
@@ -1301,14 +1302,6 @@ try
 	////MetaModel::ShowQueryTrace();
 	$oP->output();
 }
-catch(Exception $e)
-{
-	require_once('../setup/setuppage.class.inc.php');
-	$oP = new SetupWebPage('iTop - fatal error');
-	$oP->add("<h1>Fatal Error, iTop cannot continue</h1>\n");	
-	$oP->error("Error: '".$e->getMessage()."'");	
-	$oP->output();
-}
 catch(CoreException $e)
 {
 	require_once('../setup/setuppage.class.inc.php');
@@ -1316,5 +1309,52 @@ catch(CoreException $e)
 	$oP->add("<h1>Fatal Error, iTop cannot continue</h1>\n");	
 	$oP->error("Error: '".$e->getHtmlDesc()."'");	
 	$oP->output();
+
+	if (MetaModel::IsLogEnabledIssue())
+	{
+		if (class_exists('EventIssue'))
+		{
+			$oLog = new EventIssue();
+
+			$oLog->Set('message', $e->getMessage());
+			$oLog->Set('userinfo', '');
+			$oLog->Set('issue', $e->GetIssue());
+			$oLog->Set('impact', 'Page could not be displayed');
+			$oLog->Set('callstack', $e->getTrace());
+			$oLog->Set('data', $e->getContextData());
+			$oLog->DBInsertNoReload();
+		}
+
+		IssueLog::Error($e->getMessage());
+	}
+
+	// For debugging only
+	//throw $e;
+}
+catch(Exception $e)
+{
+	require_once('../setup/setuppage.class.inc.php');
+	$oP = new SetupWebPage('iTop - fatal error');
+	$oP->add("<h1>Fatal Error, iTop cannot continue</h1>\n");	
+	$oP->error("Error: '".$e->getMessage()."'");	
+	$oP->output();
+
+	if (MetaModel::IsLogEnabledIssue())
+	{
+		if (class_exists('EventIssue'))
+		{
+			$oLog = new EventIssue();
+
+			$oLog->Set('message', $e->getMessage());
+			$oLog->Set('userinfo', '');
+			$oLog->Set('issue', 'PHP Exception');
+			$oLog->Set('impact', 'Page could not be displayed');
+			$oLog->Set('callstack', $e->getTrace());
+			$oLog->Set('data', array());
+			$oLog->DBInsertNoReload();
+		}
+
+		IssueLog::Error($e->getMessage());
+	}
 }
 ?>
