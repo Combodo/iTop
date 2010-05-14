@@ -210,6 +210,11 @@ abstract class AttributeDefinition
 	//abstract protected GetBasicFilterHTMLInput();
 	abstract public function GetBasicFilterSQLExpr($sOpCode, $value); 
 
+	public function GetFilterDefinitions()
+	{
+		return array();
+	}
+
 	public function GetEditValue($sValue)
 	{
 		return (string)$sValue;
@@ -384,6 +389,11 @@ class AttributeDBFieldVoid extends AttributeDefinition
 		$aColumns = array();
 		$aColumns[$this->Get("sql")] = $this->GetSQLCol();
 		return $aColumns;
+	}
+
+	public function GetFilterDefinitions()
+	{
+		return array($this->GetCode() => new FilterFromAttribute($this));
 	}
 
 	public function GetBasicFilterOperators()
@@ -729,6 +739,12 @@ class AttributePassword extends AttributeString
 
 	public function GetEditClass() {return "Password";}
 	protected function GetSQLCol() {return "VARCHAR(64)";}
+
+	public function GetFilterDefinitions()
+	{
+		// not allowed to search on passwords!
+		return array();
+	}
 }
 
 /**
@@ -1266,6 +1282,11 @@ class AttributeExternalField extends AttributeDefinition
 		return $oExtAttDef->IsScalar(); 
 	} 
 
+	public function GetFilterDefinitions()
+	{
+		return array($this->GetCode() => new FilterFromAttribute($this));
+	}
+
 	public function GetBasicFilterOperators()
 	{
 		$oExtAttDef = $this->GetExtAttDef();
@@ -1360,7 +1381,7 @@ class AttributeURL extends AttributeString
 }
 
 /**
- * Data column, consisting in TWO columns in the DB  
+ * A blob is an ormDocument, it is stored as several columns in the database  
  *
  * @package     iTopORM
  * @author      Romain Quetiez <romainquetiez@yahoo.fr>
@@ -1465,6 +1486,17 @@ class AttributeBlob extends AttributeDefinition
 		$aColumns[$this->GetCode().'_mimetype'] = 'VARCHAR(255)';
 		$aColumns[$this->GetCode().'_filename'] = 'VARCHAR(255)';
 		return $aColumns;
+	}
+
+	public function GetFilterDefinitions()
+	{
+		return array();
+		// still not working... see later...
+		return array(
+			$this->GetCode().'->filename' => new FilterFromAttribute($this, '_filename'),
+			$this->GetCode().'_mimetype' => new FilterFromAttribute($this, '_mimetype'),
+			$this->GetCode().'_mimetype' => new FilterFromAttribute($this, '_mimetype')
+		);
 	}
 
 	public function GetBasicFilterOperators()

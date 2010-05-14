@@ -37,10 +37,6 @@ abstract class Action extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum(array('test'=>'Being tested' ,'enabled'=>'In production', 'disabled'=>'Inactive')), "sql"=>"status", "default_value"=>"test", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("related_triggers", array("linked_class"=>"lnkTriggerAction", "ext_key_to_me"=>"action_id", "ext_key_to_remote"=>"trigger_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 
-		//MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("name");
-		MetaModel::Init_AddFilterFromAttribute("description");
-
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('name', 'description', 'status')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'name', 'description', 'status')); // Attributes to be displayed for a list
@@ -108,8 +104,6 @@ abstract class ActionNotification extends Action
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 
-		MetaModel::Init_InheritFilters();
-
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('name', 'description', 'status')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'name', 'description', 'status')); // Attributes to be displayed for a list
@@ -160,8 +154,6 @@ class ActionEmail extends ActionNotification
 		MetaModel::Init_AddAttribute(new AttributeTemplateString("subject", array("allowed_values"=>null, "sql"=>"subject", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeTemplateText("body", array("allowed_values"=>null, "sql"=>"body", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("importance", array("allowed_values"=>new ValueSetEnum('low,normal,high'), "sql"=>"importance", "default_value"=>'normal', "is_null_allowed"=>false, "depends_on"=>array())));
-
-		MetaModel::Init_InheritFilters();
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('name', 'description', 'status', 'test_recipient', 'from', 'reply_to', 'to', 'cc', 'bcc', 'subject', 'body', 'importance')); // Attributes to be displayed for the complete details

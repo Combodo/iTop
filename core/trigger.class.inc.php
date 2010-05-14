@@ -35,9 +35,6 @@ class Trigger extends cmdbAbstractObject
 
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("linked_actions", array("linked_class"=>"lnkTriggerAction", "ext_key_to_me"=>"trigger_id", "ext_key_to_remote"=>"action_id", "allowed_values"=>null, "count_min"=>1, "count_max"=>0, "depends_on"=>array())));
 
-		//MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("description");
-
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('finalclass', 'description')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'description')); // Attributes to be displayed for a list
@@ -83,9 +80,6 @@ class TriggerOnObject extends Trigger
 		MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeClass("target_class", array("class_category"=>"bizmodel", "more_values"=>null, "sql"=>"target_class", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 
-		MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("target_class");
-
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('description', 'target_class')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'target_class', 'description')); // Attributes to be displayed for a list
@@ -116,9 +110,6 @@ class TriggerOnStateChange extends TriggerOnObject
 		MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeString("state", array("allowed_values"=>null, "sql"=>"state", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));	
 
-		MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("state");
-
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('description', 'target_class', 'state')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'target_class', 'state', 'description')); // Attributes to be displayed for a list
@@ -147,8 +138,6 @@ class TriggerOnStateEnter extends TriggerOnStateChange
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-
-		MetaModel::Init_InheritFilters();
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('description', 'target_class', 'state')); // Attributes to be displayed for the complete details
@@ -179,8 +168,6 @@ class TriggerOnStateLeave extends TriggerOnStateChange
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 
-		MetaModel::Init_InheritFilters();
-
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('description', 'target_class', 'state')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('target_class', 'state', 'description')); // Attributes to be displayed for a list
@@ -209,8 +196,6 @@ class TriggerOnObjectCreate extends TriggerOnObject
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-
-		MetaModel::Init_InheritFilters();
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('description', 'target_class')); // Attributes to be displayed for the complete details
@@ -245,10 +230,6 @@ class lnkTriggerAction extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalField("trigger_name", array("allowed_values"=>null, "extkey_attcode"=> 'trigger_id', "target_attcode"=>"description")));
 		MetaModel::Init_AddAttribute(new AttributeInteger("order", array("allowed_values"=>null, "sql"=>"order", "default_value"=>0, "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_AddFilterFromAttribute("action_id");
-		MetaModel::Init_AddFilterFromAttribute("trigger_id");
-		MetaModel::Init_AddFilterFromAttribute("order");
-		
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('action_id', 'trigger_id', 'order')); // Attributes to be displayed for a list
 		MetaModel::Init_SetZListItems('list', array('action_name', 'trigger_name', 'order')); // Attributes to be displayed for a list

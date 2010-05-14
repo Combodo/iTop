@@ -34,24 +34,11 @@ class bizKnownError extends cmdbAbstractObject
  	  MetaModel::Init_AddAttribute(new AttributeText("workaround", array("allowed_values"=>null, "sql"=>"workaround", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
  		MetaModel::Init_AddAttribute(new AttributeText("solution", array("allowed_values"=>null, "sql"=>"solution", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
  
-    MetaModel::Init_AddAttribute(new AttributeString("error_code", array("allowed_values"=>null, "sql"=>"error_code", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("error_code", array("allowed_values"=>null, "sql"=>"error_code", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("domain", array("allowed_values"=>new ValueSetEnum("Network, Server, Application, Desktop"), "sql"=>"domain", "default_value"=>"Application", "is_null_allowed"=>false, "depends_on"=>array())));
-	  MetaModel::Init_AddAttribute(new AttributeString("vendor", array("allowed_values"=>null, "sql"=>"vendor", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-    MetaModel::Init_AddAttribute(new AttributeString("model", array("allowed_values"=>null, "sql"=>"model", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-    MetaModel::Init_AddAttribute(new AttributeString("version", array("allowed_values"=>null, "sql"=>"version", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-
-
-
-		MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("name");
-		MetaModel::Init_AddFilterFromAttribute("org_id");
-		MetaModel::Init_AddFilterFromAttribute("cust_name");
-		MetaModel::Init_AddFilterFromAttribute("error_code");
-		MetaModel::Init_AddFilterFromAttribute("domain");
-		
-
-
-		
+		MetaModel::Init_AddAttribute(new AttributeString("vendor", array("allowed_values"=>null, "sql"=>"vendor", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("model", array("allowed_values"=>null, "sql"=>"model", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("version", array("allowed_values"=>null, "sql"=>"version", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
 		MetaModel::Init_SetZListItems('details', array('name', 'org_id','error_code','domain','vendor','model','version', 'symptom','root_cause','workaround','solution')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('name', 'org_id','error_code', 'symptom')); // Attributes to be displayed for a list
@@ -98,9 +85,6 @@ class lnkInfraError extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("error_id", array("targetclass"=>"bizKnownError", "jointype"=> '', "allowed_values"=>null, "sql"=>"error_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("error_name", array("allowed_values"=>null, "extkey_attcode"=> 'error_id', "target_attcode"=>"name")));
 
-		MetaModel::Init_AddFilterFromAttribute("infra_id");
-		MetaModel::Init_AddFilterFromAttribute("error_id");
-		
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('infra_id', 'error_id')); // Attributes to be displayed for a list
 		MetaModel::Init_SetZListItems('list', array('infra_id', 'infra_status','error_id')); // Attributes to be displayed for a list
@@ -141,12 +125,6 @@ class lnkDocumentError extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalField("error_name", array("allowed_values"=>null, "extkey_attcode"=> 'error_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeString("link_type", array("allowed_values"=>null, "sql"=>"link_type", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_AddFilterFromAttribute("doc_id");
-		MetaModel::Init_AddFilterFromAttribute("doc_name");
-		MetaModel::Init_AddFilterFromAttribute("error_id");
-		MetaModel::Init_AddFilterFromAttribute("error_name");
-		MetaModel::Init_AddFilterFromAttribute("link_type");
-		
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('doc_id', 'error_name', 'link_type')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('doc_id', 'error_name', 'link_type')); // Attributes to be displayed for a list

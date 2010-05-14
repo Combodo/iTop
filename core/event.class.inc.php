@@ -34,10 +34,6 @@ class Event extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeDate("date", array("allowed_values"=>null, "sql"=>"date", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("userinfo", array("allowed_values"=>null, "sql"=>"userinfo", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 
-		//MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("message");
-		MetaModel::Init_AddFilterFromAttribute("date");
-
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('message', 'date', 'userinfo')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('date', 'finalclass', 'message')); // Attributes to be displayed for a list
@@ -69,11 +65,6 @@ class EventNotification extends Event
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("trigger_id", array("targetclass"=>"Trigger", "jointype"=> "", "allowed_values"=>null, "sql"=>"trigger_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("action_id", array("targetclass"=>"Action", "jointype"=> "", "allowed_values"=>null, "sql"=>"action_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeInteger("object_id", array("allowed_values"=>null, "sql"=>"object_id", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
-
-		MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("trigger_id");
-		MetaModel::Init_AddFilterFromAttribute("action_id");
-		MetaModel::Init_AddFilterFromAttribute("object_id");
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'trigger_id', 'action_id', 'object_id')); // Attributes to be displayed for the complete details
@@ -110,7 +101,6 @@ class EventNotificationEmail extends EventNotification
 		MetaModel::Init_AddAttribute(new AttributeText("from", array("allowed_values"=>null, "sql"=>"from", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("subject", array("allowed_values"=>null, "sql"=>"subject", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("body", array("allowed_values"=>null, "sql"=>"body", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_InheritFilters();
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'message', 'trigger_id', 'action_id', 'object_id', 'to', 'cc', 'bcc', 'from', 'subject', 'body')); // Attributes to be displayed for the complete details
@@ -149,10 +139,6 @@ class EventIssue extends Event
 		MetaModel::Init_AddAttribute(new AttributePropertySet("arguments_get", array("allowed_values"=>null, "sql"=>"arguments_get", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeTable("callstack", array("allowed_values"=>null, "sql"=>"callstack", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributePropertySet("data", array("allowed_values"=>null, "sql"=>"data", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-
-		MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("issue");
-		MetaModel::Init_AddFilterFromAttribute("impact");
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'issue', 'impact', 'page', 'arguments_post', 'arguments_get', 'callstack', 'data')); // Attributes to be displayed for the complete details
@@ -227,8 +213,6 @@ class EventWebService extends Event
 		MetaModel::Init_AddAttribute(new AttributeText("log_warning", array("allowed_values"=>null, "sql"=>"log_warning", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("log_error", array("allowed_values"=>null, "sql"=>"log_error", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("data", array("allowed_values"=>null, "sql"=>"data", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-
-		MetaModel::Init_InheritFilters();
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'verb', 'result', 'log_info', 'log_warning', 'log_error', 'data')); // Attributes to be displayed for the complete details

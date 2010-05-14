@@ -107,11 +107,6 @@ class cmdbContact extends cmdbObjectHomeMade
 
 		MetaModel::Init_AddAttribute(new AttributeLinkedSet("myworkshops", array("depends_on"=>array(), "linked_class"=>"cmdbLiens", "ext_key_to_me"=>"tocontact", "count_min"=>1, "count_max"=>10, "allowed_values"=>null)));
 
-		MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("owner");
-		MetaModel::Init_AddFilterFromAttribute("name");
-		MetaModel::Init_AddFilterFromAttribute("ownername");
-
 		MetaModel::Init_SetZListItems("list1", array("name", "email"));
 		MetaModel::Init_SetZListItems("list2", array());
 		MetaModel::Init_SetZListItems("list3", array("ownername"));
@@ -184,9 +179,6 @@ class cmdbTeam extends cmdbContact
 		MetaModel::Init_OverloadAttributeParams("email", array());
 		MetaModel::Init_AddAttribute(new AttributeInteger("headcount", array("allowed_values"=>null, "sql"=>"headcount", "default_value"=>654321, "is_null_allowed"=>false, "depends_on"=>array())));
 
-		MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("headcount");
-
 		MetaModel::Init_SetZListItems("noneditable", array("name"));
 	}
 
@@ -242,9 +234,6 @@ class cmdbOrga extends cmdbObjectHomeMade
 		MetaModel::Init_AddAttribute(new AttributeInteger("_dunsnumber_", array("allowed_values"=>null, "sql"=>"dunsnumber", "default_value"=>99007, "is_null_allowed"=>false, "depends_on"=>array())));
 // not yet allowed		MetaModel::Init_AddAttribute(new AttributeInteger("_dunsnumberBY2_", array("allowed_values"=>null, "sql"=>"dunsnumber * 3.141592654")));
 
-		MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("_name_");
-
 		MetaModel::Init_SetZListItems("list1", array("_status_"));
 		MetaModel::Init_SetZListItems("list2", array());
 		MetaModel::Init_SetZListItems("list3", array("_name_"));
@@ -290,9 +279,6 @@ class cmdbLiens extends cmdbObjectHomeMade
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("tocontact", array("allowed_values"=>null, "sql"=>"contactid", "targetclass"=>"cmdbContact", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("contact_info", array("allowed_values"=>null, "extkey_attcode"=>"tocontact", "target_attcode"=>"name")));
 
-		MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("function");
-
 		MetaModel::Init_SetZListItems("list1", array("toworkshop", "contact_info"));
 		MetaModel::Init_SetZListItems("list2", array("function"));
 		MetaModel::Init_SetZListItems("list3", array("function"));
@@ -334,9 +320,6 @@ class cmdbWorkshop extends cmdbObjectHomeMade
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeString("namitus", array("allowed_values"=>null, "sql"=>"name", "default_value"=>"XXXX", "is_null_allowed"=>false, "depends_on"=>array())));
-
-		MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("namitus");
 
 		MetaModel::Init_SetZListItems("list1", array("namitus"));
 		MetaModel::Init_SetZListItems("list2", array());

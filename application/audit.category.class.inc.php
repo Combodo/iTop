@@ -28,10 +28,6 @@ class AuditCategory extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeString("description", array("allowed_values"=>null, "sql"=>"description", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("definition_set", array("allowed_values"=>null, "sql"=>"definition_set", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 
-		MetaModel::Init_AddFilterFromAttribute("name");
-		MetaModel::Init_AddFilterFromAttribute("description");
-		MetaModel::Init_AddFilterFromAttribute("definition_set");
-
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('name', 'description', 'definition_set')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('name', 'description', )); // Attributes to be displayed for a list

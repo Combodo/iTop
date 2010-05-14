@@ -40,25 +40,25 @@ class bizServiceCall extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeString("name", array("allowed_values"=>null, "sql"=>"name", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("title", array("allowed_values"=>null, "sql"=>"title", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
    	
-    MetaModel::Init_AddAttribute(new AttributeEnum("type", array("allowed_values"=>new ValueSetEnum("Network,Server,Desktop,Application"), "sql"=>"type", "default_value"=>"Server", "is_null_allowed"=>false, "depends_on"=>array())));
-     MetaModel::Init_AddAttribute(new AttributeExternalKey("org_id", array("targetclass"=>"bizOrganization", "allowed_values"=>null, "sql"=>"customer", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("type", array("allowed_values"=>new ValueSetEnum("Network,Server,Desktop,Application"), "sql"=>"type", "default_value"=>"Server", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("org_id", array("targetclass"=>"bizOrganization", "allowed_values"=>null, "sql"=>"customer", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("customer_name", array("allowed_values"=>null, "extkey_attcode"=> 'org_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeEnum("call_status", array("allowed_values"=>new ValueSetEnum("New, Assigned, WorkInProgress,Resolved,Closed"), "sql"=>"call_status", "default_value"=>"New", "is_null_allowed"=>false, "depends_on"=>array())));
 		// SetPossibleValues("status",array("Open","Monitored","Closed"));
 		MetaModel::Init_AddAttribute(new AttributeText("call_description", array("allowed_values"=>null, "sql"=>"call_description", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDate("creation_date", array("allowed_values"=>null, "sql"=>"creation_date", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-    // définir une date de défaut à maintenant, alias creation ou modification du ticket
+		// définir une date de défaut à maintenant, alias creation ou modification du ticket
 		MetaModel::Init_AddAttribute(new AttributeDate("last_update", array("allowed_values"=>null, "sql"=>"last_update", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-	  MetaModel::Init_AddAttribute(new AttributeDate("next_update", array("allowed_values"=>null, "sql"=>"next_update", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-
+		MetaModel::Init_AddAttribute(new AttributeDate("next_update", array("allowed_values"=>null, "sql"=>"next_update", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		
 		MetaModel::Init_AddAttribute(new AttributeDate("end_date", array("allowed_values"=>null, "sql"=>"closed_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-	  MetaModel::Init_AddAttribute(new AttributeExternalKey("caller_id", array("targetclass"=>"bizPerson", "jointype"=> "", "allowed_values"=>new ValueSetObjects('SELECT bizPerson AS p WHERE p.org_id = :this->org_id'), "sql"=>"caller_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array('org_id'))));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("caller_id", array("targetclass"=>"bizPerson", "jointype"=> "", "allowed_values"=>new ValueSetObjects('SELECT bizPerson AS p WHERE p.org_id = :this->org_id'), "sql"=>"caller_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array('org_id'))));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("caller_mail", array("allowed_values"=>null, "extkey_attcode"=> 'caller_id', "target_attcode"=>"email")));
-	
-  	MetaModel::Init_AddAttribute(new AttributeString("impact", array("allowed_values"=>null, "sql"=>"impact", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-  	MetaModel::Init_AddAttribute(new AttributeExternalKey("workgroup_id", array("targetclass"=>"bizWorkgroup", "jointype"=> "", "allowed_values"=>null, "sql"=>"workgroup_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
+		
+		MetaModel::Init_AddAttribute(new AttributeString("impact", array("allowed_values"=>null, "sql"=>"impact", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("workgroup_id", array("targetclass"=>"bizWorkgroup", "jointype"=> "", "allowed_values"=>null, "sql"=>"workgroup_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("workgroup_name", array("allowed_values"=>null, "extkey_attcode"=> 'workgroup_id', "target_attcode"=>"name")));  
-    MetaModel::Init_AddAttribute(new AttributeExternalKey("agent_id", array("targetclass"=>"bizPerson", "jointype"=> "", "allowed_values"=>new ValueSetObjects('SELECT bizPerson AS p JOIN lnkContactTeam AS l ON l.contact_id=p.id JOIN bizTeam AS t ON l.team_id=t.id JOIN bizWorkgroup AS w ON w.team_id=t.id WHERE w.id = :this->workgroup_id'), "sql"=>"agent_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array("workgroup_id"))));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("agent_id", array("targetclass"=>"bizPerson", "jointype"=> "", "allowed_values"=>new ValueSetObjects('SELECT bizPerson AS p JOIN lnkContactTeam AS l ON l.contact_id=p.id JOIN bizTeam AS t ON l.team_id=t.id JOIN bizWorkgroup AS w ON w.team_id=t.id WHERE w.id = :this->workgroup_id'), "sql"=>"agent_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array("workgroup_id"))));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("agent_mail", array("allowed_values"=>null, "extkey_attcode"=> 'agent_id', "target_attcode"=>"email")));
 		// Comment afficher le first + last name de l'agent ? Est-ce utile d'ajouter ce champ?
 		MetaModel::Init_AddAttribute(new AttributeText("action_log", array("allowed_values"=>null, "sql"=>"action_log", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
@@ -69,24 +69,6 @@ class bizServiceCall extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("impacted_infra_manual", array("linked_class"=>"lnkInfraCall", "ext_key_to_me"=>"call_id", "ext_key_to_remote"=>"infra_id", "allowed_values"=>null, "count_min"=>1, "count_max"=>0, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("related_tickets", array("linked_class"=>"lnkCallTicket", "ext_key_to_me"=>"call_id", "ext_key_to_remote"=>"ticket_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array(/*'impacted_infra_computed',*/ 'impacted_infra_manual'))));
 
-
-		//MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("name");
-		MetaModel::Init_AddFilterFromAttribute("title");
-		MetaModel::Init_AddFilterFromAttribute("type");
-		MetaModel::Init_AddFilterFromAttribute("org_id");
-		MetaModel::Init_AddFilterFromAttribute("caller_id");
-		MetaModel::Init_AddFilterFromAttribute("call_status");
-		MetaModel::Init_AddFilterFromAttribute("creation_date");
-		MetaModel::Init_AddFilterFromAttribute("last_update");
-		MetaModel::Init_AddFilterFromAttribute("end_date");
-		MetaModel::Init_AddFilterFromAttribute("workgroup_id");
-		MetaModel::Init_AddFilterFromAttribute("agent_id");
-		MetaModel::Init_AddFilterFromAttribute("severity");
-    MetaModel::Init_AddFilterFromAttribute("source");
-
-		// doit-on aussi ajouter un filtre sur les extfields lié à une extkey ? ici le name de l'agent?
-		
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('name','title', 'org_id', 'type','call_status','source', 'severity','creation_date', 'call_description', 'caller_id', 'impact', 'last_update', 'end_date', 'workgroup_id','agent_id','action_log','resolution')); // Attributes to be displayed for a list
 		MetaModel::Init_SetZListItems('list', array('name', 'title', 'org_id', 'type','call_status','severity','creation_date')); // Attributes to be displayed for a list
@@ -195,9 +177,6 @@ class lnkCallTicket extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalField("call_name", array("allowed_values"=>null, "extkey_attcode"=> 'call_id', "target_attcode"=>"title")));
 		MetaModel::Init_AddAttribute(new AttributeString("impact", array("allowed_values"=>null, "sql"=>"impact", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_AddFilterFromAttribute("ticket_id");
-		MetaModel::Init_AddFilterFromAttribute("call_id");
-		
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('ticket_id', 'call_id', 'impact')); // Attributes to be displayed for a list
 		MetaModel::Init_SetZListItems('list', array('ticket_id', 'call_id', 'impact')); // Attributes to be displayed for a list
@@ -244,9 +223,6 @@ class lnkInfraCall extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalField("call_name", array("allowed_values"=>null, "extkey_attcode"=> 'call_id', "target_attcode"=>"title")));
 		MetaModel::Init_AddAttribute(new AttributeString("impact", array("allowed_values"=>null, "sql"=>"impact", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_AddFilterFromAttribute("infra_id");
-		MetaModel::Init_AddFilterFromAttribute("call_id");
-		
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('infra_id', 'call_id', 'impact')); // Attributes to be displayed for a list
 		MetaModel::Init_SetZListItems('list', array('infra_id', 'call_id', 'impact')); // Attributes to be displayed for a list

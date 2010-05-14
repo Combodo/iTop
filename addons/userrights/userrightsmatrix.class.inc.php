@@ -35,10 +35,6 @@ class UserRightsMatrixUsers extends DBObject
 		MetaModel::Init_AddAttribute(new AttributeInteger("userid", array("allowed_values"=>null, "sql"=>"userid", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("login", array("allowed_values"=>null, "sql"=>"login", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("password", array("allowed_values"=>null, "sql"=>"pwd", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-
-		//MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("userid");
-		MetaModel::Init_AddFilterFromAttribute("login");
 	}
 }
 
@@ -66,12 +62,6 @@ class UserRightsMatrixClassGrant extends DBObject
 
 		MetaModel::Init_AddAttribute(new AttributeString("action", array("allowed_values"=>null, "sql"=>"action", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("permission", array("allowed_values"=>new ValueSetEnum('yes,no'), "sql"=>"permission", "default_value"=>"yes", "is_null_allowed"=>false, "depends_on"=>array())));
-
-		//MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("userid");
-		MetaModel::Init_AddFilterFromAttribute("login");
-		MetaModel::Init_AddFilterFromAttribute("class");
-		MetaModel::Init_AddFilterFromAttribute("action");
 	}
 }
 
@@ -99,12 +89,6 @@ class UserRightsMatrixClassStimulusGrant extends DBObject
 
 		MetaModel::Init_AddAttribute(new AttributeString("stimulus", array("allowed_values"=>null, "sql"=>"action", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("permission", array("allowed_values"=>new ValueSetEnum('yes,no'), "sql"=>"permission", "default_value"=>"yes", "is_null_allowed"=>false, "depends_on"=>array())));
-
-		//MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("userid");
-		MetaModel::Init_AddFilterFromAttribute("login");
-		MetaModel::Init_AddFilterFromAttribute("class");
-		MetaModel::Init_AddFilterFromAttribute("stimulus");
 	}
 }
 
@@ -133,13 +117,6 @@ class UserRightsMatrixAttributeGrant extends DBObject
 
 		MetaModel::Init_AddAttribute(new AttributeString("action", array("allowed_values"=>null, "sql"=>"action", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("permission", array("allowed_values"=>new ValueSetEnum('yes,no'), "sql"=>"permission", "default_value"=>"yes", "is_null_allowed"=>false, "depends_on"=>array())));
-
-		//MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("userid");
-		MetaModel::Init_AddFilterFromAttribute("login");
-		MetaModel::Init_AddFilterFromAttribute("class");
-		MetaModel::Init_AddFilterFromAttribute("attcode");
-		MetaModel::Init_AddFilterFromAttribute("action");
 	}
 }
 

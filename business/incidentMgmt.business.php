@@ -71,22 +71,6 @@ class bizIncidentTicket extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("related_tickets", array("linked_class"=>"lnkRelatedTicket", "ext_key_to_me"=>"ticket_id", "ext_key_to_remote"=>"rel_ticket_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array(/*'impacted_infra_computed',*/ 'impacted_infra_manual'))));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("contacts_a_notifier", array("linked_class"=>"lnkContactTicket", "ext_key_to_me"=>"ticket_id", "ext_key_to_remote"=>"contact_id", "allowed_values"=>null, "default_value"=>new ValueSetRelatedObjectsFromLinkSet('impacted_infra_manual'/*sLinkSetAttCode*/, 'infra_id'/*sExtKeyToRemote*/, 'impacts'/*sRelationCode*/, 3/*iMaxDepth*/, 'bizContact'/*sTargetClass*/, 'lnkContactTicket'/*sTargetLinkClass*/, 'contact_id'/*sTargetExtKey*/) /* ici plus tard... */, "count_min"=>0, "count_max"=>0, "depends_on"=>array('impacted_infra_manual'))));
 
-
-		//MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("name");
-		MetaModel::Init_AddFilterFromAttribute("title");
-		MetaModel::Init_AddFilterFromAttribute("type");
-		MetaModel::Init_AddFilterFromAttribute("org_id");
-		MetaModel::Init_AddFilterFromAttribute("caller_id");
-		MetaModel::Init_AddFilterFromAttribute("ticket_status");
-		MetaModel::Init_AddFilterFromAttribute("start_date");
-		MetaModel::Init_AddFilterFromAttribute("last_update");
-		MetaModel::Init_AddFilterFromAttribute("end_date");
-		MetaModel::Init_AddFilterFromAttribute("workgroup_id");
-		MetaModel::Init_AddFilterFromAttribute("agent_id");
-		MetaModel::Init_AddFilterFromAttribute("severity");
-		MetaModel::Init_AddFilterFromAttribute("assignment_count");
-
 		// doit-on aussi ajouter un filtre sur les extfields lié à une extkey ? ici le name de l'agent?
 		
 		// Display lists
@@ -237,9 +221,6 @@ class lnkRelatedTicket extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalField("ticket_name", array("allowed_values"=>null, "extkey_attcode"=> 'ticket_id', "target_attcode"=>"title")));
 		MetaModel::Init_AddAttribute(new AttributeString("impact", array("allowed_values"=>null, "sql"=>"impact", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_AddFilterFromAttribute("rel_ticket_id");
-		MetaModel::Init_AddFilterFromAttribute("ticket_id");
-		
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('rel_ticket_id', 'ticket_id', 'impact')); // Attributes to be displayed for a list
 		MetaModel::Init_SetZListItems('list', array('rel_ticket_id', 'ticket_id', 'impact')); // Attributes to be displayed for a list
@@ -286,9 +267,6 @@ class lnkInfraTicket extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalField("ticket_name", array("allowed_values"=>null, "extkey_attcode"=> 'ticket_id', "target_attcode"=>"title")));
 		MetaModel::Init_AddAttribute(new AttributeString("impact", array("allowed_values"=>null, "sql"=>"impact", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_AddFilterFromAttribute("infra_id");
-		MetaModel::Init_AddFilterFromAttribute("ticket_id");
-		
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('infra_id', 'ticket_id', 'impact')); // Attributes to be displayed for a list
 		MetaModel::Init_SetZListItems('list', array('infra_id', 'ticket_id', 'impact')); // Attributes to be displayed for a list
@@ -335,9 +313,6 @@ class lnkContactTicket extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalField("ticket_name", array("allowed_values"=>null, "extkey_attcode"=> 'ticket_id', "target_attcode"=>"title")));
 		MetaModel::Init_AddAttribute(new AttributeString("role", array("allowed_values"=>null, "sql"=>"role", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 
-		MetaModel::Init_AddFilterFromAttribute("contact_id");
-		MetaModel::Init_AddFilterFromAttribute("ticket_id");
-		
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('contact_id', 'ticket_id', 'role')); // Attributes to be displayed for a list
 		MetaModel::Init_SetZListItems('list', array('contact_id', 'ticket_id', 'role')); // Attributes to be displayed for a list
@@ -383,12 +358,6 @@ class bizWorkgroup extends logRealObject
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("team_id", array("targetclass"=>"bizTeam", "allowed_values"=>null, "sql"=>"team_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("team_name", array("allowed_values"=>null, "extkey_attcode"=> 'team_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeString("role", array("allowed_values"=>new ValueSetEnum("1st level support,2nd level support,3rd level support"), "sql"=>"role", "default_value"=>"1st level support", "is_null_allowed"=>true, "depends_on"=>array())));
-		
-		MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("org_name");
-		MetaModel::Init_AddFilterFromAttribute("team_id");
-		MetaModel::Init_AddFilterFromAttribute("role");
-		
 		
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'team_id', 'role')); // Attributes to be displayed for the complete details

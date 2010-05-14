@@ -32,13 +32,6 @@ class AuditRule extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("category_id", array("allowed_values"=>null, "sql"=>"category_id", "targetclass"=>"AuditCategory", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("category_name", array("allowed_values"=>null, "extkey_attcode"=> 'category_id', "target_attcode"=>"name")));
 
-		MetaModel::Init_AddFilterFromAttribute("name");
-		MetaModel::Init_AddFilterFromAttribute("description");
-		MetaModel::Init_AddFilterFromAttribute("query");
-		MetaModel::Init_AddFilterFromAttribute("valid_flag");
-		MetaModel::Init_AddFilterFromAttribute("category_id");
-		MetaModel::Init_AddFilterFromAttribute("category_name");
-
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('category_id', 'name', 'description', 'query', 'valid_flag')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('category_id', 'name', 'description', 'valid_flag')); // Attributes to be displayed for a list

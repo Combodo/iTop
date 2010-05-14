@@ -72,11 +72,6 @@ class URP_Users extends UserRightsBaseClass
 
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("profiles", array("linked_class"=>"URP_UserProfile", "ext_key_to_me"=>"userid", "ext_key_to_remote"=>"profileid", "allowed_values"=>null, "count_min"=>1, "count_max"=>0, "depends_on"=>array())));
 
-		//MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("userid");
-		MetaModel::Init_AddFilterFromAttribute("login");
-		MetaModel::Init_AddFilterFromAttribute("password");
-
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('userid', 'first_name', 'email', 'login', 'language')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('first_name', 'last_name', 'login')); // Attributes to be displayed for a list
@@ -199,10 +194,6 @@ class URP_Profiles extends UserRightsBaseClass
 
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("users", array("linked_class"=>"URP_UserProfile", "ext_key_to_me"=>"profileid", "ext_key_to_remote"=>"userid", "allowed_values"=>null, "count_min"=>1, "count_max"=>0, "depends_on"=>array())));
 
-		//MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("name");
-		MetaModel::Init_AddFilterFromAttribute("description");
-
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('name', 'description')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('name', 'description')); // Attributes to be displayed for a list
@@ -308,11 +299,6 @@ class URP_Dimensions extends UserRightsBaseClass
 		MetaModel::Init_AddAttribute(new AttributeString("name", array("allowed_values"=>null, "sql"=>"name", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("description", array("allowed_values"=>null, "sql"=>"description", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeClass("type", array("class_category"=>"bizmodel", "more_values"=>"String,Integer", "sql"=>"type", "default_value"=>'String', "is_null_allowed"=>false, "depends_on"=>array())));
-
-		//MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("name");
-		MetaModel::Init_AddFilterFromAttribute("description");
-		MetaModel::Init_AddFilterFromAttribute("type");
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('name', 'description', 'type')); // Attributes to be displayed for the complete details
@@ -432,10 +418,6 @@ class URP_UserProfile extends UserRightsBaseClass
 
 		MetaModel::Init_AddAttribute(new AttributeString("reason", array("allowed_values"=>null, "sql"=>"description", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 
-		//MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("userid");
-		MetaModel::Init_AddFilterFromAttribute("profileid");
-
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('userid', 'profileid', 'reason')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('userid', 'profileid', 'reason')); // Attributes to be displayed for a list
@@ -478,10 +460,6 @@ class URP_ProfileProjection extends UserRightsBaseClass
 
 		MetaModel::Init_AddAttribute(new AttributeString("value", array("allowed_values"=>null, "sql"=>"value", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("attribute", array("allowed_values"=>null, "sql"=>"attribute", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-
-		//MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("dimensionid");
-		MetaModel::Init_AddFilterFromAttribute("profileid");
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('dimensionid', 'profileid', 'value', 'attribute')); // Attributes to be displayed for the complete details
@@ -555,11 +533,6 @@ class URP_ClassProjection extends UserRightsBaseClass
 
 		MetaModel::Init_AddAttribute(new AttributeString("value", array("allowed_values"=>null, "sql"=>"value", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("attribute", array("allowed_values"=>null, "sql"=>"attribute", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-
-		//MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("dimensionid");
-		// #@# verifier
-		MetaModel::Init_AddFilterFromAttribute("class");
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('dimensionid', 'class', 'value', 'attribute')); // Attributes to be displayed for the complete details
@@ -639,15 +612,6 @@ class URP_ActionGrant extends UserRightsBaseClass
 
 		MetaModel::Init_AddAttribute(new AttributeString("action", array("allowed_values"=>null, "sql"=>"action", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 
-		//MetaModel::Init_InheritFilters();
-		// Common to all grant classes (could be factorized by class inheritence, but this has to be benchmarked)
-		MetaModel::Init_AddFilterFromAttribute("profileid");
-		MetaModel::Init_AddFilterFromAttribute("profile");
-		MetaModel::Init_AddFilterFromAttribute("class");
-		MetaModel::Init_AddFilterFromAttribute("permission");
-
-		MetaModel::Init_AddFilterFromAttribute("action");
-
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('profileid', 'class', 'permission', 'action')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('profileid', 'class', 'permission', 'action')); // Attributes to be displayed for a list
@@ -686,15 +650,6 @@ class URP_StimulusGrant extends UserRightsBaseClass
 
 		MetaModel::Init_AddAttribute(new AttributeString("stimulus", array("allowed_values"=>null, "sql"=>"action", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 
-		//MetaModel::Init_InheritFilters();
-		// Common to all grant classes (could be factorized by class inheritence, but this has to be benchmarked)
-		MetaModel::Init_AddFilterFromAttribute("profileid");
-		MetaModel::Init_AddFilterFromAttribute("profile");
-		MetaModel::Init_AddFilterFromAttribute("class");
-		MetaModel::Init_AddFilterFromAttribute("permission");
-
-		MetaModel::Init_AddFilterFromAttribute("stimulus");
-
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('profileid', 'class', 'permission', 'stimulus')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('profileid', 'class', 'permission', 'stimulus')); // Attributes to be displayed for a list
@@ -727,10 +682,6 @@ class URP_AttributeGrant extends UserRightsBaseClass
 
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("actiongrantid", array("targetclass"=>"URP_ActionGrant", "jointype"=> "", "allowed_values"=>null, "sql"=>"actiongrantid", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("attcode", array("allowed_values"=>null, "sql"=>"attcode", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-
-		//MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("actiongrantid");
-		MetaModel::Init_AddFilterFromAttribute("attcode");
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('actiongrantid', 'attcode')); // Attributes to be displayed for the complete details

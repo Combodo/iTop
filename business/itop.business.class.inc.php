@@ -74,11 +74,6 @@ class bizOrganization extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("parent_id", array("targetclass"=>"bizOrganization", "allowed_values"=>null, "sql"=>"parent_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("parent_name", array("allowed_values"=>null, "extkey_attcode"=> 'parent_id', "target_attcode"=>"name")));
 
-		MetaModel::Init_AddFilterFromAttribute("parent_id");
-		MetaModel::Init_AddFilterFromAttribute("name");
-		MetaModel::Init_AddFilterFromAttribute("code");
-		MetaModel::Init_AddFilterFromAttribute("status");
-		
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('name', 'code', 'status', 'parent_id')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('name', 'status', 'parent_id')); // Attributes to be displayed for a list
@@ -144,11 +139,6 @@ class logRealObject extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("org_id", array("targetclass"=>"bizOrganization", "allowed_values"=>null, "sql"=>"org_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("org_name", array("allowed_values"=>null, "extkey_attcode"=> 'org_id', "target_attcode"=>"name")));
 
-		MetaModel::Init_AddFilterFromAttribute("name");
-		MetaModel::Init_AddFilterFromAttribute("status");
-		MetaModel::Init_AddFilterFromAttribute("org_id");
-		MetaModel::Init_AddFilterFromAttribute("org_name");
-		
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'name', 'status', 'org_id')); // Attributes to be displayed for a list
@@ -199,13 +189,6 @@ class bizContact extends logRealObject
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("location_id", array("targetclass"=>"bizLocation", "allowed_values"=>new ValueSetObjects('SELECT bizLocation AS p WHERE p.org_id = :this->org_id'), "sql"=>"location_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array("org_id"))));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("location_name", array("allowed_values"=>null, "extkey_attcode"=> 'location_id', "target_attcode"=>"name")));
 
-		MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("org_name");
-		MetaModel::Init_AddFilterFromAttribute("email");
-		MetaModel::Init_AddFilterFromAttribute("phone");
-		MetaModel::Init_AddFilterFromAttribute("location_id");
-		MetaModel::Init_AddFilterFromAttribute("location_name");
-		
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'email', 'location_id', 'phone')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'name', 'status', 'org_id', 'email', 'location_id', 'phone')); // Attributes to be displayed for a list
@@ -252,10 +235,6 @@ class bizPerson extends bizContact
 		MetaModel::Init_AddAttribute(new AttributeString("first_name", array("allowed_values"=>null, "sql"=>"first_name", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("employee_number", array("allowed_values"=>null, "sql"=>"employee_number", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("first_name");
-		MetaModel::Init_AddFilterFromAttribute("employee_number");
-		
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('first_name', 'name', 'status', 'org_id', 'email', 'location_id', 'phone', 'employee_number')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('first_name', 'name', 'status', 'org_id', 'email', 'location_id', 'phone')); // Attributes to be displayed for a list
@@ -300,8 +279,6 @@ class bizTeam extends bizContact
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 
-		MetaModel::Init_InheritFilters();
-		
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'email', 'location_id', 'phone')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('name', 'status', 'org_id', 'email', 'location_id', 'phone')); // Attributes to be displayed for a list
@@ -341,12 +318,6 @@ class lnkContactTeam extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalField("team_name", array("allowed_values"=>null, "extkey_attcode"=> 'team_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeString("role", array("allowed_values"=>null, "sql"=>"role", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 
-		MetaModel::Init_AddFilterFromAttribute("contact_id");
-		MetaModel::Init_AddFilterFromAttribute("contact_name");
-		MetaModel::Init_AddFilterFromAttribute("team_id");
-		MetaModel::Init_AddFilterFromAttribute("team_name");
-		MetaModel::Init_AddFilterFromAttribute("role");
-		
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('contact_id', 'contact_phone', 'contact_email', 'team_id', 'role')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('contact_id', 'contact_phone', 'contact_email', 'team_id', 'role')); // Attributes to be displayed for a list
@@ -385,10 +356,6 @@ class bizDocument extends logRealObject
 		MetaModel::Init_AddAttribute(new AttributeText("description", array("allowed_values"=>null, "sql"=>"description", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
 		MetaModel::Init_AddAttribute(new AttributeBlob("contents", array("depends_on"=>array())));
-
-		MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("type");
-		MetaModel::Init_AddFilterFromAttribute("description");
 
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'type', 'description', 'contents')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('name', 'status', 'org_id', 'type', 'contents')); // Attributes to be displayed for a list
@@ -429,12 +396,6 @@ class lnkDocumentRealObject extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalField("object_name", array("allowed_values"=>null, "extkey_attcode"=> 'object_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeString("link_type", array("allowed_values"=>null, "sql"=>"link_type", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_AddFilterFromAttribute("doc_id");
-		MetaModel::Init_AddFilterFromAttribute("doc_name");
-		MetaModel::Init_AddFilterFromAttribute("object_id");
-		MetaModel::Init_AddFilterFromAttribute("object_name");
-		MetaModel::Init_AddFilterFromAttribute("link_type");
-		
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('doc_id', 'object_id', 'link_type')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('doc_id', 'object_id', 'link_type')); // Attributes to be displayed for a list
@@ -475,12 +436,6 @@ class lnkContactRealObject extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalField("object_name", array("allowed_values"=>null, "extkey_attcode"=> 'object_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeString("role", array("allowed_values"=>null, "sql"=>"role", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 
-		MetaModel::Init_AddFilterFromAttribute("contact_id");
-		MetaModel::Init_AddFilterFromAttribute("contact_name");
-		MetaModel::Init_AddFilterFromAttribute("object_id");
-		MetaModel::Init_AddFilterFromAttribute("object_name");
-		MetaModel::Init_AddFilterFromAttribute("role");
-		
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('contact_id', 'contact_phone', 'contact_email', 'object_id', 'role')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('contact_id', 'contact_phone', 'contact_email', 'object_id', 'role')); // Attributes to be displayed for a list
@@ -516,10 +471,7 @@ abstract class logInfra extends logRealObject
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('production,implementation,obsolete'), "sql"=>"status", "default_value"=>"implementation", "is_null_allowed"=>false, "depends_on"=>array())));
-    MetaModel::Init_AddAttribute(new AttributeEnum("severity", array("allowed_values"=>new ValueSetEnum("high,medium,low"), "sql"=>"severity", "default_value"=>"low", "is_null_allowed"=>false, "depends_on"=>array())));
-  
-		MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("severity");
+		MetaModel::Init_AddAttribute(new AttributeEnum("severity", array("allowed_values"=>new ValueSetEnum("high,medium,low"), "sql"=>"severity", "default_value"=>"low", "is_null_allowed"=>false, "depends_on"=>array())));
 	}
 }
 
@@ -553,12 +505,6 @@ class lnkContactInfra extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("infra_id", array("targetclass"=>"logInfra", "allowed_values"=>null, "sql"=>"infra_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("infra_name", array("allowed_values"=>null, "extkey_attcode"=> 'infra_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeString("role", array("allowed_values"=>null, "sql"=>"role", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-
-		MetaModel::Init_AddFilterFromAttribute("contact_id");
-		MetaModel::Init_AddFilterFromAttribute("contact_name");
-		MetaModel::Init_AddFilterFromAttribute("infra_id");
-		MetaModel::Init_AddFilterFromAttribute("infra_name");
-		MetaModel::Init_AddFilterFromAttribute("role");
 		
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('contact_id', 'contact_phone', 'contact_email', 'infra_id', 'role')); // Attributes to be displayed for the complete details
@@ -597,14 +543,6 @@ class bizLocation extends logInfra
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("parent_location_id", array("targetclass"=>"bizLocation", "allowed_values"=>null, "sql"=>"parent_location_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("parent_location_name", array("allowed_values"=>null, "extkey_attcode"=> 'parent_location_id', "target_attcode"=>"name")));
 
-    //  on veut pouvoir rechercher une location qui soit un descendant (pas obligatoirement direct) d'une Location, on fait comment ?
-
-		MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("country");
-		MetaModel::Init_AddFilterFromAttribute("address");
-		MetaModel::Init_AddFilterFromAttribute("parent_location_id");
-		MetaModel::Init_AddFilterFromAttribute("parent_location_name");
-		
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'address', 'country', 'parent_location_id')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('name', 'status', 'org_id', 'country')); // Attributes to be displayed for a list
@@ -740,16 +678,6 @@ class bizCircuit extends logInfra
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("provider_id", array("targetclass"=>"bizOrganization", "allowed_values"=>null, "sql"=>"provider_id", "is_null_allowed"=>false,"on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("carrier_name", array("allowed_values"=>null, "extkey_attcode"=> 'provider_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeString("carrier_ref", array("allowed_values"=>null, "sql"=>"carrier_ref", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-
-		MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("speed");
-		MetaModel::Init_AddFilterFromAttribute("location1_id");
-		MetaModel::Init_AddFilterFromAttribute("location2_id");
-		MetaModel::Init_AddFilterFromAttribute("interface1_id");
-		MetaModel::Init_AddFilterFromAttribute("interface2_id");
-
-		MetaModel::Init_AddFilterFromAttribute("provider_id");
-		MetaModel::Init_AddFilterFromAttribute("carrier_ref");
 		
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'speed', 'location1_id','interface1_id','device1_name','location2_id','interface2_id','device2_name','provider_id', 'carrier_ref')); // Attributes to be displayed for the complete details
@@ -810,24 +738,14 @@ class bizInterface extends logInfra
 
 		MetaModel::Init_AddAttribute(new AttributeEnum("logical_type", array("allowed_values"=>new ValueSetEnum("primary,secondary,backup,port,logical"), "sql"=>"logical_type", "default_value"=>"port", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("physical_type", array("allowed_values"=>new ValueSetEnum("ethernet,framerelay,atm,vlan"), "sql"=>"physical_type", "default_value"=>"ethernet", "is_null_allowed"=>false, "depends_on"=>array())));
-	  MetaModel::Init_AddAttribute(new AttributeString("ip_address", array("allowed_values"=>null, "sql"=>"ip_address", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-	  MetaModel::Init_AddAttribute(new AttributeString("mask", array("allowed_values"=>null, "sql"=>"mask", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-	  MetaModel::Init_AddAttribute(new AttributeString("mac", array("allowed_values"=>null, "sql"=>"mac", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-	  MetaModel::Init_AddAttribute(new AttributeString("speed", array("allowed_values"=>null, "sql"=>"speed", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-	  MetaModel::Init_AddAttribute(new AttributeEnum("duplex", array("allowed_values"=>new ValueSetEnum("half,full,unknown"), "sql"=>"duplex", "default_value"=>"unknown", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("ip_address", array("allowed_values"=>null, "sql"=>"ip_address", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("mask", array("allowed_values"=>null, "sql"=>"mask", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("mac", array("allowed_values"=>null, "sql"=>"mac", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("speed", array("allowed_values"=>null, "sql"=>"speed", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("duplex", array("allowed_values"=>new ValueSetEnum("half,full,unknown"), "sql"=>"duplex", "default_value"=>"unknown", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("if_connected_id", array("targetclass"=>"bizInterface", "allowed_values"=>null, "sql"=>"ext_if_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("if_connected_name", array("allowed_values"=>null, "extkey_attcode"=> 'if_connected_id', "target_attcode"=>"name")));
-  	MetaModel::Init_AddAttribute(new AttributeExternalField("if_connected_device", array("allowed_values"=>null, "extkey_attcode"=> 'if_connected_id', "target_attcode"=>"device_name")));
-
-		MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("device_id");
-		MetaModel::Init_AddFilterFromAttribute("device_name");
-		MetaModel::Init_AddFilterFromAttribute("device_location_id");
-		MetaModel::Init_AddFilterFromAttribute("logical_type");
-		MetaModel::Init_AddFilterFromAttribute("physical_type");
-    MetaModel::Init_AddFilterFromAttribute("ip_address");
-    MetaModel::Init_AddFilterFromAttribute("mac");		
-    MetaModel::Init_AddFilterFromAttribute("if_connected_id");	
+		MetaModel::Init_AddAttribute(new AttributeExternalField("if_connected_device", array("allowed_values"=>null, "extkey_attcode"=> 'if_connected_id', "target_attcode"=>"device_name")));
     
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'device_id', 'device_location_id','severity','logical_type','physical_type','ip_address','mask','mac','speed','duplex','if_connected_name','if_connected_device')); // Attributes to be displayed for the complete details
@@ -899,10 +817,6 @@ class bizSubnet extends logInfra
 		MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeString("ip", array("allowed_values"=>null, "sql"=>"ip", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("mask", array("allowed_values"=>null, "sql"=>"mask", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-
-		MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("ip");
-		MetaModel::Init_AddFilterFromAttribute("mask");
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('name', 'ip','mask')); // Attributes to be displayed for the complete details
@@ -985,14 +899,6 @@ class bizDevice extends logInfra
 		MetaModel::Init_AddAttribute(new AttributeString("model", array("allowed_values"=>null, "sql"=>"model", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("serial_number", array("allowed_values"=>null, "sql"=>"serial_number", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("mgmt_ip", array("allowed_values"=>null, "sql"=>"mgmt_ip", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-	
-		MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("location_id");
-		MetaModel::Init_AddFilterFromAttribute("country");
-		MetaModel::Init_AddFilterFromAttribute("brand");
-		MetaModel::Init_AddFilterFromAttribute("model");
-		MetaModel::Init_AddFilterFromAttribute("serial_number");
-		MetaModel::Init_AddFilterFromAttribute("mgmt_ip");
 	}
 
 	public static function GetRelationQueries($sRelCode)
@@ -1055,14 +961,6 @@ class bizPC extends bizDevice
 		MetaModel::Init_AddAttribute(new AttributeString("os_version", array("allowed_values"=>null, "sql"=>"os_version", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("shipment_number", array("allowed_values"=>null, "sql"=>"shipment_number", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("default_gateway", array("allowed_values"=>null, "sql"=>"default_gateway", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-
-		MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("type");
-		MetaModel::Init_AddFilterFromAttribute("memory_size");
-		MetaModel::Init_AddFilterFromAttribute("cpu");
-		MetaModel::Init_AddFilterFromAttribute("hdd_size");
-		MetaModel::Init_AddFilterFromAttribute("os_family");
-		MetaModel::Init_AddFilterFromAttribute("os_version");
 		
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('name', 'status','severity', 'org_id', 'location_id', 'brand', 'model','os_family','os_version','mgmt_ip','default_gateway','shipment_number','serial_number', 'type', 'cpu', 'memory_size', 'hdd_size')); // Attributes to be displayed for the complete details
@@ -1150,17 +1048,6 @@ class bizServer extends bizDevice
 		MetaModel::Init_AddAttribute(new AttributeString("os_version", array("allowed_values"=>null, "sql"=>"os_version", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("shipment_number", array("allowed_values"=>null, "sql"=>"shipment_number", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("default_gateway", array("allowed_values"=>null, "sql"=>"default_gateway", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-
-		MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("status");
-		MetaModel::Init_AddFilterFromAttribute("memory_size");
-		MetaModel::Init_AddFilterFromAttribute("cpu");
-		MetaModel::Init_AddFilterFromAttribute("number_of_cpus");
-		MetaModel::Init_AddFilterFromAttribute("hdd_size");
-		MetaModel::Init_AddFilterFromAttribute("hdd_free_size");
-		MetaModel::Init_AddFilterFromAttribute("os_family");
-		MetaModel::Init_AddFilterFromAttribute("os_version");
-	
  
 /*
 		// Life cycle
@@ -1317,10 +1204,6 @@ class bizNetworkDevice extends bizDevice
 		MetaModel::Init_AddAttribute(new AttributeString("snmp_read", array("allowed_values"=>null, "sql"=>"snmp_read", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("snmp_write", array("allowed_values"=>null, "sql"=>"snmp_write", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("type");
-		MetaModel::Init_AddFilterFromAttribute("ios_version");
-
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('name', 'status','severity','org_id', 'location_id', 'brand','model','type','mgmt_ip','default_gateway','serial_number','ios_version','memory','snmp_read','snmp_write')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('name', 'status','org_id','brand','model','type','mgmt_ip')); // Attributes to be displayed for a list
@@ -1375,13 +1258,6 @@ class bizInfraGroup extends logInfra
 		MetaModel::Init_AddAttribute(new AttributeString("description", array("allowed_values"=>null, "sql"=>"description", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("parent_group_id", array("targetclass"=>"bizInfraGroup", "allowed_values"=>null, "sql"=>"parent_group_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("parent_group_name", array("allowed_values"=>null, "extkey_attcode"=> 'parent_group_id', "target_attcode"=>"name")));
-
-
-		MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("type");
-		MetaModel::Init_AddFilterFromAttribute("parent_group_id");
-		MetaModel::Init_AddFilterFromAttribute("parent_group_name");
-
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'type', 'description','parent_group_id')); // Attributes to be displayed for a list
@@ -1459,16 +1335,6 @@ class bizApplication extends logInfra
 		MetaModel::Init_AddAttribute(new AttributeString("version", array("allowed_values"=>null, "sql"=>"version", "default_value"=>"undefined", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("function", array("allowed_values"=>null, "sql"=>"function", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 
-
-		MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("function");
-		MetaModel::Init_AddFilterFromAttribute("version");
-		MetaModel::Init_AddFilterFromAttribute("device_id");
-		MetaModel::Init_AddFilterFromAttribute("device_name");
-
-		
-		
-		
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('name','device_id','org_id','status','install_date', 'version','function')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('name','device_id', 'version', 'function')); // Attributes to be displayed for a list
@@ -1537,11 +1403,7 @@ class lnkInfraGrouping extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("infra_group_id", array("targetclass"=>"bizInfraGroup", "jointype"=> '', "allowed_values"=>null, "sql"=>"infra_group_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("group_name", array("allowed_values"=>null, "extkey_attcode"=> 'infra_group_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeString("impact", array("allowed_values"=>null, "sql"=>"impact", "default_value"=>"none", "is_null_allowed"=>true, "depends_on"=>array())));
-    // impact should modelized: enum (eg: if the group si dead when infra is dead)
-
-		MetaModel::Init_AddFilterFromAttribute("infra_id");
-		MetaModel::Init_AddFilterFromAttribute("infra_group_id");
-		MetaModel::Init_AddFilterFromAttribute("impact");
+		// impact should modelized: enum (eg: if the group si dead when infra is dead)
 		
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('infra_id','infra_status', 'impact', 'infra_group_id')); // Attributes to be displayed for a list
@@ -1594,9 +1456,6 @@ class lnkClientServer extends logRealObject
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("server_id", array("targetclass"=>"bizApplication", "jointype"=> '', "allowed_values"=>null, "sql"=>"server_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("server_name", array("allowed_values"=>null, "extkey_attcode"=> 'server_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeString("relation", array("allowed_values"=>null, "sql"=>"relation", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-
-		MetaModel::Init_AddFilterFromAttribute("client_id");
-		MetaModel::Init_AddFilterFromAttribute("server_id");
 		
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('client_id', 'server_id', 'relation')); // Attributes to be displayed for a list
@@ -1641,14 +1500,6 @@ class bizPatch extends logRealObject
 		MetaModel::Init_AddAttribute(new AttributeText("description", array("allowed_values"=>null, "sql"=>"description", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("patch_type", array("allowed_values"=>new ValueSetEnum("OS,Application"), "sql"=>"patch_type", "default_value"=>"OS", "is_null_allowed"=>false, "depends_on"=>array())));
 
-		MetaModel::Init_InheritFilters();
-
-		MetaModel::Init_AddFilterFromAttribute("patch_type");
-		MetaModel::Init_AddFilterFromAttribute("device_id");
-
-		
-		
-		
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('name','device_id', 'install_date', 'patch_type','description')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('name','device_id', 'patch_type','install_date')); // Attributes to be displayed for a list

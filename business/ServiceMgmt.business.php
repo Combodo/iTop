@@ -25,21 +25,14 @@ class bizService extends cmdbAbstractObject
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-    MetaModel::Init_AddAttribute(new AttributeString("name", array("allowed_values"=>null, "sql"=>"name", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-
-    MetaModel::Init_AddAttribute(new AttributeExternalKey("org_id", array("targetclass"=>"bizOrganization", "allowed_values"=>null, "sql"=>"customer_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("name", array("allowed_values"=>null, "sql"=>"name", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("org_id", array("targetclass"=>"bizOrganization", "allowed_values"=>null, "sql"=>"customer_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("provider_name", array("allowed_values"=>null, "extkey_attcode"=> 'org_id', "target_attcode"=>"name")));
- 	  MetaModel::Init_AddAttribute(new AttributeEnum("service_category", array("allowed_values"=>new ValueSetEnum("Server,Network,End-User,Desktop,Application"), "sql"=>"service_category", "default_value"=>"End-User", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("service_category", array("allowed_values"=>new ValueSetEnum("Server,Network,End-User,Desktop,Application"), "sql"=>"service_category", "default_value"=>"End-User", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("description", array("allowed_values"=>null, "sql"=>"description", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum("New, Implementation,Production,Obsolete"), "sql"=>"status", "default_value"=>"New", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("type", array("allowed_values"=>new ValueSetEnum("Hardware,Software,Support"), "sql"=>"type", "default_value"=>"Support", "is_null_allowed"=>false, "depends_on"=>array())));
-
-		MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("name");
-		MetaModel::Init_AddFilterFromAttribute("org_id");
-		MetaModel::Init_AddFilterFromAttribute("service_category");
-		MetaModel::Init_AddFilterFromAttribute("type");
-		MetaModel::Init_AddFilterFromAttribute("status");
 
 /*
 		// Life cycle
@@ -103,10 +96,10 @@ class bizContract extends cmdbAbstractObject
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-    MetaModel::Init_AddAttribute(new AttributeString("name", array("allowed_values"=>null, "sql"=>"name", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-    MetaModel::Init_AddAttribute(new AttributeExternalKey("org_id", array("targetclass"=>"bizOrganization", "allowed_values"=>null, "sql"=>"customer_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("name", array("allowed_values"=>null, "sql"=>"name", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("org_id", array("targetclass"=>"bizOrganization", "allowed_values"=>null, "sql"=>"customer_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("customer_name", array("allowed_values"=>null, "extkey_attcode"=> 'org_id', "target_attcode"=>"name")));
-    MetaModel::Init_AddAttribute(new AttributeExternalKey("service_id", array("targetclass"=>"bizService", "allowed_values"=>null, "sql"=>"service_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("service_id", array("targetclass"=>"bizService", "allowed_values"=>null, "sql"=>"service_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("provider_name", array("allowed_values"=>null, "extkey_attcode"=> 'service_id', "target_attcode"=>"provider_name")));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("service_name", array("allowed_values"=>null, "extkey_attcode"=> 'service_id', "target_attcode"=>"name")));
  		MetaModel::Init_AddAttribute(new AttributeExternalKey("team_id", array("targetclass"=>"bizTeam", "allowed_values"=>null, "sql"=>"team_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
@@ -122,21 +115,6 @@ class bizContract extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum("New, Negotiating, Signed, Production,Finished"), "sql"=>"status", "default_value"=>"New", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("type", array("allowed_values"=>new ValueSetEnum("Hardware,Software,Support,Licence"), "sql"=>"type", "default_value"=>"Support", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeInteger("version_number", array("allowed_values"=>null, "sql"=>"version_number", "default_value"=>1, "is_null_allowed"=>false, "depends_on"=>array())));
-
-		MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("service_name");
-		MetaModel::Init_AddFilterFromAttribute("provider_name");
-		MetaModel::Init_AddFilterFromAttribute("service_id");
-		MetaModel::Init_AddFilterFromAttribute("org_id");
-		MetaModel::Init_AddFilterFromAttribute("team_id");
-		MetaModel::Init_AddFilterFromAttribute("team_name");
-		MetaModel::Init_AddFilterFromAttribute("service_level");
-		MetaModel::Init_AddFilterFromAttribute("end_prod");
-		MetaModel::Init_AddFilterFromAttribute("status");
-		MetaModel::Init_AddFilterFromAttribute("version_number");
-		MetaModel::Init_AddFilterFromAttribute("name");
-		MetaModel::Init_AddFilterFromAttribute("type");
-
 
 /*
 		// Life cycle
@@ -218,11 +196,7 @@ class lnkInfraContract extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("contract_id", array("targetclass"=>"bizContract", "jointype"=> '', "allowed_values"=>null, "sql"=>"contract_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("contract_name", array("allowed_values"=>null, "extkey_attcode"=> 'contract_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeString("coverage", array("allowed_values"=>null, "sql"=>"coverage", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-    MetaModel::Init_AddAttribute(new AttributeString("service_level", array("allowed_values"=>null, "sql"=>"sla", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-
-
-		MetaModel::Init_AddFilterFromAttribute("infra_id");
-		MetaModel::Init_AddFilterFromAttribute("contract_id");
+		MetaModel::Init_AddAttribute(new AttributeString("service_level", array("allowed_values"=>null, "sql"=>"sla", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('infra_id', 'contract_id', 'coverage','service_level')); // Attributes to be displayed for a list
@@ -262,9 +236,6 @@ class lnkContactContract extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("contract_id", array("targetclass"=>"bizContract", "jointype"=> '', "allowed_values"=>null, "sql"=>"contract_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("contract_name", array("allowed_values"=>null, "extkey_attcode"=> 'contract_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeString("role", array("allowed_values"=>null, "sql"=>"role", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-
-		MetaModel::Init_AddFilterFromAttribute("contract_id");
-		MetaModel::Init_AddFilterFromAttribute("contact_id");
 		
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('contract_id', 'contact_id', 'role')); // Attributes to be displayed for a list
@@ -310,12 +281,6 @@ class lnkDocumentContract extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("contract_id", array("targetclass"=>"bizContract", "allowed_values"=>null, "sql"=>"contract_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("contract_name", array("allowed_values"=>null, "extkey_attcode"=> 'contract_id', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeString("link_type", array("allowed_values"=>null, "sql"=>"link_type", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-
-		MetaModel::Init_AddFilterFromAttribute("doc_id");
-		MetaModel::Init_AddFilterFromAttribute("doc_name");
-		MetaModel::Init_AddFilterFromAttribute("contract_id");
-		MetaModel::Init_AddFilterFromAttribute("contract_name");
-		MetaModel::Init_AddFilterFromAttribute("link_type");
 		
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('doc_id', 'contract_name', 'link_type')); // Attributes to be displayed for the complete details

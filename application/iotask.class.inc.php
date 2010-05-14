@@ -34,13 +34,6 @@ class InputOutputTask extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeEnum("verbose_mode", array("allowed_values"=>new ValueSetEnum('Yes,No'), "sql"=>"verbose_mode", "default_value" => 'No', "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("options", array("allowed_values"=>new ValueSetEnum('Full, Update Only, Creation Only'), "sql"=>"options", "default_value"=> 'Full', "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_AddFilterFromAttribute("name");
-		MetaModel::Init_AddFilterFromAttribute("description");
-		MetaModel::Init_AddFilterFromAttribute("category");
-		MetaModel::Init_AddFilterFromAttribute("source_type");
-		MetaModel::Init_AddFilterFromAttribute("source_subtype");
-		MetaModel::Init_AddFilterFromAttribute("objects_class");
-
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('name', 'description', 'category', 'objects_class', 'source_type', 'source_subtype', 'source_path' , 'options', 'test_mode', 'verbose_mode')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('name', 'description', 'category', 'objects_class', 'source_type', 'source_subtype', 'options')); // Attributes to be displayed for a list

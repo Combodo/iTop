@@ -847,11 +847,28 @@ abstract class MetaModel
 		}
 		foreach (self::GetClasses() as $sClass)
 		{
-			// Compute the fields that will be used to display a pointer to another object
-			//
 			self::$m_aExtKeyFriends[$sClass] = array();
 			foreach (self::$m_aAttribDefs[$sClass] as $sAttCode => $oAttDef)
 			{
+				// Compute the filter codes
+				//
+				foreach ($oAttDef->GetFilterDefinitions() as $sFilterCode => $oFilterDef)
+				{
+					self::$m_aFilterDefs[$sClass][$sFilterCode] = $oFilterDef;
+				}
+		
+				if ($oAttDef->IsExternalField())
+				{
+					$sKeyAttCode = $oAttDef->GetKeyAttCode();
+					$oKeyDef = self::GetAttributeDef($sClass, $sKeyAttCode);
+					self::$m_aFilterOrigins[$sClass][$sFilterCode] = $oKeyDef->GetTargetClass();
+				}
+				else
+				{
+					self::$m_aFilterOrigins[$sClass][$sFilterCode] = self::$m_aAttribOrigins[$sClass][$sAttCode];
+				}
+				// Compute the fields that will be used to display a pointer to another object
+				//
 				if ($oAttDef->IsExternalKey(EXTKEY_ABSOLUTE))
 				{
 					// oAttDef is either
@@ -1086,86 +1103,6 @@ abstract class MetaModel
 		// I wanted to simplify the syntax of the declaration of objects in the biz model
 		// Therefore, the reference to the host class is set there 
 		$oAtt->SetHostClass($sTargetClass);
-	}
-
-	public static function Init_InheritFilters($sSourceClass = null)
-	{
-		$sTargetClass = self::GetCallersPHPClass("Init");
-		if (empty($sSourceClass))
-		{
-			// Default: inherit from parent class
-			$sSourceClass = self::GetParentPersistentClass($sTargetClass);
-			if (empty($sSourceClass)) return; // no filters for the mother of all classes
-		}
-		if (isset(self::$m_aFilterDefs[$sSourceClass]))
-		{
-			if (!isset(self::$m_aFilterDefs[$sTargetClass]))
-			{
-				self::$m_aFilterDefs[$sTargetClass] = array();
-				self::$m_aFilterOrigins[$sTargetClass] = array();
-			}
-
-			foreach (self::$m_aFilterDefs[$sSourceClass] as $sFltCode=>$oFilter)
-			{
-				if ($oFilter instanceof FilterFromAttribute)
-				{
-					// In that case, cloning is not enough:
-					//  we must ensure that we will point to the correct
-					//  attribute definition (in case some properties are overloaded)
-					$oAttDef1 = $oFilter->__GetRefAttribute();
-					$oAttDef2 = self::GetAttributeDef($sTargetClass, $oAttDef1->GetCode());
-					$oNewFilter = new FilterFromAttribute($oAttDef2);
-				}
-				else
-				{
-					$oNewFilter = clone $oFilter;
-				}
-				self::$m_aFilterDefs[$sTargetClass][$sFltCode] = $oNewFilter;
-			}
-
-			self::$m_aFilterOrigins[$sTargetClass] = array_merge(self::$m_aFilterOrigins[$sTargetClass], self::$m_aFilterOrigins[$sSourceClass]);
-		}
-	}
-
-	public static function Init_OverloadFilterParams($sFltCode, $aParams)
-	{
-		$sTargetClass = self::GetCallersPHPClass("Init");
-		
-		if (!self::IsValidFilterCode($sTargetClass, $sFltCode))
-		{
-			throw new CoreException("Could not overload '$sFltCode', expecting a code from {".implode(", ", self::GetFiltersList($sTargetClass))."}");
-		}
-		self::$m_aFilterDefs[$sTargetClass][$sFltCode]->OverloadParams($aParams);
-	}
-
-	public static function Init_AddFilter(FilterDefinition $oFilter)
-	{
-		$sTargetClass = self::GetCallersPHPClass("Init");
-		self::$m_aFilterDefs[$sTargetClass][$oFilter->GetCode()] = $oFilter;
-		self::$m_aFilterOrigins[$sTargetClass][$oFilter->GetCode()] = $sTargetClass;
-		// Note: it looks redundant to put targetclass there, but a mix occurs when inheritance is used
-	}
-	public static function Init_AddFilterFromAttribute($sAttCode)
-	{
-		$sTargetClass = self::GetCallersPHPClass("Init");
-		
-		$oAttDef = self::GetAttributeDef($sTargetClass, $sAttCode);
-
-		$sFilterCode = $sAttCode;
-		$oNewFilter = new FilterFromAttribute($oAttDef);
-		self::$m_aFilterDefs[$sTargetClass][$sFilterCode] = $oNewFilter;
-
-		if ($oAttDef->IsExternalField())
-		{
-			$sKeyAttCode = $oAttDef->GetKeyAttCode();
-			$oKeyDef = self::GetAttributeDef($sTargetClass, $sKeyAttCode);
-			self::$m_aFilterOrigins[$sTargetClass][$sFilterCode] = $oKeyDef->GetTargetClass();
-		}
-		else
-		{
-			self::$m_aFilterOrigins[$sTargetClass][$sFilterCode] = $sTargetClass;
-		}
-		// Note: it looks redundant to put targetclass there, but a mix occurs when inheritance is used
 	}
 
 	public static function Init_SetZListItems($sListCode, $aItems)

@@ -36,11 +36,6 @@ class CMDBChangeOp extends DBObject
 		MetaModel::Init_AddAttribute(new AttributeString("objclass", array("allowed_values"=>null, "sql"=>"objclass", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("objkey", array("allowed_values"=>null, "sql"=>"objkey", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 
-		MetaModel::Init_AddFilterFromAttribute("objclass");
-		MetaModel::Init_AddFilterFromAttribute("objkey");
-		MetaModel::Init_AddFilterFromAttribute("date");
-		MetaModel::Init_AddFilterFromAttribute("userinfo");
-
 		MetaModel::Init_SetZListItems('details', array('change', 'date', 'userinfo')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('change', 'date', 'userinfo')); // Attributes to be displayed for the complete details
 	}
@@ -83,8 +78,6 @@ class CMDBChangeOpCreate extends CMDBChangeOp
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-
-		MetaModel::Init_InheritFilters();
 	}
 	
 	/**
@@ -125,8 +118,6 @@ class CMDBChangeOpDelete extends CMDBChangeOp
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-
-		MetaModel::Init_InheritFilters();
 	}
 	/**
 	 * Describe (as a text string) the modifications corresponding to this change
@@ -167,9 +158,6 @@ class CMDBChangeOpSetAttribute extends CMDBChangeOp
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeString("attcode", array("allowed_values"=>null, "sql"=>"attcode", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-
-		MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("attcode");
 		
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for the complete details
@@ -207,10 +195,6 @@ class CMDBChangeOpSetAttributeScalar extends CMDBChangeOpSetAttribute
 		MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeString("oldvalue", array("allowed_values"=>null, "sql"=>"oldvalue", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("newvalue", array("allowed_values"=>null, "sql"=>"newvalue", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-
-		MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("oldvalue");
-		MetaModel::Init_AddFilterFromAttribute("newvalue");
 		
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'attcode', 'oldvalue', 'newvalue')); // Attributes to be displayed for the complete details
@@ -307,8 +291,6 @@ class CMDBChangeOpSetAttributeBlob extends CMDBChangeOpSetAttribute
 		MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeBlob("prevdata", array("depends_on"=>array())));
 
-		MetaModel::Init_InheritFilters();
-		
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for a list
@@ -375,8 +357,6 @@ class CMDBChangeOpSetAttributeText extends CMDBChangeOpSetAttribute
 		MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeText("prevdata", array("allowed_values"=>null, "sql"=>"prevdata", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_InheritFilters();
-		
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for a list

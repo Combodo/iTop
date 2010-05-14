@@ -46,12 +46,6 @@ class menuNode extends DBObject
 		MetaModel::Init_AddAttribute(new AttributeExternalField("parent_name", array("allowed_values"=>null, "extkey_attcode"=>"parent_id", "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeInteger("user_id", array("allowed_values"=>null, "sql"=>"user_id", "default_value" => 0, "is_null_allowed"=>false, "depends_on"=>array())));
 
-		MetaModel::Init_AddFilterFromAttribute("label");
-		MetaModel::Init_AddFilterFromAttribute("parent_id");
-		MetaModel::Init_AddFilterFromAttribute("rank");
-		MetaModel::Init_AddFilterFromAttribute("type");
-		MetaModel::Init_AddFilterFromAttribute("user_id");
-		
 		MetaModel::Init_SetZListItems('details', array('parent_id', 'name', 'label', 'hyperlink', 'template', 'rank', 'type')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('parent_id', 'name', 'label', 'rank', 'type')); // Attributes to be displayed for a list
 	}

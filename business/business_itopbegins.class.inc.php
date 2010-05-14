@@ -53,10 +53,6 @@ class cmdbContact extends CMDBObject
 		MetaModel::Init_AddAttribute(new AttributeString("att_contact_name", array("allowed_values"=>null, "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array(), "sql"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeInteger("att_contact_availability", array("allowed_values"=>null, "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array(), "sql"=>"availability")));
 		MetaModel::Init_AddAttribute(new AttributeDate("start_date", array("allowed_values"=>null, "sql"=>"start_date", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-
-		MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("att_contact_name");
-		MetaModel::Init_AddFilterFromAttribute("att_contact_availability");
 	}
 }
 
@@ -92,9 +88,6 @@ class cmdbPerson extends cmdbContact
 		MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeString("att_person_email", array("allowed_values"=>$oValsDunsNumber, "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array(), "sql"=>"email")));
 		MetaModel::Init_AddAttribute(new AttributeString("att_person_name", array("allowed_values"=>new ValueSetEnum(array("nom1", "nom2", "nom10", "no", "noms", "")), "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array(), "sql"=>"name")));
-
-		MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("att_person_email");
 	}
 }
 
@@ -134,9 +127,6 @@ class cmdbSubcontractor extends cmdbPerson
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("ext_subcontractor_tutor", array("allowed_values"=>null, "sql"=>"tutor", "targetclass"=>"cmdbPerson", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("extatt_subcontractor_tutor_email", array("allowed_values"=>null, "extkey_attcode"=>"ext_subcontractor_tutor", "target_attcode"=>"att_person_email")));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("extatt_subcontractor_tutor_secondname", array("allowed_values"=>null, "extkey_attcode"=>"ext_subcontractor_tutor", "target_attcode"=>"att_person_name")));
-
-		MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("extatt_subcontractor_tutor_secondname");
 	}
 }
 
@@ -169,9 +159,6 @@ class cmdbCrowd extends cmdbObject
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeInteger("att_crowd_peoplecount", array("allowed_values"=>null, "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array(), "sql"=>"peoplecount")));
-
-		MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("att_crowd_peoplecount");
 	}
 }
 
@@ -204,9 +191,6 @@ class cmdbCompany extends cmdbCrowd
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeString("att_company_dunsnumber", array("allowed_values"=>null, "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array(), "sql"=>"dunsnumber")));
-
-		MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("att_company_dunsnumber");
 	}
 }
 
@@ -239,9 +223,6 @@ class cmdbProvider extends cmdbCompany
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeInteger("att_provider_ref", array("allowed_values"=>null, "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array(), "sql"=>"providerref")));
-
-		MetaModel::Init_InheritFilters();
-		MetaModel::Init_AddFilterFromAttribute("att_provider_ref");
 	}
 }
 
