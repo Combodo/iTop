@@ -149,7 +149,7 @@ class URP_Users extends UserRightsBaseClass
 
 		$oPage->SetCurrentTabContainer('Related Objects');
 
-		$oPage->SetCurrentTab('Grants matrix');
+		$oPage->SetCurrentTab(Dict::S('UI:UserManagement:GrantMatrix'));
 		$this->DoShowGrantSumary($oPage, 'bizmodel');
 
 		// debug
