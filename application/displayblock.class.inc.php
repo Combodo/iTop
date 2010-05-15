@@ -771,15 +771,6 @@ class HistoryBlock extends DisplayBlock
 	public function GetRenderContent(WebPage $oPage, $aExtraParams = array())
 	{
 		$sHtml = '';
-		// Add the extra params into the filter if they make sense for such a filter
-		$aFilterCodes = array_keys(MetaModel::GetClassFilterDefs($this->m_oFilter->GetClass()));
-		foreach($aFilterCodes as $sFilterCode)
-		{
-			if (isset($aExtraParams[$sFilterCode]))
-			{
-				$this->m_oFilter->AddCondition($sFilterCode, $aExtraParams[$sFilterCode]); // Use the default 'loose' operator
-			}
-		}
 		$oSet = new CMDBObjectSet($this->m_oFilter, array('date'=>false));
 		$sHtml .= "<!-- filter: ".($this->m_oFilter->ToOQL())."-->\n";
 		switch($this->m_sStyle)
