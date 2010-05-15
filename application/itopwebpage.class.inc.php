@@ -31,7 +31,8 @@ class iTopWebPage extends NiceWebPage
 		$this->add_linked_script("../js/jquery.treeview.js");
 		$this->add_linked_script("../js/jquery.autocomplete.js");
 		$this->add_linked_script("../js/jquery.bgiframe.js");
-		$this->add_linked_script("../js/jquery.jdMenu.js");
+		$this->add_linked_script("../js/jquery.positionBy.js");
+		$this->add_linked_script("../js/jquery.popupmenu.js");
 		$this->add_linked_script("../js/date.js");
 		$this->add_linked_script("../js/jquery.date.picker.js");
 		$this->add_linked_script("../js/jquery.tablesorter.min.js");

@@ -954,14 +954,14 @@ class MenuBlock extends DisplayBlock
 				if ($bIsBulkDeleteAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:BulkDelete'), 'url' => "../pages/$sUIPage?operation=select_for_deletion&filter=$sFilter&$sContext"); }
 			}
 		}
-		$sHtml .= "<div class=\"jd_menu_itop\"><ul class=\"jd_menu jd_menu_itop\">\n<li>".Dict::S('UI:Menu:Actions')."\n<ul>\n";
+		$sHtml .= "<div class=\"itop_popup\"><ul>\n<li>".Dict::S('UI:Menu:Actions')."\n<ul>\n";
 		foreach ($aActions as $aAction)
 		{
 			$sClass = isset($aAction['class']) ? " class=\"{$aAction['class']}\"" : "";
-			$sHtml .= "<li><a href=\"{$aAction['url']}\"$sClass>{$aAction['label']}</a></li>\n<li>\n";
+			$sHtml .= "<li><a href=\"{$aAction['url']}\"$sClass>{$aAction['label']}</a></li>\n";
 		}
 		$sHtml .= "</ul>\n</li>\n</ul></div>\n";
-		$oPage->add_ready_script("$(\"ul.jd_menu\").jdMenu();\n");
+		$oPage->add_ready_script("$(\"div.itop_popup>ul\").popupmenu();\n");
 		return $sHtml;
 	}	
 }

@@ -354,131 +354,82 @@ div.iTopLogo span {
     padding:5px 0px 16px 20px;
 }
 
-/* jdMenu popup menus */
-ul.jd_menu, 
-ul.jd_menu_vertical {
-	margin: 0px;
-	padding: 0px;
-	list-style-type: none;
-}
-ul.jd_menu ul,
-ul.jd_menu_vertical ul {
-	display: none;
-}
-ul.jd_menu li {
-	float: left;
-}
-
-/* -- Sub-Menus -- */
-ul.jd_menu ul,
-ul.jd_menu_vertical ul {
-	position: absolute;
-	display: none;
-	list-style-type: none;
-	margin: 0px;
-	padding: 0px;
-	z-index: 10000;
-}
-ul.jd_menu ul li,
-ul.jd_menu_vertical ul li {
-	float: none;
-	margin: 0px;
-}
-
-/* jdMenu popup menus styling */
-div.jd_menu_itop {
-	height:19px;
+/* popup menus */
+div.itop_popup {
+	margin: 0;
+	padding: 0;
 	float:right;
-	display:inline;
+}
+
+div.itop_popup > ul {
+	height:19px;
+	display:block;
 	width:70px; /* Nasty work-around for IE... en attendant mieux */
 	padding-left: 5px;
-	background: url(../images/actions_left.png) no-repeat left;
+	background: url(../images/actions_left.png) no-repeat top left;
+	cursor: pointer;
 }
 
-ul.jd_menu_itop {
+div.itop_popup > ul > li {
+	float: left;
+	list-style: none;
+	font-size: 11px;
+	font-family: Tahoma,sans-serif;
 	height: 19px;
-	padding-right:16px;
-	background: url(../images/actions_right.png) no-repeat right;
+	padding-right: 16px;
+	padding-left: 4px;
+	background: url(../images/actions_right.png) no-repeat top right transparent;
+	font-weight: bold;
+	color: #fff;
+	vertical-align: middle;
+}
+	
+.itop_popup li a {
+	display: block;
+	padding: 5px 12px;
+	text-decoration: none;
+	noborder: 1px solid white;
+	width: 70px;
+	color: #000;
+	font-weight: bold;
+	white-space: nowrap;
+	background: #fff;
+}
+
+.itop_popup li a:hover {
+	background: #1A4473;
+}
+
+.itop_popup ul > li > ul
+{	
+	border: 1px solid black;
+	background: #fff;
+}
+	
+.itop_popup li > ul
+{	margin: 0;
+	padding: 0;
+	position: absolute;
+	display: none;
+	border-top: 1px solid white;
+}
+
+.itop_popup li ul li {
+	float: none;
+	display: inline;
+}
+
+.itop_popup li ul li a {
+	width: auto;
+}
+
+.itop_popup li ul li a:hover {
+	background: #D81515;
+	color: #fff;
 	font-weight: bold;
 }
 
-ul.jd_menu_vertical {
-	width: 200px;
-	height: auto;
-	clear: both;
-	background: url(gradient-vertical.png) repeat-x;
-	background-color: #A5AFB8;
-}
-
-
-ul.jd_menu_itop a, 
-ul.jd_menu_itop a:active,
-ul.jd_menu_itop a:link,
-ul.jd_menu_itop a:visited {
-	text-decoration: none;
-	color: #FFF;
-}
-ul.jd_menu_itop ul li a,
-ul.jd_menu_itop ul li a:active,
-ul.jd_menu_itop ul li a:link,
-ul.jd_menu_itop ul li a:visited {
-	color: #000;
-}
-ul.jd_menu_itop li {
-	font-family: Tahoma, sans-serif;
-	font-size: 11px;
-	padding: 2px 6px 4px 6px;
-	cursor: pointer;
-	white-space: nowrap;
-	color: #FFF;
-}
-ul.jd_menu_itop li.jd_menu_active_menubar,
-ul.jd_menu_itop li.jd_menu_hover_menubar {
-	color: #FFF;
-}
-
-ul.jd_menu_vertical li.jd_menu_active_menubar,
-ul.jd_menu_vertical li.jd_menu_hover_menubar {
-	padding-left: 6px;
-	padding-top: 1px;
-	border-top: 1px solid #70777D;
-	border-left: 0px;
-	border-right: 0px;
-}
-
-ul.jd_menu_itop ul {
-	background: #d81515;
-	border: 1px solid #70777D;
-}
-ul.jd_menu_itop ul li {
-	padding: 3px 10px 3px 4px;
-	background: #FFF;
-	border: none;
-	color: #000;
-}
-ul.jd_menu_itop ul li.jd_menu_active,
-ul.jd_menu_itop ul li.jd_menu_hover {
-	background: #d81515;
-	padding-top: 2px;
-	border-top: 1px solid #ABB5BC;
-	padding-bottom: 2px;
-	border-bottom: 1px solid #929AA1;
-	color: #FFF;
-}
-
-ul.jd_menu_itop li ul li a {
-	padding: 0;
-	background: #fff;
-	padding-left:0;
-}
-
-ul.jd_menu_itop ul li.jd_menu_active a.jd_menu_active,
-ul.jd_menu_itop ul li.jd_menu_hover a.jd_menu_hover {
-	color: #FFF;
-	background: #d81515;
-	padding-left:0;
-}
-
+/************************************/
 .wizHeader {
 	background: #83b217;
 	padding: 15px;
