@@ -2320,12 +2320,13 @@ abstract class MetaModel
 
 				foreach($oAttDef->GetSQLColumns() as $sField => $sDBFieldType)
 				{
+					$bIndexNeeded = $oAttDef->RequiresIndex();
 					$sFieldSpecs = $oAttDef->IsNullAllowed() ? "$sDBFieldType NULL" : "$sDBFieldType NOT NULL";
 					if (!CMDBSource::IsField($sTable, $sField))
 					{
 						$aErrors[$sClass][$sAttCode][] = "field '$sField' could not be found in table '$sTable'";
 						$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` ADD `$sField` $sFieldSpecs";
-						if ($oAttDef->IsExternalKey())
+						if ($bIndexNeeded)
 						{
 							$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` ADD INDEX (`$sField`)";
 						}
@@ -2360,7 +2361,7 @@ abstract class MetaModel
 
 						// Create indexes (external keys only... so far)
 						//
-						if ($oAttDef->IsExternalKey() && !CMDBSource::HasIndex($sTable, $sField))
+						if ($bIndexNeeded && !CMDBSource::HasIndex($sTable, $sField))
 						{
 							$aErrors[$sClass][$sAttCode][] = "Foreign key '$sField' in table '$sTable' should have an index";
 							$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` ADD INDEX (`$sField`)";

@@ -175,6 +175,7 @@ abstract class AttributeDefinition
 	public function FromSQLToValue($aCols, $sPrefix = '') {return null;} // returns a value out of suffix/value pairs, for SELECT result interpretation
 	public function GetSQLColumns() {return array();} // returns column/spec pairs (1 in most of the cases), for STRUCTURING (DB creation)
 	public function GetSQLValues($value) {return array();} // returns column/value pairs (1 in most of the cases), for WRITING (Insert, Update)
+	public function RequiresIndex() {return false;}
 
 	public function GetJSCheckFunc()
 	{
@@ -676,6 +677,11 @@ class AttributeClass extends AttributeString
 	{
 		return MetaModel::GetName($sValue);
 	}
+
+	public function RequiresIndex()
+	{
+		return true;
+	}
 }
 
 /**
@@ -702,6 +708,11 @@ class AttributeFinalClass extends AttributeString
 	public function IsWritable()
 	{
 		return false;
+	}
+
+	public function RequiresIndex()
+	{
+		return true;
 	}
 
 	public function SetFixedValue($sValue)
@@ -869,8 +880,8 @@ class AttributeEnum extends AttributeString
 		}
 		if (count($aValues) > 0)
 		{
-			// The syntax used here is matters
-			// In particular, I had to remove unnecessary spaces to stick to
+			// The syntax used here do matters
+			// In particular, I had to remove unnecessary spaces to
 			// make sure that this string will match the field type returned by the DB
 			// (used to perform a comparison between the current DB format and the data model)
 			return "ENUM(".implode(",", $aValues).")";
@@ -879,6 +890,11 @@ class AttributeEnum extends AttributeString
 		{
 			return "VARCHAR(255)"; // ENUM() is not an allowed syntax!
 		}
+	}
+
+	public function RequiresIndex()
+	{
+		return true;
 	}
 
 	public function GetBasicFilterOperators()
@@ -1109,6 +1125,10 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 	public function GetTypeDesc() {return "Link to another object";}
 	public function GetEditClass() {return "ExtKey";}
 	protected function GetSQLCol() {return "INT(11)";}
+	public function RequiresIndex()
+	{
+		return true;
+	}
 
 	public function IsExternalKey($iType = EXTKEY_RELATIVE) {return true;}
 	public function GetTargetClass($iType = EXTKEY_RELATIVE) {return $this->Get("targetclass");}
