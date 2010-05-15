@@ -28,7 +28,7 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 				$aTotalDeletedObjs[$sRemoteClass][$iId]['auto_delete'] = $aData['auto_delete'];
 				if (!$bDeleteAllowed)
 				{
-					$aTotalDeletedObjs[$sRemoteClass][$iId]['issue'] = 'not allowed to delete this object';
+					$aTotalDeletedObjs[$sRemoteClass][$iId]['issue'] = Dict::S('UI:Delete:NotAllowedToDelete');
 					$bFoundStopper = true;
 				}
 				else
@@ -63,9 +63,10 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 					$aExtKeyLabels[] = $aRemoteAttDef->GetLabel();
 				}
 				$aResetedObjs[$sRemoteClass][$iId]['attributes_list'] = implode(', ', $aExtKeyLabels); 
+				$aTotalResetedObjs[$sRemoteClass][$iId]['attributes_list'] = $aResetedObjs[$sRemoteClass][$iId]['attributes_list'];
 				if (count($aForbiddenKeys) > 0)
 				{
-					$aTotalResetedObjs[$sRemoteClass][$iId]['issue'] = 'you are not allowed to update some fields: '.implode(', ', $aForbiddenKeys);
+					$aTotalResetedObjs[$sRemoteClass][$iId]['issue'] = Dict::Format('UI:Delete:NotAllowedToUpdate_Fields',implode(', ', $aForbiddenKeys));
 				}
 				else
 				{
@@ -82,20 +83,20 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 		if (count($aObjects) == 1)
 		{
 			$oObj = $aObjects[0];
-			$oP->add("<h1>Deletion of ".$oObj->GetName()."</h1>\n");		
+			$oP->add("<h1>".Dict::Format('UI:Title:DeletionOf_Object', $oObj->GetName())."</h1>\n");				
 		}
 		else
 		{
-			$oP->add("<h1>Deletion of ".count($aObjects)." objects of class $sClass.</h1>\n");		
+			$oP->add("<h1>".Dict::Format('UI:Title:BulkDeletionOf_Count_ObjectsOf_Class', count($aObjects), MetaModel::GetName($sClass))."</h1>\n");		
 		}
 		// Security - do not allow the user to force a forbidden delete by the mean of page arguments...
 		if ($bFoundStopper)
 		{
-			throw new SecurityException('This object could not be deleted because the current user do not have sufficient rights');
+			throw new SecurityException(Dict::S('UI:Error:NotEnoughRightsToDelete'));
 		}
 		if ($bFoundManual)
 		{
-			throw new SecurityException('This object could not be deleted because some manual operations must be performed prior to that');
+			throw new SecurityException(Dict::S('UI:Error:CannotDeleteBecauseOfDepencies'));
 		}
 
 		// Prepare the change reporting
@@ -104,7 +105,7 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 		$oMyChange->Set("date", time());
 		if (UserRights::GetUser() != UserRights::GetRealUser())
 		{
-			$sUserString = UserRights::GetRealUser()." on behalf of ".UserRights::GetUser();
+			$sUserString = Dict::Format('UI:Archive_User_OnBehalfOf_User', UserRights::GetRealUser(), UserRights::GetUser());
 		}
 		else
 		{
@@ -125,7 +126,7 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 				$aDisplayData[] = array(
 					'class' => MetaModel::GetName(get_class($oToDelete)),
 					'object' => $oToDelete->GetHyperLink(),
-					'consequence' => 'automatically deleted',
+					'consequence' => Dict::S('UI:Delete:AutomaticallyDeleted'),
 				);
 
 				$oToDelete->DBDeleteTracked($oMyChange);
@@ -142,7 +143,7 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 				$aDisplayData[] = array(
 					'class' => MetaModel::GetName(get_class($oToReset)),
 					'object' => $oToReset->GetHyperLink(),
-					'consequence' => 'automatic reset of: '.$aData['attributes_list'],
+					'consequence' => Dict::Format('UI:Delete:AutomaticResetOf_Fields', $aData['attributes_list']),
 				);
 
 				foreach ($aData['attributes'] as $sRemoteExtKey => $aRemoteAttDef)
@@ -160,16 +161,16 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 			if (count($aObjects) == 1)
 			{
 				$oObj = $aObjects[0];
-				$oP->p('Cleaning up any reference to '.$oObj->GetName().'...');
+				$oP->p(Dict::Format('UI:Delete:CleaningUpRefencesTo_Object', $oObj->GetName()));
 			}
 			else
 			{
-				$oP->p("Cleaning up any reference to the ".count($aObjects)." objects of class $sClass.\n");		
+				$oP->p(Dict::Format('UI:Delete:CleaningUpRefencesTo_Several_ObjectsOf_Class', count($aObjects), MetaModel::GetName($sClass)));
 			}
 			$aDisplayConfig = array();
 			$aDisplayConfig['class'] = array('label' => 'Class', 'description' => '');
 			$aDisplayConfig['object'] = array('label' => 'Object', 'description' => '');
-			$aDisplayConfig['consequence'] = array('label' => 'Done', 'description' => 'What has been done');
+			$aDisplayConfig['consequence'] = array('label' => 'Done', 'description' => Dict::S('UI:Delete:Done+'));
 			$oP->table($aDisplayConfig, $aDisplayData);
 		}
 
@@ -178,7 +179,7 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 			$sName = $oObj->GetName();
 			$sClassLabel = MetaModel::GetName(get_class($oObj));
 			$oObj->DBDeleteTracked($oMyChange);
-			$oP->add("<h1>".$sName." - $sClassLabel deleted</h1>\n");
+			$oP->add("<h1>".Dict::Format('UI:Delete:_Name_Class_Deleted')."</h1>\n");
 		}
 	}
 	else
@@ -186,11 +187,11 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 		if (count($aObjects) == 1)
 		{
 			$oObj = $aObjects[0];
-			$oP->add("<h1>Deletion of ".$oObj->GetHyperLink()."</h1>\n");
+			$oP->add("<h1>".Dict::Format('UI:Delete:ConfirmDeletionOf_Name', $oObj->GetName())."</h1>\n");
 		}
 		else
 		{
-			$oP->add("<h1>Deletion of ".count($aObjects)." objects of class $sClass.</h1>\n");		
+			$oP->add("<h1>".Dict::Format('UI:Delete:ConfirmDeletionOf_Count_ObjectsOf_Class', count($aObjects), MetaModel::GetName($sClass))."</h1>\n");
 		}
 		// Explain what should be done
 		//
@@ -205,22 +206,22 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 				{
 					if ($bAutoDel)
 					{
-						$sConsequence = 'Should be automaticaly deleted, but you are not allowed to do so';
+						$sConsequence = Dict::S('UI:Delete:ShouldBeDeletedAtomaticallyButNotAllowed');
 					}
 					else
 					{
-						$sConsequence = 'Must be deleted manually - you are not allowed to delete this object, please contact your application admin';
+						$sConsequence = Dict::S('UI:Delete:MustBeDeletedManuallyButNotAllowed');
 					}
 				}
 				else
 				{
 					if ($bAutoDel)
 					{
-						$sConsequence = 'Will be automaticaly deleted';
+						$sConsequence = Dict::S('UI:Delete:WillBeDeletedAutomatically');
 					}
 					else
 					{
-						$sConsequence = 'Must be deleted manually';
+						$sConsequence = Dict::S('UI:Delete:MustBeDeletedManually');
 					}
 				}
 				$aDisplayData[] = array(
@@ -237,11 +238,11 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 				$oToReset = $aData['to_reset'];
 				if (array_key_exists('issue', $aData))
 				{
-					$sConsequence = "Should be automatically updated, but: ".$aData['issue'];
+					$sConsequence = Dict::Format('UI:Delete:CannotUpdateBecause_Issue', $aData['issue']);
 				}
 				else
 				{
-					$sConsequence = "will be automaticaly updated (reset: ".$aData['attributes_list'].")";
+					$sConsequence = Dict::Format('UI:Delete:WillAutomaticallyUpdate_Fields', $aData['attributes_list']);
 				}
 				$aDisplayData[] = array(
 					'class' => MetaModel::GetName(get_class($oToReset)),
@@ -256,18 +257,18 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 			if (count($aObjects) == 1)
 			{
 				$oObj = $aObjects[0];
-				$oP->p("$iTotalTargets objects/links are referencing ".$oObj->GetName());
+				$oP->p(Dict::Format('UI:Delete:Count_Objects/LinksReferencing_Object', $iTotalTargets, $oObj->GetName()));
 			}
 			else
 			{
-				$oP->p("$iTotalTargets objects/links are referencing some of the objects to be deleted");	
+				$oP->p(Dict::Format('UI:Delete:Count_Objects/LinksReferencingTheObjects', $iTotalTargets));
 			}
-			$oP->p('To ensure Database integrity, any reference should be further eliminated');
+			$oP->p(Dict::S('UI:Delete:ReferencesMustBeDeletedToEnsureIntegrity'));
 
 			$aDisplayConfig = array();
 			$aDisplayConfig['class'] = array('label' => 'Class', 'description' => '');
 			$aDisplayConfig['object'] = array('label' => 'Object', 'description' => '');
-			$aDisplayConfig['consequence'] = array('label' => 'Consequence', 'description' => 'What will happen to this object');
+			$aDisplayConfig['consequence'] = array('label' => 'Consequence', 'description' => Dict::S('UI:Delete:Consequence+'));
 			$oP->table($aDisplayConfig, $aDisplayData);
 		}
 
@@ -275,15 +276,15 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 		{
 			if ($bFoundStopper)
 			{
-				$oP->p("Sorry, you are not allowed to delete this object, please see detailed explanations above");
+				$oP->p(Dict::S('UI:Delete:SorryDeletionNotAllowed'));
 			}
 			elseif ($bFoundManual)
 			{
-				$oP->p("Please do the manual operations requested above prior to requesting the deletion of this object");
+				$oP->p(Dict::S('UI:Delete:PleaseDoTheManualOperations'));
 			}		
 			$oP->add("<form method=\"post\">\n");
-			$oP->add("<input DISABLED type=\"submit\" name=\"\" value=\" Delete! \">\n");
-			$oP->add("<input type=\"button\" onclick=\"window.history.back();\" value=\" Cancel \">\n");
+			$oP->add("<input DISABLED type=\"submit\" name=\"\" value=\"".Dict::S('UI:Button:Delete')."\">\n");
+			$oP->add("<input type=\"button\" onclick=\"window.history.back();\" value=\"".Dict::S('UI:Button:Cancel')."\">\n");
 			$oP->add("</form>\n");
 		}
 		else
@@ -292,18 +293,18 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 			{
 				$oObj = $aObjects[0];
 				$id = $oObj->GetKey();
-				$oP->p("Please confirm that you want to delete ".$oObj->GetHyperLink());
+				$oP->p('<h1>'.Dict::Format('UI:Delect:Confirm_Object', $oObj->GetHyperLink()).'</h1>');
 				$oP->add("<form method=\"post\">\n");
 				$oP->add("<input type=\"hidden\" name=\"operation\" value=\"delete_confirmed\">\n");
 				$oP->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
 				$oP->add("<input type=\"hidden\" name=\"id\" value=\"$id\">\n");
-				$oP->add("<input type=\"submit\" name=\"\" value=\" Delete! \">\n");
-				$oP->add("<input type=\"button\" onclick=\"window.history.back();\" value=\" Cancel \">\n");
+				$oP->add("<input type=\"submit\" name=\"\" value=\"".Dict::S('UI:Button:Delete')."\">\n");
+				$oP->add("<input type=\"button\" onclick=\"window.history.back();\" value=\"".Dict::S('UI:Button:Cancel')."\">\n");
 				$oP->add("</form>\n");
 			}
 			else
 			{
-				$oP->add("<h1>Please confirm that you want to delete the following ".count($aObjects)." objects of class $sClass.</h1>\n");
+				$oP->p('<h1>'.Dict::Format('UI:Delect:Confirm_Count_ObjectsOf_Class', count($aObjects), MetaModel::GetName($sClass)).'</h1>');
 				$oSet = CMDBobjectSet::FromArray($sClass, $aObjects);
 				CMDBAbstractObject::DisplaySet($oP, $oSet, array('display_limit' => false, 'menu' => false));
 				$oP->add("<form method=\"post\">\n");
@@ -313,8 +314,8 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 				{
 					$oP->add("<input type=\"hidden\" name=\"selectObject[]\" value=\"".$oObj->GetKey()."\">\n");
 				}
-				$oP->add("<input type=\"submit\" name=\"\" value=\" Delete! \">\n");
-				$oP->add("<input type=\"button\" onclick=\"window.history.back();\" value=\" Cancel \">\n");
+				$oP->add("<input type=\"submit\" name=\"\" value=\"".Dict::S('UI:Button:Delete')."\">\n");
+				$oP->add("<input type=\"button\" onclick=\"window.history.back();\" value=\"".Dict::S('UI:Button:Cancel')."\">\n");
 				$oP->add("</form>\n");
 			}
 		}
@@ -363,7 +364,7 @@ try
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
 
-	$oP = new iTopWebPage("Welcome to ITop", $currentOrganization);
+	$oP = new iTopWebPage(Dict::S('UI:WelcomeToITop'), $currentOrganization);
 
 	// From now on the context is limited to the the selected organization ??
 	if ($iActiveNodeId != -1)
@@ -386,21 +387,18 @@ try
 			$oBlock->Display($oP, 0);
 			if ( empty($sClass) || empty($id)) // TO DO: check that the class name is valid !
 			{
-				$oP->add("<p>'class' and 'id' parameters must be specifed for this operation.</p>\n");
+				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
+			}
+			$oObj = $oContext->GetObject($sClass, $id);
+			if ($oObj != null)
+			{
+				$oP->set_title(Dict::Format('UI:DetailsPageTitle', $oObj->GetDisplayName(), $sClassLabel));
+				$oObj->DisplayDetails($oP);
 			}
 			else
 			{
-				$oObj = $oContext->GetObject($sClass, $id);
-				if ($oObj != null)
-				{
-					$oP->set_title("iTop - ".$oObj->GetDisplayName()." - $sClassLabel details");
-					$oObj->DisplayDetails($oP);
-				}
-				else
-				{
-					$oP->set_title("iTop - Error");
-					$oP->add("<p>Sorry this object does not exist (or you are not allowed to view it).</p>\n");
-				}
+				$oP->set_title(Dict::S('UI:ErrorPageTitle'));
+				$oP->P(Dict::S('UI:ObjectDoesNotExist'));
 			}
 		break;
 	
@@ -411,100 +409,13 @@ try
 			$bSearchForm = utils::ReadParam('search_form', true);
 			if (empty($sOQLClass))
 			{
-				$oP->set_title("iTop - Error");
-				$oP->add("<p>'oql_class' must be specifed for this operation.</p>\n");
+				throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'oql_class'));
 			}
-			else
+			$oP->set_title(Dict::S('UI:SearchResultsPageTitle'));
+			$sOQL = "SELECT $sOQLClass $sOQLClause";
+			try
 			{
-				$oP->set_title("iTop - Search results");
-				$sOQL = "SELECT $sOQLClass $sOQLClause";
-				try
-				{
-					$oFilter = DBObjectSearch::FromOQL($sOQL); // To Do: Make sure we don't bypass security
-					$oSet = new DBObjectSet($oFilter);
-					if ($bSearchForm)
-					{
-						$oBlock = new DisplayBlock($oFilter, 'search', false);
-						$oBlock->Display($oP, 0);
-					}
-					if (strtolower($sFormat) == 'csv')
-					{
-						$oBlock = new DisplayBlock($oFilter, 'csv', false);
-						$oBlock->Display($oP, 'csv');
-						$oPage->add_ready_script(" $('#csv').css('height', '95%');"); // adjust the size of the block
-					}
-					else
-					{
-						$oBlock = new DisplayBlock($oFilter, 'list', false);
-						$oBlock->Display($oP, 1);
-					}
-				}
-				catch(CoreException $e)
-				{
-					$oFilter = new DBObjectSearch($sOQLClass); // To Do: Make sure we don't bypass security
-					$oSet = new DBObjectSet($oFilter);
-					if ($bSearchForm)
-					{
-						$oBlock = new DisplayBlock($oFilter, 'search', false);
-						$oBlock->Display($oP, 0);
-					}
-					$oP->P("<b>Error incorrect OQL query:</b>");
-					$oP->P($e->getHtmlDesc());
-				}
-				catch(Exception $e)
-				{
-					$oP->p('<b>An error occured while running the query:</b>');
-					$oP->p($e->getMessage());
-				}
-			}
-		break;
-		case 'search_form':
-			$sClass = utils::ReadParam('class', '');
-			$sFormat = utils::ReadParam('format', 'html');
-			$bSearchForm = utils::ReadParam('search_form', true);
-			if (empty($sClass))
-			{
-				$oP->set_title("iTop - Error");
-				$oP->add("<p>'class' must be specifed for this operation.</p>\n");
-			}
-			else
-			{
-				$oP->set_title("iTop - Search results");
-				$oFilter =  $oContext->NewFilter($sClass);
-				$oSet = new DBObjectSet($oFilter);
-				if ($bSearchForm)
-				{
-					$oBlock = new DisplayBlock($oFilter, 'search', false /* Asynchronous */, array('open' => true));
-					$oBlock->Display($oP, 0);
-				}
-				if (strtolower($sFormat) == 'csv')
-				{
-					$oBlock = new DisplayBlock($oFilter, 'csv', false);
-					$oBlock->Display($oP, 1);
-					$oP->add_ready_script(" $('#csv').css('height', '95%');"); // adjust the size of the block
-				}
-				else
-				{
-					$oBlock = new DisplayBlock($oFilter, 'list', false);
-					$oBlock->Display($oP, 1);
-				}
-			}
-		break;
-		
-		case 'search':
-			$sFilter = utils::ReadParam('filter', '');
-			$sFormat = utils::ReadParam('format', '');
-			$bSearchForm = utils::ReadParam('search_form', true);
-			if (empty($sFilter))
-			{
-				$oP->set_title("iTop - Error");
-				$oP->add("<p>'filter' must be specifed for this operation.</p>\n");
-			}
-			else
-			{
-				$oP->set_title("iTop - Search results");
-				// TO DO: limit the search filter by the user context
-				$oFilter = CMDBSearchFilter::unserialize($sFilter); // TO DO : check that the filter is valid
+				$oFilter = DBObjectSearch::FromOQL($sOQL); // To Do: Make sure we don't bypass security
 				$oSet = new DBObjectSet($oFilter);
 				if ($bSearchForm)
 				{
@@ -515,7 +426,7 @@ try
 				{
 					$oBlock = new DisplayBlock($oFilter, 'csv', false);
 					$oBlock->Display($oP, 'csv');
-					$oP->add_ready_script(" $('#csv').css('height', '95%');"); // adjust the size of the block
+					$oPage->add_ready_script(" $('#csv').css('height', '95%');"); // adjust the size of the block
 				}
 				else
 				{
@@ -523,17 +434,92 @@ try
 					$oBlock->Display($oP, 1);
 				}
 			}
+			catch(CoreException $e)
+			{
+				$oFilter = new DBObjectSearch($sOQLClass); // To Do: Make sure we don't bypass security
+				$oSet = new DBObjectSet($oFilter);
+				if ($bSearchForm)
+				{
+					$oBlock = new DisplayBlock($oFilter, 'search', false);
+					$oBlock->Display($oP, 0);
+				}
+				$oP->P('<b>'.Dict::Format('UI:Error:IncorrectOQLQuery_Message', $e->getHtmlDesc()).'</b>');
+			}
+			catch(Exception $e)
+			{
+				$oP->P('<b>'.Dict::Format('UI:Error:AnErrorOccuredWhileRunningTheQuery_Message', $e->getMessage()).'</b>');
+			}
+		break;
+		
+		case 'search_form':
+			$sClass = utils::ReadParam('class', '');
+			$sFormat = utils::ReadParam('format', 'html');
+			$bSearchForm = utils::ReadParam('search_form', true);
+			if (empty($sClass))
+			{
+				throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'class'));
+			}
+			$oP->set_title(Dict::S('UI:SearchResultsPageTitle'));
+			$oFilter =  $oContext->NewFilter($sClass);
+			$oSet = new DBObjectSet($oFilter);
+			if ($bSearchForm)
+			{
+				$oBlock = new DisplayBlock($oFilter, 'search', false /* Asynchronous */, array('open' => true));
+				$oBlock->Display($oP, 0);
+			}
+			if (strtolower($sFormat) == 'csv')
+			{
+				$oBlock = new DisplayBlock($oFilter, 'csv', false);
+				$oBlock->Display($oP, 1);
+				$oP->add_ready_script(" $('#csv').css('height', '95%');"); // adjust the size of the block
+			}
+			else
+			{
+				$oBlock = new DisplayBlock($oFilter, 'list', false);
+				$oBlock->Display($oP, 1);
+			}
+		break;
+		
+		case 'search':
+			$sFilter = utils::ReadParam('filter', '');
+			$sFormat = utils::ReadParam('format', '');
+			$bSearchForm = utils::ReadParam('search_form', true);
+			if (empty($sFilter))
+			{
+				throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'filter'));
+			}
+			$oP->set_title(Dict::S('UI:SearchResultsPageTitle'));
+			// TO DO: limit the search filter by the user context
+			$oFilter = CMDBSearchFilter::unserialize($sFilter); // TO DO : check that the filter is valid
+			$oSet = new DBObjectSet($oFilter);
+			if ($bSearchForm)
+			{
+				$oBlock = new DisplayBlock($oFilter, 'search', false);
+				$oBlock->Display($oP, 0);
+			}
+			if (strtolower($sFormat) == 'csv')
+			{
+				$oBlock = new DisplayBlock($oFilter, 'csv', false);
+				$oBlock->Display($oP, 'csv');
+				$oP->add_ready_script(" $('#csv').css('height', '95%');"); // adjust the size of the block
+			}
+			else
+			{
+				$oBlock = new DisplayBlock($oFilter, 'list', false);
+				$oBlock->Display($oP, 1);
+			}
 		break;
 	
 		case 'full_text':
 			$sFullText = trim(utils::ReadParam('text', ''));
 			if (empty($sFullText))
 			{
-				$oP->p('Nothing to search.');
+				$oP->p(Dict::S('UI:Search:NoSearch'));
 			}
 			else
 			{
-				$oP->p("<h2>Results for '$sFullText':</h2>\n");
+				$oP->set_title(Dict::S('UI:SearchResultsPageTitle'));
+				$oP->p("<h1>".Dict::Format('UI:FullTextSearchTitle_Text', $sFullText)."</h1>");
 				$iCount = 0;
 				$iBlock = 0;
 				// Search in full text mode in all the classes
@@ -557,7 +543,7 @@ try
 						{
 							$iCount += count($aLeafs);
 							$oP->add("<div class=\"page_header\">\n");
-							$oP->add("<h1><span class=\"hilite\">".Metamodel::GetName($sClassName).":</span> ".count($aLeafs)." object(s) found.</h1>\n");
+							$oP->add("<h2><span class=\"hilite\">".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aLeafs), Metamodel::GetName($sClassName))."</h2>\n");
 							$oP->add("</div>\n");
 							$oLeafsFilter->AddCondition('id', $aLeafs, 'IN');
 							$oBlock = new DisplayBlock($oLeafsFilter, 'list', false);
@@ -567,7 +553,7 @@ try
 				}
 				if ($iCount == 0)
 				{
-					$oP->p('No object found.');
+					$oP->p(Dict::S('UI:Search:NoObjectFound'));
 				}
 			}	
 		break;
@@ -584,37 +570,34 @@ try
 			$id = utils::ReadParam('id', '');
 			if ( empty($sClass) || empty($id)) // TO DO: check that the class name is valid !
 			{
-				$oP->add("<p>'class' and 'id' parameters must be specifed for this operation.</p>\n");
+				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
+			}
+			// Check if the user can modify this object
+			$oSearch = new DBObjectSearch($sClass);
+			$oSearch->AddCondition('id', $id, '=');
+			$oSet = new CMDBObjectSet($oSearch);
+			if ($oSet->Count() > 0)
+			{
+				$oObj = $oSet->Fetch();
+			}
+		
+			$bIsModifiedAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) == UR_ALLOWED_YES);
+			$bIsReadAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_READ, $oSet) == UR_ALLOWED_YES);
+			if( ($oObj != null) && ($bIsModifiedAllowed) && ($bIsReadAllowed))
+			{
+				$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
+				$oP->add("<div class=\"page_header\">\n");
+				$oP->add("<h1>".Dict::Format('UI:ModificationTitle_Class_Object', $sClassLabel, $oObj->GetName())."</h1>\n");
+				$oP->add("</div>\n");
+
+				$oP->add("<div class=\"wizContainer\">\n");
+				$oObj->DisplayModifyForm($oP);
+				$oP->add("</div>\n");
 			}
 			else
 			{
-				// Check if the user can modify this object
-				$oSearch = new DBObjectSearch($sClass);
-				$oSearch->AddCondition('id', $id, '=');
-				$oSet = new CMDBObjectSet($oSearch);
-				if ($oSet->Count() > 0)
-				{
-					$oObj = $oSet->Fetch();
-				}
-			
-				$bIsModifiedAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) == UR_ALLOWED_YES);
-				$bIsReadAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_READ, $oSet) == UR_ALLOWED_YES);
-				if( ($oObj != null) && ($bIsModifiedAllowed) && ($bIsReadAllowed))
-				{
-					$oP->set_title("iTop - ".$oObj->GetName()." - $sClassLabel modification");
-					$oP->add("<div class=\"page_header\">\n");
-					$oP->add("<h1>Modification of $sClassLabel: <span class=\"hilite\">".$oObj->GetName()."</span></h1>\n");
-					$oP->add("</div>\n");
-
-					$oP->add("<div class=\"wizContainer\">\n");
-					$oObj->DisplayModifyForm($oP);
-					$oP->add("</div>\n");
-				}
-				else
-				{
-					$oP->set_title("iTop - Error");
-					$oP->add("<p>Sorry this object does not exist (or you are not allowed to view it).</p>\n");
-				}
+				$oP->set_title(Dict::S('UI:ErrorPageTitle'));
+				$oP->P(Dict::S('UI:ObjectDoesNotExist'));
 			}
 		break;
 	
@@ -624,43 +607,41 @@ try
 		$id = utils::ReadParam('id', '');
 		if ( empty($sClass) || empty($id)) // TO DO: check that the class name is valid !
 		{
-			$oP->add("<p>'class' and 'id' parameters must be specifed for this operation.</p>\n");
+			throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
+		}
+		// Check if the user can modify this object
+		$oSearch = new DBObjectSearch($sClass);
+		$oSearch->AddCondition('id', $id, '=');
+		$oSet = new CMDBObjectSet($oSearch);
+		if ($oSet->Count() > 0)
+		{
+			$oObjToClone = $oSet->Fetch();
+		}
+	
+		$bIsModifiedAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) == UR_ALLOWED_YES);
+		$bIsReadAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_READ, $oSet) == UR_ALLOWED_YES);
+		if( ($oObjToClone != null) && ($bIsModifiedAllowed) && ($bIsReadAllowed))
+		{
+			$oP->add_linked_script("../js/json.js");
+			$oP->add_linked_script("../js/forms-json-utils.js");
+			$oP->add_linked_script("../js/wizardhelper.js");
+			$oP->add_linked_script("../js/wizard.utils.js");
+			$oP->add_linked_script("../js/linkswidget.js");
+			$oP->add_linked_script("../js/jquery.blockUI.js");
+
+			$oP->set_title(Dict::Format('UI:ClonePageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
+			$oP->add("<div class=\"page_header\">\n");
+			$oP->add("<h1>".Dict::Format('UI:CloneTitle_Class_Object', $sClassLabel, $oObj->GetName())."</h1>\n");
+			$oP->add("</div>\n");
+
+			$oP->add("<div class=\"wizContainer\">\n");
+			cmdbAbstractObject::DisplayCreationForm($oP, $sClass, $oObjToClone);
+			$oP->add("</div>\n");
 		}
 		else
 		{
-			// Check if the user can modify this object
-			$oSearch = new DBObjectSearch($sClass);
-			$oSearch->AddCondition('id', $id, '=');
-			$oSet = new CMDBObjectSet($oSearch);
-			if ($oSet->Count() > 0)
-			{
-				$oObjToClone = $oSet->Fetch();
-			}
-		
-			$bIsModifiedAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) == UR_ALLOWED_YES);
-			$bIsReadAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_READ, $oSet) == UR_ALLOWED_YES);
-			if( ($oObjToClone != null) && ($bIsModifiedAllowed) && ($bIsReadAllowed))
-			{
-				$oP->add_linked_script("../js/json.js");
-				$oP->add_linked_script("../js/forms-json-utils.js");
-				$oP->add_linked_script("../js/wizardhelper.js");
-				$oP->add_linked_script("../js/wizard.utils.js");
-				$oP->add_linked_script("../js/linkswidget.js");
-				$oP->add_linked_script("../js/jquery.blockUI.js");
-				$oP->set_title("iTop - ".$oObjToClone->GetName()." - $sClassLabel clone");
-				$oP->add("<div class=\"page_header\">\n");
-				$oP->add("<h1>Clone of $sClassLabel: <span class=\"hilite\">".$oObjToClone->GetName()."</span></h1>\n");
-				$oP->add("</div>\n");
-
-				$oP->add("<div class=\"wizContainer\">\n");
-				cmdbAbstractObject::DisplayCreationForm($oP, $sClass, $oObjToClone);
-				$oP->add("</div>\n");
-			}
-			else
-			{
-				$oP->set_title("iTop - Error");
-				$oP->add("<p>Sorry this object does not exist (or you are not allowed to view it).</p>\n");
-			}
+			$oP->set_title(Dict::S('UI:ErrorPageTitle'));
+			$oP->P(Dict::S('UI:ObjectDoesNotExist'));
 		}
 		break;
 	
@@ -669,79 +650,76 @@ try
 			$sStateCode = utils::ReadParam('state', '');
 			if ( empty($sClass) )
 			{
-				$oP->p("The class must be specified for this operation!");
+				throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'class'));
 			}
-			else
+			$oP->add_linked_script("../js/json.js");
+			$oP->add_linked_script("../js/forms-json-utils.js");
+			$oP->add_linked_script("../js/wizardhelper.js");
+			$oP->add_linked_script("../js/wizard.utils.js");
+			$oP->add_linked_script("../js/linkswidget.js");
+			$oP->add_linked_script("../js/jquery.blockUI.js");
+			$oWizard = new UIWizard($oP, $sClass, $sStateCode);
+			$oContext = new UserContext();
+			$aArgs = array_merge($oAppContext->GetAsHash(), utils::ReadParam('default', array()));
+			$sStateCode = $oWizard->GetTargetState(); // Will computes the default state if none was supplied
+			$sClassLabel = MetaModel::GetName($sClass);
+
+			$oP->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel));
+			$oP->add("<h1>".Dict::Format('UI:CreationTitle_Class', $sClassLabel)."</h1>\n");
+			if (!empty($sStateCode))
 			{
-				$oP->add_linked_script("../js/json.js");
-				$oP->add_linked_script("../js/forms-json-utils.js");
-				$oP->add_linked_script("../js/wizardhelper.js");
-				$oP->add_linked_script("../js/wizard.utils.js");
-				$oP->add_linked_script("../js/linkswidget.js");
-				$oP->add_linked_script("../js/jquery.blockUI.js");
-				$oWizard = new UIWizard($oP, $sClass, $sStateCode);
-				$oContext = new UserContext();
-				$aArgs = array_merge($oAppContext->GetAsHash(), utils::ReadParam('default', array()));
-				$sStateCode = $oWizard->GetTargetState(); // Will computes the default state if none was supplied
-				$sClassLabel = MetaModel::GetName($sClass);
-				$oP->add("<h2>Creation of a new $sClassLabel</h2>");
-				if (!empty($sStateCode))
-				{
-					$sStateLabel = MetaModel::GetStateLabel($sClass, $sStateCode);
-				}
-				$aWizardSteps = $oWizard->GetWizardStructure();
-			
-				// Display the structure of the wizard
-				$iStepIndex = 1;
-				$iMaxInputId = 0;
-				$aFieldsMap = array();
-				foreach($aWizardSteps['mandatory'] as $aSteps)
-				{
-					$oP->SetCurrentTab("Step $iStepIndex *");
-					$oWizard->DisplayWizardStep($aSteps, $iStepIndex, $iMaxInputId, $aFieldsMap, false /* no finish button */, $aArgs);
-					//$oP->add("</div>\n");
-					$iStepIndex++;
-				}	
-				foreach($aWizardSteps['optional'] as $aSteps)
-				{
-					$oP->SetCurrentTab("Step $iStepIndex *");
-					$oWizard->DisplayWizardStep($aSteps, $iStepIndex, $iMaxInputId, $aFieldsMap, true, $aArgs); // true means enable the finish button
-					//$oP->add("</div>\n");
-					$iStepIndex++;
-				}
-				$oWizard->DisplayFinalStep($iStepIndex, $aFieldsMap);	
-			
-				$oObj = null;
-				if (!empty($id))
-				{
-					$oObj = $oContext->GetObject($sClass, $id);
-				}
-				if (!is_object($oObj))
-				{
-					// new object or that can't be retrieved (corrupted id or object not allowed to this user)
-					$id = '';
-					$oObj = MetaModel::NewObject($sClass);
-				}
-				$oP->add("<script type=\"text/javascript\">
-				// Fill the map between the fields of the form and the attributes of the object\n");
-			
-				$aNewFieldsMap = array();
-				foreach($aFieldsMap as $id => $sFieldCode)
-				{
-					$aNewFieldsMap[$sFieldCode] = $id;
-				}
-				$iFieldsCount = count($aFieldsMap);
-				$sJsonFieldsMap = json_encode($aNewFieldsMap);
-		
-				$oP->add("
-				// Initializes the object once at the beginning of the page...
-				var oWizardHelper = new WizardHelper('$sClass');
-				oWizardHelper.SetFieldsMap($sJsonFieldsMap);
-				oWizardHelper.SetFieldsCount($iFieldsCount);
-		
-				ActivateStep(1);
-				</script>\n");
+				$sStateLabel = MetaModel::GetStateLabel($sClass, $sStateCode);
 			}
+			$aWizardSteps = $oWizard->GetWizardStructure();
+		
+			// Display the structure of the wizard
+			$iStepIndex = 1;
+			$iMaxInputId = 0;
+			$aFieldsMap = array();
+			foreach($aWizardSteps['mandatory'] as $aSteps)
+			{
+				$oP->SetCurrentTab("Step $iStepIndex *");
+				$oWizard->DisplayWizardStep($aSteps, $iStepIndex, $iMaxInputId, $aFieldsMap, false /* no finish button */, $aArgs);
+				$iStepIndex++;
+			}	
+			foreach($aWizardSteps['optional'] as $aSteps)
+			{
+				$oP->SetCurrentTab("Step $iStepIndex");
+				$oWizard->DisplayWizardStep($aSteps, $iStepIndex, $iMaxInputId, $aFieldsMap, true, $aArgs); // true means enable the finish button
+				$iStepIndex++;
+			}
+			$oWizard->DisplayFinalStep($iStepIndex, $aFieldsMap);	
+		
+			$oObj = null;
+			if (!empty($id))
+			{
+				$oObj = $oContext->GetObject($sClass, $id);
+			}
+			if (!is_object($oObj))
+			{
+				// new object or that can't be retrieved (corrupted id or object not allowed to this user)
+				$id = '';
+				$oObj = MetaModel::NewObject($sClass);
+			}
+			$oP->add("<script type=\"text/javascript\">
+			// Fill the map between the fields of the form and the attributes of the object\n");
+		
+			$aNewFieldsMap = array();
+			foreach($aFieldsMap as $id => $sFieldCode)
+			{
+				$aNewFieldsMap[$sFieldCode] = $id;
+			}
+			$iFieldsCount = count($aFieldsMap);
+			$sJsonFieldsMap = json_encode($aNewFieldsMap);
+	
+			$oP->add("
+			// Initializes the object once at the beginning of the page...
+			var oWizardHelper = new WizardHelper('$sClass');
+			oWizardHelper.SetFieldsMap($sJsonFieldsMap);
+			oWizardHelper.SetFieldsCount($iFieldsCount);
+	
+			ActivateStep(1);
+			</script>\n");
 		break;
 	
 		case 'apply_modify':
@@ -751,19 +729,19 @@ try
 			$sTransactionId = utils::ReadPostedParam('transaction_id', '');
 			if ( empty($sClass) || empty($id)) // TO DO: check that the class name is valid !
 			{
-				$oP->add("<p>'class' and 'id' parameters must be specifed for this operation.</p>\n");
+				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
 			}
-			else if (!utils::IsTransactionValid($sTransactionId))
+			if (!utils::IsTransactionValid($sTransactionId))
 			{
-				$oP->p("<strong>Error: object has already be updated!</strong>\n");
+				$oP->p("<strong>".Dict::S('UI:Error:ObjectAlreadyUpdated')."</strong>\n");
 			}
 			else
 			{
 				$oObj = $oContext->GetObject($sClass, $id);
 				if ($oObj != null)
 				{
-					$oP->set_title("iTop - ".$oObj->GetName()." - $sClassLabel modification");
-					$oP->add("<h1>".$oObj->GetName()." - $sClassLabel modification</h1>\n");
+					$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
+					$oP->add("<h1>".Dict::Format('UI:ModificationTitle_Class_Object', $sClassLabel, $oObj->GetName())."</h1>\n");
 					$bObjectModified = false;
 					foreach(MetaModel::ListAttributeDefs(get_class($oObj)) as $sAttCode=>$oAttDef)
 					{
@@ -815,7 +793,7 @@ try
 					}
 					if (!$bObjectModified)
 					{
-						$oP->p("No modification detected. ".MetaModel::GetName(get_class($oObj))." has <strong>not</strong> been updated.\n");
+						$oP->p(Dict::Format('UI:Class_Object_NotUpdated', MetaModel::GetName(get_class($oObj)), $oObj->GetName()));
 					}
 					else if ($oObj->CheckToUpdate())
 					{
@@ -823,7 +801,7 @@ try
 						$oMyChange->Set("date", time());
 						if (UserRights::GetUser() != UserRights::GetRealUser())
 						{
-							$sUserString = UserRights::GetRealUser()." on behalf of ".UserRights::GetUser();
+							$sUserString = Dict::Format('UI:Archive_User_OnBehalfOf_User', UserRights::GetRealUser(), UserRights::GetUser());
 						}
 						else
 						{
@@ -833,18 +811,17 @@ try
 						$iChangeId = $oMyChange->DBInsert();
 						$oObj->DBUpdateTracked($oMyChange);
 			
-						$oP->p(MetaModel::GetName(get_class($oObj))." updated.\n");
+						$oP->p(Dict::Format('UI:Class_Object_Updated', MetaModel::GetName(get_class($oObj)), $oObj->GetName()));
 					}
 					else
 					{
-						$oP->p("<strong>Error: object can not be updated!</strong>\n");
-						//$oObj->Reload(); // restore default values!
+						$oP->p("<strong>".Dict::S('UI:Error:ObjectCannotBeUpdated')."</strong>\n");
 					}
 				}
 				else
 				{
-					$oP->set_title("iTop - Error");
-					$oP->add("<p>Sorry this object does not exist (or you are not allowed to edit it).</p>\n");
+					$oP->set_title(Dict::S('UI:ErrorPageTitle'));
+					$oP->P(Dict::S('UI:ObjectDoesNotExist'));
 				}
 			}
 			$oObj->DisplayDetails($oP);
@@ -856,30 +833,26 @@ try
 			$bSearchForm = utils::ReadParam('search_form', true);
 			if (empty($sFilter))
 			{
-				$oP->set_title("iTop - Error");
-				$oP->add("<p>'filter' must be specifed for this operation.</p>\n");
+				throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'filter'));
 			}
-			else
+			$oP->set_title(Dict::S('UI:BulkDeletePageTitle'));
+			$oP->add("<h1>".Dict::S('UI:BulkDeleteTitle')."</h1>\n");
+			// TO DO: limit the search filter by the user context
+			$oFilter = CMDBSearchFilter::unserialize($sFilter); // TO DO : check that the filter is valid
+			$oSet = new DBObjectSet($oFilter);
+			if ($bSearchForm)
 			{
-				$oP->set_title("iTop - mass delete");
-				$oP->add("<h1> Select the objects you want to delete</h1>\n");
-				// TO DO: limit the search filter by the user context
-				$oFilter = CMDBSearchFilter::unserialize($sFilter); // TO DO : check that the filter is valid
-				$oSet = new DBObjectSet($oFilter);
-				if ($bSearchForm)
-				{
-					$oBlock = new DisplayBlock($oFilter, 'search', false);
-					$oBlock->Display($oP, 0);
-				}
-				$oBlock = new DisplayBlock($oFilter, 'list', false);
-				$oP->add("<form method=\"post\">\n");
-				$oP->add("<input type=\"hidden\" name=\"operation\" value=\"bulk_delete\">\n");
-				$oP->add("<input type=\"hidden\" name=\"class\" value=\"".$oFilter->GetClass()."\">\n");
-				$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
-				$oBlock->Display($oP, 1, array('selection_type' => 'multiple', 'selection_mode' => true, 'display_limit' => false));
-				$oP->add("<input type=\"button\" value=\" Cancel \" onClick=\"window.history.back()\">&nbsp;&nbsp;<input type=\"submit\" value=\" Next >>\">\n");
-				$oP->add("</form>\n");
+				$oBlock = new DisplayBlock($oFilter, 'search', false);
+				$oBlock->Display($oP, 0);
 			}
+			$oBlock = new DisplayBlock($oFilter, 'list', false);
+			$oP->add("<form method=\"post\">\n");
+			$oP->add("<input type=\"hidden\" name=\"operation\" value=\"bulk_delete\">\n");
+			$oP->add("<input type=\"hidden\" name=\"class\" value=\"".$oFilter->GetClass()."\">\n");
+			$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
+			$oBlock->Display($oP, 1, array('selection_type' => 'multiple', 'selection_mode' => true, 'display_limit' => false));
+			$oP->add("<input type=\"button\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"window.history.back()\">&nbsp;&nbsp;<input type=\"submit\" value=\"".Dict::S('UI:Button:Next')."\">\n");
+			$oP->add("</form>\n");
 		break;
 		
 		case 'bulk_delete':
@@ -891,11 +864,11 @@ try
 			$sTransactionId = utils::ReadPostedParam('transaction_id', '');
 			if ( empty($sClass) || empty($aSelectObject)) // TO DO: check that the class name is valid !
 			{
-				throw new ApplicationException('Error: \'class\' and \'selectObject[]\' parameters must be specifed for this operation.');
+				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'selectObject[]'));
 			}
 			if (!utils::IsTransactionValid($sTransactionId))
 			{
-				throw new ApplicationException('Error: objects have already been deleted!');
+				throw new ApplicationException(Dict::S('UI:Error:ObjectsAlreadyDeleted'));
 			}
 			foreach($aSelectObject as $iId)
 			{
@@ -903,8 +876,9 @@ try
 			}
 			if (!UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_DELETE, DBObjectSet::FromArray($sClass, $aObjects)))
 			{
-				throw new SecurityException('You are not allowed to perform a bulk delete of objects of class '.$sClass);
+				throw new SecurityException(Dict::S('UI:Error:BulkDeleteNotAllowedOn_Class'), $sClass);
 			}
+			$oP->set_title(Dict::S('UI:BulkDeletePageTitle'));
 			DeleteObjects($oP, $sClass, $aObjects, ($operation == 'bulk_delete_confirmed'));
 		break;
 			
@@ -917,14 +891,9 @@ try
 	
 		if (!UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, DBObjectSet::FromObject($oObj)))
 		{
-			throw new SecurityException('You are not allowed to do delete objects of class '.$sClass);
+			throw new SecurityException(Dict::S('UI:Error:DeleteNotAllowedOn_Class'), $sClass);
 		}
 		DeleteObjects($oP, $sClass, array($oObj), ($operation == 'delete_confirmed'));
-		break;
-	
-		case 'apply_new':
-		$oP->p('Creation of the object');
-		$oP->p('Obsolete, should now go through the wizard...');
 		break;
 	
 		case 'apply_clone':
@@ -934,7 +903,7 @@ try
 		$sTransactionId = utils::ReadPostedParam('transaction_id', '');
 		if (!utils::IsTransactionValid($sTransactionId))
 		{
-			$oP->p("<strong>Error: object has already be cloned!</strong>\n");
+			$oP->p(Dict::S('UI:Error:ObjectAlreadyCloned'));
 		}
 		else
 		{
@@ -943,7 +912,7 @@ try
 				$oMyChange->Set("date", time());
 				if (UserRights::GetUser() != UserRights::GetRealUser())
 				{
-					$sUserString = UserRights::GetRealUser()." on behalf of ".UserRights::GetUser();
+					$sUserString = Dict::Format('UI:Archive_User_OnBehalfOf_User', UserRights::GetRealUser(), UserRights::GetUser());
 				}
 				else
 				{
@@ -961,7 +930,8 @@ try
 					}
 				}
 				$oObj->DBCloneTracked($oMyChange);
-				$oP->add("<h1>".$oObj->GetName()." - $sClassLabel created</h1>\n");
+				$oP->set_title(Dict::S('UI:PageTitle:ObjectCreated'));
+				$oP->add("<h1>".Dict::Format('UI:Title:Object_Of_Class_Created', $oObj->GetName(), $sClassLabel)."</h1>\n");
 				$oObj->DisplayDetails($oP);
 		}
 
@@ -973,7 +943,7 @@ try
 		$sTransactionId = utils::ReadPostedParam('transaction_id', '');
 		if (!utils::IsTransactionValid($sTransactionId))
 		{
-			$oP->p("<strong>Error: object has already be created!</strong>\n");
+			$oP->p(Dict::S('UI:Error:ObjectAlreadyCreated'));
 		}
 		else
 		{
@@ -986,7 +956,7 @@ try
 				$oMyChange->Set("date", time());
 				if (UserRights::GetUser() != UserRights::GetRealUser())
 				{
-					$sUserString = UserRights::GetRealUser()." on behalf of ".UserRights::GetUser();
+					$sUserString = Dict::Format('UI:Archive_User_OnBehalfOf_User', UserRights::GetRealUser(), UserRights::GetUser());
 				}
 				else
 				{
@@ -995,8 +965,8 @@ try
 				$oMyChange->Set("userinfo", $sUserString);
 				$iChangeId = $oMyChange->DBInsert();
 				$oObj->DBInsertTracked($oMyChange);
-				$oP->set_title("iTop - ".$oObj->GetName()." - $sClassLabel created");
-				$oP->add("<h1>".$oObj->GetName()." - $sClassLabel created</h1>\n");
+				$oP->set_title(Dict::S('UI:PageTitle:ObjectCreated'));
+				$oP->add("<h1>".Dict::Format('UI:Title:Object_Of_Class_Created', $oObj->GetName(), $sClassLabel)."</h1>\n");
 				$oObj->DisplayDetails($oP);
 			}
 		}
@@ -1008,75 +978,67 @@ try
 		$sStimulus = utils::ReadParam('stimulus', '');
 		if ( empty($sClass) || empty($id) ||  empty($sStimulus) ) // TO DO: check that the class name is valid !
 		{
-			$oP->add("<p>'class', 'id' and 'stimulus' parameters must be specifed for this operation.</p>\n");
+			throw new ApplicationException(Dict::Format('UI:Error:3ParametersMissing', 'class', 'id', 'stimulus'));
+		}
+		$oObj = $oContext->GetObject($sClass, $id);
+		if ($oObj != null)
+		{
+			$aTransitions = $oObj->EnumTransitions();
+			$aStimuli = MetaModel::EnumStimuli($sClass);
+			if (!isset($aTransitions[$sStimulus]))
+			{
+				// Invalid stimulus
+				throw new ApplicationException(Dict::Format('UI:Error:Invalid_Stimulus_On_Object_In_State', $sStimulus, $oObj->GetName(), $oObj->GetStateLabel()));
+			}
+			$sActionLabel = $aStimuli[$sStimulus]->GetLabel();
+			$sActionDetails = $aStimuli[$sStimulus]->GetDescription();
+			$aTransition = $aTransitions[$sStimulus];
+			$sTargetState = $aTransition['target_state'];
+			$aTargetStates = MetaModel::EnumStates($sClass);
+			$oP->add("<div class=\"page_header\">\n");
+			$oP->add("<h1>$sActionLabel - <span class=\"hilite\">{$oObj->GetName()}</span></h1>\n");
+			$oP->add("</div>\n");
+			$oObj->DisplayBareDetails($oP);
+			$aTargetState = $aTargetStates[$sTargetState];
+			$aExpectedAttributes = $aTargetState['attribute_list'];
+			$oP->add("<div class=\"wizHeader\">\n");
+			$oP->add("<h1>$sActionDetails</h1>\n");
+			$oP->add("<div class=\"wizContainer\">\n");
+			$oP->add("<form method=\"post\">\n");
+			$aDetails = array();
+			foreach($aExpectedAttributes as $sAttCode => $iExpectCode)
+			{
+				// Prompt for an attribute if
+				// - the attribute must be changed or must be displayed to the user for confirmation
+				// - or the field is mandatory and currently empty
+				if ( ($iExpectCode & (OPT_ATT_MUSTCHANGE | OPT_ATT_MUSTPROMPT)) ||
+					 (($iExpectCode & OPT_ATT_MANDATORY) && ($oObj->Get($sAttCode) == '')) ) 
+				{
+					$aAttributesDef = MetaModel::ListAttributeDefs($sClass);
+					$oAttDef = $aAttributesDef[$sAttCode];
+					$aArgs = array('this' => $oObj);
+					$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, $sClass, $sAttCode, $oAttDef, $oObj->Get($sAttCode), $oObj->GetEditValue($sAttCode), '', '', $iExpectCode, $aArgs);
+					$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $sHTMLValue);
+				}
+			}
+			$oP->details($aDetails);
+			$oP->add("<input type=\"hidden\" name=\"id\" value=\"$id\">\n");
+			$oP->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
+			$oP->add("<input type=\"hidden\" name=\"operation\" value=\"apply_stimulus\">\n");
+			$oP->add("<input type=\"hidden\" name=\"stimulus\" value=\"$sStimulus\">\n");
+			$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
+			$oP->add($oAppContext->GetForForm());
+			$oP->add("<button type=\"button\" class=\"action\" onClick=\"goBack()\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
+			$oP->add("<button type=\"submit\" class=\"action\"><span>$sActionLabel</span></button>\n");
+			$oP->add("</form>\n");
+			$oP->add("</div>\n");
+			$oP->add("</div>\n");
 		}
 		else
 		{
-			$oObj = $oContext->GetObject($sClass, $id);
-			if ($oObj != null)
-			{
-				$aTransitions = $oObj->EnumTransitions();
-				$aStimuli = MetaModel::EnumStimuli($sClass);
-				if (!isset($aTransitions[$sStimulus]))
-				{
-					$oP->add("<p><strong>Error:</strong> Invalid stimulus: '$sStimulus' on object: {$oObj->GetName()} in state {$oObj->GetStateLabel()}.</p>\n");
-				}
-				else
-				{
-					$sActionLabel = $aStimuli[$sStimulus]->GetLabel();
-					$sActionDetails = $aStimuli[$sStimulus]->GetDescription();
-					$aTransition = $aTransitions[$sStimulus];
-					$sTargetState = $aTransition['target_state'];
-					$aTargetStates = MetaModel::EnumStates($sClass);
-					$oP->add("<div class=\"page_header\">\n");
-					$oP->add("<h1>$sActionLabel - <span class=\"hilite\">{$oObj->GetName()}</span></h1>\n");
-					//$oP->add("<p>Applying '$sActionLabel' on object: {$oObj->GetName()} in state {$oObj->GetStateLabel()} to target state: $sTargetState.</p>\n");
-					$oP->add("</div>\n");
-					$oObj->DisplayBareDetails($oP);
-					$aTargetState = $aTargetStates[$sTargetState];
-					//print_r($aTransitions[$sStimulus]);
-					//print_r($aTargetState);
-					$aExpectedAttributes = $aTargetState['attribute_list'];
-					$oP->add("<div class=\"wizHeader\">\n");
-					$oP->add("<h1>$sActionDetails</h1>\n");
-					$oP->add("<div class=\"wizContainer\">\n");
-					$oP->add("<form method=\"post\">\n");
-					$aDetails = array();
-					foreach($aExpectedAttributes as $sAttCode => $iExpectCode)
-					{
-						// Prompt for an attribute if
-						// - the attribute must be changed or must be displayed to the user for confirmation
-						// - or the field is mandatory and currently empty
-						if ( ($iExpectCode & (OPT_ATT_MUSTCHANGE | OPT_ATT_MUSTPROMPT)) ||
-							 (($iExpectCode & OPT_ATT_MANDATORY) && ($oObj->Get($sAttCode) == '')) ) 
-						{
-							$aAttributesDef = MetaModel::ListAttributeDefs($sClass);
-							$oAttDef = $aAttributesDef[$sAttCode];
-							$aArgs = array('this' => $oObj);
-							$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, $sClass, $sAttCode, $oAttDef, $oObj->Get($sAttCode), $oObj->GetEditValue($sAttCode), '', '', $iExpectCode, $aArgs);
-							$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $sHTMLValue);
-						}
-					}
-					$oP->details($aDetails);
-					$oP->add("<input type=\"hidden\" name=\"id\" value=\"$id\">\n");
-					$oP->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
-					$oP->add("<input type=\"hidden\" name=\"operation\" value=\"apply_stimulus\">\n");
-					$oP->add("<input type=\"hidden\" name=\"stimulus\" value=\"$sStimulus\">\n");
-					$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
-					$oP->add($oAppContext->GetForForm());
-					$oP->add("<button type=\"button\" class=\"action\" onClick=\"goBack()\"><span>Cancel</span></button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
-					$oP->add("<button type=\"submit\" class=\"action\"><span>$sActionLabel</span></button>\n");
-					$oP->add("</form>\n");
-					$oP->add("</div>\n");
-					$oP->add("</div>\n");
-				}
-			}
-			else
-			{
-				$oP->set_title("iTop - Error");
-				$oP->add("<p>Sorry this object does not exist (or you are not allowed to edit it).</p>\n");
-			}		
-		}
+			$oP->set_title(Dict::S('UI:ErrorPageTitle'));
+			$oP->P(Dict::S('UI:ObjectDoesNotExist'));
+		}		
 		break;
 
 		case 'apply_stimulus':
@@ -1086,75 +1048,69 @@ try
 		$sStimulus = utils::ReadPostedParam('stimulus', '');
 		if ( empty($sClass) || empty($id) ||  empty($sStimulus) ) // TO DO: check that the class name is valid !
 		{
-			$oP->add("<p>'class', 'id' and 'stimulus' parameters must be specifed for this operation.</p>\n");
+			throw new ApplicationException(Dict::Format('UI:Error:3ParametersMissing', 'class', 'id', 'stimulus'));
 		}
-		else
+		$oObj = $oContext->GetObject($sClass, $id);
+		if ($oObj != null)
 		{
-			$oObj = $oContext->GetObject($sClass, $id);
-			if ($oObj != null)
+			$aTransitions = $oObj->EnumTransitions();
+			$aStimuli = MetaModel::EnumStimuli($sClass);
+			if (!isset($aTransitions[$sStimulus]))
 			{
-				$aTransitions = $oObj->EnumTransitions();
-				$aStimuli = MetaModel::EnumStimuli($sClass);
-				if (!isset($aTransitions[$sStimulus]))
-				{
-					$oP->add("<p><strong>Error:</strong> Invalid stimulus: '$sStimulus' on object: {$oObj->GetName()} in state {$oObj->GetStateLabel()}.</p>\n");
-				}
-				else if (!utils::IsTransactionValid($sTransactionId))
-				{
-					$oP->p("<strong>Error: object has already been updated!</strong>\n");
-				}
-				else
-				{
-					$sActionLabel = $aStimuli[$sStimulus]->GetLabel();
-					$sActionDetails = $aStimuli[$sStimulus]->GetDescription();
-					$aTransition = $aTransitions[$sStimulus];
-					$sTargetState = $aTransition['target_state'];
-					$aTargetStates = MetaModel::EnumStates($sClass);
-					$oP->add("<div class=\"page_header\">\n");
-					$oP->add("<h1>$sActionLabel - <span class=\"hilite\">{$oObj->GetName()}</span></h1>\n");
-					$oP->add("<p>$sActionDetails</p>\n");
-					$oP->add("<p>Applying '$sActionLabel' on object: {$oObj->GetName()} in state {$oObj->GetStateLabel()} to target state: $sTargetState.</p>\n");
-					$oP->add("</div>\n");
-					$aTargetState = $aTargetStates[$sTargetState];
-					//print_r($aTransitions[$sStimulus]);
-					//print_r($aTargetState);
-					$aExpectedAttributes = $aTargetState['attribute_list'];
-					$aDetails = array();
-					foreach($aExpectedAttributes as $sAttCode => $iExpectCode)
-					{
-						if (($iExpectCode & OPT_ATT_MUSTCHANGE) || ($oObj->Get($sAttCode) == '') ) 
-						{
-							$paramValue = utils::ReadPostedParam("attr_$sAttCode", '');
-							$oObj->Set($sAttCode, $paramValue);
-						}
-					}
-					if ($oObj->ApplyStimulus($sStimulus) && $oObj->CheckToUpdate())
-					{
-						$oMyChange = MetaModel::NewObject("CMDBChange");
-						$oMyChange->Set("date", time());
-						if (UserRights::GetUser() != UserRights::GetRealUser())
-						{
-							$sUserString = UserRights::GetRealUser()." on behalf of ".UserRights::GetUser();
-						}
-						else
-						{
-							$sUserString = UserRights::GetUser();
-						}
-						$oMyChange->Set("userinfo", $sUserString);
-						$iChangeId = $oMyChange->DBInsert();
-						$oObj->DBUpdateTracked($oMyChange);
-			
-						$oP->p(MetaModel::GetName(get_class($oObj))." updated.\n");
-					}
-					$oObj->DisplayDetails($oP);
-				}
+				throw new ApplicationException(Dict::Format('UI:Error:Invalid_Stimulus_On_Object_In_State', $sStimulus, $oObj->GetName(), $oObj->GetStateLabel()));
+			}
+			if (!utils::IsTransactionValid($sTransactionId))
+			{
+				$oP->p(Dict::S('UI:Error:ObjectAlreadyUpdated'));
 			}
 			else
 			{
-				$oP->set_title("iTop - Error");
-				$oP->add("<p>Sorry this object does not exist (or you are not allowed to edit it).</p>\n");
-			}		
+				$sActionLabel = $aStimuli[$sStimulus]->GetLabel();
+				$sActionDetails = $aStimuli[$sStimulus]->GetDescription();
+				$aTransition = $aTransitions[$sStimulus];
+				$sTargetState = $aTransition['target_state'];
+				$aTargetStates = MetaModel::EnumStates($sClass);
+				$oP->add("<div class=\"page_header\">\n");
+				$oP->add("<h1>$sActionLabel - <span class=\"hilite\">{$oObj->GetName()}</span></h1>\n");
+				$oP->add("<p>$sActionDetails</p>\n");
+				$oP->p(Dict::Format('UI:Apply_Stimulus_On_Object_In_State_ToTarget_State', $sACtionLabel, $oObj->GetName(), $oObj->GetStateLabel(), $sTargetState));
+				$oP->add("</div>\n");
+				$aTargetState = $aTargetStates[$sTargetState];
+				$aExpectedAttributes = $aTargetState['attribute_list'];
+				$aDetails = array();
+				foreach($aExpectedAttributes as $sAttCode => $iExpectCode)
+				{
+					if (($iExpectCode & OPT_ATT_MUSTCHANGE) || ($oObj->Get($sAttCode) == '') ) 
+					{
+						$paramValue = utils::ReadPostedParam("attr_$sAttCode", '');
+						$oObj->Set($sAttCode, $paramValue);
+					}
+				}
+				if ($oObj->ApplyStimulus($sStimulus) && $oObj->CheckToUpdate())
+				{
+					$oMyChange = MetaModel::NewObject("CMDBChange");
+					$oMyChange->Set("date", time());
+					if (UserRights::GetUser() != UserRights::GetRealUser())
+					{
+						$sUserString = Dict::Format('UI:Archive_User_OnBehalfOf_User', UserRights::GetRealUser(), UserRights::GetUser());
+					}
+					else
+					{
+						$sUserString = UserRights::GetUser();
+					}
+					$oMyChange->Set("userinfo", $sUserString);
+					$iChangeId = $oMyChange->DBInsert();
+					$oObj->DBUpdateTracked($oMyChange);
+					$oP->p(Dict::Format('UI:Class_Object_Updated'), get_class($oObj), $oObj->GetName());
+				}
+				$oObj->DisplayDetails($oP);
+			}
 		}
+		else
+		{
+			$oP->set_title(Dict::S('UI:ErrorPageTitle'));
+			$oP->P(Dict::S('UI:ObjectDoesNotExist'));
+		}		
 		break;
 
 		case 'modify_links':
@@ -1165,15 +1121,11 @@ try
 		$bAddObjects = utils::ReadParam('addObjects', false);
 		if ( empty($sClass) || empty($id) || empty($sLinkAttr) || empty($sTargetClass)) // TO DO: check that the class name is valid !
 		{
-			$oP->set_title("iTop - Error");
-			$oP->add("<p>4 parameters are mandatory for this operation: class, id, target_class and link_attr.</p>\n");
+			throw new ApplicationException(Dict::Format('UI:Error:4ParametersMissing', 'class', 'id', 'target_class', 'link_attr'));
 		}
-		else
-		{
-			require_once('../application/uilinkswizard.class.inc.php');
-			$oWizard = new UILinksWizard($sClass, $sLinkAttr, $id, $sTargetClass);
-			$oWizard->Display($oP, $oContext, array('StartWithAdd' => $bAddObjects));		
-		}
+		require_once('../application/uilinkswizard.class.inc.php');
+		$oWizard = new UILinksWizard($sClass, $sLinkAttr, $id, $sTargetClass);
+		$oWizard->Display($oP, $oContext, array('StartWithAdd' => $bAddObjects));		
 		break;
 	
 		case 'do_modify_links':
@@ -1192,7 +1144,7 @@ try
 		$oMyChange->Set("date", time());
 		if (UserRights::GetUser() != UserRights::GetRealUser())
 		{
-			$sUserString = UserRights::GetRealUser()." on behalf of ".UserRights::GetUser();
+			$sUserString = Dict::Format('UI:Archive_User_OnBehalfOf_User', UserRights::GetRealUser(), UserRights::GetUser());
 		}
 		else
 		{
@@ -1305,9 +1257,9 @@ try
 catch(CoreException $e)
 {
 	require_once('../setup/setuppage.class.inc.php');
-	$oP = new SetupWebPage('iTop - fatal error');
-	$oP->add("<h1>Fatal Error, iTop cannot continue</h1>\n");	
-	$oP->error("Error: '".$e->getHtmlDesc()."'");	
+	$oP = new SetupWebPage(Dict::S('UI:PageTitle:FatalError'));
+	$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");	
+	$oP->error(Dict::Format('UI:Error_Details', $e->getHtmlDesc()));	
 	$oP->output();
 
 	if (MetaModel::IsLogEnabledIssue())
@@ -1334,9 +1286,9 @@ catch(CoreException $e)
 catch(Exception $e)
 {
 	require_once('../setup/setuppage.class.inc.php');
-	$oP = new SetupWebPage('iTop - fatal error');
-	$oP->add("<h1>Fatal Error, iTop cannot continue</h1>\n");	
-	$oP->error("Error: '".$e->getMessage()."'");	
+	$oP = new SetupWebPage(Dict::S('UI:PageTitle:FatalError'));
+	$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");	
+	$oP->error(Dict::Format('UI:Error_Details', $e->getMessage()));	
 	$oP->output();
 
 	if (MetaModel::IsLogEnabledIssue())

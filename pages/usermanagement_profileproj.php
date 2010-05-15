@@ -37,8 +37,8 @@ function ComputeProjections($oPage)
 	// Setup display structure
 	//
 	$aDisplayConfig = array();
-	$aDisplayConfig['user'] = array('label' => 'User', 'description' => 'User concerned by the projection');
-	$aDisplayConfig['profile'] = array('label' => 'Profile', 'description' => 'Profile in which the projection is specified');
+	$aDisplayConfig['user'] = array('label' => Dict::S('UI:UserManagement:User'), 'description' => Dict::S('UI:UserManagement:User+'));
+	$aDisplayConfig['profile'] = array('label' => Dict::S('UI:UserManagement:Profile'), 'description' => Dict::S('UI:UserManagement:Profile+'));
 	foreach ($aDimensions as $iDimension => $oDimension)
 	{
 		$aDisplayConfig['dim'.$oDimension->GetKey()] = array('label' => $oDimension->GetName(), 'description' => $oDimension->Get('description'));
@@ -67,7 +67,7 @@ function ComputeProjections($oPage)
 				$aValues = $aProPros[$iProfile][$iDimension]->ProjectUser($oUser);
 				if (is_null($aValues))
 				{
-					$sValues = htmlentities('<any>');
+					$sValues = htmlentities(Dict::S('UI:UserManagement:AnyObject'));
 				}
 				else
 				{
@@ -98,7 +98,7 @@ $oAppContext = new ApplicationContext();
 $iActiveNodeId = utils::ReadParam('menu', -1);
 $currentOrganization = utils::ReadParam('org_id', 1);
 
-$oPage = new iTopWebPage("iTop user management - profile projections", $currentOrganization);
+$oPage = new iTopWebPage(Dict::S('UI:PageTitle:ProfileProjections'), $currentOrganization);
 $oPage->no_cache();
 
 ComputeProjections($oPage);

@@ -132,12 +132,12 @@ class WebPage
 					$sAlias = $aMatches[1];
 					$sClass = $aParams['class'][$sAlias];
 					$sUIPage = cmdbAbstractObject::ComputeUIPage($sClass);
-					$sHtml .= "<td><a class=\"no-arrow\" href=\"$sUIPage?operation=details&id=".$aRow[$sName]."&class=".$sClass."&".$oAppContext->GetForLink()."\"><img src=\"../images/zoom.gif\" title=\"Details\" border=\"0\"></a></td>\n";
+					$sHtml .= "<td><a class=\"no-arrow\" href=\"$sUIPage?operation=details&id=".$aRow[$sName]."&class=".$sClass."&".$oAppContext->GetForLink()."\"><img src=\"../images/zoom.gif\" title=\"".Dict::S('UI:Details+')."\" border=\"0\"></a></td>\n";
 				}
 				else if ($sName == 'key')
 				{
 					$sUIPage = cmdbAbstractObject::ComputeUIPage($aParams['class']);
-					$sHtml .= "<td><a class=\"no-arrow\" href=\"$sUIPage?operation=details&id=".$aRow['key']."&class=".$aParams['class']."&".$oAppContext->GetForLink()."\"><img src=\"../images/zoom.gif\" title=\"Details\" border=\"0\"></a></td>\n";
+					$sHtml .= "<td><a class=\"no-arrow\" href=\"$sUIPage?operation=details&id=".$aRow['key']."&class=".$aParams['class']."&".$oAppContext->GetForLink()."\"><img src=\"../images/zoom.gif\" title=\"".Dict::S('UI:Details+')."\" border=\"0\"></a></td>\n";
 				}
 				else
 				{

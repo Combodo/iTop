@@ -84,11 +84,11 @@ class URP_Users extends UserRightsBaseClass
 	{
 		if (UserRights::IsActionAllowed($sClass, $iAction, null, $this->GetKey())) 
 		{
-			return '<span style="background-color: #ddffdd;">yes</span>';
+			return '<span style="background-color: #ddffdd;">'.Dict::S('UI:UserManagement:ActionAllowed:Yes').'</span>';
 		}
 		else
 		{
-			return '<span style="background-color: #ffdddd;">no</span>';
+			return '<span style="background-color: #ffdddd;">'.Dict::S('UI:UserManagement:ActionAllowed:No').'</span>';
 		}
 	}
 	
@@ -98,7 +98,7 @@ class URP_Users extends UserRightsBaseClass
 		if (UserRights::IsAdministrator($iUserId))
 		{
 			// Looks dirty, but ok that's THE ONE
-			$oPage->p('Has Read/Write access to any object in the database.');
+			$oPage->p(Dict::S('UI:UserManagement:AdminProfile+'));
 			return;
 		}
 
@@ -120,7 +120,7 @@ class URP_Users extends UserRightsBaseClass
 			}
 			else
 			{
-				$sStimuli = '<em title="no lifecycle has been defined for this class">n/a</em>';
+				$sStimuli = '<em title="'.Dict::S('UI:UserManagement:NoLifeCycleApplicable+').'">'.Dict::S('UI:UserManagement:NoLifeCycleApplicable').'</em>';
 			}
 			
 			$aDisplayData[] = array(
@@ -134,12 +134,12 @@ class URP_Users extends UserRightsBaseClass
 		}
 	
 		$aDisplayConfig = array();
-		$aDisplayConfig['class'] = array('label' => 'Class', 'description' => '');
-		$aDisplayConfig['read'] = array('label' => 'Read', 'description' => '');
-		$aDisplayConfig['bulkread'] = array('label' => 'Bulk read', 'description' => 'List objects or export massively');
-		$aDisplayConfig['write'] = array('label' => 'Write', 'description' => 'Create and edit (modify)');
-		$aDisplayConfig['bulkwrite'] = array('label' => 'Bulk write', 'description' => 'Massively create/edit (CSV import)');
-		$aDisplayConfig['stimuli'] = array('label' => 'Stimuli', 'description' => 'Allowed (compound) actions');
+		$aDisplayConfig['class'] = array('label' => Dict::S('UI:UserManagement:Class'), 'description' => Dict::S('UI:UserManagement:Class+'));
+		$aDisplayConfig['read'] = array('label' => Dict::S('UI:UserManagement:Action:Read'), 'description' => Dict::S('UI:UserManagement:Action:Read+'));
+		$aDisplayConfig['bulkread'] = array('label' => Dict::S('UI:UserManagement:Action:BulkRead'), 'description' => Dict::S('UI:UserManagement:Action:BulkRead+'));
+		$aDisplayConfig['write'] = array('label' => Dict::S('UI:UserManagement:Action:Modify'), 'description' => Dict::S('UI:UserManagement:Action:Modify+'));
+		$aDisplayConfig['bulkwrite'] = array('label' => Dict::S('UI:UserManagement:Action:BulkModify'), 'description' => Dict::S('UI:UserManagement:Action:BulkModify+'));
+		$aDisplayConfig['stimuli'] = array('label' => Dict::S('UI:UserManagement:Action:Stimuli'), 'description' => Dict::S('UI:UserManagement:Action:Stimuli+'));
 		$oPage->table($aDisplayConfig, $aDisplayData);
 	}
 
@@ -207,11 +207,11 @@ class URP_Profiles extends UserRightsBaseClass
 		$oGrant = $oUserRights->GetClassActionGrant($this->GetKey(), $sClass, $sAction);
 		if (is_object($oGrant) && ($oGrant->Get('permission') == 'yes')) 
 		{
-			return '<span style="background-color: #ddffdd;">yes</span>';
+			return '<span style="background-color: #ddffdd;">'.Dict::S('UI:UserManagement:ActionAllowed:Yes').'</span>';
 		}
 		else
 		{
-			return '<span style="background-color: #ffdddd;">no</span>';
+			return '<span style="background-color: #ffdddd;">'.Dict::S('UI:UserManagement:ActionAllowed:No').'</span>';
 		}
 	}
 	
@@ -220,7 +220,7 @@ class URP_Profiles extends UserRightsBaseClass
 		if ($this->GetName() == "Administrator")
 		{
 			// Looks dirty, but ok that's THE ONE
-			$oPage->p('Has Read/Write access to any object in the database.');
+			$oPage->p(Dict::S('UI:UserManagement:AdminProfile+'));
 			return;
 		}
 
@@ -254,14 +254,14 @@ class URP_Profiles extends UserRightsBaseClass
 		}
 	
 		$aDisplayConfig = array();
-		$aDisplayConfig['class'] = array('label' => 'Class', 'description' => '');
-		$aDisplayConfig['read'] = array('label' => 'Read', 'description' => '');
-		$aDisplayConfig['bulkread'] = array('label' => 'Bulk read', 'description' => 'List objects or export massively');
-		$aDisplayConfig['write'] = array('label' => 'Write', 'description' => 'Create and edit (modify)');
-		$aDisplayConfig['bulkwrite'] = array('label' => 'Bulk write', 'description' => 'Massively create/edit (CSV import)');
-		$aDisplayConfig['delete'] = array('label' => 'Write', 'description' => 'Delete');
-		$aDisplayConfig['bulkdelete'] = array('label' => 'Bulk delete', 'description' => 'Massively delete');
-		$aDisplayConfig['stimuli'] = array('label' => 'Stimuli', 'description' => 'Allowed (compound) actions');
+		$aDisplayConfig['class'] = array('label' => Dict::S('UI:UserManagement:Class'), 'description' => Dict::S('UI:UserManagement:Class+'));
+		$aDisplayConfig['read'] = array('label' => Dict::S('UI:UserManagement:Action:Read'), 'description' => Dict::S('UI:UserManagement:Action:Read+'));
+		$aDisplayConfig['bulkread'] = array('label' => Dict::S('UI:UserManagement:Action:BulkRead'), 'description' => Dict::S('UI:UserManagement:Action:BulkRead+'));
+		$aDisplayConfig['write'] = array('label' => Dict::S('UI:UserManagement:Action:Modify'), 'description' => Dict::S('UI:UserManagement:Action:Modify+'));
+		$aDisplayConfig['bulkwrite'] = array('label' => Dict::S('UI:UserManagement:Action:BulkModify'), 'description' => Dict::S('UI:UserManagement:Action:BulkModify+'));
+		$aDisplayConfig['delete'] = array('label' => Dict::S('UI:UserManagement:Action:Delete'), 'description' => Dict::S('UI:UserManagement:Action:Delete+'));
+		$aDisplayConfig['bulkdelete'] = array('label' => Dict::S('UI:UserManagement:Action:BulkDelete'), 'description' => Dict::S('UI:UserManagement:Action:BulkDelete+'));
+		$aDisplayConfig['stimuli'] = array('label' => Dict::S('UI:UserManagement:Action:Stimuli'), 'description' => Dict::S('UI:UserManagement:Action:Stimuli+'));
 		$oPage->table($aDisplayConfig, $aDisplayData);
 	}
 
@@ -271,7 +271,7 @@ class URP_Profiles extends UserRightsBaseClass
 
 		$oPage->SetCurrentTabContainer('Related Objects');
 
-		$oPage->SetCurrentTab('Grants matrix');
+		$oPage->SetCurrentTab(Dict::S('UI:UserManagement:GrantMatrix'));
 		$this->DoShowGrantSumary($oPage);		
 	}
 }
@@ -428,7 +428,7 @@ class URP_UserProfile extends UserRightsBaseClass
 
 	public function GetName()
 	{
-		return "link between ".$this->Get('userlogin')." and ".$this->Get('profile');
+		return Dict::Format('UI:USerManagement:LinkBetween_User_And_Profile');
 	}
 }
 

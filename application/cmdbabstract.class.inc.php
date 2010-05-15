@@ -716,7 +716,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 				{
 					if (count($aMapCriteria[$sFilterCode]) > 1)
 					{
-						$sFilterValue = '* mixed *';
+						$sFilterValue = Dict::S('UI:SearchValue:Mixed');
 					}
 					else
 					{
@@ -734,7 +734,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 			{
 				//Enum field or external key, display a combo
 				$sValue = "<select name=\"$sFilterCode\">\n";
-				$sValue .= "<option value=\"\">* Any *</option>\n";
+				$sValue .= "<option value=\"\">".Dict::S('UI:SearchValue:Any')."</option>\n";
 				foreach($aAllowedValues as $key => $value)
 				{
 					if ($sFilterValue == $key)
@@ -900,7 +900,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 							// Few choices, use a normal 'select'
 							// In case there are no valid values, the select will be empty, thus blocking the user from validating the form
 							$sHTMLValue = "<select name=\"attr_{$sAttCode}{$sNameSuffix}\" id=\"$iInputId\"{$sCSSClasses}>\n";
-							$sHTMLValue .= "<option value=\"0\">-- select one --</option>\n";
+							$sHTMLValue .= "<option value=\"0\">".Dict::S('UI:SelectOne')."</option>\n";
 							foreach($aAllowedValues as $key => $display_value)
 							{
 								$sSelected = ($value == $key) ? ' selected' : '';

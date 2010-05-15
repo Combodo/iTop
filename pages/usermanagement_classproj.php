@@ -32,8 +32,8 @@ function ComputeProjections($oPage, $sScope)
 	// Setup display structure
 	//
 	$aDisplayConfig = array();
-	$aDisplayConfig['class'] = array('label' => 'Class', 'description' => 'Class');
-	$aDisplayConfig['object'] = array('label' => 'Object', 'description' => 'Projected object');
+	$aDisplayConfig['class'] = array('label' => Dict::S('UI:UserManagement:Class'), 'description' => Dict::S('UI:UserManagement:Class+'));
+	$aDisplayConfig['object'] = array('label' => Dict::S('UI:UserManagement:ProjectedObject'), 'description' => Dict::S('UI:UserManagement:ProjectedObject+'));
 	foreach ($aDimensions as $iDimension => $oDimension)
 	{
 		$aDisplayConfig['dim'.$oDimension->GetKey()] = array('label' => $oDimension->GetName(), 'description' => $oDimension->Get('description'));
@@ -57,7 +57,7 @@ function ComputeProjections($oPage, $sScope)
 			$aValues = $aClassProjs[$sClass][$iDimension]->ProjectObject($oObject);
 			if (is_null($aValues))
 			{
-				$sValues = htmlentities('<any>');
+				$sValues = htmlentities(Dict::S('UI:UserManagement:AnyObject'));
 			}
 			else
 			{
@@ -88,7 +88,7 @@ $iActiveNodeId = utils::ReadParam('menu', -1);
 $currentOrganization = utils::ReadParam('org_id', 1);
 $sScope = utils::ReadParam('scope', 'SELECT bizDevice');
 
-$oPage = new iTopWebPage("iTop user management - class projections", $currentOrganization);
+$oPage = new iTopWebPage(Dict::S('UI:PageTitle:ClassProjections'), $currentOrganization);
 $oPage->no_cache();
 
 ComputeProjections($oPage, $sScope);
