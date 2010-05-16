@@ -399,6 +399,10 @@ abstract class DBObject
 				if (is_object($oTargetObj))
 				{
 					$sEditValue = $oTargetObj->GetName();
+				}
+				else
+				{
+					$sEditValue = 0;
 				}					
 			}
 			else
