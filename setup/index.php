@@ -13,6 +13,8 @@ define('SETUP_STRUCTURE_DATA_DIR', './data/structure');
 define('SETUP_SAMPLE_DATA_DIR', './data');
 define('PHP_MIN_VERSION', '5.2.0');
 define('MYSQL_MIN_VERSION', '5.0.0');
+define('MIN_MEMORY_LIMIT', 32*1024*1024);
+
 
 $sOperation = Utils::ReadParam('operation', 'step1');
 $oP = new SetupWebPage('iTop configuration wizard');
@@ -46,7 +48,41 @@ function GetTmpDir()
     }
 }
 
-
+/**
+ * Check the value of the PHP setting 'memory_limit'
+ * against the minimum recommended value
+ * @param SetpWebPage $oP The current web page
+ * @param integer $iMinMemoryRequired The minimum memory for the test to pass
+ * @return boolean Whether or not it's Ok to continue
+ */
+function CheckMemoryLimit(SetupWebPage $oP, $iMinMemoryRequired)
+{
+	$sMemoryLimit = trim(ini_get('memory_limit'));
+	$bResult = true;
+	if (empty($sMemoryLimit))
+	{
+		// On some PHP installations, memory_limit does not exist as a PHP setting!
+		// (encountered on a 5.2.0 under Windows)
+		// In that case, ini_set will not work, let's keep track of this and proceed anyway
+		$oP->warning("No memory limit has been defined in this instance of PHP");		
+	}
+	else
+	{
+		// Check that the limit will allow us to load the data
+		//
+		$iMemoryLimit = utils::ConvertToBytes($sMemoryLimit);
+		if ($iMemoryLimit < $iMinMemoryRequired)
+		{
+			$oP->error("memory_limit ($iMemoryLimit) is too small, the minimum value to run iTop is $iMinMemoryRequired.");		
+			$bResult = false;
+		}
+		else
+		{
+			$oP->log_info("memory_limit is $iMemoryLimit, ok.");		
+		}
+	}
+	return $bResult;
+}
 /**
  * Helper function to retrieve the directory where files are to be uploaded
  * @return string Path to the temp directory used for uploading files 
@@ -167,6 +203,8 @@ function CheckPHPVersion(SetupWebPage $oP)
 		$oP->error("'magic_quotes_gpc' is set to On in '$sPhpIniFile', please turn if Off before continuing.");
 		$bResult = false;
 	}
+	
+	$bResult = $bResult & CheckMemoryLimit($oP, MIN_MEMORY_LIMIT);
 	
 	return $bResult;
 }
