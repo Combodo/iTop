@@ -18,7 +18,6 @@ jQuery.fn.popupmenu = function ()
 	{
 		$(this).bind('mouseenter.popup_menu click.popup_menu', function (evt)
 		{
-			console.log(evt.type);
 			var previous_popup = popupmenu;
 			var bMenuClosed = false;
 			popupmenu = $(this).find('ul');

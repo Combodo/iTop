@@ -198,7 +198,15 @@ class WizardHelper
 	
 	public function GetIdForField($sFieldName)
 	{
-		return $this->m_aData['m_oFieldsMap'][$sFieldName];
+		$sResult = '';
+		// It may happen that the field we'd like to update does not
+		// exist in the form. For example, if the field should be hidden/read-only
+		// in the current state of the object
+		if (isset($this->m_aData['m_oFieldsMap'][$sFieldName]))
+		{
+			$sResult = $this->m_aData['m_oFieldsMap'][$sFieldName];
+		}
+		return $sResult;
 	}
 	
 	static function ParseJsonSet($oMe, $sLinkClass, $sExtKeyToMe, $sJsonSet)

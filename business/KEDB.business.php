@@ -95,8 +95,7 @@ class lnkInfraError extends cmdbAbstractObject
 
 	
 }
-if (false)
-{
+
 ////////////////////////////////////////////////////////////////////////////////////
 /**
 * n-n link between any Contract and a Document
@@ -130,7 +129,6 @@ class lnkDocumentError extends cmdbAbstractObject
 		MetaModel::Init_SetZListItems('details', array('doc_id', 'error_name', 'link_type')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('doc_id', 'error_name', 'link_type')); // Attributes to be displayed for a list
 	}
-}
 }
 
 ?>

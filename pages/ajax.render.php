@@ -88,12 +88,18 @@ switch($operation)
 	foreach($oWizardHelper->GetFieldsForAllowedValues() as $sAttCode)
 	{
 		$sId = $oWizardHelper->GetIdForField($sAttCode);
-		$value = $oObj->Get($sAttCode);
-		$displayValue = $oObj->GetEditValue($sAttCode);
-		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-		$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $value, $displayValue, $sId, '', 0, array('this' => $oObj));
-
-		$oWizardHelper->SetAllowedValuesHtml($sAttCode, $sHTMLValue);
+		if ($sId != '')
+		{
+			// It may happen that the field we'd like to update does not
+			// exist in the form. For example, if the field should be hidden/read-only
+			// in the current state of the object
+			$value = $oObj->Get($sAttCode);
+			$displayValue = $oObj->GetEditValue($sAttCode);
+			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+			$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $value, $displayValue, $sId, '', 0, array('this' => $oObj));
+	
+			$oWizardHelper->SetAllowedValuesHtml($sAttCode, $sHTMLValue);
+		}
 	}
 	$oPage->add("<script type=\"text/javascript\">\noWizardHelper.m_oData=".$oWizardHelper->ToJSON().";\noWizardHelper.UpdateFields();\n</script>\n");
 	break;

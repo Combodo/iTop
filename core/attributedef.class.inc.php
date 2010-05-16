@@ -1268,7 +1268,7 @@ class AttributeDateTime extends AttributeDBField
 }
 
 // Init static constant once for all (remove when PHP allows real static const)
-AttributeDate::InitStatics();
+AttributeDateTime::InitStatics();
 
 
 /**
