@@ -50,7 +50,7 @@ function ComputeObjectProjections($oPage, $oObject)
 		$aValues = $aClassProjs[$sClass][$iDimension]->ProjectObject($oObject);
 		if (is_null($aValues))
 		{
-			$sValues = htmlentities('<any>');
+			$sValues = htmlentities(Dict::S('UI:UserManagement:AnyObject'));
 		}
 		else
 		{
@@ -97,7 +97,7 @@ function ComputeUserProjections($oPage, $oUser)
 	// Setup display structure
 	//
 	$aDisplayConfig = array();
-	$aDisplayConfig['profile'] = array('label' => 'Profile', 'description' => 'Profile in which the projection is specified');
+	$aDisplayConfig['profile'] = array('label' => Dict::S('UI:UserManagement:Profile'), 'description' => Dict::S('UI:UserManagement:Profile+'));
 	foreach ($aDimensions as $iDimension => $oDimension)
 	{
 		$aDisplayConfig['dim'.$oDimension->GetKey()] = array('label' => $oDimension->GetName(), 'description' => $oDimension->Get('description'));
@@ -122,7 +122,7 @@ function ComputeUserProjections($oPage, $oUser)
 			$aValues = $aProPros[$iProfile][$iDimension]->ProjectUser($oUser);
 			if (is_null($aValues))
 			{
-				$sValues = htmlentities('<any>');
+				$sValues = htmlentities(Dict::S('UI:UserManagement:AnyObject'));
 			}
 			else
 			{
@@ -152,18 +152,18 @@ function ComputeUserRights($oPage, $oUser, $oObject)
 		UR_ALLOWED_DEPENDS => '<span style="">UR_ALLOWED_DEPENDS</span>',
 	);
 	$aActions = array(
-		UR_ACTION_READ => 'Read',
-		UR_ACTION_MODIFY => 'Modify',
-		UR_ACTION_DELETE => 'Delete',
-		UR_ACTION_BULK_READ => 'Bulk Read',
-		UR_ACTION_BULK_MODIFY => 'Bulk Modify',
-		UR_ACTION_BULK_DELETE => 'Bulk Delete',
+		UR_ACTION_READ => Dict::S('UI:UserManagement:Action:Read'),
+		UR_ACTION_MODIFY => Dict::S('UI:UserManagement:Action:Modify'),
+		UR_ACTION_DELETE => Dict::S('UI:UserManagement:Action:Delete'),
+		UR_ACTION_BULK_READ => Dict::S('UI:UserManagement:Action:BulkRead'),
+		UR_ACTION_BULK_MODIFY => Dict::S('UI:UserManagement:Action:BulkModify'),
+		UR_ACTION_BULK_DELETE => Dict::S('UI:UserManagement:Action:BulkDelete'),
 	);
 	$aAttributeActions = array(
-		UR_ACTION_READ => 'Read',
-		UR_ACTION_MODIFY => 'Modify',
-		UR_ACTION_BULK_READ => 'Bulk Read',
-		UR_ACTION_BULK_MODIFY => 'Bulk Modify',
+		UR_ACTION_READ => Dict::S('UI:UserManagement:Action:Read'),
+		UR_ACTION_MODIFY => Dict::S('UI:UserManagement:Action:Modify'),
+		UR_ACTION_BULK_READ => Dict::S('UI:UserManagement:Action:BulkRead'),
+		UR_ACTION_BULK_MODIFY => Dict::S('UI:UserManagement:Action:BulkModify'),
 	);
 
 	// Determine allowed actions for the object
@@ -178,9 +178,9 @@ function ComputeUserRights($oPage, $oUser, $oObject)
 		);
 	}	
 	$aDisplayConfig = array();
-	$aDisplayConfig['action'] = array('label' => 'Action', 'description' => '');
-	$aDisplayConfig['permission'] = array('label' => 'Permission', 'description' => '');
-	$oPage->p('<h3>Actions</h3>');
+	$aDisplayConfig['action'] = array('label' => Dict::S('UI:UserManagement:Action'), 'description' => Dict::S('UI:UserManagement:Action+'));
+	$aDisplayConfig['permission'] = array('label' => Dict::S('UI:UserManagement:Permission'), 'description' => Dict::S('UI:UserManagement:Permission+'));
+	$oPage->p('<h3>'.Dict::S('UI:UserManagement:Actions').'</h3>');
 	$oPage->table($aDisplayConfig, $aDisplayData);
 
 
@@ -201,7 +201,7 @@ function ComputeUserRights($oPage, $oUser, $oObject)
 			);
 		}
 	}
-	$oPage->p('<h3>Attributes</h3>');
+	$oPage->p('<h3>'.Dict::S('UI:UserManagement:Attributes').'</h3>');
 	if (count($aDisplayData) > 0)
 	{
 		$aDisplayConfig = array();
@@ -263,7 +263,7 @@ if ($iUser == -1)
 }
 else
 {
-	$oPage->p('<h2>How is it computing the user rights?</h2>');
+	$oPage->p('<h2>How are the user rights computed?</h2>');
 
 	$oPage->p('<h3>1st, find the profiles that apply</h3>');
 	$oPage->p('<p>Project the current object in every existing dimension</p>');
