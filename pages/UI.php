@@ -179,7 +179,7 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 			$sName = $oObj->GetName();
 			$sClassLabel = MetaModel::GetName(get_class($oObj));
 			$oObj->DBDeleteTracked($oMyChange);
-			$oP->add("<h1>".Dict::Format('UI:Delete:_Name_Class_Deleted')."</h1>\n");
+			$oP->add("<h1>".Dict::Format('UI:Delete:_Name_Class_Deleted', $sName, $sClassLabel)."</h1>\n");
 		}
 	}
 	else
@@ -995,6 +995,12 @@ try
 			$aTransition = $aTransitions[$sStimulus];
 			$sTargetState = $aTransition['target_state'];
 			$aTargetStates = MetaModel::EnumStates($sClass);
+			$oP->add_linked_script("../js/json.js");
+			$oP->add_linked_script("../js/forms-json-utils.js");
+			$oP->add_linked_script("../js/wizardhelper.js");
+			$oP->add_linked_script("../js/wizard.utils.js");
+			$oP->add_linked_script("../js/linkswidget.js");
+			$oP->add_linked_script("../js/jquery.blockUI.js");
 			$oP->add("<div class=\"page_header\">\n");
 			$oP->add("<h1>$sActionLabel - <span class=\"hilite\">{$oObj->GetName()}</span></h1>\n");
 			$oP->add("</div>\n");
@@ -1006,6 +1012,8 @@ try
 			$oP->add("<div class=\"wizContainer\">\n");
 			$oP->add("<form method=\"post\">\n");
 			$aDetails = array();
+			$iFieldIndex = 0;
+			$aFieldsMap = array();
 			foreach($aExpectedAttributes as $sAttCode => $iExpectCode)
 			{
 				// Prompt for an attribute if
@@ -1017,8 +1025,10 @@ try
 					$aAttributesDef = MetaModel::ListAttributeDefs($sClass);
 					$oAttDef = $aAttributesDef[$sAttCode];
 					$aArgs = array('this' => $oObj);
-					$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, $sClass, $sAttCode, $oAttDef, $oObj->Get($sAttCode), $oObj->GetEditValue($sAttCode), '', '', $iExpectCode, $aArgs);
-					$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $sHTMLValue);
+					$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, $sClass, $sAttCode, $oAttDef, $oObj->Get($sAttCode), $oObj->GetEditValue($sAttCode), 'att_'.$iFieldIndex, '', $iExpectCode, $aArgs);
+					$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => "<span id=\"field_att_$iFieldIndex\">$sHTMLValue</span>");
+					$aFieldsMap[$sAttCode] = 'att_'.$iFieldIndex;
+					$iFieldIndex++;
 				}
 			}
 			$oP->details($aDetails);
@@ -1033,6 +1043,18 @@ try
 			$oP->add("</form>\n");
 			$oP->add("</div>\n");
 			$oP->add("</div>\n");
+
+			$iFieldsCount = count($aFieldsMap);
+			$sJsonFieldsMap = json_encode($aFieldsMap);
+	
+			$oP->add_script(
+<<<EOF
+			// Initializes the object once at the beginning of the page...
+			var oWizardHelper = new WizardHelper('$sClass');
+			oWizardHelper.SetFieldsMap($sJsonFieldsMap);
+			oWizardHelper.SetFieldsCount($iFieldsCount);
+EOF
+);
 		}
 		else
 		{
@@ -1073,7 +1095,7 @@ try
 				$oP->add("<div class=\"page_header\">\n");
 				$oP->add("<h1>$sActionLabel - <span class=\"hilite\">{$oObj->GetName()}</span></h1>\n");
 				$oP->add("<p>$sActionDetails</p>\n");
-				$oP->p(Dict::Format('UI:Apply_Stimulus_On_Object_In_State_ToTarget_State', $sACtionLabel, $oObj->GetName(), $oObj->GetStateLabel(), $sTargetState));
+				$oP->p(Dict::Format('UI:Apply_Stimulus_On_Object_In_State_ToTarget_State', $sActionLabel, $oObj->GetName(), $oObj->GetStateLabel(), $sTargetState));
 				$oP->add("</div>\n");
 				$aTargetState = $aTargetStates[$sTargetState];
 				$aExpectedAttributes = $aTargetState['attribute_list'];
@@ -1101,7 +1123,7 @@ try
 					$oMyChange->Set("userinfo", $sUserString);
 					$iChangeId = $oMyChange->DBInsert();
 					$oObj->DBUpdateTracked($oMyChange);
-					$oP->p(Dict::Format('UI:Class_Object_Updated'), get_class($oObj), $oObj->GetName());
+					$oP->p(Dict::Format('UI:Class_Object_Updated', get_class($oObj), $oObj->GetName()));
 				}
 				$oObj->DisplayDetails($oP);
 			}

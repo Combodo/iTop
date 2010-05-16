@@ -3,11 +3,11 @@ function WizardHelper(sClass)
 {
 	this.m_oData = { 'm_sClass' : '',
 					 'm_oFieldsMap': {},
-					 'm_aCurrentValues': [],
+					 'm_oCurrentValues': {},
 					 'm_aDefaultValueRequested': [],
 					 'm_aAllowedValuesRequested': [],
-					 'm_aDefaultValue': [],
-					 'm_aAllowedValues': [],
+					 'm_oDefaultValue': {},
+					 'm_oAllowedValues': {},
 					 'm_iFieldsCount' : 0
 					};
 	this.m_oData.m_sClass = sClass;
@@ -16,7 +16,6 @@ function WizardHelper(sClass)
 	this.SetFieldsMap = function (oFieldsMap)
 	{
 		this.m_oData.m_oFieldsMap = oFieldsMap;
-		
 	}
 	
 	this.SetFieldsCount = function (count)
@@ -28,7 +27,6 @@ function WizardHelper(sClass)
 	this.RequestDefaultValue = function (sFieldName)
 	{
 		currentValue = this.UpdateCurrentValue(sFieldName);
-		sFieldId = this.m_oData.m_oFieldsMap[sFieldName];
 		if (currentValue == null)
 		{
 			this.m_oData.m_aDefaultValueRequested.push(sFieldName);
@@ -40,7 +38,7 @@ function WizardHelper(sClass)
 	}
 	this.SetCurrentValue = function (sFieldName, currentValue)
 	{
-		this.m_oData.m_aCurrentValues[this.m_oData.m_oFieldsMap[sFieldName]] = currentValue;
+		this.m_oData.m_oCurrentValues[sFieldName] = currentValue;
 	}
 	
 	this.ToJSON = function ()
@@ -57,44 +55,40 @@ function WizardHelper(sClass)
 	this.ResetQuery = function ()
 	{
 		this.m_oData.m_aDefaultValueRequested = [];
-		this.m_oData.m_aDefaultValue = [];
+		this.m_oData.m_oDefaultValue = {};
 		this.m_oData.m_aAllowedValuesRequested = [];
-		this.m_oData.m_aAllowedValues = [];
+		this.m_oData.m_oAllowedValues = {};
 	}
 	
 	this.UpdateFields = function ()
 	{
 		//console.log('** UpdateFields **');
-		//console.log(this.m_oData);
-		for(i=0; i< this.m_oData.m_aAllowedValuesRequested.length; i++)
+		// Set the full HTML for the input field
+		for(i=0; i<this.m_oData.m_aAllowedValuesRequested.length; i++)
 		{
 			sAttCode = this.m_oData.m_aAllowedValuesRequested[i];
 			sFieldId = this.m_oData.m_oFieldsMap[sAttCode];
-			$('#field_'+sFieldId).html(this.m_oData.m_aAllowedValues[sFieldId]);
+			//console.log('Setting #field_'+sFieldId+' to: '+this.m_oData.m_oAllowedValues[sAttCode]);
+			$('#field_'+sFieldId).html(this.m_oData.m_oAllowedValues[sAttCode]);
 		}
-		for(i=0; i< this.m_oData.m_aDefaultValueRequested.length; i++)
+		// Set the actual value of the input
+		for(i=0; i<this.m_oData.m_aDefaultValueRequested.length; i++)
 		{
 			sAttCode = this.m_oData.m_aDefaultValueRequested[i];
-			sFieldId = this.m_oData.m_oFieldsMap[sAttCode];
-			defaultValue = this.m_oData.m_aDefaultValue[sFieldId];
-			//console.log('Setting field:'+sFieldId+' ('+sAttCode+') to: '+defaultValue);
-			var oElement = document.getElementById('att_'+sFieldId);
-			oElement.value = defaultValue;
-			//console.log('att_'+sFieldId+', set to '+defaultValue);
+			defaultValue = this.m_oData.m_oDefaultValue[sAttCode];
+			sFieldId = this.m_oData.m_oFieldsMap[sAttCode];	
+			$('#'+sFieldId).val(defaultValue);
 		}
 	}
 	
 	this.UpdateWizard = function ()
 	{
 		//console.log('** UpdateWizard **')
-		for(i=0; i< this.m_oData.m_iFieldsCount; i++)
+		for(sFieldCode in this.m_oData.m_oFieldsMap)
 		{
-			value = $('#att_'+i).val();
-			if (value == '')
-			{
-				value = null;
-			}
-			this.m_oData.m_aCurrentValues[i] = value;
+			sCleanFieldCode = sFieldCode.replace('"', '');
+			//console.log(sFieldCode);
+			this.UpdateCurrentValue(sCleanFieldCode);
 		}
 	}
 	
@@ -110,7 +104,7 @@ function WizardHelper(sClass)
 				//oWizardHelper.FromJSON(json_data);
 				//oWizardHelper.UpdateFields(); // Is done directly in the html provided by ajax.render.php
 				//console.log(oWizardHelper);
-				$('#wizStep'+ G_iCurrentStep).unblock( {fadeOut: 0} );
+				//$('#wizStep'+ G_iCurrentStep).unblock( {fadeOut: 0} );
 			});
 	}
 	
@@ -125,16 +119,14 @@ function WizardHelper(sClass)
 			});
 	}
 	
-	this.UpdateCurrentValue = function (sFieldName)
+	this.UpdateCurrentValue = function (sFieldCode)
 	{
-		sFieldId = this.m_oData.m_oFieldsMap[sFieldName];
-		var oElement = document.getElementById('att_'+sFieldId);
-		value = oElement.value;
+		value = $('#'+this.m_oData.m_oFieldsMap[sFieldCode]).val();
 		if (value == '')
 		{
 			value = null;
 		}
-		this.m_oData.m_aCurrentValues[sFieldId] = value;
+		this.m_oData.m_oCurrentValues[sFieldCode] = value;
 		return value;		
 	}
 }

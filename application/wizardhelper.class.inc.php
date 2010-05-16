@@ -16,9 +16,8 @@ class WizardHelper
 	public function GetTargetObject($bReadUploadedFiles = false)
 	{
 		$oObj = MetaModel::NewObject($this->m_aData['m_sClass']);
-		foreach($this->m_aData['m_aCurrentValues'] as $iIndex => $value)
+		foreach($this->m_aData['m_oCurrentValues'] as $sAttCode => $value)
 		{
-			$sAttCode = array_search($iIndex, $this->m_aData['m_oFieldsMap']);
 			// Because this is stored in a Javascript array, unused indexes
 			// are filled with null values
 			if ( ($sAttCode !== false) && ($value !== null))
@@ -104,7 +103,6 @@ class WizardHelper
 		// Protect against a request for a non existing field
 		if (isset($this->m_aData['m_oFieldsMap'][$sAttCode]))
 		{
-			$iIndex = $this->m_aData['m_oFieldsMap'][$sAttCode];
 			$oAttDef = MetaModel::GetAttributeDef($this->m_aData['m_sClass'], $sAttCode);
 			if ($oAttDef->GetEditClass() == 'List')
 			{
@@ -124,13 +122,13 @@ class WizardHelper
 					}
 					$aData[] = $aRow;
 				}
-				$this->m_aData['m_aDefaultValue'][$iIndex] = json_encode($aData);
+				$this->m_aData['m_oDefaultValue'][$sAttCode] = json_encode($aData);
 				
 			}
 			else
 			{
 				// Normal handling for all other scalar attributes
-				$this->m_aData['m_aDefaultValue'][$iIndex] = $value;
+				$this->m_aData['m_oDefaultValue'][$sAttCode] = $value;
 			}
 		}
 	}
@@ -145,8 +143,7 @@ class WizardHelper
 		// Protect against a request for a non existing field
 		if (isset($this->m_aData['m_oFieldsMap'][$sAttCode]))
 		{
-			$iIndex = $this->m_aData['m_oFieldsMap'][$sAttCode];
-			$this->m_aData['m_aAllowedValues'][$iIndex] = $sHtml;
+			$this->m_aData['m_oAllowedValues'][$sAttCode] = $sHtml;
 		}
 	}
 	

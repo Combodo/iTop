@@ -828,25 +828,29 @@ abstract class cmdbAbstractObject extends CMDBObject
 		if (!$oAttDef->IsExternalField())
 		{
 			$aCSSClasses = array();
+			$bMandatory = 0;
 			if ( (!$oAttDef->IsNullAllowed()) || ($iFlags & OPT_ATT_MANDATORY))
 			{
 				$aCSSClasses[] = 'mandatory';
+				$bMandatory = 1;
 			}
 			$sCSSClasses = self::GetCSSClasses($aCSSClasses);
+			$sValidationField = "<span id=\"v_{$iInputId}\"></span>";
 			switch($oAttDef->GetEditClass())
 			{
 				case 'Date':
+				case 'DateTime':
 				$aCSSClasses[] = 'date-pick';
 				$sCSSClasses = self::GetCSSClasses($aCSSClasses);
-				$sHTMLValue = "<input type=\"text\" size=\"20\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iInputId\"{$sCSSClasses}/>";
+				$sHTMLValue = "<input type=\"text\" size=\"20\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iInputId\"{$sCSSClasses}/>$sValidationField";
 				break;
 				
 				case 'Password':
-				$sHTMLValue = "<input type=\"password\" size=\"30\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iInputId\"{$sCSSClasses}/>";
+				$sHTMLValue = "<input type=\"password\" size=\"30\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iInputId\"{$sCSSClasses}/>$sValidationField";
 				break;
 				
 				case 'Text':
-					$sHTMLValue = "<textarea name=\"attr_{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iInputId\"{$sCSSClasses}>$value</textarea>";
+					$sHTMLValue = "<textarea name=\"attr_{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iInputId\"{$sCSSClasses}>$value</textarea>$sValidationField";
 				break;
 	
 				case 'List':
@@ -884,7 +888,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 						{
 							// too many choices, use an autocomplete
 							// The input for the auto complete
-							$sHTMLValue = "<input count=\"".count($aAllowedValues)."\" type=\"text\" id=\"label_$iInputId\" size=\"30\" value=\"$sDisplayValue\"{$sCSSClasses}/>";
+							$sHTMLValue = "<input count=\"".count($aAllowedValues)."\" type=\"text\" id=\"label_$iInputId\" size=\"30\" value=\"$sDisplayValue\"{$sCSSClasses}/>$sValidationField";
 							// another hidden input to store & pass the object's Id
 							$sHTMLValue .= "<input type=\"hidden\" id=\"$iInputId\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" />\n";
 							$oPage->add_ready_script("\$('#label_$iInputId').autocomplete('./ajax.render.php', { scroll:true, minChars:3, onItemSelect:selectItem, onFindValue:findValue, formatItem:formatItem, autoFill:true, keyHolder:'#$iInputId', extraParams:{operation:'autocomplete', sclass:'$sClass',attCode:'".$sAttCode."'}});");
@@ -906,14 +910,21 @@ abstract class cmdbAbstractObject extends CMDBObject
 								$sSelected = ($value == $key) ? ' selected' : '';
 								$sHTMLValue .= "<option value=\"$key\"$sSelected>$display_value</option>\n";
 							}
-							$sHTMLValue .= "</select>\n";
+							$sHTMLValue .= "</select>$sValidationField\n";
 						}
 					}
 					else
 					{
-						$sHTMLValue = "<input type=\"text\" size=\"30\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iInputId\"{$sCSSClasses} />";
+						$sHTMLValue = "<input type=\"text\" size=\"30\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iInputId\"{$sCSSClasses} />$sValidationField";
 					}
 					break;
+			}
+			$sPattern = addslashes($oAttDef->GetValidationPattern()); //'^([0-9]+)$';
+			$oPage->add_ready_script("$('#$iInputId').bind('validate blur', function(evt, sFormId) { return ValidateField('$iInputId', '$sPattern', $bMandatory, sFormId) } );"); // Bind to a custom event: validate
+			$aDependencies = MetaModel::GetDependentAttributes($sClass, $sAttCode); // List of attributes that depend on the current one
+			if (count($aDependencies) > 0)
+			{
+				$oPage->add_ready_script("$('#$iInputId').bind('change', function(evt, sFormId) { return UpdateDependentFields(['".implode("','", $aDependencies)."']) } );"); // Bind to a custom event: validate
 			}
 		}
 		return $sHTMLValue;
@@ -923,12 +934,14 @@ abstract class cmdbAbstractObject extends CMDBObject
 	{
 		static $iFormId = 0;
 		$iFormId++;
+		$sClass = get_class($this);
 		$oAppContext = new ApplicationContext();
-		$sStateAttCode = MetaModel::GetStateAttributeCode(get_class($this));
+		$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
 		$iKey = $this->GetKey();
 		$aDetails = array();
-		$oPage->add("<form id=\"form_{$iFormId}\" enctype=\"multipart/form-data\" method=\"post\" onSubmit=\"return CheckMandatoryFields('form_{$iFormId}')\">\n");
-		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode=>$oAttDef)
+		$aFieldsMap = array();
+		$oPage->add("<form id=\"form_{$iFormId}\" enctype=\"multipart/form-data\" method=\"post\" onSubmit=\"return CheckFields('form_{$iFormId}')\">\n");
+		foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode=>$oAttDef)
 		{
 			if ($oAttDef->IsWritable())
 			{
@@ -957,7 +970,10 @@ abstract class cmdbAbstractObject extends CMDBObject
 							$sValue = $this->Get($sAttCode);
 							$sDisplayValue = $this->GetEditValue($sAttCode);
 							$aArgs = array('this' => $this);
-							$sHTMLValue = self::GetFormElementForField($oPage, get_class($this), $sAttCode, $oAttDef, $sValue, $sDisplayValue, '', '', $iFlags, $aArgs);
+							$sInputId = $iFormId.'_'.$sAttCode;
+							$sHTMLValue = "<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs);
+							$aFieldsMap[$sAttCode] = $sInputId;
+							
 						}
 						$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $sHTMLValue);
 					}
@@ -966,7 +982,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		}
 		$oPage->details($aDetails);
 		$oPage->add("<input type=\"hidden\" name=\"id\" value=\"$iKey\">\n");
-		$oPage->add("<input type=\"hidden\" name=\"class\" value=\"".get_class($this)."\">\n");
+		$oPage->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
 		$oPage->add("<input type=\"hidden\" name=\"operation\" value=\"apply_modify\">\n");
 		$oPage->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
 		foreach($aExtraParams as $sName => $value)
@@ -977,6 +993,18 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$oPage->add("<button type=\"button\" class=\"action\" onClick=\"goBack()\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
 		$oPage->add("<button type=\"submit\" class=\"action\"><span>".Dict::S('UI:Button:Apply')."</span></button>\n");
 		$oPage->add("</form>\n");
+		
+		$iFieldsCount = count($aFieldsMap);
+		$sJsonFieldsMap = json_encode($aFieldsMap);
+
+		$oPage->add_script(
+<<<EOF
+		// Initializes the object once at the beginning of the page...
+		var oWizardHelper = new WizardHelper('$sClass');
+		oWizardHelper.SetFieldsMap($sJsonFieldsMap);
+		oWizardHelper.SetFieldsCount($iFieldsCount);
+EOF
+);
 	}
 	
 	public static function DisplayCreationForm(WebPage $oPage, $sClass, $oObjectToClone = null, $aArgs = array(), $aExtraParams = array())
@@ -989,7 +1017,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$sOperation = ($oObjectToClone == null) ? 'apply_new' : 'apply_clone';
 		$sClass = ($oObjectToClone == null) ? $sClass : get_class($oObjectToClone);
 		$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
-		$oPage->add("<form id=\"creation_form_{$iCreationFormId}\" method=\"post\" enctype=\"multipart/form-data\" onSubmit=\"return CheckMandatoryFields('creation_form_{$iCreationFormId}')\">\n");
+		$oPage->add("<form id=\"creation_form_{$iCreationFormId}\" method=\"post\" enctype=\"multipart/form-data\" onSubmit=\"return CheckFields('creation_form_{$iCreationFormId}')\">\n");
 		$aStates = MetaModel::EnumStates($sClass);
 		if ($oObjectToClone == null)
 		{

@@ -61,8 +61,8 @@ class UIWizard
 				$sFieldFlag = (($iOptions & (OPT_ATT_MANDATORY | OPT_ATT_MUSTCHANGE)) || (!$oAttDef->IsNullAllowed()) )? ' <span class="hilite">*</span>' : '';
 				$oDefaultValuesSet = $oAttDef->GetDefaultValue(/* $oObject->ToArgs() */); // @@@ TO DO: get the object's current value if the object exists
 				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($this->m_oPage, $this->m_sClass, $sAttCode, $oAttDef, $oDefaultValuesSet, '', "att_$iMaxInputId", '', $iOptions, $aArgs);
-				$aFieldsMap[$iMaxInputId] = $sAttCode;
-				$aDetails[] = array('label' => $oAttDef->GetLabel().$sFieldFlag, 'value' => "<div id=\"field_$iMaxInputId\">$sHTMLValue</div>");
+				$aFieldsMap["att_$iMaxInputId"] = $sAttCode;
+				$aDetails[] = array('label' => $oAttDef->GetLabel().$sFieldFlag, 'value' => "<span id=\"field_att_$iMaxInputId\">$sHTMLValue</span>");
 				if ($oAttDef->GetValuesDef() != null)
 				{
 					$sJSHandlerCode .= "\toWizardHelper.RequestAllowedValues('$sAttCode');\n";
@@ -128,6 +128,7 @@ $sJSHandlerCode
 		$this->m_oPage->add("<div id=\"object_preview\">\n");
 		$this->m_oPage->add("</div>\n");
 		$this->m_oPage->add($oAppContext->GetForForm());		
+		$this->m_oPage->add("<input type=\"button\" value=\"".Dict::S('UI:Button:Back')."\" onClick=\"GoToStep($iStepIndex, $iStepIndex - 1)\" />");
 		$this->m_oPage->add("<input type=\"submit\" value=\"Create ".MetaModel::GetName($this->m_sClass)."\" />\n");
 		$this->m_oPage->add("</div>\n");
 		$this->m_oPage->add("</form>\n");
@@ -201,35 +202,45 @@ $sJSHandlerCode
 		}
 			
 		// Now use the dependencies between the fields to order them
-		while(count($aFields) > 0)
+		// Start from the order of the 'details'
+		$aList = MetaModel::GetZListItems($this->m_sClass, 'details');
+		$index = 0;
+		$aOrder = array();
+		foreach($aFields as $sAttCode => $void)
 		{
-			$aCurrentStep = array();
-			foreach($aFields as $sAttCode => $aDependencies)
+				$aOrder[$sAttCode] = 999; // At the end of the list...
+		}
+		foreach($aList as $sAttCode)
+		{
+			if (array_key_exists($sAttCode, $aFields))
 			{
-				// All fields with no remaining dependencies can be entered at this
-				// step of the wizard
-				if (count($aDependencies) == 0)
+				$aOrder[$sAttCode] = $index;
+			}
+			$index++;
+		}
+		foreach($aFields as $sAttCode => $aDependencies)
+		{
+			// All fields with no remaining dependencies can be entered at this
+			// step of the wizard
+			if (count($aDependencies) > 0)
+			{
+				$iMaxPos = 0;
+				// Remove this field from the dependencies of the other fields
+				foreach($aDependencies as $sDependentAttCode => $void)
 				{
-					$aCurrentStep[] = $sAttCode;
-					$aFieldsDone[$sAttCode] = '';
-					unset($aFields[$sAttCode]);
-					// Remove this field from the dependencies of the other fields
-					foreach($aFields as $sUpdatedCode => $aDummy)
-					{
-						// remove the dependency
-						unset($aFields[$sUpdatedCode][$sAttCode]);
-					}
+					// position the current field after the ones it depends on
+					$iMaxPos = max($iMaxPos, 1+$aOrder[$sDependentAttCode]);
 				}
 			}
-			if (count($aCurrentStep) == 0)
-			{
-				// This step of the wizard would contain NO field !
-				echo "<strong>Error:</strong> Circular reference in the dependencies between the fields.";
-				print_r($aFields);
-				break;
-			}
-			$aWizardSteps['mandatory'][] = $aCurrentStep;
 		}
+		asort($aOrder);
+		$aCurrentStep = array();
+		foreach($aOrder as $sAttCode => $rank)
+		{
+			$aCurrentStep[] = $sAttCode;
+			$aFieldsDone[$sAttCode] = '';
+		}
+		$aWizardSteps['mandatory'][] = $aCurrentStep;
 
 
 		// Now computes the steps to fill the optional fields

@@ -60,7 +60,7 @@ function GoToStep(iCurrentStep, iNextStep)
 	if (iNextStep > iCurrentStep)
 	{
 		// Check the values when moving forward
-		if (CheckMandatoryFields('wizStep'+iCurrentStep))
+		if (CheckFields('wizStep'+iCurrentStep))
 		{
 			oCurrentStep.style.display = 'none';
 			ActivateStep(iNextStep);
@@ -85,70 +85,115 @@ function ActivateStep(iTargetStep)
 	}
 	oNextStep.style.display = '';
 	G_iCurrentStep = iTargetStep;
-	$('#wizStep'+(iTargetStep)).block({ message: null });
+	//$('#wizStep'+(iTargetStep)).block({ message: null });
 }
 
 
-function AjaxGetValuesDef(oObj, sClass, sAttCode, iFieldId)
-{
-	var oJSON = document.getElementById(sJsonFieldId);
-	$.get('ajax.render.php?class=' + sClass + '&json_obj=' + oJSON.value + '&att_code=' + sAttCode,
-	   { operation: "allowed_values" },
-	   function(data){
-		 //$('#field_'+iFieldId).html(data);
-		}
-	);
-}
+//function AjaxGetValuesDef(oObj, sClass, sAttCode, iFieldId)
+//{
+//	var oJSON = document.getElementById(sJsonFieldId);
+//	$.get('ajax.render.php?class=' + sClass + '&json_obj=' + oJSON.value + '&att_code=' + sAttCode,
+//	   { operation: "allowed_values" },
+//	   function(data){
+//		 //$('#field_'+iFieldId).html(data);
+//		}
+//	);
+//}
+//
+//function AjaxGetDefaultValue(oObj, sClass, sAttCode, iFieldId)
+//{
+//	// Asynchronously call the server to provide a default value if the field is
+//	// empty
+//	if (oObj['m_aCurrValues'][sAttCode] == '')
+//	{
+//		var oJSON = document.getElementById(sJsonFieldId);
+//		$.get('ajax.render.php?class=' + sClass + '&json_obj=' + oJSON.value + '&att_code=' + sAttCode,
+//		   { operation: "default_value" },
+//		   function(json_data){
+//			 var oObj = ReloadObjectFromServer(json_data);
+//			 UpdateFieldFromObject(iFieldId, aFieldsMap, oObj)
+//			}
+//		);
+//	}
+//}
 
-function AjaxGetDefaultValue(oObj, sClass, sAttCode, iFieldId)
-{
-	// Asynchronously call the server to provide a default value if the field is
-	// empty
-	if (oObj['m_aCurrValues'][sAttCode] == '')
-	{
-		var oJSON = document.getElementById(sJsonFieldId);
-		$.get('ajax.render.php?class=' + sClass + '&json_obj=' + oJSON.value + '&att_code=' + sAttCode,
-		   { operation: "default_value" },
-		   function(json_data){
-			 var oObj = ReloadObjectFromServer(json_data);
-			 UpdateFieldFromObject(iFieldId, aFieldsMap, oObj)
-			}
-		);
-	}
-}
+// Store the result of the form validation... there may be several forms per page, beware
+var oFormErrors = { err_form0: 0 };
 
-function CheckMandatoryFields(sFormId)
+function CheckFields(sFormId)
 {
 	$('#'+sFormId+' :submit').attr('disable', 'disabled');
 	$('#'+sFormId+' :button[type=submit]').attr('disable', 'disabled');
 	firstErrorId = '';
 	
-	var iErrorsCount = 0;
-	$('#'+sFormId+' :input.mandatory').each( function() {
-		if (( this.value == '') || (this.value == 0))
-		{
-			this.style.backgroundColor = '#fcc';
-			iErrorsCount++;
-			if (iErrorsCount == 1)
-			{
-				firstErrorId = this.id;
-			}
-		}
-		else
-		{
-			this.style.backgroundColor = '#fff';
-		}
+	// The two 'fields' below will be updated when the 'validate' event is processed
+	oFormErrors['err_'+sFormId] = 0;		// Number of errors encountered when validating the form
+	oFormErrors['input_'+sFormId] = null;	// First 'input' with an error, to set the focus to it
+	$('#'+sFormId+' :input').each( function()
+	{
+		validateEventResult = $(this).trigger('validate', sFormId);
 	}
 	);
-	if(iErrorsCount > 0)
+	if(oFormErrors['err_'+sFormId] > 0)
 	{
 		alert('Please fill-in all mandatory fields before continuing.');
 		$('#'+sFormId+' :submit').attr('disable', '');
 		$('#'+sFormId+' :button[type=submit]').attr('disable', '');
-		if (firstErrorId != '')
+		if (oFormErrors['input_'+sFormId] != null)
 		{
-			$('#'+firstErrorId).focus();
+			$('#'+oFormErrors['input_'+sFormId]).focus();
 		}
 	}
-	return(iErrorsCount == 0);
+	return (oFormErrors['err_'+sFormId] == 0); // If no error, submit the form
+}
+
+function ValidateField(sFieldId, sPattern, bMandatory, sFormId)
+{
+	var bValid = true;
+	var currentVal = $('#'+sFieldId).val();
+	if (bMandatory && ((currentVal == '') || (currentVal == 0)))
+	{
+		bValid = false;
+	}
+	else if (sPattern != '')
+	{
+		re = new RegExp(sPattern);
+		//console.log('Validating field: '+sFieldId + ' current value: '+currentVal + ' pattern: '+sPattern );
+		bValid = re.test(currentVal);
+	}
+	if (bValid)
+	{
+		// Visual feedback
+		$('#v_'+sFieldId).html('<img src="../images/validation_ok.png" />');
+	}
+	else
+	{
+		// Report the error...
+		oFormErrors['err_'+sFormId]++;
+		if (oFormErrors['input_'+sFormId] == null)
+		{
+			// Let's remember the first input with an error, so that we can put back the focus on it later
+			oFormErrors['input_'+sFormId] = sFieldId;
+		}
+		// Visual feedback
+		$('#v_'+sFieldId).html('<img src="../images/validation_error.png" />');
+	}
+	//console.log('Form: '+sFormId+' Validating field: '+sFieldId + ' current value: '+currentVal+' pattern: '+sPattern+' result: '+bValid );
+	return bValid;
+}
+
+function UpdateDependentFields(aFieldNames)
+{
+	//console.log('UpdateDependentFields:');
+	//console.log(aFieldNames);
+	index = 0;
+	oWizardHelper.ResetQuery();
+	oWizardHelper.UpdateWizard();
+	while(index < aFieldNames.length )
+	{
+		sAttCode = aFieldNames[index];
+		oWizardHelper.RequestAllowedValues(sAttCode);
+		index++;
+	}
+	oWizardHelper.AjaxQueryServer();
 }

@@ -91,7 +91,7 @@ switch($operation)
 		$value = $oObj->Get($sAttCode);
 		$displayValue = $oObj->GetEditValue($sAttCode);
 		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-		$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $value, $displayValue, 'att_'.$sId, '', 0, array('this' => $oObj));
+		$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $value, $displayValue, $sId, '', 0, array('this' => $oObj));
 
 		$oWizardHelper->SetAllowedValuesHtml($sAttCode, $sHTMLValue);
 	}

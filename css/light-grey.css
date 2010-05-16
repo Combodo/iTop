@@ -478,6 +478,9 @@ div.wizStep span {
 	padding: 5px;
 }
 
+.wizContainer table tr td {
+	background: transparent;
+}
 .alignRight {
 	text-align: right;
 	padding: 3px;
