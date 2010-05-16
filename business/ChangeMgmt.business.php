@@ -39,12 +39,12 @@ class bizChangeTicket extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeEnum("ticket_status", array("allowed_values"=>new ValueSetEnum("New, Validated,Rejected,Assigned,PlannedScheduled,Approved,NotApproved,Implemented,Monitored, Closed"), "sql"=>"change_status", "default_value"=>"New", "is_null_allowed"=>false, "depends_on"=>array())));
 		// SetPossibleValues("status",array("Open","Monitored","Closed"));
 
-		MetaModel::Init_AddAttribute(new AttributeDate("creation_date", array("allowed_values"=>null, "sql"=>"creation_date", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-    	// définir une date de défaut à maintenant, alias creation ou modification du ticket
-		MetaModel::Init_AddAttribute(new AttributeDate("last_update", array("allowed_values"=>null, "sql"=>"last_update", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-	  MetaModel::Init_AddAttribute(new AttributeDate("start_date", array("allowed_values"=>null, "sql"=>"start_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeDate("end_date", array("allowed_values"=>null, "sql"=>"end_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeDate("close_date", array("allowed_values"=>null, "sql"=>"closed_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeDateTIme("creation_date", array("allowed_values"=>null, "sql"=>"creation_date", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+    	// dï¿½finir une date de dï¿½faut ï¿½ maintenant, alias creation ou modification du ticket
+		MetaModel::Init_AddAttribute(new AttributeDateTime("last_update", array("allowed_values"=>null, "sql"=>"last_update", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+	  MetaModel::Init_AddAttribute(new AttributeDateTime("start_date", array("allowed_values"=>null, "sql"=>"start_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeDateTime("end_date", array("allowed_values"=>null, "sql"=>"end_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeDateTime("close_date", array("allowed_values"=>null, "sql"=>"closed_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 	  MetaModel::Init_AddAttribute(new AttributeString("impact", array("allowed_values"=>null, "sql"=>"impact", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
     MetaModel::Init_AddAttribute(new AttributeExternalKey("workgroup_id", array("targetclass"=>"bizWorkgroup", "jointype"=> "", "allowed_values"=>null, "sql"=>"workgroup_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("workgroup_name", array("allowed_values"=>null, "extkey_attcode"=> 'workgroup_id', "target_attcode"=>"name")));  
@@ -70,7 +70,7 @@ class bizChangeTicket extends cmdbAbstractObject
 		
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("impacted_infra_manual", array("linked_class"=>"lnkInfraChangeTicket", "ext_key_to_me"=>"ticket_id", "ext_key_to_remote"=>"infra_id", "allowed_values"=>null, "count_min"=>1, "count_max"=>0, "depends_on"=>array())));
 
-		// doit-on aussi ajouter un filtre sur les extfields lié à une extkey ? ici le name de l'agent?
+		// doit-on aussi ajouter un filtre sur les extfields liï¿½ ï¿½ une extkey ? ici le name de l'agent?
 		
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('name','title', 'org_id','type','domain','requestor_id','change_request','ticket_status', 'outage','impact', 'last_update', 'start_date','end_date', 'assignment_count', 'workgroup_id','agent_id','supervisorgroup_id','supervisor_id','managergroup_id','manager_id','change_log','fallback')); // Attributes to be displayed for a list

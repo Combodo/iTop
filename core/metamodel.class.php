@@ -318,6 +318,26 @@ abstract class MetaModel
 			return array();
 		}
 	}
+	/**
+	 * Find all attributes that depend on the specified one (reverse of GetPrequisiteAttributes)
+	 * @param string $sClass Name of the class
+	 * @param string $sAttCode Code of the attributes
+	 * @return Array List of attribute codes that depend on the given attribute, empty array if none.
+	 */
+	final static public function GetDependentAttributes($sClass, $sAttCode)
+	{
+		$aResults = array();
+		self::_check_subclass($sClass);
+		foreach (self::ListAttributeDefs($sClass) as $sDependentAttCode=>$void)
+		{
+			$aPrerequisites = self::GetPrequisiteAttributes($sClass, $sDependentAttCode);
+			if (in_array($sAttCode, $aPrerequisites))
+			{
+				$aResults[] = $sDependentAttCode;
+			}
+		}
+		return $aResults;
+	}
 	// #@# restore to private ?
 	final static public function DBGetTable($sClass, $sAttCode = null)
 	{

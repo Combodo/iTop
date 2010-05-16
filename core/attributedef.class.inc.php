@@ -177,16 +177,14 @@ abstract class AttributeDefinition
 	public function GetSQLValues($value) {return array();} // returns column/value pairs (1 in most of the cases), for WRITING (Insert, Update)
 	public function RequiresIndex() {return false;}
 
-	public function GetJSCheckFunc()
+	public function GetValidationPattern()
 	{
-		$sRegExp = $this->Get("regexp");
-		if (empty($sRegExp)) return 'return true;';
-
-		return "return regexp('$sRegExp', myvalue);";
-	} 
+		return '';
+	}
+	
 	public function CheckValue($value)
 	{
-		$sRegExp = $this->Get("regexp");
+		$sRegExp = $this->Get("regexp"); // ??? Does it exist ??
 		if (empty($sRegExp)) return true;
 		
 		return preg_match(preg_escape($this->Get("regexp")), $value);
@@ -464,6 +462,11 @@ class AttributeInteger extends AttributeDBField
 	public function GetEditClass() {return "String";}
 	protected function GetSQLCol() {return "INT(11)";}
 	
+	public function GetValidationPattern()
+	{
+		return "^[0-9]+$";
+	}
+
 	public function GetBasicFilterOperators()
 	{
 		return array(
@@ -799,6 +802,11 @@ class AttributeText extends AttributeString
 class AttributeEmailAddress extends AttributeString
 {
 	public function GetTypeDesc() {return "Email address(es)";}
+
+	public function GetValidationPattern()
+	{
+		return "^([0-9a-zA-Z]([-.\\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\\w]*[0-9a-zA-Z]\\.)+[a-zA-Z]{2,9})$";
+	}
 }
 
 /**
@@ -948,6 +956,163 @@ class AttributeEnum extends AttributeString
  */
 class AttributeDate extends AttributeDBField
 {
+	const MYDATEFORMAT = "Y-m-d";
+
+	static public function InitStatics()
+	{
+		// Nothing to do...
+	}
+
+	static protected function ListExpectedParams()
+	{
+		return parent::ListExpectedParams();
+		//return array_merge(parent::ListExpectedParams(), array());
+	}
+
+	public function GetType() {return "Date";}
+	public function GetTypeDesc() {return "Date";}
+	public function GetEditClass() {return "Date";}
+	protected function GetSQLCol() {return "DATE";}
+
+	// #@# THIS HAS TO REVISED
+	// Having null not allowed was interpreted by mySQL
+	// which was creating the field with the flag 'ON UPDATE CURRENT_TIMESTAMP'
+	// Then, on each update of the record, the field was modified.
+	// We will have to specify the default value if we want to restore this option
+	// In fact, we could also have more verbs dedicated to the DB:
+	// GetDBDefaultValue()... or GetDBFieldCreationStatement()....
+	public function IsNullAllowed() {return true;}
+	public function GetDefaultValue()
+	{
+		$default = parent::GetDefaultValue();
+
+		if (!parent::IsNullAllowed())
+		{
+			if (empty($default))
+			{
+				$default = date("Y-m-d");
+			}
+		}
+
+		return $default;
+	}
+	// END OF THE WORKAROUND
+	///////////////////////////////////////////////////////////////
+
+	public function GetValidationPattern()
+	{
+		return "^[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))$";
+	}
+
+	public function GetBasicFilterOperators()
+	{
+		return array(
+			"="=>"equals",
+			"!="=>"differs from",
+			"<"=>"before",
+			"<="=>"before",
+			">"=>"after (strictly)",
+			">="=>"after",
+			"SameMonth"=>"same year/month",
+			"SameYear"=>"same year",
+			"Today"=>"today",
+			">|"=>"after today + N days",
+			"<|"=>"before today + N days",
+			"=|"=>"equals today + N days",
+		);
+	}
+	public function GetBasicFilterLooseOperator()
+	{
+		// Unless we implement a "same xxx, depending on given precision" !
+		return "=";
+	}
+
+	public function GetBasicFilterSQLExpr($sOpCode, $value)
+	{
+		$sQValue = CMDBSource::Quote($value);
+
+		switch ($sOpCode)
+		{
+		case '=':
+		case '!=':
+		case '<':
+		case '<=':
+		case '>':
+		case '>=':
+			return $this->GetSQLExpr()." $sOpCode $sQValue";
+		case 'SameMonth':
+			return "DATE_FORMAT(".$this->GetSQLExpr().", '%Y-%m') = DATE_FORMAT($sQValue, '%Y-%m')";
+		case 'SameYear':
+			return "MONTH(".$this->GetSQLExpr().") = MONTH($sQValue)";
+		case 'Today':
+			return "DATE(".$this->GetSQLExpr().") = CURRENT_DATE()";
+		case '>|':
+			return "DATE(".$this->GetSQLExpr().") > DATE_ADD(CURRENT_DATE(), INTERVAL $sQValue DAY)";
+		case '<|':
+			return "DATE(".$this->GetSQLExpr().") < DATE_ADD(CURRENT_DATE(), INTERVAL $sQValue DAY)";
+		case '=|':
+			return "DATE(".$this->GetSQLExpr().") = DATE_ADD(CURRENT_DATE(), INTERVAL $sQValue DAY)";
+		default:
+			return $this->GetSQLExpr()." = $sQValue";
+		}
+	}
+	
+	public function MakeRealValue($proposedValue)
+	{
+		if (!is_numeric($proposedValue))
+		{
+			return $proposedValue;
+		}
+		else
+		{
+			return date("Y-m-d", $proposedValue);
+		}
+		throw new CoreException("Invalid type for a date (found ".gettype($proposedValue)." and accepting string/int/DateTime)");
+		return null;
+	}
+	public function ScalarToSQL($value)
+	{
+		if (empty($value))
+		{
+			// Make a valid date for MySQL. TO DO: support NULL as a literal value for fields that can be null.
+			return '0000-00-00';
+		}
+		return $value;
+	}
+
+	public function GetAsHTML($value)
+	{
+		return Str::pure2html($value);
+	}
+
+	public function GetAsXML($value)
+	{
+		return Str::pure2xml($value);
+	}
+
+	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"')
+	{
+		$sFrom = array("\r\n", $sTextQualifier);
+		$sTo = array("\n", $sTextQualifier.$sTextQualifier);
+		$sEscaped = str_replace($sFrom, $sTo, (string)$sValue);
+		return '"'.$sEscaped.'"';
+	}
+}
+
+// Init static constant once for all (remove when PHP allows real static const)
+AttributeDate::InitStatics();
+/**
+ * Map a date+time column to an attribute 
+ *
+ * @package     iTopORM
+ * @author      Romain Quetiez <romainquetiez@yahoo.fr>
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.itop.com
+ * @since       1.0
+ * @version     $itopversion$
+ */
+class AttributeDateTime extends AttributeDBField
+{
 	const MYDATEFORMAT = "Y-m-d H:i:s";
 	//const MYDATETIMEZONE = "UTC";
 	const MYDATETIMEZONE = "Europe/Paris";
@@ -971,7 +1136,7 @@ class AttributeDate extends AttributeDBField
 
 	public function GetType() {return "Date";}
 	public function GetTypeDesc() {return "Date and time";}
-	public function GetEditClass() {return "Date";}
+	public function GetEditClass() {return "DateTime";}
 	protected function GetSQLCol() {return "TIMESTAMP";}
 
 	// #@# THIS HAS TO REVISED
@@ -998,6 +1163,11 @@ class AttributeDate extends AttributeDBField
 	}
 	// END OF THE WORKAROUND
 	///////////////////////////////////////////////////////////////
+
+	public function GetValidationPattern()
+	{
+		return "^([0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30))))( (0[0-9]|1[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])){0,1}|0000-00-00 00:00:00|0000-00-00$";
+	}
 
 	public function GetBasicFilterOperators()
 	{
@@ -1397,6 +1567,11 @@ class AttributeURL extends AttributeString
 			$sLabel = substr($sLabel, 0, 25).'...'.substr($sLabel, -15);
 		}
 		return "<a target=\"$sTarget\" href=\"$sValue\">$sLabel</a>";
+	}
+
+	public function GetValidationPattern()
+	{
+		return "^(http|https|ftp)\://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(:[a-zA-Z0-9]*)?/?([a-zA-Z0-9\-\._\?\,\'/\\\+&amp;%\$#\=~])*$";
 	}
 }
 

@@ -47,12 +47,12 @@ class bizIncidentTicket extends cmdbAbstractObject
 		// SetPossibleValues("status",array("Open","Monitored","Closed"));
 		MetaModel::Init_AddAttribute(new AttributeText("initial_situation", array("allowed_values"=>null, "sql"=>"initial_situation", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("current_situation", array("allowed_values"=>null, "sql"=>"current_situation", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeDate("start_date", array("allowed_values"=>null, "sql"=>"start_date", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-		// définir une date de défaut à maintenant, alias creation ou modification du ticket
-		MetaModel::Init_AddAttribute(new AttributeDate("last_update", array("allowed_values"=>null, "sql"=>"last_update", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-	    MetaModel::Init_AddAttribute(new AttributeDate("next_update", array("allowed_values"=>null, "sql"=>"next_update", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeDateTime("start_date", array("allowed_values"=>null, "sql"=>"start_date", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		// dï¿½finir une date de dï¿½faut ï¿½ maintenant, alias creation ou modification du ticket
+		MetaModel::Init_AddAttribute(new AttributeDateTime("last_update", array("allowed_values"=>null, "sql"=>"last_update", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+	    MetaModel::Init_AddAttribute(new AttributeDateTime("next_update", array("allowed_values"=>null, "sql"=>"next_update", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_AddAttribute(new AttributeDate("end_date", array("allowed_values"=>null, "sql"=>"closed_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeDateTime("end_date", array("allowed_values"=>null, "sql"=>"closed_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("caller_id", array("targetclass"=>"bizPerson", "jointype"=> "", "allowed_values"=>new ValueSetObjects('SELECT bizPerson AS p WHERE p.org_id = :this->org_id'), "sql"=>"caller_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array("org_id"))));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("caller_mail", array("allowed_values"=>null, "extkey_attcode"=> 'caller_id', "target_attcode"=>"email")));
 	
@@ -71,7 +71,7 @@ class bizIncidentTicket extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("related_tickets", array("linked_class"=>"lnkRelatedTicket", "ext_key_to_me"=>"ticket_id", "ext_key_to_remote"=>"rel_ticket_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array(/*'impacted_infra_computed',*/ 'impacted_infra_manual'))));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("contacts_a_notifier", array("linked_class"=>"lnkContactTicket", "ext_key_to_me"=>"ticket_id", "ext_key_to_remote"=>"contact_id", "allowed_values"=>null, "default_value"=>new ValueSetRelatedObjectsFromLinkSet('impacted_infra_manual'/*sLinkSetAttCode*/, 'infra_id'/*sExtKeyToRemote*/, 'impacts'/*sRelationCode*/, 3/*iMaxDepth*/, 'bizContact'/*sTargetClass*/, 'lnkContactTicket'/*sTargetLinkClass*/, 'contact_id'/*sTargetExtKey*/) /* ici plus tard... */, "count_min"=>0, "count_max"=>0, "depends_on"=>array('impacted_infra_manual'))));
 
-		// doit-on aussi ajouter un filtre sur les extfields lié à une extkey ? ici le name de l'agent?
+		// doit-on aussi ajouter un filtre sur les extfields liï¿½ ï¿½ une extkey ? ici le name de l'agent?
 		
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('name','title', 'org_id', 'type','ticket_status', 'severity','start_date', 'initial_situation', 'current_situation','caller_id', 'impact', 'last_update', 'next_update','end_date', 'assignment_count', 'workgroup_id','agent_id','action_log','resolution')); // Attributes to be displayed for a list
@@ -86,7 +86,7 @@ class bizIncidentTicket extends cmdbAbstractObject
 												 "title"=>OPT_ATT_MANDATORY, "org_id"=>OPT_ATT_MANDATORY, "caller_id"=>OPT_ATT_MANDATORY, "initial_situation"=>OPT_ATT_MANDATORY, "start_date"=>OPT_ATT_MANDATORY, "workgroup_id"=>OPT_ATT_MANDATORY,
 												 "severity"=>OPT_ATT_MANDATORY, "agent_id"=>OPT_ATT_HIDDEN,"impacted_infra_manual"=>OPT_ATT_MANDATORY, "related_tickets"=>OPT_ATT_MUSTPROMPT,"resolution"=>OPT_ATT_HIDDEN)));
 		MetaModel::Init_DefineState("Assigned", array("attribute_inherit"=>null,
-												"attribute_list"=>array('name' => OPT_ATT_READONLY, "title"=>OPT_ATT_READONLY, "org_id"=>OPT_ATT_READONLY, "caller_id"=>OPT_ATT_READONLY, "initial_situation"=>OPT_ATT_READONLY, "start_date"=>OPT_ATT_READONLY,'assignment_count' => OPT_ATT_READONLY,'end_date' => OPT_ATT_HIDDEN, "workgroup_id"=>OPT_ATT_READONLY, "agent_id"=>OPT_ATT_MUSTCHANGE,"resolution"=>OPT_ATT_HIDDEN)));
+												"attribute_list"=>array('name' => OPT_ATT_READONLY, "title"=>OPT_ATT_READONLY, "org_id"=>OPT_ATT_READONLY, "caller_id"=>OPT_ATT_READONLY, "initial_situation"=>OPT_ATT_READONLY, "start_date"=>OPT_ATT_READONLY,'assignment_count' => OPT_ATT_READONLY,'end_date' => OPT_ATT_HIDDEN, "workgroup_id"=>OPT_ATT_MUSTPROMPT, "agent_id"=>OPT_ATT_MUSTCHANGE,"resolution"=>OPT_ATT_HIDDEN)));
 		MetaModel::Init_DefineState("WorkInProgress", array("attribute_inherit"=>null, "attribute_list"=>array("title"=>OPT_ATT_READONLY, "org_id"=>OPT_ATT_READONLY, "caller_id"=>OPT_ATT_READONLY, "initial_situation"=>OPT_ATT_READONLY,'end_date' => OPT_ATT_HIDDEN, "start_date"=>OPT_ATT_READONLY,"workgroup_id"=>OPT_ATT_MANDATORY, "agent_id"=>OPT_ATT_MANDATORY,"action_log"=>OPT_ATT_MANDATORY,"impact"=>OPT_ATT_READONLY,"severity"=>OPT_ATT_READONLY)));
 		MetaModel::Init_DefineState("Resolved", array("attribute_inherit"=>null, "attribute_list"=>array('name' => OPT_ATT_READONLY,'type' => OPT_ATT_READONLY, "title"=>OPT_ATT_READONLY, "org_id"=>OPT_ATT_READONLY, "caller_id"=>OPT_ATT_READONLY, "initial_situation"=>OPT_ATT_READONLY,"current_situation"=>OPT_ATT_READONLY,'end_date' => OPT_ATT_READONLY,'last_update' => OPT_ATT_READONLY,'next_update' => OPT_ATT_READONLY, "start_date"=>OPT_ATT_READONLY,"workgroup_id"=>OPT_ATT_READONLY, "agent_id"=>OPT_ATT_READONLY,"action_log"=>OPT_ATT_READONLY,"impact"=>OPT_ATT_READONLY,"severity"=>OPT_ATT_READONLY,"resolution"=>OPT_ATT_MUSTCHANGE)));
 		MetaModel::Init_DefineState("Closed", array("attribute_inherit"=>null, "attribute_list"=>array('name' => OPT_ATT_READONLY,'type' => OPT_ATT_READONLY, "title"=>OPT_ATT_READONLY, "org_id"=>OPT_ATT_READONLY, "caller_id"=>OPT_ATT_READONLY, "initial_situation"=>OPT_ATT_READONLY,"current_situation"=>OPT_ATT_READONLY,'end_date' => OPT_ATT_READONLY,'last_update' => OPT_ATT_READONLY,'next_update' => OPT_ATT_READONLY, "start_date"=>OPT_ATT_READONLY,"workgroup_id"=>OPT_ATT_READONLY, "agent_id"=>OPT_ATT_READONLY,"action_log"=>OPT_ATT_READONLY,"impact"=>OPT_ATT_READONLY,"severity"=>OPT_ATT_READONLY,"resolution"=>OPT_ATT_READONLY)));
@@ -153,12 +153,10 @@ class bizIncidentTicket extends cmdbAbstractObject
 
 		$oImpactedInfras = DBObjectSet::FromLinkSet($this, 'impacted_infra_manual', 'infra_id');
 
-		$aComputed = $oImpactedInfras->GetRelatedObjects('impacts', 2);
+		$aComputed = $oImpactedInfras->GetRelatedObjects('impacts', 10);
 
 		if (array_key_exists('logRealObject', $aComputed))
 		{
-			// Romain: supprimer cette ligne
-			// $aLinksToCreate = array();
 			foreach($aComputed['logRealObject'] as $iKey => $oObject)
 			{
 				if (MetaModel::IsParentClass('bizContact', get_class($oObject)))
@@ -166,7 +164,7 @@ class bizIncidentTicket extends cmdbAbstractObject
 					$oNewLink = new lnkContactTicket();
 					$oNewLink->Set('contact_id', $iKey);
 					//$oNewLink->Set('ticket_id', $this->GetKey()); // unkown at that time!
-					$oNewLink->Set('role', 'concerned by an impacted CI');
+					$oNewLink->Set('role', 'contact automatically computed');
 
 					// Romain: transformer cette ligne
 					$oToNotify->AddObject($oNewLink);

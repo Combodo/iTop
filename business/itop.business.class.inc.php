@@ -1330,7 +1330,7 @@ class bizApplication extends logInfra
 		MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("device_id", array("targetclass"=>"bizDevice", "jointype"=> '', "allowed_values"=>new ValueSetObjects('SELECT bizDevice AS p WHERE p.org_id = :this->org_id'), "sql"=>"device_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array("org_id"))));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("device_name", array("allowed_values"=>null, "extkey_attcode"=> 'device_id', "target_attcode"=>"name")));
-		MetaModel::Init_AddAttribute(new AttributeDate("install_date", array("allowed_values"=>null, "sql"=>"install_date", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeDateTime("install_date", array("allowed_values"=>null, "sql"=>"install_date", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 
 		MetaModel::Init_AddAttribute(new AttributeString("version", array("allowed_values"=>null, "sql"=>"version", "default_value"=>"undefined", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("function", array("allowed_values"=>null, "sql"=>"function", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
@@ -1495,7 +1495,7 @@ class bizPatch extends logRealObject
 		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('production,obsolete'), "sql"=>"status", "default_value"=>"production", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("device_id", array("targetclass"=>"bizDevice", "jointype"=> '', "allowed_values"=>new ValueSetObjects('SELECT bizDevice AS p WHERE p.org_id = :this->org_id'), "sql"=>"device_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array("org_id"))));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("device_name", array("allowed_values"=>null, "extkey_attcode"=> 'device_id', "target_attcode"=>"name")));
-   	MetaModel::Init_AddAttribute(new AttributeDate("install_date", array("allowed_values"=>null, "sql"=>"install_date", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+   		MetaModel::Init_AddAttribute(new AttributeDateTime("install_date", array("allowed_values"=>null, "sql"=>"install_date", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		
 		MetaModel::Init_AddAttribute(new AttributeText("description", array("allowed_values"=>null, "sql"=>"description", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("patch_type", array("allowed_values"=>new ValueSetEnum("OS,Application"), "sql"=>"patch_type", "default_value"=>"OS", "is_null_allowed"=>false, "depends_on"=>array())));

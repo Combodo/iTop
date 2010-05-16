@@ -46,12 +46,12 @@ class bizServiceCall extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeEnum("call_status", array("allowed_values"=>new ValueSetEnum("New, Assigned, WorkInProgress,Resolved,Closed"), "sql"=>"call_status", "default_value"=>"New", "is_null_allowed"=>false, "depends_on"=>array())));
 		// SetPossibleValues("status",array("Open","Monitored","Closed"));
 		MetaModel::Init_AddAttribute(new AttributeText("call_description", array("allowed_values"=>null, "sql"=>"call_description", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeDate("creation_date", array("allowed_values"=>null, "sql"=>"creation_date", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-		// définir une date de défaut à maintenant, alias creation ou modification du ticket
-		MetaModel::Init_AddAttribute(new AttributeDate("last_update", array("allowed_values"=>null, "sql"=>"last_update", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeDate("next_update", array("allowed_values"=>null, "sql"=>"next_update", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeDateTime("creation_date", array("allowed_values"=>null, "sql"=>"creation_date", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		// dï¿½finir une date de dï¿½faut ï¿½ maintenant, alias creation ou modification du ticket
+		MetaModel::Init_AddAttribute(new AttributeDateTime("last_update", array("allowed_values"=>null, "sql"=>"last_update", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeDateTime("next_update", array("allowed_values"=>null, "sql"=>"next_update", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		
-		MetaModel::Init_AddAttribute(new AttributeDate("end_date", array("allowed_values"=>null, "sql"=>"closed_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeDateTime("end_date", array("allowed_values"=>null, "sql"=>"closed_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("caller_id", array("targetclass"=>"bizPerson", "jointype"=> "", "allowed_values"=>new ValueSetObjects('SELECT bizPerson AS p WHERE p.org_id = :this->org_id'), "sql"=>"caller_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array('org_id'))));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("caller_mail", array("allowed_values"=>null, "extkey_attcode"=> 'caller_id', "target_attcode"=>"email")));
 		

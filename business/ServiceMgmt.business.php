@@ -110,8 +110,8 @@ class bizContract extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeString("cost", array("allowed_values"=>null, "sql"=>"cost", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("currency", array("allowed_values"=>new ValueSetEnum("Euros,Dollars"), "sql"=>"currency", "default_value"=>"Euros", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("description", array("allowed_values"=>null, "sql"=>"description", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeDate("move2prod_date", array("allowed_values"=>null, "sql"=>"move2prod_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeDate("end_prod", array("allowed_values"=>null, "sql"=>"end_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeDateTime("move2prod_date", array("allowed_values"=>null, "sql"=>"move2prod_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeDateTime("end_prod", array("allowed_values"=>null, "sql"=>"end_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum("New, Negotiating, Signed, Production,Finished"), "sql"=>"status", "default_value"=>"New", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("type", array("allowed_values"=>new ValueSetEnum("Hardware,Software,Support,Licence"), "sql"=>"type", "default_value"=>"Support", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeInteger("version_number", array("allowed_values"=>null, "sql"=>"version_number", "default_value"=>1, "is_null_allowed"=>false, "depends_on"=>array())));
