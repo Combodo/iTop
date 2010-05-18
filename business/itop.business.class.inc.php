@@ -836,8 +836,12 @@ class bizSubnet extends logInfra
 
 		$bit_ip = ip2long($this->Get('ip'));
 		$bit_mask = ip2long($this->Get('mask'));
-		$sIPMin = long2ip($bit_ip & $bit_mask);
-		$sIPMax = long2ip(($bit_ip | (~$bit_mask)) - 1);
+
+		$iIPMin = $bit_ip & $bit_mask;
+		$iIPMax = ($bit_ip | (~$bit_mask)) - 1;
+
+		$sIPMin = long2ip($iIPMin);
+		$sIPMax = long2ip($iIPMax);
 
 		$oPage->p("Interfaces having an IP in the range: <em>$sIPMin</em> to <em>$sIPMax</em>");
 		
@@ -845,7 +849,7 @@ class bizSubnet extends logInfra
 		self::DisplaySet($oPage, $oIfSet);
 
 		$iCountUsed = $oIfSet->Count();
-		$iCountRange = ip2long($sIPMax) - ip2long($sIPMin);
+		$iCountRange = $iIPMax - $iIPMin;
 		$iFreeCount =  $iCountRange - $iCountUsed;
 
 		$oPage->SetCurrentTab('Free IPs');
@@ -853,18 +857,21 @@ class bizSubnet extends logInfra
 		$oPage->p("Here is an extract of 10 free IP addresses");
 
 		$aUsedIPs = $oIfSet->GetColumnAsArray('ip_address', false);
-		$i = 0;
-		while ($i < min($iFreeCount, 10))
+		$iAnIP = $iIPMin;
+		$iFound = 0;
+		while (($iFound < min($iFreeCount, 10)) && ($iAnIP <= $iIPMax))
 		{
-			$i++;
-
-			$iAnIP = ip2long($sIPMin) + $i;
-			if (in_array($iAnIP, $aUsedIPs)) continue;
-
 			$sAnIP = long2ip($iAnIP);
-			$oPage->p($sAnIP);
+			if (!in_array($sAnIP, $aUsedIPs))
+			{
+				$iFound++;
+				$oPage->p($sAnIP);
+			}
+			else
+			{
+			}
+			$iAnIP++;
 		}
-		
 	}
 }
 
