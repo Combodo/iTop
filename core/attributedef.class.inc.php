@@ -160,14 +160,6 @@ abstract class AttributeDefinition
 	}
 	public function GetValuesDef() {return null;} 
 	public function GetPrerequisiteAttributes() {return array();} 
-	//public function IsSearchableStd() {return $this->Get("search_std");} 
-	//public function IsSearchableGlobal() {return $this->Get("search_global");} 
-	//public function IsMandatory() {return $this->Get("is_mandatory");} 
-	//public function GetMinVal() {return $this->Get("min");} 
-	//public function GetMaxVal() {return $this->Get("max");} 
-	//public function GetSize() {return $this->Get("size");} 
-	//public function GetCheckRegExp() {return $this->Get("regexp");} 
-	//public function GetCheckFunc() {return $this->Get("checkfunc");} 
 
 	public function MakeRealValue($proposedValue) {return $proposedValue;} // force an allowed value (type conversion and possibly forces a value as mySQL would do upon writing!)
 
@@ -184,10 +176,7 @@ abstract class AttributeDefinition
 	
 	public function CheckValue($value)
 	{
-		$sRegExp = $this->Get("regexp"); // ??? Does it exist ??
-		if (empty($sRegExp)) return true;
-		
-		return preg_match(preg_escape($this->Get("regexp")), $value);
+		return true;
 	}
 	 
 	public function MakeValue()
@@ -587,6 +576,19 @@ class AttributeString extends AttributeDBField
 	public function GetEditClass() {return "String";}
 	protected function GetSQLCol() {return "VARCHAR(255)";}
 
+	public function CheckValue($value)
+	{
+		$sRegExp = $this->GetValidationPattern();
+		if (empty($sRegExp))
+		{
+			return true;
+		}
+		else
+		{
+			return preg_match(preg_escape($sRegExp), $value);
+		}
+	}
+
 	public function GetBasicFilterOperators()
 	{
 		return array(
@@ -806,6 +808,27 @@ class AttributeEmailAddress extends AttributeString
 	public function GetValidationPattern()
 	{
 		return "^([0-9a-zA-Z]([-.\\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\\w]*[0-9a-zA-Z]\\.)+[a-zA-Z]{2,9})$";
+	}
+}
+
+/**
+ * Specialization of a string: IP address 
+ *
+ * @package     iTopORM
+ * @author      Romain Quetiez <romainquetiez@yahoo.fr>
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.itop.com
+ * @since       1.0
+ * @version     $itopversion$
+ */
+class AttributeIPAddress extends AttributeString
+{
+	public function GetTypeDesc() {return "IP address";}
+
+	public function GetValidationPattern()
+	{
+		$sNum = '(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])';
+		return "^($sNum\\.$sNum\\.$sNum\\.$sNum)$";
 	}
 }
 
