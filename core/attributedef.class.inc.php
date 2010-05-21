@@ -925,7 +925,7 @@ class AttributeEnum extends AttributeString
 
 	public function RequiresIndex()
 	{
-		return true;
+		return false;
 	}
 
 	public function GetBasicFilterOperators()
