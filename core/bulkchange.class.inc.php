@@ -1,16 +1,34 @@
 <?php
+// Copyright (C) 2010 Combodo SARL
+//
+//   This program is free software; you can redistribute it and/or modify
+//   it under the terms of the GNU General Public License as published by
+//   the Free Software Foundation; version 3 of the License.
+//
+//   This program is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU General Public License for more details.
+//
+//   You should have received a copy of the GNU General Public License
+//   along with this program; if not, write to the Free Software
+//   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+/**
+ * Bulk change facility (common to interactive and batch usages)
+ *
+ * @author      Erwan Taloc <erwan.taloc@combodo.com>
+ * @author      Romain Quetiez <romain.quetiez@combodo.com>
+ * @author      Denis Flaven <denis.flaven@combodo.com>
+ * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
+ */
+
 
 /**
  * BulkChange
  * Interpret a given data set and update the DB accordingly (fake mode avail.) 
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @author      Denis Flaven <denisflave@free.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     1.1.1.1 $
  */
 
 class BulkChangeException extends CoreException
@@ -22,11 +40,6 @@ class BulkChangeException extends CoreException
  * A series of classes, keeping the information about a given cell: could it be changed or not (and why)?  
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 abstract class CellChangeSpec
 {
@@ -138,11 +151,6 @@ class CellStatus_Ambiguous extends CellStatus_Issue
  * A series of classes, keeping the information about a given row: could it be changed or not (and why)?  
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 abstract class RowStatus
 {
@@ -201,13 +209,10 @@ class RowStatus_Issue extends RowStatus
 
 
 /**
- ** BulkChange *
- ** @package iTopORM
- ** @author Romain Quetiez <romainquetiez@yahoo.fr>
- ** @license http://www.opensource.org/licenses/lgpl-license.php LGPL
- ** @link www.itop.com
- ** @since 1.0
- ** @version $itopversion$ */
+ * BulkChange
+ *
+ * @package iTopORM
+ */
 class BulkChange
 {
 	protected $m_sClass; 

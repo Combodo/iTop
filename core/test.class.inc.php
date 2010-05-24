@@ -1,4 +1,28 @@
 <?php
+// Copyright (C) 2010 Combodo SARL
+//
+//   This program is free software; you can redistribute it and/or modify
+//   it under the terms of the GNU General Public License as published by
+//   the Free Software Foundation; version 3 of the License.
+//
+//   This program is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU General Public License for more details.
+//
+//   You should have received a copy of the GNU General Public License
+//   along with this program; if not, write to the Free Software
+//   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+/**
+ * Core automated tests - basics
+ *
+ * @author      Erwan Taloc <erwan.taloc@combodo.com>
+ * @author      Romain Quetiez <romain.quetiez@combodo.com>
+ * @author      Denis Flaven <denis.flaven@combodo.com>
+ * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
+ */
+
 
 require_once('coreexception.class.inc.php');
 require_once('attributedef.class.inc.php');
@@ -30,12 +54,6 @@ class UnitTestException extends Exception
  * Improved display of the backtrace
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @author      Denis Flaven <denisflave@free.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     1.1.1.1 $
  */
 class ExceptionFromError extends Exception
 {
@@ -52,12 +70,6 @@ class ExceptionFromError extends Exception
  * Test handler API and basic helpers
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @author      Denis Flaven <denisflave@free.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     1.1.1.1 $
  */
 abstract class TestHandler
 {
@@ -177,11 +189,6 @@ abstract class TestHandler
  * Test to execute a piece of code (checks if an error occurs)  
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 abstract class TestFunction extends TestHandler
 {
@@ -193,11 +200,6 @@ abstract class TestFunction extends TestHandler
  * Test to execute a piece of code (checks if an error occurs)  
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 abstract class TestWebServices extends TestHandler
 {
@@ -255,11 +257,6 @@ abstract class TestWebServices extends TestHandler
  * Test to execute a piece of code (checks if an error occurs)  
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 abstract class TestSoapWebService extends TestHandler
 {
@@ -275,11 +272,6 @@ abstract class TestSoapWebService extends TestHandler
  * Test to check that a function outputs some values depending on its input  
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 abstract class TestFunctionInOut extends TestFunction
 {
@@ -318,11 +310,6 @@ abstract class TestFunctionInOut extends TestFunction
  * Test to check an URL (Searches for Error/Warning/Etc keywords)  
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 abstract class TestUrl extends TestHandler
 {
@@ -341,11 +328,6 @@ abstract class TestUrl extends TestHandler
  * Test to check a user management module  
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 abstract class TestUserRights extends TestHandler
 {
@@ -360,11 +342,6 @@ abstract class TestUserRights extends TestHandler
  * Test to execute a scenario on a given DB
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 abstract class TestScenarioOnDB extends TestHandler
 {
@@ -399,11 +376,6 @@ abstract class TestScenarioOnDB extends TestHandler
  * Test to use a business model on a given DB  
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 abstract class TestBizModel extends TestHandler
 {
@@ -507,11 +479,6 @@ abstract class TestBizModel extends TestHandler
  * Test to execute a scenario common to any business model (tries to build all the possible queries, etc.)
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 abstract class TestBizModelGeneric extends TestBizModel
 {

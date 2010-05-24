@@ -1,4 +1,28 @@
 <?php
+// Copyright (C) 2010 Combodo SARL
+//
+//   This program is free software; you can redistribute it and/or modify
+//   it under the terms of the GNU General Public License as published by
+//   the Free Software Foundation; version 3 of the License.
+//
+//   This program is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU General Public License for more details.
+//
+//   You should have received a copy of the GNU General Public License
+//   along with this program; if not, write to the Free Software
+//   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+/**
+ * Typology for the attributes
+ *
+ * @author      Erwan Taloc <erwan.taloc@combodo.com>
+ * @author      Romain Quetiez <romain.quetiez@combodo.com>
+ * @author      Denis Flaven <denis.flaven@combodo.com>
+ * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
+ */
+
 
 require_once('MyHelpers.class.inc.php');
 require_once('ormdocument.class.inc.php');
@@ -44,12 +68,6 @@ define('DEL_AUTO', 2);
  * Attribute definition API, implemented in and many flavours (Int, String, Enum, etc.) 
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @author      Denis Flaven <denisflave@free.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     1.1.1.1 $
  */
 abstract class AttributeDefinition
 {
@@ -235,11 +253,6 @@ abstract class AttributeDefinition
  * Set of objects directly linked to an object, and being part of its definition  
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 class AttributeLinkedSet extends AttributeDefinition
 {
@@ -301,11 +314,6 @@ class AttributeLinkedSet extends AttributeDefinition
  * Set of objects linked to an object (n-n), and being part of its definition  
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 class AttributeLinkedSetIndirect extends AttributeLinkedSet
 {
@@ -320,11 +328,6 @@ class AttributeLinkedSetIndirect extends AttributeLinkedSet
  * Abstract class implementing default filters for a DB column  
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 class AttributeDBFieldVoid extends AttributeDefinition
 {
@@ -412,11 +415,6 @@ class AttributeDBFieldVoid extends AttributeDefinition
  * Base class for all kind of DB attributes, with the exception of external keys 
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 class AttributeDBField extends AttributeDBFieldVoid
 {
@@ -432,11 +430,6 @@ class AttributeDBField extends AttributeDBFieldVoid
  * Map an integer column to an attribute 
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 class AttributeInteger extends AttributeDBField
 {
@@ -521,11 +514,6 @@ class AttributeInteger extends AttributeDBField
  * Map a boolean column to an attribute 
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 class AttributeBoolean extends AttributeInteger
 {
@@ -557,11 +545,6 @@ class AttributeBoolean extends AttributeInteger
  * Map a varchar column (size < ?) to an attribute 
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 class AttributeString extends AttributeDBField
 {
@@ -658,11 +641,6 @@ class AttributeString extends AttributeDBField
  * An attibute that matches an object class 
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 class AttributeClass extends AttributeString
 {
@@ -693,11 +671,6 @@ class AttributeClass extends AttributeString
  * The attribute dedicated to the finalclass automatic attribute 
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 class AttributeFinalClass extends AttributeString
 {
@@ -739,11 +712,6 @@ class AttributeFinalClass extends AttributeString
  * Map a varchar column (size < ?) to an attribute that must never be shown to the user 
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 class AttributePassword extends AttributeString
 {
@@ -767,11 +735,6 @@ class AttributePassword extends AttributeString
  * Map a text column (size > ?) to an attribute 
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 class AttributeText extends AttributeString
 {
@@ -795,11 +758,6 @@ class AttributeText extends AttributeString
  * Specialization of a string: email 
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 class AttributeEmailAddress extends AttributeString
 {
@@ -815,11 +773,6 @@ class AttributeEmailAddress extends AttributeString
  * Specialization of a string: IP address 
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 class AttributeIPAddress extends AttributeString
 {
@@ -836,11 +789,6 @@ class AttributeIPAddress extends AttributeString
  * Specialization of a string: OQL expression 
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 class AttributeOQL extends AttributeString
 {
@@ -851,11 +799,6 @@ class AttributeOQL extends AttributeString
  * Specialization of a string: template 
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 class AttributeTemplateString extends AttributeString
 {
@@ -866,11 +809,6 @@ class AttributeTemplateString extends AttributeString
  * Specialization of a text: template 
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 class AttributeTemplateText extends AttributeText
 {
@@ -881,11 +819,6 @@ class AttributeTemplateText extends AttributeText
  * Map a enum column to an attribute 
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 class AttributeEnum extends AttributeString
 {
@@ -971,11 +904,6 @@ class AttributeEnum extends AttributeString
  * Map a date+time column to an attribute 
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 class AttributeDate extends AttributeDBField
 {
@@ -1128,11 +1056,6 @@ AttributeDate::InitStatics();
  * Map a date+time column to an attribute 
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 class AttributeDateTime extends AttributeDBField
 {
@@ -1301,11 +1224,6 @@ AttributeDateTime::InitStatics();
  *  where an AttributeExternalField corresponds to a column into another table (class)
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 class AttributeExternalKey extends AttributeDBFieldVoid
 {
@@ -1389,11 +1307,6 @@ class AttributeExternalKey extends AttributeDBFieldVoid
  * An attribute which corresponds to an external key (direct or indirect) 
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 class AttributeExternalField extends AttributeDefinition
 {
@@ -1561,11 +1474,6 @@ class AttributeExternalField extends AttributeDefinition
  * Map a varchar column to an URL (formats the ouput in HMTL) 
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 class AttributeURL extends AttributeString
 {
@@ -1602,11 +1510,6 @@ class AttributeURL extends AttributeString
  * A blob is an ormDocument, it is stored as several columns in the database  
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 class AttributeBlob extends AttributeDefinition
 {

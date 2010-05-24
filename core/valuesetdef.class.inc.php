@@ -1,20 +1,36 @@
 <?php
+// Copyright (C) 2010 Combodo SARL
+//
+//   This program is free software; you can redistribute it and/or modify
+//   it under the terms of the GNU General Public License as published by
+//   the Free Software Foundation; version 3 of the License.
+//
+//   This program is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU General Public License for more details.
+//
+//   You should have received a copy of the GNU General Public License
+//   along with this program; if not, write to the Free Software
+//   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+/**
+ * Value set definitions (from a fixed list or from a query, etc.)
+ *
+ * @author      Erwan Taloc <erwan.taloc@combodo.com>
+ * @author      Romain Quetiez <romain.quetiez@combodo.com>
+ * @author      Denis Flaven <denis.flaven@combodo.com>
+ * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
+ */
+
+require_once('MyHelpers.class.inc.php');
 
 /**
  * ValueSetDefinition
  * value sets API and implementations
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @author      Denis Flaven <denisflave@free.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     1.1.1.1 $
  */
-
-require_once('MyHelpers.class.inc.php');
-
 abstract class ValueSetDefinition
 {
 	protected $m_bIsLoaded = false;
@@ -70,11 +86,6 @@ abstract class ValueSetDefinition
  * Set of existing values for an attribute, given a search filter 
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 class ValueSetObjects extends ValueSetDefinition
 {
@@ -122,11 +133,6 @@ class ValueSetObjects extends ValueSetDefinition
  * Set of existing values for a link set attribute, given a relation code 
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 class ValueSetRelatedObjectsFromLinkSet extends ValueSetDefinition
 {
@@ -201,11 +207,6 @@ class ValueSetRelatedObjectsFromLinkSet extends ValueSetDefinition
  * Fixed set values (could be hardcoded in the business model) 
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 class ValueSetEnum extends ValueSetDefinition
 {
@@ -242,11 +243,6 @@ class ValueSetEnum extends ValueSetDefinition
  * Data model classes 
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 class ValueSetEnumClasses extends ValueSetEnum
 {

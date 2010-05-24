@@ -1,15 +1,33 @@
 <?php
+// Copyright (C) 2010 Combodo SARL
+//
+//   This program is free software; you can redistribute it and/or modify
+//   it under the terms of the GNU General Public License as published by
+//   the Free Software Foundation; version 3 of the License.
+//
+//   This program is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU General Public License for more details.
+//
+//   You should have received a copy of the GNU General Public License
+//   along with this program; if not, write to the Free Software
+//   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+/**
+ * Persistent classes (internal) : cmdbChangeOp and derived
+ *
+ * @author      Erwan Taloc <erwan.taloc@combodo.com>
+ * @author      Romain Quetiez <romain.quetiez@combodo.com>
+ * @author      Denis Flaven <denis.flaven@combodo.com>
+ * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
+ */
+
 
 /**
  * Various atomic change operations, to be tracked 
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @author      Denis Flaven <denisflave@free.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     1.1.1.1 $
  */
 
 class CMDBChangeOp extends DBObject
@@ -54,11 +72,6 @@ class CMDBChangeOp extends DBObject
  * Record the creation of an object  
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 class CMDBChangeOpCreate extends CMDBChangeOp
 {
@@ -94,11 +107,6 @@ class CMDBChangeOpCreate extends CMDBChangeOp
  * Record the deletion of an object 
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 class CMDBChangeOpDelete extends CMDBChangeOp
 {
@@ -133,11 +141,6 @@ class CMDBChangeOpDelete extends CMDBChangeOp
  * Record the modification of an attribute (abstract)
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 class CMDBChangeOpSetAttribute extends CMDBChangeOp
 {
@@ -169,11 +172,6 @@ class CMDBChangeOpSetAttribute extends CMDBChangeOp
  * Record the modification of a scalar attribute 
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 class CMDBChangeOpSetAttributeScalar extends CMDBChangeOpSetAttribute
 {
@@ -265,11 +263,6 @@ class CMDBChangeOpSetAttributeScalar extends CMDBChangeOpSetAttribute
  * Record the modification of a blob
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 class CMDBChangeOpSetAttributeBlob extends CMDBChangeOpSetAttribute
 {
@@ -331,11 +324,6 @@ class CMDBChangeOpSetAttributeBlob extends CMDBChangeOpSetAttribute
  * Record the modification of a multiline string (text)
  *
  * @package     iTopORM
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     $itopversion$
  */
 class CMDBChangeOpSetAttributeText extends CMDBChangeOpSetAttribute
 {

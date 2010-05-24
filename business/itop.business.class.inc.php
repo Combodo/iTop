@@ -1,20 +1,31 @@
 <?php
+// Copyright (C) 2010 Combodo SARL
+//
+//   This program is free software; you can redistribute it and/or modify
+//   it under the terms of the GNU General Public License as published by
+//   the Free Software Foundation; version 3 of the License.
+//
+//   This program is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU General Public License for more details.
+//
+//   You should have received a copy of the GNU General Public License
+//   along with this program; if not, write to the Free Software
+//   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+/**
+ * Persistent classes for a CMDB
+ *
+ * @author      Erwan Taloc <erwan.taloc@combodo.com>
+ * @author      Romain Quetiez <romain.quetiez@combodo.com>
+ * @author      Denis Flaven <denis.flaven@combodo.com>
+ * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
+ */
+
 require_once('../application/cmdbabstract.class.inc.php');
 require_once('../application/template.class.inc.php');
 
-
-/**
- * itop.business.class.inc.php
- * User defined objects, implements the business need 
- *
- * @package     iTopBizModelSamples
- * @author      Romain Quetiez <romainquetiez@yahoo.fr>
- * @author      Denis Flaven <denisflave@free.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     1.1.1.1 $
- */
 
 /**
  * Possible values for the statuses of objects
@@ -37,18 +48,6 @@ MetaModel::RegisterRelation("impacts", array("description"=>"objects being funct
 * Organization ownership might be used to manage the R/W access to the object
 */
 ////////////////////////////////////////////////////////////////////////////////////
-/**
- * itop.business.class.inc.php
- * User defined objects, implements the business need 
- *
- * @package     iTopBizModelSamples
- * @author      Erwan Taloc <taloche@yahoo.fr>
- * @author      Denis Flaven <denisflave@free.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     1.1.1.1 $
- */
 class bizOrganization extends cmdbAbstractObject
 {
 	public static function Init()
@@ -104,18 +103,6 @@ class bizOrganization extends cmdbAbstractObject
 *   can be documented by Documents
 */
 ////////////////////////////////////////////////////////////////////////////////////
-/**
- * itop.business.class.inc.php
- * User defined objects, implements the business need 
- *
- * @package     iTopBizModelSamples
- * @author      Erwan Taloc <taloche@yahoo.fr>
- * @author      Denis Flaven <denisflave@free.fr>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.itop.com
- * @since       1.0
- * @version     1.1.1.1 $
- */
 class logRealObject extends cmdbAbstractObject
 {
 	public static function Init()
