@@ -964,21 +964,25 @@ function Welcome(iTopWebPage $oPage)
 	$oPage->add("<div><p><h1>".Dict::S('UI:Title:BulkImport+')."</h1></p></div>\n");
 	$oPage->AddTabContainer('tabs1');	
 
-	$sFileLoadHtml = '<div><form enctype="multipart/form-data" method="post"><p>'.Dict::S('UI:CSVImport:SelectFile').'</p>'.
-			'<p><input type="file" name="csvdata"/></p>'.
-			'<p><input type="submit" value="'.Dict::S('UI:Button:Next').'"/></p>'.
-			'<p><input type="hidden" name="step" value="2"/></p>'.
-			'<p><input type="hidden" name="operation" value="file_upload"/></p>'.
-			'</form></div>';
-	
-	$oPage->AddToTab('tabs1', Dict::S('UI:CSVImport:Tab:LoadFromFile'), $sFileLoadHtml);	
-	$sCSVData = utils::ReadParam('csvdata', '');
 	$sSeparator = utils::ReadParam('separator', '');
 	$sTextQualifier = utils::ReadParam('text_qualifier', '');
 	$bHeaderLine = utils::ReadParam('header_line', true);
 	$iSkippedLines = utils::ReadParam('nb_skipped_lines', '');
 	$sClassName = utils::ReadParam('class_name', '');
 	$bAdvanced = utils::ReadParam('advanced', 0);
+
+	$sFileLoadHtml = '<div><form enctype="multipart/form-data" method="post"><p>'.Dict::S('UI:CSVImport:SelectFile').'</p>'.
+			'<p><input type="file" name="csvdata"/></p>'.
+			'<p><input type="submit" value="'.Dict::S('UI:Button:Next').'"/></p>'.
+			'<p><input type="hidden" name="step" value="2"/></p>'.
+			'<p><input type="hidden" name="operation" value="file_upload"/></p>'.
+			'<input type="hidden" name="header_line" value="'.$bHeaderLine.'"/>'.
+			'<input type="hidden" name="nb_skipped_lines" value="'.$iSkippedLines.'"/>'.
+			'<input type="hidden" name="class_name" value="'.$sClassName.'"/>'.
+			'<input type="hidden" name="advanced" value="'.$bAdvanced.'"/>'.
+			'</form></div>';
+	
+	$oPage->AddToTab('tabs1', Dict::S('UI:CSVImport:Tab:LoadFromFile'), $sFileLoadHtml);	
 	$sCSVData = utils::ReadParam('csvdata', '');
 	$sPasteDataHtml = '<div><form enctype="multipart/form-data" method="post"><p>'.Dict::S('UI:CSVImport:PasteData').'</p>'.
 			'<p><textarea cols="100" rows="30" name="csvdata">'.htmlentities($sCSVData, ENT_QUOTES, 'UTF-8').'</textarea></p>'.
@@ -994,6 +998,11 @@ function Welcome(iTopWebPage $oPage)
 			'</form></div>';
 			
 	$oPage->AddToTab('tabs1', Dict::S('UI:CSVImport:Tab:CopyPaste'), $sPasteDataHtml);		
+	if (!empty($sCSVData))
+	{
+		// When there are some data, activate the 'copy & paste' tab by default
+		$oPage->SelectTab('tabs1', Dict::S('UI:CSVImport:Tab:CopyPaste'));
+	}
 	$sTemplateHtml = '<div><p>'.Dict::S('UI:CSVImport:PickClassForTemplate').' ';
 	$sTemplateHtml .= GetClassesSelect('template_class', '', 300, UR_ACTION_BULK_MODIFY);
 	$sTemplateHtml .= '</div>';

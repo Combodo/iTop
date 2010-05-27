@@ -113,7 +113,7 @@ class iTopWebPage extends NiceWebPage
 		$("#RightPane").trigger("resize");
 	}
 	
-	$("#tabbedContent > ul").tabs( 1, { fxFade: true, fxSpeed: 'fast' } ); // tabs
+	$("div[id^=tabbedContent] > ul").tabs( 1, { fxFade: true, fxSpeed: 'fast' } ); // tabs
 	$("table.listResults").tableHover(); // hover tables
 	$(".listResults").tablesorter( { headers: { 0:{sorter: false }}, widgets: ['zebra']} ); // sortable and zebra tables
 	$(".date-pick").datePicker( {clickInput: false, createButton: true, startDate: '2000-01-01'} ); // Date picker
@@ -352,9 +352,10 @@ EOF
 		foreach($this->m_aTabs as $sTabContainerName => $m_aTabs)
 		{
 			$sTabs = '';
+			$container_index = 0;
 			if (count($m_aTabs) > 0)
 			{
-			  $sTabs = "<!-- tabs -->\n<div id=\"tabbedContent\" class=\"light\">\n";
+			  $sTabs = "<!-- tabs -->\n<div id=\"tabbedContent_{$container_index}\" class=\"light\">\n";
 			  $sTabs .= "<ul>\n";
 			  // Display the unordered list that will be rendered as the tabs
 	          $i = 0;
@@ -374,6 +375,7 @@ EOF
 			  $sTabs .= "</div>\n<!-- end of tabs-->\n";
 	        }
 			$this->s_content = str_replace("\$Tabs:$sTabContainerName\$", $sTabs, $this->s_content);
+			$container_index++;
 		}
         
 		// Display the page's content
@@ -425,6 +427,36 @@ EOF
 		$sPreviousTab = $this->m_sCurrentTab;
 		$this->m_sCurrentTab = $sTabLabel;
 		return $sPreviousTab;
+	}
+	
+	/**
+	 * Make the given tab the active one, as if it were clicked
+	 * DOES NOT WORK: apparently in the *old* version of jquery
+	 * that we are using this is not supported... TO DO upgrade
+	 * the whole jquery bundle...
+	 */
+	public function SelectTab($sTabContainer, $sTabLabel)
+	{
+		$container_index = 0;
+		$tab_index = 0;
+		foreach($this->m_aTabs as $sCurrentTabContainerName => $aTabs)
+		{
+			if ($sTabContainer == $sCurrentTabContainerName)
+			{
+				foreach($aTabs as $sCurrentTabLabel => $void)
+				{
+					if ($sCurrentTabLabel == $sTabLabel)
+					{
+						break;
+					}
+					$tab_index++;
+				}	
+				break;
+			}
+			$container_index++;
+		}
+		$sSelector = '#tabbedContent_'.$container_index.' > ul';
+		$this->add_ready_script("$('$sSelector').tabs('select', $tab_index);");
 	}
 	
 	public function StartCollapsibleSection($sSectionLabel, $bOpen = false)
