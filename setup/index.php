@@ -166,7 +166,20 @@ function CheckPHPVersion(SetupWebPage $oP)
 	if (function_exists('php_ini_loaded_file')) // PHP >= 5.2.4
 	{
 		$sPhpIniFile = php_ini_loaded_file();
-		$oP->log("Info - php.ini path: '$sPhpIniFile'");
+		// Other included/scanned files
+		if ($sFileList = php_ini_scanned_files())
+		{
+		    if (strlen($sFileList) > 0)
+		    {
+		        $aFiles = explode(',', $sFileList);
+		
+		        foreach ($aFiles as $sFile)
+		        {
+		            $sPhpIniFile .= ', '.trim($sFile);
+		        }
+		    }
+		}
+		$oP->log("Info - php.ini file(s): '$sPhpIniFile'");
 	}
 	else
 	{
@@ -221,7 +234,7 @@ function CheckPHPVersion(SetupWebPage $oP)
 	// Check some more ini settings here, needed for file upload
   	if (get_magic_quotes_gpc())
   	{
-		$oP->error("'magic_quotes_gpc' is set to On in '$sPhpIniFile', please turn it Off before continuing.");
+		$oP->error("'magic_quotes_gpc' is set to On. Please turn it Off before continuing. You may want to check the PHP configuration file(s): '$sPhpIniFile'. Be aware that this setting can also be overridden in the apache configuration.");
 		$bResult = false;
 	}
 	
