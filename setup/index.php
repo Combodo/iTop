@@ -221,7 +221,7 @@ function CheckPHPVersion(SetupWebPage $oP)
 	// Check some more ini settings here, needed for file upload
   	if (get_magic_quotes_gpc())
   	{
-		$oP->error("'magic_quotes_gpc' is set to On in '$sPhpIniFile', please turn if Off before continuing.");
+		$oP->error("'magic_quotes_gpc' is set to On in '$sPhpIniFile', please turn it Off before continuing.");
 		$bResult = false;
 	}
 	
