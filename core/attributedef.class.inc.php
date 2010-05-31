@@ -80,6 +80,18 @@ abstract class AttributeDefinition
 	private $m_sHostClass = '!undefined!';
 	protected function Get($sParamName) {return $this->m_aParams[$sParamName];}
 	protected function IsParam($sParamName) {return (array_key_exists($sParamName, $this->m_aParams));}
+
+	protected function GetOptional($sParamName, $default)
+	{
+		if (array_key_exists($sParamName, $this->m_aParams))
+		{
+			return $this->m_aParams[$sParamName];
+		}
+		else
+		{
+			return $default;
+		}
+	}
 	
 	public function __construct($sCode, $aParams)
 	{
@@ -353,6 +365,7 @@ class AttributeDBFieldVoid extends AttributeDefinition
 	public function GetDefaultValue() {return "";}
 	public function IsNullAllowed() {return false;}
 
+	// 
 	protected function ScalarToSQL($value) {return $value;} // format value as a valuable SQL literal (quoted outside)
 
 	public function GetSQLExpressions()
@@ -423,7 +436,7 @@ class AttributeDBField extends AttributeDBFieldVoid
 		return array_merge(parent::ListExpectedParams(), array("default_value", "is_null_allowed"));
 	}
 	public function GetDefaultValue() {return $this->Get("default_value");}
-	public function IsNullAllowed() {return strtolower($this->Get("is_null_allowed"));}
+	public function IsNullAllowed() {return $this->Get("is_null_allowed");}
 }
 
 /**
@@ -1526,7 +1539,8 @@ class AttributeBlob extends AttributeDefinition
 	public function IsScalar() {return true;} 
 	public function IsWritable() {return true;} 
 	public function GetDefaultValue() {return "";}
-	public function IsNullAllowed() {return false;}
+	public function IsNullAllowed() {return $this->GetOptional("is_null_allowed", false);}
+
 
 	// Facilitate things: allow the user to Set the value from a string
 	public function MakeRealValue($proposedValue)

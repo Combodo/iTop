@@ -342,7 +342,9 @@ class bizDocument extends logRealObject
 		MetaModel::Init_AddAttribute(new AttributeEnum("type", array("allowed_values"=>new ValueSetEnum("documentation,contract,working instructions,network map,white paper,presentation,training"), "sql"=>"type", "default_value"=>"documentation", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("description", array("allowed_values"=>null, "sql"=>"description", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_AddAttribute(new AttributeBlob("contents", array("depends_on"=>array())));
+//		MetaModel::Init_AddAttribute(new AttributeBlob("contents", array("depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeBlob("contents", array("is_null_allowed"=>true, "depends_on"=>array())));
+
 
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'type', 'description', 'contents')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('name', 'status', 'org_id', 'type', 'contents')); // Attributes to be displayed for a list
