@@ -149,7 +149,7 @@ table.formTable {
 		foreach($aData as $aRow)
 		{
 			$this->add("<tr>\n");
-			if (isset($aRow['label']) && isset($aRow['label']) && isset($aRow['help']))
+			if (isset($aRow['label']) && isset($aRow['input']) && isset($aRow['help']))
 			{
 				$this->add("<td class=\"wizlabel\">{$aRow['label']}</td>\n");
 				$this->add("<td class=\"wizinput\">{$aRow['input']}</td>\n");

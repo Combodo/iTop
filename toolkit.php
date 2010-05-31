@@ -16,6 +16,7 @@ echo "<a href=\"./pages/ITopConsultant.php?config=..%2Fconfig-itop.php\">Check m
 echo "<a href=\"./pages/db_importer.php\">Backup and restore (shortcut)</a></br>\n";
 echo "<a href=\"./pages/schema.php\">Objects schema (shortcut)</a></br>\n";
 echo "<a href=\"./setup/email.test.php\">Setup the email</a></br>\n";
+echo "<a href=\"./setup/benchmark.php\">Generate data for benchmarking purposes</a></br>\n";
 echo "<h2>Web services</h2>\n";
 echo "<a href=\"./webservices/soapserver.php\">Available functions</a></br>\n";
 echo "<a href=\"./webservices/itop.wsdl.php\">WSDL (dynamically generated)</a></br>\n";
