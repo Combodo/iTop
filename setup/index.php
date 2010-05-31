@@ -28,6 +28,7 @@ require_once('../core/config.class.inc.php');
 require_once('../core/log.class.inc.php');
 require_once('../core/cmdbsource.class.inc.php');
 require_once('./setuppage.class.inc.php');
+
 define('TMP_CONFIG_FILE', '../tmp-config-itop.php');
 define('FINAL_CONFIG_FILE', '../config-itop.php');
 define('SETUP_STRUCTURE_DATA_DIR', './data/structure');
@@ -39,6 +40,25 @@ define('MIN_MEMORY_LIMIT', 32*1024*1024);
 
 $sOperation = Utils::ReadParam('operation', 'step1');
 $oP = new SetupWebPage('iTop configuration wizard');
+
+/**
+ * Get a nicely formatted version string
+ */
+function GetITopVersion()
+{
+	$sVersionString = '';
+	if (ITOP_REVISION == '$WCREV$')
+	{
+		// This is NOT a version built using the buil system, just display the main version
+		$sVersionString = "iTop Version ".ITOP_VERSION;
+	}
+	else
+	{
+		// This is a build made from SVN, let display the full information
+		$sVersionString = "iTop Version ".ITOP_VERSION." revision ".ITOP_REVISION.", built on: ".ITOP_BUILD_DATE;
+	}
+	return $sVersionString;
+}
 
 /**
  * Helper function to retrieve the system's temporary directory
@@ -460,7 +480,10 @@ function PopulateDataFilesList(SetupWebPage $oP)
 function DisplayStep1(SetupWebPage $oP)
 {
 	$sNextOperation = 'step2';
+	$sVersionString = GetITopVersion();
 	$oP->add("<h1>iTop configuration wizard</h1>\n");
+	$oP->p($sVersionString);
+	$oP->log($sVersionString);
 	$oP->add("<h2>Checking prerequisites</h2>\n");
 	if (CheckPHPVersion($oP))
 	{
