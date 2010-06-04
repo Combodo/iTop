@@ -2146,6 +2146,7 @@ abstract class MetaModel
 			CMDBSource::CreateDB(self::$m_sDBName);
 		}
 		self::DBCreateTables();
+		self::DBCreateViews();
 	}
 
 	protected static function DBCreateTables()
@@ -2167,6 +2168,25 @@ abstract class MetaModel
 		}
 		// does not work -how to have multiple statements in a single query?
 		// $sDoCreateAll = implode(" ; ", $aSQL);
+	}
+
+	protected static function DBCreateViews()
+	{
+		list($aErrors, $aSugFix) = self::DBCheckViews();
+
+		$aSQL = array();
+		foreach ($aSugFix as $sClass => $aTarget)
+		{
+			foreach ($aTarget as $aQueries)
+			{
+				foreach ($aQueries as $sQuery)
+				{
+					//$aSQL[] = $sQuery;
+					// forces a refresh of cached information
+					CMDBSource::CreateTable($sQuery);
+				}
+			}
+		}
 	}
 
 	public static function DBDump()
@@ -2411,6 +2431,26 @@ abstract class MetaModel
 		return array($aErrors, $aSugFix);
 	}
 
+	public static function DBCheckViews()
+	{
+		$aErrors = array();
+		$aSugFix = array();
+
+		// Reporting views (must be created after any other table)
+		//
+		foreach (self::GetClasses('bizmodel') as $sClass)
+		{
+			$sView = "view_$sClass";
+			if (!CMDBSource::IsTable($sView))
+			{
+				$oFilter = new DBObjectSearch($sClass, '');
+				$sSQL = self::MakeSelectQuery($oFilter);
+				$aErrors[$sClass]['*'][] = "Missing view for class: $sClass";
+				$aSugFix[$sClass]['*'][] = "CREATE VIEW `$sView` AS $sSQL";
+			}
+		}
+		return array($aErrors, $aSugFix);
+	}
 
 	private static function DBCheckIntegrity_Check2Delete($sSelWrongRecs, $sErrorDesc, $sClass, &$aErrorsAndFixes, &$iNewDelCount, &$aPlannedDel, $bProcessingFriends = false)
 	{

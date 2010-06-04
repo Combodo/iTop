@@ -287,10 +287,11 @@ function printMenu($sConfigFile)
 	echo "   <li><a href=\"$sUrl&todo=showbizmodel\">Browse business model</a></li>";
 	if ($bHasDB)
 	{
-		echo "   <li><a href=\"$sUrl&todo=checkmodeltodb\">Concordance between Biz model and DB format</a></li>";
+		echo "   <li><a href=\"$sUrl&todo=checkmodeltodb\">Concordance between Biz model and <b>DB format</b></a></li>";
+		echo "   <li><a href=\"$sUrl&todo=checkmodeltoviews\">Concordance between Biz model and <b>Views</b></a></li>";
 		echo "   <li><a href=\"$sUrl&todo=checkdb\">DB integrity check</a></li>";
+		echo "   <li><a href=\"$sUrl&todo=checkall\">Any check at once (see list above)</a></li>";
 		echo "   <li><a href=\"$sUrl&todo=userrightssetup\">Setup userrights (init DB)</a></li>";
-		echo "   <li><a href=\"$sUrl&todo=checkall\">Check business model, DB format and data integrity</a></li>";
 		echo "   <li><a href=\"$sUrl&todo=showtables\">Show Tables</a></li>";
 		echo "   <li><a href=\"$sUrl&todo=debugquery\">Test an OQL query (debug)</a></li>";
 		echo "   <li><a href=\"$sUrl&todo=dumpdb\">Dump database</a></li>";
@@ -371,7 +372,10 @@ function DisplayDBFormatIssues($aErrors, $aSugFix, $sRepairUrl = "", $sSQLStatem
 			$i = 0;
 			foreach ($aTarget as $sTarget => $aMessages)
 			{
-				echo "<p>Wrong declaration for attribute <b>$sTarget</b></p>\n";
+				if ($sTarget != '*')
+				{
+					echo "<p>Wrong declaration for attribute <b>$sTarget</b></p>\n";
+				}
 				$sMsg = implode(' AND ', $aMessages);
 				if (!empty($sRepairUrl))
 				{
@@ -518,6 +522,12 @@ else
 			DisplayDBFormatIssues($aErrors, $aSugFix, $sBaseUrl, $sSQLStatementArgName = "sql");
 			echo "done...</br>\n";
 			break;
+		case "checkmodeltoviews":
+			echo "Check Views...</br>\n";
+			list($aErrors, $aSugFix) = MetaModel::DBCheckViews();
+			DisplayDBFormatIssues($aErrors, $aSugFix, $sBaseUrl, $sSQLStatementArgName = "sql");
+			echo "done...</br>\n";
+			break;
 		case "checkdb":
 			echo "Check DB integrity...</br>\n";
 			MetaModel::DBCheckIntegrity($sBaseUrl, "sql");
@@ -539,6 +549,10 @@ else
 			echo "done...</br>\n";
 			echo "Check DB format...</br>\n";
 			list($aErrors, $aSugFix) = MetaModel::DBCheckFormat();
+			DisplayDBFormatIssues($aErrors, $aSugFix, $sBaseUrl, $sSQLStatementArgName = "sql");
+			echo "done...</br>\n";
+			echo "Check Views...</br>\n";
+			list($aErrors, $aSugFix) = MetaModel::DBCheckViews();
 			DisplayDBFormatIssues($aErrors, $aSugFix, $sBaseUrl, $sSQLStatementArgName = "sql");
 			echo "done...</br>\n";
 			echo "Check DB integrity...</br>\n";

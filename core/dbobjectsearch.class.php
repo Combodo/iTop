@@ -34,14 +34,12 @@ class DBObjectSearch
 	private $m_aReferencedBy;
 	private $m_aRelatedTo;
 
-	public function __construct($sClass, $sClassAlias = '')
+	public function __construct($sClass, $sClassAlias = null)
 	{
-		if (empty($sClassAlias)) $sClassAlias = $sClass;
+		if (is_null($sClassAlias)) $sClassAlias = $sClass;
 		assert('is_string($sClass)');
 		assert('MetaModel::IsValidClass($sClass)'); // #@# could do better than an assert, or at least give the caller's reference
 		// => idee d'un assert avec call stack (autre utilisation = echec sur query SQL)
-
-		if (empty($sClassAlias)) $sClassAlias = $sClass;
 
 		$this->m_aSelectedClasses = array($sClassAlias => $sClass);
 		$this->m_aClasses = array($sClassAlias => $sClass);
