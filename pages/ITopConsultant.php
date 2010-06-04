@@ -380,9 +380,24 @@ function DisplayDBFormatIssues($aErrors, $aSugFix, $sRepairUrl = "", $sSQLStatem
 				if (!empty($sRepairUrl))
 				{
 					$aSQLFixes = array_merge($aSQLFixes, $aSugFix[$sClass][$sTarget]);
-					$sSQLFixes = implode('; ', $aSugFix[$sClass][$sTarget]);
-					$sUrl = "$sRepairUrl&$sSQLStatementArgName=".urlencode($sSQLFixes);
-					echo "<li>$sMsg (<a href=\"$sUrl\" title=\"".htmlentities($sSQLFixes)."\" target=\"_blank\">fix it now!</a>)</li>\n";
+					$aCleanFixes = array();
+					foreach($aSugFix[$sClass][$sTarget] as $sSQLFix)
+					{
+						if (!empty($sSQLFix))
+						{
+							$aCleanFixes[] = $sSQLFix;
+						}
+					}
+					if (count($aCleanFixes) > 0)
+					{
+						$sSQLFixes = implode('; ', $aCleanFixes);
+						$sUrl = "$sRepairUrl&$sSQLStatementArgName=".urlencode($sSQLFixes);
+						echo "<li>$sMsg (<a href=\"$sUrl\" title=\"".htmlentities($sSQLFixes)."\" target=\"_blank\">fix it now!</a>)</li>\n";
+					}
+					else
+					{
+						echo "<li>$sMsg</li>\n";
+					}
 				}
 				else
 				{

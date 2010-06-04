@@ -2047,11 +2047,21 @@ abstract class MetaModel
 	public static function DBShowApplyForm($sRepairUrl, $sSQLStatementArgName, $aSQLFixes)
 	{
 		if (empty($sRepairUrl)) return;
-		if (count($aSQLFixes) == 0) return;
+
+		// By design, some queries might be blank, we have to ignore them
+		$aCleanFixes = array();
+		foreach($aSQLFixes as $sSQLFix)
+		{
+			if (!empty($sSQLFix))
+			{
+				$aCleanFixes[] = $sSQLFix;
+			}
+		}
+		if (count($aCleanFixes) == 0) return;
 
 		echo "<form action=\"$sRepairUrl\" method=\"POST\">\n";
-		echo "   <input type=\"hidden\" name=\"$sSQLStatementArgName\" value=\"".htmlentities(implode("##SEP##", $aSQLFixes))."\">\n";
-		echo "   <input type=\"submit\" value=\" Apply the changes (".count($aSQLFixes)." queries) \">\n";
+		echo "   <input type=\"hidden\" name=\"$sSQLStatementArgName\" value=\"".htmlentities(implode("##SEP##", $aCleanFixes))."\">\n";
+		echo "   <input type=\"submit\" value=\" Apply changes (".count($aCleanFixes)." queries) \">\n";
 		echo "</form>\n";
 	}
 
@@ -2160,9 +2170,12 @@ abstract class MetaModel
 			{
 				foreach ($aQueries as $sQuery)
 				{
-					//$aSQL[] = $sQuery;
-					// forces a refresh of cached information
-					CMDBSource::CreateTable($sQuery);
+					if (!empty($sQuery))
+					{
+						//$aSQL[] = $sQuery;
+						// forces a refresh of cached information
+						CMDBSource::CreateTable($sQuery);
+					}
 				}
 			}
 		}
@@ -2181,9 +2194,12 @@ abstract class MetaModel
 			{
 				foreach ($aQueries as $sQuery)
 				{
-					//$aSQL[] = $sQuery;
-					// forces a refresh of cached information
-					CMDBSource::CreateTable($sQuery);
+					if (!empty($sQuery))
+					{
+						//$aSQL[] = $sQuery;
+						// forces a refresh of cached information
+						CMDBSource::CreateTable($sQuery);
+					}
 				}
 			}
 		}
@@ -2441,8 +2457,38 @@ abstract class MetaModel
 		foreach (self::GetClasses('bizmodel') as $sClass)
 		{
 			$sView = "view_$sClass";
-			if (!CMDBSource::IsTable($sView))
+			if (CMDBSource::IsTable($sView))
 			{
+				// Check that the view is complete
+				//
+				$bIsComplete = true;
+				foreach(self::ListAttributeDefs($sClass) as $sAttCode=>$oAttDef)
+				{
+					foreach($oAttDef->GetSQLExpressions() as $sSuffix => $sTrash)
+					{
+						$sCol = $sAttCode.$sSuffix;
+						if (!CMDBSource::IsField($sView, $sCol))
+						{
+							$bIsComplete = false;
+							$aErrors[$sClass][$sAttCode][] = "field '$sCol' could not be found in view '$sView'";
+							$aSugFix[$sClass][$sAttCode][] = "";
+						}
+					}
+				}
+				if (!$bIsComplete)
+				{
+					// Rework the view
+					//
+					$oFilter = new DBObjectSearch($sClass, '');
+					$sSQL = self::MakeSelectQuery($oFilter);
+					$aErrors[$sClass]['*'][] = "View '$sView' is currently not complete";
+					$aSugFix[$sClass]['*'][] = "ALTER VIEW `$sView` AS $sSQL";
+				}
+			}
+			else
+			{
+				// Create the view
+				//
 				$oFilter = new DBObjectSearch($sClass, '');
 				$sSQL = self::MakeSelectQuery($oFilter);
 				$aErrors[$sClass]['*'][] = "Missing view for class: $sClass";
