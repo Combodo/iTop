@@ -755,18 +755,17 @@ try
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
 			}
+			$oObj = $oContext->GetObject($sClass, $id);
 			if (!utils::IsTransactionValid($sTransactionId))
 			{
 				$oP->p("<strong>".Dict::S('UI:Error:ObjectAlreadyUpdated')."</strong>\n");
 			}
 			else
 			{
-				$oObj = $oContext->GetObject($sClass, $id);
 				if ($oObj != null)
 				{
 					$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
 					$oP->add("<h1>".Dict::Format('UI:ModificationTitle_Class_Object', $sClassLabel, $oObj->GetName())."</h1>\n");
-					$bObjectModified = false;
 					foreach(MetaModel::ListAttributeDefs(get_class($oObj)) as $sAttCode=>$oAttDef)
 					{
 						if ($oAttDef->IsLinkSet())
@@ -778,7 +777,6 @@ try
 								$oLinkSet = WizardHelper::ParseJsonSet($oObj, $oAttDef->GetLinkedClass(), $oAttDef->GetExtKeyToMe(), $aAttributes[$sAttCode]);
 								$oObj->Set($sAttCode, $oLinkSet);
 								// TO DO: detect a real modification, for now always update !!
-								$bObjectModified = true;
 							}
 						}
 						else if (!$oAttDef->IsExternalField())
@@ -791,7 +789,6 @@ try
 								if ($previousValue !== $aAttributes[$sAttCode])
 								{
 									$oObj->Set($sAttCode, $aAttributes[$sAttCode]);
-									$bObjectModified = true;
 								}
 							}
 						}
@@ -810,12 +807,11 @@ try
 								{
 									// A new file has been uploaded
 									$oObj->Set($sAttCode, $oDocument);
-									$bObjectModified = true;
 								}
 							}
 						}
 					}
-					if (!$bObjectModified)
+					if (!$oObj->IsModified())
 					{
 						$oP->p(Dict::Format('UI:Class_Object_NotUpdated', MetaModel::GetName(get_class($oObj)), $oObj->GetName()));
 					}
@@ -1149,8 +1145,8 @@ EOF
 					$oObj->DBUpdateTracked($oMyChange);
 					$oP->p(Dict::Format('UI:Class_Object_Updated', get_class($oObj), $oObj->GetName()));
 				}
-				$oObj->DisplayDetails($oP);
 			}
+			$oObj->DisplayDetails($oP);
 		}
 		else
 		{
