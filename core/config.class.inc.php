@@ -466,6 +466,7 @@ class Config
 			fwrite($hFile, " */\n");
 			fwrite($hFile, "\$MyModules = array(\n");
 			fwrite($hFile, "\t'application' => array (\n");
+			fwrite($hFile, "\t\t'../application/transaction.class.inc.php',\n");
 			fwrite($hFile, "\t\t'../application/menunode.class.inc.php',\n");
 			fwrite($hFile, "\t\t'../application/audit.rule.class.inc.php',\n");
 // Romain - That's dirty, because those 3 classes are in fact part of the core
