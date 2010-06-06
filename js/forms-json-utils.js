@@ -155,6 +155,11 @@ function ValidateField(sFieldId, sPattern, bMandatory, sFormId)
 	{
 		bValid = false;
 	}
+	else if ((currentVal == '') || (currentVal == 0))
+	{
+		// An empty field is Ok...
+		bValid = true;
+	}
 	else if (sPattern != '')
 	{
 		re = new RegExp(sPattern);
