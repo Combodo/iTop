@@ -24,6 +24,7 @@
  */
 
 require_once('../core/config.class.inc.php');
+require_once('../application/transaction.class.inc.php');
 
 define('ITOP_CONFIG_FILE', '../config-itop.php');
 
@@ -31,6 +32,11 @@ class FileUploadException extends Exception
 {
 }
 
+
+/**
+ * Helper functions to interact with forms: read parameters, upload files...
+ * @package     iTop
+ */
 class utils
 {
 	private static $m_oConfig = null;
@@ -116,14 +122,12 @@ class utils
 	
 	public static function GetNewTransactionId()
 	{
-		// TO DO implement the real mechanism here
-		return sprintf("%08x", rand(0,2000000000));
+		return privUITransaction::GetNewTransactionId();
 	}
 	
 	public static function IsTransactionValid($sId)
 	{
-		// TO DO implement the real mechanism here
-		return true;
+		return privUITransaction::IsTransactionValid($sId);
 	}
 	
 	public static function ReadFromFile($sFileName)
