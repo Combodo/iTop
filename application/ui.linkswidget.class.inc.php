@@ -75,6 +75,7 @@ class UILinksWidget
 		{
 			// Serialize the link set into a JSon object
 			$aCurrentValues = array();
+			$oCurrentValuesSet->Rewind(); // Make sure we can iterate through this set...
 			while($oLinkObj = $oCurrentValuesSet->Fetch())
 			{
 				$sRow = '{';
