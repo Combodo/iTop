@@ -2935,6 +2935,15 @@ abstract class MetaModel
 			self::$m_bLogWebService = false;
 		}
 
+		// Note: load the dictionary as soon as possible, because it might be
+		//       needed when some error occur
+		foreach ($oConfig->GetDictionaries() as $sModule => $sToInclude)
+		{
+			self::Plugin($sConfigFile, 'dictionaries', $sToInclude);
+		}
+		// Set the language... after the dictionaries have been loaded!
+		Dict::SetDefaultLanguage($oConfig->GetDefaultLanguage());
+
 		foreach ($oConfig->GetAppModules() as $sModule => $sToInclude)
 		{
 			self::Plugin($sConfigFile, 'application', $sToInclude);
@@ -2947,12 +2956,6 @@ abstract class MetaModel
 		{
 			self::Plugin($sConfigFile, 'addons', $sToInclude);
 		}
-		foreach ($oConfig->GetDictionaries() as $sModule => $sToInclude)
-		{
-			self::Plugin($sConfigFile, 'dictionaries', $sToInclude);
-		}
-		// Set the language... after the dictionaries have been loaded!
-		Dict::SetDefaultLanguage($oConfig->GetDefaultLanguage());
 
 		$sServer = $oConfig->GetDBHost();
 		$sUser = $oConfig->GetDBUser();

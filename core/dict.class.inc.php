@@ -101,6 +101,11 @@ class Dict
 	{
 		// Attempt to find the string in the user language
 		//
+		if (!array_key_exists(self::$m_sCurrentLanguage, self::$m_aData))
+		{
+			// It may happen, when something happens before the dictionnaries get loaded
+			return $sStringCode;
+		}
 		$aCurrentDictionary = self::$m_aData[self::$m_sCurrentLanguage];
 		if (array_key_exists($sStringCode, $aCurrentDictionary))
 		{
@@ -140,8 +145,14 @@ class Dict
 	public static function Format($sFormatCode /*, ... arguments ....*/)
 	{
 		$sLocalizedFormat = self::S($sFormatCode);
-
 		$aArguments = func_get_args();
+		
+		if ($sLocalizedFormat == $sFormatCode)
+		{
+			// Make sure the information will be displayed (ex: an error occuring before the dictionary gets loaded)
+			return $sFormatCode.' - '.implode(', ', $aArguments);
+		}
+
 		array_shift($aArguments);
 		return vsprintf($sLocalizedFormat, $aArguments);
 	}

@@ -1306,7 +1306,7 @@ catch(CoreException $e)
 
 	if (MetaModel::IsLogEnabledIssue())
 	{
-		if (class_exists('EventIssue'))
+		if (MetaModel::IsValidClass('EventIssue'))
 		{
 			$oLog = new EventIssue();
 
@@ -1335,7 +1335,7 @@ catch(Exception $e)
 
 	if (MetaModel::IsLogEnabledIssue())
 	{
-		if (class_exists('EventIssue'))
+		if (MetaModel::IsValidClass('EventIssue'))
 		{
 			$oLog = new EventIssue();
 
