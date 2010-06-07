@@ -711,12 +711,19 @@ abstract class MetaModel
 		return self::$m_aRelationInfos[$sRelCode];
 	}
 
-	final static public function GetRelationProperty($sRelCode, $sProperty)
+	final static public function GetRelationDescription($sRelCode)
 	{
-		MyHelpers::CheckKeyInArray('relation code', $sRelCode, self::$m_aRelationInfos);
-		MyHelpers::CheckKeyInArray('relation property', $sProperty, self::$m_aRelationInfos[$sRelCode]);
-	
-		return self::$m_aRelationInfos[$sRelCode][$sProperty];
+		return Dict::S("Relation:$sRelCode/Description");
+	}
+
+	final static public function GetRelationVerbUp($sRelCode)
+	{
+		return Dict::S("Relation:$sRelCode/VerbUp");
+	}
+
+	final static public function GetRelationVerbDown($sRelCode)
+	{
+		return Dict::S("Relation:$sRelCode/VerbDown");
 	}
 
 	public static function EnumRelationQueries($sClass, $sRelCode)
@@ -844,23 +851,10 @@ abstract class MetaModel
 		self::$m_aListInfos[$sListCode] = $aListInfo;
 	}
 
-	public static function RegisterRelation($sRelCode, $aRelationInfo)
+	public static function RegisterRelation($sRelCode)
 	{
-		// Check mandatory params
-		$aMandatParams = array(
-			"description" => "detailed (though one line) description of the list",
-			"verb_down" => "e.g.: 'impacts'",
-			"verb_up" => "e.g.: 'is impacted by'",
-		);		
-		foreach($aMandatParams as $sParamName=>$sParamDesc)
-		{
-			if (!array_key_exists($sParamName, $aRelationInfo))
-			{
-				throw new CoreException("Declaration of relation $sRelCode - missing parameter $sParamName");
-			}
-		}
-		
-		self::$m_aRelationInfos[$sRelCode] = $aRelationInfo;
+		// Each item used to be an array of properties...
+		self::$m_aRelationInfos[$sRelCode] = $sRelCode;
 	}
 
 	// Must be called once and only once...

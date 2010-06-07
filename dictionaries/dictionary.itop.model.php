@@ -23,6 +23,17 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
+//////////////////////////////////////////////////////////////////////
+// Relations
+//////////////////////////////////////////////////////////////////////
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Relation:impacts/Description' => 'functionaly impacted by',
+	'Relation:impacts/VerbUp' => 'impacts',
+	'Relation:impacts/VerbDown' => 'is impacted by',
+));
+
 
 // Dictionnay conventions
 // Class:<class_name>

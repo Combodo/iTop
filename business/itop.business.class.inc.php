@@ -35,7 +35,7 @@ define('STANDARD_STATUSES', 'production,implementation,obsolete');
 /**
  * Relation graphs
  */
-MetaModel::RegisterRelation("impacts", array("description"=>"objects being functionaly impacted", "verb_down"=>"impacts", "verb_up"=>"is impacted by"));
+MetaModel::RegisterRelation("impacts");
 
 ////////////////////////////////////////////////////////////////////////////////////
 /**

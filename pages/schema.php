@@ -42,10 +42,8 @@ function MakeClassHLink($sClass)
  */
 function MakeRelationHLink($sRelCode)
 {
-	$sDec = MetaModel::GetRelationProperty($sRelCode, 'description');
-	//$sVerbDown = MetaModel::GetRelationProperty($sRelCode, 'verb_down');
-	//$sVerbUp = MetaModel::GetRelationProperty($sRelCode, 'verb_up');
-	return "<a href=\"?operation=details_relation&relcode=$sRelCode\" title=\"$sDec\">".$sRelCode."</a>";
+	$sDesc = MetaModel::GetRelationDescription($sRelCode);
+	return "<a href=\"?operation=details_relation&relcode=$sRelCode\" title=\"$sDesc\">".$sRelCode."</a>";
 }
 
 /**
@@ -305,10 +303,9 @@ function DisplayClassesList($oPage)
 	{
 		$oPage->add("<li>".MakeRelationHLink($sRelCode)."\n");
 		$oPage->add("<ul>\n");
-		foreach (MetaModel::EnumRelationProperties($sRelCode) as $sProp => $sValue)
-		{
-			$oPage->add("<li>$sProp: ".htmlentities($sValue)."</li>\n");
-		}
+		$oPage->add("<li>Description: ".htmlentities(MetaModel::GetRelationDescription($sRelCode))."</li>\n");
+		$oPage->add("<li>Verb up: ".htmlentities(MetaModel::GetRelationVerbUp($sRelCode))."</li>\n");
+		$oPage->add("<li>Verb down: ".htmlentities(MetaModel::GetRelationVerbDown($sRelCode))."</li>\n");
 		$oPage->add("</ul>\n");
 		$oPage->add("</li>\n");
 	}
@@ -454,9 +451,9 @@ function DisplayClassDetails($oPage, $sClass)
  */
 function DisplayRelationDetails($oPage, $sRelCode)
 {
-	$sDesc = MetaModel::GetRelationProperty($sRelCode, 'description');
-	$sVerbDown = MetaModel::GetRelationProperty($sRelCode, 'verb_down');
-	$sVerbUp = MetaModel::GetRelationProperty($sRelCode, 'verb_up');
+	$sDesc = MetaModel::GetRelationDescription($sRelCode);
+	$sVerbDown = MetaModel::GetRelationVerbDown($sRelCode);
+	$sVerbUp = MetaModel::GetRelationVerbUp($sRelCode);
 	$oPage->add("<h1>".Dict::Format('UI:Schema:Relation_Code_Description', $sRelCode, $sDesc)."</h1>");
 	$oPage->p(Dict::Format('UI:Schema:RelationDown_Description', $sVerbDown));
 	$oPage->p(Dict::Format('UI:Schema:RelationUp_Description', $sVerbUp));

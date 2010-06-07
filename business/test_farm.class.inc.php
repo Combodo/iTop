@@ -27,7 +27,7 @@
 // Business implementation demo
 ///////////////////////////////////////////////////////////////////////////////
 
-//todo MetaModel::RegisterRelation("Potes", array("description"=>"ceux dont l'email ressemble au mien", "verb_down"=>"est pote de", "verb_up"=>"est pote de"));
+//todo MetaModel::RegisterRelation("Potes");
 
 
 //todo MetaModel::RegisterZList("list1", array("description"=>"une premiere list, just for fun", "type"=>"attributes"));
