@@ -48,7 +48,7 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 			foreach ($aDeletes as $iId => $aData)
 			{
 				$oToDelete = $aData['to_delete'];
-				$bDeleteAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_DELETE, DBObjectSet::FromObject($oToDelete));
+				$bDeleteAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_DELETE, DBObjectSet::FromObject($oToDelete)) && !MetaModel::IsReadOnlyClass($sClass);
 				$aTotalDeletedObjs[$sRemoteClass][$iId]['auto_delete'] = $aData['auto_delete'];
 				if (!$bDeleteAllowed)
 				{
@@ -605,7 +605,7 @@ try
 				$oObj = $oSet->Fetch();
 			}
 		
-			$bIsModifiedAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) == UR_ALLOWED_YES);
+			$bIsModifiedAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) == UR_ALLOWED_YES) && !MetaModel::IsReadOnlyClass($sClass);
 			$bIsReadAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_READ, $oSet) == UR_ALLOWED_YES);
 			if( ($oObj != null) && ($bIsModifiedAllowed) && ($bIsReadAllowed))
 			{
@@ -642,7 +642,7 @@ try
 			$oObjToClone = $oSet->Fetch();
 		}
 	
-		$bIsModifiedAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) == UR_ALLOWED_YES);
+		$bIsModifiedAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) == UR_ALLOWED_YES) && !MetaModel::IsReadOnlyClass($sClass);
 		$bIsReadAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_READ, $oSet) == UR_ALLOWED_YES);
 		if( ($oObjToClone != null) && ($bIsModifiedAllowed) && ($bIsReadAllowed))
 		{
@@ -894,7 +894,7 @@ try
 			{
 				$aObjects[] = $oContext->GetObject($sClass, $iId);
 			}
-			if (!UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_DELETE, DBObjectSet::FromArray($sClass, $aObjects)))
+			if (MetaModel::IsReadOnlyClass($sClass) || !UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_DELETE, DBObjectSet::FromArray($sClass, $aObjects)))
 			{
 				throw new SecurityException(Dict::S('UI:Error:BulkDeleteNotAllowedOn_Class'), $sClass);
 			}
@@ -909,7 +909,7 @@ try
 		$id = utils::ReadParam('id', '');
 		$oObj = $oContext->GetObject($sClass, $id);
 	
-		if (!UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, DBObjectSet::FromObject($oObj)))
+		if (MetaModel::IsReadOnlyClass($sClass) || !UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, DBObjectSet::FromObject($oObj)))
 		{
 			throw new SecurityException(Dict::S('UI:Error:DeleteNotAllowedOn_Class'), $sClass);
 		}

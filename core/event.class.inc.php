@@ -55,6 +55,11 @@ class Event extends cmdbAbstractObject
 //		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
 //		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
 	}
+
+	static public function IsReadOnly()
+	{
+		return true;
+	}
 }
 
 class EventNotification extends Event

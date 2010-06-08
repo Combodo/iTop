@@ -57,6 +57,12 @@ class CMDBChangeOp extends DBObject
 		MetaModel::Init_SetZListItems('details', array('change', 'date', 'userinfo')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('change', 'date', 'userinfo')); // Attributes to be displayed for the complete details
 	}
+
+	static public function IsReadOnly()
+	{
+		return true;
+	}
+
 	/**
 	 * Describe (as a text string) the modifications corresponding to this change
 	 */	 
