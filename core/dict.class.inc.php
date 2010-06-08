@@ -166,7 +166,7 @@ class Dict
 	{
 		if (!array_key_exists($sLanguageCode, self::$m_aLanguages))
 		{
-			self::$m_aLanguages[$sLanguageCode] = array($sEnglishLanguageDesc, $sLocalizedLanguageDesc);
+			self::$m_aLanguages[$sLanguageCode] = array('description' => $sEnglishLanguageDesc, 'localized_description' => $sLocalizedLanguageDesc);
 			self::$m_aData[$sLanguageCode] = array();
 		}
 		self::$m_aData[$sLanguageCode] = array_merge(self::$m_aData[$sLanguageCode], $aEntries);
