@@ -89,6 +89,7 @@ class XMLDataLoader
 	{
 		require_once('../core/log.class.inc.php');
 		require_once('../core/coreexception.class.inc.php');
+		require_once('../core/dict.class.inc.php');
 		require_once('../core/attributedef.class.inc.php');
 		require_once('../core/filterdef.class.inc.php');
 		require_once('../core/stimulus.class.inc.php');
