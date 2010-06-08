@@ -17,11 +17,10 @@ class scatter_value
 
 class scatter
 {
-	function scatter( $colour, $dot_size )
+	function scatter( $colour )
 	{
 		$this->type      = "scatter";
 		$this->set_colour( $colour );
-		$this->set_dot_size( $dot_size );
 	}
 	
 	function set_colour( $colour )
@@ -29,12 +28,18 @@ class scatter
 		$this->colour = $colour;
 	}
 
-	function set_dot_size( $dot_size )
+	function set_default_dot_style( $style )
 	{
-		$tmp = 'dot-size';
-		$this->$tmp = $dot_size;
+		$tmp = 'dot-style';
+		$this->$tmp = $style;	
 	}
 	
+	/**
+	 * @param $v as array, can contain any combination of:
+	 *  - integer, Y position of the point
+	 *  - any class that inherits from scatter_value
+	 *  - <b>null</b>
+	 */
 	function set_values( $values )
 	{
 		$this->values = $values;

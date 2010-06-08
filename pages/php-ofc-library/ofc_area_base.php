@@ -1,62 +1,36 @@
 <?php
 
-class area_base
+/**
+ * inherits from line
+ */
+class area extends line
 {
-	function area_base()
+	function area()
 	{
-		$tmp = 'fill-alpha';
-		$this->$tmp = 0.35;		
-		$this->values    = array();	
+		$this->type      = "area";
 	}
 	
-	function set_width( $w )
-	{
-		$this->width     = $w;
-	}
-	
-	function set_colour( $colour )
-	{
-		$this->colour = $colour;
-	}
-	
+	/**
+	 * the fill colour
+	 */
 	function set_fill_colour( $colour )
 	{
 		$this->fill = $colour;
+	}
+	
+	/**
+	 * sugar: see set_fill_colour
+	 */
+	function fill_colour( $colour )
+	{
+		$this->set_fill_colour( $colour );
+		return $this;
 	}
 	
 	function set_fill_alpha( $alpha )
 	{
 		$tmp = "fill-alpha";
 		$this->$tmp = $alpha;
-	}
-	
-	function set_halo_size( $size )
-	{
-		$tmp = 'halo-size';
-		$this->$tmp = $size;
-	}
-	
-	function set_values( $v )
-	{
-		$this->values = $v;		
-	}
-	
-	function set_dot_size( $size )
-	{
-		$tmp = 'dot-size';
-		$this->$tmp = $size;
-	}
-
-	function set_key( $text, $font_size )
-	{
-		$this->text      = $text;
-		$tmp = 'font-size';
-		$this->$tmp = $font_size;
-	}
-	
-	function set_tooltip( $tip )
-	{
-		$this->tip = $tip;	
 	}
 	
 	function set_loop()

@@ -2937,6 +2937,7 @@ abstract class MetaModel
 
 		// Note: load the dictionary as soon as possible, because it might be
 		//       needed when some error occur
+		require_once('../core/dict.class.inc.php');
 		foreach ($oConfig->GetDictionaries() as $sModule => $sToInclude)
 		{
 			self::Plugin($sConfigFile, 'dictionaries', $sToInclude);

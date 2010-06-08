@@ -26,9 +26,18 @@ if (!file_exists($default_path)) mkdir($default_path, 0777, true);
 $destination = $default_path . basename( $_GET[ 'name' ] ); 
 
 echo 'Saving your image to: '. $destination;
+// print_r( $_POST );
+// print_r( $_SERVER );
+// echo $HTTP_RAW_POST_DATA;
+
+//
+// POST data is usually string data, but we are passing a RAW .png
+// so PHP is a bit confused and $_POST is empty. But it has saved
+// the raw bits into $HTTP_RAW_POST_DATA
+//
 
 $jfh = fopen($destination, 'w') or die("can't open file");
-fwrite($jfh, $GLOBALS['HTTP_RAW_POST_DATA']);
+fwrite($jfh, $HTTP_RAW_POST_DATA);
 fclose($jfh);
 
 //

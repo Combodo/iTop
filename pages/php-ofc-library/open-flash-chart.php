@@ -20,21 +20,29 @@ include_once 'ofc_title.php';
 include_once 'ofc_y_axis_base.php';
 include_once 'ofc_y_axis.php';
 include_once 'ofc_y_axis_right.php';
+include_once 'ofc_y_axis_labels.php';
+include_once 'ofc_y_axis_label.php';
 include_once 'ofc_x_axis.php';
-include_once 'ofc_area_base.php';
-include_once 'ofc_area_hollow.php';
-include_once 'ofc_area_line.php';
+
+
 include_once 'ofc_pie.php';
-include_once 'ofc_bar.php';
-include_once 'ofc_bar_filled.php';
+//include_once 'ofc_bar.php';
 include_once 'ofc_bar_glass.php';
+include_once 'ofc_bar_filled.php';
 include_once 'ofc_bar_stack.php';
-include_once 'ofc_bar_3d.php';
+//include_once 'ofc_bar_3d.php';
 include_once 'ofc_hbar.php';
 include_once 'ofc_line_base.php';
 include_once 'ofc_line.php';
-include_once 'ofc_line_dot.php';
-include_once 'ofc_line_hollow.php';
+//include_once 'ofc_line_dot.php';
+//include_once 'ofc_line_hollow.php';
+include_once 'ofc_candle.php';
+include_once 'ofc_area_base.php';
+include_once 'ofc_tags.php';
+include_once 'ofc_arrow.php';
+//include_once 'ofc_area_hollow.php';
+//include_once 'ofc_area_line.php';
+
 include_once 'ofc_x_legend.php';
 include_once 'ofc_y_legend.php';
 include_once 'ofc_bar_sketch.php';
@@ -48,6 +56,9 @@ include_once 'ofc_radar_axis.php';
 include_once 'ofc_radar_axis_labels.php';
 include_once 'ofc_radar_spoke_labels.php';
 include_once 'ofc_line_style.php';
+
+include_once 'dot_base.php';
+include_once 'ofc_menu.php';
 
 class open_flash_chart
 {
@@ -110,6 +121,35 @@ class open_flash_chart
 	function set_tooltip( $tooltip )
 	{
 		$this->tooltip = $tooltip;	
+	}
+	
+	/**
+	 * This is a bit funky :(
+	 *
+	 * @param $num_decimals as integer. Truncate the decimals to $num_decimals, e.g. set it
+	 * to 5 and 3.333333333 will display as 3.33333. 2.0 will display as 2 (or 2.00000 - see below)
+	 * @param $is_fixed_num_decimals_forced as boolean. If true it will pad the decimals.
+	 * @param $is_decimal_separator_comma as boolean
+	 * @param $is_thousand_separator_disabled as boolean
+	 *
+	 * This needs a bit of love and attention
+	 */
+	function set_number_format($num_decimals, $is_fixed_num_decimals_forced, $is_decimal_separator_comma, $is_thousand_separator_disabled )
+	{
+		$this->num_decimals = $num_decimals;
+		$this->is_fixed_num_decimals_forced = $is_fixed_num_decimals_forced;
+		$this->is_decimal_separator_comma = $is_decimal_separator_comma;
+		$this->is_thousand_separator_disabled = $is_thousand_separator_disabled;
+	}
+	
+	/**
+	 * This is experimental and will change as we make it work
+	 * 
+	 * @param $m as ofc_menu
+	 */
+	function set_menu($m)
+	{
+		$this->menu = $m;
 	}
 	
 	function toString()

@@ -575,105 +575,16 @@ class DisplayBlock
 	 		$sHtml .= "<div id=\"LnkSearch_$iSearchSectionId\" class=\"DrawerHandle\">".Dict::S('UI:SearchToggle')."</div>\n";
 			break;
 			
-			case 'pie_chart':
-			$sGroupBy = isset($aExtraParams['group_by']) ? $aExtraParams['group_by'] : '';
-			$sFilter = $this->m_oFilter->ToOQL();
-			$sHtml .= "
-			<OBJECT classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\"
-				codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0\" 
-				WIDTH=\"400\" 
-				HEIGHT=\"250\" 
-				id=\"charts\" 
-				ALIGN=\"\">
-			<PARAM NAME=movie VALUE=\"../images/charts.swf?library_path=../images/charts_library&xml_source=".urlencode("../pages/ajax.render.php?operation=pie_chart&group_by=$sGroupBy&encoding=oql&filter=".urlencode($sFilter))."\">
-			<PARAM NAME=\"quality\" VALUE=\"high\">
-			<PARAM NAME=\"bgcolor\" VALUE=\"#ffffff\">
-			
-			<EMBED src=\"../images/charts.swf?library_path=../images/charts_library&xml_source=".urlencode("../pages/ajax.render.php?operation=pie_chart&group_by=$sGroupBy&encoding=oql&filter=".urlencode($sFilter))."\" 
-			       quality=\"high\"
-			       bgcolor=\"#ffffff\"  
-			       WIDTH=\"400\" 
-			       HEIGHT=\"250\" 
-			       NAME=\"charts\" 
-			       ALIGN=\"\" 
-			       swLiveConnect=\"true\" 
-			       TYPE=\"application/x-shockwave-flash\" 
-			       PLUGINSPAGE=\"http://www.macromedia.com/go/getflashplayer\">
-			</EMBED>
-			</OBJECT>
-			";
-			break;
-			
-			case 'pie_chart_ajax':
-			if (isset($aExtraParams['group_by']))
-			{
-				$sGroupByField = $aExtraParams['group_by'];
-				$aGroupBy = array();
-				while($oObj = $this->m_oSet->Fetch())
-				{
-					$sValue = $oObj->Get($sGroupByField);
-					$aGroupBy[$sValue] = isset($aGroupBy[$sValue]) ? $aGroupBy[$sValue]+1 : 1;
-				}
-				$sFilter = urlencode($this->m_oFilter->serialize());
-				$aData = array();
-				$sHtml .= "<chart>\n";
-				$sHtml .= "<chart_type>3d pie</chart_type>\n";
-				$sHtml .= "<chart_data>\n";
-				$sHtml .= "<row>\n";
-				$sHtml .= "<null/>\n";
-				foreach($aGroupBy as $sValue => $void)
-				{
-					$sHtml .= "<string>$sValue</string>\n";
-				}
-				$sHtml .= "</row>\n";
-				$sHtml .= "<row>\n";
-				$sHtml .= "<string></string>\n";
-				foreach($aGroupBy as $void => $iCount)
-				{
-					$sHtml .= "<number>$iCount</number>\n";
-				}
-				$sHtml .= "</row>\n";
-				$sHtml .= "</chart_data>\n";
-				$sHtml .= "
-	<chart_value color='ffffff' alpha='90' font='arial' bold='true' size='10' position='inside' prefix='' suffix='' decimals='0' separator='' as_percentage='true' />
-
-	<draw>
-		<text color='000000' alpha='10' font='arial' rotation='0' bold='true' size='30' x='0' y='140' width='400' height='150' h_align='center' v_align='bottom'>|||||||||||||||||||||||||||||||||||||||||||||||</text>
-	</draw>
-
-	<legend_label layout='horizontal' bullet='circle' font='arial' bold='true' size='13' color='000000' alpha='85' />
-	<legend_rect fill_color='ffffff' fill_alpha='10' line_color='ffffff' line_alpha='50' line_thickness='0' />
-	<series_color>
-		<color>ddaa41</color>
-		<color>88dd11</color>
-		<color>4e62dd</color>
-		<color>ff8811</color>
-		<color>4d4d4d</color>
-		<color>5a4b6e</color>
-		<color>1188ff</color>
-	</series_color>
-				";
-				$sHtml .= "</chart>\n";
-			}
-			else
-			{
-				// Simply count the number of elements in the set
-				$iCount = $oSet->Count();
-				$sHtml .= "<chart>\n</chart>\n";
-			}
-			break;
-			
 			case 'open_flash_chart':
 			static $iChartCounter = 0;
 			$sChartType = isset($aExtraParams['chart_type']) ? $aExtraParams['chart_type'] : 'pie';
 			$sTitle = isset($aExtraParams['chart_title']) ? $aExtraParams['chart_title'] : '';
 			$sGroupBy = isset($aExtraParams['group_by']) ? $aExtraParams['group_by'] : '';
 			$sFilter = $this->m_oFilter->ToOQL();
-			$sHtml .= "<script>
-			swfobject.embedSWF(\"../images/open-flash-chart.swf\", \"my_chart_{$iChartCounter}\", \"400\", \"400\",\"9.0.0\", \"expressInstall.swf\",
-			{\"data-file\":\"".urlencode("../pages/ajax.render.php?operation=open_flash_chart&params[group_by]=$sGroupBy&params[chart_type]=$sChartType&params[chart_title]=$sTitle&encoding=oql&filter=".urlencode($sFilter))."\"});
-</script>\n";
 			$sHtml .= "<div id=\"my_chart_{$iChartCounter}\">If the chart does not display, <a href=\"http://get.adobe.com/flash/\" target=\"_blank\">install Flash</a></div>\n";
+			$oPage->add_script("function ofc_resize(left, width, top, height) { /* do nothing special */ }");
+			$oPage->add_ready_script("swfobject.embedSWF(\"../images/open-flash-chart.swf\", \"my_chart_{$iChartCounter}\", \"100%\", \"300\",\"9.0.0\", \"expressInstall.swf\",
+			{\"data-file\":\"".urlencode("../pages/ajax.render.php?operation=open_flash_chart&params[group_by]=$sGroupBy&params[chart_type]=$sChartType&params[chart_title]=$sTitle&encoding=oql&filter=".urlencode($sFilter))."\"});\n");
 			$iChartCounter++;
 			break;
 			
@@ -742,6 +653,7 @@ class DisplayBlock
 				$oChartElement->set_start_angle( 35 );
 				$oChartElement->set_animate( true );
 				$oChartElement->set_tooltip( '#label# - #val# (#percent#)' );
+				$oChartElement->set_colours( array('#FF8A00', '#909980', '#2C2B33', '#CCC08D', '#596664') );
 				if (isset($aExtraParams['group_by']))
 				{
 					$sGroupByField = $aExtraParams['group_by'];
@@ -755,7 +667,7 @@ class DisplayBlock
 					$aData = array();
 					foreach($aGroupBy as $sValue => $iValue)
 					{
-						$aData[] = new pie_value($iValue, $sValue);
+						$aData[] = new pie_value($iValue, $sValue); //@@ BUG: not passed via ajax !!!
 					}
 	
 	
@@ -763,9 +675,9 @@ class DisplayBlock
 					$oChart->x_axis = null;
 				}
 			}				
-			if (isset($aExtraParams['chart_title'])) //@@ BUG: not passed via ajax !!!
+			if (isset($aExtraParams['chart_title']))
 			{
-				$oTitle = new title( $aExtraParams['chart_title'] );
+				$oTitle = new title( Dict::S($aExtraParams['chart_title']) );
 				$oChart->set_title( $oTitle );
 			}
 			$oChart->set_bg_colour('#FFFFFF');

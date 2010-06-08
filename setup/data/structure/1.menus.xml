@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Set>
-<menuNode id="1">
-<name>Admin tools</name>
-<label>Admin tools</label>
+<menuNode alias="menuNode" id="1">
+<name>UI:AdminToolsMenu</name>
+<label>UI:AdminToolsMenu+</label>
 <hyperlink>UI.php</hyperlink>
 <icon_path></icon_path>
 <template>&lt;p&gt;&lt;/p&gt;
@@ -15,419 +15,250 @@
 <parent_id>0</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="2">
-<name>All Applications</name>
-<label>All Applications</label>
+<menuNode alias="menuNode" id="15">
+<name>UI:AdvancedToolsMenu</name>
+<label>UI:AdvancedToolsMenu+</label>
 <hyperlink>UI.php</hyperlink>
 <icon_path></icon_path>
-<template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizApplication&lt;/itopblock&gt;
-&lt;div id=&quot;BottomPane&quot;&gt;
+<template>&lt;p&gt;&lt;/p&gt;
 &lt;p&gt;&lt;/p&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;p style=&quot;text-align:center; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:24px;&quot;&gt;All Applications&lt;/p&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizApplication&lt;/itopblock&gt;
-&lt;/div&gt;
+&lt;p style=&quot;text-align:center; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:32px;&quot;&gt;Tools for the iTop consultant&lt;/p&gt;
+&lt;p style=&quot;text-align:center; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:14px;&quot;&gt;&lt;i&gt;This section contains links to useful tools for extending or debugging iTop&lt;/i&gt;&lt;/p&gt;
 </template>
 <type>application</type>
-<rank>999</rank>
-<parent_id>16</parent_id>
+<rank>9</rank>
+<parent_id>0</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="3">
-<name>All Circuits</name>
-<label>All Circuits</label>
-<hyperlink>UI.php</hyperlink>
-<icon_path></icon_path>
-<template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizCircuit&lt;/itopblock&gt;
-&lt;div id=&quot;BottomPane&quot;&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;p style=&quot;text-align:center; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:24px;&quot;&gt;All Circuits&lt;/p&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizCircuit&lt;/itopblock&gt;
-&lt;/div&gt;
-</template>
-<type>application</type>
-<rank>999</rank>
-<parent_id>16</parent_id>
-<user_id>0</user_id>
-</menuNode>
-<menuNode id="4">
-<name>All Contracts</name>
-<label>All Contracts</label>
-<hyperlink>./UI.php</hyperlink>
-<icon_path></icon_path>
-<template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizContract&lt;/itopblock&gt;
-&lt;div id=&quot;BottomPane&quot;&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizContract&lt;/itopblock&gt;
-&lt;/div&gt;</template>
-<type>application</type>
-<rank>2</rank>
-<parent_id>38</parent_id>
-<user_id>0</user_id>
-</menuNode>
-<menuNode id="5">
-<name>All Interfaces</name>
-<label>All Interfaces</label>
-<hyperlink>UI.php</hyperlink>
-<icon_path></icon_path>
-<template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizInterface&lt;/itopblock&gt;
-&lt;div id=&quot;BottomPane&quot;&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;p style=&quot;text-align:center; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:24px;&quot;&gt;All Interfaces&lt;/p&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizInterface&lt;/itopblock&gt;
-&lt;/div&gt;
-</template>
-<type>application</type>
-<rank>999</rank>
-<parent_id>16</parent_id>
-<user_id>0</user_id>
-</menuNode>
-<menuNode id="6">
-<name>All Network devices</name>
-<label>All Network devices</label>
-<hyperlink>UI.php</hyperlink>
-<icon_path></icon_path>
-<template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizNetworkDevice&lt;/itopblock&gt;
-&lt;div id=&quot;BottomPane&quot;&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;p style=&quot;text-align:center; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:24px;&quot;&gt;All Network Devices&lt;/p&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizNetworkDevice&lt;/itopblock&gt;
-&lt;/div&gt;
-</template>
-<type>application</type>
-<rank>999</rank>
-<parent_id>16</parent_id>
-<user_id>0</user_id>
-</menuNode>
-<menuNode id="7">
-<name>All Patches</name>
-<label>All Patches</label>
-<hyperlink>UI.php</hyperlink>
-<icon_path></icon_path>
-<template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizPatch&lt;/itopblock&gt;
-&lt;div id=&quot;BottomPane&quot;&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;p style=&quot;text-align:center; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:24px;&quot;&gt;All Patches&lt;/p&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizPatch&lt;/itopblock&gt;
-&lt;/div&gt;
-</template>
-<type>application</type>
-<rank>999</rank>
-<parent_id>16</parent_id>
-<user_id>0</user_id>
-</menuNode>
-<menuNode id="8">
-<name>All PCs</name>
-<label>All PCs</label>
-<hyperlink>UI.php</hyperlink>
-<icon_path></icon_path>
-<template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizPC&lt;/itopblock&gt;
-&lt;div id=&quot;BottomPane&quot;&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;p style=&quot;text-align:center; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:24px;&quot;&gt;All PCs&lt;/p&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizPC&lt;/itopblock&gt;
-&lt;/div&gt;
-</template>
-<type>application</type>
-<rank>999</rank>
-<parent_id>16</parent_id>
-<user_id>0</user_id>
-</menuNode>
-<menuNode id="9">
-<name>All Servers</name>
-<label>All Servers</label>
-<hyperlink>UI.php</hyperlink>
-<icon_path></icon_path>
-<template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizServer&lt;/itopblock&gt;
-&lt;div id=&quot;BottomPane&quot;&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;p style=&quot;text-align:center; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:24px;&quot;&gt;All Servers&lt;/p&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizServer&lt;/itopblock&gt;
-&lt;/div&gt;
-</template>
-<type>application</type>
-<rank>999</rank>
-<parent_id>16</parent_id>
-<user_id>0</user_id>
-</menuNode>
-<menuNode id="10">
-<name>All Services</name>
-<label>All Services</label>
-<hyperlink>UI.php</hyperlink>
-<icon_path></icon_path>
-<template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizService&lt;/itopblock&gt;
-&lt;div id=&quot;BottomPane&quot;&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizService&lt;/itopblock&gt;
-&lt;/div&gt;</template>
-<type>application</type>
-<rank>1</rank>
-<parent_id>38</parent_id>
-<user_id>0</user_id>
-</menuNode>
-<menuNode id="11">
-<name>All Subnets</name>
-<label>All subnets</label>
-<hyperlink>UI.php</hyperlink>
-<icon_path></icon_path>
-<template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizSubnet&lt;/itopblock&gt;
-&lt;div id=&quot;BottomPane&quot;&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;p style=&quot;text-align:center; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:24px;&quot;&gt;All Subnets&lt;/p&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizSubnet&lt;/itopblock&gt;
-&lt;/div&gt;
-</template>
-<type>application</type>
-<rank>999</rank>
-<parent_id>16</parent_id>
-<user_id>0</user_id>
-</menuNode>
-<menuNode id="45">
-<name>Application log</name>
-<label>Application log</label>
+<menuNode alias="menuNode" id="16">
+<name>UI:ApplicationLogMenu</name>
+<label>UI:ApplicationLogMenu+</label>
 <hyperlink>UI.php</hyperlink>
 <icon_path>../images/std_view.gif</icon_path>
-<template>
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT Event&lt;/itopblock&gt;
-&lt;div id=&quot;BottomPane&quot;&gt;
-&lt;p&gt;&lt;/p&gt;
+<template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT Event&lt;/itopblock&gt;
+&lt;p class=&quot;page-header&quot;&gt;&lt;itopstring&gt;UI:ApplicationLogMenu:Title&lt;/itopstring&gt;&lt;/p&gt;
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT Event&lt;/itopblock&gt;
-&lt;/div&gt;
 </template>
 <type>administrator</type>
 <rank>2</rank>
 <parent_id>1</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="12">
-<name>Audit</name>
-<label>Audit</label>
+<menuNode alias="menuNode" id="17">
+<name>UI:ApplicationsMenu</name>
+<label>UI:ApplicationsMenu+</label>
+<hyperlink>UI.php</hyperlink>
+<icon_path></icon_path>
+<template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizApplication&lt;/itopblock&gt;
+&lt;p class=&quot;page-header&quot;&gt;&lt;itopstring&gt;UI:ApplicationsMenu:Title&lt;/itopstring&gt;&lt;/p&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizApplication&lt;/itopblock&gt;
+</template>
+<type>application</type>
+<rank>999</rank>
+<parent_id>4</parent_id>
+<user_id>0</user_id>
+</menuNode>
+<menuNode alias="menuNode" id="2">
+<name>UI:AuditMenu</name>
+<label>UI:AuditMenu+</label>
 <hyperlink>./audit.php</hyperlink>
 <icon_path></icon_path>
 <template></template>
 <type>application</type>
 <rank>4</rank>
-<parent_id>17</parent_id>
+<parent_id>5</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="13">
-<name>Change Management</name>
-<label>Change Management</label>
+<menuNode alias="menuNode" id="3">
+<name>UI:ChangeManagementMenu</name>
+<label>UI:ChangeManagementMenu+</label>
 <hyperlink>./UI.php</hyperlink>
 <icon_path></icon_path>
-<template>&lt;style&gt;
-.dashboard {
-vertical-align:top;
-width:50%;
-border:1px solid #000;
--moz-border-radius:10px;
-padding:5px;
-text-align:center;
-}
-&lt;/style&gt;
-&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:24px;&quot;&gt;Changes Overview&lt;/p&gt;
-&lt;table border=&quot;0&quot; padding=&quot;5&quot;&gt;
+<template>&lt;h1&gt;&lt;itopstring&gt;UI:ChangeManagementMenu:Title&lt;/itopstring&gt;&lt;/h1&gt;
+&lt;table border=&quot;0&quot; padding=&quot;5&quot; width=&quot;100%&quot;&gt;
 &lt;tr&gt;
 &lt;td class=&quot;dashboard&quot;&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:bars;group_by:type;chart_title:Changes by type&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizChangeTicket&lt;/itopblock&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:bars;group_by:type;chart_title:UI-ChangeManagementMenu-ChangesByType&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizChangeTicket&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;td class=&quot;dashboard&quot;&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:pie;group_by:ticket_status;chart_title:Changes by status&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizChangeTicket&lt;/itopblock&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:pie;group_by:ticket_status;chart_title:UI-ChangeManagementMenu-ChangesByStatus&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizChangeTicket&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;/tr&gt;&lt;tr&gt;
 &lt;td class=&quot;dashboard&quot;&gt;
-&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;&quot;&gt;Changes by Workgroup&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;count&quot; parameters=&quot;group_by:workgroup_id&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizChangeTicket&lt;/itopblock&gt;
+&lt;h2&gt;&lt;itopstring&gt;UI-ChangeManagementMenu-ChangesByWorkgroup&lt;/itopstring&gt;&lt;/p&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;count&quot; parameters=&quot;group_by:workgroup_name&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizChangeTicket&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;td class=&quot;dashboard&quot;&gt;
-&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;&quot;&gt;Changes not yet assigned&lt;/p&gt;
+&lt;h2&gt;&lt;itopstring&gt;UI-ChangeManagementMenu-ChangesNotYetAssigned&lt;/itopstring&gt;&lt;/p&gt;
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; parameters=&quot;dashboard:true&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizChangeTicket WHERE ticket_status = &apos;New&apos;&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;/tr&gt;
-&lt;/table&gt;
-</template>
+&lt;/table&gt;</template>
 <type>application</type>
 <rank>7</rank>
 <parent_id>0</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="14">
-<name>Closed Changes</name>
-<label>Closed Changes</label>
+<menuNode alias="menuNode" id="18">
+<name>UI:CircuitsMenu</name>
+<label>UI:CircuitsMenu+</label>
+<hyperlink>UI.php</hyperlink>
+<icon_path></icon_path>
+<template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizCircuit&lt;/itopblock&gt;
+&lt;p class=&quot;page-header&quot;&gt;&lt;itopstring&gt;UI:CircuitsMenu:Title&lt;/itopstring&gt;&lt;/p&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizCircuit&lt;/itopblock&gt;
+</template>
+<type>application</type>
+<rank>999</rank>
+<parent_id>4</parent_id>
+<user_id>0</user_id>
+</menuNode>
+<menuNode alias="menuNode" id="19">
+<name>UI:ClosedChangesMenu</name>
+<label>UI:ClosedChangesMenu+</label>
 <hyperlink>UI.php</hyperlink>
 <icon_path></icon_path>
 <template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizChangeTicket WHERE ticket_status = &apos;Closed&apos;&lt;/itopblock&gt;
-&lt;div id=&quot;BottomPane&quot;&gt;
-&lt;p&gt;&lt;/p&gt;
+&lt;p class=&quot;page-header&quot;&gt;&lt;itopstring&gt;UI:ClosedChangesMenu:Title&lt;/itopstring&gt;&lt;/p&gt;
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizChangeTicket WHERE ticket_status = &apos;Closed&apos;&lt;/itopblock&gt;
-&lt;/div&gt;</template>
+</template>
 <type>application</type>
 <rank>5</rank>
-<parent_id>13</parent_id>
+<parent_id>3</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="15">
-<name>Closed Incident</name>
-<label>List of closed ticket</label>
+<menuNode alias="menuNode" id="20">
+<name>UI:ClosedIncidentsMenu</name>
+<label>UI:ClosedIncidentsMenu+</label>
 <hyperlink>./UI.php</hyperlink>
 <icon_path></icon_path>
-<template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizIncidentTicket WHERE ticket_status LIKE &apos;Open&apos; AND severity LIKE &apos;critical&apos;&lt;/itopblock&gt;
-&lt;div id=&quot;BottomPane&quot;&gt;
-&lt;p&gt;&lt;/p&gt;
+<template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizIncidentTicket WHERE ticket_status = &apos;Closed&apos;&lt;/itopblock&gt;
+&lt;p class=&quot;page-header&quot;&gt;&lt;itopstring&gt;UI:ClosedIncidentsMenu:Title&lt;/itopstring&gt;&lt;/p&gt;
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizIncidentTicket WHERE ticket_status = &apos;Closed&apos;&lt;/itopblock&gt;
-&lt;/div&gt;</template>
+</template>
 <type>application</type>
 <rank>5</rank>
-<parent_id>24</parent_id>
+<parent_id>10</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="16">
-<name>Configuration Items</name>
-<label>All about devices</label>
+<menuNode alias="menuNode" id="4">
+<name>UI:ConfigurationItemsMenu</name>
+<label>UI:ConfigurationItemsMenu+</label>
 <hyperlink>UI.php</hyperlink>
 <icon_path></icon_path>
-<template>&lt;style&gt;
-td.dashboard {
- vertical-align:top;
- text-align: center;
- border: 1px solid #ccc;
- -moz-border-radius: 10px;
- padding: 10px;
-}
-&lt;/style&gt;
-&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:24px;&quot;&gt;Configuration Items&lt;/p&gt;
-&lt;table border=&quot;0&quot; padding=&quot;5&quot; class=&quot;layout&quot;&gt;
+<template>&lt;h1&gt;&lt;itopstring&gt;UI:ConfigurationItemsMenu:Title&lt;/itopstring&gt;&lt;/h1&gt;
+&lt;table border=&quot;0&quot; padding=&quot;5&quot; class=&quot;layout&quot; width=&quot;100%&quot;&gt;
 &lt;tr&gt;
 &lt;td class=&quot;dashboard&quot;&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:pie;chart_title:All servers by business criticity;group_by:severity&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizServer&lt;/itopblock&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:pie;chart_title:UI-ConfigurationItemsMenu-ServersByCriticity;group_by:severity&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizServer&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;td class=&quot;dashboard&quot;&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:pie;chart_title:All PCs by business criticity;group_by:severity&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizPC&lt;/itopblock&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:pie;chart_title:UI-ConfigurationItemsMenu-PCsByCriticity;group_by:severity&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizPC&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;/tr&gt;&lt;tr&gt;
 &lt;td class=&quot;dashboard&quot;&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:pie;chart_title:All network devices by business criticity;group_by:severity&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizNetworkDevice&lt;/itopblock&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:pie;chart_title:UI-ConfigurationItemsMenu-NWDevicesByCriticity;group_by:severity&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizNetworkDevice&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;td class=&quot;dashboard&quot;&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:pie;chart_title:All applications by business criticity;group_by:severity&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizApplication&lt;/itopblock&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:pie;chart_title:UI-ConfigurationItemsMenu-ApplicationsByCriticity;group_by:severity&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizApplication&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;/tr&gt;
 &lt;/table&gt;</template>
 <type>application</type>
 <rank>2</rank>
-<parent_id>17</parent_id>
+<parent_id>5</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="17">
-<name>Configuration Management</name>
-<label>Configuration Management</label>
+<menuNode alias="menuNode" id="5">
+<name>UI:ConfigurationManagementMenu</name>
+<label>UI:ConfigurationManagementMenu+</label>
 <hyperlink>UI.php</hyperlink>
 <icon_path></icon_path>
-<template>&lt;style&gt;
-td.dashboard {
- vertical-align:top;
- text-align: center;
- border: 1px solid #ccc;
- -moz-border-radius: 10px;
- padding: 10px;
-}
-&lt;/style&gt;
-&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:24px;&quot;&gt;Infrastructure Overview&lt;/p&gt;
-&lt;table border=&quot;0&quot; padding=&quot;5&quot; class=&quot;layout&quot;&gt;
+<template>&lt;h1&gt;&lt;itopstring&gt;UI:ConfigurationManagementMenu:Title&lt;/itopstring&gt;&lt;/h1&gt;
+&lt;table border=&quot;0&quot; padding=&quot;5&quot; class=&quot;layout&quot; width=&quot;100%&quot;&gt;
 &lt;tr&gt;
 &lt;td class=&quot;dashboard&quot;&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:pie;group_by:status;chart_title:Infrastructure Objects by status&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT logInfra&lt;/itopblock&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:pie;group_by:status;chart_title:UI-ConfigurationManagementMenu-InfraByStatus&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT logInfra&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;td class=&quot;dashboard&quot;&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:bars;group_by:finalclass;chart_title:Infrastructure Objects by type&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT logInfra&lt;/itopblock&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:bars;group_by:finalclass;chart_title:UI-ConfigurationManagementMenu-InfraByType&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT logInfra&lt;/itopblock&gt;
 &lt;/td&gt;
-&lt;/tr&gt;&lt;tr&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
 &lt;td class=&quot;dashboard&quot;&gt;
-&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;&quot;&gt;Infrastructure Objects by type&lt;/p&gt;
+&lt;h2&gt;&lt;itopstring&gt;UI-ConfigurationManagementMenu-InfraByType&lt;/itopstring&gt;&lt;/h2&gt;
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;count&quot; parameters=&quot;group_by:finalclass&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT logInfra&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;td&gt;
 &amp;nbsp;
 &lt;/td&gt;
 &lt;/tr&gt;
-&lt;/table&gt;
-
-</template>
+&lt;/table&gt;</template>
 <type>application</type>
 <rank>2</rank>
 <parent_id>0</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="18">
-<name>Contacts</name>
-<label>Everything about Contacts</label>
+<menuNode alias="menuNode" id="6">
+<name>UI:ContactsMenu</name>
+<label>UI:ContactsMenu+</label>
 <hyperlink>UI.php</hyperlink>
 <icon_path></icon_path>
-<template>&lt;style&gt;
-td.dashboard {
- vertical-align:top;
- text-align: center;
- border: 1px solid #ccc;
- -moz-border-radius: 10px;
- padding: 10px;
-}
-&lt;/style&gt;
-&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:24px;&quot;&gt;Contacts Overview&lt;/p&gt;
-&lt;table border=&quot;0&quot; padding=&quot;5&quot; class=&quot;layout&quot;&gt;
+<template>&lt;h1&gt;&lt;itopstring&gt;UI:ContactsMenu:Title&lt;/itopstring&gt;&lt;/h1&gt;
+&lt;table border=&quot;0&quot; padding=&quot;5&quot; class=&quot;layout&quot; width=&quot;100%&quot;&gt;
 &lt;tr&gt;
 &lt;td class=&quot;dashboard&quot;&gt;
-&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;&quot;&gt;Contacts by Location&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;count&quot; parameters=&quot;group_by:location_id&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizContact&lt;/itopblock&gt;
+&lt;h2&gt;&lt;itopstring&gt;UI-ContactsMenu-ContactsByLocation&lt;/itopstring&gt;&lt;/h2&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;count&quot; parameters=&quot;group_by:location_name&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizContact&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;td class=&quot;dashboard&quot;&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:pie;chart_title:Contacts by location;group_by:location_id&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizContact&lt;/itopblock&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:pie;chart_title:UI-ContactsMenu-ContactsByLocation;group_by:location_name&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizContact&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td class=&quot;dashboard&quot;&gt;
-&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;&quot;&gt;Contacts by Type&lt;/p&gt;
+&lt;h2&gt;&lt;itopstring&gt;UI-ContactsMenu-ContactsByType&lt;/itopstring&gt;&lt;/h2&gt;
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;count&quot; parameters=&quot;group_by:finalclass&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizContact&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;td class=&quot;dashboard&quot;&gt;
-&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;&quot;&gt;Contacts by Status&lt;/p&gt;
+&lt;h2&gt;&lt;itopstring&gt;UI-ContactsMenu-ContactsByStatus&lt;/itopstring&gt;&lt;/h2&gt;
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;count&quot; parameters=&quot;group_by:status&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizContact&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;/tr&gt;
 &lt;/table&gt;</template>
 <type>application</type>
 <rank>1</rank>
-<parent_id>17</parent_id>
+<parent_id>5</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="19">
-<name>CSV import</name>
-<label>Bulk creation or update</label>
+<menuNode alias="menuNode" id="21">
+<name>UI:ContractsMenu</name>
+<label>UI:ContractsMenu+</label>
+<hyperlink>./UI.php</hyperlink>
+<icon_path></icon_path>
+<template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizContract&lt;/itopblock&gt;
+&lt;p class=&quot;page-header&quot;&gt;&lt;itopstring&gt;UI:ContractsMenu:Title&lt;/itopstring&gt;&lt;/p&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizContract&lt;/itopblock&gt;
+</template>
+<type>application</type>
+<rank>2</rank>
+<parent_id>14</parent_id>
+<user_id>0</user_id>
+</menuNode>
+<menuNode alias="menuNode" id="7">
+<name>UI:CSVImportMenu</name>
+<label>UI:CSVImportMenu+</label>
 <hyperlink>csvimport.php</hyperlink>
 <icon_path></icon_path>
 <template></template>
 <type>application</type>
 <rank>999</rank>
-<parent_id>40</parent_id>
+<parent_id>15</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="20">
-<name>Data Model</name>
-<label>Overview of the Data Model</label>
+<menuNode alias="menuNode" id="8">
+<name>UI:DataModelMenu</name>
+<label>UI:DataModelMenu+</label>
 <hyperlink>schema.php</hyperlink>
 <icon_path></icon_path>
 <template></template>
@@ -436,27 +267,23 @@ td.dashboard {
 <parent_id>1</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="21">
-<name>Document</name>
-<label>Any object of class &apos;Document&apos;</label>
+<menuNode alias="menuNode" id="22">
+<name>UI:DocumentsMenu</name>
+<label>UI:DocumentsMenu+</label>
 <hyperlink>UI.php</hyperlink>
 <icon_path></icon_path>
 <template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizDocument&lt;/itopblock&gt;
-&lt;div id=&quot;BottomPane&quot;&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;p style=&quot;text-align:center; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:24px;&quot;&gt;All Documents&lt;/p&gt;
-&lt;p&gt;&lt;/p&gt;
+&lt;p class=&quot;page-header&quot;&gt;&lt;itopstring&gt;UI:DocumentsMenu:Title&lt;/itopstring&gt;&lt;/p&gt;
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizDocument&lt;/itopblock&gt;
-&lt;/div&gt;</template>
+</template>
 <type>application</type>
 <rank>6</rank>
-<parent_id>17</parent_id>
+<parent_id>5</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="22">
-<name>Export</name>
-<label>Export any filter in HTML, CSV or XML</label>
+<menuNode alias="menuNode" id="9">
+<name>UI:ExportMenu</name>
+<label>UI:ExportMenu+</label>
 <hyperlink>../webservices/export.php</hyperlink>
 <icon_path></icon_path>
 <template></template>
@@ -465,163 +292,151 @@ td.dashboard {
 <parent_id>1</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="23">
-<name>Grouping</name>
-<label>All Groups</label>
+<menuNode alias="menuNode" id="23">
+<name>UI:GroupingMenu</name>
+<label>UI:GroupingMenu+</label>
 <hyperlink>UI.php</hyperlink>
 <icon_path></icon_path>
 <template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizInfraGroup&lt;/itopblock&gt;
-&lt;div id=&quot;BottomPane&quot;&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;p style=&quot;text-align:center; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:24px;&quot;&gt;All Groups&lt;/p&gt;
-&lt;p&gt;&lt;/p&gt;
+&lt;p class=&quot;page-header&quot;&gt;&lt;itopstring&gt;UI:GroupingMenu:Title&lt;/itopstring&gt;&lt;/p&gt;
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizInfraGroup&lt;/itopblock&gt;
-&lt;/div&gt;
-
-
-
 </template>
 <type>application</type>
 <rank>3</rank>
-<parent_id>17</parent_id>
+<parent_id>5</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="24">
-<name>Incident Management</name>
-<label>Incident Management</label>
+<menuNode alias="menuNode" id="10">
+<name>UI:IncidentManagementMenu</name>
+<label>UI:IncidentManagementMenu+</label>
 <hyperlink>./UI.php</hyperlink>
 <icon_path></icon_path>
-<template>&lt;style&gt;
-.dashboard {
-vertical-align:top;
-width:50%;
-border:1px solid #000;
--moz-border-radius:10px;
-padding:5px;
-text-align:center;
-}
-&lt;/style&gt;
-&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:24px;&quot;&gt;Incidents Overview&lt;/p&gt;
-&lt;table border=&quot;0&quot; padding=&quot;5&quot;&gt;
+<template>&lt;h1&gt;&lt;itopstring&gt;UI:IncidentManagementMenu:Title&lt;/itopstring&gt;&lt;/h1&gt;
+&lt;table border=&quot;0&quot; padding=&quot;5&quot; width=&quot;100%&quot;&gt;
 &lt;tr&gt;
 &lt;td class=&quot;dashboard&quot;&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:pie;group_by:type;chart_title:Incidents by Type&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizIncidentTicket&lt;/itopblock&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:pie;group_by:type;chart_title:UI-IncidentManagementMenu-IncidentsByType&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizIncidentTicket&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;td class=&quot;dashboard&quot;&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:bars;group_by:ticket_status;chart_title:Incidents by status&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizIncidentTicket&lt;/itopblock&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:bars;group_by:ticket_status;chart_title:UI-IncidentManagementMenu-IncidentsByStatus&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizIncidentTicket&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;/tr&gt;&lt;tr&gt;
 &lt;td class=&quot;dashboard&quot;&gt;
-&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;&quot;&gt;Incidents by Workgroup&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;count&quot; parameters=&quot;group_by:workgroup_id&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizIncidentTicket&lt;/itopblock&gt;
+&lt;h2&gt;&lt;itopstring&gt;UI-IncidentManagementMenu-IncidentsByWorkgroup&lt;/itopstring&gt;&lt;/h2p&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;count&quot; parameters=&quot;group_by:workgroup_name&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizIncidentTicket&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;td class=&quot;dashboard&quot;&gt;
-&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;&quot;&gt;Incidents not yet assigned&lt;/p&gt;
+&lt;h2&gt;&lt;itopstring&gt;UI-IncidentManagementMenu-IncidentsNotYetAssigned&lt;/itopstring&gt;&lt;/h2p&gt;
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; parameters=&quot;dashboard:true&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizIncidentTicket WHERE ticket_status = &apos;New&apos;&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;/tr&gt;
-&lt;/table&gt;
-</template>
+&lt;/table&gt;</template>
 <type>application</type>
 <rank>5</rank>
 <parent_id>0</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="25">
-<name>Known Errors</name>
-<label>Known Errors</label>
+<menuNode alias="menuNode" id="24">
+<name>UI:InterfacesMenu</name>
+<label>UI:InterfacesMenu+</label>
+<hyperlink>UI.php</hyperlink>
+<icon_path></icon_path>
+<template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizInterface&lt;/itopblock&gt;
+&lt;p class=&quot;page-header&quot;&gt;&lt;itopstring&gt;UI:InterfacesMenu:Title&lt;/itopstring&gt;&lt;/p&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizInterface&lt;/itopblock&gt;
+</template>
+<type>application</type>
+<rank>999</rank>
+<parent_id>4</parent_id>
+<user_id>0</user_id>
+</menuNode>
+<menuNode alias="menuNode" id="25">
+<name>UI:KnownErrorsMenu</name>
+<label>UI:KnownErrorsMenu+</label>
 <hyperlink>./UI.php</hyperlink>
 <icon_path></icon_path>
 <template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizKnownError&lt;/itopblock&gt;
-&lt;div id=&quot;BottomPane&quot;&gt;
-&lt;p&gt;&lt;/p&gt;
+&lt;p class=&quot;page-header&quot;&gt;&lt;itopstring&gt;UI:KnownErrorsMenu:Title&lt;/itopstring&gt;&lt;/p&gt;
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizKnownError&lt;/itopblock&gt;
-&lt;/div&gt;</template>
+</template>
 <type>application</type>
 <rank>999</rank>
-<parent_id>24</parent_id>
+<parent_id>10</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="26">
-<name>Locations</name>
-<label>Any locations</label>
+<menuNode alias="menuNode" id="26">
+<name>UI:LocationsMenu</name>
+<label>UI:LocationsMenu+</label>
 <hyperlink>UI.php</hyperlink>
 <icon_path></icon_path>
 <template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizLocation&lt;/itopblock&gt;
-&lt;div id=&quot;BottomPane&quot;&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;p style=&quot;text-align:center; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:24px;&quot;&gt;All Locations&lt;/p&gt;
-&lt;p&gt;&lt;/p&gt;
+&lt;p class=&quot;page-header&quot;&gt;&lt;itopstring&gt;UI:LocationsMenu:Title&lt;/itopstring&gt;&lt;/p&gt;
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizLocation&lt;/itopblock&gt;
-&lt;/div&gt;</template>
+</template>
 <type>application</type>
 <rank>5</rank>
-<parent_id>17</parent_id>
+<parent_id>5</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="27">
-<name>My Changes</name>
-<label>My changes</label>
+<menuNode alias="menuNode" id="27">
+<name>UI:MyChangesMenu</name>
+<label>UI:MyChangesMenu+</label>
 <hyperlink>UI.php</hyperlink>
 <icon_path></icon_path>
-<template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizChangeTicket AS i WHERE i.agent_id = :current_contact_id&lt;/itopblock&gt;
-&lt;div id=&quot;BottomPane&quot;&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;&quot;&gt;My Changes as a requester&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizChangeTicket AS i WHERE i.requestor_id = :current_contact_id&lt;/itopblock&gt;
-&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;&quot;&gt;My Changes as an agent&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizChangeTicket AS i WHERE i.agent_id = :current_contact_id&lt;/itopblock&gt;
-
+<template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizChangeTicket AS C WHERE C.agent_id = :current_contact_id&lt;/itopblock&gt;
+&lt;p class=&quot;page-header&quot;&gt;&lt;itopstring&gt;UI:MyChangesMenu:Title&lt;/itopstring&gt;&lt;/p&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizChangeTicket AS C WHERE C.agent_id = :current_contact_id&lt;/itopblock&gt;
+</template>
+<type>application</type>
+<rank>1</rank>
+<parent_id>3</parent_id>
+<user_id>0</user_id>
+</menuNode>
+<menuNode alias="menuNode" id="28">
+<name>UI:MyIncidentsMenu</name>
+<label>UI:MyIncidentsMenu+</label>
+<hyperlink>UI.php</hyperlink>
+<icon_path></icon_path>
+<template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizIncidentTicket AS I WHERE I.agent_id = :current_contact_id&lt;/itopblock&gt;
+&lt;p class=&quot;page-header&quot;&gt;&lt;itopstring&gt;UI:MyIncidentsMenu:Title&lt;/itopstring&gt;&lt;/p&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizIncidentTicket AS I WHERE I.agent_id = :current_contact_id&lt;/itopblock&gt;
+</template>
+<type>application</type>
+<rank>1</rank>
+<parent_id>10</parent_id>
+<user_id>0</user_id>
+</menuNode>
+<menuNode alias="menuNode" id="29">
+<name>UI:MyServiceCallsMenu</name>
+<label>UI:MyServiceCallsMenu+</label>
+<hyperlink>UI.php</hyperlink>
+<icon_path></icon_path>
+<template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizServiceCall AS SC WHERE SC.agent_id = :current_contact_id&lt;/itopblock&gt;
+&lt;p class=&quot;page-header&quot;&gt;&lt;itopstring&gt;UI:MyServiceCallsMenu:Title&lt;/itopstring&gt;&lt;/p&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizServiceCall AS SC WHERE SC.agent_id = :current_contact_id&lt;/itopblock&gt;
 </template>
 <type>application</type>
 <rank>1</rank>
 <parent_id>13</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="28">
-<name>My Incidents</name>
-<label>My Incidents</label>
+<menuNode alias="menuNode" id="30">
+<name>UI:NetworkDevicesMenu</name>
+<label>UI:NetworkDevicesMenu+</label>
 <hyperlink>UI.php</hyperlink>
 <icon_path></icon_path>
-<template>
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizIncidentTicket AS i WHERE i.agent_id = :current_contact_id&lt;/itopblock&gt;
-&lt;div id=&quot;BottomPane&quot;&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;&quot;&gt;My Incidents as a caller&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizIncidentTicket AS i WHERE i.caller_id = :current_contact_id&lt;/itopblock&gt;
-&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;&quot;&gt;My Incidents as an agent&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizIncidentTicket AS i WHERE i.agent_id = :current_contact_id&lt;/itopblock&gt;
-
+<template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizNetworkDevice&lt;/itopblock&gt;
+&lt;p class=&quot;page-header&quot;&gt;&lt;itopstring&gt;UI:NetworkDevicesMenu:Title&lt;/itopstring&gt;&lt;/p&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizNetworkDevice&lt;/itopblock&gt;
 </template>
 <type>application</type>
-<rank>1</rank>
-<parent_id>24</parent_id>
+<rank>999</rank>
+<parent_id>4</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="29">
-<name>My Service calls</name>
-<label>My Service calls</label>
-<hyperlink>UI.php</hyperlink>
-<icon_path></icon_path>
-<template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizServiceCall AS i WHERE i.agent_id = :current_contact_id&lt;/itopblock&gt;
-&lt;div id=&quot;BottomPane&quot;&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;&quot;&gt;My service calls as a caller&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizServiceCall AS i WHERE i.caller_id = :current_contact_id&lt;/itopblock&gt;
-&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;&quot;&gt;My service calls as an agent&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizServiceCall AS i WHERE i.agent_id = :current_contact_id&lt;/itopblock&gt;
-
-</template>
-<type>application</type>
-<rank>1</rank>
-<parent_id>37</parent_id>
-<user_id>0</user_id>
-</menuNode>
-<menuNode id="46">
-<name>Notifications</name>
-<label>Configuration of the Notifications</label>
+<menuNode alias="menuNode" id="11">
+<name>UI:NotificationsMenu</name>
+<label>UI:NotificationsMenu+</label>
 <hyperlink>UI.php</hyperlink>
 <icon_path></icon_path>
 <template>&lt;div class=&quot;page_header&quot; style=&quot;padding:0.5em;&quot;&gt;
@@ -678,86 +493,107 @@ When associated with a trigger, each action is given an &apos;order&apos; number
 <parent_id>1</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="30">
-<name>Open Changes</name>
-<label>Open Changes</label>
+<menuNode alias="menuNode" id="31">
+<name>UI:OpenChangesMenu</name>
+<label>UI:OpenChangesMenu+</label>
 <hyperlink>./UI.php</hyperlink>
 <icon_path></icon_path>
 <template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizChangeTicket WHERE ticket_status != &apos;Closed&apos;&lt;/itopblock&gt;
-&lt;div id=&quot;BottomPane&quot;&gt;
-&lt;p&gt;&lt;/p&gt;
+&lt;p class=&quot;page-header&quot;&gt;&lt;itopstring&gt;UI:OpenChangesMenu:Title&lt;/itopstring&gt;&lt;/p&gt;
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizChangeTicket WHERE ticket_status != &apos;Closed&apos;&lt;/itopblock&gt;
-&lt;/div&gt;</template>
+</template>
 <type>application</type>
 <rank>3</rank>
-<parent_id>13</parent_id>
+<parent_id>3</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="31">
-<name>Open Incidents</name>
-<label>List of open incidents</label>
+<menuNode alias="menuNode" id="32">
+<name>UI:OpenIncidentsMenu</name>
+<label>UI:OpenIncidentsMenu+</label>
 <hyperlink>UI.php</hyperlink>
 <icon_path></icon_path>
-<template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizIncidentTicket WHERE ticket_status = &apos;Open&apos; AND severity = &apos;critical&apos;&lt;/itopblock&gt;
-&lt;div id=&quot;BottomPane&quot;&gt;
-&lt;p&gt;&lt;/p&gt;
+<template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizIncidentTicket WHERE ticket_status != &apos;Closed&apos;&lt;/itopblock&gt;
+&lt;p class=&quot;page-header&quot;&gt;&lt;itopstring&gt;UI:OpenIncidentsMenu:Title&lt;/itopstring&gt;&lt;/p&gt;
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizIncidentTicket WHERE ticket_status != &apos;Closed&apos;&lt;/itopblock&gt;
-&lt;/div&gt;</template>
+</template>
 <type>application</type>
 <rank>3</rank>
-<parent_id>24</parent_id>
+<parent_id>10</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="32">
-<name>Open Service calls</name>
-<label>Open Service calls</label>
+<menuNode alias="menuNode" id="33">
+<name>UI:OpenServiceCallsMenu</name>
+<label>UI:OpenServiceCallsMenu+</label>
 <hyperlink>UI.php</hyperlink>
 <icon_path></icon_path>
 <template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizServiceCall WHERE call_status != &apos;Closed&apos;&lt;/itopblock&gt;
-&lt;div id=&quot;BottomPane&quot;&gt;
-&lt;p&gt;&lt;/p&gt;
+&lt;p class=&quot;page-header&quot;&gt;&lt;itopstring&gt;UI:OpenServiceCallsMenu:Title&lt;/itopstring&gt;&lt;/p&gt;
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizServiceCall WHERE call_status != &apos;Closed&apos;&lt;/itopblock&gt;
-&lt;/div&gt;</template>
+</template>
 <type>application</type>
 <rank>2</rank>
-<parent_id>37</parent_id>
+<parent_id>13</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="33">
-<name>Persons</name>
-<label>Any contact of class &apos;Person&apos;</label>
+<menuNode alias="menuNode" id="34">
+<name>UI:PatchesMenu</name>
+<label>UI:PatchesMenu+</label>
+<hyperlink>UI.php</hyperlink>
+<icon_path></icon_path>
+<template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizPatch&lt;/itopblock&gt;
+&lt;p class=&quot;page-header&quot;&gt;&lt;itopstring&gt;UI:PatchesMenu:Title&lt;/itopstring&gt;&lt;/p&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizPatch&lt;/itopblock&gt;
+</template>
+<type>application</type>
+<rank>999</rank>
+<parent_id>4</parent_id>
+<user_id>0</user_id>
+</menuNode>
+<menuNode alias="menuNode" id="35">
+<name>UI:PCsMenu</name>
+<label>UI:PCsMenu+</label>
+<hyperlink>UI.php</hyperlink>
+<icon_path></icon_path>
+<template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizPC&lt;/itopblock&gt;
+&lt;p class=&quot;page-header&quot;&gt;&lt;itopstring&gt;UI:PCsMenu:Title&lt;/itopstring&gt;&lt;/p&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizPC&lt;/itopblock&gt;
+</template>
+<type>application</type>
+<rank>999</rank>
+<parent_id>4</parent_id>
+<user_id>0</user_id>
+</menuNode>
+<menuNode alias="menuNode" id="36">
+<name>UI:PersonsMenu</name>
+<label>UI:PersonsMenu+</label>
 <hyperlink>UI.php</hyperlink>
 <icon_path></icon_path>
 <template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizPerson&lt;/itopblock&gt;
-&lt;div id=&quot;BottomPane&quot;&gt;
-&lt;p&gt;&lt;/p&gt;
+&lt;p class=&quot;page-header&quot;&gt;&lt;itopstring&gt;UI:PersonsMenu:Title&lt;/itopstring&gt;&lt;/p&gt;
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizPerson&lt;/itopblock&gt;
-&lt;/div&gt;</template>
+</template>
 <type>application</type>
 <rank>7</rank>
-<parent_id>18</parent_id>
+<parent_id>6</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="34">
-<name>Profiles</name>
-<label>User profiles</label>
+<menuNode alias="menuNode" id="37">
+<name>UI:ProfilesMenu</name>
+<label>UI:ProfilesMenu+</label>
 <hyperlink>UI.php</hyperlink>
 <icon_path>../images/std_view.gif</icon_path>
-<template>
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT URP_Profiles AS URP_Profiles WHERE 1&lt;/itopblock&gt;
-&lt;div id=&quot;BottomPane&quot;&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT URP_Profiles AS URP_Profiles WHERE 1&lt;/itopblock&gt;
-&lt;/div&gt;
+<template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT URP_Profiles&lt;/itopblock&gt;
+&lt;p class=&quot;page-header&quot;&gt;&lt;itopstring&gt;UI:ProfilesMenu:Title&lt;/itopstring&gt;&lt;/p&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT URP_Profiles&lt;/itopblock&gt;
 </template>
 <type>administrator</type>
 <rank>11</rank>
-<parent_id>43</parent_id>
+<parent_id>45</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="35">
-<name>Run queries</name>
-<label>Run any query</label>
+<menuNode alias="menuNode" id="12">
+<name>UI:RunQueriesMenu</name>
+<label>UI:RunQueriesMenu+</label>
 <hyperlink>./run_query.php</hyperlink>
 <icon_path></icon_path>
 <template></template>
@@ -766,132 +602,135 @@ When associated with a trigger, each action is given an &apos;order&apos; number
 <parent_id>1</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="36">
-<name>Scheduled Outages</name>
-<label>Scheduled Outages</label>
+<menuNode alias="menuNode" id="38">
+<name>UI:ScheduledOutagesMenu</name>
+<label>UI:ScheduledOutagesMenu+</label>
 <hyperlink>./UI.php</hyperlink>
 <icon_path></icon_path>
 <template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizChangeTicket WHERE outage = &apos;Yes&apos; AND ticket_status != &apos;Closed&apos;&lt;/itopblock&gt;
-&lt;div id=&quot;BottomPane&quot;&gt;
-&lt;p&gt;&lt;/p&gt;
+&lt;p class=&quot;page-header&quot;&gt;&lt;itopstring&gt;UI:ScheduledOutagesMenu:Title&lt;/itopstring&gt;&lt;/p&gt;
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizChangeTicket WHERE outage = &apos;Yes&apos; AND ticket_status != &apos;Closed&apos;&lt;/itopblock&gt;
-&lt;/div&gt;</template>
+</template>
 <type>application</type>
 <rank>7</rank>
-<parent_id>13</parent_id>
+<parent_id>3</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="37">
-<name>Service Desk</name>
-<label>Service Desk</label>
+<menuNode alias="menuNode" id="39">
+<name>UI:ServersMenu</name>
+<label>UI:ServersMenu+</label>
 <hyperlink>UI.php</hyperlink>
 <icon_path></icon_path>
-<template>&lt;style&gt;
-.dashboard {
-vertical-align:top;
-width:50%;
-border:1px solid #000;
--moz-border-radius:10px;
-padding:5px;
-text-align:center;
-}
-&lt;/style&gt;
-&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:24px;&quot;&gt;Service Calls Overview&lt;/p&gt;
-&lt;table border=&quot;0&quot; padding=&quot;5&quot;&gt;
+<template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizServer&lt;/itopblock&gt;
+&lt;p class=&quot;page-header&quot;&gt;&lt;itopstring&gt;UI:ServersMenu:Title&lt;/itopstring&gt;&lt;/p&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizServer&lt;/itopblock&gt;
+</template>
+<type>application</type>
+<rank>999</rank>
+<parent_id>4</parent_id>
+<user_id>0</user_id>
+</menuNode>
+<menuNode alias="menuNode" id="13">
+<name>UI:ServiceDeskMenu</name>
+<label>UI:ServiceDeskMenu+</label>
+<hyperlink>UI.php</hyperlink>
+<icon_path></icon_path>
+<template>&lt;h1&gt;&lt;itopstring&gt;UI:ServiceDeskMenu:Title&lt;/itopstring&gt;&lt;/h1&gt;
+&lt;table border=&quot;0&quot; padding=&quot;5&quot; width=&quot;100%&quot;&gt;
 &lt;tr&gt;
 &lt;td class=&quot;dashboard&quot;&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:pie;group_by:type;chart_title:Service Calls by Type&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizServiceCall&lt;/itopblock&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:pie;group_by:type;chart_title:UI-ServiceDeskMenu-CallsByType&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizServiceCall&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;td class=&quot;dashboard&quot;&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:bars;group_by:call_status;chart_title:Service Calls by status&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizServiceCall&lt;/itopblock&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:bars;group_by:call_status;chart_title:UI-ServiceDeskMenu-CallsByStatus&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizServiceCall&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;/tr&gt;&lt;tr&gt;
 &lt;td class=&quot;dashboard&quot;&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:pie;group_by:severity;chart_title:Service Calls by Severity&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizServiceCall&lt;/itopblock&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:pie;group_by:severity;chart_title:UI-ServiceDeskMenu-CallsBySeverity&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizServiceCall&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;td class=&quot;dashboard&quot;&gt;
-&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;&quot;&gt;Service calls not yet assigned&lt;/p&gt;
+&lt;h2&gt;&lt;itopstring&gt;UI-ServiceDeskMenu-CallsNotYetAssigned&lt;/itopstring&gt;&lt;/h2&gt;
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; parameters=&quot;dashboard:true&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizServiceCall WHERE call_status = &apos;New&apos;&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;/tr&gt;
-&lt;/table&gt;
-</template>
+&lt;/table&gt;</template>
 <type>application</type>
 <rank>3</rank>
 <parent_id>0</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="38">
-<name>Service Management</name>
-<label>Service Management</label>
+<menuNode alias="menuNode" id="14">
+<name>UI:ServiceManagementMenu</name>
+<label>UI:ServiceManagementMenu+</label>
 <hyperlink>./UI.php</hyperlink>
 <icon_path></icon_path>
-<template>&lt;style&gt;
-.dashboard {
-vertical-align:top;
-width:50%;
-border:1px solid #000;
--moz-border-radius:10px;
-padding:5px;
-text-align:center;
-}
-&lt;/style&gt;
-&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:24px;&quot;&gt;Service Management Overview&lt;/p&gt;
-&lt;table border=&quot;0&quot; padding=&quot;5&quot;&gt;
+<template>&lt;h1&gt;&lt;itopstring&gt;UI:ServiceManagementMenu:Title&lt;/itopstring&gt;&lt;/h1&gt;
+&lt;table border=&quot;0&quot; padding=&quot;5&quot; width=&quot;100%&quot;&gt;
 &lt;tr&gt;
 &lt;td class=&quot;dashboard&quot;&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:bars;group_by:type;chart_title:Contracts by service level&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizContract&lt;/itopblock&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:bars;group_by:type;chart_title:UI-ServiceManagementMenu-ContractsBySrvLevel&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizContract&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;td class=&quot;dashboard&quot;&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:pie;group_by:status;chart_title:Contracts by status&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizContract&lt;/itopblock&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;open_flash_chart&quot; parameters=&quot;chart_type:pie;group_by:status;chart_title:UI-ServiceManagementMenu-ContractsByStatus&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizContract&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td class=&quot;dashboard&quot;&gt;
-&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;&quot;&gt;Contracts ending in 30 days&lt;/p&gt;
+&lt;h2&gt;&lt;itopstring&gt;UI-ServiceManagementMenu-ContractsEndingIn30Days&lt;/itopstring&gt;&lt;/h2&gt;
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; parameters=&quot;dashboard:true&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizContract WHERE bizContract.end_prod = (TO_DAYS(NOW()) + TO_DAYS(30))&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;/tr&gt;
-&lt;/table&gt;
-</template>
+&lt;/table&gt;</template>
 <type>application</type>
 <rank>8</rank>
 <parent_id>0</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="39">
-<name>Teams</name>
-<label>Any contact of class &apos;team&apos;</label>
+<menuNode alias="menuNode" id="40">
+<name>UI:ServicesMenu</name>
+<label>UI:ServicesMenu+</label>
+<hyperlink>UI.php</hyperlink>
+<icon_path></icon_path>
+<template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizService&lt;/itopblock&gt;
+&lt;p class=&quot;page-header&quot;&gt;&lt;itopstring&gt;UI:ServicesMenu:Title&lt;/itopstring&gt;&lt;/p&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizService&lt;/itopblock&gt;
+</template>
+<type>application</type>
+<rank>1</rank>
+<parent_id>14</parent_id>
+<user_id>0</user_id>
+</menuNode>
+<menuNode alias="menuNode" id="41">
+<name>UI:SubnetsMenu</name>
+<label>UI:SubnetsMenu+</label>
+<hyperlink>UI.php</hyperlink>
+<icon_path></icon_path>
+<template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizSubnet&lt;/itopblock&gt;
+&lt;p class=&quot;page-header&quot;&gt;&lt;itopstring&gt;UI:SubnetsMenu:Title&lt;/itopstring&gt;&lt;/p&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizSubnet&lt;/itopblock&gt;
+</template>
+<type>application</type>
+<rank>999</rank>
+<parent_id>4</parent_id>
+<user_id>0</user_id>
+</menuNode>
+<menuNode alias="menuNode" id="42">
+<name>UI:TeamsMenu</name>
+<label>UI:TeamsMenu+</label>
 <hyperlink>UI.php</hyperlink>
 <icon_path></icon_path>
 <template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizTeam&lt;/itopblock&gt;
-&lt;div id=&quot;BottomPane&quot;&gt;
-&lt;p&gt;&lt;/p&gt;
+&lt;p class=&quot;page-header&quot;&gt;&lt;itopstring&gt;UI:TeamsMenu:Title&lt;/itopstring&gt;&lt;/p&gt;
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizTeam&lt;/itopblock&gt;
-&lt;/div&gt;</template>
-<type>application</type>
-<rank>8</rank>
-<parent_id>18</parent_id>
-<user_id>0</user_id>
-</menuNode>
-<menuNode id="40">
-<name>Tools</name>
-<label>Advanced tools</label>
-<hyperlink>UI.php</hyperlink>
-<icon_path></icon_path>
-<template>&lt;p&gt;&lt;/p&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;p style=&quot;text-align:center; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:32px;&quot;&gt;Tools for the iTop consultant&lt;/p&gt;
-&lt;p style=&quot;text-align:center; font-family:Georgia, &apos;Times New Roman&apos;, Times, serif; font-size:14px;&quot;&gt;&lt;i&gt;This section contains links to useful tools for extending or debugging iTop&lt;/i&gt;&lt;/p&gt;
 </template>
 <type>application</type>
-<rank>9</rank>
-<parent_id>0</parent_id>
+<rank>8</rank>
+<parent_id>6</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="41">
-<name>Universal Search</name>
-<label>Search for anything...</label>
+<menuNode alias="menuNode" id="44">
+<name>UI:UniversalSearchMenu</name>
+<label>UI:UniversalSearchMenu+</label>
 <hyperlink>UniversalSearch.php</hyperlink>
 <icon_path></icon_path>
 <template></template>
@@ -900,26 +739,23 @@ text-align:center;
 <parent_id>1</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="42">
-<name>User logins</name>
-<label>User logins</label>
+<menuNode alias="menuNode" id="43">
+<name>UI:UserAccountsMenu</name>
+<label>UI:UserAccountsMenu+</label>
 <hyperlink>UI.php</hyperlink>
 <icon_path>../images/std_view.gif</icon_path>
-<template>
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT URP_Users AS URP_Users WHERE 1&lt;/itopblock&gt;
-&lt;div id=&quot;BottomPane&quot;&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT URP_Users AS URP_Users WHERE 1&lt;/itopblock&gt;
-&lt;/div&gt;
+<template>&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;search&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT URP_Users&lt;/itopblock&gt;
+&lt;p class=&quot;page-header&quot;&gt;&lt;itopstring&gt;UI:UserAccountsMenu:Title&lt;/itopstring&gt;&lt;/p&gt;
+&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT URP_Users&lt;/itopblock&gt;
 </template>
 <type>administrator</type>
 <rank>10</rank>
-<parent_id>43</parent_id>
+<parent_id>45</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="43">
-<name>User management</name>
-<label>User management</label>
+<menuNode alias="menuNode" id="45">
+<name>UI:UserManagementMenu</name>
+<label>UI:UserManagementMenu+</label>
 <hyperlink>UI.php</hyperlink>
 <icon_path></icon_path>
 <template>&lt;p&gt;&lt;/p&gt;
@@ -933,9 +769,9 @@ text-align:center;
 <parent_id>1</parent_id>
 <user_id>0</user_id>
 </menuNode>
-<menuNode id="44">
-<name>Welcome</name>
-<label>Welcome</label>
+<menuNode alias="menuNode" id="46">
+<name>UI:WelcomeMenu</name>
+<label>UI:WelcomeMenu+</label>
 <hyperlink>./UI.php</hyperlink>
 <icon_path></icon_path>
 <template>&lt;div style=&quot;width:100%;background: url(../images/welcome.jpg) top left no-repeat;&quot;&gt;
@@ -965,47 +801,24 @@ display: list-item;
 &lt;/style&gt;
 &lt;p&gt;&lt;/p&gt;
 &lt;p&gt;&lt;/p&gt;
-&lt;p style=&quot;text-align:left; font-size:32px;padding-left:400px;padding-top:40px;margin-bottom:30px;margin-top:0;color:#FFFFFF;&quot;&gt;Welcome to iTop&lt;/p&gt;
+&lt;p style=&quot;text-align:left; font-size:32px;padding-left:400px;padding-top:40px;margin-bottom:30px;margin-top:0;color:#FFFFFF;&quot;&gt;&lt;itopstring&gt;UI:WelcomeMenu:Title&lt;/itopstring&gt;&lt;/p&gt;
 &lt;p&gt;&lt;/p&gt;
 &lt;table border=&quot;0&quot; style=&quot;padding:10px;border-spacing: 10px;&quot;&gt;
 &lt;tr&gt;
 &lt;td class=&quot;dashboard&quot;&gt;
-&lt;p&gt;iTop is a complete, OpenSource, IT Operational Portal.&lt;/p&gt;
-&lt;ul&gt;It includes:
-&lt;li&gt;A complete CMDB (Configuration management database) to document and manage the IT inventory.&lt;/li&gt;
-&lt;li&gt;An Incident management module to track and communicate about all issues occurring in the IT.&lt;/li&gt;
-&lt;li&gt;A change management module to plan and track the changes to the IT environment.&lt;/li&gt;
-&lt;li&gt;A known error database to speed up the resolution of incidents.&lt;/li&gt;
-&lt;li&gt;An outage module to document all planned outages and notify the appropriate contacts.&lt;/li&gt;
-&lt;li&gt;Dashboards to quickly get an overview of your IT.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;All the modules can be setup, step by step, indepently of each other.&lt;/p&gt;
+&lt;itopstring&gt;UI:WelcomeMenu:LeftBlock&lt;/itopstring&gt;
 &lt;/td&gt;
 &lt;td class=&quot;dashboard&quot;&gt;
-&lt;p&gt;iTop is service provider oriented, it allows IT engineers to manage easily multiple customers or organizations.
-&lt;ul&gt;iTop, delivers a feature-rich set of business processes that:
-&lt;li&gt;Enhances IT management effectiveness&lt;/li&gt; 
-&lt;li&gt;Drives IT operations performance&lt;/li&gt; 
-&lt;li&gt;Improves customer satisfaction and provides executives with insights into business performance.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/p&gt;
-&lt;p&gt;iTop is completely opened to be integrated within your current IT Management infrastructure.&lt;/p&gt;
-&lt;p&gt;
-&lt;ul&gt;Adopting this new generation of IT Operational portal will help you to:
-&lt;li&gt;Better manage a more and more complex IT environment.&lt;/li&gt;
-&lt;li&gt;Implement ITIL processes at your own pace.&lt;/li&gt;
-&lt;li&gt;Manage the most important asset of your IT: Documentation.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/p&gt;
+&lt;itopstring&gt;UI:WelcomeMenu:RightBlock&lt;/itopstring&gt;
 &lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td class=&quot;dashboard2&quot;&gt;
-&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;&quot;&gt;My Service calls&lt;/p&gt;
+&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;&quot;&gt;&lt;itopstring&gt;UI:WelcomeMenu:MyCalls&lt;/itopstring&gt;&lt;/p&gt;
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizServiceCall AS i WHERE i.caller_id = :current_contact_id&lt;/itopblock&gt;
 &lt;/td&gt;
 &lt;td class=&quot;dashboard2&quot;&gt;
-&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;&quot;&gt;My Incident tickets&lt;/p&gt;
+&lt;p style=&quot;text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;&quot;&gt;&lt;itopstring&gt;UI:WelcomeMenu:MyIncidents&lt;/itopstring&gt;&lt;/p&gt;
 &lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT bizIncidentTicket AS i WHERE i.caller_id = :current_contact_id&lt;/itopblock&gt;
 &lt;/td&gt;
 

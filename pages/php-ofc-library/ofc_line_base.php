@@ -4,18 +4,28 @@ class line_base
 {
 	function line_base()
 	{
-		$this->type      = "line_dot";
+		$this->type      = "line";
 		$this->text      = "Page views";
 		$tmp = 'font-size';
 		$this->$tmp = 10;
 		
-		$this->values    = array(9,6,7,9,5,7,6,9,7);
+		$this->values    = array();
 	}
 	
 	function set_values( $v )
 	{
 		$this->values = $v;		
 	}
+	
+	/**
+     * Append a value to the line.
+     *
+     * @param mixed $v
+     */
+    function append_value($v)
+    {
+        $this->values[] = $v;       
+    }
 	
 	function set_width( $width )
 	{
@@ -67,4 +77,16 @@ class line_base
 		$tmp = "line-style";
 		$this->$tmp = $s;
 	}
+	
+	    /**
+     * Sets the text for the line.
+     *
+     * @param string $text
+     */   
+    function set_text($text)
+    {
+        $this->text = $text;
+    }
+	
+	
 }

@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * x_axis_label see x_axis_labels
+ */
 class x_axis_label
 {
 	function x_axis_label( $text, $colour, $size, $rotate )

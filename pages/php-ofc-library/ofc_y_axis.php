@@ -4,10 +4,10 @@ class y_axis extends y_axis_base
 {
 	function y_axis(){}
 	
-	//
-	// y axis right does NOT control
-	// grid colour, the left axis does
-	//
+	/**
+	 * @param $colour as string. The grid are the lines inside the chart.
+	 * HEX colour, e.g. '#ff0000'
+	 */
 	function set_grid_colour( $colour )
 	{
 		$tmp = 'grid-colour';

@@ -7,7 +7,6 @@ class bar_3d_value
 	function bar_3d_value( $top )
 	{
 		$this->top = $top;
-//		$this->bottom = $bottom;
 	}
 	
 	function set_colour( $colour )
@@ -21,11 +20,3 @@ class bar_3d_value
 	}
 }
 
-class bar_3d extends bar_base
-{
-	function bar_3d()
-	{
-		$this->type      = "bar_3d";
-		parent::bar_base();
-	}
-}
