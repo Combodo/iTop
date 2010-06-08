@@ -740,6 +740,30 @@ Dict::Add('EN US', 'English', 'English', array(
 	
 	'UI:NotificationsMenu' => 'Notifications',
 	'UI:NotificationsMenu+' => 'Configuration of the Notifications',
+	'UI:NotificationsMenu:Title' => 'Configuration of the <span class="hilite">Notifications</span>',
+	'UI:NotificationsMenu:Help' => 'Help',
+	'UI:NotificationsMenu:HelpContent' => '<p>In iTop the notifications are fully customizable. They are based on two sets of objects: <i>triggers and actions</i>.</p>
+<p><i><b>Triggers</b></i> define when a notification will be executed. There are 3 types of triggers for covering 3 differents phases of an object life cycle:
+<ol>
+	<li>the "OnCreate" triggers get executed when an object of the specified class is created</li>
+	<li>the "OnStateEnter" triggers get executed before an object of the given class enters a specified state (coming from another state)</li>
+	<li>the "OnStateLeave" triggers get executed when an object of the given class is leaving a specified state</li>
+</ol>
+</p>
+<p>
+<i><b>Actions</b></i> define the actions to be performed when the triggers execute. For now there is only one kind of action consisting in sending an email message.
+Such actions also define the template to be used for sending the email as well as the other parameters of the message like the recipients, importance, etc.
+</p>
+<p>A special page: <a href="../setup/email.test.php" target="_blank">email.test.php</a> is available for testing and troubleshooting your PHP mail configuration.</p>
+<p>To be executed, actions must be associated to triggers.
+When associated with a trigger, each action is given an "order" number, specifying in which order the actions are to be executed.</p>',
+	'UI:NotificationsMenu:Triggers' => 'Triggers',
+	'UI:NotificationsMenu:AvailableTriggers' => 'Available triggers',
+	'UI:NotificationsMenu:OnCreate' => 'When an object is created',
+	'UI:NotificationsMenu:OnStateEnter' => 'When an object enters a given state',
+	'UI:NotificationsMenu:OnStateLeave' => 'When an object leaves a given state',
+	'UI:NotificationsMenu:Actions' => 'Actions',
+	'UI:NotificationsMenu:AvailableActions' => 'Available actions',
 	
 	'UI:RunQueriesMenu' => 'Run Queries',
 	'UI:RunQueriesMenu+' => 'Run any query',

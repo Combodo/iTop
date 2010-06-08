@@ -440,51 +440,37 @@
 <hyperlink>UI.php</hyperlink>
 <icon_path></icon_path>
 <template>&lt;div class=&quot;page_header&quot; style=&quot;padding:0.5em;&quot;&gt;
-&lt;h1&gt;Configuration of the &lt;span class=&quot;hilite&quot;&gt;Notifications&lt;/span&gt;&lt;/h1&gt;
+&lt;h1&gt;&lt;itopstring&gt;UI:NotificationsMenu:Title&lt;/itopstring&gt;&lt;/h1&gt;
 &lt;/div&gt;
-&lt;itoptoggle name=&quot;Help&quot; open=&quot;true&quot;&gt;
+&lt;itoptoggle name=&quot;UI:NotificationsMenu:Help&quot; open=&quot;true&quot;&gt;
 &lt;div style=&quot;padding: 1em; font-size:1.25em;background:#E8F3CF;margin-top: 0.25em;&quot;&gt;
 &lt;img src=&quot;../images/bell.png&quot; style=&quot;margin-top: -60px; margin-right: 10px; float: right;&quot;&gt;
-&lt;p&gt;In iTop the notifications are fully customizable. They are based on two sets of objects: &lt;i&gt;triggers and actions&lt;/i&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;i&gt;&lt;b&gt;Triggers&lt;/b&gt;&lt;/i&gt; define when a notification will be executed. There are 3 types of triggers for covering 3 differents phases of an object life cycle:
-&lt;ol&gt;
-	&lt;li&gt;the &apos;OnCreate&apos; triggers get executed when an object of the specified class is created&lt;/li&gt;
-	&lt;li&gt;the &apos;OnStateEnter&apos; triggers get executed before an object of the given class enters a specified state (coming from another state)&lt;/li&gt;
-	&lt;li&gt;the &apos;OnStateLeave&apos; triggers get executed when an object of the given class is leaving a specified state&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/p&gt;
-&lt;p&gt;
-&lt;i&gt;&lt;b&gt;Actions&lt;/b&gt;&lt;/i&gt; define the actions to be performed when the triggers execute. For now there is only one kind of action consisting in sending an email message.
-Such actions also define the template to be used for sending the email as well as the other parameters of the message like the recipients, importance, etc.
-&lt;/p&gt;
-&lt;p&gt;A special page: &lt;a href=&quot;../setup/email.test.php&quot; target=&quot;_blank&quot;&gt;email.test.php&lt;/a&gt; is available for testing and troubleshooting your PHP mail configuration.&lt;/p&gt;
-&lt;p&gt;To be executed, actions must be associated to triggers.
-When associated with a trigger, each action is given an &apos;order&apos; number, specifying in which order the actions are to be executed.&lt;/p&gt;
+&lt;itopstring&gt;UI:NotificationsMenu:HelpContent&lt;/itopstring&gt;
 &lt;/div&gt;
 &lt;/itoptoggle&gt;
 &lt;p&gt;&amp;nbsp;&lt;/p&gt;
 &lt;itoptabs&gt;
-	&lt;itoptab name=&quot;Triggers&quot;&gt;
-		&lt;h3&gt;Available Triggers&lt;/h3&gt;
+	&lt;itoptab name=&quot;UI:NotificationsMenu:Triggers&quot;&gt;
+		&lt;h2&gt;&lt;itopstring&gt;UI:NotificationsMenu:AvailableTriggers&lt;/itopstring&gt;&lt;/h2&gt;
 		&lt;table style=&quot;border:0;border-spacing:10px;width:100%;&quot;&gt;
 		&lt;tr&gt;
 		&lt;td style=&quot;vertical-align:top;width:33%;padding:10px;background:#f8f8f8;&quot;&gt;
-		&lt;h4&gt;When an object is created&lt;/h4&gt;
+		&lt;h3&gt;&lt;itopstring&gt;UI:NotificationsMenu:OnCreate&lt;/itopstring&gt;&lt;/h3&gt;
 		&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT TriggerOnObjectCreate&lt;/itopblock&gt;
 		&lt;/td&gt;
 		&lt;td style=&quot;vertical-align:top;width:33%;padding:10px;background:#f8f8f8;&quot;&gt;
-		&lt;h4&gt;When an object enters a state&lt;/h4&gt;
+		&lt;h3&gt;&lt;itopstring&gt;UI:NotificationsMenu:OnStateEnter&lt;/itopstring&gt;&lt;/h3&gt;
 		&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT TriggerOnStateEnter&lt;/itopblock&gt;
 		&lt;/td&gt;
 		&lt;td style=&quot;vertical-align:top;width:33%;padding:10px;background:#f8f8f8;&quot;&gt;
-		&lt;h4&gt;When an object leaves a state&lt;/h4&gt;
+		&lt;h3&gt;&lt;itopstring&gt;UI:NotificationsMenu:OnStateLeave&lt;/itopstring&gt;&lt;/h3&gt;
 		&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT TriggerOnStateLeave&lt;/itopblock&gt;
 		&lt;/td&gt;
 		&lt;/tr&gt;
 		&lt;/table&gt;
 	&lt;/itoptab&gt;
-	&lt;itoptab name=&quot;Actions&quot;&gt;
-		&lt;h3&gt;Available Actions&lt;/h3&gt;
+	&lt;itoptab name=&quot;UI:NotificationsMenu:Actions&quot;&gt;
+		&lt;h2&gt;&lt;itopstring&gt;UI:NotificationsMenu:AvailableActions&lt;/itopstring&gt;&lt;/h2&gt;
 		&lt;itopblock BlockClass=&quot;DisplayBlock&quot; type=&quot;list&quot; asynchronous=&quot;false&quot; encoding=&quot;text/oql&quot;&gt;SELECT ActionEmail&lt;/itopblock&gt;
 	&lt;/itoptab&gt;
 &lt;/itoptabs&gt;</template>

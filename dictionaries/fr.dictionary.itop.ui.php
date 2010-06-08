@@ -738,6 +738,30 @@ Dict::Add('FR FR', 'French', 'Français', array(
 		
 	'UI:NotificationsMenu' => 'Notifications',
 	'UI:NotificationsMenu+' => 'Configuration des Notifications',
+	'UI:NotificationsMenu:Title' => 'Configuration des <span class="hilite">Notifications</span>',
+	'UI:NotificationsMenu:Help' => 'Aide',
+	'UI:NotificationsMenu:HelpContent' => '<p>Dans iTop les notifications sont totalement configurables. Elles sont basées sur deux types d\'objets: <i>déclencheurs et actions</i>.</p>
+<p><i><b>Les déclencheurs</b></i> définissent quand une notification doit être exécutée. Il y a 3 types de déclencheurs pour couvrir les 3 différentes phases de la vie d\'un objet:
+<ol>
+	<li>un déclencheur "OnCreate" est exécuté quand un objet d\'une classe spécifique est créé.</li>
+	<li>un déclencheur "OnEnter" est exécuté avant que l\'objet n\'entre dans un état donné (en venant d\'un autre état du cycle de vie)</li>
+	<li>un déclencheur "OnLeave" est exécuté  quand l\'objet quitte un état spécifié</li>
+</ol>
+</p>
+<p>
+<i><b>Les actions</b></i> définissent ce qui doit être exécuté. Pour le moment il existe un seul type d\'action: l\'envoi de mail.
+Les actions de type mail définissent le modèle du message ainsi que les autres paramètres (destinataires, importance, etc.)</p>
+<p>Une page spéciale: <a href="../setup/email.test.php" target="_blank">email.test.php</a> permet de tester votre configuration mail PHP.</p>
+<p>Les actions doivent être associées à des déclencheurs pour pouvoir être exécutées.
+Lors de l\'association à un déclencheur, on attribue à chaque action un numéro d\'ordre, qui définit la séquence des actions à exécuter.</p>',
+	'UI:NotificationsMenu:Triggers' => 'Déclencheurs',
+	'UI:NotificationsMenu:AvailableTriggers' => 'Déclencheurs existants',
+	'UI:NotificationsMenu:OnCreate' => 'A la création d\'un objet',
+	'UI:NotificationsMenu:OnStateEnter' => 'Quand un objet entre dans un état donné',
+	'UI:NotificationsMenu:OnStateLeave' => 'Quand un objet quitte un état donné',
+	'UI:NotificationsMenu:Actions' => 'Actions',
+	'UI:NotificationsMenu:AvailableActions' => 'Actions existantes',
+
 	
 	'UI:RunQueriesMenu' => 'Requêtes OQL',
 	'UI:RunQueriesMenu+' => 'Executer une requête OQL',
