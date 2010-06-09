@@ -9,6 +9,10 @@
  *
  * Built upon jQuery 1.2.2 (http://jquery.com)
  * This also requires the jQuery dimensions plugin
+ * 
+ * 
+ * @@ Modified by dflaven for handling the positioning of the iTop popup menus @@
+ * 
  */
 (function($){
 	/**
@@ -205,6 +209,11 @@
 			position[15]= new Range(tLeft, 				tTop,				tLeft + eWidth, 	tTop + eHeight);
 			next[15]	= [14,0,9];
 	
+			// @@ Added by dflaven
+			position[16]= new Range(tRight - eWidth, 			tBottom,			tRight, 	tBottom + eHeight);
+			next[16]	= [3,10];
+			// @@End of modification
+			
 			if ( args.positions !== null ) {
 				var pos = args.positions[0];
 			} else if ( args.targetPos != null && args.elementPos != null ) {
@@ -229,6 +238,13 @@
 				pos[3][1] = 5;
 				pos[3][2] = 6;
 				pos[3][3] = 14;
+				// @@ Added by dflaven
+				pos[4] = [];
+				pos[4][0] = 16;
+				pos[4][1] = 16;
+				pos[4][2] = 16;
+				pos[4][3] = 16;
+				// @@ End of modification
 
 				var pos = pos[args.targetPos][args.elementPos];
 			}

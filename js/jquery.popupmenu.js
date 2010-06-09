@@ -35,7 +35,7 @@ jQuery.fn.popupmenu = function ()
 				// We really clicked in a different menu, let's open it
 				popupmenu.bgiframe();
 				popupmenu.positionBy({ target: $(this), 
-										targetPos: 	2, 
+										targetPos: 	4, 
 										elementPos: 0,
 										hideAfterPosition: true
 										});
