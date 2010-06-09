@@ -307,8 +307,9 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 				$oP->p(Dict::S('UI:Delete:PleaseDoTheManualOperations'));
 			}		
 			$oP->add("<form method=\"post\">\n");
+			$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::ReadParam('transaction_id')."\">\n");
+			$oP->add("<input type=\"button\" onclick=\"window.history.back();\" value=\"".Dict::S('UI:Button:Back')."\">\n");
 			$oP->add("<input DISABLED type=\"submit\" name=\"\" value=\"".Dict::S('UI:Button:Delete')."\">\n");
-			$oP->add("<input type=\"button\" onclick=\"window.history.back();\" value=\"".Dict::S('UI:Button:Cancel')."\">\n");
 			$oP->add("</form>\n");
 		}
 		else
@@ -319,11 +320,12 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 				$id = $oObj->GetKey();
 				$oP->p('<h1>'.Dict::Format('UI:Delect:Confirm_Object', $oObj->GetHyperLink()).'</h1>');
 				$oP->add("<form method=\"post\">\n");
+				$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::ReadParam('transaction_id')."\">\n");
 				$oP->add("<input type=\"hidden\" name=\"operation\" value=\"delete_confirmed\">\n");
 				$oP->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
 				$oP->add("<input type=\"hidden\" name=\"id\" value=\"$id\">\n");
+				$oP->add("<input type=\"button\" onclick=\"window.history.back();\" value=\"".Dict::S('UI:Button:Back')."\">\n");
 				$oP->add("<input type=\"submit\" name=\"\" value=\"".Dict::S('UI:Button:Delete')."\">\n");
-				$oP->add("<input type=\"button\" onclick=\"window.history.back();\" value=\"".Dict::S('UI:Button:Cancel')."\">\n");
 				$oP->add("</form>\n");
 			}
 			else
@@ -332,14 +334,15 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 				$oSet = CMDBobjectSet::FromArray($sClass, $aObjects);
 				CMDBAbstractObject::DisplaySet($oP, $oSet, array('display_limit' => false, 'menu' => false));
 				$oP->add("<form method=\"post\">\n");
+				$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::ReadParam('transaction_id')."\">\n");
 				$oP->add("<input type=\"hidden\" name=\"operation\" value=\"bulk_delete_confirmed\">\n");
 				$oP->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
 				foreach($aObjects as $oObj)
 				{
 					$oP->add("<input type=\"hidden\" name=\"selectObject[]\" value=\"".$oObj->GetKey()."\">\n");
 				}
+				$oP->add("<input type=\"button\" onclick=\"window.history.back();\" value=\"".Dict::S('UI:Button:Back')."\">\n");
 				$oP->add("<input type=\"submit\" name=\"\" value=\"".Dict::S('UI:Button:Delete')."\">\n");
-				$oP->add("<input type=\"button\" onclick=\"window.history.back();\" value=\"".Dict::S('UI:Button:Cancel')."\">\n");
 				$oP->add("</form>\n");
 			}
 		}
@@ -850,7 +853,6 @@ try
 		case 'select_for_deletion':
 			$sFilter = utils::ReadParam('filter', '');
 			$sFormat = utils::ReadParam('format', '');
-			$bSearchForm = utils::ReadParam('search_form', true);
 			if (empty($sFilter))
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'filter'));
@@ -860,35 +862,30 @@ try
 			// TO DO: limit the search filter by the user context
 			$oFilter = CMDBSearchFilter::unserialize($sFilter); // TO DO : check that the filter is valid
 			$oSet = new DBObjectSet($oFilter);
-			if ($bSearchForm)
-			{
-				$oBlock = new DisplayBlock($oFilter, 'search', false);
-				$oBlock->Display($oP, 0);
-			}
 			$oBlock = new DisplayBlock($oFilter, 'list', false);
 			$oP->add("<form method=\"post\">\n");
 			$oP->add("<input type=\"hidden\" name=\"operation\" value=\"bulk_delete\">\n");
 			$oP->add("<input type=\"hidden\" name=\"class\" value=\"".$oFilter->GetClass()."\">\n");
 			$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
-			$oBlock->Display($oP, 1, array('selection_type' => 'multiple', 'selection_mode' => true, 'display_limit' => false));
+			$oBlock->Display($oP, 1, array('selection_type' => 'multiple', 'selection_mode' => true, 'display_limit' => false, 'menu' => false));
 			$oP->add("<input type=\"button\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"window.history.back()\">&nbsp;&nbsp;<input type=\"submit\" value=\"".Dict::S('UI:Button:Next')."\">\n");
 			$oP->add("</form>\n");
 		break;
 		
-		case 'bulk_delete':
 		case 'bulk_delete_confirmed':
+			$sTransactionId = utils::ReadPostedParam('transaction_id', '');
+			if (!utils::IsTransactionValid($sTransactionId))
+			{
+				throw new ApplicationException(Dict::S('UI:Error:ObjectsAlreadyDeleted'));
+			}
+		case 'bulk_delete':
 			$sClass = utils::ReadPostedParam('class', '');
 			$sClassLabel = MetaModel::GetName($sClass);
 			$aSelectObject = utils::ReadPostedParam('selectObject', '');
 			$aObjects = array();
-			$sTransactionId = utils::ReadPostedParam('transaction_id', '');
 			if ( empty($sClass) || empty($aSelectObject)) // TO DO: check that the class name is valid !
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'selectObject[]'));
-			}
-			if (!utils::IsTransactionValid($sTransactionId))
-			{
-				throw new ApplicationException(Dict::S('UI:Error:ObjectsAlreadyDeleted'));
 			}
 			foreach($aSelectObject as $iId)
 			{

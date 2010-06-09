@@ -187,13 +187,21 @@ class EventIssue extends Event
 			$aPost = array();
 			foreach($GLOBALS['_POST'] as $sKey => $sValue)
 			{
-				if (strlen($sValue) < 256)
+				if (is_string($sValue))
 				{
-					$aPost[$sKey] = $sValue;
+					if (strlen($sValue) < 256)
+					{
+						$aPost[$sKey] = $sValue;
+					}
+					else
+					{
+						$aPost[$sKey] = "!long string: ".strlen($sValue). " chars";
+					}
 				}
 				else
 				{
-					$aPost[$sKey] = "!long string: ".strlen($sValue). " chars";
+					// Not a string
+					$aPost[$sKey] = (string) $sValue;
 				}
 			}
 			$this->Set('arguments_post', $aPost);
