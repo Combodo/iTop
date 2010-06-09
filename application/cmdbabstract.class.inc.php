@@ -856,21 +856,22 @@ abstract class cmdbAbstractObject extends CMDBObject
 			}
 			$sCSSClasses = self::GetCSSClasses($aCSSClasses);
 			$sValidationField = "<span id=\"v_{$iInputId}\"></span>";
+			$sHelpText = $oAttDef->GetHelpOnEdition();
 			switch($oAttDef->GetEditClass())
 			{
 				case 'Date':
 				case 'DateTime':
 				$aCSSClasses[] = 'date-pick';
 				$sCSSClasses = self::GetCSSClasses($aCSSClasses);
-				$sHTMLValue = "<input type=\"text\" size=\"20\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iInputId\"{$sCSSClasses}/>$sValidationField";
+				$sHTMLValue = "<input title=\"$sHelpText\" type=\"text\" size=\"20\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iInputId\"{$sCSSClasses}/>$sValidationField";
 				break;
 				
 				case 'Password':
-				$sHTMLValue = "<input type=\"password\" size=\"30\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iInputId\"{$sCSSClasses}/>$sValidationField";
+				$sHTMLValue = "<input title=\"$sHelpText\" type=\"password\" size=\"30\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iInputId\"{$sCSSClasses}/>$sValidationField";
 				break;
 				
 				case 'Text':
-					$sHTMLValue = "<textarea name=\"attr_{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iInputId\"{$sCSSClasses}>$value</textarea>$sValidationField";
+					$sHTMLValue = "<textarea title=\"$sHelpText\" name=\"attr_{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iInputId\"{$sCSSClasses}>$value</textarea>$sValidationField";
 				break;
 	
 				case 'List':
@@ -889,7 +890,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 					$sHTMLValue = "<input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"$iMaxFileSize\" />\n";
 				    $sHTMLValue .= "<input name=\"attr_{$sAttCode}{$sNameSuffix}\" type=\"hidden\" id=\"$iInputId\" \" value=\"$sFileName\"/>\n";
 				    $sHTMLValue .= "<span id=\"name_$iInputId\">$sFileName</span><br/>\n";
-				    $sHTMLValue .= "<input name=\"file_{$sAttCode}{$sNameSuffix}\" type=\"file\" id=\"file_$iInputId\" onChange=\"UpdateFileName('$iInputId', this.value);\"/>\n";
+				    $sHTMLValue .= "<input title=\"$sHelpText\" name=\"file_{$sAttCode}{$sNameSuffix}\" type=\"file\" id=\"file_$iInputId\" onChange=\"UpdateFileName('$iInputId', this.value);\"/>\n";
 				break;
 				
 				case 'String':
@@ -923,7 +924,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 						{
 							// Few choices, use a normal 'select'
 							// In case there are no valid values, the select will be empty, thus blocking the user from validating the form
-							$sHTMLValue = "<select name=\"attr_{$sAttCode}{$sNameSuffix}\" id=\"$iInputId\"{$sCSSClasses}>\n";
+							$sHTMLValue = "<select title=\"$sHelpText\" name=\"attr_{$sAttCode}{$sNameSuffix}\" id=\"$iInputId\"{$sCSSClasses}>\n";
 							$sHTMLValue .= "<option value=\"0\">".Dict::S('UI:SelectOne')."</option>\n";
 							foreach($aAllowedValues as $key => $display_value)
 							{
@@ -935,7 +936,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 					}
 					else
 					{
-						$sHTMLValue = "<input type=\"text\" size=\"30\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iInputId\"{$sCSSClasses} />$sValidationField";
+						$sHTMLValue = "<input title=\"$sHelpText\" type=\"text\" size=\"30\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iInputId\"{$sCSSClasses} />$sValidationField";
 					}
 					break;
 			}
@@ -995,7 +996,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 							$aFieldsMap[$sAttCode] = $sInputId;
 							
 						}
-						$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $sHTMLValue);
+						$aDetails[] = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>', 'value' => $sHTMLValue);
 					}
 				}
 			}
