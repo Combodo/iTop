@@ -78,7 +78,8 @@ class URP_Users extends UserRightsBaseClass
 		MetaModel::Init_AddAttribute(new AttributeString("login", array("allowed_values"=>null, "sql"=>"login", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributePassword("password", array("allowed_values"=>null, "sql"=>"pwd", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 
-		MetaModel::Init_AddAttribute(new AttributeEnum("language", array("allowed_values"=>new ValueSetEnum('EN US,FR FR'), "sql"=>"language", "default_value"=>"EN US", "is_null_allowed"=>false, "depends_on"=>array())));
+		//MetaModel::Init_AddAttribute(new AttributeString("language", array("allowed_values"=>array('EN US,FR FR'), "sql"=>"language", "default_value"=>"EN US", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeApplicationLanguage("language", array("sql"=>"language", "default_value"=>"EN US", "is_null_allowed"=>false, "depends_on"=>array())));
 
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("profiles", array("linked_class"=>"URP_UserProfile", "ext_key_to_me"=>"userid", "ext_key_to_remote"=>"profileid", "allowed_values"=>null, "count_min"=>1, "count_max"=>0, "depends_on"=>array())));
 
@@ -438,7 +439,7 @@ class URP_UserProfile extends UserRightsBaseClass
 
 	public function GetName()
 	{
-		return Dict::Format('UI:USerManagement:LinkBetween_User_And_Profile');
+		return Dict::Format('UI:UserManagement:LinkBetween_User_And_Profile');
 	}
 }
 

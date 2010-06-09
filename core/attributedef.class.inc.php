@@ -681,6 +681,37 @@ class AttributeClass extends AttributeString
 }
 
 /**
+ * An attibute that matches one of the language codes availables in the dictionnary 
+ *
+ * @package     iTopORM
+ */
+class AttributeApplicationLanguage extends AttributeString
+{
+	static protected function ListExpectedParams()
+	{
+		return parent::ListExpectedParams();
+	}
+
+	public function __construct($sCode, $aParams)
+	{
+		$this->m_sCode = $sCode;
+		$aAvailableLanguages = Dict::GetLanguages();
+		$aLanguageCodes = array();
+		foreach($aAvailableLanguages as $sLangCode => $aInfo)
+		{
+			$aLanguageCodes[$sLangCode] = $aInfo['description'].' ('.$aInfo['localized_description'].')';
+		}
+		$aParams["allowed_values"] = new ValueSetEnum($aLanguageCodes);
+		parent::__construct($sCode, $aParams);
+	}
+
+	public function RequiresIndex()
+	{
+		return true;
+	}
+}
+
+/**
  * The attribute dedicated to the finalclass automatic attribute 
  *
  * @package     iTopORM
