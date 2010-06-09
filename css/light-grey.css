@@ -420,6 +420,7 @@ div.itop_popup > ul > li {
 
 .itop_popup li ul li a {
 	width: auto;
+	text-align: left;
 }
 
 .itop_popup li ul li a:hover {
