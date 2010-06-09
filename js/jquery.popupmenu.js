@@ -7,32 +7,27 @@
  * http://www.combodo.com/
  *
  * Built upon jQuery jQuery 1.2.3a (http://jquery.com)
- * Requires the jQuery positionBy plugin by Jonathan Sharp (http://jdsharp.us)
+ * Requires the (modified) jQuery positionBy plugin by Jonathan Sharp (http://jdsharp.us)
  */
-
 jQuery.fn.popupmenu = function ()
 {
 	var popupmenu = null;
-
 	return this.each(function() 
 	{
-		$(this).bind('mouseenter.popup_menu click.popup_menu', function (evt)
+		$(this).bind('click.popup_menu', function (evt)
 		{
 			var previous_popup = popupmenu;
 			var bMenuClosed = false;
 			popupmenu = $(this).find('ul');
 			if ( previous_popup != null)
 			{
-				if ( ((evt.type == 'click') && ((previous_popup[0] == popupmenu[0])) || // Comparing the jQuery objects
-					(evt.type == 'mouseenter') && (previous_popup[0] != popupmenu[0])) )
-				// The user clicked again in the menu or moved over another menu let's close it
+				// The user clicked while a menu is open, close the currently opened menu
 				previous_popup.css('display', 'none');
-				bMenuClosed = true;
 				
 			}
-			if ( (previous_popup == null) || (previous_popup[0] != popupmenu[0])) // Comparing the jQuery objects
+			if ( (previous_popup == null) || (previous_popup.get(0) != popupmenu.get(0))) // Comparing the DOM objects
 			{
-				// We really clicked in a different menu, let's open it
+				// The user clicked in a different menu, let's open it
 				popupmenu.bgiframe();
 				popupmenu.positionBy({ target: $(this), 
 										targetPos: 	4, 
@@ -41,8 +36,9 @@ jQuery.fn.popupmenu = function ()
 										});
 				popupmenu.css('display', 'block');
 			}
-			if (bMenuClosed)
+			else
 			{
+				// The user clicked in the opened menu, it is closed now
 				popupmenu = null;
 			}
 			evt.stopPropagation();
