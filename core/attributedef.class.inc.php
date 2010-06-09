@@ -176,6 +176,7 @@ abstract class AttributeDefinition
 		}
 	}
 	public function GetDescription() {return Dict::S('Class:'.$this->m_sHostClass.'/Attribute:'.$this->m_sCode.'+', '');} 
+	public function GetHelpOnEdition() {return Dict::S('Class:'.$this->m_sHostClass.'/Attribute:'.$this->m_sCode.'?', '');} 
 	public function GetDescription_Obsolete()
 	{
 		// Written for compatibility with a data model written prior to version 0.9.1

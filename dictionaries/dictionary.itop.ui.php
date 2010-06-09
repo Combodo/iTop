@@ -43,7 +43,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:menuNode/Attribute:hyperlink' => 'Hyperlink',
 	'Class:menuNode/Attribute:hyperlink+' => 'Hyperlink to the page',
 	'Class:menuNode/Attribute:icon_path' => 'Menu Icon',
-	'Class:menuNode/Attribute:icon_path+' => 'Path to the icon o the menu',
+	'Class:menuNode/Attribute:icon_path+' => 'Path to the icon of the menu',
 	'Class:menuNode/Attribute:template' => 'Template',
 	'Class:menuNode/Attribute:template+' => 'HTML template for the view',
 	'Class:menuNode/Attribute:type' => 'Type',
@@ -386,7 +386,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Error:BulkDeleteNotAllowedOn_Class' => 'You are not allowed to perform a bulk delete of objects of class %1$s',
 	'UI:Error:DeleteNotAllowedOn_Class' => 'You are not allowed to delete objects of class %1$s',
 	'UI:Error:ObjectAlreadyCloned' => 'Error: the object has already been cloned!',
-	'UI:Error:ObjectAlreadyCreated' => 'Error: the object has laready been created!',
+	'UI:Error:ObjectAlreadyCreated' => 'Error: the object has already been created!',
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Error: invalid stimulus "%1$s" on object %2$s in state "%3$s".',
 	
 	
@@ -450,7 +450,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:CSVImport:ClassesSelectOne' => '-- select one --',
 	'UI:CSVImport:ErrorExtendedAttCode' => 'Internal error: "%1$s" is an incorrect code because "%2$s" is NOT an external key of the class "%3$s"',
 	'UI:CSVImport:ObjectsWillStayUnchanged' => '%1$d objects(s) will stay unchanged.',
-	'UI:CSVImport:ObjectsWillBeModified' => '%1$d objects(s) will stay be modified.',
+	'UI:CSVImport:ObjectsWillBeModified' => '%1$d objects(s) will be modified.',
 	'UI:CSVImport:ObjectsWillBeAdded' => '%1$d objects(s) will be added.',
 	'UI:CSVImport:ObjectsWillHaveErrors' => '%1$d objects(s) will have errors.',
 	'UI:CSVImport:ObjectsRemainedUnchanged' => '%1$d objects(s) remained unchanged.',

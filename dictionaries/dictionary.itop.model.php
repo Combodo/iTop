@@ -456,6 +456,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:bizDevice/Attribute:serial_number+' => 'The serial number of the device',
 	'Class:bizDevice/Attribute:mgmt_ip' => 'Mgmt IP',
 	'Class:bizDevice/Attribute:mgmt_ip+' => 'Management IP',
+	'Class:bizDevice/Attribute:mgmt_ip?' => 'Format: nnn.nnn.nnn.nnn',
 ));
 
 //
