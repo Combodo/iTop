@@ -86,7 +86,7 @@ class UIWizard
 				$oDefaultValuesSet = $oAttDef->GetDefaultValue(/* $oObject->ToArgs() */); // @@@ TO DO: get the object's current value if the object exists
 				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($this->m_oPage, $this->m_sClass, $sAttCode, $oAttDef, $oDefaultValuesSet, '', "att_$iMaxInputId", '', $iOptions, $aArgs);
 				$aFieldsMap["att_$iMaxInputId"] = $sAttCode;
-				$aDetails[] = array('label' => $oAttDef->GetLabel().$sFieldFlag, 'value' => "<span id=\"field_att_$iMaxInputId\">$sHTMLValue</span>");
+				$aDetails[] = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().$sFieldFlag.'</span>', 'value' => "<span id=\"field_att_$iMaxInputId\">$sHTMLValue</span>");
 				if ($oAttDef->GetValuesDef() != null)
 				{
 					$sJSHandlerCode .= "\toWizardHelper.RequestAllowedValues('$sAttCode');\n";

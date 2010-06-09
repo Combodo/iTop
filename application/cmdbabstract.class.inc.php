@@ -202,7 +202,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 				{
 					$sDisplayValue = $this->GetAsHTML($sAttCode);
 				}
-				$aDetails[] = array('label' => MetaModel::GetLabel($sClass, $sAttCode), 'value' => $sDisplayValue);
+				$aDetails[] = array('label' => '<span title="'.MetaModel::GetDescription($sClass, $sAttCode).'">'.MetaModel::GetLabel($sClass, $sAttCode).'</span>', 'value' => $sDisplayValue);
 			}
 		}
 		$sHtml .= $oPage->GetDetails($aDetails);
