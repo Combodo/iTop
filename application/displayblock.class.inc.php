@@ -891,7 +891,13 @@ class MenuBlock extends DisplayBlock
 			$sHtml .= "<li><a href=\"{$aAction['url']}\"$sClass>{$aAction['label']}</a></li>\n";
 		}
 		$sHtml .= "</ul>\n</li>\n</ul></div>\n";
-		$oPage->add_ready_script("$(\"div.itop_popup>ul\").popupmenu();\n");
+		static $bPopupScript = false;
+		if (!$bPopupScript)
+		{
+			// Output this once per page...
+			$oPage->add_ready_script("$(\"div.itop_popup>ul\").popupmenu();\n");
+			$bPopupScript = true;
+		}
 		return $sHtml;
 	}	
 }
