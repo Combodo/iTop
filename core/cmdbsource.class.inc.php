@@ -159,6 +159,11 @@ class CMDBSource
 		// otherwise and if there is a mix of strings and numbers, the clause
 		// would always be false
 
+		if (is_null($value))
+		{
+			return 'NULL';
+		}
+
 		if (is_array($value))
 		{
 			$aRes = array();
