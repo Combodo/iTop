@@ -436,7 +436,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Button:Login' => 'Enter iTop',
 	'UI:Login:Error:AccessRestricted' => 'iTop access is restricted. Please, contact an iTop administrator.',
 	'UI:CSVImport:MappingSelectOne' => '-- select one --',
-	'UI:CSVImport:MappingNotApplicable' => '------ n/a ------',
+	'UI:CSVImport:MappingNotApplicable' => '-- ignore this field --',
 	'UI:CSVImport:NoData' => 'Empty data set..., please provide some data!',
 	'UI:Title:DataPreview' => 'Data Preview',
 	'UI:CSVImport:ErrorOnlyOneColumn' => 'Error: The data contains only one column. Did you select the appropriate separator character?',

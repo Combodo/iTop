@@ -431,7 +431,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Button:Login' => 'Entrer dans iTop',
 	'UI:Login:Error:AccessRestricted' => 'L\'accès à iTop est soumis à autorisation. Merci de contacter votre administrateur iTop.',
 	'UI:CSVImport:MappingSelectOne' => '-- choisir une valeur --',
-	'UI:CSVImport:MappingNotApplicable' => '------ n/a ------',
+	'UI:CSVImport:MappingNotApplicable' => '-- ignorer ce champ --',
 	'UI:CSVImport:NoData' => 'Aucune donnée... merci de fournir des données !',
 	'UI:Title:DataPreview' => 'Aperçu des données',
 	'UI:CSVImport:ErrorOnlyOneColumn' => 'Erreur: Les données semblent ne contenir qu\'une seule colonne. Avez-vous choisi le bon séparateur ?',

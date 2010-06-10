@@ -31,12 +31,52 @@ require_once('../application/ui.linkswidget.class.inc.php');
 require_once('../application/csvpage.class.inc.php');
 
 /**
+ * Determines if the name of the field to be mapped correspond
+ * to the name of an external key or an Id of the given class
+ * @param string $sClassName The name of the class
+ * @param string $sFieldCode The attribute code of the field , or empty if no match
+ * @return bool true if the field corresponds to an id/External key, false otherwise
+ */
+function IsIdField($sClassName, $sFieldCode)
+{
+	$bResult = false;
+	if (!empty($sFieldCode))
+	{
+		if ($sFieldCode == 'id')
+		{
+			$bResult = true;
+		}
+		else if (strpos($sFieldCode, '->') === false)
+		{
+			$oAttDef = MetaModel::GetAttributeDef($sClassName, $sFieldCode);
+			$bResult = $oAttDef->IsExternalKey();
+		}
+	}
+	return $bResult;
+}
+
+/**
  * Helper function to build the mapping drop-down list for a field
+ * Spec: Possible choices are "writable" fields in this class plus external fields that are listed as reconciliation keys
+ *       for any class pointed to by an external key in the current class.
+ *       If not in advanced mode, all "id" fields (id and external keys) must be mapped to ":none:" (i.e -- ignore this field --)
+ *       External fields that do not correspond to a reconciliation key must be mapped to ":none:"
+ *       Otherwise, if a field equals either the 'code' or the 'label' (translated) of a field, then it's mapped automatically
+ * @param string $sClassName Name of the class used for the mapping
+ * @param string $sFieldName Name of the field, as it comes from the data file (header line)
+ * @param integer $iFieldIndex Number of the field in the sequence
+ * @param bool $bAdvancedMode Whether or not advanced mode was chosen
+ * @return string The HTML code corresponding to the drop-down list for this field
  */
 function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMode = false)
 {
 	$aChoices = array('' => Dict::S('UI:CSVImport:MappingSelectOne'));
 	$aChoices[':none:'] = Dict::S('UI:CSVImport:MappingNotApplicable');
+	$sFieldCode = ''; // Code of the attribute, if there is a match
+	if ($sFieldName == 'id')
+	{
+		$sFieldCode = 'id';
+	}
 	if ($bAdvancedMode)
 	{
 		$aChoices['id'] = Dict::S('UI:CSVImport:idField');
@@ -45,7 +85,14 @@ function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMo
 	{
 		if ($oAttDef->IsExternalKey())
 		{
-			$aChoices[$sAttCode] = $oAttDef->GetLabel();
+			if ( ($sFieldName == $oAttDef->GetLabel()) || ($sFieldName == $sAttCode))
+			{
+				$sFieldCode = $sAttCode;
+			}
+			if ($bAdvancedMode)
+			{
+				$aChoices[$sAttCode] = $oAttDef->GetLabel();
+			}
 			// Get fields of the external class that are considered as reconciliation keys
 			$sTargetClass = $oAttDef->GetTargetClass();
 			foreach(MetaModel::ListAttributeDefs($sTargetClass) as $sTargetAttCode => $oTargetAttDef)
@@ -53,28 +100,48 @@ function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMo
 				if (MetaModel::IsReconcKey($sTargetClass, $sTargetAttCode))
 				{
 					$aChoices[$sAttCode.'->'.$sTargetAttCode] = $oAttDef->GetLabel().'->'.$oTargetAttDef->GetLabel();
+					if (($sFieldName == $aChoices[$sAttCode.'->'.$sTargetAttCode]) || ($sFieldName == ($sAttCode.'->'.$sTargetAttCode)) )
+					{
+						$sFieldCode = $sAttCode.'->'.$sTargetAttCode;
+					}
 				}
 			}
 		}
 		else if ($oAttDef->IsWritable())
 		{
 			$aChoices[$sAttCode] = $oAttDef->GetLabel();
-		}
+			if ( ($sFieldName == $oAttDef->GetLabel()) || ($sFieldName == $sAttCode))
+			{
+				$sFieldCode = $sAttCode;
+			}
+		}		
 	}
 	asort($aChoices);
 	
 	$sHtml = "<select id=\"mapping_{$iFieldIndex}\" name=\"field[$iFieldIndex]\">\n";
+	$bIsIdField = IsIdField($sClassName, $sFieldCode);
 	foreach($aChoices as $sAttCode => $sLabel)
 	{
 		$sSelected = '';
-		if ( ($sFieldName == $sAttCode) || ($sFieldName == $sLabel))
+		if ($bIsIdField && (!$bAdvancedMode)) // When not in advanced mode, ID are mapped to n/a
+		{
+			if ($sAttCode == ':none:')
+			{
+				$sSelected = ' selected';
+			}
+		}
+		else if (empty($sFieldCode) && (strpos($sFieldName, '->') !== false))
+		{
+			if ($sAttCode == ':none:')
+			{
+				$sSelected = ' selected';
+			}
+		}
+		else if ($sFieldCode == $sAttCode) // Otherwise map by default if there is a match
 		{
 			$sSelected = ' selected';
 		}
-		if ((!$bAdvancedMode) && ($sAttCode == ':none:') && ($sFieldName == 'id'))
-		{
-			$sSelected = ' selected';
-		}
+
 		$sHtml .= "<option value=\"$sAttCode\"$sSelected>$sLabel</option>\n";
 	}
 	$sHtml .= "</select>\n";
@@ -123,7 +190,7 @@ switch($sOperation)
 		$sMaxLen = (strlen(''.$iTarget) < 3) ? 3 : strlen(''.$iTarget); // Pad line numbers to the appropriate number of chars, but at least 3
 		$sFormat = '%0'.$sMaxLen.'d';
 		$oPage->p("<h3>".Dict::S('UI:Title:DataPreview')."</h3>\n");
-		$oPage->p("<div style=\"overflow-y:auto\">\n");
+		$oPage->p("<div style=\"overflow-y:auto\" class=\"white\">\n");
 		$oPage->add("<table cellspacing=\"0\" style=\"overflow-y:auto\">");
 		$iMaxIndex= 10; // Display maximum 10 lines for the preview
 		$index = 1;

@@ -499,7 +499,7 @@ function ProcessCSVData(WebPage $oPage, UserContext $oContext, $bSimulate = true
 	$oPage->add('<input type="checkbox" checked id="show_modified" onClick="ToggleRows(\'row_modified\')"/>&nbsp;<img src="../images/modified.png">&nbsp;'.sprintf($aDisplayFilters['modified'], $iModified).'&nbsp&nbsp;');
 	$oPage->add('<input type="checkbox" checked id="show_created" onClick="ToggleRows(\'row_added\')"/>&nbsp;<img src="../images/added.png">&nbsp;'.sprintf($aDisplayFilters['added'], $iCreated).'&nbsp&nbsp;');
 	$oPage->add('<input type="checkbox" checked id="show_errors" onClick="ToggleRows(\'row_error\')"/>&nbsp;<img src="../images/error.png">&nbsp;'.sprintf($aDisplayFilters['errors'], $iErrors).'</p>');
-	$oPage->add('<div style="overflow-y:auto">');
+	$oPage->add('<div style="overflow-y:auto" class="white">');
 	$oPage->add($sHtml);
 	$oPage->add('</div> <!-- end of preview -->');
 	$oPage->add('<p><input type="button" value="'.Dict::S('UI:Button:Back').'" onClick="CSVGoBack()"/>&nbsp;&nbsp;');
@@ -606,7 +606,7 @@ function SelectMapping(WebPage $oPage)
 	$oPage->add(GetClassesSelect('class_name', $sClassName, 300, UR_ACTION_BULK_MODIFY));
 	$oPage->add('</td><td style="text-align:right"><input type="checkbox" name="advanced" value="1" '.IsChecked($bAdvanced, 1).' onChange="DoMapping()">&nbsp;'.Dict::S('UI:CSVImport:AdvancedMode').'</td></tr></table>');
 	$oPage->add('<div style="padding:1em;display:none" id="advanced_help" style="display:none">'.Dict::S('UI:CSVImport:AdvancedMode+').'</div>');
-	$oPage->add('<div id="mapping"><p><br/>'.Dict::S('UI:CSVImport:SelectAClassFirst').'<br/></p></div>');
+	$oPage->add('<div id="mapping" class="white"><p style="text-align:center;width:100%;font-size:1.5em;padding:1em;">'.Dict::S('UI:CSVImport:SelectAClassFirst').'<br/></p></div>');
 	$oPage->add('<input type="hidden" name="step" value="4"/>');
 	$oPage->add('<input type="hidden" name="separator" value="'.htmlentities($sSeparator, ENT_QUOTES, 'UTF-8').'"/>');
 	$oPage->add('<input type="hidden" name="text_qualifier" value="'.htmlentities($sTextQualifier, ENT_QUOTES, 'UTF-8').'"/>');
