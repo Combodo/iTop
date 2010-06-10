@@ -71,7 +71,7 @@ class menuNode extends DBObject
 		MetaModel::Init_AddAttribute(new AttributeInteger("user_id", array("allowed_values"=>null, "sql"=>"user_id", "default_value" => 0, "is_null_allowed"=>false, "depends_on"=>array())));
 
 		MetaModel::Init_SetZListItems('details', array('parent_id', 'name', 'label', 'hyperlink', 'template', 'rank', 'type')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('parent_id', 'name', 'label', 'rank', 'type')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('list', array('parent_id', 'label', 'rank', 'type')); // Attributes to be displayed for a list
 	}
 	
 	public function IsVisible()

@@ -271,6 +271,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$iListId++;
 		
 		// Initialize and check the parameters
+		$bViewLink = isset($aExtraParams['view_link']) ? $aExtraParams['view_link'] : true;
 		$sLinkageAttribute = isset($aExtraParams['link_attr']) ? $aExtraParams['link_attr'] : '';
 		$iLinkedObjectId = isset($aExtraParams['object_id']) ? $aExtraParams['object_id'] : 0;
 		$sTargetAttr = isset($aExtraParams['target_attr']) ? $aExtraParams['target_attr'] : '';
@@ -340,7 +341,10 @@ abstract class cmdbAbstractObject extends CMDBObject
 				$aAttribs['form::select'] = array('label' => "", 'description' => '');
 			}
 		}
-		$aAttribs['key'] = array('label' => '', 'description' => Dict::S('UI:ClickToDisplay+'));
+		if ($bViewLink)
+		{
+			$aAttribs['key'] = array('label' => MetaModel::GetName($sClassName), 'description' => '');
+		}
 		foreach($aList as $sAttCode)
 		{
 			$aAttribs[$sAttCode] = array('label' => MetaModel::GetLabel($sClassName, $sAttCode), 'description' => MetaModel::GetDescription($sClassName, $sAttCode));
@@ -359,7 +363,10 @@ abstract class cmdbAbstractObject extends CMDBObject
 		while (($oObj = $oSet->Fetch()) && ($iMaxObjects != 0))
 		{
 			$aRow = array();
-			$aRow['key'] = $oObj->GetKey();
+			if ($bViewLink)
+			{
+				$aRow['key'] = $oObj->GetHyperLink();
+			}
 			if ($bSelectMode)
 			{
 				if ($bSingleSelectMode)
@@ -369,9 +376,8 @@ abstract class cmdbAbstractObject extends CMDBObject
 				else
 				{
 				$aRow['form::select'] = "<input type=\"checkBox\" class=\"selectList{$iListId}\" name=\"selectObject[]\" value=\"".$oObj->GetKey()."\"></input>";
+				}
 			}
-			}
-			$aRow['key'] = $oObj->GetKey();
 			foreach($aList as $sAttCode)
 			{
 				$aRow[$sAttCode] = $oObj->GetAsHTML($sAttCode);
@@ -411,7 +417,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 			$sHtml .= '</td></tr>';
 		}
 		$sHtml .= "<tr><td $sColspan>";
-		$sHtml .= $oPage->GetTable($aAttribs, $aValues, array('class'=>$sClassName, 'filter'=>$oSet->GetFilter()->serialize(), 'preview' => true));
+		$sHtml .= $oPage->GetTable($aAttribs, $aValues);
 		$sHtml .= '</td></tr>';
 		$sHtml .= '</table>';
 		return $sHtml;
@@ -424,6 +430,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$aList = array();
 		
 		// Initialize and check the parameters
+		$bViewLink = isset($aExtraParams['view_link']) ? $aExtraParams['view_link'] : true;
 		$bDisplayMenu = isset($aExtraParams['menu']) ? $aExtraParams['menu'] == true : true;
 		// Check if there is a list of aliases to limit the display to...
 		$aDisplayAliases = isset($aExtraParams['display_aliases']) ? explode(',', $aExtraParams['display_aliases']) : array();
@@ -444,7 +451,10 @@ abstract class cmdbAbstractObject extends CMDBObject
 		foreach($aAuthorizedClasses as $sAlias => $sClassName) // TO DO: check if the user has enough rights to view the classes of the list...
 		{
 			$aList[$sClassName] = MetaModel::GetZListItems($sClassName, 'list');
-			$aAttribs['key_'.$sAlias] = array('label' => '', 'description' => Dict::S('UI:ClickToDisplay+'));
+			if ($bViewLink)
+			{
+				$aAttribs['key_'.$sAlias] = array('label' => MetaModel::GetName($sClassName), 'description' => '');
+			}
 			foreach($aList[$sClassName] as $sAttCode)
 			{
 				$aAttribs[$sAttCode.'_'.$sAlias] = array('label' => MetaModel::GetLabel($sClassName, $sAttCode), 'description' => MetaModel::GetDescription($sClassName, $sAttCode));
@@ -466,7 +476,10 @@ abstract class cmdbAbstractObject extends CMDBObject
 			$aRow = array();
 			foreach($aAuthorizedClasses as $sAlias => $sClassName) // TO DO: check if the user has enough rights to view the classes of the list...
 			{
-				$aRow['key_'.$sAlias] = $aObjects[$sAlias]->GetKey();
+				if ($bViewLink)
+				{
+					$aRow['key_'.$sAlias] = $aObjects[$sAlias]->GetHyperLink();
+				}
 				foreach($aList[$sClassName] as $sAttCode)
 				{
 					$aRow[$sAttCode.'_'.$sAlias] = $aObjects[$sAlias]->GetAsHTML($sAttCode);
@@ -506,7 +519,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 			$sHtml .= '</td></tr>';
 		}
 		$sHtml .= "<tr><td $sColspan>";
-		$sHtml .= $oPage->GetTable($aAttribs, $aValues, array('class'=>$aAuthorizedClasses, 'filter'=>$oSet->GetFilter()->serialize(), 'preview' => true));
+		$sHtml .= $oPage->GetTable($aAttribs, $aValues);
 		$sHtml .= '</td></tr>';
 		$sHtml .= '</table>';
 		return $sHtml;

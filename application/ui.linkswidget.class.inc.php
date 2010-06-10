@@ -227,6 +227,7 @@ class UILinksWidget
 		$aExtraParams['target_attr'] = $sExtKeyToRemote;
 		$aExtraParams['menu'] = false;
 		$aExtraParams['select'] = false;
+		$aExtraParams['view_link'] = false;
 		
 		cmdbAbstractObject::DisplaySet($oPage, $oSet, $aExtraParams);
 	}

@@ -55,7 +55,7 @@ class AuditRule extends cmdbAbstractObject
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('category_id', 'name', 'description', 'query', 'valid_flag')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('category_id', 'name', 'description', 'valid_flag')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('list', array('category_id', 'description', 'valid_flag')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('category_id', 'name', 'description', 'valid_flag')); // Criteria of the std search form
 		MetaModel::Init_SetZListItems('advanced_search', array('category_id', 'name', 'description', 'valid_flag', 'query')); // Criteria of the advanced search form

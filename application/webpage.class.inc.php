@@ -111,6 +111,13 @@ class WebPage
         return "<p>$s_html</p>\n";
     }
     
+	/**
+	* Adds a tabular content to the web page
+	* @param Hash $aConfig Configuration of the table: hash array of 'column_id' => 'Column Label'
+	* @param Hash $aData Hash array. Data to display in the table: each row is made of 'column_id' => Data. A column 'pkey' is expected for each row
+	* @param Hash $aParams Hash array. Extra parameters for the table.
+	* @return void
+	*/	  
 	public function table($aConfig, $aData, $aParams = array())
 	{
 		$this->add($this->GetTable($aConfig, $aData, $aParams));
@@ -135,39 +142,13 @@ class WebPage
 		$sHtml .= "<tbody>\n";
 		foreach($aData as $aRow)
 		{
-			if (false) //(isset($aParams['preview']) && $aParams['preview'])
-			{
-				$sHtml .= "<tr id=\"Row_".$iNbTables."_".$aRow['key']."\" onClick=\"DisplayPreview(".$iNbTables.",".$aRow['key'].",'".$aParams['class']."')\">\n";
-			}
-			else if (isset($aRow['key']))
-			{
-				$sHtml .= "<tr onDblClick=\"DisplayDetails(".$aRow['key'].",'".$aParams['class']."')\">\n";
-			}
-			else
-			{
-				$sHtml .= "<tr>\n";
-			}
+			$sHtml .= "<tr>\n";
 			foreach($aConfig as $sName=>$aAttribs)
 			{
 				$aMatches = array();
 				$sClass = isset($aAttribs['class']) ? 'class="'.$aAttribs['class'].'"' : '';
-				if (preg_match('/^key_(.+)$/', $sName, $aMatches) > 0)
-				{
-					$sAlias = $aMatches[1];
-					$sClass = $aParams['class'][$sAlias];
-					$sUIPage = cmdbAbstractObject::ComputeUIPage($sClass);
-					$sHtml .= "<td><a class=\"no-arrow\" href=\"$sUIPage?operation=details&id=".$aRow[$sName]."&class=".$sClass."&".$oAppContext->GetForLink()."\"><img src=\"../images/zoom.gif\" title=\"".Dict::S('UI:Details+')."\" border=\"0\"></a></td>\n";
-				}
-				else if ($sName == 'key')
-				{
-					$sUIPage = cmdbAbstractObject::ComputeUIPage($aParams['class']);
-					$sHtml .= "<td><a class=\"no-arrow\" href=\"$sUIPage?operation=details&id=".$aRow['key']."&class=".$aParams['class']."&".$oAppContext->GetForLink()."\"><img src=\"../images/zoom.gif\" title=\"".Dict::S('UI:Details+')."\" border=\"0\"></a></td>\n";
-				}
-				else
-				{
-					$sValue = ($aRow[$sName] === '') ? '&nbsp;' : $aRow[$sName];
-					$sHtml .= "<td $sClass>$sValue</td>\n";
-				}
+				$sValue = ($aRow[$sName] === '') ? '&nbsp;' : $aRow[$sName];
+				$sHtml .= "<td $sClass>$sValue</td>\n";
 			}
 			$sHtml .= "</tr>\n";
 		}

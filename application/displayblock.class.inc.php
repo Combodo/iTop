@@ -332,7 +332,11 @@ class DisplayBlock
 					$aData[] = array ( 'group' => $sLabels[$sValue],
 									  'value' => "<a href=\"./UI.php?operation=search&dosearch=1&$sParams&filter=$sFilter&$sGroupByField=".urlencode($sValue)."\">$iCount</a>"); // TO DO: add the context information
 				}
-				$sHtml .= $oPage->GetTable(array('group' => array('label' => MetaModel::GetLabel($this->m_oFilter->GetClass(), $sGroupByField), 'description' => ''), 'value' => array('label'=> Dict::S('UI:GroupBy:Count'), 'description' => Dict::S('UI:GroupBy:Count+'))), $aData);
+				$aAttribs =array(
+					'group' => array('label' => MetaModel::GetLabel($this->m_oFilter->GetClass(), $sGroupByField), 'description' => ''),
+					'value' => array('label'=> Dict::S('UI:GroupBy:Count'), 'description' => Dict::S('UI:GroupBy:Count+'))
+				);
+				$sHtml .= $oPage->GetTable($aAttribs, $aData);
 			}
 			else
 			{

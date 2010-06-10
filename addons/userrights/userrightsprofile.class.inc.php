@@ -207,7 +207,7 @@ class URP_Profiles extends UserRightsBaseClass
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('name', 'description')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('name', 'description')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('list', array('description')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
 		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
@@ -313,7 +313,7 @@ class URP_Dimensions extends UserRightsBaseClass
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('name', 'description', 'type')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('name', 'description')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('list', array('description')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
 		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
@@ -431,7 +431,7 @@ class URP_UserProfile extends UserRightsBaseClass
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('userid', 'profileid', 'reason')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('userid', 'profileid', 'reason')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('list', array('profileid', 'reason')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('userid', 'profileid')); // Criteria of the std search form
 		MetaModel::Init_SetZListItems('advanced_search', array('userid', 'profileid')); // Criteria of the advanced search form
@@ -474,7 +474,7 @@ class URP_ProfileProjection extends UserRightsBaseClass
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('dimensionid', 'profileid', 'value', 'attribute')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('dimensionid', 'profileid', 'value', 'attribute')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('list', array('profileid', 'value', 'attribute')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('dimensionid', 'profileid')); // Criteria of the std search form
 		MetaModel::Init_SetZListItems('advanced_search', array('dimensionid', 'profileid')); // Criteria of the advanced search form
@@ -547,7 +547,7 @@ class URP_ClassProjection extends UserRightsBaseClass
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('dimensionid', 'class', 'value', 'attribute')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('dimensionid', 'class', 'value', 'attribute')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('list', array('class', 'value', 'attribute')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('dimensionid', 'class')); // Criteria of the std search form
 		MetaModel::Init_SetZListItems('advanced_search', array('dimensionid', 'class')); // Criteria of the advanced search form
@@ -625,7 +625,7 @@ class URP_ActionGrant extends UserRightsBaseClass
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('profileid', 'class', 'permission', 'action')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('profileid', 'class', 'permission', 'action')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('list', array('class', 'permission', 'action')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('profileid', 'class', 'permission', 'action')); // Criteria of the std search form
 		MetaModel::Init_SetZListItems('advanced_search', array('profileid', 'class', 'permission', 'action')); // Criteria of the advanced search form
@@ -663,7 +663,7 @@ class URP_StimulusGrant extends UserRightsBaseClass
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('profileid', 'class', 'permission', 'stimulus')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('profileid', 'class', 'permission', 'stimulus')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('list', array('class', 'permission', 'stimulus')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('profileid', 'class', 'permission', 'stimulus')); // Criteria of the std search form
 		MetaModel::Init_SetZListItems('advanced_search', array('profileid', 'class', 'permission', 'stimulus')); // Criteria of the advanced search form
@@ -696,7 +696,7 @@ class URP_AttributeGrant extends UserRightsBaseClass
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('actiongrantid', 'attcode')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('actiongrantid', 'attcode')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('list', array('attcode')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('actiongrantid', 'attcode')); // Criteria of the std search form
 		MetaModel::Init_SetZListItems('advanced_search', array('actiongrantid', 'attcode')); // Criteria of the advanced search form

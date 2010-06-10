@@ -410,7 +410,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:UndefinedObject' => 'non défini',
 	'UI:Document:OpenInNewWindow:Download' => 'Ouvrir dans un nouvelle fenêtre: %1$s, Télécharger: %2$s',
 	'UI:SelectAllToggle+' => 'Tout Sélectionner / Tout Désélectionner',
-	'UI:ClickToDisplay+' => 'Cliquer pour afficher',
 	'UI:TruncatedResults' => '%1$d objets affichés sur %2$d',
 	'UI:DisplayAll' => 'Tout afficher',
 	'UI:CountOfResults' => '%1$d objet(s)',

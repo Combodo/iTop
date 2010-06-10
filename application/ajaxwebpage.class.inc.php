@@ -80,69 +80,6 @@ class ajax_page extends WebPage
     {
 	}
 	
-    /**
-     * Adds a tabular content to the web page
-     * @param Hash $aConfig Configuration of the table: hash array of 'column_id' => 'Column Label'
-     * @param Hash $aData Hash array. Data to display in the table: each row is made of 'column_id' => Data. A column 'pkey' is expected for each row
-     * @param Hash $aParams Hash array. Extra parameters for the table. Entry 'class' holds the class of the objects listed in the table
-     * @return void
-     */	  
-	public function table($aConfig, $aData, $aParams = array())
-	{
-		// WARNING WARNING WARNING
-		// This whole function is actually a copy paste from iTopWebPage::table
-		$oAppContext = new ApplicationContext();
-		
-		static $iNbTables = 0;
-		$iNbTables++;
-		$sHtml = "";
-		$sHtml .= "<table class=\"listResults\">\n";
-		$sHtml .= "<thead>\n";
-		$sHtml .= "<tr>\n";
-		foreach($aConfig as $sName=>$aDef)
-		{
-			$sHtml .= "<th title=\"".$aDef['description']."\">".$aDef['label']."</th>\n";
-		}
-		$sHtml .= "</tr>\n";
-		$sHtml .= "</thead>\n";
-		$sHtml .= "<tbody>\n";
-		foreach($aData as $aRow)
-		{
-			if (false) //(isset($aParams['preview']) && $aParams['preview'])
-			{
-				$sHtml .= "<tr id=\"Row_".$iNbTables."_".$aRow['key']."\" onClick=\"DisplayPreview(".$iNbTables.",".$aRow['key'].",'".$aParams['class']."')\">\n";
-			}
-			else if (isset($aRow['key']))
-			{
-				$sHtml .= "<tr onDblClick=\"DisplayDetails(".$aRow['key'].",'".$aParams['class']."')\">\n";
-			}
-			else
-			{
-				$sHtml .= "<tr>\n";
-			}
-			foreach($aConfig as $sName=>$aVoid)
-			{
-				if ($sName != 'key')
-				{
-					$sValue = empty($aRow[$sName]) ? '&nbsp;' : $aRow[$sName];
-					$sHtml .= "<td>$sValue</td>\n";
-				}
-				else
-				{
-					$sUIPage = cmdbAbstractObject::ComputeUIPage($aParams['class']);
-					$sHtml .= "<td><a class=\"no-arrow\" href=\"$sUIPage?operation=details&id=".$aRow['key']."&class=".$aParams['class']."&".$oAppContext->GetForLink()."\"><img src=\"../images/zoom.gif\" title=\"".Dict::S('UI:Details+')."\" border=\"0\"></a></td>\n";
-				}
-			}
-			$sHtml .= "</tr>\n";
-		}
-		$sHtml .= "</tbody>\n";
-		$sHtml .= "</table>\n";
-		if (isset($aParams['preview']) && $aParams['preview'])
-		{
-			$sHtml .= "<div class=\"PreviewPane\" id=\"PreviewPane_".$iNbTables."\" style=\"height:100px;border:1px solid black;margin-top:2px;padding:3px;text-align:left;display:none;\">Preview Pane</div>";
-		}
-		$this->add($sHtml);	
-	}
 	/**
 	 * Adds a script to be executed when the DOM is ready (typical JQuery use)
 	 * NOT implemented in this version of the class.

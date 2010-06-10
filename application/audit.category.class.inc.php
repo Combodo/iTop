@@ -51,7 +51,7 @@ class AuditCategory extends cmdbAbstractObject
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('name', 'description', 'definition_set')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('name', 'description', )); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('list', array('description', )); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'description')); // Criteria of the std search form
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'description', 'definition_set')); // Criteria of the advanced search form
