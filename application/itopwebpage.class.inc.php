@@ -116,7 +116,7 @@ class iTopWebPage extends NiceWebPage
 	$("div[id^=tabbedContent] > ul").tabs( 1, { fxFade: true, fxSpeed: 'fast' } ); // tabs
 	$("table.listResults").tableHover(); // hover tables
 	$(".listResults").tablesorter( { headers: { 0:{sorter: false }}, widgets: ['zebra']} ); // sortable and zebra tables
-	$(".date-pick").datePicker( {clickInput: false, createButton: true, startDate: '2000-01-01'} ); // Date picker
+	$(".date-pick").datePicker( {clickInput: false, createButton: true, startDate: '1900-01-01'} ); // Date picker
 	$('#ModalDlg').jqm({ajax: '@href', trigger: 'a.jqmTrigger', overlay:70, modal:true, toTop:true}); // jqModal Window
 	
 	//$('.display_block').draggable(); // make the blocks draggable
