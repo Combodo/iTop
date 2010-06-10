@@ -69,6 +69,27 @@ class iTopWebPage extends NiceWebPage
 		$this->add_linked_stylesheet("../css/date.picker.css");
 		$this->add_ready_script(
 <<<EOF
+	//add new widget called TruncatedList to properly display truncated lists when they are sorted
+	$.tablesorter.addWidget({ 
+	    // give the widget a id 
+	    id: "truncatedList", 
+	    // format is called when the on init and when a sorting has finished 
+	    format: function(table)
+	    { 
+			// Check if there is a "truncated" line
+			this.truncatedList = false;  
+			if ($("tr td.truncated",table).length > 0)
+			{
+				this.truncatedList = true;
+			}
+			if (this.truncatedList)
+			{
+				$("tr td",table).removeClass('truncated');
+				$("tr:last td",table).addClass('truncated');
+			}
+	    } 
+	});
+	
 	// Vertical splitter. The min/max/starting sizes for the left (A) pane
 	// are set here. All values are in pixels.
 	$("#MySplitter").splitter({
@@ -115,7 +136,7 @@ class iTopWebPage extends NiceWebPage
 	
 	$("div[id^=tabbedContent] > ul").tabs( 1, { fxFade: true, fxSpeed: 'fast' } ); // tabs
 	$("table.listResults").tableHover(); // hover tables
-	$(".listResults").tablesorter( { headers: { 0:{sorter: false }}, widgets: ['zebra']} ); // sortable and zebra tables
+	$(".listResults").tablesorter( { headers: { 0:{sorter: false }}, widgets: ['zebra', 'truncatedList']} ); // sortable and zebra tables
 	$(".date-pick").datePicker( {clickInput: false, createButton: true, startDate: '1900-01-01'} ); // Date picker
 	$('#ModalDlg').jqm({ajax: '@href', trigger: 'a.jqmTrigger', overlay:70, modal:true, toTop:true}); // jqModal Window
 	
