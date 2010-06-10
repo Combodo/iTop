@@ -75,6 +75,7 @@ abstract class ValueSetDefinition
 				}
 			}
 		}
+		asort($aRet);
 		return $aRet;
 	}
 
@@ -223,7 +224,7 @@ class ValueSetEnum extends ValueSetDefinition
 		{
 			$aValues = $this->m_values;
 		}
-		else
+		elseif (is_string($this->m_values) && strlen($this->m_values) > 0)
 		{
 			$aValues = array();
 			foreach (explode(",", $this->m_values) as $sVal)
@@ -232,6 +233,10 @@ class ValueSetEnum extends ValueSetDefinition
 				$sKey = $sVal; 
 				$aValues[$sKey] = $sVal;
 			}
+		}
+		else
+		{
+			$aValues = array();
 		}
 		$this->m_aValues = $aValues;
 		return true;
