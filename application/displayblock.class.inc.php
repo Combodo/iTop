@@ -543,7 +543,7 @@ class DisplayBlock
 			{
 				while($oObj = $this->m_oSet->Fetch())
 				{
-					$sHtml .= $oObj->GetBareDetails($oPage);
+					$sHtml .= $oObj->GetBareProperties($oPage);
 				}
 			}
 			break;

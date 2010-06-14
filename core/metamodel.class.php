@@ -338,7 +338,7 @@ abstract class MetaModel
 	final static public function GetDisplayTemplate($sClass)
 	{
 		self::_check_subclass($sClass);	
-		return self::$m_aClassParams[$sClass]["display_template"];
+		return array_key_exists("display_template", self::$m_aClassParams[$sClass]) ? self::$m_aClassParams[$sClass]["display_template"]: '';
 	}
 	final static public function GetAttributeOrigin($sClass, $sAttCode)
 	{

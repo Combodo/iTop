@@ -119,11 +119,12 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$oBlock->Display($oPage, -1);
 
 		$oPage->add("</div>\n");
+		$oPage->add("<img src=\"".$this->GetIcon()."\" style=\"margin-top:-30px; margin-right:10px; float:right\">\n");
 	}
 
-	function DisplayBareDetails(WebPage $oPage)
+	function DisplayBareProperties(WebPage $oPage)
 	{
-		$oPage->add($this->GetBareDetails($oPage));		
+		$oPage->add($this->GetBareProperties($oPage));		
 	}
 
 	function DisplayBareRelations(WebPage $oPage)
@@ -133,7 +134,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$oPage->SetCurrentTabContainer('Related Objects');
 		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode=>$oAttDef)
 		{
-			if ((get_class($oAttDef) == 'AttributeLinkedSetIndirect') || (get_class($oAttDef) == 'AttributeLinkedSet'))
+			if ($oAttDef->IsLinkset())
 			{
 				$oPage->SetCurrentTab($oAttDef->GetLabel());
 				$oPage->p($oAttDef->GetDescription());
@@ -142,7 +143,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 				{
 					$sTargetClass = $oAttDef->GetLinkedClass();
 					$oFilter = new DBObjectSearch($sTargetClass);
-					$oFilter->AddCondition($oAttDef->GetExtKeyToMe(), $this->GetKey()); // @@@ condition has same name as field ??
+					$oFilter->AddCondition($oAttDef->GetExtKeyToMe(), $this->GetKey());
 
 					$oBlock = new DisplayBlock($oFilter, 'list', false);
 					$oBlock->Display($oPage, 0);
@@ -178,19 +179,32 @@ abstract class cmdbAbstractObject extends CMDBObject
 		return $sDisplayName;
 	}
 
-	function GetBareDetails(WebPage $oPage)
+	function GetBareProperties(WebPage $oPage)
 	{
 		$sHtml = '';
 		$oAppContext = new ApplicationContext();	
 		$sStateAttCode = MetaModel::GetStateAttributeCode(get_class($this));
 		$aDetails = array();
 		$sClass = get_class($this);
-		$aList = MetaModel::GetZListItems($sClass, 'details');
+		$aDetailsList = MetaModel::GetZListItems($sClass, 'details');
+		$aFullList = MetaModel::ListAttributeDefs($sClass);
+		$aList = $aDetailsList;
+		// Compute the list of properties to display, first the attributes in the 'details' list, then 
+		// all the remaining attributes that are not external fields
+		foreach($aFullList as $sAttCode => $void)
+		{
+			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+			if (!in_array($sAttCode, $aDetailsList) && (!$oAttDef->IsExternalField()))
+			{
+				$aList[] = $sAttCode;
+			}
+		}
 
 		foreach($aList as $sAttCode)
 		{
 			$iFlags = $this->GetAttributeFlags($sAttCode);
-			if ( ($iFlags & OPT_ATT_HIDDEN) == 0)
+			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+			if ( (!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0) )
 			{
 				// The field is visible in the current state of the object
 				if ($sStateAttCode == $sAttCode)
@@ -240,7 +254,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 			// Object's details
 			// template not found display the object using the *old style*
 			$this->DisplayBareHeader($oPage);
-			$this->DisplayBareDetails($oPage);
+			$this->DisplayBareProperties($oPage);
 			$this->DisplayBareRelations($oPage);
 		}
 	}
@@ -987,46 +1001,104 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$aDetails = array();
 		$aFieldsMap = array();
 		$oPage->add("<form id=\"form_{$iFormId}\" enctype=\"multipart/form-data\" method=\"post\" onSubmit=\"return CheckFields('form_{$iFormId}', true)\">\n");
-		foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode=>$oAttDef)
+
+		$aDetailsList = MetaModel::GetZListItems($sClass, 'details');
+		$aFullList = MetaModel::ListAttributeDefs($sClass);
+		$aList = $aDetailsList;
+		// Compute the list of properties to display, first the attributes in the 'details' list, then 
+		// all the remaining attributes that are not external fields
+		foreach($aFullList as $sAttCode => $void)
 		{
-			if ($oAttDef->IsWritable())
+			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+			if (!in_array($sAttCode, $aDetailsList) && (!$oAttDef->IsExternalField()))
 			{
-				if ($sStateAttCode == $sAttCode)
+				$aList[] = $sAttCode;
+			}
+		}
+
+		foreach($aList as $sAttCode)
+		{
+			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+			$iFlags = $this->GetAttributeFlags($sAttCode);
+			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+			if ( (!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0) )
+			{
+				if ($oAttDef->IsWritable())
 				{
-					// State attribute is always read-only from the UI
-					$sHTMLValue = $this->GetStateLabel();
-					$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $sHTMLValue);
-				}
-				else
-				{
-					$iFlags = $this->GetAttributeFlags($sAttCode);				
-					if ($iFlags & OPT_ATT_HIDDEN)
+					if ($sStateAttCode == $sAttCode)
 					{
-						// Attribute is hidden, do nothing
+						// State attribute is always read-only from the UI
+						$sHTMLValue = $this->GetStateLabel();
+						$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $sHTMLValue);
 					}
 					else
 					{
-						if ($iFlags & OPT_ATT_READONLY)
+						$iFlags = $this->GetAttributeFlags($sAttCode);				
+						if ($iFlags & OPT_ATT_HIDDEN)
 						{
-							// Attribute is read-only
-							$sHTMLValue = $this->GetAsHTML($sAttCode);
+							// Attribute is hidden, do nothing
 						}
 						else
 						{
-							$sValue = $this->Get($sAttCode);
-							$sDisplayValue = $this->GetEditValue($sAttCode);
-							$aArgs = array('this' => $this);
-							$sInputId = $iFormId.'_'.$sAttCode;
-							$sHTMLValue = "<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs);
-							$aFieldsMap[$sAttCode] = $sInputId;
-							
+							if ($iFlags & OPT_ATT_READONLY)
+							{
+								// Attribute is read-only
+								$sHTMLValue = $this->GetAsHTML($sAttCode);
+							}
+							else
+							{
+								$sValue = $this->Get($sAttCode);
+								$sDisplayValue = $this->GetEditValue($sAttCode);
+								$aArgs = array('this' => $this);
+								$sInputId = $iFormId.'_'.$sAttCode;
+								$sHTMLValue = "<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
+								$aFieldsMap[$sAttCode] = $sInputId;
+								
+							}
+							$aDetails[] = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>', 'value' => $sHTMLValue);
 						}
-						$aDetails[] = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>', 'value' => $sHTMLValue);
 					}
+				}
+				else
+				{
+					$aDetails[] = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>', 'value' => $this->GetAsHTML($sAttCode));			
 				}
 			}
 		}
 		$oPage->details($aDetails);
+		// Now display the relations, one tab per relation
+		$oPage->AddTabContainer('Related Objects');
+		$oPage->SetCurrentTabContainer('Related Objects');
+		foreach($aList as $sAttCode)
+		{
+			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+			if ($oAttDef->IsLinkset())
+			{
+				$oPage->SetCurrentTab($oAttDef->GetLabel());
+				$oPage->p($oAttDef->GetDescription());
+				
+				if (get_class($oAttDef) == 'AttributeLinkedSet')
+				{
+					$sTargetClass = $oAttDef->GetLinkedClass();
+					$oFilter = new DBObjectSearch($sTargetClass);
+					$oFilter->AddCondition($oAttDef->GetExtKeyToMe(), $this->GetKey());
+
+					$oBlock = new DisplayBlock($oFilter, 'list', false);
+					$oBlock->Display($oPage, 0);
+				}
+				else // get_class($oAttDef) == 'AttributeLinkedSetIndirect'
+				{
+					$sValue = $this->Get($sAttCode);
+					$sDisplayValue = $this->GetEditValue($sAttCode);
+					$aArgs = array('this' => $this);
+					$sInputId = $iFormId.'_'.$sAttCode;
+					$sHTMLValue = "<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
+					$aFieldsMap[$sAttCode] = $sInputId;
+					$oPage->add($sHTMLValue);
+				}
+			}
+		}
+		$oPage->SetCurrentTab('');
 		$oPage->add("<input type=\"hidden\" name=\"id\" value=\"$iKey\">\n");
 		$oPage->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
 		$oPage->add("<input type=\"hidden\" name=\"operation\" value=\"apply_modify\">\n");
@@ -1082,32 +1154,88 @@ EOF
 			$sTargetState = $oObjectToClone->GetState();
 		}
 
-		//foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode=>$oAttDef)
-		foreach(MetaModel::GetZListItems($sClass, 'details') as $sAttCode)
+		$aDetailsList = MetaModel::GetZListItems($sClass, 'details');
+		$aFullList = MetaModel::ListAttributeDefs($sClass);
+		$aList = $aDetailsList;
+		// Compute the list of properties to display, first the attributes in the 'details' list, then 
+		// all the remaining attributes that are not external fields
+		foreach($aFullList as $sAttCode => $void)
 		{
 			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-			$iOptions = isset($aStates[$sTargetState]['attribute_list'][$sAttCode]) ? $aStates[$sTargetState]['attribute_list'][$sAttCode] : 0;
-			if ($sStateAttCode == $sAttCode)
+			if (!in_array($sAttCode, $aDetailsList) && (!$oAttDef->IsExternalField()))
 			{
-				// State attribute is always read-only from the UI
-				$sHTMLValue = MetaModel::GetStateLabel($sClass, $sTargetState);
-				$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $sHTMLValue);
+				$aList[] = $sAttCode;
 			}
-			else if ((!$oAttDef->IsExternalField()) && ($oAttDef->IsWritable()) && ($iOptions != OPT_ATT_HIDDEN) && ($iOptions != OPT_ATT_READONLY) )
+		}
+		foreach($aList as $sAttCode)
+		{
+			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+			$iFlags = isset($aStates[$sTargetState]['attribute_list'][$sAttCode]) ? $aStates[$sTargetState]['attribute_list'][$sAttCode] : 0;
+
+			if ( (!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0) )
 			{
+				if ($oAttDef->IsWritable())
+				{
+					if ($sStateAttCode == $sAttCode)
+					{
+						// State attribute is always read-only from the UI
+						$sHTMLValue = MetaModel::GetStateLabel($sClass, $sTargetState);
+						$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $sHTMLValue);
+					}
+					else
+					{
+						if ($iFlags & OPT_ATT_HIDDEN)
+						{
+							// Attribute is hidden, do nothing
+						}
+						else
+						{
+							if ($iFlags & OPT_ATT_READONLY)
+							{
+								// Attribute is read-only
+								$sHTMLValue = ($oObjectToClone == null) ? '' : $oObjectToClone->GetAsHTML($sAttCode);
+							}
+							else
+							{
+								$sFieldId = 'att_'.$iFieldIndex;
+								$sValue = ($oObjectToClone == null) ? '' : $oObjectToClone->Get($sAttCode);
+								$sDisplayValue = ($oObjectToClone == null) ? '' : $oObjectToClone->GetEditValue($sAttCode);
+								$sHTMLValue = "<div id=\"field_{$sFieldId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sFieldId, '', $iFlags, $aArgs)."</div>";
+								$aFieldsMap[$sFieldId] = $sAttCode;
+								$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $sHTMLValue);
+								$iFieldIndex++;
+							}
+						}
+					}
+				}
+			}
+		}		
+		$oPage->details($aDetails);
+		// Now display the relations, one tab per relation
+		$oPage->AddTabContainer('Related Objects');
+		$oPage->SetCurrentTabContainer('Related Objects');
+		foreach($aList as $sAttCode)
+		{
+			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+			if ($oAttDef->IsLinkset())
+			{
+				$oPage->SetCurrentTab($oAttDef->GetLabel());
+				$oPage->p($oAttDef->GetDescription());
+				
+				$iFlags = isset($aStates[$sTargetState]['attribute_list'][$sAttCode]) ? $aStates[$sTargetState]['attribute_list'][$sAttCode] : 0;
 				$sFieldId = 'att_'.$iFieldIndex;
 				$sValue = ($oObjectToClone == null) ? '' : $oObjectToClone->Get($sAttCode);
 				$sDisplayValue = ($oObjectToClone == null) ? '' : $oObjectToClone->GetEditValue($sAttCode);
-				$iOptions = isset($aStates[$sTargetState]['attribute_list'][$sAttCode]) ? $aStates[$sTargetState]['attribute_list'][$sAttCode] : 0;
-				
-				$sHTMLValue = "<div id=\"field_{$sFieldId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sFieldId, '', $iOptions, $aArgs)."</div>";
+				$iFlags = isset($aStates[$sTargetState]['attribute_list'][$sAttCode]) ? $aStates[$sTargetState]['attribute_list'][$sAttCode] : 0;	
+				$sHTMLValue = "<div id=\"field_{$sFieldId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sFieldId, '', $iFlags, $aArgs)."</div>";
 				$aFieldsMap[$sFieldId] = $sAttCode;
 				$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $sHTMLValue);
 				$iFieldIndex++;
+				$oPage->add($sHTMLValue);
 			}
 		}
-		
-		$oPage->details($aDetails);
+		$oPage->SetCurrentTab('');
+
 		if ($oObjectToClone != null)
 		{
 			$oPage->add("<input type=\"hidden\" name=\"clone_id\" value=\"".$oObjectToClone->GetKey()."\">\n");

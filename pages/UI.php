@@ -616,6 +616,7 @@ try
 				$oP->add("<div class=\"page_header\">\n");
 				$oP->add("<h1>".Dict::Format('UI:ModificationTitle_Class_Object', $sClassLabel, $oObj->GetName())."</h1>\n");
 				$oP->add("</div>\n");
+				$oP->add("<img src=\"".$oObj->GetIcon()."\" style=\"margin-top:-30px; margin-right:10px; float:right\">\n");
 
 				$oP->add("<div class=\"wizContainer\">\n");
 				$oObj->DisplayModifyForm($oP);
@@ -661,6 +662,7 @@ try
 			$oP->add("<h1>".Dict::Format('UI:CloneTitle_Class_Object', $sClassLabel, $oObj->GetName())."</h1>\n");
 			$oP->add("</div>\n");
 
+			$oP->add("<img src=\"".$oObjToClone->GetIcon()."\" style=\"margin-top:-30px; margin-right:10px; float:right\">\n");
 			$oP->add("<div class=\"wizContainer\">\n");
 			cmdbAbstractObject::DisplayCreationForm($oP, $sClass, $oObjToClone);
 			$oP->add("</div>\n");
@@ -693,6 +695,7 @@ try
 			$oP->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel));
 			$oP->add("<h1>".Dict::Format('UI:CreationTitle_Class', $sClassLabel)."</h1>\n");
 			$oP->add("<div class=\"wizContainer\">\n");
+			$oP->add("<img src=\"".MetaModel::GetClassIcon($sClass)."\" style=\"margin-top:-30px; margin-right:10px; float:right\">\n");
 			cmdbAbstractObject::DisplayCreationForm($oP, $sClass, null /* $oObjToClone */);
 			$oP->add("</div>\n");
 		break;
@@ -1055,7 +1058,7 @@ try
 			$oP->add("<h1>$sActionLabel - <span class=\"hilite\">{$oObj->GetName()}</span></h1>\n");
 			$oP->set_title($sActionLabel);
 			$oP->add("</div>\n");
-			$oObj->DisplayBareDetails($oP);
+			$oObj->DisplayBareProperties($oP);
 			$aTargetState = $aTargetStates[$sTargetState];
 			$aExpectedAttributes = $aTargetState['attribute_list'];
 			$oP->add("<h1>$sActionDetails</h1>\n");

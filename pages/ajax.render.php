@@ -94,7 +94,7 @@ switch($operation)
 	$sJson = utils::ReadParam('json_obj', '', 'post');
 	$oWizardHelper = WizardHelper::FromJSON($sJson);
 	$oObj = $oWizardHelper->GetTargetObject();
-	$oObj->DisplayBareDetails($oPage); 
+	$oObj->DisplayBareProperties($oPage); 
 	break;
 	
 	case 'wizard_helper':
