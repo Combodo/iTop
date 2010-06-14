@@ -685,68 +685,16 @@ try
 			$oP->add_linked_script("../js/wizard.utils.js");
 			$oP->add_linked_script("../js/linkswidget.js");
 			$oP->add_linked_script("../js/jquery.blockUI.js");
-			$oWizard = new UIWizard($oP, $sClass, $sStateCode);
+
 			$oContext = new UserContext();
 			$aArgs = array_merge($oAppContext->GetAsHash(), utils::ReadParam('default', array()));
-			$sStateCode = $oWizard->GetTargetState(); // Will computes the default state if none was supplied
 			$sClassLabel = MetaModel::GetName($sClass);
 
 			$oP->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel));
 			$oP->add("<h1>".Dict::Format('UI:CreationTitle_Class', $sClassLabel)."</h1>\n");
-			if (!empty($sStateCode))
-			{
-				$sStateLabel = MetaModel::GetStateLabel($sClass, $sStateCode);
-			}
-			$aWizardSteps = $oWizard->GetWizardStructure();
-		
-			// Display the structure of the wizard
-			$iStepIndex = 1;
-			$iMaxInputId = 0;
-			$aFieldsMap = array();
-			foreach($aWizardSteps['mandatory'] as $aSteps)
-			{
-				$oP->SetCurrentTab("Step $iStepIndex *");
-				$oWizard->DisplayWizardStep($aSteps, $iStepIndex, $iMaxInputId, $aFieldsMap, false /* no finish button */, $aArgs);
-				$iStepIndex++;
-			}	
-			foreach($aWizardSteps['optional'] as $aSteps)
-			{
-				$oP->SetCurrentTab("Step $iStepIndex");
-				$oWizard->DisplayWizardStep($aSteps, $iStepIndex, $iMaxInputId, $aFieldsMap, true, $aArgs); // true means enable the finish button
-				$iStepIndex++;
-			}
-			$oWizard->DisplayFinalStep($iStepIndex, $aFieldsMap);	
-		
-			$oObj = null;
-			if (!empty($id))
-			{
-				$oObj = $oContext->GetObject($sClass, $id);
-			}
-			if (!is_object($oObj))
-			{
-				// new object or that can't be retrieved (corrupted id or object not allowed to this user)
-				$id = '';
-				$oObj = MetaModel::NewObject($sClass);
-			}
-			$oP->add("<script type=\"text/javascript\">
-			// Fill the map between the fields of the form and the attributes of the object\n");
-		
-			$aNewFieldsMap = array();
-			foreach($aFieldsMap as $id => $sFieldCode)
-			{
-				$aNewFieldsMap[$sFieldCode] = $id;
-			}
-			$iFieldsCount = count($aFieldsMap);
-			$sJsonFieldsMap = json_encode($aNewFieldsMap);
-	
-			$oP->add("
-			// Initializes the object once at the beginning of the page...
-			var oWizardHelper = new WizardHelper('$sClass');
-			oWizardHelper.SetFieldsMap($sJsonFieldsMap);
-			oWizardHelper.SetFieldsCount($iFieldsCount);
-	
-			ActivateStep(1);
-			</script>\n");
+			$oP->add("<div class=\"wizContainer\">\n");
+			cmdbAbstractObject::DisplayCreationForm($oP, $sClass, null /* $oObjToClone */);
+			$oP->add("</div>\n");
 		break;
 	
 		case 'apply_modify':
@@ -954,6 +902,91 @@ try
 
 		break;
 	
+		case 'apply_new':
+		$sClass = utils::ReadPostedParam('class', '');
+		$sClassLabel = MetaModel::GetName($sClass);
+		$sTransactionId = utils::ReadPostedParam('transaction_id', '');
+		if ( empty($sClass) ) // TO DO: check that the class name is valid !
+		{
+			throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'class'));
+		}
+		if (!utils::IsTransactionValid($sTransactionId))
+		{
+			$oP->p("<strong>".Dict::S('UI:Error:ObjectAlreadyCreated')."</strong>\n");
+		}
+		else
+		{
+			$oObj = MetaModel::NewObject($sClass);
+			foreach(MetaModel::GetZListItems($sClass, 'details') as $sAttCode)
+			{
+				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+				if ($oAttDef->IsLinkSet())
+				{
+					// Link set, the data is a set of link objects, encoded in JSON
+					$aAttributes[$sAttCode] = trim(utils::ReadPostedParam("attr_$sAttCode", ''));
+					if (!empty($aAttributes[$sAttCode]))
+					{
+						$oLinkSet = WizardHelper::ParseJsonSet($oObj, $oAttDef->GetLinkedClass(), $oAttDef->GetExtKeyToMe(), $aAttributes[$sAttCode]);
+						$oObj->Set($sAttCode, $oLinkSet);
+						// TO DO: detect a real modification, for now always update !!
+					}
+				}
+				else if (!$oAttDef->IsExternalField())
+				{
+					$rawValue = utils::ReadPostedParam("attr_$sAttCode", null);
+					if (!is_null($rawValue))
+					{
+						$aAttributes[$sAttCode] = trim($rawValue);
+						$previousValue = $oObj->Get($sAttCode);
+						if ($previousValue !== $aAttributes[$sAttCode])
+						{
+							$oObj->Set($sAttCode, $aAttributes[$sAttCode]);
+						}
+					}
+				}
+				else if ($oAttDef->IsWritable())
+				{
+					$iFlags = $oObj->GetAttributeFlags($sAttCode);
+					if ($iFlags & (OPT_ATT_HIDDEN | OPT_ATT_READONLY))
+					{
+						// Non-visible, or read-only attribute, do nothing
+					}
+					else if ($oAttDef->GetEditClass() == 'Document')
+					{
+						// There should be an uploaded file with the named attr_<attCode>
+						$oDocument = utils::ReadPostedDocument('file_'.$sAttCode);
+						if (!$oDocument->IsEmpty())
+						{
+							// A new file has been uploaded
+							$oObj->Set($sAttCode, $oDocument);
+						}
+					}
+				}
+			}
+		}
+		if (is_object($oObj))
+		{
+			$sClass = get_class($oObj);
+			$sClassLabel = MetaModel::GetName($sClass);
+			$oMyChange = MetaModel::NewObject("CMDBChange");
+			$oMyChange->Set("date", time());
+			if (UserRights::GetUser() != UserRights::GetRealUser())
+			{
+				$sUserString = Dict::Format('UI:Archive_User_OnBehalfOf_User', UserRights::GetRealUser(), UserRights::GetUser());
+			}
+			else
+			{
+				$sUserString = UserRights::GetUser();
+			}
+			$oMyChange->Set("userinfo", $sUserString);
+			$iChangeId = $oMyChange->DBInsert();
+			$oObj->DBInsertTracked($oMyChange);
+			$oP->set_title(Dict::S('UI:PageTitle:ObjectCreated'));
+			$oP->add("<h1>".Dict::Format('UI:Title:Object_Of_Class_Created', $oObj->GetName(), $sClassLabel)."</h1>\n");
+			$oObj->DisplayDetails($oP);
+		}
+		break;
+		
 		case 'wizard_apply_new':
 		$sJson = utils::ReadPostedParam('json_obj', '');
 		$oWizardHelper = WizardHelper::FromJSON($sJson);
@@ -1020,14 +1053,14 @@ try
 			$oP->add_linked_script("../js/jquery.blockUI.js");
 			$oP->add("<div class=\"page_header\">\n");
 			$oP->add("<h1>$sActionLabel - <span class=\"hilite\">{$oObj->GetName()}</span></h1>\n");
+			$oP->set_title($sActionLabel);
 			$oP->add("</div>\n");
 			$oObj->DisplayBareDetails($oP);
 			$aTargetState = $aTargetStates[$sTargetState];
 			$aExpectedAttributes = $aTargetState['attribute_list'];
-			$oP->add("<div class=\"wizHeader\">\n");
 			$oP->add("<h1>$sActionDetails</h1>\n");
 			$oP->add("<div class=\"wizContainer\">\n");
-			$oP->add("<form method=\"post\">\n");
+			$oP->add("<form id=\"apply_stimulus\" method=\"post\" onSubmit=\"return CheckFields('apply_stimulus', true);\">\n");
 			$aDetails = array();
 			$iFieldIndex = 0;
 			$aFieldsMap = array();
@@ -1049,16 +1082,16 @@ try
 				}
 			}
 			$oP->details($aDetails);
-			$oP->add("<input type=\"hidden\" name=\"id\" value=\"$id\">\n");
+			$oP->add("<input type=\"hidden\" name=\"id\" value=\"$id\" id=\"id\">\n");
+			$aFieldsMap['id'] = 'id';
 			$oP->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
 			$oP->add("<input type=\"hidden\" name=\"operation\" value=\"apply_stimulus\">\n");
 			$oP->add("<input type=\"hidden\" name=\"stimulus\" value=\"$sStimulus\">\n");
 			$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
 			$oP->add($oAppContext->GetForForm());
-			$oP->add("<button type=\"button\" class=\"action\" onClick=\"goBack()\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
+			$oP->add("<button type=\"button\" class=\"action\" onClick=\"BackToDetails('$sClass', $id)\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
 			$oP->add("<button type=\"submit\" class=\"action\"><span>$sActionLabel</span></button>\n");
 			$oP->add("</form>\n");
-			$oP->add("</div>\n");
 			$oP->add("</div>\n");
 
 			$iFieldsCount = count($aFieldsMap);
@@ -1119,7 +1152,7 @@ EOF
 				$aDetails = array();
 				foreach($aExpectedAttributes as $sAttCode => $iExpectCode)
 				{
-					if (($iExpectCode & OPT_ATT_MUSTCHANGE) || ($oObj->Get($sAttCode) == '') ) 
+					if (($iExpectCode & (OPT_ATT_MUSTCHANGE|OPT_ATT_MUSTPROMPT)) || ($oObj->Get($sAttCode) == '') ) 
 					{
 						$paramValue = utils::ReadPostedParam("attr_$sAttCode", '');
 						$oObj->Set($sAttCode, $paramValue);

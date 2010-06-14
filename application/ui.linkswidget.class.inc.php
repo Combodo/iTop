@@ -90,6 +90,7 @@ class UILinksWidget
 		}
 		else
 		{
+			$sJSON = '[]'; // Empty array;
 //echo "JSON VA IECH<br/>\n";
 		}
 //echo "JASON: $sJSON<br/>\n";;

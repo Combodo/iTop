@@ -60,7 +60,7 @@ function GoToStep(iCurrentStep, iNextStep)
 	if (iNextStep > iCurrentStep)
 	{
 		// Check the values when moving forward
-		if (CheckFields('wizStep'+iCurrentStep))
+		if (CheckFields('wizStep'+iCurrentStep, true))
 		{
 			oCurrentStep.style.display = 'none';
 			ActivateStep(iNextStep);
@@ -120,7 +120,7 @@ function ActivateStep(iTargetStep)
 // Store the result of the form validation... there may be several forms per page, beware
 var oFormErrors = { err_form0: 0 };
 
-function CheckFields(sFormId)
+function CheckFields(sFormId, bDisplayAlert)
 {
 	$('#'+sFormId+' :submit').attr('disable', 'disabled');
 	$('#'+sFormId+' :button[type=submit]').attr('disable', 'disabled');
@@ -136,7 +136,10 @@ function CheckFields(sFormId)
 	);
 	if(oFormErrors['err_'+sFormId] > 0)
 	{
-		alert('Please fill-in all mandatory fields before continuing.');
+		if (bDisplayAlert)
+		{
+			alert('Please fill-in all mandatory fields before continuing.');
+		}
 		$('#'+sFormId+' :submit').attr('disable', '');
 		$('#'+sFormId+' :button[type=submit]').attr('disable', '');
 		if (oFormErrors['input_'+sFormId] != null)
@@ -151,11 +154,11 @@ function ValidateField(sFieldId, sPattern, bMandatory, sFormId)
 {
 	var bValid = true;
 	var currentVal = $('#'+sFieldId).val();
-	if (bMandatory && ((currentVal == '') || (currentVal == 0)))
+	if (bMandatory && ((currentVal == '') || (currentVal == 0) || (currentVal == '[]')))
 	{
 		bValid = false;
 	}
-	else if ((currentVal == '') || (currentVal == 0))
+	else if ((currentVal == '') || (currentVal == 0) || (currentVal == '[]'))
 	{
 		// An empty field is Ok...
 		bValid = true;
@@ -168,8 +171,8 @@ function ValidateField(sFieldId, sPattern, bMandatory, sFormId)
 	}
 	if (bValid)
 	{
-		// Visual feedback
-		$('#v_'+sFieldId).html('<img src="../images/validation_ok.png" />');
+		// Visual feedback - none when it's Ok
+		$('#v_'+sFieldId).html(''); //<img src="../images/validation_ok.png" />');
 	}
 	else
 	{
@@ -184,7 +187,7 @@ function ValidateField(sFieldId, sPattern, bMandatory, sFormId)
 		$('#v_'+sFieldId).html('<img src="../images/validation_error.png" />');
 	}
 	//console.log('Form: '+sFormId+' Validating field: '+sFieldId + ' current value: '+currentVal+' pattern: '+sPattern+' result: '+bValid );
-	return bValid;
+	return true; // Do not stop propagation ??
 }
 
 function UpdateDependentFields(aFieldNames)
@@ -197,6 +200,8 @@ function UpdateDependentFields(aFieldNames)
 	while(index < aFieldNames.length )
 	{
 		sAttCode = aFieldNames[index];
+		sFieldId = oWizardHelper.GetFieldId(sAttCode);
+		$('#v_'+sFieldId).html('<img src="../images/indicator.gif" />');
 		oWizardHelper.RequestAllowedValues(sAttCode);
 		index++;
 	}

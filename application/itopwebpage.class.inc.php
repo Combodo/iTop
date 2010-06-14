@@ -169,6 +169,11 @@ EOF
 		{
 			window.history.back();
 		}
+		
+		function BackToDetails(sClass, id)
+		{
+			window.location.href = './UI.php?operation=details&class='+sClass+'&id='+id;
+		}
 		");
 		$this->DisplayMenu();
 	}

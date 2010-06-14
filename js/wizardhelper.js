@@ -23,6 +23,12 @@ function WizardHelper(sClass)
 		this.m_oData.m_iFieldsCount = count;
 		
 	}
+	
+	this.GetFieldId = function(sFieldName)
+	{
+		id = this.m_oData.m_oFieldsMap[sFieldName];
+		return id;
+	}
 
 	this.RequestDefaultValue = function (sFieldName)
 	{

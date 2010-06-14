@@ -39,12 +39,19 @@ class WizardHelper
 	 */	 	 	 	
 	public function GetTargetObject($bReadUploadedFiles = false)
 	{
-		$oObj = MetaModel::NewObject($this->m_aData['m_sClass']);
+		if (isset($this->m_aData['m_oCurrentValues']['id']))
+		{
+			$oObj = MetaModel::GetObject($this->m_aData['m_sClass'], $this->m_aData['m_oCurrentValues']['id']);
+		}
+		else
+		{
+			$oObj = MetaModel::NewObject($this->m_aData['m_sClass']);
+		}
 		foreach($this->m_aData['m_oCurrentValues'] as $sAttCode => $value)
 		{
 			// Because this is stored in a Javascript array, unused indexes
 			// are filled with null values
-			if ( ($sAttCode !== false) && ($value !== null))
+			if ( ($sAttCode !='id') && ($sAttCode !== false) && ($value !== null))
 			{
 				$oAttDef = MetaModel::GetAttributeDef($this->m_aData['m_sClass'], $sAttCode);
 				if (($oAttDef->IsLinkSet()) && ($value != '') )

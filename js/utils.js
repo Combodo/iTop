@@ -47,7 +47,9 @@ function UpdateFileName(id, sNewFileName)
 	var sNewFileName = aPath[aPath.length-1];
 
 	$('#'+id).val(sNewFileName);
+	$('#'+id).trigger('validate');
 	$('#name_'+id).text(sNewFileName);
+	return true;
 }
 /**
  * Reload a search form for the specified class
@@ -75,5 +77,4 @@ function ReloadSearchForm(divId, sClassName, sBaseClass)
 		   $('#'+divId).unblock();
 	   }
 	 );
-
 }

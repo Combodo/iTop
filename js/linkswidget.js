@@ -21,14 +21,17 @@ function LinksWidget(id, sLinkedClass, sExtKeyToMe, sExtKeyToRemote, aAttributes
 		
 	this.Refresh = function ()
 	{
+		sLinks = JSON.stringify(this.aLinks);
 		if (this.aLinks.length == 0)
 		{
 			$('#'+this.id+'_values').empty();		
+			$('#'+this.id).val(sLinks);
+			$('#'+this.id).trigger('validate');
 		}
 		else
 		{
-			sLinks = JSON.stringify(this.aLinks);
 			$('#'+this.id).val(sLinks);
+			$('#'+this.id).trigger('validate');
 			$('#'+this.id+'_values').load('ajax.render.php?operation=ui.linkswidget.linkedset&sclass='+this.sLinkedClass+'&sextkeytome='+this.sExtKeyToMe+'&sextkeytoremote='+this.sExtKeyToRemote+'&myid='+this.id,
 			{'sset' : sLinks}, function()
 				{
@@ -51,7 +54,15 @@ function LinksWidget(id, sLinkedClass, sExtKeyToMe, sExtKeyToRemote, aAttributes
 		}
 		this.aPreviousLinks = this.aLinks; // Save the list in case of cancellation
 		this.aLinks = new Array(); // rebuild the list of links from scratch
-		$('#LinkDlg_'+this.id).jqmShow();
+		if (oSelected.length > 0)
+		{
+			$('#LinkDlg_'+this.id).jqmShow();
+		}
+		else
+		{
+			this.Refresh();
+			$('#ac_add_'+this.id).attr('disabled', 'disabled');
+		}
 	}
 
 	this.OnCancel = function()
