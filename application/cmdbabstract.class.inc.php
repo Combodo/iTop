@@ -878,19 +878,19 @@ abstract class cmdbAbstractObject extends CMDBObject
 				case 'DateTime':
 				$aEventsList[] ='keyup';
 				$aEventsList[] ='change';
-				$sHTMLValue = "<input title=\"$sHelpText\" class=\"date-pick\" type=\"text\" size=\"20\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iId\"/>";
+				$sHTMLValue = "<input title=\"$sHelpText\" class=\"date-pick\" type=\"text\" size=\"20\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iId\"/>&nbsp;{$sValidationField}";
 				break;
 				
 				case 'Password':
 					$aEventsList[] ='keyup';
 					$aEventsList[] ='change';
-					$sHTMLValue = "<input title=\"$sHelpText\" type=\"password\" size=\"30\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iId\"/>";
+					$sHTMLValue = "<input title=\"$sHelpText\" type=\"password\" size=\"30\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iId\"/>&nbsp;{$sValidationField}";
 				break;
 				
 				case 'Text':
 					$aEventsList[] ='keypress';
 					$aEventsList[] ='change';
-					$sHTMLValue = "<textarea title=\"$sHelpText\" name=\"attr_{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">$value</textarea>";
+					$sHTMLValue = "<textarea title=\"$sHelpText\" name=\"attr_{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">$value</textarea>&nbsp;{$sValidationField}";
 				break;
 	
 				case 'List':
@@ -911,7 +911,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 					$sHTMLValue = "<input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"$iMaxFileSize\" />\n";
 				    $sHTMLValue .= "<input name=\"attr_{$sAttCode}{$sNameSuffix}\" type=\"hidden\" id=\"$iId\" \" value=\"$sFileName\"/>\n";
 				    $sHTMLValue .= "<span id=\"name_$iInputId\">$sFileName</span><br/>\n";
-				    $sHTMLValue .= "<input title=\"$sHelpText\" name=\"file_{$sAttCode}{$sNameSuffix}\" type=\"file\" id=\"file_$iId\" onChange=\"UpdateFileName('$iId', this.value)\"/>\n";
+				    $sHTMLValue .= "<input title=\"$sHelpText\" name=\"file_{$sAttCode}{$sNameSuffix}\" type=\"file\" id=\"file_$iId\" onChange=\"UpdateFileName('$iId', this.value)\"/>&nbsp;{$sValidationField}\n";
 				break;
 				
 				case 'String':
@@ -930,7 +930,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 						{
 							// too many choices, use an autocomplete
 							// The input for the auto complete
-							$sHTMLValue = "<input count=\"".count($aAllowedValues)."\" type=\"text\" id=\"label_$iId\" size=\"30\" value=\"$sDisplayValue\"{$sCSSClasses}/>$sValidationField";
+							$sHTMLValue = "<input count=\"".count($aAllowedValues)."\" type=\"text\" id=\"label_$iId\" size=\"30\" value=\"$sDisplayValue\"{$sCSSClasses}/>&nbsp;{$sValidationField}";
 							// another hidden input to store & pass the object's Id
 							$sHTMLValue .= "<input type=\"hidden\" id=\"$iId\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" />\n";
 							$oPage->add_ready_script("\$('#label_$iId').autocomplete('./ajax.render.php', { scroll:true, minChars:3, onItemSelect:selectItem, onFindValue:findValue, formatItem:formatItem, autoFill:true, keyHolder:'#$iId', extraParams:{operation:'autocomplete', sclass:'$sClass',attCode:'".$sAttCode."'}});");
@@ -953,13 +953,13 @@ abstract class cmdbAbstractObject extends CMDBObject
 								$sSelected = ($value == $key) ? ' selected' : '';
 								$sHTMLValue .= "<option value=\"$key\"$sSelected>$display_value</option>\n";
 							}
-							$sHTMLValue .= "</select>$sValidationField\n";
+							$sHTMLValue .= "</select>&nbsp;{$sValidationField}\n";
 							$aEventsList[] ='change';
 						}
 					}
 					else
 					{
-						$sHTMLValue = "<input title=\"$sHelpText\" type=\"text\" size=\"30\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iId\"/>";
+						$sHTMLValue = "<input title=\"$sHelpText\" type=\"text\" size=\"30\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iId\"/>&nbsp;{$sValidationField}";
 						$aEventsList[] ='keyup';
 						$aEventsList[] ='change';
 					}
@@ -973,7 +973,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 				$oPage->add_ready_script("$('#$iId').bind('change', function(evt, sFormId) { return UpdateDependentFields(['".implode("','", $aDependencies)."']) } );"); // Bind to a custom event: validate
 			}
 		}
-		return "<div>{$sHTMLValue}{$sValidationField}</div>";
+		return "<div>{$sHTMLValue}</div>";
 	}
 	
 	public function DisplayModifyForm(WebPage $oPage, $aExtraParams = array())

@@ -34,6 +34,7 @@ table.listResults {
 	border-bottom: 3px solid #e6e6e1;  
 	border-right: 3px solid #e6e6e1;
 	width: 100%;
+	background-color: #fff;
 }
 
 table.listResults td {

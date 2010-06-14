@@ -108,7 +108,7 @@ class UILinksWidget
 			$oPage->add_at_the_end($this->GetLinkObjectDialog($oPage, $this->m_iInputId)); // Forms should not be inside forms
 			$sHTMLValue .= "<input type=\"text\" id=\"ac_{$this->m_iInputId}\" size=\"35\" value=\"\" title=\"".Dict::S('UI:LinksWidget:Autocomplete+')."\"/>";
 			$sHTMLValue .= "<input type=\"button\" id=\"ac_add_{$this->m_iInputId}\" value=\"".Dict::S('UI:Button:AddObject')."\"  class=\"action\" onClick=\"oLinkWidget{$this->m_iInputId}.AddObject();\"/>";
-			$sHTMLValue .= "&nbsp;<input type=\"button\" value=\"".Dict::S('UI:Button:BrowseObjects')."\"  class=\"action\" onClick=\"return ManageObjects('$sTitle', '$sTargetClass', '$this->m_iInputId', '$sExtKeyToRemote');\"/>";
+			$sHTMLValue .= "&nbsp;<input type=\"button\" value=\"".Dict::S('UI:Button:BrowseObjects')."\"  class=\"action\" onClick=\"return ManageObjects('$sTitle', '$sTargetClass', '$this->m_iInputId', '$sExtKeyToRemote');\"/>&nbsp<span id=\"v_{$this->m_iInputId}\"></span>\n";
 			// another hidden input to store & pass the object's Id
 			$sHTMLValue .= "<input type=\"hidden\" id=\"id_ac_{$this->m_iInputId}\" onChange=\"EnableAddButton('{$this->m_iInputId}');\"/>\n";
 			$sHTMLValue .= "<input type=\"hidden\" id=\"{$this->m_iInputId}\" name=\"attr_{$this->m_sAttCode}{$this->m_sNameSuffix}\" value=\"\"/>\n";
