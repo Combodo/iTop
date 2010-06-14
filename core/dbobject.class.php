@@ -492,6 +492,11 @@ abstract class DBObject
 		$this->m_iKey = $iNewKey;
 	}
 
+	public function GetIcon()
+	{
+		return MetaModel::GetClassIcon(get_class($this));
+	}
+
 	public function GetName()
 	{
 		$sNameAttCode = MetaModel::GetNameAttributeCode(get_class($this));

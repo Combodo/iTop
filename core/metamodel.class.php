@@ -280,6 +280,25 @@ abstract class MetaModel
 			return self::GetClassDescription($sClass);
 		}
 	}
+	final static public function GetClassIcon($sClass)
+	{
+		self::_check_subclass($sClass);
+
+		$sIcon = '';
+		if (array_key_exists('icon', self::$m_aClassParams[$sClass]))
+		{
+			$sIcon = self::$m_aClassParams[$sClass]['icon'];
+		}
+		if (strlen($sIcon) == 0)
+		{
+			$sParentClass = self::GetParentPersistentClass($sClass);
+			if (strlen($sParentClass) > 0)
+			{
+				return self::GetClassIcon($sParentClass);
+			}
+		}
+		return $sIcon;
+	}
 	final static public function IsAutoIncrementKey($sClass)
 	{
 		self::_check_subclass($sClass);	
