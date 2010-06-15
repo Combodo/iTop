@@ -210,6 +210,24 @@ class EventIssue extends Event
 		{
 			$this->Set('arguments_post', array());
 		}
+
+		$sLength = strlen($this->Get('issue'));
+		if ($sLength > 255)
+		{
+			$this->Set('issue', substr($this->Get('issue'), 0, 200)." -truncated ($sLength chars)");
+		}
+
+		$sLength = strlen($this->Get('impact'));
+		if ($sLength > 255)
+		{
+			$this->Set('impact', substr($this->Get('impact'), 0, 200)." -truncated ($sLength chars)");
+		}
+
+		$sLength = strlen($this->Get('page'));
+		if ($sLength > 255)
+		{
+			$this->Set('page', substr($this->Get('page'), 0, 200)." -truncated ($sLength chars)");
+		}
 	}
 }
 
