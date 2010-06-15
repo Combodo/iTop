@@ -121,7 +121,8 @@ switch($operation)
 			$displayValue = $oObj->GetEditValue($sAttCode);
 			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 			$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $value, $displayValue, $sId, '', 0, array('this' => $oObj));
-	
+			// Make sure that we immediatly validate the field when we reload it
+			$oPage->add_ready_script("$('#$sId').trigger('validate');");
 			$oWizardHelper->SetAllowedValuesHtml($sAttCode, $sHTMLValue);
 		}
 	}

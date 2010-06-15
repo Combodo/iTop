@@ -920,9 +920,8 @@ try
 		else
 		{
 			$oObj = MetaModel::NewObject($sClass);
-			foreach(MetaModel::GetZListItems($sClass, 'details') as $sAttCode)
+			foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
 			{
-				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 				if ($oAttDef->IsLinkSet())
 				{
 					// Link set, the data is a set of link objects, encoded in JSON
