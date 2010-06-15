@@ -1400,7 +1400,7 @@ class SetupProfiles
 	{
 		$oNewObj = MetaModel::NewObject("URP_ActionGrant");
 		$oNewObj->Set('profileid', $iProfile);
-		$oNewObj->Set('permission', $bPermission);
+		$oNewObj->Set('permission', $bPermission ? 'yes' : 'no');
 		$oNewObj->Set('class', $sClass);
 		$oNewObj->Set('action', self::$m_aActions[$iAction]);
 		$iId = $oNewObj->DBInsertNoReload();
@@ -1411,7 +1411,7 @@ class SetupProfiles
 	{
 		$oNewObj = MetaModel::NewObject("URP_StimulusGrant");
 		$oNewObj->Set('profileid', $iProfile);
-		$oNewObj->Set('permission', true);
+		$oNewObj->Set('permission', 'yes');
 		$oNewObj->Set('class', $sClass);
 		$oNewObj->Set('stimulus', $sStimulusCode);
 		$iId = $oNewObj->DBInsertNoReload();
