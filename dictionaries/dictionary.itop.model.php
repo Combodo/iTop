@@ -29,9 +29,9 @@
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Relation:impacts/Description' => 'functionaly impacted by',
-	'Relation:impacts/VerbUp' => 'impacts',
-	'Relation:impacts/VerbDown' => 'is impacted by',
+	'Relation:impacts/Description' => 'Elements impacted by',
+	'Relation:impacts/VerbUp' => 'Impact...',
+	'Relation:impacts/VerbDown' => 'Elements impacted by...',
 ));
 
 

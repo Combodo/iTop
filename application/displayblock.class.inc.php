@@ -835,6 +835,11 @@ class MenuBlock extends DisplayBlock
 				//if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'Clone...', 'url' => "../pages/$sUIPage?operation=clone&class=$sClass&id=$id&$sContext"); }
 				if ($bIsModifyAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:Modify'), 'url' => "../pages/$sUIPage?operation=modify&class=$sClass&id=$id&$sContext"); }
 				if ($bIsDeleteAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:Delete'), 'url' => "../pages/$sUIPage?operation=delete&class=$sClass&id=$id&$sContext"); }
+				$aRelations = MetaModel::EnumRelations();
+				foreach($aRelations as $sRelationCode)
+				{
+					$aActions[] = array ('label' => MetaModel::GetRelationVerbUp($sRelationCode), 'url' => "../pages/$sUIPage?operation=swf_navigator&relation=$sRelationCode&class=$sClass&id=$id&$sContext");
+				}
 			}
 			$aTransitions = $oObj->EnumTransitions();
 			$aStimuli = Metamodel::EnumStimuli($sClass);
