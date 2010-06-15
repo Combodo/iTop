@@ -439,7 +439,7 @@ class URP_UserProfile extends UserRightsBaseClass
 
 	public function GetName()
 	{
-		return Dict::Format('UI:UserManagement:LinkBetween_User_And_Profile');
+		return Dict::Format('UI:UserManagement:LinkBetween_User_And_Profile', $this->Get('userlogin'), $this->Get('profile'));
 	}
 }
 
@@ -505,8 +505,7 @@ class URP_ProfileProjection extends UserRightsBaseClass
 			$sColumn = $this->Get('attribute');
 			// SELECT...
 			$oValueSetDef = new ValueSetObjects($sExpr, $sColumn);
-			$aValues = $oValueSetDef->GetValues(array('user' => $oUser), '');
-			$aRes = array_keys($aValues);
+			$aRes = $oValueSetDef->GetValues(array('user' => $oUser), '');
 		}
 		else
 		{
@@ -578,8 +577,7 @@ class URP_ClassProjection extends UserRightsBaseClass
 			$sColumn = $this->Get('attribute');
 			// SELECT...
 			$oValueSetDef = new ValueSetObjects($sExpr, $sColumn);
-			$aValues = $oValueSetDef->GetValues(array('this' => $oObject), '');
-			$aRes = array_keys($aValues);
+			$aRes = $oValueSetDef->GetValues(array('this' => $oObject), '');
 		}
 		elseif ($sExpr == '<any>')
 		{
@@ -787,7 +785,6 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		SetupProfiles::ComputeITILProfiles();
 		//SetupProfiles::ComputeBasicProfiles();
 
-		SetupProfiles::DoCreateDimensions();
 		SetupProfiles::DoCreateDimensions();
 		SetupProfiles::DoCreateProfiles();
 		return true;
@@ -1217,7 +1214,15 @@ exit;
 		$iPKey = $oObject->GetKey();
 		$iDimension = $oDimension->GetKey();
 
-		$aObjectProjection = $this->m_aClassProjs[$sClass][$iDimension]->ProjectObject($oObject);
+		if (array_key_exists($iDimension, $this->m_aClassProjs[$sClass]))
+		{
+			$aObjectProjection = $this->m_aClassProjs[$sClass][$iDimension]->ProjectObject($oObject);
+		}
+		else
+		{
+			// No projection for a given class: default to 'any'
+			$aObjectProjection = null;
+		}
 
 		$aRes = array();
 		if (array_key_exists($iUser, $this->m_aUserProfiles))
@@ -1231,7 +1236,15 @@ exit;
 				else
 				{
 					// user projection to be cached on a given page !
-					$aUserProjection = $this->m_aProPros[$iProfile][$iDimension]->ProjectUser($oUser);
+					if (array_key_exists($iDimension, $this->m_aProPros[$iProfile]))
+					{
+						$aUserProjection = $this->m_aProPros[$iProfile][$iDimension]->ProjectUser($oUser);
+					}
+					else
+					{
+						// No projection for a given profile: default to 'any'
+						$aUserProjection = null;
+					}
 
 					if (is_null($aUserProjection))
 					{
