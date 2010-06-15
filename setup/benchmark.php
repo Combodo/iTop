@@ -82,6 +82,30 @@ class BenchmarkDataCreation
 		return $this->m_aCreated[$sClass][array_rand($this->m_aCreated[$sClass])];
 	}
 
+	static protected function FindId($sClass)
+	{
+		$oSet = new DBObjectSet(new DBObjectSearch($sClass));
+		if ($oSet->Count() < 1)
+		{
+			return null;
+		}
+
+		$oObj = $oSet->Fetch();
+		return $oObj->GetKey();
+	}
+
+	static protected function FindIdFromOQL($sOQL)
+	{
+		$oSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL));
+		if ($oSet->Count() < 1)
+		{
+			return null;
+		}
+
+		$oObj = $oSet->Fetch();
+		return $oObj->GetKey();
+	}
+
 	protected function MakeFeedback($oP, $sClass)
 	{
 		$iSample = reset($this->m_aCreated[$sClass]);
@@ -100,9 +124,69 @@ class BenchmarkDataCreation
 		$oP->add("</ul>");
 	}
 
-	public function Go(WebPage $oP, $oChange)
+	public function GoProjections(WebPage $oP, $oChange)
 	{
+		// User login
+		//
+		$aData = array(
+			'userid' => self::FindId('bizPerson'),
+			'login' => 'foo',
+			'password' => 'foo',
+			'language' => 'EN US',
+		);
+		$iLogin = $this->CreateObject('URP_Users', $aData, $oChange);
 
+		// Assign profiles to the new login
+		//
+		$aData = array(
+			'userid' => $iLogin,
+			'profileid' => self::FindIdFromOQL("SELECT URP_Profiles WHERE name LIKE 'Configuration Manager'"),
+			'reason' => '',
+		);
+		$iFoo = $this->CreateObject('URP_UserProfile', $aData, $oChange);
+
+		// Dimension
+		//
+		$aData = array(
+			'name' => 'location',
+			'description' => '',
+			'type' => 'bizLocation',
+		);
+		$iDimLocation = $this->CreateObject('URP_Dimensions', $aData, $oChange);
+
+		// Project classes
+		//
+		$aMyClassesToProject = array('bizDevice', 'bizServer');
+		foreach($aMyClassesToProject as $sClass)
+		{
+			$aData = array(
+				'dimensionid' => $iDimLocation,
+				'class' => $sClass,
+				'value' => '<this>',
+				'attribute' => 'location_name',
+			);
+			$iFoo = $this->CreateObject('URP_ClassProjection', $aData, $oChange);
+		}
+
+		// Project profiles
+		//
+		$aProfilesToProject = array(1, 2, 3, 4, 5, 6, 7, 8, 9);
+		foreach($aProfilesToProject as $iProfileId)
+		{
+			$aData = array(
+				'dimensionid' => $iDimLocation,
+				'profileid' => $iProfileId,
+				'value' => 'Grenoble',
+				'attribute' => '',
+			);
+			$iFoo = $this->CreateObject('URP_ProfileProjection', $aData, $oChange);
+		}
+
+		$oP->p('Created projections (Cf. login "foo", pwd "foo")');
+	}
+
+	public function GoVolume(WebPage $oP, $oChange)
+	{
 		// 1 - Organizations
 		//
 		$aData = array(
@@ -382,7 +466,8 @@ function DisplayStep3(SetupWebPage $oP, $oDataCreation)
 	$oMyChange->Set("userinfo", "Administrator");
 	$iChangeId = $oMyChange->DBInsertNoReload();
 
-	$oDataCreation->Go($oP, $oMyChange);
+	$oDataCreation->GoProjections($oP, $oMyChange);
+	$oDataCreation->GoVolume($oP, $oMyChange);
 }
 
 /**
