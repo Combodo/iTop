@@ -96,7 +96,7 @@ class DBObjectSet
 		$oFilter = new CMDBSearchFilter($sClass);
 		$oRetSet = new self($oFilter);
 		$oRetSet->m_bLoaded = true; // no DB load
-		$oRetSet->AddObjectArray($aObjects);
+		$oRetSet->AddObjectArray($aObjects, $sClass);
 		return $oRetSet;
 	} 
 
