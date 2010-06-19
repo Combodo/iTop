@@ -949,11 +949,6 @@ abstract class cmdbAbstractObject extends CMDBObject
 							$sHTMLValue .= "<input type=\"hidden\" id=\"$iId\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" />\n";
 							$oPage->add_ready_script("\$('#label_$iId').autocomplete('./ajax.render.php', { scroll:true, minChars:3, onItemSelect:selectItem, onFindValue:findValue, formatItem:formatItem, autoFill:true, keyHolder:'#$iId', extraParams:{operation:'autocomplete', sclass:'$sClass',attCode:'".$sAttCode."'}});");
 							$oPage->add_ready_script("\$('#label_$iId').result( function(event, data, formatted) { if (data) { $('#{$iId}').val(data[1]); } } );");
-							// Prepopulate with a default value -- but no display value...
-							//if (!empty($value))
-							//{
-							//	$oPage->add_ready_script("\$('#label_$iInputId').search( 'domino.combodo.com' );");
-							//}
 							$aEventsList[] ='change';
 						}
 						else
@@ -1176,6 +1171,46 @@ EOF
 			{
 				if ($oAttDef->IsWritable())
 				{
+					if ($oObjectToClone != null)
+					{
+						$sValue = $oObjectToClone->GetEditValue($sAttCode);
+						$aArgs['this'] = $oObjectToClone;
+					}
+					else
+					{
+						if(isset($aArgs['default'][$sAttCode]))
+						{
+							$sValue = $aArgs['default'][$sAttCode];
+						}
+						else
+						{
+							$sValue = $oAttDef->GetDefaultValue();
+						}
+					}
+					// Prepopulate with a default value -- but no display value...
+					$sDisplayValue = '';
+					if (!empty($sValue))
+					{
+						$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, $aArgs, '');
+						switch (count($aAllowedValues))
+						{
+							case 1:
+							case 0:
+							$sDisplayValue = $sValue;
+							break;
+							
+							default:
+							$sDisplayValue = $sValue;
+							foreach($aAllowedValues as $key => $display)
+							{
+								if ($key == $sValue)
+								{
+									$sDisplayValue = $display;
+									break;
+								}
+							}
+						}
+					}
 					if ($sStateAttCode == $sAttCode)
 					{
 						// State attribute is always read-only from the UI
@@ -1193,13 +1228,11 @@ EOF
 							if ($iFlags & OPT_ATT_READONLY)
 							{
 								// Attribute is read-only
-								$sHTMLValue = ($oObjectToClone == null) ? '' : $oObjectToClone->GetAsHTML($sAttCode);
+								$sHTMLValue = ($oObjectToClone == null) ? $sDisplayValue : $oObjectToClone->GetAsHTML($sAttCode);
 							}
 							else
 							{
 								$sFieldId = 'att_'.$iFieldIndex;
-								$sValue = ($oObjectToClone == null) ? '' : $oObjectToClone->Get($sAttCode);
-								$sDisplayValue = ($oObjectToClone == null) ? '' : $oObjectToClone->GetEditValue($sAttCode);
 								$sHTMLValue = "<div id=\"field_{$sFieldId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sFieldId, '', $iFlags, $aArgs)."</div>";
 								$aFieldsMap[$sFieldId] = $sAttCode;
 								$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $sHTMLValue);

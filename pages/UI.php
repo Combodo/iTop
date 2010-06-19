@@ -664,7 +664,13 @@ try
 
 			$oP->add("<img src=\"".$oObjToClone->GetIcon()."\" style=\"margin-top:-30px; margin-right:10px; float:right\">\n");
 			$oP->add("<div class=\"wizContainer\">\n");
-			cmdbAbstractObject::DisplayCreationForm($oP, $sClass, $oObjToClone);
+			$aDefaults = utils::ReadParam('default', array());
+			$aContext = $oAppContext->GetAsHash();
+			foreach($aContext as $key => $value)
+			{
+				$aDefaults[$key] = $value;	
+			}
+			cmdbAbstractObject::DisplayCreationForm($oP, $sClass, $oObjToClone, array( 'default' => $aDefaults));
 			$oP->add("</div>\n");
 		}
 		else
@@ -696,7 +702,13 @@ try
 			$oP->add("<h1>".Dict::Format('UI:CreationTitle_Class', $sClassLabel)."</h1>\n");
 			$oP->add("<div class=\"wizContainer\">\n");
 			$oP->add("<img src=\"".MetaModel::GetClassIcon($sClass)."\" style=\"margin-top:-30px; margin-right:10px; float:right\">\n");
-			cmdbAbstractObject::DisplayCreationForm($oP, $sClass, null /* $oObjToClone */);
+			$aDefaults = utils::ReadParam('default', array());
+			$aContext = $oAppContext->GetAsHash();
+			foreach($aContext as $key => $value)
+			{
+				$aDefaults[$key] = $value;	
+			}
+			cmdbAbstractObject::DisplayCreationForm($oP, $sClass, null /* $oObjToClone */, array('default' => $aDefaults));
 			$oP->add("</div>\n");
 		break;
 	
