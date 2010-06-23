@@ -255,6 +255,7 @@ class UILinksWidget
 	
 	protected function GetObjectPickerDialog($oPage, $sTargetClass, $sOkFunction)
 	{
+		$sDialogTitle = Dict::S('UI:ManageObjectsDlg');
 		$sOkBtnLabel = Dict::S('UI:Button:Ok');
 		$sCancelBtnLabel = Dict::S('UI:Button:Cancel');
 		$sAddBtnLabel = Dict::S('UI:Button:AddToList');
@@ -263,9 +264,8 @@ class UILinksWidget
 		$sLabelSelectedObjects = Dict::S('UI:Label:SelectedObjects');
 		$sLabelAvailableObjects = Dict::S('UI:Label:AvailableObjects');
 		$sHTML = <<< EOF
-		<div class="jqmWindow" id="ManageObjectsDlg_{$this->m_iInputId}">
+		<div style="display:none" title="$sDialogTitle" id="ManageObjectsDlg_{$this->m_iInputId}">
 		<div class="wizContainer">
-		<div class="page_header"><h1 id="Manage_DlgTitle_{$this->m_iInputId}">Selected Objects</h1></div>
 		<table width="100%">
 			<tr>
 				<td>
@@ -287,14 +287,14 @@ class UILinksWidget
 			</tr>
 			<tr>
 				<td colspan="3">
-				<input type="submit" class="jqmClose" onClick="$('#ManageObjectsDlg_{$this->m_iInputId}').jqmHide(); $sOkFunction('$sTargetClass', 'selected_objects')" value="$sOkBtnLabel" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="jqmClose">$sCancelBtnLabel</button>
+				<input type="submit" onClick="$('#ManageObjectsDlg_{$this->m_iInputId}').dialog('close'); $sOkFunction('$sTargetClass', 'selected_objects'); return false;" value="$sOkBtnLabel" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" onClick="$('#ManageObjectsDlg_{$this->m_iInputId}').dialog('close');">$sCancelBtnLabel</button>
 				</td>
 			</tr>
 		</table>
 		</div>
 		</div>
 EOF;
-		$oPage->add_ready_script("$('#ManageObjectsDlg_$this->m_iInputId').jqm({overlay:70, modal:true, toTop:true});"); // jqModal Window
+		$oPage->add_ready_script("$('#ManageObjectsDlg_$this->m_iInputId').dialog( {autoOpen: false, modal: true, width: 750, height: 350} );"); // JQuery UI dialog
 		//$oPage->add_ready_script("UpdateObjectList('$sClass');");
 		return $sHTML;
 	}
@@ -309,9 +309,8 @@ EOF;
 		$sExtKeyToMe = $oAttDef->GetExtKeyToMe();
 		$sExtKeyToRemote = $oAttDef->GetExtKeyToRemote();
 		
-		$sHTML = "<div class=\"jqmWindow\" id=\"LinkDlg_$sId\">\n";
+		$sHTML = "<div style=\"display:none\" title=\"".Dict::Format('UI:Link_Class_Attributes', MetaModel::GetName($sLinkedClass))."\" id=\"LinkDlg_$sId\">\n";
 		$sHTML .= "<div class=\"wizContainer\">\n";
-		$sHTML .= "<div class=\"page_header\"><h1>".Dict::Format('UI:Link_Class_Attributes', MetaModel::GetName($sLinkedClass))."</h1></div>\n";
 		$sHTML .= "<form action=\"./UI.php\" onSubmit=\"return oLinkWidget$sId.OnLinkOk();\">\n";
 		$index = 0;
 		$aAttrsMap = array();
@@ -352,11 +351,11 @@ EOF;
 			}
 		}
 		$sHTML .= $oPage->GetDetails($aDetails);
-		$sHTML .= "<input type=\"submit\" class=\"jqmClose\" onClick=\"oLinkWidget$sId.OnLinkOk()\" value=\"".Dict::S('UI:Button:Ok')."\" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type=\"button\" class=\"jqmClose\"  onClick=\"oLinkWidget$sId.OnLinkCancel()\">".Dict::S('UI:Button:Cancel')."</button>\n";
+		$sHTML .= "<input type=\"submit\" onClick=\"oLinkWidget$sId.OnLinkOk(); return false;\" value=\"".Dict::S('UI:Button:Ok')."\" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type=\"button\" onClick=\"oLinkWidget$sId.OnLinkCancel()\">".Dict::S('UI:Button:Cancel')."</button>\n";
 		$sHTML .= "</form>\n";
 		$sHTML .= "</div>\n";
 		$sHTML .= "</div>\n";
-		$oPage->add_ready_script("$('#LinkDlg_$sId').jqm({overlay:70, modal:true, toTop:true});"); // jqModal Window
+		$oPage->add_ready_script("$('#LinkDlg_$sId').dialog( {autoOpen: false, modal: true, width: 300 } );"); // jQuery UI dialog
 		//$oPage->add_ready_script("UpdateObjectList('$sClass');");
 		return $sHTML;
 	}

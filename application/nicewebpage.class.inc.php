@@ -35,16 +35,18 @@ class NiceWebPage extends WebPage
     {
         parent::__construct($s_title);
 		$this->m_aReadyScripts = array();
-		$this->add_linked_script("../js/jquery.latest.js");
+		$this->add_linked_script("../js/jquery-1.4.2.min.js");
 		$this->add_linked_script("../js/jquery.history_remote.pack.js");
+		$this->add_linked_stylesheet('../css/ui-lightness/jquery-ui-1.8.2.custom.css');
+		$this->add_linked_script('../js/jquery-ui-1.8.2.custom.min.js');
 		//$this->add_linked_script("../js/ui.resizable.js");
-		$this->add_linked_script("../js/ui.tabs.js");
+//		$this->add_linked_script("../js/ui.tabs.js");
 		$this->add_linked_script("../js/hovertip.js");
-		$this->add_linked_script("../js/jqModal.js");
+//		$this->add_linked_script("../js/jqModal.js");
 		$this->add_linked_stylesheet("../css/light-grey.css");
-		$this->add_linked_stylesheet("../js/themes/light/light.tabs.css");
+//		$this->add_linked_stylesheet("../js/themes/light/light.tabs.css");
 		//$this->add_linked_stylesheet("../css/jquery.tabs-ie.css", "lte IE 7");
-		$this->add_linked_stylesheet("../css/jqModal.css");
+//		$this->add_linked_stylesheet("../css/jqModal.css");
 		$this->add_ready_script('    window.setTimeout(hovertipInit, 1);');
     }
 	

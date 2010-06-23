@@ -733,7 +733,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		}
 		$oUnlimitedFilter = new DBObjectSearch($sClassName);
 		$sHtml .= "<form id=\"form{$iSearchFormId}\">\n";
-		$sHtml .= "<h1>".Dict::Format('UI:SearchFor_Class_Objects', $sClassesCombo)."</h1>\n";
+		$sHtml .= "<h2>".Dict::Format('UI:SearchFor_Class_Objects', $sClassesCombo)."</h2>\n";
 		$index = 0;
 		$sHtml .= "<table>\n";
 		$aFilterCriteria = $oSet->GetFilter()->GetCriteria();
@@ -904,7 +904,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 				case 'Text':
 					$aEventsList[] ='keypress';
 					$aEventsList[] ='change';
-					$sHTMLValue = "<textarea title=\"$sHelpText\" name=\"attr_{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">$value</textarea>&nbsp;{$sValidationField}";
+					$sHTMLValue = "<textarea class=\"resizable\" title=\"$sHelpText\" name=\"attr_{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">$value</textarea>&nbsp;{$sValidationField}";
 				break;
 	
 				case 'List':

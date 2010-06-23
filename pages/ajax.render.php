@@ -241,6 +241,8 @@ switch($operation)
 	$sExtKeyToRemote = utils::ReadParam('sextkeytoremote', '');
 	$iObjectId = utils::ReadParam('id', -1);
 	UILinksWidget::RenderSet($oPage, $sClass, $sJSONSet, $sExtKeyToMe, $sExtKeyToRemote, $iObjectId);
+	$iFieldId = utils::ReadParam('myid', '-1');
+	$oPage->add_ready_script("$('#{$iFieldId}').trigger('validate');");
 	break;
 	
 	case 'autocomplete':

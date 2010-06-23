@@ -136,20 +136,43 @@ class menuNode extends DBObject
 		//$this->ProcessTemplate($sTemplate, $oPage, $aExtraParams);
 	}
 	
-	public function DisplayMenu(iTopWebPage $oP, $sType, $aExtraParams)
+	public function DisplayMenu(iTopWebPage $oP, $sType, $aExtraParams, $bRootLevel = true, $iActiveNodeId = -1)
 	{
-		$oP->AddToMenu("<li><a href=\"".$this->GetMenuLink($aExtraParams)."\" title=\"".$this->GetMenuLabel()."\">".$this->GetMenuName()."</a>");
-		$oSet = $this->GetChildNodesSet($sType);
-		if ($oSet->Count() > 0)
+		$bActive = false;
+		if ($bRootLevel)
 		{
-			$oP->AddToMenu("\n<ul>\n");
-			while($oChildNode = $oSet->Fetch())
+			$oP->AddToMenu("<h3><a href=\"".$this->GetMenuLink($aExtraParams)."\" title=\"".$this->GetMenuLabel()."\">".$this->GetMenuName()."</a></h3>\n");
+			$oP->AddToMenu("\n<div>\n");
+			$oP->AddToMenu("<p><a href=\"".$this->GetMenuLink($aExtraParams)."\" title=\"".$this->GetMenuLabel()."\">".$this->GetMenuLabel()."</a></p>\n");
+			$oSet = $this->GetChildNodesSet($sType);
+			if ($oSet->Count() > 0)
 			{
-				$oChildNode->DisplayMenu($oP, $sType, $aExtraParams);
+				$oP->AddToMenu("\n<ul>\n");
+				while($oChildNode = $oSet->Fetch())
+				{
+					$bActive |= $oChildNode->DisplayMenu($oP, $sType, $aExtraParams, false /* ! RootLevel */, $iActiveNodeId);
+				}
+				$oP->AddToMenu("</ul>\n");
 			}
-			$oP->AddToMenu("</ul>\n");
+			$oP->AddToMenu("\n</div>\n");
 		}
-		$oP->AddToMenu("</li>\n");
+		else
+		{
+			$oP->AddToMenu("<li><a href=\"".$this->GetMenuLink($aExtraParams)."\" title=\"".$this->GetMenuLabel()."\">".$this->GetMenuName()."</a>");
+			$oSet = $this->GetChildNodesSet($sType);
+			if ($oSet->Count() > 0)
+			{
+				$oP->AddToMenu("\n<ul>\n");
+				while($oChildNode = $oSet->Fetch())
+				{
+					$bActive |= $oChildNode->DisplayMenu($oP, $sType, $aExtraParams, false /* ! RootLevel */, $iActiveNodeId);
+				}
+				$oP->AddToMenu("</ul>\n");
+			}
+			$oP->AddToMenu("</li>\n");
+		}
+		$bResult = ($iActiveNodeId == $this->GetKey()) | $bActive;
+		return $bResult;
 	}
 	static public function DisplayCreationForm(WebPage $oP, $sClass, $sFilter, $aExtraParams = array())
 	{

@@ -46,11 +46,14 @@ class iTopWebPage extends NiceWebPage
 		$this->m_sMenu = "";
 		$oAppContext = new ApplicationContext();
 		$sExtraParams = $oAppContext->GetForLink();
+		$this->m_currentOrganization = $currentOrganization;
 		$this->add_header("Content-type: text/html; charset=utf-8");
 		$this->add_header("Cache-control: no-cache");
-		$this->m_currentOrganization = $currentOrganization;
-		$this->add_linked_script("../js/jquery.dimensions.js");
-		$this->add_linked_script("../js/splitter.js");
+		$this->add_linked_stylesheet("../css/jquery.treeview.css");
+		$this->add_linked_stylesheet("../css/jquery.autocomplete.css");
+//		$this->add_linked_stylesheet("../css/date.picker.css");
+		$this->add_linked_script('../js/jquery.layout.min.js');
+//		$this->add_linked_script("../js/jquery.dimensions.js");
 		$this->add_linked_script("../js/jquery.tablehover.js");
 		$this->add_linked_script("../js/jquery.treeview.js");
 		$this->add_linked_script("../js/jquery.autocomplete.js");
@@ -58,15 +61,11 @@ class iTopWebPage extends NiceWebPage
 		$this->add_linked_script("../js/jquery.positionBy.js");
 		$this->add_linked_script("../js/jquery.popupmenu.js");
 		$this->add_linked_script("../js/date.js");
-		$this->add_linked_script("../js/jquery.date.picker.js");
+//		$this->add_linked_script("../js/jquery.date.picker.js");
 		$this->add_linked_script("../js/jquery.tablesorter.min.js");
 		$this->add_linked_script("../js/jquery.blockUI.js");
 		$this->add_linked_script("../js/utils.js");
-		//$this->add_linked_script("../js/jquery-ui-personalized-1.5.3.js");
 		$this->add_linked_script("../js/swfobject.js");
-		$this->add_linked_stylesheet("../css/jquery.treeview.css");
-		$this->add_linked_stylesheet("../css/jquery.autocomplete.css");
-		$this->add_linked_stylesheet("../css/date.picker.css");
 		$this->add_ready_script(
 <<<EOF
 	//add new widget called TruncatedList to properly display truncated lists when they are sorted
@@ -90,55 +89,46 @@ class iTopWebPage extends NiceWebPage
 	    } 
 	});
 	
-	// Vertical splitter. The min/max/starting sizes for the left (A) pane
-	// are set here. All values are in pixels.
-	$("#MySplitter").splitter({
-		type: "v", 
-		minA: 100, initA: 250, maxA: 500,
-		accessKey: "|"
-	});
-
-	// Horizontal splitter, nested in the right pane of the vertical splitter.
-	if ( $("#TopPane").length > 0)
+	try
 	{
-		$("#RightPane").splitter({
-			type: "h" //,
-			//minA: 100, initA: 150, maxA: 500,
-			//accessKey: "_"
+	var myLayout; // a var is required because this page utilizes: myLayout.allowOverflow() method
+
+	$(document).ready(function () {
+		// Layout
+		myLayout = $('body').layout({
+			west : { minSize: 200, size: 300 /* TO DO: read from a cookie ?*/, spacing_open: 16, spacing_close: 16, slideTrigger_open: "mouseover", hideTogglerOnSlide: true }
 		});
-	}
-	
-	// Manually set the outer splitter's height to fill the browser window.
-	// This must be re-done any time the browser window is resized.
-	$(window).bind("resize", function(){
-		var ms = $("#MySplitter");
-		var top = ms.offset().top;		// from dimensions.js
-		var wh = $(window).height();
-		// Account for margin or border on the splitter container
-		var mrg = parseInt(ms.css("marginBottom")) || 0;
-		var brd = parseInt(ms.css("borderBottomWidth")) || 0;
-		ms.css("height", (wh-top-mrg-brd)+"px");
+		myLayout.addPinBtn( "#tPinMenu", "west" );
+		//myLayout.open( "west" );
+		$('.ui-layout-resizer-west').html('<img src="../images/splitter-top-corner.png"/>');
 
-		// IE fires resize for splitter; others don't so do it here
-		if ( !jQuery.browser.msie )
-			ms.trigger("resize");
-
+		// Accordion Menu
+		$("#accordion").accordion({ header: "h3", navigation: true, autoHeight: false });
+ 	});
 		
-	}).trigger("resize");
-	
-	var ms = $("#MySplitter");
-	ms.trigger("resize");
-
-	if ( $("#TopPane").length > 0)
-	{
-		$("#RightPane").trigger("resize");
-	}
-	
-	$("div[id^=tabbedContent] > ul").tabs( 1, { fxFade: true, fxSpeed: 'fast' } ); // tabs
+	//$("div[id^=tabbedContent] > ul").tabs( 1, { fxFade: true, fxSpeed: 'fast' } ); // tabs
+	$("div[id^=tabbedContent]").tabs(); // tabs
 	$("table.listResults").tableHover(); // hover tables
 	$(".listResults").tablesorter( { headers: { 0:{sorter: false }}, widgets: ['zebra', 'truncatedList']} ); // sortable and zebra tables
-	$(".date-pick").datePicker( {clickInput: false, createButton: true, startDate: '1900-01-01'} ); // Date picker
-	$('#ModalDlg').jqm({ajax: '@href', trigger: 'a.jqmTrigger', overlay:70, modal:true, toTop:true}); // jqModal Window
+	$(".date-pick").datepicker({
+			showOn: 'button',
+			buttonImage: '../images/calendar.png',
+			buttonImageOnly: true,
+			dateFormat: 'yy-mm-dd',
+			constrainInput: false,
+			changeMonth: true,
+			changeYear: true
+		});
+	$('.resizable').resizable(); // Make resizable everything that claims to be resizable !
+	docWidth = $(document).width();
+	$('#ModalDlg').dialog({ autoOpen: false, modal: true, width: 0.8*docWidth }); // JQuery UI dialogs
+	ShowDebug();
+	$('#logOffBtn>ul').popupmenu();
+	}
+	catch(err)
+	{
+		// Do something with the error !
+	}
 	
 	//$('.display_block').draggable(); // make the blocks draggable
 EOF
@@ -161,6 +151,7 @@ EOF
 			findValue(li);
 		}
 		
+		
 		function formatItem(row) {
 			return row[0];
 		}
@@ -174,6 +165,14 @@ EOF
 		{
 			window.location.href = './UI.php?operation=details&class='+sClass+'&id='+id;
 		}
+
+		function ShowDebug()
+		{
+			if ($('#rawOutput > div').html() != '')
+			{
+				$('#rawOutput').dialog( {autoOpen: true, modal:false});
+			}
+		}
 		");
 		$this->DisplayMenu();
 	}
@@ -183,17 +182,16 @@ EOF
 		$this->m_sMenu .= $sHtml;
 	}
 
-    public function DisplayMenu()
-    {
-        // Combo box to select the organization
-		$this->AddToMenu("<div id=\"OrganizationSelection\">
-			  <form style=\"display:inline\" action=\"{$_SERVER['PHP_SELF']}\"><select style=\"width:150px;font-size:x-small\" name=\"org_id\" title=\"Pick an organization\" onChange=\"this.form.submit();\">\n");
+	public function GetSiloSelectionForm()
+	{
+		$sHtml = '<div id="SiloSelection">';
+		$sHtml .= '<form style="display:inline" action="'.$_SERVER['PHP_SELF'].'"><select style="width:150px;font-size:x-small" name="org_id" title="Pick an organization" onChange="this.form.submit();">';
 		// List of visible Organizations
 		$oContext = new UserContext();
 		$oSearchFilter = $oContext->NewFilter("bizOrganization");
 		$oSet = new CMDBObjectSet($oSearchFilter);
 		$sSelected = ($this->m_currentOrganization == '') ? ' selected' : '';
-		$this->AddToMenu("<option value=\"\"$sSelected>".Dict::S('UI:AllOrganizations')."</option>");
+		$sHtml .= '<option value="">'.Dict::S('UI:AllOrganizations').'</option>';
 		if ($oSet->Count() > 0)
 		while($oOrg = $oSet->Fetch())
 		{
@@ -201,24 +199,32 @@ EOF
 			{
 				$oCurrentOrganization = $oOrg;
 				$sSelected = " selected";
+		
 			}
 			else
 			{
 				$sSelected = "";
 			}
-			$this->AddToMenu("<option value=\"".$oOrg->GetKey()."\"$sSelected>".$oOrg->Get('name')."</option>\n");
+			$sHtml .= '<option value="'.$oOrg->GetKey().'"'.$sSelected.'>'.$oOrg->Get('name').'</option>';
 		}
-		$this->AddToMenu("</select>\n");
+		$sHtml .= '</select>';
 		// Add other dimensions/context information to this form
 		$oAppContext = new ApplicationContext();
 		$oAppContext->Reset('org_id'); // Org id is handled above and we want to be able to change it here !
-		$this->AddToMenu($oAppContext->GetForForm());		
-		$this->AddToMenu("</form>\n");
-		$this->AddToMenu("</div>\n");
-		$this->AddToMenu("<ul id=\"browser\" class=\"dir\">\n");
-
+		$sHtml .= $oAppContext->GetForForm();		
+		$sHtml .= '</form>';
+		$sHtml .= '</div>';
+		return $sHtml;		
+	}
+	
+    public function DisplayMenu()
+    {
+		$oContext = new UserContext();
 		// Display the menu
 		$oAppContext = new ApplicationContext();
+		$iActiveNodeId = utils::ReadParam('menu', '');
+		$iAccordionIndex = 0;
+		
 		// 1) Application defined menus
 		$oSearchFilter = $oContext->NewFilter("menuNode");
 		$oSearchFilter->AddCondition('parent_id', 0, '=');
@@ -227,8 +233,14 @@ EOF
 		$oSet = new CMDBObjectSet($oSearchFilter, array('rank' => true));
 		while ($oRootMenuNode = $oSet->Fetch())
 		{
-			$oRootMenuNode->DisplayMenu($this, 'application', $oAppContext->GetAsHash());
+			$bResult = $oRootMenuNode->DisplayMenu($this, 'application', $oAppContext->GetAsHash(), true, $iActiveNodeId);
+			if ($bResult)
+			{
+				$this->add_ready_script("$('#accordion').accordion('activate', $iAccordionIndex)");
+			}
+			$iAccordionIndex++;
 		}
+		
 		// 2) User defined menus (Bookmarks)
 		$oSearchFilter = $oContext->NewFilter("menuNode");
 		$oSearchFilter->AddCondition('parent_id', 0, '=');
@@ -238,8 +250,14 @@ EOF
 		$oSet = new CMDBObjectSet($oSearchFilter, array('rank' => true));
 		while ($oRootMenuNode = $oSet->Fetch())
 		{
-			$oRootMenuNode->DisplayMenu($this, 'user', $oAppContext->GetAsHash());
+			$oRootMenuNode->DisplayMenu($this, 'user', $oAppContext->GetAsHash(), true, $iActiveNodeId);
+			if ($bResult)
+			{
+				$this->add_ready_script("$('#accordion').accordion('activate', $iAccordionIndex)");
+			}
+			$iAccordionIndex++;
 		}
+		
 		// 3) Administrator menu
 		if (userRights::IsAdministrator())
 		{
@@ -250,7 +268,12 @@ EOF
 			$oSet = new CMDBObjectSet($oSearchFilter, array('rank' => true));
 			while ($oRootMenuNode = $oSet->Fetch())
 			{
-				$oRootMenuNode->DisplayMenu($this, 'administrator', $oAppContext->GetAsHash());
+				$oRootMenuNode->DisplayMenu($this, 'administrator', $oAppContext->GetAsHash(), true, $iActiveNodeId);
+				if ($bResult)
+				{
+					$this->add_ready_script("$('#accordion').accordion('activate', $iAccordionIndex)");
+				}
+				$iAccordionIndex++;
 			}
 		}
 
@@ -319,7 +342,14 @@ EOF
         echo "</head>\n";
         echo "<body>\n";
 
-		// Display the header
+
+
+
+
+
+
+
+		// Render the revision number
 		if (ITOP_REVISION == '$WCREV$')
 		{
 			// This is NOT a version built using the buil system, just display the main version
@@ -330,7 +360,104 @@ EOF
 			// This is a build made from SVN, let display the full information
 			$sVersionString = "iTop Version ".ITOP_VERSION." revision ".ITOP_REVISION.", built on: ".ITOP_BUILD_DATE;
 		}
-		echo "<div id=\"Header\">\n";
+
+		// Render the text of the global search form
+		$sText = Utils::ReadParam('text', '');
+		$sOnClick = "";
+		if (empty($sText))
+		{
+			// if no search text is supplied then
+			// 1) the search text is filled with "your search"
+			// 2) clicking on it will erase it
+			$sText = Dict::S("UI:YourSearch");
+			$sOnClick = " onclick=\"this.value='';this.onclick=null;\"";
+		}
+
+		$sForm = $this->GetSiloSelectionForm();
+		
+		// Render the tabs in the page (if any)
+		foreach($this->m_aTabs as $sTabContainerName => $m_aTabs)
+		{
+			$sTabs = '';
+			$container_index = 0;
+			if (count($m_aTabs) > 0)
+			{
+			  $sTabs = "<!-- tabs -->\n<div id=\"tabbedContent_{$container_index}\" class=\"light\">\n";
+			  $sTabs .= "<ul>\n";
+			  // Display the unordered list that will be rendered as the tabs
+	          $i = 0;
+			  foreach($m_aTabs as $sTabName => $sTabContent)
+			  {
+			      $sTabs .= "<li><a href=\"#fragment_$i\" class=\"tab\"><span>".htmlentities($sTabName, ENT_QUOTES, 'UTF-8')."</span></a></li>\n";
+			      $i++;
+	          }
+			  $sTabs .= "</ul>\n";
+			  // Now add the content of the tabs themselves
+			  $i = 0;
+			  foreach($m_aTabs as $sTabName => $sTabContent)
+			  {
+			      $sTabs .= "<div id=\"fragment_$i\">".$sTabContent."</div>\n";
+			      $i++;
+	          }
+			  $sTabs .= "</div>\n<!-- end of tabs-->\n";
+	        }
+			$this->s_content = str_replace("\$Tabs:$sTabContainerName\$", $sTabs, $this->s_content);
+			$container_index++;
+		}
+		$sUserName = UserRights::GetUser();
+		$sIsAdmin = UserRights::IsAdministrator() ? '(Administrator)' : '';
+		if (UserRights::IsAdministrator())
+		{
+			$sLogonMessage = Dict::Format('UI:LoggedAsMessage+Admin', $sUserName);
+		}
+		else
+		{
+			$sLogonMessage = Dict::Format('UI:LoggedAsMessage', $sUserName);		
+		}
+		$sLogOffMenu = "<span id=\"logOffBtn\"><ul><li><img src=\"../images/onOffBtn.png\"><ul>";
+		$sLogOffMenu .= "<li><span>$sLogonMessage</span></li>\n";
+		$sLogOffMenu .= "<li><a href=\"#\">Log Off</a></li>\n";
+		$sLogOffMenu .= "<li><a href=\"#\">Change password...</a></li>\n";
+		$sLogOffMenu .= "</ul>\n</li>\n</ul></span>\n";
+
+		//$sLogOffMenu = "<span id=\"logOffBtn\" style=\"height:55px;padding:0;margin:0;\"><img src=\"../images/onOffBtn.png\"></span>";
+
+		echo '<div id="left-pane" class="ui-layout-west">';
+		echo '<!-- Beginning of the left pane -->';
+		echo '	<div id="header-logo">';
+		echo '	<div id="top-left"></div><div id="logo"><img src="../images/itop-logo.png" style="margin-top:16px; margin-right:40px;"/></div>';
+		echo '	</div>';
+		echo '	<div class="header-menu">';
+		echo '		<div class="icon ui-state-default ui-corner-all"><span id="tPinMenu" class="ui-icon ui-icon-pin-w">pin</span></div>';
+		echo '		<div style="width:100%; text-align:center;">'.$sForm.'</div>';
+		echo '	</div>';
+		echo '	<div id="menu" class="ui-layout-content">';
+		echo '		<div id="inner_menu">';
+		echo '			<div id="accordion">';
+		echo $this->m_sMenu;
+		echo '			<!-- Beginning of the accordion menu -->';
+		echo '			<!-- End of the accordion menu-->';
+		echo '			</div>';
+		echo '		</div> <!-- /inner menu -->';
+		echo '	</div> <!-- /menu -->';
+		echo '	<div class="footer"><span>iTop by Combodo</span></div>';
+		echo '<!-- End of the left pane -->';
+		echo '</div>';
+
+		echo '<div class="ui-layout-center">';
+		echo '	<div id="top-bar" style="width:100%">';
+		echo '		<div id="global-search"><form><table><tr><td id="g-search-input"><input type="text" name="text" value="'.$sText.'"'.$sOnClick.'/></td>';
+		echo '<td><input type="image" src="../images/searchBtn.png"/></td>';
+		echo '<td style="padding-right:20px;padding-left:20px;">'.$sLogOffMenu.'</td><td><input type="hidden" name="operation" value="full_text"/></td></tr></table></form></div>';
+		//echo '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="hidden" name="operation" value="full_text"/></td></tr></table></form></div>';
+		echo '	</div>';
+		echo '	<div class="ui-layout-content">';
+		echo '	<!-- Beginning of page content -->';
+		echo $this->s_content;
+		echo '	<!-- End of page content -->';
+		echo '	</div>';
+		echo '</div>';
+/*		
 		echo "<div class=\"iTopLogo\" title=\"$sVersionString\"><span>iTop</span></div>\n";
 		//echo "<div id=\"GlobalSearch\"><div style=\"border: 1px solid #999; padding:1px; background-color:#fff;\"><img src=\"../images/magnifier.gif\"/><input style=\"border:0\" type=\"text\" size=\"15\" title=\"Global Search\"></input></div></div>\n";
 		$sText = Utils::ReadParam('text', '');
@@ -373,50 +500,21 @@ EOF
 		echo "  </div> <!-- LeftPane -->\n";
 		
 		echo "<div id=\"RightPane\">\n";
-        
-		// Render the tabs in the page (if any)
-		foreach($this->m_aTabs as $sTabContainerName => $m_aTabs)
-		{
-			$sTabs = '';
-			$container_index = 0;
-			if (count($m_aTabs) > 0)
-			{
-			  $sTabs = "<!-- tabs -->\n<div id=\"tabbedContent_{$container_index}\" class=\"light\">\n";
-			  $sTabs .= "<ul>\n";
-			  // Display the unordered list that will be rendered as the tabs
-	          $i = 0;
-			  foreach($m_aTabs as $sTabName => $sTabContent)
-			  {
-			      $sTabs .= "<li><a href=\"#fragment_$i\" class=\"tab\"><span>".htmlentities($sTabName, ENT_QUOTES, 'UTF-8')."</span></a></li>\n";
-			      $i++;
-	          }
-			  $sTabs .= "</ul>\n";
-			  // Now add the content of the tabs themselves
-			  $i = 0;
-			  foreach($m_aTabs as $sTabName => $sTabContent)
-			  {
-			      $sTabs .= "<div id=\"fragment_$i\">".$sTabContent."</div>\n";
-			      $i++;
-	          }
-			  $sTabs .= "</div>\n<!-- end of tabs-->\n";
-	        }
-			$this->s_content = str_replace("\$Tabs:$sTabContainerName\$", $sTabs, $this->s_content);
-			$container_index++;
-		}
+    
         
 		// Display the page's content
         echo $this->s_content;
 
+*/
         // Add the captured output
         if (trim($s_captured_output) != "")
         {
-            echo "<div class=\"raw_output\">$s_captured_output</div>\n";
+            echo "<div id=\"rawOutput\" title=\"Debug Output\"><div style=\"height:500px; overflow-y:auto;\">$s_captured_output</div></div>\n";
         }
         echo $this->s_deferred_content;
-		echo "<div class=\"jqmWindow\" id=\"ex2\">Please wait...</div>\n"; // jqModal Window
-		echo "</div> <!-- RightPane -->\n";
-		echo "</div> <!-- Splitter -->\n";
-		echo "<div class=\"jqmWindow\" id=\"ModalDlg\"></div>";
+		echo "<div style=\"display:none\" title=\"ex2\" id=\"ex2\">Please wait...</div>\n"; // jqModal Window
+		echo "<div style=\"display:none\" title=\"dialog\" id=\"ModalDlg\"></div>";
+
 		echo "</body>\n";
         echo "</html>\n";
     }

@@ -145,7 +145,7 @@ class UILinksWizard
 					$('#ModalDlg').css('width', dlgWidth);
 					$('#ModalDlg').css('left', 50);
 					$('#ModalDlg').css('top', 50);
-					$('#ModalDlg').jqmShow();
+					$('#ModalDlg').dialog( 'open' );
 				},
 				'html'
 			);
@@ -179,18 +179,7 @@ class UILinksWizard
 				function(data)
 				{
 					$('#SearchResultsToAdd').html(data);
-					nb_rows = $('#SearchResultsToAdd table.listResults tr').length;
-					if(nb_rows > 10)
-					{
-						yOffset = $('#ModalDlg').height() - $('#SearchResultsToAdd table.listResults tbody').height();
-						tbodyHeight = $(document).height() - 100 - yOffset;
-						if ($('#ModalDlg').height() > ($(document).height() - 100))
-						{
-							$('#SearchResultsToAdd table.listResults tbody').attr('height', tbodyHeight);
-							$('#SearchResultsToAdd .listResults tbody').css('overflow', 'auto');
-							$('#SearchResultsToAdd .listResults').tablesorter( { headers: { 0:{sorter: false }}, widgets: ['zebra']} ); // sortable and zebra tables
-						}
-					}
+					$('#SearchResultsToAdd .listResults').tablesorter( { headers: { 0:{sorter: false }}, widgets: ['zebra']} ); // sortable and zebra tables
 					
 				},
 				'html'
@@ -248,7 +237,7 @@ class UILinksWizard
 				},
 				'html'
 			);
-			$('#ModalDlg').jqmHide();
+			$('#ModalDlg').dialog('close');
 			return false;
 		}
 		
@@ -287,7 +276,7 @@ EOF
 		$this->DisplayFormTable($oP, $this->m_aTableConfig, $aForm);
 		$oP->add("<span style=\"float:left;\">&nbsp;&nbsp;&nbsp;<img src=\"../images/tv-item-last.gif\">&nbsp;&nbsp;<input id=\"btnRemove\" type=\"button\" value=\"".Dict::S('UI:RemoveLinkedObjectsOf_Class')."\" onClick=\"RemoveSelected();\" >");
 		$oP->add("&nbsp;&nbsp;&nbsp;<input id=\"btnAdd\" type=\"button\" value=\"".Dict::Format('UI:AddLinkedObjectsOf_Class', MetaModel::GetName($this->m_sLinkedClass))."\" onClick=\"AddObjects();\"></span>\n");
-		$oP->add("<span style=\"float:right;\"><input id=\"btnCancel\" type=\"button\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"goBack();\">");
+		$oP->add("<span style=\"float:right;\"><input id=\"btnCancel\" type=\"button\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"BackToDetails('".$sTargetClass."', ".$this->m_iObjectId.");\">");
 		$oP->add("&nbsp;&nbsp;&nbsp;<input id=\"btnOk\" type=\"submit\" value=\"".Dict::S('UI:Button:Ok')."\"></span>\n");
 		$oP->add("<span style=\"clear:both;\"><p>&nbsp;</p></span>\n");
 		$oP->add("</div>\n");
@@ -380,9 +369,9 @@ EOF
 		$sTargetClass = $oAttDef->GetTargetClass();
 		$oTargetObj = $oContext->GetObject($sTargetClass, $this->m_iObjectId);
 		$oP->add("<div class=\"wizContainer\">\n");
-		$oP->add("<div class=\"page_header\">\n");
-		$oP->add("<h1>".Dict::Format('UI:AddObjectsOf_Class_LinkedWith_Class_Instance', MetaModel::GetName($this->m_sLinkedClass), MetaModel::GetName(get_class($oTargetObj)), "<span class=\"hilite\">".$oTargetObj->GetHyperlink()."</span>")."</h1>\n");
-		$oP->add("</div>\n");
+		//$oP->add("<div class=\"page_header\">\n");
+		//$oP->add("<h1>".Dict::Format('UI:AddObjectsOf_Class_LinkedWith_Class_Instance', MetaModel::GetName($this->m_sLinkedClass), MetaModel::GetName(get_class($oTargetObj)), "<span class=\"hilite\">".$oTargetObj->GetHyperlink()."</span>")."</h1>\n");
+		//$oP->add("</div>\n");
 
 		$oFilter = $oContext->NewFilter($this->m_sLinkedClass);
 		$oSet = new CMDBObjectSet($oFilter);
@@ -392,9 +381,10 @@ EOF
 		$oP->Add("<div id=\"SearchResultsToAdd\">\n");
 		$oP->Add("<div style=\"height: 100px; background: #fff;border-color:#F6F6F1 #E6E6E1 #E6E6E1 #F6F6F1; border-style:solid; border-width:3px; text-align: center; vertical-align: center;\"><p>".Dict::S('UI:Message:EmptyList:UseSearchForm')."</p></div>\n");
 		$oP->Add("</div>\n");
-		$oP->add("<input type=\"button\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"$('#ModalDlg').jqmHide();\">&nbsp;&nbsp;<input type=\"submit\" value=\"".Dict::S('UI:Button:Add')."\">");
+		$oP->add("<input type=\"button\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"$('#ModalDlg').dialog('close');\">&nbsp;&nbsp;<input type=\"submit\" value=\"".Dict::S('UI:Button:Add')."\">");
 		$oP->Add("</div>\n");
 		$oP->Add("</form>\n");
+		$oP->add_ready_script("$('#ModalDlg').dialog('option', {title:'".Dict::Format('UI:AddObjectsOf_Class_LinkedWith_Class_Instance', MetaModel::GetName($this->m_sLinkedClass), MetaModel::GetName(get_class($oTargetObj)), "<span class=\"hilite\">".$oTargetObj->GetHyperlink()."</span>")."'});");
 		$oP->add_ready_script("$('div#SearchFormToAdd form').bind('submit.uilinksWizard', SubmitHook);");
 	}
 
