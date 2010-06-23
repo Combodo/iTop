@@ -627,7 +627,7 @@ function DisplayStep4(SetupWebPage $oP, Config $oConfig, $sAdminUser, $sAdminPwd
 		$oP->p("</fieldset>\n");
 		$oP->add("<button type=\"button\" onClick=\"window.history.back();\"><< Back</button>\n");
 		$oP->add("&nbsp;&nbsp;&nbsp;&nbsp;\n");
-		$oP->add("<button onclick=\"DoSubmit('Finalizing configuration and loading data...', 4);\">Finish</button>\n");
+		$oP->add("<button onclick=\"return DoSubmit('Finalizing configuration and loading data...', 4);\">Finish</button>\n");
 	}
 	else
 	{
