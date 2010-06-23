@@ -722,7 +722,12 @@ abstract class MetaModel
 
 	public static function EnumRelations($sClass = '')
 	{
-		return array_keys(self::$m_aRelationInfos);
+		if (empty($sClass))
+		{
+			return array_keys(self::$m_aRelationInfos);
+		}
+
+		return array_keys(self::EnumRelationQueries($sClass, $sRelCode));
 	}
 
 	public static function EnumRelationProperties($sRelCode)
