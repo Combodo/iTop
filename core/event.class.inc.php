@@ -33,7 +33,6 @@ class Event extends cmdbAbstractObject
 		(
 			"category" => "core/cmdb",
 			"key_type" => "autoincrement",
-			"key_label" => "",
 			"name_attcode" => "",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
@@ -70,7 +69,6 @@ class EventNotification extends Event
 		(
 			"category" => "core/cmdb",
 			"key_type" => "autoincrement",
-			"key_label" => "",
 			"name_attcode" => "",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
@@ -103,7 +101,6 @@ class EventNotificationEmail extends EventNotification
 		(
 			"category" => "core/cmdb",
 			"key_type" => "autoincrement",
-			"key_label" => "",
 			"name_attcode" => "",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
@@ -140,7 +137,6 @@ class EventIssue extends Event
 		(
 			"category" => "core/cmdb",
 			"key_type" => "autoincrement",
-			"key_label" => "",
 			"name_attcode" => "",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
@@ -240,7 +236,6 @@ class EventWebService extends Event
 		(
 			"category" => "core/cmdb",
 			"key_type" => "autoincrement",
-			"key_label" => "",
 			"name_attcode" => "",
 			"state_attcode" => "",
 			"reconc_keys" => array(),

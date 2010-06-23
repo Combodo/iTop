@@ -43,7 +43,6 @@ class Animal extends cmdbObject
 		(
 			"category" => "blah",
 			"key_type" => "autoincrement",
-			"key_label" => "",
 			"name_attcode" => "",
 			"state_attcode" => "",
 			"reconc_keys" => array(""),
@@ -70,7 +69,6 @@ class Mammal extends Animal
 		(
 			"category" => "blah",
 			"key_type" => "autoincrement",
-			"key_label" => "",
 			"name_attcode" => "name",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
@@ -95,7 +93,6 @@ class Bird extends Animal
 		(
 			"category" => "blah",
 			"key_type" => "autoincrement",
-			"key_label" => "",
 			"name_attcode" => "",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
@@ -117,7 +114,6 @@ class WalkingBird extends Bird
 		(
 			"category" => "blah",
 			"key_type" => "",
-			"key_label" => "",
 			"name_attcode" => "",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
@@ -139,7 +135,6 @@ class FlyingBird extends Bird
 		(
 			"category" => "blah",
 			"key_type" => "",
-			"key_label" => "",
 			"name_attcode" => "",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
@@ -162,7 +157,6 @@ class AnimalRelation extends cmdbObject
 		(
 			"category" => "blah",
 			"key_type" => "autoincrement",
-			"key_label" => "",
 			"name_attcode" => "",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
@@ -188,7 +182,6 @@ class EaterToEaten extends AnimalRelation
 		(
 			"category" => "blah",
 			"key_type" => "autoincrement",
-			"key_label" => "",
 			"name_attcode" => "",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
@@ -210,7 +203,6 @@ class Group extends cmdbObject
 		(
 			"category" => "blah",
 			"key_type" => "autoincrement",
-			"key_label" => "",
 			"name_attcode" => "name",
 			"state_attcode" => "",
 			"reconc_keys" => array(),

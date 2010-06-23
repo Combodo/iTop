@@ -37,7 +37,6 @@ class bizKnownError extends cmdbAbstractObject
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "autoincrement",
-			"key_label" => "id",
 			"name_attcode" => "name",
 			"state_attcode" => "",
 			"reconc_keys" => array("org_id", "name"), // inherited attributes
@@ -93,7 +92,6 @@ class lnkInfraError extends cmdbAbstractObject
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "autoincrement",
-			"key_label" => "link_id",
 			"name_attcode" => "",  // ????
 			"state_attcode" => "",
 			"reconc_keys" => array("infra_id","error_id"),  // ????
@@ -133,7 +131,6 @@ class lnkDocumentError extends cmdbAbstractObject
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "autoincrement",
-			"key_label" => "link_id",
 			"name_attcode" => "link_type",
 			"state_attcode" => "",
 			"reconc_keys" => array("doc_name", "error_name"),

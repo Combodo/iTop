@@ -36,7 +36,6 @@ class bizServiceCall extends cmdbAbstractObject
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "autoincrement",
-			"key_label" => "id",
 			"name_attcode" => "name",  
 			"state_attcode" => "call_status",
 			"reconc_keys" => array("title"),
@@ -171,7 +170,6 @@ class lnkCallTicket extends cmdbAbstractObject
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "autoincrement",
-			"key_label" => "link_id",
 			"name_attcode" => "impact",  // ????
 			"state_attcode" => "",
 			"reconc_keys" => array("impact"),  // ????
@@ -217,7 +215,6 @@ class lnkInfraCall extends cmdbAbstractObject
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "autoincrement",
-			"key_label" => "link_id",
 			"name_attcode" => "impact",  // ????
 			"state_attcode" => "",
 			"reconc_keys" => array("impact"),  // ????

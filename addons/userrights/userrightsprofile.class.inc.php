@@ -58,7 +58,6 @@ class URP_Users extends UserRightsBaseClass
 		(
 			"category" => "addon/userrights",
 			"key_type" => "autoincrement",
-			"key_label" => "",
 			"name_attcode" => "login",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
@@ -189,7 +188,6 @@ class URP_Profiles extends UserRightsBaseClass
 		(
 			"category" => "addon/userrights",
 			"key_type" => "autoincrement",
-			"key_label" => "",
 			"name_attcode" => "name",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
@@ -296,7 +294,6 @@ class URP_Dimensions extends UserRightsBaseClass
 		(
 			"category" => "addon/userrights",
 			"key_type" => "autoincrement",
-			"key_label" => "",
 			"name_attcode" => "name",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
@@ -410,7 +407,6 @@ class URP_UserProfile extends UserRightsBaseClass
 		(
 			"category" => "addon/userrights",
 			"key_type" => "autoincrement",
-			"key_label" => "",
 			"name_attcode" => "userid",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
@@ -452,7 +448,6 @@ class URP_ProfileProjection extends UserRightsBaseClass
 		(
 			"category" => "addon/userrights",
 			"key_type" => "autoincrement",
-			"key_label" => "",
 			"name_attcode" => "profileid",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
@@ -525,7 +520,6 @@ class URP_ClassProjection extends UserRightsBaseClass
 		(
 			"category" => "addon/userrights",
 			"key_type" => "autoincrement",
-			"key_label" => "",
 			"name_attcode" => "dimensionid",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
@@ -601,7 +595,6 @@ class URP_ActionGrant extends UserRightsBaseClass
 		(
 			"category" => "addon/userrights",
 			"key_type" => "autoincrement",
-			"key_label" => "",
 			"name_attcode" => "profileid",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
@@ -639,7 +632,6 @@ class URP_StimulusGrant extends UserRightsBaseClass
 		(
 			"category" => "addon/userrights",
 			"key_type" => "autoincrement",
-			"key_label" => "",
 			"name_attcode" => "profileid",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
@@ -677,7 +669,6 @@ class URP_AttributeGrant extends UserRightsBaseClass
 		(
 			"category" => "addon/userrights",
 			"key_type" => "autoincrement",
-			"key_label" => "",
 			"name_attcode" => "actiongrantid",
 			"state_attcode" => "",
 			"reconc_keys" => array(),

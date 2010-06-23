@@ -48,7 +48,6 @@ class menuNode extends DBObject
 		(
 			"category" => "gui",
 			"key_type" => "autoincrement",
-			"key_label" => "",
 			"name_attcode" => "name",
 			"state_attcode" => "",
 			"reconc_keys" => array(),

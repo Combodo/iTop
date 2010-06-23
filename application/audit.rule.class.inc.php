@@ -36,7 +36,6 @@ class AuditRule extends cmdbAbstractObject
 		(
 			"category" => "application",
 			"key_type" => "autoincrement",
-			"key_label" => "",
 			"name_attcode" => "name",
 			"state_attcode" => "",
 			"reconc_keys" => array('name'),

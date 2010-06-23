@@ -39,7 +39,6 @@ class privUITransaction extends DBObject
 		(
 			"category" => "gui",
 			"key_type" => "autoincrement",
-			"key_label" => "",
 			"name_attcode" => "expiration_date",
 			"state_attcode" => "",
 			"reconc_keys" => array(),

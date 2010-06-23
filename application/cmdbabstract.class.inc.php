@@ -571,7 +571,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 					$aList[$sClassName][$sAttCode] = $oAttDef;
 				}
 			}
-			$aHeader[] = MetaModel::GetKeyLabel($sClassName);
+			$aHeader[] = 'id';
 			foreach($aList[$sClassName] as $sAttCode => $oAttDef)
 			{
 				if ($oAttDef->IsExternalField())

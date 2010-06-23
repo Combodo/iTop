@@ -31,7 +31,6 @@ class UserRightsMatrixUsers extends DBObject
 		(
 			"category" => "addon/userrights",
 			"key_type" => "autoincrement",
-			"key_label" => "",
 			"name_attcode" => "login",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
@@ -55,7 +54,6 @@ class UserRightsMatrixClassGrant extends DBObject
 		(
 			"category" => "addon/userrights",
 			"key_type" => "autoincrement",
-			"key_label" => "",
 			"name_attcode" => "",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
@@ -82,7 +80,6 @@ class UserRightsMatrixClassStimulusGrant extends DBObject
 		(
 			"category" => "addon/userrights",
 			"key_type" => "autoincrement",
-			"key_label" => "",
 			"name_attcode" => "",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
@@ -109,7 +106,6 @@ class UserRightsMatrixAttributeGrant extends DBObject
 		(
 			"category" => "addon/userrights",
 			"key_type" => "autoincrement",
-			"key_label" => "",
 			"name_attcode" => "",
 			"state_attcode" => "",
 			"reconc_keys" => array(),

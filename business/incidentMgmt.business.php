@@ -36,7 +36,6 @@ class bizIncidentTicket extends cmdbAbstractObject
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "autoincrement",
-			"key_label" => "id",
 			"name_attcode" => "name",  
 			"state_attcode" => "ticket_status",
 			"reconc_keys" => array("title"),
@@ -213,7 +212,6 @@ class lnkRelatedTicket extends cmdbAbstractObject
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "autoincrement",
-			"key_label" => "link_id",
 			"name_attcode" => "impact",  // ????
 			"state_attcode" => "",
 			"reconc_keys" => array("impact"),  // ????
@@ -259,7 +257,6 @@ class lnkInfraTicket extends cmdbAbstractObject
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "autoincrement",
-			"key_label" => "link_id",
 			"name_attcode" => "impact",  // ????
 			"state_attcode" => "",
 			"reconc_keys" => array("impact"),  // ????
@@ -305,7 +302,6 @@ class lnkContactTicket extends cmdbAbstractObject
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "autoincrement",
-			"key_label" => "link_id",
 			"name_attcode" => "role",  // ????
 			"state_attcode" => "",
 			"reconc_keys" => array("role"),  // ????
@@ -350,7 +346,6 @@ class bizWorkgroup extends logRealObject
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "",
-			"key_label" => "id",
 			"name_attcode" => "name",
 			"state_attcode" => "",
 			"reconc_keys" => array("org_name", "name"), // inherited attributes

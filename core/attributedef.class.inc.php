@@ -936,6 +936,7 @@ class AttributeEnum extends AttributeString
 	public function GetAllowedValues($aArgs = array(), $sBeginsWith = '')
 	{
 		$aRawValues = parent::GetAllowedValues($aArgs, $sBeginsWith);
+		if (is_null($aRawValues)) return null;
 		$aLocalizedValues = array();
 		foreach ($aRawValues as $sKey => $sValue)
 		{

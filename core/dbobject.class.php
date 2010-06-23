@@ -320,8 +320,11 @@ abstract class DBObject
 				return;
 			}
 		}
-		$this->m_aCurrValues[$sAttCode] = $oAttDef->MakeRealValue($value);
-		$this->RegisterAsDirty(); // Make sure we do not reload it anymore... before saving it
+		if ($oAttDef->CheckValue($value))
+		{
+			$this->m_aCurrValues[$sAttCode] = $oAttDef->MakeRealValue($value);
+			$this->RegisterAsDirty(); // Make sure we do not reload it anymore... before saving it
+		}
 	}
 	
 	public function Get($sAttCode)

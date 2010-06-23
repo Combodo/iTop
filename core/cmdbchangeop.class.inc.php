@@ -38,7 +38,6 @@ class CMDBChangeOp extends DBObject
 		(
 			"category" => "core/cmdb",
 			"key_type" => "autoincrement",
-			"key_label" => "",
 			"name_attcode" => "change",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
@@ -87,7 +86,6 @@ class CMDBChangeOpCreate extends CMDBChangeOp
 		(
 			"category" => "core/cmdb",
 			"key_type" => "",
-			"key_label" => "",
 			"name_attcode" => "change",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
@@ -122,7 +120,6 @@ class CMDBChangeOpDelete extends CMDBChangeOp
 		(
 			"category" => "core/cmdb",
 			"key_type" => "",
-			"key_label" => "",
 			"name_attcode" => "change",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
@@ -156,7 +153,6 @@ class CMDBChangeOpSetAttribute extends CMDBChangeOp
 		(
 			"category" => "core/cmdb",
 			"key_type" => "",
-			"key_label" => "",
 			"name_attcode" => "change",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
@@ -187,7 +183,6 @@ class CMDBChangeOpSetAttributeScalar extends CMDBChangeOpSetAttribute
 		(
 			"category" => "core/cmdb",
 			"key_type" => "",
-			"key_label" => "",
 			"name_attcode" => "change",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
@@ -278,7 +273,6 @@ class CMDBChangeOpSetAttributeBlob extends CMDBChangeOpSetAttribute
 		(
 			"category" => "core/cmdb",
 			"key_type" => "",
-			"key_label" => "",
 			"name_attcode" => "change",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
@@ -339,7 +333,6 @@ class CMDBChangeOpSetAttributeText extends CMDBChangeOpSetAttribute
 		(
 			"category" => "core/cmdb",
 			"key_type" => "",
-			"key_label" => "",
 			"name_attcode" => "change",
 			"state_attcode" => "",
 			"reconc_keys" => array(),

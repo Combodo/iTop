@@ -37,7 +37,6 @@ class bizServiceRequest extends cmdbAbstractObject
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "autoincrement",
-			"key_label" => "id",
 			"name_attcode" => "name",
 			"state_attcode" => "",
 			"reconc_keys" => array("org_id", "name"), // inherited attributes
@@ -114,7 +113,6 @@ class bizServiceItem extends cmdbAbstractObject
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "autoincrement",
-			"key_label" => "id",
 			"name_attcode" => "name",
 			"state_attcode" => "",
 			"reconc_keys" => array("request_id", "name"), // inherited attributes

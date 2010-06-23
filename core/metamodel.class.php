@@ -304,11 +304,6 @@ abstract class MetaModel
 		self::_check_subclass($sClass);	
 		return (self::$m_aClassParams[$sClass]["key_type"] == "autoincrement");
 	}
-	final static public function GetKeyLabel($sClass)
-	{
-		self::_check_subclass($sClass);	
-		return self::$m_aClassParams[$sClass]["key_label"];
-	}
 	final static public function GetNameAttributeCode($sClass)
 	{
 		self::_check_subclass($sClass);	
@@ -725,7 +720,7 @@ abstract class MetaModel
 	//
 	private static $m_aRelationInfos = array(); // array of ("relcode" => various info on the list, common to every classes)
 
-	public static function EnumRelations()
+	public static function EnumRelations($sClass = '')
 	{
 		return array_keys(self::$m_aRelationInfos);
 	}
@@ -1046,7 +1041,6 @@ abstract class MetaModel
 		$aMandatParams = array(
 			"category" => "group classes by modules defining their visibility in the UI",
 			"key_type" => "autoincrement | string",
-			"key_label" => "if set, then display the key as an attribute",
 			"name_attcode" => "define wich attribute is the class name, may be an inherited attribute",
 			"state_attcode" => "define wich attribute is representing the state (object lifecycle)",
 			"reconc_keys" => "define the attributes that will 'almost uniquely' identify an object in batch processes",

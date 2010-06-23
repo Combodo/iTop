@@ -36,7 +36,6 @@ class bizService extends cmdbAbstractObject
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "autoincrement",
-			"key_label" => "id",
 			"name_attcode" => "name",
 			//"state_attcode" => "status",
 			"state_attcode" => "",
@@ -107,7 +106,6 @@ class bizContract extends cmdbAbstractObject
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "autoincrement",
-			"key_label" => "id",
 			"name_attcode" => "name",
 			//"state_attcode" => "status",
 			"state_attcode" => "",
@@ -203,7 +201,6 @@ class lnkInfraContract extends cmdbAbstractObject
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "autoincrement",
-			"key_label" => "link_id",
 			"name_attcode" => "coverage",  // ????
 			"state_attcode" => "",
 			"reconc_keys" => array("infra_id","contract_id"),  // ????
@@ -244,7 +241,6 @@ class lnkContactContract extends cmdbAbstractObject
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "autoincrement",
-			"key_label" => "link_id",
 			"name_attcode" => "role",  // ????
 			"state_attcode" => "",
 			"reconc_keys" => array("role"),  // ????
@@ -289,7 +285,6 @@ class lnkDocumentContract extends cmdbAbstractObject
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "autoincrement",
-			"key_label" => "link_id",
 			"name_attcode" => "link_type",
 			"state_attcode" => "",
 			"reconc_keys" => array("doc_name", "contract_name"),

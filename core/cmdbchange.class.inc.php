@@ -37,7 +37,6 @@ class CMDBChange extends DBObject
 		(
 			"category" => "core/cmdb",
 			"key_type" => "autoincrement",
-			"key_label" => "",
 			"name_attcode" => "date",
 			"state_attcode" => "",
 			"reconc_keys" => array(),

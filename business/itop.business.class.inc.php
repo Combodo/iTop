@@ -37,6 +37,49 @@ define('STANDARD_STATUSES', 'production,implementation,obsolete');
  */
 MetaModel::RegisterRelation("impacts");
 
+class classetest extends cmdbObject
+{
+
+	public static function Init()
+	{
+		$aParams = array
+		(
+			"category" => "bizmodel,searchable",
+			"key_type" => "automincrement",
+			"name_attcode" => "name",
+			"state_attcode" => "",
+			"reconc_keys" => array("name"),
+			"db_table" => "myclasstable",
+			"db_key_field" => "id",
+			"db_finalclass_field" => "",
+			"display_template" => "",
+		);
+		MetaModel::Init_Params($aParams);
+		//MetaModel::Init_InheritAttributes();
+
+		MetaModel::Init_AddAttribute(new AttributeString("aaaa", array("allowed_values"=>null, "sql"=>"mysqlcolumn_to_be_defined", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeText("b", array("allowed_values"=>null, "sql"=>"mysqlcolumn_to_be_defined", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEmailAddress("c", array("allowed_values"=>null, "sql"=>"mysqlcolumn_to_be_defined", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeIPAddress("d", array("allowed_values"=>null, "sql"=>"mysqlcolumn_to_be_defined", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributePassword("e", array("allowed_values"=>null, "sql"=>"mysqlcolumn_to_be_defined", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("f", array("allowed_values"=>null, "sql"=>"mysqlcolumn_to_be_defined", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeInteger("g", array("allowed_values"=>null, "sql"=>"mysqlcolumn_to_be_defined", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeBoolean("h", array("allowed_values"=>null, "sql"=>"mysqlcolumn_to_be_defined", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeDateTime("i", array("allowed_values"=>null, "sql"=>"mysqlcolumn_to_be_defined", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeDate("j", array("allowed_values"=>null, "sql"=>"mysqlcolumn_to_be_defined", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeBlob("k", array("depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributePropertySet("l", array("allowed_values"=>null, "sql"=>"mysqlcolumn_to_be_defined", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeTable("m", array("allowed_values"=>null, "sql"=>"mysqlcolumn_to_be_defined", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("n", array("targetclass"=>"bizOrganization", "jointype"=>null, "allowed_values"=>null, "sql"=>"mysqlcolumn_to_be_defined", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("o", array("allowed_values"=>null, "extkey_attcode"=>"n", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("p", array("linked_class"=>"class_to_be_defined", "ext_key_to_me"=>"attribute_to_be_defined", "ext_key_to_remote"=>"attribute_to_be_defined", "allowed_values"=>null, "count_min"=>1, "count_max"=>0, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeOQL("q", array("allowed_values"=>null, "sql"=>"mysqlcolumn_to_be_defined", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeClass("r", array("class_category"=>"bizmodel", "more_values"=>"myvalue1,myvalue2,myvalue3", "sql"=>"mysqlcolumn_to_be_defined", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeTemplateString("s", array("allowed_values"=>null, "sql"=>"mysqlcolumn_to_be_defined", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeTemplateText("t", array("allowed_values"=>null, "sql"=>"mysqlcolumn_to_be_defined", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+	}
+}
+
 ////////////////////////////////////////////////////////////////////////////////////
 /**
 * An organization that owns some objects
@@ -57,7 +100,6 @@ class bizOrganization extends cmdbAbstractObject
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "autoincrement",
-			"key_label" => "id",
 			"name_attcode" => "name",
 			"state_attcode" => "",
 			"reconc_keys" => array("name"),
@@ -111,7 +153,6 @@ class logRealObject extends cmdbAbstractObject
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "autoincrement",
-			"key_label" => "id",
 			"name_attcode" => "name",
 			"state_attcode" => "",
 			"reconc_keys" => array("name"),
@@ -158,7 +199,6 @@ class bizContact extends logRealObject
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "",
-			"key_label" => "id",
 			"name_attcode" => "name",
 			"state_attcode" => "",
 			"reconc_keys" => array("org_id", "name"), // inherited attributes
@@ -207,7 +247,6 @@ class bizPerson extends bizContact
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "",
-			"key_label" => "id",
 			"name_attcode" => "name",
 			"state_attcode" => "",
 			"reconc_keys" => array("org_id", "first_name", "name"),  // comment en définir plusieurs
@@ -254,7 +293,6 @@ class bizTeam extends bizContact
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "",
-			"key_label" => "id",
 			"name_attcode" => "name",
 			"state_attcode" => "",
 			"reconc_keys" => array("org_id", "name"), // inherited attributes
@@ -287,7 +325,6 @@ class lnkContactTeam extends cmdbAbstractObject
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "autoincrement",
-			"key_label" => "link_id",
 			"name_attcode" => "role",
 			"state_attcode" => "",
 			"reconc_keys" => array("contact_id", "team_name"),
@@ -326,7 +363,6 @@ class bizDocument extends logRealObject
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "",
-			"key_label" => "id",
 			"name_attcode" => "name",
 			"state_attcode" => "",
 			"reconc_keys" => array("org_id", "name"), // inherited attributes
@@ -369,7 +405,6 @@ class lnkDocumentRealObject extends cmdbAbstractObject
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "autoincrement",
-			"key_label" => "link_id",
 			"name_attcode" => "link_type",
 			"state_attcode" => "",
 			"reconc_keys" => array("doc_id", "object_name"),
@@ -407,7 +442,6 @@ class lnkContactRealObject extends cmdbAbstractObject
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "autoincrement",
-			"key_label" => "link_id",
 			"name_attcode" => "role",
 			"state_attcode" => "",
 			"reconc_keys" => array("contact_id", "object_name"),
@@ -448,7 +482,6 @@ abstract class logInfra extends logRealObject
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "",
-			"key_label" => "id",
 			"name_attcode" => "name",
 			"state_attcode" => "",
 			"reconc_keys" => array("org_id", "name"), // inherited attributes
@@ -477,7 +510,6 @@ class lnkContactInfra extends cmdbAbstractObject
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "autoincrement",
-			"key_label" => "link_id",
 			"name_attcode" => "role",
 			"state_attcode" => "",
 			"reconc_keys" => array("contact_id", "infra_id"),
@@ -516,7 +548,6 @@ class bizLocation extends logInfra
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "",
-			"key_label" => "id",
 			"name_attcode" => "name",
 			"state_attcode" => "",
 			"reconc_keys" => array("org_id", "name"), // inherited attributes
@@ -638,7 +669,6 @@ class bizCircuit extends logInfra
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "",
-			"key_label" => "id",
 			"name_attcode" => "name",
 			"state_attcode" => "",
 			"reconc_keys" => array("org_id", "provider_id", "carrier_ref", "name"), // inherited attributes
@@ -709,7 +739,6 @@ class bizInterface extends logInfra
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "",
-			"key_label" => "id",
 			"name_attcode" => "name",
 			"state_attcode" => "",
 			"reconc_keys" => array("org_id", "device_id", "name"),
@@ -793,7 +822,6 @@ class bizSubnet extends logInfra
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "",
-			"key_label" => "id",
 			"name_attcode" => "name",
 			"state_attcode" => "",
 			"reconc_keys" => array("org_id", "name"), // inherited attributes
@@ -877,7 +905,6 @@ class bizDevice extends logInfra
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "",
-			"key_label" => "id",
 			"name_attcode" => "name",
 			"state_attcode" => "",
 			"reconc_keys" => array("org_id", "name"), // inherited attributes
@@ -938,7 +965,6 @@ class bizPC extends bizDevice
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "",
-			"key_label" => "id",
 			"name_attcode" => "name",
 			"state_attcode" => "",
 			"reconc_keys" => array("org_id", "name"), // inherited attributes
@@ -1022,7 +1048,6 @@ class bizServer extends bizDevice
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "",
-			"key_label" => "id",
 			"name_attcode" => "name",
 			//"state_attcode" => "status",
 			"state_attcode" => "",
@@ -1181,7 +1206,6 @@ class bizNetworkDevice extends bizDevice
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "",
-			"key_label" => "id",
 			"name_attcode" => "name",
 			"state_attcode" => "",
 			"reconc_keys" => array("org_id", "name"), // inherited attributes
@@ -1239,7 +1263,6 @@ class bizInfraGroup extends logInfra
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "",
-			"key_label" => "id",
 			"name_attcode" => "name",
 			"state_attcode" => "",
 			"reconc_keys" => array("org_id", "name"), // inherited attributes
@@ -1313,7 +1336,6 @@ class bizApplication extends logInfra
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "",
-			"key_label" => "id",
 			"name_attcode" => "name",
 			"state_attcode" => "",
 			"reconc_keys" => array("device_id", "name"), // inherited attributes
@@ -1383,7 +1405,6 @@ class lnkInfraGrouping extends cmdbAbstractObject
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "autoincrement",
-			"key_label" => "link_id",
 			"name_attcode" => "impact", 
 			"state_attcode" => "",
 			"reconc_keys" => array(""),
@@ -1435,7 +1456,6 @@ class lnkClientServer extends logRealObject
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "autoincrement",
-			"key_label" => "link_id",
 			"name_attcode" => "relation",  // ????
 			"state_attcode" => "",
 			"reconc_keys" => array("relation"),  // ????
@@ -1477,7 +1497,6 @@ class bizPatch extends logRealObject
 		(
 			"category" => "bizmodel,searchable",
 			"key_type" => "",
-			"key_label" => "id",
 			"name_attcode" => "name",
 			"state_attcode" => "",
 			"reconc_keys" => array("device_id", "name"), // inherited attributes

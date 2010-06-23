@@ -39,7 +39,6 @@ abstract class Action extends cmdbAbstractObject
 		(
 			"category" => "core/cmdb",
 			"key_type" => "autoincrement",
-			"key_label" => "",
 			"name_attcode" => "name",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
@@ -104,7 +103,6 @@ abstract class ActionNotification extends Action
 		(
 			"category" => "core/cmdb",
 			"key_type" => "autoincrement",
-			"key_label" => "",
 			"name_attcode" => "name",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
@@ -138,7 +136,6 @@ class ActionEmail extends ActionNotification
 		(
 			"category" => "core/cmdb",
 			"key_type" => "autoincrement",
-			"key_label" => "",
 			"name_attcode" => "name",
 			"state_attcode" => "",
 			"reconc_keys" => array(),

@@ -60,7 +60,6 @@ function ShowClass($sClass, $sBaseArgs)
 
 	$aProps["Description"] = MetaModel::GetClassDescription($sClass);
 	$aProps["Autoincrement id?"] = MetaModel::IsAutoIncrementKey($sClass);
-	$aProps["Key label"] = MetaModel::GetKeyLabel($sClass);
 	$aProps["Name attribute"] = MetaModel::GetNameAttributeCode($sClass);
 	$aProps["Reconciliation keys"] = implode(", ", MetaModel::GetReconcKeys($sClass));
 	$aProps["DB key column"] = MetaModel::DBGetKey($sClass);

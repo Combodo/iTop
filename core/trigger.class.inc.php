@@ -39,7 +39,6 @@ class Trigger extends cmdbAbstractObject
 		(
 			"category" => "core/cmdb",
 			"key_type" => "autoincrement",
-			"key_label" => "",
 			"name_attcode" => "description",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
@@ -86,7 +85,6 @@ class TriggerOnObject extends Trigger
 		(
 			"category" => "core/cmdb",
 			"key_type" => "autoincrement",
-			"key_label" => "",
 			"name_attcode" => "description",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
@@ -116,7 +114,6 @@ class TriggerOnStateChange extends TriggerOnObject
 		(
 			"category" => "core/cmdb",
 			"key_type" => "autoincrement",
-			"key_label" => "",
 			"name_attcode" => "description",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
@@ -146,7 +143,6 @@ class TriggerOnStateEnter extends TriggerOnStateChange
 		(
 			"category" => "core/cmdb",
 			"key_type" => "autoincrement",
-			"key_label" => "",
 			"name_attcode" => "description",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
@@ -175,7 +171,6 @@ class TriggerOnStateLeave extends TriggerOnStateChange
 		(
 			"category" => "core/cmdb",
 			"key_type" => "autoincrement",
-			"key_label" => "",
 			"name_attcode" => "description",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
@@ -204,7 +199,6 @@ class TriggerOnObjectCreate extends TriggerOnObject
 		(
 			"category" => "core/cmdb",
 			"key_type" => "autoincrement",
-			"key_label" => "",
 			"name_attcode" => "description",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
@@ -233,7 +227,6 @@ class lnkTriggerAction extends cmdbAbstractObject
 		(
 			"category" => "core/cmdb",
 			"key_type" => "autoincrement",
-			"key_label" => "Link ID",
 			"name_attcode" => "",
 			"state_attcode" => "",
 			"reconc_keys" => array(""),
