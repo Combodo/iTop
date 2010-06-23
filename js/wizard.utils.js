@@ -22,13 +22,12 @@ function AddObject(sClass, sId, sExtKeyToRemote)
 {
 	var sCurrentObjectId = new String($('#ac_current_object_id_'+sId).val());
 	// Display the additional dialog
-	$('#LinkDlg_'+sId).jqmShow();
+	$('#LinkDlg_'+sId).dialog('open');
 	return;
 }
 
 function ManageObjects(sTitle, sClass, sId, sExtKeyToRemote)
 {
-	$('#Manage_DlgTitle_'+sId).text(sTitle);
 	aObjList = GetObjectIds(sId, sExtKeyToRemote);
 	if (aObjList.length == 0)
 	{
@@ -36,7 +35,8 @@ function ManageObjects(sTitle, sClass, sId, sExtKeyToRemote)
 	}
 	Manage_LoadSelect('selected_objects_'+sId, 'SELECT '+sClass+' WHERE id IN (' + aObjList.join(', ') + ')'); // id is a reserved keyword always representing the primary key
 	Manage_LoadSelect('available_objects_'+sId, 'SELECT '+sClass+' WHERE id NOT IN (' + aObjList.join(', ') + ')');
-	$('#ManageObjectsDlg_'+sId).jqmShow();
+	$('#ManageObjectsDlg_'+sId).dialog('option', {title: sTitle});
+	$('#ManageObjectsDlg_'+sId).dialog('open');
 }
 
 function Manage_LoadSelect(sSelectedId, sFilter)

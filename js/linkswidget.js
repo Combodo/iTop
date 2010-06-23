@@ -21,6 +21,7 @@ function LinksWidget(id, sLinkedClass, sExtKeyToMe, sExtKeyToRemote, aAttributes
 		
 	this.Refresh = function ()
 	{
+		$('#v_'+this.id).html('<img src="../images/indicator.gif" />');
 		sLinks = JSON.stringify(this.aLinks);
 		if (this.aLinks.length == 0)
 		{
@@ -31,13 +32,12 @@ function LinksWidget(id, sLinkedClass, sExtKeyToMe, sExtKeyToRemote, aAttributes
 		else
 		{
 			$('#'+this.id).val(sLinks);
-			$('#'+this.id).trigger('validate');
 			$('#'+this.id+'_values').load('ajax.render.php?operation=ui.linkswidget.linkedset&sclass='+this.sLinkedClass+'&sextkeytome='+this.sExtKeyToMe+'&sextkeytoremote='+this.sExtKeyToRemote+'&myid='+this.id,
 			{'sset' : sLinks}, function()
 				{
 					// Refresh the style of the loaded table
 					$('#'+this.id+' table.listResults').tableHover();	
-		 			$('#'+this.id+' .listResults').tablesorter( { headers: { 0:{sorter: false }}, widgets: ['zebra']} ); // sortable and zebra tables
+		 			$('#'+this.id+' .listResults').tablesorter( { headers: { 0:{sorter: false }}, widgets: ['zebra', 'truncatedList']} ); // sortable and zebra tables
 				}
 			);
 		}
@@ -56,7 +56,7 @@ function LinksWidget(id, sLinkedClass, sExtKeyToMe, sExtKeyToRemote, aAttributes
 		this.aLinks = new Array(); // rebuild the list of links from scratch
 		if (oSelected.length > 0)
 		{
-			$('#LinkDlg_'+this.id).jqmShow();
+			$('#LinkDlg_'+this.id).dialog('open');
 		}
 		else
 		{
@@ -73,7 +73,7 @@ function LinksWidget(id, sLinkedClass, sExtKeyToMe, sExtKeyToRemote, aAttributes
 	
 	this.OnLinkOk = function()
 	{
-		$('#LinkDlg_'+this.id).jqmHide();
+		$('#LinkDlg_'+this.id).dialog('close');
 		for(i=0; i<this.aObjectBeingLinked.length; i++)
 		{
 			oLink = {};
@@ -87,14 +87,17 @@ function LinksWidget(id, sLinkedClass, sExtKeyToMe, sExtKeyToRemote, aAttributes
 		this.Refresh();
 		// Grey out the 'Add...' button
 		$('#ac_add_'+this.id).attr('disabled', 'disabled');
+		return false;
 	}
 	
 	this.OnLinkCancel = function()
 	{
+		$('#LinkDlg_'+this.id).dialog('close');
 		// Restore the links to their previous value (just in case)
 		this.aLinks = this.aPreviousLinks;
 		// Grey out the 'Add...' button
 		$('#ac_add_'+this.id).attr('disabled', 'disabled');
+		return false;
 	}
 	
 	this.RemoveLink = function(index)
@@ -114,7 +117,7 @@ function LinksWidget(id, sLinkedClass, sExtKeyToMe, sExtKeyToRemote, aAttributes
 		this.aObjectBeingLinked[0] = linkedObjId;
 		// Add the object to the list of links
 		this.aPreviousLinks = this.aLinks; // Save the list in case of cancellation
-		$('#LinkDlg_'+this.id).jqmShow();
+		$('#LinkDlg_'+this.id).dialog('open');
 	}
 	
 	this.ModifyLink = function(index)
@@ -128,6 +131,6 @@ function LinksWidget(id, sLinkedClass, sExtKeyToMe, sExtKeyToRemote, aAttributes
 			$('#'+this.id+'_'+j).val(aLinks[index][aAttributes[j]]);
 		}
 		this.aLinks.splice(index, 1); // Remove the element at position 'index'
-		$('#LinkDlg_'+this.id).jqmShow(); // And add it again	
+		$('#LinkDlg_'+this.id).dialog('open'); // And add it again	
 	}
 }
