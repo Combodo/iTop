@@ -98,13 +98,19 @@ var aFilesToLoad = new Array();
 
 function DoLoadDataAsynchronous()
 {
-	// The array aFilesToLoad is populated by this function dynamically written on the server
-	PopulateDataFilesList();
-
-	$('#setup').block({message: '<p>Loading data...<br/><div id=\"progress\">0%</div></p>'});
-	$('#progress').progression( {Current:0, Maximum: 100, aBackgroundImg: 'orange-progress.gif', aTextColor: '#000000'} );
-	$('#log').ajaxError(function(e, xhr, settings, exception) {	alert('Fatal error detected: '+ xhr.responseText); $('#log').append(xhr.responseText); $('#setup').unblock(); } );
-   LoadNextDataFile('', '');
+	try
+	{
+		// The array aFilesToLoad is populated by this function dynamically written on the server
+		PopulateDataFilesList();
+		$('#setup').block({message: '<p>Loading data...<br/><div id=\"progress\">0%</div></p>'});
+		$('#progress').progression( {Current:0, Maximum: 100, aBackgroundImg: 'orange-progress.gif', aTextColor: '#000000'} );
+		$('#log').ajaxError(function(e, xhr, settings, exception) {	alert('Fatal error detected: '+ xhr.responseText); $('#log').append(xhr.responseText); $('#setup').unblock(); } );
+	   LoadNextDataFile('', '');
+	}
+	catch(err)
+	{
+		alert('An exception occured: '+err);
+	}
 	return false; // Stop here for now
 }
 
@@ -113,33 +119,40 @@ var iCounter = 0;
 function LoadNextDataFile(sData, sTextStatus)
 {
 	//$("#progress").html(sData);
-	if (iCounter < aFilesToLoad.length)
+	try
 	{
-		if (iCounter == (aFilesToLoad.length - 1))
+		if (iCounter < aFilesToLoad.length)
 		{
-			// Last file in the list (or only 1 file), this completes the session
-			sSessionStatus = 'end';
-		}
-		else if (iCounter == 0)
-		{
-			// First file in the list, start the session
-			sSessionStatus = 'start';
+			if (iCounter == (aFilesToLoad.length - 1))
+			{
+				// Last file in the list (or only 1 file), this completes the session
+				sSessionStatus = 'end';
+			}
+			else if (iCounter == 0)
+			{
+				// First file in the list, start the session
+				sSessionStatus = 'start';
+			}
+			else
+			{
+				sSessionStatus = 'continue';
+			}
+			iPercent = Math.round((100.0 * (1+iCounter)) / aFilesToLoad.length);
+			sFileName = aFilesToLoad[iCounter];
+			//alert('Loading file '+sFileName+' ('+iPercent+' %) - '+sSessionStatus);
+			$("#progress").progression({ Current: iPercent });
+			iCounter++;
+			$.get( 'ajax.dataloader.php', { 'file': sFileName, 'percent': iPercent, 'session_status': sSessionStatus }, LoadNextDataFile, 'html');
 		}
 		else
 		{
-			sSessionStatus = 'continue';
+			// We're done
+			$('#setup').unblock();
+			$('#GoToNextStep').submit(); // Use the hidden form to navigate to the next step
 		}
-		iPercent = Math.round((100.0 * (1+iCounter)) / aFilesToLoad.length);
-		sFileName = aFilesToLoad[iCounter];
-		//alert('Loading file '+sFileName+' ('+iPercent+' %) - '+sSessionStatus);
-		$("#progress").progression({ Current: iPercent });
-		iCounter++;
-		$.get( 'ajax.dataloader.php', { 'file': sFileName, 'percent': iPercent, 'session_status': sSessionStatus }, LoadNextDataFile, 'html');
 	}
-	else
+	catch(err)
 	{
-		// We're done
-		$('#setup').unblock();
-		$('#GoToNextStep').submit(); // Use the hidden form to navigate to the next step
+		alert('An exception occurred: '+err);
 	}
 }
