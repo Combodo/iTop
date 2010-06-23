@@ -1,7 +1,7 @@
 /* CSS Document */
 body {
     font-family: Tahoma, Verdana, Arial, Helevtica;
-    font-size: 8pt;
+    font-size: 10pt;
     background-color: #fff;
     color:#000000;
 	margin: 0;			/* Remove body margin/padding */
@@ -23,9 +23,23 @@ h1 {
     font-family: Tahoma, Verdana, Arial, Helvetica;
     color: #000;
     font-weight: bold;
+    font-size: 12pt;
 }
-.hilite {
-    color: #d81515;
+h2 {
+    font-family: Tahoma, Verdana, Arial, Helvetica;
+    color: #000;
+    font-weight: normal;
+    font-size: 12pt;
+}
+h3 {
+    font-family: Tahoma, Verdana, Arial, Helvetica;
+    color: #000;
+    font-weight: normal;
+    font-size: 10pt;
+}
+.hilite, .hilite a, .hilite a:visited {
+    color: #EB8F00;
+    text-decoration: none;
 }
 table.listResults {
     padding: 0px;
@@ -57,16 +71,17 @@ tr.even td {
 } 
 
 tr td.hover, tr.even td.hover, .hover a, .hover a:visited, .hover a:hover {
-	background-color: #E8FFD3;
+	background-color: #fdf5d0;
 }
 
 th {
     font-family: Tahoma, Verdana, Arial, Helvetica;
     font-size: 8pt;
-    color: #d81515;
+    color: #1C94C4;
     height:20px;
     background: #f6f6f1 url(../images/grey-header.gif) bottom repeat-x;	
 }
+
 th.header {
 	cursor: pointer;
 }
@@ -100,17 +115,17 @@ td.label {
     font-weight:bold;	
 }
 
-td a, td a:visited {
+p a, p a:visited, td a, td a:visited {
 	text-decoration:none;
-	color:#000000;
+	color: #1C94C4;
 	padding-left:14px;
-	background: url(../images/red-arrow.gif) no-repeat left;
+	background: url(../images/mini-arrow-orange.gif) no-repeat left;
 }
-td a:hover {
+p a:hover, td a:hover {
 	text-decoration:underline;
-	color:#d81515;
+	color:#EB8F00;
 	padding-left:14px;
-	background: url(../images/red-arrow.gif) no-repeat left;
+	background: url(../images/mini-arrow-orange.gif) no-repeat left;
 }
 
 td a.no-arrow, td a.no-arrow:visited {
@@ -181,8 +196,6 @@ div#TopPane td {
 
 input.textSearch {
 	border:1px solid #000;
-	noheight:1.2em;
-	font-size:8pt;
 	font-family:Tahoma,Verdana, Arial, Helvetica, sans-serif;
 	color:#000000;
 }
@@ -220,19 +233,18 @@ input.textSearch {
     background-color:#FFFFFF;
 }
 
-ul.dir {
+.ui-accordion-content ul {
     list-style:none;
     padding-left:16px;
 }	
 
-ul.dir ul {
+.ui-accordion-content ul ul {
 	padding: 8px 0px 8px 8px;
 	margin:0;
     list-style:none;
     border: 0;
 }	
-
-ul.dir li a,  ul.dir li a:visited, ul.dir li a:hover{
+.nothing {
     noborder-top: 1px solid #8b8b8b;
     padding: 4px 0px 0px 16px;   	
 	font-size:8pt;
@@ -241,14 +253,41 @@ ul.dir li a,  ul.dir li a:visited, ul.dir li a:hover{
     font-weight:bold;
 	text-decoration:none;
 }
+div.ui-accordion-content {
+	padding-top: 10px;
+	padding-left: 10px;
+}
+.ui-accordion-content a, ui-accordion-content a:visited {
+	color:	#1C94C4;
+	text-decoration:none;
+}
 
-ul.dir li li a, ul.dir li li a:visited, ul.dir li li a:hover { 
+.ui-accordion-content a:hover {
+	color: 	#EB8F00;
+	text-decoration: none;
+}
+.ui-accordion-content p {
+	color:#8b8b8b;
+	text-decoration:none;
+	margin: 0;
+	padding-bottom: 1px;
+	font-size: 9pt;
+    font-weight:normal;
+    border: 0;
+}
+
+.ui-accordion-content ul { 
+	padding-left: 0;
+	margin-top: 0;
+}
+
+.ui-accordion-content li { 
 	color:#8b8b8b;
 	text-decoration:none;
 	margin: 0;
 	padding: 0px 0pt 0px 16px;
-	font-size:8pt;
-    background: url(../images/mini-arrow-green.gif) no-repeat left;
+	font-size: 9pt;
+    background: url(../images/mini-arrow-orange.gif) no-repeat top left;
     font-weight:normal;
     border: 0;
 }
@@ -259,7 +298,7 @@ a.CollapsibleLabel, td a.CollapsibleLabel {
 	font-size:8pt;
 	text-decoration:none;
 	color:#8b8b8b;
-    background: url(../images/mini-arrow-green.gif) no-repeat left;
+    background: url(../images/mini-arrow-orange.gif) no-repeat left;
 }
 
 /* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
@@ -268,8 +307,8 @@ a.CollapsibleLabel.open,  td a.CollapsibleLabel.open {
 	padding: 0px 0pt 0px 16px;
 	font-size:8pt;
 	text-decoration:none;
-	color:red;
-    background: url(../images/mini-arrow-green-open.gif) no-repeat left;
+	color: #EB8F00;
+    background: url(../images/mini-arrow-orange-open.gif) no-repeat left;
 }
 
 .page_header {
@@ -284,72 +323,6 @@ a.CollapsibleLabel.open,  td a.CollapsibleLabel.open {
 .notreeview .lastCollapsable { background-image: url(../images/tv-collapsable-last.gif); }
 .notreeview .lastExpandable { background-image: url(../images/tv-expandable-last.gif); }
 
-#Header { padding: 0; background:#ccc url(../images/bandeau3.gif) repeat-x center;}
-div.iTopLogo {
-	background:url(../images/iTop2.gif) no-repeat center;
-	width:150px;
-	height:56px;
-}
-div.iTopLogo span {
-	display:none;
-}
-
-#MySplitter {
-	/* Height is set to match window size in $().ready() below */
-	border:0px;
-	margin:4px;
-	padding:0px;
-	min-width: 100px;	/* Splitter can't be too thin ... */
-	min-height: 100px;	/* ... or too flat */
-}
-#LeftPane {
-	background: #f6f6f1 url(../images/left-border.gif) repeat-y top left;
-	padding: 16px;
-	overflow: auto;		/* Scroll bars appear as needed */
-	color:#000;
-}
-#TopPane {				/* Top nested in right pane */
-	background: #fff;
-	padding: 4px;
-	height: 150px;		/* Initial height */
-	min-height: 75px;	/* Minimum height */
-	overflow: auto;	
-	color:#000;
-}
-#RightPane {			/* Bottom nested in right pane */
-	background: #fff;
-	height:150px;		/* Initial height */
-	min-height:130px;
-	no.padding:15px;
-	no.margin:10px;
-	overflow:auto;
-	color:#000000;
-	padding-left:10px;
-}
-
-#BottomPane {			/* Bottom nested in right pane */
-	background: #fff;
-	padding: 4px;
-	overflow: auto;
-	color:#000;
-}
-#MySplitter .vsplitbar {
-	width: 9px;
-	height: 50px;
-	background: url(../images/vsplitter-grey.gif) repeat top;
-}
-/* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
-#MySplitter .vsplitbar.active, #MySplitter .vsplitbar:hover {
-	background-color: #fff;
-}
-#MySplitter .hsplitbar {
-	height: 8px;
-	background-color: #fff;
-}
-/* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
-#MySplitter .hsplitbar.active, #MySplitter .hsplitbar:hover {
-	background-color: #fff;
-}
 #OrganizationSelection {
     padding:5px 0px 16px 20px;
 }
@@ -383,30 +356,52 @@ div.itop_popup > ul > li {
 	color: #fff;
 	vertical-align: middle;
 }
+#logOffBtn > ul > li {
+	list-style: none;
+	vertical-align: middle;
+	margin: 0;
+	padding: 0;
+}
+#logOffBtn > ul {
+	list-style: none;
+	vertical-align: middle;
+	margin: 0;
+	padding: 0;
+	height: 25px;
+	noline-height: 25px;
+}
 	
-.itop_popup li a {
+.itop_popup li a, #logOffBtn li a {
 	display: block;
 	padding: 5px 12px;
 	text-decoration: none;
-	noborder: 1px solid white;
-	width: 70px;
+	nowidth: 70px;
 	color: #000;
 	font-weight: bold;
 	white-space: nowrap;
 	background: #fff;
 }
 
-.itop_popup li a:hover {
+#logOffBtn li span {
+	display: block;
+	padding: 5px 12px;
+	text-decoration: none;
+	nowidth: 70px;
+	color: #000;
+	white-space: nowrap;
+	background: #fff;
+}
+.itop_popup li a:hover, #logOffBtn li a:hover {
 	background: #1A4473;
 }
 
-.itop_popup ul > li > ul
+.itop_popup ul > li > ul, #logOffBtn ul > li > ul
 {	
 	border: 1px solid black;
 	background: #fff;
 }
 	
-.itop_popup li > ul
+.itop_popup li > ul, #logOffBtn li > ul
 {	margin: 0;
 	padding: 0;
 	position: absolute;
@@ -414,17 +409,17 @@ div.itop_popup > ul > li {
 	border-top: 1px solid white;
 }
 
-.itop_popup li ul li {
+.itop_popup li ul li,  #logOffBtn li ul li {
 	float: none;
 	display: inline;
 }
 
-.itop_popup li ul li a {
+.itop_popup li ul li a, #logOffBtn li ul li a {
 	width: auto;
 	text-align: left;
 }
 
-.itop_popup li ul li a:hover {
+.itop_popup li ul li a:hover, #logOffBtn li ul li a:hover{
 	background: #D81515;
 	color: #fff;
 	font-weight: bold;
@@ -432,7 +427,7 @@ div.itop_popup > ul > li {
 
 /************************************/
 .wizHeader {
-	background: #83b217;
+	background: #1c94c4;
 	padding: 15px;
 }
 .wizSeparator {
@@ -474,8 +469,8 @@ div.wizStep span {
 	float:left;
 }
 .wizContainer {
-	border: 5px solid #83b217;
-	background: #e8f3cf;
+	border: 5px solid #1c94c4;
+	background: #d6e8ef;
 	padding: 5px;
 }
 
@@ -549,22 +544,28 @@ input.dp-applied {
 
 /* For search forms */
 .SearchDrawer {
-	background: #83b217 url(../images/green-corner.png) top left no-repeat;
-	color: #fff;
+	//background: #1c94c4 url(../images/search-top-left-corner.png) top left no-repeat;
+	border-top: 5px solid #1c94c4;
+	border-left: 5px solid #1c94c4;
+	border-right: 5px solid #1c94c4;
+	border-bottom: 0;
+	background: #d6e8ef;
+	color: #000;
 	padding: 10px;
 	margin: 0;
 }
 .SearchDrawer form table tbody tr td {
-	background: #83b217;
+	background: #d6e8ef;
 	color: #fff;
+	font-size: 10pt;
 }
 .SearchDrawer label {
-	background: #83b217;
-	color: #fff;
+	background: #d6e8ef;
+	color: #000;
 	padding-left: 10px;
 }
 .SearchDrawer h1 {
-	color: #fff;
+	color: #000;
 }
 .DrawerClosed {
 	display: none;
@@ -572,7 +573,7 @@ input.dp-applied {
 .DrawerHandle {
 	margin: 0;
 	padding: 5px;
-	background: #fff url(../images/drawer-handle.gif) bottom no-repeat;
+	background: url(../images/drawer-handle.gif) bottom no-repeat transparent;
 	color: #fff;
 	cursor: pointer;
 	text-align: center;
@@ -589,7 +590,7 @@ div.HRDrawer {
 	height: 5px;
 	width: 100%;
 	margin: 0;
-	background-color:  #83b217;
+	background-color:  #1c94c4;
 	margin: 0;
 	padding: 0;
 	border: 0;
@@ -606,7 +607,7 @@ div.HRDrawer {
 }
 .mini_tabs a.selected {
 	color: #fff;
-	background-color:  #83b217;
+	background-color:  #1c94c4;
 	padding-top: 0.25em;
 }
 .mini_tabs ul {
@@ -635,12 +636,12 @@ table.listResults tr.even td.truncated {
 
 /* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
 table.listResults tr.even td.hover.truncated {
-	background: #E8FFD3 url(../images/truncated.png) bottom  repeat-x;
+	background: #fdf5d0 url(../images/truncated.png) bottom  repeat-x;
 }
 
 /* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
 table.listResults tr.odd td.hover.truncated {
-	background: #E8FFD3 url(../images/truncated.png) bottom  repeat-x;
+	background: #fdf5d0 url(../images/truncated.png) bottom  repeat-x;
 }
 
 table.listResults.truncated {
@@ -688,9 +689,9 @@ table.transparent, table.transparent td {
 	background: transparent;
 }
 p.page-header {
-	color:#83B217;
+	color:#1c94c4;
 	font-weight: bold;
-	font-size: 2em;
+	font-size: 12pt;
 	font-family: Verdana, Arial, Helvetica, Sans-Serif
 }
 td.dashboard {
@@ -703,4 +704,126 @@ td.dashboard {
 }
 .white {
 	background-color: #fff;
+}
+
+/*** New Lacanau layout ***/
+
+.ui-layout-pane { /* all 'panes' */ 
+	background: #FFF;  
+	overflow: auto;
+} 
+
+.ui-layout-resizer { /* all 'resizer-bars' */ 
+	background: #DDD; 
+} 
+.ui-layout-toggler { /* all 'toggler-buttons' */ 
+	background: #AAA; 
+}
+div#top-left {
+	width: 28px;
+	height: 70px;
+	background: #f6f6f1 url(../images/top-left-bkg.png) top left no-repeat;
+	float:left;
+}
+div#header-logo {
+	width: 100%;
+	height: 70px;
+	background: #f6f6f1 url(../images/splitter-top.png) top repeat-x;
+}
+.ui-layout-pane-west {
+	background: #f6f6f1 url(../images/left-bkg.png) left repeat-y;
+}
+div#right {
+	min-width: 260px;
+}
+div#menu {
+	width: 100%;
+}
+.header-menu {
+	padding-left: 24px;
+	padding-right: 8px;
+	padding-bottom: 24px;
+	background: transparent;
+}
+div#inner_menu {
+	padding-left: 24px;
+	padding-right: 8px;
+	background: transparent;
+}
+div#logo {
+	height: 70px;
+	width: 100%;
+	text-align: center;
+}
+div#logo div {
+	height: 88px;
+	width: 244px;
+	background: url(../images/itop-logo-2.png) left no-repeat;
+}
+#top-bar {
+	height: 55px;
+	background: url(../images/banner-bkg.png) repeat-x scroll 0 0 transparent;
+	text-align: right;
+}
+#global-search {
+	height: 55px;
+	float: right;
+	background: url(../images/banner-search.png) no-repeat left;
+	nopadding-top: 15px;
+	text-align: right;
+	overflow-y: hidden;
+}
+#global-search > form div {
+	padding-left: 4px;
+}
+#global-search table, #global-search tr td,  #global-search tr {
+	padding: 0;
+	border: 0;
+	height: 55px;
+	margin: 0;
+	background: transparent;
+	overflow-y: hidden;
+	vertical-align: middle;
+}
+#global-search > form input[type="text"] {
+	border: 0;
+	height: 18px;
+	width: 180px;E8FFD3
+	padding-top: 4;
+	background: transparent;
+}
+#global-search > form tr td#g-search-input {
+	padding-top: 3px;
+	padding-left: 3px;
+	background: transparent;
+}
+div.icon {
+	width: 20px;
+	height: 20px;
+	margin: 2px;
+	float: right;
+}
+span.ui-icon {
+	float:left;
+	margin:0 2px;
+}
+.ui-layout-button-pin-down {
+	background: url(../images/splitter-bkg.png) transparent;
+	width: 16px;
+	background-position: -144px -144px;
+}
+.ui-layout-resizer-west-open {
+	background: url(../images/splitter-bkg.png) repeat-y scroll 0 0 transparent;
+	width: 16px;
+}
+div.footer {
+	height: 123px;
+	background: url(../images/logo-combodo.png) center no-repeat;
+}
+div.footer > span {
+	display:none;
+}
+#SearchResultsToAdd table.listResults tbody {
+	height: 300px;
+	overflow-y: auto;
 }
