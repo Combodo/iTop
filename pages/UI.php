@@ -519,10 +519,24 @@ try
 				$iCount = 0;
 				$iBlock = 0;
 				// Search in full text mode in all the classes
+				$aMatches = array();
+				if (preg_match('/^"(.*)"$/', $sFullText, $aMatches))
+				{
+					// The text is surrounded by double-quotes, remove the quotes and treat it as one single expression
+					$aFullTextNeedles = array($aMatches[1]);
+				}
+				else
+				{
+					// Split the text on the blanks and treat this as a search for <word1> AND <word2> AND <word3>
+					$aFullTextNeedles = explode(' ', $sFullText);
+				}
 				foreach(MetaModel::GetClasses('bizmodel') as $sClassName)
 				{
 					$oFilter = new DBObjectSearch($sClassName);
-					$oFilter->AddCondition_FullText($sFullText);
+					foreach($aFullTextNeedles as $sSearchText)
+					{
+						$oFilter->AddCondition_FullText($sSearchText);
+					}
 					$oSet = new DBObjectSet($oFilter);
 					if ($oSet->Count() > 0)
 					{
