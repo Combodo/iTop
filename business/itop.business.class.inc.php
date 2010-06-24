@@ -37,48 +37,6 @@ define('STANDARD_STATUSES', 'production,implementation,obsolete');
  */
 MetaModel::RegisterRelation("impacts");
 
-class classetest extends cmdbObject
-{
-
-	public static function Init()
-	{
-		$aParams = array
-		(
-			"category" => "bizmodel,searchable",
-			"key_type" => "automincrement",
-			"name_attcode" => "name",
-			"state_attcode" => "",
-			"reconc_keys" => array("name"),
-			"db_table" => "myclasstable",
-			"db_key_field" => "id",
-			"db_finalclass_field" => "",
-			"display_template" => "",
-		);
-		MetaModel::Init_Params($aParams);
-		//MetaModel::Init_InheritAttributes();
-
-		MetaModel::Init_AddAttribute(new AttributeString("aaaa", array("allowed_values"=>null, "sql"=>"mysqlcolumn_to_be_defined", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeText("b", array("allowed_values"=>null, "sql"=>"mysqlcolumn_to_be_defined", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEmailAddress("c", array("allowed_values"=>null, "sql"=>"mysqlcolumn_to_be_defined", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeIPAddress("d", array("allowed_values"=>null, "sql"=>"mysqlcolumn_to_be_defined", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributePassword("e", array("allowed_values"=>null, "sql"=>"mysqlcolumn_to_be_defined", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("f", array("allowed_values"=>null, "sql"=>"mysqlcolumn_to_be_defined", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeInteger("g", array("allowed_values"=>null, "sql"=>"mysqlcolumn_to_be_defined", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeBoolean("h", array("allowed_values"=>null, "sql"=>"mysqlcolumn_to_be_defined", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeDateTime("i", array("allowed_values"=>null, "sql"=>"mysqlcolumn_to_be_defined", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeDate("j", array("allowed_values"=>null, "sql"=>"mysqlcolumn_to_be_defined", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeBlob("k", array("depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributePropertySet("l", array("allowed_values"=>null, "sql"=>"mysqlcolumn_to_be_defined", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeTable("m", array("allowed_values"=>null, "sql"=>"mysqlcolumn_to_be_defined", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("n", array("targetclass"=>"bizOrganization", "jointype"=>null, "allowed_values"=>null, "sql"=>"mysqlcolumn_to_be_defined", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("o", array("allowed_values"=>null, "extkey_attcode"=>"n", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("p", array("linked_class"=>"class_to_be_defined", "ext_key_to_me"=>"attribute_to_be_defined", "ext_key_to_remote"=>"attribute_to_be_defined", "allowed_values"=>null, "count_min"=>1, "count_max"=>0, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeOQL("q", array("allowed_values"=>null, "sql"=>"mysqlcolumn_to_be_defined", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeClass("r", array("class_category"=>"bizmodel", "more_values"=>"myvalue1,myvalue2,myvalue3", "sql"=>"mysqlcolumn_to_be_defined", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeTemplateString("s", array("allowed_values"=>null, "sql"=>"mysqlcolumn_to_be_defined", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeTemplateText("t", array("allowed_values"=>null, "sql"=>"mysqlcolumn_to_be_defined", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-	}
-}
 
 ////////////////////////////////////////////////////////////////////////////////////
 /**
@@ -159,7 +117,7 @@ class logRealObject extends cmdbAbstractObject
 			"db_table" => "objects",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "obj_class",
-			"display_template" => "../business/templates/default.html",
+			"icon" => "../images/tar.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_AddAttribute(new AttributeString("name", array("allowed_values"=>null, "sql"=>"name", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
@@ -175,6 +133,18 @@ class logRealObject extends cmdbAbstractObject
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'org_id')); // Criteria of the advanced search form
 	}
 	
+	public static function GetRelationQueries($sRelCode)
+	{
+		switch ($sRelCode)
+		{
+		case "impacts":
+			$aRels = array(
+				"owner" => array("sQuery"=>"SELECT bizPerson AS p JOIN lnkContactRealObject AS l1 ON l1.contact_id = p.id WHERE l1.object_id = :this->id", "bPropagate"=>true, "iDistance"=>3),
+			);
+			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
+		}
+	}
+
 	public function Generate(cmdbDataGenerator $oGenerator)
 	{
 		$this->Set('org_id', $oGenerator->GetOrganizationId());
@@ -312,6 +282,8 @@ class bizTeam extends bizContact
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'org_id')); // Criteria of the advanced search form
 	}
 }
+
+
 ////////////////////////////////////////////////////////////////////////////////////
 /**
 * n-n link between any Object and a contact
@@ -1525,7 +1497,52 @@ class bizPatch extends logRealObject
 	}
 }
 
-/*** Insert here all modules requires for ITOP application  ***/
+////////////////////////////////////////////////////////////////////////////////////
+// Menu:
+//   +----------------------------------------+
+//   | Configuration Management Group         |
+//   +----------------------------------------+
+//		+ Configuration Management Overview
+//		+ Contacts
+//			+ Persons
+//			+ Teams
+//		+ Configuration Items
+//			+ PCs
+//			+ Servers
+//			+ Network Devices
+//			+ Interfaces
+//			+ Circuits
+//			+ Applications
+//			+ Subnets
+//			+ Infra Groups
+//		+ Locations
+//		+ Documents
+////////////////////////////////////////////////////////////////////////////////////
+
+// Create the top-level group. fRank = 1, means it will be inserted after the group '0', which is usually 'Welcome'
+$oConfigMgmtMenu = new MenuGroup('UI:ConfigurationManagementMenu', 1 /* fRank */);
+// Create an entry, based on a custom template, for the Configuration management overview, under the top-level group
+new TemplateMenuNode('UI:ConfigurationManagementMenu', '../business/templates/configuration_management_menu.html', $oConfigMgmtMenu->GetIndex(), 0 /* fRank */);
+// Create an entry (template based) for the overview of contacts
+$oContactsMenu = new TemplateMenuNode('UI:ContactsMenu', '../business/templates/configuration_management_menu.html',$oConfigMgmtMenu->GetIndex(), 1 /* fRank */);
+	// Plain list of persons
+	new OQLMenuNode('UI:PersonsMenu', 'UI:PersonsMenu:Title', 'SELECT bizPerson', $oContactsMenu->GetIndex(), 0 /* fRank */);
+	// Plain list of teams
+	new OQLMenuNode('UI:TeamsMenu', 'UI:TeamsMenu:Title', 'SELECT bizTeam', $oContactsMenu->GetIndex(), 1 /* fRank */);
+// Create an entry (template based) to provide an overview of all the 'infrastructure' CIs
+$oConfigItemsMenu = new TemplateMenuNode('UI:ConfigurationItemsMenu', '../business/templates/configuration_items_menu.html',$oConfigMgmtMenu->GetIndex(), 2 /* fRank */);
+// Quick and dirty way to add in one pass an entry for a few classes of CIs... good enough for testing, but not compatible with the localization
+$index = 0;
+foreach( array('bizPC', 'bizServer', 'bizNetworkDevice', 'bizInterface', 'bizCircuit', 'bizApplication', 'bizSubnet', 'bizInfraGroup') as $sClass)
+{
+	new OQLMenuNode($sClass,$sClass, 'SELECT '.$sClass, $oConfigItemsMenu->GetIndex(), $index++ /* fRank */);
+}
+// Add an entry (plain list) for locations
+new OQLMenuNode('UI:LocationsMenu', 'UI:LocationsMenu:Title', 'SELECT bizLocation', $oConfigMgmtMenu->GetIndex(), 3 /* fRank */);
+// Last but not least, add an entry (plain list) for documents
+new OQLMenuNode('UI:DocumentsMenu', 'UI:DocumentsMenu:Title', 'SELECT bizDocument', $oConfigMgmtMenu->GetIndex(), 4 /* fRank */);
+
+/*** Insert here all modules required for the whole iTop application  ***/
 
 require_once('incidentMgmt.business.php');
 require_once('ServiceMgmt.business.php');

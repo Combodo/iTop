@@ -174,7 +174,46 @@ EOF
 			}
 		}
 		");
-		$this->DisplayMenu();
+		
+		// Add the standard menus
+		/*
+		 * +--------------------+
+		 * | Welcome            |
+		 * +--------------------+
+		 * 		Welcome To iTop
+		 * +--------------------+
+		 * | Tools              |
+		 * +--------------------+
+		 * 		CSV Import
+		 * +--------------------+
+		 * | Admin Tools        | << Only present if the user is an admin
+		 * +--------------------+
+		 *		User Accounts
+		 *		Profiles
+		 *		Notifications
+		 *		Run Queries
+		 *		Export
+		 *		Data Model
+		 *		Universal Search
+		 */
+		$oWelcomeMenu = new MenuGroup('UI:WelcomeMenu', 0 /* fRank */);
+		new TemplateMenuNode('UI:WelcomeMenu', '../business/templates/welcome_menu.html', $oWelcomeMenu->GetIndex() /* oParent */, 1 /* fRank */);
+		
+		$oToolsMenu = new MenuGroup('UI:AdvancedToolsMenu', 2 /* fRank */);
+		new WebPageMenuNode('UI:CSVImportMenu', '../pages/csvimport.php', $oToolsMenu->GetIndex(), 1 /* fRank */);
+
+		if (userRights::IsAdministrator())
+		{
+			// Add the admin menus
+			$oAdminMenu = new MenuGroup('UI:AdminToolsMenu', 999 /* fRank */);
+			new OQLMenuNode('UI:UserAccountsMenu', 'UI:UserAccountsMenu:Title', 'SELECT URP_Users', $oAdminMenu->GetIndex(), 1 /* fRank */);
+			new OQLMenuNode('UI:ProfilesMenu', 'UI:ProfilesMenu:Title', 'SELECT URP_Profiles', $oAdminMenu->GetIndex(), 2 /* fRank */);
+			new TemplateMenuNode('UI:NotificationsMenu', '../business/templates/notifications_menu.html', $oAdminMenu->GetIndex(), 3 /* fRank */);
+			new WebPageMenuNode('UI:RunQueriesMenu', '../pages/run_query.php', $oAdminMenu->GetIndex(), 8 /* fRank */);
+			new WebPageMenuNode('UI:ExportMenu', '../webservices/export.php', $oAdminMenu->GetIndex(), 9 /* fRank */);
+			new WebPageMenuNode('UI:DataModelMenu', '../pages/schema.php', $oAdminMenu->GetIndex(), 10 /* fRank */);
+			new WebPageMenuNode('UI:UniversalSearchMenu', '../pages/UniversalSearch.php', $oAdminMenu->GetIndex(), 11 /* fRank */);
+		}
 	}
 	
 	public function AddToMenu($sHtml)
@@ -222,62 +261,10 @@ EOF
 		$oContext = new UserContext();
 		// Display the menu
 		$oAppContext = new ApplicationContext();
-		$iActiveNodeId = utils::ReadParam('menu', '');
+		$iActiveNodeId = ApplicationMenu::GetActiveNodeId();
 		$iAccordionIndex = 0;
-		
-		// 1) Application defined menus
-		$oSearchFilter = $oContext->NewFilter("menuNode");
-		$oSearchFilter->AddCondition('parent_id', 0, '=');
-		$oSearchFilter->AddCondition('type', 'application', '=');
-		// There may be more criteria added later to have a specific menu based on the user's profile
-		$oSet = new CMDBObjectSet($oSearchFilter, array('rank' => true));
-		while ($oRootMenuNode = $oSet->Fetch())
-		{
-			$bResult = $oRootMenuNode->DisplayMenu($this, 'application', $oAppContext->GetAsHash(), true, $iActiveNodeId);
-			if ($bResult)
-			{
-				$this->add_ready_script("$('#accordion').accordion('activate', $iAccordionIndex)");
-			}
-			$iAccordionIndex++;
-		}
-		
-		// 2) User defined menus (Bookmarks)
-		$oSearchFilter = $oContext->NewFilter("menuNode");
-		$oSearchFilter->AddCondition('parent_id', 0, '=');
-		$oSearchFilter->AddCondition('type', 'user', '=');
-		$oSearchFilter->AddCondition('user_id', UserRights::GetUserId(), '=');
-		// There may be more criteria added later to have a specific menu based on the user's profile
-		$oSet = new CMDBObjectSet($oSearchFilter, array('rank' => true));
-		while ($oRootMenuNode = $oSet->Fetch())
-		{
-			$oRootMenuNode->DisplayMenu($this, 'user', $oAppContext->GetAsHash(), true, $iActiveNodeId);
-			if ($bResult)
-			{
-				$this->add_ready_script("$('#accordion').accordion('activate', $iAccordionIndex)");
-			}
-			$iAccordionIndex++;
-		}
-		
-		// 3) Administrator menu
-		if (userRights::IsAdministrator())
-		{
-			$oSearchFilter = $oContext->NewFilter("menuNode");
-			$oSearchFilter->AddCondition('parent_id', 0, '=');
-			$oSearchFilter->AddCondition('type', 'administrator', '=');
-			// There may be more criteria added later to have a specific menu based on the user's profile
-			$oSet = new CMDBObjectSet($oSearchFilter, array('rank' => true));
-			while ($oRootMenuNode = $oSet->Fetch())
-			{
-				$oRootMenuNode->DisplayMenu($this, 'administrator', $oAppContext->GetAsHash(), true, $iActiveNodeId);
-				if ($bResult)
-				{
-					$this->add_ready_script("$('#accordion').accordion('activate', $iAccordionIndex)");
-				}
-				$iAccordionIndex++;
-			}
-		}
 
-		$this->AddToMenu("</ul>\n");
+		ApplicationMenu::DisplayMenu($this, $oAppContext->GetAsHash(), $iActiveNodeId);
     }
 
 	/**
@@ -285,6 +272,7 @@ EOF
 	 */
     public function output()
     {
+		$this->DisplayMenu(); // Compute the menu
         foreach($this->a_headers as $s_header)
         {
             header($s_header);

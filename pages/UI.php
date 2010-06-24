@@ -364,44 +364,13 @@ try
 	require_once('../application/startup.inc.php');
 	$oContext = new UserContext();
 	$oAppContext = new ApplicationContext();
-	$iActiveNodeId = utils::ReadParam('menu', '');
-
-	if (empty($iActiveNodeId) && !is_numeric($iActiveNodeId))
-	{
-		// No menu specified, let's get the default one:
-		// 1) It's a root menu item (parent_id == 0)
-		// 2) with the lowest rank
-		$oFilter = DBObjectSearch::FromOQL('SELECT menuNode AS M WHERE M.parent_id = 0');
-		if ($oFilter)
-		{
-			$oMenuSet = new CMDBObjectSet($oFilter);
-			while($oMenu = $oMenuSet->Fetch())
-			{
-				$aRanks[$oMenu->GetKey()] = $oMenu->Get('rank');
-			}
-			asort($aRanks); // sort by ascending rank: menuId => rank
-			$aKeys = array_keys($aRanks);
-			$iActiveNodeId = array_shift($aKeys); // Takes the first key, i.e. the menuId with the lowest rank
-		}
-	}
 	$currentOrganization = utils::ReadParam('org_id', '');
 	$operation = utils::ReadParam('operation', '');
 
 	require_once('../application/loginwebpage.class.inc.php');
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
-
 	$oP = new iTopWebPage(Dict::S('UI:WelcomeToITop'), $currentOrganization);
-
-	// From now on the context is limited to the the selected organization ??
-	if ($iActiveNodeId != -1)
-	{
-	    $oActiveNode = $oContext->GetObject('menuNode', $iActiveNodeId);
-	}
-	else
-	{
-	    $oActiveNode = null;
-	}
 
 	switch($operation)
 	{
@@ -1331,10 +1300,12 @@ EOF
 		break;
 	
 		default:
-		if (is_object($oActiveNode))
+		$oMenuNode = ApplicationMenu::GetMenuNode(ApplicationMenu::GetActiveNodeId());
+		if (is_object($oMenuNode))
 		{
-			$oActiveNode->RenderContent($oP, $oAppContext->GetAsHash());
-			$oP->set_title($oActiveNode->GetMenuLabel());
+		
+			$oMenuNode->RenderContent($oP, $oAppContext->GetAsHash());
+			$oP->set_title($oMenuNode->GetLabel());
 		}
 	}
 	////MetaModel::ShowQueryTrace();

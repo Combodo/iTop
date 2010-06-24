@@ -15,7 +15,7 @@
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 /**
- * Persistent class menuNode
+ * Construction and display of the application's main menu
  *
  * @author      Erwan Taloc <erwan.taloc@combodo.com>
  * @author      Romain Quetiez <romain.quetiez@combodo.com>
@@ -23,231 +23,415 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
-require_once('../core/attributedef.class.inc.php');
-require_once('../core/filterdef.class.inc.php');
-require_once('../core/stimulus.class.inc.php');
-require_once('../core/MyHelpers.class.inc.php');
+require_once('../application/utils.inc.php');
+require_once('../application/template.class.inc.php');
 
-require_once('../core/cmdbsource.class.inc.php');
-require_once('../core/sqlquery.class.inc.php');
-
-require_once('../core/dbobject.class.php');
-require_once('../core/dbobjectsearch.class.php');
-require_once('../core/dbobjectset.class.php');
-
-require_once('../application/displayblock.class.inc.php');
 
 /**
- * This class manages en entries in the menu tree on the left of the iTop pages
+ * This class manipulates, stores and displays the navigation menu used in the application
+ * In order to improve the modularity of the data model and to ease the update/migration
+ * between evolving data models, the menus are no longer stored in the database, but are instead
+ * built on the fly each time a page is loaded.
+ * The application's menu is organized into top-level groups with, inside each group, a tree of menu items.
+ * Top level groups do not display any content, they just expand/collapse.
+ * Sub-items drive the actual content of the page, they are based either on templates, OQL queries or full (external?) web pages.
+ *
+ * Example:
+ * Here is how to insert the following items in the application's menu:
+ *   +----------------------------------------+
+ *   | Configuration Management Group         | >> Top level group
+ *   +----------------------------------------+
+ *		+ Configuration Management Overview     >> Template based menu item
+ *		+ Contacts								>> Template based menu item
+ *			+ Persons							>> Plain list (OQL based)
+ *			+ Teams								>> Plain list (OQL based)
+ *
+ * // Create the top-level group. fRank = 1, means it will be inserted after the group '0', which is usually 'Welcome'
+ * $oConfigMgmtMenu = new MenuGroup('UI:ConfigurationManagementMenu', 1);
+ * // Create an entry, based on a custom template, for the Configuration management overview, under the top-level group
+ * new TemplateMenuNode('UI:ConfigurationManagementMenu', '../business/templates/configuration_management_menu.html', $oConfigMgmtMenu->GetIndex(), 0);
+ * // Create an entry (template based) for the overview of contacts
+ * $oContactsMenu = new TemplateMenuNode('UI:ContactsMenu', '../business/templates/configuration_management_menu.html',$oConfigMgmtMenu->GetIndex(), 1);
+ * // Plain list of persons
+ * new OQLMenuNode('UI:PersonsMenu', 'UI:PersonsMenu:Title', 'SELECT bizPerson', $oContactsMenu->GetIndex(), 0);
+ * // Plain list of teams
+ * new OQLMenuNode('UI:TeamsMenu', 'UI:TeamsMenu:Title', 'SELECT bizTeam', $oContactsMenu->GetIndex(), 1);
+ *
  */
-class menuNode extends DBObject
+ 
+class ApplicationMenu
 {
-	public static function Init()
-	{
-		$aParams = array
-		(
-			"category" => "gui",
-			"key_type" => "autoincrement",
-			"name_attcode" => "name",
-			"state_attcode" => "",
-			"reconc_keys" => array(),
-			"db_table" => "priv_menunode",
-			"db_key_field" => "id",
-			"db_finalclass_field" => "",
-		);
-		MetaModel::Init_Params($aParams);
-//		MetaModel::Init_AddAttribute(new AttributeExternalKey("change", array("allowed_values"=>null, "sql"=>"changeid", "targetclass"=>"CMDBChange", "jointype"=>"closed")));
-//		MetaModel::Init_AddAttribute(new AttributeExternalField("date", array("allowed_values"=>null, "extkey_attcode"=>"change", "target_attcode"=>"date")));
-		MetaModel::Init_AddAttribute(new AttributeString("name", array("allowed_values"=>null, "sql"=>"name", "default_value"=>"", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("label", array("allowed_values"=>null, "sql"=>"label", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("hyperlink", array("allowed_values"=>null, "sql"=>"hyperlink", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("icon_path", array("allowed_values"=>null, "sql"=>"icon_path", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeText("template", array("allowed_values"=>null, "sql"=>"template", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("type", array("allowed_values"=>new ValueSetEnum('application,user,administrator'), "sql"=>"type", "default_value"=>"application", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeInteger("rank", array("allowed_values"=>null, "sql"=>"rank", "default_value" => 999, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("parent_id", array("allowed_values"=>null, "sql"=>"parent_id", "targetclass"=>"menuNode", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("parent_name", array("allowed_values"=>null, "extkey_attcode"=>"parent_id", "target_attcode"=>"name")));
-		MetaModel::Init_AddAttribute(new AttributeInteger("user_id", array("allowed_values"=>null, "sql"=>"user_id", "default_value" => 0, "is_null_allowed"=>false, "depends_on"=>array())));
-
-		MetaModel::Init_SetZListItems('details', array('parent_id', 'name', 'label', 'hyperlink', 'template', 'rank', 'type')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('parent_id', 'label', 'rank', 'type')); // Attributes to be displayed for a list
-	}
+	static $aRootMenus = array();
+	static $aMenusIndex = array();
 	
-	public function IsVisible()
+	/**
+	 * Main function to add a menu entry into the application, can be called during the definition
+	 * of the data model objects
+	 */
+	static public function InsertMenu(MenuNode $oMenuNode, $iParentIndex = -1, $fRank)
 	{
-		return true;
-	}
-	
-	public function GetMenuName()
-	{
-		return Dict::S($this->Get('name'));
-	}
-
-	public function GetMenuIcon()
-	{
-		return $this->Get('icon_path');
-	}
-
-	public function GetMenuLabel()
-	{
-		return Dict::S($this->Get('label'));
-	}
-	
-	public function GetMenuLink($aExtraParams)
-	{
-		$aExtraParams['menu'] = $this->GetKey(); // Make sure we overwrite the current menu id (if any)
-		$aParams = array();
-		foreach($aExtraParams as $sName => $sValue)
+		$index = count(self::$aMenusIndex);
+		self::$aMenusIndex[$index] = array( 'node' => $oMenuNode, 'children' => array());
+		if ($iParentIndex == -1)
 		{
-			$aParams[] = urlencode($sName)."=".urlencode($sValue);
-		}
-		return $this->Get('hyperlink')."?".implode("&", $aParams);
-	}
-
-	public function GetChildNodesSet($sType = null)
-	{
-		$aParams = array();
-
-		if ($sType == 'user')
-		{
-			$sSelectChilds = 'SELECT menuNode AS m WHERE m.parent_id = :parent AND type = :type AND m.user_id = :user';
-			$aParams = array('parent' => $this->GetKey(), 'type' => $sType, 'user' => UserRights::GetUserId());
-		}
-		elseif ($sType != null)
-		{
-			$sSelectChilds = 'SELECT menuNode AS m WHERE m.parent_id = :parent AND type = :type';
-			$aParams = array('parent' => $this->GetKey(), 'type' => $sType);
+			self::$aRootMenus[] = array ('rank' => $fRank, 'index' => $index);
 		}
 		else
 		{
-			$sSelectChilds = 'SELECT menuNode AS m WHERE m.parent_id = :parent';
-			$aParams = array('parent' => $this->GetKey());
+			self::$aMenusIndex[$iParentIndex]['children'][] = array ('rank' => $fRank, 'index' => $index);
 		}
-		$oSearchFilter = DBObjectSearch::FromOQL($sSelectChilds);
-		$oSet = new CMDBObjectSet($oSearchFilter, array('rank' => true), $aParams);
-		return $oSet;
-	}
-
-	public function RenderContent(WebPage $oPage, $aExtraParams = array())
-	{
-		$sTemplate = $this->Get('template');
-		$oTemplate = new DisplayTemplate($sTemplate);
-		$oTemplate->Render($oPage, $aExtraParams);
-		//$this->ProcessTemplate($sTemplate, $oPage, $aExtraParams);
+		return $index;
 	}
 	
-	public function DisplayMenu(iTopWebPage $oP, $sType, $aExtraParams, $bRootLevel = true, $iActiveNodeId = -1)
+	/**
+	 * Entry point to display the whole menu into the web page, used by iTopWebPage
+	 */
+	static public function DisplayMenu(iTopWebPage $oPage, $aExtraParams)
 	{
+		// Sort the root menu based on the rank
+		usort(self::$aRootMenus, array('ApplicationMenu', 'CompareOnRank'));
+		$iAccordion = 0;
+		$iActiveMenu = ApplicationMenu::GetActiveNodeId();
+		foreach(self::$aRootMenus as $aMenu)
+		{
+			$oMenuNode = self::GetMenuNode($aMenu['index']);
+			$oPage->AddToMenu('<h3><a href="'.$oMenuNode->GetHyperlink($aExtraParams).'">'.$oMenuNode->GetTitle().'</a></h3>');
+			$oPage->AddToMenu('<div>');
+			$aChildren = self::GetChildren($aMenu['index']);
+			if (count($aChildren) > 0)
+			{
+				$oPage->AddToMenu('<ul>');
+				$bActive = self::DisplaySubMenu($oPage, $aChildren, $aExtraParams, $iActiveMenu);
+				$oPage->AddToMenu('</ul>');
+				if ($bActive)
+				{
+					$oPage->add_ready_script("$('#accordion').accordion('activate', $iAccordion);");
+				}
+			}
+			$oPage->AddToMenu('</div>');
+			$iAccordion++;
+		}
+	}
+	
+	/**
+	 * Handles the display of the sub-menus (called recursively if necessary)
+	 * @return true if the currently selected menu is one of the submenus
+	 */
+	static protected function DisplaySubMenu($oPage, $aMenus, $aExtraParams, $iActiveMenu = -1)
+	{
+		// Sort the menu based on the rank
 		$bActive = false;
-		if ($bRootLevel)
+		usort($aMenus, array('ApplicationMenu', 'CompareOnRank'));
+		foreach($aMenus as $aMenu)
 		{
-			$oP->AddToMenu("<h3><a href=\"".$this->GetMenuLink($aExtraParams)."\" title=\"".$this->GetMenuLabel()."\">".$this->GetMenuName()."</a></h3>\n");
-			$oP->AddToMenu("\n<div>\n");
-			$oP->AddToMenu("<p><a href=\"".$this->GetMenuLink($aExtraParams)."\" title=\"".$this->GetMenuLabel()."\">".$this->GetMenuLabel()."</a></p>\n");
-			$oSet = $this->GetChildNodesSet($sType);
-			if ($oSet->Count() > 0)
+			$index = $aMenu['index'];
+			$oMenu = self::GetMenuNode($index);
+			$oPage->AddToMenu('<li><a href="'.$oMenu->GetHyperlink($aExtraParams).'">'.$oMenu->GetTitle().'</a></li>');
+			$aCurrentMenu = self::$aMenusIndex[$index];
+			$aChildren = self::GetChildren($index);
+			if ($iActiveMenu == $index)
 			{
-				$oP->AddToMenu("\n<ul>\n");
-				while($oChildNode = $oSet->Fetch())
-				{
-					$bActive |= $oChildNode->DisplayMenu($oP, $sType, $aExtraParams, false /* ! RootLevel */, $iActiveNodeId);
-				}
-				$oP->AddToMenu("</ul>\n");
+				$bActive = true;
 			}
-			$oP->AddToMenu("\n</div>\n");
-		}
-		else
-		{
-			$oP->AddToMenu("<li><a href=\"".$this->GetMenuLink($aExtraParams)."\" title=\"".$this->GetMenuLabel()."\">".$this->GetMenuName()."</a>");
-			$oSet = $this->GetChildNodesSet($sType);
-			if ($oSet->Count() > 0)
+			if (count($aChildren) > 0)
 			{
-				$oP->AddToMenu("\n<ul>\n");
-				while($oChildNode = $oSet->Fetch())
-				{
-					$bActive |= $oChildNode->DisplayMenu($oP, $sType, $aExtraParams, false /* ! RootLevel */, $iActiveNodeId);
-				}
-				$oP->AddToMenu("</ul>\n");
-			}
-			$oP->AddToMenu("</li>\n");
-		}
-		$bResult = ($iActiveNodeId == $this->GetKey()) | $bActive;
-		return $bResult;
-	}
-	static public function DisplayCreationForm(WebPage $oP, $sClass, $sFilter, $aExtraParams = array())
-	{
-		$oFilter = DBObjectSearch::unserialize($sFilter);
-		$oP->p('Create a new menu item for: '.$oFilter->__DescribeHTML());
-		$oP->add('<form action="UniversalSearch.php" method="post">');
-		$oP->add('<input type="hidden" name="operation" value="add_menu">');
-		$oP->add('<input type="hidden" name="filter" value="'.$sFilter.'">');
-		$oP->add('<input type="hidden" name="class" value="'.$sClass.'">');
-		$oP->p('Menu Label: <input type="text" name="label" size="30">');
-		$oP->p('Description: <input type="text" name="description" size="30">');
-		$oP->add('<p>Insert after: <select name="previous_node_id">');
-		$aNodes = self::GetMenuAsArray(null, 'user');
-		foreach($aNodes as $aNodeDesc)
-		{
-			$oP->add('<option value="'.$aNodeDesc['id'].'">'.str_repeat('&nbsp;&nbsp;&nbsp;', $aNodeDesc['depth']).$aNodeDesc['label'].'</option>');
-		}
-		$oP->add('</select></p>');
-		$oP->p('<input type="checkbox" name="child_item" value="1"> Create as a child menu item');
-		$oP->p('<input type="submit" value=" Ok "> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" class="jqmClose" value="Cancel">');
-		$oP->add('</form>');
-	}
-	
-	static public function GetMenuAsArray($oRootNode = null, $sType = 'application', $iDepth = 0)
-	{
-		$aNodes = array();
-		if (is_object($oRootNode))
-		{
-			$oChildSet = $oRootNode->GetChildNodesSet($sType);
-			while($oNode = $oChildSet->Fetch())
-			{
-				$aNodes[] = array('depth' => $iDepth, 'id' => $oNode->GetKey(), 'label' => $oNode->GetName());
-				$aNodes = array_merge($aNodes, self::GetMenuAsArray($oNode, $sType, $iDepth+1));
+				$oPage->AddToMenu('<ul>');
+				$bActive |= self::DisplaySubMenu($oPage, $aChildren, $aExtraParams, $iActiveMenu);
+				$oPage->AddToMenu('</ul>');
 			}
 		}
-		else
-		{
-			$oSearchFilter = new DbObjectSearch("menuNode");
-			$oSearchFilter->AddCondition('parent_id', 0, '=');
-			if ($sType != null)
-			{
-				$oSearchFilter->AddCondition('type', $sType, '=');
-				if ($sType == 'user')
-				{
-				    $oSearchFilter->AddCondition('user_id', UserRights::GetUserId(), '=');
-				}
-			}
-			$oRootSet = new CMDBObjectSet($oSearchFilter, array('rank' => true));
-			while($oNode = $oRootSet->Fetch())
-			{
-				$aNodes[] = array('depth' => $iDepth, 'id' => $oNode->GetKey(), 'label' => $oNode->GetName());
-				$aNodes = array_merge($aNodes, self::GetMenuAsArray($oNode, $sType, $iDepth+1));
-			}
-		}
-		return $aNodes;
+		return $bActive;
 	}
 	/**
-	 * Returns a set of all the nodes following the current node in the tree
-	 * (i.e. nodes with the same parent but with a greater rank)
+	 * Helper function to sort the menus based on their rank
 	 */
-	public function GetNextNodesSet($sType = 'application')
+	static public function CompareOnRank($a, $b)
 	{
-		$oSearchFilter = new DBObjectSearch("menuNode");
-		$oSearchFilter->AddCondition('parent_id', $this->Get('parent_id'));
-		$oSearchFilter->AddCondition('rank', $this->Get('rank'), '>');
-		if ($sType != null)
+		$result = 1;
+		if ($a['rank'] == $b['rank'])
 		{
-			$oSearchFilter->AddCondition('type', $sType, '=');
-			if ($sType == 'user')
+			$result = 0;
+		}
+		if ($a['rank'] < $b['rank'])
+		{
+			$result = -1;
+		}
+		return $result;
+	}
+	
+	/**
+	 * Helper function to retrieve the MenuNodeObject based on its ID
+	 */
+	static public function GetMenuNode($index)
+	{
+		return isset(self::$aMenusIndex[$index]) ? self::$aMenusIndex[$index]['node'] : null;
+	}
+	
+	/**
+	 * Helper function to get the list of child(ren) of a menu
+	 */
+	static protected function GetChildren($index)
+	{
+		return self::$aMenusIndex[$index]['children'];
+	}
+	
+	/**
+	 * Helper function to get the ID of a menu based on its name
+	 * @param string $sTitle Title of the menu (as passed when creating the menu)
+	 * @return integer ID of the menu, or -1 if not found
+	 */
+	static public function GetMenuIndexByTitle($sTitle)
+	{
+		$index = -1;
+		foreach(self::$aMenusIndex as $aMenu)
+		{
+			if ($aMenu['node']->GetTitle() == $sTitle)
 			{
-			    $oSearchFilter->AddCondition('user_id', UserRights::GetUserId(), '=');
+				$id = $aMenu['node']->GetIndex();
+				break;
 			}
 		}
-		$oSet = new DBObjectSet($oSearchFilter, array('rank'=> true)); // Order by rank (true means ascending)
-		return $oSet;
+		return $index;
+	}
+	
+	/**
+	 * Retrieves the currently active menu (if any, otherwise the first menu is the default)
+	 * @return MenuNode or null if there is no menu at all !
+	 */
+	static public function GetActiveNodeId()
+	{
+		$iMenuIndex = utils::ReadParam('menu', -1);
+		
+		if ($iMenuIndex  == -1)
+		{
+			// Make sure the root menu is sorted on 'rank'
+			usort(self::$aRootMenus, array('ApplicationMenu', 'CompareOnRank'));
+			$oFirstGroup = self::GetMenuNode(self::$aRootMenus[0]['index']);
+			$oMenuNode = self::GetMenuNode(self::$aMenusIndex[$oFirstGroup->GetIndex()]['children'][0]['index']);
+			$iMenuIndex = $oMenuNode->GetIndex();
+		}
+		return $iMenuIndex;
+	}	
+}
+
+/**
+ * Root class for all the kind of node in the menu tree, data model providers are responsible for instantiating
+ * MenuNodes (i.e instances from derived classes) in order to populate the application's menu. Creating an objet
+ * derived from MenuNode is enough to have it inserted in the application's main menu.
+ * The class iTopWebPage, takes care of 3 items:
+ * +--------------------+
+ * | Welcome            |
+ * +--------------------+
+ * 		Welcome To iTop
+ * +--------------------+
+ * | Tools              |
+ * +--------------------+
+ * 		CSV Import
+ * +--------------------+
+ * | Admin Tools        |
+ * +--------------------+
+ *		User Accounts
+ *		Profiles
+ *		Notifications
+ *		Run Queries
+ *		Export
+ *		Data Model
+ *		Universal Search
+ *
+ * All the other menu items must constructed along with the various data model modules
+ */
+abstract class MenuNode
+{
+	protected $sTitle;
+	protected $index = null;
+	
+	/**
+	 * Create a menu item and inserts it into the application's main menu
+	 * @param string $sTitle Title of the menu (will be looked-up in the dictionnary, for translation)
+	 * @param integer $iParentIndex ID of the parent menu, pass -1 for top level (group) items
+	 * @param float $fRank Number used to order the list, any number will do, but for a given level (i.e same parent) all menus are sorted based on this value
+	 * @return MenuNode
+	 */
+	public function __construct($sTitle, $iParentIndex = -1, $fRank = 0)
+	{
+		$this->sTitle = $sTitle;
+		$this->index = ApplicationMenu::InsertMenu($this, $iParentIndex, $fRank);
+	}
+	
+	public function GetTitle()
+	{
+		return Dict::S($this->sTitle);
+	}
+	
+	public function GetLabel()
+	{
+		return Dict::S($this->sTitle);
+	}
+	
+	public function GetIndex()
+	{
+		return $this->index;
+	}
+	
+	public function GetHyperlink($aExtraParams)
+	{
+		$aExtraParams['menu'] = $this->GetIndex();
+		return $this->AddParams('../pages/UI.php?menu=', $aExtraParams);
+	}
+	
+	public abstract function RenderContent(WebPage $oPage, $aExtraParams = array());
+	
+	protected function AddParams($sHyperlink, $aExtraParams)
+	{
+		if (count($aExtraParams) > 0)
+		{
+			$aQuery = array();
+			$sSeparator = '?';
+			if (strpos($sHyperlink, '?') !== false)
+			{
+				$sSeparator = '&';
+			}
+			foreach($aExtraParams as $sName => $sValue)
+			{
+				$aQuery[] = urlencode($sName).'='.urlencode($sValue);
+			}
+			$sHyperlink .= $sSeparator.implode('&', $aQuery);
+		}
+		return $sHyperlink;
+	}
+}
+
+/**
+ * This class implements a top-level menu group. A group is just a container for sub-items
+ * it does not display a page by itself
+ */
+class MenuGroup extends MenuNode
+{
+	/**
+	 * Create a top-level menu group and inserts it into the application's main menu
+	 * @param string $sTitle Title of the menu (will be looked-up in the dictionnary for translation)
+	 * @param float $fRank Number used to order the list, the groups are sorted based on this value
+	 * @return MenuGroup
+	 */
+	public function __construct($sTitle, $fRank)
+	{
+		parent::__construct($sTitle, -1 /* no parent, groups are at root level */, $fRank);
+	}
+	
+	public function RenderContent(WebPage $oPage, $aExtraParams = array())
+	{
+		assert(false); // Shall never be called, groups do not display any content
+	}
+}
+
+/**
+ * This class defines a menu item which content is based on a custom template.
+ * Note the template can be either a local file or an URL !
+ */
+class TemplateMenuNode extends MenuNode
+{
+	protected $sTemplateFile;
+	
+	/**
+	 * Create a menu item based on a custom template and inserts it into the application's main menu
+	 * @param string $sTitle Title of the menu (will be looked-up in the dictionnary for translation)
+	 * @param string $sTemplateFile Path (or URL) to the file that will be used as a template for displaying the page's content
+	 * @param integer $iParentIndex ID of the parent menu
+	 * @param float $fRank Number used to order the list, any number will do, but for a given level (i.e same parent) all menus are sorted based on this value
+	 * @return MenuNode
+	 */
+	public function __construct($sTitle, $sTemplateFile, $iParentIndex, $fRank = 0)
+	{
+		parent::__construct($sTitle, $iParentIndex, $fRank);
+		$this->sTemplateFile = $sTemplateFile;
+	}
+	
+	public function RenderContent(WebPage $oPage, $aExtraParams = array())
+	{
+		$sTemplate = @file_get_contents($this->sTemplateFile);
+		if ($sTemplate !== false)
+		{
+			$oTemplate = new DisplayTemplate($sTemplate);
+			$oTemplate->Render($oPage, $aExtraParams);
+		}
+		else
+		{
+			$oPage->p("Error: failed to load template file: '{$this->sTemplateFile}'"); // No need to translate ?
+		}
+	}
+}
+
+/**
+ * This class defines a menu item that uses a standard template to display a list of items therefore it allows
+ * only two parameters: the page's title and the OQL expression defining the list of items to be displayed
+ */
+class OQLMenuNode extends MenuNode
+{
+	protected $sPageTitle;
+	protected $sOQL;
+	
+	/**
+	 * Create a menu item based on an OQL query and inserts it into the application's main menu
+	 * @param string $sTitle Title of the menu (will be looked-up in the dictionnary for translation)
+	 * @param string $sPageTitle Title displayed into the page's content (will be looked-up in the dictionnary for translation)
+	 * @param integer $iParentIndex ID of the parent menu
+	 * @param float $fRank Number used to order the list, any number will do, but for a given level (i.e same parent) all menus are sorted based on this value
+	 * @return MenuNode
+	 */
+	public function __construct($sTitle, $sPageTitle, $sOQL, $iParentIndex, $fRank = 0)
+	{
+		parent::__construct($sTitle, $iParentIndex, $fRank);
+		$this->sPageTitle = $sPageTitle;
+		$this->sOQL = $sOQL;
+	}
+	
+	public function RenderContent(WebPage $oPage, $aExtraParams = array())
+	{
+		// The standard template used for all such pages: a (closed) search form at the top and a list of results at the bottom
+		$sTemplate = <<<EOF
+<itopblock BlockClass="DisplayBlock" type="search" asynchronous="false" encoding="text/oql">$this->sOQL</itopblock>
+<p class="page-header"><itopstring>$this->sPageTitle</itopstring></p>
+<itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql">$this->sOQL</itopblock>
+EOF;
+		$oTemplate = new DisplayTemplate($sTemplate);
+		$oTemplate->Render($oPage, $aExtraParams);
+	}
+}
+
+/**
+ * This class defines a menu that points to any web page. It takes only two parameters:
+ * - The hyperlink to point to
+ * - The name of the menu
+ * Note: the parameter menu=xxx (where xxx is the id of the menu itself) will be added to the hyperlink
+ * in order to make it the active one, if the target page is based on iTopWebPage and therefore displays the menu
+ */
+class WebPageMenuNode extends MenuNode
+{
+	protected $sHyperlink;
+	
+	/**
+	 * Create a menu item that points to any web page (not only UI.php)
+	 * @param string $sTitle Title of the menu (will be looked-up in the dictionnary for translation)
+	 * @param string $sHyperlink URL to the page to load. Use relative URL if you want to keep the application portable !
+	 * @param integer $iParentIndex ID of the parent menu
+	 * @param float $fRank Number used to order the list, any number will do, but for a given level (i.e same parent) all menus are sorted based on this value
+	 * @return MenuNode
+	 */
+	public function __construct($sTitle, $sHyperlink, $iParentIndex, $fRank = 0)
+	{
+		parent::__construct($sTitle, $iParentIndex, $fRank);
+		$this->sHyperlink = $sHyperlink;
+	}
+
+	public function GetHyperlink($aExtraParams)
+	{
+		$aExtraParams['menu'] = $this->GetIndex();
+		return $this->AddParams( $this->sHyperlink, $aExtraParams);
+	}
+	
+	public function RenderContent(WebPage $oPage, $aExtraParams = array())
+	{
+		assert(false); // Shall never be called, the external web page will handle the display by itself
 	}
 }
 ?>

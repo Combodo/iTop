@@ -13,7 +13,7 @@
 		<itopblock blockclass="DisplayBlock" type="links" link_attr="contact_id" object_id="$id$" target_attr="object_id" encoding="text/oql">SELECT lnkContactRealObject WHERE contact_id = $id$</itopblock>	
 	</itoptab>
 	<itoptab name="Service_Calls">	
-		<itopblock blockclass="DisplayBlock"  type="list" encoding="text/oql">SELECT bizServiceCall WHERE caller_id = $id$</itopblock>	
+		<itopblock blockclass="DisplayBlock"  type="list" object_id="$id$" target_attr="caller_id" encoding="text/oql">SELECT bizServiceCall WHERE caller_id = $id$</itopblock>	
 	</itoptab>
 
 	<itoptab name="Documents">

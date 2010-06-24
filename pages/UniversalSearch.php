@@ -64,7 +64,9 @@ foreach($aClassLabels as $sCurrentClass => $sLabel)
 	$sSelected = ($sCurrentClass == $sBaseClass) ? " SELECTED" : "";
 	$oP->add("<option value=\"$sCurrentClass\" title=\"$sDescription\"$sSelected>$sLabel</option>");
 }
-$oP->add("</select></form>");
+$oP->add("</select>\n");
+$oP->add($oAppContext->GetForForm());
+$oP->add("</form>\n");
 
 try 
 {
