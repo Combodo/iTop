@@ -1,0 +1,51 @@
+<div style="width:100%;background: url(../images/welcome.jpg) top left no-repeat;">
+<style>
+.dashboard {
+vertical-align:top;
+width:50%;
+border:0px solid #000;
+background-color:#F9F9F1;
+padding:10px;
+text-align:left;
+font-size:10pt;
+}
+.dashboard2 {
+vertical-align:top;
+width:50%;
+border:0px solid #000;
+-moz-border-radius:10px;
+padding:5px;
+text-align:left;
+}
+
+td.dashboard li {
+margin-top: 5px;
+display: list-item;
+}
+</style>
+<p></p>
+<p></p>
+<p style="text-align:left; font-size:32px;padding-left:400px;padding-top:40px;margin-bottom:30px;margin-top:0;color:#FFFFFF;"><itopstring>UI:WelcomeMenu:Title</itopstring></p>
+<p></p>
+<table border="0" style="padding:10px;border-spacing: 10px;">
+<tr>
+<td class="dashboard">
+<itopstring>UI:WelcomeMenu:LeftBlock</itopstring>
+</td>
+<td class="dashboard">
+<itopstring>UI:WelcomeMenu:RightBlock</itopstring>
+</td>
+</tr>
+<tr>
+<td class="dashboard2">
+<p style="text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;"><itopstring>UI:WelcomeMenu:MyCalls</itopstring></p>
+<itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql">SELECT bizServiceCall AS i WHERE i.caller_id = :current_contact_id</itopblock>
+</td>
+<td class="dashboard2">
+<p style="text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;"><itopstring>UI:WelcomeMenu:MyIncidents</itopstring></p>
+<itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql">SELECT bizIncidentTicket AS i WHERE i.caller_id = :current_contact_id</itopblock>
+</td>
+
+</tr>
+</table>
+</div>
