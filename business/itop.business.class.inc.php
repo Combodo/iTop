@@ -48,7 +48,7 @@ class Organization extends cmdbAbstractObject
 
 		MetaModel::Init_AddAttribute(new AttributeString("name", array("allowed_values"=>null, "sql"=>"name", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("code", array("allowed_values"=>null, "sql"=>"code", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('active,inactive'), "sql"=>"status", "default_value"=>"active", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('active,inactive'), "sql"=>"status", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("parent_id", array("targetclass"=>"Organization", "jointype"=>null, "allowed_values"=>null, "sql"=>"parent_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("parent_name", array("allowed_values"=>null, "extkey_attcode"=>"parent_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
 
@@ -114,7 +114,7 @@ abstract class Contact extends cmdbAbstractObject
 		MetaModel::Init_InheritAttributes();
 
 		MetaModel::Init_AddAttribute(new AttributeString("name", array("allowed_values"=>null, "sql"=>"name", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('active,inactive'), "sql"=>"status", "default_value"=>"active", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('active,inactive'), "sql"=>"status", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("org_id", array("targetclass"=>"Organization", "jointype"=>null, "allowed_values"=>null, "sql"=>"org_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("org_name", array("allowed_values"=>null, "extkey_attcode"=>"org_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEmailAddress("email", array("allowed_values"=>null, "sql"=>"email", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
@@ -125,7 +125,7 @@ abstract class Contact extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("ticket_list", array("linked_class"=>"lnkTicketToContact", "ext_key_to_me"=>"contact_id", "ext_key_to_remote"=>"ticket_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("ci_list", array("linked_class"=>"lnkCIToContact", "ext_key_to_me"=>"contact_id", "ext_key_to_remote"=>"ci_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'email', 'phone', 'location_id'));
+		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'email', 'phone', 'location_id', 'contract_list', 'ticket_list', 'ci_list'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'org_id', 'email', 'phone', 'location_id'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'org_id', 'email', 'phone', 'location_id'));
 		MetaModel::Init_SetZListItems('list', array('name', 'status', 'org_id', 'email', 'phone', 'location_id'));
@@ -182,9 +182,9 @@ class Team extends Contact
 
 
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'email', 'phone', 'location_id', 'contract_list', 'ticket_list', 'ci_list'));
-		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'org_id', 'email', 'phone', 'location_id', 'contract_list', 'ticket_list', 'ci_list'));
-		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'org_id', 'email', 'phone', 'location_id', 'contract_list', 'ticket_list', 'ci_list'));
-		MetaModel::Init_SetZListItems('list', array('name', 'status', 'org_id', 'email', 'phone', 'location_id', 'contract_list', 'ticket_list', 'ci_list'));
+		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'org_id', 'email', 'phone', 'location_id'));
+		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'org_id', 'email', 'phone', 'location_id'));
+		MetaModel::Init_SetZListItems('list', array('name', 'status', 'org_id', 'email', 'phone', 'location_id'));
 	}
 }
 abstract class Document extends cmdbAbstractObject
@@ -216,9 +216,9 @@ abstract class Document extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("ci_list", array("linked_class"=>"lnkCIToDoc", "ext_key_to_me"=>"document_id", "ext_key_to_remote"=>"ci_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 
 		MetaModel::Init_SetZListItems('details', array('name', 'description', 'type', 'status', 'contract_list', 'ticket_list', 'ci_list'));
-		MetaModel::Init_SetZListItems('advanced_search', array('name', 'description', 'type', 'status', 'contract_list', 'ticket_list', 'ci_list'));
-		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'type', 'status', 'contract_list', 'ticket_list', 'ci_list'));
-		MetaModel::Init_SetZListItems('list', array('name', 'description', 'type', 'status', 'contract_list', 'ticket_list', 'ci_list'));
+		MetaModel::Init_SetZListItems('advanced_search', array('name', 'description', 'type', 'status'));
+		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'type', 'status'));
+		MetaModel::Init_SetZListItems('list', array('name', 'description', 'type', 'status'));
 	}
 }
 class ExternalDoc extends Document
@@ -244,9 +244,9 @@ class ExternalDoc extends Document
 		MetaModel::Init_AddAttribute(new AttributeURL("url", array("target"=>"_blank", "allowed_values"=>null, "sql"=>"url", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
 		MetaModel::Init_SetZListItems('details', array('name', 'description', 'type', 'status', 'contract_list', 'ticket_list', 'ci_list', 'url'));
-		MetaModel::Init_SetZListItems('advanced_search', array('name', 'description', 'type', 'status', 'contract_list', 'ticket_list', 'ci_list', 'url'));
-		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'type', 'status', 'contract_list', 'ticket_list', 'ci_list', 'url'));
-		MetaModel::Init_SetZListItems('list', array('name', 'description', 'type', 'status', 'contract_list', 'ticket_list', 'ci_list', 'url'));
+		MetaModel::Init_SetZListItems('advanced_search', array('name', 'description', 'type', 'status', 'url'));
+		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'type', 'status', 'url'));
+		MetaModel::Init_SetZListItems('list', array('name', 'description', 'type', 'status', 'url'));
 	}
 }
 class Note extends Document
@@ -272,9 +272,9 @@ class Note extends Document
 		MetaModel::Init_AddAttribute(new AttributeWikiText("note", array("allowed_values"=>null, "sql"=>"note", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
 		MetaModel::Init_SetZListItems('details', array('name', 'description', 'type', 'status', 'contract_list', 'ticket_list', 'ci_list', 'note'));
-		MetaModel::Init_SetZListItems('advanced_search', array('name', 'description', 'type', 'status', 'contract_list', 'ticket_list', 'ci_list', 'note'));
-		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'type', 'status', 'contract_list', 'ticket_list', 'ci_list', 'note'));
-		MetaModel::Init_SetZListItems('list', array('name', 'description', 'type', 'status', 'contract_list', 'ticket_list', 'ci_list', 'note'));
+		MetaModel::Init_SetZListItems('advanced_search', array('name', 'description', 'type', 'status', 'note'));
+		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'type', 'status', 'note'));
+		MetaModel::Init_SetZListItems('list', array('name', 'description', 'type', 'status', 'note'));
 	}
 }
 class FileDoc extends Document
@@ -300,9 +300,9 @@ class FileDoc extends Document
 		MetaModel::Init_AddAttribute(new AttributeBlob("contents", array("depends_on"=>array())));
 
 		MetaModel::Init_SetZListItems('details', array('name', 'description', 'type', 'status', 'contract_list', 'ticket_list', 'ci_list', 'contents'));
-		MetaModel::Init_SetZListItems('advanced_search', array('name', 'description', 'type', 'status', 'contract_list', 'ticket_list', 'ci_list', 'contents'));
-		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'type', 'status', 'contract_list', 'ticket_list', 'ci_list', 'contents'));
-		MetaModel::Init_SetZListItems('list', array('name', 'description', 'type', 'status', 'contract_list', 'ticket_list', 'ci_list', 'contents'));
+		MetaModel::Init_SetZListItems('advanced_search', array('name', 'description', 'type', 'status', 'contents'));
+		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'type', 'status', 'contents'));
+		MetaModel::Init_SetZListItems('list', array('name', 'description', 'type', 'status', 'contents'));
 	}
 }
 class Licence extends cmdbAbstractObject
@@ -584,9 +584,9 @@ class ApplicationSolution extends FunctionalCI
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("ci_list", array("linked_class"=>"lnkSolutionToCI", "ext_key_to_me"=>"solution_id", "ext_key_to_remote"=>"ci_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'owner_id', 'importance', 'description', 'ci_list'));
-		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'owner_id', 'importance', 'description', 'ci_list'));
-		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'owner_id', 'importance', 'description', 'ci_list'));
-		MetaModel::Init_SetZListItems('list', array('name', 'status', 'owner_id', 'importance', 'description', 'ci_list'));
+		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'owner_id', 'importance', 'description'));
+		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'owner_id', 'importance', 'description'));
+		MetaModel::Init_SetZListItems('list', array('name', 'status', 'owner_id', 'importance', 'description'));
 	}
 }
 class BusinessProcess extends FunctionalCI
@@ -613,9 +613,9 @@ class BusinessProcess extends FunctionalCI
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("solution_list", array("linked_class"=>"lnkProcessToSolution", "ext_key_to_me"=>"process_id", "ext_key_to_remote"=>"solution_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'owner_id', 'importance', 'description', 'solution_list'));
-		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'owner_id', 'importance', 'description', 'solution_list'));
-		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'owner_id', 'importance', 'description', 'solution_list'));
-		MetaModel::Init_SetZListItems('list', array('name', 'status', 'owner_id', 'importance', 'description', 'solution_list'));
+		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'owner_id', 'importance', 'description'));
+		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'owner_id', 'importance', 'description'));
+		MetaModel::Init_SetZListItems('list', array('name', 'status', 'owner_id', 'importance', 'description'));
 	}
 }
 class ConnectableCI extends FunctionalCI
@@ -737,7 +737,7 @@ class PC extends Device
 
 		MetaModel::Init_AddAttribute(new AttributeString("cpu", array("allowed_values"=>null, "sql"=>"cpu", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeInteger("ram", array("allowed_values"=>null, "sql"=>"ram", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeInteger("hdd", array("allowed_values"=>null, "sql"=>"hdd", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("hdd", array("allowed_values"=>null, "sql"=>"hdd", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("os_family", array("allowed_values"=>null, "sql"=>"os_family", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("os_version", array("allowed_values"=>null, "sql"=>"os_version", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
@@ -1089,9 +1089,9 @@ class Contract extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("ci_list", array("linked_class"=>"lnkContractToCI", "ext_key_to_me"=>"contract_id", "ext_key_to_remote"=>"ci_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'description', 'signed', 'begin', 'end', 'cost', 'cost_currency', 'cost_unit', 'billing_frequency', 'contact_list', 'document_list', 'ci_list'));
-		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'description', 'signed', 'begin', 'end', 'cost', 'cost_currency', 'cost_unit', 'billing_frequency', 'contact_list', 'document_list', 'ci_list'));
-		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'description', 'signed', 'begin', 'end', 'cost', 'cost_currency', 'cost_unit', 'billing_frequency', 'contact_list', 'document_list', 'ci_list'));
-		MetaModel::Init_SetZListItems('list', array('name', 'status', 'description', 'signed', 'begin', 'end', 'cost', 'cost_currency', 'cost_unit', 'billing_frequency', 'contact_list', 'document_list', 'ci_list'));
+		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'description', 'signed', 'begin', 'end', 'cost', 'cost_currency', 'cost_unit', 'billing_frequency'));
+		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'description', 'signed', 'begin', 'end', 'cost', 'cost_currency', 'cost_unit', 'billing_frequency'));
+		MetaModel::Init_SetZListItems('list', array('name', 'status', 'description', 'signed', 'begin', 'end', 'cost', 'cost_currency', 'cost_unit', 'billing_frequency'));
 	}
 }
 class ProviderContract extends cmdbAbstractObject
@@ -1123,9 +1123,9 @@ class ProviderContract extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("sla_list", array("linked_class"=>"lnkContractToSLA", "ext_key_to_me"=>"contract_id", "ext_key_to_remote"=>"sla_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 
 		MetaModel::Init_SetZListItems('details', array('type', 'provider_id', 'ola', 'coverage', 'customer_list', 'sla_list'));
-		MetaModel::Init_SetZListItems('advanced_search', array('type', 'provider_id', 'ola', 'coverage', 'customer_list', 'sla_list'));
-		MetaModel::Init_SetZListItems('standard_search', array('type', 'provider_id', 'ola', 'coverage', 'customer_list', 'sla_list'));
-		MetaModel::Init_SetZListItems('list', array('type', 'provider_id', 'ola', 'coverage', 'customer_list', 'sla_list'));
+		MetaModel::Init_SetZListItems('advanced_search', array('type', 'provider_id', 'ola', 'coverage'));
+		MetaModel::Init_SetZListItems('standard_search', array('type', 'provider_id', 'ola', 'coverage'));
+		MetaModel::Init_SetZListItems('list', array('type', 'provider_id', 'ola', 'coverage'));
 	}
 }
 class CustomerContract extends cmdbAbstractObject
@@ -1496,9 +1496,9 @@ abstract class Ticket extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("ci_list", array("linked_class"=>"lnkTicketToCI", "ext_key_to_me"=>"ticket_id", "ext_key_to_remote"=>"ci_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 
 		MetaModel::Init_SetZListItems('details', array('ref', 'title', 'opened', 'domain', 'workgroup_id', 'contact_list', 'document_list', 'ci_list'));
-		MetaModel::Init_SetZListItems('advanced_search', array('ref', 'title', 'opened', 'domain', 'workgroup_id', 'contact_list', 'document_list', 'ci_list'));
-		MetaModel::Init_SetZListItems('standard_search', array('ref', 'title', 'opened', 'domain', 'workgroup_id', 'contact_list', 'document_list', 'ci_list'));
-		MetaModel::Init_SetZListItems('list', array('ref', 'title', 'opened', 'domain', 'workgroup_id', 'contact_list', 'document_list', 'ci_list'));
+		MetaModel::Init_SetZListItems('advanced_search', array('ref', 'title', 'opened', 'domain', 'workgroup_id'));
+		MetaModel::Init_SetZListItems('standard_search', array('ref', 'title', 'opened', 'domain', 'workgroup_id'));
+		MetaModel::Init_SetZListItems('list', array('ref', 'title', 'opened', 'domain', 'workgroup_id'));
 	}
 }
 class lnkTicketToDoc extends cmdbAbstractObject
@@ -1832,7 +1832,7 @@ new OQLMenuNode('Menu:Class:NetworkDevice/Name', 'Menu:Class:NetworkDevice/Title
 new OQLMenuNode('Menu:Class:Server/Name', 'Menu:Class:Server/Title', 'SELECT Server', $oMyMenuNode->GetIndex(), 27 /* fRank */);
 new OQLMenuNode('Menu:Class:Printer/Name', 'Menu:Class:Printer/Title', 'SELECT Printer', $oMyMenuNode->GetIndex(), 28 /* fRank */);
 new OQLMenuNode('Menu:Class:lnkCItoDoc/Name', 'Menu:Class:lnkCItoDoc/Title', 'SELECT lnkCItoDoc', $oMyMenuNode->GetIndex(), 29 /* fRank */);
-new OQLMenuNode('Menu:Class:lnkCItoContact/Name', 'Menu:Class:lnkCItoContact/Title', 'SELECT lnkCItoContact', $oMyMenuNode->GetIndex(), 30 /* fRank */);
+new OQLMenuNode('Menu:Class:lnkCIToContact/Name', 'Menu:Class:lnkCIToContact/Title', 'SELECT lnkCIToContact', $oMyMenuNode->GetIndex(), 30 /* fRank */);
 new OQLMenuNode('Menu:Class:lnkSolutionToCI/Name', 'Menu:Class:lnkSolutionToCI/Title', 'SELECT lnkSolutionToCI', $oMyMenuNode->GetIndex(), 31 /* fRank */);
 new OQLMenuNode('Menu:Class:lnkProcessToSolution/Name', 'Menu:Class:lnkProcessToSolution/Title', 'SELECT lnkProcessToSolution', $oMyMenuNode->GetIndex(), 32 /* fRank */);
 new OQLMenuNode('Menu:Class:Contract/Name', 'Menu:Class:Contract/Title', 'SELECT Contract', $oMyMenuNode->GetIndex(), 33 /* fRank */);
