@@ -363,7 +363,7 @@ class AttributeDBFieldVoid extends AttributeDefinition
 	public function IsScalar() {return true;} 
 	public function IsWritable() {return true;} 
 	public function GetSQLExpr()    {return $this->Get("sql");}
-	public function GetDefaultValue() {return "";}
+	public function GetDefaultValue() {return $this->MakeRealValue("");}
 	public function IsNullAllowed() {return false;}
 
 	// 
@@ -436,7 +436,7 @@ class AttributeDBField extends AttributeDBFieldVoid
 	{
 		return array_merge(parent::ListExpectedParams(), array("default_value", "is_null_allowed"));
 	}
-	public function GetDefaultValue() {return $this->Get("default_value");}
+	public function GetDefaultValue() {return $this->MakeRealValue($this->Get("default_value"));}
 	public function IsNullAllowed() {return $this->Get("is_null_allowed");}
 }
 
@@ -515,11 +515,12 @@ class AttributeInteger extends AttributeDBField
 	public function MakeRealValue($proposedValue)
 	{
 		//return intval($proposedValue); could work as well
+		if ($proposedValue == '') return null;
 		return (int)$proposedValue;
 	}
 	public function ScalarToSQL($value)
 	{
-		assert(is_numeric($value));
+		assert(is_numeric($value) || is_null($value));
 		return $value; // supposed to be an int
 	}
 }
