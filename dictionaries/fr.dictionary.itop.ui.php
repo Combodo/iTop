@@ -874,6 +874,9 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:UserAccountsMenu+' => 'Comptes Utilisateur',
 	'UI:UserAccountsMenu:Title' => 'Comptes Utilisateur',	
 
+	'UI:iTopVersion:Short' => 'iTop version %1$s',
+	'UI:iTopVersion:Long' => 'iTop version %1$s-%2$s du %3$s',
+
 ));
 
 ?>

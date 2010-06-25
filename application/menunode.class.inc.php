@@ -276,7 +276,7 @@ abstract class MenuNode
 	public function GetHyperlink($aExtraParams)
 	{
 		$aExtraParams['menu'] = $this->GetIndex();
-		return $this->AddParams('../pages/UI.php?menu=', $aExtraParams);
+		return $this->AddParams('../pages/UI.php', $aExtraParams);
 	}
 	
 	public abstract function RenderContent(WebPage $oPage, $aExtraParams = array());

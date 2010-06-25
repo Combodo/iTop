@@ -78,3 +78,42 @@ function ReloadSearchForm(divId, sClassName, sBaseClass)
 	   }
 	 );
 }
+
+/**
+ * Stores - in a persistent way - user specific preferences
+ * depends on a global variable oUserPreferences created/filled by the iTopWebPage
+ * that acts as a local -write through- cache
+ */
+function SetUserPreference(sPreferenceCode, sPrefValue, bPersistent)
+{
+	sPreviousValue = undefined;
+	try
+	{
+		sPreviousValue = oUserPreferences[sPreferenceCode];
+	}
+	catch(err)
+	{
+		sPreviousValue = undefined;
+	}
+    oUserPreferences[sPreferenceCode] = sPrefValue;
+    if (bPersistent && (sPrefValue != sPreviousValue))
+    {
+    	ajax_request = $.post('ajax.render.php',
+    						  { operation: 'set_pref', code: sPreferenceCode, value: sPrefValue} ); // Make it persistent
+    }
+}
+
+/**
+ * Get user specific preferences
+ * depends on a global variable oUserPreferences created/filled by the iTopWebPage
+ * that acts as a local -write through- cache
+ */
+function GetUserPreference(sPreferenceCode, sDefaultValue)
+{
+	var value = sDefaultValue;
+	if ( oUserPreferences[sPreferenceCode] != undefined)
+	{
+		value = oUserPreferences[sPreferenceCode];
+	}
+	return value;
+}

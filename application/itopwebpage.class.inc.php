@@ -26,6 +26,7 @@
 require_once("../application/nicewebpage.class.inc.php");
 require_once("../application/usercontext.class.inc.php");
 require_once("../application/applicationcontext.class.inc.php");
+require_once("../application/user.preferences.class.inc.php");
 /**
  * Web page with some associated CSS and scripts (jquery) for a fancier display
  */
@@ -95,15 +96,44 @@ class iTopWebPage extends NiceWebPage
 
 	$(document).ready(function () {
 		// Layout
+		paneSize = GetUserPreference('menu_size', 300)
 		myLayout = $('body').layout({
-			west : { minSize: 200, size: 300 /* TO DO: read from a cookie ?*/, spacing_open: 16, spacing_close: 16, slideTrigger_open: "mouseover", hideTogglerOnSlide: true }
+			west : 	{
+						minSize: 200, size: paneSize, spacing_open: 16, spacing_close: 16, slideTrigger_open: "mouseover", hideTogglerOnSlide: true,
+					 	onclose_end: function(name, elt, state, options, layout)
+					 	{
+					 			if (state.isSliding == false)
+					 			{
+					 				SetUserPreference('menu_pane', 'closed', true);
+					 			}
+					 	},
+					 	onresize_end: function(name, elt, state, options, layout)
+					 	{
+					 			if (state.isSliding == false)
+					 			{
+					 				SetUserPreference('menu_size', state.size, true);
+					 			}
+					 	},
+					 				
+					 	onopen_end: function(name, elt, state, options, layout)
+					 	{
+					 		if (state.isSliding == false)
+					 		{
+					 			SetUserPreference('menu_pane', 'open', true);
+					 		}
+					 	}
+					}
 		});
 		myLayout.addPinBtn( "#tPinMenu", "west" );
 		//myLayout.open( "west" );
 		$('.ui-layout-resizer-west').html('<img src="../images/splitter-top-corner.png"/>');
+		if (GetUserPreference('menu_pane', 'open') == 'closed')
+		{
+			myLayout.close('west');
+		}
 
 		// Accordion Menu
-		$("#accordion").accordion({ header: "h3", navigation: true, autoHeight: false });
+		$("#accordion").accordion({ header: "h3", navigation: true, autoHeight: false, collapsible: false });
  	});
 		
 	//$("div[id^=tabbedContent] > ul").tabs( 1, { fxFade: true, fxSpeed: 'fast' } ); // tabs
@@ -128,11 +158,13 @@ class iTopWebPage extends NiceWebPage
 	catch(err)
 	{
 		// Do something with the error !
+		alert(err);
 	}
 	
 	//$('.display_block').draggable(); // make the blocks draggable
 EOF
 );
+		$sUserPrefs = appUserPreferences::GetAsJSON();
 		$this->add_script("
 		// For automplete
 		function findValue(li) {
@@ -173,6 +205,8 @@ EOF
 				$('#rawOutput').dialog( {autoOpen: true, modal:false});
 			}
 		}
+		
+		var oUserPreferences = $sUserPrefs;
 		");
 		
 		// Add the standard menus
@@ -223,36 +257,56 @@ EOF
 
 	public function GetSiloSelectionForm()
 	{
-		$sHtml = '<div id="SiloSelection">';
-		$sHtml .= '<form style="display:inline" action="'.$_SERVER['PHP_SELF'].'"><select style="width:150px;font-size:x-small" name="org_id" title="Pick an organization" onChange="this.form.submit();">';
 		// List of visible Organizations
+		$iCount = 0;
 		$oContext = new UserContext();
-		$oSearchFilter = $oContext->NewFilter("bizOrganization");
-		$oSet = new CMDBObjectSet($oSearchFilter);
-		$sSelected = ($this->m_currentOrganization == '') ? ' selected' : '';
-		$sHtml .= '<option value="">'.Dict::S('UI:AllOrganizations').'</option>';
-		if ($oSet->Count() > 0)
-		while($oOrg = $oSet->Fetch())
+		if (MetaModel::IsValidClass('bizOrganization'))
 		{
-			if ($this->m_currentOrganization == $oOrg->GetKey())
-			{
-				$oCurrentOrganization = $oOrg;
-				$sSelected = " selected";
-		
-			}
-			else
-			{
-				$sSelected = "";
-			}
-			$sHtml .= '<option value="'.$oOrg->GetKey().'"'.$sSelected.'>'.$oOrg->Get('name').'</option>';
+			$oSearchFilter = $oContext->NewFilter('Organization');
+			$oSet = new CMDBObjectSet($oSearchFilter);
+			$iCount = $oSet->Count();
 		}
-		$sHtml .= '</select>';
-		// Add other dimensions/context information to this form
-		$oAppContext = new ApplicationContext();
-		$oAppContext->Reset('org_id'); // Org id is handled above and we want to be able to change it here !
-		$sHtml .= $oAppContext->GetForForm();		
-		$sHtml .= '</form>';
-		$sHtml .= '</div>';
+		switch($iCount)
+		{
+			case 0:
+			// No such dimension/silo => nothing to select
+			$sHtml = '<div id="SiloSelection"><!-- nothing to select --></div>';
+			break;
+			
+			case 1:
+			// Only one possible choice... no selection, but display the value
+			$oOrg = $oSet->Fetch();
+			$sHtml = '<div id="SiloSelection">'.$oOrg->GetName().'</div>';
+			$sHtml .= '';
+			break;
+			
+			default:
+			$sHtml = '<div id="SiloSelection">';
+			$sHtml .= '<form style="display:inline" action="'.$_SERVER['PHP_SELF'].'"><select style="width:150px;font-size:x-small" name="org_id" title="Pick an organization" onChange="this.form.submit();">';
+			$sSelected = ($this->m_currentOrganization == '') ? ' selected' : '';
+			$sHtml .= '<option value=""'.$sSelected.'>'.Dict::S('UI:AllOrganizations').'</option>';
+			while($oOrg = $oSet->Fetch())
+			{
+				if ($this->m_currentOrganization == $oOrg->GetKey())
+				{
+					$oCurrentOrganization = $oOrg;
+					$sSelected = " selected";
+			
+				}
+				else
+				{
+					$sSelected = "";
+				}
+				$sHtml .= '<option value="'.$oOrg->GetKey().'"'.$sSelected.'>'.$oOrg->GetName().'</option>';
+			}
+			$sHtml .= '</select>';
+			// Add other dimensions/context information to this form
+			$oAppContext = new ApplicationContext();
+			$oAppContext->Reset('org_id'); // Org id is handled above and we want to be able to change it here !
+			$sHtml .= $oAppContext->GetForForm();		
+			$sHtml .= '</form>';
+			$sHtml .= '</div>';
+		}
 		return $sHtml;		
 	}
 	
@@ -341,12 +395,12 @@ EOF
 		if (ITOP_REVISION == '$WCREV$')
 		{
 			// This is NOT a version built using the buil system, just display the main version
-			$sVersionString = "iTop Version ".ITOP_VERSION;
+			$sVersionString = Dict::Format('UI:iTopVersion:Short', ITOP_VERSION);
 		}
 		else
 		{
 			// This is a build made from SVN, let display the full information
-			$sVersionString = "iTop Version ".ITOP_VERSION." revision ".ITOP_REVISION.", built on: ".ITOP_BUILD_DATE;
+			$sVersionString = Dict::Format('UI:iTopVersion:Long', ITOP_VERSION, ITOP_REVISION, ITOP_BUILD_DATE);
 		}
 
 		// Render the text of the global search form
@@ -413,7 +467,7 @@ EOF
 		echo '<div id="left-pane" class="ui-layout-west">';
 		echo '<!-- Beginning of the left pane -->';
 		echo '	<div id="header-logo">';
-		echo '	<div id="top-left"></div><div id="logo"><img src="../images/itop-logo.png" style="margin-top:16px; margin-right:40px;"/></div>';
+		echo '	<div id="top-left"></div><div id="logo"><a href="http://www.combodo.com/itop"><img src="../images/itop-logo.png" title="'.$sVersionString.'" style="border:0; margin-top:16px; margin-right:40px;"/></a></div>';
 		echo '	</div>';
 		echo '	<div class="header-menu">';
 		echo '		<div class="icon ui-state-default ui-corner-all"><span id="tPinMenu" class="ui-icon ui-icon-pin-w">pin</span></div>';

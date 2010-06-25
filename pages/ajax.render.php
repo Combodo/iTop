@@ -30,6 +30,8 @@ require_once('../application/wizardhelper.class.inc.php');
 require_once('../application/ui.linkswidget.class.inc.php');
 
 require_once('../application/startup.inc.php');
+require_once('../application/user.preferences.class.inc.php');
+
 session_start();
 if (isset($_SESSION['auth_user']))
 {
@@ -329,6 +331,17 @@ switch($operation)
 	$oSet = new CMDBObjectSet($oFilter); 
 	$sHtml = cmdbAbstractObject::GetSearchForm($oPage, $oSet, array('currentId' => $currentId, 'baseClass' => $sRootClass));
 	$oPage->add($sHtml);
+	break;
+	
+	case 'set_pref':
+	$sCode = utils::ReadParam('code', '', 'post');
+	$sValue = utils::ReadParam('value', '', 'post');
+	appUserPreferences::SetPref($sCode, $sValue);
+	break;
+
+	case 'erase_all_pref':
+	// Can be useful in case a user got some corrupted prefs...
+	appUserPreferences::ClearPreferences();
 	break;
 
 	default:

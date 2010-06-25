@@ -55,7 +55,7 @@ body {
 }
 
 h1 {
-	color: #83b217;
+	color: #1C94C4;
 	font-size: 16pt;
 }
 h2 {

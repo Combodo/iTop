@@ -32,33 +32,56 @@ class LoginWebPage extends NiceWebPage
     public function __construct()
     {
         parent::__construct("iTop Login");
-        $this->add_style("
+        $this->add_style(<<<EOF
 body {
-	background-color: #eee;
+	background: #eee;
 	margin: 0;
 	padding: 0;
 }
-#login {
-	width: 230px;
+#login-logo {
+	margin-top: 150px;
+	width: 250px;
+	padding-left: 20px;
+	padding-right: 20px;
+	padding-top: 10px;
+	padding-bottom: 10px;
 	margin-left: auto;
 	margin-right: auto;
-	margin-top: 150px;
+	background: #f6f6f1;
+	height: 54px;
+	border-top: 1px solid #000;
+	border-left: 1px solid #000;
+	border-right: 1px solid #000;
+	border-bottom: 0;
+	text-align: center;
+}
+#login-logo img {
+	border: 0;
+}
+#login {
+	width: 250px;
+	margin-left: auto;
+	margin-right: auto;
 	padding: 20px;
 	background-color: #fff;
-	border: 1px solid #000;
+	border-bottom: 1px solid #000;
+	border-left: 1px solid #000;
+	border-right: 1px solid #000;
+	border-top: 0;
 }
 .center {
 	text-align: center;
 }
 
 h1 {
-	color: #83b217;
+	color: #1C94C4;
 	font-size: 16pt;
 }
 .v-spacer {
 	padding-top: 1em;
 }
-		");
+EOF
+);
 	}
 	
 	public function DisplayLoginForm($bFailedLogin = false)
@@ -66,6 +89,8 @@ h1 {
 		$sAuthUser = utils::ReadParam('auth_user', '');
 		$sAuthPwd = utils::ReadParam('suggest_pwd', '');
 
+		$sVersionShort = Dict::Format('UI:iTopVersion:Short', ITOP_VERSION);
+		$this->add("<div id=\"login-logo\"><a href=\"http://www.combodo.com/itop\"><img title=\"$sVersionShort\" src=\"../images/itop-logo.png\"></a></div>\n");
 		$this->add("<div id=\"login\">\n");
 		$this->add("<h1>".Dict::S('UI:Login:Welcome')."</h1>\n");
 		if ($bFailedLogin)

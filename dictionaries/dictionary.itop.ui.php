@@ -875,6 +875,9 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:UserAccountsMenu' => 'User Accounts',
 	'UI:UserAccountsMenu+' => 'User Accounts',
 	'UI:UserAccountsMenu:Title' => 'User Accounts',	
+
+	'UI:iTopVersion:Short' => 'iTop version %1$s',
+	'UI:iTopVersion:Long' => 'iTop version %1$s-%2$s built on %3$s',
 ));
 
 
