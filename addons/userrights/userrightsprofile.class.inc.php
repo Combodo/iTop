@@ -69,7 +69,7 @@ class URP_Users extends UserRightsBaseClass
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
 
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", array("targetclass"=>"bizPerson", "allowed_values"=>null, "sql"=>"userid", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", array("targetclass"=>"Person", "allowed_values"=>null, "sql"=>"userid", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("last_name", array("allowed_values"=>null, "extkey_attcode"=> 'userid', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("first_name", array("allowed_values"=>null, "extkey_attcode"=> 'userid', "target_attcode"=>"first_name")));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("email", array("allowed_values"=>null, "extkey_attcode"=> 'userid', "target_attcode"=>"email")));
@@ -715,10 +715,10 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		$oChange->Set("userinfo", "Initialization");
 		$iChangeId = $oChange->DBInsert();
 
-		$oOrg = new bizOrganization();
+		$oOrg = new Organization();
 		$oOrg->Set('name', 'My Company/Department');
 		$oOrg->Set('code', 'SOMECODE');
-		$oOrg->Set('status', 'implementation');
+//		$oOrg->Set('status', 'implementation');
 		//$oOrg->Set('parent_id', xxx);
 		$iOrgId = $oOrg->DBInsertTrackedNoReload($oChange);
 
@@ -733,15 +733,15 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		//$oLocation->Set('parent_location_id', xxx);
 		//$iLocationId = $oLocation->DBInsertNoReload();
 
-		$oContact = new bizPerson();
+		$oContact = new Person();
 		$oContact->Set('name', 'My last name');
-		$oContact->Set('first_name', 'My first name');
-		$oContact->Set('status', 'available');
+		//$oContact->Set('first_name', 'My first name');
+		//$oContact->Set('status', 'available');
 		$oContact->Set('org_id', $iOrgId);
 		$oContact->Set('email', 'my.email@foo.org');
-		$oContact->Set('phone', '');
+		//$oContact->Set('phone', '');
 		//$oContact->Set('location_id', $iLocationId);
-		$oContact->Set('employee_number', '');
+		//$oContact->Set('employee_number', '');
 		$iContactId = $oContact->DBInsertTrackedNoReload($oChange);
 		
 		$oUser = new URP_Users();
@@ -1336,7 +1336,7 @@ class SetupProfiles
 	protected static $m_aDimensions = array(
 		'organization' => array(
 			'description' => '',
-			'type' => 'bizOrganization',
+			'type' => 'Organization',
 		),
 	);
 
@@ -1528,6 +1528,9 @@ class SetupProfiles
 	public static function DoCreateProfiles()
 	{
 		self::DoCreateAdminProfile();
+
+// temporary
+return;
 	
 		foreach(self::$m_aProfiles as $sName => $aProfileData)
 		{
@@ -1566,7 +1569,7 @@ class SetupProfiles
 		//
 		self::$m_aModules = array(
 			'General' => array(
-				'bizOrganization',
+				'Organization',
 			),
 			'Documentation' => array(
 				'bizDocument',

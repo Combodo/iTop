@@ -632,6 +632,7 @@ function DisplayStep4(SetupWebPage $oP, Config $oConfig, $sAdminUser, $sAdminPwd
 	else
 	{
 		// Creation failed
+		$oP->error("Failed to create admin account or setup user rights");
 		$oP->add("<button type=\"button\" onClick=\"window.history.back();\"><< Back</button>\n");
 	}
 	// End of visible form

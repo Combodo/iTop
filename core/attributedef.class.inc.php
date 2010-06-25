@@ -582,7 +582,8 @@ class AttributeString extends AttributeDBField
 		}
 		else
 		{
-			return preg_match(preg_escape($sRegExp), $value);
+			$sRegExp = str_replace('/', '\\/', $sRegExp);
+			return preg_match("/$sRegExp/", $value);
 		}
 	}
 
@@ -858,6 +859,27 @@ class AttributeTemplateString extends AttributeString
 class AttributeTemplateText extends AttributeText
 {
 	public function GetTypeDesc() {return "Multiline template string";}
+}
+
+
+/**
+ * Specialization of a text: wiki formatting 
+ *
+ * @package     iTopORM
+ */
+class AttributeWikiText extends AttributeText
+{
+	public function GetTypeDesc() {return "Multiline string with special formatting such as links to objects";}
+
+	public function GetAsHTML($value)
+	{
+		// [SELECT xxxx.... [label]] => hyperlink to a result list
+		// {SELECT xxxx.... [label]} => result list displayed inline
+		// [myclass/nnn [label]] => hyperlink to an object
+		// {myclass/nnn/attcode} => attribute displayed inline
+		// etc.
+		return parent::GetAsHTML($value);
+	}
 }
 
 /**

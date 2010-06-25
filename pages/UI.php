@@ -961,7 +961,7 @@ try
 				}
 			}
 		}
-		if (is_object($oObj))
+		if (isset($oObj) && is_object($oObj))
 		{
 			$sClass = get_class($oObj);
 			$sClassLabel = MetaModel::GetName($sClass);
