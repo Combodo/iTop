@@ -73,7 +73,7 @@ class Location extends cmdbAbstractObject
 			"db_table" => "location",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
+			"icon" => "../business/templates/location.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -146,7 +146,7 @@ class Person extends Contact
 			"db_table" => "person",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
+			"icon" => "../business/templates/person.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -175,7 +175,7 @@ class Team extends Contact
 			"db_table" => "team",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
+			"icon" => "../business/templates/team.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -202,7 +202,7 @@ abstract class Document extends cmdbAbstractObject
 			"db_table" => "document",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
+			"icon" => "../business/templates/document.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -236,7 +236,7 @@ class ExternalDoc extends Document
 			"db_table" => "externaldoc",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
+			"icon" => "../business/templates/document.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -264,7 +264,7 @@ class Note extends Document
 			"db_table" => "note",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
+			"icon" => "../business/templates/document.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -292,7 +292,7 @@ class FileDoc extends Document
 			"db_table" => "filedoc",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
+			"icon" => "../business/templates/document.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -421,7 +421,7 @@ class Application extends cmdbAbstractObject
 			"db_table" => "application",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
+			"icon" => "../business/templates/software.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -515,7 +515,7 @@ class ApplicationInstance extends FunctionalCI
 			"db_table" => "applicationinstance",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
+			"icon" => "../business/templates/application.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -550,7 +550,7 @@ class DatabaseInstance extends FunctionalCI
 			"db_table" => "databaseinstance",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
+			"icon" => "../business/templates/database-instance.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -562,8 +562,8 @@ class DatabaseInstance extends FunctionalCI
 		MetaModel::Init_AddAttribute(new AttributeWikiText("description", array("allowed_values"=>null, "sql"=>"description", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'owner_id', 'importance', 'application_id', 'admin_login', 'admin_password', 'description'));
-		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'owner_id', 'importance', 'application_id', 'admin_login', 'admin_password', 'description'));
-		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'owner_id', 'importance', 'application_id', 'admin_login', 'admin_password', 'description'));
+		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'owner_id', 'importance', 'application_id', 'description'));
+		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'owner_id', 'importance', 'application_id', 'description'));
 		MetaModel::Init_SetZListItems('list', array('status', 'owner_id', 'importance', 'application_id', 'admin_login', 'admin_password', 'description'));
 	}
 }
@@ -582,7 +582,7 @@ class ApplicationSolution extends FunctionalCI
 			"db_table" => "applicationsolution",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
+			"icon" => "../business/templates/",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -612,7 +612,7 @@ class BusinessProcess extends FunctionalCI
 			"db_table" => "businessprocess",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
+			"icon" => "../business/templates/business-process.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -739,7 +739,7 @@ class PC extends Device
 			"db_table" => "pc",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
+			"icon" => "../business/templates/computer.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -771,7 +771,7 @@ class MobileCI extends Device
 			"db_table" => "mobileci",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
+			"icon" => "../business/templates/mobile-phone.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -873,8 +873,8 @@ class NetworkDevice extends InfrastructureCI
 		MetaModel::Init_AddAttribute(new AttributePassword("snmp_write", array("allowed_values"=>null, "sql"=>"snmp_write", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'description', 'location_id', 'location_details', 'management_ip', 'default_gateway', 'type', 'ios_version', 'ram', 'snmp_read', 'snmp_write'));
-		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'description', 'location_id', 'location_details', 'management_ip', 'default_gateway', 'type', 'ios_version', 'ram', 'snmp_read', 'snmp_write'));
-		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'description', 'location_id', 'location_details', 'management_ip', 'default_gateway', 'type', 'ios_version', 'ram', 'snmp_read', 'snmp_write'));
+		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'description', 'location_id', 'location_details', 'management_ip', 'default_gateway', 'type', 'ios_version', 'ram'));
+		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'description', 'location_id', 'location_details', 'management_ip', 'default_gateway', 'type', 'ios_version', 'ram'));
 		MetaModel::Init_SetZListItems('list', array('status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'description', 'location_id', 'location_details', 'management_ip', 'default_gateway', 'type', 'ios_version', 'ram', 'snmp_read', 'snmp_write'));
 	}
 }
@@ -893,7 +893,7 @@ class Server extends InfrastructureCI
 			"db_table" => "server",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
+			"icon" => "../business/templates/server.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -925,7 +925,7 @@ class Printer extends InfrastructureCI
 			"db_table" => "printer",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
+			"icon" => "../business/templates/printer.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -985,7 +985,7 @@ class lnkCIToContact extends cmdbAbstractObject
 			"db_table" => "lnkcitocontact",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
+			"icon" => "../business/templates/contact.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -1829,7 +1829,7 @@ $oConfigManagementGroup = new MenuGroup('Menu:ConfigManagement', 1 /* fRank */);
 new TemplateMenuNode('Menu:ConfigManagement/Overview', '../business/templates/configuration_management_menu.html', $oConfigManagementGroup->GetIndex(), 0 /* fRank */);
 
 
-$oContactNode = new TemplateMenuNode('Menu:Class:Contact/Name', '../business/templates/configuration_management_menu.html', $oConfigManagementGroup->GetIndex(), 1 /* fRank */);
+$oContactNode = new TemplateMenuNode('Menu:Class:Contact/Name', '../business/templates/contacts_menu.html', $oConfigManagementGroup->GetIndex(), 1 /* fRank */);
 new OQLMenuNode('Menu:Class:Person/Name', 'Menu:Class:Person/Title', 'SELECT Person', $oContactNode->GetIndex(), 1 /* fRank */);
 new OQLMenuNode('Menu:Class:Team/Name', 'Menu:Class:Team/Title', 'SELECT Team', $oContactNode->GetIndex(), 2 /* fRank */);
 
@@ -1837,7 +1837,7 @@ new OQLMenuNode('Menu:Class:FileDoc/Name', 'Menu:Class:FileDoc/Title', 'SELECT F
 new OQLMenuNode('Menu:Class:Location/Name', 'Menu:Class:Location/Title', 'SELECT Location', $oConfigManagementGroup->GetIndex(), 3 /* fRank */);
 
 
-$oCINode = new TemplateMenuNode('Menu:ConfigManagement:CI', '../business/templates/configuration_management_menu.html', $oConfigManagementGroup->GetIndex(), 2 /* fRank */);
+$oCINode = new TemplateMenuNode('Menu:ConfigManagement:CI', '../business/templates/configuration_items_menu.html', $oConfigManagementGroup->GetIndex(), 2 /* fRank */);
 
 new OQLMenuNode('Menu:Class:BusinessProcess/Name', 'Menu:Class:BusinessProcess/Title', 'SELECT BusinessProcess', $oCINode->GetIndex(), 0 /* fRank */);
 new OQLMenuNode('Menu:Class:ApplicationSolution/Name', 'Menu:Class:ApplicationSolution/Title', 'SELECT ApplicationSolution', $oCINode->GetIndex(), 1 /* fRank */);

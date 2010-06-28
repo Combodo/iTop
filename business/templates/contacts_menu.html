@@ -3,20 +3,20 @@
 <tr>
 <td class="dashboard">
 <h2><itopstring>UI-ContactsMenu-ContactsByLocation</itopstring></h2>
-<itopblock BlockClass="DisplayBlock" type="count" parameters="group_by:location_name" asynchronous="false" encoding="text/oql">SELECT bizContact</itopblock>
+<itopblock BlockClass="DisplayBlock" type="count" parameters="group_by:location_id" asynchronous="false" encoding="text/oql">SELECT Contact</itopblock>
 </td>
 <td class="dashboard">
-<itopblock BlockClass="DisplayBlock" type="open_flash_chart" parameters="chart_type:pie;chart_title:UI-ContactsMenu-ContactsByLocation;group_by:location_name" asynchronous="false" encoding="text/oql">SELECT bizContact</itopblock>
+<itopblock BlockClass="DisplayBlock" type="open_flash_chart" parameters="chart_type:pie;chart_title:UI-ContactsMenu-ContactsByLocation;group_by:location_name" asynchronous="false" encoding="text/oql">SELECT Contact</itopblock>
 </td>
 </tr>
 <tr>
 <td class="dashboard">
 <h2><itopstring>UI-ContactsMenu-ContactsByType</itopstring></h2>
-<itopblock BlockClass="DisplayBlock" type="count" parameters="group_by:finalclass" asynchronous="false" encoding="text/oql">SELECT bizContact</itopblock>
+<itopblock BlockClass="DisplayBlock" type="count" parameters="group_by:finalclass" asynchronous="false" encoding="text/oql">SELECT Contact</itopblock>
 </td>
 <td class="dashboard">
 <h2><itopstring>UI-ContactsMenu-ContactsByStatus</itopstring></h2>
-<itopblock BlockClass="DisplayBlock" type="count" parameters="group_by:status" asynchronous="false" encoding="text/oql">SELECT bizContact</itopblock>
+<itopblock BlockClass="DisplayBlock" type="count" parameters="group_by:status" asynchronous="false" encoding="text/oql">SELECT Contact</itopblock>
 </td>
 </tr>
 </table>
