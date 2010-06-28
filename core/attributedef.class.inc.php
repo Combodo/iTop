@@ -335,6 +335,7 @@ class AttributeLinkedSetIndirect extends AttributeLinkedSet
 		return array_merge(parent::ListExpectedParams(), array("ext_key_to_remote"));
 	}
 	public function GetExtKeyToRemote() { return $this->Get('ext_key_to_remote'); }
+	public function GetEditClass() {return "LinkedSet";}
 }
 
 /**
