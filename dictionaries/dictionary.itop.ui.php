@@ -297,6 +297,7 @@ Dict::Add('EN US', 'English', 'English', array(
 
 Dict::Add('EN US', 'English', 'English', array(
 	'UI:WelcomeMenu' => 'Welcome',
+	'UI:WelcomeMenuPage' => 'Welcome',
 	'UI:WelcomeMenu+' => 'Welcome to iTop',
 	'UI:WelcomeMenu:Title' => 'Welcome to iTop',
 
