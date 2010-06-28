@@ -231,7 +231,7 @@ EOF
 		 *		Universal Search
 		 */
 		$oWelcomeMenu = new MenuGroup('UI:WelcomeMenu', 0 /* fRank */);
-		new TemplateMenuNode('UI:WelcomeMenu', '../business/templates/welcome_menu.html', $oWelcomeMenu->GetIndex() /* oParent */, 1 /* fRank */);
+		new TemplateMenuNode('UI:WelcomeMenuPage', '../business/templates/welcome_menu.html', $oWelcomeMenu->GetIndex() /* oParent */, 1 /* fRank */);
 		
 		$oToolsMenu = new MenuGroup('UI:AdvancedToolsMenu', 2 /* fRank */);
 		new WebPageMenuNode('UI:CSVImportMenu', '../pages/csvimport.php', $oToolsMenu->GetIndex(), 1 /* fRank */);

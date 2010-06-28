@@ -146,9 +146,12 @@ abstract class cmdbAbstractObject extends CMDBObject
 					$sTargetClass = $oAttDef->GetLinkedClass();
 					$oFilter = new DBObjectSearch($sTargetClass);
 					$oFilter->AddCondition($oAttDef->GetExtKeyToMe(), $this->GetKey());
-
 					$oBlock = new DisplayBlock($oFilter, 'list', false);
-					$oBlock->Display($oPage, 0);
+						$aParams = array(
+							'target_attr' => $oAttDef->GetExtKeyToMe(),
+							'object_id' => $this->GetKey()
+							);
+					$oBlock->Display($oPage, 0, $aParams);
 				}
 				else // get_class($oAttDef) == 'AttributeLinkedSetIndirect'
 				{
@@ -904,7 +907,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 					$sHTMLValue = "<textarea class=\"resizable\" title=\"$sHelpText\" name=\"attr_{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">$value</textarea>&nbsp;{$sValidationField}";
 				break;
 	
-				case 'List':
+				case 'LinkedSet':
 					$aEventsList[] ='change';
 					$oWidget = new UILinksWidget($sClass, $sAttCode, $iId, $sNameSuffix);
 					$sHTMLValue = $oWidget->Display($oPage, $value);
@@ -923,6 +926,10 @@ abstract class cmdbAbstractObject extends CMDBObject
 				    $sHTMLValue .= "<input name=\"attr_{$sAttCode}{$sNameSuffix}\" type=\"hidden\" id=\"$iId\" \" value=\"$sFileName\"/>\n";
 				    $sHTMLValue .= "<span id=\"name_$iInputId\">$sFileName</span><br/>\n";
 				    $sHTMLValue .= "<input title=\"$sHelpText\" name=\"file_{$sAttCode}{$sNameSuffix}\" type=\"file\" id=\"file_$iId\" onChange=\"UpdateFileName('$iId', this.value)\"/>&nbsp;{$sValidationField}\n";
+				break;
+				
+				case 'List':
+				// Not editable for now...
 				break;
 				
 				case 'String':
