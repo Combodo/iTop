@@ -33,7 +33,7 @@ class Organization extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,structure",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
@@ -48,7 +48,7 @@ class Organization extends cmdbAbstractObject
 
 		MetaModel::Init_AddAttribute(new AttributeString("name", array("allowed_values"=>null, "sql"=>"name", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("code", array("allowed_values"=>null, "sql"=>"code", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('active,inactive'), "sql"=>"status", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('active,inactive'), "sql"=>"status", "default_value"=>"active", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("parent_id", array("targetclass"=>"Organization", "jointype"=>null, "allowed_values"=>null, "sql"=>"parent_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("parent_name", array("allowed_values"=>null, "extkey_attcode"=>"parent_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
 
@@ -65,7 +65,7 @@ class Location extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,structure",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
@@ -79,7 +79,7 @@ class Location extends cmdbAbstractObject
 		MetaModel::Init_InheritAttributes();
 
 		MetaModel::Init_AddAttribute(new AttributeString("name", array("allowed_values"=>null, "sql"=>"name", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('active,inactive'), "sql"=>"status", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('active,inactive'), "sql"=>"status", "default_value"=>"active", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("org_id", array("targetclass"=>"Organization", "jointype"=>null, "allowed_values"=>null, "sql"=>"org_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("org_name", array("allowed_values"=>null, "extkey_attcode"=>"org_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("address", array("allowed_values"=>null, "sql"=>"address", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
@@ -100,7 +100,7 @@ abstract class Contact extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,structure",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
@@ -114,7 +114,7 @@ abstract class Contact extends cmdbAbstractObject
 		MetaModel::Init_InheritAttributes();
 
 		MetaModel::Init_AddAttribute(new AttributeString("name", array("allowed_values"=>null, "sql"=>"name", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('active,inactive'), "sql"=>"status", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('active,inactive'), "sql"=>"status", "default_value"=>"active", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("org_id", array("targetclass"=>"Organization", "jointype"=>null, "allowed_values"=>null, "sql"=>"org_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("org_name", array("allowed_values"=>null, "extkey_attcode"=>"org_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEmailAddress("email", array("allowed_values"=>null, "sql"=>"email", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
@@ -138,7 +138,7 @@ class Person extends Contact
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,structure",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
@@ -167,7 +167,7 @@ class Team extends Contact
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,structure",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
@@ -194,7 +194,7 @@ abstract class Document extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,documentation",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
@@ -209,8 +209,8 @@ abstract class Document extends cmdbAbstractObject
 
 		MetaModel::Init_AddAttribute(new AttributeString("name", array("allowed_values"=>null, "sql"=>"name", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("description", array("allowed_values"=>null, "sql"=>"description", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("type", array("allowed_values"=>new ValueSetEnum('contract,networkmap,presentation,training,whitePaper,workinginstructions'), "sql"=>"type", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('draft,published,obsolete'), "sql"=>"status", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("type", array("allowed_values"=>new ValueSetEnum('contract,networkmap,presentation,training,whitePaper,workinginstructions'), "sql"=>"type", "default_value"=>"presentation", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('draft,published,obsolete'), "sql"=>"status", "default_value"=>"draft", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("contract_list", array("linked_class"=>"lnkContractToDoc", "ext_key_to_me"=>"document_id", "ext_key_to_remote"=>"contract_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("ticket_list", array("linked_class"=>"lnkTicketToDoc", "ext_key_to_me"=>"document_id", "ext_key_to_remote"=>"ticket_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("ci_list", array("linked_class"=>"lnkCIToDoc", "ext_key_to_me"=>"document_id", "ext_key_to_remote"=>"ci_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
@@ -228,7 +228,7 @@ class ExternalDoc extends Document
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,documentation",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
@@ -256,7 +256,7 @@ class Note extends Document
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,documentation",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
@@ -284,7 +284,7 @@ class FileDoc extends Document
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,documentation",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
@@ -312,7 +312,7 @@ class Licence extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,configmgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "provider",
 			"state_attcode" => "",
@@ -346,7 +346,7 @@ class Subnet extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,configmgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
@@ -377,7 +377,7 @@ class Patch extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,configmgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
@@ -393,7 +393,7 @@ class Patch extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeString("name", array("allowed_values"=>null, "sql"=>"name", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("target_sw", array("allowed_values"=>null, "sql"=>"target_sw", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("version", array("allowed_values"=>null, "sql"=>"version", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("type", array("allowed_values"=>new ValueSetEnum('security,servicepack,fix'), "sql"=>"type", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("type", array("allowed_values"=>new ValueSetEnum('security,servicepack,fix'), "sql"=>"type", "default_value"=>"fix", "is_null_allowed"=>true, "depends_on"=>array())));
 
 		MetaModel::Init_SetZListItems('details', array('name', 'target_sw', 'version', 'type'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'target_sw', 'version', 'type'));
@@ -408,7 +408,7 @@ class Application extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,configmgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
@@ -437,7 +437,7 @@ class lnkPatchToCI extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,configmgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "patch_id",
 			"state_attcode" => "",
@@ -468,7 +468,7 @@ abstract class FunctionalCI extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,configmgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
@@ -482,10 +482,10 @@ abstract class FunctionalCI extends cmdbAbstractObject
 		MetaModel::Init_InheritAttributes();
 
 		MetaModel::Init_AddAttribute(new AttributeString("name", array("allowed_values"=>null, "sql"=>"name", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('implementation,production,obsolete'), "sql"=>"status", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('implementation,production,obsolete'), "sql"=>"status", "default_value"=>"implementation", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("owner_id", array("targetclass"=>"Organization", "jointype"=>null, "allowed_values"=>null, "sql"=>"owner_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("owner_name", array("allowed_values"=>null, "extkey_attcode"=>"owner_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("importance", array("allowed_values"=>new ValueSetEnum('low,medium,high'), "sql"=>"importance", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("importance", array("allowed_values"=>new ValueSetEnum('low,medium,high'), "sql"=>"importance", "default_value"=>"medium", "is_null_allowed"=>false, "depends_on"=>array())));
 
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'owner_id', 'importance'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'owner_id', 'importance'));
@@ -500,7 +500,7 @@ class ApplicationInstance extends FunctionalCI
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,configmgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
@@ -535,7 +535,7 @@ class DatabaseInstance extends FunctionalCI
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,configmgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
@@ -567,7 +567,7 @@ class ApplicationSolution extends FunctionalCI
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,configmgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
@@ -596,7 +596,7 @@ class BusinessProcess extends FunctionalCI
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,configmgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
@@ -625,7 +625,7 @@ class ConnectableCI extends FunctionalCI
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,configmgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
@@ -656,7 +656,7 @@ class NetworkInterface extends ConnectableCI
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,configmgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
@@ -671,13 +671,13 @@ class NetworkInterface extends ConnectableCI
 
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("device_id", array("targetclass"=>"Device", "jointype"=>null, "allowed_values"=>null, "sql"=>"device_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("device_name", array("allowed_values"=>null, "extkey_attcode"=>"device_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("logical_type", array("allowed_values"=>new ValueSetEnum('backup,logical,port,primary,secondary'), "sql"=>"logical_type", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("physical_type", array("allowed_values"=>new ValueSetEnum('atm,ethernet,framerelay,vlan'), "sql"=>"physical_type", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("logical_type", array("allowed_values"=>new ValueSetEnum('backup,logical,port,primary,secondary'), "sql"=>"logical_type", "default_value"=>"primary", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("physical_type", array("allowed_values"=>new ValueSetEnum('atm,ethernet,framerelay,vlan'), "sql"=>"physical_type", "default_value"=>"ethernet", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeIPAddress("ip_address", array("allowed_values"=>null, "sql"=>"ip_address", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeIPAddress("ip_mask", array("allowed_values"=>null, "sql"=>"ip_mask", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("mac_address", array("allowed_values"=>null, "sql"=>"mac_address", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeInteger("speed", array("allowed_values"=>null, "sql"=>"speed", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("duplex", array("allowed_values"=>new ValueSetEnum('full,half,unknown'), "sql"=>"duplex", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("duplex", array("allowed_values"=>new ValueSetEnum('full,half,unknown'), "sql"=>"duplex", "default_value"=>"full", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("connected_if", array("targetclass"=>"NetworkInterface", "jointype"=>null, "allowed_values"=>null, "sql"=>"connected_if", "is_null_allowed"=>true, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("connected_name", array("allowed_values"=>null, "extkey_attcode"=>"connected_if", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("connected_if_device_id", array("allowed_values"=>null, "extkey_attcode"=>"connected_if", "target_attcode"=>"device_id", "is_null_allowed"=>true, "depends_on"=>array())));
@@ -695,7 +695,7 @@ class Device extends ConnectableCI
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,configmgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
@@ -722,7 +722,7 @@ class PC extends Device
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,configmgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
@@ -754,7 +754,7 @@ class MobileCI extends Device
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,configmgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
@@ -781,7 +781,7 @@ class MobilePhone extends MobileCI
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,configmgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
@@ -811,7 +811,7 @@ class InfrastructureCI extends Device
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,configmgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
@@ -844,7 +844,7 @@ class NetworkDevice extends InfrastructureCI
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,configmgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
@@ -857,7 +857,7 @@ class NetworkDevice extends InfrastructureCI
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 
-		MetaModel::Init_AddAttribute(new AttributeEnum("type", array("allowed_values"=>new ValueSetEnum('WANaccelerator,firewall,hub,loadbalancer,router,switch'), "sql"=>"type", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("type", array("allowed_values"=>new ValueSetEnum('WANaccelerator,firewall,hub,loadbalancer,router,switch'), "sql"=>"type", "default_value"=>"switch", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("ios_version", array("allowed_values"=>null, "sql"=>"ios_version", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeInteger("ram", array("allowed_values"=>null, "sql"=>"ram", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributePassword("snmp_read", array("allowed_values"=>null, "sql"=>"snmp_read", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
@@ -876,7 +876,7 @@ class Server extends InfrastructureCI
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,configmgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
@@ -908,7 +908,7 @@ class Printer extends InfrastructureCI
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,configmgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
@@ -921,8 +921,8 @@ class Printer extends InfrastructureCI
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 
-		MetaModel::Init_AddAttribute(new AttributeEnum("type", array("allowed_values"=>new ValueSetEnum('Mopier,Printer'), "sql"=>"type", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("technology", array("allowed_values"=>new ValueSetEnum('Laser,Inkjet,Tracer'), "sql"=>"technology", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("type", array("allowed_values"=>new ValueSetEnum('Mopier,Printer'), "sql"=>"type", "default_value"=>"Printer", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("technology", array("allowed_values"=>new ValueSetEnum('Laser,Inkjet,Tracer'), "sql"=>"technology", "default_value"=>"Laser", "is_null_allowed"=>true, "depends_on"=>array())));
 
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'description', 'location_id', 'location_details', 'management_ip', 'default_gateway', 'type', 'technology'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'description', 'location_id', 'location_details', 'management_ip', 'default_gateway', 'type', 'technology'));
@@ -937,7 +937,7 @@ class lnkCItoDoc extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,configmgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "ci_id",
 			"state_attcode" => "",
@@ -968,7 +968,7 @@ class lnkCIToContact extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,configmgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "ci_id",
 			"state_attcode" => "",
@@ -999,7 +999,7 @@ class lnkSolutionToCI extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,configmgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "solution_id",
 			"state_attcode" => "",
@@ -1030,7 +1030,7 @@ class lnkProcessToSolution extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,configmgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "solution_id",
 			"state_attcode" => "",
@@ -1061,7 +1061,7 @@ class Contract extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,servicemgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
@@ -1081,7 +1081,7 @@ class Contract extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeDate("begin", array("allowed_values"=>null, "sql"=>"begin", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDate("end", array("allowed_values"=>null, "sql"=>"end", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeInteger("cost", array("allowed_values"=>null, "sql"=>"cost", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("cost_currency", array("allowed_values"=>new ValueSetEnum('dollars'), "sql"=>"cost_currency", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("cost_currency", array("allowed_values"=>new ValueSetEnum('dollars,euros'), "sql"=>"cost_currency", "default_value"=>"euros", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("cost_unit", array("allowed_values"=>new ValueSetEnum(''), "sql"=>"cost_unit", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("billing_frequency", array("allowed_values"=>null, "sql"=>"billing_frequency", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("contact_list", array("linked_class"=>"lnkContractToContact", "ext_key_to_me"=>"contract_id", "ext_key_to_remote"=>"contact_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
@@ -1101,7 +1101,7 @@ class ProviderContract extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,servicemgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "type",
 			"state_attcode" => "",
@@ -1135,7 +1135,7 @@ class CustomerContract extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,servicemgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "type",
 			"state_attcode" => "",
@@ -1165,7 +1165,7 @@ class lnkProviderToCustomer extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,servicemgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "provider_id",
 			"state_attcode" => "",
@@ -1196,7 +1196,7 @@ class lnkContractToSLA extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,servicemgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "contract_id",
 			"state_attcode" => "",
@@ -1228,7 +1228,7 @@ class lnkContractToDoc extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,servicemgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "contract_id",
 			"state_attcode" => "",
@@ -1259,7 +1259,7 @@ class lnkContractToContact extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,servicemgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "contract_id",
 			"state_attcode" => "",
@@ -1290,7 +1290,7 @@ class lnkContractToCI extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,servicemgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "contract_id",
 			"state_attcode" => "",
@@ -1321,7 +1321,7 @@ class ServiceType extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,servicemgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
@@ -1350,7 +1350,7 @@ class Service extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,servicemgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "servicetype_id",
 			"state_attcode" => "",
@@ -1379,7 +1379,7 @@ class SLA extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,servicemgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "service_id",
 			"state_attcode" => "",
@@ -1409,7 +1409,7 @@ class ServiceLevel extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,servicemgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
@@ -1423,7 +1423,7 @@ class ServiceLevel extends cmdbAbstractObject
 		MetaModel::Init_InheritAttributes();
 
 		MetaModel::Init_AddAttribute(new AttributeString("name", array("allowed_values"=>null, "sql"=>"name", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("metric", array("allowed_values"=>new ValueSetEnum('TTO'), "sql"=>"metric", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("metric", array("allowed_values"=>new ValueSetEnum('TTO,TTR'), "sql"=>"metric", "default_value"=>"TTO", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("ticket_type", array("allowed_values"=>null, "sql"=>"ticket_type", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("ticket_priorities", array("allowed_values"=>null, "sql"=>"ticket_priorities", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeInteger("value", array("allowed_values"=>null, "sql"=>"value", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
@@ -1441,7 +1441,7 @@ class lnkLevelToSLA extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,servicemgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "sla_id",
 			"state_attcode" => "",
@@ -1472,7 +1472,7 @@ abstract class Ticket extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,ticketing",
 			"key_type" => "autoincrement",
 			"name_attcode" => "ref",
 			"state_attcode" => "",
@@ -1488,7 +1488,7 @@ abstract class Ticket extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeString("ref", array("allowed_values"=>null, "sql"=>"ref", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("title", array("allowed_values"=>null, "sql"=>"title", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDate("opened", array("allowed_values"=>null, "sql"=>"opened", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("domain", array("allowed_values"=>new ValueSetEnum('Application'), "sql"=>"domain", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("domain", array("allowed_values"=>new ValueSetEnum('Application,Desktop,Network,Server'), "sql"=>"domain", "default_value"=>"Application", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("workgroup_id", array("targetclass"=>"Team", "jointype"=>null, "allowed_values"=>null, "sql"=>"workgroup_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("workgroup_name", array("allowed_values"=>null, "extkey_attcode"=>"workgroup_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("contact_list", array("linked_class"=>"lnkTicketToDoc", "ext_key_to_me"=>"ticket_id", "ext_key_to_remote"=>"contact_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
@@ -1508,7 +1508,7 @@ class lnkTicketToDoc extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,ticketing",
 			"key_type" => "autoincrement",
 			"name_attcode" => "ticket_id",
 			"state_attcode" => "",
@@ -1539,7 +1539,7 @@ class lnkTicketToContact extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,ticketing",
 			"key_type" => "autoincrement",
 			"name_attcode" => "ticket_id",
 			"state_attcode" => "",
@@ -1570,7 +1570,7 @@ class lnkTicketToCI extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,ticketing",
 			"key_type" => "autoincrement",
 			"name_attcode" => "ticket_id",
 			"state_attcode" => "",
@@ -1601,7 +1601,7 @@ class Incident extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,incidentmgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "status",
 			"state_attcode" => "",
@@ -1614,7 +1614,7 @@ class Incident extends cmdbAbstractObject
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 
-		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('Assigned,Closed,New,Resolved,WorkInProgress'), "sql"=>"status", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('Assigned,Closed,New,Resolved,WorkInProgress'), "sql"=>"status", "default_value"=>"New", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("customer_id", array("targetclass"=>"Organization", "jointype"=>null, "allowed_values"=>null, "sql"=>"customer_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("customer_name", array("allowed_values"=>null, "extkey_attcode"=>"customer_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("category_id", array("targetclass"=>"ServiceType", "jointype"=>null, "allowed_values"=>null, "sql"=>"category_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
@@ -1628,7 +1628,7 @@ class Incident extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalField("agent_email", array("allowed_values"=>null, "extkey_attcode"=>"agent_id", "target_attcode"=>"email", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("caller_id", array("targetclass"=>"Person", "jointype"=>null, "allowed_values"=>null, "sql"=>"caller_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("workgroup_name", array("allowed_values"=>null, "extkey_attcode"=>"caller_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("priority", array("allowed_values"=>new ValueSetEnum('low'), "sql"=>"priority", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("priority", array("allowed_values"=>new ValueSetEnum('low,medium,high'), "sql"=>"priority", "default_value"=>"medium", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDate("started", array("allowed_values"=>null, "sql"=>"started", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDate("closed", array("allowed_values"=>null, "sql"=>"closed", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDate("last_update", array("allowed_values"=>null, "sql"=>"last_update", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
@@ -1648,7 +1648,7 @@ class Change extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,changemgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "reason",
 			"state_attcode" => "",
@@ -1662,7 +1662,7 @@ class Change extends cmdbAbstractObject
 		MetaModel::Init_InheritAttributes();
 
 		MetaModel::Init_AddAttribute(new AttributeString("reason", array("allowed_values"=>null, "sql"=>"reason", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('Approved,Assigned,Closed,Implemented,Monitored,New,NotApproved,PlannedScheduled,Rejected,Validated'), "sql"=>"status", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('Approved,Assigned,Closed,Implemented,Monitored,New,NotApproved,PlannedScheduled,Rejected,Validated'), "sql"=>"status", "default_value"=>"New", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("caller_id", array("targetclass"=>"Person", "jointype"=>null, "allowed_values"=>null, "sql"=>"caller_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("workgroup_name", array("allowed_values"=>null, "extkey_attcode"=>"caller_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDate("start", array("allowed_values"=>null, "sql"=>"start", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
@@ -1682,7 +1682,7 @@ class UserRequest extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,callmgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "foo",
 			"state_attcode" => "",
@@ -1710,7 +1710,7 @@ class Problem extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,problemmgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "foo",
 			"state_attcode" => "",
@@ -1738,7 +1738,7 @@ class KnownError extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,knownerrormgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "foo",
 			"state_attcode" => "",
@@ -1766,7 +1766,7 @@ class lnkKnownErrorToProblem extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,knownerrormgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "foo",
 			"state_attcode" => "",

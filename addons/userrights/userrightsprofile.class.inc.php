@@ -1529,9 +1529,6 @@ class SetupProfiles
 	{
 		self::DoCreateAdminProfile();
 
-// temporary
-return;
-	
 		foreach(self::$m_aProfiles as $sName => $aProfileData)
 		{
 			self::DoCreateOneProfile($sName, $aProfileData);
@@ -1568,82 +1565,51 @@ return;
 		// In this profiling scheme, modules are based on ITIL recommendations
 		//
 		self::$m_aModules = array(
-			'General' => array(
-				'Organization',
+			/*
+			'WriteModule' => array(
+				'someclass',
+				'anotherclass',
 			),
-			'Documentation' => array(
-				'bizDocument',
-				'lnkDocumentRealObject',
-				'lnkDocumentContract',
-				'lnkDocumentError',
-			),
-			'Configuration' => array(
-				'logRealObject',
-				'lnkContactRealObject',
-	//			'lnkInterfaces',
-				'lnkClientServer',
-				'lnkInfraGrouping',
-				'lnkContactInfra',
-				'lnkContactTeam',
-			),
-			'Incident' => array(
-				'bizIncidentTicket',
-				'lnkRelatedTicket',
-				'lnkInfraTicket',
-				'lnkContactTicket',
-			),
-			'Problem' => array(
-				'bizKnownError',
-				'lnkInfraError',
-				'lnkDocumentError',
-			),
-			'Change' => array(
-				'bizChangeTicket',
-				'lnkInfraChangeTicket',
-				'lnkContactChange',
-			),
-			'Service' => array(
-				'bizService',
-				'bizContract',
-				'lnkInfraContract',
-				'lnkContactContract',
-				'lnkDocumentContract',
-			),
-			'Call' => array(
-				'bizServiceCall',
-				'lnkCallTicket',
-				'lnkInfraCall',
-			),
+			*/
+			'General' => MetaModel::GetClasses('structure'),
+			'Documentation' => MetaModel::GetClasses('documentation'),
+			'Configuration' => MetaModel::GetClasses('configmgmt'),
+			'Incident' => MetaModel::GetClasses('incidentmgmt'),
+			'Problem' => MetaModel::GetClasses('problemmgmt'),
+			'Change' => MetaModel::GetClasses('changemgmt'),
+			'Service' => MetaModel::GetClasses('servicemgmt'),
+			'Call' => MetaModel::GetClasses('callmgmt'),
+			'KnownError' => MetaModel::GetClasses('knownerrormgmt'),
 		);
 		
 		self::$m_aProfiles = array(
 			'Configuration Manager' => array(
 				'description' => 'Person in charge of the documentation of the managed CIs',
-				'write_modules' => 'Documentation,Configuration',
+				'write_modules' => 'General,Documentation,Configuration',
 				'stimuli' => array(
-					'bizServer' => 'any',
+					//'bizServer' => 'any',
 					//'bizServer' => 'ev_store,ev_ship,ev_plug,ev_configuration_finished,ev_val_failed,ev_mtp,ev_start_change,ev_end_change,ev_decomission,ev_obsolete,ev_recycle',
-					'bizContract' => 'none',
-					'bizIncidentTicket' => 'none',
-					'bizChangeTicket' => 'none',
+					//'bizContract' => 'none',
+					//'bizIncidentTicket' => 'none',
+					//'bizChangeTicket' => 'none',
 				),
 			),
 			'Service Desk Agent' => array(
 				'description' => 'Person in charge of creating incident reports',
 				'write_modules' => 'Incident,Call',
 				'stimuli' => array(
-					'bizServer' => 'none',
-					'bizContract' => 'none',
-					'bizIncidentTicket' => 'ev_assign',
-					'bizChangeTicket' => 'none',
-					'bizServiceCall' => 'any',
+					//'bizServer' => 'none',
+					//'bizContract' => 'none',
+					//'bizIncidentTicket' => 'ev_assign',
+					//'bizChangeTicket' => 'none',
+					//'bizServiceCall' => 'any',
 				),
 			),
 			'Support Agent' => array(
 				'description' => 'Person analyzing and solving the current incidents or problems',
-				'write_modules' => 'Incident,Problem',
+				'write_modules' => 'Incident,Problem,KnownError',
 				'stimuli' => array(
-					'bizIncidentTicket' => 'any',
+					//'bizIncidentTicket' => 'any',
 					//'bizIncidentTicket' => 'ev_assign,ev_reassign,ev_start_working,ev_close',
 				),
 			),
@@ -1651,41 +1617,41 @@ return;
 				'description' => 'Person executing the changes',
 				'write_modules' => 'Change',
 				'stimuli' => array(
-					'bizServer' => 'none',
-					'bizContract' => 'none',
-					'bizIncidentTicket' => 'none',
-					'bizChangeTicket' => 'ev_plan,ev_replan,ev_implement,ev_monitor',
+					//'bizServer' => 'none',
+					//'bizContract' => 'none',
+					//'bizIncidentTicket' => 'none',
+					//'bizChangeTicket' => 'ev_plan,ev_replan,ev_implement,ev_monitor',
 				),
 			),
 			'Change Supervisor' => array(
 				'description' => 'Person responsible for the overall change execution',
 				'write_modules' => 'Change',
 				'stimuli' => array(
-					'bizServer' => 'none',
-					'bizContract' => 'none',
-					'bizIncidentTicket' => 'none',
-					'bizChangeTicket' => 'ev_assign,ev_validate,ev_reject,ev_reopen,ev_finish',
+					//'bizServer' => 'none',
+					//'bizContract' => 'none',
+					//'bizIncidentTicket' => 'none',
+					//'bizChangeTicket' => 'ev_assign,ev_validate,ev_reject,ev_reopen,ev_finish',
 				),
 			),
 			'Change Approver' => array(
 				'description' => 'Person who could be impacted by some changes',
 				'write_modules' => 'Change',
 				'stimuli' => array(
-					'bizServer' => 'none',
-					'bizContract' => 'none',
-					'bizIncidentTicket' => 'none',
-					'bizChangeTicket' => 'ev_approve,ev_notapprove',
+					//'bizServer' => 'none',
+					//'bizContract' => 'none',
+					//'bizIncidentTicket' => 'none',
+					//'bizChangeTicket' => 'ev_approve,ev_notapprove',
 				),
 			),
 			'Service Manager' => array(
 				'description' => 'Person responsible for the service delivered to the [internal] customer',
 				'write_modules' => 'Service',
 				'stimuli' => array(
-					'bizServer' => 'none',
-					'bizContract' => 'any',
+					//'bizServer' => 'none',
+					//'bizContract' => 'any',
 					//'bizContract' => 'ev_freeze_version,ev_sign,ev_begin,ev_notice,ev_terminate,ev_elapsed',
-					'bizIncidentTicket' => 'none',
-					'bizChangeTicket' => 'none',
+					//'bizIncidentTicket' => 'none',
+					//'bizChangeTicket' => 'none',
 				),
 			),
 			'Document author' => array(
