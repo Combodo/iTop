@@ -185,7 +185,7 @@ class ApplicationMenu
 		$index = -1;
 		foreach(self::$aMenusIndex as $aMenu)
 		{
-			if ($aMenu['node']->GetTitle() == $sTitle)
+			if ($aMenu['node']->GetRawTitle() == $sTitle)
 			{
 				$id = $aMenu['node']->GetIndex();
 				break;
@@ -256,6 +256,11 @@ abstract class MenuNode
 	{
 		$this->sTitle = $sTitle;
 		$this->index = ApplicationMenu::InsertMenu($this, $iParentIndex, $fRank);
+	}
+	
+	public function GetRawTitle()
+	{
+		return $this->sTitle;
 	}
 	
 	public function GetTitle()
