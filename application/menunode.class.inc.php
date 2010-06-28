@@ -70,6 +70,10 @@ class ApplicationMenu
 	 */
 	static public function InsertMenu(MenuNode $oMenuNode, $iParentIndex = -1, $fRank)
 	{
+		$index = self::GetMenuIndexByTitle($oMenuNode->GetRawTitle());
+		if ($index == -1)
+		{
+			// The menu does not already exist, insert it
 		$index = count(self::$aMenusIndex);
 		self::$aMenusIndex[$index] = array( 'node' => $oMenuNode, 'children' => array());
 		if ($iParentIndex == -1)
@@ -79,6 +83,7 @@ class ApplicationMenu
 		else
 		{
 			self::$aMenusIndex[$iParentIndex]['children'][] = array ('rank' => $fRank, 'index' => $index);
+		}
 		}
 		return $index;
 	}
@@ -187,7 +192,7 @@ class ApplicationMenu
 		{
 			if ($aMenu['node']->GetRawTitle() == $sTitle)
 			{
-				$id = $aMenu['node']->GetIndex();
+				$index = $aMenu['node']->GetIndex();
 				break;
 			}
 		}
