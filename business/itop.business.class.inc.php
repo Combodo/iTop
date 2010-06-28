@@ -369,6 +369,11 @@ class Subnet extends cmdbAbstractObject
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'ip', 'ip_mask'));
 		MetaModel::Init_SetZListItems('list', array('name', 'description', 'ip', 'ip_mask'));
 	}
+	public function ComputeValues()
+	{
+		$sName = $this->Get('ip').'/'.$this->Get('ip_mask');
+		$this->Set('name', $sName);
+	}
 }
 class Patch extends cmdbAbstractObject
 {
@@ -1797,66 +1802,51 @@ class lnkKnownErrorToProblem extends cmdbAbstractObject
 //			+ ...
 ////////////////////////////////////////////////////////////////////////////////////
 // Create the top-level group. fRank = 1, means it will be inserted after the group '0', which is usually 'Welcome'
-$oMyMenuGroup = new MenuGroup('Menu:MyModule', 1 /* fRank */);
+
+$oAdminMenu = new MenuGroup('UI:AdminToolsMenu', 999);
+$iAdminGroup = $oAdminMenu->GetIndex();
+new OQLMenuNode('Menu:Class:Organization/Name', 'Menu:Class:Organization/Title', 'SELECT Organization', $iAdminGroup, 10 /* fRank */);
+new OQLMenuNode('Menu:Class:Application/Name', 'Menu:Class:Application/Title', 'SELECT Application', $iAdminGroup, 20 /* fRank */);
+
+$oToolsMenu = new MenuGroup('UI:AdvancedToolsMenu', 998);
+$iToolsGroup = $oToolsMenu->GetIndex();
+new WebPageMenuNode('Menu:Audit', '../pages/audit.php', $iToolsGroup, 33 /* fRank */);
+
+
+$oConfigManagementGroup = new MenuGroup('Menu:ConfigManagement', 1 /* fRank */);
 
 // Create an entry, based on a custom template, for the Configuration management overview, under the top-level group
-$oMyMenuNode = new TemplateMenuNode('Menu:MyModule', '../business/templates/configuration_management_menu.html', $oMyMenuGroup->GetIndex(), 0 /* fRank */);
-// By default, one entry per class
-new OQLMenuNode('Menu:Class:Organization/Name', 'Menu:Class:Organization/Title', 'SELECT Organization', $oMyMenuNode->GetIndex(), 0 /* fRank */);
-new OQLMenuNode('Menu:Class:Location/Name', 'Menu:Class:Location/Title', 'SELECT Location', $oMyMenuNode->GetIndex(), 1 /* fRank */);
-new OQLMenuNode('Menu:Class:Contact/Name', 'Menu:Class:Contact/Title', 'SELECT Contact', $oMyMenuNode->GetIndex(), 2 /* fRank */);
-new OQLMenuNode('Menu:Class:Person/Name', 'Menu:Class:Person/Title', 'SELECT Person', $oMyMenuNode->GetIndex(), 3 /* fRank */);
-new OQLMenuNode('Menu:Class:Team/Name', 'Menu:Class:Team/Title', 'SELECT Team', $oMyMenuNode->GetIndex(), 4 /* fRank */);
-new OQLMenuNode('Menu:Class:Document/Name', 'Menu:Class:Document/Title', 'SELECT Document', $oMyMenuNode->GetIndex(), 5 /* fRank */);
-new OQLMenuNode('Menu:Class:ExternalDoc/Name', 'Menu:Class:ExternalDoc/Title', 'SELECT ExternalDoc', $oMyMenuNode->GetIndex(), 6 /* fRank */);
-new OQLMenuNode('Menu:Class:Note/Name', 'Menu:Class:Note/Title', 'SELECT Note', $oMyMenuNode->GetIndex(), 7 /* fRank */);
-new OQLMenuNode('Menu:Class:FileDoc/Name', 'Menu:Class:FileDoc/Title', 'SELECT FileDoc', $oMyMenuNode->GetIndex(), 8 /* fRank */);
-new OQLMenuNode('Menu:Class:Licence/Name', 'Menu:Class:Licence/Title', 'SELECT Licence', $oMyMenuNode->GetIndex(), 9 /* fRank */);
-new OQLMenuNode('Menu:Class:Subnet/Name', 'Menu:Class:Subnet/Title', 'SELECT Subnet', $oMyMenuNode->GetIndex(), 10 /* fRank */);
-new OQLMenuNode('Menu:Class:Patch/Name', 'Menu:Class:Patch/Title', 'SELECT Patch', $oMyMenuNode->GetIndex(), 11 /* fRank */);
-new OQLMenuNode('Menu:Class:Application/Name', 'Menu:Class:Application/Title', 'SELECT Application', $oMyMenuNode->GetIndex(), 12 /* fRank */);
-new OQLMenuNode('Menu:Class:lnkPatchToCI/Name', 'Menu:Class:lnkPatchToCI/Title', 'SELECT lnkPatchToCI', $oMyMenuNode->GetIndex(), 13 /* fRank */);
-new OQLMenuNode('Menu:Class:FunctionalCI/Name', 'Menu:Class:FunctionalCI/Title', 'SELECT FunctionalCI', $oMyMenuNode->GetIndex(), 14 /* fRank */);
-new OQLMenuNode('Menu:Class:ApplicationInstance/Name', 'Menu:Class:ApplicationInstance/Title', 'SELECT ApplicationInstance', $oMyMenuNode->GetIndex(), 15 /* fRank */);
-new OQLMenuNode('Menu:Class:DatabaseInstance/Name', 'Menu:Class:DatabaseInstance/Title', 'SELECT DatabaseInstance', $oMyMenuNode->GetIndex(), 16 /* fRank */);
-new OQLMenuNode('Menu:Class:ApplicationSolution/Name', 'Menu:Class:ApplicationSolution/Title', 'SELECT ApplicationSolution', $oMyMenuNode->GetIndex(), 17 /* fRank */);
-new OQLMenuNode('Menu:Class:BusinessProcess/Name', 'Menu:Class:BusinessProcess/Title', 'SELECT BusinessProcess', $oMyMenuNode->GetIndex(), 18 /* fRank */);
-new OQLMenuNode('Menu:Class:ConnectableCI/Name', 'Menu:Class:ConnectableCI/Title', 'SELECT ConnectableCI', $oMyMenuNode->GetIndex(), 19 /* fRank */);
-new OQLMenuNode('Menu:Class:NetworkInterface/Name', 'Menu:Class:NetworkInterface/Title', 'SELECT NetworkInterface', $oMyMenuNode->GetIndex(), 20 /* fRank */);
-new OQLMenuNode('Menu:Class:Device/Name', 'Menu:Class:Device/Title', 'SELECT Device', $oMyMenuNode->GetIndex(), 21 /* fRank */);
-new OQLMenuNode('Menu:Class:PC/Name', 'Menu:Class:PC/Title', 'SELECT PC', $oMyMenuNode->GetIndex(), 22 /* fRank */);
-new OQLMenuNode('Menu:Class:MobileCI/Name', 'Menu:Class:MobileCI/Title', 'SELECT MobileCI', $oMyMenuNode->GetIndex(), 23 /* fRank */);
-new OQLMenuNode('Menu:Class:MobilePhone/Name', 'Menu:Class:MobilePhone/Title', 'SELECT MobilePhone', $oMyMenuNode->GetIndex(), 24 /* fRank */);
-new OQLMenuNode('Menu:Class:InfrastructureCI/Name', 'Menu:Class:InfrastructureCI/Title', 'SELECT InfrastructureCI', $oMyMenuNode->GetIndex(), 25 /* fRank */);
-new OQLMenuNode('Menu:Class:NetworkDevice/Name', 'Menu:Class:NetworkDevice/Title', 'SELECT NetworkDevice', $oMyMenuNode->GetIndex(), 26 /* fRank */);
-new OQLMenuNode('Menu:Class:Server/Name', 'Menu:Class:Server/Title', 'SELECT Server', $oMyMenuNode->GetIndex(), 27 /* fRank */);
-new OQLMenuNode('Menu:Class:Printer/Name', 'Menu:Class:Printer/Title', 'SELECT Printer', $oMyMenuNode->GetIndex(), 28 /* fRank */);
-new OQLMenuNode('Menu:Class:lnkCItoDoc/Name', 'Menu:Class:lnkCItoDoc/Title', 'SELECT lnkCItoDoc', $oMyMenuNode->GetIndex(), 29 /* fRank */);
-new OQLMenuNode('Menu:Class:lnkCIToContact/Name', 'Menu:Class:lnkCIToContact/Title', 'SELECT lnkCIToContact', $oMyMenuNode->GetIndex(), 30 /* fRank */);
-new OQLMenuNode('Menu:Class:lnkSolutionToCI/Name', 'Menu:Class:lnkSolutionToCI/Title', 'SELECT lnkSolutionToCI', $oMyMenuNode->GetIndex(), 31 /* fRank */);
-new OQLMenuNode('Menu:Class:lnkProcessToSolution/Name', 'Menu:Class:lnkProcessToSolution/Title', 'SELECT lnkProcessToSolution', $oMyMenuNode->GetIndex(), 32 /* fRank */);
-new OQLMenuNode('Menu:Class:Contract/Name', 'Menu:Class:Contract/Title', 'SELECT Contract', $oMyMenuNode->GetIndex(), 33 /* fRank */);
-new OQLMenuNode('Menu:Class:ProviderContract/Name', 'Menu:Class:ProviderContract/Title', 'SELECT ProviderContract', $oMyMenuNode->GetIndex(), 34 /* fRank */);
-new OQLMenuNode('Menu:Class:CustomerContract/Name', 'Menu:Class:CustomerContract/Title', 'SELECT CustomerContract', $oMyMenuNode->GetIndex(), 35 /* fRank */);
-new OQLMenuNode('Menu:Class:lnkProviderToCustomer/Name', 'Menu:Class:lnkProviderToCustomer/Title', 'SELECT lnkProviderToCustomer', $oMyMenuNode->GetIndex(), 36 /* fRank */);
-new OQLMenuNode('Menu:Class:lnkContractToSLA/Name', 'Menu:Class:lnkContractToSLA/Title', 'SELECT lnkContractToSLA', $oMyMenuNode->GetIndex(), 37 /* fRank */);
-new OQLMenuNode('Menu:Class:lnkContractToDoc/Name', 'Menu:Class:lnkContractToDoc/Title', 'SELECT lnkContractToDoc', $oMyMenuNode->GetIndex(), 38 /* fRank */);
-new OQLMenuNode('Menu:Class:lnkContractToContact/Name', 'Menu:Class:lnkContractToContact/Title', 'SELECT lnkContractToContact', $oMyMenuNode->GetIndex(), 39 /* fRank */);
-new OQLMenuNode('Menu:Class:lnkContractToCI/Name', 'Menu:Class:lnkContractToCI/Title', 'SELECT lnkContractToCI', $oMyMenuNode->GetIndex(), 40 /* fRank */);
-new OQLMenuNode('Menu:Class:ServiceType/Name', 'Menu:Class:ServiceType/Title', 'SELECT ServiceType', $oMyMenuNode->GetIndex(), 41 /* fRank */);
-new OQLMenuNode('Menu:Class:Service/Name', 'Menu:Class:Service/Title', 'SELECT Service', $oMyMenuNode->GetIndex(), 42 /* fRank */);
-new OQLMenuNode('Menu:Class:SLA/Name', 'Menu:Class:SLA/Title', 'SELECT SLA', $oMyMenuNode->GetIndex(), 43 /* fRank */);
-new OQLMenuNode('Menu:Class:ServiceLevel/Name', 'Menu:Class:ServiceLevel/Title', 'SELECT ServiceLevel', $oMyMenuNode->GetIndex(), 44 /* fRank */);
-new OQLMenuNode('Menu:Class:lnkLevelToSLA/Name', 'Menu:Class:lnkLevelToSLA/Title', 'SELECT lnkLevelToSLA', $oMyMenuNode->GetIndex(), 45 /* fRank */);
-new OQLMenuNode('Menu:Class:Ticket/Name', 'Menu:Class:Ticket/Title', 'SELECT Ticket', $oMyMenuNode->GetIndex(), 46 /* fRank */);
-new OQLMenuNode('Menu:Class:lnkTicketToDoc/Name', 'Menu:Class:lnkTicketToDoc/Title', 'SELECT lnkTicketToDoc', $oMyMenuNode->GetIndex(), 47 /* fRank */);
-new OQLMenuNode('Menu:Class:lnkTicketToContact/Name', 'Menu:Class:lnkTicketToContact/Title', 'SELECT lnkTicketToContact', $oMyMenuNode->GetIndex(), 48 /* fRank */);
-new OQLMenuNode('Menu:Class:lnkTicketToCI/Name', 'Menu:Class:lnkTicketToCI/Title', 'SELECT lnkTicketToCI', $oMyMenuNode->GetIndex(), 49 /* fRank */);
-new OQLMenuNode('Menu:Class:Incident/Name', 'Menu:Class:Incident/Title', 'SELECT Incident', $oMyMenuNode->GetIndex(), 50 /* fRank */);
-new OQLMenuNode('Menu:Class:Change/Name', 'Menu:Class:Change/Title', 'SELECT Change', $oMyMenuNode->GetIndex(), 51 /* fRank */);
-new OQLMenuNode('Menu:Class:UserRequest/Name', 'Menu:Class:UserRequest/Title', 'SELECT UserRequest', $oMyMenuNode->GetIndex(), 52 /* fRank */);
-new OQLMenuNode('Menu:Class:Problem/Name', 'Menu:Class:Problem/Title', 'SELECT Problem', $oMyMenuNode->GetIndex(), 53 /* fRank */);
-new OQLMenuNode('Menu:Class:KnownError/Name', 'Menu:Class:KnownError/Title', 'SELECT KnownError', $oMyMenuNode->GetIndex(), 54 /* fRank */);
-new OQLMenuNode('Menu:Class:lnkKnownErrorToProblem/Name', 'Menu:Class:lnkKnownErrorToProblem/Title', 'SELECT lnkKnownErrorToProblem', $oMyMenuNode->GetIndex(), 55 /* fRank */);
+new TemplateMenuNode('Menu:ConfigManagement/Overview', '../business/templates/configuration_management_menu.html', $oConfigManagementGroup->GetIndex(), 0 /* fRank */);
+
+
+$oContactNode = new TemplateMenuNode('Menu:Class:Contact/Name', '../business/templates/configuration_management_menu.html', $oConfigManagementGroup->GetIndex(), 1 /* fRank */);
+new OQLMenuNode('Menu:Class:Person/Name', 'Menu:Class:Person/Title', 'SELECT Person', $oContactNode->GetIndex(), 1 /* fRank */);
+new OQLMenuNode('Menu:Class:Team/Name', 'Menu:Class:Team/Title', 'SELECT Team', $oContactNode->GetIndex(), 2 /* fRank */);
+
+new OQLMenuNode('Menu:Class:FileDoc/Name', 'Menu:Class:FileDoc/Title', 'SELECT FileDoc', $oConfigManagementGroup->GetIndex(), 2 /* fRank */);
+new OQLMenuNode('Menu:Class:Location/Name', 'Menu:Class:Location/Title', 'SELECT Location', $oConfigManagementGroup->GetIndex(), 3 /* fRank */);
+
+
+$oCINode = new TemplateMenuNode('Menu:ConfigManagement:CI', '../business/templates/configuration_management_menu.html', $oConfigManagementGroup->GetIndex(), 2 /* fRank */);
+
+new OQLMenuNode('Menu:Class:BusinessProcess/Name', 'Menu:Class:BusinessProcess/Title', 'SELECT BusinessProcess', $oCINode->GetIndex(), 0 /* fRank */);
+new OQLMenuNode('Menu:Class:ApplicationSolution/Name', 'Menu:Class:ApplicationSolution/Title', 'SELECT ApplicationSolution', $oCINode->GetIndex(), 1 /* fRank */);
+
+$oSWNode = new TemplateMenuNode('Menu:ConfigManagement:Software', '', $oCINode->GetIndex(), 2 /* fRank */);
+new OQLMenuNode('Menu:Class:Licence/Name', 'Menu:Class:Licence/Title', 'SELECT Licence', $oSWNode->GetIndex(), 0 /* fRank */);
+new OQLMenuNode('Menu:Class:Patch/Name', 'Menu:Class:Patch/Title', 'SELECT Patch', $oSWNode->GetIndex(), 1 /* fRank */);
+new OQLMenuNode('Menu:Class:ApplicationInstance/Name', 'Menu:Class:ApplicationInstance/Title', 'SELECT ApplicationInstance', $oSWNode->GetIndex(), 2 /* fRank */);
+new OQLMenuNode('Menu:Class:DatabaseInstance/Name', 'Menu:Class:DatabaseInstance/Title', 'SELECT DatabaseInstance', $oSWNode->GetIndex(), 3 /* fRank */);
+
+$oHWNode = new TemplateMenuNode('Menu:ConfigManagement:Hardware', '', $oCINode->GetIndex(), 3 /* fRank */);
+new OQLMenuNode('Menu:Class:Subnet/Name', 'Menu:Class:Subnet/Title', 'SELECT Subnet', $oHWNode->GetIndex(), 0 /* fRank */);
+new OQLMenuNode('Menu:Class:NetworkDevice/Name', 'Menu:Class:NetworkDevice/Title', 'SELECT NetworkDevice', $oHWNode->GetIndex(), 1 /* fRank */);
+new OQLMenuNode('Menu:Class:Server/Name', 'Menu:Class:Server/Title', 'SELECT Server', $oHWNode->GetIndex(), 2 /* fRank */);
+new OQLMenuNode('Menu:Class:Printer/Name', 'Menu:Class:Printer/Title', 'SELECT Printer', $oHWNode->GetIndex(), 3 /* fRank */);
+new OQLMenuNode('Menu:Class:MobilePhone/Name', 'Menu:Class:MobilePhone/Title', 'SELECT MobilePhone', $oHWNode->GetIndex(), 4 /* fRank */);
+new OQLMenuNode('Menu:Class:PC/Name', 'Menu:Class:PC/Title', 'SELECT PC', $oHWNode->GetIndex(), 5 /* fRank */);
+
+
+
 
 ?>
