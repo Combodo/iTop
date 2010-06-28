@@ -387,10 +387,19 @@ class OQLMenuNode extends MenuNode
 	
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())
 	{
+		try
+		{
+			$oSearch = DBObjectSearch::FromOQL($this->sOQL);
+			$sIcon = MetaModel::GetClassIcon($oSearch->GetClass());
+		}
+		catch(Exception $e)
+		{
+			$sIcon = '';
+		}
 		// The standard template used for all such pages: a (closed) search form at the top and a list of results at the bottom
 		$sTemplate = <<<EOF
 <itopblock BlockClass="DisplayBlock" type="search" asynchronous="false" encoding="text/oql">$this->sOQL</itopblock>
-<p class="page-header"><itopstring>$this->sPageTitle</itopstring></p>
+<p class="page-header"><img src="$sIcon"><itopstring>$this->sPageTitle</itopstring></p>
 <itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql">$this->sOQL</itopblock>
 EOF;
 		$oTemplate = new DisplayTemplate($sTemplate);

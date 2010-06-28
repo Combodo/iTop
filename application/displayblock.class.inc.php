@@ -588,7 +588,7 @@ class DisplayBlock
 			$sHtml .= "<div id=\"my_chart_{$iChartCounter}\">If the chart does not display, <a href=\"http://get.adobe.com/flash/\" target=\"_blank\">install Flash</a></div>\n";
 			$oPage->add_script("function ofc_resize(left, width, top, height) { /* do nothing special */ }");
 			$oPage->add_ready_script("swfobject.embedSWF(\"../images/open-flash-chart.swf\", \"my_chart_{$iChartCounter}\", \"100%\", \"300\",\"9.0.0\", \"expressInstall.swf\",
-			{\"data-file\":\"".urlencode("../pages/ajax.render.php?operation=open_flash_chart&params[group_by]=$sGroupBy&params[chart_type]=$sChartType&params[chart_title]=$sTitle&encoding=oql&filter=".urlencode($sFilter))."\"});\n");
+			{\"data-file\":\"".urlencode("../pages/ajax.render.php?operation=open_flash_chart&params[group_by]=$sGroupBy&params[chart_type]=$sChartType&params[chart_title]=$sTitle&encoding=oql&filter=".urlencode($sFilter))."\"}, {wmode: 'transparent'} );\n");
 			$iChartCounter++;
 			break;
 			
@@ -718,7 +718,7 @@ class HistoryBlock extends DisplayBlock
 		$sHtml .= "<!-- filter: ".($this->m_oFilter->ToOQL())."-->\n";
 		switch($this->m_sStyle)
 		{
-			case 'toggle':
+			default:
 			// First the latest change that the user is allowed to see
 			do
 			{
@@ -734,7 +734,7 @@ class HistoryBlock extends DisplayBlock
 				$oChange = $oContext->GetObject('CMDBChange', $oLatestChangeOp->Get('change'));
 				$sUserInfo = $oChange->GetAsHTML('userinfo');
 				$oSet->Rewind(); // Reset the pointer to the beginning of the set
-				$sHtml .= $oPage->GetStartCollapsibleSection(Dict::Format('UI:History:LastModified_On_By', $sDate, $sUserInfo));
+				//$sHtml .= $oPage->GetStartCollapsibleSection(Dict::Format('UI:History:LastModified_On_By', $sDate, $sUserInfo));
 				//$sHtml .= cmdbAbstractObject::GetDisplaySet($oPage, $oSet);
 				$aChanges = array();
 				while($oChangeOp = $oSet->Fetch())
@@ -763,12 +763,12 @@ class HistoryBlock extends DisplayBlock
 					$aValues[] = array('date' => $aChange['date'], 'userinfo' => $aChange['userinfo'], 'log' => "<ul><li>".implode('</li><li>', $aChange['log'])."</li></ul>");
 				}
 				$sHtml .= $oPage->GetTable($aAttribs, $aValues);		
-				$sHtml .= $oPage->GetEndCollapsibleSection();
+				//$sHtml .= $oPage->GetEndCollapsibleSection();
 			}
 			break;
 						
-			default:
-			$sHtml .= parent::GetRenderContent($oPage, $aExtraParams);
+			///default:
+			//$sHtml .= parent::GetRenderContent($oPage, $aExtraParams);
 		}
 		return $sHtml;
 	}

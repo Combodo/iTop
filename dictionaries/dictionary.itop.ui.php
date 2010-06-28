@@ -395,6 +395,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:CountOfObjects' => '%1$d objects matching the criteria.',
 	'UI:NoObject_Class_ToDisplay' => 'No %1$s to display',
 	'UI:History:LastModified_On_By' => 'Last modified on %1$s by %2$s.',
+	'UI:HistoryTab' => 'History',
 	'UI:History:Date' => 'Date',
 	'UI:History:Date+' => 'Date of the change',
 	'UI:History:User' => 'User',
@@ -878,6 +879,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 
 	'UI:iTopVersion:Short' => 'iTop version %1$s',
 	'UI:iTopVersion:Long' => 'iTop version %1$s-%2$s built on %3$s',
+	'UI:PropertiesTab' => 'Properties',
 ));
 
 

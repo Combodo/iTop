@@ -407,6 +407,7 @@ div.itop_popup > ul > li {
 	position: absolute;
 	display: none;
 	border-top: 1px solid white;
+	z-index: 999;
 }
 
 .itop_popup li ul li,  #logOffBtn li ul li {

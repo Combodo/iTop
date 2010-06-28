@@ -24,6 +24,8 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
+define('OBJECT_PROPERTIES_TAB', 'ObjectProperties');
+
 require_once('../core/cmdbobject.class.inc.php');
 require_once('../application/utils.inc.php');
 require_once('../application/applicationcontext.class.inc.php');
@@ -101,25 +103,25 @@ abstract class cmdbAbstractObject extends CMDBObject
 	{
 		// Standard Header with name, actions menu and history block
 		//
-		$oPage->add("<div class=\"page_header\">\n");
 
 		// action menu
 		$oSingletonFilter = new DBObjectSearch(get_class($this));
 		$oSingletonFilter->AddCondition('id', array($this->GetKey()));
 		$oBlock = new MenuBlock($oSingletonFilter, 'popup', false);
 		$oBlock->Display($oPage, -1);
+		$oPage->add("<div class=\"page_header\"><h1><img src=\"".$this->GetIcon()."\" style=\"margin-right:10px;margin-top: -16px;vertical-align:middle;\">\n");
+		$oPage->add(MetaModel::GetName(get_class($this)).": <span class=\"hilite\">".$this->GetDisplayName()."</span></h1>\n");
+		$oPage->add("</div>\n");
+	}
 
-		$oPage->add("<h1>".MetaModel::GetName(get_class($this)).": <span class=\"hilite\">".$this->GetDisplayName()."</span></h1>\n");
-
-		// history block (with toggle)
+	function DisplayBareHistory(WebPage $oPage)
+	{
+		// history block (with as a tab)
 		$oHistoryFilter = new DBObjectSearch('CMDBChangeOp');
 		$oHistoryFilter->AddCondition('objkey', $this->GetKey());
 		$oHistoryFilter->AddCondition('objclass', get_class($this));
-		$oBlock = new HistoryBlock($oHistoryFilter, 'toggle', false);
+		$oBlock = new HistoryBlock($oHistoryFilter, 'tab', false);
 		$oBlock->Display($oPage, -1);
-
-		$oPage->add("</div>\n");
-		$oPage->add("<img src=\"".$this->GetIcon()."\" style=\"margin-top:-30px; margin-right:10px; float:right\">\n");
 	}
 
 	function DisplayBareProperties(WebPage $oPage)
@@ -130,8 +132,8 @@ abstract class cmdbAbstractObject extends CMDBObject
 	function DisplayBareRelations(WebPage $oPage)
 	{
 		// Related objects
-		$oPage->AddTabContainer('Related Objects');
-		$oPage->SetCurrentTabContainer('Related Objects');
+		//$oPage->AddTabContainer('Related Objects');
+		//$oPage->SetCurrentTabContainer('Related Objects');
 		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode=>$oAttDef)
 		{
 			if ($oAttDef->IsLinkset())
@@ -189,52 +191,42 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$aDetailsList = MetaModel::GetZListItems($sClass, 'details');
 		$aFullList = MetaModel::ListAttributeDefs($sClass);
 		$aList = $aDetailsList;
+		$aDetailsStruct = self::ProcessZlist($aDetailsList, array('UI:PropertiesTab' => array()), 'UI:PropertiesTab', 'col1', '');
 		// Compute the list of properties to display, first the attributes in the 'details' list, then 
 		// all the remaining attributes that are not external fields
-		foreach($aFullList as $sAttCode => $void)
+		$sHtml = '';
+		$aDetails = array();
+		foreach($aDetailsStruct as $sTab => $aCols )
 		{
-			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-			if (!in_array($sAttCode, $aDetailsList) && (!$oAttDef->IsExternalField()))
+			$aDetails[$sTab] = array();
+			ksort($aCols);
+			$oPage->SetCurrentTab(Dict::S($sTab));
+			$oPage->add('<table style="vertical-align:top"><tr>');
+			foreach($aCols as $sColIndex => $aFieldsets)
 			{
-				$aList[] = $sAttCode;
-			}
-		}
-
-		foreach($aList as $sAttCode)
-		{
-			$iFlags = $this->GetAttributeFlags($sAttCode);
-			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-			if ( (!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0) )
-			{
-				// The field is visible in the current state of the object
-				if ($sStateAttCode == $sAttCode)
+				$aDetails[$sTab][$sColIndex] = array();
+				foreach($aFieldsets as $sFieldsetName => $aFields)
 				{
-					// Special display for the 'state' attribute itself
-					$sDisplayValue = $this->GetStateLabel();
+					//if ($sFieldsetName == '')
+					//{
+						foreach($aFields as $sAttCode)
+						{
+							$val = $this->GetFieldAsHtml($sClass, $sAttCode, $sStateAttCode);
+							if ($val != null)
+							{
+								// The field is visible, add it to the current column
+								$aDetails[$sTab][$sColIndex][] = $val;
+							}				
+						}
+					//}
 				}
-				else
-				{
-					$sDisplayValue = $this->GetAsHTML($sAttCode);
-				}
-				$aDetails[] = array('label' => '<span title="'.MetaModel::GetDescription($sClass, $sAttCode).'">'.MetaModel::GetLabel($sClass, $sAttCode).'</span>', 'value' => $sDisplayValue);
+				$oPage->add('<td style="vertical-align:top">');
+				$oPage->Details($aDetails[$sTab][$sColIndex]);
+				$oPage->add('</td>');
 			}
+			$oPage->add('</tr></table>');
 		}
-		$sHtml .= $oPage->GetDetails($aDetails);
-		// Documents displayed inline (when possible: images, html...)
-		foreach($aList as $sAttCode)
-		{
-			$oAttDef = Metamodel::GetAttributeDef($sClass, $sAttCode);
-			if ( $oAttDef->GetEditClass() == 'Document')
-			{
-				$oDoc = $this->Get($sAttCode);
-				if (is_object($oDoc) && !$oDoc->IsEmpty())
-				{
-					$sHtml .= "<p>".Dict::Format('UI:Document:OpenInNewWindow:Download', $oDoc->GetDisplayLink($sClass, $this->GetKey(), $sAttCode), $oDoc->GetDownloadLink($sClass, $this->GetKey(), $sAttCode))."</p>\n";
-					$sHtml .= "<div>".$oDoc->GetDisplayInline($sClass, $this->GetKey(), $sAttCode)."</div>\n";
-				}
-			}
-		}
-		return $sHtml;		
+		return $sHtml;
 	}
 
 	
@@ -254,8 +246,13 @@ abstract class cmdbAbstractObject extends CMDBObject
 			// Object's details
 			// template not found display the object using the *old style*
 			$this->DisplayBareHeader($oPage);
+			$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB);
+			$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
+			$oPage->SetCurrentTab(Dict::S('UI:PropertiesTab'));
 			$this->DisplayBareProperties($oPage);
 			$this->DisplayBareRelations($oPage);
+			$oPage->SetCurrentTab(Dict::S('UI:HistoryTab'));
+			$this->DisplayBareHistory($oPage);
 		}
 	}
 	
@@ -1309,5 +1306,81 @@ EOF
 		}
 		return $sCSSClasses;
 	}
+
+	protected static function ProcessZlist($aList, $aDetails, $sCurrentTab, $sCurrentCol, $sCurrentSet)
+	{
+		//echo "<pre>ZList: ";
+		//print_r($aList);
+		//echo "</pre>\n";
+		foreach($aList as $sKey => $value)
+		{
+			if (is_array($value))
+			{
+				if (preg_match('/^(.*):(.*)$/U', $sKey, $aMatches))
+				{
+					$sCode = $aMatches[1];
+					$sName = $aMatches[2];
+					switch($sCode)
+					{
+						case 'tab':
+						//echo "<p>Found a tab:  $sName ($sKey)</p>\n";
+						if(!isset($aDetails[$sName]))
+						{
+							$aDetails[$sName] = array('col1' => array('' => array()));
+						}
+						$aDetails = self::ProcessZlist($value, $aDetails, $sName, 'col1', '');
+						break;
+						
+						case 'fieldset':
+						//echo "<p>Found a fieldset: $sName ($sKey)</p>\n";
+						if(!isset($aDetailsStruct[$sCurrentTab][$sCurrentCol][$sName]))
+						{
+							$aDetails[$sCurrentTab][$sCurrentCol][$sName] = array();
+						}
+						$aDetails = self::ProcessZlist($value, $aDetails, $sCurrentTab, $sCurrentCol, $sName);
+						break;
+
+						default:
+						case 'col':
+						//echo "<p>Found a column: $sName ($sKey)</p>\n";
+						if(!isset($aDetails[$sCurrentTab][$sName]))
+						{
+							$aDetails[$sCurrentTab][$sName] = array('' => array());
+						}
+						$aDetails = self::ProcessZlist($value, $aDetails, $sCurrentTab, $sName, '');
+						break;
+					}
+				}
+			}
+			else
+			{
+				//echo "<p>Scalar value: $value, in [$sCurrentTab][$sCurrentCol][$sCurrentSet][]</p>\n";
+				$aDetails[$sCurrentTab][$sCurrentCol][$sCurrentSet][] = $value;
+			}
+		}
+		return $aDetails;
+	}
+	protected function GetFieldAsHtml($sClass, $sAttCode, $sStateAttCode)
+	{
+		$retVal = null;
+		$iFlags = $this->GetAttributeFlags($sAttCode);
+		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+		if ( (!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0) )
+		{
+			// The field is visible in the current state of the object
+			if ($sStateAttCode == $sAttCode)
+			{
+				// Special display for the 'state' attribute itself
+				$sDisplayValue = $this->GetStateLabel();
+			}
+			else
+			{
+				$sDisplayValue = $this->GetAsHTML($sAttCode);
+			}
+			$retVal = array('label' => '<span title="'.MetaModel::GetDescription($sClass, $sAttCode).'">'.MetaModel::GetLabel($sClass, $sAttCode).'</span>', 'value' => $sDisplayValue);
+		}
+		return $retVal;
+	}
+	
 }
 ?>
