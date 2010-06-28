@@ -774,6 +774,7 @@ class AttributePassword extends AttributeString
 
 	public function GetFilterDefinitions()
 	{
+	// Note: due to this, you will get an error if a password is being declared as a search criteria (see ZLists)
 		// not allowed to search on passwords!
 		return array();
 	}
