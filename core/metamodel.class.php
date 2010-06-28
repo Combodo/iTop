@@ -722,12 +722,24 @@ abstract class MetaModel
 
 	public static function EnumRelations($sClass = '')
 	{
-		if (empty($sClass))
+		$aResult = array_keys(self::$m_aRelationInfos);
+		if (!empty($sClass))
 		{
-			return array_keys(self::$m_aRelationInfos);
+			// Return only the relations that have a meaning (i.e. for which at least one query is defined)
+			// for the specified class
+			$aClassRelations = array();
+			foreach($aResult as $sRelCode)
+			{	
+				$aQueries = self::EnumRelationQueries($sClass, $sRelCode);
+				if (count($aQueries) > 0)
+				{
+					$aClassRelations[] = $sRelCode;
+				}
+			}
+			return $aClassRelations;
 		}
-
-		return array_keys(self::EnumRelationQueries($sClass, $sRelCode));
+		
+		return $aResult;
 	}
 
 	public static function EnumRelationProperties($sRelCode)
