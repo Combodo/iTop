@@ -513,6 +513,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:bizServer/Attribute:shipment_number+' => 'Number for tracking shipment',
 	'Class:bizServer/Attribute:default_gateway' => 'Default Gateway',
 	'Class:bizServer/Attribute:default_gateway+' => 'Default Gateway for this device',
+	'Class:lnkClientServer/Attribute:relation+' => 'Type of relation between both application',
+	'Class:NetWorkServer:Tab' => 'Network',
 ));
 
 //
@@ -1412,5 +1414,53 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkInfraCall/Attribute:impact+' => 'Level of impact of the infra by the related ticket',
 ));
 
+//
+// Application Menu
+//
 
+Dict::Add('EN US', 'English', 'English', array(
+'Menu:Class:Organization/Name' => 'Organizations',
+'Menu:Class:Organization/Title' => 'ALl Organizations',
+'Menu:Class:Application/Name' => 'Applications',
+'Menu:Class:Application/Title' => 'All Applications',
+'Menu:Audit' => 'Audit',
+'Menu:ConfigManagement' => 'Configuration Management',
+'Menu:ConfigManagement/Overview' => 'Overview',
+'Menu:Class:Contact/Name' => 'Contacts',
+'Menu:Class:Person/Name' => 'Persons',
+'Menu:Class:Person/Title' => 'All Persons',
+'Menu:Class:Team/Name' => 'Teams',
+'Menu:Class:Team/Title' => 'All Teams',
+'Menu:Class:FileDoc/Name' => 'Documents',
+'Menu:Class:FileDoc/Title' => 'All Documents',
+'Menu:Class:Location/Name' => 'Locations',
+'Menu:Class:Location/Title' => 'All Locations',
+'Menu:ConfigManagement:CI' => 'Configuration Items',
+'Menu:Class:BusinessProcess/Name' => 'Business Processes',
+'Menu:Class:BusinessProcess/Title' => 'All Business Processes',
+'Menu:Class:ApplicationSolution/Name' => 'Application Solutions',
+'Menu:Class:ApplicationSolution/Title' => 'All Application Solutions',
+'Menu:ConfigManagement:Software' => 'Software',
+'Menu:Class:Licence/Name' => 'Licences',
+'Menu:Class:Licence/Title' => 'All Licences',
+'Menu:Class:Patch/Name' => 'Patches',
+'Menu:Class:Patch/Title' => 'ALl Patches',
+'Menu:Class:ApplicationInstance/Name' => 'Installed Applications',
+'Menu:Class:ApplicationInstance/Title' => 'All Installed Applications',
+'Menu:Class:DatabaseInstance/Name' => 'Database Instances',
+'Menu:Class:DatabaseInstance/Title' => 'All Database Instances',
+'Menu:ConfigManagement:Hardware' => 'Hardware',
+'Menu:Class:Subnet/Name' => 'Subnets',
+'Menu:Class:Subnet/Title' => 'All Subnets',
+'Menu:Class:NetworkDevice/Name' => 'Network Devices',
+'Menu:Class:NetworkDevice/Title' => 'All Network Devices',
+'Menu:Class:Server/Name' => 'Servers',
+'Menu:Class:Server/Title' => 'All Servers',
+'Menu:Class:Printer/Name' => 'Printers',
+'Menu:Class:Printer/Title' => 'All Printers',
+'Menu:Class:MobilePhone/Name' => 'Mobile Phones',
+'Menu:Class:MobilePhone/Title' => 'All Mobile Phones',
+'Menu:Class:PC/Name' => 'Personal Computers',
+'Menu:Class:PC/Title' => 'All Personal Computers',
+));
 ?>
