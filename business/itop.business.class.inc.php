@@ -55,7 +55,7 @@ class Organization extends cmdbAbstractObject
 		MetaModel::Init_SetZListItems('details', array('name', 'code', 'status', 'parent_id'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'code', 'status'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'code', 'status'));
-		MetaModel::Init_SetZListItems('list', array('name', 'status', 'parent_id'));
+		MetaModel::Init_SetZListItems('list', array('status', 'parent_id'));
 	}
 }
 class Location extends cmdbAbstractObject
@@ -90,7 +90,7 @@ class Location extends cmdbAbstractObject
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'address', 'country', 'parent_id'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'org_id', 'country'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'org_id', 'country'));
-		MetaModel::Init_SetZListItems('list', array('name', 'status', 'org_id', 'country'));
+		MetaModel::Init_SetZListItems('list', array('status', 'org_id', 'country'));
 	}
 }
 abstract class Contact extends cmdbAbstractObject
@@ -128,7 +128,7 @@ abstract class Contact extends cmdbAbstractObject
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'email', 'phone', 'location_id', 'contract_list', 'ticket_list', 'ci_list'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'org_id', 'email', 'phone', 'location_id'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'org_id', 'email', 'phone', 'location_id'));
-		MetaModel::Init_SetZListItems('list', array('name', 'status', 'org_id', 'email', 'phone', 'location_id'));
+		MetaModel::Init_SetZListItems('list', array('status', 'org_id', 'email', 'phone', 'location_id'));
 	}
 }
 class Person extends Contact
@@ -157,7 +157,7 @@ class Person extends Contact
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'email', 'phone', 'location_id', 'contract_list', 'ticket_list', 'ci_list', 'first_name', 'employee_id'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'org_id', 'email', 'phone', 'location_id', 'first_name', 'employee_id'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'org_id', 'email', 'phone', 'location_id', 'first_name', 'employee_id'));
-		MetaModel::Init_SetZListItems('list', array('name', 'status', 'org_id', 'email', 'phone', 'location_id', 'first_name', 'employee_id'));
+		MetaModel::Init_SetZListItems('list', array('status', 'org_id', 'email', 'phone', 'location_id', 'first_name', 'employee_id'));
 	}
 }
 class Team extends Contact
@@ -184,7 +184,7 @@ class Team extends Contact
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'email', 'phone', 'location_id', 'contract_list', 'ticket_list', 'ci_list'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'org_id', 'email', 'phone', 'location_id'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'org_id', 'email', 'phone', 'location_id'));
-		MetaModel::Init_SetZListItems('list', array('name', 'status', 'org_id', 'email', 'phone', 'location_id'));
+		MetaModel::Init_SetZListItems('list', array('status', 'org_id', 'email', 'phone', 'location_id'));
 	}
 }
 abstract class Document extends cmdbAbstractObject
@@ -218,7 +218,7 @@ abstract class Document extends cmdbAbstractObject
 		MetaModel::Init_SetZListItems('details', array('name', 'description', 'type', 'status', 'contract_list', 'ticket_list', 'ci_list'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'description', 'type', 'status'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'type', 'status'));
-		MetaModel::Init_SetZListItems('list', array('name', 'description', 'type', 'status'));
+		MetaModel::Init_SetZListItems('list', array('type', 'status'));
 	}
 }
 class ExternalDoc extends Document
@@ -246,7 +246,7 @@ class ExternalDoc extends Document
 		MetaModel::Init_SetZListItems('details', array('name', 'description', 'type', 'status', 'contract_list', 'ticket_list', 'ci_list', 'url'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'description', 'type', 'status', 'url'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'type', 'status', 'url'));
-		MetaModel::Init_SetZListItems('list', array('name', 'description', 'type', 'status', 'url'));
+		MetaModel::Init_SetZListItems('list', array('type', 'status', 'url'));
 	}
 }
 class Note extends Document
@@ -274,7 +274,7 @@ class Note extends Document
 		MetaModel::Init_SetZListItems('details', array('name', 'description', 'type', 'status', 'contract_list', 'ticket_list', 'ci_list', 'note'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'description', 'type', 'status', 'note'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'type', 'status', 'note'));
-		MetaModel::Init_SetZListItems('list', array('name', 'description', 'type', 'status', 'note'));
+		MetaModel::Init_SetZListItems('list', array('type', 'status', 'note'));
 	}
 }
 class FileDoc extends Document
@@ -300,9 +300,9 @@ class FileDoc extends Document
 		MetaModel::Init_AddAttribute(new AttributeBlob("contents", array("depends_on"=>array())));
 
 		MetaModel::Init_SetZListItems('details', array('name', 'description', 'type', 'status', 'contract_list', 'ticket_list', 'ci_list', 'contents'));
-		MetaModel::Init_SetZListItems('advanced_search', array('name', 'description', 'type', 'status', 'contents'));
-		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'type', 'status', 'contents'));
-		MetaModel::Init_SetZListItems('list', array('name', 'description', 'type', 'status', 'contents'));
+		MetaModel::Init_SetZListItems('advanced_search', array('name', 'description', 'type', 'status'));
+		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'type', 'status'));
+		MetaModel::Init_SetZListItems('list', array('type', 'status', 'contents'));
 	}
 }
 class Licence extends cmdbAbstractObject
@@ -367,7 +367,7 @@ class Subnet extends cmdbAbstractObject
 		MetaModel::Init_SetZListItems('details', array('name', 'description', 'ip', 'ip_mask'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'description', 'ip', 'ip_mask'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'ip', 'ip_mask'));
-		MetaModel::Init_SetZListItems('list', array('name', 'description', 'ip', 'ip_mask'));
+		MetaModel::Init_SetZListItems('list', array('description', 'ip', 'ip_mask'));
 	}
 	public function ComputeValues()
 	{
@@ -403,7 +403,7 @@ class Patch extends cmdbAbstractObject
 		MetaModel::Init_SetZListItems('details', array('name', 'target_sw', 'version', 'type'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'target_sw', 'version', 'type'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'target_sw', 'version', 'type'));
-		MetaModel::Init_SetZListItems('list', array('name', 'target_sw', 'version', 'type'));
+		MetaModel::Init_SetZListItems('list', array('target_sw', 'version', 'type'));
 	}
 }
 class Application extends cmdbAbstractObject
@@ -432,7 +432,7 @@ class Application extends cmdbAbstractObject
 		MetaModel::Init_SetZListItems('details', array('name', 'description'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'description'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'description'));
-		MetaModel::Init_SetZListItems('list', array('name', 'description'));
+		MetaModel::Init_SetZListItems('list', array('description'));
 	}
 }
 class lnkPatchToCI extends cmdbAbstractObject
@@ -497,7 +497,7 @@ abstract class FunctionalCI extends cmdbAbstractObject
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'owner_id', 'importance', 'solution_list'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'owner_id', 'importance'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'owner_id', 'importance'));
-		MetaModel::Init_SetZListItems('list', array('name', 'status', 'owner_id', 'importance'));
+		MetaModel::Init_SetZListItems('list', array('status', 'owner_id', 'importance'));
 	}
 }
 class ApplicationInstance extends FunctionalCI
@@ -532,7 +532,7 @@ class ApplicationInstance extends FunctionalCI
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'owner_id', 'importance', 'device_id', 'licence_id', 'application_id', 'version', 'description'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'owner_id', 'importance', 'device_id', 'licence_id', 'application_id', 'version', 'description'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'owner_id', 'importance', 'device_id', 'licence_id', 'application_id', 'version', 'description'));
-		MetaModel::Init_SetZListItems('list', array('name', 'status', 'owner_id', 'importance', 'device_id', 'licence_id', 'application_id', 'version', 'description'));
+		MetaModel::Init_SetZListItems('list', array('status', 'owner_id', 'importance', 'device_id', 'licence_id', 'application_id', 'version', 'description'));
 	}
 }
 class DatabaseInstance extends FunctionalCI
@@ -564,7 +564,7 @@ class DatabaseInstance extends FunctionalCI
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'owner_id', 'importance', 'application_id', 'admin_login', 'admin_password', 'description'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'owner_id', 'importance', 'application_id', 'admin_login', 'admin_password', 'description'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'owner_id', 'importance', 'application_id', 'admin_login', 'admin_password', 'description'));
-		MetaModel::Init_SetZListItems('list', array('name', 'status', 'owner_id', 'importance', 'application_id', 'admin_login', 'admin_password', 'description'));
+		MetaModel::Init_SetZListItems('list', array('status', 'owner_id', 'importance', 'application_id', 'admin_login', 'admin_password', 'description'));
 	}
 }
 class ApplicationSolution extends FunctionalCI
@@ -594,7 +594,7 @@ class ApplicationSolution extends FunctionalCI
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'owner_id', 'importance', 'description', 'ci_list', 'process_list'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'owner_id', 'importance', 'description'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'owner_id', 'importance', 'description'));
-		MetaModel::Init_SetZListItems('list', array('name', 'status', 'owner_id', 'importance', 'description'));
+		MetaModel::Init_SetZListItems('list', array('status', 'owner_id', 'importance', 'description'));
 	}
 }
 class BusinessProcess extends FunctionalCI
@@ -623,7 +623,7 @@ class BusinessProcess extends FunctionalCI
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'owner_id', 'importance', 'description', 'solution_list'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'owner_id', 'importance', 'description'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'owner_id', 'importance', 'description'));
-		MetaModel::Init_SetZListItems('list', array('name', 'status', 'owner_id', 'importance', 'description'));
+		MetaModel::Init_SetZListItems('list', array('status', 'owner_id', 'importance', 'description'));
 	}
 }
 class ConnectableCI extends FunctionalCI
@@ -654,7 +654,7 @@ class ConnectableCI extends FunctionalCI
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref'));
-		MetaModel::Init_SetZListItems('list', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref'));
+		MetaModel::Init_SetZListItems('list', array('status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref'));
 	}
 }
 class NetworkInterface extends ConnectableCI
@@ -693,7 +693,7 @@ class NetworkInterface extends ConnectableCI
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'device_id', 'logical_type', 'physical_type', 'ip_address', 'ip_mask', 'mac_address', 'speed', 'duplex', 'connected_if', 'connected_if_device_id'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'device_id', 'logical_type', 'physical_type', 'ip_address', 'ip_mask', 'mac_address', 'speed', 'duplex', 'connected_if', 'connected_if_device_id'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'device_id', 'logical_type', 'physical_type', 'ip_address', 'ip_mask', 'mac_address', 'speed', 'duplex', 'connected_if', 'connected_if_device_id'));
-		MetaModel::Init_SetZListItems('list', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'device_id', 'logical_type', 'physical_type', 'ip_address', 'ip_mask', 'mac_address', 'speed', 'duplex', 'connected_if', 'connected_if_device_id'));
+		MetaModel::Init_SetZListItems('list', array('status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'device_id', 'logical_type', 'physical_type', 'ip_address', 'ip_mask', 'mac_address', 'speed', 'duplex', 'connected_if', 'connected_if_device_id'));
 	}
 }
 class Device extends ConnectableCI
@@ -721,7 +721,7 @@ class Device extends ConnectableCI
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'application_list'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref'));
-		MetaModel::Init_SetZListItems('list', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref'));
+		MetaModel::Init_SetZListItems('list', array('status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref'));
 	}
 }
 class PC extends Device
@@ -753,7 +753,7 @@ class PC extends Device
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'cpu', 'ram', 'hdd', 'os_family', 'os_version'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'cpu', 'ram', 'hdd', 'os_family', 'os_version'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'cpu', 'ram', 'hdd', 'os_family', 'os_version'));
-		MetaModel::Init_SetZListItems('list', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'cpu', 'ram', 'hdd', 'os_family', 'os_version'));
+		MetaModel::Init_SetZListItems('list', array('status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'cpu', 'ram', 'hdd', 'os_family', 'os_version'));
 	}
 }
 class MobileCI extends Device
@@ -780,7 +780,7 @@ class MobileCI extends Device
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref'));
-		MetaModel::Init_SetZListItems('list', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref'));
+		MetaModel::Init_SetZListItems('list', array('status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref'));
 	}
 }
 class MobilePhone extends MobileCI
@@ -810,7 +810,7 @@ class MobilePhone extends MobileCI
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'number', 'imei', 'hw_pin'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'number', 'imei'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'number', 'imei'));
-		MetaModel::Init_SetZListItems('list', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'number', 'imei', 'hw_pin'));
+		MetaModel::Init_SetZListItems('list', array('status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'number', 'imei', 'hw_pin'));
 	}
 }
 class InfrastructureCI extends Device
@@ -843,7 +843,7 @@ class InfrastructureCI extends Device
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'description', 'location_id', 'location_details', 'management_ip', 'default_gateway'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'description', 'location_id', 'location_details', 'management_ip', 'default_gateway'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'description', 'location_id', 'location_details', 'management_ip', 'default_gateway'));
-		MetaModel::Init_SetZListItems('list', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'description', 'location_id', 'location_details', 'management_ip', 'default_gateway'));
+		MetaModel::Init_SetZListItems('list', array('status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'description', 'location_id', 'location_details', 'management_ip', 'default_gateway'));
 	}
 }
 class NetworkDevice extends InfrastructureCI
@@ -875,7 +875,7 @@ class NetworkDevice extends InfrastructureCI
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'description', 'location_id', 'location_details', 'management_ip', 'default_gateway', 'type', 'ios_version', 'ram', 'snmp_read', 'snmp_write'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'description', 'location_id', 'location_details', 'management_ip', 'default_gateway', 'type', 'ios_version', 'ram', 'snmp_read', 'snmp_write'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'description', 'location_id', 'location_details', 'management_ip', 'default_gateway', 'type', 'ios_version', 'ram', 'snmp_read', 'snmp_write'));
-		MetaModel::Init_SetZListItems('list', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'description', 'location_id', 'location_details', 'management_ip', 'default_gateway', 'type', 'ios_version', 'ram', 'snmp_read', 'snmp_write'));
+		MetaModel::Init_SetZListItems('list', array('status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'description', 'location_id', 'location_details', 'management_ip', 'default_gateway', 'type', 'ios_version', 'ram', 'snmp_read', 'snmp_write'));
 	}
 }
 class Server extends InfrastructureCI
@@ -907,7 +907,7 @@ class Server extends InfrastructureCI
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'description', 'location_id', 'location_details', 'management_ip', 'default_gateway', 'cpu', 'ram', 'hdd', 'os_family', 'os_version'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'description', 'location_id', 'location_details', 'management_ip', 'default_gateway', 'cpu', 'ram', 'hdd', 'os_family', 'os_version'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'description', 'location_id', 'location_details', 'management_ip', 'default_gateway', 'cpu', 'ram', 'hdd', 'os_family', 'os_version'));
-		MetaModel::Init_SetZListItems('list', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'description', 'location_id', 'location_details', 'management_ip', 'default_gateway', 'cpu', 'ram', 'hdd', 'os_family', 'os_version'));
+		MetaModel::Init_SetZListItems('list', array('status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'description', 'location_id', 'location_details', 'management_ip', 'default_gateway', 'cpu', 'ram', 'hdd', 'os_family', 'os_version'));
 	}
 }
 class Printer extends InfrastructureCI
@@ -936,10 +936,10 @@ class Printer extends InfrastructureCI
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'description', 'location_id', 'location_details', 'management_ip', 'default_gateway', 'type', 'technology'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'description', 'location_id', 'location_details', 'management_ip', 'default_gateway', 'type', 'technology'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'description', 'location_id', 'location_details', 'management_ip', 'default_gateway', 'type', 'technology'));
-		MetaModel::Init_SetZListItems('list', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'description', 'location_id', 'location_details', 'management_ip', 'default_gateway', 'type', 'technology'));
+		MetaModel::Init_SetZListItems('list', array('status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'description', 'location_id', 'location_details', 'management_ip', 'default_gateway', 'type', 'technology'));
 	}
 }
-class lnkCItoDoc extends cmdbAbstractObject
+class lnkCIToDoc extends cmdbAbstractObject
 {
 
 	public static function Init()
@@ -1105,7 +1105,7 @@ class Contract extends cmdbAbstractObject
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'description', 'signed', 'begin', 'end', 'cost', 'cost_currency', 'cost_unit', 'billing_frequency', 'contact_list', 'document_list', 'ci_list'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'description', 'signed', 'begin', 'end', 'cost', 'cost_currency', 'cost_unit', 'billing_frequency'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'description', 'signed', 'begin', 'end', 'cost', 'cost_currency', 'cost_unit', 'billing_frequency'));
-		MetaModel::Init_SetZListItems('list', array('name', 'status', 'description', 'signed', 'begin', 'end', 'cost', 'cost_currency', 'cost_unit', 'billing_frequency'));
+		MetaModel::Init_SetZListItems('list', array('status', 'description', 'signed', 'begin', 'end', 'cost', 'cost_currency', 'cost_unit', 'billing_frequency'));
 	}
 }
 class ProviderContract extends cmdbAbstractObject
@@ -1354,7 +1354,7 @@ class ServiceType extends cmdbAbstractObject
 		MetaModel::Init_SetZListItems('details', array('name', 'description'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'description'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'description'));
-		MetaModel::Init_SetZListItems('list', array('name', 'description'));
+		MetaModel::Init_SetZListItems('list', array('description'));
 	}
 }
 class Service extends cmdbAbstractObject
@@ -1445,7 +1445,7 @@ class ServiceLevel extends cmdbAbstractObject
 		MetaModel::Init_SetZListItems('details', array('name', 'metric', 'ticket_type', 'ticket_priorities', 'value'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'metric', 'ticket_type', 'ticket_priorities', 'value'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'metric', 'ticket_type', 'ticket_priorities', 'value'));
-		MetaModel::Init_SetZListItems('list', array('name', 'metric', 'ticket_type', 'ticket_priorities', 'value'));
+		MetaModel::Init_SetZListItems('list', array('metric', 'ticket_type', 'ticket_priorities', 'value'));
 	}
 }
 class lnkLevelToSLA extends cmdbAbstractObject

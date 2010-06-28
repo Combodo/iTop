@@ -149,11 +149,11 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Contact/Attribute:location_name' => 'Location',
 	'Class:Contact/Attribute:location_name+' => '',
 	'Class:Contact/Attribute:ci_list' => 'CIs',
-	'Class:Contact/Attribute:ci_list+' => '',
+	'Class:Contact/Attribute:ci_list+' => 'CIs related to the contact',
 	'Class:Contact/Attribute:contract_list' => 'Contracts',
-	'Class:Contact/Attribute:ontract_list+' => '',
+	'Class:Contact/Attribute:ontract_list+' => 'Contracts related to the contact',
 	'Class:Contact/Attribute:ticket_list' => 'Tickets',
-	'Class:Contact/Attribute:ticket_list+' => '',
+	'Class:Contact/Attribute:ticket_list+' => 'Tickets related to the contact',
 ));
 
 //
@@ -212,7 +212,11 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Document/Attribute:status/Value:published' => 'Published',
 	'Class:Document/Attribute:status/Value:published+' => '',
 	'Class:Document/Attribute:ci_list' => 'CIs',
-	'Class:Document/Attribute:ci_list+' => '',
+	'Class:Document/Attribute:ci_list+' => 'CI refering to this document',
+	'Class:Document/Attribute:contract_list' => 'Contracts',
+	'Class:Document/Attribute:contract_list+' => 'Contracts refering to this document',
+	'Class:Document/Attribute:ticket_list' => 'Tickets',
+	'Class:Document/Attribute:ticket_list+' => 'Tickets refering to this document',
 ));
 
 //
@@ -371,7 +375,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:FunctionalCI/Attribute:importance/Value:medium' => 'Medium',
 	'Class:FunctionalCI/Attribute:importance/Value:medium+' => '',
 	'Class:FunctionalCI/Attribute:solution_list' => 'Solutions',
-	'Class:FunctionalCI/Attribute:solution_list+' => '',
+	'Class:FunctionalCI/Attribute:solution_list+' => 'Solutions using this CI',
 	'Class:FunctionalCI/Attribute:finalclass' => 'finalclass',
 	'Class:FunctionalCI/Attribute:finalclass+' => '',
 ));
@@ -669,20 +673,20 @@ Dict::Add('EN US', 'English', 'English', array(
 ));
 
 //
-// Class: lnkCItoDoc
+// Class: lnkCIToDoc
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:lnkCItoDoc' => 'lnkCItoDoc',
-	'Class:lnkCItoDoc+' => '',
-	'Class:lnkCItoDoc/Attribute:ci_id' => 'CI',
-	'Class:lnkCItoDoc/Attribute:ci_id+' => '',
-	'Class:lnkCItoDoc/Attribute:ci_name' => 'CI',
-	'Class:lnkCItoDoc/Attribute:ci_name+' => '',
-	'Class:lnkCItoDoc/Attribute:document_id' => 'Document',
-	'Class:lnkCItoDoc/Attribute:document_id+' => '',
-	'Class:lnkCItoDoc/Attribute:document_name' => 'Document',
-	'Class:lnkCItoDoc/Attribute:document_name+' => '',
+	'Class:lnkCIToDoc' => 'lnkCItoDoc',
+	'Class:lnkCIToDoc+' => '',
+	'Class:lnkCIToDoc/Attribute:ci_id' => 'CI',
+	'Class:lnkCIToDoc/Attribute:ci_id+' => '',
+	'Class:lnkCIToDoc/Attribute:ci_name' => 'CI',
+	'Class:lnkCIToDoc/Attribute:ci_name+' => '',
+	'Class:lnkCIToDoc/Attribute:document_id' => 'Document',
+	'Class:lnkCIToDoc/Attribute:document_id+' => '',
+	'Class:lnkCIToDoc/Attribute:document_name' => 'Document',
+	'Class:lnkCIToDoc/Attribute:document_name+' => '',
 ));
 
 //

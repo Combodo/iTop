@@ -3,14 +3,14 @@
 <AuditRule id="1">
 <name>Devices in production on a Location not in production</name>
 <description></description>
-<query>SELECT bizDevice AS d JOIN bizLocation AS l ON d.location_id = l.id WHERE l.status != &apos;production&apos;</query>
+<query>SELECT InfrastructureCI AS ci JOIN Location AS l ON ci.location_id = l.id WHERE ci.status = &apos;production&apos; AND l.status != &apos;active&apos;</query>
 <valid_flag>false</valid_flag>
 <category_id>1</category_id>
 </AuditRule>
 <AuditRule id="2">
-<name>Devices not attached to a monitoring group</name>
+<name>Devices not attached to a monitoring solution</name>
 <description></description>
-<query>SELECT bizDevice AS d JOIN lnkInfraGrouping AS l ON l.infra_id = d.id JOIN bizInfraGroup AS g ON l.infra_group_id = g.id WHERE g.type = &apos;Monitoring&apos;</query>
+<query>SELECT Device AS d JOIN lnkSolutionToCI AS l ON l.ci_id = d.id JOIN ApplicationSolution AS s ON l.solution_id = s.id WHERE d.status = &apos;production&apos; AND s.name LIKE &apos;%Monitoring%&apos;</query>
 <valid_flag>true</valid_flag>
 <category_id>1</category_id>
 </AuditRule>
