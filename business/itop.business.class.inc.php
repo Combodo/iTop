@@ -108,7 +108,7 @@ abstract class Contact extends cmdbAbstractObject
 			"db_table" => "contact",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
+			"icon" => "../business/templates/team.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -333,7 +333,7 @@ class Licence extends cmdbAbstractObject
 			"db_table" => "licence",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
+			"icon" => "../business/templates/licence.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -367,7 +367,7 @@ class Subnet extends cmdbAbstractObject
 			"db_table" => "subnet",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
+			"icon" => "../business/templates/subnet.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -403,7 +403,7 @@ class Patch extends cmdbAbstractObject
 			"db_table" => "patch",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
+			"icon" => "../business/templates/patch.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -495,7 +495,7 @@ abstract class FunctionalCI extends cmdbAbstractObject
 			"db_table" => "functionalci",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
+			"icon" => "../business/templates/server.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -598,7 +598,7 @@ class ApplicationSolution extends FunctionalCI
 			"db_table" => "applicationsolution",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"icon" => "../business/templates/",
+			"icon" => "../business/templates/solution.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -688,7 +688,7 @@ class NetworkInterface extends ConnectableCI
 			"db_table" => "networkinterface",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
+			"icon" => "../business/templates/interface.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -727,7 +727,7 @@ class Device extends ConnectableCI
 			"db_table" => "device",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
+			"icon" => "../business/templates/server.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -755,7 +755,7 @@ class PC extends Device
 			"db_table" => "pc",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"icon" => "../business/templates/computer.png",
+			"icon" => "../business/templates/laptop.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -814,7 +814,7 @@ class MobilePhone extends MobileCI
 			"db_table" => "mobilephone",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
+			"icon" => "../business/templates/mobile-phone.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -844,7 +844,7 @@ class InfrastructureCI extends Device
 			"db_table" => "infrastructureci",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
+			"icon" => "../business/templates/server.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -1105,7 +1105,7 @@ class Contract extends cmdbAbstractObject
 			"db_table" => "contract",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
+			"icon" => "../business/templates/contract.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -1145,7 +1145,7 @@ class ProviderContract extends cmdbAbstractObject
 			"db_table" => "providercontract",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
+			"icon" => "../business/templates/contract.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -1179,7 +1179,7 @@ class CustomerContract extends cmdbAbstractObject
 			"db_table" => "customercontract",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
+			"icon" => "../business/templates/contract.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();

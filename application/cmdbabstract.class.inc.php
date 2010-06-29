@@ -139,11 +139,13 @@ abstract class cmdbAbstractObject extends CMDBObject
 			if ($oAttDef->IsLinkset())
 			{
 				$oPage->SetCurrentTab($oAttDef->GetLabel());
-				$oPage->p($oAttDef->GetDescription());
 				
 				if (get_class($oAttDef) == 'AttributeLinkedSet')
 				{
+					// 1:n links
 					$sTargetClass = $oAttDef->GetLinkedClass();
+					$oPage->p("<img src=\"".MetaModel::GetClassIcon($sTargetClass)."\" style=\"vertical-align:middle;\">&nbsp;".$oAttDef->GetDescription());
+
 					$oFilter = new DBObjectSearch($sTargetClass);
 					$oFilter->AddCondition($oAttDef->GetExtKeyToMe(), $this->GetKey());
 					$oBlock = new DisplayBlock($oFilter, 'list', false);
@@ -155,12 +157,17 @@ abstract class cmdbAbstractObject extends CMDBObject
 				}
 				else // get_class($oAttDef) == 'AttributeLinkedSetIndirect'
 				{
-					$sLinkClass = $oAttDef->GetLinkedClass();
+					// n:n links
+					$sLinkedClass = $oAttDef->GetLinkedClass();
+					$oLinkingAttDef = 	MetaModel::GetAttributeDef($sLinkedClass, $oAttDef->GetExtKeyToRemote());
+					$sTargetClass = $oLinkingAttDef->GetTargetClass();
+
+					$oPage->p("<img src=\"".MetaModel::GetClassIcon($sTargetClass)."\" style=\"vertical-align:middle;\">&nbsp;".$oAttDef->GetDescription());
 					// Transform the DBObjectSet into a CMBDObjectSet !!!
 					$aLinkedObjects = $this->Get($sAttCode)->ToArray(false);
 					if (count($aLinkedObjects) > 0)
 					{
-						$oSet = CMDBObjectSet::FromArray($sLinkClass, $aLinkedObjects);
+						$oSet = CMDBObjectSet::FromArray($sLinkedClass, $aLinkedObjects);
 						$aParams = array(
 							'link_attr' => $oAttDef->GetExtKeyToMe(),
 							'object_id' => $this->GetKey(),
@@ -1011,6 +1018,9 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$aFieldsMap = array();
 		$oPage->add("<form id=\"form_{$iFormId}\" enctype=\"multipart/form-data\" method=\"post\" onSubmit=\"return CheckFields('form_{$iFormId}', true)\">\n");
 
+		$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB);
+		$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
+		$oPage->SetCurrentTab(Dict::S('UI:PropertiesTab'));
 		$aDetailsList = MetaModel::GetZListItems($sClass, 'details');
 		$aFullList = MetaModel::ListAttributeDefs($sClass);
 		$aList = $aDetailsList;
@@ -1076,19 +1086,19 @@ abstract class cmdbAbstractObject extends CMDBObject
 		}
 		$oPage->details($aDetails);
 		// Now display the relations, one tab per relation
-		$oPage->AddTabContainer('Related Objects');
-		$oPage->SetCurrentTabContainer('Related Objects');
 		foreach($aList as $sAttCode)
 		{
 			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 			if ($oAttDef->IsLinkset())
 			{
 				$oPage->SetCurrentTab($oAttDef->GetLabel());
-				$oPage->p($oAttDef->GetDescription());
 				
 				if (get_class($oAttDef) == 'AttributeLinkedSet')
 				{
+					// 1:n links
 					$sTargetClass = $oAttDef->GetLinkedClass();
+					$oPage->p("<img src=\"".MetaModel::GetClassIcon($sTargetClass)."\" style=\"vertical-align:middle;\">&nbsp;".$oAttDef->GetDescription());
+
 					$oFilter = new DBObjectSearch($sTargetClass);
 					$oFilter->AddCondition($oAttDef->GetExtKeyToMe(), $this->GetKey());
 
@@ -1097,6 +1107,12 @@ abstract class cmdbAbstractObject extends CMDBObject
 				}
 				else // get_class($oAttDef) == 'AttributeLinkedSetIndirect'
 				{
+					// n:n links
+					$sLinkedClass = $oAttDef->GetLinkedClass();
+					$oLinkingAttDef = 	MetaModel::GetAttributeDef($sLinkedClass, $oAttDef->GetExtKeyToRemote());
+					$sTargetClass = $oLinkingAttDef->GetTargetClass();
+					$oPage->p("<img src=\"".MetaModel::GetClassIcon($sTargetClass)."\" style=\"vertical-align:middle;\">&nbsp;".$oAttDef->GetDescription());
+
 					$sValue = $this->Get($sAttCode);
 					$sDisplayValue = $this->GetEditValue($sAttCode);
 					$aArgs = array('this' => $this);
@@ -1154,6 +1170,9 @@ EOF
 		$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
 		$oPage->add("<form id=\"creation_form_{$iCreationFormId}\" method=\"post\" enctype=\"multipart/form-data\" onSubmit=\"return CheckFields('creation_form_{$iCreationFormId}', true)\">\n");
 		$aStates = MetaModel::EnumStates($sClass);
+		$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB);
+		$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
+		$oPage->SetCurrentTab(Dict::S('UI:PropertiesTab'));
 		if ($oObjectToClone == null)
 		{
 			$sTargetState = MetaModel::GetDefaultState($sClass);
@@ -1259,8 +1278,6 @@ EOF
 		}		
 		$oPage->details($aDetails);
 		// Now display the relations, one tab per relation
-		$oPage->AddTabContainer('Related Objects');
-		$oPage->SetCurrentTabContainer('Related Objects');
 		foreach($aList as $sAttCode)
 		{
 			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);

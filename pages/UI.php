@@ -604,11 +604,12 @@ try
 						{
 							$iCount += count($aLeafs);
 							$oP->add("<div class=\"page_header\">\n");
-							$oP->add("<h2><span class=\"hilite\">".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aLeafs), Metamodel::GetName($sClassName))."</h2>\n");
+							$oP->add("<h2><img style=\"vertical-align:middle;\" src=\"".MetaModel::GetClassIcon($sClassName)."\"><span class=\"hilite\">".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aLeafs), Metamodel::GetName($sClassName))."</h2>\n");
 							$oP->add("</div>\n");
 							$oLeafsFilter->AddCondition('id', $aLeafs, 'IN');
 							$oBlock = new DisplayBlock($oLeafsFilter, 'list', false);
 							$oBlock->Display($oP, $iBlock++);
+							$oP->P('&nbsp;'); // Some space ?
 						}
 					}
 				}
@@ -648,9 +649,8 @@ try
 			{
 				$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
 				$oP->add("<div class=\"page_header\">\n");
-				$oP->add("<h1>".Dict::Format('UI:ModificationTitle_Class_Object', $sClassLabel, $oObj->GetName())."</h1>\n");
+				$oP->add("<h1><img src=\"".$oObj->GetIcon()."\" style=\"vertical-align:middle\"> ".Dict::Format('UI:ModificationTitle_Class_Object', $sClassLabel, $oObj->GetName())."</h1>\n");
 				$oP->add("</div>\n");
-				$oP->add("<img src=\"".$oObj->GetIcon()."\" style=\"margin-top:-30px; margin-right:10px; float:right\">\n");
 
 				$oP->add("<div class=\"wizContainer\">\n");
 				$oObj->DisplayModifyForm($oP);
@@ -733,9 +733,8 @@ try
 			$sClassLabel = MetaModel::GetName($sClass);
 
 			$oP->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel));
-			$oP->add("<h1>".Dict::Format('UI:CreationTitle_Class', $sClassLabel)."</h1>\n");
+			$oP->add("<h1><img src=\"".MetaModel::GetClassIcon($sClass)."\" style=\"vertical-align:middle;\">".Dict::Format('UI:CreationTitle_Class', $sClassLabel)."</h1>\n");
 			$oP->add("<div class=\"wizContainer\">\n");
-			$oP->add("<img src=\"".MetaModel::GetClassIcon($sClass)."\" style=\"margin-top:-30px; margin-right:10px; float:right\">\n");
 			$aDefaults = utils::ReadParam('default', array());
 			$aContext = $oAppContext->GetAsHash();
 			foreach($aContext as $key => $value)
