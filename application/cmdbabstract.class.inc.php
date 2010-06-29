@@ -1425,6 +1425,7 @@ EOF
 				case 'text/html':
 				case 'text/xml':
 				$oPage->add("<iframe id='preview_$sAttCode' src=\"../pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode\" width=\"100%\" height=\"400\">Loading...</iframe>\n");
+				break;
 				
 				default:
 				$oPage->add("<pre>".htmlentities(MyHelpers::beautifulstr($data, 1000, true))."</pre>\n");			
