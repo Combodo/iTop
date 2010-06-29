@@ -165,6 +165,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 							'link_attr' => $oAttDef->GetExtKeyToMe(),
 							'object_id' => $this->GetKey(),
 							'target_attr' => $oAttDef->GetExtKeyToRemote(),
+							'view_link' => false,
 						); 
 						self::DisplaySet($oPage, $oSet, $aParams);
 					}
