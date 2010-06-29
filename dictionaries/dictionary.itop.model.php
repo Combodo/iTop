@@ -151,7 +151,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Contact/Attribute:ci_list' => 'CIs',
 	'Class:Contact/Attribute:ci_list+' => 'CIs related to the contact',
 	'Class:Contact/Attribute:contract_list' => 'Contracts',
-	'Class:Contact/Attribute:ontract_list+' => 'Contracts related to the contact',
+	'Class:Contact/Attribute:contract_list+' => 'Contracts related to the contact',
 	'Class:Contact/Attribute:ticket_list' => 'Tickets',
 	'Class:Contact/Attribute:ticket_list+' => 'Tickets related to the contact',
 ));
@@ -212,7 +212,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Document/Attribute:status/Value:published' => 'Published',
 	'Class:Document/Attribute:status/Value:published+' => '',
 	'Class:Document/Attribute:ci_list' => 'CIs',
-	'Class:Document/Attribute:ci_list+' => 'CI refering to this document',
+	'Class:Document/Attribute:ci_list+' => 'CIs refering to this document',
 	'Class:Document/Attribute:contract_list' => 'Contracts',
 	'Class:Document/Attribute:contract_list+' => 'Contracts refering to this document',
 	'Class:Document/Attribute:ticket_list' => 'Tickets',
@@ -344,6 +344,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkPatchToCI/Attribute:ci_id+' => '',
 	'Class:lnkPatchToCI/Attribute:ci_name' => 'CI',
 	'Class:lnkPatchToCI/Attribute:ci_name+' => '',
+	'Class:lnkPatchToCI/Attribute:ci_status' => 'CI Status',
+	'Class:lnkPatchToCI/Attribute:ci_status+' => '',
 ));
 
 //
@@ -688,10 +690,16 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkCIToDoc/Attribute:ci_id+' => '',
 	'Class:lnkCIToDoc/Attribute:ci_name' => 'CI',
 	'Class:lnkCIToDoc/Attribute:ci_name+' => '',
+	'Class:lnkCIToDoc/Attribute:ci_status' => 'CI Status',
+	'Class:lnkCIToDoc/Attribute:ci_status+' => '',
 	'Class:lnkCIToDoc/Attribute:document_id' => 'Document',
 	'Class:lnkCIToDoc/Attribute:document_id+' => '',
 	'Class:lnkCIToDoc/Attribute:document_name' => 'Document',
 	'Class:lnkCIToDoc/Attribute:document_name+' => '',
+	'Class:lnkCIToDoc/Attribute:document_type' => 'Document Type',
+	'Class:lnkCIToDoc/Attribute:document_type+' => '',
+	'Class:lnkCIToDoc/Attribute:document_status' => 'Document Status',
+	'Class:lnkCIToDoc/Attribute:document_status+' => '',
 ));
 
 //
@@ -705,10 +713,14 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkCIToContact/Attribute:ci_id+' => '',
 	'Class:lnkCIToContact/Attribute:ci_name' => 'CI',
 	'Class:lnkCIToContact/Attribute:ci_name+' => '',
+	'Class:lnkCIToContact/Attribute:ci_status' => 'CI Status',
+	'Class:lnkCIToContact/Attribute:ci_status+' => '',
 	'Class:lnkCIToContact/Attribute:contact_id' => 'Contact',
 	'Class:lnkCIToContact/Attribute:contact_id+' => '',
 	'Class:lnkCIToContact/Attribute:contact_name' => 'Contact',
 	'Class:lnkCIToContact/Attribute:contact_name+' => '',
+	'Class:lnkCIToContact/Attribute:contact_email' => 'Contact Email',
+	'Class:lnkCIToContact/Attribute:contact_email+' => '',
 	'Class:lnkCIToContact/Attribute:role' => 'Role',
 	'Class:lnkCIToContact/Attribute:role+' => 'Role of the contact regarding the CI',
 ));
@@ -728,6 +740,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkSolutionToCI/Attribute:ci_id+' => '',
 	'Class:lnkSolutionToCI/Attribute:ci_name' => 'CI',
 	'Class:lnkSolutionToCI/Attribute:ci_name+' => '',
+	'Class:lnkSolutionToCI/Attribute:ci_status' => 'CI Status',
+	'Class:lnkSolutionToCI/Attribute:ci_status+' => '',
 	'Class:lnkSolutionToCI/Attribute:utility' => 'Utility',
 	'Class:lnkSolutionToCI/Attribute:utility+' => 'Utility of the CI in the solution',
 ));

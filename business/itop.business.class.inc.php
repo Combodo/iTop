@@ -472,11 +472,12 @@ class lnkPatchToCI extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalField("patch_name", array("allowed_values"=>null, "extkey_attcode"=>"patch_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("ci_id", array("targetclass"=>"Device", "jointype"=>null, "allowed_values"=>null, "sql"=>"ci_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("ci_name", array("allowed_values"=>null, "extkey_attcode"=>"ci_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("ci_status", array("allowed_values"=>null, "extkey_attcode"=>"ci_id", "target_attcode"=>"status", "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('patch_id', 'ci_id'));
+		MetaModel::Init_SetZListItems('details', array('patch_id', 'ci_id', 'ci_status'));
 		MetaModel::Init_SetZListItems('advanced_search', array('patch_id', 'ci_id'));
 		MetaModel::Init_SetZListItems('standard_search', array('patch_id', 'ci_id'));
-		MetaModel::Init_SetZListItems('list', array('patch_id', 'ci_id'));
+		MetaModel::Init_SetZListItems('list', array('patch_id', 'ci_id', 'ci_status'));
 	}
 }
 abstract class FunctionalCI extends cmdbAbstractObject
@@ -976,13 +977,16 @@ class lnkCIToDoc extends cmdbAbstractObject
 
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("ci_id", array("targetclass"=>"FunctionalCI", "jointype"=>null, "allowed_values"=>null, "sql"=>"ci_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("ci_name", array("allowed_values"=>null, "extkey_attcode"=>"ci_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("ci_status", array("allowed_values"=>null, "extkey_attcode"=>"ci_id", "target_attcode"=>"status", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("document_id", array("targetclass"=>"Document", "jointype"=>null, "allowed_values"=>null, "sql"=>"document_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("document_name", array("allowed_values"=>null, "extkey_attcode"=>"document_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("document_type", array("allowed_values"=>null, "extkey_attcode"=>"document_id", "target_attcode"=>"type", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("document_status", array("allowed_values"=>null, "extkey_attcode"=>"document_id", "target_attcode"=>"status", "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('ci_id', 'document_id'));
+		MetaModel::Init_SetZListItems('details', array('ci_id', 'ci_status', 'document_id', 'document_type', 'document_status'));
 		MetaModel::Init_SetZListItems('advanced_search', array('ci_id', 'document_id'));
 		MetaModel::Init_SetZListItems('standard_search', array('ci_id', 'document_id'));
-		MetaModel::Init_SetZListItems('list', array('ci_id', 'document_id'));
+		MetaModel::Init_SetZListItems('list', array('ci_id', 'ci_status', 'document_id', 'document_type', 'document_status'));
 	}
 }
 class lnkCIToContact extends cmdbAbstractObject
@@ -1007,14 +1011,16 @@ class lnkCIToContact extends cmdbAbstractObject
 
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("ci_id", array("targetclass"=>"FunctionalCI", "jointype"=>null, "allowed_values"=>null, "sql"=>"ci_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("ci_name", array("allowed_values"=>null, "extkey_attcode"=>"ci_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("ci_status", array("allowed_values"=>null, "extkey_attcode"=>"ci_id", "target_attcode"=>"status", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("contact_id", array("targetclass"=>"Contact", "jointype"=>null, "allowed_values"=>null, "sql"=>"contact_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("contact_name", array("allowed_values"=>null, "extkey_attcode"=>"contact_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("contact_email", array("allowed_values"=>null, "extkey_attcode"=>"contact_id", "target_attcode"=>"email", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("role", array("allowed_values"=>null, "sql"=>"role", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('ci_id', 'contact_id', 'role'));
+		MetaModel::Init_SetZListItems('details', array('ci_id', 'ci_status', 'contact_id', 'contact_email', 'role'));
 		MetaModel::Init_SetZListItems('advanced_search', array('ci_id', 'contact_id', 'role'));
 		MetaModel::Init_SetZListItems('standard_search', array('ci_id', 'contact_id', 'role'));
-		MetaModel::Init_SetZListItems('list', array('ci_id', 'contact_id', 'role'));
+		MetaModel::Init_SetZListItems('list', array('ci_id', 'ci_status', 'contact_id', 'contact_email', 'role'));
 	}
 }
 class lnkSolutionToCI extends cmdbAbstractObject
@@ -1041,12 +1047,13 @@ class lnkSolutionToCI extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalField("solution_name", array("allowed_values"=>null, "extkey_attcode"=>"solution_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("ci_id", array("targetclass"=>"FunctionalCI", "jointype"=>null, "allowed_values"=>null, "sql"=>"ci_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("ci_name", array("allowed_values"=>null, "extkey_attcode"=>"ci_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("ci_status", array("allowed_values"=>null, "extkey_attcode"=>"ci_id", "target_attcode"=>"status", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("utility", array("allowed_values"=>null, "sql"=>"utility", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('solution_id', 'ci_id', 'utility'));
+		MetaModel::Init_SetZListItems('details', array('solution_id', 'ci_id', 'ci_status', 'utility'));
 		MetaModel::Init_SetZListItems('advanced_search', array('solution_id', 'ci_id', 'utility'));
 		MetaModel::Init_SetZListItems('standard_search', array('solution_id', 'ci_id', 'utility'));
-		MetaModel::Init_SetZListItems('list', array('solution_id', 'ci_id', 'utility'));
+		MetaModel::Init_SetZListItems('list', array('solution_id', 'ci_id', 'ci_status', 'utility'));
 	}
 }
 class lnkProcessToSolution extends cmdbAbstractObject
@@ -1336,11 +1343,12 @@ class lnkContractToCI extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalField("contract_name", array("allowed_values"=>null, "extkey_attcode"=>"contract_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("ci_id", array("targetclass"=>"FunctionalCI", "jointype"=>null, "allowed_values"=>null, "sql"=>"ci_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("ci_name", array("allowed_values"=>null, "extkey_attcode"=>"ci_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("ci_status", array("allowed_values"=>null, "extkey_attcode"=>"ci_id", "target_attcode"=>"status", "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('contract_id', 'ci_id'));
+		MetaModel::Init_SetZListItems('details', array('contract_id', 'ci_id', 'ci_status'));
 		MetaModel::Init_SetZListItems('advanced_search', array('contract_id', 'ci_id'));
 		MetaModel::Init_SetZListItems('standard_search', array('contract_id', 'ci_id'));
-		MetaModel::Init_SetZListItems('list', array('contract_id', 'ci_id'));
+		MetaModel::Init_SetZListItems('list', array('contract_id', 'ci_id', 'ci_status'));
 	}
 }
 class ServiceType extends cmdbAbstractObject
@@ -1616,11 +1624,12 @@ class lnkTicketToCI extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalField("ticket_ref", array("allowed_values"=>null, "extkey_attcode"=>"ticket_id", "target_attcode"=>"ref", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("ci_id", array("targetclass"=>"FunctionalCI", "jointype"=>null, "allowed_values"=>null, "sql"=>"ci_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("ci_name", array("allowed_values"=>null, "extkey_attcode"=>"ci_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("ci_status", array("allowed_values"=>null, "extkey_attcode"=>"ci_id", "target_attcode"=>"status", "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('ticket_id', 'ci_id'));
+		MetaModel::Init_SetZListItems('details', array('ticket_id', 'ci_id', 'ci_status'));
 		MetaModel::Init_SetZListItems('advanced_search', array('ticket_id', 'ci_id'));
 		MetaModel::Init_SetZListItems('standard_search', array('ticket_id', 'ci_id'));
-		MetaModel::Init_SetZListItems('list', array('ticket_id', 'ci_id'));
+		MetaModel::Init_SetZListItems('list', array('ticket_id', 'ci_id', 'ci_status'));
 	}
 }
 class Incident extends cmdbAbstractObject
