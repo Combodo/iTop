@@ -580,7 +580,7 @@ class DatabaseInstance extends FunctionalCI
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'owner_id', 'importance', 'application_id', 'admin_login', 'admin_password', 'description'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'owner_id', 'importance', 'application_id', 'description'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'owner_id', 'importance', 'application_id', 'description'));
-		MetaModel::Init_SetZListItems('list', array('status', 'owner_id', 'importance', 'application_id', 'admin_login', 'admin_password', 'description'));
+		MetaModel::Init_SetZListItems('list', array('status', 'owner_id', 'importance', 'application_id'));
 	}
 }
 class ApplicationSolution extends FunctionalCI
