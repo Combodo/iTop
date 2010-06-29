@@ -94,46 +94,11 @@ class ormDocument
 		else
 		{
 			$data = $this->GetData();
-			$sResult = $this->GetFileName().' [ '.$this->GetMimeType().', size: '.strlen($data).' byte(s) ]';
+			$sResult = $this->GetFileName().' [ '.$this->GetMimeType().', size: '.strlen($data).' byte(s) ]<br/>';
 		}
 		return $sResult;
 	}
-	
-	/**
-	 * Returns an HTML fragment that will display the document *inline* (if possible)
-	 * @return string
-	 */	 	 	
-	public function GetDisplayInline($sClass, $Id, $sAttCode)
-	{
-		switch ($this->GetMainMimeType())
-		{
-			case 'text':
-			case 'html':
-			$data = $this->GetData();
-			switch($this->GetMimeType())
-			{
-				case 'text/html':
-				case 'text/xml':
-				return "<iframe src=\"../pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode\" width=\"100%\" height=\"400\">Loading...</iframe>\n";
-				
-				default:
-				return "<pre>".htmlentities(MyHelpers::beautifulstr($data, 1000, true))."</pre>\n";			
-			}
-			break; // Not really needed, but...
-
-			case 'application':
-			switch($this->GetMimeType())
-			{
-				case 'application/pdf':
-				return "<iframe src=\"../pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode\" width=\"100%\" height=\"400\">Loading...</iframe>\n";
-			}
-			break;
-			
-			case 'image':
-			return "<img src=\"../pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode\" />\n";
-		}
-	}
-	
+		
 	/**
 	 * Returns an hyperlink to display the document *inline*
 	 * @return string

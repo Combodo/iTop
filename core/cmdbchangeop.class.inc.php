@@ -310,9 +310,8 @@ class CMDBChangeOpSetAttributeBlob extends CMDBChangeOpSetAttribute
 			$sAttName = $oAttDef->GetLabel();
 			$oPrevDoc = $this->Get('prevdata');
 			$sDocView = $oPrevDoc->GetAsHtml();
-			$sDocView .= "<br/>Open in New Window: ".$oPrevDoc->GetDisplayLink(get_class($this), $this->GetKey(), 'prevdata').", \n";
-			$sDocView .= "Download: ".$oPrevDoc->GetDownloadLink(get_class($this), $this->GetKey(), 'prevdata')."\n";
-
+			$sDocView .= "<br/>".Dict::Format('UI:OpenDocumentInNewWindow_',$oPrevDoc->GetDisplayLink(get_class($this), $this->GetKey(), 'prevdata')).", \n";
+			$sDocView .= Dict::Format('UI:DownloadDocument_', $oPrevDoc->GetDownloadLink(get_class($this), $this->GetKey(), 'prevdata'))."\n";
 			//$sDocView = $oPrevDoc->GetDisplayInline(get_class($this), $this->GetKey(), 'prevdata');
 			$sResult = "$sAttName changed, previous value: $sDocView";
 		}

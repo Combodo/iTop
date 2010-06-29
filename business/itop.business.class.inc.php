@@ -304,6 +304,19 @@ class FileDoc extends Document
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'type', 'status'));
 		MetaModel::Init_SetZListItems('list', array('type', 'status', 'contents'));
 	}
+	
+	/**
+	 * Overload the display of the properties to add a tab (the first one)
+	 * with the preview of the document
+	 */
+	public function DisplayBareProperties(WebPage $oPage)
+	{
+		$oPage->SetCurrentTab(Dict::S('Class:Document:PreviewTab'));
+		$oPage->add($this->DisplayDocumentInline($oPage, 'contents'));
+		$oPage->SetCurrentTab(Dict::S('UI:PropertiesTab'));
+		parent::DisplayBareProperties($oPage);
+		
+	}
 }
 class Licence extends cmdbAbstractObject
 {

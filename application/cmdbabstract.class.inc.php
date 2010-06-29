@@ -930,6 +930,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 				
 				case 'List':
 				// Not editable for now...
+				$sHTMLValue = '';
 				break;
 				
 				case 'String':
@@ -963,7 +964,15 @@ abstract class cmdbAbstractObject extends CMDBObject
 							$sHTMLValue .= "<option value=\"0\">".Dict::S('UI:SelectOne')."</option>\n";
 							foreach($aAllowedValues as $key => $display_value)
 							{
+								if (count($aAllowedValues) == 1)
+								{
+									// When there is only once choice, select it by default
+									$sSelected = ' selected';
+								}
+								else
+								{
 								$sSelected = ($value == $key) ? ' selected' : '';
+								}
 								$sHTMLValue .= "<option value=\"$key\"$sSelected>$display_value</option>\n";
 							}
 							$sHTMLValue .= "</select>&nbsp;{$sValidationField}\n";
@@ -1380,6 +1389,13 @@ EOF
 				// Special display for the 'state' attribute itself
 				$sDisplayValue = $this->GetStateLabel();
 			}
+			else if ($oAttDef->GetEditClass() == 'Document')
+			{
+				$oDocument = $this->Get($sAttCode);
+				$sDisplayValue = $this->GetAsHTML($sAttCode);
+				$sDisplayValue .= "<br/>".Dict::Format('UI:OpenDocumentInNewWindow_', $oDocument->GetDisplayLink(get_class($this), $this->GetKey(), $sAttCode)).", \n";
+				$sDisplayValue .= "<br/>".Dict::Format('UI:DownloadDocument_', $oDocument->GetDisplayLink(get_class($this), $this->GetKey(), $sAttCode)).", \n";
+			}
 			else
 			{
 				$sDisplayValue = $this->GetAsHTML($sAttCode);
@@ -1387,6 +1403,52 @@ EOF
 			$retVal = array('label' => '<span title="'.MetaModel::GetDescription($sClass, $sAttCode).'">'.MetaModel::GetLabel($sClass, $sAttCode).'</span>', 'value' => $sDisplayValue);
 		}
 		return $retVal;
+	}
+	
+	/**
+	 * Displays a blob document *inline* (if possible, depending on the type of the document)
+	 * @return string
+	 */	 	 	
+	public function DisplayDocumentInline(WebPage $oPage, $sAttCode)
+	{
+		$oDoc = $this->Get($sAttCode);
+		$sClass = get_class($this);
+		$Id = $this->GetKey();
+		switch ($oDoc->GetMainMimeType())
+		{
+			case 'text':
+			case 'html':
+			$data = $oDoc->GetData();
+			switch($oDoc->GetMimeType())
+			{
+				case 'text/html':
+				case 'text/xml':
+				$oPage->add("<iframe id='preview_$sAttCode' src=\"../pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode\" width=\"100%\" height=\"400\">Loading...</iframe>\n");
+				
+				default:
+				$oPage->add("<pre>".htmlentities(MyHelpers::beautifulstr($data, 1000, true))."</pre>\n");			
+			}
+			break;
+
+			case 'application':
+			switch($oDoc->GetMimeType())
+			{
+				case 'application/pdf':
+				$oPage->add("<iframe id='preview_$sAttCode' src=\"../pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode\" width=\"100%\" height=\"400\">Loading...</iframe>\n");
+				break;
+
+				default:
+				$oPage->add(Dict::S('UI:Document:NoPreview'));
+			}
+			break;
+			
+			case 'image':
+			$oPage->add("<img src=\"../pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode\" />\n");
+			break;
+			
+			default:
+			$oPage->add(Dict::S('UI:Document:NoPreview'));
+		}
 	}
 	
 }

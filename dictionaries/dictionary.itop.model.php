@@ -217,6 +217,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Document/Attribute:contract_list+' => 'Contracts refering to this document',
 	'Class:Document/Attribute:ticket_list' => 'Tickets',
 	'Class:Document/Attribute:ticket_list+' => 'Tickets refering to this document',
+	'Class:Document:PreviewTab' => 'Preview',
 ));
 
 //

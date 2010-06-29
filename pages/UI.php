@@ -350,6 +350,57 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 
 }
 
+/**
+ * Updates an object from the POSTed parameters
+ */
+function UpdateObject(&$oObj)
+{
+	foreach(MetaModel::ListAttributeDefs(get_class($oObj)) as $sAttCode=>$oAttDef)
+	{
+		if ($oAttDef->IsLinkSet())
+		{
+			// Link set, the data is a set of link objects, encoded in JSON
+			$aAttributes[$sAttCode] = trim(utils::ReadPostedParam("attr_$sAttCode", ''));
+			if (!empty($aAttributes[$sAttCode]))
+			{
+				$oLinkSet = WizardHelper::ParseJsonSet($oObj, $oAttDef->GetLinkedClass(), $oAttDef->GetExtKeyToMe(), $aAttributes[$sAttCode]);
+				$oObj->Set($sAttCode, $oLinkSet);
+				// TO DO: detect a real modification, for now always update !!
+			}
+		}
+		else if ($oAttDef->IsWritable())
+		{
+			$iFlags = $oObj->GetAttributeFlags($sAttCode);
+			if ($iFlags & (OPT_ATT_HIDDEN | OPT_ATT_READONLY))
+			{
+				// Non-visible, or read-only attribute, do nothing
+			}
+			else if ($oAttDef->GetEditClass() == 'Document')
+			{
+				// There should be an uploaded file with the named attr_<attCode>
+				$oDocument = utils::ReadPostedDocument('file_'.$sAttCode);
+				if (!$oDocument->IsEmpty())
+				{
+					// A new file has been uploaded
+					$oObj->Set($sAttCode, $oDocument);
+				}
+			}
+			else
+			{
+				$rawValue = utils::ReadPostedParam("attr_$sAttCode", null);
+				if (!is_null($rawValue))
+				{
+					$aAttributes[$sAttCode] = trim($rawValue);
+					$previousValue = $oObj->Get($sAttCode);
+					if ($previousValue !== $aAttributes[$sAttCode])
+					{
+						$oObj->Set($sAttCode, $aAttributes[$sAttCode]);
+					}
+				}
+			}
+		}
+	}
+}
 /***********************************************************************************
  * 
  * Main user interface page, starts here
@@ -715,51 +766,9 @@ try
 				{
 					$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
 					$oP->add("<h1>".Dict::Format('UI:ModificationTitle_Class_Object', $sClassLabel, $oObj->GetName())."</h1>\n");
-					foreach(MetaModel::ListAttributeDefs(get_class($oObj)) as $sAttCode=>$oAttDef)
-					{
-						if ($oAttDef->IsLinkSet())
-						{
-							// Link set, the data is a set of link objects, encoded in JSON
-							$aAttributes[$sAttCode] = trim(utils::ReadPostedParam("attr_$sAttCode", ''));
-							if (!empty($aAttributes[$sAttCode]))
-							{
-								$oLinkSet = WizardHelper::ParseJsonSet($oObj, $oAttDef->GetLinkedClass(), $oAttDef->GetExtKeyToMe(), $aAttributes[$sAttCode]);
-								$oObj->Set($sAttCode, $oLinkSet);
-								// TO DO: detect a real modification, for now always update !!
-							}
-						}
-						else if (!$oAttDef->IsExternalField())
-						{
-							$rawValue = utils::ReadPostedParam("attr_$sAttCode", null);
-							if (!is_null($rawValue))
-							{
-								$aAttributes[$sAttCode] = trim($rawValue);
-								$previousValue = $oObj->Get($sAttCode);
-								if ($previousValue !== $aAttributes[$sAttCode])
-								{
-									$oObj->Set($sAttCode, $aAttributes[$sAttCode]);
-								}
-							}
-						}
-						else if ($oAttDef->IsWritable())
-						{
-							$iFlags = $oObj->GetAttributeFlags($sAttCode);
-							if ($iFlags & (OPT_ATT_HIDDEN | OPT_ATT_READONLY))
-							{
-								// Non-visible, or read-only attribute, do nothing
-							}
-							else if ($oAttDef->GetEditClass() == 'Document')
-							{
-								// There should be an uploaded file with the named attr_<attCode>
-								$oDocument = utils::ReadPostedDocument('file_'.$sAttCode);
-								if (!$oDocument->IsEmpty())
-								{
-									// A new file has been uploaded
-									$oObj->Set($sAttCode, $oDocument);
-								}
-							}
-						}
-					}
+
+					UpdateObject($oObj);
+
 					if (!$oObj->IsModified())
 					{
 						$oP->p(Dict::Format('UI:Class_Object_NotUpdated', MetaModel::GetName(get_class($oObj)), $oObj->GetName()));
@@ -884,14 +893,7 @@ try
 				$oMyChange->Set("userinfo", $sUserString);
 				$iChangeId = $oMyChange->DBInsert();
 				$sStateAttCode = MetaModel::GetStateAttributeCode(get_class($oObj));
-				foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode=>$oAttDef)
-				{
-					if ( ($oAttDef->IsWritable()) )
-					{
-						$value = utils::ReadPostedParam('attr_'.$sAttCode, '');
-						$oObj->Set($sAttCode, $value);
-					}
-				}
+				UpdateObject($oObj);
 				$oObj->DBCloneTracked($oMyChange);
 				$oP->set_title(Dict::S('UI:PageTitle:ObjectCreated'));
 				$oP->add("<h1>".Dict::Format('UI:Title:Object_Of_Class_Created', $oObj->GetName(), $sClassLabel)."</h1>\n");
@@ -915,51 +917,7 @@ try
 		else
 		{
 			$oObj = MetaModel::NewObject($sClass);
-			foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
-			{
-				if ($oAttDef->IsLinkSet())
-				{
-					// Link set, the data is a set of link objects, encoded in JSON
-					$aAttributes[$sAttCode] = trim(utils::ReadPostedParam("attr_$sAttCode", ''));
-					if (!empty($aAttributes[$sAttCode]))
-					{
-						$oLinkSet = WizardHelper::ParseJsonSet($oObj, $oAttDef->GetLinkedClass(), $oAttDef->GetExtKeyToMe(), $aAttributes[$sAttCode]);
-						$oObj->Set($sAttCode, $oLinkSet);
-						// TO DO: detect a real modification, for now always update !!
-					}
-				}
-				else if (!$oAttDef->IsExternalField())
-				{
-					$rawValue = utils::ReadPostedParam("attr_$sAttCode", null);
-					if (!is_null($rawValue))
-					{
-						$aAttributes[$sAttCode] = trim($rawValue);
-						$previousValue = $oObj->Get($sAttCode);
-						if ($previousValue !== $aAttributes[$sAttCode])
-						{
-							$oObj->Set($sAttCode, $aAttributes[$sAttCode]);
-						}
-					}
-				}
-				else if ($oAttDef->IsWritable())
-				{
-					$iFlags = $oObj->GetAttributeFlags($sAttCode);
-					if ($iFlags & (OPT_ATT_HIDDEN | OPT_ATT_READONLY))
-					{
-						// Non-visible, or read-only attribute, do nothing
-					}
-					else if ($oAttDef->GetEditClass() == 'Document')
-					{
-						// There should be an uploaded file with the named attr_<attCode>
-						$oDocument = utils::ReadPostedDocument('file_'.$sAttCode);
-						if (!$oDocument->IsEmpty())
-						{
-							// A new file has been uploaded
-							$oObj->Set($sAttCode, $oDocument);
-						}
-					}
-				}
-			}
+			UpdateObject($oObj);
 		}
 		if (isset($oObj) && is_object($oObj))
 		{
