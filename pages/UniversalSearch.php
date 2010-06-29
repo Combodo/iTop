@@ -42,7 +42,7 @@ $oP = new iTopWebPage(Dict::S('UI:UniversalSearchTitle'), $currentOrganization);
 // From now on the context is limited to the the selected organization ??
 
 // Now render the content of the page
-$sBaseClass = utils::ReadParam('baseClass', 'bizOrganization');
+$sBaseClass = utils::ReadParam('baseClass', 'Organization');
 $sClass = utils::ReadParam('class', $sBaseClass);
 $sOQLClause = utils::ReadParam('oql_clause', '');
 $sFilter = utils::ReadParam('filter', '');
