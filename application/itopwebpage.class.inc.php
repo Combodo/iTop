@@ -236,18 +236,15 @@ EOF
 		$oToolsMenu = new MenuGroup('AdvancedToolsMenu', 2 /* fRank */);
 		new WebPageMenuNode('CSVImportMenu', '../pages/csvimport.php', $oToolsMenu->GetIndex(), 1 /* fRank */);
 
-		if (userRights::IsAdministrator())
-		{
-			// Add the admin menus
-			$oAdminMenu = new MenuGroup('AdminTools', 999 /* fRank */);
-			new OQLMenuNode('UserAccountsMenu', 'SELECT URP_Users', $oAdminMenu->GetIndex(), 1 /* fRank */);
-			new OQLMenuNode('ProfilesMenu', 'SELECT URP_Profiles', $oAdminMenu->GetIndex(), 2 /* fRank */);
-			new TemplateMenuNode('NotificationsMenu', '../business/templates/notifications_menu.html', $oAdminMenu->GetIndex(), 3 /* fRank */);
-			new WebPageMenuNode('RunQueriesMenu', '../pages/run_query.php', $oAdminMenu->GetIndex(), 8 /* fRank */);
-			new WebPageMenuNode('ExportMenu', '../webservices/export.php', $oAdminMenu->GetIndex(), 9 /* fRank */);
-			new WebPageMenuNode('DataModelMenu', '../pages/schema.php', $oAdminMenu->GetIndex(), 10 /* fRank */);
-			new WebPageMenuNode('UniversalSearchMenu', '../pages/UniversalSearch.php', $oAdminMenu->GetIndex(), 11 /* fRank */);
-		}
+		// Add the admin menus
+		$oAdminMenu = new MenuGroup('AdminTools', 999 /* fRank */);
+		new OQLMenuNode('UserAccountsMenu', 'SELECT URP_Users', $oAdminMenu->GetIndex(), 1 /* fRank */);
+		new OQLMenuNode('ProfilesMenu', 'SELECT URP_Profiles', $oAdminMenu->GetIndex(), 2 /* fRank */);
+		new TemplateMenuNode('NotificationsMenu', '../business/templates/notifications_menu.html', $oAdminMenu->GetIndex(), 3 /* fRank */);
+		new WebPageMenuNode('RunQueriesMenu', '../pages/run_query.php', $oAdminMenu->GetIndex(), 8 /* fRank */);
+		new WebPageMenuNode('ExportMenu', '../webservices/export.php', $oAdminMenu->GetIndex(), 9 /* fRank */);
+		new WebPageMenuNode('DataModelMenu', '../pages/schema.php', $oAdminMenu->GetIndex(), 10 /* fRank */);
+		new WebPageMenuNode('UniversalSearchMenu', '../pages/UniversalSearch.php', $oAdminMenu->GetIndex(), 11 /* fRank */);
 	}
 	
 	public function AddToMenu($sHtml)

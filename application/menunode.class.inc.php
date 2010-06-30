@@ -98,6 +98,7 @@ class ApplicationMenu
 		foreach(self::$aRootMenus as $aMenu)
 		{
 			$oMenuNode = self::GetMenuNode($aMenu['index']);
+			if (($oMenuNode->GetMenuId() == 'AdminTools') && (!UserRights::IsAdministrator())) continue; // Don't display the admin menu for non admin users
 			$oPage->AddToMenu('<h3><a href="'.$oMenuNode->GetHyperlink($aExtraParams).'">'.$oMenuNode->GetTitle().'</a></h3>');
 			$oPage->AddToMenu('<div>');
 			$aChildren = self::GetChildren($aMenu['index']);
