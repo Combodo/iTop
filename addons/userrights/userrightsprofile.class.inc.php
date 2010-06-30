@@ -157,8 +157,6 @@ class URP_Users extends UserRightsBaseClass
 	{
 		parent::DisplayBareRelations($oPage);
 
-		$oPage->SetCurrentTabContainer('Related Objects');
-
 		$oPage->SetCurrentTab(Dict::S('UI:UserManagement:GrantMatrix'));
 		$this->DoShowGrantSumary($oPage, 'bizmodel');
 
@@ -277,8 +275,6 @@ class URP_Profiles extends UserRightsBaseClass
 	function DisplayBareRelations(WebPage $oPage)
 	{
 		parent::DisplayBareRelations($oPage);
-
-		$oPage->SetCurrentTabContainer('Related Objects');
 
 		$oPage->SetCurrentTab(Dict::S('UI:UserManagement:GrantMatrix'));
 		$this->DoShowGrantSumary($oPage);		
