@@ -8,7 +8,8 @@ function NameIsValid(name)
 function DoGoBack(iStep)
 {
 	$('input[name=operation]').val('step'+(iStep-1));
-	return true; // Submit the form
+	$('#theForm').submit(); // Submit the form
+	return true; 
 }
 
 function DoSubmit(sMsg, iStep)

@@ -579,11 +579,11 @@ function WelcomeAndCheckPrerequisites(SetupWebPage $oP, $aParamValues, $iCurrent
 	if (CheckPHPVersion($oP))
 	{
 		$oP->add("<h2 class=\"next\">Next: Licence agreement</h2>\n");
-		$oP->add("<form method=\"post\" onSubmit=\"return DoSubmit('', 0)\">\n");
+		$oP->add("<form id=\"theForm\" method=\"post\" onSubmit=\"return DoSubmit('', 0)\">\n");
 		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
 		AddParamsToForm($oP, $aParamValues);
 		$oP->add("<table style=\"width:100%\"><tr>\n");
-		$oP->add("<td style=\"text-align:right;\"><button type=\"submit\">Next >></button></td>\n");
+		$oP->add("<td style=\"text-align:right;\"><button type=\"submit\" type=\"submit\">Next >></button></td>\n");
 		$oP->add("</tr></table>\n");
 		$oP->add("</form>\n");
 	}
@@ -596,7 +596,7 @@ function LicenceAcknowledgement($oP, $aParamValues, $iCurrentStep)
 	$oP->set_title('License Agreement');
 	$oP->add('<h2>iTop is released by <a href="http://www.combodo.com">Combodo SARL</a> under the terms of the GPL V3 license. In order to use iTop you must accept the terms of this license.</h2>');
 	$oP->add("<iframe style=\"width: 100%; height: 350px; overflow-y:auto; font-size:0.8em;\" src=\"./licence.html\">Next: Database server selection</iframe>\n");
-	$oP->add("<form method=\"post\">\n");
+	$oP->add("<form id=\"theForm\" method=\"post\">\n");
 	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
 	AddParamsToForm($oP, $aParamValues, array('licence_ok'));
 
@@ -605,7 +605,7 @@ function LicenceAcknowledgement($oP, $aParamValues, $iCurrentStep)
 
 	$oP->add("<h2 class=\"next\">Next: Database server selection</h2>\n");
 	$oP->add("<table style=\"width:100%\"><tr>\n");
-	$oP->add("<td style=\"text-align:left;\"><button type=\"submit\" onClick=\"return DoGoBack($iCurrentStep)\"><< Back</button></td>\n");
+	$oP->add("<td style=\"text-align:left;\"><button type=\"button\" onClick=\"return DoGoBack($iCurrentStep)\"><< Back</button></td>\n");
 	$oP->add("<td style=\"text-align:right;\"><button type=\"submit\" onClick=\"return DoSubmit('', $iCurrentStep)\">Next >></button></td>\n");
 	$oP->add("</tr></table>\n");
 	$oP->add("</form>\n");
@@ -619,7 +619,7 @@ function DatabaseServerSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep)
 {
 	$sNextOperation = 'step'.($iCurrentStep+1);
 
-	$oP->add("<form method=\"post\">\n");
+	$oP->add("<form id=\"theForm\" method=\"post\">\n");
 	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
 	AddParamsToForm($oP, $aParamValues, array('db_server', 'db_user', 'db_pwd'));
 	if ($aParamValues['licence_ok'] == 1)
@@ -639,13 +639,13 @@ function DatabaseServerSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep)
 		$oP->add("</fieldset>\n");
 		$oP->add("<h2 class=\"next\">Next: Database Instance Selection</h2>\n");
 		$oP->add("<table style=\"width:100%\"><tr>\n");
-		$oP->add("<td style=\"text-align:left;\"><button onClick=\"return DoGoBack($iCurrentStep)\"><< Back</button></td>\n");
-		$oP->add("<td style=\"text-align:right;\"><button type=\"submit\" onClick=\"return DoSubmit('Connecting to the database...', $iCurrentStep)\">Next >></button></td>\n");
+		$oP->add("<td style=\"text-align:left;\"><button type=\"button\" onClick=\"return DoGoBack($iCurrentStep)\"><< Back</button></td>\n");
+		$oP->add("<td style=\"text-align:right;\"><button type=\"submit\" onClick=\"return DoSubmit('Connecting to the database...', $iCurrentStep);\">Next >></button></td>\n");
 		$oP->add("</tr></table>\n");
 	}
 	else
 	{
-		$oP->add("<button type=\"submit\" onClick=\"return DoGoBack($iCurrentStep);\"><< Back</button>\n");		
+		$oP->add("<button type=\"button\" onClick=\"return DoGoBack($iCurrentStep);\"><< Back</button>\n");		
 	}
 	$oP->add("</form>\n");
 }
@@ -660,7 +660,7 @@ function DatabaseInstanceSelection(SetupWebPage $oP, $aParamValues, $iCurrentSte
 {
 	$sNextOperation = 'step'.($iCurrentStep+1);
 	$oP->set_title("Database Instance Selection\n");
-	$oP->add("<form method=\"post\">\n");
+	$oP->add("<form id=\"theForm\" method=\"post\">\n");
 	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
 	AddParamsToForm($oP, $aParamValues, array('db_name', 'db_prefix', 'new_db_name'));
 	$sDBServer = $aParamValues['db_server'];
@@ -670,7 +670,7 @@ function DatabaseInstanceSelection(SetupWebPage $oP, $aParamValues, $iCurrentSte
 	if ($aDatabases === false)
 	{
 		// Connection failed, invalid credentials ? Go back
-		$oP->add("<button type=\"submit\" onClick=\"return DoGoBack($iCurrentStep);\"><< Back</button>\n");
+		$oP->add("<button type=\"button\" onClick=\"return DoGoBack($iCurrentStep);\"><< Back</button>\n");
 	}
 	else
 	{
@@ -720,7 +720,7 @@ function DatabaseInstanceSelection(SetupWebPage $oP, $aParamValues, $iCurrentSte
 
 		$oP->add("<h2 class=\"next\">Next: iTop Modules Selection</h2>\n");
 		$oP->add("<table style=\"width:100%\"><tr>\n");
-		$oP->add("<td style=\"text-align:left;\"><button type=\"submit\" onClick=\"return DoGoBack($iCurrentStep)\"><< Back</button></td>\n");
+		$oP->add("<td style=\"text-align:left;\"><button type=\"button\" onClick=\"return DoGoBack($iCurrentStep)\"><< Back</button></td>\n");
 		$oP->add("<td style=\"text-align:right;\"><button type=\"submit\" onClick=\"return DoSubmit('', $iCurrentStep);\">Next >></button></td>\n");
 		$oP->add("</tr></table>\n");
 	}
@@ -745,7 +745,7 @@ function ModulesSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, $oConf
 	$oConfig->SetDBSubname($sDBPrefix);
 	$oConfig->WriteToFile(TMP_CONFIG_FILE);
 
-	$oP->add("<form method=\"post\">\n");
+	$oP->add("<form id=\"theForm\" method=\"post\">\n");
 	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
 	AddParamsToForm($oP, $aParamValues, array('module'));
 	$sRedStar = '<span class="hilite">*</span>';
@@ -770,20 +770,25 @@ function ModulesSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, $oConf
 		$sModuleHelp = $aModule['doc.more_information'];
 		$sClass = ($aModule['mandatory']) ? 'class="read-only"' : '';
 		$sChecked = ($aModule['mandatory'] ||  in_array($sModuleId, $aSelectedModules) ) ? 'checked' : '';
-		$sMoreInfo = (!empty($aModule['doc.more_information'])) ? "<a href=\"{$aModule['doc']}\" target=\"_blank\">more info</a>": '';
+		$sMoreInfo = (!empty($aModule['doc.more_information'])) ? "<a href=\"{$aModule['doc.more_information']}\" target=\"_blank\">more info</a>": '';
 		if ($aModule['visible'])
 		{
 			$oP->add("<p><input type=\"checkbox\" $sClass $sChecked id=\"module[$index]\" name=\"module[$index]\" value=\"$sModuleId\"><label $sClass for=\"module[$index]\"> {$aModule['label']}</label> $sMoreInfo</p>\n");
 			$index++;
+		}
+		else
+		{
+			// For now hidden modules are always on !
+			$oP->add("<input type=\"hidden\" id=\"module[$index]\" name=\"module[$index]\" value=\"$sModuleId\">\n");
 		}
 	}	
 	$oP->add("</div>");
 	$oP->add("</fieldset>\n");
 	$oP->add("<h2 class=\"next\">Next: Administrator Account Creation</h2>\n");
 	$oP->add("<table style=\"width:100%\"><tr>\n");
-	$oP->add("<td style=\"text-align:left;\"><button onClick=\"return DoGoBack($iCurrentStep)\"><< Back</button></td>\n");
+	$oP->add("<td style=\"text-align:left;\"><button type=\"button\" onClick=\"return DoGoBack($iCurrentStep)\"><< Back</button></td>\n");
 	$oP->add("<td style=\"text-align:right;\"><button type=\"submit\" onClick=\"return DoSubmit('Creating the database structure...', $iCurrentStep);\">Next >></button></td>\n");
-		$oP->add("</tr></table>\n");
+	$oP->add("</tr></table>\n");
 	$oP->add("</form>\n");
 	$oP->add_ready_script("$('.read-only').click( function() { $(this).attr('checked','checked'); } );");
 	
@@ -800,7 +805,7 @@ function AdminAccountDefinition(SetupWebPage $oP, $aParamValues, $iCurrentStep, 
 	$sNextOperation = 'step'.($iCurrentStep+1);
 	$oP->add("<h1>iTop configuration wizard</h1>\n");
 	$oP->add("<h2>Creation of the database structure</h2>\n");
-	$oP->add("<form method=\"post\">\n");
+	$oP->add("<form id=\"theForm\" method=\"post\">\n");
 	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
 	AddParamsToForm($oP, $aParamValues, array('auth_user', 'auth_pwd'));
 
@@ -828,13 +833,13 @@ function AdminAccountDefinition(SetupWebPage $oP, $aParamValues, $iCurrentStep, 
 		$oP->add("</fieldset>\n");
 		$oP->add("<h2 class=\"next\">Next: Administrator Account Creation</h2>\n");
 		$oP->add("<table style=\"width:100%\"><tr>\n");
-		$oP->add("<td style=\"text-align:left;\"><button type=\"submit\" onClick=\"return DoGoBack($iCurrentStep)\"><< Back</button></td>\n");
+		$oP->add("<td style=\"text-align:left;\"><button type=\"button\" onClick=\"return DoGoBack($iCurrentStep)\"><< Back</button></td>\n");
 		$oP->add("<td style=\"text-align:right;\"><button type=\"submit\" onClick=\"return DoSubmit('Creating the admin account and profiles...', $iCurrentStep);\">Next >></button></td>\n");
 		$oP->add("</tr></table>\n");
 	}
 	else
 	{
-		$oP->add("<button type=\"submit\" onClick=\"return DoGoBack($iCurrentStep)\"><< Back</button>\n");
+		$oP->add("<button type=\"button\" onClick=\"return DoGoBack($iCurrentStep)\"><< Back</button>\n");
 	}
 	// Form goes here
 	$oP->add("</form>\n");
@@ -855,7 +860,7 @@ function SampleDataSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, Con
 	$sAdminUser = $aParamValues['auth_user'];
 	$sAdminPwd = $aParamValues['auth_pwd'];
 
-	$oP->add("<form method=\"post\"\">\n");
+	$oP->add("<form id=\"theForm\" method=\"post\"\">\n");
 	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
 	AddParamsToForm($oP, $aParamValues, array('sample_data'));
 	
@@ -863,12 +868,12 @@ function SampleDataSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, Con
 	{
 		$oP->add("<h2>Step 4: Loading of sample data</h2>\n");
 		$oP->p("<fieldset><legend> Do you want to load sample data into the database ? </legend>\n");
-		$oP->p("<input type=\"radio\" id=\"sample_data\" name=\"sample_data\" checked value=\"yes\"> Yes, for testing purposes, populate the database with sample data.\n");
-		$oP->p("<input type=\"radio\" name=\"sample_data\" unchecked value=\"no\"> No, this is a production system, load only the data required by the application.\n");
+		$oP->p("<input type=\"radio\" id=\"sample_data\" name=\"sample_data\" id=\"sample_data_no\" checked value=\"yes\"><label for=\"sample_data_yes\"> Yes, for testing purposes, populate the database with sample data.</label>\n");
+		$oP->p("<input type=\"radio\" name=\"sample_data\" unchecked id=\"sample_data_no\" value=\"no\"><label for=\"sample_data_no\"> No, this is a production system, load only the data required by the application.</label>\n");
 		$oP->p("</fieldset>\n");	
 		$oP->add("<h2 class=\"next\">Next: Application Initialization</h2>\n");
 		$oP->add("<table style=\"width:100%\"><tr>\n");
-		$oP->add("<td style=\"text-align:left;\"><button onClick=\"return DoGoBack($iCurrentStep)\"><< Back</button></td>\n");
+		$oP->add("<td style=\"text-align:left;\"><button type=\"button\" onClick=\"return DoGoBack($iCurrentStep)\"><< Back</button></td>\n");
 		$oP->add("<td style=\"text-align:right;\"><button type=\"submit\" onClick=\"return DoSubmit('Finalizing configuration and loading data...', $iCurrentStep)\">Next >></button></td>\n");
 		$oP->add("</tr></table>\n");
 	}
@@ -876,7 +881,7 @@ function SampleDataSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, Con
 	{
 		// Creation failed
 		$oP->error("Internal error: Failed to create the admin account or to setup the user rights");
-		$oP->add("<button type=\"submit\" onClick=\"return DoGoBack($iCurrentStep)\"><< Back</button>\n");
+		$oP->add("<button type=\"button\" onClick=\"return DoGoBack($iCurrentStep)\"><< Back</button>\n");
 	}
 	// End of visible form
 	$oP->add("</form>\n");
@@ -921,7 +926,7 @@ function SetupFinished(SetupWebPage $oP, $aParamValues, $iCurrentStep, Config $o
 			
 			$oP->add("<h1>iTop configuration wizard</h1>\n");
 			$oP->add("<h2>Configuration completed</h2>\n");
-			$oP->add("<form method=\"get\" action=\"../index.php\">\n");
+			$oP->add("<form id=\"theForm\" method=\"get\" action=\"../index.php\">\n");
 			$oP->ok("The initialization completed successfully.");
 			// Form goes here.. No back button since the job is done !
 			$oP->add("<button type=\"submit\">Enter iTop</button>\n");
@@ -935,11 +940,10 @@ function SetupFinished(SetupWebPage $oP, $aParamValues, $iCurrentStep, Config $o
 			@unlink(FINAL_CONFIG_FILE); // remove the aborted config
 			$oP->error("Error: Failed to login for user: '$sAuthUser'\n");
 
-			$oP->add("<form method=\"post\">\n");
-			$oP->add("<button type=\"submit\" onClick=\"return DoGoBack($iCurrentStep);\"><< Back</button>\n");
+			$oP->add("<form id=\"theForm\" method=\"post\">\n");
+			$oP->add("<button type=\"button\" onClick=\"return DoGoBack($iCurrentStep);\"><< Back</button>\n");
 			AddParamsToForm($oP, $aParamValues);
 			$oP->add("<input type=\"hidden\" name=\"operation\" value=\"step0\">\n");
-			$oP->add("&nbsp;&nbsp;&nbsp;&nbsp;\n");
 			$oP->add("</form>\n");
 		}
 	}
@@ -948,10 +952,10 @@ function SetupFinished(SetupWebPage $oP, $aParamValues, $iCurrentStep, Config $o
 		$oP->error("Error: unable to create the configuration file.");
 		$oP->p($e->getHtmlDesc());
 		$oP->p("Did you forget to remove the previous (read-only) configuration file ?");
-		$oP->add("<form method=\"post\">\n");
+		$oP->add("<form id=\"theForm\" method=\"post\">\n");
 		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"step0\">\n");
 		AddParamsToForm($oP, $aParamValues);
-		$oP->add("<button type=\"submit\" onClick=\"return DoGoBack($iCurrentStep);\"><< Back</button>\n");
+		$oP->add("<button type=\"button\" onClick=\"return DoGoBack($iCurrentStep);\"><< Back</button>\n");
 		$oP->add("</form>\n");
 	}
 }
@@ -960,7 +964,7 @@ function SetupFinished(SetupWebPage $oP, $aParamValues, $iCurrentStep, Config $o
 // Main program
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
- clearstatcache(); // Make sure we know what we are doing !
+clearstatcache(); // Make sure we know what we are doing !
 if (file_exists(FINAL_CONFIG_FILE))
 {
 	// The configuration file already exists
