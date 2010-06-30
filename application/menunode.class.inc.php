@@ -268,12 +268,12 @@ abstract class MenuNode
 	
 	public function GetTitle()
 	{
-		return Dict::S("Menu:$this->sMenuId+");
+		return Dict::S("Menu:$this->sMenuId");
 	}
 	
 	public function GetLabel()
 	{
-		return Dict::S("Menu:$this->sMenuId");
+		return Dict::S("Menu:$this->sMenuId+");
 	}
 	
 	public function GetIndex()

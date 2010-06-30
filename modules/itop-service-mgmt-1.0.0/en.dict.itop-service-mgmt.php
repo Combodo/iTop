@@ -54,7 +54,29 @@ Dict::Add('EN US', 'English', 'English', array(
 'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contracts by service level',
 'UI-ServiceManagementMenu-ContractsByStatus' => 'Contracts by status',
 'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contracts ending in less then 30 days',
+
+'Menu:ServiceType' => 'Service Types',
+'Menu:ServiceType+' => 'Service Types',
+'Menu:ProviderContract' => 'Provider Contracts',
+'Menu:ProviderContract+' => 'Provider Contracts',
+'Menu:CustomerContract' => 'Customer Contracts',
+'Menu:CustomerContract+' => 'Customer Contracts',
+'Menu:Service' => 'Services',
+'Menu:Service+' => 'Services',
+'Menu:SLA' => 'SLAs',
+'Menu:SLA+' => 'SLAs',
+'Menu:ServiceLevel' => 'Service levels',
+'Menu:ServiceLevel+' => 'Service levels',
+
 ));
 
+/*
+	'UI:ServiceManagementMenu' => 'Gestion des Services',
+	'UI:ServiceManagementMenu+' => 'Gestion des Services',
+	'UI:ServiceManagementMenu:Title' => 'Résumé des services & contrats',
+	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contrats par niveau de service',
+	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contrats par état',
+	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contrats se terminant dans moins de 30 jours',
+*/
 
 ?>

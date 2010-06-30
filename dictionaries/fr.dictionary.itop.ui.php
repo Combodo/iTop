@@ -764,13 +764,6 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'Menu:RunQueriesMenu' => 'Requêtes OQL',
 	'Menu:RunQueriesMenu+' => 'Executer une requête OQL',
 	
-	'UI:ServiceManagementMenu' => 'Gestion des Services',
-	'UI:ServiceManagementMenu+' => 'Gestion des Services',
-	'UI:ServiceManagementMenu:Title' => 'Résumé des services & contrats',
-	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contrats par niveau de service',
-	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contrats par état',
-	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contrats se terminant dans moins de 30 jours',
-		
 	'Menu:AdvancedToolsMenu' => 'Outils',
 	'Menu:AdvancedToolsMenu+' => 'Outils Avancés',
 	
