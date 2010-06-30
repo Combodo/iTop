@@ -210,5 +210,38 @@ table.formTable {
 			fclose($hLogFile);
 		}
 	}
+
+	static $m_aModuleArgs = array(
+		'label' => 'One line description shown during the interactive setup',
+		'dependencies' => 'array of module ids',
+		'mandatory' => 'boolean',
+		'visible' => 'boolean',
+		'datamodel' =>  'array of data model files',
+		'dictionary' => 'array of dictionary files',
+		'data.struct' => 'array of structural data files',
+		'data.sample' => 'array of sample data files',
+		'doc.manual_setup' => 'url',
+		'doc.more_information' => 'url',
+	);
+
+	static $m_aModules = array();
+
+	public static function AddModule($sId, $aArgs)
+	{
+		foreach (self::$m_aModuleArgs as $sArgName => $sArgDesc)
+		{
+			if (!array_key_exists($sArgName, $aArgs))
+			{
+				throw new Exception("Module '$sId': missing argument '$sArgName'");
+		   }
+		}
+
+		self::$m_aModules[$sId] = $aArgs;
+	}
+	public static function GetModules()
+	{
+		return self::$m_aModules;
+	}
+
 } // End of class
 ?>
