@@ -1294,10 +1294,10 @@ abstract class MetaModel
 			return self::$m_Category2Class[$sCategory];
 		}
 
-		if (count(self::$m_Category2Class) > 0)
-		{
-			throw new CoreException("unkown class category '$sCategory', expecting a value in {".implode(', ', array_keys(self::$m_Category2Class))."}");
-		}
+		//if (count(self::$m_Category2Class) > 0)
+		//{
+		//	throw new CoreException("unkown class category '$sCategory', expecting a value in {".implode(', ', array_keys(self::$m_Category2Class))."}");
+		//}
 		return array();
 	}
 

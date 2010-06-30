@@ -38,8 +38,12 @@ define('MYSQL_MIN_VERSION', '5.0.0');
 define('MIN_MEMORY_LIMIT', 32*1024*1024);
 
 
-$sOperation = Utils::ReadParam('operation', 'step1');
+$sOperation = Utils::ReadParam('operation', 'step0');
 $oP = new SetupWebPage('iTop configuration wizard');
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Various helper function
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Get a nicely formatted version string
@@ -262,7 +266,7 @@ function CheckPHPVersion(SetupWebPage $oP)
 	
 	return $bResult;
 }
-  
+ 
 /**
  * Helper function check the connection to the database and (if connected) to enumerate
  * the existing databases
@@ -359,8 +363,8 @@ function InitDataModel(SetupWebPage $oP, $sConfigFileName, $bAllowMissingDatabas
  */
 function CreateDatabaseStructure(SetupWebPage $oP, Config $oConfig, $sDBName, $sDBPrefix)
 {
-	InitDataModel($oP, TMP_CONFIG_FILE, true); // Allow the DB to NOT exist since we're about to create it !
 
+	InitDataModel($oP, TMP_CONFIG_FILE, true); // Allow the DB to NOT exist since we're about to create it !
 	$oP->log('Info - CreateDatabaseStructure');
 	if (strlen($sDBPrefix) > 0)
 	{
@@ -375,7 +379,7 @@ function CreateDatabaseStructure(SetupWebPage $oP, Config $oConfig, $sDBName, $s
 	if (!MetaModel::DBExists(/* bMustBeComplete */ false))
 	{
 		MetaModel::DBCreate();
-		$oP->ok("Database structure successfuly created.");
+		$oP->ok("Database structure successfully created.");
 	}
 	else
 	{
@@ -412,48 +416,68 @@ function CreateAdminAccount(SetupWebPage $oP, Config $oConfig, $sAdminUser, $sAd
 	}
 }
 
-//aFilesToLoad[aFilesToLoad.length] = './menus.xml'; // First load the menus
-
-function ListDataFiles($sDirectory, SetupWebPage $oP)
+function ListModuleFiles($sDirectory, SetupWebPage $oP)
 {
-	$aFilesToLoad = array();
-	if ($hDir = @opendir($sDirectory))
+	//echo "<p>$sDirectory</p>\n";
+	if ($hDir = opendir($sDirectory))
 	{
 		// This is the correct way to loop over the directory. (according to the documentation)
 		while (($sFile = readdir($hDir)) !== false)
 		{
-			$sExtension = pathinfo($sFile, PATHINFO_EXTENSION );
-			if (strcasecmp($sExtension, 'xml') == 0)
+			$aMatches = array();
+			if (is_dir($sDirectory.'/'.$sFile))
 			{
-				$aFilesToLoad[] = $sDirectory.'/'.$sFile;
+				if (($sFile != '.') && ($sFile != '..') && ($sFile != '.svn'))
+				{
+					ListModuleFiles($sDirectory.'/'.$sFile, $oP);
+				}
+			}
+			else if (preg_match('/^module\.(.*).php$/i', $sFile, $aMatches))
+			{
+				try
+				{
+					//echo "<p>Loading: $sDirectory/$sFile...</p>\n";
+					require_once($sDirectory.'/'.$sFile);
+					//echo "<p>Done.</p>\n";
+				}
+				catch(Exception $e)
+				{
+					// Continue...
+				}
 			}
 		}
 		closedir($hDir);
-		// Load order is important we expect the files to be ordered
-		// like numbered 1.Organizations.xml 2.Locations.xml , etc.
-		asort($aFilesToLoad);
 	}
 	else
 	{
 		$oP->error("Data directory (".$sDirectory.") not found or not readable.");
 	}
-	return $aFilesToLoad;
 }
 
 
 /**
  * Scans the ./data directory for XML files and output them as a Javascript array
  */ 
-function PopulateDataFilesList(SetupWebPage $oP)
+function PopulateDataFilesList(SetupWebPage $oP, $aParamValues)
 {
 
 	$oP->add("<script type=\"text/javascript\">\n");
 	$oP->add("function PopulateDataFilesList()\n");
 	$oP->add("{\n");
+	$oP->add("if (aFilesToLoad.length > 0)  return;"); // Populate the list only once...
 
+	$aAvailableModules = GetAvailableModules($oP);
+	$aStructureDataFiles = array();
+	$aSampleDataFiles = array();
+	foreach($aParamValues['module'] as $sModuleId)
+	{
+		$aModuleStruct = $aAvailableModules[$sModuleId]['data.struct'];
+		$aModuleSamples = $aAvailableModules[$sModuleId]['data.sample'];
+		$aStructureDataFiles = array_merge($aStructureDataFiles, $aModuleStruct);
+		$aSampleDataFiles = array_merge($aSampleDataFiles, $aModuleSamples);
+	}
 	// Structure data
 	//
-	$aStructureDataFiles = ListDataFiles(SETUP_STRUCTURE_DATA_DIR, $oP);
 	foreach($aStructureDataFiles as $sFile)
 	{
 		$oP->add("aFilesToLoad[aFilesToLoad.length] = '$sFile';\n");
@@ -463,7 +487,6 @@ function PopulateDataFilesList(SetupWebPage $oP)
 	//
 	$oP->add("if (($(\"#sample_data:checked\").length == 1))");
 	$oP->add("{");
-	$aSampleDataFiles = ListDataFiles(SETUP_SAMPLE_DATA_DIR, $oP);
 	foreach($aSampleDataFiles as $sFile)
 	{
 		$oP->add("aFilesToLoad[aFilesToLoad.length] = '$sFile';\n");
@@ -475,36 +498,156 @@ function PopulateDataFilesList(SetupWebPage $oP)
 }
 
 /**
- * Display the form for the first step of the configuration wizard
- * which consists in the database server selection
- */  
-function DisplayStep1(SetupWebPage $oP)
+ * Add some parameters as hidden inputs into a form
+ * @param SetupWebpage $oP The page to insert the form elements into
+ * @param Hash $aParamValues The pairs name/value to be stored in the form
+ * @param Array $aExcludeParams A list of parameters to exclude from the previous hash
+ */
+function AddParamsToForm(SetupWebpage $oP, $aParamValues, $aExcludeParams = array())
 {
-	$sNextOperation = 'step2';
-	$sVersionString = GetITopVersion();
+	foreach($aParamValues as $sName => $value)
+	{
+		if(!in_array($sName, $aExcludeParams))
+		{
+			if (is_array($value))
+			{
+				foreach($value as $sKey => $sItem)
+				{
+					$oP->add('<input type="hidden" name="'.$sName.'['.$sKey.']'.'" value="'.$sItem.'">');			
+				}
+			}
+			else
+			{
+				$oP->add('<input type="hidden" name="'.$sName.'" value="'.$value.'">');			
+			}
+		}
+	}
+}
+
+/**
+ * Search (on the disk) for all defined iTop modules, load them and returns the list (as an array)
+ * of the possible iTop modules to install
+ * @param none
+ * @return Hash A big array moduleID => ModuleData
+ */
+function GetAvailableModules(SetupWebpage $oP)
+{
+	clearstatcache();
+	ListModuleFiles('../modules/', $oP);
+	return SetupWebPage::GetModules();
+}
+
+/**
+ * Build the config file from the parameters (especially the selected modules)
+ */
+function BuildConfig(SetupWebpage $oP, Config &$oConfig, $aParamValues)
+{
+	$aAvailableModules = GetAvailableModules($oP);
+	// Initialize the arrays below with default values for the application...
+	$aAddOns = $oConfig->GetAddOns();
+	$aAppModules = $oConfig->GetAppModules();
+	$aDataModels = $oConfig->GetDataModels();
+	$sDictionaries = $oConfig->GetDictionaries();
+	// Merge the values with the ones provided by the modules
+	// Make sure when don't load the same file twice...
+	foreach($aParamValues['module'] as $sModuleId)
+	{
+		$aDataModels = array_unique(array_merge($aDataModels, $aAvailableModules[$sModuleId]['datamodel']));
+		$sDictionaries = array_unique(array_merge($sDictionaries, $aAvailableModules[$sModuleId]['dictionary']));
+	}
+	$oConfig->SetAddOns($aAddOns);
+	$oConfig->SetAppModules($aAppModules);
+	$oConfig->SetDataModels($aDataModels);
+	$oConfig->SetDictionaries($sDictionaries);
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Handling of the different steps of the setup wizard
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Displays the welcome screen and check some basic prerequisites
+ */
+function WelcomeAndCheckPrerequisites(SetupWebPage $oP, $aParamValues, $iCurrentStep)
+{
+	$sNextOperation = 'step'.($iCurrentStep+1);
 	$oP->add("<h1>iTop configuration wizard</h1>\n");
-	$oP->p($sVersionString);
+	$sVersionString = GetITopVersion();
+	$oP->set_title('Welcome to '.$sVersionString);
 	$oP->log($sVersionString);
 	$oP->add("<h2>Checking prerequisites</h2>\n");
 	if (CheckPHPVersion($oP))
 	{
+		$oP->add("<h2 class=\"next\">Next: Licence agreement</h2>\n");
+		$oP->add("<form method=\"post\" onSubmit=\"return DoSubmit('', 0)\">\n");
+		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
+		AddParamsToForm($oP, $aParamValues);
+		$oP->add("<table style=\"width:100%\"><tr>\n");
+		$oP->add("<td style=\"text-align:right;\"><button type=\"submit\">Next >></button></td>\n");
+		$oP->add("</tr></table>\n");
+		$oP->add("</form>\n");
+	}
+}
+
+function LicenceAcknowledgement($oP, $aParamValues, $iCurrentStep)
+{
+	$sNextOperation = 'step'.($iCurrentStep+1);
+	
+	$oP->set_title('License Agreement');
+	$oP->add('<h2>iTop is released by <a href="http://www.combodo.com">Combodo SARL</a> under the terms of the GPL V3 license. In order to use iTop you must accept the terms of this license.</h2>');
+	$oP->add("<iframe style=\"width: 100%; height: 350px; overflow-y:auto; font-size:0.8em;\" src=\"./licence.html\">Next: Database server selection</iframe>\n");
+	$oP->add("<form method=\"post\">\n");
+	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
+	AddParamsToForm($oP, $aParamValues, array('licence_ok'));
+
+	$sChecked = $aParamValues['licence_ok'] == 1 ? 'checked' : '';
+	$oP->add("<h2><input id=\"licence_ok\" type=\"checkbox\" name=\"licence_ok\" value=\"1\" $sChecked><label for=\"licence_ok\">I accept the terms of this licence agreement</label></h2>\n");
+
+	$oP->add("<h2 class=\"next\">Next: Database server selection</h2>\n");
+	$oP->add("<table style=\"width:100%\"><tr>\n");
+	$oP->add("<td style=\"text-align:left;\"><button type=\"submit\" onClick=\"return DoGoBack($iCurrentStep)\"><< Back</button></td>\n");
+	$oP->add("<td style=\"text-align:right;\"><button type=\"submit\" onClick=\"return DoSubmit('', $iCurrentStep)\">Next >></button></td>\n");
+	$oP->add("</tr></table>\n");
+	$oP->add("</form>\n");
+}
+
+/**
+ * Display the form for the first step of the configuration wizard
+ * which consists in the database server selection
+ */  
+function DatabaseServerSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep)
+{
+	$sNextOperation = 'step'.($iCurrentStep+1);
+
+	$oP->add("<form method=\"post\">\n");
+	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
+	AddParamsToForm($oP, $aParamValues, array('db_server', 'db_user', 'db_pwd'));
+	if ($aParamValues['licence_ok'] == 1)
+	{
 		$sRedStar = '<span class="hilite">*</span>';
-		$oP->add("<h2>Step 1: Configuration of the database connection</h2>\n");
-		$oP->add("<form method=\"post\" onSubmit=\"return DoSubmit('Connection to the database...', 1)\">\n");
+		$oP->set_title("Configuration of the database connection\n");
+		$oP->add("<h2>Please enter the name of the MySQL database server you want to use for iTop and supply valid credentials to connect to it</h2>\n");
 		// Form goes here
 		$oP->add("<fieldset><legend>Database connection</legend>\n");
 		$aForm = array();
-		$aForm[] = array('label' => "Server name$sRedStar:", 'input' => "<input id=\"db_server\" type=\"text\" name=\"db_server\" value=\"\">",
+		$aForm[] = array('label' => "Server name$sRedStar:", 'input' => "<input id=\"db_server\" type=\"text\" name=\"db_server\" value=\"{$aParamValues['db_server']}\">",
 						'help' => 'E.g. "localhost", "dbserver.mycompany.com" or "192.142.10.23"');
-		$aForm[] = array('label' => "User name$sRedStar:", 'input' => "<input id=\"db_user\" type=\"text\" name=\"db_user\" value=\"\">",
+		$aForm[] = array('label' => "User name$sRedStar:", 'input' => "<input id=\"db_user\" type=\"text\" name=\"db_user\" value=\"{$aParamValues['db_user']}\">",
 						'help' => 'The account must have the following privileges: SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER');
-		$aForm[] = array('label' => 'Password:', 'input' => "<input id=\"db_pwd\" type=\"password\" name=\"db_pwd\" value=\"\">");
+		$aForm[] = array('label' => 'Password:', 'input' => "<input id=\"db_pwd\" type=\"password\" name=\"db_pwd\" value=\"{$aParamValues['db_pwd']}\">");
 		$oP->form($aForm);
 		$oP->add("</fieldset>\n");
-		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
-		$oP->add("<button type=\"submit\">Next >></button>\n");
-		$oP->add("</form>\n");
+		$oP->add("<h2 class=\"next\">Next: Database Instance Selection</h2>\n");
+		$oP->add("<table style=\"width:100%\"><tr>\n");
+		$oP->add("<td style=\"text-align:left;\"><button onClick=\"return DoGoBack($iCurrentStep)\"><< Back</button></td>\n");
+		$oP->add("<td style=\"text-align:right;\"><button type=\"submit\" onClick=\"return DoSubmit('Connecting to the database...', $iCurrentStep)\">Next >></button></td>\n");
+		$oP->add("</tr></table>\n");
 	}
+	else
+	{
+		$oP->add("<button type=\"submit\" onClick=\"return DoGoBack($iCurrentStep);\"><< Back</button>\n");		
+	}
+	$oP->add("</form>\n");
 }
 
 /**
@@ -513,17 +656,21 @@ function DisplayStep1(SetupWebPage $oP)
  * 1) Validating the parameters by connecting to the database server
  * 2) Prompting to select an existing database or to create a new one  
  */  
-function DisplayStep2(SetupWebPage $oP, Config $oConfig, $sDBServer, $sDBUser, $sDBPwd)
+function DatabaseInstanceSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, $oConfig)
 {
-	$sNextOperation = 'step3';
-	$oP->add("<h1>iTop configuration wizard</h1>\n");
-	$oP->add("<h2>Step 2: Database selection</h2>\n");
-	$oP->add("<form method=\"post\" onSubmit=\"return DoSubmit('Creating database structure...', 2);\">\n");
+	$sNextOperation = 'step'.($iCurrentStep+1);
+	$oP->set_title("Database Instance Selection\n");
+	$oP->add("<form method=\"post\">\n");
+	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
+	AddParamsToForm($oP, $aParamValues, array('db_name', 'db_prefix', 'new_db_name'));
+	$sDBServer = $aParamValues['db_server'];
+	$sDBUser = $aParamValues['db_user'];
+	$sDBPwd = $aParamValues['db_pwd'];
 	$aDatabases = CheckServerConnection($oP, $sDBServer, $sDBUser, $sDBPwd);
 	if ($aDatabases === false)
 	{
 		// Connection failed, invalid credentials ? Go back
-		$oP->add("<button type=\"button\" onClick=\"window.history.back();\"><< Back</button>\n");
+		$oP->add("<button type=\"submit\" onClick=\"return DoGoBack($iCurrentStep);\"><< Back</button>\n");
 	}
 	else
 	{
@@ -533,13 +680,20 @@ function DisplayStep2(SetupWebPage $oP, Config $oConfig, $sDBServer, $sDBUser, $
 		$oConfig->SetDBPwd($sDBPwd);
 		$oConfig->WriteToFile();
 
-		$oP->add("<fieldset><legend>Specify a database<span class=\"hilite\">*</span></legend>\n");
+		$oP->add("<fieldset><legend>Select the database instance to use for iTop<span class=\"hilite\">*</span></legend>\n");
 		$aForm = array();
+		$bExistingChecked = false;
 		if (is_array($aDatabases))
 		{
 			foreach($aDatabases as $sDBName)
 			{
-				$aForm[] = array('label' => "<input id=\"db_$sDBName\" type=\"radio\" name=\"db_name\" value=\"$sDBName\" /><label for=\"db_$sDBName\"> $sDBName</label>");
+				$sChecked = '';
+				if ($aParamValues['db_name'] == $sDBName)
+				{
+					$sChecked = 'checked';
+					$bExistingChecked = true;
+				}
+				$aForm[] = array('label' => "<input id=\"db_$sDBName\" type=\"radio\" name=\"db_name\" value=\"$sDBName\" $sChecked/><label for=\"db_$sDBName\"> $sDBName</label>");
 			}
 		}
 		else
@@ -547,23 +701,93 @@ function DisplayStep2(SetupWebPage $oP, Config $oConfig, $sDBServer, $sDBUser, $
 			$aForm[] = array('label' => "<input id=\"current_db\" type=\"radio\" name=\"db_name\" value=\"-1\" /><label for=\"current_db\"> Use the existing database:</label> <input type=\"text\" id=\"current_db_name\" name=\"current_db_name\" value=\"\"  maxlength=\"32\"/>");			
 			$oP->add_ready_script("$('#current_db_name').click( function() { $('#current_db').attr('checked', true); });");
 		}
-		$aForm[] = array('label' => "<input id=\"new_db\" type=\"radio\" name=\"db_name\" value=\"\" /><label for=\"new_db\"> Create a new database:</label> <input type=\"text\" id=\"new_db_name\" name=\"new_db_name\" value=\"\"  maxlength=\"32\"/>");
+		$sChecked = '';
+		$sDBName = '';
+		// If the 'Create Database' option was checked... and the database still does not exist
+		if (!$bExistingChecked && !empty($aParamValues['new_db_name']))
+		{
+			$sChecked = 'checked';
+			$sDBName = $aParamValues['new_db_name'];
+		}
+		$aForm[] = array('label' => "<input id=\"new_db\" type=\"radio\" name=\"db_name\" value=\"\" $sChecked/><label for=\"new_db\"> Create a new database:</label> <input type=\"text\" id=\"new_db_name\" name=\"new_db_name\" value=\"$sDBName\"  maxlength=\"32\"/>");
 		$oP->form($aForm);
 
 		$oP->add_ready_script("$('#new_db_name').click( function() { $('#new_db').attr('checked', true); })");
 		$oP->add("</fieldset>\n");
 		$aForm = array();
-		$aForm[] = array('label' => "Add a prefix to all the tables: <input id=\"db_prefix\" type=\"text\" name=\"db_prefix\" value=\"\" maxlength=\"32\"/>");
+		$aForm[] = array('label' => "Add a prefix to all the tables: <input id=\"db_prefix\" type=\"text\" name=\"db_prefix\" value=\"{$aParamValues['db_prefix']}\" maxlength=\"32\"/>");
 		$oP->form($aForm);
 
-		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
-		$oP->add("<button type=\"button\" onClick=\"window.history.back();\"><< Back</button>\n");
-		$oP->add("&nbsp;&nbsp;&nbsp;&nbsp;\n");
-		$oP->add("<button type=\"submit\">Next >></button>\n");
+		$oP->add("<h2 class=\"next\">Next: iTop Modules Selection</h2>\n");
+		$oP->add("<table style=\"width:100%\"><tr>\n");
+		$oP->add("<td style=\"text-align:left;\"><button type=\"submit\" onClick=\"return DoGoBack($iCurrentStep)\"><< Back</button></td>\n");
+		$oP->add("<td style=\"text-align:right;\"><button type=\"submit\" onClick=\"return DoSubmit('', $iCurrentStep);\">Next >></button></td>\n");
+		$oP->add("</tr></table>\n");
 	}
 	$oP->add("</form>\n");
 }
 
+/**
+ * Display the form to select the iTop modules to be installed
+ */  
+function ModulesSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, $oConfig)
+{
+	$sNextOperation = 'step'.($iCurrentStep+1);
+	$sPrevOperation = 'step'.($iCurrentStep-1);
+	
+	$sDBName = $aParamValues['db_name'];
+	if ($sDBName == '')
+	{
+		$sDBName = $aParamValues['new_db_name'];
+	}
+	$sDBPrefix = $aParamValues['db_prefix'];
+	$oConfig->SetDBName($sDBName);
+	$oConfig->SetDBSubname($sDBPrefix);
+	$oConfig->WriteToFile(TMP_CONFIG_FILE);
+
+	$oP->add("<form method=\"post\">\n");
+	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
+	AddParamsToForm($oP, $aParamValues, array('module'));
+	$sRedStar = '<span class="hilite">*</span>';
+	$oP->set_title("Selection of the iTop Modules\n");
+	$oP->add("<h2>Customize your iTop installation to fit your needs</h2>\n");
+	
+	// Form goes here
+	$oP->add("<fieldset><legend>Select the iTop modules you want to install:</legend>\n");
+	$oP->add("<div style=\"border: 0;width:100%; height: 350px; overflow-y:auto;\">");
+	$sRedStar = '<span class="hilite">*</span>';
+	$index = 0;
+	$aSelectedModules = $aParamValues['module'];
+	if ($aSelectedModules == '')
+	{
+		// Make sure it gets initialized as an array
+		$aSelectedModules = array();
+	}
+	$aAvailableModules = GetAvailableModules($oP);
+	foreach($aAvailableModules as $sModuleId => $aModule)
+	{
+		$sModuleLabel = $aModule['label'];
+		$sModuleHelp = $aModule['doc.more_information'];
+		$sClass = ($aModule['mandatory']) ? 'class="read-only"' : '';
+		$sChecked = ($aModule['mandatory'] ||  in_array($sModuleId, $aSelectedModules) ) ? 'checked' : '';
+		$sMoreInfo = (!empty($aModule['doc.more_information'])) ? "<a href=\"{$aModule['doc']}\" target=\"_blank\">more info</a>": '';
+		if ($aModule['visible'])
+		{
+			$oP->add("<p><input type=\"checkbox\" $sClass $sChecked id=\"module[$index]\" name=\"module[$index]\" value=\"$sModuleId\"><label $sClass for=\"module[$index]\"> {$aModule['label']}</label> $sMoreInfo</p>\n");
+			$index++;
+		}
+	}	
+	$oP->add("</div>");
+	$oP->add("</fieldset>\n");
+	$oP->add("<h2 class=\"next\">Next: Administrator Account Creation</h2>\n");
+	$oP->add("<table style=\"width:100%\"><tr>\n");
+	$oP->add("<td style=\"text-align:left;\"><button onClick=\"return DoGoBack($iCurrentStep)\"><< Back</button></td>\n");
+	$oP->add("<td style=\"text-align:right;\"><button type=\"submit\" onClick=\"return DoSubmit('Creating the database structure...', $iCurrentStep);\">Next >></button></td>\n");
+		$oP->add("</tr></table>\n");
+	$oP->add("</form>\n");
+	$oP->add_ready_script("$('.read-only').click( function() { $(this).attr('checked','checked'); } );");
+	
+}
 /**
  * Display the form for the third step of the configuration wizard
  * which consists in
@@ -571,14 +795,24 @@ function DisplayStep2(SetupWebPage $oP, Config $oConfig, $sDBServer, $sDBUser, $
  * 2) Creating the database structure  
  * 3) Prompting for the admin account to be created  
  */  
-function DisplayStep3(SetupWebPage $oP, Config $oConfig, $sDBName, $sDBPrefix)
+function AdminAccountDefinition(SetupWebPage $oP, $aParamValues, $iCurrentStep, Config $oConfig)
 {
-	$sNextOperation = 'step4';
+	$sNextOperation = 'step'.($iCurrentStep+1);
 	$oP->add("<h1>iTop configuration wizard</h1>\n");
 	$oP->add("<h2>Creation of the database structure</h2>\n");
-	$oP->add("<form method=\"post\" onSubmit=\"return DoSubmit('Creating user and profiles...', 3);\">\n");
+	$oP->add("<form method=\"post\">\n");
+	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
+	AddParamsToForm($oP, $aParamValues, array('auth_user', 'auth_pwd'));
+
+	$sDBName = $aParamValues['db_name'];
+	if ($sDBName == '')
+	{
+		$sDBName = $aParamValues['new_db_name'];
+	}
+	$sDBPrefix = $aParamValues['db_prefix'];
 	$oConfig->SetDBName($sDBName);
 	$oConfig->SetDBSubname($sDBPrefix);
+	BuildConfig($oP, $oConfig, $aParamValues); // Load all the includes based on the modules selected
 	$oConfig->WriteToFile(TMP_CONFIG_FILE);
 	if (CreateDatabaseStructure($oP, $oConfig, $sDBName, $sDBPrefix))
 	{
@@ -587,19 +821,20 @@ function DisplayStep3(SetupWebPage $oP, Config $oConfig, $sDBName, $sDBPrefix)
 		// Database created, continue with admin creation		
 		$oP->add("<fieldset><legend>Administrator account</legend>\n");
 		$aForm = array();
-		$aForm[] = array('label' => "Login$sRedStar:", 'input' => "<input id=\"auth_user\" type=\"text\" name=\"auth_user\" value=\"\">");
-		$aForm[] = array('label' => "Password$sRedStar:", 'input' => "<input id=\"auth_pwd\" type=\"password\" name=\"auth_pwd\" value=\"\">");
-		$aForm[] = array('label' => "Retype password$sRedStar:", 'input' => "<input  id=\"auth_pwd2\" type=\"password\" name=\"auth_pwd2\" value=\"\">");
+		$aForm[] = array('label' => "Login$sRedStar:", 'input' => "<input id=\"auth_user\" type=\"text\" name=\"auth_user\" value=\"{$aParamValues['auth_user']}\">");
+		$aForm[] = array('label' => "Password$sRedStar:", 'input' => "<input id=\"auth_pwd\" type=\"password\" name=\"auth_pwd\" value=\"{$aParamValues['auth_pwd']}\">");
+		$aForm[] = array('label' => "Retype password$sRedStar:", 'input' => "<input  id=\"auth_pwd2\" type=\"password\" name=\"auth_pwd2\" value=\"{$aParamValues['auth_pwd']}\">");
 		$oP->form($aForm);
 		$oP->add("</fieldset>\n");
-		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
-		$oP->add("<button type=\"button\" onClick=\"window.history.back();\"><< Back</button>\n");
-		$oP->add("&nbsp;&nbsp;&nbsp;&nbsp;\n");
-		$oP->add("<button type=\"submit\">Next >></button>\n");
+		$oP->add("<h2 class=\"next\">Next: Administrator Account Creation</h2>\n");
+		$oP->add("<table style=\"width:100%\"><tr>\n");
+		$oP->add("<td style=\"text-align:left;\"><button type=\"submit\" onClick=\"return DoGoBack($iCurrentStep)\"><< Back</button></td>\n");
+		$oP->add("<td style=\"text-align:right;\"><button type=\"submit\" onClick=\"return DoSubmit('Creating the admin account and profiles...', $iCurrentStep);\">Next >></button></td>\n");
+		$oP->add("</tr></table>\n");
 	}
 	else
 	{
-		$oP->add("<button type=\"button\" onClick=\"window.history.back();\"><< Back</button>\n");
+		$oP->add("<button type=\"submit\" onClick=\"return DoGoBack($iCurrentStep)\"><< Back</button>\n");
 	}
 	// Form goes here
 	$oP->add("</form>\n");
@@ -611,42 +846,50 @@ function DisplayStep3(SetupWebPage $oP, Config $oConfig, $sDBName, $sDBPrefix)
  * 1) Creating the admin user account
  * 2) Prompting to load some sample data  
  */  
-function DisplayStep4(SetupWebPage $oP, Config $oConfig, $sAdminUser, $sAdminPwd)
+function SampleDataSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, Config $oConfig)
 {
-	$sNextOperation = 'step5';
+	$sNextOperation = 'step'.($iCurrentStep+1);
+
 	$oP->add("<h1>iTop configuration wizard</h1>\n");
 	$oP->add("<h2>Creation of the administrator account</h2>\n");
+	$sAdminUser = $aParamValues['auth_user'];
+	$sAdminPwd = $aParamValues['auth_pwd'];
 
 	$oP->add("<form method=\"post\"\">\n");
+	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
+	AddParamsToForm($oP, $aParamValues, array('sample_data'));
+	
 	if (CreateAdminAccount($oP, $oConfig, $sAdminUser, $sAdminPwd) && UserRights::Setup())
 	{
 		$oP->add("<h2>Step 4: Loading of sample data</h2>\n");
 		$oP->p("<fieldset><legend> Do you want to load sample data into the database ? </legend>\n");
 		$oP->p("<input type=\"radio\" id=\"sample_data\" name=\"sample_data\" checked value=\"yes\"> Yes, for testing purposes, populate the database with sample data.\n");
 		$oP->p("<input type=\"radio\" name=\"sample_data\" unchecked value=\"no\"> No, this is a production system, load only the data required by the application.\n");
-		$oP->p("</fieldset>\n");
-		$oP->add("<button type=\"button\" onClick=\"window.history.back();\"><< Back</button>\n");
-		$oP->add("&nbsp;&nbsp;&nbsp;&nbsp;\n");
-		$oP->add("<button onclick=\"return DoSubmit('Finalizing configuration and loading data...', 4);\">Finish</button>\n");
+		$oP->p("</fieldset>\n");	
+		$oP->add("<h2 class=\"next\">Next: Application Initialization</h2>\n");
+		$oP->add("<table style=\"width:100%\"><tr>\n");
+		$oP->add("<td style=\"text-align:left;\"><button onClick=\"return DoGoBack($iCurrentStep)\"><< Back</button></td>\n");
+		$oP->add("<td style=\"text-align:right;\"><button type=\"submit\" onClick=\"return DoSubmit('Finalizing configuration and loading data...', $iCurrentStep)\">Next >></button></td>\n");
+		$oP->add("</tr></table>\n");
 	}
 	else
 	{
 		// Creation failed
-		$oP->error("Failed to create admin account or setup user rights");
-		$oP->add("<button type=\"button\" onClick=\"window.history.back();\"><< Back</button>\n");
+		$oP->error("Internal error: Failed to create the admin account or to setup the user rights");
+		$oP->add("<button type=\"submit\" onClick=\"return DoGoBack($iCurrentStep)\"><< Back</button>\n");
 	}
 	// End of visible form
 	$oP->add("</form>\n");
-	// Hidden form
+	// Hidden form submitted when moving on to the next page, once all the data files
+	// have been processed
 	$oP->add("<form id=\"GoToNextStep\" method=\"post\">\n");
-	$oP->add("<input type=\"hidden\" name=\"auth_user\" value=\"$sAdminUser\">\n"); // To be compatible with login page
-	$oP->add("<input type=\"hidden\" name=\"auth_pwd\" value=\"$sAdminPwd\">\n"); // To be compatible with login page
+	AddParamsToForm($oP, $aParamValues, array('sample_data'));
 	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
 	$oP->add("</form>\n");
 	$oP->add("<div id=\"log\" style=\"color:#F00;\"></div>\n");
 	$oP->add_linked_script('./jquery.progression.js');
 
-	PopulateDataFilesList($oP);
+	PopulateDataFilesList($oP, $aParamValues);
 }
 /**
  * Display the form for the fifth (and final) step of the configuration wizard
@@ -654,8 +897,10 @@ function DisplayStep4(SetupWebPage $oP, Config $oConfig, $sAdminUser, $sAdminPwd
  * 1) Creating the final configuration file
  * 2) Prompting the user to make the file read-only  
  */  
-function DisplayStep5(SetupWebPage $oP, Config $oConfig, $sAuthUser, $sAuthPwd)
+function SetupFinished(SetupWebPage $oP, $aParamValues, $iCurrentStep, Config $oConfig)
 {
+	$sAuthUser = $aParamValues['auth_user'];
+	$sAuthPwd = $aParamValues['auth_pwd'];
 	try
 	{
 		session_start();
@@ -678,9 +923,7 @@ function DisplayStep5(SetupWebPage $oP, Config $oConfig, $sAuthUser, $sAuthPwd)
 			$oP->add("<h2>Configuration completed</h2>\n");
 			$oP->add("<form method=\"get\" action=\"../index.php\">\n");
 			$oP->ok("The initialization completed successfully.");
-			// Form goes here
-			$oP->add("<button type=\"button\" onClick=\"window.history.back();\"><< Back</button>\n");
-			$oP->add("&nbsp;&nbsp;&nbsp;&nbsp;\n");
+			// Form goes here.. No back button since the job is done !
 			$oP->add("<button type=\"submit\">Enter iTop</button>\n");
 			$oP->add("</form>\n");
 		}
@@ -692,8 +935,10 @@ function DisplayStep5(SetupWebPage $oP, Config $oConfig, $sAuthUser, $sAuthPwd)
 			@unlink(FINAL_CONFIG_FILE); // remove the aborted config
 			$oP->error("Error: Failed to login for user: '$sAuthUser'\n");
 
-			$oP->add("<form method=\"get\" action=\"../index.php\">\n");
-			$oP->add("<button type=\"button\" onClick=\"window.history.back();\"><< Back</button>\n");
+			$oP->add("<form method=\"post\">\n");
+			$oP->add("<button type=\"submit\" onClick=\"return DoGoBack($iCurrentStep);\"><< Back</button>\n");
+			AddParamsToForm($oP, $aParamValues);
+			$oP->add("<input type=\"hidden\" name=\"operation\" value=\"step0\">\n");
 			$oP->add("&nbsp;&nbsp;&nbsp;&nbsp;\n");
 			$oP->add("</form>\n");
 		}
@@ -703,12 +948,18 @@ function DisplayStep5(SetupWebPage $oP, Config $oConfig, $sAuthUser, $sAuthPwd)
 		$oP->error("Error: unable to create the configuration file.");
 		$oP->p($e->getHtmlDesc());
 		$oP->p("Did you forget to remove the previous (read-only) configuration file ?");
-		$oP->add("<button type=\"button\" onClick=\"window.history.back();\"><< Back</button>\n");
+		$oP->add("<form method=\"post\">\n");
+		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"step0\">\n");
+		AddParamsToForm($oP, $aParamValues);
+		$oP->add("<button type=\"submit\" onClick=\"return DoGoBack($iCurrentStep);\"><< Back</button>\n");
+		$oP->add("</form>\n");
 	}
 }
-/**
- * Main program
- */
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Main program
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
  clearstatcache(); // Make sure we know what we are doing !
 if (file_exists(FINAL_CONFIG_FILE))
 {
@@ -753,48 +1004,60 @@ catch(Exception $e)
 }
 try
 {
+	$aParams = array('licence_ok', 'db_server', 'db_user', 'db_pwd','db_name', 'new_db_name', 'db_prefix', 'module', 'sample_data', 'auth_user', 'auth_pwd');
+	foreach($aParams as $sName)
+	{
+		$aParamValues[$sName] = utils::ReadParam($sName, '');
+	}
+	
 	switch($sOperation)
 	{
+		case 'step0':
+		$oP->no_cache();
+		$oP->log("Info - ========= Wizard step 0 ========");
+		WelcomeAndCheckPrerequisites($oP, $aParamValues, 0);
+		break;
+
 		case 'step1':
+		$oP->no_cache();
 		$oP->log("Info - ========= Wizard step 1 ========");
-		DisplayStep1($oP);
+		LicenceAcknowledgement($oP, $aParamValues, 1);
+		break;
+
+		case 'step2':
+		$oP->log("Info - ========= Wizard step 2 ========");
+		DatabaseServerSelection($oP, $aParamValues, 2);
 		break;
 		
-		case 'step2':
-		$oP->no_cache();
-		$oP->log("Info - ========= Wizard step 2 ========");
-		$sDBServer = Utils::ReadParam('db_server');
-		$sDBUser = Utils::ReadParam('db_user');
-		$sDBPwd = Utils::ReadParam('db_pwd');
-		DisplayStep2($oP, $oConfig, $sDBServer, $sDBUser, $sDBPwd);
-		break;
-	
 		case 'step3':
 		$oP->no_cache();
 		$oP->log("Info - ========= Wizard step 3 ========");
-		$sDBName = Utils::ReadParam('db_name');
-		if (empty($sDBName))
-		{
-			$sDBName = Utils::ReadParam('new_db_name');
-		}
-		$sDBPrefix = Utils::ReadParam('db_prefix');
-		DisplayStep3($oP, $oConfig, $sDBName, $sDBPrefix);
+		DatabaseInstanceSelection($oP, $aParamValues, 3, $oConfig);
 		break;
-	
+
 		case 'step4':
 		$oP->no_cache();
 		$oP->log("Info - ========= Wizard step 4 ========");
-		$sAdminUser = Utils::ReadParam('auth_user');
-		$sAdminPwd = Utils::ReadParam('auth_pwd');
-		DisplayStep4($oP, $oConfig, $sAdminUser, $sAdminPwd);
+		ModulesSelection($oP, $aParamValues, 4, $oConfig);
 		break;
+		
 	
 		case 'step5':
 		$oP->no_cache();
 		$oP->log("Info - ========= Wizard step 5 ========");
-		$sAdminUser = Utils::ReadParam('auth_user');
-		$sAdminPwd = Utils::ReadParam('auth_pwd');
-		DisplayStep5($oP, $oConfig, $sAdminUser, $sAdminPwd);
+		AdminAccountDefinition($oP, $aParamValues, 5, $oConfig);
+		break;
+	
+		case 'step6':
+		$oP->no_cache();
+		$oP->log("Info - ========= Wizard step 6 ========");
+		SampleDataSelection($oP, $aParamValues, 6, $oConfig);
+		break;
+	
+		case 'step7':
+		$oP->no_cache();
+		$oP->log("Info - ========= Wizard step 7 ========");
+		SetupFinished($oP, $aParamValues, 7, $oConfig);
 		break;
 	
 		default:

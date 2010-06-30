@@ -4,12 +4,27 @@ function NameIsValid(name)
 	if (sName.match(/^[A-Za-z][A-Za-z0-9_]*$/))	return true;
 	return false;
 }
+
+function DoGoBack(iStep)
+{
+	$('input[name=operation]').val('step'+(iStep-1));
+	return true; // Submit the form
+}
+
 function DoSubmit(sMsg, iStep)
 {
 	var bResult = true;
 	switch(iStep)
 	{
-		case 1:
+		case 1: // Licence agreement
+		if ($('#licence_ok:checked').length < 1)
+		{
+			alert('Please accept the licence agreement before continuing.');
+			bResult = false;
+		}
+		break;
+		
+		case 2: // Database server selection
 		if ($('#db_server').val() == '')
 		{
 			alert('Please specify a database server. Use "localhost" for a local DB server.');
@@ -22,7 +37,7 @@ function DoSubmit(sMsg, iStep)
 		}
 		break;
 		
-		case 2:
+		case 3: // Database instance selection
 		if ($("input[@type=radio]:checked").length < 1)
 		{
 			alert('Please specify a database name');
@@ -62,7 +77,10 @@ function DoSubmit(sMsg, iStep)
 		}
 		break;
 		
-		case 3:
+		case 4: // Choice of iTop modules
+		break;
+		
+		case 5: // Administrator account
 		if ($('#auth_user').val() == '')
 		{
 			alert('Please specify a login name for the administrator account');
@@ -75,7 +93,7 @@ function DoSubmit(sMsg, iStep)
 		}
 		break;
 		
-		case 4:
+		case 6: // Asynchronous load of data
 		bResult = DoLoadDataAsynchronous();
 		break;
 
@@ -87,7 +105,7 @@ function DoSubmit(sMsg, iStep)
 			bResult = false;
 		}
 	}
-	if (bResult)
+	if (bResult && (sMsg != ''))
 	{
 		$('#setup').block({message: '<img src="../images/indicator.gif">&nbsp;'+sMsg});
 	}
@@ -95,6 +113,7 @@ function DoSubmit(sMsg, iStep)
 }
 
 var aFilesToLoad = new Array();
+var iCounter = 0;
 
 function DoLoadDataAsynchronous()
 {
@@ -102,10 +121,18 @@ function DoLoadDataAsynchronous()
 	{
 		// The array aFilesToLoad is populated by this function dynamically written on the server
 		PopulateDataFilesList();
+		iCounter = 0;
+		$('#log').html('');
 		$('#setup').block({message: '<p>Loading data...<br/><div id=\"progress\">0%</div></p>'});
 		$('#progress').progression( {Current:0, Maximum: 100, aBackgroundImg: 'orange-progress.gif', aTextColor: '#000000'} );
-		$('#log').ajaxError(function(e, xhr, settings, exception) {	alert('Fatal error detected: '+ xhr.responseText); $('#log').append(xhr.responseText); $('#setup').unblock(); } );
-	   LoadNextDataFile('', '');
+		$('#log').ajaxError(
+				function(e, xhr, settings, exception)
+				{
+					alert('Fatal error detected: '+ xhr.responseText);
+					$('#log').append(xhr.responseText);
+					$('#setup').unblock();
+				} );
+		LoadNextDataFile('', '', '');
 	}
 	catch(err)
 	{
@@ -114,11 +141,14 @@ function DoLoadDataAsynchronous()
 	return false; // Stop here for now
 }
 
-var iCounter = 0;
-
-function LoadNextDataFile(sData, sTextStatus)
+function LoadNextDataFile(response, status, xhr)
 {
-	//$("#progress").html(sData);
+	if (status == 'error')
+	{
+		$('#setup').unblock();
+		return; // Stop here
+	}
+	
 	try
 	{
 		if (iCounter < aFilesToLoad.length)
@@ -142,7 +172,7 @@ function LoadNextDataFile(sData, sTextStatus)
 			//alert('Loading file '+sFileName+' ('+iPercent+' %) - '+sSessionStatus);
 			$("#progress").progression({ Current: iPercent });
 			iCounter++;
-			$.get( 'ajax.dataloader.php', { 'file': sFileName, 'percent': iPercent, 'session_status': sSessionStatus }, LoadNextDataFile, 'html');
+			$('#log').load( 'ajax.dataloader.php', { 'file': sFileName, 'percent': iPercent, 'session_status': sSessionStatus }, LoadNextDataFile, 'html');
 		}
 		else
 		{

@@ -105,10 +105,31 @@ class Config
 	public function __construct($sConfigFile, $bLoadConfig = true)
 	{
 		$this->m_sFile = $sConfigFile;
-		$this->m_aAppModules = array();
+		$this->m_aAppModules = array(
+			// Some default modules, always present can be move to an official iTop Module later if needed
+			'../application/transaction.class.inc.php',
+			'../application/menunode.class.inc.php',
+			'../application/user.preferences.class.inc.php',
+			'../application/audit.rule.class.inc.php',
+// Romain - That's dirty, because those 3 classes are in fact part of the core
+//          but I needed those classes to be derived from cmdbAbstractObject
+//          (to be managed via the GUI) and this class in not really known from
+//          the core, PLUS I needed the includes to be there also for the setup
+//          to create the tables.
+			'../core/event.class.inc.php',
+			'../core/action.class.inc.php',
+			'../core/trigger.class.inc.php',
+		);
 		$this->m_aDataModels = array();
-		$this->m_aAddons = array();
-		$this->m_aDictionaries = array();
+		$this->m_aAddons = array(
+			// Default AddOn, always present can be moved to an official iTop Module later if needed
+			'user rights' => '../addons/userrights/userrightsprofile.class.inc.php',
+		);
+		$this->m_aDictionaries = array(
+			// Default dictionaries, always present can be moved to an official iTop Module later if needed
+			'../dictionaries/dictionary.itop.core.php',
+			'../dictionaries/dictionary.itop.ui.php',
+		);
 
 		$this->m_sDBHost = '';
 		$this->m_sDBUser = '';
@@ -244,20 +265,36 @@ class Config
 	{
 		return $this->m_aAppModules;
 	}
+	public function SetAppModules($aAppModules)
+	{
+		$this->m_aAppModules = $aAppModules;
+	}
 
 	public function GetDataModels()
 	{
 		return $this->m_aDataModels;
+	}
+	public function SetDataModels($aDataModels)
+	{
+		$this->m_aDataModels = $aDataModels;
 	}
 
 	public function GetAddons()
 	{
 		return $this->m_aAddons;
 	}
+	public function SetAddons($aAddons)
+	{
+		$this->m_aAddons = $aAddons;
+	}
 
 	public function GetDictionaries()
 	{
 		return $this->m_aDictionaries;
+	}
+	public function SetDictionaries($aDictionaries)
+	{
+		$this->m_aDictionaries = $aDictionaries;
 	}
 
 	public function GetDBHost()
@@ -466,33 +503,28 @@ class Config
 			fwrite($hFile, " */\n");
 			fwrite($hFile, "\$MyModules = array(\n");
 			fwrite($hFile, "\t'application' => array (\n");
-			fwrite($hFile, "\t\t'../application/transaction.class.inc.php',\n");
-			fwrite($hFile, "\t\t'../application/menunode.class.inc.php',\n");
-			fwrite($hFile, "\t\t'../application/user.preferences.class.inc.php',\n");
-			fwrite($hFile, "\t\t'../application/audit.rule.class.inc.php',\n");
-// Romain - That's dirty, because those 3 classes are in fact part of the core
-//          but I needed those classes to be derived from cmdbAbstractObject
-//          (to be managed via the GUI) and this class in not really known from
-//          the core, PLUS I needed the includes to be there also for the setup
-//          to create the tables.
-			fwrite($hFile, "\t\t'../core/event.class.inc.php',\n");
-			fwrite($hFile, "\t\t'../core/action.class.inc.php',\n");
-			fwrite($hFile, "\t\t'../core/trigger.class.inc.php',\n");
-			fwrite($hFile, "\t\t// to be continued...\n");
+			foreach($this->m_aAppModules as $sFile)
+			{
+				fwrite($hFile, "\t\t'$sFile',\n");
+			}
 			fwrite($hFile, "\t),\n");
 			fwrite($hFile, "\t'business' => array (\n");
-			fwrite($hFile, "\t\t'../business/itop.business.class.inc.php'\n");
-			fwrite($hFile, "\t\t// to be continued...\n");
+			foreach($this->m_aDataModels as $sFile)
+			{
+				fwrite($hFile, "\t\t'$sFile',\n");
+			}
 			fwrite($hFile, "\t),\n");
 			fwrite($hFile, "\t'addons' => array (\n");
-			fwrite($hFile, "\t\t'user rights' => '../addons/userrights/userrightsprofile.class.inc.php',\n");
-			fwrite($hFile, "\t\t// other modules to come later\n");
+			foreach($this->m_aAddons as $sKey => $sFile)
+			{
+				fwrite($hFile, "\t\t'$sKey' => '$sFile',\n");
+			}
 			fwrite($hFile, "\t),\n");
 			fwrite($hFile, "\t'dictionaries' => array (\n");
-			fwrite($hFile, "\t\t'../dictionaries/dictionary.itop.model.php',\n");
-			fwrite($hFile, "\t\t'../dictionaries/dictionary.itop.core.php',\n");
-			fwrite($hFile, "\t\t'../dictionaries/dictionary.itop.ui.php',\n");
-			fwrite($hFile, "\t\t// to be continued...\n");
+			foreach($this->m_aDictionaries as $sFile)
+			{
+				fwrite($hFile, "\t\t'$sFile',\n");
+			}
 			fwrite($hFile, "\t),\n");
 			fwrite($hFile, ");\n");
 			fwrite($hFile, '?'.'>'); // Avoid perturbing the syntax highlighting !

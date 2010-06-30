@@ -127,7 +127,7 @@ try
 
 	$oDataLoader->LoadFile($sFileName);
 	$sResult = sprintf("loading of %s done. (Overall %d %% completed).", basename($sFileName), $iPercent);
-	echo $sResult;
+	//echo $sResult;
 	SetupWebPage::log_info($sResult);
 
 	if ($sSessionStatus == 'end')
@@ -138,6 +138,7 @@ try
 }
 catch(Exception $e)
 {
+	header("HTTP/1.0 500 Internal server error.");
 	echo "<p>An error happened while loading the data</p>\n";
 	echo '<p>'.$e."</p>\n";
 	SetupWebPage::log_error("An error happened while loading the data. ".$e);

@@ -204,7 +204,7 @@ class XMLDataLoader
 						if (!$oTargetObj->CheckValue($sAttCode, (string)$oXmlObj->$sAttCode))
 						{
 							SetupWebPage::log_error("Value not allowed - $sClass/$iSrcId - $sAttCode: '".$oXmlObj->$sAttCode."'");
-							echo "Wrong value for attribute $sAttCode: '".$oXmlObj->$sAttCode."'";
+							throw(new Exception("Wrong value for attribute $sAttCode: '".$oXmlObj->$sAttCode."'"));
 						}
 						$oTargetObj->Set($sAttCode, (string)$oXmlObj->$sAttCode);
 					}
@@ -235,6 +235,7 @@ class XMLDataLoader
 	 */  
 	protected function StoreObject($sClass, $oTargetObj, $iSrcId)
 	{
+		$iObjId = 0;
 		try
 		{
 			if (is_subclass_of($oTargetObj, 'CMDBObject'))
@@ -263,7 +264,8 @@ class XMLDataLoader
 	
 	/**
 	 * Maps an external key to its (newly created) value
-	 */ 
+	 */
+	 
 	protected function ResolveExternalKeys()
 	{
 		foreach($this->m_aObjectsCache as $sClass => $oObjList)
@@ -284,7 +286,6 @@ class XMLDataLoader
 						{
 							$sMsg = "unresolved extkey in $sClass::".$oTargetObj->GetKey()."(".$oTargetObj->GetName().")::$sAttCode=$sTargetClass::$iTempKey";
 							SetupWebPage::log_warning($sMsg);
-							echo "Warning: $sMsg<br/>\n";
 							echo "<pre>aKeys[".$sTargetClass."]:\n";
 							print_r($this->m_aKeys[$sTargetClass]);
 							echo "</pre>\n";

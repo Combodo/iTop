@@ -41,14 +41,38 @@ body {
 	font-size: 10pt;
 	overflow-y: auto;
 }
-#setup {
+#header {
 	width: 600px;
 	margin-left: auto;
 	margin-right: auto;
 	margin-top: 50px;
 	padding: 20px;
+	background: #f6f6f1;
+	height: 54px;
+	border-top: 1px solid #000;
+	border-left: 1px solid #000;
+	border-right: 1px solid #000;
+}
+#header img {
+	border: 0;
+	vertical-align: middle;
+	margin-right: 20px;
+}
+#header h1 {
+	vertical-align: middle;
+	height: 54px;
+	noline-height: 54px;
+	margin: 0;
+}
+#setup {
+	width: 600px;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 20px;
 	background-color: #fff;
-	border: 1px solid #000;
+	border-left: 1px solid #000;
+	border-right: 1px solid #000;
+	border-bottom: 1px solid #000;
 }
 .center {
 	text-align: center;
@@ -61,6 +85,10 @@ h1 {
 h2 {
 	color: #000;
 	font-size: 14pt;
+}
+.next {
+	width: 100%;
+	text-align: right;
 }
 .v-spacer {
 	padding-top: 1em;
@@ -92,6 +120,10 @@ p.error {
 }
 td.label {
 	text-align: left;
+}
+label.read-only {
+	color: #666;
+	cursor: text;
 }
 td.input {
 	text-align: left;
@@ -176,7 +208,7 @@ table.formTable {
 	
 	public function output()
 	{
-		$this->s_content = "<div id=\"setup\">{$this->s_content}\n</div>\n";
+		$this->s_content = "<div id=\"header\"><h1><a href=\"http://www.combodo.com/itop\"><img title=\"iTop by Combodo\" src=\"../images/itop-logo.png\"></a>&nbsp;{$this->s_title}</h1>\n</div><div id=\"setup\">{$this->s_content}\n</div>\n";
 		return parent::output();
 	}
 	
@@ -223,10 +255,13 @@ table.formTable {
 		'doc.manual_setup' => 'url',
 		'doc.more_information' => 'url',
 	);
-
+	
 	static $m_aModules = array();
+	
+	// All the entries below are list of (relative) file paths
+	static $m_aFilesList = array('datamodel', 'dictionary', 'data.struct', 'data.sample');
 
-	public static function AddModule($sId, $aArgs)
+	public static function AddModule($sFilePath, $sId, $aArgs)
 	{
 		foreach (self::$m_aModuleArgs as $sArgName => $sArgDesc)
 		{
@@ -237,6 +272,16 @@ table.formTable {
 		}
 
 		self::$m_aModules[$sId] = $aArgs;
+		$sDirPart = dirname($sFilePath).'/';
+		foreach(self::$m_aFilesList as $sAttribute)
+		{
+			// All the items below are list of files, that are relative to the current file
+			// being loaded, let's update their path to store a full (absolute) path in the config
+			foreach(self::$m_aModules[$sId][$sAttribute] as $idx => $sRelativePath)
+			{
+				self::$m_aModules[$sId][$sAttribute][$idx] = $sDirPart.$sRelativePath;
+			}
+		}
 	}
 	public static function GetModules()
 	{
