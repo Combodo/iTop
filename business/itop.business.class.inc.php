@@ -1839,10 +1839,10 @@ class lnkKnownErrorToProblem extends cmdbAbstractObject
 
 $oAdminMenu = new MenuGroup('UI:AdminToolsMenu', 999);
 $iAdminGroup = $oAdminMenu->GetIndex();
-new OQLMenuNode('Menu:Class:Organization/Name', 'Menu:Class:Organization/Title', 'SELECT Organization', $iAdminGroup, 10 /* fRank */);
-new OQLMenuNode('Menu:Class:Application/Name', 'Menu:Class:Application/Title', 'SELECT Application', $iAdminGroup, 20 /* fRank */);
+new OQLMenuNode('Organization', 'SELECT Organization', $iAdminGroup, 10 /* fRank */);
+new OQLMenuNode('Application', 'SELECT Application', $iAdminGroup, 20 /* fRank */);
 
-$oToolsMenu = new MenuGroup('UI:AdvancedToolsMenu', 998);
+$oToolsMenu = new MenuGroup('AdvancedToolsMenu', 998);
 $iToolsGroup = $oToolsMenu->GetIndex();
 new WebPageMenuNode('Menu:Audit', '../pages/audit.php', $iToolsGroup, 33 /* fRank */);
 

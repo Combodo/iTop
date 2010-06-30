@@ -230,23 +230,23 @@ EOF
 		 *		Data Model
 		 *		Universal Search
 		 */
-		$oWelcomeMenu = new MenuGroup('UI:WelcomeMenu', 0 /* fRank */);
-		new TemplateMenuNode('UI:WelcomeMenuPage', '../business/templates/welcome_menu.html', $oWelcomeMenu->GetIndex() /* oParent */, 1 /* fRank */);
+		$oWelcomeMenu = new MenuGroup('WelcomeMenu', 0 /* fRank */);
+		new TemplateMenuNode('WelcomeMenuPage', '../business/templates/welcome_menu.html', $oWelcomeMenu->GetIndex() /* oParent */, 1 /* fRank */);
 		
-		$oToolsMenu = new MenuGroup('UI:AdvancedToolsMenu', 2 /* fRank */);
-		new WebPageMenuNode('UI:CSVImportMenu', '../pages/csvimport.php', $oToolsMenu->GetIndex(), 1 /* fRank */);
+		$oToolsMenu = new MenuGroup('AdvancedToolsMenu', 2 /* fRank */);
+		new WebPageMenuNode('CSVImportMenu', '../pages/csvimport.php', $oToolsMenu->GetIndex(), 1 /* fRank */);
 
 		if (userRights::IsAdministrator())
 		{
 			// Add the admin menus
-			$oAdminMenu = new MenuGroup('UI:AdminToolsMenu', 999 /* fRank */);
-			new OQLMenuNode('UI:UserAccountsMenu', 'UI:UserAccountsMenu:Title', 'SELECT URP_Users', $oAdminMenu->GetIndex(), 1 /* fRank */);
-			new OQLMenuNode('UI:ProfilesMenu', 'UI:ProfilesMenu:Title', 'SELECT URP_Profiles', $oAdminMenu->GetIndex(), 2 /* fRank */);
-			new TemplateMenuNode('UI:NotificationsMenu', '../business/templates/notifications_menu.html', $oAdminMenu->GetIndex(), 3 /* fRank */);
-			new WebPageMenuNode('UI:RunQueriesMenu', '../pages/run_query.php', $oAdminMenu->GetIndex(), 8 /* fRank */);
-			new WebPageMenuNode('UI:ExportMenu', '../webservices/export.php', $oAdminMenu->GetIndex(), 9 /* fRank */);
-			new WebPageMenuNode('UI:DataModelMenu', '../pages/schema.php', $oAdminMenu->GetIndex(), 10 /* fRank */);
-			new WebPageMenuNode('UI:UniversalSearchMenu', '../pages/UniversalSearch.php', $oAdminMenu->GetIndex(), 11 /* fRank */);
+			$oAdminMenu = new MenuGroup('AdminTools', 999 /* fRank */);
+			new OQLMenuNode('UserAccountsMenu', 'SELECT URP_Users', $oAdminMenu->GetIndex(), 1 /* fRank */);
+			new OQLMenuNode('ProfilesMenu', 'SELECT URP_Profiles', $oAdminMenu->GetIndex(), 2 /* fRank */);
+			new TemplateMenuNode('NotificationsMenu', '../business/templates/notifications_menu.html', $oAdminMenu->GetIndex(), 3 /* fRank */);
+			new WebPageMenuNode('RunQueriesMenu', '../pages/run_query.php', $oAdminMenu->GetIndex(), 8 /* fRank */);
+			new WebPageMenuNode('ExportMenu', '../webservices/export.php', $oAdminMenu->GetIndex(), 9 /* fRank */);
+			new WebPageMenuNode('DataModelMenu', '../pages/schema.php', $oAdminMenu->GetIndex(), 10 /* fRank */);
+			new WebPageMenuNode('UniversalSearchMenu', '../pages/UniversalSearch.php', $oAdminMenu->GetIndex(), 11 /* fRank */);
 		}
 	}
 	

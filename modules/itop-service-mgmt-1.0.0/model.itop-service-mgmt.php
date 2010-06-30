@@ -378,12 +378,13 @@ class ServiceLevel extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeString("ticket_type", array("allowed_values"=>null, "sql"=>"ticket_type", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("ticket_priorities", array("allowed_values"=>null, "sql"=>"ticket_priorities", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeInteger("value", array("allowed_values"=>null, "sql"=>"value", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("value_unit", array("allowed_values"=>null, "sql"=>"value_unit", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("sla_list", array("linked_class"=>"lnkLevelToSLA", "ext_key_to_me"=>"servicelevel_id", "ext_key_to_remote"=>"sla_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('name', 'metric', 'ticket_type', 'ticket_priorities', 'value', 'sla_list'));
-		MetaModel::Init_SetZListItems('advanced_search', array('name', 'metric', 'ticket_type', 'ticket_priorities', 'value'));
-		MetaModel::Init_SetZListItems('standard_search', array('name', 'metric', 'ticket_type', 'ticket_priorities', 'value'));
-		MetaModel::Init_SetZListItems('list', array('name', 'metric', 'ticket_type', 'ticket_priorities', 'value'));
+		MetaModel::Init_SetZListItems('details', array('name', 'metric', 'ticket_type', 'ticket_priorities', 'value', 'value_unit', 'sla_list'));
+		MetaModel::Init_SetZListItems('advanced_search', array('name', 'metric', 'ticket_type', 'ticket_priorities', 'value', 'value_unit'));
+		MetaModel::Init_SetZListItems('standard_search', array('name', 'metric', 'ticket_type', 'ticket_priorities', 'value', 'value_unit'));
+		MetaModel::Init_SetZListItems('list', array('name', 'metric', 'ticket_type', 'ticket_priorities', 'value', 'value_unit'));
 	}
 }
 class lnkLevelToSLA extends cmdbAbstractObject
@@ -410,11 +411,14 @@ class lnkLevelToSLA extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalField("sla_name", array("allowed_values"=>null, "extkey_attcode"=>"sla_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("servicelevel_id", array("targetclass"=>"ServiceLevel", "jointype"=>null, "allowed_values"=>null, "sql"=>"servicelevel_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("servicelevel_name", array("allowed_values"=>null, "extkey_attcode"=>"servicelevel_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("servicelevel_metric", array("allowed_values"=>null, "extkey_attcode"=>"servicelevel_id", "target_attcode"=>"metric", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("servicelevel_value", array("allowed_values"=>null, "extkey_attcode"=>"servicelevel_id", "target_attcode"=>"value", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("servicelevel_value_unit", array("allowed_values"=>null, "extkey_attcode"=>"servicelevel_id", "target_attcode"=>"value_unit", "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('sla_id', 'servicelevel_id'));
-		MetaModel::Init_SetZListItems('advanced_search', array('sla_id', 'servicelevel_id'));
-		MetaModel::Init_SetZListItems('standard_search', array('sla_id', 'servicelevel_id'));
-		MetaModel::Init_SetZListItems('list', array('sla_id', 'servicelevel_id'));
+		MetaModel::Init_SetZListItems('details', array('sla_id', 'servicelevel_id', 'servicelevel_metric', 'servicelevel_value', 'servicelevel_value_unit'));
+		MetaModel::Init_SetZListItems('advanced_search', array('sla_id', 'servicelevel_id', 'servicelevel_metric', 'servicelevel_value', 'servicelevel_value_unit'));
+		MetaModel::Init_SetZListItems('standard_search', array('sla_id', 'servicelevel_id', 'servicelevel_metric', 'servicelevel_value', 'servicelevel_value_unit'));
+		MetaModel::Init_SetZListItems('list', array('sla_id', 'servicelevel_id', 'servicelevel_metric', 'servicelevel_value', 'servicelevel_value_unit'));
 	}
 }
 //////////////////////////////////////////////////////////////////////////////
@@ -426,41 +430,20 @@ class lnkLevelToSLA extends cmdbAbstractObject
 //			+ ...
 //			+ ...
 ////////////////////////////////////////////////////////////////////////////////////
-// Create the top-level group. fRank = 1, means it will be inserted after the group '0', which is usually 'Welcome'
-$oMyMenuGroup = new MenuGroup('Menu:MyModule', 1 /* fRank */);
 
-// Create an entry, based on a custom template, for the Configuration management overview, under the top-level group
-$oMyMenuNode = new TemplateMenuNode('Menu:MyModule', '../business/templates/configuration_management_menu.html', $oMyMenuGroup->GetIndex(), 0 /* fRank */);
-// By default, one entry per class
-new OQLMenuNode('Menu:Class:Contract/Name', 'Menu:Class:Contract/Title', 'SELECT Contract', $oMyMenuNode->GetIndex(), 0 /* fRank */);
-new OQLMenuNode('Menu:Class:ProviderContract/Name', 'Menu:Class:ProviderContract/Title', 'SELECT ProviderContract', $oMyMenuNode->GetIndex(), 1 /* fRank */);
-new OQLMenuNode('Menu:Class:CustomerContract/Name', 'Menu:Class:CustomerContract/Title', 'SELECT CustomerContract', $oMyMenuNode->GetIndex(), 2 /* fRank */);
-new OQLMenuNode('Menu:Class:lnkProviderToCustomer/Name', 'Menu:Class:lnkProviderToCustomer/Title', 'SELECT lnkProviderToCustomer', $oMyMenuNode->GetIndex(), 3 /* fRank */);
-new OQLMenuNode('Menu:Class:lnkContractToSLA/Name', 'Menu:Class:lnkContractToSLA/Title', 'SELECT lnkContractToSLA', $oMyMenuNode->GetIndex(), 4 /* fRank */);
-new OQLMenuNode('Menu:Class:lnkContractToDoc/Name', 'Menu:Class:lnkContractToDoc/Title', 'SELECT lnkContractToDoc', $oMyMenuNode->GetIndex(), 5 /* fRank */);
-new OQLMenuNode('Menu:Class:lnkContractToContact/Name', 'Menu:Class:lnkContractToContact/Title', 'SELECT lnkContractToContact', $oMyMenuNode->GetIndex(), 6 /* fRank */);
-new OQLMenuNode('Menu:Class:lnkContractToCI/Name', 'Menu:Class:lnkContractToCI/Title', 'SELECT lnkContractToCI', $oMyMenuNode->GetIndex(), 7 /* fRank */);
-new OQLMenuNode('Menu:Class:ServiceType/Name', 'Menu:Class:ServiceType/Title', 'SELECT ServiceType', $oMyMenuNode->GetIndex(), 8 /* fRank */);
-new OQLMenuNode('Menu:Class:Service/Name', 'Menu:Class:Service/Title', 'SELECT Service', $oMyMenuNode->GetIndex(), 9 /* fRank */);
-new OQLMenuNode('Menu:Class:SLA/Name', 'Menu:Class:SLA/Title', 'SELECT SLA', $oMyMenuNode->GetIndex(), 10 /* fRank */);
-new OQLMenuNode('Menu:Class:ServiceLevel/Name', 'Menu:Class:ServiceLevel/Title', 'SELECT ServiceLevel', $oMyMenuNode->GetIndex(), 11 /* fRank */);
-new OQLMenuNode('Menu:Class:lnkLevelToSLA/Name', 'Menu:Class:lnkLevelToSLA/Title', 'SELECT lnkLevelToSLA', $oMyMenuNode->GetIndex(), 12 /* fRank */);
-
-
-
-
-
-
-$oAdminMenu = new MenuGroup('UI:AdminToolsMenu', 999);
+$oAdminMenu = new MenuGroup('AdminTools', 999);
 $iAdminGroup = $oAdminMenu->GetIndex();
-new OQLMenuNode('Menu:Class:ServiceType/Name', 'Menu:Class:ServiceType/Title', 'SELECT ServiceType', $iAdminGroup, 20 /* fRank */);
+new OQLMenuNode('ServiceType', 'SELECT ServiceType', $iAdminGroup, 25 /* fRank */);
 
-$oServiceManagementGroup = new MenuGroup('Menu:ServiceManagement', 2 /* fRank */);
 
-new OQLMenuNode('Menu:Class:ProviderContract/Name', 'Menu:Class:ProviderContract/Title', 'SELECT ProviderContract', $oServiceManagementGroup->GetIndex(), 1 /* fRank */);
-new OQLMenuNode('Menu:Class:ProviderContract/Name', 'Menu:Class:ProviderContract/Title', 'SELECT ProviderContract', $oServiceManagementGroup->GetIndex(), 2 /* fRank */);
-new OQLMenuNode('Menu:Class:ProviderContract/Name', 'Menu:Class:ProviderContract/Title', 'SELECT Service', $oServiceManagementGroup->GetIndex(), 3 /* fRank */);
-new OQLMenuNode('Menu:Class:SLA/Name', 'Menu:Class:SLA/Title', 'SELECT SLA', $oServiceManagementGroup->GetIndex(), 4 /* fRank */);
-new OQLMenuNode('Menu:Class:ServiceLevel/Name', 'Menu:Class:ServiceLevel/Title', 'SELECT ServiceLevel', $oServiceManagementGroup->GetIndex(), 5 /* fRank */);
+$oServiceManagementGroup = new MenuGroup('ServiceManagement', 2 /* fRank */);
+
+
+
+new OQLMenuNode('ProviderContract', 'SELECT ProviderContract', $oServiceManagementGroup->GetIndex(), 1 /* fRank */);
+new OQLMenuNode('CustomerContract', 'SELECT CustomerContract', $oServiceManagementGroup->GetIndex(), 2 /* fRank */);
+new OQLMenuNode('Service', 'SELECT Service', $oServiceManagementGroup->GetIndex(), 3 /* fRank */);
+new OQLMenuNode('SLA', 'SELECT SLA', $oServiceManagementGroup->GetIndex(), 4 /* fRank */);
+new OQLMenuNode('ServiceLevel', 'SELECT ServiceLevel', $oServiceManagementGroup->GetIndex(), 5 /* fRank */);
 
 ?>

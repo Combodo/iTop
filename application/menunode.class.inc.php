@@ -47,15 +47,13 @@ require_once('../application/template.class.inc.php');
  *			+ Teams								>> Plain list (OQL based)
  *
  * // Create the top-level group. fRank = 1, means it will be inserted after the group '0', which is usually 'Welcome'
- * $oConfigMgmtMenu = new MenuGroup('UI:ConfigurationManagementMenu', 1);
+ * $oConfigMgmtMenu = new MenuGroup('ConfigurationManagementMenu', 1);
  * // Create an entry, based on a custom template, for the Configuration management overview, under the top-level group
- * new TemplateMenuNode('UI:ConfigurationManagementMenu', '../business/templates/configuration_management_menu.html', $oConfigMgmtMenu->GetIndex(), 0);
+ * new TemplateMenuNode('ConfigurationManagementMenu', '../business/templates/configuration_management_menu.html', $oConfigMgmtMenu->GetIndex(), 0);
  * // Create an entry (template based) for the overview of contacts
- * $oContactsMenu = new TemplateMenuNode('UI:ContactsMenu', '../business/templates/configuration_management_menu.html',$oConfigMgmtMenu->GetIndex(), 1);
+ * $oContactsMenu = new TemplateMenuNode('ContactsMenu', '../business/templates/configuration_management_menu.html',$oConfigMgmtMenu->GetIndex(), 1);
  * // Plain list of persons
- * new OQLMenuNode('UI:PersonsMenu', 'UI:PersonsMenu:Title', 'SELECT bizPerson', $oContactsMenu->GetIndex(), 0);
- * // Plain list of teams
- * new OQLMenuNode('UI:TeamsMenu', 'UI:TeamsMenu:Title', 'SELECT bizTeam', $oContactsMenu->GetIndex(), 1);
+ * new OQLMenuNode('PersonsMenu', 'SELECT bizPerson', $oContactsMenu->GetIndex(), 0);
  *
  */
  
@@ -70,20 +68,20 @@ class ApplicationMenu
 	 */
 	static public function InsertMenu(MenuNode $oMenuNode, $iParentIndex = -1, $fRank)
 	{
-		$index = self::GetMenuIndexByTitle($oMenuNode->GetRawTitle());
+		$index = self::GetMenuIndexById($oMenuNode->GetMenuId());
 		if ($index == -1)
 		{
 			// The menu does not already exist, insert it
-		$index = count(self::$aMenusIndex);
-		self::$aMenusIndex[$index] = array( 'node' => $oMenuNode, 'children' => array());
-		if ($iParentIndex == -1)
-		{
-			self::$aRootMenus[] = array ('rank' => $fRank, 'index' => $index);
-		}
-		else
-		{
-			self::$aMenusIndex[$iParentIndex]['children'][] = array ('rank' => $fRank, 'index' => $index);
-		}
+			$index = count(self::$aMenusIndex);
+			self::$aMenusIndex[$index] = array( 'node' => $oMenuNode, 'children' => array());
+			if ($iParentIndex == -1)
+			{
+				self::$aRootMenus[] = array ('rank' => $fRank, 'index' => $index);
+			}
+			else
+			{
+				self::$aMenusIndex[$iParentIndex]['children'][] = array ('rank' => $fRank, 'index' => $index);
+			}
 		}
 		return $index;
 	}
@@ -185,12 +183,12 @@ class ApplicationMenu
 	 * @param string $sTitle Title of the menu (as passed when creating the menu)
 	 * @return integer ID of the menu, or -1 if not found
 	 */
-	static public function GetMenuIndexByTitle($sTitle)
+	static public function GetMenuIndexById($sTitle)
 	{
 		$index = -1;
 		foreach(self::$aMenusIndex as $aMenu)
 		{
-			if ($aMenu['node']->GetRawTitle() == $sTitle)
+			if ($aMenu['node']->GetMenuId() == $sTitle)
 			{
 				$index = $aMenu['node']->GetIndex();
 				break;
@@ -247,35 +245,35 @@ class ApplicationMenu
  */
 abstract class MenuNode
 {
-	protected $sTitle;
+	protected $sMenuId;
 	protected $index = null;
 	
 	/**
 	 * Create a menu item and inserts it into the application's main menu
-	 * @param string $sTitle Title of the menu (will be looked-up in the dictionnary, for translation)
+	 * @param string $sMenuId Unique identifier of the menu (used to identify the menu for bookmarking, and for getting the labels from the dictionary)
 	 * @param integer $iParentIndex ID of the parent menu, pass -1 for top level (group) items
 	 * @param float $fRank Number used to order the list, any number will do, but for a given level (i.e same parent) all menus are sorted based on this value
 	 * @return MenuNode
 	 */
-	public function __construct($sTitle, $iParentIndex = -1, $fRank = 0)
+	public function __construct($sMenuId, $iParentIndex = -1, $fRank = 0)
 	{
-		$this->sTitle = $sTitle;
+		$this->sMenuId = $sMenuId;
 		$this->index = ApplicationMenu::InsertMenu($this, $iParentIndex, $fRank);
 	}
 	
-	public function GetRawTitle()
+	public function GetMenuId()
 	{
-		return $this->sTitle;
+		return $this->sMenuId;
 	}
 	
 	public function GetTitle()
 	{
-		return Dict::S($this->sTitle);
+		return Dict::S("Menu:$this->sMenuId+");
 	}
 	
 	public function GetLabel()
 	{
-		return Dict::S($this->sTitle);
+		return Dict::S("Menu:$this->sMenuId");
 	}
 	
 	public function GetIndex()
@@ -319,13 +317,13 @@ class MenuGroup extends MenuNode
 {
 	/**
 	 * Create a top-level menu group and inserts it into the application's main menu
-	 * @param string $sTitle Title of the menu (will be looked-up in the dictionnary for translation)
+	 * @param string $sMenuId Unique identifier of the menu (used to identify the menu for bookmarking, and for getting the labels from the dictionary)
 	 * @param float $fRank Number used to order the list, the groups are sorted based on this value
 	 * @return MenuGroup
 	 */
-	public function __construct($sTitle, $fRank)
+	public function __construct($sMenuId, $fRank)
 	{
-		parent::__construct($sTitle, -1 /* no parent, groups are at root level */, $fRank);
+		parent::__construct($sMenuId, -1 /* no parent, groups are at root level */, $fRank);
 	}
 	
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())
@@ -344,15 +342,15 @@ class TemplateMenuNode extends MenuNode
 	
 	/**
 	 * Create a menu item based on a custom template and inserts it into the application's main menu
-	 * @param string $sTitle Title of the menu (will be looked-up in the dictionnary for translation)
+	 * @param string $sMenuId Unique identifier of the menu (used to identify the menu for bookmarking, and for getting the labels from the dictionary)
 	 * @param string $sTemplateFile Path (or URL) to the file that will be used as a template for displaying the page's content
 	 * @param integer $iParentIndex ID of the parent menu
 	 * @param float $fRank Number used to order the list, any number will do, but for a given level (i.e same parent) all menus are sorted based on this value
 	 * @return MenuNode
 	 */
-	public function __construct($sTitle, $sTemplateFile, $iParentIndex, $fRank = 0)
+	public function __construct($sMenuId, $sTemplateFile, $iParentIndex, $fRank = 0)
 	{
-		parent::__construct($sTitle, $iParentIndex, $fRank);
+		parent::__construct($sMenuId, $iParentIndex, $fRank);
 		$this->sTemplateFile = $sTemplateFile;
 	}
 	
@@ -382,16 +380,16 @@ class OQLMenuNode extends MenuNode
 	
 	/**
 	 * Create a menu item based on an OQL query and inserts it into the application's main menu
-	 * @param string $sTitle Title of the menu (will be looked-up in the dictionnary for translation)
+	 * @param string $sMenuId Unique identifier of the menu (used to identify the menu for bookmarking, and for getting the labels from the dictionary)
 	 * @param string $sPageTitle Title displayed into the page's content (will be looked-up in the dictionnary for translation)
 	 * @param integer $iParentIndex ID of the parent menu
 	 * @param float $fRank Number used to order the list, any number will do, but for a given level (i.e same parent) all menus are sorted based on this value
 	 * @return MenuNode
 	 */
-	public function __construct($sTitle, $sPageTitle, $sOQL, $iParentIndex, $fRank = 0)
+	public function __construct($sMenuId, $sOQL, $iParentIndex, $fRank = 0)
 	{
-		parent::__construct($sTitle, $iParentIndex, $fRank);
-		$this->sPageTitle = $sPageTitle;
+		parent::__construct($sMenuId, $iParentIndex, $fRank);
+		$this->sPageTitle = "Menu:$sMenuId+";
 		$this->sOQL = $sOQL;
 	}
 	
@@ -430,15 +428,15 @@ class WebPageMenuNode extends MenuNode
 	
 	/**
 	 * Create a menu item that points to any web page (not only UI.php)
-	 * @param string $sTitle Title of the menu (will be looked-up in the dictionnary for translation)
+	 * @param string $sMenuId Unique identifier of the menu (used to identify the menu for bookmarking, and for getting the labels from the dictionary)
 	 * @param string $sHyperlink URL to the page to load. Use relative URL if you want to keep the application portable !
 	 * @param integer $iParentIndex ID of the parent menu
 	 * @param float $fRank Number used to order the list, any number will do, but for a given level (i.e same parent) all menus are sorted based on this value
 	 * @return MenuNode
 	 */
-	public function __construct($sTitle, $sHyperlink, $iParentIndex, $fRank = 0)
+	public function __construct($sMenuId, $sHyperlink, $iParentIndex, $fRank = 0)
 	{
-		parent::__construct($sTitle, $iParentIndex, $fRank);
+		parent::__construct($sMenuId, $iParentIndex, $fRank);
 		$this->sHyperlink = $sHyperlink;
 	}
 
