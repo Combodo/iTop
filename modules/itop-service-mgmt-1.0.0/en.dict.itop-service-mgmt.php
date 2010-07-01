@@ -61,12 +61,14 @@ Dict::Add('EN US', 'English', 'English', array(
 'Menu:ProviderContract+' => 'Provider Contracts',
 'Menu:CustomerContract' => 'Customer Contracts',
 'Menu:CustomerContract+' => 'Customer Contracts',
+'Menu:ServiceSubcategory' => 'Service Subcategories',
+'Menu:ServiceSubcategory+' => 'Service Subcategories',
 'Menu:Service' => 'Services',
 'Menu:Service+' => 'Services',
 'Menu:SLA' => 'SLAs',
-'Menu:SLA+' => 'SLAs',
-'Menu:ServiceLevel' => 'Service levels',
-'Menu:ServiceLevel+' => 'Service levels',
+'Menu:SLA+' => 'Service Level Agreements',
+'Menu:SLT' => 'SLTs',
+'Menu:SLT+' => 'Service Level Targets',
 
 ));
 
