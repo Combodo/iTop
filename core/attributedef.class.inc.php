@@ -280,6 +280,7 @@ class AttributeLinkedSet extends AttributeDefinition
 
 	public function IsWritable() {return true;} 
 	public function IsLinkSet() {return true;} 
+	public function IsIndirect() {return false;} 
 
 	public function GetValuesDef() {return $this->Get("allowed_values");} 
 	public function GetPrerequisiteAttributes() {return $this->Get("depends_on");} 
@@ -334,6 +335,7 @@ class AttributeLinkedSetIndirect extends AttributeLinkedSet
 	{
 		return array_merge(parent::ListExpectedParams(), array("ext_key_to_remote"));
 	}
+	public function IsIndirect() {return true;} 
 	public function GetExtKeyToRemote() { return $this->Get('ext_key_to_remote'); }
 	public function GetEditClass() {return "LinkedSet";}
 }
