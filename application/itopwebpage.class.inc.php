@@ -257,7 +257,7 @@ EOF
 		// List of visible Organizations
 		$iCount = 0;
 		$oContext = new UserContext();
-		if (MetaModel::IsValidClass('bizOrganization'))
+		if (MetaModel::IsValidClass('Organization'))
 		{
 			$oSearchFilter = $oContext->NewFilter('Organization');
 			$oSet = new CMDBObjectSet($oSearchFilter);
