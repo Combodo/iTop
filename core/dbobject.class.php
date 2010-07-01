@@ -420,6 +420,7 @@ abstract class DBObject
 			}
 			else
 			{
+				$aAvailableFields = array();
 				// retrieve the "external fields" linked to this external key
 				foreach (MetaModel::GetExternalFields(get_class($this), $sAttCode) as $oExtField)
 				{
