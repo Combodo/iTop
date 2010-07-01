@@ -472,6 +472,8 @@ abstract class MetaModel
 	private static $m_aAttribDefs = array(); // array of ("classname" => array of attributes)
 	private static $m_aAttribOrigins = array(); // array of ("classname" => array of ("attcode"=>"sourceclass"))
 	private static $m_aExtKeyFriends = array(); // array of ("classname" => array of ("indirect ext key attcode"=> array of ("relative ext field")))
+	private static $m_aIgnoredLinkSets = array(); //array of ("classname" => array of ("attcode")
+
 	final static public function ListAttributeDefs($sClass)
 	{
 		self::_check_subclass($sClass);	
@@ -908,6 +910,11 @@ abstract class MetaModel
 		foreach(get_declared_classes() as $sPHPClass) {
 			if (is_subclass_of($sPHPClass, 'DBObject'))
 			{
+				$sParent = get_parent_class($sPHPClass);
+				if (array_key_exists($sParent, self::$m_aIgnoredLinkSets))
+				{
+					self::$m_aIgnoredLinkSets[$sPHPClass] = self::$m_aIgnoredLinkSets[$sParent];
+				}
 				if (method_exists($sPHPClass, 'Init'))
 				{
 					call_user_func(array($sPHPClass, 'Init'));
@@ -1162,7 +1169,23 @@ abstract class MetaModel
 	}
 	public static function Init_AddAttribute(AttributeDefinition $oAtt)
 	{
-		$sTargetClass = self::GetCallersPHPClass("Init");
+		$sTargetClass = self::GetCallersPHPClass("Init");		
+
+		// Some LinkedSet attributes could refer to a class
+		// declared in a module which is currently not installed/active
+		// We simply discard those attributes
+		if ($oAtt->IsLinkSet())
+		{
+			$sRemoteClass = $oAtt->GetLinkedClass();
+			// Note: I would not use IsValidClass here because not all the classes
+			// have been initialized so far
+			if (!class_exists($sRemoteClass) || !is_subclass_of($sRemoteClass, 'DBObject'))
+			{
+				self::$m_aIgnoredLinkSets[$sTargetClass][$oAtt->GetCode()] = $sRemoteClass;
+				return;
+			}
+		}
+
 		self::$m_aAttribDefs[$sTargetClass][$oAtt->GetCode()] = $oAtt;
 		self::$m_aAttribOrigins[$sTargetClass][$oAtt->GetCode()] = $sTargetClass;
 		// Note: it looks redundant to put targetclass there, but a mix occurs when inheritance is used
@@ -1178,6 +1201,16 @@ abstract class MetaModel
 		MyHelpers::CheckKeyInArray('list code', $sListCode, self::$m_aListInfos);
 
 		$sTargetClass = self::GetCallersPHPClass("Init");
+
+		// Discard LinkedSets that do not make sense (missing classes in the current module combination)
+		//
+		foreach($aItems as $iFoo => $sAttCode)
+		{
+			if (isset(self::$m_aIgnoredLinkSets[$sTargetClass][$sAttCode]))
+			{
+				unset($aItems[$iFoo]);
+			}
+		}
 		self::$m_aListData[$sTargetClass][$sListCode] = $aItems;
 	}
 
