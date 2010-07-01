@@ -38,18 +38,18 @@ function ShowExamples($oP, $sExpression)
 
 	$aExamples = array(
 		'Pedagogic examples' => array(
-			"Applications" => "SELECT bizApplication",
-			"Person having an 'A' in their name" => "SELECT bizPerson AS B WHERE B.name LIKE '%A%'",
-			"Changes planned on new year's day" => "SELECT bizChangeTicket AS ch WHERE ch.start_date >= '2009-12-31' AND ch.end_date <= '2010-01-01'",
-			"IPs in a range" => "SELECT bizDevice AS dev WHERE INET_ATON(dev.mgmt_ip) > INET_ATON('10.22.32.33') AND INET_ATON(dev.mgmt_ip) < INET_ATON('10.22.32.40')"
+			"Applications" => "SELECT Application",
+			"Person having an 'A' in their name" => "SELECT Person AS B WHERE B.name LIKE '%A%'",
+			"Changes planned on new year's day" => "SELECT ChangeTicket AS ch WHERE ch.start_date >= '2009-12-31' AND ch.end_date <= '2010-01-01'",
+			"IPs in a range" => "SELECT InfrastructureCI AS dev WHERE INET_ATON(dev.management_ip) > INET_ATON('10.22.32.224') AND INET_ATON(dev.management_ip) < INET_ATON('10.22.32.255')"
 		),
 		'Usefull examples' => array(
-			"NW interfaces of equipment in production for customer 'Demo'" => "SELECT bizInterface AS if JOIN bizDevice AS dev ON if.device_id = dev.id WHERE if.status = 'production' AND dev.status = 'production' AND dev.org_name = 'Demo' AND if.physical_type = 'ethernet'",
-			"My tickets" => "SELECT bizIncidentTicket AS i WHERE i.agent_id = :current_contact_id",
-			"People being owner of an active ticket" => "SELECT bizPerson AS p JOIN bizIncidentTicket AS i ON i.agent_id = p.id WHERE i.ticket_status != 'Closed'",
-			"Contracts terminating in the next thirty days" => "SELECT bizContract AS c WHERE c.end_prod > NOW() AND c.end_prod < DATE_ADD(NOW(), INTERVAL 30 DAY)",
-			"Orphan tickets (opened one hour ago, still not assigned)" => "SELECT bizIncidentTicket AS i WHERE i.start_date < DATE_SUB(NOW(), INTERVAL 60 MINUTE) AND i.ticket_status = 'New'",
-			"Long lasting incidents (duration > 8 hours)" => "SELECT bizIncidentTicket AS i WHERE i.end_date > DATE_ADD(i.start_date, INTERVAL 8 HOUR)",
+			"NW interfaces of equipment in production for customer 'Demo'" => "SELECT NetworkInterface AS if JOIN InfrastructureCI AS dev ON if.device_id = dev.id WHERE if.status = 'production' AND dev.status = 'production' AND dev.owner_name = 'Demo' AND if.physical_type = 'ethernet'",
+			"My tickets" => "SELECT IncidentTicket AS i WHERE i.agent_id = :current_contact_id",
+			"People being owner of an active ticket" => "SELECT Person AS p JOIN IncidentTicket AS i ON i.agent_id = p.id WHERE i.ticket_status != 'Closed'",
+			"Contracts terminating in the next thirty days" => "SELECT Contract AS c WHERE c.end_prod > NOW() AND c.end_prod < DATE_ADD(NOW(), INTERVAL 30 DAY)",
+			"Orphan tickets (opened one hour ago, still not assigned)" => "SELECT IncidentTicket AS i WHERE i.start_date < DATE_SUB(NOW(), INTERVAL 60 MINUTE) AND i.ticket_status = 'New'",
+			"Long lasting incidents (duration > 8 hours)" => "SELECT IncidentTicket AS i WHERE i.end_date > DATE_ADD(i.start_date, INTERVAL 8 HOUR)",
 		),
 	);
 
