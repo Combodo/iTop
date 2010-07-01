@@ -717,6 +717,7 @@ try
 		case 'new':
 			$sClass = utils::ReadParam('class', '');
 			$sStateCode = utils::ReadParam('state', '');
+			$bCheckSubClass = utils::ReadParam('checkSubclass', true);
 			if ( empty($sClass) )
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'class'));
@@ -730,19 +731,77 @@ try
 
 			$oContext = new UserContext();
 			$aArgs = array_merge($oAppContext->GetAsHash(), utils::ReadParam('default', array()));
-			$sClassLabel = MetaModel::GetName($sClass);
 
-			$oP->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel));
-			$oP->add("<h1><img src=\"".MetaModel::GetClassIcon($sClass)."\" style=\"vertical-align:middle;\">".Dict::Format('UI:CreationTitle_Class', $sClassLabel)."</h1>\n");
-			$oP->add("<div class=\"wizContainer\">\n");
-			$aDefaults = utils::ReadParam('default', array());
-			$aContext = $oAppContext->GetAsHash();
-			foreach($aContext as $key => $value)
+			// If the specified class has subclasses, ask the user an instance of which class to create
+			$aSubClasses = MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL); // Including the specified class itself
+			$aPossibleClasses = array();
+			$sRealClass = '';
+			if ($bCheckSubClass)
 			{
-				$aDefaults[$key] = $value;	
+				foreach($aSubClasses as $sCandidateClass)
+				{
+					if (!MetaModel::IsAbstract($sCandidateClass))
+					{
+						$aPossibleClasses[$sCandidateClass] = MetaModel::GetName($sCandidateClass);
+					}
+				}
+				// Only one of the subclasses can be instantiated...
+				if (count($aPossibleClasses) == 1)
+				{
+					$aKeys = array_keys($aPossibleClasses);
+					$sRealClass = $aKeys[0];
+				}
 			}
-			cmdbAbstractObject::DisplayCreationForm($oP, $sClass, null /* $oObjToClone */, array('default' => $aDefaults));
-			$oP->add("</div>\n");
+			else
+			{
+				$sRealClass = $sClass;
+			}
+			
+			if (!empty($sRealClass))
+			{
+				// Display the creation form
+				$sClassLabel = MetaModel::GetName($sRealClass);
+				$oP->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel));
+				$oP->add("<h1><img src=\"".MetaModel::GetClassIcon($sRealClass)."\" style=\"vertical-align:middle;\">".Dict::Format('UI:CreationTitle_Class', $sClassLabel)."</h1>\n");
+				$oP->add("<div class=\"wizContainer\">\n");
+				$aDefaults = utils::ReadParam('default', array());
+				$aContext = $oAppContext->GetAsHash();
+				foreach($aContext as $key => $value)
+				{
+					$aDefaults[$key] = $value;	
+				}
+				cmdbAbstractObject::DisplayCreationForm($oP, $sRealClass, null /* $oObjToClone */, array('default' => $aDefaults));
+				$oP->add("</div>\n");
+			}
+			else
+			{
+				// Select the derived class to create
+				$sClassLabel = MetaModel::GetName($sClass);
+				$oP->add("<h1><img src=\"".MetaModel::GetClassIcon($sClass)."\" style=\"vertical-align:middle;\">".Dict::Format('UI:CreationTitle_Class', $sClassLabel)."</h1>\n");
+				$oP->add("<div class=\"wizContainer\">\n");
+				$oP->add('<form>');
+				$oP->add('<p>'.Dict::Format('UI:SelectTheTypeOf_Class_ToCreate', $sClassLabel));
+				$aDefaults = utils::ReadParam('default', array());
+				$oP->add($oAppContext->GetForForm());
+				$oP->add("<input type=\"hidden\" name=\"state\" value=\"$sStateCode\">\n");
+				$oP->add("<input type=\"hidden\" name=\"operation\" value=\"new\">\n");
+				foreach($aDefaults as $key => $value)
+				{
+					$oP->add("<input type=\"hidden\" name=\"default[$key]\" value=\"$value\">\n");
+					$aDefaults[$key] = $value;	
+				}
+				$oP->add('<select name="class">');
+				asort($aPossibleClasses);
+				foreach($aPossibleClasses as $sClassName => $sClassLabel)
+				{
+					$sSelected = ($sClassName == $sClass) ? 'selected' : '';
+					$oP->add("<option $sSelected value=\"$sClassName\">$sClassLabel</option>");
+				}
+				$oP->add('</select>');
+				$oP->add("&nbsp; <input type=\"submit\" value=\"".Dict::S('UI:Button:Apply')."\"></p>");
+				$oP->add('</form>');
+				$oP->add("</div>\n");
+			}
 		break;
 	
 		case 'apply_modify':

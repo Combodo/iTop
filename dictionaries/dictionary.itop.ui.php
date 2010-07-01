@@ -356,7 +356,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Button:AddToList' => ' << Add ',
 	'UI:Button:RemoveFromList' => ' Remove >> ',
 	'UI:Button:FilterList' => ' Filter... ',
-	'UI:Button:Delete' => 'Delete ! ',
+	'UI:Button:Create' => ' Create ',
+	'UI:Button:Delete' => ' Delete ! ',
 
 	'UI:SearchToggle' => 'Search',
 	'UI:ClickToCreateNew' => 'Click here to create a new %1$s',
@@ -636,6 +637,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:CloneTitle_Class_Object' => 'Clone of %1$s: <span class=\"hilite\">%2$s</span>',
 	'UI:CreationPageTitle_Class' => 'iTop - Creation of a new %1$s ',
 	'UI:CreationTitle_Class' => 'Creation of a new %1$s',
+	'UI:SelectTheTypeOf_Class_ToCreate' => 'Select the type of %1$s to create:',
 	'UI:Class_Object_NotUpdated' => 'No change detected, %1$s (%2$s) has <strong>not</strong> been modified.',
 	'UI:Class_Object_Updated' => '%1$s (%2$s) updated.',
 	'UI:BulkDeletePageTitle' => 'iTop - Bulk Delete',

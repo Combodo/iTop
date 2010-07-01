@@ -778,7 +778,7 @@ class BusinessProcess extends FunctionalCI
 		MetaModel::Init_SetZListItems('list', array('status', 'owner_id', 'importance', 'description'));
 	}
 }
-class ConnectableCI extends FunctionalCI
+abstract class ConnectableCI extends FunctionalCI
 {
 
 	public static function Init()
@@ -848,7 +848,7 @@ class NetworkInterface extends ConnectableCI
 		MetaModel::Init_SetZListItems('list', array('status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'device_id', 'logical_type', 'physical_type', 'ip_address', 'ip_mask', 'mac_address', 'speed', 'duplex', 'connected_if', 'connected_if_device_id'));
 	}
 }
-class Device extends ConnectableCI
+abstract class Device extends ConnectableCI
 {
 
 	public static function Init()
@@ -908,7 +908,7 @@ class PC extends Device
 		MetaModel::Init_SetZListItems('list', array('status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'cpu', 'ram', 'hdd', 'os_family', 'os_version'));
 	}
 }
-class MobileCI extends Device
+abstract class MobileCI extends Device
 {
 
 	public static function Init()
@@ -965,7 +965,7 @@ class MobilePhone extends MobileCI
 		MetaModel::Init_SetZListItems('list', array('status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'number', 'imei', 'hw_pin'));
 	}
 }
-class InfrastructureCI extends Device
+abstract class InfrastructureCI extends Device
 {
 
 	public static function Init()
@@ -1263,7 +1263,7 @@ $oContactNode = new TemplateMenuNode('Contact', '../business/templates/contacts_
 new OQLMenuNode('Person', 'SELECT Person', $oContactNode->GetIndex(), 1 /* fRank */);
 new OQLMenuNode('Team', 'SELECT Team', $oContactNode->GetIndex(), 2 /* fRank */);
 
-new OQLMenuNode('FileDoc', 'SELECT FileDoc', $oConfigManagementGroup->GetIndex(), 2 /* fRank */);
+new OQLMenuNode('Document', 'SELECT Document', $oConfigManagementGroup->GetIndex(), 2 /* fRank */);
 new OQLMenuNode('Location', 'SELECT Location', $oConfigManagementGroup->GetIndex(), 3 /* fRank */);
 
 

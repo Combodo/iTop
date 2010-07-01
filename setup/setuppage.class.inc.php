@@ -101,22 +101,22 @@ button {
 p.info {
 	padding-left: 50px;
 	background: url(../images/info-mid.png) no-repeat left -5px;
-	height: 48px;
+	min-height: 48px;
 }
 p.ok {
 	padding-left: 50px;
 	background: url(../images/clean-mid.png) no-repeat left -8px;
-	height: 48px;
+	min-height: 48px;
 }
 p.warning {
 	padding-left: 50px;
 	background: url(../images/messagebox_warning-mid.png) no-repeat left -5px;
-	height: 48px;
+	min-height: 48px;
 }
 p.error {
 	padding-left: 50px;
 	background: url(../images/stop-mid.png) no-repeat left -5px;
-	height: 48px;
+	min-height: 48px;
 }
 td.label {
 	text-align: left;

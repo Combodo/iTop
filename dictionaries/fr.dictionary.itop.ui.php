@@ -349,7 +349,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Button:AddToList' => ' << Ajouter ',
 	'UI:Button:RemoveFromList' => ' Enlever >> ',
 	'UI:Button:FilterList' => ' Filtrer... ',
-	'UI:Button:Delete' => 'Supprimer ! ',
+	'UI:Button:Create' => ' Créer ',
+	'UI:Button:Delete' => ' Supprimer ! ',
 	
 	'UI:SearchToggle' => 'Recherche',
 
@@ -630,6 +631,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:CloneTitle_Class_Object' => ' %1$s - Duplication de <span class=\"hilite\">%2$s</span>',
 	'UI:CreationPageTitle_Class' => 'iTop - Création d\'un objet de type %1$s ',
 	'UI:CreationTitle_Class' => 'Création d\'un objet de type %1$s',
+	'UI:SelectTheTypeOf_Class_ToCreate' => 'Sélectionnez le type de %1$s à créer :',
 	'UI:Class_Object_NotUpdated' => 'Aucun changement détecté, %2$s (type : %2$s) n\'a <strong>pas</strong> été modifié.',
 	'UI:Class_Object_Updated' => '%1$s (%2$s) mise à jour.',
 	'UI:BulkDeletePageTitle' => 'iTop - Suppression massive',

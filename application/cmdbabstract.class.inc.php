@@ -1303,7 +1303,7 @@ EOF
 			$oPage->add("<input type=\"hidden\" name=\"$sName\" value=\"$value\">\n");
 		}
 		$oPage->add("<button type=\"button\" class=\"action\" onClick=\"goBack()\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
-		$oPage->add("<button type=\"submit\" class=\"action\"><span>".Dict::S('UI:Button:Apply')."</span></button>\n");
+		$oPage->add("<button type=\"submit\" class=\"action\"><span>".Dict::S('UI:Button:Create')."</span></button>\n");
 		$oPage->add("</form>\n");
 		$aNewFieldsMap = array();
 		foreach($aFieldsMap as $id => $sFieldCode)
