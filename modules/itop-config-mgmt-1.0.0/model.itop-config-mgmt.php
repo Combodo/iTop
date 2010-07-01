@@ -382,10 +382,57 @@ class Subnet extends cmdbAbstractObject
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'ip', 'ip_mask'));
 		MetaModel::Init_SetZListItems('list', array('description', 'ip', 'ip_mask'));
 	}
+
 	public function ComputeValues()
 	{
 		$sName = $this->Get('ip').'/'.$this->Get('ip_mask');
 		$this->Set('name', $sName);
+	}
+
+	function DisplayBareRelations(WebPage $oPage)
+	{
+		parent::DisplayBareRelations($oPage);
+
+		$oPage->SetCurrentTab(Dict::S('Class:Subnet/Tab:IPUsage'));
+
+		$bit_ip = ip2long($this->Get('ip'));
+		$bit_mask = ip2long($this->Get('ip_mask'));
+
+		$iIPMin = $bit_ip & $bit_mask;
+		$iIPMax = ($bit_ip | (~$bit_mask)) - 1;
+
+		$sIPMin = long2ip($iIPMin);
+		$sIPMax = long2ip($iIPMax);
+
+		$oPage->p(Dict::Format('Class:Subnet/Tab:IPUsage-explain', $sIPMin, $sIPMax));
+		
+		$oIfSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT NetworkInterface AS if WHERE INET_ATON(if.ip_address) >= INET_ATON('$sIPMin') AND INET_ATON(if.ip_address) <= INET_ATON('$sIPMax')"));
+		self::DisplaySet($oPage, $oIfSet);
+
+		$iCountUsed = $oIfSet->Count();
+		$iCountRange = $iIPMax - $iIPMin;
+		$iFreeCount =  $iCountRange - $iCountUsed;
+
+		$oPage->SetCurrentTab(Dict::S('Class:Subnet/Tab:FreeIPs'));
+		$oPage->p(Dict::Format('Class:Subnet/Tab:FreeIPs-count', $iFreeCount));
+		$oPage->p(Dict::S('Class:Subnet/Tab:FreeIPs-explain'));
+
+		$aUsedIPs = $oIfSet->GetColumnAsArray('ip_address', false);
+		$iAnIP = $iIPMin;
+		$iFound = 0;
+		while (($iFound < min($iFreeCount, 10)) && ($iAnIP <= $iIPMax))
+		{
+			$sAnIP = long2ip($iAnIP);
+			if (!in_array($sAnIP, $aUsedIPs))
+			{
+				$iFound++;
+				$oPage->p($sAnIP);
+			}
+			else
+			{
+			}
+			$iAnIP++;
+		}
 	}
 }
 class Patch extends cmdbAbstractObject

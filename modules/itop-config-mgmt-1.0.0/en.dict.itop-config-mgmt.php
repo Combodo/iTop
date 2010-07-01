@@ -766,6 +766,19 @@ Dict::Add('EN US', 'English', 'English', array(
 ));
 
 
+
+//
+// Class extensions
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+'Class:Subnet/Tab:IPUsage' => 'IP Usage',
+'Class:Subnet/Tab:IPUsage-explain' => 'Interfaces having an IP in the range: <em>%1$s</em> to <em>%2$s</em>',
+'Class:Subnet/Tab:FreeIPs' => 'Free IPs',
+'Class:Subnet/Tab:FreeIPs-count' => 'Free IPs: %1$s',
+'Class:Subnet/Tab:FreeIPs-explain' => 'Here is an extract of 10 free IP addresses',
+));
+
 //
 // Application Menu
 //
