@@ -764,8 +764,8 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'Menu:RunQueriesMenu' => 'Requêtes OQL',
 	'Menu:RunQueriesMenu+' => 'Executer une requête OQL',
 	
-	'Menu:AdvancedToolsMenu' => 'Outils',
-	'Menu:AdvancedToolsMenu+' => 'Outils Avancés',
+	'Menu:DataAdministration' => 'Administration des données',
+	'Menu:DataAdministration+' => 'Administration des données',
 	
 	'Menu:UniversalSearchMenu' => 'Recherche Universelle',
 	'Menu:UniversalSearchMenu+' => 'Rechercher n\'importe quel objet...',

@@ -233,7 +233,7 @@ EOF
 		$oWelcomeMenu = new MenuGroup('WelcomeMenu', 0 /* fRank */);
 		new TemplateMenuNode('WelcomeMenuPage', '../business/templates/welcome_menu.html', $oWelcomeMenu->GetIndex() /* oParent */, 1 /* fRank */);
 		
-		$oToolsMenu = new MenuGroup('AdvancedToolsMenu', 2 /* fRank */);
+		$oToolsMenu = new MenuGroup('DataAdministration', 2 /* fRank */);
 		new WebPageMenuNode('CSVImportMenu', '../pages/csvimport.php', $oToolsMenu->GetIndex(), 1 /* fRank */);
 
 		// Add the admin menus

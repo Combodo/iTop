@@ -758,8 +758,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'Menu:RunQueriesMenu' => 'Run Queries',
 	'Menu:RunQueriesMenu+' => 'Run any query',
 	
-	'Menu:AdvancedToolsMenu' => 'Tools',
-	'Menu:AdvancedToolsMenu+' => 'Advanced tools',
+	'Menu:DataAdministration' => 'Data administration',
+	'Menu:DataAdministration+' => 'Data administration',
 	
 	'Menu:UniversalSearchMenu' => 'Universal Search',
 	'Menu:UniversalSearchMenu+' => 'Search for anything...',

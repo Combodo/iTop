@@ -154,6 +154,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Contact/Attribute:contract_list+' => 'Contracts related to the contact',
 	'Class:Contact/Attribute:ticket_list' => 'Tickets',
 	'Class:Contact/Attribute:ticket_list+' => 'Tickets related to the contact',
+	'Class:Contact/Attribute:team_list' => 'Teams',
+	'Class:Contact/Attribute:team_list+' => 'Teams this contact belongs to',
 ));
 
 //
@@ -176,6 +178,8 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:Team' => 'Team',
 	'Class:Team+' => '',
+	'Class:Team/Attribute:member_list' => 'Members',
+	'Class:Team/Attribute:member_list+' => 'Contacts that are part of the team',
 ));
 
 //
@@ -314,6 +318,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Patch/Attribute:type/Value:security+' => '',
 	'Class:Patch/Attribute:type/Value:servicepack' => 'Service Pack',
 	'Class:Patch/Attribute:type/Value:servicepack+' => '',
+	'Class:Patch/Attribute:ci_list' => 'Devices',
+	'Class:Patch/Attribute:ci_list+' => 'Devices where the patch is installed',
 ));
 
 //
@@ -327,6 +333,26 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Application/Attribute:name+' => '',
 	'Class:Application/Attribute:description' => 'Description',
 	'Class:Application/Attribute:description+' => '',
+	'Class:Application/Attribute:instance_list' => 'Installations',
+	'Class:Application/Attribute:instance_list+' => 'Instances of this application',
+));
+
+//
+// Class: DBServer
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:DBServer' => 'Database',
+	'Class:DBServer+' => 'Database server SW',
+));
+
+//
+// Class: OperatingSystem
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:OperatingSystem' => 'OS',
+	'Class:OperatingSystem+' => 'Operating System SW',
 ));
 
 //
@@ -559,6 +585,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:PC/Attribute:os_family+' => '',
 	'Class:PC/Attribute:os_version' => 'OS Version',
 	'Class:PC/Attribute:os_version+' => '',
+	'Class:PC/Attribute:application_list' => 'Applications',
+	'Class:PC/Attribute:application_list+' => 'Applications installed on this server',
+	'Class:PC/Attribute:patch_list' => 'Patches',
+	'Class:PC/Attribute:patch_list+' => 'Patches installed on this server',
 ));
 
 //
@@ -654,6 +684,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Server/Attribute:os_family+' => '',
 	'Class:Server/Attribute:os_version' => 'OS Version',
 	'Class:Server/Attribute:os_version+' => '',
+	'Class:Server/Attribute:application_list' => 'Applications',
+	'Class:Server/Attribute:application_list+' => 'Applications installed on this server',
+	'Class:Server/Attribute:patch_list' => 'Patches',
+	'Class:Server/Attribute:patch_list+' => 'Patches installed on this server',
 ));
 
 //
@@ -784,12 +818,18 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
+'Menu:Catalogs' => 'Catalogs',
+'Menu:Catalogs+' => 'Data types',
 'Menu:Audit' => 'Audit',
 'Menu:Audit+' => 'Audit',
 'Menu:Organization' => 'Organizations',
 'Menu:Organization+' => 'All Organizations',
 'Menu:Application' => 'Applications',
 'Menu:Application+' => 'All Applications',
+'Menu:DBServer' => 'Database Servers',
+'Menu:DBServer+' => 'Database Servers',
+'Menu:OperatingSystem' => 'OS',
+'Menu:OperatingSystem+' => 'Operating Systems',
 'Menu:Audit' => 'Audit',
 'Menu:ConfigManagement' => 'Configuration Management',
 'Menu:ConfigManagement+' => 'Configuration Management',
