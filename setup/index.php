@@ -552,6 +552,7 @@ function BuildConfig(SetupWebpage $oP, Config &$oConfig, $aParamValues)
 	// Make sure when don't load the same file twice...
 	foreach($aParamValues['module'] as $sModuleId)
 	{
+		$oP->log('Installed iTop module: '. $sModuleId);
 		$aDataModels = array_unique(array_merge($aDataModels, $aAvailableModules[$sModuleId]['datamodel']));
 		$sDictionaries = array_unique(array_merge($sDictionaries, $aAvailableModules[$sModuleId]['dictionary']));
 	}
@@ -803,11 +804,11 @@ function ModulesSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, $oConf
 function AdminAccountDefinition(SetupWebPage $oP, $aParamValues, $iCurrentStep, Config $oConfig)
 {
 	$sNextOperation = 'step'.($iCurrentStep+1);
-	$oP->add("<h1>iTop configuration wizard</h1>\n");
-	$oP->add("<h2>Creation of the database structure</h2>\n");
+	$oP->set_title("Configuration of the admin account");
+	$oP->add("<h2>Creation of the database structure</h2>");
 	$oP->add("<form id=\"theForm\" method=\"post\">\n");
 	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
-	AddParamsToForm($oP, $aParamValues, array('auth_user', 'auth_pwd'));
+	AddParamsToForm($oP, $aParamValues, array('auth_user', 'auth_pwd', 'language'));
 
 	$sDBName = $aParamValues['db_name'];
 	if ($sDBName == '')
@@ -822,7 +823,21 @@ function AdminAccountDefinition(SetupWebPage $oP, $aParamValues, $iCurrentStep, 
 	if (CreateDatabaseStructure($oP, $oConfig, $sDBName, $sDBPrefix))
 	{
 		$sRedStar = "<span class=\"hilite\">*</span>";
-		$oP->add("<h2>Step 3: Definition of the administrator account</h2>\n");
+		$oP->add("<h2>Default language for the application:</h2>\n");
+		// Possible languages (depends on the dictionaries loaded in the config)
+		$aForm = array();
+		$aAvailableLanguages = Dict::GetLanguages();
+		$sLanguages = '';
+		$sDefaultCode = $oConfig->GetDefaultLanguage();
+		foreach($aAvailableLanguages as $sLangCode => $aInfo)
+		{
+			$sSelected = ($sLangCode == $sDefaultCode ) ? 'selected ' : '';
+			$sLanguages.="<option value=\"{$sLangCode}\">{$aInfo['description']} ({$aInfo['localized_description']})</option>";
+		}
+		
+		$aForm[] = array('label' => "Default Language$sRedStar:", 'input' => "<select id=\"language\" name=\"language\">$sLanguages</option>");
+		$oP->form($aForm);
+		$oP->add("<h2>Definition of the administrator account</h2>\n");
 		// Database created, continue with admin creation		
 		$oP->add("<fieldset><legend>Administrator account</legend>\n");
 		$aForm = array();
@@ -855,10 +870,11 @@ function SampleDataSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, Con
 {
 	$sNextOperation = 'step'.($iCurrentStep+1);
 
-	$oP->add("<h1>iTop configuration wizard</h1>\n");
-	$oP->add("<h2>Creation of the administrator account</h2>\n");
+	$oP->set_title("Application Initialization");
 	$sAdminUser = $aParamValues['auth_user'];
 	$sAdminPwd = $aParamValues['auth_pwd'];
+	$oConfig->SetDefaultLanguage($aParamValues['language']);
+	$oConfig->WriteToFile(TMP_CONFIG_FILE);
 
 	$oP->add("<form id=\"theForm\" method=\"post\"\">\n");
 	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
@@ -866,7 +882,7 @@ function SampleDataSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, Con
 	
 	if (CreateAdminAccount($oP, $oConfig, $sAdminUser, $sAdminPwd) && UserRights::Setup())
 	{
-		$oP->add("<h2>Step 4: Loading of sample data</h2>\n");
+		$oP->add("<h2>Loading of sample data</h2>\n");
 		$oP->p("<fieldset><legend> Do you want to load sample data into the database ? </legend>\n");
 		$oP->p("<input type=\"radio\" id=\"sample_data\" name=\"sample_data\" id=\"sample_data_no\" checked value=\"yes\"><label for=\"sample_data_yes\"> Yes, for testing purposes, populate the database with sample data.</label>\n");
 		$oP->p("<input type=\"radio\" name=\"sample_data\" unchecked id=\"sample_data_no\" value=\"no\"><label for=\"sample_data_no\"> No, this is a production system, load only the data required by the application.</label>\n");
@@ -924,12 +940,44 @@ function SetupFinished(SetupWebPage $oP, $aParamValues, $iCurrentStep, Config $o
 			// try to make the final config file read-only
 			@chmod(FINAL_CONFIG_FILE, 0440); // Read-only for owner and group, nothing for others
 			
-			$oP->add("<h1>iTop configuration wizard</h1>\n");
-			$oP->add("<h2>Configuration completed</h2>\n");
+			$oP->set_title("Configuration completed");
 			$oP->add("<form id=\"theForm\" method=\"get\" action=\"../index.php\">\n");
-			$oP->ok("The initialization completed successfully.");
+
+			// Check if there are some manual steps required:
+			$aAvailableModules = GetAvailableModules($oP);
+			$aManualSteps = array();
+			foreach($aParamValues['module'] as $sModuleId)
+			{
+				if (!empty($aAvailableModules[$sModuleId]['doc.manual_setup']))
+				{
+					$aManualSteps[$aAvailableModules[$sModuleId]['label']] = $aAvailableModules[$sModuleId]['doc.manual_setup'];
+				}
+			}
+			if (count($aManualSteps) > 0)
+			{
+				$oP->add("<h2>Manual operations required</h2>");
+				$oP->p("In order to complete the installation, the following manual operations are required:");
+				foreach($aManualSteps as $sModuleLabel => $sUrl)
+				{
+					$oP->p("<a href=\"$sUrl\" target=\"_blank\">Manual instructions for $sModuleLabel</a>");
+				}
+			}
+			else
+			{
+				$oP->add("<h2>Congratulations for installing iTop</h2>");
+				$oP->ok("The initialization completed successfully.");
+			}
 			// Form goes here.. No back button since the job is done !
-			$oP->add("<button type=\"submit\">Enter iTop</button>\n");
+			$oP->add("<h1>Let us know what you think about iTop</h1>");
+			$oP->add('<table style="width:100%;border:0;padding:0;"><tr><td style="width:100px;vertical-align:middle;background:#f6f6f1;text-align:center">');
+			$oP->add('<a href="http://www.combodo.com" style="padding:0;background:transparent;margin:0;"><img style="border:0" src="../images/logo-combodo.png"></a></td>');
+			$oP->add('<td style="padding-left: 10px;font-size:10pt">');
+			$oP->add("Combodo built iTop because Combodo believes that modern ITIL tools should be at the center of any IT department.");
+			$oP->p("Combodo invested a lot of time and effort in iTop, but you can help us improve it even further by providing your feedbacks</p>");
+			$oP->p("<a href=\"http://www.combodo.com/register?product=iTop&version=".urlencode(ITOP_VERSION." revision ".ITOP_REVISION)."\" target=\"_blank\">Register online</a> to get informed about all iTop related events (new versions, webinars, etc...)");
+			$oP->p("Check out the <a href=\"http://www.combodo.com/itopsupport\">support options</a> available for iTop.");
+			$oP->add('</td></tr></table>');
+			$oP->add("<p style=\"text-align:center;width:100%\"><button type=\"submit\">Enter iTop</button></p>\n");
 			$oP->add("</form>\n");
 		}
 		else
@@ -1008,7 +1056,7 @@ catch(Exception $e)
 }
 try
 {
-	$aParams = array('licence_ok', 'db_server', 'db_user', 'db_pwd','db_name', 'new_db_name', 'db_prefix', 'module', 'sample_data', 'auth_user', 'auth_pwd');
+	$aParams = array('licence_ok', 'db_server', 'db_user', 'db_pwd','db_name', 'new_db_name', 'db_prefix', 'module', 'sample_data', 'auth_user', 'auth_pwd', 'language');
 	foreach($aParams as $sName)
 	{
 		$aParamValues[$sName] = utils::ReadParam($sName, '');

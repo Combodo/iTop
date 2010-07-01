@@ -34,7 +34,7 @@ SetupWebPage::AddModule(
 		
 		// Documentation
 		//
-		'doc.manual_setup' => '/doc/xxx/yyy.htm',
+		'doc.manual_setup' => '', // No manual installation instructions
 		'doc.more_information' => '/doc/xxx/yyy.htm',
 	)
 );
