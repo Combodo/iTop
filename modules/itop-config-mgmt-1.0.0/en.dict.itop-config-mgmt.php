@@ -787,7 +787,7 @@ Dict::Add('EN US', 'English', 'English', array(
 'Menu:Audit' => 'Audit',
 'Menu:Audit+' => 'Audit',
 'Menu:Organization' => 'Organizations',
-'Menu:Organization+' => 'ALl Organizations',
+'Menu:Organization+' => 'All Organizations',
 'Menu:Application' => 'Applications',
 'Menu:Application+' => 'All Applications',
 'Menu:Audit' => 'Audit',
