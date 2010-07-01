@@ -54,14 +54,31 @@ function LinksWidget(id, sLinkedClass, sExtKeyToMe, sExtKeyToRemote, aAttributes
 		}
 		this.aPreviousLinks = this.aLinks; // Save the list in case of cancellation
 		this.aLinks = new Array(); // rebuild the list of links from scratch
-		if (oSelected.length > 0)
+		if (this.aAttributes.length == 0)
 		{
-			$('#LinkDlg_'+this.id).dialog('open');
+			// No attributes on the link, no need for the extra dialog box
+			// Process the results directly
+			for(i=0; i<this.aObjectBeingLinked.length; i++)
+			{
+				oLink = {};
+				oLink[this.sExtKeyToRemote] = this.aObjectBeingLinked[i];
+				this.aLinks.push(oLink);
+			}
+			this.Refresh();
+			// Grey out the 'Add...' button
+			$('#ac_add_'+this.id).attr('disabled', 'disabled');
 		}
 		else
 		{
-			this.Refresh();
-			$('#ac_add_'+this.id).attr('disabled', 'disabled');
+			if (oSelected.length > 0)
+			{
+				$('#LinkDlg_'+this.id).dialog('open');
+			}
+			else
+			{
+				this.Refresh();
+				$('#ac_add_'+this.id).attr('disabled', 'disabled');
+			}
 		}
 	}
 

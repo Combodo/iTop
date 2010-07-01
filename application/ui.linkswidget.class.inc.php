@@ -70,7 +70,11 @@ class UILinksWidget
 				}
 			}
 		}
-		$sAttributes = "['".implode("','", $aAttributes)."']";
+		$sAttributes = '[]';
+		if (count($aAttributes) > 0)
+		{
+			$sAttributes = "['".implode("','", $aAttributes)."']";
+		}
 		if ($oCurrentValuesSet != null)
 		{
 			// Serialize the link set into a JSon object
