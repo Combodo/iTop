@@ -972,14 +972,14 @@ abstract class cmdbAbstractObject extends CMDBObject
 							$sHTMLValue .= "<option value=\"0\">".Dict::S('UI:SelectOne')."</option>\n";
 							foreach($aAllowedValues as $key => $display_value)
 							{
-								if (count($aAllowedValues) == 1)
+								if ((count($aAllowedValues) == 1) && $bMandatory )
 								{
 									// When there is only once choice, select it by default
 									$sSelected = ' selected';
 								}
 								else
 								{
-								$sSelected = ($value == $key) ? ' selected' : '';
+									$sSelected = ($value == $key) ? ' selected' : '';
 								}
 								$sHTMLValue .= "<option value=\"$key\"$sSelected>$display_value</option>\n";
 							}
