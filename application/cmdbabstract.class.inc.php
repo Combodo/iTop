@@ -132,51 +132,41 @@ abstract class cmdbAbstractObject extends CMDBObject
 	function DisplayBareRelations(WebPage $oPage)
 	{
 		// Related objects
-		//$oPage->AddTabContainer('Related Objects');
-		//$oPage->SetCurrentTabContainer('Related Objects');
 		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode=>$oAttDef)
 		{
 			if ($oAttDef->IsLinkset())
 			{
 				$oPage->SetCurrentTab($oAttDef->GetLabel());
 				
-				if (get_class($oAttDef) == 'AttributeLinkedSet')
+				if (!$oAttDef->IsIndirect())
 				{
 					// 1:n links
 					$sTargetClass = $oAttDef->GetLinkedClass();
-					$oPage->p("<img src=\"".MetaModel::GetClassIcon($sTargetClass)."\" style=\"vertical-align:middle;\">&nbsp;".$oAttDef->GetDescription());
 
-					$oFilter = new DBObjectSearch($sTargetClass);
-					$oFilter->AddCondition($oAttDef->GetExtKeyToMe(), $this->GetKey());
-					$oBlock = new DisplayBlock($oFilter, 'list', false);
-						$aParams = array(
-							'target_attr' => $oAttDef->GetExtKeyToMe(),
-							'object_id' => $this->GetKey()
-							);
-					$oBlock->Display($oPage, 0, $aParams);
+					$aParams = array(
+						'target_attr' => $oAttDef->GetExtKeyToMe(),
+						'object_id' => $this->GetKey(),
+						'menu' => false,
+						);
 				}
-				else // get_class($oAttDef) == 'AttributeLinkedSetIndirect'
+				else
 				{
 					// n:n links
 					$sLinkedClass = $oAttDef->GetLinkedClass();
 					$oLinkingAttDef = 	MetaModel::GetAttributeDef($sLinkedClass, $oAttDef->GetExtKeyToRemote());
 					$sTargetClass = $oLinkingAttDef->GetTargetClass();
-
-					$oPage->p("<img src=\"".MetaModel::GetClassIcon($sTargetClass)."\" style=\"vertical-align:middle;\">&nbsp;".$oAttDef->GetDescription());
-					// Transform the DBObjectSet into a CMBDObjectSet !!!
-					$aLinkedObjects = $this->Get($sAttCode)->ToArray(false);
-					if (count($aLinkedObjects) > 0)
-					{
-						$oSet = CMDBObjectSet::FromArray($sLinkedClass, $aLinkedObjects);
-						$aParams = array(
+					
+					$aParams = array(
 							'link_attr' => $oAttDef->GetExtKeyToMe(),
 							'object_id' => $this->GetKey(),
 							'target_attr' => $oAttDef->GetExtKeyToRemote(),
 							'view_link' => false,
-						); 
-						self::DisplaySet($oPage, $oSet, $aParams);
-					}
+							'menu' => false,
+						);
 				}
+				$oPage->p("<img src=\"".MetaModel::GetClassIcon($sTargetClass)."\" style=\"vertical-align:middle;\">&nbsp;".$oAttDef->GetDescription());
+				$oBlock = new DisplayBlock($this->Get($sAttCode)->GetFilter(), 'list', false);
+				$oBlock->Display($oPage, 'rel_'.$sAttCode, $aParams);
 			}
 		}
 		$oPage->SetCurrentTab('');
