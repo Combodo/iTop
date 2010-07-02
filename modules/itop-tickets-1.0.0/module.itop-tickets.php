@@ -19,10 +19,10 @@ SetupWebPage::AddModule(
 		// Components
 		//
 		'datamodel' => array(
-			'model.itop-ticket.php',
+			'model.itop-tickets.php',
 		),
 		'dictionary' => array(
-			'en.dict.itop-ticket.php',
+			'en.dict.itop-tickets.php',
 		),
 		'data.struct' => array(
 		),
