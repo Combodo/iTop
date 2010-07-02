@@ -118,6 +118,24 @@ EOF
 		$sAuthPwd = utils::ReadParam('suggest_pwd', '');
 
 		$sVersionShort = Dict::Format('UI:iTopVersion:Short', ITOP_VERSION);
+		$sInconsistenPwdMsg = Dict::S('UI:Login:RetypePwdDoesNotMatch');
+		$this->add_script(<<<EOF
+function GoBack()
+{
+	window.history.back();
+}
+
+function DoCheckPwd()
+{
+	if ($('#new_pwd').val() != $('#retype_new_pwd').val())
+	{
+		alert('$sInconsistenPwdMsg');
+		return false;
+	}
+	return true;
+}
+EOF
+);
 		$this->add("<div id=\"login-logo\"><a href=\"http://www.combodo.com/itop\"><img title=\"$sVersionShort\" src=\"../images/itop-logo.png\"></a></div>\n");
 		$this->add("<div id=\"login\">\n");
 		$this->add("<h1>".Dict::S('UI:Login:ChangeYourPassword')."</h1>\n");
@@ -130,7 +148,7 @@ EOF
 		$this->add("<tr><td><label for=\"old_pwd\">".Dict::S('UI:Login:OldPasswordPrompt').":</label></td><td><input type=\"password\" id=\"old_pwd\" name=\"old_pwd\" value=\"\" /></td></tr>\n");
 		$this->add("<tr><td><label for=\"new_pwd\">".Dict::S('UI:Login:NewPasswordPrompt').":</label></td><td><input type=\"password\" id=\"new_pwd\" name=\"new_pwd\" value=\"\" /></td></tr>\n");
 		$this->add("<tr><td><label for=\"retype_new_pwd\">".Dict::S('UI:Login:RetypeNewPasswordPrompt').":</label></td><td><input type=\"password\" id=\"retype_new_pwd\" name=\"retype_new_pwd\" value=\"\" /></td></tr>\n");
-		$this->add("<tr><td colspan=\"2\" class=\"center v-spacer\">  <input type=\"button\" onClick=\"GoBack();\" value=\"".Dict::S('UI:Button:Cancel')."\" />&nbsp;&nbsp;<input type=\"submit\" value=\"".Dict::S('UI:Button:ChangePassword')."\" /></td></tr>\n");
+		$this->add("<tr><td colspan=\"2\" class=\"center v-spacer\">  <input type=\"button\" onClick=\"GoBack();\" value=\"".Dict::S('UI:Button:Cancel')."\" />&nbsp;&nbsp;<input type=\"submit\" onClick=\"return DoCheckPwd();\" value=\"".Dict::S('UI:Button:ChangePassword')."\" /></td></tr>\n");
 		$this->add("</table>\n");
 		$this->add("<input type=\"hidden\" name=\"loginop\" value=\"do_change_pwd\" />\n");
 		$this->add("</form>\n");
@@ -220,6 +238,9 @@ EOF
 		
 		if ($operation == 'change_pwd')
 		{
+			$sAuthUser = $_SESSION['auth_user'];
+			$sAuthPwd = $_SESSION['auth_pwd'];
+			UserRights::Login($sAuthUser, $sAuthPwd); // Set the user's language
 			$oPage = new LoginWebPage();
 			$oPage->DisplayChangePwdForm();
 			$oPage->output();
@@ -228,6 +249,8 @@ EOF
 		if ($operation == 'do_change_pwd')
 		{
 			$sAuthUser = $_SESSION['auth_user'];
+			$sAuthPwd = $_SESSION['auth_pwd'];
+			UserRights::Login($sAuthUser, $sAuthPwd); // Set the user's language
 			$sOldPwd = utils::ReadPostedParam('old_pwd');
 			$sNewPwd = utils::ReadPostedParam('new_pwd');
 			if (UserRights::CanChangePassword() && ((!UserRights::Login($sAuthUser, $sOldPwd)) || (!UserRights::ChangePassword($sOldPwd, $sNewPwd))))
