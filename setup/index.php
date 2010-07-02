@@ -480,6 +480,8 @@ function PopulateDataFilesList(SetupWebPage $oP, $aParamValues)
 	//
 	foreach($aStructureDataFiles as $sFile)
 	{
+		// Under Windows, it is a must to escape backslashes (not an issue until a folder name starts with t or n, etc...)
+		$sFile = str_replace('\\', '\\\\', $sFile);
 		$oP->add("aFilesToLoad[aFilesToLoad.length] = '$sFile';\n");
 	}
 
@@ -489,6 +491,8 @@ function PopulateDataFilesList(SetupWebPage $oP, $aParamValues)
 	$oP->add("{");
 	foreach($aSampleDataFiles as $sFile)
 	{
+		// Under Windows, it is a must to escape backslashes (not an issue until a folder name starts with t or n, etc...)
+		$sFile = str_replace('\\', '\\\\', $sFile);
 		$oP->add("aFilesToLoad[aFilesToLoad.length] = '$sFile';\n");
 	}
 	$oP->add("}\n");

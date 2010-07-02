@@ -29,7 +29,9 @@ SetupWebPage::AddModule(
 			//'data.struct.itop-config-mgmt.xml',
 		),
 		'data.sample' => array(
-			//'data.sample.itop-config-mgmt.xml',
+			'data.sample.organization.xml',
+			'data.sample.location.xml',
+			'data.sample.team.xml',
 		),
 		
 		// Documentation

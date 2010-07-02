@@ -29,7 +29,13 @@ SetupWebPage::AddModule(
 			//'data.struct.itop-service-mgmt.xml',
 		),
 		'data.sample' => array(
-			//'data.sample.itop-service-mgmt.xml',
+			'data.sample.service.xml',
+			'data.sample.servicesubcategory.xml',
+			'data.sample.sla.xml',
+			'data.sample.slt.xml',
+			'data.sample.slttosla.xml',
+			'data.sample.customercontract.xml',
+			'data.sample.contracttosla.xml',
 		),
 		
 		// Documentation
