@@ -189,7 +189,7 @@ class Incident extends Ticket
 		MetaModel::Init_AddAttribute(new AttributeString("product", array("allowed_values"=>null, "sql"=>"product", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("impact", array("allowed_values"=>new ValueSetEnum('1,2,3'), "sql"=>"impact", "default_value"=>"1", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("urgency", array("allowed_values"=>new ValueSetEnum('1,2,3'), "sql"=>"urgency", "default_value"=>"1", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("priority", array("allowed_values"=>new ValueSetEnum('low,medium,high'), "sql"=>"priority", "default_value"=>"low", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("priority", array("allowed_values"=>new ValueSetEnum('1,2,3'), "sql"=>"priority", "default_value"=>"low", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("workgroup_id", array("targetclass"=>"Team", "jointype"=>null, "allowed_values"=>null, "sql"=>"workgroup_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("workgroup_name", array("allowed_values"=>null, "extkey_attcode"=>"workgroup_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("agent_id", array("targetclass"=>"Person", "jointype"=>null, "allowed_values"=>null, "sql"=>"agent_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
@@ -327,15 +327,35 @@ class Incident extends Ticket
 		$sName = sprintf('I-%06d', $iKey);
 		$this->Set('ref', $sName);
 
-		$iPriority = $this->Get('impact') * $this->Get('urgency');
-		if ($iPriority > 5)
-		{
-			$this->Set('priority', 'high');
-		}
-		else
-		{
-			$this->Set('priority', 'low');
-		}
+		// priority[impact][urgency]
+		$aPriorities = array(
+			// single person
+			1 => array(
+				array(
+					1 => 1,
+					2 => 1,
+					3 => 2,
+				)
+			),
+			// a group
+			2 => array(
+				array(
+					1 => 1,
+					2 => 2,
+					3 => 3,
+				)
+			),
+			// a departement!
+			3 => array(
+				array(
+					1 => 2,
+					2 => 3,
+					3 => 3,
+				)
+			),
+		);
+		$iPriority = $aPriorities[$this->Get('impact')][$this->Get('urgency')];
+		$this->Set('priority', $iPriority);
 	}
 }
 class Change extends Ticket
