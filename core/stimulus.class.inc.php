@@ -126,6 +126,12 @@ class ObjectStimulus
 
 class StimulusUserAction extends ObjectStimulus
 {
+	// Entry in the menus
+}
+
+class StimulusInternal extends ObjectStimulus
+{
+	// Applied from page xxxx
 }
 
 ?>

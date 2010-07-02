@@ -49,6 +49,12 @@ define('ENUM_CHILD_CLASSES_EXCLUDETOP', 1);
 define('ENUM_CHILD_CLASSES_ALL', 2);
 
 /**
+ * Specifies that this attribute is visible/editable.... normal (default config) 
+ *
+ * @package     iTopORM
+ */
+define('OPT_ATT_NORMAL', 0);
+/**
  * Specifies that this attribute is hidden in that state 
  *
  * @package     iTopORM
@@ -774,8 +780,8 @@ abstract class MetaModel
 	//
 	// Object lifecycle model
 	//
-	private static $m_aStates = array(); // array of ("classname" => array of "statecode"=>array('label'=>..., 'description'=>..., attribute_inherit=> attribute_list=>...))
-	private static $m_aStimuli = array(); // array of ("classname" => array of ("stimuluscode"=>array('label'=>..., 'description'=>...)))
+	private static $m_aStates = array(); // array of ("classname" => array of "statecode"=>array('label'=>..., attribute_inherit=> attribute_list=>...))
+	private static $m_aStimuli = array(); // array of ("classname" => array of ("stimuluscode"=>array('label'=>...)))
 	private static $m_aTransitions = array(); // array of ("classname" => array of ("statcode_from"=>array of ("stimuluscode" => array('target_state'=>..., 'actions'=>array of handlers procs, 'user_restriction'=>TBD)))
 
 	public static function EnumStates($sClass)
@@ -1223,9 +1229,20 @@ abstract class MetaModel
 		if (!empty($sParentState))
 		{
 			// Inherit from the given state (must be defined !)
+			//
 			$aToInherit = self::$m_aStates[$sTargetClass][$sParentState];
+
+			// Reset the constraint when it was mandatory to set the value at the previous state
+			//
+			foreach ($aToInherit['attribute_list'] as $sState => $iFlags)
+			{
+				$iFlags = $iFlags & ~OPT_ATT_MUSTPROMPT;
+				$iFlags = $iFlags & ~OPT_ATT_MUSTCHANGE;
+				$aToInherit['attribute_list'][$sState] = $iFlags;
+			}
+			
 			// The inherited configuration could be overriden
-			$aStateDef['attribute_list'] = array_merge($aToInherit, $aStateDef['attribute_list']);
+			$aStateDef['attribute_list'] = array_merge($aToInherit['attribute_list'], $aStateDef['attribute_list']);
 		}
 		self::$m_aStates[$sTargetClass][$sStateCode] = $aStateDef;
 

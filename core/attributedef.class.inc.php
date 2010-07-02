@@ -632,6 +632,7 @@ class AttributeString extends AttributeDBField
 
 	public function MakeRealValue($proposedValue)
 	{
+		if (is_null($proposedValue)) return null;
 		return (string)$proposedValue;
 		// if (!settype($proposedValue, "string"))
 		// {

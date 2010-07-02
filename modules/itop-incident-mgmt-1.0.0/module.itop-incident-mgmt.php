@@ -13,6 +13,7 @@ SetupWebPage::AddModule(
 		//
 		'dependencies' => array(
 			'itop-config-mgmt/1.0.0',
+			'itop-service-mgmt/1.0.0',
 			'itop-tickets/1.0.0',
 		),
 		'mandatory' => false,
