@@ -35,7 +35,7 @@ class DisplayTemplate
 	
 	public function __construct($sTemplate)
 	{
-		$this->m_aTags = array('itopblock', 'itoptabs', 'itoptab', 'itoptoggle', 'itopstring');
+		$this->m_aTags = array('itopblock', 'itopcheck', 'itoptabs', 'itoptab', 'itoptoggle', 'itopstring');
 		$this->m_sTemplate = $sTemplate;
 	}
 	
@@ -166,6 +166,20 @@ class DisplayTemplate
 				$oTemplate = new DisplayTemplate($sContent);
 				$oTemplate->Render($oPage, array()); // no params to apply, they have already been applied
 				$oPage->SetCurrentTabContainer('');
+			break;
+			
+			case 'itopcheck':
+				$sClassName = $aAttributes['class'];
+				if (MetaModel::IsValidClass($sClassName))
+				{
+					$oTemplate = new DisplayTemplate($sContent);
+					$oTemplate->Render($oPage, array()); // no params to apply, they have already been applied
+				}
+				else
+				{
+					// Leave a trace for those who'd like to understand why nothing is displayed
+					$oPage->add("<!-- class $sClassName does not exist, skipping some part of the template -->\n");
+				}
 			break;
 			
 			case 'itoptab':

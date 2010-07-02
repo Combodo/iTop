@@ -38,12 +38,16 @@ display: list-item;
 </tr>
 <tr>
 <td class="dashboard2">
+<itopcheck class="ServiceCall">
 <p style="text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;"><itopstring>UI:WelcomeMenu:MyCalls</itopstring></p>
-<itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql">SELECT bizServiceCall AS i WHERE i.caller_id = :current_contact_id</itopblock>
+<itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql">SELECT ServiceCall AS i WHERE i.caller_id = :current_contact_id</itopblock>
+</itopcheck>
 </td>
 <td class="dashboard2">
+<itopcheck class="IncidentTicket">
 <p style="text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;"><itopstring>UI:WelcomeMenu:MyIncidents</itopstring></p>
-<itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql">SELECT bizIncidentTicket AS i WHERE i.caller_id = :current_contact_id</itopblock>
+<itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql">SELECT IncidentTicket AS i WHERE i.caller_id = :current_contact_id</itopblock>
+</itopcheck>
 </td>
 
 </tr>
