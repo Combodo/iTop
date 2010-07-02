@@ -845,7 +845,7 @@ class MenuBlock extends DisplayBlock
 			$aStimuli = Metamodel::EnumStimuli($sClass);
 			foreach($aTransitions as $sStimulusCode => $aTransitionDef)
 			{
-				$iActionAllowed = UserRights::IsStimulusAllowed($sClass, $sStimulusCode, $oSet);
+				$iActionAllowed = (get_class($aStimuli[$sStimulusCode]) == 'StimulusUserAction') ? UserRights::IsStimulusAllowed($sClass, $sStimulusCode, $oSet) : UR_ALLOWED_NO;
 				switch($iActionAllowed)
 				{
 					case UR_ALLOWED_YES:

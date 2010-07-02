@@ -259,7 +259,7 @@ class Incident extends Ticket
 			array(
 				"attribute_inherit" => 'new',
 				"attribute_list" => array(
-					'agent_id' => OPT_ATT_MUSTCHANGE,
+					'agent_id' => OPT_ATT_MANDATORY,
 					'related_problem_id' => OPT_ATT_NORMAL,
 					'related_change_id' => OPT_ATT_NORMAL,
 				),
@@ -316,6 +316,51 @@ class Incident extends Ticket
 		MetaModel::Init_DefineTransition("resolved", "ev_close", array("target_state"=>"closed", "actions"=>array(), "user_restriction"=>null));
 	}
 
+	public function ComputeSLT($sMetric = 'TTO')
+	{
+		$sOQL = "SELECT SLT JOIN lnkSLTToSLA AS L1 ON L1.slt_id=SLT.id JOIN SLA ON L1.sla_id = SLA.id JOIN lnkContractToSLA AS L2 ON L2.sla_id = SLA.id JOIN CustomerContract ON L2.contract_id = CustomerContract.id 
+				WHERE SLT.ticket_priority = :priority AND SLA.service_id = :service_id AND SLT.metric = :metric AND CustomerContract.customer_id = :customer_id";
+		$oSLTSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL),
+						array(),
+						array(
+							'priority' => $this->Get('priority'),
+							'service_id' => $this->Get('service_id'),
+							'metric' => $sMetric,
+							'customer_id' => $this->Get('customer_id'),
+						)
+						);
+						
+		$iMinDuration = PHP_INT_MAX;
+		$sSLTName = '';
+
+		while($oSLT = $oSLTSet->Fetch())
+		{
+			$iDuration = $oSLT->Get('value');
+			$sUnit = $oSLT->Get('value_unit');
+			switch($sUnit)
+			{
+				case 'days':
+				$iDuration = $iDuration * 24; // 24 hours in 1 days
+				// Fall though
+				
+				case 'hours':
+				$iDuration = $iDuration * 60; // 60 minutes in 1 hour
+				// Fall though
+				
+				case 'minutes':
+				$iDuration = $iDuration * 60;
+			}
+			if ($iDuration < $iMinDuration)
+			{
+				$iMinDuration = $iDuration;
+				$sSLTName = $oSLT->GetName();
+			}
+		}
+		if ($iMinDuration == PHP_INT_MAX) $iMinDuration = null;
+		return array('SLT' => $sSLTName, 'value' => $iMinDuration);
+	}
+
+
 	public function ComputeValues()
 	{
 		$iKey = $this->GetKey();
@@ -354,8 +399,20 @@ class Incident extends Ticket
 				)
 			),
 		);
-		$iPriority = $aPriorities[$this->Get('impact')][$this->Get('urgency')];
+		$iPriority = 1; //$aPriorities[$this->Get('impact')][$this->Get('urgency')];
 		$this->Set('priority', $iPriority);
+		
+		// Compute the SLA deadlines
+		
+		$aSLT = $this->ComputeSLT('TTO');
+		$iStartDate = $this->Get('start_date');
+		//echo "<p>TTO: SLT found: {$aSLT['SLT']}, value: {$aSLT['value']}</p>\n";
+		$this->Set('escalation_deadline', $iStartDate + $aSLT['value']);
+		$aSLT = $this->ComputeSLT('TTR');
+		//echo "<p>TTR: SLT found: {$aSLT['SLT']}, value: {$aSLT['value']}</p>\n";
+		$iStartDate = $this->Get('start_date');
+		$this->Set('closure_deadline', $iStartDate + $aSLT['value']);
+		
 	}
 }
 class Change extends Ticket

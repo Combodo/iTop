@@ -581,7 +581,7 @@ try
 					// Split the text on the blanks and treat this as a search for <word1> AND <word2> AND <word3>
 					$aFullTextNeedles = explode(' ', $sFullText);
 				}
-				foreach(MetaModel::GetClasses('bizmodel') as $sClassName)
+				foreach(MetaModel::GetClasses('searchable') as $sClassName)
 				{
 					$oFilter = new DBObjectSearch($sClassName);
 					foreach($aFullTextNeedles as $sSearchText)
