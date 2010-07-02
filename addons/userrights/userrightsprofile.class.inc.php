@@ -883,6 +883,41 @@ exit;
 		return false;
 	}
 
+	public function CanChangePassword()
+	{
+		// For now everyone can change their password..
+		return true;
+	}
+
+	public function ChangePassword($iUserId, $sOldPassword, $sNewPassword)
+	{
+		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_Users WHERE id = :user_id"), array(), array('user_id' => $iUserId));
+		if ($oSet->Count() < 1)
+		{
+			return false;
+		}
+
+		$oLogin = $oSet->Fetch();
+		if ($oLogin->Get('password') == $sOldPassword)
+		{
+			$oLogin->Set('password', $sNewPassword);
+			$oChange = MetaModel::NewObject("CMDBChange");
+			$oChange->Set("date", time());
+			if (UserRights::GetUser() != UserRights::GetRealUser())
+			{
+				$sUserString = Dict::Format('UI:Archive_User_OnBehalfOf_User', UserRights::GetRealUser(), UserRights::GetUser());
+			}
+			else
+			{
+				$sUserString = UserRights::GetUser();
+			}
+			$oChange->Set("userinfo", $sUserString);
+			$oLogin->DBUpdateTracked($oChange);
+			return true;
+		}
+		return false;
+	}
+
 	public function GetUserId($sUserName)
 	{
 		if (array_key_exists($sUserName, $this->m_aLogin2UserId))

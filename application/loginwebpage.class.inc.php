@@ -40,7 +40,7 @@ body {
 }
 #login-logo {
 	margin-top: 150px;
-	width: 250px;
+	width: 300px;
 	padding-left: 20px;
 	padding-right: 20px;
 	padding-top: 10px;
@@ -59,7 +59,7 @@ body {
 	border: 0;
 }
 #login {
-	width: 250px;
+	width: 300px;
 	margin-left: auto;
 	margin-right: auto;
 	padding: 20px;
@@ -108,6 +108,31 @@ EOF
 		$this->add("<tr><td colspan=\"2\" class=\"center v-spacer\"> <input type=\"submit\" value=\"".Dict::S('UI:Button:Login')."\" /></td></tr>\n");
 		$this->add("</table>\n");
 		$this->add("<input type=\"hidden\" name=\"loginop\" value=\"login\" />\n");
+		$this->add("</form>\n");
+		$this->add("</div>\n");
+	}
+
+	public function DisplayChangePwdForm($bFailedLogin = false)
+	{
+		$sAuthUser = utils::ReadParam('auth_user', '');
+		$sAuthPwd = utils::ReadParam('suggest_pwd', '');
+
+		$sVersionShort = Dict::Format('UI:iTopVersion:Short', ITOP_VERSION);
+		$this->add("<div id=\"login-logo\"><a href=\"http://www.combodo.com/itop\"><img title=\"$sVersionShort\" src=\"../images/itop-logo.png\"></a></div>\n");
+		$this->add("<div id=\"login\">\n");
+		$this->add("<h1>".Dict::S('UI:Login:ChangeYourPassword')."</h1>\n");
+		if ($bFailedLogin)
+		{
+			$this->add("<p class=\"hilite\">".Dict::S('UI:Login:IncorrectOldPassword')."</p>\n");
+		}
+		$this->add("<form method=\"post\">\n");
+		$this->add("<table>\n");
+		$this->add("<tr><td><label for=\"old_pwd\">".Dict::S('UI:Login:OldPasswordPrompt').":</label></td><td><input type=\"password\" id=\"old_pwd\" name=\"old_pwd\" value=\"\" /></td></tr>\n");
+		$this->add("<tr><td><label for=\"new_pwd\">".Dict::S('UI:Login:NewPasswordPrompt').":</label></td><td><input type=\"password\" id=\"new_pwd\" name=\"new_pwd\" value=\"\" /></td></tr>\n");
+		$this->add("<tr><td><label for=\"retype_new_pwd\">".Dict::S('UI:Login:RetypeNewPasswordPrompt').":</label></td><td><input type=\"password\" id=\"retype_new_pwd\" name=\"retype_new_pwd\" value=\"\" /></td></tr>\n");
+		$this->add("<tr><td colspan=\"2\" class=\"center v-spacer\">  <input type=\"button\" onClick=\"GoBack();\" value=\"".Dict::S('UI:Button:Cancel')."\" />&nbsp;&nbsp;<input type=\"submit\" value=\"".Dict::S('UI:Button:ChangePassword')."\" /></td></tr>\n");
+		$this->add("</table>\n");
+		$this->add("<input type=\"hidden\" name=\"loginop\" value=\"do_change_pwd\" />\n");
 		$this->add("</form>\n");
 		$this->add("</div>\n");
 	}
@@ -191,6 +216,33 @@ EOF
 		if ($operation == 'logoff')
 		{
 			self::ResetSession();
+		}
+		
+		if ($operation == 'change_pwd')
+		{
+			$oPage = new LoginWebPage();
+			$oPage->DisplayChangePwdForm();
+			$oPage->output();
+			exit;
+		}
+		if ($operation == 'do_change_pwd')
+		{
+			$sAuthUser = $_SESSION['auth_user'];
+			$sOldPwd = utils::ReadPostedParam('old_pwd');
+			$sNewPwd = utils::ReadPostedParam('new_pwd');
+			if (UserRights::CanChangePassword() && ((!UserRights::Login($sAuthUser, $sOldPwd)) || (!UserRights::ChangePassword($sOldPwd, $sNewPwd))))
+			{
+				$oPage = new LoginWebPage();
+				$oPage->DisplayChangePwdForm(true); // old pwd was wrong
+				$oPage->output();
+				exit;
+			}
+			else
+			{
+				// Remember the changed password
+				$_SESSION['auth_pwd'] = $sNewPwd;
+				return;
+			}
 		}
 		
 		if (!isset($_SESSION['auth_user']) || !isset($_SESSION['auth_pwd']))

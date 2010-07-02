@@ -55,6 +55,8 @@ abstract class UserRightsAddOnAPI
 
 	abstract public function Init(); // loads data (possible optimizations)
 	abstract public function CheckCredentials($sLogin, $sPassword); // returns the id of the user or false
+	abstract public function CanChangePassword(); // Whether or not a user can change her/his own password
+	abstract public function ChangePassword($iUserId, $sOldPassword, $sNewPassword); // Change the password of the specified user
 	abstract public function GetUserLanguage($sLogin); // returns the language code (e.g "EN US")
 	abstract public function GetUserId($sLogin); // returns the id of the user or false
 	abstract public function GetContactId($sLogin); // returns the id of the "business" user or false
@@ -137,6 +139,30 @@ class UserRights
 			self::$m_sUserLanguage = self::$m_oAddOn->GetUserLanguage($sName);
 			Dict::SetUserLanguage(self::GetUserLanguage());
 			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	public static function CanChangePassword()
+	{
+		if (!is_null(self::$m_iUserId))
+		{
+ 			return self::$m_oAddOn->CanChangePassword(self::$m_iUserId);
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	public static function ChangePassword($sCurrentPassword, $sNewPassword)
+	{
+		if (!is_null(self::$m_iUserId))
+		{
+ 			return self::$m_oAddOn->ChangePassword(self::$m_iUserId, $sCurrentPassword, $sNewPassword);
 		}
 		else
 		{

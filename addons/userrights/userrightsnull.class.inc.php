@@ -51,6 +51,16 @@ class UserRightsNull extends UserRightsAddOnAPI
 	{
 		return 1;
 	}
+	
+	public function CanChangePassword()
+	{
+		return true;
+	}
+
+	public function ChangePassword($iUserId, $sOldPassword, $sNewPassword)
+	{
+		return true;
+	}
 
 	public function GetUserId($sUserName)
 	{

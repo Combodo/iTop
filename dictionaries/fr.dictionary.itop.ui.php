@@ -351,6 +351,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Button:FilterList' => ' Filtrer... ',
 	'UI:Button:Create' => ' Créer ',
 	'UI:Button:Delete' => ' Supprimer ! ',
+	'UI:Button:ChangePassword' => ' Changer ! ',
 	
 	'UI:SearchToggle' => 'Recherche',
 
@@ -429,6 +430,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Login:IdentifyYourself' => 'Merci de vous identifier',
 	'UI:Login:UserNamePrompt' => 'Identifiant',
 	'UI:Login:PasswordPrompt' => 'Mot de passe',
+	'UI:Login:ChangeYourPassword' => 'Changer de mot de passe',
+	'UI:Login:OldPasswordPrompt' => 'Ancien mot de passe',
+	'UI:Login:NewPasswordPrompt' => 'Nouveau mot de passe',
+	'UI:Login:RetypeNewPasswordPrompt' => 'Resaisir le nouveau mot de passe',
+	'UI:Login:IncorrectOldPassword' => 'Erreur: l\'ancien mot de passe est incorrect',
+	'UI:LogoffMenu' => 'Déconnexion',
+	'UI:ChangePwdMenu' => 'Changer de mot de passe...',
 	'UI:Button:Login' => 'Entrer dans iTop',
 	'UI:Login:Error:AccessRestricted' => 'L\'accès à iTop est soumis à autorisation. Merci de contacter votre administrateur iTop.',
 	'UI:CSVImport:MappingSelectOne' => '-- choisir une valeur --',

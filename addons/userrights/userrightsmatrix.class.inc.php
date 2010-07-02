@@ -304,6 +304,30 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 		// todo: throw an exception?
 		return false;
 	}
+	
+	public function CanChangePassword()
+	{
+		return true;
+	}
+
+	public function ChangePassword($iUserId, $sOldPassword, $sNewPassword)
+	{
+		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixUsers WHERE userid = $iUserId"));
+		if ($oSet->Count() < 1)
+		{
+			return false;
+		}
+
+		$oLogin = $oSet->Fetch();
+		if ($oLogin->Get('password') == $sOldPassword)
+		{
+			$oLogin->Set('password', $sNewPassword);
+			$oLogin->DBUpdate();
+			return true;
+		}
+		return false;
+	}
+
 
 	public function GetUserId($sUserName)
 	{
