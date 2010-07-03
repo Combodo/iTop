@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Set>
-<CustomerContract alias="CustomerContract" id="1">
-<name>Support for MyCust</name>
-<description>PC support and SW support</description>
+<CustomerContract alias="CustomerContract" id="2">
+<name>End-User PC Support</name>
+<description>Hardware support for end-users' PC</description>
 <start_date>2010-07-01</start_date>
-<end_date>0000-00-00</end_date>
-<cost>10000</cost>
+<end_date>2012-07-31</end_date>
+<cost></cost>
 <cost_currency>euros</cost_currency>
 <cost_unit></cost_unit>
-<billing_frequency>per month</billing_frequency>
-<customer_id>1</customer_id>
-<support_team_id>1</support_team_id>
+<billing_frequency></billing_frequency>
+<customer_id>2</customer_id>
+<support_team_id>2</support_team_id>
 </CustomerContract>
 </Set>
