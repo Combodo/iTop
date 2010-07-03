@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<BusinessProcess alias="BusinessProcess" id="7">
+<name>iTop demonstration</name>
+<status>production</status>
+<owner_id>2</owner_id>
+<importance>medium</importance>
+<description>Demonstrating iTop on line</description>
+</BusinessProcess>
+<lnkProcessToSolution alias="lnkProcessToSolution" id="2">
+<solution_id>6</solution_id>
+<process_id>7</process_id>
+<reason>On demand demo of iTop</reason>
+</lnkProcessToSolution>
+<lnkCIToContact alias="lnkCIToContact" id="1">
+<ci_id>7</ci_id>
+<contact_id>3</contact_id>
+<role>Operations Manager</role>
+</lnkCIToContact>
+<lnkCIToContact alias="lnkCIToContact" id="2">
+<ci_id>7</ci_id>
+<contact_id>4</contact_id>
+<role>Support Specialist</role>
+</lnkCIToContact>
+<lnkCIToContact alias="lnkCIToContact" id="3">
+<ci_id>8</ci_id>
+<contact_id>6</contact_id>
+<role>Datacenter Network Engineer</role>
+</lnkCIToContact>
+</Set>

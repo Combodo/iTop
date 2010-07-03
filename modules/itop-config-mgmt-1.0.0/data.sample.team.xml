@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Set>
-<Team alias="Team" id="1">
-<name>My team</name>
+<Team alias="Team" id="2">
+<name>Hardware Support Team</name>
 <status>active</status>
-<org_id>1</org_id>
-<email>myteam@combodo.com</email>
+<org_id>2</org_id>
+<email>pcsupport@demo-noemail.net</email>
 <phone></phone>
 <location_id>1</location_id>
 </Team>

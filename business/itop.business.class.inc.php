@@ -573,14 +573,15 @@ class DatabaseInstance extends FunctionalCI
 
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("application_id", array("targetclass"=>"ApplicationInstance", "jointype"=>null, "allowed_values"=>null, "sql"=>"application_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("application_name", array("allowed_values"=>null, "extkey_attcode"=>"application_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("application_version", array("allowed_values"=>null, "extkey_attcode"=>"application_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributePassword("admin_login", array("allowed_values"=>null, "sql"=>"admin_login", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributePassword("admin_password", array("allowed_values"=>null, "sql"=>"admin_password", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeWikiText("description", array("allowed_values"=>null, "sql"=>"description", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('name', 'status', 'owner_id', 'importance', 'application_id', 'admin_login', 'admin_password', 'description'));
+		MetaModel::Init_SetZListItems('details', array('name', 'status', 'owner_id', 'importance', 'application_id', 'application_version', 'admin_login', 'admin_password', 'description'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'owner_id', 'importance', 'application_id', 'description'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'owner_id', 'importance', 'application_id', 'description'));
-		MetaModel::Init_SetZListItems('list', array('status', 'owner_id', 'importance', 'application_id'));
+		MetaModel::Init_SetZListItems('list', array('status', 'owner_id', 'importance', 'application_id', 'application_version'));
 	}
 }
 class ApplicationSolution extends FunctionalCI

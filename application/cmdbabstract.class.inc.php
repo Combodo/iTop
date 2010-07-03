@@ -87,7 +87,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 			// AND make the name be a mandatory field
 			//
 			$sObject = MetaModel::GetObject($sObjClass, $sObjKey);
-			$sLabel = $sObject->GetDisplayName();
+			$sLabel = $sObject->GetName();
 		}
 		// Safety net
 		//
@@ -110,7 +110,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$oBlock = new MenuBlock($oSingletonFilter, 'popup', false);
 		$oBlock->Display($oPage, -1);
 		$oPage->add("<div class=\"page_header\"><h1><img src=\"".$this->GetIcon()."\" style=\"margin-right:10px;margin-top: -16px;vertical-align:middle;\">\n");
-		$oPage->add(MetaModel::GetName(get_class($this)).": <span class=\"hilite\">".$this->GetDisplayName()."</span></h1>\n");
+		$oPage->add(MetaModel::GetName(get_class($this)).": <span class=\"hilite\">".$this->GetName()."</span></h1>\n");
 		$oPage->add("</div>\n");
 	}
 
@@ -131,9 +131,13 @@ abstract class cmdbAbstractObject extends CMDBObject
 
 	function DisplayBareRelations(WebPage $oPage)
 	{
-		// Related objects
-		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode=>$oAttDef)
+		// Related objects: display all the linkset attributes, each as a separate tab
+		// First in the order described by the 'display' ZList, then the remaining ones
+		$aList = $this->FlattenZList(MetaModel::GetZListItems(get_class($this), 'details'));
+		$aList = array_unique(array_merge($aList, array_keys(MetaModel::ListAttributeDefs(get_class($this)))));
+		foreach($aList as $sAttCode)
 		{
+			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
 			if ($oAttDef->IsLinkset())
 			{
 				$oPage->SetCurrentTab($oAttDef->GetLabel());
@@ -172,16 +176,6 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$oPage->SetCurrentTab('');
 	}
 
-	function GetDisplayName()
-	{
-		$sDisplayName = '';
-		if (MetaModel::GetNameAttributeCode(get_class($this)) != '')
-		{
-			$sDisplayName = $this->GetAsHTML(MetaModel::GetNameAttributeCode(get_class($this)));
-		}
-		return $sDisplayName;
-	}
-
 	function GetBareProperties(WebPage $oPage)
 	{
 		$sHtml = '';
@@ -190,8 +184,6 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$aDetails = array();
 		$sClass = get_class($this);
 		$aDetailsList = MetaModel::GetZListItems($sClass, 'details');
-		$aFullList = MetaModel::ListAttributeDefs($sClass);
-		$aList = $aDetailsList;
 		$aDetailsStruct = self::ProcessZlist($aDetailsList, array('UI:PropertiesTab' => array()), 'UI:PropertiesTab', 'col1', '');
 		// Compute the list of properties to display, first the attributes in the 'details' list, then 
 		// all the remaining attributes that are not external fields
@@ -1384,6 +1376,24 @@ EOF
 		}
 		return $aDetails;
 	}
+
+	protected function FlattenZList($aList)
+	{
+		$aResult = array();
+		foreach($aList as $value)
+		{
+			if (!is_array($value))
+			{
+				$aResult[] = $value;
+			}
+			else
+			{
+				$aResult = array_merge($aResult, $this->FlattenZList($value));
+			}
+		}
+		return $aResult;
+	}
+		
 	protected function GetFieldAsHtml($sClass, $sAttCode, $sStateAttCode)
 	{
 		$retVal = null;

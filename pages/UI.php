@@ -439,7 +439,7 @@ try
 			$oObj = $oContext->GetObject($sClass, $id);
 			if ($oObj != null)
 			{
-				$oP->set_title(Dict::Format('UI:DetailsPageTitle', $oObj->GetDisplayName(), $sClassLabel));
+				$oP->set_title(Dict::Format('UI:DetailsPageTitle', $oObj->GetName(), $sClassLabel));
 				$oObj->DisplayDetails($oP);
 			}
 			else
@@ -783,6 +783,7 @@ try
 				$oP->add('<p>'.Dict::Format('UI:SelectTheTypeOf_Class_ToCreate', $sClassLabel));
 				$aDefaults = utils::ReadParam('default', array());
 				$oP->add($oAppContext->GetForForm());
+				$oP->add("<input type=\"hidden\" name=\"checkSubclass\" value=\"0\">\n");
 				$oP->add("<input type=\"hidden\" name=\"state\" value=\"$sStateCode\">\n");
 				$oP->add("<input type=\"hidden\" name=\"operation\" value=\"new\">\n");
 				foreach($aDefaults as $key => $value)

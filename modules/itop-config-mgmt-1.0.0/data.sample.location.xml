@@ -3,9 +3,11 @@
 <Location alias="Location" id="1">
 <name>Headquarters</name>
 <status>active</status>
-<org_id>1</org_id>
-<address></address>
-<country></country>
+<org_id>2</org_id>
+<address>1, rue de la Paix</address>
+<postal_code>75000</postal_code>
+<city>Paris</city>
+<country>France</country>
 <parent_id>0</parent_id>
 </Location>
 </Set>

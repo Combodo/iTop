@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<Person alias="Contact" id="4">
+<name>Dumas</name>
+<status>active</status>
+<org_id>2</org_id>
+<email>alexandre.dumas@demo-noemail.net</email>
+<phone></phone>
+<location_id>1</location_id>
+<first_name>Alexandre</first_name>
+<employee_id>20100002</employee_id>
+</Person>
+<Person alias="Contact" id="3">
+<name>Hugo</name>
+<status>active</status>
+<org_id>2</org_id>
+<email>victor.hugo@demo-noemail.net</email>
+<phone></phone>
+<location_id>1</location_id>
+<first_name>Victor</first_name>
+<employee_id>20100001</employee_id>
+</Person>
+<Person alias="Contact" id="1">
+<name>My last name</name>
+<status>active</status>
+<org_id>1</org_id>
+<email>my.email@foo.org</email>
+<phone></phone>
+<location_id>0</location_id>
+<first_name></first_name>
+<employee_id></employee_id>
+</Person>
+<Person alias="Contact" id="5">
+<name>Verne</name>
+<status>active</status>
+<org_id>2</org_id>
+<email>jules.verne@demo-noemail.net</email>
+<phone></phone>
+<location_id>1</location_id>
+<first_name>Jules</first_name>
+<employee_id>20100003</employee_id>
+</Person>
+<lnkTeamToContact alias="lnkTeamToContact" id="1">
+<team_id>2</team_id>
+<contact_id>4</contact_id>
+</lnkTeamToContact>
+<lnkTeamToContact alias="lnkTeamToContact" id="2">
+<team_id>2</team_id>
+<contact_id>5</contact_id>
+</lnkTeamToContact>
+</Set>

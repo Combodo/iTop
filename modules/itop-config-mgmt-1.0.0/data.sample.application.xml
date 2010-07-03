@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<Application alias="Application" id="2">
+<name>Apache Web Server</name>
+<description></description>
+</Application>
+<DBServer alias="Application" id="1">
+<name>MySQL 5</name>
+<description>MySQL Server version 5</description>
+</DBServer>
+<ApplicationInstance alias="ApplicationInstance" id="5">
+<name>Apache Web Server</name>
+<status>production</status>
+<owner_id>2</owner_id>
+<importance>medium</importance>
+<device_id>4</device_id>
+<licence_id>0</licence_id>
+<application_id>2</application_id>
+<version>2.2</version>
+<description>Apache 2.2 with PHP 5.3.4</description>
+</ApplicationInstance>
+<ApplicationInstance alias="ApplicationInstance" id="2">
+<name>MySQL 5 prod</name>
+<status>production</status>
+<owner_id>2</owner_id>
+<importance>medium</importance>
+<device_id>1</device_id>
+<licence_id>0</licence_id>
+<application_id>1</application_id>
+<version>5.0.27</version>
+<description></description>
+</ApplicationInstance>
+<DatabaseInstance alias="DatabaseInstance" id="3">
+<name>itop_beta</name>
+<status>implementation</status>
+<owner_id>2</owner_id>
+<importance>medium</importance>
+<db_server_instance_id>2</db_server_instance_id>
+<admin_login>root</admin_login>
+<admin_password></admin_password>
+<description>iTop beta test instance</description>
+</DatabaseInstance>
+<ApplicationSolution alias="ApplicationSolution" id="6">
+<name>iTop demo</name>
+<status>production</status>
+<owner_id>2</owner_id>
+<importance>high</importance>
+<description>Demo instance of iTop</description>
+</ApplicationSolution>
+<lnkSolutionToCI alias="lnkSolutionToCI" id="1">
+<solution_id>6</solution_id>
+<ci_id>5</ci_id>
+<utility>itop beta instance</utility>
+</lnkSolutionToCI>
+<lnkSolutionToCI alias="lnkSolutionToCI" id="2">
+<solution_id>6</solution_id>
+<ci_id>3</ci_id>
+<utility>itop beta instance</utility>
+</lnkSolutionToCI>
+</Set>

@@ -113,6 +113,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Location/Attribute:org_name+' => '',
 	'Class:Location/Attribute:address' => 'Address',
 	'Class:Location/Attribute:address+' => 'Postal address',
+	'Class:Location/Attribute:postal_code' => 'Postal code',
+	'Class:Location/Attribute:postal_code+' => 'ZIP/Postal code',
+	'Class:Location/Attribute:city' => 'City',
+	'Class:Location/Attribute:city+' => '',
 	'Class:Location/Attribute:country' => 'Country',
 	'Class:Location/Attribute:country+' => '',
 	'Class:Location/Attribute:parent_id' => 'Parent location',
@@ -180,6 +184,25 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Team+' => '',
 	'Class:Team/Attribute:member_list' => 'Members',
 	'Class:Team/Attribute:member_list+' => 'Contacts that are part of the team',
+));
+
+//
+// Class: lnkTeamToContact
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:lnkTeamToContact' => 'Team Members',
+	'Class:lnkTeamToContact+' => 'Members of a team',
+	'Class:lnkTeamToContact/Attribute:team_id' => 'Team',
+	'Class:lnkTeamToContact/Attribute:team_id+' => '',
+	'Class:lnkTeamToContact/Attribute:contact_id' => 'Member',
+	'Class:lnkTeamToContact/Attribute:contact_id+' => '',
+	'Class:lnkTeamToContact/Attribute:contact_location_id' => 'Location',
+	'Class:lnkTeamToContact/Attribute:contact_location_id+' => '',
+	'Class:lnkTeamToContact/Attribute:contact_email' => 'eMail',
+	'Class:lnkTeamToContact/Attribute:contact_email+' => '',
+	'Class:lnkTeamToContact/Attribute:contact_phone' => 'Phone',
+	'Class:lnkTeamToContact/Attribute:contact_phone+' => '',
 ));
 
 //
@@ -445,8 +468,10 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:DatabaseInstance' => 'Database instance',
 	'Class:DatabaseInstance+' => '',
-	'Class:DatabaseInstance/Attribute:application_id' => 'Database software',
-	'Class:DatabaseInstance/Attribute:application_id+' => '',
+	'Class:DatabaseInstance/Attribute:db_server_instance_id' => 'Database software',
+	'Class:DatabaseInstance/Attribute:db_server_instance_id+' => '',
+	'Class:DatabaseInstance/Attribute:db_server_instance_version' => 'Database version',
+	'Class:DatabaseInstance/Attribute:db_server_instance_version+' => '',
 	'Class:DatabaseInstance/Attribute:application_name' => 'Database software',
 	'Class:DatabaseInstance/Attribute:application_name+' => '',
 	'Class:DatabaseInstance/Attribute:admin_login' => 'Admin login',

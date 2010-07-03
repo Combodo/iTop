@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Set>
-<Organization alias="Organization" id="1">
+<Organization alias="Organization" id="2">
 <name>Demo company</name>
-<code></code>
+<code>DEMO</code>
 <status>active</status>
 <parent_id>0</parent_id>
 </Organization>

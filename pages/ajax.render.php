@@ -301,7 +301,7 @@ switch($operation)
 	$oSet = new CMDBObjectSet($oFilter);
 	while( $oObj = $oSet->fetch())
 	{
-		$oPage->add('<option title="Here is more information..." value="'.$oObj->GetKey().'">'.$oObj->GetDisplayName().'</option>');
+		$oPage->add('<option title="Here is more information..." value="'.$oObj->GetKey().'">'.$oObj->GetName().'</option>');
 	}
 	break;
 	

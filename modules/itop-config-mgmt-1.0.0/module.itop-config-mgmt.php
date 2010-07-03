@@ -32,6 +32,10 @@ SetupWebPage::AddModule(
 			'data.sample.organization.xml',
 			'data.sample.location.xml',
 			'data.sample.team.xml',
+			'data.sample.contact.xml',
+			'data.sample.server.xml',
+			'data.sample.application.xml',
+			'data.sample.business.xml',
 		),
 		
 		// Documentation

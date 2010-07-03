@@ -233,20 +233,53 @@ class XMLDataLoader
 	 * Store an object in the database and remember the mapping
 	 * between its original ID and the newly created ID in the database
 	 */  
-	protected function StoreObject($sClass, $oTargetObj, $iSrcId)
+	protected function StoreObject($sClass, $oTargetObj, $iSrcId, $bSearch = false)
 	{
 		$iObjId = 0;
 		try
 		{
-			if (is_subclass_of($oTargetObj, 'CMDBObject'))
+			if ($bSearch)
 			{
-		        $iObjId = $oTargetObj->DBInsertTrackedNoReload($this->m_oChange);
-			}
-			else
+				// Check if the object does not already exist, based on its usual reconciliation keys...
+				$aReconciliationKeys = MetaModel::GetReconcKeys($sClass);
+				if (count($aReconciliationKeys) > 0)
+				{
+					// Some reconciliation keys have been defined, use them to search for the object
+					$oSearch = new DBObjectSearch($sClass);
+					$iConditionsCount  = 0;
+					foreach($aReconciliationKeys as $sAttCode)
+					{
+						if ($oTargetObj->Get($sAttCode) != '')
+						{
+							$oSearch->AddCondition($sAttCode, $oTargetObj->Get($sAttCode));
+							$iConditionsCount++;
+						}
+					}
+					if ($iConditionsCount > 0) // Search only if there are some valid conditions...
+					{
+						$oSet = new DBObjectSet($oSearch);
+						if ($oSet->count() == 1)
+						{
+							// The object already exists, reuse it
+							$oExistingObject = $oSet->Fetch();
+							$iObjId = $oExistingObject->GetKey();
+						}
+					}
+				}
+			}	
+			
+			if ($iObjId == 0)
 			{
-		        $iObjId = $oTargetObj->DBInsertNoReload();
-			}
-	        
+				// No similar object found for sure, let's create it
+				if (is_subclass_of($oTargetObj, 'CMDBObject'))
+				{
+			        $iObjId = $oTargetObj->DBInsertTrackedNoReload($this->m_oChange);
+				}
+				else
+				{
+			        $iObjId = $oTargetObj->DBInsertNoReload();
+				}
+			}	        
 		}
 		catch(Exception $e)
 		{

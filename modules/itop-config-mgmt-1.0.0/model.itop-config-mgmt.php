@@ -83,14 +83,16 @@ class Location extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("org_id", array("targetclass"=>"Organization", "jointype"=>null, "allowed_values"=>null, "sql"=>"org_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("org_name", array("allowed_values"=>null, "extkey_attcode"=>"org_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("address", array("allowed_values"=>null, "sql"=>"address", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("postal_code", array("allowed_values"=>null, "sql"=>"postal_code", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("city", array("allowed_values"=>null, "sql"=>"city", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("country", array("allowed_values"=>null, "sql"=>"country", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("parent_id", array("targetclass"=>"Location", "jointype"=>null, "allowed_values"=>null, "sql"=>"parent_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("parent_name", array("allowed_values"=>null, "extkey_attcode"=>"parent_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'address', 'country', 'parent_id'));
+		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'address', 'postal_code', 'city', 'country', 'parent_id'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'org_id', 'country'));
-		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'org_id', 'country'));
-		MetaModel::Init_SetZListItems('list', array('status', 'org_id', 'country'));
+		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'org_id', 'city', 'country'));
+		MetaModel::Init_SetZListItems('list', array('status', 'org_id', 'city', 'country'));
 	}
 }
 abstract class Contact extends cmdbAbstractObject
@@ -119,7 +121,7 @@ abstract class Contact extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalField("org_name", array("allowed_values"=>null, "extkey_attcode"=>"org_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEmailAddress("email", array("allowed_values"=>null, "sql"=>"email", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("phone", array("allowed_values"=>null, "sql"=>"phone", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("location_id", array("targetclass"=>"Location", "jointype"=>null, "allowed_values"=>null, "sql"=>"location_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("location_id", array("targetclass"=>"Location", "jointype"=>null, "allowed_values"=>new ValueSetObjects('SELECT Location AS L WHERE L.org_id = :this->org_id'), "sql"=>"location_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array('org_id'))));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("location_name", array("allowed_values"=>null, "extkey_attcode"=>"location_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("contract_list", array("linked_class"=>"lnkContractToContact", "ext_key_to_me"=>"contact_id", "ext_key_to_remote"=>"contract_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("ticket_list", array("linked_class"=>"lnkTicketToContact", "ext_key_to_me"=>"contact_id", "ext_key_to_remote"=>"ticket_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
@@ -155,10 +157,15 @@ class Person extends Contact
 		MetaModel::Init_AddAttribute(new AttributeString("first_name", array("allowed_values"=>null, "sql"=>"first_name", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("employee_id", array("allowed_values"=>null, "sql"=>"employee_id", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'email', 'phone', 'location_id', 'contract_list', 'ticket_list', 'ci_list', 'first_name', 'employee_id'));
+		MetaModel::Init_SetZListItems('details', array('first_name', 'name', 'org_id', 'status', 'location_id', 'email', 'phone', 'employee_id', 'contract_list', 'ticket_list', 'ci_list'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'org_id', 'email', 'phone', 'location_id', 'first_name', 'employee_id'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'org_id', 'email', 'phone', 'location_id', 'first_name', 'employee_id'));
-		MetaModel::Init_SetZListItems('list', array('status', 'org_id', 'email', 'phone', 'location_id', 'first_name', 'employee_id'));
+		MetaModel::Init_SetZListItems('list', array('status', 'org_id', 'email', 'phone', 'location_id', 'employee_id'));
+	}
+	
+	public function GetName()
+	{
+		return $this->Get('first_name').' '.$this->Get('name');
 	}
 }
 class Team extends Contact
@@ -183,7 +190,7 @@ class Team extends Contact
 
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("member_list", array("linked_class"=>"lnkTeamToContact", "ext_key_to_me"=>"team_id", "ext_key_to_remote"=>"contact_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'email', 'phone', 'location_id', 'contract_list', 'ticket_list', 'ci_list', 'member_list'));
+		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'location_id', 'email', 'phone', 'member_list','contract_list', 'ticket_list', 'ci_list'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'org_id', 'email', 'phone', 'location_id'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'org_id', 'email', 'phone', 'location_id'));
 		MetaModel::Init_SetZListItems('list', array('status', 'org_id', 'email', 'phone', 'location_id'));
@@ -213,11 +220,15 @@ class lnkTeamToContact extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalField("team_name", array("allowed_values"=>null, "extkey_attcode"=>"team_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("contact_id", array("targetclass"=>"Contact", "jointype"=>null, "allowed_values"=>null, "sql"=>"contact_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("contact_name", array("allowed_values"=>null, "extkey_attcode"=>"contact_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("contact_location_id", array("allowed_values"=>null, "extkey_attcode"=>"contact_id", "target_attcode"=>"location_id", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("contact_location_name", array("allowed_values"=>null, "extkey_attcode"=>"contact_id", "target_attcode"=>"location_name", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("contact_email", array("allowed_values"=>null, "extkey_attcode"=>"contact_id", "target_attcode"=>"email", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("contact_phone", array("allowed_values"=>null, "extkey_attcode"=>"contact_id", "target_attcode"=>"phone", "is_null_allowed"=>true, "depends_on"=>array())));
 
 		MetaModel::Init_SetZListItems('details', array('team_id', 'contact_id'));
 		MetaModel::Init_SetZListItems('advanced_search', array('team_id', 'contact_id'));
 		MetaModel::Init_SetZListItems('standard_search', array('team_id', 'contact_id'));
-		MetaModel::Init_SetZListItems('list', array('team_id', 'contact_id'));
+		MetaModel::Init_SetZListItems('list', array('team_id', 'contact_id', 'contact_location_id', 'contact_email', 'contact_phone'));
 	}
 }
 abstract class Document extends cmdbAbstractObject
@@ -550,8 +561,6 @@ class DBServer extends Application
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 
-		MetaModel::Init_OverloadAttributeParams("instance_list", array("linked_class"=>"DatabaseInstance"));
-
 		MetaModel::Init_SetZListItems('details', array('name', 'description', 'instance_list'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'description'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'description'));
@@ -707,16 +716,17 @@ class DatabaseInstance extends FunctionalCI
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("application_id", array("targetclass"=>"DBServer", "jointype"=>null, "allowed_values"=>null, "sql"=>"application_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("application_name", array("allowed_values"=>null, "extkey_attcode"=>"application_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("db_server_instance_id", array("targetclass"=>"ApplicationInstance", "jointype"=>null, "allowed_values"=>new ValueSetObjects('SELECT ApplicationInstance AS DBSrvInstance JOIN DBServer AS DBServerSW ON DBSrvInstance.application_id = DBServerSW.id WHERE DBServerSW.finalclass=\'DBServer\''), "sql"=>"db_server_instance_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("db_server_instance_name", array("allowed_values"=>null, "extkey_attcode"=>"db_server_instance_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("db_server_instance_version", array("allowed_values"=>null, "extkey_attcode"=>"db_server_instance_id", "target_attcode"=>"version", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributePassword("admin_login", array("allowed_values"=>null, "sql"=>"admin_login", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributePassword("admin_password", array("allowed_values"=>null, "sql"=>"admin_password", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeWikiText("description", array("allowed_values"=>null, "sql"=>"description", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('name', 'status', 'owner_id', 'importance', 'application_id', 'admin_login', 'admin_password', 'description'));
-		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'owner_id', 'importance', 'application_id', 'description'));
-		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'owner_id', 'importance', 'application_id', 'description'));
-		MetaModel::Init_SetZListItems('list', array('status', 'owner_id', 'importance', 'application_id'));
+		MetaModel::Init_SetZListItems('details', array('name', 'status', 'owner_id', 'importance', 'db_server_instance_id', 'db_server_instance_version', 'admin_login', 'admin_password', 'description'));
+		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'owner_id', 'importance', 'db_server_instance_id', 'db_server_instance_version', 'description'));
+		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'owner_id', 'importance', 'db_server_instance_id', 'db_server_instance_version', 'description'));
+		MetaModel::Init_SetZListItems('list', array('status', 'owner_id', 'importance', 'db_server_instance_id', 'db_server_instance_version'));
 	}
 }
 class ApplicationSolution extends FunctionalCI
