@@ -602,6 +602,17 @@ abstract class DBObject
 		}
 		elseif ($oAtt->IsWritable() && $oAtt->IsScalar())
 		{
+			if (is_null($toCheck))
+			{
+				if ($oAtt->IsNullAllowed())
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
 			$aValues = $oAtt->GetAllowedValues();
 			if (count($aValues) > 0)
 			{

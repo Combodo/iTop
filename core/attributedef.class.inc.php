@@ -972,6 +972,14 @@ class AttributeEnum extends AttributeString
 		}
   		return $aLocalizedValues;
   }
+
+	public function MakeRealValue($proposedValue)
+	{
+		// For an enum, let's consider an empty value like a null value
+		// Could be implemented by changing the UI : no value => let the default value
+		if ($proposedValue == '') return null;
+		return parent::MakeRealValue($proposedValue);
+	}
 }
 
 /**
