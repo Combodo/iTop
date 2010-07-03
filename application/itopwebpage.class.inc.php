@@ -136,7 +136,6 @@ class iTopWebPage extends NiceWebPage
 		$("#accordion").accordion({ header: "h3", navigation: true, autoHeight: false, collapsible: false });
  	});
 		
-	//$("div[id^=tabbedContent] > ul").tabs( 1, { fxFade: true, fxSpeed: 'fast' } ); // tabs
 	$("div[id^=tabbedContent]").tabs(); // tabs
 	$("table.listResults").tableHover(); // hover tables
 	$(".listResults").tablesorter( { headers: { 0:{sorter: false }}, widgets: ['zebra', 'truncatedList']} ); // sortable and zebra tables
