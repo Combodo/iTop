@@ -790,7 +790,7 @@ abstract class DBObject
 		if (count($aValuesToWrite) == 0) return false;
 
 		$sTable = MetaModel::DBGetTable($sTableClass);
-		$sInsertSQL = "INSERT INTO $sTable (".join(",", $aFieldsToWrite).") VALUES (".join(", ", $aValuesToWrite).")";
+		$sInsertSQL = "INSERT INTO `$sTable` (".join(",", $aFieldsToWrite).") VALUES (".join(", ", $aValuesToWrite).")";
 
 		$iNewKey = CMDBSource::InsertInto($sInsertSQL);
 		// Note that it is possible to have a key defined here, and the autoincrement expected, this is acceptable in a non root class
