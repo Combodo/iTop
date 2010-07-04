@@ -478,7 +478,7 @@ abstract class MetaModel
 	private static $m_aAttribDefs = array(); // array of ("classname" => array of attributes)
 	private static $m_aAttribOrigins = array(); // array of ("classname" => array of ("attcode"=>"sourceclass"))
 	private static $m_aExtKeyFriends = array(); // array of ("classname" => array of ("indirect ext key attcode"=> array of ("relative ext field")))
-	private static $m_aIgnoredLinkSets = array(); //array of ("classname" => array of ("attcode")
+	private static $m_aIgnoredAttributes = array(); //array of ("classname" => array of ("attcode")
 
 	final static public function ListAttributeDefs($sClass)
 	{
@@ -917,9 +917,10 @@ abstract class MetaModel
 			if (is_subclass_of($sPHPClass, 'DBObject'))
 			{
 				$sParent = get_parent_class($sPHPClass);
-				if (array_key_exists($sParent, self::$m_aIgnoredLinkSets))
+				if (array_key_exists($sParent, self::$m_aIgnoredAttributes))
 				{
-					self::$m_aIgnoredLinkSets[$sPHPClass] = self::$m_aIgnoredLinkSets[$sParent];
+					// Inherit info about attributes to ignore
+					self::$m_aIgnoredAttributes[$sPHPClass] = self::$m_aIgnoredAttributes[$sParent];
 				}
 				if (method_exists($sPHPClass, 'Init'))
 				{
@@ -1173,23 +1174,54 @@ abstract class MetaModel
 		}
 		self::$m_aAttribDefs[$sTargetClass][$sAttCode]->OverloadParams($aParams);
 	}
+
+	protected static function Init_IsKnownClass($sClass)
+	{
+		// Differs from self::IsValidClass()
+		// because it is being called before all the classes have been initialized
+		if (!class_exists($sClass)) return false;
+		if (!is_subclass_of($sClass, 'DBObject')) return false;
+		return true;
+	}
+
 	public static function Init_AddAttribute(AttributeDefinition $oAtt)
 	{
 		$sTargetClass = self::GetCallersPHPClass("Init");		
 
-		// Some LinkedSet attributes could refer to a class
+		// Some attributes could refer to a class
 		// declared in a module which is currently not installed/active
 		// We simply discard those attributes
+		//
 		if ($oAtt->IsLinkSet())
 		{
 			$sRemoteClass = $oAtt->GetLinkedClass();
-			// Note: I would not use IsValidClass here because not all the classes
-			// have been initialized so far
-			if (!class_exists($sRemoteClass) || !is_subclass_of($sRemoteClass, 'DBObject'))
+			if (!self::Init_IsKnownClass($sRemoteClass))
 			{
-				self::$m_aIgnoredLinkSets[$sTargetClass][$oAtt->GetCode()] = $sRemoteClass;
+				self::$m_aIgnoredAttributes[$sTargetClass][$oAtt->GetCode()] = $sRemoteClass;
 				return;
 			}
+		}
+		elseif($oAtt->IsExternalKey())
+		{
+			$sRemoteClass = $oAtt->GetTargetClass();
+			if (!self::Init_IsKnownClass($sRemoteClass))
+			{
+				self::$m_aIgnoredAttributes[$sTargetClass][$oAtt->GetCode()] = $sRemoteClass;
+				return;
+			}
+		}
+		elseif($oAtt->IsExternalField())
+		{
+			$sExtKeyAttCode = $oAtt->GetKeyAttCode();
+			if (isset(self::$m_aIgnoredAttributes[$sTargetClass][$sExtKeyAttCode]))
+			{
+				// The corresponding external key has already been ignored
+				self::$m_aIgnoredAttributes[$sTargetClass][$oAtt->GetCode()] = self::$m_aIgnoredAttributes[$sTargetClass][$sExtKeyAttCode];
+				return;
+			}
+			// #@# todo - Check if the target attribute is still there
+			// this is not simple to implement because is involves
+			// several passes (the load order has a significant influence on that)
 		}
 
 		self::$m_aAttribDefs[$sTargetClass][$oAtt->GetCode()] = $oAtt;
@@ -1208,11 +1240,12 @@ abstract class MetaModel
 
 		$sTargetClass = self::GetCallersPHPClass("Init");
 
-		// Discard LinkedSets that do not make sense (missing classes in the current module combination)
+		// Discard attributes that do not make sense
+		// (missing classes in the current module combination, resulting in irrelevant ext key or link set)
 		//
 		foreach($aItems as $iFoo => $sAttCode)
 		{
-			if (isset(self::$m_aIgnoredLinkSets[$sTargetClass][$sAttCode]))
+			if (isset(self::$m_aIgnoredAttributes[$sTargetClass][$sAttCode]))
 			{
 				unset($aItems[$iFoo]);
 			}
@@ -1244,6 +1277,15 @@ abstract class MetaModel
 			// The inherited configuration could be overriden
 			$aStateDef['attribute_list'] = array_merge($aToInherit['attribute_list'], $aStateDef['attribute_list']);
 		}
+
+		foreach($aStateDef['attribute_list'] as $sAttCode => $iFlags)
+		{
+			if (isset(self::$m_aIgnoredAttributes[$sTargetClass][$sAttCode]))
+			{
+				unset($aStateDef['attribute_list'][$sAttCode]);
+			}
+		}
+
 		self::$m_aStates[$sTargetClass][$sStateCode] = $aStateDef;
 
 		// by default, create an empty set of transitions associated to that state
