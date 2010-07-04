@@ -1320,9 +1320,10 @@ abstract class MetaModel
 		}
 
 		self::$m_aClassParams[$sTargetClass]["state_attcode"] = self::$m_aClassParams[$sSourceClass]["state_attcode"];
-		self::$m_aStates[$sTargetClass] = clone self::$m_aStates[$sSourceClass];
-		self::$m_aStimuli[$sTargetClass] = clone self::$m_aStimuli[$sSourceClass];
-		self::$m_aTransitions[$sTargetClass] = clone self::$m_aTransitions[$sSourceClass];
+		self::$m_aStates[$sTargetClass] = self::$m_aStates[$sSourceClass];
+		// #@# Note: the aim is to clone the data, could be an issue if the simuli objects are changed
+		self::$m_aStimuli[$sTargetClass] = self::$m_aStimuli[$sSourceClass];
+		self::$m_aTransitions[$sTargetClass] = self::$m_aTransitions[$sSourceClass];
 	}
 
 	//

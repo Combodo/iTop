@@ -50,10 +50,6 @@ abstract class DBObject
 		{
 			$this->FromRow($aRow, $sClassAlias);
 			$this->m_bFullyLoaded = $this->IsFullyLoaded();
-			if ($this->m_bFullyLoaded)
-			{
-				$this->DoComputeValues();
-			}
 			return;
 		}
 		// Creation of brand new object
@@ -78,7 +74,6 @@ abstract class DBObject
 				$this->m_aLoadedAtt[$sAttCode] = true;
 			}
 		}
-		$this->DoComputeValues();
 	}
 
 	// Read-only <=> Written once (archive)
@@ -154,7 +149,6 @@ abstract class DBObject
 			throw new CoreException("Failed to reload object of class '".get_class($this)."', id = ".$this->m_iKey);
 		}
 		$this->FromRow($aRow);
-		$this->DoComputeValues();
 
 		// Process linked set attributes
 		//

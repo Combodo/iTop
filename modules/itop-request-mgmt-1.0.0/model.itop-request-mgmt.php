@@ -23,4 +23,34 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
+class UserRequest extends ResponseTicket
+{
+	public static function Init()
+	{
+		$aParams = array
+		(
+			"category" => "bizmodel,searchable,requestmgmt",
+			"key_type" => "autoincrement",
+			"name_attcode" => "ref",
+			"state_attcode" => "status",
+			"reconc_keys" => array("ref"),
+			"db_table" => "ticket_request",
+			"db_key_field" => "id",
+			"db_finalclass_field" => "",
+			"display_template" => "",
+		);
+		MetaModel::Init_Params($aParams);
+		MetaModel::Init_InheritAttributes();
+		MetaModel::Init_InheritLifecycle();
+	}
+}
+
+$oMyMenuGroup = new MenuGroup('RequestManagement', 1 /* fRank */);
+
+// By default, one entry per class
+new OQLMenuNode('UserRequests', 'SELECT UserRequest', $oMyMenuGroup->GetIndex(), 0 /* fRank */);
+new OQLMenuNode('OpenedRequests', 'SELECT UserRequest WHERE status IN ("new", "assigned", "escalation")', $oMyMenuGroup->GetIndex(), 0 /* fRank */);
+new OQLMenuNode('ClosedRequests', 'SELECT UserRequest WHERE status IN ("resolved", "closed")', $oMyMenuGroup->GetIndex(), 0 /* fRank */);
+//new TemplateMenuNode('WelcomeMenuPage', '../business/templates/welcome_menu.html', $oWelcomeMenu->GetIndex() /* oParent */, 1 /* fRank */);
+
 ?>

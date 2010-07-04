@@ -23,11 +23,6 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
-
-
-
-
-
 abstract class Ticket extends cmdbAbstractObject
 {
 
@@ -39,7 +34,7 @@ abstract class Ticket extends cmdbAbstractObject
 			"key_type" => "autoincrement",
 			"name_attcode" => "ref",
 			"state_attcode" => "",
-			"reconc_keys" => array("name"),
+			"reconc_keys" => array("ref"),
 			"db_table" => "ticket",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -157,19 +152,21 @@ class lnkTicketToCI extends cmdbAbstractObject
 		MetaModel::Init_SetZListItems('list', array('ticket_id', 'ci_id', 'ci_status'));
 	}
 }
-class Incident extends Ticket
+
+
+abstract class ResponseTicket extends Ticket
 {
 
 	public static function Init()
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable,incidentmgmt",
+			"category" => "bizmodel",
 			"key_type" => "autoincrement",
 			"name_attcode" => "ref",
 			"state_attcode" => "status",
-			"reconc_keys" => array("name"),
-			"db_table" => "incident",
+			"reconc_keys" => array("ref"),
+			"db_table" => "ticket_response",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
 			"display_template" => "",
@@ -448,214 +445,5 @@ class Incident extends Ticket
 		}
 	}
 }
-class Change extends Ticket
-{
-
-	public static function Init()
-	{
-		$aParams = array
-		(
-			"category" => "bizmodel,searchable,changemgmt",
-			"key_type" => "autoincrement",
-			"name_attcode" => "ref",
-			"state_attcode" => "",
-			"reconc_keys" => array("name"),
-			"db_table" => "change",
-			"db_key_field" => "id",
-			"db_finalclass_field" => "",
-			"display_template" => "",
-		);
-		MetaModel::Init_Params($aParams);
-		MetaModel::Init_InheritAttributes();
-
-		MetaModel::Init_AddAttribute(new AttributeString("reason", array("allowed_values"=>null, "sql"=>"reason", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('Approved,Assigned,Closed,Implemented,Monitored,New,NotApproved,PlannedScheduled,Rejected,Validated'), "sql"=>"status", "default_value"=>"New", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("caller_id", array("targetclass"=>"Person", "jointype"=>null, "allowed_values"=>null, "sql"=>"caller_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("workgroup_name", array("allowed_values"=>null, "extkey_attcode"=>"caller_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeDate("start", array("allowed_values"=>null, "sql"=>"start", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeDate("end", array("allowed_values"=>null, "sql"=>"end", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeDate("last_update", array("allowed_values"=>null, "sql"=>"last_update", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-
-		MetaModel::Init_SetZListItems('details', array('ref', 'title', 'ticket_log', 'start_date', 'document_list', 'ci_list', 'contact_list', 'reason', 'status', 'caller_id', 'start', 'end', 'last_update'));
-		MetaModel::Init_SetZListItems('advanced_search', array('ref', 'title', 'ticket_log', 'start_date', 'reason', 'status', 'caller_id', 'start', 'end', 'last_update'));
-		MetaModel::Init_SetZListItems('standard_search', array('ref', 'title', 'ticket_log', 'start_date', 'reason', 'status', 'caller_id', 'start', 'end', 'last_update'));
-		MetaModel::Init_SetZListItems('list', array('ref', 'title', 'ticket_log', 'start_date', 'reason', 'status', 'caller_id', 'start', 'end', 'last_update'));
-
-		MetaModel::Init_DefineState(
-			"new",
-			array(
-				"attribute_inherit"=>null,
-				"attribute_list"=>array(
-					'xxx' => OPT_ATT_READONLY,
-					'xxx' => OPT_ATT_HIDDEN,
-					'xxx' => OPT_ATT_MUSTCHANGE,
-					'xxx' => OPT_ATT_MUSTPROMPT,
-					'xxx' => OPT_ATT_MANDATORY,
-				),
-			)
-		);
-	}
-}
-class UserRequest extends Ticket
-{
-
-	public static function Init()
-	{
-		$aParams = array
-		(
-			"category" => "bizmodel,searchable,callmgmt",
-			"key_type" => "autoincrement",
-			"name_attcode" => "ref",
-			"state_attcode" => "",
-			"reconc_keys" => array("name"),
-			"db_table" => "userrequest",
-			"db_key_field" => "id",
-			"db_finalclass_field" => "",
-			"display_template" => "",
-		);
-		MetaModel::Init_Params($aParams);
-		MetaModel::Init_InheritAttributes();
-
-		MetaModel::Init_AddAttribute(new AttributeString("foo", array("allowed_values"=>null, "sql"=>"foo", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-
-		MetaModel::Init_SetZListItems('details', array('ref', 'title', 'ticket_log', 'start_date', 'document_list', 'ci_list', 'contact_list', 'foo'));
-		MetaModel::Init_SetZListItems('advanced_search', array('ref', 'title', 'ticket_log', 'start_date', 'foo'));
-		MetaModel::Init_SetZListItems('standard_search', array('ref', 'title', 'ticket_log', 'start_date', 'foo'));
-		MetaModel::Init_SetZListItems('list', array('ref', 'title', 'ticket_log', 'start_date', 'foo'));
-	}
-}
-class Problem extends Ticket
-{
-
-	public static function Init()
-	{
-		$aParams = array
-		(
-			"category" => "bizmodel,searchable,problemmgmt",
-			"key_type" => "autoincrement",
-			"name_attcode" => "ref",
-			"state_attcode" => "",
-			"reconc_keys" => array("name"),
-			"db_table" => "problem",
-			"db_key_field" => "id",
-			"db_finalclass_field" => "",
-			"display_template" => "",
-		);
-		MetaModel::Init_Params($aParams);
-		MetaModel::Init_InheritAttributes();
-
-		MetaModel::Init_AddAttribute(new AttributeString("foo", array("allowed_values"=>null, "sql"=>"foo", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-
-		MetaModel::Init_SetZListItems('details', array('ref', 'title', 'ticket_log', 'start_date', 'document_list', 'ci_list', 'contact_list', 'foo'));
-		MetaModel::Init_SetZListItems('advanced_search', array('ref', 'title', 'ticket_log', 'start_date', 'foo'));
-		MetaModel::Init_SetZListItems('standard_search', array('ref', 'title', 'ticket_log', 'start_date', 'foo'));
-		MetaModel::Init_SetZListItems('list', array('ref', 'title', 'ticket_log', 'start_date', 'foo'));
-
-		MetaModel::Init_DefineState(
-			"new",
-			array(
-				"attribute_inherit"=>null,
-				"attribute_list"=>array(
-					'xxx' => OPT_ATT_READONLY,
-					'xxx' => OPT_ATT_HIDDEN,
-					'xxx' => OPT_ATT_MUSTCHANGE,
-					'xxx' => OPT_ATT_MUSTPROMPT,
-					'xxx' => OPT_ATT_MANDATORY,
-				),
-			)
-		);
-	}
-}
-class KnownError extends Ticket
-{
-
-	public static function Init()
-	{
-		$aParams = array
-		(
-			"category" => "bizmodel,searchable,knownerrormgmt",
-			"key_type" => "autoincrement",
-			"name_attcode" => "ref",
-			"state_attcode" => "",
-			"reconc_keys" => array("name"),
-			"db_table" => "knownerror",
-			"db_key_field" => "id",
-			"db_finalclass_field" => "",
-			"display_template" => "",
-		);
-		MetaModel::Init_Params($aParams);
-		MetaModel::Init_InheritAttributes();
-
-		MetaModel::Init_AddAttribute(new AttributeString("foo", array("allowed_values"=>null, "sql"=>"foo", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-
-		MetaModel::Init_SetZListItems('details', array('ref', 'title', 'ticket_log', 'start_date', 'document_list', 'ci_list', 'contact_list', 'foo'));
-		MetaModel::Init_SetZListItems('advanced_search', array('ref', 'title', 'ticket_log', 'start_date', 'foo'));
-		MetaModel::Init_SetZListItems('standard_search', array('ref', 'title', 'ticket_log', 'start_date', 'foo'));
-		MetaModel::Init_SetZListItems('list', array('ref', 'title', 'ticket_log', 'start_date', 'foo'));
-
-		MetaModel::Init_DefineState(
-			"new",
-			array(
-				"attribute_inherit"=>null,
-				"attribute_list"=>array(
-					'xxx' => OPT_ATT_READONLY,
-					'xxx' => OPT_ATT_HIDDEN,
-					'xxx' => OPT_ATT_MUSTCHANGE,
-					'xxx' => OPT_ATT_MUSTPROMPT,
-					'xxx' => OPT_ATT_MANDATORY,
-				),
-			)
-		);
-	}
-}
-class lnkKnownErrorToProblem extends Ticket
-{
-
-	public static function Init()
-	{
-		$aParams = array
-		(
-			"category" => "bizmodel,searchable,knownerrormgmt",
-			"key_type" => "autoincrement",
-			"name_attcode" => "ref",
-			"state_attcode" => "",
-			"reconc_keys" => array("name"),
-			"db_table" => "lnkknownerrortoproblem",
-			"db_key_field" => "id",
-			"db_finalclass_field" => "",
-			"display_template" => "",
-		);
-		MetaModel::Init_Params($aParams);
-		MetaModel::Init_InheritAttributes();
-
-		MetaModel::Init_AddAttribute(new AttributeString("foo", array("allowed_values"=>null, "sql"=>"foo", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-
-		MetaModel::Init_SetZListItems('details', array('ref', 'title', 'ticket_log', 'start_date', 'document_list', 'ci_list', 'contact_list', 'foo'));
-		MetaModel::Init_SetZListItems('advanced_search', array('ref', 'title', 'ticket_log', 'start_date', 'foo'));
-		MetaModel::Init_SetZListItems('standard_search', array('ref', 'title', 'ticket_log', 'start_date', 'foo'));
-		MetaModel::Init_SetZListItems('list', array('ref', 'title', 'ticket_log', 'start_date', 'foo'));
-	}
-}
-
-
-
-
-//////////////////////////////////////////////////////////////////////////////
-// Menu:
-//   +----------------------------------------+
-//   | My Module                              |
-//   +----------------------------------------+
-//		+ All items
-//			+ ...
-//			+ ...
-////////////////////////////////////////////////////////////////////////////////////
-// Create the top-level group. fRank = 1, means it will be inserted after the group '0', which is usually 'Welcome'
-$oMyMenuGroup = new MenuGroup('IncidentManagement', 1 /* fRank */);
-
-// By default, one entry per class
-new OQLMenuNode('Incidents', 'SELECT Incident', $oMyMenuGroup->GetIndex(), 0 /* fRank */);
-new OQLMenuNode('OpenedIncidents', 'SELECT Incident WHERE status IN ("new", "assigned", "escalation")', $oMyMenuGroup->GetIndex(), 0 /* fRank */);
-new OQLMenuNode('ClosedIncidents', 'SELECT Incident WHERE status IN ("resolved", "closed")', $oMyMenuGroup->GetIndex(), 0 /* fRank */);
-//new TemplateMenuNode('WelcomeMenuPage', '../business/templates/welcome_menu.html', $oWelcomeMenu->GetIndex() /* oParent */, 1 /* fRank */);
 
 ?>
