@@ -23,6 +23,16 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
+Dict::Add('EN US', 'English', 'English', array(
+	'Menu:IncidentManagement' => 'Incidents',
+	'Menu:Incidents' => 'Incidents',
+	'Menu:Incidents+' => 'Incidents',
+	'Menu:ClosedIncidents' => 'Closed incidents',
+	'Menu:ClosedIncidents+' => 'Closed incidents',
+	'Menu:OpenedIncidents' => 'Opened incidents',
+	'Menu:OpenedIncidents+' => 'Opened incidents',
+));
+
 // Dictionnay conventions
 // Class:<class_name>
 // Class:<class_name>+
@@ -33,19 +43,23 @@
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
+//
+// Class: Incident
 //
 
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:Incident' => 'Incident',
+	'Class:Incident+' => '',
+	'Class:Incident/Stimulus:ev_assign' => 'Assign',
+	'Class:Incident/Stimulus:ev_assign+' => '',
+	'Class:Incident/Stimulus:ev_reassign' => 'Reassign',
+	'Class:Incident/Stimulus:ev_reassign+' => '',
+	'Class:Incident/Stimulus:ev_timeout' => 'ev_timeout',
+	'Class:Incident/Stimulus:ev_timeout+' => '',
+	'Class:Incident/Stimulus:ev_resolve' => 'Mark as resolved',
+	'Class:Incident/Stimulus:ev_resolve+' => '',
+	'Class:Incident/Stimulus:ev_close' => 'Close',
+	'Class:Incident/Stimulus:ev_close+' => '',
+));
 
 ?>

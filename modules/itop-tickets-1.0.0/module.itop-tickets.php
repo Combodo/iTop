@@ -31,8 +31,8 @@ SetupWebPage::AddModule(
 		
 		// Documentation
 		//
-		'doc.manual_setup' => 'aaa',
-		'doc.more_information' => 'aaa',
+		'doc.manual_setup' => '',
+		'doc.more_information' => '',
 	)
 );
 

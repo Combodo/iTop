@@ -23,6 +23,16 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
+Dict::Add('EN US', 'English', 'English', array(
+	'Menu:RequestManagement' => 'Helpdesk',
+	'Menu:UserRequests' => 'All requests',
+	'Menu:UserRequests+' => 'All requests, whatever their state',
+	'Menu:ClosedRequests' => 'Closed requests',
+	'Menu:ClosedRequests+' => 'Closed requests',
+	'Menu:OpenedRequests' => 'Opened requests',
+	'Menu:OpenedRequests+' => 'Opened requests',
+));
+
 // Dictionnay conventions
 // Class:<class_name>
 // Class:<class_name>+
@@ -33,19 +43,23 @@
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
+//
+// Class: UserRequest
 //
 
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:UserRequest' => 'User Request',
+	'Class:UserRequest+' => '',
+	'Class:UserRequest/Stimulus:ev_assign' => 'Assign',
+	'Class:UserRequest/Stimulus:ev_assign+' => '',
+	'Class:UserRequest/Stimulus:ev_reassign' => 'Reassign',
+	'Class:UserRequest/Stimulus:ev_reassign+' => '',
+	'Class:UserRequest/Stimulus:ev_timeout' => 'ev_timeout',
+	'Class:UserRequest/Stimulus:ev_timeout+' => '',
+	'Class:UserRequest/Stimulus:ev_resolve' => 'Mark as resolved',
+	'Class:UserRequest/Stimulus:ev_resolve+' => '',
+	'Class:UserRequest/Stimulus:ev_close' => 'Close',
+	'Class:UserRequest/Stimulus:ev_close+' => '',
+));
 
 ?>

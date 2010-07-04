@@ -1292,6 +1292,12 @@ abstract class MetaModel
 		self::$m_aTransitions[$sTargetClass][$sStateCode] = array();
 	}
 
+	public static function Init_OverloadStateAttribute($sStateCode, $sAttCode, $iFlags)
+	{
+		$sTargetClass = self::GetCallersPHPClass("Init");
+		self::$m_aStates[$sTargetClass][$sStateCode]['attribute_list'][$sAttCode] = $iFlags;
+	}
+
 	public static function Init_DefineStimulus($oStimulus)
 	{
 		$sTargetClass = self::GetCallersPHPClass("Init");
