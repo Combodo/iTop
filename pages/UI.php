@@ -1342,7 +1342,7 @@ EOF
 	////MetaModel::ShowQueryTrace();
 	$oP->output();
 }
-catch(CoreException $e)
+catch(ZCoreException $e)
 {
 	require_once('../setup/setuppage.class.inc.php');
 	$oP = new SetupWebPage(Dict::S('UI:PageTitle:FatalError'));
@@ -1371,7 +1371,7 @@ catch(CoreException $e)
 	// For debugging only
 	//throw $e;
 }
-catch(Exception $e)
+catch(ZException $e)
 {
 	require_once('../setup/setuppage.class.inc.php');
 	$oP = new SetupWebPage(Dict::S('UI:PageTitle:FatalError'));

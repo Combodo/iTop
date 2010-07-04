@@ -26,6 +26,8 @@
 require_once('../application/cmdbabstract.class.inc.php');
 require_once('../application/template.class.inc.php');
 
+MetaModel::RegisterRelation("impacts", array("description"=>"Objects impacted by", "verb_down"=>"impacts", "verb_up"=>"is impacted by"));
+
 class Organization extends cmdbAbstractObject
 {
 
@@ -660,6 +662,20 @@ abstract class FunctionalCI extends cmdbAbstractObject
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'owner_id', 'importance'));
 		MetaModel::Init_SetZListItems('list', array('status', 'owner_id', 'importance'));
 	}
+
+	public static function GetRelationQueries($sRelCode)
+	{
+		switch ($sRelCode)
+		{
+		case "impacts":
+			$aRels = array(
+				"contact" => array("sQuery"=>"SELECT Contact AS c JOIN lnkCIToContact AS l1 ON l1.contact_id = c.id WHERE l1.ci_id = :this->id", "bPropagate"=>true, "iDistance"=>3),
+				"solution" => array("sQuery"=>"SELECT ApplicationSolution AS s JOIN lnkSolutionToCI AS l1 ON l1.solution_id = s.id WHERE l1.ci_id = :this->id", "bPropagate"=>true, "iDistance"=>2),
+			);
+			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
+		}
+	}
+	
 }
 class ApplicationInstance extends FunctionalCI
 {
@@ -695,7 +711,21 @@ class ApplicationInstance extends FunctionalCI
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'owner_id', 'importance', 'device_id', 'licence_id', 'application_id', 'version', 'description'));
 		MetaModel::Init_SetZListItems('list', array('status', 'owner_id', 'importance', 'device_id', 'licence_id', 'application_id', 'version', 'description'));
 	}
+
+	public static function GetRelationQueries($sRelCode)
+	{
+		switch ($sRelCode)
+		{
+		case "impacts":
+			$aRels = array(
+				// Actually this should be limited to the ApplicationInstances based on a DBServer Application type...
+				"db_instances" => array("sQuery"=>"SELECT DatabaseInstance AS db WHERE db.db_server_instance_id = :this->id", "bPropagate"=>true, "iDistance"=>5),
+			);
+			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
+		}
+	}
 }
+
 class DatabaseInstance extends FunctionalCI
 {
 
@@ -757,6 +787,18 @@ class ApplicationSolution extends FunctionalCI
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'owner_id', 'importance', 'description'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'owner_id', 'importance', 'description'));
 		MetaModel::Init_SetZListItems('list', array('status', 'owner_id', 'importance', 'description'));
+	}
+	
+	public static function GetRelationQueries($sRelCode)
+	{
+		switch ($sRelCode)
+		{
+		case "impacts":
+			$aRels = array(
+				"process" => array("sQuery"=>"SELECT BusinessProcess AS p JOIN lnkProcessToSolution AS l1 ON l1.process_id = p.id WHERE l1.solution_id = :this->id", "bPropagate"=>true, "iDistance"=>3),
+			);
+			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
+		}
 	}
 }
 class BusinessProcess extends FunctionalCI
@@ -882,6 +924,18 @@ abstract class Device extends ConnectableCI
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref'));
 		MetaModel::Init_SetZListItems('list', array('status', 'owner_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref'));
+	}
+	
+	public static function GetRelationQueries($sRelCode)
+	{
+		switch ($sRelCode)
+		{
+		case "impacts":
+			$aRels = array(
+				"applications" => array("sQuery"=>"SELECT ApplicationInstance AS app WHERE app.device_id = :this->id", "bPropagate"=>true, "iDistance"=>5),
+			);
+			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
+		}
 	}
 }
 class PC extends Device

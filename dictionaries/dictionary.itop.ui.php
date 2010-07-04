@@ -797,6 +797,12 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:OpenDocumentInNewWindow_' => 'Open this document in a new window: %1$s',
 	'UI:DownloadDocument_' => 'Download this document: %1$s',
 	'UI:Document:NoPreview' => 'No preview is available for this type of document',
+
+	'UI:DeadlineMissedBy_duration' => 'Missed  by %1$s',
+	'UI:Deadline_LessThan1Min' => '< 1 min',		
+	'UI:Deadline_Minutes' => '%1$d min',			
+	'UI:Deadline_Hours_Minutes' => '%1$dh %2$dmin',			
+	'UI:Deadline_Days_Hours_Minutes' => '%1$dd %2$dh %3$dmin',
 ));
 
 

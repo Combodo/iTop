@@ -202,14 +202,14 @@ class Incident extends Ticket
 		MetaModel::Init_AddAttribute(new AttributeDateTime("closure_date", array("allowed_values"=>null, "sql"=>"closure_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDateTime("last_update", array("allowed_values"=>null, "sql"=>"last_update", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDateTime("assignment_date", array("allowed_values"=>null, "sql"=>"assignment_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeDateTime("escalation_deadline", array("allowed_values"=>null, "sql"=>"escalation_deadline", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeDateTime("closure_deadline", array("allowed_values"=>null, "sql"=>"closure_deadline", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeDeadline("escalation_deadline", array("allowed_values"=>null, "sql"=>"escalation_deadline", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeDeadline("closure_deadline", array("allowed_values"=>null, "sql"=>"closure_deadline", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("resolution_code", array("allowed_values"=>new ValueSetEnum('fixed,duplicate,couldnotreproduce,irrelevant'), "sql"=>"resolution_code", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("solution", array("allowed_values"=>null, "sql"=>"solution", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("user_satisfaction", array("allowed_values"=>new ValueSetEnum('1,2,3,4'), "sql"=>"user_satisfaction", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("user_commment", array("allowed_values"=>null, "sql"=>"user_commment", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('ref', 'title', 'ticket_log', 'start_date', 'document_list', 'ci_list', 'contact_list', 'status', 'caller_id', 'customer_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'closure_date', 'last_update', 'assignment_date', 'escalation_deadline', 'closure_deadline', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
+		MetaModel::Init_SetZListItems('details', array('ref', 'title', 'ticket_log', 'start_date', 'escalation_deadline', 'closure_deadline', 'document_list', 'ci_list', 'contact_list', 'status', 'caller_id', 'customer_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'closure_date', 'last_update', 'assignment_date', 'escalation_deadline', 'closure_deadline', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
 		MetaModel::Init_SetZListItems('advanced_search', array('ref', 'title', 'ticket_log', 'start_date', 'status', 'caller_id', 'customer_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'closure_date', 'last_update', 'assignment_date', 'escalation_deadline', 'closure_deadline', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
 		MetaModel::Init_SetZListItems('standard_search', array('ref', 'title', 'ticket_log', 'start_date', 'status', 'caller_id', 'customer_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'closure_date', 'last_update', 'assignment_date', 'escalation_deadline', 'closure_deadline', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
 		MetaModel::Init_SetZListItems('list', array('ref', 'title', 'ticket_log', 'start_date', 'status', 'caller_id', 'customer_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'closure_date', 'last_update', 'assignment_date', 'escalation_deadline', 'closure_deadline', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
@@ -225,7 +225,7 @@ class Incident extends Ticket
 					'start_date' => OPT_ATT_READONLY,
 					'last_update' => OPT_ATT_READONLY,
 					'assignment_date' => OPT_ATT_HIDDEN,
-					'escalation_deadline' => OPT_ATT_HIDDEN,
+					'escalation_deadline' => OPT_ATT_READONLY,
 					'closure_deadline' => OPT_ATT_HIDDEN,
 					'closure_date' => OPT_ATT_HIDDEN,
 					'customer_id' => OPT_ATT_MUSTCHANGE,
@@ -262,6 +262,8 @@ class Incident extends Ticket
 					'agent_id' => OPT_ATT_MANDATORY,
 					'related_problem_id' => OPT_ATT_NORMAL,
 					'related_change_id' => OPT_ATT_NORMAL,
+					'closure_deadline' => OPT_ATT_READONLY,
+					'escalation_deadline' => OPT_ATT_HIDDEN,
 				),
 			)
 		);
@@ -316,51 +318,97 @@ class Incident extends Ticket
 		MetaModel::Init_DefineTransition("resolved", "ev_close", array("target_state"=>"closed", "actions"=>array(), "user_restriction"=>null));
 	}
 
+	/**
+	 * Determines the shortest SLT, for this ticket, for the given metric. Returns null is no SLT was found
+	 * @param string $sMetric Type of metric 'TTO', 'TTR', etc as defined in the SLT class
+	 * @return hash Array with 'SLT' => name of the SLT selected, 'value' => duration in seconds of the SLT metric, null if no SLT applies to this ticket
+	 */
 	public function ComputeSLT($sMetric = 'TTO')
 	{
-		$sOQL = "SELECT SLT JOIN lnkSLTToSLA AS L1 ON L1.slt_id=SLT.id JOIN SLA ON L1.sla_id = SLA.id JOIN lnkContractToSLA AS L2 ON L2.sla_id = SLA.id JOIN CustomerContract ON L2.contract_id = CustomerContract.id 
-				WHERE SLT.ticket_priority = :priority AND SLA.service_id = :service_id AND SLT.metric = :metric AND CustomerContract.customer_id = :customer_id";
-		$oSLTSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL),
-						array(),
-						array(
-							'priority' => $this->Get('priority'),
-							'service_id' => $this->Get('service_id'),
-							'metric' => $sMetric,
-							'customer_id' => $this->Get('customer_id'),
-						)
-						);
-						
-		$iMinDuration = PHP_INT_MAX;
-		$sSLTName = '';
-
-		while($oSLT = $oSLTSet->Fetch())
+		$aResult = null;
+		if (MetaModel::IsValidClass('SLT'))
 		{
-			$iDuration = $oSLT->Get('value');
-			$sUnit = $oSLT->Get('value_unit');
-			switch($sUnit)
+			$sOQL = "SELECT SLT JOIN lnkSLTToSLA AS L1 ON L1.slt_id=SLT.id JOIN SLA ON L1.sla_id = SLA.id JOIN lnkContractToSLA AS L2 ON L2.sla_id = SLA.id JOIN CustomerContract ON L2.contract_id = CustomerContract.id 
+					WHERE SLT.ticket_priority = :priority AND SLA.service_id = :service_id AND SLT.metric = :metric AND CustomerContract.customer_id = :customer_id";
+			$oSLTSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL),
+							array(),
+							array(
+								'priority' => $this->Get('priority'),
+								'service_id' => $this->Get('service_id'),
+								'metric' => $sMetric,
+								'customer_id' => $this->Get('customer_id'),
+							)
+							);
+							
+			$iMinDuration = PHP_INT_MAX;
+			$sSLTName = '';
+	
+			while($oSLT = $oSLTSet->Fetch())
 			{
-				case 'days':
-				$iDuration = $iDuration * 24; // 24 hours in 1 days
-				// Fall though
-				
-				case 'hours':
-				$iDuration = $iDuration * 60; // 60 minutes in 1 hour
-				// Fall though
-				
-				case 'minutes':
-				$iDuration = $iDuration * 60;
+				$iDuration = $oSLT->Get('value');
+				$sUnit = $oSLT->Get('value_unit');
+				switch($sUnit)
+				{
+					case 'days':
+					$iDuration = $iDuration * 24; // 24 hours in 1 days
+					// Fall though
+					
+					case 'hours':
+					$iDuration = $iDuration * 60; // 60 minutes in 1 hour
+					// Fall though
+					
+					case 'minutes':
+					$iDuration = $iDuration * 60;
+				}
+				if ($iDuration < $iMinDuration)
+				{
+					$iMinDuration = $iDuration;
+					$sSLTName = $oSLT->GetName();
+				}
 			}
-			if ($iDuration < $iMinDuration)
+			if ($iMinDuration == PHP_INT_MAX)
 			{
-				$iMinDuration = $iDuration;
-				$sSLTName = $oSLT->GetName();
+				$aResult = null;
+			}
+			else
+			{
+				array('SLT' => $sSLTName, 'value' => $iMinDuration);
 			}
 		}
-		if ($iMinDuration == PHP_INT_MAX) $iMinDuration = null;
-		return array('SLT' => $sSLTName, 'value' => $iMinDuration);
+		return $aResult;
 	}
 
-
+	/**
+	 * Compute the priority of the ticket based on its impact and urgency
+	 * @return integer The priority of the ticket 1(high) .. 3(low)
+	 */
+	public function ComputePriority()
+	{
+		// priority[impact][urgency]
+		$aPriorities = array(
+			// single person
+			1 => array(
+					1 => 1,
+					2 => 1,
+					3 => 2,
+			),
+			// a group
+			2 => array(
+				1 => 1,
+				2 => 2,
+				3 => 3,
+			),
+			// a departement!
+			3 => array(
+					1 => 2,
+					2 => 3,
+					3 => 3,
+			),
+		);
+		$iPriority = $aPriorities[(int)$this->Get('impact')][(int)$this->Get('urgency')];
+		return $iPriority;		
+	}
+	
 	public function ComputeValues()
 	{
 		$iKey = $this->GetKey();
@@ -371,42 +419,33 @@ class Incident extends Ticket
 		}
 		$sName = sprintf('I-%06d', $iKey);
 		$this->Set('ref', $sName);
-
-		// priority[impact][urgency]
-		$aPriorities = array(
-			// single person
-			1 => array(
-				1 => 1,
-				2 => 1,
-				3 => 2,
-			),
-			// a group
-			2 => array(
-				1 => 1,
-				2 => 2,
-				3 => 3,
-			),
-			// a departement!
-			3 => array(
-				1 => 2,
-				2 => 3,
-				3 => 3,
-			),
-		);
-		$iPriority = $aPriorities[$this->Get('impact')][$this->Get('urgency')];
-		$this->Set('priority', $iPriority);
 		
-		// Compute the SLA deadlines
+		// Compute the priority of the ticket
+		$this->Set('priority', $this->ComputePriority());
 		
+		// Compute the SLA deadlines, if any is applicable to this ticket
 		$aSLT = $this->ComputeSLT('TTO');
-		$iStartDate = $this->Get('start_date');
-		//echo "<p>TTO: SLT found: {$aSLT['SLT']}, value: {$aSLT['value']}</p>\n";
-		$this->Set('escalation_deadline', $iStartDate + $aSLT['value']);
+		if ($aSLT != null)
+		{
+			//echo "<p>TTO: SLT found: {$aSLT['SLT']}, value: {$aSLT['value']}</p>\n";
+			$iStartDate = AttributeDateTime::GetAsUnixSeconds($this->Get('start_date'));		
+			$this->Set('escalation_deadline', $iStartDate + $aSLT['value']);
+		}
+		else
+		{
+			$this->Set('escalation_deadline', null);
+		}
 		$aSLT = $this->ComputeSLT('TTR');
-		//echo "<p>TTR: SLT found: {$aSLT['SLT']}, value: {$aSLT['value']}</p>\n";
-		$iStartDate = $this->Get('start_date');
-		$this->Set('closure_deadline', $iStartDate + $aSLT['value']);
-		
+		if ($aSLT != null)
+		{
+			//echo "<p>TTR: SLT found: {$aSLT['SLT']}, value: {$aSLT['value']}</p>\n";
+			$iStartDate = AttributeDateTime::GetAsUnixSeconds($this->Get('start_date'));		
+			$this->Set('closure_deadline', $iStartDate + $aSLT['value']);
+		}
+		else
+		{
+			$this->Set('closure_deadline', null);
+		}
 	}
 }
 class Change extends Ticket

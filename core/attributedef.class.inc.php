@@ -1166,6 +1166,13 @@ class AttributeDateTime extends AttributeDBField
 	public function GetTypeDesc() {return "Date and time";}
 	public function GetEditClass() {return "DateTime";}
 	protected function GetSQLCol() {return "TIMESTAMP";}
+	public static function GetAsUnixSeconds($value)
+	{
+		$oDeadlineDateTime = new DateTime($value, self::$const_TIMEZONE);
+		$iUnixSeconds = $oDeadlineDateTime->format('U');
+		return $iUnixSeconds;
+		
+	}
 
 	// #@# THIS HAS TO REVISED
 	// Having null not allowed was interpreted by mySQL
@@ -1294,7 +1301,63 @@ class AttributeDateTime extends AttributeDBField
 		return '"'.$sEscaped.'"';
 	}
 }
+/**
+ * A dead line stored as a date & time
+ * The only difference with the DateTime attribute is the display:
+ * relative to the current time
+ */
+class AttributeDeadline extends AttributeDateTime
+{
+	public function GetAsHTML($value)
+	{
+		$sResult = '';
+		if ($value !== null)
+		{
+			$value = AttributeDateTime::GetAsUnixSeconds($value);
+			$difference = $value - time();
+	
+			if ($difference >= 0)
+			{
+				$sResult = self::FormatDuration($difference);
+			}
+			else
+			{
+				$sResult = Dict::Format('UI:DeadlineMissedBy_duration', self::FormatDuration(-$difference));
+			}
+		}
+		return $sResult;
+	}
 
+	static function FormatDuration($duration)
+	{
+		$days = floor($duration / 86400);
+		$hours = floor(($duration - (86400*$days)) / 3600);
+		$minutes = floor(($duration - (86400*$days + 3600*$hours)) / 60);
+		$sResult = '';
+		
+		if ($duration < 60)
+		{
+			// Less than 1 min
+			$sResult =Dict::S('UI:Deadline_LessThan1Min');			
+		}
+		else if ($duration < 3600)
+		{
+			// less than 1 hour, display it in minutes
+			$sResult =Dict::Format('UI:Deadline_Minutes', $minutes);			
+		}
+		else if ($duration < 86400)
+		{
+			// Less that 1 day, display it in hours/minutes	
+			$sResult =Dict::Format('UI:Deadline_Hours_Minutes', $hours, $minutes);			
+		}
+		else
+		{
+			// Less that 1 day, display it in hours/minutes	
+			$sResult =Dict::Format('UI:Deadline_Days_Hours_Minutes', $days, $hours, $minutes);			
+		}
+		return $sResult;
+	}
+}
 // Init static constant once for all (remove when PHP allows real static const)
 AttributeDateTime::InitStatics();
 

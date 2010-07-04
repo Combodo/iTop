@@ -150,7 +150,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 					$aParams = array(
 						'target_attr' => $oAttDef->GetExtKeyToMe(),
 						'object_id' => $this->GetKey(),
-						'menu' => false,
+						'menu' => true,
 						);
 				}
 				else
@@ -165,7 +165,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 							'object_id' => $this->GetKey(),
 							'target_attr' => $oAttDef->GetExtKeyToRemote(),
 							'view_link' => false,
-							'menu' => false,
+							'menu' => true,
 						);
 				}
 				$oPage->p("<img src=\"".MetaModel::GetClassIcon($sTargetClass)."\" style=\"vertical-align:middle;\">&nbsp;".$oAttDef->GetDescription());

@@ -799,6 +799,12 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:iTopVersion:Short' => 'iTop version %1$s',
 	'UI:iTopVersion:Long' => 'iTop version %1$s-%2$s du %3$s',
 
+	'UI:DeadlineMissedBy_duration' => 'Passé de %1$s',
+	'UI:Deadline_LessThan1Min' => '< 1 min',		
+	'UI:Deadline_Minutes' => '%1$d min',			
+	'UI:Deadline_Hours_Minutes' => '%1$dh %2$dmin',			
+	'UI:Deadline_Days_Hours_Minutes' => '%1$dj %2$dh %3$dmin',
+
 ));
 
 ?>
