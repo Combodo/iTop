@@ -50,6 +50,10 @@ abstract class DBObject
 		{
 			$this->FromRow($aRow, $sClassAlias);
 			$this->m_bFullyLoaded = $this->IsFullyLoaded();
+			if ($this->m_bFullyLoaded)
+			{
+				$this->DoComputeValues();
+			}
 			return;
 		}
 		// Creation of brand new object
@@ -74,6 +78,7 @@ abstract class DBObject
 				$this->m_aLoadedAtt[$sAttCode] = true;
 			}
 		}
+		$this->DoComputeValues();
 	}
 
 	// Read-only <=> Written once (archive)
@@ -149,6 +154,7 @@ abstract class DBObject
 			throw new CoreException("Failed to reload object of class '".get_class($this)."', id = ".$this->m_iKey);
 		}
 		$this->FromRow($aRow);
+		$this->DoComputeValues();
 
 		// Process linked set attributes
 		//
@@ -338,7 +344,6 @@ abstract class DBObject
 			// #@# non-scalar attributes.... handle that differentely
 			$this->Reload();
 		}
-		$this->ComputeFields();
 		return $this->m_aCurrValues[$sAttCode];
 	}
 
@@ -351,7 +356,8 @@ abstract class DBObject
 		return $this->m_aOrigValues[$sAttCode];
 	}
 
-	public function ComputeFields()
+	// Compute scalar attributes that depend on any other type of attribute
+	public function DoComputeValues()
 	{
 		if (is_callable(array($this, 'ComputeValues')))
 		{
@@ -820,7 +826,7 @@ abstract class DBObject
 		$sRootClass = MetaModel::GetRootClass($sClass);
 
 		// Ensure the update of the values (we are accessing the data directly)
-		$this->ComputeFields();
+		$this->DoComputeValues();
 		$this->OnInsert();
 
 		if ($this->m_iKey < 0)
@@ -896,6 +902,9 @@ abstract class DBObject
 		{
 			throw new CoreException("DBUpdate: could not update a newly created object, please call DBInsert instead");
 		}
+
+		$this->DoComputeValues();
+
 		$aChanges = $this->ListChanges();
 		if (count($aChanges) == 0)
 		{

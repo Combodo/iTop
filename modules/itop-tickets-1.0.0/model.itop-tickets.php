@@ -376,30 +376,24 @@ class Incident extends Ticket
 		$aPriorities = array(
 			// single person
 			1 => array(
-				array(
-					1 => 1,
-					2 => 1,
-					3 => 2,
-				)
+				1 => 1,
+				2 => 1,
+				3 => 2,
 			),
 			// a group
 			2 => array(
-				array(
-					1 => 1,
-					2 => 2,
-					3 => 3,
-				)
+				1 => 1,
+				2 => 2,
+				3 => 3,
 			),
 			// a departement!
 			3 => array(
-				array(
-					1 => 2,
-					2 => 3,
-					3 => 3,
-				)
+				1 => 2,
+				2 => 3,
+				3 => 3,
 			),
 		);
-		$iPriority = 1; //$aPriorities[$this->Get('impact')][$this->Get('urgency')];
+		$iPriority = $aPriorities[$this->Get('impact')][$this->Get('urgency')];
 		$this->Set('priority', $iPriority);
 		
 		// Compute the SLA deadlines
