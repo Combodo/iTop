@@ -69,7 +69,7 @@ class DisplayTemplate
 				}
 				catch(Exception $e)
 				{
-					$oPage->p('Error in template (please contact your administrator)<!--'.$sOuterTag.'-->');
+					$oPage->p('Error in template (please contact your administrator)<!--'.$e->getMessage().'--><!--'.$sOuterTag.'-->');
 				}
 				
 				self::$iBlockCount++;
