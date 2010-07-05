@@ -6,75 +6,6 @@ require_once('../application/wizardhelper.class.inc.php');
 require_once('../application/ui.linkswidget.class.inc.php');
 
 /**
- * Determines the most appropriate icon (among the ones supported by the navigator)
- * for the given object
- * @param $oObj DBObject
- * @return string The name of the icon
- */    
-function GetIcon(DBObject $oObj)
-{
-	switch(get_class($oObj))
-	{
-		case 'bizSoftware':
-		$sIcon = 'application';
-		break;
-
-		case 'bizDatabase':
-		$sIcon = 'database';
-		break;
-
-		case 'bizBusinessProcess':
-		$sIcon = 'business_process';
-		break;
-
-		case 'bizContract':
-		$sIcon = 'contract';
-		break;
-		
-		case 'bizChangeTicket':
-		$sIcon = 'change';
-		break;
-		
-		case 'bizServiceCall':
-		case 'bizIncidentTicket':
-		$sIcon = 'incident';
-		break;
-		
-		case 'bizServer':
-		$sIcon = 'server';
-		break;
-		
-		case 'bizPC':
-		if ($oObj->Get('type') == 'desktop')
-		{
-			$sIcon = 'desktop PC';
-		}
-		else
-		{
-			$sIcon = 'laptop';
-		}
-		break;
-		
-		case 'bizNetworkDevice':
-		$sIcon = 'network_device';
-		break;
-
-		case 'bizInterface':
-		$sIcon = 'interface';
-		break;
-		
-		case 'bizPerson':
-		case 'bizTeam':
-		$sIcon = 'contact';
-		break;
-		
-		default:
-		$sIcon = 'application';
-	}
-	return $sIcon;
-}
-
-/**
  * Fills the given XML node with te details of the specified object
  */ 
 function AddNodeDetails(&$oNode, $oObj)
@@ -244,12 +175,12 @@ function BuildIconPath($sIconPath)
 
 require_once('../application/startup.inc.php');
 require_once('../application/loginwebpage.class.inc.php');
-// For developping the Navigator
-session_start();
-$_SESSION['auth_user'] = 'admin';
-$_SESSION['auth_pwd'] = 'admin2';
-UserRights::Login($_SESSION['auth_user'], $_SESSION['auth_pwd']); // Set the user's language
-//LoginWebPage::DoLogin(); // Check user rights and prompt if needed
+//// For developping the Navigator
+//session_start();
+//$_SESSION['auth_user'] = 'admin';
+//$_SESSION['auth_pwd'] = 'admin2';
+//UserRights::Login($_SESSION['auth_user'], $_SESSION['auth_pwd']); // Set the user's language
+LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
 $oPage = new ajax_page("");
 $oPage->no_cache();
