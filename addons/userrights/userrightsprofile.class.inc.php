@@ -153,27 +153,29 @@ class URP_Users extends UserRightsBaseClass
 		$oPage->table($aDisplayConfig, $aDisplayData);
 	}
 
-	function DisplayBareRelations(WebPage $oPage)
+	function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
 	{
-		parent::DisplayBareRelations($oPage);
-
-		$oPage->SetCurrentTab(Dict::S('UI:UserManagement:GrantMatrix'));
-		$this->DoShowGrantSumary($oPage, 'bizmodel');
-
-		// debug
-		if (false)
+		parent::DisplayBareRelations($oPage, $bEditMode);
+		if (!$bEditMode)
 		{
-			$oPage->SetCurrentTab('More on user rigths (dev only)');
-			$oPage->add("<h3>User rights</h3>\n");
-			$this->DoShowGrantSumary($oPage, 'addon/userrights');
-			$oPage->add("<h3>Change log</h3>\n");
-			$this->DoShowGrantSumary($oPage, 'core/cmdb');
-			$oPage->add("<h3>Application</h3>\n");
-			$this->DoShowGrantSumary($oPage, 'application');
-			$oPage->add("<h3>GUI</h3>\n");
-			$this->DoShowGrantSumary($oPage, 'gui');
-			
-		}		
+			$oPage->SetCurrentTab(Dict::S('UI:UserManagement:GrantMatrix'));
+			$this->DoShowGrantSumary($oPage, 'bizmodel');
+	
+			// debug
+			if (false)
+			{
+				$oPage->SetCurrentTab('More on user rigths (dev only)');
+				$oPage->add("<h3>User rights</h3>\n");
+				$this->DoShowGrantSumary($oPage, 'addon/userrights');
+				$oPage->add("<h3>Change log</h3>\n");
+				$this->DoShowGrantSumary($oPage, 'core/cmdb');
+				$oPage->add("<h3>Application</h3>\n");
+				$this->DoShowGrantSumary($oPage, 'application');
+				$oPage->add("<h3>GUI</h3>\n");
+				$this->DoShowGrantSumary($oPage, 'gui');
+				
+			}					
+		}
 	}
 }
 
@@ -272,12 +274,14 @@ class URP_Profiles extends UserRightsBaseClass
 		$oPage->table($aDisplayConfig, $aDisplayData);
 	}
 
-	function DisplayBareRelations(WebPage $oPage)
+	function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
 	{
 		parent::DisplayBareRelations($oPage);
-
-		$oPage->SetCurrentTab(Dict::S('UI:UserManagement:GrantMatrix'));
-		$this->DoShowGrantSumary($oPage);		
+		if (!$bEditMode)
+		{
+			$oPage->SetCurrentTab(Dict::S('UI:UserManagement:GrantMatrix'));
+			$this->DoShowGrantSumary($oPage);		
+		}
 	}
 }
 

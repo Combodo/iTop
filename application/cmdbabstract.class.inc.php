@@ -33,6 +33,7 @@ require_once('../application/ui.linkswidget.class.inc.php');
 
 abstract class cmdbAbstractObject extends CMDBObject
 {
+	protected $m_iFormId; // The ID of the form used to edit the object (when in edition mode !)
 	
 	public static function GetUIPage()
 	{
@@ -99,7 +100,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		return "<a href=\"{$sAbsoluteUrl}{$sPage}?operation=details&class=$sObjClass&id=$sObjKey&".$oAppContext->GetForLink()."\" title=\"$sHint\">$sLabel</a>";
 	}
 
-	function DisplayBareHeader(WebPage $oPage)
+	function DisplayBareHeader(WebPage $oPage, $bEditMode = false)
 	{
 		// Standard Header with name, actions menu and history block
 		//
@@ -114,7 +115,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$oPage->add("</div>\n");
 	}
 
-	function DisplayBareHistory(WebPage $oPage)
+	function DisplayBareHistory(WebPage $oPage, $bEditMode = false)
 	{
 		// history block (with as a tab)
 		$oHistoryFilter = new DBObjectSearch('CMDBChangeOp');
@@ -124,24 +125,64 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$oBlock->Display($oPage, -1);
 	}
 
-	function DisplayBareProperties(WebPage $oPage)
+	function DisplayBareProperties(WebPage $oPage, $bEditMode = false)
 	{
-		$oPage->add($this->GetBareProperties($oPage));		
+		$oPage->add($this->GetBareProperties($oPage, $bEditMode));		
 	}
 
-	function DisplayBareRelations(WebPage $oPage)
+	function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
 	{
 		// Related objects: display all the linkset attributes, each as a separate tab
-		// First in the order described by the 'display' ZList, then the remaining ones
+		// In the order described by the 'display' ZList
 		$aList = $this->FlattenZList(MetaModel::GetZListItems(get_class($this), 'details'));
-		$aList = array_unique(array_merge($aList, array_keys(MetaModel::ListAttributeDefs(get_class($this)))));
+		if (count($aList) == 0)
+		{
+			// Empty ZList defined, display all the linkedset attributes defined
+			$aList = array_keys(MetaModel::ListAttributeDefs(get_class($this)));
+		}
 		foreach($aList as $sAttCode)
 		{
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-			if ($oAttDef->IsLinkset())
+			// Display mode
+			if (!$oAttDef->IsLinkset()) continue; // Process only linkset attributes...
+			
+			$oPage->SetCurrentTab($oAttDef->GetLabel());
+			if ($bEditMode)
 			{
-				$oPage->SetCurrentTab($oAttDef->GetLabel());
-				
+				$iFlags = $this->GetAttributeFlags($sAttCode);
+				$sClass = get_class($this);
+				if (get_class($oAttDef) == 'AttributeLinkedSet')
+				{
+					// 1:n links
+					$sTargetClass = $oAttDef->GetLinkedClass();
+					$oPage->p("<img src=\"".MetaModel::GetClassIcon($sTargetClass)."\" style=\"vertical-align:middle;\">&nbsp;".$oAttDef->GetDescription());
+
+					$oFilter = new DBObjectSearch($sTargetClass);
+					$oFilter->AddCondition($oAttDef->GetExtKeyToMe(), $this->GetKey());
+
+					$oBlock = new DisplayBlock($oFilter, 'list', false);
+					$oBlock->Display($oPage, 0);
+				}
+				else // get_class($oAttDef) == 'AttributeLinkedSetIndirect'
+				{
+					// n:n links
+					$sLinkedClass = $oAttDef->GetLinkedClass();
+					$oLinkingAttDef = 	MetaModel::GetAttributeDef($sLinkedClass, $oAttDef->GetExtKeyToRemote());
+					$sTargetClass = $oLinkingAttDef->GetTargetClass();
+					$oPage->p("<img src=\"".MetaModel::GetClassIcon($sTargetClass)."\" style=\"vertical-align:middle;\">&nbsp;".$oAttDef->GetDescription());
+
+					$sValue = $this->Get($sAttCode);
+					$sDisplayValue = $this->GetEditValue($sAttCode);
+					$aArgs = array('this' => $this);
+					$sInputId = $this->m_iFormId.'_'.$sAttCode;
+					$sHTMLValue = "<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
+					$aFieldsMap[$sAttCode] = $sInputId;
+					$oPage->add($sHTMLValue);
+				}
+			}
+			else
+			{
+				// Display mode
 				if (!$oAttDef->IsIndirect())
 				{
 					// 1:n links
@@ -176,7 +217,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$oPage->SetCurrentTab('');
 	}
 
-	function GetBareProperties(WebPage $oPage)
+	function GetBareProperties(WebPage $oPage, $bEditMode = false)
 	{
 		$sHtml = '';
 		$oAppContext = new ApplicationContext();	
@@ -223,7 +264,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 	}
 
 	
-	function DisplayDetails(WebPage $oPage)
+	function DisplayDetails(WebPage $oPage, $bEditMode = false)
 	{
 		$sTemplate = Utils::ReadFromFile(MetaModel::GetDisplayTemplate(get_class($this)));
 		if (!empty($sTemplate))
@@ -238,14 +279,14 @@ abstract class cmdbAbstractObject extends CMDBObject
 		{
 			// Object's details
 			// template not found display the object using the *old style*
-			$this->DisplayBareHeader($oPage);
+			$this->DisplayBareHeader($oPage, $bEditMode);
 			$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB);
 			$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
 			$oPage->SetCurrentTab(Dict::S('UI:PropertiesTab'));
-			$this->DisplayBareProperties($oPage);
-			$this->DisplayBareRelations($oPage);
+			$this->DisplayBareProperties($oPage, $bEditMode);
+			$this->DisplayBareRelations($oPage, $bEditMode);
 			$oPage->SetCurrentTab(Dict::S('UI:HistoryTab'));
-			$this->DisplayBareHistory($oPage);
+			$this->DisplayBareHistory($oPage, $bEditMode);
 		}
 	}
 	
@@ -990,28 +1031,29 @@ abstract class cmdbAbstractObject extends CMDBObject
 	
 	public function DisplayModifyForm(WebPage $oPage, $aExtraParams = array())
 	{
-		static $iFormId = 0;
-		$iFormId++;
+		static $iGlobalFormId = 0;
+		$iGlobalFormId++;
+		$this->m_iFormId = $iGlobalFormId;
 		$sClass = get_class($this);
 		$oAppContext = new ApplicationContext();
 		$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
 		$iKey = $this->GetKey();
 		$aDetails = array();
 		$aFieldsMap = array();
-		$oPage->add("<form id=\"form_{$iFormId}\" enctype=\"multipart/form-data\" method=\"post\" onSubmit=\"return CheckFields('form_{$iFormId}', true)\">\n");
+		$oPage->add("<form id=\"form_{$this->m_iFormId}\" enctype=\"multipart/form-data\" method=\"post\" onSubmit=\"return CheckFields('form_{$this->m_iFormId}', true)\">\n");
 
 		$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB);
 		$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
 		$oPage->SetCurrentTab(Dict::S('UI:PropertiesTab'));
-		$aDetailsList = MetaModel::GetZListItems($sClass, 'details');
-		$aFullList = MetaModel::ListAttributeDefs($sClass);
-		$aList = $aDetailsList;
+		$aDetailsList = $this->FLattenZList(MetaModel::GetZListItems($sClass, 'details'));
+		//$aFullList = MetaModel::ListAttributeDefs($sClass);
+		$aList = array();
 		// Compute the list of properties to display, first the attributes in the 'details' list, then 
 		// all the remaining attributes that are not external fields
-		foreach($aFullList as $sAttCode => $void)
+		foreach($aDetailsList as $sAttCode)
 		{
 			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-			if (!in_array($sAttCode, $aDetailsList) && (!$oAttDef->IsExternalField()))
+			if (!$oAttDef->IsExternalField())
 			{
 				$aList[] = $sAttCode;
 			}
@@ -1019,7 +1061,6 @@ abstract class cmdbAbstractObject extends CMDBObject
 
 		foreach($aList as $sAttCode)
 		{
-			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 			$iFlags = $this->GetAttributeFlags($sAttCode);
 			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 			if ( (!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0) )
@@ -1051,7 +1092,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 								$sValue = $this->Get($sAttCode);
 								$sDisplayValue = $this->GetEditValue($sAttCode);
 								$aArgs = array('this' => $this);
-								$sInputId = $iFormId.'_'.$sAttCode;
+								$sInputId = $this->m_iFormId.'_'.$sAttCode;
 								$sHTMLValue = "<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
 								$aFieldsMap[$sAttCode] = $sInputId;
 								
@@ -1068,43 +1109,9 @@ abstract class cmdbAbstractObject extends CMDBObject
 		}
 		$oPage->details($aDetails);
 		// Now display the relations, one tab per relation
-		foreach($aList as $sAttCode)
-		{
-			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-			if ($oAttDef->IsLinkset())
-			{
-				$oPage->SetCurrentTab($oAttDef->GetLabel());
-				
-				if (get_class($oAttDef) == 'AttributeLinkedSet')
-				{
-					// 1:n links
-					$sTargetClass = $oAttDef->GetLinkedClass();
-					$oPage->p("<img src=\"".MetaModel::GetClassIcon($sTargetClass)."\" style=\"vertical-align:middle;\">&nbsp;".$oAttDef->GetDescription());
 
-					$oFilter = new DBObjectSearch($sTargetClass);
-					$oFilter->AddCondition($oAttDef->GetExtKeyToMe(), $this->GetKey());
+		$this->DisplayBareRelations($oPage, true); // Edit mode
 
-					$oBlock = new DisplayBlock($oFilter, 'list', false);
-					$oBlock->Display($oPage, 0);
-				}
-				else // get_class($oAttDef) == 'AttributeLinkedSetIndirect'
-				{
-					// n:n links
-					$sLinkedClass = $oAttDef->GetLinkedClass();
-					$oLinkingAttDef = 	MetaModel::GetAttributeDef($sLinkedClass, $oAttDef->GetExtKeyToRemote());
-					$sTargetClass = $oLinkingAttDef->GetTargetClass();
-					$oPage->p("<img src=\"".MetaModel::GetClassIcon($sTargetClass)."\" style=\"vertical-align:middle;\">&nbsp;".$oAttDef->GetDescription());
-
-					$sValue = $this->Get($sAttCode);
-					$sDisplayValue = $this->GetEditValue($sAttCode);
-					$aArgs = array('this' => $this);
-					$sInputId = $iFormId.'_'.$sAttCode;
-					$sHTMLValue = "<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
-					$aFieldsMap[$sAttCode] = $sInputId;
-					$oPage->add($sHTMLValue);
-				}
-			}
-		}
 		$oPage->SetCurrentTab('');
 		$oPage->add("<input type=\"hidden\" name=\"id\" value=\"$iKey\">\n");
 		$oPage->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
@@ -1133,7 +1140,7 @@ EOF
 		$oPage->add_ready_script(
 <<<EOF
 		// Initializes the object once at the beginning of the page...
-		CheckFields('form_{$iFormId}', false);
+		CheckFields('form_{$this->m_iFormId}', false);
 EOF
 );
 	}
@@ -1164,15 +1171,15 @@ EOF
 			$sTargetState = $oObjectToClone->GetState();
 		}
 
-		$aDetailsList = MetaModel::GetZListItems($sClass, 'details');
-		$aFullList = MetaModel::ListAttributeDefs($sClass);
-		$aList = $aDetailsList;
+		$aDetailsList = self::FlattenZList(MetaModel::GetZListItems($sClass, 'details'));
+		//$aFullList = MetaModel::ListAttributeDefs($sClass);
+		$aList = array();
 		// Compute the list of properties to display, first the attributes in the 'details' list, then 
 		// all the remaining attributes that are not external fields
-		foreach($aFullList as $sAttCode => $void)
+		foreach($aDetailsList as $sAttCode)
 		{
 			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-			if (!in_array($sAttCode, $aDetailsList) && (!$oAttDef->IsExternalField()))
+			if (!$oAttDef->IsExternalField())
 			{
 				$aList[] = $sAttCode;
 			}
@@ -1260,6 +1267,17 @@ EOF
 		}		
 		$oPage->details($aDetails);
 		// Now display the relations, one tab per relation
+		if ($oObjectToClone != null)
+		{
+			$oObj = $oObjectToClone; // Hmm, likely to fail... 
+		}
+		else
+		{
+			$oObj = new $sClass;
+		}	
+		$oObj->m_iFormId = $iCreationFormId;
+		$oObj->DisplayBareRelations($oPage, true);
+		/*
 		foreach($aList as $sAttCode)
 		{
 			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
@@ -1281,6 +1299,7 @@ EOF
 			}
 		}
 		$oPage->SetCurrentTab('');
+		*/
 
 		if ($oObjectToClone != null)
 		{
@@ -1377,7 +1396,7 @@ EOF
 		return $aDetails;
 	}
 
-	protected function FlattenZList($aList)
+	protected static function FlattenZList($aList)
 	{
 		$aResult = array();
 		foreach($aList as $value)

@@ -355,12 +355,15 @@ class FileDoc extends Document
 	 * Overload the display of the properties to add a tab (the first one)
 	 * with the preview of the document
 	 */
-	public function DisplayBareProperties(WebPage $oPage)
+	public function DisplayBareProperties(WebPage $oPage, $bEditMode = false)
+	{
+		if (!$bEditMode)
 	{
 		$oPage->SetCurrentTab(Dict::S('Class:Document:PreviewTab'));
 		$oPage->add($this->DisplayDocumentInline($oPage, 'contents'));
 		$oPage->SetCurrentTab(Dict::S('UI:PropertiesTab'));
-		parent::DisplayBareProperties($oPage);
+		}
+		parent::DisplayBareProperties($oPage, $bEditMode);
 		
 	}
 }
@@ -435,10 +438,12 @@ class Subnet extends cmdbAbstractObject
 		$this->Set('name', $sName);
 	}
 
-	function DisplayBareRelations(WebPage $oPage)
+	function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
 	{
-		parent::DisplayBareRelations($oPage);
+		parent::DisplayBareRelations($oPage, $bEditMode);
 
+		if (!$bEditMode)
+		{
 		$oPage->SetCurrentTab(Dict::S('Class:Subnet/Tab:IPUsage'));
 
 		$bit_ip = ip2long($this->Get('ip'));
@@ -480,6 +485,7 @@ class Subnet extends cmdbAbstractObject
 			$iAnIP++;
 		}
 	}
+}
 }
 class Patch extends cmdbAbstractObject
 {
