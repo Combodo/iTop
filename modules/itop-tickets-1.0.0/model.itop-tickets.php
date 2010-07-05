@@ -460,6 +460,60 @@ abstract class ResponseTicket extends Ticket
 			$this->Set('closure_deadline', null);
 		}
 	}
+	
+	/**
+	 * Determines if the ticket must be hilighted in the list, if we're about to miss a SLA for instance
+	 */
+	public function GetHilightClass()
+	{
+		$sHilightClass = '';
+		switch($this->GetState())
+		{
+			case 'new':
+			$oEscalationDeadline = $this->Get('escalation_deadline');
+			if ($oEscalationDeadline != null)
+			{
+				// A SLA is running
+				$iStartDate = AttributeDateTime::GetAsUnixSeconds($this->Get('start_date'));
+				$iEscalationDeadline = AttributeDateTime::GetAsUnixSeconds($oEscalationDeadline);
+				$ratio = ($iEscalationDeadline - time())/($iEscalationDeadline - $iStartDate);
+				if ($ratio <= 0)
+				{
+					$sHilightClass = HILIGHT_CLASS_CRITICAL;
+				}
+				else if ($ratio <= 0.25)
+				{
+					$sHilightClass = HILIGHT_CLASS_WARNING;
+				}
+			}
+			break;
+			
+			case 'assigned':
+			$oClosureDeadline = $this->Get('closure_deadline');
+			if ($oClosureDeadline != null)
+			{
+				// A SLA is running
+				$iStartDate = AttributeDateTime::GetAsUnixSeconds($this->Get('start_date'));
+				$iClosureDeadline = AttributeDateTime::GetAsUnixSeconds($oClosureDeadline);
+				$ratio = ($iClosureDeadline - time())/($iClosureDeadline - $iStartDate);
+				if ($ratio <= 0)
+				{
+					$sHilightClass = HILIGHT_CLASS_CRITICAL;
+				}
+				else if ($ratio <= 0.25)
+				{
+					$sHilightClass = HILIGHT_CLASS_WARNING;
+				}
+			}
+			break;
+			
+			case 'escalated_tto':
+			case 'escalated_ttr':
+			$sHilightClass = HILIGHT_CLASS_CRITICAL;
+			break;
+		}
+		return $sHilightClass;
+	}
 }
 
 ?>

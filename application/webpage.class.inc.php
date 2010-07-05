@@ -142,7 +142,14 @@ class WebPage
 		$sHtml .= "<tbody>\n";
 		foreach($aData as $aRow)
 		{
-			$sHtml .= "<tr>\n";
+			if (isset($aRow['@class'])) // Row specific class, for hilighting certain rows
+			{
+				$sHtml .= "<tr class=\"{$aRow['@class']}\">\n";				
+			}
+			else
+			{
+				$sHtml .= "<tr>\n";
+			}
 			foreach($aConfig as $sName=>$aAttribs)
 			{
 				$aMatches = array();
@@ -262,6 +269,7 @@ class WebPage
         echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n";
         echo "<html>\n";
         echo "<head>\n";
+         echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
         echo "<title>{$this->s_title}</title>\n";
         echo $this->get_base_tag();
         foreach($this->a_linked_scripts as $s_script)

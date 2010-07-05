@@ -90,6 +90,20 @@ class iTopWebPage extends NiceWebPage
 	    } 
 	});
 	
+	$.tablesorter.addWidget({ 
+	    // give the widget a id 
+	    id: "myZebra", 
+	    // format is called when the on init and when a sorting has finished 
+	    format: function(table)
+	    {
+	    	// Replace the 'red even' lines by 'red_even' since most browser do not support 2 classes selector in CSS, etc..
+			$("tbody tr:even",table).addClass('even');
+			$("tbody tr.red:even",table).removeClass('red').removeClass('even').addClass('red_even');
+			$("tbody tr.orange:even",table).removeClass('orange').removeClass('even').addClass('orange_even');
+			$("tbody tr.green:even",table).removeClass('green').removeClass('even').addClass('green_even');
+	    } 
+	});
+
 	try
 	{
 	var myLayout; // a var is required because this page utilizes: myLayout.allowOverflow() method
@@ -138,7 +152,7 @@ class iTopWebPage extends NiceWebPage
 		
 	$("div[id^=tabbedContent]").tabs(); // tabs
 	$("table.listResults").tableHover(); // hover tables
-	$(".listResults").tablesorter( { headers: { 0:{sorter: false }}, widgets: ['zebra', 'truncatedList']} ); // sortable and zebra tables
+	$(".listResults").tablesorter( { headers: { 0:{sorter: false }}, widgets: ['myZebra', 'truncatedList']} ); // sortable and zebra tables
 	$(".date-pick").datepicker({
 			showOn: 'button',
 			buttonImage: '../images/calendar.png',

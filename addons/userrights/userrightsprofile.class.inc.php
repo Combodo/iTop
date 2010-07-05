@@ -748,6 +748,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		$oUser->Set('login', $sAdminUser);
 		$oUser->Set('password', $sAdminPwd);
 		$oUser->Set('userid', $iContactId);
+		$oUser->Set('language', utils::GetConfig()->GetDefaultLanguage()); // Default language was chosen during the installation
 		$iUserId = $oUser->DBInsertTrackedNoReload($oChange);
 		
 		// Add this user to the very specific 'admin' profile

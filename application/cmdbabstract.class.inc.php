@@ -26,6 +26,11 @@
 
 define('OBJECT_PROPERTIES_TAB', 'ObjectProperties');
 
+define('HILIGHT_CLASS_CRITICAL', 'red');
+define('HILIGHT_CLASS_WARNING', 'orange');
+define('HILIGHT_CLASS_OK', 'green');
+define('HILIGHT_CLASS_NONE', '');
+
 require_once('../core/cmdbobject.class.inc.php');
 require_once('../application/utils.inc.php');
 require_once('../application/applicationcontext.class.inc.php');
@@ -302,14 +307,18 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$oPage->details($aDetails);		
 	}
 	
-	// Comment by Rom: this helper may be used to display objects of class DBObject
-	//                 -> I am using this to display the changes history
 	public static function DisplaySet(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
 		$oPage->add(self::GetDisplaySet($oPage, $oSet, $aExtraParams));
 	}
-	
-	//public static function GetDisplaySet(WebPage $oPage, CMDBObjectSet $oSet, $sLinkageAttribute = '', $bDisplayMenu = true, $bSelectMode = false)
+
+	/**
+	 * Get the HTML fragment corresponding to the display of a table representing a set of objects
+	 * @param WebPage $oPage The page object is used for out-of-band information (mostly scripts) output
+	 * @param CMDBObjectSet The set of objects to display
+	 * @param Hash $aExtraParams Some extra configuration parameters to tweak the behavior of the display
+	 * @return String The HTML fragment representing the table of objects
+	 */	
 	public static function GetDisplaySet(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
 		static $iListId = 0;
@@ -336,12 +345,14 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$bDisplayMenu = isset($aExtraParams['menu']) ? $aExtraParams['menu'] == true : true;
 		$bSelectMode = isset($aExtraParams['selection_mode']) ? $aExtraParams['selection_mode'] == true : false;
 		$bSingleSelectMode = isset($aExtraParams['selection_type']) ? ($aExtraParams['selection_type'] == 'single') : false;
+		$aExtraFields = isset($aExtraParams['extra_fields']) ? explode(',', trim($aExtraParams['extra_fields'])) : array();
 		
 		$sHtml = '';
 		$oAppContext = new ApplicationContext();
 		$sClassName = $oSet->GetFilter()->GetClass();
 		$aAttribs = array();
 		$aList = MetaModel::GetZListItems($sClassName, 'list');
+		$aList = array_merge($aList, $aExtraFields);
 		if (!empty($sLinkageAttribute))
 		{
 			// The set to display is in fact a set of links between the object specified in the $sLinkageAttribute
@@ -408,6 +419,11 @@ abstract class cmdbAbstractObject extends CMDBObject
 		while (($oObj = $oSet->Fetch()) && ($iMaxObjects != 0))
 		{
 			$aRow = array();
+			$sHilightClass = $oObj->GetHilightClass();
+			if ($sHilightClass != '')
+			{
+				$aRow['@class'] = $sHilightClass;	
+			}
 			if ($bViewLink)
 			{
 				$aRow['key'] = $oObj->GetHyperLink();
@@ -1489,5 +1505,19 @@ EOF
 		}
 	}
 	
+	/**
+	 * This function returns a 'hilight' CSS class, used to hilight a given row in a table
+	 * There are currently (i.e defined in the CSS) 4 possible values HILIGHT_CLASS_CRITICAL,
+	 * HILIGHT_CLASS_WARNING, HILIGHT_CLASS_OK, HILIGHT_CLASS_NONE
+	 * To Be overridden by derived classes
+	 * @param void
+	 * @return String The desired higlight class for the object/row
+	 */
+	public function GetHilightClass()
+	{
+		// Possible return values are:
+		// HILIGHT_CLASS_CRITICAL, HILIGHT_CLASS_WARNING, HILIGHT_CLASS_OK, HILIGHT_CLASS_NONE	
+		return HILIGHT_CLASS_NONE; // Not hilighted by default
+	}
 }
 ?>
