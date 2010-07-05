@@ -404,7 +404,7 @@ function CreateAdminAccount(SetupWebPage $oP, Config $oConfig, $sAdminUser, $sAd
 {
 	$oP->log('Info - CreateAdminAccount');
 	InitDataModel($oP, TMP_CONFIG_FILE, true);  // allow missing DB
-	if (UserRights::CreateAdministrator($sAdminUser, $sAdminPwd))
+	if (UserRights::CreateAdministrator($sAdminUser, $sAdminPwd, $sLanguage))
 	{
 		$oP->ok("Administrator account '$sAdminUser' created.");
 		return true;
