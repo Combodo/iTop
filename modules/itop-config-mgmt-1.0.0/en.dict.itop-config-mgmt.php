@@ -123,6 +123,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Location/Attribute:parent_id+' => '',
 	'Class:Location/Attribute:parent_name' => 'Parent name',
 	'Class:Location/Attribute:parent_name+' => '',
+	'Class:Location/Attribute:contact_list' => 'Contacts',
+	'Class:Location/Attribute:contact_list+' => 'Contacts located on this site',
+	'Class:Location/Attribute:infra_list' => 'Infrastructure',
+	'Class:Location/Attribute:infra_list+' => 'CIs located on this site',
 ));
 
 //
@@ -199,10 +203,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkTeamToContact/Attribute:contact_id+' => '',
 	'Class:lnkTeamToContact/Attribute:contact_location_id' => 'Location',
 	'Class:lnkTeamToContact/Attribute:contact_location_id+' => '',
-	'Class:lnkTeamToContact/Attribute:contact_email' => 'eMail',
+	'Class:lnkTeamToContact/Attribute:contact_email' => 'Email',
 	'Class:lnkTeamToContact/Attribute:contact_email+' => '',
 	'Class:lnkTeamToContact/Attribute:contact_phone' => 'Phone',
 	'Class:lnkTeamToContact/Attribute:contact_phone+' => '',
+	'Class:lnkTeamToContact/Attribute:role' => 'Role',
+	'Class:lnkTeamToContact/Attribute:role+' => '',
 ));
 
 //
@@ -297,10 +303,14 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Licence/Attribute:start+' => '',
 	'Class:Licence/Attribute:end' => 'End date',
 	'Class:Licence/Attribute:end+' => '',
-	'Class:Licence/Attribute:key' => 'Key',
-	'Class:Licence/Attribute:key+' => '',
+	'Class:Licence/Attribute:licence_key' => 'Key',
+	'Class:Licence/Attribute:licence_key+' => '',
 	'Class:Licence/Attribute:scope' => 'Scope',
 	'Class:Licence/Attribute:scope+' => '',
+	'Class:Licence/Attribute:usage_limit' => 'Usage limit',
+	'Class:Licence/Attribute:usage_limit+' => '',
+	'Class:Licence/Attribute:usage_list' => 'Usage',
+	'Class:Licence/Attribute:usage_list+' => 'Application instances using this licence',
 ));
 
 //
@@ -310,8 +320,10 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:Subnet' => 'Subnet',
 	'Class:Subnet+' => '',
-	'Class:Subnet/Attribute:name' => 'Name',
-	'Class:Subnet/Attribute:name+' => '',
+	//'Class:Subnet/Attribute:name' => 'Name',
+	//'Class:Subnet/Attribute:name+' => '',
+	'Class:Subnet/Attribute:org_id' => 'Owner organization',
+	'Class:Subnet/Attribute:org_id+' => '',
 	'Class:Subnet/Attribute:description' => 'Description',
 	'Class:Subnet/Attribute:description+' => '',
 	'Class:Subnet/Attribute:ip' => 'IP',
@@ -329,14 +341,18 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Patch+' => '',
 	'Class:Patch/Attribute:name' => 'Name',
 	'Class:Patch/Attribute:name+' => '',
+	'Class:Patch/Attribute:description' => 'Description',
+	'Class:Patch/Attribute:description+' => '',
 	'Class:Patch/Attribute:target_sw' => 'Application scope',
 	'Class:Patch/Attribute:target_sw+' => 'Target software (OS or application)',
 	'Class:Patch/Attribute:version' => 'Version',
 	'Class:Patch/Attribute:version+' => '',
 	'Class:Patch/Attribute:type' => 'Type',
 	'Class:Patch/Attribute:type+' => '',
-	'Class:Patch/Attribute:type/Value:fix' => 'Fix',
-	'Class:Patch/Attribute:type/Value:fix+' => '',
+	'Class:Patch/Attribute:type/Value:application' => 'Application',
+	'Class:Patch/Attribute:type/Value:application+' => '',
+	'Class:Patch/Attribute:type/Value:os' => 'OS',
+	'Class:Patch/Attribute:type/Value:os+' => '',
 	'Class:Patch/Attribute:type/Value:security' => 'Security',
 	'Class:Patch/Attribute:type/Value:security+' => '',
 	'Class:Patch/Attribute:type/Value:servicepack' => 'Service Pack',
@@ -383,7 +399,7 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:lnkPatchToCI' => 'lnkPatchToCI',
+	'Class:lnkPatchToCI' => 'Patch usage',
 	'Class:lnkPatchToCI+' => '',
 	'Class:lnkPatchToCI/Attribute:patch_id' => 'Patch',
 	'Class:lnkPatchToCI/Attribute:patch_id+' => '',
@@ -414,11 +430,11 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:FunctionalCI/Attribute:status/Value:obsolete+' => '',
 	'Class:FunctionalCI/Attribute:status/Value:production' => 'Production',
 	'Class:FunctionalCI/Attribute:status/Value:production+' => '',
-	'Class:FunctionalCI/Attribute:owner_id' => 'Owner organization',
-	'Class:FunctionalCI/Attribute:owner_id+' => '',
+	'Class:FunctionalCI/Attribute:org_id' => 'Owner organization',
+	'Class:FunctionalCI/Attribute:org_id+' => '',
 	'Class:FunctionalCI/Attribute:owner_name' => 'Owner organization',
 	'Class:FunctionalCI/Attribute:owner_name+' => '',
-	'Class:FunctionalCI/Attribute:importance' => 'Importance',
+	'Class:FunctionalCI/Attribute:importance' => 'Business criticity',
 	'Class:FunctionalCI/Attribute:importance+' => '',
 	'Class:FunctionalCI/Attribute:importance/Value:high' => 'High',
 	'Class:FunctionalCI/Attribute:importance/Value:high+' => '',
@@ -430,10 +446,39 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:FunctionalCI/Attribute:contact_list+' => 'Contacts for this CI',
 	'Class:FunctionalCI/Attribute:document_list' => 'Documents',
 	'Class:FunctionalCI/Attribute:document_list+' => 'Documentation for this CI',
-	'Class:FunctionalCI/Attribute:solution_list' => 'Solutions',
-	'Class:FunctionalCI/Attribute:solution_list+' => 'Solutions using this CI',
+	'Class:FunctionalCI/Attribute:solution_list' => 'Application solutions',
+	'Class:FunctionalCI/Attribute:solution_list+' => 'Application solutions using this CI',
+	'Class:FunctionalCI/Attribute:contract_list' => 'Contracts',
+	'Class:FunctionalCI/Attribute:contract_list+' => 'Contracts supporting this CI',
+	'Class:FunctionalCI/Attribute:ticket_list' => 'Tickets',
+	'Class:FunctionalCI/Attribute:ticket_list+' => 'Tickets related to the CI',
 	'Class:FunctionalCI/Attribute:finalclass' => 'finalclass',
 	'Class:FunctionalCI/Attribute:finalclass+' => '',
+));
+
+//
+// Class: SoftwareInstance
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:SoftwareInstance' => 'Software Instance',
+	'Class:SoftwareInstance+' => '',
+	'Class:SoftwareInstance/Attribute:device_id' => 'Device',
+	'Class:SoftwareInstance/Attribute:device_id+' => '',
+	'Class:SoftwareInstance/Attribute:device_name' => 'Device',
+	'Class:SoftwareInstance/Attribute:device_name+' => '',
+	'Class:SoftwareInstance/Attribute:licence_id' => 'Licence',
+	'Class:SoftwareInstance/Attribute:licence_id+' => '',
+	'Class:SoftwareInstance/Attribute:licence_name' => 'Licence',
+	'Class:SoftwareInstance/Attribute:licence_name+' => '',
+	'Class:SoftwareInstance/Attribute:software_id' => 'Software',
+	'Class:SoftwareInstance/Attribute:software_id+' => '',
+	'Class:SoftwareInstance/Attribute:software_name' => 'Software',
+	'Class:SoftwareInstance/Attribute:software_name+' => '',
+	'Class:SoftwareInstance/Attribute:version' => 'Version',
+	'Class:SoftwareInstance/Attribute:version+' => '',
+	'Class:SoftwareInstance/Attribute:description' => 'Description',
+	'Class:SoftwareInstance/Attribute:description+' => '',
 ));
 
 //
@@ -441,24 +486,17 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:ApplicationInstance' => 'Application Instance',
+	'Class:ApplicationInstance' => 'Application instance',
 	'Class:ApplicationInstance+' => '',
-	'Class:ApplicationInstance/Attribute:device_id' => 'Device',
-	'Class:ApplicationInstance/Attribute:device_id+' => '',
-	'Class:ApplicationInstance/Attribute:device_name' => 'Device',
-	'Class:ApplicationInstance/Attribute:device_name+' => '',
-	'Class:ApplicationInstance/Attribute:licence_id' => 'Licence',
-	'Class:ApplicationInstance/Attribute:licence_id+' => '',
-	'Class:ApplicationInstance/Attribute:licence_name' => 'Licence',
-	'Class:ApplicationInstance/Attribute:licence_name+' => '',
-	'Class:ApplicationInstance/Attribute:application_id' => 'Application',
-	'Class:ApplicationInstance/Attribute:application_id+' => '',
-	'Class:ApplicationInstance/Attribute:application_name' => 'Application',
-	'Class:ApplicationInstance/Attribute:application_name+' => '',
-	'Class:ApplicationInstance/Attribute:version' => 'Version',
-	'Class:ApplicationInstance/Attribute:version+' => '',
-	'Class:ApplicationInstance/Attribute:description' => 'Description',
-	'Class:ApplicationInstance/Attribute:description+' => '',
+));
+
+//
+// Class: DBServerInstance
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:DBServerInstance' => 'DB Server instance',
+	'Class:DBServerInstance+' => '',
 ));
 
 //
@@ -472,12 +510,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:DatabaseInstance/Attribute:db_server_instance_id+' => '',
 	'Class:DatabaseInstance/Attribute:db_server_instance_version' => 'Database version',
 	'Class:DatabaseInstance/Attribute:db_server_instance_version+' => '',
-	'Class:DatabaseInstance/Attribute:application_name' => 'Database software',
-	'Class:DatabaseInstance/Attribute:application_name+' => '',
-	'Class:DatabaseInstance/Attribute:admin_login' => 'Admin login',
-	'Class:DatabaseInstance/Attribute:admin_login+' => '',
-	'Class:DatabaseInstance/Attribute:admin_password' => 'Admin password',
-	'Class:DatabaseInstance/Attribute:admin_password+' => '',
 	'Class:DatabaseInstance/Attribute:description' => 'Description',
 	'Class:DatabaseInstance/Attribute:description+' => '',
 ));
@@ -493,7 +525,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:ApplicationSolution/Attribute:description+' => '',
 	'Class:ApplicationSolution/Attribute:ci_list' => 'CIs',
 	'Class:ApplicationSolution/Attribute:ci_list+' => 'CIs composing the solution',
-	'Class:ApplicationSolution/Attribute:process_list' => 'Processes',
+	'Class:ApplicationSolution/Attribute:process_list' => 'Business processes',
 	'Class:ApplicationSolution/Attribute:process_list+' => 'Business processes relying on the solution',
 ));
 
@@ -504,8 +536,8 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:BusinessProcess' => 'Business Process',
 	'Class:BusinessProcess+' => '',
-	'Class:BusinessProcess/Attribute:solution_list' => 'Solutions',
-	'Class:BusinessProcess/Attribute:solution_list+' => 'Solutions the process is relying on',
+	'Class:BusinessProcess/Attribute:solution_list' => 'Application solutions',
+	'Class:BusinessProcess/Attribute:solution_list+' => 'Application solutions the process is relying on',
 	'Class:BusinessProcess/Attribute:description' => 'Description',
 	'Class:BusinessProcess/Attribute:description+' => '',
 ));
@@ -591,6 +623,8 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:Device' => 'Device',
 	'Class:Device+' => '',
+	'Class:Device/Attribute:nwinterface_list' => 'Network interfaces',
+	'Class:Device/Attribute:nwinterface_list+' => '',
 ));
 
 //
@@ -743,7 +777,7 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:lnkCIToDoc' => 'lnkCItoDoc',
+	'Class:lnkCIToDoc' => 'Doc/CI',
 	'Class:lnkCIToDoc+' => '',
 	'Class:lnkCIToDoc/Attribute:ci_id' => 'CI',
 	'Class:lnkCIToDoc/Attribute:ci_id+' => '',
@@ -766,7 +800,7 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:lnkCIToContact' => 'lnkCIToContact',
+	'Class:lnkCIToContact' => 'CI/Contact',
 	'Class:lnkCIToContact+' => '',
 	'Class:lnkCIToContact/Attribute:ci_id' => 'CI',
 	'Class:lnkCIToContact/Attribute:ci_id+' => '',
@@ -789,11 +823,11 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:lnkSolutionToCI' => 'lnkSolutionToCI',
+	'Class:lnkSolutionToCI' => 'CI/Solution',
 	'Class:lnkSolutionToCI+' => '',
-	'Class:lnkSolutionToCI/Attribute:solution_id' => 'Solution',
+	'Class:lnkSolutionToCI/Attribute:solution_id' => 'Application solution',
 	'Class:lnkSolutionToCI/Attribute:solution_id+' => '',
-	'Class:lnkSolutionToCI/Attribute:solution_name' => 'Solution',
+	'Class:lnkSolutionToCI/Attribute:solution_name' => 'Application solution',
 	'Class:lnkSolutionToCI/Attribute:solution_name+' => '',
 	'Class:lnkSolutionToCI/Attribute:ci_id' => 'CI',
 	'Class:lnkSolutionToCI/Attribute:ci_id+' => '',
@@ -810,11 +844,11 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:lnkProcessToSolution' => 'lnkProcessToSolution',
+	'Class:lnkProcessToSolution' => 'Business process/Solution',
 	'Class:lnkProcessToSolution+' => '',
-	'Class:lnkProcessToSolution/Attribute:solution_id' => 'Solution',
+	'Class:lnkProcessToSolution/Attribute:solution_id' => 'Application solution',
 	'Class:lnkProcessToSolution/Attribute:solution_id+' => '',
-	'Class:lnkProcessToSolution/Attribute:solution_name' => 'Solution',
+	'Class:lnkProcessToSolution/Attribute:solution_name' => 'Application solution',
 	'Class:lnkProcessToSolution/Attribute:solution_name+' => '',
 	'Class:lnkProcessToSolution/Attribute:process_id' => 'Process',
 	'Class:lnkProcessToSolution/Attribute:process_id+' => '',
@@ -876,16 +910,14 @@ Dict::Add('EN US', 'English', 'English', array(
 'Menu:BusinessProcess+' => 'All Business Processes',
 'Menu:ApplicationSolution' => 'Application Solutions',
 'Menu:ApplicationSolution+' => 'All Application Solutions',
-'Menu:ConfigManagementSoftware' => 'Software',
+'Menu:ConfigManagementSoftware' => 'Application Management',
 'Menu:Licence' => 'Licences',
 'Menu:Licence+' => 'All Licences',
 'Menu:Patch' => 'Patches',
-'Menu:Patch+' => 'ALl Patches',
+'Menu:Patch+' => 'All Patches',
 'Menu:ApplicationInstance' => 'Installed Applications',
 'Menu:ApplicationInstance+' => 'All Installed Applications',
-'Menu:DatabaseInstance' => 'Database Instances',
-'Menu:DatabaseInstance+' => 'All Database Instances',
-'Menu:ConfigManagementHardware' => 'Hardware',
+'Menu:ConfigManagementHardware' => 'Infrastructure Management',
 'Menu:Subnet' => 'Subnets',
 'Menu:Subnet+' => 'All Subnets',
 'Menu:NetworkDevice' => 'Network Devices',

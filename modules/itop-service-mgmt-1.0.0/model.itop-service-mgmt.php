@@ -91,7 +91,7 @@ class ProviderContract extends Contract
 		MetaModel::Init_SetZListItems('details', array('name', 'description', 'start_date', 'end_date', 'cost', 'cost_currency', 'cost_unit', 'billing_frequency', 'contact_list', 'document_list', 'ci_list', 'provider_id', 'ola', 'coverage', 'customer_list'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'description', 'start_date', 'end_date', 'cost', 'cost_currency', 'cost_unit', 'billing_frequency', 'provider_id', 'ola', 'coverage'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'start_date', 'end_date', 'cost', 'cost_currency', 'cost_unit', 'billing_frequency', 'provider_id', 'ola', 'coverage'));
-		MetaModel::Init_SetZListItems('list', array('name', 'description', 'start_date', 'end_date', 'cost', 'cost_currency', 'cost_unit', 'billing_frequency', 'provider_id', 'ola', 'coverage'));
+		MetaModel::Init_SetZListItems('list', array('name', 'start_date', 'end_date', 'provider_id', 'ola', 'coverage'));
 	}
 }
 class CustomerContract extends Contract
@@ -124,7 +124,7 @@ class CustomerContract extends Contract
 		MetaModel::Init_SetZListItems('details', array('name', 'description', 'start_date', 'end_date', 'cost', 'cost_currency', 'cost_unit', 'billing_frequency', 'contact_list', 'document_list', 'ci_list', 'customer_id', 'support_team_id', 'provider_list', 'sla_list'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'description', 'start_date', 'end_date', 'cost', 'cost_currency', 'cost_unit', 'billing_frequency', 'customer_id', 'support_team_id'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'start_date', 'end_date', 'cost', 'cost_currency', 'cost_unit', 'billing_frequency', 'customer_id', 'support_team_id'));
-		MetaModel::Init_SetZListItems('list', array('name', 'description', 'start_date', 'end_date', 'cost', 'cost_currency', 'cost_unit', 'billing_frequency', 'customer_id', 'support_team_id'));
+		MetaModel::Init_SetZListItems('list', array('name', 'start_date', 'end_date', 'customer_id', 'support_team_id'));
 	}
 }
 class lnkProviderToCustomer extends cmdbAbstractObject

@@ -45,6 +45,7 @@ abstract class Ticket extends cmdbAbstractObject
 
 		MetaModel::Init_AddAttribute(new AttributeString("ref", array("allowed_values"=>null, "sql"=>"ref", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("title", array("allowed_values"=>null, "sql"=>"title", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+//		MetaModel::Init_AddAttribute(new AttributeText("description", array("allowed_values"=>null, "sql"=>"description", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("ticket_log", array("allowed_values"=>null, "sql"=>"ticket_log", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDateTime("start_date", array("allowed_values"=>null, "sql"=>"start_date", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("document_list", array("linked_class"=>"lnkTicketToDoc", "ext_key_to_me"=>"ticket_id", "ext_key_to_remote"=>"document_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
@@ -113,11 +114,12 @@ class lnkTicketToContact extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("contact_id", array("targetclass"=>"Contact", "jointype"=>null, "allowed_values"=>null, "sql"=>"contact_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("contact_name", array("allowed_values"=>null, "extkey_attcode"=>"contact_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("contact_email", array("allowed_values"=>null, "extkey_attcode"=>"contact_id", "target_attcode"=>"email", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("role", array("allowed_values"=>null, "sql"=>"role", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('ticket_id', 'contact_id', 'contact_email'));
-		MetaModel::Init_SetZListItems('advanced_search', array('ticket_id', 'contact_id', 'contact_email'));
-		MetaModel::Init_SetZListItems('standard_search', array('ticket_id', 'contact_id', 'contact_email'));
-		MetaModel::Init_SetZListItems('list', array('ticket_id', 'contact_id', 'contact_email'));
+		MetaModel::Init_SetZListItems('details', array('ticket_id', 'contact_id', 'contact_email', 'role'));
+		MetaModel::Init_SetZListItems('advanced_search', array('ticket_id', 'contact_id', 'contact_email', 'role'));
+		MetaModel::Init_SetZListItems('standard_search', array('ticket_id', 'contact_id', 'contact_email', 'role'));
+		MetaModel::Init_SetZListItems('list', array('ticket_id', 'contact_id', 'contact_email', 'role'));
 	}
 }
 class lnkTicketToCI extends cmdbAbstractObject
@@ -218,6 +220,8 @@ abstract class ResponseTicket extends Ticket
 				"attribute_inherit" => null,
 				"attribute_list" => array(
 					'ref' => OPT_ATT_READONLY,
+					'ticket_log' => OPT_ATT_HIDDEN,
+					'description' => OPT_ATT_MUSTCHANGE,
 					'contact_list' => OPT_ATT_READONLY,
 					'start_date' => OPT_ATT_READONLY,
 					'last_update' => OPT_ATT_READONLY,
@@ -234,8 +238,6 @@ abstract class ResponseTicket extends Ticket
 					'priority' => OPT_ATT_READONLY,
 					'workgroup_id' => OPT_ATT_MUSTCHANGE,
 					'agent_id' => OPT_ATT_HIDDEN,
-					'related_problem_id' => OPT_ATT_HIDDEN,
-					'related_change_id' => OPT_ATT_HIDDEN,
 					'resolution_code' => OPT_ATT_HIDDEN,
 					'solution' => OPT_ATT_HIDDEN,
 					'user_satisfaction' => OPT_ATT_HIDDEN,
@@ -256,9 +258,9 @@ abstract class ResponseTicket extends Ticket
 			array(
 				"attribute_inherit" => 'new',
 				"attribute_list" => array(
+					'ticket_log' => OPT_ATT_NORMAL,
+					'description' => OPT_ATT_READONLY,
 					'agent_id' => OPT_ATT_MANDATORY,
-					'related_problem_id' => OPT_ATT_NORMAL,
-					'related_change_id' => OPT_ATT_NORMAL,
 					'closure_deadline' => OPT_ATT_READONLY,
 					'escalation_deadline' => OPT_ATT_HIDDEN,
 				),
@@ -287,6 +289,7 @@ abstract class ResponseTicket extends Ticket
 			array(
 				"attribute_inherit" => 'resolved',
 				"attribute_list" => array(
+					'ticket_log' => OPT_ATT_READONLY,
 					'user_satisfaction' => OPT_ATT_MUSTCHANGE,
 					'user_commment' => OPT_ATT_MUSTPROMPT,
 				),

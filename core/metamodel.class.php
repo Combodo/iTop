@@ -3028,7 +3028,9 @@ abstract class MetaModel
 	public static function Startup($sConfigFile, $bAllowMissingDB = false)
 	{
 		self::LoadConfig($sConfigFile);
-		if (self::DBExists())
+		//if (self::DBExists())
+// !!!! #@# 
+		if (true)
 		{
 			CMDBSource::SelectDB(self::$m_sDBName);
 

@@ -42,15 +42,25 @@ class Incident extends ResponseTicket
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 		MetaModel::Init_InheritLifecycle();
+
+		MetaModel::Init_SetZListItems('details', array('ref', 'title', 'ticket_log', 'start_date', 'escalation_deadline', 'closure_deadline', 'document_list', 'ci_list', 'contact_list', 'status', 'caller_id', 'customer_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'closure_date', 'last_update', 'assignment_date', 'closure_deadline', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
+		MetaModel::Init_SetZListItems('advanced_search', array('ref', 'title', 'ticket_log', 'start_date', 'status', 'caller_id', 'customer_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'closure_date', 'last_update', 'assignment_date', 'escalation_deadline', 'closure_deadline', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
+		MetaModel::Init_SetZListItems('standard_search', array('ref', 'title', 'ticket_log', 'start_date', 'status', 'caller_id', 'customer_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'closure_date', 'last_update', 'assignment_date', 'escalation_deadline', 'closure_deadline', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
+		MetaModel::Init_SetZListItems('list', array('ref', 'title', 'ticket_log', 'start_date', 'status', 'caller_id', 'customer_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'closure_date', 'last_update', 'assignment_date', 'escalation_deadline', 'closure_deadline', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
 	}
 }
 
 $oMyMenuGroup = new MenuGroup('IncidentManagement', 1 /* fRank */);
 
 // By default, one entry per class
-new OQLMenuNode('Incidents', 'SELECT Incident', $oMyMenuGroup->GetIndex(), 0 /* fRank */);
+//new TemplateMenuNode('MyIncidents', 'SELECT Incident', $oMyMenuGroup->GetIndex(), 0 /* fRank */);
+// incident dont je suis caller
+// incident dont je suis requester
 new OQLMenuNode('OpenedIncidents', 'SELECT Incident WHERE status IN ("new", "assigned", "escalation")', $oMyMenuGroup->GetIndex(), 0 /* fRank */);
-new OQLMenuNode('ClosedIncidents', 'SELECT Incident WHERE status IN ("resolved", "closed")', $oMyMenuGroup->GetIndex(), 0 /* fRank */);
+//new OQLMenuNode('EscalatedIncidents', 'SELECT Incident WHERE status IN ("escalation")', $oMyMenuGroup->GetIndex(), 0 /* fRank */);
+//new TemplateMenuNode('IncidentOverview', 'SELECT Incident', $oMyMenuGroup->GetIndex(), 0 /* fRank */);
+
+
 //new TemplateMenuNode('WelcomeMenuPage', '../business/templates/welcome_menu.html', $oWelcomeMenu->GetIndex() /* oParent */, 1 /* fRank */);
 
 

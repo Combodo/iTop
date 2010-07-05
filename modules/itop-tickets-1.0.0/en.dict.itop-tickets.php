@@ -64,7 +64,7 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:lnkTicketToDoc' => 'lnkTicketToDoc',
+	'Class:lnkTicketToDoc' => 'Ticket/Document',
 	'Class:lnkTicketToDoc+' => '',
 	'Class:lnkTicketToDoc/Attribute:ticket_id' => 'ticket_id',
 	'Class:lnkTicketToDoc/Attribute:ticket_id+' => '',
@@ -81,9 +81,9 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:lnkTicketToContact' => 'lnkTicketToContact',
+	'Class:lnkTicketToContact' => 'Ticket/Contact',
 	'Class:lnkTicketToContact+' => '',
-	'Class:lnkTicketToContact/Attribute:ticket_id' => 'ticket_id',
+	'Class:lnkTicketToContact/Attribute:ticket_id' => 'Ticket',
 	'Class:lnkTicketToContact/Attribute:ticket_id+' => '',
 	'Class:lnkTicketToContact/Attribute:ticket_ref' => 'Ticket #',
 	'Class:lnkTicketToContact/Attribute:ticket_ref+' => '',
@@ -93,6 +93,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkTicketToContact/Attribute:contact_name+' => '',
 	'Class:lnkTicketToContact/Attribute:contact_email' => 'Email',
 	'Class:lnkTicketToContact/Attribute:contact_email+' => '',
+	'Class:lnkTicketToContact/Attribute:role' => 'Role',
+	'Class:lnkTicketToContact/Attribute:role+' => '',
 ));
 
 //
@@ -100,9 +102,9 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:lnkTicketToCI' => 'lnkTicketToCI',
+	'Class:lnkTicketToCI' => 'Ticket/CI',
 	'Class:lnkTicketToCI+' => '',
-	'Class:lnkTicketToCI/Attribute:ticket_id' => 'ticket_id',
+	'Class:lnkTicketToCI/Attribute:ticket_id' => 'Ticket',
 	'Class:lnkTicketToCI/Attribute:ticket_id+' => '',
 	'Class:lnkTicketToCI/Attribute:ticket_ref' => 'Ticket #',
 	'Class:lnkTicketToCI/Attribute:ticket_ref+' => '',
@@ -167,11 +169,11 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:ResponseTicket/Attribute:urgency/Value:3+' => '',
 	'Class:ResponseTicket/Attribute:priority' => 'priority',
 	'Class:ResponseTicket/Attribute:priority+' => '',
-	'Class:ResponseTicket/Attribute:priority/Value:1' => 'Lowest',
+	'Class:ResponseTicket/Attribute:priority/Value:1' => 'Low',
 	'Class:ResponseTicket/Attribute:priority/Value:1+' => '',
-	'Class:ResponseTicket/Attribute:priority/Value:2' => 'To be done',
+	'Class:ResponseTicket/Attribute:priority/Value:2' => 'Medium',
 	'Class:ResponseTicket/Attribute:priority/Value:2+' => '',
-	'Class:ResponseTicket/Attribute:priority/Value:3' => 'Top priority',
+	'Class:ResponseTicket/Attribute:priority/Value:3' => 'High',
 	'Class:ResponseTicket/Attribute:priority/Value:3+' => '',
 	'Class:ResponseTicket/Attribute:workgroup_id' => 'Workgroup',
 	'Class:ResponseTicket/Attribute:workgroup_id+' => '',
@@ -195,7 +197,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:ResponseTicket/Attribute:escalation_deadline+' => '',
 	'Class:ResponseTicket/Attribute:closure_deadline' => 'Closure deadline',
 	'Class:ResponseTicket/Attribute:closure_deadline+' => '',
-	'Class:ResponseTicket/Attribute:resolution_code' => 'Resoluion code',
+	'Class:ResponseTicket/Attribute:resolution_code' => 'Resolution code',
 	'Class:ResponseTicket/Attribute:resolution_code+' => '',
 	'Class:ResponseTicket/Attribute:resolution_code/Value:couldnotreproduce' => 'Could not be reproduced',
 	'Class:ResponseTicket/Attribute:resolution_code/Value:couldnotreproduce+' => '',

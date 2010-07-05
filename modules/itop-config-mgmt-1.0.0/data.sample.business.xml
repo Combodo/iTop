@@ -3,7 +3,7 @@
 <BusinessProcess alias="BusinessProcess" id="7">
 <name>iTop demonstration</name>
 <status>production</status>
-<owner_id>2</owner_id>
+<org_id>2</org_id>
 <importance>medium</importance>
 <description>Demonstrating iTop on line</description>
 </BusinessProcess>

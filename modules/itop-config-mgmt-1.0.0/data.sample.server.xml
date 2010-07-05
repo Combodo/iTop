@@ -3,7 +3,7 @@
 <Server alias="Server" id="1">
 <name>dbserver1.demo.net</name>
 <status>implementation</status>
-<owner_id>2</owner_id>
+<org_id>2</org_id>
 <importance>medium</importance>
 <brand>Hewlett-Packard</brand>
 <model>Proliant DL380 G5</model>
@@ -23,7 +23,7 @@
 <Server alias="Server" id="4">
 <name>itop.demo.net</name>
 <status>production</status>
-<owner_id>2</owner_id>
+<org_id>2</org_id>
 <importance>high</importance>
 <brand>Hewlet-Packard</brand>
 <model>Proliant DL380 G5</model>

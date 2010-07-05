@@ -71,6 +71,7 @@ abstract class Change extends Ticket
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("manager_id", array("targetclass"=>"Person", "jointype"=>null, "allowed_values"=>null, "sql"=>"manager_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("manager_email", array("allowed_values"=>null, "extkey_attcode"=>"manager_id", "target_attcode"=>"email", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeBoolean("outage", array("allowed_values"=>null, "sql"=>"outage", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+//		MetaModel::Init_AddAttribute(new AttributeEnum("outage", array("allowed_values"=>new ValueSetEnum('yes,no'), "sql"=>"outage", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("change_request", array("allowed_values"=>null, "sql"=>"change_request", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("change_log", array("allowed_values"=>null, "sql"=>"change_log", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("fallback", array("allowed_values"=>null, "sql"=>"fallback", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
@@ -86,7 +87,13 @@ abstract class Change extends Ticket
 			array(
 				"attribute_inherit" => null,
 				"attribute_list" => array(
+					'start_date' => OPT_ATT_HIDDEN,
+					'ticket_log' => OPT_ATT_HIDDEN,
+					'impact' => OPT_ATT_HIDDEN,
+					'outage' => OPT_ATT_HIDDEN,
+					'fallback' => OPT_ATT_HIDDEN,
 					'ref' => OPT_ATT_READONLY,
+					'requestor_id' => OPT_ATT_MANDATORY,
 					'title' => OPT_ATT_MANDATORY,
 					'reason' => OPT_ATT_MANDATORY,
 					'workgroup_id' => OPT_ATT_HIDDEN,
@@ -109,7 +116,9 @@ abstract class Change extends Ticket
 				"attribute_list" => array(
 					'title' => OPT_ATT_READONLY,
 					'reason' => OPT_ATT_READONLY,
-					'workgroup_id' => OPT_ATT_MUSTCHANGE,
+					'workgroup_id' => OPT_ATT_MANDATORY,
+					'supervisor_group_id' => OPT_ATT_MANDATORY,
+					'manager_group_id' => OPT_ATT_MANDATORY,
 					'change_request' => OPT_ATT_READONLY,
 				),
 			)
@@ -129,9 +138,7 @@ abstract class Change extends Ticket
 				"attribute_list" => array(
 					'workgroup_id' => OPT_ATT_MANDATORY,
 					'agent_id' => OPT_ATT_MUSTCHANGE,
-					'supervisor_group_id' => OPT_ATT_MUSTCHANGE,
 					'supervisor_id' => OPT_ATT_MUSTCHANGE,
-					'manager_group_id' => OPT_ATT_MUSTCHANGE,
 					'manager_id' => OPT_ATT_MUSTCHANGE,
 				),
 			)
@@ -141,6 +148,7 @@ abstract class Change extends Ticket
 			array(
 				"attribute_inherit" => 'assigned',
 				"attribute_list" => array(
+					'ticket_log' => OPT_ATT_MANDATORY,
 					'requestor_id' => OPT_ATT_READONLY,
 					'customer_id' => OPT_ATT_READONLY,
 					'workgroup_id' => OPT_ATT_READONLY,
@@ -208,8 +216,9 @@ abstract class Change extends Ticket
 		MetaModel::Init_DefineState(
 			"closed",
 			array(
-				"attribute_inherit" => 'implemented',
+				"attribute_inherit" => 'monitored',
 				"attribute_list" => array(
+					'ticket_log' => OPT_ATT_READONLY,
 					'close_date' => OPT_ATT_READONLY,
 				),
 			)
@@ -319,11 +328,15 @@ abstract class ApprovedChange extends Change
 		MetaModel::Init_OverloadStateAttribute('new', 'approval_date', OPT_ATT_HIDDEN);
 		MetaModel::Init_OverloadStateAttribute('new', 'approval_comment', OPT_ATT_HIDDEN);
 
-		MetaModel::Init_OverloadStateAttribute('approved', 'approval_date', OPT_ATT_MUSTCHANGE);
-		MetaModel::Init_OverloadStateAttribute('approved', 'approval_comment', OPT_ATT_MUSTCHANGE);
+		MetaModel::Init_OverloadStateAttribute('approved', 'approval_date', OPT_ATT_MANDATORY);
+		MetaModel::Init_OverloadStateAttribute('approved', 'approval_comment', OPT_ATT_MANDATORY);
 
 		MetaModel::Init_OverloadStateAttribute('implemented', 'approval_date', OPT_ATT_READONLY);
 		MetaModel::Init_OverloadStateAttribute('implemented', 'approval_comment', OPT_ATT_READONLY);
+		MetaModel::Init_OverloadStateAttribute('monitored', 'approval_date', OPT_ATT_READONLY);
+		MetaModel::Init_OverloadStateAttribute('monitored', 'approval_comment', OPT_ATT_READONLY);
+		MetaModel::Init_OverloadStateAttribute('closed', 'approval_date', OPT_ATT_READONLY);
+		MetaModel::Init_OverloadStateAttribute('closed', 'approval_comment', OPT_ATT_READONLY);
 	}
 }
 
@@ -358,11 +371,19 @@ class NormalChange extends ApprovedChange
 		MetaModel::Init_OverloadStateAttribute('new', 'acceptance_date', OPT_ATT_HIDDEN);
 		MetaModel::Init_OverloadStateAttribute('new', 'acceptance_comment', OPT_ATT_HIDDEN);
 
-		MetaModel::Init_OverloadStateAttribute('validated', 'acceptance_date', OPT_ATT_MUSTCHANGE);
-		MetaModel::Init_OverloadStateAttribute('validated', 'acceptance_comment', OPT_ATT_MUSTCHANGE);
+		MetaModel::Init_OverloadStateAttribute('validated', 'acceptance_date', OPT_ATT_MANDATORY);
+		MetaModel::Init_OverloadStateAttribute('validated', 'acceptance_comment', OPT_ATT_MANDATORY);
 
 		MetaModel::Init_OverloadStateAttribute('plannedschedule', 'acceptance_date', OPT_ATT_READONLY);
 		MetaModel::Init_OverloadStateAttribute('plannedschedule', 'acceptance_comment', OPT_ATT_READONLY);
+		MetaModel::Init_OverloadStateAttribute('approved', 'acceptance_date', OPT_ATT_READONLY);
+		MetaModel::Init_OverloadStateAttribute('approved', 'acceptance_comment', OPT_ATT_READONLY);
+		MetaModel::Init_OverloadStateAttribute('implemented', 'acceptance_date', OPT_ATT_READONLY);
+		MetaModel::Init_OverloadStateAttribute('implemented', 'acceptance_comment', OPT_ATT_READONLY);
+		MetaModel::Init_OverloadStateAttribute('monitored', 'acceptance_date', OPT_ATT_READONLY);
+		MetaModel::Init_OverloadStateAttribute('monitored', 'acceptance_comment', OPT_ATT_READONLY);
+		MetaModel::Init_OverloadStateAttribute('closed', 'acceptance_date', OPT_ATT_READONLY);
+		MetaModel::Init_OverloadStateAttribute('closed', 'acceptance_comment', OPT_ATT_READONLY);
 
 		MetaModel::Init_DefineTransition("new", "ev_validate", array("target_state"=>"validated", "actions"=>array('SetLastUpDate'), "user_restriction"=>null));
 		MetaModel::Init_DefineTransition("new", "ev_reject", array("target_state"=>"rejected", "actions"=>array('SetLastUpDate'), "user_restriction"=>null));
