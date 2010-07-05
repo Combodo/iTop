@@ -283,9 +283,54 @@ table.formTable {
 			}
 		}
 	}
-	public static function GetModules()
+	public function GetModules()
 	{
-		return self::$m_aModules;
+		// Order the modules to take into account their inter-dependencies
+		$aDependencies = array();
+		foreach(self::$m_aModules as $sId => $aModule)
+		{
+			$aDependencies[$sId] = $aModule['dependencies'];
+		}
+		$aOrderedModules = array();
+		$iLoopCount = 1;
+		while(($iLoopCount < count(self::$m_aModules)) && (count($aDependencies) > 0) )
+		{
+			foreach($aDependencies as $sId => $aRemainingDeps)
+			{
+				$bDependenciesSolved = true;
+				foreach($aRemainingDeps as $sDepId)
+				{
+					if (!in_array($sDepId, $aOrderedModules))
+					{
+						$bDependenciesSolved = false;
+					}
+				}
+				if ($bDependenciesSolved)
+				{
+					$aOrderedModules[] = $sId;
+					unset($aDependencies[$sId]);
+				}
+			}
+			$iLoopCount++;
+		}
+		if (count($aDependencies) >0)
+		{
+			$sHtml = "<ul><b>Warning: the following modules have unmet dependencies, and have been ignored:</b>\n";			
+			foreach($aDependencies as $sId => $aDeps)
+			{
+				$aModule = self::$m_aModules[$sId];
+				$sHtml.= "<li>{$aModule['label']} (id: $sId), depends on: ".implode(', ', $aDeps)."</li>";
+			}
+			$sHtml .= "</ul>\n";
+			$this->warning($sHtml);
+		}
+		// Return the ordered list, so that the dependencies are met...
+		$aResult = array();
+		foreach($aOrderedModules as $sId)
+		{
+			$aResult[$sId] = self::$m_aModules[$sId];
+		}
+		return $aResult;
 	}
 
 } // End of class

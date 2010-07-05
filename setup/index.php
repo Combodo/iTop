@@ -538,7 +538,7 @@ function GetAvailableModules(SetupWebpage $oP)
 {
 	clearstatcache();
 	ListModuleFiles('../modules/', $oP);
-	return SetupWebPage::GetModules();
+	return $oP->GetModules();
 }
 
 /**
@@ -756,6 +756,7 @@ function ModulesSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, $oConf
 	$sRedStar = '<span class="hilite">*</span>';
 	$oP->set_title("Selection of the iTop Modules\n");
 	$oP->add("<h2>Customize your iTop installation to fit your needs</h2>\n");
+	$aAvailableModules = GetAvailableModules($oP);
 	
 	// Form goes here
 	$oP->add("<fieldset><legend>Select the iTop modules you want to install:</legend>\n");
@@ -768,7 +769,6 @@ function ModulesSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, $oConf
 		// Make sure it gets initialized as an array
 		$aSelectedModules = array();
 	}
-	$aAvailableModules = GetAvailableModules($oP);
 	foreach($aAvailableModules as $sModuleId => $aModule)
 	{
 		$sModuleLabel = $aModule['label'];

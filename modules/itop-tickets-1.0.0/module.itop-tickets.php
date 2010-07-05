@@ -12,6 +12,7 @@ SetupWebPage::AddModule(
 		// Setup
 		//
 		'dependencies' => array(
+			'itop-config-mgmt/1.0.0',
 		),
 		'mandatory' => true,
 		'visible' => true,

@@ -20,16 +20,6 @@
 <first_name>Victor</first_name>
 <employee_id>20100001</employee_id>
 </Person>
-<Person alias="Contact" id="1">
-<name>My last name</name>
-<status>active</status>
-<org_id>1</org_id>
-<email>my.email@foo.org</email>
-<phone></phone>
-<location_id>0</location_id>
-<first_name></first_name>
-<employee_id></employee_id>
-</Person>
 <Person alias="Contact" id="5">
 <name>Verne</name>
 <status>active</status>

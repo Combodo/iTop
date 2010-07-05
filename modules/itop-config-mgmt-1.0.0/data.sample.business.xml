@@ -22,9 +22,4 @@
 <contact_id>4</contact_id>
 <role>Support Specialist</role>
 </lnkCIToContact>
-<lnkCIToContact alias="lnkCIToContact" id="3">
-<ci_id>8</ci_id>
-<contact_id>6</contact_id>
-<role>Datacenter Network Engineer</role>
-</lnkCIToContact>
 </Set>
