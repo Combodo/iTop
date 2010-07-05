@@ -236,6 +236,11 @@ input.textSearch {
 .ui-accordion-content ul {
     list-style:none;
     padding-left:16px;
+	margin-top: 8px;
+}	
+
+.ui-accordion-content li.submenu {
+	margin-top: 8px;
 }	
 
 .ui-accordion-content ul ul {
@@ -244,6 +249,7 @@ input.textSearch {
     list-style:none;
     border: 0;
 }	
+	
 .nothing {
     noborder-top: 1px solid #8b8b8b;
     padding: 4px 0px 0px 16px;   	

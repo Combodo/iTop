@@ -130,9 +130,18 @@ class ApplicationMenu
 		{
 			$index = $aMenu['index'];
 			$oMenu = self::GetMenuNode($index);
-			$oPage->AddToMenu('<li><a href="'.$oMenu->GetHyperlink($aExtraParams).'">'.$oMenu->GetTitle().'</a></li>');
-			$aCurrentMenu = self::$aMenusIndex[$index];
 			$aChildren = self::GetChildren($index);
+			$sCSSClass = (count($aChildren) > 0) ? ' class="submenu"' : '';
+			$sHyperlink = $oMenu->GetHyperlink($aExtraParams);
+			if ($sHyperlink != '')
+			{
+				$oPage->AddToMenu('<li'.$sCSSClass.'><a href="'.$oMenu->GetHyperlink($aExtraParams).'">'.$oMenu->GetTitle().'</a></li>');
+			}
+			else
+			{
+				$oPage->AddToMenu('<li'.$sCSSClass.'>'.$oMenu->GetTitle().'</li>');
+			}
+			$aCurrentMenu = self::$aMenusIndex[$index];
 			if ($iActiveMenu == $index)
 			{
 				$bActive = true;
@@ -353,6 +362,12 @@ class TemplateMenuNode extends MenuNode
 	{
 		parent::__construct($sMenuId, $iParentIndex, $fRank);
 		$this->sTemplateFile = $sTemplateFile;
+	}
+	
+	public function GetHyperlink($aExtraParams)
+	{
+		if ($this->sTemplateFile == '') return '';
+		return parent::GetHyperlink($aExtraParams);
 	}
 	
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())
