@@ -53,11 +53,11 @@ abstract class Change extends Ticket
 		MetaModel::Init_AddAttribute(new AttributeExternalField("customer_name", array("allowed_values"=>null, "extkey_attcode"=>"customer_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("workgroup_id", array("targetclass"=>"Team", "jointype"=>null, "allowed_values"=>null, "sql"=>"workgroup_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("workgroup_name", array("allowed_values"=>null, "extkey_attcode"=>"workgroup_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeDate("creation_date", array("allowed_values"=>null, "sql"=>"creation_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeDate("last_update", array("allowed_values"=>null, "sql"=>"last_update", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeDate("start_date", array("allowed_values"=>null, "sql"=>"start_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeDate("end_date", array("allowed_values"=>null, "sql"=>"end_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeDate("close_date", array("allowed_values"=>null, "sql"=>"close_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeDate("creation_date", array("allowed_values"=>null, "sql"=>"creation_date", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeDate("last_update", array("allowed_values"=>null, "sql"=>"last_update", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeDate("start_date", array("allowed_values"=>null, "sql"=>"start_date", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeDate("end_date", array("allowed_values"=>null, "sql"=>"end_date", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeDate("close_date", array("allowed_values"=>null, "sql"=>"close_date", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("impact", array("allowed_values"=>null, "sql"=>"impact", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("agent_id", array("targetclass"=>"Person", "jointype"=>null, "allowed_values"=>null, "sql"=>"agent_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("agent_name", array("allowed_values"=>null, "extkey_attcode"=>"agent_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
@@ -308,7 +308,7 @@ abstract class ApprovedChange extends Change
 		MetaModel::Init_InheritAttributes();
 		MetaModel::Init_InheritLifecycle();
 
-		MetaModel::Init_AddAttribute(new AttributeDate("approval_date", array("allowed_values"=>null, "sql"=>"approval_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeDate("approval_date", array("allowed_values"=>null, "sql"=>"approval_date", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("approval_comment", array("allowed_values"=>null, "sql"=>"approval_comment", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
 		MetaModel::Init_SetZListItems('details', array('title', 'ticket_log', 'start_date', 'document_list', 'ci_list', 'contact_list', 'status', 'reason', 'requestor_id', 'customer_id', 'workgroup_id', 'creation_date', 'last_update', 'end_date', 'close_date', 'impact', 'agent_id', 'agent_email', 'supervisor_group_id', 'supervisor_id', 'manager_group_id', 'manager_id', 'outage', 'change_request', 'change_log', 'fallback', 'approval_date', 'approval_comment'));
@@ -347,7 +347,7 @@ class NormalChange extends ApprovedChange
 		MetaModel::Init_InheritAttributes();
 		MetaModel::Init_InheritLifecycle();
 
-		MetaModel::Init_AddAttribute(new AttributeDate("acceptance_date", array("allowed_values"=>null, "sql"=>"acceptance_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeDate("acceptance_date", array("allowed_values"=>null, "sql"=>"acceptance_date", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("acceptance_comment", array("allowed_values"=>null, "sql"=>"acceptance_comment", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
 		MetaModel::Init_SetZListItems('details', array('title', 'ticket_log', 'start_date', 'document_list', 'ci_list', 'contact_list', 'status', 'reason', 'requestor_id', 'customer_id', 'workgroup_id', 'creation_date', 'last_update', 'end_date', 'close_date', 'impact', 'agent_id', 'agent_email', 'supervisor_group_id', 'supervisor_id', 'manager_group_id', 'manager_id', 'outage', 'change_request', 'change_log', 'fallback', 'approval_date', 'approval_comment', 'acceptance_date', 'acceptance_comment'));
