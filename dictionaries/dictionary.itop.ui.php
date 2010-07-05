@@ -803,6 +803,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Deadline_Minutes' => '%1$d min',			
 	'UI:Deadline_Hours_Minutes' => '%1$dh %2$dmin',			
 	'UI:Deadline_Days_Hours_Minutes' => '%1$dd %2$dh %3$dmin',
+	'UI:Help' => 'Help',
 ));
 
 

@@ -488,8 +488,9 @@ EOF
 		echo '<div class="ui-layout-center">';
 		echo '	<div id="top-bar" style="width:100%">';
 		echo '		<div id="global-search"><form><table><tr><td id="g-search-input"><input type="text" name="text" value="'.$sText.'"'.$sOnClick.'/></td>';
-		echo '<td><input type="image" src="../images/searchBtn.png"/></td>';
-		echo '<td style="padding-right:20px;padding-left:20px;">'.$sLogOffMenu.'</td><td><input type="hidden" name="operation" value="full_text"/></td></tr></table></form></div>';
+		echo '<td><input type="image" src="../images/searchBtn.png"/></a></td>';
+		echo '<td><a style="background:transparent;" href="http://www.combodo.com/itop-help" target="_blank"><img style="border:0;padding-left:20px;padding-right:10px;" title="'.Dict::S('UI:Help').'" src="../images/help.png"/></td>';
+		echo '<td style="padding-right:20px;padding-left:10px;">'.$sLogOffMenu.'</td><td><input type="hidden" name="operation" value="full_text"/></td></tr></table></form></div>';
 		//echo '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="hidden" name="operation" value="full_text"/></td></tr></table></form></div>';
 		echo '	</div>';
 		echo '	<div class="ui-layout-content">';
