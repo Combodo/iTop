@@ -823,12 +823,13 @@ span.ui-icon {
 	background: url(../images/splitter-bkg.png) repeat-y scroll 0 0 transparent;
 	width: 16px;
 }
-div.footer {
-	height: 123px;
-	background: url(../images/logo-combodo.png) center no-repeat;
+div.footer img {
+	border: 0;
+	margin-bottom: 5px;
+	margin-top: 5px;
 }
-div.footer > span {
-	display:none;
+div.footer{
+	text-align:center;
 }
 #SearchResultsToAdd table.listResults tbody {
 	height: 300px;

@@ -481,7 +481,7 @@ EOF
 		echo '			</div>';
 		echo '		</div> <!-- /inner menu -->';
 		echo '	</div> <!-- /menu -->';
-		echo '	<div class="footer"><span>iTop by Combodo</span></div>';
+		echo '	<div class="footer"><a href="http://www.combodo.com" title="www.combodo.com" target="_blank"><img src="../images/logo-combodo.png"/></a></div>';
 		echo '<!-- End of the left pane -->';
 		echo '</div>';
 
