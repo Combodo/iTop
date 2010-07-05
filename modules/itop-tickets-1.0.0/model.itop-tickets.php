@@ -315,6 +315,17 @@ abstract class ResponseTicket extends Ticket
 		MetaModel::Init_DefineTransition("resolved", "ev_close", array("target_state"=>"closed", "actions"=>array(), "user_restriction"=>null));
 	}
 
+	// Lifecycle actions
+	//
+	public function SetEscalationDeadline()
+	{
+		$this->Set('escalation_deadline', time() + 100);
+	}
+	public function SetClosureDeadline()
+	{
+		$this->Set('closure_deadline', time() + 100);
+	}
+
 	/**
 	 * Determines the shortest SLT, for this ticket, for the given metric. Returns null is no SLT was found
 	 * @param string $sMetric Type of metric 'TTO', 'TTR', etc as defined in the SLT class

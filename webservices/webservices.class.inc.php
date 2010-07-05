@@ -598,7 +598,6 @@ class WebServices
 
 		try
 		{
-			new CMDBChange();
 			$oMyChange = MetaModel::NewObject("CMDBChange");
 			$oMyChange->Set("date", time());
 			$oMyChange->Set("userinfo", "Administrator");
