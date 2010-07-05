@@ -524,7 +524,6 @@ abstract class DBObject
 		else
 		{
 			return $this->Get($sStateAttCode);
-			return MetaModel::GetStateLabel(get_class($this), $sStateAttCode);
 		}
 	}
 

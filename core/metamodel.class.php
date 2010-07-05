@@ -811,7 +811,9 @@ abstract class MetaModel
 	public static function GetStateLabel($sClass, $sStateValue)
 	{
 		$sStateAttrCode = self::GetStateAttributeCode($sClass);
-		return Dict::S("Class:$sClass/Attribute:$sStateAttrCode/Value:$sStateValue", $sStateValue);
+		$oAttDef = self::GetAttributeDef($sClass, $sStateAttrCode);
+		// Be consistent with what is done for enums, since states are defined as enums...
+		return Dict::S("Class:".$oAttDef->GetHostClass()."/Attribute:$sStateAttrCode/Value:$sStateValue");
 
 		// I've decided the current implementation, because I need
 		// to get the description as well -GetAllowedValues does not render the description,
