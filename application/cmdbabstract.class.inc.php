@@ -159,13 +159,13 @@ abstract class cmdbAbstractObject extends CMDBObject
 					$sLinkedClass = $oAttDef->GetLinkedClass();
 					$oLinkingAttDef = 	MetaModel::GetAttributeDef($sLinkedClass, $oAttDef->GetExtKeyToRemote());
 					$sTargetClass = $oLinkingAttDef->GetTargetClass();
-					
+					$bMenu = ($this->Get($sAttCode)->Count() > 0); // The menu is enabled only if there are already some elements...
 					$aParams = array(
 							'link_attr' => $oAttDef->GetExtKeyToMe(),
 							'object_id' => $this->GetKey(),
 							'target_attr' => $oAttDef->GetExtKeyToRemote(),
 							'view_link' => false,
-							'menu' => true,
+							'menu' => $bMenu,
 						);
 				}
 				$oPage->p("<img src=\"".MetaModel::GetClassIcon($sTargetClass)."\" style=\"vertical-align:middle;\">&nbsp;".$oAttDef->GetDescription());

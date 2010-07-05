@@ -861,6 +861,7 @@ try
 					$oP->P(Dict::S('UI:ObjectDoesNotExist'));
 				}
 			}
+			$oObj = MetaModel::GetObject(get_class($oObj), $oObj->GetKey()); //Workaround: reload the object some that the linkedset are displayed properly
 			$oObj->DisplayDetails($oP);
 		break;
 
