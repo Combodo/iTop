@@ -56,6 +56,25 @@ function IsIdField($sClassName, $sFieldCode)
 }
 
 /**
+ * Get all the fields xxx->yyy based on the field xxx which is an external key
+ * @param string $sExtKeyAttCode Attribute code of the external key
+ * @return Ash List of codes=>display name: xxx->yyy where yyy are the reconciliation keys for the object xxx 
+ */
+function GetMappingsForExtKey($sAttCode, AttributeDefinition $oExtKeyAttDef)
+{
+	$aResult = array();
+	$sTargetClass = $oExtKeyAttDef->GetTargetClass();
+	foreach(MetaModel::ListAttributeDefs($sTargetClass) as $sTargetAttCode => $oTargetAttDef)
+	{
+		if (MetaModel::IsReconcKey($sTargetClass, $sTargetAttCode))
+		{
+			$aResult[$sAttCode.'->'.$sTargetAttCode] = $oExtKeyAttDef->GetLabel().'->'.$oTargetAttDef->GetLabel();
+		}
+	}
+	return $aResult;	
+}
+
+/**
  * Helper function to build the mapping drop-down list for a field
  * Spec: Possible choices are "writable" fields in this class plus external fields that are listed as reconciliation keys
  *       for any class pointed to by an external key in the current class.
@@ -100,7 +119,7 @@ function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMo
 				if (MetaModel::IsReconcKey($sTargetClass, $sTargetAttCode))
 				{
 					$aChoices[$sAttCode.'->'.$sTargetAttCode] = $oAttDef->GetLabel().'->'.$oTargetAttDef->GetLabel();
-					if (($sFieldName == $aChoices[$sAttCode.'->'.$sTargetAttCode]) || ($sFieldName == ($sAttCode.'->'.$sTargetAttCode)) )
+					if ((strcasecmp($sFieldName, $aChoices[$sAttCode.'->'.$sTargetAttCode]) == 0) || (strcasecmp($sFieldName, ($sAttCode.'->'.$sTargetAttCode)) == 0) )
 					{
 						$sFieldCode = $sAttCode.'->'.$sTargetAttCode;
 					}
@@ -288,7 +307,16 @@ switch($sOperation)
 		}
 		$oPage->add("</table>\n");
 		$aReconciliationKeys = MetaModel::GetReconcKeys($sClassName);
-		$sDefaultKeys = '"'.implode('", "',$aReconciliationKeys).'"';
+		$aMoreReconciliationKeys = array();
+		foreach($aReconciliationKeys as $sAttCode)
+		{
+			$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
+			if ($oAttDef->IsExternalKey())
+			{
+				$aMoreReconciliationKeys = array_keys(GetMappingsForExtKey($sAttCode, $oAttDef));
+			}
+		}
+		$sDefaultKeys = '"'.implode('", "',array_merge($aReconciliationKeys,$aMoreReconciliationKeys)).'"';
 		$oPage->add_ready_script(
 <<<EOF
 		$('select[name^=field]').change( DoCheckMapping );
