@@ -1448,7 +1448,17 @@ abstract class MetaModel
 		$sOqlQuery = $oFilter->ToOql($aParams); // Render with arguments in clear
 		if ($bQueryCacheEnabled)
 		{
-			if (array_key_exists($sOqlQuery, self::$m_aQueryStructCache))
+			// Warning: using directly the query string as the key to the hash array can FAIL if the string
+			// is long and the differences are only near the end... so it's safer (but not bullet proof?)
+			// to use a hash (like md5) of the string as the key !
+			//
+			// Example of two queries that were found as similar by the hash array:
+			// SELECT SLT JOIN lnkSLTToSLA AS L1 ON L1.slt_id=SLT.id JOIN SLA ON L1.sla_id = SLA.id JOIN lnkContractToSLA AS L2 ON L2.sla_id = SLA.id JOIN CustomerContract ON L2.contract_id = CustomerContract.id WHERE SLT.ticket_priority = 1 AND SLA.service_id = 3 AND SLT.metric = 'TTO' AND CustomerContract.customer_id = 2
+			// and	
+			// SELECT SLT JOIN lnkSLTToSLA AS L1 ON L1.slt_id=SLT.id JOIN SLA ON L1.sla_id = SLA.id JOIN lnkContractToSLA AS L2 ON L2.sla_id = SLA.id JOIN CustomerContract ON L2.contract_id = CustomerContract.id WHERE SLT.ticket_priority = 1 AND SLA.service_id = 3 AND SLT.metric = 'TTR' AND CustomerContract.customer_id = 2
+			// the only difference is R instead or O at position 285 (TTR instead of TTO)...
+			//
+			if (array_key_exists(md5($sOqlQuery), self::$m_aQueryStructCache))
 			{
 				// hit!
 				$oSelect = clone self::$m_aQueryStructCache[$sOqlQuery];
@@ -3028,9 +3038,9 @@ abstract class MetaModel
 	public static function Startup($sConfigFile, $bAllowMissingDB = false)
 	{
 		self::LoadConfig($sConfigFile);
-		//if (self::DBExists())
+		if (self::DBExists())
 // !!!! #@# 
-		if (true)
+		//if (true)
 		{
 			CMDBSource::SelectDB(self::$m_sDBName);
 

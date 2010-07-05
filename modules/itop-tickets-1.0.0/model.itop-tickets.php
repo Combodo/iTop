@@ -45,7 +45,7 @@ abstract class Ticket extends cmdbAbstractObject
 
 		MetaModel::Init_AddAttribute(new AttributeString("ref", array("allowed_values"=>null, "sql"=>"ref", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("title", array("allowed_values"=>null, "sql"=>"title", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-//		MetaModel::Init_AddAttribute(new AttributeText("description", array("allowed_values"=>null, "sql"=>"description", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeText("description", array("allowed_values"=>null, "sql"=>"description", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("ticket_log", array("allowed_values"=>null, "sql"=>"ticket_log", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDateTime("start_date", array("allowed_values"=>null, "sql"=>"start_date", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("document_list", array("linked_class"=>"lnkTicketToDoc", "ext_key_to_me"=>"ticket_id", "ext_key_to_remote"=>"document_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
@@ -341,6 +341,7 @@ abstract class ResponseTicket extends Ticket
 		{
 			$sOQL = "SELECT SLT JOIN lnkSLTToSLA AS L1 ON L1.slt_id=SLT.id JOIN SLA ON L1.sla_id = SLA.id JOIN lnkContractToSLA AS L2 ON L2.sla_id = SLA.id JOIN CustomerContract ON L2.contract_id = CustomerContract.id 
 					WHERE SLT.ticket_priority = :priority AND SLA.service_id = :service_id AND SLT.metric = :metric AND CustomerContract.customer_id = :customer_id";
+			
 			$oSLTSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL),
 							array(),
 							array(
@@ -356,8 +357,9 @@ abstract class ResponseTicket extends Ticket
 	
 			while($oSLT = $oSLTSet->Fetch())
 			{
-				$iDuration = $oSLT->Get('value');
+				$iDuration = (int)$oSLT->Get('value');
 				$sUnit = $oSLT->Get('value_unit');
+				//echo "<p>Found SLT: ".$oSLT->GetName()." - $iDuration ($sUnit)</p>\n";
 				switch($sUnit)
 				{
 					case 'days':
@@ -383,7 +385,7 @@ abstract class ResponseTicket extends Ticket
 			}
 			else
 			{
-				array('SLT' => $sSLTName, 'value' => $iMinDuration);
+				$aResult = array('SLT' => $sSLTName, 'value' => $iMinDuration);
 			}
 		}
 		return $aResult;

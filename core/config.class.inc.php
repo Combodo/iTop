@@ -127,8 +127,9 @@ class Config
 		);
 		$this->m_aDictionaries = array(
 			// Default dictionaries, always present can be moved to an official iTop Module later if needed
-			'../dictionaries/dictionary.itop.core.php',
-			'../dictionaries/dictionary.itop.ui.php',
+			//'../dictionaries/dictionary.itop.core.php',
+			'../dictionaries/dictionary.itop.ui.php',		// Support for English
+			'../dictionaries/fr.dictionary.itop.ui.php',	// Support for French
 		);
 
 		$this->m_sDBHost = '';
