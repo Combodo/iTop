@@ -400,7 +400,7 @@ function CreateDatabaseStructure(SetupWebPage $oP, Config $oConfig, $sDBName, $s
  * Helper function to create and administrator account for iTop
  * @return boolean true on success, false otherwise 
  */
-function CreateAdminAccount(SetupWebPage $oP, Config $oConfig, $sAdminUser, $sAdminPwd)
+function CreateAdminAccount(SetupWebPage $oP, Config $oConfig, $sAdminUser, $sAdminPwd, $sLanguage)
 {
 	$oP->log('Info - CreateAdminAccount');
 	InitDataModel($oP, TMP_CONFIG_FILE, true);  // allow missing DB
@@ -877,6 +877,7 @@ function SampleDataSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, Con
 	$oP->set_title("Application Initialization");
 	$sAdminUser = $aParamValues['auth_user'];
 	$sAdminPwd = $aParamValues['auth_pwd'];
+	$sLanguage = $aParamValues['language'];
 	$oConfig->SetDefaultLanguage($aParamValues['language']);
 	$oConfig->WriteToFile(TMP_CONFIG_FILE);
 
@@ -884,7 +885,7 @@ function SampleDataSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, Con
 	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
 	AddParamsToForm($oP, $aParamValues, array('sample_data'));
 	
-	if (CreateAdminAccount($oP, $oConfig, $sAdminUser, $sAdminPwd) && UserRights::Setup())
+	if (CreateAdminAccount($oP, $oConfig, $sAdminUser, $sAdminPwd, $sLanguage) && UserRights::Setup())
 	{
 		$oP->add("<h2>Loading of sample data</h2>\n");
 		$oP->p("<fieldset><legend> Do you want to load sample data into the database ? </legend>\n");

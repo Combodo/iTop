@@ -140,7 +140,7 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 	);
 
 	// Installation: create the very first user
-	public function CreateAdministrator($sAdminUser, $sAdminPwd)
+	public function CreateAdministrator($sAdminUser, $sAdminPwd, $sLanguage)
 	{
 		// Maybe we should check that no other user with userid == 0 exists
 		$oUser = new UserRightsMatrixUsers();

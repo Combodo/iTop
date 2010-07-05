@@ -707,7 +707,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 	);
 
 	// Installation: create the very first user
-	public function CreateAdministrator($sAdminUser, $sAdminPwd)
+	public function CreateAdministrator($sAdminUser, $sAdminPwd, $sLanguage = 'EN US')
 	{
 		// Create a change to record the history of the User object
 		$oChange = MetaModel::NewObject("CMDBChange");
@@ -748,7 +748,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		$oUser->Set('login', $sAdminUser);
 		$oUser->Set('password', $sAdminPwd);
 		$oUser->Set('userid', $iContactId);
-		$oUser->Set('language', utils::GetConfig()->GetDefaultLanguage()); // Default language was chosen during the installation
+		$oUser->Set('language', $sLanguage); // Language was chosen during the installation
 		$iUserId = $oUser->DBInsertTrackedNoReload($oChange);
 		
 		// Add this user to the very specific 'admin' profile

@@ -51,7 +51,7 @@ define('UR_ACTION_APPLICATION_DEFINED', 10000); // Application specific actions 
 abstract class UserRightsAddOnAPI
 {
 	abstract public function Setup(); // initial installation
-	abstract public function CreateAdministrator($sAdminUser, $sAdminPwd); // could be used during initial installation
+	abstract public function CreateAdministrator($sAdminUser, $sAdminPwd, $sLanguage = 'EN US'); // could be used during initial installation
 
 	abstract public function Init(); // loads data (possible optimizations)
 	abstract public function CheckCredentials($sLogin, $sPassword); // returns the id of the user or false
@@ -111,9 +111,9 @@ class UserRights
 	}
 
 	// Installation: create the very first user
-	public static function CreateAdministrator($sAdminUser, $sAdminPwd)
+	public static function CreateAdministrator($sAdminUser, $sAdminPwd, $sLanguage = 'EN US')
 	{
-		return self::$m_oAddOn->CreateAdministrator($sAdminUser, $sAdminPwd);
+		return self::$m_oAddOn->CreateAdministrator($sAdminUser, $sAdminPwd, $sLanguage);
 	}
 	
 	// Installation (e.g: give default values for users)
