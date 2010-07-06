@@ -394,15 +394,6 @@ Dict::Add('EN US', 'English', 'English', array(
 ));
 
 //
-// Class: OperatingSystem
-//
-
-Dict::Add('EN US', 'English', 'English', array(
-	'Class:OperatingSystem' => 'OS',
-	'Class:OperatingSystem+' => 'Operating System SW',
-));
-
-//
 // Class: lnkPatchToCI
 //
 
@@ -516,7 +507,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:DatabaseInstance' => 'Database Instance',
 	'Class:DatabaseInstance+' => '',
-	'Class:DatabaseInstance/Attribute:db_server_instance_id' => 'Database software',
+	'Class:DatabaseInstance/Attribute:db_server_instance_id' => 'Database server',
 	'Class:DatabaseInstance/Attribute:db_server_instance_id+' => '',
 	'Class:DatabaseInstance/Attribute:db_server_instance_version' => 'Database version',
 	'Class:DatabaseInstance/Attribute:db_server_instance_version+' => '',
@@ -897,8 +888,6 @@ Dict::Add('EN US', 'English', 'English', array(
 'Menu:Application+' => 'All Applications',
 'Menu:DBServer' => 'Database Servers',
 'Menu:DBServer+' => 'Database Servers',
-'Menu:OperatingSystem' => 'OS',
-'Menu:OperatingSystem+' => 'Operating Systems',
 'Menu:Audit' => 'Audit',
 'Menu:ConfigManagement' => 'Configuration Management',
 'Menu:ConfigManagement+' => 'Configuration Management',
@@ -925,8 +914,8 @@ Dict::Add('EN US', 'English', 'English', array(
 'Menu:Licence+' => 'All Licences',
 'Menu:Patch' => 'Patches',
 'Menu:Patch+' => 'All Patches',
-'Menu:ApplicationInstance' => 'Installed Applications',
-'Menu:ApplicationInstance+' => 'All Installed Applications',
+'Menu:ApplicationInstance' => 'Installed Software',
+'Menu:ApplicationInstance+' => 'Applications and Database servers',
 'Menu:ConfigManagementHardware' => 'Infrastructure Management',
 'Menu:Subnet' => 'Subnets',
 'Menu:Subnet+' => 'All Subnets',

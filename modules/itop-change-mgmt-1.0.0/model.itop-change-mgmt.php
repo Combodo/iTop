@@ -70,7 +70,7 @@ abstract class Change extends Ticket
 		MetaModel::Init_AddAttribute(new AttributeExternalField("manager_group_name", array("allowed_values"=>null, "extkey_attcode"=>"manager_group_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("manager_id", array("targetclass"=>"Person", "jointype"=>null, "allowed_values"=>new ValueSetObjects('SELECT Person AS p JOIN lnkTeamToContact AS l ON l.contact_id=p.id JOIN Team AS t ON l.team_id=t.id WHERE t.id = :this->manager_group_id'), "sql"=>"manager_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array("manager_group_id"))));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("manager_email", array("allowed_values"=>null, "extkey_attcode"=>"manager_id", "target_attcode"=>"email", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("outage", array("allowed_values"=>new ValueSetEnum('yes,no'), "sql"=>"outage", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("outage", array("allowed_values"=>new ValueSetEnum('yes,no'), "sql"=>"outage", "default_value"=>"no", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("change_request", array("allowed_values"=>null, "sql"=>"change_request", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("fallback", array("allowed_values"=>null, "sql"=>"fallback", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 

@@ -511,11 +511,12 @@ class lnkServiceToContact extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("contact_id", array("targetclass"=>"Contact", "jointype"=>null, "allowed_values"=>null, "sql"=>"contact_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("contact_name", array("allowed_values"=>null, "extkey_attcode"=>"contact_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("contact_email", array("allowed_values"=>null, "extkey_attcode"=>"contact_id", "target_attcode"=>"email", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("role", array("allowed_values"=>null, "sql"=>"role", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('service_id', 'contact_id', 'contact_email'));
-		MetaModel::Init_SetZListItems('advanced_search', array('service_id', 'contact_id', 'contact_email'));
-		MetaModel::Init_SetZListItems('standard_search', array('service_id', 'contact_id', 'contact_email'));
-		MetaModel::Init_SetZListItems('list', array('service_id', 'contact_id', 'contact_email'));
+		MetaModel::Init_SetZListItems('details', array('service_id', 'contact_id', 'contact_email', 'role'));
+		MetaModel::Init_SetZListItems('advanced_search', array('service_id', 'contact_id', 'contact_email', 'role'));
+		MetaModel::Init_SetZListItems('standard_search', array('service_id', 'contact_id', 'contact_email', 'role'));
+		MetaModel::Init_SetZListItems('list', array('service_id', 'contact_id', 'contact_email', 'role'));
 	}
 }
 class lnkServiceToCI extends cmdbAbstractObject

@@ -412,6 +412,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkServiceToContact/Attribute:contact_name+' => '',
 	'Class:lnkServiceToContact/Attribute:contact_email' => 'Contact email',
 	'Class:lnkServiceToContact/Attribute:contact_email+' => '',
+	'Class:lnkServiceToContact/Attribute:role' => 'Role',
+	'Class:lnkServiceToContact/Attribute:role+' => '',
 ));
 
 //

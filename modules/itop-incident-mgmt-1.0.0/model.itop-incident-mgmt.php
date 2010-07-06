@@ -70,6 +70,7 @@ $oMyMenuGroup = new MenuGroup('IncidentManagement', 1 /* fRank */);
 // incident dont je suis caller
 // incident dont je suis requester
 new OQLMenuNode('OpenedIncidents', 'SELECT Incident WHERE status IN ("new", "assigned", "escalation")', $oMyMenuGroup->GetIndex(), 0 /* fRank */);
+new OQLMenuNode('MyIncidents', 'SELECT Incident WHERE status IN ("assigned", "escalation_ttr") AND agent_id = :current_contact_id', $oMyMenuGroup->GetIndex(), 0 /* fRank */);
 //new OQLMenuNode('EscalatedIncidents', 'SELECT Incident WHERE status IN ("escalation")', $oMyMenuGroup->GetIndex(), 0 /* fRank */);
 //new TemplateMenuNode('IncidentOverview', 'SELECT Incident', $oMyMenuGroup->GetIndex(), 0 /* fRank */);
 

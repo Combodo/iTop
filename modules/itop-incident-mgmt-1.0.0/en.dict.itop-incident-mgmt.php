@@ -31,6 +31,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:ClosedIncidents+' => 'Closed incidents',
 	'Menu:OpenedIncidents' => 'Opened incidents',
 	'Menu:OpenedIncidents+' => 'Opened incidents',
+	'Menu:MyIncidents' => 'My incidents',
+	'Menu:MyIncidents+' => 'Incidents assigned to me',
 ));
 
 // Dictionnay conventions

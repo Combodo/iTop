@@ -611,32 +611,6 @@ class DBServer extends Software
 		MetaModel::Init_SetZListItems('list', array('description'));
 	}
 }
-class OperatingSystem extends Software
-{
-
-	public static function Init()
-	{
-		$aParams = array
-		(
-			"category" => "bizmodel,searchable,configmgmt",
-			"key_type" => "autoincrement",
-			"name_attcode" => "name",
-			"state_attcode" => "",
-			"reconc_keys" => array("name"),
-			"db_table" => "software_os",
-			"db_key_field" => "id",
-			"db_finalclass_field" => "",
-			"icon" => "../business/templates/software.png",
-		);
-		MetaModel::Init_Params($aParams);
-		MetaModel::Init_InheritAttributes();
-
-		MetaModel::Init_SetZListItems('details', array('name', 'description', 'instance_list'));
-		MetaModel::Init_SetZListItems('advanced_search', array('name', 'description'));
-		MetaModel::Init_SetZListItems('standard_search', array('name', 'description'));
-		MetaModel::Init_SetZListItems('list', array('description'));
-	}
-}
 class lnkPatchToCI extends cmdbAbstractObject
 {
 	public static function Init()
@@ -795,6 +769,8 @@ class DBServerInstance extends SoftwareInstance
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 
+		MetaModel::Init_OverloadAttributeParams("software_id", array("targetclass"=>"DBServer"));
+		//MetaModel::Init_OverloadAttributeParams("software_id", array("allowed_values"=>new ValueSetObjects('SELECT DBServer')));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSet("dbinstance_list", array("linked_class"=>"DatabaseInstance", "ext_key_to_me"=>"db_server_instance_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'importance', 'device_id', 'licence_id', 'software_id', 'version', 'description', 'contact_list', 'document_list', 'solution_list', 'contract_list', 'ticket_list', 'dbinstance_list'));
@@ -821,6 +797,8 @@ class ApplicationInstance extends SoftwareInstance
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
+
+		MetaModel::Init_OverloadAttributeParams("software_id", array("targetclass"=>"Application"));
 
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'importance', 'device_id', 'licence_id', 'software_id', 'version', 'description', 'contact_list', 'document_list', 'solution_list', 'contract_list', 'ticket_list'));
 		MetaModel::Init_SetZListItems('advanced_search', array('status', 'org_id', 'importance', 'device_id', 'licence_id', 'software_id', 'version'));
@@ -1427,7 +1405,6 @@ $oTypologyNode = new TemplateMenuNode('Catalogs', '', $iAdminGroup, 50 /* fRank 
 $iTopology = $oTypologyNode->GetIndex();
 new OQLMenuNode('Organization', 'SELECT Organization', $iTopology, 10 /* fRank */);
 new OQLMenuNode('Application', 'SELECT Application', $iTopology, 20 /* fRank */);
-new OQLMenuNode('OperatingSystem', 'SELECT OperatingSystem', $iTopology, 30 /* fRank */);
 new OQLMenuNode('DBServer', 'SELECT DBServer', $iTopology, 40 /* fRank */);
 
 
@@ -1454,8 +1431,6 @@ $oSWNode = new TemplateMenuNode('ConfigManagementSoftware', '', $oCINode->GetInd
 new OQLMenuNode('Licence', 'SELECT Licence', $oSWNode->GetIndex(), 0 /* fRank */);
 new OQLMenuNode('Patch', 'SELECT Patch', $oSWNode->GetIndex(), 1 /* fRank */);
 new OQLMenuNode('ApplicationInstance', 'SELECT SoftwareInstance', $oSWNode->GetIndex(), 2 /* fRank */);
-new OQLMenuNode('vraieappliinstance', 'SELECT ApplicationInstance', $oSWNode->GetIndex(), 3 /* fRank */);
-new OQLMenuNode('DBServerInstance', 'SELECT DBServerInstance', $oSWNode->GetIndex(), 3 /* fRank */);
 
 $oHWNode = new TemplateMenuNode('ConfigManagementHardware', '', $oCINode->GetIndex(), 3 /* fRank */);
 new OQLMenuNode('Subnet', 'SELECT Subnet', $oHWNode->GetIndex(), 0 /* fRank */);

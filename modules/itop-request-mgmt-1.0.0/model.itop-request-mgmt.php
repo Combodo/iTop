@@ -63,7 +63,7 @@ class UserRequest extends ResponseTicket
 		// The freeze reason remains hidden in all other states
 		MetaModel::Init_OverloadStateAttribute('new', 'freeze_reason', OPT_ATT_HIDDEN);
 		MetaModel::Init_OverloadStateAttribute('assigned', 'freeze_reason', OPT_ATT_HIDDEN);
-		MetaModel::Init_OverloadStateAttribute('frozen', 'freeze_reason', OPT_ATT_MANDATORY);
+		MetaModel::Init_OverloadStateAttribute('frozen', 'freeze_reason', OPT_ATT_MANDATORY | OPT_ATT_MUSTPROMPT);
 		MetaModel::Init_OverloadStateAttribute('escalated_tto', 'freeze_reason', OPT_ATT_HIDDEN);
 		MetaModel::Init_OverloadStateAttribute('escalated_ttr', 'freeze_reason', OPT_ATT_HIDDEN);
 		MetaModel::Init_OverloadStateAttribute('resolved', 'freeze_reason', OPT_ATT_HIDDEN);

@@ -105,7 +105,7 @@ abstract class AttributeDefinition
 		{
 			if (!array_key_exists($sParam, $this->m_aParams))
 			{
-				throw new CoreException("Unknown attribute definition parameter '$sParam', please select a value in {".implode(", ", $this->m_aParams)."}");
+				throw new CoreException("Unknown attribute definition parameter '$sParam', please select a value in {".implode(", ", array_keys($this->m_aParams))."}");
 			}
 			else
 			{
