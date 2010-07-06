@@ -290,8 +290,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'UI:WelcomeMenu' => 'Bienvenue',
-	'UI:WelcomeMenu+' => 'Bienvenue dans iTop',
+	'Menu:WelcomeMenu' => 'Bienvenue',
+	'Menu:WelcomeMenu+' => 'Bienvenue dans iTop',
+	'Menu:WelcomeMenuPage' => 'Bienvenue',
+	'Menu:WelcomeMenuPage+' => 'Bienvenue dans iTop',
 	'UI:WelcomeMenu:Title' => 'Bienvenue dans iTop',
 
 	'UI:WelcomeMenu:LeftBlock' => '<p>iTop est un portail opérationnel complet et libre pour gérer votre SI.</p>
@@ -697,7 +699,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 
 	'UI:AuditMenu' => 'Audit',
 	'UI:AuditMenu+' => 'Audit',
-	
+
 	'UI:ChangeManagementMenu' => 'Gestion du Changement',
 	'UI:ChangeManagementMenu+' => 'Gestion du Changement',
 	'UI:ChangeManagementMenu:Title' => 'Résumé des changements',
@@ -745,8 +747,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI-IncidentManagementMenu-IncidentsByWorkgroup' => 'Incidents par workgroup',
 	'UI-IncidentManagementMenu-IncidentsNotYetAssigned' => 'Incidents en attente d\'assignation',
 		
-	'UI:NotificationsMenu' => 'Notifications',
-	'UI:NotificationsMenu+' => 'Configuration des Notifications',
+	'Menu:NotificationsMenu' => 'Notifications',
+	'Menu:NotificationsMenu+' => 'Configuration des Notifications',
 	'UI:NotificationsMenu:Title' => 'Configuration des <span class="hilite">Notifications</span>',
 	'UI:NotificationsMenu:Help' => 'Aide',
 	'UI:NotificationsMenu:HelpContent' => '<p>Dans iTop les notifications sont totalement configurables. Elles sont basées sur deux types d\'objets: <i>déclencheurs et actions</i>.</p>
@@ -798,6 +800,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 
 	'UI:iTopVersion:Short' => 'iTop version %1$s',
 	'UI:iTopVersion:Long' => 'iTop version %1$s-%2$s du %3$s',
+	'UI:PropertiesTab' => 'Propriétés',
 
 	'UI:DeadlineMissedBy_duration' => 'Passé de %1$s',
 	'UI:Deadline_LessThan1Min' => '< 1 min',		

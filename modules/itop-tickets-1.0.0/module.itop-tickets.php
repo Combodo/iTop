@@ -24,6 +24,7 @@ SetupWebPage::AddModule(
 		),
 		'dictionary' => array(
 			'en.dict.itop-tickets.php',
+			'fr.dict.itop-tickets.php',
 		),
 		'data.struct' => array(
 		),
