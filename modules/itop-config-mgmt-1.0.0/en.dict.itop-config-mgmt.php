@@ -632,6 +632,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:NetworkInterface/Attribute:connected_name+' => '',
 	'Class:NetworkInterface/Attribute:connected_if_device_id' => 'Connected device',
 	'Class:NetworkInterface/Attribute:connected_if_device_id+' => '',
+	'Class:NetworkInterface/Attribute:link_type' => 'Link type',
+	'Class:NetworkInterface/Attribute:link_type+' => '',
+	'Class:NetworkInterface/Attribute:link_type/Value:uplink' => 'Up link',
+	'Class:NetworkInterface/Attribute:link_type/Value:uplink+' => '',
+	'Class:NetworkInterface/Attribute:link_type/Value:downlink' => 'Down link',
+	'Class:NetworkInterface/Attribute:link_type/Value:downlink+' => '',
 ));
 
 //

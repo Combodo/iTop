@@ -252,6 +252,10 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:Service' => 'Service',
 	'Class:Service+' => '',
+	'Class:Service/Attribute:org_id' => 'Provider',
+	'Class:Service/Attribute:org_id+' => '',
+	'Class:Service/Attribute:provider_name' => 'Provider',
+	'Class:Service/Attribute:provider_name+' => '',
 	'Class:Service/Attribute:name' => 'Name',
 	'Class:Service/Attribute:name+' => '',
 	'Class:Service/Attribute:description' => 'Description',

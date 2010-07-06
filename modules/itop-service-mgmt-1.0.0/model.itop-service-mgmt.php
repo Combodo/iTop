@@ -278,7 +278,7 @@ class Service extends cmdbAbstractObject
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("org_id", array("targetclass"=>"Organizations", "jointype"=>null, "allowed_values"=>null, "sql"=>"org_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("org_id", array("targetclass"=>"Organization", "jointype"=>null, "allowed_values"=>null, "sql"=>"org_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("provider_name", array("allowed_values"=>null, "extkey_attcode"=>"org_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("name", array("allowed_values"=>null, "sql"=>"name", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("description", array("allowed_values"=>null, "sql"=>"description", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
@@ -289,10 +289,10 @@ class Service extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("document_list", array("linked_class"=>"lnkServiceToDoc", "ext_key_to_me"=>"service_id", "ext_key_to_remote"=>"document_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("contact_list", array("linked_class"=>"lnkServiceToContact", "ext_key_to_me"=>"service_id", "ext_key_to_remote"=>"contact_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('name', 'description', 'type', 'status', 'subcategory_list', 'sla_list', 'document_list', 'contact_list'));
-		MetaModel::Init_SetZListItems('advanced_search', array('name', 'description', 'type', 'status'));
-		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'type', 'status'));
-		MetaModel::Init_SetZListItems('list', array('name', 'description', 'type', 'status'));
+		MetaModel::Init_SetZListItems('details', array('name', 'description', 'org_id', 'type', 'status', 'subcategory_list', 'sla_list', 'document_list', 'contact_list'));
+		MetaModel::Init_SetZListItems('advanced_search', array('name', 'description', 'org_id', 'type', 'status'));
+		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'org_id', 'type', 'status'));
+		MetaModel::Init_SetZListItems('list', array('name', 'description', 'org_id', 'type', 'status'));
 	}
 }
 class ServiceSubcategory extends cmdbAbstractObject
