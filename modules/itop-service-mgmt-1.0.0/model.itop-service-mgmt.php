@@ -138,7 +138,7 @@ class lnkProviderToCustomer extends cmdbAbstractObject
 			"key_type" => "autoincrement",
 			"name_attcode" => "provider_id",
 			"state_attcode" => "",
-			"reconc_keys" => array("name"),
+			"reconc_keys" => array(),
 			"db_table" => "lnkprovidertocustomer",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -169,7 +169,7 @@ class lnkContractToSLA extends cmdbAbstractObject
 			"key_type" => "autoincrement",
 			"name_attcode" => "contract_id",
 			"state_attcode" => "",
-			"reconc_keys" => array("name"),
+			"reconc_keys" => array(),
 			"db_table" => "lnkcontracttosla",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -201,7 +201,7 @@ class lnkContractToDoc extends cmdbAbstractObject
 			"key_type" => "autoincrement",
 			"name_attcode" => "contract_id",
 			"state_attcode" => "",
-			"reconc_keys" => array("name"),
+			"reconc_keys" => array(),
 			"db_table" => "lnkcontracttodoc",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -234,7 +234,7 @@ class lnkContractToContact extends cmdbAbstractObject
 			"key_type" => "autoincrement",
 			"name_attcode" => "contract_id",
 			"state_attcode" => "",
-			"reconc_keys" => array("name"),
+			"reconc_keys" => array(),
 			"db_table" => "lnkcontracttocontact",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -267,7 +267,7 @@ class lnkContractToCI extends cmdbAbstractObject
 			"key_type" => "autoincrement",
 			"name_attcode" => "contract_id",
 			"state_attcode" => "",
-			"reconc_keys" => array("name"),
+			"reconc_keys" => array(),
 			"db_table" => "lnkcontracttoci",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -310,8 +310,8 @@ class Service extends cmdbAbstractObject
 
 		MetaModel::Init_AddAttribute(new AttributeString("name", array("allowed_values"=>null, "sql"=>"name", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("description", array("allowed_values"=>null, "sql"=>"description", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("type", array("allowed_values"=>new ValueSetEnum('RequestManagement,IncidentManagement'), "sql"=>"type", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('design,production,obsolete'), "sql"=>"status", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("type", array("allowed_values"=>new ValueSetEnum('RequestManagement,IncidentManagement'), "sql"=>"type", "default_value"=>"IncidentManagement", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('design,production,obsolete'), "sql"=>"status", "default_value"=>"design", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSet("subcategory_list", array("linked_class"=>"ServiceSubcategory", "ext_key_to_me"=>"service_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSet("sla_list", array("linked_class"=>"SLA", "ext_key_to_me"=>"service_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("document_list", array("linked_class"=>"lnkServiceToDoc", "ext_key_to_me"=>"service_id", "ext_key_to_remote"=>"document_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
@@ -406,10 +406,10 @@ class SLT extends cmdbAbstractObject
 		MetaModel::Init_InheritAttributes();
 
 		MetaModel::Init_AddAttribute(new AttributeString("name", array("allowed_values"=>null, "sql"=>"name", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("metric", array("allowed_values"=>new ValueSetEnum('TTO,TTR'), "sql"=>"metric", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("ticket_priority", array("allowed_values"=>new ValueSetEnum('1,2,3'), "sql"=>"ticket_priority", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeInteger("value", array("allowed_values"=>null, "sql"=>"value", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("value_unit", array("allowed_values"=>new ValueSetEnum('days,hours,minutes'), "sql"=>"value_unit", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("metric", array("allowed_values"=>new ValueSetEnum('TTO,TTR'), "sql"=>"metric", "default_value"=>'TTO', "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("ticket_priority", array("allowed_values"=>new ValueSetEnum('1,2,3'), "sql"=>"ticket_priority", "default_value"=>"1", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeInteger("value", array("allowed_values"=>null, "sql"=>"value", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("value_unit", array("allowed_values"=>new ValueSetEnum('days,hours,minutes'), "sql"=>"value_unit", "default_value"=>"hours", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("sla_list", array("linked_class"=>"lnkSLTToSLA", "ext_key_to_me"=>"slt_id", "ext_key_to_remote"=>"sla_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 
 		MetaModel::Init_SetZListItems('details', array('name', 'metric', 'ticket_priority', 'value', 'value_unit', 'sla_list'));
@@ -429,7 +429,7 @@ class lnkSLTToSLA extends cmdbAbstractObject
 			"key_type" => "autoincrement",
 			"name_attcode" => "sla_id",
 			"state_attcode" => "",
-			"reconc_keys" => array("name"),
+			"reconc_keys" => array(),
 			"db_table" => "lnkslttosla",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -464,7 +464,7 @@ class lnkServiceToDoc extends cmdbAbstractObject
 			"key_type" => "autoincrement",
 			"name_attcode" => "service_id",
 			"state_attcode" => "",
-			"reconc_keys" => array("name"),
+			"reconc_keys" => array(),
 			"db_table" => "lnkservicetodoc",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -497,7 +497,7 @@ class lnkServiceToContact extends cmdbAbstractObject
 			"key_type" => "autoincrement",
 			"name_attcode" => "service_id",
 			"state_attcode" => "",
-			"reconc_keys" => array("name"),
+			"reconc_keys" => array(),
 			"db_table" => "lnkservicetocontact",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -530,7 +530,7 @@ class lnkServiceToCI extends cmdbAbstractObject
 			"key_type" => "autoincrement",
 			"name_attcode" => "service_id",
 			"state_attcode" => "",
-			"reconc_keys" => array("name"),
+			"reconc_keys" => array(),
 			"db_table" => "lnkservicetoci",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",

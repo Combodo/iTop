@@ -1030,7 +1030,7 @@ abstract class MetaModel
 							self::$m_aAttribDefs[$sClass][$sClassRecallAttCode] = $oClassRecall;
 							self::$m_aAttribOrigins[$sClass][$sClassRecallAttCode] = $sRemoteClass;
 
-							$oClassFlt = new FilterFromAttribute($oClassAtt);
+							$oClassFlt = new FilterFromAttribute($oClassRecall);
 							self::$m_aFilterDefs[$sClass][$sClassRecallAttCode] = $oClassFlt;
 							self::$m_aFilterOrigins[$sClass][$sClassRecallAttCode] = $sRemoteClass;
 

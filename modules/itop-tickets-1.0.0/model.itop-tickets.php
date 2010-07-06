@@ -69,7 +69,7 @@ class lnkTicketToDoc extends cmdbAbstractObject
 			"key_type" => "autoincrement",
 			"name_attcode" => "ticket_id",
 			"state_attcode" => "",
-			"reconc_keys" => array("name"),
+			"reconc_keys" => array(),
 			"db_table" => "lnktickettodoc",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -100,7 +100,7 @@ class lnkTicketToContact extends cmdbAbstractObject
 			"key_type" => "autoincrement",
 			"name_attcode" => "ticket_id",
 			"state_attcode" => "",
-			"reconc_keys" => array("name"),
+			"reconc_keys" => array(),
 			"db_table" => "lnktickettocontact",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -133,7 +133,7 @@ class lnkTicketToCI extends cmdbAbstractObject
 			"key_type" => "autoincrement",
 			"name_attcode" => "ticket_id",
 			"state_attcode" => "",
-			"reconc_keys" => array("name"),
+			"reconc_keys" => array(),
 			"db_table" => "lnktickettoci",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -188,7 +188,7 @@ abstract class ResponseTicket extends Ticket
 		MetaModel::Init_AddAttribute(new AttributeString("product", array("allowed_values"=>null, "sql"=>"product", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("impact", array("allowed_values"=>new ValueSetEnum('1,2,3'), "sql"=>"impact", "default_value"=>"1", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("urgency", array("allowed_values"=>new ValueSetEnum('1,2,3'), "sql"=>"urgency", "default_value"=>"1", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("priority", array("allowed_values"=>new ValueSetEnum('1,2,3'), "sql"=>"priority", "default_value"=>"low", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("priority", array("allowed_values"=>new ValueSetEnum('1,2,3'), "sql"=>"priority", "default_value"=>"1", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("workgroup_id", array("targetclass"=>"Team", "jointype"=>null, "allowed_values"=>null, "sql"=>"workgroup_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("workgroup_name", array("allowed_values"=>null, "extkey_attcode"=>"workgroup_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("agent_id", array("targetclass"=>"Person", "jointype"=>null, "allowed_values"=>null, "sql"=>"agent_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
@@ -203,9 +203,9 @@ abstract class ResponseTicket extends Ticket
 		MetaModel::Init_AddAttribute(new AttributeDateTime("assignment_date", array("allowed_values"=>null, "sql"=>"assignment_date", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDeadline("escalation_deadline", array("allowed_values"=>null, "sql"=>"escalation_deadline", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDeadline("closure_deadline", array("allowed_values"=>null, "sql"=>"closure_deadline", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("resolution_code", array("allowed_values"=>new ValueSetEnum('fixed,duplicate,couldnotreproduce,irrelevant'), "sql"=>"resolution_code", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("resolution_code", array("allowed_values"=>new ValueSetEnum('fixed,duplicate,couldnotreproduce,irrelevant'), "sql"=>"resolution_code", "default_value"=>"fixed", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("solution", array("allowed_values"=>null, "sql"=>"solution", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("user_satisfaction", array("allowed_values"=>new ValueSetEnum('1,2,3,4'), "sql"=>"user_satisfaction", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("user_satisfaction", array("allowed_values"=>new ValueSetEnum('1,2,3,4'), "sql"=>"user_satisfaction", "default_value"=>"1", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("user_commment", array("allowed_values"=>null, "sql"=>"user_commment", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
 		MetaModel::Init_SetZListItems('details', array('ref', 'title', 'ticket_log', 'start_date', 'escalation_deadline', 'closure_deadline', 'document_list', 'ci_list', 'contact_list', 'status', 'caller_id', 'org_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'close_date', 'last_update', 'assignment_date', 'closure_deadline', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
