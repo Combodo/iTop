@@ -116,46 +116,16 @@ class CustomerContract extends Contract
 
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("org_id", array("targetclass"=>"Organization", "jointype"=>null, "allowed_values"=>null, "sql"=>"org_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("org_name", array("allowed_values"=>null, "extkey_attcode"=>"org_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("support_team_id", array("targetclass"=>"Team", "jointype"=>null, "allowed_values"=>null, "sql"=>"support_team_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("provider_id", array("targetclass"=>"Organization", "jointype"=>null, "allowed_values"=>null, "sql"=>"provider_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("provider_name", array("allowed_values"=>null, "extkey_attcode"=>"provider_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("support_team_id", array("targetclass"=>"Team", "jointype"=>null, "allowed_values"=>new ValueSetObjects('SELECT Team WHERE Team.org_id = :this->provider_id'), "sql"=>"support_team_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array('provider_id'))));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("support_team_name", array("allowed_values"=>null, "extkey_attcode"=>"support_team_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("provider_list", array("linked_class"=>"lnkProviderToCustomer", "ext_key_to_me"=>"org_id", "ext_key_to_remote"=>"provider_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("sla_list", array("linked_class"=>"lnkContractToSLA", "ext_key_to_me"=>"contract_id", "ext_key_to_remote"=>"sla_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('name', 'description', 'start_date', 'end_date', 'cost', 'cost_currency', 'cost_unit', 'billing_frequency', 'contact_list', 'document_list', 'ci_list', 'org_id', 'support_team_id', 'provider_list', 'sla_list'));
+		MetaModel::Init_SetZListItems('details', array('name', 'org_id', 'description', 'start_date', 'end_date', 'cost', 'cost_currency', 'cost_unit', 'billing_frequency', 'contact_list', 'document_list', 'ci_list', 'provider_id', 'support_team_id', 'sla_list'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'description', 'start_date', 'end_date', 'cost', 'cost_currency', 'cost_unit', 'billing_frequency', 'org_id', 'support_team_id'));
-		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'start_date', 'end_date', 'cost', 'cost_currency', 'cost_unit', 'billing_frequency', 'org_id', 'support_team_id'));
-		MetaModel::Init_SetZListItems('list', array('name', 'start_date', 'end_date', 'org_id', 'support_team_id'));
-	}
-}
-class lnkProviderToCustomer extends cmdbAbstractObject
-{
-
-	public static function Init()
-	{
-		$aParams = array
-		(
-			"category" => "bizmodel,searchable,servicemgmt",
-			"key_type" => "autoincrement",
-			"name_attcode" => "provider_id",
-			"state_attcode" => "",
-			"reconc_keys" => array(),
-			"db_table" => "lnkprovidertocustomer",
-			"db_key_field" => "id",
-			"db_finalclass_field" => "",
-			"display_template" => "",
-		);
-		MetaModel::Init_Params($aParams);
-		MetaModel::Init_InheritAttributes();
-
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("provider_id", array("targetclass"=>"Organization", "jointype"=>null, "allowed_values"=>null, "sql"=>"provider_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("provider_name", array("allowed_values"=>null, "extkey_attcode"=>"provider_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("org_id", array("targetclass"=>"Organization", "jointype"=>null, "allowed_values"=>null, "sql"=>"org_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("org_name", array("allowed_values"=>null, "extkey_attcode"=>"org_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
-
-		MetaModel::Init_SetZListItems('details', array('provider_id', 'org_id'));
-		MetaModel::Init_SetZListItems('advanced_search', array('provider_id', 'org_id'));
-		MetaModel::Init_SetZListItems('standard_search', array('provider_id', 'org_id'));
-		MetaModel::Init_SetZListItems('list', array('provider_id', 'org_id'));
+		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'org_id', 'start_date', 'end_date', 'cost', 'cost_currency', 'cost_unit', 'billing_frequency', 'provider_id', 'support_team_id'));
+		MetaModel::Init_SetZListItems('list', array('name', 'org_id', 'start_date', 'end_date', 'provider_id', 'support_team_id'));
 	}
 }
 class lnkContractToSLA extends cmdbAbstractObject
@@ -308,6 +278,8 @@ class Service extends cmdbAbstractObject
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("org_id", array("targetclass"=>"Organizations", "jointype"=>null, "allowed_values"=>null, "sql"=>"org_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("provider_name", array("allowed_values"=>null, "extkey_attcode"=>"org_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("name", array("allowed_values"=>null, "sql"=>"name", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("description", array("allowed_values"=>null, "sql"=>"description", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("type", array("allowed_values"=>new ValueSetEnum('RequestManagement,IncidentManagement'), "sql"=>"type", "default_value"=>"IncidentManagement", "is_null_allowed"=>true, "depends_on"=>array())));

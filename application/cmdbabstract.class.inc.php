@@ -1178,6 +1178,22 @@ EOF
 		$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB);
 		$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
 		$oPage->SetCurrentTab(Dict::S('UI:PropertiesTab'));
+		
+		$oObj = MetaModel::NewObject($sClass);
+		if (isset($aArgs['default']))
+		{
+			// Pre-populated default values
+			$aDefaultValues = $aArgs['default'];
+			foreach($aDefaultValues as $sAttCode => $value)
+			{
+				if (MetaModel::IsValidAttCode($sClass, $sAttCode))
+				{
+					$oObj->Set($sAttCode, $value);
+				}
+			}
+		}
+		$aArgs['this'] = $oObj;
+
 		if ($oObjectToClone == null)
 		{
 			$sTargetState = MetaModel::GetDefaultState($sClass);
