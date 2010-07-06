@@ -123,8 +123,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:ProviderContract/Attribute:sla+' => 'Service Level Agreement',
 	'Class:ProviderContract/Attribute:coverage' => 'Coverage',
 	'Class:ProviderContract/Attribute:coverage+' => '',
-	'Class:ProviderContract/Attribute:customer_list' => 'Customers',
-	'Class:ProviderContract/Attribute:customer_list+' => 'Organizations for which this contract is delivering services',
 ));
 
 //
@@ -138,6 +136,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:CustomerContract/Attribute:org_id+' => '',
 	'Class:CustomerContract/Attribute:org_name' => 'Customer name',
 	'Class:CustomerContract/Attribute:org_name+' => '',
+	'Class:CustomerContract/Attribute:provider_id' => 'Provider',
+	'Class:CustomerContract/Attribute:provider_id+' => '',
+	'Class:CustomerContract/Attribute:provider_name' => 'Provider name',
+	'Class:CustomerContract/Attribute:provider_name+' => '',
 	'Class:CustomerContract/Attribute:support_team_id' => 'Support team',
 	'Class:CustomerContract/Attribute:support_team_id+' => '',
 	'Class:CustomerContract/Attribute:support_team_name' => 'Support team',
@@ -146,23 +148,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:CustomerContract/Attribute:provider_list+' => '',
 	'Class:CustomerContract/Attribute:sla_list' => 'SLAs',
 	'Class:CustomerContract/Attribute:sla_list+' => 'List of SLA related to the contract',
-));
-
-//
-// Class: lnkProviderToCustomer
-//
-
-Dict::Add('EN US', 'English', 'English', array(
-	'Class:lnkProviderToCustomer' => 'Provider/Customer',
-	'Class:lnkProviderToCustomer+' => '',
-	'Class:lnkProviderToCustomer/Attribute:provider_id' => 'Provider',
-	'Class:lnkProviderToCustomer/Attribute:provider_id+' => '',
-	'Class:lnkProviderToCustomer/Attribute:provider_name' => 'Provider',
-	'Class:lnkProviderToCustomer/Attribute:provider_name+' => '',
-	'Class:lnkProviderToCustomer/Attribute:org_id' => 'Customer',
-	'Class:lnkProviderToCustomer/Attribute:org_id+' => '',
-	'Class:lnkProviderToCustomer/Attribute:org_name' => 'Customer',
-	'Class:lnkProviderToCustomer/Attribute:org_name+' => '',
 ));
 
 //
