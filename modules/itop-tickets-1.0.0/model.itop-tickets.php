@@ -52,10 +52,10 @@ abstract class Ticket extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("ci_list", array("linked_class"=>"lnkTicketToCI", "ext_key_to_me"=>"ticket_id", "ext_key_to_remote"=>"ci_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("contact_list", array("linked_class"=>"lnkTicketToContact", "ext_key_to_me"=>"ticket_id", "ext_key_to_remote"=>"contact_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('ref', 'title', 'ticket_log', 'start_date', 'document_list', 'ci_list', 'contact_list'));
-		MetaModel::Init_SetZListItems('advanced_search', array('ref', 'title', 'ticket_log', 'start_date'));
-		MetaModel::Init_SetZListItems('standard_search', array('ref', 'title', 'ticket_log', 'start_date'));
-		MetaModel::Init_SetZListItems('list', array('ref', 'title', 'ticket_log', 'start_date'));
+		MetaModel::Init_SetZListItems('details', array('ref', 'title', 'description', 'ticket_log', 'start_date', 'document_list', 'ci_list', 'contact_list'));
+		MetaModel::Init_SetZListItems('advanced_search', array('finalclass', 'ref', 'title', 'ticket_log', 'start_date'));
+		MetaModel::Init_SetZListItems('standard_search', array('finalclass', 'ref', 'title', 'ticket_log', 'start_date'));
+		MetaModel::Init_SetZListItems('list', array('finalclass', 'ref', 'title', 'ticket_log', 'start_date'));
 	}
 }
 class lnkTicketToDoc extends cmdbAbstractObject
@@ -176,11 +176,11 @@ abstract class ResponseTicket extends Ticket
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 
-		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('new,assigned,escalated_tto,escalated_ttr,resolved,closed'), "sql"=>"status", "default_value"=>"new", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('new,assigned,frozen,escalated_tto,escalated_ttr,resolved,closed'), "sql"=>"status", "default_value"=>"new", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("caller_id", array("targetclass"=>"Person", "jointype"=>null, "allowed_values"=>null, "sql"=>"caller_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("workgroup_name", array("allowed_values"=>null, "extkey_attcode"=>"caller_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("customer_id", array("targetclass"=>"Organization", "jointype"=>null, "allowed_values"=>null, "sql"=>"customer_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("customer_name", array("allowed_values"=>null, "extkey_attcode"=>"customer_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("caller_email", array("allowed_values"=>null, "extkey_attcode"=>"caller_id", "target_attcode"=>"email", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("org_id", array("targetclass"=>"Organization", "jointype"=>null, "allowed_values"=>null, "sql"=>"org_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("org_name", array("allowed_values"=>null, "extkey_attcode"=>"org_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("service_id", array("targetclass"=>"Service", "jointype"=>null, "allowed_values"=>null, "sql"=>"service_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("service_name", array("allowed_values"=>null, "extkey_attcode"=>"service_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("servicesubcategory_id", array("targetclass"=>"ServiceSubcategory", "jointype"=>null, "allowed_values"=>null, "sql"=>"servicesubcategory_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
@@ -198,7 +198,7 @@ abstract class ResponseTicket extends Ticket
 		MetaModel::Init_AddAttribute(new AttributeExternalField("related_problem_ref", array("allowed_values"=>null, "extkey_attcode"=>"related_problem_id", "target_attcode"=>"ref", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("related_change_id", array("targetclass"=>"Change", "jointype"=>null, "allowed_values"=>null, "sql"=>"related_change_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("related_change_ref", array("allowed_values"=>null, "extkey_attcode"=>"related_change_id", "target_attcode"=>"ref", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeDateTime("closure_date", array("allowed_values"=>null, "sql"=>"closure_date", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeDateTime("close_date", array("allowed_values"=>null, "sql"=>"close_date", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDateTime("last_update", array("allowed_values"=>null, "sql"=>"last_update", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDateTime("assignment_date", array("allowed_values"=>null, "sql"=>"assignment_date", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDeadline("escalation_deadline", array("allowed_values"=>null, "sql"=>"escalation_deadline", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
@@ -208,10 +208,10 @@ abstract class ResponseTicket extends Ticket
 		MetaModel::Init_AddAttribute(new AttributeEnum("user_satisfaction", array("allowed_values"=>new ValueSetEnum('1,2,3,4'), "sql"=>"user_satisfaction", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("user_commment", array("allowed_values"=>null, "sql"=>"user_commment", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('ref', 'title', 'ticket_log', 'start_date', 'escalation_deadline', 'closure_deadline', 'document_list', 'ci_list', 'contact_list', 'status', 'caller_id', 'customer_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'closure_date', 'last_update', 'assignment_date', 'closure_deadline', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
-		MetaModel::Init_SetZListItems('advanced_search', array('ref', 'title', 'ticket_log', 'start_date', 'status', 'caller_id', 'customer_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'closure_date', 'last_update', 'assignment_date', 'escalation_deadline', 'closure_deadline', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
-		MetaModel::Init_SetZListItems('standard_search', array('ref', 'title', 'ticket_log', 'start_date', 'status', 'caller_id', 'customer_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'closure_date', 'last_update', 'assignment_date', 'escalation_deadline', 'closure_deadline', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
-		MetaModel::Init_SetZListItems('list', array('ref', 'title', 'ticket_log', 'start_date', 'status', 'caller_id', 'customer_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'closure_date', 'last_update', 'assignment_date', 'escalation_deadline', 'closure_deadline', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
+		MetaModel::Init_SetZListItems('details', array('ref', 'title', 'ticket_log', 'start_date', 'escalation_deadline', 'closure_deadline', 'document_list', 'ci_list', 'contact_list', 'status', 'caller_id', 'org_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'close_date', 'last_update', 'assignment_date', 'closure_deadline', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
+		MetaModel::Init_SetZListItems('advanced_search', array('finalclass', 'ref', 'title', 'ticket_log', 'start_date', 'status', 'caller_id', 'org_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'close_date', 'last_update', 'assignment_date', 'escalation_deadline', 'closure_deadline', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
+		MetaModel::Init_SetZListItems('standard_search', array('finalclass', 'ref', 'title', 'ticket_log', 'start_date', 'status', 'caller_id', 'org_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'close_date', 'last_update', 'assignment_date', 'escalation_deadline', 'closure_deadline', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
+		MetaModel::Init_SetZListItems('list', array('finalclass', 'ref', 'title', 'ticket_log', 'start_date', 'status', 'caller_id', 'org_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'close_date', 'last_update', 'assignment_date', 'escalation_deadline', 'closure_deadline', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
 
 		// Lifecycle
 		MetaModel::Init_DefineState(
@@ -221,15 +221,17 @@ abstract class ResponseTicket extends Ticket
 				"attribute_list" => array(
 					'ref' => OPT_ATT_READONLY,
 					'ticket_log' => OPT_ATT_HIDDEN,
-					'description' => OPT_ATT_MUSTCHANGE,
+					'caller_id' => OPT_ATT_MANDATORY,
+					'related_change_id' => OPT_ATT_HIDDEN,
+					//'description' => OPT_ATT_MUSTCHANGE,
 					'contact_list' => OPT_ATT_READONLY,
 					'start_date' => OPT_ATT_READONLY,
 					'last_update' => OPT_ATT_READONLY,
 					'assignment_date' => OPT_ATT_HIDDEN,
 					'escalation_deadline' => OPT_ATT_READONLY,
 					'closure_deadline' => OPT_ATT_HIDDEN,
-					'closure_date' => OPT_ATT_HIDDEN,
-					'customer_id' => OPT_ATT_MUSTCHANGE,
+					'close_date' => OPT_ATT_HIDDEN,
+					'org_id' => OPT_ATT_MUSTCHANGE,
 					'service_id' => OPT_ATT_MUSTCHANGE,
 					'servicesubcategory_id' => OPT_ATT_MUSTCHANGE,
 					'product' => OPT_ATT_MUSTPROMPT,
@@ -238,6 +240,7 @@ abstract class ResponseTicket extends Ticket
 					'priority' => OPT_ATT_READONLY,
 					'workgroup_id' => OPT_ATT_MUSTCHANGE,
 					'agent_id' => OPT_ATT_HIDDEN,
+					'agent_email' => OPT_ATT_HIDDEN,
 					'resolution_code' => OPT_ATT_HIDDEN,
 					'solution' => OPT_ATT_HIDDEN,
 					'user_satisfaction' => OPT_ATT_HIDDEN,
@@ -258,11 +261,16 @@ abstract class ResponseTicket extends Ticket
 			array(
 				"attribute_inherit" => 'new',
 				"attribute_list" => array(
+					'title' => OPT_ATT_READONLY,
+					'caller_id' => OPT_ATT_READONLY,
+					'org_id' => OPT_ATT_READONLY,
 					'ticket_log' => OPT_ATT_NORMAL,
-					'description' => OPT_ATT_READONLY,
+					//'description' => OPT_ATT_READONLY,
 					'agent_id' => OPT_ATT_MANDATORY,
-					'closure_deadline' => OPT_ATT_READONLY,
-					'escalation_deadline' => OPT_ATT_HIDDEN,
+					'agent_email' => OPT_ATT_READONLY,
+					'workgroup_id' => OPT_ATT_MUSTPROMPT,
+					'closure_deadline' => OPT_ATT_HIDDEN,
+					'escalation_deadline' => OPT_ATT_READONLY,
 				),
 			)
 		);
@@ -279,7 +287,14 @@ abstract class ResponseTicket extends Ticket
 			array(
 				"attribute_inherit" => 'assigned',
 				"attribute_list" => array(
-					'resolution_code' => OPT_ATT_MUSTCHANGE,
+					'service_id' => OPT_ATT_READONLY,
+					'servicesubcategory_id' => OPT_ATT_READONLY,
+					'product' => OPT_ATT_READONLY,
+					'impact' => OPT_ATT_READONLY,
+					'workgroup_id' => OPT_ATT_READONLY,
+					'agent_id' => OPT_ATT_READONLY,
+					'urgency' => OPT_ATT_READONLY,
+					'resolution_code' => OPT_ATT_MANDATORY,
 					'solution' => OPT_ATT_MUSTPROMPT,
 				),
 			)
@@ -290,8 +305,11 @@ abstract class ResponseTicket extends Ticket
 				"attribute_inherit" => 'resolved',
 				"attribute_list" => array(
 					'ticket_log' => OPT_ATT_READONLY,
-					'user_satisfaction' => OPT_ATT_MUSTCHANGE,
+					'user_satisfaction' => OPT_ATT_MUSTPROMPT,
 					'user_commment' => OPT_ATT_MUSTPROMPT,
+					'resolution_code' => OPT_ATT_READONLY,
+					'solution' => OPT_ATT_READONLY,
+					'close_date' => OPT_ATT_READONLY,
 				),
 			)
 		);
@@ -315,18 +333,15 @@ abstract class ResponseTicket extends Ticket
 		MetaModel::Init_DefineTransition("escalated_ttr", "ev_resolve", array("target_state"=>"resolved", "actions"=>array(), "user_restriction"=>null));
 
 		MetaModel::Init_DefineTransition("resolved", "ev_reassign", array("target_state"=>"assigned", "actions"=>array(), "user_restriction"=>null));
-		MetaModel::Init_DefineTransition("resolved", "ev_close", array("target_state"=>"closed", "actions"=>array(), "user_restriction"=>null));
+		MetaModel::Init_DefineTransition("resolved", "ev_close", array("target_state"=>"closed", "actions"=>array('SetClosureDate'), "user_restriction"=>null));
 	}
 
 	// Lifecycle actions
 	//
-	public function SetEscalationDeadline()
+	public function SetClosureDate($sStimulusCode)
 	{
-		$this->Set('escalation_deadline', time() + 100);
-	}
-	public function SetClosureDeadline()
-	{
-		$this->Set('closure_deadline', time() + 100);
+		$this->Set('close_date', time());
+		return true;
 	}
 
 	/**
@@ -340,7 +355,7 @@ abstract class ResponseTicket extends Ticket
 		if (MetaModel::IsValidClass('SLT'))
 		{
 			$sOQL = "SELECT SLT JOIN lnkSLTToSLA AS L1 ON L1.slt_id=SLT.id JOIN SLA ON L1.sla_id = SLA.id JOIN lnkContractToSLA AS L2 ON L2.sla_id = SLA.id JOIN CustomerContract ON L2.contract_id = CustomerContract.id 
-					WHERE SLT.ticket_priority = :priority AND SLA.service_id = :service_id AND SLT.metric = :metric AND CustomerContract.customer_id = :customer_id";
+					WHERE SLT.ticket_priority = :priority AND SLA.service_id = :service_id AND SLT.metric = :metric AND CustomerContract.org_id = :org_id";
 			
 			$oSLTSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL),
 							array(),
@@ -348,7 +363,7 @@ abstract class ResponseTicket extends Ticket
 								'priority' => $this->Get('priority'),
 								'service_id' => $this->Get('service_id'),
 								'metric' => $sMetric,
-								'customer_id' => $this->Get('customer_id'),
+								'org_id' => $this->Get('org_id'),
 							)
 							);
 							
@@ -424,15 +439,6 @@ abstract class ResponseTicket extends Ticket
 	
 	public function ComputeValues()
 	{
-		$iKey = $this->GetKey();
-		if ($iKey < 0)
-		{
-			// Object not yet in the Database
-			$iKey = MetaModel::GetNextKey(get_class($this));
-		}
-		$sName = sprintf('I-%06d', $iKey);
-		$this->Set('ref', $sName);
-		
 		// Compute the priority of the ticket
 		$this->Set('priority', $this->ComputePriority());
 		
@@ -514,6 +520,54 @@ abstract class ResponseTicket extends Ticket
 		}
 		return $sHilightClass;
 	}
+
+	protected function OnInsert()
+	{
+		$this->Set('last_update', time());
+	}
+	protected function OnUpdate()
+	{
+		$this->Set('last_update', time());
+	}
+/*
+	EXAMPLE: OnInsert....
+
+	protected function OnInsert()
+	{
+		// Romain: ajouter cette ligne
+		$oToNotify = $this->Get('contacts_a_notifier');
+
+		// Romain: ca c'etait pour verifier que ca fonctionne bien
+		// $oFirstContact = MetaModel::GetObject('bizPerson', 6);
+		// $oNewLink = new lnkContactTicket();
+		// $oNewLink->Set('contact_id', 6);
+		// $oNewLink->Set('role', 'created before');
+		// $oToNotify->AddObject($oNewLink);
+
+		$oImpactedInfras = DBObjectSet::FromLinkSet($this, 'impacted_infra_manual', 'infra_id');
+
+		$aComputed = $oImpactedInfras->GetRelatedObjects('impacts', 10);
+
+		if (array_key_exists('logRealObject', $aComputed))
+		{
+			foreach($aComputed['logRealObject'] as $iKey => $oObject)
+			{
+				if (MetaModel::IsParentClass('bizContact', get_class($oObject)))
+				{
+					$oNewLink = new lnkContactTicket();
+					$oNewLink->Set('contact_id', $iKey);
+					//$oNewLink->Set('ticket_id', $this->GetKey()); // unkown at that time!
+					$oNewLink->Set('role', 'contact automatically computed');
+
+					// Romain: transformer cette ligne
+					$oToNotify->AddObject($oNewLink);
+				}
+			}
+			// Romain: supprimer cette ligne
+			// $this->Set('contacts_a_notifier', $oToNotify);
+		}
+	}
+*/
 }
 
 ?>

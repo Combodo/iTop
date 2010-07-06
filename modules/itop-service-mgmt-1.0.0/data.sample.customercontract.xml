@@ -9,7 +9,7 @@
 <cost_currency>euros</cost_currency>
 <cost_unit></cost_unit>
 <billing_frequency></billing_frequency>
-<customer_id>2</customer_id>
+<org_id>2</org_id>
 <support_team_id>2</support_team_id>
 </CustomerContract>
 </Set>

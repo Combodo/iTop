@@ -163,7 +163,7 @@ class EventIssue extends Event
 //		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
 	}
 
-	public function OnInsert()
+	protected function OnInsert()
 	{
 		// Init page information: name, arguments
 		//

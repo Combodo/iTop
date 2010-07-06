@@ -160,10 +160,14 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Contact/Attribute:ci_list+' => 'CIs related to the contact',
 	'Class:Contact/Attribute:contract_list' => 'Contracts',
 	'Class:Contact/Attribute:contract_list+' => 'Contracts related to the contact',
+	'Class:Contact/Attribute:service_list' => 'Services',
+	'Class:Contact/Attribute:service_list+' => 'Services related to this contact',
 	'Class:Contact/Attribute:ticket_list' => 'Tickets',
 	'Class:Contact/Attribute:ticket_list+' => 'Tickets related to the contact',
 	'Class:Contact/Attribute:team_list' => 'Teams',
 	'Class:Contact/Attribute:team_list+' => 'Teams this contact belongs to',
+	'Class:Contact/Attribute:finalclass' => 'Type',
+	'Class:Contact/Attribute:finalclass+' => '',
 ));
 
 //
@@ -248,6 +252,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Document/Attribute:ci_list+' => 'CIs refering to this document',
 	'Class:Document/Attribute:contract_list' => 'Contracts',
 	'Class:Document/Attribute:contract_list+' => 'Contracts refering to this document',
+	'Class:Document/Attribute:service_list' => 'Services',
+	'Class:Document/Attribute:service_list+' => 'Services refering to this document',
 	'Class:Document/Attribute:ticket_list' => 'Tickets',
 	'Class:Document/Attribute:ticket_list+' => 'Tickets refering to this document',
 	'Class:Document:PreviewTab' => 'Preview',
@@ -383,6 +389,8 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:DBServer' => 'Database',
 	'Class:DBServer+' => 'Database server SW',
+	'Class:DBServer/Attribute:instance_list' => 'Installations',
+	'Class:DBServer/Attribute:instance_list+' => 'Instances of this database server',
 ));
 
 //
@@ -399,7 +407,7 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:lnkPatchToCI' => 'Patch usage',
+	'Class:lnkPatchToCI' => 'Patch Usage',
 	'Class:lnkPatchToCI+' => '',
 	'Class:lnkPatchToCI/Attribute:patch_id' => 'Patch',
 	'Class:lnkPatchToCI/Attribute:patch_id+' => '',
@@ -418,7 +426,7 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:FunctionalCI' => 'FunctionalCI',
+	'Class:FunctionalCI' => 'Functional CI',
 	'Class:FunctionalCI+' => '',
 	'Class:FunctionalCI/Attribute:name' => 'Name',
 	'Class:FunctionalCI/Attribute:name+' => '',
@@ -452,7 +460,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:FunctionalCI/Attribute:contract_list+' => 'Contracts supporting this CI',
 	'Class:FunctionalCI/Attribute:ticket_list' => 'Tickets',
 	'Class:FunctionalCI/Attribute:ticket_list+' => 'Tickets related to the CI',
-	'Class:FunctionalCI/Attribute:finalclass' => 'finalclass',
+	'Class:FunctionalCI/Attribute:finalclass' => 'Type',
 	'Class:FunctionalCI/Attribute:finalclass+' => '',
 ));
 
@@ -486,7 +494,7 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:ApplicationInstance' => 'Application instance',
+	'Class:ApplicationInstance' => 'Application Instance',
 	'Class:ApplicationInstance+' => '',
 ));
 
@@ -495,8 +503,10 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:DBServerInstance' => 'DB Server instance',
+	'Class:DBServerInstance' => 'DB Server Instance',
 	'Class:DBServerInstance+' => '',
+	'Class:DBServerInstance/Attribute:dbinstance_list' => 'Databases',
+	'Class:DBServerInstance/Attribute:dbinstance_list+' => 'Database sources',
 ));
 
 //
@@ -504,7 +514,7 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:DatabaseInstance' => 'Database instance',
+	'Class:DatabaseInstance' => 'Database Instance',
 	'Class:DatabaseInstance+' => '',
 	'Class:DatabaseInstance/Attribute:db_server_instance_id' => 'Database software',
 	'Class:DatabaseInstance/Attribute:db_server_instance_id+' => '',
@@ -536,10 +546,10 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:BusinessProcess' => 'Business Process',
 	'Class:BusinessProcess+' => '',
-	'Class:BusinessProcess/Attribute:solution_list' => 'Application solutions',
-	'Class:BusinessProcess/Attribute:solution_list+' => 'Application solutions the process is relying on',
 	'Class:BusinessProcess/Attribute:description' => 'Description',
 	'Class:BusinessProcess/Attribute:description+' => '',
+	'Class:BusinessProcess/Attribute:used_solution_list' => 'Application	solutions',
+	'Class:BusinessProcess/Attribute:used_solution_list+' => 'Application solutions the process is relying on',
 ));
 
 //

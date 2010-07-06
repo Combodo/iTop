@@ -42,6 +42,50 @@ class UserRequest extends ResponseTicket
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 		MetaModel::Init_InheritLifecycle();
+
+		MetaModel::Init_AddAttribute(new AttributeString("freeze_reason", array("allowed_values"=>null, "sql"=>"freeze_reason", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+
+		MetaModel::Init_SetZListItems('details', array('ref', 'title', 'description', 'ticket_log', 'start_date', 'escalation_deadline', 'closure_deadline', 'document_list', 'ci_list', 'contact_list', 'status', 'caller_id', 'org_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'close_date', 'last_update', 'assignment_date', 'closure_deadline', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment', 'freeze_reason'));
+		MetaModel::Init_SetZListItems('advanced_search', array('ref', 'title', 'ticket_log', 'start_date', 'status', 'caller_id', 'org_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'close_date', 'last_update', 'assignment_date', 'escalation_deadline', 'closure_deadline', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
+		MetaModel::Init_SetZListItems('standard_search', array('ref', 'title', 'ticket_log', 'start_date', 'status', 'caller_id', 'org_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'close_date', 'last_update', 'assignment_date', 'escalation_deadline', 'closure_deadline', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
+		MetaModel::Init_SetZListItems('list', array('ref', 'title', 'start_date', 'status', 'org_id', 'service_id', 'priority', 'workgroup_id', 'agent_id'));
+
+		MetaModel::Init_DefineState(
+			"frozen",
+			array(
+				"attribute_inherit" => 'assigned',
+				"attribute_list" => array(
+					'freeze_reason' => OPT_ATT_MANDATORY,
+				),
+			)
+		);
+
+		// The freeze reason remains hidden in all other states
+		MetaModel::Init_OverloadStateAttribute('new', 'freeze_reason', OPT_ATT_HIDDEN);
+		MetaModel::Init_OverloadStateAttribute('assigned', 'freeze_reason', OPT_ATT_HIDDEN);
+		MetaModel::Init_OverloadStateAttribute('escalated_tto', 'freeze_reason', OPT_ATT_HIDDEN);
+		MetaModel::Init_OverloadStateAttribute('escalated_ttr', 'freeze_reason', OPT_ATT_HIDDEN);
+		MetaModel::Init_OverloadStateAttribute('resolved', 'freeze_reason', OPT_ATT_HIDDEN);
+		MetaModel::Init_OverloadStateAttribute('closed', 'freeze_reason', OPT_ATT_HIDDEN);
+
+		MetaModel::Init_DefineStimulus(new StimulusUserAction("ev_freeze", array()));
+
+		MetaModel::Init_DefineTransition("assigned", "ev_freeze", array("target_state"=>"frozen", "actions"=>array(), "user_restriction"=>null));
+		MetaModel::Init_DefineTransition("frozen", "ev_timeout", array("target_state"=>"escalated_ttr", "actions"=>array(), "user_restriction"=>null));
+		MetaModel::Init_DefineTransition("frozen", "ev_assign", array("target_state"=>"assigned", "actions"=>array(), "user_restriction"=>null));
+	}
+
+	public function ComputeValues()
+	{
+		$iKey = $this->GetKey();
+		if ($iKey < 0)
+		{
+			// Object not yet in the Database
+			$iKey = MetaModel::GetNextKey(get_class($this));
+		}
+		$sName = sprintf('R-%06d', $iKey);
+		$this->Set('ref', $sName);
+		return parent::ComputeValues();
 	}
 }
 

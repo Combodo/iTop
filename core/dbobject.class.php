@@ -802,7 +802,7 @@ abstract class DBObject
 	}
 
 	// To be optionaly overloaded
-	public function OnInsert()
+	protected function OnInsert()
 	{
 	}
 	
@@ -888,6 +888,11 @@ abstract class DBObject
 		return $this->DBInsert();
 	}
 
+	// To be optionaly overloaded
+	protected function OnUpdate()
+	{
+	}
+
 	// Update a record
 	public function DBUpdate()
 	{
@@ -897,6 +902,7 @@ abstract class DBObject
 		}
 
 		$this->DoComputeValues();
+		$this->OnUpdate();
 
 		$aChanges = $this->ListChanges();
 		if (count($aChanges) == 0)

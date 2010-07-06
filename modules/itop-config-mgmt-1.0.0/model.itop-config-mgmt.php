@@ -129,14 +129,15 @@ abstract class Contact extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("location_id", array("targetclass"=>"Location", "jointype"=>null, "allowed_values"=>new ValueSetObjects('SELECT Location AS L WHERE L.org_id = :this->org_id'), "sql"=>"location_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array('org_id'))));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("location_name", array("allowed_values"=>null, "extkey_attcode"=>"location_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("contract_list", array("linked_class"=>"lnkContractToContact", "ext_key_to_me"=>"contact_id", "ext_key_to_remote"=>"contract_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("service_list", array("linked_class"=>"lnkServiceToContact", "ext_key_to_me"=>"contact_id", "ext_key_to_remote"=>"service_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("ticket_list", array("linked_class"=>"lnkTicketToContact", "ext_key_to_me"=>"contact_id", "ext_key_to_remote"=>"ticket_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("ci_list", array("linked_class"=>"lnkCIToContact", "ext_key_to_me"=>"contact_id", "ext_key_to_remote"=>"ci_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("team_list", array("linked_class"=>"lnkTeamToContact", "ext_key_to_me"=>"contact_id", "ext_key_to_remote"=>"team_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'email', 'phone', 'location_id', 'contract_list', 'ticket_list', 'ci_list', 'team_list'));
+		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'email', 'phone', 'location_id', 'contract_list', 'service_list', 'ticket_list', 'ci_list', 'team_list'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'org_id', 'email', 'phone', 'location_id'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'org_id', 'email', 'phone', 'location_id'));
-		MetaModel::Init_SetZListItems('list', array('status', 'org_id', 'email', 'phone', 'location_id'));
+		MetaModel::Init_SetZListItems('list', array('finalclass', 'status', 'org_id', 'email', 'phone', 'location_id'));
 	}
 }
 class Person extends Contact
@@ -162,7 +163,7 @@ class Person extends Contact
 		MetaModel::Init_AddAttribute(new AttributeString("first_name", array("allowed_values"=>null, "sql"=>"first_name", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("employee_id", array("allowed_values"=>null, "sql"=>"employee_id", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('first_name', 'name', 'org_id', 'status', 'location_id', 'email', 'phone', 'employee_id', 'contract_list', 'ticket_list', 'ci_list'));
+		MetaModel::Init_SetZListItems('details', array('first_name', 'name', 'org_id', 'status', 'location_id', 'email', 'phone', 'employee_id', 'contract_list', 'service_list', 'ticket_list', 'ci_list'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'org_id', 'email', 'phone', 'location_id', 'first_name', 'employee_id'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'org_id', 'email', 'phone', 'location_id', 'first_name', 'employee_id'));
 		MetaModel::Init_SetZListItems('list', array('status', 'org_id', 'email', 'phone', 'location_id'));
@@ -195,7 +196,7 @@ class Team extends Contact
 
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("member_list", array("linked_class"=>"lnkTeamToContact", "ext_key_to_me"=>"team_id", "ext_key_to_remote"=>"contact_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'location_id', 'email', 'phone', 'member_list','contract_list', 'ticket_list', 'ci_list'));
+		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'location_id', 'email', 'phone', 'member_list','contract_list', 'service_list', 'ticket_list', 'ci_list'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'org_id', 'email', 'phone', 'location_id'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'org_id', 'email', 'phone', 'location_id'));
 		MetaModel::Init_SetZListItems('list', array('status', 'org_id', 'email', 'phone', 'location_id'));
@@ -262,6 +263,7 @@ abstract class Document extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeEnum("type", array("allowed_values"=>new ValueSetEnum('contract,networkmap,presentation,training,whitePaper,workinginstructions'), "sql"=>"type", "default_value"=>"presentation", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('draft,published,obsolete'), "sql"=>"status", "default_value"=>"draft", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("contract_list", array("linked_class"=>"lnkContractToDoc", "ext_key_to_me"=>"document_id", "ext_key_to_remote"=>"contract_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("service_list", array("linked_class"=>"lnkServiceToDoc", "ext_key_to_me"=>"document_id", "ext_key_to_remote"=>"service_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("ticket_list", array("linked_class"=>"lnkTicketToDoc", "ext_key_to_me"=>"document_id", "ext_key_to_remote"=>"ticket_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("ci_list", array("linked_class"=>"lnkCIToDoc", "ext_key_to_me"=>"document_id", "ext_key_to_remote"=>"ci_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 
@@ -293,7 +295,7 @@ class ExternalDoc extends Document
 
 		MetaModel::Init_AddAttribute(new AttributeURL("url", array("target"=>"_blank", "allowed_values"=>null, "sql"=>"url", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('name', 'description', 'type', 'status', 'contract_list', 'ticket_list', 'ci_list', 'url'));
+		MetaModel::Init_SetZListItems('details', array('name', 'description', 'type', 'status', 'contract_list', 'service_list', 'ticket_list', 'ci_list', 'url'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'description', 'type', 'status', 'url'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'type', 'status', 'url'));
 		MetaModel::Init_SetZListItems('list', array('type', 'status', 'url'));
@@ -321,7 +323,7 @@ class Note extends Document
 
 		MetaModel::Init_AddAttribute(new AttributeWikiText("note", array("allowed_values"=>null, "sql"=>"note", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('name', 'description', 'type', 'status', 'contract_list', 'ticket_list', 'ci_list', 'note'));
+		MetaModel::Init_SetZListItems('details', array('name', 'description', 'type', 'status', 'contract_list', 'service_list', 'ticket_list', 'ci_list', 'note'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'description', 'type', 'status', 'note'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'type', 'status', 'note'));
 		MetaModel::Init_SetZListItems('list', array('type', 'status', 'note'));
@@ -349,7 +351,7 @@ class FileDoc extends Document
 
 		MetaModel::Init_AddAttribute(new AttributeBlob("contents", array("depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('name', 'description', 'type', 'status', 'contract_list', 'ticket_list', 'ci_list', 'contents'));
+		MetaModel::Init_SetZListItems('details', array('name', 'description', 'type', 'status', 'contract_list', 'service_list', 'ticket_list', 'ci_list', 'contents'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'description', 'type', 'status'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'type', 'status'));
 		MetaModel::Init_SetZListItems('list', array('type', 'status', 'contents'));
@@ -434,10 +436,10 @@ class Subnet extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeIPAddress("ip", array("allowed_values"=>null, "sql"=>"ip", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeIPAddress("ip_mask", array("allowed_values"=>null, "sql"=>"ip_mask", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('description', 'org_id', 'ip', 'ip_mask'));
-		MetaModel::Init_SetZListItems('advanced_search', array('description', 'org_id', 'ip', 'ip_mask'));
-		MetaModel::Init_SetZListItems('standard_search', array('description', 'org_id', 'ip', 'ip_mask'));
-		MetaModel::Init_SetZListItems('list', array('description', 'org_id', 'ip', 'ip_mask'));
+		MetaModel::Init_SetZListItems('details', array('ip', 'ip_mask', 'org_id', 'description'));
+		MetaModel::Init_SetZListItems('advanced_search', array('ip', 'ip_mask', 'org_id', 'description'));
+		MetaModel::Init_SetZListItems('standard_search', array('ip', 'ip_mask', 'org_id', 'description'));
+		MetaModel::Init_SetZListItems('list', array('ip', 'ip_mask', 'org_id'));
 	}
 
 	public function GetName()
@@ -701,7 +703,7 @@ abstract class FunctionalCI extends cmdbAbstractObject
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'importance', 'contact_list', 'document_list', 'solution_list', 'contract_list', 'ticket_list'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'org_id', 'importance'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'org_id', 'importance'));
-		MetaModel::Init_SetZListItems('list', array('status', 'org_id', 'importance'));
+		MetaModel::Init_SetZListItems('list', array('finalclass', 'status', 'org_id', 'importance'));
 	}
 
 	public static function GetRelationQueries($sRelCode)
@@ -746,7 +748,7 @@ abstract class SoftwareInstance extends FunctionalCI
 		MetaModel::Init_AddAttribute(new AttributeString("version", array("allowed_values"=>null, "sql"=>"version", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeWikiText("description", array("allowed_values"=>null, "sql"=>"description", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('status', 'org_id', 'importance', 'device_id', 'licence_id', 'software_id', 'version', 'description'));
+		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'importance', 'device_id', 'licence_id', 'software_id', 'version', 'description'));
 		MetaModel::Init_SetZListItems('advanced_search', array('status', 'org_id', 'importance', 'device_id', 'licence_id', 'software_id', 'version'));
 		MetaModel::Init_SetZListItems('standard_search', array('status', 'org_id', 'importance', 'device_id', 'licence_id', 'software_id', 'version'));
 		MetaModel::Init_SetZListItems('list', array('status', 'org_id', 'importance', 'device_id', 'software_id', 'version'));
@@ -754,12 +756,11 @@ abstract class SoftwareInstance extends FunctionalCI
 
 	public function GetName()
 	{
-		return $this->Get('software_name').' - '.$this->Get('device_name');
+		return $this->Get('name').' - '.$this->Get('device_name');
 	}
 
 	public function ComputeValues()
 	{
-		return $this->Set('name', $this->GetName());
 	}
 
 	public static function GetRelationQueries($sRelCode)
@@ -796,7 +797,7 @@ class DBServerInstance extends SoftwareInstance
 
 		MetaModel::Init_AddAttribute(new AttributeLinkedSet("dbinstance_list", array("linked_class"=>"DatabaseInstance", "ext_key_to_me"=>"db_server_instance_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('status', 'org_id', 'importance', 'device_id', 'licence_id', 'software_id', 'version', 'description', 'dbinstance_list'));
+		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'importance', 'device_id', 'licence_id', 'software_id', 'version', 'description', 'dbinstance_list'));
 		MetaModel::Init_SetZListItems('advanced_search', array('status', 'org_id', 'importance', 'device_id', 'licence_id', 'software_id', 'version'));
 		MetaModel::Init_SetZListItems('standard_search', array('status', 'org_id', 'importance', 'device_id', 'licence_id', 'software_id', 'version'));
 		MetaModel::Init_SetZListItems('list', array('status', 'org_id', 'importance', 'device_id', 'software_id', 'version'));
@@ -821,7 +822,7 @@ class ApplicationInstance extends SoftwareInstance
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 
-		MetaModel::Init_SetZListItems('details', array('status', 'org_id', 'importance', 'device_id', 'licence_id', 'software_id', 'version', 'description'));
+		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'importance', 'device_id', 'licence_id', 'software_id', 'version', 'description'));
 		MetaModel::Init_SetZListItems('advanced_search', array('status', 'org_id', 'importance', 'device_id', 'licence_id', 'software_id', 'version'));
 		MetaModel::Init_SetZListItems('standard_search', array('status', 'org_id', 'importance', 'device_id', 'licence_id', 'software_id', 'version'));
 		MetaModel::Init_SetZListItems('list', array('status', 'org_id', 'importance', 'device_id', 'software_id', 'version'));
@@ -1036,7 +1037,7 @@ abstract class Device extends ConnectableCI
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'application_list', 'nwinterface_list'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'org_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'org_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref'));
-		MetaModel::Init_SetZListItems('list', array('status', 'org_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref'));
+		MetaModel::Init_SetZListItems('list', array('finalclass', 'status', 'org_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref'));
 	}
 	
 	public static function GetRelationQueries($sRelCode)
