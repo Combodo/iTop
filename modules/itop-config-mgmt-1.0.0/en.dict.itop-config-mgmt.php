@@ -368,6 +368,23 @@ Dict::Add('EN US', 'English', 'English', array(
 ));
 
 //
+// Class: Software
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:Software' => 'Software',
+	'Class:Software+' => '',
+	'Class:Software/Attribute:name' => 'Name',
+	'Class:Software/Attribute:name+' => '',
+	'Class:Software/Attribute:description' => 'Description',
+	'Class:Software/Attribute:description+' => '',
+	'Class:Software/Attribute:instance_list' => 'Installations',
+	'Class:Software/Attribute:instance_list+' => 'Instances of this software',
+	'Class:Software/Attribute:finalclass' => 'Type',
+	'Class:Software/Attribute:finalclass+' => '',
+));
+
+//
 // Class: Application
 //
 

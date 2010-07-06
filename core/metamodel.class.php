@@ -1028,10 +1028,17 @@ abstract class MetaModel
 							));
 							$oClassRecall->SetHostClass($sClass);
 							self::$m_aAttribDefs[$sClass][$sClassRecallAttCode] = $oClassRecall;
-							self::$m_aAttribOrigins[$sClass][$sClassRecallAttCode] = $oClassRecall;
+							self::$m_aAttribOrigins[$sClass][$sClassRecallAttCode] = $sRemoteClass;
+
+							$oClassFlt = new FilterFromAttribute($oClassAtt);
+							self::$m_aFilterDefs[$sClass][$sClassRecallAttCode] = $oClassFlt;
+							self::$m_aFilterOrigins[$sClass][$sClassRecallAttCode] = $sRemoteClass;
 
 							// Add it to the ZLists where the external key is present
-							foreach(self::$m_aListData[$sClass] as $sListCode => $aAttributes)
+							//foreach(self::$m_aListData[$sClass] as $sListCode => $aAttributes)
+							$sListCode = 'list';
+							$aAttributes = self::$m_aListData[$sClass][$sListCode];
+							// temporary.... no loop
 							{
 								if (in_array($sAttCode, $aAttributes))
 								{
@@ -3086,6 +3093,8 @@ abstract class MetaModel
 	{
 		self::LoadConfig($sConfigFile);
 		if (self::DBExists())
+// !!!! #@# 
+		//if (true)
 		{
 			CMDBSource::SelectDB(self::$m_sDBName);
 

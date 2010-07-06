@@ -784,7 +784,7 @@ class DBServerInstance extends SoftwareInstance
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 
-		MetaModel::Init_OverloadAttributeParams("software_id", array("targetclass"=>"DBServer"));
+		//MetaModel::Init_OverloadAttributeParams("software_id", array("targetclass"=>"DBServer"));
 		//MetaModel::Init_OverloadAttributeParams("software_id", array("allowed_values"=>new ValueSetObjects('SELECT DBServer')));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSet("dbinstance_list", array("linked_class"=>"DatabaseInstance", "ext_key_to_me"=>"db_server_instance_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 
@@ -813,7 +813,7 @@ class ApplicationInstance extends SoftwareInstance
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 
-		MetaModel::Init_OverloadAttributeParams("software_id", array("targetclass"=>"Application"));
+		//MetaModel::Init_OverloadAttributeParams("software_id", array("targetclass"=>"Application"));
 
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'importance', 'device_id', 'licence_id', 'software_id', 'version', 'description', 'contact_list', 'document_list', 'solution_list', 'contract_list', 'ticket_list'));
 		MetaModel::Init_SetZListItems('advanced_search', array('status', 'org_id', 'importance', 'device_id', 'licence_id', 'software_id', 'version'));
