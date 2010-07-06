@@ -782,9 +782,9 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'Menu:UserManagementMenu' => 'User Management',
 	'Menu:UserManagementMenu+' => 'User management',
 
-	'Menu:ProfilesMenu' => 'Profils',
-	'Menu:ProfilesMenu+' => 'Profils',
-	'Menu:ProfilesMenu:Title' => 'Profils',
+	'Menu:ProfilesMenu' => 'Profiles',
+	'Menu:ProfilesMenu+' => 'Profiles',
+	'Menu:ProfilesMenu:Title' => 'Profiles',
 
 	'Menu:UserAccountsMenu' => 'User Accounts',
 	'Menu:UserAccountsMenu+' => 'User Accounts',

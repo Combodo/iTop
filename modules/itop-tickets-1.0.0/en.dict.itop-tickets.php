@@ -127,7 +127,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:ResponseTicket/Attribute:status+' => '',
 	'Class:ResponseTicket/Attribute:status/Value:new' => 'New',
 	'Class:ResponseTicket/Attribute:status/Value:new+' => 'newly opened',
-	'Class:ResponseTicket/Attribute:status/Value:frozen' => 'Frozen',
+	'Class:ResponseTicket/Attribute:status/Value:frozen' => 'Pending',
 	'Class:ResponseTicket/Attribute:status/Value:frozen+' => '',
 	'Class:ResponseTicket/Attribute:status/Value:escalated_tto' => 'Escalation/TTO',
 	'Class:ResponseTicket/Attribute:status/Value:escalated_tto+' => '',

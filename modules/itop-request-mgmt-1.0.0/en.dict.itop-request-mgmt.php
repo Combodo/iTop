@@ -50,11 +50,11 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:UserRequest' => 'User Request',
 	'Class:UserRequest+' => '',
-	'Class:UserRequest/Attribute:freeze_reason' => 'Freeze reason',
+	'Class:UserRequest/Attribute:freeze_reason' => 'Pending reason',
 	'Class:UserRequest/Attribute:freeze_reason+' => '',
 	'Class:UserRequest/Stimulus:ev_assign' => 'Assign',
 	'Class:UserRequest/Stimulus:ev_assign+' => '',
-	'Class:UserRequest/Stimulus:ev_freeze' => 'Freeze',
+	'Class:UserRequest/Stimulus:ev_freeze' => 'Mark as pending',
 	'Class:UserRequest/Stimulus:ev_freeze+' => '',
 	'Class:UserRequest/Stimulus:ev_reassign' => 'Reassign',
 	'Class:UserRequest/Stimulus:ev_reassign+' => '',

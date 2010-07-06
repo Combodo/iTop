@@ -63,6 +63,7 @@ class UserRequest extends ResponseTicket
 		// The freeze reason remains hidden in all other states
 		MetaModel::Init_OverloadStateAttribute('new', 'freeze_reason', OPT_ATT_HIDDEN);
 		MetaModel::Init_OverloadStateAttribute('assigned', 'freeze_reason', OPT_ATT_HIDDEN);
+		MetaModel::Init_OverloadStateAttribute('frozen', 'freeze_reason', OPT_ATT_MANDATORY);
 		MetaModel::Init_OverloadStateAttribute('escalated_tto', 'freeze_reason', OPT_ATT_HIDDEN);
 		MetaModel::Init_OverloadStateAttribute('escalated_ttr', 'freeze_reason', OPT_ATT_HIDDEN);
 		MetaModel::Init_OverloadStateAttribute('resolved', 'freeze_reason', OPT_ATT_HIDDEN);
@@ -73,6 +74,7 @@ class UserRequest extends ResponseTicket
 		MetaModel::Init_DefineTransition("assigned", "ev_freeze", array("target_state"=>"frozen", "actions"=>array(), "user_restriction"=>null));
 		MetaModel::Init_DefineTransition("frozen", "ev_timeout", array("target_state"=>"escalated_ttr", "actions"=>array(), "user_restriction"=>null));
 		MetaModel::Init_DefineTransition("frozen", "ev_assign", array("target_state"=>"assigned", "actions"=>array(), "user_restriction"=>null));
+		MetaModel::Init_DefineTransition("frozen", "ev_resolve", array("target_state"=>"resolved", "actions"=>array(), "user_restriction"=>null));
 	}
 
 	public function ComputeValues()
