@@ -77,7 +77,7 @@ abstract class AttributeDefinition
 
 	protected $m_sCode;
 	private $m_aParams = array();
-	private $m_sHostClass = '!undefined!';
+	protected $m_sHostClass = '!undefined!';
 	protected function Get($sParamName) {return $this->m_aParams[$sParamName];}
 	protected function IsParam($sParamName) {return (array_key_exists($sParamName, $this->m_aParams));}
 
@@ -1357,7 +1357,6 @@ class AttributeExternalKey extends AttributeDBFieldVoid
  */
 class AttributeExternalField extends AttributeDefinition
 {
-
 	static protected function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("extkey_attcode", "target_attcode"));
@@ -1372,6 +1371,25 @@ class AttributeExternalField extends AttributeDefinition
 		$oExtAttDef = $this->GetExtAttDef();
 		return $oExtAttDef->GetSQLCol(); 
 	}
+
+	public function GetLabel()
+	{
+		$oRemoteAtt = $this->GetExtAttDef();
+		$sDefault = $oRemoteAtt->GetLabel();
+		return Dict::S('Class:'.$this->m_sHostClass.'/Attribute:'.$this->m_sCode, $sDefault);
+	}
+	public function GetDescription()
+	{
+		$oRemoteAtt = $this->GetExtAttDef();
+		$sDefault = $oRemoteAtt->GetDescription();
+		return Dict::S('Class:'.$this->m_sHostClass.'/Attribute:'.$this->m_sCode.'+', $sDefault);
+	} 
+	public function GetHelpOnEdition()
+	{
+		$oRemoteAtt = $this->GetExtAttDef();
+		$sDefault = $oRemoteAtt->GetHelpOnEdition();
+		return Dict::S('Class:'.$this->m_sHostClass.'/Attribute:'.$this->m_sCode.'?', $sDefault);
+	} 
 
 	public function IsExternalKey($iType = EXTKEY_RELATIVE)
 	{

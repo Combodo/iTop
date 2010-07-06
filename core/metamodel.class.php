@@ -930,6 +930,57 @@ abstract class MetaModel
 				}
 			}
 		}
+
+		// Add a 'class' attribute/filter to the root classes and their children
+		//
+		foreach(self::EnumRootClasses() as $sRootClass)
+		{
+			if (self::IsStandaloneClass($sRootClass)) continue;
+			
+			$sDbFinalClassField = self::DBGetClassField($sRootClass);
+			if (strlen($sDbFinalClassField) == 0)
+			{
+				$sDbFinalClassField = 'finalclass';
+				self::$m_aClassParams[$sRootClass]["db_finalclass_field"] = 'finalclass';
+			}
+			$oClassAtt = new AttributeFinalClass('finalclass', array(
+					"sql"=>$sDbFinalClassField,
+					"default_value"=>$sRootClass,
+					"is_null_allowed"=>false,
+					"depends_on"=>array()
+			));
+			$oClassAtt->SetHostClass($sRootClass);
+			self::$m_aAttribDefs[$sRootClass]['finalclass'] = $oClassAtt;
+			self::$m_aAttribOrigins[$sRootClass]['finalclass'] = $sRootClass;
+
+			$oClassFlt = new FilterFromAttribute($oClassAtt);
+			self::$m_aFilterDefs[$sRootClass]['finalclass'] = $oClassFlt;
+			self::$m_aFilterOrigins[$sRootClass]['finalclass'] = $sRootClass;
+
+			foreach(self::EnumChildClasses($sRootClass, ENUM_CHILD_CLASSES_EXCLUDETOP) as $sChildClass)
+			{
+				if (array_key_exists('finalclass', self::$m_aAttribDefs[$sChildClass]))
+				{
+					throw new CoreException("Class $sChildClass, 'finalclass' is a reserved keyword, it cannot be used as an attribute code");
+				}
+				if (array_key_exists('finalclass', self::$m_aFilterDefs[$sChildClass]))
+				{
+					throw new CoreException("Class $sChildClass, 'finalclass' is a reserved keyword, it cannot be used as a filter code");
+				}
+				$oCloned = clone $oClassAtt;
+				$oCloned->SetFixedValue($sChildClass);
+				self::$m_aAttribDefs[$sChildClass]['finalclass'] = $oCloned;
+				self::$m_aAttribOrigins[$sChildClass]['finalclass'] = $sRootClass;
+
+				$oClassFlt = new FilterFromAttribute($oClassAtt);
+				self::$m_aFilterDefs[$sChildClass]['finalclass'] = $oClassFlt;
+				self::$m_aFilterOrigins[$sChildClass]['finalclass'] = self::GetRootClass($sChildClass);
+			}
+		}
+
+		// Prepare external fields and filters
+		// Add final class to external keys
+		//
 		foreach (self::GetClasses() as $sClass)
 		{
 			self::$m_aExtKeyFriends[$sClass] = array();
@@ -960,6 +1011,45 @@ abstract class MetaModel
 					// - an external KEY / FIELD (direct),
 					// - an external field pointing to an external KEY / FIELD
 					// - an external field pointing to an external field pointing to....
+
+					if ($oAttDef->IsExternalKey())
+					{
+						$sRemoteClass = $oAttDef->GetTargetClass();
+						if (self::HasChildrenClasses($sRemoteClass))
+						{
+							// First, create an external field attribute, that gets the final class
+							$sClassRecallAttCode = $sAttCode.'_finalclass_recall'; 
+							$oClassRecall = new AttributeExternalField($sClassRecallAttCode, array(
+									"allowed_values"=>null,
+									"extkey_attcode"=>$sAttCode,
+									"target_attcode"=>"finalclass",
+									"is_null_allowed"=>true,
+									"depends_on"=>array()
+							));
+							$oClassRecall->SetHostClass($sClass);
+							self::$m_aAttribDefs[$sClass][$sClassRecallAttCode] = $oClassRecall;
+							self::$m_aAttribOrigins[$sClass][$sClassRecallAttCode] = $oClassRecall;
+
+							// Add it to the ZLists where the external key is present
+							foreach(self::$m_aListData[$sClass] as $sListCode => $aAttributes)
+							{
+								if (in_array($sAttCode, $aAttributes))
+								{
+									$aNewList = array();
+									foreach($aAttributes as $iPos => $sAttToDisplay)
+									{
+										if (is_string($sAttToDisplay) && ($sAttToDisplay == $sAttCode))
+										{
+											// Insert the final class right before
+											$aNewList[] = $sClassRecallAttCode;
+										}
+										$aNewList[] = $sAttToDisplay;
+									}
+									self::$m_aListData[$sClass][$sListCode] = $aNewList;
+								}
+							}
+						}
+					}
 
 					// Get the real external key attribute
 					// It will be our reference to determine the other ext fields related to the same ext key
@@ -1006,53 +1096,6 @@ abstract class MetaModel
 			//		//echo "<p>$sClass: $sListCode (".count($aAllAttributes)." attributes)</p>\n";
 			//	}
 			//}
-		}
-
-		// Add a 'class' attribute/filter to the root classes and their children
-		//
-		foreach(self::EnumRootClasses() as $sRootClass)
-		{
-			if (self::IsStandaloneClass($sRootClass)) continue;
-			
-			$sDbFinalClassField = self::DBGetClassField($sRootClass);
-			if (strlen($sDbFinalClassField) == 0)
-			{
-				$sDbFinalClassField = 'finalclass';
-				self::$m_aClassParams[$sClass]["db_finalclass_field"] = 'finalclass';
-			}
-			$oClassAtt = new AttributeFinalClass('finalclass', array(
-					"sql"=>$sDbFinalClassField,
-					"default_value"=>$sRootClass,
-					"is_null_allowed"=>false,
-					"depends_on"=>array()
-			));
-			$oClassAtt->SetHostClass($sRootClass);
-			self::$m_aAttribDefs[$sRootClass]['finalclass'] = $oClassAtt;
-			self::$m_aAttribOrigins[$sRootClass]['finalclass'] = $sRootClass;
-
-			$oClassFlt = new FilterFromAttribute($oClassAtt);
-			self::$m_aFilterDefs[$sRootClass]['finalclass'] = $oClassFlt;
-			self::$m_aFilterOrigins[$sRootClass]['finalclass'] = $sRootClass;
-
-			foreach(self::EnumChildClasses($sRootClass, ENUM_CHILD_CLASSES_EXCLUDETOP) as $sChildClass)
-			{
-				if (array_key_exists('finalclass', self::$m_aAttribDefs[$sChildClass]))
-				{
-					throw new CoreException("Class $sChildClass, 'finalclass' is a reserved keyword, it cannot be used as an attribute code");
-				}
-				if (array_key_exists('finalclass', self::$m_aFilterDefs[$sChildClass]))
-				{
-					throw new CoreException("Class $sChildClass, 'finalclass' is a reserved keyword, it cannot be used as a filter code");
-				}
-				$oCloned = clone $oClassAtt;
-				$oCloned->SetFixedValue($sChildClass);
-				self::$m_aAttribDefs[$sChildClass]['finalclass'] = $oCloned;
-				self::$m_aAttribOrigins[$sChildClass]['finalclass'] = $sRootClass;
-
-				$oClassFlt = new FilterFromAttribute($oClassAtt);
-				self::$m_aFilterDefs[$sChildClass]['finalclass'] = $oClassFlt;
-				self::$m_aFilterOrigins[$sChildClass]['finalclass'] = self::GetRootClass($sChildClass);
-			}
 		}
 	}
 
@@ -1368,6 +1411,10 @@ abstract class MetaModel
 			$aRes[] = $sClass;
 		}
 		return $aRes;
+	}
+	public static function HasChildrenClasses($sClass)
+	{
+		return (count(self::$m_aChildClasses[$sClass]) > 0);
 	}
 
 	public static function EnumCategories()
@@ -3039,8 +3086,6 @@ abstract class MetaModel
 	{
 		self::LoadConfig($sConfigFile);
 		if (self::DBExists())
-// !!!! #@# 
-		//if (true)
 		{
 			CMDBSource::SelectDB(self::$m_sDBName);
 
