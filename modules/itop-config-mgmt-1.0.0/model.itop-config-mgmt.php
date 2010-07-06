@@ -26,7 +26,8 @@
 require_once('../application/cmdbabstract.class.inc.php');
 require_once('../application/template.class.inc.php');
 
-MetaModel::RegisterRelation("impacts", array("description"=>"Objects impacted by", "verb_down"=>"impacts", "verb_up"=>"is impacted by"));
+MetaModel::RegisterRelation("impacts", array("description"=>"Objects impacted by", "verb_down"=>"impacts", "verb_up"=>"depends on"));
+MetaModel::RegisterRelation("depends on", array("description"=>"That impacts ", "verb_down"=>"depends on", "verb_up"=>"impacts"));
 
 class Organization extends cmdbAbstractObject
 {
@@ -690,6 +691,9 @@ abstract class FunctionalCI extends cmdbAbstractObject
 				"solution" => array("sQuery"=>"SELECT ApplicationSolution AS s JOIN lnkSolutionToCI AS l1 ON l1.solution_id = s.id WHERE l1.ci_id = :this->id", "bPropagate"=>true, "iDistance"=>2),
 			);
 			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
+			break;
+		default:
+			return parent::GetRelationQueries($sRelCode);
 		}
 	}
 	
@@ -741,12 +745,23 @@ abstract class SoftwareInstance extends FunctionalCI
 	{
 		switch ($sRelCode)
 		{
-		case "impacts":
+			case "impacts":
 			$aRels = array(
 				// Actually this should be limited to the Software instances based on a DBServer Application type...
 				"db_instances" => array("sQuery"=>"SELECT DatabaseInstance AS db WHERE db.db_server_instance_id = :this->id", "bPropagate"=>true, "iDistance"=>5),
 			);
 			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
+			break;
+			
+			case 'depends on':
+			$aRels = array(
+				"applications" => array("sQuery"=>"SELECT Device JOIN ApplicationInstance AS app ON app.device_id = Device.id WHERE app.id = :this->id", "bPropagate"=>true, "iDistance"=>5),			
+			);
+			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
+			break;
+			
+			default:
+			return parent::GetRelationQueries($sRelCode);			
 		}
 	}
 }
@@ -842,6 +857,21 @@ class DatabaseInstance extends FunctionalCI
 	{
 		return $this->Get('name').' - '.$this->Get('db_server_instance_name');
 	}
+	public static function GetRelationQueries($sRelCode)
+	{
+		switch ($sRelCode)
+		{
+			case "depends on":
+			$aRels = array(
+				"db_instances" => array("sQuery"=>"SELECT DBServerInstance AS db_server_inst JOIN DatabaseInstance AS db ON  db.db_server_instance_id = db_server_inst.id WHERE db.id = :this->id", "bPropagate"=>true, "iDistance"=>5),
+			);
+			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
+			break;
+						
+			default:
+			return parent::GetRelationQueries($sRelCode);			
+		}
+	}
 }
 class ApplicationSolution extends FunctionalCI
 {
@@ -877,11 +907,22 @@ class ApplicationSolution extends FunctionalCI
 	{
 		switch ($sRelCode)
 		{
-		case "impacts":
+			case "impacts":
 			$aRels = array(
 				"process" => array("sQuery"=>"SELECT BusinessProcess AS p JOIN lnkProcessToSolution AS l1 ON l1.process_id = p.id WHERE l1.solution_id = :this->id", "bPropagate"=>true, "iDistance"=>3),
 			);
 			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
+			break;
+			
+			case "depends on":
+			$aRels = array(
+				"solution" => array("sQuery"=>"SELECT FunctionalCI AS ci JOIN lnkSolutionToCI AS l1 ON l1.ci_id = ci.id WHERE l1.solution_id = :this->id", "bPropagate"=>true, "iDistance"=>2),
+			);
+			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
+			break;
+						
+			default:
+			return parent::GetRelationQueries($sRelCode);			
 		}
 	}
 }
@@ -908,10 +949,26 @@ class BusinessProcess extends FunctionalCI
 		MetaModel::Init_AddAttribute(new AttributeWikiText("description", array("allowed_values"=>null, "sql"=>"description", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("used_solution_list", array("linked_class"=>"lnkProcessToSolution", "ext_key_to_me"=>"process_id", "ext_key_to_remote"=>"solution_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'importance', 'description', 'contact_list', 'document_list', 'solution_list', 'contract_list', 'ticket_list', 'used_solution_list'));
+		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'importance', 'description', 'contact_list', 'document_list', 'contract_list', 'ticket_list', 'used_solution_list'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'org_id', 'importance', 'description'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'org_id', 'importance', 'description'));
 		MetaModel::Init_SetZListItems('list', array('status', 'org_id', 'importance', 'description'));
+	}
+	
+	public static function GetRelationQueries($sRelCode)
+	{
+		switch ($sRelCode)
+		{
+			case "depends on":
+			$aRels = array(
+				"solution" => array("sQuery"=>"SELECT ApplicationSolution AS app JOIN lnkProcessToSolution AS l1 ON l1.solution_id = app.id WHERE l1.process_id = :this->id", "bPropagate"=>true, "iDistance"=>3),
+			);
+			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
+			break;
+			
+			default:
+			return parent::GetRelationQueries($sRelCode);			
+		}
 	}
 }
 abstract class ConnectableCI extends FunctionalCI
@@ -978,11 +1035,12 @@ class NetworkInterface extends ConnectableCI
 		MetaModel::Init_AddAttribute(new AttributeExternalField("connected_name", array("allowed_values"=>null, "extkey_attcode"=>"connected_if", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("connected_if_device_id", array("allowed_values"=>null, "extkey_attcode"=>"connected_if", "target_attcode"=>"device_id", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("connected_if_device_id_name", array("allowed_values"=>null, "extkey_attcode"=>"connected_if", "target_attcode"=>"device_name", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("link_type", array("allowed_values"=>new ValueSetEnum('uplink,downlink'), "sql"=>"link_type", "default_value"=>"uplink", "is_null_allowed"=>false, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'device_id', 'logical_type', 'physical_type', 'ip_address', 'ip_mask', 'mac_address', 'speed', 'duplex', 'connected_if', 'connected_if_device_id', 'contact_list', 'document_list', 'solution_list', 'contract_list', 'ticket_list'));
+		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'device_id', 'logical_type', 'physical_type', 'ip_address', 'ip_mask', 'mac_address', 'speed', 'duplex', 'link_type', 'connected_if', 'connected_if_device_id', 'contact_list', 'document_list', 'solution_list', 'contract_list', 'ticket_list'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'org_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'device_id', 'logical_type', 'physical_type', 'ip_address', 'ip_mask', 'mac_address', 'speed', 'duplex', 'connected_if', 'connected_if_device_id'));
-		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'org_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'device_id', 'logical_type', 'physical_type', 'ip_address', 'ip_mask', 'mac_address', 'speed', 'duplex', 'connected_if', 'connected_if_device_id'));
-		MetaModel::Init_SetZListItems('list', array('status', 'org_id', 'importance', 'device_id', 'logical_type', 'physical_type', 'connected_if'));
+		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'org_id', 'importance', 'device_id', 'logical_type', 'physical_type', 'ip_address', 'ip_mask', 'mac_address', 'connected_if_device_id'));
+		MetaModel::Init_SetZListItems('list', array('status', 'org_id', 'importance', 'device_id', 'logical_type', 'physical_type', 'link_type', 'connected_if_device_id'));
 	}
 
 	public function GetName()
@@ -1022,11 +1080,23 @@ abstract class Device extends ConnectableCI
 	{
 		switch ($sRelCode)
 		{
-		case "impacts":
+			case "impacts":
 			$aRels = array(
 				"applications" => array("sQuery"=>"SELECT SoftwareInstance AS app WHERE app.device_id = :this->id", "bPropagate"=>true, "iDistance"=>5),
+				"connected_devices" => array("sQuery"=>"SELECT Device AS dev JOIN NetworkInterface AS if1 ON if1.device_id = dev.id JOIN NetworkInterface AS if2 ON if2.connected_if = if1.id WHERE if2.device_id = :this->id AND if2.link_type='downlink'", "bPropagate"=>true, "iDistance"=>5),
 			);
 			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
+			break;
+			
+			case "depends on":
+			$aRels = array(
+				"connected_devices" => array("sQuery"=>"SELECT Device AS dev JOIN NetworkInterface AS if1 ON if1.device_id = dev.id JOIN NetworkInterface AS if2 ON if2.connected_if = if1.id WHERE if2.device_id = :this->id AND if2.link_type='uplink'", "bPropagate"=>true, "iDistance"=>5),
+			);
+			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
+			break;
+
+			default:
+			return parent::GetRelationQueries($sRelCode);			
 		}
 	}
 }
@@ -1396,7 +1466,7 @@ class lnkProcessToSolution extends cmdbAbstractObject
 ////////////////////////////////////////////////////////////////////////////////////
 // Create the top-level group. fRank = 1, means it will be inserted after the group '0', which is usually 'Welcome'
 
-$oAdminMenu = new MenuGroup('DataAdministration', 999);
+$oAdminMenu = new MenuGroup('DataAdministration', 70);
 $iAdminGroup = $oAdminMenu->GetIndex();
 
 new WebPageMenuNode('Audit', '../pages/audit.php', $iAdminGroup, 33 /* fRank */);
@@ -1408,13 +1478,13 @@ new OQLMenuNode('Application', 'SELECT Application', $iTopology, 20 /* fRank */)
 new OQLMenuNode('DBServer', 'SELECT DBServer', $iTopology, 40 /* fRank */);
 
 
-$oConfigManagementGroup = new MenuGroup('ConfigManagement', 1 /* fRank */);
+$oConfigManagementGroup = new MenuGroup('ConfigManagement', 20 /* fRank */);
 
 // Create an entry, based on a custom template, for the Configuration management overview, under the top-level group
-new TemplateMenuNode('ConfigManagementOverview', '../business/templates/configuration_management_menu.html', $oConfigManagementGroup->GetIndex(), 0 /* fRank */);
+new TemplateMenuNode('ConfigManagementOverview', '../../modules/itop-config-mgmt-1.0.0/overview.html', $oConfigManagementGroup->GetIndex(), 0 /* fRank */);
 
 
-$oContactNode = new TemplateMenuNode('Contact', '../business/templates/contacts_menu.html', $oConfigManagementGroup->GetIndex(), 1 /* fRank */);
+$oContactNode = new TemplateMenuNode('Contact', '../../modules/itop-config-mgmt-1.0.0/contacts_menu.html', $oConfigManagementGroup->GetIndex(), 1 /* fRank */);
 new OQLMenuNode('Person', 'SELECT Person', $oContactNode->GetIndex(), 1 /* fRank */);
 new OQLMenuNode('Team', 'SELECT Team', $oContactNode->GetIndex(), 2 /* fRank */);
 
@@ -1422,7 +1492,7 @@ new OQLMenuNode('Document', 'SELECT Document', $oConfigManagementGroup->GetIndex
 new OQLMenuNode('Location', 'SELECT Location', $oConfigManagementGroup->GetIndex(), 3 /* fRank */);
 
 
-$oCINode = new TemplateMenuNode('ConfigManagementCI', '../business/templates/configuration_items_menu.html', $oConfigManagementGroup->GetIndex(), 2 /* fRank */);
+$oCINode = new TemplateMenuNode('ConfigManagementCI', '../modules/itop-config-mgmt-1.0.0/cis_menu.html', $oConfigManagementGroup->GetIndex(), 4 /* fRank */);
 
 new OQLMenuNode('BusinessProcess', 'SELECT BusinessProcess', $oCINode->GetIndex(), 0 /* fRank */);
 new OQLMenuNode('ApplicationSolution', 'SELECT ApplicationSolution', $oCINode->GetIndex(), 1 /* fRank */);

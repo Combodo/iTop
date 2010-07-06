@@ -37,6 +37,8 @@
 Dict::Add('EN US', 'English', 'English', array(
 'Menu:ServiceManagement' => 'Service Management',
 'Menu:ServiceManagement+' => 'Service Management Overview',
+'Menu:Service:Overview' => 'Overview',
+'Menu:Service:Overview+' => '',
 'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contracts by service level',
 'UI-ServiceManagementMenu-ContractsByStatus' => 'Contracts by status',
 'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contracts ending in less then 30 days',

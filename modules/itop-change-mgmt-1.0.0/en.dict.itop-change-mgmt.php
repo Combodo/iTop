@@ -25,6 +25,8 @@
 
 Dict::Add('EN US', 'English', 'English', array(
 	'Menu:ChangeManagement' => 'Change management',
+	'Menu:Change:Overview' => 'Overview',
+	'Menu:Change:Overview+' => '',
 	'Menu:WaitingAcceptance' => 'Changes awaiting acceptance',
 	'Menu:WaitingAcceptance+' => '',
 	'Menu:WaitingApproval' => 'Changes awaiting approval',

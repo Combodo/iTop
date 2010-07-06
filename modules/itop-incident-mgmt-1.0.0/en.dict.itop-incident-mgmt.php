@@ -24,15 +24,17 @@
  */
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Menu:IncidentManagement' => 'Incidents',
-	'Menu:Incidents' => 'Incidents',
-	'Menu:Incidents+' => 'Incidents',
-	'Menu:ClosedIncidents' => 'Closed incidents',
-	'Menu:ClosedIncidents+' => 'Closed incidents',
-	'Menu:OpenedIncidents' => 'Opened incidents',
-	'Menu:OpenedIncidents+' => 'Opened incidents',
-	'Menu:MyIncidents' => 'My incidents',
-	'Menu:MyIncidents+' => 'Incidents assigned to me',
+	'Menu:IncidentManagement' => 'Incident Management',
+	'Menu:IncidentManagement+' => 'Incident Management',
+	'Menu:Incident:Overview' => 'Overview',
+	'Menu:Incident:Overview+' => 'Overview',
+	'Menu:Incident:MyIncidents' => 'My Incidents',
+	'Menu:Incident:MyIncidents+' => 'My Incidents',
+	'Menu:Incident:EscalatedIncidents' => 'Escalated Incidents',
+	'Menu:Incident:EscalatedIncidents+' => 'Escalated Incidents',
+	'Menu:Incident:OpenIncidents' => 'All Open Incidents',
+	'Menu:Incident:OpenIncidents+' => 'All Open Incidents',
+
 ));
 
 // Dictionnay conventions

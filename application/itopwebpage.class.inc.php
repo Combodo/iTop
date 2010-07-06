@@ -243,14 +243,14 @@ EOF
 		 *		Data Model
 		 *		Universal Search
 		 */
-		$oWelcomeMenu = new MenuGroup('WelcomeMenu', 0 /* fRank */);
+		$oWelcomeMenu = new MenuGroup('WelcomeMenu', 10 /* fRank */);
 		new TemplateMenuNode('WelcomeMenuPage', '../business/templates/welcome_menu.html', $oWelcomeMenu->GetIndex() /* oParent */, 1 /* fRank */);
 		
-		$oToolsMenu = new MenuGroup('DataAdministration', 2 /* fRank */);
+		$oToolsMenu = new MenuGroup('DataAdministration', 70 /* fRank */);
 		new WebPageMenuNode('CSVImportMenu', '../pages/csvimport.php', $oToolsMenu->GetIndex(), 1 /* fRank */);
 
 		// Add the admin menus
-		$oAdminMenu = new MenuGroup('AdminTools', 999 /* fRank */);
+		$oAdminMenu = new MenuGroup('AdminTools', 80 /* fRank */);
 		new OQLMenuNode('UserAccountsMenu', 'SELECT URP_Users', $oAdminMenu->GetIndex(), 1 /* fRank */);
 		new OQLMenuNode('ProfilesMenu', 'SELECT URP_Profiles', $oAdminMenu->GetIndex(), 2 /* fRank */);
 		new TemplateMenuNode('NotificationsMenu', '../business/templates/notifications_menu.html', $oAdminMenu->GetIndex(), 3 /* fRank */);

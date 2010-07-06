@@ -91,12 +91,12 @@ class UserRequest extends ResponseTicket
 	}
 }
 
-$oMyMenuGroup = new MenuGroup('RequestManagement', 1 /* fRank */);
+$oMyMenuGroup = new MenuGroup('RequestManagement', 30 /* fRank */);
 
-// By default, one entry per class
-new OQLMenuNode('UserRequests', 'SELECT UserRequest', $oMyMenuGroup->GetIndex(), 0 /* fRank */);
-new OQLMenuNode('OpenedRequests', 'SELECT UserRequest WHERE status IN ("new", "assigned", "escalation")', $oMyMenuGroup->GetIndex(), 0 /* fRank */);
-new OQLMenuNode('ClosedRequests', 'SELECT UserRequest WHERE status IN ("resolved", "closed")', $oMyMenuGroup->GetIndex(), 0 /* fRank */);
+new TemplateMenuNode('UserRequest:Overview', '../modules/itop-request-mgmt-1.0.0/overview.html', $oMyMenuGroup->GetIndex() /* oParent */, 0 /* fRank */);
+new OQLMenuNode('UserRequest:MyRequests', 'SELECT UserRequest WHERE agent_id = :current_contact_id', $oMyMenuGroup->GetIndex(), 1 /* fRank */);
+new OQLMenuNode('UserRequest:EscalatedRequests', 'SELECT UserRequest WHERE status IN ("escalation")', $oMyMenuGroup->GetIndex(), 2 /* fRank */);
+new OQLMenuNode('UserRequest:OpenRequests', 'SELECT UserRequest WHERE status IN ("new", "assigned", "escalation", "frozen", "resolved")', $oMyMenuGroup->GetIndex(), 3 /* fRank */);
 //new TemplateMenuNode('WelcomeMenuPage', '../business/templates/welcome_menu.html', $oWelcomeMenu->GetIndex() /* oParent */, 1 /* fRank */);
 
 ?>

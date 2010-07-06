@@ -63,19 +63,10 @@ class Incident extends ResponseTicket
 	}
 }
 
-$oMyMenuGroup = new MenuGroup('IncidentManagement', 1 /* fRank */);
-
-// By default, one entry per class
-//new TemplateMenuNode('MyIncidents', 'SELECT Incident', $oMyMenuGroup->GetIndex(), 0 /* fRank */);
-// incident dont je suis caller
-// incident dont je suis requester
-new OQLMenuNode('OpenedIncidents', 'SELECT Incident WHERE status IN ("new", "assigned", "escalation")', $oMyMenuGroup->GetIndex(), 0 /* fRank */);
-new OQLMenuNode('MyIncidents', 'SELECT Incident WHERE status IN ("assigned", "escalation_ttr") AND agent_id = :current_contact_id', $oMyMenuGroup->GetIndex(), 0 /* fRank */);
-//new OQLMenuNode('EscalatedIncidents', 'SELECT Incident WHERE status IN ("escalation")', $oMyMenuGroup->GetIndex(), 0 /* fRank */);
-//new TemplateMenuNode('IncidentOverview', 'SELECT Incident', $oMyMenuGroup->GetIndex(), 0 /* fRank */);
-
-
-//new TemplateMenuNode('WelcomeMenuPage', '../business/templates/welcome_menu.html', $oWelcomeMenu->GetIndex() /* oParent */, 1 /* fRank */);
-
+$oMyMenuGroup = new MenuGroup('IncidentManagement', 40 /* fRank */);
+new TemplateMenuNode('Incident:Overview', '../modules/itop-incident-mgmt-1.0.0/overview.html', $oMyMenuGroup->GetIndex() /* oParent */, 0 /* fRank */);
+new OQLMenuNode('Incident:MyIncidents', 'SELECT Incident WHERE agent_id = :current_contact_id', $oMyMenuGroup->GetIndex(), 1 /* fRank */);
+new OQLMenuNode('Incident:EscalatedIncidents', 'SELECT Incident WHERE status IN ("escalation")', $oMyMenuGroup->GetIndex(), 2 /* fRank */);
+new OQLMenuNode('Incident:OpenIncidents', 'SELECT Incident WHERE status IN ("new", "assigned", "escalation", "resolved")', $oMyMenuGroup->GetIndex(), 3 /* fRank */);
 
 ?>

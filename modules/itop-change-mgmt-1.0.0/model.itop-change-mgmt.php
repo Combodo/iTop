@@ -452,11 +452,11 @@ class EmergencyChange extends ApprovedChange
 }
 
 
-$oMyMenuGroup = new MenuGroup('ChangeManagement', 1 /* fRank */);
-
-new OQLMenuNode('MyChanges', 'SELECT Change WHERE agent_id = :current_contact_id', $oMyMenuGroup->GetIndex(), 0 /* fRank */);
-new OQLMenuNode('Changes', 'SELECT Change WHERE status != "closed"', $oMyMenuGroup->GetIndex(), 0 /* fRank */);
-new OQLMenuNode('WaitingApproval', 'SELECT ApprovedChange WHERE status IN ("plannedscheduled")', $oMyMenuGroup->GetIndex(), 0 /* fRank */);
-new OQLMenuNode('WaitingAcceptance', 'SELECT NormalChange WHERE status IN ("new")', $oMyMenuGroup->GetIndex(), 0 /* fRank */);
+$oMyMenuGroup = new MenuGroup('ChangeManagement', 50 /* fRank */);
+new TemplateMenuNode('Change:Overview', '../modules/itop-change-mgmt-1.0.0/overview.html', $oMyMenuGroup->GetIndex() /* oParent */, 0 /* fRank */);
+new OQLMenuNode('MyChanges', 'SELECT Change WHERE agent_id = :current_contact_id', $oMyMenuGroup->GetIndex(), 1 /* fRank */);
+new OQLMenuNode('Changes', 'SELECT Change WHERE status != "closed"', $oMyMenuGroup->GetIndex(), 2 /* fRank */);
+new OQLMenuNode('WaitingApproval', 'SELECT ApprovedChange WHERE status IN ("plannedscheduled")', $oMyMenuGroup->GetIndex(), 3 /* fRank */);
+new OQLMenuNode('WaitingAcceptance', 'SELECT NormalChange WHERE status IN ("new")', $oMyMenuGroup->GetIndex(), 4 /* fRank */);
 
 ?>

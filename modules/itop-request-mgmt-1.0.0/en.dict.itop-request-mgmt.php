@@ -25,12 +25,15 @@
 
 Dict::Add('EN US', 'English', 'English', array(
 	'Menu:RequestManagement' => 'Helpdesk',
-	'Menu:UserRequests' => 'All requests',
-	'Menu:UserRequests+' => 'All requests, whatever their state',
-	'Menu:ClosedRequests' => 'Closed requests',
-	'Menu:ClosedRequests+' => 'Closed requests',
-	'Menu:OpenedRequests' => 'Opened requests',
-	'Menu:OpenedRequests+' => 'Opened requests',
+	'Menu:RequestManagement+' => 'Helpdesk',
+	'Menu:UserRequest:Overview' => 'Overview',
+	'Menu:UserRequest:Overview+' => 'Overview',
+	'Menu:UserRequest:MyRequests' => 'My Requests',
+	'Menu:UserRequest:MyRequests+' => 'My Requests',
+	'Menu:UserRequest:EscalatedRequests' => 'Escalated Requests',
+	'Menu:UserRequest:EscalatedRequests+' => 'Escalated Requests',
+	'Menu:UserRequest:OpenRequests' => 'All Open Requests',
+	'Menu:UserRequest:OpenRequests+' => 'All Open Requests',
 ));
 
 // Dictionnay conventions
