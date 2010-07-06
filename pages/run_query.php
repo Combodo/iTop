@@ -40,16 +40,16 @@ function ShowExamples($oP, $sExpression)
 		'Pedagogic examples' => array(
 			"Applications" => "SELECT Application",
 			"Person having an 'A' in their name" => "SELECT Person AS B WHERE B.name LIKE '%A%'",
-			"Changes planned on new year's day" => "SELECT ChangeTicket AS ch WHERE ch.start_date >= '2009-12-31' AND ch.end_date <= '2010-01-01'",
+			"Changes planned on new year's day" => "SELECT Change AS ch WHERE ch.start_date >= '2009-12-31' AND ch.end_date <= '2010-01-01'",
 			"IPs in a range" => "SELECT InfrastructureCI AS dev WHERE INET_ATON(dev.management_ip) > INET_ATON('10.22.32.224') AND INET_ATON(dev.management_ip) < INET_ATON('10.22.32.255')"
 		),
 		'Usefull examples' => array(
 			"NW interfaces of equipment in production for customer 'Demo'" => "SELECT NetworkInterface AS if JOIN InfrastructureCI AS dev ON if.device_id = dev.id WHERE if.status = 'production' AND dev.status = 'production' AND dev.owner_name = 'Demo' AND if.physical_type = 'ethernet'",
-			"My tickets" => "SELECT IncidentTicket AS i WHERE i.agent_id = :current_contact_id",
-			"People being owner of an active ticket" => "SELECT Person AS p JOIN IncidentTicket AS i ON i.agent_id = p.id WHERE i.ticket_status != 'Closed'",
-			"Contracts terminating in the next thirty days" => "SELECT Contract AS c WHERE c.end_prod > NOW() AND c.end_prod < DATE_ADD(NOW(), INTERVAL 30 DAY)",
-			"Orphan tickets (opened one hour ago, still not assigned)" => "SELECT IncidentTicket AS i WHERE i.start_date < DATE_SUB(NOW(), INTERVAL 60 MINUTE) AND i.ticket_status = 'New'",
-			"Long lasting incidents (duration > 8 hours)" => "SELECT IncidentTicket AS i WHERE i.end_date > DATE_ADD(i.start_date, INTERVAL 8 HOUR)",
+			"My tickets" => "SELECT Incident AS i WHERE i.agent_id = :current_contact_id",
+			"People being owner of an active ticket" => "SELECT Person AS p JOIN Incident AS i ON i.agent_id = p.id WHERE i.status != 'Closed'",
+			"Contracts terminating in the next thirty days" => "SELECT Contract AS c WHERE c.end_date > NOW() AND c.end_date < DATE_ADD(NOW(), INTERVAL 30 DAY)",
+			"Orphan tickets (opened one hour ago, still not assigned)" => "SELECT Incident AS i WHERE i.start_date < DATE_SUB(NOW(), INTERVAL 60 MINUTE) AND i.status = 'New'",
+			"Long lasting incidents (duration > 8 hours)" => "SELECT Incident AS i WHERE i.close_date > DATE_ADD(i.start_date, INTERVAL 8 HOUR)",
 		),
 	);
 
