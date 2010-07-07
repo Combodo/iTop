@@ -61,6 +61,37 @@ class Incident extends ResponseTicket
 		$this->Set('ref', $sName);
 		return parent::ComputeValues();
 	}
+
+	protected function OnInsert()
+	{
+		$oToNotify = $this->Get('contact_list');
+		$oToImpact = $this->Get('ci_list');
+
+		$oImpactedInfras = DBObjectSet::FromLinkSet($this, 'ci_list', 'ci_id');
+
+		$aComputed = $oImpactedInfras->GetRelatedObjects('impacts', 10);
+
+		if (isset($aComputed['FunctionalCI']) && is_array($aComputed['FunctionalCI']))
+		{
+			foreach($aComputed['FunctionalCI'] as $iKey => $oObject)
+			{
+				$oNewLink = new lnkTicketToCI();
+				$oNewLink->Set('ci_id', $iKey);
+				$oToImpact->AddObject($oNewLink);
+			}
+		}
+		if (isset($aComputed['Contact']) && is_array($aComputed['Contact']))
+		{
+			foreach($aComputed['Contact'] as $iKey => $oObject)
+			{
+				$oNewLink = new lnkTicketToContact();
+				$oNewLink->Set('contact_id', $iKey);
+				$oNewLink->Set('role', 'contact automatically computed');
+				$oToNotify->AddObject($oNewLink);
+			}
+		}
+		parent::OnInsert();
+	}
 }
 
 $oMyMenuGroup = new MenuGroup('IncidentManagement', 40 /* fRank */);
