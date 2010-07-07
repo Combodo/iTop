@@ -52,26 +52,28 @@ try
 	(
 		'admin', /* login */
 		'admin', /* password */
-		'Server', /* type */
-		'Email server down', /* description */
-		'HW found shutdown', /* initial situation */
-		'Email not working', /* impact */
+		'Email server down', /* title */
+		'HW found shutdown', /* description */
 		null, /* caller */
 		new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Demo'))), /* customer */
-		new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* workgroup */
+		new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'NW Mgmt'))), /* service */
+		new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Troubleshooting'))), /* service subcategory */
+		'', /* product */
+		new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'NW support'))), /* workgroup */
 		array(
 			new SOAPLinkCreationSpec(
-				'bizDevice',
-				array(new SOAPSearchCondition('name', 'Router03')),
-				array(new SOAPAttributeValue('impact', 'root cause'))
+				'Device',
+				array(new SOAPSearchCondition('name', 'switch01')),
+				array()
 			),
 			new SOAPLinkCreationSpec(
-				'bizServer',
-				array(new SOAPSearchCondition('name', 'Server01')),
-				array(new SOAPAttributeValue('impact', ''))
+				'Server',
+				array(new SOAPSearchCondition('name', 'dbserver1.demo.com')),
+				array()
 			),
-		), /* impact */
-		'high' /* severity */
+		), /* impacted cis */
+		'1', /* impact */
+		'1', /* urgency */
 	);
 
 	echo "<p>CreateIncidentTicket() returned:\n";

@@ -543,7 +543,7 @@ class WebServices
 		return "0.8";
 	}
 
-	public function CreateIncidentTicket($sLogin, $sPassword, $sType, $sDescription, $sInitialSituation, $sImpact, $oCallerDesc, $oCustomerDesc, $oWorkgroupDesc, $aSOAPImpactedCIs, $sSeverity)
+	public function CreateIncidentTicket($sLogin, $sPassword, $sTitle, $sDescription, $oCallerDesc, $oCustomerDesc, $oServiceDesc, $oServiceSubcategoryDesc, $sProduct, $oWorkgroupDesc, $aSOAPImpactedCIs, $sImpact, $sUrgency)
 	{
 		if (!UserRights::Login($sLogin, $sPassword))
 		{
@@ -555,6 +555,8 @@ class WebServices
 
 		$aCallerDesc = self::SoapStructToExternalKeySearch($oCallerDesc);
 		$aCustomerDesc = self::SoapStructToExternalKeySearch($oCustomerDesc);
+		$aServiceDesc = self::SoapStructToExternalKeySearch($oServiceDesc);
+		$aServiceSubcategoryDesc = self::SoapStructToExternalKeySearch($oServiceSubcategoryDesc);
 		$aWorkgroupDesc = self::SoapStructToExternalKeySearch($oWorkgroupDesc);
 		$aImpactedCIs = array();
 		foreach($aSOAPImpactedCIs as $oImpactedCIs)
@@ -564,15 +566,17 @@ class WebServices
 
 		$oRes = $this->_CreateIncidentTicket
 		(
-			$sType,
+			$sTitle,
 			$sDescription,
-			$sInitialSituation,
-			$sImpact,
 			$aCallerDesc,
 			$aCustomerDesc,
+			$aServiceDesc,
+			$aServiceSubcategoryDesc,
+			$sProduct,
 			$aWorkgroupDesc,
 			$aImpactedCIs,
-			$sSeverity
+			$sImpact,
+			$sUrgency
 		);
 		return $oRes->ToSoapStructure();
 	}
@@ -581,17 +585,21 @@ class WebServices
 	 * Create an incident ticket from a monitoring system
 	 * Some CIs might be specified (by their name/IP)
 	 *	 
-	 * @param string sDecription
-	 * @param string sInitialSituation
+	 * @param string sTitle
+	 * @param string sDescription
 	 * @param array aCallerDesc
 	 * @param array aCustomerDesc
+	 * @param array aServiceDesc
+	 * @param array aServiceSubcategoryDesc
+	 * @param string sProduct
 	 * @param array aWorkgroupDesc
 	 * @param array aImpactedCIs
-	 * @param string sSeverity
+	 * @param string sImpact
+	 * @param string sUrgency
 	 *
 	 * @return WebServiceResult
 	 */
-	protected function _CreateIncidentTicket($sType, $sDescription, $sInitialSituation, $sImpact, $aCallerDesc, $aCustomerDesc, $aWorkgroupDesc, $aImpactedCIs, $sSeverity)
+	protected function _CreateIncidentTicket($sTitle, $sDescription, $aCallerDesc, $aCustomerDesc, $aServiceDesc, $aServiceSubcategoryDesc, $sProduct, $aWorkgroupDesc, $aImpactedCIs, $sImpact, $sUrgency)
 	{
 
 		$oRes = new WebServiceResult();
@@ -603,25 +611,32 @@ class WebServices
 			$oMyChange->Set("userinfo", "Administrator");
 			$iChangeId = $oMyChange->DBInsertNoReload();
 	
-			$oNewTicket = MetaModel::NewObject('bizIncidentTicket');
-			$this->MyObjectSetScalar('type', 'type', $sType, $oNewTicket, $oRes);
-			$this->MyObjectSetScalar('title', 'title', $sDescription, $oNewTicket, $oRes);
-			$this->MyObjectSetScalar('initial_situation', 'initialsituation', $sInitialSituation, $oNewTicket, $oRes);
-			$this->MyObjectSetScalar('severity', 'severity', $sSeverity, $oNewTicket, $oRes);
-	
+			$oNewTicket = MetaModel::NewObject('Incident');
+			$this->MyObjectSetScalar('title', 'title', $sTitle, $oNewTicket, $oRes);
+			$this->MyObjectSetScalar('description', 'description', $sDescription, $oNewTicket, $oRes);
+
 			$this->MyObjectSetExternalKey('org_id', 'customer', $aCustomerDesc, $oNewTicket, $oRes);
 			$this->MyObjectSetExternalKey('caller_id', 'caller', $aCallerDesc, $oNewTicket, $oRes);
-			$this->MyObjectSetExternalKey('workgroup_id', 'workgroup', $aWorkgroupDesc, $oNewTicket, $oRes);
 	
-			$aDevicesNotFound = $this->AddLinkedObjects('impacted_infra_manual', 'impacted_cis', 'logInfra', $aImpactedCIs, $oNewTicket, $oRes);
+			$this->MyObjectSetExternalKey('service_id', 'service', $aServiceDesc, $oNewTicket, $oRes);
+			$this->MyObjectSetExternalKey('servicesubcategory_id', 'servicesubcategory', $aServiceSubcategoryDesc, $oNewTicket, $oRes);
+			$this->MyObjectSetScalar('product', 'product', $sProduct, $oNewTicket, $oRes);
+
+			$this->MyObjectSetExternalKey('workgroup_id', 'workgroup', $aWorkgroupDesc, $oNewTicket, $oRes);
+
+
+			$aDevicesNotFound = $this->AddLinkedObjects('ci_list', 'impacted_cis', 'FunctionalCI', $aImpactedCIs, $oNewTicket, $oRes);
 			if (count($aDevicesNotFound) > 0)
 			{
-				$this->MyObjectSetScalar('impact', 'n/a', $sImpact.' - Related CIs: '.implode(', ', $aDevicesNotFound), $oNewTicket, $oRes);
+				$this->MyObjectSetScalar('description', 'n/a', $sDescription.' - Related CIs: '.implode(', ', $aDevicesNotFound), $oNewTicket, $oRes);
 			}
 			else
 			{
-				$this->MyObjectSetScalar('impact', 'n/a', $sImpact, $oNewTicket, $oRes);
+				$this->MyObjectSetScalar('description', 'n/a', $sDescription, $oNewTicket, $oRes);
 			}
+
+			$this->MyObjectSetScalar('impact', 'impact', $sImpact, $oNewTicket, $oRes);
+			$this->MyObjectSetScalar('urgency', 'urgency', $sUrgency, $oNewTicket, $oRes);
 
 			$this->MyObjectInsert($oNewTicket, 'created', $oMyChange, $oRes);
 		}

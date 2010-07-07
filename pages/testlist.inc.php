@@ -1285,31 +1285,33 @@ $aWebServices = array(
 		'args' => array(
 			'admin', /* sLogin */
 			'admin', /* sPassword */
-			'Server', /* sType */
 			'desc of ticket', /* sDescription */
 			'initial situation blah blah blah', /* sInitialSituation */
-			'very grave', /* sImpact */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 2))), /* aCustomerDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 4))), /* aServiceDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aServiceSubcategoryDesc */
+			'sub product of the service', /* sProduct */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'FLS Desktop'))), /* aWorkgroupDesc */
 			array(
 				new SOAPLinkCreationSpec(
-					'logInfra',
+					'InfrastructureCI',
 					array(new SOAPSearchCondition('id', 108)),
 					array(new SOAPAttributeValue('impacting', 'very critical'))
 				),
 				new SOAPLinkCreationSpec(
-					'bizDevice',
+					'NetworkDevice',
 					array(new SOAPSearchCondition('name', 'Router03')),
 					array(new SOAPAttributeValue('impact', 'who cares'))
 				),
 				new SOAPLinkCreationSpec(
-					'bizDevice',
+					'Device',
 					array(new SOAPSearchCondition('name', 'thisone')),
 					array(new SOAPAttributeValue('impact', 'our lives'))
 				),
 			), /* aImpact */
-			'low' /* sSeverity */
+			'1', /* sImpact */
+			'1', /* sUrgency */
 		),
 	),
 	array(
@@ -1319,16 +1321,23 @@ $aWebServices = array(
 		'args' => array(
 			'admin', /* sLogin */
 			'admin', /* sPassword */
-			'Desktop', /* sType */
 			'PC burning', /* sDescription */
 			'The power supply suddenly started to warm up', /* sInitialSituation */
-			'The agent could not do his job', /* sImpact */
 			null, /* aCallerDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 2))), /* aCustomerDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 4))), /* aServiceDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aServiceSubcategoryDesc */
+			'sub product of the service', /* sProduct */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'FLS Desktop'))), /* aWorkgroupDesc */
 			array(
-			), /* aImpact */
-			'low' /* sSeverity */
+				new SOAPLinkCreationSpec(
+					'InfrastructureCI',
+					array(new SOAPSearchCondition('id', 1)),
+					array()
+				), /* aImpact */
+			),
+			'1', /* sImpact */
+			'1', /* sUrgency */
 		),
 	),
 	array(
@@ -1338,12 +1347,13 @@ $aWebServices = array(
 		'args' => array(
 			'admin', /* sLogin */
 			'admin', /* sPassword */
-			'Desktop', /* sType */
 			'PC burning', /* sDescription */
 			'The power supply suddenly started to warm up', /* sInitialSituation */
-			'The agent could not do his job', /* sImpact */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 2))), /* aCustomerDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 4))), /* aServiceDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aServiceSubcategoryDesc */
+			'sub product of the service', /* sProduct */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'FLS Desktop'))), /* aWorkgroupDesc */
 			array(
 				new SOAPLinkCreationSpec(
@@ -1352,7 +1362,8 @@ $aWebServices = array(
 					array(new SOAPAttributeValue('impact', 'very critical'))
 				),
 			), /* aImpact */
-			'low' /* sSeverity */
+			'1', /* sImpact */
+			'1', /* sUrgency */
 		),
 	),
 	array(
@@ -1362,16 +1373,18 @@ $aWebServices = array(
 		'args' => array(
 			'admin', /* sLogin */
 			'admin', /* sPassword */
-			'Network', /* sType */
 			'Houston not reachable', /* sDescription */
 			'Tried to join the shuttle', /* sInitialSituation */
-			'Could not talk to my wife', /* sImpact */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 2))), /* aCustomerDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 4))), /* aServiceDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aServiceSubcategoryDesc */
+			'sub product of the service', /* sProduct */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'FLS Desktop'))), /* aWorkgroupDesc */
 			array(
 			), /* aImpact */
-			'low' /* sSeverity */
+			'1', /* sImpact */
+			'1', /* sUrgency */
 		),
 	),
 	array(
@@ -1381,15 +1394,17 @@ $aWebServices = array(
 		'args' => array(
 			'admin', /* sLogin */
 			'admin', /* sPassword */
-			'Network', /* sType */
 			'Houston not reachable', /* sDescription */
 			'Tried to join the shuttle', /* sInitialSituation */
-			'Could not talk to my wife', /* sImpact */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 2))), /* aCustomerDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 4))), /* aServiceDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aServiceSubcategoryDesc */
+			'sub product of the service', /* sProduct */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'FLS Desktop'))), /* aWorkgroupDesc */
 			null, /* aImpact */
-			'low' /* sSeverity */
+			'1', /* sImpact */
+			'1', /* sUrgency */
 		),
 	),
 	array(
@@ -1399,16 +1414,18 @@ $aWebServices = array(
 		'args' => array(
 			'admin', /* sLogin */
 			'admin', /* sPassword */
-			'Network', /* sType */
 			'Houston not reachable', /* sDescription */
 			'Tried to join the shuttle', /* sInitialSituation */
-			'Could not talk to my wife', /* sImpact */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1000))), /* aCallerDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 2))), /* aCustomerDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 4))), /* aServiceDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aServiceSubcategoryDesc */
+			'sub product of the service', /* sProduct */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'FLS Desktop'))), /* aWorkgroupDesc */
 			array(
 			), /* aImpact */
-			'low' /* sSeverity */
+			'1', /* sImpact */
+			'1', /* sUrgency */
 		),
 	),
 	array(
@@ -1418,16 +1435,18 @@ $aWebServices = array(
 		'args' => array(
 			'admin', /* sLogin */
 			'admin', /* sPassword */
-			'my type', /* sType */
 			'Houston not reachable', /* sDescription */
 			'Tried to join the shuttle', /* sInitialSituation */
-			'Could not talk to my wife', /* sImpact */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 2))), /* aCustomerDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 4))), /* aServiceDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aServiceSubcategoryDesc */
+			'sub product of the service', /* sProduct */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'FLS Desktop'))), /* aWorkgroupDesc */
 			array(
 			), /* aImpact */
-			'my severity' /* sSeverity */
+			'1', /* sImpact */
+			'1', /* sUrgency */
 		),
 	),
 	array(
@@ -1437,16 +1456,18 @@ $aWebServices = array(
 		'args' => array(
 			'admin', /* sLogin */
 			'xxxxx', /* sPassword */
-			'Network', /* sType */
 			'Houston not reachable', /* sDescription */
 			'Tried to join the shuttle', /* sInitialSituation */
-			'Could not talk to my wife', /* sImpact */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 2))), /* aCustomerDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 4))), /* aServiceDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aServiceSubcategoryDesc */
+			'sub product of the service', /* sProduct */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'FLS Desktop'))), /* aWorkgroupDesc */
 			array(
 			), /* aImpact */
-			'low' /* sSeverity */
+			'1', /* sImpact */
+			'1', /* sUrgency */
 		),
 	),
 	array(
@@ -1456,16 +1477,18 @@ $aWebServices = array(
 		'args' => array(
 			'xxxxx', /* sLogin */
 			'yyyyy', /* sPassword */
-			'Network', /* sType */
 			'Houston not reachable', /* sDescription */
 			'Tried to join the shuttle', /* sInitialSituation */
-			'Could not talk to my wife', /* sImpact */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 2))), /* aCustomerDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 4))), /* aServiceDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aServiceSubcategoryDesc */
+			'sub product of the service', /* sProduct */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'FLS Desktop'))), /* aWorkgroupDesc */
 			array(
 			), /* aImpact */
-			'low' /* sSeverity */
+			'1', /* sImpact */
+			'1', /* sUrgency */
 		),
 	),
 );

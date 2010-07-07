@@ -146,15 +146,17 @@
 	<message name="CreateIncidentTicket">
 		<part name="login" type="xsd:string"/>
 		<part name="password" type="xsd:string"/>
-		<part name="type" type="xsd:string"/>
+		<part name="title" type="xsd:string"/>
 		<part name="description" type="xsd:string"/>
-		<part name="initialsituation" type="xsd:string"/>
-		<part name="impact" type="xsd:string"/>
 		<part name="caller" type="typens:ExternalKeySearch"/>
 		<part name="customer" type="typens:ExternalKeySearch"/>
+		<part name="service" type="typens:ExternalKeySearch"/>
+		<part name="service_subcategory" type="typens:ExternalKeySearch"/>
+		<part name="product" type="xsd:string"/>
 		<part name="workgroup" type="typens:ExternalKeySearch"/>
 		<part name="impacted_cis" type="typens:ArrayOfLinkCreationSpec"/>
-		<part name="severity" type="xsd:string"/>
+		<part name="impact" type="xsd:string"/>
+		<part name="urgency" type="xsd:string"/>
 	</message>
 	<message name="CreateIncidentTicketResponse">
 		<part name="CreateIncidentTicketReturn" type="typens:Result"/>
