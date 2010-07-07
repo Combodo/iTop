@@ -29,7 +29,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:Incident:Overview' => 'Vue d\'ensemble',
 	'Menu:Incident:Overview+' => 'Vue d\'ensemble',
 	'Menu:Incident:MyIncidents' => 'Mes tickets',
-	'Menu:Incident:MyIncidents+' => 'Mes tickets d\'incident',
+	'Menu:Incident:MyIncidents+' => 'Tickets d\'incident qui me sont assignés',
 	'Menu:Incident:EscalatedIncidents' => 'Ticket en cours d\'escalade',
 	'Menu:Incident:EscalatedIncidents+' => 'Ticket d\'incident en cours d\'escalade',
 	'Menu:Incident:OpenIncidents' => 'Ticket ouverts',

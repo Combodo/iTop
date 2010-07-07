@@ -294,8 +294,10 @@ abstract class ResponseTicket extends Ticket
 					'workgroup_id' => OPT_ATT_READONLY,
 					'agent_id' => OPT_ATT_READONLY,
 					'urgency' => OPT_ATT_READONLY,
-					'resolution_code' => OPT_ATT_MANDATORY,
+					'resolution_code' => OPT_ATT_MUSTPROMPT,
 					'solution' => OPT_ATT_MUSTPROMPT,
+					'closure_deadline' => OPT_ATT_READONLY,
+					'escalation_deadline' => OPT_ATT_HIDDEN,
 				),
 			)
 		);
@@ -310,6 +312,7 @@ abstract class ResponseTicket extends Ticket
 					'resolution_code' => OPT_ATT_READONLY,
 					'solution' => OPT_ATT_READONLY,
 					'close_date' => OPT_ATT_READONLY,
+					'closure_deadline' => OPT_ATT_HIDDEN,
 				),
 			)
 		);

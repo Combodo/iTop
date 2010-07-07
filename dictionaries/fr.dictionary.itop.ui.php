@@ -645,7 +645,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:CreationTitle_Class' => 'Création d\'un objet de type %1$s',
 	'UI:SelectTheTypeOf_Class_ToCreate' => 'Sélectionnez le type de %1$s à créer :',
 	'UI:Class_Object_NotUpdated' => 'Aucun changement détecté, %2$s (type : %2$s) n\'a <strong>pas</strong> été modifié.',
-	'UI:Class_Object_Updated' => '%1$s (%2$s) mise à jour.',
+	'UI:Class_Object_Updated' => '%1$s (%2$s) - informations mises à jour.',
 	'UI:BulkDeletePageTitle' => 'iTop - Suppression massive',
 	'UI:BulkDeleteTitle' => 'Sélectionnez les objets à supprimer:',
 	'UI:PageTitle:ObjectCreated' => 'iTop objet créé.',

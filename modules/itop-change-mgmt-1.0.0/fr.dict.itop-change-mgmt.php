@@ -31,10 +31,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:WaitingAcceptance+' => '',
 	'Menu:WaitingApproval' => 'Tickets en attente d\'approbation',
 	'Menu:WaitingApproval+' => '',
-	'Menu:Changes' => 'Ticket ouverts',
-	'Menu:Changes+' => '',
+	'Menu:Changes' => 'Tickets ouverts',
+	'Menu:Changes+' => 'Tickets de changement ouverts',
 	'Menu:MyChanges' => 'Mes tickets',
-	'Menu:MyChanges+' => '',
+	'Menu:MyChanges+' => 'Tickets de changement qui me sont assignés',
 ));
 
 // Dictionnay conventions
@@ -53,7 +53,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:Change' => 'Ticket de changements',
+	'Class:Change' => 'Ticket de changement',
 	'Class:Change+' => '',
 	'Class:Change/Attribute:start_date' => 'Début de l\'intervention',
 	'Class:Change/Attribute:start_date+' => '',
@@ -165,7 +165,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:RoutineChange' => 'Routine Change',
+	'Class:RoutineChange' => 'Ticket de Changement de Routine',
 	'Class:RoutineChange+' => '',
 	'Class:RoutineChange/Attribute:status/Value:new' => 'Nouveau',
 	'Class:RoutineChange/Attribute:status/Value:new+' => '',
@@ -238,7 +238,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:NormalChange' => 'Normal Change',
+	'Class:NormalChange' => 'Ticket de Changement',
 	'Class:NormalChange+' => '',
 	'Class:NormalChange/Attribute:status/Value:new' => 'Nouveau',
 	'Class:NormalChange/Attribute:status/Value:new+' => '',
@@ -293,7 +293,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:EmergencyChange' => 'Emergency Change',
+	'Class:EmergencyChange' => 'Ticket de Changement d\'Urgence',
 	'Class:EmergencyChange+' => '',
 	'Class:EmergencyChange/Attribute:status/Value:new' => 'New',
 	'Class:EmergencyChange/Attribute:status/Value:new+' => '',

@@ -160,6 +160,7 @@ abstract class Change extends Ticket
 					'manager_group_id' => OPT_ATT_MANDATORY,
 					'manager_id' => OPT_ATT_MANDATORY,
 					'fallback' => OPT_ATT_MANDATORY,
+					'outage' => OPT_ATT_MUSTPROMPT,
 				),
 			)
 		);

@@ -33,8 +33,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:WaitingApproval+' => '',
 	'Menu:Changes' => 'Opened changes',
 	'Menu:Changes+' => '',
-	'Menu:MyChanges' => 'My changes',
-	'Menu:MyChanges+' => '',
+	'Menu:MyChanges' => 'Changes assigned to me',
+	'Menu:MyChanges+' => 'Changes assigned to me (as Agent)',
 ));
 
 // Dictionnay conventions
@@ -71,7 +71,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Change/Attribute:status/Value:plannedscheduled+' => '',
 	'Class:Change/Attribute:status/Value:approved' => 'Approved',
 	'Class:Change/Attribute:status/Value:approved+' => '',
-	'Class:Change/Attribute:status/Value:notapproved' => 'Rejected',
+	'Class:Change/Attribute:status/Value:notapproved' => 'Not approved',
 	'Class:Change/Attribute:status/Value:notapproved+' => '',
 	'Class:Change/Attribute:status/Value:implemented' => 'Implemented',
 	'Class:Change/Attribute:status/Value:implemented+' => '',
@@ -251,7 +251,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:NormalChange/Attribute:status/Value:plannedscheduled+' => '',
 	'Class:NormalChange/Attribute:status/Value:approved' => 'Approved',
 	'Class:NormalChange/Attribute:status/Value:approved+' => '',
-	'Class:NormalChange/Attribute:status/Value:notapproved' => 'Rejected',
+	'Class:NormalChange/Attribute:status/Value:notapproved' => 'Not approved',
 	'Class:NormalChange/Attribute:status/Value:notapproved+' => '',
 	'Class:NormalChange/Attribute:status/Value:implemented' => 'Implemented',
 	'Class:NormalChange/Attribute:status/Value:implemented+' => '',
@@ -306,7 +306,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:EmergencyChange/Attribute:status/Value:plannedscheduled+' => '',
 	'Class:EmergencyChange/Attribute:status/Value:approved' => 'Approved',
 	'Class:EmergencyChange/Attribute:status/Value:approved+' => '',
-	'Class:EmergencyChange/Attribute:status/Value:notapproved' => 'Rejected',
+	'Class:EmergencyChange/Attribute:status/Value:notapproved' => 'Not approved',
 	'Class:EmergencyChange/Attribute:status/Value:notapproved+' => '',
 	'Class:EmergencyChange/Attribute:status/Value:implemented' => 'Implemented',
 	'Class:EmergencyChange/Attribute:status/Value:implemented+' => '',

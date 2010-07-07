@@ -29,7 +29,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:UserRequest:Overview' => 'Vue d\'ensemble',
 	'Menu:UserRequest:Overview+' => 'Vue d\'ensemble des demandes utilisateurs',
 	'Menu:UserRequest:MyRequests' => 'Mes demandes',
-	'Menu:UserRequest:MyRequests+' => 'Les demandes utilisateurs qui me sont assignées',
+	'Menu:UserRequest:MyRequests+' => 'Demandes utilisateurs qui me sont assignées',
 	'Menu:UserRequest:EscalatedRequests' => 'Demandes en escalade',
 	'Menu:UserRequest:EscalatedRequests+' => 'Demandes utilisateurs en escalade',
 	'Menu:UserRequest:OpenRequests' => 'Demandes en cours',
