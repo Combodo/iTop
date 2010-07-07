@@ -394,6 +394,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:CountOfObjects' => '%1$d objets correspondants aux critères.',
 	'UI:NoObject_Class_ToDisplay' => 'Aucun objet %1$s à afficher',
 	'UI:History:LastModified_On_By' => 'Dernière modification par %2$s le %1$s.',
+	'UI:HistoryTab' => 'Historique',
 	'UI:History:Date' => 'Date',
 	'UI:History:Date+' => 'Date de modification',
 	'UI:History:User' => 'Utilisateur',

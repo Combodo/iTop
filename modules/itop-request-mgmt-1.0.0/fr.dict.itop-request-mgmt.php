@@ -24,8 +24,8 @@
  */
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Menu:RequestManagement' => 'Helpdesk',
-	'Menu:RequestManagement+' => 'Helpdesk',
+	'Menu:RequestManagement' => 'Gestion des demandes',
+	'Menu:RequestManagement+' => 'Gestion des demandes utilisateurs',
 	'Menu:UserRequest:Overview' => 'Vue d\'ensemble',
 	'Menu:UserRequest:Overview+' => 'Vue d\'ensemble des demandes utilisateurs',
 	'Menu:UserRequest:MyRequests' => 'Mes demandes',
