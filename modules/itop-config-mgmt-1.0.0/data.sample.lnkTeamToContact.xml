@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<lnkTeamToContact alias="lnkTeamToContact" id="5">
+<team_id>2</team_id>
+<contact_id>1</contact_id>
+<role>support agent</role>
+</lnkTeamToContact>
+<lnkTeamToContact alias="lnkTeamToContact" id="6">
+<team_id>4</team_id>
+<contact_id>3</contact_id>
+<role>support agent</role>
+</lnkTeamToContact>
+</Set>

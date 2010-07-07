@@ -29,24 +29,24 @@ display: list-item;
 <p></p>
 <table border="0" style="padding:10px;border-spacing: 10px;">
 <tr>
-<td class="dashboard">
+<td class="dashboard" style="border:0;text-align:left;">
 <itopstring>UI:WelcomeMenu:LeftBlock</itopstring>
 </td>
-<td class="dashboard">
+<td class="dashboard" style="border:0;text-align:left;">
 <itopstring>UI:WelcomeMenu:RightBlock</itopstring>
 </td>
 </tr>
 <tr>
 <td class="dashboard2">
-<itopcheck class="ServiceCall">
+<itopcheck class="UserRequest">
 <p style="text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;"><itopstring>UI:WelcomeMenu:MyCalls</itopstring></p>
-<itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql">SELECT ServiceCall AS i WHERE i.caller_id = :current_contact_id</itopblock>
+<itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql">SELECT UserRequest AS i WHERE i.caller_id = :current_contact_id</itopblock>
 </itopcheck>
 </td>
 <td class="dashboard2">
-<itopcheck class="IncidentTicket">
+<itopcheck class="Incident">
 <p style="text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;"><itopstring>UI:WelcomeMenu:MyIncidents</itopstring></p>
-<itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql">SELECT IncidentTicket AS i WHERE i.caller_id = :current_contact_id</itopblock>
+<itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql">SELECT Incident AS i WHERE i.caller_id = :current_contact_id</itopblock>
 </itopcheck>
 </td>
 

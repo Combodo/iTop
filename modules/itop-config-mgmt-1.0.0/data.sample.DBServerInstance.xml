@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<DBServerInstance alias="DBServerInstance" id="7">
+<name>MySql server</name>
+<status>implementation</status>
+<org_id>2</org_id>
+<importance>medium</importance>
+<device_id>2</device_id>
+<licence_id>0</licence_id>
+<software_id>3</software_id>
+<version>5.0.27</version>
+<description></description>
+</DBServerInstance>
+</Set>

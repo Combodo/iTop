@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<DatabaseInstance alias="DatabaseInstance" id="8">
+<name>itop-alpha</name>
+<status>implementation</status>
+<org_id>2</org_id>
+<importance>medium</importance>
+<db_server_instance_id>7</db_server_instance_id>
+<description>database instance for iTop application</description>
+</DatabaseInstance>
+</Set>

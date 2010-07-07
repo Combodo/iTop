@@ -300,7 +300,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:SLA/Attribute:service_name' => 'Service',
 	'Class:SLA/Attribute:service_name+' => '',
 	'Class:SLA/Attribute:slt_list' => 'SLTs',
-	'Class:SLA/Attribute:slt_list+' => 'List of Service Level Targets',
+	'Class:SLA/Attribute:slt_list+' => 'List Service Level Thresholds',
 ));
 
 //

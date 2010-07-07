@@ -329,8 +329,8 @@ Dict::Add('EN US', 'English', 'English', array(
 </ul>
 </p>',
 
-	'UI:WelcomeMenu:MyCalls' => 'My Service Calls',
-	'UI:WelcomeMenu:MyIncidents' => 'My Incidents',
+	'UI:WelcomeMenu:MyCalls' => 'User Requests assigned to me',
+	'UI:WelcomeMenu:MyIncidents' => 'Incidents assigned to me',
 	'UI:AllOrganizations' => ' All Organizations ',
 	'UI:YourSearch' => 'Your Search',
 	'UI:LoggedAsMessage' => 'Logged in as %1$s',
@@ -722,6 +722,29 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:ConfigurationManagementMenu:Title' => 'Infrastructure Overview',
 	'UI-ConfigurationManagementMenu-InfraByType' => 'Infrastructure objects by type',
 	'UI-ConfigurationManagementMenu-InfraByStatus' => 'Infrastructure objects by status',
+
+'UI:ConfigMgmtMenuOverview:Title' => 'Dashboard for Configuration Management',
+'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => 'Configuration Items by status',
+'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => 'Configuration Items by type',
+
+'UI:RequestMgmtMenuOverview:Title' => 'Dashboard for Request Management',
+'UI-RequestManagementOverview-RequestByService' => 'User Requests by service',
+'UI-RequestManagementOverview-RequestByPriority' => 'User Requests by priority',
+'UI-RequestManagementOverview-RequestUnassigned' => 'User Requests not yet assigned to an agent',
+
+'UI:IncidentMgmtMenuOverview:Title' => 'Dashboard for Incident Management',
+'UI-IncidentManagementOverview-IncidentByService' => 'Incidents by service',
+'UI-IncidentManagementOverview-IncidentByPriority' => 'Incident by priority',
+'UI-IncidentManagementOverview-IncidentUnassigned' => 'Incidents not yet assigned to an agent',
+
+'UI:ChangeMgmtMenuOverview:Title' => 'Dashboard for Change Management',
+'UI-ChangeManagementOverview-ChangeByType' => 'Changes by type',
+'UI-ChangeManagementOverview-ChangeUnassigned' => 'Changes not yet assigned to an agent',
+'UI-ChangeManagementOverview-ChangeWithOutage' => 'Outages due to changes',
+
+'UI:ServiceMgmtMenuOverview:Title' => 'Dashboard for Service Management',
+'UI-ServiceManagementOverview-CustomerContractToRenew' => 'Customer contracts to be renewed in 30 days',
+'UI-ServiceManagementOverview-ProviderContractToRenew' => 'Provider contracts to be renewed in 30 days',
 
 	'UI:ContactsMenu' => 'Contacts',
 	'UI:ContactsMenu+' => 'Contacts',

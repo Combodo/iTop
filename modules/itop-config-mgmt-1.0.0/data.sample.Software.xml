@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<Application alias="Software" id="1">
+<name>Apache</name>
+<description></description>
+</Application>
+<DBServer alias="Software" id="3">
+<name>MySql</name>
+<description></description>
+</DBServer>
+<DBServer alias="Software" id="4">
+<name>Oracle</name>
+<description></description>
+</DBServer>
+<DBServer alias="Software" id="5">
+<name>Outlook Server</name>
+<description></description>
+</DBServer>
+<Application alias="Software" id="2">
+<name>Tomcat</name>
+<description></description>
+</Application>
+</Set>

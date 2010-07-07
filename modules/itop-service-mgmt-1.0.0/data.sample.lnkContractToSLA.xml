@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<lnkContractToSLA alias="lnkContractToSLA" id="9">
+<contract_id>2</contract_id>
+<sla_id>3</sla_id>
+<coverage></coverage>
+</lnkContractToSLA>
+<lnkContractToSLA alias="lnkContractToSLA" id="7">
+<contract_id>3</contract_id>
+<sla_id>6</sla_id>
+<coverage></coverage>
+</lnkContractToSLA>
+</Set>

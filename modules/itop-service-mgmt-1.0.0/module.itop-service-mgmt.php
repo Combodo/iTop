@@ -30,19 +30,19 @@ SetupWebPage::AddModule(
 			//'data.struct.itop-service-mgmt.xml',
 		),
 		'data.sample' => array(
-			'data.sample.service.xml',
-			'data.sample.servicesubcategory.xml',
-			'data.sample.sla.xml',
-			'data.sample.slt.xml',
-			'data.sample.slttosla.xml',
-			'data.sample.customercontract.xml',
-			'data.sample.contracttosla.xml',
+			'data.sample.Service.xml',
+			'data.sample.ServiceSubcategory.xml',
+			'data.sample.SLA.xml',
+			'data.sample.SLT.xml',
+			'data.sample.lnkSLTToSLA.xml',
+			'data.sample.Contract.xml',
+			'data.sample.lnkContractToSLA.xml',
 		),
 		
 		// Documentation
 		//
 		'doc.manual_setup' => '', // No manual installation instructions
-		'doc.more_information' => '/doc/xxx/yyy.htm',
+		'doc.more_information' => '/doc/itop-documentation.htm#ServiceMgmt',
 	)
 );
 

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<lnkSolutionToCI alias="lnkSolutionToCI" id="1">
+<solution_id>12</solution_id>
+<ci_id>10</ci_id>
+<utility></utility>
+</lnkSolutionToCI>
+<lnkSolutionToCI alias="lnkSolutionToCI" id="2">
+<solution_id>12</solution_id>
+<ci_id>8</ci_id>
+<utility></utility>
+</lnkSolutionToCI>
+<lnkSolutionToCI alias="lnkSolutionToCI" id="3">
+<solution_id>12</solution_id>
+<ci_id>11</ci_id>
+<utility></utility>
+</lnkSolutionToCI>
+</Set>

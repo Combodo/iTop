@@ -48,18 +48,25 @@ $oP = new SetupWebPage('iTop configuration wizard');
 /**
  * Get a nicely formatted version string
  */
-function GetITopVersion()
+function GetITopVersion($bShort = true)
 {
 	$sVersionString = '';
-	if (ITOP_REVISION == '$WCREV$')
+	if ($bShort)
 	{
-		// This is NOT a version built using the buil system, just display the main version
 		$sVersionString = "iTop Version ".ITOP_VERSION;
 	}
 	else
 	{
-		// This is a build made from SVN, let display the full information
-		$sVersionString = "iTop Version ".ITOP_VERSION." revision ".ITOP_REVISION.", built on: ".ITOP_BUILD_DATE;
+		if (ITOP_REVISION == '$WCREV$')
+		{
+			// This is NOT a version built using the buil system, just display the main version
+			$sVersionString = "iTop Version ".ITOP_VERSION;
+		}
+		else
+		{
+			// This is a build made from SVN, let display the full information
+			$sVersionString = "iTop Version ".ITOP_VERSION." revision ".ITOP_REVISION.", built on: ".ITOP_BUILD_DATE;
+		}
 	}
 	return $sVersionString;
 }
@@ -577,9 +584,10 @@ function WelcomeAndCheckPrerequisites(SetupWebPage $oP, $aParamValues, $iCurrent
 {
 	$sNextOperation = 'step'.($iCurrentStep+1);
 	$oP->add("<h1>iTop configuration wizard</h1>\n");
-	$sVersionString = GetITopVersion();
-	$oP->set_title('Welcome to '.$sVersionString);
-	$oP->log($sVersionString);
+	$sVersionStringShort = GetITopVersion(true);
+	$sVersionStringLong = GetITopVersion(false);
+	$oP->set_title('Welcome to '.$sVersionStringShort);
+	$oP->log($sVersionStringLong);
 	$oP->add("<h2>Checking prerequisites</h2>\n");
 	if (CheckPHPVersion($oP))
 	{

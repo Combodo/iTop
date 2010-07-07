@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Set>
-<lnkContractToSLA alias="lnkContractToSLA" id="2">
-<contract_id>2</contract_id>
-<sla_id>6</sla_id>
-<coverage>8h-18h, business days</coverage>
-</lnkContractToSLA>
-</Set>

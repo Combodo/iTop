@@ -319,9 +319,9 @@ class XMLDataLoader
 						{
 							$sMsg = "unresolved extkey in $sClass::".$oTargetObj->GetKey()."(".$oTargetObj->GetName().")::$sAttCode=$sTargetClass::$iTempKey";
 							SetupWebPage::log_warning($sMsg);
-							echo "<pre>aKeys[".$sTargetClass."]:\n";
-							print_r($this->m_aKeys[$sTargetClass]);
-							echo "</pre>\n";
+							//echo "<pre>aKeys[".$sTargetClass."]:\n";
+							//print_r($this->m_aKeys[$sTargetClass]);
+							//echo "</pre>\n";
 						}
 						else
 						{

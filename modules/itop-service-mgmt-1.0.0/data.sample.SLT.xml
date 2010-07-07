@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<SLT alias="SLT" id="1">
+<name>TTO -15mn - Prio1</name>
+<metric>TTO</metric>
+<ticket_priority>1</ticket_priority>
+<value>15</value>
+<value_unit>minutes</value_unit>
+</SLT>
+<SLT alias="SLT" id="2">
+<name>TTO -30mn - Prio2</name>
+<metric>TTO</metric>
+<ticket_priority>2</ticket_priority>
+<value>30</value>
+<value_unit>minutes</value_unit>
+</SLT>
+<SLT alias="SLT" id="3">
+<name>TTO -4h - Prio3</name>
+<metric>TTO</metric>
+<ticket_priority>3</ticket_priority>
+<value>4</value>
+<value_unit>hours</value_unit>
+</SLT>
+<SLT alias="SLT" id="4">
+<name>TTR -2h - Prio1</name>
+<metric>TTR</metric>
+<ticket_priority>1</ticket_priority>
+<value>2</value>
+<value_unit>hours</value_unit>
+</SLT>
+<SLT alias="SLT" id="5">
+<name>TTR -4h - Prio2</name>
+<metric>TTR</metric>
+<ticket_priority>2</ticket_priority>
+<value>4</value>
+<value_unit>hours</value_unit>
+</SLT>
+<SLT alias="SLT" id="6">
+<name>TTR -8h- Prio3</name>
+<metric>TTR</metric>
+<ticket_priority>3</ticket_priority>
+<value>8</value>
+<value_unit>hours</value_unit>
+</SLT>
+</Set>

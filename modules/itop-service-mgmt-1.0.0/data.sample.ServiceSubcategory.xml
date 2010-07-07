@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<ServiceSubcategory alias="ServiceSubcategory" id="1">
+<name>Break</name>
+<description></description>
+<service_id>1</service_id>
+</ServiceSubcategory>
+<ServiceSubcategory alias="ServiceSubcategory" id="2">
+<name>Troubleshooting</name>
+<description></description>
+<service_id>2</service_id>
+</ServiceSubcategory>
+</Set>

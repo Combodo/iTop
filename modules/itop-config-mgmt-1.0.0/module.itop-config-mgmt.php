@@ -30,19 +30,25 @@ SetupWebPage::AddModule(
 			//'data.struct.itop-config-mgmt.xml',
 		),
 		'data.sample' => array(
-			'data.sample.organization.xml',
-			'data.sample.location.xml',
-			'data.sample.team.xml',
-			'data.sample.contact.xml',
-			'data.sample.server.xml',
-			'data.sample.application.xml',
-			'data.sample.business.xml',
+			'data.sample.Organization.xml',
+			'data.sample.Location.xml',
+			'data.sample.Software.xml',
+			'data.sample.Contact.xml',
+			'data.sample.lnkTeamToContact.xml',
+			'data.sample.FunctionalCI.xml',
+			'data.sample.DBServerInstance.xml',
+			'data.sample.ApplicationInstance.xml',
+			'data.sample.DatabaseInstance.xml',
+			//'data.sample.NetworkInterface.xml',
+			'data.sample.lnkCIToContact.xml',
+			'data.sample.lnkProcessToSolution.xml',
+			'data.sample.lnkSolutionToCI.xml',
 		),
 		
 		// Documentation
 		//
 		'doc.manual_setup' => '', // No manual installation required
-		'doc.more_information' => '/doc/xxx/yyy.htm',
+		'doc.more_information' => '/doc/itop-documentation.htm#ConfigMgmt',
 	)
 );
 
