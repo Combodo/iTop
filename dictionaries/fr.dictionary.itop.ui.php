@@ -133,8 +133,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:URP_Users/Attribute:login+' => 'user identification string',
 	'Class:URP_Users/Attribute:password' => 'Password',
 	'Class:URP_Users/Attribute:password+' => 'user authentication string',
-	'Class:URP_Users/Attribute:profiles' => 'Profiles',
-	'Class:URP_Users/Attribute:profiles+' => 'roles, granting rights for that person',
+	'Class:URP_Users/Attribute:profile_list' => 'Profiles',
+	'Class:URP_Users/Attribute:profile_list+' => 'roles, granting rights for that person',
 ));
 
 //
@@ -142,14 +142,14 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:URP_Profiles' => 'profile',
-	'Class:URP_Profiles+' => 'usage profiles',
+	'Class:URP_Profiles' => 'Profil',
+	'Class:URP_Profiles+' => 'Profil utilisateur',
 	'Class:URP_Profiles/Attribute:name' => 'Name',
 	'Class:URP_Profiles/Attribute:name+' => 'label',
 	'Class:URP_Profiles/Attribute:description' => 'Description',
 	'Class:URP_Profiles/Attribute:description+' => 'one line description',
-	'Class:URP_Profiles/Attribute:users' => 'Users',
-	'Class:URP_Profiles/Attribute:users+' => 'persons having this role',
+	'Class:URP_Profiles/Attribute:user_list' => 'Users',
+	'Class:URP_Profiles/Attribute:user_list+' => 'persons having this role',
 ));
 
 //

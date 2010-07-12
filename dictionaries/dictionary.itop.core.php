@@ -243,8 +243,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Action/Attribute:status/Value:enabled+' => 'In production',
 	'Class:Action/Attribute:status/Value:disabled' => 'Inactive',
 	'Class:Action/Attribute:status/Value:disabled+' => 'Inactive',
-	'Class:Action/Attribute:related_triggers' => 'Related Triggers',
-	'Class:Action/Attribute:related_triggers+' => 'Triggers linked to this action',
+	'Class:Action/Attribute:trigger_list' => 'Related Triggers',
+	'Class:Action/Attribute:trigger_list+' => 'Triggers linked to this action',
 	'Class:Action/Attribute:finalclass' => 'Type',
 	'Class:Action/Attribute:finalclass+' => '',
 ));
