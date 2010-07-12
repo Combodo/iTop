@@ -34,7 +34,7 @@
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:CMDBChange' => 'Change',
+	'Class:CMDBChange' => 'change',
 	'Class:CMDBChange+' => 'Changes tracking',
 	'Class:CMDBChange/Attribute:date' => 'date',
 	'Class:CMDBChange/Attribute:date+' => 'date and time at which the changes have been recorded',
@@ -47,7 +47,7 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:CMDBChangeOp' => 'Change Operation',
+	'Class:CMDBChangeOp' => 'change operation',
 	'Class:CMDBChangeOp+' => 'Change operations tracking',
 	'Class:CMDBChangeOp/Attribute:change' => 'change',
 	'Class:CMDBChangeOp/Attribute:change+' => 'change',
@@ -229,12 +229,12 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:Action' => 'Custom Action',
-	'Class:Action+' => 'User defined action',
+	'Class:Action' => 'action',
+	'Class:Action+' => 'Custom action',
 	'Class:Action/Attribute:name' => 'Name',
-	'Class:Action/Attribute:name+' => '',
+	'Class:Action/Attribute:name+' => 'label',
 	'Class:Action/Attribute:description' => 'Description',
-	'Class:Action/Attribute:description+' => '',
+	'Class:Action/Attribute:description+' => 'one line description',
 	'Class:Action/Attribute:status' => 'Status',
 	'Class:Action/Attribute:status+' => 'In production or ?',
 	'Class:Action/Attribute:status/Value:test' => 'Being tested',
@@ -254,7 +254,7 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:ActionNotification' => 'Notification',
+	'Class:ActionNotification' => 'notification',
 	'Class:ActionNotification+' => 'Notification (abstract)',
 ));
 
@@ -263,8 +263,8 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:ActionEmail' => 'Email notification',
-	'Class:ActionEmail+' => '',
+	'Class:ActionEmail' => 'email notification',
+	'Class:ActionEmail+' => 'Action: Email notification',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Test recipient',
 	'Class:ActionEmail/Attribute:test_recipient+' => 'Detination in case status is set to "Test"',
 	'Class:ActionEmail/Attribute:from' => 'From',
@@ -296,7 +296,7 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:Trigger' => 'Trigger',
+	'Class:Trigger' => 'trigger',
 	'Class:Trigger+' => 'Custom event handler',
 	'Class:Trigger/Attribute:description' => 'Description',
 	'Class:Trigger/Attribute:description+' => 'one line description',
@@ -311,10 +311,10 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:TriggerOnObject' => 'Trigger (class dependent)',
+	'Class:TriggerOnObject' => 'Trigger on a class of objects',
 	'Class:TriggerOnObject+' => 'Trigger on a given class of objects',
 	'Class:TriggerOnObject/Attribute:target_class' => 'Target class',
-	'Class:TriggerOnObject/Attribute:target_class+' => '',
+	'Class:TriggerOnObject/Attribute:target_class+' => 'label',
 ));
 
 //
@@ -322,10 +322,10 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:TriggerOnStateChange' => 'Trigger (on state change)',
+	'Class:TriggerOnStateChange' => 'Trigger on object state change',
 	'Class:TriggerOnStateChange+' => 'Trigger on object state change',
 	'Class:TriggerOnStateChange/Attribute:state' => 'State',
-	'Class:TriggerOnStateChange/Attribute:state+' => '',
+	'Class:TriggerOnStateChange/Attribute:state+' => 'label',
 ));
 
 //
@@ -333,7 +333,7 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:TriggerOnStateEnter' => 'Trigger (on entering a state)',
+	'Class:TriggerOnStateEnter' => 'Trigger on object entering a state',
 	'Class:TriggerOnStateEnter+' => 'Trigger on object state change - entering',
 ));
 
@@ -342,7 +342,7 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:TriggerOnStateLeave' => 'Trigger (on leaving a state)',
+	'Class:TriggerOnStateLeave' => 'Trigger on object leaving a state',
 	'Class:TriggerOnStateLeave+' => 'Trigger on object state change - leaving',
 ));
 
@@ -351,7 +351,7 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:TriggerOnObjectCreate' => 'Trigger (on object creation)',
+	'Class:TriggerOnObjectCreate' => 'Trigger on object creation',
 	'Class:TriggerOnObjectCreate+' => 'Trigger on object creation of [a child class of] the given class',
 ));
 
@@ -360,16 +360,16 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:lnkTriggerAction' => 'Action/Trigger',
+	'Class:lnkTriggerAction' => 'Actions-Trigger',
 	'Class:lnkTriggerAction+' => 'Link between a trigger and an action',
 	'Class:lnkTriggerAction/Attribute:action_id' => 'Action',
 	'Class:lnkTriggerAction/Attribute:action_id+' => 'The action to be executed',
-	'Class:lnkTriggerAction/Attribute:action_name' => 'Action',
-	'Class:lnkTriggerAction/Attribute:action_name+' => '',
+	'Class:lnkTriggerAction/Attribute:action_name' => 'Action Name',
+	'Class:lnkTriggerAction/Attribute:action_name+' => 'Name of the action',
 	'Class:lnkTriggerAction/Attribute:trigger_id' => 'Trigger',
-	'Class:lnkTriggerAction/Attribute:trigger_id+' => '',
-	'Class:lnkTriggerAction/Attribute:trigger_name' => 'Trigger',
-	'Class:lnkTriggerAction/Attribute:trigger_name+' => '',
+	'Class:lnkTriggerAction/Attribute:trigger_id+' => 'Trigger',
+	'Class:lnkTriggerAction/Attribute:trigger_name' => 'Trigger Name',
+	'Class:lnkTriggerAction/Attribute:trigger_name+' => 'Name of the trigger',
 	'Class:lnkTriggerAction/Attribute:order' => 'Order',
 	'Class:lnkTriggerAction/Attribute:order+' => 'Actions execution order',
 ));
