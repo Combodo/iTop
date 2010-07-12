@@ -74,14 +74,14 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:AuditCategory' => 'AuditCategory',
+	'Class:AuditCategory' => 'Catégorie d\'audit',
 	'Class:AuditCategory+' => 'A section inside the overall audit',
-	'Class:AuditCategory/Attribute:name' => 'Category Name',
-	'Class:AuditCategory/Attribute:name+' => 'Short name for this category',
-	'Class:AuditCategory/Attribute:description' => 'Audit Category Description',
-	'Class:AuditCategory/Attribute:description+' => 'Long description for this audit category',
-	'Class:AuditCategory/Attribute:definition_set' => 'Definition Set',
-	'Class:AuditCategory/Attribute:definition_set+' => 'SibusQL expression defining the set of objects to audit',
+	'Class:AuditCategory/Attribute:name' => 'Nom',
+	'Class:AuditCategory/Attribute:name+' => 'Nom raccourci',
+	'Class:AuditCategory/Attribute:description' => 'Description',
+	'Class:AuditCategory/Attribute:description+' => 'Description',
+	'Class:AuditCategory/Attribute:definition_set' => 'Ensemble de définition',
+	'Class:AuditCategory/Attribute:definition_set+' => 'Expression OQL qui défini le périmètre d\'application de l\'audit',
 ));
 
 //
@@ -89,24 +89,24 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:AuditRule' => 'AuditRule',
-	'Class:AuditRule+' => 'A rule to check for a given Audit category',
-	'Class:AuditRule/Attribute:name' => 'Rule Name',
-	'Class:AuditRule/Attribute:name+' => 'Short name for this rule',
-	'Class:AuditRule/Attribute:description' => 'Audit Rule Description',
-	'Class:AuditRule/Attribute:description+' => 'Long description for this audit rule',
-	'Class:AuditRule/Attribute:query' => 'Query to Run',
-	'Class:AuditRule/Attribute:query+' => 'The SibusQL expression to run',
-	'Class:AuditRule/Attribute:valid_flag' => 'Valid objects?',
-	'Class:AuditRule/Attribute:valid_flag+' => 'True if the rule returns the valid objects, false otherwise',
-	'Class:AuditRule/Attribute:valid_flag/Value:true' => 'true',
-	'Class:AuditRule/Attribute:valid_flag/Value:true+' => 'true',
-	'Class:AuditRule/Attribute:valid_flag/Value:false' => 'false',
-	'Class:AuditRule/Attribute:valid_flag/Value:false+' => 'false',
-	'Class:AuditRule/Attribute:category_id' => 'Category',
-	'Class:AuditRule/Attribute:category_id+' => 'The category for this rule',
+	'Class:AuditRule' => 'Règle d\'audit',
+	'Class:AuditRule+' => '',
+	'Class:AuditRule/Attribute:name' => 'Nom',
+	'Class:AuditRule/Attribute:name+' => '',
+	'Class:AuditRule/Attribute:description' => 'Description',
+	'Class:AuditRule/Attribute:description+' => '',
+	'Class:AuditRule/Attribute:query' => 'Requête',
+	'Class:AuditRule/Attribute:query+' => 'Expression OQL de calcul des éléments incorrects',
+	'Class:AuditRule/Attribute:valid_flag' => 'Interprétation',
+	'Class:AuditRule/Attribute:valid_flag+' => 'La requête définit-elle les éléments valides ?',
+	'Class:AuditRule/Attribute:valid_flag/Value:true' => 'Objets valides',
+	'Class:AuditRule/Attribute:valid_flag/Value:true+' => '',
+	'Class:AuditRule/Attribute:valid_flag/Value:false' => 'Objets incorrects',
+	'Class:AuditRule/Attribute:valid_flag/Value:false+' => '',
+	'Class:AuditRule/Attribute:category_id' => 'Catégorie',
+	'Class:AuditRule/Attribute:category_id+' => '',
 	'Class:AuditRule/Attribute:category_name' => 'Category',
-	'Class:AuditRule/Attribute:category_name+' => 'Name of the category for this rule',
+	'Class:AuditRule/Attribute:category_name+' => '',
 ));
 
 //////////////////////////////////////////////////////////////////////
@@ -119,22 +119,22 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:URP_Users' => 'user',
-	'Class:URP_Users+' => 'users and credentials',
-	'Class:URP_Users/Attribute:userid' => 'Contact (person)',
-	'Class:URP_Users/Attribute:userid+' => 'Personal details from the business data',
-	'Class:URP_Users/Attribute:last_name' => 'Last name',
-	'Class:URP_Users/Attribute:last_name+' => 'Name of the corresponding contact',
-	'Class:URP_Users/Attribute:first_name' => 'First name',
-	'Class:URP_Users/Attribute:first_name+' => 'First name of the corresponding contact',
-	'Class:URP_Users/Attribute:email' => 'Email',
-	'Class:URP_Users/Attribute:email+' => 'Email of the corresponding contact',
+	'Class:URP_Users' => 'Compte utilisateur',
+	'Class:URP_Users+' => 'Login utilisateur',
+	'Class:URP_Users/Attribute:userid' => 'Contact (personne)',
+	'Class:URP_Users/Attribute:userid+' => '',
+	'Class:URP_Users/Attribute:last_name' => 'Nom',
+	'Class:URP_Users/Attribute:last_name+' => '',
+	'Class:URP_Users/Attribute:first_name' => 'Prénom',
+	'Class:URP_Users/Attribute:first_name+' => '',
+	'Class:URP_Users/Attribute:email' => 'Adresse email',
+	'Class:URP_Users/Attribute:email+' => '',
 	'Class:URP_Users/Attribute:login' => 'Login',
-	'Class:URP_Users/Attribute:login+' => 'user identification string',
-	'Class:URP_Users/Attribute:password' => 'Password',
-	'Class:URP_Users/Attribute:password+' => 'user authentication string',
-	'Class:URP_Users/Attribute:profile_list' => 'Profiles',
-	'Class:URP_Users/Attribute:profile_list+' => 'roles, granting rights for that person',
+	'Class:URP_Users/Attribute:login+' => '',
+	'Class:URP_Users/Attribute:password' => 'Mot de passe',
+	'Class:URP_Users/Attribute:password+' => '',
+	'Class:URP_Users/Attribute:profile_list' => 'Profils',
+	'Class:URP_Users/Attribute:profile_list+' => 'Rôles, ouvrants les droits d\'accès',
 ));
 
 //
@@ -144,12 +144,12 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:URP_Profiles' => 'Profil',
 	'Class:URP_Profiles+' => 'Profil utilisateur',
-	'Class:URP_Profiles/Attribute:name' => 'Name',
-	'Class:URP_Profiles/Attribute:name+' => 'label',
+	'Class:URP_Profiles/Attribute:name' => 'Nom',
+	'Class:URP_Profiles/Attribute:name+' => '',
 	'Class:URP_Profiles/Attribute:description' => 'Description',
-	'Class:URP_Profiles/Attribute:description+' => 'one line description',
-	'Class:URP_Profiles/Attribute:user_list' => 'Users',
-	'Class:URP_Profiles/Attribute:user_list+' => 'persons having this role',
+	'Class:URP_Profiles/Attribute:description+' => '',
+	'Class:URP_Profiles/Attribute:user_list' => 'Utilisateurs',
+	'Class:URP_Profiles/Attribute:user_list+' => 'Comptes utilisateur (logins) ayant ce profil',
 ));
 
 //
@@ -157,14 +157,14 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:URP_Dimensions' => 'dimension',
-	'Class:URP_Dimensions+' => 'application dimension (defining silos)',
-	'Class:URP_Dimensions/Attribute:name' => 'Name',
-	'Class:URP_Dimensions/Attribute:name+' => 'label',
+	'Class:URP_Dimensions' => 'Dimension',
+	'Class:URP_Dimensions+' => 'Dimension applicative (défini des silos)',
+	'Class:URP_Dimensions/Attribute:name' => 'Nom',
+	'Class:URP_Dimensions/Attribute:name+' => '',
 	'Class:URP_Dimensions/Attribute:description' => 'Description',
-	'Class:URP_Dimensions/Attribute:description+' => 'one line description',
+	'Class:URP_Dimensions/Attribute:description+' => '',
 	'Class:URP_Dimensions/Attribute:type' => 'Type',
-	'Class:URP_Dimensions/Attribute:type+' => 'class name or data type (projection unit)',
+	'Class:URP_Dimensions/Attribute:type+' => 'Nom de classe ou type de données (unité de projection)',
 ));
 
 //
@@ -172,18 +172,18 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:URP_UserProfile' => 'User to profile',
-	'Class:URP_UserProfile+' => 'user profiles',
-	'Class:URP_UserProfile/Attribute:userid' => 'User',
-	'Class:URP_UserProfile/Attribute:userid+' => 'user account',
+	'Class:URP_UserProfile' => 'Utilisateur/Profil',
+	'Class:URP_UserProfile+' => '',
+	'Class:URP_UserProfile/Attribute:userid' => 'Utilisateur',
+	'Class:URP_UserProfile/Attribute:userid+' => '',
 	'Class:URP_UserProfile/Attribute:userlogin' => 'Login',
-	'Class:URP_UserProfile/Attribute:userlogin+' => 'User\'s login',
-	'Class:URP_UserProfile/Attribute:profileid' => 'Profile',
-	'Class:URP_UserProfile/Attribute:profileid+' => 'usage profile',
-	'Class:URP_UserProfile/Attribute:profile' => 'Profile',
-	'Class:URP_UserProfile/Attribute:profile+' => 'Profile name',
-	'Class:URP_UserProfile/Attribute:reason' => 'Reason',
-	'Class:URP_UserProfile/Attribute:reason+' => 'explain why this person may have this role',
+	'Class:URP_UserProfile/Attribute:userlogin+' => '',
+	'Class:URP_UserProfile/Attribute:profileid' => 'Profil',
+	'Class:URP_UserProfile/Attribute:profileid+' => '',
+	'Class:URP_UserProfile/Attribute:profile' => 'Profil',
+	'Class:URP_UserProfile/Attribute:profile+' => '',
+	'Class:URP_UserProfile/Attribute:reason' => 'Raison',
+	'Class:URP_UserProfile/Attribute:reason+' => 'Justifie le rôles affecté à cet utilisateur',
 ));
 
 //
