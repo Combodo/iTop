@@ -83,7 +83,7 @@ class URP_Users extends UserRightsBaseClass
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("profile_list", array("linked_class"=>"URP_UserProfile", "ext_key_to_me"=>"userid", "ext_key_to_remote"=>"profileid", "allowed_values"=>null, "count_min"=>1, "count_max"=>0, "depends_on"=>array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('userid', 'first_name', 'email', 'login', 'language', 'profile_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('userid', 'first_name', 'email', 'login', 'password', 'language', 'profile_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('first_name', 'last_name', 'login')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('login', 'userid')); // Criteria of the std search form

@@ -781,6 +781,18 @@ class AttributePassword extends AttributeString
 		// not allowed to search on passwords!
 		return array();
 	}
+
+	public function GetAsHTML($sValue)
+	{
+		if (strlen($sValue) == 0)
+		{
+			return '';
+		}
+		else
+		{
+			return '******';
+		}
+	}
 }
 
 /**
