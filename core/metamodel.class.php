@@ -3089,25 +3089,15 @@ abstract class MetaModel
 		}
 	}
 
-	public static function Startup($sConfigFile, $bAllowMissingDB = false)
+	public static function Startup($sConfigFile, $bModelOnly = false)
 	{
 		self::LoadConfig($sConfigFile);
-		if (self::DBExists())
-// !!!! #@# 
-		//if (true)
-		{
-			CMDBSource::SelectDB(self::$m_sDBName);
+		if ($bModelOnly) return;
 
-			// Some of the init could not be done earlier (requiring classes to be declared and DB to be accessible)
-			self::InitPlugins();
-		}
-		else
-		{
-			if (!$bAllowMissingDB)
-			{
-				throw new CoreException('Database not found, check your configuration file', array('config_file'=>$sConfigFile, 'db_name'=>self::$m_sDBName));
-			}
-		}
+		CMDBSource::SelectDB(self::$m_sDBName);
+
+		// Some of the init could not be done earlier (requiring classes to be declared and DB to be accessible)
+		self::InitPlugins();
 	}
 
 	public static function LoadConfig($sConfigFile)

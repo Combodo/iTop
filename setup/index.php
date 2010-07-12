@@ -342,10 +342,10 @@ function CheckServerConnection(SetupWebPage $oP, $sDBServer, $sDBUser, $sDBPwd)
  * Helper function to initialize the ORM and load the data model
  * from the given file
  * @param $sConfigFileName string The name of the configuration file to load
- * @param $bAllowMissingDatabase boolean Whether or not to allow loading a data model with no corresponding DB 
+ * @param $bModelOnly boolean Whether or not to allow loading a data model with no corresponding DB 
  * @return none
  */    
-function InitDataModel(SetupWebPage $oP, $sConfigFileName, $bAllowMissingDatabase = true)
+function InitDataModel(SetupWebPage $oP, $sConfigFileName, $bModelOnly = true)
 {
 	require_once('../core/log.class.inc.php');
 	require_once('../core/coreexception.class.inc.php');
@@ -361,8 +361,9 @@ function InitDataModel(SetupWebPage $oP, $sConfigFileName, $bAllowMissingDatabas
 	require_once('../core/dbobjectsearch.class.php');
 	require_once('../core/dbobjectset.class.php');
 	require_once('../core/userrights.class.inc.php');
-	$oP->log("Info - MetaModel::Startup from file '$sConfigFileName' (AllowMissingDB = $bAllowMissingDatabase)");
-	MetaModel::Startup($sConfigFileName, $bAllowMissingDatabase);
+	$oP->log("Info - MetaModel::Startup from file '$sConfigFileName' (ModelOnly = $bModelOnly)");
+
+	MetaModel::Startup($sConfigFileName, $bModelOnly);
 }
 /**
  * Helper function to create the database structure
@@ -410,7 +411,7 @@ function CreateDatabaseStructure(SetupWebPage $oP, Config $oConfig, $sDBName, $s
 function CreateAdminAccount(SetupWebPage $oP, Config $oConfig, $sAdminUser, $sAdminPwd, $sLanguage)
 {
 	$oP->log('Info - CreateAdminAccount');
-	InitDataModel($oP, TMP_CONFIG_FILE, true);  // allow missing DB
+	InitDataModel($oP, TMP_CONFIG_FILE, true);  // load data model only
 	if (UserRights::CreateAdministrator($sAdminUser, $sAdminPwd, $sLanguage))
 	{
 		$oP->ok("Administrator account '$sAdminUser' created.");
@@ -943,7 +944,7 @@ function SetupFinished(SetupWebPage $oP, $aParamValues, $iCurrentStep, Config $o
 		$oConfig->WriteToFile(FINAL_CONFIG_FILE);
 
 		// Start the application
-		InitDataModel($oP, FINAL_CONFIG_FILE, false); // DO NOT allow missing DB
+		InitDataModel($oP, FINAL_CONFIG_FILE, false); // Load model and startup DB
 		if (UserRights::Login($sAuthUser, $sAuthPwd))
 		{
 			$_SESSION['auth_user'] = $sAuthUser;

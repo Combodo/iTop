@@ -66,10 +66,12 @@ class SQLQuery
 
 	public function __construct($sTable, $sTableAlias, $aFields, $oConditionExpr, $aFullTextNeedles, $bToDelete = true, $aValues = array())
 	{
-		if (!CMDBSource::IsTable($sTable))
-		{
-			throw new CoreException("Unknown table '$sTable'");
-		}
+		// This check is not needed but for developping purposes
+		//if (!CMDBSource::IsTable($sTable))
+		//{
+		//	throw new CoreException("Unknown table '$sTable'");
+		//}
+
 		// $aFields must be an array of "alias"=>"expr"
 		// $oConditionExpr must be a condition tree
 		// $aValues is an array of "alias"=>value
@@ -157,10 +159,12 @@ class SQLQuery
 	private function AddJoin($sJoinType, $oSQLQuery, $sLeftField, $sRightField, $sRightTableAlias = '')
 	{
 		assert((get_class($oSQLQuery) == __CLASS__) || is_subclass_of($oSQLQuery, __CLASS__));
-		if (!CMDBSource::IsField($this->m_sTable, $sLeftField))
-		{
-			throw new CoreException("Unknown field '$sLeftField' in table '".$this->m_sTable);
-		}
+		// No need to check this here but for development purposes
+		//if (!CMDBSource::IsField($this->m_sTable, $sLeftField))
+		//{
+		//	throw new CoreException("Unknown field '$sLeftField' in table '".$this->m_sTable);
+		//}
+
 		if (empty($sRightTableAlias))
 		{
 			$sRightTableAlias = $oSQLQuery->m_sTableAlias;

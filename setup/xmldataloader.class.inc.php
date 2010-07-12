@@ -85,7 +85,7 @@ class XMLDataLoader
 	/**
 	 * Initializes the ORM (MetaModel)
 	 */	 	
-	protected function InitDataModel($sConfigFileName, $bAllowMissingDatabase = true)
+	protected function InitDataModel($sConfigFileName)
 	{
 		require_once('../core/log.class.inc.php');
 		require_once('../core/coreexception.class.inc.php');
@@ -101,7 +101,7 @@ class XMLDataLoader
 		require_once('../core/dbobjectsearch.class.php');
 		require_once('../core/dbobjectset.class.php');
 		require_once('../core/userrights.class.inc.php');
-		MetaModel::Startup($sConfigFileName, $bAllowMissingDatabase);
+		MetaModel::Startup($sConfigFileName);
 	}
 	
 	/**

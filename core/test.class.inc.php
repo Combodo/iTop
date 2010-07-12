@@ -385,8 +385,9 @@ abstract class TestBizModel extends TestHandler
 
 	protected function DoPrepare()
 	{
-		MetaModel::Startup($this->GetConfigFile(), true); // allow missing DB
-		MetaModel::CheckDefinitions();
+		MetaModel::Startup($this->GetConfigFile(), true); // Load model only
+// #@# Temporary disabled by Romain
+//		MetaModel::CheckDefinitions();
 
 		// something here to create records... but that's another story
 	}

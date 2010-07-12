@@ -433,7 +433,7 @@ if (empty($sConfigFile))
 	exit;
 }
 
-MetaModel::Startup($sConfigFile, true); // allow missing DB
+MetaModel::Startup($sConfigFile, true); // load data model only
 
 
 $sBaseArgs = "config=".urlencode($sConfigFile);
