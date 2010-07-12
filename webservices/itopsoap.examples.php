@@ -73,7 +73,7 @@ try
 			),
 		), /* impacted cis */
 		'1', /* impact */
-		'1', /* urgency */
+		'1' /* urgency */
 	);
 
 	echo "<p>CreateIncidentTicket() returned:\n";
