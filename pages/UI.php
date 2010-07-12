@@ -1188,7 +1188,7 @@ EOF
 					$oMyChange->Set("userinfo", $sUserString);
 					$iChangeId = $oMyChange->DBInsert();
 					$oObj->DBUpdateTracked($oMyChange);
-					$oP->p(Dict::Format('UI:Class_Object_Updated', get_class($oObj), $oObj->GetName()));
+					$oP->p(Dict::Format('UI:Class_Object_Updated', MetaModel::GetName(get_class($oObj)), $oObj->GetName()));
 				}
 			}
 			$oObj->DisplayDetails($oP);
@@ -1343,7 +1343,7 @@ EOF
 	////MetaModel::ShowQueryTrace();
 	$oP->output();
 }
-catch(ZCoreException $e)
+catch(CoreException $e)
 {
 	require_once('../setup/setuppage.class.inc.php');
 	$oP = new SetupWebPage(Dict::S('UI:PageTitle:FatalError'));
@@ -1372,7 +1372,7 @@ catch(ZCoreException $e)
 	// For debugging only
 	//throw $e;
 }
-catch(ZException $e)
+catch(Exception $e)
 {
 	require_once('../setup/setuppage.class.inc.php');
 	$oP = new SetupWebPage(Dict::S('UI:PageTitle:FatalError'));
