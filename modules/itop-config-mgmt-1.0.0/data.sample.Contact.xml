@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Set>
-<Person alias="Contact" id="3">
+<Person alias="Contact" id="1">
+<name>Picasso</name>
+<status>active</status>
+<org_id>2</org_id>
+<email>pablo@combodo.com</email>
+<phone></phone>
+<location_id>3</location_id>
+<first_name>Pablo</first_name>
+<employee_id></employee_id>
+</Person><Person alias="Contact" id="3">
 <name>Dali</name>
 <status>active</status>
 <org_id>2</org_id>

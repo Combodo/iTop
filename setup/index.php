@@ -775,8 +775,12 @@ function ModulesSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, $oConf
 	$aSelectedModules = $aParamValues['module'];
 	if ($aSelectedModules == '')
 	{
-		// Make sure it gets initialized as an array
+		// Make sure it gets initialized as an array, default value: all modules selected !
 		$aSelectedModules = array();
+		foreach($aAvailableModules as $sModuleId => $aModule)
+		{
+			$aSelectedModules[] = $sModuleId;
+		}
 	}
 	foreach($aAvailableModules as $sModuleId => $aModule)
 	{

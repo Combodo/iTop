@@ -1,3 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Set>
+<Service alias="Service" id="1">
+<org_id>2</org_id>
+<name>HW Management</name>
+<description>Hardware support and repair</description>
+<type>IncidentManagement</type>
+<status>production</status>
+</Service>
+<Service alias="Service" id="2">
+<org_id>2</org_id>
+<name>NW Management</name>
+<description>LAN and WAN support and troubleshooting</description>
+<type>IncidentManagement</type>
+<status>production</status>
+</Service>
 </Set>
