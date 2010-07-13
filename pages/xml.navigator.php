@@ -44,7 +44,10 @@ function AddNodeDetails(&$oNode, $oObj)
 	{
 		$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
 		$aLabels[] = $oAttDef->GetLabel();
-		$oNode->SetAttribute('att_'.$index, $oObj->Get($sAttCode));
+		if (!$oAttDef->IsLinkSet())
+		{
+			$oNode->SetAttribute('att_'.$index, $oObj->Get($sAttCode));
+		}
 		$index++;
 	}
 	$oNode->SetAttribute('zlist', implode(',', $aLabels));
