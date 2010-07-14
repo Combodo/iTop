@@ -300,7 +300,7 @@ class URP_Dimensions extends UserRightsBaseClass
 			"db_table" => "priv_urp_dimensions",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "../business/templates/default.html",
+			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -454,7 +454,7 @@ class URP_ProfileProjection extends UserRightsBaseClass
 			"db_table" => "priv_urp_profileprojection",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "../business/templates/default.html",
+			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -526,7 +526,7 @@ class URP_ClassProjection extends UserRightsBaseClass
 			"db_table" => "priv_urp_classprojection",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "../business/templates/default.html",
+			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -601,7 +601,7 @@ class URP_ActionGrant extends UserRightsBaseClass
 			"db_table" => "priv_urp_grant_actions",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "../business/templates/default.html",
+			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -638,7 +638,7 @@ class URP_StimulusGrant extends UserRightsBaseClass
 			"db_table" => "priv_urp_grant_stimulus",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "../business/templates/default.html",
+			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -675,7 +675,7 @@ class URP_AttributeGrant extends UserRightsBaseClass
 			"db_table" => "priv_urp_grant_attributes",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "../business/templates/default.html",
+			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();

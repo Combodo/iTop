@@ -43,7 +43,7 @@ class InputOutputTask extends cmdbAbstractObject
 			"db_table" => "priv_iotask",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "../business/templates/default.html",
+			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_AddAttribute(new AttributeString("name", array("allowed_values"=>null, "sql"=>"name", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));

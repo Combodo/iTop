@@ -25,7 +25,6 @@ $MyModules = array(
 		// to be continued...
 	),
 	'business' => array (
-		'../business/itop.business.class.inc.php'
 		// to be continued...
 	),
 	'addons' => array (
