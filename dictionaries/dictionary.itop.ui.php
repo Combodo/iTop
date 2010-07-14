@@ -119,8 +119,8 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:URP_Users' => 'user',
-	'Class:URP_Users+' => 'users and credentials',
+	'Class:URP_Users' => 'User',
+	'Class:URP_Users+' => 'Users and credentials',
 	'Class:URP_Users/Attribute:userid' => 'Contact (person)',
 	'Class:URP_Users/Attribute:userid+' => 'Personal details from the business data',
 	'Class:URP_Users/Attribute:last_name' => 'Last name',
