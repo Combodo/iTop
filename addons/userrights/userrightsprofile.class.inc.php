@@ -1521,7 +1521,9 @@ class SetupProfiles
 		{
 			if (!MetaModel::IsValidClass($sClass))
 			{
-				throw new CoreException("Invalid class name '$sClass'");
+				// Could be a class defined in a module that wasn't installed
+				continue;
+				//throw new CoreException("Invalid class name '$sClass'");
 			}
 
 			if ($sAllowedStimuli == 'any')
