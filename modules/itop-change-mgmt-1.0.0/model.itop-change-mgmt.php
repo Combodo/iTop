@@ -415,8 +415,8 @@ class NormalChange extends ApprovedChange
 		MetaModel::Init_OverloadStateAttribute('validated', 'acceptance_comment', OPT_ATT_MANDATORY);
 		MetaModel::Init_OverloadStateAttribute('rejected', 'acceptance_date', OPT_ATT_HIDDEN);
 		MetaModel::Init_OverloadStateAttribute('rejected', 'acceptance_comment', OPT_ATT_HIDDEN);
-		MetaModel::Init_OverloadStateAttribute('plannedschedule', 'acceptance_date', OPT_ATT_READONLY);
-		MetaModel::Init_OverloadStateAttribute('plannedschedule', 'acceptance_comment', OPT_ATT_READONLY);
+		MetaModel::Init_OverloadStateAttribute('plannedscheduled', 'acceptance_date', OPT_ATT_READONLY);
+		MetaModel::Init_OverloadStateAttribute('plannedscheduled', 'acceptance_comment', OPT_ATT_READONLY);
 		MetaModel::Init_OverloadStateAttribute('approved', 'acceptance_date', OPT_ATT_READONLY);
 		MetaModel::Init_OverloadStateAttribute('approved', 'acceptance_comment', OPT_ATT_READONLY);
 		MetaModel::Init_OverloadStateAttribute('notapproved', 'acceptance_date', OPT_ATT_READONLY);
