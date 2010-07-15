@@ -463,7 +463,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:CSVImport:ObjectsRemainedUnchanged' => '%1$d objets(s) n\'ont pas changé.',
 	'UI:CSVImport:ObjectsWereModified' => '%1$d objets(s)ont été modifiés.',
 	'UI:CSVImport:ObjectsWereAdded' => '%1$d objets(s) ont été créés.',
-	'UI:CSVImport:ObjectsAddErrors' => '%1$d ligne(s) contenaient des erreurs.',
+	'UI:CSVImport:ObjectsHadErrors' => '%1$d ligne(s) contenaient des erreurs.',
 	'UI:Title:CSVImportStep2' => 'Etape 2 sur 5: Options du format CSV',
 	'UI:Title:CSVImportStep3' => 'Etape 3 sur 5: Correspondance des données',
 	'UI:Title:CSVImportStep4' => 'Etape 4 sur 5: Simulation de l\'import',

@@ -468,7 +468,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:CSVImport:ObjectsRemainedUnchanged' => '%1$d objects(s) remained unchanged.',
 	'UI:CSVImport:ObjectsWereModified' => '%1$d objects(s) were modified.',
 	'UI:CSVImport:ObjectsWereAdded' => '%1$d objects(s) were added.',
-	'UI:CSVImport:ObjectsAddErrors' => '%1$d objects(s) had errors.',
+	'UI:CSVImport:ObjectsHadErrors' => '%1$d objects(s) had errors.',
 	'UI:Title:CSVImportStep2' => 'Step 2 of 5: CSV data options',
 	'UI:Title:CSVImportStep3' => 'Step 3 of 5: Data mapping',
 	'UI:Title:CSVImportStep4' => 'Step 4 of 5: Import simulation',
