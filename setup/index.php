@@ -892,7 +892,6 @@ function SampleDataSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, Con
 	$sAdminPwd = $aParamValues['auth_pwd'];
 	$sLanguage = $aParamValues['language'];
 	$oConfig->SetDefaultLanguage($aParamValues['language']);
-	echo "DB Name: ".$oConfig->GetDBName()."</p>\n";
 	$oConfig->WriteToFile(TMP_CONFIG_FILE);
 
 	$oP->add("<form id=\"theForm\" method=\"post\"\">\n");
