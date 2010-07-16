@@ -411,7 +411,7 @@ function CreateDatabaseStructure(SetupWebPage $oP, Config $oConfig, $sDBName, $s
 function CreateAdminAccount(SetupWebPage $oP, Config $oConfig, $sAdminUser, $sAdminPwd, $sLanguage)
 {
 	$oP->log('Info - CreateAdminAccount');
-	InitDataModel($oP, TMP_CONFIG_FILE, true);  // load data model only
+	InitDataModel($oP, TMP_CONFIG_FILE, false);  // load data model and connect to the database
 	if (UserRights::CreateAdministrator($sAdminUser, $sAdminPwd, $sLanguage))
 	{
 		$oP->ok("Administrator account '$sAdminUser' created.");
@@ -892,6 +892,7 @@ function SampleDataSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, Con
 	$sAdminPwd = $aParamValues['auth_pwd'];
 	$sLanguage = $aParamValues['language'];
 	$oConfig->SetDefaultLanguage($aParamValues['language']);
+	echo "DB Name: ".$oConfig->GetDBName()."</p>\n";
 	$oConfig->WriteToFile(TMP_CONFIG_FILE);
 
 	$oP->add("<form id=\"theForm\" method=\"post\"\">\n");
