@@ -126,7 +126,7 @@ function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMo
 				}
 			}
 		}
-		else if ($oAttDef->IsWritable())
+		else if ( ($oAttDef->IsWritable()) && (!$oAttDef->IsLinkSet()) )
 		{
 			$aChoices[$sAttCode] = $oAttDef->GetLabel();
 			if ( ($sFieldName == $oAttDef->GetLabel()) || ($sFieldName == $sAttCode))
