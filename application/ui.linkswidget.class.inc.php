@@ -213,7 +213,7 @@ class UILinksWidget
 			foreach($aObject as $sAttCode => $value)
 			{
 				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-				if ($oAttDef->IsExternalKey())
+				if ($oAttDef->IsExternalKey() && ($value != 0))
 				{
 					$oTargetObj = MetaModel::GetObject($oAttDef->GetTargetClass(), $value); // @@ optimization, don't do & query per object in the set !
 					$oObj->Set($sAttCode, $oTargetObj);
