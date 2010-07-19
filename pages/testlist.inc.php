@@ -1323,7 +1323,7 @@ $aWebServices = array(
 			'admin', /* sPassword */
 			'PC burning', /* sDescription */
 			'The power supply suddenly started to warm up', /* sInitialSituation */
-			null, /* aCallerDesc */
+			new SOAPExternalKeySearch(), /* aCallerDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 2))), /* aCustomerDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 4))), /* aServiceDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aServiceSubcategoryDesc */
@@ -1402,7 +1402,8 @@ $aWebServices = array(
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aServiceSubcategoryDesc */
 			'sub product of the service', /* sProduct */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'FLS Desktop'))), /* aWorkgroupDesc */
-			null, /* aImpact */
+			array(
+			), /* aImpact */
 			'1', /* sImpact */
 			'1', /* sUrgency */
 		),
@@ -1581,8 +1582,9 @@ class TestWebServicesDirect extends TestBizModel
 		$oWebServices = new WebServices();
 
 		global $aWebServices;
-		foreach ($aWebServices as $aWebService)
+		foreach ($aWebServices as $i => $aWebService)
 		{
+			echo "<h2>Test #$i - {$aWebService['verb']} </h2>\n";
 			$oRes = call_user_func_array(array($oWebServices, $aWebService['verb']), $aWebService['args']);
 			echo "<pre>\n";
 			print_r($oRes);

@@ -44,9 +44,15 @@ class SOAPExternalKeySearch
 {
 	public $conditions; // array of SOAPSearchCondition
 
-	public function __construct($aConditions)
+	public function __construct($aConditions = null)
 	{
 		$this->conditions = $aConditions;
+	}
+
+	public function IsVoid()
+	{
+		if (is_null($this->conditions)) return true;
+		if (count($this->conditions) == 0) return true;
 	}
 }
 

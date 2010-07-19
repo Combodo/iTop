@@ -500,7 +500,7 @@ class WebServices
 
 	static protected function SoapStructToExternalKeySearch(SoapExternalKeySearch $oExternalKeySearch)
 	{
-		if (is_null($oExternalKeySearch)) return null;
+		if ($oExternalKeySearch->IsVoid()) return null;
 
 		$aRes = array();
 		foreach($oExternalKeySearch->conditions as $oSearchCondition)
