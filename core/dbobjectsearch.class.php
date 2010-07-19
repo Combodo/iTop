@@ -492,116 +492,14 @@ class DBObjectSearch
 
 	public function serialize()
 	{
-		// Efficient but resulting in long strings:
-		// -> return (base64_encode(serialize($this)));
-
-		$sValue = $this->GetClass()."\n";
-		$sValue .= $this->GetClassAlias()."\n";
-
-		foreach($this->m_aSelectedClasses as $sClassAlias => $sClass)
-		{
-			// A stands for "Aliases"
-			$sValue .= "S:$sClassAlias:$sClass\n";
-		}
-		foreach($this->m_aClasses as $sClassAlias => $sClass)
-		{
-			// A stands for "Aliases"
-			$sValue .= "A:$sClassAlias:$sClass\n";
-		}
-		foreach($this->m_aFullText as $sFullText)
-		{
-			// F stands for "Full text"
-			$sValue .= "F:".$sFullText."\n";
-		}
-		$sValue .= "C:".$this->m_oSearchCondition->serialize()."\n";
-
-		foreach($this->m_aPointingTo as $sExtKey=>$oFilter)
-		{
-			// P stands for "Pointing to"
-			$sValue .= "P:".$sExtKey.":".$oFilter->serialize()."\n";
-		}
-		foreach($this->m_aReferencedBy as $sForeignClass=>$aReferences)
-		{
-			foreach($aReferences as $sForeignExtKeyAttCode=>$oForeignFilter)
-			{
-				// R stands for "Referenced by"
-				$sValue .= "R:".$sForeignExtKeyAttCode.":".$oForeignFilter->serialize()."\n";
-			}
-		}
-		foreach($this->m_aRelatedTo as $aRelatedTo)
-		{
-			$oFilter = $aRelatedTo['flt'];
-			$sRelCode = $aRelatedTo['relcode'];
-			$iMaxDepth = $aRelatedTo['maxdepth'];
-			
-			$sValue .= "T:".$oFilter->serialize().":$sRelCode:$iMaxDepth\n";
-		}
-		if (count($this->m_aParams) > 0)
-		{
-			foreach($this->m_aParams as $sName => $sArgValue)
-			{
-				// G stands for arGument
-				$sValue .= "G:$sName:$sArgValue\n";
-			}
-		}
-		return base64_encode($sValue);
+		$sOql = $this->ToOql();
+		return base64_encode(gzcompress($sOql));
 	}
 	
 	static public function unserialize($sValue)
 	{
-		// See comment above...
-		// -> return (unserialize(base64_decode($sValue)));
-
-		$sClearText = base64_decode($sValue);
-		$aValues = explode("\n", $sClearText);
-		$i = 0;
-		$sClass = $aValues[$i++];
-		$sClassAlias = $aValues[$i++];
-		$oFilter = new DBObjectSearch($sClass, $sClassAlias);
-		while($i < count($aValues) && !empty($aValues[$i]))
-		{
-			$aCondition = explode(":", $aValues[$i++]);
-			switch ($aCondition[0])
-			{
-			case "S":
-				$oFilter->m_aSelectedClasses[$aCondition[1]] = $aCondition[2];
-				break;
-			case "A":
-				$oFilter->m_aClasses[$aCondition[1]] = $aCondition[2];
-				break;
-			case "F":
-				$oFilter->AddCondition_FullText($aCondition[1]);
-				break;
-			case "C":
-				$oFilter->m_oSearchCondition = Expression::unserialize($aCondition[1]);
-				break;
-			case "P":
-				//$oAtt = DBObject::GetAttributeDef($sClass, $aCondition[1]);
-				//$sRemoteClass = $oAtt->GetTargetClass();
-				$oSubFilter = self::unserialize($aCondition[2]);
-				$sExtKeyAttCode = $aCondition[1];
-				$oFilter->AddCondition_PointingTo($oSubFilter, $sExtKeyAttCode);
-				break;
-			case "R":
-				$oRemoteFilter = self::unserialize($aCondition[2]);
-				$sExtKeyAttCodeToMe = $aCondition[1];
-				$oFilter->AddCondition_ReferencedBy($oRemoteFilter, $sExtKeyAttCodeToMe);
-				break;
-			case "T":
-				$oSubFilter = self::unserialize($aCondition[1]);
-				$sRelCode = $aCondition[2];
-				$iMaxDepth = $aCondition[3];
-				$oFilter->AddCondition_RelatedTo($oSubFilter, $sRelCode, $iMaxDepth);
-				break;
-			case "G":
-				$oFilter->m_aParams[$aCondition[1]] = $aCondition[2];
-				break;
-
-			default:
-				throw new CoreException("invalid filter definition (cannot unserialize the data, clear text = '$sClearText')");
-			}
-		}
-		return $oFilter;
+		$sOql = base64_decode($sValue);
+		return self::FromOQL(gzuncompress($sOql));
 	}
 
 	// SImple BUt Structured Query Languag - SubuSQL
