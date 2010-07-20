@@ -126,7 +126,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$oHistoryFilter = new DBObjectSearch('CMDBChangeOp');
 		$oHistoryFilter->AddCondition('objkey', $this->GetKey());
 		$oHistoryFilter->AddCondition('objclass', get_class($this));
-		$oBlock = new HistoryBlock($oHistoryFilter, 'tab', false);
+		$oBlock = new HistoryBlock($oHistoryFilter, 'table', false);
 		$oBlock->Display($oPage, -1);
 	}
 

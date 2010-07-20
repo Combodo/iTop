@@ -718,7 +718,7 @@ class HistoryBlock extends DisplayBlock
 		$sHtml .= "<!-- filter: ".($this->m_oFilter->ToOQL())."-->\n";
 		switch($this->m_sStyle)
 		{
-			default:
+			case 'toggle':
 			// First the latest change that the user is allowed to see
 			do
 			{
@@ -728,48 +728,57 @@ class HistoryBlock extends DisplayBlock
 			
 			if (is_object($oLatestChangeOp))
 			{
-				global $oContext; // User Context.. should be statis instead of global...
+				$oContext = new UserContext();
 				// There is one change in the list... only when the object has been created !
 				$sDate = $oLatestChangeOp->GetAsHTML('date');
 				$oChange = $oContext->GetObject('CMDBChange', $oLatestChangeOp->Get('change'));
 				$sUserInfo = $oChange->GetAsHTML('userinfo');
-				$oSet->Rewind(); // Reset the pointer to the beginning of the set
-				//$sHtml .= $oPage->GetStartCollapsibleSection(Dict::Format('UI:History:LastModified_On_By', $sDate, $sUserInfo));
-				//$sHtml .= cmdbAbstractObject::GetDisplaySet($oPage, $oSet);
-				$aChanges = array();
-				while($oChangeOp = $oSet->Fetch())
-				{
-					$sChangeDescription = $oChangeOp->GetDescription();
-					if ($sChangeDescription != '')
-					{
-						// The change is visible for the current user
-						$changeId = $oChangeOp->Get('change');
-						$aChanges[$changeId]['date'] = $oChangeOp->Get('date');
-						$aChanges[$changeId]['userinfo'] = $oChangeOp->Get('userinfo');
-						if (!isset($aChanges[$changeId]['log']))
-						{
-							$aChanges[$changeId]['log'] = array();
-						}
-						$aChanges[$changeId]['log'][] = $sChangeDescription;
-					}
-				}
-				$aAttribs = array('date' => array('label' => Dict::S('UI:History:Date'), 'description' => Dict::S('UI:History:Date+')),
-								  'userinfo' => array('label' => Dict::S('UI:History:User'), 'description' => Dict::S('UI:History:User+')),
-								  'log' => array('label' => Dict::S('UI:History:Changes'), 'description' => Dict::S('UI:History:Changes+')),
-								 );
-				$aValues = array();
-				foreach($aChanges as $aChange)
-				{
-					$aValues[] = array('date' => $aChange['date'], 'userinfo' => $aChange['userinfo'], 'log' => "<ul><li>".implode('</li><li>', $aChange['log'])."</li></ul>");
-				}
-				$sHtml .= $oPage->GetTable($aAttribs, $aValues);		
-				//$sHtml .= $oPage->GetEndCollapsibleSection();
+				$sHtml .= $oPage->GetStartCollapsibleSection(Dict::Format('UI:History:LastModified_On_By', $sDate, $sUserInfo));
+				$sHtml .= $this->GetHistoryTable($oPage, $oSet);		
+				$sHtml .= $oPage->GetEndCollapsibleSection();
 			}
 			break;
-						
-			///default:
-			//$sHtml .= parent::GetRenderContent($oPage, $aExtraParams);
+
+			case 'table':
+			default:
+			$sHtml .= $this->GetHistoryTable($oPage, $oSet);		
+
 		}
+		return $sHtml;
+	}
+	
+	protected function GetHistoryTable(WebPage $oPage, DBObjectSet $oSet)
+	{
+		$sHtml = '';
+		// First the latest change that the user is allowed to see
+		$oSet->Rewind(); // Reset the pointer to the beginning of the set
+		$aChanges = array();
+		while($oChangeOp = $oSet->Fetch())
+		{
+			$sChangeDescription = $oChangeOp->GetDescription();
+			if ($sChangeDescription != '')
+			{
+				// The change is visible for the current user
+				$changeId = $oChangeOp->Get('change');
+				$aChanges[$changeId]['date'] = $oChangeOp->Get('date');
+				$aChanges[$changeId]['userinfo'] = $oChangeOp->Get('userinfo');
+				if (!isset($aChanges[$changeId]['log']))
+				{
+					$aChanges[$changeId]['log'] = array();
+				}
+				$aChanges[$changeId]['log'][] = $sChangeDescription;
+			}
+		}
+		$aAttribs = array('date' => array('label' => Dict::S('UI:History:Date'), 'description' => Dict::S('UI:History:Date+')),
+						  'userinfo' => array('label' => Dict::S('UI:History:User'), 'description' => Dict::S('UI:History:User+')),
+						  'log' => array('label' => Dict::S('UI:History:Changes'), 'description' => Dict::S('UI:History:Changes+')),
+						 );
+		$aValues = array();
+		foreach($aChanges as $aChange)
+		{
+			$aValues[] = array('date' => $aChange['date'], 'userinfo' => $aChange['userinfo'], 'log' => "<ul><li>".implode('</li><li>', $aChange['log'])."</li></ul>");
+		}
+		$sHtml .= $oPage->GetTable($aAttribs, $aValues);
 		return $sHtml;
 	}
 }
