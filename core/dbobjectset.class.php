@@ -369,8 +369,17 @@ class DBObjectSet
 		$this->Seek(0);
 		while ($oObject = $this->Fetch())
 		{
-			// #@# todo - actually merge !
-			$aRelatedObjs = array_merge_recursive($aRelatedObjs, $oObject->GetRelatedObjects($sRelCode, $iMaxDepth, $aVisited));
+			$aMore = $oObject->GetRelatedObjects($sRelCode, $iMaxDepth, $aVisited);
+			foreach ($aMore as $sClass => $aRelated)
+			{
+				foreach ($aRelated as $iObj => $oObj)
+				{
+					if (!isset($aRelatedObjs[$sClass][$iObj]))
+					{
+						$aRelatedObjs[$sClass][$iObj] = $oObj;
+					}
+				}
+			}
 		}
 		return $aRelatedObjs;
 	}
