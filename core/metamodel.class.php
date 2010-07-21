@@ -403,6 +403,11 @@ abstract class MetaModel
 		return self::DBGetTable(self::$m_aAttribOrigins[$sClass][$sAttCode]);
 	}
 
+	final static public function DBGetView($sClass)
+	{
+		return self::$m_sTablePrefix."_view_".$sClass;
+	}
+
 	final static protected function DBEnumTables()
 	{
 		// This API do not rely on our capability to query the DB and retrieve
@@ -2651,7 +2656,7 @@ abstract class MetaModel
 		//
 		foreach (self::GetClasses('bizmodel') as $sClass)
 		{
-			$sView = "view_$sClass";
+			$sView = self::DBGetView($sClass);
 			if (CMDBSource::IsTable($sView))
 			{
 				// Check that the view is complete
