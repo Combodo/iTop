@@ -1274,8 +1274,8 @@ class TestItopWebServices extends TestWebServices
 $aWebServices = array(
 	array(
 		'verb' => 'GetVersion',
-		'expected result' => '0.8',
-		'explain result' => 'n/a',
+		'expected result' => WebServices::GetVersion(),
+		'explain result' => 'no comment!',
 		'args' => array(),
 	),
 	array(
@@ -1316,7 +1316,7 @@ $aWebServices = array(
 	),
 	array(
 		'verb' => 'CreateIncidentTicket',
-		'expected result' => false,
+		'expected result' => true,
 		'explain result' => 'caller not specified',
 		'args' => array(
 			'admin', /* sLogin */
@@ -1435,7 +1435,7 @@ $aWebServices = array(
 	),
 	array(
 		'verb' => 'CreateIncidentTicket',
-		'expected result' => false,
+		'expected result' => true,
 		'explain result' => 'caller unknown',
 		'args' => array(
 			'admin', /* sLogin */
@@ -1590,6 +1590,10 @@ class TestSoap extends TestSoapWebService
 			}
 			if ($res != $aWebService['expected result'])
 			{
+				echo "Expecting:<br/>\n";
+				var_dump($aWebService['expected result']);
+				echo "Obtained:<br/>\n";
+				var_dump($res);
 				throw new UnitTestException("Expecting result '{$aWebService['expected result']}', but got '$res'");
 			}
 		} 
@@ -1616,6 +1620,23 @@ class TestWebServicesDirect extends TestBizModel
 			echo "<pre>\n";
 			print_r($oRes);
 			echo "</pre>\n";
+
+			if ($oRes instanceof SOAPResult)
+			{
+				$res = $oRes->status;
+			}
+			else
+			{
+				$res = $oRes;
+			}
+			if ($res != $aWebService['expected result'])
+			{
+				echo "Expecting:<br/>\n";
+				var_dump($aWebService['expected result']);
+				echo "Obtained:<br/>\n";
+				var_dump($res);
+				throw new UnitTestException("Expecting result '{$aWebService['expected result']}', but got '$res'");
+			}
 		}
 		return true;
 	}

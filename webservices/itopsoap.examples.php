@@ -56,7 +56,7 @@ try
 		'HW found shutdown', /* description */
 		null, /* caller */
 		new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Demo'))), /* customer */
-		new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'NW Mgmt'))), /* service */
+		new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'NW Management'))), /* service */
 		new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Troubleshooting'))), /* service subcategory */
 		'', /* product */
 		new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'NW support'))), /* workgroup */

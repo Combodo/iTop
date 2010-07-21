@@ -498,8 +498,9 @@ class WebServices
 	}
 
 
-	static protected function SoapStructToExternalKeySearch(SoapExternalKeySearch $oExternalKeySearch)
+	static protected function SoapStructToExternalKeySearch($oExternalKeySearch)
 	{
+		if (is_null($oExternalKeySearch)) return null;
 		if ($oExternalKeySearch->IsVoid()) return null;
 
 		$aRes = array();
@@ -538,9 +539,19 @@ class WebServices
 	 *	 
 	 * @return WebServiceResult
 	 */
-	public function GetVersion()
+	static public function GetVersion()
 	{
-		return "0.8";
+		if (ITOP_REVISION == '$WCREV$')
+		{
+			$sVersionString = ITOP_VERSION.' [dev]';
+		}
+		else
+		{
+			// This is a build made from SVN, let display the full information
+			$sVersionString = ITOP_VERSION."-".ITOP_REVISION." ".ITOP_BUILD_DATE;
+		}
+
+		return $sVersionString;
 	}
 
 	public function CreateIncidentTicket($sLogin, $sPassword, $sTitle, $sDescription, $oCallerDesc, $oCustomerDesc, $oServiceDesc, $oServiceSubcategoryDesc, $sProduct, $oWorkgroupDesc, $aSOAPImpactedCIs, $sImpact, $sUrgency)
