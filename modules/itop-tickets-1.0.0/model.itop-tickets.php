@@ -283,6 +283,14 @@ abstract class ResponseTicket extends Ticket
 			)
 		);
 		MetaModel::Init_DefineState(
+			"frozen",
+			array(
+				"attribute_inherit" => 'assigned',
+				"attribute_list" => array(
+				),
+			)
+		);
+		MetaModel::Init_DefineState(
 			"resolved",
 			array(
 				"attribute_inherit" => 'assigned',

@@ -676,6 +676,21 @@ class AttributeClass extends AttributeString
 		parent::__construct($sCode, $aParams);
 	}
 
+	public function GetDefaultValue()
+	{
+		$sDefault = parent::GetDefaultValue();
+		if (!$this->IsNullAllowed() && is_null($sDefault))
+		{
+			// For this kind of attribute specifying null as default value
+			// is authorized even if null is not allowed
+			
+			// Pick the first one...
+			$aClasses = $this->GetAllowedValues();
+			$sDefault = key($aClasses);
+		}
+		return $sDefault;
+	}
+
 	public function GetAsHTML($sValue)
 	{
 		return MetaModel::GetName($sValue);

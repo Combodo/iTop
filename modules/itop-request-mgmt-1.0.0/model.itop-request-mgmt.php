@@ -50,15 +50,7 @@ class UserRequest extends ResponseTicket
 		MetaModel::Init_SetZListItems('standard_search', array('ref', 'title', 'org_id', 'start_date', 'status', 'caller_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'close_date', 'last_update', 'assignment_date', 'escalation_deadline', 'closure_deadline', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
 		MetaModel::Init_SetZListItems('list', array('ref', 'title', 'org_id', 'start_date', 'status', 'service_id', 'priority', 'workgroup_id', 'agent_id'));
 
-		MetaModel::Init_DefineState(
-			"frozen",
-			array(
-				"attribute_inherit" => 'assigned',
-				"attribute_list" => array(
-					'freeze_reason' => OPT_ATT_MANDATORY,
-				),
-			)
-		);
+		MetaModel::Init_OverloadStateAttribute('frozen', 'freeze_reason', OPT_ATT_MANDATORY);
 
 		// The freeze reason remains hidden in all other states
 		MetaModel::Init_OverloadStateAttribute('new', 'freeze_reason', OPT_ATT_HIDDEN);
