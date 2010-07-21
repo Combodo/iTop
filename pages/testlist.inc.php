@@ -1288,24 +1288,24 @@ $aWebServices = array(
 			'desc of ticket', /* sDescription */
 			'initial situation blah blah blah', /* sInitialSituation */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 2))), /* aCustomerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 4))), /* aServiceDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Demo'))), /* aCustomerDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'HW Management'))), /* aServiceDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aServiceSubcategoryDesc */
 			'sub product of the service', /* sProduct */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'FLS Desktop'))), /* aWorkgroupDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Hardware support'))), /* aWorkgroupDesc */
 			array(
 				new SOAPLinkCreationSpec(
 					'InfrastructureCI',
-					array(new SOAPSearchCondition('id', 108)),
+					array(new SOAPSearchCondition('name', 'dbserver1.demo.com')),
 					array(new SOAPAttributeValue('impacting', 'very critical'))
 				),
 				new SOAPLinkCreationSpec(
 					'NetworkDevice',
-					array(new SOAPSearchCondition('name', 'Router03')),
+					array(new SOAPSearchCondition('name', 'switch01')),
 					array(new SOAPAttributeValue('impact', 'who cares'))
 				),
 				new SOAPLinkCreationSpec(
-					'Device',
+					'Server',
 					array(new SOAPSearchCondition('name', 'thisone')),
 					array(new SOAPAttributeValue('impact', 'our lives'))
 				),
@@ -1324,15 +1324,15 @@ $aWebServices = array(
 			'PC burning', /* sDescription */
 			'The power supply suddenly started to warm up', /* sInitialSituation */
 			new SOAPExternalKeySearch(), /* aCallerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 2))), /* aCustomerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 4))), /* aServiceDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Demo'))), /* aCustomerDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'HW Management'))), /* aServiceDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aServiceSubcategoryDesc */
 			'sub product of the service', /* sProduct */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'FLS Desktop'))), /* aWorkgroupDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Hardware support'))), /* aWorkgroupDesc */
 			array(
 				new SOAPLinkCreationSpec(
 					'InfrastructureCI',
-					array(new SOAPSearchCondition('id', 1)),
+					array(new SOAPSearchCondition('name', 'dbserver1.demo.com')),
 					array()
 				), /* aImpact */
 			),
@@ -1343,21 +1343,47 @@ $aWebServices = array(
 	array(
 		'verb' => 'CreateIncidentTicket',
 		'expected result' => false,
-		'explain result' => 'wrong condition on CI to attach',
+		'explain result' => 'wrong class on CI to attach',
 		'args' => array(
 			'admin', /* sLogin */
 			'admin', /* sPassword */
 			'PC burning', /* sDescription */
 			'The power supply suddenly started to warm up', /* sInitialSituation */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 2))), /* aCustomerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 4))), /* aServiceDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Demo'))), /* aCustomerDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'HW Management'))), /* aServiceDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aServiceSubcategoryDesc */
 			'sub product of the service', /* sProduct */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'FLS Desktop'))), /* aWorkgroupDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Hardware support'))), /* aWorkgroupDesc */
 			array(
 				new SOAPLinkCreationSpec(
 					'logInfra',
+					array(new SOAPSearchCondition('dummyfiltercode', 2)),
+					array(new SOAPAttributeValue('impact', 'very critical'))
+				),
+			), /* aImpact */
+			'1', /* sImpact */
+			'1', /* sUrgency */
+		),
+	),
+	array(
+		'verb' => 'CreateIncidentTicket',
+		'expected result' => false,
+		'explain result' => 'wrong search condition on CI to attach',
+		'args' => array(
+			'admin', /* sLogin */
+			'admin', /* sPassword */
+			'PC burning', /* sDescription */
+			'The power supply suddenly started to warm up', /* sInitialSituation */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Demo'))), /* aCustomerDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'HW Management'))), /* aServiceDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aServiceSubcategoryDesc */
+			'sub product of the service', /* sProduct */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Hardware support'))), /* aWorkgroupDesc */
+			array(
+				new SOAPLinkCreationSpec(
+					'InfrastructureCI',
 					array(new SOAPSearchCondition('dummyfiltercode', 2)),
 					array(new SOAPAttributeValue('impact', 'very critical'))
 				),
@@ -1376,11 +1402,11 @@ $aWebServices = array(
 			'Houston not reachable', /* sDescription */
 			'Tried to join the shuttle', /* sInitialSituation */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 2))), /* aCustomerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 4))), /* aServiceDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Demo'))), /* aCustomerDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'HW Management'))), /* aServiceDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aServiceSubcategoryDesc */
 			'sub product of the service', /* sProduct */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'FLS Desktop'))), /* aWorkgroupDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Hardware support'))), /* aWorkgroupDesc */
 			array(
 			), /* aImpact */
 			'1', /* sImpact */
@@ -1397,13 +1423,12 @@ $aWebServices = array(
 			'Houston not reachable', /* sDescription */
 			'Tried to join the shuttle', /* sInitialSituation */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 2))), /* aCustomerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 4))), /* aServiceDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Demo'))), /* aCustomerDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'HW Management'))), /* aServiceDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aServiceSubcategoryDesc */
 			'sub product of the service', /* sProduct */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'FLS Desktop'))), /* aWorkgroupDesc */
-			array(
-			), /* aImpact */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Hardware support'))), /* aWorkgroupDesc */
+			null,  /* aImpact */
 			'1', /* sImpact */
 			'1', /* sUrgency */
 		),
@@ -1418,11 +1443,11 @@ $aWebServices = array(
 			'Houston not reachable', /* sDescription */
 			'Tried to join the shuttle', /* sInitialSituation */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1000))), /* aCallerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 2))), /* aCustomerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 4))), /* aServiceDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Demo'))), /* aCustomerDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'HW Management'))), /* aServiceDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aServiceSubcategoryDesc */
 			'sub product of the service', /* sProduct */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'FLS Desktop'))), /* aWorkgroupDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Hardware support'))), /* aWorkgroupDesc */
 			array(
 			), /* aImpact */
 			'1', /* sImpact */
@@ -1432,22 +1457,22 @@ $aWebServices = array(
 	array(
 		'verb' => 'CreateIncidentTicket',
 		'expected result' => false,
-		'explain result' => 'wrong values for type and severity',
+		'explain result' => 'wrong values for impact and urgency',
 		'args' => array(
 			'admin', /* sLogin */
 			'admin', /* sPassword */
 			'Houston not reachable', /* sDescription */
 			'Tried to join the shuttle', /* sInitialSituation */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 2))), /* aCustomerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 4))), /* aServiceDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Demo'))), /* aCustomerDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'HW Management'))), /* aServiceDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aServiceSubcategoryDesc */
 			'sub product of the service', /* sProduct */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'FLS Desktop'))), /* aWorkgroupDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Hardware support'))), /* aWorkgroupDesc */
 			array(
 			), /* aImpact */
-			'1', /* sImpact */
-			'1', /* sUrgency */
+			'6', /* sImpact */
+			'7', /* sUrgency */
 		),
 	),
 	array(
@@ -1460,11 +1485,11 @@ $aWebServices = array(
 			'Houston not reachable', /* sDescription */
 			'Tried to join the shuttle', /* sInitialSituation */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 2))), /* aCustomerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 4))), /* aServiceDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Demo'))), /* aCustomerDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'HW Management'))), /* aServiceDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aServiceSubcategoryDesc */
 			'sub product of the service', /* sProduct */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'FLS Desktop'))), /* aWorkgroupDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Hardware support'))), /* aWorkgroupDesc */
 			array(
 			), /* aImpact */
 			'1', /* sImpact */
@@ -1481,11 +1506,11 @@ $aWebServices = array(
 			'Houston not reachable', /* sDescription */
 			'Tried to join the shuttle', /* sInitialSituation */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 2))), /* aCustomerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 4))), /* aServiceDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Demo'))), /* aCustomerDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'HW Management'))), /* aServiceDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aServiceSubcategoryDesc */
 			'sub product of the service', /* sProduct */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'FLS Desktop'))), /* aWorkgroupDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Hardware support'))), /* aWorkgroupDesc */
 			array(
 			), /* aImpact */
 			'1', /* sImpact */
@@ -1529,7 +1554,8 @@ class TestSoap extends TestSoapWebService
 		global $aWebServices;
 		foreach ($aWebServices as $iPos => $aWebService)
 		{
-			echo "<h4>SOAP call #$iPos ".$aWebService['explain result']."</h4>\n";
+			echo "<h2>SOAP call #$iPos - {$aWebService['verb']}</h2>\n";
+			echo "<p>{$aWebService['explain result']}</p>\n";
 
 			try
 			{
@@ -1582,9 +1608,10 @@ class TestWebServicesDirect extends TestBizModel
 		$oWebServices = new WebServices();
 
 		global $aWebServices;
-		foreach ($aWebServices as $i => $aWebService)
+		foreach ($aWebServices as $iPos => $aWebService)
 		{
-			echo "<h2>Test #$i - {$aWebService['verb']} </h2>\n";
+			echo "<h2>SOAP call #$iPos - {$aWebService['verb']}</h2>\n";
+			echo "<p>{$aWebService['explain result']}</p>\n";
 			$oRes = call_user_func_array(array($oWebServices, $aWebService['verb']), $aWebService['args']);
 			echo "<pre>\n";
 			print_r($oRes);

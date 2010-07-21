@@ -487,7 +487,7 @@ class WebServices
 			if ($bRes)
 			{
 				$iId = $oTargetObj->DBInsertTrackedNoReload($oChange);
-				$oRes->LogInfo("Created object ".get_class($$oTargetObj)."::$iId");
+				$oRes->LogInfo("Created object ".get_class($oTargetObj)."::$iId");
 				$oRes->AddResultObject($sResultLabel, $oTargetObj);
 			}
 			else
@@ -558,7 +558,9 @@ class WebServices
 		$aServiceDesc = self::SoapStructToExternalKeySearch($oServiceDesc);
 		$aServiceSubcategoryDesc = self::SoapStructToExternalKeySearch($oServiceSubcategoryDesc);
 		$aWorkgroupDesc = self::SoapStructToExternalKeySearch($oWorkgroupDesc);
+
 		$aImpactedCIs = array();
+		if (is_null($aSOAPImpactedCIs)) $aSOAPImpactedCIs = array();
 		foreach($aSOAPImpactedCIs as $oImpactedCIs)
 		{
 			$aImpactedCIs[] = self::SoapStructToLinkCreationSpec($oImpactedCIs);
