@@ -115,26 +115,47 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 //
-// Class: URP_Users
+// Class: User
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:URP_Users' => 'Compte utilisateur',
-	'Class:URP_Users+' => 'Login utilisateur',
-	'Class:URP_Users/Attribute:userid' => 'Contact (personne)',
-	'Class:URP_Users/Attribute:userid+' => '',
-	'Class:URP_Users/Attribute:last_name' => 'Nom',
-	'Class:URP_Users/Attribute:last_name+' => '',
-	'Class:URP_Users/Attribute:first_name' => 'Prénom',
-	'Class:URP_Users/Attribute:first_name+' => '',
-	'Class:URP_Users/Attribute:email' => 'Adresse email',
-	'Class:URP_Users/Attribute:email+' => '',
-	'Class:URP_Users/Attribute:login' => 'Login',
-	'Class:URP_Users/Attribute:login+' => '',
-	'Class:URP_Users/Attribute:password' => 'Mot de passe',
-	'Class:URP_Users/Attribute:password+' => '',
-	'Class:URP_Users/Attribute:profile_list' => 'Profils',
-	'Class:URP_Users/Attribute:profile_list+' => 'Rôles, ouvrants les droits d\'accès',
+	'Class:User' => 'Compte utilisateur',
+	'Class:User+' => 'Login utilisateur',
+	'Class:User/Attribute:contactid' => 'Contact (personne)',
+	'Class:User/Attribute:contactid+' => '',
+	'Class:User/Attribute:last_name' => 'Nom',
+	'Class:User/Attribute:last_name+' => '',
+	'Class:User/Attribute:first_name' => 'Prénom',
+	'Class:User/Attribute:first_name+' => '',
+	'Class:User/Attribute:email' => 'Adresse email',
+	'Class:User/Attribute:email+' => '',
+	'Class:User/Attribute:login' => 'Login',
+	'Class:User/Attribute:login+' => '',
+	'Class:User/Attribute:profile_list' => 'Profils',
+	'Class:User/Attribute:profile_list+' => 'Rôles, ouvrants les droits d\'accès',
+));
+
+//
+// Class: UserLocal
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:UserLocal' => 'Utilisateur iTop',
+	'Class:UserLocal+' => 'Utilisateur authentifié par iTop',
+	'Class:UserLocal/Attribute:contactid' => 'Contact (personne)',
+	'Class:UserLocal/Attribute:contactid+' => '',
+	'Class:UserLocal/Attribute:last_name' => 'Nom',
+	'Class:UserLocal/Attribute:last_name+' => '',
+	'Class:UserLocal/Attribute:first_name' => 'Prénom',
+	'Class:UserLocal/Attribute:first_name+' => '',
+	'Class:UserLocal/Attribute:email' => 'Adresse email',
+	'Class:UserLocal/Attribute:email+' => '',
+	'Class:UserLocal/Attribute:login' => 'Login',
+	'Class:UserLocal/Attribute:login+' => '',
+	'Class:UserLocal/Attribute:password' => 'Mot de passe',
+	'Class:UserLocal/Attribute:password+' => '',
+	'Class:UserLocal/Attribute:profile_list' => 'Profils',
+	'Class:UserLocal/Attribute:profile_list+' => 'Rôles, ouvrants les droits d\'accès',
 ));
 
 //

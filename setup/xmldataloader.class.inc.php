@@ -100,6 +100,7 @@ class XMLDataLoader
 		require_once('../core/dbobject.class.php');
 		require_once('../core/dbobjectsearch.class.php');
 		require_once('../core/dbobjectset.class.php');
+		require_once('../application/cmdbabstract.class.inc.php');
 		require_once('../core/userrights.class.inc.php');
 		MetaModel::Startup($sConfigFileName);
 	}

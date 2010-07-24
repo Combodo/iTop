@@ -74,7 +74,6 @@ require_once('cmdbchangeop.class.inc.php');
 require_once('csvparser.class.inc.php');
 require_once('bulkchange.class.inc.php');
 
-require_once('userrights.class.inc.php');
 
 //
 // Error handling

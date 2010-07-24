@@ -115,32 +115,59 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 //
-// Class: URP_Users
+// Class: User
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:URP_Users' => 'User',
-	'Class:URP_Users+' => 'Users and credentials',
-	'Class:URP_Users/Attribute:userid' => 'Contact (person)',
-	'Class:URP_Users/Attribute:userid+' => 'Personal details from the business data',
-	'Class:URP_Users/Attribute:last_name' => 'Last name',
-	'Class:URP_Users/Attribute:last_name+' => 'Name of the corresponding contact',
-	'Class:URP_Users/Attribute:first_name' => 'First name',
-	'Class:URP_Users/Attribute:first_name+' => 'First name of the corresponding contact',
-	'Class:URP_Users/Attribute:email' => 'Email',
-	'Class:URP_Users/Attribute:email+' => 'Email of the corresponding contact',
-	'Class:URP_Users/Attribute:login' => 'Login',
-	'Class:URP_Users/Attribute:login+' => 'user identification string',
-	'Class:URP_Users/Attribute:password' => 'Password',
-	'Class:URP_Users/Attribute:password+' => 'user authentication string',
-	'Class:URP_Users/Attribute:language' => 'Language',
-	'Class:URP_Users/Attribute:language+' => 'user language',
-	'Class:URP_Users/Attribute:language/Value:EN US' => 'English',
-	'Class:URP_Users/Attribute:language/Value:EN US+' => 'English U.S.',
-	'Class:URP_Users/Attribute:language/Value:FR FR' => 'French',
-	'Class:URP_Users/Attribute:language/Value:FR FR+' => 'FR FR',
-	'Class:URP_Users/Attribute:profile_list' => 'Profiles',
-	'Class:URP_Users/Attribute:profile_list+' => 'Roles, granting rights for that person',
+	'Class:User' => 'User',
+	'Class:User+' => 'User login',
+	'Class:User/Attribute:contactid' => 'Contact (person)',
+	'Class:User/Attribute:contactid+' => 'Personal details from the business data',
+	'Class:User/Attribute:last_name' => 'Last name',
+	'Class:User/Attribute:last_name+' => 'Name of the corresponding contact',
+	'Class:User/Attribute:first_name' => 'First name',
+	'Class:User/Attribute:first_name+' => 'First name of the corresponding contact',
+	'Class:User/Attribute:email' => 'Email',
+	'Class:User/Attribute:email+' => 'Email of the corresponding contact',
+	'Class:User/Attribute:login' => 'Login',
+	'Class:User/Attribute:login+' => 'user identification string',
+	'Class:User/Attribute:language' => 'Language',
+	'Class:User/Attribute:language+' => 'user language',
+	'Class:User/Attribute:language/Value:EN US' => 'English',
+	'Class:User/Attribute:language/Value:EN US+' => 'English U.S.',
+	'Class:User/Attribute:language/Value:FR FR' => 'French',
+	'Class:User/Attribute:language/Value:FR FR+' => 'FR FR',
+	'Class:User/Attribute:profile_list' => 'Profiles',
+	'Class:User/Attribute:profile_list+' => 'Roles, granting rights for that person',
+));
+
+//
+// Class: UserLocal
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:UserLocal' => 'iTop user',
+	'Class:UserLocal+' => 'User authentified by iTop',
+	'Class:UserLocal/Attribute:contactid' => 'Contact (person)',
+	'Class:UserLocal/Attribute:contactid+' => 'Personal details from the business data',
+	'Class:UserLocal/Attribute:last_name' => 'Last name',
+	'Class:UserLocal/Attribute:last_name+' => 'Name of the corresponding contact',
+	'Class:UserLocal/Attribute:first_name' => 'First name',
+	'Class:UserLocal/Attribute:first_name+' => 'First name of the corresponding contact',
+	'Class:UserLocal/Attribute:email' => 'Email',
+	'Class:UserLocal/Attribute:email+' => 'Email of the corresponding contact',
+	'Class:UserLocal/Attribute:login' => 'Login',
+	'Class:UserLocal/Attribute:login+' => 'user identification string',
+	'Class:UserLocal/Attribute:password' => 'Password',
+	'Class:UserLocal/Attribute:password+' => 'user authentication string',
+	'Class:UserLocal/Attribute:language' => 'Language',
+	'Class:UserLocal/Attribute:language+' => 'user language',
+	'Class:UserLocal/Attribute:language/Value:EN US' => 'English',
+	'Class:UserLocal/Attribute:language/Value:EN US+' => 'English U.S.',
+	'Class:UserLocal/Attribute:language/Value:FR FR' => 'French',
+	'Class:UserLocal/Attribute:language/Value:FR FR+' => 'FR FR',
+	'Class:UserLocal/Attribute:profile_list' => 'Profiles',
+	'Class:UserLocal/Attribute:profile_list+' => 'Roles, granting rights for that person',
 ));
 
 //

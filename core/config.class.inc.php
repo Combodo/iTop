@@ -119,6 +119,7 @@ class Config
 			'../core/event.class.inc.php',
 			'../core/action.class.inc.php',
 			'../core/trigger.class.inc.php',
+			'../addons/authentication/authent.local.inc.php',
 		);
 		$this->m_aDataModels = array();
 		$this->m_aAddons = array(

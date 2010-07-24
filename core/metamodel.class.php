@@ -1042,22 +1042,25 @@ abstract class MetaModel
 							// Add it to the ZLists where the external key is present
 							//foreach(self::$m_aListData[$sClass] as $sListCode => $aAttributes)
 							$sListCode = 'list';
-							$aAttributes = self::$m_aListData[$sClass][$sListCode];
-							// temporary.... no loop
+							if (isset(self::$m_aListData[$sClass][$sListCode]))
 							{
-								if (in_array($sAttCode, $aAttributes))
+								$aAttributes = self::$m_aListData[$sClass][$sListCode];
+								// temporary.... no loop
 								{
-									$aNewList = array();
-									foreach($aAttributes as $iPos => $sAttToDisplay)
+									if (in_array($sAttCode, $aAttributes))
 									{
-										if (is_string($sAttToDisplay) && ($sAttToDisplay == $sAttCode))
+										$aNewList = array();
+										foreach($aAttributes as $iPos => $sAttToDisplay)
 										{
-											// Insert the final class right before
-											$aNewList[] = $sClassRecallAttCode;
+											if (is_string($sAttToDisplay) && ($sAttToDisplay == $sAttCode))
+											{
+												// Insert the final class right before
+												$aNewList[] = $sClassRecallAttCode;
+											}
+											$aNewList[] = $sAttToDisplay;
 										}
-										$aNewList[] = $sAttToDisplay;
+										self::$m_aListData[$sClass][$sListCode] = $aNewList;
 									}
-									self::$m_aListData[$sClass][$sListCode] = $aNewList;
 								}
 							}
 						}
@@ -3135,6 +3138,10 @@ abstract class MetaModel
 		}
 		// Set the language... after the dictionaries have been loaded!
 		Dict::SetDefaultLanguage($oConfig->GetDefaultLanguage());
+
+		// Romain: this is the only way I've found to cope with the fact that
+		//         classes have to be derived from cmdbabstract (to be editable in the UI)
+		require_once('../application/cmdbabstract.class.inc.php');
 
 		foreach ($oConfig->GetAppModules() as $sModule => $sToInclude)
 		{

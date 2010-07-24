@@ -25,7 +25,6 @@
 
 require_once('../application/webpage.class.inc.php');
 require_once('../application/utils.inc.php');
-require_once('../core/userrights.class.inc.php');
 /**
  * Helper class to manage 'blocks' of HTML pieces that are parts of a page and contain some list of cmdb objects
  *

@@ -32,7 +32,7 @@ class UserRightsNull extends UserRightsAddOnAPI
 		return true;
 	}
 
-	public function IsAdministrator($iUserId)
+	public function IsAdministrator($oUser)
 	{
 		return true;
 	}
@@ -47,54 +47,23 @@ class UserRightsNull extends UserRightsAddOnAPI
 		return true;
 	}
 
-	public function CheckCredentials($sUserName, $sPassword)
-	{
-		return 1;
-	}
-	
-	public function CanChangePassword()
-	{
-		return true;
-	}
-
-	public function ChangePassword($iUserId, $sOldPassword, $sNewPassword)
-	{
-		return true;
-	}
-
-	public function GetUserId($sUserName)
-	{
-		return 1;
-	}
-
-	public function GetUserLanguage($sUserName)
-	{
-		return 'EN US';
-	}
-
-	public function GetContactId($sUserName)
-	{
-		// this module has no link with the business data
-		return null;
-	}
-
 	public function GetFilter($sUserName, $sClass)
 	{
 		$oNullFilter  = new DBObjectSearch($sClass);
 		return $oNullFilter;
 	}
 
-	public function IsActionAllowed($iUserId, $sClass, $iActionCode, $oInstanceSet = null)
+	public function IsActionAllowed($oUser, $sClass, $iActionCode, $oInstanceSet = null)
 	{
 		return UR_ALLOWED_YES;
 	}
 
-	public function IsStimulusAllowed($iUserId, $sClass, $sStimulusCode, $oInstanceSet = null)
+	public function IsStimulusAllowed($oUser, $sClass, $sStimulusCode, $oInstanceSet = null)
 	{
 		return UR_ALLOWED_YES;
 	}
 
-	public function IsActionAllowedOnAttribute($iUserId, $sClass, $sAttCode, $iActionCode, $oInstanceSet = null)
+	public function IsActionAllowedOnAttribute($oUser, $sClass, $sAttCode, $iActionCode, $oInstanceSet = null)
 	{
 		return UR_ALLOWED_YES;
 	}

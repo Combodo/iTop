@@ -23,28 +23,6 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
-class UserRightsMatrixUsers extends DBObject
-{
-	public static function Init()
-	{
-		$aParams = array
-		(
-			"category" => "addon/userrights",
-			"key_type" => "autoincrement",
-			"name_attcode" => "login",
-			"state_attcode" => "",
-			"reconc_keys" => array(),
-			"db_table" => "priv_ur_matrixusers",
-			"db_key_field" => "id",
-			"db_finalclass_field" => "",
-		);
-		MetaModel::Init_Params($aParams);
-		//MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeInteger("userid", array("allowed_values"=>null, "sql"=>"userid", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("login", array("allowed_values"=>null, "sql"=>"login", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("password", array("allowed_values"=>null, "sql"=>"pwd", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-	}
-}
 
 class UserRightsMatrixClassGrant extends DBObject
 {
@@ -63,7 +41,7 @@ class UserRightsMatrixClassGrant extends DBObject
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", array("targetclass"=>"UserRightsMatrixUsers", "jointype"=> "", "allowed_values"=>null, "sql"=>"userid", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", array("targetclass"=>"User", "jointype"=> "", "allowed_values"=>null, "sql"=>"userid", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("login", array("allowed_values"=>null, "extkey_attcode"=> 'userid', "target_attcode"=>"login")));
 		MetaModel::Init_AddAttribute(new AttributeString("class", array("allowed_values"=>null, "sql"=>"class", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 
@@ -89,7 +67,7 @@ class UserRightsMatrixClassStimulusGrant extends DBObject
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", array("targetclass"=>"UserRightsMatrixUsers", "jointype"=> "", "allowed_values"=>null, "sql"=>"userid", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", array("targetclass"=>"User", "jointype"=> "", "allowed_values"=>null, "sql"=>"userid", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("login", array("allowed_values"=>null, "extkey_attcode"=> 'userid', "target_attcode"=>"login")));
 		MetaModel::Init_AddAttribute(new AttributeString("class", array("allowed_values"=>null, "sql"=>"class", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 
@@ -115,7 +93,7 @@ class UserRightsMatrixAttributeGrant extends DBObject
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", array("targetclass"=>"UserRightsMatrixUsers", "jointype"=> "", "allowed_values"=>null, "sql"=>"userid", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", array("targetclass"=>"User", "jointype"=> "", "allowed_values"=>null, "sql"=>"userid", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("login", array("allowed_values"=>null, "extkey_attcode"=> 'userid', "target_attcode"=>"login")));
 		MetaModel::Init_AddAttribute(new AttributeString("class", array("allowed_values"=>null, "sql"=>"class", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("attcode", array("allowed_values"=>null, "sql"=>"attcode", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
@@ -143,10 +121,11 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 	public function CreateAdministrator($sAdminUser, $sAdminPwd, $sLanguage = 'EN US')
 	{
 		// Maybe we should check that no other user with userid == 0 exists
-		$oUser = new UserRightsMatrixUsers();
+		$oUser = new UserLocal();
 		$oUser->Set('login', $sAdminUser);
 		$oUser->Set('password', $sAdminPwd);
-		$oUser->Set('userid', 1); // one is for root !
+		$oUser->Set('contactid', 1); // one is for root !
+		$oUser->Set('language', $sLanguage); // Language was chosen during the installation
 
 		// Create a change to record the history of the User object
 		$oChange = MetaModel::NewObject("CMDBChange");
@@ -160,16 +139,16 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 		return true;
 	}
 
-	public function IsAdministrator($iUserId)
+	public function IsAdministrator($oUser)
 	{
-		return ($iUserId == 1);
+		return ($oUser->GetKey() == 1);
 	}
 
 	public function Setup()
 	{
 		// Users must be added manually
 		// This procedure will then update the matrix when a new user is found or a new class/attribute appears
-		$oUserSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixUsers"));
+		$oUserSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT User"));
 		while ($oUser = $oUserSet->Fetch())
 		{
 			$this->SetupUser($oUser->GetKey());
@@ -287,80 +266,13 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 		return true;
 	}
 
-	public function CheckCredentials($sUserName, $sPassword)
-	{
-		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixUsers WHERE login = '$sUserName'"));
-		if ($oSet->Count() < 1)
-		{
-		// todo: throw an exception?
-			return false;
-		}
-
-		$oLogin = $oSet->Fetch();
-		if ($oLogin->Get('password') == $sPassword)
-		{
-			return $oLogin->Get('userid');
-		}
-		// todo: throw an exception?
-		return false;
-	}
-	
-	public function CanChangePassword()
-	{
-		return true;
-	}
-
-	public function ChangePassword($iUserId, $sOldPassword, $sNewPassword)
-	{
-		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixUsers WHERE userid = $iUserId"));
-		if ($oSet->Count() < 1)
-		{
-			return false;
-		}
-
-		$oLogin = $oSet->Fetch();
-		if ($oLogin->Get('password') == $sOldPassword)
-		{
-			$oLogin->Set('password', $sNewPassword);
-			$oLogin->DBUpdate();
-			return true;
-		}
-		return false;
-	}
-
-
-	public function GetUserId($sUserName)
-	{
-		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixUsers WHERE login = '$sUserName'"));
-		if ($oSet->Count() < 1)
-		{
-		// todo: throw an exception?
-			return false;
-		}
-
-		$oLogin = $oSet->Fetch();
-		return $oLogin->Get('userid');
-	}
-
-	// this module does not handle localization
-	public function GetUserLanguage($sUserName)
-	{
-		return 'EN US';
-	}
-
-	public function GetContactId($sUserName)
-	{
-		// this module has no link with the business data
-		return null;
-	}
-
 	public function GetFilter($sUserName, $sClass)
 	{
 		$oNullFilter  = new DBObjectSearch($sClass);
 		return $oNullFilter;
 	}
 
-	public function IsActionAllowed($iUserId, $sClass, $iActionCode, $oInstanceSet = null)
+	public function IsActionAllowed($oUser, $sClass, $iActionCode, $oInstanceSet = null)
 	{
 		if (!array_key_exists($iActionCode, self::$m_aActionCodes))
 		{
@@ -368,7 +280,7 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 		}
 		$sAction = self::$m_aActionCodes[$iActionCode];
 
-		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixClassGrant WHERE class = '$sClass' AND action = '$sAction' AND userid = '$iUserId'"));
+		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixClassGrant WHERE class = '$sClass' AND action = '$sAction' AND userid = '{$oUser->GetKey()}'"));
 		if ($oSet->Count() < 1)
 		{
 			return UR_ALLOWED_NO;
@@ -388,7 +300,7 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 		return $iRetCode;
 	}
 
-	public function IsActionAllowedOnAttribute($iUserId, $sClass, $sAttCode, $iActionCode, $oInstanceSet = null)
+	public function IsActionAllowedOnAttribute($oUser, $sClass, $sAttCode, $iActionCode, $oInstanceSet = null)
 	{
 		if (!array_key_exists($iActionCode, self::$m_aActionCodes))
 		{
@@ -396,7 +308,7 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 		}
 		$sAction = self::$m_aActionCodes[$iActionCode];
 
-		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixAttributeGrant WHERE class = '$sClass' AND attcode = '$sAttCode' AND action = '$sAction' AND userid = '$iUserId'"));
+		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixAttributeGrant WHERE class = '$sClass' AND attcode = '$sAttCode' AND action = '$sAction' AND userid = '{$oUser->GetKey()}'"));
 		if ($oSet->Count() < 1)
 		{
 			return UR_ALLOWED_NO;
@@ -416,9 +328,9 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 		return $iRetCode;
 	}
 
-	public function IsStimulusAllowed($iUserId, $sClass, $sStimulusCode, $oInstanceSet = null)
+	public function IsStimulusAllowed($oUser, $sClass, $sStimulusCode, $oInstanceSet = null)
 	{
-		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixClassStimulusGrant WHERE class = '$sClass' AND stimulus = '$sStimulusCode' AND userid = '$iUserId'"));
+		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixClassStimulusGrant WHERE class = '$sClass' AND stimulus = '$sStimulusCode' AND userid = '{$oUser->GetKey()}'"));
 		if ($oSet->Count() < 1)
 		{
 			return UR_ALLOWED_NO;

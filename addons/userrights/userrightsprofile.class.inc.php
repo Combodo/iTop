@@ -50,134 +50,6 @@ class UserRightsBaseClass extends cmdbAbstractObject
 }
 
 
-class URP_Users extends UserRightsBaseClass
-{
-	public static function Init()
-	{
-		$aParams = array
-		(
-			"category" => "addon/userrights",
-			"key_type" => "autoincrement",
-			"name_attcode" => "login",
-			"state_attcode" => "",
-			"reconc_keys" => array(),
-			"db_table" => "priv_urp_users",
-			"db_key_field" => "id",
-			"db_finalclass_field" => "",
-			"display_template" => "",
-		);
-		MetaModel::Init_Params($aParams);
-		//MetaModel::Init_InheritAttributes();
-
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", array("targetclass"=>"Person", "allowed_values"=>null, "sql"=>"userid", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("last_name", array("allowed_values"=>null, "extkey_attcode"=> 'userid', "target_attcode"=>"name")));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("first_name", array("allowed_values"=>null, "extkey_attcode"=> 'userid', "target_attcode"=>"first_name")));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("email", array("allowed_values"=>null, "extkey_attcode"=> 'userid', "target_attcode"=>"email")));
-
-		MetaModel::Init_AddAttribute(new AttributeString("login", array("allowed_values"=>null, "sql"=>"login", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributePassword("password", array("allowed_values"=>null, "sql"=>"pwd", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-
-		//MetaModel::Init_AddAttribute(new AttributeString("language", array("allowed_values"=>array('EN US,FR FR'), "sql"=>"language", "default_value"=>"EN US", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeApplicationLanguage("language", array("sql"=>"language", "default_value"=>"EN US", "is_null_allowed"=>false, "depends_on"=>array())));
-
-		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("profile_list", array("linked_class"=>"URP_UserProfile", "ext_key_to_me"=>"userid", "ext_key_to_remote"=>"profileid", "allowed_values"=>null, "count_min"=>1, "count_max"=>0, "depends_on"=>array())));
-
-		// Display lists
-		MetaModel::Init_SetZListItems('details', array('userid', 'first_name', 'email', 'login', 'password', 'language', 'profile_list')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('first_name', 'last_name', 'login')); // Attributes to be displayed for a list
-		// Search criteria
-		MetaModel::Init_SetZListItems('standard_search', array('login', 'userid')); // Criteria of the std search form
-		MetaModel::Init_SetZListItems('advanced_search', array('login', 'userid')); // Criteria of the advanced search form
-	}
-
-	function GetGrantAsHtml($sClass, $iAction)
-	{
-		if (UserRights::IsActionAllowed($sClass, $iAction, null, $this->GetKey())) 
-		{
-			return '<span style="background-color: #ddffdd;">'.Dict::S('UI:UserManagement:ActionAllowed:Yes').'</span>';
-		}
-		else
-		{
-			return '<span style="background-color: #ffdddd;">'.Dict::S('UI:UserManagement:ActionAllowed:No').'</span>';
-		}
-	}
-	
-	function DoShowGrantSumary($oPage, $sClassCategory)
-	{
-		$iUserId = $this->GetKey();
-		if (UserRights::IsAdministrator($iUserId))
-		{
-			// Looks dirty, but ok that's THE ONE
-			$oPage->p(Dict::S('UI:UserManagement:AdminProfile+'));
-			return;
-		}
-
-		$aDisplayData = array();
-		foreach (MetaModel::GetClasses($sClassCategory) as $sClass)
-		{
-			$aClassStimuli = MetaModel::EnumStimuli($sClass);
-			if (count($aClassStimuli) > 0)
-			{
-				$aStimuli = array();
-				foreach ($aClassStimuli as $sStimulusCode => $oStimulus)
-				{
-					if (UserRights::IsStimulusAllowed($sClass, $sStimulusCode, null, $iUserId))
-					{
-						$aStimuli[] = '<span title="'.$sStimulusCode.': '.htmlentities($oStimulus->GetDescription()).'">'.htmlentities($oStimulus->GetLabel()).'</span>';
-					}
-				}
-				$sStimuli = implode(', ', $aStimuli);
-			}
-			else
-			{
-				$sStimuli = '<em title="'.Dict::S('UI:UserManagement:NoLifeCycleApplicable+').'">'.Dict::S('UI:UserManagement:NoLifeCycleApplicable').'</em>';
-			}
-			
-			$aDisplayData[] = array(
-				'class' => MetaModel::GetName($sClass),
-				'read' => $this->GetGrantAsHtml($sClass, UR_ACTION_READ),
-				'bulkread' => $this->GetGrantAsHtml($sClass, UR_ACTION_BULK_READ),
-				'write' => $this->GetGrantAsHtml($sClass, UR_ACTION_MODIFY),
-				'bulkwrite' => $this->GetGrantAsHtml($sClass, UR_ACTION_BULK_MODIFY),
-				'stimuli' => $sStimuli,
-			);
-		}
-	
-		$aDisplayConfig = array();
-		$aDisplayConfig['class'] = array('label' => Dict::S('UI:UserManagement:Class'), 'description' => Dict::S('UI:UserManagement:Class+'));
-		$aDisplayConfig['read'] = array('label' => Dict::S('UI:UserManagement:Action:Read'), 'description' => Dict::S('UI:UserManagement:Action:Read+'));
-		$aDisplayConfig['bulkread'] = array('label' => Dict::S('UI:UserManagement:Action:BulkRead'), 'description' => Dict::S('UI:UserManagement:Action:BulkRead+'));
-		$aDisplayConfig['write'] = array('label' => Dict::S('UI:UserManagement:Action:Modify'), 'description' => Dict::S('UI:UserManagement:Action:Modify+'));
-		$aDisplayConfig['bulkwrite'] = array('label' => Dict::S('UI:UserManagement:Action:BulkModify'), 'description' => Dict::S('UI:UserManagement:Action:BulkModify+'));
-		$aDisplayConfig['stimuli'] = array('label' => Dict::S('UI:UserManagement:Action:Stimuli'), 'description' => Dict::S('UI:UserManagement:Action:Stimuli+'));
-		$oPage->table($aDisplayConfig, $aDisplayData);
-	}
-
-	function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
-	{
-		parent::DisplayBareRelations($oPage, $bEditMode);
-		if (!$bEditMode)
-		{
-			$oPage->SetCurrentTab(Dict::S('UI:UserManagement:GrantMatrix'));
-			$this->DoShowGrantSumary($oPage, 'bizmodel');
-	
-			// debug
-			if (false)
-			{
-				$oPage->SetCurrentTab('More on user rigths (dev only)');
-				$oPage->add("<h3>User rights</h3>\n");
-				$this->DoShowGrantSumary($oPage, 'addon/userrights');
-				$oPage->add("<h3>Change log</h3>\n");
-				$this->DoShowGrantSumary($oPage, 'core/cmdb');
-				$oPage->add("<h3>Application</h3>\n");
-				$this->DoShowGrantSumary($oPage, 'application');
-				$oPage->add("<h3>GUI</h3>\n");
-				$this->DoShowGrantSumary($oPage, 'gui');
-				
-			}					
-		}
-	}
-}
 
 
 class URP_Profiles extends UserRightsBaseClass
@@ -417,7 +289,7 @@ class URP_UserProfile extends UserRightsBaseClass
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", array("targetclass"=>"URP_Users", "jointype"=> "", "allowed_values"=>null, "sql"=>"userid", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", array("targetclass"=>"User", "jointype"=> "", "allowed_values"=>null, "sql"=>"userid", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("userlogin", array("allowed_values"=>null, "extkey_attcode"=> 'userid', "target_attcode"=>"login")));
 
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("profileid", array("targetclass"=>"URP_Profiles", "jointype"=> "", "allowed_values"=>null, "sql"=>"profileid", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
@@ -475,7 +347,7 @@ class URP_ProfileProjection extends UserRightsBaseClass
 		MetaModel::Init_SetZListItems('advanced_search', array('dimensionid', 'profileid')); // Criteria of the advanced search form
 	}
 
-	public function ProjectUser(URP_Users $oUser)
+	public function ProjectUser(User $oUser)
 	{
 		$sExpr = $this->Get('value');
 		if ($sExpr == '<user>')
@@ -744,10 +616,10 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		//$oContact->Set('employee_number', '');
 		$iContactId = $oContact->DBInsertTrackedNoReload($oChange);
 		
-		$oUser = new URP_Users();
+		$oUser = new UserLocal();
 		$oUser->Set('login', $sAdminUser);
 		$oUser->Set('password', $sAdminPwd);
-		$oUser->Set('userid', $iContactId);
+		$oUser->Set('contactid', $iContactId);
 		$oUser->Set('language', $sLanguage); // Language was chosen during the installation
 		$iUserId = $oUser->DBInsertTrackedNoReload($oChange);
 		
@@ -760,9 +632,9 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		return true;
 	}
 
-	public function IsAdministrator($iUserId)
+	public function IsAdministrator($oUser)
 	{
-		if (in_array($iUserId, $this->m_aAdmins))
+		if (in_array($oUser->GetKey(), $this->m_aAdmins))
 		{
 			return true;
 		}
@@ -787,14 +659,11 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		MetaModel::RegisterPlugin('userrights', 'ACbyProfile', array($this, 'CacheData'));
 	}
 
-	protected $m_aUsers = array(); // id -> object
 	protected $m_aDimensions = array(); // id -> object
 	protected $m_aClassProj = array(); // class,dimensionid -> object
 	protected $m_aProfiles = array(); // id -> object
 	protected $m_aUserProfiles = array(); // userid,profileid -> object
 	protected $m_aProPro = array(); // profileid,dimensionid -> object
-
-	protected $m_aLogin2UserId = array(); // login -> id
 
 	protected $m_aAdmins = array(); // id of users being linked to the well-known admin profile
 
@@ -805,15 +674,6 @@ class UserRightsProfile extends UserRightsAddOnAPI
 	public function CacheData()
 	{
 		// Could be loaded in a shared memory (?)
-
-		$oUserSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_Users"));
-		$this->m_aUsers = array();
-		$this->m_aLogin2UserId = array();  
-		while ($oUser = $oUserSet->Fetch())
-		{
-			$this->m_aUsers[$oUser->GetKey()] = $oUser;
-			$this->m_aLogin2UserId[$oUser->Get('login')] = $oUser->GetKey();  
-		}
 
 		$oDimensionSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_Dimensions"));
 		$this->m_aDimensions = array(); 
@@ -857,7 +717,6 @@ class UserRightsProfile extends UserRightsAddOnAPI
 
 /*
 		echo "<pre>\n";
-		print_r($this->m_aUsers);
 		print_r($this->m_aDimensions);
 		print_r($this->m_aClassProjs);
 		print_r($this->m_aProfiles);
@@ -868,94 +727,6 @@ exit;
 */
 
 		return true;
-	}
-
-	public function CheckCredentials($sUserName, $sPassword)
-	{
-		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_Users WHERE login = :login"), array(), array('login' => $sUserName));
-		if ($oSet->Count() < 1)
-		{
-		// todo: throw an exception?
-			return false;
-		}
-
-		$oUser = $oSet->Fetch();
-		if ($oUser->Get('password') == $sPassword)
-		{
-			return $oUser->GetKey();
-		}
-		// todo: throw an exception?
-		return false;
-	}
-
-	public function CanChangePassword()
-	{
-		// For now everyone can change their password..
-		return true;
-	}
-
-	public function ChangePassword($iUserId, $sOldPassword, $sNewPassword)
-	{
-		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_Users WHERE id = :user_id"), array(), array('user_id' => $iUserId));
-		if ($oSet->Count() < 1)
-		{
-			return false;
-		}
-
-		$oLogin = $oSet->Fetch();
-		if ($oLogin->Get('password') == $sOldPassword)
-		{
-			$oLogin->Set('password', $sNewPassword);
-			$oChange = MetaModel::NewObject("CMDBChange");
-			$oChange->Set("date", time());
-			if (UserRights::GetUser() != UserRights::GetRealUser())
-			{
-				$sUserString = Dict::Format('UI:Archive_User_OnBehalfOf_User', UserRights::GetRealUser(), UserRights::GetUser());
-			}
-			else
-			{
-				$sUserString = UserRights::GetUser();
-			}
-			$oChange->Set("userinfo", $sUserString);
-			$oLogin->DBUpdateTracked($oChange);
-			return true;
-		}
-		return false;
-	}
-
-	public function GetUserId($sUserName)
-	{
-		if (array_key_exists($sUserName, $this->m_aLogin2UserId))
-		{
-			// This happens really when the list of users is being loaded into the cache!!!
-			$iUserId = $this->m_aLogin2UserId[$sUserName];  
-			return $iUserId;
-		}
-		return null;
-	}
-
-	public function GetUserLanguage($sUserName)
-	{
-		if (array_key_exists($sUserName, $this->m_aLogin2UserId))
-		{
-			// This happens really when the list of users is being loaded into the cache!!!
-			$iUserId = $this->m_aLogin2UserId[$sUserName];  
-			$oUser = $this->m_aUsers[$iUserId];
-			return $oUser->Get('language');
-		}
-		return 'EN US';
-	}
-
-	public function GetContactId($sUserName)
-	{
-		if (array_key_exists($sUserName, $this->m_aLogin2UserId))
-		{
-			// This happens really when the list of users is being loaded into the cache!!!
-			$iUserId = $this->m_aLogin2UserId[$sUserName];  
-			$oUser = $this->m_aUsers[$iUserId];
-			return $oUser->Get('userid');
-		}
-		return null;
 	}
 
 	public function GetFilter($sUserName, $sClass)
@@ -1051,10 +822,8 @@ exit;
 		return $aRes;
 	}
 	
-	public function IsActionAllowed($iUserId, $sClass, $iActionCode, $oInstanceSet = null)
+	public function IsActionAllowed($oUser, $sClass, $iActionCode, $oInstanceSet = null)
 	{
-		$oUser = $this->m_aUsers[$iUserId];
-
 		if (is_null($oInstanceSet))
 		{
 			$aObjectPermissions = $this->GetObjectActionGrant($oUser, $sClass, $iActionCode);
@@ -1092,10 +861,8 @@ exit;
 		}
 	}
 
-	public function IsActionAllowedOnAttribute($iUserId, $sClass, $sAttCode, $iActionCode, $oInstanceSet = null)
+	public function IsActionAllowedOnAttribute($oUser, $sClass, $sAttCode, $iActionCode, $oInstanceSet = null)
 	{
-		$oUser = $this->m_aUsers[$iUserId];
-
 		if (is_null($oInstanceSet))
 		{
 			$aObjectPermissions = $this->GetObjectActionGrant($oUser, $sClass, $iActionCode);
@@ -1173,10 +940,8 @@ exit;
 		return $oGrantRecord;
 	}
 
-	public function IsStimulusAllowed($iUserId, $sClass, $sStimulusCode, $oInstanceSet = null)
+	public function IsStimulusAllowed($oUser, $sClass, $sStimulusCode, $oInstanceSet = null)
 	{
-		$oUser = $this->m_aUsers[$iUserId];
-
 		// Note: this code is VERY close to the code of IsActionAllowed()
 
 		if (is_null($oInstanceSet))

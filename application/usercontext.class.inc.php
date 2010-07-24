@@ -24,7 +24,6 @@
  */
 
 require_once('../core/cmdbobject.class.inc.php');
-require_once('../core/userrights.class.inc.php');
 /**
  * Helper class to capture a user's restrictions (access rights, profiles...) as a set of limiting conditions
  *

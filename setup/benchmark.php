@@ -129,12 +129,12 @@ class BenchmarkDataCreation
 		// User login
 		//
 		$aData = array(
-			'userid' => self::FindId('bizPerson'),
+			'contactid' => self::FindId('bizPerson'),
 			'login' => 'foo',
 			'password' => 'foo',
 			'language' => 'EN US',
 		);
-		$iLogin = $this->CreateObject('URP_Users', $aData, $oChange);
+		$iLogin = $this->CreateObject('User', $aData, $oChange);
 
 		// Assign profiles to the new login
 		//
