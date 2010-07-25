@@ -761,7 +761,7 @@ Dict::Add('EN US', 'English', 'English', array(
 
 'UI:IncidentMgmtMenuOverview:Title' => 'Dashboard for Incident Management',
 'UI-IncidentManagementOverview-IncidentByService' => 'Incidents by service',
-'UI-IncidentManagementOverview-IncidentByPriority' => 'Incident by priority',
+'UI-IncidentManagementOverview-IncidentByPriority' => 'Incidents by priority',
 'UI-IncidentManagementOverview-IncidentUnassigned' => 'Incidents not yet assigned to an agent',
 
 'UI:ChangeMgmtMenuOverview:Title' => 'Dashboard for Change Management',

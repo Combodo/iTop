@@ -744,6 +744,29 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI-ConfigurationManagementMenu-InfraByType' => 'Nombre d\'éléments par type',
 	'UI-ConfigurationManagementMenu-InfraByStatus' => 'Nombre d\'éléments par état',
 	
+'UI:ConfigMgmtMenuOverview:Title' => 'Tableau de bord de la Gestion de Configuration',
+'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => 'Actifs par état',
+'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => 'Actifs par type',
+
+'UI:RequestMgmtMenuOverview:Title' => 'Tableau de bord de la Gestion des Demandes Utilisateurs',
+'UI-RequestManagementOverview-RequestByService' => 'Demandes par service',
+'UI-RequestManagementOverview-RequestByPriority' => 'Demandes par priorité',
+'UI-RequestManagementOverview-RequestUnassigned' => 'Demandes non affectées à un agent',
+
+'UI:IncidentMgmtMenuOverview:Title' => 'Tableau de bord de la Gestion des Incidents',
+'UI-IncidentManagementOverview-IncidentByService' => 'Incidents par service',
+'UI-IncidentManagementOverview-IncidentByPriority' => 'Incidents par priorité',
+'UI-IncidentManagementOverview-IncidentUnassigned' => 'Incidents non affectés à un agent',
+
+'UI:ChangeMgmtMenuOverview:Title' => 'Tableau de bord de la Gestion des Changements',
+'UI-ChangeManagementOverview-ChangeByType' => 'Changes par type',
+'UI-ChangeManagementOverview-ChangeUnassigned' => 'Changes non affectés à un agent',
+'UI-ChangeManagementOverview-ChangeWithOutage' => 'Interruptions de service liées à un changement',
+
+'UI:ServiceMgmtMenuOverview:Title' => 'Tableau de bord de la Gestion des Services',
+'UI-ServiceManagementOverview-CustomerContractToRenew' => 'Contrats clients à renouveler dans les 30 jours',
+'UI-ServiceManagementOverview-ProviderContractToRenew' => 'Contrats fournisseurs à renouveler dans les 30 jours',
+
 	'UI:ContactsMenu' => 'Contacts',
 	'UI:ContactsMenu+' => 'Contacts',
 	'UI:ContactsMenu:Title' => 'Résumé des contacts',
