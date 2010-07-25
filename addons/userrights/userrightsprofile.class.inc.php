@@ -111,6 +111,9 @@ class URP_Profiles extends UserRightsBaseClass
 		$aDisplayData = array();
 		foreach (MetaModel::GetClasses('bizmodel') as $sClass)
 		{
+			// Skip non instantiable classes
+			if (MetaModel::IsAbstract($sClass)) continue;
+
 			$aStimuli = array();
 			foreach (MetaModel::EnumStimuli($sClass) as $sStimulusCode => $oStimulus)
 			{
@@ -1253,6 +1256,9 @@ class SetupProfiles
 		//
 		foreach (MetaModel::GetClasses('bizmodel') as $sClass)
 		{
+			// Skip non instantiable classes
+			if (MetaModel::IsAbstract($sClass)) continue;
+
 			self::DoCreateActionGrant($iProfile, UR_ACTION_READ, $sClass);
 			self::DoCreateActionGrant($iProfile, UR_ACTION_BULK_READ, $sClass);
 		}
@@ -1270,6 +1276,9 @@ class SetupProfiles
 		}
 		foreach ($aWriteableClasses as $sClass => $foo)
 		{
+			// Skip non instantiable classes
+			if (MetaModel::IsAbstract($sClass)) continue;
+
 			if (!MetaModel::IsValidClass($sClass))
 			{
 				throw new CoreException("Invalid class name '$sClass'");
@@ -1319,6 +1328,9 @@ class SetupProfiles
 			
 			foreach($aClass as $sClass)
 			{
+				// Skip non instantiable classes
+				if (MetaModel::IsAbstract($sClass)) continue;
+
 				if (!MetaModel::IsValidClass($sClass))
 				{
 					throw new CoreException("Invalid class name '$sClass'");
