@@ -133,6 +133,9 @@ abstract class User extends cmdbAbstractObject
 		$aDisplayData = array();
 		foreach (MetaModel::GetClasses($sClassCategory) as $sClass)
 		{
+			// Skip non instantiable classes
+			if (MetaModel::IsAbstract($sClass)) continue;
+
 			$aClassStimuli = MetaModel::EnumStimuli($sClass);
 			if (count($aClassStimuli) > 0)
 			{
