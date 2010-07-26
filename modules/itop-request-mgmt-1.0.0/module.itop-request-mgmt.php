@@ -8,6 +8,7 @@ SetupWebPage::AddModule(
 		// Identification
 		//
 		'label' => 'User request management (Service Desk)',
+		'category' => 'business',
 
 		// Setup
 		//
@@ -38,6 +39,11 @@ SetupWebPage::AddModule(
 		//
 		'doc.manual_setup' => '',
 		'doc.more_information' => '/doc/itop-documentation.htm#RequestMgmt',
+
+		// Default settings
+		//
+		'settings' => array(
+		),
 	)
 );
 

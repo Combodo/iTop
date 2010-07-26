@@ -8,6 +8,7 @@ SetupWebPage::AddModule(
 		// Identification
 		//
 		'label' => 'Configuration Management (CMDB)',
+		'category' => 'business',
 
 		// Setup
 		//
@@ -49,6 +50,11 @@ SetupWebPage::AddModule(
 		//
 		'doc.manual_setup' => '', // No manual installation required
 		'doc.more_information' => '/doc/itop-documentation.htm#ConfigMgmt',
+
+		// Default settings
+		//
+		'settings' => array(
+		),
 	)
 );
 

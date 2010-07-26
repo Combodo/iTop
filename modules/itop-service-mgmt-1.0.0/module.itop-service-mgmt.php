@@ -8,6 +8,7 @@ SetupWebPage::AddModule(
 		// Identification
 		//
 		'label' => 'Service Management (services, SLAs, contracts)',
+		'category' => 'business',
 
 		// Setup
 		//
@@ -43,6 +44,11 @@ SetupWebPage::AddModule(
 		//
 		'doc.manual_setup' => '', // No manual installation instructions
 		'doc.more_information' => '/doc/itop-documentation.htm#ServiceMgmt',
+
+		// Default settings
+		//
+		'settings' => array(
+		),
 	)
 );
 

@@ -8,6 +8,7 @@ SetupWebPage::AddModule(
 		// Identification
 		//
 		'label' => 'Problem Management',
+		'category' => 'business',
 
 		// Setup
 		//
@@ -38,6 +39,11 @@ SetupWebPage::AddModule(
 		//
 		'doc.manual_setup' => '', // No manual installation instructions
 		'doc.more_information' => '/doc/itop-documentation.htm#ProblemMgmt',
+
+		// Default settings
+		//
+		'settings' => array(
+		),
 	)
 );
 

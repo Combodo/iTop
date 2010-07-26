@@ -568,6 +568,10 @@ function BuildConfig(SetupWebpage $oP, Config &$oConfig, $aParamValues)
 		$oP->log('Installed iTop module: '. $sModuleId);
 		$aDataModels = array_unique(array_merge($aDataModels, $aAvailableModules[$sModuleId]['datamodel']));
 		$sDictionaries = array_unique(array_merge($sDictionaries, $aAvailableModules[$sModuleId]['dictionary']));
+		foreach($aAvailableModules[$sModuleId]['settings'] as $sProperty => $value)
+		{
+			$oConfig->SetModuleSetting($sModuleId, $sProperty, $value);
+		}
 	}
 	$oConfig->SetAddOns($aAddOns);
 	$oConfig->SetAppModules($aAppModules);
@@ -790,7 +794,13 @@ function ModulesSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, $oConf
 		$sClass = ($aModule['mandatory']) ? 'class="read-only"' : '';
 		$sChecked = ($aModule['mandatory'] ||  in_array($sModuleId, $aSelectedModules) ) ? 'checked' : '';
 		$sMoreInfo = (!empty($aModule['doc.more_information'])) ? "<a href=\"{$aModule['doc.more_information']}\" target=\"_blank\">more info</a>": '';
-		if ($aModule['visible'])
+		if ($aModule['category'] == 'authentication')
+		{
+			// For now authentication modules are always on and hidden
+			$oP->add("<input type=\"hidden\" id=\"module[$index]\" name=\"module[$index]\" value=\"$sModuleId\">\n");
+			$index++;
+		}
+		elseif ($aModule['visible'])
 		{
 			$oP->add("<p><input type=\"checkbox\" $sClass $sChecked id=\"module[$index]\" name=\"module[$index]\" value=\"$sModuleId\"><label $sClass for=\"module[$index]\"> {$aModule['label']}</label> $sMoreInfo</p>\n");
 			$index++;
@@ -799,6 +809,7 @@ function ModulesSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, $oConf
 		{
 			// For now hidden modules are always on !
 			$oP->add("<input type=\"hidden\" id=\"module[$index]\" name=\"module[$index]\" value=\"$sModuleId\">\n");
+			$index++;
 		}
 	}	
 	$oP->add("</div>");

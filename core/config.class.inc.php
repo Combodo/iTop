@@ -60,6 +60,8 @@ class Config
 	protected $m_aAddons;
 	protected $m_aDictionaries;
 
+	protected $m_aModuleSettings;
+
 	protected $m_sDBHost;
 	protected $m_sDBUser;
 	protected $m_sDBPwd;
@@ -119,7 +121,6 @@ class Config
 			'../core/event.class.inc.php',
 			'../core/action.class.inc.php',
 			'../core/trigger.class.inc.php',
-			'../addons/authentication/authent.local.inc.php',
 		);
 		$this->m_aDataModels = array();
 		$this->m_aAddons = array(
@@ -148,6 +149,9 @@ class Config
 		$this->m_iFastReloadInterval = DEFAULT_FAST_RELOAD_INTERVAL;
 		$this->m_bSecureConnectionRequired = DEFAULT_SECURE_CONNECTION_REQUIRED;
 		$this->m_sDefaultLanguage = 'EN US';
+
+		$this->m_aModuleSettings = array();
+
 		if ($bLoadConfig)
 		{
 			$this->Load($sConfigFile);
@@ -240,6 +244,8 @@ class Config
 		$this->m_iFastReloadInterval = isset($MySettings['fast_reload_interval']) ? trim($MySettings['fast_reload_interval']) : DEFAULT_FAST_RELOAD_INTERVAL;
 		$this->m_bSecureConnectionRequired = isset($MySettings['secure_connection_required']) ? trim($MySettings['secure_connection_required']) : DEFAULT_SECURE_CONNECTION_REQUIRED;
 
+		$this->m_aModuleSettings = isset($MyModuleSettings) ?  $MyModuleSettings : array();
+
 		$this->m_sDefaultLanguage = isset($MySettings['default_language']) ? trim($MySettings['default_language']) : 'EN US';
 	}
 
@@ -261,6 +267,20 @@ class Config
 		{
 			$this->CheckFile('dictionary', $sToInclude);
 		}
+	}
+
+	public function GetModuleSetting($sModule, $sProperty, $defaultvalue = null)
+	{
+		if (isset($this->m_aModuleSettings[$sModule][$sProperty]))
+		{
+			return $this->m_aModuleSettings[$sModule][$sProperty];
+		}
+		return $defaultvalue;
+	}
+
+	public function SetModuleSetting($sModule, $sProperty, $value)
+	{
+		$this->m_aModuleSettings[$sModule][$sProperty] = $value;
 	}
 
 	public function GetAppModules()
@@ -496,6 +516,20 @@ class Config
 			fwrite($hFile, "\t'fast_reload_interval' => {$this->m_iFastReloadInterval},\n");
 			fwrite($hFile, "\t'secure_connection_required' => ".($this->m_bSecureConnectionRequired ? 'true' : 'false').",\n");
 			fwrite($hFile, "\t'default_language' => '{$this->m_sDefaultLanguage}',\n");
+			fwrite($hFile, ");\n");
+
+			fwrite($hFile, "\n");
+			fwrite($hFile, "\$MyModuleSettings = array(\n");
+			foreach ($this->m_aModuleSettings as $sModule => $aProperties)
+			{
+				fwrite($hFile, "\t'$sModule' => array (\n");
+				foreach ($aProperties as $sProperty => $value)
+				{
+					$sExport = var_export($value, true);
+					fwrite($hFile, "\t\t'$sProperty' => $sExport,\n");
+				}
+				fwrite($hFile, "\t),\n");
+			}
 			fwrite($hFile, ");\n");
 			
 			fwrite($hFile, "\n/**\n");

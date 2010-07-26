@@ -3,19 +3,16 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-knownerror-mgmt/1.0.0',
+	'authent-ldap',
 	array(
 		// Identification
 		//
-		'label' => 'Known Errors Database',
-		'category' => 'business',
+		'label' => 'User authentication based on LDAP',
+		'category' => 'authentication',
 
 		// Setup
 		//
 		'dependencies' => array(
-			'itop-config-mgmt/1.0.0',
-			'itop-tickets/1.0.0',
-			'itop-incident-mgmt/1.0.0',
 		),
 		'mandatory' => false,
 		'visible' => true,
@@ -23,26 +20,29 @@ SetupWebPage::AddModule(
 		// Components
 		//
 		'datamodel' => array(
-			'model.itop-knownerror-mgmt.php',
+			'model.authent-ldap.php',
 		),
 		'dictionary' => array(
-			'en.dict.itop-knownerror-mgmt.php',
+			'en.dict.authent-ldap.php',
 		),
 		'data.struct' => array(
-			//'data.struct.itop-knownerror-mgmt.xml',
+			//'data.struct.authent-ldap.xml',
 		),
 		'data.sample' => array(
-			//'data.sample.itop-knownerror-mgmt.xml',
+			//'data.sample.authent-ldap.xml',
 		),
 		
 		// Documentation
 		//
-		'doc.manual_setup' => '', // No manual installation instructions
-		'doc.more_information' => '/doc/itop-documentation.htm#KnownErrorsDB',
+		'doc.manual_setup' => '',
+		'doc.more_information' => '',
 
 		// Default settings
 		//
 		'settings' => array(
+			'host' => '192.168.10.164',
+			'port' => 389,
+			'basedn' => 'dc=leconcorde,dc=net',
 		),
 	)
 );

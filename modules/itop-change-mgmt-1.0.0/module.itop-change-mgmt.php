@@ -8,6 +8,7 @@ SetupWebPage::AddModule(
 		// Identification
 		//
 		'label' => 'Change Management',
+		'category' => 'business',
 
 		// Setup
 		//
@@ -38,6 +39,11 @@ SetupWebPage::AddModule(
 		//
 		'doc.manual_setup' => '',
 		'doc.more_information' => '/doc/itop-documentation.htm#ChangeMgmt',
+
+		// Default settings
+		//
+		'settings' => array(
+		),
 	)
 );
 

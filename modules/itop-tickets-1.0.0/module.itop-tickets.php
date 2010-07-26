@@ -8,6 +8,7 @@ SetupWebPage::AddModule(
 		// Identification
 		//
 		'label' => 'Tickets - prerequisite for ticket modules',
+		'category' => 'business',
 
 		// Setup
 		//
@@ -35,6 +36,11 @@ SetupWebPage::AddModule(
 		//
 		'doc.manual_setup' => '',
 		'doc.more_information' => '',
+
+		// Default settings
+		//
+		'settings' => array(
+		),
 	)
 );
 

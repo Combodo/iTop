@@ -3,39 +3,39 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-basic/1.0.0',
+	'authent-local',
 	array(
 		// Identification
 		//
-		'label' => 'iTop Basic Model',
-		'category' => 'business',
+		'label' => 'User authentication based on the local DB',
+		'category' => 'authentication',
 
 		// Setup
 		//
 		'dependencies' => array(
 		),
-		'mandatory' => false,
+		'mandatory' => true,
 		'visible' => true,
 
 		// Components
 		//
 		'datamodel' => array(
-			'model.itop-basic.php',
+			'model.authent-local.php',
 		),
 		'dictionary' => array(
-			'en.dict.itop-basic.php',
+			'en.dict.authent-local.php',
 		),
 		'data.struct' => array(
-			//'data.struct.itop-basic.xml',
+			//'data.struct.authent-local.xml',
 		),
 		'data.sample' => array(
-			//'data.sample.itop-basic.xml',
+			//'data.sample.authent-local.xml',
 		),
 		
 		// Documentation
 		//
-		'doc.manual_setup' => '/doc/xxx/yyy.htm',
-		'doc.more_information' => '/doc/xxx/yyy.htm',
+		'doc.manual_setup' => '',
+		'doc.more_information' => '',
 
 		// Default settings
 		//

@@ -8,6 +8,7 @@ SetupWebPage::AddModule(
 		// Identification
 		//
 		'label' => 'Incident Management',
+		'category' => 'business',
 
 		// Setup
 		//
@@ -39,6 +40,11 @@ SetupWebPage::AddModule(
 		//
 		'doc.manual_setup' => '',
 		'doc.more_information' => '/doc/itop-documentation.htm#IncidentMgmt',
+
+		// Default settings
+		//
+		'settings' => array(
+		),
 	)
 );
 

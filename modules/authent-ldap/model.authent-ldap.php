@@ -15,7 +15,7 @@
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 /**
- * Authent Null Password
+ * Authent LDAP
  * User authentication Module, no password at all!
  *
  * @author      Erwan Taloc <erwan.taloc@combodo.com>
@@ -25,7 +25,7 @@
  */
 
 
-class UserNullPassword extends User
+class UserLDAP extends User
 {
 	public static function Init()
 	{
@@ -36,7 +36,6 @@ class UserNullPassword extends User
 			"name_attcode" => "login",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
-			//"db_table" => "aaaaaaanullpassword",
 			"db_table" => "",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -55,12 +54,29 @@ class UserNullPassword extends User
 
 	public function CheckCredentials($sPassword)
 	{
-		return true;
+		$aLDAPConfig['host'] = MetaModel::GetModuleSetting('authent-ldap', 'host', 'localhost');
+		$aLDAPConfig['port'] = MetaModel::GetModuleSetting('authent-ldap', 'port', 389);
+		$aLDAPConfig['basedn'] = MetaModel::GetModuleSetting('authent-ldap', 'basedn', 'dc=net');
+		
+		$ds = @ldap_connect($aLDAPConfig['host'], $aLDAPConfig['port']);
+		ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
+		ldap_set_option($ds, LDAP_OPT_REFERRALS, 0);
+		
+		$sDN = "uid=".$this->Get('login').",ou=people,".$aLDAPConfig['basedn'];
+		
+		if ($bind = @ldap_bind($ds, $sDN, $sPassword))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	public function TrustWebServerContext()
 	{
-		return true;
+		return false;
 	}
 
 	public function CanChangePassword()
@@ -70,7 +86,7 @@ class UserNullPassword extends User
 
 	public function ChangePassword($sOldPassword, $sNewPassword)
 	{
-		return true;
+		return false;
 	}
 }
 

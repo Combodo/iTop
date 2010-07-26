@@ -188,6 +188,8 @@ abstract class MetaModel
 		}
 	}
 
+	private static $m_oConfig = null;
+
 	private static $m_bTraceQueries = true;
 	private static $m_aQueriesLog = array();
 	
@@ -3110,18 +3112,18 @@ abstract class MetaModel
 
 	public static function LoadConfig($sConfigFile)
 	{
-		$oConfig = new Config($sConfigFile);
+		self::$m_oConfig = new Config($sConfigFile);
 
 		// Set log ASAP
-		if ($oConfig->GetLogGlobal())
+		if (self::$m_oConfig->GetLogGlobal())
 		{
-			if ($oConfig->GetLogIssue())
+			if (self::$m_oConfig->GetLogIssue())
 			{
 				self::$m_bLogIssue = true;
 				IssueLog::Enable('../error.log');
 			}
-			self::$m_bLogNotification = $oConfig->GetLogNotification();
-			self::$m_bLogWebService = $oConfig->GetLogWebService();
+			self::$m_bLogNotification = self::$m_oConfig->GetLogNotification();
+			self::$m_bLogWebService = self::$m_oConfig->GetLogWebService();
 		}
 		else
 		{
@@ -3132,35 +3134,35 @@ abstract class MetaModel
 
 		// Note: load the dictionary as soon as possible, because it might be
 		//       needed when some error occur
-		foreach ($oConfig->GetDictionaries() as $sModule => $sToInclude)
+		foreach (self::$m_oConfig->GetDictionaries() as $sModule => $sToInclude)
 		{
 			self::Plugin($sConfigFile, 'dictionaries', $sToInclude);
 		}
 		// Set the language... after the dictionaries have been loaded!
-		Dict::SetDefaultLanguage($oConfig->GetDefaultLanguage());
+		Dict::SetDefaultLanguage(self::$m_oConfig->GetDefaultLanguage());
 
 		// Romain: this is the only way I've found to cope with the fact that
 		//         classes have to be derived from cmdbabstract (to be editable in the UI)
 		require_once('../application/cmdbabstract.class.inc.php');
 
-		foreach ($oConfig->GetAppModules() as $sModule => $sToInclude)
+		foreach (self::$m_oConfig->GetAppModules() as $sModule => $sToInclude)
 		{
 			self::Plugin($sConfigFile, 'application', $sToInclude);
 		}
-		foreach ($oConfig->GetDataModels() as $sModule => $sToInclude)
+		foreach (self::$m_oConfig->GetDataModels() as $sModule => $sToInclude)
 		{
 			self::Plugin($sConfigFile, 'business', $sToInclude);
 		}
-		foreach ($oConfig->GetAddons() as $sModule => $sToInclude)
+		foreach (self::$m_oConfig->GetAddons() as $sModule => $sToInclude)
 		{
 			self::Plugin($sConfigFile, 'addons', $sToInclude);
 		}
 
-		$sServer = $oConfig->GetDBHost();
-		$sUser = $oConfig->GetDBUser();
-		$sPwd = $oConfig->GetDBPwd();
-		$sSource = $oConfig->GetDBName();
-		$sTablePrefix = $oConfig->GetDBSubname();
+		$sServer = self::$m_oConfig->GetDBHost();
+		$sUser = self::$m_oConfig->GetDBUser();
+		$sPwd = self::$m_oConfig->GetDBPwd();
+		$sSource = self::$m_oConfig->GetDBName();
+		$sTablePrefix = self::$m_oConfig->GetDBSubname();
 
 		// The include have been included, let's browse the existing classes and
 		// develop some data based on the proposed model
@@ -3170,6 +3172,11 @@ abstract class MetaModel
 		self::$m_sTablePrefix = $sTablePrefix;
 
 		CMDBSource::Init($sServer, $sUser, $sPwd); // do not select the DB (could not exist)
+	}
+
+	public static function GetModuleSetting($sModule, $sProperty, $defaultvalue = null)
+	{
+		return self::$m_oConfig->GetModuleSetting($sModule, $sProperty, $defaultvalue);
 	}
 
 	protected static $m_aPlugins = array();
