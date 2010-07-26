@@ -1026,7 +1026,7 @@ function Welcome(iTopWebPage $oPage)
 		ajax_request = null;
 	}
 	
-	ajax_request = $.get('ajax.csvimport.php',
+	ajax_request = $.post('ajax.csvimport.php',
 		   { operation: 'get_csv_template', class_name: sClassName },
 		   function(data) {
 			 $('#template').empty();

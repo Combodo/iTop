@@ -9,8 +9,8 @@ function UpdateObjectList(sClass, sId, sExtKeyToRemote)
 		aRelatedObjectIds[0] = 0;
 	}
 	var oql = "SELECT "+sClass+" AS c WHERE c.id IN (" + aRelatedObjectIds.join(", ") + ")";
-	$.get("ajax.render.php?filter=" + oql + "&style=list&encoding=oql",
-	   { operation: "ajax" },
+	$.post("ajax.render.php?style=list&encoding=oql",
+	   { operation: "ajax", filter: oql },
 	   function(data){
 		 $("#related_objects_"+sId).empty();
 		 $("#related_objects_"+sId).append(data);
@@ -42,8 +42,8 @@ function ManageObjects(sTitle, sClass, sId, sExtKeyToRemote)
 function Manage_LoadSelect(sSelectedId, sFilter)
 {
  	$('#'+sSelectedId).addClass('loading');
-	$.get('ajax.render.php?filter=' + sFilter,
-	   { operation: 'combo_options' },
+	$.post('ajax.render.php',
+	   { operation: 'combo_options', filter: sFilter },
 	   function(data){
 		 $('#'+sSelectedId).empty();
 		 $('#'+sSelectedId).append(data);

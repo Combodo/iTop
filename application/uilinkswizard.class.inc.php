@@ -132,7 +132,7 @@ class UILinksWizard
 		function AddObjects()
 		{
 			// TO DO: compute the list of objects already linked with the current Object
-			$.get( 'ajax.render.php', { 'operation': 'addObjects',
+			$.post( 'ajax.render.php', { 'operation': 'addObjects',
 										'class': '{$this->m_sClass}',
 										'linkageAttr': '{$this->m_sLinkageAttr}',
 										'linkedClass': '{$this->m_sLinkedClass}',
@@ -175,7 +175,7 @@ class UILinksWizard
 			theMap['operation'] = 'searchObjectsToAdd';
 			
 			// Run the query and display the results
-			$.get( 'ajax.render.php', theMap, 
+			$.post( 'ajax.render.php', theMap, 
 				function(data)
 				{
 					$('#SearchResultsToAdd').html(data);
@@ -223,7 +223,7 @@ class UILinksWizard
 			theMap['operation'] = 'doAddObjects';
 			
 			// Run the query and display the results
-			$.get( 'ajax.render.php', theMap, 
+			$.post( 'ajax.render.php', theMap, 
 				function(data)
 				{
 					//console.log('Data: ' + data);

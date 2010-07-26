@@ -102,8 +102,8 @@ function WizardHelper(sClass)
 	{
 		//console.log('data sent:', this.ToJSON());
 		//console.log('oWizard:', this);
-		$.get('ajax.render.php?json_obj=' + this.ToJSON(),
-		   { operation: 'wizard_helper' },
+		$.post('ajax.render.php',
+		   { operation: 'wizard_helper', json_obj: this.ToJSON() },
 			function(html){
 				$('body').append(html);
 				//console.log('data received:', oWizardHelper);

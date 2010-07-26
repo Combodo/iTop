@@ -190,8 +190,8 @@ class DisplayBlock
 			$oPage->add("</div>\n");
 			$oPage->add('
 			<script language="javascript">
-			$.get("ajax.render.php?filter='.$sFilter.'&style='.$this->m_sStyle.'",
-			   { operation: "ajax" },
+			$.post("ajax.render.php?style='.$this->m_sStyle.'",
+			   { operation: "ajax", filter: "$sFilter" },
 			   function(data){
 				 $("#'.$sId.'").empty();
 				 $("#'.$sId.'").append(data);
@@ -257,8 +257,8 @@ class DisplayBlock
 			$sHtml .= "</div>\n";
 			$sHtml .= '
 			<script language="javascript">
-			$.get("ajax.render.php?filter='.$sFilter.'&style='.$this->m_sStyle.'",
-			   { operation: "ajax", extra_params: "'.$sExtraParams.'" },
+			$.post("ajax.render.php?style='.$this->m_sStyle.'",
+			   { operation: "ajax", filter: "'.$sFilter.'", extra_params: "'.$sExtraParams.'" },
 			   function(data){
 				 $("#'.$sId.'").empty();
 				 $("#'.$sId.'").append(data);

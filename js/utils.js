@@ -6,8 +6,8 @@ function ReloadTruncatedList(divId, sSerializedFilter, sExtraParams)
 {
 	$('#'+divId).addClass('loading');
 	//$('#'+divId).blockUI();
-	$.get('ajax.render.php?filter='+sSerializedFilter+'&style=list',
-	   { operation: 'ajax', extra_params: sExtraParams },
+	$.post('ajax.render.php?style=list',
+	   { operation: 'ajax', filter: sSerializedFilter, extra_params: sExtraParams },
 	   function(data){
 		 $('#'+divId).empty();
 		 $('#'+divId).append(data);
@@ -25,8 +25,8 @@ function ReloadBlock(divId, sStyle, sSerializedFilter, sExtraParams)
 {
 	$('#'+divId).addClass('loading');
 	//$('#'+divId).blockUI();
-	$.get('ajax.render.php?filter='+sSerializedFilter+'&style='+sStyle,
-	   { operation: 'ajax', extra_params: sExtraParams },
+	$.post('ajax.render.php?style='+sStyle,
+	   { operation: 'ajax', filter: sSerializedFilter, extra_params: sExtraParams },
 	   function(data){
 		 $('#'+divId).empty();
 		 $('#'+divId).append(data);
@@ -65,7 +65,7 @@ function ReloadSearchForm(divId, sClassName, sBaseClass)
 		bSubmitHookIsUsed = true;
 	}
 	$('#'+divId+' form').unbind('submit');
-	$.get('ajax.render.php',
+	$.post('ajax.render.php',
 	   { operation: 'search_form', className: sClassName, baseClass: sBaseClass, currentId: divId },
 	   function(data){
 		   $('#'+divId).empty();
