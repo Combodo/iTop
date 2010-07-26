@@ -761,6 +761,10 @@ abstract class DBObject
 
 	private function DBInsertSingleTable($sTableClass)
 	{
+		$sTable = MetaModel::DBGetTable($sTableClass);
+		// Abstract classes or classes having no specific attribute do not have an associated table
+		if ($sTable == '') return;
+
 		$sClass = get_class($this);
 
 		// fields in first array, values in the second
@@ -788,7 +792,6 @@ abstract class DBObject
 
 		if (count($aValuesToWrite) == 0) return false;
 
-		$sTable = MetaModel::DBGetTable($sTableClass);
 		$sInsertSQL = "INSERT INTO `$sTable` (".join(",", $aFieldsToWrite).") VALUES (".join(", ", $aValuesToWrite).")";
 
 		$iNewKey = CMDBSource::InsertInto($sInsertSQL);
@@ -850,7 +853,6 @@ abstract class DBObject
 		foreach(MetaModel::EnumParentClasses($sClass) as $sParentClass)
 		{
 			if ($sParentClass == $sRootClass) continue;
-			if (MetaModel::DBGetTable($sParentClass) == "") continue;
 			$this->DBInsertSingleTable($sParentClass);
 		}
 

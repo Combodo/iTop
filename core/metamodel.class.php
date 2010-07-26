@@ -1727,7 +1727,7 @@ abstract class MetaModel
 		// Then we join the queries of the eventual parent classes (compound model)
 		foreach(self::EnumParentClasses($sClass) as $sParentClass)
 		{
-			if (self::DBGetTable($sParentClass) == "") continue;
+			if (!self::HasTable($sParentClass)) continue;
 			self::DbgTrace("Parent class: $sParentClass... let's call MakeQuerySingleTable()");
 			$oSelectParentTable = self::MakeQuerySingleTable($aSelectedClasses, $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oFilter, $sParentClass, $aExpectedAtts, $aExtKeys, $aValues);
 			if (is_null($oSelectBase))
