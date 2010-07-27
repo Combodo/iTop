@@ -1,6 +1,12 @@
 <?php
 
 
+// Until we develop a mean to adress this within the setup, let's check that this instance
+// of PHP has the php_ldap extension
+//
+if (function_exists('ldap_connect'))
+{
+
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
 	'authent-ldap',
@@ -56,5 +62,7 @@ SetupWebPage::AddModule(
 		),
 	)
 );
+
+} // if (function_exists('ldap_connect'))
 
 ?>

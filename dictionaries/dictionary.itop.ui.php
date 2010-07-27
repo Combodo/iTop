@@ -29,41 +29,6 @@
 //////////////////////////////////////////////////////////////////////
 //
 
-//
-// Class: menuNode
-//
-
-Dict::Add('EN US', 'English', 'English', array(
-	'Class:menuNode' => 'menuNode',
-	'Class:menuNode+' => 'Main menu configuration elements',
-	'Class:menuNode/Attribute:name' => 'Menu Name',
-	'Class:menuNode/Attribute:name+' => 'Short name for this menu',
-	'Class:menuNode/Attribute:label' => 'Menu Description',
-	'Class:menuNode/Attribute:label+' => 'Long description for this menu',
-	'Class:menuNode/Attribute:hyperlink' => 'Hyperlink',
-	'Class:menuNode/Attribute:hyperlink+' => 'Hyperlink to the page',
-	'Class:menuNode/Attribute:icon_path' => 'Menu Icon',
-	'Class:menuNode/Attribute:icon_path+' => 'Path to the icon of the menu',
-	'Class:menuNode/Attribute:template' => 'Template',
-	'Class:menuNode/Attribute:template+' => 'HTML template for the view',
-	'Class:menuNode/Attribute:type' => 'Type',
-	'Class:menuNode/Attribute:type+' => 'Type of menu',
-	'Class:menuNode/Attribute:type/Value:application' => 'application',
-	'Class:menuNode/Attribute:type/Value:application+' => 'application',
-	'Class:menuNode/Attribute:type/Value:user' => 'user',
-	'Class:menuNode/Attribute:type/Value:user+' => 'user',
-	'Class:menuNode/Attribute:type/Value:administrator' => 'administrator',
-	'Class:menuNode/Attribute:type/Value:administrator+' => 'administrator',
-	'Class:menuNode/Attribute:rank' => 'Display rank',
-	'Class:menuNode/Attribute:rank+' => 'Sort order for displaying the menu',
-	'Class:menuNode/Attribute:parent_id' => 'Parent Menu Item',
-	'Class:menuNode/Attribute:parent_id+' => 'Parent Menu Item',
-	'Class:menuNode/Attribute:parent_name' => 'Parent Menu Item',
-	'Class:menuNode/Attribute:parent_name+' => 'Parent Menu Item',
-	'Class:menuNode/Attribute:user_id' => 'Owner of the menu',
-	'Class:menuNode/Attribute:user_id+' => 'User who owns this menu (for user defined menus)',
-));
-
 //////////////////////////////////////////////////////////////////////
 // Classes in 'application'
 //////////////////////////////////////////////////////////////////////
@@ -121,6 +86,8 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:User' => 'User',
 	'Class:User+' => 'User login',
+	'Class:User/Attribute:finalclass' => 'Type of account',
+	'Class:User/Attribute:finalclass+' => '',
 	'Class:User/Attribute:contactid' => 'Contact (person)',
 	'Class:User/Attribute:contactid+' => 'Personal details from the business data',
 	'Class:User/Attribute:last_name' => 'Last name',
@@ -134,40 +101,11 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:User/Attribute:language' => 'Language',
 	'Class:User/Attribute:language+' => 'user language',
 	'Class:User/Attribute:language/Value:EN US' => 'English',
-	'Class:User/Attribute:language/Value:EN US+' => 'English U.S.',
+	'Class:User/Attribute:language/Value:EN US+' => 'English (U.S.)',
 	'Class:User/Attribute:language/Value:FR FR' => 'French',
-	'Class:User/Attribute:language/Value:FR FR+' => 'FR FR',
+	'Class:User/Attribute:language/Value:FR FR+' => 'French (France)',
 	'Class:User/Attribute:profile_list' => 'Profiles',
 	'Class:User/Attribute:profile_list+' => 'Roles, granting rights for that person',
-));
-
-//
-// Class: UserLocal
-//
-
-Dict::Add('EN US', 'English', 'English', array(
-	'Class:UserLocal' => 'iTop user',
-	'Class:UserLocal+' => 'User authentified by iTop',
-	'Class:UserLocal/Attribute:contactid' => 'Contact (person)',
-	'Class:UserLocal/Attribute:contactid+' => 'Personal details from the business data',
-	'Class:UserLocal/Attribute:last_name' => 'Last name',
-	'Class:UserLocal/Attribute:last_name+' => 'Name of the corresponding contact',
-	'Class:UserLocal/Attribute:first_name' => 'First name',
-	'Class:UserLocal/Attribute:first_name+' => 'First name of the corresponding contact',
-	'Class:UserLocal/Attribute:email' => 'Email',
-	'Class:UserLocal/Attribute:email+' => 'Email of the corresponding contact',
-	'Class:UserLocal/Attribute:login' => 'Login',
-	'Class:UserLocal/Attribute:login+' => 'user identification string',
-	'Class:UserLocal/Attribute:password' => 'Password',
-	'Class:UserLocal/Attribute:password+' => 'user authentication string',
-	'Class:UserLocal/Attribute:language' => 'Language',
-	'Class:UserLocal/Attribute:language+' => 'user language',
-	'Class:UserLocal/Attribute:language/Value:EN US' => 'English',
-	'Class:UserLocal/Attribute:language/Value:EN US+' => 'English U.S.',
-	'Class:UserLocal/Attribute:language/Value:FR FR' => 'French',
-	'Class:UserLocal/Attribute:language/Value:FR FR+' => 'FR FR',
-	'Class:UserLocal/Attribute:profile_list' => 'Profiles',
-	'Class:UserLocal/Attribute:profile_list+' => 'Roles, granting rights for that person',
 ));
 
 //

@@ -29,41 +29,6 @@
 //////////////////////////////////////////////////////////////////////
 //
 
-//
-// Class: menuNode
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:menuNode' => 'menuNode',
-	'Class:menuNode+' => 'Main menu configuration elements',
-	'Class:menuNode/Attribute:name' => 'Menu Name',
-	'Class:menuNode/Attribute:name+' => 'Short name for this menu',
-	'Class:menuNode/Attribute:label' => 'Menu Description',
-	'Class:menuNode/Attribute:label+' => 'Long description for this menu',
-	'Class:menuNode/Attribute:hyperlink' => 'Hyperlink',
-	'Class:menuNode/Attribute:hyperlink+' => 'Hyperlink to the page',
-	'Class:menuNode/Attribute:icon_path' => 'Menu Icon',
-	'Class:menuNode/Attribute:icon_path+' => 'Path to the icon o the menu',
-	'Class:menuNode/Attribute:template' => 'Template',
-	'Class:menuNode/Attribute:template+' => 'HTML template for the view',
-	'Class:menuNode/Attribute:type' => 'Type',
-	'Class:menuNode/Attribute:type+' => 'Type of menu',
-	'Class:menuNode/Attribute:type/Value:application' => 'application',
-	'Class:menuNode/Attribute:type/Value:application+' => 'application',
-	'Class:menuNode/Attribute:type/Value:user' => 'user',
-	'Class:menuNode/Attribute:type/Value:user+' => 'user',
-	'Class:menuNode/Attribute:type/Value:administrator' => 'administrator',
-	'Class:menuNode/Attribute:type/Value:administrator+' => 'administrator',
-	'Class:menuNode/Attribute:rank' => 'Display rank',
-	'Class:menuNode/Attribute:rank+' => 'Sort order for displaying the menu',
-	'Class:menuNode/Attribute:parent_id' => 'Parent Menu Item',
-	'Class:menuNode/Attribute:parent_id+' => 'Parent Menu Item',
-	'Class:menuNode/Attribute:parent_name' => 'Parent Menu Item',
-	'Class:menuNode/Attribute:parent_name+' => 'Parent Menu Item',
-	'Class:menuNode/Attribute:user_id' => 'Owner of the menu',
-	'Class:menuNode/Attribute:user_id+' => 'User who owns this menu (for user defined menus)',
-));
-
 //////////////////////////////////////////////////////////////////////
 // Classes in 'application'
 //////////////////////////////////////////////////////////////////////
@@ -118,9 +83,11 @@ Dict::Add('FR FR', 'French', 'Français', array(
 // Class: User
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:User' => 'Compte utilisateur',
-	'Class:User+' => 'Login utilisateur',
+Dict::Add('EN US', 'French', 'Français', array(
+	'Class:User' => 'Utilisateur',
+	'Class:User+' => 'Compte utilisateur',
+	'Class:User/Attribute:finalclass' => 'Type de compte',
+	'Class:User/Attribute:finalclass+' => '',
 	'Class:User/Attribute:contactid' => 'Contact (personne)',
 	'Class:User/Attribute:contactid+' => '',
 	'Class:User/Attribute:last_name' => 'Nom',
@@ -131,31 +98,14 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:User/Attribute:email+' => '',
 	'Class:User/Attribute:login' => 'Login',
 	'Class:User/Attribute:login+' => '',
+	'Class:User/Attribute:language' => 'Langue',
+	'Class:User/Attribute:language+' => '',
+	'Class:User/Attribute:language/Value:EN US' => 'Anglais',
+	'Class:User/Attribute:language/Value:EN US+' => 'Anglais (Etats-unis)',
+	'Class:User/Attribute:language/Value:FR FR' => 'Français',
+	'Class:User/Attribute:language/Value:FR FR+' => 'Français (France)',
 	'Class:User/Attribute:profile_list' => 'Profils',
 	'Class:User/Attribute:profile_list+' => 'Rôles, ouvrants les droits d\'accès',
-));
-
-//
-// Class: UserLocal
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:UserLocal' => 'Utilisateur iTop',
-	'Class:UserLocal+' => 'Utilisateur authentifié par iTop',
-	'Class:UserLocal/Attribute:contactid' => 'Contact (personne)',
-	'Class:UserLocal/Attribute:contactid+' => '',
-	'Class:UserLocal/Attribute:last_name' => 'Nom',
-	'Class:UserLocal/Attribute:last_name+' => '',
-	'Class:UserLocal/Attribute:first_name' => 'Prénom',
-	'Class:UserLocal/Attribute:first_name+' => '',
-	'Class:UserLocal/Attribute:email' => 'Adresse email',
-	'Class:UserLocal/Attribute:email+' => '',
-	'Class:UserLocal/Attribute:login' => 'Login',
-	'Class:UserLocal/Attribute:login+' => '',
-	'Class:UserLocal/Attribute:password' => 'Mot de passe',
-	'Class:UserLocal/Attribute:password+' => '',
-	'Class:UserLocal/Attribute:profile_list' => 'Profils',
-	'Class:UserLocal/Attribute:profile_list+' => 'Rôles, ouvrants les droits d\'accès',
 ));
 
 //

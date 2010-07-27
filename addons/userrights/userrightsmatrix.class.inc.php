@@ -234,6 +234,7 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 				}
 			}
 		}
+		/*
 		// Create the "My Bookmarks" menu item (parent_id = 0, rank = 6)
 		if ($bNewUser)
 		{
@@ -257,6 +258,7 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 			$oMenu->Set('user_id', $iUserId);
 			$oMenu->DBInsert();
 		}
+		*/
 	}
 
 
