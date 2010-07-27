@@ -89,7 +89,26 @@ class UserLDAP extends User
 			$sLDAPUserQuery = MetaModel::GetModuleSetting('authent-ldap', 'user_query', '');
 			$sBaseDN = MetaModel::GetModuleSetting('authent-ldap', 'base_dn', '');
 			
-			$sQuery = sprintf($sLDAPUserQuery, $this->Get('login'));
+			$sLogin = $this->Get('login');
+			$iContactId = $this->Get('contactid');
+			$sFirstName = '';
+			$sLastName = '';
+			$sEMail = '';
+			if ($iContactId > 0)
+			{
+				$oPerson = MetaModel::GetObject('Person', $iContactId);
+				if (is_object($oPerson))
+				{
+					$sFirstName = $oPerson->Get('first_name');
+					$sLastName = $oPerson->Get('name');
+					$sEMail = $oPerson->Get('email');
+				}
+			}
+			// %1$s => login
+			// %2$s => first name
+			// %3$s => last name			
+			// %4$s => email
+			$sQuery = sprintf($sLDAPUserQuery, $sLogin, $sFirstName, $sLastName, $sEMail);
 			$hSearchResult = @ldap_search($hDS, $sBaseDN, $sQuery);
 
 			$iCountEntries = ($hSearchResult !== false) ? @ldap_count_entries($hDS, $hSearchResult) : 0;
