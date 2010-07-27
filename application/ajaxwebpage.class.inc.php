@@ -42,6 +42,8 @@ class ajax_page extends WebPage
     {
         parent::__construct($s_title);
         $this->m_sReadyScript = "";
+		$this->add_header("Content-type: text/html; charset=utf-8");
+		$this->add_header("Cache-control: no-cache");
     }	
 
 	
