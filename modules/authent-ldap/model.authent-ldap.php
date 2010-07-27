@@ -52,24 +52,78 @@ class UserLDAP extends User
 		MetaModel::Init_SetZListItems('advanced_search', array('login', 'contactid')); // Criteria of the advanced search form
 	}
 
+	/**
+	 * Check the user's password against the LDAP server
+	 * Algorithm:
+	 * 1) Connect to the LDAP server, using a predefined account (or anonymously)
+	 * 2) Search for the specified user, based on a specific search query/pattern
+	 * 3) If exactly one user is found, continue, otherwise return false (wrong user or wrong query configured)
+	 * 3) Bind again to LDAP using the DN of the found user and the password
+	 * 4) If the bind is successful return true, otherwise return false (wrong password)
+	 * @param string $sPassword The user's password to validate against the LDAP server
+	 * @return boolean True if the password is Ok, false otherwise
+	 */
 	public function CheckCredentials($sPassword)
 	{
-		$aLDAPConfig['host'] = MetaModel::GetModuleSetting('authent-ldap', 'host', 'localhost');
-		$aLDAPConfig['port'] = MetaModel::GetModuleSetting('authent-ldap', 'port', 389);
-		$aLDAPConfig['basedn'] = MetaModel::GetModuleSetting('authent-ldap', 'basedn', 'dc=net');
+		$sLDAPHost = MetaModel::GetModuleSetting('authent-ldap', 'host', 'localhost');
+		$iLDAPPort = MetaModel::GetModuleSetting('authent-ldap', 'port', 389);
 		
-		$ds = @ldap_connect($aLDAPConfig['host'], $aLDAPConfig['port']);
-		ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
-		ldap_set_option($ds, LDAP_OPT_REFERRALS, 0);
+		$sDefaultLDAPUser = MetaModel::GetModuleSetting('authent-ldap', 'default_user', '');
+		$sDefaultLDAPPwd = MetaModel::GetModuleSetting('authent-ldap', 'default_pwd', '');
 		
-		$sDN = "uid=".$this->Get('login').",ou=people,".$aLDAPConfig['basedn'];
-		
-		if ($bind = @ldap_bind($ds, $sDN, $sPassword))
+		$hDS = @ldap_connect($sLDAPHost, $iLDAPPort);
+		if ($hDS === false)
 		{
-			return true;
+			$this->LogMessage("ldap_authentication: can not connect to the LDAP server '$sLDAPHost' (port: $iLDAPPort). Check the configuration file config-itop.php.");
+			return false;
+		}
+		$aOptions = MetaModel::GetModuleSetting('authent-ldap', 'options', array());
+		foreach($aOptions as $name => $value)
+		{
+			ldap_set_option($hDS, $name, $value);
+		}
+				
+		if ($bind = @ldap_bind($hDS, $sDefaultLDAPUser, $sDefaultLDAPPwd))
+		{
+			// Search for the person, using the specified query expression
+			$sLDAPUserQuery = MetaModel::GetModuleSetting('authent-ldap', 'user_query', '');
+			$sBaseDN = MetaModel::GetModuleSetting('authent-ldap', 'base_dn', '');
+			
+			$sQuery = sprintf($sLDAPUserQuery, $this->Get('login'));
+			$hSearchResult = @ldap_search($hDS, $sBaseDN, $sQuery);
+
+			$iCountEntries = ($hSearchResult !== false) ? @ldap_count_entries($hDS, $hSearchResult) : 0;
+			switch($iCountEntries)
+			{
+				case 1:
+				// Exactly one entry found, let's check the password by trying to bind with this user
+				$aEntry = ldap_get_entries($hDS, $hSearchResult);
+				$sUserDN = $aEntry[0]['dn'];
+				$bUserBind =  @ldap_bind($hDS, $sUserDN, $sPassword);
+				if ($bUserBind !== false)
+				{
+					ldap_unbind($hDS);
+					return true; // Password Ok
+				}
+				$this->LogMessage("ldap_authentication: wrong password for user: '$sUserDN'.");
+				return false; // Wrong password
+				break;
+				
+				case 0:
+				// User not found...
+				$this->LogMessage("ldap_authentication: no entry found with the query '$sQuery', base_dn = '$sBaseDN'. User not found in LDAP.");
+				break;
+				
+				default:
+				// More than one entry... maybe the query is not specific enough...
+				$this->LogMessage("ldap_authentication: several (".ldap_count_entries($hDS, $hSearchResult).") entries match the query '$sQuery', base_dn = '$sBaseDN', check that the query defined in config-itop.php is specific enough.");
+			}
+			return false;
 		}
 		else
 		{
+			// Trace: invalid default user for LDAP initial binding
+			$this->LogMessage("ldap_authentication: can not bind to the LDAP server '$sLDAPHost' (port: $iLDAPPort), user='$sDefaultLDAPUser', pwd='$sDefaultLDAPPwd'. Error: '".ldap_error($hDS)."'. Check the configuration file config-itop.php.");
 			return false;
 		}
 	}
@@ -87,6 +141,26 @@ class UserLDAP extends User
 	public function ChangePassword($sOldPassword, $sNewPassword)
 	{
 		return false;
+	}
+	
+	protected function LogMessage($sMessage, $aData = array())
+	{
+		if (MetaModel::IsLogEnabledIssue())
+		{
+			if (MetaModel::IsValidClass('EventIssue'))
+			{
+				$oLog = new EventIssue();
+	
+				$oLog->Set('message', $sMessage);
+				$oLog->Set('userinfo', '');
+				$oLog->Set('issue', 'LDAP Authentication');
+				$oLog->Set('impact', 'User login rejected');
+				$oLog->Set('data', $aData);
+				$oLog->DBInsertNoReload();
+			}
+	
+			IssueLog::Error($sMessage);
+		}		
 	}
 }
 
