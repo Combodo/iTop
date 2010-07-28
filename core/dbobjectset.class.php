@@ -273,15 +273,14 @@ class DBObjectSet
 
 	public function AddObject($oObject, $sClassAlias = '')
 	{
-		$sObjClass = get_class($oObject);
 		if (strlen($sClassAlias) == 0)
 		{
-			$sClassAlias = $sObjClass;
+			$sClassAlias = $this->m_oFilter->GetClassAlias();
 		}
 
 		$iNextPos = count($this->m_aData);
 		$this->m_aData[$iNextPos][$sClassAlias] = $oObject;
-		$this->m_aId2Row[$sObjClass][$oObject->GetKey()] = $iNextPos;
+		$this->m_aId2Row[$sClassAlias][$oObject->GetKey()] = $iNextPos;
 	}
 
 	protected function AddObjectExtended($aObjectArray)
@@ -291,7 +290,7 @@ class DBObjectSet
 		foreach ($aObjectArray as $sClassAlias => $oObject)
 		{
 			$this->m_aData[$iNextPos][$sClassAlias] = $oObject;
-			$this->m_aId2Row[get_class($oObject)][$oObject->GetKey()] = $iNextPos;
+			$this->m_aId2Row[$sClassAlias][$oObject->GetKey()] = $iNextPos;
 		}
 	}
 
@@ -329,10 +328,11 @@ class DBObjectSet
 
 		$oNewSet = DBObjectSet::FromScratch($this->GetClass());
 
+		$sClassAlias = $this->m_oFilter->GetClassAlias();
 		$oObjectSet->Seek(0);
 		while ($oObject = $oObjectSet->Fetch())
 		{
-			if (array_key_exists($oObject->GetKey(), $this->m_aId2Row))
+			if (array_key_exists($oObject->GetKey(), $this->m_aId2Row[$sClassAlias]))
 			{
 				$oNewSet->AddObject($oObject);
 			}
@@ -350,10 +350,11 @@ class DBObjectSet
 
 		$oNewSet = DBObjectSet::FromScratch($this->GetClass());
 
+		$sClassAlias = $this->m_oFilter->GetClassAlias();
 		$oObjectSet->Seek(0);
 		while ($oObject = $oObjectSet->Fetch())
 		{
-			if (!array_key_exists($oObject->GetKey(), $this->m_aId2Row))
+			if (!array_key_exists($oObject->GetKey(), $this->m_aId2Row[$sClassAlias]))
 			{
 				$oNewSet->AddObject($oObject);
 			}
