@@ -264,7 +264,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ExternalDoc' => 'Document externe',
-	'Class:ExternalDoc+' => 'Document mis a disposition depuis un serveur web externe',
+	'Class:ExternalDoc+' => 'Document mis à disposition depuis un serveur web externe',
 	'Class:ExternalDoc/Attribute:url' => 'Url',
 	'Class:ExternalDoc/Attribute:url+' => '',
 ));
@@ -583,9 +583,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:NetworkInterface' => 'Interface réseau',
 	'Class:NetworkInterface+' => '',
-	'Class:NetworkInterface/Attribute:device_id' => 'Equipment',
+	'Class:NetworkInterface/Attribute:device_id' => 'Equipement',
 	'Class:NetworkInterface/Attribute:device_id+' => '',
-	'Class:NetworkInterface/Attribute:device_name' => 'Equipment',
+	'Class:NetworkInterface/Attribute:device_name' => 'Equipement',
 	'Class:NetworkInterface/Attribute:device_name+' => '',
 	'Class:NetworkInterface/Attribute:logical_type' => 'Type logique',
 	'Class:NetworkInterface/Attribute:logical_type+' => '',
@@ -625,7 +625,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:NetworkInterface/Attribute:duplex/Value:half+' => '',
 	'Class:NetworkInterface/Attribute:duplex/Value:unknown' => 'Unknown',
 	'Class:NetworkInterface/Attribute:duplex/Value:unknown+' => '',
-	'Class:NetworkInterface/Attribute:connected_if' => 'Connectée a',
+	'Class:NetworkInterface/Attribute:connected_if' => 'Connectée à',
 	'Class:NetworkInterface/Attribute:connected_if+' => 'Interface connectée',
 	'Class:NetworkInterface/Attribute:connected_name' => 'Connectée à',
 	'Class:NetworkInterface/Attribute:connected_name+' => '',
@@ -840,7 +840,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkCIToContact/Attribute:contact_email' => 'Email du contact',
 	'Class:lnkCIToContact/Attribute:contact_email+' => '',
 	'Class:lnkCIToContact/Attribute:role' => 'Rôle',
-	'Class:lnkCIToContact/Attribute:role+' => 'Rôle du contact vis-a-vis du CI',
+	'Class:lnkCIToContact/Attribute:role+' => 'Rôle du contact vis-à-vis du CI',
 ));
 
 //
