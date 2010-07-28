@@ -493,13 +493,16 @@ class DBObjectSearch
 	public function serialize()
 	{
 		$sOql = $this->ToOql();
-		return base64_encode(gzcompress($sOql));
+		return base64_encode($sOql);
 	}
 	
 	static public function unserialize($sValue)
 	{
 		$sOql = base64_decode($sValue);
-		return self::FromOQL(gzuncompress($sOql));
+		// We've tried to use gzcompress/gzuncompress, but for some specific queries
+		// it was not working at all (See Trac #193)
+		// gzuncompress was issuing a warning "data error" and the return object was null
+		return self::FromOQL($sOql);
 	}
 
 	// SImple BUt Structured Query Languag - SubuSQL
