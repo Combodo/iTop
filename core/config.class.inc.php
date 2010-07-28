@@ -14,7 +14,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-define('ITOP_VERSION', '1.0 beta');
+define('ITOP_VERSION', '$ITOP_VERSION$');
 define('ITOP_REVISION', '$WCREV$');
 define('ITOP_BUILD_DATE', '$WCNOW$');
 
