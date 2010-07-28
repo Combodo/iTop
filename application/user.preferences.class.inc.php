@@ -125,7 +125,7 @@ class appUserPreferences extends DBObject
 	{
 		if (self::$oUserPrefs != null) return;
 		$oSearch = new DBObjectSearch('appUserPreferences');
-		$oSearch->AddCondition('userid', UserRights::GetUser());
+		$oSearch->AddCondition('userid', UserRights::GetUser(), '=');
 		$oSet = new DBObjectSet($oSearch);
 		$oObj = $oSet->Fetch();
 		if ($oObj == null)

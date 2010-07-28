@@ -224,15 +224,25 @@ class DBObjectSearch
 		MyHelpers::CheckKeyInArray('filter code', $sFilterCode, MetaModel::GetClassFilterDefs($this->GetClass()));
 		$oFilterDef = MetaModel::GetClassFilterDef($this->GetClass(), $sFilterCode);
 
+		$oField = new FieldExpression($sFilterCode, $this->GetClassAlias());
 		if (empty($sOpCode))
 		{
-			$sOpCode = $oFilterDef->GetLooseOperator();
+			if ($sFilterCode == 'id')
+			{
+				$sOpCode = '=';
+			}
+			else
+			{
+				$oAttDef = MetaModel::GetAttributeDef($this->GetClass(), $sFilterCode);
+				$oNewCondition = $oAttDef->GetSmartConditionExpression($value, $oField, $this->m_aParams);
+				$this->AddConditionExpression($oNewCondition);
+				return;
+			}
 		}
 		MyHelpers::CheckKeyInArray('operator', $sOpCode, $oFilterDef->GetOperators());
 
 		// Preserve backward compatibility - quick n'dirty way to change that API semantic
 		//
-		$oField = new FieldExpression($sFilterCode, $this->GetClassAlias());
 		switch($sOpCode)
 		{
 		case 'SameDay':

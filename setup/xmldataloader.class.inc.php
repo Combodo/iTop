@@ -252,7 +252,7 @@ class XMLDataLoader
 					{
 						if ($oTargetObj->Get($sAttCode) != '')
 						{
-							$oSearch->AddCondition($sAttCode, $oTargetObj->Get($sAttCode));
+							$oSearch->AddCondition($sAttCode, $oTargetObj->Get($sAttCode), '=');
 							$iConditionsCount++;
 						}
 					}

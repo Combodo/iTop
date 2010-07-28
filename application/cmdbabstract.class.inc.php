@@ -112,7 +112,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 
 		// action menu
 		$oSingletonFilter = new DBObjectSearch(get_class($this));
-		$oSingletonFilter->AddCondition('id', array($this->GetKey()));
+		$oSingletonFilter->AddCondition('id', $this->GetKey(), '=');
 		$oBlock = new MenuBlock($oSingletonFilter, 'popup', false);
 		$oBlock->Display($oPage, -1);
 		$oPage->add("<div class=\"page_header\"><h1><img src=\"".$this->GetIcon()."\" style=\"margin-right:10px;margin-top: -16px;vertical-align:middle;\">\n");
@@ -124,8 +124,8 @@ abstract class cmdbAbstractObject extends CMDBObject
 	{
 		// history block (with as a tab)
 		$oHistoryFilter = new DBObjectSearch('CMDBChangeOp');
-		$oHistoryFilter->AddCondition('objkey', $this->GetKey());
-		$oHistoryFilter->AddCondition('objclass', get_class($this));
+		$oHistoryFilter->AddCondition('objkey', $this->GetKey(), '=');
+		$oHistoryFilter->AddCondition('objclass', get_class($this), '=');
 		$oBlock = new HistoryBlock($oHistoryFilter, 'table', false);
 		$oBlock->Display($oPage, -1);
 	}
@@ -163,7 +163,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 					$oPage->p("<img src=\"".MetaModel::GetClassIcon($sTargetClass)."\" style=\"vertical-align:middle;\">&nbsp;".$oAttDef->GetDescription());
 
 					$oFilter = new DBObjectSearch($sTargetClass);
-					$oFilter->AddCondition($oAttDef->GetExtKeyToMe(), $this->GetKey());
+					$oFilter->AddCondition($oAttDef->GetExtKeyToMe(), $this->GetKey(),'=');
 
 					$oBlock = new DisplayBlock($oFilter, 'list', false);
 					$oBlock->Display($oPage, 0);

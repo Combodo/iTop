@@ -1101,7 +1101,7 @@ abstract class DBObject
 				if (!$oExtKeyAttDef->IsExternalKey(EXTKEY_ABSOLUTE)) continue;
 
 				$oSearch = new DBObjectSearch($sRemoteClass);
-				$oSearch->AddCondition($sExtKeyAttCode, $this->GetKey());
+				$oSearch->AddCondition($sExtKeyAttCode, $this->GetKey(), '=');
 				$oSet = new CMDBObjectSet($oSearch);
 				if ($oSet->Count() > 0)
 				{

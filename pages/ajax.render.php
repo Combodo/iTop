@@ -280,7 +280,7 @@ switch($operation)
 	$iCount = 0;
 	$oFilter = $oContext->NewFilter($sClass);
 	$oFilter->AddCondition($sAttCode, $sName, 'Begins with');
-	//$oFilter->AddCondition('org_id', $sOrg);
+	//$oFilter->AddCondition('org_id', $sOrg, '=');
 	$oSet = new CMDBObjectSet($oFilter, array($sAttCode => true));
 	while( ($iCount < $iMaxCount) && ($oObj = $oSet->fetch()) )
 	{

@@ -92,7 +92,7 @@ switch($operation)
 	$oDefinitionFilter = DBObjectSearch::FromOQL($oAuditCategory->Get('definition_set'));
 	if (!empty($currentOrganization))
 	{
-		$oDefinitionFilter->AddCondition('org_id', $currentOrganization);
+		$oDefinitionFilter->AddCondition('org_id', $currentOrganization, '=');
 	}
 	$oDefinitionSet = new CMDBObjectSet($oDefinitionFilter);
 	$oErrorObjectSet = GetRuleResultSet($iRuleIndex, $oDefinitionFilter);
@@ -124,14 +124,14 @@ switch($operation)
 		{
 			if (MetaModel::IsValidFilterCode($oDefinitionFilter->GetClass(), 'org_id'))
 			{
-				$oDefinitionFilter->AddCondition('org_id', $currentOrganization);
+				$oDefinitionFilter->AddCondition('org_id', $currentOrganization, '=');
 			}
 		}
 		$aResults = array();
 		$oDefinitionSet = new CMDBObjectSet($oDefinitionFilter);
 		$iCount = $oDefinitionSet->Count();
 		$oRulesFilter = new CMDBSearchFilter('AuditRule');
-		$oRulesFilter->AddCondition('category_id', $oAuditCategory->GetKey());
+		$oRulesFilter->AddCondition('category_id', $oAuditCategory->GetKey(), '=');
 		$oRulesSet = new DBObjectSet($oRulesFilter);
 		while($oAuditRule = $oRulesSet->fetch() )
 		{

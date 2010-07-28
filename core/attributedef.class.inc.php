@@ -260,6 +260,35 @@ abstract class AttributeDefinition
 		if (!$oValSetDef) return null;
 		return $oValSetDef->GetValues($aArgs, $sBeginsWith);
 	}
+	
+	/**
+	 * Parses a string to find some smart search patterns and build the corresponding search/OQL condition
+	 * Each derived class is reponsible for defining and processing their own smart patterns, the base class
+	 * does nothing special, and just calls the default (loose) operator
+	 * @param string $sSearchText The search string to analyze for smart patterns
+	 * @param FieldExpression The FieldExpression representing the atttribute code in this OQL query
+	 * @param Hash $aParams Values of the query parameters
+	 * @return Expression The search condition to be added (AND) to the current search
+	 */
+	public function GetSmartConditionExpression($sSearchText, FieldExpression $oField, &$aParams)
+	{
+		$sParamName = $oField->GetParent().'_'.$oField->GetName();
+		$oRightExpr = new VariableExpression($sParamName);
+		$sOperator = $this->GetBasicFilterLooseOperator();
+		switch ($sOperator)
+		{
+			case 'Contains':
+			$aParams[$sParamName] = "%$sSearchText%";
+			$sSQLOperator = 'LIKE';
+			break;
+			
+			default:
+			$sSQLOperator = $sOperator;
+			$aParams[$sParamName] = $sSearchText;
+		}
+		$oNewCondition = new BinaryExpression($oField, $sSQLOperator, $oRightExpr);
+		return $oNewCondition;
+	}
 }
 
 /**
@@ -1188,6 +1217,74 @@ class AttributeDateTime extends AttributeDBField
 		$sTo = array("\n", $sTextQualifier.$sTextQualifier);
 		$sEscaped = str_replace($sFrom, $sTo, (string)$sValue);
 		return '"'.$sEscaped.'"';
+	}
+	
+	/**
+	 * Parses a string to find some smart search patterns and build the corresponding search/OQL condition
+	 * Each derived class is reponsible for defining and processing their own smart patterns, the base class
+	 * does nothing special, and just calls the default (loose) operator
+	 * @param string $sSearchText The search string to analyze for smart patterns
+	 * @param FieldExpression The FieldExpression representing the atttribute code in this OQL query
+	 * @param Hash $aParams Values of the query parameters
+	 * @return Expression The search condition to be added (AND) to the current search
+	 */
+	public function GetSmartConditionExpression($sSearchText, FieldExpression $oField, &$aParams)
+	{
+		// Possible smart patterns
+		$aPatterns = array(
+			'between' => array('pattern' => '/^\[(.*),(.*)\]$/', 'operator' => 'n/a'),
+			'greater than or equal' => array('pattern' => '/^>=(.*)$/', 'operator' => '>='),
+			'greater than' => array('pattern' => '/^>(.*)$/', 'operator' => '>'),
+			'less than or equal' => array('pattern' => '/^<=(.*)$/', 'operator' => '<='),
+			'less than' =>  array('pattern' => '/^<(.*)$/', 'operator' => '<'),
+		);
+		
+		$sPatternFound = '';
+		$aMatches = array();
+		foreach($aPatterns as $sPatName => $sPattern)
+		{
+			if (preg_match($sPattern['pattern'], $sSearchText, $aMatches))
+			{
+				$sPatternFound = $sPatName;
+				break;
+			}			
+		}
+		
+		switch($sPatternFound)
+		{
+			case 'between':
+			
+			$sParamName1 = $oField->GetParent().'_'.$oField->GetName().'_1';
+			$oRightExpr = new VariableExpression($sParamName1);
+			$aParams[$sParamName1] = $aMatches[1];
+			$oCondition1 = new BinaryExpression($oField, '>=', $oRightExpr);
+
+			$sParamName2 = $oField->GetParent().'_'.$oField->GetName().'_2';
+			$oRightExpr = new VariableExpression($sParamName2);
+			$sOperator = $this->GetBasicFilterLooseOperator();
+			$aParams[$sParamName2] = $aMatches[2];
+			$oCondition2 = new BinaryExpression($oField, '<=', $oRightExpr);
+			
+			$oNewCondition = new BinaryExpression($oCondition1, 'AND', $oCondition2);
+			break;
+			
+			case 'greater than':
+			case 'greater than or equal':
+			case 'less than':
+			case 'less than or equal':
+			$sSQLOperator = $aPatterns[$sPatternFound]['operator'];
+			$sParamName = $oField->GetParent().'_'.$oField->GetName();
+			$oRightExpr = new VariableExpression($sParamName);
+			$aParams[$sParamName] = $aMatches[1];
+			$oNewCondition = new BinaryExpression($oField, $sSQLOperator, $oRightExpr);
+			
+			break;
+						
+			default:
+			$oNewCondition = parent::GetSmartConditionExpression($sSearchText, $oField, &$aParams);
+		}
+
+		return $oNewCondition;
 	}
 }
 

@@ -330,7 +330,7 @@ EOF
 	case 'get_csv_template':
 	$sClassName = utils::ReadParam('class_name');
 	$oSearch = new DBObjectSearch($sClassName);
-	$oSearch->AddCondition('id', 0); // Make sure we create an empty set
+	$oSearch->AddCondition('id', 0, '='); // Make sure we create an empty set
 	$oSet = new CMDBObjectSet($oSearch);
 	$sResult = cmdbAbstractObject::GetSetAsCSV($oSet);
 	//$aCSV = explode("\n", $sCSV);

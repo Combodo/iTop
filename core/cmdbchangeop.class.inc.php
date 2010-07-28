@@ -212,7 +212,7 @@ class CMDBChangeOpSetAttributeScalar extends CMDBChangeOpSetAttribute
 		$oTargetObjectClass = $this->Get('objclass');
 		$oTargetObjectKey = $this->Get('objkey');
 		$oTargetSearch = new DBObjectSearch($oTargetObjectClass);
-		$oTargetSearch->AddCondition('id', $oTargetObjectKey);
+		$oTargetSearch->AddCondition('id', $oTargetObjectKey, '=');
 
 		$oMonoObjectSet = new DBObjectSet($oTargetSearch);
 		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES)
@@ -301,7 +301,7 @@ class CMDBChangeOpSetAttributeBlob extends CMDBChangeOpSetAttribute
 		$oTargetObjectClass = $this->Get('objclass');
 		$oTargetObjectKey = $this->Get('objkey');
 		$oTargetSearch = new DBObjectSearch($oTargetObjectClass);
-		$oTargetSearch->AddCondition('id', $oTargetObjectKey);
+		$oTargetSearch->AddCondition('id', $oTargetObjectKey, '=');
 
 		$oMonoObjectSet = new DBObjectSet($oTargetSearch);
 		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES)
@@ -360,7 +360,7 @@ class CMDBChangeOpSetAttributeText extends CMDBChangeOpSetAttribute
 		$oTargetObjectClass = $this->Get('objclass');
 		$oTargetObjectKey = $this->Get('objkey');
 		$oTargetSearch = new DBObjectSearch($oTargetObjectClass);
-		$oTargetSearch->AddCondition('id', $oTargetObjectKey);
+		$oTargetSearch->AddCondition('id', $oTargetObjectKey, '=');
 
 		$oMonoObjectSet = new DBObjectSet($oTargetSearch);
 		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES)
