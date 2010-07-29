@@ -49,9 +49,9 @@ require_once('../application/template.class.inc.php');
  * // Create the top-level group. fRank = 1, means it will be inserted after the group '0', which is usually 'Welcome'
  * $oConfigMgmtMenu = new MenuGroup('ConfigurationManagementMenu', 1);
  * // Create an entry, based on a custom template, for the Configuration management overview, under the top-level group
- * new TemplateMenuNode('ConfigurationManagementMenu', '../business/templates/configuration_management_menu.html', $oConfigMgmtMenu->GetIndex(), 0);
+ * new TemplateMenuNode('ConfigurationManagementMenu', '../somedirectory/configuration_management_menu.html', $oConfigMgmtMenu->GetIndex(), 0);
  * // Create an entry (template based) for the overview of contacts
- * $oContactsMenu = new TemplateMenuNode('ContactsMenu', '../business/templates/configuration_management_menu.html',$oConfigMgmtMenu->GetIndex(), 1);
+ * $oContactsMenu = new TemplateMenuNode('ContactsMenu', '../somedirectory/configuration_management_menu.html',$oConfigMgmtMenu->GetIndex(), 1);
  * // Plain list of persons
  * new OQLMenuNode('PersonsMenu', 'SELECT bizPerson', $oContactsMenu->GetIndex(), 0);
  *

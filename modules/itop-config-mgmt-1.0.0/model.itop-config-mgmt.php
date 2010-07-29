@@ -76,7 +76,7 @@ class Location extends cmdbAbstractObject
 			"db_table" => "location",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"icon" => "../business/templates/location.png",
+			"icon" => "../modules/itop-config-mgmt-1.0.0/images/location.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -116,7 +116,7 @@ abstract class Contact extends cmdbAbstractObject
 			"db_table" => "contact",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"icon" => "../business/templates/team.png",
+			"icon" => "../modules/itop-config-mgmt-1.0.0/images/team.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -156,7 +156,7 @@ class Person extends Contact
 			"db_table" => "person",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"icon" => "../business/templates/person.png",
+			"icon" => "../modules/itop-config-mgmt-1.0.0/images/person.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -190,7 +190,7 @@ class Team extends Contact
 			"db_table" => "team",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"icon" => "../business/templates/team.png",
+			"icon" => "../modules/itop-config-mgmt-1.0.0/images/team.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -254,7 +254,7 @@ abstract class Document extends cmdbAbstractObject
 			"db_table" => "document",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"icon" => "../business/templates/document.png",
+			"icon" => "../modules/itop-config-mgmt-1.0.0/images/document.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -289,7 +289,7 @@ class ExternalDoc extends Document
 			"db_table" => "externaldoc",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"icon" => "../business/templates/document.png",
+			"icon" => "../modules/itop-config-mgmt-1.0.0/images/document.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -317,7 +317,7 @@ class Note extends Document
 			"db_table" => "note",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"icon" => "../business/templates/document.png",
+			"icon" => "../modules/itop-config-mgmt-1.0.0/images/document.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -345,7 +345,7 @@ class FileDoc extends Document
 			"db_table" => "filedoc",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"icon" => "../business/templates/document.png",
+			"icon" => "../modules/itop-config-mgmt-1.0.0/images/document.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -389,7 +389,7 @@ class Licence extends cmdbAbstractObject
 			"db_table" => "licence",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"icon" => "../business/templates/licence.png",
+			"icon" => "../modules/itop-config-mgmt-1.0.0/images/licence.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -425,7 +425,7 @@ class Subnet extends cmdbAbstractObject
 			"db_table" => "subnet",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"icon" => "../business/templates/subnet.png",
+			"icon" => "../modules/itop-config-mgmt-1.0.0/images/subnet.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -512,7 +512,7 @@ class Patch extends cmdbAbstractObject
 			"db_table" => "patch",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"icon" => "../business/templates/patch.png",
+			"icon" => "../modules/itop-config-mgmt-1.0.0/images/patch.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -544,7 +544,7 @@ abstract class Software extends cmdbAbstractObject
 			"db_table" => "software",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"icon" => "../business/templates/software.png",
+			"icon" => "../modules/itop-config-mgmt-1.0.0/images/software.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -572,7 +572,7 @@ class Application extends Software
 			"db_table" => "software_app",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"icon" => "../business/templates/software.png",
+			"icon" => "../modules/itop-config-mgmt-1.0.0/images/software.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -599,7 +599,7 @@ class DBServer extends Software
 			"db_table" => "software_db",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"icon" => "../business/templates/software.png",
+			"icon" => "../modules/itop-config-mgmt-1.0.0/images/software.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -658,7 +658,7 @@ abstract class FunctionalCI extends cmdbAbstractObject
 			"db_table" => "functionalci",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"icon" => "../business/templates/server.png",
+			"icon" => "../modules/itop-config-mgmt-1.0.0/images/server.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -712,7 +712,7 @@ abstract class SoftwareInstance extends FunctionalCI
 			"db_table" => "softwareinstance",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"icon" => "../business/templates/application.png",
+			"icon" => "../modules/itop-config-mgmt-1.0.0/images/application.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -779,7 +779,7 @@ class DBServerInstance extends SoftwareInstance
 			"db_table" => "softwareinstance_dbserver",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"icon" => "../business/templates/application.png",
+			"icon" => "../modules/itop-config-mgmt-1.0.0/images/database.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -808,7 +808,7 @@ class ApplicationInstance extends SoftwareInstance
 			"db_table" => "softwareinstance_application",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"icon" => "../business/templates/application.png",
+			"icon" => "../modules/itop-config-mgmt-1.0.0/images/application.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -837,7 +837,7 @@ class DatabaseInstance extends FunctionalCI
 			"db_table" => "databaseinstance",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"icon" => "../business/templates/database-instance.png",
+			"icon" => "../modules/itop-config-mgmt-1.0.0/images/database-instance.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -888,7 +888,7 @@ class ApplicationSolution extends FunctionalCI
 			"db_table" => "applicationsolution",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"icon" => "../business/templates/solution.png",
+			"icon" => "../modules/itop-config-mgmt-1.0.0/images/solution.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -941,7 +941,7 @@ class BusinessProcess extends FunctionalCI
 			"db_table" => "businessprocess",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"icon" => "../business/templates/business-process.png",
+			"icon" => "../modules/itop-config-mgmt-1.0.0/images/business-process.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -1017,7 +1017,7 @@ class NetworkInterface extends ConnectableCI
 			"db_table" => "networkinterface",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"icon" => "../business/templates/interface.png",
+			"icon" => "../modules/itop-config-mgmt-1.0.0/images/interface.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -1063,7 +1063,7 @@ abstract class Device extends ConnectableCI
 			"db_table" => "device",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"icon" => "../business/templates/server.png",
+			"icon" => "../modules/itop-config-mgmt-1.0.0/images/server.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -1115,7 +1115,7 @@ class PC extends Device
 			"db_table" => "pc",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"icon" => "../business/templates/laptop.png",
+			"icon" => "../modules/itop-config-mgmt-1.0.0/images/laptop.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -1149,7 +1149,7 @@ abstract class MobileCI extends Device
 			"db_table" => "mobileci",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"icon" => "../business/templates/mobile-phone.png",
+			"icon" => "../modules/itop-config-mgmt-1.0.0/images/mobile-phone.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -1176,7 +1176,7 @@ class MobilePhone extends MobileCI
 			"db_table" => "mobilephone",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"icon" => "../business/templates/mobile-phone.png",
+			"icon" => "../modules/itop-config-mgmt-1.0.0/images/mobile-phone.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -1206,7 +1206,7 @@ abstract class InfrastructureCI extends Device
 			"db_table" => "infrastructureci",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"icon" => "../business/templates/server.png",
+			"icon" => "../modules/itop-config-mgmt-1.0.0/images/server.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -1271,7 +1271,7 @@ class Server extends InfrastructureCI
 			"db_table" => "server",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"icon" => "../business/templates/server.png",
+			"icon" => "../modules/itop-config-mgmt-1.0.0/images/server.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -1305,7 +1305,7 @@ class Printer extends InfrastructureCI
 			"db_table" => "printer",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"icon" => "../business/templates/printer.png",
+			"icon" => "../modules/itop-config-mgmt-1.0.0/images/printer.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -1368,7 +1368,7 @@ class lnkCIToContact extends cmdbAbstractObject
 			"db_table" => "lnkcitocontact",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"icon" => "../business/templates/contact.png",
+			"icon" => "../modules/itop-config-mgmt-1.0.0/images/contact.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();

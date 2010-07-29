@@ -39,7 +39,7 @@ abstract class Contract extends cmdbAbstractObject
 			"db_table" => "contract",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
+			"icon" => "../modules/itop-service-mgmt-1.0.0/contract.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -77,7 +77,7 @@ class ProviderContract extends Contract
 			"db_table" => "providercontract",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
+			"icon" => "../modules/itop-service-mgmt-1.0.0/contract.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -108,7 +108,7 @@ class CustomerContract extends Contract
 			"db_table" => "customercontract",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
+			"icon" => "../modules/itop-service-mgmt-1.0.0/contract.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
