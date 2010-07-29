@@ -31,8 +31,6 @@ require_once('./setuppage.class.inc.php');
 
 define('TMP_CONFIG_FILE', '../tmp-config-itop.php');
 define('FINAL_CONFIG_FILE', '../config-itop.php');
-define('SETUP_STRUCTURE_DATA_DIR', './data/structure');
-define('SETUP_SAMPLE_DATA_DIR', './data');
 define('PHP_MIN_VERSION', '5.2.0');
 define('MYSQL_MIN_VERSION', '5.0.0');
 define('MIN_MEMORY_LIMIT', 32*1024*1024);

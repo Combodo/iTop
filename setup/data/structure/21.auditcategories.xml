@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Set>
-<AuditCategory id="1">
-<name>Devices in production</name>
-<description>Checking all devices in production</description>
-<definition_set>SELECT bizDevice AS d WHERE d.status = &apos;production&apos;</definition_set>
-</AuditCategory>
-</Set>
