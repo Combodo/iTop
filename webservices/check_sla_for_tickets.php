@@ -33,24 +33,31 @@ $oMyChange->Set("date", time());
 $oMyChange->Set("userinfo", "Automatic updates");
 $iChangeId = $oMyChange->DBInsertNoReload();
 
-// Bug: only TTO is being handled for the beta version
-//
-$oSet = new DBObjectSet(DBObjectSearch::FromOQL('SELECT Incident WHERE status = \'new\' AND escalation_deadline < NOW()'));
+$oSet = new DBObjectSet(DBObjectSearch::FromOQL('SELECT ResponseTicket WHERE status = \'new\' AND tto_escalation_deadline <= NOW()'));
 while ($oToEscalate = $oSet->Fetch())
 {
 	$oToEscalate->ApplyStimulus('ev_timeout');
-	$oToEscalate->Set('escalation_deadline', null);
+	//$oToEscalate->Set('tto_escalation_deadline', null);
 	$oToEscalate->DBUpdateTracked($oMyChange);
 	echo "<p>ticket ".$oToEscalate->Get('ref')." reached TTO ESCALATION deadline</p>\n";
 }
 
-$oSet = new DBObjectSet(DBObjectSearch::FromOQL('SELECT Incident WHERE status = \'assigned\' AND closure_deadline < NOW()'));
+$oSet = new DBObjectSet(DBObjectSearch::FromOQL('SELECT ResponseTicket WHERE status = \'assigned\' AND ttr_escalation_deadline <= NOW()'));
 while ($oToEscalate = $oSet->Fetch())
 {
 	$oToEscalate->ApplyStimulus('ev_timeout');
-	$oToEscalate->Set('closure_deadline', null);
+	//$oToEscalate->Set('ttr_escalation_deadline', null);
 	$oToEscalate->DBUpdateTracked($oMyChange);
 	echo "<p>ticket ".$oToEscalate->Get('ref')." reached TTR ESCALATION deadline</p>\n";
+}
+
+$oSet = new DBObjectSet(DBObjectSearch::FromOQL('SELECT ResponseTicket WHERE status = \'resolved\' AND closure_deadline <= NOW()'));
+while ($oToEscalate = $oSet->Fetch())
+{
+	$oToEscalate->ApplyStimulus('ev_close');
+	//$oToEscalate->Set('closure_deadline', null);
+	$oToEscalate->DBUpdateTracked($oMyChange);
+	echo "<p>ticket ".$oToEscalate->Get('ref')." reached closure deadline</p>\n";
 }
 
 ?>

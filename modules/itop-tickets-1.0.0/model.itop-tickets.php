@@ -201,17 +201,18 @@ abstract class ResponseTicket extends Ticket
 		MetaModel::Init_AddAttribute(new AttributeDateTime("close_date", array("allowed_values"=>null, "sql"=>"close_date", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDateTime("last_update", array("allowed_values"=>null, "sql"=>"last_update", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDateTime("assignment_date", array("allowed_values"=>null, "sql"=>"assignment_date", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeDeadline("escalation_deadline", array("allowed_values"=>null, "sql"=>"escalation_deadline", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeDeadline("tto_escalation_deadline", array("allowed_values"=>null, "sql"=>"tto_escalation_deadline", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeDeadline("ttr_escalation_deadline", array("allowed_values"=>null, "sql"=>"ttr_escalation_deadline", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDeadline("closure_deadline", array("allowed_values"=>null, "sql"=>"closure_deadline", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("resolution_code", array("allowed_values"=>new ValueSetEnum('fixed,duplicate,couldnotreproduce,irrelevant'), "sql"=>"resolution_code", "default_value"=>"fixed", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("solution", array("allowed_values"=>null, "sql"=>"solution", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("user_satisfaction", array("allowed_values"=>new ValueSetEnum('1,2,3,4'), "sql"=>"user_satisfaction", "default_value"=>"1", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("user_commment", array("allowed_values"=>null, "sql"=>"user_commment", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('ref', 'title', 'org_id', 'ticket_log', 'start_date', 'escalation_deadline', 'closure_deadline', 'document_list', 'ci_list', 'contact_list', 'status', 'caller_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'close_date', 'last_update', 'assignment_date', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
-		MetaModel::Init_SetZListItems('advanced_search', array('finalclass', 'ref', 'title', 'org_id', 'start_date', 'status', 'caller_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'close_date', 'last_update', 'assignment_date', 'escalation_deadline', 'closure_deadline', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
-		MetaModel::Init_SetZListItems('standard_search', array('finalclass', 'ref', 'title', 'org_id', 'start_date', 'status', 'caller_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'close_date', 'last_update', 'assignment_date', 'escalation_deadline', 'closure_deadline', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
-		MetaModel::Init_SetZListItems('list', array('finalclass', 'ref', 'title', 'org_id', 'start_date', 'status', 'caller_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'close_date', 'last_update', 'assignment_date', 'escalation_deadline', 'closure_deadline', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
+		MetaModel::Init_SetZListItems('details', array('ref', 'title', 'org_id', 'ticket_log', 'start_date', 'tto_escalation_deadline', 'ttr_escalation_deadline', 'closure_deadline', 'document_list', 'ci_list', 'contact_list', 'status', 'caller_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'close_date', 'last_update', 'assignment_date', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
+		MetaModel::Init_SetZListItems('advanced_search', array('finalclass', 'ref', 'title', 'org_id', 'start_date', 'status', 'caller_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'close_date', 'last_update', 'assignment_date', 'tto_escalation_deadline', 'ttr_escalation_deadline', 'closure_deadline', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
+		MetaModel::Init_SetZListItems('standard_search', array('finalclass', 'ref', 'title', 'org_id', 'start_date', 'status', 'caller_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'close_date', 'last_update', 'assignment_date', 'tto_escalation_deadline', 'ttr_escalation_deadline', 'closure_deadline', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
+		MetaModel::Init_SetZListItems('list', array('finalclass', 'ref', 'title', 'org_id', 'start_date', 'status', 'caller_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'close_date', 'last_update', 'assignment_date', 'tto_escalation_deadline', 'ttr_escalation_deadline', 'closure_deadline', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
 
 		// Lifecycle
 		MetaModel::Init_DefineState(
@@ -228,7 +229,8 @@ abstract class ResponseTicket extends Ticket
 					'start_date' => OPT_ATT_READONLY,
 					'last_update' => OPT_ATT_READONLY,
 					'assignment_date' => OPT_ATT_HIDDEN,
-					'escalation_deadline' => OPT_ATT_READONLY,
+					'tto_escalation_deadline' => OPT_ATT_READONLY,
+					'ttr_escalation_deadline' => OPT_ATT_HIDDEN,
 					'closure_deadline' => OPT_ATT_HIDDEN,
 					'close_date' => OPT_ATT_HIDDEN,
 					'org_id' => OPT_ATT_MUSTCHANGE,
@@ -269,8 +271,8 @@ abstract class ResponseTicket extends Ticket
 					'agent_id' => OPT_ATT_MUSTPROMPT | OPT_ATT_MANDATORY,
 					'agent_email' => OPT_ATT_READONLY,
 					'workgroup_id' => OPT_ATT_MUSTPROMPT | OPT_ATT_MANDATORY,
-					'closure_deadline' => OPT_ATT_HIDDEN,
-					'escalation_deadline' => OPT_ATT_READONLY,
+					'tto_escalation_deadline' => OPT_ATT_HIDDEN,
+					'ttr_escalation_deadline' => OPT_ATT_READONLY,
 				),
 			)
 		);
@@ -279,6 +281,8 @@ abstract class ResponseTicket extends Ticket
 			array(
 				"attribute_inherit" => 'assigned',
 				"attribute_list" => array(
+					'agent_id' => OPT_ATT_MUSTPROMPT | OPT_ATT_MANDATORY,
+					'workgroup_id' => OPT_ATT_MUSTPROMPT | OPT_ATT_MANDATORY,
 				),
 			)
 		);
@@ -305,7 +309,7 @@ abstract class ResponseTicket extends Ticket
 					'resolution_code' => OPT_ATT_MUSTPROMPT,
 					'solution' => OPT_ATT_MUSTPROMPT,
 					'closure_deadline' => OPT_ATT_READONLY,
-					'escalation_deadline' => OPT_ATT_HIDDEN,
+					'ttr_escalation_deadline' => OPT_ATT_HIDDEN,
 				),
 			)
 		);
@@ -338,10 +342,10 @@ abstract class ResponseTicket extends Ticket
 
 		MetaModel::Init_DefineTransition("assigned", "ev_reassign", array("target_state"=>"assigned", "actions"=>array(), "user_restriction"=>null));
 		MetaModel::Init_DefineTransition("assigned", "ev_timeout", array("target_state"=>"escalated_ttr", "actions"=>array(), "user_restriction"=>null));
-		MetaModel::Init_DefineTransition("assigned", "ev_resolve", array("target_state"=>"resolved", "actions"=>array(), "user_restriction"=>null));
+		MetaModel::Init_DefineTransition("assigned", "ev_resolve", array("target_state"=>"resolved", "actions"=>array('SetClosureDeadline'), "user_restriction"=>null));
 
 		MetaModel::Init_DefineTransition("escalated_ttr", "ev_reassign", array("target_state"=>"escalated_ttr", "actions"=>array(), "user_restriction"=>null));
-		MetaModel::Init_DefineTransition("escalated_ttr", "ev_resolve", array("target_state"=>"resolved", "actions"=>array(), "user_restriction"=>null));
+		MetaModel::Init_DefineTransition("escalated_ttr", "ev_resolve", array("target_state"=>"resolved", "actions"=>array('SetClosureDeadline'), "user_restriction"=>null));
 
 		MetaModel::Init_DefineTransition("resolved", "ev_reassign", array("target_state"=>"assigned", "actions"=>array(), "user_restriction"=>null));
 		MetaModel::Init_DefineTransition("resolved", "ev_close", array("target_state"=>"closed", "actions"=>array('SetClosureDate'), "user_restriction"=>null));
@@ -349,6 +353,12 @@ abstract class ResponseTicket extends Ticket
 
 	// Lifecycle actions
 	//
+	public function SetClosureDeadline($sStimulusCode)
+	{
+		$iMaxWaitHours = 24;
+		$this->Set('closure_deadline', time() + $iMaxWaitHours * 3600);
+		return true;
+	}
 	public function SetClosureDate($sStimulusCode)
 	{
 		$this->Set('close_date', time());
@@ -459,25 +469,25 @@ abstract class ResponseTicket extends Ticket
 		{
 			//echo "<p>TTO: SLT found: {$aSLT['SLT']}, value: {$aSLT['value']}</p>\n";
 			$iStartDate = AttributeDateTime::GetAsUnixSeconds($this->Get('start_date'));		
-			$this->Set('escalation_deadline', $iStartDate + $aSLT['value']);
+			$this->Set('tto_escalation_deadline', $iStartDate + $aSLT['value']);
 		}
 		else
 		{
-			$this->Set('escalation_deadline', null);
+			$this->Set('tto_escalation_deadline', null);
 		}
 		$aSLT = $this->ComputeSLT('TTR');
 		if ($aSLT != null)
 		{
 			//echo "<p>TTR: SLT found: {$aSLT['SLT']}, value: {$aSLT['value']}</p>\n";
 			$iStartDate = AttributeDateTime::GetAsUnixSeconds($this->Get('start_date'));		
-			$this->Set('closure_deadline', $iStartDate + $aSLT['value']);
+			$this->Set('ttr_escalation_deadline', $iStartDate + $aSLT['value']);
 		}
 		else
 		{
-			$this->Set('closure_deadline', null);
+			$this->Set('ttr_escalation_deadline', null);
 		}
 	}
-	
+
 	/**
 	 * Determines if the ticket must be hilighted in the list, if we're about to miss a SLA for instance
 	 */
@@ -487,7 +497,7 @@ abstract class ResponseTicket extends Ticket
 		switch($this->GetState())
 		{
 			case 'new':
-			$oEscalationDeadline = $this->Get('escalation_deadline');
+			$oEscalationDeadline = $this->Get('tto_escalation_deadline');
 			if ($oEscalationDeadline != null)
 			{
 				// A SLA is running
@@ -506,13 +516,13 @@ abstract class ResponseTicket extends Ticket
 			break;
 			
 			case 'assigned':
-			$oClosureDeadline = $this->Get('closure_deadline');
-			if ($oClosureDeadline != null)
+			$oEscalationDeadline = $this->Get('ttr_escalation_deadline');
+			if ($oEscalationDeadline != null)
 			{
 				// A SLA is running
 				$iStartDate = AttributeDateTime::GetAsUnixSeconds($this->Get('start_date'));
-				$iClosureDeadline = AttributeDateTime::GetAsUnixSeconds($oClosureDeadline);
-				$ratio = ($iClosureDeadline - time())/($iClosureDeadline - $iStartDate);
+				$iEscalationDeadline = AttributeDateTime::GetAsUnixSeconds($oEscalationDeadline);
+				$ratio = ($iEscalationDeadline - time())/($iEscalationDeadline - $iStartDate);
 				if ($ratio <= 0)
 				{
 					$sHilightClass = HILIGHT_CLASS_CRITICAL;
