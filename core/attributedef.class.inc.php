@@ -1281,7 +1281,7 @@ class AttributeDateTime extends AttributeDBField
 			break;
 						
 			default:
-			$oNewCondition = parent::GetSmartConditionExpression($sSearchText, $oField, &$aParams);
+			$oNewCondition = parent::GetSmartConditionExpression($sSearchText, $oField, $aParams);
 		}
 
 		return $oNewCondition;
