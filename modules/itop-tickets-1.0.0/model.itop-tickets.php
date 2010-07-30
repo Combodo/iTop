@@ -281,6 +281,7 @@ abstract class ResponseTicket extends Ticket
 			array(
 				"attribute_inherit" => 'assigned',
 				"attribute_list" => array(
+					// MUST_PROMPT is not inherited...but does that make sense
 					'agent_id' => OPT_ATT_MUSTPROMPT | OPT_ATT_MANDATORY,
 					'workgroup_id' => OPT_ATT_MUSTPROMPT | OPT_ATT_MANDATORY,
 				),
