@@ -350,6 +350,28 @@ abstract class DBObject
 		return $this->m_aOrigValues[$sAttCode];
 	}
 
+	/**
+	 * Updates the value of an external field by (re)loading the object
+	 * corresponding to the external key and getting the value from it
+	 * @param string $sAttCode Attribute code of the external field to update
+	 * @return void
+	 */
+	protected function UpdateExternalField($sAttCode)
+	{
+		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+		if ($oAttDef->IsExternalField())
+		{
+			$sTargetClass = $oAttDef->GetTargetClass();
+			$objkey = $this->Get($oAttDef->GetKeyAttCode());
+			$oObj = MetaModel::GetObject($sTargetClass, $objkey);
+			if (is_object($oObj))
+			{
+				$value = $oObj->Get($oAttDef->GetExtAttCode());
+				$this->Set($sAttCode, $value);
+			}
+		}
+	}
+	
 	// Compute scalar attributes that depend on any other type of attribute
 	public function DoComputeValues()
 	{
@@ -495,10 +517,14 @@ abstract class DBObject
 		}
 		$this->m_iKey = $iNewKey;
 	}
-
-	public function GetIcon()
+	/**
+	 * Get the icon representing this object
+	 * @param boolean $bImgTag If true the result is a full IMG tag (or an emtpy string if no icon is defined)
+	 * @return string Either the full IMG tag ($bImgTag == true) or just the path to the icon file
+	 */
+	public function GetIcon($bImgTag = true)
 	{
-		return MetaModel::GetClassIcon(get_class($this));
+		return MetaModel::GetClassIcon(get_class($this), $bImgTag);
 	}
 
 	public function GetName()
