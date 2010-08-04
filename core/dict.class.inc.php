@@ -59,7 +59,7 @@ class Dict
 {
 	protected static $m_iErrorMode = DICT_ERR_STRING;
 	protected static $m_sDefaultLanguage = 'EN US';
-	protected static $m_sCurrentLanguage = 'EN US';
+	protected static $m_sCurrentLanguage = null; // No language selected by default
 
 	protected static $m_aLanguages = array(); // array( code => array( 'description' => '...', 'localized_description' => '...') ...)
 	protected static $m_aData = array();
@@ -84,6 +84,16 @@ class Dict
 	}
 
 
+	public static function GetCurrentLanguage()
+	{
+		if (self::$m_sCurrentLanguage == null) // May happen when no user is logged in (i.e login screen, non authentifed page)
+		{
+			// In which case let's use the default language
+			return self::$m_sDefaultLanguage;
+		}
+		return self::$m_sCurrentLanguage;
+	}
+
 	//returns a hash array( code => array( 'description' => '...', 'localized_description' => '...') ...)
 	public static function GetLanguages()
 	{
@@ -101,12 +111,12 @@ class Dict
 	{
 		// Attempt to find the string in the user language
 		//
-		if (!array_key_exists(self::$m_sCurrentLanguage, self::$m_aData))
+		if (!array_key_exists(self::GetCurrentLanguage(), self::$m_aData))
 		{
 			// It may happen, when something happens before the dictionnaries get loaded
 			return $sStringCode;
 		}
-		$aCurrentDictionary = self::$m_aData[self::$m_sCurrentLanguage];
+		$aCurrentDictionary = self::$m_aData[self::GetCurrentLanguage()];
 		if (array_key_exists($sStringCode, $aCurrentDictionary))
 		{
 			return $aCurrentDictionary[$sStringCode];
@@ -215,11 +225,4 @@ class Dict
 		MyHelpers::var_dump_html(self::$m_aData);
 	}
 }
-
-/*
-Dans les templates, les chaines localizables seront remplacées par un tag <itopstring>code_de_la_chaine</itopstring>
-Modifier les profils utilisateurs pour stocker le langage de l'utilisateur.
-*/
-
-
 ?>
