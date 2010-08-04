@@ -357,16 +357,48 @@ function UpdateObject(&$oObj)
 {
 	foreach(MetaModel::ListAttributeDefs(get_class($oObj)) as $sAttCode=>$oAttDef)
 	{
-		if ($oAttDef->IsLinkSet())
+		if ($oAttDef->IsLinkSet() && $oAttDef->IsIndirect())
 		{
-			// Link set, the data is a set of link objects, encoded in JSON
-			$aAttributes[$sAttCode] = trim(utils::ReadPostedParam("attr_$sAttCode", ''));
-			if (!empty($aAttributes[$sAttCode]))
+			$aLinks = utils::ReadPostedParam("attr_$sAttCode", '');
+			$sLinkedClass = $oAttDef->GetLinkedClass();
+			$sExtKeyToRemote = $oAttDef->GetExtKeyToRemote();
+			$sExtKeyToMe = $oAttDef->GetExtKeyToMe();
+			$oLinkedSet = DBObjectSet::FromScratch($sLinkedClass);
+			if (is_array($aLinks))
 			{
-				$oLinkSet = WizardHelper::ParseJsonSet($oObj, $oAttDef->GetLinkedClass(), $oAttDef->GetExtKeyToMe(), $aAttributes[$sAttCode]);
-				$oObj->Set($sAttCode, $oLinkSet);
-				// TO DO: detect a real modification, for now always update !!
+				foreach($aLinks as $id => $aData)
+				{
+					if (is_numeric($id))
+					{
+						if ($id < 0)
+						{
+							// New link to be created, the opposite of the id (-$id) is the ID of the remote object
+							$oLink = MetaModel::NewObject($sLinkedClass);
+							$oLink->Set($sExtKeyToRemote, -$id);
+							$oLink->Set($sExtKeyToMe, $oObj->GetKey());
+						}
+						else
+						{
+							// Existing link, potentially to be updated...
+							$oLink = MetaModel::GetObject($sLinkedClass, $id);
+						}
+						// Now populate the attributes
+						foreach($aData as $sName => $value)
+						{
+							if (MetaModel::IsValidAttCode($sLinkedClass, $sName))
+							{
+								$oLinkAttDef = MetaModel::GetAttributeDef($sLinkedClass, $sName);
+								if ($oLinkAttDef->IsWritable())
+								{
+									$oLink->Set($sName, $value);
+								}
+							}
+						}
+						$oLinkedSet->AddObject($oLink);
+					}
+				}
 			}
+			$oObj->Set($sAttCode, $oLinkedSet);
 		}
 		else if ($oAttDef->IsWritable())
 		{
@@ -426,6 +458,7 @@ try
 	switch($operation)
 	{
 		case 'details':
+		
 			$sClass = utils::ReadParam('class', '');
 			$sClassLabel = MetaModel::GetName($sClass);
 			$id = utils::ReadParam('id', '');
@@ -604,7 +637,7 @@ try
 						{
 							$iCount += count($aLeafs);
 							$oP->add("<div class=\"page_header\">\n");
-							$oP->add("<h2><img style=\"vertical-align:middle;\" src=\"".MetaModel::GetClassIcon($sClassName)."\"><span class=\"hilite\">".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aLeafs), Metamodel::GetName($sClassName))."</h2>\n");
+							$oP->add("<h2>".MetaModel::GetClassIcon($sClassName)."&nbsp;<span class=\"hilite\">".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aLeafs), Metamodel::GetName($sClassName))."</h2>\n");
 							$oP->add("</div>\n");
 							$oLeafsFilter->AddCondition('id', $aLeafs, 'IN');
 							$oBlock = new DisplayBlock($oLeafsFilter, 'list', false);
@@ -649,7 +682,7 @@ try
 			{
 				$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
 				$oP->add("<div class=\"page_header\">\n");
-				$oP->add("<h1><img src=\"".$oObj->GetIcon()."\" style=\"vertical-align:middle\"> ".Dict::Format('UI:ModificationTitle_Class_Object', $sClassLabel, $oObj->GetName())."</h1>\n");
+				$oP->add("<h1>".$oObj->GetIcon()."&nbsp;".Dict::Format('UI:ModificationTitle_Class_Object', $sClassLabel, $oObj->GetName())."</h1>\n");
 				$oP->add("</div>\n");
 
 				$oP->add("<div class=\"wizContainer\">\n");
@@ -762,7 +795,7 @@ try
 				// Display the creation form
 				$sClassLabel = MetaModel::GetName($sRealClass);
 				$oP->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel));
-				$oP->add("<h1><img src=\"".MetaModel::GetClassIcon($sRealClass)."\" style=\"vertical-align:middle;\">".Dict::Format('UI:CreationTitle_Class', $sClassLabel)."</h1>\n");
+				$oP->add("<h1>".MetaModel::GetClassIcon($sRealClass)."&nbsp;".Dict::Format('UI:CreationTitle_Class', $sClassLabel)."</h1>\n");
 				$oP->add("<div class=\"wizContainer\">\n");
 				$aDefaults = utils::ReadParam('default', array());
 				$aContext = $oAppContext->GetAsHash();
@@ -777,7 +810,7 @@ try
 			{
 				// Select the derived class to create
 				$sClassLabel = MetaModel::GetName($sClass);
-				$oP->add("<h1><img src=\"".MetaModel::GetClassIcon($sClass)."\" style=\"vertical-align:middle;\">".Dict::Format('UI:CreationTitle_Class', $sClassLabel)."</h1>\n");
+				$oP->add("<h1>".MetaModel::GetClassIcon($sClass)."&nbsp;".Dict::Format('UI:CreationTitle_Class', $sClassLabel)."</h1>\n");
 				$oP->add("<div class=\"wizContainer\">\n");
 				$oP->add('<form>');
 				$oP->add('<p>'.Dict::Format('UI:SelectTheTypeOf_Class_ToCreate', $sClassLabel));

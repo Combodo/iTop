@@ -80,7 +80,7 @@ function GetRelatedObjects(DBObject $oObj, $sRelationName, &$oLinks, &$oXmlDoc, 
 				$oLinkedNode->SetAttribute('id', $oTargetObj->GetKey());
 				$oLinkedNode->SetAttribute('obj_class', get_class($oTargetObj));
 				$oLinkedNode->SetAttribute('name', $oTargetObj->GetName());
-				$oLinkedNode->SetAttribute('icon', BuildIconPath($oTargetObj->GetIcon()));
+				$oLinkedNode->SetAttribute('icon', BuildIconPath($oTargetObj->GetIcon(false /* No IMG tag */)));
 				AddNodeDetails($oLinkedNode, $oTargetObj);
 				$oSubLinks = $oXmlDoc->CreateElement('links');
 				GetRelatedObjects($oTargetObj, $sRelationName, $oSubLinks, $oXmlDoc, $oLinkedNode);
@@ -137,7 +137,7 @@ if ($id != 0)
 	$oXmlNode->SetAttribute('id', $oObj->GetKey());
 	$oXmlNode->SetAttribute('obj_class', get_class($oObj));
 	$oXmlNode->SetAttribute('name', $oObj->GetName());
-	$oXmlNode->SetAttribute('icon', BuildIconPath($oObj->GetIcon())); // Hard coded for the moment
+	$oXmlNode->SetAttribute('icon', BuildIconPath($oObj->GetIcon(false /* No IMG tag */))); // Hard coded for the moment
 	AddNodeDetails($oXmlNode, $oObj);
 	
 	$oLinks = $oXmlDoc->CreateElement("links");

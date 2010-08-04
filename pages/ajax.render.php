@@ -53,14 +53,13 @@ $oContext = new UserContext();
 $operation = utils::ReadParam('operation', '');
 $sFilter = stripslashes(utils::ReadParam('filter', ''));
 $sEncoding = utils::ReadParam('encoding', 'serialize');
-$sClass = utils::ReadParam('class', 'bizContact');
+$sClass = utils::ReadParam('class', 'MissingAjaxParam');
 $sStyle = utils::ReadParam('style', 'list');
 
 switch($operation)
 {
 	case 'addObjects':
 	require_once('../application/uilinkswizard.class.inc.php');
-	
 	$sClass = utils::ReadParam('class', '', 'get');
 	$sLinkedClass = utils::ReadParam('linkedClass', '', 'get');
 	$sLinkageAttr = utils::ReadParam('linkageAttr', '', 'get');
@@ -70,26 +69,22 @@ switch($operation)
 	break;
 	
 	case 'searchObjectsToAdd':
-	require_once('../application/uilinkswizard.class.inc.php');
-	
-	$sClass = utils::ReadParam('class', '', 'get');
-	$sLinkedClass = utils::ReadParam('linkedClass', '', 'get');
-	$sLinkageAttr = utils::ReadParam('linkageAttr', '', 'get');
-	$iObjectId = utils::ReadParam('objectId', '', 'get');
-	$oLinksWizard = new UILinksWizard($sClass,  $sLinkageAttr, $iObjectId, $sLinkedClass);
-	$oLinksWizard->SearchObjectsToAdd($oPage, $oContext);
+	$sRemoteClass = utils::ReadParam('sRemoteClass', '');
+	$sAttCode = utils::ReadParam('sAttCode', '');
+	$iInputId = utils::ReadParam('iInputId', '');
+	$sSuffix = utils::ReadParam('sSuffix', '');
+	$aAlreadyLinked = utils::ReadParam('aAlreadyLinked', array());
+	$oWidget = new UILinksWidget($sClass, $sAttCode, $iInputId, $sSuffix);
+	$oWidget->SearchObjectsToAdd($oPage, $oContext, $sRemoteClass, $aAlreadyLinked);	
 	break;
 	
 	case 'doAddObjects':
-	require_once('../application/uilinkswizard.class.inc.php');
-	
-	$sClass = utils::ReadParam('class', '', 'get');
-	$sLinkedClass = utils::ReadParam('linkedClass', '', 'get');
-	$sLinkageAttr = utils::ReadParam('linkageAttr', '', 'get');
-	$iObjectId = utils::ReadParam('objectId', '', 'get');
+	$sAttCode = utils::ReadParam('sAttCode', '');
+	$iInputId = utils::ReadParam('iInputId', '');
+	$sSuffix = utils::ReadParam('sSuffix', '');
 	$aLinkedObjectIds = utils::ReadParam('selectObject', array(), 'get');
-	$oLinksWizard = new UILinksWizard($sClass,  $sLinkageAttr, $iObjectId, $sLinkedClass);
-	$oLinksWizard->DoAddObjects($oPage, $oContext, $aLinkedObjectIds);
+	$oWidget = new UILinksWidget($sClass, $sAttCode, $iInputId, $sSuffix);
+	$oWidget->DoAddObjects($oPage, $oContext, $aLinkedObjectIds);	
 	break;
 	
 	case 'wizard_helper_preview':
@@ -324,9 +319,9 @@ switch($operation)
 	break;
 	
 	case 'search_form':
-	$sClass = utils::ReadParam('className', '', 'get');
-	$sRootClass = utils::ReadParam('baseClass', '', 'get');
-	$currentId = utils::ReadParam('currentId', '', 'get');
+	$sClass = utils::ReadParam('className', '');
+	$sRootClass = utils::ReadParam('baseClass', '');
+	$currentId = utils::ReadParam('currentId', '');
 	$oFilter = $oContext->NewFilter($sClass);
 	$oSet = new CMDBObjectSet($oFilter); 
 	$sHtml = cmdbAbstractObject::GetSearchForm($oPage, $oSet, array('currentId' => $currentId, 'baseClass' => $sRootClass));
