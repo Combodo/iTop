@@ -423,7 +423,7 @@ class OQLMenuNode extends MenuNode
 		// The standard template used for all such pages: a (closed) search form at the top and a list of results at the bottom
 		$sTemplate = <<<EOF
 <itopblock BlockClass="DisplayBlock" type="search" asynchronous="false" encoding="text/oql">$this->sOQL</itopblock>
-<p class="page-header"><img src="$sIcon"><itopstring>$this->sPageTitle</itopstring></p>
+<p class="page-header">$sIcon<itopstring>$this->sPageTitle</itopstring></p>
 <itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql">$this->sOQL</itopblock>
 EOF;
 		$oTemplate = new DisplayTemplate($sTemplate);

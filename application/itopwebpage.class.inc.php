@@ -54,6 +54,7 @@ class iTopWebPage extends NiceWebPage
 		$this->add_linked_stylesheet("../css/jquery.autocomplete.css");
 //		$this->add_linked_stylesheet("../css/date.picker.css");
 		$this->add_linked_script('../js/jquery.layout.min.js');
+		$this->add_linked_script('../js/jquery.history.js');
 //		$this->add_linked_script("../js/jquery.dimensions.js");
 		$this->add_linked_script("../js/jquery.tablehover.js");
 		$this->add_linked_script("../js/jquery.treeview.js");
@@ -69,41 +70,6 @@ class iTopWebPage extends NiceWebPage
 		$this->add_linked_script("../js/swfobject.js");
 		$this->add_ready_script(
 <<<EOF
-	//add new widget called TruncatedList to properly display truncated lists when they are sorted
-	$.tablesorter.addWidget({ 
-	    // give the widget a id 
-	    id: "truncatedList", 
-	    // format is called when the on init and when a sorting has finished 
-	    format: function(table)
-	    { 
-			// Check if there is a "truncated" line
-			this.truncatedList = false;  
-			if ($("tr td.truncated",table).length > 0)
-			{
-				this.truncatedList = true;
-			}
-			if (this.truncatedList)
-			{
-				$("tr td",table).removeClass('truncated');
-				$("tr:last td",table).addClass('truncated');
-			}
-	    } 
-	});
-	
-	$.tablesorter.addWidget({ 
-	    // give the widget a id 
-	    id: "myZebra", 
-	    // format is called when the on init and when a sorting has finished 
-	    format: function(table)
-	    {
-	    	// Replace the 'red even' lines by 'red_even' since most browser do not support 2 classes selector in CSS, etc..
-			$("tbody tr:even",table).addClass('even');
-			$("tbody tr.red:even",table).removeClass('red').removeClass('even').addClass('red_even');
-			$("tbody tr.orange:even",table).removeClass('orange').removeClass('even').addClass('orange_even');
-			$("tbody tr.green:even",table).removeClass('green').removeClass('even').addClass('green_even');
-	    } 
-	});
-
 	try
 	{
 	var myLayout; // a var is required because this page utilizes: myLayout.allowOverflow() method
@@ -149,8 +115,46 @@ class iTopWebPage extends NiceWebPage
 		// Accordion Menu
 		$("#accordion").accordion({ header: "h3", navigation: true, autoHeight: false, collapsible: false });
  	});
+	//add new widget called TruncatedList to properly display truncated lists when they are sorted
+	$.tablesorter.addWidget({ 
+	    // give the widget a id 
+	    id: "truncatedList", 
+	    // format is called when the on init and when a sorting has finished 
+	    format: function(table)
+	    { 
+			// Check if there is a "truncated" line
+			this.truncatedList = false;  
+			if ($("tr td.truncated",table).length > 0)
+			{
+				this.truncatedList = true;
+			}
+			if (this.truncatedList)
+			{
+				$("tr td",table).removeClass('truncated');
+				$("tr:last td",table).addClass('truncated');
+			}
+	    } 
+	});
 		
-	$("div[id^=tabbedContent]").tabs(); // tabs
+	
+	$.tablesorter.addWidget({ 
+	    // give the widget a id 
+	    id: "myZebra", 
+	    // format is called when the on init and when a sorting has finished 
+	    format: function(table)
+	    {
+	    	// Replace the 'red even' lines by 'red_even' since most browser do not support 2 classes selector in CSS, etc..
+			$("tbody tr:even",table).addClass('even');
+			$("tbody tr.red:even",table).removeClass('red').removeClass('even').addClass('red_even');
+			$("tbody tr.orange:even",table).removeClass('orange').removeClass('even').addClass('orange_even');
+			$("tbody tr.green:even",table).removeClass('green').removeClass('even').addClass('green_even');
+	    } 
+		});
+		
+	// tabs
+	$("div[id^=tabbedContent]").tabs( { show: function(event, ui) {
+			window.location.href = ui.tab.href; // So that history can keep track of the tabs
+	} });
 	$("table.listResults").tableHover(); // hover tables
 	$(".listResults").tablesorter( { headers: { 0:{sorter: false }}, widgets: ['myZebra', 'truncatedList']} ); // sortable and zebra tables
 	$(".date-pick").datepicker({
@@ -167,6 +171,12 @@ class iTopWebPage extends NiceWebPage
 	$('#ModalDlg').dialog({ autoOpen: false, modal: true, width: 0.8*docWidth }); // JQuery UI dialogs
 	ShowDebug();
 	$('#logOffBtn>ul').popupmenu();
+	$.history.init(history_callback);
+	$("a[rel='history']").click(function()
+	{
+		$.history.load(this.href.replace(/^.*#/, ''));
+		return false;
+	});
 	}
 	catch(err)
 	{
@@ -178,10 +188,23 @@ class iTopWebPage extends NiceWebPage
 EOF
 );
 		$sUserPrefs = appUserPreferences::GetAsJSON();
-		$this->add_script("
+		$this->add_script(
+<<<EOF
+		// for JQuery history
+		function history_callback(hash)
+		{
+			// do stuff that loads page content based on hash variable
+			var aMatches = /^tab_(.*)$/.exec(hash);
+			if (aMatches != null)
+			{
+				var tab = $('#'+hash);
+				tab.parents('div[id^=tabbedContent]:first').tabs('select', aMatches[1]);
+			}
+		}
+
 		// For automplete
 		function findValue(li) {
-			if( li == null ) return alert(\"No match!\");
+			if( li == null ) return alert("No match!");
 			
 			// if coming from an AJAX call, let's use the CityId as the value
 			if( !!li.extra ) var sValue = li.extra[0];
@@ -220,7 +243,8 @@ EOF
 		}
 		
 		var oUserPreferences = $sUserPrefs;
-		");
+EOF
+);
 		
 		// Add the standard menus
 		/*
@@ -440,7 +464,7 @@ EOF
 	          $i = 0;
 			  foreach($m_aTabs as $sTabName => $sTabContent)
 			  {
-			      $sTabs .= "<li><a href=\"#fragment_$i\" class=\"tab\"><span>".htmlentities($sTabName, ENT_QUOTES, 'UTF-8')."</span></a></li>\n";
+			      $sTabs .= "<li><a href=\"#tab_$i\" class=\"tab\"><span>".htmlentities($sTabName, ENT_QUOTES, 'UTF-8')."</span></a></li>\n";
 			      $i++;
 	          }
 			  $sTabs .= "</ul>\n";
@@ -448,7 +472,7 @@ EOF
 			  $i = 0;
 			  foreach($m_aTabs as $sTabName => $sTabContent)
 			  {
-			      $sTabs .= "<div id=\"fragment_$i\">".$sTabContent."</div>\n";
+			      $sTabs .= "<div id=\"tab_$i\">".$sTabContent."</div>\n";
 			      $i++;
 	          }
 			  $sTabs .= "</div>\n<!-- end of tabs-->\n";

@@ -568,14 +568,17 @@ class DisplayBlock
 			break;
 			
 			case 'search':
-			$iSearchSectionId = 1;
+			static $iSearchSectionId = 1;
 			$sStyle = (isset($aExtraParams['open']) && ($aExtraParams['open'] == 'true')) ? 'SearchDrawer' : 'SearchDrawer DrawerClosed';
 			$sHtml .= "<div id=\"Search_$iSearchSectionId\" class=\"$sStyle\">\n";
-			$oPage->add_ready_script("\$(\"#LnkSearch_$iSearchSectionId\").click(function() {\$(\"#Search_$iSearchSectionId\").slideToggle('normal'); $(\"#LnkSearch_$iSearchSectionId\").toggleClass('open');});");
+			$oPage->add_ready_script("\$(\"#LnkSearch_$iSearchSectionId\").click(function() {\n" .
+					"	\$(\"#Search_$iSearchSectionId\").slideToggle('normal');\n" .
+					"	$(\"#LnkSearch_$iSearchSectionId\").toggleClass('open');});");
 			$sHtml .= cmdbAbstractObject::GetSearchForm($oPage, $this->m_oSet, $aExtraParams);
 	 		$sHtml .= "</div>\n";
 	 		$sHtml .= "<div class=\"HRDrawer\"></div>\n";
 	 		$sHtml .= "<div id=\"LnkSearch_$iSearchSectionId\" class=\"DrawerHandle\">".Dict::S('UI:SearchToggle')."</div>\n";
+	 		$iSearchSectionId++;
 			break;
 			
 			case 'open_flash_chart':
@@ -784,6 +787,15 @@ class HistoryBlock extends DisplayBlock
 
 class MenuBlock extends DisplayBlock
 {
+	/**
+	 * Renders the "Actions" popup menu for the given set of objects
+	 * 
+	 * Note that the menu links containing (or ending) with a hash (#) will have their fragment
+	 * part (whatever is after the hash) dynamically replaced (by javascript) when the menu is
+	 * displayed, to correspond to the current hash/fragment in the page. This allows modifying
+	 * an object in with the same tab active by default as the tab that was active when selecting
+	 * the "Modify..." action.
+	 */
 	public function GetRenderContent(WebPage $oPage, $aExtraParams = array())
 	{
 		$sHtml = '';
@@ -841,7 +853,7 @@ class MenuBlock extends DisplayBlock
 				//$aActions[] = array ('label' => 'Bookmark...', 'url' => "../pages/ajax.render.php?operation=create&class=$sClass&filter=$sFilter", 'class' => 'jqmTrigger');
 				if ($bIsModifyAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:New'), 'url' => "../pages/$sUIPage?operation=new&class=$sClass&$sContext{$sDefault}"); }
 				//if ($bIsModifyAllowed) { $aActions[] = array ('label' => 'Clone...', 'url' => "../pages/$sUIPage?operation=clone&class=$sClass&id=$id&$sContext"); }
-				if ($bIsModifyAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:Modify'), 'url' => "../pages/$sUIPage?operation=modify&class=$sClass&id=$id&$sContext"); }
+				if ($bIsModifyAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:Modify'), 'url' => "../pages/$sUIPage?operation=modify&class=$sClass&id=$id&$sContext#"); }
 				if ($bIsDeleteAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:Delete'), 'url' => "../pages/$sUIPage?operation=delete&class=$sClass&id=$id&$sContext"); }
 				$aRelations = MetaModel::EnumRelations($sClass);
 				foreach($aRelations as $sRelationCode)

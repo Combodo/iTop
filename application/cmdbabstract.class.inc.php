@@ -115,7 +115,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$oSingletonFilter->AddCondition('id', $this->GetKey(), '=');
 		$oBlock = new MenuBlock($oSingletonFilter, 'popup', false);
 		$oBlock->Display($oPage, -1);
-		$oPage->add("<div class=\"page_header\"><h1><img src=\"".$this->GetIcon()."\" style=\"margin-right:10px;margin-top: -16px;vertical-align:middle;\">\n");
+		$oPage->add("<div class=\"page_header\"><h1>".$this->GetIcon()."&nbsp;\n");
 		$oPage->add(MetaModel::GetName(get_class($this)).": <span class=\"hilite\">".$this->GetName()."</span></h1>\n");
 		$oPage->add("</div>\n");
 	}
@@ -174,7 +174,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 					$sLinkedClass = $oAttDef->GetLinkedClass();
 					$oLinkingAttDef = 	MetaModel::GetAttributeDef($sLinkedClass, $oAttDef->GetExtKeyToRemote());
 					$sTargetClass = $oLinkingAttDef->GetTargetClass();
-					$oPage->p("<img src=\"".MetaModel::GetClassIcon($sTargetClass)."\" style=\"vertical-align:middle;\">&nbsp;".$oAttDef->GetDescription());
+					$oPage->p(MetaModel::GetClassIcon($sTargetClass)."&nbsp;".$oAttDef->GetDescription());
 
 					$sValue = $this->Get($sAttCode);
 					$sDisplayValue = $this->GetEditValue($sAttCode);
@@ -211,10 +211,10 @@ abstract class cmdbAbstractObject extends CMDBObject
 							'object_id' => $this->GetKey(),
 							'target_attr' => $oAttDef->GetExtKeyToRemote(),
 							'view_link' => false,
-							'menu' => $bMenu,
+							'menu' => false,
 						);
 				}
-				$oPage->p("<img src=\"".MetaModel::GetClassIcon($sTargetClass)."\" style=\"vertical-align:middle;\">&nbsp;".$oAttDef->GetDescription());
+				$oPage->p(MetaModel::GetClassIcon($sTargetClass)."&nbsp;".$oAttDef->GetDescription());
 				$oBlock = new DisplayBlock($this->Get($sAttCode)->GetFilter(), 'list', false);
 				$oBlock->Display($oPage, 'rel_'.$sAttCode, $aParams);
 			}
@@ -782,7 +782,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$sHtml .= "<form id=\"form{$iSearchFormId}\">\n";
 		$sHtml .= "<h2>".Dict::Format('UI:SearchFor_Class_Objects', $sClassesCombo)."</h2>\n";
 		$index = 0;
-		$sHtml .= "<table>\n";
+		$sHtml .= "<p>\n";
 		$aFilterCriteria = $oSet->GetFilter()->GetCriteria();
 		$aMapCriteria = array();
 		foreach($aFilterCriteria as $aCriteria)
@@ -793,14 +793,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		foreach($aList as $sFilterCode)
 		{
 			$oAppContext->Reset($sFilterCode); // Make sure the same parameter will not be passed twice
-			if (($index % $numCols) == 0)
-			{
-				if ($index != 0)
-				{
-					$sHtml .= "</tr>\n";
-				}
-				$sHtml .= "<tr>\n";
-			}
+			$sHtml .= '<span style="white-space: nowrap;padding:5px;display:inline-block;">';
 			$sFilterValue = '';
 			$sFilterValue = utils::ReadParam($sFilterCode, '');
 			$sFilterOpCode = null; // Use the default 'loose' OpCode
@@ -842,22 +835,18 @@ abstract class cmdbAbstractObject extends CMDBObject
 					$sValue .= "<option value=\"$key\"$sSelected>$value</option>\n";
 				}
 				$sValue .= "</select>\n";
-				$sHtml .= "<td><label>".MetaModel::GetFilterLabel($sClassName, $sFilterCode).":</label></td><td>$sValue</td>\n";
+				$sHtml .= "<label>".MetaModel::GetFilterLabel($sClassName, $sFilterCode).":</label>&nbsp;$sValue\n";
 			}
 			else
 			{
 				// Any value is possible, display an input box
-				$sHtml .= "<td><label>".MetaModel::GetFilterLabel($sClassName, $sFilterCode).":</label></td><td><input class=\"textSearch\" name=\"$sFilterCode\" value=\"$sFilterValue\"/></td>\n";
+				$sHtml .= "<label>".MetaModel::GetFilterLabel($sClassName, $sFilterCode).":</label>&nbsp;<input class=\"textSearch\" name=\"$sFilterCode\" value=\"$sFilterValue\"/>\n";
 			}
 			$index++;
+			$sHtml .= '</span> ';
 		}
-		if (($index % $numCols) != 0)
-		{
-			$sHtml .= "<td colspan=\"".(2*($numCols - ($index % $numCols)))."\"></td>\n";
-		}
-		$sHtml .= "</tr>\n";
-		$sHtml .= "<tr><td colspan=\"".(2*$numCols)."\" align=\"right\"><input type=\"submit\" value=\"".Dict::S('UI:Button:Search')."\"></td></tr>\n";
-		$sHtml .= "</table>\n";
+		$sHtml .= "</p>\n";
+		$sHtml .= "<p align=\"right\"><input type=\"submit\" value=\"".Dict::S('UI:Button:Search')."\"></p>\n";
 		foreach($aExtraParams as $sName => $sValue)
 		{
 			$sHtml .= "<input type=\"hidden\" name=\"$sName\" value=\"$sValue\" />\n";
@@ -904,6 +893,11 @@ abstract class cmdbAbstractObject extends CMDBObject
 	public static function GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $value = '', $sDisplayValue = '', $iId = '', $sNameSuffix = '', $iFlags = 0, $aArgs = array())
 	{
 		static $iInputId = 0;
+		$sFieldPrefix = '';
+		if (isset($aArgs['prefix']))
+		{
+			$sFieldPrefix = $aArgs['prefix'];
+		}
 		if (isset($aArgs[$sAttCode]) && empty($value))
 		{
 			// default value passed by the context (either the app context of the operation)
@@ -939,19 +933,19 @@ abstract class cmdbAbstractObject extends CMDBObject
 				case 'DateTime':
 				$aEventsList[] ='keyup';
 				$aEventsList[] ='change';
-				$sHTMLValue = "<input title=\"$sHelpText\" class=\"date-pick\" type=\"text\" size=\"20\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iId\"/>&nbsp;{$sValidationField}";
+				$sHTMLValue = "<input title=\"$sHelpText\" class=\"date-pick\" type=\"text\" size=\"20\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iId\"/>&nbsp;{$sValidationField}";
 				break;
 				
 				case 'Password':
 					$aEventsList[] ='keyup';
 					$aEventsList[] ='change';
-					$sHTMLValue = "<input title=\"$sHelpText\" type=\"password\" size=\"30\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iId\"/>&nbsp;{$sValidationField}";
+					$sHTMLValue = "<input title=\"$sHelpText\" type=\"password\" size=\"30\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iId\"/>&nbsp;{$sValidationField}";
 				break;
 				
 				case 'Text':
 					$aEventsList[] ='keypress';
 					$aEventsList[] ='change';
-					$sHTMLValue = "<textarea class=\"resizable\" title=\"$sHelpText\" name=\"attr_{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">$value</textarea>&nbsp;{$sValidationField}";
+					$sHTMLValue = "<textarea class=\"resizable\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">$value</textarea>&nbsp;{$sValidationField}";
 				break;
 	
 				case 'LinkedSet':
@@ -970,9 +964,9 @@ abstract class cmdbAbstractObject extends CMDBObject
 					}
 					$iMaxFileSize = utils::ConvertToBytes(ini_get('upload_max_filesize'));
 					$sHTMLValue = "<input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"$iMaxFileSize\" />\n";
-				    $sHTMLValue .= "<input name=\"attr_{$sAttCode}{$sNameSuffix}\" type=\"hidden\" id=\"$iId\" \" value=\"$sFileName\"/>\n";
+				    $sHTMLValue .= "<input name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" type=\"hidden\" id=\"$iId\" \" value=\"$sFileName\"/>\n";
 				    $sHTMLValue .= "<span id=\"name_$iInputId\">$sFileName</span><br/>\n";
-				    $sHTMLValue .= "<input title=\"$sHelpText\" name=\"file_{$sAttCode}{$sNameSuffix}\" type=\"file\" id=\"file_$iId\" onChange=\"UpdateFileName('$iId', this.value)\"/>&nbsp;{$sValidationField}\n";
+				    $sHTMLValue .= "<input title=\"$sHelpText\" name=\"file_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" type=\"file\" id=\"file_$iId\" onChange=\"UpdateFileName('$iId', this.value)\"/>&nbsp;{$sValidationField}\n";
 				break;
 				
 				case 'List':
@@ -998,7 +992,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 							// The input for the auto complete
 							$sHTMLValue = "<input count=\"".count($aAllowedValues)."\" type=\"text\" id=\"label_$iId\" size=\"30\" value=\"$sDisplayValue\"{$sCSSClasses}/>&nbsp;{$sValidationField}";
 							// another hidden input to store & pass the object's Id
-							$sHTMLValue .= "<input type=\"hidden\" id=\"$iId\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" />\n";
+							$sHTMLValue .= "<input type=\"hidden\" id=\"$iId\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"$value\" />\n";
 							$oPage->add_ready_script("\$('#label_$iId').autocomplete('./ajax.render.php', { scroll:true, minChars:3, onItemSelect:selectItem, onFindValue:findValue, formatItem:formatItem, autoFill:true, keyHolder:'#$iId', extraParams:{operation:'autocomplete', sclass:'$sClass',attCode:'".$sAttCode."'}});");
 							$oPage->add_ready_script("\$('#label_$iId').result( function(event, data, formatted) { if (data) { $('#{$iId}').val(data[1]); } } );");
 							$aEventsList[] ='change';
@@ -1007,7 +1001,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 						{
 							// Few choices, use a normal 'select'
 							// In case there are no valid values, the select will be empty, thus blocking the user from validating the form
-							$sHTMLValue = "<select title=\"$sHelpText\" name=\"attr_{$sAttCode}{$sNameSuffix}\" id=\"$iId\">\n";
+							$sHTMLValue = "<select title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" id=\"$iId\">\n";
 							$sHTMLValue .= "<option value=\"0\">".Dict::S('UI:SelectOne')."</option>\n";
 							foreach($aAllowedValues as $key => $display_value)
 							{
@@ -1028,7 +1022,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 					}
 					else
 					{
-						$sHTMLValue = "<input title=\"$sHelpText\" type=\"text\" size=\"30\" name=\"attr_{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iId\"/>&nbsp;{$sValidationField}";
+						$sHTMLValue = "<input title=\"$sHelpText\" type=\"text\" size=\"30\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iId\"/>&nbsp;{$sValidationField}";
 						$aEventsList[] ='keyup';
 						$aEventsList[] ='change';
 					}
