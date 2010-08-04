@@ -34,6 +34,20 @@ jQuery.fn.popupmenu = function ()
 										elementPos: 0,
 										hideAfterPosition: true
 										});
+				// In links containing a hash, replace what's after the hash by the current hash
+				// In order to navigate to the same tab as the current one when editing an object
+				currentHash = '';
+				aMatches = /#(.*)$/.exec(window.location.href);
+				if (aMatches != null)
+				{
+					currentHash = aMatches[1];
+					popupmenu.find('a').each( function() {
+						if ( /#(.*)$/.test(this.href))
+						{
+							this.href = this.href.replace(/#(.*)$/, '#'+currentHash);
+						}
+					});
+				}
 				popupmenu.css('display', 'block');
 			}
 			else

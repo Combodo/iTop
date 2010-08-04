@@ -59,21 +59,34 @@ function ReloadSearchForm(divId, sClassName, sBaseClass)
 	$('#'+divId).block();
 	var formEvents = $('#'+divId+' form').data('events');
 	var bSubmitHookIsUsed = false;
-	if ( (formEvents != undefined) && (SubmitHook != undefined))
+	
+	// Save the submit handlers
+	aSubmit = new Array();
+	if ( (formEvents != null) && (formEvents.submit != undefined))
 	{
-		// Assume that we're using the function submit hook...
-		bSubmitHookIsUsed = true;
+		aSubmit = formEvents.submit;
 	}
-	$('#'+divId+' form').unbind('submit');
+
 	$.post('ajax.render.php',
 	   { operation: 'search_form', className: sClassName, baseClass: sBaseClass, currentId: divId },
 	   function(data){
 		   $('#'+divId).empty();
 		   $('#'+divId).append(data);
-		   if (bSubmitHookIsUsed)
-		   {
-			   $('#'+divId+' form').bind('submit', SubmitHook);
-		   }
+			if (aSubmit.length > 0)
+			{
+				for(index = 0; index < aSubmit.length; index++)
+				{
+					// Restore the previously bound submit handlers
+					if (aSubmit[index].data != undefined)
+					{
+						$('#'+divId+' form').bind('submit.'+aSubmit[index].namespace, aSubmit[index].data, aSubmit[index].handler)
+					}
+					else
+					{
+						$('#'+divId+' form').bind('submit.'+aSubmit[index].namespace, aSubmit[index].handler)
+					}
+				}
+			}
 		   $('#'+divId).unblock();
 	   }
 	 );

@@ -1,153 +1,163 @@
 // JavaScript Document
-
-function LinksWidget(id, sLinkedClass, sExtKeyToMe, sExtKeyToRemote, aAttributes)
+function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix)
 {
 	this.id = id;
-	this.sLinkedClass = sLinkedClass;
-	this.sExtKeyToMe = sExtKeyToMe;
-	this.sExtKeyToRemote = sExtKeyToRemote;
-	this.aAttributes = aAttributes;
-	this.aLinks = new Array();
-
+	this.iInputId = iInputId;
+	this.sClass = sClass;
+	this.sAttCode = sAttCode;
+	this.sSuffix = sSuffix;
+	var me = this;
 	this.Init = function()
 	{
-		sLinks = $('#'+this.id).val();
-		if (sLinks.length > 0)
-		{
-			this.aLinks = JSON.parse(sLinks);
-		}
-		this.Refresh();
-	}
-		
-	this.Refresh = function ()
-	{
-		$('#v_'+this.id).html('<img src="../images/indicator.gif" />');
-		sLinks = JSON.stringify(this.aLinks);
-		if (this.aLinks.length == 0)
-		{
-			$('#'+this.id+'_values').empty();		
-			$('#'+this.id).val(sLinks);
-			$('#'+this.id).trigger('validate');
-		}
-		else
-		{
-			$('#'+this.id).val(sLinks);
-			$('#'+this.id+'_values').load('ajax.render.php?operation=ui.linkswidget.linkedset&sclass='+this.sLinkedClass+'&sextkeytome='+this.sExtKeyToMe+'&sextkeytoremote='+this.sExtKeyToRemote+'&myid='+this.id,
-			{'sset' : sLinks}, function()
-				{
-					// Refresh the style of the loaded table
-					$('#'+this.id+' table.listResults').tableHover();	
-		 			$('#'+this.id+' .listResults').tablesorter( { headers: { 0:{sorter: false }}, widgets: ['zebra', 'truncatedList']} ); // sortable and zebra tables
-				}
-			);
-		}
+		// make sure that the form is clean
+		$('#linkedset_'+this.id+' .selection').each( function() { this.checked = false; });
+		$('#'+this.id+'_btnRemove').attr('disabled','disabled');
+		$('#'+this.id+'_linksToRemove').val('');
 	}
 	
-	this.OnOk = function()
+	this.RemoveSelected = function()
 	{
-		this.aObjectBeingLinked = new Array();
-		sSelected = 'selected_objects_'+this.id;
-		oSelected = document.getElementById(sSelected);
-		for(i=0; i<oSelected.length; i++)
-		{
-			this.aObjectBeingLinked[i] = oSelected.options[i].value;
-		}
-		this.aPreviousLinks = this.aLinks; // Save the list in case of cancellation
-		this.aLinks = new Array(); // rebuild the list of links from scratch
-		if (this.aAttributes.length == 0)
-		{
-			// No attributes on the link, no need for the extra dialog box
-			// Process the results directly
-			for(i=0; i<this.aObjectBeingLinked.length; i++)
+		var my_id = '#'+me.id;
+		$('#linkedset_'+me.id+' .selection:checked').each(
+			function()
 			{
-				oLink = {};
-				oLink[this.sExtKeyToRemote] = this.aObjectBeingLinked[i];
-				this.aLinks.push(oLink);
+				$linksToRemove = $(my_id+'_linksToRemove');
+				prevValue = $linksToRemove.val();
+				if (prevValue != '')
+				{
+					$linksToRemove.val(prevValue + ',' + this.value);
+				}
+				else
+				{
+					$linksToRemove.val(this.value);
+				}
+				$(my_id+'_row_'+this.value).remove();
 			}
-			this.Refresh();
-			// Grey out the 'Add...' button
-			$('#ac_add_'+this.id).attr('disabled', 'disabled');
-		}
-		else
-		{
-			if (oSelected.length > 0)
-			{
-				$('#LinkDlg_'+this.id).dialog('open');
-			}
-			else
-			{
-				this.Refresh();
-				$('#ac_add_'+this.id).attr('disabled', 'disabled');
-			}
-		}
+		);
+		// Disable the button since all the selected items have been removed
+		$(my_id+'_btnRemove').attr('disabled','disabled');
+		// Re-run the zebra plugin to properly highlight the remaining lines
+		$('#linkset_'+this.id+' .listResults').trigger('update');
+		
 	}
 
-	this.OnCancel = function()
+	this.OnSelectChange = function()
 	{
-		// Restore the links to their previous value (just in case)
-		this.aLinks = this.aPreviousLinks;
+		var nbChecked = $('#linkedset_'+me.id+' .selection:checked').length;
+		if (nbChecked > 0)
+		{
+			$('#'+me.id+'_btnRemove').attr('disabled','');
+		}
+		else
+		{
+			$('#'+me.id+'_btnRemove').attr('disabled','disabled');
+		}
 	}
 	
-	this.OnLinkOk = function()
+	this.AddObjects  = function()
 	{
-		$('#LinkDlg_'+this.id).dialog('close');
-		for(i=0; i<this.aObjectBeingLinked.length; i++)
-		{
-			oLink = {};
-			oLink[this.sExtKeyToRemote] = this.aObjectBeingLinked[i];
-			for(j=0; j<this.aAttributes.length; j++)
+		//$('#dlg_'+this.id).hide();
+		$('#dlg_'+me.id).dialog('open');
+		//alert('Not Yet Implemented !');
+	}
+	
+	this.SearchObjectsToAdd = function()
+	{
+		var theMap = { sAttCode: me.sAttCode,
+					   iInputId: me.iInputId,
+					   sSuffix: me.sSuffix
+					 }
+		
+		// Gather the parameters from the search form
+		$('#SearchFormToAdd_'+me.id+' :input').each(
+			function(i)
 			{
-				oLink[aAttributes[j]] = $('#'+this.id+'_'+j).val();
+				if (this.name != '')
+				{
+					theMap[this.name] = this.value;
+				}
 			}
-			this.aLinks.push(oLink);
-		}
-		this.Refresh();
-		// Grey out the 'Add...' button
-		$('#ac_add_'+this.id).attr('disabled', 'disabled');
+		);
+		
+		// Gather the already linked target objects
+		theMap.aAlreadyLinked = new Array();
+		$('#linkedset_'+me.id+' .selection:input').each(
+			function(i)
+			{
+				theMap.aAlreadyLinked.push(this.value);
+			}
+		);
+		theMap['sRemoteClass'] = theMap['class'];  // swap 'class' (defined in the form) and 'remoteClass'
+		theMap['class'] = me.sClass;
+		theMap.operation = 'searchObjectsToAdd'; // Override what is defined in the form itself
+		
+		sSearchAreaId = '#SearchResultsToAdd_'+me.id;
+		
+		// Run the query and display the results
+		$.post( 'ajax.render.php', theMap, 
+			function(data)
+			{
+				$(sSearchAreaId).html(data);
+				$(sSearchAreaId+' .listResults').tablesorter( { headers: { 0:{sorter: false }}, widgets: ['zebra']} ); // sortable and zebra tables
+				
+			},
+			'html'
+		);
+
+		return false; // Don't submit the form, stay in the current page !
+	}
+
+	this.DoAddObjects = function()
+	{
+		var theMap = { sAttCode: me.sAttCode,
+				   	   iInputId: me.iInputId,
+				   	   sSuffix: me.sSuffix,
+				   	   'class': me.sClass
+				 	 }
+		
+		// Gather the parameters from the search form
+		$('#SearchResultsToAdd_'+me.id+' :checked').each(
+			function(i)
+			{
+				if ( (this.name != '') && ((this.type != 'checkbox') || (this.checked)) ) 
+				{
+					//console.log(this.type);
+					arrayExpr = /\[\]$/;
+					if (arrayExpr.test(this.name))
+					{
+						// Array
+						if (theMap[this.name] == undefined)
+						{
+							theMap[this.name] = new Array();
+						}
+						theMap[this.name].push(this.value);
+					}
+					else
+					{
+						theMap[this.name] = this.value;
+					}
+					$(this).parents('tr:first').remove(); // Remove the whole line, so that, next time the dialog gets displayed it's no longer there
+				}
+			}
+		);
+		theMap['operation'] = 'doAddObjects';
+		
+		// Run the query and display the results
+		$.post( 'ajax.render.php', theMap, 
+			function(data)
+			{
+				//console.log('Data: ' + data);
+				if (data != '')
+				{
+					$('#'+me.id+'_empty_row').remove();
+					$('#linkedset_'+me.id+' .listResults tbody').append(data);
+					$('#linkedset_'+me.id+' .listResults').trigger('update');
+					$('#linkedset_'+me.id+' .listResults').tablesorter( { headers: { 0:{sorter: false }}, widgets: ['zebra']} ); // sortable and zebra tables
+				}
+			},
+			'html'
+		);
+		$('#dlg_'+me.id).dialog('close');
 		return false;
-	}
-	
-	this.OnLinkCancel = function()
-	{
-		$('#LinkDlg_'+this.id).dialog('close');
-		// Restore the links to their previous value (just in case)
-		this.aLinks = this.aPreviousLinks;
-		// Grey out the 'Add...' button
-		$('#ac_add_'+this.id).attr('disabled', 'disabled');
-		return false;
-	}
-	
-	this.RemoveLink = function(index)
-	{
-		this.aLinks.splice(index, 1); // Remove the element at position 'index'
-		this.Refresh();
-	}
-	
-	this.AddObject = function()
-	{
-		linkedObjId = $('#id_ac_'+this.id).val();
-		// Clears the selection
-		$('#id_ac_'+this.id).val('');
-		$('#ac_'+this.id).val('');
-		// Add the object to the list
-		this.aObjectBeingLinked = new Array();
-		this.aObjectBeingLinked[0] = linkedObjId;
-		// Add the object to the list of links
-		this.aPreviousLinks = this.aLinks; // Save the list in case of cancellation
-		$('#LinkDlg_'+this.id).dialog('open');
-	}
-	
-	this.ModifyLink = function(index)
-	{
-		this.aObjectBeingLinked = new Array();
-		this.aObjectBeingLinked[0] = this.aLinks[index][this.sExtKeyToRemote];
-		this.aPreviousLinks = this.aLinks; // Save the list in case of cancellation
-		// Set the default values of the dialog to the current ones
-		for(j=0; j<this.aAttributes.length; j++)
-		{
-			$('#'+this.id+'_'+j).val(aLinks[index][aAttributes[j]]);
-		}
-		this.aLinks.splice(index, 1); // Remove the element at position 'index'
-		$('#LinkDlg_'+this.id).dialog('open'); // And add it again	
 	}
 }
