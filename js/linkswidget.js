@@ -56,9 +56,8 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix)
 	
 	this.AddObjects  = function()
 	{
-		//$('#dlg_'+this.id).hide();
 		$('#dlg_'+me.id).dialog('open');
-		//alert('Not Yet Implemented !');
+		this.UpdateSizes(null, null);
 	}
 	
 	this.SearchObjectsToAdd = function()
@@ -153,11 +152,30 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix)
 					$('#linkedset_'+me.id+' .listResults tbody').append(data);
 					$('#linkedset_'+me.id+' .listResults').trigger('update');
 					$('#linkedset_'+me.id+' .listResults').tablesorter( { headers: { 0:{sorter: false }}, widgets: ['zebra']} ); // sortable and zebra tables
+					$('#linkedset_'+me.id+' :input').each( function() { $(this).trigger('validate', ''); }); // Validate newly added form fields...
 				}
 			},
 			'html'
 		);
 		$('#dlg_'+me.id).dialog('close');
 		return false;
+	}
+	
+	this.UpdateSizes = function(event, ui)
+	{
+		var dlg = $('#dlg_'+me.id);
+		var searchForm = $('#SearchFormToAdd_'+me.id);
+		var results = $('#SearchResultsToAdd_'+me.id);
+		padding_right = parseInt(dlg.css('padding-right').replace('px', ''));
+		padding_left = parseInt(dlg.css('padding-left').replace('px', ''));
+		padding_top = parseInt(dlg.css('padding-top').replace('px', ''));
+		padding_bottom = parseInt(dlg.css('padding-bottom').replace('px', ''));
+		width = dlg.innerWidth() - padding_right - padding_left - 22; // 5 (margin-left) + 5 (padding-left) + 5 (padding-right) + 5 (margin-right) + 2 for rounding !
+		height = dlg.innerHeight() - padding_top - padding_bottom -22;
+		wizard = dlg.find('.wizContainer:first');
+		wizard.width(width);
+		wizard.height(height);
+		form_height = searchForm.outerHeight();
+		results.height(height - form_height - 40); // Leave some space for the buttons
 	}
 }

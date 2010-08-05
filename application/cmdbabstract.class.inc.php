@@ -1050,7 +1050,15 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$iKey = $this->GetKey();
 		$aDetails = array();
 		$aFieldsMap = array();
-		$oPage->add("<form id=\"form_{$this->m_iFormId}\" enctype=\"multipart/form-data\" method=\"post\" onSubmit=\"return CheckFields('form_{$this->m_iFormId}', true)\">\n");
+		if (!isset($aExtraParams['action']))
+		{
+			$sFormAction = $_SERVER['SCRIPT_NAME']; // No parameter in the URL, the only parameter will be the ones passed through the form
+		}
+		else
+		{
+			$sFormAction = $aExtraParams['action'];
+		}
+		$oPage->add("<form action=\"$sFormAction\" id=\"form_{$this->m_iFormId}\" enctype=\"multipart/form-data\" method=\"post\" onSubmit=\"return CheckFields('form_{$this->m_iFormId}', true)\">\n");
 
 		$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB);
 		$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);

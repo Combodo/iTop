@@ -560,6 +560,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Link_Class_Attributes' => '%1$s attributes',
 	'UI:SelectAllToggle+' => 'Select All / Deselect All',
 	'UI:AddObjectsOf_Class_LinkedWith_Class_Instance' => 'Add %1$s objects linked with %2$s: %3$s',
+	'UI:AddObjectsOf_Class_LinkedWith_Class' => 'Add %1$s objects to link with the %2$s',
 	'UI:ManageObjectsOf_Class_LinkedWith_Class_Instance' => 'Manage %1$s objects linked with %2$s: %3$s',
 	'UI:AddLinkedObjectsOf_Class' => 'Add %1$ss...',
 	'UI:RemoveLinkedObjectsOf_Class' => 'Remove selected objects',

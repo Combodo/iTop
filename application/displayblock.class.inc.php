@@ -571,9 +571,14 @@ class DisplayBlock
 			static $iSearchSectionId = 1;
 			$sStyle = (isset($aExtraParams['open']) && ($aExtraParams['open'] == 'true')) ? 'SearchDrawer' : 'SearchDrawer DrawerClosed';
 			$sHtml .= "<div id=\"Search_$iSearchSectionId\" class=\"$sStyle\">\n";
-			$oPage->add_ready_script("\$(\"#LnkSearch_$iSearchSectionId\").click(function() {\n" .
-					"	\$(\"#Search_$iSearchSectionId\").slideToggle('normal');\n" .
-					"	$(\"#LnkSearch_$iSearchSectionId\").toggleClass('open');});");
+			$oPage->add_ready_script(
+<<<EOF
+	$("#LnkSearch_$iSearchSectionId").click( function() {
+		$("#Search_$iSearchSectionId").slideToggle('normal', function() { $("#Search_$iSearchSectionId").parent().resize(); } );
+		$("#LnkSearch_$iSearchSectionId").toggleClass('open');
+	});
+EOF
+			);
 			$sHtml .= cmdbAbstractObject::GetSearchForm($oPage, $this->m_oSet, $aExtraParams);
 	 		$sHtml .= "</div>\n";
 	 		$sHtml .= "<div class=\"HRDrawer\"></div>\n";

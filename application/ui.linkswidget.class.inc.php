@@ -76,6 +76,8 @@ class UILinksWidget
 				}
 			}
 		}
+		
+		$this->m_aTableConfig['static::key'] = array( 'label' => MetaModel::GetName($this->m_sRemoteClass), 'description' => MetaModel::GetClassDescription($this->m_sRemoteClass));
 		foreach(MetaModel::GetZListItems($this->m_sRemoteClass, 'list') as $sFieldCode)
 		{
 			// TO DO: check the state of the attribute: hidden or visible ?
@@ -127,6 +129,7 @@ class UILinksWidget
 			}
 		}
 
+		$aRow['static::key'] = $oLinkedObj->GetHyperLink();
 		foreach(MetaModel::GetZListItems($this->m_sRemoteClass, 'list') as $sFieldCode)
 		{
 			$aRow['static::'.$sFieldCode] = $oLinkedObj->GetAsHTML($sFieldCode);
@@ -342,12 +345,7 @@ EOF
 	protected function GetObjectPickerDialog($oPage)
 	{
 		$sHtml = "<div id=\"dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}\">";
-		//$oTargetObj = $oContext->GetObject($sTargetClass, $this->m_iObjectId);
-		$sHtml .= "<div class=\"wizContainer\">\n";
-		//$sHtml .= "<div class=\"page_header\">\n");
-		//$sHtml .= "<h1>".Dict::Format('UI:AddObjectsOf_Class_LinkedWith_Class_Instance', MetaModel::GetName($this->m_sLinkedClass), MetaModel::GetName(get_class($oTargetObj)), "<span class=\"hilite\">".$oTargetObj->GetHyperlink()."</span>")."</h1>\n");
-		//$sHtml .= "</div>\n");
-
+		$sHtml .= "<div class=\"wizContainer\" style=\"vertical-align:top;\">\n";
 		$oContext = new UserContext();
 		$iWidgetIndex = self::$iWidgetIndex;
 		$oFilter = $oContext->NewFilter($this->m_sRemoteClass);
@@ -355,16 +353,17 @@ EOF
 		$oBlock = new DisplayBlock($oFilter, 'search', false);
 		$sHtml .= $oBlock->GetDisplay($oPage, "SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}", array('open' => true));
 		$sHtml .= "<form id=\"ObjectsAddForm_{$this->m_sAttCode}{$this->m_sNameSuffix}\" OnSubmit=\"return oWidget$iWidgetIndex.DoAddObjects(this.id);\">\n";
-		$sHtml .= "<div id=\"SearchResultsToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}\">\n";
-		$sHtml .= "<div style=\"height: 100px; background: #fff;border-color:#F6F6F1 #E6E6E1 #E6E6E1 #F6F6F1; border-style:solid; border-width:3px; text-align: center; vertical-align: center;\"><p>".Dict::S('UI:Message:EmptyList:UseSearchForm')."</p></div>\n";
+		$sHtml .= "<div id=\"SearchResultsToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}\" style=\"vertical-align:top;background: #fff;height:100%;overflow:auto;padding:0;border:0;\">\n";
+		$sHtml .= "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>".Dict::S('UI:Message:EmptyList:UseSearchForm')."</p></div>\n";
 		$sHtml .= "</div>\n";
 		$sHtml .= "<input type=\"button\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"$('#dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}').dialog('close');\">&nbsp;&nbsp;<input type=\"submit\" value=\"".Dict::S('UI:Button:Add')."\">";
 		$sHtml .= "</div>\n";
 		$sHtml .= "</form>\n";
 		$sHtml .= "</div>\n";
-		$oPage->add_ready_script("$('#dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}').dialog({ autoOpen: false, modal: true });");
-		$oPage->add_ready_script("$('#dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}').dialog('option', {title:'".Dict::Format('UI:AddObjectsOf_Class_LinkedWith_Class_Instance', MetaModel::GetName($this->m_sLinkedClass), MetaModel::GetName($this->m_sClass), "<span class=\"hilite\"> ZZZZ </span>")."'});");
+		$oPage->add_ready_script("$('#dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}').dialog({ width: $(window).width()*0.8, height: $(window).height()*0.8, autoOpen: false, modal: true, resizeStop: oWidget$iWidgetIndex.UpdateSizes });");
+		$oPage->add_ready_script("$('#dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}').dialog('option', {title:'".Dict::Format('UI:AddObjectsOf_Class_LinkedWith_Class', MetaModel::GetName($this->m_sLinkedClass), MetaModel::GetName($this->m_sClass))."'});");
 		$oPage->add_ready_script("$('#SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix} form').bind('submit.uilinksWizard', oWidget$iWidgetIndex.SearchObjectsToAdd);");
+		$oPage->add_ready_script("$('#SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}').resize(oWidget$iWidgetIndex.UpdateSizes);");
 		return $sHtml;
 	}
 

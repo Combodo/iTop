@@ -56,38 +56,40 @@ function UpdateFileName(id, sNewFileName)
  */
 function ReloadSearchForm(divId, sClassName, sBaseClass)
 {
-	$('#'+divId).block();
-	var formEvents = $('#'+divId+' form').data('events');
-	var bSubmitHookIsUsed = false;
+    var oDiv = $('#'+divId);
+	oDiv.block();
+	var oFormEvents = $('#'+divId+' form').data('events');
 	
 	// Save the submit handlers
 	aSubmit = new Array();
-	if ( (formEvents != null) && (formEvents.submit != undefined))
+	if ( (oFormEvents != null) && (oFormEvents.submit != undefined))
 	{
-		aSubmit = formEvents.submit;
+		aSubmit = oFormEvents.submit;
 	}
 
 	$.post('ajax.render.php',
 	   { operation: 'search_form', className: sClassName, baseClass: sBaseClass, currentId: divId },
-	   function(data){
-		   $('#'+divId).empty();
-		   $('#'+divId).append(data);
-			if (aSubmit.length > 0)
-			{
+	   function(data) {
+		   oDiv.empty();
+		   oDiv.append(data);
+		   if (aSubmit.length > 0)
+		   {
+			    var oForm = $('#'+divId+' form'); // Form was reloaded, recompute it
 				for(index = 0; index < aSubmit.length; index++)
 				{
 					// Restore the previously bound submit handlers
 					if (aSubmit[index].data != undefined)
 					{
-						$('#'+divId+' form').bind('submit.'+aSubmit[index].namespace, aSubmit[index].data, aSubmit[index].handler)
+						oForm.bind('submit.'+aSubmit[index].namespace, aSubmit[index].data, aSubmit[index].handler)
 					}
 					else
 					{
-						$('#'+divId+' form').bind('submit.'+aSubmit[index].namespace, aSubmit[index].handler)
+						oForm.bind('submit.'+aSubmit[index].namespace, aSubmit[index].handler)
 					}
 				}
-			}
-		   $('#'+divId).unblock();
+		   }
+		   oDiv.unblock();
+		   oDiv.parent().resize(); // Inform the parent that the form has just been (potentially) resized
 	   }
 	 );
 }

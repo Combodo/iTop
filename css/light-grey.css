@@ -129,7 +129,7 @@ tr.clicked td {
 
 td.label {
     font-family: Tahoma, Verdana, Arial, Helvetica;
-    font-size: 8pt;
+    font-size: 12px;
     color: #000000;
     background-color:#f6f6f6;
     padding: 0.25em;
@@ -161,33 +161,15 @@ td a.no-arrow:hover {
 	padding-left:0px;
 	background: inherit;
 }
-
 a.small_action {
     font-family: Tahoma, Verdana, Arial, Helvetica;
     font-size: 8pt;
     color: #000000;
 	text-decoration:none;
 }
-
 .display_block {
-	noborder: 1px dashed #CCC;
 	padding:0.25em;
 }
-div#TopPane .display_block {
-	background: #fff;
-	padding:0.25em;
-	text-align:center;
-}
-div#TopPane label {
-	color:#000;
-	background: #fff;
-}
-
-div#TopPane td {
-	color:#000;
-	background: #fff;
-}
-
 .actions_details {
 	float:right;
 	margin-top:10px;
@@ -197,7 +179,6 @@ div#TopPane td {
 	padding-bottom: 2px;
 	background: url(../images/actions_left.png) no-repeat left;
 }
-
 .actions_details span{
 	background: url(../images/actions_right.png) no-repeat right;
 	color: #fff;
@@ -218,6 +199,7 @@ div#TopPane td {
 input.textSearch {
 	border:1px solid #000;
 	font-family:Tahoma,Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
 	color:#000000;
 }
 
@@ -581,16 +563,11 @@ input.dp-applied {
 	color: #000;
 	padding: 10px;
 	margin: 0;
-}
-.SearchDrawer form table tbody tr td {
-	background: #d6e8ef;
-	color: #fff;
-	font-size: 10pt;
+	font-size: 12px;
 }
 .SearchDrawer label {
 	background: #d6e8ef;
 	color: #000;
-	padding-left: 10px;
 }
 .SearchDrawer h1 {
 	color: #000;
@@ -612,6 +589,7 @@ input.dp-applied {
 	margin-top: 0;
 	margin-bottom: 0;
 	display: block;
+	font-size: 12px;
 }
 
 div.HRDrawer {

@@ -68,6 +68,7 @@ switch($operation)
 	$oLinksWizard->DisplayAddForm($oPage, $oContext);
 	break;
 	
+	// ui.linkswidget
 	case 'searchObjectsToAdd':
 	$sRemoteClass = utils::ReadParam('sRemoteClass', '');
 	$sAttCode = utils::ReadParam('sAttCode', '');
@@ -78,6 +79,7 @@ switch($operation)
 	$oWidget->SearchObjectsToAdd($oPage, $oContext, $sRemoteClass, $aAlreadyLinked);	
 	break;
 	
+	// ui.linkswidget
 	case 'doAddObjects':
 	$sAttCode = utils::ReadParam('sAttCode', '');
 	$iInputId = utils::ReadParam('iInputId', '');
@@ -223,15 +225,18 @@ switch($operation)
 	break;
 		
 	case 'ui.linkswidget':
+	/*
 	$sClass = utils::ReadParam('sclass', 'bizContact');
 	$sAttCode = utils::ReadParam('attCode', 'name');
 	$sOrg = utils::ReadParam('org_id', '');
 	$sName = utils::ReadParam('q', '');
 	$iMaxCount = utils::ReadParam('max', 30);
 	UILinksWidget::Autocomplete($oPage, $oContext, $sClass, $sAttCode, $sName, $iMaxCount);
+	*/
 	break;
 	
 	case 'ui.linkswidget.linkedset':
+	/*
 	$sClass = utils::ReadParam('sclass', 'bizContact');
 	$sJSONSet = stripslashes(utils::ReadParam('sset', ''));
 	$sExtKeyToMe = utils::ReadParam('sextkeytome', '');
@@ -240,6 +245,7 @@ switch($operation)
 	UILinksWidget::RenderSet($oPage, $sClass, $sJSONSet, $sExtKeyToMe, $sExtKeyToRemote, $iObjectId);
 	$iFieldId = utils::ReadParam('myid', '-1');
 	$oPage->add_ready_script("$('#{$iFieldId}').trigger('validate');");
+	*/
 	break;
 	
 	case 'autocomplete':
