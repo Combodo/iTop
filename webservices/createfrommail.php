@@ -141,7 +141,10 @@ for($index = 1; $index <= $iNbMessages; $index++)
 	$iPartIndex = 0;
 	$bFound = false;
 	$sTextBody = '';
-	if (count($oStructure->parts) == 0)
+	//echo "<pre>\n";
+	//print_r($oStructure);
+	//echo "</pre>\n";
+	if (!isset($oStructure->parts) || count($oStructure->parts) == 0)
 	{
 		$sTextBody = $oStructure->body;
 	}
@@ -178,7 +181,7 @@ for($index = 1; $index <= $iNbMessages; $index++)
 		}
 	}
 
-	$oTicket = CreateTicket($aSender['name'], $aSender['email'], $sSubject, $sBody);
+	$oTicket = CreateTicket($aSender['email'], $sSubject, $sTextBody);
 	if ($oTicket != null)
 	{
 		// Ticket created, delete the email
