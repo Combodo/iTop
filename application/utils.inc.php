@@ -92,7 +92,7 @@ class utils
 				
 				case UPLOAD_ERR_FORM_SIZE:
 				case UPLOAD_ERR_INI_SIZE:
-				throw new FileUploadException(Dict::Format('UI:Error:UploadedFileTooBig'), ini_get('upload_max_filesize'));
+				throw new FileUploadException(Dict::Format('UI:Error:UploadedFileTooBig', ini_get('upload_max_filesize')));
 				break;
 
 				case UPLOAD_ERR_PARTIAL:
