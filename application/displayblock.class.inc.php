@@ -521,7 +521,15 @@ class DisplayBlock
 					{
 						$oAppContext = new ApplicationContext();
 						$sParams = $oAppContext->GetForLink();
-						$sHtml .= $oPage->GetP("<a href=\"../pages/UI.php?operation=modify_links&class=$sClass&sParams&link_attr=".$aExtraParams['link_attr']."&id=".$aExtraParams['object_id']."&target_class=$sTargetClass&addObjects=true\">".Dict::Format('UI:ClickToCreateNew', Metamodel::GetName($sClass))."</a>\n");
+						$sDefaults = '';
+						if (isset($this->m_aParams['default']))
+						{
+							foreach($this->m_aParams['default'] as $sName => $sValue)
+							{
+								$sDefaults .= '&'.urlencode($sName).'='.urlencode($sValue);
+							}
+						}
+						$sHtml .= $oPage->GetP("<a href=\"../pages/UI.php?operation=modify_links&class=$sClass&sParams&link_attr=".$aExtraParams['link_attr']."&id=".$aExtraParams['object_id']."&target_class=$sTargetClass&addObjects=true$sDefaults\">".Dict::Format('UI:ClickToCreateNew', Metamodel::GetName($sClass))."</a>\n");
 					}
 				}
 			}

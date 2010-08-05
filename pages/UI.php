@@ -803,7 +803,20 @@ try
 				{
 					$aDefaults[$key] = $value;	
 				}
-				cmdbAbstractObject::DisplayCreationForm($oP, $sRealClass, null /* $oObjToClone */, array('default' => $aDefaults));
+				// Set all the default values in an object and clone this "default" object
+				$oObjToClone = MetaModel::NewObject($sRealClass);
+				foreach($aDefaults as $sName => $value)
+				{
+					if (MetaModel::IsValidAttCode($sRealClass, $sName))
+					{
+						$oAttDef = MetaModel::GetAttributeDef($sRealClass, $sName);
+						if ($oAttDef->IsWritable())
+						{
+							$oObjToClone->Set($sName, $value);
+						}
+					}
+				}
+				cmdbAbstractObject::DisplayCreationForm($oP, $sRealClass, $oObjToClone, array('default' => $aDefaults));
 				$oP->add("</div>\n");
 			}
 			else

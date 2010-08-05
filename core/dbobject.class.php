@@ -915,6 +915,18 @@ abstract class DBObject
 		$this->m_iKey = $iNewKey;
 		return $this->DBInsert();
 	}
+	
+	/**
+	 * This function is automatically called after cloning an object with the "clone" PHP language construct
+	 * The purpose of this method is to reset the appropriate attributes of the object in
+	 * order to make sure that the newly cloned object is really distinct from its clone
+	 */
+	public function __clone()
+	{
+		$this->m_bIsInDB = false;
+		$this->m_bDirty = true;
+		$this->m_iKey = self::GetNextTempId(get_class($this));
+	}
 
 	// To be optionaly overloaded
 	protected function OnUpdate()

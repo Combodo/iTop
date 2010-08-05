@@ -156,17 +156,25 @@ abstract class cmdbAbstractObject extends CMDBObject
 			{
 				$iFlags = $this->GetAttributeFlags($sAttCode);
 				$sClass = get_class($this);
+				$sInputId = $this->m_iFormId.'_'.$sAttCode;
 				if (get_class($oAttDef) == 'AttributeLinkedSet')
 				{
 					// 1:n links
 					$sTargetClass = $oAttDef->GetLinkedClass();
-					$oPage->p("<img src=\"".MetaModel::GetClassIcon($sTargetClass)."\" style=\"vertical-align:middle;\">&nbsp;".$oAttDef->GetDescription());
+					$oPage->p(MetaModel::GetClassIcon($sTargetClass)."&nbsp;".$oAttDef->GetDescription());
 
 					$oFilter = new DBObjectSearch($sTargetClass);
 					$oFilter->AddCondition($oAttDef->GetExtKeyToMe(), $this->GetKey(),'=');
 
+					$aParams = array(
+						'target_attr' => $oAttDef->GetExtKeyToMe(),
+						'object_id' => $this->GetKey(),
+						'menu' => true,
+						'default' => array($oAttDef->GetExtKeyToMe() => $this->GetKey()),
+						);
+
 					$oBlock = new DisplayBlock($oFilter, 'list', false);
-					$oBlock->Display($oPage, 0);
+					$oBlock->Display($oPage, $sInputId, $aParams);
 				}
 				else // get_class($oAttDef) == 'AttributeLinkedSetIndirect'
 				{
@@ -179,7 +187,6 @@ abstract class cmdbAbstractObject extends CMDBObject
 					$sValue = $this->Get($sAttCode);
 					$sDisplayValue = $this->GetEditValue($sAttCode);
 					$aArgs = array('this' => $this);
-					$sInputId = $this->m_iFormId.'_'.$sAttCode;
 					$sHTMLValue = "<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
 					$aFieldsMap[$sAttCode] = $sInputId;
 					$oPage->add($sHTMLValue);
@@ -197,6 +204,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 						'target_attr' => $oAttDef->GetExtKeyToMe(),
 						'object_id' => $this->GetKey(),
 						'menu' => true,
+						'default' => array($oAttDef->GetExtKeyToMe() => $this->GetKey()),
 						);
 				}
 				else
@@ -1081,7 +1089,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		{
 			$iFlags = $this->GetAttributeFlags($sAttCode);
 			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-			if ( (!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0) )
+			if ( (!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0))
 			{
 				if ($oAttDef->IsWritable())
 				{
@@ -1131,17 +1139,28 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$this->DisplayBareRelations($oPage, true); // Edit mode
 
 		$oPage->SetCurrentTab('');
-		$oPage->add("<input type=\"hidden\" name=\"id\" value=\"$iKey\">\n");
 		$oPage->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
-		$oPage->add("<input type=\"hidden\" name=\"operation\" value=\"apply_modify\">\n");
 		$oPage->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
 		foreach($aExtraParams as $sName => $value)
 		{
 			$oPage->add("<input type=\"hidden\" name=\"$sName\" value=\"$value\">\n");
 		}
 		$oPage->add($oAppContext->GetForForm());
-		$oPage->add("<button type=\"button\" class=\"action\" onClick=\"BackToDetails('$sClass', $iKey)\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
-		$oPage->add("<button type=\"submit\" class=\"action\"><span>".Dict::S('UI:Button:Apply')."</span></button>\n");
+		if ($iKey > 0)
+		{
+			// The object already exists in the database, it's modification
+			$oPage->add("<input type=\"hidden\" name=\"id\" value=\"$iKey\">\n");
+			$oPage->add("<input type=\"hidden\" name=\"operation\" value=\"apply_modify\">\n");			
+			$oPage->add("<button type=\"button\" class=\"action\" onClick=\"BackToDetails('$sClass', $iKey)\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
+			$oPage->add("<button type=\"submit\" class=\"action\"><span>".Dict::S('UI:Button:Apply')."</span></button>\n");
+		}
+		else
+		{
+			// The object does not exist in the database it's a creation
+			$oPage->add("<input type=\"hidden\" name=\"operation\" value=\"apply_new\">\n");			
+			$oPage->add("<button type=\"button\" class=\"action\" onClick=\"goBack()\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
+			$oPage->add("<button type=\"submit\" class=\"action\"><span>".Dict::S('UI:Button:Create')."</span></button>\n");
+		}
 		$oPage->add("</form>\n");
 		
 		$iFieldsCount = count($aFieldsMap);
@@ -1149,7 +1168,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 
 		$oPage->add_script(
 <<<EOF
-		// Initializes the object once at the beginning of the page...
+		// Create the object once at the beginning of the page...
 		var oWizardHelper = new WizardHelper('$sClass');
 		oWizardHelper.SetFieldsMap($sJsonFieldsMap);
 		oWizardHelper.SetFieldsCount($iFieldsCount);
@@ -1157,213 +1176,30 @@ EOF
 );
 		$oPage->add_ready_script(
 <<<EOF
-		// Initializes the object once at the beginning of the page...
+		// Starts the validation when the page is ready
 		CheckFields('form_{$this->m_iFormId}', false);
 EOF
 );
 	}
-	
+
 	public static function DisplayCreationForm(WebPage $oPage, $sClass, $oObjectToClone = null, $aArgs = array(), $aExtraParams = array())
 	{
-		static $iCreationFormId = 0;
-
-		$iCreationFormId++;
-		$iFieldIndex = 0;
 		$oAppContext = new ApplicationContext();
-		$aDetails = array();
-		$aFieldsMap = array();
-		$sOperation = ($oObjectToClone == null) ? 'apply_new' : 'apply_clone';
 		$sClass = ($oObjectToClone == null) ? $sClass : get_class($oObjectToClone);
 		$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
-		$oPage->add("<form id=\"creation_form_{$iCreationFormId}\" method=\"post\" enctype=\"multipart/form-data\" onSubmit=\"return CheckFields('creation_form_{$iCreationFormId}', true)\">\n");
 		$aStates = MetaModel::EnumStates($sClass);
-		$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB);
-		$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
-		$oPage->SetCurrentTab(Dict::S('UI:PropertiesTab'));
 		
-		$oObj = MetaModel::NewObject($sClass);
-		if (isset($aArgs['default']))
-		{
-			// Pre-populated default values
-			$aDefaultValues = $aArgs['default'];
-			foreach($aDefaultValues as $sAttCode => $value)
-			{
-				if (MetaModel::IsValidAttCode($sClass, $sAttCode))
-				{
-					$oObj->Set($sAttCode, $value);
-				}
-			}
-		}
-		$aArgs['this'] = $oObj;
-
 		if ($oObjectToClone == null)
 		{
 			$sTargetState = MetaModel::GetDefaultState($sClass);
+			$oObj = MetaModel::NewObject($sClass);
+			$oObj->Set($sStateAttCode, $sTargetState);
 		}
 		else
 		{
-			$sTargetState = $oObjectToClone->GetState();
+			$oObj = clone $oObjectToClone;
 		}
-
-		$aDetailsList = self::FlattenZList(MetaModel::GetZListItems($sClass, 'details'));
-		//$aFullList = MetaModel::ListAttributeDefs($sClass);
-		$aList = array();
-		// Compute the list of properties to display, first the attributes in the 'details' list, then 
-		// all the remaining attributes that are not external fields
-		foreach($aDetailsList as $sAttCode)
-		{
-			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-			if (!$oAttDef->IsExternalField())
-			{
-				$aList[] = $sAttCode;
-			}
-		}
-		foreach($aList as $sAttCode)
-		{
-			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-			$iFlags = isset($aStates[$sTargetState]['attribute_list'][$sAttCode]) ? $aStates[$sTargetState]['attribute_list'][$sAttCode] : 0;
-
-			if ( (!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0) )
-			{
-				if ($oAttDef->IsWritable())
-				{
-					if ($oObjectToClone != null)
-					{
-						$sValue = $oObjectToClone->GetEditValue($sAttCode);
-						$aArgs['this'] = $oObjectToClone;
-					}
-					else
-					{
-						if(isset($aArgs['default'][$sAttCode]))
-						{
-							$sValue = $aArgs['default'][$sAttCode];
-						}
-						else
-						{
-							$sValue = $oAttDef->GetDefaultValue();
-						}
-					}
-					// Prepopulate with a default value -- but no display value...
-					$sDisplayValue = '';
-					if (!empty($sValue))
-					{
-						$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, $aArgs, '');
-						switch (count($aAllowedValues))
-						{
-							case 1:
-							case 0:
-							$sDisplayValue = $sValue;
-							break;
-							
-							default:
-							$sDisplayValue = $sValue;
-							foreach($aAllowedValues as $key => $display)
-							{
-								if ($key == $sValue)
-								{
-									$sDisplayValue = $display;
-									break;
-								}
-							}
-						}
-					}
-					if ($sStateAttCode == $sAttCode)
-					{
-						// State attribute is always read-only from the UI
-						$sHTMLValue = MetaModel::GetStateLabel($sClass, $sTargetState);
-						$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $sHTMLValue);
-					}
-					else
-					{
-						if ($iFlags & OPT_ATT_HIDDEN)
-						{
-							// Attribute is hidden, do nothing
-						}
-						else
-						{
-							if ($iFlags & OPT_ATT_READONLY)
-							{
-								// Attribute is read-only
-								$sHTMLValue = ($oObjectToClone == null) ? $sDisplayValue : $oObjectToClone->GetAsHTML($sAttCode);
-							}
-							else
-							{
-								$sFieldId = 'att_'.$iFieldIndex;
-								$sHTMLValue = "<div id=\"field_{$sFieldId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sFieldId, '', $iFlags, $aArgs)."</div>";
-								$aFieldsMap[$sFieldId] = $sAttCode;
-								$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $sHTMLValue);
-								$iFieldIndex++;
-							}
-						}
-					}
-				}
-			}
-		}		
-		$oPage->details($aDetails);
-		// Now display the relations, one tab per relation
-		if ($oObjectToClone != null)
-		{
-			$oObj = $oObjectToClone; // Hmm, likely to fail... 
-		}
-		else
-		{
-			$oObj = new $sClass;
-		}	
-		$oObj->m_iFormId = $iCreationFormId;
-		$oObj->DisplayBareRelations($oPage, true);
-		/*
-		foreach($aList as $sAttCode)
-		{
-			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-			if ($oAttDef->IsLinkset())
-			{
-				$oPage->SetCurrentTab($oAttDef->GetLabel());
-				$oPage->p($oAttDef->GetDescription());
-				
-				$iFlags = isset($aStates[$sTargetState]['attribute_list'][$sAttCode]) ? $aStates[$sTargetState]['attribute_list'][$sAttCode] : 0;
-				$sFieldId = 'att_'.$iFieldIndex;
-				$sValue = ($oObjectToClone == null) ? '' : $oObjectToClone->Get($sAttCode);
-				$sDisplayValue = ($oObjectToClone == null) ? '' : $oObjectToClone->GetEditValue($sAttCode);
-				$iFlags = isset($aStates[$sTargetState]['attribute_list'][$sAttCode]) ? $aStates[$sTargetState]['attribute_list'][$sAttCode] : 0;	
-				$sHTMLValue = "<div id=\"field_{$sFieldId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sFieldId, '', $iFlags, $aArgs)."</div>";
-				$aFieldsMap[$sFieldId] = $sAttCode;
-				$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $sHTMLValue);
-				$iFieldIndex++;
-				$oPage->add($sHTMLValue);
-			}
-		}
-		$oPage->SetCurrentTab('');
-		*/
-
-		if ($oObjectToClone != null)
-		{
-			$oPage->add("<input type=\"hidden\" name=\"clone_id\" value=\"".$oObjectToClone->GetKey()."\">\n");
-		}
-		$oPage->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
-		$oPage->add("<input type=\"hidden\" name=\"operation\" value=\"$sOperation\">\n");
-		$oPage->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
-		$oPage->add($oAppContext->GetForForm());
-		foreach($aExtraParams as $sName => $value)
-		{
-			$oPage->add("<input type=\"hidden\" name=\"$sName\" value=\"$value\">\n");
-		}
-		$oPage->add("<button type=\"button\" class=\"action\" onClick=\"goBack()\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
-		$oPage->add("<button type=\"submit\" class=\"action\"><span>".Dict::S('UI:Button:Create')."</span></button>\n");
-		$oPage->add("</form>\n");
-		$aNewFieldsMap = array();
-		foreach($aFieldsMap as $id => $sFieldCode)
-		{
-			$aNewFieldsMap[$sFieldCode] = $id;
-		}
-		$iFieldsCount = count($aFieldsMap);
-		$sJsonFieldsMap = json_encode($aNewFieldsMap);
-
-		$oPage->add_script("
-			// Initializes the object once at the beginning of the page...
-			var oWizardHelper = new WizardHelper('$sClass');
-			oWizardHelper.SetFieldsMap($sJsonFieldsMap);
-			oWizardHelper.SetFieldsCount($iFieldsCount);");
-		$oPage->add_ready_script("CheckFields('creation_form_{$iCreationFormId}', false);");
+		return $oObj->DisplayModifyForm( $oPage, $aExtraParams = array());
 	}
 
 	protected static function GetCSSClasses($aCSSClasses)
