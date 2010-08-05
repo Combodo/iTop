@@ -72,7 +72,7 @@ class Location extends cmdbAbstractObject
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array(""),
+			"reconc_keys" => array("name", "org_id"),
 			"db_table" => "location",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",

@@ -76,7 +76,7 @@ class WizardHelper
 							if ( isset($aLinkedObject[$sLinkedAttCode]) && ($aLinkedObject[$sLinkedAttCode] !== null) )
 							{
 								$sLinkedAttDef = MetaModel::GetAttributeDef($sLinkedClass, $sLinkedAttCode);
-								if (($sLinkedAttDef->IsExternalKey()) && ($aLinkedObject[$sLinkedAttCode] != '') )
+								if (($sLinkedAttDef->IsExternalKey()) && ($aLinkedObject[$sLinkedAttCode] != '') && ($aLinkedObject[$sLinkedAttCode] != 0) )
 								{
 									// For external keys: load the target object so that external fields
 									// get filled too
