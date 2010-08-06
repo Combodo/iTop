@@ -274,7 +274,6 @@ class UserRights
 			return false;
 		}
 		self::$m_oUser = $oUser;
-		self::$m_oRealUser = $oUser;
 		Dict::SetUserLanguage(self::GetUserLanguage());
 		return true;
 	}
