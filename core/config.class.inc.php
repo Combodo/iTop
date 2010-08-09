@@ -43,6 +43,7 @@ define ('DEFAULT_MAX_DISPLAY_LIMIT', 15);
 define ('DEFAULT_STANDARD_RELOAD_INTERVAL', 5*60);
 define ('DEFAULT_FAST_RELOAD_INTERVAL', 1*60);
 define ('DEFAULT_SECURE_CONNECTION_REQUIRED', false);
+define ('DEFAULT_ALLOWED_LOGIN_TYPES', 'form|popup|remote|url');
 
 /**
  * Config
@@ -103,6 +104,11 @@ class Config
 	 * @var string Langage code, default if the user language is undefined
 	 */	 	
 	protected $m_sDefaultLanguage;
+	
+	/**
+	 * @var string Type of login process allowed: form|popup|url|remote
+	 */
+	 protected $m_sAllowedLoginTypes;
 
 	public function __construct($sConfigFile, $bLoadConfig = true)
 	{
@@ -149,7 +155,8 @@ class Config
 		$this->m_iFastReloadInterval = DEFAULT_FAST_RELOAD_INTERVAL;
 		$this->m_bSecureConnectionRequired = DEFAULT_SECURE_CONNECTION_REQUIRED;
 		$this->m_sDefaultLanguage = 'EN US';
-
+		$this->m_sAllowedLoginTypes = DEFAULT_ALLOWED_LOGIN_TYPES;
+		
 		$this->m_aModuleSettings = array();
 
 		if ($bLoadConfig)
@@ -247,6 +254,7 @@ class Config
 		$this->m_aModuleSettings = isset($MyModuleSettings) ?  $MyModuleSettings : array();
 
 		$this->m_sDefaultLanguage = isset($MySettings['default_language']) ? trim($MySettings['default_language']) : 'EN US';
+		$this->m_sAllowedLoginTypes = isset($MySettings['allowed_login_types']) ? trim($MySettings['allowed_login_types']) : DEFAULT_ALLOWED_LOGIN_TYPES;
 	}
 
 	protected function Verify()
@@ -394,6 +402,12 @@ class Config
 		return $this->m_sDefaultLanguage;
 	}
 
+
+	public function GetAllowedLoginTypes()
+	{
+		return explode('|', $this->m_sAllowedLoginTypes);
+	}
+
 	public function SetDBHost($sDBHost)
 	{
 		$this->m_sDBHost = $sDBHost;
@@ -469,6 +483,11 @@ class Config
 		$this->m_sDefaultLanguage = $sLanguageCode;
 	}
 
+	public function SetAllowedLoginTypes($aAllowedLoginTypes)
+	{
+		$this->m_sAllowedLoginTypes = implode('|', $aAllowedLoginTypes);
+	}
+
 	public function FileIsWritable()
 	{
 		return is_writable($this->m_sFile);
@@ -516,6 +535,7 @@ class Config
 			fwrite($hFile, "\t'fast_reload_interval' => {$this->m_iFastReloadInterval},\n");
 			fwrite($hFile, "\t'secure_connection_required' => ".($this->m_bSecureConnectionRequired ? 'true' : 'false').",\n");
 			fwrite($hFile, "\t'default_language' => '{$this->m_sDefaultLanguage}',\n");
+			fwrite($hFile, "\t'allowed_login_types' => '{$this->m_sAllowedLoginTypes}',\n");
 			fwrite($hFile, ");\n");
 
 			fwrite($hFile, "\n");

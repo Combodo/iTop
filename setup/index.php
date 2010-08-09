@@ -959,10 +959,11 @@ function SetupFinished(SetupWebPage $oP, $aParamValues, $iCurrentStep, Config $o
 
 		// Start the application
 		InitDataModel($oP, FINAL_CONFIG_FILE, false); // Load model and startup DB
-		if (UserRights::Login($sAuthUser, $sAuthPwd))
+		if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd))
 		{
+			UserRights::Login($sAuthUser);
 			$_SESSION['auth_user'] = $sAuthUser;
-			$_SESSION['auth_pwd'] = $sAuthPwd;
+			
 			// remove the tmp config file
 			@unlink(TMP_CONFIG_FILE);
 			// try to make the final config file read-only

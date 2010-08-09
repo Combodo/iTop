@@ -200,7 +200,41 @@ abstract class User extends cmdbAbstractObject
 	}
 }
 
+/**
+ * Abstract class for all types of "internal" authentication i.e. users
+ * for which the application is supplied a login and a password opposed
+ * to "external" users for whom the authentication is performed outside
+ * of the application (by the web server for example).
+ * Note that "internal" users do not necessary correspond to a local authentication
+ * they may be authenticated by a remote system, like in authent-ldap.
+ */
+abstract class UserInternal extends User
+{
+	// Nothing special, just a base class to categorize this type of authenticated users	
+	public static function Init()
+	{
+		$aParams = array
+		(
+			"category" => "core",
+			"key_type" => "autoincrement",
+			"name_attcode" => "login",
+			"state_attcode" => "",
+			"reconc_keys" => array('login'),
+			"db_table" => "priv_internalUser",
+			"db_key_field" => "id",
+			"db_finalclass_field" => "",
+		);
+		MetaModel::Init_Params($aParams);
+		MetaModel::Init_InheritAttributes();
 
+		// Display lists
+		MetaModel::Init_SetZListItems('details', array('contactid', 'first_name', 'email', 'login', 'language', 'profile_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('finalclass', 'first_name', 'last_name', 'login')); // Attributes to be displayed for a list
+		// Search criteria
+		MetaModel::Init_SetZListItems('standard_search', array('login', 'contactid')); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('advanced_search', array('login', 'contactid')); // Criteria of the advanced search form
+	}
+}
 
 /**
  * User management core API  
@@ -261,9 +295,21 @@ class UserRights
 		}	
 	}
 
-	public static function Login($sName, $sPassword)
+	public static function Login($sName, $sAuthentication = 'any')
 	{
-		$oUser = self::FindUser($sName);
+		$oUser = self::FindUser($sName, $sAuthentication);
+		if (is_null($oUser))
+		{
+			return false;
+		}
+		self::$m_oUser = $oUser;
+		Dict::SetUserLanguage(self::GetUserLanguage());
+		return true;
+	}
+
+	public static function CheckCredentials($sName, $sPassword, $sAuthentication = 'any')
+	{
+		$oUser = self::FindUser($sName, $sAuthentication);
 		if (is_null($oUser))
 		{
 			return false;
@@ -273,8 +319,6 @@ class UserRights
 		{
 			return false;
 		}
-		self::$m_oUser = $oUser;
-		Dict::SetUserLanguage(self::GetUserLanguage());
 		return true;
 	}
 
@@ -295,6 +339,18 @@ class UserRights
 		if (!is_null(self::$m_oUser))
 		{
  			return self::$m_oUser->CanChangePassword();
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	public static function CanLogOff()
+	{
+		if (!is_null(self::$m_oUser))
+		{
+ 			return self::$m_oUser->CanLogOff();
 		}
 		else
 		{
@@ -521,22 +577,54 @@ class UserRights
 	}
 
 	static $m_aCacheUsers;
-	protected static function FindUser($sLogin)
+	/**
+	 * Find a user based on its login and its type of authentication
+	 * @param string $sLogin Login/identifier of the user
+	 * @param string $sAuthentication Type of authentication used: internal|external|any
+	 * @return User The found user or null
+	 */
+	protected static function FindUser($sLogin, $sAuthentication = 'any')
 	{
-		if (!isset(self::$m_aCacheUsers))
+		if ($sAuthentication == 'any')
 		{
-			self::$m_aCacheUsers = array();
+			$oUser = self::FindUser($sLogin, 'internal');
+			if ($oUser == null)
+			{
+				$oUser = self::FindUser($sLogin, 'external');
+			}
 		}
-		if (!isset(self::$m_aCacheUsers[$sLogin]))
+		else
 		{
-			$oSearch = DBObjectSearch::FromOQL("SELECT User WHERE login = :login");
-			$oSet = new DBObjectSet($oSearch, array(), array('login' => $sLogin));
-			$oUser = $oSet->fetch();
-			self::$m_aCacheUsers[$sLogin] = $oUser;
+			if (!isset(self::$m_aCacheUsers))
+			{
+				self::$m_aCacheUsers = array('internal' => array(), 'external' => array());
+			}
+			
+			if (!isset(self::$m_aCacheUsers[$sAuthentication][$sLogin]))
+			{
+				switch($sAuthentication)
+				{
+					case 'external':
+					$sBaseClass = 'UserExternal';
+					break;
+					
+					case 'internal':
+					$sBaseClass = 'UserInternal';
+					break;
+					
+					default:
+					echo "<p>sAuthentication = $sAuthentication</p>\n";
+					assert(false); // should never happen
+				}
+				$oSearch = DBObjectSearch::FromOQL("SELECT $sBaseClass WHERE login = :login");
+				$oSet = new DBObjectSet($oSearch, array(), array('login' => $sLogin));
+				$oUser = $oSet->fetch();
+				self::$m_aCacheUsers[$sAuthentication][$sLogin] = $oUser;
+			}
+			$oUser = self::$m_aCacheUsers[$sAuthentication][$sLogin];
 		}
-		return self::$m_aCacheUsers[$sLogin];
+		return $oUser;
 	}
 }
-
 
 ?>

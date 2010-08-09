@@ -168,19 +168,10 @@ function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMo
 }
 
 require_once('../application/startup.inc.php');
-session_start();
-if (isset($_SESSION['auth_user']))
-{
-	$sAuthUser = $_SESSION['auth_user'];
-	$sAuthPwd = $_SESSION['auth_pwd'];
-	// Attempt to login, fails silently
-	UserRights::Login($sAuthUser, $sAuthPwd);
-}
-else
-{
-	// No session information
-	echo "<p>No session information</p>\n";
-}
+
+require_once('../application/loginwebpage.class.inc.php');
+LoginWebPage::DoLogin(); // Check user rights and prompt if needed
+
 
 
 $oContext = new UserContext();

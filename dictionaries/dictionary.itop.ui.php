@@ -409,6 +409,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Login:RetypeNewPasswordPrompt' => 'Retype new password',
 	'UI:Login:IncorrectOldPassword' => 'Error: the old password is incorrect',
 	'UI:LogOffMenu' => 'Log off',
+	'UI:LogOff:ThankYou' => 'Thank you for using iTop',
+	'UI:LogOff:ClickHereToLoginAgain' => 'Click here to login again...',
 	'UI:ChangePwdMenu' => 'Change Password...',
 	'UI:Login:RetypePwdDoesNotMatch' => 'New password and retyped new password do not match !',
 	'UI:Button:Login' => 'Enter iTop',

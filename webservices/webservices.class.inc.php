@@ -556,13 +556,14 @@ class WebServices
 
 	public function CreateIncidentTicket($sLogin, $sPassword, $sTitle, $sDescription, $oCallerDesc, $oCustomerDesc, $oServiceDesc, $oServiceSubcategoryDesc, $sProduct, $oWorkgroupDesc, $aSOAPImpactedCIs, $sImpact, $sUrgency)
 	{
-		if (!UserRights::Login($sLogin, $sPassword))
+		if (!UserRights::CheckCredentials($sLogin, $sPassword))
 		{
 			$oRes = new WebServiceResultFailedLogin($sLogin);
 			$this->LogUsage(__FUNCTION__, $oRes);
 
 			return $oRes->ToSoapStructure();
 		}
+		UserRights::Login($sLogin);
 
 		$aCallerDesc = self::SoapStructToExternalKeySearch($oCallerDesc);
 		$aCustomerDesc = self::SoapStructToExternalKeySearch($oCustomerDesc);

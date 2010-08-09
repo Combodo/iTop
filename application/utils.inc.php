@@ -231,5 +231,17 @@ class utils
 		
 		return $sUrl;
 	}
+	
+	/**
+	 * Tells whether or not log off operation is supported.
+	 * Actually in only one case:
+	 * 1) iTop is using an internal authentication
+	 * 2) the user did not log-in using the "popup" mode (i.e basic authentication) or by passing credentials in the URL
+	 * @return boolean True if logoff is supported, false otherwise
+	 */
+	static function CanLogOff()
+	{
+		return (isset($_SESSION['login_mode']) && $_SESSION['login_mode'] == 'form');
+	}
 }
 ?>

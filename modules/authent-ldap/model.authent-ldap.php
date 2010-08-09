@@ -25,7 +25,7 @@
  */
 
 
-class UserLDAP extends User
+class UserLDAP extends UserInternal
 {
 	public static function Init()
 	{
@@ -155,6 +155,12 @@ class UserLDAP extends User
 	public function CanChangePassword()
 	{
 		return false;
+	}
+
+	public function CanLogOff()
+	{
+		// Internal authentication allows everybody to log off
+		return true;
 	}
 
 	public function ChangePassword($sOldPassword, $sNewPassword)

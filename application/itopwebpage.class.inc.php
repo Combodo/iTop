@@ -492,7 +492,12 @@ EOF
 		}
 		$sLogOffMenu = "<span id=\"logOffBtn\"><ul><li><img src=\"../images/onOffBtn.png\"><ul>";
 		$sLogOffMenu .= "<li><span>$sLogonMessage</span></li>\n";
-		$sLogOffMenu .= "<li><a href=\"../pages/UI.php?loginop=logoff\">".Dict::S('UI:LogOffMenu')."</a></li>\n";
+		
+		if (utils::CanLogOff() && UserRights::CanLogOff())
+		{
+			//$sLogOffMenu .= "<li><a href=\"../pages/UI.php?loginop=logoff\">".Dict::S('UI:LogOffMenu')."</a></li>\n";
+			$sLogOffMenu .= "<li><a href=\"../pages/logoff.php\">".Dict::S('UI:LogOffMenu')."</a></li>\n";
+		}
 		if (UserRights::CanChangePassword())
 		{
 			$sLogOffMenu .= "<li><a href=\"../pages/UI.php?loginop=change_pwd\">".Dict::S('UI:ChangePwdMenu')."</a></li>\n";

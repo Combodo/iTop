@@ -32,19 +32,8 @@ require_once('../application/ui.linkswidget.class.inc.php');
 require_once('../application/startup.inc.php');
 require_once('../application/user.preferences.class.inc.php');
 
-session_start();
-if (isset($_SESSION['auth_user']))
-{
-	$sAuthUser = $_SESSION['auth_user'];
-	$sAuthPwd = $_SESSION['auth_pwd'];
-	// Attempt to login, fails silently
-	UserRights::Login($sAuthUser, $sAuthPwd);
-}
-else
-{
-	// No session information
-	echo "<p>No session information</p>\n";
-}
+require_once('../application/loginwebpage.class.inc.php');
+LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
 $oPage = new ajax_page("");
 $oPage->no_cache();

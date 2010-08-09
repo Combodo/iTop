@@ -25,7 +25,7 @@
  */
 
 
-class UserLocal extends User
+class UserLocal extends UserInternal
 {
 	public static function Init()
 	{
@@ -71,6 +71,12 @@ class UserLocal extends User
 	public function CanChangePassword()
 	{
 		// For now everyone can change their password..
+		return true;
+	}
+
+	public function CanLogOff()
+	{
+		// Internal authentication allows everybody to log off
 		return true;
 	}
 

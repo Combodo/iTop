@@ -410,6 +410,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Login:RetypeNewPasswordPrompt' => 'Resaisir le nouveau mot de passe',
 	'UI:Login:IncorrectOldPassword' => 'Erreur: l\'ancien mot de passe est incorrect',
 	'UI:LogOffMenu' => 'Déconnexion',
+	'UI:LogOff:ThankYou' => 'Merci d\'avoir utilisé iTop',
+	'UI:LogOff:ClickHereToLoginAgain' => 'Cliquez ici pour vous reconnecter...',
 	'UI:ChangePwdMenu' => 'Changer de mot de passe...',
 	'UI:Login:RetypePwdDoesNotMatch' => 'Les deux saisies du nouveau mot de passe ne sont pas identiques !',
 	'UI:Button:Login' => 'Entrer dans iTop',

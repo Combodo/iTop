@@ -347,8 +347,8 @@ class TestUserRightsMatrixItop extends TestUserRights
 	protected function DoExecute()
 	{
 		$sUser = 'Romain';
-		echo "<p>Totor: ".(UserRights::Login('Totor', 'toto') ? 'ok' : 'NO')."</p>\n";
-		echo "<p>Romain: ".(UserRights::Login('Romain', 'toto') ? 'ok' : 'NO')."</p>\n";
+		echo "<p>Totor: ".(UserRights::CheckCredentials('Totor', 'toto') ? 'ok' : 'NO')."</p>\n";
+		echo "<p>Romain: ".(UserRights::CheckCredentials('Romain', 'toto') ? 'ok' : 'NO')."</p>\n";
 		echo "<p>User: ".UserRights::GetUser()."</p>\n";
 		echo "<p>On behalf of...".UserRights::GetRealUser()."</p>\n";
 
