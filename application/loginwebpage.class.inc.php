@@ -194,8 +194,7 @@ EOF
 
 	static function SecureConnectionRequired()
 	{
-		$oConfig = new Config(ITOP_CONFIG_FILE);
-		return $oConfig->GetSecureConnectionRequired();
+		return utils::GetConfig()->GetSecureConnectionRequired();
 	}
 
 	static function IsConnectionSecure()

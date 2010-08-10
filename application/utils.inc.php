@@ -185,6 +185,11 @@ class utils
 	{
 		// Build an absolute URL to this page on this server/port
 		$sServerName = $_SERVER['SERVER_NAME'];
+		if (self::GetConfig()->GetSecureConnectionRequired())
+		{
+			// If a secure connection is required, then any URL must start with https !
+			$bForceHTTPS = true;
+		}
 		if ($bForceHTTPS)
 		{
 			$sProtocol = 'https';
