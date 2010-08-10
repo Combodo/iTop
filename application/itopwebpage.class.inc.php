@@ -113,7 +113,7 @@ class iTopWebPage extends NiceWebPage
 		}
 
 		// Accordion Menu
-		$("#accordion").accordion({ header: "h3", navigation: true, autoHeight: false, collapsible: false });
+		$("#accordion").accordion({ header: "h3", navigation: true, autoHeight: false, collapsible: false, icons: false });
  	});
 	//add new widget called TruncatedList to properly display truncated lists when they are sorted
 	$.tablesorter.addWidget({ 

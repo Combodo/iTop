@@ -236,6 +236,10 @@ input.textSearch {
     background-color:#FFFFFF;
 }
 
+#accordion h3 {
+	padding: 10px;
+}
+
 .ui-accordion-content ul {
     list-style:none;
     padding-left:16px;
