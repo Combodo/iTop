@@ -43,7 +43,8 @@ define ('DEFAULT_MAX_DISPLAY_LIMIT', 15);
 define ('DEFAULT_STANDARD_RELOAD_INTERVAL', 5*60);
 define ('DEFAULT_FAST_RELOAD_INTERVAL', 1*60);
 define ('DEFAULT_SECURE_CONNECTION_REQUIRED', false);
-define ('DEFAULT_ALLOWED_LOGIN_TYPES', 'form|popup|remote|url');
+define ('DEFAULT_ALLOWED_LOGIN_TYPES', 'form|basic|external');
+define ('DEFAULT_EXT_AUTH_VARIABLE', '$_SERVER[\'REMOTE_USER\']');
 
 /**
  * Config
@@ -106,9 +107,14 @@ class Config
 	protected $m_sDefaultLanguage;
 	
 	/**
-	 * @var string Type of login process allowed: form|popup|url|remote
+	 * @var string Type of login process allowed: form|basic|url|external
 	 */
 	 protected $m_sAllowedLoginTypes;
+	 
+	/**
+	 * @var string Name of the PHP variable in which external authentication information is passed by the web server
+	 */
+	 protected $m_sExtAuthVariable;
 
 	public function __construct($sConfigFile, $bLoadConfig = true)
 	{
@@ -156,6 +162,7 @@ class Config
 		$this->m_bSecureConnectionRequired = DEFAULT_SECURE_CONNECTION_REQUIRED;
 		$this->m_sDefaultLanguage = 'EN US';
 		$this->m_sAllowedLoginTypes = DEFAULT_ALLOWED_LOGIN_TYPES;
+		$this->m_sExtAuthVariable = DEFAULT_EXT_AUTH_VARIABLE;
 		
 		$this->m_aModuleSettings = array();
 
@@ -255,6 +262,7 @@ class Config
 
 		$this->m_sDefaultLanguage = isset($MySettings['default_language']) ? trim($MySettings['default_language']) : 'EN US';
 		$this->m_sAllowedLoginTypes = isset($MySettings['allowed_login_types']) ? trim($MySettings['allowed_login_types']) : DEFAULT_ALLOWED_LOGIN_TYPES;
+		$this->m_sExtAuthVariable = isset($MySettings['ext_auth_variable']) ? trim($MySettings['ext_auth_variable']) : DEFAULT_EXT_AUTH_VARIABLE;
 	}
 
 	protected function Verify()
@@ -408,6 +416,11 @@ class Config
 		return explode('|', $this->m_sAllowedLoginTypes);
 	}
 
+	public function GetExternalAuthenticationVariable()
+	{
+		return $this->m_sExtAuthVariable;
+	}
+
 	public function SetDBHost($sDBHost)
 	{
 		$this->m_sDBHost = $sDBHost;
@@ -486,6 +499,11 @@ class Config
 	public function SetAllowedLoginTypes($aAllowedLoginTypes)
 	{
 		$this->m_sAllowedLoginTypes = implode('|', $aAllowedLoginTypes);
+	}
+
+	public function SetExternalAuthenticationVariable($sExtAuthVariable)
+	{
+		$this->m_sExtAuthVariable = $sExtAuthVariable;
 	}
 
 	public function FileIsWritable()

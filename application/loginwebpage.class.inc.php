@@ -88,7 +88,7 @@ EOF
 	{
 		switch($sLoginType)
 		{
-			case 'popup':
+			case 'basic':
 			case 'url':
 			$this->add_header('WWW-Authenticate: Basic realm="'.Dict::Format('UI:iTopVersion:Short', ITOP_VERSION));
 			$this->add_header('HTTP/1.0 401 Unauthorized');
@@ -96,7 +96,7 @@ EOF
 			$this->add('<p><strong>'.Dict::S('UI:Login:Error:AccessRestricted').'</strong></p>');
 			break;
 			
-			case 'remote':
+			case 'external':
 			case 'form':
 			default: // In case the settings get messed up...
 			$sAuthUser = utils::ReadParam('auth_user', '');
@@ -248,29 +248,33 @@ EOF
 					}
 					break;
 					
-					case 'popup':
+					case 'basic':
 					// Standard PHP authentication method, works with Apache...
 					// Case 1) Apache running in CGI mode + rewrite rules in .htaccess
 					if (isset($_SERVER['HTTP_AUTHORIZATION']) && !empty($_SERVER['HTTP_AUTHORIZATION']))
 					{
 						list($sAuthUser, $sAuthPwd) = explode(':' , base64_decode(substr($_SERVER['HTTP_AUTHORIZATION'], 6)));
-						$sLoginMode = 'popup';
+						$sLoginMode = 'basic';
 					}
 					else if (isset($_SERVER['PHP_AUTH_USER']))
 					{
 						$sAuthUser = $_SERVER['PHP_AUTH_USER'];
 						$sAuthPwd = $_SERVER['PHP_AUTH_PW'];
-						$sLoginMode = 'popup';
+						$sLoginMode = 'basic';
 					}
 					break;
 
-					case 'remote':
+					case 'external':
 					// Web server supplied authentication
-					if (isset($_SERVER['REMOTE_USER']))
-					{
-						$sAuthUser = $_SERVER['REMOTE_USER'];
+					$bExternalAuth = false;
+                    $sExtAuthVar = utils::GetConfig()->GetExternalAuthenticationVariable(); // In which variable is the info passed ?
+                    $sEval = '$bExternalAuth = isset('.$sExtAuthVar.');';
+                    eval($sEval);
+                    if ($bExternalAuth)
+                    {
+						eval('$sAuthUser = '.$sExtAuthVar.';'); // Retrieve the value
 						$sAuthPwd = ''; // No password in this case the web server already authentified the user...
-						$sLoginMode = 'remote';
+						$sLoginMode = 'external';
 						$sAuthentication = 'external';
 					}
 					break;

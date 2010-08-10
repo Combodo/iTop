@@ -83,7 +83,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 // Class: User
 //
 
-Dict::Add('EN US', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:User' => 'Utilisateur',
 	'Class:User+' => 'Compte utilisateur',
 	'Class:User/Attribute:finalclass' => 'Type de compte',
