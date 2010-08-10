@@ -951,7 +951,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 				break;
 				
 				case 'Text':
-					$aEventsList[] ='keypress';
+					$aEventsList[] ='keyup';
 					$aEventsList[] ='change';
 					$sHTMLValue = "<textarea class=\"resizable\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">$value</textarea>&nbsp;{$sValidationField}";
 				break;
