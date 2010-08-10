@@ -185,9 +185,10 @@ class utils
 	{
 		// Build an absolute URL to this page on this server/port
 		$sServerName = $_SERVER['SERVER_NAME'];
-		if (self::GetConfig()->GetSecureConnectionRequired())
+		if (self::GetConfig()->GetSecureConnectionRequired() || self::GetConfig()->GetHttpsHyperlinks())
 		{
-			// If a secure connection is required, then any URL must start with https !
+			// If a secure connection is required, or if the URL is requested to start with HTTPS
+			// then any URL must start with https !
 			$bForceHTTPS = true;
 		}
 		if ($bForceHTTPS)

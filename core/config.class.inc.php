@@ -43,6 +43,7 @@ define ('DEFAULT_MAX_DISPLAY_LIMIT', 15);
 define ('DEFAULT_STANDARD_RELOAD_INTERVAL', 5*60);
 define ('DEFAULT_FAST_RELOAD_INTERVAL', 1*60);
 define ('DEFAULT_SECURE_CONNECTION_REQUIRED', false);
+define ('DEFAULT_HTTPS_HYPERLINKS', false);
 define ('DEFAULT_ALLOWED_LOGIN_TYPES', 'form|basic|external');
 define ('DEFAULT_EXT_AUTH_VARIABLE', '$_SERVER[\'REMOTE_USER\']');
 
@@ -97,9 +98,18 @@ class Config
 	protected $m_iFastReloadInterval;
 	
 	/**
-	 * @var boolean Whether or not a secure connection is required for using the application
+	 * @var boolean Whether or not a secure connection is required for using the application.
+	 *              If set, any attempt to connect to an iTop page with http:// will be redirected
+	 *              to https://
 	 */	 	
 	protected $m_bSecureConnectionRequired;
+
+	/**
+	 * @var boolean Forces iTop to output hyperlinks starting with https:// even
+	 *              if the current page is not using https. This can be useful when
+	 *              the application runs behind a SSL gateway
+	 */	 	
+	protected $m_bHttpsHyperlinks;
 
 	/**
 	 * @var string Langage code, default if the user language is undefined
@@ -160,6 +170,7 @@ class Config
 		$this->m_iStandardReloadInterval = DEFAULT_STANDARD_RELOAD_INTERVAL;
 		$this->m_iFastReloadInterval = DEFAULT_FAST_RELOAD_INTERVAL;
 		$this->m_bSecureConnectionRequired = DEFAULT_SECURE_CONNECTION_REQUIRED;
+		$this->m_bHttpsHyperlinks = DEFAULT_HTTPS_HYPERLINKS;
 		$this->m_sDefaultLanguage = 'EN US';
 		$this->m_sAllowedLoginTypes = DEFAULT_ALLOWED_LOGIN_TYPES;
 		$this->m_sExtAuthVariable = DEFAULT_EXT_AUTH_VARIABLE;
@@ -257,6 +268,7 @@ class Config
 		$this->m_iStandardReloadInterval = isset($MySettings['standard_reload_interval']) ? trim($MySettings['standard_reload_interval']) : DEFAULT_STANDARD_RELOAD_INTERVAL;
 		$this->m_iFastReloadInterval = isset($MySettings['fast_reload_interval']) ? trim($MySettings['fast_reload_interval']) : DEFAULT_FAST_RELOAD_INTERVAL;
 		$this->m_bSecureConnectionRequired = isset($MySettings['secure_connection_required']) ? trim($MySettings['secure_connection_required']) : DEFAULT_SECURE_CONNECTION_REQUIRED;
+		$this->m_bHttpsHyperlinks = isset($MySettings['https_hyperlinks']) ? trim($MySettings['https_hyperlinks']) : DEFAULT_HTTPS_HYPERLINKS;
 
 		$this->m_aModuleSettings = isset($MyModuleSettings) ?  $MyModuleSettings : array();
 
@@ -405,6 +417,11 @@ class Config
 		return $this->m_bSecureConnectionRequired;
 	}
 
+	public function GetHttpsHyperlinks()
+	{
+		return $this->m_bHttpsHyperlinks;
+	}
+
 	public function GetDefaultLanguage()
 	{
 		return $this->m_sDefaultLanguage;
@@ -491,6 +508,11 @@ class Config
 		$this->m_bSecureConnectionRequired = $bSecureConnectionRequired;
 	}
 
+	public function SetHttpsHyperlinks($bHttpsHyperlinks)
+	{
+		$this->m_bHttpsHyperlinks = $bHttpsHyperlinks;
+	}
+
 	public function SetDefaultLanguage($sLanguageCode)
 	{
 		$this->m_sDefaultLanguage = $sLanguageCode;
@@ -552,6 +574,7 @@ class Config
 			fwrite($hFile, "\t'standard_reload_interval' => {$this->m_iStandardReloadInterval},\n");
 			fwrite($hFile, "\t'fast_reload_interval' => {$this->m_iFastReloadInterval},\n");
 			fwrite($hFile, "\t'secure_connection_required' => ".($this->m_bSecureConnectionRequired ? 'true' : 'false').",\n");
+			fwrite($hFile, "\t'https_hyperlinks' => ".($this->m_bHttpsHyperlinks ? 'true' : 'false').",\n");
 			fwrite($hFile, "\t'default_language' => '{$this->m_sDefaultLanguage}',\n");
 			fwrite($hFile, "\t'allowed_login_types' => '{$this->m_sAllowedLoginTypes}',\n");
 			fwrite($hFile, ");\n");
