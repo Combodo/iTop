@@ -228,16 +228,16 @@ class DisplayTemplate
 		<itopblock blockclass="HistoryBlock" type="toggle" encoding="text/oql">SELECT CMDBChangeOp WHERE objkey = $id$ AND objclass = \'$class$\'</itopblock>
 		</div>
 		<img src="../../images/connect_to_network.png" style="margin-top:-10px; margin-right:10px; float:right">
-		<itopblock blockclass="DisplayBlock" asynchronous="false" type="bare_details" encoding="text/oql">SELECT bizNetworkDevice AS d WHERE d.id = $id$</itopblock>
+		<itopblock blockclass="DisplayBlock" asynchronous="false" type="bare_details" encoding="text/oql">SELECT NetworkDevice AS d WHERE d.id = $id$</itopblock>
 		<itoptabs>
 			<itoptab name="Interfaces">
-				<itopblock blockclass="DisplayBlock" type="list" encoding="text/oql">SELECT bizInterface AS i WHERE i.device_id = $id$</itopblock>
+				<itopblock blockclass="DisplayBlock" type="list" encoding="text/oql">SELECT Interface AS i WHERE i.device_id = $id$</itopblock>
 			</itoptab>
 			<itoptab name="Contacts">
-				<itopblock blockclass="DisplayBlock" type="list" encoding="text/oql">SELECT bizContact AS c JOIN ContactsLinks AS l ON l.contact_id = c.id WHERE l.object_id = $id$</itopblock>
+				<itopblock blockclass="DisplayBlock" type="list" encoding="text/oql">SELECT Contact AS c JOIN lnkContactToCI AS l ON l.contact_id = c.id WHERE l.ci_id = $id$</itopblock>
 			</itoptab>
 			<itoptab name="Documents">
-				<itopblock blockclass="DisplayBlock" type="list" encoding="text/oql">SELECT bizDocument AS d JOIN lnkDocumentRealObject as l ON l.document_id = d.id WHERE l.object_id = $id$)</itopblock>
+				<itopblock blockclass="DisplayBlock" type="list" encoding="text/oql">SELECT Document AS d JOIN lnkDocumentToCI as l ON l.document_id = d.id WHERE l.ci_id = $id$)</itopblock>
 			</itoptab>
 		</itoptabs>';
 		

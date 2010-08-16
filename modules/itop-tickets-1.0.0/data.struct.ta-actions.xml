@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Set>
-<ActionEmail id="4">
+<ActionEmail id="1">
 <name>Incident Notification to a Workgroup</name>
 <description>This action informs a team that a ticket has been assigned their workgroup</description>
 <status>disabled</status>
 <test_recipient></test_recipient>
 <from></from>
 <reply_to></reply_to>
-<to>SELECT bizTeam AS t JOIN bizWorkgroup AS w ON w.team_id = t.id WHERE w.id=:this-&gt;workgroup_id</to>
+<to>SELECT Team WHERE id=:this-&gt;workgroup_id</to>
 <cc></cc>
 <bcc></bcc>
-<subject>The ticket $this-&gt;name()$, severity $this-&gt;severity$ has been assigned to the workgroup $this-&gt;workgroup_name$</subject>
+<subject>The ticket $this-&gt;name()$, priority $this-&gt;priority$ has been assigned to the workgroup $this-&gt;workgroup_name$</subject>
 <body>&lt;html&gt;
 &lt;body&gt;
 &lt;p&gt;The incident ticket $this-&gt;name()$ has been assigned to the workgroup $this-&gt;workgroup_name$.&lt;/p&gt;
 &lt;p&gt;Description: $this-&gt;title$&lt;/p&gt;
-&lt;p&gt;Initial Situation: $this-&gt;initial_situation$&lt;/p&gt;
+&lt;p&gt;Title: $this-&gt;title$&lt;/p&gt;
 &lt;hr/&gt;
 &lt;p&gt;for more information on this ticket, click here: $this-&gt;hyperlink()$&lt;/p&gt;
 &lt;/body&gt;
@@ -29,15 +29,15 @@
 <test_recipient></test_recipient>
 <from></from>
 <reply_to></reply_to>
-<to>SELECT bizPerson WHERE id=:this-&gt;agent_id</to>
+<to>SELECT Person WHERE id=:this-&gt;agent_id</to>
 <cc></cc>
 <bcc></bcc>
-<subject>The ticket $this-&gt;name()$, severity $this-&gt;severity$ has been assigned to you</subject>
+<subject>The ticket $this-&gt;name()$, priority $this-&gt;priority$ has been assigned to you</subject>
 <body>&lt;html&gt;
 &lt;body&gt;
 &lt;p&gt;The incident ticket $this-&gt;name()$ has been assigned to you.&lt;/p&gt;
 &lt;p&gt;Description: $this-&gt;title$&lt;/p&gt; 
-&lt;p&gt;Initial Situation: $this-&gt;initial_situation$&lt;/p&gt;
+&lt;p&gt;Title: $this-&gt;title$&lt;/p&gt;
 &lt;hr/&gt;
 &lt;p&gt;for more information on this ticket, click here: $this-&gt;hyperlink()$&lt;/p&gt;
 &lt;/body&gt;
@@ -51,10 +51,10 @@
 <test_recipient></test_recipient>
 <from></from>
 <reply_to></reply_to>
-<to>SELECT bizPerson WHERE id=:this-&gt;caller_id</to>
+<to>SELECT Person WHERE id=:this-&gt;caller_id</to>
 <cc></cc>
 <bcc></bcc>
-<subject>Ticket $this-&gt;name()$, severity $this-&gt;severity$ - $this-&gt;ticket_status$</subject>
+<subject>Ticket $this-&gt;name()$, priority $this-&gt;priority$ - $this-&gt;ticket_status$</subject>
 <body>&lt;html&gt;
 &lt;body&gt;
 &lt;p&gt;The incident ticket $this-&gt;name()$ has changed to status $this-&gt;ticket_status$&lt;/p&gt;

@@ -566,7 +566,7 @@ abstract class ResponseTicket extends Ticket
 		// $oNewLink->Set('role', 'created before');
 		// $oToNotify->AddObject($oNewLink);
 
-		$oImpactedInfras = DBObjectSet::FromLinkSet($this, 'impacted_infra_manual', 'infra_id');
+		$oImpactedInfras = DBObjectSet::FromLinkSet($this, 'impacted_infra_manual', 'ci_id');
 
 		$aComputed = $oImpactedInfras->GetRelatedObjects('impacts', 10);
 

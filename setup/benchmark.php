@@ -129,12 +129,12 @@ class BenchmarkDataCreation
 		// User login
 		//
 		$aData = array(
-			'contactid' => self::FindId('bizPerson'),
+			'contactid' => self::FindId('Person'),
 			'login' => 'foo',
 			'password' => 'foo',
 			'language' => 'EN US',
 		);
-		$iLogin = $this->CreateObject('User', $aData, $oChange);
+		$iLogin = $this->CreateObject('UserLocal', $aData, $oChange);
 
 		// Assign profiles to the new login
 		//
@@ -150,13 +150,13 @@ class BenchmarkDataCreation
 		$aData = array(
 			'name' => 'location',
 			'description' => '',
-			'type' => 'bizLocation',
+			'type' => 'Location',
 		);
 		$iDimLocation = $this->CreateObject('URP_Dimensions', $aData, $oChange);
 
 		// Project classes
 		//
-		$aMyClassesToProject = array('bizDevice', 'bizServer');
+		$aMyClassesToProject = array('NetworkDevice', 'Server');
 		foreach($aMyClassesToProject as $sClass)
 		{
 			$aData = array(
@@ -192,17 +192,33 @@ class BenchmarkDataCreation
 		$aData = array(
 			'name' => 'benchmark',
 		);
-		$iOrg = $this->CreateObject('bizOrganization', $aData, $oChange);
-		$this->MakeFeedback($oP, 'bizOrganization');
+		$iOrg = $this->CreateObject('Organization', $aData, $oChange);
+		$this->MakeFeedback($oP, 'Organization');
 	
+		// 1' - Services
+		//
+		$aData = array(
+			'name' => 'My Service',
+		);
+		$iOrg = $this->CreateObject('Service', $aData, $oChange);
+		$this->MakeFeedback($oP, 'Service');
+
+		// 1'' - Service subcategories
+		//
+		$aData = array(
+			'name' => 'My subcategory',
+		);
+		$iOrg = $this->CreateObject('ServiceSubcategory', $aData, $oChange);
+		$this->MakeFeedback($oP, 'ServiceSubcategory');
+
 		// 2 - Locations
 		//
 		$aData = array(
 			'org_id' => $iOrg,
 			'name' => 'rio',
 		);
-		$iLoc = $this->CreateObject('bizLocation', $aData, $oChange);
-		$this->MakeFeedback($oP, 'bizLocation');
+		$iLoc = $this->CreateObject('Location', $aData, $oChange);
+		$this->MakeFeedback($oP, 'Location');
 		
 		// 3 - Teams
 		//
@@ -210,21 +226,11 @@ class BenchmarkDataCreation
 			'org_id' => $iOrg,
 			'location_id' => $iLoc,
 			'name' => 'fluminense',
+			'email' => 'fluminense@nowhere.fr',
 		);
-		$iTeam = $this->CreateObject('bizTeam', $aData, $oChange);
-		$this->MakeFeedback($oP, 'bizTeam');
+		$iTeam = $this->CreateObject('Team', $aData, $oChange);
+		$this->MakeFeedback($oP, 'Team');
 	
-		// 3' - Workgroups
-		//
-		$iAnyTeam = $this->RandomId('bizTeam');
-		$aData = array(
-			'org_id' => $iOrg,
-			'team_id' => $iAnyTeam,
-			'name' => 'trabolhogrupo'.$iAnyTeam,
-		);
-		$iTeam = $this->CreateObject('bizWorkgroup', $aData, $oChange);
-		$this->MakeFeedback($oP, 'bizWorkgroup');
-
 		// 4 - Persons
 		//
 		for($i = 0 ; $i < $this->m_aPlanned['Contacts'] ; $i++)
@@ -233,10 +239,11 @@ class BenchmarkDataCreation
 				'org_id' => $iOrg,
 				'location_id' => $iLoc,
 				'name' => 'ningem'.$i,
+				'email' => 'foo'.$i.'@nowhere.fr',
 			);
-			$this->CreateObject('bizPerson', $aData, $oChange);
+			$this->CreateObject('Person', $aData, $oChange);
 		}
-		$this->MakeFeedback($oP, 'bizPerson');
+		$this->MakeFeedback($oP, 'Person');
 		
 		// 5 - Servers
 		//
@@ -247,9 +254,9 @@ class BenchmarkDataCreation
 				'location_id' => $iLoc,
 				'name' => 'server'.$i,
 			);
-			$this->CreateObject('bizServer', $aData, $oChange);
+			$this->CreateObject('Server', $aData, $oChange);
 		}
-		$this->MakeFeedback($oP, 'bizServer');
+		$this->MakeFeedback($oP, 'Server');
 
 		// 6 - Incident Tickets
 		//
@@ -257,12 +264,15 @@ class BenchmarkDataCreation
 		{
 			$aData = array(
 				'org_id' => $iOrg,
-				'caller_id' => $this->RandomId('bizPerson'),
-				'workgroup_id' => $this->RandomId('bizWorkgroup'),
-				'agent_id' => $this->RandomId('bizPerson'),
+				'caller_id' => $this->RandomId('Person'),
+				'workgroup_id' => $this->RandomId('Team'),
+				'agent_id' => $this->RandomId('Person'),
+				'service_id' => $this->RandomId('Service'),
+				'servicesubcategory_id' => $this->RandomId('ServiceSubcategory'),
 				'title' => 'someevent'.$i,
+				'ticket_log' => 'Testing...',
 			);
-			$iTicket = $this->CreateObject('bizIncidentTicket', $aData, $oChange);
+			$iTicket = $this->CreateObject('Incident', $aData, $oChange);
 
 			// Incident/Infra
 			//
@@ -270,11 +280,10 @@ class BenchmarkDataCreation
 			for($iLinked = 0 ; $iLinked < $iInfraCount ; $iLinked++)
 			{
 				$aData = array(
-					'infra_id' => $this->RandomId('bizServer'),
+					'ci_id' => $this->RandomId('Server'),
 					'ticket_id' => $iTicket,
-					'impact' => 'info on impact '.$iLinked,
 				);
-				$this->CreateObject('lnkInfraTicket', $aData, $oChange);
+				$this->CreateObject('lnkTicketToCI', $aData, $oChange);
 			}
 
 			// Incident/Contact
@@ -283,14 +292,14 @@ class BenchmarkDataCreation
 			for($iLinked = 0 ; $iLinked < $iInfraCount ; $iLinked++)
 			{
 				$aData = array(
-					'contact_id' => $this->RandomId('bizPerson'),
+					'contact_id' => $this->RandomId('Person'),
 					'ticket_id' => $iTicket,
 					'role' => 'role '.$iLinked,
 				);
-				$this->CreateObject('lnkContactTicket', $aData, $oChange);
+				$this->CreateObject('lnkTicketToContact', $aData, $oChange);
 			}
 		}
-		$this->MakeFeedback($oP, 'bizIncidentTicket');
+		$this->MakeFeedback($oP, 'Incident');
 
 	
 		// 7 - Change Tickets
@@ -299,16 +308,17 @@ class BenchmarkDataCreation
 		{
 			$aData = array(
 				'org_id' => $iOrg,
-				'requestor_id' => $this->RandomId('bizPerson'),
-				'workgroup_id' => $this->RandomId('bizWorkgroup'),
-				'agent_id' => $this->RandomId('bizPerson'),
-				'supervisorgroup_id' => $this->RandomId('bizWorkgroup'),
-				'supervisor_id' => $this->RandomId('bizPerson'),
-				'managergroup_id' => $this->RandomId('bizWorkgroup'),
-				'manager_id' => $this->RandomId('bizPerson'),
+				'requestor_id' => $this->RandomId('Person'),
+				'workgroup_id' => $this->RandomId('Team'),
+				'agent_id' => $this->RandomId('Person'),
+				'supervisor_group_id' => $this->RandomId('Team'),
+				'supervisor_id' => $this->RandomId('Person'),
+				'manager_group_id' => $this->RandomId('Team'),
+				'manager_id' => $this->RandomId('Person'),
 				'title' => "change$i",
+				'description' => "Let's do something there",
 			);
-			$iTicket = $this->CreateObject('bizChangeTicket', $aData, $oChange);
+			$iTicket = $this->CreateObject('NormalChange', $aData, $oChange);
 
 			// Change/Infra
 			//
@@ -316,11 +326,10 @@ class BenchmarkDataCreation
 			for($iLinked = 0 ; $iLinked < $iInfraCount ; $iLinked++)
 			{
 				$aData = array(
-					'infra_id' => $this->RandomId('bizServer'),
+					'ci_id' => $this->RandomId('Server'),
 					'ticket_id' => $iTicket,
-					'impact' => 'info on impact '.$iLinked,
 				);
-				$this->CreateObject('lnkInfraChangeTicket', $aData, $oChange);
+				$this->CreateObject('lnkTicketToCI', $aData, $oChange);
 			}
 
 			// Change/Contact
@@ -329,14 +338,14 @@ class BenchmarkDataCreation
 			for($iLinked = 0 ; $iLinked < $iInfraCount ; $iLinked++)
 			{
 				$aData = array(
-					'contact_id' => $this->RandomId('bizPerson'),
-					'change_id' => $iTicket,
+					'contact_id' => $this->RandomId('Person'),
+					'ticket_id' => $iTicket,
 					'role' => 'role '.$iLinked,
 				);
-				$this->CreateObject('lnkContactChange', $aData, $oChange);
+				$this->CreateObject('lnkTicketToContact', $aData, $oChange);
 			}
 		}
-		$this->MakeFeedback($oP, 'bizChangeTicket');
+		$this->MakeFeedback($oP, 'NormalChange');
 	
 		// 8 - Service calls
 		//
@@ -344,12 +353,15 @@ class BenchmarkDataCreation
 		{
 			$aData = array(
 				'org_id' => $iOrg,
-				'caller_id' => $this->RandomId('bizPerson'),
-				'workgroup_id' => $this->RandomId('bizWorkgroup'),
-				'agent_id' => $this->RandomId('bizPerson'),
-				'title' => "call$i",
+				'caller_id' => $this->RandomId('Person'),
+				'workgroup_id' => $this->RandomId('Team'),
+				'agent_id' => $this->RandomId('Person'),
+				'service_id' => $this->RandomId('Service'),
+				'servicesubcategory_id' => $this->RandomId('ServiceSubcategory'),
+				'title' => 'someevent'.$i,
+				'ticket_log' => 'Testing...',
 			);
-			$iTicket = $this->CreateObject('bizServiceCall', $aData, $oChange);
+			$iTicket = $this->CreateObject('UserRequest', $aData, $oChange);
 
 			// Call/Infra
 			//
@@ -357,14 +369,13 @@ class BenchmarkDataCreation
 			for($iLinked = 0 ; $iLinked < $iInfraCount ; $iLinked++)
 			{
 				$aData = array(
-					'infra_id' => $this->RandomId('bizServer'),
-					'call_id' => $iTicket,
-					'impact' => 'info on impact '.$iLinked,
+					'ci_id' => $this->RandomId('Server'),
+					'ticket_id' => $iTicket,
 				);
-				$this->CreateObject('lnkInfraCall', $aData, $oChange);
+				$this->CreateObject('lnkTicketToCI', $aData, $oChange);
 			}
 		}
-		$this->MakeFeedback($oP, 'bizServiceCall');
+		$this->MakeFeedback($oP, 'UserRequest');
 
 		// 8 - Documents
 		//
@@ -379,13 +390,13 @@ class BenchmarkDataCreation
 		for($i = 0 ; $i < $this->m_aPlanned['Documents'] ; $i++)
 		{
 			$aData = array(
-				'org_id' => $iOrg,
+				//'org_id' => $iOrg,
 				'name' => "document$i",
 				'contents' => $oRefDoc,
 			);
-			$this->CreateObject('bizDocument', $aData, $oChange);
+			$this->CreateObject('FileDoc', $aData, $oChange);
 		}
-		$this->MakeFeedback($oP, 'bizDocument');
+		$this->MakeFeedback($oP, 'FileDoc');
 	}
 }
 
