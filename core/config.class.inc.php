@@ -259,16 +259,16 @@ class Config
 		$this->m_sDBName = trim($MySettings['db_name']);
 		$this->m_sDBSubname = trim($MySettings['db_subname']);
 
-		$this->m_bLogGlobal = isset($MySettings['log_global']) ? trim($MySettings['log_global']) : DEFAULT_LOG_GLOBAL;
-		$this->m_bLogNotification = isset($MySettings['log_notification']) ? trim($MySettings['log_notification']) : DEFAULT_LOG_NOTIFICATION;
-		$this->m_bLogIssue = isset($MySettings['log_issue']) ? trim($MySettings['log_issue']) : DEFAULT_LOG_ISSUE;
-		$this->m_bLogWebService = isset($MySettings['log_web_service']) ? trim($MySettings['log_web_service']) : DEFAULT_LOG_WEB_SERVICE;
+		$this->m_bLogGlobal = isset($MySettings['log_global']) ? (bool) trim($MySettings['log_global']) : DEFAULT_LOG_GLOBAL;
+		$this->m_bLogNotification = isset($MySettings['log_notification']) ? (bool) trim($MySettings['log_notification']) : DEFAULT_LOG_NOTIFICATION;
+		$this->m_bLogIssue = isset($MySettings['log_issue']) ? (bool) trim($MySettings['log_issue']) : DEFAULT_LOG_ISSUE;
+		$this->m_bLogWebService = isset($MySettings['log_web_service']) ? (bool) trim($MySettings['log_web_service']) : DEFAULT_LOG_WEB_SERVICE;
 		$this->m_iMinDisplayLimit = isset($MySettings['min_display_limit']) ? trim($MySettings['min_display_limit']) : DEFAULT_MIN_DISPLAY_LIMIT;
 		$this->m_iMaxDisplayLimit = isset($MySettings['max_display_limit']) ? trim($MySettings['max_display_limit']) : DEFAULT_MAX_DISPLAY_LIMIT;
 		$this->m_iStandardReloadInterval = isset($MySettings['standard_reload_interval']) ? trim($MySettings['standard_reload_interval']) : DEFAULT_STANDARD_RELOAD_INTERVAL;
 		$this->m_iFastReloadInterval = isset($MySettings['fast_reload_interval']) ? trim($MySettings['fast_reload_interval']) : DEFAULT_FAST_RELOAD_INTERVAL;
-		$this->m_bSecureConnectionRequired = isset($MySettings['secure_connection_required']) ? trim($MySettings['secure_connection_required']) : DEFAULT_SECURE_CONNECTION_REQUIRED;
-		$this->m_bHttpsHyperlinks = isset($MySettings['https_hyperlinks']) ? trim($MySettings['https_hyperlinks']) : DEFAULT_HTTPS_HYPERLINKS;
+		$this->m_bSecureConnectionRequired = isset($MySettings['secure_connection_required']) ? (bool) trim($MySettings['secure_connection_required']) : DEFAULT_SECURE_CONNECTION_REQUIRED;
+		$this->m_bHttpsHyperlinks = isset($MySettings['https_hyperlinks']) ? (bool) trim($MySettings['https_hyperlinks']) : DEFAULT_HTTPS_HYPERLINKS;
 
 		$this->m_aModuleSettings = isset($MyModuleSettings) ?  $MyModuleSettings : array();
 
