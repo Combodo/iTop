@@ -3476,10 +3476,13 @@ abstract class MetaModel
 	{
 		$aSearches = array();
 		$aReplacements = array();
-		foreach($aParams as $sSearch => $sReplace)
+		foreach($aParams as $sSearch => $replace)
 		{
+			// Some environment parameters are objects, we just need scalars
+			if (is_object($replace)) continue;
+
 			$aSearches[] = '$'.$sSearch.'$';
-			$aReplacements[] = $sReplace;
+			$aReplacements[] = (string) $replace;
 		}
 		return str_replace($aSearches, $aReplacements, $aInput);
 	}

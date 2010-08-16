@@ -39,7 +39,8 @@ abstract class DBObject
 	private $m_aCurrValues = array();
 	protected $m_aOrigValues = array();
 
-	private $m_bDirty = false; // The object may have incorrect external keys, then any attempt of reload must be avoided
+	private $m_bDirty = false; // Means: "a modification is ongoing"
+										// The object may have incorrect external keys, then any attempt of reload must be avoided
 	private $m_bFullyLoaded = false; // Compound objects can be partially loaded
 	private $m_aLoadedAtt = array(); // Compound objects can be partially loaded, array of sAttCode
 
@@ -884,6 +885,7 @@ abstract class DBObject
 
 		$this->DBWriteLinks();
 		$this->m_bIsInDB = true;
+		$this->m_bDirty = false;
 
 		// Activate any existing trigger 
 		$sClass = get_class($this);
@@ -902,7 +904,6 @@ abstract class DBObject
 	public function DBInsert()
 	{
 		$this->DBInsertNoReload();
-		$this->m_bDirty = false;
 		$this->Reload();
 		return $this->m_iKey;
 	}
