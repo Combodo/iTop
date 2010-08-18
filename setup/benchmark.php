@@ -33,18 +33,26 @@ require_once('./setuppage.class.inc.php');
 
 class BenchmarkDataCreation
 {
-	var $m_aPlanned = array();
+	var $m_aRequested;
+	var $m_aPlanned;
 	var $m_aCreated = array();
 
 	var $m_aStatsByClass = array();
 
 	public function __construct($iPlannedCIs, $iPlannedContacts, $iPlannedContracts)
 	{
-		$this->m_aPlanned = array(
+		$this->m_aRequested = array(
 			'CIs' => $iPlannedCIs,
 			'Contacts' => $iPlannedContacts,
 			'Contracts' => $iPlannedContracts,
-			'SubCIs' => 10 * $iPlannedCIs,
+		);
+
+		$this->m_aPlanned = array(
+			'Network devices' => ceil($iPlannedCIs / 2),
+			'Servers' => ceil($iPlannedCIs / 2),
+			'Interfaces' => 10 * $iPlannedCIs,
+			'Contacts' => $iPlannedContacts,
+			'Contracts' => $iPlannedContracts,
 			'Incidents' => 2 * 12 * $iPlannedCIs,
 			'ServiceCalls' => 1 * 12 * $iPlannedContacts,
 			'Changes' => 1 * 12 * $iPlannedCIs,
@@ -52,9 +60,14 @@ class BenchmarkDataCreation
 		);
 	}
 
-	public function GetPlan()
+	public function GetPlans()
 	{
 		return $this->m_aPlanned;
+	}
+
+	public function GetRequestInfo()
+	{
+		return $this->m_aRequested;
 	}
 
 	protected function CreateObject($sClass, $aData, $oChange)
@@ -187,15 +200,60 @@ class BenchmarkDataCreation
 
 	public function GoVolume(WebPage $oP, $oChange)
 	{
-		// 1 - Organizations
+		/////////////////////////
+		//
+		// Organizations
 		//
 		$aData = array(
-			'name' => 'benchmark',
+			'name' => 'Benchmark',
 		);
 		$iOrg = $this->CreateObject('Organization', $aData, $oChange);
 		$this->MakeFeedback($oP, 'Organization');
 	
-		// 1' - Services
+		/////////////////////////
+		//
+		// Locations
+		//
+		$aData = array(
+			'org_id' => $iOrg,
+			'name' => 'Rio',
+		);
+		$iLoc = $this->CreateObject('Location', $aData, $oChange);
+		$this->MakeFeedback($oP, 'Location');
+		
+		/////////////////////////
+		//
+		// Teams
+		//
+		$aData = array(
+			'org_id' => $iOrg,
+			'location_id' => $iLoc,
+			'name' => 'Fluminense',
+			'email' => 'fluminense@nowhere.fr',
+		);
+		$iTeam = $this->CreateObject('Team', $aData, $oChange);
+		$this->MakeFeedback($oP, 'Team');
+	
+		/////////////////////////
+		//
+		// Persons
+		//
+		for($i = 0 ; $i < $this->m_aPlanned['Contacts'] ; $i++)
+		{
+			$aData = array(
+				'org_id' => $iOrg,
+				'location_id' => $iLoc,
+				'first_name' => 'Joaõ',
+				'name' => 'Ningem #'.$i,
+				'email' => 'foo'.$i.'@nowhere.fr',
+			);
+			$this->CreateObject('Person', $aData, $oChange);
+		}
+		$this->MakeFeedback($oP, 'Person');
+		
+		/////////////////////////
+		//
+		// Services
 		//
 		$aData = array(
 			'name' => 'My Service',
@@ -203,7 +261,9 @@ class BenchmarkDataCreation
 		$iOrg = $this->CreateObject('Service', $aData, $oChange);
 		$this->MakeFeedback($oP, 'Service');
 
-		// 1'' - Service subcategories
+		/////////////////////////
+		//
+		// Service subcategories
 		//
 		$aData = array(
 			'name' => 'My subcategory',
@@ -211,54 +271,111 @@ class BenchmarkDataCreation
 		$iOrg = $this->CreateObject('ServiceSubcategory', $aData, $oChange);
 		$this->MakeFeedback($oP, 'ServiceSubcategory');
 
-		// 2 - Locations
+		/////////////////////////
 		//
-		$aData = array(
-			'org_id' => $iOrg,
-			'name' => 'rio',
-		);
-		$iLoc = $this->CreateObject('Location', $aData, $oChange);
-		$this->MakeFeedback($oP, 'Location');
-		
-		// 3 - Teams
+		// Contracts
 		//
-		$aData = array(
-			'org_id' => $iOrg,
-			'location_id' => $iLoc,
-			'name' => 'fluminense',
-			'email' => 'fluminense@nowhere.fr',
-		);
-		$iTeam = $this->CreateObject('Team', $aData, $oChange);
-		$this->MakeFeedback($oP, 'Team');
-	
-		// 4 - Persons
-		//
-		for($i = 0 ; $i < $this->m_aPlanned['Contacts'] ; $i++)
+		for($i = 0 ; $i < $this->m_aPlanned['Contracts'] ; $i++)
 		{
 			$aData = array(
-				'org_id' => $iOrg,
-				'location_id' => $iLoc,
-				'name' => 'ningem'.$i,
-				'email' => 'foo'.$i.'@nowhere.fr',
+				'name' => "Contract #$i",
+				'description' => 'Created for benchmarking purposes',
+				'org_id' => $this->RandomId('Organization'),
+				'provider_id' => $this->RandomId('Organization'),
+				'start_date' => '2009-12-25',
+				'end_date' => '2019-08-01',
+				'support_team_id' => $this->RandomId('Team'),
 			);
-			$this->CreateObject('Person', $aData, $oChange);
+			$iContract = $this->CreateObject('CustomerContract', $aData, $oChange);
 		}
-		$this->MakeFeedback($oP, 'Person');
+		$this->MakeFeedback($oP, 'CustomerContract');
 		
-		// 5 - Servers
+		/////////////////////////
 		//
-		for($i = 0 ; $i < $this->m_aPlanned['CIs'] ; $i++)
+		// Servers
+		//
+		for($i = 0 ; $i < $this->m_aPlanned['Servers'] ; $i++)
 		{
 			$aData = array(
 				'org_id' => $iOrg,
 				'location_id' => $iLoc,
 				'name' => 'server'.$i,
 			);
-			$this->CreateObject('Server', $aData, $oChange);
+			$iServer = $this->CreateObject('Server', $aData, $oChange);
+
+			// Contract/Infra
+			//
+			$iContractCount = 1;
+			for($iLinked = 0 ; $iLinked < $iContractCount ; $iLinked++)
+			{
+				$aData = array(
+					'contract_id' => $this->RandomId('CustomerContract'),
+					'ci_id' => $iServer,
+				);
+				$this->CreateObject('lnkContractToCI', $aData, $oChange);
+			}
+
+			// Interfaces
+			//
+			$iInterfaceCount = 5; // See how aPlanned['Interfaces'] is computed
+			for($iLinked = 0 ; $iLinked < $iInterfaceCount ; $iLinked++)
+			{
+				$aData = array(
+					'name' => "eth$iLinked",
+					'status' => 'implementation',
+					'org_id' => $iOrg,
+					'device_id' => $iServer,
+				);
+				$this->CreateObject('NetworkInterface', $aData, $oChange);
+			}
 		}
 		$this->MakeFeedback($oP, 'Server');
 
-		// 6 - Incident Tickets
+		/////////////////////////
+		//
+		// Network devices
+		//
+		for($i = 0 ; $i < $this->m_aPlanned['Network devices'] ; $i++)
+		{
+			$aData = array(
+				'org_id' => $iOrg,
+				'location_id' => $iLoc,
+				'name' => 'server'.$i,
+			);
+			$iNWDevice = $this->CreateObject('NetworkDevice', $aData, $oChange);
+
+			// Contract/Infra
+			//
+			$iContractCount = 1;
+			for($iLinked = 0 ; $iLinked < $iContractCount ; $iLinked++)
+			{
+				$aData = array(
+					'contract_id' => $this->RandomId('CustomerContract'),
+					'ci_id' => $iNWDevice,
+				);
+				$this->CreateObject('lnkContractToCI', $aData, $oChange);
+			}
+
+			// Interfaces
+			//
+			$iInterfaceCount = 5; // See how aPlanned['Interfaces'] is computed
+			for($iLinked = 0 ; $iLinked < $iInterfaceCount ; $iLinked++)
+			{
+				$aData = array(
+					'name' => "eth$iLinked",
+					'status' => 'implementation',
+					'org_id' => $iOrg,
+					'device_id' => $iNWDevice,
+				);
+				$this->CreateObject('NetworkInterface', $aData, $oChange);
+			}
+		}
+		$this->MakeFeedback($oP, 'NetworkDevice');
+		$this->MakeFeedback($oP, 'NetworkInterface');
+
+		/////////////////////////
+		//
+		// Incident Tickets
 		//
 		for($i = 0 ; $i < $this->m_aPlanned['Incidents'] ; $i++)
 		{
@@ -269,7 +386,7 @@ class BenchmarkDataCreation
 				'agent_id' => $this->RandomId('Person'),
 				'service_id' => $this->RandomId('Service'),
 				'servicesubcategory_id' => $this->RandomId('ServiceSubcategory'),
-				'title' => 'someevent'.$i,
+				'title' => 'Incident #'.$i,
 				'ticket_log' => 'Testing...',
 			);
 			$iTicket = $this->CreateObject('Incident', $aData, $oChange);
@@ -301,8 +418,9 @@ class BenchmarkDataCreation
 		}
 		$this->MakeFeedback($oP, 'Incident');
 
-	
-		// 7 - Change Tickets
+		/////////////////////////
+		//
+		// Change Tickets
 		//
 		for($i = 0 ; $i < $this->m_aPlanned['Changes'] ; $i++)
 		{
@@ -315,7 +433,7 @@ class BenchmarkDataCreation
 				'supervisor_id' => $this->RandomId('Person'),
 				'manager_group_id' => $this->RandomId('Team'),
 				'manager_id' => $this->RandomId('Person'),
-				'title' => "change$i",
+				'title' => 'change #'.$i,
 				'description' => "Let's do something there",
 			);
 			$iTicket = $this->CreateObject('NormalChange', $aData, $oChange);
@@ -347,7 +465,9 @@ class BenchmarkDataCreation
 		}
 		$this->MakeFeedback($oP, 'NormalChange');
 	
-		// 8 - Service calls
+		/////////////////////////
+		//
+		// Service calls
 		//
 		for($i = 0 ; $i < $this->m_aPlanned['ServiceCalls'] ; $i++)
 		{
@@ -358,7 +478,7 @@ class BenchmarkDataCreation
 				'agent_id' => $this->RandomId('Person'),
 				'service_id' => $this->RandomId('Service'),
 				'servicesubcategory_id' => $this->RandomId('ServiceSubcategory'),
-				'title' => 'someevent'.$i,
+				'title' => 'Call #'.$i,
 				'ticket_log' => 'Testing...',
 			);
 			$iTicket = $this->CreateObject('UserRequest', $aData, $oChange);
@@ -377,7 +497,9 @@ class BenchmarkDataCreation
 		}
 		$this->MakeFeedback($oP, 'UserRequest');
 
-		// 8 - Documents
+		/////////////////////////
+		//
+		// Documents
 		//
 		$sMyDoc = '';
 		for($i = 0 ; $i < 1000 ; $i++)
@@ -443,8 +565,8 @@ function DisplayStep2(SetupWebPage $oP, $oDataCreation)
 	$oP->add("<h1>iTop benchmarking</h1>\n");
 	$oP->add("<h2>Step 2: review planned volumes</h2>\n");
 
-	$aPlanned = $oDataCreation->GetPlan();
 
+	$aPlanned = $oDataCreation->GetPlans();
 	$aForm = array();
 	foreach ($aPlanned as $sKey => $iCount)
 	{
@@ -455,11 +577,12 @@ function DisplayStep2(SetupWebPage $oP, $oDataCreation)
 	}
 	$oP->form($aForm);
 
+	$aRequested = $oDataCreation->GetRequestInfo();
 	$oP->add("<form method=\"post\" onSubmit=\"return DoSubmit('Loading data...', 10)\">\n");
 	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
-	$oP->add("<input type=\"hidden\" name=\"plannedcis\" value=\"".$aPlanned['CIs']."\">\n");
-	$oP->add("<input type=\"hidden\" name=\"plannedcontacts\" value=\"".$aPlanned['Contacts']."\">\n");
-	$oP->add("<input type=\"hidden\" name=\"plannedcontracts\" value=\"".$aPlanned['Contracts']."\">\n");
+	$oP->add("<input type=\"hidden\" name=\"plannedcis\" value=\"".$aRequested['CIs']."\">\n");
+	$oP->add("<input type=\"hidden\" name=\"plannedcontacts\" value=\"".$aRequested['Contacts']."\">\n");
+	$oP->add("<input type=\"hidden\" name=\"plannedcontracts\" value=\"".$aRequested['Contracts']."\">\n");
 	$oP->add("<button type=\"submit\">Next >></button>\n");
 	$oP->add("</form>\n");
 }
