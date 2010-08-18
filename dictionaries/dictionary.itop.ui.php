@@ -365,6 +365,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:NoObject_Class_ToDisplay' => 'No %1$s to display',
 	'UI:History:LastModified_On_By' => 'Last modified on %1$s by %2$s.',
 	'UI:HistoryTab' => 'History',
+	'UI:NotificationsTab' => 'Notifications',
 	'UI:History:Date' => 'Date',
 	'UI:History:Date+' => 'Date of the change',
 	'UI:History:User' => 'User',

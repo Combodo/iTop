@@ -228,6 +228,25 @@ abstract class cmdbAbstractObject extends CMDBObject
 			}
 		}
 		$oPage->SetCurrentTab('');
+
+		if (!$bEditMode)
+		{
+			// Get the actual class of the current object
+			// And look for triggers referring to it
+			// If any trigger has been found then display a tab with notifications
+			//			
+			$sClass = get_class($this);
+			$oTriggerSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObject AS T WHERE T.target_class = '$sClass'"));
+			if ($oTriggerSet->Count() > 0)
+			{
+				$oPage->SetCurrentTab(Dict::S('UI:NotificationsTab'));
+		
+				// Display notifications regarding the object
+				$iId = $this->GetKey();
+				$oNotifSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT EventNotificationEmail AS Ev JOIN TriggerOnObject AS T ON Ev.trigger_id = T.id WHERE T.target_class = '$sClass' AND Ev.object_id = $iId"));
+				self::DisplaySet($oPage, $oNotifSet);
+			}
+		}
 	}
 
 	function GetBareProperties(WebPage $oPage, $bEditMode = false)
