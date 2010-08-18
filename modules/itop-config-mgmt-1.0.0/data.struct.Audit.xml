@@ -4,7 +4,7 @@
 <AuditCategory id="1">
 <name>Devices in production</name>
 <description>Checking all devices in production</description>
-<definition_set>SELECT Device AS d WHERE d.status = 'production'</definition_set>
+<definition_set>SELECT InfrastructureCI AS ci WHERE ci.status = 'production'</definition_set>
 </AuditCategory>
 
 <AuditRule id="1">
@@ -18,7 +18,7 @@
 <AuditRule id="2">
 <name>Devices not attached to a monitoring solution</name>
 <description></description>
-<query>SELECT Device AS d JOIN lnkSolutionToCI AS l ON l.ci_id = d.id JOIN ApplicationSolution AS s ON l.solution_id = s.id WHERE d.status = &apos;production&apos; AND s.name LIKE &apos;%Monitoring%&apos;</query>
+<query>SELECT InfrastructureCI AS ci JOIN lnkSolutionToCI AS l ON l.ci_id = ci.id JOIN ApplicationSolution AS s ON l.solution_id = s.id WHERE ci.status = &apos;production&apos; AND s.name LIKE &apos;%Monitoring%&apos;</query>
 <valid_flag>true</valid_flag>
 <category_id>1</category_id>
 </AuditRule>
