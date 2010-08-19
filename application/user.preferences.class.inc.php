@@ -143,7 +143,7 @@ class appUserPreferences extends DBObject
 	{
 		$aParams = array
 		(
-			"category" => "gui",
+			"category" => "gui,alwaysreadable",
 			"key_type" => "autoincrement",
 			"name_attcode" => "userid",
 			"state_attcode" => "",

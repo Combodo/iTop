@@ -230,6 +230,19 @@ class TrueExpression extends ScalarExpression
 	}
 }
 
+class FalseExpression extends ScalarExpression
+{
+	public function __construct()
+	{
+		parent::__construct(0);
+	}
+
+	public function IsTrue()
+	{
+		return false;
+	}
+}
+
 class FieldExpression extends UnaryExpression
 {
 	protected $m_sParent;
@@ -346,6 +359,16 @@ class ListExpression extends Expression
 	public function __construct($aExpressions)
 	{
 		$this->m_aExpressions = $aExpressions;
+	}
+
+	public static function FromScalars($aScalars)
+	{
+		$aExpressions = array();
+		foreach($aScalars as $value)
+		{
+			$aExpressions[] = new ScalarExpression($value);
+		}
+		return new ListExpression($aExpressions);
 	}
 
 	public function IsTrue()

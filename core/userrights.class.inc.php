@@ -57,6 +57,8 @@ abstract class UserRightsAddOnAPI
 
 	// Cf UserContext...
 	abstract public function GetFilter($sLogin, $sClass); // returns a filter object
+	// Used to build select queries showing only objects visible for the given user
+	abstract public function GetSelectFilter($sLogin, $sClass); // returns a filter object
 
 	abstract public function IsActionAllowed($oUser, $sClass, $iActionCode, /*dbObjectSet*/ $oInstanceSet = null);
 	abstract public function IsStimulusAllowed($oUser, $sClass, $sStimulusCode, /*dbObjectSet*/ $oInstanceSet = null);
@@ -494,6 +496,9 @@ class UserRights
 
 	public static function GetFilter($sClass)
 	{
+		// #@# to cleanup !
+		return new DBObjectSearch($sClass);
+
 		if (!self::CheckLogin()) return false;
 		if (self::IsAdministrator()) return new DBObjectSearch($sClass);
 
@@ -506,10 +511,34 @@ class UserRights
 		return self::$m_oAddOn->GetFilter(self::$m_oUser->GetKey(), $sClass);
 	}
 
+	public static function GetSelectFilter($sClass)
+	{
+		// Need to load some records before the login is performed (user preferences)
+		if (MetaModel::HasCategory($sClass, 'alwaysreadable')) return true;
+
+		// ne marche pas... pourquoi?
+		//if (!self::CheckLogin()) return false;
+
+		if (self::IsAdministrator()) return true;
+
+		// this module is forbidden for non admins.... BUT I NEED IT HERE TO DETERMINE USER RIGHTS
+		if (MetaModel::HasCategory($sClass, 'addon/userrights')) return true;
+
+		// the rest is allowed (#@# to be improved)
+		if (!MetaModel::HasCategory($sClass, 'bizmodel')) return true;
+
+		return self::$m_oAddOn->GetSelectFilter(self::$m_oUser, $sClass);
+	}
+
 	public static function IsActionAllowed($sClass, $iActionCode, /*dbObjectSet*/ $oInstanceSet = null, $oUser = null)
 	{
 		if (!self::CheckLogin()) return false;
 		if (self::IsAdministrator($oUser)) return true;
+
+
+		// #@# Temporary?????
+		// The read access is controlled in MetaModel::MakeSelectQuery()
+		if ($iActionCode == UR_ACTION_READ) return true;
 
 		// this module is forbidden for non admins
 		if (MetaModel::HasCategory($sClass, 'addon/userrights')) return false;

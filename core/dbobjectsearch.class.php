@@ -34,6 +34,10 @@ class DBObjectSearch
 	private $m_aReferencedBy;
 	private $m_aRelatedTo;
 
+	// By default, some information may be hidden to the current user
+	// But it may happen that we need to disable that feature
+	private $m_bAllowAllData = false;
+
 	public function __construct($sClass, $sClassAlias = null)
 	{
 		if (is_null($sClassAlias)) $sClassAlias = $sClass;
@@ -50,6 +54,9 @@ class DBObjectSearch
 		$this->m_aReferencedBy = array();
 		$this->m_aRelatedTo = array();
 	}
+
+	public function AllowAllData() {$this->m_bAllowAllData = true;}
+	public function IsAllDataAllowed() {return $this->m_bAllowAllData;}
 
 	public function GetClassName($sAlias) {return $this->m_aClasses[$sAlias];}
 	public function GetJoinedClasses() {return $this->m_aClasses;}
@@ -681,7 +688,24 @@ class DBObjectSearch
 		}
 	}
 
+	// Create a search definition that leads to 0 result, still a valid search object
+	static public function FromEmptySet($sClass)
+	{
+		$oResultFilter = new DBObjectSearch($sClass);
+		$oResultFilter->m_oSearchCondition = new FalseExpression;
+		return $oResultFilter;
+	}
+
 	static protected $m_aOQLQueries = array();
+
+	// Do not filter out depending on user rights
+	// In particular when we are currently in the process of evaluating the user rights...
+	static public function FromOQL_AllData($sQuery)
+	{
+		$oRes = self::FromOQL($sQuery);
+		$oRes->AllowAllData();
+		return $oRes;
+	}
 
 	static public function FromOQL($sQuery)
 	{

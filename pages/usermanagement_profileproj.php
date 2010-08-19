@@ -72,7 +72,7 @@ function ComputeProjections($oPage)
 	// Load users, and create a record per couple user/profile
 	//
 	$aDisplayData = array();
-	$oUserSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_Users"));
+	$oUserSet = new DBObjectSet(DBObjectSearch::FromOQL("User"));
 	while ($oUser = $oUserSet->Fetch())
 	{
 		$oUserProfileSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_UserProfile WHERE userid = :user->id"), array(), array('user' => $oUser));

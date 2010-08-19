@@ -274,6 +274,12 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 		return $oNullFilter;
 	}
 
+	public function GetSelectFilter($oUser, $sClass)
+	{
+		$oNullFilter  = new DBObjectSearch($sClass);
+		return $oNullFilter;
+	}
+
 	public function IsActionAllowed($oUser, $sClass, $iActionCode, $oInstanceSet = null)
 	{
 		if (!array_key_exists($iActionCode, self::$m_aActionCodes))

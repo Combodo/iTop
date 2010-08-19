@@ -93,19 +93,28 @@ class ValueSetObjects extends ValueSetDefinition
 	protected $m_sFilterExpr; // in OQL
 	protected $m_sValueAttCode;
 	protected $m_aOrderBy;
+	private $m_bAllowAllData;
 
-	public function __construct($sFilterExp, $sValueAttCode = '', $aOrderBy = array())
+	public function __construct($sFilterExp, $sValueAttCode = '', $aOrderBy = array(), $bAllowAllData = false)
 	{
 		$this->m_sFilterExpr = $sFilterExp;
 		$this->m_sValueAttCode = $sValueAttCode;
 		$this->m_aOrderBy = $aOrderBy;
+		$this->m_bAllowAllData = $bAllowAllData;
 	}
 
 	protected function LoadValues($aArgs)
 	{
 		$this->m_aValues = array();
 		
-		$oFilter = DBObjectSearch::FromOQL($this->m_sFilterExpr, $aArgs);
+		if ($this->m_bAllowAllData)
+		{
+			$oFilter = DBObjectSearch::FromOQL_AllData($this->m_sFilterExpr, $aArgs);
+		}
+		else
+		{
+			$oFilter = DBObjectSearch::FromOQL($this->m_sFilterExpr, $aArgs);
+		}
 		if (!$oFilter) return false;
 
 		$oObjects = new DBObjectSet($oFilter, $this->m_aOrderBy, $aArgs);

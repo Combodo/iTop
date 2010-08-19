@@ -305,7 +305,7 @@ else
 	$oPage->p('<p>If one profile says YES, then the answer is YES</p>');
 	
 
-	$oUser = MetaModel::GetObject('URP_Users', $iUser);
+	$oUser = MetaModel::GetObject('User', $iUser);
 
 	$oPage->p('<h2>Projections for user '.$oUser->GetName().'</h2>');
 	ComputeUserProjections($oPage, $oUser);

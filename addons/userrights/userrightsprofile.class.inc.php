@@ -228,7 +228,7 @@ class URP_Dimensions extends UserRightsBaseClass
 			// Evaluate wether it is a constant or not
 			try
 			{
-				$oObjectSearch = DBObjectSearch::FromOQL($sExpression);
+				$oObjectSearch = DBObjectSearch::FromOQL_AllData($sExpression);
 
 				$sTargetClass = $oObjectSearch->GetClass();
 			}
@@ -366,7 +366,7 @@ class URP_ProfileProjection extends UserRightsBaseClass
 			}
 			
 		}
-		elseif ($sExpr == '<any>')
+		elseif (($sExpr == '<any>') || ($sExpr == ''))
 		{
 			$aRes = null;
 		}
@@ -374,7 +374,7 @@ class URP_ProfileProjection extends UserRightsBaseClass
 		{ 
 			$sColumn = $this->Get('attribute');
 			// SELECT...
-			$oValueSetDef = new ValueSetObjects($sExpr, $sColumn);
+			$oValueSetDef = new ValueSetObjects($sExpr, $sColumn, array(), true /*allow all data*/);
 			$aRes = $oValueSetDef->GetValues(array('user' => $oUser), '');
 		}
 		else
@@ -437,7 +437,7 @@ class URP_ClassProjection extends UserRightsBaseClass
 			}
 			
 		}
-		elseif ($sExpr == '<any>')
+		elseif (($sExpr == '<any>') || ($sExpr == ''))
 		{
 			$aRes = null;
 		}
@@ -445,12 +445,8 @@ class URP_ClassProjection extends UserRightsBaseClass
 		{ 
 			$sColumn = $this->Get('attribute');
 			// SELECT...
-			$oValueSetDef = new ValueSetObjects($sExpr, $sColumn);
+			$oValueSetDef = new ValueSetObjects($sExpr, $sColumn, array(), true /*allow all data*/);
 			$aRes = $oValueSetDef->GetValues(array('this' => $oObject), '');
-		}
-		elseif ($sExpr == '<any>')
-		{
-			$aRes = null;
 		}
 		else
 		{
@@ -459,6 +455,7 @@ class URP_ClassProjection extends UserRightsBaseClass
 		}
 		return $aRes;
 	}
+
 }
 
 
@@ -678,28 +675,28 @@ class UserRightsProfile extends UserRightsAddOnAPI
 	{
 		// Could be loaded in a shared memory (?)
 
-		$oDimensionSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_Dimensions"));
+		$oDimensionSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData("SELECT URP_Dimensions"));
 		$this->m_aDimensions = array(); 
 		while ($oDimension = $oDimensionSet->Fetch())
 		{
 			$this->m_aDimensions[$oDimension->GetKey()] = $oDimension; 
 		}
 		
-		$oClassProjSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_ClassProjection"));
+		$oClassProjSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData("SELECT URP_ClassProjection"));
 		$this->m_aClassProjs = array(); 
 		while ($oClassProj = $oClassProjSet->Fetch())
 		{
 			$this->m_aClassProjs[$oClassProj->Get('class')][$oClassProj->Get('dimensionid')] = $oClassProj; 
 		}
 
-		$oProfileSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_Profiles"));
+		$oProfileSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData("SELECT URP_Profiles"));
 		$this->m_aProfiles = array(); 
 		while ($oProfile = $oProfileSet->Fetch())
 		{
 			$this->m_aProfiles[$oProfile->GetKey()] = $oProfile; 
 		}
 
-		$oUserProfileSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_UserProfile"));
+		$oUserProfileSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData("SELECT URP_UserProfile"));
 		$this->m_aUserProfiles = array();
 		$this->m_aAdmins = array();
 		while ($oUserProfile = $oUserProfileSet->Fetch())
@@ -711,7 +708,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 			}
 		}
 
-		$oProProSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_ProfileProjection"));
+		$oProProSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData("SELECT URP_ProfileProjection"));
 		$this->m_aProPros = array(); 
 		while ($oProPro = $oProProSet->Fetch())
 		{
@@ -738,6 +735,90 @@ exit;
 		return $oNullFilter;
 	}
 
+	public function GetSelectFilter($oUser, $sClass)
+	{
+		$aConditions = array();
+		foreach ($this->m_aDimensions as $iDimension => $oDimension)
+		{
+			$oClassProj = @$this->m_aClassProjs[$sClass][$iDimension];
+			if (is_null($oClassProj))
+			{
+				// Authorize any for this dimension, then no additional criteria is required
+				continue;
+			}
+ 
+			// 1 - Get class projection info
+			//
+			$oExpression = null;
+			$sExpr = $oClassProj->Get('value');
+			if ($sExpr == '<this>')
+			{
+				$sColumn = $oClassProj->Get('attribute');
+				if (empty($sColumn))
+				{
+					$oExpression = new FieldExpression('id', $sClass);
+				}
+				else
+				{
+					$oExpression = new FieldExpression($sColumn, $sClass);
+				}
+			}
+			elseif (($sExpr == '<any>') || ($sExpr == ''))
+			{
+				// Authorize any for this dimension, then no additional criteria is required
+				continue;
+			}
+			elseif (strtolower(substr($sExpr, 0, 6)) == 'select')
+			{
+				throw new CoreException('Sorry, projections by the mean of OQL are not supported currently, please specify an attribute instead', array('class' => $sClass, 'expression' => $sExpr)); 
+			}
+			else
+			{
+				// Constant value(s)
+				// unsupported
+				throw new CoreException('Sorry, constant projections are not supported currently, please specify an attribute instead', array('class' => $sClass, 'expression' => $sExpr)); 
+//				$aRes = explode(';', trim($sExpr));
+			}
+
+			// 2 - Get profile projection info and use it if needed
+			//
+			$aProjections = self::GetReadableProjectionsByDim($oUser, $sClass, $oDimension);
+			if (is_null($aProjections))
+			{
+				// Authorize any for this dimension, then no additional criteria is required
+				continue;
+			}
+			elseif (count($aProjections) == 0)
+			{
+				// Authorize none, then exit as quickly as possible
+				return false;
+			}
+			else
+			{
+				// Authorize the given set of values
+				$oListExpr = ListExpression::FromScalars($aProjections);
+				$oCondition = new BinaryExpression($oExpression, 'IN', $oListExpr);
+				$aConditions[] = $oCondition;
+			}
+		}
+
+		if (count($aConditions) == 0)
+		{
+			// allow all
+			return true;
+		}
+		else
+		{
+			$oFilter  = new DBObjectSearch($sClass);
+			foreach($aConditions as $oCondition)
+			{
+				$oFilter->AddConditionExpression($oCondition);
+			}
+			//return true;
+			return $oFilter;
+		}
+	}
+
 	// This verb has been made public to allow the development of an accurate feedback for the current configuration
 	public function GetClassActionGrant($iProfile, $sClass, $sAction)
 	{
@@ -747,7 +828,7 @@ exit;
 		}
 
 		// Get the permission for this profile/class/action
-		$oSearch = DBObjectSearch::FromOQL("SELECT URP_ActionGrant WHERE class = :class AND action = :action AND profileid = :profile AND permission = 'yes'");
+		$oSearch = DBObjectSearch::FromOQL_AllData("SELECT URP_ActionGrant WHERE class = :class AND action = :action AND profileid = :profile AND permission = 'yes'");
 		$oSet = new DBObjectSet($oSearch, array(), array('class'=>$sClass, 'action'=>$sAction, 'profile'=>$iProfile));
 		if ($oSet->Count() >= 1)
 		{
@@ -802,7 +883,7 @@ exit;
 
 				// update the list of attributes with those allowed for this profile
 				//
-				$oSearch = DBObjectSearch::FromOQL("SELECT URP_AttributeGrant WHERE actiongrantid = :actiongrantid");
+				$oSearch = DBObjectSearch::FromOQL_AllData("SELECT URP_AttributeGrant WHERE actiongrantid = :actiongrantid");
 				$oSet = new DBObjectSet($oSearch, array(), array('actiongrantid' => $oGrantRecord->GetKey()));
 				$aProfileAttributes = $oSet->GetColumnAsArray('attcode', false);
 				if (count($aProfileAttributes) == 0)
@@ -928,7 +1009,7 @@ exit;
 		}
 
 		// Get the permission for this profile/class/stimulus
-		$oSearch = DBObjectSearch::FromOQL("SELECT URP_StimulusGrant WHERE class = :class AND stimulus = :stimulus AND profileid = :profile AND permission = 'yes'");
+		$oSearch = DBObjectSearch::FromOQL_AllData("SELECT URP_StimulusGrant WHERE class = :class AND stimulus = :stimulus AND profileid = :profile AND permission = 'yes'");
 		$oSet = new DBObjectSet($oSearch, array(), array('class'=>$sClass, 'stimulus'=>$sStimulusCode, 'profile'=>$iProfile));
 		if ($oSet->Count() >= 1)
 		{
@@ -999,6 +1080,44 @@ exit;
 		}
 	}
 
+	// Copied from GetMatchingProfilesByDim()
+	// adapted to the optimized implementation of GetSelectFilter()
+	// Note: shares the cache m_aProPros with GetMatchingProfilesByDim()
+	// Returns   null if any object is readable
+	//           an array of allowed projections otherwise (could be an empty array if none is allowed)
+	protected function GetReadableProjectionsByDim($oUser, $sClass, $oDimension)
+	{
+		//
+		// Given a dimension, lists the values for which the user will be allowed to read the objects
+		//
+		$iUser = $oUser->GetKey();
+		$iDimension = $oDimension->GetKey();
+
+		$aRes = array();
+		if (array_key_exists($iUser, $this->m_aUserProfiles))
+		{
+			foreach ($this->m_aUserProfiles[$iUser] as $iProfile => $oProfile)
+			{
+				// user projection to be cached on a given page !
+				if (!array_key_exists($iDimension, $this->m_aProPros[$iProfile]))
+				{
+					// No projection for a given profile: default to 'any'
+					return null;
+				}
+
+				$aUserProjection = $this->m_aProPros[$iProfile][$iDimension]->ProjectUser($oUser);
+				if (is_null($aUserProjection))
+				{
+					// No projection for a given profile: default to 'any'
+					return null;
+				}
+				$aRes = array_merge($aRes, $aUserProjection);
+			}
+		}
+		return $aRes;
+	}
+
+	// Note: shares the cache m_aProPros with GetReadableProjectionsByDim()
 	protected function GetMatchingProfilesByDim($oUser, $oObject, $oDimension)
 	{
 		//
@@ -1245,7 +1364,7 @@ class SetupProfiles
 	
 		// Project in every dimension
 		//
-		$oDimensionSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT URP_Dimensions"));
+		$oDimensionSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData("SELECT URP_Dimensions"));
 		while ($oDimension = $oDimensionSet->Fetch())
 		{
 			$iDimension = $oDimension->GetKey();
@@ -1393,7 +1512,7 @@ class SetupProfiles
 			'Problem' => MetaModel::GetClasses('problemmgmt'),
 			'Change' => MetaModel::GetClasses('changemgmt'),
 			'Service' => MetaModel::GetClasses('servicemgmt'),
-			'Call' => MetaModel::GetClasses('callmgmt'),
+			'Call' => MetaModel::GetClasses('requestmgmt'),
 			'KnownError' => MetaModel::GetClasses('knownerrormgmt'),
 		);
 		

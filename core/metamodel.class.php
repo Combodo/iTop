@@ -1509,6 +1509,27 @@ abstract class MetaModel
 
 	public static function MakeSelectQuery(DBObjectSearch $oFilter, $aOrderBy = array(), $aArgs = array())
 	{
+		// Hide objects that are not visible to the current user
+		//
+		if (!$oFilter->IsAllDataAllowed())
+		{
+			$oVisibleObjects = UserRights::GetSelectFilter($oFilter->GetClass());
+			if ($oVisibleObjects === false)
+			{
+				// Make sure this is a valid search object, saying NO for all
+				$oVisibleObjects = DBObjectSearch::FromEmptySet($oFilter->GetClass());
+			}
+			if (is_object($oVisibleObjects))
+			{
+				$oFilter->MergeWith($oVisibleObjects);
+			}
+			else
+			{
+				// should be true at this point, meaning that no additional filtering
+				// is required
+			}
+		}
+
 		// Query caching
 		//
 		$bQueryCacheEnabled = true;
