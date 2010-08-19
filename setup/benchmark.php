@@ -31,6 +31,8 @@ require_once('../application/loginwebpage.class.inc.php');
 require_once('../application/utils.inc.php');
 require_once('./setuppage.class.inc.php');
 
+ini_set('memory_limit', '2048M');
+
 class BenchmarkDataCreation
 {
 	var $m_iIfByServer;
@@ -57,9 +59,9 @@ class BenchmarkDataCreation
 		$iNWDevices = ceil($iPlannedCIs / 10);
 		$iBigTicketCIs = ceil($iPlannedCIs / 10);
 		$iInterfaces = $iServers * $this->m_iIfByServer + $iNWDevices * $this->m_iIfByNWDevice;
-		$iApplications = $iServers * 10;
-		$iSolutions = $iApplications;
-		$iProcesses = $iSolutions * 2;
+		$iApplications = $iServers * 5;
+		$iSolutions = ceil($iApplications / 2);
+		$iProcesses = ceil($iSolutions / 2);
 
 		$this->m_aPlanned = array(
 			'Network devices' => $iNWDevices,
