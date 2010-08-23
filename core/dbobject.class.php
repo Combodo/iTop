@@ -948,7 +948,7 @@ abstract class DBObject
 		$aChanges = $this->ListChanges();
 		if (count($aChanges) == 0)
 		{
-			throw new CoreWarning("Attempting to update an unchanged object");
+			//throw new CoreWarning("Attempting to update an unchanged object");
 			return;
 		}
 		$bHasANewExternalKeyValue = false;
