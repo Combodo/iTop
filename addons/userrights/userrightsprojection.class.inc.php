@@ -15,8 +15,8 @@
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 /**
- * UserRightsProfile
- * User management Module, basing the right on profiles and a matrix (similar to UserRightsMatrix, but profiles and other decorations have been added) 
+ * UserRightsProjection
+ * User management Module, basing the right on profiles and a matrix (similar to UserRightsProfile, but enhanced with dimensions and projection of classes and profile over the dimensions) 
  *
  * @author      Erwan Taloc <erwan.taloc@combodo.com>
  * @author      Romain Quetiez <romain.quetiez@combodo.com>
@@ -105,7 +105,7 @@ class URP_Profiles extends UserRightsBaseClass
 			return;
 		}
 
-		// Note: for sure, we assume that the instance is derived from UserRightsProfile
+		// Note: for sure, we assume that the instance is derived from UserRightsProjection
 		$oUserRights = UserRights::GetModuleInstance();
 	
 		$aDisplayData = array();
@@ -576,7 +576,7 @@ class URP_AttributeGrant extends UserRightsBaseClass
 
 
 
-class UserRightsProfile extends UserRightsAddOnAPI
+class UserRightsProjection extends UserRightsAddOnAPI
 {
 	static public $m_aActionCodes = array(
 		UR_ACTION_READ => 'read',
@@ -1589,6 +1589,6 @@ class SetupProfiles
 	}
 }
 
-UserRights::SelectModule('UserRightsProfile');
+UserRights::SelectModule('UserRightsProjection');
 
 ?>

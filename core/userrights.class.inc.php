@@ -95,9 +95,10 @@ abstract class User extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeApplicationLanguage("language", array("sql"=>"language", "default_value"=>"EN US", "is_null_allowed"=>false, "depends_on"=>array())));
 
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("profile_list", array("linked_class"=>"URP_UserProfile", "ext_key_to_me"=>"userid", "ext_key_to_remote"=>"profileid", "allowed_values"=>null, "count_min"=>1, "count_max"=>0, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("allowed_org_list", array("linked_class"=>"URP_UserOrg", "ext_key_to_me"=>"userid", "ext_key_to_remote"=>"allowed_org_id", "allowed_values"=>null, "count_min"=>1, "count_max"=>0, "depends_on"=>array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('contactid', 'first_name', 'email', 'login', 'language', 'profile_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('contactid', 'first_name', 'email', 'login', 'language', 'profile_list', 'allowed_org_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'first_name', 'last_name', 'login')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('login', 'contactid')); // Criteria of the std search form
@@ -228,7 +229,7 @@ abstract class UserInternal extends User
 		MetaModel::Init_InheritAttributes();
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('contactid', 'first_name', 'email', 'login', 'language', 'profile_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('contactid', 'first_name', 'email', 'login', 'language', 'profile_list', 'allowed_org_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'first_name', 'last_name', 'login')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('login', 'contactid')); // Criteria of the std search form
