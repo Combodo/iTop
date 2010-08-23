@@ -38,7 +38,6 @@ LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 $oPage = new ajax_page("");
 $oPage->no_cache();
 
-$oContext = new UserContext();
 $operation = utils::ReadParam('operation', '');
 $sFilter = stripslashes(utils::ReadParam('filter', ''));
 $sEncoding = utils::ReadParam('encoding', 'serialize');
@@ -54,7 +53,7 @@ switch($operation)
 	$sLinkageAttr = utils::ReadParam('linkageAttr', '', 'get');
 	$iObjectId = utils::ReadParam('objectId', '', 'get');
 	$oLinksWizard = new UILinksWizard($sClass,  $sLinkageAttr, $iObjectId, $sLinkedClass);
-	$oLinksWizard->DisplayAddForm($oPage, $oContext);
+	$oLinksWizard->DisplayAddForm($oPage);
 	break;
 	
 	// ui.linkswidget
@@ -65,7 +64,7 @@ switch($operation)
 	$sSuffix = utils::ReadParam('sSuffix', '');
 	$aAlreadyLinked = utils::ReadParam('aAlreadyLinked', array());
 	$oWidget = new UILinksWidget($sClass, $sAttCode, $iInputId, $sSuffix);
-	$oWidget->SearchObjectsToAdd($oPage, $oContext, $sRemoteClass, $aAlreadyLinked);	
+	$oWidget->SearchObjectsToAdd($oPage, $sRemoteClass, $aAlreadyLinked);	
 	break;
 	
 	// ui.linkswidget
@@ -75,7 +74,7 @@ switch($operation)
 	$sSuffix = utils::ReadParam('sSuffix', '');
 	$aLinkedObjectIds = utils::ReadParam('selectObject', array(), 'get');
 	$oWidget = new UILinksWidget($sClass, $sAttCode, $iInputId, $sSuffix);
-	$oWidget->DoAddObjects($oPage, $oContext, $aLinkedObjectIds);	
+	$oWidget->DoAddObjects($oPage, $aLinkedObjectIds);	
 	break;
 	
 	case 'wizard_helper_preview':
@@ -145,7 +144,7 @@ switch($operation)
 	
 	case 'details':
 	$key = utils::ReadParam('id', 0);
-	$oFilter = $oContext->NewFilter($sClass);
+	$oFilter = new DBObjectSearch($sClass);
 	$oFilter->AddCondition('id', $key, '=');
 	$oDisplayBlock = new DisplayBlock($oFilter, 'details', false);
 	$oDisplayBlock->RenderContent($oPage);
@@ -153,7 +152,7 @@ switch($operation)
 	
 	case 'preview':
 	$key = utils::ReadParam('id', 0);
-	$oFilter = $oContext->NewFilter($sClass);
+	$oFilter = new DBObjectSearch($sClass);
 	$oFilter->AddCondition('id', $key, '=');
 	$oDisplayBlock = new DisplayBlock($oFilter, 'preview', false);
 	$oDisplayBlock->RenderContent($oPage);
@@ -205,7 +204,7 @@ switch($operation)
 
 	case 'modal_details':
 	$key = utils::ReadParam('id', 0);
-	$oFilter = $oContext->NewFilter($sClass);
+	$oFilter = new DBObjectSearch($sClass);
 	$oFilter->AddCondition('id', $key, '=');
 	$oPage->Add("<p style=\"width:100%; margin-top:-5px;padding:3px; background-color:#33f; color:#fff;\">Object Details</p>\n");
 	$oDisplayBlock = new DisplayBlock($oFilter, 'details', false);
@@ -220,7 +219,7 @@ switch($operation)
 	$sOrg = utils::ReadParam('org_id', '');
 	$sName = utils::ReadParam('q', '');
 	$iMaxCount = utils::ReadParam('max', 30);
-	UILinksWidget::Autocomplete($oPage, $oContext, $sClass, $sAttCode, $sName, $iMaxCount);
+	UILinksWidget::Autocomplete($oPage, $sClass, $sAttCode, $sName, $iMaxCount);
 	*/
 	break;
 	
@@ -268,7 +267,7 @@ switch($operation)
 	$sName = utils::ReadParam('q', '');
 	$iMaxCount = utils::ReadParam('max', 30);
 	$iCount = 0;
-	$oFilter = $oContext->NewFilter($sClass);
+	$oFilter = new DBObjectSearch($sClass);
 	$oFilter->AddCondition($sAttCode, $sName, 'Begins with');
 	//$oFilter->AddCondition('org_id', $sOrg, '=');
 	$oSet = new CMDBObjectSet($oFilter, array($sAttCode => true));
@@ -300,7 +299,7 @@ switch($operation)
 	$sField = utils::ReadParam('field', '');
 	if (!empty($sClass) && !empty($id) && !empty($sField))
 	{
-		DownloadDocument($oPage, $oContext, $sClass, $id, $sField, 'inline');
+		DownloadDocument($oPage, $sClass, $id, $sField, 'inline');
 	}
 	break;
 	
@@ -309,7 +308,7 @@ switch($operation)
 	$sField = utils::ReadParam('field', '');
 	if (!empty($sClass) && !empty($id) && !empty($sField))
 	{
-		DownloadDocument($oPage, $oContext, $sClass, $id, $sField, 'attachement');
+		DownloadDocument($oPage, $sClass, $id, $sField, 'attachement');
 	}
 	break;
 	
@@ -317,7 +316,7 @@ switch($operation)
 	$sClass = utils::ReadParam('className', '');
 	$sRootClass = utils::ReadParam('baseClass', '');
 	$currentId = utils::ReadParam('currentId', '');
-	$oFilter = $oContext->NewFilter($sClass);
+	$oFilter = new DBObjectSearch($sClass);
 	$oSet = new CMDBObjectSet($oFilter); 
 	$sHtml = cmdbAbstractObject::GetSearchForm($oPage, $oSet, array('currentId' => $currentId, 'baseClass' => $sRootClass));
 	$oPage->add($sHtml);
@@ -343,18 +342,17 @@ $oPage->output();
  * Downloads a document to the browser, either as 'inline' or 'attachment'
  *  
  * @param WebPage $oPage The web page for the output
- * @param UserContext $oContext The current User/security context to retreive the objects
  * @param string $sClass Class name of the object
  * @param mixed $id Identifier of the object
  * @param string $sAttCode Name of the attribute containing the document to download
  * @param string $sContentDisposition Either 'inline' or 'attachment'
  * @return none
  */   
-function DownloadDocument(WebPage $oPage, UserContext $oContext, $sClass, $id, $sAttCode, $sContentDisposition = 'attachement')
+function DownloadDocument(WebPage $oPage, $sClass, $id, $sAttCode, $sContentDisposition = 'attachement')
 {
 	try
 	{
-		$oObj = $oContext->GetObject($sClass, $id);
+		$oObj = MetaModel::GetObject($sClass, $id);
 		if (is_object($oObj))
 		{
 			$oDocument = $oObj->Get($sAttCode);

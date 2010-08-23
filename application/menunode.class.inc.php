@@ -110,6 +110,7 @@ class ApplicationMenu
 				if ($bActive)
 				{
 					$oPage->add_ready_script("$('#accordion').accordion('activate', $iAccordion);");
+					$oPage->add_ready_script("$('#accordion').accordion('option', {collapsible: true});"); // Make it auto-collapsible once it has been opened properly
 				}
 			}
 			$oPage->AddToMenu('</div>');

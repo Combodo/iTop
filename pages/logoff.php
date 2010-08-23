@@ -19,7 +19,6 @@ require_once('../application/itopwebpage.class.inc.php');
 require_once('../application/wizardhelper.class.inc.php');
 
 require_once('../application/startup.inc.php');
-$oContext = new UserContext();
 $oAppContext = new ApplicationContext();
 $currentOrganization = utils::ReadParam('org_id', '');
 $operation = utils::ReadParam('operation', '');

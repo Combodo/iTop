@@ -356,8 +356,6 @@ class TestUserRightsMatrixItop extends TestUserRights
 		echo "<p>User: ".UserRights::GetUser()."</p>\n";
 		echo "<p>On behalf of...".UserRights::GetRealUser()."</p>\n";
 
-		UserRights::GetFilter('bizOrganization'); // returns a filter object
-
 		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT bizOrganization"));
 		echo "<p>IsActionAllowed...".(UserRights::IsActionAllowed('bizOrganization', UR_ACTION_MODIFY, $oSet) == UR_ALLOWED_YES ? 'ok' : 'NO')."</p>\n";
 		echo "<p>IsStimulusAllowed...".(UserRights::IsStimulusAllowed('bizOrganization', 'myStimulus', $oSet) == UR_ALLOWED_YES ? 'ok' : 'NO')."</p>\n";

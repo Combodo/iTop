@@ -24,7 +24,6 @@
  */
 
 require_once("../application/nicewebpage.class.inc.php");
-require_once("../application/usercontext.class.inc.php");
 require_once("../application/applicationcontext.class.inc.php");
 require_once("../application/user.preferences.class.inc.php");
 /**
@@ -113,7 +112,7 @@ class iTopWebPage extends NiceWebPage
 		}
 
 		// Accordion Menu
-		$("#accordion").accordion({ header: "h3", navigation: true, autoHeight: false, collapsible: false, icons: false });
+		$("#accordion").accordion({ header: "h3", navigation: true, autoHeight: false, collapsible: false, icons: false }); // collapsible will be enabled once the item will be selected
  	});
 	//add new widget called TruncatedList to properly display truncated lists when they are sorted
 	$.tablesorter.addWidget({ 
@@ -293,10 +292,9 @@ EOF
 	{
 		// List of visible Organizations
 		$iCount = 0;
-		$oContext = new UserContext();
 		if (MetaModel::IsValidClass('Organization'))
 		{
-			$oSearchFilter = $oContext->NewFilter('Organization');
+			$oSearchFilter = new DBObjectSearch('Organization');
 			$oSet = new CMDBObjectSet($oSearchFilter);
 			$iCount = $oSet->Count();
 		}
@@ -346,7 +344,6 @@ EOF
 	
     public function DisplayMenu()
     {
-		$oContext = new UserContext();
 		// Display the menu
 		$oAppContext = new ApplicationContext();
 		$iActiveNodeId = ApplicationMenu::GetActiveNodeId();

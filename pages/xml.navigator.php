@@ -60,7 +60,6 @@ function AddNodeDetails(&$oNode, $oObj)
  */
 function GetRelatedObjects(DBObject $oObj, $sRelationName, &$oLinks, &$oXmlDoc, &$oXmlNode)
 {
-	$oContext = new UserContext();
 	$aResults = array();
 	$oObj->GetRelatedObjects($sRelationName, 1 /* iMaxDepth */, $aResults);
 	static $iDepth = 0;
@@ -115,7 +114,6 @@ LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 $oPage = new ajax_page("");
 $oPage->no_cache();
 
-$oContext = new UserContext();
 $sClass = utils::ReadParam('class', 'Contact');
 $id = utils::ReadParam('id', 1);
 $sRelation = utils::ReadParam('relation', 'impacts');
@@ -129,7 +127,7 @@ if (!in_array($sRelation, $aValidRelations))
 
 if ($id != 0)
 {
-	$oObj = $oContext->GetObject($sClass, $id);
+	$oObj = MetaModel::GetObject($sClass, $id);
 	// Build the root XML part
 	$oXmlDoc = new DOMDocument( '1.0', 'UTF-8' );
 	$oXmlRoot = $oXmlDoc->CreateElement('root');

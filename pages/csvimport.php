@@ -33,7 +33,6 @@ require_once('../application/startup.inc.php');
 require_once('../application/loginwebpage.class.inc.php');
 LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
-$oContext = new UserContext();
 $oAppContext = new ApplicationContext();
 $currentOrganization = utils::ReadParam('org_id', 1);
 $iStep = utils::ReadParam('step', 1);
@@ -208,11 +207,10 @@ function GuessParameters($sCSVData)
 /**
  * Process the CSV data, for real or as a simulation
  * @param WebPage $oPage The page used to display the wizard
- * @param UserContext $oContext The current user context
  * @param bool $bSimulate Whether or not to simulate the data load
  * @return array The CSV lines in error that were rejected from the load (with the header line - if any) or null
  */
-function ProcessCSVData(WebPage $oPage, UserContext $oContext, $bSimulate = true)
+function ProcessCSVData(WebPage $oPage, $bSimulate = true)
 {
 	$aResult = array();
 	$sCSVData = utils::ReadParam('csvdata', '');
@@ -362,7 +360,7 @@ function ProcessCSVData(WebPage $oPage, UserContext $oContext, $bSimulate = true
 			case 'RowStatus_NoChange':
 			$iUnchanged++;
 			$sFinalClass = $aRes[$iLine]['finalclass'];
-			$oObj = $oContext->GetObject($sFinalClass, $aRes[$iLine]['id']->GetValue());
+			$oObj = MetaModel::GetObject($sFinalClass, $aRes[$iLine]['id']->GetValue());
 			$sUrl = $oObj->GetHyperlink();
 			$sStatus = '<img src="../images/unchanged.png" title="Unchanged">';
 			$sCSSRowClass = 'row_unchanged';
@@ -371,7 +369,7 @@ function ProcessCSVData(WebPage $oPage, UserContext $oContext, $bSimulate = true
 			case 'RowStatus_Modify':
 			$iModified++;
 			$sFinalClass = $aRes[$iLine]['finalclass'];
-			$oObj = $oContext->GetObject($sFinalClass, $aRes[$iLine]['id']->GetValue());
+			$oObj = MetaModel::GetObject($sFinalClass, $aRes[$iLine]['id']->GetValue());
 			$sUrl = $oObj->GetHyperlink();
 			$sStatus = '<img src="../images/modified.png" title="Modified">';
 			$sCSSRowClass = 'row_modified';
@@ -389,7 +387,7 @@ function ProcessCSVData(WebPage $oPage, UserContext $oContext, $bSimulate = true
 			else
 			{
 				$sFinalClass = $aRes[$iLine]['finalclass'];
-				$oObj = $oContext->GetObject($sFinalClass, $aRes[$iLine]['id']->GetValue());
+				$oObj = MetaModel::GetObject($sFinalClass, $aRes[$iLine]['id']->GetValue());
 				$sUrl = $oObj->GetHyperlink();
 				$sMessage = 'Object created';				
 			}
@@ -541,13 +539,12 @@ EOF
 /**
  * Perform the actual load of the CSV data and display the results
  * @param WebPage $oPage The web page to display the wizard
- * @param UserContext $oContext Current user's context
  * @return void
  */
-function LoadData(WebPage $oPage, UserContext $oContext)
+function LoadData(WebPage $oPage)
 {
 	$oPage->add('<h2>'.Dict::S('UI:Title:CSVImportStep5').'</h2>');
-	$aResult = ProcessCSVData($oPage, $oContext, false /* simulate = false */);
+	$aResult = ProcessCSVData($oPage, false /* simulate = false */);
 	if (is_array($aResult))
 	{
 		$oPage->StartCollapsibleSection(Dict::S('UI:CSVImport:LinesNotImported'), false);
@@ -562,13 +559,12 @@ function LoadData(WebPage $oPage, UserContext $oContext)
 /**
  * Simulate the load of the CSV data and display the results
  * @param WebPage $oPage The web page to display the wizard
- * @param UserContext $oContext Current user's context
  * @return void
  */
-function Preview(WebPage $oPage, UserContext $oContext)
+function Preview(WebPage $oPage)
 {
 	$oPage->add('<h2>'.Dict::S('UI:Title:CSVImportStep4').'</h2>');
-	ProcessCSVData($oPage, $oContext, true /* simulate */);
+	ProcessCSVData($oPage, true /* simulate */);
 }
 
 /**
@@ -1049,11 +1045,11 @@ EOF
 switch($iStep)
 {
 	case 5:
-		LoadData($oPage, $oContext);
+		LoadData($oPage);
 		break;
 		
 	case 4:
-		Preview($oPage, $oContext);
+		Preview($oPage);
 		break;
 		
 	case 3:

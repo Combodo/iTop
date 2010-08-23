@@ -173,8 +173,6 @@ require_once('../application/loginwebpage.class.inc.php');
 LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
 
-
-$oContext = new UserContext();
 $sOperation = utils::ReadParam('operation', '');
 
 switch($sOperation)

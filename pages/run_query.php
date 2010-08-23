@@ -91,7 +91,6 @@ function ShowExamples($oP, $sExpression)
 }
 
 $sOperation = utils::ReadParam('operation', 'menu');
-$oContext = new UserContext();
 $oAppContext = new ApplicationContext();
 $iActiveNodeId = utils::ReadParam('menu', -1);
 $currentOrganization = utils::ReadParam('org_id', '');

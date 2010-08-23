@@ -270,7 +270,6 @@ require_once('../application/loginwebpage.class.inc.php');
 LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
 // Display the menu on the left
-$oContext = new UserContext();
 $oAppContext = new ApplicationContext();
 $iActiveNodeId = utils::ReadParam('menu', -1);
 $currentOrganization = utils::ReadParam('org_id', 1);

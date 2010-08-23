@@ -55,8 +55,6 @@ abstract class UserRightsAddOnAPI
 
 	abstract public function Init(); // loads data (possible optimizations)
 
-	// Cf UserContext...
-	abstract public function GetFilter($sLogin, $sClass); // returns a filter object
 	// Used to build select queries showing only objects visible for the given user
 	abstract public function GetSelectFilter($sLogin, $sClass); // returns a filter object
 
@@ -492,23 +490,6 @@ class UserRights
 			return false;
 		}
 		return true;
-	}
-
-	public static function GetFilter($sClass)
-	{
-		// #@# to cleanup !
-		return new DBObjectSearch($sClass);
-
-		if (!self::CheckLogin()) return false;
-		if (self::IsAdministrator()) return new DBObjectSearch($sClass);
-
-		// this module is forbidden for non admins
-		if (MetaModel::HasCategory($sClass, 'addon/userrights')) return false;
-
-		// the rest is allowed (#@# to be improved)
-		if (!MetaModel::HasCategory($sClass, 'bizmodel')) return new DBObjectSearch($sClass);
-
-		return self::$m_oAddOn->GetFilter(self::$m_oUser->GetKey(), $sClass);
 	}
 
 	public static function GetSelectFilter($sClass)

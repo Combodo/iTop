@@ -79,11 +79,11 @@ class UILinksWizard
 		}
 	}
 
-	public function Display(WebPage $oP, UserContext $oContext, $aExtraParams = array())
+	public function Display(WebPage $oP, $aExtraParams = array())
 	{
 		$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $this->m_sLinkageAttr);
 		$sTargetClass = $oAttDef->GetTargetClass();
-		$oTargetObj = $oContext->GetObject($sTargetClass, $this->m_iObjectId);
+		$oTargetObj = MetaModel::GetObject($sTargetClass, $this->m_iObjectId);
 
 		$oP->set_title("iTop - ".MetaModel::GetName($this->m_sLinkedClass)." objects linked with ".MetaModel::GetName(get_class($oTargetObj)).": ".$oTargetObj->GetName());
 		$oP->add("<div class=\"wizContainer\">\n");
@@ -259,7 +259,7 @@ EOF
 );
 		$oP->Add("</script>\n");
 		$oP->add_ready_script("InitForm();");
-		$oFilter = $oContext->NewFilter($this->m_sClass);
+		$oFilter = new DBObjectSearch($this->m_sClass);
 		$oFilter->AddCondition($this->m_sLinkageAttr, $this->m_iObjectId, '=');
 		$oSet = new DBObjectSet($oFilter);
 		$aForm = array();
@@ -267,7 +267,7 @@ EOF
 		{
 			$aRow = array();
 			$key = $oCurrentLink->GetKey();
-			$oLinkedObj = $oContext->GetObject($this->m_sLinkedClass, $oCurrentLink->Get($this->m_sLinkingAttCode));
+			$oLinkedObj = MetaModel::GetObject($this->m_sLinkedClass, $oCurrentLink->Get($this->m_sLinkingAttCode));
 
 			$aForm[$key] = $this->GetFormRow($oP, $oLinkedObj, $oCurrentLink);
 		}
@@ -363,17 +363,17 @@ EOF
 		$oP->add("</tr>\n");
 	}
 	
-	public function DisplayAddForm(WebPage $oP, UserContext $oContext)
+	public function DisplayAddForm(WebPage $oP)
 	{
 		$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $this->m_sLinkageAttr);
 		$sTargetClass = $oAttDef->GetTargetClass();
-		$oTargetObj = $oContext->GetObject($sTargetClass, $this->m_iObjectId);
+		$oTargetObj = MetaModel::GetObject($sTargetClass, $this->m_iObjectId);
 		$oP->add("<div class=\"wizContainer\">\n");
 		//$oP->add("<div class=\"page_header\">\n");
 		//$oP->add("<h1>".Dict::Format('UI:AddObjectsOf_Class_LinkedWith_Class_Instance', MetaModel::GetName($this->m_sLinkedClass), MetaModel::GetName(get_class($oTargetObj)), "<span class=\"hilite\">".$oTargetObj->GetHyperlink()."</span>")."</h1>\n");
 		//$oP->add("</div>\n");
 
-		$oFilter = $oContext->NewFilter($this->m_sLinkedClass);
+		$oFilter = new DBObjectSearch($this->m_sLinkedClass);
 		$oSet = new CMDBObjectSet($oFilter);
 		$oBlock = new DisplayBlock($oFilter, 'search', false);
 		$oBlock->Display($oP, 'SearchFormToAdd', array('open' => true));
@@ -388,17 +388,17 @@ EOF
 		$oP->add_ready_script("$('div#SearchFormToAdd form').bind('submit.uilinksWizard', SubmitHook);");
 	}
 
-	public function SearchObjectsToAdd(WebPage $oP, UserContext $oContext)
+	public function SearchObjectsToAdd(WebPage $oP)
 	{
 		//$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $this->m_sLinkageAttr);
 
-		$oFilter = $oContext->NewFilter($this->m_sLinkedClass);
+		$oFilter = new DBObjectSearch($this->m_sLinkedClass);
 		$oSet = new CMDBObjectSet($oFilter);
 		$oBlock = new DisplayBlock($oFilter, 'list', false);
 		$oBlock->Display($oP, 'ResultsToAdd', array('menu' => false, 'selection_mode' => true, 'display_limit' => false)); // Don't display the 'Actions' menu on the results
 	}
 	
-	public function DoAddObjects(WebPage $oP, UserContext $oContext, $aLinkedObjectIds = array())
+	public function DoAddObjects(WebPage $oP, $aLinkedObjectIds = array())
 	{
 		//$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $this->m_sLinkageAttr);
 		//$sTargetClass = $oAttDef->GetTargetClass();
@@ -406,7 +406,7 @@ EOF
 		$aTable = array();
 		foreach($aLinkedObjectIds as $iObjectId)
 		{
-			$oLinkedObj = $oContext->GetObject($this->m_sLinkedClass, $iObjectId);
+			$oLinkedObj = MetaModel::GetObject($this->m_sLinkedClass, $iObjectId);
 			if (is_object($oLinkedObj))
 			{
 				$aRow = $this->GetFormRow($oP, $oLinkedObj, -$iObjectId ); // Not yet created link get negative Ids

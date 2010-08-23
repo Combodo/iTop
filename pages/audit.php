@@ -38,9 +38,7 @@ $oP = new iTopWebPage(Dict::S('UI:Audit:Title'), $currentOrganization);
 
 function GetRuleResultSet($iRuleId, $oDefinitionFilter)
 {
-	$oContext = new UserContext();
-	
-	$oRule = $oContext->GetObject('AuditRule', $iRuleId);
+	$oRule = MetaModel::GetObject('AuditRule', $iRuleId);
 	$sOql = $oRule->Get('query');
 	$oRuleFilter = DBObjectSearch::FromOQL($sOql);
 	if ($oRule->Get('valid_flag') == 'false')
@@ -87,8 +85,7 @@ switch($operation)
 	$iCategory = utils::ReadParam('category', '');
 	$iRuleIndex = utils::ReadParam('rule', 0);
 
-	$oContext = new UserContext();
-	$oAuditCategory = $oContext->GetObject('AuditCategory', $iCategory);
+	$oAuditCategory = MetaModel::GetObject('AuditCategory', $iCategory);
 	$oDefinitionFilter = DBObjectSearch::FromOQL($oAuditCategory->Get('definition_set'));
 	if (!empty($currentOrganization))
 	{
@@ -96,7 +93,7 @@ switch($operation)
 	}
 	$oDefinitionSet = new CMDBObjectSet($oDefinitionFilter);
 	$oErrorObjectSet = GetRuleResultSet($iRuleIndex, $oDefinitionFilter);
-	$oAuditRule = $oContext->GetObject('AuditRule', $iRuleIndex);
+	$oAuditRule = MetaModel::GetObject('AuditRule', $iRuleIndex);
 	$oP->add('<div class="page_header"><h1>Audit Errors: <span class="hilite">'.$oAuditRule->Get('description').'</span></h1><img style="margin-top: -20px; margin-right: 10px; float: right;" src="../images/stop.png"/></div>');
 	$oP->p('<a href="./audit.php?'.$oAppContext->GetForLink().'">[Back to audit results]</a>');
     $sBlockId = 'audit_errors';

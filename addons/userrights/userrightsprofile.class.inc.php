@@ -729,12 +729,6 @@ exit;
 		return true;
 	}
 
-	public function GetFilter($sUserName, $sClass)
-	{
-		$oNullFilter  = new DBObjectSearch($sClass);
-		return $oNullFilter;
-	}
-
 	public function GetSelectFilter($oUser, $sClass)
 	{
 		$aConditions = array();

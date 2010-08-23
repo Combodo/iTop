@@ -24,7 +24,6 @@
  */
 
 require_once('../application/applicationcontext.class.inc.php');
-require_once('../application/usercontext.class.inc.php');
 require_once('../application/cmdbabstract.class.inc.php');
 require_once('../application/displayblock.class.inc.php');
 require_once('../application/audit.category.class.inc.php');

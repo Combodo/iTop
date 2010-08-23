@@ -212,12 +212,11 @@ class UILinksWidget
 		$sHtmlValue .= "<div id=\"linkedset_{$this->m_sAttCode}{$this->m_sNameSuffix}\">\n";
 		$oValue->Rewind();
 		$aForm = array();
-		$oContext = new UserContext();
 		while($oCurrentLink = $oValue->Fetch())
 		{
 			$aRow = array();
 			$key = $oCurrentLink->GetKey();
-			$oLinkedObj = $oContext->GetObject($this->m_sRemoteClass, $oCurrentLink->Get($this->m_sExtKeyToRemote));
+			$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $oCurrentLink->Get($this->m_sExtKeyToRemote));
 
 			$aForm[$key] = $this->GetFormRow($oPage, $oLinkedObj, $oCurrentLink, $aArgs);
 		}
@@ -238,14 +237,13 @@ EOF
 	/**
 	 * This static function is called by the Ajax Page when there is a need to fill an autocomplete combo
 	 * @param $oPage WebPage The ajax page used for the output (sent back to the browser)
-	 * @param $oContext UserContext The context of the user (for limiting the search)
 	 * @param $sClass string The name of the class of the current object being edited
 	 * @param $sAttCode string The name of the attribute being edited
 	 * @param $sName string The partial name that was typed by the user
 	 * @param $iMaxCount integer The maximum number of items to return
 	 * @return void
 	 */	 	 	  	 	 	 	
-	static public function Autocomplete(WebPage $oPage, UserContext $oContext, $sClass, $sAttCode, $sName, $iMaxCount)
+	static public function Autocomplete(WebPage $oPage, $sClass, $sAttCode, $sName, $iMaxCount)
 	{
 		// #@# todo - add context information, otherwise any value will be authorized for external keys
 		$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, array() /* $aArgs */, $sName);
@@ -265,7 +263,7 @@ EOF
 			$oAttDef = 	$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 			$sLinkedClass = $oAttDef->GetLinkedClass();
 			$sSearchClass = self::GetTargetClass($sClass, $sAttCode);
-			$oFilter = $oContext->NewFilter($sSearchClass);
+			$oFilter = new DBObjectSearch($sSearchClass);
 			$sSearchAttCode = MetaModel::GetNameAttributeCode($sSearchClass);
 			$oFilter->AddCondition($sSearchAttCode, $sName, 'Begins with');
 			$oSet = new CMDBObjectSet($oFilter, array($sSearchAttCode => true));
@@ -346,9 +344,8 @@ EOF
 	{
 		$sHtml = "<div id=\"dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}\">";
 		$sHtml .= "<div class=\"wizContainer\" style=\"vertical-align:top;\">\n";
-		$oContext = new UserContext();
 		$iWidgetIndex = self::$iWidgetIndex;
-		$oFilter = $oContext->NewFilter($this->m_sRemoteClass);
+		$oFilter = new DBObjectSearch($this->m_sRemoteClass);
 		$oSet = new CMDBObjectSet($oFilter);
 		$oBlock = new DisplayBlock($oFilter, 'search', false);
 		$sHtml .= $oBlock->GetDisplay($oPage, "SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}", array('open' => true));
@@ -370,21 +367,20 @@ EOF
 	/**
 	 * Search for objects to be linked to the current object (i.e "remote" objects)
 	 * @param WebPage $oP The page used for the output (usually an AjaxWebPage)
-	 * @param UserContext $oContext User context to limit the search...
 	 * @param string $sRemoteClass Name of the "remote" class to perform the search on, must be a derived class of m_sRemoteClass
 	 * @param Array $aAlreadyLinkedIds List of IDs of objects of "remote" class already linked, to be filtered out of the search
 	 */
-	public function SearchObjectsToAdd(WebPage $oP, UserContext $oContext, $sRemoteClass = '', $aAlreadyLinkedIds = array())
+	public function SearchObjectsToAdd(WebPage $oP, $sRemoteClass = '', $aAlreadyLinkedIds = array())
 	{
 		if ($sRemoteClass != '')
 		{
 			// assert(MetaModel::IsParentClass($this->m_sRemoteClass, $sRemoteClass));
-			$oFilter = $oContext->NewFilter($sRemoteClass);
+			$oFilter = new DBObjectSearch($sRemoteClass);
 		}
 		else
 		{
 			// No remote class specified use the one defined in the linkedset
-			$oFilter = $oContext->NewFilter($this->m_sRemoteClass);		
+			$oFilter = new DBObjectSearch($this->m_sRemoteClass);		
 		}
 		if (count($aAlreadyLinkedIds) > 0)
 		{
@@ -407,7 +403,7 @@ EOF
 			if (count($aLinkIds) >0)
 			{
 				// Search for the links to find to which "remote" object they are linked
-				$oLinkFilter = $oContext->NewFilter($this->m_sLinkedClass);
+				$oLinkFilter = new DBObjectSearch($this->m_sLinkedClass);
 				$oLinkFilter->AddCondition('id', $aLinkIds, 'IN');
 				$oLinkSet = new CMDBObjectSet($oLinkFilter);
 				while($oLink = $oLinkSet->Fetch())
@@ -422,12 +418,12 @@ EOF
 		$oBlock->Display($oP, 'ResultsToAdd', array('menu' => false, 'selection_mode' => true, 'display_limit' => false)); // Don't display the 'Actions' menu on the results
 	}
 	
-	public function DoAddObjects(WebPage $oP, UserContext $oContext, $aLinkedObjectIds = array())
+	public function DoAddObjects(WebPage $oP, $aLinkedObjectIds = array())
 	{
 		$aTable = array();
 		foreach($aLinkedObjectIds as $iObjectId)
 		{
-			$oLinkedObj = $oContext->GetObject($this->m_sRemoteClass, $iObjectId);
+			$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $iObjectId);
 			if (is_object($oLinkedObj))
 			{
 				$aRow = $this->GetFormRow($oP, $oLinkedObj, -$iObjectId ); // Not yet created link get negative Ids

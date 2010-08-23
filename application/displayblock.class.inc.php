@@ -743,10 +743,9 @@ class HistoryBlock extends DisplayBlock
 			
 			if (is_object($oLatestChangeOp))
 			{
-				$oContext = new UserContext();
 				// There is one change in the list... only when the object has been created !
 				$sDate = $oLatestChangeOp->GetAsHTML('date');
-				$oChange = $oContext->GetObject('CMDBChange', $oLatestChangeOp->Get('change'));
+				$oChange = MetaModel::GetObject('CMDBChange', $oLatestChangeOp->Get('change'));
 				$sUserInfo = $oChange->GetAsHTML('userinfo');
 				$sHtml .= $oPage->GetStartCollapsibleSection(Dict::Format('UI:History:LastModified_On_By', $sDate, $sUserInfo));
 				$sHtml .= $this->GetHistoryTable($oPage, $oSet);		

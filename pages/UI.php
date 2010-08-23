@@ -445,7 +445,6 @@ try
 	require_once('../application/wizardhelper.class.inc.php');
 
 	require_once('../application/startup.inc.php');
-	$oContext = new UserContext();
 	$oAppContext = new ApplicationContext();
 	$currentOrganization = utils::ReadParam('org_id', '');
 	$operation = utils::ReadParam('operation', '');
@@ -469,7 +468,7 @@ try
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
 			}
-			$oObj = $oContext->GetObject($sClass, $id);
+			$oObj = MetaModel::GetObject($sClass, $id);
 			if ($oObj != null)
 			{
 				$oP->set_title(Dict::Format('UI:DetailsPageTitle', $oObj->GetName(), $sClassLabel));
@@ -540,7 +539,7 @@ try
 				throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'class'));
 			}
 			$oP->set_title(Dict::S('UI:SearchResultsPageTitle'));
-			$oFilter =  $oContext->NewFilter($sClass);
+			$oFilter =  new DBObjectSearch($sClass);
 			$oSet = new DBObjectSet($oFilter);
 			if ($bSearchForm)
 			{
@@ -762,7 +761,6 @@ try
 			$oP->add_linked_script("../js/linkswidget.js");
 			$oP->add_linked_script("../js/jquery.blockUI.js");
 
-			$oContext = new UserContext();
 			$aArgs = array_merge($oAppContext->GetAsHash(), utils::ReadParam('default', array()));
 
 			// If the specified class has subclasses, ask the user an instance of which class to create
@@ -860,7 +858,7 @@ try
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
 			}
-			$oObj = $oContext->GetObject($sClass, $id);
+			$oObj = MetaModel::GetObject($sClass, $id);
 			if (!utils::IsTransactionValid($sTransactionId))
 			{
 				$oP->p("<strong>".Dict::S('UI:Error:ObjectAlreadyUpdated')."</strong>\n");
@@ -950,7 +948,7 @@ try
 			}
 			foreach($aSelectObject as $iId)
 			{
-				$aObjects[] = $oContext->GetObject($sClass, $iId);
+				$aObjects[] = MetaModel::GetObject($sClass, $iId);
 			}
 			if (MetaModel::IsReadOnlyClass($sClass) || !UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_DELETE, DBObjectSet::FromArray($sClass, $aObjects)))
 			{
@@ -965,7 +963,7 @@ try
 		$sClass = utils::ReadParam('class', '');
 		$sClassLabel = MetaModel::GetName($sClass);
 		$id = utils::ReadParam('id', '');
-		$oObj = $oContext->GetObject($sClass, $id);
+		$oObj = MetaModel::GetObject($sClass, $id);
 	
 		if (MetaModel::IsReadOnlyClass($sClass) || !UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, DBObjectSet::FromObject($oObj)))
 		{
@@ -985,7 +983,7 @@ try
 		}
 		else
 		{
-				$oObj = $oContext->GetObject($sClass, $iCloneId);
+				$oObj = MetaModel::GetObject($sClass, $iCloneId);
 				$oMyChange = MetaModel::NewObject("CMDBChange");
 				$oMyChange->Set("date", time());
 				if (UserRights::IsImpersonated())
@@ -1091,7 +1089,7 @@ try
 		{
 			throw new ApplicationException(Dict::Format('UI:Error:3ParametersMissing', 'class', 'id', 'stimulus'));
 		}
-		$oObj = $oContext->GetObject($sClass, $id);
+		$oObj = MetaModel::GetObject($sClass, $id);
 		if ($oObj != null)
 		{
 			$aTransitions = $oObj->EnumTransitions();
@@ -1183,7 +1181,7 @@ EOF
 		{
 			throw new ApplicationException(Dict::Format('UI:Error:3ParametersMissing', 'class', 'id', 'stimulus'));
 		}
-		$oObj = $oContext->GetObject($sClass, $id);
+		$oObj = MetaModel::GetObject($sClass, $id);
 		if ($oObj != null)
 		{
 			$aTransitions = $oObj->EnumTransitions();
@@ -1258,7 +1256,7 @@ EOF
 		}
 		require_once('../application/uilinkswizard.class.inc.php');
 		$oWizard = new UILinksWizard($sClass, $sLinkAttr, $id, $sTargetClass);
-		$oWizard->Display($oP, $oContext, array('StartWithAdd' => $bAddObjects));		
+		$oWizard->Display($oP, array('StartWithAdd' => $bAddObjects));		
 		break;
 	
 		case 'do_modify_links':
@@ -1291,7 +1289,7 @@ EOF
 		{
 			if ($iLinkId > 0) // Negative IDs are objects that were not even created
 			{
-				$oLink = $oContext->GetObject($sClass, $iLinkId);
+				$oLink = MetaModel::GetObject($sClass, $iLinkId);
 				$oLink->DBDeleteTracked($oMyChange);
 			}
 		}
@@ -1314,7 +1312,7 @@ EOF
 			if ($iLinkId > 0)
 			{
 				// This is an existing link to be modified
-				$oLink = $oContext->GetObject($sClass, $iLinkId);
+				$oLink = MetaModel::GetObject($sClass, $iLinkId);
 			
 				// Update all the attributes of the link
 				foreach($aEditableFields as $sAttCode)
@@ -1352,9 +1350,9 @@ EOF
 		// Display again the details of the linked object
 		$oAttDef = MetaModel::GetAttributeDef($sClass, $sLinkageAtt);
 		$sTargetClass = $oAttDef->GetTargetClass();
-		$oObj = $oContext->GetObject($sTargetClass, $iObjectId);
+		$oObj = MetaModel::GetObject($sTargetClass, $iObjectId);
 	
-		$oSearch = $oContext->NewFilter(get_class($oObj));
+		$oSearch = new DBObjectSearch(get_class($oObj));
 		$oBlock = new DisplayBlock($oSearch, 'search', false);
 		$oBlock->Display($oP, 0);
 		$oObj->DisplayDetails($oP);
