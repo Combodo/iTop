@@ -648,7 +648,7 @@ abstract class DBObject
 				}
 			}
 		}
-		return true;
+		return $oAtt->CheckValue($toCheck); // Check the format
 	}
 	
 	// check attributes together
