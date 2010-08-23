@@ -126,7 +126,7 @@ class ValueSetObjects extends ValueSetDefinition
 			}
 			else
 			{
-				$this->m_aValues[$oObject->GetKey()] = $oObject->GetAsHTML($this->m_sValueAttCode);
+				$this->m_aValues[$oObject->GetKey()] = $oObject->Get($this->m_sValueAttCode);
 			}
 		}
 		return true;

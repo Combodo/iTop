@@ -350,8 +350,16 @@ class URP_ProfileProjection extends UserRightsBaseClass
 		MetaModel::Init_SetZListItems('advanced_search', array('dimensionid', 'profileid')); // Criteria of the advanced search form
 	}
 
+	protected $m_aUserProjections; // cache
+
 	public function ProjectUser(User $oUser)
 	{
+		if (is_array($this->m_aUserProjections))
+		{
+			// Hit!
+			return $this->m_aUserProjections;
+		}
+
 		$sExpr = $this->Get('value');
 		if ($sExpr == '<user>')
 		{
@@ -371,7 +379,7 @@ class URP_ProfileProjection extends UserRightsBaseClass
 			$aRes = null;
 		}
 		elseif (strtolower(substr($sExpr, 0, 6)) == 'select')
-		{ 
+		{
 			$sColumn = $this->Get('attribute');
 			// SELECT...
 			$oValueSetDef = new ValueSetObjects($sExpr, $sColumn, array(), true /*allow all data*/);
@@ -382,6 +390,7 @@ class URP_ProfileProjection extends UserRightsBaseClass
 			// Constant value(s)
 			$aRes = explode(';', trim($sExpr));
 		}
+		$this->m_aUserProjections = $aRes;
 		return $aRes;
 	}
 }
@@ -1093,7 +1102,7 @@ exit;
 			foreach ($this->m_aUserProfiles[$iUser] as $iProfile => $oProfile)
 			{
 				// user projection to be cached on a given page !
-				if (!array_key_exists($iDimension, $this->m_aProPros[$iProfile]))
+				if (!isset($this->m_aProPros[$iProfile][$iDimension]))
 				{
 					// No projection for a given profile: default to 'any'
 					return null;
@@ -1105,7 +1114,7 @@ exit;
 					// No projection for a given profile: default to 'any'
 					return null;
 				}
-				$aRes = array_merge($aRes, $aUserProjection);
+				$aRes = array_unique(array_merge($aRes, $aUserProjection));
 			}
 		}
 		return $aRes;
@@ -1122,7 +1131,7 @@ exit;
 		$iPKey = $oObject->GetKey();
 		$iDimension = $oDimension->GetKey();
 
-		if (array_key_exists($iDimension, $this->m_aClassProjs[$sClass]))
+		if (isset($this->m_aClassProjs[$sClass][$iDimension]))
 		{
 			$aObjectProjection = $this->m_aClassProjs[$sClass][$iDimension]->ProjectObject($oObject);
 		}
@@ -1144,7 +1153,7 @@ exit;
 				else
 				{
 					// user projection to be cached on a given page !
-					if (array_key_exists($iDimension, $this->m_aProPros[$iProfile]))
+					if (isset($this->m_aProPros[$iProfile][$iDimension]))
 					{
 						$aUserProjection = $this->m_aProPros[$iProfile][$iDimension]->ProjectUser($oUser);
 					}
