@@ -121,7 +121,7 @@ class UILinksWidget
 			$sNameSuffix = "]"; // To make a tabular form
 			$aArgs['prefix'] = $sPrefix;
 			$aRow['form::checkbox'] = "<input class=\"selection\" type=\"checkbox\" onChange=\"oWidget".self::$iWidgetIndex.".OnSelectChange();\" value=\"$linkObjOrId\">";
-			$aRow['form::checkbox'] .= "<input type=\"hidden\" name=\"attr_attr_{$sPrefix}id{$sNameSuffix}\" value=\"\">";
+			$aRow['form::checkbox'] .= "<input type=\"hidden\" name=\"attr_{$sPrefix}id{$sNameSuffix}\" value=\"\">";
 			foreach($this->m_aEditableFields as $sFieldCode)
 			{
 				$oAttDef = MetaModel::GetAttributeDef($this->m_sLinkedClass, $sFieldCode);
