@@ -436,7 +436,7 @@ class DisplayBlock
 				// Check the classes that can be read (i.e authorized) by this user...
 				foreach($aClasses as $sAlias => $sClassName)
 				{
-					if (UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $this->m_oSet) == UR_ALLOWED_YES)
+					if (UserRights::IsActionAllowed($sClassName, UR_ACTION_READ,  $this->m_oSet) && (UR_ALLOWED_YES || UR_ALLOWED_DEPENDS))
 					{
 						$aAuthorizedClasses[$sAlias] = $sClassName;
 					}
@@ -536,32 +536,23 @@ class DisplayBlock
 			break;
 			
 			case 'details':
-			if (UserRights::IsActionAllowed($this->m_oSet->GetClass(), UR_ACTION_READ, $this->m_oSet) == UR_ALLOWED_YES)
+			while($oObj = $this->m_oSet->Fetch())
 			{
-				while($oObj = $this->m_oSet->Fetch())
-				{
-					$sHtml .= $oObj->GetDetails($oPage); // Still used ???
-				}
+				$sHtml .= $oObj->GetDetails($oPage); // Still used ???
 			}
 			break;
 			
 			case 'bare_details':
-			if (UserRights::IsActionAllowed($this->m_oSet->GetClass(), UR_ACTION_READ, $this->m_oSet) == UR_ALLOWED_YES)
+			while($oObj = $this->m_oSet->Fetch())
 			{
-				while($oObj = $this->m_oSet->Fetch())
-				{
-					$sHtml .= $oObj->GetBareProperties($oPage);
-				}
+				$sHtml .= $oObj->GetBareProperties($oPage);
 			}
 			break;
 			
 			case 'csv':
-			if (UserRights::IsActionAllowed($this->m_oSet->GetClass(), UR_ACTION_READ, $this->m_oSet) == UR_ALLOWED_YES)
-			{
-				$sHtml .= "<textarea style=\"width:95%;height:98%\">\n";
-				$sHtml .= cmdbAbstractObject::GetSetAsCSV($this->m_oSet);
-				$sHtml .= "</textarea>\n";
-			}
+			$sHtml .= "<textarea style=\"width:95%;height:98%\">\n";
+			$sHtml .= cmdbAbstractObject::GetSetAsCSV($this->m_oSet);
+			$sHtml .= "</textarea>\n";
 			break;
 
 			case 'modify':

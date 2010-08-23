@@ -529,7 +529,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$aAuthorizedClasses = array();
 		foreach($aClasses as $sAlias => $sClassName)
 		{
-			if ((UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $oSet) == UR_ALLOWED_YES) &&
+			if ( (UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $oSet) && (UR_ALLOWED_YES || UR_ALLOWED_DEPENDS)) &&
 			( (count($aDisplayAliases) == 0) || (in_array($sAlias, $aDisplayAliases))) )
 			{
 				$aAuthorizedClasses[$sAlias] = $sClassName;
@@ -629,7 +629,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$aAuthorizedClasses = array();
 		foreach($aClasses as $sAlias => $sClassName)
 		{
-			if (UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $oSet) == UR_ALLOWED_YES)
+			if (UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $oSet) && (UR_ALLOWED_YES || UR_ALLOWED_DEPENDS))
 			{
 				$aAuthorizedClasses[$sAlias] = $sClassName;
 			}
@@ -687,7 +687,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$aAuthorizedClasses = array();
 		foreach($aClasses as $sAlias => $sClassName)
 		{
-			if (UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $oSet) == UR_ALLOWED_YES)
+			if (UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $oSet) && (UR_ALLOWED_YES || UR_ALLOWED_DEPENDS))
 			{
 				$aAuthorizedClasses[$sAlias] = $sClassName;
 			}

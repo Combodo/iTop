@@ -676,8 +676,7 @@ try
 			}
 		
 			$bIsModifiedAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) == UR_ALLOWED_YES) && !MetaModel::IsReadOnlyClass($sClass);
-			$bIsReadAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_READ, $oSet) == UR_ALLOWED_YES);
-			if( ($oObj != null) && ($bIsModifiedAllowed) && ($bIsReadAllowed))
+			if( ($oObj != null) && $bIsModifiedAllowed )
 			{
 				$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
 				$oP->add("<div class=\"page_header\">\n");
@@ -707,14 +706,13 @@ try
 		$oSearch = new DBObjectSearch($sClass);
 		$oSearch->AddCondition('id', $id, '=');
 		$oSet = new CMDBObjectSet($oSearch);
-		if ($oSet->Count() > 0)
+		if ($oSet->Count() > 0) // Set is empty if not allowed to read this object
 		{
 			$oObjToClone = $oSet->Fetch();
 		}
 	
 		$bIsModifiedAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) == UR_ALLOWED_YES) && !MetaModel::IsReadOnlyClass($sClass);
-		$bIsReadAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_READ, $oSet) == UR_ALLOWED_YES);
-		if( ($oObjToClone != null) && ($bIsModifiedAllowed) && ($bIsReadAllowed))
+		if( ($oObjToClone != null) && ($bIsModifiedAllowed))
 		{
 			$oP->add_linked_script("../js/json.js");
 			$oP->add_linked_script("../js/forms-json-utils.js");
