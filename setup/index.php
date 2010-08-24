@@ -963,6 +963,7 @@ function SetupFinished(SetupWebPage $oP, $aParamValues, $iCurrentStep, Config $o
 		{
 			UserRights::Login($sAuthUser);
 			$_SESSION['auth_user'] = $sAuthUser;
+			$_SESSION['login_mode'] = 'form'; // Will enable the "log-off button"
 			
 			// remove the tmp config file
 			@unlink(TMP_CONFIG_FILE);
