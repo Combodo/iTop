@@ -40,24 +40,6 @@
 Dict::Add('EN US', 'French', 'Français', array(
 	'Class:UserExternal' => 'Utilisateur externe à iTop',
 	'Class:UserExternal+' => 'Utilisateur authentifié à l\'extérieur d\'iTop',
-	'Class:UserExternal/Attribute:contactid' => 'Contact (personne)',
-	'Class:UserExternal/Attribute:contactid+' => '',
-	'Class:UserExternal/Attribute:last_name' => 'Nom',
-	'Class:UserExternal/Attribute:last_name+' => '',
-	'Class:UserExternal/Attribute:first_name' => 'Prénom',
-	'Class:UserExternal/Attribute:first_name+' => '',
-	'Class:UserExternal/Attribute:email' => 'Adresse email',
-	'Class:UserExternal/Attribute:email+' => '',
-	'Class:UserExternal/Attribute:login' => 'Login',
-	'Class:UserExternal/Attribute:login+' => '',
-	'Class:UserExternal/Attribute:language' => 'Langage',
-	'Class:UserExternal/Attribute:language+' => '',
-	'Class:UserExternal/Attribute:language/Value:EN US' => 'Anglais',
-	'Class:UserExternal/Attribute:language/Value:EN US+' => 'Anglais (Etats-unis)',
-	'Class:UserExternal/Attribute:language/Value:FR FR' => 'Français',
-	'Class:UserExternal/Attribute:language/Value:FR FR+' => 'Français (France)',
-	'Class:UserExternal/Attribute:profile_list' => 'Profils',
-	'Class:UserExternal/Attribute:profile_list+' => 'Rôles, ouvrants les droits d\'accès',
 ));
 
 ?>

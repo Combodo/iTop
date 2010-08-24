@@ -106,6 +106,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:User/Attribute:language/Value:FR FR+' => 'Français (France)',
 	'Class:User/Attribute:profile_list' => 'Profils',
 	'Class:User/Attribute:profile_list+' => 'Rôles, ouvrants les droits d\'accès',
+	'Class:User/Attribute:allowed_org_list' => 'Organisations permises',
+	'Class:User/Attribute:allowed_org_list+' => 'L\'utilisateur a le droit de voir les données des organisations listées ici. Si aucune organisation n\'est spécifiée, alors aucune restriction ne s\'applique.',
 ));
 
 //
@@ -668,6 +670,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:UserManagement:NoLifeCycleApplicable+' => 'Aucun cycle de vie n\'est défini pour ce type d\'objets.',
 	'UI:UserManagement:GrantMatrix' => 'Matrice des droits',
 	'UI:USerManagement:LinkBetween_User_And_Profile' => 'Lien entre %1$s et %2$s',
+	'UI:USerManagement:LinkBetween_User_And_Org' => 'Lien entre %1$s et %2$s',
 
 	'Menu:AdminTools' => 'Outils d\'admin',
 	'Menu:AdminTools+' => 'Outils d\'administration',

@@ -106,6 +106,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:User/Attribute:language/Value:FR FR+' => 'French (France)',
 	'Class:User/Attribute:profile_list' => 'Profiles',
 	'Class:User/Attribute:profile_list+' => 'Roles, granting rights for that person',
+	'Class:User/Attribute:allowed_org_list' => 'Allowed Organizations',
+	'Class:User/Attribute:allowed_org_list+' => 'The end user is allowed to see data belonging to the following organizations. If no organization is specified, there is no restriction.',
 ));
 
 //
@@ -665,6 +667,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:UserManagement:NoLifeCycleApplicable+' => 'No lifecycle has been defined for this class',
 	'UI:UserManagement:GrantMatrix' => 'Grant Matrix',
 	'UI:UserManagement:LinkBetween_User_And_Profile' => 'Link between %1$s and %2$s',
+	'UI:UserManagement:LinkBetween_User_And_Org' => 'Link between %1$s and %2$s',
 	
 	'Menu:AdminTools' => 'Admin tools',
 	'Menu:AdminTools+' => 'Administration tools',

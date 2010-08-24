@@ -40,26 +40,8 @@
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:UserLDAP' => 'LDAP user',
 	'Class:UserLDAP+' => 'User authentified by LDAP',
-	'Class:UserLDAP/Attribute:contactid' => 'Contact (person)',
-	'Class:UserLDAP/Attribute:contactid+' => 'Personal details from the business data',
-	'Class:UserLDAP/Attribute:last_name' => 'Last name',
-	'Class:UserLDAP/Attribute:last_name+' => 'Name of the corresponding contact',
-	'Class:UserLDAP/Attribute:first_name' => 'First name',
-	'Class:UserLDAP/Attribute:first_name+' => 'First name of the corresponding contact',
-	'Class:UserLDAP/Attribute:email' => 'Email',
-	'Class:UserLDAP/Attribute:email+' => 'Email of the corresponding contact',
-	'Class:UserLDAP/Attribute:login' => 'Login',
-	'Class:UserLDAP/Attribute:login+' => 'user identification string',
 	'Class:UserLDAP/Attribute:password' => 'Password',
 	'Class:UserLDAP/Attribute:password+' => 'user authentication string',
-	'Class:UserLDAP/Attribute:language' => 'Language',
-	'Class:UserLDAP/Attribute:language+' => 'user language',
-	'Class:UserLDAP/Attribute:language/Value:EN US' => 'English',
-	'Class:UserLDAP/Attribute:language/Value:EN US+' => 'English (U.S.)',
-	'Class:UserLDAP/Attribute:language/Value:FR FR' => 'French',
-	'Class:UserLDAP/Attribute:language/Value:FR FR+' => 'French (France)',
-	'Class:UserLDAP/Attribute:profile_list' => 'Profiles',
-	'Class:UserLDAP/Attribute:profile_list+' => 'Roles, granting rights for that person',
 ));
 
 

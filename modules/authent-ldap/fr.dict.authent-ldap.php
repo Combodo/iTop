@@ -40,26 +40,8 @@
 Dict::Add('EN US', 'French', 'Français', array(
 	'Class:UserLDAP' => 'Utilisateur iTop',
 	'Class:UserLDAP+' => 'Utilisateur authentifié par iTop',
-	'Class:UserLDAP/Attribute:contactid' => 'Contact (personne)',
-	'Class:UserLDAP/Attribute:contactid+' => '',
-	'Class:UserLDAP/Attribute:last_name' => 'Nom',
-	'Class:UserLDAP/Attribute:last_name+' => '',
-	'Class:UserLDAP/Attribute:first_name' => 'Prénom',
-	'Class:UserLDAP/Attribute:first_name+' => '',
-	'Class:UserLDAP/Attribute:email' => 'Adresse email',
-	'Class:UserLDAP/Attribute:email+' => '',
-	'Class:UserLDAP/Attribute:login' => 'Login',
-	'Class:UserLDAP/Attribute:login+' => '',
 	'Class:UserLDAP/Attribute:password' => 'Mot de passe LDAP',
 	'Class:UserLDAP/Attribute:password+' => '',
-	'Class:UserLDAP/Attribute:language' => 'Language',
-	'Class:UserLDAP/Attribute:language+' => '',
-	'Class:UserLDAP/Attribute:language/Value:EN US' => 'Anglais',
-	'Class:UserLDAP/Attribute:language/Value:EN US+' => 'Anglais (Etats-unis)',
-	'Class:UserLDAP/Attribute:language/Value:FR FR' => 'Français',
-	'Class:UserLDAP/Attribute:language/Value:FR FR+' => 'Français (France)',
-	'Class:UserLDAP/Attribute:profile_list' => 'Profils',
-	'Class:UserLDAP/Attribute:profile_list+' => 'Rôles, ouvrants les droits d\'accès',
 ));
 
 ?>

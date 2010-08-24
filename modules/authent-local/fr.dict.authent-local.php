@@ -40,26 +40,8 @@
 Dict::Add('EN US', 'French', 'Français', array(
 	'Class:UserLocal' => 'Utilisateur iTop',
 	'Class:UserLocal+' => 'Utilisateur authentifié par iTop',
-	'Class:UserLocal/Attribute:contactid' => 'Contact (personne)',
-	'Class:UserLocal/Attribute:contactid+' => '',
-	'Class:UserLocal/Attribute:last_name' => 'Nom',
-	'Class:UserLocal/Attribute:last_name+' => '',
-	'Class:UserLocal/Attribute:first_name' => 'Prénom',
-	'Class:UserLocal/Attribute:first_name+' => '',
-	'Class:UserLocal/Attribute:email' => 'Adresse email',
-	'Class:UserLocal/Attribute:email+' => '',
-	'Class:UserLocal/Attribute:login' => 'Login',
-	'Class:UserLocal/Attribute:login+' => '',
 	'Class:UserLocal/Attribute:password' => 'Mot de passe',
 	'Class:UserLocal/Attribute:password+' => '',
-	'Class:UserLocal/Attribute:language' => 'Language',
-	'Class:UserLocal/Attribute:language+' => '',
-	'Class:UserLocal/Attribute:language/Value:EN US' => 'Anglais',
-	'Class:UserLocal/Attribute:language/Value:EN US+' => 'Anglais (Etats-unis)',
-	'Class:UserLocal/Attribute:language/Value:FR FR' => 'Français',
-	'Class:UserLocal/Attribute:language/Value:FR FR+' => 'Français (France)',
-	'Class:UserLocal/Attribute:profile_list' => 'Profils',
-	'Class:UserLocal/Attribute:profile_list+' => 'Rôles, ouvrants les droits d\'accès',
 ));
 
 ?>

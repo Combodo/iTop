@@ -2710,6 +2710,7 @@ abstract class MetaModel
 					// Rework the view
 					//
 					$oFilter = new DBObjectSearch($sClass, '');
+					$oFilter->AllowAllData();
 					$sSQL = self::MakeSelectQuery($oFilter);
 					$aErrors[$sClass]['*'][] = "View '$sView' is currently not complete";
 					$aSugFix[$sClass]['*'][] = "ALTER VIEW `$sView` AS $sSQL";
@@ -2720,6 +2721,7 @@ abstract class MetaModel
 				// Create the view
 				//
 				$oFilter = new DBObjectSearch($sClass, '');
+				$oFilter->AllowAllData();
 				$sSQL = self::MakeSelectQuery($oFilter);
 				$aErrors[$sClass]['*'][] = "Missing view for class: $sClass";
 				$aSugFix[$sClass]['*'][] = "CREATE VIEW `$sView` AS $sSQL";

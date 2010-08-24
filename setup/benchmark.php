@@ -256,11 +256,6 @@ class BenchmarkDataCreation
 		$aStdProfiles = array(2, 3, 4, 5, 6, 7, 8, 9);
 
 		////////////////////////////////////////
-		// Dimension: Organization
-		//
-		$iDimension = self::FindId('URP_Dimensions');
-
-		////////////////////////////////////////
 		// New specific profile, giving access to everything
 		//
 		$aData = array(
@@ -281,13 +276,6 @@ class BenchmarkDataCreation
 				$this->CreateObject('URP_ActionGrant', $aData);
 			}
 		}
-		$aData = array(
-			'dimensionid' => $iDimension,
-			'profileid' => $iGuruProfile,
-			'value' => '<any>',
-			'attribute' => '',
-		);
-		$this->CreateObject('URP_ProfileProjection', $aData);
 
 		// User login with super access rights
 		//

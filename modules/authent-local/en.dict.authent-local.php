@@ -40,26 +40,8 @@
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:UserLocal' => 'iTop user',
 	'Class:UserLocal+' => 'User authentified by iTop',
-	'Class:UserLocal/Attribute:contactid' => 'Contact (person)',
-	'Class:UserLocal/Attribute:contactid+' => 'Personal details from the business data',
-	'Class:UserLocal/Attribute:last_name' => 'Last name',
-	'Class:UserLocal/Attribute:last_name+' => 'Name of the corresponding contact',
-	'Class:UserLocal/Attribute:first_name' => 'First name',
-	'Class:UserLocal/Attribute:first_name+' => 'First name of the corresponding contact',
-	'Class:UserLocal/Attribute:email' => 'Email',
-	'Class:UserLocal/Attribute:email+' => 'Email of the corresponding contact',
-	'Class:UserLocal/Attribute:login' => 'Login',
-	'Class:UserLocal/Attribute:login+' => 'user identification string',
 	'Class:UserLocal/Attribute:password' => 'Password',
 	'Class:UserLocal/Attribute:password+' => 'user authentication string',
-	'Class:UserLocal/Attribute:language' => 'Language',
-	'Class:UserLocal/Attribute:language+' => 'user language',
-	'Class:UserLocal/Attribute:language/Value:EN US' => 'English',
-	'Class:UserLocal/Attribute:language/Value:EN US+' => 'English (U.S.)',
-	'Class:UserLocal/Attribute:language/Value:FR FR' => 'French',
-	'Class:UserLocal/Attribute:language/Value:FR FR+' => 'French (France)',
-	'Class:UserLocal/Attribute:profile_list' => 'Profiles',
-	'Class:UserLocal/Attribute:profile_list+' => 'Roles, granting rights for that person',
 ));
 
 

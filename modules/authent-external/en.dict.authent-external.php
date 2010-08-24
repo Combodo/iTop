@@ -40,24 +40,6 @@
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:UserExternal' => 'External user',
 	'Class:UserExternal+' => 'User authentified outside of iTop',
-	'Class:UserExternal/Attribute:contactid' => 'Contact (person)',
-	'Class:UserExternal/Attribute:contactid+' => 'Personal details from the business data',
-	'Class:UserExternal/Attribute:last_name' => 'Last name',
-	'Class:UserExternal/Attribute:last_name+' => 'Name of the corresponding contact',
-	'Class:UserExternal/Attribute:first_name' => 'First name',
-	'Class:UserExternal/Attribute:first_name+' => 'First name of the corresponding contact',
-	'Class:UserExternal/Attribute:email' => 'Email',
-	'Class:UserExternal/Attribute:email+' => 'Email of the corresponding contact',
-	'Class:UserExternal/Attribute:login' => 'Login',
-	'Class:UserExternal/Attribute:login+' => 'user identification string',
-	'Class:UserExternal/Attribute:language' => 'Language',
-	'Class:UserExternal/Attribute:language+' => 'user language',
-	'Class:UserExternal/Attribute:language/Value:EN US' => 'English',
-	'Class:UserExternal/Attribute:language/Value:EN US+' => 'English (U.S.)',
-	'Class:UserExternal/Attribute:language/Value:FR FR' => 'French',
-	'Class:UserExternal/Attribute:language/Value:FR FR+' => 'French (France)',
-	'Class:UserExternal/Attribute:profile_list' => 'Profiles',
-	'Class:UserExternal/Attribute:profile_list+' => 'Roles, granting rights for that person',
 ));
 
 
