@@ -52,7 +52,14 @@ function GetClassesSelect($sName, $sDefaultValue, $iWidthPx, $iActionCode = null
 	$sHtml = "<select id=\"select_$sName\" name=\"$sName\">";
 	$sHtml .= "<option tyle=\"width: ".$iWidthPx."px;\" title=\"Select the class you want to load\" value=\"\">".Dict::S('UI:CSVImport:ClassesSelectOne')."</option>\n";
 	$aValidClasses = array();
-	foreach(MetaModel::GetClasses('bizmodel') as $sClassName)
+	$aClassCategories = array('bizmodel');
+	if (UserRights::IsAdministrator())
+	{
+		$aClassCategories = array('bizmodel', 'application', 'addon/authentication');
+	}
+	foreach($aClassCategories as $sClassCategory)
+	{
+		foreach(MetaModel::GetClasses($sClassCategory) as $sClassName)
 	{
 		if ( (is_null($iActionCode) || UserRights::IsActionAllowed($sClassName, $iActionCode)) &&
 		     (!MetaModel::IsAbstract($sClassName)) )
@@ -62,6 +69,7 @@ function GetClassesSelect($sName, $sDefaultValue, $iWidthPx, $iActionCode = null
 			$sDisplayName = MetaModel::GetName($sClassName);
 			$aValidClasses[$sDisplayName] = "<option style=\"width: ".$iWidthPx."px;\" title=\"$sDescription\" value=\"$sClassName\"$sSelected>$sDisplayName</option>";
 		}
+	}
 	}
 	ksort($aValidClasses);
 	$sHtml .= implode("\n", $aValidClasses);
