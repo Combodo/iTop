@@ -874,7 +874,7 @@ try
 					{
 						$oP->p(Dict::Format('UI:Class_Object_NotUpdated', MetaModel::GetName(get_class($oObj)), $oObj->GetName()));
 					}
-					else if ($oObj->CheckToUpdate())
+					else
 					{
 						$oMyChange = MetaModel::NewObject("CMDBChange");
 						$oMyChange->Set("date", time());
@@ -891,10 +891,6 @@ try
 						$oObj->DBUpdateTracked($oMyChange);
 			
 						$oP->p(Dict::Format('UI:Class_Object_Updated', MetaModel::GetName(get_class($oObj)), $oObj->GetName()));
-					}
-					else
-					{
-						$oP->p("<strong>".Dict::S('UI:Error:ObjectCannotBeUpdated')."</strong>\n");
 					}
 				}
 				else
@@ -1215,7 +1211,7 @@ EOF
 						$oObj->Set($sAttCode, $paramValue);
 					}
 				}
-				if ($oObj->ApplyStimulus($sStimulus) && $oObj->CheckToUpdate())
+				if ($oObj->ApplyStimulus($sStimulus))
 				{
 					$oMyChange = MetaModel::NewObject("CMDBChange");
 					$oMyChange->Set("date", time());

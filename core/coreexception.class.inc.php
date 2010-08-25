@@ -107,4 +107,8 @@ class CoreWarning extends CoreException
 {
 }
 
+class CoreUnexpectedValue extends CoreException
+{
+}
+
 ?>

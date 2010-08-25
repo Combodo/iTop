@@ -411,6 +411,12 @@ function CreateAdminAccount(SetupWebPage $oP, Config $oConfig, $sAdminUser, $sAd
 {
 	$oP->log('Info - CreateAdminAccount');
 	InitDataModel($oP, TMP_CONFIG_FILE, false);  // load data model and connect to the database
+
+	if (!UserRights::Setup())
+	{
+		return false;
+	}
+
 	if (UserRights::CreateAdministrator($sAdminUser, $sAdminPwd, $sLanguage))
 	{
 		$oP->ok("Administrator account '$sAdminUser' created.");
@@ -908,7 +914,7 @@ function SampleDataSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, Con
 	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
 	AddParamsToForm($oP, $aParamValues, array('sample_data'));
 	
-	if (CreateAdminAccount($oP, $oConfig, $sAdminUser, $sAdminPwd, $sLanguage) && UserRights::Setup())
+	if (CreateAdminAccount($oP, $oConfig, $sAdminUser, $sAdminPwd, $sLanguage))
 	{
 		$oP->add("<h2>Loading of sample data</h2>\n");
 		$oP->p("<fieldset><legend> Do you want to load sample data into the database ? </legend>\n");

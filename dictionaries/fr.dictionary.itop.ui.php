@@ -156,7 +156,26 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:URP_UserProfile/Attribute:profile' => 'Profil',
 	'Class:URP_UserProfile/Attribute:profile+' => '',
 	'Class:URP_UserProfile/Attribute:reason' => 'Raison',
-	'Class:URP_UserProfile/Attribute:reason+' => 'Justifie le rôles affecté à cet utilisateur',
+	'Class:URP_UserProfile/Attribute:reason+' => 'Justifie le rôle affecté à cet utilisateur',
+));
+
+//
+// Class: URP_UserOrg
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:URP_UserOrg' => 'Utilisateur/Organisation',
+	'Class:URP_UserOrg+' => 'Organizations permises pour l\'utilisateur',
+	'Class:URP_UserProfile/Attribute:userid' => 'Utilisateur',
+	'Class:URP_UserProfile/Attribute:userid+' => '',
+	'Class:URP_UserProfile/Attribute:userlogin' => 'Login',
+	'Class:URP_UserProfile/Attribute:userlogin+' => '',
+	'Class:URP_UserProfile/Attribute:allowed_org_id' => 'Organisation',
+	'Class:URP_UserProfile/Attribute:allowed_org_id+' => '',
+	'Class:URP_UserProfile/Attribute:allowed_org_name' => 'Organisation',
+	'Class:URP_UserProfile/Attribute:allowed_org_name+' => '',
+	'Class:URP_UserProfile/Attribute:reason' => 'Raison',
+	'Class:URP_UserProfile/Attribute:reason+' => 'Justifie la permission de voir les données de cette organisation',
 ));
 
 //

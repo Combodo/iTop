@@ -498,8 +498,8 @@ class UserRights
 		// Need to load some records before the login is performed (user preferences)
 		if (MetaModel::HasCategory($sClass, 'alwaysreadable')) return true;
 
-		// ne marche pas... pourquoi?
-		//if (!self::CheckLogin()) return false;
+		// When initializing, we need to let everything pass trough
+		if (!self::CheckLogin()) return true;
 
 		if (self::IsAdministrator()) return true;
 
@@ -514,7 +514,9 @@ class UserRights
 
 	public static function IsActionAllowed($sClass, $iActionCode, /*dbObjectSet*/ $oInstanceSet = null, $oUser = null)
 	{
-		if (!self::CheckLogin()) return false;
+		// When initializing, we need to let everything pass trough
+		if (!self::CheckLogin()) return true;
+
 		if (self::IsAdministrator($oUser)) return true;
 
 
@@ -537,7 +539,9 @@ class UserRights
 
 	public static function IsStimulusAllowed($sClass, $sStimulusCode, /*dbObjectSet*/ $oInstanceSet = null, $oUser = null)
 	{
-		if (!self::CheckLogin()) return false;
+		// When initializing, we need to let everything pass trough
+		if (!self::CheckLogin()) return true;
+
 		if (self::IsAdministrator($oUser)) return true;
 
 		// this module is forbidden for non admins
@@ -555,8 +559,8 @@ class UserRights
 
 	public static function IsActionAllowedOnAttribute($sClass, $sAttCode, $iActionCode, /*dbObjectSet*/ $oInstanceSet = null, $oUser = null)
 	{
-		if (!self::CheckLogin()) return false;
-		if (self::IsAdministrator($oUser)) return true;
+		// When initializing, we need to let everything pass trough
+		if (!self::CheckLogin()) return true;
 
 		// this module is forbidden for non admins
 		if (MetaModel::HasCategory($sClass, 'addon/userrights')) return false;

@@ -380,7 +380,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 
 		$oContact = new Person();
 		$oContact->Set('name', 'My last name');
-		//$oContact->Set('first_name', 'My first name');
+		$oContact->Set('first_name', 'My first name');
 		//$oContact->Set('status', 'available');
 		$oContact->Set('org_id', $iOrgId);
 		$oContact->Set('email', 'my.email@foo.org');
@@ -421,7 +421,6 @@ class UserRightsProfile extends UserRightsAddOnAPI
 	{
 		SetupProfiles::ComputeITILProfiles();
 		//SetupProfiles::ComputeBasicProfiles();
-
 		SetupProfiles::DoCreateProfiles();
 		return true;
 	}
@@ -562,16 +561,17 @@ exit;
 	{
 		// load and cache permissions for the current user on the given class
 		//
-		$aTest = @$this->m_aObjectActionGrants[$oUser->GetKey()][$sClass][$iActionCode];
+		$iUser = $oUser->GetKey();
+		$aTest = @$this->m_aObjectActionGrants[$iUser][$sClass][$iActionCode];
 		if (is_array($aTest)) return $aTest;
 
 		$sAction = self::$m_aActionCodes[$iActionCode];
 
 		$iInstancePermission = UR_ALLOWED_NO;
 		$aAttributes = array();
-		if (isset($this->m_aUserProfiles[$oUser->GetKey()]))
+		if (isset($this->m_aUserProfiles[$iUser]))
 		{
-			foreach($this->m_aUserProfiles[$oUser->GetKey()] as $iProfile => $oProfile)
+			foreach($this->m_aUserProfiles[$iUser] as $iProfile => $oProfile)
 			{
 				$oGrantRecord = $this->GetProfileActionGrant($iProfile, $sClass, $sAction);
 				if (is_null($oGrantRecord))
@@ -604,7 +604,7 @@ exit;
 			'permission' => $iInstancePermission,
 			'attributes' => $aAttributes,
 		);
-		$this->m_aObjectActionGrants[$oUser->GetKey()][$sClass][$iActionCode] = $aRes;
+		$this->m_aObjectActionGrants[$iUser][$sClass][$iActionCode] = $aRes;
 		return $aRes;
 	}
 	
@@ -728,13 +728,14 @@ exit;
 	public function IsStimulusAllowed($oUser, $sClass, $sStimulusCode, $oInstanceSet = null)
 	{
 		// Note: this code is VERY close to the code of IsActionAllowed()
+		$iUser = $oUser->GetKey();
 
 		if (is_null($oInstanceSet))
 		{
 			$iInstancePermission = UR_ALLOWED_NO;
-			if (isset($this->m_aUserProfiles[$oUser->GetKey()]))
+			if (isset($this->m_aUserProfiles[$iUser]))
 			{
-				foreach($this->m_aUserProfiles[$oUser->GetKey()] as $iProfile => $oProfile)
+				foreach($this->m_aUserProfiles[$iUser] as $iProfile => $oProfile)
 				{
 					$oGrantRecord = $this->GetClassStimulusGrant($iProfile, $sClass, $sStimulusCode);
 					if (!is_null($oGrantRecord))
@@ -751,9 +752,9 @@ exit;
 		while($oObject = $oInstanceSet->Fetch())
 		{
 			$iInstancePermission = UR_ALLOWED_NO;
-			if (isset($this->m_aUserProfiles[$oUser->GetKey()]))
+			if (isset($this->m_aUserProfiles[$iUser]))
 			{
-				foreach($this->m_aUserProfiles[$oUser->GetKey()] as $iProfile => $oProfile)
+				foreach($this->m_aUserProfiles[$iUser] as $iProfile => $oProfile)
 				{
 					$oGrantRecord = $this->GetClassStimulusGrant($iProfile, get_class($oObject), $sStimulusCode);
 					if (!is_null($oGrantRecord))

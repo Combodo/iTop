@@ -3257,7 +3257,7 @@ abstract class MetaModel
 		return $iTotalHits.' ('.implode(', ', $aRes).')';
 	}
 
-	public static function MakeSingleRow($sClass, $iKey, $bMustBeFound = true)
+	public static function MakeSingleRow($sClass, $iKey, $bMustBeFound = true, $bAllowAllData = false)
 	{
 		if (!array_key_exists($sClass, self::$aQueryCacheGetObject))
 		{
@@ -3268,6 +3268,10 @@ abstract class MetaModel
 			//       or a view... next optimization to come! 
 			$oFilter = new DBObjectSearch($sClass);
 			$oFilter->AddCondition('id', 987654321, '=');
+			if ($bAllowAllData)
+			{
+				$oFilter->AllowAllData();
+			}
 	
 			$sSQL = self::MakeSelectQuery($oFilter);
 			self::$aQueryCacheGetObject[$sClass] = $sSQL;
@@ -3323,10 +3327,10 @@ abstract class MetaModel
 		return new $sClass($aRow, $sClassAlias);
 	}
 
-	public static function GetObject($sClass, $iKey, $bMustBeFound = true)
+	public static function GetObject($sClass, $iKey, $bMustBeFound = true, $bAllowAllData = false)
 	{
 		self::_check_subclass($sClass);	
-		$aRow = self::MakeSingleRow($sClass, $iKey, $bMustBeFound);
+		$aRow = self::MakeSingleRow($sClass, $iKey, $bMustBeFound, $bAllowAllData);
 		if (empty($aRow))
 		{
 			return null;

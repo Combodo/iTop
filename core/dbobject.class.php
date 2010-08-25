@@ -41,6 +41,9 @@ abstract class DBObject
 
 	private $m_bDirty = false; // Means: "a modification is ongoing"
 										// The object may have incorrect external keys, then any attempt of reload must be avoided
+	private $m_bCheckStatus = null; // Means: the object has been verified and is consistent with integrity rules
+													//        if null, then the check has to be performed again to know the status
+													//        otherwise, 
 	private $m_bFullyLoaded = false; // Compound objects can be partially loaded
 	private $m_aLoadedAtt = array(); // Compound objects can be partially loaded, array of sAttCode
 
@@ -194,6 +197,7 @@ abstract class DBObject
 		$this->m_aCurrValues = array();
 		$this->m_aOrigValues = array();
 		$this->m_aLoadedAtt = array();
+		$this->m_bCheckStatus = true;
 
 		// Get the key
 		//
@@ -251,12 +255,7 @@ abstract class DBObject
 		if ($sAttCode == 'finalclass')
 		{
 			// Ignore it - this attribute is set upon object creation and that's it
-			//throw new CoreWarning('Attempting to set the value for the internal attribute \"finalclass\"', array('current value'=>$this->Get('finalclass'), 'new value'=>$value));
 			return;
-		}
-		if (!array_key_exists($sAttCode, MetaModel::ListAttributeDefs(get_class($this))))
-		{
-			throw new CoreException("Unknown attribute code '$sAttCode' for the class ".get_class($this));
 		}
 		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
 		if ($this->m_bIsInDB && !$this->m_bFullyLoaded && !$this->m_bDirty)
@@ -266,12 +265,7 @@ abstract class DBObject
 			//           + consistency does not make sense !
 			$this->Reload();
 		}
-		if($oAttDef->IsScalar() && !$oAttDef->IsNullAllowed() && is_null($value))
-		{
-			throw new CoreWarning("null not allowed for attribute '$sAttCode', setting default value");
-			$this->m_aCurrValues[$sAttCode] = $oAttDef->GetDefaultValue();
-			return;
-		}
+
 		if ($oAttDef->IsExternalKey() && is_object($value))
 		{
 			// Setting an external key with a whole object (instead of just an ID)
@@ -279,11 +273,11 @@ abstract class DBObject
 			// (useful when building objects in memory and not from a query)
 			if ( (get_class($value) != $oAttDef->GetTargetClass()) && (!is_subclass_of($value, $oAttDef->GetTargetClass())))
 			{
-				throw new CoreWarning("Trying to set the value of '$sAttCode', to an object of class '".get_class($value)."', whereas it's an ExtKey to '".$oAttDef->GetTargetClass()."'. Ignored");
-				$this->m_aCurrValues[$sAttCode] = $oAttDef->GetDefaultValue();
+				throw new CoreUnexpectedValue("Trying to set the value of '$sAttCode', to an object of class '".get_class($value)."', whereas it's an ExtKey to '".$oAttDef->GetTargetClass()."'. Ignored");
 			}
 			else
 			{
+				$this->m_bCheckStatus = null;
 				$this->m_aCurrValues[$sAttCode] = $value->GetKey();
 				foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sCode => $oDef)
 				{
@@ -297,17 +291,13 @@ abstract class DBObject
 		}
 		if(!$oAttDef->IsScalar() && !is_object($value))
 		{
-			throw new CoreWarning("scalar not allowed for attribute '$sAttCode', setting default value (empty list)");
-			$this->m_aCurrValues[$sAttCode] = $oAttDef->GetDefaultValue();
-			return;
+			throw new CoreUnexpectedValue("scalar not allowed for attribute '$sAttCode', setting default value (empty list)");
 		}
 		if($oAttDef->IsLinkSet())
 		{
 			if((get_class($value) != 'DBObjectSet') && !is_subclass_of($value, 'DBObjectSet'))
 			{
-				throw new CoreWarning("expecting a set of persistent objects (found a '".get_class($value)."'), setting default value (empty list)");
-				$this->m_aCurrValues[$sAttCode] = $oAttDef->GetDefaultValue();
-				return;
+				throw new CoreUnexpectedValue("expecting a set of persistent objects (found a '".get_class($value)."'), setting default value (empty list)");
 			}
 
 			$oObjectSet = $value;
@@ -316,18 +306,17 @@ abstract class DBObject
 			// not working fine :-(   if (!is_subclass_of($sSetClass, $sLinkClass))
 			if ($sSetClass != $sLinkClass)
 			{
-				throw new CoreWarning("expecting a set of '$sLinkClass' objects (found a set of '$sSetClass'), setting default value (empty list)");
-				$this->m_aCurrValues[$sAttCode] = $oAttDef->GetDefaultValue();
-				return;
+				throw new CoreUnexpectedValue("expecting a set of '$sLinkClass' objects (found a set of '$sSetClass'), setting default value (empty list)");
 			}
 		}
-		if ($oAttDef->CheckValue($value))
-		{
-			$this->m_aCurrValues[$sAttCode] = $oAttDef->MakeRealValue($value);
-			$this->RegisterAsDirty(); // Make sure we do not reload it anymore... before saving it
-		}
+
+		$realvalue = $oAttDef->MakeRealValue($value);
+		$this->m_aCurrValues[$sAttCode] = $realvalue;
+
+		$this->m_bCheckStatus = null;
+		$this->RegisterAsDirty(); // Make sure we do not reload it anymore... before saving it
 	}
-	
+
 	public function Get($sAttCode)
 	{
 		if (!array_key_exists($sAttCode, MetaModel::ListAttributeDefs(get_class($this))))
@@ -599,6 +588,8 @@ abstract class DBObject
 	}
 
 	// check if the given (or current) value is suitable for the attribute
+	// return true if successfull
+	// return the error desciption otherwise
 	public function CheckValue($sAttCode, $value = null)
 	{
 		if (!is_null($value))
@@ -611,44 +602,46 @@ abstract class DBObject
 		}
 
 		$oAtt = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-		if ($oAtt->IsExternalKey())
+		if (!$oAtt->IsWritable())
 		{
-			if (!$oAtt->IsNullAllowed() || ($toCheck != 0) )
+			return true;
+		}
+		elseif ($oAtt->IsNull($toCheck))
+		{
+			if ($oAtt->IsNullAllowed())
 			{
-				try
-				{
-					$oTargetObj = MetaModel::GetObject($oAtt->GetTargetClass(), $toCheck);
-					return true;
-				}
-				catch (CoreException $e)
-				{
-					return false;
-				}
+				return true;
+			}
+			else
+			{
+				return "Null not allowed";
 			}
 		}
-		elseif ($oAtt->IsWritable() && $oAtt->IsScalar())
+		elseif ($oAtt->IsExternalKey())
 		{
-			if (is_null($toCheck))
+			$sTargetClass = $oAtt->GetTargetClass();
+			$oTargetObj = MetaModel::GetObject($sTargetClass, $toCheck, false /*must be found*/, true /*allow all data*/);
+			if (is_null($oTargetObj))
 			{
-				if ($oAtt->IsNullAllowed())
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
+				return "Target object not found ($sTargetClass::$toCheck)";
 			}
-			$aValues = $oAtt->GetAllowedValues();
+		}
+		elseif ($oAtt->IsScalar())
+		{
+			$aValues = $oAtt->GetAllowedValues($this->ToArgs());
 			if (count($aValues) > 0)
 			{
 				if (!array_key_exists($toCheck, $aValues))
 				{
-					return false;
+					return "Value not allowed [$toCheck]";
 				}
 			}
+			elseif (!$oAtt->CheckFormat($toCheck))
+			{
+				return "Wrong format [$toCheck]";
+			}
 		}
-		return $oAtt->CheckValue($toCheck); // Check the format
+		return true;
 	}
 	
 	// check attributes together
@@ -657,45 +650,57 @@ abstract class DBObject
 		return true;
 	}
 	
-	// check if it is allowed to record the new object into the database
+	// check integrity rules (before inserting or updating the object)
 	// a displayable error is returned
-	// Note: checks the values and consistency
-	public function CheckToInsert()
+	public function DoCheckToWrite()
 	{
-		$aIssues = array();
+		$this->m_aCheckIssues = array();
+
 		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode=>$oAttDef)
 		{
-			if (!$this->CheckValue($sAttCode))
+			$res = $this->CheckValue($sAttCode);
+			if ($res !== true)
 			{
-				$aIssues[$sAttCode] = array(
-					'issue' => 'unexpected value'
-				);
+				// $res contains the error description
+				$this->m_aCheckIssues[] = "Unexpected value for attribute '$sAttCode': $res";
 			}
 		}
-		if (count($aIssues) > 0)
+		if (count($this->m_aCheckIssues) > 0)
 		{
-			return array(false, $aIssues);
+			// No need to check consistency between attributes if any of them has
+			// an unexpected value
+			return;
 		}
-		if (!$this->CheckConsistency())
+		$res = $this->CheckConsistency();
+		if ($res !== true)
 		{
-			return array(false, $aIssues);
+			// $res contains the error description
+			$this->m_aCheckIssues[] = "Consistency rules not followed: $res";
 		}
-		return array(true, $aIssues);
 	}
 
-	// check if it is allowed to update the existing object into the database
-	// a displayable error is returned
-	// Note: checks the values and consistency
-	public function CheckToUpdate()
+	final public function CheckToWrite()
 	{
-		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode=>$oAttDef)
+		if (false)
 		{
-			if (!$this->CheckValue($sAttCode)) return false;
+			return array(true, array());
 		}
-		if (!$this->CheckConsistency()) return false;
-		return true;
+
+		if (is_null($this->m_bCheckStatus))
+		{
+			$this->DoCheckToWrite();
+			if (count($this->m_aCheckIssues) == 0)
+			{
+				$this->m_bCheckStatus = true;
+			}
+			else
+			{
+				$this->m_bCheckStatus = false;
+			}
+		}
+		return array($this->m_bCheckStatus, $this->m_aCheckIssues);
 	}
-	
+
 	// check if it is allowed to delete the existing object from the database
 	// a displayable error is returned
 	public function CheckToDelete()
@@ -863,8 +868,15 @@ abstract class DBObject
 		{
 			if (empty($this->m_iKey))
 			{
-				throw new CoreWarning("Missing key for the object to write - This class is supposed to have a user defined key, not an autonumber");
+				throw new CoreWarning("Missing key for the object to write - This class is supposed to have a user defined key, not an autonumber", array('class' => $sRootClass));
 			}
+		}
+
+		// Ultimate check - ensure DB integrity
+		list($bRes, $aIssues) = $this->CheckToWrite();
+		if (!$bRes)
+		{
+			throw new CoreException("Object not following integrity rules - it will not be written into the DB", array('class' => $sClass, 'id' => $this->GetKey(), 'issues' => $aIssues));
 		}
 
 		// First query built upon on the root class, because the ID must be created first
@@ -951,6 +963,14 @@ abstract class DBObject
 			//throw new CoreWarning("Attempting to update an unchanged object");
 			return;
 		}
+
+		// Ultimate check - ensure DB integrity
+		list($bRes, $aIssues) = $this->CheckToWrite();
+		if (!$bRes)
+		{
+			throw new CoreException("Object not following integrity rules - it will not be written into the DB", array('class' => get_class($this), 'id' => $this->GetKey(), 'issues' => $aIssues));
+		}
+
 		$bHasANewExternalKeyValue = false;
 		foreach($aChanges as $sAttCode => $valuecurr)
 		{

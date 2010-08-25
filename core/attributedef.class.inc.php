@@ -160,7 +160,6 @@ abstract class AttributeDefinition
 	public function IsExternalField() {return false;} 
 	public function IsWritable() {return false;} 
 	public function IsNullAllowed() {return true;} 
-	public function GetNullValue() {return null;} 
 	public function GetCode() {return $this->m_sCode;} 
 	public function GetLabel() {return Dict::S('Class:'.$this->m_sHostClass.'/Attribute:'.$this->m_sCode, $this->m_sCode);}
 	public function GetLabel_Obsolete()
@@ -192,6 +191,9 @@ abstract class AttributeDefinition
 	public function GetValuesDef() {return null;} 
 	public function GetPrerequisiteAttributes() {return array();} 
 
+	public function GetNullValue() {return null;} 
+	public function IsNull($proposedValue) {return is_null($proposedValue);} 
+
 	public function MakeRealValue($proposedValue) {return $proposedValue;} // force an allowed value (type conversion and possibly forces a value as mySQL would do upon writing!)
 
 	public function GetSQLExpressions() {return array();} // returns suffix/expression pairs (1 in most of the cases), for READING (Select)
@@ -205,7 +207,7 @@ abstract class AttributeDefinition
 		return '';
 	}
 	
-	public function CheckValue($value)
+	public function CheckFormat($value)
 	{
 		return true;
 	}
@@ -544,12 +546,22 @@ class AttributeInteger extends AttributeDBField
 		}
 	} 
 
+	public function GetNullValue()
+	{
+		return null;
+	} 
+	public function IsNull($proposedValue)
+	{
+		return is_null($proposedValue);
+	} 
+
 	public function MakeRealValue($proposedValue)
 	{
-		//return intval($proposedValue); could work as well
+		if (is_null($proposedValue)) return null;
 		if ($proposedValue == '') return null;
 		return (int)$proposedValue;
 	}
+
 	public function ScalarToSQL($value)
 	{
 		assert(is_numeric($value) || is_null($value));
@@ -577,9 +589,12 @@ class AttributeBoolean extends AttributeInteger
 	
 	public function MakeRealValue($proposedValue)
 	{
+		if (is_null($proposedValue)) return null;
+		if ($proposedValue == '') return null;
 		if ((int)$proposedValue) return true;
 		return false;
 	}
+
 	public function ScalarToSQL($value)
 	{
 		assert(is_bool($value));
@@ -606,7 +621,7 @@ class AttributeString extends AttributeDBField
 	public function GetEditClass() {return "String";}
 	protected function GetSQLCol() {return "VARCHAR(255)";}
 
-	public function CheckValue($value)
+	public function CheckFormat($value)
 	{
 		$sRegExp = $this->GetValidationPattern();
 		if (empty($sRegExp))
@@ -659,15 +674,22 @@ class AttributeString extends AttributeDBField
 		}
 	} 
 
+	public function GetNullValue()
+	{
+		return '';
+	} 
+
+	public function IsNull($proposedValue)
+	{
+		return ($proposedValue == '');
+	} 
+
 	public function MakeRealValue($proposedValue)
 	{
-		if (is_null($proposedValue)) return null;
+		if (is_null($proposedValue)) return '';
 		return (string)$proposedValue;
-		// if (!settype($proposedValue, "string"))
-		// {
-		// 	throw new CoreException("Failed to change the type of '$proposedValue' to a string");
-		// }
 	}
+
 	public function ScalarToSQL($value)
 	{
 		if (!is_string($value) && !is_null($value))
@@ -1029,14 +1051,6 @@ class AttributeEnum extends AttributeString
 		}
   		return $aLocalizedValues;
   }
-
-	public function MakeRealValue($proposedValue)
-	{
-		// For an enum, let's consider an empty value like a null value
-		// Could be implemented by changing the UI : no value => let the default value
-		if ($proposedValue == '') return null;
-		return parent::MakeRealValue($proposedValue);
-	}
 }
 
 /**
@@ -1420,7 +1434,6 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 
 	public function GetDefaultValue() {return 0;}
 	public function IsNullAllowed() {return $this->Get("is_null_allowed");}
-	public function GetNullValue() {return 0;} 
 
 	public function GetBasicFilterOperators()
 	{
@@ -1468,8 +1481,20 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		return $this->Get("on_target_delete");
 	}
 
+	public function GetNullValue()
+	{
+		return 0;
+	} 
+
+	public function IsNull($proposedValue)
+	{
+		return ($proposedValue == 0);
+	} 
+
 	public function MakeRealValue($proposedValue)
 	{
+		if (is_null($proposedValue)) return 0;
+		if (MetaModel::IsValidObject($proposedValue)) return $proposedValue->GetKey();
 		return (int)$proposedValue;
 	}
 }
@@ -1619,11 +1644,24 @@ class AttributeExternalField extends AttributeDefinition
 		return $oExtAttDef->GetBasicFilterSQLExpr($sOpCode, $value);
 	} 
 
+	public function GetNullValue()
+	{
+		$oExtAttDef = $this->GetExtAttDef();
+		return $oExtAttDef->GetNullValue();
+	} 
+
+	public function IsNull($proposedValue)
+	{
+		$oExtAttDef = $this->GetExtAttDef();
+		return $oExtAttDef->IsNull($proposedValue);
+	} 
+
 	public function MakeRealValue($proposedValue)
 	{
 		$oExtAttDef = $this->GetExtAttDef();
 		return $oExtAttDef->MakeRealValue($proposedValue);
 	}
+
 	public function ScalarToSQL($value)
 	{
 		// This one could be used in case of filtering only

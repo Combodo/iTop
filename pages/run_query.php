@@ -112,7 +112,6 @@ try
 		echo "<strong>FYI: '$sClearText'</strong><br/>\n";
 		$oFilter = DBObjectSearch::unserialize($sExpression);
 		$sExpression = $oFilter->ToOQL();
-		exit;
 	}
 	else
 	{

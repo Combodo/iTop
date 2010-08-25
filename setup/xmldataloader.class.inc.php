@@ -202,10 +202,12 @@ class XMLDataLoader
 					else
 					{
 						// tested by Romain, little impact on perf (not significant on the intial setup)
-						if (!$oTargetObj->CheckValue($sAttCode, (string)$oXmlObj->$sAttCode))
+						$res = $oTargetObj->CheckValue($sAttCode, (string)$oXmlObj->$sAttCode);
+						if ($res !== true)
 						{
-							SetupWebPage::log_error("Value not allowed - $sClass/$iSrcId - $sAttCode: '".$oXmlObj->$sAttCode."'");
-							throw(new Exception("Wrong value for attribute $sAttCode: '".$oXmlObj->$sAttCode."'"));
+							// $res contains the error description
+							SetupWebPage::log_error("Value not allowed - $sClass/$iSrcId - $sAttCode: '".$oXmlObj->$sAttCode."' ; $res");
+							throw(new Exception("Value not allowed - $sClass/$iSrcId - $sAttCode: '".$oXmlObj->$sAttCode."' ; $res"));
 						}
 						$oTargetObj->Set($sAttCode, (string)$oXmlObj->$sAttCode);
 					}

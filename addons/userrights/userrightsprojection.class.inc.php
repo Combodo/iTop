@@ -616,7 +616,7 @@ class UserRightsProjection extends UserRightsAddOnAPI
 
 		$oContact = new Person();
 		$oContact->Set('name', 'My last name');
-		//$oContact->Set('first_name', 'My first name');
+		$oContact->Set('first_name', 'My first name');
 		//$oContact->Set('status', 'available');
 		$oContact->Set('org_id', $iOrgId);
 		$oContact->Set('email', 'my.email@foo.org');

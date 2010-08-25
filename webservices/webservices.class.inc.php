@@ -280,15 +280,15 @@ class WebServices
 	 */
 	protected function MyObjectSetScalar($sAttCode, $sParamName, $value, &$oTargetObj, &$oRes)
 	{
-		if ($oTargetObj->CheckValue($sAttCode, $value))
+		$res = $oTargetObj->CheckValue($sAttCode, $value);
+		if ($res === true)
 		{
 			$oTargetObj->Set($sAttCode, $value);
 		}
 		else
 		{
-			$aAllowedValues = MetaModel::GetAllowedValues_att(get_class($oTargetObj), $sAttCode);
-			$sValues = implode(', ', $aAllowedValues);
-			$oRes->LogError("Parameter $sParamName: found '$value' while expecting a value in {".$sValues."}");
+			// $res contains the error description
+			$oRes->LogError("Unexpected value for parameter $sParamName: $res");
 		}
 	}
 
@@ -483,7 +483,7 @@ class WebServices
 	{
 		if ($oRes->IsOk())
 		{
-			list($bRes, $aIssues) = $oTargetObj->CheckToInsert();
+			list($bRes, $aIssues) = $oTargetObj->CheckToWrite();
 			if ($bRes)
 			{
 				$iId = $oTargetObj->DBInsertTrackedNoReload($oChange);
@@ -493,6 +493,10 @@ class WebServices
 			else
 			{
 				$oRes->LogError("The ticket could not be created due to forbidden values (or inconsistent values)");
+				foreach($aIssues as $iIssue => $sIssue)
+				{
+					$oRes->LogError("Issue #$iIssue: $sIssue");
+				}
 			}
 		}
 	}

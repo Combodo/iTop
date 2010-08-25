@@ -320,13 +320,15 @@ class BulkChange
 			// skip the private key, if any
 			if ($sAttCode == 'id') continue;
 
-			if (!$oTargetObj->CheckValue($sAttCode, $aRowData[$iCol]))
+			$res = $oTargetObj->CheckValue($sAttCode, $aRowData[$iCol]);
+			if ($res === true)
 			{
-				$aErrors[$sAttCode] = "Unexpected value";
+				$oTargetObj->Set($sAttCode, $aRowData[$iCol]);
 			}
 			else
 			{
-				$oTargetObj->Set($sAttCode, $aRowData[$iCol]);
+				// $res is a string with the error description
+				$aErrors[$sAttCode] = "Unexpected value for attribute '$sAttCode': $res";
 			}
 		}
 	
@@ -363,9 +365,11 @@ class BulkChange
 	
 		// Checks
 		//
-		if (!$oTargetObj->CheckConsistency())
+		$res = $oTargetObj->CheckConsistency();
+		if ($res !== true)
 		{
-			$aErrors["GLOBAL"] = "Attributes not consistent with each others";
+			// $res contains the error description
+			$aErrors["GLOBAL"] = "Attributes not consistent with each others: $res";
 		}
 		return $aResults;
 	}

@@ -395,10 +395,10 @@ abstract class TestBizModel extends TestHandler
 	protected $m_oChange;
 	protected function ObjectToDB($oNew, $bReload = false)
 	{
-		list($bRes, $aIssues) = $oNew->CheckToInsert();
+		list($bRes, $aIssues) = $oNew->CheckToWrite();
 		if (!$bRes)
 		{
-			throw new CoreException('Could not create object, unexpected values', array('attributes' => $aIssues));
+			throw new CoreException('Could not create object, unexpected values', array('issues' => $aIssues));
 		}
 		if ($oNew instanceof CMDBObject)
 		{
