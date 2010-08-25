@@ -163,7 +163,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 // Class: URP_UserOrg
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:URP_UserOrg' => 'Utilisateur/Organisation',
 	'Class:URP_UserOrg+' => 'Organizations permises pour l\'utilisateur',
 	'Class:URP_UserProfile/Attribute:userid' => 'Utilisateur',
