@@ -166,10 +166,14 @@ function CheckPHPVersion(SetupWebPage $oP)
 		return false;
 	}
 	$aMandatoryExtensions = array('mysql', 'iconv', 'simplexml', 'soap');
+	$aOptionalExtensions = array('mcrypt' => 'Strong encryption will not be used.',
+								 'ldap' => 'LDAP authentication will be disabled.');
 	asort($aMandatoryExtensions); // Sort the list to look clean !
+	ksort($aOptionalExtensions); // Sort the list to look clean !
 	$aExtensionsOk = array();
 	$aMissingExtensions = array();
 	$aMissingExtensionsLinks = array();
+	// First check the mandatory extensions
 	foreach($aMandatoryExtensions as $sExtension)
 	{
 		if (extension_loaded($sExtension))
@@ -190,6 +194,31 @@ function CheckPHPVersion(SetupWebPage $oP)
 	{
 		$oP->error("Missing PHP extension(s): ".implode(', ', $aMissingExtensionsLinks).".");
 		$bResult = false;
+	}
+	// Next check the optional extensions
+	$aExtensionsOk = array();
+	$aMissingExtensions = array();
+	foreach($aOptionalExtensions as $sExtension => $sMessage)
+	{
+		if (extension_loaded($sExtension))
+		{
+			$aExtensionsOk[] = $sExtension;
+		}
+		else
+		{
+			$aMissingExtensions[$sExtension] = $sMessage;
+		}
+	}
+	if (count($aExtensionsOk) > 0)
+	{
+		$oP->ok("Optional PHP extension(s): ".implode(', ', $aExtensionsOk).".");
+	}
+	if (count($aMissingExtensions) > 0)
+	{
+		foreach($aMissingExtensions as $sExtension => $sMessage)
+		{
+			$oP->warning("Missing optional PHP extension: $sExtension. ".$sMessage);
+		}
 	}
 	// Check some ini settings here
 	if (function_exists('php_ini_loaded_file')) // PHP >= 5.2.4
