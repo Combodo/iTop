@@ -475,6 +475,22 @@ abstract class cmdbAbstractObject extends CMDBObject
 		}
 		$sHtml .= '<table class="listContainer">';
 		$sColspan = '';
+		if ($bDisplayLimit && ($oSet->Count() > utils::GetConfig()->GetMaxDisplayLimit()))
+		{
+			// list truncated
+			$divId = $aExtraParams['block_id'];
+			$sFilter = $oSet->GetFilter()->serialize();
+			$aExtraParams['display_limit'] = false; // To expand the full list
+			$sExtraParams = addslashes(str_replace('"', "'", json_encode($aExtraParams))); // JSON encode, change the style of the quotes and escape them
+			$sHtml .= '<tr class="containerHeader"><td>'.Dict::Format('UI:TruncatedResults', utils::GetConfig()->GetMinDisplayLimit(), $oSet->Count()).'&nbsp;&nbsp;<a href="#open_'.$divId.'" onClick="Javascript:ReloadTruncatedList(\''.$divId.'\', \''.$sFilter.'\', \''.$sExtraParams.'\');">'.Dict::S('UI:DisplayAll').'</a></td><td>';
+			$oPage->add_ready_script("$('#{$divId} table.listResults').addClass('truncated');");
+			$oPage->add_ready_script("$('#{$divId} table.listResults tr:last td').addClass('truncated');");
+		}
+		else
+		{
+			// Full list
+			$sHtml .= '<tr class="containerHeader"><td>&nbsp;'.Dict::Format('UI:CountOfResults', $oSet->Count()).'</td><td>';
+		}
 		if ($bDisplayMenu)
 		{
 			$oMenuBlock = new MenuBlock($oSet->GetFilter());
@@ -484,22 +500,6 @@ abstract class cmdbAbstractObject extends CMDBObject
 			{
 				//$aMenuExtraParams['linkage'] = $sLinkageAttribute;
 				$aMenuExtraParams = $aExtraParams;
-			}
-			if ($bDisplayLimit && ($oSet->Count() > utils::GetConfig()->GetMaxDisplayLimit()))
-			{
-				// list truncated
-				$divId = $aExtraParams['block_id'];
-				$sFilter = $oSet->GetFilter()->serialize();
-				$aExtraParams['display_limit'] = false; // To expand the full list
-				$sExtraParams = addslashes(str_replace('"', "'", json_encode($aExtraParams))); // JSON encode, change the style of the quotes and escape them
-				$sHtml .= '<tr class="containerHeader"><td>'.Dict::Format('UI:TruncatedResults', utils::GetConfig()->GetMinDisplayLimit(), $oSet->Count()).'&nbsp;&nbsp;<a href="#open_'.$divId.'" onClick="Javascript:ReloadTruncatedList(\''.$divId.'\', \''.$sFilter.'\', \''.$sExtraParams.'\');">'.Dict::S('UI:DisplayAll').'</a></td><td>';
-				$oPage->add_ready_script("$('#{$divId} table.listResults').addClass('truncated');");
-				$oPage->add_ready_script("$('#{$divId} table.listResults tr:last td').addClass('truncated');");
-			}
-			else
-			{
-				// Full list
-				$sHtml .= '<tr class="containerHeader"><td>&nbsp;'.Dict::Format('UI:CountOfResults', $oSet->Count()).'</td><td>';
 			}
 			$sHtml .= $oMenuBlock->GetRenderContent($oPage, $aMenuExtraParams);
 			$sHtml .= '</td></tr>';
@@ -1217,6 +1217,30 @@ EOF
 		else
 		{
 			$oObj = clone $oObjectToClone;
+		}
+		// Pre-fill the object with default values, when there is only on possible choice
+		// AND the field is mandatory (otherwise there is always the possiblity to let it empty)
+		$aArgs['this'] = $oObj;
+		$aDetailsList = self::FLattenZList(MetaModel::GetZListItems($sClass, 'details'));
+		// TO DO: the list should be ordered based on the dependencies between fields
+		// i.e. if some fields depend on another field, the latter should be computed first...
+		// Right now we depend on the display order... anyhow if the display order does not
+		// reflect the dependency order, the UI will not be so intuitive to use... beware
+		foreach($aDetailsList as $sAttCode)
+		{
+			$bMandatory = false;
+			$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, $aArgs);
+			if (count($aAllowedValues) == 1)
+			{
+				// If the field is mandatory, set it to the only possible value
+				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+				$iFlags = $oObj->GetAttributeFlags($sAttCode);
+				if ( (!$oAttDef->IsNullAllowed()) || ($iFlags & OPT_ATT_MANDATORY))
+				{
+					$aValues = array_keys($aAllowedValues);
+					$oObj->Set($sAttCode, $aValues[0]);
+				}
+			}
 		}
 		return $oObj->DisplayModifyForm( $oPage, $aExtraParams = array());
 	}
