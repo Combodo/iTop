@@ -1533,8 +1533,7 @@ abstract class MetaModel
 		// Query caching
 		//
 		$bQueryCacheEnabled = true;
-		$aParams = array();
-		$sOqlQuery = $oFilter->ToOql($aParams); // Render with arguments in clear
+		$sOqlQuery = $oFilter->ToOql();
 		if ($bQueryCacheEnabled)
 		{
 			// Warning: using directly the query string as the key to the hash array can FAIL if the string
@@ -1552,6 +1551,10 @@ abstract class MetaModel
 				// hit!
 				$oSelect = clone self::$m_aQueryStructCache[$sOqlQuery];
 			}
+		}
+		else
+		{
+			$sOqlQuery = "dummy";
 		}
 
 		if (!isset($oSelect))

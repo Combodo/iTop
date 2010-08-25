@@ -560,14 +560,12 @@ class DBObjectSearch
 
 	public function ToOQL(&$aParams = null)
 	{
-		$bRetrofitParams = (!is_null($aParams));
+		// Currently unused, but could be useful later
+		$bRetrofitParams = false;
+
 		if (is_null($aParams))
 		{
-			if (count($this->m_aParams) > 0)
-			{
-				$aParams = $this->m_aParams;
-			}
-			$bRetrofitParams = false;
+			// Leave it as is, the rendering will be made with parameters in clear
 		}
 		else
 		{
@@ -575,7 +573,6 @@ class DBObjectSearch
 			{
 				$aParams = array_merge($aParams, $this->m_aParams);
 			}
-			$bRetrofitParams = true;
 		}
 
 		$sSelectedClasses = implode(', ', array_keys($this->m_aSelectedClasses));
