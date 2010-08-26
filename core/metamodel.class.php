@@ -1002,18 +1002,19 @@ abstract class MetaModel
 				foreach ($oAttDef->GetFilterDefinitions() as $sFilterCode => $oFilterDef)
 				{
 					self::$m_aFilterDefs[$sClass][$sFilterCode] = $oFilterDef;
+
+					if ($oAttDef->IsExternalField())
+					{
+						$sKeyAttCode = $oAttDef->GetKeyAttCode();
+						$oKeyDef = self::GetAttributeDef($sClass, $sKeyAttCode);
+						self::$m_aFilterOrigins[$sClass][$sFilterCode] = $oKeyDef->GetTargetClass();
+					}
+					else
+					{
+						self::$m_aFilterOrigins[$sClass][$sFilterCode] = self::$m_aAttribOrigins[$sClass][$sAttCode];
+					}
 				}
 		
-				if ($oAttDef->IsExternalField())
-				{
-					$sKeyAttCode = $oAttDef->GetKeyAttCode();
-					$oKeyDef = self::GetAttributeDef($sClass, $sKeyAttCode);
-					self::$m_aFilterOrigins[$sClass][$sFilterCode] = $oKeyDef->GetTargetClass();
-				}
-				else
-				{
-					self::$m_aFilterOrigins[$sClass][$sFilterCode] = self::$m_aAttribOrigins[$sClass][$sAttCode];
-				}
 				// Compute the fields that will be used to display a pointer to another object
 				//
 				if ($oAttDef->IsExternalKey(EXTKEY_ABSOLUTE))
@@ -3138,6 +3139,12 @@ abstract class MetaModel
 
 		// Some of the init could not be done earlier (requiring classes to be declared and DB to be accessible)
 		self::InitPlugins();
+
+		if (false)
+		{
+			echo "Debug<br/>\n";
+			self::static_var_dump();
+		}
 	}
 
 	public static function LoadConfig($sConfigFile)
