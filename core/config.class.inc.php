@@ -154,6 +154,9 @@ class Config
 			'../dictionaries/dictionary.itop.core.php',
 			'../dictionaries/dictionary.itop.ui.php',		// Support for English
 			'../dictionaries/fr.dictionary.itop.ui.php',	// Support for French
+			'../dictionaries/fr.dictionary.itop.core.php',	// Support for French
+			'../dictionaries/es_cr.dictionary.itop.ui.php',	// Support for Spanish (from Costa Rica)
+			'../dictionaries/es_cr.dictionary.itop.core.php',	// Support for Spanish (from Costa Rica)
 		);
 
 		$this->m_sDBHost = '';

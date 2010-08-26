@@ -45,6 +45,7 @@ class UserLocal extends UserInternal
 		MetaModel::Init_InheritAttributes();
 
 		MetaModel::Init_AddAttribute(new AttributePassword("password", array("allowed_values"=>null, "sql"=>"pwd", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEncryptedString("encrypted_password", array("allowed_values"=>null, "sql"=>"encrypted_pwd", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('contactid', 'first_name', 'email', 'login', 'password', 'language', 'profile_list', 'allowed_org_list')); // Attributes to be displayed for the complete details

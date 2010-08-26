@@ -26,6 +26,7 @@ SetupWebPage::AddModule(
 		'dictionary' => array(
 			'en.dict.itop-service-mgmt.php',
 			'fr.dict.itop-service-mgmt.php',
+			'es_cr.dict.itop-service-mgmt.php',
 		),
 		'data.struct' => array(
 			//'data.struct.itop-service-mgmt.xml',

@@ -27,6 +27,7 @@ SetupWebPage::AddModule(
 		),
 		'dictionary' => array(
 			'en.dict.itop-problem-mgmt.php',
+			'es_cr.dict.itop-problem-mgmt.php',
 		),
 		'data.struct' => array(
 			//'data.struct.itop-problem-mgmt.xml',

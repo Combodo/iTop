@@ -28,6 +28,7 @@ SetupWebPage::AddModule(
 		'dictionary' => array(
 			'en.dict.itop-incident-mgmt.php',
 			'fr.dict.itop-incident-mgmt.php',
+			'es_cr.dict.itop-incident-mgmt.php',
 		),
 		'data.struct' => array(
 			//'data.struct.itop-incident-mgmt.xml',
