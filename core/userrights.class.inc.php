@@ -164,7 +164,7 @@ abstract class User extends cmdbAbstractObject
 				'stimuli' => $sStimuli,
 			);
 		}
-	
+
 		$aDisplayConfig = array();
 		$aDisplayConfig['class'] = array('label' => Dict::S('UI:UserManagement:Class'), 'description' => Dict::S('UI:UserManagement:Class+'));
 		$aDisplayConfig['read'] = array('label' => Dict::S('UI:UserManagement:Action:Read'), 'description' => Dict::S('UI:UserManagement:Action:Read+'));
@@ -274,14 +274,18 @@ class UserRights
 	// Installation: create the very first user
 	public static function CreateAdministrator($sAdminUser, $sAdminPwd, $sLanguage = 'EN US')
 	{
-		return self::$m_oAddOn->CreateAdministrator($sAdminUser, $sAdminPwd, $sLanguage);
+		$bRes = self::$m_oAddOn->CreateAdministrator($sAdminUser, $sAdminPwd, $sLanguage);
+		self::FlushPrivileges(true /* reset admin cache */);
+		return $bRes;
 	}
 	
 	// Installation (e.g: give default values for users)
 	public static function Setup()
 	{
 		// to be discussed...
-		return self::$m_oAddOn->Setup();
+		$bRes = self::$m_oAddOn->Setup();
+		self::FlushPrivileges(true /* reset admin cache */);
+		return $bRes;
 	}
 
 	protected static function IsLoggedIn()
@@ -575,6 +579,7 @@ class UserRights
 		return self::$m_oAddOn->IsActionAllowedOnAttribute($oUser, $sClass, $sAttCode, $iActionCode, $oInstanceSet);
 	}
 
+	static $m_aAdmins = array();
 	public static function IsAdministrator($oUser = null)
 	{
 		if (!self::CheckLogin()) return false;
@@ -583,11 +588,20 @@ class UserRights
 		{
 			$oUser = self::$m_oUser;
 		}
-		return self::$m_oAddOn->IsAdministrator($oUser);
+		$iUser = $oUser->GetKey();
+		if (!isset(self::$m_aAdmins[$iUser]))
+		{
+			self::$m_aAdmins[$iUser] = self::$m_oAddOn->IsAdministrator($oUser);
+		}
+		return self::$m_aAdmins[$iUser];
 	}
 
-	public static function FlushPrivileges()
+	public static function FlushPrivileges($bResetAdminCache = false)
 	{
+		if ($bResetAdminCache)
+		{
+			self::$m_aAdmins = array();
+		}
 		return self::$m_oAddOn->FlushPrivileges();
 	}
 

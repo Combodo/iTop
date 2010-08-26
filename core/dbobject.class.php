@@ -836,11 +836,6 @@ abstract class DBObject
 		return $this->m_iKey;
 	}
 
-	// To be optionaly overloaded
-	protected function OnInsert()
-	{
-	}
-	
 	// Insert of record for the new object into the database
 	// Returns the key of the newly created object
 	public function DBInsertNoReload()
@@ -899,6 +894,8 @@ abstract class DBObject
 		$this->m_bIsInDB = true;
 		$this->m_bDirty = false;
 
+		$this->AfterInsert();
+
 		// Activate any existing trigger 
 		$sClass = get_class($this);
 		$oSet = new DBObjectSet(new DBObjectSearch('TriggerOnObjectCreate'));
@@ -939,11 +936,6 @@ abstract class DBObject
 		$this->m_bIsInDB = false;
 		$this->m_bDirty = true;
 		$this->m_iKey = self::GetNextTempId(get_class($this));
-	}
-
-	// To be optionaly overloaded
-	protected function OnUpdate()
-	{
 	}
 
 	// Update a record
@@ -992,6 +984,8 @@ abstract class DBObject
 		$this->DBWriteLinks();
 		$this->m_bDirty = false;
 
+		$this->AfterUpdate();
+
 		// Reload to get the external attributes
 		if ($bHasANewExternalKeyValue)
 		{
@@ -1013,15 +1007,19 @@ abstract class DBObject
 			return $this->DBInsert();
 		}
 	}
-	
+
 	// Delete a record
 	public function DBDelete()
 	{
 		$oFilter = new DBObjectSearch(get_class($this));
 		$oFilter->AddCondition('id', $this->m_iKey, '=');
 
+		$this->OnDelete();
+
 		$sSQL = MetaModel::MakeDeleteQuery($oFilter);
 		CMDBSource::Query($sSQL);
+
+		$this->AfterDelete();
 
 		$this->m_bIsInDB = false;
 		$this->m_iKey = null;
@@ -1106,6 +1104,35 @@ abstract class DBObject
 		return $aScalarArgs;
 	}
 
+	// To be optionaly overloaded
+	protected function OnInsert()
+	{
+	}
+	
+	// To be optionaly overloaded
+	protected function AfterInsert()
+	{
+	}
+
+	// To be optionaly overloaded
+	protected function OnUpdate()
+	{
+	}
+
+	// To be optionaly overloaded
+	protected function AfterUpdate()
+	{
+	}
+
+	// To be optionaly overloaded
+	protected function OnDelete()
+	{
+	}
+
+	// To be optionaly overloaded
+	protected function AfterDelete()
+	{
+	}
 
 	// Return an empty set for the parent of all
 	public static function GetRelationQueries($sRelCode)

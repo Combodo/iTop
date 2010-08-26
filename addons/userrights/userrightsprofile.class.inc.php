@@ -30,21 +30,18 @@ class UserRightsBaseClass extends cmdbAbstractObject
 {
 	// Whenever something changes, reload the privileges
 	
-	public function DBInsertTracked(CMDBChange $oChange)
+	protected function AfterInsert()
 	{
-		parent::DBInsertTracked($oChange);
 		UserRights::FlushPrivileges();
 	}
 
-	public function DBUpdateTracked(CMDBChange $oChange)
+	protected function AfterUpdate()
 	{
-		parent::DBUpdateTracked($oChange);
 		UserRights::FlushPrivileges();
 	}
 
-	public function DBDeleteTracked(CMDBChange $oChange)
+	protected function AfterDelete()
 	{
-		parent::DBDeleteTracked($oChange);
 		UserRights::FlushPrivileges();
 	}
 }
@@ -405,18 +402,6 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		return true;
 	}
 
-	public function IsAdministrator($oUser)
-	{
-		if (in_array($oUser->GetKey(), $this->m_aAdmins))
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
 	public function Setup()
 	{
 		SetupProfiles::ComputeITILProfiles();
@@ -427,20 +412,36 @@ class UserRightsProfile extends UserRightsAddOnAPI
 
 	public function Init()
 	{
-		MetaModel::RegisterPlugin('userrights', 'ACbyProfile', array($this, 'CacheData'));
+		MetaModel::RegisterPlugin('userrights', 'ACbyProfile', array($this, 'LoadCache'));
 	}
 
-	protected $m_aProfiles = array(); // id -> object
-	protected $m_aUserProfiles = array(); // userid,profileid -> object
-	protected $m_aUserOrgs = array(); // userid,orgid -> object
 
-	protected $m_aAdmins = array(); // id of users being linked to the well-known admin profile
+	protected $m_aAdmins; // id of users being linked to the well-known admin profile
 
-	protected $m_aClassActionGrants = array(); // profile, class, action -> permission
-	protected $m_aClassStimulusGrants = array(); // profile, class, stimulus -> permission
+	protected $m_aProfiles; // id -> object
+	protected $m_aUserProfiles; // userid,profileid -> object
+	protected $m_aUserOrgs; // userid,orgid -> object
 
-	public function CacheData()
+	protected $m_aClassActionGrants; // profile, class, action -> permission
+	protected $m_aClassStimulusGrants; // profile, class, stimulus -> permission
+
+	public function ResetCache()
 	{
+		// Loaded by Load cache
+		$this->m_aProfiles = null; 
+		$this->m_aUserProfiles = null;
+		$this->m_aUserOrgs = null;
+
+		$this->m_aAdmins = null;
+
+		// Loaded on demand
+		$this->m_aClassActionGrants = array();
+		$this->m_aClassStimulusGrants = array();
+	}
+
+	public function LoadCache()
+	{
+		if (!is_null($this->m_aProfiles)) return;
 		// Could be loaded in a shared memory (?)
 
 		$oProfileSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData("SELECT URP_Profiles"));
@@ -480,8 +481,24 @@ exit;
 		return true;
 	}
 
+	public function IsAdministrator($oUser)
+	{
+		$this->LoadCache();
+
+		if (in_array($oUser->GetKey(), $this->m_aAdmins))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
 	public function GetSelectFilter($oUser, $sClass)
 	{
+		$this->LoadCache();
+
 		$aObjectPermissions = $this->GetUserActionGrant($oUser, $sClass, UR_ACTION_READ);
 		if ($aObjectPermissions['permission'] == UR_ALLOWED_NO)
 		{
@@ -527,6 +544,8 @@ exit;
 	// This verb has been made public to allow the development of an accurate feedback for the current configuration
 	public function GetProfileActionGrant($iProfile, $sClass, $sAction)
 	{
+		$this->LoadCache();
+
 		if (isset($this->m_aClassActionGrants[$iProfile][$sClass][$sAction]))
 		{
 			return $this->m_aClassActionGrants[$iProfile][$sClass][$sAction];
@@ -559,6 +578,8 @@ exit;
 
 	protected function GetUserActionGrant($oUser, $sClass, $iActionCode)
 	{
+		$this->LoadCache();
+
 		// load and cache permissions for the current user on the given class
 		//
 		$iUser = $oUser->GetKey();
@@ -610,6 +631,8 @@ exit;
 	
 	public function IsActionAllowed($oUser, $sClass, $iActionCode, $oInstanceSet = null)
 	{
+		$this->LoadCache();
+
 		if (is_null($oInstanceSet))
 		{
 			$aObjectPermissions = $this->GetUserActionGrant($oUser, $sClass, $iActionCode);
@@ -649,6 +672,8 @@ exit;
 
 	public function IsActionAllowedOnAttribute($oUser, $sClass, $sAttCode, $iActionCode, $oInstanceSet = null)
 	{
+		$this->LoadCache();
+
 		if (is_null($oInstanceSet))
 		{
 			$aObjectPermissions = $this->GetUserActionGrant($oUser, $sClass, $iActionCode);
@@ -704,6 +729,8 @@ exit;
 	// This verb has been made public to allow the development of an accurate feedback for the current configuration
 	public function GetClassStimulusGrant($iProfile, $sClass, $sStimulusCode)
 	{
+		$this->LoadCache();
+
 		if (isset($this->m_aClassStimulusGrants[$iProfile][$sClass][$sStimulusCode]))
 		{
 			return $this->m_aClassStimulusGrants[$iProfile][$sClass][$sStimulusCode];
@@ -727,6 +754,7 @@ exit;
 
 	public function IsStimulusAllowed($oUser, $sClass, $sStimulusCode, $oInstanceSet = null)
 	{
+		$this->LoadCache();
 		// Note: this code is VERY close to the code of IsActionAllowed()
 		$iUser = $oUser->GetKey();
 
@@ -790,7 +818,7 @@ exit;
 
 	public function FlushPrivileges()
 	{
-		$this->CacheData();
+		$this->ResetCache();
 	}
 }
 
