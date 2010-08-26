@@ -26,6 +26,12 @@ on our web site http://www.combodo.com, under the "Support" topic.
 iTop is released under the GPL (v3) license. (Check license.txt in this directory).
 The source code of iTop can be found on SourceForge: http://itop.sourceforge.net
 
+1.1 Special Thanks To:
+    -----------------
+Bruno Bonfils for his guidance about LDAP and authentication.
+Randall Badilla Castro for the Spanish translation.
+
+
 2. INSTALLATION
    ============
 
