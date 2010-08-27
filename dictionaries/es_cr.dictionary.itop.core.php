@@ -104,6 +104,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue' => 'Nuevo valor',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue+' => 'nuevo valor del atributo',
 ));
+// Used by CMDBChangeOp... & derived classes
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => '%1$s modificado en %2$s (valor anterior: %3$s)',
+	'Change:Text_AppendedTo_AttName' => '%1$s añadido a %2$s',
+	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s modificado, valor anterior: %2$s',
+	'Change:AttName_Changed' => '%1$s modificado',
+));
 
 //
 // Class: CMDBChangeOpSetAttributeBlob

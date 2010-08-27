@@ -170,7 +170,7 @@ class DisplayTemplate
 			
 			case 'itopcheck':
 				$sClassName = $aAttributes['class'];
-				if (MetaModel::IsValidClass($sClassName))
+				if (MetaModel::IsValidClass($sClassName) && UserRights::IsActionAllowed($sClassName, UR_ACTION_READ))
 				{
 					$oTemplate = new DisplayTemplate($sContent);
 					$oTemplate->Render($oPage, array()); // no params to apply, they have already been applied

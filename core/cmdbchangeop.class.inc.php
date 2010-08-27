@@ -102,7 +102,7 @@ class CMDBChangeOpCreate extends CMDBChangeOp
 	 */	 
 	public function GetDescription()
 	{
-		return 'Object created';
+		return Dict::S('Change:ObjectCreated');
 	}
 }
 
@@ -135,7 +135,7 @@ class CMDBChangeOpDelete extends CMDBChangeOp
 	 */	 
 	public function GetDescription()
 	{
-		return 'Object deleted';
+		return Dict::S('Change:ObjectDeleted');
 	}
 }
 
@@ -228,16 +228,16 @@ class CMDBChangeOpSetAttributeScalar extends CMDBChangeOpSetAttribute
 				if (substr($sNewValue,0, strlen($sOldValue)) == $sOldValue) // Text added at the end
 				{
 					$sDelta = substr($sNewValue, strlen($sOldValue));
-					$sResult = "$sDelta appended to $sAttName";
+					$sResult = Dict::Format('Change:Text_AppendedTo_AttName', $sDelta, $sAttName);
 				}
 				else if (substr($sNewValue, -strlen($sOldValue)) == $sOldValue)   // Text added at the beginning
 				{
 					$sDelta = substr($sNewValue, 0, strlen($sNewValue) - strlen($sOldValue));
-					$sResult = "$sDelta appended to $sAttName";
+					$sResult = Dict::Format('Change:Text_AppendedTo_AttName', $sDelta, $sAttName);
 				}
 				else
 				{
-					$sResult = "$sAttName set to $sNewValue (previous value: $sOldValue)";
+					$sResult = Dict::Format('Change:AttName_SetTo_NewValue_PreviousValue_OldValue', $sAttName, $sNewValue, $sOldValue);
 				}
 			}
 			elseif($bIsHtml && $oAttDef->IsExternalKey())
@@ -253,7 +253,7 @@ class CMDBChangeOpSetAttributeScalar extends CMDBChangeOpSetAttribute
 			}
 			else
 			{
-				$sResult = "$sAttName set to $sNewValue (previous value: $sOldValue)";
+				$sResult = Dict::Format('Change:Att_SetTo_NewValue_PreviousValue_OldValue', $sAttName, $sNewValue, $sOldValue);
 			}
 		}
 		return $sResult;
@@ -313,7 +313,111 @@ class CMDBChangeOpSetAttributeBlob extends CMDBChangeOpSetAttribute
 			$sDocView .= "<br/>".Dict::Format('UI:OpenDocumentInNewWindow_',$oPrevDoc->GetDisplayLink(get_class($this), $this->GetKey(), 'prevdata')).", \n";
 			$sDocView .= Dict::Format('UI:DownloadDocument_', $oPrevDoc->GetDownloadLink(get_class($this), $this->GetKey(), 'prevdata'))."\n";
 			//$sDocView = $oPrevDoc->GetDisplayInline(get_class($this), $this->GetKey(), 'prevdata');
-			$sResult = "$sAttName changed, previous value: $sDocView";
+			$sResult = Dict::Format('Change:AttName_Changed_PreviousValue_OldValue', $sAttName, $sDocView);
+		}
+		return $sResult;
+	}
+}
+/**
+ * Safely record the modification of one way encrypted password
+ */
+class CMDBChangeOpSetAttributeOneWayPassword extends CMDBChangeOpSetAttribute
+{
+	public static function Init()
+	{
+		$aParams = array
+		(
+			"category" => "core/cmdb",
+			"key_type" => "",
+			"name_attcode" => "change",
+			"state_attcode" => "",
+			"reconc_keys" => array(),
+			"db_table" => "priv_changeop_setatt_pwd",
+			"db_key_field" => "id",
+			"db_finalclass_field" => "",
+		);
+		MetaModel::Init_Params($aParams);
+		MetaModel::Init_InheritAttributes();
+		MetaModel::Init_AddAttribute(new AttributeOneWayPassword("prev_pwd", array("sql" => 'data', "default_value" => '', "is_null_allowed"=> true, "allowed_values" => null, "depends_on"=>array())));
+
+		// Display lists
+		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for a list
+	}
+	
+	/**
+	 * Describe (as a text string) the modifications corresponding to this change
+	 */	 
+	public function GetDescription()
+	{
+		// Temporary, until we change the options of GetDescription() -needs a more global revision
+		$bIsHtml = true;
+		
+		$sResult = '';
+		$oTargetObjectClass = $this->Get('objclass');
+		$oTargetObjectKey = $this->Get('objkey');
+		$oTargetSearch = new DBObjectSearch($oTargetObjectClass);
+		$oTargetSearch->AddCondition('id', $oTargetObjectKey, '=');
+
+		$oMonoObjectSet = new DBObjectSet($oTargetSearch);
+		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES)
+		{
+			$oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
+			$sAttName = $oAttDef->GetLabel();
+			$sResult = Dict::Format('Change:AttName_Changed', $sAttName);
+		}
+		return $sResult;
+	}
+}
+
+/**
+ * Safely record the modification of an encrypted field
+ */
+class CMDBChangeOpSetAttributeEncrypted extends CMDBChangeOpSetAttribute
+{
+	public static function Init()
+	{
+		$aParams = array
+		(
+			"category" => "core/cmdb",
+			"key_type" => "",
+			"name_attcode" => "change",
+			"state_attcode" => "",
+			"reconc_keys" => array(),
+			"db_table" => "priv_changeop_setatt_encrypted",
+			"db_key_field" => "id",
+			"db_finalclass_field" => "",
+		);
+		MetaModel::Init_Params($aParams);
+		MetaModel::Init_InheritAttributes();
+		MetaModel::Init_AddAttribute(new AttributeEncryptedString("prevstring", array("sql" => 'data', "default_value" => '', "is_null_allowed"=> true, "allowed_values" => null, "depends_on"=>array())));
+
+		// Display lists
+		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for a list
+	}
+	
+	/**
+	 * Describe (as a text string) the modifications corresponding to this change
+	 */	 
+	public function GetDescription()
+	{
+		// Temporary, until we change the options of GetDescription() -needs a more global revision
+		$bIsHtml = true;
+		
+		$sResult = '';
+		$oTargetObjectClass = $this->Get('objclass');
+		$oTargetObjectKey = $this->Get('objkey');
+		$oTargetSearch = new DBObjectSearch($oTargetObjectClass);
+		$oTargetSearch->AddCondition('id', $oTargetObjectKey, '=');
+
+		$oMonoObjectSet = new DBObjectSet($oTargetSearch);
+		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES)
+		{
+			$oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
+			$sAttName = $oAttDef->GetLabel();
+			$sPrevString = $this->Get('prevstring');
+			$sResult = Dict::Format('Change:AttName_Changed_PreviousValue_OldValue', $sAttName, $sPrevString);
 		}
 		return $sResult;
 	}
@@ -370,7 +474,7 @@ class CMDBChangeOpSetAttributeText extends CMDBChangeOpSetAttribute
 			$sTextView = '<div>'.$this->GetAsHtml('prevdata').'</div>';
 
 			//$sDocView = $oPrevDoc->GetDisplayInline(get_class($this), $this->GetKey(), 'prevdata');
-			$sResult = "$sAttName changed, previous value: $sTextView";
+			$sResult = Dict::Format('Change:AttName_Changed_PreviousValue_OldValue', $sAttName, $sTextView);
 		}
 		return $sResult;
 	}

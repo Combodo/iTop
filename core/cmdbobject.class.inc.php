@@ -187,7 +187,47 @@ abstract class CMDBObject extends DBObject
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
 			if ($oAttDef->IsLinkSet()) continue; // #@# temporary
 
-			if ($oAttDef instanceOf AttributeBlob)
+			if ($oAttDef instanceOf AttributeOneWayPassword)
+			{
+				// One Way encrypted passwords' history is stored -one way- encrypted
+				$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeOneWayPassword");
+				$oMyChangeOp->Set("change", $oChange->GetKey());
+				$oMyChangeOp->Set("objclass", get_class($this));
+				$oMyChangeOp->Set("objkey", $this->GetKey());
+				$oMyChangeOp->Set("attcode", $sAttCode);
+
+				if (array_key_exists($sAttCode, $aOrigValues))
+				{
+					$original = $aOrigValues[$sAttCode];
+				}
+				else
+				{
+					$original = '';
+				}
+				$oMyChangeOp->Set("prev_pwd", $original);
+				$iId = $oMyChangeOp->DBInsertNoReload();
+			}
+			elseif ($oAttDef instanceOf AttributeEncryptedString)
+			{
+				// Encrypted string history is stored encrypted
+				$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeEncrypted");
+				$oMyChangeOp->Set("change", $oChange->GetKey());
+				$oMyChangeOp->Set("objclass", get_class($this));
+				$oMyChangeOp->Set("objkey", $this->GetKey());
+				$oMyChangeOp->Set("attcode", $sAttCode);
+
+				if (array_key_exists($sAttCode, $aOrigValues))
+				{
+					$original = $aOrigValues[$sAttCode];
+				}
+				else
+				{
+					$original = '';
+				}
+				$oMyChangeOp->Set("prevdata", $original);
+				$iId = $oMyChangeOp->DBInsertNoReload();
+			}
+			elseif ($oAttDef instanceOf AttributeBlob)
 			{
 				// Data blobs
 				$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeBlob");

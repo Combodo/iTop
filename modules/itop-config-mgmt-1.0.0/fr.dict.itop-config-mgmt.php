@@ -31,7 +31,10 @@
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Relation:impacts/Description' => 'Eléments impactés par',
 	'Relation:impacts/VerbUp' => 'Impacte...',
-	'Relation:impacts/VerbDown' => 'Eléments impactés par...',
+	'Relation:impacts/VerbDown' => 'Dépend de...',
+	'Relation:depends on/Description' => 'Eléments dont dépend cet élément',
+	'Relation:depends on/VerbUp' => 'Dépend de...',
+	'Relation:depends on/VerbDown' => 'Impacte...',
 ));
 
 

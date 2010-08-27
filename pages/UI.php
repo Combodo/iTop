@@ -407,7 +407,7 @@ function UpdateObject(&$oObj)
 			{
 				// Non-visible, or read-only attribute, do nothing
 			}
-			else if ($oAttDef->GetEditClass() == 'Document')
+			elseif ($oAttDef->GetEditClass() == 'Document')
 			{
 				// There should be an uploaded file with the named attr_<attCode>
 				$oDocument = utils::ReadPostedDocument('file_'.$sAttCode);
@@ -415,6 +415,17 @@ function UpdateObject(&$oObj)
 				{
 					// A new file has been uploaded
 					$oObj->Set($sAttCode, $oDocument);
+				}
+			}
+			elseif ($oAttDef->GetEditClass() == 'One Way Password')
+			{
+				// Check if the password was typed/changed
+				$bChanged = utils::ReadPostedParam("attr_{$sAttCode}_changed", false);
+				if ($bChanged)
+				{
+					// The password has been changed or set
+					$rawValue = utils::ReadPostedParam("attr_$sAttCode", null);
+					$oObj->Set($sAttCode, $rawValue);
 				}
 			}
 			else
@@ -769,7 +780,7 @@ try
 			{
 				foreach($aSubClasses as $sCandidateClass)
 				{
-					if (!MetaModel::IsAbstract($sCandidateClass))
+					if (!MetaModel::IsAbstract($sCandidateClass) && (UserRights::IsActionAllowed($sCandidateClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES))
 					{
 						$aPossibleClasses[$sCandidateClass] = MetaModel::GetName($sCandidateClass);
 					}

@@ -35,6 +35,7 @@ require_once('../core/cmdbobject.class.inc.php');
 require_once('../application/utils.inc.php');
 require_once('../application/applicationcontext.class.inc.php');
 require_once('../application/ui.linkswidget.class.inc.php');
+require_once('../application/ui.passwordwidget.class.inc.php');
 
 abstract class cmdbAbstractObject extends CMDBObject
 {
@@ -220,6 +221,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 							'target_attr' => $oAttDef->GetExtKeyToRemote(),
 							'view_link' => false,
 							'menu' => false,
+							'display_limit' => true, // By default limit the list to speed up the initial load & display
 						);
 				}
 				$oPage->p(MetaModel::GetClassIcon($sTargetClass)."&nbsp;".$oAttDef->GetDescription());
@@ -1001,6 +1003,12 @@ abstract class cmdbAbstractObject extends CMDBObject
 				$sHTMLValue = '';
 				break;
 				
+				case 'One Way Password':
+				$oWidget = new UIPasswordWidget($sAttCode, $iId, $sNameSuffix);
+				$sHTMLValue = $oWidget->Display($oPage, $aArgs);
+				// Event list & validation is handled  directly by the widget
+				break;
+				
 				case 'String':
 				default:
 					// #@# todo - add context information (depending on dimensions)
@@ -1056,7 +1064,10 @@ abstract class cmdbAbstractObject extends CMDBObject
 					break;
 			}
 			$sPattern = addslashes($oAttDef->GetValidationPattern()); //'^([0-9]+)$';
-			$oPage->add_ready_script("$('#$iId').bind('".implode(' ', $aEventsList)."', function(evt, sFormId) { return ValidateField('$iId', '$sPattern', $bMandatory, sFormId) } );"); // Bind to a custom event: validate
+			if (!empty($aEventlist))
+			{
+				$oPage->add_ready_script("$('#$iId').bind('".implode(' ', $aEventsList)."', function(evt, sFormId) { return ValidateField('$iId', '$sPattern', $bMandatory, sFormId) } );"); // Bind to a custom event: validate
+			}
 			$aDependencies = MetaModel::GetDependentAttributes($sClass, $sAttCode); // List of attributes that depend on the current one
 			if (count($aDependencies) > 0)
 			{

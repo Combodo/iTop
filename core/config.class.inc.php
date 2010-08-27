@@ -46,6 +46,7 @@ define ('DEFAULT_SECURE_CONNECTION_REQUIRED', false);
 define ('DEFAULT_HTTPS_HYPERLINKS', false);
 define ('DEFAULT_ALLOWED_LOGIN_TYPES', 'form|basic|external');
 define ('DEFAULT_EXT_AUTH_VARIABLE', '$_SERVER[\'REMOTE_USER\']');
+define ('DEFAULT_ENCRYPTION_KEY', '@iT0pEncr1pti0n!'); // We'll use a random value, later...
 
 /**
  * Config
@@ -126,6 +127,13 @@ class Config
 	 */
 	 protected $m_sExtAuthVariable;
 
+	/**
+	 * @var string Encryption key used for all attributes of type "encrypted string". Can be set to a random value
+	 *             unless you want to import a database from another iTop instance, in which case you must use
+	 *             the same encryption key in order to properly decode the encrypted fields
+	 */
+	 protected $m_sEncryptionKey;
+
 	public function __construct($sConfigFile, $bLoadConfig = true)
 	{
 		$this->m_sFile = $sConfigFile;
@@ -177,6 +185,7 @@ class Config
 		$this->m_sDefaultLanguage = 'EN US';
 		$this->m_sAllowedLoginTypes = DEFAULT_ALLOWED_LOGIN_TYPES;
 		$this->m_sExtAuthVariable = DEFAULT_EXT_AUTH_VARIABLE;
+		$this->m_sEncryptionKey = DEFAULT_ENCRYPTION_KEY;
 		
 		$this->m_aModuleSettings = array();
 
@@ -278,6 +287,7 @@ class Config
 		$this->m_sDefaultLanguage = isset($MySettings['default_language']) ? trim($MySettings['default_language']) : 'EN US';
 		$this->m_sAllowedLoginTypes = isset($MySettings['allowed_login_types']) ? trim($MySettings['allowed_login_types']) : DEFAULT_ALLOWED_LOGIN_TYPES;
 		$this->m_sExtAuthVariable = isset($MySettings['ext_auth_variable']) ? trim($MySettings['ext_auth_variable']) : DEFAULT_EXT_AUTH_VARIABLE;
+		$this->m_sEncryptionKey = isset($MySettings['encryption_key']) ? trim($MySettings['encryption_key']) : DEFAULT_ENCRYPTION_KEY;
 	}
 
 	protected function Verify()
@@ -430,6 +440,10 @@ class Config
 		return $this->m_sDefaultLanguage;
 	}
 
+	public function GetEncryptionKey()
+	{
+		return $this->m_sEncryptionKey;
+	}
 
 	public function GetAllowedLoginTypes()
 	{
@@ -531,6 +545,11 @@ class Config
 		$this->m_sExtAuthVariable = $sExtAuthVariable;
 	}
 
+	public function SetEncryptionKey($sKey)
+	{
+		$this->m_sEncryptionKey = $sKey;
+	}
+
 	public function FileIsWritable()
 	{
 		return is_writable($this->m_sFile);
@@ -580,6 +599,7 @@ class Config
 			fwrite($hFile, "\t'https_hyperlinks' => ".($this->m_bHttpsHyperlinks ? 'true' : 'false').",\n");
 			fwrite($hFile, "\t'default_language' => '{$this->m_sDefaultLanguage}',\n");
 			fwrite($hFile, "\t'allowed_login_types' => '{$this->m_sAllowedLoginTypes}',\n");
+			fwrite($hFile, "\t'encryption_key' => '{$this->m_sEncryptionKey}',\n");
 			fwrite($hFile, ");\n");
 
 			fwrite($hFile, "\n");

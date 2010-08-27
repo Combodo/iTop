@@ -96,8 +96,11 @@ class Incident extends ResponseTicket
 
 $oMyMenuGroup = new MenuGroup('IncidentManagement', 40 /* fRank */);
 new TemplateMenuNode('Incident:Overview', '../modules/itop-incident-mgmt-1.0.0/overview.html', $oMyMenuGroup->GetIndex() /* oParent */, 0 /* fRank */);
-new OQLMenuNode('Incident:MyIncidents', 'SELECT Incident WHERE agent_id = :current_contact_id', $oMyMenuGroup->GetIndex(), 1 /* fRank */);
-new OQLMenuNode('Incident:EscalatedIncidents', 'SELECT Incident WHERE status IN ("escalated_tto", "escalated_ttr")', $oMyMenuGroup->GetIndex(), 2 /* fRank */);
-new OQLMenuNode('Incident:OpenIncidents', 'SELECT Incident WHERE status IN ("new", "assigned", "escalated_tto", "escalated_ttr", "resolved")', $oMyMenuGroup->GetIndex(), 3 /* fRank */);
+new NewObjectMenuNode('NewIncident', 'Incident', $oMyMenuGroup->GetIndex(), 1 /* fRank */);
+new SearchMenuNode('SearchIncidents', 'Incident', $oMyMenuGroup->GetIndex(), 2 /* fRank */);
+$oShortcutNode = new TemplateMenuNode('Incident:Shortcuts', '', $oMyMenuGroup->GetIndex(), 3 /* fRank */);
+new OQLMenuNode('Incident:MyIncidents', 'SELECT Incident WHERE agent_id = :current_contact_id', $oShortcutNode->GetIndex(), 1 /* fRank */);
+new OQLMenuNode('Incident:EscalatedIncidents', 'SELECT Incident WHERE status IN ("escalated_tto", "escalated_ttr")', $oShortcutNode->GetIndex(), 2 /* fRank */);
+new OQLMenuNode('Incident:OpenIncidents', 'SELECT Incident WHERE status IN ("new", "assigned", "escalated_tto", "escalated_ttr", "resolved")', $oShortcutNode->GetIndex(), 3 /* fRank */);
 
 ?>

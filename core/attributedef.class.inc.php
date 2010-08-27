@@ -26,6 +26,7 @@
 
 require_once('MyHelpers.class.inc.php');
 require_once('ormdocument.class.inc.php');
+require_once('ormpassword.class.inc.php');
 
 /**
  * MissingColumnException - sent if an attribute is being created but the column is missing in the row 
@@ -377,7 +378,7 @@ class AttributeLinkedSetIndirect extends AttributeLinkedSet
  * @package     iTopORM
  */
 class AttributeDBFieldVoid extends AttributeDefinition
-{
+{	
 	static protected function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("allowed_values", "depends_on", "sql"));
@@ -465,7 +466,7 @@ class AttributeDBFieldVoid extends AttributeDefinition
  * @package     iTopORM
  */
 class AttributeDBField extends AttributeDBFieldVoid
-{
+{	
 	static protected function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("default_value", "is_null_allowed"));
@@ -858,6 +859,66 @@ class AttributePassword extends AttributeString
 		{
 			return '******';
 		}
+	}
+}
+
+/**
+ * Map a text column (size < 255) to an attribute that is encrypted in the database
+ * The encryption is based on a key set per iTop instance. Thus if you export your
+ * database (in SQL) to someone else without providing the key at the same time
+ * the encrypted fields will remain encrypted
+ *
+ * @package     iTopORM
+ */
+class AttributeEncryptedString extends AttributeString
+{
+	static $sKey = null; // Encryption key used for all encrypted fields
+
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+		if (self::$sKey == null)
+		{
+			self::$sKey = MetaModel::GetConfig()->GetEncryptionKey();
+		}
+	}
+
+	protected function GetSQLCol() {return "TINYBLOB";}	
+
+	public function GetFilterDefinitions()
+	{
+		// Note: due to this, you will get an error if a an encrypted field is declared as a search criteria (see ZLists)
+		// not allowed to search on encrypted fields !
+		return array();
+	}
+
+	public function MakeRealValue($proposedValue)
+	{
+		if (is_null($proposedValue)) return null;
+		return (string)$proposedValue;
+	}
+
+	/**
+	 * Decrypt the value when reading from the database
+	 */
+	public function FromSQLToValue($aCols, $sPrefix = '')
+	{
+ 		$oSimpleCrypt = new SimpleCrypt();
+ 		$sValue = $oSimpleCrypt->Decrypt(self::$sKey, $aCols[$sPrefix]);
+		return $sValue;
+	}
+
+	/**
+	 * Encrypt the value before storing it in the database
+	 */
+	public function GetSQLValues($value)
+	{
+ 		$oSimpleCrypt = new SimpleCrypt();
+ 		$encryptedValue = $oSimpleCrypt->Encrypt(self::$sKey, $value);
+
+		$aValues = array();
+		$aValues[$this->Get("sql")] = $encryptedValue;
+		return $aValues;
 	}
 }
 
@@ -1878,6 +1939,140 @@ class AttributeBlob extends AttributeDefinition
 	public function GetAsXML($value)
 	{
 		return ''; // Not exportable in XML, or as CDATA + some subtags ??
+	}
+}
+/**
+ * One way encrypted (hashed) password
+ */
+class AttributeOneWayPassword extends AttributeDefinition
+{
+	static protected function ListExpectedParams()
+	{
+		return array_merge(parent::ListExpectedParams(), array("depends_on"));
+	}
+
+	public function GetType() {return "One Way Password";}
+	public function GetTypeDesc() {return "One Way Password";}
+	public function GetEditClass() {return "One Way Password";}
+	
+	public function IsDirectField() {return true;} 
+	public function IsScalar() {return true;} 
+	public function IsWritable() {return true;} 
+	public function GetDefaultValue() {return "";}
+	public function IsNullAllowed() {return $this->GetOptional("is_null_allowed", false);}
+
+	// Facilitate things: allow the user to Set the value from a string or from an ormPassword (already encrypted)
+	public function MakeRealValue($proposedValue)
+	{
+		$oPassword = $proposedValue;
+		if (!is_object($oPassword))
+		{
+			$oPassword = new ormPassword('', '');
+			$oPassword->SetPassword($proposedValue);
+		}
+		return $oPassword;
+	}
+
+	public function GetSQLExpressions()
+	{
+		$aColumns = array();
+		// Note: to optimize things, the existence of the attribute is determined by the existence of one column with an empty suffix
+		$aColumns[''] = $this->GetCode().'_hash';
+		$aColumns['_salt'] = $this->GetCode().'_salt';
+		return $aColumns;
+	}
+
+	public function FromSQLToValue($aCols, $sPrefix = '')
+	{
+		if (!isset($aCols[$sPrefix]))
+		{
+			$sAvailable = implode(', ', array_keys($aCols));
+			throw new MissingColumnException("Missing column '$sPrefix' from {$sAvailable}");
+		} 
+		$hashed = $aCols[$sPrefix];
+
+		if (!isset($aCols[$sPrefix.'_salt'])) 
+		{
+			$sAvailable = implode(', ', array_keys($aCols));
+			throw new MissingColumnException("Missing column '".$sPrefix."_salt' from {$sAvailable}");
+		} 
+		$sSalt = $aCols[$sPrefix.'_salt'];
+
+		$value = new ormPassword($hashed, $sSalt);
+		return $value;
+	}
+
+	public function GetSQLValues($value)
+	{
+		// #@# Optimization: do not load blobs anytime
+		//     As per mySQL doc, selecting blob columns will prevent mySQL from
+		//     using memory in case a temporary table has to be created
+		//     (temporary tables created on disk)
+		//     We will have to remove the blobs from the list of attributes when doing the select
+		//     then the use of Get() should finalize the load
+		if ($value instanceOf ormPassword)
+		{
+			$aValues = array();
+			$aValues[$this->GetCode().'_hash'] = $value->GetHash();
+			$aValues[$this->GetCode().'_salt'] = $value->GetSalt();
+		}
+		else
+		{
+			$aValues = array();
+			$aValues[$this->GetCode().'_hash'] = '';
+			$aValues[$this->GetCode().'_salt'] = '';
+			echo "Writing an empty password !!!";
+			echo "<pre>\n";
+			print_r($value);
+			echo "</pre>\n";
+		}
+		return $aValues;
+	}
+
+	public function GetSQLColumns()
+	{
+		$aColumns = array();
+		$aColumns[$this->GetCode().'_hash'] = 'TINYBLOB';
+		$aColumns[$this->GetCode().'_salt'] = 'TINYBLOB';
+		return $aColumns;
+	}
+
+	public function GetFilterDefinitions()
+	{
+		return array();
+		// still not working... see later...
+	}
+
+	public function GetBasicFilterOperators()
+	{
+		return array();
+	}
+	public function GetBasicFilterLooseOperator()
+	{
+		return '=';
+	}
+
+	public function GetBasicFilterSQLExpr($sOpCode, $value)
+	{
+		return 'true';
+	} 
+
+	public function GetAsHTML($value)
+	{
+		if (is_object($value))
+		{
+			return $value->GetAsHTML();
+		}
+	}
+
+	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"')
+	{
+		return ''; // Not exportable in CSV
+	}
+	
+	public function GetAsXML($value)
+	{
+		return ''; // Not exportable in XML
 	}
 }
 

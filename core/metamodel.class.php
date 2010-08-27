@@ -3216,6 +3216,11 @@ abstract class MetaModel
 		return self::$m_oConfig->GetModuleSetting($sModule, $sProperty, $defaultvalue);
 	}
 
+	public static function GetConfig()
+	{
+		return self::$m_oConfig;
+	}
+
 	protected static $m_aPlugins = array();
 	public static function RegisterPlugin($sType, $sName, $aInitCallSpec = array())
 	{

@@ -331,7 +331,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 </ul>
 </p>',
 
-	'UI:WelcomeMenu:MyCalls' => 'User Requests assigned to me',
+	'UI:WelcomeMenu:MyCalls' => 'My requests',
 	'UI:WelcomeMenu:MyIncidents' => 'Incidents assigned to me',
 	'UI:AllOrganizations' => ' All Organizations ',
 	'UI:YourSearch' => 'Your Search',
@@ -361,6 +361,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:Button:Create' => ' Create ',
 	'UI:Button:Delete' => ' Delete ! ',
 	'UI:Button:ChangePassword' => ' Change Password ',
+	'UI:Button:ResetPassword' => ' Reset Password ',
 
 	'UI:SearchToggle' => 'Search',
 	'UI:ClickToCreateNew' => 'Click here to create a new %1$s',
@@ -399,6 +400,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:GroupBy:Count' => 'Count',
 	'UI:GroupBy:Count+' => 'Number of elements',
 	'UI:CountOfObjects' => '%1$d objects matching the criteria.',
+	'UI_CountOfObjectsShort' => '%1$d objects.',
 	'UI:NoObject_Class_ToDisplay' => 'No %1$s to display',
 	'UI:History:LastModified_On_By' => 'Last modified on %1$s by %2$s.',
 	'UI:HistoryTab' => 'History',
@@ -829,6 +831,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Deadline_Hours_Minutes' => '%1$dh %2$dmin',			
 	'UI:Deadline_Days_Hours_Minutes' => '%1$dd %2$dh %3$dmin',
 	'UI:Help' => 'Ayuda',
+	'UI:PasswordConfirm' => '(Confirm)',
 ));
 
 ?>

@@ -131,27 +131,30 @@ class ApplicationMenu
 		{
 			$index = $aMenu['index'];
 			$oMenu = self::GetMenuNode($index);
-			$aChildren = self::GetChildren($index);
-			$sCSSClass = (count($aChildren) > 0) ? ' class="submenu"' : '';
-			$sHyperlink = $oMenu->GetHyperlink($aExtraParams);
-			if ($sHyperlink != '')
+			if ($oMenu->IsEnabled())
 			{
-				$oPage->AddToMenu('<li'.$sCSSClass.'><a href="'.$oMenu->GetHyperlink($aExtraParams).'">'.$oMenu->GetTitle().'</a></li>');
-			}
-			else
-			{
-				$oPage->AddToMenu('<li'.$sCSSClass.'>'.$oMenu->GetTitle().'</li>');
-			}
-			$aCurrentMenu = self::$aMenusIndex[$index];
-			if ($iActiveMenu == $index)
-			{
-				$bActive = true;
-			}
-			if (count($aChildren) > 0)
-			{
-				$oPage->AddToMenu('<ul>');
-				$bActive |= self::DisplaySubMenu($oPage, $aChildren, $aExtraParams, $iActiveMenu);
-				$oPage->AddToMenu('</ul>');
+				$aChildren = self::GetChildren($index);
+				$sCSSClass = (count($aChildren) > 0) ? ' class="submenu"' : '';
+				$sHyperlink = $oMenu->GetHyperlink($aExtraParams);
+				if ($sHyperlink != '')
+				{
+					$oPage->AddToMenu('<li'.$sCSSClass.'><a href="'.$oMenu->GetHyperlink($aExtraParams).'">'.$oMenu->GetTitle().'</a></li>');
+				}
+				else
+				{
+					$oPage->AddToMenu('<li'.$sCSSClass.'>'.$oMenu->GetTitle().'</li>');
+				}
+				$aCurrentMenu = self::$aMenusIndex[$index];
+				if ($iActiveMenu == $index)
+				{
+					$bActive = true;
+				}
+				if (count($aChildren) > 0)
+				{
+					$oPage->AddToMenu('<ul>');
+					$bActive |= self::DisplaySubMenu($oPage, $aChildren, $aExtraParams, $iActiveMenu);
+					$oPage->AddToMenu('</ul>');
+				}
 			}
 		}
 		return $bActive;
@@ -298,6 +301,15 @@ abstract class MenuNode
 		return $this->AddParams('../pages/UI.php', $aExtraParams);
 	}
 	
+	/**
+	 * Tells whether the menu is enabled (i.e. displayed) for the current user
+	 * @return bool True if enabled, false otherwise
+	 */
+	public function IsEnabled()
+	{
+		return true;
+	}
+	
 	public abstract function RenderContent(WebPage $oPage, $aExtraParams = array());
 	
 	protected function AddParams($sHyperlink, $aExtraParams)
@@ -394,20 +406,23 @@ class OQLMenuNode extends MenuNode
 {
 	protected $sPageTitle;
 	protected $sOQL;
+	protected $bSearch;
 	
 	/**
 	 * Create a menu item based on an OQL query and inserts it into the application's main menu
 	 * @param string $sMenuId Unique identifier of the menu (used to identify the menu for bookmarking, and for getting the labels from the dictionary)
-	 * @param string $sPageTitle Title displayed into the page's content (will be looked-up in the dictionnary for translation)
+	 * @param string $sOQL OQL query defining the set of objects to be displayed
 	 * @param integer $iParentIndex ID of the parent menu
 	 * @param float $fRank Number used to order the list, any number will do, but for a given level (i.e same parent) all menus are sorted based on this value
+	 * @param bool $bSearch Whether or not to display a (collapsed) search frame at the top of the page
 	 * @return MenuNode
 	 */
-	public function __construct($sMenuId, $sOQL, $iParentIndex, $fRank = 0)
+	public function __construct($sMenuId, $sOQL, $iParentIndex, $fRank = 0, $bSearch = false)
 	{
 		parent::__construct($sMenuId, $iParentIndex, $fRank);
 		$this->sPageTitle = "Menu:$sMenuId+";
 		$this->sOQL = $sOQL;
+		$this->bSearch = $bSearch;
 	}
 	
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())
@@ -422,10 +437,52 @@ class OQLMenuNode extends MenuNode
 			$sIcon = '';
 		}
 		// The standard template used for all such pages: a (closed) search form at the top and a list of results at the bottom
-		$sTemplate = <<<EOF
+		$sTemplate = '';
+
+		if ($this->bSearch)
+		{
+			$sTemplate .= <<<EOF
 <itopblock BlockClass="DisplayBlock" type="search" asynchronous="false" encoding="text/oql">$this->sOQL</itopblock>
+EOF;
+		}
+		
+		$sTemplate .= <<<EOF
 <p class="page-header">$sIcon<itopstring>$this->sPageTitle</itopstring></p>
 <itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql">$this->sOQL</itopblock>
+EOF;
+		$oTemplate = new DisplayTemplate($sTemplate);
+		$oTemplate->Render($oPage, $aExtraParams);
+	}
+}
+/**
+ * This class defines a menu item that displays a search form for the given class of objects
+ */
+class SearchMenuNode extends MenuNode
+{
+	protected $sPageTitle;
+	protected $sClass;
+	
+	/**
+	 * Create a menu item based on an OQL query and inserts it into the application's main menu
+	 * @param string $sMenuId Unique identifier of the menu (used to identify the menu for bookmarking, and for getting the labels from the dictionary)
+	 * @param string $sClass The class of objects to search for
+	 * @param string $sPageTitle Title displayed into the page's content (will be looked-up in the dictionnary for translation)
+	 * @param integer $iParentIndex ID of the parent menu
+	 * @param float $fRank Number used to order the list, any number will do, but for a given level (i.e same parent) all menus are sorted based on this value
+	 * @return MenuNode
+	 */
+	public function __construct($sMenuId, $sClass, $iParentIndex, $fRank = 0)
+	{
+		parent::__construct($sMenuId, $iParentIndex, $fRank);
+		$this->sPageTitle = "Menu:$sMenuId+";
+		$this->sClass = $sClass;
+	}
+	
+	public function RenderContent(WebPage $oPage, $aExtraParams = array())
+	{
+		// The standard template used for all such pages: an open search form at the top
+		$sTemplate = <<<EOF
+<itopblock BlockClass="DisplayBlock" type="search" asynchronous="false" encoding="text/oql" parameters="open:true">SELECT $this->sClass</itopblock>
 EOF;
 		$oTemplate = new DisplayTemplate($sTemplate);
 		$oTemplate->Render($oPage, $aExtraParams);
@@ -463,6 +520,62 @@ class WebPageMenuNode extends MenuNode
 		return $this->AddParams( $this->sHyperlink, $aExtraParams);
 	}
 	
+	public function RenderContent(WebPage $oPage, $aExtraParams = array())
+	{
+		assert(false); // Shall never be called, the external web page will handle the display by itself
+	}
+}
+
+/**
+ * This class defines a menu that points to the page for creating a new object of the specified class.
+ * It take only one parameter: the name of the class
+ * Note: the parameter menu=xxx (where xxx is the id of the menu itself) will be added to the hyperlink
+ * in order to make it the active one
+ */
+class NewObjectMenuNode extends MenuNode
+{
+	protected $sClass;
+	
+	/**
+	 * Create a menu item that points to the URL for creating a new object, the menu will be added only if the current user has enough
+	 * rights to create such an object (or an object of a child class)
+	 * @param string $sMenuId Unique identifier of the menu (used to identify the menu for bookmarking, and for getting the labels from the dictionary)
+	 * @param string $sClass URL to the page to load. Use relative URL if you want to keep the application portable !
+	 * @param integer $iParentIndex ID of the parent menu
+	 * @param float $fRank Number used to order the list, any number will do, but for a given level (i.e same parent) all menus are sorted based on this value
+	 * @return MenuNode
+	 */
+	public function __construct($sMenuId, $sClass, $iParentIndex, $fRank = 0)
+	{
+		parent::__construct($sMenuId, $iParentIndex, $fRank);
+		$this->sClass = $sClass;
+	}
+
+	public function GetHyperlink($aExtraParams)
+	{
+		$sHyperlink = '../pages/UI.php?operation=new&class='.$this->sClass;
+		$aExtraParams['menu'] = $this->GetIndex();
+		return $this->AddParams($sHyperlink, $aExtraParams);
+	}
+
+	public function IsEnabled()
+	{
+		// Enable this menu, only if the current user has enough rights to create such an object, or an object of
+		// any child class
+	
+		$aSubClasses = MetaModel::EnumChildClasses($this->sClass, ENUM_CHILD_CLASSES_ALL); // Including the specified class itself
+		$bActionIsAllowed = false;
+	
+		foreach($aSubClasses as $sCandidateClass)
+		{
+			if (!MetaModel::IsAbstract($sCandidateClass) && (UserRights::IsActionAllowed($sCandidateClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES))
+			{
+				$bActionIsAllowed = true;
+				break; // Enough for now
+			}
+		}
+		return $bActionIsAllowed;		
+	}	
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())
 	{
 		assert(false); // Shall never be called, the external web page will handle the display by itself

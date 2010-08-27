@@ -346,6 +346,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Button:Create' => ' Créer ',
 	'UI:Button:Delete' => ' Supprimer ! ',
 	'UI:Button:ChangePassword' => ' Changer ! ',
+	'UI:Button:ResetPassword' => ' Ràz du mot de passe ',
 	
 	'UI:SearchToggle' => 'Recherche',
 
@@ -384,6 +385,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:GroupBy:Count' => 'Nombre',
 	'UI:GroupBy:Count+' => 'Nombre d\'éléments',
 	'UI:CountOfObjects' => '%1$d objets correspondants aux critères.',
+	'UI_CountOfObjectsShort' => '%1$d objets.',
 	'UI:NoObject_Class_ToDisplay' => 'Aucun objet %1$s à afficher',
 	'UI:History:LastModified_On_By' => 'Dernière modification par %2$s le %1$s.',
 	'UI:HistoryTab' => 'Historique',
@@ -829,6 +831,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Deadline_Hours_Minutes' => '%1$dh %2$dmin',			
 	'UI:Deadline_Days_Hours_Minutes' => '%1$dj %2$dh %3$dmin',
 	'UI:Help' => 'Aide',
+	'UI:PasswordConfirm' => '(Confirmer)',
 ));
 
 ?>

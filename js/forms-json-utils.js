@@ -207,3 +207,45 @@ function UpdateDependentFields(aFieldNames)
 	}
 	oWizardHelper.AjaxQueryServer();
 }
+
+function ResetPwd(id)
+{
+	// Reset the values of the password fields
+	$('#'+id).val('*****');
+	$('#'+id+'_confirm').val('*****');
+	// And reset the flag, to tell it that the password remains unchanged
+	$('#'+id+'_changed').val(0);
+	// Visual feedback, None when it's Ok
+	$('#v_'+id).html('');
+}
+
+// Called whenever the content of a one way encrypted password changes
+function PasswordFieldChanged(id)
+{
+	// Set the flag, to tell that the password changed
+	console.log('Password changed');
+	$('#'+id+'_changed').val(1);
+}
+
+// Special validation function for one way encrypted password fields
+function ValidatePasswordField(id, sFormId)
+{
+	var bChanged = $('#'+id+'_changed').val();
+	if (bChanged)
+	{
+		if ($('#'+id).val() != $('#'+id+'_confirm').val())
+		{
+			oFormErrors['err_'+sFormId]++;
+			if (oFormErrors['input_'+sFormId] == null)
+			{
+				// Let's remember the first input with an error, so that we can put back the focus on it later
+				oFormErrors['input_'+sFormId] = id;
+			}
+			// Visual feedback
+			$('#v_'+id).html('<img src="../images/validation_error.png" />');
+			return false;
+		}
+	}
+	$('#v_'+id).html(''); //<img src="../images/validation_ok.png" />');
+	return true;
+}

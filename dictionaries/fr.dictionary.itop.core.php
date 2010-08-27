@@ -33,7 +33,7 @@
 // Class: CMDBChange
 //
 
-Dict::Add('EN US', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:CMDBChange' => 'change',
 	'Class:CMDBChange+' => 'Changes tracking',
 	'Class:CMDBChange/Attribute:date' => 'date',
@@ -46,7 +46,7 @@ Dict::Add('EN US', 'French', 'Français', array(
 // Class: CMDBChangeOp
 //
 
-Dict::Add('EN US', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:CMDBChangeOp' => 'change operation',
 	'Class:CMDBChangeOp+' => 'Change operations tracking',
 	'Class:CMDBChangeOp/Attribute:change' => 'change',
@@ -67,7 +67,7 @@ Dict::Add('EN US', 'French', 'Français', array(
 // Class: CMDBChangeOpCreate
 //
 
-Dict::Add('EN US', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:CMDBChangeOpCreate' => 'object creation',
 	'Class:CMDBChangeOpCreate+' => 'Object creation tracking',
 ));
@@ -76,7 +76,7 @@ Dict::Add('EN US', 'French', 'Français', array(
 // Class: CMDBChangeOpDelete
 //
 
-Dict::Add('EN US', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:CMDBChangeOpDelete' => 'object deletion',
 	'Class:CMDBChangeOpDelete+' => 'Object deletion tracking',
 ));
@@ -85,7 +85,7 @@ Dict::Add('EN US', 'French', 'Français', array(
 // Class: CMDBChangeOpSetAttribute
 //
 
-Dict::Add('EN US', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:CMDBChangeOpSetAttribute' => 'object change',
 	'Class:CMDBChangeOpSetAttribute+' => 'Object properties change tracking',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode' => 'Attribute',
@@ -96,7 +96,7 @@ Dict::Add('EN US', 'French', 'Français', array(
 // Class: CMDBChangeOpSetAttributeScalar
 //
 
-Dict::Add('EN US', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:CMDBChangeOpSetAttributeScalar' => 'property change',
 	'Class:CMDBChangeOpSetAttributeScalar+' => 'Object scalar properties change tracking',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue' => 'Previous value',
@@ -104,12 +104,21 @@ Dict::Add('EN US', 'French', 'Français', array(
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue' => 'New value',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue+' => 'new value of the attribute',
 ));
+// Used by CMDBChangeOp... & derived classes
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Change:ObjectCreated' => 'Elément créé',
+	'Change:ObjectDeleted' => 'Elément effacé',
+	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => '%1$s modifié en %2$s (ancienne valeur: %3$s)',
+	'Change:Text_AppendedTo_AttName' => '%1$s ajouté à %2$s',
+	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s modifié, ancienne valeur: %2$s',
+	'Change:AttName_Changed' => '%1$s modifié',
+));
 
 //
 // Class: CMDBChangeOpSetAttributeBlob
 //
 
-Dict::Add('EN US', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:CMDBChangeOpSetAttributeBlob' => 'data change',
 	'Class:CMDBChangeOpSetAttributeBlob+' => 'data change tracking',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata' => 'Previous data',
@@ -120,7 +129,7 @@ Dict::Add('EN US', 'French', 'Français', array(
 // Class: CMDBChangeOpSetAttributeText
 //
 
-Dict::Add('EN US', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:CMDBChangeOpSetAttributeText' => 'text change',
 	'Class:CMDBChangeOpSetAttributeText+' => 'text change tracking',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata' => 'Previous data',
@@ -131,7 +140,7 @@ Dict::Add('EN US', 'French', 'Français', array(
 // Class: Event
 //
 
-Dict::Add('EN US', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Event' => 'Log Event',
 	'Class:Event+' => 'An application internal event',
 	'Class:Event/Attribute:message' => 'message',
@@ -148,7 +157,7 @@ Dict::Add('EN US', 'French', 'Français', array(
 // Class: EventNotification
 //
 
-Dict::Add('EN US', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:EventNotification' => 'Notification event',
 	'Class:EventNotification+' => 'Trace of a notification that has been sent',
 	'Class:EventNotification/Attribute:trigger_id' => 'Trigger',
@@ -163,7 +172,7 @@ Dict::Add('EN US', 'French', 'Français', array(
 // Class: EventNotificationEmail
 //
 
-Dict::Add('EN US', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:EventNotificationEmail' => 'Email emission event',
 	'Class:EventNotificationEmail+' => 'Trace of an email that has been sent',
 	'Class:EventNotificationEmail/Attribute:to' => 'TO',
@@ -184,7 +193,7 @@ Dict::Add('EN US', 'French', 'Français', array(
 // Class: EventIssue
 //
 
-Dict::Add('EN US', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:EventIssue' => 'Issue event',
 	'Class:EventIssue+' => 'Trace of an issue (warning, error, etc.)',
 	'Class:EventIssue/Attribute:issue' => 'Issue',
@@ -207,7 +216,7 @@ Dict::Add('EN US', 'French', 'Français', array(
 // Class: EventWebService
 //
 
-Dict::Add('EN US', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:EventWebService' => 'Web service event',
 	'Class:EventWebService+' => 'Trace of an web service call',
 	'Class:EventWebService/Attribute:verb' => 'Verb',
@@ -228,7 +237,7 @@ Dict::Add('EN US', 'French', 'Français', array(
 // Class: Action
 //
 
-Dict::Add('EN US', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Action' => 'action',
 	'Class:Action+' => 'Custom action',
 	'Class:Action/Attribute:name' => 'Name',
@@ -253,7 +262,7 @@ Dict::Add('EN US', 'French', 'Français', array(
 // Class: ActionNotification
 //
 
-Dict::Add('EN US', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ActionNotification' => 'notification',
 	'Class:ActionNotification+' => 'Notification (abstract)',
 ));
@@ -262,7 +271,7 @@ Dict::Add('EN US', 'French', 'Français', array(
 // Class: ActionEmail
 //
 
-Dict::Add('EN US', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ActionEmail' => 'email notification',
 	'Class:ActionEmail+' => 'Action: Email notification',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Test recipient',
@@ -295,7 +304,7 @@ Dict::Add('EN US', 'French', 'Français', array(
 // Class: Trigger
 //
 
-Dict::Add('EN US', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Trigger' => 'trigger',
 	'Class:Trigger+' => 'Custom event handler',
 	'Class:Trigger/Attribute:description' => 'Description',
@@ -310,7 +319,7 @@ Dict::Add('EN US', 'French', 'Français', array(
 // Class: TriggerOnObject
 //
 
-Dict::Add('EN US', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:TriggerOnObject' => 'Trigger on a class of objects',
 	'Class:TriggerOnObject+' => 'Trigger on a given class of objects',
 	'Class:TriggerOnObject/Attribute:target_class' => 'Target class',
@@ -321,7 +330,7 @@ Dict::Add('EN US', 'French', 'Français', array(
 // Class: TriggerOnStateChange
 //
 
-Dict::Add('EN US', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:TriggerOnStateChange' => 'Trigger on object state change',
 	'Class:TriggerOnStateChange+' => 'Trigger on object state change',
 	'Class:TriggerOnStateChange/Attribute:state' => 'State',
@@ -332,7 +341,7 @@ Dict::Add('EN US', 'French', 'Français', array(
 // Class: TriggerOnStateEnter
 //
 
-Dict::Add('EN US', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:TriggerOnStateEnter' => 'Trigger on object entering a state',
 	'Class:TriggerOnStateEnter+' => 'Trigger on object state change - entering',
 ));
@@ -341,7 +350,7 @@ Dict::Add('EN US', 'French', 'Français', array(
 // Class: TriggerOnStateLeave
 //
 
-Dict::Add('EN US', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:TriggerOnStateLeave' => 'Trigger on object leaving a state',
 	'Class:TriggerOnStateLeave+' => 'Trigger on object state change - leaving',
 ));
@@ -350,7 +359,7 @@ Dict::Add('EN US', 'French', 'Français', array(
 // Class: TriggerOnObjectCreate
 //
 
-Dict::Add('EN US', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:TriggerOnObjectCreate' => 'Trigger on object creation',
 	'Class:TriggerOnObjectCreate+' => 'Trigger on object creation of [a child class of] the given class',
 ));
@@ -359,7 +368,7 @@ Dict::Add('EN US', 'French', 'Français', array(
 // Class: lnkTriggerAction
 //
 
-Dict::Add('EN US', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkTriggerAction' => 'Actions-Trigger',
 	'Class:lnkTriggerAction+' => 'Link between a trigger and an action',
 	'Class:lnkTriggerAction/Attribute:action_id' => 'Action',
