@@ -290,6 +290,11 @@ class DisplayBlock
 		$bDoSearch = utils::ReadParam('dosearch', false);
 		if ($this->m_oSet == null)
 		{
+			$aQueryParams = array();
+			if (isset($aExtraParams['query_params']))
+			{
+				$aQueryParams = $aExtraParams['query_params'];
+			}
 			if ($this->m_sStyle != 'links')
 			{
 				$aFilterCodes = array_keys(MetaModel::GetClassFilterDefs($this->m_oFilter->GetClass()));
@@ -306,7 +311,7 @@ class DisplayBlock
 					}
 				}
 			}
-			$this->m_oSet = new CMDBObjectSet($this->m_oFilter);
+			$this->m_oSet = new CMDBObjectSet($this->m_oFilter, array(), $aQueryParams);
 		}
 		switch($this->m_sStyle)
 		{
@@ -340,8 +345,13 @@ class DisplayBlock
 			else
 			{
 				// Simply count the number of elements in the set
-				$iCount = $oSet->Count();
-				$sHtml .= $oPage->GetP(Dict::Format('UI:CountOfObjects', $iCount));
+				$iCount = $this->m_oSet->Count();
+				$sFormat = 'UI:CountOfObjects';
+				if (isset($aExtraParams['format']))
+				{
+					$sFormat = $aExtraParams['format'];
+				}
+				$sHtml .= $oPage->GetP(Dict::Format($sFormat, $iCount));
 			}
 			
 			break;
@@ -540,6 +550,19 @@ class DisplayBlock
 			{
 				$sHtml .= $oObj->GetDetails($oPage); // Still used ???
 			}
+			break;
+			
+			case 'actions':
+			$sClass = $this->m_oFilter->GetClass();
+			$oAppContext = new ApplicationContext();
+			$sParams = $oAppContext->GetForLink();
+			$sHtml .= '<p>';
+			if (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY))
+			{
+				$sHtml .= "<a href=\"../pages/UI.php?operation=new&class={$sClass}&$sParams\">".Dict::Format('UI:ClickToCreateNew', MetaModel::GetName($sClass))."</a><br/>\n";
+			}
+			$sHtml .= "<a href=\"../pages/UI.php?operation=search_form&class={$sClass}&$sParams\">".Dict::Format('UI:SearchFor_Class', MetaModel::GetName($sClass))."</a>\n";
+			$sHtml .= '</p>';
 			break;
 			
 			case 'bare_details':

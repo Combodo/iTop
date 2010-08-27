@@ -483,6 +483,10 @@ abstract class cmdbAbstractObject extends CMDBObject
 			$divId = $aExtraParams['block_id'];
 			$sFilter = $oSet->GetFilter()->serialize();
 			$aExtraParams['display_limit'] = false; // To expand the full list
+			foreach($oSet->GetFilter()->GetInternalParams() as $sName => $sValue)
+			{
+				$aExtraParams['query_params'][$sName] = $sValue;
+			}
 			$sExtraParams = addslashes(str_replace('"', "'", json_encode($aExtraParams))); // JSON encode, change the style of the quotes and escape them
 			$sHtml .= '<tr class="containerHeader"><td>'.Dict::Format('UI:TruncatedResults', utils::GetConfig()->GetMinDisplayLimit(), $oSet->Count()).'&nbsp;&nbsp;<a href="#open_'.$divId.'" onClick="Javascript:ReloadTruncatedList(\''.$divId.'\', \''.$sFilter.'\', \''.$sExtraParams.'\');">'.Dict::S('UI:DisplayAll').'</a></td><td>';
 			$oPage->add_ready_script("$('#{$divId} table.listResults').addClass('truncated');");
