@@ -89,6 +89,7 @@ ob_start('FatalErrorCatcher'); // Start capturing the output, and pass it throug
 
 require_once('../core/config.class.inc.php');
 require_once('../core/log.class.inc.php');
+require_once('../core/duration.class.inc.php');
 require_once('../core/cmdbsource.class.inc.php');
 require_once('./xmldataloader.class.inc.php');
 

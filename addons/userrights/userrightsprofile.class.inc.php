@@ -412,7 +412,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 
 	public function Init()
 	{
-		MetaModel::RegisterPlugin('userrights', 'ACbyProfile', array($this, 'LoadCache'));
+		MetaModel::RegisterPlugin('userrights', 'ACbyProfile');
 	}
 
 
@@ -422,8 +422,12 @@ class UserRightsProfile extends UserRightsAddOnAPI
 	protected $m_aUserProfiles; // userid,profileid -> object
 	protected $m_aUserOrgs; // userid,orgid -> object
 
-	protected $m_aClassActionGrants; // profile, class, action -> permission
-	protected $m_aClassStimulusGrants; // profile, class, stimulus -> permission
+	// Those arrays could be completed on demand (inheriting parent permissions)
+	protected $m_aClassActionGrants = null; // profile, class, action -> actiongrantid (or false if NO, or null/missing if undefined)
+	protected $m_aClassStimulusGrants = array(); // profile, class, stimulus -> permission
+
+	// Built on demand, could be optimized if necessary (doing a query for each attribute that needs to be read)
+	protected $m_aObjectActionGrants = array();
 
 	public function ResetCache()
 	{
@@ -434,15 +438,38 @@ class UserRightsProfile extends UserRightsAddOnAPI
 
 		$this->m_aAdmins = null;
 
-		// Loaded on demand
-		$this->m_aClassActionGrants = array();
-		$this->m_aClassStimulusGrants = array();
+		// Loaded on demand (time consuming as compared to the others)
+		$this->m_aClassActionGrants = null;
+		$this->m_aClassStimulusGrants = null;
+		
+		$this->m_aObjectActionGrants = array();
+	}
+
+	// Separate load: this cache is much more time consuming while loading
+	// Thus it is loaded iif required
+	// Could be improved by specifying the profile id
+	public function LoadActionGrantCache()
+	{
+		if (!is_null($this->m_aClassActionGrants)) return;
+
+		$oDuration = new Duration();
+
+		$oFilter = DBObjectSearch::FromOQL_AllData("SELECT URP_ActionGrant AS p WHERE p.permission = 'yes'");
+		$aGrants = $oFilter->ToDataArray();
+		foreach($aGrants as $aGrant)
+		{
+			$this->m_aClassActionGrants[$aGrant['profileid']][$aGrant['class']][strtolower($aGrant['action'])] = $aGrant['id'];
+		}
+
+		$oDuration->Scratch('Load of action grants');
 	}
 
 	public function LoadCache()
 	{
 		if (!is_null($this->m_aProfiles)) return;
 		// Could be loaded in a shared memory (?)
+
+		$oDuration = new Duration();
 
 		$oProfileSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData("SELECT URP_Profiles"));
 		$this->m_aProfiles = array(); 
@@ -469,11 +496,24 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		{
 			$this->m_aUserOrgs[$oUserOrg->Get('userid')][$oUserOrg->Get('allowed_org_id')] = $oUserOrg;
 		}
+
+		$this->m_aClassStimulusGrants = array();
+		$oStimGrantSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData("SELECT URP_StimulusGrant"));
+		$this->m_aStimGrants = array();
+		while ($oStimGrant = $oStimGrantSet->Fetch())
+		{
+			$this->m_aClassStimulusGrants[$oStimGrant->Get('profileid')][$oStimGrant->Get('class')][$oStimGrant->Get('stimulus')] = $oStimGrant;
+		}
+
+		$oDuration->Scratch('Load of user management cache (excepted Action Grants)');
+
 /*
 		echo "<pre>\n";
 		print_r($this->m_aProfiles);
 		print_r($this->m_aUserProfiles);
 		print_r($this->m_aUserOrgs);
+		print_r($this->m_aClassActionGrants);
+		print_r($this->m_aClassStimulusGrants);
 		echo "</pre>\n";
 exit;
 */
@@ -544,36 +584,29 @@ exit;
 	// This verb has been made public to allow the development of an accurate feedback for the current configuration
 	public function GetProfileActionGrant($iProfile, $sClass, $sAction)
 	{
-		$this->LoadCache();
+		$this->LoadActionGrantCache();
 
+		// Note: action is forced lowercase to be more flexible (historical bug)
+		$sAction = strtolower($sAction);
 		if (isset($this->m_aClassActionGrants[$iProfile][$sClass][$sAction]))
 		{
 			return $this->m_aClassActionGrants[$iProfile][$sClass][$sAction];
 		}
 
-		// Get the permission for this profile/class/action
-		$oSearch = DBObjectSearch::FromOQL_AllData("SELECT URP_ActionGrant WHERE class = :class AND action = :action AND profileid = :profile AND permission = 'yes'");
-		$oSet = new DBObjectSet($oSearch, array(), array('class'=>$sClass, 'action'=>$sAction, 'profile'=>$iProfile));
-		if ($oSet->Count() >= 1)
+		// Recursively look for the grant record in the class hierarchy
+		$sParentClass = MetaModel::GetParentPersistentClass($sClass);
+		if (empty($sParentClass))
 		{
-			$oGrantRecord = $oSet->Fetch();
+			$iGrant = null;
 		}
 		else
 		{
-			$sParentClass = MetaModel::GetParentPersistentClass($sClass);
-			if (empty($sParentClass))
-			{
-				$oGrantRecord = null;
-			}
-			else
-			{
-				// Recursively look for the grant record in the class hierarchy
-				$oGrantRecord = $this->GetProfileActionGrant($iProfile, $sParentClass, $sAction);
-			}
+			// Recursively look for the grant record in the class hierarchy
+			$iGrant = $this->GetProfileActionGrant($iProfile, $sParentClass, $sAction);
 		}
 
-		$this->m_aClassActionGrants[$iProfile][$sClass][$sAction] = $oGrantRecord;
-		return $oGrantRecord;
+		$this->m_aClassActionGrants[$iProfile][$sClass][$sAction] = $iGrant;
+		return $iGrant;
 	}
 
 	protected function GetUserActionGrant($oUser, $sClass, $iActionCode)
@@ -594,8 +627,8 @@ exit;
 		{
 			foreach($this->m_aUserProfiles[$iUser] as $iProfile => $oProfile)
 			{
-				$oGrantRecord = $this->GetProfileActionGrant($iProfile, $sClass, $sAction);
-				if (is_null($oGrantRecord))
+				$iGrant = $this->GetProfileActionGrant($iProfile, $sClass, $sAction);
+				if (is_null($iGrant) || !$iGrant)
 				{
 					continue; // loop to the next profile
 				}
@@ -606,7 +639,7 @@ exit;
 					// update the list of attributes with those allowed for this profile
 					//
 					$oSearch = DBObjectSearch::FromOQL_AllData("SELECT URP_AttributeGrant WHERE actiongrantid = :actiongrantid");
-					$oSet = new DBObjectSet($oSearch, array(), array('actiongrantid' => $oGrantRecord->GetKey()));
+					$oSet = new DBObjectSet($oSearch, array(), array('actiongrantid' => $iGrant));
 					$aProfileAttributes = $oSet->GetColumnAsArray('attcode', false);
 					if (count($aProfileAttributes) == 0)
 					{
@@ -735,21 +768,10 @@ exit;
 		{
 			return $this->m_aClassStimulusGrants[$iProfile][$sClass][$sStimulusCode];
 		}
-
-		// Get the permission for this profile/class/stimulus
-		$oSearch = DBObjectSearch::FromOQL_AllData("SELECT URP_StimulusGrant WHERE class = :class AND stimulus = :stimulus AND profileid = :profile AND permission = 'yes'");
-		$oSet = new DBObjectSet($oSearch, array(), array('class'=>$sClass, 'stimulus'=>$sStimulusCode, 'profile'=>$iProfile));
-		if ($oSet->Count() >= 1)
-		{
-			$oGrantRecord = $oSet->Fetch();
-		}
 		else
 		{
-			$oGrantRecord = null;
+			return null;
 		}
-
-		$this->m_aClassStimulusGrants[$iProfile][$sClass][$sStimulusCode] = $oGrantRecord;
-		return $oGrantRecord;
 	}
 
 	public function IsStimulusAllowed($oUser, $sClass, $sStimulusCode, $oInstanceSet = null)

@@ -3169,6 +3169,11 @@ abstract class MetaModel
 			self::$m_bLogWebService = false;
 		}
 
+		if (self::$m_oConfig->GetLogDuration())
+		{
+			Duration::Enable();
+		}
+
 		// Note: load the dictionary as soon as possible, because it might be
 		//       needed when some error occur
 		foreach (self::$m_oConfig->GetDictionaries() as $sModule => $sToInclude)
@@ -3201,9 +3206,13 @@ abstract class MetaModel
 		$sSource = self::$m_oConfig->GetDBName();
 		$sTablePrefix = self::$m_oConfig->GetDBSubname();
 
+		$oDuration = new Duration();
+
 		// The include have been included, let's browse the existing classes and
 		// develop some data based on the proposed model
 		self::InitClasses($sTablePrefix);
+
+		$oDuration->Scratch('Initialization of Data model structures');
 
 		self::$m_sDBName = $sSource;
 		self::$m_sTablePrefix = $sTablePrefix;

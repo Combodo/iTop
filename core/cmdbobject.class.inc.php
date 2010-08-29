@@ -35,6 +35,7 @@ require_once('coreexception.class.inc.php');
 
 require_once('config.class.inc.php');
 require_once('log.class.inc.php');
+require_once('duration.class.inc.php');
 
 require_once('dict.class.inc.php');
 

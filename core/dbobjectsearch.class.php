@@ -558,6 +558,48 @@ class DBObjectSearch
 		return $retValue;
 	}
 
+	// Alternative to object mapping: the data are transfered directly into an array
+	// This is 10 times faster than creating a set of objects, and makes sense when optimization is required
+	public function ToDataArray($aColumns = array(), $aOrderBy = array(), $aArgs = array())
+	{
+		$sSQL = MetaModel::MakeSelectQuery($this, $aOrderBy, $aArgs);
+		$resQuery = CMDBSource::Query($sSQL);
+		if (!$resQuery) return;
+
+		if (count($aColumns) == 0)
+		{
+			$aColumns = array_keys(MetaModel::ListAttributeDefs($this->GetClass()));
+			// Add the standard id (as first column)
+			array_unshift($aColumns, 'id');
+		}
+
+		$aQueryCols = CMDBSource::GetColumns($resQuery);
+
+		$sClassAlias = $this->GetClassAlias();
+		$aColMap = array();
+		foreach ($aColumns as $sAttCode)
+		{
+			$sColName = $sClassAlias.$sAttCode;
+			if (in_array($sColName, $aQueryCols))
+			{
+				$aColMap[$sAttCode] = $sColName;
+			}
+		}
+
+		$aRes = array();
+		while ($aRow = CMDBSource::FetchArray($resQuery))
+		{
+			$aMappedRow = array();
+			foreach ($aColMap as $sAttCode => $sColName)
+			{
+				$aMappedRow[$sAttCode] = $aRow[$sColName];
+			}
+			$aRes[] = $aMappedRow;
+		}
+		CMDBSource::FreeResult($resQuery);
+		return $aRes;
+	}
+
 	public function ToOQL(&$aParams = null)
 	{
 		// Currently unused, but could be useful later

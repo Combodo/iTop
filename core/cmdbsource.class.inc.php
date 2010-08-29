@@ -265,19 +265,7 @@ class CMDBSource
 			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql));
 		}
 
-		$aNames = array();
-		for ($i = 0; $i < mysql_num_fields($result) ; $i++)
-		{
-		   $meta = mysql_fetch_field($result, $i);
-		   if (!$meta)
-		   {
-				throw new MySQLException('mysql_fetch_field: No information available', array('query'=>$sSql, 'i'=>$i));
-		   }
-		   else
-		   {
-		   		$aNames[] = $meta->name;
-		   }
-		}
+		$aNames = self::GetColumns($result);
 
 		$aData[] = $aNames;
 		while ($aRow = mysql_fetch_array($result, MYSQL_ASSOC))
@@ -308,6 +296,24 @@ class CMDBSource
 	public static function FetchArray($result)
 	{
 		return mysql_fetch_array($result, MYSQL_ASSOC);
+	}
+
+	public static function GetColumns($result)
+	{
+		$aNames = array();
+		for ($i = 0; $i < mysql_num_fields($result) ; $i++)
+		{
+		   $meta = mysql_fetch_field($result, $i);
+		   if (!$meta)
+		   {
+				throw new MySQLException('mysql_fetch_field: No information available', array('query'=>$sSql, 'i'=>$i));
+		   }
+		   else
+		   {
+	   		$aNames[] = $meta->name;
+		   }
+		}
+		return $aNames;
 	}
 
 	public static function Seek($result, $iRow)

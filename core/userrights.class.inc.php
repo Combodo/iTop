@@ -131,6 +131,8 @@ abstract class User extends cmdbAbstractObject
 			return;
 		}
 
+		$oDuration = new Duration();
+
 		$aDisplayData = array();
 		foreach (MetaModel::GetClasses($sClassCategory) as $sClass)
 		{
@@ -165,6 +167,8 @@ abstract class User extends cmdbAbstractObject
 			);
 		}
 
+		$oDuration->Scratch('Computation of user rights');
+	
 		$aDisplayConfig = array();
 		$aDisplayConfig['class'] = array('label' => Dict::S('UI:UserManagement:Class'), 'description' => Dict::S('UI:UserManagement:Class+'));
 		$aDisplayConfig['read'] = array('label' => Dict::S('UI:UserManagement:Action:Read'), 'description' => Dict::S('UI:UserManagement:Action:Read+'));
@@ -596,6 +600,13 @@ class UserRights
 		return self::$m_aAdmins[$iUser];
 	}
 
+	/**
+	 * Reset cached data
+	 * @param Bool Reset admin cache as well
+	 * @return void
+	 */
+	// Reset cached data
+	//
 	public static function FlushPrivileges($bResetAdminCache = false)
 	{
 		if ($bResetAdminCache)

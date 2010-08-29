@@ -455,6 +455,7 @@ try
 	require_once('../application/itopwebpage.class.inc.php');
 	require_once('../application/wizardhelper.class.inc.php');
 
+	$oDuration = new Duration();
 	require_once('../application/startup.inc.php');
 	$oAppContext = new ApplicationContext();
 	$currentOrganization = utils::ReadParam('org_id', '');
@@ -1389,6 +1390,7 @@ EOF
 			$oP->set_title($oMenuNode->GetLabel());
 		}
 	}
+	$oDuration->Scratch('Total page execution time');
 	////MetaModel::ShowQueryTrace();
 	$oP->output();
 }
