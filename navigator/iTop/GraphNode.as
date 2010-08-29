@@ -5,6 +5,7 @@
 	import flash.net.*;
 	import flash.events.*;
 	import flash.text.*; 
+	import flash.xml.*; 
 	import flash.ui.ContextMenu;
 	import flash.ui.ContextMenuItem;
 	import iTop.ToolTip;
@@ -14,27 +15,46 @@
 	public class GraphNode extends Sprite
 	{
 		private var m_oIcon:Loader;
-		private var m_sClass;String;
+		private var m_sClass:String;
+		private var m_sClassName:String;
 		private var m_iId:Number;
 		private var m_sParentKey:String;
 		private var m_oToolTip:ToolTip;
 		private var m_fZoom:Number;
 		private var m_oParent:Navigator;
+		private static const ROUND:Number = 20;
+		private static const PADDING:Number = 5;
+		public var m_speed_x:Number = 0;
+		public var m_speed_y:Number = 0;
+		public var m_bInDrag:Boolean = false;
 		
-		public function GraphNode(oParent:Navigator, oPt:Point, sClass:String, iId:Number, sLabel:String, sIconPath:String, sParentKey:String, fZoom:Number)
+		public function GraphNode(oParent:Navigator, oPt:Point, sClass:String, sClassName:String, iId:Number, sLabel:String, sIconPath:String, sParentKey:String, fZoom:Number, oDetails:Object)
 		{
 			x = oPt.x;
 			y = oPt.y;
 			m_fZoom = fZoom;
 			m_sClass = sClass;
+			m_sClassName = sClassName;
 			m_iId = iId;
+			m_sLabel.autoSize = TextFieldAutoSize.LEFT;
+			m_sLabel.multiline = false;
 			m_sLabel.text = sLabel;
-			m_sLabel.autoSize = TextFieldAutoSize.CENTER;
 			m_sLabel.width = m_sLabel.textWidth;
 			m_sLabel.x = -m_sLabel.width/2;
 			m_sLabel.height = m_sLabel.textHeight;
+			// Draw the background
+			graphics.beginFill( 0xf1f1f6, 0.8 );
+			graphics.drawRoundRect( m_sLabel.x -PADDING, m_sLabel.y - PADDING, m_sLabel.width+PADDING*2, m_sLabel.height+PADDING*2, ROUND );
+			graphics.endFill();
+			
 			m_sParentKey = sParentKey;
-			m_oToolTip = new ToolTip( "<p><b>"+m_sClass+"</b></p><p>"+sLabel+"</p>");
+			var sTooltipText:String = "<p><b>"+m_sClassName+"</b></p><p>"+sLabel+"</p>";
+			for (var s:String in oDetails)
+			{
+				sTooltipText += '<p>'+s+': '+oDetails[s]+'</p>';
+			}
+			trace('Tooltip text: '+sTooltipText);
+			m_oToolTip = new ToolTip(sTooltipText);
 			m_oToolTip.scaleX = 1 / m_fZoom;
 			m_oToolTip.scaleY = 1 / m_fZoom;
 			m_oParent = oParent;
@@ -94,11 +114,14 @@
 		{
 			trace("Click in Node");
 			m_oParent.m_bChildDragging = true;
+			m_bInDrag = true;
+			m_oToolTip.timer.stop(); // Don't show the tooltip while dragging
 			startDrag(); 
 		} 
 		
 		function mouseReleased(event:MouseEvent):void 
 		{ 
+			m_bInDrag = false;
 			stopDrag(); 
 			m_oParent.m_bChildDragging = false;
 		}
@@ -129,6 +152,11 @@
 			{
 				return sDefaultValue;
 			}
+		}
+		        
+		public function GetLabelWidth():Number
+		{
+			return m_sLabel.width;
 		}
 	}
 }

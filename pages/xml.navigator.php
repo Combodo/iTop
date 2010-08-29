@@ -37,7 +37,7 @@ define('MAX_RECURSION_DEPTH', 20);
  */ 
 function AddNodeDetails(&$oNode, $oObj)
 {
-	$aZlist = MetaModel::GetZListItems(get_class($oObj), 'details');
+	$aZlist = MetaModel::GetZListItems(get_class($oObj), 'list');
 	$aLabels = array();
 	$index = 0;
 	foreach($aZlist as $sAttCode)
@@ -46,7 +46,7 @@ function AddNodeDetails(&$oNode, $oObj)
 		$aLabels[] = $oAttDef->GetLabel();
 		if (!$oAttDef->IsLinkSet())
 		{
-			$oNode->SetAttribute('att_'.$index, $oObj->Get($sAttCode));
+			$oNode->SetAttribute('att_'.$index, $oObj->GetAsHTML($sAttCode));
 		}
 		$index++;
 	}
@@ -78,6 +78,7 @@ function GetRelatedObjects(DBObject $oObj, $sRelationName, &$oLinks, &$oXmlDoc, 
 				$oLinkedNode = $oXmlDoc->CreateElement('node');
 				$oLinkedNode->SetAttribute('id', $oTargetObj->GetKey());
 				$oLinkedNode->SetAttribute('obj_class', get_class($oTargetObj));
+				$oLinkedNode->SetAttribute('obj_class_name', MetaModel::GetName(get_class($oTargetObj)));
 				$oLinkedNode->SetAttribute('name', $oTargetObj->GetName());
 				$oLinkedNode->SetAttribute('icon', BuildIconPath($oTargetObj->GetIcon(false /* No IMG tag */)));
 				AddNodeDetails($oLinkedNode, $oTargetObj);
@@ -104,11 +105,10 @@ function BuildIconPath($sIconPath)
 
 require_once('../application/startup.inc.php');
 require_once('../application/loginwebpage.class.inc.php');
-//// For developping the Navigator
+// For developping the Navigator from within Flash
 //session_start();
 //$_SESSION['auth_user'] = 'admin';
-//$_SESSION['auth_pwd'] = 'admin2';
-//UserRights::Login($_SESSION['auth_user'], $_SESSION['auth_pwd']); // Set the user's language
+//UserRights::Login($_SESSION['auth_user']); // Set the user's language
 LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
 $oPage = new ajax_page("");
@@ -134,6 +134,7 @@ if ($id != 0)
 	$oXmlNode = $oXmlDoc->CreateElement('node');
 	$oXmlNode->SetAttribute('id', $oObj->GetKey());
 	$oXmlNode->SetAttribute('obj_class', get_class($oObj));
+	$oXmlNode->SetAttribute('obj_class_name', MetaModel::GetName(get_class($oObj)));
 	$oXmlNode->SetAttribute('name', $oObj->GetName());
 	$oXmlNode->SetAttribute('icon', BuildIconPath($oObj->GetIcon(false /* No IMG tag */))); // Hard coded for the moment
 	AddNodeDetails($oXmlNode, $oObj);
