@@ -1029,6 +1029,10 @@ abstract class cmdbAbstractObject extends CMDBObject
 						{
 							// too many choices, use an autocomplete
 							// The input for the auto complete
+							if ($sDisplayValue == $oAttDef->GetNullValue()) // Null or zero is displayed as ''
+							{
+								$sDisplayValue = '';
+							}
 							$sHTMLValue = "<input count=\"".count($aAllowedValues)."\" type=\"text\" id=\"label_$iId\" size=\"30\" maxlength=\"255\" value=\"$sDisplayValue\"{$sCSSClasses}/>&nbsp;{$sValidationField}";
 							// another hidden input to store & pass the object's Id
 							$sHTMLValue .= "<input type=\"hidden\" id=\"$iId\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"$value\" />\n";
