@@ -25,10 +25,6 @@
 
 
 
-class SecurityException extends CoreException
-{
-}
-
 class CoreException extends Exception
 {
 	public function __construct($sIssue, $aContextData = null, $sImpact = '')
@@ -108,6 +104,10 @@ class CoreWarning extends CoreException
 }
 
 class CoreUnexpectedValue extends CoreException
+{
+}
+
+class SecurityException extends CoreException
 {
 }
 
