@@ -2021,10 +2021,6 @@ class AttributeOneWayPassword extends AttributeDefinition
 			$aValues = array();
 			$aValues[$this->GetCode().'_hash'] = '';
 			$aValues[$this->GetCode().'_salt'] = '';
-			echo "Writing an empty password !!!";
-			echo "<pre>\n";
-			print_r($value);
-			echo "</pre>\n";
 		}
 		return $aValues;
 	}
