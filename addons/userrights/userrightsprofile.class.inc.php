@@ -452,7 +452,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 	{
 		if (!is_null($this->m_aClassActionGrants)) return;
 
-		$oDuration = new Duration();
+		$oKPI = new ExecutionKPI();
 
 		$oFilter = DBObjectSearch::FromOQL_AllData("SELECT URP_ActionGrant AS p WHERE p.permission = 'yes'");
 		$aGrants = $oFilter->ToDataArray();
@@ -461,7 +461,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 			$this->m_aClassActionGrants[$aGrant['profileid']][$aGrant['class']][strtolower($aGrant['action'])] = $aGrant['id'];
 		}
 
-		$oDuration->Scratch('Load of action grants');
+		$oKPI->ComputeAndReport('Load of action grants');
 	}
 
 	public function LoadCache()
@@ -469,7 +469,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		if (!is_null($this->m_aProfiles)) return;
 		// Could be loaded in a shared memory (?)
 
-		$oDuration = new Duration();
+		$oKPI = new ExecutionKPI();
 
 		$oProfileSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData("SELECT URP_Profiles"));
 		$this->m_aProfiles = array(); 
@@ -505,7 +505,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 			$this->m_aClassStimulusGrants[$oStimGrant->Get('profileid')][$oStimGrant->Get('class')][$oStimGrant->Get('stimulus')] = $oStimGrant;
 		}
 
-		$oDuration->Scratch('Load of user management cache (excepted Action Grants)');
+		$oKPI->ComputeAndReport('Load of user management cache (excepted Action Grants)');
 
 /*
 		echo "<pre>\n";

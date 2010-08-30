@@ -88,7 +88,7 @@ class XMLDataLoader
 	protected function InitDataModel($sConfigFileName)
 	{
 		require_once('../core/log.class.inc.php');
-		require_once('../core/duration.class.inc.php');
+		require_once('../core/kpi.class.inc.php');
 		require_once('../core/coreexception.class.inc.php');
 		require_once('../core/dict.class.inc.php');
 		require_once('../core/attributedef.class.inc.php');

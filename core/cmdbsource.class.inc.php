@@ -195,14 +195,13 @@ class CMDBSource
 		//$aTraceInf['file'] = __FILE__;
 		// $sSQLQuery .= MyHelpers::MakeSQLComment($aTraceInf);
 	  
-		$mu_t1 = MyHelpers::getmicrotime();
+		$oKPI = new ExecutionKPI();
 		$result = mysql_query($sSQLQuery, self::$m_resDBLink);
 		if (!$result) 
 		{
 			throw new MySQLException('Failed to issue SQL query', array('query' => $sSQLQuery));
 		}
-		$mu_t2 = MyHelpers::getmicrotime();
-		// #@# todo - query_trace($sSQLQuery, $mu_t2 - $mu_t1);
+		$oKPI->ComputeStats('Query exec (mySQL)', $sSQLQuery);
 	
 		return $result;
 	}

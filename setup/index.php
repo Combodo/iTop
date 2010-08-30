@@ -26,7 +26,7 @@
 require_once('../application/utils.inc.php');
 require_once('../core/config.class.inc.php');
 require_once('../core/log.class.inc.php');
-require_once('../core/duration.class.inc.php');
+require_once('../core/kpi.class.inc.php');
 require_once('../core/cmdbsource.class.inc.php');
 require_once('./setuppage.class.inc.php');
 
@@ -376,7 +376,7 @@ function CheckServerConnection(SetupWebPage $oP, $sDBServer, $sDBUser, $sDBPwd)
 function InitDataModel(SetupWebPage $oP, $sConfigFileName, $bModelOnly = true)
 {
 	require_once('../core/log.class.inc.php');
-	require_once('../core/duration.class.inc.php');
+	require_once('../core/kpi.class.inc.php');
 	require_once('../core/coreexception.class.inc.php');
 	require_once('../core/dict.class.inc.php');
 	require_once('../core/attributedef.class.inc.php');

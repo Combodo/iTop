@@ -1534,9 +1534,9 @@ abstract class MetaModel
 		// Query caching
 		//
 		$bQueryCacheEnabled = true;
-		$sOqlQuery = $oFilter->ToOql();
 		if ($bQueryCacheEnabled)
 		{
+			$sOqlQuery = $oFilter->ToOql();
 			// Warning: using directly the query string as the key to the hash array can FAIL if the string
 			// is long and the differences are only near the end... so it's safer (but not bullet proof?)
 			// to use a hash (like md5) of the string as the key !
@@ -1565,7 +1565,9 @@ abstract class MetaModel
 			$aTableAliases = array();
 			$oConditionTree = $oFilter->GetCriteria();
 
+			$oKPI = new ExecutionKPI();
 			$oSelect = self::MakeQuery($oFilter->GetSelectedClasses(), $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oFilter);
+			$oKPI->ComputeStats('MakeQuery (select)', $sOqlQuery);
 
 			self::$m_aQueryStructCache[$sOqlQuery] = clone $oSelect;
 		}
@@ -3169,9 +3171,13 @@ abstract class MetaModel
 			self::$m_bLogWebService = false;
 		}
 
-		if (self::$m_oConfig->GetLogDuration())
+		if (self::$m_oConfig->GetLogKPIDuration())
 		{
-			Duration::Enable();
+			ExecutionKPI::EnableDuration();
+		}
+		if (self::$m_oConfig->GetLogKPIMemory())
+		{
+			ExecutionKPI::EnableMemory();
 		}
 
 		// Note: load the dictionary as soon as possible, because it might be
@@ -3206,13 +3212,13 @@ abstract class MetaModel
 		$sSource = self::$m_oConfig->GetDBName();
 		$sTablePrefix = self::$m_oConfig->GetDBSubname();
 
-		$oDuration = new Duration();
+		$oKPI = new ExecutionKPI();
 
 		// The include have been included, let's browse the existing classes and
 		// develop some data based on the proposed model
 		self::InitClasses($sTablePrefix);
 
-		$oDuration->Scratch('Initialization of Data model structures');
+		$oKPI->ComputeAndReport('Initialization of Data model structures');
 
 		self::$m_sDBName = $sSource;
 		self::$m_sTablePrefix = $sTablePrefix;

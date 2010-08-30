@@ -131,7 +131,7 @@ abstract class User extends cmdbAbstractObject
 			return;
 		}
 
-		$oDuration = new Duration();
+		$oKPI = new ExecutionKPI();
 
 		$aDisplayData = array();
 		foreach (MetaModel::GetClasses($sClassCategory) as $sClass)
@@ -167,7 +167,7 @@ abstract class User extends cmdbAbstractObject
 			);
 		}
 
-		$oDuration->Scratch('Computation of user rights');
+		$oKPI->ComputeAndReport('Computation of user rights');
 	
 		$aDisplayConfig = array();
 		$aDisplayConfig['class'] = array('label' => Dict::S('UI:UserManagement:Class'), 'description' => Dict::S('UI:UserManagement:Class+'));

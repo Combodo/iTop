@@ -37,7 +37,8 @@ define ('DEFAULT_LOG_GLOBAL', true);
 define ('DEFAULT_LOG_NOTIFICATION', true);
 define ('DEFAULT_LOG_ISSUE', true);
 define ('DEFAULT_LOG_WEB_SERVICE', true);
-define ('DEFAULT_LOG_DURATION', false);
+define ('DEFAULT_LOG_KPI_DURATION', false);
+define ('DEFAULT_LOG_KPI_MEMORY', false);
 
 define ('DEFAULT_MIN_DISPLAY_LIMIT', 10);
 define ('DEFAULT_MAX_DISPLAY_LIMIT', 15);
@@ -80,7 +81,8 @@ class Config
 	protected $m_bLogNotification;
 	protected $m_bLogIssue;
 	protected $m_bLogWebService;
-	protected $m_bLogDuration; // private setting
+	protected $m_bLogKpiDuration; // private setting
+	protected $m_bLogKpiMemory; // private setting
 
 	/**
 	 * @var integer Number of elements to be displayed when there are more than m_iMaxDisplayLimit elements
@@ -178,7 +180,8 @@ class Config
 		$this->m_bLogNotification = DEFAULT_LOG_NOTIFICATION;
 		$this->m_bLogIssue = DEFAULT_LOG_ISSUE;
 		$this->m_bLogWebService = DEFAULT_LOG_WEB_SERVICE;
-		$this->m_bLogDuration = DEFAULT_LOG_DURATION;
+		$this->m_bLogKPIDuration = DEFAULT_LOG_KPI_DURATION;
+		$this->m_bLogKPIDuration = DEFAULT_LOG_KPI_DURATION;
 		$this->m_iMinDisplayLimit = DEFAULT_MIN_DISPLAY_LIMIT;
 		$this->m_iMaxDisplayLimit = DEFAULT_MAX_DISPLAY_LIMIT;
 		$this->m_iStandardReloadInterval = DEFAULT_STANDARD_RELOAD_INTERVAL;
@@ -278,7 +281,8 @@ class Config
 		$this->m_bLogNotification = isset($MySettings['log_notification']) ? (bool) trim($MySettings['log_notification']) : DEFAULT_LOG_NOTIFICATION;
 		$this->m_bLogIssue = isset($MySettings['log_issue']) ? (bool) trim($MySettings['log_issue']) : DEFAULT_LOG_ISSUE;
 		$this->m_bLogWebService = isset($MySettings['log_web_service']) ? (bool) trim($MySettings['log_web_service']) : DEFAULT_LOG_WEB_SERVICE;
-		$this->m_bLogDuration = isset($MySettings['log_duration']) ? (bool) trim($MySettings['log_duration']) : DEFAULT_LOG_DURATION;
+		$this->m_bLogKPIDuration = isset($MySettings['log_kpi_duration']) ? (bool) trim($MySettings['log_kpi_duration']) : DEFAULT_LOG_KPI_DURATION;
+		$this->m_bLogKPIMemory = isset($MySettings['log_kpi_memory']) ? (bool) trim($MySettings['log_kpi_memory']) : DEFAULT_LOG_KPI_MEMORY;
 		$this->m_iMinDisplayLimit = isset($MySettings['min_display_limit']) ? trim($MySettings['min_display_limit']) : DEFAULT_MIN_DISPLAY_LIMIT;
 		$this->m_iMaxDisplayLimit = isset($MySettings['max_display_limit']) ? trim($MySettings['max_display_limit']) : DEFAULT_MAX_DISPLAY_LIMIT;
 		$this->m_iStandardReloadInterval = isset($MySettings['standard_reload_interval']) ? trim($MySettings['standard_reload_interval']) : DEFAULT_STANDARD_RELOAD_INTERVAL;
@@ -409,9 +413,14 @@ class Config
 		return $this->m_bLogWebService;
 	}
 
-	public function GetLogDuration()
+	public function GetLogKPIDuration()
 	{
-		return $this->m_bLogDuration;
+		return $this->m_bLogKPIDuration;
+	}
+
+	public function GetLogKPIMemory()
+	{
+		return $this->m_bLogKPIMemory;
 	}
 
 	public function GetMinDisplayLimit()

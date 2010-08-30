@@ -455,14 +455,17 @@ try
 	require_once('../application/itopwebpage.class.inc.php');
 	require_once('../application/wizardhelper.class.inc.php');
 
-	$oDuration = new Duration();
 	require_once('../application/startup.inc.php');
 	$oAppContext = new ApplicationContext();
 	$currentOrganization = utils::ReadParam('org_id', '');
 	$operation = utils::ReadParam('operation', '');
 
+	$oKPI = new ExecutionKPI();
+
 	require_once('../application/loginwebpage.class.inc.php');
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
+
+	$oKPI->ComputeAndReport('User login');
 
 	$oP = new iTopWebPage(Dict::S('UI:WelcomeToITop'), $currentOrganization);
 
@@ -1390,7 +1393,8 @@ EOF
 			$oP->set_title($oMenuNode->GetLabel());
 		}
 	}
-	$oDuration->Scratch('Total page execution time');
+	$oKPI->ComputeAndReport('GUI creation before output');
+	ExecutionKPI::ReportStats();
 	////MetaModel::ShowQueryTrace();
 	$oP->output();
 }
