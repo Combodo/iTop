@@ -53,8 +53,8 @@ class UIPasswordWidget
 		$sCode = $this->sAttCode.$this->sNameSuffix;
 		$iWidgetIndex = self::$iWidgetIndex;
 		$sHtmlValue = '';
-		$sHtmlValue = '<input type="password" name="attr_'.$sCode.'" id="'.$this->iId.'" value="*****"/>&nbsp;<span id="v_'.$this->iId.'"></span><br/>';
-		$sHtmlValue .= '<input type="password" id="'.$this->iId.'_confirm" value="*****"/> '.Dict::S('UI:PasswordConfirm').' <input type="button" value="'.Dict::S('UI:Button:ResetPassword').'" onClick="ResetPwd(\''.$this->iId.'\');">';
+		$sHtmlValue = '<input type="password" maxlength="255" name="attr_'.$sCode.'" id="'.$this->iId.'" value="*****"/>&nbsp;<span id="v_'.$this->iId.'"></span><br/>';
+		$sHtmlValue .= '<input type="password" maxlength="255" id="'.$this->iId.'_confirm" value="*****"/> '.Dict::S('UI:PasswordConfirm').' <input type="button" value="'.Dict::S('UI:Button:ResetPassword').'" onClick="ResetPwd(\''.$this->iId.'\');">';
 		$sHtmlValue .= '<input type="hidden" id="'.$this->iId.'_changed" name="attr_'.$sCode.'_changed" value="0"/>';
 
 		$oPage->add_ready_script("$('#$this->iId').bind('keyup change', function(evt) { return PasswordFieldChanged('$this->iId') } );"); // Bind to a custom event: validate

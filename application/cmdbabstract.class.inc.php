@@ -1029,7 +1029,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 						{
 							// too many choices, use an autocomplete
 							// The input for the auto complete
-							$sHTMLValue = "<input count=\"".count($aAllowedValues)."\" type=\"text\" id=\"label_$iId\" size=\"30\" value=\"$sDisplayValue\"{$sCSSClasses}/>&nbsp;{$sValidationField}";
+							$sHTMLValue = "<input count=\"".count($aAllowedValues)."\" type=\"text\" id=\"label_$iId\" size=\"30\" maxlength=\"255\" value=\"$sDisplayValue\"{$sCSSClasses}/>&nbsp;{$sValidationField}";
 							// another hidden input to store & pass the object's Id
 							$sHTMLValue .= "<input type=\"hidden\" id=\"$iId\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"$value\" />\n";
 							$oPage->add_ready_script("\$('#label_$iId').autocomplete('./ajax.render.php', { scroll:true, minChars:3, onItemSelect:selectItem, onFindValue:findValue, formatItem:formatItem, autoFill:true, keyHolder:'#$iId', extraParams:{operation:'autocomplete', sclass:'$sClass',attCode:'".$sAttCode."'}});");
@@ -1061,14 +1061,14 @@ abstract class cmdbAbstractObject extends CMDBObject
 					}
 					else
 					{
-						$sHTMLValue = "<input title=\"$sHelpText\" type=\"text\" size=\"30\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iId\"/>&nbsp;{$sValidationField}";
+						$sHTMLValue = "<input title=\"$sHelpText\" type=\"text\" size=\"30\" maxlength=\"255\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iId\"/>&nbsp;{$sValidationField}";
 						$aEventsList[] ='keyup';
 						$aEventsList[] ='change';
 					}
 					break;
 			}
 			$sPattern = addslashes($oAttDef->GetValidationPattern()); //'^([0-9]+)$';
-			if (!empty($aEventlist))
+			if (!empty($aEventsList))
 			{
 				$oPage->add_ready_script("$('#$iId').bind('".implode(' ', $aEventsList)."', function(evt, sFormId) { return ValidateField('$iId', '$sPattern', $bMandatory, sFormId) } );"); // Bind to a custom event: validate
 			}

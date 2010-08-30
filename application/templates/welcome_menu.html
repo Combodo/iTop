@@ -22,34 +22,93 @@ td.dashboard li {
 margin-top: 5px;
 display: list-item;
 }
+td div.display_block {
+padding:0;
+}
 </style>
 <p></p>
 <p></p>
 <p style="text-align:left; font-size:32px;padding-left:400px;padding-top:40px;margin-bottom:30px;margin-top:0;color:#FFFFFF;"><itopstring>UI:WelcomeMenu:Title</itopstring></p>
 <p></p>
-<table border="0" style="padding:10px;border-spacing: 10px;">
-<tr>
-<td class="dashboard" style="border:0;text-align:left;">
-<itopstring>UI:WelcomeMenu:LeftBlock</itopstring>
-</td>
-<td class="dashboard" style="border:0;text-align:left;">
-<itopstring>UI:WelcomeMenu:RightBlock</itopstring>
-</td>
-</tr>
+<table border="0" style="padding:10px;border-spacing: 10px;width:100%">
 <tr>
 <td class="dashboard2">
 <itopcheck class="UserRequest">
-<p style="text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;"><itopstring>UI:WelcomeMenu:MyCalls</itopstring></p>
-<itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql">SELECT UserRequest AS i WHERE i.caller_id = :current_contact_id</itopblock>
+<img src="../modules/itop-request-mgmt-1.0.0/images/user-request.png" style="float:left"></img>
+<p style="text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;"><itopstring>Request Management</itopstring></p>
+<itopblock BlockClass="DisplayBlock" type="actions" asynchronous="false" encoding="text/oql">SELECT UserRequest</itopblock>
+<p style="text-align:left; font-family:Verdana, Arial, sans-serif; font-size:14px;"><itopstring>UI:WelcomeMenu:MyCalls</itopstring></p>
+<itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql" parameters="menu:0">SELECT UserRequest AS i WHERE i.caller_id = :current_contact_id</itopblock>
 </itopcheck>
 </td>
 <td class="dashboard2">
 <itopcheck class="Incident">
-<p style="text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;"><itopstring>UI:WelcomeMenu:MyIncidents</itopstring></p>
-<itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql">SELECT Incident AS i WHERE i.caller_id = :current_contact_id</itopblock>
+<img src="../modules/itop-incident-mgmt-1.0.0/images/incident-deadline.png" style="float:left"></img>
+<p style="text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;"><itopstring>Incident Management</itopstring></p>
+<itopblock BlockClass="DisplayBlock" type="actions" asynchronous="false" encoding="text/oql">SELECT Incident</itopblock>
+<p style="text-align:left; font-family:Verdana, Arial, sans-serif; font-size:14px;"><itopstring>UI:WelcomeMenu:MyIncidents</itopstring></p>
+<itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql" parameters="menu:0">SELECT Incident AS i WHERE i.agent_id = :current_contact_id</itopblock>
 </itopcheck>
 </td>
-
+</tr>
+<tr>
+<td colspan="2" width="100%">
+<p style="text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;"><itopstring>Configuration Management</itopstring></p>
+<table border="0" style="border-spacing: 10px;width:100%">
+<tr>
+<td>
+<itopcheck class="BusinessProcess">
+<img src="../modules/itop-config-mgmt-1.0.0/images/business-process.png" style="float:left"></img>
+<p style="text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;"><itopstring>Class:BusinessProcess</itopstring></p>
+<itopblock BlockClass="DisplayBlock" type="count" asynchronous="false" encoding="text/oql" parameters="format:UI_CountOfObjectsShort">SELECT BusinessProcess</itopblock></p>
+<itopblock BlockClass="DisplayBlock" type="actions" asynchronous="false" encoding="text/oql">SELECT BusinessProcess</itopblock>
+</itopcheck>
+</td>
+<td>
+<itopcheck class="Contact">
+<img src="../modules/itop-config-mgmt-1.0.0/images/team.png" style="float:left"></img>
+<p style="text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;"><itopstring>Class:Contact</itopstring></p>
+<itopblock BlockClass="DisplayBlock" type="count" asynchronous="false" encoding="text/oql" parameters="format:UI_CountOfObjectsShort">SELECT Contact</itopblock></p>
+<itopblock BlockClass="DisplayBlock" type="actions" asynchronous="false" encoding="text/oql">SELECT Contact</itopblock>
+</itopcheck>
+</td>
+<td>
+<itopcheck class="Location">
+<img src="../modules/itop-config-mgmt-1.0.0/images/location.png" style="float:left"></img>
+<p style="text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;"><itopstring>Class:Location</itopstring></p>
+<itopblock BlockClass="DisplayBlock" type="count" asynchronous="false" encoding="text/oql" parameters="format:UI_CountOfObjectsShort">SELECT Location</itopblock></p>
+<itopblock BlockClass="DisplayBlock" type="actions" asynchronous="false" encoding="text/oql">SELECT Location</itopblock>
+</itopcheck>
+</td>
+</tr>
+<tr>
+<td>
+<itopcheck class="Server">
+<img src="../modules/itop-config-mgmt-1.0.0/images/server.png" style="float:left"></img>
+<p style="text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;"><itopstring>Class:Server</itopstring>
+<itopblock BlockClass="DisplayBlock" type="count" asynchronous="false" encoding="text/oql" parameters="format:UI_CountOfObjectsShort">SELECT Server</itopblock></p>
+<itopblock BlockClass="DisplayBlock" type="actions" asynchronous="false" encoding="text/oql">SELECT Server</itopblock>
+</itopcheck>
+</td>
+<td>
+<itopcheck class="DatabaseInstance">
+<img src="../modules/itop-config-mgmt-1.0.0/images/database.png" style="float:left"></img>
+<p style="text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;"><itopstring>Class:DatabaseInstance</itopstring></p>
+<itopblock BlockClass="DisplayBlock" type="count" asynchronous="false" encoding="text/oql" parameters="format:UI_CountOfObjectsShort">SELECT DatabaseInstance</itopblock></p>
+<itopblock BlockClass="DisplayBlock" type="actions" asynchronous="false" encoding="text/oql">SELECT DatabaseInstance</itopblock>
+</itopcheck>
+</td>
+<td>
+<itopcheck class="NetworkDevice">
+<img src="../modules/itop-config-mgmt-1.0.0/images/interface.png" style="float:left"></img>
+<p style="text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;"><itopstring>Class:NetworkDevice</itopstring></p>
+<itopblock BlockClass="DisplayBlock" type="count" asynchronous="false" encoding="text/oql" parameters="format:UI_CountOfObjectsShort">SELECT NetworkDevice</itopblock></p>
+<itopblock BlockClass="DisplayBlock" type="actions" asynchronous="false" encoding="text/oql">SELECT NetworkDevice</itopblock>
+</itopcheck>
+</td>
+</tr>
+</table>
+</td>
 </tr>
 </table>
 </div>
