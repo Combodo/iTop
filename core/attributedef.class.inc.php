@@ -745,6 +745,7 @@ class AttributeClass extends AttributeString
 
 	public function GetAsHTML($sValue)
 	{
+		if (empty($sValue)) return '';
 		return MetaModel::GetName($sValue);
 	}
 
@@ -822,6 +823,7 @@ class AttributeFinalClass extends AttributeString
 
 	public function GetAsHTML($sValue)
 	{
+		if (empty($sValue)) return '';
 		return MetaModel::GetName($sValue);
 	}
 }
