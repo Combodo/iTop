@@ -213,6 +213,11 @@ abstract class AttributeDefinition
 		return true;
 	}
 	 
+	public function GetMaxSize()
+	{
+		return null;
+	}
+	 
 	public function MakeValue()
 	{
 		$sComputeFunc = $this->Get("compute_func");
@@ -636,6 +641,11 @@ class AttributeString extends AttributeDBField
 		}
 	}
 
+	public function GetMaxSize()
+	{
+		return 255;
+	}
+
 	public function GetBasicFilterOperators()
 	{
 		return array(
@@ -844,6 +854,11 @@ class AttributePassword extends AttributeString
 	public function GetEditClass() {return "Password";}
 	protected function GetSQLCol() {return "VARCHAR(64)";}
 
+	public function GetMaxSize()
+	{
+		return 64;
+	}
+
 	public function GetFilterDefinitions()
 	{
 	// Note: due to this, you will get an error if a password is being declared as a search criteria (see ZLists)
@@ -886,6 +901,11 @@ class AttributeEncryptedString extends AttributeString
 	}
 
 	protected function GetSQLCol() {return "TINYBLOB";}	
+
+	public function GetMaxSize()
+	{
+		return 255;
+	}
 
 	public function GetFilterDefinitions()
 	{
@@ -935,6 +955,13 @@ class AttributeText extends AttributeString
 	public function GetTypeDesc() {return "Multiline character string";}
 	public function GetEditClass() {return "Text";}
 	protected function GetSQLCol() {return "TEXT";}
+
+	public function GetMaxSize()
+	{
+		// Is there a way to know the current limitation for mysql?
+		// See mysql_field_len()
+		return 65535;
+	}
 
 	public function GetAsHTML($sValue)
 	{
@@ -2082,6 +2109,10 @@ class AttributeTable extends AttributeText
 	public function GetEditClass() {return "Text";}
 	protected function GetSQLCol() {return "TEXT";}
 
+	public function GetMaxSize()
+	{
+		return null;
+	}
 
 	// Facilitate things: allow the user to Set the value from a string
 	public function MakeRealValue($proposedValue)

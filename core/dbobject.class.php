@@ -636,7 +636,15 @@ abstract class DBObject
 					return "Value not allowed [$toCheck]";
 				}
 			}
-			elseif (!$oAtt->CheckFormat($toCheck))
+			if (!is_null($iMaxSize = $oAtt->GetMaxSize()))
+			{
+				$iLen = strlen($toCheck);
+				if ($iLen > $iMaxSize)
+				{
+					return "String too long (found $iLen, limited to $iMaxSize)";
+				}
+			}
+			if (!$oAtt->CheckFormat($toCheck))
 			{
 				return "Wrong format [$toCheck]";
 			}
