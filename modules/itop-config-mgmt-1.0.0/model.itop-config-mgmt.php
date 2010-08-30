@@ -1467,7 +1467,7 @@ class lnkProcessToSolution extends cmdbAbstractObject
 ////////////////////////////////////////////////////////////////////////////////////
 // Create the top-level group. fRank = 1, means it will be inserted after the group '0', which is usually 'Welcome'
 
-$oAdminMenu = new MenuGroup('DataAdministration', 70);
+$oAdminMenu = new MenuGroup('DataAdministration', 70 /* fRank */, 'Organization', UR_ACTION_MODIFY, UR_ALLOWED_YES|UR_ALLOWED_DEPENDS);
 $iAdminGroup = $oAdminMenu->GetIndex();
 
 new WebPageMenuNode('Audit', '../pages/audit.php', $iAdminGroup, 33 /* fRank */);

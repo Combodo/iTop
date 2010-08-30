@@ -99,6 +99,7 @@ class ApplicationMenu
 		{
 			$oMenuNode = self::GetMenuNode($aMenu['index']);
 			if (($oMenuNode->GetMenuId() == 'AdminTools') && (!UserRights::IsAdministrator())) continue; // Don't display the admin menu for non admin users
+			if (!$oMenuNode->IsEnabled()) continue; // Don't display a non-enabled menu
 			$oPage->AddToMenu('<h3>'.$oMenuNode->GetTitle().'</h3>');
 			$oPage->AddToMenu('<div>');
 			$aChildren = self::GetChildren($aMenu['index']);
@@ -260,18 +261,39 @@ class ApplicationMenu
 abstract class MenuNode
 {
 	protected $sMenuId;
-	protected $index = null;
+	protected $index;
+
+	/**
+	 * Class of objects to check if the menu is enabled, null if none
+	 */
+	protected $m_sEnableClass;
+
+	/**
+	 * User Rights Action code to check if the menu is enabled, null if none
+	 */
+	protected $m_iEnableAction;
+
+	/**
+	 * User Rights allowed results (actually a bitmask) to check if the menu is enabled, null if none
+	 */
+	protected $m_iEnableActionResults;
 	
 	/**
-	 * Create a menu item and inserts it into the application's main menu
+	 * Create a menu item, sets the condition to have it displayed and inserts it into the application's main menu
 	 * @param string $sMenuId Unique identifier of the menu (used to identify the menu for bookmarking, and for getting the labels from the dictionary)
 	 * @param integer $iParentIndex ID of the parent menu, pass -1 for top level (group) items
 	 * @param float $fRank Number used to order the list, any number will do, but for a given level (i.e same parent) all menus are sorted based on this value
+	 * @param string $sEnableClass Name of class of object
+	 * @param integer $iActionCode Either UR_ACTION_READ, UR_ACTION_MODIFY, UR_ACTION_DELETE, UR_ACTION_BULKREAD, UR_ACTION_BULKMODIFY or UR_ACTION_BULKDELETE
+	 * @param integer $iAllowedResults Expected "rights" for the action: either UR_ALLOWED_YES, UR_ALLOWED_NO, UR_ALLOWED_DEPENDS or a mix of them...
 	 * @return MenuNode
 	 */
-	public function __construct($sMenuId, $iParentIndex = -1, $fRank = 0)
+	public function __construct($sMenuId, $iParentIndex = -1, $fRank = 0, $sEnableClass = null, $iActionCode = null, $iAllowedResults = UR_ALLOWED_YES)
 	{
 		$this->sMenuId = $sMenuId;
+		$this->m_sEnableClass = $sEnableClass;
+		$this->m_iEnableAction = $iActionCode;
+		$this->m_iEnableActionResults = $iAllowedResults;
 		$this->index = ApplicationMenu::InsertMenu($this, $iParentIndex, $fRank);
 	}
 	
@@ -307,6 +329,18 @@ abstract class MenuNode
 	 */
 	public function IsEnabled()
 	{
+		if ($this->m_sEnableClass != null)
+		{
+			if (MetaModel::IsValidClass($this->m_sEnableClass))
+			{
+				$iResult = UserRights::IsActionAllowed($this->m_sEnableClass, $this->m_iEnableAction);
+				if (($iResult & $this->m_iEnableActionResults))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
 		return true;
 	}
 	
@@ -342,11 +376,14 @@ class MenuGroup extends MenuNode
 	 * Create a top-level menu group and inserts it into the application's main menu
 	 * @param string $sMenuId Unique identifier of the menu (used to identify the menu for bookmarking, and for getting the labels from the dictionary)
 	 * @param float $fRank Number used to order the list, the groups are sorted based on this value
+	 * @param string $sEnableClass Name of class of object
+	 * @param integer $iActionCode Either UR_ACTION_READ, UR_ACTION_MODIFY, UR_ACTION_DELETE, UR_ACTION_BULKREAD, UR_ACTION_BULKMODIFY or UR_ACTION_BULKDELETE
+	 * @param integer $iAllowedResults Expected "rights" for the action: either UR_ALLOWED_YES, UR_ALLOWED_NO, UR_ALLOWED_DEPENDS or a mix of them...
 	 * @return MenuGroup
 	 */
-	public function __construct($sMenuId, $fRank)
+	public function __construct($sMenuId, $fRank, $sEnableClass = null, $iActionCode = null, $iAllowedResults = UR_ALLOWED_YES)
 	{
-		parent::__construct($sMenuId, -1 /* no parent, groups are at root level */, $fRank);
+		parent::__construct($sMenuId, -1 /* no parent, groups are at root level */, $fRank, $sEnableClass, $iActionCode, $iAllowedResults);
 	}
 	
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())
@@ -369,11 +406,14 @@ class TemplateMenuNode extends MenuNode
 	 * @param string $sTemplateFile Path (or URL) to the file that will be used as a template for displaying the page's content
 	 * @param integer $iParentIndex ID of the parent menu
 	 * @param float $fRank Number used to order the list, any number will do, but for a given level (i.e same parent) all menus are sorted based on this value
+	 * @param string $sEnableClass Name of class of object
+	 * @param integer $iActionCode Either UR_ACTION_READ, UR_ACTION_MODIFY, UR_ACTION_DELETE, UR_ACTION_BULKREAD, UR_ACTION_BULKMODIFY or UR_ACTION_BULKDELETE
+	 * @param integer $iAllowedResults Expected "rights" for the action: either UR_ALLOWED_YES, UR_ALLOWED_NO, UR_ALLOWED_DEPENDS or a mix of them...
 	 * @return MenuNode
 	 */
-	public function __construct($sMenuId, $sTemplateFile, $iParentIndex, $fRank = 0)
+	public function __construct($sMenuId, $sTemplateFile, $iParentIndex, $fRank = 0, $sEnableClass = null, $iActionCode = null, $iAllowedResults = UR_ALLOWED_YES)
 	{
-		parent::__construct($sMenuId, $iParentIndex, $fRank);
+		parent::__construct($sMenuId, $iParentIndex, $fRank, $sEnableClass, $iActionCode, $iAllowedResults);
 		$this->sTemplateFile = $sTemplateFile;
 	}
 	
@@ -415,14 +455,19 @@ class OQLMenuNode extends MenuNode
 	 * @param integer $iParentIndex ID of the parent menu
 	 * @param float $fRank Number used to order the list, any number will do, but for a given level (i.e same parent) all menus are sorted based on this value
 	 * @param bool $bSearch Whether or not to display a (collapsed) search frame at the top of the page
+	 * @param string $sEnableClass Name of class of object
+	 * @param integer $iActionCode Either UR_ACTION_READ, UR_ACTION_MODIFY, UR_ACTION_DELETE, UR_ACTION_BULKREAD, UR_ACTION_BULKMODIFY or UR_ACTION_BULKDELETE
+	 * @param integer $iAllowedResults Expected "rights" for the action: either UR_ALLOWED_YES, UR_ALLOWED_NO, UR_ALLOWED_DEPENDS or a mix of them...
 	 * @return MenuNode
 	 */
-	public function __construct($sMenuId, $sOQL, $iParentIndex, $fRank = 0, $bSearch = false)
+	public function __construct($sMenuId, $sOQL, $iParentIndex, $fRank = 0, $bSearch = false, $sEnableClass = null, $iActionCode = null, $iAllowedResults = UR_ALLOWED_YES)
 	{
-		parent::__construct($sMenuId, $iParentIndex, $fRank);
+		parent::__construct($sMenuId, $iParentIndex, $fRank, $sEnableClass, $iActionCode, $iAllowedResults);
 		$this->sPageTitle = "Menu:$sMenuId+";
 		$this->sOQL = $sOQL;
 		$this->bSearch = $bSearch;
+		// Enhancement: we could set as the "enable" condition that the user has enough rights to "read" the objects
+		// of the class specified by the OQL...
 	}
 	
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())
@@ -469,11 +514,14 @@ class SearchMenuNode extends MenuNode
 	 * @param string $sPageTitle Title displayed into the page's content (will be looked-up in the dictionnary for translation)
 	 * @param integer $iParentIndex ID of the parent menu
 	 * @param float $fRank Number used to order the list, any number will do, but for a given level (i.e same parent) all menus are sorted based on this value
+	 * @param string $sEnableClass Name of class of object
+	 * @param integer $iActionCode Either UR_ACTION_READ, UR_ACTION_MODIFY, UR_ACTION_DELETE, UR_ACTION_BULKREAD, UR_ACTION_BULKMODIFY or UR_ACTION_BULKDELETE
+	 * @param integer $iAllowedResults Expected "rights" for the action: either UR_ALLOWED_YES, UR_ALLOWED_NO, UR_ALLOWED_DEPENDS or a mix of them...
 	 * @return MenuNode
 	 */
-	public function __construct($sMenuId, $sClass, $iParentIndex, $fRank = 0)
+	public function __construct($sMenuId, $sClass, $iParentIndex, $fRank = 0, $bSearch = false, $sEnableClass = null, $iActionCode = null, $iAllowedResults = UR_ALLOWED_YES)
 	{
-		parent::__construct($sMenuId, $iParentIndex, $fRank);
+		parent::__construct($sMenuId, $iParentIndex, $fRank, $sEnableClass, $iActionCode, $iAllowedResults);
 		$this->sPageTitle = "Menu:$sMenuId+";
 		$this->sClass = $sClass;
 	}
@@ -506,11 +554,14 @@ class WebPageMenuNode extends MenuNode
 	 * @param string $sHyperlink URL to the page to load. Use relative URL if you want to keep the application portable !
 	 * @param integer $iParentIndex ID of the parent menu
 	 * @param float $fRank Number used to order the list, any number will do, but for a given level (i.e same parent) all menus are sorted based on this value
+	 * @param string $sEnableClass Name of class of object
+	 * @param integer $iActionCode Either UR_ACTION_READ, UR_ACTION_MODIFY, UR_ACTION_DELETE, UR_ACTION_BULKREAD, UR_ACTION_BULKMODIFY or UR_ACTION_BULKDELETE
+	 * @param integer $iAllowedResults Expected "rights" for the action: either UR_ALLOWED_YES, UR_ALLOWED_NO, UR_ALLOWED_DEPENDS or a mix of them...
 	 * @return MenuNode
 	 */
-	public function __construct($sMenuId, $sHyperlink, $iParentIndex, $fRank = 0)
+	public function __construct($sMenuId, $sHyperlink, $iParentIndex, $fRank = 0, $sEnableClass = null, $iActionCode = null, $iAllowedResults = UR_ALLOWED_YES)
 	{
-		parent::__construct($sMenuId, $iParentIndex, $fRank);
+		parent::__construct($sMenuId, $iParentIndex, $fRank, $sEnableClass, $iActionCode, $iAllowedResults);
 		$this->sHyperlink = $sHyperlink;
 	}
 
@@ -558,6 +609,10 @@ class NewObjectMenuNode extends MenuNode
 		return $this->AddParams($sHyperlink, $aExtraParams);
 	}
 
+	/**
+	 * Overload the check of the "enable" state of this menu to take into account
+	 * derived classes of objects
+	 */
 	public function IsEnabled()
 	{
 		// Enable this menu, only if the current user has enough rights to create such an object, or an object of
