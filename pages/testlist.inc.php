@@ -237,6 +237,8 @@ a2","b","c"
 		$sDataFile = '?field1?;?field2?;?field3?
 ?a?;?b?;?c?
 a;b;c
+ ? a ? ; ? b ? ; ? c ? 
+ a ; b ; c 
 ??;??;??
 ;;
 ?a"?;?b?;?c?
@@ -256,6 +258,8 @@ a2?;?b?;?c?
 			//array('field1', 'field2', 'field3'),
 			array('a', 'b', 'c'),
 			array('a', 'b', 'c'),
+			array(' a ', ' b ', ' c '),
+			array('a', 'b', 'c'),
 			array('', '', ''),
 			array('', '', ''),
 			array('a"', 'b', 'c'),
@@ -263,7 +267,6 @@ a2?;?b?;?c?
 			array('a1,a2', 'b', 'c'),
 			array('a', 'b', "c1,\",c2\n,c3"),
 			array('a', 'b', 'ouf !'),
-			array('a', 'b', 'a'),
 		);
 	
 		$oCSVParser = new CSVParser($sDataFile, ';', '?');

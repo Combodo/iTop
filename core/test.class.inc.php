@@ -41,6 +41,8 @@ require_once('dbobject.class.php');
 require_once('dbobjectsearch.class.php');
 require_once('dbobjectset.class.php');
 
+require_once('../application/cmdbabstract.class.inc.php');
+
 require_once('userrights.class.inc.php');
 
 require_once('../webservices/webservices.class.inc.php');
