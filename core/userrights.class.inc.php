@@ -570,6 +570,8 @@ class UserRights
 		// When initializing, we need to let everything pass trough
 		if (!self::CheckLogin()) return true;
 
+		if (self::IsAdministrator($oUser)) return true;
+
 		// this module is forbidden for non admins
 		if (MetaModel::HasCategory($sClass, 'addon/userrights')) return false;
 
