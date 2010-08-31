@@ -277,7 +277,9 @@ class ActionEmail extends ActionNotification
 				}
 				else
 				{
+					$oKPI = new ExecutionKPI();
 					$this->m_aMailErrors = array_merge($this->m_aMailErrors, $oEmail->Send());
+					$oKPI->ComputeStats('Send mail', $sTo);
 				}
 			}
 		}
