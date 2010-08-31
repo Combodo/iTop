@@ -186,7 +186,7 @@ function DisplayLifecycle($oPage, $sClass)
 		{
 			$sStateLabel = MetaModel::GetStateLabel($sClass, $sStateCode);
 			$sStateDescription = MetaModel::GetStateDescription($sClass, $sStateCode);
-			$oPage->add("<li title=\"code: $sStateCode\">$sStateLabel <span style=\"color:grey;\">($sStateDescription)</span></li>\n");
+			$oPage->add("<li title=\"code: $sStateCode\">$sStateLabel <span style=\"color:grey;\">($sStateCode) $sStateDescription</span></li>\n");
 			$oPage->add("<ul>\n");
 			foreach(MetaModel::EnumTransitions($sClass, $sStateCode) as $sStimulusCode => $aTransitionDef)
 			{
@@ -212,7 +212,7 @@ function DisplayLifecycle($oPage, $sClass)
 		{
 			$sStateLabel = MetaModel::GetStateLabel($sClass, $sStateCode);
 			$sStateDescription = MetaModel::GetStateDescription($sClass, $sStateCode);
-			$oPage->add("<li title=\"code: $sStateCode\">$sStateLabel <span style=\"color:grey;\">($sStateDescription)</span></li>\n");
+			$oPage->add("<li title=\"code: $sStateCode\">$sStateLabel <span style=\"color:grey;\">($sStateCode) $sStateDescription</span></li>\n");
 			if (count($aStates[$sStateCode]['attribute_list']) > 0)
 			{
 				$oPage->add("<ul>\n");
