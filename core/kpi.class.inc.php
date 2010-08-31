@@ -52,6 +52,8 @@ class ExecutionKPI
 			echo "====================<br/>\n";
 			$fTotalOp = 0;
 			$iTotalOp = 0;
+			$fMinOp = null;
+			$fMaxOp = 0;
 			foreach ($aOpStats as $sArguments => $aEvents)
 			{
 				$fTotalInter = 0;
@@ -60,12 +62,18 @@ class ExecutionKPI
 				{
 					$fTotalInter += $fDuration;
 					$iTotalInter++;
+
+					$fMinOp = is_null($fMinOp) ? $fDuration : min($fMinOp, $fDuration);
+					$fMaxOp = max($fMaxOp, $fDuration);
 				}
 				$fTotalOp += $fTotalInter;
 				$iTotalOp++;
 				echo "$sArguments: $iTotalInter (".round($fTotalInter, 3).")<br/>\n";
 			}
 			echo "Total: $iTotalOp (".round($fTotalOp, 3).")<br/>\n";
+			echo "Min: ".round($fMinOp, 3)."<br/>\n";
+			echo "Max: ".round($fMaxOp, 3)."<br/>\n";
+			echo "Avg: ".round($fTotalOp / $iTotalOp, 3)."<br/>\n";
 			echo "====================<br/>\n";
 		}
 	}

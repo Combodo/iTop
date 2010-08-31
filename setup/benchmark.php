@@ -218,7 +218,9 @@ class BenchmarkDataCreation
 		}
 		elseif ($iCount == 1)
 		{
-			$aSample = array(array_rand($aData));
+			// array_rand() for one item returns only the key
+			$key = array_rand($aData);
+			$aSample = array($key);
 		}
 		elseif ($iCount <= count($aData))
 		{
@@ -226,7 +228,7 @@ class BenchmarkDataCreation
 		}
 		else
 		{
-			$aSample = array_merge(array_rand($aData, count($aData)), self::my_array_rand($aData, $iCount - count($aData)));
+			$aSample = array_merge(array_keys($aData), self::my_array_rand($aData, $iCount - count($aData)));
 		}
 		return $aSample;
 	}
@@ -239,11 +241,11 @@ class BenchmarkDataCreation
 		$aTargets = self::GetClassIds($sToClass);
 		$aSample = self::my_array_rand($aTargets, $iCount);
 
-		for($iLinked = 0 ; $iLinked < $iCount ; $iLinked++)
+		foreach($aSample as $key)
 		{
 			$aData = array(
 				$sAttCodeFrom => $iFrom,
-				$sAttCodeTo => $aSample[$iLinked],
+				$sAttCodeTo => $aTargets[$key],
 			);
 			$this->CreateObject($sLinkClass, $aData);
 		}
@@ -284,7 +286,7 @@ class BenchmarkDataCreation
 			'location_id' => self::FindId('Location'),
 			'first_name' => 'Jesus',
 			'name' => 'Deus',
-			'email' => '',
+			'email' => 'guru@combodo.com',
 		);
 		$iPerson = $this->CreateObject('Person', $aData);
 		$aData = array(
@@ -312,7 +314,7 @@ class BenchmarkDataCreation
 			'location_id' => self::FindId('Location'),
 			'first_name' => 'Little ze',
 			'name' => 'Foo',
-			'email' => '',
+			'email' => 'foo@combodo.com',
 		);
 		$iPerson = $this->CreateObject('Person', $aData);
 		$aData = array(
@@ -362,7 +364,7 @@ class BenchmarkDataCreation
 			'org_id' => $iOrg,
 			'location_id' => $iLoc,
 			'name' => 'Fluminense',
-			'email' => 'fluminense@nowhere.fr',
+			'email' => 'fluminense@combodo.com',
 		);
 		$iTeam = $this->CreateObject('Team', $aData);
 	
@@ -398,7 +400,7 @@ class BenchmarkDataCreation
 			'org_id' => $iOrg,
 			'name' => 'My Service',
 		);
-		$iOrg = $this->CreateObject('Service', $aData);
+		$iService = $this->CreateObject('Service', $aData);
 
 		/////////////////////////
 		//
@@ -406,6 +408,7 @@ class BenchmarkDataCreation
 		//
 		$aData = array(
 			'name' => 'My subcategory',
+			'service_id' => $iService,
 		);
 		$iOrg = $this->CreateObject('ServiceSubcategory', $aData);
 
@@ -617,6 +620,7 @@ class BenchmarkDataCreation
 				'service_id' => $this->RandomId('Service'),
 				'servicesubcategory_id' => $this->RandomId('ServiceSubcategory'),
 				'title' => 'Incident #'.$i,
+				'description' => 'O que aconteceu?',
 				'ticket_log' => 'Testing...',
 			);
 			$iTicket = $this->CreateObject('Incident', $aData);
@@ -642,6 +646,7 @@ class BenchmarkDataCreation
 			'service_id' => $this->RandomId('Service'),
 			'servicesubcategory_id' => $this->RandomId('ServiceSubcategory'),
 			'title' => 'Big ticket',
+			'description' => 'O que aconteceu?',
 			'ticket_log' => 'Testing...',
 		);
 		$iTicket = $this->CreateObject('Incident', $aData);
@@ -777,6 +782,9 @@ LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 $sOperation = Utils::ReadParam('operation', 'step1');
 $oP = new SetupWebPage('iTop benchmark utility');
 
+ExecutionKPI::EnableDuration();
+$oKPI = new ExecutionKPI();
+
 try
 {
 	switch($sOperation)
@@ -862,5 +870,6 @@ catch(ZZCoreException $e)
 {
 	$oP->error("Error: '".$e->getHtmlDesc()."'");	
 }
+$oKPI->ComputeAndReport('Total execution');
 $oP->output();
 ?>
