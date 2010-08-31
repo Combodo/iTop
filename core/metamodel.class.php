@@ -47,6 +47,18 @@ define('ENUM_CHILD_CLASSES_EXCLUDETOP', 1);
  * @package     iTopORM
  */
 define('ENUM_CHILD_CLASSES_ALL', 2);
+/**
+ * add some description here... 
+ *
+ * @package     iTopORM
+ */
+define('ENUM_PARENT_CLASSES_EXCLUDELEAF', 1);
+/**
+ * add some description here... 
+ *
+ * @package     iTopORM
+ */
+define('ENUM_PARENT_CLASSES_ALL', 2);
 
 /**
  * Specifies that this attribute is visible/editable.... normal (default config) 
@@ -1209,6 +1221,19 @@ abstract class MetaModel
 				self::$m_aAttribOrigins[$sTargetClass] = array();
 			}
 			self::$m_aAttribDefs[$sTargetClass] = self::object_array_mergeclone(self::$m_aAttribDefs[$sTargetClass], self::$m_aAttribDefs[$sSourceClass]);
+			// Note: while investigating on some issues related to attribute inheritance,
+			//       I found out that the notion of "host class" is unclear
+			//       For stability reasons, and also because a workaround has been found
+			//       I leave it unchanged, but later it could be a good thing to force
+			//       attribute host class to the new class (See code below)
+			//       In that case, we will have to review the attribute labels
+			//       (currently relying on host class => the original declaration
+			//       of the attribute)
+			//       See TRAC #148
+			//       foreach(self::$m_aAttribDefs[$sTargetClass] as $sAttCode => $oAttDef)
+			//       {
+			//       	$oAttDef->SetHostClass($sTargetClass);
+			//       }
 			self::$m_aAttribOrigins[$sTargetClass] = array_merge(self::$m_aAttribOrigins[$sTargetClass], self::$m_aAttribOrigins[$sSourceClass]);
 		}
 		// Build root class information
@@ -1417,10 +1442,16 @@ abstract class MetaModel
 	{
 		return array_unique(self::$m_aRootClasses);
 	}
-	public static function EnumParentClasses($sClass)
+	public static function EnumParentClasses($sClass, $iOption = ENUM_PARENT_CLASSES_EXCLUDELEAF)
 	{
 		self::_check_subclass($sClass);	
-		return self::$m_aParentClasses[$sClass];
+		if ($iOption == ENUM_PARENT_CLASSES_EXCLUDELEAF)
+		{
+			return self::$m_aParentClasses[$sClass];
+		}
+		$aRes = self::$m_aParentClasses[$sClass];
+		$aRes[] = $sClass;
+		return $aRes;
 	}
 	public static function EnumChildClasses($sClass, $iOption = ENUM_CHILD_CLASSES_EXCLUDETOP)
 	{

@@ -238,14 +238,15 @@ abstract class cmdbAbstractObject extends CMDBObject
 			// If any trigger has been found then display a tab with notifications
 			//			
 			$sClass = get_class($this);
-			$oTriggerSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObject AS T WHERE T.target_class = '$sClass'"));
+			$sClassList = implode("', '", MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
+			$oTriggerSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObject AS T WHERE T.target_class IN ('$sClassList')"));
 			if ($oTriggerSet->Count() > 0)
 			{
 				$oPage->SetCurrentTab(Dict::S('UI:NotificationsTab'));
 		
 				// Display notifications regarding the object
 				$iId = $this->GetKey();
-				$oNotifSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT EventNotificationEmail AS Ev JOIN TriggerOnObject AS T ON Ev.trigger_id = T.id WHERE T.target_class = '$sClass' AND Ev.object_id = $iId"));
+				$oNotifSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT EventNotificationEmail AS Ev JOIN TriggerOnObject AS T ON Ev.trigger_id = T.id WHERE T.target_class IN ('$sClassList') AND Ev.object_id = $iId"));
 				self::DisplaySet($oPage, $oNotifSet);
 			}
 		}

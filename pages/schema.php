@@ -255,7 +255,8 @@ function DisplayLifecycle($oPage, $sClass)
  */
 function DisplayTriggers($oPage, $sClass)
 {
-	$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnStateChange WHERE target_class = '$sClass'"));
+	$sClassList = implode("', '", MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
+	$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObject WHERE target_class IN ('$sClassList')"));
 	cmdbAbstractObject::DisplaySet($oPage, $oSet);
 }
 
