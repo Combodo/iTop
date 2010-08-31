@@ -184,7 +184,7 @@ function CheckPHPVersion(SetupWebPage $oP)
 		else
 		{
 			$aMissingExtensions[] = $sExtension;
-			$aMissingExtensionsLinks[] = "<a href=\"http://www.php.net/manual/en/book.$sExtension.php\">$sExtension</a>";
+			$aMissingExtensionsLinks[] = "<a href=\"http://www.php.net/manual/en/book.$sExtension.php\" target=\"_blank\">$sExtension</a>";
 		}
 	}
 	if (count($aExtensionsOk) > 0)
@@ -647,8 +647,8 @@ function LicenceAcknowledgement($oP, $aParamValues, $iCurrentStep)
 {
 	$sNextOperation = 'step'.($iCurrentStep+1);
 	
-	$oP->set_title('License Agreement');
-	$oP->add('<h2>iTop is released by <a href="http://www.combodo.com">Combodo SARL</a> under the terms of the GPL V3 license. In order to use iTop you must accept the terms of this license.</h2>');
+	$oP->set_title('License agreement');
+	$oP->add('<h2>iTop is released by <a href="http://www.combodo.com" target="_blank">Combodo SARL</a> under the terms of the GPL V3 license. In order to use iTop you must accept the terms of this license.</h2>');
 	$oP->add("<iframe style=\"width: 100%; height: 350px; overflow-y:auto; font-size:0.8em;\" src=\"./licence.html\">Next: Database server selection</iframe>\n");
 	$oP->add("<form id=\"theForm\" method=\"post\">\n");
 	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
@@ -679,7 +679,7 @@ function DatabaseServerSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep)
 	if ($aParamValues['licence_ok'] == 1)
 	{
 		$sRedStar = '<span class="hilite">*</span>';
-		$oP->set_title("Configuration of the database connection\n");
+		$oP->set_title("Database server selection\n");
 		$oP->add("<h2>Please enter the name of the MySQL database server you want to use for iTop and supply valid credentials to connect to it</h2>\n");
 		// Form goes here
 		$oP->add("<fieldset><legend>Database connection</legend>\n");
@@ -691,7 +691,7 @@ function DatabaseServerSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep)
 		$aForm[] = array('label' => 'Password:', 'input' => "<input id=\"db_pwd\" type=\"password\" name=\"db_pwd\" value=\"{$aParamValues['db_pwd']}\">");
 		$oP->form($aForm);
 		$oP->add("</fieldset>\n");
-		$oP->add("<h2 class=\"next\">Next: Database Instance Selection</h2>\n");
+		$oP->add("<h2 class=\"next\">Next: Database instance Selection</h2>\n");
 		$oP->add("<table style=\"width:100%\"><tr>\n");
 		$oP->add("<td style=\"text-align:left;\"><button type=\"button\" onClick=\"return DoGoBack($iCurrentStep)\"><< Back</button></td>\n");
 		$oP->add("<td style=\"text-align:right;\"><button type=\"submit\" onClick=\"return DoSubmit('Connecting to the database...', $iCurrentStep);\">Next >></button></td>\n");
@@ -713,7 +713,7 @@ function DatabaseServerSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep)
 function DatabaseInstanceSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, $oConfig)
 {
 	$sNextOperation = 'step'.($iCurrentStep+1);
-	$oP->set_title("Database Instance Selection\n");
+	$oP->set_title("Database instance selection\n");
 	$oP->add("<form id=\"theForm\" method=\"post\">\n");
 	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
 	AddParamsToForm($oP, $aParamValues, array('db_name', 'db_prefix', 'new_db_name'));
@@ -772,7 +772,7 @@ function DatabaseInstanceSelection(SetupWebPage $oP, $aParamValues, $iCurrentSte
 		$aForm[] = array('label' => "Add a prefix to all the tables: <input id=\"db_prefix\" type=\"text\" name=\"db_prefix\" value=\"{$aParamValues['db_prefix']}\" maxlength=\"32\"/>");
 		$oP->form($aForm);
 
-		$oP->add("<h2 class=\"next\">Next: iTop Modules Selection</h2>\n");
+		$oP->add("<h2 class=\"next\">Next: iTop modules selection</h2>\n");
 		$oP->add("<table style=\"width:100%\"><tr>\n");
 		$oP->add("<td style=\"text-align:left;\"><button type=\"button\" onClick=\"return DoGoBack($iCurrentStep)\"><< Back</button></td>\n");
 		$oP->add("<td style=\"text-align:right;\"><button type=\"submit\" onClick=\"return DoSubmit('', $iCurrentStep);\">Next >></button></td>\n");
@@ -803,7 +803,7 @@ function ModulesSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, $oConf
 	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
 	AddParamsToForm($oP, $aParamValues, array('module'));
 	$sRedStar = '<span class="hilite">*</span>';
-	$oP->set_title("Selection of the iTop Modules\n");
+	$oP->set_title("iTop modules selection");
 	$oP->add("<h2>Customize your iTop installation to fit your needs</h2>\n");
 	$aAvailableModules = GetAvailableModules($oP);
 	
@@ -828,7 +828,7 @@ function ModulesSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, $oConf
 		$sModuleHelp = $aModule['doc.more_information'];
 		$sClass = ($aModule['mandatory']) ? 'class="read-only"' : '';
 		$sChecked = ($aModule['mandatory'] ||  in_array($sModuleId, $aSelectedModules) ) ? 'checked' : '';
-		$sMoreInfo = (!empty($aModule['doc.more_information'])) ? "<a href=\"{$aModule['doc.more_information']}\" target=\"_blank\">more info</a>": '';
+		$sMoreInfo = (!empty($aModule['doc.more_information'])) ? "<a href=\"..{$aModule['doc.more_information']}\" target=\"_blank\">more info</a>": '';
 		if ($aModule['category'] == 'authentication')
 		{
 			// For now authentication modules are always on and hidden
@@ -849,7 +849,7 @@ function ModulesSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, $oConf
 	}	
 	$oP->add("</div>");
 	$oP->add("</fieldset>\n");
-	$oP->add("<h2 class=\"next\">Next: Administrator Account Creation</h2>\n");
+	$oP->add("<h2 class=\"next\">Next: Administrator account creation</h2>\n");
 	$oP->add("<table style=\"width:100%\"><tr>\n");
 	$oP->add("<td style=\"text-align:left;\"><button type=\"button\" onClick=\"return DoGoBack($iCurrentStep)\"><< Back</button></td>\n");
 	$oP->add("<td style=\"text-align:right;\"><button type=\"submit\" onClick=\"return DoSubmit('Creating the database structure...', $iCurrentStep);\">Next >></button></td>\n");
@@ -868,7 +868,7 @@ function ModulesSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, $oConf
 function AdminAccountDefinition(SetupWebPage $oP, $aParamValues, $iCurrentStep, Config $oConfig)
 {
 	$sNextOperation = 'step'.($iCurrentStep+1);
-	$oP->set_title("Configuration of the admin account");
+	$oP->set_title("Administrator account creation");
 	$oP->add("<h2>Creation of the database structure</h2>");
 	$oP->add("<form id=\"theForm\" method=\"post\">\n");
 	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
@@ -910,7 +910,7 @@ function AdminAccountDefinition(SetupWebPage $oP, $aParamValues, $iCurrentStep, 
 		$aForm[] = array('label' => "Retype password$sRedStar:", 'input' => "<input  id=\"auth_pwd2\" type=\"password\" name=\"auth_pwd2\" value=\"{$aParamValues['auth_pwd']}\">");
 		$oP->form($aForm);
 		$oP->add("</fieldset>\n");
-		$oP->add("<h2 class=\"next\">Next: Administrator Account Creation</h2>\n");
+		$oP->add("<h2 class=\"next\">Next: Application initialization</h2>\n");
 		$oP->add("<table style=\"width:100%\"><tr>\n");
 		$oP->add("<td style=\"text-align:left;\"><button type=\"button\" onClick=\"return DoGoBack($iCurrentStep)\"><< Back</button></td>\n");
 		$oP->add("<td style=\"text-align:right;\"><button type=\"submit\" onClick=\"return DoSubmit('Creating the admin account and profiles...', $iCurrentStep);\">Next >></button></td>\n");
@@ -934,7 +934,7 @@ function SampleDataSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, Con
 {
 	$sNextOperation = 'step'.($iCurrentStep+1);
 
-	$oP->set_title("Application Initialization");
+	$oP->set_title("Application initialization");
 	$sAdminUser = $aParamValues['auth_user'];
 	$sAdminPwd = $aParamValues['auth_pwd'];
 	$sLanguage = $aParamValues['language'];
@@ -952,7 +952,7 @@ function SampleDataSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, Con
 		$oP->p("<input type=\"radio\" id=\"sample_data\" name=\"sample_data\" id=\"sample_data_no\" checked value=\"yes\"><label for=\"sample_data_yes\"> Yes, for testing purposes, populate the database with sample data.</label>\n");
 		$oP->p("<input type=\"radio\" name=\"sample_data\" unchecked id=\"sample_data_no\" value=\"no\"><label for=\"sample_data_no\"> No, this is a production system, load only the data required by the application.</label>\n");
 		$oP->p("</fieldset>\n");	
-		$oP->add("<h2 class=\"next\">Next: Application Initialization</h2>\n");
+		$oP->add("<h2 class=\"next\">Next: Setup complete</h2>\n");
 		$oP->add("<table style=\"width:100%\"><tr>\n");
 		$oP->add("<td style=\"text-align:left;\"><button type=\"button\" onClick=\"return DoGoBack($iCurrentStep)\"><< Back</button></td>\n");
 		$oP->add("<td style=\"text-align:right;\"><button type=\"submit\" onClick=\"return DoSubmit('Finalizing configuration and loading data...', $iCurrentStep)\">Next >></button></td>\n");
@@ -1007,7 +1007,7 @@ function SetupFinished(SetupWebPage $oP, $aParamValues, $iCurrentStep, Config $o
 			// try to make the final config file read-only
 			@chmod(FINAL_CONFIG_FILE, 0440); // Read-only for owner and group, nothing for others
 			
-			$oP->set_title("Configuration completed");
+			$oP->set_title("Setup complete");
 			$oP->add("<form id=\"theForm\" method=\"get\" action=\"../index.php\">\n");
 
 			// Check if there are some manual steps required:
@@ -1037,12 +1037,12 @@ function SetupFinished(SetupWebPage $oP, $aParamValues, $iCurrentStep, Config $o
 			// Form goes here.. No back button since the job is done !
 			$oP->add("<h1>Let us know what you think about iTop</h1>");
 			$oP->add('<table style="width:100%;border:0;padding:0;"><tr><td style="width:100px;vertical-align:middle;background:#f6f6f1;text-align:center">');
-			$oP->add('<a href="http://www.combodo.com" style="padding:0;background:transparent;margin:0;"><img style="border:0" src="../images/logo-combodo.png"></a></td>');
+			$oP->add('<a href="http://www.combodo.com" style="padding:0;background:transparent;margin:0;" target="_blank"><img style="border:0" src="../images/logo-combodo.png"></a></td>');
 			$oP->add('<td style="padding-left: 10px;font-size:10pt">');
 			$oP->add("Combodo built iTop because Combodo believes that modern ITIL tools should be at the center of any IT department.");
 			$oP->p("Combodo invested a lot of time and effort in iTop, but you can help us improve it even further by providing your feedbacks</p>");
 			$oP->p("<a href=\"http://www.combodo.com/register?product=iTop&version=".urlencode(ITOP_VERSION." revision ".ITOP_REVISION)."\" target=\"_blank\">Register online</a> to get informed about all iTop related events (new versions, webinars, etc...)");
-			$oP->p("Check out the <a href=\"http://www.combodo.com/itopsupport\">support options</a> available for iTop.");
+			$oP->p("Check out the <a href=\"http://www.combodo.com/itopsupport\" target=\"_blank\">support options</a> available for iTop.");
 			$oP->add('</td></tr></table>');
 			$oP->add("<p style=\"text-align:center;width:100%\"><button type=\"submit\">Enter iTop</button></p>\n");
 			$oP->add("</form>\n");
