@@ -499,6 +499,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:CSVImport:HeaderSearch' => 'Recherche ?',
 	'UI:CSVImport:AlertIncompleteMapping' => 'Veuillez choisir le correspondance de chacun des champs.',
 	'UI:CSVImport:AlertNoSearchCriteria' => 'Veuillez choisir au moins une clef de recherche.',
+	'UI:CSVImport:Encoding' => 'Encodage des caractères',	
 
 	'UI:UniversalSearchTitle' => 'iTop - Recherche Universelle',
 	'UI:UniversalSearch:Error' => 'Erreur : %1$s',

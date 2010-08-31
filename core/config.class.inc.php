@@ -138,6 +138,12 @@ class Config
 	 */
 	 protected $m_sEncryptionKey;
 
+	/**
+	 * @var array Additional character sets to be supported by the interactive CSV import
+	 *            'iconv_code' => 'display name'
+	 */
+	 protected $m_aCharsets;
+
 	public function __construct($sConfigFile, $bLoadConfig = true)
 	{
 		$this->m_sFile = $sConfigFile;
@@ -192,6 +198,7 @@ class Config
 		$this->m_sAllowedLoginTypes = DEFAULT_ALLOWED_LOGIN_TYPES;
 		$this->m_sExtAuthVariable = DEFAULT_EXT_AUTH_VARIABLE;
 		$this->m_sEncryptionKey = DEFAULT_ENCRYPTION_KEY;
+		$this->m_aCharsets = array();
 		
 		$this->m_aModuleSettings = array();
 
@@ -296,6 +303,7 @@ class Config
 		$this->m_sAllowedLoginTypes = isset($MySettings['allowed_login_types']) ? trim($MySettings['allowed_login_types']) : DEFAULT_ALLOWED_LOGIN_TYPES;
 		$this->m_sExtAuthVariable = isset($MySettings['ext_auth_variable']) ? trim($MySettings['ext_auth_variable']) : DEFAULT_EXT_AUTH_VARIABLE;
 		$this->m_sEncryptionKey = isset($MySettings['encryption_key']) ? trim($MySettings['encryption_key']) : DEFAULT_ENCRYPTION_KEY;
+		$this->m_aCharsets = isset($MySettings['csv_import_charsets']) ? $MySettings['csv_import_charsets'] : array();
 	}
 
 	protected function Verify()
@@ -473,6 +481,11 @@ class Config
 		return $this->m_sExtAuthVariable;
 	}
 
+	public function GetCSVImportCharsets()
+	{
+		return $this->m_aCharsets;
+	}
+	
 	public function SetDBHost($sDBHost)
 	{
 		$this->m_sDBHost = $sDBHost;
@@ -568,6 +581,15 @@ class Config
 		$this->m_sEncryptionKey = $sKey;
 	}
 
+	public function SetCSVImportCharsets($aCharsets)
+	{
+		$this->m_aCharsets = $aCharsets;
+	}
+
+	public function AddCSVImportCharset($sIconvCode, $sDisplayName)
+	{
+		$this->m_aCharsets[$sIconvCode] = $sDisplayName;
+	}	
 	public function FileIsWritable()
 	{
 		return is_writable($this->m_sFile);
@@ -618,6 +640,9 @@ class Config
 			fwrite($hFile, "\t'default_language' => '{$this->m_sDefaultLanguage}',\n");
 			fwrite($hFile, "\t'allowed_login_types' => '{$this->m_sAllowedLoginTypes}',\n");
 			fwrite($hFile, "\t'encryption_key' => '{$this->m_sEncryptionKey}',\n");
+			$sExport = var_export($this->m_aCharsets, true);
+			fwrite($hFile, "\t'csv_import_charsets' => $sExport,\n");
+
 			fwrite($hFile, ");\n");
 
 			fwrite($hFile, "\n");

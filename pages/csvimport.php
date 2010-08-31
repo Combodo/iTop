@@ -232,6 +232,7 @@ function ProcessCSVData(WebPage $oPage, $bSimulate = true)
 	$aSearchFields = utils::ReadParam('search_field', array());
 	$iCurrentStep = $bSimulate ? 4 : 5;
 	$bAdvanced = utils::ReadParam('advanced', 0);
+	$sEncoding = utils::ReadParam('encoding', 'UTF-8');
 	
 	// Parse the data set
 	$oCSVParser = new CSVParser($sCSVData, $sSeparator, $sTextQualifier);
@@ -476,6 +477,7 @@ function ProcessCSVData(WebPage $oPage, $bSimulate = true)
 	$oPage->add('<input type="hidden" name="csvdata_truncated" value="'.htmlentities($sCSVDataTruncated, ENT_QUOTES, 'UTF-8').'"/>');
 	$oPage->add('<input type="hidden" name="class_name" value="'.$sClassName.'"/>');
 	$oPage->add('<input type="hidden" name="advanced" value="'.$bAdvanced.'"/>');
+	$oPage->add('<input type="hidden" name="encoding" value="'.$sEncoding.'"/>');
 	foreach($aFieldsMapping as $iNumber => $sAttCode)
 	{
 		$oPage->add('<input type="hidden" name="field['.$iNumber.']" value="'.$sAttCode.'"/>');
@@ -603,6 +605,7 @@ function SelectMapping(WebPage $oPage)
 	}
 	$sClassName = utils::ReadParam('class_name', '');
 	$bAdvanced = utils::ReadParam('advanced', 0);
+	$sEncoding = utils::ReadParam('encoding', 'UTF-8');
 
 	$oPage->add('<h2>'.Dict::S('UI:Title:CSVImportStep3').'</h2>');
 	$oPage->add('<div class="wizContainer">');
@@ -619,7 +622,7 @@ function SelectMapping(WebPage $oPage)
 	$oPage->add('<input type="hidden" name="nb_skipped_lines" value="'.$iSkippedLines.'"/>');
 	$oPage->add('<input type="hidden" name="csvdata_truncated" id="csvdata_truncated" value="'.htmlentities($sCSVDataTruncated, ENT_QUOTES, 'UTF-8').'"/>');
 	$oPage->add('<input type="hidden" name="csvdata" value="'.htmlentities($sCSVData, ENT_QUOTES, 'UTF-8').'"/>');
-	$oPage->add('<input type="hidden" name="_charset_"/>');
+	$oPage->add('<input type="hidden" name="encoding" value="'.$sEncoding.'">');
 	$oPage->add('<p><input type="button" value="'.Dict::S('UI:Button:Back').'" onClick="CSVGoBack()"/>&nbsp;&nbsp;');
 	$oPage->add('<input type="submit" value="'.Dict::S('UI:Button:SimulateImport').'"/></p>');
 	$oPage->add('</form>');
@@ -670,6 +673,7 @@ EOF
 			var header_line = $('input[name=header_line]').val();
 			var nb_lines_skipped = $('input[name=nb_skipped_lines]').val();
 			var csv_data = $('input[name=csvdata]').val();
+			var encoding = $('input[name=encoding]').val();
 			if (advanced != 1)
 			{
 				advanced = 0;
@@ -687,7 +691,7 @@ EOF
 			ajax_request = $.post('ajax.csvimport.php',
 				   { operation: 'display_mapping_form', enctype: 'multipart/form-data', csvdata: csv_data, separator: separator, 
 				   	 qualifier: text_qualifier, nb_lines_skipped: nb_lines_skipped, header_line: header_line, class_name: class_name,
-				   	 advanced: advanced },
+				   	 advanced: advanced, encoding: encoding },
 				   function(data) {
 					 $('#mapping').empty();
 					 $('#mapping').append(data);
@@ -823,8 +827,19 @@ function SelectOptions(WebPage $oPage)
 		default:
 		$sCSVData = utils::ReadParam('csvdata', '', 'post');
 	}
-	
-	$aGuesses = GuessParameters($sCSVData); // Try to predict the parameters, based on the input data
+	$sEncoding = utils::ReadParam('encoding', 'UTF-8');
+
+	// Compute a subset of the data set, now that we know the charset
+	if ($sEncoding == 'UTF-8')
+	{
+		$sUTF8Data = $sCSVData;		
+	}
+	else
+	{
+		$sUTF8Data = iconv($sEncoding, 'UTF-8//IGNORE//TRANSLIT', $sCSVData);
+	}
+
+	$aGuesses = GuessParameters($sUTF8Data); // Try to predict the parameters, based on the input data
 	
 	$sSeparator = utils::ReadParam('separator', '');
 	if ($sSeparator == '') // May be set to an empty value by the previous page
@@ -848,23 +863,23 @@ function SelectOptions(WebPage $oPage)
 	// Create a truncated version of the data used for the fast preview
 	// Take about 20 lines of data... knowing that some lines may contain carriage returns
 	$iMaxLines = 20;
-	$iMaxLen = strlen($sCSVData);
+	$iMaxLen = strlen($sUTF8Data);
 	$iCurPos = true;
 	while ( ($iCurPos > 0) && ($iMaxLines > 0))
 	{
-		$pos = strpos($sCSVData, "\n", $iCurPos);
+		$pos = strpos($sUTF8Data, "\n", $iCurPos);
 		if ($pos !== false)
 		{
 			$iCurPos = 1+$pos;
 		}
 		else
 		{
-			$iCurPos = strlen($sCSVData);
+			$iCurPos = strlen($sUTF8Data);
 			$iMaxLines = 1;
 		}
 		$iMaxLines--;
 	}
-	$sCSVDataTruncated = substr($sCSVData, 0, $iCurPos);
+	$sCSVDataTruncated = substr($sUTF8Data, 0, $iCurPos);
 	
 	$oPage->add('<h2>'.Dict::S('UI:Title:CSVImportStep2').'</h2>');
 	$oPage->add('<div class="wizContainer">');
@@ -888,7 +903,7 @@ function SelectOptions(WebPage $oPage)
 	$oPage->add('<p><input type="checkbox" name="box_skiplines" value="1" id="box_skiplines" onChange="DoPreview()"'.IsChecked($bBoxSkipLines, 1).'/> '.Dict::Format('UI:CSVImport:Skip_N_LinesAtTheBeginning', '<input type="text" size=2 name="nb_skipped_lines" id="nb_skipped_lines" onChange="DoPreview()" value="'.$iSkippedLines.'">').'<p>');
 	$oPage->add('</td></tr></table>');
 	$oPage->add('<input type="hidden" name="csvdata_truncated" id="csvdata_truncated" value="'.htmlentities($sCSVDataTruncated, ENT_QUOTES, 'UTF-8').'"/>');
-	$oPage->add('<input type="hidden" name="csvdata" id="csvdata" value="'.htmlentities($sCSVData, ENT_QUOTES, 'UTF-8').'"/>');
+	$oPage->add('<input type="hidden" name="csvdata" id="csvdata" value="'.htmlentities($sUTF8Data, ENT_QUOTES, 'UTF-8').'"/>');
 	$oPage->add('<input type="hidden" name="class_name" value="'.$sClassName.'"/>');
 	$oPage->add('<input type="hidden" name="advanced" value="'.$bAdvanced.'"/>');
 	$oPage->add('<input type="hidden" name="step" value="3"/>');
@@ -933,6 +948,7 @@ function SelectOptions(WebPage $oPage)
 		{
 			header_line = 1;
 		}
+		var encoding = $('input[name=encoding]').val();
 
 		$('#preview').block();
 		
@@ -945,7 +961,7 @@ function SelectOptions(WebPage $oPage)
 		}
 		
 		ajax_request = $.post('ajax.csvimport.php',
-			   { operation: 'parser_preview', enctype: 'multipart/form-data', csvdata: $("#csvdata_truncated").val(), separator: separator, qualifier: text_qualifier, nb_lines_skipped: nb_lines_skipped, header_line: header_line },
+			   { operation: 'parser_preview', enctype: 'multipart/form-data', csvdata: $("#csvdata_truncated").val(), separator: separator, qualifier: text_qualifier, nb_lines_skipped: nb_lines_skipped, header_line: header_line, encoding: encoding },
 			   function(data) {
 				 $('#preview').empty();
 				 $('#preview').append(data);
@@ -965,6 +981,23 @@ EOF
  */
 function Welcome(iTopWebPage $oPage)
 {
+	// Encodings supported:
+	// ICONV_CODE => Display Name
+	// Each iconv installation supports different encodings
+	// Some reasonably common and useful encodnings are listed here
+	$aPossibleEncodings = array(
+		'UTF-8' => 'Unicode (UTF-8)',
+		'ISO-8859-1' => 'Western (ISO-8859-1)',
+		'WINDOWS-1251' => 'Cyrilic (Windows 1251)',
+		'WINDOWS-1252' => 'Western (Windows 1252)',
+		'ISO-8859-15' => 'Western (ISO-8859-15)',
+	);
+	// Some more encodings can be specified in the config file
+	$aExtraCharsets = utils::GetConfig()->GetCSVImportCharsets();
+	
+	$aPossibleEncodings = array_merge($aPossibleEncodings, $aExtraCharsets);
+	asort($aPossibleEncodings);
+
 	$oPage->add("<div><p><h1>".Dict::S('UI:Title:BulkImport+')."</h1></p></div>\n");
 	$oPage->AddTabContainer('tabs1');	
 
@@ -974,12 +1007,26 @@ function Welcome(iTopWebPage $oPage)
 	$iSkippedLines = utils::ReadParam('nb_skipped_lines', '');
 	$sClassName = utils::ReadParam('class_name', '');
 	$bAdvanced = utils::ReadParam('advanced', 0);
+	$sEncoding = utils::ReadParam('encoding', 'UTF-8');
 
 	$sFileLoadHtml = '<div><form enctype="multipart/form-data" method="post"><p>'.Dict::S('UI:CSVImport:SelectFile').'</p>'.
-			'<p><input type="file" name="csvdata"/></p>'.
-			'<p><input type="submit" value="'.Dict::S('UI:Button:Next').'"/></p>'.
-			'<p><input type="hidden" name="step" value="2"/></p>'.
-			'<p><input type="hidden" name="operation" value="file_upload"/></p>'.
+			'<p><input type="file" name="csvdata"/></p>';
+			
+	$sFileLoadHtml .= '<p>'.Dict::S('UI:CSVImport:Encoding').': ';
+	$sFileLoadHtml .= '<select name="encoding" onChange="DoPreview()"/>';
+	foreach($aPossibleEncodings as $sIconvCode => $sDisplayName )
+	{
+		$sSelected  = '';
+		if ($sEncoding == $sIconvCode)
+		{
+			$sSelected = ' selected';
+		}
+		$sFileLoadHtml .= '<option value="'.$sIconvCode.'"'.$sSelected.'>'.$sDisplayName.'</option>';
+	}
+	$sFileLoadHtml .= '</select></p>';
+	$sFileLoadHtml .= '<p><input type="submit" value="'.Dict::S('UI:Button:Next').'"/></p>'.
+			'<input type="hidden" name="step" value="2"/>'.
+			'<input type="hidden" name="operation" value="file_upload"/>'.
 			'<input type="hidden" name="header_line" value="'.$bHeaderLine.'"/>'.
 			'<input type="hidden" name="nb_skipped_lines" value="'.$iSkippedLines.'"/>'.
 			'<input type="hidden" name="class_name" value="'.$sClassName.'"/>'.
@@ -989,7 +1036,19 @@ function Welcome(iTopWebPage $oPage)
 	$oPage->AddToTab('tabs1', Dict::S('UI:CSVImport:Tab:LoadFromFile'), $sFileLoadHtml);	
 	$sCSVData = utils::ReadParam('csvdata', '');
 	$sPasteDataHtml = '<div><form enctype="multipart/form-data" method="post"><p>'.Dict::S('UI:CSVImport:PasteData').'</p>'.
-			'<p><textarea cols="100" rows="30" name="csvdata">'.htmlentities($sCSVData, ENT_QUOTES, 'UTF-8').'</textarea></p>'.
+					  '<p><textarea cols="100" rows="30" name="csvdata">'.htmlentities($sCSVData, ENT_QUOTES, 'UTF-8').'</textarea></p>';
+	$sPasteDataHtml .= '<p>'.Dict::S('UI:CSVImport:Encoding').': ';
+	$sPasteDataHtml .= '<select name="encoding" onChange="DoPreview()"/>';
+	foreach($aPossibleEncodings as $sIconvCode => $sDisplayName )
+	{
+		$sSelected  = '';
+		if ($sEncoding == $sIconvCode)
+		{
+			$sSelected = ' selected';
+		}
+		$sPasteDataHtml .= '<option value="'.$sIconvCode.'"'.$sSelected.'>'.$sDisplayName.'</option>';
+	}
+	$sPasteDataHtml .= '</select></p>'.
 			'<p><input type="submit" value="'.Dict::S('UI:Button:Next').'"/></p>'.
 			'<input type="hidden" name="step" value="2"/>'.
 			'<input type="hidden" name="operation" value="csv_data"/>'.

@@ -185,6 +185,7 @@ switch($sOperation)
 	$sTextQualifier = utils::ReadParam('qualifier', '"');
 	$iLinesToSkip = utils::ReadParam('nb_lines_skipped', 0);
 	$bFirstLineAsHeader = utils::ReadParam('header_line', true);
+	$sEncoding = utils::ReadParam('encoding', 'UTF-8');
 	$sData = stripslashes(utils::ReadParam('csvdata', true));
 	$oCSVParser = new CSVParser($sData, $sSeparator, $sTextQualifier);
 	$aData = $oCSVParser->ToArray($iLinesToSkip);
@@ -246,7 +247,7 @@ switch($sOperation)
 	$sData = stripslashes(utils::ReadParam('csvdata', true));
 	$sClassName = utils::ReadParam('class_name', '');
 	$bAdvanced = utils::ReadParam('advanced', false);
-	
+	$sEncoding = utils::ReadParam('encoding', 'UTF-8');
 	$oCSVParser = new CSVParser($sData, $sSeparator, $sTextQualifier);
 	$aData = $oCSVParser->ToArray($iLinesToSkip);
 	$iTarget = count($aData);
