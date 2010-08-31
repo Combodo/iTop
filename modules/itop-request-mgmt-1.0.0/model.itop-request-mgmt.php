@@ -92,7 +92,7 @@ new TemplateMenuNode('UserRequest:Overview', '../modules/itop-request-mgmt-1.0.0
 new NewObjectMenuNode('NewUserRequest', 'UserRequest', $oMyMenuGroup->GetIndex(), 1 /* fRank */);
 new SearchMenuNode('SearchUserRequests', 'UserRequest', $oMyMenuGroup->GetIndex(), 2 /* fRank */);
 $oShortcutNode = new TemplateMenuNode('UserRequest:Shortcuts', '', $oMyMenuGroup->GetIndex(), 3 /* fRank */);
-new OQLMenuNode('UserRequest:MyRequests', 'SELECT UserRequest WHERE agent_id = :current_contact_id', $oShortcutNode->GetIndex(), 1 /* fRank */);
+new OQLMenuNode('UserRequest:MyRequests', 'SELECT UserRequest WHERE agent_id = :current_contact_id AND status NOT IN ("closed", "resolved")', $oShortcutNode->GetIndex(), 1 /* fRank */);
 new OQLMenuNode('UserRequest:EscalatedRequests', 'SELECT UserRequest WHERE status IN ("escalated_tto", "escalated_ttr")', $oShortcutNode->GetIndex(), 2 /* fRank */);
 new OQLMenuNode('UserRequest:OpenRequests', 'SELECT UserRequest WHERE status IN ("new", "assigned", "escalated_tto", "escalated_ttr", "frozen", "resolved")', $oShortcutNode->GetIndex(), 3 /* fRank */);
 
