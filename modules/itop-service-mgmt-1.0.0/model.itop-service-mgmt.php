@@ -73,7 +73,7 @@ class ProviderContract extends Contract
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("name"),
+			"reconc_keys" => array("name","provider_id"),
 			"db_table" => "providercontract",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -104,7 +104,7 @@ class CustomerContract extends Contract
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("name"),
+			"reconc_keys" => array("name","org_id","provider_id"),
 			"db_table" => "customercontract",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -120,11 +120,45 @@ class CustomerContract extends Contract
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("support_team_id", array("targetclass"=>"Team", "jointype"=>null, "allowed_values"=>new ValueSetObjects('SELECT Team WHERE Team.org_id = :this->provider_id'), "sql"=>"support_team_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array('provider_id'))));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("support_team_name", array("allowed_values"=>null, "extkey_attcode"=>"support_team_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("sla_list", array("linked_class"=>"lnkContractToSLA", "ext_key_to_me"=>"contract_id", "ext_key_to_remote"=>"sla_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("provider_list", array("linked_class"=>"lnkCustomerContractToProviderContract", "ext_key_to_me"=>"customer_contract_id", "ext_key_to_remote"=>"provider_contract_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('name', 'org_id', 'description', 'start_date', 'end_date', 'cost', 'cost_currency', 'cost_unit', 'billing_frequency', 'contact_list', 'document_list', 'ci_list', 'provider_id', 'support_team_id', 'sla_list'));
+		MetaModel::Init_SetZListItems('details', array('name', 'org_id', 'description', 'start_date', 'end_date', 'cost', 'cost_currency', 'cost_unit', 'billing_frequency', 'contact_list', 'document_list', 'ci_list', 'provider_list','provider_id', 'support_team_id', 'sla_list'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'description', 'start_date', 'end_date', 'cost', 'cost_currency', 'cost_unit', 'billing_frequency', 'org_id', 'support_team_id'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'org_id', 'start_date', 'end_date', 'cost', 'cost_currency', 'cost_unit', 'billing_frequency', 'provider_id', 'support_team_id'));
 		MetaModel::Init_SetZListItems('list', array('name', 'org_id', 'start_date', 'end_date', 'provider_id', 'support_team_id'));
+	}
+}
+class lnkCustomerContractToProviderContract extends cmdbAbstractObject
+{
+
+	public static function Init()
+	{
+		$aParams = array
+		(
+			"category" => "bizmodel,searchable,servicemgmt",
+			"key_type" => "autoincrement",
+			"name_attcode" => "customer_contract_id",
+			"state_attcode" => "",
+			"reconc_keys" => array("customer_contract_id","provider_contract_id"),
+			"db_table" => "lnkcustomercontracttoprovider",
+			"db_key_field" => "id",
+			"db_finalclass_field" => "",
+			"display_template" => "",
+		);
+		MetaModel::Init_Params($aParams);
+		MetaModel::Init_InheritAttributes();
+
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("customer_contract_id", array("targetclass"=>"CustomerContract", "jointype"=>null, "allowed_values"=>null, "sql"=>"customer_contract_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("customer_contract_name", array("allowed_values"=>null, "extkey_attcode"=>"customer_contract_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("provider_contract_id", array("targetclass"=>"ProviderContract", "jointype"=>null, "allowed_values"=>null, "sql"=>"provider_contract_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("provider_contract_name", array("allowed_values"=>null, "extkey_attcode"=>"provider_contract_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("provider_sla", array("allowed_values"=>null, "extkey_attcode"=>"provider_contract_id", "target_attcode"=>"sla", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("provider_coverage", array("allowed_values"=>null, "extkey_attcode"=>"provider_contract_id", "target_attcode"=>"coverage", "is_null_allowed"=>true, "depends_on"=>array())));
+
+		MetaModel::Init_SetZListItems('details', array('customer_contract_id', 'provider_contract_id','provider_sla','provider_coverage'));
+		MetaModel::Init_SetZListItems('advanced_search', array('customer_contract_id', 'provider_contract_id'));
+		MetaModel::Init_SetZListItems('standard_search', array('customer_contract_id', 'provider_contract_id'));
+		MetaModel::Init_SetZListItems('list', array('customer_contract_id', 'provider_contract_id','provider_sla','provider_coverage'));
 	}
 }
 class lnkContractToSLA extends cmdbAbstractObject
@@ -138,7 +172,7 @@ class lnkContractToSLA extends cmdbAbstractObject
 			"key_type" => "autoincrement",
 			"name_attcode" => "contract_id",
 			"state_attcode" => "",
-			"reconc_keys" => array(),
+			"reconc_keys" => array("contract_id","sla_id"),
 			"db_table" => "lnkcontracttosla",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -151,12 +185,13 @@ class lnkContractToSLA extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalField("contract_name", array("allowed_values"=>null, "extkey_attcode"=>"contract_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("sla_id", array("targetclass"=>"SLA", "jointype"=>null, "allowed_values"=>null, "sql"=>"sla_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("sla_name", array("allowed_values"=>null, "extkey_attcode"=>"sla_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("sla_service_name", array("allowed_values"=>null, "extkey_attcode"=>"sla_id", "target_attcode"=>"service_name", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("coverage", array("allowed_values"=>null, "sql"=>"coverage", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('contract_id', 'sla_id', 'coverage'));
+		MetaModel::Init_SetZListItems('details', array('contract_id', 'sla_id','sla_service_name', 'coverage'));
 		MetaModel::Init_SetZListItems('advanced_search', array('contract_id', 'sla_id', 'coverage'));
 		MetaModel::Init_SetZListItems('standard_search', array('contract_id', 'sla_id', 'coverage'));
-		MetaModel::Init_SetZListItems('list', array('contract_id', 'sla_id', 'coverage'));
+		MetaModel::Init_SetZListItems('list', array('contract_id', 'sla_id', 'sla_service_name','coverage'));
 	}
 }
 class lnkContractToDoc extends cmdbAbstractObject
@@ -170,7 +205,7 @@ class lnkContractToDoc extends cmdbAbstractObject
 			"key_type" => "autoincrement",
 			"name_attcode" => "contract_id",
 			"state_attcode" => "",
-			"reconc_keys" => array(),
+			"reconc_keys" => array("contract_id","document_id"),
 			"db_table" => "lnkcontracttodoc",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -203,7 +238,7 @@ class lnkContractToContact extends cmdbAbstractObject
 			"key_type" => "autoincrement",
 			"name_attcode" => "contract_id",
 			"state_attcode" => "",
-			"reconc_keys" => array(),
+			"reconc_keys" => array("contract_id","contact_id"),
 			"db_table" => "lnkcontracttocontact",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -236,7 +271,7 @@ class lnkContractToCI extends cmdbAbstractObject
 			"key_type" => "autoincrement",
 			"name_attcode" => "contract_id",
 			"state_attcode" => "",
-			"reconc_keys" => array(),
+			"reconc_keys" => array("contract_id","ci_id"),
 			"db_table" => "lnkcontracttoci",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -268,7 +303,7 @@ class Service extends cmdbAbstractObject
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("name"),
+			"reconc_keys" => array("name","org_id"),
 			"db_table" => "service",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -292,6 +327,22 @@ class Service extends cmdbAbstractObject
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'description', 'org_id', 'type', 'status'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'org_id', 'type', 'status'));
 		MetaModel::Init_SetZListItems('list', array('name', 'description', 'org_id', 'type', 'status'));
+
+	}
+        function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
+        {
+                parent::DisplayBareRelations($oPage, $bEditMode);
+		$aExtraParam = array ('menu' => false);
+		$ServiceID=$this->GetKey();
+                if (!$bEditMode)
+                {
+			$oPage->SetCurrentTab(Dict::S('Class:Service/Tab:Related_Contracts'));
+			$oCustomerContracts=new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT CustomerContract AS cc JOIN lnkContractToSLA AS ln ON ln.contract_id=cc.id JOIN SLA AS sla ON ln.sla_id=sla.id WHERE sla.service_id=$ServiceID"));
+                        self::DisplaySet($oPage,$oCustomerContracts,$aExtraParam);
+	
+
+		}
+
 	}
 }
 class ServiceSubcategory extends cmdbAbstractObject
@@ -305,7 +356,7 @@ class ServiceSubcategory extends cmdbAbstractObject
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("name"),
+			"reconc_keys" => array("name","service_id"),
 			"db_table" => "servicesubcategory",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -336,7 +387,7 @@ class SLA extends cmdbAbstractObject
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("name"),
+			"reconc_keys" => array("name","service_id"),
 			"db_table" => "sla",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -400,7 +451,7 @@ class lnkSLTToSLA extends cmdbAbstractObject
 			"key_type" => "autoincrement",
 			"name_attcode" => "sla_id",
 			"state_attcode" => "",
-			"reconc_keys" => array(),
+			"reconc_keys" => array("sla_id","slt_id"),
 			"db_table" => "lnkslttosla",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -435,7 +486,7 @@ class lnkServiceToDoc extends cmdbAbstractObject
 			"key_type" => "autoincrement",
 			"name_attcode" => "service_id",
 			"state_attcode" => "",
-			"reconc_keys" => array(),
+			"reconc_keys" => array("service_id","document_id"),
 			"db_table" => "lnkservicetodoc",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -468,7 +519,7 @@ class lnkServiceToContact extends cmdbAbstractObject
 			"key_type" => "autoincrement",
 			"name_attcode" => "service_id",
 			"state_attcode" => "",
-			"reconc_keys" => array(),
+			"reconc_keys" => array("service_id","contact_id"),
 			"db_table" => "lnkservicetocontact",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -501,7 +552,7 @@ class lnkServiceToCI extends cmdbAbstractObject
 			"key_type" => "autoincrement",
 			"name_attcode" => "service_id",
 			"state_attcode" => "",
-			"reconc_keys" => array(),
+			"reconc_keys" => array("service_id","ci_id"),
 			"db_table" => "lnkservicetoci",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",

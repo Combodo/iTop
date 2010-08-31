@@ -38,6 +38,10 @@
 // Class: Ticket
 //
 
+//
+// Class: Ticket
+//
+
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:Ticket' => 'Ticket',
 	'Class:Ticket+' => '',
@@ -45,6 +49,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Ticket/Attribute:ref+' => '',
 	'Class:Ticket/Attribute:title' => 'Title',
 	'Class:Ticket/Attribute:title+' => '',
+	'Class:Ticket/Attribute:description' => 'description',
+	'Class:Ticket/Attribute:description+' => '',
 	'Class:Ticket/Attribute:ticket_log' => 'Log',
 	'Class:Ticket/Attribute:ticket_log+' => '',
 	'Class:Ticket/Attribute:start_date' => 'Started',
@@ -55,9 +61,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Ticket/Attribute:ci_list+' => 'CIs concerned by the incident',
 	'Class:Ticket/Attribute:contact_list' => 'Contacts',
 	'Class:Ticket/Attribute:contact_list+' => 'Team and persons involved',
+	'Class:Ticket/Attribute:incident_list' => 'Related Incidents',
+	'Class:Ticket/Attribute:incident_list+' => '',
 	'Class:Ticket/Attribute:finalclass' => 'Type',
 	'Class:Ticket/Attribute:finalclass+' => '',
 ));
+
 
 //
 // Class: lnkTicketToDoc
@@ -114,7 +123,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkTicketToCI/Attribute:ci_name+' => '',
 	'Class:lnkTicketToCI/Attribute:ci_status' => 'CI status',
 	'Class:lnkTicketToCI/Attribute:ci_status+' => '',
+	'Class:lnkTicketToCI/Attribute:impact' => 'Impact',
+	'Class:lnkTicketToCI/Attribute:impact+' => '',
 ));
+
 
 //
 // Class: ResponseTicket
@@ -127,30 +139,34 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:ResponseTicket/Attribute:status+' => '',
 	'Class:ResponseTicket/Attribute:status/Value:new' => 'New',
 	'Class:ResponseTicket/Attribute:status/Value:new+' => 'newly opened',
-	'Class:ResponseTicket/Attribute:status/Value:frozen' => 'Pending',
-	'Class:ResponseTicket/Attribute:status/Value:frozen+' => '',
 	'Class:ResponseTicket/Attribute:status/Value:escalated_tto' => 'Escalation/TTO',
 	'Class:ResponseTicket/Attribute:status/Value:escalated_tto+' => '',
 	'Class:ResponseTicket/Attribute:status/Value:assigned' => 'Assigned',
 	'Class:ResponseTicket/Attribute:status/Value:assigned+' => '',
 	'Class:ResponseTicket/Attribute:status/Value:escalated_ttr' => 'Escalation/TTR',
 	'Class:ResponseTicket/Attribute:status/Value:escalated_ttr+' => '',
+	'Class:ResponseTicket/Attribute:status/Value:frozen' => 'Pending',
+	'Class:ResponseTicket/Attribute:status/Value:frozen+' => '',
 	'Class:ResponseTicket/Attribute:status/Value:resolved' => 'Resolved',
 	'Class:ResponseTicket/Attribute:status/Value:resolved+' => '',
 	'Class:ResponseTicket/Attribute:status/Value:closed' => 'Closed',
 	'Class:ResponseTicket/Attribute:status/Value:closed+' => '',
 	'Class:ResponseTicket/Attribute:caller_id' => 'Caller',
 	'Class:ResponseTicket/Attribute:caller_id+' => '',
-	'Class:ResponseTicket/Attribute:workgroup_name' => 'Workgroup',
-	'Class:ResponseTicket/Attribute:workgroup_name+' => '',
+	'Class:ResponseTicket/Attribute:caller_email' => 'Email',
+	'Class:ResponseTicket/Attribute:caller_email+' => '',
 	'Class:ResponseTicket/Attribute:org_id' => 'Customer',
 	'Class:ResponseTicket/Attribute:org_id+' => '',
 	'Class:ResponseTicket/Attribute:org_name' => 'Customer',
 	'Class:ResponseTicket/Attribute:org_name+' => '',
 	'Class:ResponseTicket/Attribute:service_id' => 'Service',
 	'Class:ResponseTicket/Attribute:service_id+' => '',
+	'Class:ResponseTicket/Attribute:service_name' => 'Name',
+	'Class:ResponseTicket/Attribute:service_name+' => '',
 	'Class:ResponseTicket/Attribute:servicesubcategory_id' => 'Service element',
 	'Class:ResponseTicket/Attribute:servicesubcategory_id+' => '',
+	'Class:ResponseTicket/Attribute:servicesubcategory_name' => 'Name',
+	'Class:ResponseTicket/Attribute:servicesubcategory_name+' => '',
 	'Class:ResponseTicket/Attribute:product' => 'Product',
 	'Class:ResponseTicket/Attribute:product+' => '',
 	'Class:ResponseTicket/Attribute:impact' => 'Impact',
@@ -179,12 +195,18 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:ResponseTicket/Attribute:priority/Value:3+' => '',
 	'Class:ResponseTicket/Attribute:workgroup_id' => 'Workgroup',
 	'Class:ResponseTicket/Attribute:workgroup_id+' => '',
+	'Class:ResponseTicket/Attribute:workgroup_name' => 'Workgroup',
+	'Class:ResponseTicket/Attribute:workgroup_name+' => '',
 	'Class:ResponseTicket/Attribute:agent_id' => 'Agent',
 	'Class:ResponseTicket/Attribute:agent_id+' => '',
 	'Class:ResponseTicket/Attribute:agent_name' => 'Agent',
 	'Class:ResponseTicket/Attribute:agent_name+' => '',
 	'Class:ResponseTicket/Attribute:agent_email' => 'Agent email',
 	'Class:ResponseTicket/Attribute:agent_email+' => '',
+	'Class:ResponseTicket/Attribute:related_problem_id' => 'Related Problem',
+	'Class:ResponseTicket/Attribute:related_problem_id+' => '',
+	'Class:ResponseTicket/Attribute:related_problem_ref' => 'Ref',
+	'Class:ResponseTicket/Attribute:related_problem_ref+' => '',
 	'Class:ResponseTicket/Attribute:related_change_id' => 'Related change',
 	'Class:ResponseTicket/Attribute:related_change_id+' => '',
 	'Class:ResponseTicket/Attribute:related_change_ref' => 'Related change',
@@ -193,8 +215,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:ResponseTicket/Attribute:close_date+' => '',
 	'Class:ResponseTicket/Attribute:last_update' => 'Last update',
 	'Class:ResponseTicket/Attribute:last_update+' => '',
-	'Class:ResponseTicket/Attribute:assignment_date' => 'Assigned',
+	'Class:ResponseTicket/Attribute:assignment_date' => 'Assignment Date ',
 	'Class:ResponseTicket/Attribute:assignment_date+' => '',
+	'Class:ResponseTicket/Attribute:resolution_date' => 'Resolution Date',
+	'Class:ResponseTicket/Attribute:resolution_date+' => '',
 	'Class:ResponseTicket/Attribute:tto_escalation_deadline' => 'TTO Escalation deadline',
 	'Class:ResponseTicket/Attribute:tto_escalation_deadline+' => '',
 	'Class:ResponseTicket/Attribute:ttr_escalation_deadline' => 'TTR Escalation deadline',
@@ -215,27 +239,29 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:ResponseTicket/Attribute:solution+' => '',
 	'Class:ResponseTicket/Attribute:user_satisfaction' => 'User satisfaction',
 	'Class:ResponseTicket/Attribute:user_satisfaction+' => '',
-	'Class:ResponseTicket/Attribute:user_satisfaction/Value:1' => '1',
-	'Class:ResponseTicket/Attribute:user_satisfaction/Value:1+' => '1',
-	'Class:ResponseTicket/Attribute:user_satisfaction/Value:2' => '2',
-	'Class:ResponseTicket/Attribute:user_satisfaction/Value:2+' => '2',
-	'Class:ResponseTicket/Attribute:user_satisfaction/Value:3' => '3',
-	'Class:ResponseTicket/Attribute:user_satisfaction/Value:3+' => '3',
-	'Class:ResponseTicket/Attribute:user_satisfaction/Value:4' => '4',
-	'Class:ResponseTicket/Attribute:user_satisfaction/Value:4+' => '4',
+	'Class:ResponseTicket/Attribute:user_satisfaction/Value:1' => 'Bad',
+	'Class:ResponseTicket/Attribute:user_satisfaction/Value:1+' => 'Bad',
+	'Class:ResponseTicket/Attribute:user_satisfaction/Value:2' => 'Average',
+	'Class:ResponseTicket/Attribute:user_satisfaction/Value:2+' => 'Average',
+	'Class:ResponseTicket/Attribute:user_satisfaction/Value:3' => 'Good',
+	'Class:ResponseTicket/Attribute:user_satisfaction/Value:3+' => 'Good',
+	'Class:ResponseTicket/Attribute:user_satisfaction/Value:4' => 'Very Good',
+	'Class:ResponseTicket/Attribute:user_satisfaction/Value:4+' => 'Very Good',
 	'Class:ResponseTicket/Attribute:user_commment' => 'User comment',
 	'Class:ResponseTicket/Attribute:user_commment+' => '',
 	'Class:ResponseTicket/Stimulus:ev_assign' => 'Assign',
 	'Class:ResponseTicket/Stimulus:ev_assign+' => '',
 	'Class:ResponseTicket/Stimulus:ev_reassign' => 'Reassign',
 	'Class:ResponseTicket/Stimulus:ev_reassign+' => '',
-	'Class:ResponseTicket/Stimulus:ev_timeout' => 'ev_timeout',
+	'Class:ResponseTicket/Stimulus:ev_timeout' => 'Escalation',
 	'Class:ResponseTicket/Stimulus:ev_timeout+' => '',
 	'Class:ResponseTicket/Stimulus:ev_resolve' => 'Mark a resolved',
 	'Class:ResponseTicket/Stimulus:ev_resolve+' => '',
 	'Class:ResponseTicket/Stimulus:ev_close' => 'Close',
 	'Class:ResponseTicket/Stimulus:ev_close+' => '',
 ));
+
+
 
 
 ?>

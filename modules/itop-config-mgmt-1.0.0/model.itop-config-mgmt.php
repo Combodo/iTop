@@ -164,7 +164,7 @@ class Person extends Contact
 		MetaModel::Init_AddAttribute(new AttributeString("first_name", array("allowed_values"=>null, "sql"=>"first_name", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("employee_id", array("allowed_values"=>null, "sql"=>"employee_id", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('name','first_name', 'org_id', 'status', 'location_id', 'email', 'phone', 'employee_id', 'contract_list', 'service_list', 'ticket_list', 'ci_list', 'team_list'));
+		MetaModel::Init_SetZListItems('details', array('name','first_name', 'org_id', 'status', 'location_id', 'email', 'phone', 'employee_id','team_list', 'contract_list', 'service_list', 'ticket_list', 'ci_list'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'org_id', 'email', 'phone', 'location_id', 'first_name', 'employee_id'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'org_id', 'email', 'phone', 'location_id', 'first_name', 'employee_id'));
 		MetaModel::Init_SetZListItems('list', array('first_name','status', 'org_id', 'email', 'phone', 'location_id'));
@@ -1047,6 +1047,24 @@ class NetworkInterface extends ConnectableCI
 	public function GetName()
 	{
 		return $this->Get('device_name').' - '.$this->Get('name');
+	}
+
+
+
+	public static function GetRelationQueries($sRelCode)
+	{
+		switch ($sRelCode)
+		{
+			case "impacts":
+			$aRels = array(
+				"connected_devices" => array("sQuery"=>"SELECT Device AS dev JOIN NetworkInterface AS if1 ON if1.device_id = dev.id JOIN NetworkInterface AS if2 ON if2.connected_if = if1.id WHERE if2.id = :this->id AND if2.link_type='downlink'", "bPropagate"=>true, "iDistance"=>5),
+			);
+			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
+			break;
+			
+			default:
+			return parent::GetRelationQueries($sRelCode);			
+		}
 	}
 }
 abstract class Device extends ConnectableCI

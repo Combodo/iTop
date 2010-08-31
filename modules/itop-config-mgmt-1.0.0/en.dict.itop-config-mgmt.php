@@ -304,6 +304,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Licence+' => '',
 	'Class:Licence/Attribute:provider' => 'Provider',
 	'Class:Licence/Attribute:provider+' => '',
+	'Class:Licence/Attribute:org_id' => 'Owner',
+	'Class:Licence/Attribute:org_id+' => '',
+	'Class:Licence/Attribute:org_name' => 'Name',
+	'Class:Licence/Attribute:org_name+' => 'Common name',
 	'Class:Licence/Attribute:product' => 'Product',
 	'Class:Licence/Attribute:product+' => '',
 	'Class:Licence/Attribute:name' => 'Name',
@@ -321,6 +325,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Licence/Attribute:usage_list' => 'Usage',
 	'Class:Licence/Attribute:usage_list+' => 'Application instances using this licence',
 ));
+
 
 //
 // Class: Subnet
@@ -490,8 +495,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:SoftwareInstance/Attribute:licence_id+' => '',
 	'Class:SoftwareInstance/Attribute:licence_name' => 'Licence',
 	'Class:SoftwareInstance/Attribute:licence_name+' => '',
-	'Class:SoftwareInstance/Attribute:software_id' => 'Software',
-	'Class:SoftwareInstance/Attribute:software_id+' => '',
 	'Class:SoftwareInstance/Attribute:software_name' => 'Software',
 	'Class:SoftwareInstance/Attribute:software_name+' => '',
 	'Class:SoftwareInstance/Attribute:version' => 'Version',
@@ -507,7 +510,12 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:ApplicationInstance' => 'Application Instance',
 	'Class:ApplicationInstance+' => '',
+	'Class:ApplicationInstance/Attribute:software_id' => 'Software',
+	'Class:ApplicationInstance/Attribute:software_id+' => '',
+	'Class:ApplicationInstance/Attribute:software_name' => 'Name',
+	'Class:ApplicationInstance/Attribute:software_name+' => '',
 ));
+
 
 //
 // Class: DBServerInstance
@@ -516,9 +524,14 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:DBServerInstance' => 'DB Server Instance',
 	'Class:DBServerInstance+' => '',
+	'Class:DBServerInstance/Attribute:software_id' => 'Software',
+	'Class:DBServerInstance/Attribute:software_id+' => '',
+	'Class:DBServerInstance/Attribute:software_name' => 'Name',
+	'Class:DBServerInstance/Attribute:software_name+' => '',
 	'Class:DBServerInstance/Attribute:dbinstance_list' => 'Databases',
 	'Class:DBServerInstance/Attribute:dbinstance_list+' => 'Database sources',
 ));
+
 
 //
 // Class: DatabaseInstance
@@ -623,6 +636,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:NetworkInterface/Attribute:speed+' => '',
 	'Class:NetworkInterface/Attribute:duplex' => 'Duplex',
 	'Class:NetworkInterface/Attribute:duplex+' => '',
+	'Class:NetworkInterface/Attribute:duplex/Value:auto' => 'Auto',
+	'Class:NetworkInterface/Attribute:duplex/Value:auto+' => 'Auto',
 	'Class:NetworkInterface/Attribute:duplex/Value:full' => 'Full',
 	'Class:NetworkInterface/Attribute:duplex/Value:full+' => '',
 	'Class:NetworkInterface/Attribute:duplex/Value:half' => 'Half',
@@ -635,13 +650,17 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:NetworkInterface/Attribute:connected_name+' => '',
 	'Class:NetworkInterface/Attribute:connected_if_device_id' => 'Connected device',
 	'Class:NetworkInterface/Attribute:connected_if_device_id+' => '',
+	'Class:NetworkInterface/Attribute:connected_if_device_id_name' => 'Device',
+	'Class:NetworkInterface/Attribute:connected_if_device_id_name+' => '',
 	'Class:NetworkInterface/Attribute:link_type' => 'Link type',
 	'Class:NetworkInterface/Attribute:link_type+' => '',
-	'Class:NetworkInterface/Attribute:link_type/Value:uplink' => 'Up link',
-	'Class:NetworkInterface/Attribute:link_type/Value:uplink+' => '',
 	'Class:NetworkInterface/Attribute:link_type/Value:downlink' => 'Down link',
 	'Class:NetworkInterface/Attribute:link_type/Value:downlink+' => '',
+	'Class:NetworkInterface/Attribute:link_type/Value:uplink' => 'Up link',
+	'Class:NetworkInterface/Attribute:link_type/Value:uplink+' => '',
 ));
+
+
 
 //
 // Class: Device
@@ -955,5 +974,14 @@ Dict::Add('EN US', 'English', 'English', array(
 'Menu:MobilePhone+' => 'All Mobile Phones',
 'Menu:PC' => 'Personal Computers',
 'Menu:PC+' => 'All Personal Computers',
+'Menu:NewContact' => 'New Contact',
+'Menu:NewContact+' => 'New Contact',
+'Menu:SearchContacts' => 'Search for contacts',
+'Menu:SearchContacts+' => 'Search for contacts',
+'Menu:NewCI' => 'New CI',
+'Menu:NewCI+' => 'New CI',
+'Menu:SearchCIs' => 'Search for CIs',
+'Menu:SearchCIs+' => 'Search for CIs',
+
 ));
 ?>

@@ -121,7 +121,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:ProviderContract/Attribute:provider_name+' => '',
 	'Class:ProviderContract/Attribute:sla' => 'SLA',
 	'Class:ProviderContract/Attribute:sla+' => 'Service Level Agreement',
-	'Class:ProviderContract/Attribute:coverage' => 'Coverage',
+	'Class:ProviderContract/Attribute:coverage' => 'Service hours',
 	'Class:ProviderContract/Attribute:coverage+' => '',
 ));
 
@@ -148,7 +148,30 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:CustomerContract/Attribute:provider_list+' => '',
 	'Class:CustomerContract/Attribute:sla_list' => 'SLAs',
 	'Class:CustomerContract/Attribute:sla_list+' => 'List of SLA related to the contract',
+	'Class:CustomerContract/Attribute:provider_list' => 'Underpinning Contracts',
+	'Class:CustomerContract/Attribute:sla_list+' => '',
 ));
+//
+// Class: lnkCustomerContractToProviderContract
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:lnkCustomerContractToProviderContract' => 'lnkCustomerContractToProviderContract',
+	'Class:lnkCustomerContractToProviderContract+' => '',
+	'Class:lnkCustomerContractToProviderContract/Attribute:customer_contract_id' => 'Customer Contract',
+	'Class:lnkCustomerContractToProviderContract/Attribute:customer_contract_id+' => '',
+	'Class:lnkCustomerContractToProviderContract/Attribute:customer_contract_name' => 'Name',
+	'Class:lnkCustomerContractToProviderContract/Attribute:customer_contract_name+' => '',
+	'Class:lnkCustomerContractToProviderContract/Attribute:provider_contract_id' => 'Provider Contract',
+	'Class:lnkCustomerContractToProviderContract/Attribute:provider_contract_id+' => '',
+	'Class:lnkCustomerContractToProviderContract/Attribute:provider_contract_name' => 'Name',
+	'Class:lnkCustomerContractToProviderContract/Attribute:provider_contract_name+' => '',
+	'Class:lnkCustomerContractToProviderContract/Attribute:provider_sla' => 'Provider SLA',
+	'Class:lnkCustomerContractToProviderContract/Attribute:provider_sla+' => 'Service Level Agreement',
+	'Class:lnkCustomerContractToProviderContract/Attribute:provider_coverage' => 'Service hours',
+	'Class:lnkCustomerContractToProviderContract/Attribute:provider_coverage+' => '',
+));
+
 
 //
 // Class: lnkContractToSLA
@@ -165,7 +188,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkContractToSLA/Attribute:sla_id+' => '',
 	'Class:lnkContractToSLA/Attribute:sla_name' => 'SLA',
 	'Class:lnkContractToSLA/Attribute:sla_name+' => '',
-	'Class:lnkContractToSLA/Attribute:coverage' => 'Coverage',
+	'Class:lnkContractToSLA/Attribute:coverage' => 'Service Hours',
 	'Class:lnkContractToSLA/Attribute:coverage+' => '',
 ));
 
@@ -267,6 +290,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Service/Attribute:document_list+' => 'Documents attached to the service',
 	'Class:Service/Attribute:contact_list' => 'Contacts',
 	'Class:Service/Attribute:contact_list+' => 'Contacts having a role for this service',
+	'Class:Service/Tab:Related_Contracts' => 'Related Contracts',
+	'Class:Service/Tab:Related_Contracts+' => 'Contracts signed for this service',
 ));
 
 //

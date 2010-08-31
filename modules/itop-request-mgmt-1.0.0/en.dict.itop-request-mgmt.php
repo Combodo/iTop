@@ -59,12 +59,18 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:UserRequest' => 'User Request',
 	'Class:UserRequest+' => '',
+	'Class:UserRequest/Attribute:request_type' => 'Request Type',
+	'Class:UserRequest/Attribute:request_type+' => '',
+	'Class:UserRequest/Attribute:request_type/Value:information' => 'Information',
+	'Class:UserRequest/Attribute:request_type/Value:information+' => 'Information',
+	'Class:UserRequest/Attribute:request_type/Value:issue' => 'Issue',
+	'Class:UserRequest/Attribute:request_type/Value:issue+' => 'Issue',
+	'Class:UserRequest/Attribute:request_type/Value:service request' => 'Service Request',
+	'Class:UserRequest/Attribute:request_type/Value:service request+' => 'Service Request',
 	'Class:UserRequest/Attribute:freeze_reason' => 'Pending reason',
 	'Class:UserRequest/Attribute:freeze_reason+' => '',
 	'Class:UserRequest/Stimulus:ev_assign' => 'Assign',
 	'Class:UserRequest/Stimulus:ev_assign+' => '',
-	'Class:UserRequest/Stimulus:ev_freeze' => 'Mark as pending',
-	'Class:UserRequest/Stimulus:ev_freeze+' => '',
 	'Class:UserRequest/Stimulus:ev_reassign' => 'Reassign',
 	'Class:UserRequest/Stimulus:ev_reassign+' => '',
 	'Class:UserRequest/Stimulus:ev_timeout' => 'ev_timeout',
@@ -73,6 +79,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:UserRequest/Stimulus:ev_resolve+' => '',
 	'Class:UserRequest/Stimulus:ev_close' => 'Close',
 	'Class:UserRequest/Stimulus:ev_close+' => '',
+	'Class:UserRequest/Stimulus:ev_freeze' => 'Mark as pending',
+	'Class:UserRequest/Stimulus:ev_freeze+' => '',
 ));
+
 
 ?>

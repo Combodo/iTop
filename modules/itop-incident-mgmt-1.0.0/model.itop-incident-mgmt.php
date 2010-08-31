@@ -43,9 +43,9 @@ class Incident extends ResponseTicket
 		MetaModel::Init_InheritAttributes();
 		MetaModel::Init_InheritLifecycle();
 
-		MetaModel::Init_SetZListItems('details', array('ref', 'title', 'org_id', 'description', 'ticket_log', 'start_date', 'tto_escalation_deadline', 'ttr_escalation_deadline', 'document_list', 'ci_list', 'contact_list', 'status', 'caller_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'close_date', 'last_update', 'assignment_date', 'closure_deadline', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
-		MetaModel::Init_SetZListItems('advanced_search', array('ref', 'title', 'org_id', 'start_date', 'status', 'caller_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'close_date', 'last_update', 'assignment_date', 'tto_escalation_deadline', 'ttr_escalation_deadline', 'closure_deadline', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
-		MetaModel::Init_SetZListItems('standard_search', array('ref', 'title', 'org_id', 'start_date', 'status', 'caller_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'close_date', 'last_update', 'assignment_date', 'tto_escalation_deadline', 'ttr_escalation_deadline', 'closure_deadline', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
+		MetaModel::Init_SetZListItems('details', array('ref', 'title', 'org_id', 'description', 'ticket_log', 'start_date', 'tto_escalation_deadline', 'ttr_escalation_deadline', 'document_list', 'ci_list', 'contact_list','incident_list', 'status', 'caller_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'close_date', 'last_update', 'assignment_date', 'closure_deadline', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
+		MetaModel::Init_SetZListItems('advanced_search', array('ref', 'title', 'org_id', 'start_date', 'status', 'caller_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'close_date', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
+		MetaModel::Init_SetZListItems('standard_search', array('ref', 'title', 'org_id', 'start_date', 'status', 'caller_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'close_date', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
 		MetaModel::Init_SetZListItems('list', array('ref', 'title', 'org_id', 'start_date', 'status', 'service_id', 'priority', 'workgroup_id', 'agent_id'));
 	}
 
@@ -77,6 +77,7 @@ class Incident extends ResponseTicket
 			{
 				$oNewLink = new lnkTicketToCI();
 				$oNewLink->Set('ci_id', $iKey);
+				$oNewLink->Set('impact', 'potentially impacted (automatically computed)');
 				$oToImpact->AddObject($oNewLink);
 			}
 		}
@@ -93,6 +94,39 @@ class Incident extends ResponseTicket
 		parent::OnInsert();
 	}
 }
+
+class lnkTicketToIncident extends cmdbAbstractObject
+{
+
+        public static function Init()
+        {
+                $aParams = array
+                (
+                        "category" => "bizmodel,searchable,incidentmgmt,requestmgmt",
+                        "key_type" => "autoincrement",
+                        "name_attcode" => "ticket_id",
+                        "state_attcode" => "",
+                        "reconc_keys" => array("ticket_id","incident_id"),
+                        "db_table" => "lnktickettoincident",
+                        "db_key_field" => "id",
+                        "db_finalclass_field" => "",
+                        "display_template" => "",
+                );
+                MetaModel::Init_Params($aParams);
+                MetaModel::Init_InheritAttributes();
+                MetaModel::Init_AddAttribute(new AttributeExternalKey("ticket_id", array("targetclass"=>"Ticket", "jointype"=>null, "allowed_values"=>null, "sql"=>"ticket_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
+                MetaModel::Init_AddAttribute(new AttributeExternalField("ticket_ref", array("allowed_values"=>null, "extkey_attcode"=>"ticket_id", "target_attcode"=>"ref", "is_null_allowed"=>true, "depends_on"=>array())));
+                MetaModel::Init_AddAttribute(new AttributeExternalKey("incident_id", array("targetclass"=>"Incident", "jointype"=>null, "allowed_values"=>null, "sql"=>"incident_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
+                MetaModel::Init_AddAttribute(new AttributeExternalField("incident_ref", array("allowed_values"=>null, "extkey_attcode"=>"incident_id", "target_attcode"=>"ref", "is_null_allowed"=>true, "depends_on"=>array())));
+                MetaModel::Init_AddAttribute(new AttributeString("reason", array("allowed_values"=>null, "sql"=>"reason", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+                MetaModel::Init_SetZListItems('details', array('ticket_id', 'incident_id','reason'));
+                MetaModel::Init_SetZListItems('advanced_search', array('ticket_id', 'incident_id'));
+                MetaModel::Init_SetZListItems('standard_search', array('ticket_id', 'incident_id'));
+                MetaModel::Init_SetZListItems('list', array('ticket_id', 'incident_id','reason'));
+  
+      }
+}
+
 
 $oMyMenuGroup = new MenuGroup('IncidentManagement', 40 /* fRank */);
 new TemplateMenuNode('Incident:Overview', '../modules/itop-incident-mgmt-1.0.0/overview.html', $oMyMenuGroup->GetIndex() /* oParent */, 0 /* fRank */);

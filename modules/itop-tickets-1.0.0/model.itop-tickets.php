@@ -51,8 +51,9 @@ abstract class Ticket extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("document_list", array("linked_class"=>"lnkTicketToDoc", "ext_key_to_me"=>"ticket_id", "ext_key_to_remote"=>"document_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("ci_list", array("linked_class"=>"lnkTicketToCI", "ext_key_to_me"=>"ticket_id", "ext_key_to_remote"=>"ci_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("contact_list", array("linked_class"=>"lnkTicketToContact", "ext_key_to_me"=>"ticket_id", "ext_key_to_remote"=>"contact_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("incident_list", array("linked_class"=>"lnkTicketToIncident", "ext_key_to_me"=>"ticket_id", "ext_key_to_remote"=>"incident_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('ref', 'title', 'description', 'ticket_log', 'start_date', 'document_list', 'ci_list', 'contact_list'));
+		MetaModel::Init_SetZListItems('details', array('ref', 'title', 'description', 'ticket_log', 'start_date', 'document_list', 'ci_list', 'contact_list','incident_list'));
 		MetaModel::Init_SetZListItems('advanced_search', array('finalclass', 'ref', 'title', 'ticket_log', 'start_date'));
 		MetaModel::Init_SetZListItems('standard_search', array('finalclass', 'ref', 'title', 'ticket_log', 'start_date'));
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'ref', 'title', 'ticket_log', 'start_date'));
@@ -69,7 +70,7 @@ class lnkTicketToDoc extends cmdbAbstractObject
 			"key_type" => "autoincrement",
 			"name_attcode" => "ticket_id",
 			"state_attcode" => "",
-			"reconc_keys" => array(),
+			"reconc_keys" => array("ticket_id","document_id"),
 			"db_table" => "lnktickettodoc",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -100,7 +101,7 @@ class lnkTicketToContact extends cmdbAbstractObject
 			"key_type" => "autoincrement",
 			"name_attcode" => "ticket_id",
 			"state_attcode" => "",
-			"reconc_keys" => array(),
+			"reconc_keys" => array("ticket_id","contact_id"),
 			"db_table" => "lnktickettocontact",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -133,7 +134,7 @@ class lnkTicketToCI extends cmdbAbstractObject
 			"key_type" => "autoincrement",
 			"name_attcode" => "ticket_id",
 			"state_attcode" => "",
-			"reconc_keys" => array(),
+			"reconc_keys" => array("ticket_id","ci_id"),
 			"db_table" => "lnktickettoci",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -147,11 +148,12 @@ class lnkTicketToCI extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("ci_id", array("targetclass"=>"FunctionalCI", "jointype"=>null, "allowed_values"=>null, "sql"=>"ci_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("ci_name", array("allowed_values"=>null, "extkey_attcode"=>"ci_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("ci_status", array("allowed_values"=>null, "extkey_attcode"=>"ci_id", "target_attcode"=>"status", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("impact", array("allowed_values"=>null, "sql"=>"impact", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('ticket_id', 'ci_id', 'ci_status'));
+		MetaModel::Init_SetZListItems('details', array('ticket_id', 'ci_id', 'impact','ci_status'));
 		MetaModel::Init_SetZListItems('advanced_search', array('ticket_id', 'ci_id', 'ci_status'));
 		MetaModel::Init_SetZListItems('standard_search', array('ticket_id', 'ci_id', 'ci_status'));
-		MetaModel::Init_SetZListItems('list', array('ticket_id', 'ci_id', 'ci_status'));
+		MetaModel::Init_SetZListItems('list', array('ticket_id', 'ci_id', 'impact','ci_status'));
 	}
 }
 
@@ -201,6 +203,7 @@ abstract class ResponseTicket extends Ticket
 		MetaModel::Init_AddAttribute(new AttributeDateTime("close_date", array("allowed_values"=>null, "sql"=>"close_date", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDateTime("last_update", array("allowed_values"=>null, "sql"=>"last_update", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDateTime("assignment_date", array("allowed_values"=>null, "sql"=>"assignment_date", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeDateTime("resolution_date", array("allowed_values"=>null, "sql"=>"resolution_date", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDeadline("tto_escalation_deadline", array("allowed_values"=>null, "sql"=>"tto_escalation_deadline", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDeadline("ttr_escalation_deadline", array("allowed_values"=>null, "sql"=>"ttr_escalation_deadline", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDeadline("closure_deadline", array("allowed_values"=>null, "sql"=>"closure_deadline", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
@@ -211,8 +214,8 @@ abstract class ResponseTicket extends Ticket
 
 		MetaModel::Init_SetZListItems('details', array('ref', 'title', 'org_id', 'ticket_log', 'start_date', 'tto_escalation_deadline', 'ttr_escalation_deadline', 'closure_deadline', 'document_list', 'ci_list', 'contact_list', 'status', 'caller_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'close_date', 'last_update', 'assignment_date', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
 		MetaModel::Init_SetZListItems('advanced_search', array('finalclass', 'ref', 'title', 'org_id', 'start_date', 'status', 'caller_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'close_date', 'last_update', 'assignment_date', 'tto_escalation_deadline', 'ttr_escalation_deadline', 'closure_deadline', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
-		MetaModel::Init_SetZListItems('standard_search', array('finalclass', 'ref', 'title', 'org_id', 'start_date', 'status', 'caller_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'close_date', 'last_update', 'assignment_date', 'tto_escalation_deadline', 'ttr_escalation_deadline', 'closure_deadline', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
-		MetaModel::Init_SetZListItems('list', array('finalclass', 'ref', 'title', 'org_id', 'start_date', 'status', 'caller_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'close_date', 'last_update', 'assignment_date', 'tto_escalation_deadline', 'ttr_escalation_deadline', 'closure_deadline', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
+		MetaModel::Init_SetZListItems('standard_search', array('finalclass', 'ref', 'title', 'org_id', 'start_date', 'status', 'caller_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'close_date', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
+		MetaModel::Init_SetZListItems('list', array('finalclass', 'ref', 'title', 'org_id', 'start_date', 'status', 'caller_id', 'service_id', 'priority', 'workgroup_id', 'agent_id', 'last_update'));
 
 		// Lifecycle
 		MetaModel::Init_DefineState(
@@ -229,6 +232,7 @@ abstract class ResponseTicket extends Ticket
 					'start_date' => OPT_ATT_READONLY,
 					'last_update' => OPT_ATT_READONLY,
 					'assignment_date' => OPT_ATT_HIDDEN,
+					'resolution_date' => OPT_ATT_HIDDEN,
 					'tto_escalation_deadline' => OPT_ATT_READONLY,
 					'ttr_escalation_deadline' => OPT_ATT_HIDDEN,
 					'closure_deadline' => OPT_ATT_HIDDEN,
@@ -273,6 +277,8 @@ abstract class ResponseTicket extends Ticket
 					'workgroup_id' => OPT_ATT_MUSTPROMPT | OPT_ATT_MANDATORY,
 					'tto_escalation_deadline' => OPT_ATT_HIDDEN,
 					'ttr_escalation_deadline' => OPT_ATT_READONLY,
+					'related_problem_id' => OPT_ATT_MUSTPROMPT,
+//					'related_change_id' => OPT_ATT_MUSTPROMPT,
 				),
 			)
 		);
@@ -336,17 +342,17 @@ abstract class ResponseTicket extends Ticket
 		MetaModel::Init_DefineStimulus(new StimulusUserAction("ev_resolve", array()));
 		MetaModel::Init_DefineStimulus(new StimulusUserAction("ev_close", array()));
 
-		MetaModel::Init_DefineTransition("new", "ev_assign", array("target_state"=>"assigned", "actions"=>array(), "user_restriction"=>null));
+		MetaModel::Init_DefineTransition("new", "ev_assign", array("target_state"=>"assigned", "actions"=>array('SetAssignedDate'), "user_restriction"=>null));
 		MetaModel::Init_DefineTransition("new", "ev_timeout", array("target_state"=>"escalated_tto", "actions"=>array(), "user_restriction"=>null));
 
-		MetaModel::Init_DefineTransition("escalated_tto", "ev_assign", array("target_state"=>"assigned", "actions"=>array(), "user_restriction"=>null));
+		MetaModel::Init_DefineTransition("escalated_tto", "ev_assign", array("target_state"=>"assigned", "actions"=>array('SetAssignedDate'), "user_restriction"=>null));
 
 		MetaModel::Init_DefineTransition("assigned", "ev_reassign", array("target_state"=>"assigned", "actions"=>array(), "user_restriction"=>null));
 		MetaModel::Init_DefineTransition("assigned", "ev_timeout", array("target_state"=>"escalated_ttr", "actions"=>array(), "user_restriction"=>null));
-		MetaModel::Init_DefineTransition("assigned", "ev_resolve", array("target_state"=>"resolved", "actions"=>array('SetClosureDeadline'), "user_restriction"=>null));
+		MetaModel::Init_DefineTransition("assigned", "ev_resolve", array("target_state"=>"resolved", "actions"=>array('SetResolveDate','SetClosureDeadline'), "user_restriction"=>null));
 
 		MetaModel::Init_DefineTransition("escalated_ttr", "ev_reassign", array("target_state"=>"escalated_ttr", "actions"=>array(), "user_restriction"=>null));
-		MetaModel::Init_DefineTransition("escalated_ttr", "ev_resolve", array("target_state"=>"resolved", "actions"=>array('SetClosureDeadline'), "user_restriction"=>null));
+		MetaModel::Init_DefineTransition("escalated_ttr", "ev_resolve", array("target_state"=>"resolved", "actions"=>array('SetResolveDate','SetClosureDeadline'), "user_restriction"=>null));
 
 		MetaModel::Init_DefineTransition("resolved", "ev_reassign", array("target_state"=>"assigned", "actions"=>array(), "user_restriction"=>null));
 		MetaModel::Init_DefineTransition("resolved", "ev_close", array("target_state"=>"closed", "actions"=>array('SetClosureDate'), "user_restriction"=>null));
@@ -358,6 +364,16 @@ abstract class ResponseTicket extends Ticket
 	{
 		$iMaxWaitHours = 24;
 		$this->Set('closure_deadline', time() + $iMaxWaitHours * 3600);
+		return true;
+	}
+	public function SetAssignedDate($sStimulusCode)
+	{
+		$this->Set('assignment_date', time());
+		return true;
+	}
+	public function SetResolveDate($sStimulusCode)
+	{
+		$this->Set('resolution_date', time());
 		return true;
 	}
 	public function SetClosureDate($sStimulusCode)
