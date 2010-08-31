@@ -88,6 +88,7 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 				}
 				$aResetedObjs[$sRemoteClass][$iId]['attributes_list'] = implode(', ', $aExtKeyLabels); 
 				$aTotalResetedObjs[$sRemoteClass][$iId]['attributes_list'] = $aResetedObjs[$sRemoteClass][$iId]['attributes_list'];
+				$aTotalResetedObjs[$sRemoteClass][$iId]['attributes'] = $aResetedObjs[$sRemoteClass][$iId]['attributes'];
 				if (count($aForbiddenKeys) > 0)
 				{
 					$aTotalResetedObjs[$sRemoteClass][$iId]['issue'] = Dict::Format('UI:Delete:NotAllowedToUpdate_Fields',implode(', ', $aForbiddenKeys));
