@@ -381,7 +381,8 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$oAppContext = new ApplicationContext();
 		$sClassName = $oSet->GetFilter()->GetClass();
 		$aAttribs = array();
-		$aList = MetaModel::GetZListItems($sClassName, 'list');
+		$sZListName = isset($aExtraParams['zlist']) ? ($aExtraParams['zlist']) : 'list';
+		$aList = self::FlattenZList(MetaModel::GetZListItems($sClassName, '$sZListName'));
 		$aList = array_merge($aList, $aExtraFields);
 		if (!empty($sLinkageAttribute))
 		{

@@ -70,7 +70,7 @@ if (!empty($sExpression))
 				}
 				$sUrl = "$sProtocol://{$sServerName}{$sPort}/pages/";
 				$oP->set_base($sUrl);
-				cmdbAbstractObject::DisplaySet($oP, $oSet, array('menu' => false, 'display_limit' => false)); // no menu, no truncated list
+				cmdbAbstractObject::DisplaySet($oP, $oSet, array('menu' => false, 'display_limit' => false, 'zlist' => 'details')); // no menu, no truncated list, "details" zlist
 				break;
 				
 				case 'csv':
