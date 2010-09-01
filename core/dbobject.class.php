@@ -1096,6 +1096,10 @@ abstract class DBObject
 	}
 
 	// Make standard context arguments
+	// Note: Needs to be reviewed because it is currently called once per attribute when an object is written (CheckToWrite / CheckValue)
+	//       Several options here:
+	//       1) cache the result
+	//       2) set only the object ref and resolve the values iif needed from contextual templates and queries (easy for the queries, not for the templates)
 	public function ToArgs($sArgName = 'this')
 	{
 		$aScalarArgs = array();
@@ -1109,6 +1113,11 @@ abstract class DBObject
 		foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
 		{
 			$aScalarArgs[$sArgName.'->'.$sAttCode] = $this->Get($sAttCode);
+			if ($oAttDef->IsScalar())
+			{
+				$aScalarArgs[$sArgName.'->html('.$sAttCode.')'] = $this->GetAsHtml($sAttCode);
+				$aScalarArgs[$sArgName.'->label('.$sAttCode.')'] = strip_tags($this->GetAsHtml($sAttCode));
+			}
 		}
 		return $aScalarArgs;
 	}

@@ -10,7 +10,7 @@
 <to>SELECT Team WHERE id=:this-&gt;workgroup_id</to>
 <cc></cc>
 <bcc></bcc>
-<subject>The ticket $this-&gt;name()$, priority $this-&gt;priority$ has been assigned to the workgroup $this-&gt;workgroup_name$</subject>
+<subject>The ticket $this-&gt;name()$, priority $this-&gt;label(priority)$ has been assigned to the workgroup $this-&gt;workgroup_name$</subject>
 <body>&lt;html&gt;
 &lt;body&gt;
 &lt;p&gt;The incident ticket $this-&gt;name()$ has been assigned to the workgroup $this-&gt;workgroup_name$.&lt;/p&gt;
@@ -32,7 +32,7 @@
 <to>SELECT Person WHERE id=:this-&gt;agent_id</to>
 <cc></cc>
 <bcc></bcc>
-<subject>The ticket $this-&gt;name()$, priority $this-&gt;priority$ has been assigned to you</subject>
+<subject>The ticket $this-&gt;name()$, priority $this-&gt;label(priority)$ has been assigned to you</subject>
 <body>&lt;html&gt;
 &lt;body&gt;
 &lt;p&gt;The incident ticket $this-&gt;name()$ has been assigned to you.&lt;/p&gt;
@@ -54,7 +54,7 @@
 <to>SELECT Person WHERE id=:this-&gt;caller_id</to>
 <cc></cc>
 <bcc></bcc>
-<subject>Ticket $this-&gt;name()$, priority $this-&gt;priority$ - $this-&gt;ticket_status$</subject>
+<subject>Ticket $this-&gt;name()$, priority $this-&gt;label(priority)$ - $this-&gt;ticket_status$</subject>
 <body>&lt;html&gt;
 &lt;body&gt;
 &lt;p&gt;The incident ticket $this-&gt;name()$ has changed to status $this-&gt;ticket_status$&lt;/p&gt;

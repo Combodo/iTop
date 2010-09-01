@@ -39,6 +39,7 @@ class FileUploadException extends Exception
  */
 class utils
 {
+	private static $m_sConfigFile = ITOP_CONFIG_FILE;
 	private static $m_oConfig = null;
 
 	public static function ReadParam($sName, $defaultValue = "")
@@ -137,6 +138,15 @@ class utils
 	}
 
 	/**
+	 * Specify the application config file
+	 * @param string path to the config file
+	 * @return void
+	 */	 	 	 	
+	public static function SpecifyConfigFile($sFilePath)
+	{
+		self::$m_sConfigFile = $sFilePath;
+	}
+	/**
 	 * Get access to the application config file
 	 * @param none
 	 * @return Config The Config object initialized from the application config file
@@ -145,7 +155,7 @@ class utils
 	{
 		if (self::$m_oConfig == null)
 		{
-			self::$m_oConfig = new Config(ITOP_CONFIG_FILE);
+			self::$m_oConfig = new Config(self::$m_sConfigFile);
 		}
 		return self::$m_oConfig;
 	}

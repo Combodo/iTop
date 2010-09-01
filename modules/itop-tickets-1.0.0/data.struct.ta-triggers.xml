@@ -8,12 +8,12 @@
 <TriggerOnStateEnter id="5">
 <description>Incident ticket assigned to agent</description>
 <target_class>Incident</target_class>
-<state>Assigned</state>
+<state>assigned</state>
 </TriggerOnStateEnter>
 
 <TriggerOnStateEnter id="6">
 <description>Incident ticket resolved</description>
 <target_class>Incident</target_class>
-<state>Resolved</state>
+<state>resolved</state>
 </TriggerOnStateEnter>
 </Set>

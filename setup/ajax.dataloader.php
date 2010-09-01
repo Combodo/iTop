@@ -100,6 +100,8 @@ define('TMP_CONFIG_FILE', '../tmp-config-itop.php');
 header("Cache-Control: no-cache, must-revalidate");  // HTTP/1.1
 header("Expires: Fri, 17 Jul 1970 05:00:00 GMT");    // Date in the past
 
+Utils::SpecifyConfigFile(TMP_CONFIG_FILE);
+
 /**
  * Main program
  */
