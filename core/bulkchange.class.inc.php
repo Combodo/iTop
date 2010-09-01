@@ -274,6 +274,7 @@ class BulkChange
 				if ($oExtKey->IsNullAllowed())
 				{
 					$oTargetObj->Set($sAttCode, $oExtKey->GetNullValue());
+					$aResults[$sAttCode]= new CellStatus_Issue(null, $oTargetObj->Get($sAttCode), 'Object not found');
 				}
 				else
 				{

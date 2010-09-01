@@ -58,9 +58,11 @@ function IsIdField($sClassName, $sFieldCode)
 /**
  * Get all the fields xxx->yyy based on the field xxx which is an external key
  * @param string $sExtKeyAttCode Attribute code of the external key
+ * @param AttributeDefinition $oExtKeyAttDef Attribute definition of the external key
+ * @param bool $bAdvanced True if advanced mode
  * @return Ash List of codes=>display name: xxx->yyy where yyy are the reconciliation keys for the object xxx 
  */
-function GetMappingsForExtKey($sAttCode, AttributeDefinition $oExtKeyAttDef)
+function GetMappingsForExtKey($sAttCode, AttributeDefinition $oExtKeyAttDef, $bAdvanced)
 {
 	$aResult = array();
 	$sTargetClass = $oExtKeyAttDef->GetTargetClass();
@@ -68,7 +70,11 @@ function GetMappingsForExtKey($sAttCode, AttributeDefinition $oExtKeyAttDef)
 	{
 		if (MetaModel::IsReconcKey($sTargetClass, $sTargetAttCode))
 		{
-			$aResult[$sAttCode.'->'.$sTargetAttCode] = $oExtKeyAttDef->GetLabel().'->'.$oTargetAttDef->GetLabel();
+			if ($bAdvanced || !$oTargetAttDef->IsExternalKey())
+			{
+				// When not in advanced mode do not allow to use reconciliation keys (on external keys) if they are themselves external keys !
+				$aResult[$sAttCode.'->'.$sTargetAttCode] = $oExtKeyAttDef->GetLabel().'->'.$oTargetAttDef->GetLabel();
+			}
 		}
 	}
 	return $aResult;	
@@ -118,10 +124,15 @@ function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMo
 			{
 				if (MetaModel::IsReconcKey($sTargetClass, $sTargetAttCode))
 				{
-					$aChoices[$sAttCode.'->'.$sTargetAttCode] = $oAttDef->GetLabel().'->'.$oTargetAttDef->GetLabel();
-					if ((strcasecmp($sFieldName, $aChoices[$sAttCode.'->'.$sTargetAttCode]) == 0) || (strcasecmp($sFieldName, ($sAttCode.'->'.$sTargetAttCode)) == 0) )
+					if ($bAdvancedMode || (!$oTargetAttDef->IsExternalKey()))
 					{
-						$sFieldCode = $sAttCode.'->'.$sTargetAttCode;
+					
+						// When not in advanced mode do not allow to use reconciliation keys (on external keys) if they are themselves external keys !
+						$aChoices[$sAttCode.'->'.$sTargetAttCode] = $oAttDef->GetLabel().'->'.$oTargetAttDef->GetLabel();
+						if ((strcasecmp($sFieldName, $aChoices[$sAttCode.'->'.$sTargetAttCode]) == 0) || (strcasecmp($sFieldName, ($sAttCode.'->'.$sTargetAttCode)) == 0) )
+						{
+							$sFieldCode = $sAttCode.'->'.$sTargetAttCode;
+						}
 					}
 				}
 			}
@@ -303,7 +314,7 @@ switch($sOperation)
 			$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
 			if ($oAttDef->IsExternalKey())
 			{
-				$aMoreReconciliationKeys = array_keys(GetMappingsForExtKey($sAttCode, $oAttDef));
+				$aMoreReconciliationKeys = array_keys(GetMappingsForExtKey($sAttCode, $oAttDef, $bAdvanced));
 			}
 		}
 		$sDefaultKeys = '"'.implode('", "',array_merge($aReconciliationKeys,$aMoreReconciliationKeys)).'"';
