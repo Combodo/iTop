@@ -923,9 +923,6 @@ class SetupProfiles
 		//
 		foreach (MetaModel::GetClasses('bizmodel') as $sClass)
 		{
-			// Skip non instantiable classes
-			if (MetaModel::IsAbstract($sClass)) continue;
-
 			self::DoCreateActionGrant($iProfile, UR_ACTION_READ, $sClass);
 			self::DoCreateActionGrant($iProfile, UR_ACTION_BULK_READ, $sClass);
 		}
