@@ -790,10 +790,14 @@ abstract class DBObject
 			{
 				$aOriginalList = $oOriginalSet->ToArray();
 				$aNewSet = $oLinks->ToArray();
-				$aToDelete = array_diff($aOriginalList, $aNewSet);
-				foreach ($aToDelete as $iKey => $oObject)
+				
+				foreach($aOriginalList as $iId => $oObject)
 				{
-					$oObject->DBDelete();
+					if (!array_key_exists($iId, $aNewSet))
+					{
+						// It disappeared from the list
+						$oObject->DBDelete();
+					}
 				}
 			}
 		}
