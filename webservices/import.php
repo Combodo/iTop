@@ -112,9 +112,9 @@ try
 
 	$oMyChange = MetaModel::NewObject("CMDBChange");
 	$oMyChange->Set("date", time());
-	if (UserRights::GetUser() != UserRights::GetRealUser())
+	if (UserRights::IsImpersonated())
 	{
-		$sUserString = UserRights::GetRealUser()." on behalf of ".UserRights::GetUser();
+		$sUserString = Dict::Format('UI:Archive_User_OnBehalfOf_User', UserRights::GetRealUser(), UserRights::GetUser());
 	}
 	else
 	{

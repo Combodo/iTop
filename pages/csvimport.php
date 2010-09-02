@@ -314,9 +314,9 @@ function ProcessCSVData(WebPage $oPage, $bSimulate = true)
 		// We're doing it for real, let's create a change
 		$oMyChange = MetaModel::NewObject("CMDBChange");
 		$oMyChange->Set("date", time());
-		if (UserRights::GetUser() != UserRights::GetRealUser())
+		if (UserRights::IsImpersonated())
 		{
-			$sUserString = UserRights::GetRealUser()." on behalf of ".UserRights::GetUser();
+			$sUserString = Dict::Format('UI:Archive_User_OnBehalfOf_User', UserRights::GetRealUser(), UserRights::GetUser());
 		}
 		else
 		{
