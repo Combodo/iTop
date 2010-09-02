@@ -223,7 +223,6 @@ function ResetPwd(id)
 function PasswordFieldChanged(id)
 {
 	// Set the flag, to tell that the password changed
-	console.log('Password changed');
 	$('#'+id+'_changed').val(1);
 }
 
