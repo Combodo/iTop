@@ -423,7 +423,7 @@ abstract class MetaModel
 
 	final static public function DBGetView($sClass)
 	{
-		return self::$m_sTablePrefix."_view_".$sClass;
+		return self::$m_sTablePrefix."view_".$sClass;
 	}
 
 	final static protected function DBEnumTables()
