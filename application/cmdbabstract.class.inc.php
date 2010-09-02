@@ -382,7 +382,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$sClassName = $oSet->GetFilter()->GetClass();
 		$aAttribs = array();
 		$sZListName = isset($aExtraParams['zlist']) ? ($aExtraParams['zlist']) : 'list';
-		$aList = self::FlattenZList(MetaModel::GetZListItems($sClassName, '$sZListName'));
+		$aList = self::FlattenZList(MetaModel::GetZListItems($sClassName, $sZListName));
 		$aList = array_merge($aList, $aExtraFields);
 		if (!empty($sLinkageAttribute))
 		{
@@ -390,6 +390,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 			// and other objects...
 			// The display will then group all the attributes related to the link itself:
 			// | Link_attr1 | link_attr2 | ... || Object_attr1 | Object_attr2 | Object_attr3 | .. | Object_attr_n |
+			$aDisplayList = array();
 			$aAttDefs = MetaModel::ListAttributeDefs($sClassName);
 			assert(isset($aAttDefs[$sLinkageAttribute]));
 			$oAttDef = $aAttDefs[$sLinkageAttribute];
