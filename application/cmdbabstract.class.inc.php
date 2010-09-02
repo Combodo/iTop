@@ -661,7 +661,14 @@ abstract class cmdbAbstractObject extends CMDBObject
 				{
 					$sExtKeyLabel = MetaModel::GetLabel($sClassName, $oAttDef->GetKeyAttCode());
 					$sRemoteAttLabel = MetaModel::GetLabel($oAttDef->GetTargetClass(), $oAttDef->GetExtAttCode());
-					$aHeader[] = $sExtKeyLabel.'->'.$sRemoteAttLabel;
+					$oTargetAttDef = MetaModel::GetAttributeDef($oAttDef->GetTargetClass(), $oAttDef->GetExtAttCode());
+					$sSuffix = '';
+					if ($oTargetAttDef->IsExternalKey())
+					{
+						$sSuffix = '->id';
+					}
+					
+					$aHeader[] = $sExtKeyLabel.'->'.$sRemoteAttLabel.$sSuffix;
 				}
 				else
 				{

@@ -70,10 +70,16 @@ function GetMappingsForExtKey($sAttCode, AttributeDefinition $oExtKeyAttDef, $bA
 	{
 		if (MetaModel::IsReconcKey($sTargetClass, $sTargetAttCode))
 		{
-			if ($bAdvanced || !$oTargetAttDef->IsExternalKey())
+			$bExtKey = $oTargetAttDef->IsExternalKey();
+			$sSuffix = '';
+			if ($bExtKey)
+			{
+				$sSuffix = '->id';
+			}
+			if ($bAdvanced || !$bExtKey)
 			{
 				// When not in advanced mode do not allow to use reconciliation keys (on external keys) if they are themselves external keys !
-				$aResult[$sAttCode.'->'.$sTargetAttCode] = $oExtKeyAttDef->GetLabel().'->'.$oTargetAttDef->GetLabel();
+				$aResult[$sAttCode.'->'.$sTargetAttCode] = $oExtKeyAttDef->GetLabel().'->'.$oTargetAttDef->GetLabel().$sSuffix;
 			}
 		}
 	}
@@ -124,12 +130,18 @@ function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMo
 			{
 				if (MetaModel::IsReconcKey($sTargetClass, $sTargetAttCode))
 				{
-					if ($bAdvancedMode || (!$oTargetAttDef->IsExternalKey()))
+					$bExtKey = $oTargetAttDef->IsExternalKey();
+					$sSuffix = '';
+					if ($bExtKey)
+					{
+						$sSuffix = '->id';
+					}
+					if ($bAdvancedMode || !$bExtKey)
 					{
 					
 						// When not in advanced mode do not allow to use reconciliation keys (on external keys) if they are themselves external keys !
-						$aChoices[$sAttCode.'->'.$sTargetAttCode] = $oAttDef->GetLabel().'->'.$oTargetAttDef->GetLabel();
-						if ((strcasecmp($sFieldName, $aChoices[$sAttCode.'->'.$sTargetAttCode]) == 0) || (strcasecmp($sFieldName, ($sAttCode.'->'.$sTargetAttCode)) == 0) )
+						$aChoices[$sAttCode.'->'.$sTargetAttCode] = $oAttDef->GetLabel().'->'.$oTargetAttDef->GetLabel().$sSuffix;
+						if ((strcasecmp($sFieldName, $aChoices[$sAttCode.'->'.$sTargetAttCode]) == 0) || (strcasecmp($sFieldName, ($sAttCode.'->'.$sTargetAttCode.$sSuffix)) == 0) )
 						{
 							$sFieldCode = $sAttCode.'->'.$sTargetAttCode;
 						}
