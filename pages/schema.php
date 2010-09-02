@@ -269,33 +269,20 @@ function DisplayClassesList($oPage)
 	$oPage->add("<h1>".Dict::S('UI:Schema:Title')."</h1>\n");
 
 	$oPage->add("<ul id=\"ClassesList\" class=\"treeview fileview\">\n");
-	foreach(MetaModel::EnumCategories() as $sCategory)
+	foreach(MetaModel::GetClasses() as $sClassName)
 	{
-		if (empty($sCategory)) continue; // means 'all' -> skip
-
-		$sClosed = ($sCategory == 'bizmodel') ? '' : ' class="closed"';
-		$oPage->add("<li$sClosed>".Dict::Format('UI:Schema:CategoryMenuItem', $sCategory)."\n");
-
-		$oPage->add("<ul>\n");
-		foreach(MetaModel::GetClasses($sCategory) as $sClassName)
+		if (MetaModel::IsRootClass($sClassName))
 		{
-			if (MetaModel::IsStandaloneClass($sClassName))
-			{
-				$oPage->add("<li>".MakeClassHLink($sClassName)."</li>\n");
-			}
-			else if (MetaModel::IsRootClass($sClassName))
-			{
-				$oPage->add("<li class=\"closed\">".MakeClassHLink($sClassName)."\n");
-				DisplaySubclasses($oPage, $sClassName);
-				$oPage->add("</li>\n");
-			}
+			$oPage->add("<li class=\"closed\">".MakeClassHLink($sClassName)."\n");
+			DisplaySubclasses($oPage, $sClassName);
+			$oPage->add("</li>\n");
 		}
-		$oPage->add("</ul>\n");
-
-		$oPage->add("</li>\n");
+		elseif (MetaModel::IsStandaloneClass($sClassName))
+		{
+			$oPage->add("<li>".MakeClassHLink($sClassName)."</li>\n");
+		}
 	}
 	$oPage->add("</ul>\n");
-
 
 	$oPage->add("<h1>".Dict::S('UI:Schema:Relationships')."</h1>\n");
 
@@ -320,7 +307,7 @@ function DisplayClassesList($oPage)
  */
 function DisplayClassDetails($oPage, $sClass)
 {
-	$oPage->p("<h2>$sClass</h2><br/>\n".MetaModel::GetClassDescription($sClass)."<br/>\n");
+	$oPage->add("<h2>$sClass - ".MetaModel::GetClassDescription($sClass)."</h2>\n");
 	if (MetaModel::IsAbstract($sClass))
 	{
 		$oPage->p(Dict::S('UI:Schema:AbstractClass'));
@@ -329,32 +316,33 @@ function DisplayClassDetails($oPage, $sClass)
 	{
 		$oPage->p(Dict::S('UI:Schema:NonAbstractClass'));
 	}
-	$oPage->p("<h3>".Dict::S('UI:Schema:ClassHierarchyTitle')."</h3>");
-	$oPage->p("[<a href=\"?operation='list'\">".Dict::S('UI:Schema:AllClasses')."</a>]");
-	// List the parent classes
-	$sParent = MetaModel::GetParentPersistentClass($sClass);
-	$aParents = array();
-	$aParents[] = $sClass;
-	while($sParent != "" && $sParent != 'cmdbAbstractObject')
+
+//	$oPage->p("<h3>".Dict::S('UI:Schema:ClassHierarchyTitle')."</h3>");
+
+	$aParentClasses = array();
+	foreach(MetaModel::EnumParentClasses($sClass) as $sParentClass)
 	{
-		$aParents[] = $sParent;
-		$sParent = MetaModel::GetParentPersistentClass($sParent);
+		$aParentClasses[] = MakeClassHLink($sParentClass);
 	}
-	$iIndex = count($aParents);
-	$sSpace ="";
-	$oPage->add("<ul id=\"ClassHierarchy\">");
-	while ($iIndex > 0)
+	if (count($aParentClasses) > 0)
 	{
-		$iIndex--;
-		$oPage->add("<li>".MakeClassHLink($aParents[$iIndex])."\n");
-		$oPage->add("<ul>\n");
+		$sParents = implode(' &gt;&gt; ', $aParentClasses)." &gt;&gt; <b>$sClass</b>";
 	}
-	for($iIndex = 0; $iIndex < count($aParents); $iIndex++)
+	else
 	{
-		$oPage->add("</ul>\n</li>\n");
+		$sParents = '';
 	}
-	$oPage->add("</ul>\n");
-	$oPage->add_ready_script('$("#ClassHierarchy").treeview();');	
+	$oPage->p("[<a href=\"?operation='list'\">".Dict::S('UI:Schema:AllClasses')."</a>] $sParents");
+
+	if (MetaModel::HasChildrenClasses($sClass))
+	{
+		$oPage->add("<ul id=\"ClassHierarchy\">");
+		$oPage->add("<li class=\"closed\">".$sClass."\n");
+		DisplaySubclasses($oPage, $sClass);
+		$oPage->add("</li>\n");
+		$oPage->add("</ul>\n");
+		$oPage->add_ready_script('$("#ClassHierarchy").treeview();');	
+	}
 	$oPage->p('');
 	$oPage->AddTabContainer('details');
 	$oPage->SetCurrentTabContainer('details');
