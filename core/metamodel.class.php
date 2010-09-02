@@ -3242,6 +3242,8 @@ abstract class MetaModel
 		$sPwd = self::$m_oConfig->GetDBPwd();
 		$sSource = self::$m_oConfig->GetDBName();
 		$sTablePrefix = self::$m_oConfig->GetDBSubname();
+		$sCharacterSet = self::$m_oConfig->GetDBCharacterSet();
+		$sCollation = self::$m_oConfig->GetDBCollation();
 
 		$oKPI = new ExecutionKPI();
 
@@ -3255,6 +3257,7 @@ abstract class MetaModel
 		self::$m_sTablePrefix = $sTablePrefix;
 
 		CMDBSource::Init($sServer, $sUser, $sPwd); // do not select the DB (could not exist)
+		CMDBSource::SetCharacterSet($sCharacterSet, $sCollation);
 	}
 
 	public static function GetModuleSetting($sModule, $sProperty, $defaultvalue = null)

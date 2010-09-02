@@ -361,6 +361,7 @@ abstract class TestScenarioOnDB extends TestHandler
 		$sDBName = $this->GetDBName();
 
 		CMDBSource::Init($sDBHost, $sDBUser, $sDBPwd);
+		CMDBSource::SetCharacterSet();
 		if (CMDBSource::IsDB($sDBName))
 		{
 			CMDBSource::DropDB($sDBName);

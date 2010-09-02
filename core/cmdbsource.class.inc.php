@@ -69,6 +69,21 @@ class CMDBSource
 		}
 	}
 
+	public static function SetCharacterSet($sCharset = 'utf8', $sCollation = 'utf8_general_ci')
+	{
+		if (strlen($sCharset) > 0)
+		{
+			if (strlen($sCollation) > 0)
+			{
+				self::Query("SET NAMES '$sCharset' COLLATE '$sCollation'");
+			}
+			else
+			{
+				self::Query("SET NAMES '$sCharset'");
+			}
+		}
+	}
+
 	public static function ListDB()
 	{
 		$aDBs = self::QueryToCol('SHOW DATABASES', 'Database');

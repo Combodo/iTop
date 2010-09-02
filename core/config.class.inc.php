@@ -33,6 +33,9 @@ class ConfigException extends CoreException
 {
 }
 
+define ('DEFAULT_CHARACTER_SET', 'utf8');
+define ('DEFAULT_COLLATION', 'utf8_general_ci');
+
 define ('DEFAULT_LOG_GLOBAL', true);
 define ('DEFAULT_LOG_NOTIFICATION', true);
 define ('DEFAULT_LOG_ISSUE', true);
@@ -73,6 +76,8 @@ class Config
 	protected $m_sDBPwd;
 	protected $m_sDBName;
 	protected $m_sDBSubname;
+	protected $m_sDBCharacterSet;
+	protected $m_sDBCollation;
 
 	/**
 	 * @var integer Event log options (see LOG_... definition)
@@ -182,6 +187,8 @@ class Config
 		$this->m_sDBPwd = '';
 		$this->m_sDBName = '';
 		$this->m_sDBSubname = '';
+		$this->m_sDBCharacterSet = DEFAULT_CHARACTER_SET;
+		$this->m_sDBCollation = DEFAULT_COLLATION;
 		$this->m_bLogGlobal = DEFAULT_LOG_GLOBAL;
 		$this->m_bLogNotification = DEFAULT_LOG_NOTIFICATION;
 		$this->m_bLogIssue = DEFAULT_LOG_ISSUE;
@@ -283,6 +290,9 @@ class Config
 		$this->m_sDBPwd = trim($MySettings['db_pwd']);
 		$this->m_sDBName = trim($MySettings['db_name']);
 		$this->m_sDBSubname = trim($MySettings['db_subname']);
+
+		$this->m_sDBCharacterSet = isset($MySettings['db_character_set']) ? trim($MySettings['db_character_set']) : DEFAULT_CHARACTER_SET;
+		$this->m_sDBCollation = isset($MySettings['db_collation']) ? trim($MySettings['db_collation']) : DEFAULT_COLLATION;
 
 		$this->m_bLogGlobal = isset($MySettings['log_global']) ? (bool) trim($MySettings['log_global']) : DEFAULT_LOG_GLOBAL;
 		$this->m_bLogNotification = isset($MySettings['log_notification']) ? (bool) trim($MySettings['log_notification']) : DEFAULT_LOG_NOTIFICATION;
@@ -389,6 +399,16 @@ class Config
 	public function GetDBSubname()
 	{
 		return $this->m_sDBSubname;
+	}
+
+	public function GetDBCharacterSet()
+	{
+		return $this->m_sDBCharacterSet;
+	}
+
+	public function GetDBCollation()
+	{
+		return $this->m_sDBCollation;
 	}
 
 	public function GetDBUser()
@@ -499,6 +519,16 @@ class Config
 	public function SetDBSubname($sDBSubName)
 	{
 		$this->m_sDBSubname = $sDBSubName;
+	}
+
+	public function SetDBCharacterSet($sDBCharacterSet)
+	{
+		$this->m_sDBCharacterSet = $sDBCharacterSet;
+	}
+
+	public function SetDBCollation($sDBCollation)
+	{
+		$this->m_sDBCollation = $sDBCollation;
 	}
 
 	public function SetDBUser($sUser)
@@ -626,6 +656,8 @@ class Config
 			fwrite($hFile, "\t'db_pwd' => '".addslashes($this->m_sDBPwd)."',\n");
 			fwrite($hFile, "\t'db_name' => '{$this->m_sDBName}',\n");
 			fwrite($hFile, "\t'db_subname' => '{$this->m_sDBSubname}',\n");
+			fwrite($hFile, "\t'db_character_set' => '{$this->m_sDBCharacterSet}',\n");
+			fwrite($hFile, "\t'db_collation' => '{$this->m_sDBCollation}',\n");
 			fwrite($hFile, "\n");
 			fwrite($hFile, "\t'log_global' => {$this->m_bLogGlobal},\n");
 			fwrite($hFile, "\t'log_notification' => {$this->m_bLogNotification},\n");
