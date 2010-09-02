@@ -303,11 +303,11 @@ class DisplayBlock
 					$sExternalFilterValue = utils::ReadParam($sFilterCode, '');
 					if (isset($aExtraParams[$sFilterCode]))
 					{
-						$this->m_oFilter->AddCondition($sFilterCode, $aExtraParams[$sFilterCode]); // Use the default 'loose' operator
+						$this->m_oFilter->AddCondition($sFilterCode, trim($aExtraParams[$sFilterCode])); // Use the default 'loose' operator
 					}
 					else if ($bDoSearch && $sExternalFilterValue != "")
 					{
-						$this->m_oFilter->AddCondition($sFilterCode, $sExternalFilterValue); // Use the default 'loose' operator
+						$this->m_oFilter->AddCondition($sFilterCode, trim($sExternalFilterValue)); // Use the default 'loose' operator
 					}
 				}
 			}
