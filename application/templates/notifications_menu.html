@@ -2,7 +2,7 @@
 <h1><itopstring>UI:NotificationsMenu:Title</itopstring></h1>
 </div>
 <itoptoggle name="UI:NotificationsMenu:Help" open="true">
-<div style="padding: 1em; font-size:1.25em;background:#E8F3CF;margin-top: 0.25em;">
+<div style="padding: 1em; font-size:10pt;background:#E8F3CF;margin-top: 0.25em;">
 <img src="../images/bell.png" style="margin-top: -60px; margin-right: 10px; float: right;">
 <itopstring>UI:NotificationsMenu:HelpContent</itopstring>
 </div>
@@ -11,22 +11,7 @@
 <itoptabs>
 	<itoptab name="UI:NotificationsMenu:Triggers">
 		<h2><itopstring>UI:NotificationsMenu:AvailableTriggers</itopstring></h2>
-		<table style="border:0;border-spacing:10px;width:100%;">
-		<tr>
-		<td style="vertical-align:top;width:33%;padding:10px;background:#f8f8f8;">
-		<h3><itopstring>UI:NotificationsMenu:OnCreate</itopstring></h3>
-		<itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql">SELECT TriggerOnObjectCreate</itopblock>
-		</td>
-		<td style="vertical-align:top;width:33%;padding:10px;background:#f8f8f8;">
-		<h3><itopstring>UI:NotificationsMenu:OnStateEnter</itopstring></h3>
-		<itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql">SELECT TriggerOnStateEnter</itopblock>
-		</td>
-		<td style="vertical-align:top;width:33%;padding:10px;background:#f8f8f8;">
-		<h3><itopstring>UI:NotificationsMenu:OnStateLeave</itopstring></h3>
-		<itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql">SELECT TriggerOnStateLeave</itopblock>
-		</td>
-		</tr>
-		</table>
+		<itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql">SELECT Trigger</itopblock>
 	</itoptab>
 	<itoptab name="UI:NotificationsMenu:Actions">
 		<h2><itopstring>UI:NotificationsMenu:AvailableActions</itopstring></h2>
