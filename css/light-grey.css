@@ -136,7 +136,7 @@ td.label {
     font-weight:bold;	
 }
 
-.ui-widget-content td a, .ui-widget-content td a:visited, p a, p a:visited, td a, td a:visited {
+.ui-widget-content td a, p a, p a:visited, td a, td a:visited {
 	text-decoration:none;
 	color: #1C94C4;
 	padding-left:14px;
