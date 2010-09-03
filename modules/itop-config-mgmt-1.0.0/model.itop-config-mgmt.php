@@ -72,7 +72,7 @@ class Location extends cmdbAbstractObject
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("name", "org_id"),
+			"reconc_keys" => array("name", "org_id", "org_name"),
 			"db_table" => "location",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -112,7 +112,7 @@ abstract class Contact extends cmdbAbstractObject
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("name","org_id","email"),
+			"reconc_keys" => array("name","org_id", "org_name", "email"),
 			"db_table" => "contact",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -186,7 +186,7 @@ class Team extends Contact
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("name"),
+			"reconc_keys" => array("name", "org_id", "org_name"),
 			"db_table" => "team",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -250,7 +250,7 @@ abstract class Document extends cmdbAbstractObject
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("name"),
+			"reconc_keys" => array("name","org_id","org_name"),
 			"db_table" => "document",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -260,6 +260,8 @@ abstract class Document extends cmdbAbstractObject
 		MetaModel::Init_InheritAttributes();
 
 		MetaModel::Init_AddAttribute(new AttributeString("name", array("allowed_values"=>null, "sql"=>"name", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("org_id", array("targetclass"=>"Organization", "jointype"=>null, "allowed_values"=>null, "sql"=>"org_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("org_name", array("allowed_values"=>null, "extkey_attcode"=>"org_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("description", array("allowed_values"=>null, "sql"=>"description", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("type", array("allowed_values"=>new ValueSetEnum('contract,networkmap,presentation,training,whitePaper,workinginstructions'), "sql"=>"type", "default_value"=>"presentation", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('draft,published,obsolete'), "sql"=>"status", "default_value"=>"draft", "is_null_allowed"=>false, "depends_on"=>array())));
@@ -268,10 +270,10 @@ abstract class Document extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("ticket_list", array("linked_class"=>"lnkTicketToDoc", "ext_key_to_me"=>"document_id", "ext_key_to_remote"=>"ticket_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("ci_list", array("linked_class"=>"lnkCIToDoc", "ext_key_to_me"=>"document_id", "ext_key_to_remote"=>"ci_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('name', 'description', 'type', 'status', 'contract_list', 'service_list', 'ticket_list', 'ci_list'));
-		MetaModel::Init_SetZListItems('advanced_search', array('name', 'description', 'type', 'status'));
-		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'type', 'status'));
-		MetaModel::Init_SetZListItems('list', array('type', 'status'));
+		MetaModel::Init_SetZListItems('details', array('name', 'org_id', 'description', 'type', 'status', 'contract_list', 'service_list', 'ticket_list', 'ci_list'));
+		MetaModel::Init_SetZListItems('advanced_search', array('name', 'org_id', 'description', 'type', 'status'));
+		MetaModel::Init_SetZListItems('standard_search', array('name', 'org_id', 'description', 'type', 'status'));
+		MetaModel::Init_SetZListItems('list', array('name', 'org_id', 'type', 'status'));
 	}
 }
 class ExternalDoc extends Document
@@ -285,7 +287,7 @@ class ExternalDoc extends Document
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("name"),
+			"reconc_keys" => array("name","org_id","org_name"),
 			"db_table" => "externaldoc",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -296,10 +298,10 @@ class ExternalDoc extends Document
 
 		MetaModel::Init_AddAttribute(new AttributeURL("url", array("target"=>"_blank", "allowed_values"=>null, "sql"=>"url", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('name', 'description', 'type', 'status', 'contract_list', 'service_list', 'ticket_list', 'ci_list', 'url'));
-		MetaModel::Init_SetZListItems('advanced_search', array('name', 'description', 'type', 'status', 'url'));
-		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'type', 'status', 'url'));
-		MetaModel::Init_SetZListItems('list', array('type', 'status', 'url'));
+		MetaModel::Init_SetZListItems('details', array('name', 'org_id', 'description', 'type', 'status', 'contract_list', 'service_list', 'ticket_list', 'ci_list', 'url'));
+		MetaModel::Init_SetZListItems('advanced_search', array('name', 'org_id', 'description', 'type', 'status', 'url'));
+		MetaModel::Init_SetZListItems('standard_search', array('name', 'org_id', 'description', 'type', 'status', 'url'));
+		MetaModel::Init_SetZListItems('list', array('name', 'org_id', 'type', 'status', 'url'));
 	}
 }
 class Note extends Document
@@ -313,7 +315,7 @@ class Note extends Document
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("name"),
+			"reconc_keys" => array("name","org_id","org_name"),
 			"db_table" => "note",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -324,10 +326,10 @@ class Note extends Document
 
 		MetaModel::Init_AddAttribute(new AttributeWikiText("note", array("allowed_values"=>null, "sql"=>"note", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('name', 'description', 'type', 'status', 'contract_list', 'service_list', 'ticket_list', 'ci_list', 'note'));
-		MetaModel::Init_SetZListItems('advanced_search', array('name', 'description', 'type', 'status', 'note'));
-		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'type', 'status', 'note'));
-		MetaModel::Init_SetZListItems('list', array('type', 'status', 'note'));
+		MetaModel::Init_SetZListItems('details', array('name', 'org_id', 'description', 'type', 'status', 'contract_list', 'service_list', 'ticket_list', 'ci_list', 'note'));
+		MetaModel::Init_SetZListItems('advanced_search', array('name', 'org_id', 'description', 'type', 'status', 'note'));
+		MetaModel::Init_SetZListItems('standard_search', array('name', 'org_id', 'description', 'type', 'status', 'note'));
+		MetaModel::Init_SetZListItems('list', array('name', 'org_id', 'type', 'status', 'note'));
 	}
 }
 class FileDoc extends Document
@@ -341,7 +343,7 @@ class FileDoc extends Document
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("name"),
+			"reconc_keys" => array("name","org_id","org_name"),
 			"db_table" => "filedoc",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -352,10 +354,10 @@ class FileDoc extends Document
 
 		MetaModel::Init_AddAttribute(new AttributeBlob("contents", array("depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('name', 'description', 'type', 'status', 'contract_list', 'service_list', 'ticket_list', 'ci_list', 'contents'));
-		MetaModel::Init_SetZListItems('advanced_search', array('name', 'description', 'type', 'status'));
-		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'type', 'status'));
-		MetaModel::Init_SetZListItems('list', array('type', 'status', 'contents'));
+		MetaModel::Init_SetZListItems('details', array('name', 'org_id', 'description', 'type', 'status', 'contract_list', 'service_list', 'ticket_list', 'ci_list', 'contents'));
+		MetaModel::Init_SetZListItems('advanced_search', array('name', 'org_id', 'description', 'type', 'status'));
+		MetaModel::Init_SetZListItems('standard_search', array('name', 'org_id', 'description', 'type', 'status'));
+		MetaModel::Init_SetZListItems('list', array('name', 'org_id', 'type', 'status', 'contents'));
 	}
 	
 	/**
@@ -385,7 +387,7 @@ class Licence extends cmdbAbstractObject
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("name","org_id"),
+			"reconc_keys" => array("name","org_id", "org_name"),
 			"db_table" => "licence",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -423,7 +425,7 @@ class Subnet extends cmdbAbstractObject
 			"key_type" => "autoincrement",
 			"name_attcode" => "ip",
 			"state_attcode" => "",
-			"reconc_keys" => array("ip", "ip_mask","org_id"),
+			"reconc_keys" => array("ip", "ip_mask","org_id", "org_name"),
 			"db_table" => "subnet",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -656,7 +658,7 @@ abstract class FunctionalCI extends cmdbAbstractObject
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("name","org_id"),
+			"reconc_keys" => array("name","org_id", "owner_name"),
 			"db_table" => "functionalci",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -710,7 +712,7 @@ abstract class SoftwareInstance extends FunctionalCI
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("name", "device_id","org_id"),
+			"reconc_keys" => array("name", "device_id", "device_name", "org_id", "owner_name"),
 			"db_table" => "softwareinstance",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -775,7 +777,7 @@ class DBServerInstance extends SoftwareInstance
 			"key_type" => "autoincrement",
 			"name_attcode" => "software_name",
 			"state_attcode" => "",
-			"reconc_keys" => array("name","software_id", "device_id","org_id"),
+			"reconc_keys" => array("name","software_id","software_name","device_id","device_name","org_id","owner_name"),
 			"db_table" => "softwareinstance_dbserver",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -804,7 +806,7 @@ class ApplicationInstance extends SoftwareInstance
 			"key_type" => "autoincrement",
 			"name_attcode" => "software_name",
 			"state_attcode" => "",
-			"reconc_keys" => array("name","software_id", "device_id","org_id"),
+			"reconc_keys" => array("name","software_id","software_name","device_id","device_name","org_id","owner_name"),
 			"db_table" => "softwareinstance_application",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -834,7 +836,7 @@ class DatabaseInstance extends FunctionalCI
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("name","org_id","db_server_instance_id"),
+			"reconc_keys" => array("name","org_id","owner_name","db_server_instance_id","db_server_instance_name"),
 			"db_table" => "databaseinstance",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -885,7 +887,7 @@ class ApplicationSolution extends FunctionalCI
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("name","org_id"),
+			"reconc_keys" => array("name","org_id","owner_name"),
 			"db_table" => "applicationsolution",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -938,7 +940,7 @@ class BusinessProcess extends FunctionalCI
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("name","org_id"),
+			"reconc_keys" => array("name","org_id","owner_name"),
 			"db_table" => "businessprocess",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -983,7 +985,7 @@ abstract class ConnectableCI extends FunctionalCI
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("name","org_id"),
+			"reconc_keys" => array("name","org_id","owner_name"),
 			"db_table" => "connectableci",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -1014,7 +1016,7 @@ class NetworkInterface extends ConnectableCI
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("name","device_id","org_id"),
+			"reconc_keys" => array("name","device_id","org_id", "device_name", "owner_name"),
 			"db_table" => "networkinterface",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -1078,7 +1080,7 @@ abstract class Device extends ConnectableCI
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("name","org_id"),
+			"reconc_keys" => array("name","org_id","owner_name"),
 			"db_table" => "device",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -1130,7 +1132,7 @@ class PC extends Device
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("name","org_id"),
+			"reconc_keys" => array("name","org_id","owner_name"),
 			"db_table" => "pc",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -1164,7 +1166,7 @@ abstract class MobileCI extends Device
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("name","org_id"),
+			"reconc_keys" => array("name","org_id","owner_name"),
 			"db_table" => "mobileci",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -1191,7 +1193,7 @@ class MobilePhone extends MobileCI
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("name","org_id"),
+			"reconc_keys" => array("name","org_id","owner_name"),
 			"db_table" => "mobilephone",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -1221,7 +1223,7 @@ abstract class InfrastructureCI extends Device
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("name","org_id","location_id"),
+			"reconc_keys" => array("name","org_id","owner_name","location_id","location_name"),
 			"db_table" => "infrastructureci",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -1254,11 +1256,12 @@ class NetworkDevice extends InfrastructureCI
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("name","org_id","location_id"),
+			"reconc_keys" => array("name","org_id","owner_name","location_id","location_name"),
 			"db_table" => "networkdevice",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
 			"display_template" => "",
+			"icon" => "../modules/itop-config-mgmt-1.0.0/images/switch.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -1286,7 +1289,7 @@ class Server extends InfrastructureCI
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("name","org_id","location_id"),
+			"reconc_keys" => array("name","org_id","owner_name","location_id","location_name"),
 			"db_table" => "server",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -1320,7 +1323,7 @@ class Printer extends InfrastructureCI
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("name","org_id","location_id"),
+			"reconc_keys" => array("name","org_id","owner_name","location_id","location_name"),
 			"db_table" => "printer",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
