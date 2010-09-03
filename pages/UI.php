@@ -1395,8 +1395,10 @@ EOF
 		}
 	}
 	$oKPI->ComputeAndReport('GUI creation before output');
+
 	ExecutionKPI::ReportStats();
-	////MetaModel::ShowQueryTrace();
+	MetaModel::ShowQueryTrace();
+
 	$oP->output();
 }
 catch(CoreException $e)
@@ -1411,15 +1413,22 @@ catch(CoreException $e)
 	{
 		if (MetaModel::IsValidClass('EventIssue'))
 		{
-			$oLog = new EventIssue();
-
-			$oLog->Set('message', $e->getMessage());
-			$oLog->Set('userinfo', '');
-			$oLog->Set('issue', $e->GetIssue());
-			$oLog->Set('impact', 'Page could not be displayed');
-			$oLog->Set('callstack', $e->getTrace());
-			$oLog->Set('data', $e->getContextData());
-			$oLog->DBInsertNoReload();
+			try
+			{
+				$oLog = new EventIssue();
+	
+				$oLog->Set('message', $e->getMessage());
+				$oLog->Set('userinfo', '');
+				$oLog->Set('issue', $e->GetIssue());
+				$oLog->Set('impact', 'Page could not be displayed');
+				$oLog->Set('callstack', $e->getTrace());
+				$oLog->Set('data', $e->getContextData());
+				$oLog->DBInsertNoReload();
+			}
+			catch(Exception $e)
+			{
+				IssueLog::Error("Failed to log issue into the DB");
+			}
 		}
 
 		IssueLog::Error($e->getMessage());
@@ -1440,15 +1449,22 @@ catch(Exception $e)
 	{
 		if (MetaModel::IsValidClass('EventIssue'))
 		{
-			$oLog = new EventIssue();
-
-			$oLog->Set('message', $e->getMessage());
-			$oLog->Set('userinfo', '');
-			$oLog->Set('issue', 'PHP Exception');
-			$oLog->Set('impact', 'Page could not be displayed');
-			$oLog->Set('callstack', $e->getTrace());
-			$oLog->Set('data', array());
-			$oLog->DBInsertNoReload();
+			try
+			{
+				$oLog = new EventIssue();
+	
+				$oLog->Set('message', $e->getMessage());
+				$oLog->Set('userinfo', '');
+				$oLog->Set('issue', 'PHP Exception');
+				$oLog->Set('impact', 'Page could not be displayed');
+				$oLog->Set('callstack', $e->getTrace());
+				$oLog->Set('data', array());
+				$oLog->DBInsertNoReload();
+			}
+			catch(Exception $e)
+			{
+				IssueLog::Error("Failed to log issue into the DB");
+			}
 		}
 
 		IssueLog::Error($e->getMessage());

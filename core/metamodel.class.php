@@ -2080,7 +2080,8 @@ abstract class MetaModel
 				self::DbgTrace("External key $sKeyAttCode (class: $sKeyClass), call MakeQuery()");
 				$oSelectExtKey = self::MakeQuery($aSelectedClasses, $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oExtFilter, $aExpAtts);
 
-				$sLocalKeyField = current($oKeyAttDef->GetSQLExpressions()); // get the first column for an external key
+				$aCols = $oKeyAttDef->GetSQLExpressions(); // Workaround a PHP bug: sometimes issuing a Notice if invoking current(somefunc())
+				$sLocalKeyField = current($aCols); // get the first column for an external key
 				$sExternalKeyField = self::DBGetKey($sKeyClass);
 				self::DbgTrace("External key $sKeyAttCode, Join on $sLocalKeyField = $sExternalKeyField");
 				if ($oKeyAttDef->IsNullAllowed())
@@ -2992,7 +2993,8 @@ abstract class MetaModel
 					$sRemoteTable = self::DBGetTable($sRemoteClass);
 					$sRemoteKey = self::DBGetKey($sRemoteClass);
 
-					$sExtKeyField = current($oAttDef->GetSQLExpressions()); // get the first column for an external key
+					$aCols = $oKeyAttDef->GetSQLExpressions(); // Workaround a PHP bug: sometimes issuing a Notice if invoking current(somefunc())
+					$sExtKeyField = current($aCols); // get the first column for an external key
 
 					// Note: a class/table may have an external key on itself
 					$sSelBase = "SELECT DISTINCT maintable.`$sKeyField` AS id, maintable.`$sExtKeyField` AS extkey FROM `$sTable` AS maintable LEFT JOIN `$sRemoteTable` ON maintable.`$sExtKeyField` = `$sRemoteTable`.`$sRemoteKey`";
@@ -3038,7 +3040,8 @@ abstract class MetaModel
 					{
 						$sExpectedValues = implode(",", CMDBSource::Quote(array_keys($aAllowedValues), true));
 	
-						$sMyAttributeField = current($oAttDef->GetSQLExpressions()); // get the first column for the moment
+						$aCols = $oKeyAttDef->GetSQLExpressions(); // Workaround a PHP bug: sometimes issuing a Notice if invoking current(somefunc())
+						$sMyAttributeField = current($aCols); // get the first column for the moment
 						$sDefaultValue = $oAttDef->GetDefaultValue();
 						$sSelWrongRecs = "SELECT DISTINCT maintable.`$sKeyField` AS id FROM `$sTable` AS maintable WHERE maintable.`$sMyAttributeField` NOT IN ($sExpectedValues)";
 						self::DBCheckIntegrity_Check2Update($sSelWrongRecs, "Record having a column ('<em>$sAttCode</em>') with an unexpected value", $sMyAttributeField, CMDBSource::Quote($sDefaultValue), $sClass, $aErrorsAndFixes, $iNewDelCount, $aPlannedDel);
