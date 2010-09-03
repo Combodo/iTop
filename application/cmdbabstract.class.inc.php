@@ -959,14 +959,11 @@ abstract class cmdbAbstractObject extends CMDBObject
 
 		if (!$oAttDef->IsExternalField())
 		{
-			$aCSSClasses = array();
 			$bMandatory = 0;
 			if ( (!$oAttDef->IsNullAllowed()) || ($iFlags & OPT_ATT_MANDATORY))
 			{
-				$aCSSClasses[] = 'mandatory';
 				$bMandatory = 1;
 			}
-			$sCSSClasses = self::GetCSSClasses($aCSSClasses);
 			$sValidationField = "<span id=\"v_{$iId}\"></span>";
 			$sHelpText = $oAttDef->GetHelpOnEdition();
 			$aEventsList = array('validate');
@@ -988,7 +985,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 				case 'Text':
 					$aEventsList[] ='keyup';
 					$aEventsList[] ='change';
-					$sHTMLValue = "<textarea class=\"resizable\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">$value</textarea>&nbsp;{$sValidationField}";
+					$sHTMLValue = "<table><tr><td><textarea class=\"resizable\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">$value</textarea></td><td>{$sValidationField}</td></tr></table>";
 				break;
 	
 				case 'LinkedSet':
@@ -1027,27 +1024,23 @@ abstract class cmdbAbstractObject extends CMDBObject
 				default:
 					// #@# todo - add context information (depending on dimensions)
 					$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, $aArgs);
+					$iFieldSize = $oAttDef->GetMaxSize();
 					if ($aAllowedValues !== null)
 					{
-						//Enum field or external key, display a combo
-						//if (count($aAllowedValues) == 0)
-						//{
-						//	$sHTMLValue = "<input count=\"0\" type=\"text\" size=\"30\" value=\"\" name=\"attr_{$sAttCode}{$sNameSuffix}\" id=\"$iInputId\"{$sCSSClasses}/>";
-						//}
-						//else if (count($aAllowedValues) > 50)
 						if (count($aAllowedValues) > 50)
 						{
 							// too many choices, use an autocomplete
 							// The input for the auto complete
-							if ($sDisplayValue == $oAttDef->GetNullValue()) // Null or zero is displayed as ''
+							if ($oAttDef->IsNull($value)) // Null values are displayed as ''
 							{
 								$sDisplayValue = '';
 							}
-							$sHTMLValue = "<input count=\"".count($aAllowedValues)."\" type=\"text\" id=\"label_$iId\" size=\"30\" maxlength=\"255\" value=\"$sDisplayValue\"{$sCSSClasses}/>&nbsp;{$sValidationField}";
+							$sHTMLValue = "<input count=\"".count($aAllowedValues)."\" type=\"text\" id=\"label_$iId\" size=\"30\" maxlength=\"$iFieldSize\" value=\"$sDisplayValue\"/>&nbsp;{$sValidationField}";
 							// another hidden input to store & pass the object's Id
 							$sHTMLValue .= "<input type=\"hidden\" id=\"$iId\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"$value\" />\n";
 							$oPage->add_ready_script("\$('#label_$iId').autocomplete('./ajax.render.php', { scroll:true, minChars:3, onItemSelect:selectItem, onFindValue:findValue, formatItem:formatItem, autoFill:true, keyHolder:'#$iId', extraParams:{operation:'autocomplete', sclass:'$sClass',attCode:'".$sAttCode."'}});");
-							$oPage->add_ready_script("\$('#label_$iId').result( function(event, data, formatted) { if (data) { $('#{$iId}').val(data[1]); } } );");
+							$oPage->add_ready_script("\$('#label_$iId').blur(function() { $(this).search(); } );");
+							$oPage->add_ready_script("\$('#label_$iId').result( function(event, data, formatted) { if (data) { $('#{$iId}').val(data[1]); $('#{$iId}').trigger('change'); } else { $('#{$iId}').val(''); $('#{$iId}').trigger('change');} } );");
 							$aEventsList[] ='change';
 						}
 						else
@@ -1075,7 +1068,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 					}
 					else
 					{
-						$sHTMLValue = "<input title=\"$sHelpText\" type=\"text\" size=\"30\" maxlength=\"255\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iId\"/>&nbsp;{$sValidationField}";
+						$sHTMLValue = "<input title=\"$sHelpText\" type=\"text\" size=\"30\" maxlength=\"$iFieldSize\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iId\"/>&nbsp;{$sValidationField}";
 						$aEventsList[] ='keyup';
 						$aEventsList[] ='change';
 					}
@@ -1272,16 +1265,6 @@ EOF
 			}
 		}
 		return $oObj->DisplayModifyForm( $oPage, $aExtraParams = array());
-	}
-
-	protected static function GetCSSClasses($aCSSClasses)
-	{
-		$sCSSClasses = '';
-		if (!empty($aCSSClasses))
-		{
-			$sCSSClasses = ' class="'.implode(' ', $aCSSClasses).'" ';
-		}
-		return $sCSSClasses;
 	}
 
 	protected static function ProcessZlist($aList, $aDetails, $sCurrentTab, $sCurrentCol, $sCurrentSet)
