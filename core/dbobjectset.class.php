@@ -38,11 +38,13 @@ class DBObjectSet
 	private $m_aId2Row;
 	private $m_iCurrRow;
 
-	public function __construct(DBObjectSearch $oFilter, $aOrderBy = array(), $aArgs = array())
+	public function __construct(DBObjectSearch $oFilter, $aOrderBy = array(), $aArgs = array(), $iLimitCount = 0, $iLimitStart = 0)
 	{
 		$this->m_oFilter = $oFilter;
 		$this->m_aOrderBy = $aOrderBy;
 		$this->m_aArgs = $aArgs;
+		$this->m_iLimitCount = $iLimitCount;
+		$this->m_iLimitStart = $iLimitStart;
 
 		$this->m_bLoaded = false;
 		$this->m_aData = array(); // array of (row => array of (classalias) => object)
@@ -194,11 +196,33 @@ class DBObjectSet
 		return MetaModel::GetRootClass($this->GetClass());
 	}
 
+	public function SetLimit($iLimitCount, $iLimitStart = 0)
+	{
+		$this->m_iLimitCount = $iLimitCount;
+		$this->m_iLimitStart = $iLimitStart;
+	}
+
+	public function GetLimitCount()
+	{
+		return $this->m_iLimitCount;
+	}
+
+	public function GetLimitStart()
+	{
+		return $this->m_iLimitStart;
+	}
+
 	public function Load()
 	{
 		if ($this->m_bLoaded) return;
-
-		$sSQL = MetaModel::MakeSelectQuery($this->m_oFilter, $this->m_aOrderBy, $this->m_aArgs);
+		if ($this->m_iLimitCount > 0)
+		{
+			$sSQL = MetaModel::MakeSelectQuery($this->m_oFilter, $this->m_aOrderBy, $this->m_aArgs, $this->m_iLimitCount, $this->m_iLimitStart);
+		}
+		else
+		{
+			$sSQL = MetaModel::MakeSelectQuery($this->m_oFilter, $this->m_aOrderBy, $this->m_aArgs);
+		}
 		$resQuery = CMDBSource::Query($sSQL);
 		if (!$resQuery) return;
 
@@ -220,8 +244,13 @@ class DBObjectSet
 
 	public function Count()
 	{
-		if (!$this->m_bLoaded) $this->Load();
-		return count($this->m_aData);
+		$sSQL = MetaModel::MakeSelectQuery($this->m_oFilter, $this->m_aOrderBy, $this->m_aArgs, 0, 0, true);
+		$resQuery = CMDBSource::Query($sSQL);
+		if (!$resQuery) return 0;
+
+		$aRow = CMDBSource::FetchArray($resQuery);
+		CMDBSource::FreeResult($resQuery);
+		return $aRow['COUNT'];
 	}
 
 	public function Fetch($sClassAlias = '')

@@ -202,7 +202,8 @@ abstract class MetaModel
 
 	private static $m_oConfig = null;
 
-	private static $m_bTraceQueries = true;
+	private static $m_bQueryCacheEnabled = false;
+	private static $m_bTraceQueries = false;
 	private static $m_aQueriesLog = array();
 	
 	private static $m_bLogIssue = false;
@@ -1539,7 +1540,7 @@ abstract class MetaModel
 		return $aScalarArgs;
 	}
 
-	public static function MakeSelectQuery(DBObjectSearch $oFilter, $aOrderBy = array(), $aArgs = array())
+	public static function MakeSelectQuery(DBObjectSearch $oFilter, $aOrderBy = array(), $aArgs = array(), $iLimitCount = 0, $iLimitStart = 0, $bGetCount = false)
 	{
 		// Hide objects that are not visible to the current user
 		//
@@ -1562,12 +1563,23 @@ abstract class MetaModel
 			}
 		}
 
+		if (self::$m_bQueryCacheEnabled || self::$m_bTraceQueries)
+		{
+			// Need to identify the query
+			$sOqlQuery = $oFilter->ToOql();
+			$sOqlId = md5($sOqlQuery);
+		}
+		else
+		{
+			$sOqlQuery = "SELECTING... ".$oFilter->GetClass();
+			$sOqlId = "query id ? n/a";
+		}
+
+
 		// Query caching
 		//
-		$bQueryCacheEnabled = true;
-		if ($bQueryCacheEnabled)
+		if (self::$m_bQueryCacheEnabled)
 		{
-			$sOqlQuery = $oFilter->ToOql();
 			// Warning: using directly the query string as the key to the hash array can FAIL if the string
 			// is long and the differences are only near the end... so it's safer (but not bullet proof?)
 			// to use a hash (like md5) of the string as the key !
@@ -1578,15 +1590,11 @@ abstract class MetaModel
 			// SELECT SLT JOIN lnkSLTToSLA AS L1 ON L1.slt_id=SLT.id JOIN SLA ON L1.sla_id = SLA.id JOIN lnkContractToSLA AS L2 ON L2.sla_id = SLA.id JOIN CustomerContract ON L2.contract_id = CustomerContract.id WHERE SLT.ticket_priority = 1 AND SLA.service_id = 3 AND SLT.metric = 'TTR' AND CustomerContract.customer_id = 2
 			// the only difference is R instead or O at position 285 (TTR instead of TTO)...
 			//
-			if (array_key_exists(md5($sOqlQuery), self::$m_aQueryStructCache))
+			if (array_key_exists($sOqlId, self::$m_aQueryStructCache))
 			{
 				// hit!
-				$oSelect = clone self::$m_aQueryStructCache[$sOqlQuery];
+				$oSelect = clone self::$m_aQueryStructCache[$sOqlId];
 			}
-		}
-		else
-		{
-			$sOqlQuery = "dummy";
 		}
 
 		if (!isset($oSelect))
@@ -1600,7 +1608,7 @@ abstract class MetaModel
 			$oSelect = self::MakeQuery($oFilter->GetSelectedClasses(), $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oFilter);
 			$oKPI->ComputeStats('MakeQuery (select)', $sOqlQuery);
 
-			self::$m_aQueryStructCache[$sOqlQuery] = clone $oSelect;
+			self::$m_aQueryStructCache[$sOqlId] = clone $oSelect;
 		}
 
 		// Check the order by specification, and prefix with the class alias
@@ -1636,7 +1644,7 @@ abstract class MetaModel
 
 		try
 		{
-			$sRes = $oSelect->RenderSelect($aOrderSpec, $aScalarArgs);
+			$sRes = $oSelect->RenderSelect($aOrderSpec, $aScalarArgs, $iLimitCount, $iLimitStart, $bGetCount);
 		}
 		catch (MissingQueryArgument $e)
 		{
@@ -1647,16 +1655,25 @@ abstract class MetaModel
 
 		if (self::$m_bTraceQueries)
 		{
-			$aParams = array();
-			if (!array_key_exists($sOqlQuery, self::$m_aQueriesLog))
+			$sQueryId = md5($sRes);
+			if(!isset(self::$m_aQueriesLog[$sOqlId]))
 			{
-				self::$m_aQueriesLog[$sOqlQuery] = array(
-					'sql' => array(),
-					'count' => 0,
-				);
+				self::$m_aQueriesLog[$sOqlId]['oql'] = $sOqlQuery;
+				self::$m_aQueriesLog[$sOqlId]['hits'] = 1;
 			}
-			self::$m_aQueriesLog[$sOqlQuery]['count']++;
-			self::$m_aQueriesLog[$sOqlQuery]['sql'][] = $sRes;
+			else
+			{
+				self::$m_aQueriesLog[$sOqlId]['hits']++;
+			}
+			if(!isset(self::$m_aQueriesLog[$sOqlId]['queries'][$sQueryId]))
+			{
+				self::$m_aQueriesLog[$sOqlId]['queries'][$sQueryId]['sql'] = $sRes;
+				self::$m_aQueriesLog[$sOqlId]['queries'][$sQueryId]['count'] = 1;
+			}
+			else
+			{
+				self::$m_aQueriesLog[$sOqlId]['queries'][$sQueryId]['count']++;
+			}
 		}
 
 		return $sRes;
@@ -1664,17 +1681,37 @@ abstract class MetaModel
 
 	public static function ShowQueryTrace()
 	{
-		$iTotal = 0;
-		foreach (self::$m_aQueriesLog as $sOql => $aQueryData)
+		if (!self::$m_bTraceQueries) return;
+
+		$iOqlCount = count(self::$m_aQueriesLog);
+		if ($iOqlCount == 0)
 		{
-			echo "<h2>$sOql</h2>\n";
-			$iTotal += $aQueryData['count'];
-			echo '<p>'.$aQueryData['count'].'</p>';
-			echo '<p>Example: '.$aQueryData['sql'][0].'</p>';
+			echo "<p>Trace activated, but no query found</p>\n";
+			return;
 		}
-		echo "<h2>Total</h2>\n";
-		echo "<p>Count of executed queries: $iTotal</p>";
-		echo "<p>Count of built queries: ".count(self::$m_aQueriesLog)."</p>";
+
+		$iSqlCount = 0;
+		foreach (self::$m_aQueriesLog as $aOqlData)
+		{
+			$iSqlCount += $aOqlData['hits'];
+		}
+		echo "<h2>Stats on SELECT queries: OQL=$iOqlCount, SQL=$iSqlCount</h2>\n";
+
+		foreach (self::$m_aQueriesLog as $aOqlData)
+		{
+			$sOql = $aOqlData['oql'];
+			$sHits = $aOqlData['hits'];
+
+			echo "<p><b>$sHits</b> hits for OQL query: $sOql</p>\n";
+			echo "<ul id=\"ClassesRelationships\" class=\"treeview\">\n";
+			foreach($aOqlData['queries'] as $aSqlData)
+			{
+				$sQuery = $aSqlData['sql'];
+				$sSqlHits = $aSqlData['count'];
+				echo "<li><b>$sSqlHits</b> hits for SQL: <span style=\"font-size:60%\">$sQuery</span><li>\n";
+			}
+			echo "</ul>\n";
+		}
 	}
 
 	public static function MakeDeleteQuery(DBObjectSearch $oFilter, $aArgs = array())
@@ -3210,6 +3247,9 @@ abstract class MetaModel
 		{
 			ExecutionKPI::EnableMemory();
 		}
+
+		self::$m_bTraceQueries = self::$m_oConfig->GetDebugQueries();
+		self::$m_bQueryCacheEnabled = self::$m_oConfig->GetQueryCacheEnabled();
 
 		// Note: load the dictionary as soon as possible, because it might be
 		//       needed when some error occur

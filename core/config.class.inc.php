@@ -42,6 +42,10 @@ define ('DEFAULT_LOG_ISSUE', true);
 define ('DEFAULT_LOG_WEB_SERVICE', true);
 define ('DEFAULT_LOG_KPI_DURATION', false);
 define ('DEFAULT_LOG_KPI_MEMORY', false);
+define ('DEFAULT_DEBUG_QUERIES', false);
+
+define ('DEFAULT_QUERY_CACHE_ENABLED', true);
+
 
 define ('DEFAULT_MIN_DISPLAY_LIMIT', 10);
 define ('DEFAULT_MAX_DISPLAY_LIMIT', 15);
@@ -88,6 +92,8 @@ class Config
 	protected $m_bLogWebService;
 	protected $m_bLogKpiDuration; // private setting
 	protected $m_bLogKpiMemory; // private setting
+	protected $m_bDebugQueries; // private setting
+	protected $m_bQueryCacheEnabled; // private setting
 
 	/**
 	 * @var integer Number of elements to be displayed when there are more than m_iMaxDisplayLimit elements
@@ -300,6 +306,9 @@ class Config
 		$this->m_bLogWebService = isset($MySettings['log_web_service']) ? (bool) trim($MySettings['log_web_service']) : DEFAULT_LOG_WEB_SERVICE;
 		$this->m_bLogKPIDuration = isset($MySettings['log_kpi_duration']) ? (bool) trim($MySettings['log_kpi_duration']) : DEFAULT_LOG_KPI_DURATION;
 		$this->m_bLogKPIMemory = isset($MySettings['log_kpi_memory']) ? (bool) trim($MySettings['log_kpi_memory']) : DEFAULT_LOG_KPI_MEMORY;
+		$this->m_bDebugQueries = isset($MySettings['debug_queries']) ? (bool) trim($MySettings['debug_queries']) : DEFAULT_DEBUG_QUERIES;
+		$this->m_bQueryCacheEnabled = isset($MySettings['query_cache_enabled']) ? (bool) trim($MySettings['query_cache_enabled']) : DEFAULT_QUERY_CACHE_ENABLED;
+
 		$this->m_iMinDisplayLimit = isset($MySettings['min_display_limit']) ? trim($MySettings['min_display_limit']) : DEFAULT_MIN_DISPLAY_LIMIT;
 		$this->m_iMaxDisplayLimit = isset($MySettings['max_display_limit']) ? trim($MySettings['max_display_limit']) : DEFAULT_MAX_DISPLAY_LIMIT;
 		$this->m_iStandardReloadInterval = isset($MySettings['standard_reload_interval']) ? trim($MySettings['standard_reload_interval']) : DEFAULT_STANDARD_RELOAD_INTERVAL;
@@ -449,6 +458,16 @@ class Config
 	public function GetLogKPIMemory()
 	{
 		return $this->m_bLogKPIMemory;
+	}
+
+	public function GetDebugQueries()
+	{
+		return $this->m_bDebugQueries;
+	}
+
+	public function GetQueryCacheEnabled()
+	{
+		return $this->m_bQueryCacheEnabled;
 	}
 
 	public function GetMinDisplayLimit()

@@ -438,7 +438,6 @@ abstract class cmdbAbstractObject extends CMDBObject
 			$aAttribs[$sAttCode] = array('label' => MetaModel::GetLabel($sClassName, $sAttCode), 'description' => MetaModel::GetDescription($sClassName, $sAttCode));
 		}
 		$aValues = array();
-		$oSet->Seek(0);
 		$bDisplayLimit = isset($aExtraParams['display_limit']) ? $aExtraParams['display_limit'] : true;
 		$iMaxObjects = -1;
 		if ($bDisplayLimit)
@@ -446,8 +445,10 @@ abstract class cmdbAbstractObject extends CMDBObject
 			if ($oSet->Count() > utils::GetConfig()->GetMaxDisplayLimit())
 			{
 				$iMaxObjects = utils::GetConfig()->GetMinDisplayLimit();
+				$oSet->SetLimit($iMaxObjects);
 			}
 		}
+		$oSet->Seek(0);
 		while (($oObj = $oSet->Fetch()) && ($iMaxObjects != 0))
 		{
 			$aRow = array();

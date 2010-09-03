@@ -47,34 +47,50 @@ class ExecutionKPI
 	{
 		foreach (self::$m_aStats as $sOperation => $aOpStats)
 		{
-			echo "====================<br/>\n";
-			echo "KPIs for $sOperation<br/>\n";
-			echo "====================<br/>\n";
+			echo "<h2>KPIs for $sOperation</h2>\n";
 			$fTotalOp = 0;
 			$iTotalOp = 0;
 			$fMinOp = null;
 			$fMaxOp = 0;
+			echo "<ul>\n";
 			foreach ($aOpStats as $sArguments => $aEvents)
 			{
 				$fTotalInter = 0;
-				$iTotalInter = 0;
+				$fMinInter = null;
+				$fMaxInter = 0;
 				foreach ($aEvents as $fDuration)
 				{
 					$fTotalInter += $fDuration;
-					$iTotalInter++;
+					$fMinInter = is_null($fMinInter) ? $fDuration : min($fMinInter, $fDuration);
+					$fMaxInter = max($fMaxInter, $fDuration);
 
 					$fMinOp = is_null($fMinOp) ? $fDuration : min($fMinOp, $fDuration);
 					$fMaxOp = max($fMaxOp, $fDuration);
 				}
 				$fTotalOp += $fTotalInter;
 				$iTotalOp++;
-				echo "$sArguments: $iTotalInter (".round($fTotalInter, 3).")<br/>\n";
+
+				$iCountInter = count($aEvents);
+				$sTotalInter = round($fTotalInter, 3)."s";
+				if ($iCountInter > 1)
+				{
+					$sMinInter = round($fMinInter, 3)."s";
+					$sMaxInter = round($fMaxInter, 3)."s";
+					$sTimeDesc = "$sTotalInter (from $sMinInter to $sMaxInter) in $iCountInter times";
+				}
+				else
+				{
+					$sTimeDesc = "$sTotalInter";
+				}
+				echo "<li>Spent $sTimeDesc, on: <span style=\"font-size:60%\">$sArguments</span></li>\n";
 			}
-			echo "Total: $iTotalOp (".round($fTotalOp, 3).")<br/>\n";
-			echo "Min: ".round($fMinOp, 3)."<br/>\n";
-			echo "Max: ".round($fMaxOp, 3)."<br/>\n";
-			echo "Avg: ".round($fTotalOp / $iTotalOp, 3)."<br/>\n";
-			echo "====================<br/>\n";
+			echo "</ul>\n";
+			echo "<ul>Sumary for $sOperation\n";
+			echo "<li>Total: $iTotalOp (".round($fTotalOp, 3).")</li>\n";
+			echo "<li>Min: ".round($fMinOp, 3)."</li>\n";
+			echo "<li>Max: ".round($fMaxOp, 3)."</li>\n";
+			echo "<li>Avg: ".round($fTotalOp / $iTotalOp, 3)."</li>\n";
+			echo "</ul>\n";
 		}
 	}
 

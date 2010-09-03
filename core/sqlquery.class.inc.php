@@ -238,7 +238,7 @@ class SQLQuery
 	}
 
 	// Interface, build the SQL query
-	public function RenderSelect($aOrderBy = array(), $aArgs = array())
+	public function RenderSelect($aOrderBy = array(), $aArgs = array(), $iLimitCount = 0, $iLimitStart = 0, $bGetCount = false)
 	{
 		// The goal will be to complete the lists as we build the Joins
 		$aFrom = array();
@@ -248,15 +248,31 @@ class SQLQuery
 		$aSetValues = array();
 		$this->privRender($aFrom, $aFields, $oCondition, $aDelTables, $aSetValues);
 
-		$sSelect = self::ClauseSelect($aFields);
 		$sFrom   = self::ClauseFrom($aFrom);
 		$sWhere  = self::ClauseWhere($oCondition, $aArgs);
-		$sOrderBy = self::ClauseOrderBy($aOrderBy);
-		if (!empty($sOrderBy))
+		if ($bGetCount)
 		{
-			$sOrderBy = "ORDER BY $sOrderBy";
+			$sSQL = "SELECT COUNT(*) AS COUNT FROM $sFrom WHERE $sWhere";
 		}
-		return "SELECT DISTINCT $sSelect FROM $sFrom WHERE $sWhere $sOrderBy";
+		else
+		{
+			$sSelect = self::ClauseSelect($aFields);
+			$sOrderBy = self::ClauseOrderBy($aOrderBy);
+			if (!empty($sOrderBy))
+			{
+				$sOrderBy = "ORDER BY $sOrderBy";
+			}
+			if ($iLimitCount > 0)
+			{
+				$sLimit = 'LIMIT '.$iLimitStart.', '.$iLimitCount;
+			}
+			else
+			{
+				$sLimit = '';
+			}
+			$sSQL = "SELECT DISTINCT $sSelect FROM $sFrom WHERE $sWhere $sOrderBy $sLimit";
+		}
+		return $sSQL;
 	}
 
 	private static function ClauseSelect($aFields)
