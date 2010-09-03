@@ -5,7 +5,7 @@
 <description>This action informs a team that a ticket has been assigned their workgroup</description>
 <status>disabled</status>
 <test_recipient></test_recipient>
-<from></from>
+<from>test@test.com</from>
 <reply_to></reply_to>
 <to>SELECT Team WHERE id=:this-&gt;workgroup_id</to>
 <cc></cc>
@@ -27,7 +27,7 @@
 <description>This action informs an agent that a ticket has been assigned to her/him</description>
 <status>disabled</status>
 <test_recipient></test_recipient>
-<from></from>
+<from>test@test.com</from>
 <reply_to></reply_to>
 <to>SELECT Person WHERE id=:this-&gt;agent_id</to>
 <cc></cc>
@@ -49,7 +49,7 @@
 <description>This action is used to inform the caller</description>
 <status>disabled</status>
 <test_recipient></test_recipient>
-<from></from>
+<from>test@test.com</from>
 <reply_to></reply_to>
 <to>SELECT Person WHERE id=:this-&gt;caller_id</to>
 <cc></cc>
