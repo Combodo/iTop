@@ -458,7 +458,7 @@ class BenchmarkDataCreation
 		for($i = 0 ; $i < $this->m_aPlanned['Documents'] ; $i++)
 		{
 			$aData = array(
-				//'org_id' => $iOrg,
+				'org_id' => $iOrg,
 				'name' => "document$i",
 				'contents' => $oRefDoc,
 			);
