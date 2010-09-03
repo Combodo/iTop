@@ -507,19 +507,21 @@ class DBObjectSearch
 		return $this->m_oSearchCondition->Render($this->m_aParams, false);
 	}
 
-	public function serialize()
+	public function serialize($bDevelopParams = false, $aContextParams = null)
 	{
-		$sOql = $this->ToOql();
-		return base64_encode($sOql);
+		$sOql = $this->ToOql($bDevelopParams, $aContextParams);
+		return base64_encode(serialize(array($sOql, $this->m_aParams)));
 	}
 	
 	static public function unserialize($sValue)
 	{
-		$sOql = base64_decode($sValue);
+		$aData = unserialize(base64_decode($sValue));
+		$sOql = $aData[0];
+		$aParams = $aData[1];
 		// We've tried to use gzcompress/gzuncompress, but for some specific queries
 		// it was not working at all (See Trac #193)
 		// gzuncompress was issuing a warning "data error" and the return object was null
-		return self::FromOQL($sOql);
+		return self::FromOQL($sOql, $aParams);
 	}
 
 	// SImple BUt Structured Query Languag - SubuSQL
@@ -600,23 +602,28 @@ class DBObjectSearch
 		return $aRes;
 	}
 
-	public function ToOQL(&$aParams = null)
+	public function ToOQL($bDevelopParams = false, $aContextParams = null)
 	{
 		// Currently unused, but could be useful later
 		$bRetrofitParams = false;
 
-		if (is_null($aParams))
+		if ($bDevelopParams)
 		{
-			// Leave it as is, the rendering will be made with parameters in clear
+			if (is_null($aContextParams))
+			{
+				$aParams = array_merge($this->m_aParams);
+			}
+			else
+			{
+				$aParams = array_merge($aContextParams, $this->m_aParams);
+			}
 		}
 		else
 		{
-			if (count($this->m_aParams) > 0)
-			{
-				$aParams = array_merge($aParams, $this->m_aParams);
-			}
+			// Leave it as is, the rendering will be made with parameters in clear
+			$aParams = null;
 		}
-
+	
 		$sSelectedClasses = implode(', ', array_keys($this->m_aSelectedClasses));
 		$sRes = 'SELECT '.$sSelectedClasses.' FROM';
 
@@ -739,14 +746,14 @@ class DBObjectSearch
 
 	// Do not filter out depending on user rights
 	// In particular when we are currently in the process of evaluating the user rights...
-	static public function FromOQL_AllData($sQuery)
+	static public function FromOQL_AllData($sQuery, $aParams = null)
 	{
-		$oRes = self::FromOQL($sQuery);
+		$oRes = self::FromOQL($sQuery, $aParams);
 		$oRes->AllowAllData();
 		return $oRes;
 	}
 
-	static public function FromOQL($sQuery)
+	static public function FromOQL($sQuery, $aParams = null)
 	{
 		if (empty($sQuery)) return null;
 
@@ -859,6 +866,11 @@ class DBObjectSearch
 		if ($oConditionTree instanceof Expression)
 		{
 			$oResultFilter->m_oSearchCondition = $oResultFilter->OQLExpressionToCondition($sQuery, $oConditionTree, $aAliases);
+		}
+
+		if (!is_null($aParams))
+		{
+			$oResultFilter->m_aParams = $aParams;
 		}
 
 		if ($bOQLCacheEnabled)

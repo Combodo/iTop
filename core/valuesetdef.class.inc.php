@@ -109,11 +109,11 @@ class ValueSetObjects extends ValueSetDefinition
 		
 		if ($this->m_bAllowAllData)
 		{
-			$oFilter = DBObjectSearch::FromOQL_AllData($this->m_sFilterExpr, $aArgs);
+			$oFilter = DBObjectSearch::FromOQL_AllData($this->m_sFilterExpr);
 		}
 		else
 		{
-			$oFilter = DBObjectSearch::FromOQL($this->m_sFilterExpr, $aArgs);
+			$oFilter = DBObjectSearch::FromOQL($this->m_sFilterExpr);
 		}
 		if (!$oFilter) return false;
 
