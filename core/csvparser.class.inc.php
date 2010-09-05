@@ -38,6 +38,7 @@ define('evSEPARATOR', 1);
 define('evNEWLINE', 2);
 define('evTEXTQUAL', 3); // used for escaping as well
 define('evOTHERCHAR', 4);
+define('evEND', 5);
 
 
 /**
@@ -141,24 +142,28 @@ class CSVParser
 		$aTransitions[stSTARTING][evNEWLINE] = array('__AddRow', stSTARTING);
 		$aTransitions[stSTARTING][evTEXTQUAL] = array('', stQUALIFIED);
 		$aTransitions[stSTARTING][evOTHERCHAR] = array('__AddChar', stRAW);
+		$aTransitions[stSTARTING][evEND] = array('__AddRow', stSTARTING);
 
 		$aTransitions[stRAW][evBLANK] = array('__AddChar', stRAW);
 		$aTransitions[stRAW][evSEPARATOR] = array('__AddCellTrimmed', stSTARTING);
 		$aTransitions[stRAW][evNEWLINE] = array('__AddRowTrimmed', stSTARTING);
 		$aTransitions[stRAW][evTEXTQUAL] = array('__AddChar', stRAW);
 		$aTransitions[stRAW][evOTHERCHAR] = array('__AddChar', stRAW);
+		$aTransitions[stRAW][evEND] = array('__AddRowTrimmed', stSTARTING);
 
 		$aTransitions[stQUALIFIED][evBLANK] = array('__AddChar', stQUALIFIED);
 		$aTransitions[stQUALIFIED][evSEPARATOR] = array('__AddChar', stQUALIFIED);
 		$aTransitions[stQUALIFIED][evNEWLINE] = array('__AddChar', stQUALIFIED);
 		$aTransitions[stQUALIFIED][evTEXTQUAL] = array('', stESCAPED);
 		$aTransitions[stQUALIFIED][evOTHERCHAR] = array('__AddChar', stQUALIFIED);
+		$aTransitions[stQUALIFIED][evEND] = array('__AddRow', stSTARTING);
 
 		$aTransitions[stESCAPED][evBLANK] = array('', stESCAPED);
 		$aTransitions[stESCAPED][evSEPARATOR] = array('__AddCell', stSTARTING);
 		$aTransitions[stESCAPED][evNEWLINE] = array('__AddRow', stSTARTING);
 		$aTransitions[stESCAPED][evTEXTQUAL] = array('__AddChar', stQUALIFIED);
 		$aTransitions[stESCAPED][evOTHERCHAR] = array('__AddChar', stSTARTING);
+		$aTransitions[stESCAPED][evEND] = array('__AddRow', stSTARTING);
 
 		// Reset parser variables
 		$this->m_sCurrCell = '';
@@ -166,37 +171,43 @@ class CSVParser
 		$this->m_iToSkip = $iToSkip;
 		$this->m_aDataSet = array();
 
+		$iDataLength = strlen($this->m_sCSVData);
+
 		$iState = stSTARTING;
-		for($i = 0; $i < strlen($this->m_sCSVData) ; $i++)
+		for($i = 0; $i <= $iDataLength ; $i++)
 		{
-			$c = $this->m_sCSVData[$i];
-
-//			// Note: I did that because the unit test was not working fine (file edited with notepad: \n chars padded :-(
-//			if (ord($c) == 0) continue;
-
-			if ($c == $this->m_sSep)
+			if ($i == $iDataLength)
 			{
-				$iEvent = evSEPARATOR;
-			}
-			elseif ($c == ' ')
-			{
-				$iEvent = evBLANK;
-			}
-			elseif ($c == "\t")
-			{
-				$iEvent = evBLANK;
-			}
-			elseif ($c == "\n")
-			{
-				$iEvent = evNEWLINE;
-			}
-			elseif ($c == $this->m_sTextQualifier)
-			{
-				$iEvent = evTEXTQUAL;
+				$iEvent = evEND;
 			}
 			else
 			{
-				$iEvent = evOTHERCHAR;
+				$c = $this->m_sCSVData[$i];
+
+				if ($c == $this->m_sSep)
+				{
+					$iEvent = evSEPARATOR;
+				}
+				elseif ($c == ' ')
+				{
+					$iEvent = evBLANK;
+				}
+				elseif ($c == "\t")
+				{
+					$iEvent = evBLANK;
+				}
+				elseif ($c == "\n")
+				{
+					$iEvent = evNEWLINE;
+				}
+				elseif ($c == $this->m_sTextQualifier)
+				{
+					$iEvent = evTEXTQUAL;
+				}
+				else
+				{
+					$iEvent = evOTHERCHAR;
+				}
 			}
 
 			$sAction = $aTransitions[$iState][$iEvent][0];
@@ -218,8 +229,6 @@ class CSVParser
 			$iLineCount = count($this->m_aDataSet);
 			if (($iMax > 0) && ($iLineCount >= $iMax)) break;
 		}
-		// Close the final line
-		$this->__AddRow(null, $aFieldMap);
 		return $this->m_aDataSet;
 	}
 

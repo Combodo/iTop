@@ -88,8 +88,8 @@ abstract class TestHandler
 		$this->m_aErrors = array();
 	}
 
-	abstract static public function GetName();
-	abstract static public function GetDescription();
+	static public function GetName() {return "fooname";}
+	static public function GetDescription(){return "foodesc";}
 
 	protected function DoPrepare() {return true;}
 	abstract protected function DoExecute();
@@ -278,8 +278,8 @@ abstract class TestSoapWebService extends TestHandler
  */
 abstract class TestFunctionInOut extends TestFunction
 {
-	abstract static public function GetCallSpec(); // parameters to call_user_func
-	abstract static public function GetInOut(); // array of input => output
+//	abstract static public function GetCallSpec(); // parameters to call_user_func
+//	abstract static public function GetInOut(); // array of input => output
 
 	protected function DoExecute()
 	{
@@ -316,9 +316,9 @@ abstract class TestFunctionInOut extends TestFunction
  */
 abstract class TestUrl extends TestHandler
 {
-	abstract static public function GetUrl();
-	abstract static public function GetErrorKeywords();
-	abstract static public function GetWarningKeywords();
+//	abstract static public function GetUrl();
+//	abstract static public function GetErrorKeywords();
+//	abstract static public function GetWarningKeywords();
 
 	protected function DoExecute()
 	{
@@ -348,10 +348,10 @@ abstract class TestUserRights extends TestHandler
  */
 abstract class TestScenarioOnDB extends TestHandler
 {
-	abstract static public function GetDBHost();
-	abstract static public function GetDBUser();
-	abstract static public function GetDBPwd();
-	abstract static public function GetDBName();
+//	abstract static public function GetDBHost();
+//	abstract static public function GetDBUser();
+//	abstract static public function GetDBPwd();
+//	abstract static public function GetDBName();
 
 	protected function DoPrepare()
 	{
@@ -385,7 +385,7 @@ abstract class TestBizModel extends TestHandler
 {
 //	abstract static public function GetDBSubName();
 //	abstract static public function GetBusinessModelFile();
-	abstract static public function GetConfigFile();
+//	abstract static public function GetConfigFile();
 
 	protected function DoPrepare()
 	{

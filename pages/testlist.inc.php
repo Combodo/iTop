@@ -220,20 +220,6 @@ class TestCSVParser extends TestFunction
 
 	public function DoExecute()
 	{
-		$sDataFile = '"field1","field2","field3"
-"a","b","c"
-a,b,c
-"","",""
-,,
-"a""","b","c"
-"a1
-a2","b","c"
-"a1,a2","b","c"
-"a","b","c1,"",c2
-,c3"
-"a","b","ouf !"
-';
-
 		$sDataFile = '?field1?;?field2?;?field3?
 ?a?;?b?;?c?
 a;b;c
@@ -248,7 +234,7 @@ a2?;?b?;?c?
 ?a?;?b?;?c1,",c2
 ,c3?
 ?a?;?b?;?ouf !?
-';
+    Espace sur la fin ; 1234; e@taloc.com ';
 
 		echo "<pre style=\"font-style:italic;\">\n";
 		print_r($sDataFile);
@@ -267,6 +253,7 @@ a2?;?b?;?c?
 			array('a1,a2', 'b', 'c'),
 			array('a', 'b', "c1,\",c2\n,c3"),
 			array('a', 'b', 'ouf !'),
+			array('Espace sur la fin', '1234', 'e@taloc.com'),
 		);
 	
 		$oCSVParser = new CSVParser($sDataFile, ';', '?');
