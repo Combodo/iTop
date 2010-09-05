@@ -150,15 +150,15 @@ function CheckFields(sFormId, bDisplayAlert)
 	return (oFormErrors['err_'+sFormId] == 0); // If no error, submit the form
 }
 
-function ValidateField(sFieldId, sPattern, bMandatory, sFormId)
+function ValidateField(sFieldId, sPattern, bMandatory, sFormId, nullValue)
 {
 	var bValid = true;
 	var currentVal = $('#'+sFieldId).val();
-	if (bMandatory && ((currentVal == '') || (currentVal == 0) || (currentVal == '[]')))
+	if (bMandatory && (currentVal == nullValue))
 	{
 		bValid = false;
 	}
-	else if ((currentVal == '') || (currentVal == 0) || (currentVal == '[]'))
+	else if (currentVal == nullValue)
 	{
 		// An empty field is Ok...
 		bValid = true;
