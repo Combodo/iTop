@@ -31,7 +31,7 @@
  *
  * @package     iTopORM
  */
-class Trigger extends cmdbAbstractObject
+abstract class Trigger extends cmdbAbstractObject
 {
 	public static function Init()
 	{
@@ -77,7 +77,7 @@ class Trigger extends cmdbAbstractObject
 	}
 }
 
-class TriggerOnObject extends Trigger
+abstract class TriggerOnObject extends Trigger
 {
 	public static function Init()
 	{
@@ -106,7 +106,7 @@ class TriggerOnObject extends Trigger
 	}
 }
 
-class TriggerOnStateChange extends TriggerOnObject
+abstract class TriggerOnStateChange extends TriggerOnObject
 {
 	public static function Init()
 	{
