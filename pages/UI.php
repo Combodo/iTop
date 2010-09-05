@@ -1211,11 +1211,11 @@ EOF
 				$aTransition = $aTransitions[$sStimulus];
 				$sTargetState = $aTransition['target_state'];
 				$aTargetStates = MetaModel::EnumStates($sClass);
-				$oP->add("<div class=\"page_header\">\n");
-				$oP->add("<h1>$sActionLabel - <span class=\"hilite\">{$oObj->GetName()}</span></h1>\n");
-				$oP->add("<p>$sActionDetails</p>\n");
-				$oP->p(Dict::Format('UI:Apply_Stimulus_On_Object_In_State_ToTarget_State', $sActionLabel, $oObj->GetName(), $oObj->GetStateLabel(), $sTargetState));
-				$oP->add("</div>\n");
+				//$oP->add("<div class=\"page_header\">\n");
+				//$oP->add("<h1>$sActionLabel - <span class=\"hilite\">{$oObj->GetName()}</span></h1>\n");
+				//$oP->add("<p>$sActionDetails</p>\n");
+				//$oP->p(Dict::Format('UI:Apply_Stimulus_On_Object_In_State_ToTarget_State', $sActionLabel, $oObj->GetName(), $oObj->GetStateLabel(), $sTargetState));
+				//$oP->add("</div>\n");
 				$aTargetState = $aTargetStates[$sTargetState];
 				$aExpectedAttributes = $aTargetState['attribute_list'];
 				$aDetails = array();
@@ -1371,7 +1371,7 @@ EOF
 		case 'swf_navigator':
 		$sClass = utils::ReadParam('class', '');
 		$id = utils::ReadParam('id', 0);
-		$sRelation = utils::ReadParam('relation', 'neighbours');
+		$sRelation = utils::ReadParam('relation', 'impact');
 		$width = 1000;
 		$height = 700;
 		$sParams = "pWidth=$width&pHeight=$height&drillUrl=".urlencode('../pages/UI.php?operation=details')."&displayController=false&xmlUrl=".urlencode("./xml.navigator.php")."&obj_class=$sClass&obj_id=$id&relation=$sRelation";
