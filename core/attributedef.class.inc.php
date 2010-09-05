@@ -603,7 +603,6 @@ class AttributeBoolean extends AttributeInteger
 
 	public function ScalarToSQL($value)
 	{
-		assert(is_bool($value));
 		if ($value) return 1;
 		return 0;
 	}
