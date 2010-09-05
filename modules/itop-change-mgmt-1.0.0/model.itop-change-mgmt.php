@@ -538,9 +538,12 @@ new TemplateMenuNode('Change:Overview', '../modules/itop-change-mgmt-1.0.0/overv
 new NewObjectMenuNode('NewChange', 'Change', $oMyMenuGroup->GetIndex(), 1 /* fRank */);
 new SearchMenuNode('SearchChanges', 'Change', $oMyMenuGroup->GetIndex(), 2 /* fRank */);
 $oShortcutNode = new TemplateMenuNode('Change:Shortcuts', '', $oMyMenuGroup->GetIndex(), 3 /* fRank */);
-new OQLMenuNode('MyChanges', 'SELECT Change WHERE agent_id = :current_contact_id', $oShortcutNode->GetIndex(), 1 /* fRank */);
-new OQLMenuNode('Changes', 'SELECT Change WHERE status != "closed"', $oShortcutNode->GetIndex(), 2 /* fRank */);
-new OQLMenuNode('WaitingApproval', 'SELECT ApprovedChange WHERE status IN ("plannedscheduled")', $oShortcutNode->GetIndex(), 3 /* fRank */);
-new OQLMenuNode('WaitingAcceptance', 'SELECT NormalChange WHERE status IN ("new")', $oShortcutNode->GetIndex(), 4 /* fRank */);
-
+$oNode = new OQLMenuNode('MyChanges', 'SELECT Change WHERE agent_id = :current_contact_id', $oShortcutNode->GetIndex(), 1 /* fRank */);
+$oNode->SetParameters(array('auto_reload' => 'fast'));
+$oNode = new OQLMenuNode('Changes', 'SELECT Change WHERE status != "closed"', $oShortcutNode->GetIndex(), 2 /* fRank */);
+$oNode->SetParameters(array('auto_reload' => 'fast'));
+$oNode = new OQLMenuNode('WaitingApproval', 'SELECT ApprovedChange WHERE status IN ("plannedscheduled")', $oShortcutNode->GetIndex(), 3 /* fRank */);
+$oNode->SetParameters(array('auto_reload' => 'fast'));
+$oNode = new OQLMenuNode('WaitingAcceptance', 'SELECT NormalChange WHERE status IN ("new")', $oShortcutNode->GetIndex(), 4 /* fRank */);
+$oNode->SetParameters(array('auto_reload' => 'fast'));
 ?>

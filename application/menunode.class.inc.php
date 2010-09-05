@@ -449,6 +449,12 @@ class OQLMenuNode extends MenuNode
 	protected $bSearch;
 	
 	/**
+	 * Extra parameters to be passed to the display block to fine tune its appearence
+	 */
+	protected $m_aParams;
+	
+	
+	/**
 	 * Create a menu item based on an OQL query and inserts it into the application's main menu
 	 * @param string $sMenuId Unique identifier of the menu (used to identify the menu for bookmarking, and for getting the labels from the dictionary)
 	 * @param string $sOQL OQL query defining the set of objects to be displayed
@@ -466,12 +472,23 @@ class OQLMenuNode extends MenuNode
 		$this->sPageTitle = "Menu:$sMenuId+";
 		$this->sOQL = $sOQL;
 		$this->bSearch = $bSearch;
+		$this->m_aParams = array();
 		// Enhancement: we could set as the "enable" condition that the user has enough rights to "read" the objects
 		// of the class specified by the OQL...
 	}
 	
+	/**
+	 * Set some extra parameters to be passed to the display block to fine tune its appearence
+	 * @param Hash $aParams paramCode => value. See DisplayBlock::GetDisplay for the meaning of the parameters
+	 */
+	public function SetParameters($aParams)
+	{
+		$this->m_aParams = $aParams;
+	}
+	
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())
 	{
+		$aExtraParams = array_merge($aExtraParams, $this->m_aParams);
 		try
 		{
 			$oSearch = DBObjectSearch::FromOQL($this->sOQL);
@@ -490,10 +507,19 @@ class OQLMenuNode extends MenuNode
 <itopblock BlockClass="DisplayBlock" type="search" asynchronous="false" encoding="text/oql">$this->sOQL</itopblock>
 EOF;
 		}
-		
+		$sParams = '';
+		if (!empty($this->m_aParams))
+		{
+			$sParams = 'parameters="';
+			foreach($this->m_aParams as $sName => $sValue)
+			{
+				$sParams .= $sName.':'.$sValue.';';
+			}
+			$sParams .= '"';
+		}
 		$sTemplate .= <<<EOF
 <p class="page-header">$sIcon<itopstring>$this->sPageTitle</itopstring></p>
-<itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql">$this->sOQL</itopblock>
+<itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql" $sParams>$this->sOQL</itopblock>
 EOF;
 		$oTemplate = new DisplayTemplate($sTemplate);
 		$oTemplate->Render($oPage, $aExtraParams);
