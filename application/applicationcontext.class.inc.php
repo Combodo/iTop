@@ -106,6 +106,15 @@ class ApplicationContext
 	{
 		return $this->aValues;
 	}
+	
+	/**
+	 * Returns an array of the context parameters NAMEs
+	 * @return array The list of context parameters
+	 */
+	public function GetNames()
+	{
+		return $this->aNames;
+	}
 	/**
 	 * Removes the specified parameter from the context, for example when the same parameter
 	 * is already a search parameter

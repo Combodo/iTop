@@ -146,6 +146,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 			// Empty ZList defined, display all the linkedset attributes defined
 			$aList = array_keys(MetaModel::ListAttributeDefs(get_class($this)));
 		}
+		$sClass = get_class($this);
 		foreach($aList as $sAttCode)
 		{
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
@@ -156,7 +157,6 @@ abstract class cmdbAbstractObject extends CMDBObject
 			if ($bEditMode)
 			{
 				$iFlags = $this->GetAttributeFlags($sAttCode);
-				$sClass = get_class($this);
 				$sInputId = $this->m_iFormId.'_'.$sAttCode;
 				if (get_class($oAttDef) == 'AttributeLinkedSet')
 				{
@@ -167,11 +167,21 @@ abstract class cmdbAbstractObject extends CMDBObject
 					$oFilter = new DBObjectSearch($sTargetClass);
 					$oFilter->AddCondition($oAttDef->GetExtKeyToMe(), $this->GetKey(),'=');
 
+					$aDefaults = array($oAttDef->GetExtKeyToMe() => $this->GetKey());
+					$oAppContext = new ApplicationContext();
+					foreach($oAppContext->GetNames() as $sKey)
+					{
+						// The linked object inherits the parent's value for the context
+						if (MetaModel::IsValidAttCode($sClass, $sKey))
+						{
+							$aDefaults[$sKey] = $this->Get($sKey);
+						}
+					}
 					$aParams = array(
 						'target_attr' => $oAttDef->GetExtKeyToMe(),
 						'object_id' => $this->GetKey(),
 						'menu' => true,
-						'default' => array($oAttDef->GetExtKeyToMe() => $this->GetKey()),
+						'default' => $aDefaults,
 						);
 
 					$oBlock = new DisplayBlock($oFilter, 'list', false);
@@ -201,11 +211,21 @@ abstract class cmdbAbstractObject extends CMDBObject
 					// 1:n links
 					$sTargetClass = $oAttDef->GetLinkedClass();
 
+					$aDefaults = array($oAttDef->GetExtKeyToMe() => $this->GetKey());
+					$oAppContext = new ApplicationContext();
+					foreach($oAppContext->GetNames() as $sKey)
+					{
+						// The linked object inherits the parent's value for the context
+						if (MetaModel::IsValidAttCode($sClass, $sKey))
+						{
+							$aDefaults[$sKey] = $this->Get($sKey);
+						}
+					}
 					$aParams = array(
 						'target_attr' => $oAttDef->GetExtKeyToMe(),
 						'object_id' => $this->GetKey(),
 						'menu' => true,
-						'default' => array($oAttDef->GetExtKeyToMe() => $this->GetKey()),
+						'default' => $aDefaults,
 						);
 				}
 				else
@@ -1250,15 +1270,24 @@ EOF
 		// AND the field is mandatory (otherwise there is always the possiblity to let it empty)
 		$aArgs['this'] = $oObj;
 		$aDetailsList = self::FLattenZList(MetaModel::GetZListItems($sClass, 'details'));
-		// TO DO: the list should be ordered based on the dependencies between fields
-		// i.e. if some fields depend on another field, the latter should be computed first...
-		// Right now we depend on the display order... anyhow if the display order does not
-		// reflect the dependency order, the UI will not be so intuitive to use... beware
+		// Order the fields based on their dependencies
+		$aDeps = array();
 		foreach($aDetailsList as $sAttCode)
+		{
+			$aDeps[$sAttCode] = MetaModel::GetPrequisiteAttributes($sClass, $sAttCode);
+		}
+		$aList = self::OrderDependentFields($aDeps);
+		
+		// Now fill-in the fields with default/supplied values
+		foreach($aList as $sAttCode)
 		{
 			$bMandatory = false;
 			$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, $aArgs);
-			if (count($aAllowedValues) == 1)
+			if ($aArgs['default'][$sAttCode])
+			{
+				$oObj->Set($sAttCode, $aArgs['default'][$sAttCode]);			
+			}
+			elseif (count($aAllowedValues) == 1)
 			{
 				// If the field is mandatory, set it to the only possible value
 				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
@@ -1433,6 +1462,49 @@ EOF
 		// Possible return values are:
 		// HILIGHT_CLASS_CRITICAL, HILIGHT_CLASS_WARNING, HILIGHT_CLASS_OK, HILIGHT_CLASS_NONE	
 		return HILIGHT_CLASS_NONE; // Not hilighted by default
+	}
+	
+	/**
+	 * Re-order the fields based on their inter-dependencies
+	 * @params hash @aFields field_code => array_of_depencies
+	 * @return array Ordered array of fields or throws an exception
+	 */
+	public static function OrderDependentFields($aFields)
+	{
+		$bCircular = false;
+		$aResult = array();
+		$iCount = 0;
+		do
+		{
+			$bSet = false;
+			$iCount++;
+			foreach($aFields as $sFieldCode => $aDeps)
+			{
+				foreach($aDeps as $key => $sDependency)
+				{
+					if (in_array($sDependency, $aResult))
+					{
+						// Dependency is resolved, remove it
+						unset($aFields[$sFieldCode][$key]);
+					}
+				}
+				if (count($aFields[$sFieldCode]) == 0)
+				{
+					// No more pending depencies for this field, add it to the list
+					$aResult[] = $sFieldCode;
+					unset($aFields[$sFieldCode]);
+					$bSet = true;
+				}
+			}
+		}
+		while($bSet && (count($aFields) > 0));
+		
+		if (count($aFields) > 0)
+		{
+			$sMessage =  "Error: Circular dependencies between the fields ! <pre>".print_r($aFields, true)."</pre>";
+			throw(new Exception($sMessage));
+		}
+		return $aResult;
 	}
 }
 ?>
