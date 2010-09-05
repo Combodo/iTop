@@ -253,7 +253,7 @@ class CMDBChangeOpSetAttributeScalar extends CMDBChangeOpSetAttribute
 			}
 			else
 			{
-				$sResult = Dict::Format('Change:Att_SetTo_NewValue_PreviousValue_OldValue', $sAttName, $sNewValue, $sOldValue);
+				$sResult = Dict::Format('Change:AttName_SetTo_NewValue_PreviousValue_OldValue', $sAttName, $sNewValue, $sOldValue);
 			}
 		}
 		return $sResult;
