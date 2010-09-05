@@ -412,6 +412,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:SelectAllToggle+' => 'Select / Deselect All',
 	'UI:TruncatedResults' => '%1$d objects displayed out of %2$d',
 	'UI:DisplayAll' => 'Display All',
+	'UI:CollapseList' => 'Collapse',
 	'UI:CountOfResults' => '%1$d object(s)',
 	'UI:ChangesLogTitle' => 'Changes log (%1$d):',
 	'UI:EmptyChangesLogTitle' => 'Changes log is empty',

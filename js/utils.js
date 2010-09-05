@@ -19,6 +19,24 @@ function ReloadTruncatedList(divId, sSerializedFilter, sExtraParams)
 	 );
 }
 /**
+ * Truncate a previously expanded list !
+ */
+function TruncateList(divId, iLimit, sNewLabel, sLinkLabel)
+{
+	var iCount = 0;
+	$('#'+divId+' table.listResults tr').each( function(){
+		if (iCount > iLimit)
+		{
+			$(this).remove();
+		}
+		iCount++;
+	});
+	$('#lbl_'+divId).html(sNewLabel);
+	$('#'+divId+' table.listResults tr:last td').addClass('truncated');
+	$('#'+divId+' table.listResults').addClass('truncated');
+	$('#trc_'+divId).html(sLinkLabel);
+}
+/**
  * Reload any block -- used for periodic auto-reload
  */ 
 function ReloadBlock(divId, sStyle, sSerializedFilter, sExtraParams)

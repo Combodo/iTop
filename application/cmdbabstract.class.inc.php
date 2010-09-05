@@ -240,7 +240,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 							'object_id' => $this->GetKey(),
 							'target_attr' => $oAttDef->GetExtKeyToRemote(),
 							'view_link' => false,
-							'menu' => false,
+							'menu' => true,
 							'display_limit' => true, // By default limit the list to speed up the initial load & display
 						);
 				}
@@ -393,6 +393,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 			}
 		}
 		$bDisplayMenu = isset($aExtraParams['menu']) ? $aExtraParams['menu'] == true : true;
+		$bTruncated = isset($aExtraParams['truncated']) ? $aExtraParams['truncated'] == true : true;
 		$bSelectMode = isset($aExtraParams['selection_mode']) ? $aExtraParams['selection_mode'] == true : false;
 		$bSingleSelectMode = isset($aExtraParams['selection_type']) ? ($aExtraParams['selection_type'] == 'single') : false;
 		$aExtraFields = isset($aExtraParams['extra_fields']) ? explode(',', trim($aExtraParams['extra_fields'])) : array();
@@ -460,7 +461,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$aValues = array();
 		$bDisplayLimit = isset($aExtraParams['display_limit']) ? $aExtraParams['display_limit'] : true;
 		$iMaxObjects = -1;
-		if ($bDisplayLimit)
+		if ($bDisplayLimit && $bTruncated)
 		{
 			if ($oSet->Count() > utils::GetConfig()->GetMaxDisplayLimit())
 			{
@@ -501,26 +502,67 @@ abstract class cmdbAbstractObject extends CMDBObject
 		}
 		$sHtml .= '<table class="listContainer">';
 		$sColspan = '';
-		if ($bDisplayLimit && ($oSet->Count() > utils::GetConfig()->GetMaxDisplayLimit()))
+		$divId = $aExtraParams['block_id'];
+		$sFilter = $oSet->GetFilter()->serialize();
+		$iMinDisplayLimit = utils::GetConfig()->GetMinDisplayLimit();
+		$sCollapsedLabel = Dict::Format('UI:TruncatedResults', $iMinDisplayLimit, $oSet->Count());
+		$sLinkLabel = Dict::S('UI:DisplayAll');
+		foreach($oSet->GetFilter()->GetInternalParams() as $sName => $sValue)
+		{
+			$aExtraParams['query_params'][$sName] = $sValue;
+		}
+		if ($bDisplayLimit && $bTruncated && ($oSet->Count() > utils::GetConfig()->GetMaxDisplayLimit()))
 		{
 			// list truncated
-			$divId = $aExtraParams['block_id'];
-			$sFilter = $oSet->GetFilter()->serialize();
-			$aExtraParams['display_limit'] = false; // To expand the full list
-			foreach($oSet->GetFilter()->GetInternalParams() as $sName => $sValue)
-			{
-				$aExtraParams['query_params'][$sName] = $sValue;
-			}
-			$sExtraParams = addslashes(str_replace('"', "'", json_encode($aExtraParams))); // JSON encode, change the style of the quotes and escape them
-			$sHtml .= '<tr class="containerHeader"><td>'.Dict::Format('UI:TruncatedResults', utils::GetConfig()->GetMinDisplayLimit(), $oSet->Count()).'&nbsp;&nbsp;<a href="#open_'.$divId.'" onClick="Javascript:ReloadTruncatedList(\''.$divId.'\', \''.$sFilter.'\', \''.$sExtraParams.'\');">'.Dict::S('UI:DisplayAll').'</a></td><td>';
-			$oPage->add_ready_script("$('#{$divId} table.listResults').addClass('truncated');");
-			$oPage->add_ready_script("$('#{$divId} table.listResults tr:last td').addClass('truncated');");
+			$aExtraParams['display_limit'] = true;
+			$sHtml .= '<tr class="containerHeader"><td><span id="lbl_'.$divId.'">'.$sCollapsedLabel.'</span>&nbsp;&nbsp;<a class="truncated" id="trc_'.$divId.'">'.$sLinkLabel.'</a></td><td>';
+			$oPage->add_ready_script(
+<<<EOF
+	$('#$divId table.listResults').addClass('truncated');
+	$('#$divId table.listResults tr:last td').addClass('truncated');
+EOF
+);
+		}
+		else if ($bDisplayLimit && !$bTruncated && ($oSet->Count() > utils::GetConfig()->GetMaxDisplayLimit()))
+		{
+			// Collapsible list
+			$aExtraParams['display_limit'] = true;
+			$sHtml .= '<tr class="containerHeader"><td><span id="lbl_'.$divId.'">'.Dict::Format('UI:CountOfResults', $oSet->Count()).'</span><a class="truncated" id="trc_'.$divId.'">'.Dict::S('UI:CollapseList').'</a></td><td>';
+		}
+		$aExtraParams['truncated'] = false; // To expand the full list when clicked
+		$sExtraParamsExpand = addslashes(str_replace('"', "'", json_encode($aExtraParams))); // JSON encode, change the style of the quotes and escape them
+		$oPage->add_ready_script(
+<<<EOF
+	// Handle truncated lists
+	$('#trc_$divId').click(function()
+	{
+		var state = {};
+		
+		var currentState = $.bbq.getState( this.id, true ) || 'close';	  
+		// Toggle the state!
+		if (currentState == 'close')
+		{
+			state[ this.id ] = 'open';
 		}
 		else
 		{
-			// Full list
-			$sHtml .= '<tr class="containerHeader"><td>&nbsp;'.Dict::Format('UI:CountOfResults', $oSet->Count()).'</td><td>';
+			state[ this.id ] = 'close';			
 		}
+		$.bbq.pushState( state );
+		$(this).trigger(state[this.id]);	
+	});
+	
+	$('#trc_$divId').bind('open', function()
+	{
+		ReloadTruncatedList('$divId', '$sFilter', '$sExtraParamsExpand');
+	});
+	
+	$('#trc_$divId').bind('close', function()
+	{
+		TruncateList('$divId', $iMinDisplayLimit, '$sCollapsedLabel', '$sLinkLabel');
+	});
+EOF
+);
 		if ($bDisplayMenu)
 		{
 			$oMenuBlock = new MenuBlock($oSet->GetFilter());

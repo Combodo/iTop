@@ -53,7 +53,7 @@ class iTopWebPage extends NiceWebPage
 		$this->add_linked_stylesheet("../css/jquery.autocomplete.css");
 //		$this->add_linked_stylesheet("../css/date.picker.css");
 		$this->add_linked_script('../js/jquery.layout.min.js');
-		$this->add_linked_script('../js/jquery.history.js');
+		$this->add_linked_script('../js/jquery.ba-bbq.min.js');
 //		$this->add_linked_script("../js/jquery.dimensions.js");
 		$this->add_linked_script("../js/jquery.tablehover.js");
 		$this->add_linked_script("../js/jquery.treeview.js");
@@ -148,12 +148,73 @@ class iTopWebPage extends NiceWebPage
 			$("tbody tr.orange:even",table).removeClass('orange').removeClass('even').addClass('orange_even');
 			$("tbody tr.green:even",table).removeClass('green').removeClass('even').addClass('green_even');
 	    } 
-		});
+	});
 		
-	// tabs
-	$("div[id^=tabbedContent]").tabs( { show: function(event, ui) {
-			window.location.href = ui.tab.href; // So that history can keep track of the tabs
-	} });
+	// Tabs, using JQuery BBQ to store the history
+	// The "tab widgets" to handle.
+	var tabs = $('div[id^=tabbedContent]');
+	    
+	// This selector will be reused when selecting actual tab widget A elements.
+	var tab_a_selector = 'ul.ui-tabs-nav a';
+	  
+	// Enable tabs on all tab widgets. The `event` property must be overridden so
+	// that the tabs aren't changed on click, and any custom event name can be
+	// specified. Note that if you define a callback for the 'select' event, it
+	// will be executed for the selected tab whenever the hash changes.
+	tabs.tabs({ event: 'change' });
+	  
+	// Define our own click handler for the tabs, overriding the default.
+	tabs.find( tab_a_selector ).click(function()
+	{
+		var state = {};
+				  
+		// Get the id of this tab widget.
+		var id = $(this).closest( 'div[id^=tabbedContent]' ).attr( 'id' );
+		  
+		// Get the index of this tab.
+		var idx = $(this).parent().prevAll().length;
+		
+		// Set the state!
+		state[ id ] = idx;
+		$.bbq.pushState( state );
+	});
+	
+	// Bind an event to window.onhashchange that, when the history state changes,
+	// iterates over all tab widgets, changing the current tab as necessary.
+	$(window).bind( 'hashchange', function(e)
+	{
+		// Iterate over all tab widgets.
+		tabs.each(function()
+		{  
+			// Get the index for this tab widget from the hash, based on the
+			// appropriate id property. In jQuery 1.4, you should use e.getState()
+			// instead of $.bbq.getState(). The second, 'true' argument coerces the
+			// string value to a number.
+			var idx = $.bbq.getState( this.id, true ) || 0;
+			  
+			// Select the appropriate tab for this tab widget by triggering the custom
+			// event specified in the .tabs() init above (you could keep track of what
+			// tab each widget is on using .data, and only select a tab if it has
+			// changed).
+			$(this).find( tab_a_selector ).eq( idx ).triggerHandler( 'change' );
+		});
+
+		// Iterate over all truncated lists to find whether they are expanded or not
+		$('a.truncated').each(function()
+		{
+			var state = $.bbq.getState( this.id, true ) || 'close';
+			if (state == 'open')
+			{
+				$(this).trigger('open');
+			}
+			else
+			{
+				$(this).trigger('close');	
+			}
+		});
+	});
+	  
+	// End of Tabs handling
 	$("table.listResults").tableHover(); // hover tables
 	$(".listResults").tablesorter( { headers: { 0:{sorter: false }}, widgets: ['myZebra', 'truncatedList']} ); // sortable and zebra tables
 	$(".date-pick").datepicker({
@@ -170,12 +231,12 @@ class iTopWebPage extends NiceWebPage
 	$('#ModalDlg').dialog({ autoOpen: false, modal: true, width: 0.8*docWidth }); // JQuery UI dialogs
 	ShowDebug();
 	$('#logOffBtn>ul').popupmenu();
-	$.history.init(history_callback);
-	$("a[rel='history']").click(function()
-	{
-		$.history.load(this.href.replace(/^.*#/, ''));
-		return false;
-	});
+//	$.history.init(history_callback);
+//	$("a[rel='history']").click(function()
+//	{
+//		$.history.load(this.href.replace(/^.*#/, ''));
+//		return false;
+//	});
 	}
 	catch(err)
 	{
@@ -189,17 +250,17 @@ EOF
 		$sUserPrefs = appUserPreferences::GetAsJSON();
 		$this->add_script(
 <<<EOF
-		// for JQuery history
-		function history_callback(hash)
-		{
-			// do stuff that loads page content based on hash variable
-			var aMatches = /^tab_(.*)$/.exec(hash);
-			if (aMatches != null)
-			{
-				var tab = $('#'+hash);
-				tab.parents('div[id^=tabbedContent]:first').tabs('select', aMatches[1]);
-			}
-		}
+//		// for JQuery history
+//		function history_callback(hash)
+//		{
+//			// do stuff that loads page content based on hash variable
+//			var aMatches = /^tab_(.*)$/.exec(hash);
+//			if (aMatches != null)
+//			{
+//				var tab = $('#'+hash);
+//				tab.parents('div[id^=tabbedContent]:first').tabs('select', aMatches[1]);
+//			}
+//		}
 
 		// For automplete
 		function findValue(li) {
@@ -358,6 +419,16 @@ EOF
     public function output()
     {
 		$this->DisplayMenu(); // Compute the menu
+
+		// Put here the 'ready scripts' that must be executed after all others
+    	$this->add_ready_script(
+<<<EOF
+	// Since the event is only triggered when the hash changes, we need to trigger
+	// the event now, to handle the hash the page may have loaded with.
+	$(window).trigger( 'hashchange' );
+
+EOF
+);
         foreach($this->a_headers as $s_header)
         {
             header($s_header);
