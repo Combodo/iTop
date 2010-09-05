@@ -41,6 +41,7 @@ abstract class Change extends Ticket
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
 			"display_template" => "",
+			"icon" => "../modules/itop-change-mgmt-1.0.0/images/change.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -295,6 +296,55 @@ abstract class Change extends Ticket
 		}
 		$sName = sprintf('C-%06d', $iKey);
 		$this->Set('ref', $sName);
+	}
+
+	/**
+	 * Get the icon representing this object
+	 * @param boolean $bImgTag If true the result is a full IMG tag (or an emtpy string if no icon is defined)
+	 * @return string Either the full IMG tag ($bImgTag == true) or just the path to the icon file
+	 */
+	public function GetIcon($bImgTag = true)
+	{
+		$sStatus = $this->Get('status');
+		switch($this->GetState())
+		{
+			case 'approved':
+			case 'implemented':
+			case 'monitored':
+			$sIconName = self::MakeIconFromName('change-approved.png');
+			break;
+			
+			case 'rejected':
+			case 'notapproved':
+				$sIconName = self::MakeIconFromName('change-rejected.png');
+			break;
+
+			case 'closed':
+			$sIcon = self::MakeIconFromName('change-closed.png');
+			break;
+
+			default:
+			$sIcon = MetaModel::GetClassIcon(get_class($this), $bImgTag);
+		}
+		return $sIcon;
+	}
+	
+	protected static function MakeIconFromName($sIconName, $bImgTag = true)
+	{
+		$sIcon = '';
+		if ($sIconName != '')
+		{
+			$sPath = '../modules/itop-change-mgmt-1.0.0/images/'.$sIconName;
+			if ($bImgTag)
+			{
+				$sIcon = "<img src=\"$sPath\" style=\"vertical-align:middle;\"/>";
+			}
+			else
+			{
+				$sIcon  = $sPath;
+			}
+		}
+		return $sIcon;
 	}
 }
 

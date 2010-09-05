@@ -38,6 +38,7 @@ class Incident extends ResponseTicket
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
 			"display_template" => "",
+			"icon" => "../modules/itop-incident-mgmt-1.0.0/images/incident.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -93,6 +94,93 @@ class Incident extends ResponseTicket
 		}
 		parent::OnInsert();
 	}
+
+	/**
+	 * Get the icon representing this object
+	 * @param boolean $bImgTag If true the result is a full IMG tag (or an emtpy string if no icon is defined)
+	 * @return string Either the full IMG tag ($bImgTag == true) or just the path to the icon file
+	 */
+	public function GetIcon($bImgTag = true)
+	{
+		$sStatus = $this->Get('status');
+		switch($this->GetState())
+		{
+
+			case 'escalated_tto':
+			case 'escalated_ttr':
+			$sIconName = self::MakeIconFromName('incident-escalated.png');
+			break;
+			
+			case 'resolved':
+			case 'closed':
+			$sIcon = self::MakeIconFromName('incident-closed.png');
+			break;
+
+			case 'new':
+			$sIcon = self::MakeIconFromName('incident.png');
+			$oEscalationDeadline = $this->Get('tto_escalation_deadline');
+			if ($oEscalationDeadline != null)
+			{
+				// A SLA is running
+				$iStartDate = AttributeDateTime::GetAsUnixSeconds($this->Get('start_date'));
+				$iEscalationDeadline = AttributeDateTime::GetAsUnixSeconds($oEscalationDeadline);
+				$ratio = ($iEscalationDeadline - time())/($iEscalationDeadline - $iStartDate);
+				if ($ratio <= 0)
+				{
+					$sIcon = self::MakeIconFromName('incident-escalated.png');
+				}
+				else if ($ratio <= 0.25)
+				{
+					$sIcon = self::MakeIconFromName('incident-deadline.png');
+				}
+			}
+			break;
+			
+			case 'assigned':
+			$sIcon = self::MakeIconFromName('incident.png');
+			$oEscalationDeadline = $this->Get('ttr_escalation_deadline');
+			if ($oEscalationDeadline != null)
+			{
+				// A SLA is running
+				$iStartDate = AttributeDateTime::GetAsUnixSeconds($this->Get('start_date'));
+				$iEscalationDeadline = AttributeDateTime::GetAsUnixSeconds($oEscalationDeadline);
+				$ratio = ($iEscalationDeadline - time())/($iEscalationDeadline - $iStartDate);
+				if ($ratio <= 0)
+				{
+					$sIcon = self::MakeIconFromName('incident-escalated.png');
+				}
+				else if ($ratio <= 0.25)
+				{
+					$sIcon = self::MakeIconFromName('incident-deadline.png');
+				}
+			}
+			break;
+
+			
+			default:
+			$sIcon = MetaModel::GetClassIcon(get_class($this), $bImgTag);
+		}
+		return $sIcon;
+	}
+	
+	protected static function MakeIconFromName($sIconName, $bImgTag = true)
+	{
+		$sIcon = '';
+		if ($sIconName != '')
+		{
+			$sPath = '../modules/itop-incident-mgmt-1.0.0/images/'.$sIconName;
+			if ($bImgTag)
+			{
+				$sIcon = "<img src=\"$sPath\" style=\"vertical-align:middle;\"/>";
+			}
+			else
+			{
+				$sIcon  = $sPath;
+			}
+		}
+		return $sIcon;
+	}
+
 }
 
 class lnkTicketToIncident extends cmdbAbstractObject

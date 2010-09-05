@@ -46,6 +46,7 @@ class KnownError extends cmdbAbstractObject
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
 			"display_template" => "",
+			"icon" => "../modules/itop-knownerror-mgmt-1.0.0/images/known-error.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();

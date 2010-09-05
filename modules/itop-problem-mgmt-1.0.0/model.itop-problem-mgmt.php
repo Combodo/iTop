@@ -38,6 +38,7 @@ class Problem extends Ticket
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
 			"display_template" => "",
+			"icon" => "../modules/itop-problem-mgmt-1.0.0/images/problem.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
