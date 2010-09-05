@@ -75,6 +75,64 @@ class Config
 
 	protected $m_aModuleSettings;
 
+	// New way to store the settings !
+	//
+	protected $m_aSettings = array(
+		'skip_check_to_write' => array(
+			'type' => 'bool',
+			'description' => 'Disable data format and integrity checks to boost up data load (insert or update)',
+			'default' => false,
+			'value' => false,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
+		'skip_check_ext_keys' => array(
+			'type' => 'bool',
+			'description' => 'Disable external key check when checking the value of attribtutes',
+			'default' => false,
+			'value' => false,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
+	);
+
+	public function IsProperty($sPropCode)
+	{
+		return (array_key_exists($sPropCode, $this->m_aSettings));
+	}
+
+	public function Set($sPropCode, $value, $sSourceDesc = 'unknown')
+	{
+		$sType = $this->m_aSettings[$sPropCode]['type'];
+		switch($sType)
+		{
+		case 'bool':
+			$value = (bool) $value;
+			break;
+		case 'string':
+			$value = (string) $value;
+			break;
+		case 'integer':
+			$value = (integer) $value;
+			break;
+		case 'float':
+			$value = (float) $value;
+			break;
+		default:
+			throw new CoreException('Unknown type for setting', array('property' => $sPropCode, 'type' => $sType));
+		}
+
+		$this->m_aSettings[$sPropCode]['value'] = $value;
+		$this->m_aSettings[$sPropCode]['source_of_value'] = $sSourceDesc;
+
+	}
+
+	public function Get($sPropCode)
+	{
+		return $this->m_aSettings[$sPropCode]['value'];
+	}
+
+	// Those variables will be deprecated later, when the transition to ...Get('my_setting') will be done
 	protected $m_sDBHost;
 	protected $m_sDBUser;
 	protected $m_sDBPwd;
@@ -84,8 +142,9 @@ class Config
 	protected $m_sDBCollation;
 
 	/**
-	 * @var integer Event log options (see LOG_... definition)
+	 * Event log options (see LOG_... definition)
 	 */	 	
+	// Those variables will be deprecated later, when the transition to ...Get('my_setting') will be done
 	protected $m_bLogGlobal;
 	protected $m_bLogNotification;
 	protected $m_bLogIssue;
@@ -187,6 +246,11 @@ class Config
 			'../dictionaries/es_cr.dictionary.itop.ui.php',	// Support for Spanish (from Costa Rica)
 			'../dictionaries/es_cr.dictionary.itop.core.php',	// Support for Spanish (from Costa Rica)
 		);
+
+		foreach($this->m_aSettings as $sPropCode => $aSettingInfo)
+		{
+			$this->m_aSettings[$sPropCode]['value'] = $aSettingInfo['default'];
+		}
 
 		$this->m_sDBHost = '';
 		$this->m_sDBUser = '';
@@ -290,6 +354,15 @@ class Config
 		$this->m_aDataModels = $MyModules['business'];
 		$this->m_aAddons = $MyModules['addons'];
 		$this->m_aDictionaries = $MyModules['dictionaries'];
+
+		foreach($MySettings as $sPropCode => $rawvalue)
+		{
+			if ($this->IsProperty($sPropCode))
+			{
+				$value = trim($rawvalue);
+				$this->Set($sPropCode, $value, $sConfigFile);
+			}
+		}
 
 		$this->m_sDBHost = trim($MySettings['db_host']);
 		$this->m_sDBUser = trim($MySettings['db_user']);
@@ -670,6 +743,22 @@ class Config
 			fwrite($hFile, "\n");
 			
 			fwrite($hFile, "\$MySettings = array(\n");
+			foreach($this->m_aSettings as $sPropCode => $aSettingInfo)
+			{
+				if ($aSettingInfo['show_in_conf_sample'])
+				{
+					$sType = $this->m_aSettings[$sPropCode]['type'];
+					switch($sType)
+					{
+					case 'bool':
+						$sSeenAs = $aSettingInfo['value'] ? '1' : '0';
+						break;
+					default:
+						$sSeenAs = "'".$aSettingInfo['value']."'";
+					}
+					fwrite($hFile, "\t'$sPropCode' => $sSeenAs,\n");
+				}
+			}
 			fwrite($hFile, "\t'db_host' => '{$this->m_sDBHost}',\n");
 			fwrite($hFile, "\t'db_user' => '{$this->m_sDBUser}',\n");
 			fwrite($hFile, "\t'db_pwd' => '".addslashes($this->m_sDBPwd)."',\n");

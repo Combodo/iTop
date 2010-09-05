@@ -202,6 +202,9 @@ abstract class MetaModel
 
 	private static $m_oConfig = null;
 
+	private static $m_bSkipCheckToWrite = false;
+	private static $m_bSkipCheckExtKeys = false;
+
 	private static $m_bQueryCacheEnabled = false;
 	private static $m_bTraceQueries = false;
 	private static $m_aQueriesLog = array();
@@ -209,6 +212,16 @@ abstract class MetaModel
 	private static $m_bLogIssue = false;
 	private static $m_bLogNotification = false;
 	private static $m_bLogWebService = false;
+
+	public static function SkipCheckToWrite()
+	{
+		return self::$m_bSkipCheckToWrite;
+	}
+
+	public static function SkipCheckExtKeys()
+	{
+		return self::$m_bSkipCheckExtKeys;
+	}
 
 	public static function IsLogEnabledIssue()
 	{
@@ -3253,6 +3266,9 @@ abstract class MetaModel
 
 		self::$m_bTraceQueries = self::$m_oConfig->GetDebugQueries();
 		self::$m_bQueryCacheEnabled = self::$m_oConfig->GetQueryCacheEnabled();
+
+		self::$m_bSkipCheckToWrite = self::$m_oConfig->Get('skip_check_to_write');
+		self::$m_bSkipCheckExtKeys = self::$m_oConfig->Get('skip_check_ext_keys');
 
 		// Note: load the dictionary as soon as possible, because it might be
 		//       needed when some error occur

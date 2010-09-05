@@ -43,7 +43,9 @@ abstract class DBObject
 										// The object may have incorrect external keys, then any attempt of reload must be avoided
 	private $m_bCheckStatus = null; // Means: the object has been verified and is consistent with integrity rules
 													//        if null, then the check has to be performed again to know the status
-													//        otherwise, 
+	protected $m_aCheckIssues = null;
+	protected $m_aAsArgs = null; // The current object as a standard argument (cache)
+
 	private $m_bFullyLoaded = false; // Compound objects can be partially loaded
 	private $m_aLoadedAtt = array(); // Compound objects can be partially loaded, array of sAttCode
 
@@ -277,7 +279,10 @@ abstract class DBObject
 			}
 			else
 			{
+				// The object has changed, reset caches
 				$this->m_bCheckStatus = null;
+				$this->m_aAsArgs = null;
+
 				$this->m_aCurrValues[$sAttCode] = $value->GetKey();
 				foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sCode => $oDef)
 				{
@@ -313,8 +318,12 @@ abstract class DBObject
 		$realvalue = $oAttDef->MakeRealValue($value);
 		$this->m_aCurrValues[$sAttCode] = $realvalue;
 
+		// The object has changed, reset caches
 		$this->m_bCheckStatus = null;
-		$this->RegisterAsDirty(); // Make sure we do not reload it anymore... before saving it
+		$this->m_aAsArgs = null;
+
+		// Make sure we do not reload it anymore... before saving it
+		$this->RegisterAsDirty();
 	}
 
 	public function Get($sAttCode)
@@ -619,11 +628,14 @@ abstract class DBObject
 		}
 		elseif ($oAtt->IsExternalKey())
 		{
-			$sTargetClass = $oAtt->GetTargetClass();
-			$oTargetObj = MetaModel::GetObject($sTargetClass, $toCheck, false /*must be found*/, true /*allow all data*/);
-			if (is_null($oTargetObj))
+			if (!MetaModel::SkipCheckExtKeys())
 			{
-				return "Target object not found ($sTargetClass::$toCheck)";
+				$sTargetClass = $oAtt->GetTargetClass();
+				$oTargetObj = MetaModel::GetObject($sTargetClass, $toCheck, false /*must be found*/, true /*allow all data*/);
+				if (is_null($oTargetObj))
+				{
+					return "Target object not found ($sTargetClass::$toCheck)";
+				}
 			}
 		}
 		elseif ($oAtt->IsScalar())
@@ -689,14 +701,15 @@ abstract class DBObject
 
 	final public function CheckToWrite()
 	{
-		if (false)
+		if (MetaModel::SkipCheckToWrite())
 		{
 			return array(true, array());
 		}
-
 		if (is_null($this->m_bCheckStatus))
 		{
+			$oKPI = new ExecutionKPI();
 			$this->DoCheckToWrite();
+			$oKPI->ComputeStats('CheckToWrite', get_class($this));
 			if (count($this->m_aCheckIssues) == 0)
 			{
 				$this->m_bCheckStatus = true;
@@ -1106,24 +1119,32 @@ abstract class DBObject
 	//       2) set only the object ref and resolve the values iif needed from contextual templates and queries (easy for the queries, not for the templates)
 	public function ToArgs($sArgName = 'this')
 	{
-		$aScalarArgs = array();
-		$aScalarArgs[$sArgName] = $this->GetKey();
-		$aScalarArgs[$sArgName.'->id'] = $this->GetKey();
-		$aScalarArgs[$sArgName.'->object()'] = $this;
-		$aScalarArgs[$sArgName.'->hyperlink()'] = $this->GetHyperlink();
-		$aScalarArgs[$sArgName.'->name()'] = $this->GetName();
-	
-		$sClass = get_class($this);
-		foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+		if (is_null($this->m_aAsArgs))
 		{
-			$aScalarArgs[$sArgName.'->'.$sAttCode] = $this->Get($sAttCode);
-			if ($oAttDef->IsScalar())
+			$oKPI = new ExecutionKPI();
+			$aScalarArgs = array();
+			$aScalarArgs[$sArgName] = $this->GetKey();
+			$aScalarArgs[$sArgName.'->id'] = $this->GetKey();
+			$aScalarArgs[$sArgName.'->object()'] = $this;
+			$aScalarArgs[$sArgName.'->hyperlink()'] = $this->GetHyperlink();
+			$aScalarArgs[$sArgName.'->name()'] = $this->GetName();
+		
+			$sClass = get_class($this);
+			foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
 			{
-				$aScalarArgs[$sArgName.'->html('.$sAttCode.')'] = $this->GetAsHtml($sAttCode);
-				$aScalarArgs[$sArgName.'->label('.$sAttCode.')'] = strip_tags($this->GetAsHtml($sAttCode));
+				$aScalarArgs[$sArgName.'->'.$sAttCode] = $this->Get($sAttCode);
+				if ($oAttDef->IsScalar())
+				{
+					// #@# Note: This has been proven to be quite slow, this can slow down bulk load
+					$sAsHtml = $this->GetAsHtml($sAttCode);
+					$aScalarArgs[$sArgName.'->html('.$sAttCode.')'] = $sAsHtml;
+					$aScalarArgs[$sArgName.'->label('.$sAttCode.')'] = strip_tags($sAsHtml);
+				}
 			}
+			$this->m_aAsArgs = $aScalarArgs;
+			$oKPI->ComputeStats('ToArgs', get_class($this));
 		}
-		return $aScalarArgs;
+		return $this->m_aAsArgs;
 	}
 
 	// To be optionaly overloaded

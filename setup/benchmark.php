@@ -859,7 +859,6 @@ try
 
 		default:
 		$oP->error("Error: unsupported operation '$sOperation'");
-		
 	}
 }
 catch(ZZException $e)
@@ -871,5 +870,7 @@ catch(ZZCoreException $e)
 	$oP->error("Error: '".$e->getHtmlDesc()."'");	
 }
 $oKPI->ComputeAndReport('Total execution');
+// too big (showing all queries) ExecutionKPI::ReportStats();
+//MetaModel::ShowQueryTrace();
 $oP->output();
 ?>
