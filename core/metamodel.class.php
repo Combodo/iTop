@@ -97,6 +97,13 @@ define('OPT_ATT_MUSTCHANGE', 8);
  */
 define('OPT_ATT_MUSTPROMPT', 16);
 
+/**
+ * DB Engine -should be moved into CMDBSource 
+ *
+ * @package     iTopORM
+ */
+//define('MYSQL_ENGINE', 'innodb');
+define('MYSQL_ENGINE', 'myisam');
 
 
 
@@ -2676,7 +2683,7 @@ abstract class MetaModel
 			if (!CMDBSource::IsTable($sTable))
 			{
 				$aErrors[$sClass]['*'][] = "table '$sTable' could not be found into the DB";
-				$aSugFix[$sClass]['*'][] = "CREATE TABLE `$sTable` (`$sKeyField` INT(11) NOT NULL $sAutoIncrement PRIMARY KEY) ENGINE = innodb CHARACTER SET utf8 COLLATE utf8_unicode_ci";
+				$aSugFix[$sClass]['*'][] = "CREATE TABLE `$sTable` (`$sKeyField` INT(11) NOT NULL $sAutoIncrement PRIMARY KEY) ENGINE = ".MYSQL_ENGINE." CHARACTER SET utf8 COLLATE utf8_unicode_ci";
 			}
 			// Check that the key field exists
 			//
