@@ -82,8 +82,8 @@ class URP_Profiles extends UserRightsBaseClass
 
 	function GetGrantAsHtml($oUserRights, $sClass, $sAction)
 	{
-		$oGrant = $oUserRights->GetProfileActionGrant($this->GetKey(), $sClass, $sAction);
-		if (is_object($oGrant) && ($oGrant->Get('permission') == 'yes')) 
+		$iGrant = $oUserRights->GetProfileActionGrant($this->GetKey(), $sClass, $sAction);
+		if (!is_null($iGrant))
 		{
 			return '<span style="background-color: #ddffdd;">'.Dict::S('UI:UserManagement:ActionAllowed:Yes').'</span>';
 		}
