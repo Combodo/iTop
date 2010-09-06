@@ -224,7 +224,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 					$aParams = array(
 						'target_attr' => $oAttDef->GetExtKeyToMe(),
 						'object_id' => $this->GetKey(),
-						'menu' => true,
+						'menu' => false,
 						'default' => $aDefaults,
 						);
 				}
@@ -240,7 +240,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 							'object_id' => $this->GetKey(),
 							'target_attr' => $oAttDef->GetExtKeyToRemote(),
 							'view_link' => false,
-							'menu' => true,
+							'menu' => false,
 							'display_limit' => true, // By default limit the list to speed up the initial load & display
 						);
 				}
@@ -266,8 +266,8 @@ abstract class cmdbAbstractObject extends CMDBObject
 		
 				// Display notifications regarding the object
 				$iId = $this->GetKey();
-				$oNotifSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT EventNotificationEmail AS Ev JOIN TriggerOnObject AS T ON Ev.trigger_id = T.id WHERE T.target_class IN ('$sClassList') AND Ev.object_id = $iId"));
-				self::DisplaySet($oPage, $oNotifSet);
+				$oBlock = new DisplayBlock(DBObjectSearch::FromOQL("SELECT EventNotificationEmail AS Ev JOIN TriggerOnObject AS T ON Ev.trigger_id = T.id WHERE T.target_class IN ('$sClassList') AND Ev.object_id = $iId"), 'list', false);
+				$oBlock->Display($oPage, 'notifications', array());
 			}
 		}
 	}
