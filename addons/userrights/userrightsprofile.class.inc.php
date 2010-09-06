@@ -831,9 +831,6 @@ class SetupProfiles
 		}
 		foreach ($aWriteableClasses as $sClass => $foo)
 		{
-			// Skip non instantiable classes
-			if (MetaModel::IsAbstract($sClass)) continue;
-
 			if (!MetaModel::IsValidClass($sClass))
 			{
 				throw new CoreException("Invalid class name '$sClass'");
