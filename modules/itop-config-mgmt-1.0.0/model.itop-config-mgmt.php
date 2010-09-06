@@ -152,7 +152,7 @@ class Person extends Contact
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("name"),
+			"reconc_keys" => array("name","first_name","org_id","email"),
 			"db_table" => "person",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -186,7 +186,7 @@ class Team extends Contact
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("name", "org_id", "org_name"),
+			"reconc_keys" => array("name", "org_id"),
 			"db_table" => "team",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -276,7 +276,7 @@ abstract class Document extends cmdbAbstractObject
 		MetaModel::Init_SetZListItems('list', array('name', 'org_id', 'type', 'status'));
 	}
 }
-class ExternalDoc extends Document
+class WebDoc extends Document
 {
 
 	public static function Init()
@@ -1016,7 +1016,7 @@ class NetworkInterface extends ConnectableCI
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("name","device_id","org_id", "device_name", "owner_name"),
+			"reconc_keys" => array("name","device_id","org_id"),
 			"db_table" => "networkinterface",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",

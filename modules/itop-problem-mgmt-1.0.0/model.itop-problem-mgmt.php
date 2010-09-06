@@ -231,7 +231,7 @@ new TemplateMenuNode('Problem:Overview', '../modules/itop-problem-mgmt-1.0.0/ove
 new NewObjectMenuNode('NewProblem', 'Problem', $iIndex, 1 /* fRank */);
 new SearchMenuNode('SearchProblems', 'Problem', $iIndex, 2 /* fRank */);
 $oShortcutNode = new TemplateMenuNode('Problem:Shortcuts', '', $iIndex, 4 /* fRank */);
-new OQLMenuNode('Problem:MyProblems', 'SELECT Problem WHERE agent_id = :current_contact_id', $oShortcutNode->GetIndex(), 1 /* fRank */);
+new OQLMenuNode('Problem:MyProblems', 'SELECT Problem WHERE agent_id = :current_contact_id AND status NOT IN ("closed", "resolved")', $oShortcutNode->GetIndex(), 1 /* fRank */);
 new OQLMenuNode('Problem:OpenProblems', 'SELECT Problem WHERE status IN ("new", "assigned", "resolved")', $oShortcutNode->GetIndex(), 3 /* fRank */);
 
 ?>

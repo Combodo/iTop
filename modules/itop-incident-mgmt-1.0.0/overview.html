@@ -11,7 +11,7 @@
 <tr>
 <td class="dashboard">
 <h2><itopstring>UI-IncidentManagementOverview-IncidentUnassigned</itopstring></h2>
-<itopblock BlockClass="DisplayBlock" type="list" parameters="dashboard:true" asynchronous="false" encoding="text/oql">SELECT Incident WHERE status = 'new'</itopblock>
+<itopblock BlockClass="DisplayBlock" type="list" parameters="dashboard:true" asynchronous="false" encoding="text/oql">SELECT Incident WHERE status IN ("new", "escalated_tto")</itopblock>
 </td>
 <td class="dashboard">
 </td>

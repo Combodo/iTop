@@ -268,14 +268,14 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 ));
 
 //
-// Class: ExternalDoc
+// Class: WebDoc
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:ExternalDoc' => 'Documento externo',
-	'Class:ExternalDoc+' => 'Documento disponible en otro servidor Web',
-	'Class:ExternalDoc/Attribute:url' => 'Url',
-	'Class:ExternalDoc/Attribute:url+' => '',
+	'Class:WebDoc' => 'Documento Web',
+	'Class:WebDoc+' => 'Documento disponible en otro servidor Web',
+	'Class:WebDoc/Attribute:url' => 'Url',
+	'Class:WebDoc/Attribute:url+' => '',
 ));
 
 //

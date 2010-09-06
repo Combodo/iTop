@@ -67,6 +67,15 @@ Dict::Add('EN US', 'English', 'English', array(
         'Menu:Problem:MyProblems+' => 'My Problems',
         'Menu:Problem:OpenProblems' => 'All Open problems',
         'Menu:Problem:OpenProblems+' => 'All Open problems',
+	'UI-ProblemManagementOverview-ProblemByService' => 'Problems by Service',
+	'UI-ProblemManagementOverview-ProblemByService+' => 'Problems by Service',
+	'UI-ProblemManagementOverview-ProblemByPriority' => 'Problems by Priority',
+	'UI-ProblemManagementOverview-ProblemByPriority+' => 'Problems by Priority',
+	'UI-ProblemManagementOverview-ProblemUnassigned' => 'Unassigned Problems',
+	'UI-ProblemManagementOverview-ProblemUnassigned+' => 'Unassigned Problems',
+	'UI:ProblemMgmtMenuOverview:Title' => 'Dashboard for Problem Management',
+	'UI:ProblemMgmtMenuOverview:Title+' => 'Dashboard for Problem Management',
+
 ));
 //
 // Class: Problem

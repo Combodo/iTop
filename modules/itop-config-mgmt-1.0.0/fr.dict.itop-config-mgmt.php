@@ -266,14 +266,14 @@ Dict::Add('FR FR', 'French', 'Français', array(
 ));
 
 //
-// Class: ExternalDoc
+// Class: WebDoc
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:ExternalDoc' => 'Document externe',
-	'Class:ExternalDoc+' => 'Document mis à disposition depuis un serveur web externe',
-	'Class:ExternalDoc/Attribute:url' => 'Url',
-	'Class:ExternalDoc/Attribute:url+' => '',
+	'Class:WebDoc' => 'Document Web',
+	'Class:WebDoc+' => 'Document mis à disposition depuis un serveur web externe',
+	'Class:WebDoc/Attribute:url' => 'Url',
+	'Class:WebDoc/Attribute:url+' => '',
 ));
 
 //

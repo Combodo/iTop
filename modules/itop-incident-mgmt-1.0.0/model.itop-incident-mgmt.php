@@ -221,11 +221,11 @@ new TemplateMenuNode('Incident:Overview', '../modules/itop-incident-mgmt-1.0.0/o
 new NewObjectMenuNode('NewIncident', 'Incident', $oMyMenuGroup->GetIndex(), 1 /* fRank */);
 new SearchMenuNode('SearchIncidents', 'Incident', $oMyMenuGroup->GetIndex(), 2 /* fRank */);
 $oShortcutNode = new TemplateMenuNode('Incident:Shortcuts', '', $oMyMenuGroup->GetIndex(), 3 /* fRank */);
-$oNode = new OQLMenuNode('Incident:MyIncidents', 'SELECT Incident WHERE agent_id = :current_contact_id', $oShortcutNode->GetIndex(), 1 /* fRank */);
+$oNode = new OQLMenuNode('Incident:MyIncidents', 'SELECT Incident WHERE agent_id = :current_contact_id AND status NOT IN ("closed", "resolved")', $oShortcutNode->GetIndex(), 1 /* fRank */);
 $oNode->SetParameters(array('auto_reload' => 'fast'));
 $oNode = new OQLMenuNode('Incident:EscalatedIncidents', 'SELECT Incident WHERE status IN ("escalated_tto", "escalated_ttr")', $oShortcutNode->GetIndex(), 2 /* fRank */);
 $oNode->SetParameters(array('auto_reload' => 'fast'));
 $oNode = new OQLMenuNode('Incident:OpenIncidents', 'SELECT Incident WHERE status IN ("new", "assigned", "escalated_tto", "escalated_ttr", "resolved")', $oShortcutNode->GetIndex(), 3 /* fRank */);
-$oNode->SetParameters(array('auto_reload' => 'fast'));
+$oNode->SetParameters(array('auto_reload' => 'standard'));
 
 ?>
