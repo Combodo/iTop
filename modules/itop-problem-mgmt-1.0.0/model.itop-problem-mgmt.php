@@ -71,7 +71,7 @@ class Problem extends Ticket
 
 		MetaModel::Init_SetZListItems('details', array('ref', 'title', 'org_id', 'description', 'ticket_log', 'start_date','knownerrors_list', 'document_list', 'ci_list', 'contact_list','incident_list', 'status', 'service_id', 'servicesubcategory_id','product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_change_id', 'close_date', 'last_update', 'assignment_date'));
 		MetaModel::Init_SetZListItems('advanced_search', array('ref', 'title', 'org_id', 'start_date', 'status', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_change_id', 'close_date'));
-		MetaModel::Init_SetZListItems('standard_search', array('ref', 'title', 'org_id', 'start_date', 'status', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_change_id', 'close_date'));
+		MetaModel::Init_SetZListItems('standard_search', array('ref', 'title', 'org_id', 'start_date', 'status', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'close_date'));
 		MetaModel::Init_SetZListItems('list', array('ref', 'title', 'org_id', 'start_date', 'status', 'service_id', 'priority'));
 
                 // Lifecycle
