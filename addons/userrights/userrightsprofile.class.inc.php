@@ -621,7 +621,7 @@ exit;
 
 		$sAction = self::$m_aActionCodes[$iActionCode];
 
-		$iInstancePermission = UR_ALLOWED_NO;
+		$iPermission = UR_ALLOWED_NO;
 		$aAttributes = array();
 		if (isset($this->m_aUserProfiles[$iUser]))
 		{
@@ -634,7 +634,7 @@ exit;
 				}
 				else
 				{
-					$iInstancePermission = UR_ALLOWED_YES;
+					$iPermission = UR_ALLOWED_YES;
 	
 					// update the list of attributes with those allowed for this profile
 					//
@@ -655,7 +655,7 @@ exit;
 		}
 
 		$aRes = array(
-			'permission' => $iInstancePermission,
+			'permission' => $iPermission,
 			'attributes' => $aAttributes,
 		);
 		$this->m_aObjectActionGrants[$iUser][$sClass][$iActionCode] = $aRes;
@@ -666,92 +666,23 @@ exit;
 	{
 		$this->LoadCache();
 
-		if (is_null($oInstanceSet))
-		{
-			$aObjectPermissions = $this->GetUserActionGrant($oUser, $sClass, $iActionCode);
-			return $aObjectPermissions['permission'];
-		}
-
-		$oInstanceSet->Rewind();
-		while($oObject = $oInstanceSet->Fetch())
-		{
-			$aObjectPermissions = $this->GetUserActionGrant($oUser, get_class($oObject), $iActionCode);
-
-			$iInstancePermission = $aObjectPermissions['permission'];
-			if (isset($iGlobalPermission))
-			{
-				if ($iInstancePermission != $iGlobalPermission)
-				{
-					$iGlobalPermission = UR_ALLOWED_DEPENDS;
-					break;
-				}
-			}
-			else
-			{
-				$iGlobalPermission = $iInstancePermission;
-			}
-		}
-		$oInstanceSet->Rewind();
-
-		if (isset($iGlobalPermission))
-		{
-			return $iGlobalPermission;
-		}
-		else
-		{
-			return UR_ALLOWED_NO;
-		}
+		// Note: The object set is ignored because it was interesting to optimize for huge data sets
+		//       and acceptable to consider only the root class of the object set
+		$aObjectPermissions = $this->GetUserActionGrant($oUser, $sClass, $iActionCode);
+		return $aObjectPermissions['permission'];
 	}
 
 	public function IsActionAllowedOnAttribute($oUser, $sClass, $sAttCode, $iActionCode, $oInstanceSet = null)
 	{
 		$this->LoadCache();
 
-		if (is_null($oInstanceSet))
+		// Note: The object set is ignored because it was interesting to optimize for huge data sets
+		//       and acceptable to consider only the root class of the object set
+		$aObjectPermissions = $this->GetUserActionGrant($oUser, $sClass, $iActionCode);
+		$aAttributes = $aObjectPermissions['attributes'];
+		if (in_array($sAttCode, $aAttributes))
 		{
-			$aObjectPermissions = $this->GetUserActionGrant($oUser, $sClass, $iActionCode);
-			$aAttributes = $aObjectPermissions['attributes'];
-			if (in_array($sAttCode, $aAttributes))
-			{
-				return $aObjectPermissions['permission'];
-			}
-			else
-			{
-				return UR_ALLOWED_NO;
-			}
-		}
-
-		$oInstanceSet->Rewind();
-		while($oObject = $oInstanceSet->Fetch())
-		{
-			$aObjectPermissions = $this->GetUserActionGrant($oUser, get_class($oObject), $iActionCode);
-			$aAttributes = $aObjectPermissions['attributes'];
-			if (in_array($sAttCode, $aAttributes))
-			{
-				$iInstancePermission = $aObjectPermissions['permission'];
-			}
-			else
-			{
-				$iInstancePermission = UR_ALLOWED_NO; 
-			}
-
-			if (isset($iGlobalPermission))
-			{
-				if ($iInstancePermission != $iGlobalPermission)
-				{
-					$iGlobalPermission = UR_ALLOWED_DEPENDS;
-				}
-			}
-			else
-			{
-				$iGlobalPermission = $iInstancePermission;
-			}
-		}
-		$oInstanceSet->Rewind();
-
-		if (isset($iGlobalPermission))
-		{
-			return $iGlobalPermission;
+			return $aObjectPermissions['permission'];
 		}
 		else
 		{
@@ -780,62 +711,22 @@ exit;
 		// Note: this code is VERY close to the code of IsActionAllowed()
 		$iUser = $oUser->GetKey();
 
-		if (is_null($oInstanceSet))
+		// Note: The object set is ignored because it was interesting to optimize for huge data sets
+		//       and acceptable to consider only the root class of the object set
+		$iPermission = UR_ALLOWED_NO;
+		if (isset($this->m_aUserProfiles[$iUser]))
 		{
-			$iInstancePermission = UR_ALLOWED_NO;
-			if (isset($this->m_aUserProfiles[$iUser]))
+			foreach($this->m_aUserProfiles[$iUser] as $iProfile => $oProfile)
 			{
-				foreach($this->m_aUserProfiles[$iUser] as $iProfile => $oProfile)
+				$oGrantRecord = $this->GetClassStimulusGrant($iProfile, $sClass, $sStimulusCode);
+				if (!is_null($oGrantRecord))
 				{
-					$oGrantRecord = $this->GetClassStimulusGrant($iProfile, $sClass, $sStimulusCode);
-					if (!is_null($oGrantRecord))
-					{
-						// no need to fetch the record, we've requested the records having permission = 'yes'
-						$iInstancePermission = UR_ALLOWED_YES;
-					}
+					// no need to fetch the record, we've requested the records having permission = 'yes'
+					$iPermission = UR_ALLOWED_YES;
 				}
 			}
-			return $iInstancePermission;
 		}
-
-		$oInstanceSet->Rewind();
-		while($oObject = $oInstanceSet->Fetch())
-		{
-			$iInstancePermission = UR_ALLOWED_NO;
-			if (isset($this->m_aUserProfiles[$iUser]))
-			{
-				foreach($this->m_aUserProfiles[$iUser] as $iProfile => $oProfile)
-				{
-					$oGrantRecord = $this->GetClassStimulusGrant($iProfile, get_class($oObject), $sStimulusCode);
-					if (!is_null($oGrantRecord))
-					{
-						// no need to fetch the record, we've requested the records having permission = 'yes'
-						$iInstancePermission = UR_ALLOWED_YES;
-					}
-				}
-			}
-			if (isset($iGlobalPermission))
-			{
-				if ($iInstancePermission != $iGlobalPermission)
-				{
-					$iGlobalPermission = UR_ALLOWED_DEPENDS;
-				}
-			}
-			else
-			{
-				$iGlobalPermission = $iInstancePermission;
-			}
-		}
-		$oInstanceSet->Rewind();
-
-		if (isset($iGlobalPermission))
-		{
-			return $iGlobalPermission;
-		}
-		else
-		{
-			return UR_ALLOWED_NO;
-		}
+		return $iPermission;
 	}
 
 	public function FlushPrivileges()
