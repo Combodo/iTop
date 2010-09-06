@@ -324,7 +324,7 @@ class ActionEmail extends ActionNotification
 			$oLog->Set('userinfo', UserRights::GetUser());
 			$oLog->Set('trigger_id', $oTrigger->GetKey());
 			$oLog->Set('action_id', $this->GetKey());
-			$oLog->Set('object_id', $aContextArgs['this->id']);
+			$oLog->Set('object_id', $aContextArgs['this->object()']->GetKey());
 
 			// Note: we have to secure this because those values are calculated
 			// inside the try statement, and we would like to keep track of as
