@@ -334,7 +334,7 @@ abstract class DBObject
 		}
 		if ($this->m_bIsInDB && !$this->m_aLoadedAtt[$sAttCode] && !$this->m_bDirty)
 		{
-			// #@# non-scalar attributes.... handle that differentely
+			// #@# non-scalar attributes.... handle that differently
 			$this->Reload();
 		}
 		return $this->m_aCurrValues[$sAttCode];
@@ -918,6 +918,9 @@ abstract class DBObject
 		$this->DBWriteLinks();
 		$this->m_bIsInDB = true;
 		$this->m_bDirty = false;
+		
+		// Arg cache invalidated (in particular, it needs the object key -could be improved later)
+		$this->m_aAsArgs = null;
 
 		$this->AfterInsert();
 
