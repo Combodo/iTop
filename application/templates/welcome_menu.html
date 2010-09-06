@@ -38,7 +38,7 @@ padding:0;
 <p style="text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;"><itopstring>Request Management</itopstring></p>
 <itopblock BlockClass="DisplayBlock" type="actions" asynchronous="false" encoding="text/oql">SELECT UserRequest</itopblock>
 <p style="text-align:left; font-family:Verdana, Arial, sans-serif; font-size:14px;"><itopstring>UI:WelcomeMenu:MyCalls</itopstring></p>
-<itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql" parameters="menu:0">SELECT UserRequest AS i WHERE i.caller_id = :current_contact_id</itopblock>
+<itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql" parameters="menu:0">SELECT UserRequest AS i WHERE i.caller_id = :current_contact_id AND status NOT IN ("closed", "resolved")</itopblock>
 </itopcheck>
 </td>
 <td class="dashboard2">
@@ -47,7 +47,7 @@ padding:0;
 <p style="text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;"><itopstring>Incident Management</itopstring></p>
 <itopblock BlockClass="DisplayBlock" type="actions" asynchronous="false" encoding="text/oql">SELECT Incident</itopblock>
 <p style="text-align:left; font-family:Verdana, Arial, sans-serif; font-size:14px;"><itopstring>UI:WelcomeMenu:MyIncidents</itopstring></p>
-<itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql" parameters="menu:0">SELECT Incident AS i WHERE i.agent_id = :current_contact_id</itopblock>
+<itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql" parameters="menu:0">SELECT Incident AS i WHERE i.agent_id = :current_contact_id AND status NOT IN ("closed", "resolved")</itopblock>
 </itopcheck>
 </td>
 </tr>
