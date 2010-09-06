@@ -37,7 +37,7 @@
 // Class: UserLocal
 //
 
-Dict::Add('EN US', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:UserLocal' => 'Utilisateur iTop',
 	'Class:UserLocal+' => 'Utilisateur authentifié par iTop',
 	'Class:UserLocal/Attribute:password' => 'Mot de passe',

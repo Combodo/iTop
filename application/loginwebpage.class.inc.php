@@ -380,12 +380,6 @@ EOF
 				$oPage->output();
 				exit;
 			}
-			else
-			{
-				// Remember the changed password
-				$_SESSION['auth_pwd'] = $sNewPwd;
-				return;
-			}
 		}
 		
 		self::Login();

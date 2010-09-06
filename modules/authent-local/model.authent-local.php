@@ -56,10 +56,6 @@ class UserLocal extends UserInternal
 
 	public function CheckCredentials($sPassword)
 	{
-//		if ($this->Get('password') == $sPassword)
-//		{
-//			return true;
-//		}
 		$oPassword = $this->Get('password'); // ormPassword object
 		// Cannot compare directly the values since they are hashed, so
 		// Let's ask the password to compare the hashed values
@@ -89,7 +85,10 @@ class UserLocal extends UserInternal
 
 	public function ChangePassword($sOldPassword, $sNewPassword)
 	{
-		if ($this->Get('password') == $sOldPassword)
+		$oPassword = $this->Get('password'); // ormPassword object
+		// Cannot compare directly the values since they are hashed, so
+		// Let's ask the password to compare the hashed values
+		if ($oPassword->CheckPassword($sOldPassword))
 		{
 			$this->Set('password', $sNewPassword);
 			$oChange = MetaModel::NewObject("CMDBChange");
@@ -103,6 +102,7 @@ class UserLocal extends UserInternal
 				$sUserString = UserRights::GetUser();
 			}
 			$oChange->Set("userinfo", $sUserString);
+			$oChange->DBInsert();
 			$this->DBUpdateTracked($oChange);
 			return true;
 		}

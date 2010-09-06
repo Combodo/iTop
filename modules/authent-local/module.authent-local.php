@@ -24,6 +24,7 @@ SetupWebPage::AddModule(
 		),
 		'dictionary' => array(
 			'en.dict.authent-local.php',
+			'fr.dict.authent-local.php',
 		),
 		'data.struct' => array(
 			//'data.struct.authent-local.xml',
