@@ -1325,7 +1325,7 @@ EOF
 		{
 			$bMandatory = false;
 			$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, $aArgs);
-			if ($aArgs['default'][$sAttCode])
+			if (isset($aArgs['default'][$sAttCode]))
 			{
 				$oObj->Set($sAttCode, $aArgs['default'][$sAttCode]);			
 			}
