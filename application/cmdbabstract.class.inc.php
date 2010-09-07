@@ -162,30 +162,37 @@ abstract class cmdbAbstractObject extends CMDBObject
 				{
 					// 1:n links
 					$sTargetClass = $oAttDef->GetLinkedClass();
-					$oPage->p(MetaModel::GetClassIcon($sTargetClass)."&nbsp;".$oAttDef->GetDescription());
-
-					$oFilter = new DBObjectSearch($sTargetClass);
-					$oFilter->AddCondition($oAttDef->GetExtKeyToMe(), $this->GetKey(),'=');
-
-					$aDefaults = array($oAttDef->GetExtKeyToMe() => $this->GetKey());
-					$oAppContext = new ApplicationContext();
-					foreach($oAppContext->GetNames() as $sKey)
+					if ($this->IsNew())
 					{
-						// The linked object inherits the parent's value for the context
-						if (MetaModel::IsValidAttCode($sClass, $sKey))
-						{
-							$aDefaults[$sKey] = $this->Get($sKey);
-						}
+						$oPage->p(Dict::Format('UI:BeforeAdding_Class_ObjectsSaveThisObject', MetaModel::GetName($sTargetClass)));
 					}
-					$aParams = array(
-						'target_attr' => $oAttDef->GetExtKeyToMe(),
-						'object_id' => $this->GetKey(),
-						'menu' => true,
-						'default' => $aDefaults,
-						);
-
-					$oBlock = new DisplayBlock($oFilter, 'list', false);
-					$oBlock->Display($oPage, $sInputId, $aParams);
+					else
+					{
+						$oPage->p(MetaModel::GetClassIcon($sTargetClass)."&nbsp;".$oAttDef->GetDescription());
+	
+						$oFilter = new DBObjectSearch($sTargetClass);
+						$oFilter->AddCondition($oAttDef->GetExtKeyToMe(), $this->GetKey(),'=');
+	
+						$aDefaults = array($oAttDef->GetExtKeyToMe() => $this->GetKey());
+						$oAppContext = new ApplicationContext();
+						foreach($oAppContext->GetNames() as $sKey)
+						{
+							// The linked object inherits the parent's value for the context
+							if (MetaModel::IsValidAttCode($sClass, $sKey))
+							{
+								$aDefaults[$sKey] = $this->Get($sKey);
+							}
+						}
+						$aParams = array(
+							'target_attr' => $oAttDef->GetExtKeyToMe(),
+							'object_id' => $this->GetKey(),
+							'menu' => true,
+							'default' => $aDefaults,
+							);
+	
+						$oBlock = new DisplayBlock($oFilter, 'list', false);
+						$oBlock->Display($oPage, $sInputId, $aParams);
+					}
 				}
 				else // get_class($oAttDef) == 'AttributeLinkedSetIndirect'
 				{
