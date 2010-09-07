@@ -34,7 +34,7 @@ class KnownError extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,knownerrormgmt",
 			"name" => "Known Error",
 			"description" => "Error documented for a known issue",
 			"key_type" => "autoincrement",
@@ -93,7 +93,7 @@ class lnkInfraError extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,knownerrormgmt",
 			"name" => "InfraErrorLinks",
 			"description" => "Infra related to a known error",
 			"key_type" => "autoincrement",
@@ -137,7 +137,7 @@ class lnkDocumentError extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable",
+			"category" => "bizmodel,searchable,knownerrormgmt",
 			"name" => "DocumentsErrorLinks",
 			"description" => "A link between a document and a known error",
 			"key_type" => "autoincrement",

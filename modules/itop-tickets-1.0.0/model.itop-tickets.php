@@ -30,7 +30,7 @@ abstract class Ticket extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable,incidentmgmt,requestmgmt,changemgmt",
+			"category" => "bizmodel,searchable,incidentmgmt,requestmgmt,changemgmt,problemmgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "ref",
 			"state_attcode" => "",
@@ -66,7 +66,7 @@ class lnkTicketToDoc extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable,incidentmgmt,requestmgmt,changemgmt",
+			"category" => "bizmodel,searchable,incidentmgmt,requestmgmt,changemgmt,problemmgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "ticket_id",
 			"state_attcode" => "",
@@ -97,7 +97,7 @@ class lnkTicketToContact extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable,incidentmgmt,requestmgmt,changemgmt",
+			"category" => "bizmodel,searchable,incidentmgmt,requestmgmt,changemgmt,problemmgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "ticket_id",
 			"state_attcode" => "",
@@ -130,7 +130,7 @@ class lnkTicketToCI extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable,incidentmgmt,requestmgmt,changemgmt",
+			"category" => "bizmodel,searchable,incidentmgmt,requestmgmt,changemgmt,problemmgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "ticket_id",
 			"state_attcode" => "",
@@ -165,7 +165,7 @@ abstract class ResponseTicket extends Ticket
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel",
+			"category" => "bizmodel,incidentmgmt,requestmgmt",
 			"key_type" => "autoincrement",
 			"name_attcode" => "ref",
 			"state_attcode" => "status",

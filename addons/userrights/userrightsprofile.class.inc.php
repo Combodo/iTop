@@ -187,7 +187,7 @@ class URP_UserProfile extends UserRightsBaseClass
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('userid', 'profileid', 'reason')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('profileid', 'reason')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('list', array('userid', 'profileid', 'reason')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('userid', 'profileid')); // Criteria of the std search form
 		MetaModel::Init_SetZListItems('advanced_search', array('userid', 'profileid')); // Criteria of the advanced search form
@@ -948,13 +948,21 @@ class SetupProfiles
 				),
 			),
 			'Support Agent' => array(
-				'description' => 'Person analyzing and solving the current incidents or problems',
-				'write_modules' => 'Incident,Problem,KnownError',
+				'description' => 'Person analyzing and solving the current incidents',
+				'write_modules' => 'Incident',
 				'stimuli' => array(
 					'Incident' => 'ev_assign,ev_reassign,ev_resolve,ev_close',
 					'UserRequest' => 'ev_assign,ev_reassign,ev_resolve,ev_close,ev_freeze',
 				),
 			),
+			'Problem Manager' => array(
+				'description' => 'Person analyzing and solving the current problems',
+				'write_modules' => 'Problem,KnownError',
+				'stimuli' => array(
+					'Problem' => 'ev_assign,ev_reassign,ev_resolve,ev_close',
+				),
+			),
+
 			'Change Implementor' => array(
 				'description' => 'Person executing the changes',
 				'write_modules' => 'Change',
