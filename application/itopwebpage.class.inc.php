@@ -294,6 +294,12 @@ EOF
 			window.location.href = './UI.php?operation=details&class='+sClass+'&id='+id;
 		}
 
+		
+		function BackToList(sClass)
+		{
+			window.location.href = './UI.php?operation=search_oql&oql_class='+sClass+'&oql_clause=WHERE id=0';
+		}
+
 		function ShowDebug()
 		{
 			if ($('#rawOutput > div').html() != '')

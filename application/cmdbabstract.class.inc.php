@@ -1267,7 +1267,7 @@ EOF
 		{
 			// The object does not exist in the database it's a creation
 			$oPage->add("<input type=\"hidden\" name=\"operation\" value=\"apply_new\">\n");			
-			$oPage->add("<button type=\"button\" class=\"action\" onClick=\"goBack()\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
+			$oPage->add("<button type=\"button\" class=\"action\" onClick=\"BackToList('$sClass')\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
 			$oPage->add("<button type=\"submit\" class=\"action\"><span>".Dict::S('UI:Button:Create')."</span></button>\n");
 		}
 		$oPage->add("</form>\n");
