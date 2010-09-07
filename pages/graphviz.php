@@ -15,7 +15,7 @@
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 /**
- * Renders a graph as a png (directly in the HTTP response)
+ * Renders a graph of the class' lifecycle as a png (directly in the HTTP response)
  *
  * @author      Erwan Taloc <erwan.taloc@combodo.com>
  * @author      Romain Quetiez <romain.quetiez@combodo.com>
@@ -27,6 +27,10 @@ require_once('../application/application.inc.php');
 require_once('../application/itopwebpage.class.inc.php');
 
 require_once('../application/startup.inc.php');
+require_once('../application/utils.inc.php');
+
+require_once('../application/loginwebpage.class.inc.php');
+LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
 /**
  * Helper to generate a Graphviz code for displaying the life cycle of a class
@@ -72,14 +76,19 @@ function GraphvizLifecycle($sClass)
 		}
 		foreach($aStates as $sStateCode => $aStateDef)
 		{
-			$sStateLabel = str_replace(' ', '\n', MetaModel::GetStateLabel($sClass, $sStateCode));
-			if ( ($aStatesLinks[$sStateCode]['in'] == 0) || ($aStatesLinks[$sStateCode]['out'] == 0))
+			if (($aStatesLinks[$sStateCode]['out'] > 0) || ($aStatesLinks[$sStateCode]['in'] > 0))
 			{
-				$sDotFileContent .= "\t$sStateCode [ shape=doublecircle,label=\"$sStateLabel\"];\n";
-			}
-			else
-			{
-				$sDotFileContent .= "\t$sStateCode [ shape=circle,label=\"$sStateLabel\"];\n";
+				// Show only reachable states
+				$sStateLabel = str_replace(' ', '\n', MetaModel::GetStateLabel($sClass, $sStateCode));
+				if ( ($aStatesLinks[$sStateCode]['in'] == 0) || ($aStatesLinks[$sStateCode]['out'] == 0))
+				{
+					// End or Start state, make it look different
+					$sDotFileContent .= "\t$sStateCode [ shape=doublecircle,label=\"$sStateLabel\"];\n";
+				}
+				else
+				{
+					$sDotFileContent .= "\t$sStateCode [ shape=circle,label=\"$sStateLabel\"];\n";
+				}
 			}
 		}
 		$sDotFileContent .= "}\n";
@@ -90,15 +99,20 @@ function GraphvizLifecycle($sClass)
 $sClass = utils::ReadParam('class', 'bizIncidentTicket');
 $sDir = dirname(__FILE__);
 $sImageFilePath = $sDir."/../images/lifecycle/".$sClass.".png";
-if (file_exists("/iTop/Graphviz/bin/dot.exe"))
+$sDotExecutable = utils::GetConfig()->Get('graphviz_path');
+if (file_exists($sDotExecutable))
 {
 	// create the file with Graphviz
 	$sDotDescription = GraphvizLifecycle($sClass);
 	$sDotFilePath = $sDir."/tmp-lifecycle.dot";
-	$rFile = fopen($sDotFilePath, "w");
-	fwrite($rFile, $sDotDescription);
-	fclose($rFile);
-	exec("/iTop/Graphviz/bin/dot.exe -Tpng < $sDotFilePath > $sImageFilePath");
+	// From now on, fail silently, since the image file may
+	// already exist and we should not "pollute" the page's output
+	// with warnings in case we are unable to refresh the image
+	$rFile = @fopen($sDotFilePath, "w");
+	@fwrite($rFile, $sDotDescription);
+	@fclose($rFile);
+	//echo "<p>Executing command: <tt>$sDotExecutable -Tpng < $sDotFilePath > $sImageFilePath</tt></p>\n";
+	@exec("$sDotExecutable -Tpng < $sDotFilePath > $sImageFilePath");
 }
 
 header('Content-type: image/png');

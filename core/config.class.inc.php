@@ -94,6 +94,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'graphviz_path' => array(
+			'type' => 'string',
+			'description' => 'Path to the Graphviz "dot" executable for graphing objects lifecycle',
+			'default' => '/usr/bin/dot',
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 	);
 
 	public function IsProperty($sPropCode)
