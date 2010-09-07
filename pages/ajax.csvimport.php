@@ -266,8 +266,8 @@ switch($sOperation)
 	$sSeparator = utils::ReadParam('separator', ',');
 	$sTextQualifier = utils::ReadParam('qualifier', '"');
 	$iLinesToSkip = utils::ReadParam('nb_lines_skipped', 0);
-	$bFirstLineAsHeader = utils::ReadParam('header_line', true);
-	$sData = stripslashes(utils::ReadParam('csvdata', true));
+	$bFirstLineAsHeader = utils::ReadParam('header_line', false);
+	$sData = stripslashes(utils::ReadParam('csvdata', ''));
 	$sClassName = utils::ReadParam('class_name', '');
 	$bAdvanced = utils::ReadParam('advanced', false);
 	$sEncoding = utils::ReadParam('encoding', 'UTF-8');
@@ -281,12 +281,12 @@ switch($sOperation)
 	else
 	{
 		$oPage->add("<table>");
-		$index = 1;
 		$aFirstLine = $aData[0]; // Use the first row to determine the number of columns
 		$iStartLine = 0;
 		$iNbColumns = count($aFirstLine);
 		if ($bFirstLineAsHeader)
-		{			$iStartLine = 1;
+		{
+			$iStartLine = 1;
 			foreach($aFirstLine as $sField)
 			{
 				$aHeader[] = $sField;
@@ -306,6 +306,7 @@ switch($sOperation)
 		$oPage->add('<tr>');
 		$oPage->add('<th>'.Dict::S('UI:CSVImport:HeaderFields').'</th><th>'.Dict::S('UI:CSVImport:HeaderMappings').'</th><th>&nbsp;</th><th>'.Dict::S('UI:CSVImport:HeaderSearch').'</th><th>'.Dict::S('UI:CSVImport:DataLine1').'</th><th>'.Dict::S('UI:CSVImport:DataLine2').'</th>');
 		$oPage->add('</tr>');
+		$index = 1;
 		foreach($aHeader as $sField)
 		{
 			$oPage->add('<tr>');
