@@ -216,7 +216,7 @@ class iTopWebPage extends NiceWebPage
 	  
 	// End of Tabs handling
 	$("table.listResults").tableHover(); // hover tables
-	$(".listResults").tablesorter( { headers: { 0:{sorter: false }}, widgets: ['myZebra', 'truncatedList']} ); // sortable and zebra tables
+	$(".listResults").tablesorter( { widgets: ['myZebra', 'truncatedList']} ); // sortable and zebra tables
 	$(".date-pick").datepicker({
 			showOn: 'button',
 			buttonImage: '../images/calendar.png',

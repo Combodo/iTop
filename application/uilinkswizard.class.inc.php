@@ -179,7 +179,7 @@ class UILinksWizard
 				function(data)
 				{
 					$('#SearchResultsToAdd').html(data);
-					$('#SearchResultsToAdd .listResults').tablesorter( { headers: { 0:{sorter: false }}, widgets: ['zebra']} ); // sortable and zebra tables
+					$('#SearchResultsToAdd .listResults').tablesorter( { widgets: ['myZebra', 'truncatedList']} ); // sortable and zebra tables
 					
 				},
 				'html'
@@ -233,7 +233,7 @@ class UILinksWizard
 					}
 					$('.listResults tbody').append(data);
 					$('.listResults').trigger('update');
-					$('.listResults').tablesorter( { headers: { 0:{sorter: false }}, widgets: ['zebra']} ); // sortable and zebra tables
+					$('.listResults').tablesorter( { widgets: ['myZebra', 'truncatedList']} ); // sortable and zebra tables
 				},
 				'html'
 			);

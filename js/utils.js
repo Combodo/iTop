@@ -13,7 +13,7 @@ function ReloadTruncatedList(divId, sSerializedFilter, sExtraParams)
 		 $('#'+divId).append(data);
 		 $('#'+divId).removeClass('loading');
 		 $('#'+divId+' .listResults').tableHover(); // hover tables
-		 $('#'+divId+' .listResults').tablesorter( { headers: { 0:{sorter: false }}, widgets: ['zebra']} ); // sortable and zebra tables
+		 $('#'+divId+' .listResults').tablesorter( { widgets: ['zebra', 'truncatedList']} ); // sortable and zebra tables
 		 //$('#'+divId).unblockUI();
 		}
 	 );
@@ -24,17 +24,14 @@ function ReloadTruncatedList(divId, sSerializedFilter, sExtraParams)
 function TruncateList(divId, iLimit, sNewLabel, sLinkLabel)
 {
 	var iCount = 0;
-	$('#'+divId+' table.listResults tr').each( function(){
-		if (iCount > iLimit)
-		{
+	$('#'+divId+' table.listResults tr:gt('+iLimit+')').each( function(){
 			$(this).remove();
-		}
-		iCount++;
 	});
 	$('#lbl_'+divId).html(sNewLabel);
 	$('#'+divId+' table.listResults tr:last td').addClass('truncated');
 	$('#'+divId+' table.listResults').addClass('truncated');
 	$('#trc_'+divId).html(sLinkLabel);
+	$('#'+divId+' .listResults').trigger("update"); //  Reset the cache
 }
 /**
  * Reload any block -- used for periodic auto-reload
@@ -50,7 +47,7 @@ function ReloadBlock(divId, sStyle, sSerializedFilter, sExtraParams)
 		 $('#'+divId).append(data);
 		 $('#'+divId).removeClass('loading');
 		 $('#'+divId+' .listResults').tableHover(); // hover tables
-		 $('#'+divId+' .listResults').tablesorter( { headers: { 0:{sorter: false }}, widgets: ['zebra']} ); // sortable and zebra tables
+		 $('#'+divId+' .listResults').tablesorter( { widgets: ['myZebra', 'truncatedList']} ); // sortable and zebra tables
 		 //$('#'+divId).unblockUI();
 		}
 	 );
