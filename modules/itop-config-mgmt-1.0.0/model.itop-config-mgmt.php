@@ -1016,7 +1016,7 @@ class NetworkInterface extends ConnectableCI
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array("name","device_id","org_id"),
+			"reconc_keys" => array("name","device_id","device_name","org_id"),
 			"db_table" => "networkinterface",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
