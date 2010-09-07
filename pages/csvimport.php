@@ -514,7 +514,7 @@ try
 		$oPage->add('<p><input type="button" value="'.Dict::S('UI:Button:Back').'" onClick="CSVGoBack()"/>&nbsp;&nbsp;');
 		if ($bSimulate)
 		{
-			$oPage->add('<input type="submit" value="'.Dict::S('UI:Button:DoImport').'"/></p>');
+			$oPage->add('<input type="submit" value="'.Dict::S('UI:Button:DoImport').'" onClick="$(\'#wizForm\').block();"/></p>');
 		}
 		else
 		{
