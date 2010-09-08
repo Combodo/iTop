@@ -102,8 +102,8 @@ define('OPT_ATT_MUSTPROMPT', 16);
  *
  * @package     iTopORM
  */
-//define('MYSQL_ENGINE', 'innodb');
-define('MYSQL_ENGINE', 'myisam');
+define('MYSQL_ENGINE', 'innodb');
+//define('MYSQL_ENGINE', 'myisam');
 
 
 
