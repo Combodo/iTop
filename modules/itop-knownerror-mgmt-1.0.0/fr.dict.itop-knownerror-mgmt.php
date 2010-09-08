@@ -102,7 +102,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 // Class: lnkInfraError
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('FR FR', 'English', 'English', array(
 	'Class:lnkInfraError' => 'Lien erreur CI',
 	'Class:lnkInfraError+' => 'CIs liés à une erreur connue',
 	'Class:lnkInfraError/Attribute:infra_id' => 'CI',
@@ -123,7 +123,7 @@ Dict::Add('EN US', 'English', 'English', array(
 // Class: lnkDocumentError
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('FR FR', 'English', 'English', array(
 	'Class:lnkDocumentError' => 'Lien erreur document',
 	'Class:lnkDocumentError+' => 'Lien entre une erreur et un document',
 	'Class:lnkDocumentError/Attribute:doc_id' => 'Document',

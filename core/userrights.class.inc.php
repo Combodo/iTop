@@ -110,6 +110,27 @@ abstract class User extends cmdbAbstractObject
 	abstract public function CanChangePassword();
 	abstract public function ChangePassword($sOldPassword, $sNewPassword);
 
+	/*
+	* Overload the standard behavior
+	*/	
+	public function DoCheckToWrite()
+	{
+		parent::DoCheckToWrite();
+
+		// Note: This MUST be factorized later: declare unique keys (set of columns) in the data model
+		$aChanges = $this->ListChanges();
+		if (array_key_exists('login', $aChanges))
+		{
+			$sNewLogin = $aChanges['login'];
+			$oSearch = DBObjectSearch::FromOQL_AllData("SELECT User WHERE login = :newlogin");
+			$oSet = new DBObjectSet($oSearch, array(), array('newlogin' => $sNewLogin));
+			if ($oSet->Count() > 0)
+			{
+				$this->m_aCheckIssues[] = Dict::Format('Class:User/Error:LoginMustBeUnique', $sNewLogin);
+			}
+		}
+	}
+
 	function GetGrantAsHtml($sClass, $iAction)
 	{
 		if (UserRights::IsActionAllowed($sClass, $iAction, null, $this)) 

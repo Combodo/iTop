@@ -108,6 +108,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:User/Attribute:profile_list+' => 'Rôles, ouvrants les droits d\'accès',
 	'Class:User/Attribute:allowed_org_list' => 'Organisations permises',
 	'Class:User/Attribute:allowed_org_list+' => 'L\'utilisateur a le droit de voir les données des organisations listées ici. Si aucune organisation n\'est spécifiée, alors aucune restriction ne s\'applique.',
+
+	'Class:User/Error:LoginMustBeUnique' => 'Le login doit être unique - "%1s" est déjà utilisé.',
 ));
 
 //
@@ -651,6 +653,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:PageTitle:ObjectCreated' => 'iTop objet créé.',
 	'UI:Title:Object_Of_Class_Created' => '%2$s - %1$s créé(e).',
 	'UI:Apply_Stimulus_On_Object_In_State_ToTarget_State' => '%1$s pour %2$s de l\'état %3$s vers l\'état %4$s.',
+	'UI:ObjectCouldNotBeWritten' => 'L\'objet ne peut pas être enregistré: %1$s',
 	'UI:PageTitle:FatalError' => 'iTop - Erreur Fatale',
 	'UI:FatalErrorMessage' => 'Erreur fatale, iTop ne peut pas continuer.',
 	'UI:Error_Details' => 'Erreur: %1$s.',

@@ -658,6 +658,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:PageTitle:ObjectCreated' => 'iTop Object Created.',
 	'UI:Title:Object_Of_Class_Created' => '%1$s - %2$s created.',
 	'UI:Apply_Stimulus_On_Object_In_State_ToTarget_State' => 'Applying %1$s on object: %2$s in state %3$s to target state: %4$s.',
+	'UI:ObjectCouldNotBeWritten' => 'The object could not be written: %1$s',
 	'UI:PageTitle:FatalError' => 'iTop - Fatal Error',
 	'UI:FatalErrorMessage' => 'Fatal error, iTop cannot continue.',
 	'UI:Error_Details' => 'Error: %1$s.',

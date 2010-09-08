@@ -484,7 +484,7 @@ try
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
 			}
-			$oObj = MetaModel::GetObject($sClass, $id);
+			$oObj = MetaModel::GetObject($sClass, $id, false);
 			if ($oObj != null)
 			{
 				$oP->set_title(Dict::Format('UI:DetailsPageTitle', $oObj->GetName(), $sClassLabel));
@@ -694,6 +694,7 @@ try
 			$bIsModifiedAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) == UR_ALLOWED_YES) && !MetaModel::IsReadOnlyClass($sClass);
 			if( ($oObj != null) && $bIsModifiedAllowed )
 			{
+				// Note: code duplicated to the case 'apply_modify' when a data integrity issue has been found
 				$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
 				$oP->add("<div class=\"page_header\">\n");
 				$oP->add("<h1>".$oObj->GetIcon()."&nbsp;".Dict::Format('UI:ModificationTitle_Class_Object', $sClassLabel, $oObj->GetName())."</h1>\n");
@@ -768,6 +769,7 @@ try
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'class'));
 			}
+			// Note: code duplicated to the case 'apply_modify' when a data integrity issue has been found
 			$oP->add_linked_script("../js/json.js");
 			$oP->add_linked_script("../js/forms-json-utils.js");
 			$oP->add_linked_script("../js/wizardhelper.js");
@@ -806,6 +808,7 @@ try
 			{
 				// Display the creation form
 				$sClassLabel = MetaModel::GetName($sRealClass);
+				// Note: some code has been duplicated to the case 'apply_new' when a data integrity issue has been found
 				$oP->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel));
 				$oP->add("<h1>".MetaModel::GetClassIcon($sRealClass)."&nbsp;".Dict::Format('UI:CreationTitle_Class', $sClassLabel)."</h1>\n");
 				$oP->add("<div class=\"wizContainer\">\n");
@@ -872,26 +875,36 @@ try
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
 			}
-			$oObj = MetaModel::GetObject($sClass, $id);
-			if (!utils::IsTransactionValid($sTransactionId))
+			$bDisplayDetails = true;
+			$oObj = MetaModel::GetObject($sClass, $id, false);
+			if ($oObj == null)
 			{
+				$bDisplayDetails = false;
+				$oP->set_title(Dict::S('UI:ErrorPageTitle'));
+				$oP->P(Dict::S('UI:ObjectDoesNotExist'));
+			}
+			elseif (!utils::IsTransactionValid($sTransactionId))
+			{
+				$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
 				$oP->p("<strong>".Dict::S('UI:Error:ObjectAlreadyUpdated')."</strong>\n");
 			}
 			else
 			{
-				if ($oObj != null)
+				UpdateObject($oObj);
+
+				if (!$oObj->IsModified())
 				{
 					$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
-					$oP->add("<h1>".Dict::Format('UI:ModificationTitle_Class_Object', $sClassLabel, $oObj->GetName())."</h1>\n");
-
-					UpdateObject($oObj);
-
-					if (!$oObj->IsModified())
+					$oP->p(Dict::Format('UI:Class_Object_NotUpdated', MetaModel::GetName(get_class($oObj)), $oObj->GetName()));
+				}
+				else
+				{
+					list($bRes, $aIssues) = $oObj->CheckToWrite();
+					if ($bRes)
 					{
-						$oP->p(Dict::Format('UI:Class_Object_NotUpdated', MetaModel::GetName(get_class($oObj)), $oObj->GetName()));
-					}
-					else
-					{
+						$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
+						$oP->add("<h1>".Dict::Format('UI:ModificationTitle_Class_Object', $sClassLabel, $oObj->GetName())."</h1>\n");
+
 						$oMyChange = MetaModel::NewObject("CMDBChange");
 						$oMyChange->Set("date", time());
 						if (UserRights::IsImpersonated())
@@ -908,15 +921,35 @@ try
 			
 						$oP->p(Dict::Format('UI:Class_Object_Updated', MetaModel::GetName(get_class($oObj)), $oObj->GetName()));
 					}
-				}
-				else
-				{
-					$oP->set_title(Dict::S('UI:ErrorPageTitle'));
-					$oP->P(Dict::S('UI:ObjectDoesNotExist'));
+					else
+					{
+						$bDisplayDetails = false;
+						// Found issues, explain and give the user a second chance
+						//
+						// Note: code duplicated from the case 'modify'
+						$oP->add_linked_script("../js/json.js");
+						$oP->add_linked_script("../js/forms-json-utils.js");
+						$oP->add_linked_script("../js/wizardhelper.js");
+						$oP->add_linked_script("../js/wizard.utils.js");
+						$oP->add_linked_script("../js/linkswidget.js");
+						$oP->add_linked_script("../js/jquery.blockUI.js");
+						$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
+						$oP->add("<div class=\"page_header\">\n");
+						$oP->add("<h1>".$oObj->GetIcon()."&nbsp;".Dict::Format('UI:ModificationTitle_Class_Object', $sClassLabel, $oObj->GetName())."</h1>\n");
+						$oP->add("</div>\n");
+						$oP->add("<div class=\"wizContainer\">\n");
+						$oObj->DisplayModifyForm($oP);
+						$oP->add("</div>\n");
+						$sIssueDesc = Dict::Format('UI:ObjectCouldNotBeWritten', implode(', ', $aIssues));
+						$oP->add_ready_script("alert('".addslashes($sIssueDesc)."');");
+					}
 				}
 			}
-			$oObj = MetaModel::GetObject(get_class($oObj), $oObj->GetKey()); //Workaround: reload the object some that the linkedset are displayed properly
-			$oObj->DisplayDetails($oP);
+			if ($bDisplayDetails)
+			{
+				$oObj = MetaModel::GetObject(get_class($oObj), $oObj->GetKey()); //Workaround: reload the object so that the linkedset are displayed properly
+				$oObj->DisplayDetails($oP);
+			}
 		break;
 
 		case 'select_for_deletion':
@@ -1037,22 +1070,46 @@ try
 		{
 			$sClass = get_class($oObj);
 			$sClassLabel = MetaModel::GetName($sClass);
-			$oMyChange = MetaModel::NewObject("CMDBChange");
-			$oMyChange->Set("date", time());
-			if (UserRights::IsImpersonated())
+
+			list($bRes, $aIssues) = $oObj->CheckToWrite();
+			if ($bRes)
 			{
-				$sUserString = Dict::Format('UI:Archive_User_OnBehalfOf_User', UserRights::GetRealUser(), UserRights::GetUser());
+				$oMyChange = MetaModel::NewObject("CMDBChange");
+				$oMyChange->Set("date", time());
+				if (UserRights::IsImpersonated())
+				{
+					$sUserString = Dict::Format('UI:Archive_User_OnBehalfOf_User', UserRights::GetRealUser(), UserRights::GetUser());
+				}
+				else
+				{
+					$sUserString = UserRights::GetUser();
+				}
+				$oMyChange->Set("userinfo", $sUserString);
+				$iChangeId = $oMyChange->DBInsert();
+				$oObj->DBInsertTracked($oMyChange);
+				$oP->set_title(Dict::S('UI:PageTitle:ObjectCreated'));
+				$oP->add("<h1>".Dict::Format('UI:Title:Object_Of_Class_Created', $oObj->GetName(), $sClassLabel)."</h1>\n");
+				$oObj->DisplayDetails($oP);
 			}
 			else
 			{
-				$sUserString = UserRights::GetUser();
+				// Found issues, explain and give the user a second chance
+				//
+				// Note: code similar to the case 'modify'
+				$oP->add_linked_script("../js/json.js");
+				$oP->add_linked_script("../js/forms-json-utils.js");
+				$oP->add_linked_script("../js/wizardhelper.js");
+				$oP->add_linked_script("../js/wizard.utils.js");
+				$oP->add_linked_script("../js/linkswidget.js");
+				$oP->add_linked_script("../js/jquery.blockUI.js");
+				$oP->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel));
+				$oP->add("<h1>".MetaModel::GetClassIcon($sClass)."&nbsp;".Dict::Format('UI:CreationTitle_Class', $sClassLabel)."</h1>\n");
+				$oP->add("<div class=\"wizContainer\">\n");
+				cmdbAbstractObject::DisplayCreationForm($oP, $sClass, $oObj);
+				$oP->add("</div>\n");
+				$sIssueDesc = Dict::Format('UI:ObjectCouldNotBeWritten', implode(', ', $aIssues));
+				$oP->add_ready_script("alert('".addslashes($sIssueDesc)."');");
 			}
-			$oMyChange->Set("userinfo", $sUserString);
-			$iChangeId = $oMyChange->DBInsert();
-			$oObj->DBInsertTracked($oMyChange);
-			$oP->set_title(Dict::S('UI:PageTitle:ObjectCreated'));
-			$oP->add("<h1>".Dict::Format('UI:Title:Object_Of_Class_Created', $oObj->GetName(), $sClassLabel)."</h1>\n");
-			$oObj->DisplayDetails($oP);
 		}
 		break;
 		
@@ -1099,7 +1156,7 @@ try
 		{
 			throw new ApplicationException(Dict::Format('UI:Error:3ParametersMissing', 'class', 'id', 'stimulus'));
 		}
-		$oObj = MetaModel::GetObject($sClass, $id);
+		$oObj = MetaModel::GetObject($sClass, $id, false);
 		if ($oObj != null)
 		{
 			$aTransitions = $oObj->EnumTransitions();
@@ -1191,7 +1248,7 @@ EOF
 		{
 			throw new ApplicationException(Dict::Format('UI:Error:3ParametersMissing', 'class', 'id', 'stimulus'));
 		}
-		$oObj = MetaModel::GetObject($sClass, $id);
+		$oObj = MetaModel::GetObject($sClass, $id, false);
 		if ($oObj != null)
 		{
 			$aTransitions = $oObj->EnumTransitions();
