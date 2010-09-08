@@ -116,6 +116,11 @@ class ExecutionKPI
 			$iMemory = self::memory_get_usage();
 			$iMemoryUsed = $iMemory - $this->m_iInitialMemory;
 			$this->Report($sOperationDesc.' / memory: '.self::MemStr($iMemoryUsed).' (Total: '.self::MemStr($iMemory).')');
+			if (function_exists('memory_get_peak_usage'))
+			{
+				$iMemoryPeak = memory_get_peak_usage();
+				$this->Report($sOperationDesc.' / memory peak: '.self::MemStr($iMemoryPeak));
+			}
 		}
 
 		$this->ResetCounters();
