@@ -445,6 +445,47 @@ function UpdateObject(&$oObj)
 		}
 	}
 }
+
+/**
+ * Displays a popup welcome message, once per session at maximum
+ * until the user unchecks the "Display welcome at startup"
+ * @param WebPage $oP The current web page for the display
+ * @return void
+ */
+function DisplayWelcomePopup(WebPage $oP)
+{
+	if (!isset($_SESSION['welcome']))
+	{
+		// Check, only once per session, if the popup should be displayed...
+		// If the user did not already ask for hiding it forever
+		$bPopup = appUserPreferences::GetPref('welcome_popup', true);
+		if ($bPopup)
+		{
+			$sTemplate = @file_get_contents('../application/templates/welcome_popup.html');
+			if ($sTemplate !== false)
+			{
+				$oTemplate = new DisplayTemplate($sTemplate);
+				$oP->add("<div id=\"welcome_popup\">");
+				$oTemplate->Render($oP, array());
+				$oP->add("<p style=\"float:left\"><input type=\"checkbox\" checked id=\"display_welcome_popup\"/><label for=\"display_welcome_popup\">&nbsp;".Dict::S('UI:DisplayThisMessageAtStartup')."</label></p>\n");
+				$oP->add("<p style=\"float:right\"><input type=\"button\" value=\"".Dict::S('UI:Button:Ok')."\" onClick=\"$('#welcome_popup').dialog('close');\"/>\n");
+				$oP->add("</div>\n");
+				$sTitle = addslashes(Dict::S('UI:WelcomeMenu:Title'));
+				$oP->add_ready_script(
+<<<EOF
+	$('#welcome_popup').dialog( { width:'80%', title: '$sTitle', autoOpen: true, modal:true,
+								  close: function() {
+								  	var bDisplay = $('#display_welcome_popup:checked').length;
+								  	SetUserPreference('welcome_popup', bDisplay, true); 
+								  }
+								  });
+EOF
+);
+				$_SESSION['welcome'] = 'ok';
+			}
+		}
+	}	
+}
 /***********************************************************************************
  * 
  * Main user interface page, starts here
@@ -1456,7 +1497,8 @@ EOF
 	ExecutionKPI::ReportStats();
 	MetaModel::ShowQueryTrace();
 
-	$oP->output();
+	DisplayWelcomePopup($oP);
+	$oP->output();	
 }
 catch(CoreException $e)
 {

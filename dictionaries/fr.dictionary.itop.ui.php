@@ -838,6 +838,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Help' => 'Aide',
 	'UI:PasswordConfirm' => '(Confirmer)',
 	'UI:BeforeAdding_Class_ObjectsSaveThisObject' => 'Enregistrez l\'objet courant avant de créer de nouveaux éléments de type %1$s.',
+	'UI:DisplayThisMessageAtStartup' => 'Afficher ce message au démarrage',
 ));
 
 ?>

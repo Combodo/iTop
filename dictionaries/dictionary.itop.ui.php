@@ -827,6 +827,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Help' => 'Help',
 	'UI:PasswordConfirm' => '(Confirm)',
 	'UI:BeforeAdding_Class_ObjectsSaveThisObject' => 'Before adding more %1$s objects, save this object.',
+	'UI:DisplayThisMessageAtStartup' => 'Display this message at startup',
 ));
 
 
