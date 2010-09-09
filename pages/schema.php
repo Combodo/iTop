@@ -260,7 +260,7 @@ function DisplayTriggers($oPage, $sClass)
 {
 	$sClassList = implode("', '", MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
 	$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObject WHERE target_class IN ('$sClassList')"));
-	cmdbAbstractObject::DisplaySet($oPage, $oSet);
+	cmdbAbstractObject::DisplaySet($oPage, $oSet, array('block_id' => 'triggers'));
 }
 
 
@@ -478,9 +478,6 @@ function DisplayRelationDetails($oPage, $sRelCode)
 	$oPage->add_ready_script('$("#RelationshipDetails").treeview();');
 }
 
-
-require_once('../application/loginwebpage.class.inc.php');
-LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
 // Display the menu on the left
 $oAppContext = new ApplicationContext();
