@@ -151,7 +151,7 @@ class URP_Profiles extends UserRightsBaseClass
 
 	function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
 	{
-		parent::DisplayBareRelations($oPage);
+		parent::DisplayBareRelations($oPage, $bEditMode);
 		if (!$bEditMode)
 		{
 			$oPage->SetCurrentTab(Dict::S('UI:UserManagement:GrantMatrix'));
