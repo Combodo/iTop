@@ -1130,8 +1130,9 @@ abstract class DBObject
 			$aScalarArgs[$sArgName.'->id'] = $this->GetKey();
 			$aScalarArgs[$sArgName.'->object()'] = $this;
 			$aScalarArgs[$sArgName.'->hyperlink()'] = $this->GetHyperlink();
-			// #@# Prototype for a user portal - to be dehardcoded later 
-			$aScalarArgs[$sArgName.'->hyperlink(portal)'] = '../portal/index.php?operation=details&id='.$this->GetKey();
+			// #@# Prototype for a user portal - to be dehardcoded later
+			$sToPortal = utils::GetAbsoluteUrlPath().'portal/index.php?operation=details&id='.$this->GetKey();
+			$aScalarArgs[$sArgName.'->hyperlink(portal)'] = '<a href="'.$sToPortal.'">'.$this->GetName().'</a>';
 			$aScalarArgs[$sArgName.'->name()'] = $this->GetName();
 		
 			$sClass = get_class($this);

@@ -189,6 +189,7 @@ class utils
     /**
      * Returns an absolute URL to the current page
      * @param $bQueryString bool True to also get the query string, false otherwise
+     * @param $bForceHTTPS bool True to force HTTPS, false otherwise
      * @return string The absolute URL to the current page
      */                   
 	static public function GetAbsoluteUrl($bQueryString = true, $bForceHTTPS = false)
@@ -248,6 +249,18 @@ class utils
 		return $sUrl;
 	}
 	
+    /**
+     * Returns the absolute URL PATH of the current page
+     * @param $bForceHTTPS bool True to force HTTPS, false otherwise
+     * @return string The absolute URL to the current page
+     */                   
+	static public function GetAbsoluteUrlPath($bForceHTTPS = false)
+	{
+		$sAbsoluteUrl = self::GetAbsoluteUrl(false, $bForceHTTPS); // False => Don't get the query string
+		$sAbsoluteUrl = substr($sAbsoluteUrl, 0, 1+strrpos($sAbsoluteUrl, '/')); // remove the current page, keep just the path, up to the last /
+		return $sAbsoluteUrl;
+	}
+
 	/**
 	 * Tells whether or not log off operation is supported.
 	 * Actually in only one case:

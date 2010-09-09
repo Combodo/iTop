@@ -54,14 +54,13 @@
 <to>SELECT Person WHERE id=:this-&gt;caller_id</to>
 <cc></cc>
 <bcc></bcc>
-<subject>Ticket $this-&gt;name()$, priority $this-&gt;label(priority)$ - $this-&gt;ticket_status$</subject>
+<subject>Ticket $this-&gt;name()$, priority $this-&gt;label(priority)$ - $this-&gt;status$</subject>
 <body>&lt;html&gt;
 &lt;body&gt;
-&lt;p&gt;The incident ticket $this-&gt;name()$ has changed to status $this-&gt;ticket_status$&lt;/p&gt;
-&lt;p&gt;Current situation: $this-&gt;current_situation$&lt;/p&gt;
+&lt;p&gt;The incident ticket $this-&gt;name()$ has changed to status $this-&gt;status$&lt;/p&gt;
 &lt;p&gt;Last update: $this-&gt;last_update$&lt;/p&gt;
 &lt;hr/&gt;
-&lt;p&gt;for more information on this ticket, click here: $this-&gt;hyperlink()$&lt;/p&gt;
+&lt;p&gt;for more information on this ticket, click here: $this-&gt;hyperlink(portal)$&lt;/p&gt;
 &lt;/body&gt;
 &lt;/html&gt;</body>
 <importance>normal</importance>
