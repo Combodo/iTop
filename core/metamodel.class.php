@@ -3468,6 +3468,18 @@ abstract class MetaModel
 		return self::GetObjectByRow($sClass, $aRow);
 	}
 
+	public static function GetObjectFromOQL($sQuery, $aParams = null, $bAllowAllData = false)
+	{
+		$oFilter = DBObjectSearch::FromOQL($sQuery, $aParams);
+		if ($bAllowAllData)
+		{
+			$oFilter->AllowAllData();
+		}
+		$oSet = new DBObjectSet($oFilter);
+		$oObject = $oSet->Fetch();
+		return $oObject;
+	}
+
 	public static function GetHyperLink($sTargetClass, $iKey)
 	{
 		if ($iKey < 0)

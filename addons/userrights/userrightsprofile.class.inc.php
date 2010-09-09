@@ -24,7 +24,8 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
-define('ADMIN_PROFILE_ID', 1);
+define('ADMIN_PROFILE_NAME', 'Administrator');
+define('PORTAL_PROFILE_NAME', 'Portal user');
 
 class UserRightsBaseClass extends cmdbAbstractObject
 {
@@ -78,6 +79,68 @@ class URP_Profiles extends UserRightsBaseClass
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
 		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
+	}
+
+	protected $m_bCheckReservedNames = true;
+	protected function DisableCheckOnReservedNames()
+	{
+		$this->m_bCheckReservedNames = false;
+	}
+
+	/*
+	* Create the built-in Administrator profile with its reserved name
+	*/	
+	public static function DoCreateAdminProfile()
+	{
+		$oNewObj = MetaModel::NewObject("URP_Profiles");
+		$oNewObj->Set('name', ADMIN_PROFILE_NAME);
+		$oNewObj->Set('description', 'Has the rights on everything (bypassing any control)');
+		$oNewObj->DisableCheckOnReservedNames();
+		$iNewId = $oNewObj->DBInsertNoReload();
+	}
+
+	/*
+	* Create the built-in User Portal profile with its reserved name
+	*/	
+	public static function DoCreateUserPortalProfile()
+	{
+		$oNewObj = MetaModel::NewObject("URP_Profiles");
+		$oNewObj->Set('name', PORTAL_PROFILE_NAME);
+		$oNewObj->Set('description', 'Has the rights to access to the user portal. People having this profile will not be allowed to access the standard application, they will be automatically redirected to the user portal.');
+		$oNewObj->DisableCheckOnReservedNames();
+		$iNewId = $oNewObj->DBInsertNoReload();
+	}
+
+	/*
+	* Overload the standard behavior to preserve reserved names
+	*/	
+	public function DoCheckToWrite()
+	{
+		parent::DoCheckToWrite();
+
+		if ($this->m_bCheckReservedNames)
+		{
+			$aChanges = $this->ListChanges();
+			if (array_key_exists('name', $aChanges))
+			{
+				if ($this->GetOriginal('name') == ADMIN_PROFILE_NAME)
+				{
+					$this->m_aCheckIssues[] = "The name of the Administrator profile must not be changed";
+				}
+				elseif ($this->Get('name') == ADMIN_PROFILE_NAME)
+				{
+					$this->m_aCheckIssues[] = ADMIN_PROFILE_NAME." is a reserved to the built-in Administrator profile";
+				}
+				elseif ($this->GetOriginal('name') == PORTAL_PROFILE_NAME)
+				{
+					$this->m_aCheckIssues[] = "The name of the User Portal profile must not be changed";
+				}
+				elseif ($this->Get('name') == PORTAL_PROFILE_NAME)
+				{
+					$this->m_aCheckIssues[] = PORTAL_PROFILE_NAME." is a reserved to the built-in User Portal profile";
+				}
+			}
+		}
 	}
 
 	function GetGrantAsHtml($oUserRights, $sClass, $sAction)
@@ -385,20 +448,24 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		//$oContact->Set('location_id', $iLocationId);
 		//$oContact->Set('employee_number', '');
 		$iContactId = $oContact->DBInsertTrackedNoReload($oChange);
-		
+
 		$oUser = new UserLocal();
 		$oUser->Set('login', $sAdminUser);
 		$oUser->Set('password', $sAdminPwd);
 		$oUser->Set('contactid', $iContactId);
 		$oUser->Set('language', $sLanguage); // Language was chosen during the installation
 		$iUserId = $oUser->DBInsertTrackedNoReload($oChange);
-		
+
 		// Add this user to the very specific 'admin' profile
-		$oUserProfile = new URP_UserProfile();
-		$oUserProfile->Set('userid', $iUserId);
-		$oUserProfile->Set('profileid', ADMIN_PROFILE_ID);
-		$oUserProfile->Set('reason', 'By definition, the administrator must have the administrator profile');
-		$oUserProfile->DBInsertTrackedNoReload($oChange);
+		$oAdminProfile = MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", array('name' => ADMIN_PROFILE_NAME), true /*all data*/);
+		if (is_object($oAdminProfile))
+		{
+			$oUserProfile = new URP_UserProfile();
+			$oUserProfile->Set('userid', $iUserId);
+			$oUserProfile->Set('profileid', $oAdminProfile->GetKey());
+			$oUserProfile->Set('reason', 'By definition, the administrator must have the administrator profile');
+			$oUserProfile->DBInsertTrackedNoReload($oChange);
+		}
 		return true;
 	}
 
@@ -417,6 +484,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 
 
 	protected $m_aAdmins; // id of users being linked to the well-known admin profile
+	protected $m_aPortalUsers; // id of users being linked to the well-known admin profile
 
 	protected $m_aProfiles; // id -> object
 	protected $m_aUserProfiles; // userid,profileid -> object
@@ -437,6 +505,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		$this->m_aUserOrgs = null;
 
 		$this->m_aAdmins = null;
+		$this->m_aPortalUsers = null;
 
 		// Loaded on demand (time consuming as compared to the others)
 		$this->m_aClassActionGrants = null;
@@ -481,12 +550,17 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		$oUserProfileSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData("SELECT URP_UserProfile"));
 		$this->m_aUserProfiles = array();
 		$this->m_aAdmins = array();
+		$this->m_aPortalUsers = array();
 		while ($oUserProfile = $oUserProfileSet->Fetch())
 		{
 			$this->m_aUserProfiles[$oUserProfile->Get('userid')][$oUserProfile->Get('profileid')] = $oUserProfile;
-			if ($oUserProfile->Get('profileid') == ADMIN_PROFILE_ID)
+			if ($oUserProfile->Get('profile') == ADMIN_PROFILE_NAME)
 			{
 				$this->m_aAdmins[] = $oUserProfile->Get('userid');
+			}
+			elseif ($oUserProfile->Get('profile') == PORTAL_PROFILE_NAME)
+			{
+				$this->m_aPortalUsers[] = $oUserProfile->Get('userid');
 			}
 		}
 
@@ -526,6 +600,20 @@ exit;
 		$this->LoadCache();
 
 		if (in_array($oUser->GetKey(), $this->m_aAdmins))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	public function IsPortalUser($oUser)
+	{
+		$this->LoadCache();
+
+		if (in_array($oUser->GetKey(), $this->m_aPortalUsers))
 		{
 			return true;
 		}
@@ -780,18 +868,6 @@ class SetupProfiles
 		return $iId;
 	}
 	
-	protected static function DoCreateAdminProfile()
-	{
-		$oNewObj = MetaModel::NewObject("URP_Profiles");
-		$oNewObj->Set('name', 'Administrator');
-		$oNewObj->Set('description', 'Has the rights on everything (bypassing any control)');
-		$iNewId = $oNewObj->DBInsertNoReload();
-		if ($iNewId != ADMIN_PROFILE_ID)
-		{
-			throw new CoreException('Admin profile could not be created with its standard id', array('requested'=>ADMIN_PROFILE_ID, 'obtained'=>$iNewId));
-		}
-	}
-
 	protected static function DoCreateOneProfile($sName, $aProfileData)
 	{
 		$sDescription = $aProfileData['description'];
@@ -873,7 +949,8 @@ class SetupProfiles
 	
 	public static function DoCreateProfiles()
 	{
-		self::DoCreateAdminProfile();
+		URP_Profiles::DoCreateAdminProfile();
+		URP_Profiles::DoCreateUserPortalProfile();
 
 		foreach(self::$m_aProfiles as $sName => $aProfileData)
 		{

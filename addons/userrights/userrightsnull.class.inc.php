@@ -37,6 +37,11 @@ class UserRightsNull extends UserRightsAddOnAPI
 		return true;
 	}
 
+	public function IsPortalUser($oUser)
+	{
+		return true;
+	}
+
 	public function Setup()
 	{
 		return true;

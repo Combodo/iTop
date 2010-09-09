@@ -653,6 +653,12 @@ class UserRightsProjection extends UserRightsAddOnAPI
 		}
 	}
 
+	public function IsPortalUser($oUser)
+	{
+		return true;
+		// See implementation of userrightsprofile
+	}
+
 	public function Setup()
 	{
 		SetupProfiles::ComputeITILProfiles();

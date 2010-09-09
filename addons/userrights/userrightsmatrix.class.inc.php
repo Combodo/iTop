@@ -144,6 +144,11 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 		return ($oUser->GetKey() == 1);
 	}
 
+	public function IsPortalUser($oUser)
+	{
+		return ($oUser->GetKey() == 1);
+	}
+
 	public function Setup()
 	{
 		// Users must be added manually

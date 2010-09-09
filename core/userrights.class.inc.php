@@ -62,6 +62,7 @@ abstract class UserRightsAddOnAPI
 	abstract public function IsStimulusAllowed($oUser, $sClass, $sStimulusCode, /*dbObjectSet*/ $oInstanceSet = null);
 	abstract public function IsActionAllowedOnAttribute($oUser, $sClass, $sAttCode, $iActionCode, /*dbObjectSet*/ $oInstanceSet = null);
 	abstract public function IsAdministrator($oUser);
+	abstract public function IsPortalUser($oUser);
 	abstract public function FlushPrivileges();
 }
 
@@ -618,6 +619,23 @@ class UserRights
 			self::$m_aAdmins[$iUser] = self::$m_oAddOn->IsAdministrator($oUser);
 		}
 		return self::$m_aAdmins[$iUser];
+	}
+
+	static $m_aPortalUsers = array();
+	public static function IsPortalUser($oUser = null)
+	{
+		if (!self::CheckLogin()) return false;
+
+		if (is_null($oUser))
+		{
+			$oUser = self::$m_oUser;
+		}
+		$iUser = $oUser->GetKey();
+		if (!isset(self::$m_aPortalUsers[$iUser]))
+		{
+			self::$m_aPortalUsers[$iUser] = self::$m_oAddOn->IsPortalUser($oUser);
+		}
+		return self::$m_aPortalUsers[$iUser];
 	}
 
 	/**
