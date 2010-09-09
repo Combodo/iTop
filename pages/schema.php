@@ -28,6 +28,9 @@ require_once('../application/itopwebpage.class.inc.php');
 
 require_once('../application/startup.inc.php');
 
+require_once('../application/loginwebpage.class.inc.php');
+LoginWebPage::DoLogin(true); // Check user rights and prompt if needed (must be admin)
+
 
 /**
  * Helper for this page -> link to a class

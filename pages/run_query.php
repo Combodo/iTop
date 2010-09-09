@@ -29,8 +29,7 @@ require_once('../application/itopwebpage.class.inc.php');
 require_once('../application/startup.inc.php');
 
 require_once('../application/loginwebpage.class.inc.php');
-LoginWebPage::DoLogin(); // Check user rights and prompt if needed
-
+LoginWebPage::DoLogin(true); // Check user rights and prompt if needed (must be admin)
 
 function ShowExamples($oP, $sExpression)
 {

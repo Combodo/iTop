@@ -443,6 +443,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Login:RetypePwdDoesNotMatch' => 'Les deux saisies du nouveau mot de passe ne sont pas identiques !',
 	'UI:Button:Login' => 'Entrer dans iTop',
 	'UI:Login:Error:AccessRestricted' => 'L\'accès à iTop est soumis à autorisation. Merci de contacter votre administrateur iTop.',
+	'UI:Login:Error:AccessAdmin' => 'Accès resreint aux utilisateurs possédant le profil Administrateur.',
 	'UI:CSVImport:MappingSelectOne' => '-- choisir une valeur --',
 	'UI:CSVImport:MappingNotApplicable' => '-- ignorer ce champ --',
 	'UI:CSVImport:NoData' => 'Aucune donnée... merci de fournir des données !',
@@ -700,7 +701,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 
 	'Menu:AdminTools' => 'Outils d\'admin',
 	'Menu:AdminTools+' => 'Outils d\'administration',
-	'Menu:AdminTools?' => 'Ces outils sont accessibles uniquement aux utilisateur possédant le profil Administrateur.',
+	'Menu:AdminTools?' => 'Ces outils sont accessibles uniquement aux utilisateurs possédant le profil Administrateur.',
 
 	'UI:AuditMenu' => 'Audit',
 	'UI:AuditMenu+' => 'Audit',

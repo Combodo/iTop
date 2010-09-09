@@ -452,6 +452,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:Login:RetypePwdDoesNotMatch' => 'New password and retyped new password do not match !',
 	'UI:Button:Login' => 'Enter iTop',
 	'UI:Login:Error:AccessRestricted' => 'iTop access is restricted. Please, contact an iTop administrator.',
+	'UI:Login:Error:AccessAdmin' => 'Access restricted to people having administrator privileges. Please, contact an iTop administrator.',
 	'UI:CSVImport:MappingSelectOne' => '-- select one --',
 	'UI:CSVImport:MappingNotApplicable' => '-- ignore this field --',
 	'UI:CSVImport:NoData' => 'Empty data set..., please provide some data!',

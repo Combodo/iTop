@@ -217,7 +217,7 @@ EOF
 			header("Location: $sUrl");			
 			exit;
 		}
-		
+
 		$aAllowedLoginTypes = utils::GetConfig()->GetAllowedLoginTypes();
 
 		if (isset($_SESSION['auth_user']))
@@ -329,7 +329,7 @@ EOF
 		}
 	}
 	
-	static function DoLogin()
+	static function DoLogin($bMustBeAdmin = false)
 	{
 		$operation = utils::ReadParam('loginop', '');
 		session_start();
@@ -378,11 +378,20 @@ EOF
 				$oPage = new LoginWebPage();
 				$oPage->DisplayChangePwdForm(true); // old pwd was wrong
 				$oPage->output();
-				exit;
 			}
 		}
 		
 		self::Login();
+
+		if ($bMustBeAdmin && !UserRights::IsAdministrator())
+		{	
+			require_once('../setup/setuppage.class.inc.php');
+			$oP = new SetupWebPage(Dict::S('UI:PageTitle:FatalError'));
+			$oP->add("<h1>".Dict::S('UI:Login:Error:AccessAdmin')."</h1>\n");	
+			$oP->p("<a href=\"../pages/logoff.php\">".Dict::S('UI:LogOffMenu')."</a>");
+			$oP->output();
+			exit;
+		}
 	}
 
 } // End of class
