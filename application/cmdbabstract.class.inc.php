@@ -69,8 +69,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$oAppContext = new ApplicationContext();	
 		$sExtClassNameAtt = MetaModel::GetNameAttributeCode($sObjClass);
 		$sPage = self::ComputeUIPage($sObjClass);
-        $sAbsoluteUrl = utils::GetAbsoluteUrl(false); // False => Don't get the query string
-        $sAbsoluteUrl = substr($sAbsoluteUrl, 0, 1+strrpos($sAbsoluteUrl, '/')); // remove the current page, keep just the path, up to the last /
+		$sAbsoluteUrl = utils::GetAbsoluteUrlPath();
 
 		// Use the "name" of the target class as the label of the hyperlink
 		// unless it's not available in the external attributes...
@@ -509,7 +508,14 @@ abstract class cmdbAbstractObject extends CMDBObject
 		}
 		$sHtml .= '<table class="listContainer">';
 		$sColspan = '';
-		$divId = $aExtraParams['block_id'];
+		if (isset($aExtraParams['block_id']))
+		{
+			$divId = $aExtraParams['block_id'];
+		}
+		else
+		{
+			$divId = 'missingblockid';
+		}
 		$sFilter = $oSet->GetFilter()->serialize();
 		$iMinDisplayLimit = utils::GetConfig()->GetMinDisplayLimit();
 		$sCollapsedLabel = Dict::Format('UI:TruncatedResults', $iMinDisplayLimit, $oSet->Count());
@@ -812,25 +818,6 @@ EOF
 		$oPage->add("</Set>\n");
 	}
 
-	// By rom
-	function DisplayChangesLog(WebPage $oPage)
-	{
-		$oFltChangeOps = new CMDBSearchFilter('CMDBChangeOpSetAttribute');
-		$oFltChangeOps->AddCondition('objkey', $this->GetKey(), '=');
-		$oFltChangeOps->AddCondition('objclass', get_class($this), '=');
-		$oSet = new CMDBObjectSet($oFltChangeOps, array('date' => false)); // order by date descending (i.e. false)
-		$count = $oSet->Count();
-		if ($count > 0)
-		{
-			$oPage->p(Dict::Format('UI:ChangesLogTitle', $count));
-			self::DisplaySet($oPage, $oSet);
-		}
-		else
-		{
-			$oPage->p(Dict::S('UI:EmptyChangesLogTitle'));
-		}
-	}
-	
 	public static function DisplaySearchForm(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
 

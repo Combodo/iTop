@@ -472,7 +472,7 @@ class Subnet extends cmdbAbstractObject
 		$oPage->p(Dict::Format('Class:Subnet/Tab:IPUsage-explain', $sIPMin, $sIPMax));
 		
 		$oIfSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT NetworkInterface AS if WHERE INET_ATON(if.ip_address) >= INET_ATON('$sIPMin') AND INET_ATON(if.ip_address) <= INET_ATON('$sIPMax')"));
-		self::DisplaySet($oPage, $oIfSet);
+		self::DisplaySet($oPage, $oIfSet, array('block_id' => 'nwif'));
 
 		$iCountUsed = $oIfSet->Count();
 		$iCountRange = $iIPMax - $iIPMin;

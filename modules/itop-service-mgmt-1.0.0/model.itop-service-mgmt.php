@@ -329,20 +329,18 @@ class Service extends cmdbAbstractObject
 		MetaModel::Init_SetZListItems('list', array('name', 'description', 'org_id', 'type', 'status'));
 
 	}
-        function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
-        {
-                parent::DisplayBareRelations($oPage, $bEditMode);
-		$aExtraParam = array ('menu' => false);
+
+	function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
+	{
+		parent::DisplayBareRelations($oPage, $bEditMode);
+		$aExtraParam = array ('menu' => false, 'block_id' => 'service');
 		$ServiceID=$this->GetKey();
-                if (!$bEditMode)
-                {
+		if (!$bEditMode)
+		{
 			$oPage->SetCurrentTab(Dict::S('Class:Service/Tab:Related_Contracts'));
 			$oCustomerContracts=new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT CustomerContract AS cc JOIN lnkContractToSLA AS ln ON ln.contract_id=cc.id JOIN SLA AS sla ON ln.sla_id=sla.id WHERE sla.service_id=$ServiceID"));
-                        self::DisplaySet($oPage,$oCustomerContracts,$aExtraParam);
-	
-
+			self::DisplaySet($oPage,$oCustomerContracts,$aExtraParam);
 		}
-
 	}
 }
 class ServiceSubcategory extends cmdbAbstractObject
