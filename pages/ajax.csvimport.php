@@ -327,7 +327,18 @@ switch($sOperation)
 			$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
 			if ($oAttDef->IsExternalKey())
 			{
+				// An external key is specified as a reconciliation key: this means that all the reconciliation
+				// keys of this class are proposed to identify the target object
 				$aMoreReconciliationKeys = array_keys(GetMappingsForExtKey($sAttCode, $oAttDef, $bAdvanced));
+			}
+			elseif($oAttDef->IsExternalField())
+			{
+				// An external field is specified as a reconciliation key, translate the field into a field on the target class
+				// since external fields are not writable, and thus never appears in the mapping form
+				$sKeyAttCode = $oAttDef->GetKeyAttCode();
+				$sTargetAttCode = $oAttDef->GetExtAttCode();
+				
+				$aMoreReconciliationKeys = array($sKeyAttCode.'->'.$sTargetAttCode);				
 			}
 		}
 		$sDefaultKeys = '"'.implode('", "',array_merge($aReconciliationKeys,$aMoreReconciliationKeys)).'"';
