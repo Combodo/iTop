@@ -38,7 +38,7 @@ while ($oToEscalate = $oSet->Fetch())
 {
 	$oToEscalate->ApplyStimulus('ev_timeout');
 	//$oToEscalate->Set('tto_escalation_deadline', null);
-	$oToEscalate->DBUpdateTracked($oMyChange);
+	$oToEscalate->DBUpdateTracked($oMyChange, true);
 	echo "<p>ticket ".$oToEscalate->Get('ref')." reached TTO ESCALATION deadline</p>\n";
 }
 
@@ -47,7 +47,7 @@ while ($oToEscalate = $oSet->Fetch())
 {
 	$oToEscalate->ApplyStimulus('ev_timeout');
 	//$oToEscalate->Set('ttr_escalation_deadline', null);
-	$oToEscalate->DBUpdateTracked($oMyChange);
+	$oToEscalate->DBUpdateTracked($oMyChange, true);
 	echo "<p>ticket ".$oToEscalate->Get('ref')." reached TTR ESCALATION deadline</p>\n";
 }
 
@@ -56,7 +56,7 @@ while ($oToEscalate = $oSet->Fetch())
 {
 	$oToEscalate->ApplyStimulus('ev_close');
 	//$oToEscalate->Set('closure_deadline', null);
-	$oToEscalate->DBUpdateTracked($oMyChange);
+	$oToEscalate->DBUpdateTracked($oMyChange, true);
 	echo "<p>ticket ".$oToEscalate->Get('ref')." reached closure deadline</p>\n";
 }
 

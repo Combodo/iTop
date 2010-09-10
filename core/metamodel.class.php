@@ -267,12 +267,6 @@ abstract class MetaModel
 		return self::GetParentPersistentClass($sClass);
 	}
 
-	static public function IsReadOnlyClass($sClass)
-	{
-		$bReadOnly = call_user_func(array($sClass, 'IsReadOnly'));
-		return $bReadOnly;
-	}
-
 	final static public function GetName($sClass)
 	{
 		self::_check_subclass($sClass);

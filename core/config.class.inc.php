@@ -94,6 +94,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'skip_strong_security' => array(
+			'type' => 'bool',
+			'description' => 'Disable strong security - TEMPORY: this flag should be removed when we are more confident in the recent change in security',
+			'default' => true,
+			'value' => true,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 		'graphviz_path' => array(
 			'type' => 'string',
 			'description' => 'Path to the Graphviz "dot" executable for graphing objects lifecycle',

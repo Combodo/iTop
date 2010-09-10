@@ -134,7 +134,7 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 		$iChangeId = $oChange->DBInsert();
 
 		// Now record the admin user object
-		$iUserId = $oUser->DBInsertTrackedNoReload($oChange);
+		$iUserId = $oUser->DBInsertTrackedNoReload($oChange, true /* skip security */);
 		$this->SetupUser($iUserId, true);
 		return true;
 	}

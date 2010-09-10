@@ -217,6 +217,35 @@ abstract class CMDBObject extends DBObject
 		}
 	}
 
+	/**
+	 * Helper to ultimately check user rights before writing (Insert, Update or Delete)
+	 * The check should never fail, because the UI should prevent from such a usage
+	 * Anyhow, if the user has found a workaround... the security gets enforced here	 	 
+	 */
+	protected function CheckUserRights($bSkipStrongSecurity, $iActionCode)
+	{
+		if (is_null($bSkipStrongSecurity))
+		{
+			// This is temporary
+			// We have implemented this safety net right before releasing iTop 1.0
+			// and we decided that it was too risky to activate it
+			// Anyhow, users willing to have a very strong security could set
+			// skip_strong_security = 0, in the config file
+			$bSkipStrongSecurity = utils::GetConfig()->Get('skip_strong_security');
+		}
+		if (!$bSkipStrongSecurity)
+		{
+			$sClass = get_class($this);
+			$oSet = DBObjectSet::FromObject($this);
+			if (!UserRights::IsActionAllowed($sClass, $iActionCode, $oSet))
+			{
+				// Intrusion detected
+				throw new SecurityException('You are not allowed to modify objects of class: '.$sClass);
+			}
+		}
+	}
+
+
 	public function DBInsert()
 	{
 		if(!is_object(self::$m_oCurrChange))
@@ -226,16 +255,20 @@ abstract class CMDBObject extends DBObject
 		return $this->DBInsertTracked_Internal();
 	}
 
-	public function DBInsertTracked(CMDBChange $oChange)
+	public function DBInsertTracked(CMDBChange $oChange, $bSkipStrongSecurity = null)
 	{
+		$this->CheckUserRights($bSkipStrongSecurity, UR_ACTION_MODIFY);
+
 		self::$m_oCurrChange = $oChange;
 		$ret = $this->DBInsertTracked_Internal();
 		self::$m_oCurrChange = null;
 		return $ret;
 	}
 
-	public function DBInsertTrackedNoReload(CMDBChange $oChange)
+	public function DBInsertTrackedNoReload(CMDBChange $oChange, $bSkipStrongSecurity = null)
 	{
+		$this->CheckUserRights($bSkipStrongSecurity, UR_ACTION_MODIFY);
+
 		self::$m_oCurrChange = $oChange;
 		$ret = $this->DBInsertTracked_Internal(true);
 		self::$m_oCurrChange = null;
@@ -290,8 +323,10 @@ abstract class CMDBObject extends DBObject
 		return $this->DBUpdateTracked_internal();
 	}
 
-	public function DBUpdateTracked(CMDBChange $oChange)
+	public function DBUpdateTracked(CMDBChange $oChange, $bSkipStrongSecurity = null)
 	{
+		$this->CheckUserRights($bSkipStrongSecurity, UR_ACTION_MODIFY);
+
 		self::$m_oCurrChange = $oChange;
 		$this->DBUpdateTracked_Internal();
 		self::$m_oCurrChange = null;
@@ -323,8 +358,10 @@ abstract class CMDBObject extends DBObject
 		return $this->DBDeleteTracked_Internal();
 	}
 
-	public function DBDeleteTracked(CMDBChange $oChange)
+	public function DBDeleteTracked(CMDBChange $oChange, $bSkipStrongSecurity = null)
 	{
+		$this->CheckUserRights($bSkipStrongSecurity, UR_ACTION_DELETE);
+
 		self::$m_oCurrChange = $oChange;
 		$this->DBDeleteTracked_Internal();
 		self::$m_oCurrChange = null;

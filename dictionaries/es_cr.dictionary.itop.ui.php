@@ -662,6 +662,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:ObjectCouldNotBeWritten' => 'The object could not be written: %1$s',
 	'UI:PageTitle:FatalError' => 'iTop - Fatal Error',
 	'UI:FatalErrorMessage' => 'Fatal error, iTop cannot continue.',
+	'UI:SystemIntrusion' => 'Access denied. You have trying to perform an operation that is not allowed for you.',
 	'UI:Error_Details' => 'Error: %1$s.',
 
 	'UI:PageTitle:ClassProjections'	=> 'iTop user management - class projections',

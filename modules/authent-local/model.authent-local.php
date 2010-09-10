@@ -103,7 +103,7 @@ class UserLocal extends UserInternal
 			}
 			$oChange->Set("userinfo", $sUserString);
 			$oChange->DBInsert();
-			$this->DBUpdateTracked($oChange);
+			$this->DBUpdateTracked($oChange, true);
 			return true;
 		}
 		return false;

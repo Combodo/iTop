@@ -83,11 +83,6 @@ abstract class DBObject
 	}
 
 	// Read-only <=> Written once (archive)
-	static public function IsReadOnly()
-	{
-		return false;
-	}
-
 	public function RegisterAsDirty()
 	{
 		// While the object may be written to the DB, it is NOT possible to reload it

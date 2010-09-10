@@ -411,6 +411,16 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$sZListName = isset($aExtraParams['zlist']) ? ($aExtraParams['zlist']) : 'list';
 		$aList = self::FlattenZList(MetaModel::GetZListItems($sClassName, $sZListName));
 		$aList = array_merge($aList, $aExtraFields);
+		// Filter the list to removed linked set since we are not able to display them here
+		foreach($aList as $index => $sAttCode)
+		{
+			$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
+			if ($oAttDef instanceof AttributeLinkedSet)
+			{
+				// Removed from the display list
+				unset($aList[$index]);
+			}
+		}
 		if (!empty($sLinkageAttribute))
 		{
 			// The set to display is in fact a set of links between the object specified in the $sLinkageAttribute

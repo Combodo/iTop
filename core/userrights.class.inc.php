@@ -522,9 +522,6 @@ class UserRights
 
 	public static function GetSelectFilter($sClass)
 	{
-		// Need to load some records before the login is performed (user preferences)
-		if (MetaModel::HasCategory($sClass, 'alwaysreadable')) return true;
-
 		// When initializing, we need to let everything pass trough
 		if (!self::CheckLogin()) return true;
 
@@ -532,13 +529,14 @@ class UserRights
 		// Portal users actions are limited by the portal page...
 		if (self::IsPortalUser()) return true;
 
-		// this module is forbidden for non admins.... BUT I NEED IT HERE TO DETERMINE USER RIGHTS
-		if (MetaModel::HasCategory($sClass, 'addon/userrights')) return true;
-
-		// the rest is allowed (#@# to be improved)
-		if (!MetaModel::HasCategory($sClass, 'bizmodel')) return true;
-
-		return self::$m_oAddOn->GetSelectFilter(self::$m_oUser, $sClass);
+		if (MetaModel::HasCategory($sClass, 'bizmodel'))
+		{
+			return self::$m_oAddOn->GetSelectFilter(self::$m_oUser, $sClass);
+		}
+		else
+		{
+			return true;
+		}
 	}
 
 	public static function IsActionAllowed($sClass, $iActionCode, /*dbObjectSet*/ $oInstanceSet = null, $oUser = null)
@@ -548,22 +546,27 @@ class UserRights
 
 		if (self::IsAdministrator($oUser)) return true;
 
-
-		// #@# Temporary?????
-		// The read access is controlled in MetaModel::MakeSelectQuery()
-		if ($iActionCode == UR_ACTION_READ) return true;
-
-		// this module is forbidden for non admins
-		if (MetaModel::HasCategory($sClass, 'addon/userrights')) return false;
-
-		// the rest is allowed (#@# to be improved)
-		if (!MetaModel::HasCategory($sClass, 'bizmodel')) return true;
-
-		if (is_null($oUser))
+		if (MetaModel::HasCategory($sClass, 'bizmodel'))
 		{
-			$oUser = self::$m_oUser;
+			// #@# Temporary?????
+			// The read access is controlled in MetaModel::MakeSelectQuery()
+			if ($iActionCode == UR_ACTION_READ) return true;
+
+			if (is_null($oUser))
+			{
+				$oUser = self::$m_oUser;
+			}
+			return self::$m_oAddOn->IsActionAllowed($oUser, $sClass, $iActionCode, $oInstanceSet);
 		}
-		return self::$m_oAddOn->IsActionAllowed($oUser, $sClass, $iActionCode, $oInstanceSet);
+		elseif(($iActionCode == UR_ACTION_READ) && MetaModel::HasCategory($sClass, 'view_in_gui'))
+		{
+			return true;
+		}
+		else
+		{
+			// Other classes could be edited/listed by the administrators
+			return false;
+		}
 	}
 
 	public static function IsStimulusAllowed($sClass, $sStimulusCode, /*dbObjectSet*/ $oInstanceSet = null, $oUser = null)
@@ -573,17 +576,23 @@ class UserRights
 
 		if (self::IsAdministrator($oUser)) return true;
 
-		// this module is forbidden for non admins
-		if (MetaModel::HasCategory($sClass, 'addon/userrights')) return false;
-
-		// the rest is allowed (#@# to be improved)
-		if (!MetaModel::HasCategory($sClass, 'bizmodel')) return true;
-
-		if (is_null($oUser))
+		if (MetaModel::HasCategory($sClass, 'bizmodel'))
 		{
-			$oUser = self::$m_oUser;
+			if (is_null($oUser))
+			{
+				$oUser = self::$m_oUser;
+			}
+			return self::$m_oAddOn->IsStimulusAllowed($oUser, $sClass, $sStimulusCode, $oInstanceSet);
 		}
-		return self::$m_oAddOn->IsStimulusAllowed($oUser, $sClass, $sStimulusCode, $oInstanceSet);
+		elseif(($iActionCode == UR_ACTION_READ) && MetaModel::HasCategory($sClass, 'view_in_gui'))
+		{
+			return true;
+		}
+		else
+		{
+			// Other classes could be edited/listed by the administrators
+			return false;
+		}
 	}
 
 	public static function IsActionAllowedOnAttribute($sClass, $sAttCode, $iActionCode, /*dbObjectSet*/ $oInstanceSet = null, $oUser = null)

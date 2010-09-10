@@ -31,7 +31,7 @@ class Event extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb",
+			"category" => "core/cmdb,view_in_gui",
 			"key_type" => "autoincrement",
 			"name_attcode" => "",
 			"state_attcode" => "",
@@ -54,11 +54,6 @@ class Event extends cmdbAbstractObject
 //		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
 //		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
 	}
-
-	static public function IsReadOnly()
-	{
-		return true;
-	}
 }
 
 class EventNotification extends Event
@@ -67,7 +62,7 @@ class EventNotification extends Event
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb",
+			"category" => "core/cmdb,view_in_gui",
 			"key_type" => "autoincrement",
 			"name_attcode" => "",
 			"state_attcode" => "",
@@ -99,7 +94,7 @@ class EventNotificationEmail extends EventNotification
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb",
+			"category" => "core/cmdb,view_in_gui",
 			"key_type" => "autoincrement",
 			"name_attcode" => "",
 			"state_attcode" => "",
@@ -135,7 +130,7 @@ class EventIssue extends Event
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb",
+			"category" => "core/cmdb,view_in_gui",
 			"key_type" => "autoincrement",
 			"name_attcode" => "",
 			"state_attcode" => "",
@@ -234,7 +229,7 @@ class EventWebService extends Event
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb",
+			"category" => "core/cmdb,view_in_gui",
 			"key_type" => "autoincrement",
 			"name_attcode" => "",
 			"state_attcode" => "",

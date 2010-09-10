@@ -30,21 +30,20 @@ class UserRightsBaseClass extends cmdbAbstractObject
 {
 	// Whenever something changes, reload the privileges
 	
-	public function DBInsertTracked(CMDBChange $oChange)
+	// Whenever something changes, reload the privileges
+	
+	protected function AfterInsert()
 	{
-		parent::DBInsertTracked($oChange);
 		UserRights::FlushPrivileges();
 	}
 
-	public function DBUpdateTracked(CMDBChange $oChange)
+	protected function AfterUpdate()
 	{
-		parent::DBUpdateTracked($oChange);
 		UserRights::FlushPrivileges();
 	}
 
-	public function DBDeleteTracked(CMDBChange $oChange)
+	protected function AfterDelete()
 	{
-		parent::DBDeleteTracked($oChange);
 		UserRights::FlushPrivileges();
 	}
 }
@@ -601,7 +600,7 @@ class UserRightsProjection extends UserRightsAddOnAPI
 		$oOrg->Set('code', 'SOMECODE');
 //		$oOrg->Set('status', 'implementation');
 		//$oOrg->Set('parent_id', xxx);
-		$iOrgId = $oOrg->DBInsertTrackedNoReload($oChange);
+		$iOrgId = $oOrg->DBInsertTrackedNoReload($oChange, true /* skip strong security */);
 
 		// Location : optional
 		//$oLocation = new bizLocation();
@@ -623,21 +622,21 @@ class UserRightsProjection extends UserRightsAddOnAPI
 		//$oContact->Set('phone', '');
 		//$oContact->Set('location_id', $iLocationId);
 		//$oContact->Set('employee_number', '');
-		$iContactId = $oContact->DBInsertTrackedNoReload($oChange);
+		$iContactId = $oContact->DBInsertTrackedNoReload($oChange, true /* skip security */);
 		
 		$oUser = new UserLocal();
 		$oUser->Set('login', $sAdminUser);
 		$oUser->Set('password', $sAdminPwd);
 		$oUser->Set('contactid', $iContactId);
 		$oUser->Set('language', $sLanguage); // Language was chosen during the installation
-		$iUserId = $oUser->DBInsertTrackedNoReload($oChange);
+		$iUserId = $oUser->DBInsertTrackedNoReload($oChange, true /* skip security */);
 		
 		// Add this user to the very specific 'admin' profile
 		$oUserProfile = new URP_UserProfile();
 		$oUserProfile->Set('userid', $iUserId);
 		$oUserProfile->Set('profileid', ADMIN_PROFILE_ID);
 		$oUserProfile->Set('reason', 'By definition, the administrator must have the administrator profile');
-		$oUserProfile->DBInsertTrackedNoReload($oChange);
+		$oUserProfile->DBInsertTrackedNoReload($oChange, true /* skip security */);
 		return true;
 	}
 

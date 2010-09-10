@@ -659,6 +659,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:ObjectCouldNotBeWritten' => 'L\'objet ne peut pas être enregistré: %1$s',
 	'UI:PageTitle:FatalError' => 'iTop - Erreur Fatale',
 	'UI:FatalErrorMessage' => 'Erreur fatale, iTop ne peut pas continuer.',
+	'UI:SystemIntrusion' => 'Accès non autorisé. Vous êtes en train de d\'effectuer une opération qui ne vous est pas permise.',
 	'UI:Error_Details' => 'Erreur: %1$s.',
 
 	'UI:PageTitle:ClassProjections'	=> 'iTop gestion des utilisateurs - projections des classes',

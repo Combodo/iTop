@@ -483,8 +483,7 @@ class DisplayBlock
 					$bDisplayMenu = isset($aExtraParams['menu']) ? $aExtraParams['menu'] == true : true; 
 					if ($bDisplayMenu)
 					{
-						if ((UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES)
-							&& !MetaModel::IsReadOnlyClass($sClass))
+						if ((UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES))
 						{
 							$oAppContext = new ApplicationContext();
 							$sParams = $oAppContext->GetForLink();
@@ -526,8 +525,7 @@ class DisplayBlock
 				$bDisplayMenu = isset($this->m_aParams['menu']) ? $this->m_aParams['menu'] == true : true; 
 				if ($bDisplayMenu)
 				{
-					if ((UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES)
-						&& (!MetaModel::IsReadOnlyClass($sClass)))
+					if ((UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES))
 					{
 						$oAppContext = new ApplicationContext();
 						$sParams = $oAppContext->GetForLink();
@@ -579,8 +577,7 @@ class DisplayBlock
 			break;
 
 			case 'modify':
-			if ((UserRights::IsActionAllowed($this->m_oSet->GetClass(), UR_ACTION_MODIFY, $this->m_oSet) == UR_ALLOWED_YES)
-				&& !MetaModel::IsReadOnlyClass($this->m_oSet->GetClass()))
+			if ((UserRights::IsActionAllowed($this->m_oSet->GetClass(), UR_ACTION_MODIFY, $this->m_oSet) == UR_ALLOWED_YES))
 			{
 				while($oObj = $this->m_oSet->Fetch())
 				{
@@ -849,17 +846,17 @@ class MenuBlock extends DisplayBlock
 		{
 			case 0:
 			// No object in the set, the only possible action is "new"
-			$bIsModifyAllowed =  (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES) && !MetaModel::IsReadOnlyClass($sClass);
+			$bIsModifyAllowed =  (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES);
 			if ($bIsModifyAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:New'), 'url' => "../page/$sUIPage?operation=new&class=$sClass&$sContext{$sDefault}"); }
 			break;
 			
 			case 1:
 			$oObj = $oSet->Fetch();
 			$id = $oObj->GetKey();
-			$bIsModifyAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) == UR_ALLOWED_YES) && !MetaModel::IsReadOnlyClass($sClass);
-			$bIsDeleteAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_DELETE, $oSet) && !MetaModel::IsReadOnlyClass($sClass);
-			$bIsBulkModifyAllowed = (!MetaModel::IsAbstract($sClass)) && UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_MODIFY, $oSet) && !MetaModel::IsReadOnlyClass($sClass);
-			$bIsBulkDeleteAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_DELETE, $oSet) && !MetaModel::IsReadOnlyClass($sClass);
+			$bIsModifyAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) == UR_ALLOWED_YES);
+			$bIsDeleteAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_DELETE, $oSet);
+			$bIsBulkModifyAllowed = (!MetaModel::IsAbstract($sClass)) && UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_MODIFY, $oSet);
+			$bIsBulkDeleteAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_DELETE, $oSet);
 			// Just one object in the set, possible actions are "new / clone / modify and delete"
 			if (isset($aExtraParams['link_attr']))
 			{
@@ -912,16 +909,16 @@ class MenuBlock extends DisplayBlock
 			default:
 			// Check rights
 			// New / Modify
-			$bIsModifyAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) && !MetaModel::IsReadOnlyClass($sClass);
-			$bIsBulkModifyAllowed = (!MetaModel::IsAbstract($sClass)) && UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_MODIFY, $oSet) && !MetaModel::IsReadOnlyClass($sClass);
-			$bIsBulkDeleteAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_DELETE, $oSet) && !MetaModel::IsReadOnlyClass($sClass);
+			$bIsModifyAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet);
+			$bIsBulkModifyAllowed = (!MetaModel::IsAbstract($sClass)) && UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_MODIFY, $oSet);
+			$bIsBulkDeleteAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_DELETE, $oSet);
 			if (isset($aExtraParams['link_attr']))
 			{
 				$id = $aExtraParams['object_id'];
 				$sTargetAttr = $aExtraParams['target_attr'];
 				$oAttDef = MetaModel::GetAttributeDef($sClass, $sTargetAttr);
 				$sTargetClass = $oAttDef->GetTargetClass();
-				$bIsDeleteAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_DELETE, $oSet) && !MetaModel::IsReadOnlyClass($sClass);
+				$bIsDeleteAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_DELETE, $oSet);
 				if ($bIsModifyAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:Add'), 'url' => "../pages/$sUIPage?operation=modify_links&class=$sClass&link_attr=".$aExtraParams['link_attr']."&target_class=$sTargetClass&id=$id&addObjects=true&$sContext"); }
 				//if ($bIsBulkModifyAllowed) { $aActions[] = array ('label' => 'Add...', 'url' => "../pages/$sUIPage?operation=modify_links&class=$sClass&linkage=".$aExtraParams['linkage']."&id=$id&addObjects=true&$sContext"); }
 				if ($bIsBulkModifyAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:Manage'), 'url' => "../pages/$sUIPage?operation=modify_links&class=$sClass&link_attr=".$aExtraParams['link_attr']."&target_class=$sTargetClass&id=$id&sContext"); }

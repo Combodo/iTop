@@ -436,7 +436,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		$oOrg->Set('code', 'SOMECODE');
 //		$oOrg->Set('status', 'implementation');
 		//$oOrg->Set('parent_id', xxx);
-		$iOrgId = $oOrg->DBInsertTrackedNoReload($oChange);
+		$iOrgId = $oOrg->DBInsertTrackedNoReload($oChange, true /* skip security */);
 
 		$oContact = new Person();
 		$oContact->Set('name', 'My last name');
@@ -447,14 +447,14 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		//$oContact->Set('phone', '');
 		//$oContact->Set('location_id', $iLocationId);
 		//$oContact->Set('employee_number', '');
-		$iContactId = $oContact->DBInsertTrackedNoReload($oChange);
+		$iContactId = $oContact->DBInsertTrackedNoReload($oChange, true /* skip security */);
 
 		$oUser = new UserLocal();
 		$oUser->Set('login', $sAdminUser);
 		$oUser->Set('password', $sAdminPwd);
 		$oUser->Set('contactid', $iContactId);
 		$oUser->Set('language', $sLanguage); // Language was chosen during the installation
-		$iUserId = $oUser->DBInsertTrackedNoReload($oChange);
+		$iUserId = $oUser->DBInsertTrackedNoReload($oChange, true /* skip security */);
 
 		// Add this user to the very specific 'admin' profile
 		$oAdminProfile = MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", array('name' => ADMIN_PROFILE_NAME), true /*all data*/);
@@ -464,7 +464,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 			$oUserProfile->Set('userid', $iUserId);
 			$oUserProfile->Set('profileid', $oAdminProfile->GetKey());
 			$oUserProfile->Set('reason', 'By definition, the administrator must have the administrator profile');
-			$oUserProfile->DBInsertTrackedNoReload($oChange);
+			$oUserProfile->DBInsertTrackedNoReload($oChange, true /* skip security */);
 		}
 		return true;
 	}

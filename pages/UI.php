@@ -48,7 +48,7 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 			foreach ($aDeletes as $iId => $aData)
 			{
 				$oToDelete = $aData['to_delete'];
-				$bDeleteAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_DELETE, DBObjectSet::FromObject($oToDelete)) && !MetaModel::IsReadOnlyClass($sClass);
+				$bDeleteAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_DELETE, DBObjectSet::FromObject($oToDelete));
 				$aTotalDeletedObjs[$sRemoteClass][$iId]['auto_delete'] = $aData['auto_delete'];
 				if (!$bDeleteAllowed)
 				{
@@ -117,11 +117,11 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 		// Security - do not allow the user to force a forbidden delete by the mean of page arguments...
 		if ($bFoundStopper)
 		{
-			throw new SecurityException(Dict::S('UI:Error:NotEnoughRightsToDelete'));
+			throw new CoreException(Dict::S('UI:Error:NotEnoughRightsToDelete'));
 		}
 		if ($bFoundManual)
 		{
-			throw new SecurityException(Dict::S('UI:Error:CannotDeleteBecauseOfDepencies'));
+			throw new CoreException(Dict::S('UI:Error:CannotDeleteBecauseOfDepencies'));
 		}
 
 		// Prepare the change reporting
@@ -525,16 +525,23 @@ try
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
 			}
-			$oObj = MetaModel::GetObject($sClass, $id, false);
-			if ($oObj != null)
-			{
-				$oP->set_title(Dict::Format('UI:DetailsPageTitle', $oObj->GetName(), $sClassLabel));
-				$oObj->DisplayDetails($oP);
-			}
-			else
+
+			$oObj = MetaModel::GetObject($sClass, $id, false /* MustBeFound */);
+			if (is_null($oObj))
 			{
 				$oP->set_title(Dict::S('UI:ErrorPageTitle'));
 				$oP->P(Dict::S('UI:ObjectDoesNotExist'));
+			}
+			else
+			{
+				// The object could be listed, check if it is actually allowed to view it
+				$oSet = CMDBObjectSet::FromObject($oObj);
+				if (UserRights::IsActionAllowed($sClass, UR_ACTION_READ, $oSet) == UR_ALLOWED_NO)
+				{
+					throw new SecurityException('User not allowed to view this object', array('class' => $sClass, 'id' => $id));
+				}
+				$oP->set_title(Dict::Format('UI:DetailsPageTitle', $oObj->GetName(), $sClassLabel));
+				$oObj->DisplayDetails($oP);
 			}
 		break;
 	
@@ -724,17 +731,20 @@ try
 				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
 			}
 			// Check if the user can modify this object
-			$oSearch = new DBObjectSearch($sClass);
-			$oSearch->AddCondition('id', $id, '=');
-			$oSet = new CMDBObjectSet($oSearch);
-			if ($oSet->Count() > 0)
+			$oObj = MetaModel::GetObject($sClass, $id, false /* MustBeFound */);
+			if (is_null($oObj))
 			{
-				$oObj = $oSet->Fetch();
+				$oP->set_title(Dict::S('UI:ErrorPageTitle'));
+				$oP->P(Dict::S('UI:ObjectDoesNotExist'));
 			}
-		
-			$bIsModifiedAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) == UR_ALLOWED_YES) && !MetaModel::IsReadOnlyClass($sClass);
-			if( ($oObj != null) && $bIsModifiedAllowed )
+			else
 			{
+				// The object could be read - check if it is allowed to modify it
+				$oSet = CMDBObjectSet::FromObject($oObj);
+				if (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) == UR_ALLOWED_NO)
+				{
+					throw new SecurityException('User not allowed to modify this object', array('class' => $sClass, 'id' => $id));
+				}
 				// Note: code duplicated to the case 'apply_modify' when a data integrity issue has been found
 				$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
 				$oP->add("<div class=\"page_header\">\n");
@@ -744,11 +754,6 @@ try
 				$oP->add("<div class=\"wizContainer\">\n");
 				$oObj->DisplayModifyForm($oP);
 				$oP->add("</div>\n");
-			}
-			else
-			{
-				$oP->set_title(Dict::S('UI:ErrorPageTitle'));
-				$oP->P(Dict::S('UI:ObjectDoesNotExist'));
 			}
 		break;
 	
@@ -769,7 +774,7 @@ try
 			$oObjToClone = $oSet->Fetch();
 		}
 	
-		$bIsModifiedAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) == UR_ALLOWED_YES) && !MetaModel::IsReadOnlyClass($sClass);
+		$bIsModifiedAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) == UR_ALLOWED_YES);
 		if( ($oObjToClone != null) && ($bIsModifiedAllowed))
 		{
 			$oP->add_linked_script("../js/json.js");
@@ -1034,7 +1039,7 @@ try
 			{
 				$aObjects[] = MetaModel::GetObject($sClass, $iId);
 			}
-			if (MetaModel::IsReadOnlyClass($sClass) || !UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_DELETE, DBObjectSet::FromArray($sClass, $aObjects)))
+			if (!UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_DELETE, DBObjectSet::FromArray($sClass, $aObjects)))
 			{
 				throw new SecurityException(Dict::S('UI:Error:BulkDeleteNotAllowedOn_Class'), $sClass);
 			}
@@ -1049,7 +1054,7 @@ try
 		$id = utils::ReadParam('id', '');
 		$oObj = MetaModel::GetObject($sClass, $id);
 	
-		if (MetaModel::IsReadOnlyClass($sClass) || !UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, DBObjectSet::FromObject($oObj)))
+		if (!UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, DBObjectSet::FromObject($oObj)))
 		{
 			throw new SecurityException(Dict::S('UI:Error:DeleteNotAllowedOn_Class'), $sClass);
 		}
@@ -1504,7 +1509,14 @@ catch(CoreException $e)
 {
 	require_once('../setup/setuppage.class.inc.php');
 	$oP = new SetupWebPage(Dict::S('UI:PageTitle:FatalError'));
-	$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");	
+	if ($e instanceof SecurityException)
+	{
+		$oP->add("<h1>".Dict::S('UI:SystemIntrusion')."</h1>\n");
+	}
+	else
+	{
+		$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");
+	}	
 	$oP->error(Dict::Format('UI:Error_Details', $e->getHtmlDesc()));	
 	$oP->output();
 
