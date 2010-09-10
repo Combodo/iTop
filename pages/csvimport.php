@@ -323,6 +323,7 @@ try
 			{
 				$sUserString = UserRights::GetUser();
 			}
+			$sUserString .= ' (CSV)';
 			$oMyChange->Set("userinfo", $sUserString);
 			$iChangeId = $oMyChange->DBInsert();		
 		}
