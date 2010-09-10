@@ -47,6 +47,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:AuditCategory/Attribute:description+' => 'Description',
 	'Class:AuditCategory/Attribute:definition_set' => 'Ensemble de définition',
 	'Class:AuditCategory/Attribute:definition_set+' => 'Expression OQL qui défini le périmètre d\'application de l\'audit',
+	'Class:AuditCategory/Attribute:rules_list' => 'Règles d\'audit',
+	'Class:AuditCategory/Attribute:rules_list+' => 'Règles d\'audit pour cette catégorie',
 ));
 
 //
@@ -802,6 +804,9 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:NotificationsMenu:Actions' => 'Actions',
 	'UI:NotificationsMenu:AvailableActions' => 'Actions existantes',
 
+	'Menu:AuditCategories' => 'Catégories d\'audit',
+	'Menu:AuditCategories+' => 'Catégories d\'audit',
+	'Menu:Notifications:Title' => 'Catégories d\'audit',
 	
 	'Menu:RunQueriesMenu' => 'Requêtes OQL',
 	'Menu:RunQueriesMenu+' => 'Executer une requête OQL',
@@ -840,6 +845,25 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:PasswordConfirm' => '(Confirmer)',
 	'UI:BeforeAdding_Class_ObjectsSaveThisObject' => 'Enregistrez l\'objet courant avant de créer de nouveaux éléments de type %1$s.',
 	'UI:DisplayThisMessageAtStartup' => 'Afficher ce message au démarrage',
+
+	'Portal:Title' => 'Portail utilisateur iTop',
+	'Portal:Refresh' => 'Rafraîchir',
+	'Portal:Back' => 'Retour',
+	'Portal:CreateNewRequest' => 'Créer une nouvelle requête',
+	'Portal:ChangeMyPassword' => 'Changer mon mot de passe',
+	'Portal:Disconnect' => 'Déconnexion',
+	'Portal:OpenRequests' => 'Mes requêtes en cours',
+	'Portal:ResolvedRequests'  => 'Mes requêtes résolues',
+	'Portal:SelectService' => 'Choisissez un service dans le catalogue:',
+	'Portal:PleaseSelectOneService' => 'Veuillez choisir un service',
+	'Portal:SelectSubcategoryFrom_Service' => 'Choisissez une sous-catégorie du service %1$s:',
+	'Portal:PleaseSelectAServiceSubCategory' => 'Veuillez choisir une sous-catégorie', 
+	'Portal:DescriptionOfTheRequest' => 'Entrez la description de votre requête:',
+	'Portal:TitleRequestDetailsFor_Request' => 'Détails de votre requête %1$s:',
+	'Portal:NoOpenRequest' => 'Aucune requête.',
+	'Portal:Button:CloseTicket' => 'Clôre cette requête',
+	'Portal:EnterYourCommentsOnTicket' => 'Vos commentaires à propos du traitement de cette requête:',
+	'Portal:ErrorNoContactForThisUser' => 'Erreur: l\'utilisateur courant n\'est pas associé à une Personne/Contact. Contactez votre administrateur.',
 ));
 
 ?>

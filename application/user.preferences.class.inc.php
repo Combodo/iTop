@@ -125,14 +125,14 @@ class appUserPreferences extends DBObject
 	{
 		if (self::$oUserPrefs != null) return;
 		$oSearch = new DBObjectSearch('appUserPreferences');
-		$oSearch->AddCondition('userid', UserRights::GetUser(), '=');
+		$oSearch->AddCondition('userid', UserRights::GetUserId(), '=');
 		$oSet = new DBObjectSet($oSearch);
 		$oObj = $oSet->Fetch();
 		if ($oObj == null)
 		{
 			// No prefs (yet) for this user, create the object
 			$oObj = new appUserPreferences();
-			$oObj->Set('userid', UserRights::GetUser());
+			$oObj->Set('userid', UserRights::GetUserId());
 			$oObj->Set('preferences', array()); // Default preferences: an empty array
 			$oObj->DBInsert();
 		}

@@ -329,7 +329,14 @@ EOF
 		}
 	}
 	
-	static function DoLogin($bMustBeAdmin = false)
+	/**
+	 * Check if the user is already authentified, if yes, then performs some additional validations:
+	 * - if $bMustBeAdmin is true, then the user must be an administrator, otherwise an error is displayed
+	 * - if $bIsAllowedToPortalUsers is false and the user has only access to the portal, then the user is redirected to the portal
+	 * @param bool $bMustBeAdmin Whether or not the user must be an admin to access the current page
+	 * @param bool $bIsAllowedToPortalUsers Whether or not the current page is considered as part of the portal
+	 */
+	static function DoLogin($bMustBeAdmin = false, $bIsAllowedToPortalUsers = false)
 	{
 		$operation = utils::ReadParam('loginop', '');
 		session_start();
@@ -391,6 +398,11 @@ EOF
 			$oP->p("<a href=\"../pages/logoff.php\">".Dict::S('UI:LogOffMenu')."</a>");
 			$oP->output();
 			exit;
+		}
+		elseif ( (!$bIsAllowedToPortalUsers) && (UserRights::IsPortalUser()))
+		{
+			// No rights to be here, redirect to the portal
+			header('Location: ../portal/index.php');
 		}
 	}
 

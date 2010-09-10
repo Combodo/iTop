@@ -39,7 +39,7 @@
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:AuditCategory' => 'AuditCategory',
+	'Class:AuditCategory' => 'Audit Category',
 	'Class:AuditCategory+' => 'A section inside the overall audit',
 	'Class:AuditCategory/Attribute:name' => 'Category Name',
 	'Class:AuditCategory/Attribute:name+' => 'Short name for this category',
@@ -47,6 +47,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:AuditCategory/Attribute:description+' => 'Long description for this audit category',
 	'Class:AuditCategory/Attribute:definition_set' => 'Definition Set',
 	'Class:AuditCategory/Attribute:definition_set+' => 'OQL expression defining the set of objects to audit',
+	'Class:AuditCategory/Attribute:rules_list' => 'Audit Rules',
+	'Class:AuditCategory/Attribute:rules_list+' => 'Audit rules for this category',
 ));
 
 //
@@ -54,7 +56,7 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:AuditRule' => 'AuditRule',
+	'Class:AuditRule' => 'Audit Rule',
 	'Class:AuditRule+' => 'A rule to check for a given Audit category',
 	'Class:AuditRule/Attribute:name' => 'Rule Name',
 	'Class:AuditRule/Attribute:name+' => 'Short name for this rule',
@@ -788,6 +790,10 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:NotificationsMenu:Actions' => 'Actions',
 	'UI:NotificationsMenu:AvailableActions' => 'Available actions',
 	
+	'Menu:AuditCategories' => 'Audit Categories',
+	'Menu:AuditCategories+' => 'Audit Categories',
+	'Menu:Notifications:Title' => 'Audit Categories',
+	
 	'Menu:RunQueriesMenu' => 'Run Queries',
 	'Menu:RunQueriesMenu+' => 'Run any query',
 	
@@ -829,6 +835,25 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:PasswordConfirm' => '(Confirm)',
 	'UI:BeforeAdding_Class_ObjectsSaveThisObject' => 'Before adding more %1$s objects, save this object.',
 	'UI:DisplayThisMessageAtStartup' => 'Display this message at startup',
+
+	'Portal:Title' => 'iTop user portal',
+	'Portal:Refresh' => 'Refresh',
+	'Portal:Back' => 'Back',
+	'Portal:CreateNewRequest' => 'Create a new request',
+	'Portal:ChangeMyPassword' => 'Change my password',
+	'Portal:Disconnect' => 'Disconnect',
+	'Portal:OpenRequests' => 'My open requests',
+	'Portal:ResolvedRequests'  => 'My resolved requests',
+	'Portal:SelectService' => 'Select a service from the catalog:',
+	'Portal:PleaseSelectOneService' => 'Please select one service',
+	'Portal:SelectSubcategoryFrom_Service' => 'Select a sub-category for the service %1$s:',
+	'Portal:PleaseSelectAServiceSubCategory' => 'Please select one sub-category',
+	'Portal:DescriptionOfTheRequest' => 'Enter the description of your request:',
+	'Portal:TitleRequestDetailsFor_Request' => 'Details for request %1$s:',
+	'Portal:NoOpenRequest' => 'No request in this category.',
+	'Portal:Button:CloseTicket' => 'Close this ticket',
+	'Portal:EnterYourCommentsOnTicket' => 'Enter your comments about the resolution of this ticket:',
+	'Portal:ErrorNoContactForThisUser' => 'Error: the current user is not associated with a Contact/Person. Please contact your administrator.',
 ));
 
 

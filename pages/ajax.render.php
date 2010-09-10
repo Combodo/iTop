@@ -33,7 +33,7 @@ require_once('../application/startup.inc.php');
 require_once('../application/user.preferences.class.inc.php');
 
 require_once('../application/loginwebpage.class.inc.php');
-LoginWebPage::DoLogin(); // Check user rights and prompt if needed
+LoginWebPage::DoLogin(false /* bMustBeAdmin */, true /* IsAllowedToPortalUsers */); // Check user rights and prompt if needed
 
 $oPage = new ajax_page("");
 $oPage->no_cache();

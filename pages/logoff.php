@@ -31,7 +31,16 @@ $sVersionShort = Dict::Format('UI:iTopVersion:Short', ITOP_VERSION);
 $oPage->add("<div id=\"login-logo\"><a href=\"http://www.combodo.com/itop\"><img title=\"$sVersionShort\" src=\"../images/itop-logo.png\"></a></div>\n");
 $oPage->add("<div id=\"login\">\n");
 $oPage->add("<h1>".Dict::S('UI:LogOff:ThankYou')."</h1>\n");
-$oPage->add("<p><a href=\"../pages/UI.php\">".Dict::S('UI:LogOff:ClickHereToLoginAgain')."</a></p>");
+$bPortal = utils::ReadParam('portal', false);
+if ($bPortal)
+{
+	$sUrl = '../portal/';
+}
+else
+{
+	$sUrl = '../pages/UI.php';
+}
+$oPage->add("<p><a href=\"$sUrl\">".Dict::S('UI:LogOff:ClickHereToLoginAgain')."</a></p>");
 $oPage->add("</div>\n");
 $oPage->output();
 ?>

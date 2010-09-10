@@ -529,6 +529,8 @@ class UserRights
 		if (!self::CheckLogin()) return true;
 
 		if (self::IsAdministrator()) return true;
+		// Portal users actions are limited by the portal page...
+		if (self::IsPortalUser()) return true;
 
 		// this module is forbidden for non admins.... BUT I NEED IT HERE TO DETERMINE USER RIGHTS
 		if (MetaModel::HasCategory($sClass, 'addon/userrights')) return true;
