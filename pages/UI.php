@@ -757,56 +757,6 @@ try
 			}
 		break;
 	
-		case 'clone':
-		$sClass = utils::ReadParam('class', '');
-		$sClassLabel = MetaModel::GetName($sClass);
-		$id = utils::ReadParam('id', '');
-		if ( empty($sClass) || empty($id)) // TO DO: check that the class name is valid !
-		{
-			throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
-		}
-		// Check if the user can modify this object
-		$oSearch = new DBObjectSearch($sClass);
-		$oSearch->AddCondition('id', $id, '=');
-		$oSet = new CMDBObjectSet($oSearch);
-		if ($oSet->Count() > 0) // Set is empty if not allowed to read this object
-		{
-			$oObjToClone = $oSet->Fetch();
-		}
-	
-		$bIsModifiedAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) == UR_ALLOWED_YES);
-		if( ($oObjToClone != null) && ($bIsModifiedAllowed))
-		{
-			$oP->add_linked_script("../js/json.js");
-			$oP->add_linked_script("../js/forms-json-utils.js");
-			$oP->add_linked_script("../js/wizardhelper.js");
-			$oP->add_linked_script("../js/wizard.utils.js");
-			$oP->add_linked_script("../js/linkswidget.js");
-			$oP->add_linked_script("../js/jquery.blockUI.js");
-
-			$oP->set_title(Dict::Format('UI:ClonePageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
-			$oP->add("<div class=\"page_header\">\n");
-			$oP->add("<h1>".Dict::Format('UI:CloneTitle_Class_Object', $sClassLabel, $oObj->GetName())."</h1>\n");
-			$oP->add("</div>\n");
-
-			$oP->add("<img src=\"".$oObjToClone->GetIcon()."\" style=\"margin-top:-30px; margin-right:10px; float:right\">\n");
-			$oP->add("<div class=\"wizContainer\">\n");
-			$aDefaults = utils::ReadParam('default', array());
-			$aContext = $oAppContext->GetAsHash();
-			foreach($aContext as $key => $value)
-			{
-				$aDefaults[$key] = $value;	
-			}
-			cmdbAbstractObject::DisplayCreationForm($oP, $sClass, $oObjToClone, array( 'default' => $aDefaults));
-			$oP->add("</div>\n");
-		}
-		else
-		{
-			$oP->set_title(Dict::S('UI:ErrorPageTitle'));
-			$oP->P(Dict::S('UI:ObjectDoesNotExist'));
-		}
-		break;
-	
 		case 'new':
 			$sClass = utils::ReadParam('class', '');
 			$sStateCode = utils::ReadParam('state', '');
@@ -1059,40 +1009,6 @@ try
 			throw new SecurityException(Dict::S('UI:Error:DeleteNotAllowedOn_Class'), $sClass);
 		}
 		DeleteObjects($oP, $sClass, array($oObj), ($operation == 'delete_confirmed'));
-		break;
-	
-		case 'apply_clone':
-		$sClass = utils::ReadPostedParam('class', '');
-		$sClassLabel = MetaModel::GetName($sClass);
-		$iCloneId = utils::ReadPostedParam('clone_id', '');
-		$sTransactionId = utils::ReadPostedParam('transaction_id', '');
-		if (!utils::IsTransactionValid($sTransactionId))
-		{
-			$oP->p(Dict::S('UI:Error:ObjectAlreadyCloned'));
-		}
-		else
-		{
-				$oObj = MetaModel::GetObject($sClass, $iCloneId);
-				$oMyChange = MetaModel::NewObject("CMDBChange");
-				$oMyChange->Set("date", time());
-				if (UserRights::IsImpersonated())
-				{
-					$sUserString = Dict::Format('UI:Archive_User_OnBehalfOf_User', UserRights::GetRealUser(), UserRights::GetUser());
-				}
-				else
-				{
-					$sUserString = UserRights::GetUser();
-				}
-				$oMyChange->Set("userinfo", $sUserString);
-				$iChangeId = $oMyChange->DBInsert();
-				$sStateAttCode = MetaModel::GetStateAttributeCode(get_class($oObj));
-				UpdateObject($oObj);
-				$oObj->DBCloneTracked($oMyChange);
-				$oP->set_title(Dict::S('UI:PageTitle:ObjectCreated'));
-				$oP->add("<h1>".Dict::Format('UI:Title:Object_Of_Class_Created', $oObj->GetName(), $sClassLabel)."</h1>\n");
-				$oObj->DisplayDetails($oP);
-		}
-
 		break;
 	
 		case 'apply_new':
