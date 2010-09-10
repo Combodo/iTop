@@ -239,8 +239,8 @@ EOF
 				{
 					case 'form':
 					// iTop standard mode: form based authentication
-					$sAuthUser = utils::ReadParam('auth_user', '', 'post');
-					$sAuthPwd = utils::ReadParam('auth_pwd', '', 'post');
+					$sAuthUser = utils::ReadPostedParam('auth_user', '');
+					$sAuthPwd = utils::ReadPostedParam('auth_pwd', '');
 					if ($sAuthUser != '')
 					{
 						$sLoginMode = 'form';
@@ -280,10 +280,10 @@ EOF
 
 					case 'url':
 					// Credentials passed directly in the url
-					$sAuthUser = utils::ReadParam('auth_user', '', 'get');
+					$sAuthUser = utils::ReadParam('auth_user', '');
 					if ($sAuthUser != '')
 					{
-						$sAuthPwd = utils::ReadParam('auth_pwd', '', 'post');
+						$sAuthPwd = utils::ReadParam('auth_pwd', '');
 						$sLoginMode = 'url';
 					}		
 					break;	

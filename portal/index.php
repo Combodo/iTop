@@ -111,7 +111,7 @@ function SelectService($oP, $oUserOrg)
 	$oSet = new CMDBObjectSet($oSearch, array(), array('org_id' => $oUserOrg->GetKey()));
 	$oP->add("<div class=\"wizContainer\" id=\"form_select_service\">\n");
 	$oP->add("<h1 id=\"select_subcategory\">".Dict::S('Portal:SelectService')."</h1>\n");
-	$oP->add("<form id=\"request_form\" method=\"get\">\n");
+	$oP->add("<form action=\"../portal/index.php\" id=\"request_form\" method=\"get\">\n");
 	$oP->add("<table>\n");
 	while($oService = $oSet->Fetch())
 	{
@@ -249,7 +249,7 @@ function RequestCreationForm($oP, $oUserOrg)
 		}
 		$oP->add("<div class=\"wizContainer\" id=\"form_request_description\">\n");
 		$oP->add("<h1 id=\"title_request_form\">".Dict::S('Portal:DescriptionOfTheRequest')."</h1>\n");
-		$oP->add("<form id=\"request_form\" method=\"post\">\n");
+		$oP->add("<form action=\"../portal/index.php\" id=\"request_form\" method=\"post\">\n");
 		$oP->add("<table>\n");
 		$oP->details($aDetails);		
 		DumpHiddenParams($oP, $aList, $aParameters);
@@ -528,7 +528,7 @@ function DisplayRequestDetails($oP, UserRequest $oRequest)
 function DisplayResolvedRequestForm($oP, UserRequest $oRequest)
 {
 	$oP->add("<div class=\"wizContainer\" id=\"form_close_request\">\n");
-	$oP->add("<form id=\"request_form\" method=\"post\">\n");
+	$oP->add("<form action=\"../portal/index.php\" id=\"request_form\" method=\"post\">\n");
 	$oP->add('<table id="close_form_table"><tr><td style="vertical-align:top;">');
 	$oP->add("<h1 id=\"title_request_details\">".Dict::Format('Portal:TitleRequestDetailsFor_Request', $oRequest->GetName())."</h1>\n");
 	DisplayRequestDetails($oP, $oRequest);
@@ -562,9 +562,10 @@ function DisplayResolvedRequestForm($oP, UserRequest $oRequest)
 	$aStimuli = MetaModel::EnumStimuli($sClass);
 	$oP->add("<h1>".Dict::S('Portal:EnterYourCommentsOnTicket')."</h1>");
 	$oP->details($aDetails);
+	$oP->add("<input type=\"hidden\" name=\"id\" value=\"".$oRequest->GetKey()."\">");
 	$oP->add("<input type=\"hidden\" name=\"step\" value=\"2\">");
 	$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
-	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"request_details\">");
+	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"details\">");
 	$oP->p("<input type=\"submit\" value=\"".Dict::S('Portal:Button:CloseTicket')."\">");
 	$oP->add('</td></tr></table>');
 	$oP->add("</form>");
@@ -611,7 +612,7 @@ function DoCloseRequest($oP, UserRequest $oRequest)
 		if ( ($iExpectCode & (OPT_ATT_MUSTCHANGE | OPT_ATT_MUSTPROMPT)) ||
 			 (($iExpectCode & OPT_ATT_MANDATORY) && ($oRequest->Get($sAttCode) == '')) ) 
 		{
-			$value = utils::ReadParam('attr_'.$sAttCode, null, 'post');
+			$value = utils::ReadPostedParam('attr_'.$sAttCode, null);
 			if (!is_null($value))
 			{
 				$oRequest->Set($sAttCode, $value);
@@ -680,7 +681,7 @@ function RequestDetails(WebPage $oP, $id)
 	$oRequest = FindRequest($id);
 	if (!is_object($oRequest))
 	{
-		echo "Request not found ! count=".$oSet->Count();
+		echo "Request not found !";
 		return;
 	}
 	$iDefaultStep = 0;

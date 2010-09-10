@@ -49,9 +49,9 @@ switch($operation)
 	case 'addObjects':
 	require_once('../application/uilinkswizard.class.inc.php');
 	$sClass = utils::ReadParam('class', '', 'get');
-	$sLinkedClass = utils::ReadParam('linkedClass', '', 'get');
-	$sLinkageAttr = utils::ReadParam('linkageAttr', '', 'get');
-	$iObjectId = utils::ReadParam('objectId', '', 'get');
+	$sLinkedClass = utils::ReadParam('linkedClass', '');
+	$sLinkageAttr = utils::ReadParam('linkageAttr', '');
+	$iObjectId = utils::ReadParam('objectId', '');
 	$oLinksWizard = new UILinksWizard($sClass,  $sLinkageAttr, $iObjectId, $sLinkedClass);
 	$oLinksWizard->DisplayAddForm($oPage);
 	break;
@@ -72,13 +72,13 @@ switch($operation)
 	$sAttCode = utils::ReadParam('sAttCode', '');
 	$iInputId = utils::ReadParam('iInputId', '');
 	$sSuffix = utils::ReadParam('sSuffix', '');
-	$aLinkedObjectIds = utils::ReadParam('selectObject', array(), 'get');
+	$aLinkedObjectIds = utils::ReadParam('selectObject', array());
 	$oWidget = new UILinksWidget($sClass, $sAttCode, $iInputId, $sSuffix);
 	$oWidget->DoAddObjects($oPage, $aLinkedObjectIds);	
 	break;
 	
 	case 'wizard_helper_preview':
-	$sJson = utils::ReadParam('json_obj', '', 'post');
+	$sJson = utils::ReadParam('json_obj', '');
 	$oWizardHelper = WizardHelper::FromJSON($sJson);
 	$oObj = $oWizardHelper->GetTargetObject();
 	$oObj->DisplayBareProperties($oPage); 
@@ -323,8 +323,8 @@ switch($operation)
 	break;
 	
 	case 'set_pref':
-	$sCode = utils::ReadParam('code', '', 'post');
-	$sValue = utils::ReadParam('value', '', 'post');
+	$sCode = utils::ReadPostedParam('code', '');
+	$sValue = utils::ReadPostedParam('value', '');
 	appUserPreferences::SetPref($sCode, $sValue);
 	break;
 

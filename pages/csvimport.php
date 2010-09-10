@@ -815,7 +815,7 @@ EOF
 	 */
 	function SelectOptions(WebPage $oPage)
 	{
-		$sOperation = utils::ReadParam('operation', 'csv_data', 'post');
+		$sOperation = utils::ReadParam('operation', 'csv_data');
 		$sCSVData = '';
 		switch($sOperation)
 		{
@@ -828,7 +828,7 @@ EOF
 			break;
 			
 			default:
-			$sCSVData = utils::ReadParam('csvdata', '', 'post');
+			$sCSVData = utils::ReadPostedParam('csvdata', '');
 		}
 		$sEncoding = utils::ReadParam('encoding', 'UTF-8');
 	

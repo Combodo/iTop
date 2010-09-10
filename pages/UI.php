@@ -1289,17 +1289,17 @@ EOF
 		break;
 	
 		case 'do_modify_links':
-		$aLinks = utils::ReadParam('linkId', array(), 'post');
-		$sLinksToRemove = trim(utils::ReadParam('linksToRemove', '', 'post'));
+		$aLinks = utils::ReadPostedParam('linkId', array());
+		$sLinksToRemove = trim(utils::ReadPostedParam('linksToRemove', ''));
 		$aLinksToRemove = array();
 		if (!empty($sLinksToRemove))
 		{
 			$aLinksToRemove = explode(' ', trim($sLinksToRemove));
 		}
-		$sClass = utils::ReadParam('class', '', 'post');
-		$sLinkageAtt = utils::ReadParam('linkage', '', 'post');
-		$iObjectId = utils::ReadParam('object_id', '', 'post');
-		$sLinkingAttCode = utils::ReadParam('linking_attcode', '', 'post');
+		$sClass = utils::ReadPostedParam('class', '');
+		$sLinkageAtt = utils::ReadPostedParam('linkage', '');
+		$iObjectId = utils::ReadPostedParam('object_id', '');
+		$sLinkingAttCode = utils::ReadPostedParam('linking_attcode', '');
 		$oMyChange = MetaModel::NewObject("CMDBChange");
 		$oMyChange->Set("date", time());
 		if (UserRights::IsImpersonated())
