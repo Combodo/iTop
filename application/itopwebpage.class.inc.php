@@ -344,6 +344,7 @@ EOF
 		new OQLMenuNode('UserAccountsMenu', 'SELECT User', $oAdminMenu->GetIndex(), 1 /* fRank */);
 		new OQLMenuNode('ProfilesMenu', 'SELECT URP_Profiles', $oAdminMenu->GetIndex(), 2 /* fRank */);
 		new TemplateMenuNode('NotificationsMenu', '../application/templates/notifications_menu.html', $oAdminMenu->GetIndex(), 3 /* fRank */);
+		new OQLMenuNode('AuditCategories', 'SELECT AuditCategory', $oAdminMenu->GetIndex(), 4 /* fRank */);
 		new WebPageMenuNode('RunQueriesMenu', '../pages/run_query.php', $oAdminMenu->GetIndex(), 8 /* fRank */);
 		new WebPageMenuNode('ExportMenu', '../webservices/export.php', $oAdminMenu->GetIndex(), 9 /* fRank */);
 		new WebPageMenuNode('DataModelMenu', '../pages/schema.php', $oAdminMenu->GetIndex(), 10 /* fRank */);
