@@ -1,0 +1,114 @@
+div#portal #banner {
+	width: 100%;
+	height: 60px;
+	display: inline-block;
+	vertical-align:middle;
+	background-color: #f6f6f1;
+}
+
+div#portal #logo {
+	width: 126px;
+	background: url(../images/itop-logo.png) 0 0 no-repeat;
+	margin-left:20px;
+	margin-right:20px;
+	height: 60px;
+	border: 0;
+	vertical-align: middle;
+	text-align: center;
+	display: inline-block;
+	line-height: 48px;
+	padding-right:50px;
+}
+
+#portal_menu {
+	height: 60px;
+}
+
+div.button {
+	margin-left:20px;
+	margin-right:20px;
+	height: 60px;
+	border: 0;
+	vertical-align: middle;
+	text-align: center;
+	display: inline-block;
+	line-height: 48px;
+}
+
+a.button , a.button:visited {
+	color: #1C94C4;
+	text-decoration: none;
+	vertical-align: middle;
+	height: 48px;
+	line-height: 48px;
+	display: inline-block;
+}
+
+a.button span {
+	vertical-align:middle;
+	margin-right: 20px;
+	margin-left: 50px;
+}
+
+#close_form_table {
+	width: 100%;
+	padding: 20px;
+}
+
+#logoff {
+	float: right;
+	background: url(../images/logoff.png) right center no-repeat;
+}
+
+#logoff span {
+	margin-right: 50px;
+	margin-left: 20px;
+}
+
+#cancel {
+	background: url(../images/stop-mid.png) 0 0 no-repeat;
+}
+
+#create {
+	background: url(../modules/itop-request-mgmt-1.0.0/images/user-request.png) 0 0 no-repeat;
+}
+#user_info {
+	background: url(../images/clean-mid.png) 0 0 no-repeat;
+}
+
+#change_pwd {
+	background: url(../images/password.png) 0 0 no-repeat;
+}
+#back {
+	background: url(../images/back.png) 0 0 no-repeat;
+}
+#back span {
+	margin-left: 54px;
+}
+#refresh {
+	background: url(../images/refresh.png) 0 0 no-repeat;
+	margin-right: 40px;
+}
+#refresh span {
+	margin-left: 54px;
+	margin-right: 20px;
+}
+
+#content {
+	margin: 10px;
+	padding: 10px;
+	text-align: center;
+}
+#request_details {
+	display: inline-block;
+}
+#request_details table {
+	border: #f1f1f6 2px solid;
+}
+#form_details {
+	display: inline-block;
+}
+.wizContainer table {
+	display: inline-block;
+	text-align: left;
+}
