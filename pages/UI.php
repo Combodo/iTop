@@ -38,8 +38,10 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 	{
 		// Evaluate the impact on the DB integrity
 		//
-		list ($aDeletedObjs, $aResetedObjs) = $oObj->GetDeletionScheme();
-	
+		$aDeletedObjs = array();
+		$aResetedObjs = array();
+		$oObj->GetDeletionScheme($aDeletedObjs, $aResetedObjs);
+
 		// Evaluate feasibility (user access control)
 		//
 		foreach ($aDeletedObjs as $sRemoteClass => $aDeletes)

@@ -1245,11 +1245,22 @@ abstract class DBObject
 		return $aDependentObjects;
 	}
 
-	public function GetDeletionScheme()
+	/**
+	 *		$aDeletedObjs = array(); // [class][key] => structure
+	 *		$aResetedObjs = array(); // [class][key] => object
+	 */	 	
+	public function GetDeletionScheme(&$aDeletedObjs, &$aResetedObjs, $aVisited = array())
 	{
+		if (array_key_exists(get_class($this), $aVisited))
+		{
+			if (in_array($this->GetKey(), $aVisited[get_class($this)]))
+			{
+				return;
+			}
+		}
+		$aVisited[get_class($this)] = $this->GetKey();
+
 		$aDependentObjects = $this->GetReferencingObjects();
-		$aDeletedObjs = array(); // [class][key] => structure
-		$aResetedObjs = array(); // [class][key] => object
 		foreach ($aDependentObjects as $sRemoteClass => $aPotentialDeletes)
 		{
 			foreach ($aPotentialDeletes as $sRemoteExtKey => $aData)
@@ -1292,13 +1303,17 @@ abstract class DBObject
 							// First time we find the given object in the list
 							// (and most likely case is that no other occurence will be found)
 							$aDeletedObjs[$sRemoteClass][$iId]['to_delete'] = $oDependentObj;
-							$aDeletedObjs[$sRemoteClass][$iId]['auto_delete'] = ($iDeletePropagationOption == DEL_AUTO); 
+							$aDeletedObjs[$sRemoteClass][$iId]['auto_delete'] = ($iDeletePropagationOption == DEL_AUTO);
+							// Recursively inspect this object
+							if ($iDeletePropagationOption == DEL_AUTO)
+							{
+								$oDependentObj->GetDeletionScheme($aDeletedObjs, $aResetedObjs, $aVisited);
+							} 
 						}
 					}
 				}
 			}
 		}
-		return array($aDeletedObjs, $aResetedObjs);
 	}
 }
 
