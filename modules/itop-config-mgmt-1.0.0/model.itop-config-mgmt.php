@@ -845,7 +845,7 @@ class DatabaseInstance extends FunctionalCI
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("db_server_instance_id", array("targetclass"=>"DBServerInstance", "jointype"=>null, "allowed_values"=>new ValueSetObjects('SELECT DBServerInstance WHERE org_id = :this->org_id'), "sql"=>"db_server_instance_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array("org_id"))));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("db_server_instance_id", array("targetclass"=>"DBServerInstance", "jointype"=>null, "allowed_values"=>new ValueSetObjects('SELECT DBServerInstance WHERE org_id = :this->org_id'), "sql"=>"db_server_instance_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array("org_id"))));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("db_server_instance_name", array("allowed_values"=>null, "extkey_attcode"=>"db_server_instance_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("db_server_instance_version", array("allowed_values"=>null, "extkey_attcode"=>"db_server_instance_id", "target_attcode"=>"version", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeWikiText("description", array("allowed_values"=>null, "sql"=>"description", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
@@ -1068,6 +1068,55 @@ class NetworkInterface extends ConnectableCI
 			return parent::GetRelationQueries($sRelCode);			
 		}
 	}
+
+	protected function UpdateConnectedInterface()
+	{
+		$oConnIf = MetaModel::GetObject('NetworkInterface', $this->Get('connected_if'), false /* no exception if not found */);
+		if (!is_null($oConnIf))
+		{
+			$sLink = $this->Get('link_type');
+			$sConnLink = ($sLink == 'uplink') ? 'downlink' : 'uplink';
+
+			if (($oConnIf->Get('connected_if') != $this->GetKey()) || ($sConnLink != $oConnIf->Get('link_type')))
+			{
+				// Something has to be changed on the connected interface...
+				if ($oConnIf->Get('connected_if') != $this->GetKey())
+				{
+					// It is connected to another interface: reset that third one...
+					$oThirdIf = MetaModel::GetObject('NetworkInterface', $oConnIf->Get('connected_if'), false);
+					if (!is_null($oThirdIf))
+					{
+						$oThirdIf->Set('connected_if', 0);			
+						// Need to backup the current change, because it is reset when DBUpdateTracked is complete
+						$oCurrChange = self::$m_oCurrChange;
+						$oThirdIf->DBUpdateTracked($oCurrChange);
+						self::$m_oCurrChange = $oCurrChange;
+					}
+				}
+				// Connect the remote interface to the current one
+				$oConnIf->Set('connected_if', $this->GetKey());
+				$oConnIf->Set('link_type', $sConnLink);
+
+				// Need to backup the current change, because it is reset when DBUpdateTracked is complete
+				$oCurrChange = self::$m_oCurrChange;
+				$oConnIf->DBUpdateTracked($oCurrChange);
+				self::$m_oCurrChange = $oCurrChange;
+			}
+		}
+	}
+
+	protected function AfterInsert()
+	{
+		$this->UpdateConnectedInterface();
+		parent::AfterInsert();
+	}
+
+	protected function AfterUpdate()
+	{
+		$this->UpdateConnectedInterface();
+		parent::AfterUpdate();
+	}
+
 }
 abstract class Device extends ConnectableCI
 {

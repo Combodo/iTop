@@ -84,6 +84,7 @@ abstract class CMDBObject extends DBObject
 {
 	protected $m_datCreated;
 	protected $m_datUpdated;
+	// Note: this value is static, but that could be changed because it is sometimes a real issue (see update of interfaces / connected_to
 	protected static $m_oCurrChange = null;
 
 
