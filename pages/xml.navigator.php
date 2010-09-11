@@ -54,11 +54,11 @@ function AddNodeDetails(&$oNode, $oObj)
 }
 
 /**
- * Get the related objects through the given relation
+ * Get the related objects through the given relation, output in XML
  * @param DBObject $oObj The current object
  * @param string $sRelation The name of the relation to search with
  */
-function GetRelatedObjects(DBObject $oObj, $sRelationName, &$oLinks, &$oXmlDoc, &$oXmlNode)
+function GetRelatedObjectsAsXml(DBObject $oObj, $sRelationName, &$oLinks, &$oXmlDoc, &$oXmlNode)
 {
 	$aResults = array();
 	$oObj->GetRelatedObjects($sRelationName, 1 /* iMaxDepth */, $aResults);
@@ -83,7 +83,8 @@ function GetRelatedObjects(DBObject $oObj, $sRelationName, &$oLinks, &$oXmlDoc, 
 				$oLinkedNode->SetAttribute('icon', BuildIconPath($oTargetObj->GetIcon(false /* No IMG tag */)));
 				AddNodeDetails($oLinkedNode, $oTargetObj);
 				$oSubLinks = $oXmlDoc->CreateElement('links');
-				GetRelatedObjects($oTargetObj, $sRelationName, $oSubLinks, $oXmlDoc, $oLinkedNode);
+				// Recurse
+				GetRelatedObjectsAsXml($oTargetObj, $sRelationName, $oSubLinks, $oXmlDoc, $oLinkedNode);
 				$oLinkingNode->AppendChild($oLinkedNode);
 				$oLinks->AppendChild($oLinkingNode);
 			}
@@ -118,6 +119,7 @@ $sClass = utils::ReadParam('class', 'Contact');
 $id = utils::ReadParam('id', 1);
 $sRelation = utils::ReadParam('relation', 'impacts');
 $aValidRelations = MetaModel::EnumRelations();
+$sFormat = utils::ReadParam('format', 'xml');
 
 if (!in_array($sRelation, $aValidRelations))
 {
@@ -125,29 +127,61 @@ if (!in_array($sRelation, $aValidRelations))
 	$sRelation = 'impacts';
 }
 
-if ($id != 0)
+try
 {
-	$oObj = MetaModel::GetObject($sClass, $id);
-	// Build the root XML part
-	$oXmlDoc = new DOMDocument( '1.0', 'UTF-8' );
-	$oXmlRoot = $oXmlDoc->CreateElement('root');
-	$oXmlNode = $oXmlDoc->CreateElement('node');
-	$oXmlNode->SetAttribute('id', $oObj->GetKey());
-	$oXmlNode->SetAttribute('obj_class', get_class($oObj));
-	$oXmlNode->SetAttribute('obj_class_name', MetaModel::GetName(get_class($oObj)));
-	$oXmlNode->SetAttribute('name', $oObj->GetName());
-	$oXmlNode->SetAttribute('icon', BuildIconPath($oObj->GetIcon(false /* No IMG tag */))); // Hard coded for the moment
-	AddNodeDetails($oXmlNode, $oObj);
-	
-	$oLinks = $oXmlDoc->CreateElement("links");
+	if ($id != 0)
+	{
+		switch($sFormat)
+		{
+			case 'html':
+			$oObj = MetaModel::GetObject($sClass, $id, true /* object must exist */);
+			$aResults = array();
+			$oObj->GetRelatedObjects($sRelation, MAX_RECURSION_DEPTH /* iMaxDepth */, $aResults);
 
-	$oXmlRoot->SetAttribute('position', 'left');
-	$oXmlRoot->SetAttribute('title', MetaModel::GetRelationDescription($sRelation).' '.$oObj->GetName());
-	GetRelatedObjects($oObj, $sRelation, $oLinks, $oXmlDoc, $oXmlNode);
-	
-	$oXmlRoot->AppendChild($oXmlNode);
-	$oXmlDoc->AppendChild($oXmlRoot);
-	$oPage->add($oXmlDoc->SaveXML());
+			$iBlock = 0;
+			foreach($aResults as $sClass => $aObjects)
+			{
+				$oSet = CMDBObjectSet::FromArray($sClass, $aObjects);
+				$oPage->add("<h1>".MetaModel::GetRelationDescription($sRelation).' '.$oObj->GetName()."</h1>\n");
+				$oPage->add("<div class=\"page_header\">\n");
+				$oPage->add("<h2>".MetaModel::GetClassIcon($sClass)."&nbsp;<span class=\"hilite\">".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aObjects), Metamodel::GetName($sClass))."</h2>\n");
+				$oPage->add("</div>\n");
+				$oBlock = DisplayBlock::FromObjectSet($oSet, 'list');
+				$oBlock->Display($oPage, $iBlock++);
+				$oPage->P('&nbsp;'); // Some space ?				
+			}			
+			break;
+			
+			case 'xml':
+			default:
+			$oObj = MetaModel::GetObject($sClass, $id, true /* object must exist */);
+			// Build the root XML part
+			$oXmlDoc = new DOMDocument( '1.0', 'UTF-8' );
+			$oXmlRoot = $oXmlDoc->CreateElement('root');
+			$oXmlNode = $oXmlDoc->CreateElement('node');
+			$oXmlNode->SetAttribute('id', $oObj->GetKey());
+			$oXmlNode->SetAttribute('obj_class', get_class($oObj));
+			$oXmlNode->SetAttribute('obj_class_name', MetaModel::GetName(get_class($oObj)));
+			$oXmlNode->SetAttribute('name', $oObj->GetName());
+			$oXmlNode->SetAttribute('icon', BuildIconPath($oObj->GetIcon(false /* No IMG tag */))); // Hard coded for the moment
+			AddNodeDetails($oXmlNode, $oObj);
+			
+			$oLinks = $oXmlDoc->CreateElement("links");
+		
+			$oXmlRoot->SetAttribute('position', 'left');
+			$oXmlRoot->SetAttribute('title', MetaModel::GetRelationDescription($sRelation).' '.$oObj->GetName());
+			GetRelatedObjectsAsXml($oObj, $sRelation, $oLinks, $oXmlDoc, $oXmlNode);
+			
+			$oXmlRoot->AppendChild($oXmlNode);
+			$oXmlDoc->AppendChild($oXmlRoot);
+			$oPage->add($oXmlDoc->SaveXML());
+			break;
+		}
+	}
+	$oPage->output();
 }
-$oPage->output();
+catch(Exception $e)
+{
+	echo "Error: ".$e->getMessage();
+}
 ?>
