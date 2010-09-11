@@ -65,7 +65,14 @@ class DisplayBlock
 	public static function FromObjectSet(DBObjectSet $oSet, $sStyle, $aParams = array())
 	{
 		$oDummyFilter = new DBObjectSearch($oSet->GetClass());
-		$oBlock = new DisplayBlock($oDummyFilter, $sStyle, false, $aParams, $oSet); // DisplayBlocks built this way are synchronous
+		$aKeys = array();
+		while($oObject = $oSet->Fetch())
+		{
+			$aKeys[] = $oObject->GetKey();	
+		}
+		$oSet->Rewind();
+		$oDummyFilter->AddCondition('id', $aKeys, 'IN');
+		$oBlock = new DisplayBlock($oDummyFilter, $sStyle, false, $aParams); // DisplayBlocks built this way are synchronous
 		return $oBlock;
 	}
 	
@@ -553,6 +560,30 @@ class DisplayBlock
 			case 'actions':
 			$sClass = $this->m_oFilter->GetClass();
 			$oAppContext = new ApplicationContext();
+			$bContextFilter = isset($aExtraParams['context_filter']) ? isset($aExtraParams['context_filter']) != 0 : false;
+			if ($bContextFilter)
+			{
+				$aFilterCodes = array_keys(MetaModel::GetClassFilterDefs($this->m_oFilter->GetClass()));
+				foreach($oAppContext->GetNames() as $sFilterCode)
+				{
+					$sContextParamValue = trim(utils::ReadParam($sFilterCode, null));
+					if (!is_null($sContextParamValue) && ! empty($sContextParamValue) && MetaModel::IsValidFilterCode($sClass, $sFilterCode))
+					{
+						$this->m_oFilter->AddCondition($sFilterCode, $sContextParamValue); // Use the default 'loose' operator
+					}
+				}
+				$aQueryParams = array();
+				if (isset($aExtraParams['query_params']))
+				{
+					$aQueryParams = $aExtraParams['query_params'];
+				}
+				$this->m_oSet = new CMDBObjectSet($this->m_oFilter, array(), $aQueryParams);				
+			}
+			$iCount = $this->m_oSet->Count();
+			$sHyperlink = '../pages/UI.php?operation=search&filter='.$this->m_oFilter->serialize();
+			$sHtml .= '<p><a class="actions" href="'.$sHyperlink.'">';
+			$sHtml .= MetaModel::GetClassIcon($sClass, true, 'float;left;margin-right:10px;');
+			$sHtml .= MetaModel::GetName($sClass).': '.$iCount.'</a></p>';
 			$sParams = $oAppContext->GetForLink();
 			$sHtml .= '<p>';
 			if (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY))
@@ -561,6 +592,67 @@ class DisplayBlock
 			}
 			$sHtml .= "<a href=\"../pages/UI.php?operation=search_form&class={$sClass}&$sParams\">".Dict::Format('UI:SearchFor_Class', MetaModel::GetName($sClass))."</a>\n";
 			$sHtml .= '</p>';
+			break;
+
+			case 'summary':
+			$sClass = $this->m_oFilter->GetClass();
+			$oAppContext = new ApplicationContext();
+			$sTitle = isset($aExtraParams['title[block]']) ? $aExtraParams['title[block]'] : '';
+			$sLabel = isset($aExtraParams['label[block]']) ? $aExtraParams['label[block]'] : '';
+			$sStateAttrCode = isset($aExtraParams['status[block]']) ? $aExtraParams['status[block]'] : 'status';
+			$sStatesList = isset($aExtraParams['status_codes[block]']) ? $aExtraParams['status_codes[block]'] : '';
+			
+			$bContextFilter = isset($aExtraParams['context_filter']) ? isset($aExtraParams['context_filter']) != 0 : false;
+			if ($bContextFilter)
+			{
+				$aFilterCodes = array_keys(MetaModel::GetClassFilterDefs($this->m_oFilter->GetClass()));
+				foreach($oAppContext->GetNames() as $sFilterCode)
+				{
+					$sContextParamValue = trim(utils::ReadParam($sFilterCode, null));
+					if (!is_null($sContextParamValue) && ! empty($sContextParamValue) && MetaModel::IsValidFilterCode($sClass, $sFilterCode))
+					{
+						$this->m_oFilter->AddCondition($sFilterCode, $sContextParamValue); // Use the default 'loose' operator
+					}
+				}
+				$aQueryParams = array();
+				if (isset($aExtraParams['query_params']))
+				{
+					$aQueryParams = $aExtraParams['query_params'];
+				}
+				$this->m_oSet = new CMDBObjectSet($this->m_oFilter, array(), $aQueryParams);				
+			}
+			// Summary details
+			$aCounts = array();
+			$aStateLabels = array();
+			if (!empty($sStateAttrCode) && !empty($sStatesList))
+			{
+				$aStates = explode(',', $sStatesList);
+				$oAttDef = MetaModel::GetAttributeDef($sClass, $sStateAttrCode);
+				foreach($aStates as $sStateValue)
+				{
+					$oFilter = clone($this->m_oFilter);
+					$oFilter->AddCondition($sStateAttrCode, $sStateValue, '=');
+					$oSet = new DBObjectSet($oFilter);
+					$aCounts[$sStateValue] = $oSet->Count();
+					$aStateLabels[$sStateValue] = Dict::S("Class:".$oAttDef->GetHostClass()."/Attribute:$sStateAttrCode/Value:$sStateValue");
+					if ($aCounts[$sStateValue] == 0)
+					{
+						$aCounts[$sStateValue] = '-';
+					}
+					else
+					{
+						$sHyperlink = '../pages/UI.php?operation=search&filter='.$oFilter->serialize();
+						$aCounts[$sStateValue] = "<a href=\"$sHyperlink\">{$aCounts[$sStateValue]}</a>";
+					}
+				}
+			}
+			$sHtml .= '<div class="summary-details"><table><tr><th>'.implode('</th><th>', $aStateLabels).'</th></tr>';
+			$sHtml .= '<tr><td>'.implode('</td><td>', $aCounts).'</td></tr></table></div>';
+			// Title & summary
+			$iCount = $this->m_oSet->Count();
+			$sHyperlink = '../pages/UI.php?operation=search&filter='.$this->m_oFilter->serialize();
+			$sHtml .= '<h1>'.Dict::S(str_replace('_', ':', $sTitle)).'</h1>';
+			$sHtml .= '<a class="summary" href="'.$sHyperlink.'">'.Dict::Format(str_replace('_', ':', $sLabel), $iCount).'</a>';
 			break;
 			
 			case 'bare_details':

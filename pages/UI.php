@@ -1393,6 +1393,10 @@ EOF
 		$sClass = utils::ReadParam('class', '');
 		$id = utils::ReadParam('id', 0);
 		$sRelation = utils::ReadParam('relation', 'impact');
+		
+		$oP->AddTabContainer('Navigator');
+		$oP->SetCurrentTabContainer('Navigator');
+		$oP->SetCurrentTab(Dict::S('UI:RelationshipGraph'));
 		$width = 1000;
 		$height = 700;
 		$sParams = "pWidth=$width&pHeight=$height&drillUrl=".urlencode('../pages/UI.php?operation=details')."&displayController=false&xmlUrl=".urlencode("./xml.navigator.php")."&obj_class=$sClass&obj_id=$id&relation=$sRelation";
@@ -1404,6 +1408,44 @@ EOF
 		<param name=\"movie\" value=\"../navigator/navigator.swf\" /><param name=\"quality\" value=\"high\" /><param name=\"bgcolor\" value=\"#ffffff\" />
 		<embed src=\"../navigator/navigator.swf\" flashVars=\"$sParams\" quality=\"high\" bgcolor=\"#ffffff\" width=\"$width\" height=\"$height\" name=\"navigator\" align=\"middle\" allowScriptAccess=\"sameDomain\" allowFullScreen=\"false\" type=\"application/x-shockwave-flash\" pluginspage=\"http://www.adobe.com/go/getflashplayer\" />
 		</object>\n");
+		$oP->SetCurrentTab(Dict::S('UI:RelationshipList'));
+		$oP->add("<div id=\"impacted_objects\" style=\"width:100%;background-color:#fff;padding:10px;\"><p style=\"height:150px;\">&nbsp;</p></div>");
+		$oP->add_ready_script(
+<<<EOF
+	UpdateImpactedObjects('$sClass', $id, '$sRelation');
+	
+	var ajax_request = null;
+	
+	function UpdateImpactedObjects(sClass, iId, sRelation)
+	{
+		var class_name = sClass; //$('select[name=class_name]').val();
+		if (class_name != '')
+		{
+			$('#impacted_objects').block();
+	
+			// Make sure that we cancel any pending request before issuing another
+			// since responses may arrive in arbitrary order
+			if (ajax_request != null)
+			{
+				ajax_request.abort();
+				ajax_request = null;
+			}
+	
+			ajax_request = $.get('xml.navigator.php', { class: sClass, id: iId, relation: sRelation, format: 'html' },
+					function(data)
+					{
+						$('#impacted_objects').empty();
+						$('#impacted_objects').append(data);
+						$('#impacted_objects').unblock();
+						$('#impacted_objects .listResults').tablesorter( { widgets: ['myZebra', 'truncatedList']} ); // sortable and zebra tables
+						$('#impacted_objects table.listResults').tableHover(); // hover tables
+					}
+			);
+		}
+	}
+EOF
+		);
+		$oP->SetCurrentTab('');
 		break;
 	
 		default:
