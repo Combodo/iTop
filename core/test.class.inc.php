@@ -95,6 +95,13 @@ abstract class TestHandler
 	abstract protected function DoExecute();
 	protected function DoCleanup() {return true;}
 
+	protected static function DumpVariable($var)
+	{
+		echo "<pre class=\"vardump\">\n"; 
+		print_r($var);
+		echo "</pre>\n";
+	}
+
 	protected function ReportSuccess($sMessage, $sSubtestId = '')
 	{
 		$this->m_aSuccesses[] = $sMessage;

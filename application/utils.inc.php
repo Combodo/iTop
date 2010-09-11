@@ -42,9 +42,40 @@ class utils
 	private static $m_sConfigFile = ITOP_CONFIG_FILE;
 	private static $m_oConfig = null;
 
-	public static function ReadParam($sName, $defaultValue = "")
+
+	public static function IsModeCLI()
 	{
-		return isset($_REQUEST[$sName]) ? $_REQUEST[$sName] : $defaultValue;
+		global $argv;
+		if (isset($argv))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+
+	public static function ReadParam($sName, $defaultValue = "", $bAllowCLI = false)
+	{
+		global $argv;
+		$retValue = $defaultValue;
+		if (isset($_REQUEST[$sName]))
+		{
+			$retValue = $_REQUEST[$sName];
+		}
+		elseif ($bAllowCLI && isset($argv))
+		{
+			foreach($argv as $iArg => $sArg)
+			{
+				if (preg_match('/^--'.$sName.'=(.*)$/', $sArg, $aMatches))
+				{
+					$retValue = $aMatches[1];
+				}
+			}
+		}
+		return $retValue;
 	}
 	
 	public static function ReadPostedParam($sName, $defaultValue = "")

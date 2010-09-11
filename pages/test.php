@@ -23,7 +23,14 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
-
+?>
+<style>
+.vardump {
+font-size:8pt;
+line-height:100%;
+}
+</style>
+<?
 
 ///////////////////////////////////////////////////////////////////////////////
 // Helpers

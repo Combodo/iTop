@@ -71,7 +71,7 @@ abstract class CellChangeSpec
 
 	public function GetOql()
 	{
-		return $this->m_proposedValue;
+		return $this->m_sOql;
 	}
 
 	abstract public function GetDescription();
@@ -289,7 +289,7 @@ class BulkChange
 				break;
 			default:
 				$aErrors[$sAttCode] = "Found ".$oExtObjects->Count()." matches";
-				$aResults[$sAttCode]= new CellStatus_Ambiguous($oTargetObj->Get($sAttCode), $oExtObjects->Count(), $oExtObjects->ToOql());
+				$aResults[$sAttCode]= new CellStatus_Ambiguous($oTargetObj->Get($sAttCode), $oExtObjects->Count(), $oReconFilter->ToOql());
 			}
 
 			// Report

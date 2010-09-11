@@ -145,7 +145,7 @@ class BenchmarkDataCreation
 			$oMyObject->Set($sProp, $value);
 		}
 
-		$iId = $oMyObject->DBInsertTrackedNoReload($this->m_oChange);
+		$iId = $oMyObject->DBInsertTrackedNoReload($this->m_oChange, true /* skip security */);
 
 		$sClassId = "$sClass ($sClassDesc)";
 		$this->m_aCreatedByDesc[$sClassId][] = $iId;

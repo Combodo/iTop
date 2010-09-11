@@ -25,17 +25,12 @@
 
 //
 // Known limitations
-// - output still in html, because the errors are not displayed in xml
 // - reconciliation is made on the first column
-// - no option to force 'always create' or 'never create'
-// - text qualifier hardcoded to "
 //
 // Known issues
 // - ALMOST impossible to troubleshoot when an externl key has a wrong value
 // - no character escaping in the xml output (yes !?!?!)
 // - not outputing xml when a wrong input is given (class, attribute names)
-// - for a bizIncidentTicket you may use the name as the reconciliation key,
-//   but that attribute is in fact recomputed by the application! An error should be raised somewhere
 //
 
 require_once('../application/application.inc.php');
@@ -45,147 +40,583 @@ require_once('../application/xmlpage.class.inc.php');
 
 require_once('../application/startup.inc.php');
 
-require_once('../application/loginwebpage.class.inc.php');
-
-class WebServiceException extends Exception
+class BulkLoadException extends Exception
 {
 }
 
-LoginWebPage::DoLogin(); // Check user rights and prompt if needed
+$aPageParams = array
+(
+	'class' => array
+	(
+		'mandatory' => true,
+		'default' => null,
+		'description' => 'class of loaded objects',
+	),
+	'csvdata' => array
+	(
+		'mandatory' => true,
+		'default' => null,
+		'description' => 'data',
+	),
+	'charset' => array
+	(
+		'mandatory' => false,
+		'default' => 'UTF-8',
+		'description' => 'Character set encoding of the CSV data: UTF-8, ISO-8859-1, WINDOWS-1251, WINDOWS-1252, ISO-8859-15',
+	),
+//	'csvfile' => array
+//	(
+//		'mandatory' => false,
+//		'default' => '',
+//		'description' => 'local data file, replaces csvdata if specified',
+//	),
+	'separator' => array
+	(
+		'mandatory' => false,
+		'default' => ';',
+		'description' => 'column separator in CSV data',
+	),
+	'qualifier' => array
+	(
+		'mandatory' => false,
+		'default' => '"',
+		'description' => 'test qualifier in CSV data',
+	),
+	'output' => array
+	(
+		'mandatory' => false,
+		'default' => 'summary',
+		'description' => '[retcode] to return the count of lines in error, [summary] to return a concise report, [details] to get a detailed report (each line listed)',
+	),
+/*
+	'reportlevel' => array
+	(
+		'mandatory' => false,
+		'default' => 'errors|warnings|created|changed|unchanged',
+		'description' => 'combination of flags to limit the detailed output',
+	),
+*/
+	'reconciliationkeys' => array
+	(
+		'mandatory' => false,
+		'default' => '',
+		'description' => 'name of the columns used to identify existing objects and update them, or create a new one',
+	),
+	'simulate' => array
+	(
+		'mandatory' => false,
+		'default' => '0',
+		'description' => 'If set to 1, then the load will not be executed, but the expected report will be produced',
+	),
+	'comment' => array
+	(
+		'mandatory' => false,
+		'default' => '',
+		'description' => 'Comment to be added into the change log',
+	),
+);
 
-$oAppContext = new ApplicationContext();
-//$iActiveNodeId = utils::ReadParam('menu', -1);
-//$currentOrganization = utils::ReadParam('org_id', '');
+function UsageAndExit($oP)
+{
+	global $aPageParams;
+	$oP->p("USAGE:\n");
+	foreach($aPageParams as $sParam => $aParamData)
+	{
+		$sDesc = $aParamData['description'].', '.($aParamData['mandatory'] ? 'mandatory' : 'optional, defaults to ['.$aParamData['default'].']');
+		$oP->p("$sParam = $sDesc\n");
+	}
+	$oP->output();
+	exit;
+}
 
+
+function ReadParam($oP, $sParam)
+{
+	global $aPageParams;
+	assert(isset($aPageParams[$sParam]));
+	assert(!$aPageParams[$sParam]['mandatory']);
+	$sValue = utils::ReadParam($sParam, $aPageParams[$sParam]['default'], true /* Allow CLI */);
+	return trim($sValue);
+}
+
+function ReadMandatoryParam($oP, $sParam)
+{
+	global $aPageParams;
+	assert(isset($aPageParams[$sParam]));
+	assert($aPageParams[$sParam]['mandatory']);
+
+	$sValue = utils::ReadParam($sParam, null, true /* Allow CLI */);
+	if (is_null($sValue))
+	{
+		$oP->p("ERROR: Missing argument '$sParam'\n");
+		UsageAndExit($oP);
+	}
+	return trim($sValue);
+}
+
+/////////////////////////////////
 // Main program
 
-//$oP = new XMLPage("iTop - Bulk import");
-$oP = new WebPage("iTop - Bulk import");
-$oP->add('<warning>This is a prototype, I repeat: PRO-TO-TYPE, therefore it suffers bugs and limitations, documented in the code. Next step: specify...</warning>');		
+if (false && utils::IsModeCLI())
+{
+	// Mode CLI under construction... sorry!
+	// Next steps:
+	//   implement a new page: CLIPage, that does a very clean output
+	//   branch if in CLI mode
+	//   enable the new argument 'csvfile'
+	$sAuthUser = ReadMandatoryParam($oP, 'auth_user');
+	$sAuthPwd = ReadMandatoryParam($oP, 'auth_user');
+	$sCsvFile = ReadMandatoryParam($oP, 'csv_file');
+	if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd))
+	{
+		UserRights::Login($sAuthUser); // Login & set the user's language
+	}
+	else
+	{
+		$oP->p("Access restricted or wrong credentials ('$sAuthUser')");
+		exit;
+	}
+}
+else
+{
+	require_once('../application/loginwebpage.class.inc.php');
+	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
+
+	$oP = new CSVPage("iTop - Bulk import");
+}
+
+
 try
 {
-	$sClass = utils::ReadParam('class', '');
-	$sSep = utils::ReadParam('separator', ';');
+	//////////////////////////////////////////////////
+	//
+	// Read parameters
+	//
+	$sClass = ReadMandatoryParam($oP, 'class');
+	$sSep = ReadParam($oP, 'separator');
+	$sQualifier = ReadParam($oP, 'qualifier');
 	$sCSVData = utils::ReadPostedParam('csvdata');
+	$sCharSet = ReadParam($oP, 'charset');
+	$sOutput = ReadParam($oP, 'output');
+//	$sReportLevel = ReadParam($oP, 'reportlevel');
+	$sReconcKeys = ReadParam($oP, 'reconciliationkeys');
+	$sSimulate = ReadParam($oP, 'simulate');
+	$sComment = ReadParam($oP, 'comment');
 
-	$oCSVParser = new CSVParser($sCSVData, $sSep, $sDelimiter = '"'); 
+	//////////////////////////////////////////////////
+	//
+	// Check parameters format/consistency
+	//
+	if (!MetaModel::IsValidClass($sClass))
+	{
+		throw new BulkLoadException("Unknown class: '$sClass'");
+	}
+
+	if (strlen($sSep) > 1)
+	{
+		throw new BulkLoadException("Separator is limited to one character, found '$sSep'");
+	}
+
+	if (strlen($sQualifier) > 1)
+	{
+		throw new BulkLoadException("Text qualifier is limited to one character, found '$sQualifier'");
+	}
+
+	if (!in_array($sOutput, array('retcode', 'summary', 'details')))
+	{
+		throw new BulkLoadException("Unknown output format: '$sOutput'");
+	}
+
+/*
+	$aReportLevels = explode('|', $sReportLevel);
+	foreach($aReportLevels as $sLevel)
+	{
+		if (!in_array($sLevel, explode('|', 'errors|warnings|created|changed|unchanged')))
+		{
+			throw new BulkLoadException("Unknown level in reporting level: '$sLevel'");
+		}
+	}
+*/
+
+	if ($sSimulate == '1')
+	{
+		$bSimulate = true;
+	}
+	else
+	{
+		$bSimulate = false;
+	}
+
+	//////////////////////////////////////////////////
+	//
+	// Parse first line, check attributes, analyse the request
+	//
+	if ($sCharSet == 'UTF-8')
+	{
+		$sUTF8Data = $sCSVData;		
+	}
+	else
+	{
+		$sUTF8Data = iconv($sCharSet, 'UTF-8//IGNORE//TRANSLIT', $sCSVData);
+	}
+	$oCSVParser = new CSVParser($sUTF8Data, $sSep, $sQualifier); 
 
 	// Limitation: as the attribute list is in the first line, we can not match external key by a third-party attribute
-	$sRawFieldList = $oCSVParser->ListFields();
+	$aRawFieldList = $oCSVParser->ListFields();
+	$iColCount = count($aRawFieldList);
+
 	$aAttList = array();
 	$aExtKeys = array();
-	foreach($sRawFieldList as $iFieldId => $sFieldName)
+	foreach($aRawFieldList as $iFieldId => $sFieldName)
 	{
-		if (!MetaModel::IsValidAttCode($sClass, $sFieldName))
+		if (preg_match('/^(.*)->(.*)$/', trim($sFieldName), $aMatches))
 		{
-			throw new WebServiceException("Unknown attribute '$sFieldName' (class: '$sClass')");
-		}
-		$oAtt = MetaModel::GetAttributeDef($sClass, $sFieldName);
-		if ($oAtt->IsExternalKey())
-		{
-			$aExtKeys[$sFieldName]['id'] = $iFieldId;
-			$aAttList[$sFieldName] = $iFieldId;
-		}
-		elseif ($oAtt->IsExternalField())
-		{
-			$sExtKeyAttCode = $oAtt->GetKeyAttCode();
-			$sRemoteAttCode = $oAtt->GetExtAttCode();
+			// The column has been specified as "extkey->attcode"
+			//
+			$sExtKeyAttCode = $aMatches[1];
+			$sRemoteAttCode = $aMatches[2];
+			if (!MetaModel::IsValidAttCode($sClass, $sExtKeyAttCode))
+			{
+				throw new BulkLoadException("Unknown attribute '$sExtKeyAttCode' (class: '$sClass')");
+			}
+			$oAtt = MetaModel::GetAttributeDef($sClass, $sExtKeyAttCode);
+			if (!$oAtt->IsExternalKey())
+			{
+				throw new BulkLoadException("Not an external key '$sExtKeyAttCode' (class: '$sClass')");
+			}
+			$sTargetClass = $oAtt->GetTargetClass();
+			if (!MetaModel::IsValidAttCode($sTargetClass, $sRemoteAttCode))
+			{
+				throw new BulkLoadException("Unknown attribute '$sRemoteAttCode' (key: '$sExtKeyAttCode', class: '$sTargetClass')");
+			}
 			$aExtKeys[$sExtKeyAttCode][$sRemoteAttCode] = $iFieldId;
 		}
 		else
 		{
-			$aAttList[$sFieldName] = $iFieldId;
+			// The column has been specified as "attcode"
+			//
+			if (!MetaModel::IsValidAttCode($sClass, $sFieldName))
+			{
+				throw new BulkLoadException("Unknown attribute '$sFieldName' (class: '$sClass')");
+			}
+			$oAtt = MetaModel::GetAttributeDef($sClass, $sFieldName);
+			if ($oAtt->IsExternalKey())
+			{
+				$aExtKeys[$sFieldName]['id'] = $iFieldId;
+				$aAttList[$sFieldName] = $iFieldId;
+			}
+			elseif ($oAtt->IsExternalField())
+			{
+				$sExtKeyAttCode = $oAtt->GetKeyAttCode();
+				$sRemoteAttCode = $oAtt->GetExtAttCode();
+				$aExtKeys[$sExtKeyAttCode][$sRemoteAttCode] = $iFieldId;
+			}
+			else
+			{
+				$aAttList[$sFieldName] = $iFieldId;
+			}
 		}
 	}
 
-	// Limitation: the reconciliation key is the first attribute
-	$aReconcilKeys = array($sRawFieldList[0]);
+	// Make sure there are some reconciliation keys
+	//
+	if (empty($sReconcKeys))
+	{
+		$aReconcSpec = array();
+		// Base reconciliation scheme on the default one
+		// The reconciliation attributes not present in the data will be ignored
+		foreach(MetaModel::GetReconcKeys($sClass) as $sReconcKeyAttCode)
+		{
+			if (in_array($sReconcKeyAttCode, $aRawFieldList))
+			{
+				$aReconcSpec[] = $sReconcKeyAttCode;
+			}
+		}
+		if (count($aReconcSpec) == 0)
+		{
+			throw new BulkLoadException("No reconciliation scheme could be defined, please add a column corresponding to one defined reconciliation key (class: '$sClass', reconciliation:".implode(',', MetaModel::GetReconcKeys($sClass)).")");
+		}
+		$sReconcKeys = implode(',', $aReconcSpec);
+	}
+
+if (false)
+{
+echo "Reconciliation keys<pre class=\"vardump\">";
+print_r($sReconcKeys);
+throw new BulkLoadException("testing");
+}
+	// Interpret the list of reconciliation keys
+	//
+	$aFinalReconcilKeys = array();
+	$aReconcilKeysReport = array();
+	foreach (explode(',', $sReconcKeys) as $sReconcKey)
+	{
+		$sReconcKey = trim($sReconcKey);
+		if (empty($sReconcKey)) continue; // skip empty spec
+
+		if (!in_array($sReconcKey, $aRawFieldList))
+		{
+			throw new BulkLoadException("Reconciliation keys not found in the input columns '$sReconcKey' (class: '$sClass')");
+		}
+
+		if (preg_match('/^(.*)->(.*)$/', trim($sReconcKey), $aMatches))
+		{
+			// The column has been specified as "extkey->attcode"
+			//
+			$sExtKeyAttCode = $aMatches[1];
+			$sRemoteAttCode = $aMatches[2];
+
+			$aFinalReconcilKeys[] = $sExtKeyAttCode;
+			$aReconcilKeysReport[$sExtKeyAttCode][] = $sRemoteAttCode;
+		}
+		else
+		{
+			if (!MetaModel::IsValidAttCode($sClass, $sReconcKey))
+			{
+				// Safety net: should never happen, but...
+				throw new BulkLoadException("Unknown reconciliation attribute '$sReconcKey' (class: '$sClass')");
+			}
+			$oAtt = MetaModel::GetAttributeDef($sClass, $sReconcKey);
+			if ($oAtt->IsExternalKey())
+			{
+				$aFinalReconcilKeys[] = $sReconcKey;
+				$aReconcilKeysReport[$sReconcKey][] = 'id';
+			}
+			elseif ($oAtt->IsExternalField())
+			{
+				$sReconcAttCode = $oAtt->GetKeyAttCode();
+				$sReconcKeyReport = "$sReconcAttCode ($sReconcKey)";
+
+				$aFinalReconcilKeys[] = $sReconcAttCode;
+				$aReconcilKeysReport[$sReconcAttCode][] = $sReconcKeyReport;
+			}
+			else
+			{
+				$aFinalReconcilKeys[] = $sReconcKey;
+				$aReconcilKeysReport[$sReconcKey] = array();
+			}
+		}
+	}
+
+	//////////////////////////////////////////////////
+	//
+	// Go for parsing and interpretation
+	//
 
 	$aData = $oCSVParser->ToArray();
+	$iLineCount = count($aData);
+
 	$oBulk = new BulkChange(
 		$sClass,
 		$aData,
 		$aAttList,
 		$aExtKeys,
-		$aReconcilKeys
+		$aFinalReconcilKeys
 	);
 
-	$oMyChange = MetaModel::NewObject("CMDBChange");
-	$oMyChange->Set("date", time());
-	if (UserRights::IsImpersonated())
+	if ($bSimulate)
 	{
-		$sUserString = Dict::Format('UI:Archive_User_OnBehalfOf_User', UserRights::GetRealUser(), UserRights::GetUser());
+		$oMyChange = null;
 	}
 	else
 	{
-		$sUserString = UserRights::GetUser();
+		$oMyChange = MetaModel::NewObject("CMDBChange");
+		$oMyChange->Set("date", time());
+		if (UserRights::IsImpersonated())
+		{
+			$sUserString = Dict::Format('UI:Archive_User_OnBehalfOf_User', UserRights::GetRealUser(), UserRights::GetUser());
+		}
+		else
+		{
+			$sUserString = UserRights::GetUser();
+		}
+		if (strlen($sComment) > 0)
+		{
+			$sMoreInfo = 'Web Service (CSV) - '.$sComment;
+		}
+		else
+		{
+			$sMoreInfo = 'Web Service (CSV)';
+		}
+		$oMyChange->Set("userinfo", $sUserString.' '.$sMoreInfo);
+		$iChangeId = $oMyChange->DBInsert();
 	}
-	$oMyChange->Set("userinfo", $sUserString.' (bulk load by web service)');
-	$iChangeId = $oMyChange->DBInsert();
 
 	$aRes = $oBulk->Process($oMyChange);
 
-	// Setup result presentation
+	//////////////////////////////////////////////////
 	//
-	$aDisplayConfig = array();
-	$aDisplayConfig["__RECONCILIATION__"] = array("label"=>"Reconciliation", "description"=>"");
-	$aDisplayConfig["__STATUS__"] = array("label"=>"Status", "description"=>"");
-	if (isset($iPKeyId))
-	{
-		$aDisplayConfig["col$iPKeyId"] = array("label"=>"<strong>id</strong>", "description"=>"");
-	}
-	foreach($aReconcilKeys as $iCol => $sAttCode)
-	{
-		$sLabel = MetaModel::GetAttributeDef($sClass, $sAttCode)->GetLabel();
-		$aDisplayConfig["col$iCol"] = array("label"=>"$sLabel", "description"=>"");
-	}
-	foreach ($aAttList as $sAttCode => $iCol)
-	{
-		$sLabel = MetaModel::GetAttributeDef($sClass, $sAttCode)->GetLabel();
-		$aDisplayConfig["col$iCol"] = array("label"=>"$sLabel", "description"=>"");
-	}
-
-
-	$aResultDisp = array(); // to be displayed
+	// Compute statistics
+	//
+	$iCountErrors = 0;
+	$iCountWarnings = 0;
+	$iCountCreations = 0;
+	$iCountUpdates = 0;
+	$iCountUnchanged = 0;
 	foreach($aRes as $iRow => $aRowData)
 	{
-		$aRowDisp = array();
-		$aRowDisp["__RECONCILIATION__"] = $aRowData["__RECONCILIATION__"];
-		$aRowDisp["__STATUS__"] = $aRowData["__STATUS__"]->GetDescription();
-		foreach($aRowData as $sKey => $value)
+		$bWritten = false;
+
+		$oStatus = $aRowData["__STATUS__"];
+		switch(get_class($oStatus))
 		{
-			if ($sKey == '__RECONCILIATION__') continue;
-			if ($sKey == '__STATUS__') continue;
-			
-			switch (get_class($value))
+		case 'RowStatus_NoChange':
+			$iCountUnchanged++;
+			break;
+		case 'RowStatus_Modify':
+			$iCountUpdates++;
+			$bWritten = true;
+			break;
+		case 'RowStatus_NewObj':
+			$iCountCreations++;
+			$bWritten = true;
+			break;
+		case 'RowStatus_Issue':
+			$iCountErrors++;
+			break;		
+		}
+
+		if ($bWritten)
+		{
+			// Something has been done, still there may be some issues to report
+			foreach($aRowData as $key => $value)
 			{
-				case 'CellStatus_Void':
-					$sClass = '';
-					break;
-				case 'CellStatus_Modify':
-					$sClass = 'csvimport_ok';
-					break;
-				case 'CellStatus_Issue':
-					$sClass = 'csvimport_error';
-					break;
+				if (!is_object($value)) continue;
+
+				switch (get_class($value))
+				{
+					case 'CellStatus_Void':
+					case 'CellStatus_Modify':
+						break;
+					case 'CellStatus_Issue':
+					case 'CellStatus_Ambiguous':
+						$iCountWarnings++;
+						break;
+				}
 			}
-			if (empty($sClass))
+		}
+	}
+
+	//////////////////////////////////////////////////
+	//
+	// Summary of settings and results
+	//
+	if ($sOutput == 'retcode')
+	{
+		$oP->add($iCountErrors);
+	}
+
+	if (($sOutput == "summary") || ($sOutput == 'details'))
+	{
+		$aReconciliationReport = array();
+		foreach($aReconcilKeysReport as $sKey => $aKeyDetails)
+		{
+			if (count($aKeyDetails) > 0)
 			{
-				$aRowDisp[$sKey] = $value->GetDescription();
+				$aReconciliationReport[] = $sKey.' ('.implode(',', $aKeyDetails).')';
 			}
 			else
 			{
-				$aRowDisp[$sKey] = "<div class=\"$sClass\">".$value->GetDescription()."</div>";
+				$aReconciliationReport[] = $sKey;
 			}
 		}
-		$aResultDisp[$iRow] = $aRowDisp;
+		$oP->add_comment("Class: ".$sClass);
+		$oP->add_comment("Separator: ".$sSep);
+		$oP->add_comment("Qualifier: ".$sQualifier);
+		$oP->add_comment("Charset Encoding:".$sCharSet);
+		$oP->add_comment("Data Size: ".strlen($sCSVData));
+		$oP->add_comment("Data Lines: ".$iLineCount);
+		$oP->add_comment("Columns: ".implode(', ', $aRawFieldList));
+		$oP->add_comment("Reconciliation Keys: ".implode(', ', $aReconciliationReport));
+		$oP->add_comment("Output format: ".$sOutput);
+//		$oP->add_comment("Report level: ".$sReportLevel);
+		$oP->add_comment("Simulate: ".($bSimulate ? '1' : '0'));
+		$oP->add_comment("Change tracking comment: ".$sComment);
+		$oP->add_comment("Issues: ".$iCountErrors);
+		$oP->add_comment("Warnings: ".$iCountWarnings);
+		$oP->add_comment("Created: ".$iCountCreations);
+		$oP->add_comment("Updated: ".$iCountUpdates);
+		$oP->add_comment("Unchanged: ".$iCountUnchanged);
 	}
-	$oP->table($aDisplayConfig, $aResultDisp);
 
+
+	if ($sOutput == 'details')
+	{
+		// Setup result presentation
+		//
+		$aDisplayConfig = array();
+		$aDisplayConfig["__LINE__"] = array("label"=>"Line", "description"=>"");
+		$aDisplayConfig["__STATUS__"] = array("label"=>"Status", "description"=>"");
+		$aDisplayConfig["__OBJECT_CLASS__"] = array("label"=>"Object Class", "description"=>"");
+		$aDisplayConfig["__OBJECT_ID__"] = array("label"=>"Object Id", "description"=>"");
+		foreach($aExtKeys as $sExtKeyAttCode => $aRemoteAtt)
+		{
+			$sLabel = MetaModel::GetAttributeDef($sClass, $sExtKeyAttCode)->GetLabel();
+			$aDisplayConfig["$sExtKeyAttCode"] = array("label"=>$sExtKeyAttCode, "description"=>$sLabel." - ext key");
+		}
+		foreach($aFinalReconcilKeys as $iCol => $sAttCode)
+		{
+	//		$sLabel = MetaModel::GetAttributeDef($sClass, $sAttCode)->GetLabel();
+	//		$aDisplayConfig["$iCol"] = array("label"=>"$sLabel", "description"=>"");
+		}
+		foreach ($aAttList as $sAttCode => $iCol)
+		{
+			$sLabel = MetaModel::GetAttributeDef($sClass, $sAttCode)->GetLabel();
+			$aDisplayConfig["$iCol"] = array("label"=>$sAttCode, "description"=>$sLabel);
+		}
+	
+		$aResultDisp = array(); // to be displayed
+		foreach($aRes as $iRow => $aRowData)
+		{
+			$aRowDisp = array();
+			$aRowDisp["__LINE__"] = $iRow;
+			if (is_object($aRowData["__STATUS__"]))
+			{
+				$aRowDisp["__STATUS__"] = $aRowData["__STATUS__"]->GetDescription();
+			}
+			else
+			{
+				$aRowDisp["__STATUS__"] = "*No status available*";
+			}
+			if (isset($aRowData["finalclass"]) && isset($aRowData["id"]))
+			{
+				$aRowDisp["__OBJECT_CLASS__"] = $aRowData["finalclass"];
+				$aRowDisp["__OBJECT_ID__"] = $aRowData["id"]->GetValue();
+			}
+			else
+			{
+				$aRowDisp["__OBJECT_CLASS__"] = "n/a";
+				$aRowDisp["__OBJECT_ID__"] = "n/a";
+			}
+			foreach($aRowData as $key => $value)
+			{
+				$sKey = (string) $key;
+	
+				if ($sKey == '__STATUS__') continue;
+				if ($sKey == 'finalclass') continue;
+				if ($sKey == 'id') continue;
+	
+				if (is_object($value))
+				{
+					$aRowDisp["$sKey"] = $value->GetValue().$value->GetDescription();
+				}
+				else
+				{
+					$aRowDisp["$sKey"] = $value;
+				}
+			}
+			$aResultDisp[$iRow] = $aRowDisp;
+		}
+		$oP->table($aDisplayConfig, $aResultDisp);
+	}
+}
+catch(BulkLoadException $e)
+{
+	$oP->add_comment($e->getMessage());		
 }
 catch(Exception $e)
 {
-	$oP->add('<error>'.((string)$e).'</error>');		
+	$oP->add_comment((string)$e);		
 }
 
 $oP->output();

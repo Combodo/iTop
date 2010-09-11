@@ -45,12 +45,51 @@ class CSVPage extends WebPage
         echo trim($this->s_content);
     }
 
-    public function small_p($sText)
-    {
+	public function small_p($sText)
+	{
 	}
-	
+
+	public function add($sText)
+	{
+		$this->s_content .= $sText;
+	}	
+
+	public function p($sText)
+	{
+		$this->s_content .= $sText."\n";
+	}	
+
+	public function add_comment($sText)
+	{
+		$this->s_content .= "#".$sText."\n";
+	}	
+
 	public function table($aConfig, $aData, $aParams = array())
 	{
+		$aCells = array();
+		foreach($aConfig as $sName=>$aDef)
+		{
+			if (strlen($aDef['description']) > 0)
+			{
+				$aCells[] = $aDef['label'].' ('.$aDef['description'].')';
+			}
+			else
+			{
+				$aCells[] = $aDef['label'];
+			}
+		}
+		$this->s_content .= implode(';', $aCells)."\n";
+
+		foreach($aData as $aRow)
+		{
+			$aCells = array();
+			foreach($aConfig as $sName=>$aAttribs)
+			{
+				$sValue = $aRow["$sName"];
+				$aCells[] = $sValue;
+			}
+			$this->s_content .= implode(';', $aCells)."\n";
+		}
 	}
 }
 

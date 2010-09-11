@@ -100,7 +100,7 @@ class TestOQLParser extends TestFunction
 		try
 		{
 			$oTrash = $oOql->Parse(); // Not expecting a given format, otherwise use ParseExpression/ParseObjectQuery/ParseValueSetQuery
-			MyHelpers::var_dump_html($oTrash, true);
+			self::DumpVariable($oTrash);
 		}
 		catch (OQLException $OqlException)
 		{
@@ -236,9 +236,7 @@ a2?;?b?;?c?
 ?a?;?b?;?ouf !?
     Espace sur la fin ; 1234; e@taloc.com ';
 
-		echo "<pre style=\"font-style:italic;\">\n";
-		print_r($sDataFile);
-		echo "</pre>\n";
+		self::DumpVariable($sDataFile);
 
 		$aExpectedResult = array(
 			//array('field1', 'field2', 'field3'),
@@ -375,13 +373,13 @@ class TestMyBizModel extends TestBizModel
 	function test_linksinfo()
 	{
 		echo "<h4>Enum links</h4>";
-		MyHelpers::var_dump_html(MetaModel::EnumReferencedClasses("cmdbTeam"));
-		MyHelpers::var_dump_html(MetaModel::EnumReferencingClasses("Organization"));
+		self::DumpVariable(MetaModel::EnumReferencedClasses("cmdbTeam"));
+		self::DumpVariable(MetaModel::EnumReferencingClasses("Organization"));
 	
-		MyHelpers::var_dump_html(MetaModel::EnumLinkingClasses());
-		MyHelpers::var_dump_html(MetaModel::EnumLinkingClasses("cmdbContact"));
-		MyHelpers::var_dump_html(MetaModel::EnumLinkingClasses("cmdWorkshop"));
-		MyHelpers::var_dump_html(MetaModel::GetLinkLabel("Liens_entre_contacts_et_workshop", "toworkshop"));
+		self::DumpVariable(MetaModel::EnumLinkingClasses());
+		self::DumpVariable(MetaModel::EnumLinkingClasses("cmdbContact"));
+		self::DumpVariable(MetaModel::EnumLinkingClasses("cmdWorkshop"));
+		self::DumpVariable(MetaModel::GetLinkLabel("Liens_entre_contacts_et_workshop", "toworkshop"));
 	}
 	
 	function test_list_attributes()
@@ -423,7 +421,7 @@ class TestMyBizModel extends TestBizModel
 		echo "<h4>Reload</h4>";
 		$team = MetaModel::GetObject("cmdbContact", "2");
 		echo "Chargement de l'attribut headcount: {$team->Get("headcount")}</br>\n";
-		MyHelpers::var_dump_html($team);
+		self::DumpVariable($team);
 	}
 	
 	function test_setattribute()
@@ -432,7 +430,7 @@ class TestMyBizModel extends TestBizModel
 		$team = MetaModel::GetObject("cmdbTeam", "2");
 		$team->Set("headcount", rand(1,1000));
 		$team->Set("email", "Luis ".rand(9,250));
-		MyHelpers::var_dump_html($team->ListChanges());
+		self::DumpVariable($team->ListChanges());
 		echo "New headcount = {$team->Get("headcount")}</br>\n";
 		echo "Computed name = {$team->Get("name")}</br>\n";
 	
@@ -447,7 +445,7 @@ class TestMyBizModel extends TestBizModel
 	
 		echo "<h4>Check the modified team</h4>";
 		$oTeam = MetaModel::GetObject("cmdbTeam", "2");
-		MyHelpers::var_dump_html($oTeam);
+		self::DumpVariable($oTeam);
 	}
 	function test_newobject()
 	{
@@ -469,7 +467,7 @@ class TestMyBizModel extends TestBizModel
 		$oTeam = MetaModel::GetObject("cmdbTeam", $iId);
 		$oTeam->DBDeleteTracked($oMyChange);
 		echo "Deleted team: $iId</br>";
-		MyHelpers::var_dump_html($oTeam);
+		self::DumpVariable($oTeam);
 	}
 	
 	
@@ -507,7 +505,7 @@ class TestMyBizModel extends TestBizModel
 		$oMyChange->Set("userinfo", "Made by robot #".rand(1,100));
 		$iChangeId = $oMyChange->DBInsert();
 		echo "Created new change: $iChangeId</br>";
-		MyHelpers::var_dump_html($oMyChange);
+		self::DumpVariable($oMyChange);
 	
 		echo "<h4>Create a new object (team)</h4>";
 		$oNewTeam = MetaModel::NewObject("cmdbTeam");
@@ -522,7 +520,7 @@ class TestMyBizModel extends TestBizModel
 		$oTeam = MetaModel::GetObject("cmdbTeam", $iId);
 		$oTeam->DBDeleteTracked($oMyChange);
 		echo "Deleted team: $iId</br>";
-		MyHelpers::var_dump_html($oTeam);
+		self::DumpVariable($oTeam);
 	}
 	
 	function test_zlist()
@@ -579,8 +577,8 @@ class TestMyBizModel extends TestBizModel
 	{
 		echo "<h4>Test relations</h4>";
 		
-		//MyHelpers::var_dump_html(MetaModel::EnumRelationQueries("cmdbObjectHomeMade", "Potes"));
-		MyHelpers::var_dump_html(MetaModel::EnumRelationQueries("cmdbContact", "Potes"));
+		//self::DumpVariable(MetaModel::EnumRelationQueries("cmdbObjectHomeMade", "Potes"));
+		self::DumpVariable(MetaModel::EnumRelationQueries("cmdbContact", "Potes"));
 	
 		$iMaxDepth = 9;
 		echo "Max depth = $iMaxDepth</br>\n";
@@ -640,24 +638,24 @@ class TestMyBizModel extends TestBizModel
 		echo "<h4>Test object lifecycle</h4>";
 	
 	
-		MyHelpers::var_dump_html(MetaModel::GetStateAttributeCode("cmdbContact"));
-		MyHelpers::var_dump_html(MetaModel::EnumStates("cmdbContact"));
-		MyHelpers::var_dump_html(MetaModel::EnumStimuli("cmdbContact"));
+		self::DumpVariable(MetaModel::GetStateAttributeCode("cmdbContact"));
+		self::DumpVariable(MetaModel::EnumStates("cmdbContact"));
+		self::DumpVariable(MetaModel::EnumStimuli("cmdbContact"));
 		foreach(MetaModel::EnumStates("cmdbContact") as $sStateCode => $aStateDef)
 		{
 			echo "<p>Transition from <strong>$sStateCode</strong></p>\n";
-			MyHelpers::var_dump_html(MetaModel::EnumTransitions("cmdbContact", $sStateCode));
+			self::DumpVariable(MetaModel::EnumTransitions("cmdbContact", $sStateCode));
 		}
 	
 		$oObj = MetaModel::GetObject("cmdbContact", 18);
 		echo "Current state: ".$oObj->GetState()."... let's go to school...";
-		MyHelpers::var_dump_html($oObj->EnumTransitions());
+		self::DumpVariable($oObj->EnumTransitions());
 		$oObj->ApplyStimulus("toschool");
 		echo "New state: ".$oObj->GetState()."... let's get older...";
-		MyHelpers::var_dump_html($oObj->EnumTransitions());
+		self::DumpVariable($oObj->EnumTransitions());
 		$oObj->ApplyStimulus("raise");
 		echo "New state: ".$oObj->GetState()."... let's try to go further... (should give an error)";
-		MyHelpers::var_dump_html($oObj->EnumTransitions());
+		self::DumpVariable($oObj->EnumTransitions());
 		$oObj->ApplyStimulus("raise"); // should give an error
 	}
 
@@ -774,7 +772,7 @@ class TestQueriesOnFarm extends MyFarm
 		{
 			//$oOql = new OqlInterpreter($sQuery);
 			//$oTrash = $oOql->ParseObjectQuery();
-			//MyHelpers::var_dump_html($oTrash, true);
+			//self::DumpVariable($oTrash, true);
 			$oMyFilter = DBObjectSearch::FromOQL($sQuery);
 		}
 		catch (OQLException $oOqlException)
@@ -809,10 +807,10 @@ class TestQueriesOnFarm extends MyFarm
 		$this->search_and_show_list($oMyFilter);
 		
 		//echo "<p>first pass<p>\n";
-		//MyHelpers::var_dump_html($oMyFilter, true);
+		//self::DumpVariable($oMyFilter, true);
 		$sQuery1 = MetaModel::MakeSelectQuery($oMyFilter);
 		//echo "<p>second pass<p>\n";
-		//MyHelpers::var_dump_html($oMyFilter, true);
+		//self::DumpVariable($oMyFilter, true);
 		//$sQuery1 = MetaModel::MakeSelectQuery($oMyFilter);
 		
 		$sSerialize = $oMyFilter->serialize();
@@ -991,7 +989,7 @@ class TestBulkChangeOnFarm extends TestBizModel
 		chita,456,
 		");
 		$aData = $oParser->ToArray(array('_name', '_height', '_birth'), ',');
-		MyHelpers::var_dump_html($aData);
+		self::DumpVariable($aData);
 
 		$oBulk = new BulkChange(
 			'Mammal',
@@ -1012,10 +1010,10 @@ class TestBulkChangeOnFarm extends TestBizModel
 
 		echo "<h3>Planned for loading...</h3>";
 		$aRes = $oBulk->Process();
-		print_r($aRes);
+		self::DumpVariable($aRes);
 		echo "<h3>Go for loading...</h3>";
 		$aRes = $oBulk->Process($oMyChange);
-		print_r($aRes);
+		self::DumpVariable($aRes);
 
 		return;
 
@@ -1165,11 +1163,13 @@ class TestItopEfficiency extends TestBizModel
 			'SELECT CMDBChangeOpSetAttribute WHERE id=10',
 			'SELECT CMDBChangeOpSetAttribute WHERE id=123456789',
 			'SELECT CMDBChangeOpSetAttribute WHERE CMDBChangeOpSetAttribute.id=10',
-			'SELECT bizIncidentTicket',
-			'SELECT bizIncidentTicket WHERE id=1',
-			'SELECT bizPerson',
-			'SELECT bizPerson WHERE id=1',
-			'SELECT bizIncidentTicket JOIN bizPerson ON bizIncidentTicket.agent_id = bizPerson.id WHERE bizPerson.id = 5',
+			'SELECT Ticket',
+			'SELECT Ticket WHERE id=1',
+			'SELECT Person',
+			'SELECT Person WHERE id=1',
+			'SELECT Server',
+			'SELECT Server WHERE id=1',
+			'SELECT Incident JOIN Person ON Incident.agent_id = Person.id WHERE Person.id = 5',
 		);
 		$aStats  = array();
 		foreach ($aQueries as $sOQL)
@@ -1197,28 +1197,51 @@ class TestItopEfficiency extends TestBizModel
 // Test data load
 ///////////////////////////////////////////////////////////////////////////
 
-class TestItopWebServices extends TestWebServices
+class TestImportREST extends TestWebServices
 {
 	static public function GetName()
 	{
-		return 'Itop - web services';
+		return 'CSV import (REST)';
 	}
 
 	static public function GetDescription()
 	{
-		return 'Bulk load and ???';
+		return 'Bulk load in the background';
 	}
 
 	protected function DoExecSingleLoad($aLoadSpec)
 	{
-		$sTitle = 'Load: '.$aLoadSpec['class'];
-		$sClass = $aLoadSpec['class'];
 		$sCsvData = $aLoadSpec['csvdata'];
 
-		$aPostData = array('class' => $sClass, 'csvdata' => $sCsvData);
-		$sRes = self::DoPostRequestAuth('../webservices/import.php', $aPostData);
+		echo "<div style=\"padding: 10;\">\n";
+		echo "<h3 style=\"background-color: #ddddff; padding: 10;\">{$aLoadSpec['desc']}</h3>\n";
 
-		echo "<div><h3>$sTitle</h3><pre>$sCsvData</pre><div>$sRes</div></div>";
+		$aPostData = array('csvdata' => $sCsvData);
+
+		$aGetParams = array();
+		$aGetParamReport = array();
+		foreach($aLoadSpec['args'] as $sArg => $sValue)
+		{
+			$aGetParams[] = $sArg.'='.urlencode($sValue);
+			$aGetParamReport[] = $sArg.'='.$sValue;
+		}
+		$sGetParams = implode('&', $aGetParams);
+		$sRes = self::DoPostRequestAuth('../webservices/import.php?'.$sGetParams, $aPostData);
+
+		$sArguments = implode('<br/>', $aGetParamReport);
+
+		echo "<div style=\"\">\n";
+		echo "   <div style=\"float: left; padding: 5; background-color: #eeeeff;\">\n";
+		echo "      $sArguments\n";
+		echo "   </div>\n";
+		echo "   <div style=\"float: right; padding: 5; background-color: #eeeeff\">\n";
+		echo "      <pre class=\"vardump\">$sCsvData</pre>\n";
+		echo "   </div>\n";
+		echo "</div>\n";
+
+		echo "<pre class=\"vardump\" style=\"clear: both; padding: 5; background-color: black; color: green;\">$sRes</pre>\n";
+
+		echo "</div>\n";
 	}
 	
 	protected function DoExecute()
@@ -1226,30 +1249,244 @@ class TestItopWebServices extends TestWebServices
 
 		$aLoads = array(
 			array(
-				'class' => 'bizOrganization',
-				'csvdata' => "name;code\nWorldCompany;WCY"
+				'desc' => 'Missing class',
+				'args' => array(
+				),
+				'csvdata' => "xxx",
 			),
 			array(
-				'class' => 'bizLocation',
-				'csvdata' => "name;org_id;address\nParis;1;Centre de la Franca"
+				'desc' => 'Wrong class',
+				'args' => array(
+					'class' => 'toto',
+				),
+				'csvdata' => "xxx",
 			),
 			array(
-				'class' => 'bizPerson',
-				'csvdata' => "email;name;first_name;org_id;phone\njohn.foo@starac.com;Foo;John;1;+33(1)23456789"
+				'desc' => 'Wrong output type',
+				'args' => array(
+					'class' => 'NetworkDevice',
+					'output' => 'onthefly',
+				),
+				'csvdata' => "xxx",
 			),
 			array(
-				'class' => 'bizTeam',
-				'csvdata' => "name;org_id;location_name\nSquadra Azzura2;1;Paris"
+				'desc' => 'Wrong report level',
+				'args' => array(
+					'class' => 'NetworkDevice',
+					'reportlevel' => 'errors|ouarnings|changed',
+				),
+				'csvdata' => "xxx",
 			),
 			array(
-				'class' => 'bizWorkgroup',
-				'csvdata' => "name;org_id;team_id\ntravailleurs alpins;1;6"
+				'desc' => 'Weird format, working anyhow...',
+				'args' => array(
+					'class' => 'Server',
+					'output' => 'details',
+					'separator' => '*',
+					'qualifier' => '@',
+					'reconciliationkeys' => 'org_id,name',
+				),
+				'csvdata' => 'name*org_id
+									server01*2
+									  @server02@@combodo@*   2
+									server45*99',
 			),
 			array(
-				'class' => 'bizIncidentTicket',
-				'csvdata' => "name;title;type;org_id;initial_situation;start_date;next_update;caller_id;workgroup_id;agent_id\nOVSD-12345;server down;Network;1;server was found down;2009-04-10 12:00;2009-04-10 15:00;3;317;5"
+				'desc' => 'Load an organization',
+				'args' => array(
+					'class' => 'Organization',
+					'output' => 'details',
+					'reconciliationkeys' => '',
+				),
+				'csvdata' => "name;code\nWorldCompany;WCY",
 			),
-		);  
+			array(
+				'desc' => 'Load a location',
+				'args' => array(
+					'class' => 'Location',
+					'output' => 'details',
+					'reconciliationkeys' => '',
+				),
+				'csvdata' => "name;org_id;address\nParis;1;Centre de la Franca",
+			),
+			array(
+				'desc' => 'Load a person',
+				'args' => array(
+					'class' => 'Person',
+					'output' => 'details',
+					'reconciliationkeys' => '',
+				),
+				'csvdata' => "email;name;first_name;org_id;phone\njohn.foo@starac.com;Foo;John;1;+33(1)23456789",
+			),
+			array(
+				'desc' => 'Load a person - wrong email format',
+				'args' => array(
+					'class' => 'Person',
+					'output' => 'details',
+					'reconciliationkeys' => '',
+				),
+				'csvdata' => "email;name;first_name;org_id\nemailPASbon;Foo;John;1",
+			),
+			array(
+				'desc' => 'Load a team',
+				'args' => array(
+					'class' => 'Team',
+					'output' => 'details',
+					'reconciliationkeys' => '',
+				),
+				'csvdata' => "name;org_id;location_name\nSquadra Azzura2;1;Paris",
+			),
+			array(
+				'desc' => 'Load server',
+				'args' => array(
+					'class' => 'Server',
+					'output' => 'details',
+					'reconciliationkeys' => '',
+				),
+				'csvdata' => "name;status;owner_name;location_name;os_family;os_version;management_ip;cpu;ram;brand;model;serial_number\nlocalhost.;production;Demo;Grenoble;Ubuntu 9.10;2.6.31-19-generic-#56-Ubuntu SMP Thu Jan 28 01:26:53 UTC 2010;16.16.230.232;Intel(R) Core(TM)2 Duo CPU     T7100  @ 1.80GHz;2005;Hewlett-Packard;HP Compaq 6510b (GM108UC#ABF);CNU7370BNP",
+			),
+			array(
+				'desc' => 'Load NW if',
+				'args' => array(
+					'class' => 'NetworkInterface',
+					'output' => 'details',
+					'reconciliationkeys' => '',
+				),
+				'csvdata' => "name;status;org_id;device_name;physical_type;ip_address;ip_mask;mac_address;speed\neth0;implementation;2;localhost.;ethernet;16.16.230.232;255.255.240.0;00:1a:4b:68:e3:97;\nlo;implementation;2;localhost.;ethernet;127.0.0.1;255.0.0.0;;",
+			),
+			// Data Bruno
+			array(
+				'desc' => 'Load NW devices from real life',
+				'args' => array(
+					'class' => 'NetworkDevice',
+					'output' => 'details',
+					'reconciliationkeys' => 'org_id->name,name',
+					),
+				'csvdata' => 'name;management_ip;importance;org_id->name;type
+									truc-machin-bidule;172.15.255.150;high;My Company/Department;switch
+									10.15.255.222;10.15.255.222;high;My Company/Department;switch',
+			),
+			array(
+				'desc' => 'Load NW ifs',
+				'args' => array(
+					'class' => 'NetworkInterface',
+					'output' => 'details',
+					'reconciliationkeys' => 'device_id->name,name',
+				),
+				'csvdata' => 'device_id->name;org_id->name;name;ip_address;ip_mask;speed;link_type;mac_address;physical_type
+					truc-machin-bidule;My Company/Department;"GigabitEthernet44";;;0;downlink;00 12 F2 CB C4 EB ;ethernet
+					truc-machin-bidule;My Company/Department;"GigabitEthernet38";;;0;downlink;00 12 F2 CB C4 E5 ;ethernet
+					un-autre;My Company/Department;"GigabitEthernet2/3";;;1000000000;uplink;00 12 F2 20 0F 1A ;ethernet',
+			),
+			array(
+				'desc' => 'The simplest data load',
+				'args' => array(
+					'class' => 'Location',
+					'output' => 'details',
+				),
+				'csvdata' => "name\nParis",
+			),
+			array(
+				'desc' => 'The simplest data load + org',
+				'args' => array(
+					'class' => 'Location',
+					'output' => 'details',
+				),
+				'csvdata' => "name;org_id\nParis;2",
+			),
+			array(
+				'desc' => 'The simplest data load + org (name)',
+				'args' => array(
+					'class' => 'Location',
+					'output' => 'details',
+				),
+				'csvdata' => "name;org_name\nParis;Demo",
+			),
+			array(
+				'desc' => 'The simplest data load + org (code)',
+				'args' => array(
+					'class' => 'Location',
+					'output' => 'details',
+				),
+				'csvdata' => "name;org_id->code\nParis;DEMO",
+			),
+			array(
+				'desc' => 'Ouput: summary',
+				'args' => array(
+					'class' => 'Location',
+					'output' => 'summary',
+				),
+				'csvdata' => "name;org_id->code\nParis;DEMO",
+			),
+			array(
+				'desc' => 'Ouput: retcode',
+				'args' => array(
+					'class' => 'Location',
+					'output' => 'retcode',
+				),
+				'csvdata' => "name;org_id->code\nParis;DEMO",
+			),
+			array(
+				'desc' => 'Error in reconciliation list',
+				'args' => array(
+					'class' => 'Location',
+					'output' => 'details',
+					'reconciliationkeys' => 'org_id',
+				),
+				'csvdata' => "name\nParis",
+			),
+			array(
+				'desc' => 'Error in attribute list that does not allow to compute reconciliation scheme',
+				'args' => array(
+					'class' => 'Location',
+					'output' => 'details',
+				),
+				'csvdata' => "country\nFrance",
+			),
+			array(
+				'desc' => 'Error in attribute list - case A',
+				'args' => array(
+					'class' => 'Location',
+					'output' => 'details',
+				),
+				'csvdata' => "name;org\nParis;2",
+			),
+			array(
+				'desc' => 'Error in attribute list - case B1 (key->attcode)',
+				'args' => array(
+					'class' => 'Location',
+					'output' => 'details',
+				),
+				'csvdata' => "name;org->code\nParis;DEMO",
+			),
+			array(
+				'desc' => 'Error in attribute list - case B2 (key->attcode)',
+				'args' => array(
+					'class' => 'Location',
+					'output' => 'details',
+				),
+				'csvdata' => "name;org_id->duns\nParis;DEMO",
+			),
+			array(
+				'desc' => 'Always changing... special comment in change tracking',
+				'args' => array(
+					'class' => 'Location',
+					'output' => 'details',
+					'comment' => 'automated testing'
+				),
+				'csvdata' => "name;address\nLe pantheon;Addresse bidon:".((string)microtime(true)),
+			),
+			array(
+				'desc' => 'Always changing... but "simulate"',
+				'args' => array(
+					'class' => 'Location',
+					'output' => 'details',
+					'simulate' => '1',
+					'comment' => 'SHOULD NEVER APPEAR IN THE HISTORY'
+				),
+				'csvdata' => "name;address\nLe pantheon;restore address?",
+			),
+		); 
 
 		foreach ($aLoads as $aLoadSpec)
 		{
@@ -1534,9 +1771,7 @@ class TestSoap extends TestSoapWebService
 
 		if (false)
 		{
-			print "<pre>\n"; 
-			print_r($this->m_SoapClient->__getTypes());
-			print "</pre>\n";
+			self::DumpVariable($this->m_SoapClient->__getTypes());
 		} 
 
 		global $aWebServices;
@@ -1559,9 +1794,7 @@ class TestSoap extends TestSoapWebService
 				throw $e;
 			}
 
-			echo "<pre>\n";
-			print_r($oRes);
-			echo "</pre>\n";
+			self::DumpVariable($oRes);
 	
 			print "<pre>\n"; 
 			print "Request: \n".htmlspecialchars($this->m_SoapClient->__getLastRequest()) ."\n"; 
@@ -1605,9 +1838,7 @@ class TestWebServicesDirect extends TestBizModel
 			echo "<h2>SOAP call #$iPos - {$aWebService['verb']}</h2>\n";
 			echo "<p>{$aWebService['explain result']}</p>\n";
 			$oRes = call_user_func_array(array($oWebServices, $aWebService['verb']), $aWebService['args']);
-			echo "<pre>\n";
-			print_r($oRes);
-			echo "</pre>\n";
+			self::DumpVariable($oRes);
 
 			if ($oRes instanceof SOAPResult)
 			{
