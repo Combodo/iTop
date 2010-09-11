@@ -318,8 +318,10 @@ Dict::Add('EN US', 'English', 'English', array(
 <li>Manage the most important asset of your IT: Documentation.</li>
 </ul>
 </p>',
-
+	'UI:WelcomeMenu:AllOpenRequests' => 'Open requests: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'My requests',
+	'UI:WelcomeMenu:OpenIncidents' => 'Open incidents: %1$d',
+	'UI:WelcomeMenu:AllConfigItems' => 'Configuration Items: %1$d',
 	'UI:WelcomeMenu:MyIncidents' => 'Incidents assigned to me',
 	'UI:AllOrganizations' => ' All Organizations ',
 	'UI:YourSearch' => 'Your Search',
@@ -352,7 +354,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Button:ResetPassword' => ' Reset Password ',
 	
 	'UI:SearchToggle' => 'Search',
-	'UI:ClickToCreateNew' => 'Click here to create a new %1$s',
+	'UI:ClickToCreateNew' => 'Create a new %1$s',
 	'UI:SearchFor_Class' => 'Search for %1$s objects',
 	'UI:NoObjectToDisplay' => 'No object to display.',
 	'UI:Error:MandatoryTemplateParameter_object_id' => 'Parameter object_id is mandatory when link_attr is specified. Check the definition of the display template.',
@@ -836,6 +838,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:PasswordConfirm' => '(Confirm)',
 	'UI:BeforeAdding_Class_ObjectsSaveThisObject' => 'Before adding more %1$s objects, save this object.',
 	'UI:DisplayThisMessageAtStartup' => 'Display this message at startup',
+	'UI:RelationshipGraph' => 'Graphical view',
+	'UI:RelationshipList' => 'List',
 
 	'Portal:Title' => 'iTop user portal',
 	'Portal:Refresh' => 'Refresh',

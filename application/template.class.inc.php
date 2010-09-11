@@ -86,7 +86,6 @@ class DisplayTemplate
 			$iStart = $iEnd;
 			$iEnd = strlen($this->m_sTemplate); 
 			$iCount++;
-			if ($iCount > 10) break; //@@@ Why ?? Debug ??
 		}
 		$oPage->add(substr($this->m_sTemplate, $iAfterTagPos));
 	}

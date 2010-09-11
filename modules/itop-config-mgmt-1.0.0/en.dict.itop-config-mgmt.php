@@ -987,6 +987,10 @@ Dict::Add('EN US', 'English', 'English', array(
 'Menu:NewCI+' => 'New CI',
 'Menu:SearchCIs' => 'Search for CIs',
 'Menu:SearchCIs+' => 'Search for CIs',
+'Menu:ConfigManagement:Devices' => 'Devices',
+'Menu:ConfigManagement:AllDevices' => 'Number of devices: %1$d',
+'Menu:ConfigManagement:SWAndApps' => 'Software and Applications',
+'Menu:ConfigManagement:Misc' => 'Miscellaneous',
 
 ));
 ?>

@@ -315,7 +315,7 @@ abstract class MetaModel
 			return self::GetClassDescription($sClass);
 		}
 	}
-	final static public function GetClassIcon($sClass, $bImgTag = true)
+	final static public function GetClassIcon($sClass, $bImgTag = true, $sMoreStyles = '')
 	{
 		self::_check_subclass($sClass);
 
@@ -334,7 +334,7 @@ abstract class MetaModel
 		}
 		if ($bImgTag && ($sIcon != ''))
 		{
-			$sIcon = "<img src=\"$sIcon\" style=\"vertical-align:middle;\"/>";
+			$sIcon = "<img src=\"$sIcon\" style=\"vertical-align:middle;$sMoreStyles\"/>";
 		}
 		return $sIcon;
 	}

@@ -1,114 +1,201 @@
-<div style="width:100%;background: url(../images/welcome.jpg) top left no-repeat;">
 <style>
-.dashboard {
-vertical-align:top;
-width:50%;
-border:0px solid #000;
-background-color:#F9F9F1;
-padding:10px;
-text-align:left;
-font-size:10pt;
+.main_container {
+	width: 100%;
+	border: 0;
+	overflow-y: hidden;
+	overflow-x: hidden;
+	margin-bottom: 5px;
+	margin-top: 5px;
+	border-bottom: #ccc 1px solid;
+	border-top: #ccc 1px solid;
 }
-.dashboard2 {
-vertical-align:top;
-width:50%;
-border:0px solid #000;
--moz-border-radius:10px;
-padding:5px;
-text-align:left;
+.main_header {
+	width:100%;
+	height: 60px;
+	cursor: move;
+	background-color: #F1F1F6;
+}
+.main_header h1 {
+	color: #1C94C4;
+	margin-top:0;
+	margin-bottom:0;
+	padding-top: 10px;
+	padding-bottom: 10px;p
+	font-size: 16px;
+	line-height: 16px;
+}
+.main_header img {
+	margin-top: 10px;
+	margin-right: 10px;
+	float:left;
+}
+.item {
+	overflow-y: auto;
+	overflow-x: hidden;
+	background-color: #fff;
+	padding: 5px;
+	height: auto;
+}
+.main_menu {
+	overflow-y: auto;
+	overflow-x: hidden;
+	height: auto;
+	background-color: #eee;
+	width: 100%;
+}
+.element {
+	display: inline-block;
+}
+.element a {
+	font-size: 10px;
+}
+.element a.actions {
+	font-size: 16px;
+	text-decoration: none;
+	background: transparent;
+	color: #666;
+}
+.element a img {
+	border: 0;
+}
+.summary-details {
+	float:right;
+	margin-top: 5px;
 }
 
-td.dashboard li {
-margin-top: 5px;
-display: list-item;
+.summary-details td {
+	text-align: center;
+	background: transparent;
+	padding: 5px;
 }
-td div.display_block {
-padding:0;
+.summary-details th {
+	text-align: center;
+	background: #CCC;
+	padding: 5px;
+	color: #eee;
+}
+a.summary {
+	text-decoration: none;
+	background: transparent;
+	color: #666;
+}
+a.summary:hover {
+	text-decoration: underline;
 }
 </style>
-<p></p>
-<p></p>
-<p style="text-align:left; font-size:32px;padding-left:400px;padding-top:40px;margin-bottom:30px;margin-top:0;color:#FFFFFF;"><itopstring>UI:WelcomeMenu:Title</itopstring></p>
-<p></p>
-<table border="0" style="padding:10px;border-spacing: 10px;width:100%">
-<tr>
-<td class="dashboard2">
+<script>
+var sSerialized = '';
+function DumpPositions()
+{
+	sSerialized = $('.sortable').sortable('serialize', {key: 'menu'});
+	alert(sSerialized);
+}
+
+function RestorePositions()
+{	height: auto;
+    var arr = $('#main_menu .main_container').get();    
+    arr.reverse();
+
+	var sTemp = sSerialized.replace(/menu=/g, '');
+	alert(sTemp);
+	var aSerialized = sTemp.split('&');
+	console.log(aSerialized);
+    $.each(aSerialized, function(i,v) {
+      console.log(i+' => '+v);
+      var $menu = $('#menu_'+v);
+      if ($menu.length >  0) // Check that the menu exists
+      {
+      	$('#main_menu').append($menu);
+      }
+    });
+}
+</script>
+<div id="main_menu" class="sortable persistent">
+
+<div id="menu_1" class="main_container v-resizable">
+
+<div class="main_header drag_handle" id="main_cfg">
+
+<img src="../modules/itop-config-mgmt-1.0.0/images/database.png"/>
+<itopblock BlockClass="DisplayBlock" type="summary" asynchronous="false" encoding="text/oql" parameters="title[block]:Menu_ConfigManagement;context_filter:1;label[block]:UI_WelcomeMenu_AllConfigItems;status[block]:status;status_codes[block]:implementation,production,obsolete">SELECT FunctionalCI</itopblock>
+
+</div>
+
+<div class="item">
+
+<div class="element">
+<itopcheck class="BusinessProcess">
+<itopblock BlockClass="DisplayBlock" type="actions" asynchronous="false" encoding="text/oql" parameters="context_filter:1">SELECT BusinessProcess</itopblock>
+</itopcheck>
+</div>
+
+<div class="element">
+<itopcheck class="Contact">
+<itopblock BlockClass="DisplayBlock" type="actions" asynchronous="false" encoding="text/oql" parameters="context_filter:1">SELECT Contact</itopblock>
+</itopcheck>
+</div>
+
+<div class="element">
+<itopcheck class="Location">
+<itopblock BlockClass="DisplayBlock" type="actions" asynchronous="false" encoding="text/oql" parameters="context_filter:1">SELECT Location</itopblock>
+</itopcheck>
+</div>
+
+<div class="element">
+<itopcheck class="Server">
+<itopblock BlockClass="DisplayBlock" type="actions" asynchronous="false" encoding="text/oql" parameters="context_filter:1">SELECT Server</itopblock>
+</itopcheck>
+</div>
+
+<div class="element">
+<itopcheck class="DatabaseInstance">
+<itopblock BlockClass="DisplayBlock" type="actions" asynchronous="false" encoding="text/oql" parameters="context_filter:1">SELECT DatabaseInstance</itopblock>
+</itopcheck>
+</div>
+
+<div class="element">
+<itopcheck class="NetworkDevice">
+<itopblock BlockClass="DisplayBlock" type="actions" asynchronous="false" encoding="text/oql" parameters="context_filter:1">SELECT NetworkDevice</itopblock>
+</itopcheck>
+</div>
+
+</div>
+</div>
+
 <itopcheck class="UserRequest">
-<img src="../modules/itop-request-mgmt-1.0.0/images/user-request.png" style="float:left"></img>
-<p style="text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;"><itopstring>Request Management</itopstring></p>
-<itopblock BlockClass="DisplayBlock" type="actions" asynchronous="false" encoding="text/oql">SELECT UserRequest</itopblock>
+
+<div id="menu_2" class="main_container v-resizable">
+
+<div class="main_header drag_handle" id="main_helpdesk">
+<img src="../modules/itop-request-mgmt-1.0.0/images/user-request-deadline.png"/>
+<itopblock BlockClass="DisplayBlock" type="summary" asynchronous="false" encoding="text/oql" parameters="title[block]:Menu_RequestManagement;context_filter:1;label[block]:UI_WelcomeMenu_AllOpenRequests;status[block]:status;status_codes[block]:new,assigned,escalated_tto,escalated_ttr,resolved">SELECT UserRequest WHERE status != "closed"</itopblock>
+</div>
+
+<div class="item">
 <p style="text-align:left; font-family:Verdana, Arial, sans-serif; font-size:14px;"><itopstring>UI:WelcomeMenu:MyCalls</itopstring></p>
 <itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql" parameters="menu:0">SELECT UserRequest AS i WHERE i.caller_id = :current_contact_id AND status NOT IN ("closed", "resolved")</itopblock>
+</div>
+
+</div>
+
 </itopcheck>
-</td>
-<td class="dashboard2">
+
 <itopcheck class="Incident">
-<img src="../modules/itop-incident-mgmt-1.0.0/images/incident-deadline.png" style="float:left"></img>
-<p style="text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;"><itopstring>Incident Management</itopstring></p>
-<itopblock BlockClass="DisplayBlock" type="actions" asynchronous="false" encoding="text/oql">SELECT Incident</itopblock>
+
+<div id="menu_3" class="main_container v-resizable">
+
+<div class="main_header drag_handle" id="main_incident">
+<img src="../modules/itop-incident-mgmt-1.0.0/images/incident-escalated.png"/>
+<itopblock BlockClass="DisplayBlock" type="summary" asynchronous="false" encoding="text/oql" parameters="title[block]:Menu_IncidentManagement;context_filter:1;label[block]:UI_WelcomeMenu_OpenIncidents;status[block]:status;status_codes[block]:new,assigned,escalated_tto,escalated_ttr,resolved">SELECT Incident WHERE status != "closed"</itopblock>
+</div>
+
+<div class="item">
 <p style="text-align:left; font-family:Verdana, Arial, sans-serif; font-size:14px;"><itopstring>UI:WelcomeMenu:MyIncidents</itopstring></p>
 <itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql" parameters="menu:0">SELECT Incident AS i WHERE i.agent_id = :current_contact_id AND status NOT IN ("closed", "resolved")</itopblock>
+</div>
+
 </itopcheck>
-</td>
-</tr>
-<tr>
-<td colspan="2" width="100%">
-<p style="text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;"><itopstring>Configuration Management</itopstring></p>
-<table border="0" style="border-spacing: 10px;width:100%">
-<tr>
-<td>
-<itopcheck class="BusinessProcess">
-<img src="../modules/itop-config-mgmt-1.0.0/images/business-process.png" style="float:left"></img>
-<p style="text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;"><itopstring>Class:BusinessProcess</itopstring></p>
-<itopblock BlockClass="DisplayBlock" type="count" asynchronous="false" encoding="text/oql" parameters="format:UI_CountOfObjectsShort">SELECT BusinessProcess</itopblock></p>
-<itopblock BlockClass="DisplayBlock" type="actions" asynchronous="false" encoding="text/oql">SELECT BusinessProcess</itopblock>
-</itopcheck>
-</td>
-<td>
-<itopcheck class="Contact">
-<img src="../modules/itop-config-mgmt-1.0.0/images/team.png" style="float:left"></img>
-<p style="text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;"><itopstring>Class:Contact</itopstring></p>
-<itopblock BlockClass="DisplayBlock" type="count" asynchronous="false" encoding="text/oql" parameters="format:UI_CountOfObjectsShort">SELECT Contact</itopblock></p>
-<itopblock BlockClass="DisplayBlock" type="actions" asynchronous="false" encoding="text/oql">SELECT Contact</itopblock>
-</itopcheck>
-</td>
-<td>
-<itopcheck class="Location">
-<img src="../modules/itop-config-mgmt-1.0.0/images/location.png" style="float:left"></img>
-<p style="text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;"><itopstring>Class:Location</itopstring></p>
-<itopblock BlockClass="DisplayBlock" type="count" asynchronous="false" encoding="text/oql" parameters="format:UI_CountOfObjectsShort">SELECT Location</itopblock></p>
-<itopblock BlockClass="DisplayBlock" type="actions" asynchronous="false" encoding="text/oql">SELECT Location</itopblock>
-</itopcheck>
-</td>
-</tr>
-<tr>
-<td>
-<itopcheck class="Server">
-<img src="../modules/itop-config-mgmt-1.0.0/images/server.png" style="float:left"></img>
-<p style="text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;"><itopstring>Class:Server</itopstring>
-<itopblock BlockClass="DisplayBlock" type="count" asynchronous="false" encoding="text/oql" parameters="format:UI_CountOfObjectsShort">SELECT Server</itopblock></p>
-<itopblock BlockClass="DisplayBlock" type="actions" asynchronous="false" encoding="text/oql">SELECT Server</itopblock>
-</itopcheck>
-</td>
-<td>
-<itopcheck class="DatabaseInstance">
-<img src="../modules/itop-config-mgmt-1.0.0/images/database.png" style="float:left"></img>
-<p style="text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;"><itopstring>Class:DatabaseInstance</itopstring></p>
-<itopblock BlockClass="DisplayBlock" type="count" asynchronous="false" encoding="text/oql" parameters="format:UI_CountOfObjectsShort">SELECT DatabaseInstance</itopblock></p>
-<itopblock BlockClass="DisplayBlock" type="actions" asynchronous="false" encoding="text/oql">SELECT DatabaseInstance</itopblock>
-</itopcheck>
-</td>
-<td>
-<itopcheck class="NetworkDevice">
-<img src="../modules/itop-config-mgmt-1.0.0/images/interface.png" style="float:left"></img>
-<p style="text-align:left; font-family:Verdana, Arial, sans-serif; font-size:16px;"><itopstring>Class:NetworkDevice</itopstring></p>
-<itopblock BlockClass="DisplayBlock" type="count" asynchronous="false" encoding="text/oql" parameters="format:UI_CountOfObjectsShort">SELECT NetworkDevice</itopblock></p>
-<itopblock BlockClass="DisplayBlock" type="actions" asynchronous="false" encoding="text/oql">SELECT NetworkDevice</itopblock>
-</itopcheck>
-</td>
-</tr>
-</table>
-</td>
-</tr>
-</table>
+
+</div>
+
 </div>

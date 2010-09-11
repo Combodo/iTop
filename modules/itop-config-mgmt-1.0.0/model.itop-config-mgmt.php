@@ -1572,17 +1572,17 @@ new SearchMenuNode('SearchCIs', 'FunctionalCI', $oCINode->GetIndex(), 1 /* fRank
 new OQLMenuNode('BusinessProcess', 'SELECT BusinessProcess', $oCINode->GetIndex(), 2 /* fRank */);
 new OQLMenuNode('ApplicationSolution', 'SELECT ApplicationSolution', $oCINode->GetIndex(), 3 /* fRank */);
 
-$oSWNode = new TemplateMenuNode('ConfigManagementSoftware', '', $oCINode->GetIndex(), 4 /* fRank */);
-new OQLMenuNode('Licence', 'SELECT Licence', $oSWNode->GetIndex(), 0 /* fRank */);
-new OQLMenuNode('Patch', 'SELECT Patch', $oSWNode->GetIndex(), 1 /* fRank */);
-new OQLMenuNode('ApplicationInstance', 'SELECT SoftwareInstance', $oSWNode->GetIndex(), 2 /* fRank */);
+//$oSWNode = new TemplateMenuNode('ConfigManagementSoftware', '', $oCINode->GetIndex(), 4 /* fRank */);
+//new OQLMenuNode('Licence', 'SELECT Licence', $oSWNode->GetIndex(), 0 /* fRank */);
+//new OQLMenuNode('Patch', 'SELECT Patch', $oSWNode->GetIndex(), 1 /* fRank */);
+//new OQLMenuNode('ApplicationInstance', 'SELECT SoftwareInstance', $oSWNode->GetIndex(), 2 /* fRank */);
 
 $oHWNode = new TemplateMenuNode('ConfigManagementHardware', '', $oCINode->GetIndex(), 5 /* fRank */);
-new OQLMenuNode('Subnet', 'SELECT Subnet', $oHWNode->GetIndex(), 0 /* fRank */);
+//new OQLMenuNode('Subnet', 'SELECT Subnet', $oHWNode->GetIndex(), 0 /* fRank */);
 new OQLMenuNode('NetworkDevice', 'SELECT NetworkDevice', $oHWNode->GetIndex(), 1 /* fRank */);
 new OQLMenuNode('Server', 'SELECT Server', $oHWNode->GetIndex(), 2 /* fRank */);
 new OQLMenuNode('Printer', 'SELECT Printer', $oHWNode->GetIndex(), 3 /* fRank */);
-new OQLMenuNode('MobilePhone', 'SELECT MobilePhone', $oHWNode->GetIndex(), 4 /* fRank */);
+//new OQLMenuNode('MobilePhone', 'SELECT MobilePhone', $oHWNode->GetIndex(), 4 /* fRank */);
 new OQLMenuNode('PC', 'SELECT PC', $oHWNode->GetIndex(), 5 /* fRank */);
 
 ?>

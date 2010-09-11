@@ -960,5 +960,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 'Menu:MobilePhone+' => 'Tous les téléphones portables',
 'Menu:PC' => 'Ordinateurs personnels',
 'Menu:PC+' => 'Tous les ordinateurs personnels',
+'Menu:ConfigManagement:Devices' => 'Equipements',
+'Menu:ConfigManagement:AllDevices' => 'Nombre d\'équipements: %1$d',
+'Menu:ConfigManagement:SWAndApps' => 'Logiciels et Applications',
+'Menu:ConfigManagement:Misc' => 'Divers',
 ));
 ?>

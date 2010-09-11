@@ -319,7 +319,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 </ul>
 </p>',
 
+	'UI:WelcomeMenu:AllOpenRequests' => 'Requêtes en cours: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Mes Appels Support',
+	'UI:WelcomeMenu:OpenIncidents' => 'Incidents en cours: %1$d',
+	'UI:WelcomeMenu:AllConfigItems' => 'Actifs: %1$d',
 	'UI:WelcomeMenu:MyIncidents' => 'Mes Incidents',
 	'UI:AllOrganizations' => ' Toutes les Organizations ',
 	'UI:YourSearch' => 'Votre recherche',
@@ -354,7 +357,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	
 	'UI:SearchToggle' => 'Recherche',
 
-	'UI:ClickToCreateNew' => 'Cliquez ici pour créer un nouvel objet de type %1$s',
+	'UI:ClickToCreateNew' => 'Créer un nouvel objet de type %1$s',
 	'UI:NoObjectToDisplay' => 'Aucun objet à afficher.',
 	'UI:Error:MandatoryTemplateParameter_object_id' => 'Le paramètre object_id est obligatoire quand link_attr est spécifié. Vérifiez la définition du modèle.',
 	'UI:Error:MandatoryTemplateParameter_link_attr' => 'Le paramètre target_attr est obligatoire quand link_attr est spécifié. Vérifiez la définition du modèle.',
@@ -846,6 +849,8 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:PasswordConfirm' => '(Confirmer)',
 	'UI:BeforeAdding_Class_ObjectsSaveThisObject' => 'Enregistrez l\'objet courant avant de créer de nouveaux éléments de type %1$s.',
 	'UI:DisplayThisMessageAtStartup' => 'Afficher ce message au démarrage',
+	'UI:RelationshipGraph' => 'Vue graphique',
+	'UI:RelationshipList' => 'Liste',
 
 	'Portal:Title' => 'Portail utilisateur iTop',
 	'Portal:Refresh' => 'Rafraîchir',

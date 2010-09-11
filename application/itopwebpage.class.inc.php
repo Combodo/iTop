@@ -101,7 +101,22 @@ class iTopWebPage extends NiceWebPage
 					 			SetUserPreference('menu_pane', 'open', true);
 					 		}
 					 	}
-					}
+					},
+			center:	{
+					 	onresize_end: function(name, elt, state, options, layout)
+					 	{
+					 			$('.v-resizable').each( function() {
+					 				var fixedWidth = $(this).parent().innerWidth() - 6;
+					 				$(this).width(fixedWidth);
+					 				// Make sure it cannot be resized horizontally
+									$(this).resizable('options', { minWidth: fixedWidth, maxWidth:  fixedWidth });
+									// Now adjust all the child 'items'
+					 				var innerWidth = $(this).innerWidth() - 10;
+					 				$(this).find('.item').width(innerWidth);
+					 			});
+					 	}
+				
+				 	}
 		});
 		myLayout.addPinBtn( "#tPinMenu", "west" );
 		//myLayout.open( "west" );
@@ -227,6 +242,67 @@ class iTopWebPage extends NiceWebPage
 			changeYear: true
 		});
 	$('.resizable').resizable(); // Make resizable everything that claims to be resizable !
+	// Adjust initial size
+	$('.v-resizable').each( function()
+		{
+			var parent_id = $(this).parent().id;
+			// Restore the saved height
+			var iHeight = GetUserPreference(parent_id+'_'+this.id+'_height', undefined);
+			if (iHeight != undefined)
+			{
+				$(this).height(parseInt(iHeight, 10)); // Parse in base 10 !);
+			}
+			// Adjust the child 'item''s height and width to fit
+			var container = $(this);
+			var fixedWidth = container.parent().innerWidth() - 6;
+			// Set the width to fit the parent
+			$(this).width(fixedWidth);
+			var headerHeight = $(this).find('.drag_handle').height();
+			// Now adjust the width and height of the child 'item'
+			container.find('.item').height(container.innerHeight() - headerHeight - 12).width(fixedWidth - 10);
+		}
+	);
+	// Make resizable, vertically only everything that claims to be v-resizable !
+	$('.v-resizable').resizable( { handles: 's', minHeight: $(this).find('.drag_handle').height(), minWidth: $(this).parent().innerWidth() - 6, maxWidth: $(this).parent().innerWidth() - 6, stop: function()
+		{
+			// Adjust the content
+			var container = $(this);
+			var headerHeight = $(this).find('.drag_handle').height();
+			container.find('.item').height(container.innerHeight() - headerHeight - 12);//.width(container.innerWidth());
+			var parent_id = $(this).parent().id;
+			SetUserPreference(parent_id+'_'+this.id+'_height', $(this).height(), true); // true => persistent
+		}
+	} );
+	// Restore the persisted sortable order, for all sortable lists... if any
+	$('.sortable').each(function()
+	{
+		var sTemp = GetUserPreference(this.id+'_order', undefined);
+		if (sTemp != undefined)
+		{
+			var aSerialized = sTemp.split(',');
+			var sortable = $(this);
+		    $.each(aSerialized, function(i,v) {
+		      var item = $('#menu_'+v);
+		      if (item.length >  0) // Check that the menu exists
+		      {
+		      		sortable.append(item);
+		      }
+		    });
+		}
+	});
+
+	// Make sortable, everything that claims to be sortable
+	$('.sortable').sortable( {axis: 'y', cursor: 'move', handle: '.drag_handle', stop: function()
+		{
+			if ($(this).hasClass('persistent'))
+			{
+				// remember the sort order for next time the page is loaded...
+				sSerialized = $(this).sortable('serialize', {key: 'menu'});
+				var sTemp = sSerialized.replace(/menu=/g, '');
+				SetUserPreference(this.id+'_order', sTemp.replace(/&/g, ','), true); // true => persistent !
+			}
+		}
+	});
 	docWidth = $(document).width();
 	$('#ModalDlg').dialog({ autoOpen: false, modal: true, width: 0.8*docWidth }); // JQuery UI dialogs
 	ShowDebug();
