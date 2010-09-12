@@ -740,7 +740,7 @@ class AttributeClass extends AttributeString
 	public function GetDefaultValue()
 	{
 		$sDefault = parent::GetDefaultValue();
-		if (!$this->IsNullAllowed() && is_null($sDefault))
+		if (!$this->IsNullAllowed() && $this->IsNull($sDefault))
 		{
 			// For this kind of attribute specifying null as default value
 			// is authorized even if null is not allowed
