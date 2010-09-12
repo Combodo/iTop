@@ -1,4 +1,4 @@
-package iTop
+﻿package iTop
 {
 	import flash.display.*;
 	import flash.geom.*;
@@ -93,6 +93,10 @@ package iTop
 		private function appear(i:uint):void
 		{
 			// The delay has elapsed, show (smoothly) the tooltip
+			// Make sure that the tooltip always appears at se same scale 1:1 even
+			// if the whole scene is zoomed out
+			scaleX = 1 / this.parent.parent.scaleX;
+			scaleY = 1 / this.parent.parent.scaleY;
 			if (this.timer != null)
 			{
 				this.timer.stop();

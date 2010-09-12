@@ -1,4 +1,4 @@
-package iTop
+﻿package iTop
 {
 	import flash.display.*;
 	import flash.geom.*;
@@ -35,7 +35,7 @@ package iTop
 		protected var m_Ks = 30; // Solid friction coeff
 		protected var m_deltaT = 0.1; // Interval of time between updates
 		protected var m_MAX_ITEMS_PER_ROW = 8;
-		protected var m_FOCUS_DELAY_COUNTDOWN = 50; // 50 images to zoom & pan correctly
+		protected var m_FOCUS_DELAY_COUNTDOWN = 30; // 30 images to zoom & pan correctly
 		protected var m_fZoom:Number;
 		
 		// Constructor
@@ -99,6 +99,10 @@ package iTop
 			m_oCanvas.scaleX = m_fZoom;
 			m_oCanvas.scaleY = m_fZoom;
 		}
+		function GetZommLevel()
+		{
+			return m_fZoom;
+		}
 		
 		function doLoadData()
 		{
@@ -119,25 +123,52 @@ package iTop
 		
 		function onXMLLoadComplete(event:Event):void
 		{
-			var myXML:XML = XML(m_oLoader.data);
-			//trace("Data loaded." + myXML);
-			//trace("===========================");
-			parseXMLData(null, myXML, 0, 0);
-			m_sTitle.text = myXML.attribute("title");
-			m_oZoomSlider.enabled = true;
-			removeChild(m_oPreloader);
-			addEventListener(Event.ENTER_FRAME, drawLines);
-			m_oZoomSlider.value = 100;
-			m_oZoomSlider.addEventListener(SliderEvent.CHANGE, onZoomChange);
-			stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseDown)  
-			stage.addEventListener(MouseEvent.MOUSE_UP, mouseReleased);
-			//trace('======= Initial Posistions =========');
-			//DumpPositions();
+			try
+			{
+				var myXML:XML = XML(m_oLoader.data);
+				//trace("Data loaded." + myXML);
+				//trace("===========================");
+				parseXMLData(null, myXML, 0, 0);
+				m_sTitle.text = myXML.attribute("title");
+				m_oZoomSlider.enabled = true;
+				addEventListener(Event.ENTER_FRAME, drawLines);
+				m_oZoomSlider.value = 100;
+				m_oZoomSlider.addEventListener(SliderEvent.CHANGE, onZoomChange);
+				stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseDown)  
+				stage.addEventListener(MouseEvent.MOUSE_UP, mouseReleased);
+				//trace('======= Initial Posistions =========');
+				//DumpPositions();
+			}
+			catch(error:IOErrorEvent)
+			{
+				m_sTitle.text = "I/O Error: unable to load the graph data ("+error+")";
+			}
+			catch(error:TypeError)
+			{
+				m_sTitle.text = "Error: unable to load the graph data (Invalid XML data)";
+			}
+			catch(error:Error)
+			{
+				m_sTitle.text = "Error: unable to load the graph data ("+error+")";
+			}
+			finally
+			{
+				if (m_oPreloader != null)
+				{
+					removeChild(m_oPreloader);
+					m_oPreloader = null;
+				}
+			}
 		}
 
 		function onXMLLoadError(event:IOErrorEvent):void
 		{
-			trace("An error occured:" + Event);
+				if (m_oPreloader != null)
+				{
+					removeChild(m_oPreloader);
+					m_oPreloader = null;
+				}
+				m_sTitle.text = "I/O Error: unable to load the graph data ("+event+")";
 		}
 		
 		function parseXMLData(oParentNode:GraphNode, oXMLData:XML, iChildIndex:Number, iChildCount:Number)
@@ -362,6 +393,13 @@ package iTop
 				this.m_FOCUS_DELAY_COUNTDOWN--;
 				trace('FOCUS_DELAY:'+this.m_FOCUS_DELAY_COUNTDOWN);
 				UpdatePanAndZoom(m_FOCUS_DELAY_COUNTDOWN / 30);
+			}
+			else if (this.m_FOCUS_DELAY_COUNTDOWN == 0)
+			{
+				// Increase the friction so that manually manipulating objects gets easier
+				trace("More friction now...");
+				m_Ks = 5*m_Ks; // 5 times more friction
+				this.m_FOCUS_DELAY_COUNTDOWN--;
 			}
 		}
 		function drawArrow(oPt:Point, dx:Number, dy:Number, color:uint):void

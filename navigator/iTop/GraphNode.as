@@ -65,7 +65,7 @@
 			m_oIcon.contentLoaderInfo.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onLoadError);
 			m_oIcon.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoadComplete);
 			m_oIcon.load(myURL);
-			addChild(m_oIcon);
+			//addChild(m_oIcon);
 			addEventListener(MouseEvent.MOUSE_DOWN, mouseDown)  
 			addEventListener(MouseEvent.MOUSE_UP, mouseReleased); 
 			addEventListener( MouseEvent.MOUSE_OVER, mouseOver );
@@ -99,15 +99,16 @@
 			// Add the Loader on the Sprite when the loading is completed
 			m_oIcon.x = -m_oIcon.width / 2;
 			m_oIcon.y = -m_oIcon.height + 8; // Slightly shifted downward
-			
 			// Construct a tooltip
 			addChild(m_oToolTip);
 			addChild(m_oIcon);
+			//hitArea = m_oIcon; // Drag only by the icon...
 			trace('m_sLabel, getChildIndex:'+getChildIndex(m_sLabel));
 			trace('m_oToolTip, getChildIndex:'+getChildIndex(m_oToolTip));
+			trace('m_oIcon, getChildIndex:'+getChildIndex(m_oIcon));
 			//swapChildren(m_oToolTip, );
 			// Start the tooltip
-			m_oToolTip.start(); 
+			m_oToolTip.start();
 		}
 		 
 		function mouseDown(event:MouseEvent):void 
