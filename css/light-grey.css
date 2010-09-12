@@ -66,31 +66,31 @@ tr.containerHeader, tr.containerHeader td {
 	background: transparent;
 } 
 
-tr.even td {
+tr.even td, .wizContainer tr.even td {
 	background-color: #f9f9f1;
 } 
-tr.red_even td {
+tr.red_even td, .wizContainer tr.red_even td {
 	background-color: #f97e75;
 	color: #ffffff;
 }
-tr.red td {
+tr.red td, .wizContainer tr.red td {
 	background-color: #f9a397;
 	color: #ffffff;
 }
-tr.orange_even td {
+tr.orange_even td, .wizContainer tr.orange_even td {
 	background-color: #f4d07a;
 }
-tr.orange td {
+tr.orange td, .wizContainer tr.orange td {
 	background-color: #f4e96c;
 } 
-tr.green_even td {
+tr.green_even td, .wizContainer tr.green_even td {
 	background-color: #bee5a3;
 } 
-tr.green td {
+tr.green td, .wizContainer tr.green td {
 	background-color: #b3e5b4;
 } 
 
-tr td.hover, tr.even td.hover, .hover a, .hover a:visited, .hover a:hover {
+tr td.hover, tr.even td.hover, .hover a, .hover a:visited, .hover a:hover, .wizContainer tr.even td.hover,  .wizContainer tr td.hover {
 	background-color: #fdf5d0;
 	color: #000000;
 }
@@ -105,10 +105,21 @@ th {
 
 th.header {
 	cursor: pointer;
+	background-repeat: no-repeat;
+	background-position: center right;
+	background-image: url(../images/bg.gif);
+	background-repeat: no-repeat;
+	padding-right: 16px; // some space for the asc/desc icons
 }
 
-th.headerSortUp, th.headerSortDown {
-	
+th.headerSortUp {
+	background-image: url(../images/asc.gif);
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+th.headerSortDown {
+	background-image: url(../images/desc.gif);
 	text-decoration: underline;
 	cursor: pointer;
 }
@@ -635,22 +646,22 @@ div.HRDrawer {
 }
 
 /* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
-table.listResults tr.odd td.truncated, table.listResults tr td.truncated {
+table.listResults tr.odd td.truncated, table.listResults tr td.truncated, .wizContainer table.listResults tr.odd td.truncated, .wizContainer table.listResults tr td.truncated {
 	background: url(../images/truncated.png) bottom  repeat-x;
 }
 
 /* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
-table.listResults tr.even td.truncated {
+table.listResults tr.even td.truncated, .wizContainer table.listResults  tr.even td.truncated {
 	background: #f9f9f1 url(../images/truncated.png) bottom  repeat-x;
 }
 
 /* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
-table.listResults tr.even td.hover.truncated {
+table.listResults tr.even td.hover.truncated, , .wizContainer table.listResults  tr.even td.hover.truncated {
 	background: #fdf5d0 url(../images/truncated.png) bottom  repeat-x;
 }
 
 /* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
-table.listResults tr.odd td.hover.truncated,  table.listResults tr td.hover.truncated{
+table.listResults tr.odd td.hover.truncated,  table.listResults tr td.hover.truncated, .wizContainer table.listResults  tr.odd td.hover.truncated, .wizContainer table.listResults  tr td.hover.truncated {
 	background: #fdf5d0 url(../images/truncated.png) bottom  repeat-x;
 }
 

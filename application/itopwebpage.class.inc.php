@@ -162,6 +162,11 @@ class iTopWebPage extends NiceWebPage
 			$("tbody tr.red:even",table).removeClass('red').removeClass('even').addClass('red_even');
 			$("tbody tr.orange:even",table).removeClass('orange').removeClass('even').addClass('orange_even');
 			$("tbody tr.green:even",table).removeClass('green').removeClass('even').addClass('green_even');
+			// In case we sort again the table, we need to remove the added 'even' classes on odd rows
+			$("tbody tr:odd",table).removeClass('even');
+			$("tbody tr.red_even:odd",table).removeClass('even').removeClass('red_even').addClass('red');
+			$("tbody tr.orange_even:odd",table).removeClass('even').removeClass('orange_even').addClass('orange');
+			$("tbody tr.green_even:odd",table).removeClass('even').removeClass('green_even').addClass('green');
 	    } 
 	});
 		
@@ -231,7 +236,23 @@ class iTopWebPage extends NiceWebPage
 	  
 	// End of Tabs handling
 	$("table.listResults").tableHover(); // hover tables
-	$(".listResults").tablesorter( { widgets: ['myZebra', 'truncatedList']} ); // sortable and zebra tables
+	// Check each 'listResults' table for a checkbox in the first column and make the first column sortable only if it does not contain a checkbox in the header
+	$(".listResults").each( function()
+		{
+			var table = $(this);
+			var id = $(this).parent();
+			var checkbox = (table.find('th:first :checkbox').length > 0);
+			if (checkbox)
+			{
+				// There is a checkbox in the first column, don't make it sortable
+				table.tablesorter( { headers: { 0: {sorter: false}}, widgets: ['myZebra', 'truncatedList']} ); // sortable and zebra tables
+			}
+			else
+			{
+				// There is NO checkbox in the first column, all columns are considered sortable
+				table.tablesorter( { widgets: ['myZebra', 'truncatedList']} ); // sortable and zebra tables
+			}
+		});
 	$(".date-pick").datepicker({
 			showOn: 'button',
 			buttonImage: '../images/calendar.png',

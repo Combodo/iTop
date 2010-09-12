@@ -36,8 +36,8 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix)
 		);
 		// Disable the button since all the selected items have been removed
 		$(my_id+'_btnRemove').attr('disabled','disabled');
-		// Re-run the zebra plugin to properly highlight the remaining lines
-		$('#linkset_'+this.id+' .listResults').trigger('update');
+		// Re-run the zebra plugin to properly highlight the remaining lines & and take into account the removed ones
+		$('#linkedset_'+this.id+' .listResults').trigger('update').trigger("applyWidgets");
 		
 	}
 
@@ -97,7 +97,8 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix)
 			function(data)
 			{
 				$(sSearchAreaId).html(data);
-				$(sSearchAreaId+' .listResults').tablesorter( { widgets: ['myZebra', 'truncatedList']} ); // sortable and zebra tables
+				$(sSearchAreaId+' .listResults').tableHover();
+				$(sSearchAreaId+' .listResults').tablesorter( { headers: {0: {sorter: false}}, widgets: ['myZebra', 'truncatedList']} ); // sortable and zebra tables
 				
 			},
 			'html'
@@ -151,7 +152,8 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix)
 					$('#'+me.id+'_empty_row').remove();
 					$('#linkedset_'+me.id+' .listResults tbody').append(data);
 					$('#linkedset_'+me.id+' .listResults').trigger('update');
-					$('#linkedset_'+me.id+' .listResults').tablesorter( { widgets: ['myZebra', 'truncatedList']} ); // sortable and zebra tables
+					$('#linkedset_'+me.id+' .listResults').tableHover();
+					$('#linkedset_'+me.id+' .listResults').trigger('update').trigger("applyWidgets"); // table is already sortable, just refresh it
 					$('#linkedset_'+me.id+' :input').each( function() { $(this).trigger('validate', ''); }); // Validate newly added form fields...
 				}
 			},

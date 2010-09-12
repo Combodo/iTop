@@ -13,7 +13,22 @@ function ReloadTruncatedList(divId, sSerializedFilter, sExtraParams)
 		 $('#'+divId).append(data);
 		 $('#'+divId).removeClass('loading');
 		 $('#'+divId+' .listResults').tableHover(); // hover tables
-		 $('#'+divId+' .listResults').tablesorter( { widgets: ['zebra', 'truncatedList']} ); // sortable and zebra tables
+		 $('#'+divId+' .listResults').each( function()
+				{
+					var table = $(this);
+					var id = $(this).parent();
+					var checkbox = (table.find('th:first :checkbox').length > 0);
+					if (checkbox)
+					{
+						// There is a checkbox in the first column, don't make it sortable
+						table.tablesorter( { headers: { 0: {sorter: false}}, widgets: ['myZebra', 'truncatedList']} ); // sortable and zebra tables
+					}
+					else
+					{
+						// There is NO checkbox in the first column, all columns are considered sortable
+						table.tablesorter( { widgets: ['myZebra', 'truncatedList']} ); // sortable and zebra tables
+					}
+				});
 		 //$('#'+divId).unblockUI();
 		}
 	 );
@@ -47,7 +62,22 @@ function ReloadBlock(divId, sStyle, sSerializedFilter, sExtraParams)
 		 $('#'+divId).append(data);
 		 $('#'+divId).removeClass('loading');
 		 $('#'+divId+' .listResults').tableHover(); // hover tables
-		 $('#'+divId+' .listResults').tablesorter( { widgets: ['myZebra', 'truncatedList']} ); // sortable and zebra tables
+		 $('#'+divId+' .listResults').each( function()
+				{
+					var table = $(this);
+					var id = $(this).parent();
+					var checkbox = (table.find('th:first :checkbox').length > 0);
+					if (checkbox)
+					{
+						// There is a checkbox in the first column, don't make it sortable
+						table.tablesorter( { headers: { 0: {sorter: false}}, widgets: ['myZebra', 'truncatedList']} ); // sortable and zebra tables
+					}
+					else
+					{
+						// There is NO checkbox in the first column, all columns are considered sortable
+						table.tablesorter( { widgets: ['myZebra', 'truncatedList']} ); // sortable and zebra tables
+					}
+				});
 		 //$('#'+divId).unblockUI();
 		}
 	 );
