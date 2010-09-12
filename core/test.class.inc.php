@@ -252,7 +252,15 @@ abstract class TestWebServices extends TestHandler
 		$fp = @fopen($sUrl, 'rb', false, $ctx);
 		if (!$fp)
 		{
-			throw new Exception("Problem with $sUrl, $php_errormsg");
+			global $php_errormsg;
+			if (isset($php_errormsg))
+			{
+				throw new Exception("Problem with $sUrl, $php_errormsg");
+			}
+			else
+			{
+				throw new Exception("Problem with $sUrl");
+			}
 		}
 		$response = @stream_get_contents($fp);
 		if ($response === false)

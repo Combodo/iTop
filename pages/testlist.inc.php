@@ -1206,7 +1206,7 @@ class TestImportREST extends TestWebServices
 
 	static public function GetDescription()
 	{
-		return 'Bulk load in the background';
+		return 'Test various options and fonctionality of import.php';
 	}
 
 	protected function DoExecSingleLoad($aLoadSpec)
@@ -1230,12 +1230,21 @@ class TestImportREST extends TestWebServices
 
 		$sArguments = implode('<br/>', $aGetParamReport);
 
+		if (strlen($sCsvData) > 5000)
+		{
+			$sCsvDataViewable = 'INPUT TOO LONG TO BE DISPLAYED ('.strlen($sCsvData).")\n".substr($sCsvData, 0, 500)."\n... TO BE CONTINUED";
+		}
+		else
+		{
+			$sCsvDataViewable = $sCsvData;
+		}
+
 		echo "<div style=\"\">\n";
-		echo "   <div style=\"float: left; padding: 5; background-color: #eeeeff;\">\n";
+		echo "   <div style=\"float:left; width:45%; padding:5; background-color:#eeeeff;\">\n";
 		echo "      $sArguments\n";
 		echo "   </div>\n";
-		echo "   <div style=\"float: right; padding: 5; background-color: #eeeeff\">\n";
-		echo "      <pre class=\"vardump\">$sCsvData</pre>\n";
+		echo "   <div style=\"float:right; width:45%; padding:5; background-color:#eeeeff\">\n";
+		echo "      <pre class=\"vardump\">$sCsvDataViewable</pre>\n";
 		echo "   </div>\n";
 		echo "</div>\n";
 
@@ -1495,6 +1504,45 @@ class TestImportREST extends TestWebServices
 	}
 }
 
+///////////////////////////////////////////////////////////////////////////
+// Test massive data load
+///////////////////////////////////////////////////////////////////////////
+
+class TestImportRESTMassive extends TestImportREST
+{
+	static public function GetName()
+	{
+		return 'CSV import (REST) - HUGE data set (20000 PCs)';
+	}
+
+	static public function GetDescription()
+	{
+		return 'Stress import.php';
+	}
+
+	protected function DoExecute()
+	{
+		$aLoadSpec = array(
+			'desc' => 'Missing class',
+			'args' => array(
+				'class' => 'PC',
+				'output' => 'summary',
+			),
+			'csvdata' => "name;org_id;brand\n",
+		);
+		$iMaxPC = 20000;
+		for($i = 0 ; $i <= $iMaxPC ; $i++)
+		{
+			$aLoadSpec['csvdata'] .= "pc.import.$i;2;Combodo\n";
+		}
+		$this->DoExecSingleLoad($aLoadSpec);
+	}
+}
+
+
+///////////////////////////////////////////////////////////////////////////
+// Test SOAP services
+///////////////////////////////////////////////////////////////////////////
 
 $aWebServices = array(
 	array(
