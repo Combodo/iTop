@@ -391,6 +391,7 @@ function InitDataModel(SetupWebPage $oP, $sConfigFileName, $bModelOnly = true)
 	require_once('../core/dbobjectset.class.php');
 	require_once('../application/cmdbabstract.class.inc.php');
 	require_once('../core/userrights.class.inc.php');
+	require_once('../setup/moduleinstallation.class.inc.php');
 	$oP->log("Info - MetaModel::Startup from file '$sConfigFileName' (ModelOnly = $bModelOnly)");
 
 	MetaModel::Startup($sConfigFileName, $bModelOnly);
@@ -399,9 +400,8 @@ function InitDataModel(SetupWebPage $oP, $sConfigFileName, $bModelOnly = true)
  * Helper function to create the database structure
  * @return boolean true on success, false otherwise
  */
-function CreateDatabaseStructure(SetupWebPage $oP, Config $oConfig, $sDBName, $sDBPrefix)
+function CreateDatabaseStructure(SetupWebPage $oP, Config $oConfig, $sDBName, $sDBPrefix, $aSelectedModules)
 {
-
 	InitDataModel($oP, TMP_CONFIG_FILE, true); // Allow the DB to NOT exist since we're about to create it !
 	$oP->log('Info - CreateDatabaseStructure');
 	if (strlen($sDBPrefix) > 0)
@@ -431,6 +431,63 @@ function CreateDatabaseStructure(SetupWebPage $oP, Config $oConfig, $sDBName, $s
 		}
 		return false;
 	}
+
+	// Record main installation
+	$oInstallRec = new ModuleInstallation();
+	$oInstallRec->Set('name', 'itop');
+	$oInstallRec->Set('version', ITOP_VERSION.'.'.ITOP_REVISION);
+	$oInstallRec->Set('comment', "Done by the setup program\nBuilt on ".ITOP_BUILD_DATE);
+	$oInstallRec->Set('parent_id', 0); // root module
+	$iMainItopRecord = $oInstallRec->DBInsertNoReload();
+
+	// Record installed modules
+	//
+	$aAvailableModules = GetAvailableModules($oP);
+	foreach($aSelectedModules as $sModuleId)
+	{
+		$aModuleData = $aAvailableModules[$sModuleId];
+		if (preg_match('!^(.*)/(.*)$!', $sModuleId, $aMatches))
+		{
+			$sName = $aMatches[1];
+			$sVersion = $aMatches[2];
+		}
+		else
+		{
+			$sName = $sModuleId;
+			$sVersion = "";
+		}
+		$aComments = array();
+		$aComments[] = 'Done by the setup program';
+		if ($aModuleData['mandatory'])
+		{
+			$aComments[] = 'Mandatory';
+		}
+		else
+		{
+			$aComments[] = 'Optional';
+		}
+		if ($aModuleData['visible'])
+		{
+			$aComments[] = 'Visible (during the setup)';
+		}
+		else
+		{
+			$aComments[] = 'Hidden (selected automatically)';
+		}
+		foreach ($aModuleData['dependencies'] as $sDependOn)
+		{
+			$aComments[] = "Depends on module: $sDependOn";
+		}
+		$sComment = implode("\n", $aComments);
+
+		$oInstallRec = new ModuleInstallation();
+		$oInstallRec->Set('name', $sName);
+		$oInstallRec->Set('version', $sVersion);
+		$oInstallRec->Set('comment', $sComment);
+		$oInstallRec->Set('parent_id', $iMainItopRecord);
+		$oInstallRec->DBInsertNoReload();
+	}
+	// Database is created, installation has been tracked into it
 	return true;
 }
 
@@ -884,7 +941,7 @@ function AdminAccountDefinition(SetupWebPage $oP, $aParamValues, $iCurrentStep, 
 	$oConfig->SetDBSubname($sDBPrefix);
 	BuildConfig($oP, $oConfig, $aParamValues); // Load all the includes based on the modules selected
 	$oConfig->WriteToFile(TMP_CONFIG_FILE);
-	if (CreateDatabaseStructure($oP, $oConfig, $sDBName, $sDBPrefix))
+	if (CreateDatabaseStructure($oP, $oConfig, $sDBName, $sDBPrefix, $aParamValues['module']))
 	{
 		$sRedStar = "<span class=\"hilite\">*</span>";
 		$oP->add("<h2>Default language for the application:</h2>\n");
