@@ -184,14 +184,7 @@ switch($operation)
 	$aParams = utils::ReadParam('params', array());
 	if ($sFilter != '')
 	{
-		if ($sEncoding == 'oql')
-		{
-			$oFilter = CMDBSearchFilter::FromOQL($sFilter);
-		}
-		else
-		{
-			$oFilter = CMDBSearchFilter::unserialize($sFilter);
-		}
+		$oFilter = CMDBSearchFilter::unserialize($sFilter);
 		$oDisplayBlock = new DisplayBlock($oFilter, 'open_flash_chart_ajax', false);
 		$oDisplayBlock->RenderContent($oPage, $aParams);
 	}

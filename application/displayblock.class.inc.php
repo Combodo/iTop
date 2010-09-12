@@ -702,11 +702,11 @@ EOF
 			$sChartType = isset($aExtraParams['chart_type']) ? $aExtraParams['chart_type'] : 'pie';
 			$sTitle = isset($aExtraParams['chart_title']) ? $aExtraParams['chart_title'] : '';
 			$sGroupBy = isset($aExtraParams['group_by']) ? $aExtraParams['group_by'] : '';
-			$sFilter = $this->m_oFilter->ToOQL();
+			$sFilter = $this->m_oFilter->serialize();
 			$sHtml .= "<div id=\"my_chart_{$iChartCounter}\">If the chart does not display, <a href=\"http://get.adobe.com/flash/\" target=\"_blank\">install Flash</a></div>\n";
 			$oPage->add_script("function ofc_resize(left, width, top, height) { /* do nothing special */ }");
 			$oPage->add_ready_script("swfobject.embedSWF(\"../images/open-flash-chart.swf\", \"my_chart_{$iChartCounter}\", \"100%\", \"300\",\"9.0.0\", \"expressInstall.swf\",
-			{\"data-file\":\"".urlencode("../pages/ajax.render.php?operation=open_flash_chart&params[group_by]=$sGroupBy&params[chart_type]=$sChartType&params[chart_title]=$sTitle&encoding=oql&filter=".urlencode($sFilter))."\"}, {wmode: 'transparent'} );\n");
+			{\"data-file\":\"".urlencode("../pages/ajax.render.php?operation=open_flash_chart&params[group_by]=$sGroupBy&params[chart_type]=$sChartType&params[chart_title]=$sTitle&filter=".$sFilter)."\"}, {wmode: 'transparent'} );\n");
 			$iChartCounter++;
 			break;
 			
