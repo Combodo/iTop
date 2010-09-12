@@ -1507,12 +1507,13 @@ class TestImportREST extends TestWebServices
 ///////////////////////////////////////////////////////////////////////////
 // Test massive data load
 ///////////////////////////////////////////////////////////////////////////
+define('IMPORT_COUNT', 1000);
 
 class TestImportRESTMassive extends TestImportREST
 {
 	static public function GetName()
 	{
-		return 'CSV import (REST) - HUGE data set (20000 PCs)';
+		return 'CSV import (REST) - HUGE data set ('.IMPORT_COUNT.' PCs)';
 	}
 
 	static public function GetDescription()
@@ -1530,8 +1531,7 @@ class TestImportRESTMassive extends TestImportREST
 			),
 			'csvdata' => "name;org_id;brand\n",
 		);
-		$iMaxPC = 20000;
-		for($i = 0 ; $i <= $iMaxPC ; $i++)
+		for($i = 0 ; $i <= IMPORT_COUNT ; $i++)
 		{
 			$aLoadSpec['csvdata'] .= "pc.import.$i;2;Combodo\n";
 		}
