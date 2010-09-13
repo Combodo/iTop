@@ -321,7 +321,7 @@ switch($sOperation)
 		}
 		$oPage->add("</table>\n");
 		$aReconciliationKeys = MetaModel::GetReconcKeys($sClassName);
-		$aMoreReconciliationKeys = array();
+		$aMoreReconciliationKeys = array(); // Store: key => void to automatically remove duplicates
 		foreach($aReconciliationKeys as $sAttCode)
 		{
 			$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
@@ -329,7 +329,7 @@ switch($sOperation)
 			{
 				// An external key is specified as a reconciliation key: this means that all the reconciliation
 				// keys of this class are proposed to identify the target object
-				$aMoreReconciliationKeys = array_keys(GetMappingsForExtKey($sAttCode, $oAttDef, $bAdvanced));
+				$aMoreReconciliationKeys = array_merge($aMoreReconciliationKeys, GetMappingsForExtKey($sAttCode, $oAttDef, $bAdvanced));
 			}
 			elseif($oAttDef->IsExternalField())
 			{
@@ -337,11 +337,10 @@ switch($sOperation)
 				// since external fields are not writable, and thus never appears in the mapping form
 				$sKeyAttCode = $oAttDef->GetKeyAttCode();
 				$sTargetAttCode = $oAttDef->GetExtAttCode();
-				
-				$aMoreReconciliationKeys = array($sKeyAttCode.'->'.$sTargetAttCode);				
+				$aMoreReconciliationKeys[$sKeyAttCode.'->'.$sTargetAttCode] = '';			
 			}
 		}
-		$sDefaultKeys = '"'.implode('", "',array_merge($aReconciliationKeys,$aMoreReconciliationKeys)).'"';
+		$sDefaultKeys = '"'.implode('", "',array_merge($aReconciliationKeys, array_keys($aMoreReconciliationKeys))).'"';
 		$oPage->add_ready_script(
 <<<EOF
 		$('select[name^=field]').change( DoCheckMapping );
