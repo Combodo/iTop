@@ -179,6 +179,7 @@ if (false && utils::IsModeCLI())
 }
 else
 {
+	$_SESSION['login_mode'] = 'basic';
 	require_once('../application/loginwebpage.class.inc.php');
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
@@ -245,6 +246,15 @@ try
 	else
 	{
 		$bSimulate = false;
+	}
+
+	//////////////////////////////////////////////////
+	//
+	// Security
+	//
+	if (!UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_MODIFY))
+	{
+		throw new SecurityException(Dict::Format('UI:Error:BulkModifyNotAllowedOn_Class', $sClass));
 	}
 
 	//////////////////////////////////////////////////
@@ -339,12 +349,6 @@ try
 		$sReconcKeys = implode(',', $aReconcSpec);
 	}
 
-if (false)
-{
-echo "Reconciliation keys<pre class=\"vardump\">";
-print_r($sReconcKeys);
-throw new BulkLoadException("testing");
-}
 	// Interpret the list of reconciliation keys
 	//
 	$aFinalReconcilKeys = array();
@@ -438,7 +442,7 @@ throw new BulkLoadException("testing");
 		{
 			$sMoreInfo = 'Web Service (CSV)';
 		}
-		$oMyChange->Set("userinfo", $sUserString.' '.$sMoreInfo);
+		$oMyChange->Set("userinfo", $sUserString.', '.$sMoreInfo);
 		$iChangeId = $oMyChange->DBInsert();
 	}
 
@@ -611,6 +615,10 @@ throw new BulkLoadException("testing");
 	}
 }
 catch(BulkLoadException $e)
+{
+	$oP->add_comment($e->getMessage());		
+}
+catch(SecurityException $e)
 {
 	$oP->add_comment($e->getMessage());		
 }

@@ -218,6 +218,7 @@ abstract class TestWebServices extends TestHandler
 	static protected function DoPostRequestAuth($sRelativeUrl, $aData, $sLogin = 'admin', $sPassword = 'admin', $sOptionnalHeaders = null)
 	{
 		$aDataAndAuth = $aData;
+// To be changed to use basic authentication
 		$aDataAndAuth['operation'] = 'login';
 		$aDataAndAuth['auth_user'] = $sLogin;
 		$aDataAndAuth['auth_pwd'] = $sPassword;

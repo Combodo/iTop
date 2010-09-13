@@ -1226,7 +1226,10 @@ class TestImportREST extends TestWebServices
 			$aGetParamReport[] = $sArg.'='.$sValue;
 		}
 		$sGetParams = implode('&', $aGetParams);
-		$sRes = self::DoPostRequestAuth('../webservices/import.php?'.$sGetParams, $aPostData);
+		$sLogin = isset($aLoadSpec['login']) ? $aLoadSpec['login'] : 'admin';
+		$sPassword = isset($aLoadSpec['password']) ? $aLoadSpec['password'] : 'admin';
+
+		$sRes = self::DoPostRequestAuth('../webservices/import.php?'.$sGetParams, $aPostData, $sLogin, $sPassword);
 
 		$sArguments = implode('<br/>', $aGetParamReport);
 
@@ -1240,15 +1243,15 @@ class TestImportREST extends TestWebServices
 		}
 
 		echo "<div style=\"\">\n";
-		echo "   <div style=\"float:left; width:45%; padding:5; background-color:#eeeeff;\">\n";
+		echo "   <div style=\"float:left; width:20%; padding:5; background-color:#eeeeff;\">\n";
 		echo "      $sArguments\n";
 		echo "   </div>\n";
-		echo "   <div style=\"float:right; width:45%; padding:5; background-color:#eeeeff\">\n";
+		echo "   <div style=\"float:right; width:75%; padding:5; background-color:#eeeeff\">\n";
 		echo "      <pre class=\"vardump\">$sCsvDataViewable</pre>\n";
 		echo "   </div>\n";
 		echo "</div>\n";
 
-		echo "<pre class=\"vardump\" style=\"clear: both; padding: 5; background-color: black; color: green;\">$sRes</pre>\n";
+		echo "<pre class=\"vardump\" style=\"clear: both; padding: 15; background-color: black; color: green;\">$sRes</pre>\n";
 
 		echo "</div>\n";
 	}
@@ -1259,12 +1262,16 @@ class TestImportREST extends TestWebServices
 		$aLoads = array(
 			array(
 				'desc' => 'Missing class',
+				'login' => 'admin',
+				'password' => 'admin',
 				'args' => array(
 				),
 				'csvdata' => "xxx",
 			),
 			array(
 				'desc' => 'Wrong class',
+				'login' => 'admin',
+				'password' => 'admin',
 				'args' => array(
 					'class' => 'toto',
 				),
@@ -1272,6 +1279,8 @@ class TestImportREST extends TestWebServices
 			),
 			array(
 				'desc' => 'Wrong output type',
+				'login' => 'admin',
+				'password' => 'admin',
 				'args' => array(
 					'class' => 'NetworkDevice',
 					'output' => 'onthefly',
@@ -1280,6 +1289,8 @@ class TestImportREST extends TestWebServices
 			),
 			array(
 				'desc' => 'Wrong report level',
+				'login' => 'admin',
+				'password' => 'admin',
 				'args' => array(
 					'class' => 'NetworkDevice',
 					'reportlevel' => 'errors|ouarnings|changed',
@@ -1288,6 +1299,8 @@ class TestImportREST extends TestWebServices
 			),
 			array(
 				'desc' => 'Weird format, working anyhow...',
+				'login' => 'admin',
+				'password' => 'admin',
 				'args' => array(
 					'class' => 'Server',
 					'output' => 'details',
@@ -1302,6 +1315,8 @@ class TestImportREST extends TestWebServices
 			),
 			array(
 				'desc' => 'Load an organization',
+				'login' => 'admin',
+				'password' => 'admin',
 				'args' => array(
 					'class' => 'Organization',
 					'output' => 'details',
@@ -1311,6 +1326,8 @@ class TestImportREST extends TestWebServices
 			),
 			array(
 				'desc' => 'Load a location',
+				'login' => 'admin',
+				'password' => 'admin',
 				'args' => array(
 					'class' => 'Location',
 					'output' => 'details',
@@ -1320,6 +1337,8 @@ class TestImportREST extends TestWebServices
 			),
 			array(
 				'desc' => 'Load a person',
+				'login' => 'admin',
+				'password' => 'admin',
 				'args' => array(
 					'class' => 'Person',
 					'output' => 'details',
@@ -1329,6 +1348,8 @@ class TestImportREST extends TestWebServices
 			),
 			array(
 				'desc' => 'Load a person - wrong email format',
+				'login' => 'admin',
+				'password' => 'admin',
 				'args' => array(
 					'class' => 'Person',
 					'output' => 'details',
@@ -1338,6 +1359,8 @@ class TestImportREST extends TestWebServices
 			),
 			array(
 				'desc' => 'Load a team',
+				'login' => 'admin',
+				'password' => 'admin',
 				'args' => array(
 					'class' => 'Team',
 					'output' => 'details',
@@ -1347,15 +1370,19 @@ class TestImportREST extends TestWebServices
 			),
 			array(
 				'desc' => 'Load server',
+				'login' => 'admin',
+				'password' => 'admin',
 				'args' => array(
 					'class' => 'Server',
 					'output' => 'details',
 					'reconciliationkeys' => '',
 				),
-				'csvdata' => "name;status;owner_name;location_name;os_family;os_version;management_ip;cpu;ram;brand;model;serial_number\nlocalhost.;production;Demo;Grenoble;Ubuntu 9.10;2.6.31-19-generic-#56-Ubuntu SMP Thu Jan 28 01:26:53 UTC 2010;16.16.230.232;Intel(R) Core(TM)2 Duo CPU     T7100  @ 1.80GHz;2005;Hewlett-Packard;HP Compaq 6510b (GM108UC#ABF);CNU7370BNP",
+				'csvdata' => "name;status;owner_name;location_name;location_id->org_name;os_family;os_version;management_ip;cpu;ram;brand;model;serial_number\nlocalhost.;production;Demo;Grenoble;Demo;Ubuntu 9.10;2.6.31-19-generic-#56-Ubuntu SMP Thu Jan 28 01:26:53 UTC 2010;16.16.230.232;Intel(R) Core(TM)2 Duo CPU     T7100  @ 1.80GHz;2005;Hewlett-Packard;HP Compaq 6510b (GM108UC#ABF);CNU7370BNP",
 			),
 			array(
 				'desc' => 'Load NW if',
+				'login' => 'admin',
+				'password' => 'admin',
 				'args' => array(
 					'class' => 'NetworkInterface',
 					'output' => 'details',
@@ -1366,6 +1393,8 @@ class TestImportREST extends TestWebServices
 			// Data Bruno
 			array(
 				'desc' => 'Load NW devices from real life',
+				'login' => 'admin',
+				'password' => 'admin',
 				'args' => array(
 					'class' => 'NetworkDevice',
 					'output' => 'details',
@@ -1377,6 +1406,8 @@ class TestImportREST extends TestWebServices
 			),
 			array(
 				'desc' => 'Load NW ifs',
+				'login' => 'admin',
+				'password' => 'admin',
 				'args' => array(
 					'class' => 'NetworkInterface',
 					'output' => 'details',
@@ -1389,6 +1420,8 @@ class TestImportREST extends TestWebServices
 			),
 			array(
 				'desc' => 'The simplest data load',
+				'login' => 'admin',
+				'password' => 'admin',
 				'args' => array(
 					'class' => 'Location',
 					'output' => 'details',
@@ -1397,6 +1430,8 @@ class TestImportREST extends TestWebServices
 			),
 			array(
 				'desc' => 'The simplest data load + org',
+				'login' => 'admin',
+				'password' => 'admin',
 				'args' => array(
 					'class' => 'Location',
 					'output' => 'details',
@@ -1405,6 +1440,8 @@ class TestImportREST extends TestWebServices
 			),
 			array(
 				'desc' => 'The simplest data load + org (name)',
+				'login' => 'admin',
+				'password' => 'admin',
 				'args' => array(
 					'class' => 'Location',
 					'output' => 'details',
@@ -1413,6 +1450,8 @@ class TestImportREST extends TestWebServices
 			),
 			array(
 				'desc' => 'The simplest data load + org (code)',
+				'login' => 'admin',
+				'password' => 'admin',
 				'args' => array(
 					'class' => 'Location',
 					'output' => 'details',
@@ -1421,6 +1460,8 @@ class TestImportREST extends TestWebServices
 			),
 			array(
 				'desc' => 'Ouput: summary',
+				'login' => 'admin',
+				'password' => 'admin',
 				'args' => array(
 					'class' => 'Location',
 					'output' => 'summary',
@@ -1429,6 +1470,8 @@ class TestImportREST extends TestWebServices
 			),
 			array(
 				'desc' => 'Ouput: retcode',
+				'login' => 'admin',
+				'password' => 'admin',
 				'args' => array(
 					'class' => 'Location',
 					'output' => 'retcode',
@@ -1437,23 +1480,29 @@ class TestImportREST extends TestWebServices
 			),
 			array(
 				'desc' => 'Error in reconciliation list',
+				'login' => 'admin',
+				'password' => 'admin',
 				'args' => array(
 					'class' => 'Location',
 					'output' => 'details',
 					'reconciliationkeys' => 'org_id',
 				),
-				'csvdata' => "name\nParis",
+				'csvdata' => "org_name;name\nDemo;Paris",
 			),
 			array(
 				'desc' => 'Error in attribute list that does not allow to compute reconciliation scheme',
+				'login' => 'admin',
+				'password' => 'admin',
 				'args' => array(
 					'class' => 'Location',
 					'output' => 'details',
 				),
-				'csvdata' => "country\nFrance",
+				'csvdata' => "org_name;country\nDemo;France",
 			),
 			array(
 				'desc' => 'Error in attribute list - case A',
+				'login' => 'admin',
+				'password' => 'admin',
 				'args' => array(
 					'class' => 'Location',
 					'output' => 'details',
@@ -1462,6 +1511,8 @@ class TestImportREST extends TestWebServices
 			),
 			array(
 				'desc' => 'Error in attribute list - case B1 (key->attcode)',
+				'login' => 'admin',
+				'password' => 'admin',
 				'args' => array(
 					'class' => 'Location',
 					'output' => 'details',
@@ -1470,6 +1521,8 @@ class TestImportREST extends TestWebServices
 			),
 			array(
 				'desc' => 'Error in attribute list - case B2 (key->attcode)',
+				'login' => 'admin',
+				'password' => 'admin',
 				'args' => array(
 					'class' => 'Location',
 					'output' => 'details',
@@ -1478,22 +1531,26 @@ class TestImportREST extends TestWebServices
 			),
 			array(
 				'desc' => 'Always changing... special comment in change tracking',
+				'login' => 'admin',
+				'password' => 'admin',
 				'args' => array(
 					'class' => 'Location',
 					'output' => 'details',
 					'comment' => 'automated testing'
 				),
-				'csvdata' => "name;address\nLe pantheon;Addresse bidon:".((string)microtime(true)),
+				'csvdata' => "org_name;name;address\nDemo;Le pantheon;Addresse bidon:".((string)microtime(true)),
 			),
 			array(
 				'desc' => 'Always changing... but "simulate"',
+				'login' => 'admin',
+				'password' => 'admin',
 				'args' => array(
 					'class' => 'Location',
 					'output' => 'details',
 					'simulate' => '1',
 					'comment' => 'SHOULD NEVER APPEAR IN THE HISTORY'
 				),
-				'csvdata' => "name;address\nLe pantheon;restore address?",
+				'csvdata' => "org_name;name;address\nDemo;Le pantheon;restore address?",
 			),
 		); 
 

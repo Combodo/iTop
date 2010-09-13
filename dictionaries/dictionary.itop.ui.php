@@ -383,6 +383,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Error:ObjectsAlreadyDeleted' => 'Error: objects have already been deleted!',
 	'UI:Error:BulkDeleteNotAllowedOn_Class' => 'You are not allowed to perform a bulk delete of objects of class %1$s',
 	'UI:Error:DeleteNotAllowedOn_Class' => 'You are not allowed to delete objects of class %1$s',
+	'UI:Error:BulkModifyNotAllowedOn_Class' => 'You are not allowed to perform a bulk update of objects of class %1$s',
 	'UI:Error:ObjectAlreadyCloned' => 'Error: the object has already been cloned!',
 	'UI:Error:ObjectAlreadyCreated' => 'Error: the object has already been created!',
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Error: invalid stimulus "%1$s" on object %2$s in state "%3$s".',

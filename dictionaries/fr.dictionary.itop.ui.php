@@ -385,6 +385,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Error:ObjectsAlreadyDeleted' => 'Erreur: les objets ont déjà été supprimés !',
 	'UI:Error:BulkDeleteNotAllowedOn_Class' => 'Vous n\'êtes pas autorisé à faire une suppression massive sur les objets de type %1$s',
 	'UI:Error:DeleteNotAllowedOn_Class' => 'Vous n\'êtes pas autorisé supprimer des objets de type %1$s',
+	'UI:Error:BulkModifyNotAllowedOn_Class' => 'Vous n\'êtes pas autorisé à faire une modification massive sur les objets de type %1$s',
 	'UI:Error:ObjectAlreadyCloned' => 'Erreur: l\'objet a déjà été dupliqué !',
 	'UI:Error:ObjectAlreadyCreated' => 'Erreur: l\'objet a déjà été créé !',
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Erreur: le stimulus "%1$s" n\'est pas valide pour l\'objet %2$s dans l\'état "%3$s".',

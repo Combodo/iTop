@@ -993,7 +993,7 @@ try
 			}
 			if (!UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_DELETE, DBObjectSet::FromArray($sClass, $aObjects)))
 			{
-				throw new SecurityException(Dict::S('UI:Error:BulkDeleteNotAllowedOn_Class'), $sClass);
+				throw new SecurityException(Dict::Format('UI:Error:BulkDeleteNotAllowedOn_Class', $sClass));
 			}
 			$oP->set_title(Dict::S('UI:BulkDeletePageTitle'));
 			DeleteObjects($oP, $sClass, $aObjects, ($operation == 'bulk_delete_confirmed'));
@@ -1008,7 +1008,7 @@ try
 	
 		if (!UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, DBObjectSet::FromObject($oObj)))
 		{
-			throw new SecurityException(Dict::S('UI:Error:DeleteNotAllowedOn_Class'), $sClass);
+			throw new SecurityException(Dict::Format('UI:Error:DeleteNotAllowedOn_Class', $sClass));
 		}
 		DeleteObjects($oP, $sClass, array($oObj), ($operation == 'delete_confirmed'));
 		break;
