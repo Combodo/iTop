@@ -1015,5 +1015,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 'Menu:PC+' => 'Todos los PCs (Computadores de Personales',
 'Menu:Group' => 'Grupos de ICs',
 'Menu:Group+' => 'Grupos de ICs',
+'Menu:ConfigManagement:Shortcuts' => 'Atajos',
+'Menu:ConfigManagement:AllContacts' => 'Todos los Contactos: %1$d',
 ));
 ?>

@@ -173,7 +173,7 @@ function RestorePositions()
 
 <div class="item">
 <p style="text-align:left; font-family:Verdana, Arial, sans-serif; font-size:14px;"><itopstring>UI:WelcomeMenu:MyCalls</itopstring></p>
-<itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql" parameters="menu:0">SELECT UserRequest AS i WHERE i.caller_id = :current_contact_id AND status NOT IN ("closed", "resolved")</itopblock>
+<itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql" parameters="menu:1">SELECT UserRequest AS i WHERE i.caller_id = :current_contact_id AND status NOT IN ("closed", "resolved")</itopblock>
 </div>
 
 </div>
@@ -191,7 +191,7 @@ function RestorePositions()
 
 <div class="item">
 <p style="text-align:left; font-family:Verdana, Arial, sans-serif; font-size:14px;"><itopstring>UI:WelcomeMenu:MyIncidents</itopstring></p>
-<itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql" parameters="menu:0">SELECT Incident AS i WHERE i.agent_id = :current_contact_id AND status NOT IN ("closed", "resolved")</itopblock>
+<itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql" parameters="menu:1">SELECT Incident AS i WHERE i.agent_id = :current_contact_id AND status NOT IN ("closed", "resolved")</itopblock>
 </div>
 
 </itopcheck>

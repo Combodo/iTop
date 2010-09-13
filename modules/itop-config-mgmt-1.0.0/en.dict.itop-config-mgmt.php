@@ -1047,6 +1047,8 @@ Dict::Add('EN US', 'English', 'English', array(
 'Menu:ConfigManagement:Misc' => 'Miscellaneous',
 'Menu:Group' => 'Groups of CIs',
 'Menu:Group+' => 'Groups of CIs',
+'Menu:ConfigManagement:Shortcuts' => 'Shortcuts',
+'Menu:ConfigManagement:AllContacts' => 'All contacts: %1$d',
 
 ));
 ?>

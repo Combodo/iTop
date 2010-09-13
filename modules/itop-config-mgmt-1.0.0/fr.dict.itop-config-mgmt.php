@@ -1019,5 +1019,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 'Menu:ConfigManagement:Misc' => 'Divers',
 'Menu:Group' => 'Groupes de CIs',
 'Menu:Group+' => 'Groupes de CIs',
+'Menu:ConfigManagement:Shortcuts' => 'Raccourcis',
+'Menu:ConfigManagement:AllContacts' => 'Tous les contacts: %1$d',
 ));
 ?>
