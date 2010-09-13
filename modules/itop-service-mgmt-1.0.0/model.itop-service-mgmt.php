@@ -59,7 +59,7 @@ abstract class Contract extends cmdbAbstractObject
 		MetaModel::Init_SetZListItems('details', array('name', 'description', 'start_date', 'end_date', 'cost', 'cost_currency', 'cost_unit', 'billing_frequency', 'contact_list', 'document_list', 'ci_list'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'description', 'start_date', 'end_date', 'cost', 'cost_currency', 'cost_unit', 'billing_frequency'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'start_date', 'end_date', 'cost', 'cost_currency', 'cost_unit', 'billing_frequency'));
-		MetaModel::Init_SetZListItems('list', array('name', 'description', 'start_date', 'end_date', 'cost', 'cost_currency', 'cost_unit', 'billing_frequency'));
+		MetaModel::Init_SetZListItems('list', array('description', 'start_date', 'end_date', 'cost', 'cost_currency', 'cost_unit', 'billing_frequency'));
 	}
 }
 class ProviderContract extends Contract
@@ -90,7 +90,7 @@ class ProviderContract extends Contract
 		MetaModel::Init_SetZListItems('details', array('name', 'description', 'start_date', 'end_date', 'cost', 'cost_currency', 'cost_unit', 'billing_frequency', 'contact_list', 'document_list', 'ci_list', 'provider_id', 'sla', 'coverage'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'description', 'start_date', 'end_date', 'cost', 'cost_currency', 'cost_unit', 'billing_frequency', 'provider_id', 'sla', 'coverage'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'start_date', 'end_date', 'cost', 'cost_currency', 'cost_unit', 'billing_frequency', 'provider_id', 'sla', 'coverage'));
-		MetaModel::Init_SetZListItems('list', array('name', 'start_date', 'end_date', 'provider_id', 'sla', 'coverage'));
+		MetaModel::Init_SetZListItems('list', array('start_date', 'end_date', 'provider_id', 'sla', 'coverage'));
 	}
 }
 class CustomerContract extends Contract
@@ -125,7 +125,7 @@ class CustomerContract extends Contract
 		MetaModel::Init_SetZListItems('details', array('name', 'org_id', 'description', 'start_date', 'end_date', 'cost', 'cost_currency', 'cost_unit', 'billing_frequency', 'contact_list', 'document_list', 'ci_list', 'provider_list','provider_id', 'support_team_id', 'sla_list'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'description', 'start_date', 'end_date', 'cost', 'cost_currency', 'cost_unit', 'billing_frequency', 'org_id', 'support_team_id'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'org_id', 'start_date', 'end_date', 'cost', 'cost_currency', 'cost_unit', 'billing_frequency', 'provider_id', 'support_team_id'));
-		MetaModel::Init_SetZListItems('list', array('name', 'org_id', 'start_date', 'end_date', 'provider_id', 'support_team_id'));
+		MetaModel::Init_SetZListItems('list', array('org_id', 'start_date', 'end_date', 'provider_id', 'support_team_id'));
 	}
 }
 class lnkCustomerContractToProviderContract extends cmdbAbstractObject
@@ -326,7 +326,7 @@ class Service extends cmdbAbstractObject
 		MetaModel::Init_SetZListItems('details', array('name', 'description', 'org_id', 'type', 'status', 'subcategory_list', 'sla_list', 'document_list', 'contact_list'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'description', 'org_id', 'type', 'status'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'org_id', 'type', 'status'));
-		MetaModel::Init_SetZListItems('list', array('name', 'description', 'org_id', 'type', 'status'));
+		MetaModel::Init_SetZListItems('list', array('description', 'org_id', 'type', 'status'));
 
 	}
 
@@ -371,7 +371,7 @@ class ServiceSubcategory extends cmdbAbstractObject
 		MetaModel::Init_SetZListItems('details', array('name', 'description', 'service_id'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'description', 'service_id'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'service_id'));
-		MetaModel::Init_SetZListItems('list', array('name', 'description', 'service_id'));
+		MetaModel::Init_SetZListItems('list', array('description', 'service_id'));
 	}
 }
 class SLA extends cmdbAbstractObject
@@ -402,7 +402,7 @@ class SLA extends cmdbAbstractObject
 		MetaModel::Init_SetZListItems('details', array('name', 'service_id', 'slt_list'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'service_id'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'service_id'));
-		MetaModel::Init_SetZListItems('list', array('name', 'service_id'));
+		MetaModel::Init_SetZListItems('list', array('service_id'));
 	}
 }
 class SLT extends cmdbAbstractObject
@@ -435,7 +435,7 @@ class SLT extends cmdbAbstractObject
 		MetaModel::Init_SetZListItems('details', array('name', 'metric', 'ticket_priority', 'value', 'value_unit', 'sla_list'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'metric', 'ticket_priority', 'value', 'value_unit'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'metric', 'ticket_priority', 'value', 'value_unit'));
-		MetaModel::Init_SetZListItems('list', array('name', 'metric', 'ticket_priority', 'value', 'value_unit'));
+		MetaModel::Init_SetZListItems('list', array('metric', 'ticket_priority', 'value', 'value_unit'));
 	}
 }
 class lnkSLTToSLA extends cmdbAbstractObject
