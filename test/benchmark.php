@@ -29,7 +29,7 @@ require_once('../application/wizardhelper.class.inc.php');
 require_once('../application/startup.inc.php');
 require_once('../application/loginwebpage.class.inc.php');
 require_once('../application/utils.inc.php');
-require_once('./setuppage.class.inc.php');
+require_once('../setup/setuppage.class.inc.php');
 
 //ini_set('memory_limit', '2048M');
 
