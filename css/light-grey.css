@@ -449,7 +449,15 @@ div.itop_popup > ul > li {
 	color: #fff;
 	font-weight: bold;
 }
-
+hr.menu-separator {
+	border: none 0;
+	border-top: 1px solid #ccc;;
+	color: #ccc;
+	background-color: transparent;
+	height: 1px;
+	margin: 3px;
+	cursor: default;
+}
 /************************************/
 .wizHeader {
 	background: #1c94c4;

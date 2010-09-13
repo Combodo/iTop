@@ -976,7 +976,7 @@ class MenuBlock extends DisplayBlock
 				$aTransitions = $oObj->EnumTransitions();
 				if (count($aTransitions))
 				{
-					$aActions[] = array('label' => '<hr>', 'url' => ""); // Separator
+					$this->AddMenuSeparator($aActions);
 					$aStimuli = Metamodel::EnumStimuli($sClass);
 					foreach($aTransitions as $sStimulusCode => $aTransitionDef)
 					{
@@ -996,13 +996,13 @@ class MenuBlock extends DisplayBlock
 				$aRelations = MetaModel::EnumRelations($sClass);
 				if (count($aRelations))
 				{
-					$aActions[] = array('label' => '<hr>', 'url' => ""); // Separator
+					$this->AddMenuSeparator($aActions);
 					foreach($aRelations as $sRelationCode)
 					{
 						$aActions[] = array ('label' => MetaModel::GetRelationVerbUp($sRelationCode), 'url' => "../pages/$sUIPage?operation=swf_navigator&relation=$sRelationCode&class=$sClass&id=$id&$sContext");
 					}
 				}
-				$aActions[] = array('label' => '<hr>', 'url' => ""); // Separator
+				$this->AddMenuSeparator($aActions);
 				// Static menus: Email this page & CSV Export
 				$aActions[] = array ('label' => Dict::S('UI:Menu:EMail'), 'url' => "mailto:?subject=".$oObj->GetName()."&body=".urlencode("$sUrl?operation=details&class=$sClass&id=$id&$sContext"));
 				$aActions[] = array ('label' => Dict::S('UI:Menu:CSVExport'), 'url' => "../pages/$sUIPage?operation=search&filter=$sFilter&format=csv&$sContext");
@@ -1043,7 +1043,7 @@ class MenuBlock extends DisplayBlock
 				if ($bIsModifyAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:New'), 'url' => "../pages/$sUIPage?operation=new&class=$sClass&$sContext{$sDefault}"); }
 				//if ($bIsBulkModifyAllowed) { $aActions[] = array ('label' => 'Modify All...', 'url' => "../pages/$sUIPage?operation=modify_all&filter=$sFilter&$sContext"); }
 				if ($bIsBulkDeleteAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:BulkDelete'), 'url' => "../pages/$sUIPage?operation=select_for_deletion&filter=$sFilter&$sContext"); }
-				$aActions[] = array('label' => '<hr>', 'url' => ""); // Separator
+				$this->AddMenuSeparator($aActions);
 				$aActions[] = array ('label' => Dict::S('UI:Menu:EMail'), 'url' => "mailto:?subject=".$oSet->GetFilter()->__DescribeHTML()."&body=".urlencode("$sUrl?operation=search&filter=$sFilter&$sContext"));
 				$aActions[] = array ('label' => Dict::S('UI:Menu:CSVExport'), 'url' => "../pages/$sUIPage?operation=search&filter=$sFilter&format=csv&$sContext");
 			}
@@ -1070,6 +1070,23 @@ class MenuBlock extends DisplayBlock
 			$bPopupScript = true;
 		}
 		return $sHtml;
+	}
+	
+	/**
+	 * Appends a menu separator to the current list of actions
+	 * @param Hash $aActions The current actions list
+	 * @return void
+	 */
+	protected function AddMenuSeparator(&$aActions)
+	{
+		$sSeparator = '<hr class="menu-separator"/>';
+		if (count($aActions) > 0) // Make sure that the separator is not the first item in the menu
+		{
+			if ($aActions[count($aActions)]['label'] != $sSeparator) // Make sure there are no 2 consecutive separators
+			{
+				$aActions[] = array('label' => $sSeparator, 'url' => '');
+			}
+		}
 	}	
 }
 ?>
