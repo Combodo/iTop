@@ -37,7 +37,7 @@ class PortalWebPage extends NiceWebPage
 	 */
 	protected $m_aMenuButtons;
 	
-    public function __construct($sTitle)
+    public function __construct($sTitle, $sAlternateStyleSheet = '')
     {
     	$this->m_aMenuButtons = array();
         parent::__construct($sTitle);
@@ -45,7 +45,14 @@ class PortalWebPage extends NiceWebPage
 		$this->add_header("Cache-control: no-cache");
 		$this->add_linked_stylesheet("../css/jquery.treeview.css");
 		$this->add_linked_stylesheet("../css/jquery.autocomplete.css");
-		$this->add_linked_stylesheet("../portal/portal.css");
+		if ($sAlternateStyleSheet != '')
+		{
+			$this->add_linked_stylesheet("../portal/$sAlternateStyleSheet/portal.css");
+		}
+		else
+		{
+			$this->add_linked_stylesheet("../portal/portal.css");
+		}
 		$this->add_linked_script('../js/jquery.layout.min.js');
 		$this->add_linked_script('../js/jquery.ba-bbq.min.js');
 		$this->add_linked_script("../js/jquery.tablehover.js");
@@ -158,12 +165,11 @@ EOF
 	public function output()
 	{
 		$this->AddMenuButton('logoff', 'Portal:Disconnect', '../pages/logoff.php?portal=1'); // This menu is always present and is the last one
-		$sMenu = '	<div id="banner"><div id="portal_menu"><div id="logo"></div>';
 		foreach($this->m_aMenuButtons as $aMenuItem)
 		{
 			$sMenu .= "<a class=\"button\" id=\"{$aMenuItem['id']}\" href=\"{$aMenuItem['hyperlink']}\"><span>".Dict::S($aMenuItem['label'])."</span></a>";
 		}
-		$this->s_content = '<div id="portal">'.$sMenu.'<div id="content">'.$this->s_content.'</div></div>';
+		$this->s_content = '<div id="portal"><div id="banner"><div id="logo"></div>'.$sMenu.'</div><div id="content">'.$this->s_content.'</div></div>';
 		parent::output();
 	}
 }

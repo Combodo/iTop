@@ -743,8 +743,17 @@ try
 	require_once('../application/loginwebpage.class.inc.php');
 	LoginWebPage::DoLogin(false /* bMustBeAdmin */, true /* IsAllowedToPortalUsers */); // Check user rights and prompt if needed
 
-	$oP = new PortalWebPage(Dict::S('Portal:Title'));
 	$oUserOrg = GetUserOrg($oP);
+
+	$sCode = $oUserOrg->Get('code');
+	$sAlternateStylesheet = '';
+	if (@file_exists("./$sCode/portal.css"))
+	{
+		$sAlternateStylesheet = "$sCode";
+	}
+
+	$oP = new PortalWebPage(Dict::S('Portal:Title'), $sAlternateStylesheet);
+	$oP->add($sAlternateStylesheet);
 
 	if (is_object($oUserOrg))
 	{

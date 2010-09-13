@@ -1,7 +1,23 @@
+html, body {
+	margin: 0;
+	padding:0;
+	overflow-y: auto;
+}
+#portal {
+	height: 100%;
+}
+#content {
+	margin: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
+	text-align: center;
+	overflow-y: auto;
+	display: block;
+}
 div#portal #banner {
 	width: 100%;
 	height: 60px;
-	display: inline-block;
+	display: block;
 	vertical-align:middle;
 	background-color: #f6f6f1;
 }
@@ -92,12 +108,6 @@ a.button span {
 #refresh span {
 	margin-left: 54px;
 	margin-right: 20px;
-}
-
-#content {
-	margin: 10px;
-	padding: 10px;
-	text-align: center;
 }
 #request_details {
 	display: inline-block;
