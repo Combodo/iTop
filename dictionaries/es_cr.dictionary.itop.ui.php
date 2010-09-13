@@ -298,11 +298,11 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Menu:WelcomeMenu' => 'Bievenido',
-	'Menu:WelcomeMenu+' => 'Bievenido a iTop',
-	'Menu:WelcomeMenuPage' => 'Bievenido',
-	'Menu:WelcomeMenuPage+' => 'Bievenido a iTop',
-	'UI:WelcomeMenu:Title' => 'Bievenido a iTop',
+	'Menu:WelcomeMenu' => 'Bienvenido',
+	'Menu:WelcomeMenu+' => 'Bienvenido a iTop',
+	'Menu:WelcomeMenuPage' => 'Bienvenido',
+	'Menu:WelcomeMenuPage+' => 'Bienvenido a iTop',
+	'UI:WelcomeMenu:Title' => 'Bienvenido a iTop',
 
 	'UI:WelcomeMenu:LeftBlock' => '<p>iTop es un completo; portal  IT funcioanl basado en código abierto (OpenSource).</p>
 <ul>Incluye:
@@ -364,8 +364,9 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:Button:ResetPassword' => ' Reset Password ',
 
 	'UI:SearchToggle' => 'Search',
-	'UI:ClickToCreateNew' => 'Click here to create a new %1$s',
-	'UI:NoObjectToDisplay' => 'No object to display.',
+	'UI:ClickToCreateNew' => 'Crear un nuevo %1$s',
+	'UI:SearchFor_Class' => 'Buscar %1$s objetos',
+	'UI:NoObjectToDisplay' => 'Ningún objeto para visualizar.',
 	'UI:Error:MandatoryTemplateParameter_object_id' => 'Parameter object_id is mandatory when link_attr is specified. Check the definition of the display template.',
 	'UI:Error:MandatoryTemplateParameter_target_attr' => 'Parameter target_attr is mandatory when link_attr is specified. Check the definition of the display template.',
 	'UI:Error:MandatoryTemplateParameter_group_by' => 'Parameter group_by is mandatory. Check the definition of the display template.',
@@ -430,7 +431,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:CountOfResults' => '%1$d object(s)',
 	'UI:ChangesLogTitle' => 'Changes log (%1$d):',
 	'UI:EmptyChangesLogTitle' => 'Changes log is empty',
-	'UI:SearchFor_Class_Objects' => 'Search for %1$s Objects',
+	'UI:SearchFor_Class_Objects' => 'Buscar %1$s objetos',
 	'UI:OQLQueryBuilderTitle' => 'OQL Query Builder',
 	'UI:OQLQueryTab' => 'OQL Query',
 	'UI:SimpleSearchTab' => 'Simple Search',
