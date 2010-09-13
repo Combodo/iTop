@@ -215,7 +215,7 @@ abstract class ResponseTicket extends Ticket
 		MetaModel::Init_SetZListItems('details', array('ref', 'title', 'org_id', 'ticket_log', 'start_date', 'tto_escalation_deadline', 'ttr_escalation_deadline', 'closure_deadline', 'document_list', 'ci_list', 'contact_list', 'status', 'caller_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'close_date', 'last_update', 'assignment_date', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
 		MetaModel::Init_SetZListItems('advanced_search', array('finalclass', 'ref', 'title', 'org_id', 'start_date', 'status', 'caller_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'close_date', 'last_update', 'assignment_date', 'tto_escalation_deadline', 'ttr_escalation_deadline', 'closure_deadline', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
 		MetaModel::Init_SetZListItems('standard_search', array('finalclass', 'ref', 'title', 'org_id', 'start_date', 'status', 'caller_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'close_date', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
-		MetaModel::Init_SetZListItems('list', array('finalclass', 'ref', 'title', 'org_id', 'start_date', 'status', 'caller_id', 'service_id', 'priority', 'workgroup_id', 'agent_id', 'last_update'));
+		MetaModel::Init_SetZListItems('list', array('finalclass', 'title', 'org_id', 'start_date', 'status', 'caller_id', 'service_id', 'priority', 'workgroup_id', 'agent_id', 'last_update'));
 
 		// Lifecycle
 		MetaModel::Init_DefineState(
@@ -250,6 +250,8 @@ abstract class ResponseTicket extends Ticket
 					'resolution_code' => OPT_ATT_HIDDEN,
 					'solution' => OPT_ATT_HIDDEN,
 					'user_satisfaction' => OPT_ATT_HIDDEN,
+					'related_problem_id' => OPT_ATT_HIDDEN,
+					'related_change_id' => OPT_ATT_HIDDEN,
 					'user_commment' => OPT_ATT_HIDDEN,
 				),
 			)
@@ -277,8 +279,8 @@ abstract class ResponseTicket extends Ticket
 					'workgroup_id' => OPT_ATT_MUSTPROMPT | OPT_ATT_MANDATORY,
 					'tto_escalation_deadline' => OPT_ATT_HIDDEN,
 					'ttr_escalation_deadline' => OPT_ATT_READONLY,
-					'related_problem_id' => OPT_ATT_MUSTPROMPT,
-//					'related_change_id' => OPT_ATT_MUSTPROMPT,
+					'related_problem_id' => OPT_ATT_NORMAL,
+					'related_change_id' => OPT_ATT_NORMAL,
 				),
 			)
 		);

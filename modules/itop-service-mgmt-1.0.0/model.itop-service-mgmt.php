@@ -368,10 +368,10 @@ class ServiceSubcategory extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("service_id", array("targetclass"=>"Service", "jointype"=>null, "allowed_values"=>null, "sql"=>"service_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("service_name", array("allowed_values"=>null, "extkey_attcode"=>"service_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('name', 'description', 'service_id'));
+		MetaModel::Init_SetZListItems('details', array('name', 'service_id','description'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'description', 'service_id'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'service_id'));
-		MetaModel::Init_SetZListItems('list', array('description', 'service_id'));
+		MetaModel::Init_SetZListItems('list', array('service_id','description'));
 	}
 }
 class SLA extends cmdbAbstractObject
