@@ -170,16 +170,16 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:URP_UserOrg' => 'User organizations',
 	'Class:URP_UserOrg+' => 'Allowed organizations',
-	'Class:URP_UserProfile/Attribute:userid' => 'User',
-	'Class:URP_UserProfile/Attribute:userid+' => 'user account',
-	'Class:URP_UserProfile/Attribute:userlogin' => 'Login',
-	'Class:URP_UserProfile/Attribute:userlogin+' => 'User\'s login',
-	'Class:URP_UserProfile/Attribute:allowed_org_id' => 'Organization',
-	'Class:URP_UserProfile/Attribute:allowed_org_id+' => 'Allowed organization',
-	'Class:URP_UserProfile/Attribute:allowed_org_name' => 'Organization',
-	'Class:URP_UserProfile/Attribute:allowed_org_name+' => 'Allowed organization',
-	'Class:URP_UserProfile/Attribute:reason' => 'Reason',
-	'Class:URP_UserProfile/Attribute:reason+' => 'explain why this person is allowed to see the data belonging to this organization',
+	'Class:URP_UserOrg/Attribute:userid' => 'User',
+	'Class:URP_UserOrg/Attribute:userid+' => 'user account',
+	'Class:URP_UserOrg/Attribute:userlogin' => 'Login',
+	'Class:URP_UserOrg/Attribute:userlogin+' => 'User\'s login',
+	'Class:URP_UserOrg/Attribute:allowed_org_id' => 'Organization',
+	'Class:URP_UserOrg/Attribute:allowed_org_id+' => 'Allowed organization',
+	'Class:URP_UserOrg/Attribute:allowed_org_name' => 'Organization',
+	'Class:URP_UserOrg/Attribute:allowed_org_name+' => 'Allowed organization',
+	'Class:URP_UserOrg/Attribute:reason' => 'Reason',
+	'Class:URP_UserOrg/Attribute:reason+' => 'explain why this person is allowed to see the data belonging to this organization',
 ));
 
 //
