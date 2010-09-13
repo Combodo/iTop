@@ -27,6 +27,7 @@ SetupWebPage::AddModule(
 			'en.dict.itop-config-mgmt.php',
 			'fr.dict.itop-config-mgmt.php',
 			'es_cr.dict.itop-config-mgmt.php',
+			'de.dict.itop-config-mgmt.php',
 		),
 		'data.struct' => array(
 			'data.struct.Audit.xml',

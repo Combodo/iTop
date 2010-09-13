@@ -28,6 +28,7 @@ SetupWebPage::AddModule(
 			'en.dict.itop-change-mgmt.php',
 			'fr.dict.itop-change-mgmt.php',
 			'es_cr.dict.itop-change-mgmt.php',
+			'de.dict.itop-change-mgmt.php',
 		),
 		'data.struct' => array(
 			//'data.struct.itop-change-mgmt.xml',

@@ -15,8 +15,7 @@
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 /**
- * Authent External
- * Module definition file for the "External Authentication" module
+ * Localized data
  *
  * @author      Erwan Taloc <erwan.taloc@combodo.com>
  * @author      Romain Quetiez <romain.quetiez@combodo.com>
@@ -24,47 +23,27 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
-SetupWebPage::AddModule(
-	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'authent-external/1.0.0',
-	array(
-		// Identification
-		//
-		'label' => 'External user authentication',
-		'category' => 'authentication',
+// Dictionnay conventions
+// Class:<class_name>
+// Class:<class_name>+
+// Class:<class_name>/Attribute:<attribute_code>
+// Class:<class_name>/Attribute:<attribute_code>+
+// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
+// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
+// Class:<class_name>/Stimulus:<stimulus_code>
+// Class:<class_name>/Stimulus:<stimulus_code>+
 
-		// Setup
-		//
-		'dependencies' => array(
-		),
-		'mandatory' => false,
-		'visible' => true,
+//
+// Class: UserLDAP
+//
 
-		// Components
-		//
-		'datamodel' => array(
-			'model.authent-external.php',
-		),
-		'dictionary' => array(
-			'en.dict.authent-external.php',
-			'fr.dict.authent-external.php',
-			'de.dict.authent-external.php',
-		),
-		'data.struct' => array(
-			//'data.struct.authent-ldap.xml',
-		),
-		'data.sample' => array(
-			//'data.sample.authent-ldap.xml',
-		),
-		
-		// Documentation
-		//
-		'doc.manual_setup' => '',
-		'doc.more_information' => '',
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:UserLDAP' => 'LDAP-Benutzer',
+	'Class:UserLDAP+' => 'Benutzer,der über LDP authenifiziert wird',
+	'Class:UserLDAP/Attribute:password' => 'Passwort',
+	'Class:UserLDAP/Attribute:password+' => 'Benutzerpasswort',
+));
 
-		// Default settings
-		//
-		'settings' => array(),
-	)
-);
+
+
 ?>
