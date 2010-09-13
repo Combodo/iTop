@@ -130,6 +130,59 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Location/Attribute:infra_list' => 'Infrastructure',
 	'Class:Location/Attribute:infra_list+' => 'Eléments d\'infrastructure situés sur ce lieu',
 ));
+//
+// Class: Group
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+        'Class:Group' => 'Groupe',
+        'Class:Group+' => '',
+        'Class:Group/Attribute:name' => 'Nom',
+        'Class:Group/Attribute:name+' => '',
+        'Class:Group/Attribute:status' => 'Etat',
+        'Class:Group/Attribute:status+' => '',
+        'Class:Group/Attribute:status/Value:implementation' => 'Implémentation',
+        'Class:Group/Attribute:status/Value:implementation+' => 'Implémentation',
+        'Class:Group/Attribute:status/Value:obsolete' => 'Obsolète',
+        'Class:Group/Attribute:status/Value:obsolete+' => 'Obsolète',
+        'Class:Group/Attribute:status/Value:production' => 'Production',
+        'Class:Group/Attribute:status/Value:production+' => 'Production',
+        'Class:Group/Attribute:org_id' => 'Organization',
+        'Class:Group/Attribute:org_id+' => '',
+        'Class:Group/Attribute:owner_name' => 'Nom',
+        'Class:Group/Attribute:owner_name+' => 'Nom commun',
+        'Class:Group/Attribute:description' => 'Description',
+        'Class:Group/Attribute:description+' => '',
+        'Class:Group/Attribute:type' => 'Type',
+        'Class:Group/Attribute:type+' => '',
+        'Class:Group/Attribute:parent_id' => 'Group parent',
+        'Class:Group/Attribute:parent_id+' => '',
+        'Class:Group/Attribute:parent_name' => 'Nom',
+        'Class:Group/Attribute:parent_name+' => '',
+        'Class:Group/Attribute:ci_list' => 'CIs lié',
+        'Class:Group/Attribute:ci_list+' => '',
+));
+//
+// Class: lnkGroupToCI
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+        'Class:lnkGroupToCI' => 'Groupe / CI',
+        'Class:lnkGroupToCI+' => '',
+        'Class:lnkGroupToCI/Attribute:group_id' => 'Groupe',
+        'Class:lnkGroupToCI/Attribute:group_id+' => '',
+        'Class:lnkGroupToCI/Attribute:group_name' => 'Nom',
+        'Class:lnkGroupToCI/Attribute:group_name+' => '',
+        'Class:lnkGroupToCI/Attribute:ci_id' => 'CI',
+        'Class:lnkGroupToCI/Attribute:ci_id+' => '',
+        'Class:lnkGroupToCI/Attribute:ci_name' => 'Nom',
+        'Class:lnkGroupToCI/Attribute:ci_name+' => '',
+        'Class:lnkGroupToCI/Attribute:ci_status' => 'Etat du CI',
+        'Class:lnkGroupToCI/Attribute:ci_status+' => '',
+        'Class:lnkGroupToCI/Attribute:reason' => 'Raison',
+        'Class:lnkGroupToCI/Attribute:reason+' => '',
+));
+
 
 //
 // Class: Contact
@@ -964,5 +1017,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 'Menu:ConfigManagement:AllDevices' => 'Nombre d\'équipements: %1$d',
 'Menu:ConfigManagement:SWAndApps' => 'Logiciels et Applications',
 'Menu:ConfigManagement:Misc' => 'Divers',
+'Menu:Group' => 'Groupes de CIs',
+'Menu:Group+' => 'Groupes de CIs',
 ));
 ?>

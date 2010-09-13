@@ -273,7 +273,7 @@ abstract class Document extends cmdbAbstractObject
 		MetaModel::Init_SetZListItems('details', array('name', 'org_id', 'description', 'type', 'status', 'contract_list', 'service_list', 'ticket_list', 'ci_list'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'org_id', 'description', 'type', 'status'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'org_id', 'description', 'type', 'status'));
-		MetaModel::Init_SetZListItems('list', array('name', 'org_id', 'type', 'status'));
+		MetaModel::Init_SetZListItems('list', array('org_id', 'type', 'status'));
 	}
 }
 class WebDoc extends Document
@@ -301,7 +301,7 @@ class WebDoc extends Document
 		MetaModel::Init_SetZListItems('details', array('name', 'org_id', 'description', 'type', 'status', 'contract_list', 'service_list', 'ticket_list', 'ci_list', 'url'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'org_id', 'description', 'type', 'status', 'url'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'org_id', 'description', 'type', 'status', 'url'));
-		MetaModel::Init_SetZListItems('list', array('name', 'org_id', 'type', 'status', 'url'));
+		MetaModel::Init_SetZListItems('list', array('org_id', 'type', 'status', 'url'));
 	}
 }
 class Note extends Document
@@ -329,7 +329,7 @@ class Note extends Document
 		MetaModel::Init_SetZListItems('details', array('name', 'org_id', 'description', 'type', 'status', 'contract_list', 'service_list', 'ticket_list', 'ci_list', 'note'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'org_id', 'description', 'type', 'status', 'note'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'org_id', 'description', 'type', 'status', 'note'));
-		MetaModel::Init_SetZListItems('list', array('name', 'org_id', 'type', 'status', 'note'));
+		MetaModel::Init_SetZListItems('list', array('org_id', 'type', 'status', 'note'));
 	}
 }
 class FileDoc extends Document
@@ -357,7 +357,7 @@ class FileDoc extends Document
 		MetaModel::Init_SetZListItems('details', array('name', 'org_id', 'description', 'type', 'status', 'contract_list', 'service_list', 'ticket_list', 'ci_list', 'contents'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'org_id', 'description', 'type', 'status'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'org_id', 'description', 'type', 'status'));
-		MetaModel::Init_SetZListItems('list', array('name', 'org_id', 'type', 'status', 'contents'));
+		MetaModel::Init_SetZListItems('list', array('org_id', 'type', 'status', 'contents'));
 	}
 	
 	/**
@@ -876,6 +876,75 @@ class DatabaseInstance extends FunctionalCI
 		}
 	}
 }
+class Group extends cmdbAbstractObject
+{
+
+	public static function Init()
+	{
+		$aParams = array
+		(
+			"category" => "bizmodel,searchable,configmgmt",
+			"key_type" => "autoincrement",
+			"name_attcode" => "name",
+			"state_attcode" => "",
+			"reconc_keys" => array("name","org_id","owner_name"),
+			"db_table" => "group",
+			"db_key_field" => "id",
+			"db_finalclass_field" => "",
+			"icon" => "../modules/itop-config-mgmt-1.0.0/images/solution.png",
+		);
+		MetaModel::Init_Params($aParams);
+		MetaModel::Init_InheritAttributes();
+
+		MetaModel::Init_AddAttribute(new AttributeString("name", array("allowed_values"=>null, "sql"=>"name", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('production,implementation,obsolete'), "sql"=>"status", "default_value"=>"implementation", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("org_id", array("targetclass"=>"Organization", "jointype"=>null, "allowed_values"=>null, "sql"=>"org_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("owner_name", array("allowed_values"=>null, "extkey_attcode"=>"org_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeWikiText("description", array("allowed_values"=>null, "sql"=>"description", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("type", array("allowed_values"=>null, "sql"=>"type", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("parent_id", array("targetclass"=>"Group", "jointype"=>null, "allowed_values"=>null, "sql"=>"parent_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array("org_id"))));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("parent_name", array("allowed_values"=>null, "extkey_attcode"=>"parent_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("ci_list", array("linked_class"=>"lnkGroupToCI", "ext_key_to_me"=>"group_id", "ext_key_to_remote"=>"ci_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
+
+		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'type','description', 'parent_id', 'ci_list'));
+		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'org_id', 'type'));
+		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'org_id', 'type'));
+		MetaModel::Init_SetZListItems('list', array('status', 'org_id', 'type','parent_id'));
+	}
+}
+class lnkGroupToCI extends cmdbAbstractObject
+{
+
+	public static function Init()
+	{
+		$aParams = array
+		(
+			"category" => "bizmodel,configmgmt",
+			"key_type" => "autoincrement",
+			"name_attcode" => "group_id",
+			"state_attcode" => "",
+			"reconc_keys" => array("group_id","ci_id"),
+			"db_table" => "lnkgrouptoci",
+			"db_key_field" => "id",
+			"db_finalclass_field" => "",
+			"display_template" => "",
+		);
+		MetaModel::Init_Params($aParams);
+		MetaModel::Init_InheritAttributes();
+
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("group_id", array("targetclass"=>"Group", "jointype"=>null, "allowed_values"=>null, "sql"=>"group_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("group_name", array("allowed_values"=>null, "extkey_attcode"=>"group_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("ci_id", array("targetclass"=>"FunctionalCI", "jointype"=>null, "allowed_values"=>null, "sql"=>"ci_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("ci_name", array("allowed_values"=>null, "extkey_attcode"=>"ci_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("ci_status", array("allowed_values"=>null, "extkey_attcode"=>"ci_id", "target_attcode"=>"status", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("reason", array("allowed_values"=>null, "sql"=>"reason", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+
+		MetaModel::Init_SetZListItems('details', array('group_id', 'ci_id', 'ci_status', 'reason'));
+		MetaModel::Init_SetZListItems('advanced_search', array('group_id', 'ci_id', 'reason'));
+		MetaModel::Init_SetZListItems('standard_search', array('group_id', 'ci_id', 'reason'));
+		MetaModel::Init_SetZListItems('list', array('group_id', 'ci_id', 'ci_status', 'reason'));
+	}
+}
 class ApplicationSolution extends FunctionalCI
 {
 
@@ -1291,7 +1360,7 @@ abstract class InfrastructureCI extends Device
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'description', 'location_id', 'location_details', 'management_ip', 'default_gateway', 'contact_list', 'document_list', 'solution_list', 'contract_list', 'ticket_list', 'nwinterface_list'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'org_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'description', 'location_id', 'location_details', 'management_ip', 'default_gateway'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'org_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref','location_id','management_ip', 'default_gateway'));
-		MetaModel::Init_SetZListItems('list', array('name', 'status', 'org_id', 'importance', 'brand', 'model', 'location_id'));
+		MetaModel::Init_SetZListItems('list', array('status', 'org_id', 'importance', 'brand', 'model', 'location_id'));
 	}
 }
 class NetworkDevice extends InfrastructureCI
@@ -1563,9 +1632,10 @@ new OQLMenuNode('Team', 'SELECT Team', $oContactNode->GetIndex(), 4 /* fRank */)
 
 new OQLMenuNode('Document', 'SELECT Document', $oConfigManagementGroup->GetIndex(), 2 /* fRank */, true /* bSearch */);
 new OQLMenuNode('Location', 'SELECT Location', $oConfigManagementGroup->GetIndex(), 3 /* fRank */, true /* bSearch */);
+new OQLMenuNode('Group', 'SELECT Group', $oConfigManagementGroup->GetIndex(), 4 /* fRank */, true /* bSearch */);
 
 
-$oCINode = new TemplateMenuNode('ConfigManagementCI', '../modules/itop-config-mgmt-1.0.0/cis_menu.html', $oConfigManagementGroup->GetIndex(), 4 /* fRank */);
+$oCINode = new TemplateMenuNode('ConfigManagementCI', '../modules/itop-config-mgmt-1.0.0/cis_menu.html', $oConfigManagementGroup->GetIndex(), 5 /* fRank */);
 new NewObjectMenuNode('NewCI', 'FunctionalCI', $oCINode->GetIndex(), 0 /* fRank */);
 new SearchMenuNode('SearchCIs', 'FunctionalCI', $oCINode->GetIndex(), 1 /* fRank */);
 

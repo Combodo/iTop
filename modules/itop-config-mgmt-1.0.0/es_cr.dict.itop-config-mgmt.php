@@ -131,6 +131,59 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Location/Attribute:infra_list' => 'Infraestructura',
 	'Class:Location/Attribute:infra_list+' => 'Ítem Configurados (CI) ubicados en este sitio',
 ));
+//
+// Class: Group
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:Group' => 'Grupo',
+	'Class:Group+' => '',
+	'Class:Group/Attribute:name' => 'Nombre',
+	'Class:Group/Attribute:name+' => '',
+	'Class:Group/Attribute:status' => 'Estado',
+	'Class:Group/Attribute:status+' => '',
+	'Class:Group/Attribute:status/Value:implementation' => 'Implementación',
+	'Class:Group/Attribute:status/Value:implementation+' => 'Implementación',
+	'Class:Group/Attribute:status/Value:obsolete' => 'Obsoleto',
+	'Class:Group/Attribute:status/Value:obsolete+' => 'Obsoleto',
+	'Class:Group/Attribute:status/Value:production' => 'Producción',
+	'Class:Group/Attribute:status/Value:production+' => 'Producción',
+	'Class:Group/Attribute:org_id' => 'Organización propietaria',
+	'Class:Group/Attribute:org_id+' => '',
+	'Class:Group/Attribute:owner_name' => 'Nombre de la Organización propietaria',
+	'Class:Group/Attribute:owner_name+' => 'Organización propietaria',
+	'Class:Group/Attribute:description' => 'Descripción',
+	'Class:Group/Attribute:description+' => '',
+	'Class:Group/Attribute:type' => 'Tipo',
+	'Class:Group/Attribute:type+' => '',
+	'Class:Group/Attribute:parent_id' => 'Padre',
+	'Class:Group/Attribute:parent_id+' => '',
+	'Class:Group/Attribute:parent_name' => 'Grupo padre',
+	'Class:Group/Attribute:parent_name+' => '',
+	'Class:Group/Attribute:ci_list' => 'I.C.s',
+	'Class:Group/Attribute:ci_list+' => 'Ítems Configurados relacionados con el grupo',
+));
+
+//
+// Class: lnkGroupToCI
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:lnkGroupToCI' => 'Grupo I.C',
+	'Class:lnkGroupToCI+' => '',
+	'Class:lnkGroupToCI/Attribute:group_id' => 'Grupo',
+	'Class:lnkGroupToCI/Attribute:group_id+' => '',
+	'Class:lnkGroupToCI/Attribute:group_name' => 'Nombre',
+	'Class:lnkGroupToCI/Attribute:group_name+' => '',
+	'Class:lnkGroupToCI/Attribute:ci_id' => 'I.C',
+	'Class:lnkGroupToCI/Attribute:ci_id+' => '',
+	'Class:lnkGroupToCI/Attribute:ci_name' => 'Nombre',
+	'Class:lnkGroupToCI/Attribute:ci_name+' => '',
+	'Class:lnkGroupToCI/Attribute:ci_status' => 'Estato',
+	'Class:lnkGroupToCI/Attribute:ci_status+' => '',
+	'Class:lnkGroupToCI/Attribute:reason' => 'Razón',
+	'Class:lnkGroupToCI/Attribute:reason+' => '',
+));
 
 //
 // Class: Contact
@@ -960,5 +1013,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 'Menu:MobilePhone+' => 'Todos los Teléfonos Celulares',
 'Menu:PC' => 'PCs (Computadores de Personales',
 'Menu:PC+' => 'Todos los PCs (Computadores de Personales',
+'Menu:Group' => 'Grupos de ICs',
+'Menu:Group+' => 'Grupos de ICs',
 ));
 ?>
