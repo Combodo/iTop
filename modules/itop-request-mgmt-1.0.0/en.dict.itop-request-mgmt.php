@@ -23,17 +23,23 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Menu:RequestManagement' => 'Servicio de ayuda',
-	'Menu:RequestManagement+' => 'Servicio de ayuda',
-	'Menu:UserRequest:Overview' => 'Visión General',
-	'Menu:UserRequest:Overview+' => 'Visión General',
-	'Menu:UserRequest:MyRequests' => 'Solicitudes asignadas a mí',
-	'Menu:UserRequest:MyRequests+' => 'Solicitudes asignadas a mí (como Agente)',
-	'Menu:UserRequest:EscalatedRequests' => 'Solicitudes Escaladas',
-	'Menu:UserRequest:EscalatedRequests+' => 'Solicitudes Escaladas',
-	'Menu:UserRequest:OpenRequests' => 'Todas las Solicitudes Abiertas',
-	'Menu:UserRequest:OpenRequests+' => 'Todas las Solicitudes Abiertas',
+Dict::Add('EN US', 'English', 'English', array(
+	'Menu:RequestManagement' => 'Helpdesk',
+	'Menu:RequestManagement+' => 'Helpdesk',
+	'Menu:UserRequest:Overview' => 'Overview',
+	'Menu:UserRequest:Overview+' => 'Overview',
+	'Menu:NewUserRequest' => 'New User Request',
+	'Menu:NewUserRequest+' => 'Create a new User Request ticket',
+	'Menu:SearchUserRequests' => 'Search for User Requests',
+	'Menu:SearchUserRequests+' => 'Search for User Request tickets',
+	'Menu:UserRequest:Shortcuts' => 'Shortcuts',
+	'Menu:UserRequest:Shortcuts+' => '',
+	'Menu:UserRequest:MyRequests' => 'Requests assigned to me',
+	'Menu:UserRequest:MyRequests+' => 'Requests assigned to me (as Agent)',
+	'Menu:UserRequest:EscalatedRequests' => 'Escalated Requests',
+	'Menu:UserRequest:EscalatedRequests+' => 'Escalated Requests',
+	'Menu:UserRequest:OpenRequests' => 'All Open Requests',
+	'Menu:UserRequest:OpenRequests+' => 'All Open Requests',
 ));
 
 // Dictionnay conventions
@@ -50,23 +56,31 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 // Class: UserRequest
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:UserRequest' => 'Solicitud por parte de Usuario',
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:UserRequest' => 'User Request',
 	'Class:UserRequest+' => '',
-	'Class:UserRequest/Attribute:freeze_reason' => 'Razón de Suspensión',
+	'Class:UserRequest/Attribute:request_type' => 'Request Type',
+	'Class:UserRequest/Attribute:request_type+' => '',
+	'Class:UserRequest/Attribute:request_type/Value:information' => 'Information',
+	'Class:UserRequest/Attribute:request_type/Value:information+' => 'Information',
+	'Class:UserRequest/Attribute:request_type/Value:issue' => 'Issue',
+	'Class:UserRequest/Attribute:request_type/Value:issue+' => 'Issue',
+	'Class:UserRequest/Attribute:request_type/Value:service request' => 'Service Request',
+	'Class:UserRequest/Attribute:request_type/Value:service request+' => 'Service Request',
+	'Class:UserRequest/Attribute:freeze_reason' => 'Pending reason',
 	'Class:UserRequest/Attribute:freeze_reason+' => '',
-	'Class:UserRequest/Stimulus:ev_assign' => 'Asignar',
+	'Class:UserRequest/Stimulus:ev_assign' => 'Assign',
 	'Class:UserRequest/Stimulus:ev_assign+' => '',
-	'Class:UserRequest/Stimulus:ev_freeze' => 'Marcar como Suspendida',
-	'Class:UserRequest/Stimulus:ev_freeze+' => '',
-	'Class:UserRequest/Stimulus:ev_reassign' => 'Re-asignar',
+	'Class:UserRequest/Stimulus:ev_reassign' => 'Reassign',
 	'Class:UserRequest/Stimulus:ev_reassign+' => '',
-	'Class:UserRequest/Stimulus:ev_timeout' => 'Tiempo Fuera del incidente',
+	'Class:UserRequest/Stimulus:ev_timeout' => 'ev_timeout',
 	'Class:UserRequest/Stimulus:ev_timeout+' => '',
-	'Class:UserRequest/Stimulus:ev_resolve' => 'Marcar como resuelto',
+	'Class:UserRequest/Stimulus:ev_resolve' => 'Mark as resolved',
 	'Class:UserRequest/Stimulus:ev_resolve+' => '',
-	'Class:UserRequest/Stimulus:ev_close' => 'Cerrar',
+	'Class:UserRequest/Stimulus:ev_close' => 'Close',
 	'Class:UserRequest/Stimulus:ev_close+' => '',
+	'Class:UserRequest/Stimulus:ev_freeze' => 'Mark as pending',
+	'Class:UserRequest/Stimulus:ev_freeze+' => '',
 ));
 
 ?>

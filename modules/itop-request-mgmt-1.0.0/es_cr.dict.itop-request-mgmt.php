@@ -28,12 +28,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Menu:RequestManagement+' => 'Servicio de ayuda',
 	'Menu:UserRequest:Overview' => 'Visión General',
 	'Menu:UserRequest:Overview+' => 'Visión General',
-	'Menu:NewUserRequest' => 'New User Request',
-	'Menu:NewUserRequest+' => 'Create a new User Request ticket',
-	'Menu:SearchUserRequests' => 'Search for User Requests',
-	'Menu:SearchUserRequests+' => 'Search for User Request tickets',
-	'Menu:UserRequest:Shortcuts' => 'Shortcuts',
-	'Menu:UserRequest:Shortcuts+' => '',
 	'Menu:UserRequest:MyRequests' => 'Solicitudes asignadas a mí',
 	'Menu:UserRequest:MyRequests+' => 'Solicitudes asignadas a mí (como Agente)',
 	'Menu:UserRequest:EscalatedRequests' => 'Solicitudes Escaladas',
@@ -74,4 +68,5 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:UserRequest/Stimulus:ev_close' => 'Cerrar',
 	'Class:UserRequest/Stimulus:ev_close+' => '',
 ));
+
 ?>
