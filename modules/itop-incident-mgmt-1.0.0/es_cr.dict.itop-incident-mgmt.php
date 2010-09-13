@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // Copyright (C) 2010 Combodo SARL
 //
 //   This program is free software; you can redistribute it and/or modify
