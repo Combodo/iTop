@@ -891,7 +891,7 @@ class Group extends cmdbAbstractObject
 			"db_table" => "group",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"icon" => "../modules/itop-config-mgmt-1.0.0/images/solution.png",
+			"icon" => "../modules/itop-config-mgmt-1.0.0/images/group.png",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
