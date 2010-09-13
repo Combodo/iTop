@@ -115,7 +115,7 @@ class Problem extends Ticket
                                         'agent_id' => OPT_ATT_MUSTPROMPT | OPT_ATT_MANDATORY,
                                         'agent_email' => OPT_ATT_READONLY,
                                         'workgroup_id' => OPT_ATT_MUSTPROMPT | OPT_ATT_MANDATORY,
-//                                      'related_change_id' => OPT_ATT_NORMAL,
+                                        'related_change_id' => OPT_ATT_NORMAL,
                                 ),
                         )
                 );
