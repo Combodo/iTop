@@ -58,7 +58,18 @@ function DisplaySubclasses($oPage, $sClass)
 	if (count($aChildClasses) != 0)
 	{
 		$oPage->add("<ul>\n");
+		$aOrderedClasses = array();
 		foreach($aChildClasses as $sClassName)
+		{
+			// Skip indirect childs, they will be handled somewhere else
+			if (MetaModel::GetParentPersistentClass($sClassName) == $sClass)
+			{
+					$aOrderedClasses[$sClassName] = MetaModel::GetName($sClassName);
+			}
+		}
+		// Sort on the display name
+		asort($aOrderedClasses);
+		foreach($aOrderedClasses as $sClassName => $sDisplayName)
 		{
 			// Skip indirect childs, they will be handled somewhere else
 			if (MetaModel::GetParentPersistentClass($sClassName) == $sClass)
@@ -272,7 +283,22 @@ function DisplayClassesList($oPage)
 	$oPage->add("<h1>".Dict::S('UI:Schema:Title')."</h1>\n");
 
 	$oPage->add("<ul id=\"ClassesList\" class=\"treeview fileview\">\n");
+	// Get all the "root" classes for display
+	$aRootClasses = array();
 	foreach(MetaModel::GetClasses() as $sClassName)
+	{
+		if (MetaModel::IsRootClass($sClassName))
+		{
+			$aRootClasses[$sClassName] = MetaModel::GetName($sClassName);
+		}
+		elseif (MetaModel::IsStandaloneClass($sClassName))
+		{
+			$aRootClasses[$sClassName] = MetaModel::GetName($sClassName);
+		}
+	}
+	// Sort them alphabetically on their display name
+	asort($aRootClasses);
+	foreach($aRootClasses as $sClassName => $sDisplayName)
 	{
 		if (MetaModel::IsRootClass($sClassName))
 		{
