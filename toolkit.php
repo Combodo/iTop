@@ -39,7 +39,6 @@ echo "<div style=\"$sStyle\">\n";
 
 
 echo "<a href=\"./pages/ITopConsultant.php\">Manage configurations</a></br>\n";
-echo "<a href=\"./pages/test.php\">Core unit tests</a></br>\n";
 
 
 echo "</div>\n";
