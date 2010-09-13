@@ -1564,7 +1564,7 @@ class TestImportREST extends TestWebServices
 ///////////////////////////////////////////////////////////////////////////
 // Test massive data load
 ///////////////////////////////////////////////////////////////////////////
-define('IMPORT_COUNT', 1000);
+define('IMPORT_COUNT', 4000);
 
 class TestImportRESTMassive extends TestImportREST
 {
@@ -1581,7 +1581,7 @@ class TestImportRESTMassive extends TestImportREST
 	protected function DoExecute()
 	{
 		$aLoadSpec = array(
-			'desc' => 'Missing class',
+			'desc' => 'Loading PCs: '.IMPORT_COUNT,
 			'args' => array(
 				'class' => 'PC',
 				'output' => 'summary',
