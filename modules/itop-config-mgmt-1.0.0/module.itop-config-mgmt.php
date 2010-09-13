@@ -41,7 +41,7 @@ SetupWebPage::AddModule(
 			'data.sample.DBServerInstance.xml',
 			'data.sample.ApplicationInstance.xml',
 			'data.sample.DatabaseInstance.xml',
-			//'data.sample.NetworkInterface.xml',
+			'data.sample.NetworkInterface.xml',
 			'data.sample.lnkCIToContact.xml',
 			'data.sample.lnkProcessToSolution.xml',
 			'data.sample.lnkSolutionToCI.xml',

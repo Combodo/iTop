@@ -46,7 +46,7 @@
 <description></description>
 <location_id>0</location_id>
 <location_details></location_details>
-<management_ip></management_ip>
+<management_ip>10.1.1.3</management_ip>
 <default_gateway></default_gateway>
 <type>router</type>
 <ios_version></ios_version>
