@@ -30,7 +30,8 @@ SetupWebPage::AddModule(
 			'es_cr.dict.itop-request-mgmt.php',
 		),
 		'data.struct' => array(
-			//'data.struct.itop-request-mgmt.xml',
+			'data.struct.ta-triggers.xml',
+			'data.struct.ta-links.xml',
 		),
 		'data.sample' => array(
 			//'data.sample.itop-request-mgmt.xml',

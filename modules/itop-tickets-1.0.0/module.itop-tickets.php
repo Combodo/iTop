@@ -29,9 +29,7 @@ SetupWebPage::AddModule(
 			'es_cr.dict.itop-tickets.php',
 		),
 		'data.struct' => array(
-			'data.struct.ta-triggers.xml',
 			'data.struct.ta-actions.xml',
-			'data.struct.ta-links.xml',
 		),
 		'data.sample' => array(
 		),

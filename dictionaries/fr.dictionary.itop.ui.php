@@ -775,8 +775,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:ExportMenu' => 'Exportation',
 	'Menu:ExportMenu+' => 'Exportation des résultats d\'une requête en HTML, CSV ou XML',
 	
-	'Menu:IncidentManagementMenu' => 'Gestion des Incidents',
-	'Menu:IncidentManagementMenu+' => 'Gestion des Incidents',
 	'UI:IncidentManagementMenu:Title' => 'Résumé des incidents',
 	'UI-IncidentManagementMenu-IncidentsByType' => 'Incidents par type',
 	'UI-IncidentManagementMenu-IncidentsByStatus' => 'Incidents par état',
