@@ -292,6 +292,23 @@ class utils
 		return $sAbsoluteUrl;
 	}
 
+    /**
+     * Returns the absolute URL to the server's root path
+     * @param $bForceHTTPS bool True to force HTTPS, false otherwise
+     * @return string The absolute URL to the server's root, without the first slash
+     */                   
+	static public function GetAbsoluteUrlRoot($bForceHTTPS = false)
+	{
+		$sAbsoluteUrl = self::GetAbsoluteUrl(false, $bForceHTTPS); // False => Don't get the query string
+		$sServerPos = 3 + strpos($sAbsoluteUrl, '://');
+		$iFirstSlashPos = strpos($sAbsoluteUrl, '/', $sServerPos);
+		if ($iFirstSlashPos !== false)
+		{
+			$sAbsoluteUrl = substr($sAbsoluteUrl, 0, $iFirstSlashPos); // remove the current page, keep just the path, without the first /
+		}
+		return $sAbsoluteUrl;
+	}
+
 	/**
 	 * Tells whether or not log off operation is supported.
 	 * Actually in only one case:
