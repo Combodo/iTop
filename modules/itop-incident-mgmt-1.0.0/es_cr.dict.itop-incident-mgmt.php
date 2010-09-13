@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 // Copyright (C) 2010 Combodo SARL
 //
 //   This program is free software; you can redistribute it and/or modify
@@ -28,12 +28,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Menu:IncidentManagement+' => 'Gestión de Incidentes',
 	'Menu:Incident:Overview' => 'Visión General',
 	'Menu:Incident:Overview+' => 'Visión General',
-	'Menu:NewIncident' => 'New Incident',
-	'Menu:NewIncident+' => 'Create a new Incident ticket',
-	'Menu:SearchIncidents' => 'Search for Incidents',
-	'Menu:SearchIncidents+' => 'Search for Incident tickets',
-	'Menu:Incident:Shortcuts' => 'Shortcuts',
-	'Menu:Incident:Shortcuts+' => '',
 	'Menu:Incident:MyIncidents' => 'Incidentes asignados a mí',
 	'Menu:Incident:MyIncidents+' => 'Incidentes asignados a mí (como Agente)',
 	'Menu:Incident:EscalatedIncidents' => 'Incidentes Escalados',
@@ -71,4 +65,5 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Incident/Stimulus:ev_close' => 'Cerrar',
 	'Class:Incident/Stimulus:ev_close+' => '',
 ));
+
 ?>

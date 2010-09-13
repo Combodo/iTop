@@ -26,7 +26,7 @@ SetupWebPage::AddModule(
 		'dictionary' => array(
 			'en.dict.itop-tickets.php',
 			'fr.dict.itop-tickets.php',
-//			'es_cr.dict.itop-tickets.php',
+			'es_cr.dict.itop-tickets.php',
 		),
 		'data.struct' => array(
 			'data.struct.ta-triggers.xml',

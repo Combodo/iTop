@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 // Copyright (C) 2010 Combodo SARL
 //
 //   This program is free software; you can redistribute it and/or modify
@@ -27,12 +27,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Menu:ChangeManagement' => 'Gestión del cambio',
 	'Menu:Change:Overview' => 'Visión General',
 	'Menu:Change:Overview+' => '',
-	'Menu:NewChange' => 'New Change',
-	'Menu:NewChange+' => 'Create a new Change ticket',
-	'Menu:SearchChanges' => 'Search for Changes',
-	'Menu:SearchChanges+' => 'Search for Change tickets',
-	'Menu:Change:Shortcuts' => 'Shortcuts',
-	'Menu:Change:Shortcuts+' => '',
 	'Menu:WaitingAcceptance' => 'Cambios esperando ser aceptados',
 	'Menu:WaitingAcceptance+' => '',
 	'Menu:WaitingApproval' => 'Cambios esperando ser aprovados',
@@ -343,4 +337,5 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:EmergencyChange/Stimulus:ev_finish' => 'Finalizar',
 	'Class:EmergencyChange/Stimulus:ev_finish+' => '',
 ));
+
 ?>
