@@ -454,18 +454,20 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		$oUser->Set('password', $sAdminPwd);
 		$oUser->Set('contactid', $iContactId);
 		$oUser->Set('language', $sLanguage); // Language was chosen during the installation
-		$iUserId = $oUser->DBInsertTrackedNoReload($oChange, true /* skip security */);
 
 		// Add this user to the very specific 'admin' profile
 		$oAdminProfile = MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", array('name' => ADMIN_PROFILE_NAME), true /*all data*/);
 		if (is_object($oAdminProfile))
 		{
 			$oUserProfile = new URP_UserProfile();
-			$oUserProfile->Set('userid', $iUserId);
+			//$oUserProfile->Set('userid', $iUserId);
 			$oUserProfile->Set('profileid', $oAdminProfile->GetKey());
 			$oUserProfile->Set('reason', 'By definition, the administrator must have the administrator profile');
-			$oUserProfile->DBInsertTrackedNoReload($oChange, true /* skip security */);
+			//$oUserProfile->DBInsertTrackedNoReload($oChange, true /* skip security */);
+			$oSet = DBObjectSet::FromObject($oUserProfile);
+			$oUser->Set('profile_list', $oSet);
 		}
+		$iUserId = $oUser->DBInsertTrackedNoReload($oChange, true /* skip security */);
 		return true;
 	}
 
