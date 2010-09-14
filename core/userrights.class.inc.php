@@ -130,6 +130,14 @@ abstract class User extends cmdbAbstractObject
 				$this->m_aCheckIssues[] = Dict::Format('Class:User/Error:LoginMustBeUnique', $sNewLogin);
 			}
 		}
+		// Check that this user has at least one profile assigned
+		$oSet = $this->Get('profile_list');
+		$aProfileLinks = $oSet->ToArray();
+		if (count($aProfileLinks) == 0)
+		{
+			$this->m_aCheckIssues[] = Dict::Format('Class:User/Error:AtLeastOneProfileIsNeeded');
+		}
+		
 	}
 
 	function GetGrantAsHtml($sClass, $iAction)
@@ -583,10 +591,6 @@ class UserRights
 				$oUser = self::$m_oUser;
 			}
 			return self::$m_oAddOn->IsStimulusAllowed($oUser, $sClass, $sStimulusCode, $oInstanceSet);
-		}
-		elseif(($iActionCode == UR_ACTION_READ) && MetaModel::HasCategory($sClass, 'view_in_gui'))
-		{
-			return true;
 		}
 		else
 		{
