@@ -367,6 +367,26 @@ function CheckServerConnection(SetupWebPage $oP, $sDBServer, $sDBUser, $sDBPwd)
 }
 
 /**
+ * Helper function to interpret the name of a module
+ * @param $sModuleId string Identifier of the module, in the form 'name/version'
+ * @return array(name, version)
+ */    
+function GetModuleName($sModuleId)
+{
+	if (preg_match('!^(.*)/(.*)$!', $sModuleId, $aMatches))
+	{
+		$sName = $aMatches[1];
+		$sVersion = $aMatches[2];
+	}
+	else
+	{
+		$sName = $sModuleId;
+		$sVersion = "";
+	}
+	return array($sName, $sVersion);
+}
+
+/**
  * Helper function to initialize the ORM and load the data model
  * from the given file
  * @param $sConfigFileName string The name of the configuration file to load
@@ -446,16 +466,7 @@ function CreateDatabaseStructure(SetupWebPage $oP, Config $oConfig, $sDBName, $s
 	foreach($aSelectedModules as $sModuleId)
 	{
 		$aModuleData = $aAvailableModules[$sModuleId];
-		if (preg_match('!^(.*)/(.*)$!', $sModuleId, $aMatches))
-		{
-			$sName = $aMatches[1];
-			$sVersion = $aMatches[2];
-		}
-		else
-		{
-			$sName = $sModuleId;
-			$sVersion = "";
-		}
+		list($sName, $sVersion) = GetModuleName($sModuleId);
 		$aComments = array();
 		$aComments[] = 'Done by the setup program';
 		if ($aModuleData['mandatory'])
@@ -662,7 +673,8 @@ function BuildConfig(SetupWebpage $oP, Config &$oConfig, $aParamValues)
 		$sDictionaries = array_unique(array_merge($sDictionaries, $aAvailableModules[$sModuleId]['dictionary']));
 		foreach($aAvailableModules[$sModuleId]['settings'] as $sProperty => $value)
 		{
-			$oConfig->SetModuleSetting($sModuleId, $sProperty, $value);
+			list($sName, $sVersion) = GetModuleName($sModuleId);
+			$oConfig->SetModuleSetting($sName, $sProperty, $value);
 		}
 	}
 	$oConfig->SetAddOns($aAddOns);
