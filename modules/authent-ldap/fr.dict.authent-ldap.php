@@ -37,7 +37,7 @@
 // Class: UserLDAP
 //
 
-Dict::Add('EN US', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:UserLDAP' => 'Utilisateur iTop',
 	'Class:UserLDAP+' => 'Utilisateur authentifié par iTop',
 	'Class:UserLDAP/Attribute:password' => 'Mot de passe LDAP',

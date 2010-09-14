@@ -37,7 +37,7 @@
 // Class: UserExternal
 //
 
-Dict::Add('EN US', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:UserExternal' => 'Utilisateur externe à iTop',
 	'Class:UserExternal+' => 'Utilisateur authentifié à l\'extérieur d\'iTop',
 ));
