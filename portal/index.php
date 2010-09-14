@@ -271,9 +271,8 @@ EOF
 	}
 	else
 	{
-		echo "<pre>\n";
-		print_r($aParameters);
-		echo "</pre>\n";
+		// User not authorized to use this service ?
+		DisplayMainMenu($oP);
 	}
 }
 
@@ -681,7 +680,7 @@ function RequestDetails(WebPage $oP, $id)
 	$oRequest = FindRequest($id);
 	if (!is_object($oRequest))
 	{
-		echo "Request not found !";
+		DisplayMainMenu($oP);
 		return;
 	}
 	$iDefaultStep = 0;
