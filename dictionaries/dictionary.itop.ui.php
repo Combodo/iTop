@@ -112,6 +112,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:User/Attribute:allowed_org_list+' => 'The end user is allowed to see data belonging to the following organizations. If no organization is specified, there is no restriction.',
 
 	'Class:User/Error:LoginMustBeUnique' => 'Login must be unique - "%1s" is already being used.',
+	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'At least one profile must be assigned to this user.',
 ));
 
 //
