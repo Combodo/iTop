@@ -48,6 +48,7 @@ define('DEFAULT_URGENCY', '2');
 define('DEFAULT_SERVICE_ID', 2);
 define('DEFAULT_SUBSERVICE_ID', 12);
 define('DEFAULT_PRODUCT', 'Request via eMail');
+define('DEFAULT_WORKGROUP_ID', 5);
 
 require_once('../application/application.inc.php');
 require_once('../application/startup.inc.php');
@@ -93,7 +94,8 @@ function CreateTicket($sSenderEmail, $sSubject, $sBody)
 			$oTicket->Set('product', DEFAULT_PRODUCT);
 			$oTicket->Set('service_id', DEFAULT_SERVICE_ID); //  Can be replaced by a search for a valid service for this 'org_id'
 			$oTicket->Set('servicesubcategory_id', DEFAULT_SUBSERVICE_ID); // Same as above...
-	
+			$oTicket->Set('workgroup_id', DEFAULT_WORKGROUP_ID); // Same as above...
+
 			// Record the change information about the object
 			$oMyChange = MetaModel::NewObject("CMDBChange");
 			$oMyChange->Set("date", time());
@@ -180,6 +182,10 @@ for($index = 1; $index <= $iNbMessages; $index++)
 			}
 		}
 	}
+
+	// Bug: depending on the email, the email address could be found in :
+	// email => 'john.foo@combodo.com'
+	// name  => 'john foo <john.foo@combodo.com>
 
 	$oTicket = CreateTicket($aSender['email'], $sSubject, $sTextBody);
 	if ($oTicket != null)
