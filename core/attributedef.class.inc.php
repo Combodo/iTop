@@ -1009,7 +1009,7 @@ class AttributeIPAddress extends AttributeString
  *
  * @package     iTopORM
  */
-class AttributeOQL extends AttributeString
+class AttributeOQL extends AttributeText
 {
 	public function GetTypeDesc() {return "OQL expression";}
 }
