@@ -1082,7 +1082,7 @@ class MenuBlock extends DisplayBlock
 		$sSeparator = '<hr class="menu-separator"/>';
 		if (count($aActions) > 0) // Make sure that the separator is not the first item in the menu
 		{
-			if ($aActions[count($aActions)]['label'] != $sSeparator) // Make sure there are no 2 consecutive separators
+			if ($aActions[count($aActions)-1]['label'] != $sSeparator) // Make sure there are no 2 consecutive separators
 			{
 				$aActions[] = array('label' => $sSeparator, 'url' => '');
 			}
