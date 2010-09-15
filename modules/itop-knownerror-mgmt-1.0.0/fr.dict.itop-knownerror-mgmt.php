@@ -102,7 +102,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 // Class: lnkInfraError
 //
 
-Dict::Add('FR FR', 'English', 'English', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkInfraError' => 'Lien erreur CI',
 	'Class:lnkInfraError+' => 'CIs liés à une erreur connue',
 	'Class:lnkInfraError/Attribute:infra_id' => 'CI',
@@ -123,7 +123,7 @@ Dict::Add('FR FR', 'English', 'English', array(
 // Class: lnkDocumentError
 //
 
-Dict::Add('FR FR', 'English', 'English', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkDocumentError' => 'Lien erreur document',
 	'Class:lnkDocumentError+' => 'Lien entre une erreur et un document',
 	'Class:lnkDocumentError/Attribute:doc_id' => 'Document',
@@ -138,9 +138,9 @@ Dict::Add('FR FR', 'English', 'English', array(
 	'Class:lnkDocumentError/Attribute:link_type+' => '',
 ));
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('FR FR', 'FRench', 'Français', array(
         'Menu:NewError' => 'Nouvelle Erreur connue',
-        'Menu:NewError+' => 'Creation d'une nouvelle erreur connue',
+        'Menu:NewError+' => 'Creation d\'une nouvelle erreur connue',
         'Menu:SearchError' => 'Rechercher des erreurs connues',
         'Menu:SearchError+' => 'Rechercher des erreurs connues',
         'Menu:Problem:KnownErrors' => 'Toutes les erreurs connues',
