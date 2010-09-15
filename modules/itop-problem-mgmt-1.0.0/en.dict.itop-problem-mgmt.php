@@ -60,8 +60,6 @@ Dict::Add('EN US', 'English', 'English', array(
     	'Menu:NewProblem+' => 'New Problem',
     	'Menu:SearchProblems' => 'Search for Problems',
     	'Menu:SearchProblems+' => 'Search for Problems',
-    	'Menu:Problem:KnownErrors' => 'All Known Errors',
-    	'Menu:Problem:KnownErrors+' => 'All Known Errors',
     	'Menu:Problem:Shortcuts' => 'Shortcuts',
         'Menu:Problem:MyProblems' => 'My Problems',
         'Menu:Problem:MyProblems+' => 'My Problems',

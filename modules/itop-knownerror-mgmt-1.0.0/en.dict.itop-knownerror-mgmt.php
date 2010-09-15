@@ -138,5 +138,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkDocumentError/Attribute:link_type+' => '',
 ));
 
-
+Dict::Add('EN US', 'English', 'English', array(
+	'Menu:NewError' => 'New Known Error',
+	'Menu:NewError+' => 'Creation of a new known error',
+	'Menu:SearchError' => 'Search for Known Errors',
+	'Menu:SearchError+' => 'Search for Known Errors',
+        'Menu:Problem:KnownErrors' => 'All Known Errors',
+        'Menu:Problem:KnownErrors+' => 'All Known Errors',
+));
 ?>

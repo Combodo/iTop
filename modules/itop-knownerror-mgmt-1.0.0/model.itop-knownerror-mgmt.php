@@ -166,6 +166,10 @@ class lnkDocumentError extends cmdbAbstractObject
 
 
 $oMyMenuGroup = new MenuGroup('ProblemManagement', 42 /* fRank */);
-new OQLMenuNode('Problem:KnownErrors', 'SELECT KnownError', $oMyMenuGroup->GetIndex(), 3 /* fRank */);
+$iIndex = $oMyMenuGroup->GetIndex();
+new NewObjectMenuNode('NewError', 'KnownError', $iIndex, 3 /* fRank */);
+new SearchMenuNode('SearchError', 'KnownError', $iIndex, 4 /* fRank */);
+$oShortcutNode = new TemplateMenuNode('Problem:Shortcuts', '', $iIndex, 5 /* fRank */);
+new OQLMenuNode('Problem:KnownErrors', 'SELECT KnownError', $oShortcutNode->GetIndex(), 3 /* fRank */,true /*bsearch */);
 
 ?>
