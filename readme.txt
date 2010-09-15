@@ -16,10 +16,9 @@ Readme file
 Thank you for downloading the seventh packaged release of iTop. This version is
 the first complete version of iTop: it aims at being really used professionaly.
 
-Additional documentation can be dowloaded from http://www.combodo.com,
-under the "Support" topic:
+Additional documentation can be dowloaded from http://www.combodo.com/itop, in the topic 'support':
  - User guide
- - Admin guide
+ - Administrator guide
  - How to upgrade from previous versions
 
 iTop is released under the GPL (v3) license. (Check license.txt in this directory).
@@ -65,9 +64,9 @@ innodb_flush_method = O_DSYNC
 On some systems you'll see a 5 to 10 times performance improvement for writing data into
 the MySQL database !
 
-2.3. Migration from a previous version
+2.3. Migrating from a previous version
      ---------------------------------
-Please refer to the updgrade guide available at www.combodo.com/itop-support.
+Please refer to the migration guide available at http://www.combodo.com/itop.
 
 
 3. FEATURES
@@ -80,20 +79,25 @@ Version 1.0 is a major release.
 
 Localization
 ------------
-- iTop is localized: English, French, Spanish and German are available.
+iTop is localized: English, French, Spanish and German are available.
 
 User portal
 -----------
-- User Portal: let customers submit their request directly
+Customers may submit their request directly into a dedicated page.
+The same page shows a report of ongoing requests.
 
 SLA Management
 --------------
-- SLAs can be defined in the service management module. iTop application uses them to change behavior of Incident,
-  Request and Change tickets when SLAs are not respected.
+SLAs can be defined in the service management module.
+When a SLA is not met (and just before it gest too late), the corresponding
+ticket is higlighted in the dashboard.
+When the deadline is reached, tickets automatically switch to an "escalation"
+state. An acknowledgement is required before returning to normal operations on
+that ticket.
 
 Modular setup
 -------------
-- Modules: It is possible to select ITIL modules you would like to use
+It is now possible to select ITIL modules you would like to use.
 
 
 Major changes
@@ -124,18 +128,18 @@ Minor changes
 
 Security improvements
 ---------------------
-#157 Data Admin menu allowed only to admins and configuration managers
-#260 Prevent normal users from accessing data admin menu
-Don't display the admin menu for non-admin users
-#188 - ForceHttps = SecureConnectionRequired
-Strong encryption of passwords
-Redirect from /pages/index.php to /index.php (to prevent users from listing the directory)
+- Data Administration menu is now restricted to administrators and
+  configuration managers
+- Administration menu restricted to administrators
+- The same restrictions apply whenever a user attempts to access the pages directly
+- New setting to enforce HTTPS
+- Strong encryption of passwords
+- Prevent users from listing the application directories
 
 
 Bugs fixed
 ----------
-
-Bugs can be reviewed on http://sourceforge.net/apps/trac/itop/report/1
+The complete list can be reviewed on http://sourceforge.net/apps/trac/itop/report/1
 
 #182	Setup fails with mysql error 1046 or 1146
 #144 	Could not create a workgroup
@@ -166,6 +170,7 @@ Bugs can be reviewed on http://sourceforge.net/apps/trac/itop/report/1
       default settings (See TRAC)
 #265  Add reconciliations keys into CSV template
 
+
 3.3. Known issues
      ------------
 #259  Not instantaneously logged off when the administrator deletes a user entry
@@ -173,5 +178,4 @@ Bugs can be reviewed on http://sourceforge.net/apps/trac/itop/report/1
 #175  When moving backward in the CSV import wizard, some settings may be lost
       (e.g column selection)
 #174  CSV import not displaying the labels of enums
-
-#258	org_id search -> silo
+#258	Context automatically selected when searching on organization
