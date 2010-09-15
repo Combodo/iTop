@@ -1,27 +1,26 @@
-iTop - version 0.9.1 - 06-Apr-2010
+iTop - version 1.0.0 - 16-Sep-2010
 Readme file
-
-Content Of This File:
 
 1.   ABOUT THIS RELEASE
 2.   INSTALLATION
 2.1. Requirements
 2.2. Install procedure
-2.3. Migration from version 0.8.1
-3.   LIMITATIONS OF THE CURRENT VERSION
-3.1. Changes since 0.8.1
-4.   HOW TO
-4.1. How to export data out of iTop
-4.3. How to import data into iTop
+2.3. Migration from previous version
+3.   FEATURES
+3.1. Changes since 0.9.1
+3.2. Known limitations
+3.3. Known issues
 
 1. ABOUT THIS RELEASE
    ==================
-Thank you for downloading the sixth packaged release of iTop. This version is a maintenance
-release providing a few bug fixes.
-Keep in mind that this version (0.9.1) is still not a final version (see the section "Limitations" below).
+Thank you for downloading the seventh packaged release of iTop. This version is
+the first complete version of iTop: it aims at being really used professionaly.
 
-With this release we also provide two user guides. These documents are available
-on our web site http://www.combodo.com, under the "Support" topic.
+Additional documentation can be dowloaded from http://www.combodo.com,
+under the "Support" topic:
+ - User guide
+ - Admin guide
+ - How to upgrade from previous versions
 
 iTop is released under the GPL (v3) license. (Check license.txt in this directory).
 The source code of iTop can be found on SourceForge: http://itop.sourceforge.net
@@ -29,7 +28,11 @@ The source code of iTop can be found on SourceForge: http://itop.sourceforge.net
 1.1 Special Thanks To:
     -----------------
 Bruno Bonfils for his guidance about LDAP and authentication.
-Randall Badilla Castro for the Spanish translation.
+Randall Badilla Castro, for the Spanish translation.
+Jonathan Lucas and David Gumbel from ITOMIG BmBh, for the german translation.
+Christian Lempereur, for his feedbacks.
+Olivier Fouquet, for his feedbacks.
+
 
 
 2. INSTALLATION
@@ -64,173 +67,111 @@ the MySQL database !
 
 2.3. Migration from a previous version
      ---------------------------------
-The 0.9.1 data model IS FULLY COMPATIBLE with the former one (0.9).
-In order to upgrade from vesion 0.9, just overwrite the files in your iTop directory
-with the ones provided in the current version.
-
-In order to MIGRATE FROM AN OLDER VERSION, you have two options:
-	- keep your current data model and give up all the benefits from the
-new data model (subnets, known errors, etc.).
-	- export your data into CSV files and import them back after the installation
-of the new release.
-
-Preserving your previous data model
------------------------------------
-In case you want to keep a previous data model (i.e. from 0.8.1) just make sure
-that you don't overwrite the content of the "business" directory and its "template"
-subdirectory.
-
-Exporting & re-importing data
------------------------------
-If you choose this option, you have to use the export function for each type of
-object, in order to save your data in csv files.
-Once done, you can install new release 0.9 using a new database.
-Then, you can re-import you object using "csv import" functionality. 
-
-Caution: you need to make sure that attributes for your objects are still valid,
-as per the new data model constraints.
-In particular, attributes defined as enumerated lists may have to be changed
-into the data files, to comply with to the new list of allowed values.
-Please refer to the chapter "viewing data model" chapter in the administrator
-guide.
-
-In case you encounter issues, do not hesitate to contact the support team:
-support@combodo.com
+Please refer to the updgrade guide available at www.combodo.com/itop-support.
 
 
+3. FEATURES
+   ========
 
-3. LIMITATIONS OF THE CURRENT VERSION
-   ==================================
-
-Release 0.9.1 is not supporting:
-
-	- Creation of new user profile from the iTop user interface.
-	- "Delete All" action for a list of objects.
-	- Cloning an existing device. This feature has been disabled for the moment
-          as it was not working properly.
-	- "Update All" for n/n relationships.
-	- A lifecycle is not defined for all types of CIs. Only for incident tickets and change tickets.
-	- Localized characters (like accentuated letters) are not supported for the moment in eMail notifications
-
-
-3.1. Changes since 0.9
+3.1. Changes since 0.9.1
      -------------------
-Only bug fixes haven bee made since version 0.9, hence the increment of the minor revision number.
+
+Version 1.0 is a major release.
+
+Localization
+------------
+- iTop is localized: English, French, Spanish and German are available.
+
+User portal
+-----------
+- User Portal: let customers submit their request directly
+
+SLA Management
+--------------
+- SLAs can be defined in the service management module. iTop application uses them to change behavior of Incident,
+  Request and Change tickets when SLAs are not respected.
+
+Modular setup
+-------------
+- Modules: It is possible to select ITIL modules you would like to use
+
+
+Major changes
+-------------
+- A brand new data model has been designed to make iTop ITIL compliant.
+- Graphical views have been developed to represent releation between CIS. Two views are available today: "impact"
+  in order to view what CIs are impacted by a given one, and "depends on" to view what CIs impact a given one.
+- Relations for computing impacts can be customized.
+- Those relations are used as well to compute impacted CIs and contacts to notify when an incident occurs.
+- UI look and feel has been reviewed to make the application more professional.
+- The CSV import tool has been improved to make it easier to use.
+- A Web service has been developed to allow tickets to be created automatically from emails. This feature simplifies
+  ticket creation for end-users.
+- User management: Finalized the UI to create new users and manage their profiles
+- Authentication: added the possibility to rely on an LDAP authentication, or
+  and external authentication (e.g. Web Server single sign-on, relying on a .htaccess file)
+
+
+Minor changes
+-------------
+- User welcome splash screen: message displayed to new users, the first time
+  they logon to iTop
+- Implemented validation of attributes entered in forms
+- import.php has been finalized, and is the preferred way to load/synchronize
+  data in a non-interactive way
+- New menu to edit the Audit Category and Rules
+
+
+Security improvements
+---------------------
+#157 Data Admin menu allowed only to admins and configuration managers
+#260 Prevent normal users from accessing data admin menu
+Don't display the admin menu for non-admin users
+#188 - ForceHttps = SecureConnectionRequired
+Strong encryption of passwords
+Redirect from /pages/index.php to /index.php (to prevent users from listing the directory)
+
 
 Bugs fixed
 ----------
 
-All our bugs are tracked on sourceforge: 
-http://sourceforge.net/apps/trac/itop/report/1.
-This release is closing 3 bugs or enhancement requests.
+Bugs can be reviewed on http://sourceforge.net/apps/trac/itop/report/1
 
-#86 major	defect	Fixed bug on CSV import (was not working fine when exporting/importing fields with multiple lines)
-#87 major 	defect	Strings containing only digits were treated as numbers instead of string (i.e leading zeroes were lost)
-#93 major	defect	Fixed issue within the setup data load (related to memory_limit)
+#182	Setup fails with mysql error 1046 or 1146
+#144 	Could not create a workgroup
+#97 	Issue when removing an organization
+#105 	Issue in exporting a given class of object
+#106 	Importing data using import CSV
+#116 	When modifying a user, the link with the profile(s) is lost.
+#98 	Computation of free IPs in a subnet is wrong
+#126 	'magic_quotes_gpc' test issue during setup
+#128 	Issue when using AttributeBlob not mandatory
+#136 	Context menus
+#102  Allow users to change their password.
+#210  Error message when trying to uploading a big file
+#139  mysSQL error: "truncated column", or truncated string
+#223  Trim spaces in CSV imports
+#215  Support several characters encoding for the CSV imports
+#239  Issue with character set (impacting searches with accents)
+#234  PHP Strict Standards warnings
+#140  Check that user logins are unique
 
-Comprehensive list of all other changes...
-------------------------------------------
+3.2. Known limitations
+     -----------------
+#71   The same MySQL credentials are used for setup and the application. They have to
+      be changed manually into the configuration file to achieve maximum security
+#246  Massive data load requiring to setup specific HTTP sessions with higher
+      timeouts and memory limits
+#257  Could not delete more than 997 items when SUHOSIN is installed with its
+      default settings (See TRAC)
+#265  Add reconciliations keys into CSV template
 
-- Fixed bug in DisplayBlock (group by - visible on the page "contacts overview")
-- Finalized the demo of impact computation (removed an ugly test message) and added few comments
-- Related objects computation:
-	moved to OQL
-	added capacity to set a default value based on the related objects (during the creation wizard)
-- Fixed issues with the consultant toolkit: upgrade an existing DB (add new class/attribute)
-- Developed core services to allow for demonstrating impact computation capability
-- Deprecated option operation=direct on page UI.php (not used anyway ?)
+3.3. Known issues
+     ------------
+#259  Not instantaneously logged off when the administrator deletes a user entry
+#245  Search form gets too specialized
+#175  When moving backward in the CSV import wizard, some settings may be lost
+      (e.g column selection)
+#174  CSV import not displaying the labels of enums
 
-4. HOW TO
-   ======
-
-4.1. How to export data out of iTop
-     ------------------------------
-A set of objects can be exported by the mean of a web service (could be scripted)
-Simply call /pages/export.php?format=xml&expression=OQL
-(format=csv is also available)
-
-Using wget, this would give the following command line:
-wget --header="Content-Type:application/x-www-form-urlencoded" --post-file=./login.txt -O "export.txt" http://<server>/webservices/export.php?format=csv&expression=...
-
-Use the wget option -O to store the result in the specified file, in our example: export.txt
-
-The format for the file login.txt should be:
-
-operation=login&auth_user=<your user>&auth_pwd=<your password>&foo=1
-
-The set of objects to be exported is defined by an OQL query.
-OQL stands for Object Query Language. The OQL syntax is very close to the SQL.
-The main differences between SQL and OQL are:
-
- * No FROM clause: an OQL query always return a set of objects of a given class
-   and the user will never specify the expected columns, because the OQL
-   interpreter retreives this information from the Data Model.
-   
- * JOINS: simply specify "JOIN" and the interpreter will determine for you if an
-   INNER JOIN or an OUTER JOIN should be performed, based on the definitions of
-   the Data Model.
-
-OQL Examples:
-
-Get all the contacts
-SELECT bizContact
-
-Get all the persons (note that a person is contact also, but it has more
-attributes to be exported: first_name and employee_number)
-
-SELECT bizPerson
-
-Get the WAN circuits provided by "Foo Telecom"
-
-SELECT bizCircuit JOIN bizOrganization ON bizCircuit.provider_id = bizOrganization.id
-WHERE bizOrganization.name = 'Foo Telecom'
-
-Get the WAN circuits providers
-
-SELECT bizOrganization JOIN bizCircuit
-ON bizCircuit.provider_id = bizOrganization.id
-
-(In this example we have just inverted bizCircuit and bizOrganization ; yes the order matters, the first class specified is the expected class)
-
-
-4.2. How to import data
-     ------------------
-SOAP web service:
-
-This new SOAP web service enables the creation of incident tickets from an external application.
-Look at the iTop WSDL file (http://<your_server_and_port/webservices/itop.wsdl.php) for the full
-description of the API.
-
-Check the PHP client example, available with this release in /webservices/itop.soap.examples.php
-
-
-"CSV import" web service:
-
-This is the "POST web service" that was already existing in the previous version.
-A dedicated page allows you to write a script to enter new data, or refresh existing
-data. This can be helpful for the initial load or to schedule a daily synchronization
-of the data coming from an external data source - could be another application,
-an automated data collector, etc.
-
-/webservices/import.php?class=bizOrganization&csvdata=<multine-csv>[&separator=<char>]
-
-Note that this service emulates the functionality provided by the interactive
-bulk load: /pages/import.php
-
-csvdata must be posted, the first line will contain the codes of the attributes
-to load, the first column is always used as the reconciliation key
-- should be unique, as it determines if the object needs to be updated or created)
-If not specified, the separator defaults to ';'
-
-The answer is given in a simple html format, explaining what has been done for each row of data.
-
-Example:
-A script that creates a company called "Food and Drug Administration" (code FDA).
-
-wget --header="Content-Type:application/x-www-form-urlencoded" --post-file=data.txt http://<yourserver:port>/webservices/import.php?class=bizOrganization
-
-with: data.txt containing the following text
-
-auth_user=<username>&auth_pwd=<pwd>&loginop=login&csvdata=name;code
-Food and Drug Administration;FDA
-Combodo;CBD
+#258	org_id search -> silo
