@@ -104,6 +104,15 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue' => 'Neuer Wert',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue+' => 'Neuer Wert des Attributes',
 ));
+// Used by CMDBChangeOp... & derived classes
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Change:ObjectCreated' => 'Objekt erstellt',
+	'Change:ObjectDeleted' => 'Objekt erstellt',
+	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => '%1$s geändert zu %2$s (vorheriger Wert: %3$s)',
+	'Change:Text_AppendedTo_AttName' => '%1$s zugefügt an %2$s',
+	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s modifiziert, vorheriger Wert: %2$s',
+	'Change:AttName_Changed' => '%1$s modifiziert',
+));
 
 //
 // Class: CMDBChangeOpSetAttributeBlob
@@ -360,7 +369,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 //
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:lnkTriggerAction' => 'AKtion/Trigger',
+	'Class:lnkTriggerAction' => 'Aktion/Trigger',
 	'Class:lnkTriggerAction+' => 'Verknüpfung zwischen einem Trigger und einer Aktion',
 	'Class:lnkTriggerAction/Attribute:action_id' => 'Aktion',
 	'Class:lnkTriggerAction/Attribute:action_id+' => 'Die auszuführende Aktion',

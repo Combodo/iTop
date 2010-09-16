@@ -131,6 +131,59 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Location/Attribute:infra_list' => 'Infrastruktur',
 	'Class:Location/Attribute:infra_list+' => 'CIs, die auf dieser Seite aufgelistet sind',
 ));
+//
+// Class: Group
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:Group' => 'Gruppe',
+	'Class:Group+' => '',
+	'Class:Group/Attribute:name' => 'Name',
+	'Class:Group/Attribute:name+' => '',
+	'Class:Group/Attribute:status' => 'Status',
+	'Class:Group/Attribute:status+' => '',
+	'Class:Group/Attribute:status/Value:implementation' => 'Implementation',
+	'Class:Group/Attribute:status/Value:implementation+' => 'Implementation',
+	'Class:Group/Attribute:status/Value:obsolete' => 'Veraltet',
+	'Class:Group/Attribute:status/Value:obsolete+' => 'Veraltet',
+	'Class:Group/Attribute:status/Value:production' => 'Produktion',
+	'Class:Group/Attribute:status/Value:production+' => 'Produktion',
+	'Class:Group/Attribute:org_id' => 'Organisation',
+	'Class:Group/Attribute:org_id+' => '',
+	'Class:Group/Attribute:owner_name' => 'Name',
+	'Class:Group/Attribute:owner_name+' => 'Allgemeiner Name',
+	'Class:Group/Attribute:description' => 'Beschreibung',
+	'Class:Group/Attribute:description+' => '',
+	'Class:Group/Attribute:type' => 'Typ',
+	'Class:Group/Attribute:type+' => '',
+	'Class:Group/Attribute:parent_id' => 'Muttergruppe',
+	'Class:Group/Attribute:parent_id+' => '',
+	'Class:Group/Attribute:parent_name' => 'Name',
+	'Class:Group/Attribute:parent_name+' => '',
+	'Class:Group/Attribute:ci_list' => 'Verbundene CIs',
+	'Class:Group/Attribute:ci_list+' => '',
+));
+
+//
+// Class: lnkGroupToCI
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:lnkGroupToCI' => 'Gruppe/CI',
+	'Class:lnkGroupToCI+' => '',
+	'Class:lnkGroupToCI/Attribute:group_id' => 'Gruppe',
+	'Class:lnkGroupToCI/Attribute:group_id+' => '',
+	'Class:lnkGroupToCI/Attribute:group_name' => 'Name',
+	'Class:lnkGroupToCI/Attribute:group_name+' => '',
+	'Class:lnkGroupToCI/Attribute:ci_id' => 'CI',
+	'Class:lnkGroupToCI/Attribute:ci_id+' => '',
+	'Class:lnkGroupToCI/Attribute:ci_name' => 'Name',
+	'Class:lnkGroupToCI/Attribute:ci_name+' => '',
+	'Class:lnkGroupToCI/Attribute:ci_status' => 'CI-Status',
+	'Class:lnkGroupToCI/Attribute:ci_status+' => '',
+	'Class:lnkGroupToCI/Attribute:reason' => 'Grund',
+	'Class:lnkGroupToCI/Attribute:reason+' => '',
+));
 
 //
 // Class: Contact
@@ -227,13 +280,18 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Document+' => '',
 	'Class:Document/Attribute:name' => 'Name',
 	'Class:Document/Attribute:name+' => '',
+	'Class:Document/Attribute:org_id' => 'Organisation',
+	'Class:Document/Attribute:description+' => '',
+	'Class:Document/Attribute:org_name' => 'Organizationsname',
+	'Class:Document/Attribute:org_name+' => '',
+	'Class:Document/Attribute:description+' => '',
 	'Class:Document/Attribute:description' => 'Beschreibung',
 	'Class:Document/Attribute:description+' => '',
 	'Class:Document/Attribute:type' => 'Typ',
 	'Class:Document/Attribute:type+' => '',
 	'Class:Document/Attribute:type/Value:contract' => 'Vertrag',
 	'Class:Document/Attribute:type/Value:contract+' => '',
-	'Class:Document/Attribute:type/Value:networkmap' => 'Network Map',
+	'Class:Document/Attribute:type/Value:networkmap' => 'Netzwerkkarte',
 	'Class:Document/Attribute:type/Value:networkmap+' => '',
 	'Class:Document/Attribute:type/Value:presentation' => 'Präsentation',
 	'Class:Document/Attribute:type/Value:presentation+' => '',
@@ -304,6 +362,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Licence+' => '',
 	'Class:Licence/Attribute:provider' => 'Anbieter',
 	'Class:Licence/Attribute:provider+' => '',
+	'Class:Licence/Attribute:org_id' => 'Besitzer',
+	'Class:Licence/Attribute:org_id+' => '',
+	'Class:Licence/Attribute:org_name' => 'Name',
+	'Class:Licence/Attribute:org_name+' => 'Allgemeiner Name',
 	'Class:Licence/Attribute:product' => 'Produkt',
 	'Class:Licence/Attribute:product+' => '',
 	'Class:Licence/Attribute:name' => 'Name',
@@ -480,7 +542,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 //
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:SoftwareInstance' => 'Software Instanz',
+	'Class:SoftwareInstance' => 'Software-Instanz',
 	'Class:SoftwareInstance+' => '',
 	'Class:SoftwareInstance/Attribute:device_id' => 'Gerät',
 	'Class:SoftwareInstance/Attribute:device_id+' => '',
@@ -507,6 +569,11 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:ApplicationInstance' => 'Anwendungsinstanz',
 	'Class:ApplicationInstance+' => '',
+	'Class:ApplicationInstance/Attribute:software_id' => 'Software',
+	'Class:ApplicationInstance/Attribute:software_id+' => '',
+	'Class:ApplicationInstance/Attribute:software_name' => 'Name',
+	'Class:ApplicationInstance/Attribute:software_name+' => '',
+
 ));
 
 //
@@ -516,6 +583,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:DBServerInstance' => 'Datenbank-Server-Instanz',
 	'Class:DBServerInstance+' => '',
+	'Class:DBServerInstance/Attribute:software_id' => 'Software',
+	'Class:DBServerInstance/Attribute:software_id+' => '',
+	'Class:DBServerInstance/Attribute:software_name' => 'Name',
+	'Class:DBServerInstance/Attribute:software_name+' => '',
 	'Class:DBServerInstance/Attribute:dbinstance_list' => 'Datenbanken',
 	'Class:DBServerInstance/Attribute:dbinstance_list+' => 'Datenbanken-Quellen',
 ));
@@ -547,7 +618,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:ApplicationSolution/Attribute:ci_list' => 'CIs',
 	'Class:ApplicationSolution/Attribute:ci_list+' => 'CIs, aus der sich die Lösung zusammensetzt',
 	'Class:ApplicationSolution/Attribute:process_list' => 'Business-Prozesse',
-	'Class:ApplicationSolution/Attribute:process_list+' => 'Business-Prozesse, die auf dieser Lösung basiereno',
+	'Class:ApplicationSolution/Attribute:process_list+' => 'Business-Prozesse, die auf dieser Lösung basieren',
 ));
 
 //
@@ -570,7 +641,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:ConnectableCI' => 'Verknüpfbarer CI',
 	'Class:ConnectableCI+' => 'Physischer CI',
-	'Class:ConnectableCI/Attribute:brand' => 'Hersteller/Markenname',
+	'Class:ConnectableCI/Attribute:brand' => 'Hersteller',
 	'Class:ConnectableCI/Attribute:brand+' => '',
 	'Class:ConnectableCI/Attribute:model' => 'Modell',
 	'Class:ConnectableCI/Attribute:model+' => '',
@@ -623,6 +694,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:NetworkInterface/Attribute:speed+' => '',
 	'Class:NetworkInterface/Attribute:duplex' => 'Duplex',
 	'Class:NetworkInterface/Attribute:duplex+' => '',
+	'Class:NetworkInterface/Attribute:duplex/Value:auto' => 'Auto',
+	'Class:NetworkInterface/Attribute:duplex/Value:auto+' => 'Auto',
 	'Class:NetworkInterface/Attribute:duplex/Value:full' => 'Full',
 	'Class:NetworkInterface/Attribute:duplex/Value:full+' => '',
 	'Class:NetworkInterface/Attribute:duplex/Value:half' => 'Half',
@@ -714,7 +787,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:InfrastructureCI/Attribute:location_id+' => '',
 	'Class:InfrastructureCI/Attribute:location_name' => 'Standort',
 	'Class:InfrastructureCI/Attribute:location_name+' => '',
-	'Class:InfrastructureCI/Attribute:location_details' => 'Details zur Standort',
+	'Class:InfrastructureCI/Attribute:location_details' => 'Details zum Standort',
 	'Class:InfrastructureCI/Attribute:location_details+' => '',
 	'Class:InfrastructureCI/Attribute:management_ip' => 'Management-IP',
 	'Class:InfrastructureCI/Attribute:management_ip+' => '',
@@ -955,5 +1028,21 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 'Menu:MobilePhone+' => 'Alle Mobiltelefone',
 'Menu:PC' => 'Rechner (PC)',
 'Menu:PC+' => 'Alle Rechner (PC)',
+'Menu:NewContact' => 'Neuer Kontakt',
+'Menu:NewContact+' => 'Neuer Kontakt',
+'Menu:SearchContacts' => 'Nach Kontakten suchen',
+'Menu:SearchContacts+' => 'Nach Kontakten suchen',
+'Menu:NewCI' => 'Neues CI',
+'Menu:NewCI+' => 'Neues CI',
+'Menu:SearchCIs' => 'Nach CIs suchen',
+'Menu:SearchCIs+' => 'Nach CIs suchen',
+'Menu:ConfigManagement:Devices' => 'Geräte',
+'Menu:ConfigManagement:AllDevices' => 'Anzahl der Geräte: %1$d',
+'Menu:ConfigManagement:SWAndApps' => 'Software und Anwendunge',
+'Menu:ConfigManagement:Misc' => 'Diverses',
+'Menu:Group' => 'Gruppen von CIs',
+'Menu:Group+' => 'Gruppen von CIs',
+'Menu:ConfigManagement:Shortcuts' => 'Shortcuts',
+'Menu:ConfigManagement:AllContacts' => 'Alle Kontakte: %1$d',
 ));
 ?>

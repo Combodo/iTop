@@ -45,6 +45,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Ticket/Attribute:ref+' => '',
 	'Class:Ticket/Attribute:title' => 'Titel',
 	'Class:Ticket/Attribute:title+' => '',
+	'Class:Ticket/Attribute:description' => 'Beschreibung',
+	'Class:Ticket/Attribute:description+' => '',
 	'Class:Ticket/Attribute:ticket_log' => 'Protokoll',
 	'Class:Ticket/Attribute:ticket_log+' => '',
 	'Class:Ticket/Attribute:start_date' => 'Gestartet',
@@ -55,6 +57,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Ticket/Attribute:ci_list+' => 'CIs, die diesen Incident betreffen',
 	'Class:Ticket/Attribute:contact_list' => 'Kontakte',
 	'Class:Ticket/Attribute:contact_list+' => 'Beteiligtes Team und beteiligte Personen',
+	'Class:Ticket/Attribute:incident_list' => 'Dazugehörige Incidents',
+	'Class:Ticket/Attribute:incident_list+' => '',
 	'Class:Ticket/Attribute:finalclass' => 'Typ',
 	'Class:Ticket/Attribute:finalclass+' => '',
 ));
@@ -114,6 +118,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkTicketToCI/Attribute:ci_name+' => '',
 	'Class:lnkTicketToCI/Attribute:ci_status' => 'CI-Status',
 	'Class:lnkTicketToCI/Attribute:ci_status+' => '',
+	'Class:lnkTicketToCI/Attribute:impact' => 'Auswirkung',
+	'Class:lnkTicketToCI/Attribute:impact+' => '',
 ));
 
 //
@@ -203,7 +209,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:ResponseTicket/Attribute:resolution_code+' => '',
 	'Class:ResponseTicket/Attribute:resolution_code/Value:couldnotreproduce' => 'Konnte nicht reproduziert werden',
 	'Class:ResponseTicket/Attribute:resolution_code/Value:couldnotreproduce+' => '',
-	'Class:ResponseTicket/Attribute:resolution_code/Value:duplicate' => 'Ticket duplizieren',
+	'Class:ResponseTicket/Attribute:resolution_code/Value:duplicate' => 'Duplikat eines bestehenden Tickets',
 	'Class:ResponseTicket/Attribute:resolution_code/Value:duplicate+' => '',
 	'Class:ResponseTicket/Attribute:resolution_code/Value:fixed' => 'Repariert',
 	'Class:ResponseTicket/Attribute:resolution_code/Value:fixed+' => '',

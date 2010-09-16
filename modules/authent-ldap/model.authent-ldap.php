@@ -71,6 +71,7 @@ class UserLDAP extends UserInternal
 		$sDefaultLDAPUser = MetaModel::GetModuleSetting('authent-ldap', 'default_user', '');
 		$sDefaultLDAPPwd = MetaModel::GetModuleSetting('authent-ldap', 'default_pwd', '');
 		
+		
 		$hDS = @ldap_connect($sLDAPHost, $iLDAPPort);
 		if ($hDS === false)
 		{

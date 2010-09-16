@@ -82,6 +82,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:AuditCategory/Attribute:description+' => 'Ausführliche Beschreibung dieser Audit-Kategorie',
 	'Class:AuditCategory/Attribute:definition_set' => 'Definition Set',
 	'Class:AuditCategory/Attribute:definition_set+' => 'OQL-Ausdrücke, die den Umfang der zu auditierenden Objekte festlegen',
+	'Class:AuditCategory/Attribute:rules_list' => 'Audit-Regeln',
+	'Class:AuditCategory/Attribute:rules_list+' => 'Audit-Regeln für diese Kategorie',
 ));
 
 //
@@ -141,9 +143,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:URP_Users/Attribute:language/Value:FR FR+' => 'FR FR',
 	'Class:URP_Users/Attribute:language/Value:DE DE' => 'German',
 	'Class:URP_Users/Attribute:language/Value:DE DE+' => 'DE DE',
+	'Class:User/Attribute:profile_list' => 'Profile',
+	'Class:User/Attribute:profile_list+' => 'Rollen, Rechtemanagement für diese Personn',
+	'Class:User/Attribute:allowed_org_list' => 'Zugelassenen Organisationen',
+	'Class:User/Attribute:allowed_org_list+' => 'Der Endbenutzer ist berechtigt, die daten der folgenden Organisationen zu sehen. Wenn keine Organisation zu sehen ist, gibt es keine Beschränkung.',
 
-	'Class:URP_Users/Attribute:profile_list' => 'Profile',
-	'Class:URP_Users/Attribute:profile_list+' => 'Regeln und Rechtemangement für diese Person',
+	'Class:User/Error:LoginMustBeUnique' => 'Login-Namen müssen unterschiedlich sein - "%1s" benutzt diesen Login-Name bereits.',
+	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Mindestens ein Profil muss diesem Benutzer zugewiesen sein.',
 ));
 
 //
@@ -192,7 +198,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:URP_UserProfile/Attribute:profile' => 'Profil',
 	'Class:URP_UserProfile/Attribute:profile+' => 'Profil-Name',
 	'Class:URP_UserProfile/Attribute:reason' => 'Begründung',
-	'Class:URP_UserProfile/Attribute:reason+' => 'Erklären Sie, warum diese Person diese Rolle haben kann',
+	'Class:URP_UserProfile/Attribute:reason+' => 'Erklären Sie, warum diese Person diese Rolle haben soll',
 ));
 
 //
@@ -250,10 +256,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:URP_ActionGrant/Attribute:class+' => 'Zielklasse',
 	'Class:URP_ActionGrant/Attribute:permission' => 'Autorisierung',
 	'Class:URP_ActionGrant/Attribute:permission+' => 'Zugelassen oder untersagt?',
-	'Class:URP_ActionGrant/Attribute:permission/Value:yes' => 'ja',
-	'Class:URP_ActionGrant/Attribute:permission/Value:yes+' => 'ja',
-	'Class:URP_ActionGrant/Attribute:permission/Value:no' => 'nein',
-	'Class:URP_ActionGrant/Attribute:permission/Value:no+' => 'nein',
+	'Class:URP_ActionGrant/Attribute:permission/Value:yes' => 'Ja',
+	'Class:URP_ActionGrant/Attribute:permission/Value:yes+' => 'Ja',
+	'Class:URP_ActionGrant/Attribute:permission/Value:no' => 'Nein',
+	'Class:URP_ActionGrant/Attribute:permission/Value:no+' => 'Nein',
 	'Class:URP_ActionGrant/Attribute:action' => 'Aktion',
 	'Class:URP_ActionGrant/Attribute:action+' => 'Operationen, die auf die gegebene Klasse ausgeführt werden sollen',
 ));
@@ -273,10 +279,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:URP_StimulusGrant/Attribute:class+' => 'Zielklasse',
 	'Class:URP_StimulusGrant/Attribute:permission' => 'Autorisierungen',
 	'Class:URP_StimulusGrant/Attribute:permission+' => 'Zugelassen oder untersagt?',
-	'Class:URP_StimulusGrant/Attribute:permission/Value:yes' => 'ja',
-	'Class:URP_StimulusGrant/Attribute:permission/Value:yes+' => 'ja',
-	'Class:URP_StimulusGrant/Attribute:permission/Value:no' => 'nein',
-	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => 'nein',
+	'Class:URP_StimulusGrant/Attribute:permission/Value:yes' => 'Ja',
+	'Class:URP_StimulusGrant/Attribute:permission/Value:yes+' => 'Ja',
+	'Class:URP_StimulusGrant/Attribute:permission/Value:no' => 'Nein',
+	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => 'Nein',
 	'Class:URP_StimulusGrant/Attribute:stimulus' => 'Stimulus',
 	'Class:URP_StimulusGrant/Attribute:stimulus+' => 'Stimulus-Code',
 ));
@@ -316,7 +322,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 </ul>
 <p>Alle Module können nacheinander und vollständig unabhängig voneinander eingerichtet werden.</p>',
 
-	'UI:WelcomeMenu:RightBlock' => '<p>iTop ist mandantenfähig, es erlaubt IT-Technikern, auf einfache Art eine vielzahl an Kunden und Firmen zu verwalten.
+	'UI:WelcomeMenu:RightBlock' => '<p>iTop ist mandantenfähig, es erlaubt IT-Technikern, auf einfache Art eine Vielzahl an Kunden und Firmen zu verwalten.
 <ul>iTop bietet ein umfangreiches Set an Business-Prozessen, die..
 <li>die Effizienz des IT-Managements steigern,</li> 
 <li>die die Performance des IT-Betriebs steuern,</li> 
@@ -331,8 +337,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 <li>und ein besseres Verwalten des wichtigsten Bestandteiles Ihrer IT: der Dokumentation.</li>
 </ul>
 </p>',
-
+	'UI:WelcomeMenu:AllOpenRequests' => 'Offene Requests: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'An mich gestellte Benutzeranfragen',
+	'UI:WelcomeMenu:OpenIncidents' => 'Offene Incidents: %1$d',
+	'UI:WelcomeMenu:AllConfigItems' => 'Configuration Items: %1$d',
 	'UI:WelcomeMenu:MyIncidents' => 'An mich zugewiesene Incidents',
 	'UI:AllOrganizations' => ' Alle Organisationen ',
 	'UI:YourSearch' => 'Ihre Suche',
@@ -362,9 +370,11 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Button:Create' => ' Erstellen ',
 	'UI:Button:Delete' => ' Löschen! ',
 	'UI:Button:ChangePassword' => ' Passwort ändern ',
+	'UI:Button:ResetPassword' => ' Passwort zurücksetzen ',
 
 	'UI:SearchToggle' => 'Suche',
 	'UI:ClickToCreateNew' => 'Klicken Sie hier, um einen neuen %1$s zu erstellen',
+	'UI:SearchFor_Class' => 'Suche nach Objekten: %1$',
 	'UI:NoObjectToDisplay' => 'Kein Objekt zur Anzeige vorhanden.',
 	'UI:Error:MandatoryTemplateParameter_object_id' => 'Parameter object_id ist erforderlich, wenn link_attr verwendet wird. Überprüfen Sie die Defintion des Display-Templates.',
 	'UI:Error:MandatoryTemplateParameter_target_attr' => 'Parameter target_attr ist erforderlich, wenn link_attr verwendet wird. Überprüfen Sie die Defintion des Display-Templates.',
@@ -392,17 +402,20 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Error:ObjectsAlreadyDeleted' => 'Fehler: die Objekte wurden bereits gelöscht!',
 	'UI:Error:BulkDeleteNotAllowedOn_Class' => 'Sie sind nicht berechtigt, mehrere Objekte der Klasse %1$s zu löschen',
 	'UI:Error:DeleteNotAllowedOn_Class' => 'Sie sind nicht berechtigt, Objekte der Klasse zu löschen %1$s',
+	'UI:Error:BulkModifyNotAllowedOn_Class' => 'Sie sind nicht berechtigt, diese Massenaktualisierung der Objekte der Klasse "%1$s" durchzuführen.',
 	'UI:Error:ObjectAlreadyCloned' => 'Fehler: das Objekt wurde bereits dupliziert!',
 	'UI:Error:ObjectAlreadyCreated' => 'Fehler: das Objekt wurde bereits erstellt!',
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Fehler: ungültiger Operation "%1$s" auf Objekt %2$s in Zustand "%3$s".',
 	
 	
 	'UI:GroupBy:Count' => 'Anzahl',
-	'UI:GroupBy:Count+' => 'AnzLahl der Elemente',
+	'UI:GroupBy:Count+' => 'Anzahl der Elemente',
 	'UI:CountOfObjects' => '%1$d Objekte, die das Kriterium erfüllen.',
+	'UI_CountOfObjectsShort' => '%1$d Objekte.',
 	'UI:NoObject_Class_ToDisplay' => 'Kein %1$s zur Anzeige',
 	'UI:History:LastModified_On_By' => 'Zuletzt verändert am %1$s von %2$s.',
 	'UI:HistoryTab' => 'Verlauf',
+	'UI:NotificationsTab' => 'Benachrichtigungen',
 	'UI:History:Date' => 'Datum',
 	'UI:History:Date+' => 'Datum der Änderung',
 	'UI:History:User' => 'Benutzer',
@@ -425,6 +438,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:SelectAllToggle+' => 'Alle auswählen/deselektieren',
 	'UI:TruncatedResults' => '%1$d angezeigte Objekte von %2$d',
 	'UI:DisplayAll' => 'Alle anzeigen',
+	'UI:CollapseList' => 'Ausklappen',
 	'UI:CountOfResults' => '%1$d Objekt(e)',
 	'UI:ChangesLogTitle' => 'Änderungsprotokoll (%1$d):',
 	'UI:EmptyChangesLogTitle' => 'Änderungsprotokoll ist leer',
@@ -438,7 +452,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:SelectOne' => 'bitte wählen',
 	'UI:Login:Welcome' => 'Willkommen bei iTop!',
 	'UI:Login:IncorrectLoginPassword' => 'Ungültiges Passwort oder Login-Daten. Bitte versuchen Sie es erneut.',
-	'UI:Login:IdentifyYourself' => 'Identifizieren Sie sich, bevor Sie fortfahren.',
+	'UI:Login:IdentifyYourself' => 'Bitte identifizieren Sie sich, bevor Sie fortfahren.',
 	'UI:Login:UserNamePrompt' => 'Benutzername',
 	'UI:Login:PasswordPrompt' => 'Passwort',
 	'UI:Login:ChangeYourPassword' => 'Ändern Sie Ihr Passwort',
@@ -447,10 +461,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Login:RetypeNewPasswordPrompt' => 'Wiederholen Sie Ihr neues Passwort',
 	'UI:Login:IncorrectOldPassword' => 'Fehler: das alte Passwort ist ungültig',
 	'UI:LogOffMenu' => 'Abmelden',
+	'UI:LogOff:ThankYou' => 'Vielen Dank dafür, dass Sie iTop benutzen!',
+	'UI:LogOff:ClickHereToLoginAgain' => 'Klicken Sie hier, um sich wieder anzumelden...',
 	'UI:ChangePwdMenu' => 'Passwort ändern...',
 	'UI:Login:RetypePwdDoesNotMatch' => 'Neues Passwort und das wiederholte Passwort entsprechen nicht überein!',
 	'UI:Button:Login' => 'iTop betreten',
 	'UI:Login:Error:AccessRestricted' => 'Der iTop-Zugang ist gesperrt. Bitte kontaktieren Sie einen iTop-Administrator.',
+	'UI:Login:Error:AccessAdmin' => 'Zugang nur für Personen mit Administratorrechten. Bitte kontaktieren Sie Ihren iTop-Administrator.',
 	'UI:CSVImport:MappingSelectOne' => 'Bitte wählen',
 	'UI:CSVImport:MappingNotApplicable' => '-- Dieses Feld ignorieren --',
 	'UI:CSVImport:NoData' => 'Keine Daten eingegeben...Bitte geben Sie Daten ein!',
@@ -501,13 +518,14 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:CSVImport:AdvancedMode' => 'Fortgeschrittener Modus',
 	'UI:CSVImport:AdvancedMode+' => 'Im fortgeschrittenen Modus kann die "ID" (primärer Schlüssel) der Objekte benutzt werden, um Ojekte zu aktualisieren oder umzubenennen.' .
 	'Allerdings kann die Spalte "ID" (sofern vorhanden) nur als Suchkriterium verwendet werden und nicht mit anderen Suchkriterien kombiniert werden.',
-	'UI:CSVImport:SelectAClassFirst' => 'Um das Mapping einzustellen, wählen Sie bitte zuerst eine Klasse aus.',
+	'UI:CSVImport:SelectAClassFirst' => 'Wählen Sie bitte zuerst eine Klasse aus, bevor Sie das Mapping erstellen',
 	'UI:CSVImport:HeaderFields' => 'Felder',
 	'UI:CSVImport:HeaderMappings' => 'Mappings',
 	'UI:CSVImport:HeaderSearch' => 'Suchen?',
 	'UI:CSVImport:AlertIncompleteMapping' => 'Bitte wählen Sie ein Mapping für jedes Feld aus.',
 	'UI:CSVImport:AlertNoSearchCriteria' => 'Bitte wählen Sie mindestens ein Suchkriterium aus.',
-	
+	'UI:CSVImport:Encoding' => 'Buchstaben-Codierung',	
+
 	'UI:UniversalSearchTitle' => 'iTop - universelle Suche',
 	'UI:UniversalSearch:Error' => 'Fehler: %1$s',
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Wählen Sie für die Suche die Klasse aus: ',
@@ -548,7 +566,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Schema:AttributeCode+' => 'Interner Code des Attributes',
 	'UI:Schema:Label' => 'Label',
 	'UI:Schema:Label+' => 'Label des Attributes',
-	'UI:Schema:Type' => 'Type',
+	'UI:Schema:Type' => 'Typ',
 	
 	'UI:Schema:Type+' => 'Datentyp des Attributes',
 	'UI:Schema:Origin' => 'Ursprung',
@@ -594,22 +612,23 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:LinksWidget:Autocomplete+' => 'Geben Sie die ersten 3 Buchstaben ein...',
 	'UI:Combo:SelectValue' => '--- wählen Sie einen Wert ---',
 	'UI:Label:SelectedObjects' => 'Ausgewählte Objekte: ',
-	'UI:Label:AvailableObjects' => 'Verfügbare Objecke: ',
+	'UI:Label:AvailableObjects' => 'Verfügbare Objekte: ',
 	'UI:Link_Class_Attributes' => '%1$s kennzeichnet',
 	'UI:SelectAllToggle+' => 'Alle auswählen/deselektieren',
 	'UI:AddObjectsOf_Class_LinkedWith_Class_Instance' => 'Fügen Sie %1$s Objekte verbunden mit %2$s hinzu: %3$s',
+	'UI:AddObjectsOf_Class_LinkedWith_Class' => 'Fügen Sie %1$s Objekte verbunden mit %2$s hinzu',
 	'UI:ManageObjectsOf_Class_LinkedWith_Class_Instance' => 'Verwalten Sie %1$s Objekte verbunden mit %2$s: %3$s',
-	'UI:AddLinkedObjectsOf_Class' => 'Hinzufügen %1$ss...',
+	'UI:AddLinkedObjectsOf_Class' => ' %1$se hinzufügen...',
 	'UI:RemoveLinkedObjectsOf_Class' => 'Entferne ausgewählte Objekte',
 	'UI:Message:EmptyList:UseAdd' => 'Die Liste ist leer, benutzten Sie "Hinzufügen..." um Elemente hinzuzufügen.',
 	'UI:Message:EmptyList:UseSearchForm' => 'Benutzen Sie das Suchformular oben, um nach hinzufügenbaren Objekten zu suchen.',
 	
 	'UI:Wizard:FinalStepTitle' => 'Letzter Schritt: Bestätigung',
 	'UI:Title:DeletionOf_Object' => 'Löschung von %1$s',
-	'UI:Title:BulkDeletionOf_Count_ObjectsOf_Class' => 'Mengenlöschung von %1$d Objekten der %2$s',
+	'UI:Title:BulkDeletionOf_Count_ObjectsOf_Class' => 'Massenlöschung von %1$d Objekten der %2$s',
 	'UI:Delete:NotAllowedToDelete' => 'Sie sind nicht berechtigt, dieses Objekt zu löschen.',
 	'UI:Delete:NotAllowedToUpdate_Fields' => 'Sie sind nicht berechtigt, die folgenden Felder zu aktualisieren: %1$s',
-	'UI:Error:NotEnoughRightsToDelete' => 'Dieses Objekt konnte nicht gelöscht werden, da der derzeitige Benutzer nicht die Rechte dazu besitzt.',
+	'UI:Error:NotEnoughRightsToDelete' => 'Dieses Objekt konnte nicht gelöscht werden, da der derzeitige Benutzer nicht die notwendigen Rechte dazu besitzt.',
 	'UI:Error:CannotDeleteBecauseOfDepencies' => 'Dieses Objekt konnte nicht gelöscht werden, da zuerst dazu einige manuelle Operationen durchgeführt werden müssen.',
 	'UI:Archive_User_OnBehalfOf_User' => '%1$s im Auftrag von %2$s',
 	'UI:Delete:AutomaticallyDeleted' => 'Automatisch gelöscht',
@@ -628,12 +647,12 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Delete:WillAutomaticallyUpdate_Fields' => 'Wird automatisch aktualisiert (Reset: %1$s)',
 	'UI:Delete:Count_Objects/LinksReferencing_Object' => '%1$d Objekte/Links referenzieren %2$s',
 	'UI:Delete:Count_Objects/LinksReferencingTheObjects' => '%1$d Objekte/Links referenzieren einige der zu löschenden Objekte',	
-	'UI:Delete:ReferencesMustBeDeletedToEnsureIntegrity' => 'Um Datenbankintegrität sicherzustellen, sollten alle weiteren Referenzen entfernt werden.',
+	'UI:Delete:ReferencesMustBeDeletedToEnsureIntegrity' => 'Um Datenbankintegrität sicherzustellen sollten alle weiteren Referenzen entfernt werden.',
 	'UI:Delete:Consequence+' => 'Was getan wird',
 	'UI:Delete:SorryDeletionNotAllowed' => 'Entschuldigung, Ihnen ist es nicht gestattet, dieses Objekt zu löschen. Eine ausführliche Erklärung dazu finden Sie oben',
-	'UI:Delete:PleaseDoTheManualOperations' => 'Bitte führen Sie die oben aufgelisteten, manuellen Operationen zuerst durch, bevor Sie dieses Objekt löschen.',
-	'UI:Delect:Confirm_Object' => 'Bitte bestätigen Sie, das Sie %1$s löschen möchten.',
-	'UI:Delect:Confirm_Count_ObjectsOf_Class' => 'Bitte bestätigen Sie, dass Sie die folgenden %1$d Objekte der Klasse %2$s löschen möchten.',
+	'UI:Delete:PleaseDoTheManualOperations' => 'Bitte führen Sie die oben aufgelisteten manuellen Operationen zuerst durch, bevor Sie dieses Objekt löschen.',
+	'UI:Delect:Confirm_Object' => 'Bitte bestätigen Sie, dass Sie %1$s löschen möchten.',
+	'UI:Delect:Confirm_Count_ObjectsOf_Class' => 'Bitte bestätigen Sie, dasss Sie die folgenden %1$d Objekte der Klasse %2$s löschen möchten.',
 	'UI:WelcomeToITop' => 'Willkommen bei iTop',
 	'UI:DetailsPageTitle' => 'iTop - %1$s - %2$s Details',
 	'UI:ErrorPageTitle' => 'iTop - Fehler',
@@ -791,6 +810,10 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:NotificationsMenu:Actions' => 'Aktionen',
 	'UI:NotificationsMenu:AvailableActions' => 'Verfügbare Aktionen',
 	
+	'Menu:AuditCategories' => 'Audit-Kategorien',
+	'Menu:AuditCategories+' => 'Audit-Kategorien',
+	'Menu:Notifications:Title' => 'Audit-Kategorien',
+		
 	'Menu:RunQueriesMenu' => 'Abfrage ausführen',
 	'Menu:RunQueriesMenu+' => 'Eine beliebige Abfrage ausführen',
 	
@@ -829,6 +852,30 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:Deadline_Hours_Minutes' => '%1$dStunden %2$dMinuten',			
 	'UI:Deadline_Days_Hours_Minutes' => '%1$dTage %2$dStunden %3$dMinuten',
 	'UI:Help' => 'Hilfe',
+	'UI:PasswordConfirm' => '(Bestätigen)',
+	'UI:BeforeAdding_Class_ObjectsSaveThisObject' => 'Bevor weitere Objekte vom Typ "%1$s" hinzugefügt werden, speichern Sie dieses Objekt.',
+	'UI:DisplayThisMessageAtStartup' => 'Diese Meldung beim Start anzeigen',
+	'UI:RelationshipGraph' => 'Grafische Ansicht',
+	'UI:RelationshipList' => 'Liste',
+
+	'Portal:Title' => 'iTop-Benutzerportal',
+	'Portal:Refresh' => 'Erneuern',
+	'Portal:Back' => 'Zurück',
+	'Portal:CreateNewRequest' => 'Einen neuen Request erstellen',
+	'Portal:ChangeMyPassword' => 'Mein Passwort ändern',
+	'Portal:Disconnect' => 'Disconnect',
+	'Portal:OpenRequests' => 'Meine offenen Requests',
+	'Portal:ResolvedRequests'  => 'Meine gelösten Requests',
+	'Portal:SelectService' => 'Wählen Sie einen Service aus dem Katalog:',
+	'Portal:PleaseSelectOneService' => 'Bitte wählen Sie einen Service',
+	'Portal:SelectSubcategoryFrom_Service' => 'Wählen Sie einen Unterkategorie für diesen Service vom Typ "%1$s":',
+	'Portal:PleaseSelectAServiceSubCategory' => 'Bitte wählen Sie eine Unterkategorie',
+	'Portal:DescriptionOfTheRequest' => 'Geben Sie die Beschreibung Ihres Requests ein:',
+	'Portal:TitleRequestDetailsFor_Request' => 'Details für Request %1$s:',
+	'Portal:NoOpenRequest' => 'Keinen Request in dieser Kategorie',
+	'Portal:Button:CloseTicket' => 'Dieses Ticket schließen',
+	'Portal:EnterYourCommentsOnTicket' => 'Geben Sie einen Kommentar zur Lösung dieses Tickets ein:',
+	'Portal:ErrorNoContactForThisUser' => 'Fehler: der derzeitige Benutzer wurde nicht einem Kontakt oder einer Person zugewiesen. Bitte kontaktieren Sie Ihren Administrator.',
 ));
 
 
