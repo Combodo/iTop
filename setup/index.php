@@ -1104,15 +1104,11 @@ function SetupFinished(SetupWebPage $oP, $aParamValues, $iCurrentStep, Config $o
 				$oP->ok("The initialization completed successfully.");
 			}
 			// Form goes here.. No back button since the job is done !
-			$oP->add("<h1>Let us know what you think about iTop</h1>");
-			$oP->add('<table style="width:100%;border:0;padding:0;"><tr><td style="width:100px;vertical-align:middle;background:#f6f6f1;text-align:center">');
-			$oP->add('<a href="http://www.combodo.com" style="padding:0;background:transparent;margin:0;" target="_blank"><img style="border:0" src="../images/logo-combodo.png"></a></td>');
-			$oP->add('<td style="padding-left: 10px;font-size:10pt">');
-			$oP->add("Combodo built iTop because Combodo believes that modern ITIL tools should be at the center of any IT department.");
-			$oP->p("Combodo invested a lot of time and effort in iTop, but you can help us improve it even further by providing your feedbacks</p>");
-			$oP->p("<a href=\"http://www.combodo.com/register?product=iTop&version=".urlencode(ITOP_VERSION." revision ".ITOP_REVISION)."\" target=\"_blank\">Register online</a> to get informed about all iTop related events (new versions, webinars, etc...)");
-			$oP->p("Check out the <a href=\"http://www.combodo.com/itopsupport\" target=\"_blank\">support options</a> available for iTop.");
-			$oP->add('</td></tr></table>');
+			$oP->add('<table style="width:600px;border:0;padding:0;"><tr>');
+			$oP->add("<td><a style=\"background:transparent;padding:0;\" title=\"Free: Register your iTop version.\" href=\"http://www.combodo.com/register?product=iTop&version=".urlencode(ITOP_VERSION." revision ".ITOP_REVISION)."\" target=\"_blank\"><img style=\"border:0\" src=\"../images/setup-register.gif\"/></td></a>");
+			$oP->add("<td><a style=\"background:transparent;padding:0;\" title=\"Get Professional Support from Combodo\" href=\"http://www.combodo.com/itopsupport\" target=\"_blank\"><img style=\"border:0\" src=\"../images/setup-support.gif\"/></td></a>");
+			$oP->add("<td><a style=\"background:transparent;padding:0;\" title=\"Get Professional Training from Combodo\" href=\"http://www.combodo.com/itoptraining\" target=\"_blank\"><img style=\"border:0\" src=\"../images/setup-training.gif\"/></td></a>");
+			$oP->add('</tr></table>');
 			$oP->add("<p style=\"text-align:center;width:100%\"><button type=\"submit\">Enter iTop</button></p>\n");
 			$oP->add("</form>\n");
 		}

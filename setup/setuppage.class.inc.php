@@ -208,7 +208,7 @@ table.formTable {
 	
 	public function output()
 	{
-		$this->s_content = "<div id=\"header\"><h1><a href=\"http://www.combodo.com/itop\"><img title=\"iTop by Combodo\" src=\"../images/itop-logo.png\"></a>&nbsp;{$this->s_title}</h1>\n</div><div id=\"setup\">{$this->s_content}\n</div>\n";
+		$this->s_content = "<div id=\"header\"><h1><a href=\"http://www.combodo.com/itop\" target=\"_blank\"><img title=\"iTop by Combodo\" src=\"../images/itop-logo.png\"></a>&nbsp;{$this->s_title}</h1>\n</div><div id=\"setup\">{$this->s_content}\n</div>\n";
 		return parent::output();
 	}
 	
