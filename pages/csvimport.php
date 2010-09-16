@@ -835,7 +835,7 @@ EOF
 		// Compute a subset of the data set, now that we know the charset
 		if ($sEncoding == 'UTF-8')
 		{
-			$sUTF8Data = $sCSVData;		
+			$sUTF8Data = iconv('UTF-8', 'UTF-8//IGNORE//TRANSLIT', $sCSVData);
 		}
 		else
 		{
