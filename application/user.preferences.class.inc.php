@@ -134,7 +134,14 @@ class appUserPreferences extends DBObject
 			$oObj = new appUserPreferences();
 			$oObj->Set('userid', UserRights::GetUserId());
 			$oObj->Set('preferences', array()); // Default preferences: an empty array
-			$oObj->DBInsert();
+			try
+			{
+				$oObj->DBInsert();
+			}
+			catch(Exception $e)
+			{
+				// Ignore errors
+			}
 		}
 		self::$oUserPrefs = $oObj;
 	}
@@ -154,9 +161,17 @@ class appUserPreferences extends DBObject
 		);
 		
 		MetaModel::Init_Params($aParams);
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", array("targetclass"=>"User", "allowed_values"=>null, "sql"=>"userid", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", array("targetclass"=>"User", "allowed_values"=>null, "sql"=>"userid", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributePropertySet("preferences", array("allowed_values"=>null, "sql"=>"preferences", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 	}
-	
+
+	/**
+	* Overloading this function here to secure a fix done right before the release
+	* The real fix should be to implement this verb in DBObject	
+	*/
+	public function DBDeleteTracked(CMDBChange $oChange, $bSkipStrongSecurity = null)
+	{
+		$this->DBDelete();
+	}
 }
 ?>
