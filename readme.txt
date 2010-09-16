@@ -1,4 +1,4 @@
-iTop - version 1.0.0 - 16-Sep-2010
+iTop - version 1.0.0 - 20-Sep-2010
 Readme file
 
 1.   ABOUT THIS RELEASE
@@ -14,11 +14,12 @@ Readme file
 1. ABOUT THIS RELEASE
    ==================
 Thank you for downloading the seventh packaged release of iTop. This version is
-the first complete version of iTop: it aims at being really used professionaly.
+the first complete version of iTop: it aims at being really used professionally.
 
-Additional documentation can be dowloaded from http://www.combodo.com/itop, in the topic 'support':
+Additional documentation can be downloaded from http://www.combodo.com/itopdocumentation
  - User guide
  - Administrator guide
+ - Customization guide
  - How to upgrade from previous versions
 
 iTop is released under the GPL (v3) license. (Check license.txt in this directory).
@@ -27,11 +28,11 @@ The source code of iTop can be found on SourceForge: http://itop.sourceforge.net
 1.1 Special Thanks To:
     -----------------
 Bruno Bonfils for his guidance about LDAP and authentication.
-Randall Badilla Castro, for the Spanish translation.
-Jonathan Lucas and David Gumbel from ITOMIG BmBh, for the german translation.
-Christian Lempereur, for his feedbacks.
-Olivier Fouquet, for his feedbacks.
-
+Randall Badilla Castro for the Spanish translation.
+Jonathan Lucas and David Gumbel from ITOMIG BmBh, for the German translation.
+Christian Lempereur and Olivier Fouquet for their feedbacks.
+Everaldo Coelho and the Oxygen Team for their wonderful icons.
+The JQuery team and the all the jQuery plugins authors for developing such a powerful library.
 
 
 2. INSTALLATION
@@ -39,19 +40,24 @@ Olivier Fouquet, for his feedbacks.
 
 2.1. Requirements
      ------------
+Server configuration:
 iTop is based on the AMP (Apache / MySQL / PHP) platform and requires PHP 5.2 and
 MySQL 5. The installation of iTop does not require any command line access to the
 server. The only operations required to install iTop are: copying the files to the
-server and browsing some web pages.
-Although iTop should work with most modern web browsers the application has been
-tested mostly on Firefox 3 and IE7/IE8.
+server and browsing web pages.
+
+Client configuration:
+Although iTop should work with most modern web browsers, the application has been
+tested mostly on Firefox 3, IE7/IE8 and Chrome. iTop was designed for at least a
+1024x768 screen resolution. For the graphical view of the impact analysis, Flash
+version 8 or higher is required.
 
 2.2. Install procedure
      -----------------
 1) Make sure that you have a properly configured instance of Apache/PHP running
-2) Unpack the files contained in the zipped package in a directory served by your
-web server.
-3) Point your web browser to the URL corresponding to the directory were the files
+2) Unpack the files contained in the zipped package, and copy the content of the "web"
+directory in a directory served by your web server.
+3) Point your web browser to the URL corresponding to the directory where the files
 have been unpackaged and follow the indications on the screen.
 
 Note:
@@ -61,12 +67,12 @@ configuration file (usually located at /etc/mysql/my.cnf):
 
 innodb_flush_method = O_DSYNC
 
-On some systems you'll see a 5 to 10 times performance improvement for writing data into
+On some systems you'll see a 5 to 10 times performance boost for writing data into
 the MySQL database !
 
 2.3. Migrating from a previous version
      ---------------------------------
-Please refer to the migration guide available at http://www.combodo.com/itop.
+Please refer to the migration guide available at http://www.combodo.com/itopdocumentation.
 
 
 3. FEATURES
@@ -164,24 +170,20 @@ The complete list can be reviewed on http://sourceforge.net/apps/trac/itop/repor
 #234  PHP Strict Standards warnings
 #140  Check that user logins are unique
 
-3.2. Known limitations
+3.2. Known limitations (https://sourceforge.net/apps/trac/itop/report/3)
      -----------------
-#71   The same MySQL credentials are used for setup and the application. They have to
-      be changed manually into the configuration file to achieve maximum security
-#246  Massive data load requiring to setup specific HTTP sessions with higher
-      timeouts and memory limits
-#257  Could not delete more than 997 items when SUHOSIN is installed with its
-      default settings (See TRAC)
+#71   The same MySQL credentials are used during the setup and for running the application.
+#246  Massive data load requiring to setup specific HTTP sessions with higher timeouts and memory limits
+#257  Could not delete more than 997 items when SUHOSIN is installed with its default settings (See TRAC)
 #265  Add reconciliations keys into CSV template
 
 
-3.3. Known issues
+3.3. Known issues (https://sourceforge.net/apps/trac/itop/report/3)
      ------------
-#259  Not instantaneously logged off when the administrator deletes a user account
-#245  Search form gets too specialized
-#175  When moving backward in the CSV import wizard, some settings may be lost
-      (e.g column selection)
-#174  CSV import not displaying the labels of enums
-#258	Context automatically selected when searching on organization
-#273  The administrator could delete his/her own user account
+#259	Not instantaneously logged off when the administrator deletes a user account
+#245	Search form gets too specialized: after searching on a subclass it not possible to select the base class again
+#175	When moving backward in the CSV import wizard, some settings may be reset (e.g column mapping)
+#174	CSV import not displaying the labels of enums
+#258	Context automatically set when specifying an organization in a search form
+#273	The administrator can delete his/her own user account
 
