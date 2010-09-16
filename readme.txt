@@ -89,30 +89,34 @@ The same page shows a report of ongoing requests.
 SLA Management
 --------------
 SLAs can be defined in the service management module.
-When a SLA is not met (and just before it gest too late), the corresponding
-ticket is higlighted in the dashboard.
-When the deadline is reached, tickets automatically switch to an "escalation"
+An escalation deadline is automatically computed upon ticket creation.
+In the tickets dashboard, tickets close to reach the deadline are highlighted.
+When the deadline is reached, the ticket automatically switches to an "escalation"
 state. An acknowledgement is required before returning to normal operations on
 that ticket.
 
 Modular setup
 -------------
 It is now possible to select ITIL modules you would like to use.
+For instance, you might want to install only the configuration management 
+along with incident management.
 
 
 Major changes
 -------------
-- A brand new data model has been designed to make iTop ITIL compliant.
-- Graphical views have been developed to represent releation between CIS. Two views are available today: "impact"
-  in order to view what CIs are impacted by a given one, and "depends on" to view what CIs impact a given one.
-- Relations for computing impacts can be customized.
-- Those relations are used as well to compute impacted CIs and contacts to notify when an incident occurs.
-- UI look and feel has been reviewed to make the application more professional.
+- A brand new data model has been designed to make iTop more compliant to ITIL.
+- Graphical views have been developed to represent the relations between CIS.
+  Two views are available today.
+  * "impact" defines the CIs that are impacted by a given CI.
+  * "depends on" defines the CIs that are a threat to a given CI.  
+  When creating an incident ticket, the impacted CIs and contacts to notify are
+  automatically computed, and attached to the ticket.
+- The UI has been reviewed to make the application more professional.
 - The CSV import tool has been improved to make it easier to use.
-- A Web service has been developed to allow tickets to be created automatically from emails. This feature simplifies
-  ticket creation for end-users.
+- A Web service has been developed to allow tickets to be created automatically
+  from emails. This feature simplifies ticket creation for end-users.
 - User management: Finalized the UI to create new users and manage their profiles
-- Authentication: added the possibility to rely on an LDAP authentication, or
+- Authentication: Added the possibility to rely on an LDAP authentication, or
   and external authentication (e.g. Web Server single sign-on, relying on a .htaccess file)
 
 
@@ -141,16 +145,16 @@ Bugs fixed
 ----------
 The complete list can be reviewed on http://sourceforge.net/apps/trac/itop/report/1
 
-#182	Setup fails with mysql error 1046 or 1146
-#144 	Could not create a workgroup
-#97 	Issue when removing an organization
-#105 	Issue in exporting a given class of object
-#106 	Importing data using import CSV
-#116 	When modifying a user, the link with the profile(s) is lost.
-#98 	Computation of free IPs in a subnet is wrong
-#126 	'magic_quotes_gpc' test issue during setup
-#128 	Issue when using AttributeBlob not mandatory
-#136 	Context menus
+#182  Setup fails with mysql error 1046 or 1146
+#144  Could not create a workgroup
+#97   Issue when removing an organization
+#105  Issue in exporting a given class of object
+#106  Importing data using import CSV
+#116  When modifying a user, the link with the profile(s) is lost.
+#98   Computation of free IPs in a subnet is wrong
+#126  'magic_quotes_gpc' test issue during setup
+#128  Issue when using AttributeBlob not mandatory
+#136  Context menus
 #102  Allow users to change their password.
 #210  Error message when trying to uploading a big file
 #139  mysSQL error: "truncated column", or truncated string
