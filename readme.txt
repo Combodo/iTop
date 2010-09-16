@@ -177,9 +177,11 @@ The complete list can be reviewed on http://sourceforge.net/apps/trac/itop/repor
 
 3.3. Known issues
      ------------
-#259  Not instantaneously logged off when the administrator deletes a user entry
+#259  Not instantaneously logged off when the administrator deletes a user account
 #245  Search form gets too specialized
 #175  When moving backward in the CSV import wizard, some settings may be lost
       (e.g column selection)
 #174  CSV import not displaying the labels of enums
 #258	Context automatically selected when searching on organization
+#273  The administrator could delete his/her own user account
+
