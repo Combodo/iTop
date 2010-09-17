@@ -138,5 +138,16 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkDocumentError/Attribute:link_type+' => '',
 ));
 
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+        'Menu:ProblemManagement' => 'Problem Management', // Duplicated from Pb Mgmt module, since the two modules are independent
+        'Menu:ProblemManagement+' => 'Problem Management',// and the KEDB may be installed independently of the Pb Mgmt module
+        'Menu:NewError' => 'Neues bekannte Fehler',
+        'Menu:NewError+' => '',
+        'Menu:SearchError' => 'Nach bekannten Fehler suchen',
+        'Menu:SearchError+' => '',
+    	'Menu:Problem:KnownErrors' => 'Alle bekannten Fehler',
+    	'Menu:Problem:KnownErrors+' => 'Alle bekannten Fehler',
+));
+
 
 ?>
