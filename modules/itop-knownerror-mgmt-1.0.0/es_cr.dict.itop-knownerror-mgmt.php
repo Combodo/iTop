@@ -48,4 +48,34 @@
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
+//
+// Class: lnkDocumentError
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+        'Class:lnkDocumentError' => 'Error / Tiquete',
+        'Class:lnkDocumentError+' => 'Error / Tiquete',
+        'Class:lnkDocumentError/Attribute:doc_id' => 'Documento',
+        'Class:lnkDocumentError/Attribute:doc_id+' => '',
+        'Class:lnkDocumentError/Attribute:doc_name' => 'Identificación del Documento',
+        'Class:lnkDocumentError/Attribute:doc_name+' => '',
+        'Class:lnkDocumentError/Attribute:error_id' => 'Error',
+        'Class:lnkDocumentError/Attribute:error_id+' => '',
+        'Class:lnkDocumentError/Attribute:error_name' => 'Identificación del Error',
+        'Class:lnkDocumentError/Attribute:error_name+' => '',
+        'Class:lnkDocumentError/Attribute:link_type' => 'Información',
+        'Class:lnkDocumentError/Attribute:link_type+' => '',
+));
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+        'Menu:ProblemManagement' => 'Gestión de Errores',
+        'Menu:ProblemManagement+' => 'Gestión de Errores',
+        'Menu:NewError' => 'Nueva Error',
+        'Menu:NewError+' => 'Nueva Error',
+        'Menu:SearchError' => 'Búsqueda de errores ',
+        'Menu:SearchError+' => 'Búsqueda de errores',
+        'Menu:Problem:KnownErrors' => 'Todos los errores',
+        'Menu:Problem:KnownErrors+' => 'Todos los errores',
+));
+
 ?>

@@ -139,6 +139,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 ));
 
 Dict::Add('FR FR', 'FRench', 'Français', array(
+        'Menu:ProblemManagement' => 'Gestion des Problèmes',
+        'Menu:ProblemManagement+' => 'Gestion des Problèmes',
         'Menu:NewError' => 'Nouvelle Erreur connue',
         'Menu:NewError+' => 'Creation d\'une nouvelle erreur connue',
         'Menu:SearchError' => 'Rechercher des erreurs connues',

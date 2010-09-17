@@ -367,10 +367,12 @@ class ServiceSubcategory extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeString("description", array("allowed_values"=>null, "sql"=>"description", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("service_id", array("targetclass"=>"Service", "jointype"=>null, "allowed_values"=>null, "sql"=>"service_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("service_name", array("allowed_values"=>null, "extkey_attcode"=>"service_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("org_id", array("allowed_values"=>null, "extkey_attcode"=>"service_id", "target_attcode"=>"org_id", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("provider_name", array("allowed_values"=>null, "extkey_attcode"=>"service_id", "target_attcode"=>"provider_name", "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('name', 'service_id','description'));
+		MetaModel::Init_SetZListItems('details', array('name', 'org_id','service_id','description'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'description', 'service_id'));
-		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'service_id'));
+		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'service_id','provider_name'));
 		MetaModel::Init_SetZListItems('list', array('service_id','description'));
 	}
 }
@@ -590,11 +592,11 @@ class lnkServiceToCI extends cmdbAbstractObject
 $oServiceManagementGroup = new MenuGroup('ServiceManagement', 60 /* fRank */);
 $iRank = 0;
 new TemplateMenuNode('Service:Overview', '../modules/itop-service-mgmt-1.0.0/overview.html', $oServiceManagementGroup->GetIndex() /* oParent */, $iRank++ /* fRank */);
-new OQLMenuNode('ProviderContract', 'SELECT ProviderContract', $oServiceManagementGroup->GetIndex(), $iRank++);
-new OQLMenuNode('CustomerContract', 'SELECT CustomerContract', $oServiceManagementGroup->GetIndex(),  $iRank++);
-new OQLMenuNode('Service', 'SELECT Service', $oServiceManagementGroup->GetIndex(), $iRank++);
-new OQLMenuNode('ServiceSubcategory', 'SELECT ServiceSubcategory', $oServiceManagementGroup->GetIndex(), $iRank++);
-new OQLMenuNode('SLA', 'SELECT SLA', $oServiceManagementGroup->GetIndex(), $iRank++);
-new OQLMenuNode('SLT', 'SELECT SLT', $oServiceManagementGroup->GetIndex(), $iRank++);
+new OQLMenuNode('ProviderContract', 'SELECT ProviderContract', $oServiceManagementGroup->GetIndex(), $iRank++,true /* bsearch */);
+new OQLMenuNode('CustomerContract', 'SELECT CustomerContract', $oServiceManagementGroup->GetIndex(),  $iRank++,true /* bsearch */);
+new OQLMenuNode('Service', 'SELECT Service', $oServiceManagementGroup->GetIndex(), $iRank++,true /* bsearch */);
+new OQLMenuNode('ServiceSubcategory', 'SELECT ServiceSubcategory', $oServiceManagementGroup->GetIndex(), $iRank++,true /* bsearch */);
+new OQLMenuNode('SLA', 'SELECT SLA', $oServiceManagementGroup->GetIndex(), $iRank++,true /* bsearch */);
+new OQLMenuNode('SLT', 'SELECT SLT', $oServiceManagementGroup->GetIndex(), $iRank++,true /* bsearch */);
 
 ?>
