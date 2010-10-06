@@ -3007,7 +3007,7 @@ abstract class MetaModel
 					$sRemoteTable = self::DBGetTable($sRemoteClass);
 					$sRemoteKey = self::DBGetKey($sRemoteClass);
 
-					$aCols = $oKeyAttDef->GetSQLExpressions(); // Workaround a PHP bug: sometimes issuing a Notice if invoking current(somefunc())
+					$aCols = $oAttDef->GetSQLExpressions(); // Workaround a PHP bug: sometimes issuing a Notice if invoking current(somefunc())
 					$sExtKeyField = current($aCols); // get the first column for an external key
 
 					// Note: a class/table may have an external key on itself
@@ -3054,7 +3054,7 @@ abstract class MetaModel
 					{
 						$sExpectedValues = implode(",", CMDBSource::Quote(array_keys($aAllowedValues), true));
 	
-						$aCols = $oKeyAttDef->GetSQLExpressions(); // Workaround a PHP bug: sometimes issuing a Notice if invoking current(somefunc())
+						$aCols = $oAttDef->GetSQLExpressions(); // Workaround a PHP bug: sometimes issuing a Notice if invoking current(somefunc())
 						$sMyAttributeField = current($aCols); // get the first column for the moment
 						$sDefaultValue = $oAttDef->GetDefaultValue();
 						$sSelWrongRecs = "SELECT DISTINCT maintable.`$sKeyField` AS id FROM `$sTable` AS maintable WHERE maintable.`$sMyAttributeField` NOT IN ($sExpectedValues)";
