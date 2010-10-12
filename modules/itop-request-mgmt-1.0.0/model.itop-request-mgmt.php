@@ -75,14 +75,19 @@ class UserRequest extends ResponseTicket
 
 	public function ComputeValues()
 	{
-		$iKey = $this->GetKey();
-		if ($iKey < 0)
+		$sCurrRef = $this->Get('ref');
+		if (strlen($sCurrRef) == 0)
 		{
-			// Object not yet in the Database
-			$iKey = MetaModel::GetNextKey(get_class($this));
+			$iKey = $this->GetKey();
+			if ($iKey < 0)
+			{
+				// Object not yet in the Database
+				$iKey = MetaModel::GetNextKey(get_class($this));
+			}
+			$sName = sprintf('R-%06d', $iKey);
+			$this->Set('ref', $sName);
 		}
-		$sName = sprintf('R-%06d', $iKey);
-		$this->Set('ref', $sName);
+
 		return parent::ComputeValues();
 	}
 
