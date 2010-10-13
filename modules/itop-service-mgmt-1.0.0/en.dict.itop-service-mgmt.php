@@ -82,7 +82,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Contract/Attribute:name+' => '',
 	'Class:Contract/Attribute:description' => 'Description',
 	'Class:Contract/Attribute:description+' => '',
-	'Class:Contract/Attribute:start_date' => 'Start data',
+	'Class:Contract/Attribute:start_date' => 'Start date',
 	'Class:Contract/Attribute:start_date+' => '',
 	'Class:Contract/Attribute:end_date' => 'End date',
 	'Class:Contract/Attribute:end_date+' => '',
