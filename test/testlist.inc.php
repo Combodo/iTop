@@ -1380,6 +1380,17 @@ class TestImportREST extends TestWebServices
 				'csvdata' => "name;status;owner_name;location_name;location_id->org_name;os_family;os_version;management_ip;cpu;ram;brand;model;serial_number\nlocalhost.;production;Demo;Grenoble;Demo;Ubuntu 9.10;2.6.31-19-generic-#56-Ubuntu SMP Thu Jan 28 01:26:53 UTC 2010;16.16.230.232;Intel(R) Core(TM)2 Duo CPU     T7100  @ 1.80GHz;2005;Hewlett-Packard;HP Compaq 6510b (GM108UC#ABF);CNU7370BNP",
 			),
 			array(
+				'desc' => 'Load server - wrong value for status',
+				'login' => 'admin',
+				'password' => 'admin',
+				'args' => array(
+					'class' => 'Server',
+					'output' => 'details',
+					'reconciliationkeys' => '',
+				),
+				'csvdata' => "name;status;owner_name;location_name;location_id->org_name;os_family;os_version;management_ip;cpu;ram;brand;model;serial_number\nlocalhost.;Production;Demo;Grenoble;Demo;Ubuntu 9.10;2.6.31-19-generic-#56-Ubuntu SMP Thu Jan 28 01:26:53 UTC 2010;16.16.230.232;Intel(R) Core(TM)2 Duo CPU     T7100  @ 1.80GHz;2005;Hewlett-Packard;HP Compaq 6510b (GM108UC#ABF);CNU7370BNP",
+			),
+			array(
 				'desc' => 'Load NW if',
 				'login' => 'admin',
 				'password' => 'admin',
@@ -2101,4 +2112,67 @@ class TestTriggerAndEmail extends TestBizModel
 		return true;
 	}
 }
+
+class TestCreateObjects extends TestBizModel
+{
+	static public function GetName()
+	{
+		return 'Itop - create objects';
+	}
+
+	static public function GetDescription()
+	{
+		return 'Create weird objects (reproduce a bug?)';
+	}
+
+	static public function GetConfigFile() {return '../config-itop.php';}
+
+	protected function DoExecute()
+	{
+		$oMyObj = MetaModel::NewObject("Server");
+		$oMyObj->Set("name", "test".rand(1,1000));
+		$oMyObj->Set("org_id", 2);
+		$oMyObj->Set("status", 'production');
+		$this->ObjectToDB($oMyObj, $bReload = true);
+		echo "<p>Created: {$oMyObj->GetHyperLink()}</p>";
+
+		$sTicketRef = "I-abcdef";
+		echo "<p>Creating: $sTicketRef</p>";
+		$oMyObj = MetaModel::NewObject("Incident");
+		$oMyObj->Set("ref", $sTicketRef);
+		$oMyObj->Set("title", "my title");
+		$oMyObj->Set("description", "my description");
+		$oMyObj->Set("ticket_log", "my ticket log");
+		$oMyObj->Set("start_date", "2010-03-08 17:37:00");
+		$oMyObj->Set("status", "resolved");
+		$oMyObj->Set("caller_id", 1);
+		$oMyObj->Set("org_id", 1);
+		$oMyObj->Set("urgency", 3);
+		$oMyObj->Set("agent_id", 1);
+		$oMyObj->Set("close_date", "0000-00-00 00:00:00");
+		$oMyObj->Set("last_update", "2010-04-08 16:47:29");
+		$oMyObj->Set("solution", "branche ton pc!");
+		// External key given as a string -> should be casted to an integer
+		$oMyObj->Set("service_id", "1");
+		$oMyObj->Set("servicesubcategory_id", "1");
+		$oMyObj->Set("product", "");
+		$oMyObj->Set("impact", 2);
+		$oMyObj->Set("priority", 3);
+		$oMyObj->Set("related_problem_id", 0);
+		$oMyObj->Set("related_change_id", 0);
+		$oMyObj->Set("assignment_date", "");
+		$oMyObj->Set("resolution_date", "");
+		$oMyObj->Set("tto_escalation_deadline", "");
+		$oMyObj->Set("ttr_escalation_deadline", "");
+		$oMyObj->Set("closure_deadline", "");
+		$oMyObj->Set("resolution_code", "fixed");
+		$oMyObj->Set("user_satisfaction", "");
+		$oMyObj->Set("user_commment", "");
+		$oMyObj->Set("workgroup_id", 4);
+		$this->ObjectToDB($oMyObj, $bReload = true);
+		echo "<p>Created: {$oMyObj->GetHyperLink()}</p>";
+	}
+}
+
+
 ?>

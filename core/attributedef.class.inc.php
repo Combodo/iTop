@@ -1096,6 +1096,22 @@ class AttributeEnum extends AttributeString
 		}
 	}
 
+	public function ScalarToSQL($value)
+	{
+		// Note: for strings, the null value is an empty string and it is recorded as such in the DB
+		//       but that wasn't working for enums, because '' is NOT one of the allowed values
+		//       that's why a null value must be forced to a real null
+		$value = parent::ScalarToSQL($value);
+		if ($this->IsNull($value))
+		{
+			return null;
+		}
+		else
+		{
+			return $value;
+		}
+	}
+
 	public function RequiresIndex()
 	{
 		return false;
