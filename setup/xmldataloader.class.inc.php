@@ -41,7 +41,11 @@ class XMLDataLoader
 	protected $m_bSessionActive;
 	protected $m_oChange;
 	protected $m_sCacheFileName;
-	
+
+	protected $m_aErrors;
+	protected $m_aWarnings;
+	protected $m_iCountCreated;
+
 	public function __construct($sConfigFileName)
 	{
 		$this->m_aKeys = array();
@@ -51,7 +55,9 @@ class XMLDataLoader
 		$this->InitDataModel($sConfigFileName);
 		$this->LoadKeysCache();
 		$this->m_bSessionActive = true;
-
+		$this->m_aErrors = array();
+		$this->m_aWarnings = array();
+		$this->m_iCountCreated = 0;
 	}
 	
 	public function StartSession($oChange)
@@ -63,10 +69,38 @@ class XMLDataLoader
 		$this->m_bSessionActive  = true;
 	}
 	
-	public function EndSession()
+	public function EndSession($bStrict = false)
 	{
 		$this->ResolveExternalKeys();
 		$this->m_bSessionActive  = false;
+
+		if (count($this->m_aErrors) > 0)
+		{
+			return false;
+		}
+		elseif ($bStrict && count($this->m_aWarnings) > 0)
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+
+	public function GetErrors()
+	{
+		return $this->m_aErrors;
+	}
+
+	public function GetWarnings()
+	{
+		return $this->m_aWarnings;
+	}
+
+	public function GetCountCreated()
+	{
+		return $this->m_iCountCreated;
 	}
 	
 	public function __destruct()
@@ -116,7 +150,10 @@ class XMLDataLoader
 		{
 			$sData = serialize( array('keys' => $this->m_aKeys,
 									'objects' => $this->m_aObjectsCache,
-									'change' => $this->m_oChange));
+									'change' => $this->m_oChange,
+									'errors' => $this->m_aErrors,
+									'warnings' => $this->m_aWarnings,
+									));
 			fwrite($hFile, $sData);
 			fclose($hFile);
 		}
@@ -137,7 +174,9 @@ class XMLDataLoader
 			$aCache = unserialize($sFileContent);
 			$this->m_aKeys = $aCache['keys'];
 			$this->m_aObjectsCache = $aCache['objects']; 
-			$this->m_oChange = $aCache['change']; 
+			$this->m_oChange = $aCache['change'];
+			$this->m_aErrors = $aCache['errors'];
+			$this->m_aWarnings = $aCache['warnings'];
 		}
 	}	 	
 	
@@ -170,6 +209,12 @@ class XMLDataLoader
 		$aReplicas  = array();
 		foreach($oXml as $sClass => $oXmlObj)
 		{
+			if (!MetaModel::IsValidClass($sClass))
+			{
+				SetupWebPage::log_error("Unknown class - $sClass");
+				throw(new Exception("Unknown class - $sClass"));
+			}
+
 			$iSrcId = (integer)$oXmlObj['id']; // Mandatory to cast
 			
 			// Import algorithm
@@ -177,40 +222,84 @@ class XMLDataLoader
 			// for all attribute that is neither an external field
 			// not an external key, assign it
 			// Store all external keys for further reference
-			// Create the object an store the correspondence between its newly created Id
+			// Create the object an store the correspondance between its newly created Id
 			// and its original Id
 			// Once all the objects have been created re-assign all the external keys to
 			// their actual Ids
 			$oTargetObj = MetaModel::NewObject($sClass);
-			foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode=>$oAttDef)
+			foreach($oXmlObj as $sAttCode => $oSubNode)
 			{
+				if (!MetaModel::IsValidAttCode($sClass, $sAttCode))
+				{
+					$sMsg = "Unknown attribute code - $sClass/$sAttCode";
+					SetupWebPage::log_error($sMsg);
+					throw(new Exception($sMsg));
+				}
+
+				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 				if (($oAttDef->IsWritable()) && ($oAttDef->IsScalar()))
 				{
 					if ($oAttDef->IsExternalKey())
 					{
-						$iDstObj = (integer)($oXmlObj->$sAttCode);
-						// Attempt to find the object in the list of loaded objects
-						$iExtKey = $this->GetObjectKey($oAttDef->GetTargetClass(), $iDstObj);
-						if ($iExtKey == 0)
+						if (substr(trim($oSubNode), 0, 6) == 'SELECT')
 						{
-							$iExtKey = -$iDstObj; // Convention: Unresolved keys are stored as negative !
-							$oTargetObj->RegisterAsDirty();
+							$sQuery = trim($oSubNode);
+							$oSet = new DBObjectSet(DBObjectSearch::FromOQL($sQuery));
+							$iMatches = $oSet->Count();
+							if ($iMatches == 1)
+							{
+								$oFoundObject = $oSet->Fetch();
+								$iExtKey = $oFoundObject->GetKey();
+							}
+							else
+							{
+								$sMsg = "Ext key not reconcilied - $sClass/$iSrcId - $sAttCode: '".$sQuery."' - found $iMatches matche(s)";
+								SetupWebPage::log_error($sMsg);
+								$this->m_aErrors[] = $sMsg;
+								$iExtKey = 0;
+							}
 						}
-						// here we allow external keys to be invalid because we will resolve them later on...
+						else
+						{
+							$iDstObj = (integer)($oSubNode);
+							// Attempt to find the object in the list of loaded objects
+							$iExtKey = $this->GetObjectKey($oAttDef->GetTargetClass(), $iDstObj);
+							if ($iExtKey == 0)
+							{
+								$iExtKey = -$iDstObj; // Convention: Unresolved keys are stored as negative !
+								$oTargetObj->RegisterAsDirty();
+							}
+							// here we allow external keys to be invalid because we will resolve them later on...
+						}
 						//$oTargetObj->CheckValue($sAttCode, $iExtKey);
 						$oTargetObj->Set($sAttCode, $iExtKey);
 					}
+					elseif ($oAttDef instanceof AttributeBlob)
+					{
+						$sMimeType = (string) $oSubNode->mimetype;
+						$sFileName = (string) $oSubNode->filename;
+						$data = base64_decode((string) $oSubNode->data);
+						$oDoc = new ormDocument($data, $sMimeType, $sFileName);
+						$oTargetObj->Set($sAttCode, $oDoc);
+					}
 					else
 					{
-						// tested by Romain, little impact on perf (not significant on the intial setup)
-						$res = $oTargetObj->CheckValue($sAttCode, (string)$oXmlObj->$sAttCode);
+						$value = (string)$oSubNode;
+
+						if ($value == '')
+						{
+							$value = $oAttDef->GetNullValue();
+						}
+
+						$res = $oTargetObj->CheckValue($sAttCode, $value);
 						if ($res !== true)
 						{
 							// $res contains the error description
-							SetupWebPage::log_error("Value not allowed - $sClass/$iSrcId - $sAttCode: '".$oXmlObj->$sAttCode."' ; $res");
-							throw(new Exception("Value not allowed - $sClass/$iSrcId - $sAttCode: '".$oXmlObj->$sAttCode."' ; $res"));
+							$sMsg = "Value not allowed - $sClass/$iSrcId - $sAttCode: '".$oSubNode."' ; $res";
+							SetupWebPage::log_error($sMsg);
+							$this->m_aErrors[] = $sMsg;
 						}
-						$oTargetObj->Set($sAttCode, (string)$oXmlObj->$sAttCode);
+						$oTargetObj->Set($sAttCode, $value);
 					}
 				}
 			}
@@ -283,12 +372,13 @@ class XMLDataLoader
 				{
 			        $iObjId = $oTargetObj->DBInsertNoReload();
 				}
+				$this->m_iCountCreated++;
 			}	        
 		}
 		catch(Exception $e)
 		{
-			SetupWebPage::log_error("An object could not be loaded - $sClass/$iSrcId - ".$e->getMessage());
-			echo $e->GetHtmlDesc();
+			SetupWebPage::log_error("An object could not be recorded - $sClass/$iSrcId - ".$e->getMessage());
+			$this->m_aErrors[] = "An object could not be recorded - $sClass/$iSrcId - ".$e->getMessage();
 		}
 		$aParentClasses = MetaModel::EnumParentClasses($sClass);
 		$aParentClasses[] = $sClass;
@@ -323,6 +413,7 @@ class XMLDataLoader
 						{
 							$sMsg = "unresolved extkey in $sClass::".$oTargetObj->GetKey()."(".$oTargetObj->GetName().")::$sAttCode=$sTargetClass::$iTempKey";
 							SetupWebPage::log_warning($sMsg);
+							$this->m_aWarnings[] = $sMsg;
 							//echo "<pre>aKeys[".$sTargetClass."]:\n";
 							//print_r($this->m_aKeys[$sTargetClass]);
 							//echo "</pre>\n";
@@ -349,7 +440,7 @@ class XMLDataLoader
 					}
 					catch(Exception $e)
 					{
-						echo $e->GetHtmlDesc();
+						$this->m_aErrors[] = "The object changes could not be tracked - $sClass/$iSrcId - ".$e->getMessage();
 					}
 				}
 			}

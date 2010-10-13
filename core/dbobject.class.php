@@ -669,6 +669,8 @@ abstract class DBObject
 	// a displayable error is returned
 	public function DoCheckToWrite()
 	{
+		$this->DoComputeValues();
+
 		$this->m_aCheckIssues = array();
 
 		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode=>$oAttDef)
