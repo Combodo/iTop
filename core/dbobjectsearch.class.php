@@ -722,11 +722,21 @@ class DBObjectSearch
 		}
 		elseif ($oExpression instanceof ListOqlExpression)
 		{
-			return new ListExpression($oExpression->GetItems());
+			$aItems = array();
+			foreach ($oExpression->GetItems() as $oItemExpression)
+			{
+				$aItems[] = $this->OQLExpressionToCondition($sQuery, $oItemExpression, $aClassAliases);
+			}
+			return new ListExpression($aItems);
 		}
 		elseif ($oExpression instanceof FunctionOqlExpression)
 		{
-			return new FunctionExpression($oExpression->GetVerb(), $oExpression->GetArgs());
+			$aArgs = array();
+			foreach ($oExpression->GetArgs() as $oArgExpression)
+			{
+				$aArgs[] = $this->OQLExpressionToCondition($sQuery, $oArgExpression, $aClassAliases);
+			}
+			return new FunctionExpression($oExpression->GetVerb(), $aArgs);
 		}
 		else
 		{
