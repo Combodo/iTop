@@ -1619,7 +1619,7 @@ abstract class MetaModel
 			$oConditionTree = $oFilter->GetCriteria();
 
 			$oKPI = new ExecutionKPI();
-			$oSelect = self::MakeQuery($oFilter->GetSelectedClasses(), $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oFilter);
+			$oSelect = self::MakeQuery($oFilter->GetSelectedClasses(), $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oFilter, array(), array(), true /* main query */);
 			$oKPI->ComputeStats('MakeQuery (select)', $sOqlQuery);
 
 			self::$m_aQueryStructCache[$sOqlId] = clone $oSelect;
@@ -1751,7 +1751,7 @@ abstract class MetaModel
 		return $oSelect->RenderUpdate($aScalarArgs);
 	}
 
-	private static function MakeQuery($aSelectedClasses, &$oConditionTree, &$aClassAliases, &$aTableAliases, &$aTranslation, DBObjectSearch $oFilter, $aExpectedAtts = array(), $aValues = array())
+	private static function MakeQuery($aSelectedClasses, &$oConditionTree, &$aClassAliases, &$aTableAliases, &$aTranslation, DBObjectSearch $oFilter, $aExpectedAtts = array(), $aValues = array(), $bIsMainQuery = false)
 	{
 		// Note: query class might be different than the class of the filter
 		// -> this occurs when we are linking our class to an external class (referenced by, or pointing to)
@@ -1909,7 +1909,7 @@ abstract class MetaModel
 
 		// Translate the conditions... and go
 		//
-		if ($bIsOnQueriedClass)
+		if ($bIsMainQuery)
 		{
 			$oConditionTranslated = $oConditionTree->Translate($aTranslation);
 			$oSelectBase->SetCondition($oConditionTranslated);

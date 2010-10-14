@@ -870,6 +870,7 @@ class DBObjectSearch
 			}
 			$aSelected[$sClassToSelect] = $aAliases[$sClassToSelect];
 		}
+		$oResultFilter->m_aClasses = $aAliases;
 		$oResultFilter->SetSelectedClasses($aSelected);
 
 		$oConditionTree = $oOqlQuery->GetCondition();
