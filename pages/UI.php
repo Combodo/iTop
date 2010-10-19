@@ -881,7 +881,7 @@ try
 				$oP->set_title(Dict::S('UI:ErrorPageTitle'));
 				$oP->P(Dict::S('UI:ObjectDoesNotExist'));
 			}
-			elseif (!utils::IsTransactionValid($sTransactionId))
+			elseif (!utils::IsTransactionValid($sTransactionId, false))
 			{
 				$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
 				$oP->p("<strong>".Dict::S('UI:Error:ObjectAlreadyUpdated')."</strong>\n");
@@ -916,6 +916,7 @@ try
 						$oMyChange->Set("userinfo", $sUserString);
 						$iChangeId = $oMyChange->DBInsert();
 						$oObj->DBUpdateTracked($oMyChange);
+						utils::RemoveTransaction($sTransactionId);
 			
 						$oP->p(Dict::Format('UI:Class_Object_Updated', MetaModel::GetName(get_class($oObj)), $oObj->GetName()));
 					}
@@ -1021,7 +1022,7 @@ try
 		{
 			throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'class'));
 		}
-		if (!utils::IsTransactionValid($sTransactionId))
+		if (!utils::IsTransactionValid($sTransactionId, false))
 		{
 			$oP->p("<strong>".Dict::S('UI:Error:ObjectAlreadyCreated')."</strong>\n");
 		}
@@ -1051,6 +1052,7 @@ try
 				$oMyChange->Set("userinfo", $sUserString);
 				$iChangeId = $oMyChange->DBInsert();
 				$oObj->DBInsertTracked($oMyChange);
+				utils::RemoveTransaction($sTransactionId);
 				$oP->set_title(Dict::S('UI:PageTitle:ObjectCreated'));
 				$oP->add("<h1>".Dict::Format('UI:Title:Object_Of_Class_Created', $oObj->GetName(), $sClassLabel)."</h1>\n");
 				$oObj->DisplayDetails($oP);

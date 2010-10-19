@@ -157,9 +157,14 @@ class utils
 		return privUITransaction::GetNewTransactionId();
 	}
 	
-	public static function IsTransactionValid($sId)
+	public static function IsTransactionValid($sId, $bRemoveTransaction = true)
 	{
-		return privUITransaction::IsTransactionValid($sId);
+		return privUITransaction::IsTransactionValid($sId, $bRemoveTransaction);
+	}
+	
+	public static function RemoveTransaction($sId)
+	{
+		return privUITransaction::RemoveTransaction($sId);
 	}
 	
 	public static function ReadFromFile($sFileName)

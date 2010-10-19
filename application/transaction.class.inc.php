@@ -46,15 +46,41 @@ class privUITransaction
 	}
 
 	/**
-	 * Check whether a transaction is valid or not and remove the valid transaction from
+	 * Check whether a transaction is valid or not and (optionally) remove the valid transaction from
 	 * the session so that another call to IsTransactionValid for the same transaction id
 	 * will return false
 	 * @param int $id Identifier of the transaction, as returned by GetNewTransactionId
+	 * @param bool $bRemoveTransaction True if the transaction must be removed
 	 * @return bool True if the transaction is valid, false otherwise
 	 */	
-	public static function IsTransactionValid($id)
+	public static function IsTransactionValid($id, $bRemoveTransaction = true)
 	{
 		$bResult = false;
+		if (isset($_SESSION['transactions']))
+		{
+			// Strictly speaking, the eight lines below should be grouped together
+			// inside the same critical section as above
+			// sem_acquire($rSemIdentified);
+			if (isset($_SESSION['transactions'][$id]))
+			{
+				$bResult = true;
+				if ($bRemoveTransaction)
+				{
+					unset($_SESSION['transactions'][$id]);
+				}
+			}
+			// sem_release($rSemIdentified);
+		}
+		return $bResult;
+	}
+	
+	/**
+	 * Removes the transaction specified by its id
+	 * @param int $id The Identifier (as returned by GetNewTranscationId) of the transaction to be removed.
+	 * @return void
+	 */
+	public static function RemoveTransaction($id)
+	{
 		if (isset($_SESSION['transactions']))
 		{
 			// Strictly speaking, the three lines below should be grouped together
@@ -62,12 +88,10 @@ class privUITransaction
 			// sem_acquire($rSemIdentified);
 			if (isset($_SESSION['transactions'][$id]))
 			{
-				$bResult = true;
 				unset($_SESSION['transactions'][$id]);
 			}
 			// sem_release($rSemIdentified);
-		}
-		return $bResult;
+		}		
 	}
 }
 ?>
