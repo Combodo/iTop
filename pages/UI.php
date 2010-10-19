@@ -609,7 +609,13 @@ try
 			$oSet = new DBObjectSet($oFilter);
 			if ($bSearchForm)
 			{
-				$oBlock = new DisplayBlock($oFilter, 'search', false /* Asynchronous */, array('open' => true));
+				$aParams = array('open' => true);
+				$sBaseClass = utils::ReadParam('baseClass', '');
+				if (!empty($sBaseClass))
+				{
+					$aParams['baseClass'] = $sBaseClass;
+				}
+				$oBlock = new DisplayBlock($oFilter, 'search', false /* Asynchronous */, $aParams);
 				$oBlock->Display($oP, 0);
 			}
 			if (strtolower($sFormat) == 'csv')
