@@ -1734,7 +1734,7 @@ abstract class MetaModel
 		$aClassAliases = array();
 		$aTableAliases = array();
 		$oConditionTree = $oFilter->GetCriteria();
-		$oSelect = self::MakeQuery($oFilter->GetSelectedClasses(), $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oFilter);
+		$oSelect = self::MakeQuery($oFilter->GetSelectedClasses(), $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oFilter, array(), array(), true /* main query */);
 		$aScalarArgs = array_merge(self::PrepareQueryArguments($aArgs), $oFilter->GetInternalParams());
 		return $oSelect->RenderDelete($aScalarArgs);
 	}
@@ -1746,7 +1746,7 @@ abstract class MetaModel
 		$aClassAliases = array();
 		$aTableAliases = array();
 		$oConditionTree = $oFilter->GetCriteria();
-		$oSelect = self::MakeQuery($oFilter->GetSelectedClasses(), $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oFilter, array(), $aValues);
+		$oSelect = self::MakeQuery($oFilter->GetSelectedClasses(), $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oFilter, array(), $aValues, true /* main query */);
 		$aScalarArgs = array_merge(self::PrepareQueryArguments($aArgs), $oFilter->GetInternalParams());
 		return $oSelect->RenderUpdate($aScalarArgs);
 	}
