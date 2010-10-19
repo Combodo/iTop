@@ -59,7 +59,7 @@ if (!empty($sExpression))
 				// since this page is in a different folder, let's adjust the HTML 'base' attribute
 				// to make the relative hyperlinks in the page work
 				$sServerName = $_SERVER['SERVER_NAME'];
-				$sProtocol = isset($_SERVER['HTTPS']) ? 'https' : 'http';
+				$sProtocol = (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']!='off')) ? 'https' : 'http';
 				if ($sProtocol == 'http')
 				{
 					$sPort = ($_SERVER['SERVER_PORT'] == 80) ? '' : ':'.$_SERVER['SERVER_PORT'];

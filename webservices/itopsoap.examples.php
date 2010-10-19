@@ -26,7 +26,7 @@
 
 require_once('itopsoaptypes.class.inc.php');
 
-$sItopRoot = 'http'.(empty($_SERVER['HTTPS']) ? '' : 's').'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname($_SERVER['SCRIPT_NAME']).'/..';
+$sItopRoot = 'http'.((empty($_SERVER['HTTPS']) && ($_SERVER['HTTPS']!='off')) ? '' : 's').'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname($_SERVER['SCRIPT_NAME']).'/..';
 $sWsdlUri = $sItopRoot.'/webservices/itop.wsdl.php';
 
 ini_set("soap.wsdl_cache_enabled","0");

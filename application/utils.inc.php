@@ -240,7 +240,7 @@ class utils
 		}
 		else
 		{
-			$sProtocol = isset($_SERVER['HTTPS']) ? 'https' : 'http';
+			$sProtocol = (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']!="off")) ? 'https' : 'http';
 			if ($sProtocol == 'http')
 			{
 				$sPort = ($_SERVER['SERVER_PORT'] == 80) ? '' : ':'.$_SERVER['SERVER_PORT'];

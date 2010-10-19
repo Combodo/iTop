@@ -23,9 +23,9 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
-	$sFullUrl = 'http'.(empty($_SERVER['HTTPS']) ? '' : 's').'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname($_SERVER['SCRIPT_NAME']).'/UI.php';
-	$sICOFullUrl = 'http'.(empty($_SERVER['HTTPS']) ? '' : 's').'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname($_SERVER['SCRIPT_NAME']).'/../images/iTop-icon.ico';
-	$sPNGFullUrl = 'http'.(empty($_SERVER['HTTPS']) ? '' : 's').'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname($_SERVER['SCRIPT_NAME']).'/../images/iTop-icon.png';
+	$sFullUrl = 'http'.((empty($_SERVER['HTTPS']) && ($_SERVER['HTTPS']!='off')) ? '' : 's').'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname($_SERVER['SCRIPT_NAME']).'/UI.php';
+	$sICOFullUrl = 'http'.((empty($_SERVER['HTTPS']) && ($_SERVER['HTTPS']!='off')) ? '' : 's').'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname($_SERVER['SCRIPT_NAME']).'/../images/iTop-icon.ico';
+	$sPNGFullUrl = 'http'.((empty($_SERVER['HTTPS']) && ($_SERVER['HTTPS']!='off')) ? '' : 's').'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname($_SERVER['SCRIPT_NAME']).'/../images/iTop-icon.png';
 	header('Content-type: text/xml');
 ?>
 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/" xmlns:moz="http://www.mozilla.org/2006/browser/search/">
