@@ -104,6 +104,13 @@ function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMo
 	$aChoices = array('' => Dict::S('UI:CSVImport:MappingSelectOne'));
 	$aChoices[':none:'] = Dict::S('UI:CSVImport:MappingNotApplicable');
 	$sFieldCode = ''; // Code of the attribute, if there is a match
+	$aMatches  = array();
+	if (preg_match('/^(.+)\*$/', $sFieldName, $aMatches))
+	{
+		// Remove any trailing "star" character.
+		// A star character at the end can be used to indicate a mandatory field
+		$sFieldName = $aMatches[1];
+	}
 	if ($sFieldName == 'id')
 	{
 		$sFieldCode = 'id';
@@ -114,6 +121,7 @@ function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMo
 	}
 	foreach(MetaModel::ListAttributeDefs($sClassName) as $sAttCode => $oAttDef)
 	{
+		$sStar = '';
 		if ($oAttDef->IsExternalKey())
 		{
 			if ( ($sFieldName == $oAttDef->GetLabel()) || ($sFieldName == $sAttCode))
@@ -123,6 +131,11 @@ function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMo
 			if ($bAdvancedMode)
 			{
 				$aChoices[$sAttCode] = $oAttDef->GetLabel();
+			}
+			$oExtKeyAttDef = MetaModel::GetAttributeDef($sClassName, $oAttDef->GetKeyAttCode());
+			if (!$oExtKeyAttDef->IsNullAllowed())
+			{
+				$sStar = '*';
 			}
 			// Get fields of the external class that are considered as reconciliation keys
 			$sTargetClass = $oAttDef->GetTargetClass();
@@ -140,7 +153,7 @@ function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMo
 					{
 					
 						// When not in advanced mode do not allow to use reconciliation keys (on external keys) if they are themselves external keys !
-						$aChoices[$sAttCode.'->'.$sTargetAttCode] = $oAttDef->GetLabel().'->'.$oTargetAttDef->GetLabel().$sSuffix;
+						$aChoices[$sAttCode.'->'.$sTargetAttCode] = $oAttDef->GetLabel().'->'.$oTargetAttDef->GetLabel().$sSuffix.$sStar;
 						if ((strcasecmp($sFieldName, $aChoices[$sAttCode.'->'.$sTargetAttCode]) == 0) || (strcasecmp($sFieldName, ($sAttCode.'->'.$sTargetAttCode.$sSuffix)) == 0) )
 						{
 							$sFieldCode = $sAttCode.'->'.$sTargetAttCode;
@@ -151,7 +164,11 @@ function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMo
 		}
 		else if ( ($oAttDef->IsWritable()) && (!$oAttDef->IsLinkSet()) )
 		{
-			$aChoices[$sAttCode] = $oAttDef->GetLabel();
+			if (!$oAttDef->IsNullAllowed())
+			{
+				$sStar = '*';
+			}
+			$aChoices[$sAttCode] = $oAttDef->GetLabel().$sStar;
 			if ( ($sFieldName == $oAttDef->GetLabel()) || ($sFieldName == $sAttCode))
 			{
 				$sFieldCode = $sAttCode;
@@ -356,7 +373,7 @@ EOF
 	$oSearch = new DBObjectSearch($sClassName);
 	$oSearch->AddCondition('id', 0, '='); // Make sure we create an empty set
 	$oSet = new CMDBObjectSet($oSearch);
-	$sResult = cmdbAbstractObject::GetSetAsCSV($oSet);
+	$sResult = cmdbAbstractObject::GetSetAsCSV($oSet, array('showMandatoryFields' => true));
 	//$aCSV = explode("\n", $sCSV);
 	// If there are more than one line, let's assume that the first line is a comment and skip it.
 	//if (count($aCSV) > 1)

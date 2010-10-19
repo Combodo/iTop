@@ -299,24 +299,31 @@ abstract class cmdbAbstractObject extends CMDBObject
 			$oPage->add('<table style="vertical-align:top"><tr>');
 			foreach($aCols as $sColIndex => $aFieldsets)
 			{
-				$aDetails[$sTab][$sColIndex] = array();
+				$oPage->add('<td style="vertical-align:top">');
+				//$aDetails[$sTab][$sColIndex] = array();
 				foreach($aFieldsets as $sFieldsetName => $aFields)
 				{
-					//if ($sFieldsetName == '')
-					//{
-						foreach($aFields as $sAttCode)
+					$aDetails[$sTab][$sColIndex] = array();
+					if (!empty($sFieldsetName))
+					{
+						$oPage->add('<fieldset>');
+						$oPage->add('<legend>'.Dict::S($sFieldsetName).'</legend>');
+					}
+					foreach($aFields as $sAttCode)
+					{
+						$val = $this->GetFieldAsHtml($sClass, $sAttCode, $sStateAttCode);
+						if ($val != null)
 						{
-							$val = $this->GetFieldAsHtml($sClass, $sAttCode, $sStateAttCode);
-							if ($val != null)
-							{
-								// The field is visible, add it to the current column
-								$aDetails[$sTab][$sColIndex][] = $val;
-							}				
-						}
-					//}
+							// The field is visible, add it to the current column
+							$aDetails[$sTab][$sColIndex][] = $val;
+						}				
+					}
+					$oPage->Details($aDetails[$sTab][$sColIndex]);
+					if (!empty($sFieldsetName))
+					{
+						$oPage->add('</fieldset>');
+					}
 				}
-				$oPage->add('<td style="vertical-align:top">');
-				$oPage->Details($aDetails[$sTab][$sColIndex]);
 				$oPage->add('</td>');
 			}
 			$oPage->add('</tr></table>');
@@ -743,9 +750,15 @@ EOF
 			$aHeader[] = 'id';
 			foreach($aList[$sClassName] as $sAttCode => $oAttDef)
 			{
+				$sStar = '';
 				if ($oAttDef->IsExternalField())
 				{
 					$sExtKeyLabel = MetaModel::GetLabel($sClassName, $oAttDef->GetKeyAttCode());
+					$oExtKeyAttDef = MetaModel::GetAttributeDef($sClassName, $oAttDef->GetKeyAttCode());
+					if (!$oExtKeyAttDef->IsNullAllowed() && isset($aParams['showMandatoryFields']))
+					{
+						$sStar = '*';
+					}
 					$sRemoteAttLabel = MetaModel::GetLabel($oAttDef->GetTargetClass(), $oAttDef->GetExtAttCode());
 					$oTargetAttDef = MetaModel::GetAttributeDef($oAttDef->GetTargetClass(), $oAttDef->GetExtAttCode());
 					$sSuffix = '';
@@ -754,11 +767,15 @@ EOF
 						$sSuffix = '->id';
 					}
 					
-					$aHeader[] = $sExtKeyLabel.'->'.$sRemoteAttLabel.$sSuffix;
+					$aHeader[] = $sExtKeyLabel.'->'.$sRemoteAttLabel.$sSuffix.$sStar;
 				}
 				else
 				{
-					$aHeader[] = MetaModel::GetLabel($sClassName, $sAttCode);
+					if (!$oAttDef->IsNullAllowed() && isset($aParams['showMandatoryFields']))
+					{
+						$sStar = '*';
+					}
+					$aHeader[] = MetaModel::GetLabel($sClassName, $sAttCode).$sStar;
 				}
 			}
 		}
@@ -1184,69 +1201,107 @@ EOF
 		$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB);
 		$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
 		$oPage->SetCurrentTab(Dict::S('UI:PropertiesTab'));
-		$aDetailsList = $this->FLattenZList(MetaModel::GetZListItems($sClass, 'details'));
+//		$aDetailsList = $this->FLattenZList(MetaModel::GetZListItems($sClass, 'details'));
 		//$aFullList = MetaModel::ListAttributeDefs($sClass);
 		$aList = array();
 		// Compute the list of properties to display, first the attributes in the 'details' list, then 
 		// all the remaining attributes that are not external fields
-		foreach($aDetailsList as $sAttCode)
-		{
-			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-			if (!$oAttDef->IsExternalField())
-			{
-				$aList[] = $sAttCode;
-			}
-		}
+//		foreach($aDetailsList as $sAttCode)
+//		{
+//			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+//			if (!$oAttDef->IsExternalField())
+//			{
+//				$aList[] = $sAttCode;
+//			}
+//		}
 
-		foreach($aList as $sAttCode)
+		$aDetailsList = MetaModel::GetZListItems($sClass, 'details');
+		$aDetailsStruct = self::ProcessZlist($aDetailsList, array('UI:PropertiesTab' => array()), 'UI:PropertiesTab', 'col1', '');
+		$sHtml = '';
+		$aDetails = array();
+		foreach($aDetailsStruct as $sTab => $aCols )
 		{
-			$iFlags = $this->GetAttributeFlags($sAttCode);
-			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-			if ( (!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0))
+			$aDetails[$sTab] = array();
+			ksort($aCols);
+			$oPage->SetCurrentTab(Dict::S($sTab));
+			$oPage->add('<table style="vertical-align:top"><tr>');
+			foreach($aCols as $sColIndex => $aFieldsets)
 			{
-				if ($oAttDef->IsWritable())
+				$oPage->add('<td style="vertical-align:top">');
+				//$aDetails[$sTab][$sColIndex] = array();
+				foreach($aFieldsets as $sFieldsetName => $aFields)
 				{
-					if ($sStateAttCode == $sAttCode)
+					$aDetails[$sTab][$sColIndex] = array();
+					if (!empty($sFieldsetName))
 					{
-						// State attribute is always read-only from the UI
-						$sHTMLValue = $this->GetStateLabel();
-						$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $sHTMLValue);
+						$oPage->add('<fieldset>');
+						$oPage->add('<legend>'.Dict::S($sFieldsetName).'</legend>');
 					}
-					else
+					foreach($aFields as $sAttCode)
 					{
-						$iFlags = $this->GetAttributeFlags($sAttCode);				
-						if ($iFlags & OPT_ATT_HIDDEN)
+						$aVal = null;
+						$iFlags = $this->GetAttributeFlags($sAttCode);
+						$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+						if ( (!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0))
 						{
-							// Attribute is hidden, do nothing
-						}
-						else
-						{
-							if ($iFlags & OPT_ATT_READONLY)
+							if ($oAttDef->IsWritable())
 							{
-								// Attribute is read-only
-								$sHTMLValue = $this->GetAsHTML($sAttCode);
+								if ($sStateAttCode == $sAttCode)
+								{
+									// State attribute is always read-only from the UI
+									$sHTMLValue = $this->GetStateLabel();
+									$aVal = array('label' => $oAttDef->GetLabel(), 'value' => $sHTMLValue);
+								}
+								else
+								{
+									$iFlags = $this->GetAttributeFlags($sAttCode);				
+									if ($iFlags & OPT_ATT_HIDDEN)
+									{
+										// Attribute is hidden, do nothing
+									}
+									else
+									{
+										if ($iFlags & OPT_ATT_READONLY)
+										{
+											// Attribute is read-only
+											$sHTMLValue = $this->GetAsHTML($sAttCode);
+										}
+										else
+										{
+											$sValue = $this->Get($sAttCode);
+											$sDisplayValue = $this->GetEditValue($sAttCode);
+											$aArgs = array('this' => $this);
+											$sInputId = $this->m_iFormId.'_'.$sAttCode;
+											$sHTMLValue = "<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
+											$aFieldsMap[$sAttCode] = $sInputId;
+											
+										}
+										$aVal = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>', 'value' => $sHTMLValue);
+									}
+								}
 							}
 							else
 							{
-								$sValue = $this->Get($sAttCode);
-								$sDisplayValue = $this->GetEditValue($sAttCode);
-								$aArgs = array('this' => $this);
-								$sInputId = $this->m_iFormId.'_'.$sAttCode;
-								$sHTMLValue = "<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
-								$aFieldsMap[$sAttCode] = $sInputId;
-								
+								$aVal = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>', 'value' => $this->GetAsHTML($sAttCode));			
 							}
-							$aDetails[] = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>', 'value' => $sHTMLValue);
 						}
+						if ($aVal != null)
+						{
+							// The field is visible, add it to the current column
+							$aDetails[$sTab][$sColIndex][] = $aVal;
+						}				
+					}
+					$oPage->Details($aDetails[$sTab][$sColIndex]);
+					if (!empty($sFieldsetName))
+					{
+						$oPage->add('</fieldset>');
 					}
 				}
-				else
-				{
-					$aDetails[] = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>', 'value' => $this->GetAsHTML($sAttCode));			
-				}
+				$oPage->add('</td>');
 			}
+			$oPage->add('</tr></table>');
 		}
-		$oPage->details($aDetails);
+
 		// Now display the relations, one tab per relation
 
 		$this->DisplayBareRelations($oPage, true); // Edit mode
@@ -1413,7 +1468,7 @@ EOF
 			}
 			else
 			{
-				$aResult = array_merge($aResult, $this->FlattenZList($value));
+				$aResult = array_merge($aResult,self::FlattenZList($value));
 			}
 		}
 		return $aResult;
