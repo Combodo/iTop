@@ -373,6 +373,7 @@ EOF
 	if ($sDisposition == 'attachment')
 	{
 		$oPage = new CSVPage("");
+		$oPage->add_header("Content-type: text/csv; charset=utf-8");
 		$oPage->add_header("Content-disposition: attachment; filename=\"{$sClassDisplayName}.csv\"");
 		$oPage->no_cache();		
 		$oPage->add($sResult);	
