@@ -1179,6 +1179,15 @@ else
 		$oP->output();
 		exit;
 	}
+	if (!is_writable(dirname(FINAL_CONFIG_FILE).'/setup'))
+	{
+		$oP->add("<h1>iTop configuration wizard</h1>\n");
+		$oP->add("<h2>Fatal error</h2>\n");
+		$oP->error("<b>Error:</b> the directory where to store temporary setup files is not writable.");
+		$oP->p("The wizard cannot create operate. Please make sure that the directory '<b>".realpath(dirname(FINAL_CONFIG_FILE))."/setup</b>' is writable for the web server.");
+		$oP->output();
+		exit;
+	}
 	
 }
 try
