@@ -1112,7 +1112,7 @@ class NetworkInterface extends ConnectableCI
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'device_id', 'logical_type', 'physical_type', 'ip_address', 'ip_mask', 'mac_address', 'speed', 'duplex', 'link_type', 'connected_if', 'connected_if_device_id', 'contact_list', 'document_list', 'solution_list', 'contract_list', 'ticket_list'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'org_id', 'importance', 'brand', 'model', 'serial_number', 'asset_ref', 'device_id', 'logical_type', 'physical_type', 'ip_address', 'ip_mask', 'mac_address', 'speed', 'duplex', 'connected_if', 'connected_if_device_id'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'org_id', 'importance', 'device_id', 'logical_type', 'physical_type', 'ip_address', 'ip_mask', 'mac_address', 'connected_if_device_id'));
-		MetaModel::Init_SetZListItems('list', array('status', 'org_id', 'importance', 'device_id', 'logical_type', 'physical_type', 'link_type', 'connected_if_device_id'));
+		MetaModel::Init_SetZListItems('list', array('status', 'ip_address', 'importance', 'device_id', 'logical_type', 'physical_type', 'link_type', 'connected_if_device_id'));
 	}
 
 	public function GetName()
