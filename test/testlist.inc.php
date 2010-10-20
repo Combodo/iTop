@@ -1630,7 +1630,7 @@ $aWebServices = array(
 			'initial situation blah blah blah', /* sInitialSituation */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Demo'))), /* aCustomerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'HW Management'))), /* aServiceDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Computers and peripherals'))), /* aServiceDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aServiceSubcategoryDesc */
 			'sub product of the service', /* sProduct */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Hardware support'))), /* aWorkgroupDesc */
@@ -1666,7 +1666,7 @@ $aWebServices = array(
 			'The power supply suddenly started to warm up', /* sInitialSituation */
 			new SOAPExternalKeySearch(), /* aCallerDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Demo'))), /* aCustomerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'HW Management'))), /* aServiceDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Computers and peripherals'))), /* aServiceDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aServiceSubcategoryDesc */
 			'sub product of the service', /* sProduct */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Hardware support'))), /* aWorkgroupDesc */
@@ -1692,7 +1692,7 @@ $aWebServices = array(
 			'The power supply suddenly started to warm up', /* sInitialSituation */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Demo'))), /* aCustomerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'HW Management'))), /* aServiceDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Computers and peripherals'))), /* aServiceDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aServiceSubcategoryDesc */
 			'sub product of the service', /* sProduct */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Hardware support'))), /* aWorkgroupDesc */
@@ -1718,7 +1718,7 @@ $aWebServices = array(
 			'The power supply suddenly started to warm up', /* sInitialSituation */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Demo'))), /* aCustomerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'HW Management'))), /* aServiceDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Computers and peripherals'))), /* aServiceDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aServiceSubcategoryDesc */
 			'sub product of the service', /* sProduct */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Hardware support'))), /* aWorkgroupDesc */
@@ -1744,7 +1744,7 @@ $aWebServices = array(
 			'Tried to join the shuttle', /* sInitialSituation */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Demo'))), /* aCustomerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'HW Management'))), /* aServiceDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Computers and peripherals'))), /* aServiceDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aServiceSubcategoryDesc */
 			'sub product of the service', /* sProduct */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Hardware support'))), /* aWorkgroupDesc */
@@ -1765,7 +1765,7 @@ $aWebServices = array(
 			'Tried to join the shuttle', /* sInitialSituation */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Demo'))), /* aCustomerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'HW Management'))), /* aServiceDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Computers and peripherals'))), /* aServiceDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aServiceSubcategoryDesc */
 			'sub product of the service', /* sProduct */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Hardware support'))), /* aWorkgroupDesc */
@@ -1785,7 +1785,7 @@ $aWebServices = array(
 			'Tried to join the shuttle', /* sInitialSituation */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1000))), /* aCallerDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Demo'))), /* aCustomerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'HW Management'))), /* aServiceDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Computers and peripherals'))), /* aServiceDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aServiceSubcategoryDesc */
 			'sub product of the service', /* sProduct */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Hardware support'))), /* aWorkgroupDesc */
@@ -1806,7 +1806,7 @@ $aWebServices = array(
 			'Tried to join the shuttle', /* sInitialSituation */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Demo'))), /* aCustomerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'HW Management'))), /* aServiceDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Computers and peripherals'))), /* aServiceDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aServiceSubcategoryDesc */
 			'sub product of the service', /* sProduct */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Hardware support'))), /* aWorkgroupDesc */
@@ -1827,7 +1827,7 @@ $aWebServices = array(
 			'Tried to join the shuttle', /* sInitialSituation */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Demo'))), /* aCustomerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'HW Management'))), /* aServiceDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Computers and peripherals'))), /* aServiceDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aServiceSubcategoryDesc */
 			'sub product of the service', /* sProduct */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Hardware support'))), /* aWorkgroupDesc */
@@ -1848,7 +1848,7 @@ $aWebServices = array(
 			'Tried to join the shuttle', /* sInitialSituation */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Demo'))), /* aCustomerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'HW Management'))), /* aServiceDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Computers and peripherals'))), /* aServiceDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aServiceSubcategoryDesc */
 			'sub product of the service', /* sProduct */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Hardware support'))), /* aWorkgroupDesc */

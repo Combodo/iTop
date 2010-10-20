@@ -343,7 +343,7 @@ class WebServices
 		switch($oExtObjects->Count())
 		{
 		case 0:
-			$sMsg = "Parameter $sParamName: no match (searched: '".$oReconFilter->ToOQL()."')";
+			$sMsg = "Parameter $sParamName: no match (searched: '".$oReconFilter->ToOQL(true)."')";
 			$oRes->LogIssue($sMsg, $bIsMandatory);
 			break;
 		case 1:
@@ -358,7 +358,7 @@ class WebServices
 			}
 			break;
 		default:
-			$sMsg = "Parameter $sParamName: Found ".$oExtObjects->Count()." matches (searched: '".$oReconFilter->ToOQL()."')";
+			$sMsg = "Parameter $sParamName: Found ".$oExtObjects->Count()." matches (searched: '".$oReconFilter->ToOQL(true)."')";
 			$oRes->LogIssue($sMsg, $bIsMandatory);
 		}
 	}
@@ -436,7 +436,7 @@ class WebServices
 			switch($oExtObjects->Count())
 			{
 			case 0:
-				$oRes->LogWarning("Parameter $sParamName: object to link $sLinkedClass / $sItemDesc could not be found (searched: '".$oReconFilter->ToOQL()."')");
+				$oRes->LogWarning("Parameter $sParamName: object to link $sLinkedClass / $sItemDesc could not be found (searched: '".$oReconFilter->ToOQL(true)."')");
 				$aItemsNotFound[] = $sItemDesc;
 				break;
 			case 1:
@@ -447,7 +447,7 @@ class WebServices
 				);
 				break;
 			default:
-				$oRes->LogWarning("Parameter $sParamName: Found ".$oExtObjects->Count()." matches for item '$sItemDesc' (searched: '".$oReconFilter->ToOQL()."')");
+				$oRes->LogWarning("Parameter $sParamName: Found ".$oExtObjects->Count()." matches for item '$sItemDesc' (searched: '".$oReconFilter->ToOQL(true)."')");
 				$aItemsNotFound[] = $sItemDesc;
 			}
 		}
