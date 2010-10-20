@@ -27,10 +27,8 @@ LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
 $sOperation = utils::ReadParam('operation', 'menu');
 $oAppContext = new ApplicationContext();
-$iActiveNodeId = utils::ReadParam('menu', -1);
-$currentOrganization = utils::ReadParam('org_id', '');
 
-$oP = new iTopWebPage("iTop - Navigator", $currentOrganization);
+$oP = new iTopWebPage("iTop - Navigator");
 
 // Main program
 $sClass = utils::ReadParam('class', '');

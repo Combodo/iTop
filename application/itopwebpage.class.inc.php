@@ -32,12 +32,12 @@ require_once("../application/user.preferences.class.inc.php");
 class iTopWebPage extends NiceWebPage
 {
 	private $m_sMenu;
-	private $m_currentOrganization;
+//	private $m_currentOrganization;
 	private $m_aTabs;
 	private $m_sCurrentTabContainer;
 	private $m_sCurrentTab;
 	
-    public function __construct($sTitle, $currentOrganization)
+    public function __construct($sTitle)
     {
         parent::__construct($sTitle);
         $this->m_sCurrentTabContainer = '';
@@ -46,7 +46,7 @@ class iTopWebPage extends NiceWebPage
 		$this->m_sMenu = "";
 		$oAppContext = new ApplicationContext();
 		$sExtraParams = $oAppContext->GetForLink();
-		$this->m_currentOrganization = $currentOrganization;
+//		$this->m_currentOrganization = $currentOrganization;
 		$this->add_header("Content-type: text/html; charset=utf-8");
 		$this->add_header("Cache-control: no-cache");
 		$this->add_linked_stylesheet("../css/jquery.treeview.css");
@@ -478,15 +478,17 @@ EOF
 			break;
 			
 			default:
+			$oAppContext = new ApplicationContext();
+			$iCurrentOrganization = $oAppContext->GetCurrentValue('org_id');
 			$sHtml = '<div id="SiloSelection">';
-			$sHtml .= '<form style="display:inline" action="'.$_SERVER['PHP_SELF'].'"><select style="width:150px;font-size:x-small" name="org_id" title="Pick an organization" onChange="this.form.submit();">';
-			$sSelected = ($this->m_currentOrganization == '') ? ' selected' : '';
+			$sHtml .= '<form style="display:inline" action="'.$_SERVER['PHP_SELF'].'"><select style="width:150px;font-size:x-small" name="c[org_id]" title="Pick an organization" onChange="this.form.submit();">';
+			$sSelected = ($iCurrentOrganization == '') ? ' selected' : '';
 			$sHtml .= '<option value=""'.$sSelected.'>'.Dict::S('UI:AllOrganizations').'</option>';
 			while($oOrg = $oSet->Fetch())
 			{
-				if ($this->m_currentOrganization == $oOrg->GetKey())
+				if ($iCurrentOrganization == $oOrg->GetKey())
 				{
-					$oCurrentOrganization = $oOrg;
+//					$oCurrentOrganization = $oOrg;
 					$sSelected = " selected";
 			
 				}
@@ -498,8 +500,8 @@ EOF
 			}
 			$sHtml .= '</select>';
 			// Add other dimensions/context information to this form
-			$oAppContext = new ApplicationContext();
-			$oAppContext->Reset('org_id'); // Org id is handled above and we want to be able to change it here !
+//			$oAppContext = new ApplicationContext();
+			$oAppContext->Reset('org_id'); // org_id is handled above and we want to be able to change it here !
 			$sHtml .= $oAppContext->GetForForm();		
 			$sHtml .= '</form>';
 			$sHtml .= '</div>';
@@ -511,10 +513,9 @@ EOF
     {
 		// Display the menu
 		$oAppContext = new ApplicationContext();
-		$iActiveNodeId = ApplicationMenu::GetActiveNodeId();
 		$iAccordionIndex = 0;
 
-		ApplicationMenu::DisplayMenu($this, $oAppContext->GetAsHash(), $iActiveNodeId);
+		ApplicationMenu::DisplayMenu($this, $oAppContext->GetAsHash());
     }
 
 	/**

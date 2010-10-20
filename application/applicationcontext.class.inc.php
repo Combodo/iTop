@@ -57,9 +57,10 @@ class ApplicationContext
 		if (empty(self::$aDefaultValues))
 		{
 			self::$aDefaultValues = array();
+			$aContext = utils::ReadParam('c', array());
 			foreach($this->aNames as $sName)
 			{
-				$sValue = utils::ReadParam($sName, '');
+				$sValue = isset($aContext[$sName]) ? $aContext[$sName] : '';
 				// TO DO: check if some of the context parameters are mandatory (or have default values)
 				if (!empty($sValue))
 				{
@@ -71,6 +72,20 @@ class ApplicationContext
 	}
 	
 	/**
+	 * Returns the current value for the given parameter
+	 * @param string $sParamName Name of the parameter to read
+	 * @return mixed The value for this parameter
+	 */
+	public function GetCurrentValue($sParamName, $defaultValue = '')
+	{
+		if (isset($this->aValues[$sParamName]))
+		{
+			return $this->aValues[$sParamName];
+		}
+		return $defaultValue;
+	}
+	
+	/**
 	 * Returns the context as string with the format name1=value1&name2=value2....
 	 * return string The context as a string to be appended to an href property
 	 */
@@ -79,7 +94,7 @@ class ApplicationContext
 		$aParams = array();
 		foreach($this->aValues as $sName => $sValue)
 		{
-			$aParams[] = $sName.'='.urlencode($sValue);
+			$aParams[] = "c[$sName]".'='.urlencode($sValue);
 		}
 		return implode("&", $aParams);
 	}
@@ -93,7 +108,7 @@ class ApplicationContext
 		$sContext = "";
 		foreach($this->aValues as $sName => $sValue)
 		{
-			$sContext .= "<input type=\"hidden\" name=\"$sName\" value=\"$sValue\" />\n";
+			$sContext .= "<input type=\"hidden\" name=\"c[$sName]\" value=\"$sValue\" />\n";
 		}
 		return $sContext;
 	}
@@ -104,7 +119,12 @@ class ApplicationContext
 	 */
 	public function GetAsHash()
 	{
-		return $this->aValues;
+		$aReturn = array();
+		foreach($this->aValues as $sName => $sValue)
+		{
+			$aReturn["c[$sName]"] = $sValue;
+		}
+		return $aReturn;
 	}
 	
 	/**

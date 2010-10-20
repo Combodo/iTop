@@ -33,10 +33,8 @@ require_once('../application/loginwebpage.class.inc.php');
 LoginWebPage::DoLogin(true); // Check user rights and prompt if needed (must be admin)
 
 $oAppContext = new ApplicationContext();
-$iActiveNodeId = utils::ReadParam('menu', -1);
-$currentOrganization = utils::ReadParam('org_id', '');
 
-$oP = new iTopWebPage(Dict::S('UI:UniversalSearchTitle'), $currentOrganization);
+$oP = new iTopWebPage(Dict::S('UI:UniversalSearchTitle'));
 
 // From now on the context is limited to the the selected organization ??
 

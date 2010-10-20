@@ -320,17 +320,29 @@ class DisplayBlock
 			}
 			if ($this->m_sStyle != 'links')
 			{
-				$aFilterCodes = array_keys(MetaModel::GetClassFilterDefs($this->m_oFilter->GetClass()));
+				$oAppContext = new ApplicationContext();
+				$sClass = $this->m_oFilter->GetClass();
+				$aFilterCodes = array_keys(MetaModel::GetClassFilterDefs($sClass));
+				foreach($oAppContext->GetNames() as $sContextParam)
+				{
+					eval("\$sParamCode = $sClass::MapContextParam('$sFilterCode');"); //Map context parameter to the value/filter code depending on the class
+				}
 				foreach($aFilterCodes as $sFilterCode)
 				{
 					$sExternalFilterValue = utils::ReadParam($sFilterCode, '');
 					if (isset($aExtraParams[$sFilterCode]))
 					{
-						$this->m_oFilter->AddCondition($sFilterCode, trim($aExtraParams[$sFilterCode])); // Use the default 'loose' operator
+						$condition = $aExtraParams[$sFilterCode];
 					}
 					else if ($bDoSearch && $sExternalFilterValue != "")
 					{
-						$this->m_oFilter->AddCondition($sFilterCode, trim($sExternalFilterValue)); // Use the default 'loose' operator
+						// Search takes precedence over context params...
+						$condition = trim($sExternalFilterValue);
+					}
+
+					if (!is_null($condition))
+					{
+						$this->m_oFilter->AddCondition($sFilterCode, $condition); // Use the default 'loose' operator
 					}
 				}
 			}
@@ -582,7 +594,7 @@ class DisplayBlock
 				$aFilterCodes = array_keys(MetaModel::GetClassFilterDefs($this->m_oFilter->GetClass()));
 				foreach($oAppContext->GetNames() as $sFilterCode)
 				{
-					$sContextParamValue = trim(utils::ReadParam($sFilterCode, null));
+					$sContextParamValue = $oAppContext->GetCurrentValue($sFilterCode, null);
 					if (!is_null($sContextParamValue) && ! empty($sContextParamValue) && MetaModel::IsValidFilterCode($sClass, $sFilterCode))
 					{
 						$this->m_oFilter->AddCondition($sFilterCode, $sContextParamValue); // Use the default 'loose' operator
@@ -596,7 +608,7 @@ class DisplayBlock
 				$this->m_oSet = new CMDBObjectSet($this->m_oFilter, array(), $aQueryParams);				
 			}
 			$iCount = $this->m_oSet->Count();
-			$sHyperlink = '../pages/UI.php?operation=search&filter='.$this->m_oFilter->serialize();
+			$sHyperlink = '../pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.$this->m_oFilter->serialize();
 			$sHtml .= '<p><a class="actions" href="'.$sHyperlink.'">';
 			$sHtml .= MetaModel::GetClassIcon($sClass, true, 'float;left;margin-right:10px;');
 			$sHtml .= MetaModel::GetName($sClass).': '.$iCount.'</a></p>';
@@ -624,7 +636,7 @@ class DisplayBlock
 				$aFilterCodes = array_keys(MetaModel::GetClassFilterDefs($this->m_oFilter->GetClass()));
 				foreach($oAppContext->GetNames() as $sFilterCode)
 				{
-					$sContextParamValue = trim(utils::ReadParam($sFilterCode, null));
+					$sContextParamValue = $oAppContext->GetCurrentValue($sFilterCode, null);
 					if (!is_null($sContextParamValue) && ! empty($sContextParamValue) && MetaModel::IsValidFilterCode($sClass, $sFilterCode))
 					{
 						$this->m_oFilter->AddCondition($sFilterCode, $sContextParamValue); // Use the default 'loose' operator
@@ -657,7 +669,7 @@ class DisplayBlock
 					}
 					else
 					{
-						$sHyperlink = '../pages/UI.php?operation=search&filter='.$oFilter->serialize();
+						$sHyperlink = '../pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.$oFilter->serialize();
 						$aCounts[$sStateValue] = "<a href=\"$sHyperlink\">{$aCounts[$sStateValue]}</a>";
 					}
 				}
@@ -666,7 +678,7 @@ class DisplayBlock
 			$sHtml .= '<tr><td>'.implode('</td><td>', $aCounts).'</td></tr></table></div>';
 			// Title & summary
 			$iCount = $this->m_oSet->Count();
-			$sHyperlink = '../pages/UI.php?operation=search&filter='.$this->m_oFilter->serialize();
+			$sHyperlink = '../pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.$this->m_oFilter->serialize();
 			$sHtml .= '<h1>'.Dict::S(str_replace('_', ':', $sTitle)).'</h1>';
 			$sHtml .= '<a class="summary" href="'.$sHyperlink.'">'.Dict::Format(str_replace('_', ':', $sLabel), $iCount).'</a>';
 			break;

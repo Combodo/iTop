@@ -35,10 +35,9 @@ try
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 	
 	$oAppContext = new ApplicationContext();
-	$currentOrganization = utils::ReadParam('org_id', 1);
 	$iStep = utils::ReadParam('step', 1);
 	
-	$oPage = new iTopWebPage(Dict::S('UI:Title:BulkImport'), $currentOrganization);
+	$oPage = new iTopWebPage(Dict::S('UI:Title:BulkImport'));
 	
 	/**
 	 * Helper function to build a select from the list of valid classes for a given action

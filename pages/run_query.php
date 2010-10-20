@@ -91,10 +91,8 @@ function ShowExamples($oP, $sExpression)
 
 $sOperation = utils::ReadParam('operation', 'menu');
 $oAppContext = new ApplicationContext();
-$iActiveNodeId = utils::ReadParam('menu', -1);
-$currentOrganization = utils::ReadParam('org_id', '');
 
-$oP = new iTopWebPage(Dict::S('UI:RunQuery:Title'), $currentOrganization);
+$oP = new iTopWebPage(Dict::S('UI:RunQuery:Title'));
 
 // Main program
 $sExpression = utils::ReadParam('expression', '');

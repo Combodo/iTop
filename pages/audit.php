@@ -28,14 +28,13 @@ try
 	require_once('../application/itopwebpage.class.inc.php');
 	
 	require_once('../application/startup.inc.php');
-	$currentOrganization = utils::ReadParam('org_id', '');
 	$operation = utils::ReadParam('operation', '');
 	$oAppContext = new ApplicationContext();
 	
 	require_once('../application/loginwebpage.class.inc.php');
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 	
-	$oP = new iTopWebPage(Dict::S('UI:Audit:Title'), $currentOrganization);
+	$oP = new iTopWebPage(Dict::S('UI:Audit:Title'));
 	
 	function GetRuleResultSet($iRuleId, $oDefinitionFilter)
 	{

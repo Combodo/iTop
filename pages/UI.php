@@ -501,7 +501,6 @@ try
 
 	require_once('../application/startup.inc.php');
 	$oAppContext = new ApplicationContext();
-	$currentOrganization = utils::ReadParam('org_id', '');
 	$operation = utils::ReadParam('operation', '');
 
 	$oKPI = new ExecutionKPI();
@@ -511,7 +510,7 @@ try
 
 	$oKPI->ComputeAndReport('User login');
 
-	$oP = new iTopWebPage(Dict::S('UI:WelcomeToITop'), $currentOrganization);
+	$oP = new iTopWebPage(Dict::S('UI:WelcomeToITop'));
 
 	switch($operation)
 	{
@@ -781,7 +780,12 @@ try
 			$oP->add_linked_script("../js/linkswidget.js");
 			$oP->add_linked_script("../js/jquery.blockUI.js");
 
-			$aArgs = array_merge($oAppContext->GetAsHash(), utils::ReadParam('default', array()));
+			$aArgs = utils::ReadParam('default', array());
+			$aContext = $oAppContext->GetAsHash();
+			foreach( $oAppContext->GetNames() as $key)
+			{
+				$aArgs[$key] = $oAppContext->GetCurrentValue($key);	
+			}
 
 			// If the specified class has subclasses, ask the user an instance of which class to create
 			$aSubClasses = MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL); // Including the specified class itself
@@ -818,9 +822,9 @@ try
 				$oP->add("<div class=\"wizContainer\">\n");
 				$aDefaults = utils::ReadParam('default', array());
 				$aContext = $oAppContext->GetAsHash();
-				foreach($aContext as $key => $value)
+				foreach( $oAppContext->GetNames() as $key)
 				{
-					$aDefaults[$key] = $value;	
+					$aDefaults[$key] = $oAppContext->GetCurrentValue($key);	
 				}
 				// Set all the default values in an object and clone this "default" object
 				$oObjToClone = MetaModel::NewObject($sRealClass);

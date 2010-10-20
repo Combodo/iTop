@@ -507,11 +507,9 @@ function DisplayRelationDetails($oPage, $sRelCode)
 
 // Display the menu on the left
 $oAppContext = new ApplicationContext();
-$iActiveNodeId = utils::ReadParam('menu', -1);
-$currentOrganization = utils::ReadParam('org_id', 1);
 $operation = utils::ReadParam('operation', '');
 
-$oPage = new iTopWebPage(Dict::S('UI:Schema:Title'), $currentOrganization);
+$oPage = new iTopWebPage(Dict::S('UI:Schema:Title'));
 $oPage->no_cache();
 
 $operation = utils::ReadParam('operation', '');

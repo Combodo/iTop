@@ -240,7 +240,7 @@ class DisplayTemplate
 			</itoptab>
 		</itoptabs>';
 		
-		$oPage = new iTopWebPage('Unit Test', 3);
+		$oPage = new iTopWebPage('Unit Test');
 		//$oPage->add("Template content: <pre>".htmlentities($sTemplate)."</pre>\n");
 		$oTemplate = new DisplayTemplate($sTemplate);
 		$oTemplate->Render($oPage, array('class'=>'Network device','pkey'=> 271, 'name' => 'deliversw01.mecanorama.fr', 'org_id' => 3));

@@ -218,7 +218,8 @@ class ApplicationMenu
 	 */
 	static public function GetActiveNodeId()
 	{
-		$iMenuIndex = utils::ReadParam('menu', -1);
+		$oAppContext = new ApplicationContext();
+		$iMenuIndex = $oAppContext->GetCurrentValue('menu', -1);
 		
 		if ($iMenuIndex  == -1)
 		{
@@ -319,7 +320,7 @@ abstract class MenuNode
 	
 	public function GetHyperlink($aExtraParams)
 	{
-		$aExtraParams['menu'] = $this->GetIndex();
+		$aExtraParams['c[menu]'] = $this->GetIndex();
 		return $this->AddParams('../pages/UI.php', $aExtraParams);
 	}
 	
@@ -593,7 +594,7 @@ class WebPageMenuNode extends MenuNode
 
 	public function GetHyperlink($aExtraParams)
 	{
-		$aExtraParams['menu'] = $this->GetIndex();
+		$aExtraParams['c[menu]'] = $this->GetIndex();
 		return $this->AddParams( $this->sHyperlink, $aExtraParams);
 	}
 	
@@ -631,7 +632,7 @@ class NewObjectMenuNode extends MenuNode
 	public function GetHyperlink($aExtraParams)
 	{
 		$sHyperlink = '../pages/UI.php?operation=new&class='.$this->sClass;
-		$aExtraParams['menu'] = $this->GetIndex();
+		$aExtraParams['c[menu]'] = $this->GetIndex();
 		return $this->AddParams($sHyperlink, $aExtraParams);
 	}
 

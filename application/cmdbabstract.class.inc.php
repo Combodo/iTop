@@ -899,7 +899,8 @@ EOF
 			}
 			$aOptions[MetaModel::GetName($sClassName)] = "<option selected value=\"$sClassName\">".MetaModel::GetName($sClassName)."</options>\n";
 			ksort($aOptions);
-			$sClassesCombo = "<select name=\"class\" onChange=\"ReloadSearchForm('$sSearchFormId', this.value, '$sRootClass')\">\n".implode('', $aOptions)."</select>\n";
+			$sContext = $oAppContext->GetForLink();
+			$sClassesCombo = "<select name=\"class\" onChange=\"ReloadSearchForm('$sSearchFormId', this.value, '$sRootClass', '$sContext')\">\n".implode('', $aOptions)."</select>\n";
 		}
 		else
 		{
@@ -919,7 +920,7 @@ EOF
 		$aList = MetaModel::GetZListItems($sClassName, 'standard_search');
 		foreach($aList as $sFilterCode)
 		{
-			$oAppContext->Reset($sFilterCode); // Make sure the same parameter will not be passed twice
+			//$oAppContext->Reset($sFilterCode); // Make sure the same parameter will not be passed twice
 			$sHtml .= '<span style="white-space: nowrap;padding:5px;display:inline-block;">';
 			$sFilterValue = '';
 			$sFilterValue = utils::ReadParam($sFilterCode, '');
@@ -1606,6 +1607,16 @@ EOF
 			throw(new Exception($sMessage));
 		}
 		return $aResult;
+	}
+	
+	/**
+	 * Maps the given context parameter name to the appropriate filter/search code for this class
+	 * @param string $sContextParam Name of the context parameter, i.e. 'org_id'
+	 * @return string Filter code, i.e. 'customer_id'
+	 */
+	public static function MapContextParam($sContextParam)
+	{
+		return $sContextParam;
 	}
 }
 ?>

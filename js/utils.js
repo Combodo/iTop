@@ -99,7 +99,7 @@ function UpdateFileName(id, sNewFileName)
 /**
  * Reload a search form for the specified class
  */
-function ReloadSearchForm(divId, sClassName, sBaseClass)
+function ReloadSearchForm(divId, sClassName, sBaseClass, sContext)
 {
     var oDiv = $('#'+divId);
 	oDiv.block();
@@ -112,7 +112,7 @@ function ReloadSearchForm(divId, sClassName, sBaseClass)
 		aSubmit = oFormEvents.submit;
 	}
 
-	$.post('ajax.render.php',
+	$.post('ajax.render.php?'+sContext,
 	   { operation: 'search_form', className: sClassName, baseClass: sBaseClass, currentId: divId },
 	   function(data) {
 		   oDiv.empty();
