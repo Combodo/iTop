@@ -113,7 +113,7 @@ class Incident extends ResponseTicket
 
 			case 'escalated_tto':
 			case 'escalated_ttr':
-			$sIconName = self::MakeIconFromName('incident-escalated.png');
+			$sIcon = self::MakeIconFromName('incident-escalated.png');
 			break;
 			
 			case 'resolved':

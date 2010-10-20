@@ -104,7 +104,7 @@ class UserRequest extends ResponseTicket
 
 			case 'escalated_tto':
 			case 'escalated_ttr':
-			$sIconName = self::MakeIconFromName('user-request-escalated.png');
+			$sIcon = self::MakeIconFromName('user-request-escalated.png');
 			break;
 			
 			case 'resolved':

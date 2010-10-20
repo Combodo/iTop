@@ -315,12 +315,12 @@ abstract class Change extends Ticket
 			case 'approved':
 			case 'implemented':
 			case 'monitored':
-			$sIconName = self::MakeIconFromName('change-approved.png');
+			$sIcon = self::MakeIconFromName('change-approved.png');
 			break;
 			
 			case 'rejected':
 			case 'notapproved':
-				$sIconName = self::MakeIconFromName('change-rejected.png');
+			$sIcon = self::MakeIconFromName('change-rejected.png');
 			break;
 
 			case 'closed':
