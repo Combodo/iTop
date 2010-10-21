@@ -325,18 +325,29 @@ class DisplayBlock
 				$aFilterCodes = array_keys(MetaModel::GetClassFilterDefs($sClass));
 				foreach($oAppContext->GetNames() as $sContextParam)
 				{
-					eval("\$sParamCode = $sClass::MapContextParam('$sFilterCode');"); //Map context parameter to the value/filter code depending on the class
+					eval("\$sParamCode = $sClass::MapContextParam('$sContextParam');"); //Map context parameter to the value/filter code depending on the class
+					if (!is_null($sParamCode))
+					{
+						$sParamValue = $oAppContext->GetCurrentValue($sContextParam, null);
+						if (!is_null($sParamValue))
+						{
+							$aExtraParams[$sParamCode] = $sParamValue;
+						}
+					}
 				}
 				foreach($aFilterCodes as $sFilterCode)
 				{
 					$sExternalFilterValue = utils::ReadParam($sFilterCode, '');
+					$condition = null;
 					if (isset($aExtraParams[$sFilterCode]))
 					{
 						$condition = $aExtraParams[$sFilterCode];
 					}
-					else if ($bDoSearch && $sExternalFilterValue != "")
+//					else if ($bDoSearch && $sExternalFilterValue != "")
+					if ($bDoSearch && $sExternalFilterValue != "")
 					{
 						// Search takes precedence over context params...
+						unset($aExtraParams[$sFilterCode]);
 						$condition = trim($sExternalFilterValue);
 					}
 

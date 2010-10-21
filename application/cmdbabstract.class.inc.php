@@ -1616,7 +1616,14 @@ EOF
 	 */
 	public static function MapContextParam($sContextParam)
 	{
-		return $sContextParam;
+		if ($sContextParam == 'menu')
+		{
+			return null;
+		}
+		else
+		{
+			return $sContextParam;
+		}
 	}
 }
 ?>
