@@ -576,6 +576,106 @@ class AttributeInteger extends AttributeDBField
 }
 
 /**
+ * Map a decimal value column (suitable for financial computations) to an attribute
+ * internally in PHP such numbers are represented as string. Should you want to perform
+ * a calculation on them, it is recommended to use the BC Math functions in order to
+ * retain the precision
+ *
+ * @package     iTopORM
+ */
+class AttributeDecimal extends AttributeDBField
+{
+	static protected function ListExpectedParams()
+	{
+		return array_merge(parent::ListExpectedParams(), array('digits', 'decimals' /* including precision */));
+	}
+
+	public function GetType() {return "Decimal";}
+	public function GetTypeDesc() {return "Decimal value (could be negative)";}
+	public function GetEditClass() {return "String";}
+	protected function GetSQLCol() {return "DECIMAL(".$this->Get('digits').",".$this->Get('decimals').")";}
+	
+	public function GetValidationPattern()
+	{
+		$iNbDigits = $this->Get('digits');
+		$iPrecision = $this->Get('decimals');
+		$iNbIntegerDigits = $iNbDigits - $iPrecision - 1; // -1 because the first digit is treated separately in the pattern below
+		return "^[-+]?[0-9]\d{0,$iNbIntegerDigits}(\.\d{0,$iPrecision})?$";
+	}
+
+	public function GetBasicFilterOperators()
+	{
+		return array(
+			"!="=>"differs from",
+			"="=>"equals",
+			">"=>"greater (strict) than",
+			">="=>"greater than",
+			"<"=>"less (strict) than",
+			"<="=>"less than",
+			"in"=>"in"
+		);
+	}
+	public function GetBasicFilterLooseOperator()
+	{
+		// Unless we implement an "equals approximately..." or "same order of magnitude"
+		return "=";
+	}
+
+	public function GetBasicFilterSQLExpr($sOpCode, $value)
+	{
+		$sQValue = CMDBSource::Quote($value);
+		switch ($sOpCode)
+		{
+		case '!=':
+			return $this->GetSQLExpr()." != $sQValue";
+			break;
+		case '>':
+			return $this->GetSQLExpr()." > $sQValue";
+			break;
+		case '>=':
+			return $this->GetSQLExpr()." >= $sQValue";
+			break;
+		case '<':
+			return $this->GetSQLExpr()." < $sQValue";
+			break;
+		case '<=':
+			return $this->GetSQLExpr()." <= $sQValue";
+			break;
+		case 'in':
+			if (!is_array($value)) throw new CoreException("Expected an array for argument value (sOpCode='$sOpCode')");
+			return $this->GetSQLExpr()." IN ('".implode("', '", $value)."')"; 
+			break;
+
+		case '=':
+		default:
+			return $this->GetSQLExpr()." = \"$value\"";
+		}
+	} 
+
+	public function GetNullValue()
+	{
+		return null;
+	} 
+	public function IsNull($proposedValue)
+	{
+		return is_null($proposedValue);
+	} 
+
+	public function MakeRealValue($proposedValue)
+	{
+		if (is_null($proposedValue)) return null;
+		if ($proposedValue == '') return null;
+		return (string)$proposedValue;
+	}
+
+	public function ScalarToSQL($value)
+	{
+		assert(is_null($value) || preg_match('/'.$this->GetValidationPattern().'/', $value));
+		return (string)$value; // treated as a string
+	}
+}
+
+/**
  * Map a boolean column to an attribute 
  *
  * @package     iTopORM
@@ -1133,7 +1233,15 @@ class AttributeEnum extends AttributeString
 
 	public function GetAsHTML($sValue)
 	{
-		$sLabel = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue, $sValue);
+		if (is_null($sValue))
+		{
+			// Unless a specific label is defined for the null value of this enum, use a generic "undefined" label		
+			$sLabel = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue, Dict::S('Enum:Undefined'));
+		}
+		else
+		{
+			$sLabel = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue, $sValue);
+		}
 		$sDescription = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue.'+', $sValue);
 		// later, we could imagine a detailed description in the title
 		return "<span title=\"$sDescription\">".parent::GetAsHtml($sLabel)."</span>";
@@ -1155,7 +1263,19 @@ class AttributeEnum extends AttributeString
 			$aLocalizedValues[$sKey] = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sKey, $sKey);
 		}
   		return $aLocalizedValues;
-  }
+  	}
+  	
+  	/**
+  	 * Processes the input value to align it with the values supported
+  	 * by this type of attribute. In this case: turns empty strings into nulls
+  	 * @param mixed $proposedValue The value to be set for the attribute
+  	 * @return mixed The actual value that will be set
+  	 */
+	public function MakeRealValue($proposedValue)
+	{
+		if ($proposedValue == '') return null;
+		return parent::MakeRealValue($proposedValue);
+	}
 }
 
 /**
@@ -1599,6 +1719,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 	public function MakeRealValue($proposedValue)
 	{
 		if (is_null($proposedValue)) return 0;
+		if ($proposedValue === '') return 0;
 		if (MetaModel::IsValidObject($proposedValue)) return $proposedValue->GetKey();
 		return (int)$proposedValue;
 	}

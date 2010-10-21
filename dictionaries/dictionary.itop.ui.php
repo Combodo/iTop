@@ -861,6 +861,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'Portal:Button:CloseTicket' => 'Close this ticket',
 	'Portal:EnterYourCommentsOnTicket' => 'Enter your comments about the resolution of this ticket:',
 	'Portal:ErrorNoContactForThisUser' => 'Error: the current user is not associated with a Contact/Person. Please contact your administrator.',
+	
+	'Enum:Undefined' => 'Undefined',
 ));
 
 

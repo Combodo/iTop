@@ -876,6 +876,8 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'Portal:Button:CloseTicket' => 'Dieses Ticket schließen',
 	'Portal:EnterYourCommentsOnTicket' => 'Geben Sie einen Kommentar zur Lösung dieses Tickets ein:',
 	'Portal:ErrorNoContactForThisUser' => 'Fehler: der derzeitige Benutzer wurde nicht einem Kontakt oder einer Person zugewiesen. Bitte kontaktieren Sie Ihren Administrator.',
+
+	'Enum:Undefined' => 'Nicht definiert',
 ));
 
 

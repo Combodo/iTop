@@ -1133,7 +1133,7 @@ EOF
 							// Few choices, use a normal 'select'
 							// In case there are no valid values, the select will be empty, thus blocking the user from validating the form
 							$sHTMLValue = "<select title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" id=\"$iId\">\n";
-							$sHTMLValue .= "<option value=\"0\">".Dict::S('UI:SelectOne')."</option>\n";
+							$sHTMLValue .= "<option value=\"\">".Dict::S('UI:SelectOne')."</option>\n";
 							foreach($aAllowedValues as $key => $display_value)
 							{
 								if ((count($aAllowedValues) == 1) && $bMandatory )

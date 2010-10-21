@@ -837,6 +837,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Deadline_Days_Hours_Minutes' => '%1$dd %2$dh %3$dmin',
 	'UI:Help' => 'Ayuda',
 	'UI:PasswordConfirm' => '(Confirm)',
+
+	'Enum:Undefined' => 'Undefined',
 ));
 
 ?>
