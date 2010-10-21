@@ -907,7 +907,7 @@ EOF
 			$sClassesCombo = MetaModel::GetName($sClassName);
 		}
 		$oUnlimitedFilter = new DBObjectSearch($sClassName);
-		$sHtml .= "<form id=\"form{$iSearchFormId}\">\n";
+		$sHtml .= "<form id=\"form{$iSearchFormId}\" action=\"{$_SERVER['SCRIPT_NAME']}\">\n";
 		$sHtml .= "<h2>".Dict::Format('UI:SearchFor_Class_Objects', $sClassesCombo)."</h2>\n";
 		$index = 0;
 		$sHtml .= "<p>\n";
@@ -964,11 +964,13 @@ EOF
 				}
 				$sValue .= "</select>\n";
 				$sHtml .= "<label>".MetaModel::GetFilterLabel($sClassName, $sFilterCode).":</label>&nbsp;$sValue\n";
+				unset($aExtraParams[$sFilterCode]);
 			}
 			else
 			{
 				// Any value is possible, display an input box
 				$sHtml .= "<label>".MetaModel::GetFilterLabel($sClassName, $sFilterCode).":</label>&nbsp;<input class=\"textSearch\" name=\"$sFilterCode\" value=\"$sFilterValue\"/>\n";
+				unset($aExtraParams[$sFilterCode]);
 			}
 			$index++;
 			$sHtml .= '</span> ';
@@ -988,7 +990,7 @@ EOF
 		{
 			$sHtml .= "</div><!-- Simple search form -->\n";
 		}
-
+/*
 		// OQL query builder
 		$sHtml .= "<div id=\"OQLQuery{$iSearchFormId}\" style=\"display:none\" class=\"mini_tab{$iSearchFormId}\">\n";
 		$sHtml .= "<h1>".Dict::S('UI:OQLQueryBuilderTitle')."</h1>\n";
@@ -1015,6 +1017,7 @@ EOF
 		$sHtml .= $oAppContext->GetForForm();
 		$sHtml .= "</table></form>\n";
 		$sHtml .= "</div><!-- OQL query form -->\n";
+*/
 		return $sHtml;
 	}
 	
