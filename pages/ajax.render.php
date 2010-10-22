@@ -62,8 +62,9 @@ switch($operation)
 	$sAttCode = utils::ReadParam('sAttCode', '');
 	$iInputId = utils::ReadParam('iInputId', '');
 	$sSuffix = utils::ReadParam('sSuffix', '');
+	$bDuplicates = (utils::ReadParam('bDuplicates', 'false') == 'false') ? false : true;
 	$aAlreadyLinked = utils::ReadParam('aAlreadyLinked', array());
-	$oWidget = new UILinksWidget($sClass, $sAttCode, $iInputId, $sSuffix);
+	$oWidget = new UILinksWidget($sClass, $sAttCode, $iInputId, $sSuffix, $bDuplicates);
 	$oWidget->SearchObjectsToAdd($oPage, $sRemoteClass, $aAlreadyLinked);	
 	break;
 	
@@ -72,8 +73,9 @@ switch($operation)
 	$sAttCode = utils::ReadParam('sAttCode', '');
 	$iInputId = utils::ReadParam('iInputId', '');
 	$sSuffix = utils::ReadParam('sSuffix', '');
+	$bDuplicates = (utils::ReadParam('bDuplicates', 'false') == 'false') ? false : true;
 	$aLinkedObjectIds = utils::ReadParam('selectObject', array());
-	$oWidget = new UILinksWidget($sClass, $sAttCode, $iInputId, $sSuffix);
+	$oWidget = new UILinksWidget($sClass, $sAttCode, $iInputId, $sSuffix, $bDuplicates);
 	$oWidget->DoAddObjects($oPage, $aLinkedObjectIds);	
 	break;
 	

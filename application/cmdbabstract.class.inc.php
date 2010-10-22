@@ -1078,7 +1078,7 @@ EOF
 	
 				case 'LinkedSet':
 					$aEventsList[] ='change';
-					$oWidget = new UILinksWidget($sClass, $sAttCode, $iId, $sNameSuffix);
+					$oWidget = new UILinksWidget($sClass, $sAttCode, $iId, $sNameSuffix, $oAttDef->DuplicatesAllowed());
 					$sHTMLValue = $oWidget->Display($oPage, $value);
 				break;
 							

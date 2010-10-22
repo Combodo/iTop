@@ -36,14 +36,16 @@ class UILinksWidget
 	protected $m_sExtKeyToRemote;
 	protected $m_sLinkedClass;
 	protected $m_sRemoteClass;
+	protected $m_bDuplicatesAllowed;
 	protected static $iWidgetIndex = 0;
 	
-	public function __construct($sClass, $sAttCode, $iInputId, $sNameSuffix = '')
+	public function __construct($sClass, $sAttCode, $iInputId, $sNameSuffix = '', $bDuplicatesAllowed = false)
 	{
 		$this->m_sClass = $sClass;
 		$this->m_sAttCode = $sAttCode;
 		$this->m_sNameSuffix = $sNameSuffix;
 		$this->m_iInputId = $iInputId;
+		$this->m_bDuplicatesAllowed = $bDuplicatesAllowed;
 		$this->m_aEditableFields = array();
 		self::$iWidgetIndex++;
 			
@@ -222,8 +224,9 @@ class UILinksWidget
 			$aForm[$key] = $this->GetFormRow($oPage, $oLinkedObj, $oCurrentLink, $aArgs);
 		}
 		$sHtmlValue .= $this->DisplayFormTable($oPage, $this->m_aTableConfig, $aForm);
+		$sDuplicates = ($this->m_bDuplicatesAllowed) ? 'true' : 'false';
 		$oPage->add_ready_script(<<<EOF
-		oWidget$iWidgetIndex = new LinksWidget('{$this->m_sAttCode}{$this->m_sNameSuffix}', '{$this->m_sClass}', '{$this->m_sAttCode}', '{$this->m_iInputId}', '{$this->m_sNameSuffix}');
+		oWidget$iWidgetIndex = new LinksWidget('{$this->m_sAttCode}{$this->m_sNameSuffix}', '{$this->m_sClass}', '{$this->m_sAttCode}', '{$this->m_iInputId}', '{$this->m_sNameSuffix}', $sDuplicates);
 		oWidget$iWidgetIndex.Init();
 EOF
 );
@@ -383,7 +386,7 @@ EOF
 			// No remote class specified use the one defined in the linkedset
 			$oFilter = new DBObjectSearch($this->m_sRemoteClass);		
 		}
-		if (count($aAlreadyLinkedIds) > 0)
+		if (!$this->m_bDuplicatesAllowed && count($aAlreadyLinkedIds) > 0)
 		{
 			// Positive IDs correspond to existing link records
 			// negative IDs correspond to "remote" objects to be linked

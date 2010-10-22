@@ -1,11 +1,12 @@
 // JavaScript Document
-function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix)
+function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates)
 {
 	this.id = id;
 	this.iInputId = iInputId;
 	this.sClass = sClass;
 	this.sAttCode = sAttCode;
 	this.sSuffix = sSuffix;
+	this.bDuplicates = bDuplicates;
 	var me = this;
 	this.Init = function()
 	{
@@ -64,7 +65,8 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix)
 	{
 		var theMap = { sAttCode: me.sAttCode,
 					   iInputId: me.iInputId,
-					   sSuffix: me.sSuffix
+					   sSuffix: me.sSuffix,
+					   bDuplicates: me.bDuplicates
 					 }
 		
 		// Gather the parameters from the search form
@@ -112,6 +114,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix)
 		var theMap = { sAttCode: me.sAttCode,
 				   	   iInputId: me.iInputId,
 				   	   sSuffix: me.sSuffix,
+				   	   bDuplicates: me.bDuplicates,
 				   	   'class': me.sClass
 				 	 }
 		
