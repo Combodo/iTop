@@ -231,7 +231,7 @@ class utils
 	static public function GetAbsoluteUrl($bQueryString = true, $bForceHTTPS = false)
 	{
 		// Build an absolute URL to this page on this server/port
-		$sServerName = $_SERVER['SERVER_NAME'];
+		$sServerName = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : '';
 		if (self::GetConfig()->GetSecureConnectionRequired() || self::GetConfig()->GetHttpsHyperlinks())
 		{
 			// If a secure connection is required, or if the URL is requested to start with HTTPS
@@ -246,13 +246,14 @@ class utils
 		else
 		{
 			$sProtocol = (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']!="off")) ? 'https' : 'http';
+			$iPort = isset($_SERVER['SERVER_PORT']) ? $_SERVER['SERVER_PORT'] : 80;
 			if ($sProtocol == 'http')
 			{
-				$sPort = ($_SERVER['SERVER_PORT'] == 80) ? '' : ':'.$_SERVER['SERVER_PORT'];
+				$sPort = ($iPort == 80) ? '' : ':'.$iPort;
 			}
 			else
 			{
-				$sPort = ($_SERVER['SERVER_PORT'] == 443) ? '' : ':'.$_SERVER['SERVER_PORT'];
+				$sPort = ($iPort == 443) ? '' : ':'.$iPort;
 			}
 		}
 		// $_SERVER['REQUEST_URI'] is empty when running on IIS

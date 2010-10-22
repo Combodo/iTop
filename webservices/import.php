@@ -36,7 +36,7 @@
 require_once('../application/application.inc.php');
 require_once('../application/webpage.class.inc.php');
 require_once('../application/csvpage.class.inc.php');
-require_once('../application/xmlpage.class.inc.php');
+require_once('../application/clipage.class.inc.php');
 
 require_once('../application/startup.inc.php');
 
@@ -46,45 +46,66 @@ class BulkLoadException extends Exception
 
 $aPageParams = array
 (
+	'auth_user' => array
+	(
+		'mandatory' => true,
+		'modes' => 'cli',
+		'default' => null,
+		'description' => 'login (must have enough rights to create objects of the given class)',
+	),
+	'auth_pwd' => array
+	(
+		'mandatory' => true,
+		'modes' => 'cli',
+		'default' => null,
+		'description' => 'password',
+	),
 	'class' => array
 	(
 		'mandatory' => true,
+		'modes' => 'http,cli',
 		'default' => null,
 		'description' => 'class of loaded objects',
 	),
 	'csvdata' => array
 	(
 		'mandatory' => true,
+		'modes' => 'http',
 		'default' => null,
 		'description' => 'data',
+	),
+	'csvfile' => array
+	(
+		'mandatory' => true,
+		'modes' => 'cli',
+		'default' => '',
+		'description' => 'local data file, replaces csvdata if specified',
 	),
 	'charset' => array
 	(
 		'mandatory' => false,
+		'modes' => 'http,cli',
 		'default' => 'UTF-8',
 		'description' => 'Character set encoding of the CSV data: UTF-8, ISO-8859-1, WINDOWS-1251, WINDOWS-1252, ISO-8859-15',
 	),
-//	'csvfile' => array
-//	(
-//		'mandatory' => false,
-//		'default' => '',
-//		'description' => 'local data file, replaces csvdata if specified',
-//	),
 	'separator' => array
 	(
 		'mandatory' => false,
+		'modes' => 'http,cli',
 		'default' => ';',
 		'description' => 'column separator in CSV data',
 	),
 	'qualifier' => array
 	(
 		'mandatory' => false,
+		'modes' => 'http,cli',
 		'default' => '"',
 		'description' => 'test qualifier in CSV data',
 	),
 	'output' => array
 	(
 		'mandatory' => false,
+		'modes' => 'http,cli',
 		'default' => 'summary',
 		'description' => '[retcode] to return the count of lines in error, [summary] to return a concise report, [details] to get a detailed report (each line listed)',
 	),
@@ -92,6 +113,7 @@ $aPageParams = array
 	'reportlevel' => array
 	(
 		'mandatory' => false,
+		'modes' => 'http,cli',
 		'default' => 'errors|warnings|created|changed|unchanged',
 		'description' => 'combination of flags to limit the detailed output',
 	),
@@ -99,18 +121,21 @@ $aPageParams = array
 	'reconciliationkeys' => array
 	(
 		'mandatory' => false,
+		'modes' => 'http,cli',
 		'default' => '',
 		'description' => 'name of the columns used to identify existing objects and update them, or create a new one',
 	),
 	'simulate' => array
 	(
 		'mandatory' => false,
+		'modes' => 'http,cli',
 		'default' => '0',
 		'description' => 'If set to 1, then the load will not be executed, but the expected report will be produced',
 	),
 	'comment' => array
 	(
 		'mandatory' => false,
+		'modes' => 'http,cli',
 		'default' => '',
 		'description' => 'Comment to be added into the change log',
 	),
@@ -119,11 +144,28 @@ $aPageParams = array
 function UsageAndExit($oP)
 {
 	global $aPageParams;
+	$bModeCLI = utils::IsModeCLI();
+
 	$oP->p("USAGE:\n");
 	foreach($aPageParams as $sParam => $aParamData)
 	{
-		$sDesc = $aParamData['description'].', '.($aParamData['mandatory'] ? 'mandatory' : 'optional, defaults to ['.$aParamData['default'].']');
-		$oP->p("$sParam = $sDesc\n");
+		$aModes = explode(',', $aParamData['modes']);
+		if ($bModeCLI)
+		{
+			if (in_array('cli', $aModes))
+			{
+				$sDesc = $aParamData['description'].', '.($aParamData['mandatory'] ? 'mandatory' : 'optional, defaults to ['.$aParamData['default'].']');
+				$oP->p("$sParam = $sDesc");
+			}
+		}
+		else
+		{
+			if (in_array('http', $aModes))
+			{
+				$sDesc = $aParamData['description'].', '.($aParamData['mandatory'] ? 'mandatory' : 'optional, defaults to ['.$aParamData['default'].']');
+				$oP->p("$sParam = $sDesc");
+			}
+		}
 	}
 	$oP->output();
 	exit;
@@ -157,16 +199,16 @@ function ReadMandatoryParam($oP, $sParam)
 /////////////////////////////////
 // Main program
 
-if (false && utils::IsModeCLI())
+if (utils::IsModeCLI())
 {
-	// Mode CLI under construction... sorry!
+	$oP = new CLIPage("iTop - Bulk import");
+
 	// Next steps:
-	//   implement a new page: CLIPage, that does a very clean output
-	//   branch if in CLI mode
-	//   enable the new argument 'csvfile'
+	//   specific arguments: 'csvfile'
+	//   
 	$sAuthUser = ReadMandatoryParam($oP, 'auth_user');
-	$sAuthPwd = ReadMandatoryParam($oP, 'auth_user');
-	$sCsvFile = ReadMandatoryParam($oP, 'csv_file');
+	$sAuthPwd = ReadMandatoryParam($oP, 'auth_pwd');
+	$sCsvFile = ReadMandatoryParam($oP, 'csvfile');
 	if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd))
 	{
 		UserRights::Login($sAuthUser); // Login & set the user's language
@@ -176,6 +218,14 @@ if (false && utils::IsModeCLI())
 		$oP->p("Access restricted or wrong credentials ('$sAuthUser')");
 		exit;
 	}
+
+	if (!is_readable($sCsvFile))
+	{
+		$oP->p("Input file could not be found or could not be read: '$sCsvFile'");
+		exit;
+	}
+	$sCSVData = file_get_contents($sCsvFile);
+
 }
 else
 {
@@ -184,6 +234,7 @@ else
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
 	$oP = new CSVPage("iTop - Bulk import");
+	$sCSVData = utils::ReadPostedParam('csvdata');
 }
 
 
@@ -196,7 +247,6 @@ try
 	$sClass = ReadMandatoryParam($oP, 'class');
 	$sSep = ReadParam($oP, 'separator');
 	$sQualifier = ReadParam($oP, 'qualifier');
-	$sCSVData = utils::ReadPostedParam('csvdata');
 	$sCharSet = ReadParam($oP, 'charset');
 	$sOutput = ReadParam($oP, 'output');
 //	$sReportLevel = ReadParam($oP, 'reportlevel');
