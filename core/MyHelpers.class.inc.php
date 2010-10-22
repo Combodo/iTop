@@ -488,7 +488,7 @@ class Str
 	*/
 	protected static function xmlencode($string)
 	{
-		return self::xmlentities(iconv("ISO-8859-1", "UTF-8//IGNORE",$string));
+		return self::xmlentities(iconv("UTF-8", "UTF-8//IGNORE",$string));
 	}
 
 	public static function islowcase($sString)
