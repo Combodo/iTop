@@ -359,6 +359,7 @@ class AttributeLinkedSet extends AttributeDefinition
 	{
 		return "ERROR: LIST OF OBJECTS";
 	}
+	public function DuplicatesAllowed() {return false;} // No duplicates for 1:n links, never
 }
 
 /**
@@ -375,6 +376,7 @@ class AttributeLinkedSetIndirect extends AttributeLinkedSet
 	public function IsIndirect() {return true;} 
 	public function GetExtKeyToRemote() { return $this->Get('ext_key_to_remote'); }
 	public function GetEditClass() {return "LinkedSet";}
+	public function DuplicatesAllowed() {$bRet = $this->GetOptional("duplicates", false); echo "<p>Dups: $bRet</p>"; return $bRet;} // The same object may be linked several times... or not...
 }
 
 /**
@@ -1085,6 +1087,11 @@ class AttributeEmailAddress extends AttributeString
 	public function GetValidationPattern()
 	{
 		return "^([0-9a-zA-Z]([-.\\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\\w]*[0-9a-zA-Z]\\.)+[a-zA-Z]{2,9})$";
+	}
+
+	public function GetAsHTML($sValue)
+	{
+		return '<a class="mailto" href="mailto:'.$sValue.'">'.parent::GetAsHTML($sValue).'</a>';
 	}
 }
 

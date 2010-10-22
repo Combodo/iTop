@@ -400,7 +400,8 @@ abstract class DBObject
 			$aAvailableFields = array();
 			foreach ($aExtKeyFriends as $sDispAttCode => $oExtField)
 			{
-				$aAvailableFields[$oExtField->GetExtAttCode()] = $oExtField->GetAsHTML($this->Get($oExtField->GetCode()));
+//				$aAvailableFields[$oExtField->GetExtAttCode()] = $oExtField->GetAsHTML($this->Get($oExtField->GetCode()));
+				$aAvailableFields[$oExtField->GetExtAttCode()] = $this->Get($oExtField->GetCode());
 			}
 
 			$sTargetClass = $oAtt->GetTargetClass(EXTKEY_ABSOLUTE);

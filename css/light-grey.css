@@ -172,6 +172,19 @@ td a.no-arrow:hover {
 	padding-left:0px;
 	background: inherit;
 }
+td a.mailto, td a.mailto:visited {
+	text-decoration:none;
+	color:#000000;
+	padding-left:20px;
+	background: url(../images/mail.png) no-repeat left;
+}
+td a.mailto:hover {
+	text-decoration:underline;
+	color:#EB8F00;
+	padding-left:20px;
+	background: url(../images/mail.png) no-repeat left;
+}
+
 a.small_action {
     font-family: Tahoma, Verdana, Arial, Helvetica;
     font-size: 8pt;
