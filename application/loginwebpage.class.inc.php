@@ -339,6 +339,7 @@ EOF
 	static function DoLogin($bMustBeAdmin = false, $bIsAllowedToPortalUsers = false)
 	{
 		$operation = utils::ReadParam('loginop', '');
+		session_name(utils::GetConfig()->Get('session_name'));
 		session_start();
 
 		if ($operation == 'logoff')

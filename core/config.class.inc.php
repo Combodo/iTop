@@ -110,6 +110,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'session_name' => array(
+			'type' => 'string',
+			'description' => 'The name of the cookie used to store the PHP session id',
+			'default' => 'iTop',
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
 	);
 
 	public function IsProperty($sPropCode)

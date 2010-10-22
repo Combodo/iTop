@@ -1058,6 +1058,9 @@ function SetupFinished(SetupWebPage $oP, $aParamValues, $iCurrentStep, Config $o
 	$sAuthPwd = $aParamValues['auth_pwd'];
 	try
 	{
+		$sSessionName = sprintf('iTop-%x', rand());
+		$oConfig->Set('session_name', $sSessionName);
+		session_name($sSessionName);
 		session_start();
 		
 		// Write the final configuration file
