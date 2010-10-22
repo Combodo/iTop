@@ -30,23 +30,63 @@ require_once("../application/webpage.class.inc.php");
  */
 class XMLPage extends WebPage
 {
-    function __construct($s_title)
+	/**
+	 * For big XML files, it's better NOT to store everything in memory and output the XML piece by piece
+	 */
+	var $m_bPassThrough;
+	var $m_bHeaderSent;
+	
+    function __construct($s_title, $bPassThrough = false)
     {
         parent::__construct($s_title);
-		$this->add_header("Content-type: text/xml; charset=utf-8");
+        $this->m_bPassThrough = $bPassThrough;
+        $this->m_bHeaderSent = false;
+        $this->add_header("Content-type: text/xml; charset=utf-8");
 		$this->add_header("Cache-control: no-cache");
 		$this->add_header("Content-location: export.xml");
-		$this->add("<?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n");
     }	
 
     public function output()
     {
-		$this->add_header("Content-Length: ".strlen(trim($this->s_content)));
-        foreach($this->a_headers as $s_header)
-        {
-            header($s_header);
-        }
-        echo trim($this->s_content);
+    	if (!$this->m_bPassThrough)
+    	{
+			$this->add("<?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n");
+			$this->add_header("Content-Length: ".strlen(trim($this->s_content)));
+	        foreach($this->a_headers as $s_header)
+	        {
+	            header($s_header);
+	        }
+	        echo trim($this->s_content);
+    	}
+    }
+    
+    public function add($sText)
+    {
+    	if (!$this->m_bPassThrough)
+    	{
+    		parent::add($sText);
+    	}
+    	else
+    	{
+    		if ($this->m_bHeaderSent)
+    		{
+		   		echo $sText;
+    		}
+    		else
+    		{
+		        $s_captured_output = ob_get_contents();
+		        ob_end_clean();
+		        foreach($this->a_headers as $s_header)
+		        {
+		            header($s_header);
+		        }
+				echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n";
+		        echo trim($s_captured_output);
+		        echo trim($this->s_content);
+		        echo $sText;
+		        $this->m_bHeaderSent = true;
+    		}
+     	}
     }
 
     public function small_p($sText)
