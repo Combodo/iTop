@@ -28,6 +28,7 @@ SetupWebPage::AddModule(
 			'fr.dict.itop-tickets.php',
 			'es_cr.dict.itop-tickets.php',
 			'de.dict.itop-tickets.php',
+			'pt_br.dict.itop-tickets.php',
 		),
 		'data.struct' => array(
 			'data.struct.ta-actions.xml',

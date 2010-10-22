@@ -128,6 +128,13 @@ class Dict
 		{
 			return $aDefaultDictionary[$sStringCode];
 		}
+		// Attempt to find the string in english
+		//
+		$aDefaultDictionary = self::$m_aData['EN US'];
+		if (array_key_exists($sStringCode, $aDefaultDictionary))
+		{
+			return $aDefaultDictionary[$sStringCode];
+		}
 		// Could not find the string...
 		//
 		switch (self::$m_iErrorMode)

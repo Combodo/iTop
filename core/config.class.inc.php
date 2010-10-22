@@ -271,6 +271,8 @@ class Config
 			'../dictionaries/es_cr.dictionary.itop.core.php',	// Support for Spanish (from Costa Rica)
 			'../dictionaries/de.dictionary.itop.ui.php',	// Support for German
 			'../dictionaries/de.dictionary.itop.core.php',	// Support for German
+			'../dictionaries/pt_br.dictionary.itop.ui.php',	// Support for Brazilian Portuguese
+			'../dictionaries/pt_br.dictionary.itop.core.php',	// Support for Brazilian Portuguese
 		);
 
 		foreach($this->m_aSettings as $sPropCode => $aSettingInfo)

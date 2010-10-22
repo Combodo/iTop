@@ -29,6 +29,7 @@ SetupWebPage::AddModule(
 			'fr.dict.itop-request-mgmt.php',
 			'es_cr.dict.itop-request-mgmt.php',
 			'de.dict.itop-request-mgmt.php',
+			'pt_br.dict.itop-request-mgmt.php',
 		),
 		'data.struct' => array(
 			'data.struct.ta-triggers.xml',
