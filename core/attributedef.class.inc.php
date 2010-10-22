@@ -376,7 +376,7 @@ class AttributeLinkedSetIndirect extends AttributeLinkedSet
 	public function IsIndirect() {return true;} 
 	public function GetExtKeyToRemote() { return $this->Get('ext_key_to_remote'); }
 	public function GetEditClass() {return "LinkedSet";}
-	public function DuplicatesAllowed() {$bRet = $this->GetOptional("duplicates", false); echo "<p>Dups: $bRet</p>"; return $bRet;} // The same object may be linked several times... or not...
+	public function DuplicatesAllowed() {return $this->GetOptional("duplicates", false);} // The same object may be linked several times... or not...
 }
 
 /**
