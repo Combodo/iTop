@@ -1424,8 +1424,6 @@ EOF
 		$oP->add("<div id=\"impacted_objects\" style=\"width:100%;background-color:#fff;padding:10px;\"><p style=\"height:150px;\">&nbsp;</p></div>");
 		$oP->add_ready_script(
 <<<EOF
-	UpdateImpactedObjects('$sClass', $id, '$sRelation');
-	
 	var ajax_request = null;
 	
 	function UpdateImpactedObjects(sClass, iId, sRelation)
@@ -1443,7 +1441,7 @@ EOF
 				ajax_request = null;
 			}
 	
-			ajax_request = $.get('xml.navigator.php', { class: sClass, id: iId, relation: sRelation, format: 'html' },
+			ajax_request = $.get('xml.navigator.php', { 'class': sClass, id: iId, relation: sRelation, format: 'html' },
 					function(data)
 					{
 						$('#impacted_objects').empty();
@@ -1455,6 +1453,8 @@ EOF
 			);
 		}
 	}
+	
+	UpdateImpactedObjects('$sClass', $id, '$sRelation');
 EOF
 		);
 		$oP->SetCurrentTab('');
