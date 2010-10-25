@@ -1091,6 +1091,7 @@ class AttributeEmailAddress extends AttributeString
 
 	public function GetAsHTML($sValue)
 	{
+		if (empty($sValue)) return '';
 		return '<a class="mailto" href="mailto:'.$sValue.'">'.parent::GetAsHTML($sValue).'</a>';
 	}
 }
