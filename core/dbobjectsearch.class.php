@@ -738,6 +738,10 @@ class DBObjectSearch
 			}
 			return new FunctionExpression($oExpression->GetVerb(), $aArgs);
 		}
+		elseif ($oExpression instanceof IntervalOqlExpression)
+		{
+			return new IntervalExpression($oExpression->GetValue(), $oExpression->GetUnit());
+		}
 		else
 		{
 			throw new CoreException('Unknown expression type', array('class'=>get_class($oExpression), 'query'=>$sQuery));
