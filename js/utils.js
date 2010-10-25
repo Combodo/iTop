@@ -104,12 +104,16 @@ function ReloadSearchForm(divId, sClassName, sBaseClass, sContext)
     var oDiv = $('#'+divId);
 	oDiv.block();
 	var oFormEvents = $('#'+divId+' form').data('events');
+	var aSubmit = new Array();
 	
 	// Save the submit handlers
-	aSubmit = new Array();
+    aSubmit = new Array();
 	if ( (oFormEvents != null) && (oFormEvents.submit != undefined))
 	{
-		aSubmit = oFormEvents.submit;
+		for(index = 0; index < oFormEvents.submit.length; index++)
+		{
+			aSubmit [index ] = { data:oFormEvents.submit[index].data, namespace:oFormEvents.submit[index].namespace, handler:  oFormEvents.submit[index].handler};
+		}
 	}
 
 	$.post('ajax.render.php?'+sContext,
@@ -177,3 +181,14 @@ function GetUserPreference(sPreferenceCode, sDefaultValue)
 	}
 	return value;
 }
+
+/**
+ * Check/uncheck a whole list of checkboxes
+ */
+function CheckAll(sSelector, bValue)
+{
+	var value = bValue;
+	$(sSelector).each( function() {
+		this.checked = value;
+	});
+}  

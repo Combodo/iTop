@@ -466,7 +466,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 		{
 			if (!$bSingleSelectMode)
 			{
-				$aAttribs['form::select'] = array('label' => "<input type=\"checkbox\" onChange=\"var value = this.checked; $('.selectList{$iListId}').each( function() { this.checked = value; } );\"></input>", 'description' => Dict::S('UI:SelectAllToggle+'));
+				$aAttribs['form::select'] = array('label' => "<input type=\"checkbox\" onClick=\"CheckAll('.selectList{$iListId}', this.checked);\"></input>", 'description' => Dict::S('UI:SelectAllToggle+'));
 			}
 			else
 			{
@@ -907,7 +907,7 @@ EOF
 			$sClassesCombo = MetaModel::GetName($sClassName);
 		}
 		$oUnlimitedFilter = new DBObjectSearch($sClassName);
-		$sHtml .= "<form id=\"form{$iSearchFormId}\" action=\"{$_SERVER['SCRIPT_NAME']}\">\n";
+		$sHtml .= "<form id=\"form{$iSearchFormId}\" action=\"../pages/UI.php\">\n"; // Don't use $_SERVER['SCRIPT_NAME'] since the form may be called asynchronously (from ajax.php)
 		$sHtml .= "<h2>".Dict::Format('UI:SearchFor_Class_Objects', $sClassesCombo)."</h2>\n";
 		$index = 0;
 		$sHtml .= "<p>\n";

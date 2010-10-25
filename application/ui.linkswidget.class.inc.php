@@ -60,7 +60,7 @@ class UILinksWidget
 
 		$this->m_aEditableFields = array();
 		$this->m_aTableConfig = array();
-		$this->m_aTableConfig['form::checkbox'] = array( 'label' => "<input class=\"select_all\" type=\"checkbox\" value=\"1\" onChange=\"var value = this.checked; $('#linkedset_{$this->m_sAttCode}{$this->m_sNameSuffix} .selection').each( function() { this.checked = value; } ); oWidget".self::$iWidgetIndex.".OnSelectChange();\">", 'description' => Dict::S('UI:SelectAllToggle+'));
+		$this->m_aTableConfig['form::checkbox'] = array( 'label' => "<input class=\"select_all\" type=\"checkbox\" value=\"1\" onClick=\"CheckAll('#linkedset_{$this->m_sAttCode}{$this->m_sNameSuffix} .selection', this.checked); oWidget".self::$iWidgetIndex.".OnSelectChange();\">", 'description' => Dict::S('UI:SelectAllToggle+'));
 
 		foreach(MetaModel::ListAttributeDefs($this->m_sLinkedClass) as $sAttCode=>$oAttDef)
 		{

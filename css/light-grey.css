@@ -794,7 +794,7 @@ div#inner_menu {
 }
 div#logo {
 	height: 70px;
-	width: 100%;
+	nowidth: 100%;
 	text-align: center;
 }
 div#logo div {
@@ -810,7 +810,7 @@ div#logo div {
 #global-search {
 	height: 55px;
 	float: right;
-	background: url(../images/banner-search.png) no-repeat left;
+	background: url(../images/banner-search.png) no-repeat;
 	nopadding-top: 15px;
 	text-align: right;
 	overflow-y: hidden;
@@ -830,7 +830,7 @@ div#logo div {
 #global-search > form input[type="text"] {
 	border: 0;
 	height: 18px;
-	width: 180px;E8FFD3
+	width: 180px;
 	padding-top: 4;
 	background: transparent;
 }
