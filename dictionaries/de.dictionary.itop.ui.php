@@ -121,33 +121,30 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 //
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:URP_Users' => 'Benutzer',
-	'Class:URP_Users+' => 'Benutzer und Berechtigungen',
-	'Class:URP_Users/Attribute:userid' => 'Kontakt (Person)',
-	'Class:URP_Users/Attribute:userid+' => 'Persönliche Details aus den Geschäftsdaten',
-	'Class:URP_Users/Attribute:last_name' => 'Nachname',
-	'Class:URP_Users/Attribute:last_name+' => 'Name des dazugehörigen Kontaktes',
-	'Class:URP_Users/Attribute:first_name' => 'Vorname',
-	'Class:URP_Users/Attribute:first_name+' => 'Vorname des dazugehörigen Kontaktes',
-	'Class:URP_Users/Attribute:email' => 'Email-Adresse',
-	'Class:URP_Users/Attribute:email+' => 'Email-Adresse des dazugehörigen Kontaktes',
-	'Class:URP_Users/Attribute:login' => 'Loginname',
-	'Class:URP_Users/Attribute:login+' => 'Benutzerkennung zur Identifizierung',
-	'Class:URP_Users/Attribute:password' => 'Passwort',
-	'Class:URP_Users/Attribute:password+' => 'Benutzerkennung zur Authentifizierung',
-	'Class:URP_Users/Attribute:language' => 'Sprache',
-	'Class:URP_Users/Attribute:language+' => 'Benutzersprache',
-	'Class:URP_Users/Attribute:language/Value:EN US' => 'English',
-	'Class:URP_Users/Attribute:language/Value:EN US+' => 'English U.S.',
-	'Class:URP_Users/Attribute:language/Value:FR FR' => 'French',
-	'Class:URP_Users/Attribute:language/Value:FR FR+' => 'FR FR',
-	'Class:URP_Users/Attribute:language/Value:DE DE' => 'German',
-	'Class:URP_Users/Attribute:language/Value:DE DE+' => 'DE DE',
+	'Class:User' => 'Benutzer',
+	'Class:User+' => 'Benutzer-Login',
+	'Class:User/Attribute:finalclass' => 'Typ des Benutzerkontos',
+	'Class:User/Attribute:finalclass+' => '',
+	'Class:User/Attribute:contactid' => 'Kontakt (Person)',
+	'Class:User/Attribute:contactid+' => 'Persönliche Details der Geschäftsdaten',
+	'Class:User/Attribute:last_name' => 'Nachname',
+	'Class:User/Attribute:last_name+' => 'Nachname des Kontaktes',
+	'Class:User/Attribute:first_name' => 'Vorname',
+	'Class:User/Attribute:first_name+' => 'Vorname des Kontaktes',
+	'Class:User/Attribute:email' => 'Email-Adresse',
+	'Class:User/Attribute:email+' => 'Email-Adresse des Kontaktes',
+	'Class:User/Attribute:login' => 'Login',
+	'Class:User/Attribute:login+' => 'Benutzer-Anmeldename',
+	'Class:User/Attribute:language' => 'Sprache',
+	'Class:User/Attribute:language+' => 'Benutzersprache',
+	'Class:User/Attribute:language/Value:EN US' => 'English',
+	'Class:User/Attribute:language/Value:EN US+' => 'English (U.S.)',
+	'Class:User/Attribute:language/Value:FR FR' => 'French',
+	'Class:User/Attribute:language/Value:FR FR+' => 'French (France)',
 	'Class:User/Attribute:profile_list' => 'Profile',
-	'Class:User/Attribute:profile_list+' => 'Rollen, Rechtemanagement für diese Personn',
-	'Class:User/Attribute:allowed_org_list' => 'Zugelassenen Organisationen',
-	'Class:User/Attribute:allowed_org_list+' => 'Der Endbenutzer ist berechtigt, die daten der folgenden Organisationen zu sehen. Wenn keine Organisation zu sehen ist, gibt es keine Beschränkung.',
-
+	'Class:User/Attribute:profile_list+' => 'Rollen, Rechtemanagement für diese Person',
+	'Class:User/Attribute:allowed_org_list' => '',
+	'Class:User/Attribute:allowed_org_list+' => 'Der Endbenutzer ist berechtigt, die Daten der folgenden Organisationen zu sehen. Wenn keine Organisation zu sehen ist, gibt es keine Beschränkung.',
 	'Class:User/Error:LoginMustBeUnique' => 'Login-Namen müssen unterschiedlich sein - "%1s" benutzt diesen Login-Name bereits.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Mindestens ein Profil muss diesem Benutzer zugewiesen sein.',
 ));
@@ -166,6 +163,26 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:URP_Profiles/Attribute:user_list' => 'Benutzer',
 	'Class:URP_Profiles/Attribute:user_list+' => 'Personen, die diese Rolle haben',
 ));
+
+//
+// Class: URP_UserOrg
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:URP_UserOrg' => 'Benutzerorganisationen',
+	'Class:URP_UserOrg+' => 'Zulässige Organisationen',
+	'Class:URP_UserProfile/Attribute:userid' => 'Benutzer',
+	'Class:URP_UserProfile/Attribute:userid+' => 'Benutzerkonto',
+	'Class:URP_UserProfile/Attribute:userlogin' => 'Benutzer-Login',
+	'Class:URP_UserProfile/Attribute:userlogin+' => 'Logindaten des Benutzers',
+	'Class:URP_UserProfile/Attribute:allowed_org_id' => 'Organisation',
+	'Class:URP_UserProfile/Attribute:allowed_org_id+' => 'Gestattete Organisation',
+	'Class:URP_UserProfile/Attribute:allowed_org_name' => 'Organisation',
+	'Class:URP_UserProfile/Attribute:allowed_org_name+' => 'Gestattete Organisation',
+	'Class:URP_UserProfile/Attribute:reason' => 'Grund',
+	'Class:URP_UserProfile/Attribute:reason+' => 'Erklären Sie, warum diese Person berechtigt ist, Zugriff auf die Daten der Organisation zu haben',
+));
+
 
 //
 // Class: URP_Dimensions
@@ -314,7 +331,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:WelcomeMenu:LeftBlock' => '<p>iTop ist ein ein vollständiges, ITIL- und webbasiertes IT-Service-Management-Tool (ITSM)</p>
 <ul>Es umfasst...
 <li>eine vollständige CMDB (Configuration Management Database), um das IT-Portfolio zu dokumentieren und zu managen,</li>
-<li>ein Incident Mangement-Modul, um alle Störfälle in der IT-Landschaft zu beobachten und diese zu kommunizieren,</li>
+<li>ein Incident Management-Modul, um alle Störfälle in der IT-Landschaft zu beobachten und diese zu kommunizieren,</li>
 <li>ein Change Management-Modul, um Änderungen der IT-Landschaft zu planen und zu beobachten,</li>
 <li>eine Datenbank mit bekannten Fehlern, um Zwischenfälle schneller anhand bekannter Problemlösungen zu beseitigen,</li>
 <li>ein Ausfall-Modul, um geplante Ausfälle zu dokumentieren und die betreffenden Kontakte zu informieren,</li>
@@ -373,8 +390,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Button:ResetPassword' => ' Passwort zurücksetzen ',
 
 	'UI:SearchToggle' => 'Suche',
-	'UI:ClickToCreateNew' => 'Klicken Sie hier, um einen neuen %1$s zu erstellen',
-	'UI:SearchFor_Class' => 'Suche nach Objekten: %1$',
+	'UI:ClickToCreateNew' => 'Klicken Sie hier, um eine neues Objekt vom Typ %1$s zu erstellen',
+	'UI:SearchFor_Class' => 'Suche nach Objekten vom Typ "%1$s"',
 	'UI:NoObjectToDisplay' => 'Kein Objekt zur Anzeige vorhanden.',
 	'UI:Error:MandatoryTemplateParameter_object_id' => 'Parameter object_id ist erforderlich, wenn link_attr verwendet wird. Überprüfen Sie die Defintion des Display-Templates.',
 	'UI:Error:MandatoryTemplateParameter_target_attr' => 'Parameter target_attr ist erforderlich, wenn link_attr verwendet wird. Überprüfen Sie die Defintion des Display-Templates.',
@@ -382,7 +399,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Error:InvalidGroupByFields' => 'Ungültige Felder-Liste, um diese zu gruppieren von: "%1$s".',
 	'UI:Error:UnsupportedStyleOfBlock' => 'Fehler: nicht unterstützter Blockform: "%1$s".',
 	'UI:Error:IncorrectLinkDefinition_LinkedClass_Class' => 'Ungültige Link-Defintion: die Klasse der zu managenden Objekte: %1$s wurde nicht als externer Schlüssel in der Klasse %2$s gefunden.',
-	'UI:Error:Object_Class_Id_NotFound' => 'Object: %1$s:%2$d wurde nicht gefunden.',
+	'UI:Error:Object_Class_Id_NotFound' => 'Objekt: %1$s:%2$d wurde nicht gefunden.',
 	'UI:Error:WizardCircularReferenceInDependencies' => 'Fehler: gegenseitige Beziehung in den Abhängigkeiten zwischen den Feldern, überprüfen Sie das Datenmodell.',
 	'UI:Error:UploadedFileTooBig' => 'Die hochgeladene Datei ist zu groß. (Maximal erlaubte Dateigröße ist %1$s. Überprüfen Sie upload_max_filesize in der PHP-Konfiguration.',
 	'UI:Error:UploadedFileTruncated.' => 'Hochgeladene Datei wurde beschränkt!',
@@ -412,7 +429,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:GroupBy:Count+' => 'Anzahl der Elemente',
 	'UI:CountOfObjects' => '%1$d Objekte, die das Kriterium erfüllen.',
 	'UI_CountOfObjectsShort' => '%1$d Objekte.',
-	'UI:NoObject_Class_ToDisplay' => 'Kein %1$s zur Anzeige',
+	'UI:NoObject_Class_ToDisplay' => 'Kein Objekt vom Typ "%1$s" zur Anzeige vorhanden',
 	'UI:History:LastModified_On_By' => 'Zuletzt verändert am %1$s von %2$s.',
 	'UI:HistoryTab' => 'Verlauf',
 	'UI:NotificationsTab' => 'Benachrichtigungen',
@@ -562,7 +579,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Schema:NullAllowed' => 'Null zugelassen',
 	'UI:Schema:NullNotAllowed' => 'Null NICHT zugelassen',
 	'UI:Schema:Attributes' => 'Attribute',
-	'UI:Schema:AttributeCode' => 'Attribute-Code',
+	'UI:Schema:AttributeCode' => 'Attribut-Code',
 	'UI:Schema:AttributeCode+' => 'Interner Code des Attributes',
 	'UI:Schema:Label' => 'Label',
 	'UI:Schema:Label+' => 'Label des Attributes',
@@ -618,10 +635,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:AddObjectsOf_Class_LinkedWith_Class_Instance' => 'Fügen Sie %1$s Objekte verbunden mit %2$s hinzu: %3$s',
 	'UI:AddObjectsOf_Class_LinkedWith_Class' => 'Fügen Sie %1$s Objekte verbunden mit %2$s hinzu',
 	'UI:ManageObjectsOf_Class_LinkedWith_Class_Instance' => 'Verwalten Sie %1$s Objekte verbunden mit %2$s: %3$s',
-	'UI:AddLinkedObjectsOf_Class' => ' %1$se hinzufügen...',
+	'UI:AddLinkedObjectsOf_Class' => ' %1$s hinzufügen...',
 	'UI:RemoveLinkedObjectsOf_Class' => 'Entferne ausgewählte Objekte',
 	'UI:Message:EmptyList:UseAdd' => 'Die Liste ist leer, benutzten Sie "Hinzufügen..." um Elemente hinzuzufügen.',
-	'UI:Message:EmptyList:UseSearchForm' => 'Benutzen Sie das Suchformular oben, um nach hinzufügenbaren Objekten zu suchen.',
+	'UI:Message:EmptyList:UseSearchForm' => 'Benutzen Sie das Suchformular oben, um nach hinzufügbaren Objekten zu suchen.',
 	
 	'UI:Wizard:FinalStepTitle' => 'Letzter Schritt: Bestätigung',
 	'UI:Title:DeletionOf_Object' => 'Löschung von %1$s',
@@ -656,7 +673,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:WelcomeToITop' => 'Willkommen bei iTop',
 	'UI:DetailsPageTitle' => 'iTop - %1$s - %2$s Details',
 	'UI:ErrorPageTitle' => 'iTop - Fehler',
-	'UI:ObjectDoesNotExist' => 'Entschuldigung, dies Objekt exisitert nicht oder Sie sind nicht berechtigt es einzusehen.',
+	'UI:ObjectDoesNotExist' => 'Entschuldigung, dieses Objekt exisitert nicht oder Sie sind nicht berechtigt es einzusehen.',
 	'UI:SearchResultsPageTitle' => 'iTop - Suchergebnisse',
 	'UI:Search:NoSearch' => 'Nichts, wonach man suchen kann...',
 	'UI:FullTextSearchTitle_Text' => 'Ergebnisse für "%1$s":',
@@ -666,18 +683,18 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:ModificationTitle_Class_Object' => 'Änderungen von %1$s: <span class=\"hilite\">%2$s</span>',
 	'UI:ClonePageTitle_Object_Class' => 'iTop - Dupliziere %1$s - %2$s Änderung',
 	'UI:CloneTitle_Class_Object' => 'Duplizieren von %1$s: <span class=\"hilite\">%2$s</span>',
-	'UI:CreationPageTitle_Class' => 'iTop - Erstellung einer neue %1$s ',
-	'UI:CreationTitle_Class' => 'Erstellung einer neue %1$s',
-	'UI:SelectTheTypeOf_Class_ToCreate' => 'Wählen Sie den Typ von %1$s aus, den Sie erstellen möchten:',
+	'UI:CreationPageTitle_Class' => 'iTop - Erstellung eines neuen Objekts vom Typ "%1$s" ',
+	'UI:CreationTitle_Class' => 'Erstellung eines neuen Objekts vom Typ "%1$s"',
+	'UI:SelectTheTypeOf_Class_ToCreate' => 'Wählen Sie den Typ vom Objekt "%1$s" aus, den Sie erstellen möchten:',
 	'UI:Class_Object_NotUpdated' => 'Keine Änderung festgestellt, %1$s (%2$s) wurde <strong>nicht</strong> modifiziert.',
 	'UI:Class_Object_Updated' => '%1$s (%2$s) aktualisiert.',
-	'UI:BulkDeletePageTitle' => 'iTop - Massenlöschung',
+	'UI:BulkDeletePageTitle' => 'iTop - Massenlöschung von Objekten',
 	'UI:BulkDeleteTitle' => 'Wählen Sie die Objekte aus, die Sie löschen möchten:',
 	'UI:PageTitle:ObjectCreated' => 'iTop-Objekt wurde erstellt.',
 	'UI:Title:Object_Of_Class_Created' => '%1$s - %2$s erstellt.',
 	'UI:Apply_Stimulus_On_Object_In_State_ToTarget_State' => 'Anwenden von %1$s auf Objekt: %2$s in Status %3$s zu Zielstatus: %4$s.',
 	'UI:PageTitle:FatalError' => 'iTop - Fataler Fehler',
-	'UI:FatalErrorMessage' => 'Fataler Fehler, iTop kann nicht forfahren.',
+	'UI:FatalErrorMessage' => 'Fataler Fehler! iTop kann leider nicht forfahren.',
 	'UI:Error_Details' => 'Fehler: %1$s.',
 
 	'UI:PageTitle:ClassProjections'	=> 'iTop Benutzerverwaltung - Klassenabbildung',
@@ -697,7 +714,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:UserManagement:Action:Modify+' => 'Erstellen und editieren (modifizieren) von Objekten',
 	'UI:UserManagement:Action:Delete' => 'Löschen',
 	'UI:UserManagement:Action:Delete+' => 'Objekte löschen',
-	'UI:UserManagement:Action:BulkRead' => 'Massenlesen (Export)',
+	'UI:UserManagement:Action:BulkRead' => 'Masseneinlesen (Export)',
 	'UI:UserManagement:Action:BulkRead+' => 'Objekte massenhaft auflisten oder exportieren',
 	'UI:UserManagement:Action:BulkModify' => 'Massenmodifikation',
 	'UI:UserManagement:Action:BulkModify+' => 'Massenerstellung/-bearbeitung (CSV-Import)',
@@ -718,7 +735,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:UserManagement:NoLifeCycleApplicable+' => 'Kein Lebenszyklus wurde für diese Klasse definiert.',
 	'UI:UserManagement:GrantMatrix' => 'Zugriffsmatrix',
 	'UI:UserManagement:LinkBetween_User_And_Profile' => 'Verbindung zwischen %1$s und %2$s',
-	
+	'UI:UserManagement:LinkBetween_User_And_Org' => 'Verbindung zwischen %1$s und %2$s',
 	'Menu:AdminTools' => 'Admin-Tools',
 	'Menu:AdminTools+' => 'Administrationswerkzeuge',
 	'Menu:AdminTools?' => 'Werkzeuge, die nur für Benutzer mit Adminstratorprofil zugänglich sind',
@@ -853,13 +870,13 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:Deadline_Days_Hours_Minutes' => '%1$dTage %2$dStunden %3$dMinuten',
 	'UI:Help' => 'Hilfe',
 	'UI:PasswordConfirm' => '(Bestätigen)',
-	'UI:BeforeAdding_Class_ObjectsSaveThisObject' => 'Bevor weitere Objekte vom Typ "%1$s" hinzugefügt werden, speichern Sie dieses Objekt.',
-	'UI:DisplayThisMessageAtStartup' => 'Diese Meldung beim Start anzeigen',
+	'UI:BeforeAdding_Class_ObjectsSaveThisObject' => 'Bevor weitere Objekte vom Typ "%1$s" hinzugefügt werden können, speichern Sie bitte dieses Objekt.',
+	'UI:DisplayThisMessageAtStartup' => 'Diese Meldung beim Start immer anzeigen',
 	'UI:RelationshipGraph' => 'Grafische Ansicht',
 	'UI:RelationshipList' => 'Liste',
 
 	'Portal:Title' => 'iTop-Benutzerportal',
-	'Portal:Refresh' => 'Erneuern',
+	'Portal:Refresh' => 'Neu laden',
 	'Portal:Back' => 'Zurück',
 	'Portal:CreateNewRequest' => 'Einen neuen Request erstellen',
 	'Portal:ChangeMyPassword' => 'Mein Passwort ändern',

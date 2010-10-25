@@ -103,7 +103,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Change/Attribute:creation_date+' => '',
 	'Class:Change/Attribute:last_update' => 'Letzte Aktualisierung',
 	'Class:Change/Attribute:last_update+' => '',
-	'Class:Change/Attribute:end_date' => 'End date',
+	'Class:Change/Attribute:end_date' => 'Enddatum',
 	'Class:Change/Attribute:end_date+' => '',
 	'Class:Change/Attribute:close_date' => 'Geschlossen',
 	'Class:Change/Attribute:close_date+' => '',

@@ -35,7 +35,7 @@
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:CMDBChange' => 'Change',
-	'Class:CMDBChange+' => 'Changes Tracking',
+	'Class:CMDBChange+' => 'Protokllierung der Changes',
 	'Class:CMDBChange/Attribute:date' => 'Datum',
 	'Class:CMDBChange/Attribute:date+' => 'Datum und Uhrzeit der Änderungen',
 	'Class:CMDBChange/Attribute:userinfo' => 'Sonstige Informationen',
@@ -47,8 +47,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 //
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:CMDBChangeOp' => 'Change Operation',
-	'Class:CMDBChangeOp+' => 'Change operations tracking',
+	'Class:CMDBChangeOp' => 'Change-Operation',
+	'Class:CMDBChangeOp+' => 'Protokoll der Change-Operation',
 	'Class:CMDBChangeOp/Attribute:change' => 'Change',
 	'Class:CMDBChangeOp/Attribute:change+' => 'Change',
 	'Class:CMDBChangeOp/Attribute:date' => 'Datum',

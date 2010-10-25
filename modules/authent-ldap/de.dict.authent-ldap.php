@@ -39,7 +39,7 @@
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserLDAP' => 'LDAP-Benutzer',
-	'Class:UserLDAP+' => 'Benutzer,der über LDP authenifiziert wird',
+	'Class:UserLDAP+' => 'Benutzer,der über LDAP authenifiziert wird',
 	'Class:UserLDAP/Attribute:password' => 'Passwort',
 	'Class:UserLDAP/Attribute:password+' => 'Benutzerpasswort',
 ));
