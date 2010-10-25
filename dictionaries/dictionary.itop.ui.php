@@ -366,7 +366,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Error:IncorrectLinkDefinition_LinkedClass_Class' => 'Incorrect link definition: the class of objects to manage: %1$s was not found as an external key in the class %2$s',
 	'UI:Error:Object_Class_Id_NotFound' => 'Object: %1$s:%2$d not found.',
 	'UI:Error:WizardCircularReferenceInDependencies' => 'Error: Circular reference in the dependencies between the fields, check the data model.',
-	'UI:Error:UploadedFileTooBig' => 'Uploaded file is too big. (Max allowed size is %1$s). Check you PHP configuration for upload_max_filesize.',
+	'UI:Error:UploadedFileTooBig' => 'Uploaded file is too big. (Max allowed size is %1$s). Check you PHP configuration for upload_max_filesize and post_max_size.',
 	'UI:Error:UploadedFileTruncated.' => 'Uploaded file has been truncated !',
 	'UI:Error:NoTmpDir' => 'The temporary directory is not defined.',
 	'UI:Error:CannotWriteToTmp_Dir' => 'Unable to write the temporary file to the disk. upload_tmp_dir = "%1$s".',

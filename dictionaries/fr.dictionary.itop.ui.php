@@ -368,7 +368,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Error:IncorrectLinkDefinition_LinkedClass_Class' => 'la définition du lien est incorrecte: la classe d\'objets à gérer: %1$s n\'est référencée par aucune clef externe de la classe %2$s',
 	'UI:Error:Object_Class_Id_NotFound' => 'L\'objet: %1$s:%2$d est introuvable.',
 	'UI:Error:WizardCircularReferenceInDependencies' => 'Erreur: Référence circulaire entre les dépendences entre champs, vérifiez le modèle de données.',
-	'UI:Error:UploadedFileTooBig' => 'Le fichier téléchargé est trop gros. (La taille maximale autorisée est %1$s). Vérifiez la valeur de la variable upload_max_filesize dans la configuration PHP.',
+	'UI:Error:UploadedFileTooBig' => 'Le fichier téléchargé est trop gros. (La taille maximale autorisée est %1$s). Vérifiez la valeur des variables upload_max_filesize et post_max_size dans la configuration PHP.',
 	'UI:Error:UploadedFileTruncated.' => 'Le fichier téléchargé a été tronqué !',
 	'UI:Error:NoTmpDir' => 'Il n\'y a aucun répertoire temporaire de défini.',
 	'UI:Error:CannotWriteToTmp_Dir' => 'Impossible d\'écrire le fichier temporaire sur disque. upload_tmp_dir = "%1$s".',
