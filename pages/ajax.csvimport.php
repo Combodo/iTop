@@ -154,7 +154,7 @@ function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMo
 					
 						// When not in advanced mode do not allow to use reconciliation keys (on external keys) if they are themselves external keys !
 						$aChoices[$sAttCode.'->'.$sTargetAttCode] = $oAttDef->GetLabel().'->'.$oTargetAttDef->GetLabel().$sSuffix.$sStar;
-						if ((strcasecmp($sFieldName, $aChoices[$sAttCode.'->'.$sTargetAttCode]) == 0) || (strcasecmp($sFieldName, ($sAttCode.'->'.$sTargetAttCode.$sSuffix)) == 0) )
+						if ((strcasecmp($sFieldName, $oAttDef->GetLabel().'->'.$oTargetAttDef->GetLabel().$sSuffix) == 0) || (strcasecmp($sFieldName, ($sAttCode.'->'.$sTargetAttCode.$sSuffix)) == 0) )
 						{
 							$sFieldCode = $sAttCode.'->'.$sTargetAttCode;
 						}
