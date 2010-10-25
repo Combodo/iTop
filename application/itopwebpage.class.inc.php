@@ -543,8 +543,10 @@ EOF
         echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n";
         echo "<html>\n";
         echo "<head>\n";
-        echo "<title>{$this->s_title}</title>\n";
+        // Make sure that Internet Explorer renders the page using its latest/highest/greatest standards !
+        echo "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n";
         echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
+        echo "<title>{$this->s_title}</title>\n";
         echo $this->get_base_tag();
         // Stylesheets MUST be loaded before any scripts otherwise
         // jQuery scripts may face some spurious problems (like failing on a 'reload')
