@@ -1128,7 +1128,7 @@ EOF
 							$sHTMLValue .= "<input type=\"hidden\" id=\"$iId\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"$value\" />\n";
 							$oPage->add_ready_script("\$('#label_$iId').autocomplete('./ajax.render.php', { scroll:true, minChars:3, onItemSelect:selectItem, onFindValue:findValue, formatItem:formatItem, autoFill:true, keyHolder:'#$iId', extraParams:{operation:'autocomplete', sclass:'$sClass',attCode:'".$sAttCode."'}});");
 							$oPage->add_ready_script("\$('#label_$iId').blur(function() { $(this).search(); } );");
-							$oPage->add_ready_script("\$('#label_$iId').result( function(event, data, formatted) { if (data) { $('#{$iId}').val(data[1]); $('#{$iId}').trigger('change'); } else { $('#{$iId}').val(''); $('#{$iId}').trigger('change');} } );");
+							$oPage->add_ready_script("\$('#label_$iId').result( function(event, data, formatted) { OnAutoComplete('$iId', event, data, formatted); } );");
 							$aEventsList[] ='change';
 						}
 						else

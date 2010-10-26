@@ -154,7 +154,11 @@ function ValidateField(sFieldId, sPattern, bMandatory, sFormId, nullValue)
 {
 	var bValid = true;
 	var currentVal = $('#'+sFieldId).val();
-	if (bMandatory && (currentVal == nullValue))
+	if (currentVal == '$$NULL$$') // Convention to indicate a non-valid value since it may have to be passed as text
+	{
+		bValid = false;
+	}
+	else if (bMandatory && (currentVal == nullValue))
 	{
 		bValid = false;
 	}
@@ -247,4 +251,27 @@ function ValidatePasswordField(id, sFormId)
 	}
 	$('#v_'+id).html(''); //<img src="../images/validation_ok.png" />');
 	return true;
+}
+
+// Called when filling an autocomplete field
+function OnAutoComplete(id, event, data, formatted)
+{
+	if (data)
+	{
+		// A valid match was found: data[0] => label, data[1] => value
+		$('#'+id).val(data[1]);
+		$('#'+id).trigger('change');
+	}
+	else
+	{
+		if ($('#label_'+id).val() == '')
+		{
+			$('#'+id).val(''); // Empty value
+		}
+		else
+		{
+			$('#'+id).val('$$NULL$$'); // Convention: not a valid value
+		}
+		$('#'+id).trigger('change');
+	}
 }
