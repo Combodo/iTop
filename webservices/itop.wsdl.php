@@ -33,7 +33,7 @@ $sMyWsdl = './itop.wsdl.tpl';
 
 $sRawFile = file_get_contents($sMyWsdl);
 
-$sServerURI = 'http'.((empty($_SERVER['HTTPS']) && ($_SERVER['HTTPS']!='off')) ? '' : 's').'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname($_SERVER['SCRIPT_NAME']).'/soapserver.php';
+$sServerURI = 'http'.((isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']!='off')) ? 's' : '').'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname($_SERVER['SCRIPT_NAME']).'/soapserver.php';
 
 $sFinalFile = str_replace(
 	'___SOAP_SERVER_URI___',

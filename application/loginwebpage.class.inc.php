@@ -201,7 +201,7 @@ EOF
 	{
 		$bSecured = false;
 
-		if ( !empty($_SERVER['HTTPS']) && ($_SERVER['HTTPS']!= 'off') )
+		if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']!='off'))
 		{
 			$bSecured = true;
 		}
