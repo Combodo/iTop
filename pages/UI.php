@@ -1207,6 +1207,12 @@ try
 			oWizardHelper.SetFieldsCount($iFieldsCount);
 EOF
 );
+			$oP->add_ready_script(
+<<<EOF
+			// Starts the validation when the page is ready
+			CheckFields('apply_stimulus', false);
+EOF
+);
 		}
 		else
 		{
