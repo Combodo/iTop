@@ -500,13 +500,13 @@ try
 	require_once('../application/wizardhelper.class.inc.php');
 
 	require_once('../application/startup.inc.php');
-	$oAppContext = new ApplicationContext();
 	$operation = utils::ReadParam('operation', '');
 
 	$oKPI = new ExecutionKPI();
 
 	require_once('../application/loginwebpage.class.inc.php');
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
+	$oAppContext = new ApplicationContext();
 
 	$oKPI->ComputeAndReport('User login');
 

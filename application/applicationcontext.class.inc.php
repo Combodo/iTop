@@ -66,6 +66,24 @@ class ApplicationContext
 				{
 					self::$aDefaultValues[$sName] = $sValue;
 				}
+				// Hmm, there must be a better (more generic) way to handle the case below:
+				// When there is only one possible (allowed) organization, the context must be
+				// fixed to this org
+				if ($sName == 'org_id')
+				{
+					if (MetaModel::IsValidClass('Organization'))
+					{
+						$oSearchFilter = new DBObjectSearch('Organization');
+						$oSet = new CMDBObjectSet($oSearchFilter);
+						$iCount = $oSet->Count();
+						if ($iCount == 1)
+						{
+							// Only one possible value for org_id, set it in the context
+							$oOrg = $oSet->Fetch();
+							self::$aDefaultValues[$sName] = $oOrg->GetKey();
+						}
+					}					
+				}
 			}
 		}
 		$this->aValues = self::$aDefaultValues;
