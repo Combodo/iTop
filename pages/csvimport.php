@@ -337,7 +337,7 @@ try
 		
 		$oPage->add('<input type="hidden" name="csvdata_truncated" id="csvdata_truncated" value="'.htmlentities($sCSVDataTruncated, ENT_QUOTES, 'UTF-8').'"/>');
 		$aRes = $oBulk->Process($oMyChange);
-		
+
 		$sHtml = '<table id="bulk_preview">';
 		$sHtml .= '<tr><th>Line</th>';
 		$sHtml .= '<th>Status</th>';
@@ -429,6 +429,8 @@ try
 						switch(get_class($oExtKeyCellStatus))
 						{
 							case 'CellStatus_Issue':
+							case 'CellStatus_SearchIssue':
+							case 'CellStatus_NullIssue':
 							$sCellMessage .= $oPage->GetP($oExtKeyCellStatus->GetDescription());
 							break;
 							
@@ -443,6 +445,11 @@ try
 					switch(get_class($oCellStatus))
 					{
 						case 'CellStatus_Issue':
+						$sCellMessage .= $oPage->GetP($oCellStatus->GetDescription());
+						$sHtml .= '<td class="cell_error">ERROR: '.htmlentities($aData[$iLine][$iNumber-1], ENT_QUOTES, 'UTF-8').$sCellMessage.'</td>';
+						break;
+						
+						case 'CellStatus_SearchIssue':
 						$sCellMessage .= $oPage->GetP($oCellStatus->GetDescription());
 						$sHtml .= '<td class="cell_error">ERROR: '.htmlentities($aData[$iLine][$iNumber-1], ENT_QUOTES, 'UTF-8').$sCellMessage.'</td>';
 						break;

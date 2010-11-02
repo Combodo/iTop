@@ -127,6 +127,33 @@ class CellStatus_Issue extends CellStatus_Modify
 	}
 }
 
+class CellStatus_SearchIssue extends CellStatus_Issue
+{
+	public function __construct()
+	{
+		parent::__construct(null, null, null);
+	}
+
+	public function GetDescription()
+	{
+		return 'No match';
+	}
+}
+
+class CellStatus_NullIssue extends CellStatus_Issue
+{
+	public function __construct()
+	{
+		parent::__construct(null, null, null);
+	}
+
+	public function GetDescription()
+	{
+		return 'Missing mandatory value';
+	}
+}
+
+
 class CellStatus_Ambiguous extends CellStatus_Issue
 {
 	protected $m_iCount;
@@ -247,6 +274,21 @@ class BulkChange
 		return array($oReconFilter->ToOql(), $aKeys);
 	}
 
+	// Returns true if the CSV data specifies that the external key must be left undefined
+	protected function IsNullExternalKeySpec($aRowData, $sAttCode)
+	{
+		$oExtKey = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
+		foreach ($this->m_aExtKeys[$sAttCode] as $sForeignAttCode => $iCol)
+		{
+			// The foreign attribute is one of our reconciliation key
+			if (strlen($aRowData[$iCol]) > 0)
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
 	protected function PrepareObject(&$oTargetObj, $aRowData, &$aErrors)
 	{
 		$aResults = array();
@@ -260,36 +302,49 @@ class BulkChange
 			// if (!array_key_exists($sAttCode, $this->m_aAttList)) continue;
 
 			$oExtKey = MetaModel::GetAttributeDef(get_class($oTargetObj), $sAttCode);
-			$oReconFilter = new CMDBSearchFilter($oExtKey->GetTargetClass());
-			foreach ($aKeyConfig as $sForeignAttCode => $iCol)
+
+			if ($this->IsNullExternalKeySpec($aRowData, $sAttCode))
 			{
-				// The foreign attribute is one of our reconciliation key
-				$oReconFilter->AddCondition($sForeignAttCode, $aRowData[$iCol], '=');
-				$aResults[$iCol] = new CellStatus_Void($aRowData[$iCol]);
-			}
-			$oExtObjects = new CMDBObjectSet($oReconFilter);
-			switch($oExtObjects->Count())
-			{
-			case 0:
+				foreach ($aKeyConfig as $sForeignAttCode => $iCol)
+				{
+					$aResults[$iCol] = new CellStatus_Void($aRowData[$iCol]);
+				}
 				if ($oExtKey->IsNullAllowed())
 				{
 					$oTargetObj->Set($sAttCode, $oExtKey->GetNullValue());
-					$aResults[$sAttCode]= new CellStatus_Issue(null, $oTargetObj->Get($sAttCode), 'Object not found');
+					$aResults[$sAttCode]= new CellStatus_Void($oExtKey->GetNullValue());
 				}
 				else
 				{
-					$aErrors[$sAttCode] = "Object not found";
-					$aResults[$sAttCode]= new CellStatus_Issue(null, $oTargetObj->Get($sAttCode), 'Object not found');
+					$aErrors[$sAttCode] = "Null not allowed";
+					$aResults[$sAttCode]= new CellStatus_Issue(null, $oTargetObj->Get($sAttCode), 'Null not allowed');
 				}
-				break;
-			case 1:
-				// Do change the external key attribute
-				$oForeignObj = $oExtObjects->Fetch();
-				$oTargetObj->Set($sAttCode, $oForeignObj->GetKey());
-				break;
-			default:
-				$aErrors[$sAttCode] = "Found ".$oExtObjects->Count()." matches";
-				$aResults[$sAttCode]= new CellStatus_Ambiguous($oTargetObj->Get($sAttCode), $oExtObjects->Count(), $oReconFilter->ToOql());
+			}
+			else
+			{
+				$oReconFilter = new CMDBSearchFilter($oExtKey->GetTargetClass());
+				foreach ($aKeyConfig as $sForeignAttCode => $iCol)
+				{
+					// The foreign attribute is one of our reconciliation key
+					$oReconFilter->AddCondition($sForeignAttCode, $aRowData[$iCol], '=');
+					$aResults[$iCol] = new CellStatus_Void($aRowData[$iCol]);
+				}
+				$oExtObjects = new CMDBObjectSet($oReconFilter);
+				switch($oExtObjects->Count())
+				{
+				case 0:
+					$aErrors[$sAttCode] = "Object not found";
+					$aResults[$sAttCode]= new CellStatus_SearchIssue();
+					break;
+				case 1:
+					// Do change the external key attribute
+					$oForeignObj = $oExtObjects->Fetch();
+					$oTargetObj->Set($sAttCode, $oForeignObj->GetKey());
+					break;
+				default:
+					$aErrors[$sAttCode] = "Found ".$oExtObjects->Count()." matches";
+					$aResults[$sAttCode]= new CellStatus_Ambiguous($oTargetObj->Get($sAttCode), $oExtObjects->Count(), $oReconFilter->ToOql());
+				}
 			}
 
 			// Report
@@ -461,7 +516,24 @@ class BulkChange
 	public function Process(CMDBChange $oChange = null)
 	{
 		// Note: $oChange can be null, in which case the aim is to check what would be done
-	
+
+		// Debug...
+		//
+		if (false)
+		{
+			echo "<pre>\n";
+			echo "Attributes:\n";
+			print_r($this->m_aAttList);
+			echo "ExtKeys:\n";
+			print_r($this->m_aExtKeys);
+			echo "Reconciliation:\n";
+			print_r($this->m_aReconcilKeys);
+			//echo "Data:\n";
+			//print_r($this->m_aData);
+			echo "</pre>\n";
+			exit;
+		}
+
 		// Compute the results
 		//
 		$aResult = array();
@@ -474,22 +546,38 @@ class BulkChange
 				$valuecondition = null;
 				if (array_key_exists($sAttCode, $this->m_aExtKeys))
 				{
-					// The value has to be found or verified
-					list($sQuery, $aMatches) = $this->ResolveExternalKey($aRowData, $sAttCode, $aResult[$iRow]);
-
-					if (count($aMatches) == 1)
+					if ($this->IsNullExternalKeySpec($aRowData, $sAttCode))
 					{
-						$oRemoteObj = reset($aMatches); // first item
-						$valuecondition = $oRemoteObj->GetKey();
-						$aResult[$iRow][$sAttCode] = new CellStatus_Void($oRemoteObj->GetKey());
-					} 					
-					elseif (count($aMatches) == 0)
-					{
-						$aResult[$iRow][$sAttCode] = new CellStatus_Issue(null, null, 'object not found');
-					} 					
+						$oExtKey = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
+						if ($oExtKey->IsNullAllowed())
+						{
+							$valuecondition = $oExtKey->GetNullValue();
+							$aResult[$iRow][$sAttCode] = new CellStatus_Void($oExtKey->GetNullValue());
+						}
+						else
+						{
+							$aResult[$iRow][$sAttCode] = new CellStatus_NullIssue();
+						}
+					}
 					else
 					{
-						$aResult[$iRow][$sAttCode] = new CellStatus_Ambiguous(null, count($aMatches), $sQuery);
+						// The value has to be found or verified
+						list($sQuery, $aMatches) = $this->ResolveExternalKey($aRowData, $sAttCode, $aResult[$iRow]);
+	
+						if (count($aMatches) == 1)
+						{
+							$oRemoteObj = reset($aMatches); // first item
+							$valuecondition = $oRemoteObj->GetKey();
+							$aResult[$iRow][$sAttCode] = new CellStatus_Void($oRemoteObj->GetKey());
+						} 					
+						elseif (count($aMatches) == 0)
+						{
+							$aResult[$iRow][$sAttCode] = new CellStatus_SearchIssue();
+						} 					
+						else
+						{
+							$aResult[$iRow][$sAttCode] = new CellStatus_Ambiguous(null, count($aMatches), $sQuery);
+						}
 					} 					
 				}
 				else
@@ -546,7 +634,10 @@ class BulkChange
 				if (!array_key_exists($sAttCode, $aResult[$iRow]))
 				{
 					$aResult[$iRow][$sAttCode] = new CellStatus_Void('n/a');
-					foreach ($aForeignAtts as $sForeignAttCode => $iCol)
+				}
+				foreach ($aForeignAtts as $sForeignAttCode => $iCol)
+				{
+					if (!array_key_exists($iCol, $aResult[$iRow]))
 					{
 						// The foreign attribute is one of our reconciliation key
 						$aResult[$iRow][$iCol] = new CellStatus_Void($aRowData[$iCol]);

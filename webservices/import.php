@@ -549,6 +549,8 @@ try
 					case 'CellStatus_Modify':
 						break;
 					case 'CellStatus_Issue':
+					case 'CellStatus_SearchIssue':
+					case 'CellStatus_NullIssue':
 					case 'CellStatus_Ambiguous':
 						$iCountWarnings++;
 						break;
