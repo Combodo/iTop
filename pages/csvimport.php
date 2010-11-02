@@ -338,15 +338,15 @@ try
 		$oPage->add('<input type="hidden" name="csvdata_truncated" id="csvdata_truncated" value="'.htmlentities($sCSVDataTruncated, ENT_QUOTES, 'UTF-8').'"/>');
 		$aRes = $oBulk->Process($oMyChange);
 
-		$sHtml = '<table id="bulk_preview">';
-		$sHtml .= '<tr><th>Line</th>';
-		$sHtml .= '<th>Status</th>';
-		$sHtml .= '<th>Object</th>';
+		$sHtml = '<table id="bulk_preview" style="border-collapse: collapse;">';
+		$sHtml .= '<tr><th style="padding:2px;border-right: 2px #fff solid;">Line</th>';
+		$sHtml .= '<th style="padding:2px;border-right: 2px #fff solid;">Status</th>';
+		$sHtml .= '<th style="padding:2px;border-right: 2px #fff solid;">Object</th>';
 		foreach($aFieldsMapping as $iNumber => $sAttCode)
 		{
 			if (!empty($sAttCode) && ($sAttCode != ':none:') && ($sAttCode != 'finalclass'))
 			{
-				$sHtml .= "<th>".GetFriendlyAttCodeName($sClassName, $sAttCode)."</th>";
+				$sHtml .= "<th style=\"padding:2px;border-right: 2px #fff solid;\">".GetFriendlyAttCodeName($sClassName, $sAttCode)."</th>";
 			}
 		}
 		$sHtml .= '<th>Message</th>';
@@ -413,9 +413,9 @@ try
 				break;		
 			}
 			$sHtml .= '<tr class="'.$sCSSRowClass.'">';
-			$sHtml .= "<td>".sprintf("%0{$sMaxLen}d", 1+$iLine+$iRealSkippedLines)."</td>";
-			$sHtml .= "<td>$sStatus</td>";
-			$sHtml .= "<td>$sUrl</td>";
+			$sHtml .= "<td style=\"background-color:#f1f1f1;border-right:2px #fff solid;\">".sprintf("%0{$sMaxLen}d", 1+$iLine+$iRealSkippedLines)."</td>";
+			$sHtml .= "<td style=\"text-align:center;background-color:#f1f1f1;border-right:2px #fff solid;\">$sStatus</td>";
+			$sHtml .= "<td style=\"text-align:center;background-color:#f1f1f1;\">$sUrl</td>";
 			foreach($aFieldsMapping as $iNumber => $sAttCode)
 			{
 				if (!empty($sAttCode) && ($sAttCode != ':none:') && ($sAttCode != 'finalclass'))
@@ -446,7 +446,7 @@ try
 					{
 						case 'CellStatus_Issue':
 						$sCellMessage .= $oPage->GetP($oCellStatus->GetDescription());
-						$sHtml .= '<td class="cell_error">ERROR: '.htmlentities($aData[$iLine][$iNumber-1], ENT_QUOTES, 'UTF-8').$sCellMessage.'</td>';
+						$sHtml .= '<td class="cell_error" style="border-right:1px #eee solid;">ERROR: '.htmlentities($aData[$iLine][$iNumber-1], ENT_QUOTES, 'UTF-8').$sCellMessage.'</td>';
 						break;
 						
 						case 'CellStatus_SearchIssue':
@@ -456,19 +456,19 @@ try
 						
 						case 'CellStatus_Ambiguous':
 						$sCellMessage .= $oPage->GetP($oCellStatus->GetDescription());
-						$sHtml .= '<td class="cell_error">AMBIGUOUS: '.htmlentities($aData[$iLine][$iNumber-1], ENT_QUOTES, 'UTF-8').$sCellMessage.'</td>';
+						$sHtml .= '<td class="cell_error" style="border-right:1px #eee solid;">AMBIGUOUS: '.htmlentities($aData[$iLine][$iNumber-1], ENT_QUOTES, 'UTF-8').$sCellMessage.'</td>';
 						break;
 						
 						case 'CellStatus_Modify':
-						$sHtml .= '<td class="cell_modified"><b>'.htmlentities($aData[$iLine][$iNumber-1], ENT_QUOTES, 'UTF-8').'</b></td>';
+						$sHtml .= '<td class="cell_modified" style="border-right:1px #eee solid;"><b>'.htmlentities($aData[$iLine][$iNumber-1], ENT_QUOTES, 'UTF-8').'</b></td>';
 						break;
 						
 						default:
-						$sHtml .= '<td class="cell_ok">'.htmlentities($aData[$iLine][$iNumber-1], ENT_QUOTES, 'UTF-8').$sCellMessage.'</td>';
+						$sHtml .= '<td class="cell_ok" style="border-right:1px #eee solid;">'.htmlentities($aData[$iLine][$iNumber-1], ENT_QUOTES, 'UTF-8').$sCellMessage.'</td>';
 					}
 				}
 			}
-			$sHtml .= "<td class=\"$sCSSMessageClass\">$sMessage</td>";
+			$sHtml .= "<td class=\"$sCSSMessageClass\" style=\"background-color:#f1f1f1;\">$sMessage</td>";
 			$iLine++;
 			$sHtml .= '</tr>';
 		}

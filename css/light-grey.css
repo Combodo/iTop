@@ -870,3 +870,20 @@ div.footer{
 	height: 300px;
 	overflow-y: auto;
 }
+tr.row_unchanged td {
+	border-bottom: 1px #ccc solid;
+	padding: 2px;
+}
+.wizContainer table tr.row_error td {
+	border-bottom: 1px #ccc solid;
+	background-color: #fdd;
+	padding: 2px;
+}
+tr.row_modified td {
+	border-bottom: 1px #ccc solid;
+	padding: 2px;
+}
+tr.row_added td {
+	border-bottom: 1px #ccc solid;
+	padding: 2px;
+}
