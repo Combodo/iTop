@@ -7,35 +7,46 @@ Readme file
 2.2. Install procedure
 2.3. Migration from previous version
 3.   FEATURES
-3.1. Changes since 0.9.1
+3.1. Changes since 1.0
 3.2. Known limitations
 3.3. Known issues
 
 1. ABOUT THIS RELEASE
    ==================
 Thank you for downloading the eigth packaged release of iTop. This version is
-a maintenance release. It aims at upgrading seemlessly an existing 1.0
-installation.
+a maintenance release. It aims at upgrading seemlessly an existing 1.0 installation.
 
 Additional documentation can be downloaded from http://www.combodo.com/itopdocumentation
  - User guide
  - Administrator guide
  - Customization guide
- - How to upgrade from previous versions
+ - Implementation guide
 
 iTop is released under the GPL (v3) license. (Check license.txt in this directory).
 The source code of iTop can be found on SourceForge: http://itop.sourceforge.net
 
-1.1 Special Thanks To:
+1.1 Should I upgrade to 1.0.1 ?
+    ---------------------------
+This maintenance release fixes a number of usability issues of iTop 1.0:
+- Better handling of forms: fields validation and default values handling have been improved
+- Support of IE8 and Safari
+- Support of IIS
+- Support of localized texts in the User Portal
+
+If any of the above items is important for you, then you should upgrade your version of iTop.
+If you are Brazilian and want to run iTop on IIS with IE8, then this release is for you !
+
+
+1.2 Special Thanks To:
     -----------------
 Bruno Bonfils for his guidance about LDAP and authentication.
 Randall Badilla Castro for the Spanish translation.
-Jonathan Lucas and David Gumbel from ITOMIG BmBh, for the German translation.
+Jonathan Lucas and David Gumbel from ITOMIG Gmbh, for the German translation.
 Christian Lempereur and Olivier Fouquet for their feedbacks.
 Everaldo Coelho and the Oxygen Team for their wonderful icons.
 The JQuery team and the all the jQuery plugins authors for developing such a powerful library.
-Phil Eddiz for the numerous feedbacks provided.
-Marco Tulio for the Portuguese (Brazil) translation
+Phil Eddies for the numerous feedbacks provided.
+Marco Tulio for the Portuguese (Brazilian) translation
 
 2. INSTALLATION
    ============
@@ -46,11 +57,11 @@ Server configuration:
 iTop is based on the AMP (Apache / MySQL / PHP) platform and requires PHP 5.2 and
 MySQL 5. The installation of iTop does not require any command line access to the
 server. The only operations required to install iTop are: copying the files to the
-server and browsing web pages.
+server and browsing web pages. iTop can be installed on Apache and IIS.
 
-Client configuration:
+End-user configuration:
 Although iTop should work with most modern web browsers, the application has been
-tested mostly on Firefox 3, IE7/IE8 and Chrome. iTop was designed for at least a
+tested mostly Firefox 3, IE8, Safari 5 and Chrome. iTop was designed for at least a
 1024x768 screen resolution. For the graphical view of the impact analysis, Flash
 version 8 or higher is required.
 
@@ -117,7 +128,7 @@ Allow n:n links to link several times to the same remote object (if "duplicates)
 Browser compatibility
 ---------------------
 Tested successfully with IE8 and Chrome.
-Fixed the "Relationships" Flash navigator so that it works also on Safari. (tested with Safari 5.0.2 on Windows)
+Fixed the "Relationships" Flash navigator so that it works also on Safari. (tested with Safari 5.0.2 on Windows) (Trac #310)
 - Fixed the search form, and also fixed the search/selection of objects to link (n:n links) that was broken on IE8.
 Fix to prevent IE 8 from running in IE7 compatibility mode... to be tested...
 
