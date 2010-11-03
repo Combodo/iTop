@@ -1,4 +1,4 @@
-iTop - version 1.0.0 - 20-Sep-2010
+iTop - version 1.0.1 - 03-Nov-2010
 Readme file
 
 1.   ABOUT THIS RELEASE
@@ -13,8 +13,9 @@ Readme file
 
 1. ABOUT THIS RELEASE
    ==================
-Thank you for downloading the seventh packaged release of iTop. This version is
-the first complete version of iTop: it aims at being really used professionally.
+Thank you for downloading the eigth packaged release of iTop. This version is
+a maintenance release. It aims at upgrading seemlessly an existing 1.0
+installation.
 
 Additional documentation can be downloaded from http://www.combodo.com/itopdocumentation
  - User guide
@@ -33,7 +34,8 @@ Jonathan Lucas and David Gumbel from ITOMIG BmBh, for the German translation.
 Christian Lempereur and Olivier Fouquet for their feedbacks.
 Everaldo Coelho and the Oxygen Team for their wonderful icons.
 The JQuery team and the all the jQuery plugins authors for developing such a powerful library.
-
+Phil Eddiz for the numerous feedbacks provided.
+Marco Tulio for the Portuguese (Brazil) translation
 
 2. INSTALLATION
    ============
@@ -70,112 +72,96 @@ innodb_flush_method = O_DSYNC
 On some systems you'll see a 5 to 10 times performance boost for writing data into
 the MySQL database !
 
-2.3. Migrating from a previous version
-     ---------------------------------
-Please refer to the migration guide available at http://www.combodo.com/itopdocumentation.
+2.3. Migrating from 1.0
+     ------------------
+Overwrite your current installation files with the new ones.
+Configuration file, Data model files, and the database made by iTop 1.0 are
+fully compatible with iTop 1.0.1.
 
+2.4. Migrating from 0.9
+     ------------------
+Depending on your current situation, there are several possible migration paths.
+Please refer to the migration guide available at http://www.combodo.com/itopdocumentation.
 
 3. FEATURES
    ========
 
-3.1. Changes since 0.9.1
-     -------------------
+3.1. Changes since 1.0
+     -----------------
 
-Version 1.0 is a major release.
+Version 1.0.1 is a maintenance release.
 
 Localization
 ------------
-iTop is localized: English, French, Spanish and German are available.
-
-User portal
------------
-Customers may submit their request directly into a dedicated page.
-The same page shows a report of ongoing requests.
-
-SLA Management
---------------
-SLAs can be defined in the service management module.
-An escalation deadline is automatically computed upon ticket creation.
-In the tickets dashboard, tickets close to reach the deadline are highlighted.
-When the deadline is reached, the ticket automatically switches to an "escalation"
-state. An acknowledgement is required before returning to normal operations on
-that ticket.
-
-Modular setup
--------------
-It is now possible to select ITIL modules you would like to use.
-For instance, you might want to install only the configuration management 
-along with incident management.
-
+Portuguese (Brazil) has been added.
+German localization reviewed.
 
 Major changes
 -------------
-- A brand new data model has been designed to make iTop more compliant to ITIL.
-- Graphical views have been developed to represent the relations between CIS.
-  Two views are available today.
-  * "impact" defines the CIs that are impacted by a given CI.
-  * "depends on" defines the CIs that are a threat to a given CI.  
-  When creating an incident ticket, the impacted CIs and contacts to notify are
-  automatically computed, and attached to the ticket.
-- The UI has been reviewed to make the application more professional.
-- The CSV import tool has been improved to make it easier to use.
-- A Web service has been developed to allow tickets to be created automatically
-  from emails. This feature simplifies ticket creation for end-users.
-- User management: Finalized the UI to create new users and manage their profiles
-- Authentication: Added the possibility to rely on an LDAP authentication, or
-  and external authentication (e.g. Web Server single sign-on, relying on a .htaccess file)
-
+None: this is a maintenance release!
 
 Minor changes
 -------------
-- User welcome splash screen: message displayed to new users, the first time
-  they logon to iTop
-- Implemented validation of attributes entered in forms
-- import.php has been finalized, and is the preferred way to load/synchronize
-  data in a non-interactive way
-- New menu to edit the Audit Category and Rules
+#246  The page import.php can be used in CLI mode, allowing for massive data load
+#311	Improved the reporting in the bulk import GUI (reconciliation of external keys, how to specify "undefined")
+#293	Show the IP address against the device in the IP usage table for a subnet
+#276	Show mandatory fields during CSV import
+#285	Email addresses displayed as Mailto hyperlinks
+Nicer display of the CSV import results...
+Special passthrough mode for big XML pages output.
+Allow n:n links to link several times to the same remote object (if "duplicates)=> true in the linkedset definition)
+#284 Improved the behavior and reporting when attempting to create a document after a huge file
+#111 Improved the data loader, and added a REST service to load data from a file.
+   This is particularly interesting to facilitate the migration from an older installation.
+
+Browser compatibility
+---------------------
+Tested successfully with IE8 and Chrome.
+Fixed the "Relationships" Flash navigator so that it works also on Safari. (tested with Safari 5.0.2 on Windows)
+- Fixed the search form, and also fixed the search/selection of objects to link (n:n links) that was broken on IE8.
+Fix to prevent IE 8 from running in IE7 compatibility mode... to be tested...
 
 
 Security improvements
 ---------------------
-- Data Administration menu is now restricted to administrators and
-  configuration managers
-- Administration menu restricted to administrators
-- The same restrictions apply whenever a user attempts to access the pages directly
-- New setting to enforce HTTPS
-- Strong encryption of passwords
-- Prevent users from listing the application directories
-
+#300	When logged onto an iTop instance, you are allowed on any other instance 
 
 Bugs fixed
 ----------
 The complete list can be reviewed on http://sourceforge.net/apps/trac/itop/report/1
 
-#182  Setup fails with mysql error 1046 or 1146
-#144  Could not create a workgroup
-#97   Issue when removing an organization
-#105  Issue in exporting a given class of object
-#106  Importing data using import CSV
-#116  When modifying a user, the link with the profile(s) is lost.
-#98   Computation of free IPs in a subnet is wrong
-#126  'magic_quotes_gpc' test issue during setup
-#128  Issue when using AttributeBlob not mandatory
-#136  Context menus
-#102  Allow users to change their password.
-#210  Error message when trying to uploading a big file
-#139  mysSQL error: "truncated column", or truncated string
-#223  Trim spaces in CSV imports
-#215  Support several characters encoding for the CSV imports
-#239  Issue with character set (impacting searches with accents)
-#234  PHP Strict Standards warnings
-#140  Check that user logins are unique
+#286	GetAbsoluteUrl creates broken links on IIS
+#278	Missing PHP5 modules not detected properly
+#289	Misleading errors when apache not authorized to write files in "setup" directory
+#295	Unable to update or insert data
+#313	Provider Contracts are not filtered by Allowed Organizations
+#309	some of php-ofc-library files are missing
+#315	Default organization not handled properly when there is just one organization allowed for the user
+#308	Subnet / Free IPs: the subnet address is reserved (e.g. x.x.x.0)
+#312	Exclamation sign not displayed for mandatory fields
+#307	Auto-complete not reporting wrong selection
+#302	Error: Unknown variable sIcon
+#298	CSV template file opened in the browser instead of "downloaded"
+#245	Search form gets too specialized
+#306	Password gets corrupted if the admin forgets to select a profile
+#297	Fixed a reporting issue on the SOAP service CreateIncidentTicket
+#296	Incorrect display of Service/Subcategory localized characters in the portal
+#292	Could not leave "User Satisfaction" field undefined
+#258	Context automatically selected when searching on organization
+#282	OQL Error when using functions
+#288	Some multi objects OQL queries do not work
+Fixed a bug in the XML encoding function
+Fixed the issue "Object already modified". The mechanism that prevents a user from submitting the same form twice has been redesigned.
+#283 Fixed issue with the default value of Enum attributes
+Fixed limitation: tickets named automatically even if a name is specified (attribute : ref) ; this is stopper when importing tickets from an existing workflow tool
+
 
 3.2. Known limitations (https://sourceforge.net/apps/trac/itop/report/3)
      -----------------
 #71   The same MySQL credentials are used during the setup and for running the application.
-#246  Massive data load requiring to setup specific HTTP sessions with higher timeouts and memory limits
 #257  Could not delete more than 997 items when SUHOSIN is installed with its default settings (See TRAC)
 #265  Add reconciliations keys into CSV template
+Internet Explorer 7 is not supported (neither IE7 nor IE8 in compatibility mode)
 
 
 3.3. Known issues (https://sourceforge.net/apps/trac/itop/report/3)
