@@ -104,6 +104,14 @@ class WebPage
     }
     
 	/**
+	 * Add a pre-formatted text to the body of the page
+	 */
+    public function pre($s_html)
+    {
+        $this->add('<pre>'.$s_html.'</pre>');
+    }
+    
+	/**
 	 * Add a paragraph to the body of the page
 	 */
     public function GetP($s_html)

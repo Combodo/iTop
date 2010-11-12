@@ -46,6 +46,11 @@ class CLIPage
 		echo $sText."\n";
 	}	
 
+	public function pre($sText)
+	{
+		echo $sText."\n";
+	}	
+
 	public function add_comment($sText)
 	{
 		echo "#".$sText."\n";
