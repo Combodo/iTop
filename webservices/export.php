@@ -79,7 +79,7 @@ if (!empty($sExpression))
 				break;
 				
 				case 'xml':
-				$oP = new XMLPage("iTop - Export");
+				$oP = new XMLPage("iTop - Export", true /* passthrough */);
 				cmdbAbstractObject::DisplaySetAsXML($oP, $oSet);
 				break;
 				
