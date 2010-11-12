@@ -235,6 +235,10 @@ class ActionEmail extends ActionNotification
 	
 			$sSubject = MetaModel::ApplyParams($this->Get('subject'), $aContextArgs);
 			$sBody = MetaModel::ApplyParams($this->Get('body'), $aContextArgs);
+			
+			$oObj = $aContextArgs['this->object()'];
+			$sServerIP = gethostbyname(gethostname());
+			$sReference = '<iTop/'.get_class($oObj).'/'.$oObj->GetKey().'@'.$sServerIP.'>';
 
 			$oEmail = new EMail();
 
@@ -251,12 +255,14 @@ class ActionEmail extends ActionNotification
 				$sTestBody .= "<li>BCC: $sBCC</li>\n";
 				$sTestBody .= "<li>From: $sFrom</li>\n";
 				$sTestBody .= "<li>Reply-To: $sReplyTo</li>\n";
+				$sTestBody .= "<li>References: $sReference</li>\n";
 				$sTestBody .= "</ul>\n";
 				$sTestBody .= "</p>\n";
 				$sTestBody .= "</div>\n";
 				$oEmail->SetBody($sTestBody);
 				$oEmail->SetRecipientTO($this->Get('test_recipient'));
 				$oEmail->SetRecipientFrom($this->Get('test_recipient'));
+				$oEmail->SetReferences($sReference);
 			}
 			else
 			{
@@ -267,6 +273,7 @@ class ActionEmail extends ActionNotification
 				$oEmail->SetRecipientBCC($sBCC);
 				$oEmail->SetRecipientFrom($sFrom);
 				$oEmail->SetRecipientReplyTo($sReplyTo);
+				$oEmail->SetReferences($sReference);
 			}
 	
 			if (empty($this->m_aMailErrors))

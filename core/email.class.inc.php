@@ -89,6 +89,11 @@ class EMail
 			$this->m_aHeaders[$sKey] = $sValue;
 		}
 	}
+	
+	public function SetReferences($sReferences)
+	{
+		$this->AddToHeader('References', $sReferences);
+	}
 
 	public function SetBody($sBody)
 	{
