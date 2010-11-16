@@ -1076,6 +1076,23 @@ class AttributeText extends AttributeString
 }
 
 /**
+ * Map a text column (size > ?), containing HTML code, to an attribute 
+ *
+ * @package     iTopORM
+ */
+class AttributeHTML extends AttributeText
+{
+	public function GetType() {return "HTML";}
+	public function GetTypeDesc() {return "HTML string";}
+	public function GetEditClass() {return "HTML";}
+
+	public function GetAsHTML($sValue)
+	{
+		return $sValue;
+	}
+}
+
+/**
  * Specialization of a string: email 
  *
  * @package     iTopORM
@@ -1123,7 +1140,7 @@ class AttributeOQL extends AttributeText
 }
 
 /**
- * Specialization of a string: template 
+ * Specialization of a string: template (contains iTop placeholders like $current_contact_id$ or $this->name$) 
  *
  * @package     iTopORM
  */
@@ -1133,13 +1150,30 @@ class AttributeTemplateString extends AttributeString
 }
 
 /**
- * Specialization of a text: template 
+ * Specialization of a text: template (contains iTop placeholders like $current_contact_id$ or $this->name$)
  *
  * @package     iTopORM
  */
 class AttributeTemplateText extends AttributeText
 {
 	public function GetTypeDesc() {return "Multiline template string";}
+}
+
+/**
+ * Specialization of a HTML: template (contains iTop placeholders like $current_contact_id$ or $this->name$)
+ *
+ * @package     iTopORM
+ */
+class AttributeTemplateHTML extends AttributeText
+{
+	public function GetType() {return "HTML";}
+	public function GetTypeDesc() {return "HTML template";}
+	public function GetEditClass() {return "HTML";}
+
+	public function GetAsHTML($sValue)
+	{
+		return $sValue;
+	}
 }
 
 

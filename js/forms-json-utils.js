@@ -150,10 +150,32 @@ function CheckFields(sFormId, bDisplayAlert)
 	return (oFormErrors['err_'+sFormId] == 0); // If no error, submit the form
 }
 
+function ReportFieldValidationStatus(sFieldId, sFormId, bValid)
+{
+	if (bValid)
+	{
+		// Visual feedback - none when it's Ok
+		$('#v_'+sFieldId).html(''); //<img src="../images/validation_ok.png" />');
+	}
+	else
+	{
+		// Report the error...
+		oFormErrors['err_'+sFormId]++;
+		if (oFormErrors['input_'+sFormId] == null)
+		{
+			// Let's remember the first input with an error, so that we can put back the focus on it later
+			oFormErrors['input_'+sFormId] = sFieldId;
+		}
+		// Visual feedback
+		$('#v_'+sFieldId).html('<img src="../images/validation_error.png" />');
+	}
+}
+
 function ValidateField(sFieldId, sPattern, bMandatory, sFormId, nullValue)
 {
 	var bValid = true;
 	var currentVal = $('#'+sFieldId).val();
+
 	if (currentVal == '$$NULL$$') // Convention to indicate a non-valid value since it may have to be passed as text
 	{
 		bValid = false;
@@ -173,25 +195,40 @@ function ValidateField(sFieldId, sPattern, bMandatory, sFormId, nullValue)
 		//console.log('Validating field: '+sFieldId + ' current value: '+currentVal + ' pattern: '+sPattern );
 		bValid = re.test(currentVal);
 	}
-	if (bValid)
+	ReportFieldValidationStatus(sFieldId, sFormId, bValid);
+	//console.log('Form: '+sFormId+' Validating field: '+sFieldId + ' current value: '+currentVal+' pattern: '+sPattern+' result: '+bValid );
+	return true; // Do not stop propagation ??
+}
+
+function ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue)
+{
+	var bValid;
+	var sTextContent;
+
+	// Get the contents without the tags
+	var oFormattedContents = $("#cke_"+sFieldId+" iframe");
+	if (oFormattedContents.length == 0)
 	{
-		// Visual feedback - none when it's Ok
-		$('#v_'+sFieldId).html(''); //<img src="../images/validation_ok.png" />');
+		var oSourceContents = $("#cke_"+sFieldId+" textarea.cke_source");
+		sTextContent = oSourceContents.val();
 	}
 	else
 	{
-		// Report the error...
-		oFormErrors['err_'+sFormId]++;
-		if (oFormErrors['input_'+sFormId] == null)
-		{
-			// Let's remember the first input with an error, so that we can put back the focus on it later
-			oFormErrors['input_'+sFormId] = sFieldId;
-		}
-		// Visual feedback
-		$('#v_'+sFieldId).html('<img src="../images/validation_error.png" />');
+		sTextContent = oFormattedContents.contents().find("body").text();
 	}
-	//console.log('Form: '+sFormId+' Validating field: '+sFieldId + ' current value: '+currentVal+' pattern: '+sPattern+' result: '+bValid );
-	return true; // Do not stop propagation ??
+
+	if (bMandatory && (sTextContent == ''))
+	{
+		bValid = false;
+	}
+	else
+	{
+		bValid = true;
+	}
+
+	ReportFieldValidationStatus(sFieldId, sFormId, bValid);
+
+	setTimeout(function(){ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue);}, 500);
 }
 
 function UpdateDependentFields(aFieldNames)

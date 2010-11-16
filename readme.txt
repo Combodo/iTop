@@ -1,4 +1,4 @@
-iTop - version 1.0.1 - 03-Nov-2010
+iTop - version 1.0.? - ??-??-201?
 Readme file
 
 1.   ABOUT THIS RELEASE
@@ -45,7 +45,7 @@ Jonathan Lucas and David Gumbel from ITOMIG Gmbh, for the German translation.
 Christian Lempereur and Olivier Fouquet for their feedbacks.
 Everaldo Coelho and the Oxygen Team for their wonderful icons.
 The JQuery team and the all the jQuery plugins authors for developing such a powerful library.
-Phil Eddies for the numerous feedbacks provided.
+Phil Eddies for the numerous feedbacks provided, and the first implementation of CKEdit
 Marco Tulio for the Portuguese (Brazilian) translation
 
 2. INSTALLATION

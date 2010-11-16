@@ -36,6 +36,7 @@ require_once('../application/utils.inc.php');
 require_once('../application/applicationcontext.class.inc.php');
 require_once('../application/ui.linkswidget.class.inc.php');
 require_once('../application/ui.passwordwidget.class.inc.php');
+require_once('../application/ui.htmleditorwidget.class.inc.php');
 
 abstract class cmdbAbstractObject extends CMDBObject
 {
@@ -1047,42 +1048,52 @@ EOF
 
 		if (!$oAttDef->IsExternalField())
 		{
-			$bMandatory = 0;
+			$sMandatory = 'false';
 			if ( (!$oAttDef->IsNullAllowed()) || ($iFlags & OPT_ATT_MANDATORY))
 			{
-				$bMandatory = 1;
+				$sMandatory = 'true';
 			}
 			$sValidationField = "<span id=\"v_{$iId}\"></span>";
 			$sHelpText = $oAttDef->GetHelpOnEdition();
-			$aEventsList = array('validate');
+			$aEventsList = array();
 			switch($oAttDef->GetEditClass())
 			{
 				case 'Date':
 				case 'DateTime':
+				$aEventsList[] ='validate';
 				$aEventsList[] ='keyup';
 				$aEventsList[] ='change';
 				$sHTMLValue = "<input title=\"$sHelpText\" class=\"date-pick\" type=\"text\" size=\"20\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iId\"/>&nbsp;{$sValidationField}";
 				break;
 				
 				case 'Password':
+					$aEventsList[] ='validate';
 					$aEventsList[] ='keyup';
 					$aEventsList[] ='change';
 					$sHTMLValue = "<input title=\"$sHelpText\" type=\"password\" size=\"30\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iId\"/>&nbsp;{$sValidationField}";
 				break;
 				
 				case 'Text':
+					$aEventsList[] ='validate';
 					$aEventsList[] ='keyup';
 					$aEventsList[] ='change';
 					$sHTMLValue = "<table><tr><td><textarea class=\"resizable\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">$value</textarea></td><td>{$sValidationField}</td></tr></table>";
 				break;
-	
+
+				case 'HTML':
+					$oWidget = new UIHTMLEditorWidget($iId, $sAttCode, $sNameSuffix, $sHelpText, $sValidationField, $value, $sMandatory);
+					$sHTMLValue = $oWidget->Display($oPage, $aArgs);
+				break;
+
 				case 'LinkedSet':
+					$aEventsList[] ='validate';
 					$aEventsList[] ='change';
 					$oWidget = new UILinksWidget($sClass, $sAttCode, $iId, $sNameSuffix, $oAttDef->DuplicatesAllowed());
 					$sHTMLValue = $oWidget->Display($oPage, $value);
 				break;
 							
 				case 'Document':
+					$aEventsList[] ='validate';
 					$aEventsList[] ='change';
 					$oDocument = $value; // Value is an ormDocument object
 					$sFileName = '';
@@ -1092,24 +1103,26 @@ EOF
 					}
 					$iMaxFileSize = utils::ConvertToBytes(ini_get('upload_max_filesize'));
 					$sHTMLValue = "<input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"$iMaxFileSize\" />\n";
-				    $sHTMLValue .= "<input name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" type=\"hidden\" id=\"$iId\" \" value=\"$sFileName\"/>\n";
-				    $sHTMLValue .= "<span id=\"name_$iInputId\">$sFileName</span><br/>\n";
-				    $sHTMLValue .= "<input title=\"$sHelpText\" name=\"file_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" type=\"file\" id=\"file_$iId\" onChange=\"UpdateFileName('$iId', this.value)\"/>&nbsp;{$sValidationField}\n";
+					$sHTMLValue .= "<input name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" type=\"hidden\" id=\"$iId\" \" value=\"$sFileName\"/>\n";
+					$sHTMLValue .= "<span id=\"name_$iInputId\">$sFileName</span><br/>\n";
+					$sHTMLValue .= "<input title=\"$sHelpText\" name=\"file_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" type=\"file\" id=\"file_$iId\" onChange=\"UpdateFileName('$iId', this.value)\"/>&nbsp;{$sValidationField}\n";
 				break;
 				
 				case 'List':
-				// Not editable for now...
-				$sHTMLValue = '';
+					// Not editable for now...
+					$sHTMLValue = '';
 				break;
 				
 				case 'One Way Password':
-				$oWidget = new UIPasswordWidget($sAttCode, $iId, $sNameSuffix);
-				$sHTMLValue = $oWidget->Display($oPage, $aArgs);
-				// Event list & validation is handled  directly by the widget
+					$aEventsList[] ='validate';
+					$oWidget = new UIPasswordWidget($sAttCode, $iId, $sNameSuffix);
+					$sHTMLValue = $oWidget->Display($oPage, $aArgs);
+					// Event list & validation is handled  directly by the widget
 				break;
 				
 				case 'String':
 				default:
+					$aEventsList[] ='validate';
 					// #@# todo - add context information (depending on dimensions)
 					$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, $aArgs);
 					$iFieldSize = $oAttDef->GetMaxSize();
@@ -1139,7 +1152,7 @@ EOF
 							$sHTMLValue .= "<option value=\"\">".Dict::S('UI:SelectOne')."</option>\n";
 							foreach($aAllowedValues as $key => $display_value)
 							{
-								if ((count($aAllowedValues) == 1) && $bMandatory )
+								if ((count($aAllowedValues) == 1) && ($sMandatory == 'true') )
 								{
 									// When there is only once choice, select it by default
 									$sSelected = ' selected';
@@ -1170,7 +1183,7 @@ EOF
 				{
 					$sNullValue = "'$sNullValue'"; // Add quotes to turn this into a JS string if it's not a number
 				}
-				$oPage->add_ready_script("$('#$iId').bind('".implode(' ', $aEventsList)."', function(evt, sFormId) { return ValidateField('$iId', '$sPattern', $bMandatory, sFormId, $sNullValue) } );"); // Bind to a custom event: validate
+				$oPage->add_ready_script("$('#$iId').bind('".implode(' ', $aEventsList)."', function(evt, sFormId) { return ValidateField('$iId', '$sPattern', $sMandatory, sFormId, $sNullValue) } );"); // Bind to a custom event: validate
 			}
 			$aDependencies = MetaModel::GetDependentAttributes($sClass, $sAttCode); // List of attributes that depend on the current one
 			if (count($aDependencies) > 0)
@@ -1386,7 +1399,6 @@ EOF
 		// Now fill-in the fields with default/supplied values
 		foreach($aList as $sAttCode)
 		{
-			$bMandatory = false;
 			$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, $aArgs);
 			if (isset($aArgs['default'][$sAttCode]))
 			{
