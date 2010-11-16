@@ -942,6 +942,11 @@ abstract class DBObject
 		$this->Reload();
 		return $this->m_iKey;
 	}
+	
+	public function DBInsertTracked(CMDBChange $oVoid)
+	{
+		return $this->DBInsert();
+	}
 
 	// Creates a copy of the current object into the database
 	// Returns the id of the newly created object
@@ -1020,6 +1025,11 @@ abstract class DBObject
 
 		return $this->m_iKey;
 	}
+	
+	public function DBUpdateTracked(CMDBChange $oVoid)
+	{
+		return $this->DBUpdate();
+	}
 
 	// Make the current changes persistent - clever wrapper for Insert or Update
 	public function DBWrite()
@@ -1049,6 +1059,11 @@ abstract class DBObject
 
 		$this->m_bIsInDB = false;
 		$this->m_iKey = null;
+	}
+
+	public function DBDeleteTracked(CMDBChange $oVoid)
+	{
+		$this->DBDelete();
 	}
 
 	public function EnumTransitions()
