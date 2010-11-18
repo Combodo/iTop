@@ -262,11 +262,11 @@ abstract class AttributeDefinition
 		return (string)$sValue;
 	}
 
-	public function GetAllowedValues($aArgs = array(), $sBeginsWith = '')
+	public function GetAllowedValues($aArgs = array(), $sContains = '')
 	{
 		$oValSetDef = $this->GetValuesDef();
 		if (!$oValSetDef) return null;
-		return $oValSetDef->GetValues($aArgs, $sBeginsWith);
+		return $oValSetDef->GetValues($aArgs, $sContains);
 	}
 	
 	/**
@@ -1295,9 +1295,9 @@ class AttributeEnum extends AttributeString
 		return $sLabel;
 	}
 
-	public function GetAllowedValues($aArgs = array(), $sBeginsWith = '')
+	public function GetAllowedValues($aArgs = array(), $sContains = '')
 	{
-		$aRawValues = parent::GetAllowedValues($aArgs, $sBeginsWith);
+		$aRawValues = parent::GetAllowedValues($aArgs, $sContains);
 		if (is_null($aRawValues)) return null;
 		$aLocalizedValues = array();
 		foreach ($aRawValues as $sKey => $sValue)
@@ -1729,17 +1729,17 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		return $oValSetDef;
 	}
 
-	public function GetAllowedValues($aArgs = array(), $sBeginsWith = '')
+	public function GetAllowedValues($aArgs = array(), $sContains = '')
 	{
 		try
 		{
-			return parent::GetAllowedValues($aArgs, $sBeginsWith);
+			return parent::GetAllowedValues($aArgs, $sContains);
 		}
 		catch (MissingQueryArgument $e)
 		{
 			// Some required arguments could not be found, enlarge to any existing value
 			$oValSetDef = new ValueSetObjects('SELECT '.$this->GetTargetClass());
-			return $oValSetDef->GetValues($aArgs, $sBeginsWith);
+			return $oValSetDef->GetValues($aArgs, $sContains);
 		}
 	}
 
@@ -1764,6 +1764,16 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		if ($proposedValue === '') return 0;
 		if (MetaModel::IsValidObject($proposedValue)) return $proposedValue->GetKey();
 		return (int)$proposedValue;
+	}
+	
+	public function GetMaximumComboLength()
+	{
+		return $this->GetOptional('max_combo_length', utils::GetConfig()->Get('max_combo_length'));
+	}
+	
+	public function GetMinAutoCompleteChars()
+	{
+		return $this->GetOptional('min_autocomplete_chars', utils::GetConfig()->Get('min_autocomplete_chars'));
 	}
 }
 

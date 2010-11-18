@@ -28,6 +28,7 @@ require_once('../application/webpage.class.inc.php');
 require_once('../application/ajaxwebpage.class.inc.php');
 require_once('../application/wizardhelper.class.inc.php');
 require_once('../application/ui.linkswidget.class.inc.php');
+require_once('../application/ui.autocompletewidget.class.inc.php');
 
 require_once('../application/startup.inc.php');
 require_once('../application/user.preferences.class.inc.php');
@@ -68,6 +69,33 @@ switch($operation)
 	$oWidget->SearchObjectsToAdd($oPage, $sRemoteClass, $aAlreadyLinked);	
 	break;
 	
+	// ui.autocompletewidget
+	case 'searchObjectsToSelect':
+	$sTargetClass = utils::ReadParam('sRemoteClass', '');
+	$sAttCode = utils::ReadParam('sAttCode', '');
+	$iInputId = utils::ReadParam('iInputId', '');
+	$sSuffix = utils::ReadParam('sSuffix', '');
+	// To do: retrieve the object under construction & use it to filter the allowed values
+	$sJson = utils::ReadParam('json', '');
+	$oWizardHelper = WizardHelper::FromJSON($sJson);
+	$oObj = $oWizardHelper->GetTargetObject();
+	$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, array('this' => $oObj));
+	$oWidget = new UIAutocompleteWidget($sAttCode, $sClass, '', $aAllowedValues, $oObj->Get($sAttCode), $iInputId, $sSuffix, '');
+	$oWidget->SearchObjectsToSelect($oPage, $sTargetClass);	
+	break;
+
+	// ui.autocompletewidget
+	case 'getObjectName':
+	$sTargetClass = utils::ReadParam('sTargetClass', '');
+	$sAttCode = utils::ReadParam('sAttCode', '');
+	$iInputId = utils::ReadParam('iInputId', '');
+	$iObjectId = utils::ReadParam('iObjectId', '');
+	$sSuffix = utils::ReadParam('sSuffix', '');
+	$oWidget = new UIAutocompleteWidget($sAttCode, $sClass, '', array(), '', $iInputId, $sSuffix, '');
+	$sName = $oWidget->GetObjectName($iObjectId);
+	echo json_encode(array('name' => $sName));	
+	break;
+	
 	// ui.linkswidget
 	case 'doAddObjects':
 	$sAttCode = utils::ReadParam('sAttCode', '');
@@ -78,7 +106,7 @@ switch($operation)
 	$oWidget = new UILinksWidget($sClass, $sAttCode, $iInputId, $sSuffix, $bDuplicates);
 	$oWidget->DoAddObjects($oPage, $aLinkedObjectIds);	
 	break;
-	
+		
 	case 'wizard_helper_preview':
 	$sJson = utils::ReadParam('json_obj', '');
 	$oWizardHelper = WizardHelper::FromJSON($sJson);
@@ -109,7 +137,8 @@ switch($operation)
 			$value = $oObj->Get($sAttCode);
 			$displayValue = $oObj->GetEditValue($sAttCode);
 			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-			$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $value, $displayValue, $sId, '', 0, array('this' => $oObj));
+			$iFlags = MetaModel::GetAttributeFlags($sClass, $oObj->GetState(), $sAttCode);
+			$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $value, $displayValue, $sId, '', $iFlags, array('this' => $oObj));
 			// Make sure that we immediatly validate the field when we reload it
 			$oPage->add_ready_script("$('#$sId').trigger('validate');");
 			$oWizardHelper->SetAllowedValuesHtml($sAttCode, $sHTMLValue);

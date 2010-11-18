@@ -198,10 +198,10 @@ class FilterFromAttribute extends FilterDefinition
 		return $oAttDef->GetValuesDef();
 	}
 
-	public function GetAllowedValues($aArgs = array(), $sBeginsWith = '')
+	public function GetAllowedValues($aArgs = array(), $sContains = '')
 	{
 		$oAttDef = $this->Get("refattribute");
-		return $oAttDef->GetAllowedValues($aArgs, $sBeginsWith);
+		return $oAttDef->GetAllowedValues($aArgs, $sContains);
 	}
 
 	public function GetOperators()

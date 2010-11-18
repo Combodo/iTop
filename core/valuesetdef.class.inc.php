@@ -51,25 +51,23 @@ abstract class ValueSetDefinition
 	}
 
 
-	public function GetValues($aArgs, $sBeginsWith = '')
+	public function GetValues($aArgs, $sContains = '')
 	{
 		if (!$this->m_bIsLoaded)
 		{
 			$this->LoadValues($aArgs);
 			$this->m_bIsLoaded = true;
 		}
-		if (strlen($sBeginsWith) == 0)
+		if (strlen($sContains) == 0)
 		{
 			$aRet = $this->m_aValues;
 		}
 		else
 		{
-			$iCheckedLen = strlen($sBeginsWith);
-			$sBeginsWith = strtolower($sBeginsWith);
 			$aRet = array();
 			foreach ($this->m_aValues as $sKey=>$sValue)
 			{
-				if (strtolower(substr($sValue, 0, $iCheckedLen)) == $sBeginsWith)
+				if (stripos($sValue, $sContains) !== false)
 				{
 					$aRet[$sKey] = $sValue;
 				}

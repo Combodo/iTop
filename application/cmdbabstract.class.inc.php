@@ -36,6 +36,7 @@ require_once('../application/utils.inc.php');
 require_once('../application/applicationcontext.class.inc.php');
 require_once('../application/ui.linkswidget.class.inc.php');
 require_once('../application/ui.passwordwidget.class.inc.php');
+require_once('../application/ui.autocompletewidget.class.inc.php');
 require_once('../application/ui.htmleditorwidget.class.inc.php');
 
 abstract class cmdbAbstractObject extends CMDBObject
@@ -385,8 +386,14 @@ abstract class cmdbAbstractObject extends CMDBObject
 	 */	
 	public static function GetDisplaySet(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
-		static $iListId = 0;
-		$iListId++;
+		if (empty($aExtraParams['currentId']))
+		{
+			$iListId = $oPage->GetUniqueId(); // Works only if not in an Ajax page !!
+		}
+		else
+		{
+			$iListId = $aExtraParams['currentId'];
+		}
 		
 		// Initialize and check the parameters
 		$bViewLink = isset($aExtraParams['view_link']) ? $aExtraParams['view_link'] : true;
@@ -526,14 +533,14 @@ abstract class cmdbAbstractObject extends CMDBObject
 		}
 		$sHtml .= '<table class="listContainer">';
 		$sColspan = '';
-		if (isset($aExtraParams['block_id']))
-		{
-			$divId = $aExtraParams['block_id'];
-		}
-		else
-		{
-			$divId = 'missingblockid';
-		}
+//		if (isset($aExtraParams['block_id']))
+//		{
+//			$divId = $aExtraParams['block_id'];
+//		}
+//		else
+//		{
+//			$divId = 'missingblockid';
+//		}
 		$sFilter = $oSet->GetFilter()->serialize();
 		$iMinDisplayLimit = utils::GetConfig()->GetMinDisplayLimit();
 		$sCollapsedLabel = Dict::Format('UI:TruncatedResults', $iMinDisplayLimit, $oSet->Count());
@@ -546,11 +553,11 @@ abstract class cmdbAbstractObject extends CMDBObject
 		{
 			// list truncated
 			$aExtraParams['display_limit'] = true;
-			$sHtml .= '<tr class="containerHeader"><td><span id="lbl_'.$divId.'">'.$sCollapsedLabel.'</span>&nbsp;&nbsp;<a class="truncated" id="trc_'.$divId.'">'.$sLinkLabel.'</a></td><td>';
+			$sHtml .= '<tr class="containerHeader"><td><span id="lbl_'.$iListId.'">'.$sCollapsedLabel.'</span>&nbsp;&nbsp;<a class="truncated" id="trc_'.$iListId.'">'.$sLinkLabel.'</a></td><td>';
 			$oPage->add_ready_script(
 <<<EOF
-	$('#$divId table.listResults').addClass('truncated');
-	$('#$divId table.listResults tr:last td').addClass('truncated');
+	$('#$iListId table.listResults').addClass('truncated');
+	$('#$iListId table.listResults tr:last td').addClass('truncated');
 EOF
 );
 		}
@@ -558,14 +565,14 @@ EOF
 		{
 			// Collapsible list
 			$aExtraParams['display_limit'] = true;
-			$sHtml .= '<tr class="containerHeader"><td><span id="lbl_'.$divId.'">'.Dict::Format('UI:CountOfResults', $oSet->Count()).'</span><a class="truncated" id="trc_'.$divId.'">'.Dict::S('UI:CollapseList').'</a></td><td>';
+			$sHtml .= '<tr class="containerHeader"><td><span id="lbl_'.$iListId.'">'.Dict::Format('UI:CountOfResults', $oSet->Count()).'</span><a class="truncated" id="trc_'.$iListId.'">'.Dict::S('UI:CollapseList').'</a></td><td>';
 		}
 		$aExtraParams['truncated'] = false; // To expand the full list when clicked
 		$sExtraParamsExpand = addslashes(str_replace('"', "'", json_encode($aExtraParams))); // JSON encode, change the style of the quotes and escape them
 		$oPage->add_ready_script(
 <<<EOF
 	// Handle truncated lists
-	$('#trc_$divId').click(function()
+	$('#trc_$iListId').click(function()
 	{
 		var state = {};
 		
@@ -582,15 +589,15 @@ EOF
 		$.bbq.pushState( state );
 		$(this).trigger(state[this.id]);	
 	});
-	
-	$('#trc_$divId').bind('open', function()
+	$('#trc_$iListId').unbind('open');
+	$('#trc_$iListId').bind('open', function()
 	{
-		ReloadTruncatedList('$divId', '$sFilter', '$sExtraParamsExpand');
+		ReloadTruncatedList('$iListId', '$sFilter', '$sExtraParamsExpand');
 	});
-	
-	$('#trc_$divId').bind('close', function()
+	$('#trc_$iListId').unbind('close');	
+	$('#trc_$iListId').bind('close', function()
 	{
-		TruncateList('$divId', $iMinDisplayLimit, '$sCollapsedLabel', '$sLinkLabel');
+		TruncateList('$iListId', $iMinDisplayLimit, '$sCollapsedLabel', '$sLinkLabel');
 	});
 EOF
 );
@@ -604,7 +611,7 @@ EOF
 				//$aMenuExtraParams['linkage'] = $sLinkageAttribute;
 				$aMenuExtraParams = $aExtraParams;
 			}
-			$sHtml .= $oMenuBlock->GetRenderContent($oPage, $aMenuExtraParams);
+			$sHtml .= $oMenuBlock->GetRenderContent($oPage, $aMenuExtraParams, $iListId);
 			$sHtml .= '</td></tr>';
 		}
 		$sHtml .= "<tr><td $sColspan>";
@@ -872,13 +879,12 @@ EOF
 		if (isset($aExtraParams['currentId']))
 		{
 			$sSearchFormId = $aExtraParams['currentId'];
-			$iSearchFormId++;
 		}
 		else
 		{
-			$iSearchFormId++;
+			$iSearchFormId = $oPage->GetUniqueId();
 			$sSearchFormId = 'SimpleSearchForm'.$iSearchFormId;
-			$sHtml .= "<div id=\"$sSearchFormId\" class=\"mini_tab{$iSearchFormId}\">\n";			
+			$sHtml .= "<div id=\"ds_$sSearchFormId\" class=\"mini_tab{$iSearchFormId}\">\n";			
 		}
 		// Check if the current class has some sub-classes
 		if (isset($aExtraParams['baseClass']))
@@ -908,7 +914,7 @@ EOF
 			$sClassesCombo = MetaModel::GetName($sClassName);
 		}
 		$oUnlimitedFilter = new DBObjectSearch($sClassName);
-		$sHtml .= "<form id=\"form{$iSearchFormId}\" action=\"../pages/UI.php\">\n"; // Don't use $_SERVER['SCRIPT_NAME'] since the form may be called asynchronously (from ajax.php)
+		$sHtml .= "<form id=\"fs_{$sSearchFormId}\" action=\"../pages/UI.php\">\n"; // Don't use $_SERVER['SCRIPT_NAME'] since the form may be called asynchronously (from ajax.php)
 		$sHtml .= "<h2>".Dict::Format('UI:SearchFor_Class_Objects', $sClassesCombo)."</h2>\n";
 		$index = 0;
 		$sHtml .= "<p>\n";
@@ -1042,7 +1048,7 @@ EOF
 		}
 		else
 		{
-			$iInputId++;
+			$oPoage->GetUniqueId();
 			$iId = $iInputId;
 		}
 
@@ -1120,6 +1126,44 @@ EOF
 					// Event list & validation is handled  directly by the widget
 				break;
 				
+				case 'ExtKey':
+					$aEventsList[] ='validate';
+					$aEventsList[] ='change';
+
+					// #@# todo - add context information (depending on dimensions)
+					$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, $aArgs);
+					$iFieldSize = $oAttDef->GetMaxSize();
+					$iMaxComboLength = $oAttDef->GetMaximumComboLength();
+					if (count($aAllowedValues) >= $iMaxComboLength)
+					{
+						// too many choices, use an autocomplete
+						$oWidget = new UIAutoCompleteWidget($sAttCode, $sClass, $oAttDef->GetLabel(), $aAllowedValues, $value, $iId, $sNameSuffix, $sFieldPrefix);
+						$sHTMLValue = $oWidget->Display($oPage, $aArgs);
+						
+					}
+					else
+					{
+						// Few choices, use a normal 'select'
+						// In case there are no valid values, the select will be empty, thus blocking the user from validating the form
+						$sHTMLValue = "<select title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" id=\"$iId\">\n";
+						$sHTMLValue .= "<option value=\"\">".Dict::S('UI:SelectOne')."</option>\n";
+						foreach($aAllowedValues as $key => $display_value)
+						{
+							if ((count($aAllowedValues) == 1) && ($sMandatory == 'true') )
+							{
+								// When there is only once choice, select it by default
+								$sSelected = ' selected';
+							}
+							else
+							{
+								$sSelected = ($value == $key) ? ' selected' : '';
+							}
+							$sHTMLValue .= "<option value=\"$key\"$sSelected>$display_value</option>\n";
+						}
+						$sHTMLValue .= "</select>&nbsp;{$sValidationField}\n";
+					}
+					break;
+					
 				case 'String':
 				default:
 					$aEventsList[] ='validate';
@@ -1128,44 +1172,24 @@ EOF
 					$iFieldSize = $oAttDef->GetMaxSize();
 					if ($aAllowedValues !== null)
 					{
-						if (count($aAllowedValues) > 50)
+						// Discrete list of values, use a SELECT
+						$sHTMLValue = "<select title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" id=\"$iId\">\n";
+						$sHTMLValue .= "<option value=\"\">".Dict::S('UI:SelectOne')."</option>\n";
+						foreach($aAllowedValues as $key => $display_value)
 						{
-							// too many choices, use an autocomplete
-							// The input for the auto complete
-							if ($oAttDef->IsNull($value)) // Null values are displayed as ''
+							if ((count($aAllowedValues) == 1) && ($sMandatory == 'true') )
 							{
-								$sDisplayValue = '';
+								// When there is only once choice, select it by default
+								$sSelected = ' selected';
 							}
-							$sHTMLValue = "<input count=\"".count($aAllowedValues)."\" type=\"text\" id=\"label_$iId\" size=\"30\" maxlength=\"$iFieldSize\" value=\"$sDisplayValue\"/>&nbsp;{$sValidationField}";
-							// another hidden input to store & pass the object's Id
-							$sHTMLValue .= "<input type=\"hidden\" id=\"$iId\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"$value\" />\n";
-							$oPage->add_ready_script("\$('#label_$iId').autocomplete('./ajax.render.php', { scroll:true, minChars:3, formatItem:formatItem, autoFill:true, keyHolder:'#$iId', extraParams:{operation:'autocomplete', sclass:'$sClass',attCode:'".$sAttCode."'}});");
-							$oPage->add_ready_script("\$('#label_$iId').blur(function() { $(this).search(); } );");
-							$oPage->add_ready_script("\$('#label_$iId').result( function(event, data, formatted) { OnAutoComplete('$iId', event, data, formatted); } );");
-							$aEventsList[] ='change';
-						}
-						else
-						{
-							// Few choices, use a normal 'select'
-							// In case there are no valid values, the select will be empty, thus blocking the user from validating the form
-							$sHTMLValue = "<select title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" id=\"$iId\">\n";
-							$sHTMLValue .= "<option value=\"\">".Dict::S('UI:SelectOne')."</option>\n";
-							foreach($aAllowedValues as $key => $display_value)
+							else
 							{
-								if ((count($aAllowedValues) == 1) && ($sMandatory == 'true') )
-								{
-									// When there is only once choice, select it by default
-									$sSelected = ' selected';
-								}
-								else
-								{
-									$sSelected = ($value == $key) ? ' selected' : '';
-								}
-								$sHTMLValue .= "<option value=\"$key\"$sSelected>$display_value</option>\n";
+								$sSelected = ($value == $key) ? ' selected' : '';
 							}
-							$sHTMLValue .= "</select>&nbsp;{$sValidationField}\n";
-							$aEventsList[] ='change';
+							$sHTMLValue .= "<option value=\"$key\"$sSelected>$display_value</option>\n";
 						}
+						$sHTMLValue .= "</select>&nbsp;{$sValidationField}\n";
+						$aEventsList[] ='change';
 					}
 					else
 					{
@@ -1173,7 +1197,7 @@ EOF
 						$aEventsList[] ='keyup';
 						$aEventsList[] ='change';
 					}
-					break;
+				break;
 			}
 			$sPattern = addslashes($oAttDef->GetValidationPattern()); //'^([0-9]+)$';
 			if (!empty($aEventsList))

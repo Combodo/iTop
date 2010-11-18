@@ -887,3 +887,6 @@ tr.row_added td {
 	border-bottom: 1px #ccc solid;
 	padding: 2px;
 }
+a.truncated {
+	cursor: pointer;
+}

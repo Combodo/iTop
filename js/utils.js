@@ -1,35 +1,54 @@
 // Some general purpose JS functions for the iTop application
 /**
  * Reload a truncated list
- */ 
+ */
+aTruncatedLists = {}; // To keep track of the list being loaded, each member is an ajaxRequest object
+
 function ReloadTruncatedList(divId, sSerializedFilter, sExtraParams)
 {
-	$('#'+divId).addClass('loading');
+	$('#'+divId).block();
 	//$('#'+divId).blockUI();
-	$.post('ajax.render.php?style=list',
+	if (aTruncatedLists[divId] != undefined)
+	{
+		try
+		{
+			aAjaxRequest = aTruncatedLists[divId];
+			aAjaxRequest.abort();
+		}
+		catch(e)
+		{
+			// Do nothing special, just continue
+			console.log('Uh,uh, exception !');
+		}
+	}
+	aTruncatedLists[divId] = $.post('ajax.render.php?style=list',
 	   { operation: 'ajax', filter: sSerializedFilter, extra_params: sExtraParams },
-	   function(data){
-		 $('#'+divId).empty();
-		 $('#'+divId).append(data);
-		 $('#'+divId).removeClass('loading');
-		 $('#'+divId+' .listResults').tableHover(); // hover tables
-		 $('#'+divId+' .listResults').each( function()
-				{
-					var table = $(this);
-					var id = $(this).parent();
-					var checkbox = (table.find('th:first :checkbox').length > 0);
-					if (checkbox)
+	     function(data)
+	     {
+			 aTruncatedLists[divId] = undefined;
+			 if (data.length > 0)
+			 {
+				 $('#'+divId).html(data);
+				 $('#'+divId+' .listResults').tableHover(); // hover tables
+				 $('#'+divId+' .listResults').each( function()
 					{
-						// There is a checkbox in the first column, don't make it sortable
-						table.tablesorter( { headers: { 0: {sorter: false}}, widgets: ['myZebra', 'truncatedList']} ); // sortable and zebra tables
-					}
-					else
-					{
-						// There is NO checkbox in the first column, all columns are considered sortable
-						table.tablesorter( { widgets: ['myZebra', 'truncatedList']} ); // sortable and zebra tables
-					}
-				});
-		 //$('#'+divId).unblockUI();
+						var table = $(this);
+						var id = $(this).parent();
+						aTruncatedLists[divId] = undefined;
+						var checkbox = (table.find('th:first :checkbox').length > 0);
+						if (checkbox)
+						{
+							// There is a checkbox in the first column, don't make it sortable
+							table.tablesorter( { headers: { 0: {sorter: false}}, widgets: ['myZebra', 'truncatedList']} ); // sortable and zebra tables
+						}
+						else
+						{
+							// There is NO checkbox in the first column, all columns are considered sortable
+							table.tablesorter( { widgets: ['myZebra', 'truncatedList']} ); // sortable and zebra tables
+						}
+					});
+				 $('#'+divId).unblock();
+			 }
 		}
 	 );
 }
@@ -38,6 +57,7 @@ function ReloadTruncatedList(divId, sSerializedFilter, sExtraParams)
  */
 function TruncateList(divId, iLimit, sNewLabel, sLinkLabel)
 {
+	$('#'+divId).block();
 	var iCount = 0;
 	$('#'+divId+' table.listResults tr:gt('+iLimit+')').each( function(){
 			$(this).remove();
@@ -47,13 +67,14 @@ function TruncateList(divId, iLimit, sNewLabel, sLinkLabel)
 	$('#'+divId+' table.listResults').addClass('truncated');
 	$('#trc_'+divId).html(sLinkLabel);
 	$('#'+divId+' .listResults').trigger("update"); //  Reset the cache
+	$('#'+divId).unblock();
 }
 /**
  * Reload any block -- used for periodic auto-reload
  */ 
 function ReloadBlock(divId, sStyle, sSerializedFilter, sExtraParams)
 {
-	$('#'+divId).addClass('loading');
+	$('#'+divId).block();
 	//$('#'+divId).blockUI();
 	$.post('ajax.render.php?style='+sStyle,
 	   { operation: 'ajax', filter: sSerializedFilter, extra_params: sExtraParams },
@@ -101,11 +122,10 @@ function UpdateFileName(id, sNewFileName)
  */
 function ReloadSearchForm(divId, sClassName, sBaseClass, sContext)
 {
-    var oDiv = $('#'+divId);
+    var oDiv = $('#ds_'+divId);
 	oDiv.block();
-	var oFormEvents = $('#'+divId+' form').data('events');
-	var aSubmit = new Array();
-	
+	var oFormEvents = $('#ds_'+divId+' form').data('events');
+
 	// Save the submit handlers
     aSubmit = new Array();
 	if ( (oFormEvents != null) && (oFormEvents.submit != undefined))
@@ -123,7 +143,7 @@ function ReloadSearchForm(divId, sClassName, sBaseClass, sContext)
 		   oDiv.append(data);
 		   if (aSubmit.length > 0)
 		   {
-			    var oForm = $('#'+divId+' form'); // Form was reloaded, recompute it
+			    var oForm = $('#ds_'+divId+' form'); // Form was reloaded, recompute it
 				for(index = 0; index < aSubmit.length; index++)
 				{
 					// Restore the previously bound submit handlers

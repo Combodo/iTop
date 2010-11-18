@@ -60,6 +60,7 @@ class ajax_page extends WebPage
         $s_captured_output = ob_get_contents();
         ob_end_clean();
         echo $this->s_content;
+        echo $this->s_deferred_content;
         if (!empty($this->m_sReadyScript))
         {
 	        echo "<script>\n";
@@ -94,6 +95,17 @@ class ajax_page extends WebPage
 		// considering that at this time everything in the page is "ready"...
 		$this->m_sReadyScript .= $sScript;
 	}
+	
+	/**
+	 * Cannot be called in this context, since Ajax pages do not share
+	 * any context with the calling page !!
+	 */
+	public function GetUniqueId()
+	{
+		assert(false);
+		return 0;
+	}
+	
 }
 
 ?>

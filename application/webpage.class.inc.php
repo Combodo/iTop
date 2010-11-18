@@ -45,6 +45,7 @@ class WebPage
     protected $a_include_stylesheets;
     protected $a_headers;
     protected $a_base;
+    protected $iNextId;
     
     public function __construct($s_title)
     {
@@ -57,6 +58,7 @@ class WebPage
         $this->a_linked_stylesheets = array();
         $this->a_headers = array();
         $this->a_base = array( 'href' => '', 'target' => '');
+        $this->iNextId = 0;
         ob_start(); // Start capturing the output
     }
 	
@@ -357,6 +359,15 @@ class WebPage
 			$sTag .= " />\n";
 		}
 		return $sTag;
+	}
+	
+	/**
+	 * Get an ID (for any kind of HTML tag) that is guaranteed unique in this page
+	 * @return int The unique ID (in this page)
+	 */
+	public function GetUniqueId()
+	{
+		return $this->iNextId++;
 	}
 }
 ?>

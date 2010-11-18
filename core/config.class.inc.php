@@ -118,6 +118,22 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
+		'max_combo_length' => array(
+			'type' => 'int',
+			'description' => 'The maximum number of elements in a drop-down list. If more then an autocomplete will be used',
+			'default' => 50,
+			'value' => 50,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
+		'min_autocomplete_chars' => array(
+			'type' => 'int',
+			'description' => 'The minimum number of characters to type in order to trigger the "autocomplete" behavior',
+			'default' => 3,
+			'value' => 3,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 	);
 
 	public function IsProperty($sPropCode)

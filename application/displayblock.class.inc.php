@@ -214,7 +214,7 @@ class DisplayBlock
 	{
 		$sHtml = '';
 		$aExtraParams = array_merge($aExtraParams, $this->m_aParams);
-		$aExtraParams['block_id'] = $sId;
+		$aExtraParams['currentId'] = $sId;
 		$sExtraParams = addslashes(str_replace('"', "'", json_encode($aExtraParams))); // JSON encode, change the style of the quotes and escape them
 		
 		$bAutoReload = false;
@@ -253,7 +253,7 @@ class DisplayBlock
 		{
 			// render now
 			$sHtml .= "<div id=\"$sId\" class=\"display_block\">\n";
-			$sHtml .= $this->GetRenderContent($oPage, $aExtraParams);
+			$sHtml .= $this->GetRenderContent($oPage, $aExtraParams, $sId);
 			$sHtml .= "</div>\n";
 		}
 		else
@@ -303,10 +303,18 @@ class DisplayBlock
 	
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())
 	{
-		$oPage->add($this->GetRenderContent($oPage, $aExtraParams));
+		if (empty($aExtraParams['currentId']))
+		{
+			$sId = $oPage->GetUniqueId(); // Works only if the page is not an Ajax one !
+		}
+		else
+		{
+			$sId = $aExtraParams['currentId'];
+		}
+		$oPage->add($this->GetRenderContent($oPage, $aExtraParams, $sId));
 	}
 	
-	public function GetRenderContent(WebPage $oPage, $aExtraParams = array())
+	public function GetRenderContent(WebPage $oPage, $aExtraParams = array(), $sId)
 	{
 		$sHtml = '';
 		// Add the extra params into the filter if they make sense for such a filter
@@ -718,22 +726,21 @@ class DisplayBlock
 			break;
 			
 			case 'search':
-			static $iSearchSectionId = 1;
 			$sStyle = (isset($aExtraParams['open']) && ($aExtraParams['open'] == 'true')) ? 'SearchDrawer' : 'SearchDrawer DrawerClosed';
-			$sHtml .= "<div id=\"Search_$iSearchSectionId\" class=\"$sStyle\">\n";
+			$sHtml .= "<div id=\"ds_$sId\" class=\"$sStyle\">\n";
 			$oPage->add_ready_script(
 <<<EOF
-	$("#LnkSearch_$iSearchSectionId").click( function() {
-		$("#Search_$iSearchSectionId").slideToggle('normal', function() { $("#Search_$iSearchSectionId").parent().resize(); } );
-		$("#LnkSearch_$iSearchSectionId").toggleClass('open');
+	$("#dh_$sId").click( function() {
+		$("#ds_$sId").slideToggle('normal', function() { $("#ds_$sId").parent().resize(); } );
+		$("#dh_$sId").toggleClass('open');
 	});
 EOF
 			);
+			$aExtraParams['currentId'] = $sId;
 			$sHtml .= cmdbAbstractObject::GetSearchForm($oPage, $this->m_oSet, $aExtraParams);
 	 		$sHtml .= "</div>\n";
 	 		$sHtml .= "<div class=\"HRDrawer\"></div>\n";
-	 		$sHtml .= "<div id=\"LnkSearch_$iSearchSectionId\" class=\"DrawerHandle\">".Dict::S('UI:SearchToggle')."</div>\n";
-	 		$iSearchSectionId++;
+	 		$sHtml .= "<div id=\"dh_$sId\" class=\"DrawerHandle\">".Dict::S('UI:SearchToggle')."</div>\n";
 			break;
 			
 			case 'open_flash_chart':
@@ -868,7 +875,7 @@ EOF
  */
 class HistoryBlock extends DisplayBlock
 {
-	public function GetRenderContent(WebPage $oPage, $aExtraParams = array())
+	public function GetRenderContent(WebPage $oPage, $aExtraParams = array(), $sId)
 	{
 		$sHtml = '';
 		$oSet = new CMDBObjectSet($this->m_oFilter, array('date'=>false));
@@ -950,7 +957,7 @@ class MenuBlock extends DisplayBlock
 	 * an object in with the same tab active by default as the tab that was active when selecting
 	 * the "Modify..." action.
 	 */
-	public function GetRenderContent(WebPage $oPage, $aExtraParams = array())
+	public function GetRenderContent(WebPage $oPage, $aExtraParams = array(), $sId)
 	{
 		$sHtml = '';
 		$oAppContext = new ApplicationContext();

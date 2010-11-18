@@ -902,16 +902,16 @@ abstract class MetaModel
 	// Allowed values
 	//
 
-	public static function GetAllowedValues_att($sClass, $sAttCode, $aArgs = array(), $sBeginsWith = '')
+	public static function GetAllowedValues_att($sClass, $sAttCode, $aArgs = array(), $sContains = '')
 	{
 		$oAttDef = self::GetAttributeDef($sClass, $sAttCode);
-		return $oAttDef->GetAllowedValues($aArgs, $sBeginsWith);
+		return $oAttDef->GetAllowedValues($aArgs, $sContains);
 	}
 
-	public static function GetAllowedValues_flt($sClass, $sFltCode, $aArgs = array(), $sBeginsWith = '')
+	public static function GetAllowedValues_flt($sClass, $sFltCode, $aArgs = array(), $sContains = '')
 	{
 		$oFltDef = self::GetClassFilterDef($sClass, $sFltCode);
-		return $oFltDef->GetAllowedValues($aArgs, $sBeginsWith);
+		return $oFltDef->GetAllowedValues($aArgs, $sContains);
 	}
 
 	//
