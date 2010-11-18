@@ -1048,8 +1048,7 @@ EOF
 		}
 		else
 		{
-			$oPoage->GetUniqueId();
-			$iId = $iInputId;
+			$iInputId = $oPage->GetUniqueId();
 		}
 
 		if (!$oAttDef->IsExternalField())
