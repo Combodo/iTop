@@ -114,7 +114,7 @@ class UILinksWidget
 			foreach($this->m_aEditableFields as $sFieldCode)
 			{
 				$oAttDef = MetaModel::GetAttributeDef($this->m_sLinkedClass, $sFieldCode);
-				$aRow[$sFieldCode] = cmdbAbstractObject::GetFormElementForField($oP, $this->m_sLinkedClass, $sFieldCode, $oAttDef, $linkObjOrId->Get($sFieldCode), '' /* DisplayValue */, $key, $sNameSuffix, 0, $aArgs);
+				$aRow[$sFieldCode] = cmdbAbstractObject::GetFormElementForField($oP, $this->m_sLinkedClass, $sFieldCode, $oAttDef, $linkObjOrId->Get($sFieldCode), '' /* DisplayValue */, $this->m_iInputId.'_'.$sFieldCode.'['.$key.']', $sNameSuffix, 0, $aArgs);
 			}
 		}
 		else
@@ -128,7 +128,7 @@ class UILinksWidget
 			foreach($this->m_aEditableFields as $sFieldCode)
 			{
 				$oAttDef = MetaModel::GetAttributeDef($this->m_sLinkedClass, $sFieldCode);
-				$aRow[$sFieldCode] = cmdbAbstractObject::GetFormElementForField($oP, $this->m_sLinkedClass, $sFieldCode, $oAttDef, '' /* TO DO/ call GetDefaultValue($oObject->ToArgs()) */, '' /* DisplayValue */, '' /* id */, $sNameSuffix, 0, $aArgs);
+				$aRow[$sFieldCode] = cmdbAbstractObject::GetFormElementForField($oP, $this->m_sLinkedClass, $sFieldCode, $oAttDef, '' /* TO DO/ call GetDefaultValue($oObject->ToArgs()) */, '' /* DisplayValue */, $this->m_iInputId.'_'.$sFieldCode.'['.$linkObjOrId.']' /* id */, $sNameSuffix, 0, $aArgs);
 			}
 		}
 
