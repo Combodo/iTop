@@ -33,6 +33,17 @@ require_once('../application/loginwebpage.class.inc.php');
 LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
 /**
+ * Escape a label (string) in a manner suitable for use with graphviz' DOT syntax
+ * @param string $s The string to escape
+ * @return string The escaped string
+ */
+function GraphvizEscape($s)
+{
+	$s = str_replace('"', '\\"', $s);
+	return $s;
+}
+
+/**
  * Helper to generate a Graphviz code for displaying the life cycle of a class
  * @param string $sClass The class to display
  * @return string The Graph description in Graphviz/Dot syntax   
@@ -71,7 +82,7 @@ function GraphvizLifecycle($sClass)
 				$aStatesLinks[$aTransitionDef['target_state']]['in']++;
 				$sStimulusLabel = $aStimuli[$sStimulusCode]->GetLabel();
 				$sTargetStateLabel = MetaModel::GetStateLabel($sClass, $aTransitionDef['target_state']);
-				$sDotFileContent .= "\t$sStateCode -> {$aTransitionDef['target_state']} [ label=\"$sStimulusLabel\"];\n";
+				$sDotFileContent .= "\t$sStateCode -> {$aTransitionDef['target_state']} [ label=\"".GraphvizEscape($sStimulusLabel)."\"];\n";
 			}
 		}
 		foreach($aStates as $sStateCode => $aStateDef)
@@ -83,11 +94,11 @@ function GraphvizLifecycle($sClass)
 				if ( ($aStatesLinks[$sStateCode]['in'] == 0) || ($aStatesLinks[$sStateCode]['out'] == 0))
 				{
 					// End or Start state, make it look different
-					$sDotFileContent .= "\t$sStateCode [ shape=doublecircle,label=\"$sStateLabel\"];\n";
+					$sDotFileContent .= "\t$sStateCode [ shape=doublecircle,label=\"".GraphvizEscape($sStateLabel)."\"];\n";
 				}
 				else
 				{
-					$sDotFileContent .= "\t$sStateCode [ shape=circle,label=\"$sStateLabel\"];\n";
+					$sDotFileContent .= "\t$sStateCode [ shape=circle,label=\"".GraphvizEscape($sStateLabel)."\"];\n";
 				}
 			}
 		}
