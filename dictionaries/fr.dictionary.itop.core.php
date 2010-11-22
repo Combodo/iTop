@@ -24,7 +24,7 @@
  */
 
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('FR FR', 'English', 'English', array(
 	'Core:AttributeLinkedSet' => 'Objets liés (1-n)',
 	'Core:AttributeLinkedSet+' => 'Liste d\'objets d\'une classe donnée et pointant sur l\'objet courant',
 
