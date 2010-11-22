@@ -50,8 +50,8 @@ class WizardHelper
 		foreach($this->m_aData['m_oCurrentValues'] as $sAttCode => $value)
 		{
 			// Because this is stored in a Javascript array, unused indexes
-			// are filled with null values
-			if ( ($sAttCode !='id') && ($sAttCode !== false) && ($value !== null))
+			// are filled with null values and unused keys (stored as strings) contain $$NULL$$
+			if ( ($sAttCode !='id') && ($sAttCode !== false) && ($value !== null) && ($value !== '$$NULL$$'))
 			{
 				$oAttDef = MetaModel::GetAttributeDef($this->m_aData['m_sClass'], $sAttCode);
 				if (($oAttDef->IsLinkSet()) && ($value != '') )
