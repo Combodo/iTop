@@ -69,7 +69,7 @@ class UIAutoCompleteWidget
 	protected $iId;
 	protected $sTitle;
 	
-	public function __construct($sAttCode, $sClass, $sTitle, $aAllowedValues, $value, $iInputId, $sNameSuffix = '', $sFieldPrefix = '')
+	public function __construct($sAttCode, $sClass, $sTitle, $aAllowedValues, $value, $iInputId, $sNameSuffix = '', $sFieldPrefix = '', $sFormPrefix = '')
 	{
 		self::$iWidgetIndex++;
 		$this->sAttCode = $sAttCode;
@@ -82,6 +82,7 @@ class UIAutoCompleteWidget
 		$this->sFieldPrefix = $sFieldPrefix;
 		$this->sTargetClass = $this->oAttDef->GetTargetClass();
 		$this->sTitle = $sTitle;
+		$this->sFormPrefix = $sFormPrefix;
 	}
 	
 	/**
@@ -100,17 +101,25 @@ class UIAutoCompleteWidget
 		{
 			$sDisplayValue = $this->GetObjectName($this->value);
 		}
+		$bCreate = UserRights::IsActionAllowed($this->sTargetClass, UR_ACTION_BULK_MODIFY);
 		$sMessage = Dict::S('UI:Message:EmptyList:UseSearchForm');
+		$sFormPrefix = $this->sFormPrefix;
 		$oPage->add_ready_script(
 <<<EOF
-	oACWidget_{$this->iId} = new AutocompleteWidget('$this->iId', '$this->sClass', '$this->sAttCode', '$this->sNameSuffix');
+	oACWidget_{$this->iId} = new AutocompleteWidget('$this->iId', '$this->sClass', '$this->sAttCode', '$this->sNameSuffix', oWizardHelper$sFormPrefix);
 	oACWidget_{$this->iId}.emptyHtml = "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>$sMessage</p></div>";
 EOF
 );
 		$iMinChars = $this->oAttDef->GetMinAutoCompleteChars();
 
 		// the input for the auto-complete
-		$sHTMLValue = "<input count=\"".count($this->aAllowedValues)."\" type=\"text\" id=\"label_$this->iId\" size=\"30\" maxlength=\"$iFieldSize\" value=\"$sDisplayValue\"/>&nbsp;<a class=\"no-arrow\" href=\"javascript:oACWidget_{$this->iId}.Search();\"><img style=\"border:0;vertical-align:middle;\" src=\"../images/mini_search.gif\" /></a>&nbsp;<span id=\"v_{$this->iId}\"></span>";
+		$sHTMLValue = "<input count=\"".count($this->aAllowedValues)."\" type=\"text\" id=\"label_$this->iId\" size=\"30\" maxlength=\"$iFieldSize\" value=\"$sDisplayValue\"/>&nbsp;";
+		$sHTMLValue .= "<a class=\"no-arrow\" href=\"javascript:oACWidget_{$this->iId}.Search();\"><img style=\"border:0;vertical-align:middle;\" src=\"../images/mini_search.gif\" /></a>&nbsp;";
+		if ($bCreate)
+		{
+			$sHTMLValue .= "<a class=\"no-arrow\" href=\"javascript:oACWidget_{$this->iId}.CreateObject();\"><img style=\"border:0;vertical-align:middle;\" src=\"../images/mini_add.gif\" /></a>&nbsp;";
+		}
+		$sHTMLValue .= "<span id=\"v_{$this->iId}\"></span>";
 
 		// another hidden input to store & pass the object's Id
 		$sHTMLValue .= "<input type=\"hidden\" id=\"$this->iId\" name=\"attr_{$this->sFieldPrefix}{$this->sAttCode}{$this->sNameSuffix}\" value=\"$this->value\" />\n";
@@ -120,7 +129,12 @@ EOF
 		$oPage->add_ready_script("\$('#label_$this->iId').blur(function() { $(this).search(); } );");
 		$oPage->add_ready_script("\$('#label_$this->iId').result( function(event, data, formatted) { OnAutoComplete('$this->iId', event, data, formatted); } );");
 		$oPage->add_ready_script("\$('#ac_dlg_$this->iId').dialog({ width: $(window).width()*0.8, height: $(window).height()*0.8, autoOpen: false, modal: true, title: '$this->sTitle', resizeStop: oACWidget_{$this->iId}.UpdateSizes, close: oACWidget_{$this->iId}.OnClose });\n");
+		$oPage->add_ready_script("\$('#ac_create_$this->iId').dialog({ width: $(window).width()*0.8, height: $(window).height()*0.8, autoOpen: false, modal: true, title: '$this->sTitle'});\n");
 		$oPage->add_at_the_end($this->GetSearchDialog($oPage)); // To prevent adding forms inside the main form
+		if ($bCreate)
+		{
+			$oPage->add_at_the_end($this->GetCreationDialog($oPage)); // To prevent adding forms inside the main form
+		}
 
 		return $sHTMLValue;
 	}
@@ -143,8 +157,25 @@ EOF
 		$sHTML .= "</form>\n";
 		$sHTML .= '</div></div></div>';
 
-		$oPage->add_ready_script("$('#fs_{$this->iId}').bind('submit.uilinksWizard', oACWidget_{$this->iId}.DoSearchObjects);");
+		$oPage->add_ready_script("$('#fs_{$this->iId}').bind('submit.uiAutocomplete', oACWidget_{$this->iId}.DoSearchObjects);");
 		$oPage->add_ready_script("$('#dc_{$this->iId}').resize(oACWidget_{$this->iId}.UpdateSizes);");
+
+		return $sHTML;
+	}
+
+	
+	protected function GetCreationDialog(WebPage $oPage)
+	{
+		$sHTML = '<div id="ac_create_'.$this->iId.'"><div class="wizContainer" style="vertical-align:top;"><div id="dcr_'.$this->iId.'">';
+
+		//$sHTML .= "<form id=\"fcr_{$this->iId}\" OnSubmit=\"return oACWidget_{$this->iId}.DoCreate();\">\n";
+		//cmdbAbstractObject::DisplayCreationForm($oPage, 'Person', null, array());
+		//$sHTML .= "<input type=\"button\" id=\"btn_create_cancel_{$this->iId}\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"$('#ac_create_{$this->iId}').dialog('close');\">&nbsp;&nbsp;";
+		//$sHTML .= "<input type=\"button\" id=\"btn_create_ok_{$this->iId}\" value=\"".Dict::S('UI:Button:New')."\"  onClick=\"oACWidget_{$this->iId}.DoCreate();\">";
+		//$sHTML .= "</form>\n";
+		$sHTML .= '</div></div></div>';
+
+		//$oPage->add_ready_script("$('#dc_{$this->iId}').resize(oACWidget_{$this->iId}.UpdateSizes);");
 
 		return $sHTML;
 	}
@@ -180,6 +211,43 @@ EOF
 	{
 		$oObj = MetaModel::GetObject($this->sTargetClass, $iObjId);
 		return $oObj->GetName();
+	}
+	
+	/**
+	 * Get the form to create a new object of the 'target' class
+	 */
+	public function GetObjectCreationForm(WebPage $oPage)
+	{
+		$oPage->add("<h1>".MetaModel::GetClassIcon($this->sTargetClass)."&nbsp;".Dict::Format('UI:CreationTitle_Class', MetaModel::GetName($this->sTargetClass))."</h1>\n");
+	 	cmdbAbstractObject::DisplayCreationForm($oPage, $this->sTargetClass, null, array(), array('formPrefix' => $this->iId, 'noRelations' => true));	
+		$oPage->add_ready_script("$('#dcr_{$this->iId} form').removeAttr('onsubmit');");
+		$oPage->add_ready_script("$('#dcr_{$this->iId} form').bind('submit.uilinksWizard', oACWidget_{$this->iId}.DoCreateObject);");
+	}
+
+	/**
+	 * Get the form to create a new object of the 'target' class
+	 */
+	public function DoCreateObject($oPage)
+	{
+		$oObj = MetaModel::NewObject($this->sTargetClass);
+		$oObj->UpdateObject($this->sFormPrefix.$this->iId);
+		$oMyChange = MetaModel::NewObject("CMDBChange");
+		$oMyChange->Set("date", time());
+		if (UserRights::IsImpersonated())
+		{
+			$sUserString = Dict::Format('UI:Archive_User_OnBehalfOf_User', UserRights::GetRealUser(), UserRights::GetUser());
+		}
+		else
+		{
+			$sUserString = UserRights::GetUser();
+		}
+		$oMyChange->Set("userinfo", $sUserString);
+		$iChangeId = $oMyChange->DBInsert();
+		$oObj->DBInsertTracked($oMyChange);
+	
+		return array('name' => $oObj->GetName(), 'id' => $oObj->GetKey());
+		
+		//return array('name' => 'test', 'id' => '42');
 	}
 }
 ?>

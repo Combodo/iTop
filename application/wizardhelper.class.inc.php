@@ -227,6 +227,11 @@ class WizardHelper
 		return $this->m_aData['m_sClass'];
 	}
 	
+	public function GetFormPrefix()
+	{
+		return $this->m_aData['m_sFormPrefix'];
+	}
+	
 	public function GetIdForField($sFieldName)
 	{
 		$sResult = '';

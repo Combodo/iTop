@@ -13,7 +13,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-function AutocompleteWidget(id, sClass, sAttCode, sSuffix)
+function AutocompleteWidget(id, sClass, sAttCode, sSuffix, oWizHelper)
 {
 	this.id = id;
 	this.sClass = sClass;
@@ -21,13 +21,25 @@ function AutocompleteWidget(id, sClass, sAttCode, sSuffix)
 	this.sSuffix = sSuffix;
 	this.emptyHtml = ''; // content to be displayed when the search results are empty (when opening the dialog) 
 	this.emptyOnClose = true; // Workaround for the JQuery dialog being very slow when opening and closing if the content contains many INPUT tags
+	this.oWizardHelper = oWizHelper;
+	this.ajax_request = null;
 	var me = this;
+	
 	this.Init = function()
 	{
 		// make sure that the form is clean
 		$('#linkedset_'+this.id+' .selection').each( function() { this.checked = false; });
 		$('#'+this.id+'_btnRemove').attr('disabled','disabled');
 		$('#'+this.id+'_linksToRemove').val('');
+	}
+	
+	this.StopPendingRequest = function()
+	{
+		if (this.ajax_request)
+		{
+			this.ajax_request.Abort();
+			this.ajax_request = null;
+		}
 	}
 	
 	this.Search = function()
@@ -66,8 +78,6 @@ function AutocompleteWidget(id, sClass, sAttCode, sSuffix)
 		}
 	}
 	
-	var ajax_request = null;
-	
 	this.DoSearchObjects = function(id)
 	{
 		var theMap = { sAttCode: me.sAttCode,
@@ -86,8 +96,8 @@ function AutocompleteWidget(id, sClass, sAttCode, sSuffix)
 			}
 		);
 		
-		oWizardHelper.UpdateWizard();
-		theMap['json'] = oWizardHelper.ToJSON();
+		me.oWizardHelper.UpdateWizard();
+		theMap['json'] = me.oWizardHelper.ToJSON();
 		
 		theMap['sRemoteClass'] = theMap['class'];  // swap 'class' (defined in the form) and 'remoteClass'
 		theMap['class'] = me.sClass;
@@ -100,14 +110,10 @@ function AutocompleteWidget(id, sClass, sAttCode, sSuffix)
 
 		// Make sure that we cancel any pending request before issuing another
 		// since responses may arrive in arbitrary order
-		if (ajax_request != null)
-		{
-			ajax_request.abort();
-			ajax_request = null;
-		}
+		this.StopPendingRequest();
 		
 		// Run the query and display the results
-		ajax_request = $.post( 'ajax.render.php', theMap, 
+		this.ajax_request = $.post( 'ajax.render.php', theMap, 
 			function(data)
 			{
 				$(sSearchAreaId).html(data);
@@ -115,7 +121,7 @@ function AutocompleteWidget(id, sClass, sAttCode, sSuffix)
 				$(sSearchAreaId+' .listResults').tablesorter( { headers: {0: {sorter: false}}, widgets: ['myZebra', 'truncatedList']} ); // sortable and zebra tables
 				$('#fr_'+me.id+' input:radio').click(function() { me.UpdateButtons(); });
 				me.UpdateButtons();
-				ajax_request = null;
+				me.ajax_request = null;
 			},
 			'html'
 		);
@@ -140,21 +146,18 @@ function AutocompleteWidget(id, sClass, sAttCode, sSuffix)
 	
 		// Make sure that we cancel any pending request before issuing another
 		// since responses may arrive in arbitrary order
-		if (ajax_request != null)
-		{
-			ajax_request.abort();
-			ajax_request = null;
-		}
+		this.StopPendingRequest();
 		
 		// Run the query and get the result back directly in JSON
-		ajax_request = $.post( 'ajax.render.php', theMap, 
+		this.ajax_request = $.post( 'ajax.render.php', theMap, 
 			function(data)
 			{
 				$('#label_'+me.id).val(data.name);
 				$('#label_'+me.id).removeClass('ac_loading');
 				$('#'+me.id).val(iObjectId);
 				$('#'+me.id).trigger('validate');
-				ajax_request = null;
+				$('#label_'+me.id).focus();
+				me.ajax_request = null;
 			},
 			'json'
 		);
@@ -173,5 +176,97 @@ function AutocompleteWidget(id, sClass, sAttCode, sSuffix)
 			$('#dr_'+me.id).html(me.emptyHtml);
 		}
 		$('#label_'+me.id).focus();
+	}
+	
+	this.CreateObject = function(oWizHelper)
+	{
+		// Query the server to get the form to create a target object
+		$('#label_'+me.id).addClass('ac_loading');
+		me.oWizardHelper.UpdateWizard();
+		var theMap = { sAttCode: me.sAttCode,
+				   iInputId: me.id,
+				   sSuffix: me.sSuffix,
+				   'class': me.sClass,
+				   'json': me.oWizardHelper.ToJSON(),
+				   operation: 'objectCreationForm'
+				 }
+	
+		// Make sure that we cancel any pending request before issuing another
+		// since responses may arrive in arbitrary order
+		this.StopPendingRequest();
+		
+		// Run the query and get the result back directly in JSON
+		this.ajax_request = $.post( 'ajax.render.php', theMap, 
+			function(data)
+			{
+				$('#dcr_'+me.id).html(data);
+				// Adjust the height of the dialog
+				$('#ac_create_'+me.id).dialog('open');
+				var h = $('#ac_create_'+me.id+' .wizContainer').outerHeight();
+				$('#ac_create_'+me.id).dialog( "option", "height", h+55 ); // space for dialog title and padding...				
+				$('#ac_create_'+me.id).dialog( "option", "close", function() { $('#label_'+me.id).removeClass('ac_loading'); $('#label_'+me.id).focus(); } );			
+				// Modify the action of the cancel button
+				$('#ac_create_'+me.id+' button.cancel').unbind('click').click( me.CloseCreateObject );
+				me.ajax_request = null;
+			},
+			'html'
+		);
+	}
+	
+	this.CloseCreateObject = function()
+	{
+		$('#ac_create_'+me.id).dialog( "close" );
+		$('#dcr_'+me.id).html('');
+	}
+	
+	this.DoCreateObject = function()
+	{
+		var sFormId = $('#dcr_'+me.id+' form').attr('id');
+		if (CheckFields(sFormId, true))
+		{
+			$('#'+sFormId).block();
+			var theMap = { sAttCode: me.sAttCode,
+					   iInputId: me.id,
+					   sSuffix: me.sSuffix,
+					   'class': me.sClass,
+					   'json': me.oWizardHelper.ToJSON()
+					 }
+
+			// Gather the values from the form
+			// Gather the parameters from the search form
+			$('#'+sFormId+' :input').each(
+				function(i)
+				{
+					if (this.name != '')
+					{
+						theMap[this.name] = this.value;
+					}
+				}
+			);
+			// Override the 'operation' code
+			theMap['operation'] = 'doCreateObject';
+			theMap['class'] = me.sClass;
+
+			$('#ac_create_'+me.id).dialog('close');
+			
+			// Make sure that we cancel any pending request before issuing another
+			// since responses may arrive in arbitrary order
+			this.StopPendingRequest();
+			
+			// Run the query and get the result back directly in JSON
+			this.ajax_request = $.post( 'ajax.render.php', theMap, 
+				function(data)
+				{
+					$('#label_'+me.id).val(data.name);
+					$('#'+me.id).val(data.id);
+					$('#'+me.id).trigger('validate');
+					$('#label_'+me.id).removeClass('ac_loading');
+					$('#label_'+me.id).focus();
+					me.ajax_request = null;
+				},
+				'json'
+			);
+		}
+		return false; // do NOT submit the form
 	}
 }

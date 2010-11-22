@@ -1,5 +1,5 @@
 // Wizard Helper JavaScript class to communicate with the WizardHelper PHP class
-function WizardHelper(sClass)
+function WizardHelper(sClass, sFormPrefix)
 {
 	this.m_oData = { 'm_sClass' : '',
 					 'm_oFieldsMap': {},
@@ -8,7 +8,8 @@ function WizardHelper(sClass)
 					 'm_aAllowedValuesRequested': [],
 					 'm_oDefaultValue': {},
 					 'm_oAllowedValues': {},
-					 'm_iFieldsCount' : 0
+					 'm_iFieldsCount' : 0,
+					 'm_sFormPrefix' : sFormPrefix
 					};
 	this.m_oData.m_sClass = sClass;
 	
@@ -134,5 +135,21 @@ function WizardHelper(sClass)
 		}
 		this.m_oData.m_oCurrentValues[sFieldCode] = value;
 		return value;		
+	}
+
+	this.UpdateDependentFields = function(aFieldNames)
+	{
+		index = 0;
+		this.ResetQuery();
+		this.UpdateWizard();
+		while(index < aFieldNames.length )
+		{
+			sAttCode = aFieldNames[index];
+			sFieldId = this.GetFieldId(sAttCode);
+			$('#v_'+sFieldId).html('<img src="../images/indicator.gif" />');
+			this.RequestAllowedValues(sAttCode);
+			index++;
+		}
+		this.AjaxQueryServer();
 	}
 }

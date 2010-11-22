@@ -1032,10 +1032,9 @@ EOF
 	{
 		static $iInputId = 0;
 		$sFieldPrefix = '';
-		if (isset($aArgs['prefix']))
-		{
-			$sFieldPrefix = $aArgs['prefix'];
-		}
+		$sFormPrefix = isset($aArgs['formPrefix']) ? $aArgs['formPrefix'] : '';
+		$sFieldPrefix = isset($aArgs['prefix']) ? $sFormPrefix.$aArgs['prefix'] : $sFormPrefix;
+
 		if (isset($aArgs[$sAttCode]) && empty($value))
 		{
 			// default value passed by the context (either the app context of the operation)
@@ -1136,7 +1135,7 @@ EOF
 					if (count($aAllowedValues) >= $iMaxComboLength)
 					{
 						// too many choices, use an autocomplete
-						$oWidget = new UIAutoCompleteWidget($sAttCode, $sClass, $oAttDef->GetLabel(), $aAllowedValues, $value, $iId, $sNameSuffix, $sFieldPrefix);
+						$oWidget = new UIAutoCompleteWidget($sAttCode, $sClass, $oAttDef->GetLabel(), $aAllowedValues, $value, $iId, $sNameSuffix, $sFieldPrefix, $sFormPrefix);
 						$sHTMLValue = $oWidget->Display($oPage, $aArgs);
 						
 					}
@@ -1206,12 +1205,12 @@ EOF
 				{
 					$sNullValue = "'$sNullValue'"; // Add quotes to turn this into a JS string if it's not a number
 				}
-				$oPage->add_ready_script("$('#$iId').bind('".implode(' ', $aEventsList)."', function(evt, sFormId) { return ValidateField('$iId', '$sPattern', $sMandatory, sFormId, $sNullValue) } );"); // Bind to a custom event: validate
+				$oPage->add_ready_script("$('#$iId').bind('".implode(' ', $aEventsList)."', function(evt, sFormId) { return ValidateField('$iId', '$sPattern', $sMandatory, sFormId, $sNullValue) } );\n"); // Bind to a custom event: validate
 			}
 			$aDependencies = MetaModel::GetDependentAttributes($sClass, $sAttCode); // List of attributes that depend on the current one
 			if (count($aDependencies) > 0)
 			{
-				$oPage->add_ready_script("$('#$iId').bind('change', function(evt, sFormId) { return UpdateDependentFields(['".implode("','", $aDependencies)."']) } );"); // Bind to a custom event: validate
+				$oPage->add_ready_script("$('#$iId').bind('change', function(evt, sFormId) { return oWizardHelper{$sFormPrefix}.UpdateDependentFields(['".implode("','", $aDependencies)."']) } );\n"); // Bind to a custom event: validate
 			}
 		}
 		return "<div>{$sHTMLValue}</div>";
@@ -1219,9 +1218,14 @@ EOF
 	
 	public function DisplayModifyForm(WebPage $oPage, $aExtraParams = array())
 	{
-		static $iGlobalFormId = 0;
+		static $iGlobalFormId = 1;
 		$iGlobalFormId++;
-		$this->m_iFormId = $iGlobalFormId;
+		$sPrefix = '';
+		if (isset($aExtraParams['formPrefix']))
+		{
+			$sPrefix = $aExtraParams['formPrefix'];
+		}
+		$this->m_iFormId = $sPrefix.$iGlobalFormId;
 		$sClass = get_class($this);
 		$oAppContext = new ApplicationContext();
 		$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
@@ -1238,7 +1242,7 @@ EOF
 		}
 		$oPage->add("<form action=\"$sFormAction\" id=\"form_{$this->m_iFormId}\" enctype=\"multipart/form-data\" method=\"post\" onSubmit=\"return CheckFields('form_{$this->m_iFormId}', true)\">\n");
 
-		$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB);
+		$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB, $sPrefix);
 		$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
 		$oPage->SetCurrentTab(Dict::S('UI:PropertiesTab'));
 //		$aDetailsList = $this->FLattenZList(MetaModel::GetZListItems($sClass, 'details'));
@@ -1310,7 +1314,7 @@ EOF
 										{
 											$sValue = $this->Get($sAttCode);
 											$sDisplayValue = $this->GetEditValue($sAttCode);
-											$aArgs = array('this' => $this);
+											$aArgs = array('this' => $this, 'formPrefix' => $sPrefix);
 											$sInputId = $this->m_iFormId.'_'.$sAttCode;
 											$sHTMLValue = "<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
 											$aFieldsMap[$sAttCode] = $sInputId;
@@ -1343,8 +1347,10 @@ EOF
 		}
 
 		// Now display the relations, one tab per relation
-
-		$this->DisplayBareRelations($oPage, true); // Edit mode
+		if (!isset($aExtraParams['noRelations']))
+		{
+			$this->DisplayBareRelations($oPage, true); // Edit mode
+		}
 
 		$oPage->SetCurrentTab('');
 		$oPage->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
@@ -1359,16 +1365,20 @@ EOF
 			// The object already exists in the database, it's modification
 			$oPage->add("<input type=\"hidden\" name=\"id\" value=\"$iKey\">\n");
 			$oPage->add("<input type=\"hidden\" name=\"operation\" value=\"apply_modify\">\n");			
-			$oPage->add("<button type=\"button\" class=\"action\" onClick=\"BackToDetails('$sClass', $iKey)\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
+//			$oPage->add("<button type=\"button\" id=\"btn_cancel_{$sPrefix}\" class=\"action\" onClick=\"BackToDetails('$sClass', $iKey)\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
+			$oPage->add("<button type=\"button\" class=\"action cancel\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
 			$oPage->add("<button type=\"submit\" class=\"action\"><span>".Dict::S('UI:Button:Apply')."</span></button>\n");
 		}
 		else
 		{
 			// The object does not exist in the database it's a creation
 			$oPage->add("<input type=\"hidden\" name=\"operation\" value=\"apply_new\">\n");			
-			$oPage->add("<button type=\"button\" class=\"action\" onClick=\"BackToList('$sClass')\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
+//			$oPage->add("<button type=\"button\" id=\"btn_cancel_{$sPrefix}\" class=\"action\" onClick=\"BackToDetails('$sClass', $iKey)\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
+			$oPage->add("<button type=\"button\" class=\"action cancel\">".Dict::S('UI:Button:Cancel')."</button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
 			$oPage->add("<button type=\"submit\" class=\"action\"><span>".Dict::S('UI:Button:Create')."</span></button>\n");
 		}
+		// Hook the cancel button via jQuery so that it can be unhooked easily as well if needed
+		$oPage->add_ready_script("$('#form_{$this->m_iFormId} button.cancel').click( function() { BackToDetails('$sClass', $iKey)} );");
 		$oPage->add("</form>\n");
 		
 		$iFieldsCount = count($aFieldsMap);
@@ -1377,15 +1387,16 @@ EOF
 		$oPage->add_script(
 <<<EOF
 		// Create the object once at the beginning of the page...
-		var oWizardHelper = new WizardHelper('$sClass');
-		oWizardHelper.SetFieldsMap($sJsonFieldsMap);
-		oWizardHelper.SetFieldsCount($iFieldsCount);
+		var oWizardHelper$sPrefix = new WizardHelper('$sClass', '$sPrefix');
+		oWizardHelper$sPrefix.SetFieldsMap($sJsonFieldsMap);
+		oWizardHelper$sPrefix.SetFieldsCount($iFieldsCount);
 EOF
 );
 		$oPage->add_ready_script(
 <<<EOF
 		// Starts the validation when the page is ready
 		CheckFields('form_{$this->m_iFormId}', false);
+
 EOF
 );
 	}
@@ -1399,9 +1410,12 @@ EOF
 		
 		if ($oObjectToClone == null)
 		{
-			$sTargetState = MetaModel::GetDefaultState($sClass);
 			$oObj = MetaModel::NewObject($sClass);
-			$oObj->Set($sStateAttCode, $sTargetState);
+			if (!empty($sStateAttCode))
+			{
+				$sTargetState = MetaModel::GetDefaultState($sClass);
+				$oObj->Set($sStateAttCode, $sTargetState);
+			}
 		}
 		else
 		{
@@ -1439,7 +1453,7 @@ EOF
 				}
 			}
 		}
-		return $oObj->DisplayModifyForm( $oPage, $aExtraParams = array());
+		return $oObj->DisplayModifyForm( $oPage, $aExtraParams);
 	}
 
 	protected static function ProcessZlist($aList, $aDetails, $sCurrentTab, $sCurrentCol, $sCurrentSet)
@@ -1661,6 +1675,101 @@ EOF
 		else
 		{
 			return $sContextParam;
+		}
+	}
+	
+	/**
+	 * Updates the object from the POSTed parameters
+	 */
+	function UpdateObject($sFormPrefix = '')
+	{
+		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode=>$oAttDef)
+		{
+			if ($oAttDef->IsLinkSet() && $oAttDef->IsIndirect())
+			{
+				$aLinks = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", '');
+				$sLinkedClass = $oAttDef->GetLinkedClass();
+				$sExtKeyToRemote = $oAttDef->GetExtKeyToRemote();
+				$sExtKeyToMe = $oAttDef->GetExtKeyToMe();
+				$oLinkedSet = DBObjectSet::FromScratch($sLinkedClass);
+				if (is_array($aLinks))
+				{
+					foreach($aLinks as $id => $aData)
+					{
+						if (is_numeric($id))
+						{
+							if ($id < 0)
+							{
+								// New link to be created, the opposite of the id (-$id) is the ID of the remote object
+								$oLink = MetaModel::NewObject($sLinkedClass);
+								$oLink->Set($sExtKeyToRemote, -$id);
+								$oLink->Set($sExtKeyToMe, $this->GetKey());
+							}
+							else
+							{
+								// Existing link, potentially to be updated...
+								$oLink = MetaModel::GetObject($sLinkedClass, $id);
+							}
+							// Now populate the attributes
+							foreach($aData as $sName => $value)
+							{
+								if (MetaModel::IsValidAttCode($sLinkedClass, $sName))
+								{
+									$oLinkAttDef = MetaModel::GetAttributeDef($sLinkedClass, $sName);
+									if ($oLinkAttDef->IsWritable())
+									{
+										$oLink->Set($sName, $value);
+									}
+								}
+							}
+							$oLinkedSet->AddObject($oLink);
+						}
+					}
+				}
+				$this->Set($sAttCode, $oLinkedSet);
+			}
+			else if ($oAttDef->IsWritable())
+			{
+				$iFlags = $this->GetAttributeFlags($sAttCode);
+				if ($iFlags & (OPT_ATT_HIDDEN | OPT_ATT_READONLY))
+				{
+					// Non-visible, or read-only attribute, do nothing
+				}
+				elseif ($oAttDef->GetEditClass() == 'Document')
+				{
+					// There should be an uploaded file with the named attr_<attCode>
+					$oDocument = utils::ReadPostedDocument("file_{$sFormPrefix}{$sAttCode}");
+					if (!$oDocument->IsEmpty())
+					{
+						// A new file has been uploaded
+						$this->Set($sAttCode, $oDocument);
+					}
+				}
+				elseif ($oAttDef->GetEditClass() == 'One Way Password')
+				{
+					// Check if the password was typed/changed
+					$bChanged = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_changed", false);
+					if ($bChanged)
+					{
+						// The password has been changed or set
+						$rawValue = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null);
+						$this->Set($sAttCode, $rawValue);
+					}
+				}
+				else
+				{
+					$rawValue = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null);
+					if (!is_null($rawValue))
+					{
+						$aAttributes[$sAttCode] = trim($rawValue);
+						$previousValue = $this->Get($sAttCode);
+						if ($previousValue !== $aAttributes[$sAttCode])
+						{
+							$this->Set($sAttCode, $aAttributes[$sAttCode]);
+						}
+					}
+				}
+			}
 		}
 	}
 }

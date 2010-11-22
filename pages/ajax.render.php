@@ -75,7 +75,6 @@ switch($operation)
 	$sAttCode = utils::ReadParam('sAttCode', '');
 	$iInputId = utils::ReadParam('iInputId', '');
 	$sSuffix = utils::ReadParam('sSuffix', '');
-	// To do: retrieve the object under construction & use it to filter the allowed values
 	$sJson = utils::ReadParam('json', '');
 	$oWizardHelper = WizardHelper::FromJSON($sJson);
 	$oObj = $oWizardHelper->GetTargetObject();
@@ -84,6 +83,36 @@ switch($operation)
 	$oWidget->SearchObjectsToSelect($oPage, $sTargetClass);	
 	break;
 
+	// ui.autocompletewidget
+	case 'objectCreationForm':
+	$sTargetClass = utils::ReadParam('sRemoteClass', '');
+	$sAttCode = utils::ReadParam('sAttCode', '');
+	$iInputId = utils::ReadParam('iInputId', '');
+	$sSuffix = utils::ReadParam('sSuffix', '');
+	$sJson = utils::ReadParam('json', '');
+	$oWizardHelper = WizardHelper::FromJSON($sJson);
+	$oObj = $oWizardHelper->GetTargetObject();
+	$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, array('this' => $oObj));
+	$oWidget = new UIAutocompleteWidget($sAttCode, $sClass, '', $aAllowedValues, $oObj->Get($sAttCode), $iInputId, $sSuffix, '');
+	$oWidget->GetObjectCreationForm($oPage);
+	break;
+	
+	// ui.autocompletewidget
+	case 'doCreateObject':
+	$sTargetClass = utils::ReadParam('sRemoteClass', '');
+	$sAttCode = utils::ReadParam('sAttCode', '');
+	$iInputId = utils::ReadParam('iInputId', '');
+	$sSuffix = utils::ReadParam('sSuffix', '');
+	$sJson = utils::ReadParam('json', '');
+	$oWizardHelper = WizardHelper::FromJSON($sJson);
+	$oObj = $oWizardHelper->GetTargetObject();
+	$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, array('this' => $oObj));
+	// The iInputId of the autocomplete is the prefix for the form used to create the target object
+	$oWidget = new UIAutocompleteWidget($sAttCode, $sClass, '', $aAllowedValues, null, $iInputId, $sSuffix, $oWizardHelper->GetFormPrefix());
+	$aResult = $oWidget->DoCreateObject($oPage);
+	echo json_encode($aResult);	
+	break;
+	
 	// ui.autocompletewidget
 	case 'getObjectName':
 	$sTargetClass = utils::ReadParam('sTargetClass', '');
@@ -126,6 +155,7 @@ switch($operation)
 		$oWizardHelper->SetDefaultValue($sAttCode, $defaultValue);
 		$oObj->Set($sAttCode, $defaultValue);
 	}
+	$sFormPrefix = $oWizardHelper->GetFormPrefix();
 	foreach($oWizardHelper->GetFieldsForAllowedValues() as $sAttCode)
 	{
 		$sId = $oWizardHelper->GetIdForField($sAttCode);
@@ -138,13 +168,13 @@ switch($operation)
 			$displayValue = $oObj->GetEditValue($sAttCode);
 			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 			$iFlags = MetaModel::GetAttributeFlags($sClass, $oObj->GetState(), $sAttCode);
-			$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $value, $displayValue, $sId, '', $iFlags, array('this' => $oObj));
+			$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $value, $displayValue, $sId, '', $iFlags, array('this' => $oObj, 'formPrefix' => $sFormPrefix));
 			// Make sure that we immediatly validate the field when we reload it
 			$oPage->add_ready_script("$('#$sId').trigger('validate');");
 			$oWizardHelper->SetAllowedValuesHtml($sAttCode, $sHTMLValue);
 		}
 	}
-	$oPage->add("<script type=\"text/javascript\">\noWizardHelper.m_oData=".$oWizardHelper->ToJSON().";\noWizardHelper.UpdateFields();\n</script>\n");
+	$oPage->add_script("oWizardHelper{$sFormPrefix}.m_oData=".$oWizardHelper->ToJSON().";\noWizardHelper{$sFormPrefix}.UpdateFields();\n");
 	break;
 		
 	case 'ajax':

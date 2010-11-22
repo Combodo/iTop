@@ -231,6 +231,7 @@ function ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue)
 	setTimeout(function(){ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue);}, 500);
 }
 
+/*
 function UpdateDependentFields(aFieldNames)
 {
 	//console.log('UpdateDependentFields:');
@@ -248,6 +249,7 @@ function UpdateDependentFields(aFieldNames)
 	}
 	oWizardHelper.AjaxQueryServer();
 }
+*/
 
 function ResetPwd(id)
 {
