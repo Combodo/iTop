@@ -25,7 +25,7 @@
 
 require_once("../application/nicewebpage.class.inc.php");
 define('INSTALL_LOG_FILE', '../setup.log');
-
+date_default_timezone_set('Europe/Paris');
 class SetupWebPage extends NiceWebPage
 {
     public function __construct($sTitle)
