@@ -154,7 +154,6 @@ EOF
 		$sHTML .= "</div>\n";
 		$sHTML .= "<input type=\"button\" id=\"btn_cancel_{$this->iId}\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"$('#ac_dlg_{$this->iId}').dialog('close');\">&nbsp;&nbsp;";
 		$sHTML .= "<input type=\"button\" id=\"btn_ok_{$this->iId}\" value=\"".Dict::S('UI:Button:Ok')."\"  onClick=\"oACWidget_{$this->iId}.DoOk();\">";
-		$sHTML .= "</div>\n";
 		$sHTML .= "</form>\n";
 		$sHTML .= '</div></div></div>';
 
