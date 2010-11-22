@@ -26,10 +26,10 @@
 
 Dict::Add('EN US', 'English', 'English', array(
 	'Core:AttributeLinkedSet' => 'Objets liés (1-n)',
-	'Core:AttributeLinkedSet+' => 'Liste d'\'objets d\'une classe donnée et pointant sur l\'objet courant',
+	'Core:AttributeLinkedSet+' => 'Liste d\'objets d\'une classe donnée et pointant sur l\'objet courant',
 
 	'Core:AttributeLinkedSetIndirect' => 'Objets liés (1-n)',
-	'Core:AttributeLinkedSetIndirect+' => 'Liste d'\'objets d\'une classe donnée et liés à l\'objet courant via une classe intermédiaire',
+	'Core:AttributeLinkedSetIndirect+' => 'Liste d\'objets d\'une classe donnée et liés à l\'objet courant via une classe intermédiaire',
 
 	'Core:AttributeInteger' => 'Nombre entier',
 	'Core:AttributeInteger+' => 'Valeur numérique entière',
