@@ -106,7 +106,7 @@ function WizardHelper(sClass, sFormPrefix)
 		$.post('ajax.render.php',
 		   { operation: 'wizard_helper', json_obj: this.ToJSON() },
 			function(html){
-				$('body').append(html);
+				$('#ajax_content').html(html);
 				//console.log('data received:', oWizardHelper);
 				//oWizardHelper.FromJSON(json_data);
 				//oWizardHelper.UpdateFields(); // Is done directly in the html provided by ajax.render.php

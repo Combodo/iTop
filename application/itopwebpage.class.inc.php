@@ -670,7 +670,7 @@ EOF
 		echo '	</div>';
 		echo '	<div class="header-menu">';
 		echo '		<div class="icon ui-state-default ui-corner-all"><span id="tPinMenu" class="ui-icon ui-icon-pin-w">pin</span></div>';
-		echo '		<div style="width:100%; text-align:center;">'.$sForm.'</div>';
+		echo '		<div style="text-align:center;">'.$sForm.'</div>';
 		echo '	</div>';
 		echo '	<div id="menu" class="ui-layout-content">';
 		echo '		<div id="inner_menu">';
@@ -756,6 +756,7 @@ EOF
         echo $this->s_deferred_content;
 		echo "<div style=\"display:none\" title=\"ex2\" id=\"ex2\">Please wait...</div>\n"; // jqModal Window
 		echo "<div style=\"display:none\" title=\"dialog\" id=\"ModalDlg\"></div>";
+		echo "<div style=\"display:none\" id=\"ajax_content\"></div>";
 
 		echo "</body>\n";
         echo "</html>\n";
