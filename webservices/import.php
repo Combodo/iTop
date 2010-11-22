@@ -33,12 +33,13 @@
 // - not outputing xml when a wrong input is given (class, attribute names)
 //
 
-require_once('../application/application.inc.php');
-require_once('../application/webpage.class.inc.php');
-require_once('../application/csvpage.class.inc.php');
-require_once('../application/clipage.class.inc.php');
+require_once('../approot.inc.php');
+require_once(APPROOT.'/application/application.inc.php');
+require_once(APPROOT.'/application/webpage.class.inc.php');
+require_once(APPROOT.'/application/csvpage.class.inc.php');
+require_once(APPROOT.'/application/clipage.class.inc.php');
 
-require_once('../application/startup.inc.php');
+require_once(APPROOT.'/application/startup.inc.php');
 
 class BulkLoadException extends Exception
 {
@@ -230,7 +231,7 @@ if (utils::IsModeCLI())
 else
 {
 	$_SESSION['login_mode'] = 'basic';
-	require_once('../application/loginwebpage.class.inc.php');
+	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
 	$oP = new CSVPage("iTop - Bulk import");

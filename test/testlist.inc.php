@@ -301,7 +301,7 @@ class TestGenericItoMyModel extends TestBizModelGeneric
 		return 'Generic RO test on '.self::GetConfigFile();
 	}
 
-	static public function GetConfigFile() {return '../config-test-mymodel.php';}
+	static public function GetConfigFile() {return '/config-test-mymodel.php';}
 }
 
 class TestGenericItopBigModel extends TestBizModelGeneric
@@ -311,7 +311,7 @@ class TestGenericItopBigModel extends TestBizModelGeneric
 		return 'Generic RO test on '.self::GetConfigFile();
 	}
 
-	static public function GetConfigFile() {return '../config-test-itopv06.php';}
+	static public function GetConfigFile() {return '/config-test-itopv06.php';}
 }
 
 class TestUserRightsMatrixItop extends TestUserRights
@@ -368,7 +368,7 @@ class TestMyBizModel extends TestBizModel
 		return 'Attempts various operations and build complex queries';
 	}
 	
-	static public function GetConfigFile() {return '../config-test-mymodel.php';}
+	static public function GetConfigFile() {return '/config-test-mymodel.php';}
 
 	function test_linksinfo()
 	{
@@ -689,7 +689,7 @@ class TestMyBizModel extends TestBizModel
 
 abstract class MyFarm extends TestBizModel
 {
-	static public function GetConfigFile() {return '../config-test-farm.php';}
+	static public function GetConfigFile() {return '/config-test-farm.php';}
 
 	protected function DoPrepare()
 	{
@@ -970,7 +970,7 @@ class TestBulkChangeOnFarm extends TestBizModel
 		return 'Bulk load';
 	}
 	
-	static public function GetConfigFile() {return '../config-test-farm.php';}
+	static public function GetConfigFile() {return '/config-test-farm.php';}
 
 	protected function DoPrepare()
 	{
@@ -1084,7 +1084,7 @@ class TestItopEfficiency extends TestBizModel
 		return 'Measure time to perform the queries';
 	}
 
-	static public function GetConfigFile() {return '../config-itop.php';}
+	static public function GetConfigFile() {return '/config-itop.php';}
 
 	protected function DoBenchmark($sOqlQuery)
 	{
@@ -1942,7 +1942,7 @@ class TestWebServicesDirect extends TestBizModel
 	static public function GetName() {return 'Test web services locally';}
 	static public function GetDescription() {return 'Invoke the service directly (troubleshooting)';}
 
-	static public function GetConfigFile() {return '../config-itop.php';}
+	static public function GetConfigFile() {return '/config-itop.php';}
 
 	protected function DoExecute()
 	{
@@ -1982,7 +1982,7 @@ class TestTriggerAndEmail extends TestBizModel
 	static public function GetName() {return 'Test trigger and email';}
 	static public function GetDescription() {return 'Create a trigger and an email, then activates the trigger';}
 
-	static public function GetConfigFile() {return '../config-itop.php';}
+	static public function GetConfigFile() {return '/config-itop.php';}
 
 	protected function CreateEmailSpec($oTrigger, $sStatus, $sTo, $sCC, $sTesterEmail)
 	{
@@ -2113,6 +2113,29 @@ class TestTriggerAndEmail extends TestBizModel
 	}
 }
 
+class TestDBProperties extends TestBizModel
+{
+	static public function GetName()
+	{
+		return 'Itop - DB Properties';
+	}
+
+	static public function GetDescription()
+	{
+		return 'Write and read a dummy property';
+	}
+
+	static public function GetConfigFile() {return '/config-itop.php';}
+
+	protected function DoExecute()
+	{
+		$sName = 'test';
+		DBProperty::SetProperty($sName, 'unix time:'.time(), 'means nothing', 'done with the automated test utility');
+		$sValue = DBProperty::GetProperty($sName);
+		echo "<p>Write... then read property <b>$sName</b>, found: '$sValue'</p>\n";
+	}
+}
+
 class TestCreateObjects extends TestBizModel
 {
 	static public function GetName()
@@ -2125,7 +2148,7 @@ class TestCreateObjects extends TestBizModel
 		return 'Create weird objects (reproduce a bug?)';
 	}
 
-	static public function GetConfigFile() {return '../config-itop.php';}
+	static public function GetConfigFile() {return '/config-itop.php';}
 
 	protected function DoExecute()
 	{

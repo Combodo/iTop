@@ -22,9 +22,9 @@
  * @author      Denis Flaven <denis.flaven@combodo.com>
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
-require_once('../application/application.inc.php');
-require_once('../application/nicewebpage.class.inc.php');
-require_once('../application/wizardhelper.class.inc.php');
+require_once(APPROOT.'/application/application.inc.php');
+require_once(APPROOT.'/application/nicewebpage.class.inc.php');
+require_once(APPROOT.'/application/wizardhelper.class.inc.php');
 
 /**
  * Get the list of parameters (i.e. attribute codes) to be handled while creating a new UserRequest object
@@ -733,12 +733,12 @@ function GetUserOrg($oP)
 
 try
 {
-	require_once('../application/startup.inc.php');
-	require_once('../application/portalwebpage.class.inc.php');
+	require_once(APPROOT.'/application/startup.inc.php');
+	require_once(APPROOT.'/application/portalwebpage.class.inc.php');
 	$oAppContext = new ApplicationContext();
 	$sOperation = utils::ReadParam('operation', '');
 	
-	require_once('../application/loginwebpage.class.inc.php');
+	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 	LoginWebPage::DoLogin(false /* bMustBeAdmin */, true /* IsAllowedToPortalUsers */); // Check user rights and prompt if needed
 
 	$oUserOrg = GetUserOrg($oP);
@@ -775,7 +775,7 @@ try
 }
 catch(CoreException $e)
 {
-	require_once('../setup/setuppage.class.inc.php');
+	require_once(APPROOT.'/setup/setuppage.class.inc.php');
 	$oP = new SetupWebPage(Dict::S('UI:PageTitle:FatalError'));
 	$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");	
 	$oP->error(Dict::Format('UI:Error_Details', $e->getHtmlDesc()));	
@@ -811,7 +811,7 @@ catch(CoreException $e)
 }
 catch(Exception $e)
 {
-	require_once('../setup/setuppage.class.inc.php');
+	require_once(APPROOT.'/setup/setuppage.class.inc.php');
 	$oP = new SetupWebPage(Dict::S('UI:PageTitle:FatalError'));
 	$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");	
 	$oP->error(Dict::Format('UI:Error_Details', $e->getMessage()));	

@@ -23,7 +23,7 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
-require_once("../application/webpage.class.inc.php");
+require_once(APPROOT."/application/webpage.class.inc.php");
 /**
  * Web page with some associated CSS and scripts (jquery) for a fancier display
  */

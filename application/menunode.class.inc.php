@@ -23,8 +23,8 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
-require_once('../application/utils.inc.php');
-require_once('../application/template.class.inc.php');
+require_once(APPROOT.'/application/utils.inc.php');
+require_once(APPROOT.'/application/template.class.inc.php');
 
 
 /**

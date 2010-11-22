@@ -23,7 +23,7 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
-require_once("../application/utils.inc.php");
+require_once(APPROOT."/application/utils.inc.php");
 /**
  * Helper class to store and manipulate the parameters that make the application's context
  *

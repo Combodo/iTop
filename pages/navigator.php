@@ -17,12 +17,13 @@
 /**
  * Display the Flash navigator, in the whole pane
  */
-require_once('../application/application.inc.php');
-require_once('../application/itopwebpage.class.inc.php');
+require_once('../approot.inc.php');
+require_once(APPROOT.'/application/application.inc.php');
+require_once(APPROOT.'/application/itopwebpage.class.inc.php');
 
-require_once('../application/startup.inc.php');
+require_once(APPROOT.'/application/startup.inc.php');
 
-require_once('../application/loginwebpage.class.inc.php');
+require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
 $sOperation = utils::ReadParam('operation', 'menu');

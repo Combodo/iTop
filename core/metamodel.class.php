@@ -3251,7 +3251,7 @@ abstract class MetaModel
 			if (self::$m_oConfig->GetLogIssue())
 			{
 				self::$m_bLogIssue = true;
-				IssueLog::Enable('../error.log');
+				IssueLog::Enable(APPROOT.'/error.log');
 			}
 			self::$m_bLogNotification = self::$m_oConfig->GetLogNotification();
 			self::$m_bLogWebService = self::$m_oConfig->GetLogWebService();
@@ -3289,7 +3289,7 @@ abstract class MetaModel
 
 		// Romain: this is the only way I've found to cope with the fact that
 		//         classes have to be derived from cmdbabstract (to be editable in the UI)
-		require_once('../application/cmdbabstract.class.inc.php');
+		require_once(APPROOT.'/application/cmdbabstract.class.inc.php');
 
 		foreach (self::$m_oConfig->GetAppModules() as $sModule => $sToInclude)
 		{
@@ -3348,11 +3348,27 @@ abstract class MetaModel
 
 	protected static function Plugin($sConfigFile, $sModuleType, $sToInclude)
 	{
-		if (!file_exists($sToInclude))
+		if (substr($sToInclude, 0, 3) == '../')
 		{
-			throw new CoreException('Wrong filename in configuration file', array('file' => $sConfigFile, 'module' => $sModuleType, 'filename' => $sToInclude));
+			// Preserve compatibility with config files written before 1.0.1
+			// Replace '../' by '<root>/'
+			$sFile = APPROOT.'/'.substr($sToInclude, 3);
 		}
-		require_once($sToInclude);
+		elseif (substr($sToInclude, 0, 1) == '/')
+		{
+			// Preferred...
+			$sFile = APPROOT.$sToInclude;
+		}
+		else
+		{
+			// Leave as is - should be an absolute path
+			$sFile = $sToInclude;
+		}
+		if (!file_exists($sFile))
+		{
+			throw new CoreException('Wrong filename in configuration file', array('file' => $sConfigFile, 'module' => $sModuleType, 'filename' => $sFile));
+		}
+		require_once($sFile);
 	}
 
 	protected static function InitPlugins()

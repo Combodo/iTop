@@ -24,7 +24,7 @@
  */
 
 
-require_once('../webservices/itopsoaptypes.class.inc.php');
+require_once(APPROOT.'/webservices/itopsoaptypes.class.inc.php');
 
 /**
  * Generic response of iTop SOAP services

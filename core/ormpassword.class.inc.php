@@ -14,7 +14,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-require_once('../core/simplecrypt.class.inc.php');
+require_once(APPROOT.'/core/simplecrypt.class.inc.php');
 
 /**
  * ormPassword

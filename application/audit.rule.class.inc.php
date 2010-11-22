@@ -26,7 +26,7 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
-require_once('../application/audit.category.class.inc.php');
+require_once(APPROOT.'/application/audit.category.class.inc.php');
 
 class AuditRule extends cmdbAbstractObject
 {

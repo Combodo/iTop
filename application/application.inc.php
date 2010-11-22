@@ -23,13 +23,13 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
-require_once('../application/applicationcontext.class.inc.php');
-require_once('../application/cmdbabstract.class.inc.php');
-require_once('../application/displayblock.class.inc.php');
-require_once('../application/audit.category.class.inc.php');
-require_once('../application/audit.rule.class.inc.php');
-//require_once('../application/menunode.class.inc.php');
-require_once('../application/utils.inc.php');
+require_once(APPROOT.'/application/applicationcontext.class.inc.php');
+require_once(APPROOT.'/application/cmdbabstract.class.inc.php');
+require_once(APPROOT.'/application/displayblock.class.inc.php');
+require_once(APPROOT.'/application/audit.category.class.inc.php');
+require_once(APPROOT.'/application/audit.rule.class.inc.php');
+//require_once(APPROOT.'/application/menunode.class.inc.php');
+require_once(APPROOT.'/application/utils.inc.php');
 
 class ApplicationException extends CoreException
 {

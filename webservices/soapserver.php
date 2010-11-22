@@ -26,8 +26,9 @@
 // Important note: if some required includes are missing, this might result
 // in the error "looks like we got no XML document"...
 
-require_once('../application/application.inc.php');
-require_once('../application/startup.inc.php');
+require_once('../approot.inc.php');
+require_once(APPROOT.'/application/application.inc.php');
+require_once(APPROOT.'/application/startup.inc.php');
 
 require('./webservices.class.inc.php');
 

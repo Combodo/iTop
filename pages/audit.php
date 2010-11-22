@@ -24,14 +24,15 @@
  */
 try
 {
-	require_once('../application/application.inc.php');
-	require_once('../application/itopwebpage.class.inc.php');
+	require_once('../approot.inc.php');
+	require_once(APPROOT.'/application/application.inc.php');
+	require_once(APPROOT.'/application/itopwebpage.class.inc.php');
 	
-	require_once('../application/startup.inc.php');
+	require_once(APPROOT.'/application/startup.inc.php');
 	$operation = utils::ReadParam('operation', '');
 	$oAppContext = new ApplicationContext();
 	
-	require_once('../application/loginwebpage.class.inc.php');
+	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 	
 	$oP = new iTopWebPage(Dict::S('UI:Audit:Title'));
@@ -179,7 +180,7 @@ try
 }
 catch(CoreException $e)
 {
-	require_once('../setup/setuppage.class.inc.php');
+	require_once(APPROOT.'/setup/setuppage.class.inc.php');
 	$oP = new SetupWebPage(Dict::S('UI:PageTitle:FatalError'));
 	$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");	
 	$oP->error(Dict::Format('UI:Error_Details', $e->getHtmlDesc()));	
@@ -208,7 +209,7 @@ catch(CoreException $e)
 }
 catch(Exception $e)
 {
-	require_once('../setup/setuppage.class.inc.php');
+	require_once(APPROOT.'/setup/setuppage.class.inc.php');
 	$oP = new SetupWebPage(Dict::S('UI:PageTitle:FatalError'));
 	$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");	
 	$oP->error(Dict::Format('UI:Error_Details', $e->getMessage()));	

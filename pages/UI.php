@@ -495,16 +495,17 @@ EOF
  * ***********************************************************************************/
 try
 {
-	require_once('../application/application.inc.php');
-	require_once('../application/itopwebpage.class.inc.php');
-	require_once('../application/wizardhelper.class.inc.php');
+	require_once('../approot.inc.php');
+	require_once(APPROOT.'/application/application.inc.php');
+	require_once(APPROOT.'/application/itopwebpage.class.inc.php');
+	require_once(APPROOT.'/application/wizardhelper.class.inc.php');
 
-	require_once('../application/startup.inc.php');
+	require_once(APPROOT.'/application/startup.inc.php');
 	$operation = utils::ReadParam('operation', '');
 
 	$oKPI = new ExecutionKPI();
 
-	require_once('../application/loginwebpage.class.inc.php');
+	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 	$oAppContext = new ApplicationContext();
 
@@ -1308,7 +1309,7 @@ EOF
 		{
 			throw new ApplicationException(Dict::Format('UI:Error:4ParametersMissing', 'class', 'id', 'target_class', 'link_attr'));
 		}
-		require_once('../application/uilinkswizard.class.inc.php');
+		require_once(APPROOT.'/application/uilinkswizard.class.inc.php');
 		$oWizard = new UILinksWizard($sClass, $sLinkAttr, $id, $sTargetClass);
 		$oWizard->Display($oP, array('StartWithAdd' => $bAddObjects));		
 		break;
@@ -1490,7 +1491,7 @@ EOF
 }
 catch(CoreException $e)
 {
-	require_once('../setup/setuppage.class.inc.php');
+	require_once(APPROOT.'/setup/setuppage.class.inc.php');
 	$oP = new SetupWebPage(Dict::S('UI:PageTitle:FatalError'));
 	if ($e instanceof SecurityException)
 	{
@@ -1533,7 +1534,7 @@ catch(CoreException $e)
 }
 catch(Exception $e)
 {
-	require_once('../setup/setuppage.class.inc.php');
+	require_once(APPROOT.'/setup/setuppage.class.inc.php');
 	$oP = new SetupWebPage(Dict::S('UI:PageTitle:FatalError'));
 	$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");	
 	$oP->error(Dict::Format('UI:Error_Details', $e->getMessage()));	

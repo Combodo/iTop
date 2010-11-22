@@ -267,36 +267,36 @@ class Config
 		$this->m_sFile = $sConfigFile;
 		$this->m_aAppModules = array(
 			// Some default modules, always present can be move to an official iTop Module later if needed
-			'../application/transaction.class.inc.php',
-			'../application/menunode.class.inc.php',
-			'../application/user.preferences.class.inc.php',
-			'../application/audit.rule.class.inc.php',
+			'/application/transaction.class.inc.php',
+			'/application/menunode.class.inc.php',
+			'/application/user.preferences.class.inc.php',
+			'/application/audit.rule.class.inc.php',
 // Romain - That's dirty, because those 3 classes are in fact part of the core
 //          but I needed those classes to be derived from cmdbAbstractObject
 //          (to be managed via the GUI) and this class in not really known from
 //          the core, PLUS I needed the includes to be there also for the setup
 //          to create the tables.
-			'../core/event.class.inc.php',
-			'../core/action.class.inc.php',
-			'../core/trigger.class.inc.php',
+			'/core/event.class.inc.php',
+			'/core/action.class.inc.php',
+			'/core/trigger.class.inc.php',
 		);
 		$this->m_aDataModels = array();
 		$this->m_aAddons = array(
 			// Default AddOn, always present can be moved to an official iTop Module later if needed
-			'user rights' => '../addons/userrights/userrightsprofile.class.inc.php',
+			'user rights' => '/addons/userrights/userrightsprofile.class.inc.php',
 		);
 		$this->m_aDictionaries = array(
 			// Default dictionaries, always present can be moved to an official iTop Module later if needed
-			'../dictionaries/dictionary.itop.core.php',
-			'../dictionaries/dictionary.itop.ui.php',		// Support for English
-			'../dictionaries/fr.dictionary.itop.ui.php',	// Support for French
-			'../dictionaries/fr.dictionary.itop.core.php',	// Support for French
-			'../dictionaries/es_cr.dictionary.itop.ui.php',	// Support for Spanish (from Costa Rica)
-			'../dictionaries/es_cr.dictionary.itop.core.php',	// Support for Spanish (from Costa Rica)
-			'../dictionaries/de.dictionary.itop.ui.php',	// Support for German
-			'../dictionaries/de.dictionary.itop.core.php',	// Support for German
-			'../dictionaries/pt_br.dictionary.itop.ui.php',	// Support for Brazilian Portuguese
-			'../dictionaries/pt_br.dictionary.itop.core.php',	// Support for Brazilian Portuguese
+			'/dictionaries/dictionary.itop.core.php',
+			'/dictionaries/dictionary.itop.ui.php',		// Support for English
+			'/dictionaries/fr.dictionary.itop.ui.php',	// Support for French
+			'/dictionaries/fr.dictionary.itop.core.php',	// Support for French
+			'/dictionaries/es_cr.dictionary.itop.ui.php',	// Support for Spanish (from Costa Rica)
+			'/dictionaries/es_cr.dictionary.itop.core.php',	// Support for Spanish (from Costa Rica)
+			'/dictionaries/de.dictionary.itop.ui.php',	// Support for German
+			'/dictionaries/de.dictionary.itop.core.php',	// Support for German
+			'/dictionaries/pt_br.dictionary.itop.ui.php',	// Support for Brazilian Portuguese
+			'/dictionaries/pt_br.dictionary.itop.core.php',	// Support for Brazilian Portuguese
 		);
 
 		foreach($this->m_aSettings as $sPropCode => $aSettingInfo)
@@ -396,7 +396,8 @@ class Config
 		}
 		if (!array_key_exists('user rights', $MyModules['addons']))
 		{
-			$MyModules['addons']['user rights'] = '../addons/userrights/userrightsnull.class.inc.php';
+			// Add one, by default
+			$MyModules['addons']['user rights'] = '/addons/userrights/userrightsnull.class.inc.php';
 		}
 		if (!array_key_exists('dictionaries', $MyModules))
 		{
@@ -452,22 +453,8 @@ class Config
 
 	protected function Verify()
 	{
-		foreach ($this->m_aAppModules as $sModule => $sToInclude)
-		{
-			$this->CheckFile('application module', $sToInclude);
-		}
-		foreach ($this->m_aDataModels as $sModule => $sToInclude)
-		{
-			$this->CheckFile('business model', $sToInclude);
-		}
-		foreach ($this->m_aAddons as $sModule => $sToInclude)
-		{
-			$this->CheckFile('addon module', $sToInclude);
-		}
-		foreach ($this->m_aDictionaries as $sModule => $sToInclude)
-		{
-			$this->CheckFile('dictionary', $sToInclude);
-		}
+		// Files are verified later on, just before using them -see MetaModel::Plugin()
+		// (we have their final path at that point)
 	}
 
 	public function GetModuleSetting($sModule, $sProperty, $defaultvalue = null)

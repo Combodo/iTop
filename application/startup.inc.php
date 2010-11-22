@@ -23,8 +23,8 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
-require_once('../core/cmdbobject.class.inc.php');
-require_once('../application/utils.inc.php');
+require_once(APPROOT.'/core/cmdbobject.class.inc.php');
+require_once(APPROOT.'/application/utils.inc.php');
 
 MetaModel::Startup(ITOP_CONFIG_FILE);
 

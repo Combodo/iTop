@@ -23,10 +23,10 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
-require_once('../core/config.class.inc.php');
-require_once('../application/transaction.class.inc.php');
+require_once(APPROOT.'/core/config.class.inc.php');
+require_once(APPROOT.'/application/transaction.class.inc.php');
 
-define('ITOP_CONFIG_FILE', '../config-itop.php');
+define('ITOP_CONFIG_FILE', APPROOT.'/config-itop.php');
 
 class FileUploadException extends Exception
 {

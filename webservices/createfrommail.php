@@ -50,8 +50,9 @@ define('DEFAULT_SUBSERVICE_ID', 12);
 define('DEFAULT_PRODUCT', 'Request via eMail');
 define('DEFAULT_WORKGROUP_ID', 5);
 
-require_once('../application/application.inc.php');
-require_once('../application/startup.inc.php');
+require_once('../approot.inc.php');
+require_once(APPROOT.'/application/application.inc.php');
+require_once(APPROOT.'/application/startup.inc.php');
 
 function GetSender($aHeaders)
 {

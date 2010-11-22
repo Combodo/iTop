@@ -23,7 +23,7 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
-require_once('../application/uiwizard.class.inc.php');
+require_once(APPROOT.'/application/uiwizard.class.inc.php');
 
 class WizardHelper
 {

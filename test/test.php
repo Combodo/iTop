@@ -84,11 +84,12 @@ function DisplayEvents($aEvents, $sTitle)
 ///////////////////////////////////////////////////////////////////////////////
 
 
-require_once('../application/utils.inc.php');
+require_once('../approot.inc.php');
+require_once(APPROOT.'/application/utils.inc.php');
 require_once('./test.class.inc.php');
 require_once('./testlist.inc.php');
 
-require_once('../core/cmdbobject.class.inc.php');
+require_once(APPROOT.'/core/cmdbobject.class.inc.php');
 
 $sTodo = utils::ReadParam("todo", "");
 if ($sTodo == '')

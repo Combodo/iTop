@@ -23,17 +23,18 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
-require_once('../application/application.inc.php');
-require_once('../application/webpage.class.inc.php');
-require_once('../application/ajaxwebpage.class.inc.php');
-require_once('../application/wizardhelper.class.inc.php');
-require_once('../application/ui.linkswidget.class.inc.php');
-require_once('../application/ui.autocompletewidget.class.inc.php');
+require_once('../approot.inc.php');
+require_once(APPROOT.'/application/application.inc.php');
+require_once(APPROOT.'/application/webpage.class.inc.php');
+require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
+require_once(APPROOT.'/application/wizardhelper.class.inc.php');
+require_once(APPROOT.'/application/ui.linkswidget.class.inc.php');
+require_once(APPROOT.'/application/ui.autocompletewidget.class.inc.php');
 
-require_once('../application/startup.inc.php');
-require_once('../application/user.preferences.class.inc.php');
+require_once(APPROOT.'/application/startup.inc.php');
+require_once(APPROOT.'/application/user.preferences.class.inc.php');
 
-require_once('../application/loginwebpage.class.inc.php');
+require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 LoginWebPage::DoLogin(false /* bMustBeAdmin */, true /* IsAllowedToPortalUsers */); // Check user rights and prompt if needed
 
 $oPage = new ajax_page("");
@@ -48,7 +49,7 @@ $sStyle = utils::ReadParam('style', 'list');
 switch($operation)
 {
 	case 'addObjects':
-	require_once('../application/uilinkswizard.class.inc.php');
+	require_once(APPROOT.'/application/uilinkswizard.class.inc.php');
 	$sClass = utils::ReadParam('class', '', 'get');
 	$sLinkedClass = utils::ReadParam('linkedClass', '');
 	$sLinkageAttr = utils::ReadParam('linkageAttr', '');

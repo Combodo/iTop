@@ -23,12 +23,13 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
-require_once('../application/application.inc.php');
-require_once('../application/webpage.class.inc.php');
-require_once('../application/ajaxwebpage.class.inc.php');
-require_once('../application/wizardhelper.class.inc.php');
-require_once('../application/ui.linkswidget.class.inc.php');
-require_once('../application/csvpage.class.inc.php');
+require_once('../approot.inc.php');
+require_once(APPROOT.'/application/application.inc.php');
+require_once(APPROOT.'/application/webpage.class.inc.php');
+require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
+require_once(APPROOT.'/application/wizardhelper.class.inc.php');
+require_once(APPROOT.'/application/ui.linkswidget.class.inc.php');
+require_once(APPROOT.'/application/csvpage.class.inc.php');
 
 /**
  * Determines if the name of the field to be mapped correspond
@@ -207,9 +208,9 @@ function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMo
 	return $sHtml;
 }
 
-require_once('../application/startup.inc.php');
+require_once(APPROOT.'/application/startup.inc.php');
 
-require_once('../application/loginwebpage.class.inc.php');
+require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
 

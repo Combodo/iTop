@@ -22,8 +22,8 @@
  * @author      Denis Flaven <denis.flaven@combodo.com>
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
-require_once('../core/dbobject.class.php');
-require_once('../core/userrights.class.inc.php');
+require_once(APPROOT.'/core/dbobject.class.php');
+require_once(APPROOT.'/core/userrights.class.inc.php');
 
 /**
  * This class is used to store, in a persistent manner, user related settings (preferences)

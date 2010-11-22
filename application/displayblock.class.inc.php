@@ -23,8 +23,8 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
-require_once('../application/webpage.class.inc.php');
-require_once('../application/utils.inc.php');
+require_once(APPROOT.'/application/webpage.class.inc.php');
+require_once(APPROOT.'/application/utils.inc.php');
 /**
  * Helper class to manage 'blocks' of HTML pieces that are parts of a page and contain some list of cmdb objects
  *
@@ -757,7 +757,7 @@ EOF
 			break;
 			
 			case 'open_flash_chart_ajax':
-			include '../pages/php-ofc-library/open-flash-chart.php';
+			require_once(APPROOT.'/pages/php-ofc-library/open-flash-chart.php');
 			$sChartType = isset($aExtraParams['chart_type']) ? $aExtraParams['chart_type'] : 'pie';
 
 			$oChart = new open_flash_chart();

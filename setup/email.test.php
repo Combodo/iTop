@@ -26,8 +26,9 @@
 /**
  * Wizard to configure and initialize the iTop application
  */
-require_once('../application/utils.inc.php');
-require_once('../core/email.class.inc.php');
+require_once('../approot.inc.php');
+require_once(APPROOT.'/application/utils.inc.php');
+require_once(APPROOT.'/core/email.class.inc.php');
 require_once('./setuppage.class.inc.php');
 
 $sOperation = Utils::ReadParam('operation', 'step1');

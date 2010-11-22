@@ -23,7 +23,7 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
-require_once('../application/displayblock.class.inc.php');
+require_once(APPROOT.'/application/displayblock.class.inc.php');
 /**
  * This class manages the special template format used internally to build the iTop web pages
  */
@@ -218,8 +218,8 @@ class DisplayTemplate
 	 */
 	static public function UnitTest()
 	{
-		require_once('../application/startup.inc.php');
-		require_once("../application/itopwebpage.class.inc.php");
+		require_once(APPROOT.'/application/startup.inc.php');
+		require_once(APPROOT."/application/itopwebpage.class.inc.php");
 		
 		$sTemplate = '<div class="page_header">
 		<div class="actions_details"><a href="#"><span>Actions</span></a></div>

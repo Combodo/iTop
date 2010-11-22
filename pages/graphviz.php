@@ -23,13 +23,14 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
-require_once('../application/application.inc.php');
-require_once('../application/itopwebpage.class.inc.php');
+require_once('../approot.inc.php');
+require_once(APPROOT.'/application/application.inc.php');
+require_once(APPROOT.'/application/itopwebpage.class.inc.php');
 
-require_once('../application/startup.inc.php');
-require_once('../application/utils.inc.php');
+require_once(APPROOT.'/application/startup.inc.php');
+require_once(APPROOT.'/application/utils.inc.php');
 
-require_once('../application/loginwebpage.class.inc.php');
+require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
 /**

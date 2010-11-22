@@ -31,13 +31,13 @@ define('HILIGHT_CLASS_WARNING', 'orange');
 define('HILIGHT_CLASS_OK', 'green');
 define('HILIGHT_CLASS_NONE', '');
 
-require_once('../core/cmdbobject.class.inc.php');
-require_once('../application/utils.inc.php');
-require_once('../application/applicationcontext.class.inc.php');
-require_once('../application/ui.linkswidget.class.inc.php');
-require_once('../application/ui.passwordwidget.class.inc.php');
-require_once('../application/ui.autocompletewidget.class.inc.php');
-require_once('../application/ui.htmleditorwidget.class.inc.php');
+require_once(APPROOT.'/core/cmdbobject.class.inc.php');
+require_once(APPROOT.'/application/utils.inc.php');
+require_once(APPROOT.'/application/applicationcontext.class.inc.php');
+require_once(APPROOT.'/application/ui.linkswidget.class.inc.php');
+require_once(APPROOT.'/application/ui.passwordwidget.class.inc.php');
+require_once(APPROOT.'/application/ui.autocompletewidget.class.inc.php');
+require_once(APPROOT.'/application/ui.htmleditorwidget.class.inc.php');
 
 abstract class cmdbAbstractObject extends CMDBObject
 {

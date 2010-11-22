@@ -24,7 +24,7 @@
  */
 
 
-require_once('../core/email.class.inc.php');
+require_once(APPROOT.'/core/email.class.inc.php');
 
 /**
  * A user defined action, to customize the application  

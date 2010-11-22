@@ -23,7 +23,7 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
-define ('KEYS_CACHE_FILE', '../keyscache.tmp');
+define ('KEYS_CACHE_FILE', APPROOT.'/keyscache.tmp');
 /**
  * Class to load sets of objects from XML files into the database
  * XML files can be produced by the 'export' web service or by any other means
@@ -51,7 +51,7 @@ class XMLDataLoader
 		$this->m_aKeys = array();
 		$this->m_aObjectsCache = array();
 		$this->m_oChange = null;
-		$this->m_sCacheFileName = dirname(__FILE__).'/'.KEYS_CACHE_FILE;
+		$this->m_sCacheFileName = KEYS_CACHE_FILE;
 		$this->InitDataModel($sConfigFileName);
 		$this->LoadKeysCache();
 		$this->m_bSessionActive = true;
@@ -121,22 +121,22 @@ class XMLDataLoader
 	 */	 	
 	protected function InitDataModel($sConfigFileName)
 	{
-		require_once('../core/log.class.inc.php');
-		require_once('../core/kpi.class.inc.php');
-		require_once('../core/coreexception.class.inc.php');
-		require_once('../core/dict.class.inc.php');
-		require_once('../core/attributedef.class.inc.php');
-		require_once('../core/filterdef.class.inc.php');
-		require_once('../core/stimulus.class.inc.php');
-		require_once('../core/MyHelpers.class.inc.php');
-		require_once('../core/expression.class.inc.php');
-		require_once('../core/cmdbsource.class.inc.php');
-		require_once('../core/sqlquery.class.inc.php');
-		require_once('../core/dbobject.class.php');
-		require_once('../core/dbobjectsearch.class.php');
-		require_once('../core/dbobjectset.class.php');
-		require_once('../application/cmdbabstract.class.inc.php');
-		require_once('../core/userrights.class.inc.php');
+		require_once(APPROOT.'/core/log.class.inc.php');
+		require_once(APPROOT.'/core/kpi.class.inc.php');
+		require_once(APPROOT.'/core/coreexception.class.inc.php');
+		require_once(APPROOT.'/core/dict.class.inc.php');
+		require_once(APPROOT.'/core/attributedef.class.inc.php');
+		require_once(APPROOT.'/core/filterdef.class.inc.php');
+		require_once(APPROOT.'/core/stimulus.class.inc.php');
+		require_once(APPROOT.'/core/MyHelpers.class.inc.php');
+		require_once(APPROOT.'/core/expression.class.inc.php');
+		require_once(APPROOT.'/core/cmdbsource.class.inc.php');
+		require_once(APPROOT.'/core/sqlquery.class.inc.php');
+		require_once(APPROOT.'/core/dbobject.class.php');
+		require_once(APPROOT.'/core/dbobjectsearch.class.php');
+		require_once(APPROOT.'/core/dbobjectset.class.php');
+		require_once(APPROOT.'/application/cmdbabstract.class.inc.php');
+		require_once(APPROOT.'/core/userrights.class.inc.php');
 		MetaModel::Startup($sConfigFileName);
 	}
 	

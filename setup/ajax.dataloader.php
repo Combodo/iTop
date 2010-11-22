@@ -31,8 +31,9 @@
  * 'percent' integer 0..100 the percentage of completion once the file has been loaded 
  */ 
 define('SAFE_MINIMUM_MEMORY', 32*1024*1024);
-require_once('../application/utils.inc.php');
-require_once('./setuppage.class.inc.php');
+require_once('../approot.inc.php');
+require_once(APPROOT.'/application/utils.inc.php');
+require_once(APPROOT.'/setup/setuppage.class.inc.php');
 
 $sMemoryLimit = trim(ini_get('memory_limit'));
 if (empty($sMemoryLimit))
@@ -87,14 +88,14 @@ ini_set('error_append_string', '</phpfatalerror>');
 // Starts the capture of the ouput, and sets a filter to capture the fatal errors.
 ob_start('FatalErrorCatcher'); // Start capturing the output, and pass it through the fatal error catcher
 
-require_once('../core/config.class.inc.php');
-require_once('../core/log.class.inc.php');
-require_once('../core/kpi.class.inc.php');
-require_once('../core/cmdbsource.class.inc.php');
+require_once(APPROOT.'/core/config.class.inc.php');
+require_once(APPROOT.'/core/log.class.inc.php');
+require_once(APPROOT.'/core/kpi.class.inc.php');
+require_once(APPROOT.'/core/cmdbsource.class.inc.php');
 require_once('./xmldataloader.class.inc.php');
 
-define('TMP_CONFIG_FILE', '../tmp-config-itop.php');
-//define('FINAL_CONFIG_FILE', '../config-itop.php');
+define('TMP_CONFIG_FILE', APPROOT.'/tmp-config-itop.php');
+//define('FINAL_CONFIG_FILE', APPROOT.'/config-itop.php');
 
 // Never cache this page
 header("Cache-Control: no-cache, must-revalidate");  // HTTP/1.1

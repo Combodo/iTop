@@ -14,16 +14,17 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-require_once('../application/application.inc.php');
-require_once('../application/itopwebpage.class.inc.php');
-require_once('../application/wizardhelper.class.inc.php');
+require_once('../approot.inc.php');
+require_once(APPROOT.'/application/application.inc.php');
+require_once(APPROOT.'/application/itopwebpage.class.inc.php');
+require_once(APPROOT.'/application/wizardhelper.class.inc.php');
 
-require_once('../application/startup.inc.php');
+require_once(APPROOT.'/application/startup.inc.php');
 $oAppContext = new ApplicationContext();
 $currentOrganization = utils::ReadParam('org_id', '');
 $operation = utils::ReadParam('operation', '');
 
-require_once('../application/loginwebpage.class.inc.php');
+require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 session_name(utils::GetConfig()->Get('session_name'));
 session_start();
 LoginWebPage::ResetSession();

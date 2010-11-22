@@ -23,7 +23,7 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
-require_once("../application/nicewebpage.class.inc.php");
+require_once(APPROOT."/application/nicewebpage.class.inc.php");
 /**
  * Web page used for displaying the login form
  */
@@ -393,7 +393,7 @@ EOF
 
 		if ($bMustBeAdmin && !UserRights::IsAdministrator())
 		{	
-			require_once('../setup/setuppage.class.inc.php');
+			require_once(APPROOT.'/setup/setuppage.class.inc.php');
 			$oP = new SetupWebPage(Dict::S('UI:PageTitle:FatalError'));
 			$oP->add("<h1>".Dict::S('UI:Login:Error:AccessAdmin')."</h1>\n");	
 			$oP->p("<a href=\"../pages/logoff.php\">".Dict::S('UI:LogOffMenu')."</a>");

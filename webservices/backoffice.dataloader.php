@@ -29,10 +29,11 @@
  * 'file' string Name of the file to load
  */ 
 define('SAFE_MINIMUM_MEMORY', 256*1024*1024);
-require_once('../application/utils.inc.php');
-require_once("../application/nicewebpage.class.inc.php");
+require_once('../approot.inc.php');
+require_once(APPROOT.'/application/utils.inc.php');
+require_once(APPROOT."/application/nicewebpage.class.inc.php");
 // required because the class xmldataloader is reporting errors in the setup.log file
-require_once('../setup/setuppage.class.inc.php');
+require_once(APPROOT.'/setup/setuppage.class.inc.php');
 
 
 function SetMemoryLimit($oP)
@@ -71,13 +72,13 @@ function SetMemoryLimit($oP)
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-require_once('../core/config.class.inc.php');
-require_once('../core/log.class.inc.php');
-require_once('../core/kpi.class.inc.php');
-require_once('../core/cmdbsource.class.inc.php');
-require_once('../setup/xmldataloader.class.inc.php');
+require_once(APPROOT.'/core/config.class.inc.php');
+require_once(APPROOT.'/core/log.class.inc.php');
+require_once(APPROOT.'/core/kpi.class.inc.php');
+require_once(APPROOT.'/core/cmdbsource.class.inc.php');
+require_once(APPROOT.'/setup/xmldataloader.class.inc.php');
 
-define('FINAL_CONFIG_FILE', '../config-itop.php');
+define('FINAL_CONFIG_FILE', APPROOT.'/config-itop.php');
 
 // Never cache this page
 header("Cache-Control: no-cache, must-revalidate");  // HTTP/1.1

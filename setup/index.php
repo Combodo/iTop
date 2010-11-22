@@ -23,15 +23,16 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
-require_once('../application/utils.inc.php');
-require_once('../core/config.class.inc.php');
-require_once('../core/log.class.inc.php');
-require_once('../core/kpi.class.inc.php');
-require_once('../core/cmdbsource.class.inc.php');
-require_once('./setuppage.class.inc.php');
+require_once('../approot.inc.php');
+require_once(APPROOT.'/application/utils.inc.php');
+require_once(APPROOT.'/core/config.class.inc.php');
+require_once(APPROOT.'/core/log.class.inc.php');
+require_once(APPROOT.'/core/kpi.class.inc.php');
+require_once(APPROOT.'/core/cmdbsource.class.inc.php');
+require_once(APPROOT.'/setup/setuppage.class.inc.php');
 
-define('TMP_CONFIG_FILE', '../tmp-config-itop.php');
-define('FINAL_CONFIG_FILE', '../config-itop.php');
+define('TMP_CONFIG_FILE', APPROOT.'/tmp-config-itop.php');
+define('FINAL_CONFIG_FILE', APPROOT.'/config-itop.php');
 define('PHP_MIN_VERSION', '5.2.0');
 define('MYSQL_MIN_VERSION', '5.0.0');
 define('MIN_MEMORY_LIMIT', 32*1024*1024);
@@ -395,23 +396,23 @@ function GetModuleName($sModuleId)
  */    
 function InitDataModel(SetupWebPage $oP, $sConfigFileName, $bModelOnly = true)
 {
-	require_once('../core/log.class.inc.php');
-	require_once('../core/kpi.class.inc.php');
-	require_once('../core/coreexception.class.inc.php');
-	require_once('../core/dict.class.inc.php');
-	require_once('../core/attributedef.class.inc.php');
-	require_once('../core/filterdef.class.inc.php');
-	require_once('../core/stimulus.class.inc.php');
-	require_once('../core/MyHelpers.class.inc.php');
-	require_once('../core/expression.class.inc.php');
-	require_once('../core/cmdbsource.class.inc.php');
-	require_once('../core/sqlquery.class.inc.php');
-	require_once('../core/dbobject.class.php');
-	require_once('../core/dbobjectsearch.class.php');
-	require_once('../core/dbobjectset.class.php');
-	require_once('../application/cmdbabstract.class.inc.php');
-	require_once('../core/userrights.class.inc.php');
-	require_once('../setup/moduleinstallation.class.inc.php');
+	require_once(APPROOT.'/core/log.class.inc.php');
+	require_once(APPROOT.'/core/kpi.class.inc.php');
+	require_once(APPROOT.'/core/coreexception.class.inc.php');
+	require_once(APPROOT.'/core/dict.class.inc.php');
+	require_once(APPROOT.'/core/attributedef.class.inc.php');
+	require_once(APPROOT.'/core/filterdef.class.inc.php');
+	require_once(APPROOT.'/core/stimulus.class.inc.php');
+	require_once(APPROOT.'/core/MyHelpers.class.inc.php');
+	require_once(APPROOT.'/core/expression.class.inc.php');
+	require_once(APPROOT.'/core/cmdbsource.class.inc.php');
+	require_once(APPROOT.'/core/sqlquery.class.inc.php');
+	require_once(APPROOT.'/core/dbobject.class.php');
+	require_once(APPROOT.'/core/dbobjectsearch.class.php');
+	require_once(APPROOT.'/core/dbobjectset.class.php');
+	require_once(APPROOT.'/application/cmdbabstract.class.inc.php');
+	require_once(APPROOT.'/core/userrights.class.inc.php');
+	require_once(APPROOT.'/setup/moduleinstallation.class.inc.php');
 	$oP->log("Info - MetaModel::Startup from file '$sConfigFileName' (ModelOnly = $bModelOnly)");
 
 	MetaModel::Startup($sConfigFileName, $bModelOnly);
@@ -528,8 +529,9 @@ function CreateAdminAccount(SetupWebPage $oP, Config $oConfig, $sAdminUser, $sAd
 	}
 }
 
-function ListModuleFiles($sDirectory, SetupWebPage $oP)
+function ListModuleFiles($sRelDir, SetupWebPage $oP)
 {
+	$sDirectory = APPROOT.$sRelDir;
 	//echo "<p>$sDirectory</p>\n";
 	if ($hDir = opendir($sDirectory))
 	{
@@ -541,11 +543,12 @@ function ListModuleFiles($sDirectory, SetupWebPage $oP)
 			{
 				if (($sFile != '.') && ($sFile != '..') && ($sFile != '.svn'))
 				{
-					ListModuleFiles($sDirectory.'/'.$sFile, $oP);
+					ListModuleFiles($sRelDir.'/'.$sFile, $oP);
 				}
 			}
 			else if (preg_match('/^module\.(.*).php$/i', $sFile, $aMatches))
 			{
+				$oP->SetModulePath($sRelDir);
 				try
 				{
 					//echo "<p>Loading: $sDirectory/$sFile...</p>\n";
@@ -593,6 +596,7 @@ function PopulateDataFilesList(SetupWebPage $oP, $aParamValues)
 	foreach($aStructureDataFiles as $sFile)
 	{
 		// Under Windows, it is a must to escape backslashes (not an issue until a folder name starts with t or n, etc...)
+		$sFile = APPROOT.$sFile;
 		$sFile = str_replace('\\', '\\\\', $sFile);
 		$oP->add("aFilesToLoad[aFilesToLoad.length] = '$sFile';\n");
 	}
@@ -604,6 +608,7 @@ function PopulateDataFilesList(SetupWebPage $oP, $aParamValues)
 	foreach($aSampleDataFiles as $sFile)
 	{
 		// Under Windows, it is a must to escape backslashes (not an issue until a folder name starts with t or n, etc...)
+		$sFile = APPROOT.$sFile;
 		$sFile = str_replace('\\', '\\\\', $sFile);
 		$oP->add("aFilesToLoad[aFilesToLoad.length] = '$sFile';\n");
 	}
@@ -649,7 +654,7 @@ function AddParamsToForm(SetupWebpage $oP, $aParamValues, $aExcludeParams = arra
 function GetAvailableModules(SetupWebpage $oP)
 {
 	clearstatcache();
-	ListModuleFiles('../modules/', $oP);
+	ListModuleFiles('/modules', $oP);
 	return $oP->GetModules();
 }
 
@@ -663,14 +668,14 @@ function BuildConfig(SetupWebpage $oP, Config &$oConfig, $aParamValues)
 	$aAddOns = $oConfig->GetAddOns();
 	$aAppModules = $oConfig->GetAppModules();
 	$aDataModels = $oConfig->GetDataModels();
-	$sDictionaries = $oConfig->GetDictionaries();
+	$aDictionaries = $oConfig->GetDictionaries();
 	// Merge the values with the ones provided by the modules
 	// Make sure when don't load the same file twice...
 	foreach($aParamValues['module'] as $sModuleId)
 	{
 		$oP->log('Installed iTop module: '. $sModuleId);
 		$aDataModels = array_unique(array_merge($aDataModels, $aAvailableModules[$sModuleId]['datamodel']));
-		$sDictionaries = array_unique(array_merge($sDictionaries, $aAvailableModules[$sModuleId]['dictionary']));
+		$aDictionaries = array_unique(array_merge($aDictionaries, $aAvailableModules[$sModuleId]['dictionary']));
 		foreach($aAvailableModules[$sModuleId]['settings'] as $sProperty => $value)
 		{
 			list($sName, $sVersion) = GetModuleName($sModuleId);
@@ -680,7 +685,7 @@ function BuildConfig(SetupWebpage $oP, Config &$oConfig, $aParamValues)
 	$oConfig->SetAddOns($aAddOns);
 	$oConfig->SetAppModules($aAppModules);
 	$oConfig->SetDataModels($aDataModels);
-	$oConfig->SetDictionaries($sDictionaries);
+	$oConfig->SetDictionaries($aDictionaries);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
