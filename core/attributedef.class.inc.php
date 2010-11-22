@@ -72,8 +72,15 @@ define('DEL_AUTO', 2);
  */
 abstract class AttributeDefinition
 {
-	abstract public function GetType();
-	abstract public function GetTypeDesc();
+	public function GetType()
+	{
+		return Dict::S('Core:'.get_class($this));
+	}
+	public function GetTypeDesc()
+	{
+		return Dict::S('Core:'.get_class($this).'+');
+	}
+
 	abstract public function GetEditClass();
 
 	protected $m_sCode;
@@ -311,8 +318,6 @@ class AttributeLinkedSet extends AttributeDefinition
 		return array_merge(parent::ListExpectedParams(), array("allowed_values", "depends_on", "linked_class", "ext_key_to_me", "count_min", "count_max"));
 	}
 
-	public function GetType() {return "Array of objects";}
-	public function GetTypeDesc() {return "Any kind of objects [subclass] of the same class";}
 	public function GetEditClass() {return "List";}
 
 	public function IsWritable() {return true;} 
@@ -394,8 +399,6 @@ class AttributeDBFieldVoid extends AttributeDefinition
 	// To be overriden, used in GetSQLColumns
 	protected function GetSQLCol() {return "VARCHAR(255)";}
 
-	public function GetType() {return "Void";}
-	public function GetTypeDesc() {return "Any kind of value, from the DB";}
 	public function GetEditClass() {return "String";}
 	
 	public function GetValuesDef() {return $this->Get("allowed_values");} 
@@ -495,8 +498,6 @@ class AttributeInteger extends AttributeDBField
 		//return array_merge(parent::ListExpectedParams(), array());
 	}
 
-	public function GetType() {return "Integer";}
-	public function GetTypeDesc() {return "Numeric value (could be negative)";}
 	public function GetEditClass() {return "String";}
 	protected function GetSQLCol() {return "INT(11)";}
 	
@@ -592,8 +593,6 @@ class AttributeDecimal extends AttributeDBField
 		return array_merge(parent::ListExpectedParams(), array('digits', 'decimals' /* including precision */));
 	}
 
-	public function GetType() {return "Decimal";}
-	public function GetTypeDesc() {return "Decimal value (could be negative)";}
 	public function GetEditClass() {return "String";}
 	protected function GetSQLCol() {return "DECIMAL(".$this->Get('digits').",".$this->Get('decimals').")";}
 	
@@ -690,8 +689,6 @@ class AttributeBoolean extends AttributeInteger
 		//return array_merge(parent::ListExpectedParams(), array());
 	}
 
-	public function GetType() {return "Boolean";}
-	public function GetTypeDesc() {return "Boolean";}
 	public function GetEditClass() {return "Integer";}
 	protected function GetSQLCol() {return "TINYINT(1)";}
 	
@@ -723,8 +720,6 @@ class AttributeString extends AttributeDBField
 		//return array_merge(parent::ListExpectedParams(), array());
 	}
 
-	public function GetType() {return "String";}
-	public function GetTypeDesc() {return "Alphanumeric string";}
 	public function GetEditClass() {return "String";}
 	protected function GetSQLCol() {return "VARCHAR(255)";}
 
@@ -1052,8 +1047,6 @@ class AttributeEncryptedString extends AttributeString
  */
 class AttributeText extends AttributeString
 {
-	public function GetType() {return "Text";}
-	public function GetTypeDesc() {return "Multiline character string";}
 	public function GetEditClass() {return "Text";}
 	protected function GetSQLCol() {return "TEXT";}
 
@@ -1082,8 +1075,6 @@ class AttributeText extends AttributeString
  */
 class AttributeHTML extends AttributeText
 {
-	public function GetType() {return "HTML";}
-	public function GetTypeDesc() {return "HTML string";}
 	public function GetEditClass() {return "HTML";}
 
 	public function GetAsHTML($sValue)
@@ -1099,8 +1090,6 @@ class AttributeHTML extends AttributeText
  */
 class AttributeEmailAddress extends AttributeString
 {
-	public function GetTypeDesc() {return "Email address(es)";}
-
 	public function GetValidationPattern()
 	{
 		return "^([0-9a-zA-Z]([-.\\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\\w]*[0-9a-zA-Z]\\.)+[a-zA-Z]{2,9})$";
@@ -1120,8 +1109,6 @@ class AttributeEmailAddress extends AttributeString
  */
 class AttributeIPAddress extends AttributeString
 {
-	public function GetTypeDesc() {return "IP address";}
-
 	public function GetValidationPattern()
 	{
 		$sNum = '(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])';
@@ -1136,7 +1123,6 @@ class AttributeIPAddress extends AttributeString
  */
 class AttributeOQL extends AttributeText
 {
-	public function GetTypeDesc() {return "OQL expression";}
 }
 
 /**
@@ -1146,7 +1132,6 @@ class AttributeOQL extends AttributeText
  */
 class AttributeTemplateString extends AttributeString
 {
-	public function GetTypeDesc() {return "Template string";}
 }
 
 /**
@@ -1156,7 +1141,6 @@ class AttributeTemplateString extends AttributeString
  */
 class AttributeTemplateText extends AttributeText
 {
-	public function GetTypeDesc() {return "Multiline template string";}
 }
 
 /**
@@ -1166,8 +1150,6 @@ class AttributeTemplateText extends AttributeText
  */
 class AttributeTemplateHTML extends AttributeText
 {
-	public function GetType() {return "HTML";}
-	public function GetTypeDesc() {return "HTML template";}
 	public function GetEditClass() {return "HTML";}
 
 	public function GetAsHTML($sValue)
@@ -1184,8 +1166,6 @@ class AttributeTemplateHTML extends AttributeText
  */
 class AttributeWikiText extends AttributeText
 {
-	public function GetTypeDesc() {return "Multiline string with special formatting such as links to objects";}
-
 	public function GetAsHTML($value)
 	{
 		// [SELECT xxxx.... [label]] => hyperlink to a result list
@@ -1210,8 +1190,6 @@ class AttributeEnum extends AttributeString
 		//return array_merge(parent::ListExpectedParams(), array());
 	}
 
-	public function GetType() {return "Enum";}
-	public function GetTypeDesc() {return "List of predefined alphanumeric strings";}
 	public function GetEditClass() {return "String";}
 	protected function GetSQLCol()
 	{
@@ -1352,8 +1330,6 @@ class AttributeDateTime extends AttributeDBField
 		//return array_merge(parent::ListExpectedParams(), array());
 	}
 
-	public function GetType() {return "Date";}
-	public function GetTypeDesc() {return "Date and time";}
 	public function GetEditClass() {return "DateTime";}
 	protected function GetSQLCol() {return "TIMESTAMP";}
 	public static function GetAsUnixSeconds($value)
@@ -1594,8 +1570,6 @@ class AttributeDate extends AttributeDateTime
 		//return array_merge(parent::ListExpectedParams(), array());
 	}
 
-	public function GetType() {return "Date";}
-	public function GetTypeDesc() {return "Date";}
 	public function GetEditClass() {return "Date";}
 	protected function GetSQLCol() {return "DATE";}
 
@@ -1684,8 +1658,6 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		return array_merge(parent::ListExpectedParams(), array("targetclass", "is_null_allowed", "on_target_delete"));
 	}
 
-	public function GetType() {return "Extkey";}
-	public function GetTypeDesc() {return "Link to another object";}
 	public function GetEditClass() {return "ExtKey";}
 	protected function GetSQLCol() {return "INT(11)";}
 	public function RequiresIndex()
@@ -1789,8 +1761,6 @@ class AttributeExternalField extends AttributeDefinition
 		return array_merge(parent::ListExpectedParams(), array("extkey_attcode", "target_attcode"));
 	}
 
-	public function GetType() {return "ExtkeyField";}
-	public function GetTypeDesc() {return "Field of an object pointed to by the current object";}
 	public function GetEditClass() {return "ExtField";}
 	protected function GetSQLCol()
 	{
@@ -1988,8 +1958,6 @@ class AttributeURL extends AttributeString
 		return array_merge(parent::ListExpectedParams(), array("target"));
 	}
 
-	public function GetType() {return "Url";}
-	public function GetTypeDesc() {return "Absolute or relative URL as a text string";}
 	public function GetEditClass() {return "String";}
 
 	public function GetAsHTML($sValue)
@@ -2023,8 +1991,6 @@ class AttributeBlob extends AttributeDefinition
 		return array_merge(parent::ListExpectedParams(), array("depends_on"));
 	}
 
-	public function GetType() {return "Blob";}
-	public function GetTypeDesc() {return "Document";}
 	public function GetEditClass() {return "Document";}
 	
 	public function IsDirectField() {return true;} 
@@ -2168,8 +2134,6 @@ class AttributeOneWayPassword extends AttributeDefinition
 		return array_merge(parent::ListExpectedParams(), array("depends_on"));
 	}
 
-	public function GetType() {return "One Way Password";}
-	public function GetTypeDesc() {return "One Way Password";}
 	public function GetEditClass() {return "One Way Password";}
 	
 	public function IsDirectField() {return true;} 
@@ -2292,8 +2256,6 @@ class AttributeOneWayPassword extends AttributeDefinition
 // Indexed array having two dimensions
 class AttributeTable extends AttributeText
 {
-	public function GetType() {return "Table";}
-	public function GetTypeDesc() {return "Array with 2 dimensions";}
 	public function GetEditClass() {return "Text";}
 	protected function GetSQLCol() {return "TEXT";}
 
@@ -2369,8 +2331,6 @@ class AttributeTable extends AttributeText
 // The PHP value is a hash array, it is stored as a TEXT column
 class AttributePropertySet extends AttributeTable
 {
-	public function GetType() {return "PropertySet";}
-	public function GetTypeDesc() {return "List of properties (name and value)";}
 	public function GetEditClass() {return "Text";}
 	protected function GetSQLCol() {return "TEXT";}
 

@@ -24,6 +24,102 @@
  */
 
 
+Dict::Add('EN US', 'English', 'English', array(
+	'Core:AttributeLinkedSet' => 'Objets liés (1-n)',
+	'Core:AttributeLinkedSet+' => 'Liste d'\'objets d\'une classe donnée et pointant sur l\'objet courant',
+
+	'Core:AttributeLinkedSetIndirect' => 'Objets liés (1-n)',
+	'Core:AttributeLinkedSetIndirect+' => 'Liste d'\'objets d\'une classe donnée et liés à l\'objet courant via une classe intermédiaire',
+
+	'Core:AttributeInteger' => 'Nombre entier',
+	'Core:AttributeInteger+' => 'Valeur numérique entière',
+
+	'Core:AttributeDecimal' => 'Nombre décimal',
+	'Core:AttributeDecimal+' => 'Valeur numérique décimale',
+
+	'Core:AttributeBoolean' => 'Booléen',
+	'Core:AttributeBoolean+' => 'Booléen',
+
+	'Core:AttributeString' => 'Chaîne de caractères',
+	'Core:AttributeString+' => 'Chaîne de caractères (limitée à une ligne)',
+
+	'Core:AttributeClass' => 'Classe',
+	'Core:AttributeClass+' => 'Classe d\'objets',
+
+	'Core:AttributeApplicationLanguage' => 'Langue',
+	'Core:AttributeApplicationLanguage+' => 'Codes langue et pays (EN US)',
+
+	'Core:AttributeFinalClass' => 'Classe',
+	'Core:AttributeFinalClass+' => 'Classe réelle de l\'objet (attribut créé automatiquement)',
+
+	'Core:AttributePassword' => 'Mot de passe',
+	'Core:AttributePassword+' => 'Mot de passe qui peut être lu en clair',
+
+ 	'Core:AttributeEncryptedString' => 'Chaîne encryptée',
+	'Core:AttributeEncryptedString+' => 'Chaîne encryptée avec une clé locale',
+
+	'Core:AttributeText' => 'Texte',
+	'Core:AttributeText+' => 'Chaîne de caractères de plusieurs lignes',
+
+	'Core:AttributeHTML' => 'HTML',
+	'Core:AttributeHTML+' => 'Texte formatté en HTML',
+
+	'Core:AttributeEmailAddress' => 'Adresse électronique',
+	'Core:AttributeEmailAddress+' => 'Adresse électronique (xxxx@yyy.zzz)',
+
+	'Core:AttributeIPAddress' => 'Adresse IP',
+	'Core:AttributeIPAddress+' => 'Adresse IP',
+
+	'Core:AttributeOQL' => 'Expression OQL',
+	'Core:AttributeOQL+' => 'Expression formattée en "Object Query Language"',
+
+	'Core:AttributeEnum' => 'Enumération',
+	'Core:AttributeEnum+' => 'Valeur choisie parmi un liste de chaîne de caractères',
+
+	'Core:AttributeTemplateString' => 'Modèle de chaîne de caractères',
+	'Core:AttributeTemplateString+' => 'Chaîne de caractères d\'une ligne, contenant des espaces réservés pour des données iTop',
+
+	'Core:AttributeTemplateText' => 'Modèle de texte',
+	'Core:AttributeTemplateText+' => 'Texte contenant des espaces réservés pour des données iTop',
+
+	'Core:AttributeTemplateHTML' => 'Modèle HTML',
+	'Core:AttributeTemplateHTML+' => 'HTML contenant des espaces réservés pour des données iTop',
+
+	'Core:AttributeWikiText' => 'Article Wiki',
+	'Core:AttributeWikiText+' => 'Texte formatté en Wiki',
+
+	'Core:AttributeDateTime' => 'Date/heure',
+	'Core:AttributeDateTime+' => 'Date et heure (année-mois-jour hh:mm:ss)',
+
+	'Core:AttributeDate' => 'Date',
+	'Core:AttributeDate+' => 'Date (année-mois-jour)',
+
+	'Core:AttributeDeadline' => 'Délai',
+	'Core:AttributeDeadline+' => 'Date/heure exprimée relativement à l\'heure courante',
+
+	'Core:AttributeExternalKey' => 'Clé externe',
+	'Core:AttributeExternalKey+' => 'Clé externe',
+
+	'Core:AttributeExternalField' => 'Attribut externe',
+	'Core:AttributeExternalField+' => 'Copie de la valeur d\'un attribut de l\'objet lié par une clé externe',
+
+	'Core:AttributeURL' => 'URL',
+	'Core:AttributeURL+' => 'URL absolue ou relative',
+
+	'Core:AttributeBlob' => 'Blob',
+	'Core:AttributeBlob+' => 'Contenu binaire (document)',
+
+	'Core:AttributeOneWayPassword' => 'Mot de passe "one way"',
+	'Core:AttributeOneWayPassword+' => 'Mot de passe qui peut être vérifié mais jamais lu en clair',
+
+	'Core:AttributeTable' => 'Table',
+	'Core:AttributeTable+' => 'Tableau à deux dimensions',
+
+	'Core:AttributePropertySet' => 'Propriétés',
+	'Core:AttributePropertySet+' => 'Liste de propriétés (nom et valeur) non typées',
+));
+
+
 //////////////////////////////////////////////////////////////////////
 // Classes in 'core/cmdb'
 //////////////////////////////////////////////////////////////////////

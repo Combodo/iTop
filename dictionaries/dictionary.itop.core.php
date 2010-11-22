@@ -23,6 +23,101 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
+Dict::Add('EN US', 'English', 'English', array(
+	'Core:AttributeLinkedSet' => 'Array of objects',
+	'Core:AttributeLinkedSet+' => 'Any kind of objects of the same class or subclass',
+
+	'Core:AttributeLinkedSetIndirect' => 'Array of objects (N-N)',
+	'Core:AttributeLinkedSetIndirect+' => 'Any kind of objects [subclass] of the same class',
+
+	'Core:AttributeInteger' => 'Integer',
+	'Core:AttributeInteger+' => 'Numeric value (could be negative)',
+
+	'Core:AttributeDecimal' => 'Decimal',
+	'Core:AttributeDecimal+' => 'Decimal value (could be negative)',
+
+	'Core:AttributeBoolean' => 'Boolean',
+	'Core:AttributeBoolean+' => 'Boolean',
+
+	'Core:AttributeString' => 'String',
+	'Core:AttributeString+' => 'Alphanumeric string',
+
+	'Core:AttributeClass' => 'Class',
+	'Core:AttributeClass+' => 'Class',
+
+	'Core:AttributeApplicationLanguage' => 'User language',
+	'Core:AttributeApplicationLanguage+' => 'Language and country (EN US)',
+
+	'Core:AttributeFinalClass' => 'Class (auto)',
+	'Core:AttributeFinalClass+' => 'Real class of the object (automatically created by the core)',
+
+	'Core:AttributePassword' => 'Password',
+	'Core:AttributePassword+' => 'Password of an external device',
+
+ 	'Core:AttributeEncryptedString' => 'Encrypted string',
+	'Core:AttributeEncryptedString+' => 'String encrypted with a local key',
+
+	'Core:AttributeText' => 'Text',
+	'Core:AttributeText+' => 'Multiline character string',
+
+	'Core:AttributeHTML' => 'HTML',
+	'Core:AttributeHTML+' => 'HTML string',
+
+	'Core:AttributeEmailAddress' => 'Email address',
+	'Core:AttributeEmailAddress+' => 'Email address',
+
+	'Core:AttributeIPAddress' => 'IP address',
+	'Core:AttributeIPAddress+' => 'IP address',
+
+	'Core:AttributeOQL' => 'OQL',
+	'Core:AttributeOQL+' => 'Object Query Langage expression',
+
+	'Core:AttributeEnum' => 'Enum',
+	'Core:AttributeEnum+' => 'List of predefined alphanumeric strings',
+
+	'Core:AttributeTemplateString' => 'Template string',
+	'Core:AttributeTemplateString+' => 'String containing placeholders',
+
+	'Core:AttributeTemplateText' => 'Template text',
+	'Core:AttributeTemplateText+' => 'Text containing placeholders',
+
+	'Core:AttributeTemplateHTML' => 'Template HTML',
+	'Core:AttributeTemplateHTML+' => 'HTML containing placeholders',
+
+	'Core:AttributeWikiText' => 'Wiki article',
+	'Core:AttributeWikiText+' => 'Wiki formatted text',
+
+	'Core:AttributeDateTime' => 'Date/time',
+	'Core:AttributeDateTime+' => 'Date and time (year-month-day hh:mm:ss)',
+
+	'Core:AttributeDate' => 'Date',
+	'Core:AttributeDate+' => 'Date (year-month-day)',
+
+	'Core:AttributeDeadline' => 'Deadline',
+	'Core:AttributeDeadline+' => 'Date, displayed relatively to the current time',
+
+	'Core:AttributeExternalKey' => 'External key',
+	'Core:AttributeExternalKey+' => 'External (or foreign) key',
+
+	'Core:AttributeExternalField' => 'External field',
+	'Core:AttributeExternalField+' => 'Field mapped to an external key',
+
+	'Core:AttributeURL' => 'URL',
+	'Core:AttributeURL+' => 'Absolute or relative URL as a text string',
+
+	'Core:AttributeBlob' => 'Blob',
+	'Core:AttributeBlob+' => 'Any binary content (document)',
+
+	'Core:AttributeOneWayPassword' => 'One way password',
+	'Core:AttributeOneWayPassword+' => 'One way encrypted (hashed) password',
+
+	'Core:AttributeTable' => 'Table',
+	'Core:AttributeTable+' => 'Indexed array having two dimensions',
+
+	'Core:AttributePropertySet' => 'Properties',
+	'Core:AttributePropertySet+' => 'List of untyped properties (name and value)',
+));
+
 
 //////////////////////////////////////////////////////////////////////
 // Classes in 'core/cmdb'
