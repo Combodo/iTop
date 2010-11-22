@@ -111,6 +111,7 @@ class UIAutoCompleteWidget
 EOF
 );
 		$iMinChars = $this->oAttDef->GetMinAutoCompleteChars();
+		$iFieldSize = $this->oAttDef->GetMaxSize();
 
 		// the input for the auto-complete
 		$sHTMLValue = "<input count=\"".count($this->aAllowedValues)."\" type=\"text\" id=\"label_$this->iId\" size=\"30\" maxlength=\"$iFieldSize\" value=\"$sDisplayValue\"/>&nbsp;";

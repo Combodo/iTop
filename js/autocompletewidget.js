@@ -28,17 +28,16 @@ function AutocompleteWidget(id, sClass, sAttCode, sSuffix, oWizHelper)
 	this.Init = function()
 	{
 		// make sure that the form is clean
-		$('#linkedset_'+this.id+' .selection').each( function() { this.checked = false; });
 		$('#'+this.id+'_btnRemove').attr('disabled','disabled');
 		$('#'+this.id+'_linksToRemove').val('');
 	}
 	
 	this.StopPendingRequest = function()
 	{
-		if (this.ajax_request)
+		if (me.ajax_request)
 		{
-			this.ajax_request.Abort();
-			this.ajax_request = null;
+			me.ajax_request.Abort();
+			me.ajax_request = null;
 		}
 	}
 	
@@ -110,10 +109,10 @@ function AutocompleteWidget(id, sClass, sAttCode, sSuffix, oWizHelper)
 
 		// Make sure that we cancel any pending request before issuing another
 		// since responses may arrive in arbitrary order
-		this.StopPendingRequest();
+		me.StopPendingRequest();
 		
 		// Run the query and display the results
-		this.ajax_request = $.post( 'ajax.render.php', theMap, 
+		me.ajax_request = $.post( 'ajax.render.php', theMap, 
 			function(data)
 			{
 				$(sSearchAreaId).html(data);
@@ -146,10 +145,10 @@ function AutocompleteWidget(id, sClass, sAttCode, sSuffix, oWizHelper)
 	
 		// Make sure that we cancel any pending request before issuing another
 		// since responses may arrive in arbitrary order
-		this.StopPendingRequest();
+		me.StopPendingRequest();
 		
 		// Run the query and get the result back directly in JSON
-		this.ajax_request = $.post( 'ajax.render.php', theMap, 
+		me.ajax_request = $.post( 'ajax.render.php', theMap, 
 			function(data)
 			{
 				$('#label_'+me.id).val(data.name);
@@ -193,10 +192,10 @@ function AutocompleteWidget(id, sClass, sAttCode, sSuffix, oWizHelper)
 	
 		// Make sure that we cancel any pending request before issuing another
 		// since responses may arrive in arbitrary order
-		this.StopPendingRequest();
+		me.StopPendingRequest();
 		
 		// Run the query and get the result back directly in JSON
-		this.ajax_request = $.post( 'ajax.render.php', theMap, 
+		me.ajax_request = $.post( 'ajax.render.php', theMap, 
 			function(data)
 			{
 				$('#dcr_'+me.id).html(data);
@@ -251,10 +250,10 @@ function AutocompleteWidget(id, sClass, sAttCode, sSuffix, oWizHelper)
 			
 			// Make sure that we cancel any pending request before issuing another
 			// since responses may arrive in arbitrary order
-			this.StopPendingRequest();
+			me.StopPendingRequest();
 			
 			// Run the query and get the result back directly in JSON
-			this.ajax_request = $.post( 'ajax.render.php', theMap, 
+			me.ajax_request = $.post( 'ajax.render.php', theMap, 
 				function(data)
 				{
 					$('#label_'+me.id).val(data.name);
