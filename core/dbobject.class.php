@@ -849,7 +849,14 @@ abstract class DBObject
 
 		$sInsertSQL = "INSERT INTO `$sTable` (".join(",", $aFieldsToWrite).") VALUES (".join(", ", $aValuesToWrite).")";
 
-		$iNewKey = CMDBSource::InsertInto($sInsertSQL);
+		if (MetaModel::DBIsReadOnly())
+		{
+			$iNewKey = -1;
+		}
+		else
+		{
+			$iNewKey = CMDBSource::InsertInto($sInsertSQL);
+		}
 		// Note that it is possible to have a key defined here, and the autoincrement expected, this is acceptable in a non root class
 		if (empty($this->m_iKey))
 		{
@@ -1009,7 +1016,10 @@ abstract class DBObject
 			$oFilter->AddCondition('id', $this->m_iKey, '=');
 	
 			$sSQL = MetaModel::MakeUpdateQuery($oFilter, $aChanges);
-			CMDBSource::Query($sSQL);
+			if (!MetaModel::DBIsReadOnly())
+			{
+				CMDBSource::Query($sSQL);
+			}
 		}
 
 		$this->DBWriteLinks();
@@ -1053,7 +1063,10 @@ abstract class DBObject
 		$this->OnDelete();
 
 		$sSQL = MetaModel::MakeDeleteQuery($oFilter);
-		CMDBSource::Query($sSQL);
+		if (!MetaModel::DBIsReadOnly())
+		{
+			CMDBSource::Query($sSQL);
+		}
 
 		$this->AfterDelete();
 

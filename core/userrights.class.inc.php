@@ -372,6 +372,11 @@ class UserRights
 
 	public static function CanChangePassword()
 	{
+		if (MetaModel::DBIsReadOnly())
+		{
+			return false;
+		}
+
 		if (!is_null(self::$m_oUser))
 		{
  			return self::$m_oUser->CanChangePassword();
@@ -554,6 +559,14 @@ class UserRights
 
 		if (self::IsAdministrator($oUser)) return true;
 
+		if (MetaModel::DBIsReadOnly())
+		{
+			if ($iActionCode == UR_ACTION_MODIFY) return false;
+			if ($iActionCode == UR_ACTION_DELETE) return false;
+			if ($iActionCode == UR_ACTION_BULK_MODIFY) return false;
+			if ($iActionCode == UR_ACTION_BULK_DELETE) return false;
+		}
+
 		if (MetaModel::HasCategory($sClass, 'bizmodel'))
 		{
 			// #@# Temporary?????
@@ -584,6 +597,14 @@ class UserRights
 
 		if (self::IsAdministrator($oUser)) return true;
 
+		if (MetaModel::DBIsReadOnly())
+		{
+			if ($iActionCode == UR_ACTION_MODIFY) return false;
+			if ($iActionCode == UR_ACTION_DELETE) return false;
+			if ($iActionCode == UR_ACTION_BULK_MODIFY) return false;
+			if ($iActionCode == UR_ACTION_BULK_DELETE) return false;
+		}
+
 		if (MetaModel::HasCategory($sClass, 'bizmodel'))
 		{
 			if (is_null($oUser))
@@ -605,6 +626,14 @@ class UserRights
 		if (!self::CheckLogin()) return true;
 
 		if (self::IsAdministrator($oUser)) return true;
+
+		if (MetaModel::DBIsReadOnly())
+		{
+			if ($iActionCode == UR_ACTION_MODIFY) return false;
+			if ($iActionCode == UR_ACTION_DELETE) return false;
+			if ($iActionCode == UR_ACTION_BULK_MODIFY) return false;
+			if ($iActionCode == UR_ACTION_BULK_DELETE) return false;
+		}
 
 		// this module is forbidden for non admins
 		if (MetaModel::HasCategory($sClass, 'addon/userrights')) return false;

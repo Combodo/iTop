@@ -1401,6 +1401,7 @@ abstract class MetaModel
 
 	public static function Init_OverloadStateAttribute($sStateCode, $sAttCode, $iFlags)
 	{
+		// Warning: this is not sufficient: the flags have to be copied to the states that are inheriting from this state
 		$sTargetClass = self::GetCallersPHPClass("Init");
 		self::$m_aStates[$sTargetClass][$sStateCode]['attribute_list'][$sAttCode] = $iFlags;
 	}
@@ -2535,6 +2536,12 @@ abstract class MetaModel
 		return $aDataDump;
 	}
 
+	// Temporary - investigate the cost of such a limitation
+	public static function DBIsReadOnly()
+	{
+		return self::$m_oConfig->Get('read_only');
+	}
+
 	protected static function MakeDictEntry($sKey, $sValueFromOldSystem, $sDefaultValue, &$bNotInDico)
 	{
 		$sValue = Dict::S($sKey, 'x-no-nothing');
@@ -3505,14 +3512,20 @@ abstract class MetaModel
 	public static function BulkDelete(DBObjectSearch $oFilter)
 	{
 		$sSQL = self::MakeDeleteQuery($oFilter);
-		CMDBSource::Query($sSQL);
+		if (!self::DBIsReadOnly())
+		{
+			CMDBSource::Query($sSQL);
+		}
 	}
 
 	public static function BulkUpdate(DBObjectSearch $oFilter, array $aValues)
 	{
 		// $aValues is an array of $sAttCode => $value
 		$sSQL = self::MakeUpdateQuery($oFilter, $aValues);
-		CMDBSource::Query($sSQL);
+		if (!self::DBIsReadOnly())
+		{
+			CMDBSource::Query($sSQL);
+		}
 	}
 
 	// Links
