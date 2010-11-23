@@ -142,7 +142,7 @@ class iTopArchive
 	
 	public function WriteCatalog()
 	{
-		$sXml  = "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?".">\n"; // split the XML closing tag that disturbs PSPad's syntax coloring
+		$sXml  = "<?xml version=\"1.0\" encoding=\"utf-8\"?".">\n"; // split the XML closing tag that disturbs PSPad's syntax coloring
 		$sXml .= "<archive version=\"1.0\">\n";
 		$sXml .= "<title>{$this->m_sTitle}</title>\n";
 		$sXml .= "<description>{$this->m_sDescription}</description>\n";

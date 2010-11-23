@@ -32,7 +32,7 @@
 <ShortName>iTop</ShortName>
 <Contact>webmaster@itop.com</Contact>
 <Description>Search in iTop</Description>
-<InputEncoding>ISO-8859-1</InputEncoding>
+<InputEncoding>UTF-8</InputEncoding>
 <Url type="text/html" method="get" template="<?php echo $sFullUrl;?>?text={searchTerms}&amp;operation=full_text"/>
 <moz:SearchForm><?php echo $sFullUrl;?></moz:SearchForm>
 <Image height="16" width="16" type="image/x-icon"><?php echo $sICOFullUrl;?></Image>
