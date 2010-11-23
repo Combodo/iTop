@@ -531,7 +531,7 @@ function CreateAdminAccount(SetupWebPage $oP, Config $oConfig, $sAdminUser, $sAd
 
 function ListModuleFiles($sRelDir, SetupWebPage $oP)
 {
-	$sDirectory = APPROOT.$sRelDir;
+	$sDirectory = APPROOT.'/'.$sRelDir;
 	//echo "<p>$sDirectory</p>\n";
 	if ($hDir = opendir($sDirectory))
 	{
@@ -654,7 +654,7 @@ function AddParamsToForm(SetupWebpage $oP, $aParamValues, $aExcludeParams = arra
 function GetAvailableModules(SetupWebpage $oP)
 {
 	clearstatcache();
-	ListModuleFiles('/modules', $oP);
+	ListModuleFiles('modules', $oP);
 	return $oP->GetModules();
 }
 

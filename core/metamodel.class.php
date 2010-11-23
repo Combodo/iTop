@@ -3348,16 +3348,21 @@ abstract class MetaModel
 
 	protected static function Plugin($sConfigFile, $sModuleType, $sToInclude)
 	{
-		if (substr($sToInclude, 0, 3) == '../')
+		$sFirstChar = substr($sToInclude, 0, 1);
+		$sSecondChar = substr($sToInclude, 1, 1);
+		if (($sFirstChar != '/') && ($sFirstChar != '\\') && ($sSecondChar != ':'))
 		{
-			// Preserve compatibility with config files written before 1.0.1
-			// Replace '../' by '<root>/'
-			$sFile = APPROOT.'/'.substr($sToInclude, 3);
-		}
-		elseif (substr($sToInclude, 0, 1) == '/')
-		{
-			// Preferred...
-			$sFile = APPROOT.$sToInclude;
+			// It is a relative path, prepend APPROOT
+			if (substr($sToInclude, 0, 3) == '../')
+			{
+				// Preserve compatibility with config files written before 1.0.1
+				// Replace '../' by '<root>/'
+				$sFile = APPROOT.'/'.substr($sToInclude, 3);
+			}
+			else
+			{
+				$sFile = APPROOT.'/'.$sToInclude;			
+			}
 		}
 		else
 		{
