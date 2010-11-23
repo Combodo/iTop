@@ -771,6 +771,69 @@ class Config
 	}
 	
 	/**
+	 * Render the configuration as an associative array
+	 * @return boolean True otherwise throws an Exception
+	 */	 	 	 	 	
+	public function ToArray()
+	{
+		$aSettings = array();
+		foreach($this->m_aSettings as $sPropCode => $aSettingInfo)
+		{
+			$aSettings[$sPropCode] = $aSettingInfo['value'];
+		}
+		$aSettings['db_host'] = $this->m_sDBHost;
+		$aSettings['db_user'] = $this->m_sDBUser;
+		$aSettings['db_pwd'] = $this->m_sDBPwd;
+		$aSettings['db_name'] = $this->m_sDBName;
+		$aSettings['db_subname'] = $this->m_sDBSubname;
+		$aSettings['db_character_set'] = $this->m_sDBCharacterSet;
+		$aSettings['db_collation'] = $this->m_sDBCollation;
+		$aSettings['log_global'] = $this->m_bLogGlobal;
+		$aSettings['log_notification'] = $this->m_bLogNotification;
+		$aSettings['log_issue'] = $this->m_bLogIssue;
+		$aSettings['log_web_service'] = $this->m_bLogWebService;
+		$aSettings['min_display_limit'] = $this->m_iMinDisplayLimit;
+		$aSettings['max_display_limit'] = $this->m_iMaxDisplayLimit;
+		$aSettings['standard_reload_interval'] = $this->m_iStandardReloadInterval;
+		$aSettings['fast_reload_interval'] = $this->m_iFastReloadInterval;
+		$aSettings['secure_connection_required'] = $this->m_bSecureConnectionRequired;
+		$aSettings['https_hyperlinks'] = $this->m_bHttpsHyperlinks;
+		$aSettings['default_language'] = $this->m_sDefaultLanguage;
+		$aSettings['allowed_login_types'] = $this->m_sAllowedLoginTypes;
+		$aSettings['encryption_key'] = $this->m_sEncryptionKey;
+		$aSettings['csv_import_charsets'] = $this->m_aCharsets;
+
+		foreach ($this->m_aModuleSettings as $sModule => $aProperties)
+		{
+			foreach ($aProperties as $sProperty => $value)
+			{
+				$aSettings['module_settings'][$sModule][$sProperty] = $value;
+			}
+		}
+		foreach($this->m_aAppModules as $sFile)
+		{
+			$aSettings['application_list'][] = $sFile;
+		}
+		foreach($this->m_aDataModels as $sFile)
+		{
+			$aSettings['datamodel_list'][] = $sFile;
+		}
+		foreach($this->m_aWebServiceCategories as $sFile)
+		{
+			$aSettings['webservice_list'][] = $sFile;
+		}
+		foreach($this->m_aAddons as $sKey => $sFile)
+		{
+			$aSettings['addon_list'][] = $sFile;
+		}
+		foreach($this->m_aDictionaries as $sFile)
+		{
+			$aSettings['dictionary_list'][] = $sFile;
+		}
+		return $aSettings;
+	}
+
+	/**
 	 * Write the configuration to a file (php format) that can be reloaded later
 	 * By default write to the same file that was specified when constructing the object
 	 * @param $sFileName string Name of the file to write to (emtpy to write to the same file)
