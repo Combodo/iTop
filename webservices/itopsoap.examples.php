@@ -28,6 +28,9 @@ require_once('itopsoaptypes.class.inc.php');
 
 $sItopRoot = 'http'.((isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']!='off')) ? 's' : '').'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname($_SERVER['SCRIPT_NAME']).'/..';
 $sWsdlUri = $sItopRoot.'/webservices/itop.wsdl.php';
+//$sWsdlUri .= '?service_category=';
+
+$aSOAPMapping = SOAPMapping::GetMapping();
 
 ini_set("soap.wsdl_cache_enabled","0");
 $oSoapClient = new SoapClient(
@@ -80,6 +83,54 @@ try
 	echo "<pre>\n";
 	print_r($oRes);
 	echo "</pre>\n";
+	echo "</p>\n";
+
+	$oRes = $oSoapClient->SearchObjects
+	(
+		'admin', /* login */
+		'admin', /* password */
+		'SELECT URP_Profiles' /* oql */
+	);
+
+	echo "<p>SearchObjects() returned:\n";
+	if ($oRes->status)
+	{
+		$aResults = $oRes->result;
+
+		echo "<table>\n";
+
+		// Header made after the first line
+		echo "<tr>\n";
+		foreach ($aResults[0]->values as $aKeyValuePair)
+		{
+			echo "   <th>".$aKeyValuePair->key."</th>\n";
+		}
+		echo "</tr>\n";
+
+		foreach ($aResults as $iRow => $aData)
+		{
+			echo "<tr>\n";
+			foreach ($aData->values as $aKeyValuePair)
+			{
+				echo "   <td>".$aKeyValuePair->value."</td>\n";
+			}
+			echo "</tr>\n";
+		}
+		echo "</table>\n";
+	}
+	else
+	{
+		$aErrors = array();
+		foreach ($oRes->errors->messages as $oMessage)
+		{
+			$aErrors[] = $oMessage->text;
+		}
+		$sErrorMsg = implode(', ', $aErrors);
+		echo "<p>SearchObjects() failed with message: $sErrorMsg</p>\n";
+		//echo "<pre>\n";
+		//print_r($oRes);
+		//echo "</pre>\n";
+	}
 	echo "</p>\n";
 }
 catch(SoapFault $e)

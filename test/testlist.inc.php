@@ -1612,14 +1612,17 @@ class TestImportRESTMassive extends TestImportREST
 // Test SOAP services
 ///////////////////////////////////////////////////////////////////////////
 
-$aWebServices = array(
+$aCreateTicketSpecs = array(
 	array(
+		'service_category' => 'BasicServices',
 		'verb' => 'GetVersion',
-		'expected result' => WebServices::GetVersion(),
+//		'expected result' => '1.0.1',
+		'expected result' => '$ITOP_VERSION$ [dev]',
 		'explain result' => 'no comment!',
 		'args' => array(),
 	),
 	array(
+		'service_category' => '',
 		'verb' => 'CreateIncidentTicket',
 		'expected result' => true,
 		'explain result' => 'link attribute unknown + a CI not found',
@@ -1656,6 +1659,7 @@ $aWebServices = array(
 		),
 	),
 	array(
+		'service_category' => '',
 		'verb' => 'CreateIncidentTicket',
 		'expected result' => true,
 		'explain result' => 'caller not specified',
@@ -1682,6 +1686,7 @@ $aWebServices = array(
 		),
 	),
 	array(
+		'service_category' => '',
 		'verb' => 'CreateIncidentTicket',
 		'expected result' => false,
 		'explain result' => 'wrong class on CI to attach',
@@ -1708,6 +1713,7 @@ $aWebServices = array(
 		),
 	),
 	array(
+		'service_category' => '',
 		'verb' => 'CreateIncidentTicket',
 		'expected result' => false,
 		'explain result' => 'wrong search condition on CI to attach',
@@ -1734,6 +1740,7 @@ $aWebServices = array(
 		),
 	),
 	array(
+		'service_category' => '',
 		'verb' => 'CreateIncidentTicket',
 		'expected result' => true,
 		'explain result' => 'no CI to attach (empty array)',
@@ -1755,6 +1762,7 @@ $aWebServices = array(
 		),
 	),
 	array(
+		'service_category' => '',
 		'verb' => 'CreateIncidentTicket',
 		'expected result' => true,
 		'explain result' => 'no CI to attach (null)',
@@ -1775,6 +1783,7 @@ $aWebServices = array(
 		),
 	),
 	array(
+		'service_category' => '',
 		'verb' => 'CreateIncidentTicket',
 		'expected result' => true,
 		'explain result' => 'caller unknown',
@@ -1796,6 +1805,7 @@ $aWebServices = array(
 		),
 	),
 	array(
+		'service_category' => '',
 		'verb' => 'CreateIncidentTicket',
 		'expected result' => false,
 		'explain result' => 'wrong values for impact and urgency',
@@ -1817,6 +1827,7 @@ $aWebServices = array(
 		),
 	),
 	array(
+		'service_category' => '',
 		'verb' => 'CreateIncidentTicket',
 		'expected result' => false,
 		'explain result' => 'wrong password',
@@ -1838,6 +1849,7 @@ $aWebServices = array(
 		),
 	),
 	array(
+		'service_category' => '',
 		'verb' => 'CreateIncidentTicket',
 		'expected result' => false,
 		'explain result' => 'wrong login',
@@ -1861,40 +1873,144 @@ $aWebServices = array(
 );
 
 
-class TestSoap extends TestSoapWebService
+$aManageCloudUsersSpecs = array(
+	array(
+		'service_category' => '',
+		'verb' => 'SearchObjects',
+		'expected result' => false,
+		'explain result' => 'wrong OQL',
+		'args' => array(
+			'admin', /* sLogin */
+			'admin', /* sPassword */
+			'SELECT ThisClassDoesNotExist', /* sOQL */
+		),
+	),
+	array(
+		'service_category' => '',
+		'verb' => 'SearchObjects',
+		'expected result' => true,
+		'explain result' => 'ok',
+		'args' => array(
+			'admin', /* sLogin */
+			'admin', /* sPassword */
+			'SELECT Organization', /* sOQL */
+		),
+	),
+	array(
+		'service_category' => 'CloudUsersManagementService',
+		'verb' => 'CreateAccount',
+		'expected result' => true,
+		'explain result' => 'ok',
+		'args' => array(
+			'admin', /* sAdminLogin */
+			'admin', /* sAdminPassword */
+			'andros@combodo.com', /* sLogin */
+			'André', /* sFirstName */
+			'Dupont', /* sLastName */
+			1, /* iOrgId */
+			'FR FR', /* sLanguage */
+			array(
+				array(
+					new SOAPKeyValue('profile_id', '2'),
+					new SOAPKeyValue('reason', 'whynot'),
+				),
+				array(
+					new SOAPKeyValue('profile_id', '3'),
+					new SOAPKeyValue('reason', 'because'),
+				),
+			), /* aProfiles (array of key/value pairs) */
+			array(
+			), /* aAllowedOrgs (array of key/value pairs) */
+			'comment on the creation operation', /* sComment */
+		),
+	),
+	array(
+		'service_category' => 'CloudUsersManagementService',
+		'verb' => 'ModifyAccount',
+		'expected result' => true,
+		'explain result' => 'ok',
+		'args' => array(
+			'admin', /* sAdminLogin */
+			'admin', /* sAdminPassword */
+			'andros@combodo.com', /* sLogin */
+			'nono', /* sFirstName */
+			'robot', /* sLastName */
+			2, /* iOrgId */
+			'EN US', /* sLanguage */
+			array(
+				array(
+					new SOAPKeyValue('profile_id', '3'),
+					new SOAPKeyValue('reason', 'because'),
+				),
+			), /* aProfiles (array of key/value pairs) */
+			array(
+			), /* aAllowedOrgs (array of key/value pairs) */
+			'comment on the modify operation', /* sComment */
+		),
+	),
+	array(
+		'service_category' => 'CloudUsersManagementService',
+		'verb' => 'DeleteAccount',
+		'expected result' => true,
+		'explain result' => '',
+		'args' => array(
+			'admin', /* sAdminLogin */
+			'admin', /* sAdminPassword */
+			'andros@combodo.com', /* sLogin */
+			'comment on the deletion operation', /* sComment */
+		),
+	),
+	array(
+		'service_category' => 'CloudUsersManagementService',
+		'verb' => 'DeleteAccount',
+		'expected result' => false,
+		'explain result' => 'wrong login',
+		'args' => array(
+			'admin', /* sAdminLogin */
+			'admin', /* sAdminPassword */
+			'taratatata@sdf.com', /* sLogin */
+			'comment on the deletion operation', /* sComment */
+		),
+	),
+);
+
+abstract class TestSoap extends TestSoapWebService
 {
 	static public function GetName() {return 'Test SOAP';}
 	static public function GetDescription() {return 'Do basic stuff to test the SOAP capability';}
+
+	protected $m_aTestSpecs;
 
 	protected function DoExecute()
 	{
 		echo "<p>Note: You may also want to try the sample SOAP client <a href=\"../webservices/itopsoap.examples.php\">itopsoap.examples.php</a></p>\n";
 
-		global $aSOAPMapping;
+		$aSOAPMapping = SOAPMapping::GetMapping();
 
 		// this file is generated dynamically with location = here
 		$sWsdlUri = 'http'.(isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']!='off') ? 's' : '').'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname($_SERVER['SCRIPT_NAME']).'/../webservices/itop.wsdl.php';
 
 		ini_set("soap.wsdl_cache_enabled","0");
-		$this->m_SoapClient = new SoapClient
-		(
-			$sWsdlUri,
-			array(
-				'classmap' => $aSOAPMapping,
-				'trace' => 1,
-			)
-		);
 
-		if (false)
-		{
-			self::DumpVariable($this->m_SoapClient->__getTypes());
-		} 
-
-		global $aWebServices;
-		foreach ($aWebServices as $iPos => $aWebService)
+		foreach ($this->m_aTestSpecs as $iPos => $aWebService)
 		{
 			echo "<h2>SOAP call #$iPos - {$aWebService['verb']}</h2>\n";
 			echo "<p>{$aWebService['explain result']}</p>\n";
+
+			$sWsdlUriForService = $sWsdlUri.'?service_category='.$aWebService['service_category'];
+			$this->m_SoapClient = new SoapClient
+			(
+				$sWsdlUriForService,
+				array(
+					'classmap' => $aSOAPMapping,
+					'trace' => 1,
+				)
+			);
+	
+			if (false)
+			{
+				self::DumpVariable($this->m_SoapClient->__getTypes());
+			} 
 
 			try
 			{
@@ -1921,6 +2037,10 @@ class TestSoap extends TestSoapWebService
 			{
 				$res = $oRes->status;
 			}
+			elseif ($oRes instanceof SOAPSimpleResult)
+			{
+				$res = $oRes->status;
+			}
 			else
 			{
 				$res = $oRes;
@@ -1937,26 +2057,33 @@ class TestSoap extends TestSoapWebService
 	}
 }
 
-class TestWebServicesDirect extends TestBizModel
+abstract class TestSoapDirect extends TestBizModel
 {
 	static public function GetName() {return 'Test web services locally';}
 	static public function GetDescription() {return 'Invoke the service directly (troubleshooting)';}
 
 	static public function GetConfigFile() {return '/config-itop.php';}
 
+	protected $m_aTestSpecs;
+
 	protected function DoExecute()
 	{
-		$oWebServices = new WebServices();
-
-		global $aWebServices;
-		foreach ($aWebServices as $iPos => $aWebService)
+		foreach ($this->m_aTestSpecs as $iPos => $aWebService)
 		{
+			$sServiceClass = $aWebService['service_category'];
+			if (empty($sServiceClass)) $sServiceClass = 'BasicServices';
+			$oWebServices = new $sServiceClass();
+
 			echo "<h2>SOAP call #$iPos - {$aWebService['verb']}</h2>\n";
 			echo "<p>{$aWebService['explain result']}</p>\n";
 			$oRes = call_user_func_array(array($oWebServices, $aWebService['verb']), $aWebService['args']);
 			self::DumpVariable($oRes);
 
 			if ($oRes instanceof SOAPResult)
+			{
+				$res = $oRes->status;
+			}
+			elseif ($oRes instanceof SOAPSimpleResult)
 			{
 				$res = $oRes->status;
 			}
@@ -1976,6 +2103,59 @@ class TestWebServicesDirect extends TestBizModel
 		return true;
 	}
 }
+
+class TestSoap_Tickets extends TestSoap
+{
+	static public function GetName() {return 'Test SOAP - create ticket';}
+
+	protected function DoExecute()
+	{
+		global $aCreateTicketSpecs;
+		$this->m_aTestSpecs = $aCreateTicketSpecs;
+		return parent::DoExecute();
+	}
+}
+
+class TestSoapDirect_Tickets extends TestSoapDirect
+{
+	static public function GetName() {return 'Test SOAP without SOAP - create ticket';}
+
+	protected function DoExecute()
+	{
+		global $aCreateTicketSpecs;
+		$this->m_aTestSpecs = $aCreateTicketSpecs;
+		return parent::DoExecute();
+	}
+}
+
+
+class TestSoap_ManageCloudUsers extends TestSoap
+{
+	static public function GetName() {return 'Test SOAP - manage Cloud Users';}
+
+	protected function DoExecute()
+	{
+		global $aManageCloudUsersSpecs;
+		$this->m_aTestSpecs = $aManageCloudUsersSpecs;
+		return parent::DoExecute();
+	}
+}
+
+class TestSoapDirect_ManageCloudUsers extends TestSoapDirect
+{
+	static public function GetName() {return 'Test SOAP without SOAP - manage Cloud Users';}
+
+	protected function DoExecute()
+	{
+		global $aManageCloudUsersSpecs;
+		$this->m_aTestSpecs = $aManageCloudUsersSpecs;
+		return parent::DoExecute();
+	}
+}
+
+
+////////////////////// End of SOAP TESTS
+
 
 class TestTriggerAndEmail extends TestBizModel
 {

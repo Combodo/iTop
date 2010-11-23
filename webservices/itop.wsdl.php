@@ -23,17 +23,53 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
-// This is to make sure that the client will accept it....
+if (isset($_REQUEST['debug']))
+{
+	if ($_REQUEST['debug'] == 'text')
+	{
+		header('Content-Type: text/plain; charset=UTF-8');
+	}
+	else
+	{
+		header('Content-Type: application/xml; charset=UTF-8');
+	}
+}
+else
+{
+	// This is to make sure that the client will accept it....
+	//
+	header('Content-Type: application/xml; charset=UTF-8');
+	////header('Content-Disposition: attachment; filename="itop.wsdl"');
+	header('Content-Disposition: online; filename="itop.wsdl"');
+}
+
+require_once('../approot.inc.php');
+require_once(APPROOT.'webservices/webservices.class.inc.php');
+require_once(APPROOT.'core/config.class.inc.php');
+
+// Load the modules installed and enabled
 //
-header('Content-Type: application/xml; charset=UTF-8');
-//header('Content-Disposition: attachment; filename="itop.wsdl"');
-header('Content-Disposition: online; filename="itop.wsdl"');
+$oConfig = new Config(APPROOT.'config-itop.php');
+$aFiles = $oConfig->GetWebServiceCategories();
+foreach ($aFiles as $sFile)
+{
+	require_once(APPROOT.$sFile);
+}
 
-$sMyWsdl = './itop.wsdl.tpl';
-
-$sRawFile = file_get_contents($sMyWsdl);
+if (isset($_REQUEST['service_category']) && (!empty($_REQUEST['service_category'])))
+{
+	$sRawFile = WebServicesBase::GetWSDLContents($_REQUEST['service_category']);
+}
+else
+{
+	$sRawFile = WebServicesBase::GetWSDLContents();
+}
 
 $sServerURI = 'http'.((isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']!='off')) ? 's' : '').'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname($_SERVER['SCRIPT_NAME']).'/soapserver.php';
+if (isset($_REQUEST['service_category']) && (!empty($_REQUEST['service_category'])))
+{
+	$sServerURI .= "?service_category=".$_REQUEST['service_category'];
+}
 
 $sFinalFile = str_replace(
 	'___SOAP_SERVER_URI___',

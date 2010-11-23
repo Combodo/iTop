@@ -259,7 +259,7 @@ table.formTable {
 	static $m_aModules = array();
 	
 	// All the entries below are list of file paths relative to the module directory
-	static $m_aFilesList = array('datamodel', 'dictionary', 'data.struct', 'data.sample');
+	static $m_aFilesList = array('datamodel', 'webservice', 'dictionary', 'data.struct', 'data.sample');
 
 	static $m_sModulePath = null;
 	public function SetModulePath($sModulePath)
@@ -281,11 +281,14 @@ table.formTable {
 
 		foreach(self::$m_aFilesList as $sAttribute)
 		{
-			// All the items below are list of files, that are relative to the current file
-			// being loaded, let's update their path to store path relative to the application directory
-			foreach(self::$m_aModules[$sId][$sAttribute] as $idx => $sRelativePath)
+			if (isset(self::$m_aModules[$sId][$sAttribute]))
 			{
+				// All the items below are list of files, that are relative to the current file
+				// being loaded, let's update their path to store path relative to the application directory
+				foreach(self::$m_aModules[$sId][$sAttribute] as $idx => $sRelativePath)
+				{
 				self::$m_aModules[$sId][$sAttribute][$idx] = self::$m_sModulePath.'/'.$sRelativePath;
+				}
 			}
 		}
 	}

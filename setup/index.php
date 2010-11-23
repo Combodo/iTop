@@ -668,23 +668,38 @@ function BuildConfig(SetupWebpage $oP, Config &$oConfig, $aParamValues)
 	$aAddOns = $oConfig->GetAddOns();
 	$aAppModules = $oConfig->GetAppModules();
 	$aDataModels = $oConfig->GetDataModels();
+	$aWebServiceCategories = $oConfig->GetWebServiceCategories();
 	$aDictionaries = $oConfig->GetDictionaries();
 	// Merge the values with the ones provided by the modules
 	// Make sure when don't load the same file twice...
 	foreach($aParamValues['module'] as $sModuleId)
 	{
 		$oP->log('Installed iTop module: '. $sModuleId);
-		$aDataModels = array_unique(array_merge($aDataModels, $aAvailableModules[$sModuleId]['datamodel']));
-		$aDictionaries = array_unique(array_merge($aDictionaries, $aAvailableModules[$sModuleId]['dictionary']));
-		foreach($aAvailableModules[$sModuleId]['settings'] as $sProperty => $value)
+		if (isset($aAvailableModules[$sModuleId]['datamodel']))
 		{
-			list($sName, $sVersion) = GetModuleName($sModuleId);
-			$oConfig->SetModuleSetting($sName, $sProperty, $value);
+			$aDataModels = array_unique(array_merge($aDataModels, $aAvailableModules[$sModuleId]['datamodel']));
+		}
+		if (isset($aAvailableModules[$sModuleId]['webservice']))
+		{
+			$aWebServiceCategories = array_unique(array_merge($aWebServiceCategories, $aAvailableModules[$sModuleId]['webservice']));
+		}
+		if (isset($aAvailableModules[$sModuleId]['dictionary']))
+		{
+			$aDictionaries = array_unique(array_merge($aDictionaries, $aAvailableModules[$sModuleId]['dictionary']));
+		}
+		if (isset($aAvailableModules[$sModuleId]['settings']))
+		{
+			foreach($aAvailableModules[$sModuleId]['settings'] as $sProperty => $value)
+			{
+				list($sName, $sVersion) = GetModuleName($sModuleId);
+				$oConfig->SetModuleSetting($sName, $sProperty, $value);
+			}
 		}
 	}
 	$oConfig->SetAddOns($aAddOns);
 	$oConfig->SetAppModules($aAppModules);
 	$oConfig->SetDataModels($aDataModels);
+	$oConfig->SetWebServiceCategories($aWebServiceCategories);
 	$oConfig->SetDictionaries($aDictionaries);
 }
 

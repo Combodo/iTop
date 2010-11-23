@@ -107,7 +107,7 @@ class SOAPResultLog
 }
 
 
-class SOAPResultData
+class SOAPKeyValue
 {
 	public $key; // string
 	public $value; // string
@@ -119,11 +119,10 @@ class SOAPResultData
 	}
 }
 
-
 class SOAPResultMessage
 {
 	public $label; // string
-	public $values; // array of SOAPResultData
+	public $values; // array of SOAPKeyValue
 
 	public function __construct($sLabel, $aValues)
 	{
@@ -151,17 +150,38 @@ class SOAPResult
 	}
 }
 
-$aSOAPMapping = array(
-	'SearchCondition' => 'SOAPSearchCondition',
-	'ExternalKeySearch' => 'SOAPExternalKeySearch',
-	'AttributeValue' => 'SOAPAttributeValue',
-	'LinkCreationSpec' => 'SOAPLinkCreationSpec',
-	'LogMessage' => 'SOAPLogMessage',
-	'ResultLog' => 'SOAPResultLog',
-	'ResultData' => 'SOAPResultData',
-	'ResultMessage' => 'SOAPResultMessage',
-	'Result' => 'SOAPResult',
-);
+class SOAPSimpleResult
+{
+	public $status; // boolean
+	public $message; // string
 
+	public function __construct($bStatus, $sMessage)
+	{
+		$this->status = $bStatus;
+		$this->message = $sMessage;
+	}
+}
+
+
+class SOAPMapping
+{
+	static function GetMapping()
+	{
+		$aSOAPMapping = array(
+			'SearchCondition' => 'SOAPSearchCondition',
+			'ExternalKeySearch' => 'SOAPExternalKeySearch',
+			'AttributeValue' => 'SOAPAttributeValue',
+			'LinkCreationSpec' => 'SOAPLinkCreationSpec',
+			'KeyValue' => 'SOAPKeyValue',
+			'LogMessage' => 'SOAPLogMessage',
+			'ResultLog' => 'SOAPResultLog',
+			'ResultData' => 'SOAPKeyValue',
+			'ResultMessage' => 'SOAPResultMessage',
+			'Result' => 'SOAPResult',
+			'SimpleResult' => 'SOAPSimpleResult',
+		);
+		return $aSOAPMapping;
+	}
+}
 
 ?>

@@ -70,6 +70,7 @@ class Config
 
 	protected $m_aAppModules;
 	protected $m_aDataModels;
+	protected $m_aWebServiceCategories;
 	protected $m_aAddons;
 	protected $m_aDictionaries;
 
@@ -281,6 +282,9 @@ class Config
 			'core/trigger.class.inc.php',
 		);
 		$this->m_aDataModels = array();
+		$this->m_aWebServiceCategories = array(
+			'webservices/webservices.basic.php',
+		);
 		$this->m_aAddons = array(
 			// Default AddOn, always present can be moved to an official iTop Module later if needed
 			'user rights' => 'addons/userrights/userrightsprofile.class.inc.php',
@@ -405,6 +409,7 @@ class Config
 		}
 		$this->m_aAppModules = $MyModules['application'];
 		$this->m_aDataModels = $MyModules['business'];
+		$this->m_aWebServiceCategories = $MyModules['webservices'];
 		$this->m_aAddons = $MyModules['addons'];
 		$this->m_aDictionaries = $MyModules['dictionaries'];
 
@@ -487,6 +492,15 @@ class Config
 	public function SetDataModels($aDataModels)
 	{
 		$this->m_aDataModels = $aDataModels;
+	}
+
+	public function GetWebServiceCategories()
+	{
+		return $this->m_aWebServiceCategories;
+	}
+	public function SetWebServiceCategories($aWebServiceCategories)
+	{
+		$this->m_aWebServiceCategories = $aWebServiceCategories;
 	}
 
 	public function GetAddons()
@@ -852,6 +866,12 @@ class Config
 			fwrite($hFile, "\t),\n");
 			fwrite($hFile, "\t'business' => array (\n");
 			foreach($this->m_aDataModels as $sFile)
+			{
+				fwrite($hFile, "\t\t'$sFile',\n");
+			}
+			fwrite($hFile, "\t),\n");
+			fwrite($hFile, "\t'webservices' => array (\n");
+			foreach($this->m_aWebServiceCategories as $sFile)
 			{
 				fwrite($hFile, "\t\t'$sFile',\n");
 			}

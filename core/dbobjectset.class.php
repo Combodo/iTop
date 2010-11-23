@@ -158,6 +158,30 @@ class DBObjectSet
 		return $aRet;
 	} 
 
+	public function ToArrayOfValues()
+	{
+		if (!$this->m_bLoaded) $this->Load();
+
+		$aRet = array();
+		foreach($this->m_aData as $iRow => $aObjects)
+		{
+			foreach($aObjects as $sClassAlias => $oObject)
+			{
+				$aRet[$iRow][$sClassAlias.'.'.'id'] = $oObject->GetKey(); 
+				$sClass = get_class($oObject);
+				foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+				{
+					if ($oAttDef->IsScalar())
+					{
+						$sAttName = $sClassAlias.'.'.$sAttCode;
+						$aRet[$iRow][$sAttName] = $oObject->Get($sAttCode);
+					}
+				}
+			}
+		}
+		return $aRet;
+	} 
+
 	public function GetColumnAsArray($sAttCode, $bWithId = true)
 	{
 		$aRet = array();

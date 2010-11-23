@@ -161,6 +161,14 @@
 	<message name="CreateIncidentTicketResponse">
 		<part name="CreateIncidentTicketReturn" type="typens:Result"/>
 	</message>
+	<message name="SearchObjects">
+		<part name="login" type="xsd:string"/>
+		<part name="password" type="xsd:string"/>
+		<part name="oql" type="xsd:string"/>
+	</message>
+	<message name="SearchObjectsResponse">
+		<part name="SearchObjectsReturn" type="typens:Result"/>
+	</message>
 	<portType name="WebServicePortType">
 		<operation name="GetVersion">
 			<wsdl:documentation>
@@ -177,6 +185,13 @@
 			<input message="typens:CreateIncidentTicket"/>
 			<output message="typens:CreateIncidentTicketResponse"/>
 		</operation>
+		<operation name="SearchObjects">
+			<wsdl:documentation>
+				Create a ticket, return information about reconciliation on external keys and the created ticket
+			</wsdl:documentation> -->
+			<input message="typens:SearchObjects"/>
+			<output message="typens:SearchObjectsResponse"/>
+		</operation>
 	</portType>
 	<binding name="WebServiceBinding" type="typens:WebServicePortType">
 		<soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
@@ -190,6 +205,15 @@
 			</output>
 		</operation>
 		<operation name="CreateIncidentTicket">
+			<soap:operation soapAction="urn:WebServiceAction"/>
+			<input>
+				<soap:body namespace="urn:ITop" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body namespace="urn:ITop" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		<operation name="SearchObjects">
 			<soap:operation soapAction="urn:WebServiceAction"/>
 			<input>
 				<soap:body namespace="urn:ITop" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>

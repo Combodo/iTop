@@ -30,14 +30,17 @@ require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');
 
-require('./webservices.class.inc.php');
-
 // this file is generated dynamically with location = here
 $sWsdlUri = 'http'.((isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']!='off')) ? 's' : '').'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname($_SERVER['SCRIPT_NAME']).'/../webservices/itop.wsdl.php';
+if (isset($_REQUEST['service_category']) && (!empty($_REQUEST['service_category'])))
+{
+	$sWsdlUri .= "?service_category=".$_REQUEST['service_category'];
+}
 
 
 ini_set("soap.wsdl_cache_enabled","0");
 
+$aSOAPMapping = SOAPMapping::GetMapping();
 $oSoapServer = new SoapServer
 (
 	$sWsdlUri,
@@ -46,7 +49,28 @@ $oSoapServer = new SoapServer
 	)
 );
 // $oSoapServer->setPersistence(SOAP_PERSISTENCE_SESSION);
-$oSoapServer->setClass('WebServices', null);
+if (isset($_REQUEST['service_category']) && (!empty($_REQUEST['service_category'])))
+{
+	$sServiceClass = $_REQUEST['service_category'];
+	if (!class_exists($sServiceClass))
+	{
+		// not a valid class name (not a PHP class at all)
+		throw new SoapFault("iTop SOAP server", "Invalid argument service_category: '$sServiceClass' is not a PHP class");
+	}
+	elseif (!is_subclass_of($sServiceClass, 'WebServicesBase'))
+	{
+		// not a valid class name (not deriving from WebServicesBase)
+		throw new SoapFault("iTop SOAP server", "Invalid argument service_category: '$sServiceClass' is not derived from WebServicesBase");
+	}
+	else
+	{
+		$oSoapServer->setClass($sServiceClass, null);
+	}
+}
+else
+{
+	$oSoapServer->setClass('BasicServices', null);
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
@@ -59,9 +83,25 @@ else
 	echo "<ul>\n";
 	foreach($aFunctions as $sFunc)
 	{
+		if ($sFunc == 'GetWSDLContents') continue;
+
 		echo "<li>$sFunc</li>\n";
 	}
 	echo "</ul>\n";
 	echo "<p>Here the <a href=\"$sWsdlUri\">WSDL file</a><p>";
+
+	echo "You may also want to try the following service categories: ";
+	echo "<ul>\n";
+	foreach(get_declared_classes() as $sPHPClass)
+	{
+		if (is_subclass_of($sPHPClass, 'WebServicesBase'))
+		{
+			$sServiceCategory = $sPHPClass;
+			$sSoapServerUri = 'http'.((isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']!='off')) ? 's' : '').'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname($_SERVER['SCRIPT_NAME']).'/../webservices/soapserver.php';
+			$sSoapServerUri .= "?service_category=$sServiceCategory";
+			echo "<li><a href=\"$sSoapServerUri\">$sServiceCategory</a></li>\n";
+		}
+	}
+	echo "</ul>\n";
 }
 ?>

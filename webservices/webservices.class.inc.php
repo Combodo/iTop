@@ -84,7 +84,7 @@ class WebServiceResult
 			$aValues = array();
 			foreach($aData as $sKey => $value)
 			{
-				$aValues[] = new SoapResultData($sKey, $value);
+				$aValues[] = new SOAPKeyValue($sKey, $value);
 			}
 			$aResults[] = new SoapResultMessage($sLabel, $aValues);
 		}
@@ -138,6 +138,17 @@ class WebServiceResult
 			'name' => $oObject->GetName(),
 			'url' => $oObject->GetHyperlink(),
 		);
+	}
+
+	/**
+	 * Add result details - a table row
+	 *
+	 * @param string sLabel
+	 * @param object oObject
+	 */
+	public function AddResultRow($sLabel, $aRow)
+	{
+		$this->m_aResult[$sLabel] = $aRow;
 	}
 
 	/**
@@ -236,8 +247,18 @@ class WebServiceResultFailedLogin extends WebServiceResult
  *
  * @package     iTopORM
  */
-class WebServices
+abstract class WebServicesBase
 {
+	static public function GetWSDLContents($sServiceCategory = '')
+	{
+		if ($sServiceCategory == '')
+		{
+			$sServiceCategory = 'BasicServices';
+		}
+		$sWsdlFilePath = call_user_func(array($sServiceCategory, 'GetWSDLFilePath'));
+		return file_get_contents($sWsdlFilePath);
+	}
+
 	/**
 	 * Helper to log a service delivery
 	 *
@@ -537,138 +558,21 @@ class WebServices
 		return $aRes;
 	}
 
-
-	/**
-	 * Get the server version (TODO: get it dynamically, where ?)
-	 *	 
-	 * @return WebServiceResult
-	 */
-	static public function GetVersion()
+	static protected function SoapStructToAssociativeArray($aArrayOfAssocArray)
 	{
-		if (ITOP_REVISION == '$WCREV$')
+		if (is_null($aArrayOfAssocArray)) return array();
+
+		$aRes = array();
+		foreach($aArrayOfAssocArray as $aAssocArray)
 		{
-			$sVersionString = ITOP_VERSION.' [dev]';
-		}
-		else
-		{
-			// This is a build made from SVN, let display the full information
-			$sVersionString = ITOP_VERSION."-".ITOP_REVISION." ".ITOP_BUILD_DATE;
-		}
-
-		return $sVersionString;
-	}
-
-	public function CreateIncidentTicket($sLogin, $sPassword, $sTitle, $sDescription, $oCallerDesc, $oCustomerDesc, $oServiceDesc, $oServiceSubcategoryDesc, $sProduct, $oWorkgroupDesc, $aSOAPImpactedCIs, $sImpact, $sUrgency)
-	{
-		if (!UserRights::CheckCredentials($sLogin, $sPassword))
-		{
-			$oRes = new WebServiceResultFailedLogin($sLogin);
-			$this->LogUsage(__FUNCTION__, $oRes);
-
-			return $oRes->ToSoapStructure();
-		}
-		UserRights::Login($sLogin);
-
-		$aCallerDesc = self::SoapStructToExternalKeySearch($oCallerDesc);
-		$aCustomerDesc = self::SoapStructToExternalKeySearch($oCustomerDesc);
-		$aServiceDesc = self::SoapStructToExternalKeySearch($oServiceDesc);
-		$aServiceSubcategoryDesc = self::SoapStructToExternalKeySearch($oServiceSubcategoryDesc);
-		$aWorkgroupDesc = self::SoapStructToExternalKeySearch($oWorkgroupDesc);
-
-		$aImpactedCIs = array();
-		if (is_null($aSOAPImpactedCIs)) $aSOAPImpactedCIs = array();
-		foreach($aSOAPImpactedCIs as $oImpactedCIs)
-		{
-			$aImpactedCIs[] = self::SoapStructToLinkCreationSpec($oImpactedCIs);
-		}
-
-		$oRes = $this->_CreateIncidentTicket
-		(
-			$sTitle,
-			$sDescription,
-			$aCallerDesc,
-			$aCustomerDesc,
-			$aServiceDesc,
-			$aServiceSubcategoryDesc,
-			$sProduct,
-			$aWorkgroupDesc,
-			$aImpactedCIs,
-			$sImpact,
-			$sUrgency
-		);
-		return $oRes->ToSoapStructure();
-	}
-
-	/**
-	 * Create an incident ticket from a monitoring system
-	 * Some CIs might be specified (by their name/IP)
-	 *	 
-	 * @param string sTitle
-	 * @param string sDescription
-	 * @param array aCallerDesc
-	 * @param array aCustomerDesc
-	 * @param array aServiceDesc
-	 * @param array aServiceSubcategoryDesc
-	 * @param string sProduct
-	 * @param array aWorkgroupDesc
-	 * @param array aImpactedCIs
-	 * @param string sImpact
-	 * @param string sUrgency
-	 *
-	 * @return WebServiceResult
-	 */
-	protected function _CreateIncidentTicket($sTitle, $sDescription, $aCallerDesc, $aCustomerDesc, $aServiceDesc, $aServiceSubcategoryDesc, $sProduct, $aWorkgroupDesc, $aImpactedCIs, $sImpact, $sUrgency)
-	{
-
-		$oRes = new WebServiceResult();
-
-		try
-		{
-			$oMyChange = MetaModel::NewObject("CMDBChange");
-			$oMyChange->Set("date", time());
-			$oMyChange->Set("userinfo", "Administrator");
-			$iChangeId = $oMyChange->DBInsertNoReload();
-	
-			$oNewTicket = MetaModel::NewObject('Incident');
-			$this->MyObjectSetScalar('title', 'title', $sTitle, $oNewTicket, $oRes);
-			$this->MyObjectSetScalar('description', 'description', $sDescription, $oNewTicket, $oRes);
-
-			$this->MyObjectSetExternalKey('org_id', 'customer', $aCustomerDesc, $oNewTicket, $oRes);
-			$this->MyObjectSetExternalKey('caller_id', 'caller', $aCallerDesc, $oNewTicket, $oRes);
-	
-			$this->MyObjectSetExternalKey('service_id', 'service', $aServiceDesc, $oNewTicket, $oRes);
-			$this->MyObjectSetExternalKey('servicesubcategory_id', 'servicesubcategory', $aServiceSubcategoryDesc, $oNewTicket, $oRes);
-			$this->MyObjectSetScalar('product', 'product', $sProduct, $oNewTicket, $oRes);
-
-			$this->MyObjectSetExternalKey('workgroup_id', 'workgroup', $aWorkgroupDesc, $oNewTicket, $oRes);
-
-
-			$aDevicesNotFound = $this->AddLinkedObjects('ci_list', 'impacted_cis', 'FunctionalCI', $aImpactedCIs, $oNewTicket, $oRes);
-			if (count($aDevicesNotFound) > 0)
+			$aRow = array();
+			foreach ($aAssocArray as $oKeyValuePair)
 			{
-				$this->MyObjectSetScalar('description', 'n/a', $sDescription.' - Related CIs: '.implode(', ', $aDevicesNotFound), $oNewTicket, $oRes);
+				$aRow[$oKeyValuePair->key] = $oKeyValuePair->value;
 			}
-			else
-			{
-				$this->MyObjectSetScalar('description', 'n/a', $sDescription, $oNewTicket, $oRes);
-			}
-
-			$this->MyObjectSetScalar('impact', 'impact', $sImpact, $oNewTicket, $oRes);
-			$this->MyObjectSetScalar('urgency', 'urgency', $sUrgency, $oNewTicket, $oRes);
-
-			$this->MyObjectInsert($oNewTicket, 'created', $oMyChange, $oRes);
+			$aRes[] = $aRow;		
 		}
-		catch (CoreException $e)
-		{
-			$oRes->LogError($e->getMessage());
-		}
-		catch (Exception $e)
-		{
-			$oRes->LogError($e->getMessage());
-		}
-
-		$this->LogUsage(__FUNCTION__, $oRes);
-		return $oRes;
+		return $aRes;
 	}
 }
 ?>

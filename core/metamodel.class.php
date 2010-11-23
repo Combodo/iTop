@@ -3299,6 +3299,10 @@ abstract class MetaModel
 		{
 			self::Plugin($sConfigFile, 'business', $sToInclude);
 		}
+		foreach (self::$m_oConfig->GetWebServiceCategories() as $sModule => $sToInclude)
+		{
+			self::Plugin($sConfigFile, 'webservice', $sToInclude);
+		}
 		foreach (self::$m_oConfig->GetAddons() as $sModule => $sToInclude)
 		{
 			self::Plugin($sConfigFile, 'addons', $sToInclude);
