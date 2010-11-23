@@ -493,6 +493,10 @@ class UserRights
 		{
 			return '';
 		}
+		if (!MetaModel::IsValidAttCode(get_class($oUser), 'contactid'))
+		{
+			return '';
+		}
 		return $oUser->Get('contactid');
 	}
 
