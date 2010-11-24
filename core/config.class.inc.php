@@ -135,7 +135,7 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
-		'read_only' => array(
+		'database_read_only' => array(
 			'type' => 'bool',
 			'description' => 'Freeze the data for administration purposes - administrators can still do anything... in appearance!',
 			'default' => false,

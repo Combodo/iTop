@@ -2536,10 +2536,30 @@ abstract class MetaModel
 		return $aDataDump;
 	}
 
-	// Temporary - investigate the cost of such a limitation
+	/*
+	* Determines wether the target DB is frozen or not
+	* 1 - consider the DB property 'status'
+	* 2 - check the setting 'database_read_only'	
+	*/		
 	public static function DBIsReadOnly()
 	{
-		return self::$m_oConfig->Get('read_only');
+		$sStatus = DBProperty::GetProperty('status', null);
+		if (!is_null($sStatus))
+		{
+			switch (strtolower(trim($sStatus)))
+			{
+			case 'fullaccess':
+				$ret = false;
+				break;
+			default:
+				$ret = true;
+			}
+		}
+		else
+		{
+			$ret = self::$m_oConfig->Get('database_read_only');
+		}
+		return $ret;
 	}
 
 	protected static function MakeDictEntry($sKey, $sValueFromOldSystem, $sDefaultValue, &$bNotInDico)
