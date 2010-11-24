@@ -1904,6 +1904,7 @@ $aManageCloudUsersSpecs = array(
 		'args' => array(
 			'admin', /* sAdminLogin */
 			'admin', /* sAdminPassword */
+			'http://myserver.mydomain.fr:8080', /* sCloudMgrUrl */
 			'andros@combodo.com', /* sLogin */
 			'André', /* sFirstName */
 			'Dupont', /* sLastName */
@@ -2311,7 +2312,7 @@ class TestDBProperties extends TestBizModel
 	{
 		$sName = 'test';
 		DBProperty::SetProperty($sName, 'unix time:'.time(), 'means nothing', 'done with the automated test utility');
-		$sValue = DBProperty::GetProperty($sName);
+		$sValue = DBProperty::GetProperty($sName, 'defaults to this because the table has not been created (1.0.1 install?)');
 		echo "<p>Write... then read property <b>$sName</b>, found: '$sValue'</p>\n";
 	}
 }
