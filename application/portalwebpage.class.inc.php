@@ -164,6 +164,7 @@ EOF
 	
 	public function output()
 	{
+		$sMenu = '';
 		$this->AddMenuButton('logoff', 'Portal:Disconnect', '../pages/logoff.php?portal=1'); // This menu is always present and is the last one
 		foreach($this->m_aMenuButtons as $aMenuItem)
 		{
