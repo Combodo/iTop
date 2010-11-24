@@ -22,6 +22,7 @@
  * @author      Denis Flaven <denis.flaven@combodo.com>
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
+require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/nicewebpage.class.inc.php');
 require_once(APPROOT.'/application/wizardhelper.class.inc.php');
@@ -715,7 +716,7 @@ function RequestDetails(WebPage $oP, $id)
  * @param WebPage $oP The current page, for errors output
  * @return Organization The user's org or null in case of problem...
  */
-function GetUserOrg($oP)
+function GetUserOrg()
 {
 	$oOrg = null;
 	$iContactId = UserRights::GetContactId();
@@ -726,7 +727,7 @@ function GetUserOrg($oP)
 	}
 	else
 	{
-		$oP->add("<p class=\"error\">".Dict::S('Portal:ErrorNoContactForThisUser')."</p>");
+		throw new Exception(Dict::S('Portal:ErrorNoContactForThisUser'));
 	}
 	return $oOrg;
 }
@@ -741,7 +742,7 @@ try
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 	LoginWebPage::DoLogin(false /* bMustBeAdmin */, true /* IsAllowedToPortalUsers */); // Check user rights and prompt if needed
 
-	$oUserOrg = GetUserOrg($oP);
+	$oUserOrg = GetUserOrg();
 
 	$sCode = $oUserOrg->Get('code');
 	$sAlternateStylesheet = '';
