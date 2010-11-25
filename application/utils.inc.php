@@ -45,8 +45,8 @@ class utils
 
 	public static function IsModeCLI()
 	{
-		global $argv;
-		if (isset($argv))
+		$sSAPIName = php_sapi_name();
+		if ($sSAPIName == 'cli')
 		{
 			return true;
 		}
