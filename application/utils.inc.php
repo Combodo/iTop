@@ -46,7 +46,8 @@ class utils
 	public static function IsModeCLI()
 	{
 		$sSAPIName = php_sapi_name();
-		if ($sSAPIName == 'cli')
+		$sCleanName = strtolower(trim($sSAPIName));
+		if ($sCleanName == 'cli')
 		{
 			return true;
 		}
