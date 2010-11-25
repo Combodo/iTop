@@ -30,6 +30,7 @@ require_once(APPROOT.'/core/log.class.inc.php');
 require_once(APPROOT.'/core/kpi.class.inc.php');
 require_once(APPROOT.'/core/cmdbsource.class.inc.php');
 require_once(APPROOT.'/setup/setuppage.class.inc.php');
+require_once(APPROOT.'/setup/moduleinstaller.class.inc.php');
 
 define('TMP_CONFIG_FILE', APPROOT.'/tmp-config-itop.php');
 define('FINAL_CONFIG_FILE', APPROOT.'/config-itop.php');
@@ -661,9 +662,8 @@ function GetAvailableModules(SetupWebpage $oP)
 /**
  * Build the config file from the parameters (especially the selected modules)
  */
-function BuildConfig(SetupWebpage $oP, Config &$oConfig, $aParamValues)
+function BuildConfig(SetupWebpage $oP, Config &$oConfig, $aParamValues, $aAvailableModules)
 {
-	$aAvailableModules = GetAvailableModules($oP);
 	// Initialize the arrays below with default values for the application...
 	$aAddOns = $oConfig->GetAddOns();
 	$aAppModules = $oConfig->GetAppModules();
@@ -694,6 +694,20 @@ function BuildConfig(SetupWebpage $oP, Config &$oConfig, $aParamValues)
 				list($sName, $sVersion) = GetModuleName($sModuleId);
 				$oConfig->SetModuleSetting($sName, $sProperty, $value);
 			}
+		}
+		if (isset($aAvailableModules[$sModuleId]['installer']))
+		{
+			$sModuleInstallerClass = $aAvailableModules[$sModuleId]['installer'];
+			if (!class_exists($sModuleInstallerClass))
+			{
+				throw new Exception("Wrong installer class: '$sModuleInstallerClass' is not a PHP class - Module: ".$aAvailableModules[$sModuleId]['label']);
+			}
+			if (!is_subclass_of($sModuleInstallerClass, 'ModuleInstallerAPI'))
+			{
+				throw new Exception("Wrong installer class: '$sModuleInstallerClass' is not derived from 'ModuleInstallerAPI' - Module: ".$aAvailableModules[$sModuleId]['label']);
+			}
+			$aCallSpec = array($sModuleInstallerClass, 'BeforeWritingConfig');
+			$oConfig = call_user_func_array($aCallSpec, array($oConfig));
 		}
 	}
 	$oConfig->SetAddOns($aAddOns);
@@ -971,10 +985,22 @@ function AdminAccountDefinition(SetupWebPage $oP, $aParamValues, $iCurrentStep, 
 	$sDBPrefix = $aParamValues['db_prefix'];
 	$oConfig->SetDBName($sDBName);
 	$oConfig->SetDBSubname($sDBPrefix);
-	BuildConfig($oP, $oConfig, $aParamValues); // Load all the includes based on the modules selected
+	$aAvailableModules = GetAvailableModules($oP);
+	BuildConfig($oP, $oConfig, $aParamValues, $aAvailableModules); // Load all the includes based on the modules selected
 	$oConfig->WriteToFile(TMP_CONFIG_FILE);
 	if (CreateDatabaseStructure($oP, $oConfig, $sDBName, $sDBPrefix, $aParamValues['module']))
 	{
+		foreach($aParamValues['module'] as $sModuleId)
+		{
+			if (isset($aAvailableModules[$sModuleId]['installer']))
+			{
+				$sModuleInstallerClass = $aAvailableModules[$sModuleId]['installer'];
+				// The validity of the sModuleInstallerClass has been established in BuildConfig() 
+				$aCallSpec = array($sModuleInstallerClass, 'AfterDatabaseCreation');
+				call_user_func_array($aCallSpec, array($oConfig));
+			}
+		}
+
 		$sRedStar = "<span class=\"hilite\">*</span>";
 		$oP->add("<h2>Default language for the application:</h2>\n");
 		// Possible languages (depends on the dictionaries loaded in the config)
