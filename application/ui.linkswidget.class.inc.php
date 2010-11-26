@@ -37,7 +37,6 @@ class UILinksWidget
 	protected $m_sLinkedClass;
 	protected $m_sRemoteClass;
 	protected $m_bDuplicatesAllowed;
-	protected static $iWidgetIndex = 0;
 	
 	public function __construct($sClass, $sAttCode, $iInputId, $sNameSuffix = '', $bDuplicatesAllowed = false)
 	{
@@ -47,7 +46,6 @@ class UILinksWidget
 		$this->m_iInputId = $iInputId;
 		$this->m_bDuplicatesAllowed = $bDuplicatesAllowed;
 		$this->m_aEditableFields = array();
-		self::$iWidgetIndex++;
 			
 		$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $this->m_sAttCode);
 		$this->m_sLinkedClass = $oAttDef->GetLinkedClass();
@@ -60,7 +58,7 @@ class UILinksWidget
 
 		$this->m_aEditableFields = array();
 		$this->m_aTableConfig = array();
-		$this->m_aTableConfig['form::checkbox'] = array( 'label' => "<input class=\"select_all\" type=\"checkbox\" value=\"1\" onClick=\"CheckAll('#linkedset_{$this->m_sAttCode}{$this->m_sNameSuffix} .selection', this.checked); oWidget".self::$iWidgetIndex.".OnSelectChange();\">", 'description' => Dict::S('UI:SelectAllToggle+'));
+		$this->m_aTableConfig['form::checkbox'] = array( 'label' => "<input class=\"select_all\" type=\"checkbox\" value=\"1\" onClick=\"CheckAll('#linkedset_{$this->m_sAttCode}{$this->m_sNameSuffix} .selection', this.checked); oWidget".$this->m_iInputId.".OnSelectChange();\">", 'description' => Dict::S('UI:SelectAllToggle+'));
 
 		foreach(MetaModel::ListAttributeDefs($this->m_sLinkedClass) as $sAttCode=>$oAttDef)
 		{
@@ -109,7 +107,7 @@ class UILinksWidget
 			$sPrefix .= "[$key][";
 			$sNameSuffix = "]"; // To make a tabular form
 			$aArgs['prefix'] = $sPrefix;
-			$aRow['form::checkbox'] = "<input class=\"selection\" type=\"checkbox\" onChange=\"oWidget".self::$iWidgetIndex.".OnSelectChange();\" value=\"$key\">";
+			$aRow['form::checkbox'] = "<input class=\"selection\" type=\"checkbox\" onClick=\"oWidget".$this->m_iInputId.".OnSelectChange();\" value=\"$key\">";
 			$aRow['form::checkbox'] .= "<input type=\"hidden\" name=\"attr_{$sPrefix}id{$sNameSuffix}\" value=\"$key\">";
 			foreach($this->m_aEditableFields as $sFieldCode)
 			{
@@ -123,7 +121,7 @@ class UILinksWidget
 			$sPrefix .= "[$linkObjOrId][";
 			$sNameSuffix = "]"; // To make a tabular form
 			$aArgs['prefix'] = $sPrefix;
-			$aRow['form::checkbox'] = "<input class=\"selection\" type=\"checkbox\" onChange=\"oWidget".self::$iWidgetIndex.".OnSelectChange();\" value=\"$linkObjOrId\">";
+			$aRow['form::checkbox'] = "<input class=\"selection\" type=\"checkbox\" onClick=\"oWidget".$this->m_iInputId.".OnSelectChange();\" value=\"$linkObjOrId\">";
 			$aRow['form::checkbox'] .= "<input type=\"hidden\" name=\"attr_{$sPrefix}id{$sNameSuffix}\" value=\"\">";
 			foreach($this->m_aEditableFields as $sFieldCode)
 			{
@@ -209,7 +207,6 @@ class UILinksWidget
 	 */
 	public function Display(WebPage $oPage, DBObjectSet $oValue, $aArgs = array())
 	{
-		$iWidgetIndex = self::$iWidgetIndex;
 		$sHtmlValue = '';
 		$sTargetClass = self::GetTargetClass($this->m_sClass, $this->m_sAttCode);
 		$sHtmlValue .= "<div id=\"linkedset_{$this->m_sAttCode}{$this->m_sNameSuffix}\">\n";
@@ -226,12 +223,12 @@ class UILinksWidget
 		$sHtmlValue .= $this->DisplayFormTable($oPage, $this->m_aTableConfig, $aForm);
 		$sDuplicates = ($this->m_bDuplicatesAllowed) ? 'true' : 'false';
 		$oPage->add_ready_script(<<<EOF
-		oWidget$iWidgetIndex = new LinksWidget('{$this->m_sAttCode}{$this->m_sNameSuffix}', '{$this->m_sClass}', '{$this->m_sAttCode}', '{$this->m_iInputId}', '{$this->m_sNameSuffix}', $sDuplicates);
-		oWidget$iWidgetIndex.Init();
+		oWidget{$this->m_iInputId} = new LinksWidget('{$this->m_sAttCode}{$this->m_sNameSuffix}', '{$this->m_sClass}', '{$this->m_sAttCode}', '{$this->m_iInputId}', '{$this->m_sNameSuffix}', $sDuplicates);
+		oWidget{$this->m_iInputId}.Init();
 EOF
 );
-		$sHtmlValue .= "<span style=\"float:left;\">&nbsp;&nbsp;&nbsp;<img src=\"../images/tv-item-last.gif\">&nbsp;&nbsp;<input id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_btnRemove\" type=\"button\" value=\"".Dict::S('UI:RemoveLinkedObjectsOf_Class')."\" onClick=\"oWidget$iWidgetIndex.RemoveSelected();\" >";
-		$sHtmlValue .= "&nbsp;&nbsp;&nbsp;<input id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_btnAdd\" type=\"button\" value=\"".Dict::Format('UI:AddLinkedObjectsOf_Class', MetaModel::GetName($this->m_sRemoteClass))."\" onClick=\"oWidget$iWidgetIndex.AddObjects();\"></span>\n";
+		$sHtmlValue .= "<span style=\"float:left;\">&nbsp;&nbsp;&nbsp;<img src=\"../images/tv-item-last.gif\">&nbsp;&nbsp;<input id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_btnRemove\" type=\"button\" value=\"".Dict::S('UI:RemoveLinkedObjectsOf_Class')."\" onClick=\"oWidget{$this->m_iInputId}.RemoveSelected();\" >";
+		$sHtmlValue .= "&nbsp;&nbsp;&nbsp;<input id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_btnAdd\" type=\"button\" value=\"".Dict::Format('UI:AddLinkedObjectsOf_Class', MetaModel::GetName($this->m_sRemoteClass))."\" onClick=\"oWidget{$this->m_iInputId}.AddObjects();\"></span>\n";
 		$sHtmlValue .= "<span style=\"clear:both;\"><p>&nbsp;</p></span>\n";
 		$sHtmlValue .= "</div>\n";
 		$oPage->add_at_the_end($this->GetObjectPickerDialog($oPage)); // To prevent adding forms inside the main form
@@ -348,12 +345,11 @@ EOF
 	{
 		$sHtml = "<div id=\"dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}\">";
 		$sHtml .= "<div class=\"wizContainer\" style=\"vertical-align:top;\">\n";
-		$iWidgetIndex = self::$iWidgetIndex;
 		$oFilter = new DBObjectSearch($this->m_sRemoteClass);
 		$oSet = new CMDBObjectSet($oFilter);
 		$oBlock = new DisplayBlock($oFilter, 'search', false);
 		$sHtml .= $oBlock->GetDisplay($oPage, "SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}", array('open' => true));
-		$sHtml .= "<form id=\"ObjectsAddForm_{$this->m_sAttCode}{$this->m_sNameSuffix}\" OnSubmit=\"return oWidget$iWidgetIndex.DoAddObjects(this.id);\">\n";
+		$sHtml .= "<form id=\"ObjectsAddForm_{$this->m_sAttCode}{$this->m_sNameSuffix}\" OnSubmit=\"return oWidget{$this->m_iInputId}.DoAddObjects(this.id);\">\n";
 		$sHtml .= "<div id=\"SearchResultsToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}\" style=\"vertical-align:top;background: #fff;height:100%;overflow:auto;padding:0;border:0;\">\n";
 		$sHtml .= "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>".Dict::S('UI:Message:EmptyList:UseSearchForm')."</p></div>\n";
 		$sHtml .= "</div>\n";
@@ -361,10 +357,10 @@ EOF
 		$sHtml .= "</div>\n";
 		$sHtml .= "</form>\n";
 		$sHtml .= "</div>\n";
-		$oPage->add_ready_script("$('#dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}').dialog({ width: $(window).width()*0.8, height: $(window).height()*0.8, autoOpen: false, modal: true, resizeStop: oWidget$iWidgetIndex.UpdateSizes });");
+		$oPage->add_ready_script("$('#dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}').dialog({ width: $(window).width()*0.8, height: $(window).height()*0.8, autoOpen: false, modal: true, resizeStop: oWidget{$this->m_iInputId}.UpdateSizes });");
 		$oPage->add_ready_script("$('#dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}').dialog('option', {title:'".addslashes(Dict::Format('UI:AddObjectsOf_Class_LinkedWith_Class', MetaModel::GetName($this->m_sLinkedClass), MetaModel::GetName($this->m_sClass)))."'});");
-		$oPage->add_ready_script("$('#SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix} form').bind('submit.uilinksWizard', oWidget$iWidgetIndex.SearchObjectsToAdd);");
-		$oPage->add_ready_script("$('#SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}').resize(oWidget$iWidgetIndex.UpdateSizes);");
+		$oPage->add_ready_script("$('#SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix} form').bind('submit.uilinksWizard', oWidget{$this->m_iInputId}.SearchObjectsToAdd);");
+		$oPage->add_ready_script("$('#SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}').resize(oWidget{$this->m_iInputId}.UpdateSizes);");
 		return $sHtml;
 	}
 

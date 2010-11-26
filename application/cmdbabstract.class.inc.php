@@ -201,7 +201,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 					$sLinkedClass = $oAttDef->GetLinkedClass();
 					$oLinkingAttDef = 	MetaModel::GetAttributeDef($sLinkedClass, $oAttDef->GetExtKeyToRemote());
 					$sTargetClass = $oLinkingAttDef->GetTargetClass();
-					$oPage->p(MetaModel::GetClassIcon($sTargetClass)."&nbsp;".$oAttDef->GetDescription());
+					$oPage->p(MetaModel::GetClassIcon($sTargetClass)."&nbsp;".$oAttDef->GetDescription().'<span id="busy_'.$sInputId.'"></span>');
 
 					$sValue = $this->Get($sAttCode);
 					$sDisplayValue = $this->GetEditValue($sAttCode);

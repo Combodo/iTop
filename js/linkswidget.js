@@ -93,6 +93,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates)
 		theMap.operation = 'searchObjectsToAdd'; // Override what is defined in the form itself
 		
 		sSearchAreaId = '#SearchResultsToAdd_'+me.id;
+		$(sSearchAreaId).block();
 		
 		// Run the query and display the results
 		$.post( 'ajax.render.php', theMap, 
@@ -101,7 +102,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates)
 				$(sSearchAreaId).html(data);
 				$(sSearchAreaId+' .listResults').tableHover();
 				$(sSearchAreaId+' .listResults').tablesorter( { headers: {0: {sorter: false}}, widgets: ['myZebra', 'truncatedList']} ); // sortable and zebra tables
-				
+				$(sSearchAreaId).unblock();		
 			},
 			'html'
 		);
@@ -144,7 +145,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates)
 			}
 		);
 		theMap['operation'] = 'doAddObjects';
-		
+		$('#busy_'+me.iInputId).html('&nbsp;<img src="../images/indicator.gif"/>');
 		// Run the query and display the results
 		$.post( 'ajax.render.php', theMap, 
 			function(data)
@@ -158,6 +159,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates)
 					$('#linkedset_'+me.id+' .listResults').tableHover();
 					$('#linkedset_'+me.id+' .listResults').trigger('update').trigger("applyWidgets"); // table is already sortable, just refresh it
 					$('#linkedset_'+me.id+' :input').each( function() { $(this).trigger('validate', ''); }); // Validate newly added form fields...
+					$('#busy_'+me.iInputId).html('');
 				}
 			},
 			'html'
