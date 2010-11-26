@@ -620,7 +620,7 @@ EOF
 		$oPage->add('<div class="wizContainer">');
 		$oPage->add('<form enctype="multipart/form-data" id="wizForm" method="post" onSubmit="return CheckValues()"><table style="width:100%" class="transparent"><tr><td>'.Dict::S('UI:CSVImport:SelectClass').' ');
 		$oPage->add(GetClassesSelect('class_name', $sClassName, 300, UR_ACTION_BULK_MODIFY));
-		$oPage->add('</td><td style="text-align:right"><input type="checkbox" name="advanced" value="1" '.IsChecked($bAdvanced, 1).' onChange="DoMapping()">&nbsp;'.Dict::S('UI:CSVImport:AdvancedMode').'</td></tr></table>');
+		$oPage->add('</td><td style="text-align:right"><input type="checkbox" name="advanced" value="1" '.IsChecked($bAdvanced, 1).' onClick="DoMapping()">&nbsp;'.Dict::S('UI:CSVImport:AdvancedMode').'</td></tr></table>');
 		$oPage->add('<div style="padding:1em;display:none" id="advanced_help" style="display:none">'.Dict::S('UI:CSVImport:AdvancedMode+').'</div>');
 		$oPage->add('<div id="mapping" class="white"><p style="text-align:center;width:100%;font-size:1.5em;padding:1em;">'.Dict::S('UI:CSVImport:SelectAClassFirst').'<br/></p></div>');
 		$oPage->add('<input type="hidden" name="step" value="4"/>');
@@ -896,21 +896,21 @@ EOF
 		$oPage->add('<table><tr><td style="vertical-align:top;padding-right:50px;">');
 		$oPage->add('<form enctype="multipart/form-data" id="wizForm" method="post" id="csv_options">');
 		$oPage->add('<h3>'.Dict::S('UI:CSVImport:SeparatorCharacter').'</h3>');
-		$oPage->add('<p><input type="radio" name="separator" value="," onChange="DoPreview()"'.IsChecked($sSeparator, ',').'/> '.Dict::S('UI:CSVImport:SeparatorComma+').'<br/>');
-		$oPage->add('<input type="radio" name="separator" value=";" onChange="DoPreview()"'.IsChecked($sSeparator, ';').'/> '.Dict::S('UI:CSVImport:SeparatorSemicolon+').'<br/>');
-		$oPage->add('<input type="radio" name="separator" value="tab" onChange="DoPreview()"'.IsChecked($sSeparator, "\t").'/> '.Dict::S('UI:CSVImport:SeparatorTab+').'<br/>');
-		$oPage->add('<input type="radio" name="separator" value="other"  onChange="DoPreview()"'.IsChecked($sOtherSeparator, '', true).'/> '.Dict::S('UI:CSVImport:SeparatorOther').' <input type="text" size="3" maxlength="1" name="other_separator" id="other_separator" value="'.$sOtherSeparator.'" onChange="DoPreview()"/>');
+		$oPage->add('<p><input type="radio" name="separator" value="," onClick="DoPreview()"'.IsChecked($sSeparator, ',').'/> '.Dict::S('UI:CSVImport:SeparatorComma+').'<br/>');
+		$oPage->add('<input type="radio" name="separator" value=";" onClick="DoPreview()"'.IsChecked($sSeparator, ';').'/> '.Dict::S('UI:CSVImport:SeparatorSemicolon+').'<br/>');
+		$oPage->add('<input type="radio" name="separator" value="tab" onClick="DoPreview()"'.IsChecked($sSeparator, "\t").'/> '.Dict::S('UI:CSVImport:SeparatorTab+').'<br/>');
+		$oPage->add('<input type="radio" name="separator" value="other"  onClick="DoPreview()"'.IsChecked($sOtherSeparator, '', true).'/> '.Dict::S('UI:CSVImport:SeparatorOther').' <input type="text" size="3" maxlength="1" name="other_separator" id="other_separator" value="'.$sOtherSeparator.'" onClick="DoPreview()"/>');
 		$oPage->add('</p>');
 		$oPage->add('</td><td style="vertical-align:top;padding-right:50px;">');
 		$oPage->add('<h3>'.Dict::S('UI:CSVImport:TextQualifierCharacter').'</h3>');
-		$oPage->add('<p><input type="radio" name="text_qualifier" value="&#34;" onChange="DoPreview()"'.IsChecked($sTextQualifier, '"').'/> '.Dict::S('UI:CSVImport:QualifierDoubleQuote+').'<br/>');
-		$oPage->add('<input type="radio" name="text_qualifier" value="&#39;"  onChange="DoPreview()"'.IsChecked($sTextQualifier, "'").'/> '.Dict::S('UI:CSVImport:QualifierSimpleQuote+').'<br/>');
-		$oPage->add('<input type="radio" name="text_qualifier" value="other"  onChange="DoPreview()"'.IsChecked($sOtherTextQualifier, '', true).'/> '.Dict::S('UI:CSVImport:QualifierOther').' <input type="text" size="3" maxlength="1" name="other_qualifier"  value="'.htmlentities($sOtherTextQualifier, ENT_QUOTES, 'UTF-8').'" onChange="DoPreview()"/>');
+		$oPage->add('<p><input type="radio" name="text_qualifier" value="&#34;" onClick="DoPreview()"'.IsChecked($sTextQualifier, '"').'/> '.Dict::S('UI:CSVImport:QualifierDoubleQuote+').'<br/>');
+		$oPage->add('<input type="radio" name="text_qualifier" value="&#39;"  onClick="DoPreview()"'.IsChecked($sTextQualifier, "'").'/> '.Dict::S('UI:CSVImport:QualifierSimpleQuote+').'<br/>');
+		$oPage->add('<input type="radio" name="text_qualifier" value="other"  onClick="DoPreview()"'.IsChecked($sOtherTextQualifier, '', true).'/> '.Dict::S('UI:CSVImport:QualifierOther').' <input type="text" size="3" maxlength="1" name="other_qualifier"  value="'.htmlentities($sOtherTextQualifier, ENT_QUOTES, 'UTF-8').'" onChange="DoPreview()"/>');
 		$oPage->add('</p>');
 		$oPage->add('</td><td style="vertical-align:top;">');
 		$oPage->add('<h3>'.Dict::S('UI:CSVImport:CommentsAndHeader').'</h3>');
-		$oPage->add('<p><input type="checkbox" name="header_line" id="box_header" value="1" onChange="DoPreview()"'.IsChecked($bHeaderLine, 1).'/> '.Dict::S('UI:CSVImport:TreatFirstLineAsHeader').'<p>');
-		$oPage->add('<p><input type="checkbox" name="box_skiplines" value="1" id="box_skiplines" onChange="DoPreview()"'.IsChecked($bBoxSkipLines, 1).'/> '.Dict::Format('UI:CSVImport:Skip_N_LinesAtTheBeginning', '<input type="text" size=2 name="nb_skipped_lines" id="nb_skipped_lines" onChange="DoPreview()" value="'.$iSkippedLines.'">').'<p>');
+		$oPage->add('<p><input type="checkbox" name="header_line" id="box_header" value="1" onClick="DoPreview()"'.IsChecked($bHeaderLine, 1).'/> '.Dict::S('UI:CSVImport:TreatFirstLineAsHeader').'<p>');
+		$oPage->add('<p><input type="checkbox" name="box_skiplines" value="1" id="box_skiplines" onClick="DoPreview()"'.IsChecked($bBoxSkipLines, 1).'/> '.Dict::Format('UI:CSVImport:Skip_N_LinesAtTheBeginning', '<input type="text" size=2 name="nb_skipped_lines" id="nb_skipped_lines" onChange="DoPreview()" value="'.$iSkippedLines.'">').'<p>');
 		$oPage->add('</td></tr></table>');
 		$oPage->add('<input type="hidden" name="csvdata_truncated" id="csvdata_truncated" value="'.htmlentities($sCSVDataTruncated, ENT_QUOTES, 'UTF-8').'"/>');
 		$oPage->add('<input type="hidden" name="csvdata" id="csvdata" value="'.htmlentities($sUTF8Data, ENT_QUOTES, 'UTF-8').'"/>');
@@ -1023,7 +1023,7 @@ EOF
 				'<p><input type="file" name="csvdata"/></p>';
 				
 		$sFileLoadHtml .= '<p>'.Dict::S('UI:CSVImport:Encoding').': ';
-		$sFileLoadHtml .= '<select name="encoding" onChange="DoPreview()"/>';
+		$sFileLoadHtml .= '<select name="encoding" style="font-family:Arial,Helvetica,Sans-serif"/>'; // IE 8 has some troubles if the font is different
 		foreach($aPossibleEncodings as $sIconvCode => $sDisplayName )
 		{
 			$sSelected  = '';
@@ -1048,7 +1048,7 @@ EOF
 		$sPasteDataHtml = '<div><form enctype="multipart/form-data" method="post"><p>'.Dict::S('UI:CSVImport:PasteData').'</p>'.
 						  '<p><textarea cols="100" rows="30" name="csvdata">'.htmlentities($sCSVData, ENT_QUOTES, 'UTF-8').'</textarea></p>';
 		$sPasteDataHtml .= '<p>'.Dict::S('UI:CSVImport:Encoding').': ';
-		$sPasteDataHtml .= '<select name="encoding" onChange="DoPreview()"/>';
+		$sPasteDataHtml .= '<select name="encoding" style="font-family:Arial,Helvetica,Sans-serif"/>';  // IE8 has some troubles if the font is different
 		foreach($aPossibleEncodings as $sIconvCode => $sDisplayName )
 		{
 			$sSelected  = '';
