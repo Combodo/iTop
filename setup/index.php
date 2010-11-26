@@ -511,12 +511,6 @@ function CreateDatabaseStructure(SetupWebPage $oP, Config $oConfig, $sDBName, $s
 function CreateAdminAccount(SetupWebPage $oP, Config $oConfig, $sAdminUser, $sAdminPwd, $sLanguage)
 {
 	$oP->log('Info - CreateAdminAccount');
-	InitDataModel($oP, TMP_CONFIG_FILE, false);  // load data model and connect to the database
-
-	if (!UserRights::Setup())
-	{
-		return false;
-	}
 
 	if (UserRights::CreateAdministrator($sAdminUser, $sAdminPwd, $sLanguage))
 	{
@@ -990,17 +984,6 @@ function AdminAccountDefinition(SetupWebPage $oP, $aParamValues, $iCurrentStep, 
 	$oConfig->WriteToFile(TMP_CONFIG_FILE);
 	if (CreateDatabaseStructure($oP, $oConfig, $sDBName, $sDBPrefix, $aParamValues['module']))
 	{
-		foreach($aParamValues['module'] as $sModuleId)
-		{
-			if (isset($aAvailableModules[$sModuleId]['installer']))
-			{
-				$sModuleInstallerClass = $aAvailableModules[$sModuleId]['installer'];
-				// The validity of the sModuleInstallerClass has been established in BuildConfig() 
-				$aCallSpec = array($sModuleInstallerClass, 'AfterDatabaseCreation');
-				call_user_func_array($aCallSpec, array($oConfig));
-			}
-		}
-
 		$sRedStar = "<span class=\"hilite\">*</span>";
 		$oP->add("<h2>Default language for the application:</h2>\n");
 		// Possible languages (depends on the dictionaries loaded in the config)
@@ -1059,7 +1042,23 @@ function SampleDataSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, Con
 	$oP->add("<form id=\"theForm\" method=\"post\"\">\n");
 	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
 	AddParamsToForm($oP, $aParamValues, array('sample_data'));
+
+	InitDataModel($oP, TMP_CONFIG_FILE, false);  // load data model and connect to the database
 	
+	// Perform here additional DB setup
+	// Moved here to spread the setup duration between two steps of the wizard (timeouts...)
+	$aAvailableModules = GetAvailableModules($oP);
+	foreach($aParamValues['module'] as $sModuleId)
+	{
+		if (isset($aAvailableModules[$sModuleId]['installer']))
+		{
+			$sModuleInstallerClass = $aAvailableModules[$sModuleId]['installer'];
+			// The validity of the sModuleInstallerClass has been established in BuildConfig() 
+			$aCallSpec = array($sModuleInstallerClass, 'AfterDatabaseCreation');
+			call_user_func_array($aCallSpec, array($oConfig));
+		}
+	}
+
 	if (CreateAdminAccount($oP, $oConfig, $sAdminUser, $sAdminPwd, $sLanguage))
 	{
 		$oP->add("<h2>Loading of sample data</h2>\n");
