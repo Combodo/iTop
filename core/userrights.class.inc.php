@@ -50,7 +50,6 @@ define('UR_ACTION_APPLICATION_DEFINED', 10000); // Application specific actions 
  */
 abstract class UserRightsAddOnAPI
 {
-	abstract public function Setup(); // initial installation
 	abstract public function CreateAdministrator($sAdminUser, $sAdminPwd, $sLanguage = 'EN US'); // could be used during initial installation
 
 	abstract public function Init(); // loads data (possible optimizations)
@@ -310,15 +309,6 @@ class UserRights
 		return $bRes;
 	}
 	
-	// Installation (e.g: give default values for users)
-	public static function Setup()
-	{
-		// to be discussed...
-		$bRes = self::$m_oAddOn->Setup();
-		self::FlushPrivileges(true /* reset admin cache */);
-		return $bRes;
-	}
-
 	protected static function IsLoggedIn()
 	{
 		if (self::$m_oUser == null)

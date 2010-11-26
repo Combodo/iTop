@@ -149,6 +149,7 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 		return ($oUser->GetKey() == 1);
 	}
 
+	// Deprecated - create a new module !
 	public function Setup()
 	{
 		// Users must be added manually

@@ -42,11 +42,6 @@ class UserRightsNull extends UserRightsAddOnAPI
 		return true;
 	}
 
-	public function Setup()
-	{
-		return true;
-	}
-
 	public function Init()
 	{
 		return true;
