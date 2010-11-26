@@ -463,7 +463,7 @@ EOF
 			$oAppContext = new ApplicationContext();
 			$iCurrentOrganization = $oAppContext->GetCurrentValue('org_id');
 			$sHtml = '<div id="SiloSelection">';
-			$sHtml .= '<form style="display:inline" action="'.$_SERVER['PHP_SELF'].'"><select style="width:150px;font-size:x-small" name="c[org_id]" title="Pick an organization" onChange="this.form.submit();">';
+			$sHtml .= '<form style="display:inline" action="'.$_SERVER['PHP_SELF'].'"><select class="org_combo" name="c[org_id]" title="Pick an organization" onChange="this.form.submit();">';
 			$sSelected = ($iCurrentOrganization == '') ? ' selected' : '';
 			$sHtml .= '<option value=""'.$sSelected.'>'.Dict::S('UI:AllOrganizations').'</option>';
 			while($oOrg = $oSet->Fetch())
@@ -478,7 +478,7 @@ EOF
 				{
 					$sSelected = "";
 				}
-				$sHtml .= '<option value="'.$oOrg->GetKey().'"'.$sSelected.'>'.$oOrg->GetName().'</option>';
+				$sHtml .= '<option title="'.$oOrg->GetName().'" value="'.$oOrg->GetKey().'"'.$sSelected.'>'.$oOrg->GetName().'</option>';
 			}
 			$sHtml .= '</select>';
 			// Add other dimensions/context information to this form

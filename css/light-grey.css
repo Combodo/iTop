@@ -890,3 +890,9 @@ tr.row_added td {
 a.truncated {
 	cursor: pointer;
 }
+.org_combo
+{
+	font-size:x-small;
+	width: auto;
+	max-width: 200px; 
+}
