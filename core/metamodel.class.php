@@ -1350,14 +1350,23 @@ abstract class MetaModel
 		// Discard attributes that do not make sense
 		// (missing classes in the current module combination, resulting in irrelevant ext key or link set)
 		//
-		foreach($aItems as $iFoo => $sAttCode)
+		self::Init_CheckZListItems($aItems, $sTargetClass);
+		self::$m_aListData[$sTargetClass][$sListCode] = $aItems;
+	}
+	
+	protected static function Init_CheckZListItems(&$aItems, $sTargetClass)
+	{
+		foreach($aItems as $iFoo => $attCode)
 		{
-			if (isset(self::$m_aIgnoredAttributes[$sTargetClass][$sAttCode]))
+			if (is_array($attCode))
+			{
+				self::Init_CheckZListItems($attCode, $sTargetClass);
+			}
+			else if (isset(self::$m_aIgnoredAttributes[$sTargetClass][$attCode]))
 			{
 				unset($aItems[$iFoo]);
 			}
 		}
-		self::$m_aListData[$sTargetClass][$sListCode] = $aItems;
 	}
 
 	public static function Init_DefineState($sStateCode, $aStateDef)
