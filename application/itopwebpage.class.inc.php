@@ -412,8 +412,6 @@ EOF
 		 *		Data Model
 		 *		Universal Search
 		 */
-		$oWelcomeMenu = new MenuGroup('WelcomeMenu', 10 /* fRank */);
-		new TemplateMenuNode('WelcomeMenuPage', '../application/templates/welcome_menu.html', $oWelcomeMenu->GetIndex() /* oParent */, 1 /* fRank */);
 		
 		$oToolsMenu = new MenuGroup('DataAdministration', 70 /* fRank */, 'Organization', UR_ACTION_MODIFY, UR_ALLOWED_YES|UR_ALLOWED_DEPENDS);
 		new WebPageMenuNode('CSVImportMenu', '../pages/csvimport.php', $oToolsMenu->GetIndex(), 1 /* fRank */);
