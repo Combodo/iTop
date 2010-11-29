@@ -135,6 +135,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'allow_target_creation' => array(
+			'type' => 'bool',
+			'description' => 'Displays the + button on external keys to create target objects',
+			'default' => true,
+			'value' => true,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 		'database_read_only' => array(
 			'type' => 'bool',
 			'description' => 'Freeze the data for administration purposes - administrators can still do anything... in appearance!',

@@ -13,7 +13,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-function AutocompleteWidget(id, sClass, sAttCode, sSuffix, oWizHelper)
+function ExtKeyWidget(id, sClass, sAttCode, sSuffix, bSelectMode, oWizHelper)
 {
 	this.id = id;
 	this.sClass = sClass;
@@ -23,6 +23,7 @@ function AutocompleteWidget(id, sClass, sAttCode, sSuffix, oWizHelper)
 	this.emptyOnClose = true; // Workaround for the JQuery dialog being very slow when opening and closing if the content contains many INPUT tags
 	this.oWizardHelper = oWizHelper;
 	this.ajax_request = null;
+	this.bSelectMode = bSelectMode; // true if the edited field is a SELECT, false if it's an autocomplete
 	var me = this;
 	
 	this.Init = function()
@@ -194,16 +195,13 @@ function AutocompleteWidget(id, sClass, sAttCode, sSuffix, oWizHelper)
 		// since responses may arrive in arbitrary order
 		me.StopPendingRequest();
 		
-		// Run the query and get the result back directly in JSON
+		// Run the query and get the result back directly in HTML
 		me.ajax_request = $.post( 'ajax.render.php', theMap, 
 			function(data)
 			{
-				$('#dcr_'+me.id).html(data);
-				// Adjust the height of the dialog
+				$('#ajax_'+me.id).html(data);
 				$('#ac_create_'+me.id).dialog('open');
-				var h = $('#ac_create_'+me.id+' .wizContainer').outerHeight();
-				$('#ac_create_'+me.id).dialog( "option", "height", h+55 ); // space for dialog title and padding...				
-				$('#ac_create_'+me.id).dialog( "option", "close", function() { $('#label_'+me.id).removeClass('ac_loading'); $('#label_'+me.id).focus(); } );			
+				$('#ac_create_'+me.id).dialog( "option", "close", me.OnCloseCreateObject );			
 				// Modify the action of the cancel button
 				$('#ac_create_'+me.id+' button.cancel').unbind('click').click( me.CloseCreateObject );
 				me.ajax_request = null;
@@ -215,7 +213,15 @@ function AutocompleteWidget(id, sClass, sAttCode, sSuffix, oWizHelper)
 	this.CloseCreateObject = function()
 	{
 		$('#ac_create_'+me.id).dialog( "close" );
-		$('#dcr_'+me.id).html('');
+	}
+	
+	this.OnCloseCreateObject = function()
+	{
+		$('#label_'+me.id).removeClass('ac_loading');
+		$('#label_'+me.id).focus();
+		$('#ac_create_'+me.id).dialog("destroy");
+		$('#ac_create_'+me.id).remove();
+		$('#ajax_'+me.id).html('');
 	}
 	
 	this.DoCreateObject = function()
@@ -256,11 +262,22 @@ function AutocompleteWidget(id, sClass, sAttCode, sSuffix, oWizHelper)
 			me.ajax_request = $.post( 'ajax.render.php', theMap, 
 				function(data)
 				{
-					$('#label_'+me.id).val(data.name);
-					$('#'+me.id).val(data.id);
+					if (me.bSelectMode)
+					{
+						// Add the newly created object to the drop-down list and select it
+						$('<option/>', { value : data.id }).text(data.name).appendTo('#'+me.id);
+						$('#'+me.id+' option[value="'+data.id+'"]').attr('selected', 'selected');
+						$('#'+me.id).focus();
+					}
+					else
+					{
+						// Put the value corresponding to the newly created object in the autocomplete
+						$('#label_'+me.id).val(data.name);
+						$('#'+me.id).val(data.id);
+						$('#label_'+me.id).removeClass('ac_loading');
+						$('#label_'+me.id).focus();
+					}
 					$('#'+me.id).trigger('validate');
-					$('#label_'+me.id).removeClass('ac_loading');
-					$('#label_'+me.id).focus();
 					me.ajax_request = null;
 				},
 				'json'

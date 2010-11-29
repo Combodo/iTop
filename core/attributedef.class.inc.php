@@ -1747,6 +1747,12 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 	{
 		return $this->GetOptional('min_autocomplete_chars', utils::GetConfig()->Get('min_autocomplete_chars'));
 	}
+	
+	public function AllowTargetCreation()
+	{
+		return $this->GetOptional('allow_target_creation', utils::GetConfig()->Get('allow_target_creation'));
+	}
+	
 }
 
 /**

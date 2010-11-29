@@ -1052,10 +1052,10 @@ EOF
 
 		if (!$oAttDef->IsExternalField())
 		{
-			$sMandatory = 'false';
+			$bMandatory = 'false';
 			if ( (!$oAttDef->IsNullAllowed()) || ($iFlags & OPT_ATT_MANDATORY))
 			{
-				$sMandatory = 'true';
+				$bMandatory = 'true';
 			}
 			$sValidationField = "<span id=\"v_{$iId}\"></span>";
 			$sHelpText = $oAttDef->GetHelpOnEdition();
@@ -1085,7 +1085,7 @@ EOF
 				break;
 
 				case 'HTML':
-					$oWidget = new UIHTMLEditorWidget($iId, $sAttCode, $sNameSuffix, $sHelpText, $sValidationField, $value, $sMandatory);
+					$oWidget = new UIHTMLEditorWidget($iId, $sAttCode, $sNameSuffix, $sHelpText, $sValidationField, $value, $bMandatory);
 					$sHTMLValue = $oWidget->Display($oPage, $aArgs);
 				break;
 
@@ -1128,38 +1128,11 @@ EOF
 					$aEventsList[] ='validate';
 					$aEventsList[] ='change';
 
-					// #@# todo - add context information (depending on dimensions)
 					$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, $aArgs);
 					$iFieldSize = $oAttDef->GetMaxSize();
 					$iMaxComboLength = $oAttDef->GetMaximumComboLength();
-					if (count($aAllowedValues) >= $iMaxComboLength)
-					{
-						// too many choices, use an autocomplete
-						$oWidget = new UIAutoCompleteWidget($sAttCode, $sClass, $oAttDef->GetLabel(), $aAllowedValues, $value, $iId, $sNameSuffix, $sFieldPrefix, $sFormPrefix);
-						$sHTMLValue = $oWidget->Display($oPage, $aArgs);
-						
-					}
-					else
-					{
-						// Few choices, use a normal 'select'
-						// In case there are no valid values, the select will be empty, thus blocking the user from validating the form
-						$sHTMLValue = "<select title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" id=\"$iId\">\n";
-						$sHTMLValue .= "<option value=\"\">".Dict::S('UI:SelectOne')."</option>\n";
-						foreach($aAllowedValues as $key => $display_value)
-						{
-							if ((count($aAllowedValues) == 1) && ($sMandatory == 'true') )
-							{
-								// When there is only once choice, select it by default
-								$sSelected = ' selected';
-							}
-							else
-							{
-								$sSelected = ($value == $key) ? ' selected' : '';
-							}
-							$sHTMLValue .= "<option value=\"$key\"$sSelected>$display_value</option>\n";
-						}
-						$sHTMLValue .= "</select>&nbsp;{$sValidationField}\n";
-					}
+					$oWidget = new UIExtKeyWidget($sAttCode, $sClass, $oAttDef->GetLabel(), $aAllowedValues, $value, $iId, $bMandatory, $sNameSuffix, $sFieldPrefix, $sFormPrefix);
+					$sHTMLValue = $oWidget->Display($oPage, $aArgs);
 					break;
 					
 				case 'String':
@@ -1175,7 +1148,7 @@ EOF
 						$sHTMLValue .= "<option value=\"\">".Dict::S('UI:SelectOne')."</option>\n";
 						foreach($aAllowedValues as $key => $display_value)
 						{
-							if ((count($aAllowedValues) == 1) && ($sMandatory == 'true') )
+							if ((count($aAllowedValues) == 1) && ($bMandatory == 'true') )
 							{
 								// When there is only once choice, select it by default
 								$sSelected = ' selected';
@@ -1205,7 +1178,7 @@ EOF
 				{
 					$sNullValue = "'$sNullValue'"; // Add quotes to turn this into a JS string if it's not a number
 				}
-				$oPage->add_ready_script("$('#$iId').bind('".implode(' ', $aEventsList)."', function(evt, sFormId) { return ValidateField('$iId', '$sPattern', $sMandatory, sFormId, $sNullValue) } );\n"); // Bind to a custom event: validate
+				$oPage->add_ready_script("$('#$iId').bind('".implode(' ', $aEventsList)."', function(evt, sFormId) { return ValidateField('$iId', '$sPattern', $bMandatory, sFormId, $sNullValue) } );\n"); // Bind to a custom event: validate
 			}
 			$aDependencies = MetaModel::GetDependentAttributes($sClass, $sAttCode); // List of attributes that depend on the current one
 			if (count($aDependencies) > 0)
