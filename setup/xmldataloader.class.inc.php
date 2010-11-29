@@ -46,13 +46,16 @@ class XMLDataLoader
 	protected $m_aWarnings;
 	protected $m_iCountCreated;
 
-	public function __construct($sConfigFileName)
+	public function __construct($sConfigFileName = null)
 	{
 		$this->m_aKeys = array();
 		$this->m_aObjectsCache = array();
 		$this->m_oChange = null;
 		$this->m_sCacheFileName = KEYS_CACHE_FILE;
-		$this->InitDataModel($sConfigFileName);
+		if ($sConfigFileName != null)
+		{
+			$this->InitDataModel($sConfigFileName);
+		}
 		$this->LoadKeysCache();
 		$this->m_bSessionActive = true;
 		$this->m_aErrors = array();

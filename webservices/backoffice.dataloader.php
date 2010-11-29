@@ -29,11 +29,18 @@
  * 'file' string Name of the file to load
  */ 
 define('SAFE_MINIMUM_MEMORY', 256*1024*1024);
+
 require_once('../approot.inc.php');
-require_once(APPROOT.'/application/utils.inc.php');
-require_once(APPROOT."/application/nicewebpage.class.inc.php");
+require_once(APPROOT.'/application/application.inc.php');
+
+require_once(APPROOT.'/application/startup.inc.php');
+
+require_once(APPROOT.'/application/loginwebpage.class.inc.php');
+LoginWebPage::DoLogin(true); // Check user rights and prompt if needed (must be admin)
+
 // required because the class xmldataloader is reporting errors in the setup.log file
 require_once(APPROOT.'/setup/setuppage.class.inc.php');
+require_once(APPROOT.'/setup/xmldataloader.class.inc.php');
 
 
 function SetMemoryLimit($oP)
@@ -72,19 +79,9 @@ function SetMemoryLimit($oP)
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-require_once(APPROOT.'/core/config.class.inc.php');
-require_once(APPROOT.'/core/log.class.inc.php');
-require_once(APPROOT.'/core/kpi.class.inc.php');
-require_once(APPROOT.'/core/cmdbsource.class.inc.php');
-require_once(APPROOT.'/setup/xmldataloader.class.inc.php');
-
-define('FINAL_CONFIG_FILE', APPROOT.'/config-itop.php');
-
 // Never cache this page
 header("Cache-Control: no-cache, must-revalidate");  // HTTP/1.1
 header("Expires: Fri, 17 Jul 1970 05:00:00 GMT");    // Date in the past
-
-Utils::SpecifyConfigFile(FINAL_CONFIG_FILE);
 
 /**
  * Main program
@@ -97,7 +94,7 @@ $oP = new WebPage("iTop - Backoffice data loader");
 try
 {
 	// Note: the data model must be loaded first
-	$oDataLoader = new XMLDataLoader(FINAL_CONFIG_FILE); // When called by the wizard, the final config is not yet there
+	$oDataLoader = new XMLDataLoader();
 
 	if (empty($sFileName))
 	{
