@@ -417,7 +417,10 @@ class Config
 		}
 		$this->m_aAppModules = $MyModules['application'];
 		$this->m_aDataModels = $MyModules['business'];
-		$this->m_aWebServiceCategories = isset($MyModules['webservices']) ? $MyModules['webservices'] : array();
+		if (isset($MyModules['webservices']))
+		{
+			$this->m_aWebServiceCategories = $MyModules['webservices'];
+		}
 		$this->m_aAddons = $MyModules['addons'];
 		$this->m_aDictionaries = $MyModules['dictionaries'];
 
