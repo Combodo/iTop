@@ -1057,7 +1057,7 @@ EOF
 			{
 				$bMandatory = 'true';
 			}
-			$sValidationField = "<span id=\"v_{$iId}\"></span>";
+			$sValidationField = "<span class=\"form_validation\" id=\"v_{$iId}\"></span>";
 			$sHelpText = $oAttDef->GetHelpOnEdition();
 			$aEventsList = array();
 			switch($oAttDef->GetEditClass())

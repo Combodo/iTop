@@ -896,3 +896,7 @@ a.truncated {
 	width: auto;
 	max-width: 200px; 
 }
+span.form_validation {
+	width:24px;
+	text-align:center;
+} 

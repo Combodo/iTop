@@ -167,7 +167,7 @@ function ReportFieldValidationStatus(sFieldId, sFormId, bValid)
 			oFormErrors['input_'+sFormId] = sFieldId;
 		}
 		// Visual feedback
-		$('#v_'+sFieldId).html('<img src="../images/validation_error.png" />');
+		$('#v_'+sFieldId).html('<img src="../images/validation_error.png" style="vertical-align:middle"/>');
 	}
 }
 
@@ -284,7 +284,7 @@ function ValidatePasswordField(id, sFormId)
 				oFormErrors['input_'+sFormId] = id;
 			}
 			// Visual feedback
-			$('#v_'+id).html('<img src="../images/validation_error.png" />');
+			$('#v_'+id).html('<img src="../images/validation_error.png"  style="vertical-align:middle"/>');
 			return false;
 		}
 	}
