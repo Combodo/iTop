@@ -730,7 +730,7 @@ try
 			$oP->add_linked_script("../js/wizardhelper.js");
 			$oP->add_linked_script("../js/wizard.utils.js");
 			$oP->add_linked_script("../js/linkswidget.js");
-			$oP->add_linked_script("../js/autocompletewidget.js");
+			$oP->add_linked_script("../js/extkeywidget.js");
 			$oP->add_linked_script("../js/jquery.blockUI.js");
 			$sClass = utils::ReadParam('class', '');
 			$sClassLabel = MetaModel::GetName($sClass);
@@ -780,7 +780,7 @@ try
 			$oP->add_linked_script("../js/wizardhelper.js");
 			$oP->add_linked_script("../js/wizard.utils.js");
 			$oP->add_linked_script("../js/linkswidget.js");
-			$oP->add_linked_script("../js/autocompletewidget.js");
+			$oP->add_linked_script("../js/extkeywidget.js");
 			$oP->add_linked_script("../js/jquery.blockUI.js");
 
 			$aArgs = utils::ReadParam('default', array());
@@ -944,7 +944,7 @@ try
 						$oP->add_linked_script("../js/wizardhelper.js");
 						$oP->add_linked_script("../js/wizard.utils.js");
 						$oP->add_linked_script("../js/linkswidget.js");
-						$oP->add_linked_script("../js/autocompletewidget.js");
+						$oP->add_linked_script("../js/extkeywidget.js");
 						$oP->add_linked_script("../js/jquery.blockUI.js");
 						$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
 						$oP->add("<div class=\"page_header\">\n");
@@ -1081,7 +1081,7 @@ try
 				$oP->add_linked_script("../js/wizardhelper.js");
 				$oP->add_linked_script("../js/wizard.utils.js");
 				$oP->add_linked_script("../js/linkswidget.js");
-				$oP->add_linked_script("../js/autocompletewidget.js");
+				$oP->add_linked_script("../js/extkeywidget.js");
 				$oP->add_linked_script("../js/jquery.blockUI.js");
 				$oP->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel));
 				$oP->add("<h1>".MetaModel::GetClassIcon($sClass)."&nbsp;".Dict::Format('UI:CreationTitle_Class', $sClassLabel)."</h1>\n");
@@ -1157,7 +1157,7 @@ try
 			$oP->add_linked_script("../js/wizardhelper.js");
 			$oP->add_linked_script("../js/wizard.utils.js");
 			$oP->add_linked_script("../js/linkswidget.js");
-			$oP->add_linked_script("../js/autocompletewidget.js");
+			$oP->add_linked_script("../js/extkeywidget.js");
 			$oP->add_linked_script("../js/jquery.blockUI.js");
 			$oP->add("<div class=\"page_header\">\n");
 			$oP->add("<h1>$sActionLabel - <span class=\"hilite\">{$oObj->GetName()}</span></h1>\n");
