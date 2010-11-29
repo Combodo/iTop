@@ -109,8 +109,7 @@ try
 	
 
 	// The XMLDataLoader constructor has initialized the DB, let's start a transaction 
-	CMDBSource::Query('SET AUTOCOMMIT=0');
-	CMDBSource::Query('BEGIN WORK');
+	CMDBSource::Query('START TRANSACTION');
 	
 	$oChange = MetaModel::NewObject("CMDBChange");
 	$oChange->Set("date", time());
