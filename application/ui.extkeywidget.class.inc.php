@@ -99,6 +99,9 @@ class UIExtKeyWidget
 		{
 			// Few choices, use a normal 'select'
 			$sSelectMode = 'true';
+			
+			$sHelpText = $this->oAttDef->GetHelpOnEdition();
+
 			// In case there are no valid values, the select will be empty, thus blocking the user from validating the form
 			$sHTMLValue = "<select title=\"$sHelpText\" name=\"attr_{$this->sFieldPrefix}{$this->sAttCode}{$this->sNameSuffix}\" id=\"$this->iId\">\n";
 			$sHTMLValue .= "<option value=\"\">".Dict::S('UI:SelectOne')."</option>\n";
@@ -130,7 +133,6 @@ class UIExtKeyWidget
 			{
 				$sDisplayValue = $this->GetObjectName($this->value);
 			}
-			$sMessage = Dict::S('UI:Message:EmptyList:UseSearchForm');
 			$sFormPrefix = $this->sFormPrefix;
 			$iMinChars = $this->oAttDef->GetMinAutoCompleteChars();
 			$iFieldSize = $this->oAttDef->GetMaxSize();
@@ -155,6 +157,7 @@ class UIExtKeyWidget
 			$sHTMLValue .= "<a class=\"no-arrow\" href=\"javascript:oACWidget_{$this->iId}.CreateObject();\"><img style=\"border:0;vertical-align:middle;\" src=\"../images/mini_add.gif\" /></a>&nbsp;";
 			$oPage->add_at_the_end('<div id="ajax_'.$this->iId.'"></div>');
 		}
+		$sMessage = Dict::S('UI:Message:EmptyList:UseSearchForm');
 		$sHTMLValue .= "<span id=\"v_{$this->iId}\"></span>";
 		$oPage->add_ready_script(
 <<<EOF
