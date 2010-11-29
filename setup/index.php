@@ -168,7 +168,7 @@ function CheckPHPVersion(SetupWebPage $oP)
 		$oP->error("Error: The current PHP Version (".phpversion().") is lower than the minimum required version (".PHP_MIN_VERSION.")");
 		return false;
 	}
-	$aMandatoryExtensions = array('mysql', 'iconv', 'simplexml', 'soap', 'hash', 'json', 'session', 'pcre');
+	$aMandatoryExtensions = array('mysql', 'iconv', 'simplexml', 'soap', 'hash', 'json', 'session', 'pcre', 'dom');
 	$aOptionalExtensions = array('mcrypt' => 'Strong encryption will not be used.',
 								 'ldap' => 'LDAP authentication will be disabled.');
 	asort($aMandatoryExtensions); // Sort the list to look clean !
