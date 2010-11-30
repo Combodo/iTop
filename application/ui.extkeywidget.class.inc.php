@@ -95,6 +95,7 @@ class UIExtKeyWidget
 	public function Display(WebPage $oPage, $aArgs = array())
 	{
 		$bCreate = (UserRights::IsActionAllowed($this->sTargetClass, UR_ACTION_BULK_MODIFY) && $this->oAttDef->AllowTargetCreation());
+		$sHTMLValue = "<span style=\"white-space:nowrap\">"; // no wrap
 		if (count($this->aAllowedValues) < $this->oAttDef->GetMaximumComboLength())
 		{
 			// Few choices, use a normal 'select'
@@ -159,6 +160,7 @@ class UIExtKeyWidget
 		}
 		$sMessage = Dict::S('UI:Message:EmptyList:UseSearchForm');
 		$sHTMLValue .= "<span id=\"v_{$this->iId}\"></span>";
+		$sHTMLValue .= "</span>"; // end of no wrap
 		$oPage->add_ready_script(
 <<<EOF
 		oACWidget_{$this->iId} = new ExtKeyWidget('$this->iId', '$this->sClass', '$this->sAttCode', '$this->sNameSuffix', $sSelectMode, oWizardHelper{$this->sFormPrefix});
