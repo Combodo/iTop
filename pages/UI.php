@@ -1471,6 +1471,11 @@ EOF
 		);
 		$oP->SetCurrentTab('');
 		break;
+		
+		case 'cancel':
+		$oP->set_title(Dict::S('UI:OperationCancelled'));
+		$oP->add('<h1>'.Dict::S('UI:OperationCancelled').'</h1>');
+		break;
 	
 		default:
 		$oMenuNode = ApplicationMenu::GetMenuNode(ApplicationMenu::GetActiveNodeId());

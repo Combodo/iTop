@@ -462,6 +462,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:CSVImport:idField' => 'id (Clef primaire)',
 	'UI:Title:BulkImport' => 'iTop - Import massif',
 	'UI:Title:BulkImport+' => 'Assistant d\'import CSV',
+	'UI:Title:BulkSynchro_nbItem_ofClass_class' => 'Synchronisation de %1$d éléments de type %2$s',
 	'UI:CSVImport:ClassesSelectOne' => '-- choisir une valeur --',
 	'UI:CSVImport:ErrorExtendedAttCode' => 'Erreur interne: "%1$s" n\'est pas une code correct car "%2$s" n\'est pas une clef externe de la classe "%3$s"',
 	'UI:CSVImport:ObjectsWillStayUnchanged' => '%1$d objets(s) resteront inchangés.',
@@ -851,6 +852,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:DisplayThisMessageAtStartup' => 'Afficher ce message au démarrage',
 	'UI:RelationshipGraph' => 'Vue graphique',
 	'UI:RelationshipList' => 'Liste',
+	'UI:OperationCancelled' => 'Opération Annulée',
 
 	'Portal:Title' => 'Portail utilisateur iTop',
 	'Portal:Refresh' => 'Rafraîchir',

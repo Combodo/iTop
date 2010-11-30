@@ -369,9 +369,16 @@ EOF
 			window.history.back();
 		}
 		
-		function BackToDetails(sClass, id)
+		function BackToDetails(sClass, id, sDefaultUrl)
 		{
-			window.location.href = './UI.php?operation=details&class='+sClass+'&id='+id;
+			if (id > 0)
+			{
+				window.location.href = './UI.php?operation=details&class='+sClass+'&id='+id;
+			}
+			else
+			{
+				window.location.href = sDefaultUrl;				
+			}
 		}
 
 		

@@ -461,6 +461,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:CSVImport:idField' => 'id (Primary Key)',
 	'UI:Title:BulkImport' => 'iTop - Bulk import',
 	'UI:Title:BulkImport+' => 'CSV Import Wizard',
+	'UI:Title:BulkSynchro_nbItem_ofClass_class' => 'Synchronization of %1$d objects of class %2$s',
 	'UI:CSVImport:ClassesSelectOne' => '-- select one --',
 	'UI:CSVImport:ErrorExtendedAttCode' => 'Internal error: "%1$s" is an incorrect code because "%2$s" is NOT an external key of the class "%3$s"',
 	'UI:CSVImport:ObjectsWillStayUnchanged' => '%1$d objects(s) will stay unchanged.',
@@ -842,6 +843,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:DisplayThisMessageAtStartup' => 'Display this message at startup',
 	'UI:RelationshipGraph' => 'Graphical view',
 	'UI:RelationshipList' => 'List',
+	'UI:OperationCancelled' => 'Operation Cancelled',
 
 	'Portal:Title' => 'iTop user portal',
 	'Portal:Refresh' => 'Refresh',

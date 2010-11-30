@@ -1351,7 +1351,8 @@ EOF
 			$oPage->add("<button type=\"submit\" class=\"action\"><span>".Dict::S('UI:Button:Create')."</span></button>\n");
 		}
 		// Hook the cancel button via jQuery so that it can be unhooked easily as well if needed
-		$oPage->add_ready_script("$('#form_{$this->m_iFormId} button.cancel').click( function() { BackToDetails('$sClass', $iKey)} );");
+		$sDefaultUrl = '../pages/UI.php?operation=cancel';
+		$oPage->add_ready_script("$('#form_{$this->m_iFormId} button.cancel').click( function() { BackToDetails('$sClass', $iKey, '$sDefaultUrl')} );");
 		$oPage->add("</form>\n");
 		
 		$iFieldsCount = count($aFieldsMap);
