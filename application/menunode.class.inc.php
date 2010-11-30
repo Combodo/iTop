@@ -278,6 +278,11 @@ abstract class MenuNode
 	 * User Rights allowed results (actually a bitmask) to check if the menu is enabled, null if none
 	 */
 	protected $m_iEnableActionResults;
+
+	/**
+	 * Stimulus to check: if the user can 'apply' this stimulus, then she/he can see this menu
+	 */	
+	protected $m_sEnableStimulus;
 	
 	/**
 	 * Create a menu item, sets the condition to have it displayed and inserts it into the application's main menu
@@ -285,16 +290,18 @@ abstract class MenuNode
 	 * @param integer $iParentIndex ID of the parent menu, pass -1 for top level (group) items
 	 * @param float $fRank Number used to order the list, any number will do, but for a given level (i.e same parent) all menus are sorted based on this value
 	 * @param string $sEnableClass Name of class of object
-	 * @param integer $iActionCode Either UR_ACTION_READ, UR_ACTION_MODIFY, UR_ACTION_DELETE, UR_ACTION_BULKREAD, UR_ACTION_BULKMODIFY or UR_ACTION_BULKDELETE
+	 * @param mixed $iActionCode UR_ACTION_READ, UR_ACTION_MODIFY, UR_ACTION_DELETE, UR_ACTION_BULKREAD, UR_ACTION_BULKMODIFY or UR_ACTION_BULKDELETE
 	 * @param integer $iAllowedResults Expected "rights" for the action: either UR_ALLOWED_YES, UR_ALLOWED_NO, UR_ALLOWED_DEPENDS or a mix of them...
+	 * @param string $sEnableStimulus The user can see this menu if she/he has enough rights to apply this stimulus
 	 * @return MenuNode
 	 */
-	public function __construct($sMenuId, $iParentIndex = -1, $fRank = 0, $sEnableClass = null, $iActionCode = null, $iAllowedResults = UR_ALLOWED_YES)
+	public function __construct($sMenuId, $iParentIndex = -1, $fRank = 0, $sEnableClass = null, $iActionCode = null, $iAllowedResults = UR_ALLOWED_YES, $sEnableStimulus = null)
 	{
 		$this->sMenuId = $sMenuId;
 		$this->m_sEnableClass = $sEnableClass;
 		$this->m_iEnableAction = $iActionCode;
 		$this->m_iEnableActionResults = $iAllowedResults;
+		$this->m_sEnableStimulus = $sEnableStimulus;
 		$this->index = ApplicationMenu::InsertMenu($this, $iParentIndex, $fRank);
 	}
 	
@@ -334,10 +341,20 @@ abstract class MenuNode
 		{
 			if (MetaModel::IsValidClass($this->m_sEnableClass))
 			{
-				$iResult = UserRights::IsActionAllowed($this->m_sEnableClass, $this->m_iEnableAction);
-				if (($iResult & $this->m_iEnableActionResults))
+				if ($this->m_sEnableStimulus != null)
 				{
-					return true;
+					if (!UserRights::IsStimulusAllowed($this->m_sEnableClass, $this->m_sEnableStimulus))
+					{
+						return false;
+					}
+				}
+				if ($this->m_iEnableAction != null)
+				{
+					$iResult = UserRights::IsActionAllowed($this->m_sEnableClass, $this->m_iEnableAction);
+					if (($iResult & $this->m_iEnableActionResults))
+					{
+						return true;
+					}
 				}
 			}
 			return false;
