@@ -987,8 +987,8 @@ class TestBulkChangeOnFarm extends TestBizModel
 		$oParser = new CSVParser("denomination,hauteur,age
 		suzy,123,2009-01-01
 		chita,456,
-		");
-		$aData = $oParser->ToArray(array('_name', '_height', '_birth'), ',');
+		", ',', '"');
+		$aData = $oParser->ToArray(1, array('_name', '_height', '_birth'));
 		self::DumpVariable($aData);
 
 		$oBulk = new BulkChange(
@@ -1192,6 +1192,73 @@ class TestItopEfficiency extends TestBizModel
 		echo MyHelpers::make_table_from_assoc_array($aData);
 	}
 }
+
+///////////////////////////////////////////////////////////////////////////
+// Test bulk load API
+///////////////////////////////////////////////////////////////////////////
+
+class TestItopBulkLoad extends TestBizModel
+{
+	static public function GetName()
+	{
+		return 'Itop - test BulkChange class';
+	}
+
+	static public function GetDescription()
+	{
+		return 'Execute a bulk change at the Core API level';
+	}
+
+	static public function GetConfigFile() {return '/config-itop.php';}
+
+	
+	protected function DoExecute()
+	{
+		$oParser = new CSVParser("name,org_id->name,brand,model
+		Server1,Demo,,
+		server4,Demo,,
+		", ',', '"');
+		$aData = $oParser->ToArray(1, array('_name', '_org_name', '_brand', '_model'));
+		self::DumpVariable($aData);
+
+		$oBulk = new BulkChange(
+			'Server',
+			$aData,
+			// attributes
+			array('name' => '_name', 'brand' => '_brand', 'model' => '_model'),
+			// ext keys
+			array('org_id' => array('name' => '_org_name')),
+			// reconciliation
+			array('name'),
+			// Synchro - scope
+			"SELECT Server",
+			// Synchro - set attribute on missing objects
+			array ('brand' => 'you let package', 'model' => 'tpe', 'cpu' => 'it is pay you')
+		);
+
+		if (false)
+		{
+		$oMyChange = MetaModel::NewObject("CMDBChange");
+		$oMyChange->Set("date", time());
+		$oMyChange->Set("userinfo", "Testor");
+		$iChangeId = $oMyChange->DBInsert();
+//		echo "Created new change: $iChangeId</br>";
+		}
+
+		echo "<h3>Planned for loading...</h3>";
+		$aRes = $oBulk->Process();
+		self::DumpVariable($aRes);
+		if (false)
+		{
+		echo "<h3>Go for loading...</h3>";
+		$aRes = $oBulk->Process($oMyChange);
+		self::DumpVariable($aRes);
+		}
+
+		return;
+	}
+}
+
 
 ///////////////////////////////////////////////////////////////////////////
 // Test data load

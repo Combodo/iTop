@@ -219,6 +219,14 @@ class RowStatus_Modify extends RowStatus
 	}
 }
 
+class RowStatus_Disappeared extends RowStatus_Modify
+{
+	public function GetDescription()
+	{
+		return "disappeared, changed ".$this->m_iChanged." cols";
+	}
+}
+
 class RowStatus_Issue extends RowStatus
 {
 	protected $m_sReason;
@@ -247,15 +255,19 @@ class BulkChange
 	// #@# todo: rename the variables to sColIndex
 	protected $m_aAttList; // attcode => iCol
 	protected $m_aExtKeys; // aExtKeys[sExtKeyAttCode][sExtReconcKeyAttCode] = iCol;
-	protected $m_aReconcilKeys;// attcode (attcode = 'id' for the pkey) 
+	protected $m_aReconcilKeys; // attcode (attcode = 'id' for the pkey)
+	protected $m_sSynchroScope; // OQL - if specified, then the missing items will be reported
+	protected $m_aOnDisappear; // array of attcode => value, values to be set when an object gets out of scope (ignored if no scope has been defined)
 
-	public function __construct($sClass, $aData, $aAttList, $aExtKeys, $aReconcilKeys)
+	public function __construct($sClass, $aData, $aAttList, $aExtKeys, $aReconcilKeys, $sSynchroScope = null, $aOnDisappear = null)
 	{
 		$this->m_sClass = $sClass;
 		$this->m_aData = $aData;
 		$this->m_aAttList = $aAttList;
 		$this->m_aReconcilKeys = $aReconcilKeys;
 		$this->m_aExtKeys = $aExtKeys;
+		$this->m_sSynchroScope = $sSynchroScope;
+		$this->m_aOnDisappear = $aOnDisappear;
 	}
 
 	protected function ResolveExternalKey($aRowData, $sAttCode, &$aResults)
@@ -430,6 +442,70 @@ class BulkChange
 		return $aResults;
 	}
 	
+	protected function PrepareMissingObject(&$oTargetObj, &$aErrors)
+	{
+		$aResults = array();
+		$aErrors = array();
+	
+		// External keys
+		//
+		foreach($this->m_aExtKeys as $sAttCode => $aKeyConfig)
+		{
+			//$oExtKey = MetaModel::GetAttributeDef(get_class($oTargetObj), $sAttCode);
+			$aResults[$sAttCode]= new CellStatus_Void($oTargetObj->Get($sAttCode));
+
+			foreach ($aKeyConfig as $sForeignAttCode => $iCol)
+			{
+				$aResults[$iCol] = new CellStatus_Void('?');
+			}
+		}
+	
+		// Update attributes
+		//
+		foreach($this->m_aOnDisappear as $sAttCode => $value)
+		{
+			if (!MetaModel::IsValidAttCode(get_class($oTargetObj), $sAttCode))
+			{
+				throw new BulkChangeException('Invalid attribute code', array('class' => get_class($oTargetObj), 'attcode' => $sAttCode));
+			}
+			$oTargetObj->Set($sAttCode, $value);
+			if (!array_key_exists($sAttCode, $this->m_aAttList))
+			{
+				// #@# will be out of the reporting... (counted anyway)
+			}
+		}
+	
+		// Reporting on fields
+		//
+		$aChangedFields = $oTargetObj->ListChanges();
+		foreach ($this->m_aAttList as $sAttCode => $iCol)
+		{
+			if ($sAttCode == 'id')
+			{
+				$aResults[$iCol]= new CellStatus_Void($oTargetObj->GetKey());
+			}
+			if (array_key_exists($sAttCode, $aChangedFields))
+			{
+				$aResults[$iCol]= new CellStatus_Modify($oTargetObj->Get($sAttCode), $oTargetObj->GetOriginal($sAttCode));
+			}
+			else
+			{
+				// By default... nothing happens
+				$aResults[$iCol]= new CellStatus_Void($oTargetObj->Get($sAttCode));
+			}
+		}
+	
+		// Checks
+		//
+		$res = $oTargetObj->CheckConsistency();
+		if ($res !== true)
+		{
+			// $res contains the error description
+			$aErrors["GLOBAL"] = "Attributes not consistent with each others: $res";
+		}
+		return $aResults;
+	}
+
 	
 	protected function CreateObject(&$aResult, $iRow, $aRowData, CMDBChange $oChange = null)
 	{
@@ -512,6 +588,40 @@ class BulkChange
 			$aResult[$iRow]["__STATUS__"] = new RowStatus_NoChange();
 		}
 	}
+
+	protected function UpdateMissingObject(&$aResult, $iRow, $oTargetObj, CMDBChange $oChange = null)
+	{
+		$aResult[$iRow] = $this->PrepareMissingObject($oTargetObj, $aErrors);
+
+		// Reporting
+		//
+		$aResult[$iRow]["finalclass"] = get_class($oTargetObj);
+		$aResult[$iRow]["id"] = new CellStatus_Void($oTargetObj->GetKey());
+
+		if (count($aErrors) > 0)
+		{
+			$sErrors = implode(', ', $aErrors);
+			$aResult[$iRow]["__STATUS__"] = new RowStatus_Issue("Unexpected attribute value(s)");
+			return;
+		}
+	
+		$aChangedFields = $oTargetObj->ListChanges();
+		if (count($aChangedFields) > 0)
+		{
+			$aResult[$iRow]["__STATUS__"] = new RowStatus_Disappeared(count($aChangedFields));
+	
+			// Optionaly record the results
+			//
+			if ($oChange)
+			{
+				$oTargetObj->DBUpdateTracked($oChange);
+			}
+		}
+		else
+		{
+			$aResult[$iRow]["__STATUS__"] = new RowStatus_Disappeared(0);
+		}
+	}
 	
 	public function Process(CMDBChange $oChange = null)
 	{
@@ -528,14 +638,23 @@ class BulkChange
 			print_r($this->m_aExtKeys);
 			echo "Reconciliation:\n";
 			print_r($this->m_aReconcilKeys);
+			echo "Synchro scope:\n";
+			print_r($this->m_sSynchroScope);
+			echo "Synchro changes:\n";
+			print_r($this->m_aOnDisappear);
 			//echo "Data:\n";
 			//print_r($this->m_aData);
 			echo "</pre>\n";
 			exit;
 		}
 
+
 		// Compute the results
 		//
+		if (!is_null($this->m_sSynchroScope))
+		{
+			$aVisited = array();
+		}
 		$aResult = array();
 		foreach($this->m_aData as $iRow => $aRowData)
 		{
@@ -612,6 +731,10 @@ class BulkChange
 					$oTargetObj = $oReconciliationSet->Fetch();
 					$this->UpdateObject($aResult, $iRow, $oTargetObj, $aRowData, $oChange);
 					// $aResult[$iRow]["__STATUS__"]=> set in UpdateObject
+					if (!is_null($this->m_sSynchroScope))
+					{
+						$aVisited[] = $oTargetObj->GetKey();
+					}
 					break;
 				default:
 					// Found several matches, ambiguous
@@ -645,6 +768,23 @@ class BulkChange
 				}
 			}
 		}
+
+		if (!is_null($this->m_sSynchroScope))
+		{
+			// Compute the delta between the scope and visited objects
+			$oScopeSearch = DBObjectSearch::FromOQL($this->m_sSynchroScope);
+			$oScopeSet = new DBObjectSet($oScopeSearch);
+			while ($oObj = $oScopeSet->Fetch())
+			{
+				$iObj = $oObj->GetKey();
+				if (!in_array($iObj, $aVisited))
+				{
+					$iRow++;
+					$this->UpdateMissingObject($aResult, $iRow, $oObj, $oChange);
+				}
+			}
+		}
+
 		return $aResult;
 	}
 }

@@ -327,13 +327,18 @@ try
 			$oMyChange->Set("userinfo", $sUserString);
 			$iChangeId = $oMyChange->DBInsert();		
 		}
+
+		$sSynchroScope = null; // e.g. "SELECT Server";
+		$aSynchroUpdate = null; // e.g. array('status' => 'obsolete')		
 	
 		$oBulk = new BulkChange(
 			$sClassName,
 			$aData,
 			$aAttributes,
 			$aExtKeys,
-			array_keys($aSearchKeys)		
+			array_keys($aSearchKeys),
+			$sSynchroScope,
+			$aSynchroUpdate		
 		);
 		
 		$oPage->add('<input type="hidden" name="csvdata_truncated" id="csvdata_truncated" value="'.htmlentities($sCSVDataTruncated, ENT_QUOTES, 'UTF-8').'"/>');
@@ -352,16 +357,15 @@ try
 		}
 		$sHtml .= '<th>Message</th>';
 		$sHtml .= '</tr>';
-		$iLine = 0;
 		
 		$iErrors = 0;
 		$iCreated = 0;
 		$iModified = 0;
 		$iUnchanged = 0;
 		
-		foreach($aData as $aRow)
+		foreach($aRes as $iLine => $aResRow)
 		{
-			$oStatus = $aRes[$iLine]['__STATUS__'];
+			$oStatus = $aResRow['__STATUS__'];
 			$sUrl = '';
 			$sMessage = '';
 			$sCSSRowClass = '';
@@ -370,8 +374,8 @@ try
 			{
 				case 'RowStatus_NoChange':
 				$iUnchanged++;
-				$sFinalClass = $aRes[$iLine]['finalclass'];
-				$oObj = MetaModel::GetObject($sFinalClass, $aRes[$iLine]['id']->GetValue());
+				$sFinalClass = $aResRow['finalclass'];
+				$oObj = MetaModel::GetObject($sFinalClass, $aResRow['id']->GetValue());
 				$sUrl = $oObj->GetHyperlink();
 				$sStatus = '<img src="../images/unchanged.png" title="Unchanged">';
 				$sCSSRowClass = 'row_unchanged';
@@ -379,16 +383,33 @@ try
 						
 				case 'RowStatus_Modify':
 				$iModified++;
-				$sFinalClass = $aRes[$iLine]['finalclass'];
-				$oObj = MetaModel::GetObject($sFinalClass, $aRes[$iLine]['id']->GetValue());
+				$sFinalClass = $aResRow['finalclass'];
+				$oObj = MetaModel::GetObject($sFinalClass, $aResRow['id']->GetValue());
 				$sUrl = $oObj->GetHyperlink();
 				$sStatus = '<img src="../images/modified.png" title="Modified">';
 				$sCSSRowClass = 'row_modified';
 				break;
 						
+				case 'RowStatus_Disappeared':
+				$iModified++;
+				$sFinalClass = $aResRow['finalclass'];
+				$oObj = MetaModel::GetObject($sFinalClass, $aResRow['id']->GetValue());
+				$sUrl = $oObj->GetHyperlink();
+				$sStatus = '<img src="../images/delete.png" title="Missing">';
+				$sCSSRowClass = 'row_modified';
+				if ($bSimulate)
+				{
+					$sMessage = 'Missing object: will be updated';				
+				}
+				else
+				{
+					$sMessage = 'Missing object: updated';
+				}
+				break;
+						
 				case 'RowStatus_NewObj':
 				$iCreated++;
-				$sFinalClass = $aRes[$iLine]['finalclass'];
+				$sFinalClass = $aResRow['finalclass'];
 				$sStatus = '<img src="../images/added.png" title="Created">';
 				$sCSSRowClass = 'row_added';
 				if ($bSimulate)
@@ -397,8 +418,8 @@ try
 				}
 				else
 				{
-					$sFinalClass = $aRes[$iLine]['finalclass'];
-					$oObj = MetaModel::GetObject($sFinalClass, $aRes[$iLine]['id']->GetValue());
+					$sFinalClass = $aResRow['finalclass'];
+					$oObj = MetaModel::GetObject($sFinalClass, $aResRow['id']->GetValue());
 					$sUrl = $oObj->GetHyperlink();
 					$sMessage = 'Object created';				
 				}
@@ -410,7 +431,11 @@ try
 				$sStatus = '<img src="../images/error.png" title="Error">';
 				$sCSSMessageClass = 'cell_error';
 				$sCSSRowClass = 'row_error';
-				$aResult[] = $sTextQualifier.implode($sTextQualifier.$sSeparator.$sTextQualifier,$aRow).$sTextQualifier; // Remove the first line and store it in case of error
+				if (array_key_exists($iLine, $aData))
+				{
+					$aRow = $aData[$iLine];
+					$aResult[] = $sTextQualifier.implode($sTextQualifier.$sSeparator.$sTextQualifier,$aRow).$sTextQualifier; // Remove the first line and store it in case of error
+				}
 				break;		
 			}
 			$sHtml .= '<tr class="'.$sCSSRowClass.'">';
@@ -421,12 +446,12 @@ try
 			{
 				if (!empty($sAttCode) && ($sAttCode != ':none:') && ($sAttCode != 'finalclass'))
 				{
-					$oCellStatus = $aRes[$iLine][$iNumber -1];
+					$oCellStatus = $aResRow[$iNumber -1];
 					$sCellMessage = '';
 					if (isset($aExternalKeysByColumn[$iNumber -1]))
 					{
 						$sExtKeyName = $aExternalKeysByColumn[$iNumber -1];
-						$oExtKeyCellStatus = $aRes[$iLine][$sExtKeyName];
+						$oExtKeyCellStatus = $aResRow[$sExtKeyName];
 						switch(get_class($oExtKeyCellStatus))
 						{
 							case 'CellStatus_Issue':
@@ -443,34 +468,34 @@ try
 							// Do nothing
 						}
 					}
+					$sHtmlValue = htmlentities($oCellStatus->GetValue(), ENT_QUOTES, 'UTF-8');
 					switch(get_class($oCellStatus))
 					{
 						case 'CellStatus_Issue':
 						$sCellMessage .= $oPage->GetP($oCellStatus->GetDescription());
-						$sHtml .= '<td class="cell_error" style="border-right:1px #eee solid;">ERROR: '.htmlentities($aData[$iLine][$iNumber-1], ENT_QUOTES, 'UTF-8').$sCellMessage.'</td>';
+						$sHtml .= '<td class="cell_error" style="border-right:1px #eee solid;">ERROR: '.$sHtmlValue.$sCellMessage.'</td>';
 						break;
 						
 						case 'CellStatus_SearchIssue':
 						$sCellMessage .= $oPage->GetP($oCellStatus->GetDescription());
-						$sHtml .= '<td class="cell_error">ERROR: '.htmlentities($aData[$iLine][$iNumber-1], ENT_QUOTES, 'UTF-8').$sCellMessage.'</td>';
+						$sHtml .= '<td class="cell_error">ERROR: '.$sHtmlValue.$sCellMessage.'</td>';
 						break;
 						
 						case 'CellStatus_Ambiguous':
 						$sCellMessage .= $oPage->GetP($oCellStatus->GetDescription());
-						$sHtml .= '<td class="cell_error" style="border-right:1px #eee solid;">AMBIGUOUS: '.htmlentities($aData[$iLine][$iNumber-1], ENT_QUOTES, 'UTF-8').$sCellMessage.'</td>';
+						$sHtml .= '<td class="cell_error" style="border-right:1px #eee solid;">AMBIGUOUS: '.$sHtmlValue.$sCellMessage.'</td>';
 						break;
 						
 						case 'CellStatus_Modify':
-						$sHtml .= '<td class="cell_modified" style="border-right:1px #eee solid;"><b>'.htmlentities($aData[$iLine][$iNumber-1], ENT_QUOTES, 'UTF-8').'</b></td>';
+						$sHtml .= '<td class="cell_modified" style="border-right:1px #eee solid;"><b>'.$sHtmlValue.'</b></td>';
 						break;
 						
 						default:
-						$sHtml .= '<td class="cell_ok" style="border-right:1px #eee solid;">'.htmlentities($aData[$iLine][$iNumber-1], ENT_QUOTES, 'UTF-8').$sCellMessage.'</td>';
+						$sHtml .= '<td class="cell_ok" style="border-right:1px #eee solid;">'.$sHtmlValue.$sCellMessage.'</td>';
 					}
 				}
 			}
 			$sHtml .= "<td class=\"$sCSSMessageClass\" style=\"background-color:#f1f1f1;\">$sMessage</td>";
-			$iLine++;
 			$sHtml .= '</tr>';
 		}
 		$sHtml .= '</table>';
