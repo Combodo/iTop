@@ -24,6 +24,7 @@ function ExtKeyWidget(id, sClass, sAttCode, sSuffix, bSelectMode, oWizHelper)
 	this.oWizardHelper = oWizHelper;
 	this.ajax_request = null;
 	this.bSelectMode = bSelectMode; // true if the edited field is a SELECT, false if it's an autocomplete
+	this.v_html = '';
 	var me = this;
 	
 	this.Init = function()
@@ -181,7 +182,15 @@ function ExtKeyWidget(id, sClass, sAttCode, sSuffix, bSelectMode, oWizHelper)
 	this.CreateObject = function(oWizHelper)
 	{
 		// Query the server to get the form to create a target object
-		$('#label_'+me.id).addClass('ac_loading');
+		if (me.bSelectMode)
+		{
+			me.v_html = $('#v_'+me.id).html();
+			$('#v_'+me.id).html('<img src="../images/indicator.gif" />');
+		}
+		else
+		{
+			$('#label_'+me.id).addClass('ac_loading');
+		}
 		me.oWizardHelper.UpdateWizard();
 		var theMap = { sAttCode: me.sAttCode,
 				   iInputId: me.id,
@@ -217,7 +226,14 @@ function ExtKeyWidget(id, sClass, sAttCode, sSuffix, bSelectMode, oWizHelper)
 	
 	this.OnCloseCreateObject = function()
 	{
-		$('#label_'+me.id).removeClass('ac_loading');
+		if (me.bSelectMode)
+		{
+			$('#v_'+me.id).html(me.v_html);
+		}
+		else
+		{
+			$('#label_'+me.id).removeClass('ac_loading');
+		}
 		$('#label_'+me.id).focus();
 		$('#ac_create_'+me.id).dialog("destroy");
 		$('#ac_create_'+me.id).remove();
