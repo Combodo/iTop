@@ -214,6 +214,18 @@ try
 	}
 	
 	/**
+	 * Display a banner for the special "synchro" mode
+	 * @param WebPage $oP The Page for the output
+	 * @param string $sClass The class of objects to synchronize
+	 * @param integer $iCount The number of objects to synchronize
+	 * @return none
+	 */
+	 function DisplaySynchroBanner(WebPage $oP, $sClass, $iCount)
+	 {
+		$oP->add("<div class=\"notification\"><p><h1>".MetaModel::GetClassIcon($sClass)."&nbsp;".Dict::Format('UI:Title:BulkSynchro_nbItem_ofClass_class', $iCount, MetaModel::GetName($sClass))."</h1></p></div>\n");
+	 }
+	 
+	/**
 	 * Process the CSV data, for real or as a simulation
 	 * @param WebPage $oPage The page used to display the wizard
 	 * @param bool $bSimulate Whether or not to simulate the data load
@@ -234,7 +246,24 @@ try
 		$iCurrentStep = $bSimulate ? 4 : 5;
 		$bAdvanced = utils::ReadParam('advanced', 0);
 		$sEncoding = utils::ReadParam('encoding', 'UTF-8');
-		
+		$sSynchroScope = utils::ReadParam('synchro_scope', '');
+		if (!empty($sSynchroScope))
+		{
+			$oSearch = DBObjectSearch::FromOQL($sSynchroScope);
+			$sClassName = $oSearch->GetClass(); // If a synchronization scope is set, then the class is fixed !
+			$oSet = new DBObjectSet($oSearch);
+			$iCount = $oSet->Count();
+			$sSynchroClass = 'Server';
+			DisplaySynchroBanner($oPage, $sSynchroClass, $iCount);
+			$sClassesSelect = "<select id=\"select_class_name\" name=\"class_name\"><option value=\"$sClassName\" selected>".MetaModel::GetName($sClassName)."</option>";
+			$aSynchroUpdate = utils::ReadParam('synchro_update', array());
+		}
+		else
+		{
+			$sSynchroScope  = '';
+			$aSynchroUpdate = null;
+		}
+				
 		// Parse the data set
 		$oCSVParser = new CSVParser($sCSVData, $sSeparator, $sTextQualifier);
 		$aData = $oCSVParser->ToArray($iSkippedLines);
@@ -327,9 +356,6 @@ try
 			$oMyChange->Set("userinfo", $sUserString);
 			$iChangeId = $oMyChange->DBInsert();		
 		}
-
-		$sSynchroScope = null; // e.g. "SELECT Server";
-		$aSynchroUpdate = null; // e.g. array('status' => 'obsolete')		
 	
 		$oBulk = new BulkChange(
 			$sClassName,
@@ -337,7 +363,7 @@ try
 			$aAttributes,
 			$aExtKeys,
 			array_keys($aSearchKeys),
-			$sSynchroScope,
+			empty($sSynchroScope) ? null : $sSynchroScope,
 			$aSynchroUpdate		
 		);
 		
@@ -512,6 +538,14 @@ try
 		$oPage->add('<input type="hidden" name="class_name" value="'.$sClassName.'"/>');
 		$oPage->add('<input type="hidden" name="advanced" value="'.$bAdvanced.'"/>');
 		$oPage->add('<input type="hidden" name="encoding" value="'.$sEncoding.'"/>');
+		$oPage->add('<input type="hidden" name="synchro_scope" value="'.$sSynchroScope.'"/>');
+		if (!empty($sSynchroScope))
+		{
+			foreach($aSynchroUpdate as $sKey => $value)
+			{
+				$oPage->add('<input type="hidden" name="synchro_update['.$sKey.']" value="'.$value.'"/>');				
+			}
+		}
 		foreach($aFieldsMapping as $iNumber => $sAttCode)
 		{
 			$oPage->add('<input type="hidden" name="field['.$iNumber.']" value="'.$sAttCode.'"/>');
@@ -641,10 +675,27 @@ EOF
 		$bAdvanced = utils::ReadParam('advanced', 0);
 		$sEncoding = utils::ReadParam('encoding', 'UTF-8');
 	
+		$sSynchroScope = utils::ReadParam('synchro_scope', '');
+		if (!empty($sSynchroScope))
+		{
+			$oSearch = DBObjectSearch::FromOQL($sSynchroScope);
+			$sClassName = $oSearch->GetClass(); // If a synchronization scope is set, then the class is fixed !
+			$oSet = new DBObjectSet($oSearch);
+			$iCount = $oSet->Count();
+			$sSynchroClass = 'Server';
+			DisplaySynchroBanner($oPage, $sSynchroClass, $iCount);
+			$sClassesSelect = "<select id=\"select_class_name\" name=\"class_name\"><option value=\"$sClassName\" selected>".MetaModel::GetName($sClassName)."</option>";
+			$aSynchroUpdate = utils::ReadParam('synchro_update', array());
+		}
+		else
+		{
+			$sClassesSelect = GetClassesSelect('class_name', $sClassName, 300, UR_ACTION_BULK_MODIFY);
+		}
+
 		$oPage->add('<h2>'.Dict::S('UI:Title:CSVImportStep3').'</h2>');
 		$oPage->add('<div class="wizContainer">');
 		$oPage->add('<form enctype="multipart/form-data" id="wizForm" method="post" onSubmit="return CheckValues()"><table style="width:100%" class="transparent"><tr><td>'.Dict::S('UI:CSVImport:SelectClass').' ');
-		$oPage->add(GetClassesSelect('class_name', $sClassName, 300, UR_ACTION_BULK_MODIFY));
+		$oPage->add($sClassesSelect);
 		$oPage->add('</td><td style="text-align:right"><input type="checkbox" name="advanced" value="1" '.IsChecked($bAdvanced, 1).' onClick="DoMapping()">&nbsp;'.Dict::S('UI:CSVImport:AdvancedMode').'</td></tr></table>');
 		$oPage->add('<div style="padding:1em;display:none" id="advanced_help" style="display:none">'.Dict::S('UI:CSVImport:AdvancedMode+').'</div>');
 		$oPage->add('<div id="mapping" class="white"><p style="text-align:center;width:100%;font-size:1.5em;padding:1em;">'.Dict::S('UI:CSVImport:SelectAClassFirst').'<br/></p></div>');
@@ -657,6 +708,14 @@ EOF
 		$oPage->add('<input type="hidden" name="csvdata_truncated" id="csvdata_truncated" value="'.htmlentities($sCSVDataTruncated, ENT_QUOTES, 'UTF-8').'"/>');
 		$oPage->add('<input type="hidden" name="csvdata" value="'.htmlentities($sCSVData, ENT_QUOTES, 'UTF-8').'"/>');
 		$oPage->add('<input type="hidden" name="encoding" value="'.$sEncoding.'">');
+		$oPage->add('<input type="hidden" name="synchro_scope" value="'.$sSynchroScope.'">');
+		if (!empty($sSynchroScope))
+		{
+			foreach($aSynchroUpdate as $sKey => $value)
+			{
+				$oPage->add('<input type="hidden" name="synchro_update['.$sKey.']" value="'.$value.'"/>');				
+			}
+		}
 		$oPage->add('<p><input type="button" value="'.Dict::S('UI:Button:Back').'" onClick="CSVGoBack()"/>&nbsp;&nbsp;');
 		$oPage->add('<input type="submit" value="'.Dict::S('UI:Button:SimulateImport').'"/></p>');
 		$oPage->add('</form>');
@@ -915,6 +974,18 @@ EOF
 			$iMaxLines--;
 		}
 		$sCSVDataTruncated = substr($sUTF8Data, 0, $iCurPos);
+
+		$sSynchroScope = utils::ReadParam('synchro_scope', '');
+		if (!empty($sSynchroScope))
+		{
+			$oSearch = DBObjectSearch::FromOQL($sSynchroScope);
+			$sSynchroClass = $oSearch->GetClass();
+			$oSet = new DBObjectSet($oSearch);
+			$iCount = $oSet->Count();
+			$sSynchroClass = 'Server';
+			DisplaySynchroBanner($oPage, $sSynchroClass, $iCount);
+			$aSynchroUpdate = utils::ReadParam('synchro_update', array());
+		}
 		
 		$oPage->add('<h2>'.Dict::S('UI:Title:CSVImportStep2').'</h2>');
 		$oPage->add('<div class="wizContainer">');
@@ -941,7 +1012,15 @@ EOF
 		$oPage->add('<input type="hidden" name="csvdata" id="csvdata" value="'.htmlentities($sUTF8Data, ENT_QUOTES, 'UTF-8').'"/>');
 		$oPage->add('<input type="hidden" name="class_name" value="'.$sClassName.'"/>');
 		$oPage->add('<input type="hidden" name="advanced" value="'.$bAdvanced.'"/>');
+		$oPage->add('<input type="hidden" name="synchro_scope" value="'.$sSynchroScope.'"/>');
 		$oPage->add('<input type="hidden" name="step" value="3"/>');
+		if (!empty($sSynchroScope))
+		{
+			foreach($aSynchroUpdate as $sKey => $value)
+			{
+				$oPage->add('<input type="hidden" name="synchro_update['.$sKey.']" value="'.$value.'"/>');				
+			}
+		}
 		$oPage->add('<div id="preview">');
 		$oPage->add('<p style="text-align:center">'.Dict::S('UI:CSVImport:CSVDataPreview').'</p>');
 		$oPage->add('</div>');
@@ -1033,6 +1112,22 @@ EOF
 		$aPossibleEncodings = array_merge($aPossibleEncodings, $aExtraCharsets);
 		asort($aPossibleEncodings);
 	
+		$sSynchroScope = utils::ReadParam('synchro_scope', '');
+		if (!empty($sSynchroScope))
+		{
+			$oSearch = DBObjectSearch::FromOQL($sSynchroScope);
+			$sSynchroClass = $oSearch->GetClass();
+			$oSet = new DBObjectSet($oSearch);
+			$iCount = $oSet->Count();
+			$sSynchroClass = 'Server';
+			DisplaySynchroBanner($oPage, $sSynchroClass, $iCount);
+			$aSynchroUpdate = utils::ReadParam('synchro_update', array());
+		}
+		else
+		{
+			$aSynchroUpdate = null;
+		}
+		
 		$oPage->add("<div><p><h1>".Dict::S('UI:Title:BulkImport+')."</h1></p></div>\n");
 		$oPage->AddTabContainer('tabs1');	
 	
@@ -1066,7 +1161,15 @@ EOF
 				'<input type="hidden" name="nb_skipped_lines" value="'.$iSkippedLines.'"/>'.
 				'<input type="hidden" name="class_name" value="'.$sClassName.'"/>'.
 				'<input type="hidden" name="advanced" value="'.$bAdvanced.'"/>'.
-				'</form></div>';
+				'<input type="hidden" name="synchro_scope" value="'.$sSynchroScope.'"/>';
+		if (!empty($sSynchroScope))
+		{
+			foreach($aSynchroUpdate as $sKey => $value)
+			{
+				$sFileLoadHtml .= '<input type="hidden" name="synchro_update['.$sKey.']" value="'.$value.'"/>';				
+			}
+		}
+		$sFileLoadHtml .= '</form></div>';
 		
 		$oPage->AddToTab('tabs1', Dict::S('UI:CSVImport:Tab:LoadFromFile'), $sFileLoadHtml);	
 		$sCSVData = utils::ReadParam('csvdata', '');
@@ -1093,7 +1196,15 @@ EOF
 				'<input type="hidden" name="nb_skipped_lines" value="'.$iSkippedLines.'"/>'.
 				'<input type="hidden" name="class_name" value="'.$sClassName.'"/>'.
 				'<input type="hidden" name="advanced" value="'.$bAdvanced.'"/>'.
-				'</form></div>';
+				'<input type="hidden" name="synchro_scope" value="'.$sSynchroScope.'"/>';
+		if (!empty($sSynchroScope))
+		{
+			foreach($aSynchroUpdate as $sKey => $value)
+			{
+				$sPasteDataHtml .= '<input type="hidden" name="synchro_update['.$sKey.']" value="'.$value.'"/>';				
+			}
+		}
+		$sPasteDataHtml .= '</form></div>';
 				
 		$oPage->AddToTab('tabs1', Dict::S('UI:CSVImport:Tab:CopyPaste'), $sPasteDataHtml);		
 		if (!empty($sCSVData))

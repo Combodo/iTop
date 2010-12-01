@@ -553,6 +553,7 @@ class BulkChange
 			$aResult[$iRow]["finalclass"] = get_class($oTargetObj);
 			$aResult[$iRow]["id"] = new CellStatus_Void(0);
 		}
+		return $oTargetObj;
 	}
 	
 	protected function UpdateObject(&$aResult, $iRow, $oTargetObj, $aRowData, CMDBChange $oChange = null)
@@ -724,8 +725,9 @@ class BulkChange
 				switch($oReconciliationSet->Count())
 				{
 				case 0:
-					$this->CreateObject($aResult, $iRow, $aRowData, $oChange);
+					$oTargetObj = $this->CreateObject($aResult, $iRow, $aRowData, $oChange);
 					// $aResult[$iRow]["__STATUS__"]=> set in CreateObject
+					$aVisited[] = $oTargetObj->GetKey();
 					break;
 				case 1:
 					$oTargetObj = $oReconciliationSet->Fetch();

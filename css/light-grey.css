@@ -899,4 +899,13 @@ a.truncated {
 span.form_validation {
 	width:24px;
 	text-align:center;
-} 
+}
+.notification {
+	border: 1px solid #c33;
+	background-color: #fee;
+	padding: 0.5em;
+	margin: 0.5em;
+	text-align:center;
+	width: 95%;
+	-moz-border-radius: 0.5em;
+}
