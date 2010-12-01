@@ -338,6 +338,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Button:Cancel' => 'Annuler',
 	'UI:Button:Apply' => 'Appliquer',
 	'UI:Button:Back' => ' << Retour ',
+	'UI:Button:Restart' => ' |<< Recommencer ',
 	'UI:Button:Next' => ' Suite >> ',
 	'UI:Button:Finish' => ' Terminer ',
 	'UI:Button:DoImport' => ' Lancer l\'import ! ',

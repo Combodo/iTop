@@ -524,6 +524,8 @@ try
 			$sHtml .= "<td class=\"$sCSSMessageClass\" style=\"background-color:#f1f1f1;\">$sMessage</td>";
 			$sHtml .= '</tr>';
 		}
+		
+		$iUnchanged = count($aRes) - $iErrors - $iModified - $iCreated;
 		$sHtml .= '</table>';
 		$oPage->add('<div class="wizContainer">');
 		$oPage->add('<form enctype="multipart/form-data" id="wizForm" method="post">');
@@ -578,10 +580,43 @@ try
 		$oPage->add('<div style="overflow-y:auto" class="white">');
 		$oPage->add($sHtml);
 		$oPage->add('</div> <!-- end of preview -->');
-		$oPage->add('<p><input type="button" value="'.Dict::S('UI:Button:Back').'" onClick="CSVGoBack()"/>&nbsp;&nbsp;');
+		$oPage->add('<p>');
+		if($bSimulate)
+		{
+			$oPage->add('<input type="button" value="'.Dict::S('UI:Button:Restart').'" onClick="CSVRestart()"/>&nbsp;&nbsp;');
+		}
+		$oPage->add('<input type="button" value="'.Dict::S('UI:Button:Back').'" onClick="CSVGoBack()"/>&nbsp;&nbsp;');
+
+		$bShouldConfirm = false;
 		if ($bSimulate)
 		{
-			$oPage->add('<input type="submit" value="'.Dict::S('UI:Button:DoImport').'" onClick="$(\'#wizForm\').block();"/></p>');
+			// if there are *too many* changes, we should ask the user for a confirmation
+			if (count($aRes) >= utils::GetConfig()->Get('csv_import_min_object_confirmation'))
+			{
+				$fErrorsPercentage = (100.0*$iErrors)/count($aRes);
+				if ($fErrorsPercentage >= utils::GetConfig()->Get('csv_import_errors_percentage'))
+				{
+					$sMessage = sprintf("%.0f %% of the loaded objects will be modified.", $fErrorsPercentage);
+					$bShouldConfirm = true;
+				}
+				$fCreatedPercentage = (100.0*$iCreated)/count($aRes);
+				if ($fCreatedPercentage >= utils::GetConfig()->Get('csv_import_creations_percentage'))
+				{
+					$sMessage = sprintf("%.0f %% of the loaded objects will be modified.", $fCreatedPercentage);
+					$bShouldConfirm = true;
+				}
+				$fModifiedPercentage = (100.0*$iModified)/count($aRes);
+				if ($fModifiedPercentage >= utils::GetConfig()->Get('csv_import_modifications_percentage'))
+				{
+					$sMessage = sprintf("%.0f %% of the loaded objects will be modified.", $fModifiedPercentage);
+					$bShouldConfirm = true;
+				}
+				
+			}
+			$iCount = count($aRes);
+			//$oPage->add('<input type="submit" value="'.Dict::S('UI:Button:DoImport').'" onClick="$(\'#wizForm\').block();"/></p>');
+			$sConfirm = $bShouldConfirm ? 'true' : 'false';
+			$oPage->add('<input type="button" value="'.Dict::S('UI:Button:DoImport')."\" onClick=\"return DoSubmit($sConfirm);\"/></p>");
 		}
 		else
 		{
@@ -589,6 +624,40 @@ try
 		}
 		$oPage->add('</form>');
 		$oPage->add('</div> <!-- end of wizForm -->');
+		
+		
+		if ($bShouldConfirm)
+		{
+			$oPage->add('<div id="dlg_confirmation" title="Please confirm the operation">');
+			$oPage->add('<p style="text-align:center"><b>'.$sMessage.'</b></p>');
+			$oPage->add('<p style="text-align:center">Are you sure you want to do this ?</p>');
+			$oPage->add('<div id="confirmation_chart"></div>');
+			$oPage->add('</div> <!-- end of dlg_confirmation -->');
+			$oPage->add_ready_script(
+<<<EOF
+	$('#dlg_confirmation').dialog( 
+		{
+			height: 'auto',
+			width: 500,
+			modal:true, 
+			autoOpen: false, 
+			buttons:
+			{
+				'Yes': RunImport,
+				'No': CancelImport 
+			} 
+		});
+		swfobject.embedSWF(	"../images/open-flash-chart.swf", 
+							"confirmation_chart", 
+							"100%", "300","9.0.0",
+							"expressInstall.swf",
+							{}, 
+							{'wmode': 'transparent'}
+						);
+EOF
+);
+		}
+		
 		$oPage->add_script(
 <<< EOF
 function CSVGoBack()
@@ -598,9 +667,91 @@ function CSVGoBack()
 	
 }
 
+function CSVRestart()
+{
+	$('input[name=step]').val(1);
+	$('#wizForm').submit();
+	
+}
+
 function ToggleRows(sCSSClass)
 {
 	$('.'+sCSSClass).toggle();
+}
+
+function DoSubmit(bConfirm)
+{
+	if (bConfirm) //Ask for a confirmation
+	{
+		$('#dlg_confirmation').dialog('open');
+	}
+	else
+	{
+		// Submit the form
+		$('#wizForm').block();
+		$('#wizForm').submit();
+	}
+	return false;
+}
+
+function CancelImport()
+{
+	$('#dlg_confirmation').dialog('close');
+}
+
+function RunImport()
+{
+	$('#dlg_confirmation').dialog('close');
+	// Submit the form
+	$('#wizForm').block();
+	$('#wizForm').submit();
+}
+
+function open_flash_chart_data()
+{
+	var oResult = {
+		"elements": [
+			{
+				"type": "pie",
+				"tip": "#label# - #val# (#percent#)",
+				"font-size": 14,
+				"colours":
+				[
+					"#FF6666",
+					"#6666FF",
+					"#66FF66",
+					"#666666",
+				],
+				"values": 
+				[
+					{
+						"value": $iErrors,
+						"label": "Errors",
+						"alpha": 0.9
+					},
+					{
+						"value": $iModified,
+						"label": "Modified",
+						"alpha": 0.9
+					},
+					{
+						"value": $iCreated,
+						"label": "Created",
+						"alpha": 0.9
+					},
+					{
+						"value": $iUnchanged,
+						"label": "Unchanged",
+						"alpha": 0.9
+					}
+				]
+			}
+		],
+		"x_axis": null,
+		"font-size": 14,
+		"bg_colour": "#EEEEEE"
+	};
+	return JSON.stringify(oResult);
 }
 EOF
 	);
@@ -716,7 +867,8 @@ EOF
 				$oPage->add('<input type="hidden" name="synchro_update['.$sKey.']" value="'.$value.'"/>');				
 			}
 		}
-		$oPage->add('<p><input type="button" value="'.Dict::S('UI:Button:Back').'" onClick="CSVGoBack()"/>&nbsp;&nbsp;');
+		$oPage->add('<p><input type="button" value="'.Dict::S('UI:Button:Restart').'" onClick="CSVRestart()"/>&nbsp;&nbsp;');
+		$oPage->add('<input type="button" value="'.Dict::S('UI:Button:Back').'" onClick="CSVGoBack()"/>&nbsp;&nbsp;');
 		$oPage->add('<input type="submit" value="'.Dict::S('UI:Button:SimulateImport').'"/></p>');
 		$oPage->add('</form>');
 		$oPage->add('</div>');
@@ -742,6 +894,13 @@ EOF
 	{
 		$('input[name=step]').val(2);
 		$('#wizForm').removeAttr('onsubmit'); // No need to perform validation checks when going back
+		$('#wizForm').submit();
+		
+	}
+
+	function CSVRestart()
+	{
+		$('input[name=step]').val(1);
 		$('#wizForm').submit();
 		
 	}

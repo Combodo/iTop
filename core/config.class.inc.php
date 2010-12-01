@@ -151,6 +151,39 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		// Levels that trigger a confirmation in the CSV import/synchro wizard
+		'csv_import_min_object_confirmation' => array(
+			'type' => 'integer',
+			'description' => 'Minimum number of objects to check for the confirmation percentages',
+			'default' => 3,
+			'value' => 3,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
+		'csv_import_errors_percentage' => array(
+			'type' => 'integer',
+			'description' => 'Percentage of errors that trigger a confirmation in the CSV import',
+			'default' => 50,
+			'value' => 50,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
+		'csv_import_modifications_percentage' => array(
+			'type' => 'integer',
+			'description' => 'Percentage of modifications that trigger a confirmation in the CSV import',
+			'default' => 50,
+			'value' => 50,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
+		'csv_import_creations_percentage' => array(
+			'type' => 'integer',
+			'description' => 'Percentage of creations that trigger a confirmation in the CSV import',
+			'default' => 50,
+			'value' => 50,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 	);
 
 	public function IsProperty($sPropCode)

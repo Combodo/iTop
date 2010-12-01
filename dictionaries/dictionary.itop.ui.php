@@ -336,6 +336,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Button:Cancel' => 'Cancel',
 	'UI:Button:Apply' => 'Apply',
 	'UI:Button:Back' => ' << Back ',
+	'UI:Button:Restart' => ' |<< Restart ',
 	'UI:Button:Next' => ' Next >> ',
 	'UI:Button:Finish' => ' Finish ',
 	'UI:Button:DoImport' => ' Run the Import ! ',
