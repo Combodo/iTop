@@ -596,13 +596,13 @@ try
 				$fErrorsPercentage = (100.0*$iErrors)/count($aRes);
 				if ($fErrorsPercentage >= utils::GetConfig()->Get('csv_import_errors_percentage'))
 				{
-					$sMessage = sprintf("%.0f %% of the loaded objects will be modified.", $fErrorsPercentage);
+					$sMessage = sprintf("%.0f %% of the loaded objects have errors and will be ignored.", $fErrorsPercentage);
 					$bShouldConfirm = true;
 				}
 				$fCreatedPercentage = (100.0*$iCreated)/count($aRes);
 				if ($fCreatedPercentage >= utils::GetConfig()->Get('csv_import_creations_percentage'))
 				{
-					$sMessage = sprintf("%.0f %% of the loaded objects will be modified.", $fCreatedPercentage);
+					$sMessage = sprintf("%.0f %% of the loaded objects will be created.", $fCreatedPercentage);
 					$bShouldConfirm = true;
 				}
 				$fModifiedPercentage = (100.0*$iModified)/count($aRes);

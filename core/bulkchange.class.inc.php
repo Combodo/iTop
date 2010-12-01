@@ -516,7 +516,7 @@ class BulkChange
 		{
 			$sErrors = implode(', ', $aErrors);
 			$aResult[$iRow]["__STATUS__"] = new RowStatus_Issue("Unexpected attribute value(s)");
-			return;
+			return $oTargetObj;
 		}
 	
 		// Check that any external key will have a value proposed
@@ -535,7 +535,7 @@ class BulkChange
 		{
 			$sMissingKeys = implode(', ', $aMissingKeys);
 			$aResult[$iRow]["__STATUS__"] = new RowStatus_Issue("Could not be created, due to missing external key(s): $sMissingKeys");
-			return;
+			return $oTargetObj;
 		}
 	
 		// Optionaly record the results
