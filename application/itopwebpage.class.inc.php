@@ -648,12 +648,14 @@ EOF
 		if (strlen($sRestrictions) > 0)
 		{
 			$sAdminMessage = trim(utils::GetConfig()->Get('access_message'));
-			$sApplicationBanner = '<img src="../images/locked.png" style="vertical-align:middle;">';
+			$sApplicationBanner = '<div id="admin-banner">';
+			$sApplicationBanner .= '<img src="../images/locked.png" style="vertical-align:middle;">';
 			$sApplicationBanner .= '&nbsp;<b>'.$sRestrictions.'</b>';
 			if (strlen($sAdminMessage) > 0)
 			{
 				$sApplicationBanner .= '&nbsp;<b>'.$sAdminMessage.'</b>';
 			}
+			$sApplicationBanner .= '</div>';
 		}
 		else
 		{
@@ -686,7 +688,7 @@ EOF
 
 		echo '<div class="ui-layout-center">';
 		echo '	<div id="top-bar" style="width:100%">';
-		echo '		<div id="admin-banner">'.$sApplicationBanner.'</div>';
+		echo $sApplicationBanner;
 		echo '		<div id="global-search"><form action="../pages/UI.php"><table><tr><td></td><td id="g-search-input"><input type="text" name="text" value="'.$sText.'"'.$sOnClick.'/></td>';
 		echo '<td><input type="image" src="../images/searchBtn.png"/></a></td>';
 		echo '<td><a style="background:transparent;" href="http://www.combodo.com/itop-help" target="_blank"><img style="border:0;padding-left:20px;padding-right:10px;" title="'.Dict::S('UI:Help').'" src="../images/help.png"/></td>';
