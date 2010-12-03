@@ -130,14 +130,7 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 		//
 		$oMyChange = MetaModel::NewObject("CMDBChange");
 		$oMyChange->Set("date", time());
-		if (UserRights::IsImpersonated())
-		{
-			$sUserString = Dict::Format('UI:Archive_User_OnBehalfOf_User', UserRights::GetRealUser(), UserRights::GetUser());
-		}
-		else
-		{
-			$sUserString = UserRights::GetUser();
-		}
+		$sUserString = CMDBChange::GetCurrentUserName();
 		$oMyChange->Set("userinfo", $sUserString);
 		$oMyChange->DBInsert();
 
@@ -918,14 +911,7 @@ try
 
 						$oMyChange = MetaModel::NewObject("CMDBChange");
 						$oMyChange->Set("date", time());
-						if (UserRights::IsImpersonated())
-						{
-							$sUserString = Dict::Format('UI:Archive_User_OnBehalfOf_User', UserRights::GetRealUser(), UserRights::GetUser());
-						}
-						else
-						{
-							$sUserString = UserRights::GetUser();
-						}
+						$sUserString = CMDBChange::GetCurrentUserName();
 						$oMyChange->Set("userinfo", $sUserString);
 						$iChangeId = $oMyChange->DBInsert();
 						$oObj->DBUpdateTracked($oMyChange);
@@ -1055,14 +1041,7 @@ try
 			{
 				$oMyChange = MetaModel::NewObject("CMDBChange");
 				$oMyChange->Set("date", time());
-				if (UserRights::IsImpersonated())
-				{
-					$sUserString = Dict::Format('UI:Archive_User_OnBehalfOf_User', UserRights::GetRealUser(), UserRights::GetUser());
-				}
-				else
-				{
-					$sUserString = UserRights::GetUser();
-				}
+				$sUserString = CMDBChange::GetCurrentUserName();
 				$oMyChange->Set("userinfo", $sUserString);
 				$iChangeId = $oMyChange->DBInsert();
 				$oObj->DBInsertTracked($oMyChange);
@@ -1111,14 +1090,7 @@ try
 				$sClassLabel = MetaModel::GetName($sClass);
 				$oMyChange = MetaModel::NewObject("CMDBChange");
 				$oMyChange->Set("date", time());
-				if (UserRights::IsImpersonated())
-				{
-					$sUserString = Dict::Format('UI:Archive_User_OnBehalfOf_User', UserRights::GetRealUser(), UserRights::GetUser());
-				}
-				else
-				{
-					$sUserString = UserRights::GetUser();
-				}
+				$sUserString = CMDBChange::GetCurrentUserName();
 				$oMyChange->Set("userinfo", $sUserString);
 				$iChangeId = $oMyChange->DBInsert();
 				$oObj->DBInsertTracked($oMyChange);
@@ -1276,14 +1248,7 @@ EOF
 				{
 					$oMyChange = MetaModel::NewObject("CMDBChange");
 					$oMyChange->Set("date", time());
-					if (UserRights::IsImpersonated())
-					{
-						$sUserString = Dict::Format('UI:Archive_User_OnBehalfOf_User', UserRights::GetRealUser(), UserRights::GetUser());
-					}
-					else
-					{
-						$sUserString = UserRights::GetUser();
-					}
+					$sUserString = CMDBChange::GetCurrentUserName();
 					$oMyChange->Set("userinfo", $sUserString);
 					$iChangeId = $oMyChange->DBInsert();
 					$oObj->DBUpdateTracked($oMyChange);
@@ -1328,14 +1293,7 @@ EOF
 		$sLinkingAttCode = utils::ReadPostedParam('linking_attcode', '');
 		$oMyChange = MetaModel::NewObject("CMDBChange");
 		$oMyChange->Set("date", time());
-		if (UserRights::IsImpersonated())
-		{
-			$sUserString = Dict::Format('UI:Archive_User_OnBehalfOf_User', UserRights::GetRealUser(), UserRights::GetUser());
-		}
-		else
-		{
-			$sUserString = UserRights::GetUser();
-		}
+		$sUserString = CMDBChange::GetCurrentUserName();
 		$oMyChange->Set("userinfo", $sUserString);
 		$iChangeId = $oMyChange->DBInsert();
 	

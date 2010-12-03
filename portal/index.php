@@ -326,14 +326,7 @@ function DoCreateRequest($oP, $oUserOrg)
 	{
 		$oMyChange = MetaModel::NewObject("CMDBChange");
 		$oMyChange->Set("date", time());
-		if (UserRights::IsImpersonated())
-		{
-			$sUserString = Dict::Format('UI:Archive_User_OnBehalfOf_User', UserRights::GetRealUser(), UserRights::GetUser());
-		}
-		else
-		{
-			$sUserString = UserRights::GetUser();
-		}
+		$sUserString = CMDBChange::GetCurrentUserName();
 		$oMyChange->Set("userinfo", $sUserString);
 		$iChangeId = $oMyChange->DBInsert();
 		$oRequest->DBInsertTracked($oMyChange);
@@ -622,14 +615,7 @@ function DoCloseRequest($oP, UserRequest $oRequest)
 	{
 		$oMyChange = MetaModel::NewObject("CMDBChange");
 		$oMyChange->Set("date", time());
-		if (UserRights::IsImpersonated())
-		{
-			$sUserString = Dict::Format('UI:Archive_User_OnBehalfOf_User', UserRights::GetRealUser(), UserRights::GetUser());
-		}
-		else
-		{
-			$sUserString = UserRights::GetUser();
-		}
+		$sUserString = CMDBChange::GetCurrentUserName();
 		$oMyChange->Set("userinfo", $sUserString);
 		$iChangeId = $oMyChange->DBInsert();
 		$oRequest->DBUpdateTracked($oMyChange);

@@ -18,6 +18,11 @@ define('ITOP_VERSION', '$ITOP_VERSION$');
 define('ITOP_REVISION', '$WCREV$');
 define('ITOP_BUILD_DATE', '$WCNOW$');
 
+define('ACCESS_USER_WRITE', 1);
+define('ACCESS_ADMIN_WRITE', 2);
+define('ACCESS_FULL', ACCESS_USER_WRITE | ACCESS_ADMIN_WRITE);
+define('ACCESS_READONLY', 0);
+
 /**
  * Configuration read/write
  *
@@ -143,14 +148,6 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
-		'database_read_only' => array(
-			'type' => 'bool',
-			'description' => 'Freeze the data for administration purposes - administrators can still do anything... in appearance!',
-			'default' => false,
-			'value' => '',
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		),
 		// Levels that trigger a confirmation in the CSV import/synchro wizard
 		'csv_import_min_object_confirmation' => array(
 			'type' => 'integer',
@@ -183,6 +180,22 @@ class Config
 			'value' => 50,
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
+		),
+		'access_mode' => array(
+			'type' => 'integer',
+			'description' => 'Combination of flags (ACCESS_USER_WRITE | ACCESS_ADMIN_WRITE, or ACCESS_FULL)',
+			'default' => ACCESS_FULL,
+			'value' => ACCESS_FULL,
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
+		'access_message' => array(
+			'type' => 'string',
+			'description' => 'Message displayed to the users when there is any access restriction',
+			'default' => 'iTop is temporarily frozen, please wait... (the admin team)',
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
 		),
 	);
 

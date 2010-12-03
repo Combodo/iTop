@@ -111,6 +111,35 @@ abstract class User extends cmdbAbstractObject
 	abstract public function ChangePassword($sOldPassword, $sNewPassword);
 
 	/*
+	* Compute a name in best effort mode
+	*/	
+	public function GetFriendlyName()
+	{
+		if (!MetaModel::IsValidAttCode(get_class($this), 'contactid'))
+		{
+			return $this->Get('login');
+		}
+		if ($this->Get('contactid') != 0)
+		{
+			$sFirstName = $this->Get('first_name');
+			$sLastName = $this->Get('last_name');
+			$sEmail = $this->Get('email');
+			if (strlen($sFirstName) > 0)
+			{
+				return "$sFirstName $sLastName";
+			}
+			elseif (strlen($sEmail) > 0)
+			{
+				return "$sLastName <$sEmail>";
+			}
+			else
+			{
+				return $sLastName;
+			}
+		}
+	}
+
+	/*
 	* Overload the standard behavior
 	*/	
 	public function DoCheckToWrite()
@@ -490,6 +519,24 @@ class UserRights
 		return $oUser->Get('contactid');
 	}
 
+	// Render the user name in best effort mode
+	public static function GetUserFriendlyName($sName = '')
+	{
+		if (empty($sName))
+		{
+			$oUser = self::$m_oUser;
+		}
+		else
+		{
+			$oUser = FindUser($sName);
+		}
+		if (is_null($oUser))
+		{
+			return '';
+		}
+		return $oUser->GetFriendlyName();
+	}
+
 	public static function IsImpersonated()
 	{
 		if (is_null(self::$m_oRealUser))
@@ -515,6 +562,15 @@ class UserRights
 			return '';
 		}
 		return self::$m_oRealUser->GetKey();
+	}
+
+	public static function GetRealUserFriendlyName()
+	{
+		if (is_null(self::$m_oRealUser))
+		{
+			return '';
+		}
+		return self::$m_oRealUser->GetFriendlyName();
 	}
 
 	protected static function CheckLogin()
@@ -551,8 +607,6 @@ class UserRights
 		// When initializing, we need to let everything pass trough
 		if (!self::CheckLogin()) return true;
 
-		if (self::IsAdministrator($oUser)) return true;
-
 		if (MetaModel::DBIsReadOnly())
 		{
 			if ($iActionCode == UR_ACTION_MODIFY) return false;
@@ -560,6 +614,8 @@ class UserRights
 			if ($iActionCode == UR_ACTION_BULK_MODIFY) return false;
 			if ($iActionCode == UR_ACTION_BULK_DELETE) return false;
 		}
+
+		if (self::IsAdministrator($oUser)) return true;
 
 		if (MetaModel::HasCategory($sClass, 'bizmodel'))
 		{
@@ -589,8 +645,6 @@ class UserRights
 		// When initializing, we need to let everything pass trough
 		if (!self::CheckLogin()) return true;
 
-		if (self::IsAdministrator($oUser)) return true;
-
 		if (MetaModel::DBIsReadOnly())
 		{
 			if ($iActionCode == UR_ACTION_MODIFY) return false;
@@ -598,6 +652,8 @@ class UserRights
 			if ($iActionCode == UR_ACTION_BULK_MODIFY) return false;
 			if ($iActionCode == UR_ACTION_BULK_DELETE) return false;
 		}
+
+		if (self::IsAdministrator($oUser)) return true;
 
 		if (MetaModel::HasCategory($sClass, 'bizmodel'))
 		{
@@ -619,8 +675,6 @@ class UserRights
 		// When initializing, we need to let everything pass trough
 		if (!self::CheckLogin()) return true;
 
-		if (self::IsAdministrator($oUser)) return true;
-
 		if (MetaModel::DBIsReadOnly())
 		{
 			if ($iActionCode == UR_ACTION_MODIFY) return false;
@@ -628,6 +682,8 @@ class UserRights
 			if ($iActionCode == UR_ACTION_BULK_MODIFY) return false;
 			if ($iActionCode == UR_ACTION_BULK_DELETE) return false;
 		}
+
+		if (self::IsAdministrator($oUser)) return true;
 
 		// this module is forbidden for non admins
 		if (MetaModel::HasCategory($sClass, 'addon/userrights')) return false;

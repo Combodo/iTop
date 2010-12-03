@@ -206,6 +206,11 @@ try
 		}
 		break;
 		
+		case 'displayCSVHistory':
+		$bShowAll = (utils::ReadParam('showall', 'false') == 'true');
+		BulkChange::DisplayImportHistory($oPage, true, $bShowAll);
+		break;
+		
 		case 'details':
 		$key = utils::ReadParam('id', 0);
 		$oFilter = new DBObjectSearch($sClass);

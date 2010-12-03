@@ -93,14 +93,7 @@ class UserLocal extends UserInternal
 			$this->Set('password', $sNewPassword);
 			$oChange = MetaModel::NewObject("CMDBChange");
 			$oChange->Set("date", time());
-			if (UserRights::IsImpersonated())
-			{
-				$sUserString = Dict::Format('UI:Archive_User_OnBehalfOf_User', UserRights::GetRealUser(), UserRights::GetUser());
-			}
-			else
-			{
-				$sUserString = UserRights::GetUser();
-			}
+			$sUserString = CMDBChange::GetCurrentUserName();
 			$oChange->Set("userinfo", $sUserString);
 			$oChange->DBInsert();
 			$this->DBUpdateTracked($oChange, true);

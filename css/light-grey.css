@@ -807,6 +807,14 @@ div#logo div {
 	background: url(../images/banner-bkg.png) repeat-x scroll 0 0 transparent;
 	text-align: right;
 }
+#admin-banner {
+	float: left;
+	margin-top: 2px;
+	padding: 8px;
+	border: 1px solid #c33;
+	background-color: #fee;
+	-moz-border-radius: 0.5em;
+}
 #global-search {
 	height: 55px;
 	float: right;

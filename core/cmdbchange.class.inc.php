@@ -49,6 +49,34 @@ class CMDBChange extends DBObject
 		MetaModel::Init_AddAttribute(new AttributeDateTime("date", array("allowed_values"=>null, "sql"=>"date", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("userinfo", array("allowed_values"=>null, "sql"=>"userinfo", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 	}
+
+	// Helper to keep track of the author of a given change,
+	// taking into account a variety of cases (contact attached or not, impersonation)
+	static public function GetCurrentUserName()
+	{
+		if (UserRights::IsImpersonated())
+		{
+			$sUserString = Dict::Format('UI:Archive_User_OnBehalfOf_User', UserRights::GetRealUserFriendlyName(), UserRights::GetUserFriendlyName());
+		}
+		else
+		{
+			$sUserString = UserRights::GetUserFriendlyName();
+		}
+		return $sUserString;
+	}
+
+	public function GetUserName()
+	{
+		if (preg_match('/^(.*)\\(CSV\\)$/i', $this->Get('userinfo'), $aMatches))
+		{
+			$sUser = $aMatches[1];
+		}
+		else
+		{
+			$sUser = $this->Get('userinfo');
+		}
+		return $sUser;
+	}
 }
 
 ?>

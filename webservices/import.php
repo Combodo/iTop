@@ -483,14 +483,7 @@ try
 	{
 		$oMyChange = MetaModel::NewObject("CMDBChange");
 		$oMyChange->Set("date", time());
-		if (UserRights::IsImpersonated())
-		{
-			$sUserString = Dict::Format('UI:Archive_User_OnBehalfOf_User', UserRights::GetRealUser(), UserRights::GetUser());
-		}
-		else
-		{
-			$sUserString = UserRights::GetUser();
-		}
+		$sUserString = CMDBChange::GetCurrentUserName();
 		if (strlen($sComment) > 0)
 		{
 			$sMoreInfo = 'Web Service (CSV) - '.$sComment;

@@ -789,6 +789,272 @@ class BulkChange
 
 		return $aResult;
 	}
+
+	/**
+	 * Display the history of bulk imports
+	 */
+	static function DisplayImportHistory(WebPage $oPage, $bFromAjax = false, $bShowAll = false)
+	{
+		$sAjaxDivId = "CSVImportHistory";
+		if (!$bFromAjax)
+		{
+			$oPage->add('<div id="'.$sAjaxDivId.'">');
+		}
+
+		$oPage->p(Dict::S('UI:History:BulkImports+'));
+
+		$oBulkChangeSearch = DBObjectSearch::FromOQL("SELECT CMDBChange WHERE userinfo LIKE '%(CSV)'");
+
+		$iQueryLimit = $bShowAll ? 0 : utils::GetConfig()->GetMaxDisplayLimit() + 1;
+		$oBulkChanges = new DBObjectSet($oBulkChangeSearch, array('date' => false), array(), $iQueryLimit);
+
+		$oAppContext = new ApplicationContext();
+
+		$bLimitExceeded = false;
+		if ($oBulkChanges->Count() > utils::GetConfig()->GetMaxDisplayLimit())
+		{
+			$bLimitExceeded = true;
+			if (!$bShowAll)
+			{
+				$iMaxObjects = utils::GetConfig()->GetMinDisplayLimit();
+				$oBulkChanges->SetLimit($iMaxObjects);
+			}
+		}
+		$oBulkChanges->Seek(0);
+	
+		$aDetails = array();
+		while ($oChange = $oBulkChanges->Fetch())
+		{
+			$sDate = '<a href="?step=10&changeid='.$oChange->GetKey().'&'.$oAppContext->GetForLink().'">'.$oChange->Get('date').'</a>';
+			$sUser = $oChange->GetUserName();
+			if (preg_match('/^(.*)\\(CSV\\)$/i', $oChange->Get('userinfo'), $aMatches))
+			{
+				$sUser = $aMatches[1];
+			}
+			else
+			{
+				$sUser = $oChange->Get('userinfo');
+			}
+
+			$oOpSearch = DBObjectSearch::FromOQL("SELECT CMDBChangeOpCreate WHERE change = :change_id");
+			$oOpSet = new DBObjectSet($oOpSearch, array(), array('change_id' => $oChange->GetKey()));
+			$iCreated = $oOpSet->Count();
+
+			//while ($oCreated = $oOpSet->Fetch())
+			//{
+			//	$oPage->p("Created ".$oCreated->Get('objclass')."::".$oCreated->Get('objkey'));
+			//}
+
+			$oOpSearch = DBObjectSearch::FromOQL("SELECT CMDBChangeOpSetAttribute WHERE change = :change_id");
+			$oOpSet = new DBObjectSet($oOpSearch, array(), array('change_id' => $oChange->GetKey()));
+
+			$aModified = array();
+			$aAttList = array();
+			while ($oModified = $oOpSet->Fetch())
+			{
+				$sClass = $oModified->Get('objclass');
+				$iKey = $oModified->Get('objkey');
+				$sAttCode = $oModified->Get('attcode');
+
+				$aAttList[$sClass][$sAttCode] = true;
+				$aModified["$sClass::$iKey"] = true;
+			}
+			$iModified = count($aModified);
+
+			// Assumption: there is only one class of objects being loaded
+			// Then the last class found gives us the class for every object
+
+			$aDetails[] = array('date' => $sDate, 'user' => $sUser, 'class' => $sClass, 'created' => $iCreated, 'modified' => $iModified);
+
+		}
+
+		$aConfig = array( 'date' => array('label' => Dict::S('UI:History:Date'), 'description' => Dict::S('UI:History:Date+')),
+					'user' => array('label' => Dict::S('UI:History:User'), 'description' => Dict::S('UI:History:User+')),
+					'class' => array('label' => Dict::S('Core:AttributeClass'), 'description' => Dict::S('Core:AttributeClass+')),
+					'created' => array('label' => Dict::S('UI:History:StatsCreations'), 'description' => Dict::S('UI:History:StatsCreations+')),
+					'modified' => array('label' => Dict::S('UI:History:StatsModifs'), 'description' => Dict::S('UI:History:StatsModifs+')),
+		);
+
+		if ($bLimitExceeded)
+		{
+			if ($bShowAll)
+			{
+				// Collapsible list
+				$oPage->add('<p>'.Dict::Format('UI:CountOfResults', $oBulkChanges->Count()).'&nbsp;&nbsp;<a class="truncated" onclick="OnTruncatedHistoryToggle(false);">'.Dict::S('UI:CollapseList').'</a></p>');
+			}
+			else
+			{
+				// Truncated list
+				$iMinDisplayLimit = utils::GetConfig()->GetMinDisplayLimit();
+				$sCollapsedLabel = Dict::Format('UI:TruncatedResults', $iMinDisplayLimit, $oBulkChanges->Count());
+				$sLinkLabel = Dict::S('UI:DisplayAll');
+				$oPage->add('<p>'.$sCollapsedLabel.'&nbsp;&nbsp;<a class="truncated" onclick="OnTruncatedHistoryToggle(true);">'.$sLinkLabel.'</p>');
+
+				$oPage->add_ready_script(
+<<<EOF
+	$('#$sAjaxDivId table.listResults').addClass('truncated');
+	$('#$sAjaxDivId table.listResults tr:last td').addClass('truncated');
+EOF
+				);
+
+				
+				$sAppContext = $oAppContext->GetForLink();
+				$oPage->add_script(
+<<<EOF
+	function OnTruncatedHistoryToggle(bShowAll)
+	{
+		$.get('../pages/ajax.render.php?{$sAppContext}', {operation: 'displayCSVHistory', showall: bShowAll}, function(data)
+			{
+				$('#$sAjaxDivId').html(data);
+				var table = $('#$sAjaxDivId .listResults');
+				table.tableHover(); // hover tables
+				table.tablesorter( { widgets: ['myZebra', 'truncatedList']} ); // sortable and zebra tables
+			}
+		);
+	}
+EOF
+				);
+			}
+		}
+		else
+		{
+			// Normal display - full list without any decoration
+		}
+
+		$oPage->table($aConfig, $aDetails);
+
+		if (!$bFromAjax)
+		{
+			$oPage->add('</div>');
+		}
+	}
+
+	/**
+	 * Display the details of an import
+	 */
+	static function DisplayImportHistoryDetails(iTopWebPage $oPage, $iChange)
+	{
+		if ($iChange == 0)
+		{
+			throw new Exception("Missing parameter changeid");
+		}
+		$oChange = MetaModel::GetObject('CMDBChange', $iChange, false);
+		if (is_null($oChange))
+		{
+			throw new Exception("Unknown change: $iChange");
+		}
+		$oPage->add("<div><p><h1>".Dict::Format('UI:History:BulkImportDetails', $oChange->Get('date'), $oChange->GetUserName())."</h1></p></div>\n");
+
+		// Assumption : change made one single class of objects
+		$aObjects = array();
+		$aAttributes = array(); // array of attcode => occurences
+
+		$oOpSearch = DBObjectSearch::FromOQL("SELECT CMDBChangeOp WHERE change = :change_id");
+		$oOpSet = new DBObjectSet($oOpSearch, array(), array('change_id' => $iChange));
+		while ($oOperation = $oOpSet->Fetch())
+		{
+			$sClass = $oOperation->Get('objclass');
+			$iKey = $oOperation->Get('objkey');
+			$iObjId = "$sClass::$iKey";
+			if (!isset($aObjects[$iObjId]))
+			{
+				$aObjects[$iObjId] = array();
+				$aObjects[$iObjId]['__class__'] = $sClass;
+				$aObjects[$iObjId]['__id__'] = $iKey;
+			}
+			if (get_class($oOperation) == 'CMDBChangeOpCreate')
+			{
+				$aObjects[$iObjId]['__created__'] = true;
+			}
+			elseif (is_subclass_of($oOperation, 'CMDBChangeOpSetAttribute'))
+			{
+				$sAttCode = $oOperation->Get('attcode');
+
+				if (get_class($oOperation) == 'CMDBChangeOpSetAttributeScalar')
+				{
+					$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+					if ($oAttDef->IsExternalKey())
+					{
+						$oOldTarget = MetaModel::GetObject($oAttDef->GetTargetClass(), $oOperation->Get('oldvalue'));
+						$oNewTarget = MetaModel::GetObject($oAttDef->GetTargetClass(), $oOperation->Get('newvalue'));
+						$sOldValue = $oOldTarget->GetHyperlink();
+						$sNewValue = $oNewTarget->GetHyperlink();
+					}
+					else
+					{
+						$sOldValue = $oOperation->GetAsHTML('oldvalue');
+						$sNewValue = $oOperation->GetAsHTML('newvalue');
+					}
+					$aObjects[$iObjId][$sAttCode] = $sOldValue.' -&gt; '.$sNewValue;
+				}
+				else
+				{
+					$aObjects[$iObjId][$sAttCode] = 'n/a';
+				}
+
+				if (isset($aAttributes[$sAttCode]))
+				{
+					$aAttributes[$sAttCode]++;
+				}
+				else
+				{
+					$aAttributes[$sAttCode] = 1;				
+				}
+			}
+		}
+		
+		$aDetails = array();
+		foreach($aObjects as $iUId => $aObjData)
+		{
+			$aRow = array();
+			$oObject = MetaModel::GetObject($aObjData['__class__'], $aObjData['__id__'], false);
+			if (is_null($oObject))
+			{
+				$aRow['object'] = $aObjData['__class__'].'::'.$aObjData['__id__'].' (deleted)';
+			}
+			else
+			{
+				$aRow['object'] = $oObject->GetHyperlink();
+			}
+			if (isset($aObjData['__created__']))
+			{
+				$aRow['operation'] = Dict::S('Change:ObjectCreated');
+			}
+			else
+			{
+				$aRow['operation'] = Dict::S('Change:ObjectModified');
+			}
+			foreach ($aAttributes as $sAttCode => $iOccurences)
+			{
+				if (isset($aObjData[$sAttCode]))
+				{
+					$aRow[$sAttCode] = $aObjData[$sAttCode];
+				}
+				elseif (!is_null($oObject))
+				{
+					// This is the current vaslue: $oObject->GetAsHtml($sAttCode)
+					// whereas we are displaying the value that was set at the time
+					// the object was created
+					// This requires addtional coding...let's do that later
+					$aRow[$sAttCode] = '';
+				}
+				else
+				{
+					$aRow[$sAttCode] = '';
+				}
+			}
+			$aDetails[] = $aRow;
+		}
+
+		$aConfig = array();
+		$aConfig['object'] = array('label' => MetaModel::GetName($sClass), 'description' => MetaModel::GetClassDescription($sClass));
+		$aConfig['operation'] = array('label' => Dict::S('UI:History:Changes'), 'description' => Dict::S('UI:History:Changes+'));
+		foreach ($aAttributes as $sAttCode => $iOccurences)
+		{
+			$aConfig[$sAttCode] = array('label' => MetaModel::GetLabel($sClass, $sAttCode), 'description' => MetaModel::GetDescription($sClass, $sAttCode));
+		}
+		$oPage->table($aConfig, $aDetails);
+	}	
 }
 
 

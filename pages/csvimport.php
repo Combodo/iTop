@@ -35,7 +35,6 @@ try
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 	
-	$oAppContext = new ApplicationContext();
 	$iStep = utils::ReadParam('step', 1);
 	
 	$oPage = new iTopWebPage(Dict::S('UI:Title:BulkImport'));
@@ -344,14 +343,7 @@ try
 			// We're doing it for real, let's create a change
 			$oMyChange = MetaModel::NewObject("CMDBChange");
 			$oMyChange->Set("date", time());
-			if (UserRights::IsImpersonated())
-			{
-				$sUserString = Dict::Format('UI:Archive_User_OnBehalfOf_User', UserRights::GetRealUser(), UserRights::GetUser());
-			}
-			else
-			{
-				$sUserString = UserRights::GetUser();
-			}
+			$sUserString = CMDBChange::GetCurrentUserName();
 			$sUserString .= ' (CSV)';
 			$oMyChange->Set("userinfo", $sUserString);
 			$iChangeId = $oMyChange->DBInsert();		
@@ -1246,7 +1238,7 @@ EOF
 	);
 		$oPage->add_ready_script('DoPreview();');
 	}
-	
+
 	/**
 	 *  Prompt for the data to be loaded (either via a file or a copy/paste)
 	 * @param WebPage $oPage The current web page
@@ -1412,10 +1404,19 @@ $('#select_template_class').change( function() {
 });
 EOF
 	);
+
+		$oPage->SetCurrentTabContainer('tabs1');
+		$oPage->SetCurrentTab(Dict::S('UI:History:BulkImports'));
+		BulkChange::DisplayImportHistory($oPage);
 	}
 			
 	switch($iStep)
 	{
+		case 10:
+			$iChange = (int)utils::ReadParam('changeid', 0);
+			BulkChange::DisplayImportHistoryDetails($oPage, $iChange);
+			break;
+			
 		case 5:
 			LoadData($oPage);
 			break;

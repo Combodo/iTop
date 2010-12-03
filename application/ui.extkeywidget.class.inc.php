@@ -258,14 +258,7 @@ EOF
 		$oObj->UpdateObject($this->sFormPrefix.$this->iId);
 		$oMyChange = MetaModel::NewObject("CMDBChange");
 		$oMyChange->Set("date", time());
-		if (UserRights::IsImpersonated())
-		{
-			$sUserString = Dict::Format('UI:Archive_User_OnBehalfOf_User', UserRights::GetRealUser(), UserRights::GetUser());
-		}
-		else
-		{
-			$sUserString = UserRights::GetUser();
-		}
+		$sUserString = CMDBChange::GetCurrentUserName();
 		$oMyChange->Set("userinfo", $sUserString);
 		$iChangeId = $oMyChange->DBInsert();
 		$oObj->DBInsertTracked($oMyChange);

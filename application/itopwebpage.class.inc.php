@@ -632,13 +632,32 @@ EOF
 		}
 		$sLogOffMenu .= "</ul>\n</li>\n</ul></span>\n";
 
-		if (MetaModel::DBIsReadOnly())
+		$sRestrictions = '';
+		if (!MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE))
 		{
-			$sApplicationMode = Dict::S('UI:ApplicationReadOnly');
+			if (!MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE))
+			{
+				$sRestrictions = Dict::S('UI:AccessRO-All');
+			}
+		}
+		elseif (!MetaModel::DBHasAccess(ACCESS_USER_WRITE))
+		{
+				$sRestrictions = Dict::S('UI:AccessRO-Users');
+		}
+
+		if (strlen($sRestrictions) > 0)
+		{
+			$sAdminMessage = trim(utils::GetConfig()->Get('access_message'));
+			$sApplicationBanner = '<img src="../images/locked.png" style="vertical-align:middle;">';
+			$sApplicationBanner .= '&nbsp;<b>'.$sRestrictions.'</b>';
+			if (strlen($sAdminMessage) > 0)
+			{
+				$sApplicationBanner .= '&nbsp;<b>'.$sAdminMessage.'</b>';
+			}
 		}
 		else
 		{
-			$sApplicationMode = '';
+			$sApplicationBanner = '';
 		}
 
 		//$sLogOffMenu = "<span id=\"logOffBtn\" style=\"height:55px;padding:0;margin:0;\"><img src=\"../images/onOffBtn.png\"></span>";
@@ -667,8 +686,9 @@ EOF
 
 		echo '<div class="ui-layout-center">';
 		echo '	<div id="top-bar" style="width:100%">';
+		echo '		<div id="admin-banner">'.$sApplicationBanner.'</div>';
 		echo '		<div id="global-search"><form action="../pages/UI.php"><table><tr><td></td><td id="g-search-input"><input type="text" name="text" value="'.$sText.'"'.$sOnClick.'/></td>';
-		echo '<td><input type="image" src="../images/searchBtn.png"/></a></td><td>'.$sApplicationMode.'</td>';
+		echo '<td><input type="image" src="../images/searchBtn.png"/></a></td>';
 		echo '<td><a style="background:transparent;" href="http://www.combodo.com/itop-help" target="_blank"><img style="border:0;padding-left:20px;padding-right:10px;" title="'.Dict::S('UI:Help').'" src="../images/help.png"/></td>';
 		echo '<td style="padding-right:20px;padding-left:10px;">'.$sLogOffMenu.'</td><td><input type="hidden" name="operation" value="full_text"/></td></tr></table></form></div>';
 		//echo '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="hidden" name="operation" value="full_text"/></td></tr></table></form></div>';

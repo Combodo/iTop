@@ -2547,28 +2547,26 @@ abstract class MetaModel
 
 	/*
 	* Determines wether the target DB is frozen or not
-	* 1 - consider the DB property 'status'
-	* 2 - check the setting 'database_read_only'	
 	*/		
 	public static function DBIsReadOnly()
 	{
-		$sStatus = DBProperty::GetProperty('status', null);
-		if (!is_null($sStatus))
+		// Improvement: check the mySQL variable -> Read-only
+
+		if (UserRights::IsAdministrator())
 		{
-			switch (strtolower(trim($sStatus)))
-			{
-			case 'fullaccess':
-				$ret = false;
-				break;
-			default:
-				$ret = true;
-			}
+			return (!self::DBHasAccess(ACCESS_ADMIN_WRITE));
 		}
 		else
 		{
-			$ret = self::$m_oConfig->Get('database_read_only');
+			return (!self::DBHasAccess(ACCESS_USER_WRITE));
 		}
-		return $ret;
+	}
+
+	public static function DBHasAccess($iRequested = ACCESS_FULL)
+	{
+		$iMode = self::$m_oConfig->Get('access_mode');
+		if (($iMode & $iRequested) == 0) return false;
+		return true;
 	}
 
 	protected static function MakeDictEntry($sKey, $sValueFromOldSystem, $sDefaultValue, &$bNotInDico)
