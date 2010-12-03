@@ -442,7 +442,11 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		$oContact->Set('name', 'My last name');
 		$oContact->Set('first_name', 'My first name');
 		//$oContact->Set('status', 'available');
-		$oContact->Set('org_id', $iOrgId);
+		if (MetaModel::IsValidAttCode('Person', 'org_id'))
+		{
+			// Protect for a different data model where contacts are not part of an org
+			$oContact->Set('org_id', $iOrgId);
+		}
 		$oContact->Set('email', 'my.email@foo.org');
 		//$oContact->Set('phone', '');
 		//$oContact->Set('location_id', $iLocationId);
