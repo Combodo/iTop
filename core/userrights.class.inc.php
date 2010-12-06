@@ -418,15 +418,24 @@ class UserRights
 		}
 	}
 
-	public static function ChangePassword($sCurrentPassword, $sNewPassword)
+	public static function ChangePassword($sOldPassword, $sNewPassword, $sName = '')
 	{
-		if (!is_null(self::$m_oUser))
+		if (empty($sName))
 		{
- 			return self::$m_oUser->ChangePassword($sCurrentPassword, $sNewPassword);
+			$oUser = self::$m_oUser;
 		}
 		else
 		{
+			// find the id out of the login string
+			$oUser = self::FindUser($sName);
+		}
+		if (is_null($oUser))
+		{
 			return false;
+		}
+		else
+		{
+			return $oUser->ChangePassword($sOldPassword, $sNewPassword);
 		}
 	}
 
