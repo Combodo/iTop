@@ -583,22 +583,22 @@ try
 		if ($bSimulate)
 		{
 			// if there are *too many* changes, we should ask the user for a confirmation
-			if (count($aRes) >= utils::GetConfig()->Get('csv_import_min_object_confirmation'))
+			if (count($aRes) >= MetaModel::GetConfig()->Get('csv_import_min_object_confirmation'))
 			{
 				$fErrorsPercentage = (100.0*$iErrors)/count($aRes);
-				if ($fErrorsPercentage >= utils::GetConfig()->Get('csv_import_errors_percentage'))
+				if ($fErrorsPercentage >= MetaModel::GetConfig()->Get('csv_import_errors_percentage'))
 				{
 					$sMessage = sprintf("%.0f %% of the loaded objects have errors and will be ignored.", $fErrorsPercentage);
 					$bShouldConfirm = true;
 				}
 				$fCreatedPercentage = (100.0*$iCreated)/count($aRes);
-				if ($fCreatedPercentage >= utils::GetConfig()->Get('csv_import_creations_percentage'))
+				if ($fCreatedPercentage >= MetaModel::GetConfig()->Get('csv_import_creations_percentage'))
 				{
 					$sMessage = sprintf("%.0f %% of the loaded objects will be created.", $fCreatedPercentage);
 					$bShouldConfirm = true;
 				}
 				$fModifiedPercentage = (100.0*$iModified)/count($aRes);
-				if ($fModifiedPercentage >= utils::GetConfig()->Get('csv_import_modifications_percentage'))
+				if ($fModifiedPercentage >= MetaModel::GetConfig()->Get('csv_import_modifications_percentage'))
 				{
 					$sMessage = sprintf("%.0f %% of the loaded objects will be modified.", $fModifiedPercentage);
 					$bShouldConfirm = true;
@@ -1258,7 +1258,7 @@ EOF
 			'ISO-8859-15' => 'Western (ISO-8859-15)',
 		);
 		// Some more encodings can be specified in the config file
-		$aExtraCharsets = utils::GetConfig()->GetCSVImportCharsets();
+		$aExtraCharsets = MetaModel::GetConfig()->GetCSVImportCharsets();
 		
 		$aPossibleEncodings = array_merge($aPossibleEncodings, $aExtraCharsets);
 		asort($aPossibleEncodings);

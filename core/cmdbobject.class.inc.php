@@ -234,7 +234,7 @@ abstract class CMDBObject extends DBObject
 			// and we decided that it was too risky to activate it
 			// Anyhow, users willing to have a very strong security could set
 			// skip_strong_security = 0, in the config file
-			$bSkipStrongSecurity = utils::GetConfig()->Get('skip_strong_security');
+			$bSkipStrongSecurity = MetaModel::GetConfig()->Get('skip_strong_security');
 		}
 		if (!$bSkipStrongSecurity)
 		{

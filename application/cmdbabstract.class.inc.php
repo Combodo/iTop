@@ -494,9 +494,9 @@ abstract class cmdbAbstractObject extends CMDBObject
 		$iMaxObjects = -1;
 		if ($bDisplayLimit && $bTruncated)
 		{
-			if ($oSet->Count() > utils::GetConfig()->GetMaxDisplayLimit())
+			if ($oSet->Count() > MetaModel::GetConfig()->GetMaxDisplayLimit())
 			{
-				$iMaxObjects = utils::GetConfig()->GetMinDisplayLimit();
+				$iMaxObjects = MetaModel::GetConfig()->GetMinDisplayLimit();
 				$oSet->SetLimit($iMaxObjects);
 			}
 		}
@@ -542,14 +542,14 @@ abstract class cmdbAbstractObject extends CMDBObject
 //			$divId = 'missingblockid';
 //		}
 		$sFilter = $oSet->GetFilter()->serialize();
-		$iMinDisplayLimit = utils::GetConfig()->GetMinDisplayLimit();
+		$iMinDisplayLimit = MetaModel::GetConfig()->GetMinDisplayLimit();
 		$sCollapsedLabel = Dict::Format('UI:TruncatedResults', $iMinDisplayLimit, $oSet->Count());
 		$sLinkLabel = Dict::S('UI:DisplayAll');
 		foreach($oSet->GetFilter()->GetInternalParams() as $sName => $sValue)
 		{
 			$aExtraParams['query_params'][$sName] = $sValue;
 		}
-		if ($bDisplayLimit && $bTruncated && ($oSet->Count() > utils::GetConfig()->GetMaxDisplayLimit()))
+		if ($bDisplayLimit && $bTruncated && ($oSet->Count() > MetaModel::GetConfig()->GetMaxDisplayLimit()))
 		{
 			// list truncated
 			$aExtraParams['display_limit'] = true;
@@ -561,7 +561,7 @@ abstract class cmdbAbstractObject extends CMDBObject
 EOF
 );
 		}
-		else if ($bDisplayLimit && !$bTruncated && ($oSet->Count() > utils::GetConfig()->GetMaxDisplayLimit()))
+		else if ($bDisplayLimit && !$bTruncated && ($oSet->Count() > MetaModel::GetConfig()->GetMaxDisplayLimit()))
 		{
 			// Collapsible list
 			$aExtraParams['display_limit'] = true;
@@ -664,9 +664,9 @@ EOF
 		$iMaxObjects = -1;
 		if ($bDisplayLimit)
 		{
-			if ($oSet->Count() > utils::GetConfig()->GetMaxDisplayLimit())
+			if ($oSet->Count() > MetaModel::GetConfig()->GetMaxDisplayLimit())
 			{
-				$iMaxObjects = utils::GetConfig()->GetMinDisplayLimit();
+				$iMaxObjects = MetaModel::GetConfig()->GetMinDisplayLimit();
 			}
 		}
 		while (($aObjects = $oSet->FetchAssoc()) && ($iMaxObjects != 0))
@@ -697,14 +697,14 @@ EOF
 			{
 				$aMenuExtraParams = $aExtraParams;
 			}
-			if ($bDisplayLimit && ($oSet->Count() > utils::GetConfig()->GetMaxDisplayLimit()))
+			if ($bDisplayLimit && ($oSet->Count() > MetaModel::GetConfig()->GetMaxDisplayLimit()))
 			{
 				// list truncated
 				$divId = $aExtraParams['block_id'];
 				$sFilter = $oSet->GetFilter()->serialize();
 				$aExtraParams['display_limit'] = false; // To expand the full list
 				$sExtraParams = addslashes(str_replace('"', "'", json_encode($aExtraParams))); // JSON encode, change the style of the quotes and escape them
-				$sHtml .= '<tr class="containerHeader"><td>'.Dict::Format('UI:TruncatedResults', utils::GetConfig()->GetMinDisplayLimit(), $oSet->Count()).'&nbsp;&nbsp;<a href="Javascript:ReloadTruncatedList(\''.$divId.'\', \''.$sFilter.'\', \''.$sExtraParams.'\');">'.Dict::S('UI:DisplayAll').'</a></td><td>';
+				$sHtml .= '<tr class="containerHeader"><td>'.Dict::Format('UI:TruncatedResults', MetaModel::GetConfig()->GetMinDisplayLimit(), $oSet->Count()).'&nbsp;&nbsp;<a href="Javascript:ReloadTruncatedList(\''.$divId.'\', \''.$sFilter.'\', \''.$sExtraParams.'\');">'.Dict::S('UI:DisplayAll').'</a></td><td>';
 				$oPage->add_ready_script("$('#{$divId} table.listResults').addClass('truncated');");
 				$oPage->add_ready_script("$('#{$divId} table.listResults tr:last td').addClass('truncated');");
 			}

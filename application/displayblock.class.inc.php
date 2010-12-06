@@ -224,14 +224,14 @@ class DisplayBlock
 			{
 				case 'fast':
 				$bAutoReload = true;
-				$iReloadInterval = utils::GetConfig()->GetFastReloadInterval()*1000;
+				$iReloadInterval = MetaModel::GetConfig()->GetFastReloadInterval()*1000;
 				break;
 				
 				case 'standard':
 				case 'true':
 				case true:
 				$bAutoReload = true;
-				$iReloadInterval = utils::GetConfig()->GetStandardReloadInterval()*1000;
+				$iReloadInterval = MetaModel::GetConfig()->GetStandardReloadInterval()*1000;
 				break;
 				
 				default:

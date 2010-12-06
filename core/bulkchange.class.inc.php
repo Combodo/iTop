@@ -805,18 +805,18 @@ class BulkChange
 
 		$oBulkChangeSearch = DBObjectSearch::FromOQL("SELECT CMDBChange WHERE userinfo LIKE '%(CSV)'");
 
-		$iQueryLimit = $bShowAll ? 0 : utils::GetConfig()->GetMaxDisplayLimit() + 1;
+		$iQueryLimit = $bShowAll ? 0 : MetaModel::GetConfig()->GetMaxDisplayLimit() + 1;
 		$oBulkChanges = new DBObjectSet($oBulkChangeSearch, array('date' => false), array(), $iQueryLimit);
 
 		$oAppContext = new ApplicationContext();
 
 		$bLimitExceeded = false;
-		if ($oBulkChanges->Count() > utils::GetConfig()->GetMaxDisplayLimit())
+		if ($oBulkChanges->Count() > MetaModel::GetConfig()->GetMaxDisplayLimit())
 		{
 			$bLimitExceeded = true;
 			if (!$bShowAll)
 			{
-				$iMaxObjects = utils::GetConfig()->GetMinDisplayLimit();
+				$iMaxObjects = MetaModel::GetConfig()->GetMinDisplayLimit();
 				$oBulkChanges->SetLimit($iMaxObjects);
 			}
 		}
@@ -885,7 +885,7 @@ class BulkChange
 			else
 			{
 				// Truncated list
-				$iMinDisplayLimit = utils::GetConfig()->GetMinDisplayLimit();
+				$iMinDisplayLimit = MetaModel::GetConfig()->GetMinDisplayLimit();
 				$sCollapsedLabel = Dict::Format('UI:TruncatedResults', $iMinDisplayLimit, $oBulkChanges->Count());
 				$sLinkLabel = Dict::S('UI:DisplayAll');
 				$oPage->add('<p>'.$sCollapsedLabel.'&nbsp;&nbsp;<a class="truncated" onclick="OnTruncatedHistoryToggle(true);">'.$sLinkLabel.'</p>');

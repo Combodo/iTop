@@ -647,7 +647,7 @@ EOF
 
 		if (strlen($sRestrictions) > 0)
 		{
-			$sAdminMessage = trim(utils::GetConfig()->Get('access_message'));
+			$sAdminMessage = trim(MetaModel::GetConfig()->Get('access_message'));
 			$sApplicationBanner = '<div id="admin-banner">';
 			$sApplicationBanner .= '<img src="../images/locked.png" style="vertical-align:middle;">';
 			$sApplicationBanner .= '&nbsp;<b>'.$sRestrictions.'</b>';

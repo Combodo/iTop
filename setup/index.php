@@ -1195,8 +1195,6 @@ function SetupFinished(SetupWebPage $oP, $aParamValues, $iCurrentStep, Config $o
 clearstatcache(); // Make sure we know what we are doing !
 if (file_exists(FINAL_CONFIG_FILE))
 {
-	Utils::SpecifyConfigFile(FINAL_CONFIG_FILE);
-
 	// The configuration file already exists
 	if (is_writable(FINAL_CONFIG_FILE))
 	{
@@ -1214,8 +1212,6 @@ if (file_exists(FINAL_CONFIG_FILE))
 }
 else
 {
-	Utils::SpecifyConfigFile(TMP_CONFIG_FILE);
-
 	// No configuration file yet
 	// Check that the wizard can write into the root dir to create the configuration file
 	if (!is_writable(dirname(FINAL_CONFIG_FILE)))

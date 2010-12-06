@@ -194,7 +194,7 @@ EOF
 
 	static function SecureConnectionRequired()
 	{
-		return utils::GetConfig()->GetSecureConnectionRequired();
+		return MetaModel::GetConfig()->GetSecureConnectionRequired();
 	}
 
 	static function IsConnectionSecure()
@@ -218,7 +218,7 @@ EOF
 			exit;
 		}
 
-		$aAllowedLoginTypes = utils::GetConfig()->GetAllowedLoginTypes();
+		$aAllowedLoginTypes = MetaModel::GetConfig()->GetAllowedLoginTypes();
 
 		if (isset($_SESSION['auth_user']))
 		{
@@ -266,7 +266,7 @@ EOF
 					case 'external':
 					// Web server supplied authentication
 					$bExternalAuth = false;
-                    $sExtAuthVar = utils::GetConfig()->GetExternalAuthenticationVariable(); // In which variable is the info passed ?
+                    $sExtAuthVar = MetaModel::GetConfig()->GetExternalAuthenticationVariable(); // In which variable is the info passed ?
                     $sEval = '$bExternalAuth = isset('.$sExtAuthVar.');';
                     eval($sEval);
                     if ($bExternalAuth)
@@ -339,7 +339,7 @@ EOF
 	static function DoLogin($bMustBeAdmin = false, $bIsAllowedToPortalUsers = false)
 	{
 		$operation = utils::ReadParam('loginop', '');
-		session_name(utils::GetConfig()->Get('session_name'));
+		session_name(MetaModel::GetConfig()->Get('session_name'));
 		session_start();
 
 		if ($operation == 'logoff')
@@ -350,7 +350,7 @@ EOF
 			}
 			else
 			{
-				$aAllowedLoginTypes = utils::GetConfig()->GetAllowedLoginTypes();
+				$aAllowedLoginTypes = MetaModel::GetConfig()->GetAllowedLoginTypes();
 				if (count($aAllowedLoginTypes) > 0)
 				{
 					$sLoginMode = $aAllowedLoginTypes[0];

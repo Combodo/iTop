@@ -1741,17 +1741,17 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 	
 	public function GetMaximumComboLength()
 	{
-		return $this->GetOptional('max_combo_length', utils::GetConfig()->Get('max_combo_length'));
+		return $this->GetOptional('max_combo_length', MetaModel::GetConfig()->Get('max_combo_length'));
 	}
 	
 	public function GetMinAutoCompleteChars()
 	{
-		return $this->GetOptional('min_autocomplete_chars', utils::GetConfig()->Get('min_autocomplete_chars'));
+		return $this->GetOptional('min_autocomplete_chars', MetaModel::GetConfig()->Get('min_autocomplete_chars'));
 	}
 	
 	public function AllowTargetCreation()
 	{
-		return $this->GetOptional('allow_target_creation', utils::GetConfig()->Get('allow_target_creation'));
+		return $this->GetOptional('allow_target_creation', MetaModel::GetConfig()->Get('allow_target_creation'));
 	}
 	
 }

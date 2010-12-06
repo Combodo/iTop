@@ -14,6 +14,8 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+require_once(APPROOT.'core/modulehandler.class.inc.php');
+
 /**
  * Metamodel
  *
@@ -3259,7 +3261,17 @@ abstract class MetaModel
 		CMDBSource::SelectDB(self::$m_sDBName);
 
 		// Some of the init could not be done earlier (requiring classes to be declared and DB to be accessible)
+		// To be deprecated
 		self::InitPlugins();
+
+		foreach(get_declared_classes() as $sPHPClass)
+		{
+			if (is_subclass_of($sPHPClass, 'ModuleHandlerAPI'))
+			{
+				$aCallSpec = array($sPHPClass, 'OnMetaModelStarted');
+				call_user_func_array($aCallSpec, array());
+			}
+		}
 
 		if (false)
 		{
@@ -3407,6 +3419,8 @@ abstract class MetaModel
 		require_once($sFile);
 	}
 
+	// #@# to be deprecated!
+	//
 	protected static function InitPlugins()
 	{
 		foreach(self::$m_aPlugins as $sName => $aData)

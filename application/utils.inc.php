@@ -175,28 +175,6 @@ class utils
 	}
 
 	/**
-	 * Specify the application config file
-	 * @param string path to the config file
-	 * @return void
-	 */	 	 	 	
-	public static function SpecifyConfigFile($sFilePath)
-	{
-		self::$m_sConfigFile = $sFilePath;
-	}
-	/**
-	 * Get access to the application config file
-	 * @param none
-	 * @return Config The Config object initialized from the application config file
-	 */	 	 	 	
-	public static function GetConfig()
-	{
-		if (self::$m_oConfig == null)
-		{
-			self::$m_oConfig = new Config(self::$m_sConfigFile);
-		}
-		return self::$m_oConfig;
-	}
-	/**
 	 * Helper function to convert a value expressed in a 'user friendly format'
 	 * as in php.ini, e.g. 256k, 2M, 1G etc. Into a number of bytes
 	 * @param mixed $value The value as read from php.ini
@@ -233,7 +211,7 @@ class utils
 	{
 		// Build an absolute URL to this page on this server/port
 		$sServerName = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : '';
-		if (self::GetConfig()->GetSecureConnectionRequired() || self::GetConfig()->GetHttpsHyperlinks())
+		if (MetaModel::GetConfig()->GetSecureConnectionRequired() || MetaModel::GetConfig()->GetHttpsHyperlinks())
 		{
 			// If a secure connection is required, or if the URL is requested to start with HTTPS
 			// then any URL must start with https !

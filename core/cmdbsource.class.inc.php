@@ -533,6 +533,49 @@ class CMDBSource
 		// so far, only one line...
 		return implode(', ', $aRes);
 	}
+
+	/**
+	 * Determine the slave status of the server
+	 * @return bool true if the server is slave 
+	 */	   	
+	public static function IsSlaveServer()
+	{
+		try
+		{
+			$result = self::Query('SHOW SLAVE STATUS');
+		}
+		catch(MySQLException $e)
+		{
+			throw new CoreException("Current user not allowed to check the status", array('mysql_error' => $e->getMessage()));
+		}
+
+		if (mysql_num_rows($result) == 0)
+		{
+			return false;
+		}
+
+		// Returns one single row anytime
+		$aRow = mysql_fetch_array($result, MYSQL_ASSOC);
+		mysql_free_result($result);
+
+		if (!isset($aRow['Slave_IO_Running']))
+		{
+			return false;
+		}
+		if ($aRow['Slave_IO_Running'] != 'Yes')
+		{
+			return false;
+		}
+		if (!isset($aRow['Slave_SQL_Running']))
+		{
+			return false;
+		}
+		if ($aRow['Slave_SQL_Running'] != 'Yes')
+		{
+			return false;
+		}
+		return true;
+	}
 }
 
 

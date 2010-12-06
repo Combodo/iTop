@@ -25,7 +25,7 @@ $currentOrganization = utils::ReadParam('org_id', '');
 $operation = utils::ReadParam('operation', '');
 
 require_once(APPROOT.'/application/loginwebpage.class.inc.php');
-session_name(utils::GetConfig()->Get('session_name'));
+session_name(MetaModel::GetConfig()->Get('session_name'));
 session_start();
 LoginWebPage::ResetSession();
 $oPage = new LoginWebPage();

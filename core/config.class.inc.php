@@ -224,7 +224,6 @@ class Config
 		default:
 			throw new CoreException('Unknown type for setting', array('property' => $sPropCode, 'type' => $sType));
 		}
-
 		$this->m_aSettings[$sPropCode]['value'] = $value;
 		$this->m_aSettings[$sPropCode]['source_of_value'] = $sSourceDesc;
 
@@ -356,7 +355,6 @@ class Config
 			'dictionaries/pt_br.dictionary.itop.ui.php',	// Support for Brazilian Portuguese
 			'dictionaries/pt_br.dictionary.itop.core.php',	// Support for Brazilian Portuguese
 		);
-
 		foreach($this->m_aSettings as $sPropCode => $aSettingInfo)
 		{
 			$this->m_aSettings[$sPropCode]['value'] = $aSettingInfo['default'];

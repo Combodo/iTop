@@ -111,7 +111,7 @@ function GraphvizLifecycle($sClass)
 $sClass = utils::ReadParam('class', 'bizIncidentTicket');
 $sDir = dirname(__FILE__);
 $sImageFilePath = $sDir."/../images/lifecycle/".$sClass.".png";
-$sDotExecutable = utils::GetConfig()->Get('graphviz_path');
+$sDotExecutable = MetaModel::GetConfig()->Get('graphviz_path');
 if (file_exists($sDotExecutable))
 {
 	// create the file with Graphviz
