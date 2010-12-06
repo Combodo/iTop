@@ -252,8 +252,7 @@ try
 			$sClassName = $oSearch->GetClass(); // If a synchronization scope is set, then the class is fixed !
 			$oSet = new DBObjectSet($oSearch);
 			$iCount = $oSet->Count();
-			$sSynchroClass = 'Server';
-			DisplaySynchroBanner($oPage, $sSynchroClass, $iCount);
+			DisplaySynchroBanner($oPage, $sClassName, $iCount);
 			$sClassesSelect = "<select id=\"select_class_name\" name=\"class_name\"><option value=\"$sClassName\" selected>".MetaModel::GetName($sClassName)."</option>";
 			$aSynchroUpdate = utils::ReadParam('synchro_update', array());
 		}
@@ -825,8 +824,7 @@ EOF
 			$sClassName = $oSearch->GetClass(); // If a synchronization scope is set, then the class is fixed !
 			$oSet = new DBObjectSet($oSearch);
 			$iCount = $oSet->Count();
-			$sSynchroClass = 'Server';
-			DisplaySynchroBanner($oPage, $sSynchroClass, $iCount);
+			DisplaySynchroBanner($oPage, $sClassName, $iCount);
 			$sClassesSelect = "<select id=\"select_class_name\" name=\"class_name\"><option value=\"$sClassName\" selected>".MetaModel::GetName($sClassName)."</option>";
 			$aSynchroUpdate = utils::ReadParam('synchro_update', array());
 		}
@@ -1130,11 +1128,10 @@ EOF
 		if (!empty($sSynchroScope))
 		{
 			$oSearch = DBObjectSearch::FromOQL($sSynchroScope);
-			$sSynchroClass = $oSearch->GetClass();
+			$sClassName = $oSearch->GetClass();
 			$oSet = new DBObjectSet($oSearch);
 			$iCount = $oSet->Count();
-			$sSynchroClass = 'Server';
-			DisplaySynchroBanner($oPage, $sSynchroClass, $iCount);
+			DisplaySynchroBanner($oPage, $sClassName, $iCount);
 			$aSynchroUpdate = utils::ReadParam('synchro_update', array());
 		}
 		
@@ -1267,11 +1264,10 @@ EOF
 		if (!empty($sSynchroScope))
 		{
 			$oSearch = DBObjectSearch::FromOQL($sSynchroScope);
-			$sSynchroClass = $oSearch->GetClass();
+			$sClassName = $oSearch->GetClass();
 			$oSet = new DBObjectSet($oSearch);
 			$iCount = $oSet->Count();
-			$sSynchroClass = 'Server';
-			DisplaySynchroBanner($oPage, $sSynchroClass, $iCount);
+			DisplaySynchroBanner($oPage, $sClassName, $iCount);
 			$aSynchroUpdate = utils::ReadParam('synchro_update', array());
 		}
 		else
