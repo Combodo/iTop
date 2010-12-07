@@ -444,20 +444,23 @@ class UserRightsProfile extends UserRightsAddOnAPI
 			$iOrgId = 0;
 		}
 
-		$oContact = new Person();
-		$oContact->Set('name', 'My last name');
-		$oContact->Set('first_name', 'My first name');
-		//$oContact->Set('status', 'available');
-		if (MetaModel::IsValidAttCode('Person', 'org_id'))
+		// Support drastic data model changes: no Person class !
+		if (MetaModel::IsValidClass('Person'))
 		{
-			// Protect for a different data model where contacts are not part of an org
-			$oContact->Set('org_id', $iOrgId);
+			$oContact = new Person();
+			$oContact->Set('name', 'My last name');
+			$oContact->Set('first_name', 'My first name');
+			if (MetaModel::IsValidAttCode('Person', 'org_id'))
+			{
+				$oContact->Set('org_id', $iOrgId);
+			}
+			$oContact->Set('email', 'my.email@foo.org');
+			$iContactId = $oContact->DBInsertTrackedNoReload($oChange, true /* skip security */);
 		}
-		$oContact->Set('email', 'my.email@foo.org');
-		//$oContact->Set('phone', '');
-		//$oContact->Set('location_id', $iLocationId);
-		//$oContact->Set('employee_number', '');
-		$iContactId = $oContact->DBInsertTrackedNoReload($oChange, true /* skip security */);
+		else
+		{
+			$iContactId = 0;
+		}
 
 		$oUser = new UserLocal();
 		$oUser->Set('login', $sAdminUser);
