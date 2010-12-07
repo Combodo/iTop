@@ -471,6 +471,18 @@ class UserRights
 		}
 	}
 
+	public static function GetUserObject()
+	{
+		if (is_null(self::$m_oUser))
+		{
+			return null;
+		}
+		else
+		{
+			return self::$m_oUser;
+		}
+	}
+	
 	public static function GetUserLanguage()
 	{
 		if (is_null(self::$m_oUser))
