@@ -464,6 +464,17 @@ EOF
 	
     public function DisplayMenu()
     {
+    	// Build menus from module handlers
+    	//
+		foreach(get_declared_classes() as $sPHPClass)
+		{
+			if (is_subclass_of($sPHPClass, 'ModuleHandlerAPI'))
+			{
+				$aCallSpec = array($sPHPClass, 'OnMenuCreation');
+				call_user_func($aCallSpec);
+			}
+		}
+
 		// Display the menu
 		$oAppContext = new ApplicationContext();
 		$iAccordionIndex = 0;

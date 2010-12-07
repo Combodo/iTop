@@ -29,5 +29,9 @@ abstract class ModuleHandlerAPI
 	public static function OnMetaModelStarted()
 	{
 	}
+
+	public static function OnMenuCreation()
+	{
+	}
 }
 ?>
