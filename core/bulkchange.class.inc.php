@@ -840,10 +840,11 @@ class BulkChange
 			$oOpSet = new DBObjectSet($oOpSearch, array(), array('change_id' => $oChange->GetKey()));
 			$iCreated = $oOpSet->Count();
 
-			//while ($oCreated = $oOpSet->Fetch())
-			//{
-			//	$oPage->p("Created ".$oCreated->Get('objclass')."::".$oCreated->Get('objkey'));
-			//}
+			// Get the class from the first item found (assumption: a CSV load is done for a single class)
+			if ($oCreateOp = $oOpSet->Fetch())
+			{
+				$sClass = $oCreateOp->Get('objclass');
+			}
 
 			$oOpSearch = DBObjectSearch::FromOQL("SELECT CMDBChangeOpSetAttribute WHERE change = :change_id");
 			$oOpSet = new DBObjectSet($oOpSearch, array(), array('change_id' => $oChange->GetKey()));
@@ -852,6 +853,7 @@ class BulkChange
 			$aAttList = array();
 			while ($oModified = $oOpSet->Fetch())
 			{
+				// Get the class (if not done earlier on object creation)
 				$sClass = $oModified->Get('objclass');
 				$iKey = $oModified->Get('objkey');
 				$sAttCode = $oModified->Get('attcode');
