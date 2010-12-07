@@ -197,6 +197,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
+		'online_help' => array(
+			'type' => 'string',
+			'description' => 'Hyperlink to the online-help web page',
+			'default' => 'http://www.combodo.com/itop-help',
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
 	);
 
 	public function IsProperty($sPropCode)

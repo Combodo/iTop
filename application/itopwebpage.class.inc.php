@@ -673,6 +673,7 @@ EOF
 			$sApplicationBanner = '';
 		}
 
+		$sOnlineHelpUrl = MetaModel::GetConfig()->Get('online_help');
 		//$sLogOffMenu = "<span id=\"logOffBtn\" style=\"height:55px;padding:0;margin:0;\"><img src=\"../images/onOffBtn.png\"></span>";
 
 		echo '<div id="left-pane" class="ui-layout-west">';
@@ -702,7 +703,7 @@ EOF
 		echo $sApplicationBanner;
 		echo '		<div id="global-search"><form action="../pages/UI.php"><table><tr><td></td><td id="g-search-input"><input type="text" name="text" value="'.$sText.'"'.$sOnClick.'/></td>';
 		echo '<td><input type="image" src="../images/searchBtn.png"/></a></td>';
-		echo '<td><a style="background:transparent;" href="http://www.combodo.com/itop-help" target="_blank"><img style="border:0;padding-left:20px;padding-right:10px;" title="'.Dict::S('UI:Help').'" src="../images/help.png"/></td>';
+		echo '<td><a style="background:transparent;" href="'.$sOnlineHelpUrl.'" target="_blank"><img style="border:0;padding-left:20px;padding-right:10px;" title="'.Dict::S('UI:Help').'" src="../images/help.png"/></td>';
 		echo '<td style="padding-right:20px;padding-left:10px;">'.$sLogOffMenu.'</td><td><input type="hidden" name="operation" value="full_text"/></td></tr></table></form></div>';
 		//echo '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="hidden" name="operation" value="full_text"/></td></tr></table></form></div>';
 		echo '	</div>';
