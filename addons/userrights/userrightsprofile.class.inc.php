@@ -431,12 +431,18 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		$oChange->Set("userinfo", "Initialization");
 		$iChangeId = $oChange->DBInsert();
 
-		$oOrg = new Organization();
-		$oOrg->Set('name', 'My Company/Department');
-		$oOrg->Set('code', 'SOMECODE');
-//		$oOrg->Set('status', 'implementation');
-		//$oOrg->Set('parent_id', xxx);
-		$iOrgId = $oOrg->DBInsertTrackedNoReload($oChange, true /* skip security */);
+		// Support drastic data model changes: no organization class !
+		if (MetaModel::IsValidClass('Organization'))
+		{
+			$oOrg = new Organization();
+			$oOrg->Set('name', 'My Company/Department');
+			$oOrg->Set('code', 'SOMECODE');
+			$iOrgId = $oOrg->DBInsertTrackedNoReload($oChange, true /* skip security */);
+		}
+		else
+		{
+			$iOrgId = 0;
+		}
 
 		$oContact = new Person();
 		$oContact->Set('name', 'My last name');
