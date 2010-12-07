@@ -465,7 +465,10 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		$oUser = new UserLocal();
 		$oUser->Set('login', $sAdminUser);
 		$oUser->Set('password', $sAdminPwd);
-		$oUser->Set('contactid', $iContactId);
+		if (MetaModel::IsValidAttCode('UserLocal', 'contactid'))
+		{
+			$oUser->Set('contactid', $iContactId);
+		}
 		$oUser->Set('language', $sLanguage); // Language was chosen during the installation
 
 		// Add this user to the very specific 'admin' profile
