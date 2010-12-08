@@ -832,6 +832,10 @@ class Config
 	{
 		return is_writable($this->m_sFile);
 	}
+	public function GetLoadedFile()
+	{
+		return $this->m_sFile;
+	}
 	
 	/**
 	 * Render the configuration as an associative array
