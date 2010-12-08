@@ -30,7 +30,7 @@ session_start();
 LoginWebPage::ResetSession();
 $oPage = new LoginWebPage();
 $sVersionShort = Dict::Format('UI:iTopVersion:Short', ITOP_VERSION);
-$oPage->add("<div id=\"login-logo\"><a href=\"http://www.combodo.com/itop\"><img title=\"$sVersionShort\" src=\"../images/itop-logo.png\"></a></div>\n");
+$oPage->add("<div id=\"login-logo\"><a href=\"http://www.combodo.com/itop\"><img title=\"$sVersionShort\" src=\"../images/itop-logo-external.png\"></a></div>\n");
 $oPage->add("<div id=\"login\">\n");
 $oPage->add("<h1>".Dict::S('UI:LogOff:ThankYou')."</h1>\n");
 $bPortal = utils::ReadParam('portal', false);

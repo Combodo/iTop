@@ -103,7 +103,7 @@ EOF
 			$sAuthPwd = utils::ReadParam('suggest_pwd', '');
 	
 			$sVersionShort = Dict::Format('UI:iTopVersion:Short', ITOP_VERSION);
-			$this->add("<div id=\"login-logo\"><a href=\"http://www.combodo.com/itop\"><img title=\"$sVersionShort\" src=\"../images/itop-logo.png\"></a></div>\n");
+			$this->add("<div id=\"login-logo\"><a href=\"http://www.combodo.com/itop\"><img title=\"$sVersionShort\" src=\"../images/itop-logo-external.png\"></a></div>\n");
 			$this->add("<div id=\"login\">\n");
 			$this->add("<h1>".Dict::S('UI:Login:Welcome')."</h1>\n");
 			if ($bFailedLogin)
