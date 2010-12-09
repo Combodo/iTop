@@ -562,19 +562,21 @@ class CMDBSource
 		{
 			return false;
 		}
-		if ($aRow['Slave_IO_Running'] != 'Yes')
-		{
-			return false;
-		}
 		if (!isset($aRow['Slave_SQL_Running']))
 		{
 			return false;
 		}
-		if ($aRow['Slave_SQL_Running'] != 'Yes')
+
+		// If at least one slave thread is running, then we consider that the slave is enabled
+		if ($aRow['Slave_IO_Running'] == 'Yes')
 		{
-			return false;
+			return true;
 		}
-		return true;
+		if ($aRow['Slave_SQL_Running'] == 'Yes')
+		{
+			return true;
+		}
+		return false;
 	}
 }
 
