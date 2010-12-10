@@ -718,7 +718,7 @@ function open_flash_chart_data()
 				"animate":[
 			        {
 			          "type": "fade"
-			        },
+			        }
 		        ]
 			}
 		],
