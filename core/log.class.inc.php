@@ -117,4 +117,30 @@ class IssueLog
 		self::$m_oFileLog->Ok($sText);
 	}
 }
+
+class ToolsLog
+{
+	protected static $m_oFileLog; 
+
+	public static function Enable($sTargetFile)
+	{
+		self::$m_oFileLog = new FileLog($sTargetFile);
+	}
+	public static function Error($sText)
+	{
+		self::$m_oFileLog->Error($sText);
+	}
+	public static function Warning($sText)
+	{
+		self::$m_oFileLog->Warning($sText);
+	}
+	public static function Info($sText)
+	{
+		self::$m_oFileLog->Info($sText);
+	}
+	public static function Ok($sText)
+	{
+		self::$m_oFileLog->Ok($sText);
+	}
+}
 ?>

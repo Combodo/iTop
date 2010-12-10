@@ -3294,6 +3294,8 @@ abstract class MetaModel
 			}
 			self::$m_bLogNotification = self::$m_oConfig->GetLogNotification();
 			self::$m_bLogWebService = self::$m_oConfig->GetLogWebService();
+
+			ToolsLog::Enable(APPROOT.'/tools.log');
 		}
 		else
 		{
