@@ -700,48 +700,84 @@ function RunImport()
 
 function open_flash_chart_data()
 {
+	var iErrors = $iErrors;
+	var iModified = $iModified;
+	var iCreated = $iCreated;
+	var iUnchanged = $iUnchanged;
+	var fAlpha = 0.9;
+	
 	var oResult = {
 		"elements": [
 			{
 				"type": "pie",
-				"tip": "#label# - #val# (#percent#)",
+				"tip": "#label# (#percent#)",
+				"gradient-fill": true,
 				"font-size": 14,
-				"colours":
-				[
-					"#FF6666",
-					"#6666FF",
-					"#66FF66",
-					"#666666",
-				],
-				"values": 
-				[
-					{
-						"value": $iErrors,
-						"label": "Errors",
-						"alpha": 0.9
-					},
-					{
-						"value": $iModified,
-						"label": "Modified",
-						"alpha": 0.9
-					},
-					{
-						"value": $iCreated,
-						"label": "Created",
-						"alpha": 0.9
-					},
-					{
-						"value": $iUnchanged,
-						"label": "Unchanged",
-						"alpha": 0.9
-					}
-				]
+				"colours":[],
+				"values": [],
+				"animate":[
+			        {
+			          "type": "fade"
+			        },
+		        ]
 			}
 		],
 		"x_axis": null,
 		"font-size": 14,
 		"bg_colour": "#EEEEEE"
 	};
+
+	if (iErrors > 0)
+	{
+		var oErrors =
+		{
+			"value":  iErrors,
+			"label": "Errors: "+iErrors,
+			"alpha": fAlpha,
+			"label-colour": "#CC3333",
+		};
+		oResult.elements[0].values.push(oErrors);
+		oResult.elements[0].colours.push('#FF6666');
+	}
+	if (iModified > 0)
+	{
+		var oModified =
+		{
+			"value":  iModified,
+			"label": "Modified: "+iModified,
+			"alpha": fAlpha,
+			"label-colour": "#3333CC",
+		};
+		oResult.elements[0].values.push(oModified);
+		oResult.elements[0].colours.push('#6666FF');
+	}
+	if (iCreated > 0)
+	{
+		var oCreated =
+		{
+			"value":  iCreated,
+			"label": "Created: "+iCreated,
+			"alpha": fAlpha,
+			"label-colour": "#33CC33",
+			
+		};
+		oResult.elements[0].values.push(oCreated);
+		oResult.elements[0].colours.push('#66FF66');
+	}
+	if (iUnchanged > 0)
+	{
+		var oUnchanged =
+		{
+			"value":  iUnchanged,
+			"label": "Unchanged: "+iUnchanged,
+			"alpha": fAlpha,
+			"label-colour": "#333333",
+			
+		};
+		oResult.elements[0].values.push(oUnchanged);
+		oResult.elements[0].colours.push('#666666');
+	}
+
 	return JSON.stringify(oResult);
 }
 EOF
