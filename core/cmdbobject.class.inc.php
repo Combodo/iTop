@@ -152,7 +152,7 @@ abstract class CMDBObject extends DBObject
 				{
 					$original = '';
 				}
-				$oMyChangeOp->Set("prevdata", $original);
+				$oMyChangeOp->Set("prevstring", $original);
 				$iId = $oMyChangeOp->DBInsertNoReload();
 			}
 			elseif ($oAttDef instanceOf AttributeBlob)
