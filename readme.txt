@@ -48,6 +48,7 @@ The JQuery team and the all the jQuery plugins authors for developing such a pow
 Phil Eddies for the numerous feedbacks provided, and the first implementation of CKEdit
 Marco Tulio for the Portuguese (Brazilian) translation
 Vladimir Shilov for the Russian translation
+Izzet Sirin for the Turkish translation
 
 2. INSTALLATION
    ============

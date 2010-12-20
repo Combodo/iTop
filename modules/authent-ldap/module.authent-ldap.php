@@ -33,6 +33,7 @@ SetupWebPage::AddModule(
 			'fr.dict.authent-ldap.php',
 			'de.dict.authent-ldap.php',
 			'ru.dict.authent-ldap.php',
+			'tr.dict.authent-ldap.php',
 		),
 		'data.struct' => array(
 			//'data.struct.authent-ldap.xml',

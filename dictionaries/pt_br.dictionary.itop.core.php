@@ -24,7 +24,7 @@
  */
 
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('PT BR', 'English', 'English', array(
 	'Core:AttributeLinkedSet' => 'Array of objects',
 	'Core:AttributeLinkedSet+' => 'Any kind of objects [subclass] of the same class',
 
