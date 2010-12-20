@@ -31,6 +31,7 @@ SetupWebPage::AddModule(
 			'fr.dict.itop-problem-mgmt.php',
 			'de.dict.itop-problem-mgmt.php',
 			'pt_br.dict.itop-problem-mgmt.php',
+			'ru.dict.itop-problem-mgmt.php',
 		),
 		'data.struct' => array(
 			//'data.struct.itop-problem-mgmt.xml',

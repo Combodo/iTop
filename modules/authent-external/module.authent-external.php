@@ -49,6 +49,7 @@ SetupWebPage::AddModule(
 			'en.dict.authent-external.php',
 			'fr.dict.authent-external.php',
 			'de.dict.authent-external.php',
+			'ru.dict.authent-external.php',
 		),
 		'data.struct' => array(
 			//'data.struct.authent-ldap.xml',

@@ -31,6 +31,7 @@ SetupWebPage::AddModule(
 			'es_cr.dict.itop-incident-mgmt.php',
 			'de.dict.itop-incident-mgmt.php',
 			'pt_br.dict.itop-incident-mgmt.php',
+			'ru.dict.itop-incident-mgmt.php',
 		),
 		'data.struct' => array(
 			'data.struct.ta-triggers.xml',
