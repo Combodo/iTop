@@ -49,6 +49,7 @@ Phil Eddies for the numerous feedbacks provided, and the first implementation of
 Marco Tulio for the Portuguese (Brazilian) translation
 Vladimir Shilov for the Russian translation
 Izzet Sirin for the Turkish translation
+Deng lixin <denglx@gmail.com> (alias Robert) for the Chinese translation
 
 2. INSTALLATION
    ============
