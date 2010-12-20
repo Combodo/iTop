@@ -148,6 +148,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:CustomerContract/Attribute:provider_list+' => '',
 	'Class:CustomerContract/Attribute:sla_list' => 'SLAs',
 	'Class:CustomerContract/Attribute:sla_list+' => 'Liste der SLAs zu dem Vertrag',
+	'Class:CustomerContract/Attribute:provider_list' => 'Zugrunde liegende Verträge',
+	'Class:CustomerContract/Attribute:sla_list+' => '',
 ));
 
 // Class: lnkCustomerContractToProviderContract
@@ -287,9 +289,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Service/Attribute:document_list' => 'Dokumente',
 	'Class:Service/Attribute:document_list+' => 'Dokumente beigefügt zu dem Service',
 	'Class:Service/Attribute:contact_list' => 'Kontakte',
-	'Class:Service/Attribute:contact_list+' => 'Kontakte haben eine Rolle für diesen Service',
-	'Class:Service/Tab:Related_Contracts' => 'Dazugehörige Kontakte',
-	'Class:Service/Tab:Related_Contracts+' => 'Kontakte, die diesen Vertrag unterschrieben haben',
+	'Class:Service/Attribute:contact_list+' => 'Kontakte, die für diesen Service eine Rolle wahrnehmen',
+	'Class:Service/Tab:Related_Contracts' => 'Dazugehörige Verträge',
+	'Class:Service/Tab:Related_Contracts+' => 'Verträge, die für diesen Vertrag unterschrieben wurden',
 ));
 
 //

@@ -60,9 +60,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Incident' => 'Incident',
 	'Class:Incident+' => '',
-	'Class:Incident/Stimulus:ev_assign' => 'Zuteilen',
+	'Class:Incident/Stimulus:ev_assign' => '"Zuweisen"',
 	'Class:Incident/Stimulus:ev_assign+' => '',
-	'Class:Incident/Stimulus:ev_reassign' => 'Umverteilen',
+	'Class:Incident/Stimulus:ev_reassign' => 'Neu zuweisen',
 	'Class:Incident/Stimulus:ev_reassign+' => '',
 	'Class:Incident/Stimulus:ev_timeout' => 'ev-Timeout',
 	'Class:Incident/Stimulus:ev_timeout+' => '',
