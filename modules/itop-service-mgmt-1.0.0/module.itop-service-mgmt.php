@@ -31,6 +31,7 @@ SetupWebPage::AddModule(
 			'pt_br.dict.itop-service-mgmt.php',
 			'ru.dict.itop-service-mgmt.php',
 			'tr.dict.itop-service-mgmt.php',
+			'zh.dict.itop-service-mgmt.php',
 		),
 		'data.struct' => array(
 			//'data.struct.itop-service-mgmt.xml',

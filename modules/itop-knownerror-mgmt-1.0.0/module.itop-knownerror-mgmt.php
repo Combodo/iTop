@@ -33,6 +33,7 @@ SetupWebPage::AddModule(
 			'pt_br.dict.itop-knownerror-mgmt.php',
 			'ru.dict.itop-knownerror-mgmt.php',
 			'tr.dict.itop-knownerror-mgmt.php',
+			'zh.dict.itop-knownerror-mgmt.php',
 		),
 		'data.struct' => array(
 			//'data.struct.itop-knownerror-mgmt.xml',

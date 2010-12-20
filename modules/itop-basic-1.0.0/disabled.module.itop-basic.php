@@ -28,6 +28,7 @@ SetupWebPage::AddModule(
 			'fr.dict.itop-basic.php',
 			'pt_br.dict.itop-basic.php',
 			'tr.dict.itop-basic.php',
+			'zh.dict.itop-basic.php',
 		),
 		'data.struct' => array(
 			//'data.struct.itop-basic.xml',
