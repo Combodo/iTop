@@ -1371,6 +1371,23 @@ abstract class MetaModel
 		}
 	}
 
+	public static function FlattenZList($aList)
+	{
+		$aResult = array();
+		foreach($aList as $value)
+		{
+			if (!is_array($value))
+			{
+				$aResult[] = $value;
+			}
+			else
+			{
+				$aResult = array_merge($aResult, self::FlattenZList($value));
+			}
+		}
+		return $aResult;
+	}
+	
 	public static function Init_DefineState($sStateCode, $aStateDef)
 	{
 		$sTargetClass = self::GetCallersPHPClass("Init");
@@ -2342,7 +2359,7 @@ abstract class MetaModel
 			//
 			foreach(self::EnumZLists() as $sListCode)
 			{
-				foreach (self::GetZListItems($sClass, $sListCode) as $sMyAttCode)
+				foreach (self::FlattenZList(self::GetZListItems($sClass, $sListCode)) as $sMyAttCode)
 				{
 					if (!self::IsValidAttCode($sClass, $sMyAttCode))
 					{
@@ -2352,6 +2369,7 @@ abstract class MetaModel
 				}
 			}
 		}
+		
 		if (count($aErrors) > 0)
 		{
 			echo "<div style=\"width:100%;padding:10px;background:#FFAAAA;display:;\">";
