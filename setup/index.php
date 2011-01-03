@@ -1245,6 +1245,12 @@ catch(Exception $e)
 }
 try
 {
+	// Set a long (at least 4 minutes) execution time for the setup to avoid timeouts during this phase
+	ini_set('max_execution_time', max(240, ini_get('max_execution_time')));
+	// While running the setup it is desirable to see any error that may happen
+	ini_set('display_errors', true);
+	ini_set('display_startup_errors', true);
+	
 	$aParams = array('licence_ok', 'db_server', 'db_user', 'db_pwd','db_name', 'new_db_name', 'db_prefix', 'module', 'sample_data', 'auth_user', 'auth_pwd', 'language');
 	foreach($aParams as $sName)
 	{
