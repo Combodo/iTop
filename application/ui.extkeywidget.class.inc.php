@@ -94,7 +94,7 @@ class UIExtKeyWidget
 	 */
 	public function Display(WebPage $oPage, $aArgs = array())
 	{
-		$bCreate = (UserRights::IsActionAllowed($this->sTargetClass, UR_ACTION_BULK_MODIFY) && $this->oAttDef->AllowTargetCreation());
+		$bCreate = (!MetaModel::IsAbstract($this->sTargetClass)) && (UserRights::IsActionAllowed($this->sTargetClass, UR_ACTION_BULK_MODIFY) && $this->oAttDef->AllowTargetCreation());
 		$sMessage = Dict::S('UI:Message:EmptyList:UseSearchForm');
 
 		$sHTMLValue = "<span style=\"white-space:nowrap\">"; // no wrap
