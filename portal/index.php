@@ -118,7 +118,7 @@ function SelectService($oP, $oUserOrg)
 	{
 		$id = $oService->GetKey();
 		$sChecked = "";
-		if ($id == $aParameters['service_id'])
+		if (isset($aParameters['service_id']) && ($id == $aParameters['service_id']))
 		{
 			$sChecked = "checked";
 		}
