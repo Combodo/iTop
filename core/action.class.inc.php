@@ -237,7 +237,7 @@ class ActionEmail extends ActionNotification
 			$sBody = MetaModel::ApplyParams($this->Get('body'), $aContextArgs);
 			
 			$oObj = $aContextArgs['this->object()'];
-			$sServerIP = gethostbyname(gethostname());
+			$sServerIP = $_SERVER['SERVER_ADDR']; //gethostbyname(gethostname());
 			$sReference = '<iTop/'.get_class($oObj).'/'.$oObj->GetKey().'@'.$sServerIP.'>';
 
 			$oEmail = new EMail();
