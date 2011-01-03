@@ -290,7 +290,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Service/Attribute:document_list+' => 'Dokumente beigefügt zu dem Service',
 	'Class:Service/Attribute:contact_list' => 'Kontakte',
 	'Class:Service/Attribute:contact_list+' => 'Kontakte, die für diesen Service eine Rolle wahrnehmen',
-	'Class:Service/Tab:Related_Contracts' => 'Dazugehörige Verträge',
+	'Class:Service/Tab:Related_Contracts' => 'Zugehörige Verträge',
 	'Class:Service/Tab:Related_Contracts+' => 'Verträge, die für diesen Vertrag unterschrieben wurden',
 ));
 
