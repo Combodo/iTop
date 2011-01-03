@@ -1,4 +1,4 @@
-iTop - version 1.0.? - ??-??-201?
+iTop - version 1.0.2 - 05-01-2011
 Readme file
 
 1.   ABOUT THIS RELEASE
@@ -14,7 +14,7 @@ Readme file
 1. ABOUT THIS RELEASE
    ==================
 Thank you for downloading the eigth packaged release of iTop. This version is
-a maintenance release. It aims at upgrading seemlessly an existing 1.0 installation.
+a maintenance release. It aims at upgrading seemlessly an existing 1.0 or 1.0.1 installation.
 
 Additional documentation can be downloaded from http://www.combodo.com/itopdocumentation
  - User guide
@@ -25,19 +25,21 @@ Additional documentation can be downloaded from http://www.combodo.com/itopdocum
 iTop is released under the GPL (v3) license. (Check license.txt in this directory).
 The source code of iTop can be found on SourceForge: http://itop.sourceforge.net
 
-1.1 Should I upgrade to 1.0.1 ?
+1.1 What's new?
     ---------------------------
-This maintenance release fixes a number of usability issues of iTop 1.0:
-- Better handling of forms: fields validation and default values handling have been improved
-- Support of IE8 and Safari
-- Support of IIS
-- Support of localized texts in the User Portal
+
+
+1.2 Should I upgrade to 1.0.2?
+    ---------------------------
+This maintenance release fixes brings the following improvements:
+- Added localization for Turkish, Russian and Chinese
+- Fixed issues with Internet Explorer
+- Improved the usability of the CSV import feature, both in interactive and command-line modes
 
 If any of the above items is important for you, then you should upgrade your version of iTop.
-If you are Brazilian and want to run iTop on IIS with IE8, then this release is for you !
 
 
-1.2 Special Thanks To:
+1.3 Special Thanks To:
     -----------------
 Bruno Bonfils for his guidance about LDAP and authentication.
 Randall Badilla Castro for the Spanish translation.
@@ -49,7 +51,7 @@ Phil Eddies for the numerous feedbacks provided, and the first implementation of
 Marco Tulio for the Portuguese (Brazilian) translation
 Vladimir Shilov for the Russian translation
 Izzet Sirin for the Turkish translation
-Deng lixin <denglx@gmail.com> (alias Robert) for the Chinese translation
+Deng Lixin for the Chinese translation
 
 2. INSTALLATION
    ============
@@ -107,67 +109,92 @@ Version 1.0.1 is a maintenance release.
 
 Localization
 ------------
-Portuguese (Brazil) has been added.
+Turkish, Russian and Chinese were added.
 German localization reviewed.
 
 Major changes
 -------------
 None: this is a maintenance release!
+#320 Integrated an HTML Editor
 
 Minor changes
 -------------
-#246  The page import.php can be used in CLI mode, allowing for massive data load
-#311	Improved the reporting in the bulk import GUI (reconciliation of external keys, how to specify "undefined")
-#293	Show the IP address against the device in the IP usage table for a subnet
-#276	Show mandatory fields during CSV import
-#285	Email addresses displayed as Mailto hyperlinks
-Nicer display of the CSV import results...
-Special passthrough mode for big XML pages output.
-Allow n:n links to link several times to the same remote object (if "duplicates)=> true in the linkedset definition)
-#284 Improved the behavior and reporting when attempting to create a document after a huge file
-#111 Improved the data loader, and added a REST service to load data from a file.
-   This is particularly interesting to facilitate the migration from an older installation.
+Use XMLPage passthrough mode to speed up and consume less memory for big XML exports.
+- Improved feedback while searching and reloading added objects. (N-N links)
+REVIEWED THE FILE INCLUSION POLICY -> the application can be moved !!!
+Read-only mode relying successively on a DB property, and an application setting
+Improved change tracking: user login replaced by the full name if available
+
+Improved implementation of the 'autocomplete' input and fix of quite a few related issue with aysnchronous inputs. Autocompletes are now restricted to external keys only.
+Some details:
+- Autocomplete now matches on 'contains' instead of 'begins with'
+- The minimum size of this match is configurable in the config file and per attribute ('min_autocomplete_chars').
+- The maximum size that turns a drop-down list into an autocomplete is configurable in the config-file and per attribute ('max_combo_length').
+- Better feedback when expanding/collapsing search results lists.
+- 'Pointer' cursor on the link to Expand/Collapse results lists.
+- The 'mandatory' state of an attribute is no longer lost when some part of a form is reloaded asynchronously
+- added the ability to create objects pointed by ExtKeys even when the edit mode is a drop-down list and not an autocomplete
+- made this behavior configurable globally or per external key, using the config-flag/option: allow_target_creation.
+Renamed 'autocompleteWidget' to 'extkeyWidget' since it's not always an autocomplete...
+Make sure that the "+" (Create) button is never displayed for an abstract class.
+
+
+Customize iTop
+..............
+Added the capability to enable/disable menus based on the rights to apply a given stimulus.
+Allow a module to provide a handler to override application settings: OnMetaModelStarted()
+Menus created via a handler, at runtime
+Patch for supporting a data model without any Organization.
+Patch for supporting a data model without any Person.
+The hyperlink to the online-help file is now configurable
+Modularity: allow a module to execute some specific installation procedures (customize the config file, do something in the database)
+User profiles: created in dedicated module itop-profiles-itil
+Welcome page moved out the application, into a dedicated module: itop-welcome-itil
+Moved the standards menus into the "welcome" module
+Added the capability to enable/disable menus based on the rights to apply a given stimulus.
+FIxed the processing of hierarchical ZLists to keep the display order when plain fields and fieldsets are mixed at the same level.
+Added support for hierarchical ZLists when checking the data model consistency
+
 
 Browser compatibility
----------------------
+.....................
 Tested successfully with IE8 and Chrome.
 Fixed the "Relationships" Flash navigator so that it works also on Safari. (tested with Safari 5.0.2 on Windows) (Trac #310)
 - Fixed the search form, and also fixed the search/selection of objects to link (n:n links) that was broken on IE8.
 Fix to prevent IE 8 from running in IE7 compatibility mode... to be tested...
 
+CSV
+......
+- Added the new "synchro" mode to the CSV load page.
+- Ask for confirmation when doing a CSV import/synchro that is considered as "risky" (based on thresholds from the config file)
+- Added a "Restart" button to quickly start over a CSV import/synchro
+Added a tab into the CSV import: browse the CSV imports history
 
-Security improvements
----------------------
-#300	When logged onto an iTop instance, you are allowed on any other instance 
 
 Bugs fixed
 ----------
-The complete list can be reviewed on http://sourceforge.net/apps/trac/itop/report/1
+The complete list of active tickets can be reviewed on http://sourceforge.net/apps/trac/itop/report/1
 
-#286	GetAbsoluteUrl creates broken links on IIS
-#278	Missing PHP5 modules not detected properly
-#289	Misleading errors when apache not authorized to write files in "setup" directory
-#295	Unable to update or insert data
-#313	Provider Contracts are not filtered by Allowed Organizations
-#309	some of php-ofc-library files are missing
-#315	Default organization not handled properly when there is just one organization allowed for the user
-#308	Subnet / Free IPs: the subnet address is reserved (e.g. x.x.x.0)
-#312	Exclamation sign not displayed for mandatory fields
-#307	Auto-complete not reporting wrong selection
-#302	Error: Unknown variable sIcon
-#298	CSV template file opened in the browser instead of "downloaded"
-#245	Search form gets too specialized
-#306	Password gets corrupted if the admin forgets to select a profile
-#297	Fixed a reporting issue on the SOAP service CreateIncidentTicket
-#296	Incorrect display of Service/Subcategory localized characters in the portal
-#292	Could not leave "User Satisfaction" field undefined
-#258	Context automatically selected when searching on organization
-#282	OQL Error when using functions
-#288	Some multi objects OQL queries do not work
-Fixed a bug in the XML encoding function
-Fixed the issue "Object already modified". The mechanism that prevents a user from submitting the same form twice has been redesigned.
-#283 Fixed issue with the default value of Enum attributes
-Fixed limitation: tickets named automatically even if a name is specified (attribute : ref) ; this is stopper when importing tickets from an existing workflow tool
+#331 Import.php could not be run in  HTTP mode (when PHP running in CGI mode)
+- Fixed bug #334: proper handling of the "remove objects" button (was working only for the first linkset in the object).
+- Allow DBObjects to be deleted by the standard UI 'Delete', which may be useful in case a DBObject has to be deleted as a dependent object of a CMDBObject.
+Fixed a typo in German translation (Trac #339), thanks to ulmerspatz and Jonathan Lucas
+Fix for Trac #337: email validation. Use a simpler regular expression that is much faster to execute.
+- Bug fix: support resizable elements inside tabs.
+
+Setup/installation
+Force a dummy timezone to prevent a warning during the setup...
+- Display PHP errors during setup instead of hiding them ! (Trac #321)
+- Set a longer timeout during setup (Trac #314)
+- Fixed Trac #318 (and #335): added the check of the mandatory DOM extension.
+
+IE8 support
+- Cosmetic on the iTop logo. Removed an unneeded size=100% that bothers IE.
+- Fixed Trac #332: improved usability of the CSV import wizard with IE8. 
+- Fixed Trac #333: organizations' drop-down list is truncated on IE when the name of an organization is too long.
+
+Security...???
+XML data loader to request for credentials
 
 
 3.2. Known limitations (https://sourceforge.net/apps/trac/itop/report/3)
