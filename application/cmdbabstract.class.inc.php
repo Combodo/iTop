@@ -303,13 +303,33 @@ abstract class cmdbAbstractObject extends CMDBObject
 			{
 				$oPage->add('<td style="vertical-align:top">');
 				//$aDetails[$sTab][$sColIndex] = array();
+				$sLabel = '';
+				$sPreviousLabel = '';
+				$aDetails[$sTab][$sColIndex] = array();
 				foreach($aFieldsets as $sFieldsetName => $aFields)
 				{
-					$aDetails[$sTab][$sColIndex] = array();
-					if (!empty($sFieldsetName))
+					if (!empty($sFieldsetName) && ($sFieldsetName[0] != '_'))
 					{
-						$oPage->add('<fieldset>');
-						$oPage->add('<legend>'.Dict::S($sFieldsetName).'</legend>');
+						$sLabel = $sFieldsetName;
+					}
+					else
+					{
+						$sLabel = '';
+					}
+					if ($sLabel != $sPreviousLabel)
+					{
+						if (!empty($sPreviousLabel))
+						{
+							$oPage->add('<fieldset>');
+							$oPage->add('<legend>'.Dict::S($sPreviousLabel).'</legend>');
+						}
+						$oPage->Details($aDetails[$sTab][$sColIndex]);
+						if (!empty($sPreviousLabel))
+						{
+							$oPage->add('</fieldset>');
+						}
+						$aDetails[$sTab][$sColIndex] = array();
+						$sPreviousLabel = $sLabel;
 					}
 					foreach($aFields as $sAttCode)
 					{
@@ -320,11 +340,16 @@ abstract class cmdbAbstractObject extends CMDBObject
 							$aDetails[$sTab][$sColIndex][] = $val;
 						}				
 					}
-					$oPage->Details($aDetails[$sTab][$sColIndex]);
-					if (!empty($sFieldsetName))
-					{
-						$oPage->add('</fieldset>');
-					}
+				}
+				if (!empty($sPreviousLabel))
+				{
+					$oPage->add('<fieldset>');
+					$oPage->add('<legend>'.Dict::S($sFieldsetName).'</legend>');
+				}
+				$oPage->Details($aDetails[$sTab][$sColIndex]);
+				if (!empty($sPreviousLabel))
+				{
+					$oPage->add('</fieldset>');
 				}
 				$oPage->add('</td>');
 			}
@@ -1244,15 +1269,35 @@ EOF
 			$oPage->add('<table style="vertical-align:top"><tr>');
 			foreach($aCols as $sColIndex => $aFieldsets)
 			{
+				$sLabel = '';
+				$sPreviousLabel = '';
+				$aDetails[$sTab][$sColIndex] = array();
 				$oPage->add('<td style="vertical-align:top">');
 				//$aDetails[$sTab][$sColIndex] = array();
 				foreach($aFieldsets as $sFieldsetName => $aFields)
 				{
-					$aDetails[$sTab][$sColIndex] = array();
-					if (!empty($sFieldsetName))
+					if (!empty($sFieldsetName) && ($sFieldsetName[0]!='_'))
 					{
-						$oPage->add('<fieldset>');
-						$oPage->add('<legend>'.Dict::S($sFieldsetName).'</legend>');
+						$sLabel = $sFieldsetName;
+					}
+					else
+					{
+						$sLabel = '';
+					}
+					if ($sLabel != $sPreviousLabel)
+					{
+						if (!empty($sPreviousLabel))
+						{
+							$oPage->add('<fieldset>');
+							$oPage->add('<legend>'.Dict::S($sPreviousLabel).'</legend>');
+						}
+						$oPage->Details($aDetails[$sTab][$sColIndex]);
+						if (!empty($sPreviousLabel))
+						{
+							$oPage->add('</fieldset>');
+						}
+						$aDetails[$sTab][$sColIndex] = array();
+						$sPreviousLabel = $sLabel;
 					}
 					foreach($aFields as $sAttCode)
 					{
@@ -1308,11 +1353,16 @@ EOF
 							$aDetails[$sTab][$sColIndex][] = $aVal;
 						}				
 					}
-					$oPage->Details($aDetails[$sTab][$sColIndex]);
-					if (!empty($sFieldsetName))
-					{
-						$oPage->add('</fieldset>');
-					}
+				}
+				if (!empty($sPreviousLabel))
+				{
+					$oPage->add('<fieldset>');
+					$oPage->add('<legend>'.Dict::S($sPreviousLabel).'</legend>');
+				}
+				$oPage->Details($aDetails[$sTab][$sColIndex]);
+				if (!empty($sPreviousLabel))
+				{
+					$oPage->add('</fieldset>');
 				}
 				$oPage->add('</td>');
 			}
@@ -1435,6 +1485,7 @@ EOF
 		//echo "<pre>ZList: ";
 		//print_r($aList);
 		//echo "</pre>\n";
+		$index = 0;
 		foreach($aList as $sKey => $value)
 		{
 			if (is_array($value))
@@ -1449,7 +1500,7 @@ EOF
 						//echo "<p>Found a tab:  $sName ($sKey)</p>\n";
 						if(!isset($aDetails[$sName]))
 						{
-							$aDetails[$sName] = array('col1' => array('' => array()));
+							$aDetails[$sName] = array('col1' => array());
 						}
 						$aDetails = self::ProcessZlist($value, $aDetails, $sName, 'col1', '');
 						break;
@@ -1468,7 +1519,7 @@ EOF
 						//echo "<p>Found a column: $sName ($sKey)</p>\n";
 						if(!isset($aDetails[$sCurrentTab][$sName]))
 						{
-							$aDetails[$sCurrentTab][$sName] = array('' => array());
+							$aDetails[$sCurrentTab][$sName] = array();
 						}
 						$aDetails = self::ProcessZlist($value, $aDetails, $sCurrentTab, $sName, '');
 						break;
@@ -1478,8 +1529,16 @@ EOF
 			else
 			{
 				//echo "<p>Scalar value: $value, in [$sCurrentTab][$sCurrentCol][$sCurrentSet][]</p>\n";
-				$aDetails[$sCurrentTab][$sCurrentCol][$sCurrentSet][] = $value;
+				if (empty($sCurrentSet))
+				{
+					$aDetails[$sCurrentTab][$sCurrentCol]['_'.$index][] = $value;
+				}
+				else
+				{
+					$aDetails[$sCurrentTab][$sCurrentCol][$sCurrentSet][] = $value;
+				}
 			}
+			$index++;
 		}
 		return $aDetails;
 	}
