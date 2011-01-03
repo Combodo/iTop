@@ -875,7 +875,10 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'Portal:Button:CloseTicket' => 'Close this ticket',
 	'Portal:EnterYourCommentsOnTicket' => 'Enter your comments about the resolution of this ticket:',
 	'Portal:ErrorNoContactForThisUser' => 'Error: the current user is not associated with a Contact/Person. Please contact your administrator.',
-	
+	'Portal:Attachments' => 'Attachments',
+	'Portal:AddAttachment' => ' Add Attachment ',
+	'Portal:RemoveAttachment' => ' Remove Attachment ',
+	'Portal:Attachment_No_To_Ticket_Name' => 'Attachment #%1$d to %2$s (%3$s)',
 	'Enum:Undefined' => 'Undefined',
 ));
 
