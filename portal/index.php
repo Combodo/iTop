@@ -233,6 +233,7 @@ function RequestCreationForm($oP, $oUserOrg)
 				$oRequest->Set($sAttCode, $value);
 			}
 		}
+		$aFieldsMap = array();
 		foreach($aList as $sAttCode)
 		{
 			$value = '';
@@ -244,14 +245,24 @@ function RequestCreationForm($oP, $oUserOrg)
 			}
 			$aArgs = array('this' => $oRequest);
 				
+			$aFieldsMap[$sAttCode] = 'attr_'.$sAttCode;
 			$sValue = $oRequest->GetFormElementForField($oP, get_class($oRequest), $sAttCode, $oAttDef, $value, '', 'attr_'.$sAttCode, '', $iFlags, $aArgs);
 			$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $sValue);
 		}
+		$aDetails[] = array('label' => Dict::S('Portal:Attachments'), 'value' => '&nbsp;');
+		$aDetails[] = array('label' => '&nbsp;', 'value' => '<div id="attachments"></div><p><button type="button" onClick="AddAttachment();">'.Dict::S('Portal:AddAttachment').'</button/></p>');
+		$oP->add_linked_script("../js/json.js");
+		$oP->add_linked_script("../js/forms-json-utils.js");
+		$oP->add_linked_script("../js/wizardhelper.js");
+		$oP->add_linked_script("../js/wizard.utils.js");
+		$oP->add_linked_script("../js/linkswidget.js");
+		$oP->add_linked_script("../js/extkeywidget.js");
+		$oP->add_linked_script("../js/jquery.blockUI.js");
 		$oP->add("<div class=\"wizContainer\" id=\"form_request_description\">\n");
 		$oP->add("<h1 id=\"title_request_form\">".Dict::S('Portal:DescriptionOfTheRequest')."</h1>\n");
-		$oP->add("<form action=\"../portal/index.php\" id=\"request_form\" method=\"post\">\n");
+		$oP->add("<form action=\"../portal/index.php\" enctype=\"multipart/form-data\" id=\"request_form\" method=\"post\">\n");
 		$oP->add("<table>\n");
-		$oP->details($aDetails);		
+		$oP->details($aDetails);
 		DumpHiddenParams($oP, $aList, $aParameters);
 		$oP->add("<input type=\"hidden\" name=\"step\" value=\"3\">");
 		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"create_request\">");
@@ -259,13 +270,35 @@ function RequestCreationForm($oP, $oUserOrg)
 		$oP->p("<input type=\"submit\" value=\"".Dict::S('UI:Button:Back')."\" onClick=\"GoBack();\">&nbsp;<input type=\"submit\" value=\"".Dict::S('UI:Button:Finish')."\">");
 		$oP->add("</form>");
 		$oP->add("</div>\n");
+		$iFieldsCount = count($aFieldsMap);
+		$sJsonFieldsMap = json_encode($aFieldsMap);
 		$oP->add_ready_script(
 <<<EOF
+		// Create the object once at the beginning of the page...
+		var oWizardHelper = new WizardHelper('UserRequest', '');
+		oWizardHelper.SetFieldsMap($sJsonFieldsMap);
+		oWizardHelper.SetFieldsCount($iFieldsCount);
+
 		// Starts the validation when the page is ready
 		CheckFields('request_form', false);
 		$('#request_form').submit( function() {
 			return CheckFields('request_form', true);
 		});
+EOF
+);
+		$sBtnLabel = Dict::S('Portal:RemoveAttachment');
+		$oP->add_script(
+<<<EOF
+		var index = 0;
+		function AddAttachment()
+		{
+			$('#attachments').append('<p id="attachment_'+index+'"><input type="file" name="attachement_'+index+'"/>&nbsp;<button type="button" onClick="RemoveAttachment('+index+')">{$sBtnLabel}</button/></p>');
+			index++;
+		}
+		function RemoveAttachment(id_attachment)
+		{
+			$('#attachment_'+id_attachment).remove();
+		}		
 EOF
 );
 	}
@@ -331,6 +364,29 @@ function DoCreateRequest($oP, $oUserOrg)
 		$iChangeId = $oMyChange->DBInsert();
 		$oRequest->DBInsertTracked($oMyChange);
 		$oP->add("<h1>".Dict::Format('UI:Title:Object_Of_Class_Created', $oRequest->GetName(), MetaModel::GetName(get_class($oRequest)))."</h1>\n");
+		
+		// Now process the attachements (if any)
+		$index = 0;
+		foreach($_FILES as $sName => $void)
+		{
+			$oAttachment = utils::ReadPostedDocument($sName);
+			if (!$oAttachment->IsEmpty())
+			{
+				$index++;
+				// Create a document and attach it to the created ticket
+				$oDoc = new FileDoc();
+				$oDoc->Set('name', Dict::Format('Portal:Attachment_No_To_Ticket_Name', $index, $oRequest->GetName(), $oAttachment->GetFileName()));
+				$oDoc->Set('org_id', $oUserOrg->GetKey());
+				$oDoc->Set('description', $oAttachment->GetFileName());
+				$oDoc->Set('contents', $oAttachment);
+				$oDoc->DBInsertTracked($oMyChange);
+				// Link the document to the ticket
+				$oLink = new lnkTicketToDoc();
+				$oLink->Set('ticket_id', $oRequest->GetKey());
+				$oLink->Set('document_id', $oDoc->GetKey());
+				$oLink->DBInsertTracked($oMyChange);
+			}
+		}		
 		DisplayMainMenu($oP);
 	}
 	else
@@ -507,6 +563,19 @@ function DisplayRequestDetails($oP, UserRequest $oRequest)
 		}
 	}
 	$oP->add('<div id="request_details">');
+	$sOQL = 'SELECT FileDoc AS Doc JOIN lnkTicketToDoc AS L ON L.document_id = Doc.id WHERE L.ticket_id = :request_id';
+	$oSearch = DBObjectSearch::FromOQL($sOQL);
+	$oSet = new CMDBObjectSet($oSearch, array(), array('request_id' => $oRequest->GetKey()));
+	if ($oSet->Count() > 0)
+	{
+		$sAttachements = '<table>';
+		while($oDoc = $oSet->Fetch())
+		{
+			$sAttachements .= '<tr><td>'.$oDoc->GetAsHtml('contents').'</td></tr>';
+		}
+		$sAttachements .= '</table>';
+		$aDetails[] = array('label' => Dict::S('Portal:Attachments'), 'value' => $sAttachements);
+	}
 	$oP->details($aDetails);
 	$oP->add('</div>');
 }
