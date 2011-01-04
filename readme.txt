@@ -14,7 +14,7 @@ Readme file
 1. ABOUT THIS RELEASE
    ==================
 Thank you for downloading the eigth packaged release of iTop. This version is
-a maintenance release. It aims at upgrading seemlessly an existing 1.0 or 1.0.1 installation.
+a maintenance release. It aims at upgrading seamlessly an existing 1.0 or 1.0.1 installation.
 
 Additional documentation can be downloaded from http://www.combodo.com/itopdocumentation
  - User guide
@@ -27,13 +27,18 @@ The source code of iTop can be found on SourceForge: http://itop.sourceforge.net
 
 1.1 What's new?
     ---------------------------
+- Three new localizations were added: Chinese, Russian and Turkish
+- User Interface enhancements: quick search and create within a form when dealing with external keys
+- Improved support of IE8: a few cosmetic enhancements
+- Enhanced CSV import (with a special CSV "synchro" mode, confirmation dialogs for "risky operations",
+  better history tracking of imports) and command line support for importing objects
 
 
 1.2 Should I upgrade to 1.0.2?
     ---------------------------
 This maintenance release fixes brings the following improvements:
 - Added localization for Turkish, Russian and Chinese
-- Fixed issues with Internet Explorer
+- Fixed some usability issues with Internet Explorer
 - Improved the usability of the CSV import feature, both in interactive and command-line modes
 
 If any of the above items is important for you, then you should upgrade your version of iTop.
@@ -88,8 +93,8 @@ innodb_flush_method = O_DSYNC
 On some systems you'll see a 5 to 10 times performance boost for writing data into
 the MySQL database !
 
-2.3. Migrating from 1.0
-     ------------------
+2.3. Migrating from 1.0 or 1.0.1
+     ---------------------------
 Overwrite your current installation files with the new ones.
 Configuration file, Data model files, and the database made by iTop 1.0 are
 fully compatible with iTop 1.0.1.
@@ -102,10 +107,10 @@ Please refer to the migration guide available at http://www.combodo.com/itopdocu
 3. FEATURES
    ========
 
-3.1. Changes since 1.0
-     -----------------
+3.1. Changes since 1.0.1
+     -------------------
 
-Version 1.0.1 is a maintenance release.
+Version 1.0.2 is a maintenance release.
 
 Localization
 ------------
@@ -115,10 +120,11 @@ German localization reviewed.
 Major changes
 -------------
 None: this is a maintenance release!
-#320 Integrated an HTML Editor
+#320 Integrated an HTML Editor, though none of the fields of the standard iTop data model uses it!
 
 Minor changes
 -------------
+Added the ability to attach files to a user request from the "portal" page.
 Use XMLPage passthrough mode to speed up and consume less memory for big XML exports.
 - Improved feedback while searching and reloading added objects. (N-N links)
 REVIEWED THE FILE INCLUSION POLICY -> the application can be moved !!!
@@ -138,9 +144,14 @@ Some details:
 Renamed 'autocompleteWidget' to 'extkeyWidget' since it's not always an autocomplete...
 Make sure that the "+" (Create) button is never displayed for an abstract class.
 
+Support resizable elements inside tabs.
+Allow DBObjects to be deleted by the standard UI 'Delete', which may be useful in case a DBObject has to be deleted as a dependent object of a CMDBObject.
+Force a dummy timezone to prevent a warning during the setup...
+Cosmetic on the iTop logo (under IE8). Removed an unneeded size=100% that bothers IE.
+XML data loader now requests credentials
 
-Customize iTop
-..............
+* iTop Customization
+
 Added the capability to enable/disable menus based on the rights to apply a given stimulus.
 Allow a module to provide a handler to override application settings: OnMetaModelStarted()
 Menus created via a handler, at runtime
@@ -156,15 +167,15 @@ FIxed the processing of hierarchical ZLists to keep the display order when plain
 Added support for hierarchical ZLists when checking the data model consistency
 
 
-Browser compatibility
-.....................
-Tested successfully with IE8 and Chrome.
+* Browser compatibility
+
+iTop was tested successfully ON FF 3.6, IE8, Chrome and Safari 5 (Windows).
 Fixed the "Relationships" Flash navigator so that it works also on Safari. (tested with Safari 5.0.2 on Windows) (Trac #310)
 - Fixed the search form, and also fixed the search/selection of objects to link (n:n links) that was broken on IE8.
 Fix to prevent IE 8 from running in IE7 compatibility mode... to be tested...
 
-CSV
-......
+* CSV Import
+
 - Added the new "synchro" mode to the CSV load page.
 - Ask for confirmation when doing a CSV import/synchro that is considered as "risky" (based on thresholds from the config file)
 - Added a "Restart" button to quickly start over a CSV import/synchro
@@ -173,28 +184,18 @@ Added a tab into the CSV import: browse the CSV imports history
 
 Bugs fixed
 ----------
-The complete list of active tickets can be reviewed on http://sourceforge.net/apps/trac/itop/report/1
+The complete list of active tickets can be reviewed at http://sourceforge.net/apps/trac/itop/report/1
 
+#314 Set a longer timeout during setup
+#318 (and #335) added the check of the mandatory DOM extension.
+#321 Display PHP errors during setup instead of hiding them!
 #331 Import.php could not be run in  HTTP mode (when PHP running in CGI mode)
-- Fixed bug #334: proper handling of the "remove objects" button (was working only for the first linkset in the object).
-- Allow DBObjects to be deleted by the standard UI 'Delete', which may be useful in case a DBObject has to be deleted as a dependent object of a CMDBObject.
-Fixed a typo in German translation (Trac #339), thanks to ulmerspatz and Jonathan Lucas
-Fix for Trac #337: email validation. Use a simpler regular expression that is much faster to execute.
-- Bug fix: support resizable elements inside tabs.
+#332 Improved usability of the CSV import wizard with IE8. 
+#333 Organizations' drop-down list is truncated on IE when the name of an organization is too long.
+#334 Proper handling of the "remove objects" button (was working only for the first linkset in the object).
+#337 email validation. Use a simpler regular expression that is much faster to execute.
+#339 Fixed a typo in German translation thanks to ulmerspatz and Jonathan Lucas
 
-Setup/installation
-Force a dummy timezone to prevent a warning during the setup...
-- Display PHP errors during setup instead of hiding them ! (Trac #321)
-- Set a longer timeout during setup (Trac #314)
-- Fixed Trac #318 (and #335): added the check of the mandatory DOM extension.
-
-IE8 support
-- Cosmetic on the iTop logo. Removed an unneeded size=100% that bothers IE.
-- Fixed Trac #332: improved usability of the CSV import wizard with IE8. 
-- Fixed Trac #333: organizations' drop-down list is truncated on IE when the name of an organization is too long.
-
-Security...???
-XML data loader to request for credentials
 
 
 3.2. Known limitations (https://sourceforge.net/apps/trac/itop/report/3)
