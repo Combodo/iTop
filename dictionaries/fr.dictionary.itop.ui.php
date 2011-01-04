@@ -884,6 +884,10 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'Portal:Button:CloseTicket' => 'Clôre cette requête',
 	'Portal:EnterYourCommentsOnTicket' => 'Vos commentaires à propos du traitement de cette requête:',
 	'Portal:ErrorNoContactForThisUser' => 'Erreur: l\'utilisateur courant n\'est pas associé à une Personne/Contact. Contactez votre administrateur.',
+	'Portal:Attachments' => 'Pièces jointes',
+	'Portal:AddAttachment' => ' Ajouter une pièce jointe ',
+	'Portal:RemoveAttachment' => ' Enlever la pièce jointe ',
+	'Portal:Attachment_No_To_Ticket_Name' => 'Pièce jointe #%1$d à %2$s (%3$s)',
 
 	'Enum:Undefined' => 'Non défini',
 ));
