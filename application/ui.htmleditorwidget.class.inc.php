@@ -29,12 +29,13 @@ class UIHTMLEditorWidget
 	protected $m_iId;
 	protected $m_sAttCode;
 	protected $m_sNameSuffix;
+	protected $m_sFieldPrefix;
 	protected $m_sHelpText;
 	protected $m_sValidationField;
 	protected $m_sValue;
 	protected $m_sMandatory;
 	
-	public function __construct($iInputId, $sAttCode, $sNameSuffix, $sHelpText, $sValidationField, $sValue, $sMandatory)
+	public function __construct($iInputId, $sAttCode, $sNameSuffix, $sFieldPrefix, $sHelpText, $sValidationField, $sValue, $sMandatory)
 	{
 		$this->m_iId = $iInputId;
 		$this->m_sAttCode = $sAttCode;
@@ -43,6 +44,7 @@ class UIHTMLEditorWidget
 		$this->m_sValidationField = $sValidationField;
 		$this->m_sValue = $sValue;
 		$this->m_sMandatory = $sMandatory;
+		$this->m_sFieldPrefix = $sFieldPrefix;
 	}
 	
 	/**
@@ -53,16 +55,13 @@ class UIHTMLEditorWidget
 	 */
 	public function Display(WebPage $oPage, $aArgs = array())
 	{
-		$oPage->add_linked_script("../js/ckeditor/ckeditor.js");
-		$oPage->add_linked_script("../js/ckeditor/adapters/jquery.js");
-
 		$iId = $this->m_iId;
 		$sCode = $this->m_sAttCode.$this->m_sNameSuffix;
 		$sValue = $this->m_sValue;
 		$sHelpText = $this->m_sHelpText;
 		$sValidationField = $this->m_sValidationField;
 
-		$sHtmlValue = "<table><tr><td><textarea title=\"$sHelpText\" name=\"attr_{$sCode}\" rows=\"14\" cols=\"110\" id=\"$iId\">$sValue</textarea></td><td>$sValidationField</td></tr></table>";
+		$sHtmlValue = "<table><tr><td><textarea class=\"htmlEditor\" title=\"$sHelpText\" name=\"attr_{$this->m_sFieldPrefix}{$sCode}\" rows=\"14\" cols=\"110\" id=\"$iId\">$sValue</textarea></td><td>$sValidationField</td></tr></table>";
 
 		// Replace the text area with CKEditor
 		// To change the default settings of the editor,
