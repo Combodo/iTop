@@ -111,8 +111,10 @@ class UILinksWidget
 			$aRow['form::checkbox'] .= "<input type=\"hidden\" name=\"attr_{$sPrefix}id{$sNameSuffix}\" value=\"$key\">";
 			foreach($this->m_aEditableFields as $sFieldCode)
 			{
+				$sFieldId = $this->m_iInputId.'_'.$sFieldCode.'['.$linkObjOrId->GetKey().']';
+				$sSafeId = str_replace(array('[',']','-'), '_', $sFieldId);
 				$oAttDef = MetaModel::GetAttributeDef($this->m_sLinkedClass, $sFieldCode);
-				$aRow[$sFieldCode] = cmdbAbstractObject::GetFormElementForField($oP, $this->m_sLinkedClass, $sFieldCode, $oAttDef, $linkObjOrId->Get($sFieldCode), '' /* DisplayValue */, $this->m_iInputId.'_'.$sFieldCode.'['.$key.']', $sNameSuffix, 0, $aArgs);
+				$aRow[$sFieldCode] = cmdbAbstractObject::GetFormElementForField($oP, $this->m_sLinkedClass, $sFieldCode, $oAttDef, $linkObjOrId->Get($sFieldCode), '' /* DisplayValue */, $sSafeId, $sNameSuffix, 0, $aArgs);
 			}
 		}
 		else
@@ -125,8 +127,10 @@ class UILinksWidget
 			$aRow['form::checkbox'] .= "<input type=\"hidden\" name=\"attr_{$sPrefix}id{$sNameSuffix}\" value=\"\">";
 			foreach($this->m_aEditableFields as $sFieldCode)
 			{
+				$sFieldId = $this->m_iInputId.'_'.$sFieldCode.'['.$linkObjOrId.']';
+				$sSafeId = str_replace(array('[',']','-'), '_', $sFieldId);
 				$oAttDef = MetaModel::GetAttributeDef($this->m_sLinkedClass, $sFieldCode);
-				$aRow[$sFieldCode] = cmdbAbstractObject::GetFormElementForField($oP, $this->m_sLinkedClass, $sFieldCode, $oAttDef, '' /* TO DO/ call GetDefaultValue($oObject->ToArgs()) */, '' /* DisplayValue */, $this->m_iInputId.'_'.$sFieldCode.'['.$linkObjOrId.']' /* id */, $sNameSuffix, 0, $aArgs);
+				$aRow[$sFieldCode] = cmdbAbstractObject::GetFormElementForField($oP, $this->m_sLinkedClass, $sFieldCode, $oAttDef, '' /* TO DO/ call GetDefaultValue($oObject->ToArgs()) */, '' /* DisplayValue */, $sSafeId /* id */, $sNameSuffix, 0, $aArgs);
 			}
 		}
 
