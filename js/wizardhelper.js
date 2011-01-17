@@ -1,4 +1,22 @@
 // Wizard Helper JavaScript class to communicate with the WizardHelper PHP class
+
+if (!Array.prototype.indexOf) // Emulation of the indexOf function for IE and old browsers
+{
+	Array.prototype.indexOf = function(elt /*, from*/)
+	{
+		var len = this.length;
+		var from = Number(arguments[1]) || 0;
+		from = (from < 0) ? Math.ceil(from) : Math.floor(from);
+
+		if (from < 0) from += len;
+		for (; from < len; from++)
+		{
+			if (from in this && this[from] === elt) return from;
+		}
+		return -1;
+	};
+}
+
 function WizardHelper(sClass, sFormPrefix)
 {
 	this.m_oData = { 'm_sClass' : '',
@@ -69,6 +87,7 @@ function WizardHelper(sClass, sFormPrefix)
 	
 	this.UpdateFields = function ()
 	{
+		var aRefreshed = [];
 		//console.log('** UpdateFields **');
 		// Set the full HTML for the input field
 		for(i=0; i<this.m_oData.m_aAllowedValuesRequested.length; i++)
@@ -77,6 +96,7 @@ function WizardHelper(sClass, sFormPrefix)
 			sFieldId = this.m_oData.m_oFieldsMap[sAttCode];
 			//console.log('Setting #field_'+sFieldId+' to: '+this.m_oData.m_oAllowedValues[sAttCode]);
 			$('#field_'+sFieldId).html(this.m_oData.m_oAllowedValues[sAttCode]);
+			aRefreshed.push(sFieldId);
 		}
 		// Set the actual value of the input
 		for(i=0; i<this.m_oData.m_aDefaultValueRequested.length; i++)
@@ -85,6 +105,16 @@ function WizardHelper(sClass, sFormPrefix)
 			defaultValue = this.m_oData.m_oDefaultValue[sAttCode];
 			sFieldId = this.m_oData.m_oFieldsMap[sAttCode];	
 			$('#'+sFieldId).val(defaultValue);
+			if (!aRefreshed.indexOf(sFieldId))
+			{
+				aRefreshed.push(sFieldId);
+			}
+		}
+		// For each "refreshed" field, asynchronously trigger a change in case there are dependent fields to update
+		for(i=0; i<aRefreshed.length; i++)
+		{
+			var sString = "$('#"+aRefreshed[i]+"').trigger('change');"
+			window.setTimeout(sString, 1); // Synchronous 'trigger' does nothing, call it asynchronously
 		}
 	}
 	
