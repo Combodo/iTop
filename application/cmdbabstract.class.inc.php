@@ -1317,9 +1317,12 @@ EOF
 								else
 								{
 									$iFlags = $this->GetAttributeFlags($sAttCode);				
+									$sInputId = $this->m_iFormId.'_'.$sAttCode;
 									if ($iFlags & OPT_ATT_HIDDEN)
 									{
-										// Attribute is hidden, do nothing
+										// Attribute is hidden, add a hidden input
+										$oPage->add('<input type="hidden" id="'.$sInputId.'" name="attr_'.$sPrefix.$sAttCode.'" value="'.htmlentities($this->Get($sAttCode), ENT_QUOTES, 'UTF-8').'"/>');
+										$aFieldsMap[$sAttCode] = $sInputId;
 									}
 									else
 									{
@@ -1327,13 +1330,14 @@ EOF
 										{
 											// Attribute is read-only
 											$sHTMLValue = $this->GetAsHTML($sAttCode);
+											$sHTMLValue .= '<input type="hidden" id="'.$sInputId.'" name="attr_'.$sPrefix.$sAttCode.'" value="'.htmlentities($this->Get($sAttCode), ENT_QUOTES, 'UTF-8').'"/>';
+											$aFieldsMap[$sAttCode] = $sInputId;
 										}
 										else
 										{
 											$sValue = $this->Get($sAttCode);
 											$sDisplayValue = $this->GetEditValue($sAttCode);
 											$aArgs = array('this' => $this, 'formPrefix' => $sPrefix);
-											$sInputId = $this->m_iFormId.'_'.$sAttCode;
 											$sHTMLValue = "<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
 											$aFieldsMap[$sAttCode] = $sInputId;
 											
