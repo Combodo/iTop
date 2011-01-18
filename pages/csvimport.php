@@ -927,6 +927,7 @@ EOF
 	function CSVRestart()
 	{
 		$('input[name=step]').val(1);
+		$('#wizForm').removeAttr('onsubmit'); // No need to perform validation checks when going back
 		$('#wizForm').submit();
 		
 	}
