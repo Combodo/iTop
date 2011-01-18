@@ -1,4 +1,4 @@
-iTop - version 1.0.2 - 05-01-2011
+iTop - version 1.0.2 - 19-01-2011
 Readme file
 
 1.   ABOUT THIS RELEASE
@@ -149,6 +149,7 @@ Allow DBObjects to be deleted by the standard UI 'Delete', which may be useful i
 Force a dummy timezone to prevent a warning during the setup...
 Cosmetic on the iTop logo (under IE8). Removed an unneeded size=100% that bothers IE.
 XML data loader now requests credentials
+The configuration file now contains "relative paths" only. This means that if you installed iTop 1.0.2, you can move the directory containing the iTop installation.
 
 * iTop Customization
 
@@ -163,7 +164,7 @@ User profiles: created in dedicated module itop-profiles-itil
 Welcome page moved out the application, into a dedicated module: itop-welcome-itil
 Moved the standards menus into the "welcome" module
 Added the capability to enable/disable menus based on the rights to apply a given stimulus.
-FIxed the processing of hierarchical ZLists to keep the display order when plain fields and fieldsets are mixed at the same level.
+Fixed the processing of hierarchical ZLists to keep the display order when plain fields and fieldsets are mixed at the same level.
 Added support for hierarchical ZLists when checking the data model consistency
 
 
@@ -172,7 +173,8 @@ Added support for hierarchical ZLists when checking the data model consistency
 iTop was tested successfully ON FF 3.6, IE8, Chrome and Safari 5 (Windows).
 Fixed the "Relationships" Flash navigator so that it works also on Safari. (tested with Safari 5.0.2 on Windows) (Trac #310)
 - Fixed the search form, and also fixed the search/selection of objects to link (n:n links) that was broken on IE8.
-Fix to prevent IE 8 from running in IE7 compatibility mode... to be tested...
+- Fix to prevent IE 8 from running in IE7 compatibility mode
+- Cosmetics: The login and change password forms now look the same on all browsers (FF, IE8, Safari 5, Chrome)
 
 * CSV Import
 
@@ -186,6 +188,7 @@ Bugs fixed
 ----------
 The complete list of active tickets can be reviewed at http://sourceforge.net/apps/trac/itop/report/1
 
+#299 "Show all" should provide some feedback (progress)
 #314 Set a longer timeout during setup
 #318 (and #335) added the check of the mandatory DOM extension.
 #321 Display PHP errors during setup instead of hiding them!
@@ -194,9 +197,10 @@ The complete list of active tickets can be reviewed at http://sourceforge.net/ap
 #333 Organizations' drop-down list is truncated on IE when the name of an organization is too long.
 #334 Proper handling of the "remove objects" button (was working only for the first linkset in the object).
 #337 email validation. Use a simpler regular expression that is much faster to execute.
+#338 Service Element not updated if service is autofilled
 #339 Fixed a typo in German translation thanks to ulmerspatz and Jonathan Lucas
-
-
+#345 Impossible to reassign to another workgroup
+#346 CSV Import prompts to enter the mapping when pressing 'Restart'
 
 3.2. Known limitations (https://sourceforge.net/apps/trac/itop/report/3)
      -----------------
