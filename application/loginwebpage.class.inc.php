@@ -68,6 +68,10 @@ body {
 	border-left: 1px solid #000;
 	border-right: 1px solid #000;
 	border-top: 0;
+	text-align: center;
+}
+#pwd, #user,#old_pwd, #new_pwd, #retype_new_pwd {
+	width: 10em;
 }
 .center {
 	text-align: center;
@@ -115,9 +119,9 @@ EOF
 				$this->add("<p>".Dict::S('UI:Login:IdentifyYourself')."</p>\n");
 			}
 			$this->add("<form method=\"post\">\n");
-			$this->add("<table>\n");
-			$this->add("<tr><td><label for=\"user\">".Dict::S('UI:Login:UserNamePrompt').":</label></td><td><input id=\"user\" type=\"text\" name=\"auth_user\" value=\"$sAuthUser\" /></td></tr>\n");
-			$this->add("<tr><td><label for=\"pwd\">".Dict::S('UI:Login:PasswordPrompt').":</label></td><td><input id=\"pwd\" type=\"password\" name=\"auth_pwd\" value=\"$sAuthPwd\" /></td></tr>\n");
+			$this->add("<table width=\"100%\">\n");
+			$this->add("<tr><td style=\"text-align:right\"><label for=\"user\">".Dict::S('UI:Login:UserNamePrompt').":</label></td><td style=\"text-align:left\"><input id=\"user\" type=\"text\" name=\"auth_user\" value=\"$sAuthUser\" /></td></tr>\n");
+			$this->add("<tr><td style=\"text-align:right\"><label for=\"pwd\">".Dict::S('UI:Login:PasswordPrompt').":</label></td><td style=\"text-align:left\"><input id=\"pwd\" type=\"password\" name=\"auth_pwd\" value=\"$sAuthPwd\" /></td></tr>\n");
 			$this->add("<tr><td colspan=\"2\" class=\"center v-spacer\"> <input type=\"submit\" value=\"".Dict::S('UI:Button:Login')."\" /></td></tr>\n");
 			$this->add("</table>\n");
 			$this->add("<input type=\"hidden\" name=\"loginop\" value=\"login\" />\n");
@@ -159,10 +163,10 @@ EOF
 			$this->add("<p class=\"hilite\">".Dict::S('UI:Login:IncorrectOldPassword')."</p>\n");
 		}
 		$this->add("<form method=\"post\">\n");
-		$this->add("<table>\n");
-		$this->add("<tr><td><label for=\"old_pwd\">".Dict::S('UI:Login:OldPasswordPrompt').":</label></td><td><input type=\"password\" id=\"old_pwd\" name=\"old_pwd\" value=\"\" /></td></tr>\n");
-		$this->add("<tr><td><label for=\"new_pwd\">".Dict::S('UI:Login:NewPasswordPrompt').":</label></td><td><input type=\"password\" id=\"new_pwd\" name=\"new_pwd\" value=\"\" /></td></tr>\n");
-		$this->add("<tr><td><label for=\"retype_new_pwd\">".Dict::S('UI:Login:RetypeNewPasswordPrompt').":</label></td><td><input type=\"password\" id=\"retype_new_pwd\" name=\"retype_new_pwd\" value=\"\" /></td></tr>\n");
+		$this->add("<table width=\"100%\">\n");
+		$this->add("<tr><td style=\"text-align:right\"><label for=\"old_pwd\">".Dict::S('UI:Login:OldPasswordPrompt').":</label></td><td style=\"text-align:left\"><input type=\"password\" id=\"old_pwd\" name=\"old_pwd\" value=\"\" /></td></tr>\n");
+		$this->add("<tr><td style=\"text-align:right\"><label for=\"new_pwd\">".Dict::S('UI:Login:NewPasswordPrompt').":</label></td><td style=\"text-align:left\"><input type=\"password\" id=\"new_pwd\" name=\"new_pwd\" value=\"\" /></td></tr>\n");
+		$this->add("<tr><td style=\"text-align:right\"><label for=\"retype_new_pwd\">".Dict::S('UI:Login:RetypeNewPasswordPrompt').":</label></td><td style=\"text-align:left\"><input type=\"password\" id=\"retype_new_pwd\" name=\"retype_new_pwd\" value=\"\" /></td></tr>\n");
 		$this->add("<tr><td colspan=\"2\" class=\"center v-spacer\">  <input type=\"button\" onClick=\"GoBack();\" value=\"".Dict::S('UI:Button:Cancel')."\" />&nbsp;&nbsp;<input type=\"submit\" onClick=\"return DoCheckPwd();\" value=\"".Dict::S('UI:Button:ChangePassword')."\" /></td></tr>\n");
 		$this->add("</table>\n");
 		$this->add("<input type=\"hidden\" name=\"loginop\" value=\"do_change_pwd\" />\n");
