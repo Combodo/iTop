@@ -585,7 +585,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:DBServerInstance+' => '',
 	'Class:DBServerInstance/Attribute:software_id' => 'Software',
 	'Class:DBServerInstance/Attribute:software_id+' => '',
-	'Class:DBServerInstance/Attribute:software_name' => 'Name',
+	'Class:DBServerInstance/Attribute:software_name' => 'Software Name',
 	'Class:DBServerInstance/Attribute:software_name+' => '',
 	'Class:DBServerInstance/Attribute:dbinstance_list' => 'Databases',
 	'Class:DBServerInstance/Attribute:dbinstance_list+' => 'Database sources',
@@ -1049,6 +1049,5 @@ Dict::Add('EN US', 'English', 'English', array(
 'Menu:Group+' => 'Groups of CIs',
 'Menu:ConfigManagement:Shortcuts' => 'Shortcuts',
 'Menu:ConfigManagement:AllContacts' => 'All contacts: %1$d',
-
 ));
 ?>

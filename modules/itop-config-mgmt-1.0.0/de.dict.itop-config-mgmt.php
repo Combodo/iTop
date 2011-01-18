@@ -585,7 +585,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:DBServerInstance+' => '',
 	'Class:DBServerInstance/Attribute:software_id' => 'Software',
 	'Class:DBServerInstance/Attribute:software_id+' => '',
-	'Class:DBServerInstance/Attribute:software_name' => 'Name',
+	'Class:DBServerInstance/Attribute:software_name' => 'Software Name',
 	'Class:DBServerInstance/Attribute:software_name+' => '',
 	'Class:DBServerInstance/Attribute:dbinstance_list' => 'Datenbanken',
 	'Class:DBServerInstance/Attribute:dbinstance_list+' => 'Datenbanken-Quellen',

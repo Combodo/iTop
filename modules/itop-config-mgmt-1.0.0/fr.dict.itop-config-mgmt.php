@@ -572,8 +572,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:DBServerInstance' => 'Instance de serveur de base de données',
 	'Class:DBServerInstance+' => '',
+	'Class:DBServerInstance/Attribute:software_id' => 'Logiciel',
+	'Class:DBServerInstance/Attribute:software_name' => 'Logiciel Serveur',
 	'Class:DBServerInstance/Attribute:dbinstance_list' => 'Bases',
-	'Class:DBServerInstance/Attribute:dbinstance_list+' => 'Liste des sources de données',
+	'Class:DBServerInstance/Attribute:dbinstance_list+' => 'Liste des bases de données',
 ));
 
 //
