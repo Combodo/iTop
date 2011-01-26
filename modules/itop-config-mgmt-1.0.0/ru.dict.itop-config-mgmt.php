@@ -391,6 +391,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Subnet' => 'Подсеть',
 	'Class:Subnet+' => '',
+	'Class:Subnet/Name' => '%1$s / %2$s',
 	//'Class:Subnet/Attribute:name' => 'Name',
 	//'Class:Subnet/Attribute:name+' => '',
 	'Class:Subnet/Attribute:org_id' => 'Организация-владелец',
@@ -544,6 +545,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:SoftwareInstance' => 'Экземпляры ПО',
 	'Class:SoftwareInstance+' => '',
+	'Class:SoftwareInstance/Name' => '%1$s - %2$s',
 	'Class:SoftwareInstance/Attribute:device_id' => 'Устройство',
 	'Class:SoftwareInstance/Attribute:device_id+' => '',
 	'Class:SoftwareInstance/Attribute:device_name' => 'Устройство',
@@ -567,6 +569,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:ApplicationInstance' => 'Экземпляры приложений',
 	'Class:ApplicationInstance+' => '',
+	'Class:ApplicationInstance/Name' => '%1$s - %2$s',
 	'Class:ApplicationInstance/Attribute:software_id' => 'ПО',
 	'Class:ApplicationInstance/Attribute:software_id+' => '',
 	'Class:ApplicationInstance/Attribute:software_name' => 'Название',
@@ -581,6 +584,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:DBServerInstance' => 'Экземпляры серверов баз данных',
 	'Class:DBServerInstance+' => '',
+	'Class:DBServerInstance/Name' => '%1$s - %2$s',
 	'Class:DBServerInstance/Attribute:software_id' => 'ПО',
 	'Class:DBServerInstance/Attribute:software_id+' => '',
 	'Class:DBServerInstance/Attribute:software_name' => 'Название',
@@ -597,6 +601,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:DatabaseInstance' => 'Экземпляры баз данных',
 	'Class:DatabaseInstance+' => '',
+	'Class:DatabaseInstance/Name' => '%1$s - %2$s',
 	'Class:DatabaseInstance/Attribute:db_server_instance_id' => 'Сервер базы данных',
 	'Class:DatabaseInstance/Attribute:db_server_instance_id+' => '',
 	'Class:DatabaseInstance/Attribute:db_server_instance_version' => 'Версия базы данных',
@@ -657,6 +662,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:NetworkInterface' => 'Сетевой интерфейс',
 	'Class:NetworkInterface+' => '',
+	'Class:NetworkInterface/Name' => '%1$s - %2$s',
 	'Class:NetworkInterface/Attribute:device_id' => 'Устройство',
 	'Class:NetworkInterface/Attribute:device_id+' => '',
 	'Class:NetworkInterface/Attribute:device_name' => 'Устройство',

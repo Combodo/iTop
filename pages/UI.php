@@ -521,7 +521,14 @@ try
 				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
 			}
 
-			$oObj = MetaModel::GetObject($sClass, $id, false /* MustBeFound */);
+			if (is_numeric($id))
+			{
+				$oObj = MetaModel::GetObject($sClass, $id, false /* MustBeFound */);
+			}
+			else
+			{
+				$oObj = MetaModel::GetObjectByName($sClass, $id, false /* MustBeFound */);
+			}
 			if (is_null($oObj))
 			{
 				$oP->set_title(Dict::S('UI:ErrorPageTitle'));

@@ -35,24 +35,6 @@
 require_once('cmdbsource.class.inc.php');
 
 
-class SQLExpression extends BinaryExpression
-{
-}
-class ScalarSQLExpression extends ScalarExpression
-{
-}
-class TrueSQLExpression extends TrueExpression
-{
-}
-class FieldSQLExpression extends FieldExpression
-{
-}
-class VariableSQLExpression extends VariableExpression
-{
-}
-
-
-
 class SQLQuery
 {
 	private $m_sTable = '';
@@ -64,7 +46,7 @@ class SQLQuery
 	private $m_aValues = array(); // Values to set in case of an update query
 	private $m_aJoinSelects = array();
 
-	public function __construct($sTable, $sTableAlias, $aFields, $oConditionExpr, $aFullTextNeedles, $bToDelete = true, $aValues = array())
+	public function __construct($sTable, $sTableAlias, $aFields, $aFullTextNeedles, $bToDelete = true, $aValues = array())
 	{
 		// This check is not needed but for developping purposes
 		//if (!CMDBSource::IsTable($sTable))
@@ -79,15 +61,7 @@ class SQLQuery
 		$this->m_sTable = $sTable;
 		$this->m_sTableAlias = $sTableAlias;
 		$this->m_aFields = $aFields;
-		$this->m_oConditionExpr = $oConditionExpr;
-		if (is_null($oConditionExpr))
-		{
-			$this->m_oConditionExpr = new TrueExpression;
-		}
-		else if (!$oConditionExpr instanceof Expression)
-		{
-			throw new CoreException('Invalid type for condition, expecting an Expression', array('class' => get_class($oConditionExpr)));
-		}
+		$this->m_oConditionExpr = null;
 		$this->m_aFullTextNeedles = $aFullTextNeedles;
 		$this->m_bToDelete = $bToDelete;
 		$this->m_aValues = $aValues;
@@ -146,6 +120,11 @@ class SQLQuery
 		echo "</pre>";
 	}
 
+	public function SetSelect($aExpressions)
+	{
+		$this->m_aFields = $aExpressions;
+	}
+
 	public function SetCondition($oConditionExpr)
 	{
 		$this->m_oConditionExpr = $oConditionExpr;
@@ -153,7 +132,14 @@ class SQLQuery
 
 	public function AddCondition($oConditionExpr)
 	{
-		$this->m_oConditionExpr->LogAnd($oConditionExpr);
+		if (is_null($this->m_oConditionExpr))
+		{
+			$this->m_oConditionExpr = $oConditionExpr;
+		}
+		else
+		{
+			$this->m_oConditionExpr->LogAnd($oConditionExpr);
+		}
 	}
 
 	private function AddJoin($sJoinType, $oSQLQuery, $sLeftField, $sRightField, $sRightTableAlias = '')
@@ -216,8 +202,15 @@ class SQLQuery
 			throw new CoreException("Building a request wich will delete every object of a given table -looks suspicious- please use truncate instead...");
 		}
 		*/
-		$sWhere  = self::ClauseWhere($oCondition, $aArgs);
-		return "DELETE $sDelete FROM $sFrom WHERE $sWhere";
+		if (is_null($oCondition))
+		{
+			// Delete all !!!
+		}
+		else
+		{
+			$sWhere  = self::ClauseWhere($oCondition, $aArgs);
+			return "DELETE $sDelete FROM $sFrom WHERE $sWhere";
+		}
 	}
 
 	// Interface, build the SQL query
@@ -338,7 +331,14 @@ class SQLQuery
 
 	private static function ClauseWhere($oConditionExpr, $aArgs = array())
 	{
-		return $oConditionExpr->Render($aArgs);
+		if (is_null($oConditionExpr))
+		{
+			return '1';
+		}
+		else
+		{
+			return $oConditionExpr->Render($aArgs);
+		}
 	}
 
 	private static function ClauseOrderBy($aOrderBy)
@@ -365,24 +365,23 @@ class SQLQuery
 		$oCondition = $this->m_oConditionExpr;
 		if ((count($aFields) > 0) && (count($this->m_aFullTextNeedles) > 0))
 		{
-			$aFieldExp = array();
-			foreach ($aFields as $sField)
-			{
-				// This is TEMPORARY (that's why it is weird, actually)
-				// Full text match will be done as an expression in the filter condition
-
-				// $sField is already a string `table`.`column`
-				// Let's make an expression out of it (again !)
-				$aFieldExp[] = Expression::FromOQL($sField);
-			}
-			$oFullTextExpr = new CharConcatExpression($aFieldExp);
+			$sFields = implode(', ', $aFields);
+			$oFullTextExpr = Expression::FromSQL("CONCAT_WS(' ', $sFields)");
+			
 			// The cast is necessary because the CONCAT result in a binary string:
 			// if any of the field is a binary string => case sensitive comparison
 			//
 			foreach($this->m_aFullTextNeedles as $sFTNeedle)
 			{
 				$oNewCond = new BinaryExpression($oFullTextExpr, 'LIKE', new ScalarExpression("%$sFTNeedle%"));
-				$oCondition = $oCondition->LogAnd($oNewCond);
+				if (is_null($oCondition))
+				{
+					$oCondition = $oNewCond;
+				}
+				else
+				{
+					$oCondition = $oCondition->LogAnd($oNewCond);
+				}
 			}
 		}
 
@@ -419,8 +418,6 @@ class SQLQuery
 		//
 		foreach($this->m_aFields as $sAlias => $oExpression)
 		{
-			$sTable = $oExpression->GetParent();
-			$sColumn = $oExpression->GetName();
 			$aFields["`$sAlias`"] = $oExpression->Render();
 		}
 		if ($this->m_bToDelete)

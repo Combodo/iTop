@@ -329,6 +329,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Subnet' => 'Sub-rede',
 	'Class:Subnet+' => '',
+	'Class:Subnet/Name' => '%1$s / %2$s',
 	//'Class:Subnet/Attribute:name' => 'Nome',
 	//'Class:Subnet/Attribute:name+' => '',
 	'Class:Subnet/Attribute:org_id' => 'Organização',
@@ -482,6 +483,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:SoftwareInstance' => 'Software Instance',
 	'Class:SoftwareInstance+' => '',
+	'Class:SoftwareInstance/Name' => '%1$s - %2$s',
 	'Class:SoftwareInstance/Attribute:device_id' => 'Dispositivo',
 	'Class:SoftwareInstance/Attribute:device_id+' => '',
 	'Class:SoftwareInstance/Attribute:device_name' => 'Dispositivo',
@@ -507,6 +509,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:ApplicationInstance' => 'Inst&acirc;ncia Aplica&ccedil;&atilde;o',
 	'Class:ApplicationInstance+' => '',
+	'Class:ApplicationInstance/Name' => '%1$s - %2$s',
 ));
 
 //
@@ -516,6 +519,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:DBServerInstance' => 'Inst&acirc;ncias DB Server',
 	'Class:DBServerInstance+' => '',
+	'Class:DBServerInstance/Name' => '%1$s - %2$s',
 	'Class:DBServerInstance/Attribute:dbinstance_list' => 'Base de Dados',
 	'Class:DBServerInstance/Attribute:dbinstance_list+' => 'Origem Base de dados',
 ));
@@ -527,6 +531,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:DatabaseInstance' => 'Inst&acirc;ncia Base de Dados',
 	'Class:DatabaseInstance+' => '',
+	'Class:DatabaseInstance/Name' => '%1$s - %2$s',
 	'Class:DatabaseInstance/Attribute:db_server_instance_id' => 'Servidor Base de Dados',
 	'Class:DatabaseInstance/Attribute:db_server_instance_id+' => '',
 	'Class:DatabaseInstance/Attribute:db_server_instance_version' => 'Vers&atilde;o Base de Dados',
@@ -587,6 +592,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:NetworkInterface' => 'Interface de rede',
 	'Class:NetworkInterface+' => '',
+	'Class:NetworkInterface/Name' => '%1$s - %2$s',
 	'Class:NetworkInterface/Attribute:device_id' => 'Dispositivo',
 	'Class:NetworkInterface/Attribute:device_id+' => '',
 	'Class:NetworkInterface/Attribute:device_name' => 'Dispositivo',

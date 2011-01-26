@@ -345,11 +345,84 @@ abstract class MetaModel
 		self::_check_subclass($sClass);	
 		return (self::$m_aClassParams[$sClass]["key_type"] == "autoincrement");
 	}
-	final static public function GetNameAttributeCode($sClass)
+	final static public function GetNameSpec($sClass)
 	{
-		self::_check_subclass($sClass);	
-		return self::$m_aClassParams[$sClass]["name_attcode"];
+		self::_check_subclass($sClass);
+		$nameRawSpec = self::$m_aClassParams[$sClass]["name_attcode"];
+		if (is_array($nameRawSpec))
+		{
+			$sFormat = Dict::S("Class:$sClass/Name", '');
+			if (strlen($sFormat) == 0)
+			{
+				// Default to "%1$s %2$s..."
+				for($i = 1 ; $i <= count($nameRawSpec) ; $i++)
+				{
+					if (empty($sFormat))
+					{					
+						$sFormat .= '%'.$i.'$s';
+					}
+					else
+					{
+						$sFormat .= ' %'.$i.'$s';
+					}
+				}
+			}
+			return array($sFormat, $nameRawSpec);
+		}
+		elseif (empty($nameRawSpec))
+		{
+			//return array($sClass.' %s', array('id'));
+			return array($sClass, array());
+		}
+		else
+		{
+			// string -> attcode
+			return array('%1$s', array($nameRawSpec));
+		}
 	}
+	final static public function GetNameExpression($sClass, $sClassAlias)
+	{
+		$aNameSpec = self::GetNameSpec($sClass);
+		$sFormat = $aNameSpec[0];
+		$aAttributes = $aNameSpec[1];                                                     
+
+		$aPieces = preg_split('/%([0-9])\\$s/', $sFormat, -1, PREG_SPLIT_DELIM_CAPTURE);
+		//echo "<pre>\n";
+		//print_r($aPieces);
+		//echo "</pre>\n";
+		$aExpressions = array();
+		foreach($aPieces as $i => $sPiece)
+		{
+			if ($i & 1)
+			{
+				// $i is ODD - sPiece is a delimiter
+				//
+				$iReplacement = (int)$sPiece - 1;
+
+		      if (isset($aAttributes[$iReplacement]))
+		      {
+		      	$sAtt = $aAttributes[$iReplacement];
+					$aExpressions[] = new FieldExpression($sAtt, $sClassAlias);
+				}
+			}
+			else
+			{
+				// $i is EVEN - sPiece is a literal
+				//
+				if (strlen($sPiece) > 0)
+				{
+	    			$aExpressions[] = new ScalarExpression($sPiece);
+				}
+			}
+		}
+		//echo "<pre>\n";
+		//print_r($aExpressions);
+		//echo "</pre>\n";
+
+		$oNameExpr = new CharConcatExpression($aExpressions);
+		return $oNameExpr;
+	}
+
 	final static public function GetStateAttributeCode($sClass)
 	{
 		self::_check_subclass($sClass);	
@@ -1023,6 +1096,16 @@ abstract class MetaModel
 		//
 		foreach (self::GetClasses() as $sClass)
 		{
+			// Create the friendly name attribute
+			$sFriendlyNameAttCode = 'friendlyname'; 
+			$oFriendlyName = new AttributeFriendlyName($sFriendlyNameAttCode, 'id');
+			$oFriendlyName->SetHostClass($sClass);
+			self::$m_aAttribDefs[$sClass][$sFriendlyNameAttCode] = $oFriendlyName;
+			self::$m_aAttribOrigins[$sClass][$sFriendlyNameAttCode] = $sClass;
+			$oFriendlyNameFlt = new FilterFromAttribute($oFriendlyName);
+			self::$m_aFilterDefs[$sClass][$sFriendlyNameAttCode] = $oFriendlyNameFlt;
+			self::$m_aFilterOrigins[$sClass][$sFriendlyNameAttCode] = $sClass;
+
 			self::$m_aExtKeyFriends[$sClass] = array();
 			foreach (self::$m_aAttribDefs[$sClass] as $sAttCode => $oAttDef)
 			{
@@ -1052,10 +1135,36 @@ abstract class MetaModel
 					// - an external KEY / FIELD (direct),
 					// - an external field pointing to an external KEY / FIELD
 					// - an external field pointing to an external field pointing to....
+					$sRemoteClass = $oAttDef->GetTargetClass();
 
-					if ($oAttDef->IsExternalKey())
+					if ($oAttDef->IsExternalField())
 					{
-						$sRemoteClass = $oAttDef->GetTargetClass();
+						// This is a key, but the value comes from elsewhere
+						// Create an external field pointing to the remote friendly name attribute
+						$sKeyAttCode = $oAttDef->GetKeyAttCode();
+						$sRemoteAttCode = $oAttDef->GetExtAttCode()."_friendlyname";
+						$sFriendlyNameAttCode = $sAttCode.'_friendlyname';
+						// propagate "is_null_allowed" ? 
+						$oFriendlyName = new AttributeExternalField($sFriendlyNameAttCode, array("allowed_values"=>null, "extkey_attcode"=>$sKeyAttCode, "target_attcode"=>$sRemoteAttCode, "is_null_allowed"=>true, "depends_on"=>array()));
+						$oFriendlyName->SetHostClass($sClass);
+						self::$m_aAttribDefs[$sClass][$sFriendlyNameAttCode] = $oFriendlyName;
+						self::$m_aAttribOrigins[$sClass][$sFriendlyNameAttCode] = $sRemoteClass;
+						$oFriendlyNameFlt = new FilterFromAttribute($oFriendlyName);
+						self::$m_aFilterDefs[$sClass][$sFriendlyNameAttCode] = $oFriendlyNameFlt;
+						self::$m_aFilterOrigins[$sClass][$sFriendlyNameAttCode] = $sRemoteClass;
+					}
+					else
+					{
+						// Create the friendly name attribute
+						$sFriendlyNameAttCode = $sAttCode.'_friendlyname'; 
+						$oFriendlyName = new AttributeFriendlyName($sFriendlyNameAttCode, $sAttCode);
+						$oFriendlyName->SetHostClass($sClass);
+						self::$m_aAttribDefs[$sClass][$sFriendlyNameAttCode] = $oFriendlyName;
+						self::$m_aAttribOrigins[$sClass][$sFriendlyNameAttCode] = $sRemoteClass;
+						$oFriendlyNameFlt = new FilterFromAttribute($oFriendlyName);
+						self::$m_aFilterDefs[$sClass][$sFriendlyNameAttCode] = $oFriendlyNameFlt;
+						self::$m_aFilterOrigins[$sClass][$sFriendlyNameAttCode] = $sRemoteClass;
+
 						if (self::HasChildrenClasses($sRemoteClass))
 						{
 							// First, create an external field attribute, that gets the final class
@@ -1168,7 +1277,7 @@ abstract class MetaModel
 		$aMandatParams = array(
 			"category" => "group classes by modules defining their visibility in the UI",
 			"key_type" => "autoincrement | string",
-			"name_attcode" => "define wich attribute is the class name, may be an inherited attribute",
+			"name_attcode" => "define wich attribute is the class name, may be an array of attributes (format specified in the dictionary as 'Class:myclass/Name' => '%1\$s %2\$s...'",
 			"state_attcode" => "define wich attribute is representing the state (object lifecycle)",
 			"reconc_keys" => "define the attributes that will 'almost uniquely' identify an object in batch processes",
 			"db_table" => "database table",
@@ -1295,6 +1404,10 @@ abstract class MetaModel
 
 	public static function Init_AddAttribute(AttributeDefinition $oAtt)
 	{
+		$sAttCode = $oAtt->GetCode();
+		if ($sAttCode == 'finalclass') throw new Exception('Using a reserved keyword in metamodel declaration: '.$sAttCode);
+		if ($sAttCode == 'friendlyname') throw new Exception('Using a reserved keyword in metamodel declaration: '.$sAttCode);
+	
 		$sTargetClass = self::GetCallersPHPClass("Init");		
 
 		// Some attributes could refer to a class
@@ -1642,13 +1755,12 @@ abstract class MetaModel
 
 		if (!isset($oSelect))
 		{
-			$aTranslation = array();
 			$aClassAliases = array();
 			$aTableAliases = array();
-			$oConditionTree = $oFilter->GetCriteria();
+			$oQBExpr = new QueryBuilderExpressions(array(), $oFilter->GetCriteria());
 
 			$oKPI = new ExecutionKPI();
-			$oSelect = self::MakeQuery($oFilter->GetSelectedClasses(), $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oFilter, array(), array(), true /* main query */);
+			$oSelect = self::MakeQuery($oFilter->GetSelectedClasses(), $oQBExpr, $aClassAliases, $aTableAliases, $oFilter, array(), true /* main query */);
 			$oKPI->ComputeStats('MakeQuery (select)', $sOqlQuery);
 
 			self::$m_aQueryStructCache[$sOqlId] = clone $oSelect;
@@ -1672,12 +1784,8 @@ abstract class MetaModel
 		{
 			foreach ($oFilter->GetSelectedClasses() as $sSelectedAlias => $sSelectedClass)
 			{
-				$sNameAttCode = self::GetNameAttributeCode($sSelectedClass);
-				if (!empty($sNameAttCode))
-				{
-					// By default, simply order on the "name" attribute, ascending
-					$aOrderSpec[$sSelectedAlias.$sNameAttCode] = true;
-				}
+				// By default, simply order on the "friendlyname" attribute, ascending
+				$aOrderSpec[$sSelectedAlias."friendlyname"] = true;
 			}
 		}
 		
@@ -1759,11 +1867,10 @@ abstract class MetaModel
 
 	public static function MakeDeleteQuery(DBObjectSearch $oFilter, $aArgs = array())
 	{
-		$aTranslation = array();
 		$aClassAliases = array();
 		$aTableAliases = array();
-		$oConditionTree = $oFilter->GetCriteria();
-		$oSelect = self::MakeQuery($oFilter->GetSelectedClasses(), $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oFilter, array(), array(), true /* main query */);
+		$oQBExpr = new QueryBuilderExpressions(array(), $oFilter->GetCriteria());
+		$oSelect = self::MakeQuery($oFilter->GetSelectedClasses(), $oQBExpr, $aClassAliases, $aTableAliases, $oFilter, array(), true /* main query */);
 		$aScalarArgs = array_merge(self::PrepareQueryArguments($aArgs), $oFilter->GetInternalParams());
 		return $oSelect->RenderDelete($aScalarArgs);
 	}
@@ -1771,20 +1878,18 @@ abstract class MetaModel
 	public static function MakeUpdateQuery(DBObjectSearch $oFilter, $aValues, $aArgs = array())
 	{
 		// $aValues is an array of $sAttCode => $value
-		$aTranslation = array();
 		$aClassAliases = array();
 		$aTableAliases = array();
-		$oConditionTree = $oFilter->GetCriteria();
-		$oSelect = self::MakeQuery($oFilter->GetSelectedClasses(), $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oFilter, array(), $aValues, true /* main query */);
+		$oQBExpr = new QueryBuilderExpressions(array(), $oFilter->GetCriteria());
+		$oSelect = self::MakeQuery($oFilter->GetSelectedClasses(), $oQBExpr, $aClassAliases, $aTableAliases, $oFilter, $aValues, true /* main query */);
 		$aScalarArgs = array_merge(self::PrepareQueryArguments($aArgs), $oFilter->GetInternalParams());
 		return $oSelect->RenderUpdate($aScalarArgs);
 	}
 
-	private static function MakeQuery($aSelectedClasses, &$oConditionTree, &$aClassAliases, &$aTableAliases, &$aTranslation, DBObjectSearch $oFilter, $aExpectedAtts = array(), $aValues = array(), $bIsMainQuery = false)
+	private static function MakeQuery($aSelectedClasses, &$oQBExpr, &$aClassAliases, &$aTableAliases, DBObjectSearch $oFilter, $aValues = array(), $bIsMainQuery = false)
 	{
 		// Note: query class might be different than the class of the filter
 		// -> this occurs when we are linking our class to an external class (referenced by, or pointing to)
-		// $aExpectedAtts is an array of sAttCode=>array of columns
 		$sClass = $oFilter->GetFirstJoinedClass();
 		$sClassAlias = $oFilter->GetFirstJoinedClassAlias();
 
@@ -1794,7 +1899,7 @@ abstract class MetaModel
 			$aClassAliases = array_merge($aClassAliases, $oFilter->GetJoinedClasses());
 		}
 
-		self::DbgTrace("Entering: ".$oFilter->ToOQL().", ".($bIsOnQueriedClass ? "MAIN" : "SECONDARY").", expectedatts=".count($aExpectedAtts).": ".implode(",", array_keys($aExpectedAtts)));
+		self::DbgTrace("Entering: ".$oFilter->ToOQL().", ".($bIsOnQueriedClass ? "MAIN" : "SECONDARY"));
 
 		$sRootClass = self::GetRootClass($sClass);
 		$sKeyField = self::DBGetKey($sClass);
@@ -1802,23 +1907,32 @@ abstract class MetaModel
 		if ($bIsOnQueriedClass)
 		{
 			// default to the whole list of attributes + the very std id/finalclass
-			$aExpectedAtts['id'][] = $sClassAlias.'id';
-			foreach (self::GetAttributesList($sClass) as $sAttCode)
+			$oQBExpr->AddSelect($sClassAlias.'id', new FieldExpression('id', $sClassAlias));
+
+			foreach (self::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
 			{
-				$aExpectedAtts[$sAttCode][] = $sClassAlias.$sAttCode; // alias == class and attcode
+				if (!$oAttDef->IsScalar()) continue;
+				
+				foreach ($oAttDef->GetSQLExpressions() as $sColId => $sSQLExpr)
+				{
+					$oQBExpr->AddSelect($sClassAlias.$sAttCode.$sColId, new FieldExpression($sAttCode.$sColId, $sClassAlias));
+				}
 			}
 		}
 
-		// Compute a clear view of external keys, and external attributes
+		$aExpectedAtts = array(); // array of (attcode => fieldexpression)
+		$oQBExpr->GetUnresolvedFields($sClassAlias, $aExpectedAtts);
+
+		// Compute a clear view of required joins (from the current class)
 		// Build the list of external keys:
-		// -> ext keys required by a closed join ???
+		// -> ext keys required by an explicit join
 		// -> ext keys mentionned in a 'pointing to' condition
 		// -> ext keys required for an external field
+		// -> ext keys required for a friendly name
 		//
 		$aExtKeys = array(); // array of sTableClass => array of (sAttCode (keys) => array of (sAttCode (fields)=> oAttDef))
 		//
-		// Optimization: could be computed once for all (cached)
-		// Could be done in MakeQuerySingleTable ???
+		// Optimization: could be partially computed once for all (cached) ?
 		//  
 
 		if ($bIsOnQueriedClass)
@@ -1836,17 +1950,44 @@ abstract class MetaModel
 			$sKeyTableClass = self::$m_aAttribOrigins[$sClass][$sKeyAttCode];
 			$aExtKeys[$sKeyTableClass][$sKeyAttCode] = array();
 		}
+
+		if (array_key_exists('friendlyname', $aExpectedAtts))
+		{
+			$aTranslateNow = array();
+			$aTranslateNow[$sClassAlias]['friendlyname'] = self::GetNameExpression($sClass, $sClassAlias);
+			$oQBExpr->Translate($aTranslateNow, false);
+
+			$aNameSpec = self::GetNameSpec($sClass);
+			foreach($aNameSpec[1] as $i => $sAttCode)
+			{
+				$oAttDef = self::GetAttributeDef($sClass, $sAttCode);
+				if ($oAttDef->IsExternalKey())
+				{
+					$sKeyTableClass = self::$m_aAttribOrigins[$sClass][$sAttCode];
+					$aExtKeys[$sKeyTableClass][$sAttCode] = array();
+				}				
+				elseif ($oAttDef->IsExternalField() || ($oAttDef instanceof AttributeFriendlyName))
+				{
+					$sKeyAttCode = $oAttDef->GetKeyAttCode();
+					$sKeyTableClass = self::$m_aAttribOrigins[$sClass][$sKeyAttCode];
+					$aExtKeys[$sKeyTableClass][$sKeyAttCode][$sAttCode] = $oAttDef;
+				}
+			}
+		}
 		// Add the ext fields used in the select (eventually adds an external key)
 		foreach(self::ListAttributeDefs($sClass) as $sAttCode=>$oAttDef)
 		{
-			if ($oAttDef->IsExternalField())
+			if ($oAttDef->IsExternalField() || ($oAttDef instanceof AttributeFriendlyName))
 			{
-				$sKeyAttCode = $oAttDef->GetKeyAttCode();
-				if (array_key_exists($sAttCode, $aExpectedAtts) || $oConditionTree->RequiresField($sClassAlias, $sAttCode))
+				if (array_key_exists($sAttCode, $aExpectedAtts))
 				{
-					// Add the external attribute
-					$sKeyTableClass = self::$m_aAttribOrigins[$sClass][$sKeyAttCode];
-					$aExtKeys[$sKeyTableClass][$sKeyAttCode][$sAttCode] = $oAttDef;
+					$sKeyAttCode = $oAttDef->GetKeyAttCode();
+					if ($sKeyAttCode != 'id')
+					{
+						// Add the external attribute
+						$sKeyTableClass = self::$m_aAttribOrigins[$sClass][$sKeyAttCode];
+						$aExtKeys[$sKeyTableClass][$sKeyAttCode][$sAttCode] = $oAttDef;
+					}
 				}
 			}
 		}
@@ -1856,7 +1997,7 @@ abstract class MetaModel
 		self::DbgTrace("Main (=leaf) class, call MakeQuerySingleTable()");
 		if (self::HasTable($sClass))
 		{
-			$oSelectBase = self::MakeQuerySingleTable($aSelectedClasses, $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oFilter, $sClass, $aExpectedAtts, $aExtKeys, $aValues);
+			$oSelectBase = self::MakeQuerySingleTable($aSelectedClasses, $oQBExpr, $aClassAliases, $aTableAliases, $oFilter, $sClass, $aExtKeys, $aValues);
 		}
 		else
 		{
@@ -1865,7 +2006,7 @@ abstract class MetaModel
 			// As the join will not filter on the expected classes, we have to specify it explicitely
 			$sExpectedClasses = implode("', '", self::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL));
 			$oFinalClassRestriction = Expression::FromOQL("`$sClassAlias`.finalclass IN ('$sExpectedClasses')");
-			$oConditionTree = $oConditionTree->LogAnd($oFinalClassRestriction);
+			$oQBExpr->AddCondition($oFinalClassRestriction);
 		}
 
 		// Then we join the queries of the eventual parent classes (compound model)
@@ -1873,7 +2014,7 @@ abstract class MetaModel
 		{
 			if (!self::HasTable($sParentClass)) continue;
 			self::DbgTrace("Parent class: $sParentClass... let's call MakeQuerySingleTable()");
-			$oSelectParentTable = self::MakeQuerySingleTable($aSelectedClasses, $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oFilter, $sParentClass, $aExpectedAtts, $aExtKeys, $aValues);
+			$oSelectParentTable = self::MakeQuerySingleTable($aSelectedClasses, $oQBExpr, $aClassAliases, $aTableAliases, $oFilter, $sParentClass, $aExtKeys, $aValues);
 			if (is_null($oSelectBase))
 			{
 				$oSelectBase = $oSelectParentTable;
@@ -1891,19 +2032,20 @@ abstract class MetaModel
 			{
 				$oForeignKeyAttDef = self::GetAttributeDef($sForeignClass, $sForeignKeyAttCode);
 	
-				// We don't want any attribute from the foreign class, just filter on an inner join
-				$aExpAtts = array();
-	
 				self::DbgTrace("Referenced by foreign key: $sForeignKeyAttCode... let's call MakeQuery()");
 				//self::DbgTrace($oForeignFilter);
 				//self::DbgTrace($oForeignFilter->ToOQL());
 				//self::DbgTrace($oSelectForeign);
 				//self::DbgTrace($oSelectForeign->RenderSelect(array()));
-				$oSelectForeign = self::MakeQuery($aSelectedClasses, $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oForeignFilter, $aExpAtts);
 
 				$sForeignClassAlias = $oForeignFilter->GetFirstJoinedClassAlias();
-				$sForeignKeyTable = $aTranslation[$sForeignClassAlias][$sForeignKeyAttCode][0];
-				$sForeignKeyColumn = $aTranslation[$sForeignClassAlias][$sForeignKeyAttCode][1];
+				$oQBExpr->PushJoinField(new FieldExpression($sForeignKeyAttCode, $sForeignClassAlias));
+
+				$oSelectForeign = self::MakeQuery($aSelectedClasses, $oQBExpr, $aClassAliases, $aTableAliases, $oForeignFilter);
+
+				$oJoinExpr = $oQBExpr->PopJoinField();
+				$sForeignKeyTable = $oJoinExpr->GetParent();
+				$sForeignKeyColumn = $oJoinExpr->GetName();
 				$oSelectBase->AddInnerJoin($oSelectForeign, $sKeyField, $sForeignKeyColumn, $sForeignKeyTable);
 			}
 		}
@@ -1940,8 +2082,8 @@ abstract class MetaModel
 		//
 		if ($bIsMainQuery)
 		{
-			$oConditionTranslated = $oConditionTree->Translate($aTranslation);
-			$oSelectBase->SetCondition($oConditionTranslated);
+			$oSelectBase->SetCondition($oQBExpr->GetCondition());
+			$oSelectBase->SetSelect($oQBExpr->GetSelect());
 		}
 
 		// That's all... cross fingers and we'll get some working query
@@ -1952,9 +2094,8 @@ abstract class MetaModel
 		return $oSelectBase;
 	}
 
-	protected static function MakeQuerySingleTable($aSelectedClasses, &$oConditionTree, &$aClassAliases, &$aTableAliases, &$aTranslation, $oFilter, $sTableClass, $aExpectedAtts, $aExtKeys, $aValues)
+	protected static function MakeQuerySingleTable($aSelectedClasses, &$oQBExpr, &$aClassAliases, &$aTableAliases, $oFilter, $sTableClass, $aExtKeys, $aValues)
 	{
-		// $aExpectedAtts is an array of sAttCode=>sAlias
 		// $aExtKeys is an array of sTableClass => array of (sAttCode (keys) => array of sAttCode (fields))
 
 		// Prepare the query for a single table (compound objects)
@@ -1968,31 +2109,30 @@ abstract class MetaModel
 		$sTable = self::DBGetTable($sTableClass);
 		$sTableAlias = self::GenerateUniqueAlias($aTableAliases, $sTargetAlias.'_'.$sTable, $sTable);
 
+		$aTranslation = array();
+		$aExpectedAtts = array();
+		$oQBExpr->GetUnresolvedFields($sTargetAlias, $aExpectedAtts);
+		
 		$bIsOnQueriedClass = array_key_exists($sTargetAlias, $aSelectedClasses);
 		
-		self::DbgTrace("Entering: tableclass=$sTableClass, filter=".$oFilter->ToOQL().", ".($bIsOnQueriedClass ? "MAIN" : "SECONDARY").", expectedatts=".count($aExpectedAtts).": ".implode(",", array_keys($aExpectedAtts)));
+		self::DbgTrace("Entering: tableclass=$sTableClass, filter=".$oFilter->ToOQL().", ".($bIsOnQueriedClass ? "MAIN" : "SECONDARY"));
 
 		// 1 - SELECT and UPDATE
 		//
 		// Note: no need for any values nor fields for foreign Classes (ie not the queried Class)
 		//
-		$aSelect = array();
 		$aUpdateValues = array();
 
-		// 1/a - Get the key
+		// 1/a - Get the key and friendly name
 		//
-		if ($bIsOnQueriedClass)
-		{
-			$aSelect[$aExpectedAtts['id'][0]] = new FieldExpression(self::DBGetKey($sTableClass), $sTableAlias);
-		}
 		// We need one pkey to be the key, let's take the one corresponding to the root class
 		// (used to be based on the leaf, but it may happen that this one has no table defined)
 		$sRootClass = self::GetRootClass($sTargetClass);
 		if ($sTableClass == $sRootClass)
 		{
-			$aTranslation[$sTargetAlias]['id'] = array($sTableAlias, self::DBGetKey($sTableClass));
+			$aTranslation[$sTargetAlias]['id'] = new FieldExpressionResolved(self::DBGetKey($sTableClass), $sTableAlias);
 		}
-	
+
 		// 1/b - Get the other attributes
 		// 
 		foreach(self::ListAttributeDefs($sTableClass) as $sAttCode=>$oAttDef)
@@ -2000,7 +2140,7 @@ abstract class MetaModel
 			// Skip this attribute if not defined in this table
 			if (self::$m_aAttribOrigins[$sTargetClass][$sAttCode] != $sTableClass) continue;
 
-			// Skip this attribute if not writable (means that it does not correspond 
+			// Skip this attribute if not made of SQL columns 
 			if (count($oAttDef->GetSQLExpressions()) == 0) continue;
 
 			// Update...
@@ -2016,12 +2156,9 @@ abstract class MetaModel
 
 			// Select...
 			//
-			// Skip, if a list of fields has been specified and it is not there
-			if (!array_key_exists($sAttCode, $aExpectedAtts)) continue;
-
 			if ($oAttDef->IsExternalField())
 			{
-				// skip, this will be handled in the joined tables
+				// skip, this will be handled in the joined tables (done hereabove)
 			}
 			else
 			{
@@ -2029,32 +2166,16 @@ abstract class MetaModel
 				// add it to the output
 				foreach ($oAttDef->GetSQLExpressions() as $sColId => $sSQLExpr)
 				{
-					foreach ($aExpectedAtts[$sAttCode] as $sAttAlias)
+					if (array_key_exists($sAttCode, $aExpectedAtts))
 					{
-						$aSelect[$sAttAlias.$sColId] = new FieldExpression($sSQLExpr, $sTableAlias);
-					} 
+						$aTranslation[$sTargetAlias][$sAttCode.$sColId] = new FieldExpressionResolved($sSQLExpr, $sTableAlias);
+					}
 				}
 			}
 		}
 
-		// 2 - WHERE
-		//
-		foreach(self::$m_aFilterDefs[$sTargetClass] as $sFltCode => $oFltAtt)
-		{
-			// Skip this filter if not defined in this table
-			if (self::$m_aFilterOrigins[$sTargetClass][$sFltCode] != $sTableClass) continue;
-
-			// #@# todo - aller plus loin... a savoir que la table de translation doit contenir une "Expression"
-			foreach($oFltAtt->GetSQLExpressions() as $sColID => $sFltExpr)
-			{
-				// Note: I did not test it with filters relying on several expressions...
-				//       as long as sColdID is empty, this is working, otherwise... ?
-				$aTranslation[$sTargetAlias][$sFltCode.$sColID] = array($sTableAlias, $sFltExpr);
-			}
-		}
-
 		// #@# todo - See what a full text search condition should be
-		// 2' - WHERE / Full text search condition
+		// 2 - WHERE / Full text search condition
 		//
 		if ($bIsOnQueriedClass)
 		{
@@ -2068,7 +2189,7 @@ abstract class MetaModel
 
 		// 3 - The whole stuff, for this table only
 		//
-		$oSelectBase = new SQLQuery($sTable, $sTableAlias, $aSelect, null, $aFullText, $bIsOnQueriedClass, $aUpdateValues);
+		$oSelectBase = new SQLQuery($sTable, $sTableAlias, array(), $aFullText, $bIsOnQueriedClass, $aUpdateValues);
 
 		// 4 - The external keys -> joins...
 		//
@@ -2099,44 +2220,58 @@ abstract class MetaModel
 
 				// Specify expected attributes for the target class query
 				// ... and use the current alias !
-				$aExpAtts = array();
-				$aIntermediateTranslation = array();
+				$aTranslateNow = array(); // Translation for external fields - must be performed before the join is done (recursion...)
 				foreach($aExtFields as $sAttCode => $oAtt)
 				{
-
-					$sExtAttCode = $oAtt->GetExtAttCode();
-					if (array_key_exists($sAttCode, $aExpectedAtts))
+					if ($oAtt instanceof AttributeFriendlyName)
 					{
-						// Request this attribute... transmit the alias !
-						$aExpAtts[$sExtAttCode] = $aExpectedAtts[$sAttCode];
+						// Note: for a given ext key, there is one single attribute "friendly name"
+						$aTranslateNow[$sTargetAlias][$sAttCode] = new FieldExpression('friendlyname', $sKeyClassAlias);
 					}
-					// Translate mainclass.extfield => remoteclassalias.remotefieldcode
-					$oRemoteAttDef = self::GetAttributeDef($sKeyClass, $sExtAttCode);
-					foreach ($oRemoteAttDef->GetSQLExpressions() as $sColID => $sRemoteAttExpr)
+					else
 					{
-						$aIntermediateTranslation[$sTargetAlias.$sColID][$sAttCode] = array($sKeyClassAlias, $sRemoteAttExpr);
+						$sExtAttCode = $oAtt->GetExtAttCode();
+						// Translate mainclass.extfield => remoteclassalias.remotefieldcode
+						$oRemoteAttDef = self::GetAttributeDef($sKeyClass, $sExtAttCode);
+						foreach ($oRemoteAttDef->GetSQLExpressions() as $sColID => $sRemoteAttExpr)
+						{
+							$aTranslateNow[$sTargetAlias][$sAttCode.$sColId] = new FieldExpression($sExtAttCode, $sKeyClassAlias);
+						}
+						//#@# debug - echo "<p>$sTargetAlias.$sAttCode to $sKeyClassAlias.$sRemoteAttExpr (class: $sKeyClass)</p>\n";
 					}
-					//#@# debug - echo "<p>$sTargetAlias.$sAttCode to $sKeyClassAlias.$sRemoteAttExpr (class: $sKeyClass)</p>\n";
 				}
-				$oConditionTree = $oConditionTree->Translate($aIntermediateTranslation, false);
+				// Translate prior to recursing
+				//
+				$oQBExpr->Translate($aTranslateNow, false);
 
 				self::DbgTrace("External key $sKeyAttCode (class: $sKeyClass), call MakeQuery()");
-				$oSelectExtKey = self::MakeQuery($aSelectedClasses, $oConditionTree, $aClassAliases, $aTableAliases, $aTranslation, $oExtFilter, $aExpAtts);
+
+				$oQBExpr->PushJoinField(new FieldExpression('id', $sKeyClassAlias));
+
+				$oSelectExtKey = self::MakeQuery($aSelectedClasses, $oQBExpr, $aClassAliases, $aTableAliases, $oExtFilter);
+
+				$oJoinExpr = $oQBExpr->PopJoinField();
+				$sExternalKeyTable = $oJoinExpr->GetParent();
+				$sExternalKeyField = $oJoinExpr->GetName();
 
 				$aCols = $oKeyAttDef->GetSQLExpressions(); // Workaround a PHP bug: sometimes issuing a Notice if invoking current(somefunc())
 				$sLocalKeyField = current($aCols); // get the first column for an external key
-				$sExternalKeyField = self::DBGetKey($sKeyClass);
+
 				self::DbgTrace("External key $sKeyAttCode, Join on $sLocalKeyField = $sExternalKeyField");
 				if ($oKeyAttDef->IsNullAllowed())
 				{
-					$oSelectBase->AddLeftJoin($oSelectExtKey, $sLocalKeyField, $sExternalKeyField);
+					$oSelectBase->AddLeftJoin($oSelectExtKey, $sLocalKeyField, $sExternalKeyField, $sExternalKeyTable);
 				}
 				else
 				{
-					$oSelectBase->AddInnerJoin($oSelectExtKey, $sLocalKeyField, $sExternalKeyField);
+					$oSelectBase->AddInnerJoin($oSelectExtKey, $sLocalKeyField, $sExternalKeyField, $sExternalKeyTable);
 				}
 			}
 		}
+
+		// Translate the selected columns
+		//
+		$oQBExpr->Translate($aTranslation, false);
 
 		//MyHelpers::var_dump_html($oSelectBase->RenderSelect());
 		return $oSelectBase;
@@ -2174,18 +2309,15 @@ abstract class MetaModel
 		$aSugFix = array();
 		foreach (self::GetClasses() as $sClass)
 		{
-			$sNameAttCode = self::GetNameAttributeCode($sClass);
-			if (empty($sNameAttCode))
+			$aNameSpec = self::GetNameSpec($sClass);
+			foreach($aNameSpec[1] as $i => $sAttCode)
 			{
-			//  let's try this !!!
-				// $aErrors[$sClass][] = "Missing value for name definition: the framework will (should...) replace it by the id";
-				// $aSugFix[$sClass][] = "Expecting a value in ".implode(", ", self::GetAttributesList($sClass));
-			}
-			else if(!self::IsValidAttCode($sClass, $sNameAttCode))
-			{
-				$aErrors[$sClass][] = "Unkown attribute code '".$sNameAttCode."' for the name definition";
-				$aSugFix[$sClass][] = "Expecting a value in ".implode(", ", self::GetAttributesList($sClass));
-			}
+				if(!self::IsValidAttCode($sClass, $sAttCode))
+				{
+					$aErrors[$sClass][] = "Unkown attribute code '".$sAttCode."' for the name definition";
+					$aSugFix[$sClass][] = "Expecting a value in ".implode(", ", self::GetAttributesList($sClass));
+				}
+			}				
 
 			foreach(self::GetReconcKeys($sClass) as $sReconcKeyAttCode)
 			{
@@ -3553,6 +3685,22 @@ abstract class MetaModel
 			return null;
 		}
 		return self::GetObjectByRow($sClass, $aRow);
+	}
+
+	public static function GetObjectByName($sClass, $sName, $bMustBeFound = true)
+	{
+		self::_check_subclass($sClass);	
+
+		$oObjSearch = new DBObjectSearch($sClass);
+		$oObjSearch->AddNameCondition($sName);
+		$oSet = new DBObjectSet($oObjSearch);
+		if ($oSet->Count() != 1)
+		{
+			if ($bMustBeFound) throw new CoreException('Failed to get an object by its name', array('class'=>$sClass, 'name'=>$sName));
+			return null;
+		}
+		$oObj = $oSet->fetch();
+		return $oObj;
 	}
 
 	public static function GetObjectFromOQL($sQuery, $aParams = null, $bAllowAllData = false)

@@ -393,6 +393,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Subnet' => '子网',
 	'Class:Subnet+' => '',
+	'Class:Subnet/Name' => '%1$s / %2$s',
 	//'Class:Subnet/Attribute:name' => 'Name',
 	//'Class:Subnet/Attribute:name+' => '',
 	'Class:Subnet/Attribute:org_id' => '拥有者组织',
@@ -546,6 +547,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:SoftwareInstance' => '软件实例',
 	'Class:SoftwareInstance+' => '',
+	'Class:SoftwareInstance/Name' => '%1$s - %2$s',
 	'Class:SoftwareInstance/Attribute:device_id' => '设备',
 	'Class:SoftwareInstance/Attribute:device_id+' => '',
 	'Class:SoftwareInstance/Attribute:device_name' => '设备',
@@ -569,6 +571,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:ApplicationInstance' => '应用实例',
 	'Class:ApplicationInstance+' => '',
+	'Class:ApplicationInstance/Name' => '%1$s - %2$s',
 	'Class:ApplicationInstance/Attribute:software_id' => '软件',
 	'Class:ApplicationInstance/Attribute:software_id+' => '',
 	'Class:ApplicationInstance/Attribute:software_name' => '名称',
@@ -583,6 +586,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:DBServerInstance' => 'DB Server 实例',
 	'Class:DBServerInstance+' => '',
+	'Class:DBServerInstance/Name' => '%1$s - %2$s',
 	'Class:DBServerInstance/Attribute:software_id' => '软件',
 	'Class:DBServerInstance/Attribute:software_id+' => '',
 	'Class:DBServerInstance/Attribute:software_name' => '名称',
@@ -599,6 +603,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:DatabaseInstance' => 'Database 实例',
 	'Class:DatabaseInstance+' => '',
+	'Class:DatabaseInstance/Name' => '%1$s - %2$s',
 	'Class:DatabaseInstance/Attribute:db_server_instance_id' => '数据库服务器',
 	'Class:DatabaseInstance/Attribute:db_server_instance_id+' => '',
 	'Class:DatabaseInstance/Attribute:db_server_instance_version' => '数据库版本',
@@ -659,6 +664,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:NetworkInterface' => '网络接口',
 	'Class:NetworkInterface+' => '',
+	'Class:NetworkInterface/Name' => '%1$s - %2$s',
 	'Class:NetworkInterface/Attribute:device_id' => '设备',
 	'Class:NetworkInterface/Attribute:device_id+' => '',
 	'Class:NetworkInterface/Attribute:device_name' => '设备',

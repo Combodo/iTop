@@ -391,6 +391,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Subnet' => 'Subnet',
 	'Class:Subnet+' => '',
+	'Class:Subnet/Name' => '%1$s / %2$s',
 	//'Class:Subnet/Attribute:name' => 'Adı',
 	//'Class:Subnet/Attribute:name+' => '',
 	'Class:Subnet/Attribute:org_id' => 'Kurum',
@@ -544,6 +545,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:SoftwareInstance' => 'Yazılım Kurulumu',
 	'Class:SoftwareInstance+' => '',
+	'Class:SoftwareInstance/Name' => '%1$s - %2$s',
 	'Class:SoftwareInstance/Attribute:device_id' => 'Cihaz',
 	'Class:SoftwareInstance/Attribute:device_id+' => '',
 	'Class:SoftwareInstance/Attribute:device_name' => 'Cihaz',
@@ -567,6 +569,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:ApplicationInstance' => 'Uygulama Kurulumu',
 	'Class:ApplicationInstance+' => '',
+	'Class:ApplicationInstance/Name' => '%1$s - %2$s',
 	'Class:ApplicationInstance/Attribute:software_id' => 'Yazılım',
 	'Class:ApplicationInstance/Attribute:software_id+' => '',
 	'Class:ApplicationInstance/Attribute:software_name' => 'Adı',
@@ -581,6 +584,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:DBServerInstance' => 'Veritabanı Sunucusu',
 	'Class:DBServerInstance+' => '',
+	'Class:DBServerInstance/Name' => '%1$s - %2$s',
 	'Class:DBServerInstance/Attribute:software_id' => 'Yazılım',
 	'Class:DBServerInstance/Attribute:software_id+' => '',
 	'Class:DBServerInstance/Attribute:software_name' => 'Adı',
@@ -597,6 +601,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:DatabaseInstance' => 'Veritabanı',
 	'Class:DatabaseInstance+' => '',
+	'Class:DatabaseInstance/Name' => '%1$s - %2$s',
 	'Class:DatabaseInstance/Attribute:db_server_instance_id' => 'Veritabanı sunucusu',
 	'Class:DatabaseInstance/Attribute:db_server_instance_id+' => '',
 	'Class:DatabaseInstance/Attribute:db_server_instance_version' => 'Veritabanı versiyonu',
@@ -657,6 +662,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:NetworkInterface' => 'Network arayüzü',
 	'Class:NetworkInterface+' => '',
+	'Class:NetworkInterface/Name' => '%1$s - %2$s',
 	'Class:NetworkInterface/Attribute:device_id' => 'Cihaz',
 	'Class:NetworkInterface/Attribute:device_id+' => '',
 	'Class:NetworkInterface/Attribute:device_name' => 'Cihaz',

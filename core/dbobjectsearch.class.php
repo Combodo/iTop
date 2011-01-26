@@ -226,6 +226,14 @@ class DBObjectSearch
 		$this->m_oSearchCondition = $this->m_oSearchCondition->LogAnd($oExpression); 
 	}
 
+  	public function AddNameCondition($sName)
+	{
+		$oValueExpr = new ScalarExpression($sName);
+		$oNameExpr = new FieldExpression('friendlyname', $this->GetClassAlias());
+		$oNewCondition = new BinaryExpression($oNameExpr, '=', $oValueExpr);
+		$this->AddConditionExpression($oNewCondition);
+	}
+
 	public function AddCondition($sFilterCode, $value, $sOpCode = null)
 	{
 		MyHelpers::CheckKeyInArray('filter code', $sFilterCode, MetaModel::GetClassFilterDefs($this->GetClass()));

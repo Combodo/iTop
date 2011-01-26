@@ -274,30 +274,6 @@ try
 		$oPage->Add("<input type=\"button\" class=\"jqmClose\" value=\" Close \" />\n");
 		break;
 			
-		case 'ui.linkswidget':
-		/*
-		$sClass = utils::ReadParam('sclass', 'bizContact');
-		$sAttCode = utils::ReadParam('attCode', 'name');
-		$sOrg = utils::ReadParam('org_id', '');
-		$sName = utils::ReadParam('q', '');
-		$iMaxCount = utils::ReadParam('max', 30);
-		UILinksWidget::Autocomplete($oPage, $sClass, $sAttCode, $sName, $iMaxCount);
-		*/
-		break;
-		
-		case 'ui.linkswidget.linkedset':
-		/*
-		$sClass = utils::ReadParam('sclass', 'bizContact');
-		$sJSONSet = stripslashes(utils::ReadParam('sset', ''));
-		$sExtKeyToMe = utils::ReadParam('sextkeytome', '');
-		$sExtKeyToRemote = utils::ReadParam('sextkeytoremote', '');
-		$iObjectId = utils::ReadParam('id', -1);
-		UILinksWidget::RenderSet($oPage, $sClass, $sJSONSet, $sExtKeyToMe, $sExtKeyToRemote, $iObjectId);
-		$iFieldId = utils::ReadParam('myid', '-1');
-		$oPage->add_ready_script("$('#{$iFieldId}').trigger('validate');");
-		*/
-		break;
-		
 		case 'autocomplete':
 		$key = utils::ReadParam('id', 0);
 		$sClass = utils::ReadParam('sclass', 'bizContact');

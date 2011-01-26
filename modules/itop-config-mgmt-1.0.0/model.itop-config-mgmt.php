@@ -148,7 +148,7 @@ class Person extends Contact
 		(
 			"category" => "bizmodel,searchable,structure",
 			"key_type" => "autoincrement",
-			"name_attcode" => "name",
+			"name_attcode" => array('first_name', 'name'),
 			"state_attcode" => "",
 			"reconc_keys" => array("name","first_name","org_id","email"),
 			"db_table" => "person",
@@ -166,11 +166,6 @@ class Person extends Contact
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'org_id', 'email', 'phone', 'location_id', 'first_name', 'employee_id'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'org_id', 'email', 'phone', 'location_id', 'first_name', 'employee_id'));
 		MetaModel::Init_SetZListItems('list', array('first_name','status', 'org_id', 'email', 'phone', 'location_id'));
-	}
-	
-	public function GetName()
-	{
-		return $this->Get('first_name').' '.$this->Get('name');
 	}
 }
 class Team extends Contact
@@ -421,7 +416,7 @@ class Subnet extends cmdbAbstractObject
 		(
 			"category" => "bizmodel,searchable,configmgmt",
 			"key_type" => "autoincrement",
-			"name_attcode" => "ip",
+			"name_attcode" => array('ip', 'ip_mask'),
 			"state_attcode" => "",
 			"reconc_keys" => array("ip", "ip_mask","org_id", "org_name"),
 			"db_table" => "subnet",
@@ -443,11 +438,6 @@ class Subnet extends cmdbAbstractObject
 		MetaModel::Init_SetZListItems('advanced_search', array('ip', 'ip_mask', 'org_id', 'description'));
 		MetaModel::Init_SetZListItems('standard_search', array('ip', 'ip_mask', 'org_id', 'description'));
 		MetaModel::Init_SetZListItems('list', array('ip', 'ip_mask', 'org_id'));
-	}
-
-	public function GetName()
-	{
-		return $this->Get('ip').' / '.$this->Get('ip_mask');
 	}
 
 	function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
@@ -708,7 +698,7 @@ abstract class SoftwareInstance extends FunctionalCI
 		(
 			"category" => "bizmodel,searchable,configmgmt",
 			"key_type" => "autoincrement",
-			"name_attcode" => "name",
+			"name_attcode" => array('name', 'device_id_friendlyname'),
 			"state_attcode" => "",
 			"reconc_keys" => array("name", "device_id", "device_name", "org_id", "owner_name"),
 			"db_table" => "softwareinstance",
@@ -730,11 +720,6 @@ abstract class SoftwareInstance extends FunctionalCI
 		MetaModel::Init_SetZListItems('advanced_search', array('status', 'org_id', 'importance', 'device_id', 'licence_id',  'version'));
 		MetaModel::Init_SetZListItems('standard_search', array('status', 'org_id', 'importance', 'device_id', 'licence_id', 'version'));
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'status', 'org_id', 'importance', 'device_id', 'version'));
-	}
-
-	public function GetName()
-	{
-		return $this->Get('name').' - '.$this->Get('device_name');
 	}
 
 	public function ComputeValues()
@@ -773,7 +758,7 @@ class DBServerInstance extends SoftwareInstance
 		(
 			"category" => "bizmodel,searchable,configmgmt",
 			"key_type" => "autoincrement",
-			"name_attcode" => "software_name",
+			"name_attcode" => array('name', 'device_id_friendlyname'),
 			"state_attcode" => "",
 			"reconc_keys" => array("name","software_id","software_name","device_id","device_name","org_id","owner_name"),
 			"db_table" => "softwareinstance_dbserver",
@@ -802,7 +787,7 @@ class ApplicationInstance extends SoftwareInstance
 		(
 			"category" => "bizmodel,searchable,configmgmt",
 			"key_type" => "autoincrement",
-			"name_attcode" => "software_name",
+			"name_attcode" => array('name', 'device_id_friendlyname'),
 			"state_attcode" => "",
 			"reconc_keys" => array("name","software_id","software_name","device_id","device_name","org_id","owner_name"),
 			"db_table" => "softwareinstance_application",
@@ -832,7 +817,7 @@ class DatabaseInstance extends FunctionalCI
 		(
 			"category" => "bizmodel,searchable,configmgmt",
 			"key_type" => "autoincrement",
-			"name_attcode" => "name",
+			"name_attcode" => array('name', 'db_server_instance_name'),
 			"state_attcode" => "",
 			"reconc_keys" => array("name","org_id","owner_name","db_server_instance_id","db_server_instance_name"),
 			"db_table" => "databaseinstance",
@@ -854,10 +839,6 @@ class DatabaseInstance extends FunctionalCI
 		MetaModel::Init_SetZListItems('list', array('status', 'org_id', 'importance', 'db_server_instance_id', 'db_server_instance_version'));
 	}
 
-	public function GetName()
-	{
-		return $this->Get('name').' - '.$this->Get('db_server_instance_name');
-	}
 	public static function GetRelationQueries($sRelCode)
 	{
 		switch ($sRelCode)
@@ -1081,7 +1062,7 @@ class NetworkInterface extends ConnectableCI
 		(
 			"category" => "bizmodel,searchable,configmgmt",
 			"key_type" => "autoincrement",
-			"name_attcode" => "name",
+			"name_attcode" => array('device_id_friendlyname', 'name'),
 			"state_attcode" => "",
 			"reconc_keys" => array("name","device_id","device_name","org_id"),
 			"db_table" => "networkinterface",
@@ -1112,13 +1093,6 @@ class NetworkInterface extends ConnectableCI
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'org_id', 'importance', 'device_id', 'logical_type', 'physical_type', 'ip_address', 'ip_mask', 'mac_address', 'connected_if_device_id'));
 		MetaModel::Init_SetZListItems('list', array('status', 'ip_address', 'importance', 'device_id', 'logical_type', 'physical_type', 'link_type', 'connected_if_device_id'));
 	}
-
-	public function GetName()
-	{
-		return $this->Get('device_name').' - '.$this->Get('name');
-	}
-
-
 
 	public static function GetRelationQueries($sRelCode)
 	{

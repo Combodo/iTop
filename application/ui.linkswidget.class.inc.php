@@ -66,7 +66,7 @@ class UILinksWidget
 			{
 				// State attribute is always hidden from the UI
 			}
-			else if (!$oAttDef->IsExternalField() && ($sAttCode != $sExtKeyToMe) && ($sAttCode != $this->m_sExtKeyToRemote) && ($sAttCode != 'finalclass'))
+			else if ($oAttDef->IsWritable() && ($sAttCode != $sExtKeyToMe) && ($sAttCode != $this->m_sExtKeyToRemote) && ($sAttCode != 'finalclass'))
 			{
 				$iFlags = MetaModel::GetAttributeFlags($this->m_sLinkedClass, $sDefaultState, $sAttCode);				
 				if ( !($iFlags & OPT_ATT_HIDDEN) && !($iFlags & OPT_ATT_READONLY) )
@@ -238,94 +238,7 @@ EOF
 		$oPage->add_at_the_end($this->GetObjectPickerDialog($oPage)); // To prevent adding forms inside the main form
 		return $sHtmlValue;
 	}
-	
-	/**
-	 * This static function is called by the Ajax Page when there is a need to fill an autocomplete combo
-	 * @param $oPage WebPage The ajax page used for the output (sent back to the browser)
-	 * @param $sClass string The name of the class of the current object being edited
-	 * @param $sAttCode string The name of the attribute being edited
-	 * @param $sName string The partial name that was typed by the user
-	 * @param $iMaxCount integer The maximum number of items to return
-	 * @return void
-	 */	 	 	  	 	 	 	
-	static public function Autocomplete(WebPage $oPage, $sClass, $sAttCode, $sName, $iMaxCount)
-	{
-		// #@# todo - add context information, otherwise any value will be authorized for external keys
-		$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, array() /* $aArgs */, $sName);
-		if ($aAllowedValues != null)
-		{
-			$iCount = $iMaxCount;
-			foreach($aAllowedValues as $key => $value)
-			{
-				$oPage->add($value."|".$key."\n");
-				$iCount--;
-				if ($iCount == 0) break;
-			}
-		}
-		else // No limitation to the allowed values
-		{
-			// Search for all the object of the linked class
-			$oAttDef = 	$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-			$sLinkedClass = $oAttDef->GetLinkedClass();
-			$sSearchClass = self::GetTargetClass($sClass, $sAttCode);
-			$oFilter = new DBObjectSearch($sSearchClass);
-			$sSearchAttCode = MetaModel::GetNameAttributeCode($sSearchClass);
-			$oFilter->AddCondition($sSearchAttCode, $sName, 'Begins with');
-			$oSet = new CMDBObjectSet($oFilter, array($sSearchAttCode => true));
-			$iCount = 0;
-			while( ($iCount < $iMaxCount) && ($oObj = $oSet->fetch()) )
-			{
-				$oPage->add($oObj->GetName()."|".$oObj->GetKey()."\n");
-				$iCount++;
-			}
-		}
-	}
-
-	/**
-	 * This static function is called by the Ajax Page display a set of objects being linked
-	 * to the object being created	 
-	 * @param $oPage WebPage The ajax page used for the put^put (sent back to the browser
-	 * @param $sClass string The name of the 'linking class' which is the class of the objects to display
-	 * @param $sSet JSON serialized set of objects
-	 * @param $sExtKeyToMe Name of the attribute in sClass that is pointing to a given object
-	 * @param $iObjectId The id of the object $sExtKeyToMe is pointing to
-	 * @return void
-	 */	 	 	  	 	 	 	
-	static public function RenderSet($oPage, $sClass, $sJSONSet, $sExtKeyToMe, $sExtKeyToRemote, $iObjectId)
-	{
-		$aSet = json_decode($sJSONSet, true); // true means hash array instead of object
-		$oSet = CMDBObjectSet::FromScratch($sClass);
-		foreach($aSet as $aObject)
-		{
-			$oObj = MetaModel::NewObject($sClass);
-			foreach($aObject as $sAttCode => $value)
-			{
-				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-				if ($oAttDef->IsExternalKey() && ($value != 0))
-				{
-					$oTargetObj = MetaModel::GetObject($oAttDef->GetTargetClass(), $value); // @@ optimization, don't do & query per object in the set !
-					$oObj->Set($sAttCode, $oTargetObj);
-				}
-				else
-				{
-					$oObj->Set($sAttCode, $value);
-				}
-
-			}
-			$oSet->AddObject($oObj);
-		}
-		$aExtraParams = array();
-		$aExtraParams['link_attr'] = $sExtKeyToMe;
-		$aExtraParams['object_id'] = $iObjectId;
-		$aExtraParams['target_attr'] = $sExtKeyToRemote;
-		$aExtraParams['menu'] = false;
-		$aExtraParams['select'] = false;
-		$aExtraParams['view_link'] = false;
-		
-		cmdbAbstractObject::DisplaySet($oPage, $oSet, $aExtraParams);
-	}
-
-	
+	         
 	protected static function GetTargetClass($sClass, $sAttCode)
 	{
 		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);

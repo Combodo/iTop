@@ -50,7 +50,6 @@ class TestSQLQuery extends TestScenarioOnDB
 			$sTable = 'myTable',
 			$sTableAlias = 'myTableAlias',
 			$aFields = array('column1'=>new FieldExpression('column1', 'myTableAlias'), 'column2'=>new FieldExpression('column2', 'myTableAlias')),
-			$oCondition = new BinaryExpression(new FieldExpression('column1', 'myTableAlias'), 'LIKE', new ScalarExpression('trash')),
 			$aFullTextNeedles = array('column1'),
 			$bToDelete = false,
 			$aValues = array()
@@ -61,7 +60,6 @@ class TestSQLQuery extends TestScenarioOnDB
 			$sTable = 'myTable1',
 			$sTableAlias = 'myTable1Alias',
 			$aFields = array('column1_1'=>new FieldExpression('column1', 'myTableAlias'), 'column1_2'=>new FieldExpression('column1', 'myTableAlias')),
-			$oCondition = new TrueSQLExpression,
 			$aFullTextNeedles = array(),
 			$bToDelete = false,
 			$aValues = array()
@@ -71,7 +69,6 @@ class TestSQLQuery extends TestScenarioOnDB
 			$sTable = 'myTable2',
 			$sTableAlias = 'myTable2Alias',
 			$aFields = array('column2_1'=>new FieldExpression('column2', 'myTableAlias'), 'column2_2'=>new FieldExpression('column2', 'myTableAlias')),
-			$oCondition = new TrueSQLExpression,
 			$aFullTextNeedles = array(),
 			$bToDelete = false,
 			$aValues = array()
@@ -1069,7 +1066,7 @@ class TestFullTextSearchOnFarm extends MyFarm
 
 
 ///////////////////////////////////////////////////////////////////////////
-// Benchmark queries
+// Test queries
 ///////////////////////////////////////////////////////////////////////////
 
 class TestItopEfficiency extends TestBizModel
@@ -1171,6 +1168,118 @@ class TestItopEfficiency extends TestBizModel
 			'SELECT Server WHERE id=1',
 			'SELECT Incident JOIN Person ON Incident.agent_id = Person.id WHERE Person.id = 5',
 		);
+		$aStats  = array();
+		foreach ($aQueries as $sOQL)
+		{
+			$aStats[$sOQL] = $this->DoBenchmark($sOQL);
+		}
+
+		$aData = array();
+		foreach ($aStats as $sOQL => $aResults)
+		{
+			$aValues = array();
+			$aValues['OQL'] = htmlentities($sOQL);
+
+			foreach($aResults as $sDesc => $sInfo)
+			{
+				$aValues[$sDesc] = htmlentities($sInfo);
+			}
+			$aData[] = $aValues;
+		}
+		echo MyHelpers::make_table_from_assoc_array($aData);
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////
+// Benchmark queries
+///////////////////////////////////////////////////////////////////////////
+
+class TestQueries extends TestBizModel
+{
+	static public function GetName()
+	{
+		return 'Itop - queries';
+	}
+
+	static public function GetDescription()
+	{
+		return 'Try as many queries as possible';
+	}
+
+	static public function GetConfigFile() {return '/config-itop.php';}
+
+	protected function DoBenchmark($sOqlQuery)
+	{
+		echo "<h5>Testing query: $sOqlQuery</h5>";
+
+		$fStart = MyHelpers::getmicrotime();
+		$oFilter = DBObjectSearch::FromOQL($sOqlQuery);
+		$fParsingDuration = MyHelpers::getmicrotime() - $fStart;
+
+		$fStart = MyHelpers::getmicrotime();
+		$sSQL = MetaModel::MakeSelectQuery($oFilter);
+		$fBuildDuration = MyHelpers::getmicrotime() - $fStart;
+
+		$fStart = MyHelpers::getmicrotime();
+		$res = CMDBSource::Query($sSQL);
+		$fQueryDuration = MyHelpers::getmicrotime() - $fStart;
+
+		// The fetch could not be repeated with the same results
+		// But we've seen so far that is was very very quick to exec
+		// So it makes sense to benchmark it a single time
+		$fStart = MyHelpers::getmicrotime();
+		$aRow = CMDBSource::FetchArray($res);
+		$fDuration = MyHelpers::getmicrotime() - $fStart;
+		$fFetchDuration = $fDuration;
+
+		$fStart = MyHelpers::getmicrotime();
+		$sOql = $oFilter->ToOQL();
+		$fToOqlDuration = MyHelpers::getmicrotime() - $fStart;
+
+      if (false)
+      {
+		echo "<ul style=\"font-size:smaller;\">\n";
+		echo "<li>Parsing: $fParsingDuration</li>\n";
+		echo "<li>Build: $fBuildDuration</li>\n";
+		echo "<li>Query: $fQueryDuration</li>\n";
+		echo "<li>Fetch: $fFetchDuration</li>\n";
+		echo "<li>ToOql: $fToOqlDuration</li>\n";
+		echo "</ul>\n";
+		}
+
+		// Everything but the ToOQL (wich is interesting, anyhow)
+		$fTotal = $fParsingDuration + $fBuildDuration + $fQueryDuration + $fFetchDuration; 
+
+		return array(
+			'rows' => CMDBSource::NbRows($res),
+			'duration (s)' => round($fTotal, 4),
+			'parsing (%)' => round(100 * $fParsingDuration / $fTotal, 1),
+			'build SQL (%)' => round(100 * $fBuildDuration / $fTotal, 1),
+			'query exec (%)' => round(100 * $fQueryDuration / $fTotal, 1),
+			'fetch (%)' => round(100 * $fFetchDuration / $fTotal, 1),
+			'to OQL (%)' => round(100 * $fToOqlDuration / $fTotal, 1),
+			'parsing+build (%)' => round(100 * ($fParsingDuration + $fBuildDuration) / $fTotal, 1),
+		);
+	}
+	
+	protected function DoExecute()
+	{
+		$aQueries = array(
+			'SELECT Person AS PP WHERE PP.friendlyname LIKE "%dali"',
+			'SELECT Person AS PP WHERE PP.location_id_friendlyname LIKE "%ce ch%"',
+			'SELECT Organization AS OO JOIN Person AS PP ON PP.org_id = OO.id',
+			'SELECT lnkTeamToContact AS lnk JOIN Team AS T ON lnk.team_id = T.id',
+			'SELECT lnkTeamToContact AS lnk JOIN Team AS T ON lnk.team_id = T.id JOIN Contact AS C ON lnk.contact_id = C.id',
+			'SELECT Incident JOIN Person ON Incident.agent_id = Person.id WHERE Person.id = 5',
+			// this one is failing...
+			//'SELECT L, P FROM Person AS P JOIN Location AS L ON P.location_id = L.id',
+		);
+		foreach (MetaModel::GetClasses() as $sClass)
+		{
+			$aQueries[] = 'SELECT '.$sClass;
+			$aQueries[] = 'SELECT '.$sClass.' AS zz';
+			$aQueries[] = 'SELECT '.$sClass.' AS zz WHERE id = 1';
+		}	
 		$aStats  = array();
 		foreach ($aQueries as $sOQL)
 		{

@@ -230,6 +230,7 @@ abstract class DBObject
 			// Take care: the function isset will return false in case the value is null,
 			// which is something that could happen on open joins
 			$sAttRef = $sClassAlias.$sAttCode;
+
 			if (array_key_exists($sAttRef, $aRow))
 			{
 				$value = $oAttDef->FromSQLToValue($aRow, $sAttRef);
@@ -390,22 +391,13 @@ abstract class DBObject
 		$sClass = get_class($this);
 		$oAtt = MetaModel::GetAttributeDef($sClass, $sAttCode);
 
-		$aExtKeyFriends = MetaModel::GetExtKeyFriends($sClass, $sAttCode);
-		if (count($aExtKeyFriends) > 0)
+		if ($oAtt->IsExternalKey(EXTKEY_ABSOLUTE))
 		{
-			// This attribute is an ext key (in this class or in another class)
-			// The corresponding value is an id of the remote object
-			// Let's try to use the corresponding external fields for a sexy display
-
-			$aAvailableFields = array();
-			foreach ($aExtKeyFriends as $sDispAttCode => $oExtField)
-			{
-//				$aAvailableFields[$oExtField->GetExtAttCode()] = $oExtField->GetAsHTML($this->Get($oExtField->GetCode()));
-				$aAvailableFields[$oExtField->GetExtAttCode()] = $this->Get($oExtField->GetCode());
-			}
-
+			//return $this->Get($sAttCode.'_friendlyname');
 			$sTargetClass = $oAtt->GetTargetClass(EXTKEY_ABSOLUTE);
-			return $this->MakeHyperLink($sTargetClass, $this->Get($sAttCode), $aAvailableFields);
+			$iTargetKey = $this->Get($sAttCode);
+			$sLabel = $this->Get($sAttCode.'_friendlyname');
+			return $this->MakeHyperLink($sTargetClass, $iTargetKey, $sLabel);
 		}
 
 		// That's a standard attribute (might be an ext field or a direct field, etc.)
@@ -437,23 +429,7 @@ abstract class DBObject
 			}
 			else
 			{
-				$aAvailableFields = array();
-				// retrieve the "external fields" linked to this external key
-				foreach (MetaModel::GetExternalFields(get_class($this), $sAttCode) as $oExtField)
-				{
-					$aAvailableFields[$oExtField->GetExtAttCode()] = $oExtField->GetAsHTML($this->Get($oExtField->GetCode()));
-				}
-				// Use the "name" of the target class as the label of the hyperlink
-				// unless it's not available in the external fields...
-				$sExtClassNameAtt = MetaModel::GetNameAttributeCode($sTargetClass);
-				if (isset($aAvailableFields[$sExtClassNameAtt]))
-				{
-					$sEditValue = $aAvailableFields[$sExtClassNameAtt];
-				}
-				else
-				{
-					$sEditValue = implode(' / ', $aAvailableFields);
-				}
+				$sEditValue = $this->Get($sAttCode.'_friendlyname');
 			}
 		}
 		else
@@ -475,7 +451,7 @@ abstract class DBObject
 		return $oAtt->GetAsCSV($this->Get($sAttCode), $sSeparator, $sTextQualifier);
 	}
 
-	protected static function MakeHyperLink($sObjClass, $sObjKey, $aAvailableFields)
+	protected static function MakeHyperLink($sObjClass, $sObjKey, $sLabel = '')
 	{
 		if ($sObjKey == 0) return '<em>undefined</em>';
 
@@ -484,8 +460,7 @@ abstract class DBObject
 
 	public function GetHyperlink()
 	{
-		$aAvailableFields[MetaModel::GetNameAttributeCode(get_class($this))] = $this->GetName();
-		return $this->MakeHyperLink(get_class($this), $this->GetKey(), $aAvailableFields);
+		return $this->MakeHyperLink(get_class($this), $this->GetKey(), $this->GetName());
 	}
 
 
@@ -524,15 +499,23 @@ abstract class DBObject
 
 	public function GetName()
 	{
-		$sNameAttCode = MetaModel::GetNameAttributeCode(get_class($this));
-		if (empty($sNameAttCode))
-		{
-			return $this->m_iKey;
+		$aNameSpec = MetaModel::GetNameSpec(get_class($this));
+		$sFormat = $aNameSpec[0];
+		$aAttributes = $aNameSpec[1];                                                     
+
+		$aValues = array();
+      foreach ($aAttributes as $sAttCode)
+      {
+      	if (empty($sAttCode))
+      	{
+      		$aValues[] = $this->m_iKey;
+			}
+			else
+			{
+				$aValues[] = $this->Get($sAttCode);
+			}
 		}
-		else
-		{
-			return $this->Get($sNameAttCode);
-		}
+		return vsprintf($sFormat, $aValues);
 	}
 
 	public function GetState()

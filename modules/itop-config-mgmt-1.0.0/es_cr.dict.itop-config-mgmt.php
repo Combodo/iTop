@@ -387,6 +387,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Subnet' => 'Sub-Red',
 	'Class:Subnet+' => '',
+	'Class:Subnet/Name' => '%1$s / %2$s',
 	//'Class:Subnet/Attribute:name' => 'Nombre',
 	//'Class:Subnet/Attribute:name+' => '',
 	'Class:Subnet/Attribute:org_id' => 'Organización propietaria',
@@ -540,6 +541,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:SoftwareInstance' => 'Instancia de Software',
 	'Class:SoftwareInstance+' => '',
+	'Class:SoftwareInstance/Name' => '%1$s - %2$s',
 	'Class:SoftwareInstance/Attribute:device_id' => 'Dispositivo',
 	'Class:SoftwareInstance/Attribute:device_id+' => '',
 	'Class:SoftwareInstance/Attribute:device_name' => 'Dispositivo',
@@ -565,6 +567,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:ApplicationInstance' => 'Instancia de aplicación',
 	'Class:ApplicationInstance+' => '',
+	'Class:ApplicationInstance/Name' => '%1$s - %2$s',
 ));
 
 //
@@ -574,6 +577,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:DBServerInstance' => 'Instancia de Servidor de BD',
 	'Class:DBServerInstance+' => '',
+	'Class:DBServerInstance/Name' => '%1$s - %2$s',
 	'Class:DBServerInstance/Attribute:dbinstance_list' => 'Bases de Datos',
 	'Class:DBServerInstance/Attribute:dbinstance_list+' => 'Fuentes de Bases de Datos',
 ));
@@ -585,6 +589,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:DatabaseInstance' => 'Instancia de Base de Datos',
 	'Class:DatabaseInstance+' => '',
+	'Class:DatabaseInstance/Name' => '%1$s - %2$s',
 	'Class:DatabaseInstance/Attribute:db_server_instance_id' => 'Servidor de Base de Datos',
 	'Class:DatabaseInstance/Attribute:db_server_instance_id+' => '',
 	'Class:DatabaseInstance/Attribute:db_server_instance_version' => 'Versión de Base de Datos',
@@ -645,6 +650,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:NetworkInterface' => 'Interfase de Red',
 	'Class:NetworkInterface+' => '',
+	'Class:NetworkInterface/Name' => '%1$s - %2$s',
 	'Class:NetworkInterface/Attribute:device_id' => 'Dispositivo',
 	'Class:NetworkInterface/Attribute:device_id+' => '',
 	'Class:NetworkInterface/Attribute:device_name' => 'Dispositivo',

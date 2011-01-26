@@ -417,7 +417,7 @@ class AttributeDBFieldVoid extends AttributeDefinition
 	public function GetSQLExpressions()
 	{
 		$aColumns = array();
-		// Note: to optimize things, the existence of the attribute is determine by the existence of one column with an empty suffix
+		// Note: to optimize things, the existence of the attribute is determined by the existence of one column with an empty suffix
 		$aColumns[''] = $this->Get("sql");
 		return $aColumns;
 	}
@@ -933,6 +933,7 @@ class AttributeFinalClass extends AttributeString
 		return MetaModel::GetName($sValue);
 	}
 }
+
 
 /**
  * Map a varchar column (size < ?) to an attribute that must never be shown to the user 
@@ -1753,7 +1754,6 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 	{
 		return $this->GetOptional('allow_target_creation', MetaModel::GetConfig()->Get('allow_target_creation'));
 	}
-	
 }
 
 /**
@@ -1774,6 +1774,11 @@ class AttributeExternalField extends AttributeDefinition
 		// throw new CoreException("external attribute: does it make any sense to request its type ?");  
 		$oExtAttDef = $this->GetExtAttDef();
 		return $oExtAttDef->GetSQLCol(); 
+	}
+
+	public function GetSQLExpressions()
+	{
+		return array('' => $this->GetCode()); 
 	}
 
 	public function GetLabel()
@@ -2374,6 +2379,139 @@ class AttributePropertySet extends AttributeTable
 		$sRes .= "</TBODY>";
 		$sRes .= "</TABLE>";
 		return $sRes;
+	}
+}
+
+/**
+ * The attribute dedicated to the friendly name automatic attribute (not written) 
+ *
+ * @package     iTopORM
+ */
+class AttributeComputedFieldVoid extends AttributeDefinition
+{	
+	static protected function ListExpectedParams()
+	{
+		return array_merge(parent::ListExpectedParams(), array());
+	}
+
+	public function GetEditClass() {return "";}
+	
+	public function GetValuesDef() {return null;} 
+	public function GetPrerequisiteAttributes() {return $this->Get("depends_on");} 
+
+	public function IsDirectField() {return true;} 
+	public function IsScalar() {return true;} 
+	public function IsWritable() {return false;} 
+	public function GetSQLExpr()    {return null;}
+	public function GetDefaultValue() {return $this->MakeRealValue("");}
+	public function IsNullAllowed() {return false;}
+
+	// 
+//	protected function ScalarToSQL($value) {return $value;} // format value as a valuable SQL literal (quoted outside)
+
+	public function GetSQLExpressions()
+	{
+		return array('' => $this->GetCode()); 
+	}
+
+	public function FromSQLToValue($aCols, $sPrefix = '')
+	{
+		return null;
+	}
+	public function GetSQLValues($value)
+	{
+		return array();
+	}
+
+	public function GetSQLColumns()
+	{
+		return array();
+	}
+
+	public function GetFilterDefinitions()
+	{
+		return array($this->GetCode() => new FilterFromAttribute($this));
+	}
+
+	public function GetBasicFilterOperators()
+	{
+		return array();
+	}
+	public function GetBasicFilterLooseOperator()
+	{
+		return "=";
+	}
+
+	public function GetBasicFilterSQLExpr($sOpCode, $value)
+	{
+		$sQValue = CMDBSource::Quote($value);
+		switch ($sOpCode)
+		{
+		case '!=':
+			return $this->GetSQLExpr()." != $sQValue";
+			break;
+		case '=':
+		default:
+			return $this->GetSQLExpr()." = $sQValue";
+		}
+	} 
+}
+
+/**
+ * The attribute dedicated to the friendly name automatic attribute (not written) 
+ *
+ * @package     iTopORM
+ */
+class AttributeFriendlyName extends AttributeComputedFieldVoid
+{
+	public function __construct($sCode, $sExtKeyAttCode)
+	{
+		$this->m_sCode = $sCode;
+		$aParams = array();
+//		$aParams["is_null_allowed"] = false,
+		$aParams["default_value"] = '';
+		$aParams["extkey_attcode"] = $sExtKeyAttCode;
+		parent::__construct($sCode, $aParams);
+
+		$this->m_sValue = $this->Get("default_value");
+	}
+
+	public function GetKeyAttCode() {return $this->Get("extkey_attcode");} 
+
+	// n/a, the friendly name is made of a complex expression (see GetNameSpec)
+	protected function GetSQLCol() {return "";}	
+
+	public function FromSQLToValue($aCols, $sPrefix = '')
+	{
+ 		$sValue = $aCols[$sPrefix];
+		return $sValue;
+	}
+
+	/**
+	 * Encrypt the value before storing it in the database
+	 */
+	public function GetSQLValues($value)
+	{
+		return array();
+	}
+
+	public function IsWritable()
+	{
+		return false;
+	}
+
+	public function SetFixedValue($sValue)
+	{
+		$this->m_sValue = $sValue;
+	}
+	public function GetDefaultValue()
+	{
+		return $this->m_sValue;
+	}
+
+	public function GetAsHTML($sValue)
+	{
+		return Str::pure2html((string)$sValue);
 	}
 }
 

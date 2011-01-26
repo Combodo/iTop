@@ -64,39 +64,14 @@ abstract class cmdbAbstractObject extends CMDBObject
 		return $sPage;
 	}
 
-	protected static function MakeHyperLink($sObjClass, $sObjKey, $aAvailableFields)
+	protected static function MakeHyperLink($sObjClass, $sObjKey, $sLabel = '')
 	{
 		if ($sObjKey <= 0) return '<em>'.Dict::S('UI:UndefinedObject').'</em>'; // Objects built in memory have negative IDs
 
 		$oAppContext = new ApplicationContext();	
-		$sExtClassNameAtt = MetaModel::GetNameAttributeCode($sObjClass);
 		$sPage = self::ComputeUIPage($sObjClass);
 		$sAbsoluteUrl = utils::GetAbsoluteUrlPath();
 
-		// Use the "name" of the target class as the label of the hyperlink
-		// unless it's not available in the external attributes...
-		if (isset($aAvailableFields[$sExtClassNameAtt]))
-		{
-			$sLabel = $aAvailableFields[$sExtClassNameAtt];
-		}
-		else
-		{
-			$sLabel = implode(' / ', $aAvailableFields);
-		}
-		// Safety belt
-		//
-		if (empty($sLabel))
-		{
-			// Developer's note:
-			// This is doing the job for you, but that is just there in case
-			// the external fields associated to the external key are blanks
-			// The ultimate solution will be to query the name automatically
-			// and independantly from the data model (automatic external field)
-			// AND make the name be a mandatory field
-			//
-			$sObject = MetaModel::GetObject($sObjClass, $sObjKey);
-			$sLabel = $sObject->GetName();
-		}
 		// Safety net
 		//
 		if (empty($sLabel))
@@ -365,10 +340,9 @@ abstract class cmdbAbstractObject extends CMDBObject
 		if (!empty($sTemplate))
 		{
 			$oTemplate = new DisplayTemplate($sTemplate);
-			$sNameAttCode = MetaModel::GetNameAttributeCode(get_class($this));
 			// Note: to preserve backward compatibility with home-made templates, the placeholder '$pkey$' has been preserved
 			//       but the preferred method is to use '$id$'
-			$oTemplate->Render($oPage, array('class_name'=> MetaModel::GetName(get_class($this)),'class'=> get_class($this), 'pkey'=> $this->GetKey(), 'id'=> $this->GetKey(), 'name' => $this->Get($sNameAttCode)));
+			$oTemplate->Render($oPage, array('class_name'=> MetaModel::GetName(get_class($this)),'class'=> get_class($this), 'pkey'=> $this->GetKey(), 'id'=> $this->GetKey(), 'name' => $this->Get('friendlyname')));
 		}
 		else
 		{
