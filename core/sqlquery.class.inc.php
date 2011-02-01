@@ -46,7 +46,7 @@ class SQLQuery
 	private $m_aValues = array(); // Values to set in case of an update query
 	private $m_aJoinSelects = array();
 
-	public function __construct($sTable, $sTableAlias, $aFields, $aFullTextNeedles, $bToDelete = true, $aValues = array())
+	public function __construct($sTable, $sTableAlias, $aFields, $aFullTextNeedles = array(), $bToDelete = true, $aValues = array())
 	{
 		// This check is not needed but for developping purposes
 		//if (!CMDBSource::IsTable($sTable))

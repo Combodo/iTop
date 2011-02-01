@@ -1708,7 +1708,7 @@ abstract class MetaModel
 		return $aScalarArgs;
 	}
 
-	public static function MakeSelectQuery(DBObjectSearch $oFilter, $aOrderBy = array(), $aArgs = array(), $iLimitCount = 0, $iLimitStart = 0, $bGetCount = false)
+	public static function MakeSelectQuery(DBObjectSearch $oFilter, $aOrderBy = array(), $aArgs = array(), $aExtendedDataSpec = null, $iLimitCount = 0, $iLimitStart = 0, $bGetCount = false)
 	{
 		// Hide objects that are not visible to the current user
 		//
@@ -1799,6 +1799,21 @@ abstract class MetaModel
 				// By default, simply order on the "friendlyname" attribute, ascending
 				$aOrderSpec[$sSelectedAlias."friendlyname"] = true;
 			}
+		}
+
+		// Join to an additional table, if required...
+		//
+		if ($aExtendedDataSpec != null)
+		{
+			$sTableAlias = '_extended_data_';
+			$aExtendedFields = array();
+			foreach($aExtendedDataSpec['fields'] as $sColumn)
+			{
+				$sColRef = $oFilter->GetClassAlias().'_extdata_'.$sColumn;
+				$aExtendedFields[$sColRef] = new FieldExpressionResolved($sColumn, $sTableAlias);;
+			}
+			$oSelectExt = new SQLQuery($aExtendedDataSpec['table'], $sTableAlias, $aExtendedFields);
+			$oSelect->AddInnerJoin($oSelectExt, 'id', $aExtendedDataSpec['join_key'] /*, $sTableAlias*/);
 		}
 		
 		// Go
@@ -3656,7 +3671,7 @@ abstract class MetaModel
 		return $aRow;
 	}
 
-	public static function GetObjectByRow($sClass, $aRow, $sClassAlias = '')
+	public static function GetObjectByRow($sClass, $aRow, $sClassAlias = '', $aExtendedDataSpec = null)
 	{
 		self::_check_subclass($sClass);	
 
@@ -3685,7 +3700,7 @@ abstract class MetaModel
 			// do the job for the real target class
 			$sClass = $aRow[$sClassAlias."finalclass"];
 		}
-		return new $sClass($aRow, $sClassAlias);
+		return new $sClass($aRow, $sClassAlias, $aExtendedDataSpec);
 	}
 
 	public static function GetObject($sClass, $iKey, $bMustBeFound = true, $bAllowAllData = false)

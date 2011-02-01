@@ -38,11 +38,12 @@ class DBObjectSet
 	private $m_aId2Row;
 	private $m_iCurrRow;
 
-	public function __construct(DBObjectSearch $oFilter, $aOrderBy = array(), $aArgs = array(), $iLimitCount = 0, $iLimitStart = 0)
+	public function __construct(DBObjectSearch $oFilter, $aOrderBy = array(), $aArgs = array(), $aExtendedDataSpec = null, $iLimitCount = 0, $iLimitStart = 0)
 	{
 		$this->m_oFilter = $oFilter;
 		$this->m_aOrderBy = $aOrderBy;
 		$this->m_aArgs = $aArgs;
+		$this->m_aExtendedDataSpec = $aExtendedDataSpec;
 		$this->m_iLimitCount = $iLimitCount;
 		$this->m_iLimitStart = $iLimitStart;
 
@@ -241,11 +242,11 @@ class DBObjectSet
 		if ($this->m_bLoaded) return;
 		if ($this->m_iLimitCount > 0)
 		{
-			$sSQL = MetaModel::MakeSelectQuery($this->m_oFilter, $this->m_aOrderBy, $this->m_aArgs, $this->m_iLimitCount, $this->m_iLimitStart);
+			$sSQL = MetaModel::MakeSelectQuery($this->m_oFilter, $this->m_aOrderBy, $this->m_aArgs, $this->m_aExtendedDataSpec, $this->m_iLimitCount, $this->m_iLimitStart);
 		}
 		else
 		{
-			$sSQL = MetaModel::MakeSelectQuery($this->m_oFilter, $this->m_aOrderBy, $this->m_aArgs);
+			$sSQL = MetaModel::MakeSelectQuery($this->m_oFilter, $this->m_aOrderBy, $this->m_aArgs, $this->m_aExtendedDataSpec);
 		}
 		$resQuery = CMDBSource::Query($sSQL);
 		if (!$resQuery) return;
@@ -256,7 +257,7 @@ class DBObjectSet
 			$aObjects = array();
 			foreach ($this->m_oFilter->GetSelectedClasses() as $sClassAlias => $sClass)
 			{
-				$oObject = MetaModel::GetObjectByRow($sClass, $aRow, $sClassAlias);
+				$oObject = MetaModel::GetObjectByRow($sClass, $aRow, $sClassAlias, $this->m_aExtendedDataSpec);
 				$aObjects[$sClassAlias] = $oObject;
 			}
 			$this->AddObjectExtended($aObjects);
@@ -268,7 +269,7 @@ class DBObjectSet
 
 	public function Count()
 	{
-		$sSQL = MetaModel::MakeSelectQuery($this->m_oFilter, $this->m_aOrderBy, $this->m_aArgs, 0, 0, true);
+		$sSQL = MetaModel::MakeSelectQuery($this->m_oFilter, $this->m_aOrderBy, $this->m_aArgs, null, 0, 0, true);
 		$resQuery = CMDBSource::Query($sSQL);
 		if (!$resQuery) return 0;
 

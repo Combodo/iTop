@@ -39,6 +39,8 @@ abstract class DBObject
 	private $m_aCurrValues = array();
 	protected $m_aOrigValues = array();
 
+	protected $m_aExtendedData = null;
+
 	private $m_bDirty = false; // Means: "a modification is ongoing"
 										// The object may have incorrect external keys, then any attempt of reload must be avoided
 	private $m_bCheckStatus = null; // Means: the object has been verified and is consistent with integrity rules
@@ -50,11 +52,11 @@ abstract class DBObject
 	private $m_aLoadedAtt = array(); // Compound objects can be partially loaded, array of sAttCode
 
 	// Use the MetaModel::NewObject to build an object (do we have to force it?)
-	public function __construct($aRow = null, $sClassAlias = '')
+	public function __construct($aRow = null, $sClassAlias = '', $aExtendedDataSpec = null)
 	{
 		if (!empty($aRow))
 		{
-			$this->FromRow($aRow, $sClassAlias);
+			$this->FromRow($aRow, $sClassAlias, $aExtendedDataSpec);
 			$this->m_bFullyLoaded = $this->IsFullyLoaded();
 			return;
 		}
@@ -181,7 +183,7 @@ abstract class DBObject
 		$this->m_bFullyLoaded = true;
 	}
 
-	protected function FromRow($aRow, $sClassAlias = '')
+	protected function FromRow($aRow, $sClassAlias = '', $aExtendedDataSpec = null)
 	{
 		if (strlen($sClassAlias) == 0)
 		{
@@ -243,6 +245,20 @@ abstract class DBObject
 			{
 				// This attribute was expected and not found in the query columns
 				$bFullyLoaded = false;
+			}
+		}
+		
+		// Load extended data
+		if ($aExtendedDataSpec != null)
+		{
+			$aExtendedDataSpec['table'];
+			foreach($aExtendedDataSpec['fields'] as $sColumn)
+			{
+				$sColRef = $sClassAlias.'_extdata_'.$sColumn;
+				if (array_key_exists($sColRef, $aRow))
+				{
+					$this->m_aExtendedData[$sColumn] = $aRow[$sColRef];
+				}
 			}
 		}
 		return $bFullyLoaded;
@@ -343,6 +359,14 @@ abstract class DBObject
 			throw new CoreException("Unknown attribute code '$sAttCode' for the class ".get_class($this));
 		}
 		return $this->m_aOrigValues[$sAttCode];
+	}
+
+	/**
+	 * Returns data loaded by the mean of a dynamic and explicit JOIN
+	 */	 
+	public function GetExtendedData()
+	{
+		return $this->m_aExtendedData;
 	}
 
 	/**

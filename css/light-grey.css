@@ -917,3 +917,6 @@ span.form_validation {
 	width: 95%;
 	-moz-border-radius: 0.5em;
 }
+.wiki_broken_link {
+	text-decoration: line-through;
+}
