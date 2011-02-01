@@ -51,7 +51,7 @@ class SynchroDataSource extends cmdbAbstractObject
 		
 		MetaModel::Init_AddAttribute(new AttributeString("reconciliation_list", array("allowed_values"=>null, "sql"=>"reconciliation_list", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("action_on_zero", array("allowed_values"=>new ValueSetEnum('create,error'), "sql"=>"action_on_zero", "default_value"=>"create", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("action_on_one", array("allowed_values"=>new ValueSetEnum('update,error'), "sql"=>"action_on_one", "default_value"=>"update", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("action_on_one", array("allowed_values"=>new ValueSetEnum('update,error,delete'), "sql"=>"action_on_one", "default_value"=>"update", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("action_on_multiple", array("allowed_values"=>new ValueSetEnum('take_first,create,error'), "sql"=>"action_on_multiple", "default_value"=>"error", "is_null_allowed"=>false, "depends_on"=>array())));
 		
 		MetaModel::Init_AddAttribute(new AttributeEnum("delete_policy", array("allowed_values"=>new ValueSetEnum('ignore,delete,update'), "sql"=>"delete_policy", "default_value"=>"ignore", "is_null_allowed"=>false, "depends_on"=>array())));
@@ -107,23 +107,17 @@ class SynchroDataSource extends cmdbAbstractObject
 			}
 		}
 		
-		$aModified = array();
-		foreach($aColumns as $sColumn => $ColSpec)
-		{
-			// <=> is a null-safe 'EQUALS' operator (there is no equivalent for "DIFFERS FROM")
-			$aModified[] = "NOT(NEW.`$sColumn` <=> OLD.`$sColumn`)";
-		}
-		$sIsModified = '('.implode(') OR (', $aModified).')';
-
 		$aFieldDefs = array();
 		// Allow '0', otherwise mysql will render an error when the id is not given
 		// (the trigger is expected to set the value, but it is not executed soon enough)
-		$aFieldDefs[] = "id INTEGER(11) NOT NULL DEFAULT 0 PRIMARY KEY";
+		$aFieldDefs[] = "id INTEGER(11) NOT NULL DEFAULT 0 ";
 		$aFieldDefs[] = "`primary_key` VARCHAR(255) NULL DEFAULT NULL";
 		foreach($aColumns as $sColumn => $ColSpec)
 		{
 			$aFieldDefs[] = "`$sColumn` $ColSpec NULL DEFAULT NULL";
 		}
+		$aFieldDefs[] = "INDEX (id)";
+		$aFieldDefs[] = "INDEX (primary_key)";
 		$sFieldDefs = implode(', ', $aFieldDefs);
 
 		$sCreateTable = "CREATE TABLE `$sTable` ($sFieldDefs) ENGINE = innodb;";
@@ -137,11 +131,19 @@ class SynchroDataSource extends cmdbAbstractObject
 		$sTriggerInsert .= "   END;";
 		CMDBSource::Query($sTriggerInsert);
 
+		$aModified = array();
+		foreach($aColumns as $sColumn => $ColSpec)
+		{
+			// <=> is a null-safe 'EQUALS' operator (there is no equivalent for "DIFFERS FROM")
+			$aModified[] = "NOT(NEW.`$sColumn` <=> OLD.`$sColumn`)";
+		}
+		$sIsModified = '('.implode(') OR (', $aModified).')';
+
 		$sTriggerUpdate = "CREATE TRIGGER `{$sTable}_bu` BEFORE UPDATE ON $sTable";
 		$sTriggerUpdate .= "   FOR EACH ROW";
 		$sTriggerUpdate .= "   BEGIN";
 		$sTriggerUpdate .= "      IF @itopuser is null THEN";
-		$sTriggerUpdate .= "         UPDATE priv_sync_replica SET status_last_seen = NOW(), `status` = IF($sIsModified AND (`status` IN ('synchronized')), 'modified', `status`) WHERE sync_source_id = {$this->GetKey()} AND id = OLD.id;";
+		$sTriggerUpdate .= "         UPDATE priv_sync_replica SET status_last_seen = NOW(), `status` = IF(($sIsModified) AND (`status` IN ('synchronized')), 'modified', `status`) WHERE sync_source_id = {$this->GetKey()} AND id = OLD.id;";
 		$sTriggerUpdate .= "         SET NEW.id = OLD.id;"; // make sure this id won't change
 		$sTriggerUpdate .= "      END IF;";
 		$sTriggerUpdate .= "   END;";
