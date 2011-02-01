@@ -1080,7 +1080,8 @@ EOF
 					$aEventsList[] ='validate';
 					$aEventsList[] ='keyup';
 					$aEventsList[] ='change';
-					$sHTMLValue = "<table><tr><td><textarea class=\"resizable\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">$value</textarea></td><td>{$sValidationField}</td></tr></table>";
+					$sEditValue = $oAttDef->GetEditValue($value);
+					$sHTMLValue = "<table><tr><td><textarea class=\"resizable\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">$sEditValue</textarea></td><td>{$sValidationField}</td></tr></table>";
 				break;
 
 				case 'HTML':

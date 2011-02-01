@@ -288,6 +288,18 @@ abstract class MetaModel
 			return self::GetName($sClass);
 		}
 	}
+	final static public function GetClassFromLabel($sClassLabel)
+	{
+		foreach(self::GetClasses() as $sClass)
+		{
+			if (self::GetName($sClass) == $sClassLabel)
+			{
+				return $sClass;
+			}
+		}
+		return null;
+	}
+
 	final static public function GetCategory($sClass)
 	{
 		self::_check_subclass($sClass);	

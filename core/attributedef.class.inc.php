@@ -1046,6 +1046,7 @@ class AttributeEncryptedString extends AttributeString
  *
  * @package     iTopORM
  */
+define('WIKI_OBJECT_REGEXP', '/\[\[(.+):(.+)\]\]/U');
 class AttributeText extends AttributeString
 {
 	public function GetEditClass() {return "Text";}
@@ -1060,7 +1061,78 @@ class AttributeText extends AttributeString
 
 	public function GetAsHTML($sValue)
 	{
-		return str_replace("\n", "<br>\n", parent::GetAsHTML($sValue));
+		$sValue = parent::GetAsHTML($sValue);
+
+		if (preg_match_all(WIKI_OBJECT_REGEXP, $sValue, $aAllMatches, PREG_SET_ORDER))
+		{
+			foreach($aAllMatches as $iPos => $aMatches)
+			{
+				$sClass = $aMatches[1];
+				$sName = $aMatches[2];
+				
+				if (MetaModel::IsValidClass($sClass))
+				{
+					$oObj = MetaModel::GetObjectByName($sClass, $sName, false /* MustBeFound */);
+					if (is_object($oObj))
+					{
+						// Propose a std link to the object
+						$sValue = str_replace($aMatches[0], $oObj->GetHyperlink(), $sValue);
+					}
+					else
+					{
+						// Propose a std link to the object
+						$sClassLabel = MetaModel::GetName($sClass);
+						$sValue = str_replace($aMatches[0], "<span class=\"wiki_broken_link\">$sClassLabel:$sName</span>", $sValue);
+						// Later: propose a link to create a new object
+						// Anyhow... there is no easy way to suggest default values based on the given FRIENDLY name
+						//$sValue = preg_replace('/\[\[(.+):(.+)\]\]/', '<a href="./UI.php?operation=new&class='.$sClass.'&default[att1]=xxx&default[att2]=yyy">'.$sName.'</a>', $sValue);
+					}
+				}
+			}
+		}
+		return str_replace("\n", "<br>\n", $sValue);
+	}
+
+	public function GetEditValue($sValue)
+	{
+		if (preg_match_all(WIKI_OBJECT_REGEXP, $sValue, $aAllMatches, PREG_SET_ORDER))
+		{
+			foreach($aAllMatches as $iPos => $aMatches)
+			{
+				$sClass = $aMatches[1];
+				$sName = $aMatches[2];
+				
+				if (MetaModel::IsValidClass($sClass))
+				{
+					$sClassLabel = MetaModel::GetName($sClass);
+					$sValue = str_replace($aMatches[0], "[[$sClassLabel:$sName]]", $sValue);
+				}
+			}
+		}
+		return $sValue;
+	}
+
+	public function MakeRealValue($proposedValue)
+	{
+		$sValue = $proposedValue;
+		if (preg_match_all(WIKI_OBJECT_REGEXP, $sValue, $aAllMatches, PREG_SET_ORDER))
+		{
+			foreach($aAllMatches as $iPos => $aMatches)
+			{
+				$sClassLabel = $aMatches[1];
+				$sName = $aMatches[2];
+				
+				if (!MetaModel::IsValidClass($sClassLabel))
+				{
+					$sClass = MetaModel::GetClassFromLabel($sClassLabel);
+					if ($sClass)
+					{
+						$sValue = str_replace($aMatches[0], "[[$sClass:$sName]]", $sValue);
+					}
+				}
+			}
+		}
+		return $sValue;
 	}
 
 	public function GetAsXML($value)
