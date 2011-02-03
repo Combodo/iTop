@@ -130,11 +130,16 @@ class SynchroDataSource extends cmdbAbstractObject
 		}
 		$sIsModified = '('.implode(') OR (', $aModified).')';
 
+		// Update the replica
+		//
+		// status is forced to "new" if the replica was obsoleted directly from the state "new" (dest_id = null)
+		// otherwise, if status was either 'obsolete' or 'synchronized' it is turned into 'modified' or 'synchronized' depending on the changes
+		// otherwise, the status is left as is
 		$sTriggerUpdate = "CREATE TRIGGER `{$sTable}_bu` BEFORE UPDATE ON $sTable";
 		$sTriggerUpdate .= "   FOR EACH ROW";
 		$sTriggerUpdate .= "   BEGIN";
 		$sTriggerUpdate .= "      IF @itopuser is null THEN";
-		$sTriggerUpdate .= "         UPDATE priv_sync_replica SET status_last_seen = NOW(), `status` = IF(($sIsModified) AND (`status` IN ('synchronized')), 'modified', `status`) WHERE sync_source_id = {$this->GetKey()} AND id = OLD.id;";
+		$sTriggerUpdate .= "         UPDATE priv_sync_replica SET status_last_seen = NOW(), `status` = IF((`dest_id` IS NULL) AND (`status` = 'obsolete'), 'new', IF(`status` IN ('synchronized', 'obsolete'), IF(($sIsModified), 'modified', 'synchronized'), `status`)) WHERE sync_source_id = {$this->GetKey()} AND id = OLD.id;";
 		$sTriggerUpdate .= "         SET NEW.id = OLD.id;"; // make sure this id won't change
 		$sTriggerUpdate .= "      END IF;";
 		$sTriggerUpdate .= "   END;";
