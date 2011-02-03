@@ -259,6 +259,11 @@ try
 	//
 	// Check parameters format/consistency
 	//
+	if (strlen($sCSVData) == 0)
+	{
+		throw new ExchangeException("Missing data - at least one line is expected");
+	}
+
 	if (!MetaModel::IsValidClass($sClass))
 	{
 		throw new BulkLoadException("Unknown class: '$sClass'");
