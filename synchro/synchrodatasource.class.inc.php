@@ -139,7 +139,7 @@ class SynchroDataSource extends cmdbAbstractObject
 		$sTriggerUpdate .= "   FOR EACH ROW";
 		$sTriggerUpdate .= "   BEGIN";
 		$sTriggerUpdate .= "      IF @itopuser is null THEN";
-		$sTriggerUpdate .= "         UPDATE priv_sync_replica SET status_last_seen = NOW(), `status` = IF((`dest_id` IS NULL) AND (`status` = 'obsolete'), 'new', IF(`status` IN ('synchronized', 'obsolete'), IF(($sIsModified), 'modified', 'synchronized'), `status`)) WHERE sync_source_id = {$this->GetKey()} AND id = OLD.id;";
+		$sTriggerUpdate .= "         UPDATE priv_sync_replica SET status_last_seen = NOW(), `status` = IF(`status` = 'obsolete', IF(`dest_id` IS NULL, 'new', 'modified'), IF(`status` IN ('synchronized') AND ($sIsModified), 'modified', `status`)) WHERE sync_source_id = {$this->GetKey()} AND id = OLD.id;";
 		$sTriggerUpdate .= "         SET NEW.id = OLD.id;"; // make sure this id won't change
 		$sTriggerUpdate .= "      END IF;";
 		$sTriggerUpdate .= "   END;";
@@ -414,7 +414,7 @@ class SynchroReplica extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeInteger("dest_id", array("allowed_values"=>null, "sql"=>"dest_id", "default_value"=>0, "is_null_allowed"=>true, "depends_on"=>array())));
 
 		MetaModel::Init_AddAttribute(new AttributeDateTime("status_last_seen", array("allowed_values"=>null, "sql"=>"status_last_seen", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('new,synchronized,modified,orphan,deleted,obsolete'), "sql"=>"status", "default_value"=>"new", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('new,synchronized,modified,orphan,obsolete'), "sql"=>"status", "default_value"=>"new", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeBoolean("status_dest_creator", array("allowed_values"=>null, "sql"=>"status_dest_creator", "default_value"=>0, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("status_last_error", array("allowed_values"=>null, "sql"=>"status_last_error", "default_value"=>'', "is_null_allowed"=>true, "depends_on"=>array())));
 
