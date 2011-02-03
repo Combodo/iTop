@@ -96,15 +96,7 @@ class SynchroDataSource extends cmdbAbstractObject
 
 		$sTable = $this->GetDataTable();
 
-		$sClass = $this->GetTargetClass();
-		$aAttCodes = array();
-		foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
-		{
-			if ($sAttCode == 'finalclass') continue;
-
-			$aAttCodes[] = $sAttCode;
-		}
-		$aColumns = $this->GetSQLColumns($aAttCodes);
+		$aColumns = $this->GetSQLColumns();
 		
 		$aFieldDefs = array();
 		// Allow '0', otherwise mysql will render an error when the id is not given
@@ -218,11 +210,23 @@ class SynchroDataSource extends cmdbAbstractObject
 	
 	/**
 	 * Get the list of SQL columns corresponding to a particular list of attribute codes
+	 * Defaults to the whole list of columns for the current task	 
 	 */
-	protected function GetSQLColumns($aAttributeCodes)
+	public function GetSQLColumns($aAttributeCodes = null)
 	{
 		$aColumns = array();
 		$sClass = $this->GetTargetClass();
+
+		if (is_null($aAttributeCodes))
+		{
+			$aAttributeCodes = array();
+			foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+			{
+				if ($sAttCode == 'finalclass') continue;
+				$aAttributeCodes[] = $sAttCode;
+			}
+		}
+
 		foreach($aAttributeCodes as $sAttCode)
 		{
 			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
