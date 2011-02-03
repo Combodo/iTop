@@ -784,7 +784,7 @@ function DatabaseServerSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep)
 		$aForm[] = array('label' => "Server name$sRedStar:", 'input' => "<input id=\"db_server\" type=\"text\" name=\"db_server\" value=\"{$aParamValues['db_server']}\">",
 						'help' => 'E.g. "localhost", "dbserver.mycompany.com" or "192.142.10.23"');
 		$aForm[] = array('label' => "User name$sRedStar:", 'input' => "<input id=\"db_user\" type=\"text\" name=\"db_user\" value=\"{$aParamValues['db_user']}\">",
-						'help' => 'The account must have the following privileges: SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER');
+						'help' => 'The account must have the following privileges on the database: SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, CREATE VIEW, TRIGGER');
 		$aForm[] = array('label' => 'Password:', 'input' => "<input id=\"db_pwd\" type=\"password\" name=\"db_pwd\" value=\"{$aParamValues['db_pwd']}\">");
 		$oP->form($aForm);
 		$oP->add("</fieldset>\n");
