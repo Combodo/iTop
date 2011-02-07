@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<ApplicationInstance alias="ApplicationInstance" id="10">
+<name>Apache web server</name>
+<status>production</status>
+<org_id>2</org_id>
+<importance>medium</importance>
+<device_id>9</device_id>
+<licence_id>0</licence_id>
+<software_id>1</software_id>
+<version>2.2</version>
+<description></description>
+</ApplicationInstance>
+<ApplicationInstance alias="ApplicationInstance" id="11">
+<name>Tomcat</name>
+<status>production</status>
+<org_id>2</org_id>
+<importance>medium</importance>
+<device_id>9</device_id>
+<licence_id>0</licence_id>
+<software_id>2</software_id>
+<version></version>
+<description></description>
+</ApplicationInstance>
+</Set>

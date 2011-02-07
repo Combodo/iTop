@@ -1,0 +1,357 @@
+<?php
+
+// Copyright (C) 2010 Combodo SARL
+//
+//   This program is free software; you can redistribute it and/or modify
+//   it under the terms of the GNU General Public License as published by
+//   the Free Software Foundation; version 3 of the License.
+//
+//   This program is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU General Public License for more details.
+//
+//   You should have received a copy of the GNU General Public License
+//   along with this program; if not, write to the Free Software
+//   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+/**
+ * OQL syntax analyzer, to be used prior to run the lexical analyzer
+ *
+ * @author      Erwan Taloc <erwan.taloc@combodo.com>
+ * @author      Romain Quetiez <romain.quetiez@combodo.com>
+ * @author      Denis Flaven <denis.flaven@combodo.com>
+ * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
+ */
+
+// Notes (from the source file: oql-lexer.plex) - Romain
+//
+// The strval rule is a little bit cryptic.
+// This is due to both a bug in the lexer generator and the complexity of our need
+// The rule means: either a quoted string with ", or a quoted string with '
+//                 literal " (resp. ') must be escaped by a \
+//                 \ must be escaped by an additional \
+// 
+// Here are the issues and limitation found in the lexer generator:
+// * Matching simple quotes is an issue, because regexp are not correctly escaped (and the ESC code is escaped itself)
+//    Workaround: insert '.chr(39).' which will be a real ' in the end
+// * Matching an alternate regexp is an issue because you must specify  "|^...."
+//   and the regexp parser will not accept that syntax
+//    Workaround: insert '.chr(94).' which will be a real ^
+//
+// Let's analyze an overview of the regexp, we have
+// 1) The strval rule in the lexer definition
+//     /"([^\\"]|\\"|\\\\)*"|'.chr(94).chr(39).'([^\\'.chr(39).']|\\'.chr(39).'|\\\\)*'.chr(39).'/
+// 2) Becomes the php expression in the lexer
+//    (note the escaped double quotes, hopefully having no effect, but showing where the issue is!)
+//     $myRegexp = '/^\"([^\\\\\"]|\\\\\"|\\\\\\\\)*\"|'.chr(94).chr(39).'([^\\\\'.chr(39).']|\\\\'.chr(39).'|\\\\\\\\)*'.chr(39).'/';
+//
+// To be fixed in LexerGenerator/Parser.y, in doLongestMatch (doFirstMatch is ok)
+//
+//
+// Now, let's explain how the regexp has been designed.
+// Here is a simplified version, dealing with simple quotes, and based on the assumption that the lexer generator has been fixed!
+// The strval rule in the lexer definition
+//     /'([^\\']*(\\')*(\\\\)*)*'/
+// This means anything containing \\ or \' or any other char but a standalone ' or \
+// This means ' or \ could not be found without a preceding \
+//
+class OQLLexerRaw
+{
+    protected $data;  // input string
+    public $token;  // token id
+    public $value;  // token string representation
+    protected $line;  // current line
+    protected $count; // current column
+
+    function __construct($data)
+    {
+        $this->data  = $data;
+        $this->count = 0;
+        $this->line  = 1;
+    }
+
+/*!lex2php
+%input   $this->data
+%counter $this->count
+%token   $this->token
+%value   $this->value
+%line    $this->line
+%matchlongest 1
+whitespace = /[ \t\n\r]+/
+select     = "SELECT"
+from       = "FROM"
+as_alias   = "AS"
+where	     = "WHERE"
+join	     = "JOIN"
+on	        = "ON"
+coma       = ","
+par_open   = "("
+par_close  = ")"
+math_div   = "/"
+math_mult  = "*"
+math_plus  = "+"
+math_minus = "-"
+log_and    = "AND"
+log_or     = "OR"
+eq         = "="
+not_eq     = "!="
+gt         = ">"
+lt         = "<"
+ge         = ">="
+le         = "<="
+like       = "LIKE"
+not_like   = "NOT LIKE"
+in         = "IN"
+not_in     = "NOT IN"
+interval   = "INTERVAL"
+f_if       = "IF"
+f_elt      = "ELT"
+f_coalesce = "COALESCE"
+f_concat   = "CONCAT"
+f_substr   = "SUBSTR"
+f_trim     = "TRIM"
+f_date     = "DATE"
+f_date_format = "DATE_FORMAT"
+f_current_date = "CURRENT_DATE"
+f_now      = "NOW"
+f_time     = "TIME"
+f_to_days   = "TO_DAYS"
+f_from_days = "FROM_DAYS"
+f_year     = "YEAR"
+f_month    = "MONTH"
+f_day      = "DAY"
+f_hour     = "HOUR"
+f_minute   = "MINUTE"
+f_second   = "SECOND"
+f_date_add = "DATE_ADD"
+f_date_sub = "DATE_SUB"
+f_round    = "ROUND"
+f_floor    = "FLOOR"
+f_inet_aton = "INET_ATON"
+f_inet_ntoa = "INET_NTOA"
+numval     = /[0-9]+|0x[0-9a-fA-F]+/
+strval     = /"([^\\"]|\\"|\\\\)*"|'.chr(94).chr(39).'([^\\'.chr(39).']|\\'.chr(39).'|\\\\)*'.chr(39).'/
+name       = /([_a-zA-Z][_a-zA-Z0-9]*|`[^`]+`)/
+varname    = /:([_a-zA-Z][_a-zA-Z0-9]*->[_a-zA-Z][_a-zA-Z0-9]*|[_a-zA-Z][_a-zA-Z0-9]*)/
+dot       = "."
+*/
+
+/*!lex2php
+whitespace {
+	return false;
+}
+select {
+	$this->token = OQLParser::SELECT;
+}
+from {
+	$this->token = OQLParser::FROM;
+}
+as_alias {
+	$this->token = OQLParser::AS_ALIAS;
+}
+where {
+	$this->token = OQLParser::WHERE;
+}
+join {
+	$this->token = OQLParser::JOIN;
+}
+on {
+	$this->token = OQLParser::ON;
+}
+math_div {
+	$this->token = OQLParser::MATH_DIV;
+}
+math_mult {
+	$this->token = OQLParser::MATH_MULT;
+}
+math_plus {
+	$this->token = OQLParser::MATH_PLUS;
+}
+math_minus {
+	$this->token = OQLParser::MATH_MINUS;
+}
+log_and {
+	$this->token = OQLParser::LOG_AND;
+}
+log_or {
+	$this->token = OQLParser::LOG_OR;
+}
+coma {
+	$this->token = OQLParser::COMA;
+}
+par_open {
+	$this->token = OQLParser::PAR_OPEN;
+}
+par_close {
+	$this->token = OQLParser::PAR_CLOSE;
+}
+eq {
+	$this->token = OQLParser::EQ;
+}
+not_eq {
+	$this->token = OQLParser::NOT_EQ;
+}
+gt {
+	$this->token = OQLParser::GT;
+}
+lt {
+	$this->token = OQLParser::LT;
+}
+ge {
+	$this->token = OQLParser::GE;
+}
+le {
+	$this->token = OQLParser::LE;
+}
+like {
+	$this->token = OQLParser::LIKE;
+}
+not_like {
+	$this->token = OQLParser::NOT_LIKE;
+}
+in {
+	$this->token = OQLParser::IN;
+}
+not_in {
+	$this->token = OQLParser::NOT_IN;
+}
+interval {
+	$this->token = OQLParser::INTERVAL;
+}
+f_if {
+	$this->token = OQLParser::F_IF;
+}
+f_elt {
+	$this->token = OQLParser::F_ELT;
+}
+f_coalesce {
+	$this->token = OQLParser::F_COALESCE;
+}
+f_concat {
+	$this->token = OQLParser::F_CONCAT;
+}
+f_substr {
+	$this->token = OQLParser::F_SUBSTR;
+}
+f_trim {
+	$this->token = OQLParser::F_TRIM;
+}
+f_date {
+	$this->token = OQLParser::F_DATE;
+}
+f_date_format {
+	$this->token = OQLParser::F_DATE_FORMAT;
+}
+f_current_date {
+	$this->token = OQLParser::F_CURRENT_DATE;
+}
+f_now {
+	$this->token = OQLParser::F_NOW;
+}
+f_time {
+	$this->token = OQLParser::F_TIME;
+}
+f_to_days {
+	$this->token = OQLParser::F_TO_DAYS;
+}
+f_from_days {
+	$this->token = OQLParser::F_FROM_DAYS;
+}
+f_year {
+	$this->token = OQLParser::F_YEAR;
+}
+f_month {
+	$this->token = OQLParser::F_MONTH;
+}
+f_day {
+	$this->token = OQLParser::F_DAY;
+}
+f_hour {
+	$this->token = OQLParser::F_HOUR;
+}
+f_minute {
+	$this->token = OQLParser::F_MINUTE;
+}
+f_second {
+	$this->token = OQLParser::F_SECOND;
+}
+f_date_add {
+	$this->token = OQLParser::F_DATE_ADD;
+}
+f_date_sub {
+	$this->token = OQLParser::F_DATE_SUB;
+}
+f_round {
+	$this->token = OQLParser::F_ROUND;
+}
+f_floor {
+	$this->token = OQLParser::F_FLOOR;
+}
+f_inet_aton {
+	$this->token = OQLParser::F_INET_ATON;
+}
+f_inet_ntoa {
+	$this->token = OQLParser::F_INET_NTOA;
+}
+numval {
+	$this->token = OQLParser::NUMVAL;
+}
+strval {
+	$this->token = OQLParser::STRVAL;
+}
+name {
+	$this->token = OQLParser::NAME;
+}
+varname {
+	$this->token = OQLParser::VARNAME;
+}
+dot {
+	$this->token = OQLParser::DOT;
+}
+*/
+
+}
+
+define('UNEXPECTED_INPUT_AT_LINE', 'Unexpected input at line');
+
+class OQLLexerException extends OQLException
+{
+	public function __construct($sInput, $iLine, $iCol, $sUnexpected)
+	{
+		parent::__construct("Syntax error", $sInput, $iLine, $iCol, $sUnexpected);
+	}
+}
+
+class OQLLexer extends OQLLexerRaw 
+{
+	public function getTokenPos()
+	{
+		return max(0, $this->count - strlen($this->value));
+	}
+
+   function yylex()
+   {
+      try
+      {
+      	return parent::yylex();
+		}
+		catch (Exception $e)
+		{
+			$sMessage = $e->getMessage();
+			if (substr($sMessage, 0, strlen(UNEXPECTED_INPUT_AT_LINE)) == UNEXPECTED_INPUT_AT_LINE)
+			{
+				$sLineAndChar = substr($sMessage, strlen(UNEXPECTED_INPUT_AT_LINE));
+				if (preg_match('#^([0-9]+): (.+)$#', $sLineAndChar, $aMatches))
+				{
+					$iLine = $aMatches[1];
+					$sUnexpected = $aMatches[2];
+					throw new OQLLexerException($this->data, $iLine, $this->count, $sUnexpected);
+				}
+			}
+			// Default: forward the exception
+			throw $e;
+		}
+	}
+}
+?>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<TriggerOnObjectCreate id="20">
+<description>User Request ticket creation</description>
+<target_class>UserRequest</target_class>
+</TriggerOnObjectCreate>
+
+<TriggerOnStateEnter id="50">
+<description>User Request ticket assigned to agent</description>
+<target_class>UserRequest</target_class>
+<state>assigned</state>
+</TriggerOnStateEnter>
+
+<TriggerOnStateEnter id="60">
+<description>User Request ticket resolved</description>
+<target_class>UserRequest</target_class>
+<state>resolved</state>
+</TriggerOnStateEnter>
+</Set>

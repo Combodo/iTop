@@ -1,0 +1,165 @@
+/* CSS Document */
+body {
+    font-family: Verdana, Arial, Helevtica;
+    font-size: smaller;
+    background-color: #ffffff;
+    color:#000000;
+	margin: 0;			/* Remove body margin/padding */
+	padding: 0;
+	overflow: hidden;	/* Remove scroll bars on browser window */
+}
+
+table {
+	border: 1px solid #000000;
+}
+
+.raw_output {
+    font-family: Courier-New, Courier, Arial, Helevtica;
+    font-size: smaller;
+    background-color: #eeeeee;
+    color: #000000;
+    border: 1px dashed #000000;
+    padding: 0.25em;
+    margin-top: 1em;
+}
+
+th {
+    font-family: Verdana, Arial, Helevtica;
+    font-size: smaller;
+    color: #000000;
+    background-color:#E1DEB5;	
+}
+
+td {
+    font-family: Verdana, Arial, Helevtica;
+    font-size: smaller;
+}
+
+td.label {
+    font-family: Verdana, Arial, Helevtica;
+    font-size: smaller;
+    color: #000000;
+    background-color:#E1DEB5;
+    padding: 0.2em;	
+}
+
+a.small_action {
+    font-family: Verdana, Arial, Helvetica;
+    font-size: smaller;
+    color: #000000;
+	text-decoration:none;
+}
+
+.display_block {
+	border: 1px dashed #CCC;
+	background: #CFC;
+	padding:0.25em;
+}
+
+.loading {
+	border: 1px dashed #CCC;
+	background: #FCC;
+	padding:0.25em;
+}
+
+/* By Rom */
+.csvimport_createobj {
+    color: #AA0000;
+    background-color:#EEEEEE;
+}
+.csvimport_error {
+    font-weight: bold;
+    color: #FF0000;
+    background-color:#EEEEEE;
+}
+.csvimport_warning {
+    color: #CC8888;
+    background-color:#EEEEEE;
+}
+.csvimport_ok {
+    color: #00000;
+    background-color:#BBFFBB;
+}
+.csvimport_reconkey {
+    font-style: italic;
+    color: #888888;
+    background-color:#FFFFF;
+}
+.csvimport_extreconkey {
+    color: #888888;
+    background-color:#FFFFFF;
+}
+
+.treeview, .treeview ul { 
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}	
+
+.treeview li { 
+	margin: 0;
+	padding: 3px 0pt 3px 16px;
+}
+
+ul.dir li { padding: 2px 0 0 16px; }
+
+.treeview li { background: url(../images/tv-item.gif) 0 0 no-repeat; }
+.treeview .collapsable { background-image: url(../images/tv-collapsable.gif); }
+.treeview .expandable { background-image: url(../images/tv-expandable.gif); }
+.treeview .last { background-image: url(../images/tv-item-last.gif); }
+.treeview .lastCollapsable { background-image: url(../images/tv-collapsable-last.gif); }
+.treeview .lastExpandable { background-image: url(../images/tv-expandable-last.gif); }
+
+#MySplitter {
+	/* Height is set to match window size in $().ready() below */
+	border:0px;
+	margin:4px;
+	padding:0px;
+	min-width: 100px;	/* Splitter can't be too thin ... */
+	min-height: 100px;	/* ... or too flat */
+}
+#LeftPane {
+	background: #f0eee0;
+	padding: 4px;
+	overflow: auto;		/* Scroll bars appear as needed */
+	color:#666;
+}
+#TopPane {				/* Top nested in right pane */
+	background: #f0eee0;
+	padding: 4px;
+	height: 150px;		/* Initial height */
+	min-height: 75px;	/* Minimum height */
+	overflow: auto;	
+	color:#666;
+}
+#RightPane {			/* Bottom nested in right pane */
+	background: #79b;
+	height:150px;		/* Initial height */
+	min-height:130px;
+	no.padding:15px;
+	no.margin:10px;
+	overflow:auto;
+	color:#fff;
+}
+
+#BottomPane {			/* Bottom nested in right pane */
+	background: #79b;
+	padding: 4px;
+	overflow: auto;
+	color:#fff;
+}
+#MySplitter .vsplitbar {
+	width: 7px;
+	height: 50px;
+	background: #68a url(../images/vgrabber2.gif) no-repeat  center;
+}
+#MySplitter .vsplitbar.active, #MySplitter .vsplitbar:hover {
+	background: #68a url(../images/vgrabber2_active.gif) no-repeat  center;
+}
+#MySplitter .hsplitbar {
+	height: 8px;
+	background: #68a url(../images/hgrabber2.gif) no-repeat center;
+}
+#MySplitter .hsplitbar.active, #MySplitter .hsplitbar:hover {
+	background: #68a url(../images/hgrabber2_active.gif) no-repeat center;
+}

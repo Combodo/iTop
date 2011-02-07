@@ -1,0 +1,67 @@
+<?php
+
+
+SetupWebPage::AddModule(
+	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
+	'itop-config-mgmt/1.0.0',
+	array(
+		// Identification
+		//
+		'label' => 'Configuration Management (CMDB)',
+		'category' => 'business',
+
+		// Setup
+		//
+		'dependencies' => array(
+			//'itop-config-mgmt/1.0.0',
+		),
+		'mandatory' => true,
+		'visible' => true,
+
+		// Components
+		//
+		'datamodel' => array(
+			'model.itop-config-mgmt.php',
+		),
+		'dictionary' => array(
+			'en.dict.itop-config-mgmt.php',
+			'fr.dict.itop-config-mgmt.php',
+			'es_cr.dict.itop-config-mgmt.php',
+			'de.dict.itop-config-mgmt.php',
+			'pt_br.dict.itop-config-mgmt.php',
+			'ru.dict.itop-config-mgmt.php',
+			'tr.dict.itop-config-mgmt.php',
+			'zh.dict.itop-config-mgmt.php',
+		),
+		'data.struct' => array(
+			'data.struct.Audit.xml',
+		),
+		'data.sample' => array(
+			'data.sample.Organization.xml',
+			'data.sample.Location.xml',
+			'data.sample.Software.xml',
+			'data.sample.Contact.xml',
+			'data.sample.lnkTeamToContact.xml',
+			'data.sample.FunctionalCI.xml',
+			'data.sample.DBServerInstance.xml',
+			'data.sample.ApplicationInstance.xml',
+			'data.sample.DatabaseInstance.xml',
+			'data.sample.NetworkInterface.xml',
+			'data.sample.lnkCIToContact.xml',
+			'data.sample.lnkProcessToSolution.xml',
+			'data.sample.lnkSolutionToCI.xml',
+		),
+		
+		// Documentation
+		//
+		'doc.manual_setup' => '', // No manual installation required
+		'doc.more_information' => '/doc/itop-documentation.htm#ConfigMgmt',
+
+		// Default settings
+		//
+		'settings' => array(
+		),
+	)
+);
+
+?>

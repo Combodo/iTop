@@ -1,0 +1,12 @@
+<div class="page_header">
+	<itopblock blockclass="MenuBlock" type="popup" encoding="text/oql" label="Actions">SELECT $class$ WHERE id = $id$</itopblock>
+	<h1>$class$: <span class="hilite">$name$</span></h1>
+	<itopblock blockclass="HistoryBlock" type="toggle" encoding="text/oql">SELECT CMDBChangeOp WHERE objkey = $id$ AND objclass = '$class$'</itopblock>
+</div>
+<img src="../../images/clean.png" style="margin-top:-20px; margin-right:10px; float:right">
+<itopblock blockclass="DisplayBlock" asynchronous="false" type="bare_details" encoding="text/oql">SELECT $class$ WHERE id = $id$</itopblock>
+<itoptabs>
+	<itoptab name="Rules">
+		<itopblock blockclass="DisplayBlock" type="list" encoding="text/oql">SELECT AuditRule WHERE category_id = $id$</itopblock>
+	</itoptab>
+</itoptabs>

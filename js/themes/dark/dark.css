@@ -1,0 +1,11 @@
+.dark { background:#111; color:snow; font:10pt Calibri, Arial, sans-serif; }
+.dark a, a.dark { color:#68D; outline:none; }
+.dark a:visited, a.dark:visited { color:#D66; }
+.dark a:hover, a.dark:hover { color:#FFF; }
+.dark fieldset { border:1px solid #282828; }
+.dark legend { color:#CCC; font:.8em Verdana, san-serif; }
+.dark button, button.dark, .dark input, input.dark { padding:2px 4px; font:.9em Consolas, Verdana, san-serif; }
+.dark textarea, textarea.dark { padding:2px 4px; font:.9em Consolas, Courier New, san-serif; width:20em; height:5em; overflow:auto; }
+.dark select, select.dark { padding:3px 0 3px 4px; font:.9em Verdana, san-serif; }
+.dark label { font-weight:bold; }
+

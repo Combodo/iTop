@@ -1,0 +1,222 @@
+/* CSS Document */
+body {
+    font-family: Verdana, Arial, Helevtica;
+    font-size: smaller;
+    background-color: #68a;
+    color:#000000;
+	margin: 0;			/* Remove body margin/padding */
+	padding: 0;
+	overflow: hidden;	/* Remove scroll bars on browser window */
+}
+
+table {
+	border: 1px solid #000000;
+}
+
+.raw_output {
+    font-family: Courier-New, Courier, Arial, Helevtica;
+    font-size: smaller;
+    background-color: #eeeeee;
+    color: #000000;
+    border: 1px dashed #000000;
+    padding: 0.25em;
+    margin-top: 1em;
+}
+
+th {
+    font-family: Verdana, Arial, Helvetica;
+    font-size: smaller;
+    color: #000000;
+    background-color:#ace27d;	
+}
+
+td {
+    font-family: Verdana, Arial, Helvetica;
+    font-size: smaller;
+	background-color: #b7cfe8;
+}
+
+tr.clicked td {
+    font-family: Verdana, Arial, Helvetica;
+    font-size: smaller;
+	background-color: #ffcfe8;
+}
+
+td.label {
+    font-family: Verdana, Arial, Helvetica;
+    font-size: smaller;
+    color: #000000;
+    background-color:#ace27d;
+    padding: 0.2em;	
+}
+
+td a, td a:visited {
+	text-decoration:none;
+	color:#000000;
+}
+td a:hover {
+	text-decoration:underline;
+	color:#FFFFFF;
+}
+
+a.small_action {
+    font-family: Verdana, Arial, Helvetica;
+    font-size: smaller;
+    color: #000000;
+	text-decoration:none;
+}
+
+.display_block {
+	noborder: 1px dashed #CCC;
+	background: #79b;
+	padding:0.25em;
+}
+div#TopPane .display_block {
+	background: #f0eee0;
+	padding:0.25em;
+	text-align:center;
+}
+div#TopPane label {
+	color:#000;
+	background: #f0eee0;
+}
+
+div#TopPane td {
+	color:#000;
+	background: #f0eee0;
+}
+
+.loading {
+	noborder: 1px dashed #CCC;
+	background: #b9c1c8;
+	padding:0.25em;
+}
+
+label {
+	font-family:Georgia, "Times New Roman", Times, serif;
+	color:#FFFFFF;
+	text-align:right;
+}
+
+input.textSearch {
+	border:1px solid #333;
+	noheight:1.2em;
+	font-size:0.8em;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	color:#000000;
+}
+
+/* By Rom */
+.csvimport_createobj {
+    color: #AA0000;
+    background-color:#EEEEEE;
+}
+.csvimport_error {
+    font-weight: bold;
+    color: #FF0000;
+    background-color:#EEEEEE;
+}
+.csvimport_warning {
+    color: #CC8888;
+    background-color:#EEEEEE;
+}
+.csvimport_ok {
+    color: #00000;
+    background-color:#BBFFBB;
+}
+.csvimport_reconkey {
+    font-style: italic;
+    color: #888888;
+    background-color:#FFFFF;
+}
+.csvimport_extreconkey {
+    color: #888888;
+    background-color:#FFFFFF;
+}
+
+.treeview, .treeview ul { 
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}	
+
+.treeview li { 
+	margin: 0;
+	padding: 3px 0pt 3px 16px;
+	font-size:0.9em;
+}
+
+ul.dir li {
+	padding: 2px 0 0 16px;
+}
+
+.treeview li { background: url(../images/tv-item.gif) 0 0 no-repeat; }
+.treeview .collapsable { background-image: url(../images/tv-collapsable.gif); }
+.treeview .expandable { background-image: url(../images/tv-expandable.gif); }
+.treeview .last { background-image: url(../images/tv-item-last.gif); }
+.treeview .lastCollapsable { background-image: url(../images/tv-collapsable-last.gif); }
+.treeview .lastExpandable { background-image: url(../images/tv-expandable-last.gif); }
+
+#Header { padding: 0; background:#ccc url(../images/bandeau2.gif) repeat-x center;}
+div.iTopLogo {
+	background:url(../images/iTop.gif) no-repeat center;
+	width:100px;
+	height:56px;
+}
+div.iTopLogo span {
+	display:none;
+}
+
+#MySplitter {
+	/* Height is set to match window size in $().ready() below */
+	border:0px;
+	margin:4px;
+	padding:0px;
+	min-width: 100px;	/* Splitter can't be too thin ... */
+	min-height: 100px;	/* ... or too flat */
+}
+#LeftPane {
+	background: #f0eee0;
+	padding: 4px;
+	overflow: auto;		/* Scroll bars appear as needed */
+	color:#666;
+}
+#TopPane {				/* Top nested in right pane */
+	background: #f0eee0;
+	padding: 4px;
+	height: 150px;		/* Initial height */
+	min-height: 75px;	/* Minimum height */
+	overflow: auto;	
+	color:#666;
+}
+#RightPane {			/* Bottom nested in right pane */
+	background: #79b;
+	height:150px;		/* Initial height */
+	min-height:130px;
+	no.padding:15px;
+	no.margin:10px;
+	overflow:auto;
+	color:#fff;
+}
+
+#BottomPane {			/* Bottom nested in right pane */
+	background: #79b;
+	padding: 4px;
+	overflow: auto;
+	color:#fff;
+}
+#MySplitter .vsplitbar {
+	width: 7px;
+	height: 50px;
+	background: #68a url(../images/vgrabber2.gif) no-repeat  center;
+}
+#MySplitter .vsplitbar.active, #MySplitter .vsplitbar:hover {
+	background: #68a url(../images/vgrabber2_active.gif) no-repeat  center;
+}
+#MySplitter .hsplitbar {
+	height: 8px;
+	background: #68a url(../images/hgrabber2.gif) no-repeat center;
+}
+#MySplitter .hsplitbar.active, #MySplitter .hsplitbar:hover {
+	background: #68a url(../images/hgrabber2_active.gif) no-repeat center;
+}

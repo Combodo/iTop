@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<Server alias="FunctionalCI" id="2">
+<name>dbserver1.demo.com</name>
+<status>production</status>
+<org_id>2</org_id>
+<importance>medium</importance>
+<brand>HP</brand>
+<model>DL380</model>
+<serial_number></serial_number>
+<asset_ref></asset_ref>
+<description></description>
+<location_id>3</location_id>
+<location_details></location_details>
+<management_ip>10.1.1.10</management_ip>
+<default_gateway>255.255.255.0</default_gateway>
+<cpu>2</cpu>
+<ram>16Gb</ram>
+<hdd>120Gb</hdd>
+<os_family>Linux</os_family>
+<os_version>Debian (Lenny)</os_version>
+</Server>
+<ApplicationSolution alias="FunctionalCI" id="12">
+<name>iTop</name>
+<status>production</status>
+<org_id>2</org_id>
+<importance>medium</importance>
+<description>iTop application for IT Management</description>
+</ApplicationSolution>
+<BusinessProcess alias="FunctionalCI" id="15">
+<name>iTop Demonstration</name>
+<status>production</status>
+<org_id>2</org_id>
+<importance>medium</importance>
+<description></description>
+</BusinessProcess>
+<NetworkDevice alias="FunctionalCI" id="1">
+<name>router1</name>
+<status>implementation</status>
+<org_id>2</org_id>
+<importance>medium</importance>
+<brand></brand>
+<model></model>
+<serial_number></serial_number>
+<asset_ref></asset_ref>
+<description></description>
+<location_id>0</location_id>
+<location_details></location_details>
+<management_ip>10.1.1.3</management_ip>
+<default_gateway></default_gateway>
+<type>router</type>
+<ios_version></ios_version>
+<ram></ram>
+<snmp_read></snmp_read>
+<snmp_write></snmp_write>
+</NetworkDevice>
+<NetworkDevice alias="FunctionalCI" id="4">
+<name>switch01</name>
+<status>production</status>
+<org_id>2</org_id>
+<importance>medium</importance>
+<brand>3Com</brand>
+<model>2300</model>
+<serial_number></serial_number>
+<asset_ref></asset_ref>
+<description></description>
+<location_id>2</location_id>
+<location_details></location_details>
+<management_ip>10.1.1.2</management_ip>
+<default_gateway>255.255.255.0</default_gateway>
+<type>switch</type>
+<ios_version></ios_version>
+<ram></ram>
+<snmp_read></snmp_read>
+<snmp_write></snmp_write>
+</NetworkDevice>
+<Server alias="FunctionalCI" id="9">
+<name>webserver.demo.com</name>
+<status>production</status>
+<org_id>2</org_id>
+<importance>medium</importance>
+<brand>IBM</brand>
+<model>x3400 Tower Server</model>
+<serial_number></serial_number>
+<asset_ref></asset_ref>
+<description></description>
+<location_id>3</location_id>
+<location_details></location_details>
+<management_ip>10.1.1.20</management_ip>
+<default_gateway>255.255.255.0</default_gateway>
+<cpu>4</cpu>
+<ram>8Gb</ram>
+<hdd>240Gb</hdd>
+<os_family>Unix</os_family>
+<os_version>AIX 4.0</os_version>
+</Server>
+</Set>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<SLA alias="SLA" id="8">
+<name>Bronze - Service - HW Mgmt</name>
+<service_id>1</service_id>
+</SLA>
+<SLA alias="SLA" id="5">
+<name>Bronze - Service - NW Mgmt</name>
+<service_id>2</service_id>
+</SLA>
+<SLA alias="SLA" id="6">
+<name>Gold - Service - HW Mgmt</name>
+<service_id>1</service_id>
+</SLA>
+<SLA alias="SLA" id="3">
+<name>Gold - Service - NW Mgmt</name>
+<service_id>2</service_id>
+</SLA>
+<SLA alias="SLA" id="7">
+<name>Silver - Service - HW Mgmt</name>
+<service_id>1</service_id>
+</SLA>
+<SLA alias="SLA" id="4">
+<name>Silver - Service - NW Mgmt</name>
+<service_id>2</service_id>
+</SLA>
+</Set>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+
+<AuditCategory id="1">
+<name>Devices in production</name>
+<description>Checking all devices in production</description>
+<definition_set>SELECT InfrastructureCI AS ci WHERE ci.status = 'production'</definition_set>
+</AuditCategory>
+
+<AuditRule id="1">
+<name>Devices in production on a Location not in production</name>
+<description></description>
+<query>SELECT InfrastructureCI AS ci JOIN Location AS l ON ci.location_id = l.id WHERE ci.status = &apos;production&apos; AND l.status != &apos;active&apos;</query>
+<valid_flag>false</valid_flag>
+<category_id>1</category_id>
+</AuditRule>
+
+<AuditRule id="2">
+<name>Devices not attached to a monitoring solution</name>
+<description></description>
+<query>SELECT InfrastructureCI AS ci JOIN lnkSolutionToCI AS l ON l.ci_id = ci.id JOIN ApplicationSolution AS s ON l.solution_id = s.id WHERE ci.status = &apos;production&apos; AND s.name LIKE &apos;%Monitoring%&apos;</query>
+<valid_flag>true</valid_flag>
+<category_id>1</category_id>
+</AuditRule>
+</Set>

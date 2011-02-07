@@ -1,0 +1,20 @@
+<h1><itopstring>UI:ProblemMgmtMenuOverview:Title</itopstring></h1>
+<table border="0" padding="5" class="layout" width="100%">
+<tr>
+<td class="dashboard">
+<itopblock BlockClass="DisplayBlock" type="open_flash_chart" parameters="chart_type:bars;group_by:service_name;chart_title:UI-ProblemManagementOverview-ProblemByService" asynchronous="false" encoding="text/oql">SELECT Problem</itopblock>
+</td>
+<td class="dashboard">
+<itopblock BlockClass="DisplayBlock" type="open_flash_chart" parameters="chart_type:pie;group_by:priority;chart_title:UI-ProblemManagementOverview-ProblemByPriority" asynchronous="false" encoding="text/oql">SELECT Problem</itopblock>
+</td>
+</tr>
+<tr>
+<td class="dashboard">
+<h2><itopstring>UI-ProblemManagementOverview-ProblemUnassigned</itopstring></h2>
+<itopblock BlockClass="DisplayBlock" type="list" parameters="dashboard:true" asynchronous="false" encoding="text/oql">SELECT Problem WHERE status IN ("new")</itopblock>
+</td>
+<td class="dashboard">
+</td>
+</tr>
+</table>
+

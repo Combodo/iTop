@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<Person alias="Contact" id="1">
+<name>Picasso</name>
+<status>active</status>
+<org_id>2</org_id>
+<email>pablo@combodo.com</email>
+<phone></phone>
+<location_id>3</location_id>
+<first_name>Pablo</first_name>
+<employee_id></employee_id>
+</Person><Person alias="Contact" id="3">
+<name>Dali</name>
+<status>active</status>
+<org_id>2</org_id>
+<email>salvador@combodo.com</email>
+<phone></phone>
+<location_id>3</location_id>
+<first_name>Salvador</first_name>
+<employee_id></employee_id>
+</Person>
+<Team alias="Contact" id="2">
+<name>Hardware support</name>
+<status>active</status>
+<org_id>2</org_id>
+<email>support@combodo.com</email>
+<phone></phone>
+<location_id>2</location_id>
+</Team>
+<Team alias="Contact" id="4">
+<name>NW support</name>
+<status>active</status>
+<org_id>2</org_id>
+<email>nw@company.com</email>
+<phone></phone>
+<location_id>3</location_id>
+</Team>
+</Set>

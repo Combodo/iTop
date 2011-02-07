@@ -1,0 +1,701 @@
+var TEST_MODE = 0;
+
+if (TEST_MODE == 1)
+{
+	var root_object_id = 11; 
+	var root_object_class = "bizPC";  
+	var root_relation = "neighboors";  
+	var xml_document_url = "http://localhost:81/pages/xml.navigator.php";
+	var details_url = "http://localhost:81/pages/UI.php?operation=details";
+}
+else
+{
+	var root_object_id = obj_id; // 11; 
+	var root_object_class = obj_class; // "bizPC";  
+	var root_relation = relation; // "neighboors";  
+	var xml_document_url = unescape(xmlUrl); // "http://localhost:81/pages/xml.navigator.php";
+	var details_url = unescape(drillUrl); // "http://localhost:81/pages/UI.php?operation=details";
+}
+if (pWidth == undefined)
+{
+	pWidth = 800;
+}
+if (pHeight == undefined)
+{
+	pHeight = 800;
+}
+var K = 0; //0.02; // elasticity coeff
+var Q = 0; // Normally each element may have a specific "charge"
+var deltaT = 1; // delta time
+var solidFriction = 10;
+var radius = 25;
+if (customRadius != undefined)
+{
+	radius = customRadius;
+}
+if (displayController != 'true')
+{
+	_level0.Controller._x = -1000; // Make it invisible
+}
+var M = 1; // Mass of the object
+var frictionCoeff = 0.9; // Friction coefficient
+var bDrawForces = false;
+var aXPos = new Array;
+var aYPos = new Array;
+var aClips = new Array;
+var aLinks = new Array;
+var aWeights = new Array;
+
+var oItemsContextMenu = new ContextMenu();
+oItemsContextMenu.hideBuiltInItems();
+var menuItem = new ContextMenuItem ("Details...", DisplayObjectDetails);
+var menuItem2 = new ContextMenuItem ("Expand", Expand);
+var menuItem3 = new ContextMenuItem ("Drill down", DrillDown);
+
+function DisplayObjectDetails(oSelectedObject)
+{
+	// Called by the context menu
+	var fullUrl:String = details_url;
+	if (fullUrl.indexOf("?",0) > 0)
+	{
+		fullUrl = fullUrl+"&class="+oSelectedObject.obj_class+"&id="+oSelectedObject.id;
+	}
+	else
+	{
+		fullUrl = fullUrl+"?class="+oSelectedObject.obj_class+"&id="+oSelectedObject.id;
+	}
+	getURL(fullUrl, "_top");
+}
+
+function DrillDown(oSelectedObject)
+{
+	DoReload(oSelectedObject.id, oSelectedObject.obj_class, root_relation);
+}
+
+function Expand(oSelectedObject)
+{
+	DoLoad(oSelectedObject.id, oSelectedObject.obj_class, root_relation);
+}
+
+oItemsContextMenu.customItems.push(menuItem, menuItem2, menuItem3);
+
+function DrawLinks()
+{
+	oLinksMovie = _root.links;
+	oLinksMovie.clear();
+	oLinksMovie.lineStyle (5, 0xcccccc, 100);
+	for(i=0; i<aLinks.length; i++)
+	{
+		x1 = aClips[aLinks[i].start]._x;
+		y1 = aClips[aLinks[i].start]._y;
+		x2 = aClips[aLinks[i].end]._x;
+		y2 = aClips[aLinks[i].end]._y;
+		dx = x2 -x1;
+		dy = y2 - y1;
+		l = Math.sqrt( dx*dx + dy*dy);
+
+		//trace("Linking item "+aLinks[i].start+" to item "+aLinks[i].end+"; Line from: ("+x1+", "+y1+") to ("+x2+", "+y2+")");
+		oLinksMovie.moveTo(x1, y1);
+		oLinksMovie.lineTo(x2, y2);
+		if (aLinks[i].bArrow)
+		{
+			dx = x2 -x1;
+			dy = y2 - y1;
+			l = Math.sqrt( dx*dx + dy*dy);
+			x_mid = (x1+x2) / 2;
+			y_mid = (y1+y2) / 2;
+			oLinksMovie.lineStyle (3, 0x999999, 100);
+			oLinksMovie.moveTo(x_mid, y_mid);
+			oLinksMovie.lineTo(x_mid + 5*(dy-dx)/l, y_mid-5*(dx+dy)/l);
+			oLinksMovie.moveTo(x_mid, y_mid);
+			oLinksMovie.lineTo(x_mid - 5*(dx+dy)/l, y_mid-5*(dy-dx)/l);
+		}
+	}
+}
+
+function ComputeElasticForces()
+{
+	var aForces = new Array;
+
+	for(var i=0; i<aClips.length; i++)
+	{
+		aForces[i] = new Object;
+		aForces[i].FxTotal = 0;
+		aForces[i].FyTotal = 0;
+	}
+	// Elastic forces: each link applies a force proportional to its length (F = - K * x)
+	for(var l=0; l<aLinks.length; l++)
+	{
+		dx = aClips[aLinks[l].start]._x - aClips[aLinks[l].end]._x;
+		dy = aClips[aLinks[l].start]._y - aClips[aLinks[l].end]._y;
+		//d = Math.sqrt(dx*dx + dy*dy);
+		//Fx = -K * d * dx / d;
+		//Fy = -K * d * dy / d;
+		// Links with more weight attached are more rigid !
+		weightCoeff = (aWeights[aLinks[l].start] + aWeights[aLinks[l].end])/2;
+		Fx = -K * weightCoeff * dx;
+		Fy = -K * weightCoeff * dy;
+		aForces[aLinks[l].start].FxTotal += Fx;
+		aForces[aLinks[l].start].FyTotal += Fy;
+		aForces[aLinks[l].end].FxTotal -= Fx;
+		aForces[aLinks[l].end].FyTotal -= Fy;
+	}
+	return aForces;
+}
+
+function ComputeElectrostaticForces()
+{
+	aForces = new Array;
+
+	for(var i=0; i<aClips.length; i++)
+	{
+		aForces[i] = new Object;
+		aForces[i].FxTotal = 0;
+		aForces[i].FyTotal = 0;
+	}
+	// Each items applies a force to all the others, in proportion to the inverse of the square
+	// of their distance: (F = Q / x2)
+	for (var i=0; i<aClips.length; i++)
+	{
+		for(var j=0; j<aClips.length; j++)
+		{
+			if (i != j) // no force on itself !!
+			{
+				dx = aClips[i]._x - aClips[j]._x;
+				dy = aClips[i]._y - aClips[j]._y;
+				d2 = (dx*dx + dy*dy) / (radius * radius);
+				d = Math.sqrt(d2);
+				if (d2 < 0.05)
+				{
+					d2 = 0.05;
+				}
+				Fx = Q * dx / d2;
+				Fy = Q * dy / d2;
+				aForces[i].FxTotal += Fx;
+				aForces[i].FyTotal += Fy;
+
+			}
+		}
+	}
+	return aForces;
+}
+
+function DrawForces()
+{
+	oForcesMovie.clear();
+	oForcesMovie = _root.forces;
+	
+	// Draw elastic forces in red
+	oForcesMovie.lineStyle (1, 0xff0000, 100);
+	aElasticForces = ComputeElasticForces();
+	DrawForcesVectors(aElasticForces);
+	
+	// Draw electrostatic forces in blue
+	oForcesMovie.lineStyle (1, 0x0000ff, 100);
+	aElectrostaticForces = ComputeElectrostaticForces();
+	DrawForcesVectors(aElectrostaticForces);
+	
+	// Compute resulting forces and draw them (in green)
+	aForces = new Array;
+	for(var i=0; i<aClips.length; i++)
+	{
+		aForces[i] = new Object;
+		aForces[i].FxTotal = aElasticForces[i].FxTotal + aElectrostaticForces[i].FxTotal;
+		aForces[i].FyTotal = aElasticForces[i].FyTotal + aElectrostaticForces[i].FyTotal;
+		
+		Vx = frictionCoeff*(aClips[i].Vx + aForces[i].FxTotal / M * deltaT);
+		Vy = frictionCoeff*(aClips[i].Vy + aForces[i].FyTotal / M * deltaT);
+		V = Math.sqrt(Vx*Vx + Vy*Vy);
+		if (V < solidFriction)
+		{
+			c = 0;
+		}
+		else
+		{
+			c = (V - solidFriction) / V;
+		}
+		aClips[i].Vx = c * Vx;
+		aClips[i].Vy = c * Vy;
+	}
+	oForcesMovie.lineStyle (2, 0x00ff00, 100);
+	DrawForcesVectors(aForces);
+	UpdatePositions();
+}
+
+function DrawForcesVectors(aForces)
+{
+	if (bDrawForces)
+	{
+		for(var i=0; i<aClips.length; i++)
+		{
+			oForcesMovie.moveTo(aClips[i]._x, aClips[i]._y);
+			//trace("Resulting force on item"+i+": ("+aForces[i].FxTotal+", "+aForces[i].FyTotal+").");
+			Fx = aForces[i].FxTotal;
+			Fy = aForces[i].FyTotal;
+			strengh = Math.sqrt(Fx*Fx + Fy*Fy);
+			if (strengh > 1) // if less than 1 pixel, don't draw it
+			{
+				// Draw the arrow: main line
+				oForcesMovie.lineTo(aClips[i]._x + Fx, aClips[i]._y + Fy);
+				// Head of the arrow
+				oForcesMovie.lineTo(aClips[i]._x + Fx + 5*(Fy-Fx)/strengh, aClips[i]._y + Fy - 5*(Fx+Fy)/strengh);
+				oForcesMovie.moveTo(aClips[i]._x + Fx, aClips[i]._y + Fy);
+				// Head of the arrow
+				oForcesMovie.lineTo(aClips[i]._x + Fx - 5*(Fx+Fy)/strengh, aClips[i]._y + Fy - 5*(Fy-Fx)/strengh);
+			}
+		}
+	}
+}
+
+function DrawItems()
+{
+	aForces = ComputeForces();
+	DrawLinks(true);
+	DrawForces(aForces);
+}
+
+function DoStartDrag()
+{
+	this.bInDrag = true;
+	if (this.iTimeout != 0)
+	{
+		clearTimeout(this.iTimeout);
+		this.iTimeout = 0;
+	}
+	this.startDrag()
+}
+
+
+function DoReleaseDrag()
+{
+	this.stopDrag();
+	this.bInDrag = false;
+	if (this.lastclick - (this.lastclick=getTimer()) + 250 > 0)
+	{
+		//do doubleclick action
+	   trace("double");
+	   DoReload(this.id, this.obj_class);
+	} 
+	else
+	{
+		//do singleclick action
+	   trace("single");
+	}
+}
+
+function DoRollOver()
+{
+	trace("Roll Over: "+this.name);
+	var iTimeOut:Number;
+	iTimeout = setTimeout(ShowTooltip, 500, this);
+	this.iTimeout = iTimeout;
+}
+
+function DoRollOut()
+{
+	trace("Roll Out");
+	if (this.iTimeout != 0)
+	{
+		clearTimeout(this.iTimeout);
+		this.iTimeout = 0;
+	}
+	HideTooltip();
+}
+
+function UpdatePositions()
+{
+	var MIN_MOVE_LIMIT = 0.3; // Whatever moves of less than 0.3 px per cycle, remains frozen to spare some CPU
+	for(var i=0; i<aClips.length; i++)
+	{
+		if (!aClips[i].bInDrag)
+		{
+			//trace("Speed: ("+aClips[i].Vx+", "+aClips[i].Vy+")");
+			if ( (Math.abs(aClips[i].Vx * deltaT) > MIN_MOVE_LIMIT) || (Math.abs(aClips[i].Vy * deltaT) > MIN_MOVE_LIMIT) )
+			{
+				aClips[i]._x += aClips[i].Vx * deltaT;
+				aClips[i]._y += aClips[i].Vy * deltaT;
+			}
+		}
+	}
+}
+
+function CreateItem(id, obj_class, icon, name, x, y, parentId, oNodeDetails)
+{
+	trace("CreateItem(id:"+id+" , parentId:"+parentId+")");
+	var i = aClips.length; // Add new elements at the end of the array
+	var sMovieName;
+	switch (icon)
+	{
+		case "application":
+		sMovieName = "Item_application";
+		break;
+		
+		case "business_process":
+		sMovieName = "Item_business_process";
+		break;
+
+		case "chemicals":
+		sMovieName = "Item_chemicals";
+		break;
+		
+		case "contact":
+		sMovieName = "Item_contact";
+		break;
+		
+		case "contract":
+		sMovieName = "Item_contract";
+		break;
+		
+		case "change":
+		sMovieName = "Item_change";
+		break;
+		
+		case "database":
+		sMovieName = "Item_database";
+		break;
+		
+		case "db_instance":
+		sMovieName = "Item_db_instance";
+		break;
+		
+		case "desktop":
+		sMovieName = "Item_dekstop";
+		break;
+		
+		case "incident":
+		sMovieName = "Item_incident";
+		break;
+		
+		case "interface":
+		sMovieName = "Item_interface";
+		break;
+		
+		case "laptop":
+		sMovieName = "Item_laptop";
+		break;
+		
+		case "network_device":
+		sMovieName = "Item_nw_device";
+		break;
+		
+		case "printer":
+		sMovieName = "Item_printer";
+		break;
+		
+		case "server":
+		sMovieName = "Item_server";
+		break;
+		
+		case "wireless_device":
+		sMovieName = "Item_wireless_device";
+		break;
+		
+		default:
+		sMovieName = "Item";
+	}
+	aClips[i]= _root.links.attachMovie(sMovieName, "r"+i, i+10);
+	aClips[i]._x= x;
+	aClips[i]._y= y;
+	aClips[i].parentId = parentId;
+	aClips[i].details = oNodeDetails;
+	aClips[i]._xscale = radius;
+	aClips[i]._yscale = radius;
+	aClips[i].onPress = DoStartDrag;
+	aClips[i].onRelease = DoReleaseDrag;
+	aClips[i].onRollOver = DoRollOver;
+	aClips[i].onRollOut = DoRollOut;
+	aClips[i].Vx = 0; // No inital speed
+	aClips[i].Vy = 0; // No inital speed
+	aClips[i].bInDrag = false;
+	aClips[i].id = id;
+	aClips[i].icon = icon;
+	aClips[i].name = name;
+	aClips[i].obj_class = obj_class;
+	aClips[i].menu = oItemsContextMenu;
+	aWeights[i] = 1;
+	trace("Element added: index="+i+", id="+id+", obj_class="+id+", obj_class="+name+", icon="+icon+newline+"details: "+aClips[i].details.values);
+	return i;
+}
+
+function GetParentAngle(oClip:MovieClip)
+{
+	var angle:Number = 0;
+	
+	trace("GetParentAngle oClip.parentId: "+oClip.parentId);
+	if (oClip.parentId != undefined)
+	{
+		oParentClip = aClips[oClip.parentId];
+		dx = oClip._x - oParentClip._x;
+		dy = oClip._y - oParentClip._y;
+		trace("GetParentAngle dx: "+dx+", dy:"+dy);
+		if ((dx == 0) && (dy == 0))
+		{
+			angle = 0;
+		}
+		else
+		{
+			angle = Math.atan2(dy, dx);
+		}
+	}
+	trace("GetParentAngle returned: "+((angle*360)/(2*Math.PI)));
+	return angle;
+}
+
+function FindItemByIdAndClass(id, obj_class)
+{
+	var result = -1;
+	var i = 0;
+	while ( (i < aClips.length) && (result == -1))
+	{
+		if ((aClips[i].id == id) && (aClips[i].obj_class == obj_class))
+		{
+			result = i;
+		}
+		i++;
+	}
+	return result;
+}
+
+function AddLink(sourceIndex, destinationIndex, bArrow)
+{
+	trace("Adding link between srcIndex:"+sourceIndex+" and destIndex:"+destinationIndex+" (arrow:"+bArrow+" )");
+	aLinks[aLinks.length] = { start: sourceIndex, end: destinationIndex, bArrow: bArrow };
+}
+
+oLinksMovie = _root.createEmptyMovieClip ("links", -1);
+oForcesMovie = _root.createEmptyMovieClip ("forces", 9999);
+oLinksMovie.onEnterFrame = DrawItems;
+oForcesMovie.onEnterFrame = DrawForces;
+
+////////////////////////////////////////////////////////////////////////////
+// Experimenting with the load of an XML file
+////////////////////////////////////////////////////////////////////////////
+
+// Create a new XML object.
+var myLoader:XML = new XML();
+
+// Set the ignoreWhite property to true (default value is false).
+myLoader.ignoreWhite = true;
+
+// After loading is complete, trace the XML object.
+myLoader.onLoad = function(success)
+{
+	DumpClips("Beginning of (asynchronous) load");
+	if (success)
+	{
+		myXML = new XML();
+		myXML.parseXML(myLoader);
+		oRootNode = myXML.firstChild;
+		trace("root node: "+oRootNode.nodeName);
+		if (oRootNode.attributes.title != undefined)
+		{
+			StaticContainer.Schema_title =  oRootNode.attributes.title;
+		}
+		else
+		{
+			StaticContainer.Schema_title = "";
+		}
+		oFirstNode = oRootNode.firstChild;
+		oStartPoint = {x:0, y:0};
+		var placement = ""; 
+		switch (oRootNode.attributes.position)
+		{
+			case "top":
+			oStartPoint.x = pWidth/2;
+			oStartPoint.y = 2*radius;
+			break;
+
+			case "left":
+			oStartPoint.x = 2*radius;
+			oStartPoint.y = pHeight/2;
+			break;
+			
+			case "center":
+			default:
+			oStartPoint.x = pWidth /2;
+			oStartPoint.y = pHeight /2;
+			placement = "surround";
+		}
+		LoadNode(oFirstNode, undefined, oStartPoint.x, oStartPoint.y, placement);
+	}
+	else
+	{
+		trace("Failed to load XML data:"+newline+myLoader);
+	}
+	_level0.LoadingAnimation._alpha = 0;
+	_level0.LoadingAnimation.stop();
+	DumpClips("End of (asynchronous) load");
+}
+
+function LoadNode(oXmlNode:Object, parentIndex:Number, x:Number, y:Number, placementMethod:String)
+{
+	trace("Loading Node: "+oXmlNode);
+
+	var nodeId = oXmlNode.attributes.id;
+	var nodeClass = oXmlNode.attributes.obj_class;
+	var nodeName = oXmlNode.attributes.name;
+	var nodeIcon = oXmlNode.attributes.icon;
+	var nodeIndex = FindItemByIdAndClass(nodeId, nodeClass);
+	var nodeZlist = oXmlNode.attributes.zlist;
+	var aNodeZlist = nodeZlist.split(',');
+	var oNodeDetails = { names: new Array(), values: new Array() };
+	for(var att_index=0; att_index<aNodeZlist.length; att_index++)
+	{
+		oNodeDetails.names[att_index] = aNodeZlist[att_index];
+		oNodeDetails.values[att_index] = eval("oXmlNode.attributes.att_"+att_index);		
+	}
+	trace("ZList:"+nodeZlist);
+	trace("oNodeDetails.values:"+oNodeDetails.values);
+	oXmlNode.attributes.zlist;
+	if (nodeIndex == -1)
+	{
+		nodeIndex = CreateItem(nodeId, nodeClass, nodeIcon, nodeName, x, y, parentIndex, oNodeDetails);
+		trace("Node inserted: nodeIndex = "+nodeIndex);
+	}
+	else
+	{
+		trace("Node (id:"+nodeId+" , class:"+nodeClass+", name:"+nodeName+" ) already loaded...");
+		placementMethod = "";
+	}
+	var oLinks = oXmlNode.firstChild;
+	trace("oLinks: "+oLink);
+	if (oLinks != undefined)
+	{
+		var iCount:Number = 0;
+		for(var i=0; i<oLinks.childNodes.length; i++)
+		{
+			var oCurrentLink = oLinks.childNodes[i];
+			var arrow = oCurrentLink.attributes.arrow;
+			trace(oCurrentLink.nodeName);
+			
+			var oChildNode = oCurrentLink.firstChild;
+			var childId = oChildNode.attributes.id;
+			var childClass = oChildNode.attributes.obj_class;
+			var childIndex = FindItemByIdAndClass(childId, childClass);
+			var oChildPt:Object;
+			if (placementMethod == 'surround')
+			{
+				angle = 2*Math.PI / (oLinks.childNodes.length);
+			}
+			else
+			{
+				angle = Math.PI / 8;
+			}
+			if (childIndex == -1)
+			{
+				trace("Placing child: id:"+chidlId+", class:"+childClass+", name:"+childName);
+				oChildPt = PlaceChild(aClips[nodeIndex], iCount, angle);
+				iCount++;
+			}
+			else
+			{
+				oChildPt.x = aClips[childIndex]._x;
+				oChildPt.y = aClips[childIndex]._y;
+			}
+			trace("iCount: "+iCount);
+			trace("============= DOWN ONE LEVEL ==============");
+			childIndex = LoadNode(oChildNode, nodeIndex, oChildPt.x, oChildPt.y);
+			trace("============= UP ONE LEVEL ==============");
+			AddLink(nodeIndex, childIndex, arrow /* bArrow */);
+		}
+	}
+	return nodeIndex;
+}
+
+function DoReload(id, obj_class, relation)
+{
+	_level0.LoadingAnimation.gotoAndPlay(1);
+	_level0.LoadingAnimation._alpha = 35;
+	trace("Reloading for id = "+id+", obj_class = "+obj_class);
+	var icon = "";
+	var name = ""
+	var oDetails = {};
+	for (var i=0; i < aClips.length; i++)
+	{
+		if ( (aClips[i].id == id) && (aClips[i].obj_class == obj_class) )
+		{
+			icon = aClips[i].icon;
+			name = aClips[i].name;
+			oDetails = aClips[i].details;
+		}
+		aClips[i].removeMovieClip();
+	}
+	aClips = new Array;
+	aLinks = new Array;
+	aWeights = new Array;
+	DumpClips("Before recreating any item");
+	CreateItem(id, obj_class, icon, name, 100, 400, undefined, oDetails); // Re-create the root node
+	DumpClips("After creating the first item");
+	var sLoadUrl = xml_document_url+"?class="+obj_class+"&id="+id+"&relation="+relation;
+	trace("Reloading from: "+sLoadUrl);
+	myLoader.load(sLoadUrl); // Load the rest of the items
+}
+
+function DoLoad(id, obj_class, relation)
+{
+	_level0.LoadingAnimation.gotoAndPlay(1);
+	_level0.LoadingAnimation._alpha = 35;
+	trace("Expanding id = "+id+", obj_class = "+obj_class);
+	var sLoadUrl = xml_document_url+"?class="+obj_class+"&id="+id+"&relation="+relation;
+	trace("Loading from: "+sLoadUrl);
+	myLoader.load(sLoadUrl); // Load the rest of the items
+}
+
+function PlaceChild(oClip:MovieClip, iChildIndex:Number, deltaAngle)
+{
+	var angle:Number = GetParentAngle(oClip) + GetAngle(iChildIndex, deltaAngle);
+	x = oClip._x + 7*radius*Math.cos(angle);
+	y = oClip._y + 7*radius*Math.sin(angle);
+	
+	trace("Child "+iChildIndex+", angle: "+(angle*360/(2*Math.PI))+" placed at { x: " +x+", y: "+y+" }");
+	return { x:x, y:y, angle: angle }; 
+}
+
+function GetAngle(iChildIndex:Number, deltaAngle)
+{
+	return (1-2*(iChildIndex % 2))*Math.floor( (iChildIndex+1) / 2) * deltaAngle;
+}
+
+function DumpClips(message)
+{
+	trace("******** aClips - "+message+" **********");
+	for (var i=0; i<aClips.length; i++)
+	{
+		trace("aClips["+i+"] = { id: "+aClips[i].id+", obj_class: "+aClips[i].obj_class+", name: "+aClips[i].name+", type: "+aClips[i].type+" }");
+	}
+	trace("*************************");
+}
+
+function ShowTooltip(oClip)
+{
+	// Show the Tooltip next to the mouse cursor
+	var mouse_point:Object = {x:oClip._xmouse, y:oClip._ymouse};
+	oClip.localToGlobal(mouse_point);
+	Tooltip_movie._x = mouse_point.x;
+	Tooltip_movie._y = mouse_point.y;
+	Tooltip_movie._alpha = 60;
+	Tooltip_movie.oldDepth = Tooltip_movie.getDepth();
+	Tooltip_movie.swapDepths(999);
+	Tooltip_movie._visible = true;
+	trace(Tooltip_movie.Properties_grid);
+	for(var index = 0; index <50; index++)
+	{
+		Tooltip_movie.Properties_grid.removeItemAt(0);
+	}
+	trace("Clips details: "+oClip.details.names);
+	for(var index = 0; index <oClip.details.names.length; index++)
+	{
+		Tooltip_movie.Properties_grid.addItem({Name: oClip.details.names[index], Value: oClip.details.values[index]});
+	}
+	Tooltip_movie.Properties_grid.spaceColumnsEqually();
+	oClip.iTimeout = 0;
+}
+
+function HideTooltip()
+{
+	Tooltip_movie._visible = false;
+	Tooltip_movie.swapDepths(Tooltip_movie.oldDepth);
+}
+// Load the XML into the myLoader object.
+//myLoader.load(xmlUrl+"?class="+root_object_class+"&id="+root_object_id);
+myLoader.load(xml_document_url+"?class="+root_object_class+"&id="+root_object_id+"&relation="+root_relation);

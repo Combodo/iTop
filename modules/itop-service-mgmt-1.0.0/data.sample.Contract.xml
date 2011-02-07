@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<CustomerContract alias="Contract" id="3">
+<name>Hw Management</name>
+<description></description>
+<start_date>2010-07-01 00:00:00</start_date>
+<end_date>2011-07-01 00:00:00</end_date>
+<cost></cost>
+<cost_currency>euros</cost_currency>
+<cost_unit></cost_unit>
+<billing_frequency></billing_frequency>
+<org_id>2</org_id>
+<provider_id>2</provider_id>
+<support_team_id>2</support_team_id>
+</CustomerContract>
+<CustomerContract alias="Contract" id="2">
+<name>Nw Management</name>
+<description></description>
+<start_date>2010-06-01 00:00:00</start_date>
+<end_date>2010-07-14 00:00:00</end_date>
+<cost></cost>
+<cost_currency>euros</cost_currency>
+<cost_unit></cost_unit>
+<billing_frequency></billing_frequency>
+<org_id>2</org_id>
+<provider_id>2</provider_id>
+<support_team_id>4</support_team_id>
+</CustomerContract>
+</Set>

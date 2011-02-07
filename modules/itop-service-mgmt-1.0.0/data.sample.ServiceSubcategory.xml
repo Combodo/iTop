@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<ServiceSubcategory alias="ServiceSubcategory" id="1">
+<name>New desktop ordering</name>
+<description>Order a new desktop computer, for a new employee or for replacing an old system.</description>
+<service_id>1</service_id>
+</ServiceSubcategory>
+<ServiceSubcategory alias="ServiceSubcategory" id="2">
+<name>New laptop ordering</name>
+<description>Order a new laptop computer, for a new mobile employee or for replacing an old laptop.</description>
+<service_id>1</service_id>
+</ServiceSubcategory>
+<ServiceSubcategory alias="ServiceSubcategory" id="3">
+<name>New LCD monitor ordering</name>
+<description>Order a new LCD monitor, for a new employee or for replacing an old monitor.</description>
+<service_id>1</service_id>
+</ServiceSubcategory>
+<ServiceSubcategory alias="ServiceSubcategory" id="4">
+<name>New peripheral</name>
+<description>Order a peripheral: keyboard, mouse, personal printer...</description>
+<service_id>1</service_id>
+</ServiceSubcategory>
+<ServiceSubcategory alias="ServiceSubcategory" id="5">
+<name>Repair</name>
+<description>Ask for assistance about a hardware failure.</description>
+<service_id>1</service_id>
+</ServiceSubcategory>
+<ServiceSubcategory alias="ServiceSubcategory" id="6">
+<name>Troubleshooting</name>
+<description>Ask for help troubleshooting a hardware issue.</description>
+<service_id>2</service_id>
+</ServiceSubcategory>
+<ServiceSubcategory alias="ServiceSubcategory" id="7">
+<name>New mobile phone ordering</name>
+<description>Order a new mobile phone, for a new employee or for replacing a broken phone.</description>
+<service_id>2</service_id>
+</ServiceSubcategory>
+<ServiceSubcategory alias="ServiceSubcategory" id="8">
+<name>Mobile phone/SIM locking</name>
+<description>Request for locking the SIM when a mobile phone has been lost or stolen.</description>
+<service_id>2</service_id>
+</ServiceSubcategory>
+<ServiceSubcategory alias="ServiceSubcategory" id="9">
+<name>Mobile phone/SIM unlocking</name>
+<description>Request for unlocking the SIM of your mobile phone.</description>
+<service_id>2</service_id>
+</ServiceSubcategory>
+<ServiceSubcategory alias="ServiceSubcategory" id="10">
+<name>New IP address</name>
+<description>Request a new IP address for a fixed system (Desktop computer or server)</description>
+<service_id>2</service_id>
+</ServiceSubcategory>
+<ServiceSubcategory alias="ServiceSubcategory" id="11">
+<name>New DNS name</name>
+<description>Request a new DNS name for a fixed system (Desktop computer or server).</description>
+<service_id>2</service_id>
+</ServiceSubcategory>
+<ServiceSubcategory alias="ServiceSubcategory" id="12">
+<name>Network Troubleshooting</name>
+<description>Ask for help troubleshooting a network related issue.</description>
+<service_id>2</service_id>
+</ServiceSubcategory>
+<ServiceSubcategory alias="ServiceSubcategory" id="13">
+<name>Software Installation / Upgrade</name>
+<description>Ask for installing or upgrading software on a computer.</description>
+<service_id>3</service_id>
+</ServiceSubcategory>
+<ServiceSubcategory alias="ServiceSubcategory" id="14">
+<name>Software removal</name>
+<description>Ask for removing software from your computer.</description>
+<service_id>3</service_id>
+</ServiceSubcategory>
+<ServiceSubcategory alias="ServiceSubcategory" id="15">
+<name>Windows installation/ / Upgrade</name>
+<description>Ask for installing or upgrading Windows on a computer.</description>
+<service_id>3</service_id>
+</ServiceSubcategory>
+<ServiceSubcategory alias="ServiceSubcategory" id="16">
+<name>Troubleshooting</name>
+<description>Ask for assistance about a software related issue.</description>
+<service_id>3</service_id>
+</ServiceSubcategory>
+<ServiceSubcategory alias="ServiceSubcategory" id="17">
+<name>Microsoft Office Support</name>
+<description>Request assistance about MS Office software: Word, Excel, PowerPoint, Outlook, SharePoint.</description>
+<service_id>3</service_id>
+</ServiceSubcategory>
+</Set>

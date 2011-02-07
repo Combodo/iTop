@@ -1,0 +1,14 @@
+<h1><itopstring>UI:ServiceMgmtMenuOverview:Title</itopstring></h1>
+<table border="0" padding="5" class="layout" width="100%">
+<tr>
+<td class="dashboard">
+<h2><itopstring>UI-ServiceManagementOverview-CustomerContractToRenew</itopstring></h2>
+<itopblock BlockClass="DisplayBlock" type="list" parameters="dashboard:true" asynchronous="false" encoding="text/oql">SELECT CustomerContract AS c WHERE c.end_date < DATE_ADD(NOW(), INTERVAL 30 DAY)</itopblock>
+</td>
+<td class="dashboard">
+<h2><itopstring>UI-ServiceManagementOverview-ProviderContractToRenew</itopstring></h2>
+<itopblock BlockClass="DisplayBlock" type="list" parameters="dashboard:true" asynchronous="false" encoding="text/oql">SELECT ProviderContract AS c WHERE c.end_date < DATE_ADD(NOW(), INTERVAL 30 DAY)</itopblock>
+</td>
+</tr>
+</table>
+

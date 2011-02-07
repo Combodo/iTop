@@ -1,0 +1,919 @@
+/* CSS Document */
+body {
+    font-family: Tahoma, Verdana, Arial, Helevtica;
+    font-size: 10pt;
+    background-color: #fff;
+    color:#000000;
+	margin: 0;			/* Remove body margin/padding */
+	padding: 0;
+	overflow: hidden;	/* Remove scroll bars on browser window */
+}
+
+.raw_output {
+    font-family: Courier-New, Courier, Arial, Helevtica;
+    font-size: 8pt;
+    background-color: #eeeeee;
+    color: #000000;
+    border: 1px dashed #000000;
+    padding: 0.25em;
+    margin-top: 1em;
+}
+
+h1 {
+    font-family: Tahoma, Verdana, Arial, Helvetica;
+    color: #000;
+    font-weight: bold;
+    font-size: 12pt;
+}
+h2 {
+    font-family: Tahoma, Verdana, Arial, Helvetica;
+    color: #000;
+    font-weight: normal;
+    font-size: 12pt;
+}
+h3 {
+    font-family: Tahoma, Verdana, Arial, Helvetica;
+    color: #000;
+    font-weight: normal;
+    font-size: 10pt;
+}
+.hilite, .hilite a, .hilite a:visited {
+    color: #EB8F00;
+    text-decoration: none;
+}
+table.listResults {
+    padding: 0px;
+	border-top: 3px solid #f6f6f1;
+	border-left: 3px solid #f6f6f1;
+	border-bottom: 3px solid #e6e6e1;  
+	border-right: 3px solid #e6e6e1;
+	width: 100%;
+	background-color: #fff;
+}
+
+table.listResults td {
+	padding: 2px;
+}
+
+table.listContainer {
+    border: 0;
+	padding: 0;
+	margin:0;
+	width: 97%;
+}
+
+tr.containerHeader, tr.containerHeader td {
+	background: transparent;
+} 
+
+tr.even td, .wizContainer tr.even td {
+	background-color: #f9f9f1;
+} 
+tr.red_even td, .wizContainer tr.red_even td {
+	background-color: #f97e75;
+	color: #ffffff;
+}
+tr.red td, .wizContainer tr.red td {
+	background-color: #f9a397;
+	color: #ffffff;
+}
+tr.orange_even td, .wizContainer tr.orange_even td {
+	background-color: #f4d07a;
+}
+tr.orange td, .wizContainer tr.orange td {
+	background-color: #f4e96c;
+} 
+tr.green_even td, .wizContainer tr.green_even td {
+	background-color: #bee5a3;
+} 
+tr.green td, .wizContainer tr.green td {
+	background-color: #b3e5b4;
+} 
+
+tr td.hover, tr.even td.hover, .hover a, .hover a:visited, .hover a:hover, .wizContainer tr.even td.hover,  .wizContainer tr td.hover {
+	background-color: #fdf5d0;
+	color: #000000;
+}
+
+th {
+    font-family: Tahoma, Verdana, Arial, Helvetica;
+    font-size: 8pt;
+    color: #1C94C4;
+    height:20px;
+    background: #f6f6f1 url(../images/grey-header.gif) bottom repeat-x;	
+}
+
+th.header {
+	cursor: pointer;
+	background-repeat: no-repeat;
+	background-position: center right;
+	background-image: url(../images/bg.gif);
+	background-repeat: no-repeat;
+	padding-right: 16px; // some space for the asc/desc icons
+}
+
+th.headerSortUp {
+	background-image: url(../images/asc.gif);
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+th.headerSortDown {
+	background-image: url(../images/desc.gif);
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+td {
+    font-family: Tahoma, Verdana, Arial, Helvetica;
+    font-size: 8pt;
+    color:#696969;
+	background-color: #ffffff;
+	padding: 0px;
+}
+
+tr.clicked td {
+    font-family: Tahoma, Verdana, Arial, Helvetica;
+    font-size: smaller;
+	background-color: #ffcfe8;
+}
+
+td.label {
+    font-family: Tahoma, Verdana, Arial, Helvetica;
+    font-size: 12px;
+    color: #000000;
+    background-color:#f6f6f6;
+    padding: 0.25em;
+    font-weight:bold;	
+}
+
+.ui-widget-content td a, p a, p a:visited, td a, td a:visited {
+	text-decoration:none;
+	color: #1C94C4;
+	padding-left:14px;
+	background: url(../images/mini-arrow-orange.gif) no-repeat left;
+}
+p a:hover, td a:hover {
+	text-decoration:underline;
+	color:#EB8F00;
+	padding-left:14px;
+	background: url(../images/mini-arrow-orange.gif) no-repeat left;
+}
+
+td a.no-arrow, td a.no-arrow:visited {
+	text-decoration:none;
+	color:#000000;
+	padding-left:0px;
+	background: inherit;
+}
+td a.no-arrow:hover {
+	text-decoration:underline;
+	color:#d81515;
+	padding-left:0px;
+	background: inherit;
+}
+td a.mailto, td a.mailto:visited {
+	text-decoration:none;
+	color:#000000;
+	padding-left:20px;
+	background: url(../images/mail.png) no-repeat left;
+}
+td a.mailto:hover {
+	text-decoration:underline;
+	color:#EB8F00;
+	padding-left:20px;
+	background: url(../images/mail.png) no-repeat left;
+}
+
+a.small_action {
+    font-family: Tahoma, Verdana, Arial, Helvetica;
+    font-size: 8pt;
+    color: #000000;
+	text-decoration:none;
+}
+.display_block {
+	padding:0.25em;
+}
+.actions_details {
+	float:right;
+	margin-top:10px;
+	margin-right:10px;
+	padding-left: 5px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	background: url(../images/actions_left.png) no-repeat left;
+}
+.actions_details span{
+	background: url(../images/actions_right.png) no-repeat right;
+	color: #fff;
+	font-weight: bold;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-right: 12px;
+}
+.actions_details a {
+	text-decoration:none;
+}
+.loading {
+	noborder: 1px dashed #CCC;
+	background: #b9c1c8;
+	padding:0.25em;
+}
+
+input.textSearch {
+	border:1px solid #000;
+	font-family:Tahoma,Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color:#000000;
+}
+
+.ac_input {
+	border: 1px solid #7f9db9;
+	background: #fff url(../images/ac-background.gif) no-repeat right;
+}
+
+/* By Rom */
+.csvimport_createobj {
+    color: #AA0000;
+    background-color:#EEEEEE;
+}
+.csvimport_error {
+    font-weight: bold;
+    color: #FF0000;
+    background-color:#EEEEEE;
+}
+.csvimport_warning {
+    color: #CC8888;
+    background-color:#EEEEEE;
+}
+.csvimport_ok {
+    color: #00000;
+    background-color:#BBFFBB;
+}
+.csvimport_reconkey {
+    font-style: italic;
+    color: #888888;
+    background-color:#FFFFF;
+}
+.csvimport_extreconkey {
+    color: #888888;
+    background-color:#FFFFFF;
+}
+
+#accordion h3 {
+	padding: 10px;
+}
+
+.ui-accordion-content ul {
+    list-style:none;
+    padding-left:16px;
+	margin-top: 8px;
+}	
+
+.ui-accordion-content li.submenu {
+	margin-top: 8px;
+}	
+
+.ui-accordion-content ul ul {
+	padding: 8px 0px 8px 8px;
+	margin:0;
+    list-style:none;
+    border: 0;
+}	
+	
+.nothing {
+    noborder-top: 1px solid #8b8b8b;
+    padding: 4px 0px 0px 16px;   	
+	font-size:8pt;
+    background: url(../images/green-square.gif) no-repeat bottom left;
+    color:#83b217;
+    font-weight:bold;
+	text-decoration:none;
+}
+div.ui-accordion-content {
+	padding-top: 10px;
+	padding-left: 10px;
+}
+.ui-accordion-content a, ui-accordion-content a:visited {
+	color:	#1C94C4;
+	text-decoration:none;
+}
+
+.ui-accordion-content a:hover {
+	color: 	#EB8F00;
+	text-decoration: none;
+}
+.ui-accordion-content p {
+	color:#8b8b8b;
+	text-decoration:none;
+	margin: 0;
+	padding-bottom: 1px;
+	font-size: 9pt;
+    font-weight:normal;
+    border: 0;
+}
+
+.ui-accordion-content ul { 
+	padding-left: 0;
+	margin-top: 0;
+}
+
+.ui-accordion-content li { 
+	color:#8b8b8b;
+	text-decoration:none;
+	margin: 0;
+	padding: 0px 0pt 0px 16px;
+	font-size: 9pt;
+    background: url(../images/mini-arrow-orange.gif) no-repeat top left;
+    font-weight:normal;
+    border: 0;
+}
+
+a.CollapsibleLabel, td a.CollapsibleLabel { 
+	margin: 0;
+	padding: 0px 0pt 0px 16px;
+	font-size:8pt;
+	text-decoration:none;
+	color:#8b8b8b;
+    background: url(../images/mini-arrow-orange.gif) no-repeat left;
+}
+
+/* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
+a.CollapsibleLabel.open,  td a.CollapsibleLabel.open { 
+	margin: 0;
+	padding: 0px 0pt 0px 16px;
+	font-size:8pt;
+	text-decoration:none;
+	color: #EB8F00;
+    background: url(../images/mini-arrow-orange-open.gif) no-repeat left;
+}
+
+.page_header {
+	background-color:#f6f6f1;
+	padding:5px;
+}
+
+.notreeview li { background: url(../images/tv-item.gif) 0 0 no-repeat; }
+.notreeview .collapsable { background-image: url(../images/tv-collapsable.gif); }
+.notreeview .expandable { background-image: url(../images/tv-expandable.gif); }
+.notreeview .last { background-image: url(../images/tv-item-last.gif); }
+.notreeview .lastCollapsable { background-image: url(../images/tv-collapsable-last.gif); }
+.notreeview .lastExpandable { background-image: url(../images/tv-expandable-last.gif); }
+
+#OrganizationSelection {
+    padding:5px 0px 16px 20px;
+}
+
+/* popup menus */
+div.itop_popup {
+	margin: 0;
+	padding: 0;
+	float:right;
+}
+
+div.itop_popup > ul {
+	height:19px;
+	display:block;
+	width:70px; /* Nasty work-around for IE... en attendant mieux */
+	padding-left: 5px;
+	background: url(../images/actions_left.png) no-repeat top left;
+	cursor: pointer;
+}
+
+div.itop_popup > ul > li {
+	float: left;
+	list-style: none;
+	font-size: 11px;
+	font-family: Tahoma,sans-serif;
+	height: 19px;
+	padding-right: 16px;
+	padding-left: 4px;
+	background: url(../images/actions_right.png) no-repeat top right transparent;
+	font-weight: bold;
+	color: #fff;
+	vertical-align: middle;
+}
+#logOffBtn > ul > li {
+	list-style: none;
+	vertical-align: middle;
+	margin: 0;
+	padding: 0;
+}
+#logOffBtn > ul {
+	list-style: none;
+	vertical-align: middle;
+	margin: 0;
+	padding: 0;
+	height: 25px;
+	noline-height: 25px;
+}
+	
+.itop_popup li a, #logOffBtn li a {
+	display: block;
+	padding: 5px 12px;
+	text-decoration: none;
+	nowidth: 70px;
+	color: #000;
+	font-weight: bold;
+	white-space: nowrap;
+	background: #fff;
+}
+
+#logOffBtn li span {
+	display: block;
+	padding: 5px 12px;
+	text-decoration: none;
+	nowidth: 70px;
+	color: #000;
+	white-space: nowrap;
+	background: #fff;
+}
+.itop_popup li a:hover, #logOffBtn li a:hover {
+	background: #1A4473;
+}
+
+.itop_popup ul > li > ul, #logOffBtn ul > li > ul
+{	
+	border: 1px solid black;
+	background: #fff;
+}
+	
+.itop_popup li > ul, #logOffBtn li > ul
+{	margin: 0;
+	padding: 0;
+	position: absolute;
+	display: none;
+	border-top: 1px solid white;
+	z-index: 999;
+}
+
+.itop_popup li ul li,  #logOffBtn li ul li {
+	float: none;
+	display: inline;
+}
+
+.itop_popup li ul li a, #logOffBtn li ul li a {
+	width: auto;
+	text-align: left;
+}
+
+.itop_popup li ul li a:hover, #logOffBtn li ul li a:hover{
+	background: #D81515;
+	color: #fff;
+	font-weight: bold;
+}
+hr.menu-separator {
+	border: none 0;
+	border-top: 1px solid #ccc;;
+	color: #ccc;
+	background-color: transparent;
+	height: 1px;
+	margin: 3px;
+	cursor: default;
+}
+/************************************/
+.wizHeader {
+	background: #1c94c4;
+	padding: 15px;
+}
+.wizSeparator {
+	float:left;
+	background: #83b217;
+	height: 29px;
+	margin-top: 5px;
+}
+div.wizActiveStep {
+	height: 29px;
+	background: url(../images/wizActiveStepLeft.gif) no-repeat left;
+	color: #d81515;
+	padding-left: 8px;
+	margin-top: 5px;
+	vertical-align: middle;
+	float: left;
+}
+div.wizActiveStep span {
+	height: 29px;
+	background: url(../images/wizActiveStepRight.gif) no-repeat top right;
+	padding-right: 8px;
+	padding-top: 8px;
+	float:left;
+}
+
+div.wizStep {
+	height: 29px;
+	background: url(../images/wizStepLeft.gif) no-repeat left;
+	padding-left: 8px;
+	vertical-align: middle;
+	margin-top: 5px;
+	float:left;
+}
+div.wizStep span {
+	height: 29px;
+	background: url(../images/wizStepRight.gif) no-repeat top right;
+	padding-right: 8px;
+	padding-top: 8px;
+	float:left;
+}
+.wizContainer {
+	border: 5px solid #1c94c4;
+	background: #d6e8ef;
+	padding: 5px;
+}
+
+.wizContainer table tr td {
+	background: transparent;
+}
+.alignRight {
+	text-align: right;
+	padding: 3px;
+}
+
+.alignLeft {
+	text-align: left;
+	padding: 3px;
+}
+
+.red {
+	background-color: #ff6000;
+	color: #000;
+}
+
+th.red {
+	background: url(../images/red-header.gif) bottom left repeat-x;
+	color: #000;
+}
+
+.green {
+	background-color: #00cc00;
+	color: #000;
+}
+th.green {
+	background: url(../images/green-header.gif) bottom left repeat-x;
+	color: #000;
+}
+
+.orange {
+	background-color: #ffde00;
+	color: #000;
+}
+
+th.orange {
+	background: url(../images/orange-header.gif) bottom left repeat-x;
+	color: #000;
+}
+
+/* For Date Picker: Creates a little calendar icon
+ * instead of a text link for "Choose date"
+ */
+td a.dp-choose-date, a.dp-choose-date, td a.dp-choose-date:hover, a.dp-choose-date:hover, td a.dp-choose-date:visited, a.dp-choose-date:visited {
+	float: left;
+	width: 16px;
+	height: 16px;
+	padding: 0;
+	margin: 5px 3px 0;
+	display: block;
+	text-indent: -2000px;
+	overflow: hidden;
+	background: url(../images/calendar.png) no-repeat; 
+}
+td a.dp-choose-date.dp-disabled, a.dp-choose-date.dp-disabled {
+	background-position: 0 -20px;
+	cursor: default;
+}
+/* For Date Picker: makes the input field shorter once the date picker code
+ * has run (to allow space for the calendar icon)
+ */
+input.dp-applied {
+	width: 140px;
+	float: left;
+}
+
+/* For search forms */
+.SearchDrawer {
+	//background: #1c94c4 url(../images/search-top-left-corner.png) top left no-repeat;
+	border-top: 5px solid #1c94c4;
+	border-left: 5px solid #1c94c4;
+	border-right: 5px solid #1c94c4;
+	border-bottom: 0;
+	background: #d6e8ef;
+	color: #000;
+	padding: 10px;
+	margin: 0;
+	font-size: 12px;
+}
+.SearchDrawer label {
+	background: #d6e8ef;
+	color: #000;
+}
+.SearchDrawer h1 {
+	color: #000;
+}
+.DrawerClosed {
+	display: none;
+}
+.DrawerHandle {
+	margin: 0;
+	padding: 5px;
+	background: url(../images/drawer-handle.gif) bottom no-repeat transparent;
+	color: #fff;
+	cursor: pointer;
+	text-align: center;
+	/* center the block */
+	width: 100px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 0;
+	margin-bottom: 0;
+	display: block;
+	font-size: 12px;
+}
+
+div.HRDrawer {
+	height: 5px;
+	width: 100%;
+	margin: 0;
+	background-color:  #1c94c4;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	display: block;
+}
+.mini_tabs a {
+	text-decoration: none;
+	font-weight:bold;
+	color: #ccc;
+	background-color:#333;
+	padding-left: 1em;
+	padding-right: 1em;
+	padding-bottom: 0.25em;
+}
+.mini_tabs a.selected {
+	color: #fff;
+	background-color:  #1c94c4;
+	padding-top: 0.25em;
+}
+.mini_tabs ul {
+	margin: -10px;
+}
+.mini_tabs ul li {
+	float: right;
+	list-style: none;
+	nopadding-left: 1em;
+	nopadding-right: 1em;
+	margin-top: 0;
+}
+.mandatory {
+	border: 1px solid #f00;
+}
+
+/* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
+table.listResults tr.odd td.truncated, table.listResults tr td.truncated, .wizContainer table.listResults tr.odd td.truncated, .wizContainer table.listResults tr td.truncated {
+	background: url(../images/truncated.png) bottom  repeat-x;
+}
+
+/* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
+table.listResults tr.even td.truncated, .wizContainer table.listResults  tr.even td.truncated {
+	background: #f9f9f1 url(../images/truncated.png) bottom  repeat-x;
+}
+
+/* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
+table.listResults tr.even td.hover.truncated, , .wizContainer table.listResults  tr.even td.hover.truncated {
+	background: #fdf5d0 url(../images/truncated.png) bottom  repeat-x;
+}
+
+/* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
+table.listResults tr.odd td.hover.truncated,  table.listResults tr td.hover.truncated, .wizContainer table.listResults  tr.odd td.hover.truncated, .wizContainer table.listResults  tr td.hover.truncated {
+	background: #fdf5d0 url(../images/truncated.png) bottom  repeat-x;
+}
+
+table.listResults.truncated {
+	border-bottom: 0;
+	padding-bottom: 0;
+}
+
+tr.csv_row0 td {
+	padding-top:5px;
+	padding-bottom:5px;
+	padding-left:10px;
+	padding-right:10px;
+	background: #fff;
+	border-left: #000 1px solid;
+	
+}
+tr.csv_row1 td {
+	padding-top:5px;
+	padding-bottom:5px;
+	padding-left:10px;
+	padding-right:10px;
+	background: #f9f9f1;
+	border-left: #000 1px solid;
+	
+}
+tr.csv_row1 th, tr.csv_row0 th {
+	padding-top:5px;
+	padding-bottom:5px;
+	padding-left:10px;
+	padding-right:10px;
+	border-left: #000 1px solid;
+	
+}
+
+td.cell_modified {
+	font-weight: bold;
+	color: #000;
+}
+
+td.cell_error {
+	font-weight: bold;
+	color: #D81515;
+}
+table.transparent, table.transparent td {
+	background: transparent;
+}
+p.page-header {
+	color:#1c94c4;
+	font-weight: bold;
+	font-size: 12pt;
+	font-family: Verdana, Arial, Helvetica, Sans-Serif
+}
+td.dashboard {
+	vertical-align:top;
+	text-align: center;
+	border: 1px solid #ccc;
+	-moz-border-radius: 10px;
+	padding: 10px;
+	width: 50%;
+}
+.white {
+	background-color: #fff;
+}
+
+/*** New Lacanau layout ***/
+
+.ui-layout-pane { /* all 'panes' */ 
+	background: #FFF;  
+	overflow: auto;
+} 
+
+.ui-layout-resizer { /* all 'resizer-bars' */ 
+	background: #DDD; 
+} 
+.ui-layout-toggler { /* all 'toggler-buttons' */ 
+	background: #AAA; 
+}
+div#top-left {
+	width: 28px;
+	height: 70px;
+	background: #f6f6f1 url(../images/top-left-bkg.png) top left no-repeat;
+	float:left;
+}
+div#header-logo {
+	width: 100%;
+	height: 70px;
+	background: #f6f6f1 url(../images/splitter-top.png) top repeat-x;
+}
+.ui-layout-pane-west {
+	background: #f6f6f1 url(../images/left-bkg.png) left repeat-y;
+}
+div#right {
+	min-width: 260px;
+}
+div#menu {
+	width: 100%;
+}
+.header-menu {
+	padding-left: 24px;
+	padding-right: 8px;
+	padding-bottom: 24px;
+	background: transparent;
+}
+div#inner_menu {
+	padding-left: 24px;
+	padding-right: 8px;
+	background: transparent;
+}
+div#logo {
+	height: 70px;
+	nowidth: 100%;
+	text-align: center;
+}
+div#logo div {
+	height: 88px;
+	width: 244px;
+	background: url(../images/itop-logo-2.png) left no-repeat;
+}
+#top-bar {
+	height: 55px;
+	background: url(../images/banner-bkg.png) repeat-x scroll 0 0 transparent;
+	text-align: right;
+}
+#admin-banner {
+	float: left;
+	margin-top: 2px;
+	padding: 8px;
+	border: 1px solid #c33;
+	background-color: #fee;
+	-moz-border-radius: 0.5em;
+}
+#global-search {
+	height: 55px;
+	float: right;
+	background: url(../images/banner-search.png) no-repeat;
+	nopadding-top: 15px;
+	text-align: right;
+	overflow-y: hidden;
+}
+#global-search > form div {
+	padding-left: 4px;
+}
+#global-search table, #global-search tr td,  #global-search tr {
+	padding: 0;
+	border: 0;
+	height: 55px;
+	margin: 0;
+	background: transparent;
+	overflow-y: hidden;
+	vertical-align: middle;
+}
+#global-search > form input[type="text"] {
+	border: 0;
+	height: 18px;
+	width: 180px;
+	padding-top: 4;
+	background: transparent;
+}
+#global-search > form tr td#g-search-input {
+	padding-top: 3px;
+	padding-left: 3px;
+	background: transparent;
+}
+div.icon {
+	width: 20px;
+	height: 20px;
+	margin: 2px;
+	float: right;
+}
+span.ui-icon {
+	float:left;
+	margin:0 2px;
+}
+.ui-layout-button-pin-down {
+	background: url(../images/splitter-bkg.png) transparent;
+	width: 16px;
+	background-position: -144px -144px;
+}
+.ui-layout-resizer-west-open {
+	background: url(../images/splitter-bkg.png) repeat-y scroll 0 0 transparent;
+	width: 16px;
+}
+div.footer img {
+	border: 0;
+	margin-bottom: 5px;
+	margin-top: 5px;
+}
+div.footer{
+	text-align:center;
+}
+#SearchResultsToAdd table.listResults tbody {
+	height: 300px;
+	overflow-y: auto;
+}
+tr.row_unchanged td {
+	border-bottom: 1px #ccc solid;
+	padding: 2px;
+}
+.wizContainer table tr.row_error td {
+	border-bottom: 1px #ccc solid;
+	background-color: #fdd;
+	padding: 2px;
+}
+tr.row_modified td {
+	border-bottom: 1px #ccc solid;
+	padding: 2px;
+}
+tr.row_added td {
+	border-bottom: 1px #ccc solid;
+	padding: 2px;
+}
+a.truncated {
+	cursor: pointer;
+}
+.org_combo
+{
+	font-size:x-small;
+	width: auto;
+	max-width: 200px; 
+}
+span.form_validation {
+	width:24px;
+	text-align:center;
+}
+.notification {
+	border: 1px solid #c33;
+	background-color: #fee;
+	padding: 0.5em;
+	margin: 0.5em;
+	text-align:center;
+	width: 95%;
+	-moz-border-radius: 0.5em;
+}

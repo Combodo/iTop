@@ -1,0 +1,20 @@
+<div class="page_header" style="padding:0.5em;">
+<h1><itopstring>UI:NotificationsMenu:Title</itopstring></h1>
+</div>
+<itoptoggle name="UI:NotificationsMenu:Help" open="true">
+<div style="padding: 1em; font-size:10pt;background:#E8F3CF;margin-top: 0.25em;">
+<img src="../images/bell.png" style="margin-top: -60px; margin-right: 10px; float: right;">
+<itopstring>UI:NotificationsMenu:HelpContent</itopstring>
+</div>
+</itoptoggle>
+<p>&nbsp;</p>
+<itoptabs>
+	<itoptab name="UI:NotificationsMenu:Triggers">
+		<h2><itopstring>UI:NotificationsMenu:AvailableTriggers</itopstring></h2>
+		<itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql">SELECT Trigger</itopblock>
+	</itoptab>
+	<itoptab name="UI:NotificationsMenu:Actions">
+		<h2><itopstring>UI:NotificationsMenu:AvailableActions</itopstring></h2>
+		<itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql">SELECT ActionEmail</itopblock>
+	</itoptab>
+</itoptabs>

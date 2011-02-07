@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<lnkTriggerAction id="4">
+<action_id>2</action_id>
+<trigger_id>5</trigger_id>
+<order>1</order>
+</lnkTriggerAction>
+<lnkTriggerAction id="5">
+<action_id>3</action_id>
+<trigger_id>5</trigger_id>
+<order>2</order>
+</lnkTriggerAction>
+<lnkTriggerAction id="6">
+<action_id>3</action_id>
+<trigger_id>6</trigger_id>
+<order>1</order>
+</lnkTriggerAction>
+<lnkTriggerAction id="7">
+<action_id>1</action_id>
+<trigger_id>2</trigger_id>
+<order>1</order>
+</lnkTriggerAction>
+</Set>
