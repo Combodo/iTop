@@ -205,6 +205,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
+		'log_usage' => array(
+			'type' => 'bool',
+			'description' => 'Log the usage of the application (i.e. the date/time and the user name of each login)',
+			'default' => false,
+			'value' => false,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 	);
 
 	public function IsProperty($sPropCode)
