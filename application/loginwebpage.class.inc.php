@@ -326,6 +326,16 @@ EOF
 				{
 					// User is Ok, let's save it in the session and proceed with normal login
 					UserRights::Login($sAuthUser, $sAuthentication); // Login & set the user's language
+					
+					if (MetaModel::GetConfig()->Get('log_usage'))
+					{
+						$oLog = new EventLoginUsage();
+						$oLog->Set('userinfo', UserRights::GetUser());
+						$oLog->Set('user_id', UserRights::GetUserObject()->GetKey());
+						$oLog->Set('message', 'Successful login');
+						$oLog->DBInsertNoReload();
+					}
+					
 					$_SESSION['auth_user'] = $sAuthUser;
 					$_SESSION['login_mode'] = $sLoginMode;
 				}
