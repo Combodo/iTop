@@ -806,7 +806,7 @@ class BulkChange
 		$oBulkChangeSearch = DBObjectSearch::FromOQL("SELECT CMDBChange WHERE userinfo LIKE '%(CSV)'");
 
 		$iQueryLimit = $bShowAll ? 0 : MetaModel::GetConfig()->GetMaxDisplayLimit() + 1;
-		$oBulkChanges = new DBObjectSet($oBulkChangeSearch, array('date' => false), array(), $iQueryLimit);
+		$oBulkChanges = new DBObjectSet($oBulkChangeSearch, array('date' => false), array(), null, $iQueryLimit);
 
 		$oAppContext = new ApplicationContext();
 
