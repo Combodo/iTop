@@ -205,6 +205,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
+		'log_usage' => array(
+			'type' => 'bool',
+			'description' => 'Log the usage of the application (i.e. the date/time and the user name of each login)',
+			'default' => false,
+			'value' => false,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 	);
 
 	public function IsProperty($sPropCode)
@@ -333,7 +341,7 @@ class Config
 			'application/menunode.class.inc.php',
 			'application/user.preferences.class.inc.php',
 			'application/audit.rule.class.inc.php',
-// Romain - That's dirty, because those 3 classes are in fact part of the core
+// Romain - That's dirty, because those classes are in fact part of the core
 //          but I needed those classes to be derived from cmdbAbstractObject
 //          (to be managed via the GUI) and this class in not really known from
 //          the core, PLUS I needed the includes to be there also for the setup
