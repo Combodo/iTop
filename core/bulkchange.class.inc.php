@@ -865,8 +865,10 @@ class BulkChange
 
 			// Assumption: there is only one class of objects being loaded
 			// Then the last class found gives us the class for every object
-
-			$aDetails[] = array('date' => $sDate, 'user' => $sUser, 'class' => $sClass, 'created' => $iCreated, 'modified' => $iModified);
+			if ( ($iModified > 0) || ($iCreated > 0))
+			{
+				$aDetails[] = array('date' => $sDate, 'user' => $sUser, 'class' => $sClass, 'created' => $iCreated, 'modified' => $iModified);
+			}
 
 		}
 
