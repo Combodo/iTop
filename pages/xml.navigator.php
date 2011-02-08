@@ -59,12 +59,10 @@ function AddNodeDetails(&$oNode, $oObj)
  * @param DBObject $oObj The current object
  * @param string $sRelation The name of the relation to search with
  */
-function GetRelatedObjectsAsXml(DBObject $oObj, $sRelationName, &$oLinks, &$oXmlDoc, &$oXmlNode)
+function GetRelatedObjectsAsXml(DBObject $oObj, $sRelationName, &$oLinks, &$oXmlDoc, &$oXmlNode, $iDepth = 0)
 {
 	$aResults = array();
 	$oObj->GetRelatedObjects($sRelationName, 1 /* iMaxDepth */, $aResults);
-	static $iDepth = 0;
-	$iDepth++;
 	if ($iDepth > MAX_RECURSION_DEPTH) return;
 	
 	foreach($aResults as $sRelatedClass => $aObjects)
@@ -85,7 +83,7 @@ function GetRelatedObjectsAsXml(DBObject $oObj, $sRelationName, &$oLinks, &$oXml
 				AddNodeDetails($oLinkedNode, $oTargetObj);
 				$oSubLinks = $oXmlDoc->CreateElement('links');
 				// Recurse
-				GetRelatedObjectsAsXml($oTargetObj, $sRelationName, $oSubLinks, $oXmlDoc, $oLinkedNode);
+				GetRelatedObjectsAsXml($oTargetObj, $sRelationName, $oSubLinks, $oXmlDoc, $oLinkedNode, $iDepth++);
 				$oLinkingNode->AppendChild($oLinkedNode);
 				$oLinks->AppendChild($oLinkingNode);
 			}
