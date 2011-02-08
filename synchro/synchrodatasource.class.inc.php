@@ -24,7 +24,7 @@
  */
 
 class SynchroDataSource extends cmdbAbstractObject
-{
+{	
 	public static function Init()
 	{
 		$aParams = array
@@ -45,47 +45,39 @@ class SynchroDataSource extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeString("description", array("allowed_values"=>null, "sql"=>"description", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('implementation,production,obsolete'), "sql"=>"status", "default_value"=>"implementation", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("user_id", array("targetclass"=>"User", "jointype"=>null, "allowed_values"=>null, "sql"=>"user_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("scope", array("allowed_values"=>null, "sql"=>"scope", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeClass("scope_class", array("allowed_values"=>null, "sql"=>"scope_class", "default_value"=>null, "class_category" => '', "more_values" => array(), "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("scope_restriction", array("allowed_values"=>null, "sql"=>"scope_restriction", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		
-		MetaModel::Init_AddAttribute(new AttributeDateTime("last_synchro_date", array("allowed_values"=>null, "sql"=>"last_synchro_date", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		//MetaModel::Init_AddAttribute(new AttributeDateTime("last_synchro_date", array("allowed_values"=>null, "sql"=>"last_synchro_date", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("full_load_periodicity", array("allowed_values"=>null, "sql"=>"full_load_periodicity", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		
 		MetaModel::Init_AddAttribute(new AttributeString("reconciliation_list", array("allowed_values"=>null, "sql"=>"reconciliation_list", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("action_on_zero", array("allowed_values"=>new ValueSetEnum('create,error'), "sql"=>"action_on_zero", "default_value"=>"create", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("action_on_one", array("allowed_values"=>new ValueSetEnum('update,error,delete'), "sql"=>"action_on_one", "default_value"=>"update", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("action_on_multiple", array("allowed_values"=>new ValueSetEnum('take_first,create,error'), "sql"=>"action_on_multiple", "default_value"=>"error", "is_null_allowed"=>false, "depends_on"=>array())));
 		
-		MetaModel::Init_AddAttribute(new AttributeEnum("delete_policy", array("allowed_values"=>new ValueSetEnum('ignore,delete,update'), "sql"=>"delete_policy", "default_value"=>"ignore", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("delete_policy", array("allowed_values"=>new ValueSetEnum('ignore,delete,update,update_then_delete'), "sql"=>"delete_policy", "default_value"=>"ignore", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("delete_policy_update", array("allowed_values"=>null, "sql"=>"delete_policy_update", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("delete_policy_retention", array("allowed_values"=>null, "sql"=>"delete_policy_retention", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('name', 'description', 'status', 'user_id', 'scope', 'last_synchro_date', 'reconciliation_list', 'action_on_zero', 'action_on_one', 'action_on_multiple', 'delete_policy', 'delete_policy_update', 'delete_policy_retention')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('name', 'status', 'scope', 'user_id')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', array('name', 'description', 'status', 'user_id', 'scope_class', 'scope_restriction', 'full_load_periodicity', 'reconciliation_list', 'action_on_zero', 'action_on_one', 'action_on_multiple', 'delete_policy', 'delete_policy_update', 'delete_policy_retention')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('name', 'status', 'scope_class', 'user_id')); // Attributes to be displayed for a list
 		// Search criteria
-		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'scope', 'user_id')); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'scope_class', 'user_id')); // Criteria of the std search form
 //		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
 	}
 
 	public function GetTargetClass()
 	{
-		// target_class could be the name of a class, or an OQL
-		$sScope = trim($this->Get('scope'));
-		if (substr($sScope, 0, 6) == 'SELECT')
-		{
-			$oFilter = DBObjectSearch::FromOQL($sScope);
-			$sClass = $oFilter->GetClass();
-		}
-		else
-		{
-			$sClass = $sScope;
-		}
-		return $sClass;
+		return $this->Get('scope_class');
 	}
 
 	public function GetDataTable()
 	{
-		$sName = trim(strtolower($this->Get('name')));
+		$sName = strtolower($this->GetTargetClass());
 		$sName = str_replace('\'"&@|\\/ ', '_', $sName); // Remove forbidden characters from the table name
+		$sName .= '_'.$this->GetKey(); // Add a suffix for unicity
 		$sTable = MetaModel::GetConfig()->GetDBSubName()."synchro_data_$sName"; // Add the prefix if any
 		return $sTable;
 	}
@@ -146,14 +138,54 @@ class SynchroDataSource extends cmdbAbstractObject
 		CMDBSource::Query($sTriggerUpdate);
 	}
 	
-	public function Synchronize(&$aDataToReplica)
+	/**
+	 * Perform a synchronization between the data stored in the replicas (&synchro_data_xxx_xx table)
+	 * and the iTop objects. If the lastFullLoadStartDate is NOT specified then the full_load_periodicity
+	 * is used to determine which records are obsolete.
+	 * @param Hash $aDataToReplica Debugs/Trace information, one entry per replica
+	 * @param DateTime $oLastFullLoadStartDate Date of the last full load (start date/time), if known
+	 * @return void
+	 */
+	public function Synchronize(&$aDataToReplica, $oLastFullLoadStartDate = null)
 	{
-		// Get all the replicas that were not seen in the last import
-		// TO DO: mark them as obsolete... depending on the delete policy
+		// Create a change used for logging all the modifications/creations happening during the synchro
+		$oMyChange = MetaModel::NewObject("CMDBChange");
+		$oMyChange->Set("date", time());
+		$sUserString = CMDBChange::GetCurrentUserName();
+		$oMyChange->Set("userinfo", $sUserString);
+		$iChangeId = $oMyChange->DBInsert();
+	
+		// Get all the replicas that were not seen in the last import and mark them as obsolete
+		if ($oLastFullLoadStartDate == null)
+		{
+			// No previous import known, use the full_load_periodicity value... and the current date
+			$oLastFullLoadStartDate = new DateTime(); // Now
+			// TO DO: how do we support localization here ??
+			$oInterval = DateInterval::createFromDateString($this->Get('full_load_periodicity'));
+			$oLastFullLoadStartDate->sub($oInterval);
+		}
+		$sLimitDate = $oLastFullLoadStartDate->Format('Y-m-d H:i:s');	
+		echo "<p>sLimitDate: $sLimitDate</p>\n";
+		$sOQL  = "SELECT SynchroReplica WHERE status IN ('new', 'synchronized', 'modified', 'orphan') AND status_last_seen < :last_import";
+		$oSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL), array() /* order by*/, array('last_import' => $sLimitDate));
+		while($oReplica = $oSet->Fetch())
+		{
+			// TO DO: take the appropriate action based on the 'delete_policy' field
+			$sUpdateOnObsolete = $this->Get('delete_policy');
+			if ( ($sUpdateOnObsolete == 'update') || ($sUpdateOnObsolete == 'update_then_delete') )
+			{
+				echo "<p>Destination object: (dest_id:".$oReplica->Get('dest_id').") to be updated.</p>";
+				// TO DO: update the dest object for real...
+			}
+			echo "<p>Replica id:".$oReplica->GetKey()." (dest_id:".$oReplica->Get('dest_id').") marked as obsolete</p>";
+			$oReplica->Set('status', 'obsolete');
+			$oReplica->DBUpdateTracked($oMyChange);
+		}
 		
 		// Get all the replicas that are 'new' or modified
 		// Get the list of SQL columns: TO DO: retrieve this list from the SynchroAttributes
 		$sClass = $this->GetTargetClass();
+		echo "<p>TargetClass: $sClass</p>";
 		$aAttCodes = array();
 		foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
 		{
@@ -196,20 +228,32 @@ class SynchroDataSource extends cmdbAbstractObject
 				$aAttributes[] = $sAttCode;
 			}
 		}
-		// Create a change used for logging all the modifications/creations happening during the synchro
-		$oMyChange = MetaModel::NewObject("CMDBChange");
-		$oMyChange->Set("date", time());
-		$sUserString = CMDBChange::GetCurrentUserName();
-		$oMyChange->Set("userinfo", $sUserString);
-		$iChangeId = $oMyChange->DBInsert();
-			
+		
 		while($oReplica = $oSet->Fetch())
 		{
 			$oReplica->Synchro($this, $aReconciliationKeys, $aAttributes, $oMyChange);	
 		}
 		
-		// Get all the replicas that are obsolete / to be deleted
-		// TO DO: update or delete them based on the delete_policy and retention period defined in the data source
+		// Get all the replicas that are to be deleted
+		$oInterval = DateInterval::createFromDateString($this->Get('delete_policy_retention'));
+		$oDeletionDate = $oLastFullLoadStartDate->Sub($oInterval);
+		$sDeletionDate = $oDeletionDate->Format('Y-m-d H:i:s');	
+		echo "<p>sDeletionDate: $sDeletionDate</p>\n";
+		
+		$sOQL  = "SELECT SynchroReplica WHERE status IN ('new', 'synchronized', 'modified', 'orphan') AND status_last_seen < :last_import";
+		$oSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL), array() /* order by*/, array('last_import' => $sDeletionDate));
+		while($oReplica = $oSet->Fetch())
+		{
+			$sUpdateOnObsolete = $this->Get('delete_policy');
+			if ( ($sUpdateOnObsolete == 'delete') || ($sUpdateOnObsolete == 'update_then_delete') )
+			{
+				echo "<p>Destination object: (dest_id:".$oReplica->Get('dest_id').") to be DELETED.</p>";
+				// TO DO: delete the dest object for real...
+			}
+			echo "<p>Replica id:".$oReplica->GetKey()." (dest_id:".$oReplica->Get('dest_id').") marked as deleted</p>";
+			$oReplica->Set('status', 'deleted');
+			$oReplica->DBUpdateTracked($oMyChange);
+		}
 		return;
 	}
 	
@@ -246,12 +290,51 @@ class SynchroDataSource extends cmdbAbstractObject
 	
 	public function IsRunning()
 	{
-		return false;
+		$sOQL = "SELECT SynchroLog WHERE sync_source_id = :source_id AND status='running'";
+		$oSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL), array('start_date' => false) /* order by*/, array('source_id' => $this->GetKey()) /* aArgs */, array(), 1 /* limitCount */, 0 /* limitStart */);
+		if ($oSet->Count() < 1)
+		{
+			$bRet = false;
+		}
+		else
+		{
+			$bRet = true;
+		}
+		return $bRet;
 	}
 	
 	public function GetLatestLog()
 	{
-		return null;	
+		$oLog = null;
+		
+		$sOQL = "SELECT SynchroLog WHERE sync_source_id = :source_id";
+		$oSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL), array('start_date' => false) /* order by*/, array('source_id' => $this->GetKey()) /* aArgs */, array(), 1 /* limitCount */, 0 /* limitStart */);
+		if ($oSet->Count() >= 1)
+		{
+			$oLog = $oSet->Fetch();
+		}
+		return $oLog;
+	}
+	
+	/**
+	 * Retrieve from the log, the date of the last completed import
+	 * @return DateTime
+	 */
+	public function GetLastCompletedImportDate()
+	{
+		$date = null;
+		$sOQL = "SELECT SynchroLog WHERE sync_source_id = :source_id AND status='completed'";
+		$oSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL), array('end_date' => false) /* order by*/, array('source_id' => $this->GetKey()) /* aArgs */, array(), 0 /* limitCount */, 0 /* limitStart */);
+		if ($oSet->Count() >= 1)
+		{
+			$oLog = $oSet->Fetch();
+			$date = $oLog->Get('end_date');
+		}
+		else
+		{
+			echo "<p>No completed log found</p>\n";
+		}
+		return $date;
 	}
 }
 
@@ -350,7 +433,7 @@ class SynchroAttLinkSet extends SynchroAttribute
 
 }
 
-class SynchroLog extends cmdbAbstractObject
+class SynchroLog extends CmdbAbstractObject
 {
 	public static function Init()
 	{
@@ -371,7 +454,7 @@ class SynchroLog extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("sync_source_id", array("targetclass"=>"SynchroDataSource", "jointype"=> "", "allowed_values"=>null, "sql"=>"sync_source_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDateTime("start_date", array("allowed_values"=>null, "sql"=>"start_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDateTime("end_date", array("allowed_values"=>null, "sql"=>"end_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("status", array("allowed_values"=>null, "sql"=>"status", "default_value"=>'', "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('running,completed'), "sql"=>"status", "default_value"=>"running", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeInteger("stats_nb_seen", array("allowed_values"=>null, "sql"=>"stats_nb_seen", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeInteger("stats_nb_modified", array("allowed_values"=>null, "sql"=>"stats_nb_modified", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeInteger("stats_nb_errors", array("allowed_values"=>null, "sql"=>"stats_nb_errors", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
@@ -412,6 +495,7 @@ class SynchroReplica extends cmdbAbstractObject
 
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("sync_source_id", array("targetclass"=>"SynchroDataSource", "jointype"=> "", "allowed_values"=>null, "sql"=>"sync_source_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeInteger("dest_id", array("allowed_values"=>null, "sql"=>"dest_id", "default_value"=>0, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeClass("dest_class", array("allowed_values"=>null, "sql"=>"dest_class", "default_value"=>null, "class_category" => '', "more_values" => array(), "is_null_allowed"=>false, "depends_on"=>array())));
 
 		MetaModel::Init_AddAttribute(new AttributeDateTime("status_last_seen", array("allowed_values"=>null, "sql"=>"status_last_seen", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('new,synchronized,modified,orphan,obsolete'), "sql"=>"status", "default_value"=>"new", "is_null_allowed"=>false, "depends_on"=>array())));
@@ -423,10 +507,10 @@ class SynchroReplica extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeDateTime("info_last_synchro", array("allowed_values"=>null, "sql"=>"info_last_synchro", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('sync_source_id', 'dest_id', 'status_last_seen', 'status', 'status_dest_creator', 'status_last_error', 'info_creation_date', 'info_last_modified', 'info_last_synchro')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('sync_source_id', 'dest_id', 'status_last_seen', 'status', 'status_dest_creator', 'status_last_error')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', array('sync_source_id', 'dest_id', 'dest_class', 'status_last_seen', 'status', 'status_dest_creator', 'status_last_error', 'info_creation_date', 'info_last_modified', 'info_last_synchro')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('sync_source_id', 'dest_id', 'dest_class', 'status_last_seen', 'status', 'status_dest_creator', 'status_last_error')); // Attributes to be displayed for a list
 		// Search criteria
-		MetaModel::Init_SetZListItems('standard_search', array('sync_source_id', 'status_last_seen', 'status', 'status_dest_creator', 'dest_id', 'status_last_error')); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('standard_search', array('sync_source_id', 'status_last_seen', 'status', 'status_dest_creator', 'dest_class', 'dest_id', 'status_last_error')); // Criteria of the std search form
 //		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
 	}
 	
@@ -463,6 +547,9 @@ class SynchroReplica extends cmdbAbstractObject
 				case 1:
 				$oDestObj = $oDestSet->Fetch();
 				$this->UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange);
+				$this->Set('dest_id', $oDestObj->GetKey());
+				$this->Set('status_dest_creator', false);
+				$this->Set('dest_class', get_class($oDestObj));
 				break;
 				
 				default:
@@ -535,6 +622,8 @@ class SynchroReplica extends cmdbAbstractObject
 		{
 			$oDestObj->DBInsertTracked($oChange);
 			$this->Set('dest_id', $oDestObj->GetKey());
+			$this->Set('dest_class', get_class($oDestObj));
+			$this->Set('status_dest_creator', true);
 			$this->Set('status_last_error', '');
 			$this->Set('status', 'synchronized');
 		}
@@ -554,4 +643,10 @@ class SynchroReplica extends cmdbAbstractObject
 	 }
 }
 
+//if (UserRights::IsAdministrator())
+{
+	$oAdminMenu = new MenuGroup('AdminTools', 80 /* fRank */);
+	new OQLMenuNode('DataSources', 'SELECT SynchroDataSource', $oAdminMenu->GetIndex(), 12 /* fRank */, true, 'SynchroDataSource', UR_ACTION_MODIFY, UR_ALLOWED_YES);
+	new WebPageMenuNode('Test:RunSynchro', '../synchro/synchro_exec.php', $oAdminMenu->GetIndex(), 13 /* fRank */);
+}	
 ?>

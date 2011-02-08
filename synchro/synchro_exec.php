@@ -57,15 +57,11 @@ function UsageAndExit($oP)
 		$oP->p("The parameter 'data_sources' is mandatory, and must contain a comma separated list of data sources\n");		
 	}
 	$oP->output();
-	exit;
+	exit -2;
 }
 
 function ReadMandatoryParam($oP, $sParam)
 {
-	global $aPageParams;
-	assert(isset($aPageParams[$sParam]));
-	assert($aPageParams[$sParam]['mandatory']);
-
 	$sValue = utils::ReadParam($sParam, null, true /* Allow CLI */);
 	if (is_null($sValue))
 	{
@@ -87,7 +83,7 @@ if (utils::IsModeCLI())
 	//   
 	$sAuthUser = ReadMandatoryParam($oP, 'auth_user');
 	$sAuthPwd = ReadMandatoryParam($oP, 'auth_pwd');
-	$sCsvFile = ReadMandatoryParam($oP, 'data_sources');
+	$sDataSourcesList = ReadMandatoryParam($oP, 'data_sources');
 	if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd))
 	{
 		UserRights::Login($sAuthUser); // Login & set the user's language
@@ -95,7 +91,8 @@ if (utils::IsModeCLI())
 	else
 	{
 		$oP->p("Access restricted or wrong credentials ('$sAuthUser')");
-		exit;
+		$oP->output();
+		exit -1;
 	}
 }
 else
@@ -125,9 +122,18 @@ try
 	
 	foreach(explode(',', $sDataSourcesList) as $iSDS)
 	{
-		$oSynchroDataSource = MetaModel::GetObject('SynchroDataSource', $iSDS, true);
-		$aResults = array();
-		$oSynchroDataSource->Synchronize($aResults);
+		$oSynchroDataSource = MetaModel::GetObject('SynchroDataSource', $iSDS, false);
+		if ($oSynchroDataSource == null)
+		{
+			$oP->p("The data source (id=$iSDS) does not exist. Exiting...");
+			$oP->output();
+			exit -3;
+		}
+		else
+		{
+			$aResults = array();
+			$oSynchroDataSource->Synchronize($aResults);
+		}
 	}
 }
 catch(SecurityException $e)
