@@ -137,7 +137,7 @@ try
 			$aResults = array();
 			$oObj->GetRelatedObjects($sRelation, MAX_RECURSION_DEPTH /* iMaxDepth */, $aResults);
 
-			$iBlock = 0;
+			$iBlock = 1; // Zero is not a valid blockid
 			foreach($aResults as $sClass => $aObjects)
 			{
 				$oSet = CMDBObjectSet::FromArray($sClass, $aObjects);
