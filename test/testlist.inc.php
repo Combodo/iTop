@@ -1783,6 +1783,446 @@ class TestImportRESTMassive extends TestImportREST
 	}
 }
 
+///////////////////////////////////////////////////////////////////////////
+// Test data exchange
+///////////////////////////////////////////////////////////////////////////
+
+class TestDataExchange extends TestBizModel
+{
+	static public function GetName()
+	{
+		return 'Data exchange';
+	}
+
+	static public function GetDescription()
+	{
+		return 'Test REST services: synchro_import and synchro_exec';
+	}
+
+	static public function GetConfigFile() {return '/config-itop.php';}
+
+	protected function DoExecScenario($aSingleScenario)
+	{
+		echo "<div style=\"padding: 10;\">\n";
+		echo "<h3 style=\"background-color: #ddddff; padding: 10;\">{$aSingleScenario['desc']}</h3>\n";
+
+		$sClass = $aSingleScenario['target_class'];
+
+		$aTargetData = $aSingleScenario['target_data'];
+		$aSourceData = $aSingleScenario['source_data'];
+
+		$aTargetAttributes = array_shift($aTargetData);
+		$aSourceAttributes = array_shift($aSourceData);
+
+		if (count($aSourceData) + 1 != count($aTargetData))
+		{
+			throw new Exception("Target data must contain exactly ".(count($aSourceData) + 1)." items, found ".count($aTargetData));
+		}
+
+		// Create the data source
+		//
+		$oDataSource = new SynchroDataSource();
+		$oDataSource->Set('name', 'Test data sync '.time());
+		$oDataSource->Set('description', 'unit test - created automatically');
+		$oDataSource->Set('status', 'production');
+		$oDataSource->Set('user_id', 0);
+		$oDataSource->Set('scope_class', $sClass);
+		$oDataSource->Set('scope_restriction', '');
+		$oDataSource->Set('full_load_periodicity', $aSingleScenario['full_load_periodicity']);
+		$oDataSource->Set('reconciliation_policy', $aSingleScenario['reconciliation_policy']);
+		$oDataSource->Set('action_on_zero', $aSingleScenario['action_on_zero']);
+		$oDataSource->Set('action_on_one', $aSingleScenario['action_on_one']);
+		$oDataSource->Set('action_on_multiple', $aSingleScenario['action_on_multiple']);
+		$oDataSource->Set('delete_policy', $aSingleScenario['delete_policy']);
+		$oDataSource->Set('delete_policy_update', $aSingleScenario['delete_policy_update']);
+		$oDataSource->Set('delete_policy_retention', $aSingleScenario['delete_policy_retention']);
+		$iDataSourceId = $this->ObjectToDB($oDataSource);
+
+		// Specify the attributes for the data source
+		foreach($aSingleScenario['attributes'] as $aAttribInfo)
+		{
+			$oSyncAtt = new SynchroAttribute();
+			$oSyncAtt->Set('sync_source_id', $iDataSourceId);
+			$oSyncAtt->Set('attcode', $aAttribInfo['attcode']);
+			$oSyncAtt->Set('update', $aAttribInfo['do_update']);
+			$oSyncAtt->Set('reconcile', $aAttribInfo['do_reconcile']);
+			$this->ObjectToDB($oSyncAtt);
+		}
+	
+		// Prepare list of prefixes -> make sure objects are unique with regard to the reconciliation scheme
+		$aPrefixes = array(); // attcode => prefix
+		foreach($aSourceAttributes as $iDummy => $sAttCode)
+		{
+			$aPrefixes[$sAttCode] = ''; // init with something
+		}
+		foreach($aSingleScenario['attributes'] as $aAttribInfo)
+		{
+			if ($aAttribInfo['do_reconcile'])
+			{
+				$aPrefixes[$aAttribInfo['attcode']] = 'TEST_'.$iDataSourceId.'_';
+			}
+		}
+
+		// List existing objects (to be ignored in the analysis
+		//
+		$oAllObjects = new DBObjectSet(new DBObjectSearch($sClass));
+		$aExisting = $oAllObjects->ToArray(true);
+		$sExistingIds = implode(', ', array_keys($aExisting));
+
+		// Create the initial object list
+		//
+		$aInitialTarget = $aTargetData[0];
+		foreach($aInitialTarget as $aObjFields)
+		{
+			$oNewTarget = MetaModel::NewObject($sClass);
+			foreach($aTargetAttributes as $iAtt => $sAttCode)
+			{
+				$oNewTarget->Set($sAttCode, $aPrefixes[$sAttCode].$aObjFields[$iAtt]);
+			}
+			$this->ObjectToDB($oNewTarget);
+		}
+
+		foreach($aTargetData as $iRow => $aExpectedObjects)
+		{
+			// Check the status (while ignoring existing objects)
+			//
+			$oObjects = new DBObjectSet(DBObjectSearch::FromOQL("SELECT $sClass WHERE id NOT IN($sExistingIds)"));
+			$aFound = $oObjects->ToArray();
+			$aErrors_Unexpected = array();
+			foreach($aFound as $iObj => $oObj)
+			{
+				// Is this object in the expected objects list
+				$bFoundMatch = false;
+				foreach($aExpectedObjects as $iExp => $aValues)
+				{
+					$bDoesMatch = true;
+					foreach($aTargetAttributes as $iCol => $sAttCode)
+					{
+						if ($oObj->Get($sAttCode) != $aPrefixes[$sAttCode].$aValues[$iCol])
+						{
+							$bDoesMatch = false;
+							break;
+						}
+					}
+					if ($bDoesMatch)
+					{
+						$bFoundMatch = true;
+						unset($aExpectedObjects[$iExp]);
+						break;
+					}
+				}
+				if (!$bFoundMatch)
+				{
+					$aErrors_Unexpected[] = $oObj->GetKey();
+				}
+			}
+
+  			// Display the current status
+			//
+			echo "<p>Status at step $iRow</p>\n";
+			$aCurrentDataSet = array();
+			foreach($aFound as $iObj => $oObj)
+			{
+				$aObjDesc = array(
+					'Status' => (in_array($iObj, $aErrors_Unexpected) ? 'unexpected' : 'ok'),
+					'Object' => $oObj->GetHyperLink()
+				);
+				foreach($aTargetAttributes as $iCol => $sAttCode)
+				{
+					$aObjDesc[$sAttCode] = $oObj->Get($sAttCode);
+				}
+				$aCurrentDataSet[] = $aObjDesc;
+			}
+			if (count($aExpectedObjects) > 0)
+			{
+				foreach($aExpectedObjects as $iExp => $aValues)
+				{
+					$aObjDesc = array(
+						'Status' => 'missing',
+						'Object' => 'n/a'
+					);
+					foreach($aTargetAttributes as $iCol => $sAttCode)
+					{
+						$aObjDesc[$sAttCode] = $aPrefixes[$sAttCode].$aValues[$iCol];
+					}
+					$aCurrentDataSet[] = $aObjDesc;
+				}
+			}
+			echo MyHelpers::make_table_from_assoc_array($aCurrentDataSet);
+
+			if ((count($aErrors_Unexpected) > 0) || (count($aExpectedObjects) > 0))
+			{
+				throw new UnitTestException("The current status in iTop does not match the expectations");
+			}
+
+			// If not on the final row, run a data exchange sequence
+			//
+			if (array_key_exists($iRow, $aSourceData))
+			{
+				$aToBeLoaded = $aSourceData[$iRow];
+
+				$sCsvData = implode(';', $aSourceAttributes)."\n";
+				foreach($aToBeLoaded as $aDataRow)
+				{
+					$aFinalData = array();
+					foreach($aDataRow as $iCol => $value)
+					{
+						$sAttCode = $aSourceAttributes[$iCol];
+						$aFinalData[] = $aPrefixes[$sAttCode].$value;
+					}
+					$sCsvData .= implode(';', $aFinalData)."\n";
+				}
+				$aPostData = array('csvdata' => $sCsvData);
+		
+				$aImportArgs = array(
+					'data_source_id' => $iDataSourceId,
+					'separator' => ';',
+					'simulate' => 0,
+					'output' => 'details',
+				);
+		
+				$aGetParams = array();
+				$aGetParamReport = array();
+				foreach($aImportArgs as $sArg => $sValue)
+				{
+					$aGetParams[] = $sArg.'='.urlencode($sValue);
+					$aGetParamReport[] = $sArg.'='.$sValue;
+				}
+				$sGetParams = implode('&', $aGetParams);
+				$sLogin = isset($aSingleScenario['login']) ? $aSingleScenario['login'] : 'admin';
+				$sPassword = isset($aSingleScenario['password']) ? $aSingleScenario['password'] : 'admin';
+		
+				$sRes = self::DoPostRequestAuth('../synchro/synchro_import.php?'.$sGetParams, $aPostData, $sLogin, $sPassword);
+
+				// Report the load results
+				//
+				if (strlen($sCsvData) > 5000)
+				{
+					$sCsvDataViewable = 'INPUT TOO LONG TO BE DISPLAYED ('.strlen($sCsvData).")\n".substr($sCsvData, 0, 500)."\n... TO BE CONTINUED";
+				}
+				else
+				{
+					$sCsvDataViewable = $sCsvData;
+				}
+		
+				echo "<div style=\"\">\n";
+				echo "      <pre class=\"vardump\">$sCsvDataViewable</pre>\n";
+				echo "</div>\n";
+		
+				echo "<pre class=\"vardump\" style=\"clear: both; padding: 15; background-color: black; color: green;\">$sRes</pre>\n";
+				if (stripos($sRes, 'exception') !== false)
+				{
+					throw new UnitTestException('Encountered an Exception during the last import/synchro');
+				}
+				if (stripos($sRes, 'error') !== false)
+				{
+					throw new UnitTestException('Encountered an Error during the last import/synchro');
+				}
+			}
+		}
+		return;
+
+		echo "</div>\n";
+	}
+	
+	protected function DoExecute()
+	{
+		$aScenarios = array(
+			array(
+				'desc' => 'Simple scenario with delete option',
+				'login' => 'admin',
+				'password' => 'admin',
+				'target_class' => 'ApplicationSolution',
+				'full_load_periodicity' => '1 hour',
+				'reconciliation_policy' => 'use_attributes',
+				'action_on_zero' => 'create',
+				'action_on_one' => 'update',
+				'action_on_multiple' => 'error',
+				'delete_policy' => 'update_then_delete',
+				'delete_policy_update' => 'status:obsolete',
+				'delete_policy_retention' => '',
+				'source_data' => array(
+					array('primary_key', 'org_id', 'name', 'status'),
+					array(
+						array('obj_A', 2, 'obj_A', 'production'),
+						array('obj_B', 2, 'obj_B', 'production'),
+					),
+					array(
+					),
+				),
+				'target_data' => array(
+					array('org_id', 'name', 'status'),
+					array(
+						// Initial state
+						array(2, 'obj_A', 'production'),
+					),
+					array(
+						array(2, 'obj_A', 'production'),
+						array(2, 'obj_B', 'production'),
+					),
+					array(
+						array(2, 'obj_A', 'obsolete'),
+						// deleted !
+					),
+				),
+				'attributes' => array(
+					array(
+						'attcode' => 'org_id',
+						'do_reconcile' => false,
+						'do_update' => true,
+					),
+					array(
+						'attcode' => 'name',
+						'do_reconcile' => true,
+						'do_update' => true,
+					),
+					array(
+						'attcode' => 'status',
+						'do_reconcile' => false,
+						'do_update' => true,
+					),
+				),
+			),
+		//);
+		//$aScenarios = array(
+			array(
+				'desc' => 'Update then delete with retention (to complete with manual testing)',
+				'login' => 'admin',
+				'password' => 'admin',
+				'target_class' => 'ApplicationSolution',
+				'full_load_periodicity' => '1 hour',
+				'reconciliation_policy' => 'use_attributes',
+				'action_on_zero' => 'create',
+				'action_on_one' => 'update',
+				'action_on_multiple' => 'error',
+				'delete_policy' => 'update_then_delete',
+				'delete_policy_update' => 'status:obsolete',
+				'delete_policy_retention' => '1 hour',
+				'source_data' => array(
+					array('primary_key', 'org_id', 'name', 'status'),
+					array(
+						array('obj_A', 2, 'obj_A', 'production'),
+					),
+					array(
+					),
+				),
+				'target_data' => array(
+					array('org_id', 'name', 'status'),
+					array(
+						// Initial state
+					),
+					array(
+						array(2, 'obj_A', 'production'),
+					),
+					array(
+						array(2, 'obj_A', 'obsolete'),
+						// deleted !
+					),
+				),
+				'attributes' => array(
+					array(
+						'attcode' => 'org_id',
+						'do_reconcile' => false,
+						'do_update' => true,
+					),
+					array(
+						'attcode' => 'name',
+						'do_reconcile' => true,
+						'do_update' => true,
+					),
+					array(
+						'attcode' => 'status',
+						'do_reconcile' => false,
+						'do_update' => true,
+					),
+				),
+			),
+		//);
+		//$aScenarios = array(
+			array(
+				'desc' => 'Simple scenario loading a few ApplicationSolution',
+				'login' => 'admin',
+				'password' => 'admin',
+				'target_class' => 'ApplicationSolution',
+				'full_load_periodicity' => '1 hour',
+				'reconciliation_policy' => 'use_attributes',
+				'action_on_zero' => 'create',
+				'action_on_one' => 'update',
+				'action_on_multiple' => 'error',
+				'delete_policy' => 'update',
+				'delete_policy_update' => 'status:obsolete',
+				'delete_policy_retention' => '',
+				'source_data' => array(
+					array('primary_key', 'org_id', 'name', 'status'),
+					array(
+						array('obj_A', 2, 'obj_A', 'production'),
+						array('obj_B', 2, 'obj_B', 'implementation'),
+						array('obj_C', 2, 'obj_C', 'implementation'),
+					),
+					array(
+						array('obj_A', 2, 'obj_A', 'production'),
+						array('obj_C', 2, 'obj_C', 'implementation'),
+						array('obj_D', 2, 'obj_D', 'implementation'),
+					),
+					array(
+						array('obj_C', 2, 'obj_C', 'production'),
+					),
+				),
+				'target_data' => array(
+					array('org_id', 'name', 'status'),
+					array(
+						// Initial state
+						array(2, 'obj_A', 'implementation'),
+						array(2, 'obj_B', 'production'),
+						array(2, 'obj_B', 'implementation'),
+					),
+					array(
+						array(2, 'obj_A', 'production'),
+						array(2, 'obj_B', 'production'),
+						array(2, 'obj_B', 'implementation'),
+						array(2, 'obj_C', 'implementation'),
+					),
+					array(
+						array(2, 'obj_A', 'production'),
+						array(2, 'obj_B', 'production'),
+						array(2, 'obj_B', 'implementation'),
+						array(2, 'obj_C', 'implementation'),
+						array(2, 'obj_D', 'implementation'),
+					),
+					array(
+						array(2, 'obj_A', 'obsolete'),
+						array(2, 'obj_B', 'production'),
+						array(2, 'obj_B', 'implementation'),
+						array(2, 'obj_C', 'production'),
+						array(2, 'obj_D', 'obsolete'),
+					),
+				),
+				'attributes' => array(
+					array(
+						'attcode' => 'org_id',
+						'do_reconcile' => false,
+						'do_update' => true,
+					),
+					array(
+						'attcode' => 'name',
+						'do_reconcile' => true,
+						'do_update' => true,
+					),
+					array(
+						'attcode' => 'status',
+						'do_reconcile' => false,
+						'do_update' => true,
+					),
+				),
+			),
+		); 
+
+		foreach ($aScenarios as $aSingleScenario)
+		{
+			$this->DoExecScenario($aSingleScenario);
+		}
+	}
+}
 
 ///////////////////////////////////////////////////////////////////////////
 // Test SOAP services

@@ -77,6 +77,13 @@ $aPageParams = array
 		'default' => '',
 		'description' => 'local data file, replaces csvdata if specified',
 	),
+	'synchronize' => array
+	(
+		'mandatory' => false,
+		'modes' => 'http,cli',
+		'default' => '1',
+		'description' => 'If set to 1, then the synchronization will be executed right after the data load',
+	),
 	'charset' => array
 	(
 		'mandatory' => false,
@@ -224,10 +231,6 @@ else
 
 	$oP = new CSVPage("iTop - Data Exchange");
 	$sCSVData = utils::ReadPostedParam('csvdata');
-	$sCSVData = "primary_key;brand;model
-100;Hewlett;PC100".microtime()."
-101;Hewlett;PC101
-";
 }
 
 
@@ -238,6 +241,7 @@ try
 	// Read parameters
 	//
 	$iDataSourceId = ReadMandatoryParam($oP, 'data_source_id');
+	$sSynchronize = ReadParam($oP, 'synchronize');
 	$sSep = ReadParam($oP, 'separator');
 	$sQualifier = ReadParam($oP, 'qualifier');
 	$sCharSet = ReadParam($oP, 'charset');
@@ -245,6 +249,8 @@ try
 //	$sReportLevel = ReadParam($oP, 'reportlevel');
 	$sSimulate = ReadParam($oP, 'simulate');
 	$sComment = ReadParam($oP, 'comment');
+
+	$oLoadStartDate = new DateTime(); // Now
 
 	//////////////////////////////////////////////////
 	//
@@ -303,6 +309,15 @@ try
 	else
 	{
 		$bSimulate = false;
+	}
+
+	if ($sSynchronize == '1')
+	{
+		$bSynchronize = true;
+	}
+	else
+	{
+		$bSynchronize = false;
 	}
 
 	//////////////////////////////////////////////////
@@ -446,6 +461,20 @@ try
 
 	//////////////////////////////////////////////////
 	//
+	// Synchronize
+	//
+	if ($bSynchronize && !$bSimulate)
+	{
+		$aDataToReplica = array();
+		$oDataSource->Synchronize($aDataToReplica, $oLoadStartDate);
+		//echo "#@# Synchronize() returned :<br/>\n";
+		//echo "<pre>\n";
+		//print_r($aDataToReplica);
+		//echo "</pre>\n";
+	}
+
+	//////////////////////////////////////////////////
+	//
 	// Summary of settings and results
 	//
 	if ($sOutput == 'retcode')
@@ -455,6 +484,8 @@ try
 
 	if (($sOutput == "summary") || ($sOutput == 'details'))
 	{
+		$oP->add_comment("Data Source: ".$iDataSourceId);
+		$oP->add_comment("Synchronize: ".($bSynchronize ? '1' : '0'));
 		$oP->add_comment("Class: ".$sClass);
 		$oP->add_comment("Separator: ".$sSep);
 		$oP->add_comment("Qualifier: ".$sQualifier);

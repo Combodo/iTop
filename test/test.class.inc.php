@@ -190,30 +190,6 @@ abstract class TestHandler
 		$this->m_sOutput = ob_get_clean();
 		return (count($this->GetErrors()) == 0);
 	}
-}
-
-
-
-
-/**
- * Test to execute a piece of code (checks if an error occurs)  
- *
- * @package     iTopORM
- */
-abstract class TestFunction extends TestHandler
-{
-	// simply overload DoExecute (temporary)
-}
-
-
-/**
- * Test to execute a piece of code (checks if an error occurs)  
- *
- * @package     iTopORM
- */
-abstract class TestWebServices extends TestHandler
-{
-	// simply overload DoExecute (temporary)
 
 	static protected function DoPostRequestAuth($sRelativeUrl, $aData, $sLogin = 'admin', $sPassword = 'admin', $sOptionnalHeaders = null)
 	{
@@ -270,6 +246,29 @@ abstract class TestWebServices extends TestHandler
 		}
 		return $response;
 	}
+}
+
+
+
+
+/**
+ * Test to execute a piece of code (checks if an error occurs)  
+ *
+ * @package     iTopORM
+ */
+abstract class TestFunction extends TestHandler
+{
+	// simply overload DoExecute (temporary)
+}
+
+
+/**
+ * Test to execute a piece of code (checks if an error occurs)  
+ *
+ * @package     iTopORM
+ */
+abstract class TestWebServices extends TestHandler
+{
 }
 
 /**
