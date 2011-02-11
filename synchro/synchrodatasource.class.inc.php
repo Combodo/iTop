@@ -553,7 +553,7 @@ class SynchroLog extends CmdbAbstractObject
 }
 
 
-class SynchroReplica extends cmdbAbstractObject
+class SynchroReplica extends DBObject
 {
 	static $aSearches = array(); // Cache of OQL queries used for reconciliation (per data source)
 	
@@ -602,7 +602,7 @@ class SynchroReplica extends cmdbAbstractObject
 
 	// Overload the deletion -> the replica has been created by the mean of a trigger,
 	//                          it will be deleted by the mean of a trigger too
-	public function DBDeleteTracked_Internal()
+	public function DBDelete()
 	{
 		$oDataSource = MetaModel::GetObject('SynchroDataSource', $this->Get('sync_source_id'));
 		$sTable = $oDataSource->GetDataTable();
@@ -658,10 +658,12 @@ class SynchroReplica extends cmdbAbstractObject
 			switch($iCount)
 			{
 				case 0:
+				//echo "<p>Nothing found for: ".self::$aSearches[$oDataSource->GetKey()]->ToOQL(true, $aFilterValues)."</p>";
 				$this->CreateObjectFromReplica($oDataSource->GetTargetClass(), $aAttributes, $oChange);
 				break;
 				
 				case 1:
+				//echo "<p>Found 1 for: ".self::$aSearches[$oDataSource->GetKey()]->ToOQL(true, $aFilterValues)."</p>";
 				$oDestObj = $oDestSet->Fetch();
 				$this->UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange);
 				$this->Set('dest_id', $oDestObj->GetKey());
@@ -676,6 +678,7 @@ class SynchroReplica extends cmdbAbstractObject
 					$aConditions[] = $sCode.'='.$sValue;
 				}
 				$sCondition = implode(' AND ', $aConditions);
+				//echo "<p>Found N for: ".self::$aSearches[$oDataSource->GetKey()]->ToOQL(true, $aFilterValues)."</p>";
 				$this->SetLastError($iCount.' destination objects match the reconciliation criterias: '.$sCondition);
 			}
 			break;
