@@ -1693,7 +1693,7 @@ EOF
 	/**
 	 * Updates the object from the POSTed parameters
 	 */
-	function UpdateObject($sFormPrefix = '')
+	public function UpdateObject($sFormPrefix = '')
 	{
 		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode=>$oAttDef)
 		{

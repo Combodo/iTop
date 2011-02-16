@@ -347,101 +347,6 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 }
 
 /**
- * Updates an object from the POSTed parameters
- */
-function UpdateObject(&$oObj)
-{
-	foreach(MetaModel::ListAttributeDefs(get_class($oObj)) as $sAttCode=>$oAttDef)
-	{
-		if ($oAttDef->IsLinkSet() && $oAttDef->IsIndirect())
-		{
-			$aLinks = utils::ReadPostedParam("attr_$sAttCode", '');
-			$sLinkedClass = $oAttDef->GetLinkedClass();
-			$sExtKeyToRemote = $oAttDef->GetExtKeyToRemote();
-			$sExtKeyToMe = $oAttDef->GetExtKeyToMe();
-			$oLinkedSet = DBObjectSet::FromScratch($sLinkedClass);
-			if (is_array($aLinks))
-			{
-				foreach($aLinks as $id => $aData)
-				{
-					if (is_numeric($id))
-					{
-						if ($id < 0)
-						{
-							// New link to be created, the opposite of the id (-$id) is the ID of the remote object
-							$oLink = MetaModel::NewObject($sLinkedClass);
-							$oLink->Set($sExtKeyToRemote, -$id);
-							$oLink->Set($sExtKeyToMe, $oObj->GetKey());
-						}
-						else
-						{
-							// Existing link, potentially to be updated...
-							$oLink = MetaModel::GetObject($sLinkedClass, $id);
-						}
-						// Now populate the attributes
-						foreach($aData as $sName => $value)
-						{
-							if (MetaModel::IsValidAttCode($sLinkedClass, $sName))
-							{
-								$oLinkAttDef = MetaModel::GetAttributeDef($sLinkedClass, $sName);
-								if ($oLinkAttDef->IsWritable())
-								{
-									$oLink->Set($sName, $value);
-								}
-							}
-						}
-						$oLinkedSet->AddObject($oLink);
-					}
-				}
-			}
-			$oObj->Set($sAttCode, $oLinkedSet);
-		}
-		else if ($oAttDef->IsWritable())
-		{
-			$iFlags = $oObj->GetAttributeFlags($sAttCode);
-			if ($iFlags & (OPT_ATT_HIDDEN | OPT_ATT_READONLY))
-			{
-				// Non-visible, or read-only attribute, do nothing
-			}
-			elseif ($oAttDef->GetEditClass() == 'Document')
-			{
-				// There should be an uploaded file with the named attr_<attCode>
-				$oDocument = utils::ReadPostedDocument('file_'.$sAttCode);
-				if (!$oDocument->IsEmpty())
-				{
-					// A new file has been uploaded
-					$oObj->Set($sAttCode, $oDocument);
-				}
-			}
-			elseif ($oAttDef->GetEditClass() == 'One Way Password')
-			{
-				// Check if the password was typed/changed
-				$bChanged = utils::ReadPostedParam("attr_{$sAttCode}_changed", false);
-				if ($bChanged)
-				{
-					// The password has been changed or set
-					$rawValue = utils::ReadPostedParam("attr_$sAttCode", null);
-					$oObj->Set($sAttCode, $rawValue);
-				}
-			}
-			else
-			{
-				$rawValue = utils::ReadPostedParam("attr_$sAttCode", null);
-				if (!is_null($rawValue))
-				{
-					$aAttributes[$sAttCode] = trim($rawValue);
-					$previousValue = $oObj->Get($sAttCode);
-					if ($previousValue !== $aAttributes[$sAttCode])
-					{
-						$oObj->Set($sAttCode, $aAttributes[$sAttCode]);
-					}
-				}
-			}
-		}
-	}
-}
-
-/**
  * Displays a popup welcome message, once per session at maximum
  * until the user unchecks the "Display welcome at startup"
  * @param WebPage $oP The current web page for the display
@@ -901,7 +806,7 @@ try
 			}
 			else
 			{
-				UpdateObject($oObj);
+				$oObj->UpdateObject();
 
 				if (!$oObj->IsModified())
 				{
@@ -1036,7 +941,7 @@ try
 		else
 		{
 			$oObj = MetaModel::NewObject($sClass);
-			UpdateObject($oObj);
+			$oObj->UpdateObject();
 		}
 		if (isset($oObj) && is_object($oObj))
 		{

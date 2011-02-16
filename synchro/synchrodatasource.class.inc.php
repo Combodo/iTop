@@ -38,6 +38,7 @@ class SynchroDataSource extends cmdbAbstractObject
 			"db_key_field" => "id",
 			"db_finalclass_field" => "realclass",
 			"display_template" => "",
+			"icon" => "../images/synchro.png",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -68,13 +69,129 @@ class SynchroDataSource extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeLinkedSet("attribute_list", array("linked_class"=>"SynchroAttribute", "ext_key_to_me"=>"sync_source_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('name', 'description', 'status', 'user_id', 'scope_class', 'scope_restriction', 'full_load_periodicity', 'reconciliation_policy', 'action_on_zero', 'action_on_one', 'action_on_multiple', 'delete_policy', 'delete_policy_update', 'delete_policy_retention', 'attribute_list')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('name', 'status', 'scope_class', 'user_id')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', array('name', 'description', 'scope_class', 'scope_restriction', 'status', 'user_id', 'full_load_periodicity', 'reconciliation_policy', 'action_on_zero', 'action_on_one', 'action_on_multiple', 'delete_policy', 'delete_policy_update', 'delete_policy_retention', /*'attribute_list'*/)); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('scope_class', 'status', 'user_id', 'full_load_periodicity')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'scope_class', 'user_id')); // Criteria of the std search form
 //		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
 	}
 
+	public function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
+	{
+		if (!$this->IsNew())
+		{
+			$oPage->SetCurrentTab(Dict::S('Core:SynchroAttributes'));
+			$oAttributeSet = $this->Get('attribute_list');
+			$aAttributes = array();
+			while($oAttribute = $oAttributeSet->Fetch())
+			{
+				$aAttributes[$oAttribute->Get('attcode')] = $oAttribute;
+			}
+			$aAttribs = array(
+				'attcode' => array('label'=>'Attribute', 'description' => 'Field of the object'),
+				'reconciliation' => array('label'=>'Reconciliation ?', 'description' => 'Used for searching'),
+				'update' => array('label'=>'Update ?', 'description' => 'Used to update the object'),
+				'update_policy' => array('label'=>'Update Policy', 'description' => 'Behavior of the updated field'),
+			);
+			$aValues = array();
+			foreach(MetaModel::ListAttributeDefs($this->GetTargetClass()) as $sAttCode=>$oAttDef)
+			{
+				if ($oAttDef->IsScalar() && $oAttDef->IsWritable())
+				{
+					if (isset($aAttributes[$sAttCode]))
+					{
+						$oAttribute = $aAttributes[$sAttCode];
+					}
+					else
+					{
+						$oAttribute = new SynchroAttribute();
+						$oAttribute->Set('sync_source_id', $this->GetKey());
+						$oAttribute->Set('attcode', $sAttCode);
+						$oAttribute->Set('reconcile', MetaModel::IsReconcKey($this->GetTargetClass(), $sAttCode) ? 1 : 0);
+						$oAttribute->Set('update', 1);
+						$oAttribute->Set('update_policy', 'master_locked');
+					}
+					if (!$bEditMode)
+					{
+						// Read-only mode
+						$aRow['reconciliation'] = $oAttribute->Get('reconcile') == 1 ? Dict::S('UI:Synchro:Yes') :  Dict::S('UI:Synchro:No'); 
+						$aRow['update'] = $oAttribute->Get('update') == 1 ?  Dict::S('UI:Synchro:Yes') :  Dict::S('UI:Synchro:No');
+						$aRow['attcode'] = MetaModel::GetLabel($this->GetTargetClass(), $oAttribute->Get('attcode')); 
+						$aRow['update_policy'] = $oAttribute->GetAsHTML('update_policy'); 
+					}
+					else
+					{
+						// Read-only mode
+						$sAttCode = $oAttribute->Get('attcode');
+						$sChecked = $oAttribute->Get('reconcile') == 1 ? 'checked' : '';
+						$aRow['reconciliation'] = "<input type=\"checkbox\" name=\"reconciliation[$sAttCode]\" $sChecked/>"; 
+						$sChecked = $oAttribute->Get('update') == 1 ? 'checked' : '';
+						$aRow['update'] = "<input type=\"checkbox\" name=\"update[$sAttCode]\" $sChecked/>"; 
+						$aRow['attcode'] = MetaModel::GetLabel($this->GetTargetClass(), $oAttribute->Get('attcode'));
+						$oAttDef = MetaModel::GetAttributeDef(get_class($oAttribute), 'update_policy'); 
+						$aRow['update_policy'] = cmdbAbstractObject::GetFormElementForField($oPage, get_class($oAttribute), 'update_policy', $oAttDef, $oAttribute->Get('update_policy'), '', 'update_policy_'.$sAttCode, "[$sAttCode]");
+					}
+					$aValues[] = $aRow;
+				}
+			}
+			$oPage->Table($aAttribs, $aValues);
+		}
+		parent::DisplayBareRelations($oPage, $bEditMode);
+	}
+
+	public function GetAttributeFlags($sAttCode)
+	{
+		if (($sAttCode == 'scope_class') && (!$this->IsNew()))
+		{
+			return OPT_ATT_READONLY;
+		}
+		return parent::GetAttributeFlags($sAttCode);
+	}
+		
+	public function UpdateObject($sFormPrefix = '')
+	{
+		parent::UpdateObject($sFormPrefix);
+		// And now read the other post parameters...
+		$oAttributeSet = $this->Get('attribute_list');
+		$aAttributes = array();
+		while($oAttribute = $oAttributeSet->Fetch())
+		{
+			$aAttributes[$oAttribute->Get('attcode')] = $oAttribute;
+		}
+		$aReconcile = utils::ReadPostedParam('reconciliation', array());
+		$aUpdate = utils::ReadPostedParam('update', array());
+		$aUpdatePolicy = utils::ReadPostedParam('attr_update_policy', array());
+		// update_policy cannot be empty, so there is one entry per attribute, use this to iterate
+		// through all the writable attributes
+		foreach($aUpdatePolicy as $sAttCode => $sValue)
+		{
+			if(!isset($aAttributes[$sAttCode]))
+			{
+				$oAttribute = new SynchroAttribute();
+				$oAttribute->Set('sync_source_id', $this->GetKey());
+				$oAttribute->Set('attcode', $sAttCode);
+			}
+			else
+			{
+				$oAttribute = $aAttributes[$sAttCode];
+			}
+			$bReconcile = 0;
+			if (isset($aReconcile[$sAttCode]))
+			{
+				$bReconcile = $aReconcile[$sAttCode] == 'on' ? 1 : 0;
+			}
+			$bUpdate =  0 ; // Default / initial value
+			if (isset($aUpdate[$sAttCode]))
+			{
+				$bUpdate = $aUpdate[$sAttCode] == 'on' ? 1 : 0;
+			}
+			$oAttribute->Set('reconcile', $bReconcile);
+			$oAttribute->Set('update', $bUpdate);
+			$oAttribute->Set('update_policy', $sValue);
+			$oAttributeSet->AddObject($oAttribute);
+		}
+		$this->Set('attribute_list', $oAttributeSet);
+	}
 	public function GetTargetClass()
 	{
 		return $this->Get('scope_class');
@@ -89,6 +206,34 @@ class SynchroDataSource extends cmdbAbstractObject
 		return $sTable;
 	}
 
+	/**
+	 * When inserting a new datasource object, also create the SynchroAttribute objects
+	 * for each field of the target class
+	 */
+	protected function OnInsert()
+	{
+		// Create all the SynchroAttribute records
+		$oAttributeSet = $this->Get('attribute_list');
+		foreach(MetaModel::ListAttributeDefs($this->GetTargetClass()) as $sAttCode=>$oAttDef)
+		{
+			if ($oAttDef->IsScalar() && $oAttDef->IsWritable())
+			{
+				$oAttribute = new SynchroAttribute();
+				$oAttribute->Set('sync_source_id', $this->GetKey());
+				$oAttribute->Set('attcode', $sAttCode);
+				$oAttribute->Set('reconcile', MetaModel::IsReconcKey($this->GetTargetClass(), $sAttCode) ? 1 : 0);
+				$oAttribute->Set('update', 1);
+				$oAttribute->Set('update_policy', 'master_locked');
+				$oAttributeSet->AddObject($oAttribute);
+			}
+		}
+		$this->Set('attribute_list', $oAttributeSet);
+	}
+	/**
+	 * When the new datasource has been created, let's create the synchro_data table
+	 * that will hold the data records and the correspoding triggers which will maintain
+	 * both tables in sync
+	 */
 	protected function AfterInsert()
 	{
 		parent::AfterInsert();
@@ -154,7 +299,7 @@ class SynchroDataSource extends cmdbAbstractObject
 	
 	protected function AfterDelete()
 	{
-		parent::AfterInsert();
+		parent::AfterDelete();
 
 		$sTable = $this->GetDataTable();
 
