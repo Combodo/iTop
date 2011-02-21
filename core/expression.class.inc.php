@@ -31,7 +31,7 @@ abstract class Expression
 {
 	// recursive translation of identifiers
 	abstract public function GetUnresolvedFields($sAlias, &$aUnresolved);
-	abstract public function Translate($aTranslationData, $bMatchAll = true);
+	abstract public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true);
 
 	// recursive rendering (aArgs used as input by default, or used as output if bRetrofitParams set to True
 	abstract public function Render(&$aArgs = null, $bRetrofitParams = false);
@@ -110,7 +110,7 @@ class SQLExpression extends Expression
 	{
 	}
 
-	public function Translate($aTranslationData, $bMatchAll = true)
+	public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true)
 	{
 		return clone $this;
 	}
@@ -192,10 +192,10 @@ class BinaryExpression extends Expression
 		$this->GetRightExpr()->GetUnresolvedFields($sAlias, $aUnresolved);
 	}
 
-	public function Translate($aTranslationData, $bMatchAll = true)
+	public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true)
 	{
-		$oLeft = $this->GetLeftExpr()->Translate($aTranslationData, $bMatchAll);
-		$oRight = $this->GetRightExpr()->Translate($aTranslationData, $bMatchAll);
+		$oLeft = $this->GetLeftExpr()->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
+		$oRight = $this->GetRightExpr()->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
 		return new BinaryExpression($oLeft, $this->GetOperator(), $oRight);
 	}
 
@@ -247,7 +247,7 @@ class UnaryExpression extends Expression
 	{
 	}
 
-	public function Translate($aTranslationData, $bMatchAll = true)
+	public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true)
 	{
 		return clone $this;
 	}
@@ -342,7 +342,7 @@ class FieldExpression extends UnaryExpression
 		}
 	}
 
-	public function Translate($aTranslationData, $bMatchAll = true)
+	public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true)
 	{
 		if (!array_key_exists($this->m_sParent, $aTranslationData))
 		{
@@ -359,7 +359,14 @@ class FieldExpression extends UnaryExpression
 			}
 			$sNewParent = $aTranslationData[$this->m_sParent]['*'];
 			$sNewName = $this->m_sName;
-			$oRet = new FieldExpressionResolved($sNewName, $sNewParent);
+			if ($bMarkFieldsAsResolved)
+			{
+				$oRet = new FieldExpressionResolved($sNewName, $sNewParent);
+			}
+			else
+			{
+				$oRet = new FieldExpression($sNewName, $sNewParent);
+			}
 		}
 		else
 		{
@@ -376,7 +383,7 @@ class FieldExpressionResolved extends FieldExpression
 	{
 	}
 
-	public function Translate($aTranslationData, $bMatchAll = true)
+	public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true)
 	{
 		return clone $this;
 	}
@@ -475,12 +482,12 @@ class ListExpression extends Expression
 		}
 	}
 
-	public function Translate($aTranslationData, $bMatchAll = true)
+	public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true)
 	{
 		$aRes = array();
 		foreach ($this->m_aExpressions as $oExpr)
 		{
-			$aRes[] = $oExpr->Translate($aTranslationData, $bMatchAll);
+			$aRes[] = $oExpr->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
 		}
 		return new ListExpression($aRes);
 	}
@@ -543,12 +550,12 @@ class FunctionExpression extends Expression
 		}
 	}
 
-	public function Translate($aTranslationData, $bMatchAll = true)
+	public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true)
 	{
 		$aRes = array();
 		foreach ($this->m_aArgs as $oExpr)
 		{
-			$aRes[] = $oExpr->Translate($aTranslationData, $bMatchAll);
+			$aRes[] = $oExpr->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
 		}
 		return new FunctionExpression($this->m_sVerb, $aRes);
 	}
@@ -602,9 +609,9 @@ class IntervalExpression extends Expression
 		$this->m_oValue->GetUnresolvedFields($sAlias, $aUnresolved);
 	}
 
-	public function Translate($aTranslationData, $bMatchAll = true)
+	public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true)
 	{
-		return new IntervalExpression($this->m_oValue->Translate($aTranslationData, $bMatchAll), $this->m_sUnit);
+		return new IntervalExpression($this->m_oValue->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved), $this->m_sUnit);
 	}
 
 	public function ListRequiredFields()
@@ -654,12 +661,12 @@ class CharConcatExpression extends Expression
 		}
 	}
 
-	public function Translate($aTranslationData, $bMatchAll = true)
+	public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true)
 	{
 		$aRes = array();
 		foreach ($this->m_aExpressions as $oExpr)
 		{
-			$aRes[] = $oExpr->Translate($aTranslationData, $bMatchAll);
+			$aRes[] = $oExpr->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
 		}
 		return new CharConcatExpression($aRes);
 	}
@@ -732,16 +739,16 @@ class QueryBuilderExpressions
 		}
 	}
 
-	public function Translate($aTranslationData, $bMatchAll = true)
+	public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true)
 	{
-		$this->m_oConditionExpr = $this->m_oConditionExpr->Translate($aTranslationData, $bMatchAll);
+		$this->m_oConditionExpr = $this->m_oConditionExpr->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
 		foreach($this->m_aSelectExpr as $sColAlias => $oExpr)
 		{
-			$this->m_aSelectExpr[$sColAlias] = $oExpr->Translate($aTranslationData, $bMatchAll);
+			$this->m_aSelectExpr[$sColAlias] = $oExpr->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
 		}
 		foreach($this->m_aJoinFields as $index => $oExpression)
 		{
-			$this->m_aJoinFields[$index] = $oExpression->Translate($aTranslationData, $bMatchAll);
+			$this->m_aJoinFields[$index] = $oExpression->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
 		}
 	}
 }

@@ -209,7 +209,7 @@ class DBObjectSearch
 
 	protected function TransferConditionExpression($oFilter, $aTranslation)
 	{
-		$oTranslated = $oFilter->GetCriteria()->Translate($aTranslation, false);
+		$oTranslated = $oFilter->GetCriteria()->Translate($aTranslation, false, false /* leave unresolved fields */);
 		$this->AddConditionExpression($oTranslated);
 		// #@# what about collisions in parameter names ???
 		$this->m_aParams = array_merge($this->m_aParams, $oFilter->m_aParams);
