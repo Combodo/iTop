@@ -14,6 +14,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+
 /**
  * Data Exchange - synchronization with external applications (incoming data)
  *
@@ -22,6 +23,7 @@
  * @author      Denis Flaven <denis.flaven@combodo.com>
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
+
 
 class SynchroDataSource extends cmdbAbstractObject
 {	
@@ -324,7 +326,39 @@ class SynchroDataSource extends cmdbAbstractObject
 		$sUserString = CMDBChange::GetCurrentUserName();
 		$oMyChange->Set("userinfo", $sUserString);
 		$iChangeId = $oMyChange->DBInsert();
-	
+
+		// Start logging this execution (stats + protection against reentrance)
+		//
+		$oStatLog = new SynchroLog();
+		$oStatLog->Set('sync_source_id', $this->GetKey());
+		$oStatLog->Set('start_date', time());
+		$oStatLog->Set('status', 'running');
+		$oStatLog->Set('stats_nb_seen', 0);
+		$oStatLog->Set('stats_nb_modified', 0);
+		$oStatLog->Set('stats_nb_errors', 0);
+		$oStatLog->Set('stats_nb_created', 0);
+		$oStatLog->Set('stats_nb_deleted', 0);
+		$oStatLog->Set('stats_nb_reconciled', 0);
+		$oStatLog->DBInsertTracked($oMyChange);
+
+		try
+		{
+			$this->DoSynchronize($aDataToReplica, $oLastFullLoadStartDate, $oMyChange, $oStatLog);
+
+			$oStatLog->Set('end_date', time());
+			$oStatLog->Set('status', 'completed');
+			$oStatLog->DBUpdateTracked($oMyChange);
+		}
+		catch (Exception $e)
+		{
+			$oStatLog->Set('end_date', time());
+			$oStatLog->Set('status', 'completed');
+			$oStatLog->DBUpdateTracked($oMyChange);
+		}
+	}
+
+	protected function DoSynchronize(&$aDataToReplica, $oLastFullLoadStartDate, $oMyChange, &$oStatLog)
+	{
 		// Get all the replicas that were not seen in the last import and mark them as obsolete
 		if ($oLastFullLoadStartDate == null)
 		{
@@ -373,7 +407,7 @@ class SynchroDataSource extends cmdbAbstractObject
 						$aToUpdate[$sAttCode] = $sValue;
 					}
 				}
-				$oReplica->UpdateDestObject($aToUpdate, $oMyChange);
+				$oReplica->UpdateDestObject($aToUpdate, $oMyChange, $oStatLog);
 			}
 			// TO DO: remove trace
 			echo "<p>Replica id:".$oReplica->GetKey()." (dest_id:".$oReplica->Get('dest_id').") marked as obsolete</p>";
@@ -436,7 +470,12 @@ class SynchroDataSource extends cmdbAbstractObject
 
 		while($oReplica = $oSetToSync->Fetch())
 		{
-			$oReplica->Synchro($this, $aReconciliationKeys, $aAttributes, $oMyChange);	
+			$oStatLog->Set('stats_nb_seen', $oStatLog->Get('stats_nb_seen') + 1);
+			if ($oReplica->Get('status') == 'modified')
+			{
+				$oStatLog->Set('stats_nb_modified', $oStatLog->Get('stats_nb_modified') + 1);
+			}
+			$oReplica->Synchro($this, $aReconciliationKeys, $aAttributes, $oMyChange, $oStatLog);
 		}
 		
 		// Get all the replicas that are to be deleted
@@ -466,19 +505,20 @@ class SynchroDataSource extends cmdbAbstractObject
 		$oSetToDelete = new DBObjectSet(DBObjectSearch::FromOQL($sSelectToDelete), array() /* order by*/, array('source_id' => $this->GetKey(), 'last_import' => $sDeletionDate));
 		while($oReplica = $oSetToDelete->Fetch())
 		{
+			$oStatLog->Set('stats_nb_deleted', $oStatLog->Get('stats_nb_deleted') + 1);
+
 			$sUpdateOnObsolete = $this->Get('delete_policy');
 			if ( ($sUpdateOnObsolete == 'delete') || ($sUpdateOnObsolete == 'update_then_delete') )
 			{
 				// TO DO: remove trace
 				echo "<p>Destination object: (dest_id:".$oReplica->Get('dest_id').") to be DELETED.</p>";
 				// TO DO: delete the dest object for real...
-				$oReplica->DeleteDestObject($oMyChange);
+				$oReplica->DeleteDestObject($oMyChange, $oStatLog);
 			}
 			// TO DO: remove trace
 			echo "<p>Replica id:".$oReplica->GetKey()." (dest_id:".$oReplica->Get('dest_id').") to be deleted</p>";
 			$oReplica->DBDeleteTracked($oMyChange);
 		}
-		return;
 	}
 	
 	/**
@@ -540,6 +580,7 @@ class SynchroDataSource extends cmdbAbstractObject
 		return $oLog;
 	}
 	
+	// TO DO: remove if still unused
 	/**
 	 * Retrieve from the log, the date of the last completed import
 	 * @return DateTime
@@ -659,7 +700,8 @@ class SynchroAttLinkSet extends SynchroAttribute
 
 }
 
-class SynchroLog extends CmdbAbstractObject
+//class SynchroLog extends Event
+class SynchroLog extends cmdbAbstractObject
 {
 	public static function Init()
 	{
@@ -677,6 +719,7 @@ class SynchroLog extends CmdbAbstractObject
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
+//		MetaModel::Init_AddAttribute(new AttributeString("userinfo", array("allowed_values"=>null, "sql"=>"userinfo", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("sync_source_id", array("targetclass"=>"SynchroDataSource", "jointype"=> "", "allowed_values"=>null, "sql"=>"sync_source_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDateTime("start_date", array("allowed_values"=>null, "sql"=>"start_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDateTime("end_date", array("allowed_values"=>null, "sql"=>"end_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
@@ -775,8 +818,9 @@ class SynchroReplica extends DBObject
 		}
 		$this->Set('status_last_error', $sText);
 	}
+
 	
-	public function Synchro($oDataSource, $aReconciliationKeys, $aAttributes, $oChange)
+	public function Synchro($oDataSource, $aReconciliationKeys, $aAttributes, $oChange, $oStatLog)
 	{
 		switch($this->Get('status'))
 		{
@@ -804,16 +848,18 @@ class SynchroReplica extends DBObject
 			{
 				case 0:
 				//echo "<p>Nothing found for: ".self::$aSearches[$oDataSource->GetKey()]->ToOQL(true, $aFilterValues)."</p>";
-				$this->CreateObjectFromReplica($oDataSource->GetTargetClass(), $aAttributes, $oChange);
+				$this->CreateObjectFromReplica($oDataSource->GetTargetClass(), $aAttributes, $oChange, $oStatLog);
 				break;
 				
 				case 1:
 				//echo "<p>Found 1 for: ".self::$aSearches[$oDataSource->GetKey()]->ToOQL(true, $aFilterValues)."</p>";
 				$oDestObj = $oDestSet->Fetch();
-				$this->UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange);
+				$this->UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange, $oStatLog);
 				$this->Set('dest_id', $oDestObj->GetKey());
 				$this->Set('status_dest_creator', false);
 				$this->Set('dest_class', get_class($oDestObj));
+
+				$oStatLog->Set('stats_nb_reconciled', $oStatLog->Get('stats_nb_reconciled') + 1);
 				break;
 				
 				default:
@@ -825,6 +871,7 @@ class SynchroReplica extends DBObject
 				$sCondition = implode(' AND ', $aConditions);
 				//echo "<p>Found N for: ".self::$aSearches[$oDataSource->GetKey()]->ToOQL(true, $aFilterValues)."</p>";
 				$this->SetLastError($iCount.' destination objects match the reconciliation criterias: '.$sCondition);
+				$oStatLog->Set('stats_nb_errors', $oStatLog->Get('stats_nb_errors') + 1);
 			}
 			break;
 			
@@ -834,10 +881,11 @@ class SynchroReplica extends DBObject
 			{
 				$this->Set('status', 'orphan'); // The destination object has been deleted !
 				$this->SetLastError('Destination object deleted unexpectedly');
+				$oStatLog->Set('stats_nb_errors', $oStatLog->Get('stats_nb_errors') + 1);
 			}
 			else
 			{
-				$this->UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange);
+				$this->UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange, $oStatLog);
 			}
 			break;
 			
@@ -849,7 +897,7 @@ class SynchroReplica extends DBObject
 	/**
 	 * Updates the destination object with the Extended data found in the synchro_data_XXXX table
 	 */	
-	protected function UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange)
+	protected function UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange, &$oStatLog)
 	{
 		// TO DO: remove trace
 		echo "<p>Update object ".$oDestObj->GetHyperLink()."</p>";
@@ -869,13 +917,14 @@ class SynchroReplica extends DBObject
 		catch(Exception $e)
 		{
 			$this->SetLastError('Unable to update destination object: ', $e);
+			$oStatLog->Set('stats_nb_errors', $oStatLog->Get('stats_nb_errors') + 1);
 		}
 	}
 
 	/**
 	 * Creates the destination object populating it with the Extended data found in the synchro_data_XXXX table
 	 */	
-	protected function CreateObjectFromReplica($sClass, $aAttributes, $oChange)
+	protected function CreateObjectFromReplica($sClass, $aAttributes, $oChange, $oStatLog)
 	{
 		// TO DO: remove trace
 		echo "<p>Creating new $sClass</p>";
@@ -898,17 +947,20 @@ class SynchroReplica extends DBObject
 			$this->Set('status_dest_creator', true);
 			$this->Set('status_last_error', '');
 			$this->Set('status', 'synchronized');
+
+			$oStatLog->Set('stats_nb_created', $oStatLog->Get('stats_nb_created') + 1);
 		}
 		catch(Exception $e)
 		{
 			$this->SetLastError('Unable to create destination object: ', $e);
+			$oStatLog->Set('stats_nb_errors', $oStatLog->Get('stats_nb_errors') + 1);
 		}
 	}
 	
 	/**
 	 * Update the destination object with given values
 	 */	
-	public function UpdateDestObject($aValues, $oChange)
+	public function UpdateDestObject($aValues, $oChange, &$oStatLog)
 	{
 		try
 		{
@@ -922,13 +974,14 @@ class SynchroReplica extends DBObject
 		catch(Exception $e)
 		{
 			$this->SetLastError('Unable to update the destination object: ', $e);
+			$oStatLog->Set('stats_nb_errors', $oStatLog->Get('stats_nb_errors') + 1);
 		}
 	}
 
 	/**
 	 * Delete the destination object
 	 */	
-	public function DeleteDestObject($oChange)
+	public function DeleteDestObject($oChange, &$oStatLog)
 	{
 		if($this->Get('status_dest_creator'))
 		{
@@ -940,6 +993,7 @@ class SynchroReplica extends DBObject
 			catch(Exception $e)
 			{
 				$this->SetLastError('Unable to delete the destination object: ', $e);
+				$oStatLog->Set('stats_nb_errors', $oStatLog->Get('stats_nb_errors') + 1);
 			}
 		}
 	}
@@ -954,10 +1008,11 @@ class SynchroReplica extends DBObject
 	 }
 }
 
+// TO DO: finalize.... admins only ? which options ? troubleshoot WebPageMenuNode::__construct(.... sEnableClass...) ?
 //if (UserRights::IsAdministrator())
 {
 	$oAdminMenu = new MenuGroup('AdminTools', 80 /* fRank */);
 	new OQLMenuNode('DataSources', 'SELECT SynchroDataSource', $oAdminMenu->GetIndex(), 12 /* fRank */, true, 'SynchroDataSource', UR_ACTION_MODIFY, UR_ALLOWED_YES);
-	new WebPageMenuNode('Test:RunSynchro', '../synchro/synchro_exec.php', $oAdminMenu->GetIndex(), 13 /* fRank */);
+	new WebPageMenuNode('Test:RunSynchro', '../synchro/synchro_exec.php', $oAdminMenu->GetIndex(), 13 /* fRank */, 'SynchroDataSource');
 }	
 ?>
