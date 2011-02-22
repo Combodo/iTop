@@ -101,7 +101,9 @@ else
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
 	$oP = new WebPage(Dict::S("TitleSynchroExecution"));
-	$sDataSourcesList = utils::ReadParam('data_sources', null);
+	$sDataSourcesList = utils::ReadParam('data_sources', null, true);
+	$bSimulate = (utils::ReadParam('simulate', '0', true) == '1');
+	
 	if ($sDataSourcesList == null)
 	{
 		UsageAndExit($oP);
