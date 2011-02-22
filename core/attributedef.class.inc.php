@@ -567,7 +567,7 @@ class AttributeInteger extends AttributeDBField
 	public function MakeRealValue($proposedValue)
 	{
 		if (is_null($proposedValue)) return null;
-		if ($proposedValue == '') return null;
+		if ($proposedValue === '') return null; // 0 is transformed into '' !
 		return (int)$proposedValue;
 	}
 
