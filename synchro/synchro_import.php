@@ -466,10 +466,11 @@ try
 	if ($bSynchronize && !$bSimulate)
 	{
 		$aTraces = array();
-		$oDataSource->Synchronize($aTraces, $oLoadStartDate);
+		$oStatLog = $oDataSource->Synchronize($aTraces, $oLoadStartDate);
 		//echo "#@# Synchronize() returned :<br/>\n";
 		//echo "<pre>\n";
 		//print_r($aTraces);
+		//print_r($oStatLog);
 		//echo "</pre>\n";
 	}
 

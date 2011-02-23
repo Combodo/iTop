@@ -59,7 +59,7 @@ class SynchroDataSource extends cmdbAbstractObject
 //		MetaModel::Init_AddAttribute(new AttributeString("reconciliation_list", array("allowed_values"=>null, "sql"=>"reconciliation_list", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("reconciliation_policy", array("allowed_values"=>new ValueSetEnum('use_primary_key,use_attributes'), "sql"=>"reconciliation_policy", "default_value"=>"use_attributes", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("action_on_zero", array("allowed_values"=>new ValueSetEnum('create,error'), "sql"=>"action_on_zero", "default_value"=>"create", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("action_on_one", array("allowed_values"=>new ValueSetEnum('update,error,delete'), "sql"=>"action_on_one", "default_value"=>"update", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("action_on_one", array("allowed_values"=>new ValueSetEnum('update,error'), "sql"=>"action_on_one", "default_value"=>"update", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("action_on_multiple", array("allowed_values"=>new ValueSetEnum('take_first,create,error'), "sql"=>"action_on_multiple", "default_value"=>"error", "is_null_allowed"=>false, "depends_on"=>array())));
 		
 		MetaModel::Init_AddAttribute(new AttributeEnum("delete_policy", array("allowed_values"=>new ValueSetEnum('ignore,delete,update,update_then_delete'), "sql"=>"delete_policy", "default_value"=>"ignore", "is_null_allowed"=>false, "depends_on"=>array())));
@@ -964,6 +964,7 @@ class SynchroReplica extends DBObject
 				else
 				{
 					// Reconciliation could not be performed - log and EXIT
+					$aTraces[] = "Could not reconcile on null value: ".$sFilterCode;
 					$this->SetLastError('Could not reconcile on null value: '.$sFilterCode);
 					$oStatLog->Inc('stats_nb_replica_reconciled_errors');
 					return;
@@ -971,34 +972,71 @@ class SynchroReplica extends DBObject
 			}
 			$oDestSet = new DBObjectSet(self::$aSearches[$oDataSource->GetKey()], array(), $aFilterValues);
 			$iCount = $oDestSet->Count();
+			$aConditions = array();
+			foreach($aFilterValues as $sCode => $sValue)
+			{
+				$aConditions[] = $sCode.'='.$sValue;
+			}
+			$sConditionDesc = implode(' AND ', $aConditions);
 			// How many objects match the reconciliation criterias
 			switch($iCount)
 			{
 				case 0:
-				//echo "<p>Nothing found for: ".self::$aSearches[$oDataSource->GetKey()]->ToOQL(true, $aFilterValues)."</p>";
-				$this->CreateObjectFromReplica($oDataSource->GetTargetClass(), $aAttributes, $oChange, $oStatLog, $aTraces);
-				$oStatLog->Inc('stats_nb_obj_created');
+				$aTraces[] = "Nothing found on: $sConditionDesc";
+				if ($oDataSource->Get('action_on_zero') == 'create')
+				{
+					$this->CreateObjectFromReplica($oDataSource->GetTargetClass(), $aAttributes, $oChange, $oStatLog, $aTraces);
+				}
+				else // assumed to be 'error'
+				{
+					$aTraces[] = "Failed to reconcile (no match)";
+					$this->SetLastError('Could not find a match for reconciliation');
+					$oStatLog->Inc('stats_nb_replica_reconciled_errors');
+				}
 				break;
 				
 				case 1:
-				//echo "<p>Found 1 for: ".self::$aSearches[$oDataSource->GetKey()]->ToOQL(true, $aFilterValues)."</p>";
-				$oDestObj = $oDestSet->Fetch();
-				$this->UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange, $oStatLog, $aTraces, 'stats_nb_replica_reconciled');
-				$this->Set('dest_id', $oDestObj->GetKey());
-				$this->Set('status_dest_creator', false);
-				$this->Set('dest_class', get_class($oDestObj));
+				$aTraces[] = "Found 1 object on: $sConditionDesc";
+				if ($oDataSource->Get('action_on_one') == 'update')
+				{
+					$oDestObj = $oDestSet->Fetch();
+					$this->UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange, $oStatLog, $aTraces, 'stats_nb_replica_reconciled');
+					$this->Set('dest_id', $oDestObj->GetKey());
+					$this->Set('status_dest_creator', false);
+					$this->Set('dest_class', get_class($oDestObj));
+	
+					$oStatLog->Inc('stats_nb_replica_reconciled');
+				}
+				else
+				{
+					// assumed to be 'error'
+					$aTraces[] = "Failed to reconcile (1 match)";
+					$this->SetLastError('Found a match while expecting several');
+					$oStatLog->Inc('stats_nb_replica_reconciled_errors');
+				}
 				break;
 				
 				default:
-				$aConditions = array();
-				foreach($aFilterValues as $sCode => $sValue)
+				$aTraces[] = "Found $iCount objects on: $sConditionDesc";
+				if ($oDataSource->Get('action_on_multiple') == 'error')
 				{
-					$aConditions[] = $sCode.'='.$sValue;
+					$aTraces[] = "Failed to reconcile (N>1 matches)";
+					$this->SetLastError($iCount.' destination objects match the reconciliation criterias: '.$sConditionDesc);
+					$oStatLog->Inc('stats_nb_replica_reconciled_errors');
 				}
-				$sCondition = implode(' AND ', $aConditions);
-				//echo "<p>Found N for: ".self::$aSearches[$oDataSource->GetKey()]->ToOQL(true, $aFilterValues)."</p>";
-				$this->SetLastError($iCount.' destination objects match the reconciliation criterias: '.$sCondition);
-				$oStatLog->Inc('stats_nb_replica_reconciled_errors');
+				elseif ($oDataSource->Get('action_on_multiple') == 'create')
+				{
+					$this->CreateObjectFromReplica($oDataSource->GetTargetClass(), $aAttributes, $oChange, $oStatLog, $aTraces);
+				}
+				else
+				{
+					// assumed to be 'take_first'
+					$oDestObj = $oDestSet->Fetch();
+					$this->UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange, $oStatLog, $aTraces, 'stats_nb_replica_reconciled');
+					$this->Set('dest_id', $oDestObj->GetKey());
+					$this->Set('status_dest_creator', false);
+					$this->Set('dest_class', get_class($oDestObj));
+				}
 			}
 			break;
 			
@@ -1033,7 +1071,7 @@ class SynchroReplica extends DBObject
 			if (!is_null($value))
 			{
 				$oDestObj->Set($sAttCode, $value);
-				$aValueTrace[] = "$sAttCode&lt;$value";
+				$aValueTrace[] = "$sAttCode: $value";
 			}
 		}
 		try
@@ -1047,6 +1085,7 @@ class SynchroReplica extends DBObject
 		}
 		catch(Exception $e)
 		{
+			$aTraces[] = "Failed to update destination object: {$e->getMessage()}";
 			$this->SetLastError('Unable to update destination object: ', $e);
 			$oStatLog->Inc($sStatsCode.'_errors');
 		}
@@ -1067,7 +1106,7 @@ class SynchroReplica extends DBObject
 				if (!is_null($value))
 				{
 					$oDestObj->Set($sAttCode, $value);
-					$aValueTrace[] = "$sAttCode&lt;$value";
+					$aValueTrace[] = "$sAttCode: $value";
 				}
 			}
 			$iNew = $oDestObj->DBInsertTracked($oChange);
@@ -1083,6 +1122,7 @@ class SynchroReplica extends DBObject
 		}
 		catch(Exception $e)
 		{
+			$aTraces[] = "Failed to create $sClass ({$e->getMessage()})";
 			$this->SetLastError('Unable to create destination object: ', $e);
 			$oStatLog->Inc('stats_nb_obj_created_errors');
 		}

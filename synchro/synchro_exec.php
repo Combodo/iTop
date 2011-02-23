@@ -138,15 +138,27 @@ try
 			{
 				CMDBSource::Query('START TRANSACTION');
 			}
-			$oSynchroDataSource->Synchronize($aResults, null);
+			$oStatLog = $oSynchroDataSource->Synchronize($aResults, null);
 			foreach ($aResults as $sMessage)
 			{
-				$oP->p("results: $sMessage");
+				$oP->p($sMessage);
 			}
 			if ($bSimulate)
 			{
 				CMDBSource::Query('ROLLBACK');
 			}
+			$oP->p("Replicas: ".$oStatLog->Get('stats_nb_replica_total'));
+			$oP->p("Replicas touched since last synchro: ".$oStatLog->Get('stats_nb_replica_seen'));
+			$oP->p("Objects deleted: ".$oStatLog->Get('stats_nb_obj_deleted'));
+			$oP->p("Objects deletion errors: ".$oStatLog->Get('stats_nb_obj_deleted_errors'));
+			$oP->p("Objects obsoleted: ".$oStatLog->Get('stats_nb_obj_obsoleted'));
+			$oP->p("Objects obsolescence errors: ".$oStatLog->Get('stats_nb_obj_obsoleted_errors'));
+			$oP->p("Objects created: ".$oStatLog->Get('stats_nb_obj_created'));
+			$oP->p("Objects creation errors: ".$oStatLog->Get('stats_nb_obj_created_errors'));
+			$oP->p("Objects updated: ".$oStatLog->Get('stats_nb_obj_updated'));
+			$oP->p("Objects update errors: ".$oStatLog->Get('stats_nb_obj_updated_errors'));
+			$oP->p("Objects reconciled: ".$oStatLog->Get('stats_nb_replica_reconciled'));
+			$oP->p("Objects reconciliation errors: ".$oStatLog->Get('stats_nb_replica_reconciled_errors'));
 		}
 	}
 }
