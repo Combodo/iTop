@@ -1838,28 +1838,34 @@ class TestDataExchange extends TestBizModel
 		$oDataSource->Set('delete_policy_retention', $aSingleScenario['delete_policy_retention']);
 		$iDataSourceId = $this->ObjectToDB($oDataSource);
 
-		// Specify the attributes for the data source
-		foreach($aSingleScenario['attributes'] as $aAttribInfo)
-		{
-			$oSyncAtt = new SynchroAttribute();
-			$oSyncAtt->Set('sync_source_id', $iDataSourceId);
-			$oSyncAtt->Set('attcode', $aAttribInfo['attcode']);
-			$oSyncAtt->Set('update', $aAttribInfo['do_update']);
-			$oSyncAtt->Set('reconcile', $aAttribInfo['do_reconcile']);
-			$this->ObjectToDB($oSyncAtt);
+      $oAttributeSet = $oDataSource->Get('attribute_list');
+      while ($oAttribute = $oAttributeSet->Fetch())
+      {
+      	if (array_key_exists($aSingleScenario['attributes'], $oAttribute->Get('attcode')))
+      	{
+      		$aAttribInfo = $aSingleScenario['attributes'][$oAttribute->Get('attcode')];
+				$oSyncAtt->Set('update', $aAttribInfo['do_update']);
+				$oSyncAtt->Set('reconcile', $aAttribInfo['do_reconcile']);
+			}
+      	else
+      	{
+				$oSyncAtt->Set('update', false);
+				$oSyncAtt->Set('reconcile', false);
+			}
+			$oAttribute->DBUpdateTracked();
 		}
-	
+
 		// Prepare list of prefixes -> make sure objects are unique with regard to the reconciliation scheme
 		$aPrefixes = array(); // attcode => prefix
 		foreach($aSourceAttributes as $iDummy => $sAttCode)
 		{
 			$aPrefixes[$sAttCode] = ''; // init with something
 		}
-		foreach($aSingleScenario['attributes'] as $aAttribInfo)
+		foreach($aSingleScenario['attributes'] as $sAttCode => $aAttribInfo)
 		{
 			if ($aAttribInfo['do_reconcile'])
 			{
-				$aPrefixes[$aAttribInfo['attcode']] = 'TEST_'.$iDataSourceId.'_';
+				$aPrefixes[$sAttCode] = 'TEST_'.$iDataSourceId.'_';
 			}
 		}
 
@@ -2066,18 +2072,15 @@ class TestDataExchange extends TestBizModel
 					),
 				),
 				'attributes' => array(
-					array(
-						'attcode' => 'org_id',
+					'org_id' => array(
 						'do_reconcile' => false,
 						'do_update' => true,
 					),
-					array(
-						'attcode' => 'name',
+					'name' => array(
 						'do_reconcile' => true,
 						'do_update' => true,
 					),
-					array(
-						'attcode' => 'status',
+					'status' => array(
 						'do_reconcile' => false,
 						'do_update' => true,
 					),
@@ -2120,18 +2123,15 @@ class TestDataExchange extends TestBizModel
 					),
 				),
 				'attributes' => array(
-					array(
-						'attcode' => 'org_id',
+					'org_id' => array(
 						'do_reconcile' => false,
 						'do_update' => true,
 					),
-					array(
-						'attcode' => 'name',
+					'name' => array(
 						'do_reconcile' => true,
 						'do_update' => true,
 					),
-					array(
-						'attcode' => 'status',
+					'status' => array(
 						'do_reconcile' => false,
 						'do_update' => true,
 					),
@@ -2198,18 +2198,15 @@ class TestDataExchange extends TestBizModel
 					),
 				),
 				'attributes' => array(
-					array(
-						'attcode' => 'org_id',
+					'org_id' => array(
 						'do_reconcile' => false,
 						'do_update' => true,
 					),
-					array(
-						'attcode' => 'name',
+					'name' => array(
 						'do_reconcile' => true,
 						'do_update' => true,
 					),
-					array(
-						'attcode' => 'status',
+					'status' => array(
 						'do_reconcile' => false,
 						'do_update' => true,
 					),

@@ -465,11 +465,11 @@ try
 	//
 	if ($bSynchronize && !$bSimulate)
 	{
-		$aDataToReplica = array();
-		$oDataSource->Synchronize($aDataToReplica, $oLoadStartDate);
+		$aTraces = array();
+		$oDataSource->Synchronize($aTraces, $oLoadStartDate);
 		//echo "#@# Synchronize() returned :<br/>\n";
 		//echo "<pre>\n";
-		//print_r($aDataToReplica);
+		//print_r($aTraces);
 		//echo "</pre>\n";
 	}
 

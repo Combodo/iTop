@@ -134,7 +134,19 @@ try
 		else
 		{
 			$aResults = array();
-			$oSynchroDataSource->Synchronize($aResults);
+			if ($bSimulate)
+			{
+				CMDBSource::Query('START TRANSACTION');
+			}
+			$oSynchroDataSource->Synchronize($aResults, null);
+			foreach ($aResults as $sMessage)
+			{
+				$oP->p("results: $sMessage");
+			}
+			if ($bSimulate)
+			{
+				CMDBSource::Query('ROLLBACK');
+			}
 		}
 	}
 }

@@ -401,11 +401,11 @@ EOF
 	 * Perform a synchronization between the data stored in the replicas (&synchro_data_xxx_xx table)
 	 * and the iTop objects. If the lastFullLoadStartDate is NOT specified then the full_load_periodicity
 	 * is used to determine which records are obsolete.
-	 * @param Hash $aDataToReplica Debugs/Trace information, one entry per replica
+	 * @param Hash $aTraces Debugs/Trace information, one or more entries per replica
 	 * @param DateTime $oLastFullLoadStartDate Date of the last full load (start date/time), if known
 	 * @return void
 	 */
-	public function Synchronize(&$aDataToReplica, $oLastFullLoadStartDate = null)
+	public function Synchronize(&$aTraces, $oLastFullLoadStartDate = null)
 	{
 		// Create a change used for logging all the modifications/creations happening during the synchro
 		$oMyChange = MetaModel::NewObject("CMDBChange");
@@ -430,7 +430,7 @@ EOF
 
 		try
 		{
-			$this->DoSynchronize($aDataToReplica, $oLastFullLoadStartDate, $oMyChange, $oStatLog);
+			$this->DoSynchronize($oLastFullLoadStartDate, $oMyChange, $oStatLog, $aTraces);
 
 			$oStatLog->Set('end_date', time());
 			$oStatLog->Set('status', 'completed');
@@ -442,9 +442,10 @@ EOF
 			$oStatLog->Set('status', 'completed');
 			$oStatLog->DBUpdateTracked($oMyChange);
 		}
+		return $oStatLog;
 	}
 
-	protected function DoSynchronize(&$aDataToReplica, $oLastFullLoadStartDate, $oMyChange, &$oStatLog)
+	protected function DoSynchronize($oLastFullLoadStartDate, $oMyChange, &$oStatLog, &$aTraces)
 	{
 		// Get all the replicas that were not seen in the last import and mark them as obsolete
 		if ($oLastFullLoadStartDate == null)
@@ -470,8 +471,7 @@ EOF
 			}
 		}
 		$sLimitDate = $oLastFullLoadStartDate->Format('Y-m-d H:i:s');	
-		// TO DO: remove trace
-		echo "<p>sLimitDate: $sLimitDate</p>\n";
+		$aTraces[] = "Limit Date: $sLimitDate";
 		$sSelectToObsolete  = "SELECT SynchroReplica WHERE sync_source_id = :source_id AND status IN ('new', 'synchronized', 'modified', 'orphan') AND status_last_seen < :last_import";
 		$oSetToObsolete = new DBObjectSet(DBObjectSearch::FromOQL($sSelectToObsolete), array() /* order by*/, array('source_id' => $this->GetKey(), 'last_import' => $sLimitDate));
 		while($oReplica = $oSetToObsolete->Fetch())
@@ -480,8 +480,7 @@ EOF
 			$sUpdateOnObsolete = $this->Get('delete_policy');
 			if ( ($sUpdateOnObsolete == 'update') || ($sUpdateOnObsolete == 'update_then_delete') )
 			{
-				// TO DO: remove trace
-				echo "<p>Destination object: (dest_id:".$oReplica->Get('dest_id').") to be updated.</p>";
+				$aTraces[] = "Destination object: (dest_id:".$oReplica->Get('dest_id').") to be updated";
 				$aToUpdate = array();
 				$aToUpdate = explode(';', $this->Get('delete_policy_update')); //ex: 'status:obsolete;description:stopped',
 				foreach($aToUpdate as $sUpdateSpec)
@@ -494,10 +493,9 @@ EOF
 						$aToUpdate[$sAttCode] = $sValue;
 					}
 				}
-				$oReplica->UpdateDestObject($aToUpdate, $oMyChange, $oStatLog);
+				$oReplica->UpdateDestObject($aToUpdate, $oMyChange, $oStatLog, $aTraces);
 			}
-			// TO DO: remove trace
-			echo "<p>Replica id:".$oReplica->GetKey()." (dest_id:".$oReplica->Get('dest_id').") marked as obsolete</p>";
+			$aTraces[] = "Replica id:".$oReplica->GetKey()." (dest_id:".$oReplica->Get('dest_id').") marked as obsolete";
 			$oReplica->Set('status', 'obsolete');
 			$oReplica->DBUpdateTracked($oMyChange);
 		}
@@ -511,8 +509,6 @@ EOF
 		//
 		// Get the list of SQL columns
 		$sClass = $this->GetTargetClass();
-		// TO DO: remove trace
-		echo "<p>TargetClass: $sClass</p>";
 		$aAttCodes = array();
 		$sSelectAtt  = "SELECT SynchroAttribute WHERE sync_source_id = :source_id AND update = 1";
 		$oSetAtt = new DBObjectSet(DBObjectSearch::FromOQL($sSelectAtt), array() /* order by*/, array('source_id' => $this->GetKey()) /* aArgs */);
@@ -544,8 +540,7 @@ EOF
 		{
 			$aReconciliationKeys[] = "primary_key";
 		}
-		// TO DO: remove trace
-		echo "Reconciliation on: {".implode(', ', $aReconciliationKeys)."}<br/>\n";
+		$aTraces[] = "Reconciliation on: {".implode(', ', $aReconciliationKeys)."}";
 		
 		$aAttributes = array();
 		foreach($aAttCodes as $sAttCode)
@@ -566,7 +561,7 @@ EOF
 			{
 				$oStatLog->Set('stats_nb_modified', $oStatLog->Get('stats_nb_modified') + 1);
 			}
-			$oReplica->Synchro($this, $aReconciliationKeys, $aAttributes, $oMyChange, $oStatLog);
+			$oReplica->Synchro($this, $aReconciliationKeys, $aAttributes, $oMyChange, $oStatLog, $aTraces);
 		}
 		
 		// Get all the replicas that are to be deleted
@@ -589,9 +584,8 @@ EOF
 			}
 		}
 		$sDeletionDate = $oDeletionDate->Format('Y-m-d H:i:s');	
-		// TO DO: remove trace
-		echo "<p>sDeletionDate: $sDeletionDate</p>\n";
-		
+		$aTraces[] = "sDeletionDate: $sDeletionDate";
+
 		$sSelectToDelete  = "SELECT SynchroReplica WHERE sync_source_id = :source_id AND status IN ('obsolete') AND status_last_seen < :last_import";
 		$oSetToDelete = new DBObjectSet(DBObjectSearch::FromOQL($sSelectToDelete), array() /* order by*/, array('source_id' => $this->GetKey(), 'last_import' => $sDeletionDate));
 		while($oReplica = $oSetToDelete->Fetch())
@@ -601,13 +595,10 @@ EOF
 			$sUpdateOnObsolete = $this->Get('delete_policy');
 			if ( ($sUpdateOnObsolete == 'delete') || ($sUpdateOnObsolete == 'update_then_delete') )
 			{
-				// TO DO: remove trace
-				echo "<p>Destination object: (dest_id:".$oReplica->Get('dest_id').") to be DELETED.</p>";
-				// TO DO: delete the dest object for real...
-				$oReplica->DeleteDestObject($oMyChange, $oStatLog);
+				$aTraces[] = "Destination object: (dest_id:".$oReplica->Get('dest_id').") to be DELETED";
+				$oReplica->DeleteDestObject($oMyChange, $oStatLog, $aTraces);
 			}
-			// TO DO: remove trace
-			echo "<p>Replica id:".$oReplica->GetKey()." (dest_id:".$oReplica->Get('dest_id').") to be deleted</p>";
+			$aTraces[] = "Replica id:".$oReplica->GetKey()." (dest_id:".$oReplica->Get('dest_id').") to be deleted";
 			$oReplica->DBDeleteTracked($oMyChange);
 		}
 	}
@@ -912,7 +903,7 @@ class SynchroReplica extends DBObject
 	}
 
 	
-	public function Synchro($oDataSource, $aReconciliationKeys, $aAttributes, $oChange, $oStatLog)
+	public function Synchro($oDataSource, $aReconciliationKeys, $aAttributes, $oChange, &$oStatLog, &$aTraces)
 	{
 		switch($this->Get('status'))
 		{
@@ -931,7 +922,18 @@ class SynchroReplica extends DBObject
 			$aFilterValues = array();
 			foreach($aReconciliationKeys as $sFilterCode)
 			{
-				$aFilterValues[$sFilterCode] = $this->GetValueFromExtData($sFilterCode);
+				$value = $this->GetValueFromExtData($sFilterCode);
+				if (!is_null($value))
+				{
+					$aFilterValues[$sFilterCode] = $value;
+				}
+				else
+				{
+					// Reconciliation could not be performed - log and EXIT
+					$this->SetLastError('Could not reconcile on null value: '.$sFilterCode);
+					$oStatLog->Set('stats_nb_errors', $oStatLog->Get('stats_nb_errors') + 1);
+					return;
+				}
 			}
 			$oDestSet = new DBObjectSet(self::$aSearches[$oDataSource->GetKey()], array(), $aFilterValues);
 			$iCount = $oDestSet->Count();
@@ -940,13 +942,13 @@ class SynchroReplica extends DBObject
 			{
 				case 0:
 				//echo "<p>Nothing found for: ".self::$aSearches[$oDataSource->GetKey()]->ToOQL(true, $aFilterValues)."</p>";
-				$this->CreateObjectFromReplica($oDataSource->GetTargetClass(), $aAttributes, $oChange, $oStatLog);
+				$this->CreateObjectFromReplica($oDataSource->GetTargetClass(), $aAttributes, $oChange, $oStatLog, $aTraces);
 				break;
 				
 				case 1:
 				//echo "<p>Found 1 for: ".self::$aSearches[$oDataSource->GetKey()]->ToOQL(true, $aFilterValues)."</p>";
 				$oDestObj = $oDestSet->Fetch();
-				$this->UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange, $oStatLog);
+				$this->UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange, $oStatLog, $aTraces);
 				$this->Set('dest_id', $oDestObj->GetKey());
 				$this->Set('status_dest_creator', false);
 				$this->Set('dest_class', get_class($oDestObj));
@@ -977,7 +979,7 @@ class SynchroReplica extends DBObject
 			}
 			else
 			{
-				$this->UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange, $oStatLog);
+				$this->UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange, $oStatLog, $aTraces);
 			}
 			break;
 			
@@ -989,20 +991,23 @@ class SynchroReplica extends DBObject
 	/**
 	 * Updates the destination object with the Extended data found in the synchro_data_XXXX table
 	 */	
-	protected function UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange, &$oStatLog)
+	protected function UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange, &$oStatLog, &$aTraces)
 	{
-		// TO DO: remove trace
-		echo "<p>Update object ".$oDestObj->GetHyperLink()."</p>";
+		$aValueTrace = array();
 		foreach($aAttributes as $sAttCode)
 		{
 			$value = $this->GetValueFromExtData($sAttCode);
-			$oDestObj->Set($sAttCode, $value);
-			// TO DO: remove trace
-			echo "<p>&nbsp;&nbsp;&nbsp;Setting $sAttCode to $value</p>";
+			if (!is_null($value))
+			{
+				$oDestObj->Set($sAttCode, $value);
+				$aValueTrace[] = "$sAttCode&lt;$value";
+			}
 		}
 		try
 		{
 			$oDestObj->DBUpdateTracked($oChange);
+			$aTraces[] = "Updated object ".$oDestObj->GetHyperLink()." (".implode(', ', $aValueTrace).")";
+
 			$this->Set('status_last_error', '');
 			$this->Set('status', 'synchronized');
 		}
@@ -1016,23 +1021,23 @@ class SynchroReplica extends DBObject
 	/**
 	 * Creates the destination object populating it with the Extended data found in the synchro_data_XXXX table
 	 */	
-	protected function CreateObjectFromReplica($sClass, $aAttributes, $oChange, $oStatLog)
+	protected function CreateObjectFromReplica($sClass, $aAttributes, $oChange, &$oStatLog, &$aTraces)
 	{
-		// TO DO: remove trace
-		echo "<p>Creating new $sClass</p>";
 		$oDestObj = MetaModel::NewObject($sClass);
-		foreach($aAttributes as $sAttCode)
-		{
-			$value = $this->GetValueFromExtData($sAttCode);
-			$oDestObj->Set($sAttCode, $value);
-			// TO DO: remove trace
-			echo "<p>&nbsp;&nbsp;&nbsp;Setting $sAttCode to $value</p>";
-		}
 		try
 		{
+			$aValueTrace = array();
+			foreach($aAttributes as $sAttCode)
+			{
+				$value = $this->GetValueFromExtData($sAttCode);
+				if (!is_null($value))
+				{
+					$oDestObj->Set($sAttCode, $value);
+					$aValueTrace[] = "$sAttCode&lt;$value";
+				}
+			}
 			$iNew = $oDestObj->DBInsertTracked($oChange);
-			// TO DO: remove trace
-			echo "<p>Created: $iNew</p>";
+			$aTraces[] = "Created $sClass::$iNew (".implode(', ', $aValueTrace).")";
 
 			$this->Set('dest_id', $oDestObj->GetKey());
 			$this->Set('dest_class', get_class($oDestObj));
@@ -1052,7 +1057,7 @@ class SynchroReplica extends DBObject
 	/**
 	 * Update the destination object with given values
 	 */	
-	public function UpdateDestObject($aValues, $oChange, &$oStatLog)
+	public function UpdateDestObject($aValues, $oChange, &$oStatLog, &$aTraces)
 	{
 		try
 		{
@@ -1073,7 +1078,7 @@ class SynchroReplica extends DBObject
 	/**
 	 * Delete the destination object
 	 */	
-	public function DeleteDestObject($oChange, &$oStatLog)
+	public function DeleteDestObject($oChange, &$oStatLog, &$aTraces)
 	{
 		if($this->Get('status_dest_creator'))
 		{
