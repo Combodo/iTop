@@ -69,9 +69,10 @@ class SynchroDataSource extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeString("delete_policy_retention", array("allowed_values"=>null, "sql"=>"delete_policy_retention", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 
 		MetaModel::Init_AddAttribute(new AttributeLinkedSet("attribute_list", array("linked_class"=>"SynchroAttribute", "ext_key_to_me"=>"sync_source_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeLinkedSet("status_list", array("linked_class"=>"SynchroLog", "ext_key_to_me"=>"sync_source_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('name', 'description', 'scope_class', 'scope_restriction', 'status', 'user_id', 'full_load_periodicity', 'reconciliation_policy', 'action_on_zero', 'action_on_one', 'action_on_multiple', 'delete_policy', 'delete_policy_update', 'delete_policy_retention', /*'attribute_list'*/)); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('name', 'description', 'scope_class', 'scope_restriction', 'status', 'user_id', 'full_load_periodicity', 'reconciliation_policy', 'action_on_zero', 'action_on_one', 'action_on_multiple', 'delete_policy', 'delete_policy_update', 'delete_policy_retention' /*'attribute_list'*/, 'status_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('scope_class', 'status', 'user_id', 'full_load_periodicity')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'scope_class', 'user_id')); // Criteria of the std search form
@@ -116,8 +117,8 @@ class SynchroDataSource extends cmdbAbstractObject
 					if (!$bEditMode)
 					{
 						// Read-only mode
-						$aRow['reconciliation'] = $oAttribute->Get('reconcile') == 1 ? Dict::S('UI:Synchro:Yes') :  Dict::S('UI:Synchro:No'); 
-						$aRow['update'] = $oAttribute->Get('update') == 1 ?  Dict::S('UI:Synchro:Yes') :  Dict::S('UI:Synchro:No');
+						$aRow['reconciliation'] = $oAttribute->Get('reconcile') == 1 ? Dict::S('Core:SynchroReconcile:Yes') :  Dict::S('Core:SynchroReconcile:No'); 
+						$aRow['update'] = $oAttribute->Get('update') == 1 ?  Dict::S('Core:SynchroUpdate:Yes') :  Dict::S('Core:SynchroUpdate:No');
 						$aRow['attcode'] = MetaModel::GetLabel($this->GetTargetClass(), $oAttribute->Get('attcode')); 
 						$aRow['update_policy'] = $oAttribute->GetAsHTML('update_policy'); 
 					}
@@ -137,6 +138,92 @@ class SynchroDataSource extends cmdbAbstractObject
 				}
 			}
 			$oPage->Table($aAttribs, $aValues);
+			$oPage->SetCurrentTab(Dict::S('Core:SynchroStatus'));
+			
+			$sSelectSynchroLog = 'SELECT SynchroLog WHERE sync_source_id = :source_id';
+			$oSetSynchroLog = new CMDBObjectSet(DBObjectSearch::FromOQL($sSelectSynchroLog), array('start_date' => false) /* order by*/, array('source_id' => $this->GetKey()));
+			
+			if ($oSetSynchroLog->Count() > 0)
+			{
+				$oLastLog = $oSetSynchroLog->Fetch();
+				$sStartDate = $oLastLog->Get('start_date');
+				$oLastLog->Get('stats_nb_seen');
+				$iModified = $oLastLog->Get('stats_nb_modified');
+				$iErrors = $oLastLog->Get('stats_nb_errors');
+				$iCreated = $oLastLog->Get('stats_nb_created');
+				$iDeleted = $oLastLog->Get('stats_nb_deleted');
+				$oLastLog->Get('stats_nb_reconciled');
+				if ($oLastLog->Get('status') == 'running')
+				{
+					// Still running !
+					$oPage->p('<h2>'.Dict::Format('Core:Synchro:SynchroRunningStartedOn_Date', $sStartDate).'</h2>');
+				}
+				else
+				{
+					$sEndDate = $oLastLog->Get('end_date');
+					$oPage->p('<h2>'.Dict::Format('Core:Synchro:SynchroEndedOn_Date', $sEndDate).'</h2>');
+				}
+
+				$iIgnored = 0;
+				$iDisappeared = 0;
+				$iDeleted = 0;
+				$iObsoleted = 0;
+				$iDisappearedErrors = 0;
+				$iExisting = 0;
+				$iUnchanged = 0;
+				$iUpdated = 0;
+				$iUpdatedErrors = 0;
+				$iNew = 0;
+				$iNewErrors = 0;
+				$iReconciled = 0;
+				$iCreated = 0;
+
+				$oPage->add(
+<<<EOF
+	<style>
+	.synoptics, .synoptics tr td { background: transparent; padding:10px; font-size:1em; vertical-align:middle; color:#fff; text-align:center;}
+	.synoptics tr td.arrow { color:#333; border-top: 1px dashed #333; width:100px; }
+	</style>
+	<table class="synoptics">
+	<tr>
+	<td style="background-color:#999;">Ignored ($iIgnored)</td><td colspan="2">&nbsp;</td>
+	</tr>
+	<tr>
+	<td style="background-color:#630;" rowspan="3">Disappeared ($iDisappeared)</td><td rowspan="3" class="arrow">=&gt;</td><td style="background-color:#300;">Deleted ($iDeleted)</td>
+	</tr>
+	<tr>
+	<td style="background-color:#630;">Obsoleted ($iObsoleted)</td>
+	</tr>
+	<tr>
+	<td style="background-color:#C00;">Errors ($iDisappearedErrors)</td>
+	</tr>
+	<tr>
+	<td style="background-color:#093;" rowspan="3">Existing ($iExisting)</td><td rowspan="3" class="arrow">=&gt;</td><td style="background-color:#393;">Unchanged ($iUnchanged)</td>
+	</tr>
+	<tr>
+	<td style="background-color:#3C3;">Updated ($iUpdated)</td>
+	</tr>
+	<tr>
+	<td style="background-color:#C00;">Errors ($iUpdatedErrors)</td>
+	</tr>
+	<tr>
+	<td  style="background-color:#039;"rowspan="3">New ($iNew)</td><td rowspan="3" class="arrow">=&gt;</td><td style="background-color:#C00;">Errors ($iNewErrors)</td>
+	</tr>
+	<tr>
+	<td style="background-color:#33F;">Reconciled ($iReconciled)</td>
+	</tr>
+	<tr>
+	<td style="background-color:#339;">Created ($iCreated)</td>
+	</tr>
+	</table>
+EOF
+				);
+			}
+			else
+			{
+				$oPage->p('<h2>'.Dict::S('Core:Synchro:NeverRun').'</h2>');
+			}
+			
 		}
 		parent::DisplayBareRelations($oPage, $bEditMode);
 	}
@@ -414,6 +501,11 @@ class SynchroDataSource extends cmdbAbstractObject
 			$oReplica->Set('status', 'obsolete');
 			$oReplica->DBUpdateTracked($oMyChange);
 		}
+
+		//Count "seen" objects
+		$sSelectSeen  = "SELECT SynchroReplica WHERE sync_source_id = :source_id AND status IN ('new', 'synchronized', 'modified', 'orphan') AND status_last_seen >= :last_import";
+		$oSetSeen = new DBObjectSet(DBObjectSearch::FromOQL($sSelectSeen), array() /* order by*/, array('source_id' => $this->GetKey(), 'last_import' => $sLimitDate));
+		$oStatLog->Set('stats_nb_seen', $oSetSeen->Count());
 		
 		// Get all the replicas that are 'new' or modified
 		//
@@ -470,7 +562,6 @@ class SynchroDataSource extends cmdbAbstractObject
 
 		while($oReplica = $oSetToSync->Fetch())
 		{
-			$oStatLog->Set('stats_nb_seen', $oStatLog->Get('stats_nb_seen') + 1);
 			if ($oReplica->Get('status') == 'modified')
 			{
 				$oStatLog->Set('stats_nb_modified', $oStatLog->Get('stats_nb_modified') + 1);
@@ -734,6 +825,7 @@ class SynchroLog extends cmdbAbstractObject
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('sync_source_id', 'start_date', 'end_date', 'status', 'stats_nb_seen', 'stats_nb_modified', 'stats_nb_errors', 'stats_nb_created', 'stats_nb_deleted', 'stats_nb_reconciled')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('sync_source_id', 'start_date', 'end_date', 'status', 'stats_nb_seen', 'stats_nb_modified', 'stats_nb_errors')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('preview', array('start_date', 'end_date', 'status', 'stats_nb_seen', 'stats_nb_errors')); // Attributes to be displayed for a list
 		// Search criteria
 //		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
 //		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
