@@ -25,6 +25,10 @@
  */
 
 
+class SynchroExceptionNotStarted extends CoreException
+{
+}
+
 class SynchroDataSource extends cmdbAbstractObject
 {	
 	public static function Init()
@@ -472,10 +476,19 @@ EOF
 			$oStatLog->Set('status', 'completed');
 			$oStatLog->DBUpdateTracked($oMyChange);
 		}
+		catch (SynchroExceptionNotStarted $e)
+		{
+			// Set information for reporting... but delete the object in DB
+			$oStatLog->Set('end_date', time());
+			$oStatLog->Set('status', 'error');
+			$oStatLog->Set('last_error', $e->getMessage());
+			$oStatLog->DBDeleteTracked($oMyChange);
+		}
 		catch (Exception $e)
 		{
 			$oStatLog->Set('end_date', time());
-			$oStatLog->Set('status', 'completed');
+			$oStatLog->Set('status', 'error');
+			$oStatLog->Set('last_error', $e->getMessage());
 			$oStatLog->DBUpdateTracked($oMyChange);
 		}
 		return $oStatLog;
@@ -483,6 +496,21 @@ EOF
 
 	protected function DoSynchronize($oLastFullLoadStartDate, $oMyChange, &$oStatLog, &$aTraces)
 	{
+		if ($this->Get('status') == 'obsolete')
+		{
+			throw new SynchroExceptionNotStarted(Dict::S('Core:SyncDataSourceObsolete'));
+		}
+		if (!UserRights::IsAdministrator() && $this->Get('user_id') != UserRights::GetUserId())
+		{
+			throw new SynchroExceptionNotStarted(Dict::S('Core:SyncDataSourceAccessRestriction'));
+		}
+
+		// Count the replicas
+		$sSelectAll  = "SELECT SynchroReplica WHERE sync_source_id = :source_id";
+		$oSetAll = new DBObjectSet(DBObjectSearch::FromOQL($sSelectAll), array() /* order by*/, array('source_id' => $this->GetKey()));
+		$iCountAllReplicas = $oSetAll->Count();
+		$oStatLog->Set('stats_nb_replica_total', $iCountAllReplicas);
+
 		// Get all the replicas that were not seen in the last import and mark them as obsolete
 		if ($oLastFullLoadStartDate == null)
 		{
@@ -502,7 +530,7 @@ EOF
 				$sAfter = $oLastFullLoadStartDate->Format('Y-m-d H:i:s');
 				if ($sBefore == $sAfter)
 				{
-					throw new CoreException("Data exchange: Wrong interval specification", array('interval' => $sInterval, 'source_id' => $this->GetKey()));
+					throw new SynchroExceptionNotStarted("Data exchange: Wrong interval specification", array('interval' => $sInterval, 'source_id' => $this->GetKey()));
 				}
 			}
 		}
@@ -510,6 +538,10 @@ EOF
 		$aTraces[] = "Limit Date: $sLimitDate";
 		$sSelectToObsolete  = "SELECT SynchroReplica WHERE sync_source_id = :source_id AND status IN ('new', 'synchronized', 'modified', 'orphan') AND status_last_seen < :last_import";
 		$oSetToObsolete = new DBObjectSet(DBObjectSearch::FromOQL($sSelectToObsolete), array() /* order by*/, array('source_id' => $this->GetKey(), 'last_import' => $sLimitDate));
+		if (($iCountAllReplicas > 10) && ($iCountAllReplicas == $oSetToObsolete->Count()))
+		{
+			throw new SynchroExceptionNotStarted(Dict::S('Core:SyncTooManyMissingReplicas'));
+		} 
 		while($oReplica = $oSetToObsolete->Fetch())
 		{
 			// TO DO: take the appropriate action based on the 'delete_policy' field
@@ -616,12 +648,11 @@ EOF
 			$sAfter = $oDeletionDate->Format('Y-m-d H:i:s');
 			if ($sBefore == $sAfter)
 			{
-				throw new CoreException("Data exchange: Wrong interval specification", array('interval' => $sInterval, 'source_id' => $this->GetKey()));
+				throw new SynchroExceptionNotStarted("Data exchange: Wrong interval specification", array('interval' => $sInterval, 'source_id' => $this->GetKey()));
 			}
 		}
 		$sDeletionDate = $oDeletionDate->Format('Y-m-d H:i:s');	
 		$aTraces[] = "sDeletionDate: $sDeletionDate";
-
 		$sSelectToDelete  = "SELECT SynchroReplica WHERE sync_source_id = :source_id AND status IN ('obsolete') AND status_last_seen < :last_import";
 		$oSetToDelete = new DBObjectSet(DBObjectSearch::FromOQL($sSelectToDelete), array() /* order by*/, array('source_id' => $this->GetKey(), 'last_import' => $sDeletionDate));
 		while($oReplica = $oSetToDelete->Fetch())
@@ -839,7 +870,7 @@ class SynchroLog extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("sync_source_id", array("targetclass"=>"SynchroDataSource", "jointype"=> "", "allowed_values"=>null, "sql"=>"sync_source_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDateTime("start_date", array("allowed_values"=>null, "sql"=>"start_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDateTime("end_date", array("allowed_values"=>null, "sql"=>"end_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('running,completed'), "sql"=>"status", "default_value"=>"running", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('running,completed,error'), "sql"=>"status", "default_value"=>"running", "is_null_allowed"=>false, "depends_on"=>array())));
 
 		MetaModel::Init_AddAttribute(new AttributeInteger("stats_nb_replica_seen", array("allowed_values"=>null, "sql"=>"stats_nb_replica_seen", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeInteger("stats_nb_replica_total", array("allowed_values"=>null, "sql"=>"stats_nb_replica_total", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
@@ -855,6 +886,8 @@ class SynchroLog extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeInteger("stats_nb_replica_reconciled_errors", array("allowed_values"=>null, "sql"=>"stats_nb_replica_reconciled_errors", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeInteger("stats_nb_obj_new_updated", array("allowed_values"=>null, "sql"=>"stats_nb_obj_new_updated", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeInteger("stats_nb_obj_new_unchanged", array("allowed_values"=>null, "sql"=>"stats_nb_obj_new_unchanged", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
+
+		MetaModel::Init_AddAttribute(new AttributeString("last_error", array("allowed_values"=>null, "sql"=>"last_error", "default_value"=>'', "is_null_allowed"=>true, "depends_on"=>array())));
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('sync_source_id', 'start_date', 'end_date', 'status', 'stats_nb_replica_total', 'stats_nb_replica_seen', 'stats_nb_obj_created', /*'stats_nb_replica_reconciled',*/ 'stats_nb_obj_updated', 'stats_nb_obj_obsoleted', 'stats_nb_obj_deleted',

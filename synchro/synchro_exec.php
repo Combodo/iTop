@@ -111,41 +111,36 @@ else
 }
 
 
-try
+foreach(explode(',', $sDataSourcesList) as $iSDS)
 {
-	//////////////////////////////////////////////////
-	//
-	// Security
-	//
-	if (!UserRights::IsAdministrator())
+	$oSynchroDataSource = MetaModel::GetObject('SynchroDataSource', $iSDS, false);
+	if ($oSynchroDataSource == null)
 	{
-		throw new SecurityException(Dict::Format('UI:Error:ActionNotAllowed', $sClass));
+		$oP->p("The data source (id=$iSDS) does not exist. Exiting...");
+		$oP->output();
+		exit -3;
 	}
-	
-	foreach(explode(',', $sDataSourcesList) as $iSDS)
+	else
 	{
-		$oSynchroDataSource = MetaModel::GetObject('SynchroDataSource', $iSDS, false);
-		if ($oSynchroDataSource == null)
+		$aResults = array();
+		if ($bSimulate)
 		{
-			$oP->p("The data source (id=$iSDS) does not exist. Exiting...");
-			$oP->output();
-			exit -3;
+			CMDBSource::Query('START TRANSACTION');
 		}
-		else
+		try
 		{
-			$aResults = array();
+			$oStatLog = $oSynchroDataSource->Synchronize($aResults, null);
 			if ($bSimulate)
 			{
-				CMDBSource::Query('START TRANSACTION');
+				CMDBSource::Query('ROLLBACK');
 			}
-			$oStatLog = $oSynchroDataSource->Synchronize($aResults, null);
 			foreach ($aResults as $sMessage)
 			{
 				$oP->p($sMessage);
 			}
-			if ($bSimulate)
+			if ($oStatLog->Get('status') == 'error')
 			{
-				CMDBSource::Query('ROLLBACK');
+				$oP->p("ERROR: ".$oStatLog->Get('last_error'));
 			}
 			$oP->p("Replicas: ".$oStatLog->Get('stats_nb_replica_total'));
 			$oP->p("Replicas touched since last synchro: ".$oStatLog->Get('stats_nb_replica_seen'));
@@ -157,18 +152,19 @@ try
 			$oP->p("Objects creation errors: ".$oStatLog->Get('stats_nb_obj_created_errors'));
 			$oP->p("Objects updated: ".$oStatLog->Get('stats_nb_obj_updated'));
 			$oP->p("Objects update errors: ".$oStatLog->Get('stats_nb_obj_updated_errors'));
-			$oP->p("Objects reconciled: ".$oStatLog->Get('stats_nb_replica_reconciled'));
+			$oP->p("Objects reconciled (updated): ".$oStatLog->Get('stats_nb_new_updated'));
+			$oP->p("Objects reconciled (unchanged): ".$oStatLog->Get('stats_nb_new_unchanged'));
 			$oP->p("Objects reconciliation errors: ".$oStatLog->Get('stats_nb_replica_reconciled_errors'));
 		}
+		catch(Exception $e)
+		{
+			$oP->add($e->getMessage());		
+			if ($bSimulate)
+			{
+				CMDBSource::Query('ROLLBACK');
+			}
+		}
 	}
-}
-catch(SecurityException $e)
-{
-	$oP->add($e->getMessage());		
-}
-catch(Exception $e)
-{
-	$oP->add((string)$e);		
 }
 
 $oP->output();
