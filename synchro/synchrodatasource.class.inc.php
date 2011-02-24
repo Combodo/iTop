@@ -176,39 +176,47 @@ class SynchroDataSource extends cmdbAbstractObject
 			}
 
 			$oPage->add('<table class="synoptics"><tr><td style="color:#333;vertical-align:top">');
+
+			// List all the log entries for the user to select
 			$oPage->add('<h2>'.Dict::S('Core:Synchro:History').'</h2>');
 			$oSetSynchroLog->Rewind();
-			$oPage->add('<select size="30">');
+			$oPage->add('<select size="25" onChange="UpdateSynoptics(this.value);">');
 			$sSelected = ' selected'; // First log is selected by default
+			$sScript = "var aSynchroLog = {\n";
 			while($oLog = $oSetSynchroLog->Fetch())
 			{
 				$sLogTitle = Dict::Format('Core:SynchroLogTitle', $oLog->Get('status'), $oLog->Get('start_date'));
 				$oPage->add('<option value="'.$oLog->GetKey().'"'.$sSelected.'>'.$sLogTitle.'</option>');
-				$sSelected = ''; // only first log is selected by default
+				$sSelected = ''; // only the first log is selected by default
+				$aData = $this->ProcessLog($oLog);
+				$sScript .= '"'.$oLog->GetKey().'": '.json_encode($aData).",\n";
 			}
+			$sScript .= "end: 'Done'";
+			$sScript .= "};\n";
+			$sScript .= <<<EOF
+	function UpdateSynoptics(id)
+	{
+		var aValues = aSynchroLog[id];
+		
+		for (var sKey in aValues)
+		{
+			$('#c_'+sKey).html(aValues[sKey]);
+			var fOpacity = (aValues[sKey] == 0) ? 0.3 : 1;
+			$('#'+sKey).fadeTo("slow", fOpacity);
+		}
+	}
+EOF
+;
+			$oPage->add_script($sScript);
 			$oPage->add('</select>');
+			
 			$oPage->add('</td><td style="vertical-align:top;">');
-			$iDeleted = $oLastLog->Get('stats_nb_obj_deleted');
-			$iObsoleted = $oLastLog->Get('stats_nb_obj_obsoleted');
-			$iDisappearedErrors = $oLastLog->Get('stats_nb_obj_obsoleted_errors') + $oLastLog->Get('stats_nb_obj_deleted_errors');
-			$iUpdated = $oLastLog->Get('stats_nb_obj_updated');
-			$iUpdatedErrors = $oLastLog->Get('stats_nb_obj_updated_errors');
-			$iNewUpdated = $oLastLog->Get('stats_nb_obj_new_updated');
-			$iNewUnchanged = $oLastLog->Get('stats_nb_obj_new_unchanged');
-			$iReconciledErrors = $oLastLog->Get('stats_nb_replica_reconciled_errors');
-			$iCreated = $oLastLog->Get('stats_nb_obj_created');
-			$iCreatedErrors = $oLastLog->Get('stats_nb_obj_created_errors');
-			$iDisappeared = $iDisappearedErrors + $iObsoleted + $iDeleted;
-			$iNewErrors = $iCreatedErrors + $iReconciledErrors;
-			$iNew = $iCreated + $iCreatedErrors + $iNewUpdated + $iNewUnchanged + $iReconciledErrors;
-			$iExisting = $oLastLog->Get('stats_nb_replica_seen') - $iNew;
-			$iUnchanged = $iExisting - $iUpdated - $iUpdatedErrors;
-			$iIgnored = $oLastLog->Get('stats_nb_replica_total') - $iNew - $iExisting - $iDisappeared;
+			
+			// Now build the big "synoptics" view
+			$aData = $this->ProcessLog($oLastLog);
 
-			$iNbObjects = $iNew + $iExisting + $iDisappeared;
-			$iReplicas = $iNbObjects + $iIgnored;
-			$sNbReplica = Dict::Format('Core:Synchro:Nb_Replica', "<span id=\"nb_replica_total\">$iReplicas</span>");
-			$sNbObjects = Dict::Format('Core:Synchro:Nb_Objects', "<span id=\"nb_obj_total\">$iNbObjects</span>");
+			$sNbReplica = $this->GetIcon()."&nbsp;".Dict::Format('Core:Synchro:Nb_Replica', "<span id=\"c_nb_replica_total\">{$aData['nb_replica_total']}</span>");
+			$sNbObjects = MetaModel::GetClassIcon($this->GetTargetClass())."&nbsp;".Dict::Format('Core:Synchro:Nb_Class:Objects', $this->GetTargetClass(), "<span id=\"c_nb_obj_total\">{$aData['nb_obj_total']}</span>");
 			$oPage->add(
 <<<EOF
 	<table class="synoptics">
@@ -218,27 +226,27 @@ class SynchroDataSource extends cmdbAbstractObject
 	<tr>
 EOF
 );
-			$oPage->add($this->HtmlBox('repl_ignored', $iIgnored, '#999').'<td colspan="2">&nbsp;</td>');
+			$oPage->add($this->HtmlBox('repl_ignored', $aData, '#999').'<td colspan="2">&nbsp;</td>');
 			$oPage->add("</tr>\n<tr>");
-			$oPage->add($this->HtmlBox('repl_disappeared', $iDisappeared, '#630', 'rowspan="3"').'<td rowspan="3" class="arrow">=&gt;</td>'.$this->HtmlBox('obj_deleted', $iDeleted, '#000'));
+			$oPage->add($this->HtmlBox('repl_disappeared', $aData, '#630', 'rowspan="3"').'<td rowspan="3" class="arrow">=&gt;</td>'.$this->HtmlBox('obj_deleted', $aData, '#000'));
 			$oPage->add("</tr>\n<tr>");
-			$oPage->add($this->HtmlBox('obj_obsoleted', $iDisappeared, '#630'));
+			$oPage->add($this->HtmlBox('obj_obsoleted', $aData, '#630'));
 			$oPage->add("</tr>\n<tr>");
-			$oPage->add($this->HtmlBox('obj_disappeared_errors', $iDisappearedErrors, '#C00'));
+			$oPage->add($this->HtmlBox('obj_disappeared_errors', $aData, '#C00'));
 			$oPage->add("</tr>\n<tr>");
-			$oPage->add($this->HtmlBox('repl_existing', $iExisting, '#093', 'rowspan="3"').'<td rowspan="3" class="arrow">=&gt;</td>'.$this->HtmlBox('obj_unchanged', $iUnchanged, '#393'));
+			$oPage->add($this->HtmlBox('repl_existing', $aData, '#093', 'rowspan="3"').'<td rowspan="3" class="arrow">=&gt;</td>'.$this->HtmlBox('obj_unchanged', $aData, '#393'));
 			$oPage->add("</tr>\n<tr>");
-			$oPage->add($this->HtmlBox('obj_updated', $iUpdated, '#3C3'));
+			$oPage->add($this->HtmlBox('obj_updated', $aData, '#3C3'));
 			$oPage->add("</tr>\n<tr>");
-			$oPage->add($this->HtmlBox('obj_updated_errors', $iUpdatedErrors, '#C00'));
+			$oPage->add($this->HtmlBox('obj_updated_errors', $aData, '#C00'));
 			$oPage->add("</tr>\n<tr>");
-			$oPage->add($this->HtmlBox('repl_new', $iNew, '#339', 'rowspan="4"').'<td rowspan="4" class="arrow">=&gt;</td>'.$this->HtmlBox('obj_new_unchanged', $iNewUnchanged, '#393'));
+			$oPage->add($this->HtmlBox('repl_new', $aData, '#339', 'rowspan="4"').'<td rowspan="4" class="arrow">=&gt;</td>'.$this->HtmlBox('obj_new_unchanged', $aData, '#393'));
 			$oPage->add("</tr>\n<tr>");
-			$oPage->add($this->HtmlBox('obj_new_updated', $iNewUpdated, '#3C3'));
+			$oPage->add($this->HtmlBox('obj_new_updated', $aData, '#3C3'));
 			$oPage->add("</tr>\n<tr>");
-			$oPage->add($this->HtmlBox('obj_created', $iCreated, '#339'));
+			$oPage->add($this->HtmlBox('obj_created', $aData, '#339'));
 			$oPage->add("</tr>\n<tr>");
-			$oPage->add($this->HtmlBox('obj_new_errors', $iNewErrors, '#C00'));
+			$oPage->add($this->HtmlBox('obj_new_errors', $aData, '#C00'));
 			$oPage->add("</tr>\n</table>\n");
 			$oPage->add('</td></tr></table>');
 		}
@@ -248,13 +256,45 @@ EOF
 		}
 	}
 	
-	public function HtmlBox($sId, $iCount, $sColor, $sHTMLAttribs = '')
+	protected function HtmlBox($sId, $aData, $sColor, $sHTMLAttribs = '')
 	{
+		$iCount = $aData[$sId];
 		$sCount = "<span id=\"c_{$sId}\">$iCount</span>";
-		$sLabel = Dict::Format('Core:Synchro:label_'.$sId, $iCount);
+		$sLabel = Dict::Format('Core:Synchro:label_'.$sId, $sCount);
 		$sOpacity = ($iCount==0) ? "opacity:0.3;" : "";
 		return "<td id=\"$sId\" style=\"background-color:$sColor;$sOpacity;\" {$sHTMLAttribs}>$sLabel</td>";
 	}
+	
+	protected function ProcessLog($oLastLog)
+	{
+		$aData = array(
+			'obj_deleted' => $oLastLog->Get('stats_nb_obj_deleted'),
+			'obj_obsoleted' => $oLastLog->Get('stats_nb_obj_obsoleted'),
+			'obj_disappeared_errors' => $oLastLog->Get('stats_nb_obj_obsoleted_errors') + $oLastLog->Get('stats_nb_obj_deleted_errors'),
+			'obj_updated' => $oLastLog->Get('stats_nb_obj_updated'),
+			'obj_updated_errors' => $oLastLog->Get('stats_nb_obj_updated_errors'),
+			'obj_new_updated' => $oLastLog->Get('stats_nb_obj_new_updated'),
+			'obj_new_unchanged' => $oLastLog->Get('stats_nb_obj_new_unchanged'),
+			'obj_created' => $oLastLog->Get('stats_nb_obj_created'),
+			'obj_created_errors' => $oLastLog->Get('stats_nb_obj_created_errors'),
+		);
+		$iReconciledErrors = $oLastLog->Get('stats_nb_replica_reconciled_errors');
+		$iDisappeared = $aData['obj_disappeared_errors'] + $aData['obj_obsoleted'] + $aData['obj_deleted'];
+		$aData['repl_disappeared'] = $iDisappeared;
+		$iNewErrors = $aData['obj_created_errors'] + $oLastLog->Get('stats_nb_replica_reconciled_errors');
+		$aData['obj_new_errors'] = $iNewErrors;
+		$iNew = $aData['obj_created'] + $iNewErrors + $aData['obj_new_updated'] + $aData['obj_new_unchanged'];
+		$aData['repl_new'] = $iNew;
+		$iExisting = $oLastLog->Get('stats_nb_replica_seen') - $iNew;
+		$aData['repl_existing'] = $iExisting;
+		$aData['obj_unchanged'] = $iExisting - $aData['obj_updated'] - $aData['obj_updated_errors'];
+		$iIgnored = $oLastLog->Get('stats_nb_replica_total') - $iNew - $iExisting - $iDisappeared;
+		$aData['repl_ignored'] = $iIgnored;
+		$aData['nb_obj_total'] = $iNew + $iExisting + $iDisappeared;
+		$aData['nb_replica_total'] = $aData['nb_obj_total'] + $iIgnored;
+		return $aData;
+	}
+	
 	public function GetAttributeFlags($sAttCode)
 	{
 		if (($sAttCode == 'scope_class') && (!$this->IsNew()))
