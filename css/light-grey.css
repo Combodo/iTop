@@ -920,3 +920,21 @@ span.form_validation {
 .wiki_broken_link {
 	text-decoration: line-through;
 }
+.synoptics, .synoptics tr td {
+	background: transparent;
+	padding:10px;
+	font-size:1em;
+	vertical-align:middle;
+	color:#fff;
+	text-align:center;
+}
+.synoptics tr td.arrow {
+	color:#333;
+	border-top: 1px dashed #333;
+	width:100px;
+}
+.synoptics tr.synoptics_header td {
+	color:#000; font-size:1em;
+	vertical-align:middle;
+	text-align:center;
+}

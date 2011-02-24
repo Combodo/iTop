@@ -138,111 +138,119 @@ class SynchroDataSource extends cmdbAbstractObject
 				}
 			}
 			$oPage->Table($aAttribs, $aValues);
-			$oPage->SetCurrentTab(Dict::S('Core:SynchroStatus'));
-			
-			$sSelectSynchroLog = 'SELECT SynchroLog WHERE sync_source_id = :source_id';
-			$oSetSynchroLog = new CMDBObjectSet(DBObjectSearch::FromOQL($sSelectSynchroLog), array('start_date' => false) /* order by*/, array('source_id' => $this->GetKey()));
-			
-			if ($oSetSynchroLog->Count() > 0)
-			{
-				$oLastLog = $oSetSynchroLog->Fetch();
-				$sStartDate = $oLastLog->Get('start_date');
-				$oLastLog->Get('stats_nb_replica_seen');
-				if ($oLastLog->Get('status') == 'running')
-				{
-					// Still running !
-					$oPage->p('<h2>'.Dict::Format('Core:Synchro:SynchroRunningStartedOn_Date', $sStartDate).'</h2>');
-				}
-				else
-				{
-					$sEndDate = $oLastLog->Get('end_date');
-					$oPage->p('<h2>'.Dict::Format('Core:Synchro:SynchroEndedOn_Date', $sEndDate).'</h2>');
-				}
-
-				$iDeleted = $oLastLog->Get('stats_nb_obj_deleted');
-				$iObsoleted = $oLastLog->Get('stats_nb_obj_obsoleted');
-				$iDisappearedErrors = $oLastLog->Get('stats_nb_obj_obsoleted_errors') + $oLastLog->Get('stats_nb_obj_deleted_errors');
-				$iUpdated = $oLastLog->Get('stats_nb_obj_updated');
-				$iUpdatedErrors = $oLastLog->Get('stats_nb_obj_updated_errors');
-				$iReconciled = $oLastLog->Get('stats_nb_replica_reconciled');
-				$iReconciledErrors = $oLastLog->Get('stats_nb_replica_reconciled_errors');
-				$iCreated = $oLastLog->Get('stats_nb_obj_created');
-				$iCreatedErrors = $oLastLog->Get('stats_nb_obj_created_errors');
-				$iDisappeared = $iDisappearedErrors + $iObsoleted + $iDeleted;
-				$iNewErrors = $iCreatedErrors + $iReconciledErrors;
-				$iNew = $iCreated + $iCreatedErrors + $iReconciled + $iReconciledErrors;
-				$iExisting = $oLastLog->Get('stats_nb_replica_seen') - $iNew;
-				$iUnchanged = $iExisting - $iUpdated - $iUpdatedErrors;
-				$iIgnored = $oLastLog->Get('stats_nb_replica_total') - $iNew - $iExisting - $iDisappeared;
-
-				$fOpacity = 0.3;
-				$sNewOpacity = ($iNew ==0) ? "opacity:$fOpacity;" : "";
-				$sExistingOpacity = ($iExisting ==0) ? "opacity:$fOpacity;" : "";
-				$sDisappearedOpacity = ($iDisappeared ==0) ? "opacity:$fOpacity;" : "";
-				$sIgnoredOpacity = ($iIgnored ==0) ? "opacity:$fOpacity;" : "";
-
-				$sCreateOpacity = ($iCreated ==0) ? "opacity:$fOpacity;" : "";
-				$sReconciledOpacity = ($iReconciled ==0) ? "opacity:$fOpacity;" : "";
-				$sNewErrorsOpacity = ($iNewErrors ==0) ? "opacity:$fOpacity;" : "";
-
-				$sUnchangedOpacity = ($iUnchanged ==0) ? "opacity:$fOpacity;" : "";
-				$sUpdatedOpacity = ($iUpdated ==0) ? "opacity:$fOpacity;" : "";
-				$sUpdatedErrorsOpacity = ($iUpdatedErrors ==0) ? "opacity:$fOpacity;" : "";
-
-				$sDeletedOpacity = ($iDeleted ==0) ? "opacity:$fOpacity;" : "";
-				$sObsoletedOpacity = ($iObsoleted ==0) ? "opacity:$fOpacity;" : "";
-				$sDisappearedErrorsOpacity = ($iDisappearedErrors ==0) ? "opacity:$fOpacity;" : "";
-
-				$oPage->add(
-<<<EOF
-	<style>
-	.synoptics, .synoptics tr td { background: transparent; padding:10px; font-size:1em; vertical-align:middle; color:#fff; text-align:center;}
-	.synoptics tr td.arrow { color:#333; border-top: 1px dashed #333; width:100px; }
-	</style>
-	<table class="synoptics">
-	<tr>
-	<td style="background-color:#999;$sIgnoredOpacity">Ignored ($iIgnored)</td><td colspan="2">&nbsp;</td>
-	</tr>
-	<tr>
-	<td style="background-color:#630;$sDisappearedOpacity" rowspan="3">Disappeared ($iDisappeared)</td><td rowspan="3" class="arrow">=&gt;</td><td style="background-color:#300;$sDeletedOpacity">Deleted ($iDeleted)</td>
-	</tr>
-	<tr>
-	<td style="background-color:#630;$sObsoletedOpacity">Obsoleted ($iObsoleted)</td>
-	</tr>
-	<tr>
-	<td style="background-color:#C00;$sDisappearedErrorsOpacity">Errors ($iDisappearedErrors)</td>
-	</tr>
-	<tr>
-	<td style="background-color:#093;$sExistingOpacity" rowspan="3">Existing ($iExisting)</td><td rowspan="3" class="arrow">=&gt;</td><td style="background-color:#393;$sUnchangedOpacity">Unchanged ($iUnchanged)</td>
-	</tr>
-	<tr>
-	<td style="background-color:#3C3;$sUpdatedOpacity">Updated ($iUpdated)</td>
-	</tr>
-	<tr>
-	<td style="background-color:#C00;$sUpdatedErrorsOpacity">Errors ($iUpdatedErrors)</td>
-	</tr>
-	<tr>
-	<td  style="background-color:#039;$sNewOpacity"rowspan="3">New ($iNew)</td><td rowspan="3" class="arrow">=&gt;</td><td style="background-color:#C00;$sNewErrorsOpacity">Errors ($iNewErrors)</td>
-	</tr>
-	<tr>
-	<td style="background-color:#33F;$sReconciledOpacity">Reconciled ($iReconciled)</td>
-	</tr>
-	<tr>
-	<td style="background-color:#339;$sCreateOpacity">Created ($iCreated)</td>
-	</tr>
-	</table>
-EOF
-				);
-			}
-			else
-			{
-				$oPage->p('<h2>'.Dict::S('Core:Synchro:NeverRun').'</h2>');
-			}
-			
+			$this->DisplayStatusTab($oPage);
 		}
 		parent::DisplayBareRelations($oPage, $bEditMode);
 	}
 	
+	/**
+	 * Displays the status (SynchroLog) of the datasource in a graphical manner
+	 * @param $oPage WebPage
+	 * @return void
+	 */
+	protected function DisplayStatusTab(WebPage $oPage)
+	{
+		$oPage->SetCurrentTab(Dict::S('Core:SynchroStatus'));
+		
+		$sSelectSynchroLog = 'SELECT SynchroLog WHERE sync_source_id = :source_id';
+		$oSetSynchroLog = new CMDBObjectSet(DBObjectSearch::FromOQL($sSelectSynchroLog), array('start_date' => false) /* order by*/, array('source_id' => $this->GetKey()));
+		
+		if ($oSetSynchroLog->Count() > 0)
+		{
+			$oLastLog = $oSetSynchroLog->Fetch();
+			$sStartDate = $oLastLog->Get('start_date');
+			$oLastLog->Get('stats_nb_replica_seen');
+			if ($oLastLog->Get('status') == 'running')
+			{
+				// Still running !
+				$oPage->p('<h2>'.Dict::Format('Core:Synchro:SynchroRunningStartedOn_Date', $sStartDate).'</h2>');
+			}
+			else
+			{
+				$sEndDate = $oLastLog->Get('end_date');
+				$oPage->p('<h2>'.Dict::Format('Core:Synchro:SynchroEndedOn_Date', $sEndDate).'</h2>');
+			}
+
+			$oPage->add('<table class="synoptics"><tr><td style="color:#333;vertical-align:top">');
+			$oPage->add('<h2>'.Dict::S('Core:Synchro:History').'</h2>');
+			$oSetSynchroLog->Rewind();
+			$oPage->add('<select size="30">');
+			$sSelected = ' selected'; // First log is selected by default
+			while($oLog = $oSetSynchroLog->Fetch())
+			{
+				$sLogTitle = Dict::Format('Core:SynchroLogTitle', $oLog->Get('status'), $oLog->Get('start_date'));
+				$oPage->add('<option value="'.$oLog->GetKey().'"'.$sSelected.'>'.$sLogTitle.'</option>');
+				$sSelected = ''; // only first log is selected by default
+			}
+			$oPage->add('</select>');
+			$oPage->add('</td><td style="vertical-align:top;">');
+			$iDeleted = $oLastLog->Get('stats_nb_obj_deleted');
+			$iObsoleted = $oLastLog->Get('stats_nb_obj_obsoleted');
+			$iDisappearedErrors = $oLastLog->Get('stats_nb_obj_obsoleted_errors') + $oLastLog->Get('stats_nb_obj_deleted_errors');
+			$iUpdated = $oLastLog->Get('stats_nb_obj_updated');
+			$iUpdatedErrors = $oLastLog->Get('stats_nb_obj_updated_errors');
+			$iNewUpdated = $oLastLog->Get('stats_nb_obj_new_updated');
+			$iNewUnchanged = $oLastLog->Get('stats_nb_obj_new_unchanged');
+			$iReconciledErrors = $oLastLog->Get('stats_nb_replica_reconciled_errors');
+			$iCreated = $oLastLog->Get('stats_nb_obj_created');
+			$iCreatedErrors = $oLastLog->Get('stats_nb_obj_created_errors');
+			$iDisappeared = $iDisappearedErrors + $iObsoleted + $iDeleted;
+			$iNewErrors = $iCreatedErrors + $iReconciledErrors;
+			$iNew = $iCreated + $iCreatedErrors + $iNewUpdated + $iNewUnchanged + $iReconciledErrors;
+			$iExisting = $oLastLog->Get('stats_nb_replica_seen') - $iNew;
+			$iUnchanged = $iExisting - $iUpdated - $iUpdatedErrors;
+			$iIgnored = $oLastLog->Get('stats_nb_replica_total') - $iNew - $iExisting - $iDisappeared;
+
+			$iNbObjects = $iNew + $iExisting + $iDisappeared;
+			$iReplicas = $iNbObjects + $iIgnored;
+			$sNbReplica = Dict::Format('Core:Synchro:Nb_Replica', "<span id=\"nb_replica_total\">$iReplicas</span>");
+			$sNbObjects = Dict::Format('Core:Synchro:Nb_Objects', "<span id=\"nb_obj_total\">$iNbObjects</span>");
+			$oPage->add(
+<<<EOF
+	<table class="synoptics">
+	<tr class="synoptics_header">
+	<td>$sNbReplica</td><td>&nbsp;</td><td>$sNbObjects</td>
+	</tr>
+	<tr>
+EOF
+);
+			$oPage->add($this->HtmlBox('repl_ignored', $iIgnored, '#999').'<td colspan="2">&nbsp;</td>');
+			$oPage->add("</tr>\n<tr>");
+			$oPage->add($this->HtmlBox('repl_disappeared', $iDisappeared, '#630', 'rowspan="3"').'<td rowspan="3" class="arrow">=&gt;</td>'.$this->HtmlBox('obj_deleted', $iDeleted, '#000'));
+			$oPage->add("</tr>\n<tr>");
+			$oPage->add($this->HtmlBox('obj_obsoleted', $iDisappeared, '#630'));
+			$oPage->add("</tr>\n<tr>");
+			$oPage->add($this->HtmlBox('obj_disappeared_errors', $iDisappearedErrors, '#C00'));
+			$oPage->add("</tr>\n<tr>");
+			$oPage->add($this->HtmlBox('repl_existing', $iExisting, '#093', 'rowspan="3"').'<td rowspan="3" class="arrow">=&gt;</td>'.$this->HtmlBox('obj_unchanged', $iUnchanged, '#393'));
+			$oPage->add("</tr>\n<tr>");
+			$oPage->add($this->HtmlBox('obj_updated', $iUpdated, '#3C3'));
+			$oPage->add("</tr>\n<tr>");
+			$oPage->add($this->HtmlBox('obj_updated_errors', $iUpdatedErrors, '#C00'));
+			$oPage->add("</tr>\n<tr>");
+			$oPage->add($this->HtmlBox('repl_new', $iNew, '#339', 'rowspan="4"').'<td rowspan="4" class="arrow">=&gt;</td>'.$this->HtmlBox('obj_new_unchanged', $iNewUnchanged, '#393'));
+			$oPage->add("</tr>\n<tr>");
+			$oPage->add($this->HtmlBox('obj_new_updated', $iNewUpdated, '#3C3'));
+			$oPage->add("</tr>\n<tr>");
+			$oPage->add($this->HtmlBox('obj_created', $iCreated, '#339'));
+			$oPage->add("</tr>\n<tr>");
+			$oPage->add($this->HtmlBox('obj_new_errors', $iNewErrors, '#C00'));
+			$oPage->add("</tr>\n</table>\n");
+			$oPage->add('</td></tr></table>');
+		}
+		else
+		{
+			$oPage->p('<h2>'.Dict::S('Core:Synchro:NeverRun').'</h2>');
+		}
+	}
+	
+	public function HtmlBox($sId, $iCount, $sColor, $sHTMLAttribs = '')
+	{
+		$sCount = "<span id=\"c_{$sId}\">$iCount</span>";
+		$sLabel = Dict::Format('Core:Synchro:label_'.$sId, $iCount);
+		$sOpacity = ($iCount==0) ? "opacity:0.3;" : "";
+		return "<td id=\"$sId\" style=\"background-color:$sColor;$sOpacity;\" {$sHTMLAttribs}>$sLabel</td>";
+	}
 	public function GetAttributeFlags($sAttCode)
 	{
 		if (($sAttCode == 'scope_class') && (!$this->IsNew()))
@@ -445,8 +453,10 @@ EOF
 		$oStatLog->Set('stats_nb_obj_created_errors', 0);
 		$oStatLog->Set('stats_nb_obj_updated', 0);
 		$oStatLog->Set('stats_nb_obj_updated_errors', 0);
-		$oStatLog->Set('stats_nb_replica_reconciled', 0);
+//		$oStatLog->Set('stats_nb_replica_reconciled', 0);
 		$oStatLog->Set('stats_nb_replica_reconciled_errors', 0);
+		$oStatLog->Set('stats_nb_obj_new_updated', 0);
+		$oStatLog->Set('stats_nb_obj_new_unchanged',0);
 		
 		$sSelectTotal  = "SELECT SynchroReplica WHERE sync_source_id = :source_id";
 		$oSetTotal = new DBObjectSet(DBObjectSearch::FromOQL($sSelectTotal), array() /* order by*/, array('source_id' => $this->GetKey()));
@@ -841,12 +851,14 @@ class SynchroLog extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeInteger("stats_nb_obj_created_errors", array("allowed_values"=>null, "sql"=>"stats_nb_obj_created_errors", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeInteger("stats_nb_obj_updated", array("allowed_values"=>null, "sql"=>"stats_nb_obj_updated", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeInteger("stats_nb_obj_updated_errors", array("allowed_values"=>null, "sql"=>"stats_nb_obj_updated_errors", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeInteger("stats_nb_replica_reconciled", array("allowed_values"=>null, "sql"=>"stats_nb_replica_reconciled", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
+//		MetaModel::Init_AddAttribute(new AttributeInteger("stats_nb_replica_reconciled", array("allowed_values"=>null, "sql"=>"stats_nb_replica_reconciled", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeInteger("stats_nb_replica_reconciled_errors", array("allowed_values"=>null, "sql"=>"stats_nb_replica_reconciled_errors", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeInteger("stats_nb_obj_new_updated", array("allowed_values"=>null, "sql"=>"stats_nb_obj_new_updated", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeInteger("stats_nb_obj_new_unchanged", array("allowed_values"=>null, "sql"=>"stats_nb_obj_new_unchanged", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('sync_source_id', 'start_date', 'end_date', 'status', 'stats_nb_replica_total', 'stats_nb_replica_seen', 'stats_nb_obj_created', 'stats_nb_replica_reconciled', 'stats_nb_obj_updated', 'stats_nb_obj_obsoleted', 'stats_nb_obj_deleted',
-														'stats_nb_obj_created_errors', 'stats_nb_replica_reconciled_errors', 'stats_nb_obj_updated_errors', 'stats_nb_obj_obsoleted_errors', 'stats_nb_obj_deleted_errors')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('sync_source_id', 'start_date', 'end_date', 'status', 'stats_nb_replica_total', 'stats_nb_replica_seen', 'stats_nb_obj_created', /*'stats_nb_replica_reconciled',*/ 'stats_nb_obj_updated', 'stats_nb_obj_obsoleted', 'stats_nb_obj_deleted',
+														'stats_nb_obj_created_errors', 'stats_nb_replica_reconciled_errors', 'stats_nb_obj_updated_errors', 'stats_nb_obj_obsoleted_errors', 'stats_nb_obj_deleted_errors', 'stats_nb_obj_new_unchanged', 'stats_nb_obj_new_updated')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('sync_source_id', 'start_date', 'end_date', 'status', 'stats_nb_replica_seen')); // Attributes to be displayed for a list
 		// Search criteria
 //		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
@@ -1005,12 +1017,12 @@ class SynchroReplica extends DBObject
 				if ($oDataSource->Get('action_on_one') == 'update')
 				{
 					$oDestObj = $oDestSet->Fetch();
-					$this->UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange, $oStatLog, $aTraces, 'stats_nb_replica_reconciled');
+					$this->UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange, $oStatLog, $aTraces, 'stats_nb_obj_new', 'stats_nb_replica_reconciled_errors');
 					$this->Set('dest_id', $oDestObj->GetKey());
 					$this->Set('status_dest_creator', false);
 					$this->Set('dest_class', get_class($oDestObj));
 	
-					$oStatLog->Inc('stats_nb_replica_reconciled');
+					$oStatLog->Inc('stats_nb_replica_reconciled'); //@@@
 				}
 				else
 				{
@@ -1037,7 +1049,7 @@ class SynchroReplica extends DBObject
 				{
 					// assumed to be 'take_first'
 					$oDestObj = $oDestSet->Fetch();
-					$this->UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange, $oStatLog, $aTraces, 'stats_nb_replica_reconciled');
+					$this->UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange, $oStatLog, $aTraces, 'stats_nb_obj_new', 'stats_nb_replica_reconciled_errors');
 					$this->Set('dest_id', $oDestObj->GetKey());
 					$this->Set('status_dest_creator', false);
 					$this->Set('dest_class', get_class($oDestObj));
@@ -1055,7 +1067,7 @@ class SynchroReplica extends DBObject
 			}
 			else
 			{
-				$this->UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange, $oStatLog, $aTraces, 'stats_nb_obj_updated');
+				$this->UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange, $oStatLog, $aTraces, 'stats_nb_obj', 'stats_nb_obj_updated_errors');
 			}
 			break;
 			
@@ -1067,7 +1079,7 @@ class SynchroReplica extends DBObject
 	/**
 	 * Updates the destination object with the Extended data found in the synchro_data_XXXX table
 	 */	
-	protected function UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange, &$oStatLog, &$aTraces, $sStatsCode)
+	protected function UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange, &$oStatLog, &$aTraces, $sStatsCode, $sStatsCodeError)
 	{
 		$aValueTrace = array();
 		foreach($aAttributes as $sAttCode)
@@ -1081,9 +1093,18 @@ class SynchroReplica extends DBObject
 		}
 		try
 		{
-			$oDestObj->DBUpdateTracked($oChange);
-			$aTraces[] = "Updated object ".$oDestObj->GetHyperLink()." (".implode(', ', $aValueTrace).")";
-			$oStatLog->Inc($sStatsCode);
+			// Really modified ?
+			if ($oDestObj->IsModified())
+			{
+				$oDestObj->DBUpdateTracked($oChange);
+				$aTraces[] = "Updated object ".$oDestObj->GetHyperLink()." (".implode(', ', $aValueTrace).")";
+				$oStatLog->Inc($sStatsCode.'_updated');
+			}
+			else
+			{
+				$aTraces[] = "Unchanged object ".$oDestObj->GetHyperLink()." (".implode(', ', $aValueTrace).")";
+				$oStatLog->Inc($sStatsCode.'_unchanged');
+			}
 
 			$this->Set('status_last_error', '');
 			$this->Set('status', 'synchronized');
@@ -1092,7 +1113,7 @@ class SynchroReplica extends DBObject
 		{
 			$aTraces[] = "Failed to update destination object: {$e->getMessage()}";
 			$this->SetLastError('Unable to update destination object: ', $e);
-			$oStatLog->Inc($sStatsCode.'_errors');
+			$oStatLog->Inc($sStatsCodeError);
 		}
 	}
 

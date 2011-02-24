@@ -239,13 +239,13 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:Event' => 'Log Event',
 	'Class:Event+' => 'An application internal event',
-	'Class:Event/Attribute:message' => 'message',
+	'Class:Event/Attribute:message' => 'Message',
 	'Class:Event/Attribute:message+' => 'short description of the event',
-	'Class:Event/Attribute:date' => 'date',
+	'Class:Event/Attribute:date' => 'Date',
 	'Class:Event/Attribute:date+' => 'date and time at which the changes have been recorded',
-	'Class:Event/Attribute:userinfo' => 'user info',
+	'Class:Event/Attribute:userinfo' => 'User info',
 	'Class:Event/Attribute:userinfo+' => 'identification of the user that was doing the action that triggered this event',
-	'Class:Event/Attribute:finalclass' => 'type',
+	'Class:Event/Attribute:finalclass' => 'Type',
 	'Class:Event/Attribute:finalclass+' => '',
 ));
 
@@ -327,6 +327,21 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:EventWebService/Attribute:log_error+' => 'Result error log',
 	'Class:EventWebService/Attribute:data' => 'Data',
 	'Class:EventWebService/Attribute:data+' => 'Result data',
+));
+
+//
+// Class: EventLoginUsage
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:EventLoginUsage' => 'Login Usage',
+	'Class:EventLoginUsage+' => 'Connection to the application',
+	'Class:EventLoginUsage/Attribute:user_id' => 'Login',
+	'Class:EventLoginUsage/Attribute:user_id+' => 'Login',
+	'Class:EventLoginUsage/Attribute:contact_name' => 'User Name',
+	'Class:EventLoginUsage/Attribute:contact_name+' => 'User Name',
+	'Class:EventLoginUsage/Attribute:contact_email' => 'User Email',
+	'Class:EventLoginUsage/Attribute:contact_email+' => 'Email Address of the User',
 ));
 
 //
@@ -479,5 +494,47 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkTriggerAction/Attribute:order+' => 'Actions execution order',
 ));
 
-
+//
+// Synchro Data Source
+//
+Dict::Add('EN US', 'English', 'English', array(
+	'Core:SynchroAttributes' => 'Attributes',
+	'Core:SynchroStatus' => 'Status',
+	'Core:Synchro:ErrorsLabel' => 'Errors',	
+	'Core:Synchro:CreatedLabel' => 'Created',
+	'Core:Synchro:ModifiedLabel' => 'Modified',
+	'Core:Synchro:UnchangedLabel' => 'Unchanged',
+	'Core:Synchro:ReconciledErrorsLabel' => 'Errors',
+	'Core:Synchro:ReconciledLabel' => 'Reconciled',
+	'Core:Synchro:ReconciledNewLabel' => 'Created',
+	'Core:SynchroReconcile:Yes' => 'Yes',
+	'Core:SynchroReconcile:No' => 'No',
+	'Core:SynchroUpdate:Yes' => 'Yes',
+	'Core:SynchroUpdate:No' => 'No',
+	'Core:Synchro:LastestStatus' => 'Latest Status',
+	'Core:Synchro:History' => 'Synchronization History',
+	'Core:Synchro:NeverRun' => 'This synchro was never run. No log yet.',
+	'Core:Synchro:SynchroEndedOn_Date' => 'The latest synchronization ended on %1$s.',
+	'Core:Synchro:SynchroRunningStartedOn_Date' => 'The synchronization started on $1$s is still running...',
+	'Menu:DataSources' => 'Synchronization Data Sources',
+	'Menu:DataSources+' => 'All Synchronization Data Sources',
+	'Core:Synchro:label_repl_ignored' => 'Ignored (%1$d)',
+	'Core:Synchro:label_repl_disappeared' => 'Disappeared (%1$d)',
+	'Core:Synchro:label_repl_existing' => 'Existing (%1$d)',
+	'Core:Synchro:label_repl_new' => 'New (%1$d)',
+	'Core:Synchro:label_obj_deleted' => 'Deleted (%1$d)',
+	'Core:Synchro:label_obj_obsoleted' => 'Obsoleted (%1$d)',
+	'Core:Synchro:label_obj_disappeared_errors' => 'Errors (%1$d)',
+	'Core:Synchro:label_obj_unchanged' => 'Unchanged (%1$d)',
+	'Core:Synchro:label_obj_updated' => 'Updated (%1$d)', 
+	'Core:Synchro:label_obj_updated_errors' => 'Errors (%1$d)',
+	'Core:Synchro:label_obj_new_unchanged' => 'Unchanged (%1$d)',
+	'Core:Synchro:label_obj_new_updated' => 'Updated (%1$d)',
+	'Core:Synchro:label_obj_created' => 'Created (%1$d)',
+	'Core:Synchro:label_obj_new_errors' => 'Errors (%1$d)',
+	'Core:Synchro:History' => 'Synchronization History',
+	'Core:SynchroLogTitle' => '%1$s - %2$s',
+	'Core:Synchro:Nb_Replica' => '%1$s Replica',
+	'Core:Synchro:Nb_Objects' => '%1$s Objects',
+));
 ?>
