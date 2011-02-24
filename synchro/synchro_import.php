@@ -372,106 +372,104 @@ try
 	//
 	// Go for parsing and interpretation
 	//
-
-	$aData = $oCSVParser->ToArray();
-	$iLineCount = count($aData);
-
-	$sTable = $oDataSource->GetDataTable();
-
-   // Prepare insert columns
-	$sInsertColumns = '`'.implode('`, `', $aInputColumns).'`';
-
-   foreach($aData as $iRow => $aRow)
-   {
-      $sReconciliationCondition = "`primary_key` = ".CMDBSource::Quote($aRow[$iPrimaryKeyCol]);
-		$sSelect = "SELECT COUNT(*) FROM `$sTable` WHERE $sReconciliationCondition"; 
-		$aRes = CMDBSource::QueryToArray($sSelect);
-		$iCount = $aRes[0]['COUNT(*)'];
-
-		if ($iCount == 0)
+	try
+	{
+		if ($bSimulate)
 		{
-			// No record... create it
-			//
-			$iCountCreations++;
-			if ($sOutput == 'details')
+			CMDBSource::Query('START TRANSACTION');
+		}
+		$aData = $oCSVParser->ToArray();
+		$iLineCount = count($aData);
+	
+		$sTable = $oDataSource->GetDataTable();
+	
+	   // Prepare insert columns
+		$sInsertColumns = '`'.implode('`, `', $aInputColumns).'`';
+	
+	   foreach($aData as $iRow => $aRow)
+	   {
+	      $sReconciliationCondition = "`primary_key` = ".CMDBSource::Quote($aRow[$iPrimaryKeyCol]);
+			$sSelect = "SELECT COUNT(*) FROM `$sTable` WHERE $sReconciliationCondition"; 
+			$aRes = CMDBSource::QueryToArray($sSelect);
+			$iCount = $aRes[0]['COUNT(*)'];
+	
+			if ($iCount == 0)
 			{
-				$oP->add("$iRow: New entry, reconciliation: '$sReconciliationCondition'\n");
-			}
-
-			$aValues = array(); // Used to build the insert query
-			foreach ($aRow as $iCol => $value)
-			{
-				$aValues[] = CMDBSource::Quote($value);
-			}
-			$sValues = implode(', ', $aValues);
-			$sInsert = "INSERT INTO `$sTable` ($sInsertColumns) VALUES ($sValues)";
-			if ($bSimulate)
-			{
+				// No record... create it
+				//
+				$iCountCreations++;
 				if ($sOutput == 'details')
 				{
-					$oP->add("$iRow: SIMULATE - Planned query: $sInsert'\n");
+					$oP->add("$iRow: New entry, reconciliation: '$sReconciliationCondition'\n");
 				}
-			}
-			else
-			{
+	
+				$aValues = array(); // Used to build the insert query
+				foreach ($aRow as $iCol => $value)
+				{
+					$aValues[] = CMDBSource::Quote($value);
+				}
+				$sValues = implode(', ', $aValues);
+				$sInsert = "INSERT INTO `$sTable` ($sInsertColumns) VALUES ($sValues)";
 				CMDBSource::Query($sInsert);
 			}
-		}
-		elseif ($iCount == 1)
-		{
-			// Found a match... update it
-			//
-			$iCountUpdates++;
-			if ($sOutput == 'details')
+			elseif ($iCount == 1)
 			{
-				$oP->add("$iRow: Update entry, reconciliation: '$sReconciliationCondition'\n");
-			}
-
-			$aValuePairs = array(); // Used to build the update query
-			foreach ($aRow as $iCol => $value)
-			{
-				// Skip reconciliation column
-				if ($iCol == $iPrimaryKeyCol) continue;
-	
-				$sCol = $aInputColumns[$iCol];
-				$aValuePairs[] = "`$sCol` = ".CMDBSource::Quote($aRow[$iCol]);
-			}
-			$sValuePairs = implode(', ', $aValuePairs);
-			$sUpdateQuery = "UPDATE `$sTable` SET $sValuePairs WHERE $sReconciliationCondition";
-			if ($bSimulate)
-			{
+				// Found a match... update it
+				//
+				$iCountUpdates++;
 				if ($sOutput == 'details')
 				{
-					$oP->add("$iRow: SIMULATE - Planned query: $sUpdateQuery'\n");
+					$oP->add("$iRow: Update entry, reconciliation: '$sReconciliationCondition'\n");
 				}
+	
+				$aValuePairs = array(); // Used to build the update query
+				foreach ($aRow as $iCol => $value)
+				{
+					// Skip reconciliation column
+					if ($iCol == $iPrimaryKeyCol) continue;
+		
+					$sCol = $aInputColumns[$iCol];
+					$aValuePairs[] = "`$sCol` = ".CMDBSource::Quote($aRow[$iCol]);
+				}
+				$sValuePairs = implode(', ', $aValuePairs);
+				$sUpdateQuery = "UPDATE `$sTable` SET $sValuePairs WHERE $sReconciliationCondition";
+				CMDBSource::Query($sUpdateQuery);
 			}
 			else
 			{
-				CMDBSource::Query($sUpdateQuery);
+				// Too many records... ambiguity
+				//
+				$iCountErrors++;
+				$oP->add("$iRow: Error - Failed to reconcile, found $iCount rows having '$sReconciliationCondition'\n");
 			}
 		}
-		else
+	
+		//////////////////////////////////////////////////
+		//
+		// Synchronize
+		//
+		if ($bSynchronize)
 		{
-			// Too many records... ambiguity
-			//
-			$iCountErrors++;
-			$oP->add("$iRow: Error - Failed to reconcile, found $iCount rows having '$sReconciliationCondition'\n");
+			$aTraces = array();
+			$oStatLog = $oDataSource->Synchronize($aTraces, $oLoadStartDate);
+			//echo "#@# Synchronize() returned :<br/>\n";
+			//echo "<pre>\n";
+			//print_r($aTraces);
+			//print_r($oStatLog);
+			//echo "</pre>\n";
 		}
 	}
-
-	//////////////////////////////////////////////////
-	//
-	// Synchronize
-	//
-	if ($bSynchronize && !$bSimulate)
+	catch(Exception $e)
 	{
-		$aTraces = array();
-		$oStatLog = $oDataSource->Synchronize($aTraces, $oLoadStartDate);
-		//echo "#@# Synchronize() returned :<br/>\n";
-		//echo "<pre>\n";
-		//print_r($aTraces);
-		//print_r($oStatLog);
-		//echo "</pre>\n";
+		if ($bSimulate)
+		{
+			CMDBSource::Query('ROLLBACK');
+		}
+		throw $e;
+	}
+	if ($bSimulate)
+	{
+		CMDBSource::Query('ROLLBACK');
 	}
 
 	//////////////////////////////////////////////////
