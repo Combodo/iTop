@@ -534,14 +534,24 @@ EOF
 		//
 		// Get the list of SQL columns
 		$sClass = $this->GetTargetClass();
-		$aAttCodes = array();
-		$sSelectAtt  = "SELECT SynchroAttribute WHERE sync_source_id = :source_id AND update = 1";
+		$aAttCodesExpected = array();
+		$aAttCodesToReconcile = array();
+		$aAttCodesToUpdate = array();
+		$sSelectAtt  = "SELECT SynchroAttribute WHERE sync_source_id = :source_id AND (update = 1 OR reconcile = 1)";
 		$oSetAtt = new DBObjectSet(DBObjectSearch::FromOQL($sSelectAtt), array() /* order by*/, array('source_id' => $this->GetKey()) /* aArgs */);
 		while ($oSyncAtt = $oSetAtt->Fetch())
 		{
-			$aAttCodes[] = $oSyncAtt->Get('attcode');
+			if ($oSyncAtt->Get('update'))
+			{
+				$aAttCodesToUpdate[] = $oSyncAtt->Get('attcode');
+			}
+			if ($oSyncAtt->Get('reconcile'))
+			{
+				$aAttCodesToReconcile[] = $oSyncAtt->Get('attcode');
+			}
+			$aAttCodesExpected[] = $oSyncAtt->Get('attcode');
 		}
-		$aColumns = $this->GetSQLColumns($aAttCodes);
+		$aColumns = $this->GetSQLColumns($aAttCodesExpected);
 		$aExtDataFields = array_keys($aColumns);
 		$aExtDataFields[] = 'primary_key';
 		$aExtDataSpec = array(
@@ -551,24 +561,19 @@ EOF
 		);
 
 		// Get the list of reconciliation keys
-		$aReconciliationKeys = array();
 		if ($this->Get('reconciliation_policy') == 'use_attributes')
 		{
-			$sSelectAtt  = "SELECT SynchroAttribute WHERE sync_source_id = :source_id AND reconcile = 1";
-			$oAttSet = new DBObjectSet(DBObjectSearch::FromOQL($sSelectAtt), array() /* order by*/, array('source_id' => $this->GetKey()) /* aArgs */);
-			while ($oSyncAtt = $oAttSet->Fetch())
-			{
-				$aReconciliationKeys[] = $oSyncAtt->Get('attcode');
-			}
+			$aReconciliationKeys = $aAttCodesToReconcile;
 		}
 		elseif ($this->Get('reconciliation_policy') == 'use_primary_key')
 		{
-			$aReconciliationKeys[] = "primary_key";
+			// Override the setings made at the attribute level !
+			$aReconciliationKeys = array("primary_key");
 		}
 		$aTraces[] = "Reconciliation on: {".implode(', ', $aReconciliationKeys)."}";
 		
 		$aAttributes = array();
-		foreach($aAttCodes as $sAttCode)
+		foreach($aAttCodesToUpdate as $sAttCode)
 		{
 			$oAttDef = MetaModel::GetAttributeDef($this->GetTargetClass(), $sAttCode);
 			if ($oAttDef->IsWritable() && $oAttDef->IsScalar())
@@ -727,7 +732,7 @@ class SynchroAttribute extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeString("attcode", array("allowed_values"=>null, "sql"=>"attcode", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeBoolean("update", array("allowed_values"=>null, "sql"=>"update", "default_value"=>true, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeBoolean("reconcile", array("allowed_values"=>null, "sql"=>"reconcile", "default_value"=>false, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("update_policy", array("allowed_values"=>new ValueSetEnum('master_locked,master_unlocked,write_once'), "sql"=>"update_policy", "default_value"=>"master_locked", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("update_policy", array("allowed_values"=>new ValueSetEnum('master_locked,master_unlocked,write_if_empty'), "sql"=>"update_policy", "default_value"=>"master_locked", "is_null_allowed"=>false, "depends_on"=>array())));
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('sync_source_id', 'attcode', 'update', 'reconcile', 'update_policy')); // Attributes to be displayed for the complete details
@@ -1177,8 +1182,9 @@ class SynchroReplica extends DBObject
 	 */
 	 protected function GetValueFromExtData($sColumnName)
 	 {
+	 	// $aData should contain attributes defined either for reconciliation or update
 	 	$aData = $this->GetExtendedData();
-	 	return $aData[$sColumnName];
+ 		return $aData[$sColumnName];
 	 }
 }
 
