@@ -525,6 +525,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:Synchro:label_obj_deleted' => 'Deleted (%1$s)',
 	'Core:Synchro:label_obj_obsoleted' => 'Obsoleted (%1$s)',
 	'Core:Synchro:label_obj_disappeared_errors' => 'Errors (%1$s)',
+	'Core:Synchro:label_obj_disappeared_no_action' => 'No Action (%1$s)',
 	'Core:Synchro:label_obj_unchanged' => 'Unchanged (%1$s)',
 	'Core:Synchro:label_obj_updated' => 'Updated (%1$s)', 
 	'Core:Synchro:label_obj_updated_errors' => 'Errors (%1$s)',
@@ -534,7 +535,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:Synchro:label_obj_new_errors' => 'Errors (%1$s)',
 	'Core:Synchro:History' => 'Synchronization History',
 	'Core:SynchroLogTitle' => '%1$s - %2$s',
-	'Core:Synchro:Nb_Replica' => 'Replica: %1$s',
+	'Core:Synchro:Nb_Replica' => 'Replica processed: %1$s',
 	'Core:Synchro:Nb_Class:Objects' => '%1$s: %2$s',
 ));
 ?>

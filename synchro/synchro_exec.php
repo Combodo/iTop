@@ -136,7 +136,7 @@ foreach(explode(',', $sDataSourcesList) as $iSDS)
 			}
 			foreach ($aResults as $sMessage)
 			{
-				$oP->p($sMessage);
+				$oP->p('#'.$sMessage);
 			}
 			if ($oStatLog->Get('status') == 'error')
 			{
@@ -152,9 +152,10 @@ foreach(explode(',', $sDataSourcesList) as $iSDS)
 			$oP->p("Objects creation errors: ".$oStatLog->Get('stats_nb_obj_created_errors'));
 			$oP->p("Objects updated: ".$oStatLog->Get('stats_nb_obj_updated'));
 			$oP->p("Objects update errors: ".$oStatLog->Get('stats_nb_obj_updated_errors'));
-			$oP->p("Objects reconciled (updated): ".$oStatLog->Get('stats_nb_new_updated'));
-			$oP->p("Objects reconciled (unchanged): ".$oStatLog->Get('stats_nb_new_unchanged'));
+			$oP->p("Objects reconciled (updated): ".$oStatLog->Get('stats_nb_obj_new_updated'));
+			$oP->p("Objects reconciled (unchanged): ".$oStatLog->Get('stats_nb_obj_new_unchanged'));
 			$oP->p("Objects reconciliation errors: ".$oStatLog->Get('stats_nb_replica_reconciled_errors'));
+			$oP->p("Replica disappeared, no action taken: ".$oStatLog->Get('stats_nb_replica_disappeared_no_action'));
 		}
 		catch(Exception $e)
 		{

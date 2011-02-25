@@ -374,6 +374,9 @@ try
 	//
 	try
 	{
+		$oP->add_comment('Load--------------');
+		$oP->add_comment('------------------');
+
 		if ($bSimulate)
 		{
 			CMDBSource::Query('START TRANSACTION');
@@ -444,19 +447,62 @@ try
 			}
 		}
 	
+		if (($sOutput == "summary") || ($sOutput == 'details'))
+		{
+			$oP->add_comment("Data Source: ".$iDataSourceId);
+			$oP->add_comment("Synchronize: ".($bSynchronize ? '1' : '0'));
+			$oP->add_comment("Class: ".$sClass);
+			$oP->add_comment("Separator: ".$sSep);
+			$oP->add_comment("Qualifier: ".$sQualifier);
+			$oP->add_comment("Charset Encoding:".$sCharSet);
+			$oP->add_comment("Data Size: ".strlen($sCSVData));
+			$oP->add_comment("Data Lines: ".$iLineCount);
+			$oP->add_comment("Columns: ".implode(', ', $aInputColumns));
+			$oP->add_comment("Output format: ".$sOutput);
+	//		$oP->add_comment("Report level: ".$sReportLevel);
+			$oP->add_comment("Simulate: ".($bSimulate ? '1' : '0'));
+			$oP->add_comment("Change tracking comment: ".$sComment);
+			$oP->add_comment("Issues (before synchro): ".$iCountErrors);
+	//		$oP->add_comment("Warnings: ".$iCountWarnings);
+			$oP->add_comment("Created (before synchro): ".$iCountCreations);
+			$oP->add_comment("Updated (before synchro): ".$iCountUpdates);
+		}
+
 		//////////////////////////////////////////////////
 		//
 		// Synchronize
 		//
 		if ($bSynchronize)
 		{
-			$aTraces = array();
-			$oStatLog = $oDataSource->Synchronize($aTraces, $oLoadStartDate);
-			//echo "#@# Synchronize() returned :<br/>\n";
-			//echo "<pre>\n";
-			//print_r($aTraces);
-			//print_r($oStatLog);
-			//echo "</pre>\n";
+			$aResults = array();
+			$oStatLog = $oDataSource->Synchronize($aResults, $oLoadStartDate);
+			$oP->add_comment('Synchronization---');
+			$oP->add_comment('------------------');
+			if ($sOutput == 'details')
+			{
+				foreach ($aResults as $sMessage)
+				{
+					$oP->add_comment($sMessage);
+				}
+			}
+			if ($oStatLog->Get('status') == 'error')
+			{
+				$oP->p("ERROR: ".$oStatLog->Get('last_error'));
+			}
+			$oP->add_comment("Replicas: ".$oStatLog->Get('stats_nb_replica_total'));
+			$oP->add_comment("Replicas touched since last synchro: ".$oStatLog->Get('stats_nb_replica_seen'));
+			$oP->add_comment("Objects deleted: ".$oStatLog->Get('stats_nb_obj_deleted'));
+			$oP->add_comment("Objects deletion errors: ".$oStatLog->Get('stats_nb_obj_deleted_errors'));
+			$oP->add_comment("Objects obsoleted: ".$oStatLog->Get('stats_nb_obj_obsoleted'));
+			$oP->add_comment("Objects obsolescence errors: ".$oStatLog->Get('stats_nb_obj_obsoleted_errors'));
+			$oP->add_comment("Objects created: ".$oStatLog->Get('stats_nb_obj_created'));
+			$oP->add_comment("Objects creation errors: ".$oStatLog->Get('stats_nb_obj_created_errors'));
+			$oP->add_comment("Objects updated: ".$oStatLog->Get('stats_nb_obj_updated'));
+			$oP->add_comment("Objects update errors: ".$oStatLog->Get('stats_nb_obj_updated_errors'));
+			$oP->add_comment("Objects reconciled (updated): ".$oStatLog->Get('stats_nb_obj_new_updated'));
+			$oP->add_comment("Objects reconciled (unchanged): ".$oStatLog->Get('stats_nb_obj_new_unchanged'));
+			$oP->add_comment("Objects reconciliation errors: ".$oStatLog->Get('stats_nb_replica_reconciled_errors'));
+			$oP->add_comment("Replica disappeared, no action taken: ".$oStatLog->Get('stats_nb_replica_disappeared_no_action'));
 		}
 	}
 	catch(Exception $e)
@@ -479,27 +525,6 @@ try
 	if ($sOutput == 'retcode')
 	{
 		$oP->add($iCountErrors);
-	}
-
-	if (($sOutput == "summary") || ($sOutput == 'details'))
-	{
-		$oP->add_comment("Data Source: ".$iDataSourceId);
-		$oP->add_comment("Synchronize: ".($bSynchronize ? '1' : '0'));
-		$oP->add_comment("Class: ".$sClass);
-		$oP->add_comment("Separator: ".$sSep);
-		$oP->add_comment("Qualifier: ".$sQualifier);
-		$oP->add_comment("Charset Encoding:".$sCharSet);
-		$oP->add_comment("Data Size: ".strlen($sCSVData));
-		$oP->add_comment("Data Lines: ".$iLineCount);
-		$oP->add_comment("Columns: ".implode(', ', $aInputColumns));
-		$oP->add_comment("Output format: ".$sOutput);
-//		$oP->add_comment("Report level: ".$sReportLevel);
-		$oP->add_comment("Simulate: ".($bSimulate ? '1' : '0'));
-		$oP->add_comment("Change tracking comment: ".$sComment);
-		$oP->add_comment("Issues: ".$iCountErrors);
-//		$oP->add_comment("Warnings: ".$iCountWarnings);
-		$oP->add_comment("Created: ".$iCountCreations);
-		$oP->add_comment("Updated: ".$iCountUpdates);
 	}
 }
 catch(ExchangeException $e)
