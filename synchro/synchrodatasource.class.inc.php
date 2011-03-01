@@ -75,10 +75,9 @@ class SynchroDataSource extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeDuration("delete_policy_retention", array("allowed_values"=>null, "sql"=>"delete_policy_retention", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 
 		MetaModel::Init_AddAttribute(new AttributeLinkedSet("attribute_list", array("linked_class"=>"SynchroAttribute", "ext_key_to_me"=>"sync_source_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeLinkedSet("status_list", array("linked_class"=>"SynchroLog", "ext_key_to_me"=>"sync_source_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('name', 'description', 'scope_class', /*'scope_restriction', */'status', 'user_id', 'full_load_periodicity', 'reconciliation_policy', 'action_on_zero', 'action_on_one', 'action_on_multiple', 'delete_policy', 'delete_policy_update', 'delete_policy_retention' /*'attribute_list'*/, 'status_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('name', 'description', 'scope_class', /*'scope_restriction', */'status', 'user_id', 'full_load_periodicity', 'reconciliation_policy', 'action_on_zero', 'action_on_one', 'action_on_multiple', 'delete_policy', 'delete_policy_update', 'delete_policy_retention' /*'attribute_list'*/)); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('scope_class', 'status', 'user_id', 'full_load_periodicity')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'scope_class', 'user_id')); // Criteria of the std search form
@@ -956,7 +955,7 @@ class SynchroAttLinkSet extends SynchroAttribute
 }
 
 //class SynchroLog extends Event
-class SynchroLog extends cmdbAbstractObject
+class SynchroLog extends DBObject
 {
 	public static function Init()
 	{
