@@ -1836,23 +1836,27 @@ class TestDataExchange extends TestBizModel
 		$oDataSource->Set('delete_policy', $aSingleScenario['delete_policy']);
 		$oDataSource->Set('delete_policy_update', $aSingleScenario['delete_policy_update']);
 		$oDataSource->Set('delete_policy_retention', $aSingleScenario['delete_policy_retention']);
-		$iDataSourceId = $this->ObjectToDB($oDataSource);
+		$iDataSourceId = $this->ObjectToDB($oDataSource, true /* reload */);
 
       $oAttributeSet = $oDataSource->Get('attribute_list');
       while ($oAttribute = $oAttributeSet->Fetch())
       {
-      	if (array_key_exists($aSingleScenario['attributes'], $oAttribute->Get('attcode')))
+      	if (array_key_exists($oAttribute->Get('attcode'), $aSingleScenario['attributes']))
       	{
       		$aAttribInfo = $aSingleScenario['attributes'][$oAttribute->Get('attcode')];
-				$oSyncAtt->Set('update', $aAttribInfo['do_update']);
-				$oSyncAtt->Set('reconcile', $aAttribInfo['do_reconcile']);
+      		if (array_key_exists('reconciliation_attcode', $aAttribInfo))
+      		{
+					$oAttribute->Set('reconciliation_attcode', $aAttribInfo['reconciliation_attcode']);
+				}
+				$oAttribute->Set('update', $aAttribInfo['do_update']);
+				$oAttribute->Set('reconcile', $aAttribInfo['do_reconcile']);
 			}
       	else
       	{
-				$oSyncAtt->Set('update', false);
-				$oSyncAtt->Set('reconcile', false);
+				$oAttribute->Set('update', false);
+				$oAttribute->Set('reconcile', false);
 			}
-			$oAttribute->DBUpdateTracked();
+			$this->UpdateObjectInDB($oAttribute);
 		}
 
 		// Prepare list of prefixes -> make sure objects are unique with regard to the reconciliation scheme
@@ -1863,7 +1867,7 @@ class TestDataExchange extends TestBizModel
 		}
 		foreach($aSingleScenario['attributes'] as $sAttCode => $aAttribInfo)
 		{
-			if ($aAttribInfo['do_reconcile'])
+			if (isset($aAttribInfo['automatic_prefix']) && $aAttribInfo['automatic_prefix'])
 			{
 				$aPrefixes[$sAttCode] = 'TEST_'.$iDataSourceId.'_';
 			}
@@ -1892,7 +1896,14 @@ class TestDataExchange extends TestBizModel
 		{
 			// Check the status (while ignoring existing objects)
 			//
-			$oObjects = new DBObjectSet(DBObjectSearch::FromOQL("SELECT $sClass WHERE id NOT IN($sExistingIds)"));
+			if (empty($sExistingIds))
+			{
+				$oObjects = new DBObjectSet(DBObjectSearch::FromOQL("SELECT $sClass"));
+			}
+			else
+			{
+				$oObjects = new DBObjectSet(DBObjectSearch::FromOQL("SELECT $sClass WHERE id NOT IN($sExistingIds)"));
+			}
 			$aFound = $oObjects->ToArray();
 			$aErrors_Unexpected = array();
 			foreach($aFound as $iObj => $oObj)
@@ -1973,8 +1984,15 @@ class TestDataExchange extends TestBizModel
 					$aFinalData = array();
 					foreach($aDataRow as $iCol => $value)
 					{
-						$sAttCode = $aSourceAttributes[$iCol];
-						$aFinalData[] = $aPrefixes[$sAttCode].$value;
+						if (is_null($value))
+						{
+							$aFinalData[] = '<NULL>';
+						}
+						else
+						{
+							$sAttCode = $aSourceAttributes[$iCol];
+							$aFinalData[] = $aPrefixes[$sAttCode].$value;
+						}
 					}
 					$sCsvData .= implode(';', $aFinalData)."\n";
 				}
@@ -2010,6 +2028,7 @@ class TestDataExchange extends TestBizModel
 				{
 					$sCsvDataViewable = $sCsvData;
 				}
+				$sCsvDataViewable = htmlentities($sCsvDataViewable);
 		
 				echo "<div style=\"\">\n";
 				echo "      <pre class=\"vardump\">$sCsvDataViewable</pre>\n";
@@ -2019,10 +2038,6 @@ class TestDataExchange extends TestBizModel
 				if (stripos($sRes, 'exception') !== false)
 				{
 					throw new UnitTestException('Encountered an Exception during the last import/synchro');
-				}
-				if (stripos($sRes, 'error') !== false)
-				{
-					throw new UnitTestException('Encountered an Error during the last import/synchro');
 				}
 			}
 		}
@@ -2035,23 +2050,28 @@ class TestDataExchange extends TestBizModel
 	{
 		$aScenarios = array(
 			array(
-				'desc' => 'Simple scenario with delete option',
+				'desc' => 'Simple scenario with delete option (and extkey given as org/name)',
 				'login' => 'admin',
 				'password' => 'admin',
 				'target_class' => 'ApplicationSolution',
-				'full_load_periodicity' => '1 hour',
+				'full_load_periodicity' => 3600, // should be ignored in this case
 				'reconciliation_policy' => 'use_attributes',
 				'action_on_zero' => 'create',
 				'action_on_one' => 'update',
 				'action_on_multiple' => 'error',
-				'delete_policy' => 'update_then_delete',
-				'delete_policy_update' => 'status:obsolete',
-				'delete_policy_retention' => '',
+				'delete_policy' => 'delete',
+				'delete_policy_update' => '',
+				'delete_policy_retention' => 0,
 				'source_data' => array(
 					array('primary_key', 'org_id', 'name', 'status'),
 					array(
-						array('obj_A', 2, 'obj_A', 'production'),
-						array('obj_B', 2, 'obj_B', 'production'),
+						array('obj_A', null, 'obj_A', 'production'), // org_id unchanged
+						array('obj_B', '_DUMMY_', 'obj_B', 'production'), // error, '_DUMMY_' unknown
+						array('obj_C', 'SOMECODE', 'obj_C', 'production'),
+						array('obj_D', null, 'obj_D', 'production'),
+						array('obj_E', '_DUMMY_', 'obj_E', 'production'),
+					),
+					array(
 					),
 					array(
 					),
@@ -2060,14 +2080,23 @@ class TestDataExchange extends TestBizModel
 					array('org_id', 'name', 'status'),
 					array(
 						// Initial state
-						array(2, 'obj_A', 'production'),
-					),
-					array(
 						array(2, 'obj_A', 'production'),
 						array(2, 'obj_B', 'production'),
 					),
 					array(
-						array(2, 'obj_A', 'obsolete'),
+						array(2, 'obj_A', 'production'),
+						array(2, 'obj_B', 'production'),
+						array(1, 'obj_C', 'production'),
+					),
+					array(
+						array(2, 'obj_A', 'production'),
+						array(2, 'obj_B', 'production'),
+						// deleted !
+					),
+					// The only diff here is into the log
+					array(
+						array(2, 'obj_A', 'production'),
+						array(2, 'obj_B', 'production'),
 						// deleted !
 					),
 				),
@@ -2075,10 +2104,12 @@ class TestDataExchange extends TestBizModel
 					'org_id' => array(
 						'do_reconcile' => false,
 						'do_update' => true,
+						'reconciliation_attcode' => 'code',
 					),
 					'name' => array(
 						'do_reconcile' => true,
 						'do_update' => true,
+						'automatic_prefix' => true, // unique id
 					),
 					'status' => array(
 						'do_reconcile' => false,
@@ -2087,24 +2118,24 @@ class TestDataExchange extends TestBizModel
 				),
 			),
 		//);
-		//$aScenarios = array(
+		//$aXXXXScenarios = array(
 			array(
-				'desc' => 'Update then delete with retention (to complete with manual testing)',
+				'desc' => 'Update then delete with retention (to complete with manual testing) and reconciliation on org/name',
 				'login' => 'admin',
 				'password' => 'admin',
 				'target_class' => 'ApplicationSolution',
-				'full_load_periodicity' => '1 hour',
+				'full_load_periodicity' => 3600,
 				'reconciliation_policy' => 'use_attributes',
 				'action_on_zero' => 'create',
 				'action_on_one' => 'update',
 				'action_on_multiple' => 'error',
 				'delete_policy' => 'update_then_delete',
 				'delete_policy_update' => 'status:obsolete',
-				'delete_policy_retention' => '1 hour',
+				'delete_policy_retention' => 5,
 				'source_data' => array(
 					array('primary_key', 'org_id', 'name', 'status'),
 					array(
-						array('obj_A', 2, 'obj_A', 'production'),
+						array('obj_A', 'OMED', 'obj_A', 'production'),
 					),
 					array(
 					),
@@ -2124,12 +2155,14 @@ class TestDataExchange extends TestBizModel
 				),
 				'attributes' => array(
 					'org_id' => array(
-						'do_reconcile' => false,
+						'do_reconcile' => true,
 						'do_update' => true,
+						'reconciliation_attcode' => 'code',
 					),
 					'name' => array(
 						'do_reconcile' => true,
 						'do_update' => true,
+						'automatic_prefix' => true, // unique id
 					),
 					'status' => array(
 						'do_reconcile' => false,
@@ -2138,20 +2171,20 @@ class TestDataExchange extends TestBizModel
 				),
 			),
 		//);
-		//$aScenarios = array(
+		//$aXXScenarios = array(
 			array(
 				'desc' => 'Simple scenario loading a few ApplicationSolution',
 				'login' => 'admin',
 				'password' => 'admin',
 				'target_class' => 'ApplicationSolution',
-				'full_load_periodicity' => '1 hour',
+				'full_load_periodicity' => 3600,
 				'reconciliation_policy' => 'use_attributes',
 				'action_on_zero' => 'create',
 				'action_on_one' => 'update',
 				'action_on_multiple' => 'error',
 				'delete_policy' => 'update',
 				'delete_policy_update' => 'status:obsolete',
-				'delete_policy_retention' => '',
+				'delete_policy_retention' => 0,
 				'source_data' => array(
 					array('primary_key', 'org_id', 'name', 'status'),
 					array(
@@ -2161,8 +2194,16 @@ class TestDataExchange extends TestBizModel
 					),
 					array(
 						array('obj_A', 2, 'obj_A', 'production'),
+						array('obj_B', 2, 'obj_B', 'implementation'),
+						array('obj_C', 2, 'obj_C', 'implementation'),
+					),
+					array(
+						array('obj_A', 2, 'obj_A', 'production'),
 						array('obj_C', 2, 'obj_C', 'implementation'),
 						array('obj_D', 2, 'obj_D', 'implementation'),
+					),
+					array(
+						array('obj_C', 2, 'obj_C', 'production'),
 					),
 					array(
 						array('obj_C', 2, 'obj_C', 'production'),
@@ -2187,7 +2228,20 @@ class TestDataExchange extends TestBizModel
 						array(2, 'obj_B', 'production'),
 						array(2, 'obj_B', 'implementation'),
 						array(2, 'obj_C', 'implementation'),
+					),
+					array(
+						array(2, 'obj_A', 'production'),
+						array(2, 'obj_B', 'production'),
+						array(2, 'obj_B', 'implementation'),
+						array(2, 'obj_C', 'implementation'),
 						array(2, 'obj_D', 'implementation'),
+					),
+					array(
+						array(2, 'obj_A', 'obsolete'),
+						array(2, 'obj_B', 'production'),
+						array(2, 'obj_B', 'implementation'),
+						array(2, 'obj_C', 'production'),
+						array(2, 'obj_D', 'obsolete'),
 					),
 					array(
 						array(2, 'obj_A', 'obsolete'),
@@ -2205,6 +2259,7 @@ class TestDataExchange extends TestBizModel
 					'name' => array(
 						'do_reconcile' => true,
 						'do_update' => true,
+						'automatic_prefix' => true, // unique id
 					),
 					'status' => array(
 						'do_reconcile' => false,

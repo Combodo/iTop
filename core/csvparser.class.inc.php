@@ -40,6 +40,8 @@ define('evTEXTQUAL', 3); // used for escaping as well
 define('evOTHERCHAR', 4);
 define('evEND', 5);
 
+define('NULL_VALUE', '<NULL>');
+
 
 /**
  * CSVParser
@@ -81,6 +83,10 @@ class CSVParser
 		else
 		{
 			$sCell = $this->m_sCurrCell;
+		}
+		if ($sCell == NULL_VALUE)
+		{
+			$sCell = null;
 		}
 
 		if (!is_null($aFieldMap))

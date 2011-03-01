@@ -3730,6 +3730,31 @@ abstract class MetaModel
 		return $oObj;
 	}
 
+	static protected $m_aCacheObjectByColumn = array();
+
+	public static function GetObjectByColumn($sClass, $sAttCode, $value, $bMustBeFoundUnique = true)
+	{
+		if (!isset(self::$m_aCacheObjectByColumn[$sClass][$sAttCode][$value]))
+		{
+			self::_check_subclass($sClass);	
+	
+			$oObjSearch = new DBObjectSearch($sClass);
+			$oObjSearch->AddCondition($sAttCode, $value, '=');
+			$oSet = new DBObjectSet($oObjSearch);
+			if ($oSet->Count() == 1)
+			{
+				self::$m_aCacheObjectByColumn[$sClass][$sAttCode][$value] = $oSet->fetch();
+			}
+			else
+			{
+				if ($bMustBeFoundUnique) throw new CoreException('Failed to get an object by column', array('class'=>$sClass, 'attcode'=>$sAttCode, 'value'=>$value, 'matches' => $oSet->Count()));
+				self::$m_aCacheObjectByColumn[$sClass][$sAttCode][$value] = null;
+			}
+		}
+
+		return self::$m_aCacheObjectByColumn[$sClass][$sAttCode][$value];
+	}
+
 	public static function GetObjectFromOQL($sQuery, $aParams = null, $bAllowAllData = false)
 	{
 		$oFilter = DBObjectSearch::FromOQL($sQuery, $aParams);

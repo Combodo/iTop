@@ -409,7 +409,14 @@ try
 				$aValues = array(); // Used to build the insert query
 				foreach ($aRow as $iCol => $value)
 				{
-					$aValues[] = CMDBSource::Quote($value);
+					if (is_null($value))
+					{
+						$aValues[] = 'NULL';
+					}
+					else
+					{
+						$aValues[] = CMDBSource::Quote($value);
+					}
 				}
 				$sValues = implode(', ', $aValues);
 				$sInsert = "INSERT INTO `$sTable` ($sInsertColumns) VALUES ($sValues)";

@@ -53,6 +53,8 @@ class SynchroDataSource extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('implementation,production,obsolete'), "sql"=>"status", "default_value"=>"implementation", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("user_id", array("targetclass"=>"User", "jointype"=>null, "allowed_values"=>null, "sql"=>"user_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeClass("scope_class", array("class_category"=>"bizmodel", "more_values"=>"", "sql"=>"scope_class", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+		
+		// Declared here for a future usage, but ignored so far
 		MetaModel::Init_AddAttribute(new AttributeString("scope_restriction", array("allowed_values"=>null, "sql"=>"scope_restriction", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		
 		//MetaModel::Init_AddAttribute(new AttributeDateTime("last_synchro_date", array("allowed_values"=>null, "sql"=>"last_synchro_date", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
@@ -76,7 +78,7 @@ class SynchroDataSource extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeLinkedSet("status_list", array("linked_class"=>"SynchroLog", "ext_key_to_me"=>"sync_source_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('name', 'description', 'scope_class', 'scope_restriction', 'status', 'user_id', 'full_load_periodicity', 'reconciliation_policy', 'action_on_zero', 'action_on_one', 'action_on_multiple', 'delete_policy', 'delete_policy_update', 'delete_policy_retention' /*'attribute_list'*/, 'status_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('name', 'description', 'scope_class', /*'scope_restriction', */'status', 'user_id', 'full_load_periodicity', 'reconciliation_policy', 'action_on_zero', 'action_on_one', 'action_on_multiple', 'delete_policy', 'delete_policy_update', 'delete_policy_retention' /*'attribute_list'*/, 'status_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('scope_class', 'status', 'user_id', 'full_load_periodicity')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'scope_class', 'user_id')); // Criteria of the std search form
@@ -112,7 +114,15 @@ class SynchroDataSource extends cmdbAbstractObject
 					}
 					else
 					{
-						$oAttribute = new SynchroAttribute();
+						if ($oAttDef->IsExternalKey())
+						{
+							$oAttribute = new SynchroAttExtKey();
+							$oAttribute->Set('reconciliation_attcode', ''); // Blank means by pkey
+						}
+						else
+						{
+							$oAttribute = new SynchroAttribute();
+						}
 						$oAttribute->Set('sync_source_id', $this->GetKey());
 						$oAttribute->Set('attcode', $sAttCode);
 						$oAttribute->Set('reconcile', MetaModel::IsReconcKey($this->GetTargetClass(), $sAttCode) ? 1 : 0);
@@ -327,7 +337,16 @@ EOF
 		{
 			if(!isset($aAttributes[$sAttCode]))
 			{
-				$oAttribute = new SynchroAttribute();
+				$oAttDef = MetaModel::GetAttributeDef($this->GetTargetClass(), $sAttCode);
+				if ($oAttDef->IsExternalKey())
+				{
+					$oAttribute = new SynchroAttExtKey();
+					$oAttribute->Set('reconciliation_attcode', ''); // Blank means by pkey
+				}
+				else
+				{
+					$oAttribute = new SynchroAttribute();
+				}
 				$oAttribute->Set('sync_source_id', $this->GetKey());
 				$oAttribute->Set('attcode', $sAttCode);
 			}
@@ -419,7 +438,16 @@ EOF
 		{
 			if ($oAttDef->IsScalar() && $oAttDef->IsWritable())
 			{
-				$oAttribute = new SynchroAttribute();
+				$oAttDef = MetaModel::GetAttributeDef($this->GetTargetClass(), $sAttCode);
+				if ($oAttDef->IsExternalKey())
+				{
+					$oAttribute = new SynchroAttExtKey();
+					$oAttribute->Set('reconciliation_attcode', ''); // Blank means by pkey
+				}
+				else
+				{
+					$oAttribute = new SynchroAttribute();
+				}
 				$oAttribute->Set('sync_source_id', $this->GetKey());
 				$oAttribute->Set('attcode', $sAttCode);
 				$oAttribute->Set('reconcile', MetaModel::IsReconcKey($this->GetTargetClass(), $sAttCode) ? 1 : 0);
@@ -668,15 +696,15 @@ EOF
 		{
 			if ($oSyncAtt->Get('update'))
 			{
-				$aAttCodesToUpdate[] = $oSyncAtt->Get('attcode');
+				$aAttCodesToUpdate[$oSyncAtt->Get('attcode')] = $oSyncAtt;
 			}
 			if ($oSyncAtt->Get('reconcile'))
 			{
-				$aAttCodesToReconcile[] = $oSyncAtt->Get('attcode');
+				$aAttCodesToReconcile[$oSyncAtt->Get('attcode')] = $oSyncAtt;
 			}
-			$aAttCodesExpected[] = $oSyncAtt->Get('attcode');
+			$aAttCodesExpected[$oSyncAtt->Get('attcode')] = $oSyncAtt;
 		}
-		$aColumns = $this->GetSQLColumns($aAttCodesExpected);
+		$aColumns = $this->GetSQLColumns(array_keys($aAttCodesExpected));
 		$aExtDataFields = array_keys($aColumns);
 		$aExtDataFields[] = 'primary_key';
 		$aExtDataSpec = array(
@@ -693,17 +721,19 @@ EOF
 		elseif ($this->Get('reconciliation_policy') == 'use_primary_key')
 		{
 			// Override the setings made at the attribute level !
-			$aReconciliationKeys = array("primary_key");
+			$aReconciliationKeys = array("primary_key" => null);
 		}
-		$aTraces[] = "Reconciliation on: {".implode(', ', $aReconciliationKeys)."}";
+
+		$aTraces[] = "Update of: {".implode(', ', array_keys($aAttCodesToUpdate))."}";
+		$aTraces[] = "Reconciliation on: {".implode(', ', array_keys($aReconciliationKeys))."}";
 		
 		$aAttributes = array();
-		foreach($aAttCodesToUpdate as $sAttCode)
+		foreach($aAttCodesToUpdate as $sAttCode => $oSyncAtt)
 		{
 			$oAttDef = MetaModel::GetAttributeDef($this->GetTargetClass(), $sAttCode);
 			if ($oAttDef->IsWritable() && $oAttDef->IsScalar())
 			{
-				$aAttributes[] = $sAttCode;
+				$aAttributes[$sAttCode] = $oSyncAtt;
 			}
 		}
 		
@@ -761,9 +791,17 @@ EOF
 		{
 			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 			
-			foreach($oAttDef->GetSQLColumns() as $sField => $sDBFieldType)
+			if ($oAttDef->IsExternalKey())
 			{
-				$aColumns[$sField] = $sDBFieldType;
+				// The pkey might be used as well as any other key column
+				$aColumns[$sAttCode] = 'VARCHAR (255)';
+			}
+			else
+			{
+				foreach($oAttDef->GetSQLColumns() as $sField => $sDBFieldType)
+				{
+					$aColumns[$sField] = $sDBFieldType;
+				}
 			}
 		}
 		return $aColumns;
@@ -1068,7 +1106,7 @@ class SynchroReplica extends DBObject
 			// If needed, construct the query used for the reconciliation
 			if (!isset(self::$aSearches[$oDataSource->GetKey()]))
 			{
-				foreach($aReconciliationKeys as $sFilterCode)
+				foreach($aReconciliationKeys as $sFilterCode => $oSyncAtt)
 				{
 					$aCriterias[] = ($sFilterCode == 'primary_key' ? 'id' : $sFilterCode).' = :'.$sFilterCode;
 				}
@@ -1077,9 +1115,9 @@ class SynchroReplica extends DBObject
 			}
 			// Get the criterias for the search
 			$aFilterValues = array();
-			foreach($aReconciliationKeys as $sFilterCode)
+			foreach($aReconciliationKeys as $sFilterCode => $oSyncAtt)
 			{
-				$value = $this->GetValueFromExtData($sFilterCode);
+				$value = $this->GetValueFromExtData($sFilterCode, $oSyncAtt, $oStatLog, $aTraces);
 				if (!is_null($value))
 				{
 					$aFilterValues[$sFilterCode] = $value;
@@ -1184,9 +1222,9 @@ class SynchroReplica extends DBObject
 	protected function UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange, &$oStatLog, &$aTraces, $sStatsCode, $sStatsCodeError)
 	{
 		$aValueTrace = array();
-		foreach($aAttributes as $sAttCode)
+		foreach($aAttributes as $sAttCode => $oSyncAtt)
 		{
-			$value = $this->GetValueFromExtData($sAttCode);
+			$value = $this->GetValueFromExtData($sAttCode, $oSyncAtt, $oStatLog, $aTraces);
 			if (!is_null($value))
 			{
 				$oDestObj->Set($sAttCode, $value);
@@ -1228,9 +1266,9 @@ class SynchroReplica extends DBObject
 		try
 		{
 			$aValueTrace = array();
-			foreach($aAttributes as $sAttCode)
+			foreach($aAttributes as $sAttCode => $oSyncAtt)
 			{
-				$value = $this->GetValueFromExtData($sAttCode);
+				$value = $this->GetValueFromExtData($sAttCode, $oSyncAtt, $oStatLog, $aTraces);
 				if (!is_null($value))
 				{
 					$oDestObj->Set($sAttCode, $value);
@@ -1319,10 +1357,41 @@ class SynchroReplica extends DBObject
 	/**
 	 * Get the value from the 'Extended Data' located in the synchro_data_xxx table for this replica
 	 */
-	 protected function GetValueFromExtData($sColumnName)
+	 protected function GetValueFromExtData($sColumnName, $oSyncAtt, &$oStatLog, &$aTraces)
 	 {
-	 	// $aData should contain attributes defined either for reconciliation or update
-	 	$aData = $this->GetExtendedData();
+	 	// $aData should contain attributes defined either for reconciliation or create/update
+		$aData = $this->GetExtendedData();
+
+      // In any case, a null column means "ignore this column"
+      //
+		if (is_null($aData[$sColumnName]))
+      {
+      	return null;
+		}
+
+		if (!is_null($oSyncAtt) && ($oSyncAtt instanceof SynchroAttExtKey))
+		{
+			$sReconcAttCode = $oSyncAtt->Get('reconciliation_attcode');
+			if (!empty($sReconcAttCode))
+			{
+				$oDataSource = MetaModel::GetObject('SynchroDataSource', $this->Get('sync_source_id'));
+			 	$sClass = $oDataSource->GetTargetClass();
+		 		$oAttDef = MetaModel::GetAttributeDef($sClass, $sColumnName);
+		 		$sRemoteClass = $oAttDef->GetTargetClass();
+				$oObj = MetaModel::GetObjectByColumn($sRemoteClass, $sReconcAttCode, $aData[$sColumnName], false);
+		 		if ($oObj)
+		 		{
+					 return $oObj->GetKey();
+				}
+				else
+				{
+					// Note: differs from null (in which case the value would be left unchanged)
+					$aTraces[] = "Could not find [unique] object for '$sColumnName': searched on $sReconcAttCode = '$aData[$sColumnName]'";
+					return 0;
+				}
+			}
+		}
+
  		return $aData[$sColumnName];
 	 }
 }
