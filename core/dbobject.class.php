@@ -349,7 +349,12 @@ abstract class DBObject
 			// #@# non-scalar attributes.... handle that differently
 			$this->Reload();
 		}
-		return $this->m_aCurrValues[$sAttCode];
+		$value = $this->m_aCurrValues[$sAttCode];
+		if ($value instanceof DBObjectSet)
+		{
+			$value->Rewind();
+		}
+		return $value; 
 	}
 
 	public function GetOriginal($sAttCode)

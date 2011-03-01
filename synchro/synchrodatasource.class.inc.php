@@ -57,8 +57,8 @@ class SynchroDataSource extends cmdbAbstractObject
 		
 		//MetaModel::Init_AddAttribute(new AttributeDateTime("last_synchro_date", array("allowed_values"=>null, "sql"=>"last_synchro_date", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 
-		// Format: '1 hour', '2 weeks', '3 hoursABCDEF'... Cf DateTime->Modify()
-		MetaModel::Init_AddAttribute(new AttributeString("full_load_periodicity", array("allowed_values"=>null, "sql"=>"full_load_periodicity", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		// Format: seconds (int)
+		MetaModel::Init_AddAttribute(new AttributeDuration("full_load_periodicity", array("allowed_values"=>null, "sql"=>"full_load_periodicity", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		
 //		MetaModel::Init_AddAttribute(new AttributeString("reconciliation_list", array("allowed_values"=>null, "sql"=>"reconciliation_list", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("reconciliation_policy", array("allowed_values"=>new ValueSetEnum('use_primary_key,use_attributes'), "sql"=>"reconciliation_policy", "default_value"=>"use_attributes", "is_null_allowed"=>false, "depends_on"=>array())));
@@ -69,8 +69,8 @@ class SynchroDataSource extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeEnum("delete_policy", array("allowed_values"=>new ValueSetEnum('ignore,delete,update,update_then_delete'), "sql"=>"delete_policy", "default_value"=>"ignore", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("delete_policy_update", array("allowed_values"=>null, "sql"=>"delete_policy_update", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 
-		// Format: '1 hour', '2 weeks', '3 hoursABCDEF'... Cf DateTime->Modify()
-		MetaModel::Init_AddAttribute(new AttributeString("delete_policy_retention", array("allowed_values"=>null, "sql"=>"delete_policy_retention", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		// Format: seconds (unsigned int)
+		MetaModel::Init_AddAttribute(new AttributeDuration("delete_policy_retention", array("allowed_values"=>null, "sql"=>"delete_policy_retention", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 
 		MetaModel::Init_AddAttribute(new AttributeLinkedSet("attribute_list", array("linked_class"=>"SynchroAttribute", "ext_key_to_me"=>"sync_source_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSet("status_list", array("linked_class"=>"SynchroLog", "ext_key_to_me"=>"sync_source_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
@@ -90,6 +90,7 @@ class SynchroDataSource extends cmdbAbstractObject
 			$oPage->SetCurrentTab(Dict::S('Core:SynchroAttributes'));
 			$oAttributeSet = $this->Get('attribute_list');
 			$aAttributes = array();
+
 			while($oAttribute = $oAttributeSet->Fetch())
 			{
 				$aAttributes[$oAttribute->Get('attcode')] = $oAttribute;
@@ -351,6 +352,47 @@ EOF
 		}
 		$this->Set('attribute_list', $oAttributeSet);
 	}
+	
+	/*
+	* Overload the standard behavior
+	*/	
+	public function DoCheckToWrite()
+	{
+		parent::DoCheckToWrite();
+
+		// Check that there is at least one reconciliation key defined
+		if ($this->Get('reconciliation_policy') == 'use_attributes')
+		{
+			$oSet = $this->Get('attribute_list');
+			$oSynchroAttributeList = $oSet->ToArray();
+			$bReconciliationKey = false;
+			foreach($oSynchroAttributeList as $oSynchroAttribute)
+			{
+				if ($oSynchroAttribute->Get('reconcile') == 1)
+				{
+					$bReconciliationKey = true; // At least one key is defined
+				}
+			}
+			if (!$bReconciliationKey)
+			{
+				$this->m_aCheckIssues[] = Dict::Format('Class:SynchroDataSource/Error:AtLeastOneReconciliationKeyMustBeSpecified');			
+			}
+		}
+		
+		// If 'update_then_delete' is specified there must be a delete_retention_period
+		if (($this->Get('delete_policy') == 'update_then_delete') && ($this->Get('delete_policy_retention') == 0))
+		{
+			$this->m_aCheckIssues[] = Dict::Format('Class:SynchroDataSource/Error:DeleteRetentionDurationMustBeSpecified');			
+		}
+
+		// If update is specified, then something to update must be defined
+		if ((($this->Get('delete_policy') == 'update_then_delete') ||  ($this->Get('delete_policy') == 'update'))
+		    && ($this->Get('delete_policy_update') == ''))
+		{
+			$this->m_aCheckIssues[] = Dict::Format('Class:SynchroDataSource/Error:DeletePolicyUpdateMustBeSpecified');			
+		}
+	}
+	
 	public function GetTargetClass()
 	{
 		return $this->Get('scope_class');
@@ -562,22 +604,11 @@ EOF
 		{
 			// No previous import known, use the full_load_periodicity value... and the current date
 			$oLastFullLoadStartDate = new DateTime(); // Now
-			// TO DO: how do we support localization here ??
-			$sLoadPeriodicity = trim($this->Get('full_load_periodicity'));
-			if (strlen($sLoadPeriodicity) > 0)
+			$iLoadPeriodicity = $this->Get('full_load_periodicity'); // Duration in seconds
+			if ($iLoadPeriodicity > 0)
 			{
-				$sInterval = '-'.$sLoadPeriodicity;
-				// Note: the PHP doc states that Modify return FALSE in case of error
-				//       but, this is actually NOT the case
-				//       Therefore, I do compare before and after, considering that the
-				//       format is incorrect when the datetime remains unchanged
-				$sBefore = $oLastFullLoadStartDate->Format('Y-m-d H:i:s');
+				$sInterval = "-$iLoadPeriodicity seconds";
 				$oLastFullLoadStartDate->Modify($sInterval);
-				$sAfter = $oLastFullLoadStartDate->Format('Y-m-d H:i:s');
-				if ($sBefore == $sAfter)
-				{
-					throw new SynchroExceptionNotStarted("Data exchange: Wrong interval specification", array('interval' => $sInterval, 'source_id' => $this->GetKey()));
-				}
 			}
 		}
 		$sLimitDate = $oLastFullLoadStartDate->Format('Y-m-d H:i:s');	
@@ -689,21 +720,11 @@ EOF
 		if ($sDeletePolicy == 'update_then_delete')
 		{
 			$oDeletionDate = $oLastFullLoadStartDate;
-			$sDeleteRetention = trim($this->Get('delete_policy_retention')); // MUST NOT BE NULL
-			if (strlen($sDeleteRetention) > 0)
+			$iDeleteRetention = $this->Get('delete_policy_retention'); // Duration in seconds
+			if ($iDeleteRetention > 0)
 			{
-				$sInterval = '-'.$sDeleteRetention;
-				// Note: the PHP doc states that Modify return FALSE in case of error
-				//       but, this is actually NOT the case
-				//       Therefore, I do compare before and after, considering that the
-				//       format is incorrect when the datetime remains unchanged
-				$sBefore = $oDeletionDate->Format('Y-m-d H:i:s');
+				$sInterval = "-$iDeleteRetention seconds";
 				$oDeletionDate->Modify($sInterval);
-				$sAfter = $oDeletionDate->Format('Y-m-d H:i:s');
-				if ($sBefore == $sAfter)
-				{
-					throw new SynchroExceptionNotStarted("Data exchange: Wrong interval specification", array('interval' => $sInterval, 'source_id' => $this->GetKey()));
-				}
 			}
 			$sDeletionDate = $oDeletionDate->Format('Y-m-d H:i:s');	
 			$aTraces[] = "Deletion date: $sDeletionDate";
@@ -982,7 +1003,7 @@ class SynchroReplica extends DBObject
 
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("sync_source_id", array("targetclass"=>"SynchroDataSource", "jointype"=> "", "allowed_values"=>null, "sql"=>"sync_source_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeInteger("dest_id", array("allowed_values"=>null, "sql"=>"dest_id", "default_value"=>0, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeClass("dest_class", array("class_category"=>"bizmodel", "more_values"=>"", "sql"=>"dest_class", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeClass("dest_class", array("class_category"=>"bizmodel", "more_values"=>"", "sql"=>"dest_class", "default_value"=>'Organization', "is_null_allowed"=>true, "depends_on"=>array())));
 
 		MetaModel::Init_AddAttribute(new AttributeDateTime("status_last_seen", array("allowed_values"=>null, "sql"=>"status_last_seen", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('new,synchronized,modified,orphan,obsolete'), "sql"=>"status", "default_value"=>"new", "is_null_allowed"=>false, "depends_on"=>array())));

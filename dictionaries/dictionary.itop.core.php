@@ -537,5 +537,19 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:SynchroLogTitle' => '%1$s - %2$s',
 	'Core:Synchro:Nb_Replica' => 'Replica processed: %1$s',
 	'Core:Synchro:Nb_Class:Objects' => '%1$s: %2$s',
+	'Class:SynchroDataSource/Error:AtLeastOneReconciliationKeyMustBeSpecified' => 'At Least one reconciliation key must be specified.',			
+	'Class:SynchroDataSource/Error:DeleteRetentionDurationMustBeSpecified' => 'A delete retention period must be specified, since objects are to be deleted after being marked as obsolete',			
+	'Class:SynchroDataSource/Error:DeletePolicyUpdateMustBeSpecified' => 'Obsolete objects are to be updated, but no update is specified.',		
 ));
+
+//
+// Attribute Duration
+//
+Dict::Add('EN US', 'English', 'English', array(
+	'Core:Duration_Seconds'	=> '%1$ds',	
+	'Core:Duration_Minutes_Seconds'	=>'%1$dmin %2$ds',	
+	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',		
+	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds',		
+));
+
 ?>

@@ -1068,6 +1068,22 @@ EOF
 				$aEventsList[] ='change';
 				$sHTMLValue = "<input title=\"$sHelpText\" class=\"date-pick\" type=\"text\" size=\"20\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iId\"/>&nbsp;{$sValidationField}";
 				break;
+
+				case 'Duration':
+				$aEventsList[] ='validate';
+				$aEventsList[] ='change';
+				$oPage->add_ready_script("$('#{$iId}_d').bind('keyup change', function(evt, sFormId) { return UpdateDuration('$iId'); });");
+				$oPage->add_ready_script("$('#{$iId}_h').bind('keyup change', function(evt, sFormId) { return UpdateDuration('$iId'); });");
+				$oPage->add_ready_script("$('#{$iId}_m').bind('keyup change', function(evt, sFormId) { return UpdateDuration('$iId'); });");
+				$oPage->add_ready_script("$('#{$iId}_s').bind('keyup change', function(evt, sFormId) { return UpdateDuration('$iId'); });");
+				$aVal = AttributeDuration::SplitDuration($value);
+				$sDays = "<input title=\"$sHelpText\" type=\"text\" size=\"3\" name=\"attr_{$sFieldPrefix}{$sAttCode}[d]{$sNameSuffix}\" value=\"{$aVal['days']}\" id=\"{$iId}_d\"/>";
+				$sHours = "<input title=\"$sHelpText\" type=\"text\" size=\"2\" name=\"attr_{$sFieldPrefix}{$sAttCode}[h]{$sNameSuffix}\" value=\"{$aVal['hours']}\" id=\"{$iId}_h\"/>";
+				$sMinutes = "<input title=\"$sHelpText\" type=\"text\" size=\"2\" name=\"attr_{$sFieldPrefix}{$sAttCode}[m]{$sNameSuffix}\" value=\"{$aVal['minutes']}\" id=\"{$iId}_m\"/>";
+				$sSeconds = "<input title=\"$sHelpText\" type=\"text\" size=\"2\" name=\"attr_{$sFieldPrefix}{$sAttCode}[s]{$sNameSuffix}\" value=\"{$aVal['seconds']}\" id=\"{$iId}_s\"/>";
+				$sHidden = "<input type=\"hidden\" id=\"{$iId}\" value=\"$value\"/>";
+				$sHTMLValue = Dict::Format('UI:DurationForm_Days_Hours_Minutes_Seconds', $sDays, $sHours, $sMinutes, $sSeconds).$sHidden."&nbsp;".$sValidationField;
+				break;
 				
 				case 'Password':
 					$aEventsList[] ='validate';
@@ -1170,7 +1186,7 @@ EOF
 					}
 				break;
 			}
-			$sPattern = addslashes($oAttDef->GetValidationPattern()); //'^([0-9]+)$';
+			$sPattern = addslashes($oAttDef->GetValidationPattern()); //'^([0-9]+)$';			
 			if (!empty($aEventsList))
 			{
 				$sNullValue = $oAttDef->GetNullValue();
@@ -1766,6 +1782,24 @@ EOF
 						// The password has been changed or set
 						$rawValue = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null);
 						$this->Set($sAttCode, $rawValue);
+					}
+				}
+				elseif ($oAttDef->GetEditClass() == 'Duration')
+				{
+					$rawValue = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null);
+					if (!is_array($rawValue))
+					{
+						$iValue = null;
+					}
+					else
+					{
+						$iValue = (((24*$rawValue['d'])+$rawValue['h'])*60 +$rawValue['m'])*60 + $rawValue['s'];
+					}		
+					$this->Set($sAttCode, $iValue);
+					$previousValue = $this->Get($sAttCode);
+					if ($previousValue !== $iValue)
+					{
+						$this->Set($sAttCode, $iValue);
 					}
 				}
 				else

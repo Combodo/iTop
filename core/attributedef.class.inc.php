@@ -1620,6 +1620,82 @@ class AttributeDateTime extends AttributeDBField
 }
 
 /**
+ * Store a duration as a number of seconds 
+ *
+ * @package     iTopORM
+ */
+class AttributeDuration extends AttributeInteger
+{
+	public function GetEditClass() {return "Duration";}
+	protected function GetSQLCol() {return "INT(11) UNSIGNED";}
+
+	public function GetNullValue() {return '0';}
+	public function GetDefaultValue()
+	{
+		return 0;
+	}
+
+	public function MakeRealValue($proposedValue)
+	{
+		if (is_null($proposedValue)) return null;
+		if (!is_numeric($proposedValue)) return null;
+		if ( ((int)$proposedValue) < 0) return null;
+
+		return (int)$proposedValue;
+	}
+
+	public function ScalarToSQL($value)
+	{
+		if (is_null($value))
+		{	
+			return null;
+		}
+		return $value;
+	}
+
+	public function GetAsHTML($value)
+	{
+		return Str::pure2html(self::FormatDuration($value));
+	}
+
+	static function FormatDuration($duration)
+	{
+		$aDuration = self::SplitDuration($duration);
+		$sResult = '';
+		
+		if ($duration < 60)
+		{
+			// Less than 1 min
+			$sResult = Dict::Format('Core:Duration_Seconds', $aDuration['seconds']);			
+		}
+		else if ($duration < 3600)
+		{
+			// less than 1 hour, display it in minutes/seconds
+			$sResult = Dict::Format('Core:Duration_Minutes_Seconds', $aDuration['minutes'], $aDuration['seconds']);			
+		}
+		else if ($duration < 86400)
+		{
+			// Less than 1 day, display it in hours/minutes/seconds	
+			$sResult = Dict::Format('Core:Duration_Hours_Minutes_Seconds', $aDuration['hours'], $aDuration['minutes'], $aDuration['seconds']);			
+		}
+		else
+		{
+			// more than 1 day, display it in days/hours/minutes/seconds
+			$sResult = Dict::Format('Core:Duration_Days_Hours_Minutes_Seconds', $aDuration['days'], $aDuration['hours'], $aDuration['minutes'], $aDuration['seconds']);			
+		}
+		return $sResult;
+	}
+	
+	static function SplitDuration($duration)
+	{
+		$days = floor($duration / 86400);
+		$hours = floor(($duration - (86400*$days)) / 3600);
+		$minutes = floor(($duration - (86400*$days + 3600*$hours)) / 60);
+		$seconds = ($duration % 60); // modulo
+		return array( 'days' => $days, 'hours' => $hours, 'minutes' => $minutes, 'seconds' => $seconds );		
+	}
+}
+/**
  * Map a date+time column to an attribute 
  *
  * @package     iTopORM

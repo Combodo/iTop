@@ -292,6 +292,20 @@ function ValidatePasswordField(id, sFormId)
 	return true;
 }
 
+// Manage a 'duration' field
+function UpdateDuration(iId)
+{
+	var iDays = parseInt($('#'+iId+'_d').val(), 10);
+	var iHours = parseInt($('#'+iId+'_h').val(), 10);
+	var iMinutes = parseInt($('#'+iId+'_m').val(), 10);
+	var iSeconds = parseInt($('#'+iId+'_s').val(), 10);
+	
+	var iDuration = (((iDays*24)+ iHours)*60+ iMinutes)*60 + iSeconds;
+	$('#'+iId).val(iDuration);
+	$('#'+iId).trigger('change');
+	return true;
+}
+
 // Called when filling an autocomplete field
 function OnAutoComplete(id, event, data, formatted)
 {
