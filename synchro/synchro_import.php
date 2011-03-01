@@ -481,13 +481,12 @@ try
 		//
 		if ($bSynchronize)
 		{
-			$aResults = array();
-			$oStatLog = $oDataSource->Synchronize($aResults, $oLoadStartDate);
+			$oStatLog = $oDataSource->Synchronize($oLoadStartDate);
 			$oP->add_comment('Synchronization---');
 			$oP->add_comment('------------------');
 			if ($sOutput == 'details')
 			{
-				foreach ($aResults as $sMessage)
+				foreach ($oStatLog->GetTraces() as $sMessage)
 				{
 					$oP->add_comment($sMessage);
 				}

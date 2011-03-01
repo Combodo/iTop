@@ -213,6 +213,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'synchro_trace' => array(
+			'type' => 'string',
+			'description' => 'Synchronization details: none, display, save (includes \'display\')',
+			'default' => 'none',
+			'value' => 'none',
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
 	);
 
 	public function IsProperty($sPropCode)

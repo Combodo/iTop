@@ -1142,6 +1142,23 @@ class AttributeText extends AttributeString
 }
 
 /**
+ * Map a log to an attribute 
+ *
+ * @package     iTopORM
+ */
+class AttributeLongText extends AttributeText
+{
+	protected function GetSQLCol() {return "LONGTEXT";}
+
+	public function GetMaxSize()
+	{
+		// Is there a way to know the current limitation for mysql?
+		// See mysql_field_len()
+		return 65535*1024; // Limited... still 64 Mb!
+	}
+}
+
+/**
  * Map a text column (size > ?), containing HTML code, to an attribute 
  *
  * @package     iTopORM

@@ -122,19 +122,18 @@ foreach(explode(',', $sDataSourcesList) as $iSDS)
 	}
 	else
 	{
-		$aResults = array();
 		if ($bSimulate)
 		{
 			CMDBSource::Query('START TRANSACTION');
 		}
 		try
 		{
-			$oStatLog = $oSynchroDataSource->Synchronize($aResults, null);
+			$oStatLog = $oSynchroDataSource->Synchronize(null);
 			if ($bSimulate)
 			{
 				CMDBSource::Query('ROLLBACK');
 			}
-			foreach ($aResults as $sMessage)
+			foreach ($oStatLog->GetTraces() as $sMessage)
 			{
 				$oP->p('#'.$sMessage);
 			}
