@@ -396,23 +396,25 @@ abstract class DBObject
 		}
 	}
 	
-	// Compute scalar attributes that depend on any other type of attribute
-	public function DoComputeValues()
+	public function ComputeValues()
 	{
-		if (is_callable(array($this, 'ComputeValues')))
+	}
+
+	// Compute scalar attributes that depend on any other type of attribute
+	final public function DoComputeValues()
+	{
+		// TODO - use a flag rather than checking the call stack -> this will certainly accelerate things
+
+		// First check that we are not currently computing the fields
+		// (yes, we need to do some things like Set/Get to compute the fields which will in turn trigger the update...)
+		foreach (debug_backtrace() as $aCallInfo)
 		{
-			// First check that we are not currently computing the fields
-			// (yes, we need to do some things like Set/Get to compute the fields which will in turn trigger the update...)
-			foreach (debug_backtrace() as $aCallInfo)
-			{
-				if (!array_key_exists("class", $aCallInfo)) continue;
-				if ($aCallInfo["class"] != get_class($this)) continue;
-				if ($aCallInfo["function"] != "ComputeValues") continue;
-				return; //skip!
-			}
-			
-			$this->ComputeValues();
+			if (!array_key_exists("class", $aCallInfo)) continue;
+			if ($aCallInfo["class"] != get_class($this)) continue;
+			if ($aCallInfo["function"] != "ComputeValues") continue;
+			return; //skip!
 		}
+		$this->ComputeValues();
 	}
 
 	public function GetAsHTML($sAttCode)

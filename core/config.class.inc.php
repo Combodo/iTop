@@ -94,7 +94,7 @@ class Config
 		),
 		'skip_check_ext_keys' => array(
 			'type' => 'bool',
-			'description' => 'Disable external key check when checking the value of attribtutes',
+			'description' => 'Disable external key check when checking the value of attributes',
 			'default' => false,
 			'value' => false,
 			'source_of_value' => '',

@@ -1657,18 +1657,29 @@ abstract class MetaModel
 		}
 		return $aSubClasses;
 	}
-	public static function GetClasses($sCategory = '')
+	public static function GetClasses($sCategories = '', $bStrict = false)
 	{
-		if (array_key_exists($sCategory, self::$m_Category2Class))
+		$aCategories = explode(',', $sCategories);
+		$aClasses = array();
+		foreach($aCategories as $sCategory)
 		{
-			return self::$m_Category2Class[$sCategory];
-		}
+			$sCategory = trim($sCategory);
+			if (strlen($sCategory) == 0)
+			{
+				return array_keys(self::$m_aClassParams);
+			}
 
-		//if (count(self::$m_Category2Class) > 0)
-		//{
-		//	throw new CoreException("unkown class category '$sCategory', expecting a value in {".implode(', ', array_keys(self::$m_Category2Class))."}");
-		//}
-		return array();
+			if (array_key_exists($sCategory, self::$m_Category2Class))
+			{
+				$aClasses = array_merge($aClasses, self::$m_Category2Class[$sCategory]);
+			}
+			elseif ($bStrict)
+			{
+				throw new CoreException("unkown class category '$sCategory', expecting a value in {".implode(', ', array_keys(self::$m_Category2Class))."}");
+			}
+		}
+		
+		return array_unique($aClasses);
 	}
 
 	public static function HasTable($sClass)

@@ -204,11 +204,26 @@ abstract class AttributeDefinition
 
 	public function MakeRealValue($proposedValue) {return $proposedValue;} // force an allowed value (type conversion and possibly forces a value as mySQL would do upon writing!)
 
-	public function GetSQLExpressions() {return array();} // returns suffix/expression pairs (1 in most of the cases), for READING (Select)
+	public function GetSQLExpressions($sPrefix = '') {return array();} // returns suffix/expression pairs (1 in most of the cases), for READING (Select)
 	public function FromSQLToValue($aCols, $sPrefix = '') {return null;} // returns a value out of suffix/value pairs, for SELECT result interpretation
 	public function GetSQLColumns() {return array();} // returns column/spec pairs (1 in most of the cases), for STRUCTURING (DB creation)
 	public function GetSQLValues($value) {return array();} // returns column/value pairs (1 in most of the cases), for WRITING (Insert, Update)
 	public function RequiresIndex() {return false;}
+
+   // Import - differs slightly from SQL input, but identical in most cases
+   //
+	public function GetImportColumns() {return $this->GetSQLColumns();}
+	public function FromImportToValue($aCols, $sPrefix = '')
+	{
+		$aValues = array();
+		foreach ($this->GetSQLExpressions($sPrefix) as $sAlias => $sExpr)
+		{
+			// This is working, based on the assumption that importable fields
+			// are not computed fields => the expression is the name of a column
+			$aValues[$sPrefix.$sAlias] = $aCols[$sExpr];
+		}
+		return $this->FromSQLToValue($aValues, $sPrefix);
+	}
 
 	public function GetValidationPattern()
 	{
@@ -414,7 +429,7 @@ class AttributeDBFieldVoid extends AttributeDefinition
 	// 
 	protected function ScalarToSQL($value) {return $value;} // format value as a valuable SQL literal (quoted outside)
 
-	public function GetSQLExpressions()
+	public function GetSQLExpressions($sPrefix = '')
 	{
 		$aColumns = array();
 		// Note: to optimize things, the existence of the attribute is determined by the existence of one column with an empty suffix
@@ -1941,9 +1956,16 @@ class AttributeExternalField extends AttributeDefinition
 		return $oExtAttDef->GetSQLCol(); 
 	}
 
-	public function GetSQLExpressions()
+	public function GetSQLExpressions($sPrefix = '')
 	{
-		return array('' => $this->GetCode()); 
+		if ($sPrefix == '')
+		{
+			return array('' => $this->GetCode());
+		}
+		else
+		{
+			return $sPrefix;
+		} 
 	}
 
 	public function GetLabel()
@@ -2096,7 +2118,7 @@ class AttributeExternalField extends AttributeDefinition
 
 
 	// Do not overload GetSQLExpression here because this is handled in the joins
-	//public function GetSQLExpressions() {return array();}
+	//public function GetSQLExpressions($sPrefix = '') {return array();}
 
 	// Here, we get the data...
 	public function FromSQLToValue($aCols, $sPrefix = '')
@@ -2187,13 +2209,17 @@ class AttributeBlob extends AttributeDefinition
 		return $proposedValue;
 	}
 
-	public function GetSQLExpressions()
+	public function GetSQLExpressions($sPrefix = '')
 	{
+		if ($sPrefix == '')
+		{
+			$sPrefix = $this->GetCode();
+		}
 		$aColumns = array();
 		// Note: to optimize things, the existence of the attribute is determined by the existence of one column with an empty suffix
-		$aColumns[''] = $this->GetCode().'_mimetype';
-		$aColumns['_data'] = $this->GetCode().'_data';
-		$aColumns['_filename'] = $this->GetCode().'_filename';
+		$aColumns[''] = $sPrefix.'_mimetype';
+		$aColumns['_data'] = $sPrefix.'_data';
+		$aColumns['_filename'] = $sPrefix.'_filename';
 		return $aColumns;
 	}
 
@@ -2331,12 +2357,16 @@ class AttributeOneWayPassword extends AttributeDefinition
 		return $oPassword;
 	}
 
-	public function GetSQLExpressions()
+	public function GetSQLExpressions($sPrefix = '')
 	{
+		if ($sPrefix == '')
+		{
+			$sPrefix = $this->GetCode();
+		}
 		$aColumns = array();
 		// Note: to optimize things, the existence of the attribute is determined by the existence of one column with an empty suffix
-		$aColumns[''] = $this->GetCode().'_hash';
-		$aColumns['_salt'] = $this->GetCode().'_salt';
+		$aColumns[''] = $sPrefix.'_hash';
+		$aColumns['_salt'] = $sPrefix.'_salt';
 		return $aColumns;
 	}
 
@@ -2389,6 +2419,27 @@ class AttributeOneWayPassword extends AttributeDefinition
 		$aColumns[$this->GetCode().'_hash'] = 'TINYBLOB';
 		$aColumns[$this->GetCode().'_salt'] = 'TINYBLOB';
 		return $aColumns;
+	}
+
+	public function GetImportColumns()
+	{
+		$aColumns = array();
+		$aColumns[$this->GetCode()] = 'TINYTEXT';
+		return $aColumns;
+	}
+
+	public function FromImportToValue($aCols, $sPrefix = '')
+	{
+		if (!isset($aCols[$sPrefix]))
+		{
+			$sAvailable = implode(', ', array_keys($aCols));
+			throw new MissingColumnException("Missing column '$sPrefix' from {$sAvailable}");
+		} 
+		$sClearPwd = $aCols[$sPrefix];
+
+		$oPassword = new ormPassword('', '');
+		$oPassword->SetPassword($sClearPwd);
+		return $oPassword;
 	}
 
 	public function GetFilterDefinitions()
@@ -2574,9 +2625,13 @@ class AttributeComputedFieldVoid extends AttributeDefinition
 	// 
 //	protected function ScalarToSQL($value) {return $value;} // format value as a valuable SQL literal (quoted outside)
 
-	public function GetSQLExpressions()
+	public function GetSQLExpressions($sPrefix = '')
 	{
-		return array('' => $this->GetCode()); 
+		if ($sPrefix == '')
+		{
+			$sPrefix = $this->GetCode();
+		}
+		return array('' => $sPrefix); 
 	}
 
 	public function FromSQLToValue($aCols, $sPrefix = '')

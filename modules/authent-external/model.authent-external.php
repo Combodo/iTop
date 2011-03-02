@@ -40,7 +40,7 @@ class UserExternal extends User
 			"key_type" => "autoincrement",
 			"name_attcode" => "login",
 			"state_attcode" => "",
-			"reconc_keys" => array(),
+			"reconc_keys" => array('login'),
 			"db_table" => "",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
