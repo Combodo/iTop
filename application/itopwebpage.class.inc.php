@@ -69,6 +69,7 @@ class iTopWebPage extends NiceWebPage
 		$this->add_linked_script("../js/swfobject.js");
 		$this->add_linked_script("../js/ckeditor/ckeditor.js");
 		$this->add_linked_script("../js/ckeditor/adapters/jquery.js");
+		$this->add_linked_script("../js/jquery.qtip-1.0.min.js");
 		$this->add_ready_script(
 <<<EOF
 	try

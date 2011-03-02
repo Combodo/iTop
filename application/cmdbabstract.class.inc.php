@@ -91,9 +91,58 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		$oSingletonFilter->AddCondition('id', $this->GetKey(), '=');
 		$oBlock = new MenuBlock($oSingletonFilter, 'popup', false);
 		$oBlock->Display($oPage, -1);
+	
+		// Master data sources
+		$oReplicaSet = $this->GetMasterReplica();
+		$bSynchronized = false;
+		$bCreated = false;
+		$bCanBeDeleted = false;
+		$aMasterSources = array();
+		if ($oReplicaSet->Count() > 0)
+		{
+			$bSynchronized = true;
+			$sTip = "<p>The object is synchronized with an external data source</p>";
+			while($aData = $oReplicaSet->FetchAssoc())
+			{
+				$sApplicationURL = $aData['datasource']->GetApplicationUrl($this, $aData['replica']);
+				$sLink = "<a href=\"$sApplicationURL\" target=\"_blank\">".$aData['datasource']->GetName()."</a>";
+				if ($aData['replica']->Get('status_dest_creator') == 1)
+				{
+					$sTip .= "<p>The object was <b>created</b> by the external data source $sLink</p>";
+					$bCreated = true;
+				}
+				if ($bCreated)
+				{
+					$sDeletePolicy = $aData['datasource']->Get('delete_policy');
+					if (($sDeletePolicy == 'delete') || ($sDeletePolicy == 'update_then_delete'))
+					{
+						$bCanBeDeleted = true;
+						$sTip .= "<p>The object <b>can be deleted</b> by the external data source $sLink</p>";
+					}
+				}
+				$aMasterSources[$aData['datasource']->GetKey()]['datasource'] = $aData['datasource'];
+				$aMasterSources[$aData['datasource']->GetKey()]['url'] = $sLink;
+			}
+		}
+		
+		$sSynchroIcon = '';
+		if ($bSynchronized)
+		{
+			$sTip .= "<p><b>List of data sources:</b></p>";
+			foreach($aMasterSources as $aStruct)
+			{
+				$oDataSource = $aStruct['datasource'];
+				$sLink = $aStruct['url'];
+				$sTip .= "<p style=\"white-space:nowrap\">".$oDataSource->GetIcon(true, 'style="vertical-align:middle"')."&nbsp;$sLink</p>";
+			}
+			$sSynchroIcon = '&nbsp;<img style="vertical-align:middle;" id="synchro_icon" src="../images/locked.png"/>';
+			$oPage->add_ready_script("$('#synchro_icon').qtip( { content: '$sTip', show: 'mouseover', hide: 'unfocus', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );");
+		}
+	
 		$oPage->add("<div class=\"page_header\"><h1>".$this->GetIcon()."&nbsp;\n");
-		$oPage->add(MetaModel::GetName(get_class($this)).": <span class=\"hilite\">".$this->GetName()."</span></h1>\n");
+		$oPage->add(MetaModel::GetName(get_class($this)).": <span class=\"hilite\">".$this->GetName()."</span>$sSynchroIcon</h1>\n");
 		$oPage->add("</div>\n");
+		
 	}
 
 	function DisplayBareHistory(WebPage $oPage, $bEditMode = false)
@@ -267,6 +316,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		// all the remaining attributes that are not external fields
 		$sHtml = '';
 		$aDetails = array();
+		$iInputId = 0;
 		foreach($aDetailsStruct as $sTab => $aCols )
 		{
 			$aDetails[$sTab] = array();
@@ -310,8 +360,25 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 						$val = $this->GetFieldAsHtml($sClass, $sAttCode, $sStateAttCode);
 						if ($val != null)
 						{
+							// Check if the attribute is not mastered by a synchro...
+							$aReasons = array();
+							$iSynchroFlags = $this->GetSynchroReplicaFlags($sAttCode, $aReasons);
+							$sSynchroIcon = '';
+							if ($iSynchroFlags & OPT_ATT_READONLY)
+							{
+								$sSynchroIcon = "&nbsp;<img id=\"synchro_$iInputId\" src=\"../images/transp-lock.png\" style=\"vertical-align:middle\"/>";
+								$sTip = '';
+								foreach($aReasons as $aRow)
+								{
+									$sTip .= "<p>Synchronized with {$aRow['name']} - {$aRow['description']}</p>";
+								}
+								$oPage->add_ready_script("$('#synchro_$iInputId').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );");
+							}
+
+							$val['value'] .= $sSynchroIcon;
 							// The field is visible, add it to the current column
 							$aDetails[$sTab][$sColIndex][] = $val;
+							$iInputId++;
 						}				
 					}
 				}
@@ -1305,8 +1372,7 @@ EOF
 									$aVal = array('label' => $oAttDef->GetLabel(), 'value' => $sHTMLValue);
 								}
 								else
-								{
-									$iFlags = $this->GetAttributeFlags($sAttCode);				
+								{				
 									$sInputId = $this->m_iFormId.'_'.$sAttCode;
 									if ($iFlags & OPT_ATT_HIDDEN)
 									{
@@ -1318,8 +1384,24 @@ EOF
 									{
 										if ($iFlags & OPT_ATT_READONLY)
 										{
+
+											// Check if the attribute is not read-only becuase of a synchro...
+											$aReasons = array();
+											$iSynchroFlags = $this->GetSynchroReplicaFlags($sAttCode, $aReasons);
+											$sSynchroIcon = '';
+											if ($iSynchroFlags & OPT_ATT_READONLY)
+											{
+												$sSynchroIcon = "&nbsp;<img id=\"synchro_$sInputId\" src=\"../images/transp-lock.png\" style=\"vertical-align:middle\"/>";
+												$sTip = '';
+												foreach($aReasons as $aRow)
+												{
+													$sTip .= "<p>Synchronized with {$aRow['name']} - {$aRow['description']}</p>";
+												}
+												$oPage->add_ready_script("$('#synchro_$sInputId').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );");
+											}
+
 											// Attribute is read-only
-											$sHTMLValue = $this->GetAsHTML($sAttCode);
+											$sHTMLValue = $this->GetAsHTML($sAttCode).$sSynchroIcon;
 											$sHTMLValue .= '<input type="hidden" id="'.$sInputId.'" name="attr_'.$sPrefix.$sAttCode.'" value="'.htmlentities($this->Get($sAttCode), ENT_QUOTES, 'UTF-8').'"/>';
 											$aFieldsMap[$sAttCode] = $sInputId;
 										}

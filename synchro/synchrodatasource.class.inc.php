@@ -75,9 +75,15 @@ class SynchroDataSource extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeDuration("delete_policy_retention", array("allowed_values"=>null, "sql"=>"delete_policy_retention", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 
 		MetaModel::Init_AddAttribute(new AttributeLinkedSet("attribute_list", array("linked_class"=>"SynchroAttribute", "ext_key_to_me"=>"sync_source_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
+		// Not used yet !
+		MetaModel::Init_AddAttribute(new AttributeEnum("user_delete_policy", array("allowed_values"=>new ValueSetEnum('never,depends,always'), "sql"=>"user_delete_policy", "default_value"=>"always", "is_null_allowed"=>true, "depends_on"=>array())));
+
+		MetaModel::Init_AddAttribute(new AttributeURL("url_icon", array("allowed_values"=>null, "sql"=>"url_icon", "default_value"=>null, "is_null_allowed"=>true, "target"=> '_top', "depends_on"=>array())));
+		// The field below is not a real URL since it can contain placeholders like $replica->primary_key$ which are not syntactically allowed in a real URL
+		MetaModel::Init_AddAttribute(new AttributeString("url_application", array("allowed_values"=>null, "sql"=>"url_application", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('name', 'description', 'scope_class', /*'scope_restriction', */'status', 'user_id', 'full_load_periodicity', 'reconciliation_policy', 'action_on_zero', 'action_on_one', 'action_on_multiple', 'delete_policy', 'delete_policy_update', 'delete_policy_retention' /*'attribute_list'*/)); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('name', 'description', 'url_icon', 'url_application', 'scope_class', /*'scope_restriction', */'status', 'user_id', 'full_load_periodicity', 'reconciliation_policy', 'action_on_zero', 'action_on_one', 'action_on_multiple', 'delete_policy', 'delete_policy_update', 'delete_policy_retention' /*'attribute_list'*/)); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('scope_class', 'status', 'user_id', 'full_load_periodicity')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'scope_class', 'user_id')); // Criteria of the std search form
@@ -168,6 +174,7 @@ class SynchroDataSource extends cmdbAbstractObject
 					$aValues[] = $aRow;
 				}
 			}
+			$oPage->p(Dict::Format('Class:SynchroDataSource:DataTable', $this->GetDataTable()));
 			$oPage->Table($aAttribs, $aValues);
 			$this->DisplayStatusTab($oPage);
 		}
@@ -208,7 +215,7 @@ class SynchroDataSource extends cmdbAbstractObject
 			$oPage->add('<table class="synoptics"><tr><td style="color:#333;vertical-align:top">');
 
 			// List all the log entries for the user to select
-			$oPage->add('<h2>'.Dict::S('Core:Synchro:History').'</h2>');
+			$oPage->add('<h2 style="line-height:55px;">'.Dict::S('Core:Synchro:History').'</h2>');
 			$oSetSynchroLog->Rewind();
 			$oPage->add('<select size="25" onChange="UpdateSynoptics(this.value);">');
 			$sSelected = ' selected'; // First log is selected by default
@@ -360,6 +367,43 @@ EOF
 		$aData['nb_obj_total'] = $iNew + $iExisting + $iDisappeared;
 		$aData['nb_replica_total'] = $aData['nb_obj_total'] + $iIgnored;
 		return $aData;
+	}
+	
+	public function GetIcon($bImgTag = true, $sMoreStyles = '')
+	{
+		if ($this->Get('url_icon') == '') return MetaModel::GetClassIcon(get_class($this), $bImgTag);
+		if ($bImgTag)
+		{
+			return 	"<img src=\"".$this->Get('url_icon')."\" style=\"vertical-align:middle;$sMoreStyles\"/>";
+			
+		}
+		return $this->Get('url_icon');
+	}
+	
+	/**
+	 * Get the actual hyperlink to the remote application for the given replica and dest object
+	 */
+	public function GetApplicationUrl(DBObject $oDestObj, SynchroReplica $oReplica)
+	{
+		if ($this->Get('url_application') == '') return '';
+		$aSearches = array();
+		$aReplacements = array();
+		foreach(MetaModel::ListAttributeDefs($this->GetTargetClass()) as $sAttCode=>$oAttDef)
+		{
+			if ($oAttDef->IsScalar())
+			{
+				$aSearches[] = '$this->'.$sAttCode.'$';
+				$aReplacements[] = $oDestObj->Get($sAttCode);
+			}
+		}
+		$aData = $oReplica->LoadExtendedDataFromTable($this->GetDataTable());
+
+		foreach($aData as $sColumn => $value)
+		{
+			$aSearches[] = '$replica->'.$sColumn.'$';
+			$aReplacements[] = $value;
+		}
+		return str_replace($aSearches, $aReplacements, $this->Get('url_application'));
 	}
 	
 	public function GetAttributeFlags($sAttCode)
@@ -1643,10 +1687,7 @@ class SynchroReplica extends DBObject implements iDisplay
 		$oSource = MetaModel::GetObject('SynchroDataSource', $this->Get('sync_source_id'));
 		
 		$sSQLTable = $oSource->GetDataTable();
-		$sSQL = "SELECT * FROM $sSQLTable WHERE id=".$this->GetKey();
-
-		$rQuery = CMDBSource::Query($sSQL);
-		$aData = CMDBSource::FetchArray($rQuery);
+		$aData = $this->LoadExtendedDataFromTable($sSQLTable);
 
 		$aHeaders = array('attcode' => array('label' => 'Attribute Code', 'description' => ''),
 						  'data'    => array('label' => 'Value', 'description' => ''));
@@ -1659,6 +1700,14 @@ class SynchroReplica extends DBObject implements iDisplay
 		$oPage->add('</fieldset>');
 		$oPage->add('</td></tr></table>');
 		
+	}
+	
+	public function LoadExtendedDataFromTable($sSQLTable)
+	{
+		$sSQL = "SELECT * FROM $sSQLTable WHERE id=".$this->GetKey();
+
+		$rQuery = CMDBSource::Query($sSQL);
+		return CMDBSource::FetchArray($rQuery);
 	}
 }
 

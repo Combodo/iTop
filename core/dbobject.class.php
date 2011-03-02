@@ -50,6 +50,7 @@ abstract class DBObject
 
 	private $m_bFullyLoaded = false; // Compound objects can be partially loaded
 	private $m_aLoadedAtt = array(); // Compound objects can be partially loaded, array of sAttCode
+	protected $m_oMasterReplicaSet = null; // Set of SynchroReplica related to this object
 
 	// Use the MetaModel::NewObject to build an object (do we have to force it?)
 	public function __construct($aRow = null, $sClassAlias = '', $aExtendedDataSpec = null)
@@ -645,7 +646,9 @@ abstract class DBObject
 		{
 			$iFlags = MetaModel::GetAttributeFlags(get_class($this), $this->Get($sStateAttCode), $sAttCode);
 		}
-		return $iFlags;
+		$aReasons = array();
+		$iSynchroFlags = $this->GetSynchroReplicaFlags($sAttCode, $aReasons);
+		return $iFlags | $iSynchroFlags; // Combine both sets of flags
 	}
 
 	// check if the given (or current) value is suitable for the attribute
@@ -1401,6 +1404,50 @@ abstract class DBObject
 				}
 			}
 		}
+	}
+
+	/**
+	 * Get all the synchro replica related to this object
+	 * @param none
+	 * @return DBObjectSet Set with two columns: R=SynchroReplica S=SynchroDataSource
+	 */
+	public function GetMasterReplica()
+	{
+		if ($this->m_oMasterReplicaSet == null)
+		{
+			$aParentClasses = MetaModel::EnumParentClasses(get_class($this), ENUM_PARENT_CLASSES_ALL);
+			$sClassesList = "'".implode("','", $aParentClasses)."'";
+			$sOQL = "SELECT replica,datasource FROM SynchroReplica AS replica JOIN SynchroDataSource AS datasource ON replica.sync_source_id=datasource.id WHERE datasource.scope_class IN ($sClassesList) AND replica.dest_id = :dest_id";
+			$oReplicaSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL), array() /* order by*/, array('dest_id' => $this->GetKey()));
+			$this->m_oMasterReplicaSet = $oReplicaSet;
+		}
+		else
+		{
+			$this->m_oMasterReplicaSet->Rewind();		
+		}
+		return $this->m_oMasterReplicaSet;
+	}
+	
+	public function GetSynchroReplicaFlags($sAttCode, &$aReason)
+	{
+		$iFlags = OPT_ATT_NORMAL;
+		$oSet = $this->GetMasterReplica();
+		while($aData = $oSet->FetchAssoc())
+		{
+			$oReplica = $aData['replica'];
+			$oSource = $aData['datasource'];
+			$oAttrSet = $oSource->Get('attribute_list');
+			while($oSyncAttr = $oAttrSet->Fetch())
+			{
+				if (($oSyncAttr->Get('attcode') == $sAttCode) && ($oSyncAttr->Get('update') == 1) && ($oSyncAttr->Get('update_policy') == 'master_locked'))
+				{
+					$iFlags |= OPT_ATT_READONLY;
+					$sUrl = $oSource->GetApplicationUrl($this, $oReplica);
+					$aReason[] = array('name' => $oSource->GetName(), 'description' => $oSource->Get('description'), 'url_application' => $sUrl);
+				}
+			}
+		}
+		return $iFlags;
 	}
 }
 
