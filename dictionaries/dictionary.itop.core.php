@@ -544,6 +544,18 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:SynchroReplica:PrivateDetails' => 'Private Details',
 	'Core:SynchroReplica:BackToDataSource' => 'Go Back to the Synchro Data Source: %1$s',
 	'Core:SynchroReplica:ListOfReplicas' => 'List of Replica',
+	'Core:SynchroAttExtKey:ReconciliationById' => 'id (Primary Key)',
+	'Core:SynchroAtt:attcode' => 'Attribute',
+	'Core:SynchroAtt:attcode+' => 'Field of the object',
+	'Core:SynchroAtt:reconciliation' => 'Reconciliation ?',
+	'Core:SynchroAtt:reconciliation+' => 'Used for searching',
+	'Core:SynchroAtt:update' => 'Update ?',
+	'Core:SynchroAtt:update+' => 'Used to update the object',
+	'Core:SynchroAtt:update_policy' => 'Update Policy',
+	'Core:SynchroAtt:update_policy+' => 'Behavior of the updated field',
+	'Core:SynchroAtt:reconciliation_attcode' => 'Reconciliation Key',
+	'Core:SynchroAtt:reconciliation_attcode+' => 'Attribute Code for the External Key Reconciliation',
+
 			
 ));
 

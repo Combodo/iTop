@@ -96,12 +96,13 @@ class SynchroDataSource extends cmdbAbstractObject
 			{
 				$aAttributes[$oAttribute->Get('attcode')] = $oAttribute;
 			}
-			$aAttribs = array(
-				'attcode' => array('label'=>'Attribute', 'description' => 'Field of the object'),
-				'reconciliation' => array('label'=>'Reconciliation ?', 'description' => 'Used for searching'),
-				'update' => array('label'=>'Update ?', 'description' => 'Used to update the object'),
-				'update_policy' => array('label'=>'Update Policy', 'description' => 'Behavior of the updated field'),
-			);
+			// Columns of the form
+			$aAttribs = array();
+			foreach(array('attcode', 'reconciliation', 'update', 'update_policy', 'reconciliation_attcode') as $s )
+			{
+				$aAttribs[$s] = array( 'label' => Dict::S("Core:SynchroAtt:$s"), "description" => Dict::S("Core:SynchroAtt:$s+"));
+			}
+			// Rows of the form
 			$aValues = array();
 			foreach(MetaModel::ListAttributeDefs($this->GetTargetClass()) as $sAttCode=>$oAttDef)
 			{
@@ -134,19 +135,35 @@ class SynchroDataSource extends cmdbAbstractObject
 						$aRow['reconciliation'] = $oAttribute->Get('reconcile') == 1 ? Dict::S('Core:SynchroReconcile:Yes') :  Dict::S('Core:SynchroReconcile:No'); 
 						$aRow['update'] = $oAttribute->Get('update') == 1 ?  Dict::S('Core:SynchroUpdate:Yes') :  Dict::S('Core:SynchroUpdate:No');
 						$aRow['attcode'] = MetaModel::GetLabel($this->GetTargetClass(), $oAttribute->Get('attcode')); 
-						$aRow['update_policy'] = $oAttribute->GetAsHTML('update_policy'); 
+						$aRow['update_policy'] = $oAttribute->GetAsHTML('update_policy');
+						if ($oAttDef->IsExternalKey())
+						{
+							$aRow['reconciliation_attcode'] = $oAttribute->GetAsHTML('reconciliation_attcode');
+						}
+						else
+						{
+							$aRow['reconciliation_attcode'] = '&nbsp;';
+						}
 					}
 					else
 					{
-						// Read-only mode
+						// Edit mode
 						$sAttCode = $oAttribute->Get('attcode');
 						$sChecked = $oAttribute->Get('reconcile') == 1 ? 'checked' : '';
 						$aRow['reconciliation'] = "<input type=\"checkbox\" name=\"reconciliation[$sAttCode]\" $sChecked/>"; 
 						$sChecked = $oAttribute->Get('update') == 1 ? 'checked' : '';
 						$aRow['update'] = "<input type=\"checkbox\" name=\"update[$sAttCode]\" $sChecked/>"; 
 						$aRow['attcode'] = MetaModel::GetLabel($this->GetTargetClass(), $oAttribute->Get('attcode'));
-						$oAttDef = MetaModel::GetAttributeDef(get_class($oAttribute), 'update_policy'); 
-						$aRow['update_policy'] = cmdbAbstractObject::GetFormElementForField($oPage, get_class($oAttribute), 'update_policy', $oAttDef, $oAttribute->Get('update_policy'), '', 'update_policy_'.$sAttCode, "[$sAttCode]");
+						$oUpdateAttDef = MetaModel::GetAttributeDef(get_class($oAttribute), 'update_policy'); 
+						$aRow['update_policy'] = cmdbAbstractObject::GetFormElementForField($oPage, get_class($oAttribute), 'update_policy', $oUpdateAttDef, $oAttribute->Get('update_policy'), '', 'update_policy_'.$sAttCode, "[$sAttCode]");
+						if ($oAttDef->IsExternalKey())
+						{
+							$aRow['reconciliation_attcode'] = $oAttribute->GetReconciliationFormElement($oAttDef->GetTargetClass(), "attr_reconciliation_attcode[$sAttCode]");
+						}
+						else
+						{
+							$aRow['reconciliation_attcode'] = '&nbsp;';
+						}
 					}
 					$aValues[] = $aRow;
 				}
@@ -367,6 +384,7 @@ EOF
 		$aReconcile = utils::ReadPostedParam('reconciliation', array());
 		$aUpdate = utils::ReadPostedParam('update', array());
 		$aUpdatePolicy = utils::ReadPostedParam('attr_update_policy', array());
+		$aReconciliation = utils::ReadPostedParam('attr_reconciliation_attcode', array());
 		// update_policy cannot be empty, so there is one entry per attribute, use this to iterate
 		// through all the writable attributes
 		foreach($aUpdatePolicy as $sAttCode => $sValue)
@@ -403,6 +421,10 @@ EOF
 			$oAttribute->Set('reconcile', $bReconcile);
 			$oAttribute->Set('update', $bUpdate);
 			$oAttribute->Set('update_policy', $sValue);
+			if ($oAttribute instanceof SynchroAttExtKey)
+			{
+				$oAttribute->Set('reconciliation_attcode', $aReconciliation[$sAttCode]);
+			}
 			$oAttributeSet->AddObject($oAttribute);
 		}
 		$this->Set('attribute_list', $oAttributeSet);
@@ -955,6 +977,23 @@ class SynchroAttExtKey extends SynchroAttribute
 //		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
 //		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
 	}
+	
+	public function GetReconciliationFormElement($sTargetClass, $sFieldName)
+	{
+		$sHtml = "<select name=\"$sFieldName\">\n";
+		$sSelected = (''== $this->Get('reconciliation_attcode')) ? ' selected' : '';
+		$sHtml .= "<option value=\"\" $sSelected>".Dict::S('Core:SynchroAttExtKey:ReconciliationById')."</option>\n";
+		foreach(MetaModel::ListAttributeDefs($sTargetClass) as $sAttCode => $oAttDef)
+		{
+			if ($oAttDef->IsScalar())
+			{
+				$sSelected = ($sAttCode == $this->Get('reconciliation_attcode')) ? ' selected' : '';
+				$sHtml .= "<option value=\"$sAttCode\" $sSelected>".MetaModel::GetLabel($sTargetClass, $sAttCode)."</option>\n";	
+			}
+		}
+		$sHtml .= "</select>\n";
+		return $sHtml;
+	}
 
 }
 
@@ -1037,7 +1076,7 @@ class SynchroLog extends DBObject
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('sync_source_id', 'start_date', 'end_date', 'status', 'stats_nb_replica_total', 'stats_nb_replica_seen', 'stats_nb_obj_created', /*'stats_nb_replica_reconciled',*/ 'stats_nb_obj_updated', 'stats_nb_obj_obsoleted', 'stats_nb_obj_deleted',
-														'stats_nb_obj_created_errors', 'stats_nb_replica_reconciled_errors', 'stats_nb_replica_disappeared_no_action', 'stats_nb_obj_updated_errors', 'stats_nb_obj_obsoleted_errors', 'stats_nb_obj_deleted_errors', 'stats_nb_obj_new_unchanged', 'stats_nb_obj_new_updated', 'dump')); // Attributes to be displayed for the complete details
+														'stats_nb_obj_created_errors', 'stats_nb_replica_reconciled_errors', 'stats_nb_replica_disappeared_no_action', 'stats_nb_obj_updated_errors', 'stats_nb_obj_obsoleted_errors', 'stats_nb_obj_deleted_errors', 'stats_nb_obj_new_unchanged', 'stats_nb_obj_new_updated', 'traces')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('sync_source_id', 'start_date', 'end_date', 'status', 'stats_nb_replica_seen')); // Attributes to be displayed for a list
 		// Search criteria
 //		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
