@@ -174,6 +174,8 @@ class SynchroDataSource extends cmdbAbstractObject
 			$oLastLog = $oSetSynchroLog->Fetch();
 			$sStartDate = $oLastLog->Get('start_date');
 			$oLastLog->Get('stats_nb_replica_seen');
+			$iLastLog = 0;
+			$iDSid = $this->GetKey();
 			if ($oLastLog->Get('status') == 'running')
 			{
 				// Still running !
@@ -182,6 +184,7 @@ class SynchroDataSource extends cmdbAbstractObject
 			else
 			{
 				$sEndDate = $oLastLog->Get('end_date');
+				$iLastLog = $oLastLog->GetKey();
 				$oPage->p('<h2>'.Dict::Format('Core:Synchro:SynchroEndedOn_Date', $sEndDate).'</h2>');
 			}
 
@@ -204,6 +207,7 @@ class SynchroDataSource extends cmdbAbstractObject
 			$sScript .= "end: 'Done'";
 			$sScript .= "};\n";
 			$sScript .= <<<EOF
+			var sLastLog = '$iLastLog';
 	function UpdateSynoptics(id)
 	{
 		var aValues = aSynchroLog[id];
@@ -213,6 +217,33 @@ class SynchroDataSource extends cmdbAbstractObject
 			$('#c_'+sKey).html(aValues[sKey]);
 			var fOpacity = (aValues[sKey] == 0) ? 0.3 : 1;
 			$('#'+sKey).fadeTo("slow", fOpacity);
+		}
+		//alert('id = '+id+', lastLog='+sLastLog+', id==sLastLog: '+(id==sLastLog)+' obj_updated_errors:  '+aValues['obj_updated_errors']);
+		if ( (id == sLastLog) && (aValues['obj_new_errors'] > 0) )
+		{
+			$('#new_errors_link').show();
+		}
+		else
+		{
+			$('#new_errors_link').hide();
+		}
+		
+		if ( (id == sLastLog) && (aValues['obj_updated_errors'] > 0) )
+		{
+			$('#updated_errors_link').show();
+		}
+		else
+		{
+			$('#updated_errors_link').hide();
+		}
+		
+		if ( (id == sLastLog) && (aValues['obj_disappeared_errors'] > 0) )
+		{
+			$('#disappeared_errors_link').show();
+		}
+		else
+		{
+			$('#disappeared_errors_link').hide();
 		}
 	}
 EOF
@@ -236,6 +267,7 @@ EOF
 	<tr>
 EOF
 );
+			$sBaseOQL = "SELECT SynchroReplica WHERE sync_source_id=".$this->GetKey()." AND status_last_error!=''";
 			$oPage->add($this->HtmlBox('repl_ignored', $aData, '#999').'<td colspan="2">&nbsp;</td>');
 			$oPage->add("</tr>\n<tr>");
 			$oPage->add($this->HtmlBox('repl_disappeared', $aData, '#630', 'rowspan="4"').'<td rowspan="4" class="arrow">=&gt;</td>'.$this->HtmlBox('obj_disappeared_no_action', $aData, '#333'));
@@ -244,13 +276,15 @@ EOF
 			$oPage->add("</tr>\n<tr>");
 			$oPage->add($this->HtmlBox('obj_obsoleted', $aData, '#630'));
 			$oPage->add("</tr>\n<tr>");
-			$oPage->add($this->HtmlBox('obj_disappeared_errors', $aData, '#C00'));
+			$sOQL = urlencode($sBaseOQL." AND status='obsolete'");
+			$oPage->add($this->HtmlBox('obj_disappeared_errors', $aData, '#C00', '', " <a style=\"color:#fff\" href=\"../synchro/replica?operation=oql&datasource=$iDSid&oql=$sOQL\" id=\"disappeared_errors_link\">Show</a>"));
 			$oPage->add("</tr>\n<tr>");
 			$oPage->add($this->HtmlBox('repl_existing', $aData, '#093', 'rowspan="3"').'<td rowspan="3" class="arrow">=&gt;</td>'.$this->HtmlBox('obj_unchanged', $aData, '#393'));
 			$oPage->add("</tr>\n<tr>");
 			$oPage->add($this->HtmlBox('obj_updated', $aData, '#3C3'));
 			$oPage->add("</tr>\n<tr>");
-			$oPage->add($this->HtmlBox('obj_updated_errors', $aData, '#C00'));
+			$sOQL = urlencode($sBaseOQL." AND status='modified'");
+			$oPage->add($this->HtmlBox('obj_updated_errors', $aData, '#C00', '', " <a style=\"color:#fff\" href=\"../synchro/replica?operation=oql&datasource=$iDSid&oql=$sOQL\" id=\"updated_errors_link\">Show</a>"));
 			$oPage->add("</tr>\n<tr>");
 			$oPage->add($this->HtmlBox('repl_new', $aData, '#339', 'rowspan="4"').'<td rowspan="4" class="arrow">=&gt;</td>'.$this->HtmlBox('obj_new_unchanged', $aData, '#393'));
 			$oPage->add("</tr>\n<tr>");
@@ -258,9 +292,11 @@ EOF
 			$oPage->add("</tr>\n<tr>");
 			$oPage->add($this->HtmlBox('obj_created', $aData, '#339'));
 			$oPage->add("</tr>\n<tr>");
-			$oPage->add($this->HtmlBox('obj_new_errors', $aData, '#C00'));
+			$sOQL = urlencode($sBaseOQL." AND status='new'");
+			$oPage->add($this->HtmlBox('obj_new_errors', $aData, '#C00', '', " <a style=\"color:#fff\" href=\"../synchro/replica?operation=oql&datasource=$iDSid&oql=$sOQL\" id=\"new_errors_link\">Show</a>"));
 			$oPage->add("</tr>\n</table>\n");
 			$oPage->add('</td></tr></table>');
+			$oPage->add_ready_script("UpdateSynoptics('$iLastLog')");
 		}
 		else
 		{
@@ -268,13 +304,14 @@ EOF
 		}
 	}
 	
-	protected function HtmlBox($sId, $aData, $sColor, $sHTMLAttribs = '')
+	protected function HtmlBox($sId, $aData, $sColor, $sHTMLAttribs = '', $sErrorLink = '')
 	{
 		$iCount = $aData[$sId];
 		$sCount = "<span id=\"c_{$sId}\">$iCount</span>";
 		$sLabel = Dict::Format('Core:Synchro:label_'.$sId, $sCount);
 		$sOpacity = ($iCount==0) ? "opacity:0.3;" : "";
-		return "<td id=\"$sId\" style=\"background-color:$sColor;$sOpacity;\" {$sHTMLAttribs}>$sLabel</td>";
+
+		return "<td id=\"$sId\" style=\"background-color:$sColor;$sOpacity;\" {$sHTMLAttribs}>{$sLabel}{$sErrorLink}</td>";
 	}
 	
 	protected function ProcessLog($oLastLog)
@@ -378,6 +415,37 @@ EOF
 	{
 		parent::DoCheckToWrite();
 
+		if ($this->IsNew())
+		{
+			// When inserting a new datasource object, also create the SynchroAttribute objects
+			// for each field of the target class
+			// Create all the SynchroAttribute records
+			$oAttributeSet = $this->Get('attribute_list');
+			foreach(MetaModel::ListAttributeDefs($this->GetTargetClass()) as $sAttCode=>$oAttDef)
+			{
+				if ($oAttDef->IsScalar() && $oAttDef->IsWritable())
+				{
+					$oAttDef = MetaModel::GetAttributeDef($this->GetTargetClass(), $sAttCode);
+					if ($oAttDef->IsExternalKey())
+					{
+						$oAttribute = new SynchroAttExtKey();
+						$oAttribute->Set('reconciliation_attcode', ''); // Blank means by pkey
+					}
+					else
+					{
+						$oAttribute = new SynchroAttribute();
+					}
+					$oAttribute->Set('sync_source_id', $this->GetKey());
+					$oAttribute->Set('attcode', $sAttCode);
+					$oAttribute->Set('reconcile', MetaModel::IsReconcKey($this->GetTargetClass(), $sAttCode) ? 1 : 0);
+					$oAttribute->Set('update', 1);
+					$oAttribute->Set('update_policy', 'master_locked');
+					$oAttributeSet->AddObject($oAttribute);
+				}
+			}
+			$this->Set('attribute_list', $oAttributeSet);
+		}
+
 		// Check that there is at least one reconciliation key defined
 		if ($this->Get('reconciliation_policy') == 'use_attributes')
 		{
@@ -425,38 +493,6 @@ EOF
 		return $sTable;
 	}
 
-	/**
-	 * When inserting a new datasource object, also create the SynchroAttribute objects
-	 * for each field of the target class
-	 */
-	protected function OnInsert()
-	{
-		// Create all the SynchroAttribute records
-		$oAttributeSet = $this->Get('attribute_list');
-		foreach(MetaModel::ListAttributeDefs($this->GetTargetClass()) as $sAttCode=>$oAttDef)
-		{
-			if ($oAttDef->IsScalar() && $oAttDef->IsWritable())
-			{
-				$oAttDef = MetaModel::GetAttributeDef($this->GetTargetClass(), $sAttCode);
-				if ($oAttDef->IsExternalKey())
-				{
-					$oAttribute = new SynchroAttExtKey();
-					$oAttribute->Set('reconciliation_attcode', ''); // Blank means by pkey
-				}
-				else
-				{
-					$oAttribute = new SynchroAttribute();
-				}
-				$oAttribute->Set('sync_source_id', $this->GetKey());
-				$oAttribute->Set('attcode', $sAttCode);
-				$oAttribute->Set('reconcile', MetaModel::IsReconcKey($this->GetTargetClass(), $sAttCode) ? 1 : 0);
-				$oAttribute->Set('update', 1);
-				$oAttribute->Set('update_policy', 'master_locked');
-				$oAttributeSet->AddObject($oAttribute);
-			}
-		}
-		$this->Set('attribute_list', $oAttributeSet);
-	}
 	/**
 	 * When the new datasource has been created, let's create the synchro_data table
 	 * that will hold the data records and the correspoding triggers which will maintain
@@ -1084,7 +1120,7 @@ class SynchroLog extends DBObject
 }
 
 
-class SynchroReplica extends DBObject
+class SynchroReplica extends DBObject implements iDisplay
 {
 	static $aSearches = array(); // Cache of OQL queries used for reconciliation (per data source)
 	
@@ -1460,6 +1496,94 @@ class SynchroReplica extends DBObject
 
  		return $aData[$sColumnName];
 	 }
+	 
+	/**
+	 * Maps the given context parameter name to the appropriate filter/search code for this class
+	 * @param string $sContextParam Name of the context parameter, i.e. 'org_id'
+	 * @return string Filter code, i.e. 'customer_id'
+	 */
+	public static function MapContextParam($sContextParam)
+	{
+		if ($sContextParam == 'menu')
+		{
+			return null;
+		}
+		else
+		{
+			return $sContextParam;
+		}
+	}
+
+	/**
+	 * This function returns a 'hilight' CSS class, used to hilight a given row in a table
+	 * There are currently (i.e defined in the CSS) 4 possible values HILIGHT_CLASS_CRITICAL,
+	 * HILIGHT_CLASS_WARNING, HILIGHT_CLASS_OK, HILIGHT_CLASS_NONE
+	 * To Be overridden by derived classes
+	 * @param void
+	 * @return String The desired higlight class for the object/row
+	 */
+	public function GetHilightClass()
+	{
+		// Possible return values are:
+		// HILIGHT_CLASS_CRITICAL, HILIGHT_CLASS_WARNING, HILIGHT_CLASS_OK, HILIGHT_CLASS_NONE	
+		return HILIGHT_CLASS_NONE; // Not hilighted by default
+	}
+
+	public static function GetUIPage()
+	{
+		return '../synchro/replica.php';
+	}
+
+	function DisplayDetails(WebPage $oPage, $bEditMode = false)
+	{
+		// Object's details
+		//$this->DisplayBareHeader($oPage, $bEditMode);
+		$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB);
+		$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
+		$oPage->SetCurrentTab(Dict::S('UI:PropertiesTab'));
+		$this->DisplayBareProperties($oPage, $bEditMode);
+	}
+	
+	function DisplayBareProperties(WebPage $oPage, $bEditMode = false)
+	{
+		if ($bEditMode) return; // Not editable
+		
+		$oPage->add('<table style="vertical-align:top"><tr style="vertical-align:top"><td>');
+		$aDetails = array();
+		$sClass = get_class($this);
+		$oPage->add('<fieldset>');
+		$oPage->add('<legend>'.Dict::S('Core:SynchroReplica:PrivateDetails').'</legend>');
+		$aZList = MetaModel::GetZListItems($sClass, 'details');
+		foreach( $aZList as $sAttCode)
+		{
+			$sDisplayValue = $this->GetAsHTML($sAttCode);	
+			$aDetails[] = array('label' => '<span title="'.MetaModel::GetDescription($sClass, $sAttCode).'">'.MetaModel::GetLabel($sClass, $sAttCode).'</span>', 'value' => $sDisplayValue);
+		}
+		$oPage->Details($aDetails);
+		$oPage->add('</fieldset>');
+		$oPage->add('</td><td>');
+		$oPage->add('<fieldset>');
+		$oPage->add('<legend>'.Dict::S('Core:SynchroReplica:PublicData').'</legend>');
+		$oSource = MetaModel::GetObject('SynchroDataSource', $this->Get('sync_source_id'));
+		
+		$sSQLTable = $oSource->GetDataTable();
+		$sSQL = "SELECT * FROM $sSQLTable WHERE id=".$this->GetKey();
+
+		$rQuery = CMDBSource::Query($sSQL);
+		$aData = CMDBSource::FetchArray($rQuery);
+
+		$aHeaders = array('attcode' => array('label' => 'Attribute Code', 'description' => ''),
+						  'data'    => array('label' => 'Value', 'description' => ''));
+		$aRows = array();
+		foreach($aData as $sKey => $value)
+		{
+			$aRows[] = array('attcode' => $sKey, 'data' => $value);
+		}
+		$oPage->Table($aHeaders, $aRows);
+		$oPage->add('</fieldset>');
+		$oPage->add('</td></tr></table>');
+		
+	}
 }
 
 // TO DO: finalize.... admins only ? which options ? troubleshoot WebPageMenuNode::__construct(.... sEnableClass...) ?
@@ -1467,6 +1591,7 @@ class SynchroReplica extends DBObject
 {
 	$oAdminMenu = new MenuGroup('AdminTools', 80 /* fRank */);
 	new OQLMenuNode('DataSources', 'SELECT SynchroDataSource', $oAdminMenu->GetIndex(), 12 /* fRank */, true, 'SynchroDataSource', UR_ACTION_MODIFY, UR_ALLOWED_YES);
+	new OQLMenuNode('Replicas', 'SELECT SynchroReplica', $oAdminMenu->GetIndex(), 12 /* fRank */, true, 'SynchroReplica', UR_ACTION_MODIFY, UR_ALLOWED_YES);
 	new WebPageMenuNode('Test:RunSynchro', '../synchro/synchro_exec.php', $oAdminMenu->GetIndex(), 13 /* fRank */, 'SynchroDataSource');
 }	
 ?>

@@ -39,7 +39,40 @@ require_once(APPROOT.'/application/ui.passwordwidget.class.inc.php');
 require_once(APPROOT.'/application/ui.extkeywidget.class.inc.php');
 require_once(APPROOT.'/application/ui.htmleditorwidget.class.inc.php');
 
-abstract class cmdbAbstractObject extends CMDBObject
+/**
+ * All objects to be displayed in the application (either as a list or as details)
+ * must implement this interface.
+ */
+interface iDisplay
+{
+
+	/**
+	 * Maps the given context parameter name to the appropriate filter/search code for this class
+	 * @param string $sContextParam Name of the context parameter, i.e. 'org_id'
+	 * @return string Filter code, i.e. 'customer_id'
+	 */
+	public static function MapContextParam($sContextParam);
+	/**
+	 * This function returns a 'hilight' CSS class, used to hilight a given row in a table
+	 * There are currently (i.e defined in the CSS) 4 possible values HILIGHT_CLASS_CRITICAL,
+	 * HILIGHT_CLASS_WARNING, HILIGHT_CLASS_OK, HILIGHT_CLASS_NONE
+	 * To Be overridden by derived classes
+	 * @param void
+	 * @return String The desired higlight class for the object/row
+	 */
+	public function GetHilightClass();
+	/**
+	 * Returns the relative path to the page that handles the display of the object
+	 * @return string
+	 */
+	public static function GetUIPage();
+	/**
+	 * Displays the details of the object
+	 */
+	public function DisplayDetails(WebPage $oPage, $bEditMode = false);
+}
+
+abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 {
 	protected $m_iFormId; // The ID of the form used to edit the object (when in edition mode !)
 	
@@ -48,40 +81,6 @@ abstract class cmdbAbstractObject extends CMDBObject
 		return '../pages/UI.php';
 	}
 	
-	public static function ComputeUIPage($sClass)
-	{
-		static $aUIPagesCache = array(); // Cache to store the php page used to display each class of object
-		if (!isset($aUIPagesCache[$sClass]))
-		{
-			$UIPage = false;
-			if (is_callable("$sClass::GetUIPage"))
-			{
-				$UIPage = eval("return $sClass::GetUIPage();"); // May return false in case of error
-			}
-			$aUIPagesCache[$sClass] = $UIPage === false ? './UI.php' : $UIPage;
-		}
-		$sPage = $aUIPagesCache[$sClass];
-		return $sPage;
-	}
-
-	protected static function MakeHyperLink($sObjClass, $sObjKey, $sLabel = '')
-	{
-		if ($sObjKey <= 0) return '<em>'.Dict::S('UI:UndefinedObject').'</em>'; // Objects built in memory have negative IDs
-
-		$oAppContext = new ApplicationContext();	
-		$sPage = self::ComputeUIPage($sObjClass);
-		$sAbsoluteUrl = utils::GetAbsoluteUrlPath();
-
-		// Safety net
-		//
-		if (empty($sLabel))
-		{
-			$sLabel = MetaModel::GetName($sObjClass)." #$sObjKey";
-		}
-		$sHint = MetaModel::GetName($sObjClass)."::$sObjKey";
-		return "<a href=\"{$sAbsoluteUrl}{$sPage}?operation=details&class=$sObjClass&id=$sObjKey&".$oAppContext->GetForLink()."\" title=\"$sHint\">$sLabel</a>";
-	}
-
 	function DisplayBareHeader(WebPage $oPage, $bEditMode = false)
 	{
 		// Standard Header with name, actions menu and history block

@@ -539,7 +539,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:Synchro:Nb_Class:Objects' => '%1$s: %2$s',
 	'Class:SynchroDataSource/Error:AtLeastOneReconciliationKeyMustBeSpecified' => 'At Least one reconciliation key must be specified.',			
 	'Class:SynchroDataSource/Error:DeleteRetentionDurationMustBeSpecified' => 'A delete retention period must be specified, since objects are to be deleted after being marked as obsolete',			
-	'Class:SynchroDataSource/Error:DeletePolicyUpdateMustBeSpecified' => 'Obsolete objects are to be updated, but no update is specified.',		
+	'Class:SynchroDataSource/Error:DeletePolicyUpdateMustBeSpecified' => 'Obsolete objects are to be updated, but no update is specified.',
+	'Core:SynchroReplica:PublicData' => 'Public Data',
+	'Core:SynchroReplica:PrivateDetails' => 'Private Details',
+	'Core:SynchroReplica:BackToDataSource' => 'Go Back to the Synchro Data Source: %1$s',
+	'Core:SynchroReplica:ListOfReplicas' => 'List of Replica',
+			
 ));
 
 //

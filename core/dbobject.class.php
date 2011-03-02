@@ -482,14 +482,56 @@ abstract class DBObject
 
 	protected static function MakeHyperLink($sObjClass, $sObjKey, $sLabel = '')
 	{
-		if ($sObjKey == 0) return '<em>undefined</em>';
+		if ($sObjKey <= 0) return '<em>'.Dict::S('UI:UndefinedObject').'</em>'; // Objects built in memory have negative IDs
 
-		return MetaModel::GetName($sObjClass)."::$sObjKey";
+		$oAppContext = new ApplicationContext();	
+		$sPage = self::ComputeUIPage($sObjClass);
+		$sAbsoluteUrl = utils::GetAbsoluteUrlPath();
+
+		// Safety net
+		//
+		if (empty($sLabel))
+		{
+			$sLabel = MetaModel::GetName($sObjClass)." #$sObjKey";
+		}
+		$sHint = MetaModel::GetName($sObjClass)."::$sObjKey";
+		return "<a href=\"{$sAbsoluteUrl}{$sPage}?operation=details&class=$sObjClass&id=$sObjKey&".$oAppContext->GetForLink()."\" title=\"$sHint\">$sLabel</a>";
 	}
 
 	public function GetHyperlink()
 	{
-		return $this->MakeHyperLink(get_class($this), $this->GetKey(), $this->GetName());
+		if ($this->IsNew()) return '<em>'.Dict::S('UI:UndefinedObject').'</em>'; // Objects built in memory have negative IDs
+
+		$oAppContext = new ApplicationContext();	
+		$sPage = $this->GetUIPage();
+		$sAbsoluteUrl = utils::GetAbsoluteUrlPath();
+		$sObjClass = get_class($this);
+		$sObjKey = $this->GetKey();
+
+		$sLabel = $this->GetName();
+		$sHint = MetaModel::GetName($sObjClass)."::$sObjKey";
+		return "<a href=\"{$sAbsoluteUrl}{$sPage}?operation=details&class=$sObjClass&id=$sObjKey&".$oAppContext->GetForLink()."\" title=\"$sHint\">$sLabel</a>";
+	}
+	
+	public static function ComputeUIPage($sClass)
+	{
+		static $aUIPagesCache = array(); // Cache to store the php page used to display each class of object
+		if (!isset($aUIPagesCache[$sClass]))
+		{
+			$UIPage = false;
+			if (is_callable("$sClass::GetUIPage"))
+			{
+				$UIPage = eval("return $sClass::GetUIPage();"); // May return false in case of error
+			}
+			$aUIPagesCache[$sClass] = $UIPage === false ? './UI.php' : $UIPage;
+		}
+		$sPage = $aUIPagesCache[$sClass];
+		return $sPage;
+	}
+
+	public static function GetUIPage()
+	{
+		return 'UI.php';
 	}
 
 
