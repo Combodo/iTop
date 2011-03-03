@@ -487,29 +487,32 @@ EOF
 			// for each field of the target class
 			// Create all the SynchroAttribute records
 			$oAttributeSet = $this->Get('attribute_list');
-			foreach(MetaModel::ListAttributeDefs($this->GetTargetClass()) as $sAttCode=>$oAttDef)
+			if ($oAttributeSet->Count() == 0)
 			{
-				if ($oAttDef->IsScalar() && $oAttDef->IsWritable())
+				foreach(MetaModel::ListAttributeDefs($this->GetTargetClass()) as $sAttCode=>$oAttDef)
 				{
-					$oAttDef = MetaModel::GetAttributeDef($this->GetTargetClass(), $sAttCode);
-					if ($oAttDef->IsExternalKey())
+					if ($oAttDef->IsScalar() && $oAttDef->IsWritable())
 					{
-						$oAttribute = new SynchroAttExtKey();
-						$oAttribute->Set('reconciliation_attcode', ''); // Blank means by pkey
+						$oAttDef = MetaModel::GetAttributeDef($this->GetTargetClass(), $sAttCode);
+						if ($oAttDef->IsExternalKey())
+						{
+							$oAttribute = new SynchroAttExtKey();
+							$oAttribute->Set('reconciliation_attcode', ''); // Blank means by pkey
+						}
+						else
+						{
+							$oAttribute = new SynchroAttribute();
+						}
+						$oAttribute->Set('sync_source_id', $this->GetKey());
+						$oAttribute->Set('attcode', $sAttCode);
+						$oAttribute->Set('reconcile', MetaModel::IsReconcKey($this->GetTargetClass(), $sAttCode) ? 1 : 0);
+						$oAttribute->Set('update', 1);
+						$oAttribute->Set('update_policy', 'master_locked');
+						$oAttributeSet->AddObject($oAttribute);
 					}
-					else
-					{
-						$oAttribute = new SynchroAttribute();
-					}
-					$oAttribute->Set('sync_source_id', $this->GetKey());
-					$oAttribute->Set('attcode', $sAttCode);
-					$oAttribute->Set('reconcile', MetaModel::IsReconcKey($this->GetTargetClass(), $sAttCode) ? 1 : 0);
-					$oAttribute->Set('update', 1);
-					$oAttribute->Set('update_policy', 'master_locked');
-					$oAttributeSet->AddObject($oAttribute);
 				}
+				$this->Set('attribute_list', $oAttributeSet);
 			}
-			$this->Set('attribute_list', $oAttributeSet);
 		}
 	}
 	public function DoCheckToWrite()

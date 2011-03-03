@@ -47,7 +47,7 @@ class DBObjectSet
 		$this->m_iLimitCount = $iLimitCount;
 		$this->m_iLimitStart = $iLimitStart;
 
-		$this->m_bLoaded = false;
+		$this->m_bLoaded = false; // true when the filter has been used OR the set is built step by step (AddObject...)
 		$this->m_aData = array(); // array of (row => array of (classalias) => object)
 		$this->m_aId2Row = array();
 		$this->m_iCurrRow = 0;
@@ -203,6 +203,7 @@ class DBObjectSet
 
 	public function GetFilter()
 	{
+		// #@# This is false as soon as the set has been manipulated (AddObject...)
 		return $this->m_oFilter;
 	}
 
@@ -240,6 +241,9 @@ class DBObjectSet
 	public function Load()
 	{
 		if ($this->m_bLoaded) return;
+		// Note: it is mandatory to set this value now, to protect against reentrance
+		$this->m_bLoaded = true;
+
 		if ($this->m_iLimitCount > 0)
 		{
 			$sSQL = MetaModel::MakeSelectQuery($this->m_oFilter, $this->m_aOrderBy, $this->m_aArgs, $this->m_aExtendedDataSpec, $this->m_iLimitCount, $this->m_iLimitStart);
@@ -263,19 +267,24 @@ class DBObjectSet
 			$this->AddObjectExtended($aObjects);
 		}
 		CMDBSource::FreeResult($resQuery);
-
-		$this->m_bLoaded = true;
 	}
 
 	public function Count()
 	{
-		$sSQL = MetaModel::MakeSelectQuery($this->m_oFilter, $this->m_aOrderBy, $this->m_aArgs, null, 0, 0, true);
-		$resQuery = CMDBSource::Query($sSQL);
-		if (!$resQuery) return 0;
-
-		$aRow = CMDBSource::FetchArray($resQuery);
-		CMDBSource::FreeResult($resQuery);
-		return $aRow['COUNT'];
+		if ($this->m_bLoaded && ($this->m_iLimitCount == 0) && ($this->m_iLimitStart == 0))
+		{
+			return count($this->m_aData);
+		}
+		else
+		{
+			$sSQL = MetaModel::MakeSelectQuery($this->m_oFilter, $this->m_aOrderBy, $this->m_aArgs, null, 0, 0, true);
+			$resQuery = CMDBSource::Query($sSQL);
+			if (!$resQuery) return 0;
+	
+			$aRow = CMDBSource::FetchArray($resQuery);
+			CMDBSource::FreeResult($resQuery);
+			return $aRow['COUNT'];
+		}
 	}
 
 	public function Fetch($sClassAlias = '')
@@ -327,6 +336,8 @@ class DBObjectSet
 
 	public function AddObject($oObject, $sClassAlias = '')
 	{
+		if (!$this->m_bLoaded) $this->Load();
+
 		if (strlen($sClassAlias) == 0)
 		{
 			$sClassAlias = $this->m_oFilter->GetClassAlias();
@@ -339,6 +350,8 @@ class DBObjectSet
 
 	protected function AddObjectExtended($aObjectArray)
 	{
+		if (!$this->m_bLoaded) $this->Load();
+
 		$iNextPos = count($this->m_aData);
 
 		foreach ($aObjectArray as $sClassAlias => $oObject)
@@ -350,6 +363,8 @@ class DBObjectSet
 
 	public function AddObjectArray($aObjects, $sClassAlias = '')
 	{
+		if (!$this->m_bLoaded) $this->Load();
+
 		// #@# todo - add a check on the object class ?
 		foreach ($aObjects as $oObj)
 		{
