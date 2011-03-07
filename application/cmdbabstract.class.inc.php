@@ -1687,7 +1687,7 @@ EOF
 				break;
 				
 				default:
-				$oPage->add("<pre>".htmlentities(MyHelpers::beautifulstr($data, 1000, true))."</pre>\n");			
+				$oPage->add("<pre>".htmlentities(MyHelpers::beautifulstr($data, 1000, true), ENT_QUOTES, 'UTF-8')."</pre>\n");			
 			}
 			break;
 

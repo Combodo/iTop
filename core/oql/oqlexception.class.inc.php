@@ -52,19 +52,19 @@ class OQLException extends CoreException
 
 	public function getHtmlDesc($sHighlightHtmlBegin = '<b>', $sHighlightHtmlEnd = '</b>')
 	{
-		$sRet = htmlentities($this->m_MyIssue.", found '".$this->m_sUnexpected."' in: ");
-		$sRet .= htmlentities(substr($this->m_sInput, 0, $this->m_iCol));
-		$sRet .= $sHighlightHtmlBegin.htmlentities(substr($this->m_sInput, $this->m_iCol, strlen($this->m_sUnexpected))).$sHighlightHtmlEnd;
-		$sRet .= htmlentities(substr($this->m_sInput, $this->m_iCol + strlen($this->m_sUnexpected)));
+		$sRet = htmlentities($this->m_MyIssue.", found '".$this->m_sUnexpected."' in: ", ENT_QUOTES, 'UTF-8');
+		$sRet .= htmlentities(substr($this->m_sInput, 0, $this->m_iCol), ENT_QUOTES, 'UTF-8');
+		$sRet .= $sHighlightHtmlBegin.htmlentities(substr($this->m_sInput, $this->m_iCol, strlen($this->m_sUnexpected)), ENT_QUOTES, 'UTF-8').$sHighlightHtmlEnd;
+		$sRet .= htmlentities(substr($this->m_sInput, $this->m_iCol + strlen($this->m_sUnexpected)), ENT_QUOTES, 'UTF-8');
 
 		if (!is_null($this->m_aExpecting) && (count($this->m_aExpecting) > 0))
 		{
 			$sExpectations = '{'.implode(', ', $this->m_aExpecting).'}';
-			$sRet .= ", expecting ".htmlentities($sExpectations); 
+			$sRet .= ", expecting ".htmlentities($sExpectations, ENT_QUOTES, 'UTF-8'); 
 			$sSuggest = self::FindClosestString($this->m_sUnexpected, $this->m_aExpecting);
 			if (strlen($sSuggest) > 0)
 			{
-				$sRet .= ", I would suggest to use '$sHighlightHtmlBegin".htmlentities($sSuggest)."$sHighlightHtmlEnd'";
+				$sRet .= ", I would suggest to use '$sHighlightHtmlBegin".htmlentities($sSuggest, ENT_QUOTES, 'UTF-8')."$sHighlightHtmlEnd'";
 			}
 		}
 

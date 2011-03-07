@@ -70,8 +70,8 @@ function ShowExamples($oP, $sExpression)
 			}
 			//$aDisplayData[$sTopic][] = array(
 			$aDisplayData[Dict::S('UI:RunQuery:QueryExamples')][] = array(
-				'desc' => "<div style=\"$sHighlight\">".htmlentities($sDescription)."</div>",
-				'oql' => "<div style=\"$sHighlight\">".htmlentities($sOql)."</div>",
+				'desc' => "<div style=\"$sHighlight\">".htmlentities($sDescription, ENT_QUOTES, 'UTF-8')."</div>",
+				'oql' => "<div style=\"$sHighlight\">".htmlentities($sOql, ENT_QUOTES, 'UTF-8')."</div>",
 				'go' => "<form method=\"get\"><input type=\"hidden\" name=\"expression\" value=\"$sOql\"><input type=\"submit\" value=\"".Dict::S('UI:Button:Test')."\" $sDisable></form>\n",
 			);
 		}

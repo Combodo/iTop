@@ -2579,7 +2579,7 @@ abstract class MetaModel
 		if (count($aCleanFixes) == 0) return;
 
 		echo "<form action=\"$sRepairUrl\" method=\"POST\">\n";
-		echo "   <input type=\"hidden\" name=\"$sSQLStatementArgName\" value=\"".htmlentities(implode("##SEP##", $aCleanFixes))."\">\n";
+		echo "   <input type=\"hidden\" name=\"$sSQLStatementArgName\" value=\"".htmlentities(implode("##SEP##", $aCleanFixes), ENT_QUOTES, 'UTF-8')."\">\n";
 		echo "   <input type=\"submit\" value=\" Apply changes (".count($aCleanFixes)." queries) \">\n";
 		echo "</form>\n";
 	}
@@ -2779,14 +2779,14 @@ abstract class MetaModel
 		$sRes = '';
 
 		$sRes .= "// Dictionnay conventions\n";
-		$sRes .= htmlentities("// Class:<class_name>\n");
-		$sRes .= htmlentities("// Class:<class_name>+\n");
-		$sRes .= htmlentities("// Class:<class_name>/Attribute:<attribute_code>\n");
-		$sRes .= htmlentities("// Class:<class_name>/Attribute:<attribute_code>+\n");
-		$sRes .= htmlentities("// Class:<class_name>/Attribute:<attribute_code>/Value:<value>\n");
-		$sRes .= htmlentities("// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+\n");
-		$sRes .= htmlentities("// Class:<class_name>/Stimulus:<stimulus_code>\n");
-		$sRes .= htmlentities("// Class:<class_name>/Stimulus:<stimulus_code>+\n");
+		$sRes .= htmlentities("// Class:<class_name>\n", ENT_QUOTES, 'UTF-8');
+		$sRes .= htmlentities("// Class:<class_name>+\n", ENT_QUOTES, 'UTF-8');
+		$sRes .= htmlentities("// Class:<class_name>/Attribute:<attribute_code>\n", ENT_QUOTES, 'UTF-8');
+		$sRes .= htmlentities("// Class:<class_name>/Attribute:<attribute_code>+\n", ENT_QUOTES, 'UTF-8');
+		$sRes .= htmlentities("// Class:<class_name>/Attribute:<attribute_code>/Value:<value>\n", ENT_QUOTES, 'UTF-8');
+		$sRes .= htmlentities("// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+\n", ENT_QUOTES, 'UTF-8');
+		$sRes .= htmlentities("// Class:<class_name>/Stimulus:<stimulus_code>\n", ENT_QUOTES, 'UTF-8');
+		$sRes .= htmlentities("// Class:<class_name>/Stimulus:<stimulus_code>+\n", ENT_QUOTES, 'UTF-8');
 		$sRes .= "\n";
 
 		// Note: I did not use EnumCategories(), because a given class maybe found in several categories

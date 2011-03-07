@@ -321,9 +321,9 @@ function DisplayClassesList($oPage)
 	{
 		$oPage->add("<li>".MakeRelationHLink($sRelCode)."\n");
 		$oPage->add("<ul>\n");
-		$oPage->add("<li>Description: ".htmlentities(MetaModel::GetRelationDescription($sRelCode))."</li>\n");
-		$oPage->add("<li>Verb up: ".htmlentities(MetaModel::GetRelationVerbUp($sRelCode))."</li>\n");
-		$oPage->add("<li>Verb down: ".htmlentities(MetaModel::GetRelationVerbDown($sRelCode))."</li>\n");
+		$oPage->add("<li>Description: ".htmlentities(MetaModel::GetRelationDescription($sRelCode), ENT_QUOTES, 'UTF-8')."</li>\n");
+		$oPage->add("<li>Verb up: ".htmlentities(MetaModel::GetRelationVerbUp($sRelCode), ENT_QUOTES, 'UTF-8')."</li>\n");
+		$oPage->add("<li>Verb down: ".htmlentities(MetaModel::GetRelationVerbDown($sRelCode), ENT_QUOTES, 'UTF-8')."</li>\n");
 		$oPage->add("</ul>\n");
 		$oPage->add("</li>\n");
 	}

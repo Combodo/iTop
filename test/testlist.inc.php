@@ -268,7 +268,7 @@ a2?;?b?;?c?
 				}
 				else
 				{
-					$sCellValue = htmlentities($sCell);
+					$sCellValue = htmlentities($sCell, ENT_QUOTES, 'UTF-8');
 				}
 
 				if (!isset($aExpectedResult[$iRow][$iCol]))
@@ -1178,11 +1178,11 @@ class TestItopEfficiency extends TestBizModel
 		foreach ($aStats as $sOQL => $aResults)
 		{
 			$aValues = array();
-			$aValues['OQL'] = htmlentities($sOQL);
+			$aValues['OQL'] = htmlentities($sOQL, ENT_QUOTES, 'UTF-8');
 
 			foreach($aResults as $sDesc => $sInfo)
 			{
-				$aValues[$sDesc] = htmlentities($sInfo);
+				$aValues[$sDesc] = htmlentities($sInfo, ENT_QUOTES, 'UTF-8');
 			}
 			$aData[] = $aValues;
 		}
@@ -1290,11 +1290,11 @@ class TestQueries extends TestBizModel
 		foreach ($aStats as $sOQL => $aResults)
 		{
 			$aValues = array();
-			$aValues['OQL'] = htmlentities($sOQL);
+			$aValues['OQL'] = htmlentities($sOQL, ENT_QUOTES, 'UTF-8');
 
 			foreach($aResults as $sDesc => $sInfo)
 			{
-				$aValues[$sDesc] = htmlentities($sInfo);
+				$aValues[$sDesc] = htmlentities($sInfo, ENT_QUOTES, 'UTF-8');
 			}
 			$aData[] = $aValues;
 		}
@@ -2028,7 +2028,7 @@ class TestDataExchange extends TestBizModel
 				{
 					$sCsvDataViewable = $sCsvData;
 				}
-				$sCsvDataViewable = htmlentities($sCsvDataViewable);
+				$sCsvDataViewable = htmlentities($sCsvDataViewable, ENT_QUOTES, 'UTF-8');
 		
 				echo "<div style=\"\">\n";
 				echo "      <pre class=\"vardump\">$sCsvDataViewable</pre>\n";
@@ -2117,8 +2117,8 @@ class TestDataExchange extends TestBizModel
 					),
 				),
 			),
-		);
-		$aXXXXScenarios = array(
+		//);
+		//$aXXXXScenarios = array(
 			array(
 				'desc' => 'Update then delete with retention (to complete with manual testing) and reconciliation on org/name',
 				'login' => 'admin',
@@ -2170,8 +2170,8 @@ class TestDataExchange extends TestBizModel
 					),
 				),
 			),
-		);
-		$aXXScenarios = array(
+		//);
+		//$aXXScenarios = array(
 			array(
 				'desc' => 'Simple scenario loading a few ApplicationSolution',
 				'login' => 'admin',

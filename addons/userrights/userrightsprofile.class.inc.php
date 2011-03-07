@@ -180,7 +180,7 @@ class URP_Profiles extends UserRightsBaseClass
 				$oGrant = $oUserRights->GetClassStimulusGrant($this->GetKey(), $sClass, $sStimulusCode);
 				if (is_object($oGrant) && ($oGrant->Get('permission') == 'yes'))
 				{ 
-					$aStimuli[] = '<span title="'.$sStimulusCode.': '.htmlentities($oStimulus->GetDescription()).'">'.htmlentities($oStimulus->GetLabel()).'</span>';
+					$aStimuli[] = '<span title="'.$sStimulusCode.': '.htmlentities($oStimulus->GetDescription(), ENT_QUOTES, 'UTF-8').'">'.htmlentities($oStimulus->GetLabel(), ENT_QUOTES, 'UTF-8').'</span>';
 				}
 			}
 			$sStimuli = implode(', ', $aStimuli);

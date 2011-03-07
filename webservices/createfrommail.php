@@ -177,7 +177,7 @@ for($index = 1; $index <= $iNbMessages; $index++)
 				{
 					$sTextBody = $oStructure->parts[$iPartIndex]->body;
 					$bFound = true;
-					//echo "<p>HTML text found ! (".htmlentities($sTextBody).")</p>\n";
+					//echo "<p>HTML text found ! (".htmlentities($sTextBody, ENT_QUOTES, 'UTF-8').")</p>\n";
 				}
 				$iPartIndex++;
 			}

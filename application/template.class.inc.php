@@ -161,7 +161,7 @@ class DisplayTemplate
 				$oPage->AddTabContainer('Tabs_'.$iTabContainerCount);
 				$oPage->SetCurrentTabContainer('Tabs_'.$iTabContainerCount);
 				$iTabContainerCount++;
-				//$oPage->p('Content:<pre>'.htmlentities($sContent).'</pre>');
+				//$oPage->p('Content:<pre>'.htmlentities($sContent, ENT_QUOTES, 'UTF-8').'</pre>');
 				$oTemplate = new DisplayTemplate($sContent);
 				$oTemplate->Render($oPage, array()); // no params to apply, they have already been applied
 				$oPage->SetCurrentTabContainer('');
@@ -185,7 +185,7 @@ class DisplayTemplate
 				$oPage->SetCurrentTab(Dict::S(str_replace('_', ' ', $aAttributes['name'])));
 				$oTemplate = new DisplayTemplate($sContent);
 				$oTemplate->Render($oPage, array()); // no params to apply, they have already been applied
-				//$oPage->p('iTop Tab Content:<pre>'.htmlentities($sContent).'</pre>');
+				//$oPage->p('iTop Tab Content:<pre>'.htmlentities($sContent, ENT_QUOTES, 'UTF-8').'</pre>');
 				$oPage->SetCurrentTab('');
 			break;
 			
@@ -195,7 +195,7 @@ class DisplayTemplate
 				$oPage->StartCollapsibleSection(Dict::S($sName), $bOpen);
 				$oTemplate = new DisplayTemplate($sContent);
 				$oTemplate->Render($oPage, array()); // no params to apply, they have already been applied
-				//$oPage->p('iTop Tab Content:<pre>'.htmlentities($sContent).'</pre>');
+				//$oPage->p('iTop Tab Content:<pre>'.htmlentities($sContent, ENT_QUOTES, 'UTF-8').'</pre>');
 				$oPage->EndCollapsibleSection();
 			break;
 			
@@ -241,7 +241,7 @@ class DisplayTemplate
 		</itoptabs>';
 		
 		$oPage = new iTopWebPage('Unit Test');
-		//$oPage->add("Template content: <pre>".htmlentities($sTemplate)."</pre>\n");
+		//$oPage->add("Template content: <pre>".htmlentities($sTemplate, ENT_QUOTES, 'UTF-8')."</pre>\n");
 		$oTemplate = new DisplayTemplate($sTemplate);
 		$oTemplate->Render($oPage, array('class'=>'Network device','pkey'=> 271, 'name' => 'deliversw01.mecanorama.fr', 'org_id' => 3));
 		$oPage->output();
