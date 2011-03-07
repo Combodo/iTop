@@ -874,6 +874,12 @@ class AttributeClass extends AttributeString
 	{
 		return true;
 	}
+	
+	public function GetBasicFilterLooseOperator()
+	{
+		return '=';
+	}
+	
 }
 
 /**
@@ -904,6 +910,11 @@ class AttributeApplicationLanguage extends AttributeString
 	public function RequiresIndex()
 	{
 		return true;
+	}
+	
+	public function GetBasicFilterLooseOperator()
+	{
+		return '=';
 	}
 }
 
@@ -947,6 +958,12 @@ class AttributeFinalClass extends AttributeString
 		if (empty($sValue)) return '';
 		return MetaModel::GetName($sValue);
 	}
+
+	public function GetBasicFilterLooseOperator()
+	{
+		return '=';
+	}
+
 }
 
 
@@ -1349,7 +1366,7 @@ class AttributeEnum extends AttributeString
 	}
 	public function GetBasicFilterLooseOperator()
 	{
-		return parent::GetBasicFilterLooseOperator();
+		return '=';
 	}
 
 	public function GetBasicFilterSQLExpr($sOpCode, $value)
