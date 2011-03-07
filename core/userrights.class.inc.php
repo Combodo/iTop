@@ -202,7 +202,7 @@ abstract class User extends cmdbAbstractObject
 				{
 					if (UserRights::IsStimulusAllowed($sClass, $sStimulusCode, null, $this))
 					{
-						$aStimuli[] = '<span title="'.$sStimulusCode.': '.htmlentities($oStimulus->GetDescription()).'">'.htmlentities($oStimulus->GetLabel()).'</span>';
+						$aStimuli[] = '<span title="'.$sStimulusCode.': '.htmlentities($oStimulus->GetDescription(), ENT_QUOTES, 'UTF-8').'">'.htmlentities($oStimulus->GetLabel(), ENT_QUOTES, 'UTF-8').'</span>';
 					}
 				}
 				$sStimuli = implode(', ', $aStimuli);
@@ -668,10 +668,7 @@ class UserRights
 
 		if (MetaModel::DBIsReadOnly())
 		{
-			if ($iActionCode == UR_ACTION_MODIFY) return false;
-			if ($iActionCode == UR_ACTION_DELETE) return false;
-			if ($iActionCode == UR_ACTION_BULK_MODIFY) return false;
-			if ($iActionCode == UR_ACTION_BULK_DELETE) return false;
+			return false;
 		}
 
 		if (self::IsAdministrator($oUser)) return true;
