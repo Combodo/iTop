@@ -2302,7 +2302,7 @@ $aCreateTicketSpecs = array(
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Demo'))), /* aCustomerDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Computers and peripherals'))), /* aServiceDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aServiceSubcategoryDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Troubleshooting'))), /* aServiceSubcategoryDesc */
 			'sub product of the service', /* sProduct */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Hardware support'))), /* aWorkgroupDesc */
 			array(

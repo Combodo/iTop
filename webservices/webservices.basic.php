@@ -132,6 +132,10 @@ class BasicServices extends WebServicesBase
 			$this->MyObjectSetExternalKey('caller_id', 'caller', $aCallerDesc, $oNewTicket, $oRes);
 	
 			$this->MyObjectSetExternalKey('service_id', 'service', $aServiceDesc, $oNewTicket, $oRes);
+			if (!array_key_exists('service_id', $aServiceSubcategoryDesc))
+			{
+				$aServiceSubcategoryDesc['service_id'] = $oNewTicket->Get('service_id');
+			}
 			$this->MyObjectSetExternalKey('servicesubcategory_id', 'servicesubcategory', $aServiceSubcategoryDesc, $oNewTicket, $oRes);
 			$this->MyObjectSetScalar('product', 'product', $sProduct, $oNewTicket, $oRes);
 
