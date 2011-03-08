@@ -1676,7 +1676,7 @@ class SynchroReplica extends DBObject implements iDisplay
 		$sClass = get_class($this);
 		$oPage->add('<fieldset>');
 		$oPage->add('<legend>'.Dict::S('Core:SynchroReplica:PrivateDetails').'</legend>');
-		$aZList = MetaModel::GetZListItems($sClass, 'details');
+		$aZList = MetaModel::FlattenZlist(MetaModel::GetZListItems($sClass, 'details'));
 		foreach( $aZList as $sAttCode)
 		{
 			$sDisplayValue = $this->GetAsHTML($sAttCode);	

@@ -531,7 +531,7 @@ class TestMyBizModel extends TestBizModel
 	
 			foreach (MetaModel::GetSubclasses("cmdbObjectHomeMade") as $sKlass)
 			{
-				$aItems = MetaModel::GetZListItems($sKlass, $sListCode);
+				$aItems = MetaModel::FlattenZlist(MetaModel::GetZListItems($sKlass, $sListCode));
 				if (count($aItems) == 0) continue;
 	
 				echo "$sKlass - $sListCode : {".implode(", ", $aItems)."}</br>\n";

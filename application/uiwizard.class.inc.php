@@ -227,7 +227,7 @@ $sJSHandlerCode
 			
 		// Now use the dependencies between the fields to order them
 		// Start from the order of the 'details'
-		$aList = MetaModel::GetZListItems($this->m_sClass, 'details');
+		$aList = MetaModel::FlattenZlist(MetaModel::GetZListItems($this->m_sClass, 'details'));
 		$index = 0;
 		$aOrder = array();
 		foreach($aFields as $sAttCode => $void)

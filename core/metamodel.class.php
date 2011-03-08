@@ -840,7 +840,7 @@ abstract class MetaModel
 
 	public static function IsAttributeInZList($sClass, $sListCode, $sAttCodeOrFltCode, $sGroup = null)
 	{
-		$aZList = self::GetZListItems($sClass, $sListCode);
+		$aZList = self::FlattenZlist(self::GetZListItems($sClass, $sListCode));
 		if (!$sGroup)
 		{
 			return (in_array($sAttCodeOrFltCode, $aZList));
