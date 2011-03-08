@@ -140,6 +140,9 @@ class TestOQLParser extends TestFunction
 		$aQueries = array(
 			'SELECT toto' => true,
 			'SELECT toto WHERE toto.a = 1' => true,
+			'SELECT toto WHERE toto.a = :myparameter' => true,
+			'SELECT toto WHERE toto.a IN (:param1)' => true,
+			'SELECT toto WHERE toto.a IN (:param1, :param2)' => true,
 			'SELECT toto WHERE toto.a=1' => true,
 			'SELECT toto WHERE toto.a = "1"' => true,
 			'SELECT toto WHHHERE toto.a = "1"' => false,

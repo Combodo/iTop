@@ -101,13 +101,13 @@ expression_prio4(A) ::= expression_prio3(X). { A = X; }
 expression_prio4(A) ::= expression_prio4(X) operator4(Y) expression_prio3(Z). { A = new BinaryOqlExpression(X, Y, Z); }
 
 
-list(A) ::= PAR_OPEN scalar_list(X) PAR_CLOSE. {
+list(A) ::= PAR_OPEN list_items(X) PAR_CLOSE. {
 	A = new ListOqlExpression(X);
 }
-scalar_list(A) ::= scalar(X). {
+list_items(A) ::= expression_prio4(X). {
 	A = array(X);
 }
-scalar_list(A) ::= scalar_list(L) COMA scalar(X). {
+list_items(A) ::= list_items(L) COMA expression_prio4(X). {
 	array_push(L, X);
 	A = L;
 }
