@@ -649,6 +649,14 @@ exit;
 		{
 			$sAttCode = 'id';
 		}
+		elseif (is_callable("$sClass::MapContextParam"))
+		{
+			$sAttCode = eval("return $sClass::MapContextParam('org_id');"); // Returns null when there is no mapping for this parameter
+			if ($sAttCode == null)
+			{
+				return true;
+			}
+		}
 		elseif(MetaModel::IsValidAttCode($sClass, 'org_id'))
 		{
 			$sAttCode = 'org_id';

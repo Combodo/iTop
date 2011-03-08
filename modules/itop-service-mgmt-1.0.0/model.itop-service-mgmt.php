@@ -92,6 +92,23 @@ class ProviderContract extends Contract
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'start_date', 'end_date', 'cost', 'cost_currency', 'cost_unit', 'billing_frequency', 'provider_id', 'sla', 'coverage'));
 		MetaModel::Init_SetZListItems('list', array('start_date', 'end_date', 'provider_id', 'sla', 'coverage'));
 	}
+
+	/**
+	 * Maps the given context parameter name to the appropriate filter/search code for this class
+	 * @param string $sContextParam Name of the context parameter, e.g. 'org_id'
+	 * @return string Filter code, e.g. 'customer_id'
+	 */
+	public static function MapContextParam($sContextParam)
+	{
+		if ($sContextParam == 'org_id')
+		{
+			return 'provider_id';
+		}
+		else
+		{
+			return $sContextParam;
+		}
+	}
 }
 class CustomerContract extends Contract
 {
