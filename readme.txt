@@ -57,6 +57,7 @@ Marco Tulio for the Portuguese (Brazilian) translation
 Vladimir Shilov for the Russian translation
 Izzet Sirin for the Turkish translation
 Deng Lixin for the Chinese translation
+Schlobinux for the fix of the setup temporary file verification.
 
 2. INSTALLATION
    ============
@@ -166,6 +167,7 @@ Moved the standards menus into the "welcome" module
 Added the capability to enable/disable menus based on the rights to apply a given stimulus.
 Fixed the processing of hierarchical ZLists to keep the display order when plain fields and fieldsets are mixed at the same level.
 Added support for hierarchical ZLists when checking the data model consistency
+
 
 
 * Browser compatibility
