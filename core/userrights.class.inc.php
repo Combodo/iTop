@@ -160,8 +160,7 @@ abstract class User extends cmdbAbstractObject
 		}
 		// Check that this user has at least one profile assigned
 		$oSet = $this->Get('profile_list');
-		$aProfileLinks = $oSet->ToArray();
-		if (count($aProfileLinks) == 0)
+		if ($oSet->Count() == 0)
 		{
 			$this->m_aCheckIssues[] = Dict::Format('Class:User/Error:AtLeastOneProfileIsNeeded');
 		}
