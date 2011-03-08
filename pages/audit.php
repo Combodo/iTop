@@ -37,11 +37,37 @@ try
 	
 	$oP = new iTopWebPage(Dict::S('UI:Audit:Title'));
 	
-	function GetRuleResultSet($iRuleId, $oDefinitionFilter)
+	/**
+	 * Adds the context parameters to the audit query
+	 */
+	function FilterByContext(DBObjectSearch &$oFilter, ApplicationContext $oAppContext)
+	{
+		$sObjClass = $oFilter->GetClass();		
+		$aContextParams = $oAppContext->GetNames();
+		if (is_callable("$sObjClass::MapContextParam"))
+		{
+			foreach($aContextParams as $sParamName)
+			{
+				$sValue = $oAppContext->GetCurrentValue($sParamName, null);
+				if ($sValue != null)
+				{
+					$sAttCode = eval("return $sObjClass::MapContextParam('$sParamName');"); // Returns null when there is no mapping for this parameter
+					if ($sAttCode != null)
+					{
+						$oFilter->AddCondition($sAttCode, $sValue);
+					}
+				}
+			}
+		}
+	}
+
+	function GetRuleResultSet($iRuleId, $oDefinitionFilter, $oAppContext)
 	{
 		$oRule = MetaModel::GetObject('AuditRule', $iRuleId);
 		$sOql = $oRule->Get('query');
 		$oRuleFilter = DBObjectSearch::FromOQL($sOql);
+		FilterByContext($oRuleFilter, $oAppContext); // Not needed since this filter is a subset of the definition filter, but may speedup things
+
 		if ($oRule->Get('valid_flag') == 'false')
 		{
 			// The query returns directly the invalid elements
@@ -88,18 +114,16 @@ try
 	
 		$oAuditCategory = MetaModel::GetObject('AuditCategory', $iCategory);
 		$oDefinitionFilter = DBObjectSearch::FromOQL($oAuditCategory->Get('definition_set'));
-		if (!empty($currentOrganization))
-		{
-			$oDefinitionFilter->AddCondition('org_id', $currentOrganization, '=');
-		}
+		FilterByContext($oDefinitionFilter, $oAppContext);
 		$oDefinitionSet = new CMDBObjectSet($oDefinitionFilter);
-		$oErrorObjectSet = GetRuleResultSet($iRuleIndex, $oDefinitionFilter);
+		$oErrorObjectSet = GetRuleResultSet($iRuleIndex, $oDefinitionFilter, $oAppContext);
 		$oAuditRule = MetaModel::GetObject('AuditRule', $iRuleIndex);
 		$oP->add('<div class="page_header"><h1>Audit Errors: <span class="hilite">'.$oAuditRule->Get('description').'</span></h1><img style="margin-top: -20px; margin-right: 10px; float: right;" src="../images/stop.png"/></div>');
 		$oP->p('<a href="./audit.php?'.$oAppContext->GetForLink().'">[Back to audit results]</a>');
 	    $sBlockId = 'audit_errors';
-		$oP->p("<div id=\"$sBlockId\" style=\"clear:both\">\n");    
-	    cmdbAbstractObject::DisplaySet($oP, $oErrorObjectSet, array('block_id' => $sBlockId));
+		$oP->p("<div id=\"$sBlockId\" style=\"clear:both\">\n");
+		$oBlock = DisplayBlock::FromObjectSet($oErrorObjectSet, 'list');    
+		$oBlock->Display($oP, 1);
 		$oP->p("</div>\n");    
 		break;
 		
@@ -117,6 +141,8 @@ try
 		while($oAuditCategory = $oCategoriesSet->fetch())
 		{
 			$oDefinitionFilter = DBObjectSearch::FromOQL($oAuditCategory->Get('definition_set'));
+			FilterByContext($oDefinitionFilter, $oAppContext);
+			
 			$aObjectsWithErrors = array();
 			if (!empty($currentOrganization))
 			{
@@ -145,7 +171,7 @@ try
 				else
 				{
 					$oRuleFilter = DBObjectSearch::FromOQL($oAuditRule->Get('query'));
-					$oErrorObjectSet = GetRuleResultSet($oAuditRule->GetKey(), $oDefinitionFilter);
+					$oErrorObjectSet = GetRuleResultSet($oAuditRule->GetKey(), $oDefinitionFilter, $oAppContext);
 					$iErrorsCount = $oErrorObjectSet->Count();
 					while($oObj = $oErrorObjectSet->Fetch())
 					{
