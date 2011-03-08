@@ -207,15 +207,20 @@ abstract class DBObject
 			// #@# Bug ?
 			throw new CoreException("Missing key for class '".get_class($this)."'");
 		}
-		else
+
+		$iPKey = $aRow[$sKeyField];
+		if (!self::IsValidPKey($iPKey))
 		{
-			$iPKey = $aRow[$sKeyField];
-			if (!self::IsValidPKey($iPKey))
+			if (is_null($iPKey))
 			{
-				throw new CoreWarning("An object id must be an integer value ($iPKey)");
+				throw new CoreException("Missing object id in query result (found null)");
 			}
-			$this->m_iKey = $iPKey;
+			else
+			{
+				throw new CoreException("An object id must be an integer value ($iPKey)");
+			}
 		}
+		$this->m_iKey = $iPKey;
 
 		// Build the object from an array of "attCode"=>"value")
 		//
@@ -1434,6 +1439,7 @@ abstract class DBObject
 		$oSet = $this->GetMasterReplica();
 		while($aData = $oSet->FetchAssoc())
 		{
+			// Assumption: $aData['datasource'] will not be null because the data source id is always set...
 			$oReplica = $aData['replica'];
 			$oSource = $aData['datasource'];
 			$oAttrSet = $oSource->Get('attribute_list');

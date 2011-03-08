@@ -71,7 +71,8 @@ if (!empty($sExpression))
 				}
 				$sUrl = "$sProtocol://{$sServerName}{$sPort}/pages/";
 				$oP->set_base($sUrl);
-				cmdbAbstractObject::DisplaySet($oP, $oSet, array('block_id' => 'expresult', 'menu' => false, 'display_limit' => false, 'zlist' => 'details')); // no menu, no truncated list, "details" zlist
+				$oResultBlock = new DisplayBlock($oFilter, 'list', false, array('menu' => false, 'display_limit' => false, 'zlist' => 'details'));
+				$oResultBlock->Display($oP, 'expresult');
 				break;
 				
 				case 'csv':

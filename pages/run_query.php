@@ -130,7 +130,7 @@ try
 			$oP->add("<h3>Query results</h3>\n");
 			
 			$oResultBlock = new DisplayBlock($oFilter, 'list', false);
-			$oResultBlock->Display($oP, 1);
+			$oResultBlock->Display($oP, 'runquery');
 
 			$oP->p('');
 			$oP->StartCollapsibleSection(Dict::S('UI:RunQuery:MoreInfo'), false);

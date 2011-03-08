@@ -441,7 +441,15 @@ class DisplayBlock
 						$aKeys = array();
 						foreach($aGroupByFields as $aField)
 						{
-							$aKeys[$aField['alias'].'.'.$aField['att_code']] = $aObjects[$aField['alias']]->Get($aField['att_code']);
+							$sAlias = $aField['alias'];
+							if (is_null($aObjects[$sAlias]))
+							{
+								$aKeys[$sAlias.'.'.$aField['att_code']] = '';
+							}
+							else
+							{
+								$aKeys[$sAlias.'.'.$aField['att_code']] = $aObjects[$sAlias]->Get($aField['att_code']);
+							}
 						}
 						$sCategory = implode($aKeys, ' ');
 						$aResults[$sCategory][] = $aObjects;
@@ -469,7 +477,11 @@ class DisplayBlock
 							$aSimpleArray = array();
 							foreach($aObjects as $aRow)
 							{
-								$aSimpleArray[] = $aRow[$aDisplayAliases[0]];
+								$oObj = $aRow[$aDisplayAliases[0]];
+								if (!is_null($oObj))
+								{
+									$aSimpleArray[] = $oObj;
+								}
 							}
 							$oSet = CMDBObjectSet::FromArray($this->m_oFilter->GetClass(), $aSimpleArray);
 							$sHtml .= "<tr><td>".cmdbAbstractObject::GetDisplaySet($oPage, $oSet, $aExtraParams)."</td></tr>\n";

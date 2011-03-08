@@ -48,7 +48,7 @@ class DBObjectSet
 		$this->m_iLimitStart = $iLimitStart;
 
 		$this->m_bLoaded = false; // true when the filter has been used OR the set is built step by step (AddObject...)
-		$this->m_aData = array(); // array of (row => array of (classalias) => object)
+		$this->m_aData = array(); // array of (row => array of (classalias) => object/null)
 		$this->m_aId2Row = array();
 		$this->m_iCurrRow = 0;
 	}
@@ -163,19 +163,42 @@ class DBObjectSet
 	{
 		if (!$this->m_bLoaded) $this->Load();
 
+		$aSelectedClasses = $this->m_oFilter->GetSelectedClasses();
+
 		$aRet = array();
 		foreach($this->m_aData as $iRow => $aObjects)
 		{
 			foreach($aObjects as $sClassAlias => $oObject)
 			{
-				$aRet[$iRow][$sClassAlias.'.'.'id'] = $oObject->GetKey(); 
-				$sClass = get_class($oObject);
+				if (is_null($oObject))
+				{
+					$aRet[$iRow][$sClassAlias.'.'.'id'] = null;
+				}
+				else
+				{
+					$aRet[$iRow][$sClassAlias.'.'.'id'] = $oObject->GetKey();
+				} 
+				if (is_null($oObject))
+				{
+					$sClass = $aSelectedClasses[$sClassAlias];
+				}
+				else
+				{
+					$sClass = get_class($oObject);
+				}
 				foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
 				{
 					if ($oAttDef->IsScalar())
 					{
 						$sAttName = $sClassAlias.'.'.$sAttCode;
-						$aRet[$iRow][$sAttName] = $oObject->Get($sAttCode);
+						if (is_null($oObject))
+						{
+							$aRet[$iRow][$sAttName] = null;
+						}
+						else
+						{
+							$aRet[$iRow][$sAttName] = $oObject->Get($sAttCode);
+						}
 					}
 				}
 			}
@@ -261,7 +284,14 @@ class DBObjectSet
 			$aObjects = array();
 			foreach ($this->m_oFilter->GetSelectedClasses() as $sClassAlias => $sClass)
 			{
-				$oObject = MetaModel::GetObjectByRow($sClass, $aRow, $sClassAlias, $this->m_aExtendedDataSpec);
+				if (is_null($aRow[$sClassAlias.'id']))
+				{
+					$oObject = null;
+				}
+				else
+				{
+					$oObject = MetaModel::GetObjectByRow($sClass, $aRow, $sClassAlias, $this->m_aExtendedDataSpec);
+				}
 				$aObjects[$sClassAlias] = $oObject;
 			}
 			$this->AddObjectExtended($aObjects);
@@ -345,7 +375,10 @@ class DBObjectSet
 
 		$iNextPos = count($this->m_aData);
 		$this->m_aData[$iNextPos][$sClassAlias] = $oObject;
-		$this->m_aId2Row[$sClassAlias][$oObject->GetKey()] = $iNextPos;
+		if (!is_null($oObject))
+		{
+			$this->m_aId2Row[$sClassAlias][$oObject->GetKey()] = $iNextPos;
+		}
 	}
 
 	protected function AddObjectExtended($aObjectArray)
@@ -357,7 +390,10 @@ class DBObjectSet
 		foreach ($aObjectArray as $sClassAlias => $oObject)
 		{
 			$this->m_aData[$iNextPos][$sClassAlias] = $oObject;
-			$this->m_aId2Row[$sClassAlias][$oObject->GetKey()] = $iNextPos;
+			if (!is_null($oObject))
+			{
+				$this->m_aId2Row[$sClassAlias][$oObject->GetKey()] = $iNextPos;
+			}
 		}
 	}
 

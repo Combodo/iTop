@@ -104,6 +104,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 			$sTip = "<p>The object is synchronized with an external data source</p>";
 			while($aData = $oReplicaSet->FetchAssoc())
 			{
+				// Assumption: $aData['datasource'] will not be null because the data source id is always set...
 				$sApplicationURL = $aData['datasource']->GetApplicationUrl($this, $aData['replica']);
 				$sLink = "<a href=\"$sApplicationURL\" target=\"_blank\">".$aData['datasource']->GetName()."</a>";
 				if ($aData['replica']->Get('status_dest_creator') == 1)
@@ -741,11 +742,25 @@ EOF
 			{
 				if ($bViewLink)
 				{
-					$aRow['key_'.$sAlias] = $aObjects[$sAlias]->GetHyperLink();
+					if (is_null($aObjects[$sAlias]))
+					{
+						$aRow['key_'.$sAlias] = '';
+					}
+					else
+					{
+						$aRow['key_'.$sAlias] = $aObjects[$sAlias]->GetHyperLink();
+					}
 				}
 				foreach($aList[$sClassName] as $sAttCode)
 				{
-					$aRow[$sAttCode.'_'.$sAlias] = $aObjects[$sAlias]->GetAsHTML($sAttCode);
+					if (is_null($aObjects[$sAlias]))
+					{
+						$aRow[$sAttCode.'_'.$sAlias] = '';
+					}
+					else
+					{
+						$aRow[$sAttCode.'_'.$sAlias] = $aObjects[$sAlias]->GetAsHTML($sAttCode);
+					}
 				}
 			}
 			$aValues[] = $aRow;
@@ -778,7 +793,7 @@ EOF
 				// Full list
 				$sHtml .= '<tr class="containerHeader"><td>&nbsp;'.Dict::Format('UI:CountOfResults', $oSet->Count()).'</td><td>';
 			}
-			$sHtml .= $oMenuBlock->GetRenderContent($oPage, $aMenuExtraParams);
+			$sHtml .= $oMenuBlock->GetRenderContent($oPage, $aMenuExtraParams, $aMenuExtraParams['currentId']);
 			$sHtml .= '</td></tr>';
 		}
 		$sHtml .= "<tr><td $sColspan>";
@@ -860,10 +875,24 @@ EOF
 			foreach($aAuthorizedClasses as $sAlias => $sClassName)
 			{
 				$oObj = $aObjects[$sAlias];
-				$aRow[] = $oObj->GetKey();
+				if (is_null($oObj))
+				{
+					$aRow[] = '';
+				}
+				else
+				{
+					$aRow[] = $oObj->GetKey();
+				}
 				foreach($aList[$sClassName] as $sAttCode => $oAttDef)
 				{
-					$aRow[] = $oObj->GetAsCSV($sAttCode, $sSeparator, '\\');
+					if (is_null($oObj))
+					{
+						$aRow[] = '';
+					}
+					else
+					{
+						$aRow[] = $oObj->GetAsCSV($sAttCode, $sSeparator, '\\');
+					}
 				}
 			}
 			$sHtml .= implode($sSeparator, $aRow)."\n";
@@ -898,14 +927,28 @@ EOF
 			foreach($aAuthorizedClasses as $sAlias => $sClassName)
 			{
 				$oObj = $aObjects[$sAlias];
-			    $sClassName = get_class($oObj);
-				$oPage->add("<$sClassName alias=\"$sAlias\" id=\"".$oObj->GetKey()."\">\n");
+				if (is_null($oObj))
+				{
+					$oPage->add("<$sClassName alias=\"$sAlias\" id=\"null\">\n");
+				}
+				else
+				{
+					$sClassName = get_class($oObj);
+					$oPage->add("<$sClassName alias=\"$sAlias\" id=\"".$oObj->GetKey()."\">\n");
+				}
 				foreach(MetaModel::ListAttributeDefs($sClassName) as $sAttCode=>$oAttDef)
 				{
-					if (($oAttDef->IsWritable()) && ($oAttDef->IsScalar()))
+					if (is_null($oObj))
 					{
-						$sValue = $oObj->GetAsXML($sAttCode);
-						$oPage->add("<$sAttCode>$sValue</$sAttCode>\n");
+						$oPage->add("<$sAttCode>null</$sAttCode>\n");
+					}
+					else
+					{
+						if (($oAttDef->IsWritable()) && ($oAttDef->IsScalar()))
+						{
+							$sValue = $oObj->GetAsXML($sAttCode);
+							$oPage->add("<$sAttCode>$sValue</$sAttCode>\n");
+						}
 					}
 				}
 				$oPage->add("</$sClassName>\n");
