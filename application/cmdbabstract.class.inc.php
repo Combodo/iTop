@@ -106,7 +106,11 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 			{
 				// Assumption: $aData['datasource'] will not be null because the data source id is always set...
 				$sApplicationURL = $aData['datasource']->GetApplicationUrl($this, $aData['replica']);
+				$sLink = '';
+				if (!empty($sApplicationURL))
+				{
 				$sLink = "<a href=\"$sApplicationURL\" target=\"_blank\">".$aData['datasource']->GetName()."</a>";
+				}
 				if ($aData['replica']->Get('status_dest_creator') == 1)
 				{
 					$sTip .= "<p>The object was <b>created</b> by the external data source $sLink</p>";
@@ -1062,6 +1066,18 @@ EOF
 			$aAllowedValues = MetaModel::GetAllowedValues_flt($sClassName, $sFilterCode, $aExtraParams);
 			if ($aAllowedValues != null)
 			{
+				$oAttDef = MetaModel::GetAttributeDef($sClassName, $sFilterCode);
+
+				if ($oAttDef->IsExternalKey())
+				{
+					$iFieldSize = $oAttDef->GetMaxSize();
+					$iMaxComboLength = $oAttDef->GetMaximumComboLength();
+					$oWidget = new UIExtKeyWidget($sFilterCode, $sClassName, $oAttDef->GetLabel(), $aAllowedValues, $sFilterValue, 'search_'.$sFilterCode, false, '', '', '');
+					$sHtml .= "<label>".MetaModel::GetFilterLabel($sClassName, $sFilterCode).":</label>&nbsp;";
+					$sHtml .= $oWidget->Display($oPage, $aExtraParams, true /* bSearchMode */);
+				}
+				else
+				{
 				//Enum field or external key, display a combo
 				$sValue = "<select name=\"$sFilterCode\">\n";
 				$sValue .= "<option value=\"\">".Dict::S('UI:SearchValue:Any')."</option>\n";
@@ -1079,6 +1095,7 @@ EOF
 				}
 				$sValue .= "</select>\n";
 				$sHtml .= "<label>".MetaModel::GetFilterLabel($sClassName, $sFilterCode).":</label>&nbsp;$sValue\n";
+				}				
 				unset($aExtraParams[$sFilterCode]);
 			}
 			else

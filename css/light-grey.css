@@ -160,7 +160,7 @@ p a:hover, td a:hover {
 	background: url(../images/mini-arrow-orange.gif) no-repeat left;
 }
 
-td a.no-arrow, td a.no-arrow:visited {
+td a.no-arrow, td a.no-arrow:visited, .SearchDrawer a.no-arrow, .SearchDrawer a.no-arrow:visited {
 	text-decoration:none;
 	color:#000000;
 	padding-left:0px;

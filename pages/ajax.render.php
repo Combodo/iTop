@@ -79,10 +79,20 @@ try
 		$iInputId = utils::ReadParam('iInputId', '');
 		$sSuffix = utils::ReadParam('sSuffix', '');
 		$sJson = utils::ReadParam('json', '');
+		if (!empty($sJson))
+		{
 		$oWizardHelper = WizardHelper::FromJSON($sJson);
 		$oObj = $oWizardHelper->GetTargetObject();
+			$currentValue = $oObj->Get($sAttCode);
+		}
+		else
+		{
+			// Search form: no current object
+			$oObj = null;
+			$currentValue = 'eviV bulgroZ';
+		}
 		$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, array('this' => $oObj));
-		$oWidget = new UIExtKeyWidget($sAttCode, $sClass, '', $aAllowedValues, $oObj->Get($sAttCode), $iInputId, false, $sSuffix, '');
+		$oWidget = new UIExtKeyWidget($sAttCode, $sClass, '', $aAllowedValues, $currentValue, $iInputId, false, $sSuffix, '');
 		$oWidget->SearchObjectsToSelect($oPage, $sTargetClass);	
 		break;
 	

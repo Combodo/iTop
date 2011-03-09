@@ -92,12 +92,24 @@ class UIExtKeyWidget
 	 * @param Hash $aArgs Extra context arguments
 	 * @return string The HTML fragment to be inserted into the page
 	 */
-	public function Display(WebPage $oPage, $aArgs = array())
+	public function Display(WebPage $oPage, $aArgs = array(), $bSearchMode = false)
 	{
-		$bCreate = (!MetaModel::IsAbstract($this->sTargetClass)) && (UserRights::IsActionAllowed($this->sTargetClass, UR_ACTION_BULK_MODIFY) && $this->oAttDef->AllowTargetCreation());
+		$oPage->add_linked_script('../js/extkeywidget.js');
+		$oPage->add_linked_script('../js/forms-json-utils.js');
+		
+		$bCreate = (!$bSearchMode) && (!MetaModel::IsAbstract($this->sTargetClass)) && (UserRights::IsActionAllowed($this->sTargetClass, UR_ACTION_BULK_MODIFY) && $this->oAttDef->AllowTargetCreation());
 		$sMessage = Dict::S('UI:Message:EmptyList:UseSearchForm');
+		$sAttrFieldPrefix = ($bSearchMode) ? '' : 'attr_';
 
 		$sHTMLValue = "<span style=\"white-space:nowrap\">"; // no wrap
+		if($bSearchMode)
+		{
+			$sWizHelper = 'null';
+		} 
+		else
+		{
+			$sWizHelper = 'oWizardHelper'.$this->sFormPrefix;
+		}
 		if (count($this->aAllowedValues) < $this->oAttDef->GetMaximumComboLength())
 		{
 			// Few choices, use a normal 'select'
@@ -106,8 +118,15 @@ class UIExtKeyWidget
 			$sHelpText = $this->oAttDef->GetHelpOnEdition();
 
 			// In case there are no valid values, the select will be empty, thus blocking the user from validating the form
-			$sHTMLValue = "<select title=\"$sHelpText\" name=\"attr_{$this->sFieldPrefix}{$this->sAttCode}{$this->sNameSuffix}\" id=\"$this->iId\">\n";
-			$sHTMLValue .= "<option value=\"\">".Dict::S('UI:SelectOne')."</option>\n";
+			$sHTMLValue = "<select title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$this->sFieldPrefix}{$this->sAttCode}{$this->sNameSuffix}\" id=\"$this->iId\">\n";
+			if ($bSearchMode)
+			{
+				$sHTMLValue .= "<option value=\"\">".Dict::S('UI:SearchValue:Any')."</option>\n";			
+			}
+			else
+			{
+				$sHTMLValue .= "<option value=\"\">".Dict::S('UI:SelectOne')."</option>\n";
+			}
 			foreach($this->aAllowedValues as $key => $display_value)
 			{
 				if ((count($this->aAllowedValues) == 1) && ($this->bMandatory == 'true') )
@@ -122,9 +141,9 @@ class UIExtKeyWidget
 				$sHTMLValue .= "<option value=\"$key\"$sSelected>$display_value</option>\n";
 			}
 			$sHTMLValue .= "</select>\n";
-		$oPage->add_ready_script(
+			$oPage->add_ready_script(
 <<<EOF
-		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sClass}', '{$this->sAttCode}', '{$this->sNameSuffix}', $sSelectMode, oWizardHelper{$this->sFormPrefix});
+		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sClass}', '{$this->sAttCode}', '{$this->sNameSuffix}', $sSelectMode, $sWizHelper);
 		oACWidget_{$this->iId}.emptyHtml = "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>$sMessage</p></div>";
 
 EOF
@@ -152,12 +171,12 @@ EOF
 			$sHTMLValue .= "<a class=\"no-arrow\" href=\"javascript:oACWidget_{$this->iId}.Search();\"><img style=\"border:0;vertical-align:middle;\" src=\"../images/mini_search.gif\" /></a>&nbsp;";
 	
 			// another hidden input to store & pass the object's Id
-			$sHTMLValue .= "<input type=\"hidden\" id=\"$this->iId\" name=\"attr_{$this->sFieldPrefix}{$this->sAttCode}{$this->sNameSuffix}\" value=\"$this->value\" />\n";
+			$sHTMLValue .= "<input type=\"hidden\" id=\"$this->iId\" name=\"{$sAttrFieldPrefix}{$this->sFieldPrefix}{$this->sAttCode}{$this->sNameSuffix}\" value=\"$this->value\" />\n";
 	
 			// Scripts to start the autocomplete and bind some events to it
 		$oPage->add_ready_script(
 <<<EOF
-		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sClass}', '{$this->sAttCode}', '{$this->sNameSuffix}', $sSelectMode, oWizardHelper{$this->sFormPrefix});
+		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sClass}', '{$this->sAttCode}', '{$this->sNameSuffix}', $sSelectMode, $sWizHelper);
 		oACWidget_{$this->iId}.emptyHtml = "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>$sMessage</p></div>";
 		$('#label_$this->iId').autocomplete('./ajax.render.php', { scroll:true, minChars:{$iMinChars}, formatItem:formatItem, autoFill:false, matchContains:true, keyHolder:'#{$this->iId}', extraParams:{operation:'autocomplete', sclass:'{$this->sClass}',attCode:'{$this->sAttCode}'}});
 		$('#label_$this->iId').blur(function() { $(this).search(); } );

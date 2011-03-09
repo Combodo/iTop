@@ -97,8 +97,16 @@ function ExtKeyWidget(id, sClass, sAttCode, sSuffix, bSelectMode, oWizHelper)
 			}
 		);
 		
-		me.oWizardHelper.UpdateWizard();
-		theMap['json'] = me.oWizardHelper.ToJSON();
+		if (me.oWizardHelper == null)
+		{
+			theMap['json'] = '';
+		}
+		else
+		{
+			// Not inside a "search form", updating a real object
+			me.oWizardHelper.UpdateWizard();
+			theMap['json'] = me.oWizardHelper.ToJSON();
+		}
 		
 		theMap['sRemoteClass'] = theMap['class'];  // swap 'class' (defined in the form) and 'remoteClass'
 		theMap['class'] = me.sClass;
