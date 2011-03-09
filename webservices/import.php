@@ -93,7 +93,7 @@ $aPageParams = array
 	(
 		'mandatory' => false,
 		'modes' => 'http,cli',
-		'default' => ';',
+		'default' => ',',
 		'description' => 'column separator in CSV data',
 	),
 	'qualifier' => array
@@ -304,6 +304,15 @@ try
 		$bSimulate = false;
 	}
 
+	if (($sOutput == "summary") || ($sOutput == 'details'))
+	{
+		$oP->add_comment("Output format: ".$sOutput);
+		$oP->add_comment("Class: ".$sClass);
+		$oP->add_comment("Separator: ".$sSep);
+		$oP->add_comment("Qualifier: ".$sQualifier);
+		$oP->add_comment("Charset Encoding:".$sCharSet);
+		$oP->add_comment("Data Size: ".strlen($sCSVData));
+	}
 	//////////////////////////////////////////////////
 	//
 	// Security
@@ -313,6 +322,25 @@ try
 		throw new SecurityException(Dict::Format('UI:Error:BulkModifyNotAllowedOn_Class', $sClass));
 	}
 
+	//////////////////////////////////////////////////
+	//
+	// Make translated header reference
+	//
+	$aFriendlyToInternalAttCode = array();
+	foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+	{
+	  	$aFriendlyToInternalAttCode[strtolower(BulkChange::GetFriendlyAttCodeName($sClass, $sAttCode))] = $sAttCode;
+	  	if ($oAttDef->IsExternalKey(EXTKEY_RELATIVE))
+	  	{
+	  		$sRemoteClass = $oAttDef->GetTargetClass();
+			foreach(MetaModel::ListAttributeDefs($sRemoteClass) as $sRemoteAttCode => $oRemoteAttDef)
+		  	{
+		  		$sAttCodeEx = $sAttCode.'->'.$sRemoteAttCode;
+		  		$aFriendlyToInternalAttCode[strtolower(BulkChange::GetFriendlyAttCodeName($sClass, $sAttCodeEx))] = $sAttCodeEx;
+		  	}
+		}
+   }
+   
 	//////////////////////////////////////////////////
 	//
 	// Parse first line, check attributes, analyse the request
@@ -331,9 +359,24 @@ try
 	$aRawFieldList = $oCSVParser->ListFields();
 	$iColCount = count($aRawFieldList);
 
+	// Translate into internal names
+	$aFieldList = array();
+	foreach($aRawFieldList as $iFieldId => $sFieldName)
+	{
+		$sFieldName = trim($sFieldName);
+		if (array_key_exists(strtolower($sFieldName), $aFriendlyToInternalAttCode))
+		{
+			$aFieldList[$iFieldId] = $aFriendlyToInternalAttCode[strtolower($sFieldName)];
+		}
+		else
+		{
+			$aFieldList[$iFieldId] = $sFieldName;
+		}
+	}	
+
 	$aAttList = array();
 	$aExtKeys = array();
-	foreach($aRawFieldList as $iFieldId => $sFieldName)
+	foreach($aFieldList as $iFieldId => $sFieldName)
 	{
 		$aMatches = array();
 		if (preg_match('/^(.+)\*$/', $sFieldName, $aMatches))
@@ -362,6 +405,10 @@ try
 				throw new BulkLoadException("Unknown attribute '$sRemoteAttCode' (key: '$sExtKeyAttCode', class: '$sTargetClass')");
 			}
 			$aExtKeys[$sExtKeyAttCode][$sRemoteAttCode] = $iFieldId;
+		}
+		elseif ($sFieldName == 'id')
+		{
+			$aAttList[$sFieldName] = $iFieldId;
 		}
 		else
 		{
@@ -399,7 +446,7 @@ try
 		// The reconciliation attributes not present in the data will be ignored
 		foreach(MetaModel::GetReconcKeys($sClass) as $sReconcKeyAttCode)
 		{
-			if (in_array($sReconcKeyAttCode, $aRawFieldList))
+			if (in_array($sReconcKeyAttCode, $aFieldList))
 			{
 				$aReconcSpec[] = $sReconcKeyAttCode;
 			}
@@ -420,7 +467,7 @@ try
 		$sReconcKey = trim($sReconcKey);
 		if (empty($sReconcKey)) continue; // skip empty spec
 
-		if (!in_array($sReconcKey, $aRawFieldList))
+		if (!in_array($sReconcKey, $aFieldList))
 		{
 			throw new BulkLoadException("Reconciliation keys not found in the input columns '$sReconcKey' (class: '$sClass')");
 		}
@@ -471,6 +518,27 @@ try
 
 	$aData = $oCSVParser->ToArray();
 	$iLineCount = count($aData);
+
+	if (($sOutput == "summary") || ($sOutput == 'details'))
+	{
+		$oP->add_comment("Data Lines: ".$iLineCount);
+		$oP->add_comment("Simulate: ".($bSimulate ? '1' : '0'));
+		$oP->add_comment("Columns: ".implode(', ', $aFieldList));
+
+		$aReconciliationReport = array();
+		foreach($aReconcilKeysReport as $sKey => $aKeyDetails)
+		{
+			if (count($aKeyDetails) > 0)
+			{
+				$aReconciliationReport[] = $sKey.' ('.implode(',', $aKeyDetails).')';
+			}
+			else
+			{
+				$aReconciliationReport[] = $sKey;
+			}
+		}
+		$oP->add_comment("Reconciliation Keys: ".implode(', ', $aReconciliationReport));
+	}
 
 	$oBulk = new BulkChange(
 		$sClass,
@@ -569,29 +637,7 @@ try
 
 	if (($sOutput == "summary") || ($sOutput == 'details'))
 	{
-		$aReconciliationReport = array();
-		foreach($aReconcilKeysReport as $sKey => $aKeyDetails)
-		{
-			if (count($aKeyDetails) > 0)
-			{
-				$aReconciliationReport[] = $sKey.' ('.implode(',', $aKeyDetails).')';
-			}
-			else
-			{
-				$aReconciliationReport[] = $sKey;
-			}
-		}
-		$oP->add_comment("Class: ".$sClass);
-		$oP->add_comment("Separator: ".$sSep);
-		$oP->add_comment("Qualifier: ".$sQualifier);
-		$oP->add_comment("Charset Encoding:".$sCharSet);
-		$oP->add_comment("Data Size: ".strlen($sCSVData));
-		$oP->add_comment("Data Lines: ".$iLineCount);
-		$oP->add_comment("Columns: ".implode(', ', $aRawFieldList));
-		$oP->add_comment("Reconciliation Keys: ".implode(', ', $aReconciliationReport));
-		$oP->add_comment("Output format: ".$sOutput);
 //		$oP->add_comment("Report level: ".$sReportLevel);
-		$oP->add_comment("Simulate: ".($bSimulate ? '1' : '0'));
 		$oP->add_comment("Change tracking comment: ".$sComment);
 		$oP->add_comment("Issues: ".$iCountErrors);
 		$oP->add_comment("Warnings: ".$iCountWarnings);
@@ -622,8 +668,17 @@ try
 		}
 		foreach ($aAttList as $sAttCode => $iCol)
 		{
-			$sLabel = MetaModel::GetAttributeDef($sClass, $sAttCode)->GetLabel();
-			$aDisplayConfig["$iCol"] = array("label"=>$sAttCode, "description"=>$sLabel);
+			if ($sAttCode == 'id')
+			{
+				$sLabel = Dict::S('UI:CSVImport:idField');
+
+				$aDisplayConfig["$iCol"] = array("label"=>$sAttCode, "description"=>$sLabel);
+			}
+			else
+			{
+				$sLabel = MetaModel::GetAttributeDef($sClass, $sAttCode)->GetLabel();
+				$aDisplayConfig["$iCol"] = array("label"=>$sAttCode, "description"=>$sLabel);
+			}
 		}
 	
 		$aResultDisp = array(); // to be displayed

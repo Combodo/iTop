@@ -1059,6 +1059,49 @@ EOF
 		}
 		$oPage->table($aConfig, $aDetails);
 	}	
+
+	/**
+	 * Get the user friendly name for an 'extended' attribute code i.e 'name', becomes 'Name' and 'org_id->name' becomes 'Organization->Name'
+	 * @param string $sClassName The name of the class
+	 * @param string $sAttCodeEx Either an attribute code or ext_key_name->att_code
+	 * @return string A user friendly format of the string: AttributeName or AttributeName->ExtAttributeName
+	 */
+	public static function GetFriendlyAttCodeName($sClassName, $sAttCodeEx)
+	{
+		$sFriendlyName = '';
+		if (preg_match('/(.+)->(.+)/', $sAttCodeEx, $aMatches) > 0)
+		{
+			$sAttribute = $aMatches[1];
+			$sField = $aMatches[2];
+			$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttribute);
+			if ($oAttDef->IsExternalKey())
+			{
+				$sTargetClass = $oAttDef->GetTargetClass();
+				$oTargetAttDef = MetaModel::GetAttributeDef($sTargetClass, $sField);
+				$sFriendlyName = $oAttDef->GetLabel().'->'.$oTargetAttDef->GetLabel();
+			}
+			else
+			{
+				 // hum, hum... should never happen, we'd better raise an exception
+				 throw(new Exception(Dict::Format('UI:CSVImport:ErrorExtendedAttCode', $sAttCodeEx, $sAttribute, $sClassName)));
+			}
+	
+		}
+		else
+		{
+			if ($sAttCodeEx == 'id')
+			{
+				$sFriendlyName = Dict::S('UI:CSVImport:idField');
+			}
+			else
+			{
+				$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCodeEx);
+				$sFriendlyName = $oAttDef->GetLabel();
+			}
+		}
+		return $sFriendlyName;
+	}
+	
 }
 
 

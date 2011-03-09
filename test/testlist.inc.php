@@ -1388,12 +1388,19 @@ class TestImportREST extends TestWebServices
 		return 'Test various options and fonctionality of import.php';
 	}
 
-	protected function DoExecSingleLoad($aLoadSpec)
+	protected function DoExecSingleLoad($aLoadSpec, $iTestId = null)
 	{
 		$sCsvData = $aLoadSpec['csvdata'];
 
 		echo "<div style=\"padding: 10;\">\n";
-		echo "<h3 style=\"background-color: #ddddff; padding: 10;\">{$aLoadSpec['desc']}</h3>\n";
+		if (is_null($iTestId))
+		{
+			echo "<h3 style=\"background-color: #ddddff; padding: 10;\">{$aLoadSpec['desc']}</h3>\n";
+		}
+		else
+		{
+			echo "<h3 style=\"background-color: #ddddff; padding: 10;\"><a href=\"?todo=exec&testid=TestImportREST&subtests=$iTestId\">$iTestId</a> - {$aLoadSpec['desc']}</h3>\n";
+		}
 
 		$aPostData = array('csvdata' => $sCsvData);
 
@@ -1467,16 +1474,6 @@ class TestImportREST extends TestWebServices
 				'csvdata' => "xxx",
 			),
 			array(
-				'desc' => 'Wrong report level',
-				'login' => 'admin',
-				'password' => 'admin',
-				'args' => array(
-					'class' => 'NetworkDevice',
-					'reportlevel' => 'errors|ouarnings|changed',
-				),
-				'csvdata' => "xxx",
-			),
-			array(
 				'desc' => 'Weird format, working anyhow...',
 				'login' => 'admin',
 				'password' => 'admin',
@@ -1499,6 +1496,7 @@ class TestImportREST extends TestWebServices
 				'args' => array(
 					'class' => 'Organization',
 					'output' => 'details',
+					'separator' => ';',
 					'reconciliationkeys' => '',
 				),
 				'csvdata' => "name;code\nWorldCompany;WCY",
@@ -1510,6 +1508,7 @@ class TestImportREST extends TestWebServices
 				'args' => array(
 					'class' => 'Location',
 					'output' => 'details',
+					'separator' => ';',
 					'reconciliationkeys' => '',
 				),
 				'csvdata' => "name;org_id;address\nParis;1;Centre de la Franca",
@@ -1521,6 +1520,7 @@ class TestImportREST extends TestWebServices
 				'args' => array(
 					'class' => 'Person',
 					'output' => 'details',
+					'separator' => ';',
 					'reconciliationkeys' => '',
 				),
 				'csvdata' => "email;name;first_name;org_id;phone\njohn.foo@starac.com;Foo;John;1;+33(1)23456789",
@@ -1532,6 +1532,7 @@ class TestImportREST extends TestWebServices
 				'args' => array(
 					'class' => 'Person',
 					'output' => 'details',
+					'separator' => ';',
 					'reconciliationkeys' => '',
 				),
 				'csvdata' => "email;name;first_name;org_id\nemailPASbon;Foo;John;1",
@@ -1543,6 +1544,7 @@ class TestImportREST extends TestWebServices
 				'args' => array(
 					'class' => 'Team',
 					'output' => 'details',
+					'separator' => ';',
 					'reconciliationkeys' => '',
 				),
 				'csvdata' => "name;org_id;location_name\nSquadra Azzura2;1;Paris",
@@ -1554,9 +1556,35 @@ class TestImportREST extends TestWebServices
 				'args' => array(
 					'class' => 'Server',
 					'output' => 'details',
+					'separator' => ';',
 					'reconciliationkeys' => '',
 				),
 				'csvdata' => "name;status;owner_name;location_name;location_id->org_name;os_family;os_version;management_ip;cpu;ram;brand;model;serial_number\nlocalhost.;production;Demo;Grenoble;Demo;Ubuntu 9.10;2.6.31-19-generic-#56-Ubuntu SMP Thu Jan 28 01:26:53 UTC 2010;16.16.230.232;Intel(R) Core(TM)2 Duo CPU     T7100  @ 1.80GHz;2005;Hewlett-Packard;HP Compaq 6510b (GM108UC#ABF);CNU7370BNP",
+			),
+			array(
+				'desc' => 'Load server (column header localized in english)',
+				'login' => 'admin',
+				'password' => 'admin',
+				'args' => array(
+					'class' => 'Server',
+					'output' => 'details',
+					'separator' => ';',
+					'reconciliationkeys' => '',
+				),
+				'csvdata' => "Name;Status;Owner Organization;Location;location_id->org_name;OS Family;OS Version;Management IP;CPU;RAM;Brand;Model;Serial  Number\nlocalhost.;production;Demo;Grenoble;Demo;Ubuntu 9.10;2.6.31-19-generic-#56-Ubuntu SMP Thu Jan 28 01:26:53 UTC 2010;16.16.230.232;Intel(R) Core(TM)2 Duo CPU     T7100  @ 1.80GHz;2005;Hewlett-Packard;HP Compaq 6510b (GM108UC#ABF);CNU7370BNP",
+			),
+			array(
+				'desc' => 'Load server (directly from Export results)',
+				'login' => 'admin',
+				'password' => 'admin',
+				'args' => array(
+					'class' => 'Server',
+					'output' => 'details',
+					'reconciliationkeys' => '',
+				),
+				'csvdata' => 'id,Name,Status,Owner organization,Owner organization->Name,Business criticity,Brand,Model,Serial  Number,Asset Reference,Description,Location,Location->Name,Location details,Management IP,Default Gateway,CPU,RAM,Hard Disk,OS Family,OS Version
+1,"dbserver1.demo.com","production",2,"Demo","medium","HP","DL380","","","ouille
+[[Server:webserver.demo.com]]",1,"Grenoble","","10.1.1.10","255.255.255.0","2","16Gb","120Gb","Linux","Debian (Lenny)"',
 			),
 			array(
 				'desc' => 'Load server - wrong value for status',
@@ -1565,6 +1593,7 @@ class TestImportREST extends TestWebServices
 				'args' => array(
 					'class' => 'Server',
 					'output' => 'details',
+					'separator' => ';',
 					'reconciliationkeys' => '',
 				),
 				'csvdata' => "name;status;owner_name;location_name;location_id->org_name;os_family;os_version;management_ip;cpu;ram;brand;model;serial_number\nlocalhost.;Production;Demo;Grenoble;Demo;Ubuntu 9.10;2.6.31-19-generic-#56-Ubuntu SMP Thu Jan 28 01:26:53 UTC 2010;16.16.230.232;Intel(R) Core(TM)2 Duo CPU     T7100  @ 1.80GHz;2005;Hewlett-Packard;HP Compaq 6510b (GM108UC#ABF);CNU7370BNP",
@@ -1576,6 +1605,7 @@ class TestImportREST extends TestWebServices
 				'args' => array(
 					'class' => 'NetworkInterface',
 					'output' => 'details',
+					'separator' => ';',
 					'reconciliationkeys' => '',
 				),
 				'csvdata' => "name;status;org_id;device_name;physical_type;ip_address;ip_mask;mac_address;speed\neth0;implementation;2;localhost.;ethernet;16.16.230.232;255.255.240.0;00:1a:4b:68:e3:97;\nlo;implementation;2;localhost.;ethernet;127.0.0.1;255.0.0.0;;",
@@ -1588,6 +1618,7 @@ class TestImportREST extends TestWebServices
 				'args' => array(
 					'class' => 'NetworkDevice',
 					'output' => 'details',
+					'separator' => ';',
 					'reconciliationkeys' => 'org_id->name,name',
 					),
 				'csvdata' => 'name;management_ip;importance;org_id->name;type
@@ -1601,6 +1632,7 @@ class TestImportREST extends TestWebServices
 				'args' => array(
 					'class' => 'NetworkInterface',
 					'output' => 'details',
+					'separator' => ';',
 					'reconciliationkeys' => 'device_id->name,name',
 				),
 				'csvdata' => 'device_id->name;org_id->name;name;ip_address;ip_mask;speed;link_type;mac_address;physical_type
@@ -1625,6 +1657,7 @@ class TestImportREST extends TestWebServices
 				'args' => array(
 					'class' => 'Location',
 					'output' => 'details',
+					'separator' => ';',
 				),
 				'csvdata' => "name;org_id\nParis;2",
 			),
@@ -1635,6 +1668,7 @@ class TestImportREST extends TestWebServices
 				'args' => array(
 					'class' => 'Location',
 					'output' => 'details',
+					'separator' => ';',
 				),
 				'csvdata' => "name;org_name\nParis;Demo",
 			),
@@ -1645,6 +1679,7 @@ class TestImportREST extends TestWebServices
 				'args' => array(
 					'class' => 'Location',
 					'output' => 'details',
+					'separator' => ';',
 				),
 				'csvdata' => "name;org_id->code\nParis;DEMO",
 			),
@@ -1655,6 +1690,7 @@ class TestImportREST extends TestWebServices
 				'args' => array(
 					'class' => 'Location',
 					'output' => 'summary',
+					'separator' => ';',
 				),
 				'csvdata' => "name;org_id->code\nParis;DEMO",
 			),
@@ -1665,6 +1701,7 @@ class TestImportREST extends TestWebServices
 				'args' => array(
 					'class' => 'Location',
 					'output' => 'retcode',
+					'separator' => ';',
 				),
 				'csvdata' => "name;org_id->code\nParis;DEMO",
 			),
@@ -1675,6 +1712,7 @@ class TestImportREST extends TestWebServices
 				'args' => array(
 					'class' => 'Location',
 					'output' => 'details',
+					'separator' => ';',
 					'reconciliationkeys' => 'org_id',
 				),
 				'csvdata' => "org_name;name\nDemo;Paris",
@@ -1686,6 +1724,7 @@ class TestImportREST extends TestWebServices
 				'args' => array(
 					'class' => 'Location',
 					'output' => 'details',
+					'separator' => ';',
 				),
 				'csvdata' => "org_name;country\nDemo;France",
 			),
@@ -1696,6 +1735,7 @@ class TestImportREST extends TestWebServices
 				'args' => array(
 					'class' => 'Location',
 					'output' => 'details',
+					'separator' => ';',
 				),
 				'csvdata' => "name;org\nParis;2",
 			),
@@ -1706,6 +1746,7 @@ class TestImportREST extends TestWebServices
 				'args' => array(
 					'class' => 'Location',
 					'output' => 'details',
+					'separator' => ';',
 				),
 				'csvdata' => "name;org->code\nParis;DEMO",
 			),
@@ -1716,6 +1757,7 @@ class TestImportREST extends TestWebServices
 				'args' => array(
 					'class' => 'Location',
 					'output' => 'details',
+					'separator' => ';',
 				),
 				'csvdata' => "name;org_id->duns\nParis;DEMO",
 			),
@@ -1726,6 +1768,7 @@ class TestImportREST extends TestWebServices
 				'args' => array(
 					'class' => 'Location',
 					'output' => 'details',
+					'separator' => ';',
 					'comment' => 'automated testing'
 				),
 				'csvdata' => "org_name;name;address\nDemo;Le pantheon;Addresse bidon:".((string)microtime(true)),
@@ -1737,6 +1780,7 @@ class TestImportREST extends TestWebServices
 				'args' => array(
 					'class' => 'Location',
 					'output' => 'details',
+					'separator' => ';',
 					'simulate' => '1',
 					'comment' => 'SHOULD NEVER APPEAR IN THE HISTORY'
 				),
@@ -1744,9 +1788,21 @@ class TestImportREST extends TestWebServices
 			),
 		); 
 
-		foreach ($aLoads as $aLoadSpec)
+     	$sSubTests = utils::ReadParam('subtests', null);
+     	if (is_null($sSubTests))
+     	{
+			foreach ($aLoads as $iTestId => $aLoadSpec)
+			{
+				$this->DoExecSingleLoad($aLoadSpec, $iTestId);
+			}
+		}
+		else
 		{
-			$this->DoExecSingleLoad($aLoadSpec);
+			$aSubTests = explode(',', $sSubTests);
+			foreach ($aSubTests as $iTestId)
+			{
+				$this->DoExecSingleLoad($aLoads[$iTestId], $iTestId);
+			}
 		}
 	}
 }
