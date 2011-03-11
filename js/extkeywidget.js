@@ -114,7 +114,7 @@ function ExtKeyWidget(id, sClass, sAttCode, sSuffix, bSelectMode, oWizHelper)
 		me.StopPendingRequest();
 		
 		// Run the query and display the results
-		me.ajax_request = $.post( 'ajax.render.php', theMap, 
+		me.ajax_request = $.post( '../pages/ajax.render.php', theMap, 
 			function(data)
 			{
 				$(sSearchAreaId).html(data);
@@ -150,7 +150,7 @@ function ExtKeyWidget(id, sClass, sAttCode, sSuffix, bSelectMode, oWizHelper)
 		me.StopPendingRequest();
 		
 		// Run the query and get the result back directly in JSON
-		me.ajax_request = $.post( 'ajax.render.php', theMap, 
+		me.ajax_request = $.post( '../pages/ajax.render.php', theMap, 
 			function(data)
 			{
 				$('#label_'+me.id).val(data.name);
@@ -205,7 +205,7 @@ function ExtKeyWidget(id, sClass, sAttCode, sSuffix, bSelectMode, oWizHelper)
 		me.StopPendingRequest();
 		
 		// Run the query and get the result back directly in HTML
-		me.ajax_request = $.post( 'ajax.render.php', theMap, 
+		me.ajax_request = $.post( '../pages/ajax.render.php', theMap, 
 			function(data)
 			{
 				$('#ajax_'+me.id).html(data);
@@ -275,7 +275,7 @@ function ExtKeyWidget(id, sClass, sAttCode, sSuffix, bSelectMode, oWizHelper)
 			me.StopPendingRequest();
 			
 			// Run the query and get the result back directly in JSON
-			me.ajax_request = $.post( 'ajax.render.php', theMap, 
+			me.ajax_request = $.post( '../pages/ajax.render.php', theMap, 
 				function(data)
 				{
 					if (me.bSelectMode)
