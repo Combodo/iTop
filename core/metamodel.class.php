@@ -3444,6 +3444,30 @@ abstract class MetaModel
 	public static function Startup($sConfigFile, $bModelOnly = false)
 	{
 		self::LoadConfig($sConfigFile);
+
+		$aInterfaces = array('iApplicationUIExtension', 'iApplicationObjectExtension');
+		foreach($aInterfaces as $sInterface)
+		{
+			self::$m_aExtensionClasses[$sInterface] = array();
+		}
+
+		foreach(get_declared_classes() as $sPHPClass)
+		{
+			$oRefClass = new ReflectionClass($sPHPClass);
+			$oExtensionInstance = null;
+			foreach($aInterfaces as $sInterface)
+			{
+				if ($oRefClass->implementsInterface($sInterface))
+				{
+					if (is_null($oExtensionInstance))
+					{
+						$oExtensionInstance = new $sPHPClass;
+					}
+					self::$m_aExtensionClasses[$sInterface][] = $oExtensionInstance;
+				}
+			}
+		}
+
 		if ($bModelOnly) return;
 
 		CMDBSource::SelectDB(self::$m_sDBName);
@@ -3569,6 +3593,8 @@ abstract class MetaModel
 	{
 		return self::$m_oConfig;
 	}
+
+	protected static $m_aExtensionClasses = array();
 
 	protected static $m_aPlugins = array();
 	public static function RegisterPlugin($sType, $sName, $aInitCallSpec = array())
@@ -3960,6 +3986,20 @@ abstract class MetaModel
 		return str_replace($aSearches, $aReplacements, $aInput);
 	}
 
+	/**
+	 * Returns an array of classes implementing the given interface
+	 */
+	public static function EnumPlugins($sInterface)
+	{
+		if (array_key_exists($sInterface, self::$m_aExtensionClasses))
+		{
+			return self::$m_aExtensionClasses[$sInterface];
+		}
+		else
+		{
+			return array();
+		}
+	}
 } // class MetaModel
 
 

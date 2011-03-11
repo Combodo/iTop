@@ -46,6 +46,8 @@ abstract class DBObject
 	private $m_bCheckStatus = null; // Means: the object has been verified and is consistent with integrity rules
 													//        if null, then the check has to be performed again to know the status
 	protected $m_aCheckIssues = null;
+	protected $m_aDeleteIssues = null;
+
 	protected $m_aAsArgs = null; // The current object as a standard argument (cache)
 
 	private $m_bFullyLoaded = false; // Compound objects can be partially loaded
@@ -786,10 +788,13 @@ abstract class DBObject
 
 	// check if it is allowed to delete the existing object from the database
 	// a displayable error is returned
-	public function CheckToDelete()
+	protected function DoCheckToDelete()
 	{
-		return true;
+		$this->m_aDeleteIssues = array(); // Ok
 	}
+
+  	// final public function CheckToDelete() - THE EQUIVALENT OF CheckToWrite IS NOT AVAILABLE
+  	// Todo - split the "DeleteObject()" function (UI.php) and move the generic part in cmdbAbstractObject, etc. 
 
 	protected function ListChangedValues(array $aProposal)
 	{
@@ -1346,15 +1351,24 @@ abstract class DBObject
 	 */	 	
 	public function GetDeletionScheme(&$aDeletedObjs, &$aResetedObjs, $aVisited = array())
 	{
-		if (array_key_exists(get_class($this), $aVisited))
+		$sClass = get_class($this);
+		$iThisId = $this->GetKey();
+
+		if (array_key_exists($sClass, $aVisited))
 		{
-			if (in_array($this->GetKey(), $aVisited[get_class($this)]))
+			if (in_array($iThisId, $aVisited[$sClass]))
 			{
 				return;
 			}
 		}
-		$aVisited[get_class($this)] = $this->GetKey();
+		$aVisited[$sClass] = $iThisId;
 
+		$aDeletedObjs[$sClass][$iThisId]['to_delete'] = $this;
+		$aDeletedObjs[$sClass][$iThisId]['auto_delete'] = true;
+		// Check the node itself
+		$this->DoCheckToDelete();
+		$aDeletedObjs[$sClass][$iThisId]['issues'] = $this->m_aDeleteIssues;
+	
 		$aDependentObjects = $this->GetReferencingObjects();
 		foreach ($aDependentObjects as $sRemoteClass => $aPotentialDeletes)
 		{
@@ -1397,12 +1411,15 @@ abstract class DBObject
 						{
 							// First time we find the given object in the list
 							// (and most likely case is that no other occurence will be found)
-							$aDeletedObjs[$sRemoteClass][$iId]['to_delete'] = $oDependentObj;
-							$aDeletedObjs[$sRemoteClass][$iId]['auto_delete'] = ($iDeletePropagationOption == DEL_AUTO);
-							// Recursively inspect this object
 							if ($iDeletePropagationOption == DEL_AUTO)
 							{
+							// Recursively inspect this object
 								$oDependentObj->GetDeletionScheme($aDeletedObjs, $aResetedObjs, $aVisited);
+							}
+							else
+							{
+								$aDeletedObjs[$sRemoteClass][$iId]['to_delete'] = $oDependentObj;
+								$aDeletedObjs[$sRemoteClass][$iId]['auto_delete'] = false;
 							} 
 						}
 					}

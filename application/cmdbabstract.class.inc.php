@@ -32,6 +32,7 @@ define('HILIGHT_CLASS_OK', 'green');
 define('HILIGHT_CLASS_NONE', '');
 
 require_once(APPROOT.'/core/cmdbobject.class.inc.php');
+require_once(APPROOT.'/application/applicationextension.inc.php');
 require_once(APPROOT.'/application/utils.inc.php');
 require_once(APPROOT.'/application/applicationcontext.class.inc.php');
 require_once(APPROOT.'/application/ui.linkswidget.class.inc.php');
@@ -75,7 +76,7 @@ interface iDisplay
 abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 {
 	protected $m_iFormId; // The ID of the form used to edit the object (when in edition mode !)
-	
+
 	public static function GetUIPage()
 	{
 		return '../pages/UI.php';
@@ -163,6 +164,11 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	function DisplayBareProperties(WebPage $oPage, $bEditMode = false)
 	{
 		$oPage->add($this->GetBareProperties($oPage, $bEditMode));		
+
+		foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
+		{
+			$oExtensionInstance->OnDisplayProperties($this, $oPage, $bEditMode);
+		}
 	}
 
 	function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
@@ -305,6 +311,11 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 				$oBlock = new DisplayBlock(DBObjectSearch::FromOQL("SELECT EventNotificationEmail AS Ev JOIN TriggerOnObject AS T ON Ev.trigger_id = T.id WHERE T.target_class IN ('$sClassList') AND Ev.object_id = $iId"), 'list', false);
 				$oBlock->Display($oPage, 'notifications', array());
 			}
+		}
+
+		foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
+		{
+			$oExtensionInstance->OnDisplayRelations($this, $oPage, $bEditMode);
 		}
 	}
 
@@ -1772,6 +1783,34 @@ EOF
 		}
 	}
 	
+	// $m_highlightComparison[previous][new] => next value
+	protected static $m_highlightComparison = array(
+		HILIGHT_CLASS_CRITICAL => array(
+			HILIGHT_CLASS_CRITICAL => HILIGHT_CLASS_CRITICAL,
+			HILIGHT_CLASS_WARNING => HILIGHT_CLASS_CRITICAL,
+			HILIGHT_CLASS_OK => HILIGHT_CLASS_CRITICAL,
+			HILIGHT_CLASS_NONE => HILIGHT_CLASS_CRITICAL,
+		),
+		HILIGHT_CLASS_WARNING => array(
+			HILIGHT_CLASS_CRITICAL => HILIGHT_CLASS_CRITICAL,
+			HILIGHT_CLASS_WARNING => HILIGHT_CLASS_WARNING,
+			HILIGHT_CLASS_OK => HILIGHT_CLASS_WARNING,
+			HILIGHT_CLASS_NONE => HILIGHT_CLASS_WARNING,
+		),
+		HILIGHT_CLASS_OK => array(
+			HILIGHT_CLASS_CRITICAL => HILIGHT_CLASS_CRITICAL,
+			HILIGHT_CLASS_WARNING => HILIGHT_CLASS_WARNING,
+			HILIGHT_CLASS_OK => HILIGHT_CLASS_OK,
+			HILIGHT_CLASS_NONE => HILIGHT_CLASS_OK,
+		),
+		HILIGHT_CLASS_NONE => array(
+			HILIGHT_CLASS_CRITICAL => HILIGHT_CLASS_CRITICAL,
+			HILIGHT_CLASS_WARNING => HILIGHT_CLASS_WARNING,
+			HILIGHT_CLASS_OK => HILIGHT_CLASS_OK,
+			HILIGHT_CLASS_NONE => HILIGHT_CLASS_NONE,
+		),
+	);
+	
 	/**
 	 * This function returns a 'hilight' CSS class, used to hilight a given row in a table
 	 * There are currently (i.e defined in the CSS) 4 possible values HILIGHT_CLASS_CRITICAL,
@@ -1784,7 +1823,15 @@ EOF
 	{
 		// Possible return values are:
 		// HILIGHT_CLASS_CRITICAL, HILIGHT_CLASS_WARNING, HILIGHT_CLASS_OK, HILIGHT_CLASS_NONE	
-		return HILIGHT_CLASS_NONE; // Not hilighted by default
+		$current = HILIGHT_CLASS_NONE; // Not hilighted by default
+
+		// Invoke extensions before the deletion (the deletion will do some cleanup and we might loose some information
+		foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
+		{
+			$new = $oExtensionInstance->GetHilightClass($this);
+			@$current = self::$m_highlightComparison[$current][$new];
+		}
+		return $current;
 	}
 	
 	/**
@@ -1956,6 +2003,92 @@ EOF
 						}
 					}
 				}
+			}
+		}
+	}
+
+	protected function DBInsertTracked_Internal($bDoNotReload = false)
+	{
+		$res = parent::DBInsertTracked_Internal($bDoNotReload);
+
+		// Invoke extensions after insertion (the object must exist, have an id, etc.)
+		foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
+		{
+			$oExtensionInstance->OnDBInsert($this, self::$m_oCurrChange);
+		}
+
+		return $res;
+	}
+
+	protected function DBCloneTracked_Internal($newKey = null)
+	{
+		$oNewObj = parent::DBCloneTracked_Internal($newKey);
+
+		// Invoke extensions after insertion (the object must exist, have an id, etc.)
+		foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
+		{
+			$oExtensionInstance->OnDBInsert($oNewObj, self::$m_oCurrChange);
+		}
+		return $oNewObj;
+	}
+
+	protected function DBUpdateTracked_Internal()
+	{
+		$res = parent::DBUpdateTracked_Internal();
+
+		// Invoke extensions after the update (could be before)
+		foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
+		{
+			$oExtensionInstance->OnDBUpdate($this, self::$m_oCurrChange);
+		}
+		return $res;
+	}
+
+	protected static function BulkUpdateTracked_Internal(DBObjectSearch $oFilter, array $aValues)
+	{
+		// Todo - invoke the extension
+		return parent::BulkUpdateTracked_Internal($oFilter, $aValues);
+	}
+
+	protected function DBDeleteTracked_Internal()
+	{
+		// Invoke extensions before the deletion (the deletion will do some cleanup and we might loose some information
+		foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
+		{
+			$oExtensionInstance->OnDBDelete($this, self::$m_oCurrChange);
+		}
+
+		return parent::DBDeleteTracked_Internal();
+	}
+
+	protected static function BulkDeleteTracked_Internal(DBObjectSearch $oFilter)
+	{
+		// Todo - invoke the extension
+		return parent::BulkDeleteTracked_Internal($oFilter);
+	}
+
+	public function DoCheckToWrite()
+	{
+		parent::DoCheckToWrite();
+		foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
+		{
+			$aNewIssues = $oExtensionInstance->OnCheckToWrite($this);
+			if (count($aNewIssues) > 0)
+			{
+				$this->m_aCheckIssues = array_merge($this->m_aCheckIssues, $aNewIssues);
+			}
+		}
+	}
+
+	protected function DoCheckToDelete()
+	{
+		parent::DoCheckToDelete();
+		foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
+		{
+			$aNewIssues = $oExtensionInstance->OnCheckToDelete($this);
+			if (count($aNewIssues) > 0)
+			{
+				$this->m_aDeleteIssues = array_merge($this->m_aDeleteIssues, $aNewIssues);
 			}
 		}
 	}

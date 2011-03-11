@@ -1059,6 +1059,15 @@ class MenuBlock extends DisplayBlock
 				if ($bIsModifyAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:Add'), 'url' => "../pages/$sUIPage?operation=modify_links&class=$sClass&link_attr=".$aExtraParams['link_attr']."&target_class=$sTargetClass&id=$id&addObjects=true&$sContext"); }
 				if ($bIsModifyAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:Manage'), 'url' => "../pages/$sUIPage?operation=modify_links&class=$sClass&link_attr=".$aExtraParams['link_attr']."&target_class=$sTargetClass&id=$id&sContext"); }
 			}
+			$this->AddMenuSeparator($aActions);
+			foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
+			{
+				$oSet->Rewind();
+				foreach($oExtensionInstance->EnumAllowedActions($oSet) as $sLabel => $sUrl)
+				{
+					$aActions[] = array ('label' => $sLabel, 'url' => $sUrl);
+				}
+			}
 			break;
 			
 			default:
@@ -1088,6 +1097,15 @@ class MenuBlock extends DisplayBlock
 				$this->AddMenuSeparator($aActions);
 				$aActions[] = array ('label' => Dict::S('UI:Menu:EMail'), 'url' => "mailto:?subject=".$oSet->GetFilter()->__DescribeHTML()."&body=".urlencode("$sUrl?operation=search&filter=$sFilter&$sContext"));
 				$aActions[] = array ('label' => Dict::S('UI:Menu:CSVExport'), 'url' => "../pages/$sUIPage?operation=search&filter=$sFilter&format=csv&$sContext");
+			}
+			$this->AddMenuSeparator($aActions);
+			foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
+			{
+				$oSet->Rewind();
+				foreach($oExtensionInstance->EnumAllowedActions($oSet) as $sLabel => $sUrl)
+				{
+					$aActions[] = array ('label' => $sLabel, 'url' => $sUrl);
+				}
 			}
 		}
 		$sHtml .= "<div class=\"itop_popup\"><ul>\n<li>".Dict::S('UI:Menu:Actions')."\n<ul>\n";
