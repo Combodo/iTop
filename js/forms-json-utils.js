@@ -107,7 +107,7 @@ function ActivateStep(iTargetStep)
 //	if (oObj['m_aCurrValues'][sAttCode] == '')
 //	{
 //		var oJSON = document.getElementById(sJsonFieldId);
-//		$.get('ajax.render.php?class=' + sClass + '&json_obj=' + oJSON.value + '&att_code=' + sAttCode,
+//		$.get('../pages/ajax.render.php?class=' + sClass + '&json_obj=' + oJSON.value + '&att_code=' + sAttCode,
 //		   { operation: "default_value" },
 //		   function(json_data){
 //			 var oObj = ReloadObjectFromServer(json_data);

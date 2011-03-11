@@ -133,7 +133,7 @@ function WizardHelper(sClass, sFormPrefix)
 	{
 		//console.log('data sent:', this.ToJSON());
 		//console.log('oWizard:', this);
-		$.post('ajax.render.php',
+		$.post('../pages/ajax.render.php',
 		   { operation: 'wizard_helper', json_obj: this.ToJSON() },
 			function(html){
 				$('#ajax_content').html(html);
@@ -149,7 +149,7 @@ function WizardHelper(sClass, sFormPrefix)
 	{
 		//console.log('data sent:', this.ToJSON());
 		//console.log('oWizard:', this);
-		$('#'+divId).load('ajax.render.php?operation=wizard_helper_preview',
+		$('#'+divId).load('../pages/ajax.render.php?operation=wizard_helper_preview',
 		   	{'json_obj': this.ToJSON()},
 			function(responseText, textStatus, XMLHttpRequest){
 				$('#wizStep'+ G_iCurrentStep).unblock( {fadeOut: 0} );

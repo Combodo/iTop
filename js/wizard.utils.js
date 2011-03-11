@@ -42,7 +42,7 @@ function ManageObjects(sTitle, sClass, sId, sExtKeyToRemote)
 function Manage_LoadSelect(sSelectedId, sFilter)
 {
  	$('#'+sSelectedId).addClass('loading');
-	$.post('ajax.render.php',
+	$.post('../pages/ajax.render.php',
 	   { operation: 'combo_options', filter: sFilter },
 	   function(data){
 		 $('#'+sSelectedId).empty();

@@ -21,7 +21,7 @@ function ReloadTruncatedList(divId, sSerializedFilter, sExtraParams)
 			console.log('Uh,uh, exception !');
 		}
 	}
-	aTruncatedLists[divId] = $.post('ajax.render.php?style=list',
+	aTruncatedLists[divId] = $.post('../pages/ajax.render.php?style=list',
 	   { operation: 'ajax', filter: sSerializedFilter, extra_params: sExtraParams },
 	     function(data)
 	     {
@@ -76,7 +76,7 @@ function ReloadBlock(divId, sStyle, sSerializedFilter, sExtraParams)
 {
 	$('#'+divId).block();
 	//$('#'+divId).blockUI();
-	$.post('ajax.render.php?style='+sStyle,
+	$.post('../pages/ajax.render.php?style='+sStyle,
 	   { operation: 'ajax', filter: sSerializedFilter, extra_params: sExtraParams },
 	   function(data){
 		 $('#'+divId).empty();
@@ -136,7 +136,7 @@ function ReloadSearchForm(divId, sClassName, sBaseClass, sContext)
 		}
 	}
 
-	$.post('ajax.render.php?'+sContext,
+	$.post('../pages/ajax.render.php?'+sContext,
 	   { operation: 'search_form', className: sClassName, baseClass: sBaseClass, currentId: divId },
 	   function(data) {
 		   oDiv.empty();
@@ -182,7 +182,7 @@ function SetUserPreference(sPreferenceCode, sPrefValue, bPersistent)
     oUserPreferences[sPreferenceCode] = sPrefValue;
     if (bPersistent && (sPrefValue != sPreviousValue))
     {
-    	ajax_request = $.post('ajax.render.php',
+    	ajax_request = $.post('../pages/ajax.render.php',
     						  { operation: 'set_pref', code: sPreferenceCode, value: sPrefValue} ); // Make it persistent
     }
 }
@@ -211,4 +211,4 @@ function CheckAll(sSelector, bValue)
 	$(sSelector).each( function() {
 		this.checked = value;
 	});
-}  
+}
