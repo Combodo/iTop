@@ -2161,14 +2161,23 @@ abstract class MetaModel
 		//
 		$aUpdateValues = array();
 
+
 		// 1/a - Get the key and friendly name
 		//
 		// We need one pkey to be the key, let's take the one corresponding to the root class
 		// (used to be based on the leaf, but it may happen that this one has no table defined)
 		$sRootClass = self::GetRootClass($sTargetClass);
+		$oSelectedIdField = null;
 		if ($sTableClass == $sRootClass)
 		{
-			$aTranslation[$sTargetAlias]['id'] = new FieldExpressionResolved(self::DBGetKey($sTableClass), $sTableAlias);
+			$oIdField = new FieldExpressionResolved(self::DBGetKey($sTableClass), $sTableAlias);
+			$aTranslation[$sTargetAlias]['id'] = $oIdField;
+
+			if ($bIsOnQueriedClass)
+			{
+				// Add this field to the list of queried fields (required for the COUNT to work fine)
+				$oSelectedIdField = $oIdField;
+			}
 		}
 
 		// 1/b - Get the other attributes
@@ -2227,7 +2236,7 @@ abstract class MetaModel
 
 		// 3 - The whole stuff, for this table only
 		//
-		$oSelectBase = new SQLQuery($sTable, $sTableAlias, array(), $aFullText, $bIsOnQueriedClass, $aUpdateValues);
+		$oSelectBase = new SQLQuery($sTable, $sTableAlias, array(), $aFullText, $bIsOnQueriedClass, $aUpdateValues, $oSelectedIdField);
 
 		// 4 - The external keys -> joins...
 		//

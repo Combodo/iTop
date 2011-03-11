@@ -44,9 +44,10 @@ class SQLQuery
 	private $m_aFullTextNeedles = array();
 	private $m_bToDelete = true; // The current table must be listed for deletion ?
 	private $m_aValues = array(); // Values to set in case of an update query
+	private $m_oSelectedIdField = null;
 	private $m_aJoinSelects = array();
 
-	public function __construct($sTable, $sTableAlias, $aFields, $aFullTextNeedles = array(), $bToDelete = true, $aValues = array())
+	public function __construct($sTable, $sTableAlias, $aFields, $aFullTextNeedles = array(), $bToDelete = true, $aValues = array(), $oSelectedIdField = null)
 	{
 		// This check is not needed but for developping purposes
 		//if (!CMDBSource::IsTable($sTable))
@@ -65,6 +66,7 @@ class SQLQuery
 		$this->m_aFullTextNeedles = $aFullTextNeedles;
 		$this->m_bToDelete = $bToDelete;
 		$this->m_aValues = $aValues;
+		$this->m_oSelectedIdField = $oSelectedIdField;
 	}
 
 	public function DisplayHtml()
@@ -113,7 +115,8 @@ class SQLQuery
 		$oCondition = null;
 		$aDelTables = array();
 		$aSetValues = array();
-		$this->privRender($aFrom, $aFields, $oCondition, $aDelTables, $aSetValues);
+		$aSelectedIdFields = array();
+		$this->privRender($aFrom, $aFields, $oCondition, $aDelTables, $aSetValues, $aSelectedIdFields);
 		echo "From ...<br/>\n";
 		echo "<pre style=\"font-size: smaller;\">\n";
 		print_r($aFrom);
@@ -188,7 +191,8 @@ class SQLQuery
 		$oCondition = null;
 		$aDelTables = array();
 		$aSetValues = array();
-		$this->privRender($aFrom, $aFields, $oCondition, $aDelTables, $aSetValues);
+		$aSelectedIdFields = array();
+		$this->privRender($aFrom, $aFields, $oCondition, $aDelTables, $aSetValues, $aSelectedIdFields);
 
 		// Target: DELETE myAlias1, myAlias2 FROM t1 as myAlias1, t2 as myAlias2, t3 as topreserve WHERE ...
 
@@ -222,7 +226,8 @@ class SQLQuery
 		$oCondition = null;
 		$aDelTables = array();
 		$aSetValues = array();
-		$this->privRender($aFrom, $aFields, $oCondition, $aDelTables, $aSetValues);
+		$aSelectedIdFields = array();
+		$this->privRender($aFrom, $aFields, $oCondition, $aDelTables, $aSetValues, $aSelectedIdFields);
 
 		$sFrom   = self::ClauseFrom($aFrom);
 		$sValues = self::ClauseValues($aSetValues);
@@ -239,13 +244,22 @@ class SQLQuery
 		$oCondition = null;
 		$aDelTables = array();
 		$aSetValues = array();
-		$this->privRender($aFrom, $aFields, $oCondition, $aDelTables, $aSetValues);
+		$aSelectedIdFields = array();
+		$this->privRender($aFrom, $aFields, $oCondition, $aDelTables, $aSetValues, $aSelectedIdFields);
 
 		$sFrom   = self::ClauseFrom($aFrom);
 		$sWhere  = self::ClauseWhere($oCondition, $aArgs);
 		if ($bGetCount)
 		{
-			$sSQL = "SELECT COUNT(*) AS COUNT FROM $sFrom WHERE $sWhere";
+			if (count($aSelectedIdFields) > 0)
+			{
+				$sIDFields = implode(', ', $aSelectedIdFields);
+				$sSQL = "SELECT COUNT(DISTINCT $sIDFields) AS COUNT FROM $sFrom WHERE $sWhere";
+			}
+			else
+			{
+				$sSQL = "SELECT COUNT(*) AS COUNT FROM $sFrom WHERE $sWhere";
+			}
 		}
 		else
 		{
@@ -353,9 +367,9 @@ class SQLQuery
 	}
 
 	// Purpose: prepare the query data, once for all
-	private function privRender(&$aFrom, &$aFields, &$oCondition, &$aDelTables, &$aSetValues)
+	private function privRender(&$aFrom, &$aFields, &$oCondition, &$aDelTables, &$aSetValues, &$aSelectedIdFields)
 	{
-		$sTableAlias = $this->privRenderSingleTable($aFrom, $aFields, $aDelTables, $aSetValues);
+		$sTableAlias = $this->privRenderSingleTable($aFrom, $aFields, $aDelTables, $aSetValues, $aSelectedIdFields);
 
 		// Add the full text search condition, based on each and every requested field
 		//
@@ -388,7 +402,7 @@ class SQLQuery
 		return $sTableAlias; 
 	}
 
-	private function privRenderSingleTable(&$aFrom, &$aFields, &$aDelTables, &$aSetValues, $sJoinType = 'first', $sCallerAlias = '', $sLeftField = '', $sRightField = '', $sRightTableAlias = '')
+	private function privRenderSingleTable(&$aFrom, &$aFields, &$aDelTables, &$aSetValues, &$aSelectedIdFields, $sJoinType = 'first', $sCallerAlias = '', $sLeftField = '', $sRightField = '', $sRightTableAlias = '')
 	{
 		$aActualTableFields = CMDBSource::GetTableFieldsList($this->m_sTable);
 
@@ -429,6 +443,11 @@ class SQLQuery
 			$aSetValues["`{$this->m_sTableAlias}`.`$sFieldName`"] = $value; // quoted further!
 		}
 
+  		if (!is_null($this->m_oSelectedIdField))
+  		{
+  			$aSelectedIdFields[] = $this->m_oSelectedIdField->Render();
+		}
+
 		// loop on joins, to complete the list of tables/fields/conditions
 		//
 		$aTempFrom = array(); // temporary subset of 'from' specs, to be grouped in the final query
@@ -440,7 +459,7 @@ class SQLQuery
 			$sRightField = $aJoinData["rightfield"];
 			$sRightTableAlias = $aJoinData["righttablealias"];
 
-			$sJoinTableAlias = $oRightSelect->privRenderSingleTable($aTempFrom, $aFields, $aDelTables, $aSetValues, $sJoinType, $this->m_sTableAlias, $sLeftField, $sRightField, $sRightTableAlias);
+			$sJoinTableAlias = $oRightSelect->privRenderSingleTable($aTempFrom, $aFields, $aDelTables, $aSetValues, $aSelectedIdFields, $sJoinType, $this->m_sTableAlias, $sLeftField, $sRightField, $sRightTableAlias);
 		}
 		$aFrom[$this->m_sTableAlias]['subfrom'] = $aTempFrom;
 
