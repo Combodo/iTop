@@ -184,6 +184,7 @@ class CSVParser
 		{
 			if ($i == $iDataLength)
 			{
+				$c = null;
 				$iEvent = evEND;
 			}
 			else

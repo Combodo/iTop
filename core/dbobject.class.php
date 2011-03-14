@@ -481,13 +481,31 @@ abstract class DBObject
 	public function GetAsXML($sAttCode)
 	{
 		$oAtt = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-		return $oAtt->GetAsXML($this->Get($sAttCode));
+		return $oAtt->GetAsXML($this->Get($sAttCode), $this);
 	}
 
 	public function GetAsCSV($sAttCode, $sSeparator = ',', $sTextQualifier = '"')
 	{
 		$oAtt = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-		return $oAtt->GetAsCSV($this->Get($sAttCode), $sSeparator, $sTextQualifier);
+		return $oAtt->GetAsCSV($this->Get($sAttCode), $sSeparator, $sTextQualifier, $this);
+	}
+
+	public function GetOriginalAsHTML($sAttCode)
+	{
+		$oAtt = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+		return $oAtt->GetAsHTML($this->GetOriginal($sAttCode), $this);
+	}
+
+	public function GetOriginalAsXML($sAttCode)
+	{
+		$oAtt = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+		return $oAtt->GetAsXML($this->GetOriginal($sAttCode), $this);
+	}
+
+	public function GetOriginalAsCSV($sAttCode, $sSeparator = ',', $sTextQualifier = '"')
+	{
+		$oAtt = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+		return $oAtt->GetAsCSV($this->GetOriginal($sAttCode), $sSeparator, $sTextQualifier, $this);
 	}
 
 	protected static function MakeHyperLink($sObjClass, $sObjKey, $sLabel = '')

@@ -1326,26 +1326,45 @@ class TestItopBulkLoad extends TestBizModel
 	
 	protected function DoExecute()
 	{
-		$oParser = new CSVParser("name,org_id->name,brand,model
-		Server1,Demo,,
-		server4,Demo,,
+		$sLogin = 'testbulkload_'.time();
+
+		$oParser = new CSVParser("login,contactid->name,password,profile_list
+		_1_$sLogin,Picasso,secret1,profileid:10;reason:service manager|profileid->name:Problem Manager;'reason:toto;problem manager'
+		_2_$sLogin,Picasso,secret2,
 		", ',', '"');
-		$aData = $oParser->ToArray(1, array('_name', '_org_name', '_brand', '_model'));
+		$aData = $oParser->ToArray(1, array('_login', '_contact_name', '_password', '_profiles'));
 		self::DumpVariable($aData);
 
+		$oUser = new UserLocal();
+		$oUser->Set('login', 'patator');
+		$oUser->Set('password', 'patator');
+		//$oUser->Set('contactid', 0);
+		//$oUser->Set('language', $sLanguage);
+
+		$aProfiles = array(
+			array(
+				'profileid' => 10, // Service Manager
+				'reason' => 'service manager',
+			),
+			array(
+				'profileid->name' => 'Problem Manager',
+				'reason' => 'problem manager',
+			),
+		);
+
 		$oBulk = new BulkChange(
-			'Server',
+			'UserLocal',
 			$aData,
 			// attributes
-			array('name' => '_name', 'brand' => '_brand', 'model' => '_model'),
+			array('login' => '_login', 'password' => '_password', 'profile_list' => '_profiles'),
 			// ext keys
-			array('org_id' => array('name' => '_org_name')),
+			array('contactid' => array('name' => '_contact_name')),
 			// reconciliation
-			array('name'),
+			array('login'),
 			// Synchro - scope
-			"SELECT Server",
+			"SELECT UserLocal",
 			// Synchro - set attribute on missing objects
-			array ('brand' => 'you let package', 'model' => 'tpe', 'cpu' => 'it is pay you')
+			array ('password' => 'terminated', 'login' => 'terminated'.time())
 		);
 
 		if (false)
@@ -1785,6 +1804,19 @@ class TestImportREST extends TestWebServices
 					'comment' => 'SHOULD NEVER APPEAR IN THE HISTORY'
 				),
 				'csvdata' => "org_name;name;address\nDemo;Le pantheon;restore address?",
+			),
+			array(
+				'desc' => 'Load a user account',
+				'login' => 'admin',
+				'password' => 'admin',
+				'args' => array(
+					'class' => 'UserLocal',
+					'output' => 'details',
+					'separator' => ',',
+					'simulate' => '0',
+					'comment' => 'automated testing'
+				),
+				'csvdata' => "login,password,profile_list\nby_import_csv,fakepwd,profileid->name:Configuration Manager|profileid:10;reason:direct id",
 			),
 		); 
 
@@ -3105,5 +3137,38 @@ class TestCreateObjects extends TestBizModel
 	}
 }
 
+class TestSetLinkset extends TestBizModel
+{
+	static public function GetName()
+	{
+		return 'Itop - Link set from a string';
+	}
+
+	static public function GetDescription()
+	{
+		return 'Create a user account, setting its profile by the mean of a string (prerequisite to CSV import of linksets)';
+	}
+
+	static public function GetConfigFile() {return '/config-itop.php';}
+
+	protected function DoExecute()
+	{
+		$oUser = new UserLocal();
+		$oUser->Set('login', 'patator'.time());
+		$oUser->Set('password', 'patator');
+		//$oUser->Set('contactid', 0);
+		//$oUser->Set('language', $sLanguage);
+
+      $sLinkSetSpec = "profileid:10;reason:service manager|profileid->name:Problem Manager;'reason:problem manager;glandeur";
+
+		$oAttDef = MetaModel::GetAttributeDef('UserLocal', 'profile_list');
+		$oSet = $oAttDef->MakeValueFromString($sLinkSetSpec);
+		$oUser->Set('profile_list', $oSet);
+
+		// Create a change to record the history of the User object
+		$this->ObjectToDB($oUser, $bReload = true);
+		echo "<p>Created: {$oUser->GetHyperLink()}</p>";
+	}
+}
 
 ?>

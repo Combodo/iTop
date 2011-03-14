@@ -42,6 +42,8 @@ $currentOrganization = utils::ReadParam('org_id', '');
 // Main program
 $sExpression = utils::ReadParam('expression', '');
 $sFormat = strtolower(utils::ReadParam('format', 'html'));
+$sFields = utils::ReadParam('fields', ''); // CSV field list
+
 $oP = null;
 
 if (!empty($sExpression))
@@ -77,7 +79,7 @@ if (!empty($sExpression))
 				
 				case 'csv':
 				$oP = new CSVPage("iTop - Export");
-				cmdbAbstractObject::DisplaySetAsCSV($oP, $oSet);
+				cmdbAbstractObject::DisplaySetAsCSV($oP, $oSet, array('fields' => $sFields));
 				break;
 				
 				case 'xml':

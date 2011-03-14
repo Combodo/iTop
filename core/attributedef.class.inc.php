@@ -269,17 +269,17 @@ abstract class AttributeDefinition
 		return (string)$sValue;
 	}
 
-	public function GetAsHTML($sValue)
+	public function GetAsHTML($sValue, $oHostObject = null)
 	{
 		return Str::pure2html((string)$sValue);
 	}
 
-	public function GetAsXML($sValue)
+	public function GetAsXML($sValue, $oHostObject = null)
 	{
 		return Str::pure2xml((string)$sValue);
 	}
 
-	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"')
+	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null)
 	{
 		return (string)$sValue;
 	}
@@ -365,21 +365,188 @@ class AttributeLinkedSet extends AttributeDefinition
 	public function GetBasicFilterLooseOperator() {return '';}
 	public function GetBasicFilterSQLExpr($sOpCode, $value) {return '';}
 
-	public function GetAsHTML($sValue)
+	public function GetAsHTML($sValue, $oHostObject = null)
 	{
-		return "ERROR: LIST OF OBJECTS";
+		if (is_object($sValue) && ($sValue instanceof DBObjectSet))
+		{
+			$sValue->Rewind();
+			$aItems = array();
+			while ($oObj = $sValue->Fetch())
+			{
+				// Show only relevant information (hide the external key to the current object)
+				$aAttributes = array();
+				foreach(MetaModel::ListAttributeDefs($this->GetLinkedClass()) as $sAttCode => $oAttDef)
+				{
+					if ($sAttCode == $this->GetExtKeyToMe()) continue;
+					if ($oAttDef->IsExternalField()) continue;
+					$sAttValue = $oObj->GetAsHTML($sAttCode);
+					if (strlen($sAttValue) > 0)
+					{
+						$aAttributes[] = $sAttValue;
+					}
+				}
+				$sAttributes = implode(', ', $aAttributes);
+				$aItems[] = $sAttributes;
+			}
+			return implode('<br/>', $aItems);
+		}
+		return null;
 	}
 
-	public function GetAsXML($sValue)
+	public function GetAsXML($sValue, $oHostObject = null)
 	{
-		return "ERROR: LIST OF OBJECTS";
+		return "Sorry, no yet implemented";
 	}
 
-	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"')
+	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null)
 	{
-		return "ERROR: LIST OF OBJECTS";
+		$sSepItem = MetaModel::GetConfig()->Get('link_set_item_separator');
+		$sSepAttribute = MetaModel::GetConfig()->Get('link_set_attribute_separator');
+		$sSepValue = MetaModel::GetConfig()->Get('link_set_value_separator');
+		$sAttributeQualifier = MetaModel::GetConfig()->Get('link_set_attribute_qualifier');
+
+		if (is_object($sValue) && ($sValue instanceof DBObjectSet))
+		{
+			$sValue->Rewind();
+			$aItems = array();
+			while ($oObj = $sValue->Fetch())
+			{
+				// Show only relevant information (hide the external key to the current object)
+				$aAttributes = array();
+				foreach(MetaModel::ListAttributeDefs($this->GetLinkedClass()) as $sAttCode => $oAttDef)
+				{
+					if ($sAttCode == $this->GetExtKeyToMe()) continue;
+					if ($oAttDef->IsExternalField()) continue;
+					if (!$oAttDef->IsDirectField()) continue;
+					if (!$oAttDef->IsScalar()) continue;
+					$sAttValue = $oObj->GetAsCSV($sAttCode, $sSepValue, '');
+					if (strlen($sAttValue) > 0)
+					{
+						$sAttributeData = str_replace($sAttributeQualifier, $sAttributeQualifier.$sAttributeQualifier, $sAttCode.$sSepValue.$sAttValue);
+						$aAttributes[] = $sAttributeQualifier.$sAttributeData.$sAttributeQualifier;
+					}
+				}
+				$sAttributes = implode($sSepAttribute, $aAttributes);
+				$aItems[] = $sAttributes;
+			}
+			$sRes = implode($sSepItem, $aItems);
+		}
+		else
+		{
+			$sRes = '';
+		}
+		$sRes = str_replace($sTextQualifier, $sTextQualifier.$sTextQualifier, $sRes);
+		$sRes = $sTextQualifier.$sRes.$sTextQualifier;
+		return $sRes;
 	}
+
 	public function DuplicatesAllowed() {return false;} // No duplicates for 1:n links, never
+
+	// Specific to this kind of attribute : transform a string into a value
+	public function MakeValueFromString($sProposedValue, $sSepItem = null, $sSepAttribute = null, $sSepValue = null, $sAttributeQualifier = null)
+	{
+		if (is_null($sSepItem))
+		{
+			$sSepItem = MetaModel::GetConfig()->Get('link_set_item_separator');
+		}
+		if (is_null($sSepAttribute))
+		{
+			$sSepAttribute = MetaModel::GetConfig()->Get('link_set_attribute_separator');
+		}
+		if (is_null($sSepValue))
+		{
+			$sSepValue = MetaModel::GetConfig()->Get('link_set_value_separator');
+		}
+		if (is_null($sAttributeQualifier))
+		{
+			$sAttributeQualifier = MetaModel::GetConfig()->Get('link_set_attribute_qualifier');
+		}
+
+		$sTargetClass = $this->Get('linked_class');
+
+		$sInput = str_replace($sSepItem, "\n", $sProposedValue);
+		$oCSVParser = new CSVParser($sInput, $sSepAttribute, $sAttributeQualifier);
+
+		$aInput = $oCSVParser->ToArray(0 /* do not skip lines */);
+
+		$aLinks = array();
+		foreach($aInput as $aRow)
+		{
+			$aNewRow = array();
+			$oLink = MetaModel::NewObject($sTargetClass);
+			$aExtKeys = array();
+			foreach($aRow as $sCell)
+			{
+				$iSepPos = strpos($sCell, $sSepValue);
+				if ($iSepPos === false)
+				{
+					// Houston...
+					throw new CoreException('Wrong format for link attribute specification', array('value' => $sCell));
+				}
+
+				$sAttCode = trim(substr($sCell, 0, $iSepPos));
+				$sValue = substr($sCell, $iSepPos + strlen($sSepValue));
+
+				if (preg_match('/^(.+)->(.+)$/', $sAttCode, $aMatches))
+				{
+					$sKeyAttCode = $aMatches[1];
+					$sRemoteAttCode = $aMatches[2];
+					$aExtKeys[$sKeyAttCode][$sRemoteAttCode] = $sValue;
+					if (!MetaModel::IsValidAttCode($sTargetClass, $sKeyAttCode))
+					{
+						throw new CoreException('Wrong attribute code for link attribute specification', array('class' => $sTargetClass, 'attcode' => $sKeyAttCode));
+					}
+					$oKeyAttDef = MetaModel::GetAttributeDef($sTargetClass, $sKeyAttCode);
+					$sRemoteClass = $oKeyAttDef->GetTargetClass();
+					if (!MetaModel::IsValidAttCode($sRemoteClass, $sRemoteAttCode))
+					{
+						throw new CoreException('Wrong attribute code for link attribute specification', array('class' => $sRemoteClass, 'attcode' => $sRemoteAttCode));
+					}
+				}
+				else
+				{
+					if(!MetaModel::IsValidAttCode($sTargetClass, $sAttCode))
+					{
+						throw new CoreException('Wrong attribute code for link attribute specification', array('class' => $sTargetClass, 'attcode' => $sAttCode));
+					}
+					$oLink->Set($sAttCode, $sValue);
+				}
+			}
+			// Set external keys from search conditions
+			foreach ($aExtKeys as $sKeyAttCode => $aReconciliation)
+			{
+				$oKeyAttDef = MetaModel::GetAttributeDef($sTargetClass, $sKeyAttCode);
+				$sKeyClass = $oKeyAttDef->GetTargetClass();
+				$oExtKeyFilter = new CMDBSearchFilter($sKeyClass);
+				$aReconciliationDesc = array();
+				foreach($aReconciliation as $sRemoteAttCode => $sValue)
+				{
+					$oExtKeyFilter->AddCondition($sRemoteAttCode, $sValue, '=');
+					$aReconciliationDesc[] = "$sRemoteAttCode=$sValue";
+				}
+				$oExtKeySet = new CMDBObjectSet($oExtKeyFilter);
+				switch($oExtKeySet->Count())
+				{
+				case 0:
+					$sReconciliationDesc = implode(', ', $aReconciliationDesc);
+					throw new CoreException("Found no match", array('ext_key' => $sKeyAttCode, 'reconciliation' => $sReconciliationDesc));
+					break;
+				case 1:
+					$oRemoteObj = $oExtKeySet->Fetch();
+					$oLink->Set($sKeyAttCode, $oRemoteObj->GetKey());
+					break;
+				default:
+					$sReconciliationDesc = implode(', ', $aReconciliationDesc);
+					throw new CoreException("Found several matches", array('ext_key' => $sKeyAttCode, 'reconciliation' => $sReconciliationDesc));
+					// Found several matches, ambiguous
+				}
+			}
+
+			$aLinks[] = $oLink;
+		}
+		$oSet = DBObjectSet::FromArray($sTargetClass, $aLinks);
+		return $oSet;
+	}
 }
 
 /**
@@ -821,12 +988,12 @@ class AttributeString extends AttributeDBField
 		return $value;
 	}
 
-	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"')
+	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null)
 	{
 		$sFrom = array("\r\n", $sTextQualifier);
 		$sTo = array("\n", $sTextQualifier.$sTextQualifier);
 		$sEscaped = str_replace($sFrom, $sTo, (string)$sValue);
-		return '"'.$sEscaped.'"';
+		return $sTextQualifier.$sEscaped.$sTextQualifier;
 	}
 }
 
@@ -864,7 +1031,7 @@ class AttributeClass extends AttributeString
 		return $sDefault;
 	}
 
-	public function GetAsHTML($sValue)
+	public function GetAsHTML($sValue, $oHostObject = null)
 	{
 		if (empty($sValue)) return '';
 		return MetaModel::GetName($sValue);
@@ -953,7 +1120,7 @@ class AttributeFinalClass extends AttributeString
 		return $this->m_sValue;
 	}
 
-	public function GetAsHTML($sValue)
+	public function GetAsHTML($sValue, $oHostObject = null)
 	{
 		if (empty($sValue)) return '';
 		return MetaModel::GetName($sValue);
@@ -995,7 +1162,7 @@ class AttributePassword extends AttributeString
 		return array();
 	}
 
-	public function GetAsHTML($sValue)
+	public function GetAsHTML($sValue, $oHostObject = null)
 	{
 		if (strlen($sValue) == 0)
 		{
@@ -1091,7 +1258,7 @@ class AttributeText extends AttributeString
 		return 65535;
 	}
 
-	public function GetAsHTML($sValue)
+	public function GetAsHTML($sValue, $oHostObject = null)
 	{
 		$sValue = parent::GetAsHTML($sValue);
 
@@ -1167,7 +1334,7 @@ class AttributeText extends AttributeString
 		return $sValue;
 	}
 
-	public function GetAsXML($value)
+	public function GetAsXML($value, $oHostObject = null)
 	{
 		return Str::pure2xml($value);
 	}
@@ -1199,7 +1366,7 @@ class AttributeHTML extends AttributeText
 {
 	public function GetEditClass() {return "HTML";}
 
-	public function GetAsHTML($sValue)
+	public function GetAsHTML($sValue, $oHostObject = null)
 	{
 		return $sValue;
 	}
@@ -1218,7 +1385,7 @@ class AttributeEmailAddress extends AttributeString
 		return "^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$";
 	}
 
-	public function GetAsHTML($sValue)
+	public function GetAsHTML($sValue, $oHostObject = null)
 	{
 		if (empty($sValue)) return '';
 		return '<a class="mailto" href="mailto:'.$sValue.'">'.parent::GetAsHTML($sValue).'</a>';
@@ -1275,7 +1442,7 @@ class AttributeTemplateHTML extends AttributeText
 {
 	public function GetEditClass() {return "HTML";}
 
-	public function GetAsHTML($sValue)
+	public function GetAsHTML($sValue, $oHostObject = null)
 	{
 		return $sValue;
 	}
@@ -1289,7 +1456,7 @@ class AttributeTemplateHTML extends AttributeText
  */
 class AttributeWikiText extends AttributeText
 {
-	public function GetAsHTML($value)
+	public function GetAsHTML($value, $oHostObject = null)
 	{
 		// [SELECT xxxx.... [label]] => hyperlink to a result list
 		// {SELECT xxxx.... [label]} => result list displayed inline
@@ -1374,7 +1541,7 @@ class AttributeEnum extends AttributeString
 		return parent::GetBasicFilterSQLExpr($sOpCode, $value);
 	} 
 
-	public function GetAsHTML($sValue)
+	public function GetAsHTML($sValue, $oHostObject = null)
 	{
 		if (is_null($sValue))
 		{
@@ -1581,17 +1748,17 @@ class AttributeDateTime extends AttributeDBField
 		return $value;
 	}
 
-	public function GetAsHTML($value)
+	public function GetAsHTML($value, $oHostObject = null)
 	{
 		return Str::pure2html($value);
 	}
 
-	public function GetAsXML($value)
+	public function GetAsXML($value, $oHostObject = null)
 	{
 		return Str::pure2xml($value);
 	}
 
-	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"')
+	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null)
 	{
 		$sFrom = array("\r\n", $sTextQualifier);
 		$sTo = array("\n", $sTextQualifier.$sTextQualifier);
@@ -1702,7 +1869,7 @@ class AttributeDuration extends AttributeInteger
 		return $value;
 	}
 
-	public function GetAsHTML($value)
+	public function GetAsHTML($value, $oHostObject = null)
 	{
 		return Str::pure2html(self::FormatDuration($value));
 	}
@@ -1788,7 +1955,7 @@ AttributeDate::InitStatics();
  */
 class AttributeDeadline extends AttributeDateTime
 {
-	public function GetAsHTML($value)
+	public function GetAsHTML($value, $oHostObject = null)
 	{
 		$sResult = '';
 		if ($value !== null)
@@ -2144,17 +2311,17 @@ class AttributeExternalField extends AttributeDefinition
 		return $oExtAttDef->FromSQLToValue($aCols, $sPrefix);
 	}
 
-	public function GetAsHTML($value)
+	public function GetAsHTML($value, $oHostObject = null)
 	{
 		$oExtAttDef = $this->GetExtAttDef();
 		return $oExtAttDef->GetAsHTML($value);
 	}
-	public function GetAsXML($value)
+	public function GetAsXML($value, $oHostObject = null)
 	{
 		$oExtAttDef = $this->GetExtAttDef();
 		return $oExtAttDef->GetAsXML($value);
 	}
-	public function GetAsCSV($value, $sSeparator = ',', $sTestQualifier = '"')
+	public function GetAsCSV($value, $sSeparator = ',', $sTestQualifier = '"', $oHostObject = null)
 	{
 		$oExtAttDef = $this->GetExtAttDef();
 		return $oExtAttDef->GetAsCSV($value, $sSeparator, $sTestQualifier);
@@ -2176,7 +2343,7 @@ class AttributeURL extends AttributeString
 
 	public function GetEditClass() {return "String";}
 
-	public function GetAsHTML($sValue)
+	public function GetAsHTML($sValue, $oHostObject = null)
 	{
 		$sTarget = $this->Get("target");
 		if (empty($sTarget)) $sTarget = "_blank";
@@ -2326,7 +2493,7 @@ class AttributeBlob extends AttributeDefinition
 		return 'true';
 	} 
 
-	public function GetAsHTML($value)
+	public function GetAsHTML($value, $oHostObject = null)
 	{
 		if (is_object($value))
 		{
@@ -2334,12 +2501,12 @@ class AttributeBlob extends AttributeDefinition
 		}
 	}
 
-	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"')
+	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null)
 	{
 		return ''; // Not exportable in CSV !
 	}
 	
-	public function GetAsXML($value)
+	public function GetAsXML($value, $oHostObject = null)
 	{
 		return ''; // Not exportable in XML, or as CDATA + some subtags ??
 	}
@@ -2479,7 +2646,7 @@ class AttributeOneWayPassword extends AttributeDefinition
 		return 'true';
 	} 
 
-	public function GetAsHTML($value)
+	public function GetAsHTML($value, $oHostObject = null)
 	{
 		if (is_object($value))
 		{
@@ -2487,12 +2654,12 @@ class AttributeOneWayPassword extends AttributeDefinition
 		}
 	}
 
-	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"')
+	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null)
 	{
 		return ''; // Not exportable in CSV
 	}
 	
-	public function GetAsXML($value)
+	public function GetAsXML($value, $oHostObject = null)
 	{
 		return ''; // Not exportable in XML
 	}
@@ -2544,7 +2711,7 @@ class AttributeTable extends AttributeText
 		return $aValues;
 	}
 
-	public function GetAsHTML($value)
+	public function GetAsHTML($value, $oHostObject = null)
 	{
 		if (!is_array($value))
 		{
@@ -2589,7 +2756,7 @@ class AttributePropertySet extends AttributeTable
 		return $proposedValue;
 	}
 
-	public function GetAsHTML($value)
+	public function GetAsHTML($value, $oHostObject = null)
 	{
 		if (!is_array($value))
 		{
@@ -2737,6 +2904,11 @@ class AttributeFriendlyName extends AttributeComputedFieldVoid
 		return false;
 	}
 
+	public function IsDirectField()
+	{
+		return false;
+	}
+
 	public function SetFixedValue($sValue)
 	{
 		$this->m_sValue = $sValue;
@@ -2746,7 +2918,7 @@ class AttributeFriendlyName extends AttributeComputedFieldVoid
 		return $this->m_sValue;
 	}
 
-	public function GetAsHTML($sValue)
+	public function GetAsHTML($sValue, $oHostObject = null)
 	{
 		return Str::pure2html((string)$sValue);
 	}

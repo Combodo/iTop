@@ -384,7 +384,7 @@ try
 			// Ignore any trailing "star" (*) that simply indicates a mandatory field
 			$sFieldName = $aMatches[1];
 		}
-		if (preg_match('/^(.*)->(.*)$/', trim($sFieldName), $aMatches))
+		if (preg_match('/^(.+)->(.+)$/', trim($sFieldName), $aMatches))
 		{
 			// The column has been specified as "extkey->attcode"
 			//
@@ -472,7 +472,7 @@ try
 			throw new BulkLoadException("Reconciliation keys not found in the input columns '$sReconcKey' (class: '$sClass')");
 		}
 
-		if (preg_match('/^(.*)->(.*)$/', trim($sReconcKey), $aMatches))
+		if (preg_match('/^(.+)->(.+)$/', trim($sReconcKey), $aMatches))
 		{
 			// The column has been specified as "extkey->attcode"
 			//
@@ -697,7 +697,7 @@ try
 			if (isset($aRowData["finalclass"]) && isset($aRowData["id"]))
 			{
 				$aRowDisp["__OBJECT_CLASS__"] = $aRowData["finalclass"];
-				$aRowDisp["__OBJECT_ID__"] = $aRowData["id"]->GetValue();
+				$aRowDisp["__OBJECT_ID__"] = $aRowData["id"]->GetDisplayableValue();
 			}
 			else
 			{
@@ -714,7 +714,7 @@ try
 	
 				if (is_object($value))
 				{
-					$aRowDisp["$sKey"] = $value->GetValue().$value->GetDescription();
+					$aRowDisp["$sKey"] = $value->GetDisplayableValue().$value->GetDescription();
 				}
 				else
 				{

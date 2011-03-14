@@ -163,8 +163,9 @@ function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMo
 				}
 			}
 		}
-		else if ( ($oAttDef->IsWritable()) && (!$oAttDef->IsLinkSet()) )
+		else if ($oAttDef->IsWritable() && ($bAdvancedMode || !$oAttDef->IsLinkset()))
 		{
+			
 			if (!$oAttDef->IsNullAllowed())
 			{
 				$sStar = '*';

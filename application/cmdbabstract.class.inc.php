@@ -827,6 +827,8 @@ EOF
 	{
 		$sSeparator = isset($aParams['separator']) ? $aParams['separator'] : ','; // default separator is comma
 		$sTextQualifier = isset($aParams['text_qualifier']) ? $aParams['text_qualifier'] : '"'; // default text qualifier is double quote
+		$aFields = isset($aParams['fields']) ? explode(',', $aParams['fields']) : null;
+
 		$aList = array();
 
 		$oAppContext = new ApplicationContext();
@@ -845,7 +847,9 @@ EOF
 		{
 			foreach(MetaModel::ListAttributeDefs($sClassName) as $sAttCode => $oAttDef)
 			{
-				if ((($oAttDef->IsExternalField()) || ($oAttDef->IsWritable())) && $oAttDef->IsScalar())
+				if (!is_null($aFields) && !in_array($sAttCode, $aFields)) continue;
+
+				if ($oAttDef->IsExternalField() || $oAttDef->IsWritable())
 				{
 					$aList[$sClassName][$sAttCode] = $oAttDef;
 				}
@@ -906,7 +910,7 @@ EOF
 					}
 					else
 					{
-						$aRow[] = $oObj->GetAsCSV($sAttCode, $sSeparator, '\\');
+						$aRow[] = $oObj->GetAsCSV($sAttCode, $sSeparator, $sTextQualifier);
 					}
 				}
 			}
@@ -959,7 +963,7 @@ EOF
 					}
 					else
 					{
-						if (($oAttDef->IsWritable()) && ($oAttDef->IsScalar()))
+						if ($oAttDef->IsWritable())
 						{
 							$sValue = $oObj->GetAsXML($sAttCode);
 							$oPage->add("<$sAttCode>$sValue</$sAttCode>\n");

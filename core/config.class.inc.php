@@ -221,6 +221,38 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
+		'link_set_item_separator' => array(
+			'type' => 'string',
+			'description' => 'Link set from string: line separator',
+			'default' => '|',
+			'value' => '|',
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
+		'link_set_attribute_separator' => array(
+			'type' => 'string',
+			'description' => 'Link set from string: attribute separator',
+			'default' => ';',
+			'value' => ';',
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
+		'link_set_value_separator' => array(
+			'type' => 'string',
+			'description' => 'Link set from string: value separator (between the attcode and the value itself',
+			'default' => ':',
+			'value' => ':',
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
+		'link_set_attribute_qualifier' => array(
+			'type' => 'string',
+			'description' => 'Link set from string: attribute qualifier (encloses both the attcode and the value)',
+			'default' => "'",
+			'value' => "'",
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
 	);
 
 	public function IsProperty($sPropCode)

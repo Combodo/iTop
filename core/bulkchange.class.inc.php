@@ -52,19 +52,13 @@ abstract class CellChangeSpec
 		$this->m_sOql = $sOql;
 	}
 
-	static protected function ValueAsHtml($value)
+	public function GetPureValue()
 	{
-		if (MetaModel::IsValidObject($value))
-		{
-			return $value->GetHyperLink();
-		}
-		else
-		{
-			return htmlentities($value, ENT_QUOTES, 'UTF-8');
-		}
+		// Todo - distinguish both values
+		return $this->m_proposedValue;
 	}
 
-	public function GetValue()
+	public function GetDisplayableValue()
 	{
 		return $this->m_proposedValue;
 	}
@@ -101,10 +95,10 @@ class CellStatus_Modify extends CellChangeSpec
 		return 'Modified';
 	}
 
-	public function GetPreviousValue()
-	{
-		return $this->m_previousValue;
-	}
+	//public function GetPreviousValue()
+	//{
+	//	return $this->m_previousValue;
+	//}
 }
 
 class CellStatus_Issue extends CellStatus_Modify
@@ -270,6 +264,22 @@ class BulkChange
 		$this->m_aOnDisappear = $aOnDisappear;
 	}
 
+	protected $m_bReportHtml = false;
+	protected $m_sReportCsvSep = ',';
+	protected $m_sReportCsvDelimiter = '"';
+
+	public function SetReportHtml()
+	{
+		$this->m_bReportHtml = true;
+	}
+
+	public function SetReportCsv($sSeparator = ',', $sDelimiter = '"')
+	{
+		$this->m_bReportHtml = false;
+		$this->m_sReportCsvSep = $sSeparator;
+		$this->m_sReportCsvDelimiter = $sDelimiter;
+	}
+   
 	protected function ResolveExternalKey($aRowData, $sAttCode, &$aResults)
 	{
 		$oExtKey = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
@@ -388,15 +398,31 @@ class BulkChange
 			// skip the private key, if any
 			if ($sAttCode == 'id') continue;
 
-			$res = $oTargetObj->CheckValue($sAttCode, $aRowData[$iCol]);
-			if ($res === true)
+			$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
+			if ($oAttDef->IsLinkSet())
 			{
-				$oTargetObj->Set($sAttCode, $aRowData[$iCol]);
+				try
+				{
+					$oSet = $oAttDef->MakeValueFromString($aRowData[$iCol]);
+					$oTargetObj->Set($sAttCode, $oSet);
+				}
+				catch(CoreException $e)
+				{
+					$aErrors[$sAttCode] = "Failed to process input: ".$e->getMessage();
+				}
 			}
 			else
-			{
-				// $res is a string with the error description
-				$aErrors[$sAttCode] = "Unexpected value for attribute '$sAttCode': $res";
+			{ 
+				$res = $oTargetObj->CheckValue($sAttCode, $aRowData[$iCol]);
+				if ($res === true)
+				{
+					$oTargetObj->Set($sAttCode, $aRowData[$iCol]);
+				}
+				else
+				{
+					// $res is a string with the error description
+					$aErrors[$sAttCode] = "Unexpected value for attribute '$sAttCode': $res";
+				}
 			}
 		}
 	
@@ -409,19 +435,29 @@ class BulkChange
 			{
 				$aResults[$iCol]= new CellStatus_Void($aRowData[$iCol]);
 			}
+			if ($this->m_bReportHtml)
+			{
+				$sCurValue = $oTargetObj->GetAsHTML($sAttCode);
+				$sOrigValue = $oTargetObj->GetOriginalAsHTML($sAttCode);
+			}
+			else
+			{
+				$sCurValue = $oTargetObj->GetAsCSV($sAttCode, $this->m_sReportCsvSep, $this->m_sReportCsvDelimiter);
+				$sOrigValue = $oTargetObj->GetOriginalAsCSV($sAttCode, $this->m_sReportCsvSep, $this->m_sReportCsvDelimiter);
+			}
 			if (isset($aErrors[$sAttCode]))
 			{
-				$aResults[$iCol]= new CellStatus_Issue($oTargetObj->Get($sAttCode), $oTargetObj->GetOriginal($sAttCode), $aErrors[$sAttCode]);
+				$aResults[$iCol]= new CellStatus_Issue($sCurValue, $sOrigValue, $aErrors[$sAttCode]);
 			}
 			elseif (array_key_exists($sAttCode, $aChangedFields))
 			{
 				if ($oTargetObj->IsNew())
 				{
-					$aResults[$iCol]= new CellStatus_Void($oTargetObj->Get($sAttCode));
+					$aResults[$iCol]= new CellStatus_Void($sCurValue);
 				}
 				else
 				{
-					$aResults[$iCol]= new CellStatus_Modify($oTargetObj->Get($sAttCode), $oTargetObj->GetOriginal($sAttCode));
+					$aResults[$iCol]= new CellStatus_Modify($sCurValue, $sOrigValue);
 				}
 			}
 			else
@@ -970,7 +1006,7 @@ EOF
 			{
 				$aObjects[$iObjId]['__created__'] = true;
 			}
-			elseif (is_subclass_of($oOperation, 'CMDBChangeOpSetAttribute'))
+			elseif ($oOperation instanceof CMDBChangeOpSetAttribute)
 			{
 				$sAttCode = $oOperation->Get('attcode');
 

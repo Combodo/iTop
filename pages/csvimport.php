@@ -315,7 +315,8 @@ try
 			empty($sSynchroScope) ? null : $sSynchroScope,
 			$aSynchroUpdate		
 		);
-		
+		$oBulk->SetReportHtml();
+
 		$oPage->add('<input type="hidden" name="csvdata_truncated" id="csvdata_truncated" value="'.htmlentities($sCSVDataTruncated, ENT_QUOTES, 'UTF-8').'"/>');
 		$aRes = $oBulk->Process($oMyChange);
 
@@ -350,7 +351,7 @@ try
 				case 'RowStatus_NoChange':
 				$iUnchanged++;
 				$sFinalClass = $aResRow['finalclass'];
-				$oObj = MetaModel::GetObject($sFinalClass, $aResRow['id']->GetValue());
+				$oObj = MetaModel::GetObject($sFinalClass, $aResRow['id']->GetPureValue());
 				$sUrl = $oObj->GetHyperlink();
 				$sStatus = '<img src="../images/unchanged.png" title="Unchanged">';
 				$sCSSRowClass = 'row_unchanged';
@@ -359,7 +360,7 @@ try
 				case 'RowStatus_Modify':
 				$iModified++;
 				$sFinalClass = $aResRow['finalclass'];
-				$oObj = MetaModel::GetObject($sFinalClass, $aResRow['id']->GetValue());
+				$oObj = MetaModel::GetObject($sFinalClass, $aResRow['id']->GetPureValue());
 				$sUrl = $oObj->GetHyperlink();
 				$sStatus = '<img src="../images/modified.png" title="Modified">';
 				$sCSSRowClass = 'row_modified';
@@ -368,7 +369,7 @@ try
 				case 'RowStatus_Disappeared':
 				$iModified++;
 				$sFinalClass = $aResRow['finalclass'];
-				$oObj = MetaModel::GetObject($sFinalClass, $aResRow['id']->GetValue());
+				$oObj = MetaModel::GetObject($sFinalClass, $aResRow['id']->GetPureValue());
 				$sUrl = $oObj->GetHyperlink();
 				$sStatus = '<img src="../images/delete.png" title="Missing">';
 				$sCSSRowClass = 'row_modified';
@@ -394,7 +395,7 @@ try
 				else
 				{
 					$sFinalClass = $aResRow['finalclass'];
-					$oObj = MetaModel::GetObject($sFinalClass, $aResRow['id']->GetValue());
+					$oObj = MetaModel::GetObject($sFinalClass, $aResRow['id']->GetPureValue());
 					$sUrl = $oObj->GetHyperlink();
 					$sMessage = 'Object created';				
 				}
@@ -443,7 +444,7 @@ try
 							// Do nothing
 						}
 					}
-					$sHtmlValue = htmlentities($oCellStatus->GetValue(), ENT_QUOTES, 'UTF-8');
+					$sHtmlValue = $oCellStatus->GetDisplayableValue();
 					switch(get_class($oCellStatus))
 					{
 						case 'CellStatus_Issue':
