@@ -42,7 +42,7 @@ $currentOrganization = utils::ReadParam('org_id', '');
 // Main program
 $sExpression = utils::ReadParam('expression', '');
 $sFormat = strtolower(utils::ReadParam('format', 'html'));
-$sFields = utils::ReadParam('fields', ''); // CSV field list
+$sFields = utils::ReadParam('fields', ''); // CSV field list (allows to specify link set attributes, still not taken into account for XML export)
 
 $oP = null;
 

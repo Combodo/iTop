@@ -826,9 +826,9 @@ abstract class DBObject
 			}
 			elseif(is_object($proposedValue))
 			{
+				$oLinkAttDef = MetaModel::GetAttributeDef(get_class($this), $sAtt);
 				// The value is an object, the comparison is not strict
-				// #@# todo - should be even less strict => add verb on AttributeDefinition: Compare($a, $b)
-				if ($this->m_aOrigValues[$sAtt] != $proposedValue)
+				if (!$oLinkAttDef->Equals($proposedValue, $this->m_aOrigValues[$sAtt]))
 				{
 					$aDelta[$sAtt] = $proposedValue;
 				}
@@ -853,14 +853,56 @@ abstract class DBObject
 	// Returns an array of attname => currentvalue
 	public function ListChanges()
 	{
-		return $this->ListChangedValues($this->m_aCurrValues);
+		if ($this->m_bIsInDB)
+		{
+			return $this->ListChangedValues($this->m_aCurrValues);
+		}
+		else
+		{
+			return $this->m_aCurrValues;
+		}
 	}
 
-	// Tells whether or not an object was modified
+	// Tells whether or not an object was modified since last read (ie: does it differ from the DB ?)
 	public function IsModified()
 	{
 		$aChanges = $this->ListChanges();
 		return (count($aChanges) != 0);
+	}
+
+	public function Equals($oSibling)
+	{
+		if (get_class($oSibling) != get_class($this))
+		{
+			return false;
+		}
+		if ($this->GetKey() != $oSibling->GetKey())
+		{
+			return false;
+		}
+		if ($this->m_bIsInDB)
+		{
+			// If one has changed, then consider them as being different
+			if ($this->IsModified() || $oSibling->IsModified())
+			{
+				return false;
+			}
+		}
+		else
+		{
+			// Todo - implement this case (loop on every attribute)
+			//foreach(MetaModel::ListAttributeDefs(get_class($this) as $sAttCode => $oAttDef)
+			//{
+					//if (!isset($this->m_CurrentValues[$sAttCode])) continue;
+					//if (!isset($this->m_CurrentValues[$sAttCode])) continue;
+					//if (!$oAttDef->Equals($this->m_CurrentValues[$sAttCode], $oSibling->m_CurrentValues[$sAttCode]))
+					//{
+						//return false;
+					//}
+			//}
+			return false;
+		}
+		return true;
 	}
 
 	// used both by insert/update

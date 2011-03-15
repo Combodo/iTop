@@ -2139,6 +2139,54 @@ class TestDataExchange extends TestBizModel
 	
 	protected function DoExecute()
 	{
+/*
+		$aScenarios = array(
+			array(
+				'desc' => 'Load user logins',
+				'login' => 'admin',
+				'password' => 'admin',
+				'target_class' => 'UserLocal',
+				'full_load_periodicity' => 3600, // should be ignored in this case
+				'reconciliation_policy' => 'use_attributes',
+				'action_on_zero' => 'create',
+				'action_on_one' => 'update',
+				'action_on_multiple' => 'error',
+				'delete_policy' => 'delete',
+				'delete_policy_update' => '',
+				'delete_policy_retention' => 0,
+				'source_data' => array(
+					array('primary_key', 'login', 'password', 'profile_list'),
+					array(
+						array('user_A', 'login_A', 'password_A', 'profileid:10;reason:he/she is managing services'),
+					),
+				),
+				'target_data' => array(
+					array('login'),
+					array(
+						// Initial state
+					),
+					array(
+						array('login_A'),
+					),
+				),
+				'attributes' => array(
+					'login' => array(
+						'do_reconcile' => true,
+						'do_update' => true,
+						'automatic_prefix' => true, // unique id (for unit testing)
+					),
+					'password' => array(
+						'do_reconcile' => false,
+						'do_update' => true,
+					),
+					'profile_list' => array(
+						'do_reconcile' => false,
+						'do_update' => true,
+					),
+				),
+			),
+		);
+*/
 		$aScenarios = array(
 			array(
 				'desc' => 'Simple scenario with delete option (and extkey given as org/name)',
@@ -2222,11 +2270,11 @@ class TestDataExchange extends TestBizModel
 				'action_on_multiple' => 'error',
 				'delete_policy' => 'update_then_delete',
 				'delete_policy_update' => 'status:obsolete',
-				'delete_policy_retention' => 5,
+				'delete_policy_retention' => 15,
 				'source_data' => array(
 					array('primary_key', 'org_id', 'name', 'status'),
 					array(
-						array('obj_A', 'OMED', 'obj_A', 'production'),
+						array('obj_A', 'Demo', 'obj_A', 'production'),
 					),
 					array(
 					),
@@ -2248,7 +2296,7 @@ class TestDataExchange extends TestBizModel
 					'org_id' => array(
 						'do_reconcile' => true,
 						'do_update' => true,
-						'reconciliation_attcode' => 'code',
+						'reconciliation_attcode' => 'name',
 					),
 					'name' => array(
 						'do_reconcile' => true,

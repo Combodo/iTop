@@ -203,6 +203,7 @@ abstract class AttributeDefinition
 	public function IsNull($proposedValue) {return is_null($proposedValue);} 
 
 	public function MakeRealValue($proposedValue) {return $proposedValue;} // force an allowed value (type conversion and possibly forces a value as mySQL would do upon writing!)
+	public function Equals($val1, $val2) {return ($val1 == $val2);}
 
 	public function GetSQLExpressions($sPrefix = '') {return array();} // returns suffix/expression pairs (1 in most of the cases), for READING (Select)
 	public function FromSQLToValue($aCols, $sPrefix = '') {return null;} // returns a value out of suffix/value pairs, for SELECT result interpretation
@@ -411,10 +412,19 @@ class AttributeLinkedSet extends AttributeDefinition
 			$aItems = array();
 			while ($oObj = $sValue->Fetch())
 			{
+				$sObjClass = get_class($oObj);
 				// Show only relevant information (hide the external key to the current object)
 				$aAttributes = array();
-				foreach(MetaModel::ListAttributeDefs($this->GetLinkedClass()) as $sAttCode => $oAttDef)
+				foreach(MetaModel::ListAttributeDefs($sObjClass) as $sAttCode => $oAttDef)
 				{
+					if ($sAttCode == 'finalclass')
+					{
+						if ($sObjClass == $this->GetLinkedClass())
+						{
+							// Simplify the output if the exact class could be determined implicitely 
+							continue;
+						}
+					}
 					if ($sAttCode == $this->GetExtKeyToMe()) continue;
 					if ($oAttDef->IsExternalField()) continue;
 					if (!$oAttDef->IsDirectField()) continue;
@@ -472,9 +482,9 @@ class AttributeLinkedSet extends AttributeDefinition
 		$aLinks = array();
 		foreach($aInput as $aRow)
 		{
-			$aNewRow = array();
-			$oLink = MetaModel::NewObject($sTargetClass);
+			// 1st - get the values, split the extkey->searchkey specs, and eventually get the finalclass value
 			$aExtKeys = array();
+			$aValues = array();
 			foreach($aRow as $sCell)
 			{
 				$iSepPos = strpos($sCell, $sSepValue);
@@ -509,10 +519,35 @@ class AttributeLinkedSet extends AttributeDefinition
 					{
 						throw new CoreException('Wrong attribute code for link attribute specification', array('class' => $sTargetClass, 'attcode' => $sAttCode));
 					}
-					$oLink->Set($sAttCode, $sValue);
+					$aValues[$sAttCode] = $sValue;
 				}
 			}
-			// Set external keys from search conditions
+
+			// 2nd - Instanciate the object and set the value
+			if (isset($aValues['finalclass']))
+			{
+				$sLinkClass = $aValues['finalclass'];
+				if (!is_subclass_of($sLinkClass, $sTargetClass))
+				{
+					throw new CoreException('Wrong class for link attribute specification', array('requested_class' => $sLinkClass, 'expected_class' => $sTargetClass));
+				}
+			}
+			elseif (MetaModel::IsAbstract($sTargetClass))
+			{
+					throw new CoreException('Missing finalclass for link attribute specification');
+			}
+			else
+			{
+				$sLinkClass = $sTargetClass;
+			}
+
+			$oLink = MetaModel::NewObject($sLinkClass);
+			foreach ($aValues as $sAttCode => $sValue)
+			{
+				$oLink->Set($sAttCode, $sValue);
+			}
+
+			// 3rd - Set external keys from search conditions
 			foreach ($aExtKeys as $sKeyAttCode => $aReconciliation)
 			{
 				$oKeyAttDef = MetaModel::GetAttributeDef($sTargetClass, $sKeyAttCode);
@@ -546,6 +581,25 @@ class AttributeLinkedSet extends AttributeDefinition
 		}
 		$oSet = DBObjectSet::FromArray($sTargetClass, $aLinks);
 		return $oSet;
+	}
+
+	public function Equals($val1, $val2)
+	{
+		if ($val1 === $val2) return true;
+
+		if (is_object($val1) != is_object($val2))
+		{
+			return false;
+		}
+		if (!is_object($val1))
+		{
+			// string ?
+			// todo = implement this case ?
+			return false;
+		}
+
+		// Both values are Object sets
+		return $val1->HasSameContents($val2);
 	}
 }
 

@@ -1101,24 +1101,31 @@ EOF
 		
 		// Create a truncated version of the data used for the fast preview
 		// Take about 20 lines of data... knowing that some lines may contain carriage returns
-		$iMaxLines = 20;
 		$iMaxLen = strlen($sUTF8Data);
-		$iCurPos = true;
-		while ( ($iCurPos > 0) && ($iMaxLines > 0))
+		if ($iMaxLen > 0)
 		{
-			$pos = strpos($sUTF8Data, "\n", $iCurPos);
-			if ($pos !== false)
+			$iMaxLines = 20;
+			$iCurPos = true;
+			while ( ($iCurPos > 0) && ($iMaxLines > 0))
 			{
-				$iCurPos = 1+$pos;
+				$pos = strpos($sUTF8Data, "\n", $iCurPos);
+				if ($pos !== false)
+				{
+					$iCurPos = 1+$pos;
+				}
+				else
+				{
+					$iCurPos = strlen($sUTF8Data);
+					$iMaxLines = 1;
+				}
+				$iMaxLines--;
 			}
-			else
-			{
-				$iCurPos = strlen($sUTF8Data);
-				$iMaxLines = 1;
-			}
-			$iMaxLines--;
+			$sCSVDataTruncated = substr($sUTF8Data, 0, $iCurPos);
 		}
-		$sCSVDataTruncated = substr($sUTF8Data, 0, $iCurPos);
+		else
+		{
+			$sCSVDataTruncated = '';
+		}
 
 		$sSynchroScope = utils::ReadParam('synchro_scope', '');
 		if (!empty($sSynchroScope))
@@ -1433,7 +1440,7 @@ EOF
 	
 	$oPage->output();
 }
-catch(CoreException $e)
+catch(xxxxxxxCoreException $e)
 {
 	require_once(APPROOT.'/setup/setuppage.class.inc.php');
 	$oP = new SetupWebPage(Dict::S('UI:PageTitle:FatalError'));
@@ -1462,7 +1469,7 @@ catch(CoreException $e)
 	// For debugging only
 	//throw $e;
 }
-catch(Exception $e)
+catch(xxxxxException $e)
 {
 	require_once(APPROOT.'/setup/setuppage.class.inc.php');
 	$oP = new SetupWebPage(Dict::S('UI:PageTitle:FatalError'));

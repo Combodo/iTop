@@ -163,7 +163,7 @@ function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMo
 				}
 			}
 		}
-		else if ($oAttDef->IsWritable() && ($bAdvancedMode || !$oAttDef->IsLinkset()))
+		else if ($oAttDef->IsWritable() && (!$oAttDef->IsLinkset() || ($bAdvancedMode && $oAttDef->IsIndirect())))
 		{
 			
 			if (!$oAttDef->IsNullAllowed())

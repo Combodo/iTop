@@ -827,7 +827,11 @@ EOF
 	{
 		$sSeparator = isset($aParams['separator']) ? $aParams['separator'] : ','; // default separator is comma
 		$sTextQualifier = isset($aParams['text_qualifier']) ? $aParams['text_qualifier'] : '"'; // default text qualifier is double quote
-		$aFields = isset($aParams['fields']) ? explode(',', $aParams['fields']) : null;
+		$aFields = null;
+		if (isset($aParams['fields']) && (strlen($aParams['fields']) > 0))
+		{
+			$aFields = explode(',', $aParams['fields']);
+		}
 
 		$aList = array();
 
@@ -847,11 +851,21 @@ EOF
 		{
 			foreach(MetaModel::ListAttributeDefs($sClassName) as $sAttCode => $oAttDef)
 			{
-				if (!is_null($aFields) && !in_array($sAttCode, $aFields)) continue;
-
-				if ($oAttDef->IsExternalField() || $oAttDef->IsWritable())
+				if (is_null($aFields) || (count($aFields) == 0))
 				{
-					$aList[$sClassName][$sAttCode] = $oAttDef;
+					// Standard list of attributes (no link sets)
+					if ($oAttDef->IsScalar() && ($oAttDef->IsWritable() || $oAttDef->IsExternalField()))
+					{
+						$aList[$sClassName][$sAttCode] = $oAttDef;
+					}
+				}
+				else
+				{
+					// User defined list of attributes
+					if (in_array($sAttCode, $aFields))
+					{
+						$aList[$sClassName][$sAttCode] = $oAttDef;
+					}
 				}
 			}
 			$aHeader[] = 'id';

@@ -49,7 +49,7 @@ class DBObjectSet
 
 		$this->m_bLoaded = false; // true when the filter has been used OR the set is built step by step (AddObject...)
 		$this->m_aData = array(); // array of (row => array of (classalias) => object/null)
-		$this->m_aId2Row = array();
+		$this->m_aId2Row = array(); // array of (pkey => index in m_aData)
 		$this->m_iCurrRow = 0;
 	}
 
@@ -443,6 +443,43 @@ class DBObjectSet
 			}
 		}
 		return $oNewSet;
+	}
+
+	// Note: This verb works only with objects existing in the database
+	//
+	public function HasSameContents($oObjectSet)
+	{
+		if ($this->GetRootClass() != $oObjectSet->GetRootClass())
+		{
+			return false;
+		}
+		if (!$this->m_bLoaded) $this->Load();
+
+		if ($this->Count() != $oObjectSet->Count())
+		{
+			return false;
+		}
+		$sClassAlias = $this->m_oFilter->GetClassAlias();
+		$oObjectSet->Rewind();
+		while ($oObject = $oObjectSet->Fetch())
+		{
+			$iObjectKey = $oObject->GetKey();
+			if ($iObjectKey < 0)
+			{
+				return false;
+			}
+			if (!array_key_exists($iObjectKey, $this->m_aId2Row[$sClassAlias]))
+			{
+				return false;
+			}
+			$iRow = $this->m_aId2Row[$sClassAlias][$iObjectKey];
+			$oSibling = $this->m_aData[$iRow][$sClassAlias];
+			if (!$oObject->Equals($oSibling))
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public function CreateDelta($oObjectSet)

@@ -399,7 +399,7 @@ class BulkChange
 			if ($sAttCode == 'id') continue;
 
 			$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
-			if ($oAttDef->IsLinkSet())
+			if ($oAttDef->IsLinkSet() && $oAttDef->IsIndirect())
 			{
 				try
 				{
@@ -435,35 +435,38 @@ class BulkChange
 			{
 				$aResults[$iCol]= new CellStatus_Void($aRowData[$iCol]);
 			}
-			if ($this->m_bReportHtml)
-			{
-				$sCurValue = $oTargetObj->GetAsHTML($sAttCode);
-				$sOrigValue = $oTargetObj->GetOriginalAsHTML($sAttCode);
-			}
 			else
 			{
-				$sCurValue = $oTargetObj->GetAsCSV($sAttCode, $this->m_sReportCsvSep, $this->m_sReportCsvDelimiter);
-				$sOrigValue = $oTargetObj->GetOriginalAsCSV($sAttCode, $this->m_sReportCsvSep, $this->m_sReportCsvDelimiter);
-			}
-			if (isset($aErrors[$sAttCode]))
-			{
-				$aResults[$iCol]= new CellStatus_Issue($sCurValue, $sOrigValue, $aErrors[$sAttCode]);
-			}
-			elseif (array_key_exists($sAttCode, $aChangedFields))
-			{
-				if ($oTargetObj->IsNew())
+				if ($this->m_bReportHtml)
 				{
-					$aResults[$iCol]= new CellStatus_Void($sCurValue);
+					$sCurValue = $oTargetObj->GetAsHTML($sAttCode);
+					$sOrigValue = $oTargetObj->GetOriginalAsHTML($sAttCode);
 				}
 				else
 				{
-					$aResults[$iCol]= new CellStatus_Modify($sCurValue, $sOrigValue);
+					$sCurValue = $oTargetObj->GetAsCSV($sAttCode, $this->m_sReportCsvSep, $this->m_sReportCsvDelimiter);
+					$sOrigValue = $oTargetObj->GetOriginalAsCSV($sAttCode, $this->m_sReportCsvSep, $this->m_sReportCsvDelimiter);
 				}
-			}
-			else
-			{
-				// By default... nothing happens
-				$aResults[$iCol]= new CellStatus_Void($aRowData[$iCol]);
+				if (isset($aErrors[$sAttCode]))
+				{
+					$aResults[$iCol]= new CellStatus_Issue($sCurValue, $sOrigValue, $aErrors[$sAttCode]);
+				}
+				elseif (array_key_exists($sAttCode, $aChangedFields))
+				{
+					if ($oTargetObj->IsNew())
+					{
+						$aResults[$iCol]= new CellStatus_Void($sCurValue);
+					}
+					else
+					{
+						$aResults[$iCol]= new CellStatus_Modify($sCurValue, $sOrigValue);
+					}
+				}
+				else
+				{
+					// By default... nothing happens
+					$aResults[$iCol]= new CellStatus_Void($aRowData[$iCol]);
+				}
 			}
 		}
 	
