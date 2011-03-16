@@ -155,6 +155,7 @@ EOF
 			$sHTMLValue .= "<input type=\"hidden\" id=\"$this->iId\" name=\"attr_{$this->sFieldPrefix}{$this->sAttCode}{$this->sNameSuffix}\" value=\"$this->value\" />\n";
 	
 			// Scripts to start the autocomplete and bind some events to it
+			$sDialogTitle = addslashes($this->sTitle);
 		$oPage->add_ready_script(
 <<<EOF
 		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sClass}', '{$this->sAttCode}', '{$this->sNameSuffix}', $sSelectMode, oWizardHelper{$this->sFormPrefix});
@@ -162,7 +163,7 @@ EOF
 		$('#label_$this->iId').autocomplete('../pages/ajax.render.php', { scroll:true, minChars:{$iMinChars}, formatItem:formatItem, autoFill:false, matchContains:true, keyHolder:'#{$this->iId}', extraParams:{operation:'autocomplete', sclass:'{$this->sClass}',attCode:'{$this->sAttCode}'}});
 		$('#label_$this->iId').blur(function() { $(this).search(); } );
 		$('#label_$this->iId').result( function(event, data, formatted) { OnAutoComplete('{$this->iId}', event, data, formatted); } );
-		$('#ac_dlg_$this->iId').dialog({ width: $(window).width()*0.8, height: $(window).height()*0.8, autoOpen: false, modal: true, title: '{$this->sTitle}', resizeStop: oACWidget_{$this->iId}.UpdateSizes, close: oACWidget_{$this->iId}.OnClose });
+		$('#ac_dlg_$this->iId').dialog({ width: $(window).width()*0.8, height: $(window).height()*0.8, autoOpen: false, modal: true, title: '$sDialogTitle', resizeStop: oACWidget_{$this->iId}.UpdateSizes, close: oACWidget_{$this->iId}.OnClose });
 
 EOF
 );
@@ -240,11 +241,12 @@ EOF
 	 */
 	public function GetObjectCreationForm(WebPage $oPage)
 	{
+		$sDialogTitle = addslashes($this->sTitle);
 		$oPage->add('<div id="ac_create_'.$this->iId.'"><div class="wizContainer" style="vertical-align:top;"><div id="dcr_'.$this->iId.'">');
 		$oPage->add("<h1>".MetaModel::GetClassIcon($this->sTargetClass)."&nbsp;".Dict::Format('UI:CreationTitle_Class', MetaModel::GetName($this->sTargetClass))."</h1>\n");
 	 	cmdbAbstractObject::DisplayCreationForm($oPage, $this->sTargetClass, null, array(), array('formPrefix' => $this->iId, 'noRelations' => true));	
 		$oPage->add('</div></div></div>');
-			$oPage->add_ready_script("\$('#ac_create_$this->iId').dialog({ width: $(window).width()*0.8, height: 'auto', autoOpen: false, modal: true, title: '$this->sTitle'});\n");
+		$oPage->add_ready_script("\$('#ac_create_$this->iId').dialog({ width: $(window).width()*0.8, height: 'auto', autoOpen: false, modal: true, title: '$sDialogTitle'});\n");
 		$oPage->add_ready_script("$('#dcr_{$this->iId} form').removeAttr('onsubmit');");
 		$oPage->add_ready_script("$('#dcr_{$this->iId} form').bind('submit.uilinksWizard', oACWidget_{$this->iId}.DoCreateObject);");
 	}
@@ -264,8 +266,6 @@ EOF
 		$oObj->DBInsertTracked($oMyChange);
 	
 		return array('name' => $oObj->GetName(), 'id' => $oObj->GetKey());
-		
-		//return array('name' => 'test', 'id' => '42');
 	}
 }
 ?>
