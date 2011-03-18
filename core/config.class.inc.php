@@ -1016,7 +1016,7 @@ class Config
 						$sSeenAs = $aSettingInfo['value'] ? '1' : '0';
 						break;
 					default:
-						$sSeenAs = "'".$aSettingInfo['value']."'";
+						$sSeenAs = "'".addslashes($aSettingInfo['value'])."'";
 					}
 					fwrite($hFile, "\t'$sPropCode' => $sSeenAs,\n");
 				}
