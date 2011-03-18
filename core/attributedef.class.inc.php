@@ -63,6 +63,7 @@ define('DEL_MANUAL', 1);
  * @package     iTopORM
  */
 define('DEL_AUTO', 2);
+define('DEL_SILENT', 2);
 
 
 /**

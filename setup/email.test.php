@@ -158,18 +158,25 @@ function DisplayStep2(SetupWebPage $oP, $sFrom, $sTo)
 	$oEmail->SetRecipientFrom($sFrom);
 	$oEmail->SetSubject("Test iTop");
 	$oEmail->SetBody("<p>Hello,</p><p>The email function is now working fine.</p><p>You may now be able to use the notification function.</p><p>iTop</p>");
-	$aIssues = $oEmail->send();
-	if (count($aIssues) > 0)
+	$iRes = $oEmail->Send($aIssues, true /* force synchronous exec */);
+	switch ($iRes)
 	{
-		foreach ($aIssues as $sError)
-		{
-			$oP->error($sError);
-		}
-		$oP->add("<button onClick=\"window.history.back();\"><< Back</button>\n");
-	}
-	else
-	{
-		$oP->ok("The email has been sent, you may now check that the email will arrive...");
+		case EMAIL_SEND_OK:
+			$oP->ok("The email has been sent, you may now check that the email will arrive...");
+			break;
+
+		case EMAIL_SEND_PENDING:
+			$oP->ok("Email queued");
+			$oP->add("<button onClick=\"window.history.back();\"><< Back</button>\n");
+			break;
+
+		case EMAIL_SEND_ERROR:
+			foreach ($aIssues as $sError)
+			{
+				$oP->error($sError);
+			}
+			$oP->add("<button onClick=\"window.history.back();\"><< Back</button>\n");
+			break;
 	}
 }
 

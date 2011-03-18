@@ -24,6 +24,7 @@
  */
 
 
+require_once(APPROOT.'/core/asynctask.class.inc.php');
 require_once(APPROOT.'/core/email.class.inc.php');
 
 /**
@@ -219,120 +220,82 @@ class ActionEmail extends ActionNotification
 
 	public function DoExecute($oTrigger, $aContextArgs)
 	{
-		$this->m_iRecipients = 0;
-		$this->m_aMailErrors = array();
-		$bRes = false; // until we do succeed in sending the email
-		try
-		{
-			// Determine recicipients
-			//
-			$sTo = $this->FindRecipients('to', $aContextArgs);
-			$sCC = $this->FindRecipients('cc', $aContextArgs);
-			$sBCC = $this->FindRecipients('bcc', $aContextArgs);
-
-			$sFrom = $this->Get('from');
-			$sReplyTo = $this->Get('reply_to');
-	
-			$sSubject = MetaModel::ApplyParams($this->Get('subject'), $aContextArgs);
-			$sBody = MetaModel::ApplyParams($this->Get('body'), $aContextArgs);
-			
-			$oObj = $aContextArgs['this->object()'];
-			$sServerIP = $_SERVER['SERVER_ADDR']; //gethostbyname(gethostname());
-			$sReference = '<iTop/'.get_class($oObj).'/'.$oObj->GetKey().'@'.$sServerIP.'>';
-
-			$oEmail = new EMail();
-
-			if ($this->IsBeingTested())
-			{
-				$oEmail->SetSubject('TEST['.$sSubject.']');
-				$sTestBody = $sBody;
-				$sTestBody .= "<div style=\"border: dashed;\">\n";
-				$sTestBody .= "<h1>Testing email notification ".$this->GetHyperlink()."</h1>\n";
-				$sTestBody .= "<p>The email should be sent with the following properties\n";
-				$sTestBody .= "<ul>\n";
-				$sTestBody .= "<li>TO: $sTo</li>\n";
-				$sTestBody .= "<li>CC: $sCC</li>\n";
-				$sTestBody .= "<li>BCC: $sBCC</li>\n";
-				$sTestBody .= "<li>From: $sFrom</li>\n";
-				$sTestBody .= "<li>Reply-To: $sReplyTo</li>\n";
-				$sTestBody .= "<li>References: $sReference</li>\n";
-				$sTestBody .= "</ul>\n";
-				$sTestBody .= "</p>\n";
-				$sTestBody .= "</div>\n";
-				$oEmail->SetBody($sTestBody);
-				$oEmail->SetRecipientTO($this->Get('test_recipient'));
-				$oEmail->SetRecipientFrom($this->Get('test_recipient'));
-				$oEmail->SetReferences($sReference);
-			}
-			else
-			{
-				$oEmail->SetSubject($sSubject);
-				$oEmail->SetBody($sBody);
-				$oEmail->SetRecipientTO($sTo);
-				$oEmail->SetRecipientCC($sCC);
-				$oEmail->SetRecipientBCC($sBCC);
-				$oEmail->SetRecipientFrom($sFrom);
-				$oEmail->SetRecipientReplyTo($sReplyTo);
-				$oEmail->SetReferences($sReference);
-			}
-	
-			if (empty($this->m_aMailErrors))
-			{
-				if ($this->m_iRecipients == 0)
-				{
-					$this->m_aMailErrors[] = 'No recipient';
-				}
-				else
-				{
-					$oKPI = new ExecutionKPI();
-					$this->m_aMailErrors = array_merge($this->m_aMailErrors, $oEmail->Send());
-					$oKPI->ComputeStats('Send mail', $sTo);
-				}
-			}
-		}
-		catch (Exception $e)
-		{
-			$this->m_aMailErrors[] = $e->getMessage();
-		}
-
 		if (MetaModel::IsLogEnabledNotification())
 		{
 			$oLog = new EventNotificationEmail();
-			if (empty($this->m_aMailErrors))
+			if ($this->IsBeingTested())
 			{
-				if ($this->IsBeingTested())
-				{
-					$oLog->Set('message', 'TEST - Notification sent ('.$this->Get('test_recipient').')');
-				}
-				else
-				{
-					$oLog->Set('message', 'Notification sent');
-				}
+				$oLog->Set('message', 'TEST - Notification sent ('.$this->Get('test_recipient').')');
 			}
 			else
 			{
-				if (is_array($this->m_aMailErrors) && count($this->m_aMailErrors) > 0)
-				{
-					$sError = implode(', ', $this->m_aMailErrors);
-				}
-				else
-				{
-					$sError = 'Unknown reason';
-				}
-				if ($this->IsBeingTested())
-				{
-					$oLog->Set('message', 'TEST - Notification was not sent: '.$sError);
-				}
-				else
-				{
-					$oLog->Set('message', 'Notification was not sent: '.$sError);
-				}
+				$oLog->Set('message', 'Notification pending');
 			}
 			$oLog->Set('userinfo', UserRights::GetUser());
 			$oLog->Set('trigger_id', $oTrigger->GetKey());
 			$oLog->Set('action_id', $this->GetKey());
 			$oLog->Set('object_id', $aContextArgs['this->object()']->GetKey());
+			// Must be inserted now so that it gets a valid id that will make the link
+			// between an eventual asynchronous task (queued) and the log
+			$oLog->DBInsertNoReload();
+		}
+		else
+		{
+			$oLog = null;
+		}
 
+		try
+		{
+			$sRes = $this->_DoExecute($oTrigger, $aContextArgs, $oLog);
+
+			if ($this->IsBeingTested())
+			{
+				$sPrefix = 'TEST ('.$this->Get('test_recipient').') - ';
+			}
+			else
+			{
+				$sPrefix = '';
+			}
+			$oLog->Set('message', $sPrefix.$sRes);
+
+		}
+		catch (Exception $e)
+		{
+			if ($oLog)
+			{
+				$oLog->Set('message', 'Error: '.$e->getMessage());
+			}
+		}
+		if ($oLog)
+		{
+			$oLog->DBUpdate();
+		}
+	}
+
+	protected function _DoExecute($oTrigger, $aContextArgs, &$oLog)
+	{
+		$this->m_iRecipients = 0;
+		$this->m_aMailErrors = array();
+		$bRes = false; // until we do succeed in sending the email
+
+		// Determine recicipients
+		//
+		$sTo = $this->FindRecipients('to', $aContextArgs);
+		$sCC = $this->FindRecipients('cc', $aContextArgs);
+		$sBCC = $this->FindRecipients('bcc', $aContextArgs);
+
+		$sFrom = $this->Get('from');
+		$sReplyTo = $this->Get('reply_to');
+
+		$sSubject = MetaModel::ApplyParams($this->Get('subject'), $aContextArgs);
+		$sBody = MetaModel::ApplyParams($this->Get('body'), $aContextArgs);
+		
+		$oObj = $aContextArgs['this->object()'];
+		$sServerIP = $_SERVER['SERVER_ADDR']; //gethostbyname(gethostname());
+		$sReference = '<iTop/'.get_class($oObj).'/'.$oObj->GetKey().'@'.$sServerIP.'>';
+
+		if (!is_null($oLog))
+		{
 			// Note: we have to secure this because those values are calculated
 			// inside the try statement, and we would like to keep track of as
 			// many data as we could while some variables may still be undefined
@@ -342,7 +305,77 @@ class ActionEmail extends ActionNotification
 			if (isset($sFrom))     $oLog->Set('from', $sFrom);
 			if (isset($sSubject))  $oLog->Set('subject', $sSubject);
 			if (isset($sBody))     $oLog->Set('body', $sBody);
-			$oLog->DBInsertNoReload();
+		}
+
+		$oEmail = new EMail();
+
+		if ($this->IsBeingTested())
+		{
+			$oEmail->SetSubject('TEST['.$sSubject.']');
+			$sTestBody = $sBody;
+			$sTestBody .= "<div style=\"border: dashed;\">\n";
+			$sTestBody .= "<h1>Testing email notification ".$this->GetHyperlink()."</h1>\n";
+			$sTestBody .= "<p>The email should be sent with the following properties\n";
+			$sTestBody .= "<ul>\n";
+			$sTestBody .= "<li>TO: $sTo</li>\n";
+			$sTestBody .= "<li>CC: $sCC</li>\n";
+			$sTestBody .= "<li>BCC: $sBCC</li>\n";
+			$sTestBody .= "<li>From: $sFrom</li>\n";
+			$sTestBody .= "<li>Reply-To: $sReplyTo</li>\n";
+			$sTestBody .= "<li>References: $sReference</li>\n";
+			$sTestBody .= "</ul>\n";
+			$sTestBody .= "</p>\n";
+			$sTestBody .= "</div>\n";
+			$oEmail->SetBody($sTestBody);
+			$oEmail->SetRecipientTO($this->Get('test_recipient'));
+			$oEmail->SetRecipientFrom($this->Get('test_recipient'));
+			$oEmail->SetReferences($sReference);
+		}
+		else
+		{
+			$oEmail->SetSubject($sSubject);
+			$oEmail->SetBody($sBody);
+			$oEmail->SetRecipientTO($sTo);
+			$oEmail->SetRecipientCC($sCC);
+			$oEmail->SetRecipientBCC($sBCC);
+			$oEmail->SetRecipientFrom($sFrom);
+			$oEmail->SetRecipientReplyTo($sReplyTo);
+			$oEmail->SetReferences($sReference);
+		}
+
+		if (empty($this->m_aMailErrors))
+		{
+			if ($this->m_iRecipients == 0)
+			{
+				return 'No recipient';
+			}
+			else
+			{
+				$iRes = $oEmail->Send($aErrors, false, $oLog); // allow asynchronous mode
+				switch ($iRes)
+				{
+					case EMAIL_SEND_OK:
+						return "Sent";
+	
+					case EMAIL_SEND_PENDING:
+						return "Pending";
+	
+					case EMAIL_SEND_ERROR:
+						return "Errors: ".implode(', ', $aErrors);
+				}
+			}
+		}
+		else
+		{
+			if (is_array($this->m_aMailErrors) && count($this->m_aMailErrors) > 0)
+			{
+				$sError = implode(', ', $this->m_aMailErrors);
+			}
+			else
+			{
+				$sError = 'Unknown reason';
+			}
+			return 'Notification was not sent: '.$sError;
 		}
 	}
 }

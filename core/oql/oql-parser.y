@@ -164,6 +164,7 @@ str_value(A) ::= STRVAL(X). {A=stripslashes(substr(X, 1, strlen(X) - 2));}
 operator1(A) ::= num_operator1(X). {A=X;}
 operator2(A) ::= num_operator2(X). {A=X;}
 operator2(A) ::= str_operator(X). {A=X;}
+operator2(A) ::= REGEXP(X). {A=X;}
 operator2(A) ::= EQ(X). {A=X;}
 operator2(A) ::= NOT_EQ(X). {A=X;}
 operator3(A) ::= LOG_AND(X). {A=X;}
@@ -187,6 +188,7 @@ list_operator(A) ::= NOT_IN(X). {A=X;}
 func_name(A) ::= F_IF(X). { A=X; }
 func_name(A) ::= F_ELT(X). { A=X; }
 func_name(A) ::= F_COALESCE(X). { A=X; }
+func_name(A) ::= F_ISNULL(X). { A=X; }
 func_name(A) ::= F_CONCAT(X). { A=X; }
 func_name(A) ::= F_SUBSTR(X). { A=X; }
 func_name(A) ::= F_TRIM(X). { A=X; }

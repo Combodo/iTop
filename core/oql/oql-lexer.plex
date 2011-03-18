@@ -94,6 +94,7 @@ math_plus  = "+"
 math_minus = "-"
 log_and    = "AND"
 log_or     = "OR"
+regexp     = "REGEXP"
 eq         = "="
 not_eq     = "!="
 gt         = ">"
@@ -108,6 +109,7 @@ interval   = "INTERVAL"
 f_if       = "IF"
 f_elt      = "ELT"
 f_coalesce = "COALESCE"
+f_isnull   = "ISNULL"
 f_concat   = "CONCAT"
 f_substr   = "SUBSTR"
 f_trim     = "TRIM"
@@ -186,6 +188,9 @@ par_open {
 par_close {
 	$this->token = OQLParser::PAR_CLOSE;
 }
+regexp {
+	$this->token = OQLParser::REGEXP;
+}
 eq {
 	$this->token = OQLParser::EQ;
 }
@@ -227,6 +232,9 @@ f_elt {
 }
 f_coalesce {
 	$this->token = OQLParser::F_COALESCE;
+}
+f_isnull {
+	$this->token = OQLParser::F_ISNULL;
 }
 f_concat {
 	$this->token = OQLParser::F_CONCAT;

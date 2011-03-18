@@ -2997,35 +2997,36 @@ class TestTriggerAndEmail extends TestBizModel
 
 	protected function DoExecute()
 	{
-		$oMyPerson = MetaModel::NewObject("bizPerson");
+		$oMyPerson = MetaModel::NewObject("Person");
 		$oMyPerson->Set("name", "testemail1");
+		$oMyPerson->Set("first_name", "theodore");
 		$oMyPerson->Set("org_id", "1");
-		$oMyPerson->Set("email", "romain.quetiez@hp.com");
+		$oMyPerson->Set("email", "romain.quetiez@combodo.com");
 		$iPersonId = $this->ObjectToDB($oMyPerson, true);
 
-		$oMyPerson = MetaModel::NewObject("bizPerson");
+		$oMyPerson = MetaModel::NewObject("Person");
 		$oMyPerson->Set("name", "testemail2");
+		$oMyPerson->Set("first_name", "theodore");
 		$oMyPerson->Set("org_id", "1");
-		$oMyPerson->Set("email", "denis.flaven@hp.com");
+		$oMyPerson->Set("email", "denis.flaven@combodo.com");
 		$iPersonId = $this->ObjectToDB($oMyPerson, true);
 
-		$oMyPerson = MetaModel::NewObject("bizPerson");
+		$oMyPerson = MetaModel::NewObject("Person");
 		$oMyPerson->Set("name", "testemail3");
+		$oMyPerson->Set("first_name", "theodore");
 		$oMyPerson->Set("org_id", "1");
-		$oMyPerson->Set("email", "erwan.taloc@hp.com");
+		$oMyPerson->Set("email", "erwan.taloc@combodo.com");
 		$iPersonId = $this->ObjectToDB($oMyPerson, true);
 
-		$oMyServer = MetaModel::NewObject("bizServer");
+		$oMyServer = MetaModel::NewObject("Server");
 		$oMyServer->Set("name", "wfr.terminator.com");
-		$oMyServer->Set("severity", "low");
 		$oMyServer->Set("status", "production");
 		$oMyServer->Set("org_id", 2);
-		$oMyServer->Set("location_id", 2);
 		$iServerId = $this->ObjectToDB($oMyServer, true);
 
 		$oMyTrigger = MetaModel::NewObject("TriggerOnStateEnter");
 		$oMyTrigger->Set("description", "Testor");
-		$oMyTrigger->Set("target_class", "bizServer");
+		$oMyTrigger->Set("target_class", "Server");
 		$oMyTrigger->Set("state", "Shipped");
 		$iTriggerId = $this->ObjectToDB($oMyTrigger, true);
 
@@ -3035,9 +3036,9 @@ class TestTriggerAndEmail extends TestBizModel
 		(
 			$oMyTrigger,
 			'test',
-			"SELECT bizPerson WHERE naime = 'Dali'",
-			"SELECT bizServer",
-			'romain.quetiez@hp.com'
+			"SELECT Person WHERE naime = 'Dali'",
+			"SELECT Server",
+			'romain.quetiez@combodo.com'
 		);
 
 		// Error: no recipient
@@ -3048,7 +3049,7 @@ class TestTriggerAndEmail extends TestBizModel
 			'test',
 			"",
 			"",
-			'romain.quetiez@hp.com'
+			'romain.quetiez@combodo.com'
 		);
 
 		// Test
@@ -3057,9 +3058,9 @@ class TestTriggerAndEmail extends TestBizModel
 		(
 			$oMyTrigger,
 			'test',
-			"SELECT bizPerson WHERE name LIKE 'testemail%'",
-			"SELECT bizPerson",
-			'romain.quetiez@hp.com'
+			"SELECT Person WHERE name LIKE 'testemail%'",
+			"SELECT Person",
+			'romain.quetiez@combodo.com'
 		);
 
 		// Test failing because of a wrong test recipient address
@@ -3068,7 +3069,7 @@ class TestTriggerAndEmail extends TestBizModel
 		(
 			$oMyTrigger,
 			'test',
-			"SELECT bizPerson WHERE name LIKE 'testemail%'",
+			"SELECT Person WHERE name LIKE 'testemail%'",
 			"",
 			'toto@walibi.bg'
 		);
@@ -3079,9 +3080,9 @@ class TestTriggerAndEmail extends TestBizModel
 		(
 			$oMyTrigger,
 			'enabled',
-			"SELECT bizPerson WHERE name LIKE 'testemail%'",
+			"SELECT Person WHERE name LIKE 'testemail%'",
 			"",
-			'romain.quetiez@hp.com'
+			'romain.quetiez@combodo.com'
 		);
 
 		// Does nothing, because it is disabled
@@ -3090,9 +3091,9 @@ class TestTriggerAndEmail extends TestBizModel
 		(
 			$oMyTrigger,
 			'disabled',
-			"SELECT bizPerson WHERE name = 'testemail%'",
+			"SELECT Person WHERE name = 'testemail%'",
 			"",
-			'romain.quetiez@hp.com'
+			'romain.quetiez@combodo.com'
 		);
 
 		$oMyTrigger->DoActivate($oMyServer->ToArgs('this'));
@@ -3216,6 +3217,54 @@ class TestSetLinkset extends TestBizModel
 		// Create a change to record the history of the User object
 		$this->ObjectToDB($oUser, $bReload = true);
 		echo "<p>Created: {$oUser->GetHyperLink()}</p>";
+	}
+}
+
+class TestEmailAsynchronous extends TestBizModel
+{
+	static public function GetName()
+	{
+		return 'Itop - Asynchronous email';
+	}
+
+	static public function GetDescription()
+	{
+		return 'Queues a request to send an email';
+	}
+
+	static public function GetConfigFile() {return '/config-itop.php';}
+
+	protected function DoExecute()
+	{
+		for ($i = 0 ; $i < 2 ; $i++)
+		{
+			$oMail = new Email();
+			$oMail->SetRecipientTO('romain.quetiez@combodo.com');
+			//$oMail->SetRecipientFrom('romain.quetiez@combodo.com');
+			$oMail->SetRecipientCC('romainquetiez@yahoo.fr');
+			$oMail->SetSubject('automated test - '.$i);
+			$oMail->SetBody('this is one is entirely working fine '.time());
+			$iRes = $oMail->Send($aIssues, false);
+			switch ($iRes)
+			{
+				case EMAIL_SEND_OK:
+					echo "EMAIL_SEND_OK<br/>\n";
+					break;
+
+				case EMAIL_SEND_PENDING:
+					echo "EMAIL_SEND_PENDING<br/>\n";
+					break;
+
+				case EMAIL_SEND_ERROR:
+					echo "EMAIL_SEND_ERROR: <br/>\n";
+					foreach($aIssues as $sIssue)
+					{
+						echo "Issue: $sIssue<br/>\n";
+					}
+					break;
+			}
+		}
+		
 	}
 }
 

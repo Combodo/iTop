@@ -25,7 +25,7 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
-class Event extends cmdbAbstractObject
+class Event extends DBObject implements iDisplay
 {
 	public static function Init()
 	{
@@ -46,13 +46,76 @@ class Event extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeText("message", array("allowed_values"=>null, "sql"=>"message", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDateTime("date", array("allowed_values"=>null, "sql"=>"date", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("userinfo", array("allowed_values"=>null, "sql"=>"userinfo", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+//		MetaModel::Init_AddAttribute(new AttributeString("userinfo", array("allowed_values"=>null, "sql"=>"userinfo", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('message', 'date', 'userinfo')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('date', 'message', 'userinfo')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('date', 'finalclass', 'message')); // Attributes to be displayed for a list
 		// Search criteria
 //		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
 //		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
+	}
+
+	/**
+	 * Maps the given context parameter name to the appropriate filter/search code for this class
+	 * @param string $sContextParam Name of the context parameter, i.e. 'org_id'
+	 * @return string Filter code, i.e. 'customer_id'
+	 */
+	public static function MapContextParam($sContextParam)
+	{
+		if ($sContextParam == 'menu')
+		{
+			return null;
+		}
+		else
+		{
+			return $sContextParam;
+		}
+	}
+
+	/**
+	 * This function returns a 'hilight' CSS class, used to hilight a given row in a table
+	 * There are currently (i.e defined in the CSS) 4 possible values HILIGHT_CLASS_CRITICAL,
+	 * HILIGHT_CLASS_WARNING, HILIGHT_CLASS_OK, HILIGHT_CLASS_NONE
+	 * To Be overridden by derived classes
+	 * @param void
+	 * @return String The desired higlight class for the object/row
+	 */
+	public function GetHilightClass()
+	{
+		// Possible return values are:
+		// HILIGHT_CLASS_CRITICAL, HILIGHT_CLASS_WARNING, HILIGHT_CLASS_OK, HILIGHT_CLASS_NONE	
+		return HILIGHT_CLASS_NONE; // Not hilighted by default
+	}
+
+	public static function GetUIPage()
+	{
+		return '../pages/UI.php';
+	}
+
+	function DisplayDetails(WebPage $oPage, $bEditMode = false)
+	{
+		// Object's details
+		//$this->DisplayBareHeader($oPage, $bEditMode);
+		$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB);
+		$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
+		$oPage->SetCurrentTab(Dict::S('UI:PropertiesTab'));
+		$this->DisplayBareProperties($oPage, $bEditMode);
+	}
+	
+	function DisplayBareProperties(WebPage $oPage, $bEditMode = false)
+	{
+		if ($bEditMode) return; // Not editable
+		
+		$aDetails = array();
+		$sClass = get_class($this);
+		$aZList = MetaModel::FlattenZlist(MetaModel::GetZListItems($sClass, 'details'));
+		foreach( $aZList as $sAttCode)
+		{
+			$sDisplayValue = $this->GetAsHTML($sAttCode);	
+			$aDetails[] = array('label' => '<span title="'.MetaModel::GetDescription($sClass, $sAttCode).'">'.MetaModel::GetLabel($sClass, $sAttCode).'</span>', 'value' => $sDisplayValue);
+		}
+		$oPage->Details($aDetails);
 	}
 }
 
@@ -79,8 +142,8 @@ class EventNotification extends Event
 		MetaModel::Init_AddAttribute(new AttributeInteger("object_id", array("allowed_values"=>null, "sql"=>"object_id", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'trigger_id', 'action_id', 'object_id')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('date', 'userinfo')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', array('date', 'message', 'userinfo', 'trigger_id', 'action_id', 'object_id')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('date', 'message')); // Attributes to be displayed for a list
 		// Search criteria
 //		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
 //		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
@@ -115,7 +178,7 @@ class EventNotificationEmail extends EventNotification
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'message', 'trigger_id', 'action_id', 'object_id', 'to', 'cc', 'bcc', 'from', 'subject', 'body')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('date', 'userinfo', 'message', 'to', 'subject')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('list', array('date', 'message', 'to', 'subject')); // Attributes to be displayed for a list
 
 		// Search criteria
 //		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form

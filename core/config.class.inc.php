@@ -253,6 +253,30 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
+		'cron_max_execution_time' => array(
+			'type' => 'integer',
+			'description' => 'Duration (seconds) of the page cron.php, must be shorter than php setting max_execution_time and shorter than the web server response timeout',
+			'default' => 60,
+			'value' => 60,
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
+		'cron_sleep' => array(
+			'type' => 'integer',
+			'description' => 'Duration (seconds) before cron.php checks again if something must be done',
+			'default' => 2,
+			'value' => 2,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
+		'email_asynchronous' => array(
+			'type' => 'bool',
+			'description' => 'If set, the emails are sent off line, which requires cron.php to be activated. Exception: some features like the email test utility will force the serialized mode',
+			'default' => false,
+			'value' => false,
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
 	);
 
 	public function IsProperty($sPropCode)

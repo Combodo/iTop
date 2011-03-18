@@ -24,6 +24,11 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
+define ('EMAIL_SEND_OK', 0);
+define ('EMAIL_SEND_PENDING', 1);
+define ('EMAIL_SEND_ERROR', 2);
+
+
 class EMail
 {
 	protected $m_sBody;
@@ -31,14 +36,13 @@ class EMail
 	protected $m_sTo;
 	protected $m_aHeaders; // array of key=>value
 
-	public function __construct()
+	public function __construct($sTo = '', $sSubject = '', $sBody = '', $aHeaders = array())
 	{
-		$this->m_sTo = '';
-		$this->m_sSubject = '';
-		$this->m_sBody = '';
-		$this->m_aHeaders = array();
+		$this->m_sTo = $sTo;
+		$this->m_sSubject = $sSubject;
+		$this->m_sBody = $sBody;
+		$this->m_aHeaders = $aHeaders;
 	}
-
 
 	// Errors management : not that simple because we need that function to be
 	// executed in the background, while making sure that any issue would be reported clearly
@@ -50,9 +54,22 @@ class EMail
 		$this->m_aMailErrors[] = $sCleanMessage;
 	}
 
+  	protected function SendAsynchronous(&$aIssues, $oLog = null)
+	{
+		try
+		{
+			AsyncSendEmail::AddToQueue($this->m_sTo, $this->m_sSubject, $this->m_sBody, $this->m_aHeaders, $oLog);
+		}
+		catch(Exception $e)
+		{
+			$aIssues = array($e->GetMessage());
+			return EMAIL_SEND_ERROR;
+		}
+		$aIssues = array();
+		return EMAIL_SEND_PENDING;
+	}
 
-	// returns a list of issues if any
-	public function Send()
+	protected function SendSynchronous(&$aIssues, $oLog = null)
 	{
 		$sHeaders  = 'MIME-Version: 1.0' . "\r\n";
 		// ! the case is important for MS-Outlook
@@ -79,7 +96,36 @@ class EMail
 		{
 			$this->m_aMailErrors[] = 'Unknown reason';
 		}
-		return $this->m_aMailErrors;
+		if (count($this->m_aMailErrors) > 0)
+		{
+			$aIssues = $this->m_aMailErrors;
+			return EMAIL_SEND_ERROR;
+		}
+		else
+		{
+			$aIssues = array();
+			return EMAIL_SEND_OK;
+		}
+	}
+
+	public function Send(&$aIssues, $bForceSynchronous = false, $oLog = null)
+	{	
+		if ($bForceSynchronous)
+		{
+			return $this->SendSynchronous($aIssues, $oLog);
+		}
+		else
+		{
+			$bConfigASYNC = MetaModel::GetConfig()->Get('email_asynchronous');
+			if ($bConfigASYNC)
+			{
+				return $this->SendAsynchronous($aIssues, $oLog);
+			}
+			else
+			{
+				return $this->SendSynchronous($aIssues, $oLog);
+			}
+		}
 	}
 
 	protected function AddToHeader($sKey, $sValue)
