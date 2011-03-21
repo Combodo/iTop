@@ -26,6 +26,7 @@
 
 interface iBackgroundProcess
 {
+	public function GetPeriodicity();
 	public function Process($iUnixTimeLimit);
 }
 

@@ -31,6 +31,10 @@ require_once(APPROOT.'/application/clipage.class.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');
 
 
+
+// Known limitation - the background process periodicity is NOT taken into account
+
+
 function CronExec($oP, $aBackgroundProcesses, $bVerbose)
 {
 	$iStarted = time();
@@ -117,7 +121,7 @@ foreach(get_declared_classes() as $sPHPClass)
 		{
 			$oExecInstance = new $sPHPClass;
 		}
-		$aBackgroundProcesses[] = $oExecInstance;
+		$aBackgroundProcesses[$sPHPClass] = $oExecInstance;
 	}
 }
 

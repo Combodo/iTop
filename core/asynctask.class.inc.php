@@ -26,6 +26,11 @@
 
 class ExecAsyncTask implements iBackgroundProcess
 {
+	public function GetPeriodicity()
+	{	
+		return 2; // seconds
+	}
+
 	public function Process($iTimeLimit)
 	{
 		$sOQL = "SELECT AsyncTask WHERE ISNULL(started)";

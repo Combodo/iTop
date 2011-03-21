@@ -612,6 +612,11 @@ abstract class ResponseTicket extends Ticket
 
 class ProcessSLAResponseTicket implements iBackgroundProcess
 {
+	public function GetPeriodicity()
+	{	
+		return 2; // seconds
+	}
+
 	public function Process($iTimeLimit)
 	{
 		$oMyChange = new CMDBChange();
@@ -622,7 +627,7 @@ class ProcessSLAResponseTicket implements iBackgroundProcess
       $aReport = array();
 
 		$oSet = new DBObjectSet(DBObjectSearch::FromOQL('SELECT ResponseTicket WHERE status = \'new\' AND tto_escalation_deadline <= NOW()'));
-		while ($oToEscalate = $oSet->Fetch())
+		while ((time() < $iTimeLimit) && $oToEscalate = $oSet->Fetch())
 		{
 			$oToEscalate->ApplyStimulus('ev_timeout');
 			//$oToEscalate->Set('tto_escalation_deadline', null);
@@ -631,7 +636,7 @@ class ProcessSLAResponseTicket implements iBackgroundProcess
 		}
 		
 		$oSet = new DBObjectSet(DBObjectSearch::FromOQL('SELECT ResponseTicket WHERE status = \'assigned\' AND ttr_escalation_deadline <= NOW()'));
-		while ($oToEscalate = $oSet->Fetch())
+		while ((time() < $iTimeLimit) && $oToEscalate = $oSet->Fetch())
 		{
 			$oToEscalate->ApplyStimulus('ev_timeout');
 			//$oToEscalate->Set('ttr_escalation_deadline', null);
@@ -640,7 +645,7 @@ class ProcessSLAResponseTicket implements iBackgroundProcess
 		}
 		
 		$oSet = new DBObjectSet(DBObjectSearch::FromOQL('SELECT ResponseTicket WHERE status = \'resolved\' AND closure_deadline <= NOW()'));
-		while ($oToEscalate = $oSet->Fetch())
+		while ((time() < $iTimeLimit) && $oToEscalate = $oSet->Fetch())
 		{
 			$oToEscalate->ApplyStimulus('ev_close');
 			//$oToEscalate->Set('closure_deadline', null);
