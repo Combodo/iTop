@@ -31,10 +31,36 @@ require_once(APPROOT.'/application/clipage.class.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');
 
 
+function ReadMandatoryParam($oP, $sParam)
+{
+	$sValue = utils::ReadParam($sParam, null, true /* Allow CLI */);
+	if (is_null($sValue))
+	{
+		$oP->p("ERROR: Missing argument '$sParam'\n");
+		UsageAndExit($oP);
+	}
+	return trim($sValue);
+}
+
+function UsageAndExit($oP)
+{
+	$bModeCLI = utils::IsModeCLI();
+
+	if ($bModeCLI)
+	{
+		$oP->p("USAGE:\n");
+		$oP->p("php -q cron.php --auth_user=<login> --auth_pwd=<password> [--verbose=1]\n");		
+	}
+	else
+	{
+		$oP->p("Optional parameter: verbose\n");		
+	}
+	$oP->output();
+	exit -2;
+}
+
 
 // Known limitation - the background process periodicity is NOT taken into account
-
-
 function CronExec($oP, $aBackgroundProcesses, $bVerbose)
 {
 	$iStarted = time();
@@ -126,7 +152,7 @@ foreach(get_declared_classes() as $sPHPClass)
 }
 
 
-$bVerbose = utils::ReadParam('verbose', false);
+$bVerbose = utils::ReadParam('verbose', false, true /* Allow CLI */);
 
 if ($bVerbose)
 {

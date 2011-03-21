@@ -50,7 +50,7 @@ function UsageAndExit($oP)
 	if ($bModeCLI)
 	{
 		$oP->p("USAGE:\n");
-		$oP->p("php -q synchro_exec.php auth_user=<login> auth_pwd=<password> data_sources=<comma_separated_list_of_data_sources>\n");		
+		$oP->p("php -q synchro_exec.php --auth_user=<login> --auth_pwd=<password> --data_sources=<comma_separated_list_of_data_sources>\n");		
 	}
 	else
 	{
