@@ -40,6 +40,7 @@ function ShowExamples($oP, $sExpression)
 		'Pedagogic examples' => array(
 			"Applications" => "SELECT Application",
 			"Person having an 'A' in their name" => "SELECT Person AS B WHERE B.name LIKE '%A%'",
+			"Servers having a name like dbserver1.demo.com or dbserver023.foo.fr" => "SELECT Server WHERE name REGEXP '^dbserver[0-9]+\\\\..+\\\\.[a-z]{2,3}$'",
 			"Changes planned on new year's day" => "SELECT Change AS ch WHERE ch.start_date >= '2009-12-31' AND ch.end_date <= '2010-01-01'",
 			"IPs in a range" => "SELECT InfrastructureCI AS dev WHERE INET_ATON(dev.management_ip) > INET_ATON('10.22.32.224') AND INET_ATON(dev.management_ip) < INET_ATON('10.22.32.255')"
 		),
