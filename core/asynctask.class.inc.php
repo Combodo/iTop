@@ -33,7 +33,7 @@ class ExecAsyncTask implements iBackgroundProcess
 
 	public function Process($iTimeLimit)
 	{
-		$sOQL = "SELECT AsyncTask WHERE ISNULL(started)";
+		$sOQL = "SELECT AsyncTask WHERE ISNULL(started) AND (ISNULL(planned) OR (planned < NOW()))";
 		$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array('created' => true) /* order by*/, array());
 		$iProcessed = 0;
 		while ((time() < $iTimeLimit) && ($oTask = $oSet->Fetch()))
@@ -83,6 +83,8 @@ abstract class AsyncTask extends DBObject
 //		MetaModel::Init_AddAttribute(new AttributeString("name", array("allowed_values"=>null, "sql"=>"name", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDateTime("created", array("allowed_values"=>null, "sql"=>"created", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDateTime("started", array("allowed_values"=>null, "sql"=>"started", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		// planned... still not used - reserved for timer management
+		MetaModel::Init_AddAttribute(new AttributeDateTime("planned", array("allowed_values"=>null, "sql"=>"planned", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("event_id", array("targetclass"=>"Event", "jointype"=> "", "allowed_values"=>null, "sql"=>"event_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_SILENT, "depends_on"=>array())));
 
 		// Display lists

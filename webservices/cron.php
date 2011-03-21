@@ -120,7 +120,7 @@ if (utils::IsModeCLI())
 	}
 	else
 	{
-		$oP->p("Access restricted or wrong credentials ('$sAuthUser')");
+		$oP->p("Access wrong credentials ('$sAuthUser')");
 		exit;
 	}
 }
@@ -131,6 +131,13 @@ else
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
 	$oP = new WebPage("iTop - CRON");
+}
+
+if (!UserRights::IsAdministrator())
+{
+	$oP->p("Access restricted to administrators");
+	$oP->Output();
+	exit;
 }
 
 

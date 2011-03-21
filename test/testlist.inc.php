@@ -3240,7 +3240,7 @@ class TestEmailAsynchronous extends TestBizModel
 		{
 			$oMail = new Email();
 			$oMail->SetRecipientTO('romain.quetiez@combodo.com');
-			//$oMail->SetRecipientFrom('romain.quetiez@combodo.com');
+			$oMail->SetRecipientFrom('romain.quetiez@combodo.com');
 			$oMail->SetRecipientCC('romainquetiez@yahoo.fr');
 			$oMail->SetSubject('automated test - '.$i);
 			$oMail->SetBody('this is one is entirely working fine '.time());
