@@ -610,4 +610,61 @@ abstract class ResponseTicket extends Ticket
 */
 }
 
+class ProcessSLAResponseTicket implements iBackgroundProcess
+{
+	public function Process($iTimeLimit)
+	{
+		$oMyChange = new CMDBChange();
+		$oMyChange->Set("date", time());
+		$oMyChange->Set("userinfo", "Automatic updates");
+		$iChangeId = $oMyChange->DBInsertNoReload();
+
+      $aReport = array();
+
+		$oSet = new DBObjectSet(DBObjectSearch::FromOQL('SELECT ResponseTicket WHERE status = \'new\' AND tto_escalation_deadline <= NOW()'));
+		while ($oToEscalate = $oSet->Fetch())
+		{
+			$oToEscalate->ApplyStimulus('ev_timeout');
+			//$oToEscalate->Set('tto_escalation_deadline', null);
+			$oToEscalate->DBUpdateTracked($oMyChange, true);
+			$aReport['reached TTO ESCALATION deadline'][] = $oToEscalate->Get('ref');
+		}
+		
+		$oSet = new DBObjectSet(DBObjectSearch::FromOQL('SELECT ResponseTicket WHERE status = \'assigned\' AND ttr_escalation_deadline <= NOW()'));
+		while ($oToEscalate = $oSet->Fetch())
+		{
+			$oToEscalate->ApplyStimulus('ev_timeout');
+			//$oToEscalate->Set('ttr_escalation_deadline', null);
+			$oToEscalate->DBUpdateTracked($oMyChange, true);
+			$aReport['reached TTR ESCALATION deadline'][] = $oToEscalate->Get('ref');
+		}
+		
+		$oSet = new DBObjectSet(DBObjectSearch::FromOQL('SELECT ResponseTicket WHERE status = \'resolved\' AND closure_deadline <= NOW()'));
+		while ($oToEscalate = $oSet->Fetch())
+		{
+			$oToEscalate->ApplyStimulus('ev_close');
+			//$oToEscalate->Set('closure_deadline', null);
+			$oToEscalate->DBUpdateTracked($oMyChange, true);
+			$aReport['reached closure deadline'][] = $oToEscalate->Get('ref');
+		}
+
+		$aStringReport = array();
+		foreach ($aReport as $sOperation => $aTicketRefs)
+		{
+			if (count($aTicketRefs) > 0)
+			{
+				$aStringReport[] = $sOperation.': '.count($aTicketRefs).' {'.implode(', ', $aTicketRefs).'}';
+			}
+		}
+		if (count($aStringReport) == 0)
+		{
+			return "No ticket to process";
+		}
+		else
+		{
+			return "Some tickets reached the limit - ".implode('; ', $aStringReport);
+		}
+	}
+}
+
 ?>
