@@ -960,6 +960,19 @@ class AttributeString extends AttributeDBField
 	public function GetEditClass() {return "String";}
 	protected function GetSQLCol() {return "VARCHAR(255)";}
 
+	public function GetValidationPattern()
+	{
+		$sPattern = $this->GetOptional('validation_pattern', '');
+		if (empty($sPattern))
+		{
+			return parent::GetValidationPattern();
+		}
+		else
+		{
+			return $sPattern;
+		}
+	}
+
 	public function CheckFormat($value)
 	{
 		$sRegExp = $this->GetValidationPattern();
