@@ -231,5 +231,33 @@ class Dict
 	{
 		MyHelpers::var_dump_html(self::$m_aData);
 	}
+	
+	public static function InCache()
+	{
+		if (function_exists('apc_fetch'))
+		{
+			$bResult = false;
+			self::$m_aData = apc_fetch('dict', $bResult);
+			if (!$bResult)
+			{
+				self::$m_aData = array();
+			}
+			else
+			{
+				self::$m_aLanguages = apc_fetch('languages', $bResult);
+			}
+			return $bResult;
+		}
+		return false;
+	}
+	
+	public static function InitCache()
+	{
+		if (function_exists('apc_store'))
+		{
+			apc_store('languages', self::$m_aLanguages);
+			apc_store('dict', self::$m_aData);
+		}
+	}
 }
 ?>
