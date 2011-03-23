@@ -243,6 +243,11 @@ class CMDBSource
 		return false;
 	}
 
+	public static function DeleteFrom($sSQLQuery)
+	{
+		self::Query($sSQLQuery);
+	}
+
 	public static function QueryToScalar($sSql)
 	{
 		$result = mysql_query($sSql, self::$m_resDBLink);

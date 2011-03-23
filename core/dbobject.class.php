@@ -1183,18 +1183,37 @@ abstract class DBObject
 		}
 	}
 
+	private function DBDeleteSingleTable($sTableClass)
+	{
+		$sTable = MetaModel::DBGetTable($sTableClass);
+		// Abstract classes or classes having no specific attribute do not have an associated table
+		if ($sTable == '') return;
+
+		$sPKField = '`'.MetaModel::DBGetKey($sTableClass).'`';
+		$sKey = CMDBSource::Quote($this->m_iKey);
+
+		$sDeleteSQL = "DELETE FROM `$sTable` WHERE $sPKField = $sKey";
+		CMDBSource::DeleteFrom($sDeleteSQL);
+	}
+
+	private function DBDeleteInternal()
+	{
+		$sClass = get_class($this);
+
+		foreach(MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL) as $sParentClass)
+		{
+			$this->DBDeleteSingleTable($sParentClass);
+		}
+	}
+	
 	// Delete a record
 	public function DBDelete()
 	{
-		$oFilter = new DBObjectSearch(get_class($this));
-		$oFilter->AddCondition('id', $this->m_iKey, '=');
-
 		$this->OnDelete();
 
-		$sSQL = MetaModel::MakeDeleteQuery($oFilter);
 		if (!MetaModel::DBIsReadOnly())
 		{
-			CMDBSource::Query($sSQL);
+			$this->DBDeleteInternal();
 		}
 
 		$this->AfterDelete();
