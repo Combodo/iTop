@@ -17,7 +17,7 @@ if (!Array.prototype.indexOf) // Emulation of the indexOf function for IE and ol
 	};
 }
 
-function WizardHelper(sClass, sFormPrefix)
+function WizardHelper(sClass, sFormPrefix, sState)
 {
 	this.m_oData = { 'm_sClass' : '',
 					 'm_oFieldsMap': {},
@@ -27,7 +27,8 @@ function WizardHelper(sClass, sFormPrefix)
 					 'm_oDefaultValue': {},
 					 'm_oAllowedValues': {},
 					 'm_iFieldsCount' : 0,
-					 'm_sFormPrefix' : sFormPrefix
+					 'm_sFormPrefix' : sFormPrefix,
+					 'm_sState': sState
 					};
 	this.m_oData.m_sClass = sClass;
 	
@@ -92,10 +93,16 @@ function WizardHelper(sClass, sFormPrefix)
 		// Set the full HTML for the input field
 		for(i=0; i<this.m_oData.m_aAllowedValuesRequested.length; i++)
 		{
-			sAttCode = this.m_oData.m_aAllowedValuesRequested[i];
-			sFieldId = this.m_oData.m_oFieldsMap[sAttCode];
+			var sAttCode = this.m_oData.m_aAllowedValuesRequested[i];
+			var sFieldId = this.m_oData.m_oFieldsMap[sAttCode];
+			var bDisabled = $('#'+sFieldId).attr('disabled');
 			//console.log('Setting #field_'+sFieldId+' to: '+this.m_oData.m_oAllowedValues[sAttCode]);
 			$('#field_'+sFieldId).html(this.m_oData.m_oAllowedValues[sAttCode]);
+			if (bDisabled)
+			{
+				$('#'+sFieldId).attr('disabled', 'disabled');
+				//$('#'+sFieldId).trigger('update'); // Propagate the disable
+			}
 			aRefreshed.push(sFieldId);
 		}
 		// Set the actual value of the input
@@ -113,7 +120,7 @@ function WizardHelper(sClass, sFormPrefix)
 		// For each "refreshed" field, asynchronously trigger a change in case there are dependent fields to update
 		for(i=0; i<aRefreshed.length; i++)
 		{
-			var sString = "$('#"+aRefreshed[i]+"').trigger('change');"
+			var sString = "$('#"+aRefreshed[i]+"').trigger('change').trigger('update');"
 			window.setTimeout(sString, 1); // Synchronous 'trigger' does nothing, call it asynchronously
 		}
 	}

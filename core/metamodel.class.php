@@ -98,6 +98,13 @@ define('OPT_ATT_MUSTCHANGE', 8);
  * @package     iTopORM
  */
 define('OPT_ATT_MUSTPROMPT', 16);
+/**
+ * Specifies that the attribute is in 'slave' mode compared to one data exchange task:
+ * it should not be edited inside iTop anymore
+ *
+ * @package     iTopORM
+ */
+define('OPT_ATT_SLAVE', 32);
 
 /**
  * DB Engine -should be moved into CMDBSource 
@@ -3542,9 +3549,13 @@ abstract class MetaModel
 
 		// Note: load the dictionary as soon as possible, because it might be
 		//       needed when some error occur
-		foreach (self::$m_oConfig->GetDictionaries() as $sModule => $sToInclude)
+		if (!Dict::InCache())
 		{
-			self::Plugin($sConfigFile, 'dictionaries', $sToInclude);
+			foreach (self::$m_oConfig->GetDictionaries() as $sModule => $sToInclude)
+			{
+				self::Plugin($sConfigFile, 'dictionaries', $sToInclude);
+			}
+			Dict::InitCache();
 		}
 		// Set the language... after the dictionaries have been loaded!
 		Dict::SetDefaultLanguage(self::$m_oConfig->GetDefaultLanguage());

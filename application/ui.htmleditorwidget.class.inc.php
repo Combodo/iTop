@@ -61,14 +61,14 @@ class UIHTMLEditorWidget
 		$sHelpText = $this->m_sHelpText;
 		$sValidationField = $this->m_sValidationField;
 
-		$sHtmlValue = "<table><tr><td><textarea class=\"htmlEditor\" title=\"$sHelpText\" name=\"attr_{$this->m_sFieldPrefix}{$sCode}\" rows=\"14\" cols=\"110\" id=\"$iId\">$sValue</textarea></td><td>$sValidationField</td></tr></table>";
+		$sHtmlValue = "<table><tr><td><textarea class=\"htmlEditor\" title=\"$sHelpText\" name=\"attr_{$this->m_sFieldPrefix}{$sCode}\" rows=\"10\" cols=\"10\" id=\"$iId\">$sValue</textarea></td><td>$sValidationField</td></tr></table>";
 
 		// Replace the text area with CKEditor
 		// To change the default settings of the editor,
 		// a) edit the file /js/ckeditor/config.js
 		// b) or override some of the configuration settings, using the second parameter of ckeditor()
 		$sLanguage = strtolower(trim(UserRights::GetUserLanguage()));
-		$oPage->add_ready_script("$('#$iId').ckeditor(function() { /* callback code */ }, { language : '$sLanguage' , contentsLanguage : '$sLanguage' });"); // Transform $iId into a CKEdit
+		$oPage->add_ready_script("$('#$iId').ckeditor(function() { /* callback code */ }, { language : '$sLanguage' , contentsLanguage : '$sLanguage', extraPlugins: 'disabler' });"); // Transform $iId into a CKEdit
 
 		// Please read...
 		// ValidateCKEditField triggers a timer... calling itself indefinitely
@@ -78,7 +78,8 @@ class UIHTMLEditorWidget
 		// The most relevant solution would be to implement a plugin to CKEdit, and handle the internal events like: setData, insertHtml, insertElement, loadSnapshot, key, afterUndo, afterRedo
 
 		// Could also be bound to 'instanceReady.ckeditor'
-		$oPage->add_ready_script("$('#$iId').bind('validate', function(evt, sFormId) { return ValidateCKEditField('$iId', '', {$this->m_sMandatory}, sFormId, '') } );");
+		$oPage->add_ready_script("$('#$iId').bind('validate', function(evt, sFormId) { return ValidateCKEditField('$iId', '', {$this->m_sMandatory}, sFormId, '') } );\n");
+		$oPage->add_ready_script("$('#$iId').bind('update', function() { BlockField('cke_$iId', $('#$iId').attr('disabled')); } );\n");
 
 		return $sHtmlValue;
 	}

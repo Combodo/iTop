@@ -258,6 +258,9 @@ class WebPage
 			{
 				$sHtml .= "<td class=\"label\">".$aAttrib['label']."</td><td>".$aAttrib['value']."</td>\n";
 			}
+			$sComment = (isset($aAttrib['comments'])) ? $aAttrib['comments'] : '&nbsp;';
+			$sInfo = (isset($aAttrib['infos'])) ? $aAttrib['infos'] : '&nbsp;';
+			$sHtml .= "<td>$sComment</td><td>$sInfo</td>\n";
     		$sHtml .= "</tr>\n";
 		}
 		$sHtml .= "</tbody>\n";

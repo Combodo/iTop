@@ -399,6 +399,21 @@ EOF
 		}
 		
 		var oUserPreferences = $sUserPrefs;
+
+		// For disabling the CKEditor at init time when the corresponding textarea is disabled !
+		CKEDITOR.plugins.add( 'disabler',
+		{
+		    init : function( editor )
+		    {
+		        editor.on( 'instanceReady', function(e)
+		        {
+		        	e.removeListener();
+			        $('#'+ editor.name).trigger('update');
+                });
+		    }
+		    
+		});
+
 EOF
 );
 		

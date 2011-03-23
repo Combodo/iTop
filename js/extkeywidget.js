@@ -45,6 +45,7 @@ function ExtKeyWidget(id, sClass, sAttCode, sSuffix, bSelectMode, oWizHelper)
 	
 	this.Search = function()
 	{
+		if($('#'+me.id).attr('disabled')) return; // Disabled, do nothing
 		$('#ac_dlg_'+me.id).dialog('open');
 		this.UpdateSizes();
 		this.UpdateButtons();
@@ -189,6 +190,7 @@ function ExtKeyWidget(id, sClass, sAttCode, sSuffix, bSelectMode, oWizHelper)
 	
 	this.CreateObject = function(oWizHelper)
 	{
+		if($('#'+me.id).attr('disabled')) return; // Disabled, do nothing
 		// Query the server to get the form to create a target object
 		if (me.bSelectMode)
 		{
@@ -308,5 +310,24 @@ function ExtKeyWidget(id, sClass, sAttCode, sSuffix, bSelectMode, oWizHelper)
 			);
 		}
 		return false; // do NOT submit the form
+	}
+	
+	this.Update = function()
+	{
+		if ($('#'+me.id).attr('disabled'))
+		{
+			$('#v_'+me.id).html('');
+			$('#label_'+me.id).attr('disabled', 'disabled');
+			$('#label_'+me.id).css({'background': 'transparent'});
+			$('#mini_add_'+me.id).hide();
+			$('#mini_search_'+me.id).hide();
+		}
+		else
+		{
+			$('#label_'+me.id).attr('disabled', '');
+			$('#label_'+me.id).css({'background': '#fff url(../images/ac-background.gif) no-repeat right'});
+			$('#mini_add_'+me.id).show();
+			$('#mini_search_'+me.id).show();
+		}
 	}
 }

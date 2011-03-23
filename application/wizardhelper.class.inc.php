@@ -121,6 +121,11 @@ class WizardHelper
 				}	
 			}
 		}
+		if (isset($this->m_aData['m_sState']) && !empty($this->m_aData['m_sState']))
+		{
+			$oObj->Set(MetaModel::GetStateAttributeCode($this->m_aData['m_sClass']), $this->m_aData['m_sState']);
+		}
+
 		return $oObj;
 	}
 	

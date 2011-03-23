@@ -76,7 +76,15 @@ interface iDisplay
 abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 {
 	protected $m_iFormId; // The ID of the form used to edit the object (when in edition mode !)
+	static $iGlobalFormId = 1;
 
+	/**
+	 * returns what will be the next ID for the forms
+	 */
+	public static function GetNextFormId()
+	{
+		return 1 + self::$iGlobalFormId;
+	}
 	public static function GetUIPage()
 	{
 		return '../pages/UI.php';
@@ -380,7 +388,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 							$aReasons = array();
 							$iSynchroFlags = $this->GetSynchroReplicaFlags($sAttCode, $aReasons);
 							$sSynchroIcon = '';
-							if ($iSynchroFlags & OPT_ATT_READONLY)
+							if ($iSynchroFlags & OPT_ATT_SLAVE)
 							{
 								$sSynchroIcon = "&nbsp;<img id=\"synchro_$iInputId\" src=\"../images/transp-lock.png\" style=\"vertical-align:middle\"/>";
 								$sTip = '';
@@ -391,7 +399,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 								$oPage->add_ready_script("$('#synchro_$iInputId').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );");
 							}
 
-							$val['value'] .= $sSynchroIcon;
+							$val['comments'] = $sSynchroIcon;
 							// The field is visible, add it to the current column
 							$aDetails[$sTab][$sColIndex][] = $val;
 							$iInputId++;
@@ -555,7 +563,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		{
 			if (!$bSingleSelectMode)
 			{
-				$aAttribs['form::select'] = array('label' => "<input type=\"checkbox\" onClick=\"CheckAll('.selectList{$iListId}', this.checked);\"></input>", 'description' => Dict::S('UI:SelectAllToggle+'));
+				$aAttribs['form::select'] = array('label' => "<input type=\"checkbox\" onClick=\"CheckAll('.selectList{$iListId}:not(:disabled)', this.checked);\"></input>", 'description' => Dict::S('UI:SelectAllToggle+'));
 			}
 			else
 			{
@@ -596,13 +604,21 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 			}
 			if ($bSelectMode)
 			{
-				if ($bSingleSelectMode)
+				if (array_key_exists('selection_enabled', $aExtraParams) && isset($aExtraParams['selection_enabled'][$oObj->GetKey()]))
 				{
-					$aRow['form::select'] = "<input type=\"radio\" class=\"selectList{$iListId}\" name=\"selectObject\" value=\"".$oObj->GetKey()."\"></input>";
+					$sDisabled = ($aExtraParams['selection_enabled'][$oObj->GetKey()]) ? '' : ' disabled="disabled"';
 				}
 				else
 				{
-				$aRow['form::select'] = "<input type=\"checkBox\" class=\"selectList{$iListId}\" name=\"selectObject[]\" value=\"".$oObj->GetKey()."\"></input>";
+					$sDisabled = '';
+				}
+				if ($bSingleSelectMode)
+				{
+					$aRow['form::select'] = "<input type=\"radio\" $sDisabled class=\"selectList{$iListId}\" name=\"selectObject\" value=\"".$oObj->GetKey()."\"></input>";
+				}
+				else
+				{
+				$aRow['form::select'] = "<input type=\"checkBox\" $sDisabled class=\"selectList{$iListId}\" name=\"selectObject[]\" value=\"".$oObj->GetKey()."\"></input>";
 				}
 			}
 			foreach($aList as $sAttCode)
@@ -1238,6 +1254,7 @@ EOF
 				$sSeconds = "<input title=\"$sHelpText\" type=\"text\" size=\"2\" name=\"attr_{$sFieldPrefix}{$sAttCode}[s]{$sNameSuffix}\" value=\"{$aVal['seconds']}\" id=\"{$iId}_s\"/>";
 				$sHidden = "<input type=\"hidden\" id=\"{$iId}\" value=\"$value\"/>";
 				$sHTMLValue = Dict::Format('UI:DurationForm_Days_Hours_Minutes_Seconds', $sDays, $sHours, $sMinutes, $sSeconds).$sHidden."&nbsp;".$sValidationField;
+				$oPage->add_ready_script("$('#{$iId}').bind('update', function(evt, sFormId) { return ToggleDurationField('$iId'); });");				
 				break;
 				
 				case 'Password':
@@ -1304,6 +1321,7 @@ EOF
 					$iMaxComboLength = $oAttDef->GetMaximumComboLength();
 					$oWidget = new UIExtKeyWidget($sAttCode, $sClass, $oAttDef->GetLabel(), $aAllowedValues, $value, $iId, $bMandatory, $sNameSuffix, $sFieldPrefix, $sFormPrefix);
 					$sHTMLValue = $oWidget->Display($oPage, $aArgs);
+					$sHTMLValue .= "<!-- iFlags: $iFlags bMandatory: $bMandatory -->\n";
 					break;
 					
 				case 'String':
@@ -1362,14 +1380,15 @@ EOF
 	
 	public function DisplayModifyForm(WebPage $oPage, $aExtraParams = array())
 	{
-		static $iGlobalFormId = 1;
-		$iGlobalFormId++;
+		self::$iGlobalFormId++;
 		$sPrefix = '';
 		if (isset($aExtraParams['formPrefix']))
 		{
 			$sPrefix = $aExtraParams['formPrefix'];
 		}
-		$this->m_iFormId = $sPrefix.$iGlobalFormId;
+		$aFieldsComments = (isset($aExtraParams['fieldsComments'])) ? $aExtraParams['fieldsComments'] : array();
+		
+		$this->m_iFormId = $sPrefix.self::$iGlobalFormId;
 		$sClass = get_class($this);
 		$oAppContext = new ApplicationContext();
 		$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
@@ -1448,6 +1467,8 @@ EOF
 					foreach($aFields as $sAttCode)
 					{
 						$aVal = null;
+						$sComments = isset($aFieldsComments[$sAttCode]) ? $aFieldsComments[$sAttCode] : '&nbsp;';
+						$sInfos = '&nbsp;';
 						$iFlags = $this->GetAttributeFlags($sAttCode);
 						$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 						if ( (!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0))
@@ -1458,7 +1479,7 @@ EOF
 								{
 									// State attribute is always read-only from the UI
 									$sHTMLValue = $this->GetStateLabel();
-									$aVal = array('label' => $oAttDef->GetLabel(), 'value' => $sHTMLValue);
+									$aVal = array('label' => $oAttDef->GetLabel(), 'value' => $sHTMLValue, 'comments' => $sComments, 'infos' => $sInfos);
 								}
 								else
 								{				
@@ -1471,15 +1492,15 @@ EOF
 									}
 									else
 									{
-										if ($iFlags & OPT_ATT_READONLY)
+										if ($iFlags & (OPT_ATT_READONLY|OPT_ATT_SLAVE))
 										{
 
 											// Check if the attribute is not read-only becuase of a synchro...
 											$aReasons = array();
-											$iSynchroFlags = $this->GetSynchroReplicaFlags($sAttCode, $aReasons);
 											$sSynchroIcon = '';
-											if ($iSynchroFlags & OPT_ATT_READONLY)
+											if ($iFlags & OPT_ATT_SLAVE)
 											{
+												$iSynchroFlags = $this->GetSynchroReplicaFlags($sAttCode, $aReasons);
 												$sSynchroIcon = "&nbsp;<img id=\"synchro_$sInputId\" src=\"../images/transp-lock.png\" style=\"vertical-align:middle\"/>";
 												$sTip = '';
 												foreach($aReasons as $aRow)
@@ -1490,9 +1511,10 @@ EOF
 											}
 
 											// Attribute is read-only
-											$sHTMLValue = $this->GetAsHTML($sAttCode).$sSynchroIcon;
+											$sHTMLValue = $this->GetAsHTML($sAttCode);;
 											$sHTMLValue .= '<input type="hidden" id="'.$sInputId.'" name="attr_'.$sPrefix.$sAttCode.'" value="'.htmlentities($this->Get($sAttCode), ENT_QUOTES, 'UTF-8').'"/>';
 											$aFieldsMap[$sAttCode] = $sInputId;
+											$sComments = $sSynchroIcon;
 										}
 										else
 										{
@@ -1503,13 +1525,13 @@ EOF
 											$aFieldsMap[$sAttCode] = $sInputId;
 											
 										}
-										$aVal = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>', 'value' => $sHTMLValue);
+										$aVal = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>', 'value' => $sHTMLValue, 'comments' => $sComments, 'infos' => $sInfos);
 									}
 								}
 							}
 							else
 							{
-								$aVal = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>', 'value' => $this->GetAsHTML($sAttCode));			
+								$aVal = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>', 'value' => $this->GetAsHTML($sAttCode), 'comments' => $sComments, 'infos' => $sInfos);			
 							}
 						}
 						if ($aVal != null)
@@ -1548,22 +1570,48 @@ EOF
 			$oPage->add("<input type=\"hidden\" name=\"$sName\" value=\"$value\">\n");
 		}
 		$oPage->add($oAppContext->GetForForm());
+		// Custom operation for the form ?
+		if (isset($aExtraParams['custom_operation']))
+		{
+			$sOperation = $aExtraParams['custom_operation'];			
+		}
+		else if ($iKey > 0)
+		{
+			$sOperation = 'apply_modify';
+		}
+		else
+		{
+			$sOperation = 'apply_new';
+		}
+
+		// Custom label for the apply button ?
+		if (isset($aExtraParams['custom_button']))
+		{
+			$sApplyButton = $aExtraParams['custom_button'];			
+		}
+		else if ($iKey > 0)
+		{
+			$sApplyButton = Dict::S('UI:Button:Apply');
+		}
+		else
+		{
+			$sApplyButton = Dict::S('UI:Button:Create');
+		}
+
 		if ($iKey > 0)
 		{
-			// The object already exists in the database, it's modification
+			// The object already exists in the database, it's a modification
 			$oPage->add("<input type=\"hidden\" name=\"id\" value=\"$iKey\">\n");
-			$oPage->add("<input type=\"hidden\" name=\"operation\" value=\"apply_modify\">\n");			
-//			$oPage->add("<button type=\"button\" id=\"btn_cancel_{$sPrefix}\" class=\"action\" onClick=\"BackToDetails('$sClass', $iKey)\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
+			$oPage->add("<input type=\"hidden\" name=\"operation\" value=\"{$sOperation}\">\n");			
 			$oPage->add("<button type=\"button\" class=\"action cancel\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
-			$oPage->add("<button type=\"submit\" class=\"action\"><span>".Dict::S('UI:Button:Apply')."</span></button>\n");
+			$oPage->add("<button type=\"submit\" class=\"action\"><span>{$sApplyButton}</span></button>\n");
 		}
 		else
 		{
 			// The object does not exist in the database it's a creation
-			$oPage->add("<input type=\"hidden\" name=\"operation\" value=\"apply_new\">\n");			
-//			$oPage->add("<button type=\"button\" id=\"btn_cancel_{$sPrefix}\" class=\"action\" onClick=\"BackToDetails('$sClass', $iKey)\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
+			$oPage->add("<input type=\"hidden\" name=\"operation\" value=\"$sOperation\">\n");			
 			$oPage->add("<button type=\"button\" class=\"action cancel\">".Dict::S('UI:Button:Cancel')."</button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
-			$oPage->add("<button type=\"submit\" class=\"action\"><span>".Dict::S('UI:Button:Create')."</span></button>\n");
+			$oPage->add("<button type=\"submit\" class=\"action\"><span>{$sApplyButton}</span></button>\n");
 		}
 		// Hook the cancel button via jQuery so that it can be unhooked easily as well if needed
 		$sDefaultUrl = '../pages/UI.php?operation=cancel';
@@ -1572,11 +1620,12 @@ EOF
 		
 		$iFieldsCount = count($aFieldsMap);
 		$sJsonFieldsMap = json_encode($aFieldsMap);
+		$sState = $this->GetState();
 
 		$oPage->add_script(
 <<<EOF
 		// Create the object once at the beginning of the page...
-		var oWizardHelper$sPrefix = new WizardHelper('$sClass', '$sPrefix');
+		var oWizardHelper$sPrefix = new WizardHelper('$sClass', '$sPrefix', '$sState');
 		oWizardHelper$sPrefix.SetFieldsMap($sJsonFieldsMap);
 		oWizardHelper$sPrefix.SetFieldsCount($iFieldsCount);
 EOF
@@ -1917,11 +1966,14 @@ EOF
 	 */
 	public function UpdateObject($sFormPrefix = '')
 	{
+		$aErrors = array();
 		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode=>$oAttDef)
 		{
 			if ($oAttDef->IsLinkSet() && $oAttDef->IsIndirect())
 			{
-				$aLinks = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", '');
+				$aLinks = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null);
+				if (is_null($aLinks)) continue;
+				
 				$sLinkedClass = $oAttDef->GetLinkedClass();
 				$sExtKeyToRemote = $oAttDef->GetExtKeyToRemote();
 				$sExtKeyToMe = $oAttDef->GetExtKeyToMe();
@@ -1965,9 +2017,17 @@ EOF
 			else if ($oAttDef->IsWritable())
 			{
 				$iFlags = $this->GetAttributeFlags($sAttCode);
-				if ($iFlags & (OPT_ATT_HIDDEN | OPT_ATT_READONLY))
+				if ( $iFlags & (OPT_ATT_HIDDEN | OPT_ATT_READONLY))
 				{
 					// Non-visible, or read-only attribute, do nothing
+				}
+				elseif($iFlags & OPT_ATT_SLAVE)
+				{
+					$value = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null);
+					if (!is_null($value) && ($value != $this->Get($sAttCode)))
+					{
+						$aErrors[] = Dict::Format('UI:AttemptingToSetASlaveAttribute_Name', $oAttDef->GetLabel());
+					}
 				}
 				elseif ($oAttDef->GetEditClass() == 'Document')
 				{
@@ -1993,14 +2053,9 @@ EOF
 				elseif ($oAttDef->GetEditClass() == 'Duration')
 				{
 					$rawValue = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null);
-					if (!is_array($rawValue))
-					{
-						$iValue = null;
-					}
-					else
-					{
-						$iValue = (((24*$rawValue['d'])+$rawValue['h'])*60 +$rawValue['m'])*60 + $rawValue['s'];
-					}		
+					if (!is_array($rawValue)) continue;
+
+					$iValue = (((24*$rawValue['d'])+$rawValue['h'])*60 +$rawValue['m'])*60 + $rawValue['s'];
 					$this->Set($sAttCode, $iValue);
 					$previousValue = $this->Get($sAttCode);
 					if ($previousValue !== $iValue)
@@ -2023,6 +2078,7 @@ EOF
 				}
 			}
 		}
+		return $aErrors;
 	}
 
 	protected function DBInsertTracked_Internal($bDoNotReload = false)

@@ -126,9 +126,9 @@ th.headerSortDown {
 
 td {
     font-family: Tahoma, Verdana, Arial, Helvetica;
-    font-size: 8pt;
+    font-size: 12px;
     color:#696969;
-	background-color: #ffffff;
+	nobackground-color: #ffffff;
 	padding: 0px;
 }
 
@@ -142,7 +142,7 @@ td.label {
     font-family: Tahoma, Verdana, Arial, Helvetica;
     font-size: 12px;
     color: #000000;
-    background-color:#f6f6f6;
+    nobackground-color:#f6f6f6;
     padding: 0.25em;
     font-weight:bold;	
 }
@@ -937,4 +937,30 @@ span.form_validation {
 	color:#000; font-size:1em;
 	vertical-align:middle;
 	text-align:center;
+}
+.mono_value {
+	display: inline-block;
+	background-color: #3c3;
+	color: #fff;
+	font-weight:bold;
+	padding: 3px;
+	padding-left: 5px;
+	padding-right: 5px;
+	margin-left:3px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+}
+.multi_values {
+	display: inline-block;
+	background-color: #c33;
+	color: #fff;
+	font-weight:bold;
+	padding: 3px;
+	padding-left: 5px;
+	padding-right: 5px;
+	margin-left:3px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
 }

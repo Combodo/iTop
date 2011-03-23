@@ -57,13 +57,28 @@ class UIPasswordWidget
 		$sChangedValue = (($sPasswordValue != '*****') || ($sConfirmPasswordValue != '*****')) ? 1 : 0;
 		$sHtmlValue = '';
 		$sHtmlValue = '<input type="password" maxlength="255" name="attr_'.$sCode.'" id="'.$this->iId.'" value="'.htmlentities($sPasswordValue, ENT_QUOTES, 'UTF-8').'"/>&nbsp;<span class="form_validation" id="v_'.$this->iId.'"></span><br/>';
-		$sHtmlValue .= '<input type="password" maxlength="255" id="'.$this->iId.'_confirm" value="'.htmlentities($sConfirmPasswordValue, ENT_QUOTES, 'UTF-8').'" name="attr_'.$sCode.'_confirmed"/> '.Dict::S('UI:PasswordConfirm').' <input type="button" value="'.Dict::S('UI:Button:ResetPassword').'" onClick="ResetPwd(\''.$this->iId.'\');">';
+		$sHtmlValue .= '<input type="password" maxlength="255" id="'.$this->iId.'_confirm" value="'.htmlentities($sConfirmPasswordValue, ENT_QUOTES, 'UTF-8').'" name="attr_'.$sCode.'_confirmed"/> '.Dict::S('UI:PasswordConfirm').' <input id="'.$this->iId.'_reset" type="button" value="'.Dict::S('UI:Button:ResetPassword').'" onClick="ResetPwd(\''.$this->iId.'\');">';
 		$sHtmlValue .= '<input type="hidden" id="'.$this->iId.'_changed" name="attr_'.$sCode.'_changed" value="'.$sChangedValue.'"/>';
 
 		$oPage->add_ready_script("$('#$this->iId').bind('keyup change', function(evt) { return PasswordFieldChanged('$this->iId') } );"); // Bind to a custom event: validate
 		$oPage->add_ready_script("$('#$this->iId').bind('keyup change validate', function(evt, sFormId) { return ValidatePasswordField('$this->iId', sFormId) } );"); // Bind to a custom event: validate
 		$oPage->add_ready_script("$('#{$this->iId}_confirm').bind('keyup change', function(evt, sFormId) { return ValidatePasswordField('$this->iId', sFormId) } );"); // Bind to a custom event: validate
-
+		$oPage->add_ready_script("$('#{$this->iId}').bind('update', function(evt, sFormId)
+			{
+				if ($(this).attr('disabled'))
+				{
+					$('#{$this->iId}_confirm').attr('disabled', 'disabled');
+					$('#{$this->iId}_changed').attr('disabled', 'disabled');
+					$('#{$this->iId}_reset').attr('disabled', 'disabled');
+				}
+				else
+				{
+					$('#{$this->iId}_confirm').removeAttr('disabled');
+					$('#{$this->iId}_changed').removeAttr('disabled');
+					$('#{$this->iId}_reset').removeAttr('disabled');
+				}
+			}
+		);"); // Bind to a custom event: update to handle enabling/disabling
 		return $sHtmlValue;
 	}
 }

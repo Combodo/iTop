@@ -1092,8 +1092,48 @@ class MenuBlock extends DisplayBlock
 				// many objects in the set, possible actions are: new / modify all / delete all
 				$sUrl = utils::GetAbsoluteUrl();
 				if ($bIsModifyAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:New'), 'url' => "../pages/$sUIPage?operation=new&class=$sClass&$sContext{$sDefault}"); }
-				//if ($bIsBulkModifyAllowed) { $aActions[] = array ('label' => 'Modify All...', 'url' => "../pages/$sUIPage?operation=modify_all&filter=$sFilter&$sContext"); }
+				if ($bIsBulkModifyAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:ModifyAll'), 'url' => "../pages/$sUIPage?operation=select_for_modify_all&class=$sClass&filter=$sFilter&sContext"); }
 				if ($bIsBulkDeleteAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:BulkDelete'), 'url' => "../pages/$sUIPage?operation=select_for_deletion&filter=$sFilter&$sContext"); }
+
+				// Stimuli
+				$aStates = MetaModel::EnumStates($sClass);
+				if (count($aStates) > 0)
+				{
+					// Life cycle actions may be available... if all objects are in the same state
+					$oSet->Rewind();
+					$aStates = array();
+					while($oObj = $oSet->Fetch())
+					{
+						$aStates[$oObj->GetState()] = $oObj->GetState();
+					}
+					$oSet->Rewind();
+					if (count($aStates) == 1)
+					{
+						// All objects are in the same state...
+						$sState = array_pop($aStates);
+						$aTransitions = Metamodel::EnumTransitions($sClass, $sState);
+						if (count($aTransitions))
+						{
+							$this->AddMenuSeparator($aActions);
+							$aStimuli = Metamodel::EnumStimuli($sClass);
+							foreach($aTransitions as $sStimulusCode => $aTransitionDef)
+							{
+								$oChecker = new StimulusChecker($this->m_oFilter, $sState, $sStimulusCode);
+								$iActionAllowed = (get_class($aStimuli[$sStimulusCode]) == 'StimulusUserAction') ? $oChecker->IsAllowed() : UR_ALLOWED_NO;
+								switch($iActionAllowed)
+								{
+									case UR_ALLOWED_YES:
+									case UR_ALLOWED_DEPENDS:
+									$aActions[] = array('label' => $aStimuli[$sStimulusCode]->GetLabel(), 'url' => "../pages/UI.php?operation=select_bulk_stimulus&stimulus=$sStimulusCode&state=$sState&class=$sClass&filter=$sFilter&$sContext");
+									break;
+									
+									default:
+									// Do nothing
+								}
+							}
+						}
+					}
+				}
 				$this->AddMenuSeparator($aActions);
 				$aActions[] = array ('label' => Dict::S('UI:Menu:EMail'), 'url' => "mailto:?subject=".$oSet->GetFilter()->__DescribeHTML()."&body=".urlencode("$sUrl?operation=search&filter=$sFilter&$sContext"));
 				$aActions[] = array ('label' => Dict::S('UI:Menu:CSVExport'), 'url' => "../pages/$sUIPage?operation=search&filter=$sFilter&format=csv&$sContext");

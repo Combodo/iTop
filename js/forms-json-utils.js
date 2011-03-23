@@ -174,26 +174,33 @@ function ReportFieldValidationStatus(sFieldId, sFormId, bValid)
 function ValidateField(sFieldId, sPattern, bMandatory, sFormId, nullValue)
 {
 	var bValid = true;
-	var currentVal = $('#'+sFieldId).val();
+	if ($('#'+sFieldId).attr('disabled'))
+	{
+		bValid = true; // disabled fields are not checked
+	}
+	else
+	{
+		var currentVal = $('#'+sFieldId).val();
 
-	if (currentVal == '$$NULL$$') // Convention to indicate a non-valid value since it may have to be passed as text
-	{
-		bValid = false;
-	}
-	else if (bMandatory && (currentVal == nullValue))
-	{
-		bValid = false;
-	}
-	else if (currentVal == nullValue)
-	{
-		// An empty field is Ok...
-		bValid = true;
-	}
-	else if (sPattern != '')
-	{
-		re = new RegExp(sPattern);
-		//console.log('Validating field: '+sFieldId + ' current value: '+currentVal + ' pattern: '+sPattern );
-		bValid = re.test(currentVal);
+		if (currentVal == '$$NULL$$') // Convention to indicate a non-valid value since it may have to be passed as text
+		{
+			bValid = false;
+		}
+		else if (bMandatory && (currentVal == nullValue))
+		{
+			bValid = false;
+		}
+		else if (currentVal == nullValue)
+		{
+			// An empty field is Ok...
+			bValid = true;
+		}
+		else if (sPattern != '')
+		{
+			re = new RegExp(sPattern);
+			//console.log('Validating field: '+sFieldId + ' current value: '+currentVal + ' pattern: '+sPattern );
+			bValid = re.test(currentVal);
+		}
 	}
 	ReportFieldValidationStatus(sFieldId, sFormId, bValid);
 	//console.log('Form: '+sFormId+' Validating field: '+sFieldId + ' current value: '+currentVal+' pattern: '+sPattern+' result: '+bValid );

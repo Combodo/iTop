@@ -1543,7 +1543,7 @@ abstract class DBObject
 			{
 				if (($oSyncAttr->Get('attcode') == $sAttCode) && ($oSyncAttr->Get('update') == 1) && ($oSyncAttr->Get('update_policy') == 'master_locked'))
 				{
-					$iFlags |= OPT_ATT_READONLY;
+					$iFlags |= OPT_ATT_SLAVE;
 					$sUrl = $oSource->GetApplicationUrl($this, $oReplica);
 					$aReason[] = array('name' => $oSource->GetName(), 'description' => $oSource->Get('description'), 'url_application' => $sUrl);
 				}

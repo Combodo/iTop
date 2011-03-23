@@ -526,6 +526,109 @@ class DBObjectSet
 		}
 		return $aRelatedObjs;
 	}
+	
+	/**
+	 * Builds an object that contains the values that are common to all the objects
+	 * in the set. If for a given attribute, objects in the set have various values
+	 * then the resulting object will contain null for this value.
+	 * @param $aValues Hash Output: the distribution of the values, in the set, for each attribute
+	 * @return Object
+	 */
+	public function ComputeCommonObject(&$aValues)
+	{
+		$sClass = $this->GetClass();
+		$aList = MetaModel::FlattenZlist(MetaModel::GetZListItems($sClass, 'details'));
+		$aValues = array();
+		foreach($aList as $sAttCode)
+		{
+			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+			if ($oAttDef->IsScalar())
+			{
+				$aValues[$sAttCode] = array();
+			}
+		}
+		$this->Rewind();
+		while($oObj = $this->Fetch())
+		{
+			foreach($aList as $sAttCode)
+			{
+				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+				if ($oAttDef->IsScalar() && $oAttDef->IsWritable())
+				{
+					$currValue = $oObj->Get($sAttCode);
+					if (is_object($currValue)) continue; // Skip non scalar values...
+					if(!array_key_exists($currValue, $aValues[$sAttCode]))
+					{
+						$aValues[$sAttCode][$currValue] = array('count' => 1, 'display' => $oObj->GetAsHTML($sAttCode)); 
+					}
+					else
+					{
+						$aValues[$sAttCode][$currValue]['count']++; 
+					}
+				}
+			}
+		}
+		
+		foreach($aValues as $sAttCode => $aMultiValues)
+		{
+			if (count($aMultiValues) > 1)
+			{
+				uasort($aValues[$sAttCode], 'HashCountComparison');
+			}
+		}
+						
+		
+		// Now create an object that has values for the homogenous values only				
+		$oCommonObj = new $sClass(); // @@ What if the class is abstract ?
+		$aComments = array();
+
+		$iFormId = cmdbAbstractObject::GetNextFormId(); // Identifier that prefixes all the form fields
+		$sReadyScript = '';
+		$aDependsOn = array();
+		$sFormPrefix = '2_';
+		foreach($aList as $sAttCode)
+		{
+			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+			if ($oAttDef->IsScalar() && $oAttDef->IsWritable())
+			{
+				if ($oAttDef->GetEditClass() == 'One Way Password')
+				{
+					$oCommonObj->Set($sAttCode, null);
+				}
+				else
+				{
+					$iCount = count($aValues[$sAttCode]);
+					if ($iCount == 1)
+					{
+						// Homogenous value
+						reset($aValues[$sAttCode]);
+						$aKeys = array_keys($aValues[$sAttCode]);
+						$currValue = $aKeys[0]; // The only value is the first key
+						$oCommonObj->Set($sAttCode, $currValue);
+					}
+					else
+					{
+						// Non-homogenous value
+						$oCommonObj->Set($sAttCode, null);
+					}
+				}
+			}
+		}
+		$this->Rewind();
+		return $oCommonObj;
+	}
+}
+
+/**
+ * Helper function to perform a custom sort of a hash array
+ */
+function HashCountComparison($a, $b) // Sort descending on 'count'
+{
+    if ($a['count'] == $b['count'])
+    {
+        return 0;
+    }
+    return ($a['count'] > $b['count']) ? -1 : 1;
 }
 
 ?>

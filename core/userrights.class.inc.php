@@ -816,4 +816,169 @@ class UserRights
 	}
 }
 
+/**
+ * Helper class to get the number/list of items for which a given action is allowed/possible
+ */
+class ActionChecker
+{
+	var $oFilter;
+	var $iActionCode;
+	var $iAllowedCount = null;
+	var $aAllowedIDs = null;
+	
+	public function __construct(DBObjectSearch $oFilter, $iActionCode)
+	{
+		$this->oFilter = $oFilter;
+		$this->iActionCode = $iActionCode;
+		$this->iAllowedCount = null;
+		$this->aAllowedIDs = null;
+	}
+	
+	/**
+	 * returns the number of objects for which the action is allowed
+	 * @return integer The number of "allowed" objects 0..N
+	 */
+	public function GetAllowedCount()
+	{
+		if ($this->iAllowedCount == null) $this->CheckObjects();
+		return $this->iAllowedCount;
+	}
+	
+	/**
+	 * If IsAllowed returned UR_ALLOWED_DEPENDS, this methods returns
+	 * an array of ObjKey => Status (true|false)
+	 * @return array
+	 */
+	public function GetAllowedIDs()
+	{
+		if ($this->aAllowedIDs == null) $this->IsAllowed();
+		return $this->aAllowedIDs;
+	}
+	
+	/**
+	 * Check if the speficied stimulus is allowed for the set of objects
+	 * @return UR_ALLOWED_YES, UR_ALLOWED_NO or UR_ALLOWED_DEPENDS
+	 */
+	public function IsAllowed()
+	{
+		$sClass = $this->oFilter->GetClass();
+		$oSet = new DBObjectSet($this->oFilter);
+		$iActionAllowed = UserRights::IsActionAllowed($sClass, $oSet, $this->iActionCode);
+		if ($iActionAllowed == UR_ALLOWED_DEPENDS)
+		{
+			// Check for each object if the action is allowed or not
+			$this->aAllowedIDs = array();
+			$oSet->Rewind();
+			$this->iAllowedCount = 0;
+			while($oObj = $oSet->Fetch())
+			{
+				$oObjSet = DBObjectSet::FromArray($sClass, array($oObj));
+				if (UserRights::IsActionAllowed($sClass, $this->iActionCode, $oObjSet) == UR_ALLOWED_NO)
+				{
+					$this->aAllowedIDs[$oObj->GetKey()] = false;
+				}
+				else
+				{
+					// Assume UR_ALLOWED_YES, since there is just one object !
+					$this->aAllowedIDs[$oObj->GetKey()] = true;
+					$this->iAllowedCount++;
+				}
+			}
+		}
+		else if ($iActionAllowed == UR_ALLOWED_YES)
+		{
+			$this->iAllowedCount = $oSet->Count();
+			$this->aAllowedIDs = array(); // Optimization: not filled when Ok for all objects
+		}
+		else // UR_ALLOWED_NO
+		{
+			$this->iAllowedCount = 0;
+			$this->aAllowedIDs = array();
+		}
+		return $iActionAllowed;
+	}
+}
+
+/**
+ * Helper class to get the number/list of items for which a given stimulus can be applied (allowed & possible)
+ */
+class StimulusChecker extends ActionChecker
+{
+	var $sState = null;
+	
+	public function __construct(DBObjectSearch $oFilter, $sState, $iStimulusCode)
+	{
+		parent::__construct($oFilter, $iStimulusCode);
+		$this->sState = $sState;
+	}
+
+	/**
+	 * Check if the speficied stimulus is allowed for the set of objects
+	 * @return UR_ALLOWED_YES, UR_ALLOWED_NO or UR_ALLOWED_DEPENDS
+	 */
+	public function IsAllowed()
+	{
+		$sClass = $this->oFilter->GetClass();
+		$oSet = new DBObjectSet($this->oFilter);
+		$iActionAllowed = UserRights::IsStimulusAllowed($sClass, $oSet, $this->iActionCode);
+		if ($iActionAllowed == UR_ALLOWED_NO)
+		{
+			$this->iAllowedCount = 0;
+			$this->aAllowedIDs = array();
+		}
+		else // Even if UR_ALLOWED_YES, we need to check if each object is in the appropriate state
+		{
+			// Hmmm, may not be needed right now because we limit the "multiple" action to object in
+			// the same state... may be useful later on if we want to extend this behavior...
+			
+			// Check for each object if the action is allowed or not
+			$this->aAllowedIDs = array();
+			$oSet->Rewind();
+			$iAllowedCount = 0;
+			$iActionAllowed = UR_ALLOWED_DEPENDS;
+			while($oObj = $oSet->Fetch())
+			{
+				$aTransitions = $oObj->EnumTransitions();
+				if (array_key_exists($this->iActionCode, $aTransitions))
+				{
+					// Temporary optimization possible: since the current implementation
+					// of IsActionAllowed does not perform a 'per instance' check, we could
+					// skip this second validation phase and assume it would return UR_ALLOWED_YES
+					$oObjSet = DBObjectSet::FromArray($sClass, array($oObj));
+					if (UserRights::IsActionAllowed($sClass, $this->iActionCode, $oObjSet) == UR_ALLOWED_NO)
+					{
+						$this->aAllowedIDs[$oObj->GetKey()] = false;
+					}
+					else
+					{
+						// Assume UR_ALLOWED_YES, since there is just one object !
+						$this->aAllowedIDs[$oObj->GetKey()] = true;
+						$this->iState = $oObj->GetState();
+						$this->iAllowedCount++;
+					}					
+				}
+				else
+				{
+					$this->aAllowedIDs[$oObj->GetKey()] = false;					
+				}				
+			}
+		}
+		
+		if ($this->iAllowedCount == $oSet->Count())
+		{
+			$iActionAllowed = UR_ALLOWED_YES;
+		}
+		if ($this->iAllowedCount == 0)
+		{
+			$iActionAllowed = UR_ALLOWED_NO;
+		}
+
+		return $iActionAllowed;
+	}
+	
+	public function GetState()
+	{
+		return $this->iState;
+	}		
+}
 ?>

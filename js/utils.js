@@ -212,3 +212,75 @@ function CheckAll(sSelector, bValue)
 		this.checked = value;
 	});
 }
+
+/**
+ * Toggle (enabled/disabled) the specified field of a form
+ */
+function ToogleField(value, field_id)
+{
+	if (value)
+	{
+		$('#'+field_id).removeAttr('disabled');
+	}
+	else
+	{
+		$('#'+field_id).attr('disabled', 'disabled');
+	}
+	$('#'+field_id).trigger('update');
+	$('#'+field_id).trigger('validate');
+}
+
+/**
+ * For the fields that cannot be visually disabled, they can be blocked
+ * @return
+ */
+function BlockField(field_id, bBlocked)
+{
+	if (bBlocked)
+	{
+		$('#'+field_id).block({ message: ' ** disabled ** '});
+	}
+	else
+	{
+		$('#'+field_id).unblock();
+	}
+}
+
+/**
+ * Updates (enables/disables) a "duration" field
+ */
+function ToggleDurationField(field_id)
+{
+	// Toggle all the subfields that compose the "duration" input
+	aSubFields = new Array('d', 'h', 'm', 's');
+	
+	if ($('#'+field_id).attr('disabled'))
+	{
+		for(var i=0; i<aSubFields.length; i++)
+		{
+			$('#'+field_id+'_'+aSubFields[i]).attr('disabled', 'disabled');
+		}
+	}
+	else
+	{
+		for(var i=0; i<aSubFields.length; i++)
+		{
+			$('#'+field_id+'_'+aSubFields[i]).removeAttr('disabled');
+		}
+	}
+}
+
+/**
+ * PropagateCheckBox
+ */
+function PropagateCheckBox(bCurrValue, aFieldsList, bCheck)
+{
+	if (bCurrValue == bCheck)
+	{
+		for(var i=0;i<aFieldsList.length;i++)
+		{
+			$('#enable_'+aFieldsList[i]).attr('checked', bCheck);
+			ToogleField(bCheck, aFieldsList[i]);
+		}
+	}
+}
