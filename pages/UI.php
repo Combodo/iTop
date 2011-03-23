@@ -456,6 +456,9 @@ try
 	require_once(APPROOT.'/application/startup.inc.php');
 	$operation = utils::ReadParam('operation', '');
 
+	$oKPI = new ApplicationStartupKPI();
+	$oKPI->ComputeAndReport('Load of data model and all includes');
+
 	$oKPI = new ExecutionKPI();
 
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');

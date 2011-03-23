@@ -193,4 +193,13 @@ class ExecutionKPI
 	}
 }
 
+class ApplicationStartupKPI extends ExecutionKPI
+{
+	public function __construct()
+	{
+		global $fItopStarted;
+		$this->m_fStarted	= $fItopStarted;
+	}
+} 
+
 ?>

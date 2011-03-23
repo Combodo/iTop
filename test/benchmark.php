@@ -143,6 +143,13 @@ class BenchmarkDataCreation
 		$oMyObject = MetaModel::NewObject($sClass);
 		foreach($aData as $sProp => $value)
 		{
+			if (is_array($value))
+			{
+				// transform into a link set
+				$sCSVSpec = implode('|', $value);
+				$oAttDef = MetaModel::GetAttributeDef($sClass, $sProp);
+				$value = $oAttDef->MakeValueFromString($sCSVSpec, $sSepItem = '|', $sSepAttribute = ';', $sSepValue = ':', $sAttributeQualifier = '"');
+			}
 			$oMyObject->Set($sProp, $value);
 		}
 
@@ -295,17 +302,9 @@ class BenchmarkDataCreation
 			'login' => 'guru',
 			'password' => 'guru',
 			'language' => 'EN US',
+			'profile_list' => array("profileid:$iGuruProfile;reason:he is the one"),
 		);
 		$iLogin = $this->CreateObject('UserLocal', $aData);
-
-		// Assign the guru profile to the new login
-		//
-		$aData = array(
-			'userid' => $iLogin,
-			'profileid' => $iGuruProfile,
-			'reason' => 'he is the one',
-		);
-		$this->CreateObject('URP_UserProfile', $aData);
 
 		////////////////////////////////////////
 		// User login having all std profiles
@@ -318,25 +317,20 @@ class BenchmarkDataCreation
 			'email' => 'foo@combodo.com',
 		);
 		$iPerson = $this->CreateObject('Person', $aData);
+
+		$aProfileSet = array();
+		foreach($aStdProfiles as $iProfileId)
+		{
+			$aProfileSet[] = "profileid:$iProfileId;reason:xxx";
+		}
 		$aData = array(
 			'contactid' => $iPerson,
 			'login' => 'foo',
 			'password' => 'foo',
 			'language' => 'EN US',
+			'profile_list' => $aProfileSet,
 		);
 		$iLogin = $this->CreateObject('UserLocal', $aData);
-
-		// Assign profiles to the new login
-		//
-		foreach($aStdProfiles as $iProfileId)
-		{
-			$aData = array(
-				'userid' => $iLogin,
-				'profileid' => $iProfileId,
-				'reason' => '',
-			);
-			$this->CreateObject('URP_UserProfile', $aData);
-		}
 
 		/////////////////////////
 		//
