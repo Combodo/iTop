@@ -562,12 +562,13 @@ try
 	$oKPI = new ExecutionKPI();
 
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
-	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
+	$sLoginMessage = LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 	$oAppContext = new ApplicationContext();
 
 	$oKPI->ComputeAndReport('User login');
 
 	$oP = new iTopWebPage(Dict::S('UI:WelcomeToITop'));
+	$oP->SetMessage($sLoginMessage);
 
 	// All the following actions use advanced forms that require more javascript to be loaded
 	switch($operation)

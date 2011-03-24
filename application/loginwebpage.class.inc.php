@@ -352,6 +352,7 @@ EOF
 	 */
 	static function DoLogin($bMustBeAdmin = false, $bIsAllowedToPortalUsers = false)
 	{
+		$sMessage  = ''; // In case we need to return a message to the calling web page
 		$operation = utils::ReadParam('loginop', '');
 		session_name(MetaModel::GetConfig()->Get('session_name'));
 		session_start();
@@ -401,6 +402,7 @@ EOF
 				$oPage->DisplayChangePwdForm(true); // old pwd was wrong
 				$oPage->output();
 			}
+			$sMessage = Dict::S('UI:Login:PasswordChanged');
 		}
 		
 		self::Login();
@@ -419,6 +421,7 @@ EOF
 			// No rights to be here, redirect to the portal
 			header('Location: ../portal/index.php');
 		}
+		return $sMessage;
 	}
 
 } // End of class

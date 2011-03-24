@@ -456,6 +456,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:LogOff:ThankYou' => 'Thank you for using iTop',
 	'UI:LogOff:ClickHereToLoginAgain' => 'Click here to login again...',
 	'UI:ChangePwdMenu' => 'Change Password...',
+	'UI:Login:PasswordChanged' => 'Password successfully set !',
 	'UI:AccessRO-All' => 'iTop is read-only',
 	'UI:AccessRO-Users' => 'iTop is read-only for end-users',
 	'UI:Login:RetypePwdDoesNotMatch' => 'New password and retyped new password do not match !',

@@ -36,6 +36,7 @@ class iTopWebPage extends NiceWebPage
 	private $m_aTabs;
 	private $m_sCurrentTabContainer;
 	private $m_sCurrentTab;
+	private $m_sMessage;
 	
     public function __construct($sTitle)
     {
@@ -44,6 +45,7 @@ class iTopWebPage extends NiceWebPage
         $this->m_sCurrentTab = '';
 		$this->m_aTabs = array();
 		$this->m_sMenu = "";
+		$this->m_sMessage = '';
 		$oAppContext = new ApplicationContext();
 		$sExtraParams = $oAppContext->GetForLink();
 //		$this->m_currentOrganization = $currentOrganization;
@@ -685,6 +687,10 @@ EOF
 			}
 			$sApplicationBanner .= '</div>';
 		}
+		else if(strlen($this->m_sMessage))
+		{
+			$sApplicationBanner = '<div id="admin-banner"><span style="padding:5px;">'.$this->m_sMessage.'<span></div>';
+		}
 		else
 		{
 			$sApplicationBanner = '';
@@ -896,6 +902,14 @@ EOF
         {
             parent::add($sHtml);
         }
+    }
+    
+    /**
+     * Set the message to be displayed in the 'admin-banner' section at the top of the page
+     */
+    public function SetMessage($sMessage)
+    {
+    	$this->m_sMessage = $sMessage;	
     }
     
     /*
