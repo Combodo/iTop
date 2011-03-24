@@ -237,14 +237,24 @@ class Dict
 		if (function_exists('apc_fetch'))
 		{
 			$bResult = false;
-			self::$m_aData = apc_fetch('dict', $bResult);
-			if (!$bResult)
+			// Note: For versions of APC older than 3.0.17, fetch() accepts only one parameter
+			//
+			self::$m_aData = apc_fetch('dict');
+			if (is_bool(self::$m_aData) && (self::$m_aData === false))
 			{
 				self::$m_aData = array();
 			}
 			else
 			{
-				self::$m_aLanguages = apc_fetch('languages', $bResult);
+				self::$m_aLanguages = apc_fetch('languages');
+				if (is_bool(self::$m_aLanguages) && (self::$m_aLanguages === false))
+				{
+					self::$m_aLanguages = array();
+				}
+				else
+				{
+					$bResult = true;
+				}
 			}
 			return $bResult;
 		}
