@@ -46,6 +46,7 @@ class WebPage
     protected $a_headers;
     protected $a_base;
     protected $iNextId;
+    protected $iTransactionId;
     
     public function __construct($s_title)
     {
@@ -59,6 +60,7 @@ class WebPage
         $this->a_headers = array();
         $this->a_base = array( 'href' => '', 'target' => '');
         $this->iNextId = 0;
+        $this->iTransactionId = 0;
         ob_start(); // Start capturing the output
     }
 	
@@ -371,6 +373,25 @@ class WebPage
 	public function GetUniqueId()
 	{
 		return $this->iNextId++;
+	}
+	
+	/**
+	 * Set the transactionId of the current form
+	 * @param $iTransactionId integer
+	 * @return void
+	 */
+	public function SetTransactionId($iTransactionId)
+	{
+		$this->iTransactionId = $iTransactionId;
+	}
+	
+	/**
+	 * Returns the transactionId of the current form
+	 * @return integer The current transactionID
+	 */
+	public function GetTransactionId()
+	{
+		return $this->iTransactionId;
 	}
 }
 ?>

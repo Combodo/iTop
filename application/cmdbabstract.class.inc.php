@@ -1403,6 +1403,8 @@ EOF
 		{
 			$sFormAction = $aExtraParams['action'];
 		}
+		$iTransactionId = utils::GetNewTransactionId();
+		$oPage->SetTransactionId($iTransactionId);
 		$oPage->add("<form action=\"$sFormAction\" id=\"form_{$this->m_iFormId}\" enctype=\"multipart/form-data\" method=\"post\" onSubmit=\"return CheckFields('form_{$this->m_iFormId}', true)\">\n");
 
 		$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB, $sPrefix);
@@ -1564,7 +1566,7 @@ EOF
 
 		$oPage->SetCurrentTab('');
 		$oPage->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
-		$oPage->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
+		$oPage->add("<input type=\"hidden\" name=\"transaction_id\" value=\"$iTransactionId\">\n");
 		foreach($aExtraParams as $sName => $value)
 		{
 			$oPage->add("<input type=\"hidden\" name=\"$sName\" value=\"$value\">\n");
@@ -2078,6 +2080,13 @@ EOF
 				}
 			}
 		}
+		
+		// Invoke extensions after the update of the object from the form
+		foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
+		{
+			$oExtensionInstance->OnFormSubmit($this, $sFormPrefix);
+		}
+		
 		return $aErrors;
 	}
 
