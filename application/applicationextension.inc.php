@@ -29,6 +29,7 @@ interface iApplicationUIExtension
 	public function OnDisplayProperties($oObject, WebPage $oPage, $bEditMode = false);
 	public function OnDisplayRelations($oObject, WebPage $oPage, $bEditMode = false);
 	public function OnFormSubmit($oObject, $sFormPrefix = '');
+	public function OnFormCancel($sTempId); // temp id is made of session_id and transaction_id, it identifies the object in a unique way
 
 	public function EnumUsedAttributes($oObject); // Not yet implemented
 	public function GetIcon($oObject); // Not yet implemented
