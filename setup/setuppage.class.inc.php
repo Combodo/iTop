@@ -269,6 +269,11 @@ table.formTable {
 
 	public static function AddModule($sFilePath, $sId, $aArgs)
 	{
+		if (!array_key_exists('itop_version', $aArgs))
+		{
+			// Assume 1.0.2
+			$aArgs['itop_version'] = '1.0.2';
+		}
 		foreach (self::$m_aModuleArgs as $sArgName => $sArgDesc)
 		{
 			if (!array_key_exists($sArgName, $aArgs))

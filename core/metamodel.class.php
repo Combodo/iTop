@@ -523,6 +523,7 @@ abstract class MetaModel
 			}
 			else
 			{
+				// If the format changes here, do not forget to update the setup index page (detection of installed modules)
 				return self::$m_sTablePrefix.$sTableRaw;
 			}
 		}
