@@ -148,11 +148,17 @@ class CreateITILProfilesInstaller extends ModuleInstallerAPI
 	
 		// Grant read rights for everything
 		//
+		// Warning: BulkInsert is working because we will load one single class
+		//          having one single table !
+		//          the benefit is: 10 queries (1 per profile) instead of 1500
+		//          which divides the overall user rights setup process by 2
+		DBObject::BulkInsertStart();
 		foreach (MetaModel::GetClasses('bizmodel') as $sClass)
 		{
 			self::DoCreateActionGrant($iProfile, UR_ACTION_READ, $sClass);
 			self::DoCreateActionGrant($iProfile, UR_ACTION_BULK_READ, $sClass);
 		}
+		DBObject::BulkInsertFlush();
 	
 		// Grant write for given modules
 		// Start by compiling the information, because some modules may overlap
