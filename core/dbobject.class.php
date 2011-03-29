@@ -34,6 +34,10 @@ abstract class DBObject
 {
 	private static $m_aMemoryObjectsByClass = array();
 
+  	private static $m_aBulkInsertItems = array(); // class => array of ('table' => array of (array of <sql_value>))
+  	private static $m_aBulkInsertCols = array(); // class => array of ('table' => array of <sql_column>)
+  	private static $m_bBulkInsert = false;
+
 	private $m_bIsInDB = false; // true IIF the object is mapped to a DB record
 	private $m_iKey = null;
 	private $m_aCurrValues = array();
@@ -943,6 +947,35 @@ abstract class DBObject
 		}
 	}
 
+	// Note: this is experimental - it was designed to speed up the setup of iTop
+	// Known limitations:
+	//   - does not work with multi-table classes (issue with the unique id to maintain in several tables)
+	//   - the id of the object is not updated
+	static public final function BulkInsertStart()
+	{
+		self::$m_bBulkInsert = true;
+	} 
+
+	static public final function BulkInsertFlush()
+	{
+		if (!self::$m_bBulkInsert) return;
+
+		foreach(self::$m_aBulkInsertCols as $sClass => $aTables)
+		{
+			foreach ($aTables as $sTable => $sColumns)
+			{
+				$sValues = implode(', ', self::$m_aBulkInsertItems[$sClass][$sTable]);
+				$sInsertSQL = "INSERT INTO `$sTable` ($sColumns) VALUES $sValues";
+				$iNewKey = CMDBSource::InsertInto($sInsertSQL);
+			}
+		}
+
+		// Reset
+		self::$m_aBulkInsertItems = array();
+		self::$m_aBulkInsertCols = array();
+		self::$m_bBulkInsert = false;
+	} 
+
 	private function DBInsertSingleTable($sTableClass)
 	{
 		$sTable = MetaModel::DBGetTable($sTableClass);
@@ -976,15 +1009,27 @@ abstract class DBObject
 
 		if (count($aValuesToWrite) == 0) return false;
 
-		$sInsertSQL = "INSERT INTO `$sTable` (".join(",", $aFieldsToWrite).") VALUES (".join(", ", $aValuesToWrite).")";
-
 		if (MetaModel::DBIsReadOnly())
 		{
 			$iNewKey = -1;
 		}
 		else
 		{
-			$iNewKey = CMDBSource::InsertInto($sInsertSQL);
+			if (self::$m_bBulkInsert)
+			{
+				if (!isset(self::$m_aBulkInsertCols[$sClass][$sTable]))
+				{
+					self::$m_aBulkInsertCols[$sClass][$sTable] = implode(', ', $aFieldsToWrite);
+				}
+				self::$m_aBulkInsertItems[$sClass][$sTable][] = '('.implode (', ', $aValuesToWrite).')';
+				
+				$iNewKey = 999999; // TODO - compute next id....
+			}
+			else
+			{
+				$sInsertSQL = "INSERT INTO `$sTable` (".join(",", $aFieldsToWrite).") VALUES (".join(", ", $aValuesToWrite).")";
+				$iNewKey = CMDBSource::InsertInto($sInsertSQL);
+			}
 		}
 		// Note that it is possible to have a key defined here, and the autoincrement expected, this is acceptable in a non root class
 		if (empty($this->m_iKey))

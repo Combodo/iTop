@@ -27,7 +27,27 @@
 define('ADMIN_PROFILE_NAME', 'Administrator');
 define('PORTAL_PROFILE_NAME', 'Portal user');
 
-class UserRightsBaseClass extends cmdbAbstractObject
+class UserRightsBaseClassGUI extends cmdbAbstractObject
+{
+	// Whenever something changes, reload the privileges
+	
+	protected function AfterInsert()
+	{
+		UserRights::FlushPrivileges();
+	}
+
+	protected function AfterUpdate()
+	{
+		UserRights::FlushPrivileges();
+	}
+
+	protected function AfterDelete()
+	{
+		UserRights::FlushPrivileges();
+	}
+}
+
+class UserRightsBaseClass extends DBObject
 {
 	// Whenever something changes, reload the privileges
 	
@@ -50,7 +70,7 @@ class UserRightsBaseClass extends cmdbAbstractObject
 
 
 
-class URP_Profiles extends UserRightsBaseClass
+class URP_Profiles extends UserRightsBaseClassGUI
 {
 	public static function Init()
 	{
@@ -222,7 +242,7 @@ class URP_Profiles extends UserRightsBaseClass
 
 
 
-class URP_UserProfile extends UserRightsBaseClass
+class URP_UserProfile extends UserRightsBaseClassGUI
 {
 	public static function Init()
 	{
@@ -262,7 +282,7 @@ class URP_UserProfile extends UserRightsBaseClass
 	}
 }
 
-class URP_UserOrg extends UserRightsBaseClass
+class URP_UserOrg extends UserRightsBaseClassGUI
 {
 	public static function Init()
 	{
