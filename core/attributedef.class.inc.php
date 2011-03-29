@@ -1518,24 +1518,6 @@ class AttributeTemplateHTML extends AttributeText
 
 
 /**
- * Specialization of a text: wiki formatting 
- *
- * @package     iTopORM
- */
-class AttributeWikiText extends AttributeText
-{
-	public function GetAsHTML($value, $oHostObject = null)
-	{
-		// [SELECT xxxx.... [label]] => hyperlink to a result list
-		// {SELECT xxxx.... [label]} => result list displayed inline
-		// [myclass/nnn [label]] => hyperlink to an object
-		// {myclass/nnn/attcode} => attribute displayed inline
-		// etc.
-		return parent::GetAsHTML($value);
-	}
-}
-
-/**
  * Map a enum column to an attribute 
  *
  * @package     iTopORM

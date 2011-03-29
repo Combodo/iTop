@@ -84,9 +84,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:AttributeTemplateHTML' => 'Template HTML',
 	'Core:AttributeTemplateHTML+' => 'HTML containing placeholders',
 
-	'Core:AttributeWikiText' => 'Wiki article',
-	'Core:AttributeWikiText+' => 'Wiki formatted text',
-
 	'Core:AttributeDateTime' => 'Date/time',
 	'Core:AttributeDateTime+' => 'Date and time (year-month-day hh:mm:ss)',
 

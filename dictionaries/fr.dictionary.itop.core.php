@@ -85,9 +85,6 @@ Dict::Add('FR FR', 'English', 'English', array(
 	'Core:AttributeTemplateHTML' => 'Modèle HTML',
 	'Core:AttributeTemplateHTML+' => 'HTML contenant des espaces réservés pour des données iTop',
 
-	'Core:AttributeWikiText' => 'Article Wiki',
-	'Core:AttributeWikiText+' => 'Texte formatté en Wiki',
-
 	'Core:AttributeDateTime' => 'Date/heure',
 	'Core:AttributeDateTime+' => 'Date et heure (année-mois-jour hh:mm:ss)',
 
