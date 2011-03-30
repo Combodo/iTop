@@ -97,30 +97,97 @@ class CreateITILProfilesInstaller extends ModuleInstallerAPI
 	protected static $m_aModules = array();
 	protected static $m_aProfiles = array();
 
+
+	protected static $m_aCacheActionGrants = null;
+	protected static $m_aCacheStimulusGrants = null;
+	protected static $m_aCacheProfiles = null;
 	
 	protected static function DoCreateActionGrant($iProfile, $iAction, $sClass, $bPermission = true)
 	{
+		$sAction = self::$m_aActions[$iAction];
+	
+		if (is_null(self::$m_aCacheActionGrants))
+		{
+			self::$m_aCacheActionGrants = array();
+			$oFilterAll = new DBObjectSearch('URP_ActionGrant');
+			$oSet = new DBObjectSet($oFilterAll);
+			while ($oGrant = $oSet->Fetch())
+			{
+				self::$m_aCacheActionGrants[$oGrant->Get('profileid').'-'.$oGrant->Get('action').'-'.$oGrant->Get('class')] = $oGrant->GetKey();
+			}
+		}	
+
+		$sCacheKey = "$iProfile-$sAction-$sClass";
+		if (isset(self::$m_aCacheActionGrants[$sCacheKey]))
+		{
+			return self::$m_aCacheActionGrants[$sCacheKey];
+		}
+
 		$oNewObj = MetaModel::NewObject("URP_ActionGrant");
 		$oNewObj->Set('profileid', $iProfile);
 		$oNewObj->Set('permission', $bPermission ? 'yes' : 'no');
 		$oNewObj->Set('class', $sClass);
-		$oNewObj->Set('action', self::$m_aActions[$iAction]);
+		$oNewObj->Set('action', $sAction);
 		$iId = $oNewObj->DBInsertNoReload();
+		self::$m_aCacheActionGrants[$sCacheKey] = $iId;	
 		return $iId;
 	}
 	
 	protected static function DoCreateStimulusGrant($iProfile, $sStimulusCode, $sClass)
 	{
+		if (is_null(self::$m_aCacheStimulusGrants))
+		{
+			self::$m_aCacheStimulusGrants = array();
+			$oFilterAll = new DBObjectSearch('URP_StimulusGrant');
+			$oSet = new DBObjectSet($oFilterAll);
+			while ($oGrant = $oSet->Fetch())
+			{
+				self::$m_aCacheStimulusGrants[$oGrant->Get('profileid').'-'.$oGrant->Get('stimulus').'-'.$oGrant->Get('class')] = $oGrant->GetKey();
+			}
+		}	
+
+		$sCacheKey = "$iProfile-$sStimulusCode-$sClass";
+		if (isset(self::$m_aCacheStimulusGrants[$sCacheKey]))
+		{
+			return self::$m_aCacheStimulusGrants[$sCacheKey];
+		}
 		$oNewObj = MetaModel::NewObject("URP_StimulusGrant");
 		$oNewObj->Set('profileid', $iProfile);
 		$oNewObj->Set('permission', 'yes');
 		$oNewObj->Set('class', $sClass);
 		$oNewObj->Set('stimulus', $sStimulusCode);
 		$iId = $oNewObj->DBInsertNoReload();
+		self::$m_aCacheStimulusGrants[$sCacheKey] = $iId;	
 		return $iId;
 	}
 	
-	protected static function DoCreateOneProfile($sName, $aProfileData)
+	protected static function DoCreateProfile($sName, $sDescription)
+	{
+		if (is_null(self::$m_aCacheProfiles))
+		{
+			self::$m_aCacheProfiles = array();
+			$oFilterAll = new DBObjectSearch('URP_Profiles');
+			$oSet = new DBObjectSet($oFilterAll);
+			while ($oProfile = $oSet->Fetch())
+			{
+				self::$m_aCacheProfiles[$oProfile->Get('name')] = $oProfile->GetKey();
+			}
+		}	
+
+		$sCacheKey = $sName;
+		if (isset(self::$m_aCacheProfiles[$sCacheKey]))
+		{
+			return self::$m_aCacheProfiles[$sCacheKey];
+		}
+		$oNewObj = MetaModel::NewObject("URP_Profiles");
+		$oNewObj->Set('name', $sName);
+		$oNewObj->Set('description', $sDescription);
+		$iId = $oNewObj->DBInsertNoReload();
+		self::$m_aCacheProfiles[$sCacheKey] = $iId;	
+		return $iId;
+	}
+	
+	protected static function DoSetupProfile($sName, $aProfileData)
 	{
 		$sDescription = $aProfileData['description'];
 		if (strlen(trim($aProfileData['write_modules'])) == 0)
@@ -141,24 +208,21 @@ class CreateITILProfilesInstaller extends ModuleInstallerAPI
 		}
 		$aStimuli = $aProfileData['stimuli'];
 		
-		$oNewObj = MetaModel::NewObject("URP_Profiles");
-		$oNewObj->Set('name', $sName);
-		$oNewObj->Set('description', $sDescription);
-		$iProfile = $oNewObj->DBInsertNoReload();
+		$iProfile = self::DoCreateProfile($sName, $sDescription);
 	
-		// Grant read rights for everything
-		//
 		// Warning: BulkInsert is working because we will load one single class
 		//          having one single table !
 		//          the benefit is: 10 queries (1 per profile) instead of 1500
-		//          which divides the overall user rights setup process by 2
+		//          which divides the overall user rights setup process by 5
 		DBObject::BulkInsertStart();
+
+		// Grant read rights for everything
+		//
 		foreach (MetaModel::GetClasses('bizmodel') as $sClass)
 		{
 			self::DoCreateActionGrant($iProfile, UR_ACTION_READ, $sClass);
 			self::DoCreateActionGrant($iProfile, UR_ACTION_BULK_READ, $sClass);
 		}
-		DBObject::BulkInsertFlush();
 	
 		// Grant write for given modules
 		// Start by compiling the information, because some modules may overlap
@@ -230,6 +294,8 @@ class CreateITILProfilesInstaller extends ModuleInstallerAPI
 				self::DoCreateStimulusGrant($iProfile, $sStimulusCode, $sClass);
 			}
 		}
+		// Again: this is working only because action/stimulus grant are classes made of a single table!
+		DBObject::BulkInsertFlush();
 	}
 	
 	public static function DoCreateProfiles()
@@ -239,7 +305,7 @@ class CreateITILProfilesInstaller extends ModuleInstallerAPI
 
 		foreach(self::$m_aProfiles as $sName => $aProfileData)
 		{
-			self::DoCreateOneProfile($sName, $aProfileData);
+			self::DoSetupProfile($sName, $aProfileData);
 		}
 	}
 
