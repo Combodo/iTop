@@ -39,7 +39,7 @@ class ConfigException extends CoreException
 }
 
 define ('DEFAULT_CHARACTER_SET', 'utf8');
-define ('DEFAULT_COLLATION', 'utf8_general_ci');
+define ('DEFAULT_COLLATION', 'utf8_unicode_ci');
 
 define ('DEFAULT_LOG_GLOBAL', true);
 define ('DEFAULT_LOG_NOTIFICATION', true);
