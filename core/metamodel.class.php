@@ -3549,9 +3549,9 @@ abstract class MetaModel
 		}
 	}
 
-	public static function Startup($sConfigFile, $bModelOnly = false)
+	public static function Startup($sConfigFile, $bModelOnly = false, $bUseCache = true)
 	{
-		self::LoadConfig($sConfigFile);
+		self::LoadConfig($sConfigFile, $bUseCache);
 
 		if ($bModelOnly) return;
 
@@ -3573,10 +3573,10 @@ abstract class MetaModel
 		}
 	}
 
-	public static function LoadConfig($sConfigFile)
+	public static function LoadConfig($sConfigFile, $bUseCache = false)
 	{
 		self::$m_oConfig = new Config($sConfigFile);
-
+		
 		// Set log ASAP
 		if (self::$m_oConfig->GetLogGlobal())
 		{
@@ -3655,7 +3655,7 @@ abstract class MetaModel
 		$sCharacterSet = self::$m_oConfig->GetDBCharacterSet();
 		$sCollation = self::$m_oConfig->GetDBCollation();
 
-		if (function_exists('apc_fetch'))
+		if ($bUseCache && function_exists('apc_fetch'))
 		{
 			$oKPI = new ExecutionKPI();
 			// Note: For versions of APC older than 3.0.17, fetch() accepts only one parameter
@@ -3698,7 +3698,7 @@ abstract class MetaModel
 			self::InitClasses($sTablePrefix);
 
 			$oKPI->ComputeAndReport('Initialization of Data model structures');
-			if (function_exists('apc_store'))
+			if ($bUseCache && function_exists('apc_store'))
 			{
 				$oKPI = new ExecutionKPI();
 
@@ -4123,12 +4123,11 @@ abstract class MetaModel
 		}
 	}
 
-	public static function GetCacheEntries()
+	public static function GetCacheEntries($sAppIdentity)
 	{
 		if (!function_exists('apc_cache_info')) return array();
 
 		$aCacheUserData = apc_cache_info('user');  
-		$sAppIdentity = MetaModel::GetConfig()->Get('session_name');
 		$sPrefix = $sAppIdentity.'-';
 
 		$aEntries = array();
@@ -4144,14 +4143,14 @@ abstract class MetaModel
 		return $aEntries;
 	}
 
-	public static function ResetCache()
+	public static function ResetCache(Config $oConfig)
 	{
 		if (!function_exists('apc_delete')) return;
 
-		$sAppIdentity = MetaModel::GetConfig()->Get('session_name');
+		$sAppIdentity = $oConfig->Get('session_name');
 		Dict::ResetCache($sAppIdentity);
 
-		foreach(self::GetCacheEntries() as $sKey => $aAPCInfo)
+		foreach(self::GetCacheEntries($sAppIdentity) as $sKey => $aAPCInfo)
 		{
 			$sAPCKey = $aAPCInfo['info'];
 			apc_delete($sAPCKey);

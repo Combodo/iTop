@@ -7,7 +7,7 @@ function NameIsValid(name)
 
 function DoGoBack(iStep)
 {
-	$('input[name=operation]').val('step'+(iStep-1));
+	$('input[name=operation]').val('step'+iStep);
 	$('#theForm').submit(); // Submit the form
 	return true; 
 }
@@ -17,6 +17,14 @@ function DoSubmit(sMsg, iStep)
 	var bResult = true;
 	switch(iStep)
 	{
+		case 0: // Select either install or upgrade or nothing to select...
+		if ( ($("input:radio").length > 0) && ($("input:radio:checked").length < 1))
+		{
+			alert('Please select either install or upgrade');
+			bResult = false;
+		}
+		break;
+
 		case 1: // Licence agreement
 		if ($('#licence_ok:checked').length < 1)
 		{
@@ -94,8 +102,11 @@ function DoSubmit(sMsg, iStep)
 		}
 		break;
 		
-		case 6: // Asynchronous load of data
-		bResult = DoLoadDataAsynchronous();
+		case 6: // Sample data selection
+		break;
+		
+		case 7: // Display Summary: launch DoUpdateDBSchema to start the asynchronous update
+		bResult = DoUpdateDBSchema();
 		break;
 
 		// Email test page
@@ -113,33 +124,108 @@ function DoSubmit(sMsg, iStep)
 	return bResult;
 }
 
+function DoUpdateDBSchema()
+{
+	try
+	{
+		// Call the asynchronous page that performs the creation/update of the DB Schema
+		$('#log').html('');
+		$('#setup').block({message: '<p>Updating DB schema...<br/><div id=\"progress\">0%</div></p>'});
+		$('#progress').progression( {Current:5, Maximum: 100, aBackgroundImg: 'orange-progress.gif', aTextColor: '#000000'} );
+		$('#log').load( 'ajax.dataloader.php',
+						{ 
+							'operation': 'update_db_schema',
+							'selected_modules': GetSelectedModules(),
+							'mode': $(':input[name=mode]').val()
+						},
+						DoUpdateProfiles, 'html');
+	}
+	catch(err)
+	{
+		alert('An exception occured: '+err);
+	}
+	return false; // Do NOT submit the form yet
+}
+
+function DoUpdateProfiles(response, status, xhr)
+{
+	if (status == 'error')
+	{
+		$('#setup').unblock();
+		return; // An error occurred !
+	}
+	try
+	{
+		// Call the asynchronous page that performs the creation/update of the DB Schema
+		$('#log').html('');
+		$('#setup').block({message: '<p>Updating Profiles...<br/><div id=\"progress\">0%</div></p>'});
+		$('#progress').progression( {Current:40,  Maximum: 100, aBackgroundImg: 'orange-progress.gif', aTextColor: '#000000'} );
+		$('#log').load( 'ajax.dataloader.php',
+				{ 
+					'operation': 'after_db_create',
+					'selected_modules': GetSelectedModules(),
+					'mode': $(':input[name=mode]').val(),
+					'auth_user': $(':input[name=auth_user]').val(),
+					'auth_pwd': $(':input[name=auth_pwd]').val(),
+					'language': $(':input[name=language]').val()
+				},
+				DoLoadDataAsynchronous, 'html');
+//		$('#log').ajaxError(
+//				function(e, xhr, settings, exception)
+//				{
+//					bStopAysncProcess = true;
+//					alert('Fatal error detected: '+ xhr.responseText);
+//					$('#log').append(xhr.responseText);
+//					$('#setup').unblock();
+//				} );
+	}
+	catch(err)
+	{
+		alert('An exception occured: '+err);
+	}
+	return true; // Continue loading the data
+}
+
 var aFilesToLoad = new Array();
 var iCounter = 0;
 
-function DoLoadDataAsynchronous()
+function DoLoadDataAsynchronous(response, status, xhr)
 {
+	if (status == 'error')
+	{
+		$('#setup').unblock();
+		return; // An error occurred !
+	}
 	try
 	{
 		// The array aFilesToLoad is populated by this function dynamically written on the server
 		PopulateDataFilesList();
-		iCounter = 0;
-		$('#log').html('');
-		$('#setup').block({message: '<p>Loading data...<br/><div id=\"progress\">0%</div></p>'});
-		$('#progress').progression( {Current:0, Maximum: 100, aBackgroundImg: 'orange-progress.gif', aTextColor: '#000000'} );
-		$('#log').ajaxError(
-				function(e, xhr, settings, exception)
-				{
-					alert('Fatal error detected: '+ xhr.responseText);
-					$('#log').append(xhr.responseText);
-					$('#setup').unblock();
-				} );
+		iCurrent = 60;
+		if (aFilesToLoad.length == 0)
+		{
+			$('#progress').progression( {Current: 100} );
+		}
+		else
+		{
+			$('#log').html('');
+			$('#setup').block({message: '<p>Loading data...<br/><div id=\"progress\">0%</div></p>'});
+			$('#progress').progression( {Current: 60, Maximum: 100, aBackgroundImg: 'orange-progress.gif', aTextColor: '#000000'} );
+//			$('#log').ajaxError(
+//					function(e, xhr, settings, exception)
+//					{
+//						bStopAysncProcess = true;
+//						alert('Fatal error detected: '+ xhr.responseText);
+//						$('#log').append(xhr.responseText);
+//						$('#setup').unblock();
+//					} );
+		}
 		LoadNextDataFile('', '', '');
 	}
 	catch(err)
 	{
 		alert('An exception occured: '+err);
 	}
-	return false; // Stop here for now
+	return true; // Continue
 }
 
 function LoadNextDataFile(response, status, xhr)
@@ -168,16 +254,17 @@ function LoadNextDataFile(response, status, xhr)
 			{
 				sSessionStatus = 'continue';
 			}
-			iPercent = Math.round((100.0 * (1+iCounter)) / aFilesToLoad.length);
+			iPercent = 60+Math.round((40.0 * (1+iCounter)) / aFilesToLoad.length);
 			sFileName = aFilesToLoad[iCounter];
 			//alert('Loading file '+sFileName+' ('+iPercent+' %) - '+sSessionStatus);
-			$("#progress").progression({ Current: iPercent });
+			$("#progress").progression({ Current: iPercent, Maximum: 100, aBackgroundImg: 'orange-progress.gif', aTextColor: '#000000' });
 			iCounter++;
-			$('#log').load( 'ajax.dataloader.php', { 'file': sFileName, 'percent': iPercent, 'session_status': sSessionStatus }, LoadNextDataFile, 'html');
+			$('#log').load( 'ajax.dataloader.php', { 'operation': 'load_data', 'file': sFileName, 'percent': iPercent, 'session_status': sSessionStatus }, LoadNextDataFile, 'html');
 		}
 		else
 		{
 			// We're done
+			$("#progress").progression({ Current: 100, Maximum: 100, aBackgroundImg: 'orange-progress.gif', aTextColor: '#000000' });
 			$('#setup').unblock();
 			$('#GoToNextStep').submit(); // Use the hidden form to navigate to the next step
 		}
@@ -186,4 +273,11 @@ function LoadNextDataFile(response, status, xhr)
 	{
 		alert('An exception occurred: '+err);
 	}
+}
+
+function GetSelectedModules()
+{
+	var aModules = new Array();
+	$(':input[name^=module]').each(function() { aModules.push($(this).val()); } );
+	return aModules.join(',');
 }

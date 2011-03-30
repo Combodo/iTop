@@ -25,6 +25,11 @@
 
 require_once(APPROOT."/application/nicewebpage.class.inc.php");
 define('INSTALL_LOG_FILE', APPROOT.'/setup.log');
+
+define ('MODULE_ACTION_OPTIONAL', 1);
+define ('MODULE_ACTION_MANDATORY', 2);
+define ('MODULE_ACTION_IMPOSSIBLE', 3);
+
 date_default_timezone_set('Europe/Paris');
 class SetupWebPage extends NiceWebPage
 {
@@ -85,6 +90,11 @@ h1 {
 h2 {
 	color: #000;
 	font-size: 14pt;
+}
+h3 {
+	color: #1C94C4;
+	font-size: 12pt;
+	font-weight: bold;
 }
 .next {
 	width: 100%;
@@ -262,7 +272,7 @@ table.formTable {
 	static $m_aFilesList = array('datamodel', 'webservice', 'dictionary', 'data.struct', 'data.sample');
 
 	static $m_sModulePath = null;
-	public function SetModulePath($sModulePath)
+	public static function SetModulePath($sModulePath)
 	{
 		self::$m_sModulePath = $sModulePath;
 	}
@@ -297,7 +307,7 @@ table.formTable {
 			}
 		}
 	}
-	public function GetModules()
+	public static function GetModules($oP = null)
 	{
 		// Order the modules to take into account their inter-dependencies
 		$aDependencies = array();
@@ -336,7 +346,14 @@ table.formTable {
 				$sHtml.= "<li>{$aModule['label']} (id: $sId), depends on: ".implode(', ', $aDeps)."</li>";
 			}
 			$sHtml .= "</ul>\n";
-			$this->warning($sHtml);
+			if (is_object($oP))
+			{
+				$oP->warning($sHtml);
+			}
+			else
+			{
+				self::log_warning($sHtml);
+			}
 		}
 		// Return the ordered list, so that the dependencies are met...
 		$aResult = array();
@@ -346,6 +363,370 @@ table.formTable {
 		}
 		return $aResult;
 	}
-
 } // End of class
+
+/**
+ * Helper function to initialize the ORM and load the data model
+ * from the given file
+ * @param $sConfigFileName string The name of the configuration file to load
+ * @param $bModelOnly boolean Whether or not to allow loading a data model with no corresponding DB 
+ * @return none
+ */    
+function InitDataModel($sConfigFileName, $bModelOnly = true, $bUseCache = false)
+{
+	require_once(APPROOT.'/core/log.class.inc.php');
+	require_once(APPROOT.'/core/kpi.class.inc.php');
+	require_once(APPROOT.'/core/coreexception.class.inc.php');
+	require_once(APPROOT.'/core/dict.class.inc.php');
+	require_once(APPROOT.'/core/attributedef.class.inc.php');
+	require_once(APPROOT.'/core/filterdef.class.inc.php');
+	require_once(APPROOT.'/core/stimulus.class.inc.php');
+	require_once(APPROOT.'/core/MyHelpers.class.inc.php');
+	require_once(APPROOT.'/core/expression.class.inc.php');
+	require_once(APPROOT.'/core/cmdbsource.class.inc.php');
+	require_once(APPROOT.'/core/sqlquery.class.inc.php');
+	require_once(APPROOT.'/core/dbobject.class.php');
+	require_once(APPROOT.'/core/dbobjectsearch.class.php');
+	require_once(APPROOT.'/core/dbobjectset.class.php');
+	require_once(APPROOT.'/application/cmdbabstract.class.inc.php');
+	require_once(APPROOT.'/core/userrights.class.inc.php');
+	require_once(APPROOT.'/setup/moduleinstallation.class.inc.php');
+	SetupWebPage::log_info("MetaModel::Startup from file '$sConfigFileName' (ModelOnly = $bModelOnly)");
+
+	if ($bUseCache)
+	{
+		// Reset the cache for the first use !
+		$oConfig = new Config($sConfigFileName, false);
+		MetaModel::ResetCache($oConfig);
+	}
+
+	MetaModel::Startup($sConfigFileName, $bModelOnly, $bUseCache);
+}
+
+/**
+ * Search (on the disk) for all defined iTop modules, load them and returns the list (as an array)
+ * of the possible iTop modules to install
+ * @param none
+ * @return Hash A big array moduleID => ModuleData
+ */
+function GetAvailableModules($oP = null)
+{
+	clearstatcache();
+	ListModuleFiles('modules');
+	return SetupWebPage::GetModules($oP);
+}
+
+/**
+ * Analyzes the current installation and the possibilities
+ * 
+ * @param $oP SetupWebPage For accessing the list of loaded modules
+ * @param $sDBServer string Name/IP of the DB server
+ * @param $sDBUser username for the DB server connection
+ * @param $sDBPwd password for the DB server connection
+ * @param $sDBName Name of the database instance
+ * @param $sDBPrefix Prefix for the iTop tables in the DB instance
+ * @return hash Array with the following format:
+ * array =>
+ *     'iTop' => array(
+ *         'version_db' => ... (could be empty in case of a fresh install)
+ *         'version_code => ...
+ *     )
+ *     <module_name> => array(
+ *         'version_db' => ...  
+ *         'version_code' => ...  
+ *         'install' => array(
+ *             'flag' => SETUP_NEVER | SETUP_OPTIONAL | SETUP_MANDATORY
+ *             'message' => ...  
+ *         )   
+ *         'uninstall' => array(
+ *             'flag' => SETUP_NEVER | SETUP_OPTIONAL | SETUP_MANDATORY
+ *             'message' => ...  
+ *         )   
+ *         'label' => ...  
+ *         'dependencies' => array(<module1>, <module2>, ...)  
+ *         'visible' => true | false
+ *     )
+ * )
+ */     
+function AnalyzeInstallation($oConfig)
+{
+	$aRes = array(
+		'iTop' => array(
+			'version_db' => '',
+			'version_code' => ITOP_VERSION.'.'.ITOP_REVISION,
+		)
+	);
+
+	$aModules = GetAvailableModules();
+	foreach($aModules as $sModuleId => $aModuleInfo)
+	{
+		list($sModuleName, $sModuleVersion) = GetModuleName($sModuleId);
+
+		$sModuleAppVersion = $aModuleInfo['itop_version'];
+      $aModuleInfo['version_db'] = '';
+      $aModuleInfo['version_code'] = $sModuleVersion;
+
+		if (!in_array($sModuleAppVersion, array('1.0.0', '1.0.1', '1.0.2')))
+		{
+			// This module is NOT compatible with the current version
+      	$aModuleInfo['install'] = array(
+      		'flag' => MODULE_ACTION_IMPOSSIBLE,
+      		'message' => 'the module is not compatible with the current version of the application'
+      	);
+		}
+      elseif ($aModuleInfo['mandatory'])
+      {
+      	$aModuleInfo['install'] = array(
+      		'flag' => MODULE_ACTION_MANDATORY,
+      		'message' => 'the module is part of the application'
+      	);
+		}
+		else
+		{
+      	$aModuleInfo['install'] = array(
+      		'flag' => MODULE_ACTION_OPTIONAL,
+      		'message' => ''
+      	);
+		}
+		$aRes[$sModuleName] = $aModuleInfo;
+	}
+
+  	try
+  	{
+		CMDBSource::Init($oConfig->GetDBHost(), $oConfig->GetDBUser(), $oConfig->GetDBPwd(), $oConfig->GetDBName());
+		$aSelectInstall = CMDBSource::QueryToArray("SELECT * FROM ".$oConfig->GetDBSubname()."priv_module_install");
+	}
+	catch (MySQLException $e)
+	{
+		// No database or eroneous information
+		$aSelectInstall = array();
+	}
+
+	// Build the list of installed module (get the latest installation)
+	//
+   $aInstallByModule = array(); // array of <module> => array ('installed' => timestamp, 'version' => <version>)
+	foreach ($aSelectInstall as $aInstall)
+   {
+   	//$aInstall['comment']; // unsused
+   	//$aInstall['parent_id']; // unsused
+   	$iInstalled = strtotime($aInstall['installed']);
+   	$sModuleName = $aInstall['name'];
+   	$sModuleVersion = $aInstall['version'];
+
+		if ($sModuleName == 'itop')
+		{
+			$aRes['iTop']['version_db'] = $sModuleVersion;
+			continue;
+		}
+
+      if (array_key_exists($sModuleName, $aInstallByModule))
+      {
+      	if ($iInstalled < $aInstallByModule[$sModuleName]['installed'])
+      	{
+      		continue;
+      	}
+		}
+		$aInstallByModule[$sModuleName]['installed'] = $iInstalled;
+		$aInstallByModule[$sModuleName]['version'] = $sModuleVersion;
+   }
+
+	// Adjust the list of proposed modules
+	//
+   foreach ($aInstallByModule as $sModuleName => $aModuleDB)
+   {
+   	if (!array_key_exists($sModuleName, $aRes))
+   	{
+   		// A module was installed, it is not proposed in the new build... skip 
+   		continue;
+   	}
+   	$aRes[$sModuleName]['version_db'] = $aModuleDB['version'];
+
+      if ($aRes[$sModuleName]['install']['flag'] == MODULE_ACTION_MANDATORY)
+      {
+      	$aRes[$sModuleName]['uninstall'] = array(
+      		'flag' => MODULE_ACTION_IMPOSSIBLE,
+      		'message' => 'the module is part of the application'
+      	);
+		}
+		else
+		{
+      	$aRes[$sModuleName]['uninstall'] = array(
+      		'flag' => MODULE_ACTION_OPTIONAL,
+      		'message' => ''
+      	);
+		}
+	}
+
+	return $aRes;
+}
+
+
+/**
+ * Helper function to interpret the name of a module
+ * @param $sModuleId string Identifier of the module, in the form 'name/version'
+ * @return array(name, version)
+ */    
+function GetModuleName($sModuleId)
+{
+	if (preg_match('!^(.*)/(.*)$!', $sModuleId, $aMatches))
+	{
+		$sName = $aMatches[1];
+		$sVersion = $aMatches[2];
+	}
+	else
+	{
+		$sName = $sModuleId;
+		$sVersion = "";
+	}
+	return array($sName, $sVersion);
+}
+/**
+ * Helper function to create the database structure
+ * @return boolean true on success, false otherwise
+ */
+function CreateDatabaseStructure(Config $oConfig, $aSelectedModules, $sMode)
+{
+	if (strlen($oConfig->GetDBSubname()) > 0)
+	{
+		SetupWebPage::log_info("Creating the structure in '".$oConfig->GetDBName()."' (table names prefixed by '".$oConfig->GetDBSubname()."').");
+	}
+	else
+	{
+		SetupWebPage::log_info("Creating the structure in '".$oConfig->GetDBSubname()."'.");
+	}
+
+	//MetaModel::CheckDefinitions();
+	if ($sMode == 'install')
+	{
+		if (!MetaModel::DBExists(/* bMustBeComplete */ false))
+		{
+			MetaModel::DBCreate();
+			SetupWebPage::log_ok("Database structure successfully created.");
+		}
+		else
+		{
+			if (strlen($oConfig->GetDBSubname()) > 0)
+			{
+				throw new Exception("Error: found iTop tables into the database '".$oConfig->GetDBName()."' (prefix: '".$oConfig->GetDBSubname()."'). Please, try selecting another database instance or specify another prefix to prevent conflicting table names.");
+			}
+			else
+			{
+				throw new Exception("Error: found iTop tables into the database '".$oConfig->GetDBName()."'. Please, try selecting another database instance or specify a prefix to prevent conflicting table names.");
+			}
+		}
+	}
+	else
+	{
+		if (MetaModel::DBExists(/* bMustBeComplete */ false))
+		{
+			MetaModel::DBCreate();
+			SetupWebPage::log_ok("Database structure successfully created.");
+		}
+		else
+		{
+			if (strlen($oConfig->GetDBSubname()) > 0)
+			{
+				throw new Exception("Error: No previous instance of iTop found into the database '".$oConfig->GetDBName()."' (prefix: '".$oConfig->GetDBSubname()."'). Please, try selecting another database instance.");
+			}
+			else
+			{
+				throw new Exception("Error: No previous instance of iTop found into the database '".$oConfig->GetDBName()."'. Please, try selecting another database instance.");
+			}
+		}
+	}
+	return true;
+}
+
+function RecordInstallation(Config $oConfig, $aSelectedModules)
+{
+	// Record main installation
+	$oInstallRec = new ModuleInstallation();
+	$oInstallRec->Set('name', 'itop');
+	$oInstallRec->Set('version', ITOP_VERSION.'.'.ITOP_REVISION);
+	$oInstallRec->Set('comment', "Done by the setup program\nBuilt on ".ITOP_BUILD_DATE);
+	$oInstallRec->Set('parent_id', 0); // root module
+	$iMainItopRecord = $oInstallRec->DBInsertNoReload();
+
+	// Record installed modules
+	//
+	$aAvailableModules = AnalyzeInstallation($oConfig);
+	foreach($aSelectedModules as $sModuleId)
+	{
+		$aModuleData = $aAvailableModules[$sModuleId];
+		$sName = $sModuleId;
+		$sVersion = $aModuleData['version_code'];
+		$aComments = array();
+		$aComments[] = 'Done by the setup program';
+		if ($aModuleData['mandatory'])
+		{
+			$aComments[] = 'Mandatory';
+		}
+		else
+		{
+			$aComments[] = 'Optional';
+		}
+		if ($aModuleData['visible'])
+		{
+			$aComments[] = 'Visible (during the setup)';
+		}
+		else
+		{
+			$aComments[] = 'Hidden (selected automatically)';
+		}
+		foreach ($aModuleData['dependencies'] as $sDependOn)
+		{
+			$aComments[] = "Depends on module: $sDependOn";
+		}
+		$sComment = implode("\n", $aComments);
+
+		$oInstallRec = new ModuleInstallation();
+		$oInstallRec->Set('name', $sName);
+		$oInstallRec->Set('version', $sVersion);
+		$oInstallRec->Set('comment', $sComment);
+		$oInstallRec->Set('parent_id', $iMainItopRecord);
+		$oInstallRec->DBInsertNoReload();
+	}
+	// Database is created, installation has been tracked into it
+	return true;	
+}
+
+function ListModuleFiles($sRelDir)
+{
+	$sDirectory = APPROOT.'/'.$sRelDir;
+	//echo "<p>$sDirectory</p>\n";
+	if ($hDir = opendir($sDirectory))
+	{
+		// This is the correct way to loop over the directory. (according to the documentation)
+		while (($sFile = readdir($hDir)) !== false)
+		{
+			$aMatches = array();
+			if (is_dir($sDirectory.'/'.$sFile))
+			{
+				if (($sFile != '.') && ($sFile != '..') && ($sFile != '.svn'))
+				{
+					ListModuleFiles($sRelDir.'/'.$sFile);
+				}
+			}
+			else if (preg_match('/^module\.(.*).php$/i', $sFile, $aMatches))
+			{
+				SetupWebPage::SetModulePath($sRelDir);
+				try
+				{
+					//echo "<p>Loading: $sDirectory/$sFile...</p>\n";
+					require_once($sDirectory.'/'.$sFile);
+					//echo "<p>Done.</p>\n";
+				}
+				catch(Exception $e)
+				{
+					// Continue...
+				}
+			}
+		}
+		closedir($hDir);
+	}
+	else
+	{
+		throw new Exception("Data directory (".$sDirectory.") not found or not readable.");
+	}
+}
 ?>

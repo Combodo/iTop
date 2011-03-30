@@ -31,7 +31,11 @@ abstract class ModuleInstallerAPI
 		return $oConfiguration;
 	}
 
-	public static function AfterDatabaseCreation(Config $oConfiguration)
+	public static function BeforeDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
+	{
+	}
+	
+	public static function AfterDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
 	{
 	}
 }

@@ -38,7 +38,6 @@ define('PHP_MIN_VERSION', '5.2.0');
 define('MYSQL_MIN_VERSION', '5.0.0');
 define('MIN_MEMORY_LIMIT', 32*1024*1024);
 
-
 $sOperation = Utils::ReadParam('operation', 'step0');
 $oP = new SetupWebPage('iTop configuration wizard');
 
@@ -102,41 +101,6 @@ function GetTmpDir()
 }
 
 /**
- * Check the value of the PHP setting 'memory_limit'
- * against the minimum recommended value
- * @param SetpWebPage $oP The current web page
- * @param integer $iMinMemoryRequired The minimum memory for the test to pass
- * @return boolean Whether or not it's Ok to continue
- */
-function CheckMemoryLimit(SetupWebPage $oP, $iMinMemoryRequired)
-{
-	$sMemoryLimit = trim(ini_get('memory_limit'));
-	$bResult = true;
-	if (empty($sMemoryLimit))
-	{
-		// On some PHP installations, memory_limit does not exist as a PHP setting!
-		// (encountered on a 5.2.0 under Windows)
-		// In that case, ini_set will not work, let's keep track of this and proceed anyway
-		$oP->warning("No memory limit has been defined in this instance of PHP");		
-	}
-	else
-	{
-		// Check that the limit will allow us to load the data
-		//
-		$iMemoryLimit = utils::ConvertToBytes($sMemoryLimit);
-		if ($iMemoryLimit < $iMinMemoryRequired)
-		{
-			$oP->error("memory_limit ($iMemoryLimit) is too small, the minimum value to run iTop is $iMinMemoryRequired.");		
-			$bResult = false;
-		}
-		else
-		{
-			$oP->log_info("memory_limit is $iMemoryLimit, ok.");		
-		}
-	}
-	return $bResult;
-}
-/**
  * Helper function to retrieve the directory where files are to be uploaded
  * @return string Path to the temp directory used for uploading files 
  */
@@ -158,15 +122,19 @@ function GetUploadTmpDir()
 function CheckPHPVersion(SetupWebPage $oP)
 {
 	$bResult = true;
+	$aErrors = array();
+	$aWarnings = array();
+	$aOk = array();
+	
 	$oP->log('Info - CheckPHPVersion');
 	if (version_compare(phpversion(), PHP_MIN_VERSION, '>='))
 	{
-		$oP->ok("The current PHP Version (".phpversion().") is greater than the minimum required version (".PHP_MIN_VERSION.")");
+		$aOk [] = "The current PHP Version (".phpversion().") is greater than the minimum required version (".PHP_MIN_VERSION.")";
 	}
 	else
 	{
-		$oP->error("Error: The current PHP Version (".phpversion().") is lower than the minimum required version (".PHP_MIN_VERSION.")");
-		return false;
+		$aErrors[] = "Error: The current PHP Version (".phpversion().") is lower than the minimum required version (".PHP_MIN_VERSION.")";
+		$bResult = false;
 	}
 	$aMandatoryExtensions = array('mysql', 'iconv', 'simplexml', 'soap', 'hash', 'json', 'session', 'pcre', 'dom');
 	$aOptionalExtensions = array('mcrypt' => 'Strong encryption will not be used.',
@@ -191,11 +159,11 @@ function CheckPHPVersion(SetupWebPage $oP)
 	}
 	if (count($aExtensionsOk) > 0)
 	{
-		$oP->ok("Required PHP extension(s): ".implode(', ', $aExtensionsOk).".");
+		$aOk[] = "Required PHP extension(s): ".implode(', ', $aExtensionsOk).".";
 	}
 	if (count($aMissingExtensions) > 0)
 	{
-		$oP->error("Missing PHP extension(s): ".implode(', ', $aMissingExtensionsLinks).".");
+		$aErrors[] = "Missing PHP extension(s): ".implode(', ', $aMissingExtensionsLinks).".";
 		$bResult = false;
 	}
 	// Next check the optional extensions
@@ -214,13 +182,13 @@ function CheckPHPVersion(SetupWebPage $oP)
 	}
 	if (count($aExtensionsOk) > 0)
 	{
-		$oP->ok("Optional PHP extension(s): ".implode(', ', $aExtensionsOk).".");
+		$aOk[] = "Optional PHP extension(s): ".implode(', ', $aExtensionsOk).".";
 	}
 	if (count($aMissingExtensions) > 0)
 	{
 		foreach($aMissingExtensions as $sExtension => $sMessage)
 		{
-			$oP->warning("Missing optional PHP extension: $sExtension. ".$sMessage);
+			$aWarnings[] = "Missing optional PHP extension: $sExtension. ".$sMessage;
 		}
 	}
 	// Check some ini settings here
@@ -248,7 +216,7 @@ function CheckPHPVersion(SetupWebPage $oP)
 	}
   	if (!ini_get('file_uploads'))
   	{
-		$oP->error("Files upload is not allowed on this server (file_uploads = ".ini_get('file_uploads').").");
+		$aErrors[] = "Files upload is not allowed on this server (file_uploads = ".ini_get('file_uploads').").";
 		$bResult = false;
 	}
 
@@ -256,19 +224,19 @@ function CheckPHPVersion(SetupWebPage $oP)
 	if (empty($sUploadTmpDir))
 	{
         $sUploadTmpDir = '/tmp';
-		$oP->warning("Temporary directory for files upload is not defined (upload_tmp_dir), assuming that $sUploadTmpDir is used.");
+		$aErrors[] = "Temporary directory for files upload is not defined (upload_tmp_dir), assuming that $sUploadTmpDir is used.";
 	}
 	// check that the upload directory is indeed writable from PHP
   	if (!empty($sUploadTmpDir))
   	{
   		if (!file_exists($sUploadTmpDir))
   		{
-			$oP->error("Temporary directory for files upload ($sUploadTmpDir) does not exist or cannot be read by PHP.");
+			$aErrors[] = "Temporary directory for files upload ($sUploadTmpDir) does not exist or cannot be read by PHP.";
 			$bResult = false;
 		}
   		else if (!is_writable($sUploadTmpDir))
   		{
-			$oP->error("Temporary directory for files upload ($sUploadTmpDir) is not writable.");
+			$aErrors[] = "Temporary directory for files upload ($sUploadTmpDir) is not writable.";
 			$bResult = false;
 		}
 		else
@@ -280,13 +248,13 @@ function CheckPHPVersion(SetupWebPage $oP)
 
   	if (!ini_get('upload_max_filesize'))
   	{
-		$oP->error("File upload is not allowed on this server (file_uploads = ".ini_get('file_uploads').").");
+		$aErrors[] = "File upload is not allowed on this server (file_uploads = ".ini_get('file_uploads').").";
 	}
 
 	$iMaxFileUploads = ini_get('max_file_uploads');
   	if (!empty($iMaxFileUploads) && ($iMaxFileUploads < 1))
   	{
-		$oP->error("File upload is not allowed on this server (max_file_uploads = ".ini_get('max_file_uploads').").");
+		$aErrors[] = "File upload is not allowed on this server (max_file_uploads = ".ini_get('max_file_uploads').").";
 		$bResult = false;
 	}
 	$oP->log("Info - upload_max_filesize: ".ini_get('upload_max_filesize'));
@@ -295,12 +263,67 @@ function CheckPHPVersion(SetupWebPage $oP)
 	// Check some more ini settings here, needed for file upload
   	if (get_magic_quotes_gpc())
   	{
-		$oP->error("'magic_quotes_gpc' is set to On. Please turn it Off before continuing. You may want to check the PHP configuration file(s): '$sPhpIniFile'. Be aware that this setting can also be overridden in the apache configuration.");
+		$aErrors[] = "'magic_quotes_gpc' is set to On. Please turn it Off before continuing. You may want to check the PHP configuration file(s): '$sPhpIniFile'. Be aware that this setting can also be overridden in the apache configuration.";
 		$bResult = false;
 	}
 	
-	$bResult = $bResult & CheckMemoryLimit($oP, MIN_MEMORY_LIMIT);
-	
+	$sMemoryLimit = trim(ini_get('memory_limit'));
+	if (empty($sMemoryLimit))
+	{
+		// On some PHP installations, memory_limit does not exist as a PHP setting!
+		// (encountered on a 5.2.0 under Windows)
+		// In that case, ini_set will not work, let's keep track of this and proceed anyway
+		$aWarnings[] = "No memory limit has been defined in this instance of PHP";		
+	}
+	else
+	{
+		// Check that the limit will allow us to load the data
+		//
+		$iMemoryLimit = utils::ConvertToBytes($sMemoryLimit);
+		if ($iMemoryLimit < MIN_MEMORY_LIMIT)
+		{
+			$aErrors[] = "memory_limit ($iMemoryLimit) is too small, the minimum value to run iTop is ".MIN_MEMORY_LIMIT.".";		
+			$bResult = false;
+		}
+		else
+		{
+			$oP->log_info("memory_limit is $iMemoryLimit, ok.");		
+		}
+	}
+
+	if (!$bResult)
+	{
+		$sTitle = 'Checking prerequisites: Failed !';
+	}
+	else
+	{
+		if (count($aWarnings) > 0)
+		{
+			$sTitle = '<img src="../images/messagebox_warning-mid.png" style="vertical-align:middle"> Checking prerequisites: Warning <a href="#" onClick="$(\'#prereq_details\').toggle();">(show details)</a>';
+			$oP->add_ready_script("$('#prereq_details').hide();\n");
+		}
+		else
+		{
+			$sTitle = '<img src="../images/clean-mid.png" style="vertical-align:middle"> Checking prerequisites: Ok <a href="#" onClick="$(\'#prereq_details\').toggle();">(show details)</a>';
+			$oP->add_ready_script("$('#prereq_details').hide();\n");
+		}
+	}
+	$oP->add("<h2>$sTitle</h2>\n");
+	$oP->add("<div id=\"prereq_details\">\n");
+	foreach($aErrors as $sError)
+	{
+		$oP->error($sError);
+		//$oP->add_ready_script("$('#prereq_details').show();");
+	}	
+	foreach($aWarnings as $sWarning)
+	{
+		$oP->warning($sWarning);
+	}	
+	foreach($aOk as $sOk)
+	{
+		$oP->ok($sOk);
+	}	
+	$oP->add("</div>\n");
 	return $bResult;
 }
  
@@ -369,206 +392,9 @@ function CheckServerConnection(SetupWebPage $oP, $sDBServer, $sDBUser, $sDBPwd)
 }
 
 /**
- * Helper function to interpret the name of a module
- * @param $sModuleId string Identifier of the module, in the form 'name/version'
- * @return array(name, version)
- */    
-function GetModuleName($sModuleId)
-{
-	if (preg_match('!^(.*)/(.*)$!', $sModuleId, $aMatches))
-	{
-		$sName = $aMatches[1];
-		$sVersion = $aMatches[2];
-	}
-	else
-	{
-		$sName = $sModuleId;
-		$sVersion = "";
-	}
-	return array($sName, $sVersion);
-}
-
-/**
- * Helper function to initialize the ORM and load the data model
- * from the given file
- * @param $sConfigFileName string The name of the configuration file to load
- * @param $bModelOnly boolean Whether or not to allow loading a data model with no corresponding DB 
- * @return none
- */    
-function InitDataModel(SetupWebPage $oP, $sConfigFileName, $bModelOnly = true)
-{
-	require_once(APPROOT.'/core/log.class.inc.php');
-	require_once(APPROOT.'/core/kpi.class.inc.php');
-	require_once(APPROOT.'/core/coreexception.class.inc.php');
-	require_once(APPROOT.'/core/dict.class.inc.php');
-	require_once(APPROOT.'/core/attributedef.class.inc.php');
-	require_once(APPROOT.'/core/filterdef.class.inc.php');
-	require_once(APPROOT.'/core/stimulus.class.inc.php');
-	require_once(APPROOT.'/core/MyHelpers.class.inc.php');
-	require_once(APPROOT.'/core/expression.class.inc.php');
-	require_once(APPROOT.'/core/cmdbsource.class.inc.php');
-	require_once(APPROOT.'/core/sqlquery.class.inc.php');
-	require_once(APPROOT.'/core/dbobject.class.php');
-	require_once(APPROOT.'/core/dbobjectsearch.class.php');
-	require_once(APPROOT.'/core/dbobjectset.class.php');
-	require_once(APPROOT.'/application/cmdbabstract.class.inc.php');
-	require_once(APPROOT.'/core/userrights.class.inc.php');
-	require_once(APPROOT.'/setup/moduleinstallation.class.inc.php');
-	$oP->log("Info - MetaModel::Startup from file '$sConfigFileName' (ModelOnly = $bModelOnly)");
-
-	MetaModel::Startup($sConfigFileName, $bModelOnly);
-}
-/**
- * Helper function to create the database structure
- * @return boolean true on success, false otherwise
- */
-function CreateDatabaseStructure(SetupWebPage $oP, Config $oConfig, $sDBName, $sDBPrefix, $aSelectedModules)
-{
-	InitDataModel($oP, TMP_CONFIG_FILE, true); // Allow the DB to NOT exist since we're about to create it !
-	$oP->log('Info - CreateDatabaseStructure');
-	if (strlen($sDBPrefix) > 0)
-	{
-		$oP->info("Creating the structure in '$sDBName' (table names prefixed by '$sDBPrefix').");
-	}
-	else
-	{
-		$oP->info("Creating the structure in '$sDBName'.");
-	}
-
-	//MetaModel::CheckDefinitions();
-	if (!MetaModel::DBExists(/* bMustBeComplete */ false))
-	{
-		MetaModel::DBCreate();
-		$oP->ok("Database structure successfully created.");
-	}
-	else
-	{
-		if (strlen($sDBPrefix) > 0)
-		{
-			$oP->error("Error: found iTop tables into the database '$sDBName' (prefix: '$sDBPrefix'). Please, try selecting another database instance or specify another prefix to prevent conflicting table names.");
-		}
-		else
-		{
-			$oP->error("Error: found iTop tables into the database '$sDBName'. Please, try selecting another database instance or specify a prefix to prevent conflicting table names.");
-		}
-		return false;
-	}
-
-	// Record main installation
-	$oInstallRec = new ModuleInstallation();
-	$oInstallRec->Set('name', 'itop');
-	$oInstallRec->Set('version', ITOP_VERSION.'.'.ITOP_REVISION);
-	$oInstallRec->Set('comment', "Done by the setup program\nBuilt on ".ITOP_BUILD_DATE);
-	$oInstallRec->Set('parent_id', 0); // root module
-	$iMainItopRecord = $oInstallRec->DBInsertNoReload();
-
-	// Record installed modules
-	//
-	$aAvailableModules = GetAvailableModules($oP);
-	foreach($aSelectedModules as $sModuleId)
-	{
-		$aModuleData = $aAvailableModules[$sModuleId];
-		list($sName, $sVersion) = GetModuleName($sModuleId);
-		$aComments = array();
-		$aComments[] = 'Done by the setup program';
-		if ($aModuleData['mandatory'])
-		{
-			$aComments[] = 'Mandatory';
-		}
-		else
-		{
-			$aComments[] = 'Optional';
-		}
-		if ($aModuleData['visible'])
-		{
-			$aComments[] = 'Visible (during the setup)';
-		}
-		else
-		{
-			$aComments[] = 'Hidden (selected automatically)';
-		}
-		foreach ($aModuleData['dependencies'] as $sDependOn)
-		{
-			$aComments[] = "Depends on module: $sDependOn";
-		}
-		$sComment = implode("\n", $aComments);
-
-		$oInstallRec = new ModuleInstallation();
-		$oInstallRec->Set('name', $sName);
-		$oInstallRec->Set('version', $sVersion);
-		$oInstallRec->Set('comment', $sComment);
-		$oInstallRec->Set('parent_id', $iMainItopRecord);
-		$oInstallRec->DBInsertNoReload();
-	}
-	// Database is created, installation has been tracked into it
-	return true;
-}
-
-/**
- * Helper function to create and administrator account for iTop
- * @return boolean true on success, false otherwise 
- */
-function CreateAdminAccount(SetupWebPage $oP, Config $oConfig, $sAdminUser, $sAdminPwd, $sLanguage)
-{
-	$oP->log('Info - CreateAdminAccount');
-
-	if (UserRights::CreateAdministrator($sAdminUser, $sAdminPwd, $sLanguage))
-	{
-		$oP->ok("Administrator account '$sAdminUser' created.");
-		return true;
-	}
-	else
-	{
-		$oP->error("Failed to create the administrator account '$sAdminUser'.");
-		return false;
-	}
-}
-
-function ListModuleFiles($sRelDir, SetupWebPage $oP)
-{
-	$sDirectory = APPROOT.'/'.$sRelDir;
-	//echo "<p>$sDirectory</p>\n";
-	if ($hDir = opendir($sDirectory))
-	{
-		// This is the correct way to loop over the directory. (according to the documentation)
-		while (($sFile = readdir($hDir)) !== false)
-		{
-			$aMatches = array();
-			if (is_dir($sDirectory.'/'.$sFile))
-			{
-				if (($sFile != '.') && ($sFile != '..') && ($sFile != '.svn'))
-				{
-					ListModuleFiles($sRelDir.'/'.$sFile, $oP);
-				}
-			}
-			else if (preg_match('/^module\.(.*).php$/i', $sFile, $aMatches))
-			{
-				$oP->SetModulePath($sRelDir);
-				try
-				{
-					//echo "<p>Loading: $sDirectory/$sFile...</p>\n";
-					require_once($sDirectory.'/'.$sFile);
-					//echo "<p>Done.</p>\n";
-				}
-				catch(Exception $e)
-				{
-					// Continue...
-				}
-			}
-		}
-		closedir($hDir);
-	}
-	else
-	{
-		$oP->error("Data directory (".$sDirectory.") not found or not readable.");
-	}
-}
-
-
-/**
  * Scans the ./data directory for XML files and output them as a Javascript array
  */ 
-function PopulateDataFilesList(SetupWebPage $oP, $aParamValues)
+function PopulateDataFilesList(SetupWebPage $oP, $aParamValues, $oConfig)
 {
 
 	$oP->add("<script type=\"text/javascript\">\n");
@@ -576,16 +402,30 @@ function PopulateDataFilesList(SetupWebPage $oP, $aParamValues)
 	$oP->add("{\n");
 	$oP->add("if (aFilesToLoad.length > 0)  return;"); // Populate the list only once...
 
-	$aAvailableModules = GetAvailableModules($oP);
+	$aAvailableModules = AnalyzeInstallation($oConfig);
+
+	$sMode = $aParamValues['mode'];
 	$aStructureDataFiles = array();
 	$aSampleDataFiles = array();
-	foreach($aParamValues['module'] as $sModuleId)
+
+	foreach($aAvailableModules as $sModuleId => $aModule)
 	{
-		$aModuleStruct = $aAvailableModules[$sModuleId]['data.struct'];
-		$aModuleSamples = $aAvailableModules[$sModuleId]['data.sample'];
-		$aStructureDataFiles = array_merge($aStructureDataFiles, $aModuleStruct);
-		$aSampleDataFiles = array_merge($aSampleDataFiles, $aModuleSamples);
+		if (($sModuleId != 'iTop') && $aModule['visible'])
+		{
+			if (in_array($sModuleId, $aParamValues['module']))
+			{
+				if (empty($aModule['version_db']))
+				{
+					// New installation load the data
+					$aModuleStruct = $aAvailableModules[$sModuleId]['data.struct'];
+					$aModuleSamples = $aAvailableModules[$sModuleId]['data.sample'];
+					$aStructureDataFiles = array_merge($aStructureDataFiles, $aModuleStruct);
+					$aSampleDataFiles = array_merge($aSampleDataFiles, $aModuleSamples);
+				}
+			}
+		}
 	}
+
 	// Structure data
 	//
 	foreach($aStructureDataFiles as $sFile)
@@ -598,17 +438,16 @@ function PopulateDataFilesList(SetupWebPage $oP, $aParamValues)
 
 	// Sample data - loaded IIF wished by the user
 	//
-	$oP->add("if (($(\"#sample_data:checked\").length == 1))");
-	$oP->add("{");
-	foreach($aSampleDataFiles as $sFile)
+	if ($aParamValues['sample_data'] != 'no')
 	{
-		// Under Windows, it is a must to escape backslashes (not an issue until a folder name starts with t or n, etc...)
-		$sFile = APPROOT.$sFile;
-		$sFile = str_replace('\\', '\\\\', $sFile);
-		$oP->add("aFilesToLoad[aFilesToLoad.length] = '$sFile';\n");
+		foreach($aSampleDataFiles as $sFile)
+		{
+			// Under Windows, it is a must to escape backslashes (not an issue until a folder name starts with t or n, etc...)
+			$sFile = APPROOT.$sFile;
+			$sFile = str_replace('\\', '\\\\', $sFile);
+			$oP->add("aFilesToLoad[aFilesToLoad.length] = '$sFile';\n");
+		}
 	}
-	$oP->add("}\n");
-
 	$oP->add("}\n");
 	$oP->add("</script>\n");
 }
@@ -625,32 +464,29 @@ function AddParamsToForm(SetupWebpage $oP, $aParamValues, $aExcludeParams = arra
 	{
 		if(!in_array($sName, $aExcludeParams))
 		{
-			if (is_array($value))
-			{
-				foreach($value as $sKey => $sItem)
-				{
-					$oP->add('<input type="hidden" name="'.$sName.'['.$sKey.']'.'" value="'.$sItem.'">');			
-				}
-			}
-			else
-			{
-				$oP->add('<input type="hidden" name="'.$sName.'" value="'.$value.'">');			
-			}
+			AddHiddenParam($oP, $sName, $value);
 		}
 	}
 }
 
 /**
- * Search (on the disk) for all defined iTop modules, load them and returns the list (as an array)
- * of the possible iTop modules to install
- * @param none
- * @return Hash A big array moduleID => ModuleData
+ * Add a hidden <INPUT> field to store the specified parameter
+ * @param $sName string Name of the parameter
+ * @param $value mixed Value of the parameter
  */
-function GetAvailableModules(SetupWebpage $oP)
+function AddHiddenParam($oP, $sName, $value)
 {
-	clearstatcache();
-	ListModuleFiles('modules', $oP);
-	return $oP->GetModules();
+	if (is_array($value))
+	{
+		foreach($value as $sKey => $sItem)
+		{
+			$oP->add('<input type="hidden" name="'.$sName.'['.$sKey.']'.'" value="'.$sItem.'">');			
+		}
+	}
+	else
+	{
+		$oP->add('<input type="hidden" name="'.$sName.'" value="'.$value.'">');			
+	}
 }
 
 /**
@@ -721,20 +557,69 @@ function BuildConfig(SetupWebpage $oP, Config &$oConfig, $aParamValues, $aAvaila
 function WelcomeAndCheckPrerequisites(SetupWebPage $oP, $aParamValues, $iCurrentStep)
 {
 	$sNextOperation = 'step'.($iCurrentStep+1);
+	$aParamValues['previous_step'] = 0;
+
 	$oP->add("<h1>iTop configuration wizard</h1>\n");
 	$sVersionStringShort = GetITopVersion(true);
 	$sVersionStringLong = GetITopVersion(false);
 	$oP->set_title('Welcome to '.$sVersionStringShort);
 	$oP->log($sVersionStringLong);
-	$oP->add("<h2>Checking prerequisites</h2>\n");
+	$aPreviousParams = array();
+	$oP->add("<form id=\"theForm\" method=\"post\" onSubmit=\"return DoSubmit('', 0)\">\n");
+	$sMode = 'install'; // Fresh install
+
+	// Check for a previous version
+	if (file_exists(FINAL_CONFIG_FILE))
+	{
+		$oConfig = new Config(FINAL_CONFIG_FILE);
+		$oConfig->WriteToFile(TMP_CONFIG_FILE);
+		
+		$aVersion = AnalyzeInstallation($oConfig);
+		if (!empty($aVersion['iTop']['version_db']))
+		{
+			$aPreviousParams = array('mode', 'db_server', 'db_user', 'db_pwd','db_name', 'new_db_name', 'db_prefix');
+			$sMode = 'upgrade';
+			if ($aVersion['iTop']['version_db'] == $aVersion['iTop']['version_code'])
+			{
+				$oP->ok("Version {$aVersion['iTop']['version_db']} of iTop detected.<br/>The <b>same version</b> of the application will be reinstalled.");
+			}
+			else
+			{
+				$oP->ok("Version {$aVersion['iTop']['version_db']} of iTop detected.<br/>The application will be upgraded to version {$aVersion['iTop']['version_code']}");
+			}
+			AddHiddenParam($oP, 'db_server', $oConfig->GetDBHost());
+			AddHiddenParam($oP, 'db_user', $oConfig->GetDBUser());
+			AddHiddenParam($oP, 'db_pwd', $oConfig->GetDBPwd());
+			AddHiddenParam($oP, 'db_name', $oConfig->GetDBName());
+			AddHiddenParam($oP, 'db_prefix', $oConfig->GetDBSubname());
+			AddHiddenParam($oP, 'mode', $sMode);
+			if (CheckPHPVersion($oP))
+			{
+				$oP->add("<h2 class=\"next\">Next: Licence agreement</h2>\n");
+				$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
+				AddParamsToForm($oP, $aParamValues, $aPreviousParams);
+				$oP->add("<table style=\"width:100%\"><tr>\n");
+				$oP->add("<td style=\"text-align:right;\"><button type=\"submit\" type=\"submit\">Next >></button></td>\n");
+				$oP->add("</tr></table>\n");
+			}
+			return;
+		}
+		// else, normal install ??
+	}
+	
 	if (CheckPHPVersion($oP))
 	{
+		$oP->add("<h2>What do you want to do?</h2>\n");
+		$sChecked = ($aParamValues['mode'] == 'install') ? 'checked' : '';
+		$oP->p("<input type=\"radio\" value=\"install\" $sChecked name=\"mode\">&nbsp;Install a new iTop\n");
+		$sChecked = ($aParamValues['mode'] == 'upgrade') ? 'checked' : '';
+		$oP->p("<input type=\"radio\" value=\"upgrade\" $sChecked name=\"mode\">&nbsp;Upgrade an existing iTop instance\n");
 		$oP->add("<h2 class=\"next\">Next: Licence agreement</h2>\n");
-		$oP->add("<form id=\"theForm\" method=\"post\" onSubmit=\"return DoSubmit('', 0)\">\n");
 		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
-		AddParamsToForm($oP, $aParamValues);
+		$aPreviousParams = array('mode');
+		AddParamsToForm($oP, $aParamValues, $aPreviousParams);
 		$oP->add("<table style=\"width:100%\"><tr>\n");
-		$oP->add("<td style=\"text-align:right;\"><button type=\"submit\" type=\"submit\">Next >></button></td>\n");
+		$oP->add("<td style=\"text-align:right;\"><button type=\"submit\">Next >></button></td>\n");
 		$oP->add("</tr></table>\n");
 		$oP->add("</form>\n");
 	}
@@ -743,20 +628,30 @@ function WelcomeAndCheckPrerequisites(SetupWebPage $oP, $aParamValues, $iCurrent
 function LicenceAcknowledgement($oP, $aParamValues, $iCurrentStep)
 {
 	$sNextOperation = 'step'.($iCurrentStep+1);
+	$iPrevStep = 0;
+	$aParamValues['previous_step'] = $iCurrentStep; // Come back here	
 	
 	$oP->set_title('License agreement');
 	$oP->add('<h2>iTop is released by <a href="http://www.combodo.com" target="_blank">Combodo SARL</a> under the terms of the GPL V3 license. In order to use iTop you must accept the terms of this license.</h2>');
 	$oP->add("<iframe style=\"width: 100%; height: 350px; overflow-y:auto; font-size:0.8em;\" src=\"./licence.html\">Next: Database server selection</iframe>\n");
 	$oP->add("<form id=\"theForm\" method=\"post\">\n");
-	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
 	AddParamsToForm($oP, $aParamValues, array('licence_ok'));
 
 	$sChecked = $aParamValues['licence_ok'] == 1 ? 'checked' : '';
 	$oP->add("<h2><input id=\"licence_ok\" type=\"checkbox\" name=\"licence_ok\" value=\"1\" $sChecked><label for=\"licence_ok\">I accept the terms of this licence agreement</label></h2>\n");
 
-	$oP->add("<h2 class=\"next\">Next: Database server selection</h2>\n");
+	if (file_exists(FINAL_CONFIG_FILE))
+	{
+		$oP->add("<h2 class=\"next\">Next: Modules selection</h2>\n");		
+		$sNextOperation = 'step4';
+	}
+	else
+	{
+		$oP->add("<h2 class=\"next\">Next: Database server selection</h2>\n");		
+	}
+	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");	
 	$oP->add("<table style=\"width:100%\"><tr>\n");
-	$oP->add("<td style=\"text-align:left;\"><button type=\"button\" onClick=\"return DoGoBack($iCurrentStep)\"><< Back</button></td>\n");
+	$oP->add("<td style=\"text-align:left;\"><button type=\"button\" onClick=\"return DoGoBack($iPrevStep)\"><< Back</button></td>\n");
 	$oP->add("<td style=\"text-align:right;\"><button type=\"submit\" onClick=\"return DoSubmit('', $iCurrentStep)\">Next >></button></td>\n");
 	$oP->add("</tr></table>\n");
 	$oP->add("</form>\n");
@@ -769,6 +664,8 @@ function LicenceAcknowledgement($oP, $aParamValues, $iCurrentStep)
 function DatabaseServerSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep)
 {
 	$sNextOperation = 'step'.($iCurrentStep+1);
+	$iPrevStep = 1;
+	$aParamValues['previous_step'] = $iCurrentStep; // Come back here	
 
 	$oP->add("<form id=\"theForm\" method=\"post\">\n");
 	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
@@ -790,13 +687,13 @@ function DatabaseServerSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep)
 		$oP->add("</fieldset>\n");
 		$oP->add("<h2 class=\"next\">Next: Database instance Selection</h2>\n");
 		$oP->add("<table style=\"width:100%\"><tr>\n");
-		$oP->add("<td style=\"text-align:left;\"><button type=\"button\" onClick=\"return DoGoBack($iCurrentStep)\"><< Back</button></td>\n");
+		$oP->add("<td style=\"text-align:left;\"><button type=\"button\" onClick=\"return DoGoBack($iPrevStep)\"><< Back</button></td>\n");
 		$oP->add("<td style=\"text-align:right;\"><button type=\"submit\" onClick=\"return DoSubmit('Connecting to the database...', $iCurrentStep);\">Next >></button></td>\n");
 		$oP->add("</tr></table>\n");
 	}
 	else
 	{
-		$oP->add("<button type=\"button\" onClick=\"return DoGoBack($iCurrentStep);\"><< Back</button>\n");		
+		$oP->add("<button type=\"button\" onClick=\"return DoGoBack($iPrevStep);\"><< Back</button>\n");		
 	}
 	$oP->add("</form>\n");
 }
@@ -810,6 +707,9 @@ function DatabaseServerSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep)
 function DatabaseInstanceSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, $oConfig)
 {
 	$sNextOperation = 'step'.($iCurrentStep+1);
+	$iPrevStep = 2;
+	$aParamValues['previous_step'] = $iCurrentStep; // Come back here	
+
 	$oP->set_title("Database instance selection\n");
 	$oP->add("<form id=\"theForm\" method=\"post\">\n");
 	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
@@ -860,18 +760,30 @@ function DatabaseInstanceSelection(SetupWebPage $oP, $aParamValues, $iCurrentSte
 			$sChecked = 'checked';
 			$sDBName = $aParamValues['new_db_name'];
 		}
-		$aForm[] = array('label' => "<input id=\"new_db\" type=\"radio\" name=\"db_name\" value=\"\" $sChecked/><label for=\"new_db\"> Create a new database:</label> <input type=\"text\" id=\"new_db_name\" name=\"new_db_name\" value=\"$sDBName\"  maxlength=\"32\"/>");
+		if ($aParamValues['mode'] == 'install')
+		{
+			$aForm[] = array('label' => "<input id=\"new_db\" type=\"radio\" name=\"db_name\" value=\"\" $sChecked/><label for=\"new_db\"> Create a new database:</label> <input type=\"text\" id=\"new_db_name\" name=\"new_db_name\" value=\"$sDBName\"  maxlength=\"32\"/>");
+		}
+		$oP->add('<div style="height:250px;overflow-y:auto;padding-left:1em;">');
 		$oP->form($aForm);
+		$oP->add('</div>');
 
 		$oP->add_ready_script("$('#new_db_name').click( function() { $('#new_db').attr('checked', true); })");
 		$oP->add("</fieldset>\n");
 		$aForm = array();
-		$aForm[] = array('label' => "Add a prefix to all the tables: <input id=\"db_prefix\" type=\"text\" name=\"db_prefix\" value=\"{$aParamValues['db_prefix']}\" maxlength=\"32\"/>");
+		if ($aParamValues['mode'] == 'install')
+		{
+			$aForm[] = array('label' => "Add a prefix to all the tables: <input id=\"db_prefix\" type=\"text\" name=\"db_prefix\" value=\"{$aParamValues['db_prefix']}\" maxlength=\"32\"/>");
+		}
+		else
+		{
+			$aForm[] = array('label' => "The following prefix is used for all tables: <input id=\"db_prefix\" type=\"text\" name=\"db_prefix\" value=\"{$aParamValues['db_prefix']}\" maxlength=\"32\"/>");
+		}
 		$oP->form($aForm);
 
 		$oP->add("<h2 class=\"next\">Next: iTop modules selection</h2>\n");
 		$oP->add("<table style=\"width:100%\"><tr>\n");
-		$oP->add("<td style=\"text-align:left;\"><button type=\"button\" onClick=\"return DoGoBack($iCurrentStep)\"><< Back</button></td>\n");
+		$oP->add("<td style=\"text-align:left;\"><button type=\"button\" onClick=\"return DoGoBack($iPrevStep)\"><< Back</button></td>\n");
 		$oP->add("<td style=\"text-align:right;\"><button type=\"submit\" onClick=\"return DoSubmit('', $iCurrentStep);\">Next >></button></td>\n");
 		$oP->add("</tr></table>\n");
 	}
@@ -884,28 +796,59 @@ function DatabaseInstanceSelection(SetupWebPage $oP, $aParamValues, $iCurrentSte
 function ModulesSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, $oConfig)
 {
 	$sNextOperation = 'step'.($iCurrentStep+1);
-	$sPrevOperation = 'step'.($iCurrentStep-1);
+	$aParamValues['previous_step'] = $iCurrentStep; // Come back here	
 	
 	$sDBName = $aParamValues['db_name'];
 	if ($sDBName == '')
 	{
 		$sDBName = $aParamValues['new_db_name'];
 	}
+
 	$sDBPrefix = $aParamValues['db_prefix'];
 	$oConfig->SetDBName($sDBName);
 	$oConfig->SetDBSubname($sDBPrefix);
 	$oConfig->WriteToFile(TMP_CONFIG_FILE);
 
 	$oP->add("<form id=\"theForm\" method=\"post\">\n");
-	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
 	AddParamsToForm($oP, $aParamValues, array('module'));
 	$sRedStar = '<span class="hilite">*</span>';
 	$oP->set_title("iTop modules selection");
-	$oP->add("<h2>Customize your iTop installation to fit your needs</h2>\n");
-	$aAvailableModules = GetAvailableModules($oP);
+
+	$aAvailableModules = AnalyzeInstallation($oConfig);
 	
 	// Form goes here
-	$oP->add("<fieldset><legend>Select the iTop modules you want to install:</legend>\n");
+	if ($aParamValues['mode'] == 'upgrade')
+	{
+		$iPrevStep = 1; // depends on where we came from
+		if (empty($aAvailableModules['iTop']['version_db']))
+		{
+			$oP->error("Unable to detect the previous installation of iTop. The upgrade cannot continue.\n");	
+			$oP->add("<table style=\"width:100%\"><tr>\n");
+			$oP->add("<td style=\"text-align:left;\"><button type=\"button\" onClick=\"return DoGoBack($iPrevStep)\"><< Back</button></td>\n");
+			$oP->add("<td style=\"text-align:right;\">&nbsp;</td>\n");
+			$oP->add("</tr></table>\n");
+			$oP->add("</form>\n");
+			return;
+		}
+		$oP->add("<h2>Customize your iTop installation to fit your needs</h2>\n");
+		$oP->add("<fieldset><legend>Select the iTop modules you want to install or upgrade:</legend>\n");	
+	}
+	else
+	{
+		$iPrevStep = 3; // depends on where we came from
+		if (!empty($aAvailableModules['iTop']['version_db']))
+		{
+			$oP->error("A instance of iTop already exists. Please select the \"Upgrade\" mode to upgrade it.\n");	
+			$oP->add("<table style=\"width:100%\"><tr>\n");
+			$oP->add("<td style=\"text-align:left;\"><button type=\"button\" onClick=\"return DoGoBack($iPrevStep)\"><< Back</button></td>\n");
+			$oP->add("<td style=\"text-align:right;\">&nbsp;</td>\n");
+			$oP->add("</tr></table>\n");
+			$oP->add("</form>\n");
+			return;
+		}
+		$oP->add("<h2>Customize your iTop installation to fit your needs</h2>\n");
+		$oP->add("<fieldset><legend>Select the iTop modules you want to install:</legend>\n");
+	}
 	$oP->add("<div style=\"border: 0;width:100%; height: 350px; overflow-y:auto;\">");
 	$sRedStar = '<span class="hilite">*</span>';
 	$index = 0;
@@ -921,10 +864,10 @@ function ModulesSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, $oConf
 	}
 	foreach($aAvailableModules as $sModuleId => $aModule)
 	{
+		if ($sModuleId == 'iTop') continue; // Convention: the version number of the application is stored as a module named 'iTop'
 		$sModuleLabel = $aModule['label'];
 		$sModuleHelp = $aModule['doc.more_information'];
-		$sClass = ($aModule['mandatory']) ? 'class="read-only"' : '';
-		$sChecked = ($aModule['mandatory'] ||  in_array($sModuleId, $aSelectedModules) ) ? 'checked' : '';
+		//$sClass = ($aModule['mandatory']) ? 'class="read-only"' : '';
 		$sMoreInfo = (!empty($aModule['doc.more_information'])) ? "<a href=\"..{$aModule['doc.more_information']}\" target=\"_blank\">more info</a>": '';
 		if ($aModule['category'] == 'authentication')
 		{
@@ -934,7 +877,68 @@ function ModulesSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, $oConf
 		}
 		elseif ($aModule['visible'])
 		{
-			$oP->add("<p><input type=\"checkbox\" $sClass $sChecked id=\"module[$index]\" name=\"module[$index]\" value=\"$sModuleId\"><label $sClass for=\"module[$index]\"> {$aModule['label']}</label> $sMoreInfo</p>\n");
+			switch($aModule['install']['flag'])
+			{
+				case MODULE_ACTION_OPTIONAL:
+				$sClass = '';
+				if ($aParamValues['mode'] == 'upgrade')
+				{
+					if (!empty($aParamValues['module']))
+					{
+						$sChecked = in_array($sModuleId, $aParamValues['module']) ? 'checked' : '';				
+					}
+					else
+					{
+						$sChecked = '';
+						// Default value: modules previously installed are checked
+						if (!empty($aModule['version_db']))
+						{
+							$sChecked = 'checked'; // Checked if previously installed
+							// Previously installed, are we allowed to uninstall this module ?
+							if ($aModule['install']['flag'] == MODULE_ACTION_IMPOSSIBLE)
+							{
+								$sClass = 'class="read-only"';
+							}
+						}
+					}
+				}
+				else
+				{
+					if (!empty($aParamValues['module']))
+					{
+						$sChecked = in_array($sModuleId, $aParamValues['module']) ? 'checked' : '';				
+					}
+					else
+					{
+						$sChecked = 'checked';
+					}
+				}
+				$oP->add("<p><input type=\"checkbox\" $sChecked $sClass id=\"module[$index]\" name=\"module[$index]\" value=\"$sModuleId\"><label $sClass for=\"module[$index]\"> {$aModule['label']}</label> $sMoreInfo</p>\n");
+				break;
+				
+				case MODULE_ACTION_MANDATORY:
+				$oP->add("<p><input type=\"checkbox\" class=\"read-only\" checked id=\"module[$index]\" name=\"module[$index]\" value=\"$sModuleId\"><label class=\"read-only\" for=\"module[$index]\"> {$aModule['label']}</label> $sMoreInfo</p>\n");
+				break;
+				
+				case MODULE_ACTION_IMPOSSIBLE:
+				if ($aParamValues['mode'] == 'upgrade')
+				{
+					if (!empty($aModule['version_db']))
+					{
+						// Previously installed, are we allowed to uninstall this module ?
+						if ($aModule['uninstall']['flag'] == MODULE_ACTION_IMPOSSIBLE)
+						{
+							$oP->error('Error: impossible to uninstall the module: '.$aModule['label']."({$aModule['uninstall']['message']})");
+						}
+					}
+				}
+				else
+				{
+					$oP->add("<p><input type=\"checkbox\" class=\"read-only\" id=\"module[$index]\" name=\"module[$index]\" value=\"$sModuleId\"><label class=\"read-only\" for=\"module[$index]\"> {$aModule['label']}</label> $sMoreInfo</p>\n");
+				}
+				break;
+				
+			}
 			$index++;
 		}
 		else
@@ -946,10 +950,19 @@ function ModulesSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, $oConf
 	}	
 	$oP->add("</div>");
 	$oP->add("</fieldset>\n");
-	$oP->add("<h2 class=\"next\">Next: Administrator account creation</h2>\n");
+	if ($aParamValues['mode'] == 'upgrade')
+	{
+		$oP->add("<h2 class=\"next\">Next: Upgrade summary</h2>\n");
+		AddHiddenParam($oP, 'operation', 'step6');
+	}
+	else
+	{
+		$oP->add("<h2 class=\"next\">Next: Administrator account definition</h2>\n");
+		AddHiddenParam($oP, 'operation', 'step5');
+	}
 	$oP->add("<table style=\"width:100%\"><tr>\n");
-	$oP->add("<td style=\"text-align:left;\"><button type=\"button\" onClick=\"return DoGoBack($iCurrentStep)\"><< Back</button></td>\n");
-	$oP->add("<td style=\"text-align:right;\"><button type=\"submit\" onClick=\"return DoSubmit('Creating the database structure...', $iCurrentStep);\">Next >></button></td>\n");
+	$oP->add("<td style=\"text-align:left;\"><button type=\"button\" onClick=\"return DoGoBack($iPrevStep)\"><< Back</button></td>\n");
+	$oP->add("<td style=\"text-align:right;\"><button type=\"submit\" \">Next >></button></td>\n");
 	$oP->add("</tr></table>\n");
 	$oP->add("</form>\n");
 	$oP->add_ready_script("$('.read-only').click( function() { $(this).attr('checked','checked'); } );");
@@ -965,59 +978,48 @@ function ModulesSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, $oConf
 function AdminAccountDefinition(SetupWebPage $oP, $aParamValues, $iCurrentStep, Config $oConfig)
 {
 	$sNextOperation = 'step'.($iCurrentStep+1);
-	$oP->set_title("Administrator account creation");
-	$oP->add("<h2>Creation of the database structure</h2>");
-	$oP->add("<form id=\"theForm\" method=\"post\">\n");
+	$iPrevStep = 4;
+	$aParamValues['previous_step'] = $iCurrentStep; // Come back here	
+
+	$oP->set_title("Administrator account definition");
+	$oP->add("<form id=\"theForm\" onSubmit=\"return DoSubmit('', $iCurrentStep);\" method=\"post\">\n");
 	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
 	AddParamsToForm($oP, $aParamValues, array('auth_user', 'auth_pwd', 'language'));
 
-	$sDBName = $aParamValues['db_name'];
-	if ($sDBName == '')
-	{
-		$sDBName = $aParamValues['new_db_name'];
-	}
-	$sDBPrefix = $aParamValues['db_prefix'];
-	$oConfig->SetDBName($sDBName);
-	$oConfig->SetDBSubname($sDBPrefix);
-	$aAvailableModules = GetAvailableModules($oP);
+	$aAvailableModules = AnalyzeInstallation($oConfig);
 	BuildConfig($oP, $oConfig, $aParamValues, $aAvailableModules); // Load all the includes based on the modules selected
 	$oConfig->WriteToFile(TMP_CONFIG_FILE);
-	if (CreateDatabaseStructure($oP, $oConfig, $sDBName, $sDBPrefix, $aParamValues['module']))
+	InitDataModel(TMP_CONFIG_FILE, true); // Needed to know the available languages
+	$sRedStar = "<span class=\"hilite\">*</span>";
+	$oP->add("<h2>Default language for the application:</h2>\n");
+	// Possible languages (depends on the dictionaries loaded in the config)
+	$aForm = array();
+	$aAvailableLanguages = Dict::GetLanguages();
+	$sLanguages = '';
+	$sDefaultCode = $oConfig->GetDefaultLanguage();
+	foreach($aAvailableLanguages as $sLangCode => $aInfo)
 	{
-		$sRedStar = "<span class=\"hilite\">*</span>";
-		$oP->add("<h2>Default language for the application:</h2>\n");
-		// Possible languages (depends on the dictionaries loaded in the config)
-		$aForm = array();
-		$aAvailableLanguages = Dict::GetLanguages();
-		$sLanguages = '';
-		$sDefaultCode = $oConfig->GetDefaultLanguage();
-		foreach($aAvailableLanguages as $sLangCode => $aInfo)
-		{
-			$sSelected = ($sLangCode == $sDefaultCode ) ? 'selected ' : '';
-			$sLanguages.="<option value=\"{$sLangCode}\">{$aInfo['description']} ({$aInfo['localized_description']})</option>";
-		}
-		
-		$aForm[] = array('label' => "Default Language$sRedStar:", 'input' => "<select id=\"language\" name=\"language\">$sLanguages</option>");
-		$oP->form($aForm);
-		$oP->add("<h2>Definition of the administrator account</h2>\n");
-		// Database created, continue with admin creation		
-		$oP->add("<fieldset><legend>Administrator account</legend>\n");
-		$aForm = array();
-		$aForm[] = array('label' => "Login$sRedStar:", 'input' => "<input id=\"auth_user\" type=\"text\" name=\"auth_user\" value=\"{$aParamValues['auth_user']}\">");
-		$aForm[] = array('label' => "Password$sRedStar:", 'input' => "<input id=\"auth_pwd\" type=\"password\" name=\"auth_pwd\" value=\"{$aParamValues['auth_pwd']}\">");
-		$aForm[] = array('label' => "Retype password$sRedStar:", 'input' => "<input  id=\"auth_pwd2\" type=\"password\" name=\"auth_pwd2\" value=\"{$aParamValues['auth_pwd']}\">");
-		$oP->form($aForm);
-		$oP->add("</fieldset>\n");
-		$oP->add("<h2 class=\"next\">Next: Application initialization</h2>\n");
-		$oP->add("<table style=\"width:100%\"><tr>\n");
-		$oP->add("<td style=\"text-align:left;\"><button type=\"button\" onClick=\"return DoGoBack($iCurrentStep)\"><< Back</button></td>\n");
-		$oP->add("<td style=\"text-align:right;\"><button type=\"submit\" onClick=\"return DoSubmit('Creating the admin account and profiles...', $iCurrentStep);\">Next >></button></td>\n");
-		$oP->add("</tr></table>\n");
+		$sSelected = ($sLangCode == $sDefaultCode ) ? 'selected ' : '';
+		$sLanguages.="<option value=\"{$sLangCode}\">{$aInfo['description']} ({$aInfo['localized_description']})</option>";
 	}
-	else
-	{
-		$oP->add("<button type=\"button\" onClick=\"return DoGoBack($iCurrentStep)\"><< Back</button>\n");
-	}
+	
+	$aForm[] = array('label' => "Default Language$sRedStar:", 'input' => "<select id=\"language\" name=\"language\">$sLanguages</option>");
+	$oP->form($aForm);
+	$oP->add("<h2>Definition of the administrator account</h2>\n");
+	// Database created, continue with admin creation		
+	$oP->add("<fieldset><legend>Administrator account</legend>\n");
+	$aForm = array();
+	$aForm[] = array('label' => "Login$sRedStar:", 'input' => "<input id=\"auth_user\" type=\"text\" name=\"auth_user\" value=\"{$aParamValues['auth_user']}\">");
+	$aForm[] = array('label' => "Password$sRedStar:", 'input' => "<input id=\"auth_pwd\" type=\"password\" name=\"auth_pwd\" value=\"{$aParamValues['auth_pwd']}\">");
+	$aForm[] = array('label' => "Retype password$sRedStar:", 'input' => "<input  id=\"auth_pwd2\" type=\"password\" name=\"auth_pwd2\" value=\"{$aParamValues['auth_pwd']}\">");
+	$oP->form($aForm);
+	$oP->add("</fieldset>\n");
+	$oP->add("<h2 class=\"next\">Next: Sample data selection</h2>\n");
+	$oP->add("<table style=\"width:100%\"><tr>\n");
+	$oP->add("<td style=\"text-align:left;\"><button type=\"button\" onClick=\"return DoGoBack($iPrevStep)\"><< Back</button></td>\n");
+	$oP->add("<td style=\"text-align:right;\"><button type=\"submit\">Next >></button></td>\n");
+	$oP->add("</tr></table>\n");
+
 	// Form goes here
 	$oP->add("</form>\n");
 }
@@ -1030,23 +1032,35 @@ function AdminAccountDefinition(SetupWebPage $oP, $aParamValues, $iCurrentStep, 
  */  
 function SampleDataSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, Config $oConfig)
 {
-	$sNextOperation = 'step'.($iCurrentStep+1);
+	$sNextOperation = 'step7';
+	if ($aParamValues['mode'] == 'upgrade')
+	{
+		$iPrevStep = 4;
+	}
+	else
+	{
+		$iPrevStep = 5;
+	}
 
 	$oP->set_title("Application initialization");
 	$sAdminUser = $aParamValues['auth_user'];
 	$sAdminPwd = $aParamValues['auth_pwd'];
 	$sLanguage = $aParamValues['language'];
-	$oConfig->SetDefaultLanguage($aParamValues['language']);
+	if (($aParamValues['mode'] == 'install') ||  $oConfig->GetDefaultLanguage() == '')
+	{
+		$oConfig->SetDefaultLanguage($aParamValues['language']);
+	}
+	$aAvailableModules = AnalyzeInstallation($oConfig);
+	BuildConfig($oP, $oConfig, $aParamValues, $aAvailableModules); // Load all the includes based on the modules selected
+
+	// in case of upgrade, the value is already present in the config file
 	$oConfig->WriteToFile(TMP_CONFIG_FILE);
 
 	$oP->add("<form id=\"theForm\" method=\"post\"\">\n");
 	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
 	AddParamsToForm($oP, $aParamValues, array('sample_data'));
 
-	InitDataModel($oP, TMP_CONFIG_FILE, false);  // load data model and connect to the database
-	
-	// Perform here additional DB setup
-	// Moved here to spread the setup duration between two steps of the wizard (timeouts...)
+	InitDataModel(TMP_CONFIG_FILE, true);  // load data model and connect to the database
 	$aAvailableModules = GetAvailableModules($oP);
 	foreach($aParamValues['module'] as $sModuleId)
 	{
@@ -1059,25 +1073,19 @@ function SampleDataSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, Con
 		}
 	}
 
-	if (CreateAdminAccount($oP, $oConfig, $sAdminUser, $sAdminPwd, $sLanguage))
-	{
-		$oP->add("<h2>Loading of sample data</h2>\n");
-		$oP->p("<fieldset><legend> Do you want to load sample data into the database ? </legend>\n");
-		$oP->p("<input type=\"radio\" id=\"sample_data\" name=\"sample_data\" id=\"sample_data_no\" checked value=\"yes\"><label for=\"sample_data_yes\"> Yes, for testing purposes, populate the database with sample data.</label>\n");
-		$oP->p("<input type=\"radio\" name=\"sample_data\" unchecked id=\"sample_data_no\" value=\"no\"><label for=\"sample_data_no\"> No, this is a production system, load only the data required by the application.</label>\n");
-		$oP->p("</fieldset>\n");	
-		$oP->add("<h2 class=\"next\">Next: Setup complete</h2>\n");
-		$oP->add("<table style=\"width:100%\"><tr>\n");
-		$oP->add("<td style=\"text-align:left;\"><button type=\"button\" onClick=\"return DoGoBack($iCurrentStep)\"><< Back</button></td>\n");
-		$oP->add("<td style=\"text-align:right;\"><button type=\"submit\" onClick=\"return DoSubmit('Finalizing configuration and loading data...', $iCurrentStep)\">Next >></button></td>\n");
-		$oP->add("</tr></table>\n");
-	}
-	else
-	{
-		// Creation failed
-		$oP->error("Internal error: Failed to create the admin account or to setup the user rights");
-		$oP->add("<button type=\"button\" onClick=\"return DoGoBack($iCurrentStep)\"><< Back</button>\n");
-	}
+	$oP->add("<h2>Loading of sample data</h2>\n");
+	$oP->p("<fieldset><legend> Do you want to load sample data into the database ? </legend>\n");
+	$sChecked = ($aParamValues['sample_data'] == 'no') ? '' : 'checked';
+	$oP->p("<input type=\"radio\" id=\"sample_data\" name=\"sample_data\" id=\"sample_data_no\" $sChecked value=\"yes\"><label for=\"sample_data_yes\"> Yes, for testing purposes, populate the database with sample data.</label>\n");
+	$sChecked = ($aParamValues['sample_data'] == 'no') ? 'checked' : '';
+	$oP->p("<input type=\"radio\" name=\"sample_data\" unchecked id=\"sample_data_no\" $sChecked value=\"no\"><label for=\"sample_data_no\"> No, this is a production system, load only the data required by the application.</label>\n");
+	$oP->p("</fieldset>\n");	
+	$oP->add("<h2 class=\"next\">Next: Installation summary</h2>\n");
+	$oP->add("<table style=\"width:100%\"><tr>\n");
+	$oP->add("<td style=\"text-align:left;\"><button type=\"button\" onClick=\"return DoGoBack($iPrevStep)\"><< Back</button></td>\n");
+	$oP->add("<td style=\"text-align:right;\"><button type=\"submit\"> Next >></button></td>\n");
+	$oP->add("</tr></table>\n");
+
 	// End of visible form
 	$oP->add("</form>\n");
 	// Hidden form submitted when moving on to the next page, once all the data files
@@ -1086,13 +1094,179 @@ function SampleDataSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, Con
 	AddParamsToForm($oP, $aParamValues, array('sample_data'));
 	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
 	$oP->add("</form>\n");
+}
+
+/**
+ * Displays the summary of the actions to be taken
+ */
+function DisplaySummary(SetupWebPage $oP, $aParamValues, $iCurrentStep, Config $oConfig)
+{
+	$sMode = $aParamValues['mode'];
+	$aAvailableModules = AnalyzeInstallation($oConfig);
+	BuildConfig($oP, $oConfig, $aParamValues, $aAvailableModules); // Load all the includes based on the modules selected
+	$oConfig->WriteToFile(TMP_CONFIG_FILE);
+	InitDataModel(TMP_CONFIG_FILE, true); // Needed to know the available languages
+	
+	$aInstall = array();
+	$aUpgrade = array();
+	$aUninstall = array();
+	$aUnchanged = array();
+	switch($sMode)
+	{
+		case 'install':
+		foreach($aAvailableModules as $sModuleId => $aModule)
+		{
+			if (($sModuleId != 'iTop') && $aModule['visible'])
+			{
+				if (in_array($sModuleId, $aParamValues['module']))
+				{
+						$aInstall[$sModuleId] = $aModule;
+				}
+			}
+		}
+		$oP->set_title('Installation Summary');
+		$oP->add("<h3>iTop version ".$aAvailableModules['iTop']['version_code']." will be installed in the database: ".$oConfig->GetDBName()." on server: ".$oConfig->GetDBHost().".".'</h3>');
+		$oP->add('<div id="summary_content" style="height:350px;overflow-y:auto;border:1px solid #999;padding-left:1em;">');
+		if (count($aInstall) > 0)
+		{
+			$oP->add('<h3>Modules to install</h3>');
+			foreach($aInstall as $sModuleId => $aModule)
+			{
+				$oP->p('<img src="../images/added.png">&nbsp;'.$aModule['label'].' version '.$aModule['version_code']);
+			}		
+		}
+		$oP->add('<h3>Sample data</h3>');
+		if ($aParamValues['sample_data'] != 'no')
+		{
+			$oP->p('Sample data will be loaded for the new modules installed.');
+		}
+		else
+		{
+			$oP->p('No sample data will be loaded.');
+		}
+		$oP->add('<h3>Administrator account</h3>');
+		$oP->p('Login:'.htmlentities($aParamValues['auth_user'], ENT_QUOTES, 'UTF-8'));
+		$oP->add('<h3>Default application language:</h3>');
+		$aAvailableLanguages = Dict::GetLanguages();
+		$oP->p($aAvailableLanguages[$aParamValues['language']]['description']." (".$aAvailableLanguages[$aParamValues['language']]['localized_description'].")");
+		$oP->add('</div>');
+		
+		$oP->add("<form id=\"GoToNextStep\" method=\"post\">\n");
+		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"step8\">\n");
+		AddParamsToForm($oP, $aParamValues);
+		$oP->add("<table style=\"width:100%\"><tr>\n");
+		$oP->add("<td style=\"text-align:left;\"><button type=\"button\" onClick=\"return DoGoBack(6)\"><< Back</button></td>\n");
+		$oP->add("<td style=\"text-align:right;\"><button type=\"button\" onClick=\"DoSubmit('Installing...', 7)\"> Install ! >></button></td>\n");
+		$oP->add("</tr></table>\n");
+		$oP->add("</form>\n");
+		break;
+		
+		case 'upgrade':
+		
+		foreach($aAvailableModules as $sModuleId => $aModule)
+		{
+			if (($sModuleId != 'iTop') && $aModule['visible'])
+			{
+				if (in_array($sModuleId, $aParamValues['module']))
+				{
+					if (empty($aModule['version_db']))
+					{
+						$aInstall[$sModuleId] = $aModule;
+					}
+					else if ($aModule['version_db'] == $aModule['version_code'])
+					{
+						$aUnchanged[$sModuleId] = $aModule;
+					}
+					else
+					{
+						// Consider it's an upgrade... TO DO: handle downgrades ??
+						$aUpgrade[$sModuleId] = $aModule;
+					}	
+				}
+				else if (!empty($aModule['version_db']))
+				{
+					$aUninstall[$sModuleId] = $aModule;	
+				}
+				// Else do nothing: the module was not installed and is not selected
+			}
+		}
+		$oP->set_title('Upgrade Summary');
+		$oP->add("<h3>iTop instance: database: ".$oConfig->GetDBName()." on server: ".$oConfig->GetDBHost().", version ".$aAvailableModules['iTop']['version_db'].'</h3>');
+		$oP->add('<h3>Will be upgraded to '.$aAvailableModules['iTop']['version_code'].'</h3>');
+		$oP->add('<div id="summary_content" style="height:350px;overflow-y:auto;border:1px solid #999;padding-left:1em;">');
+		if (count($aUpgrade) > 0) 
+		{
+			$oP->add('<h3>Modules to upgrade</h3>');
+			foreach($aUpgrade as $sModuleId => $aModule)
+			{
+				$oP->add('<img src="../images/modified.png">&nbsp;'.$aModule['label'].' version '.$aModule['version_db'].' to version '.$aModule['version_code']);
+			}		
+		}
+		if (count($aInstall) > 0)
+		{
+			$oP->add('<h3>Modules to install</h3>');
+			foreach($aInstall as $sModuleId => $aModule)
+			{
+				$oP->p('<img src="../images/added.png">&nbsp;'.$aModule['label'].' version '.$aModule['version_code']);
+			}		
+		}
+		if (count($aUninstall) > 0)
+		{
+			$oP->add('<h3>Modules to remove</h3>');
+			foreach($aUninstall as $sModuleId => $aModule)
+			{
+				$oP->p('<img src="../images/delete.png">&nbsp;'.$aModule['label'].' '.$sModuleId.' version '.$aModule['version_db']);
+			}		
+		}
+		if (count($aUnchanged) > 0)
+		{
+			$oP->add('<h3>Modules that will remain unchanged</h3>');
+			foreach($aUnchanged as $sModuleId => $aModule)
+			{
+				$oP->p('<img src="../images/unchanged.png">&nbsp;'.$aModule['label'].' version '.$aModule['version_db']);
+			}		
+		}
+		$oP->add('<h3>Sample data</h3>');
+		if ($aParamValues['sample_data'] != 'no')
+		{
+			$oP->p('Sample data will be loaded for the new modules installed.');
+		}
+		else
+		{
+			$oP->p('No sample data will be loaded.');
+		}
+		$oP->add('</div>');
+		$oP->add("<form id=\"GoToNextStep\" method=\"post\">\n");
+		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"step8\">\n");
+		AddParamsToForm($oP, $aParamValues);
+		$oP->add("<table style=\"width:100%\"><tr>\n");
+		$oP->add("<td style=\"text-align:left;\"><button type=\"button\" onClick=\"return DoGoBack(6)\"><< Back</button></td>\n");
+		$oP->add("<td style=\"text-align:right;\"><button type=\"button\" onClick=\"DoSubmit('Upgrading...', 7)\"> Upgrade ! >></button></td>\n");
+		$oP->add("</tr></table>\n");
+		$oP->add("</form>\n");
+		break;
+		
+		default:
+		$oP->error("Unsupported mode $sMode");
+	}
 	$oP->add("<div id=\"log\" style=\"color:#F00;\"></div>\n");
 	$oP->add_linked_script('./jquery.progression.js');
-
-	PopulateDataFilesList($oP, $aParamValues);
+	PopulateDataFilesList($oP, $aParamValues, $oConfig);
+	$oP->add_ready_script(
+<<<EOF
+		$('#log').ajaxError(
+				function(e, xhr, settings, exception)
+				{
+					bStopAysncProcess = true;
+					alert('Fatal error detected: '+ xhr.responseText);
+					$('#log').append(xhr.responseText);
+					$('#setup').unblock();
+				} );
+EOF
+);
 }
-/**
- * Display the form for the fifth (and final) step of the configuration wizard
+
+/** Display the form for the fifth (and final) step of the configuration wizard
  * which consists in
  * 1) Creating the final configuration file
  * 2) Prompting the user to make the file read-only  
@@ -1101,79 +1275,95 @@ function SetupFinished(SetupWebPage $oP, $aParamValues, $iCurrentStep, Config $o
 {
 	$sAuthUser = $aParamValues['auth_user'];
 	$sAuthPwd = $aParamValues['auth_pwd'];
+	$iPrevStep = $aParamValues['previous_step'];
+	$aParamValues['previous_step'] = $iCurrentStep; // Come back here	
+
 	try
 	{
-		$sSessionName = sprintf('iTop-%x', rand());
-		$oConfig->Set('session_name', $sSessionName);
+		$sSessionName = $oConfig->Get('session_name');
+		if ($sSessionName != '')
+		{
+			$sSessionName = sprintf('iTop-%x', rand());
+			$oConfig->Set('session_name', $sSessionName);
+		}
 		session_name($sSessionName);
 		session_start();
+		
+		// Migration: force utf8_unicode_ci as the collation to make the global search
+		// NON case sensitive
+		$oConfig->SetDBCollation('utf8_unicode_ci');
+		
 		
 		// Write the final configuration file
 		$oConfig->WriteToFile(FINAL_CONFIG_FILE);
 
 		// Start the application
-		InitDataModel($oP, FINAL_CONFIG_FILE, false); // Load model and startup DB
-		if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd))
+		InitDataModel(FINAL_CONFIG_FILE, false, true); // Load model, startup DB and load the cache
+		if ($aParamValues['mode'] == 'install')
 		{
-			UserRights::Login($sAuthUser);
-			$_SESSION['auth_user'] = $sAuthUser;
-			$_SESSION['login_mode'] = 'form'; // Will enable the "log-off button"
-			
-			// remove the tmp config file
-			@unlink(TMP_CONFIG_FILE);
-			// try to make the final config file read-only
-			@chmod(FINAL_CONFIG_FILE, 0440); // Read-only for owner and group, nothing for others
-			
-			$oP->set_title("Setup complete");
-			$oP->add("<form id=\"theForm\" method=\"get\" action=\"../index.php\">\n");
-
-			// Check if there are some manual steps required:
-			$aAvailableModules = GetAvailableModules($oP);
-			$aManualSteps = array();
-			foreach($aParamValues['module'] as $sModuleId)
+			if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd))
 			{
-				if (!empty($aAvailableModules[$sModuleId]['doc.manual_setup']))
-				{
-					$aManualSteps[$aAvailableModules[$sModuleId]['label']] = $aAvailableModules[$sModuleId]['doc.manual_setup'];
-				}
-			}
-			if (count($aManualSteps) > 0)
-			{
-				$oP->add("<h2>Manual operations required</h2>");
-				$oP->p("In order to complete the installation, the following manual operations are required:");
-				foreach($aManualSteps as $sModuleLabel => $sUrl)
-				{
-					$oP->p("<a href=\"$sUrl\" target=\"_blank\">Manual instructions for $sModuleLabel</a>");
-				}
+				UserRights::Login($sAuthUser);
+				$_SESSION['auth_user'] = $sAuthUser;
+				$_SESSION['login_mode'] = 'form'; // Will enable the "log-off button"
 			}
 			else
 			{
-				$oP->add("<h2>Congratulations for installing iTop</h2>");
-				$oP->ok("The initialization completed successfully.");
+				$oP->add("<h1>iTop configuration wizard</h1>\n");
+				$oP->add("<h2>Step 5: Configuration completed</h2>\n");
+				
+				@unlink(FINAL_CONFIG_FILE); // remove the aborted config
+				$oP->error("Error: Failed to login for user: '$sAuthUser'\n");
+	
+				$oP->add("<form id=\"theForm\" method=\"post\">\n");
+				$oP->add("<button type=\"button\" onClick=\"return DoGoBack($iPrevStep);\"><< Back</button>\n");
+				AddParamsToForm($oP, $aParamValues);
+				$oP->add("<input type=\"hidden\" name=\"operation\" value=\"step0\">\n");
+				$oP->add("</form>\n");
+				return;
 			}
-			// Form goes here.. No back button since the job is done !
-			$oP->add('<table style="width:600px;border:0;padding:0;"><tr>');
-			$oP->add("<td><a style=\"background:transparent;padding:0;\" title=\"Free: Register your iTop version.\" href=\"http://www.combodo.com/register?product=iTop&version=".urlencode(ITOP_VERSION." revision ".ITOP_REVISION)."\" target=\"_blank\"><img style=\"border:0\" src=\"../images/setup-register.gif\"/></td></a>");
-			$oP->add("<td><a style=\"background:transparent;padding:0;\" title=\"Get Professional Support from Combodo\" href=\"http://www.combodo.com/itopsupport\" target=\"_blank\"><img style=\"border:0\" src=\"../images/setup-support.gif\"/></td></a>");
-			$oP->add("<td><a style=\"background:transparent;padding:0;\" title=\"Get Professional Training from Combodo\" href=\"http://www.combodo.com/itoptraining\" target=\"_blank\"><img style=\"border:0\" src=\"../images/setup-training.gif\"/></td></a>");
-			$oP->add('</tr></table>');
-			$oP->add("<p style=\"text-align:center;width:100%\"><button type=\"submit\">Enter iTop</button></p>\n");
-			$oP->add("</form>\n");
+		}
+			
+		// remove the tmp config file
+		@unlink(TMP_CONFIG_FILE);
+		// try to make the final config file read-only
+		@chmod(FINAL_CONFIG_FILE, 0440); // Read-only for owner and group, nothing for others
+		
+		$oP->set_title("Setup complete");
+		$oP->add("<form id=\"theForm\" method=\"get\" action=\"../index.php\">\n");
+
+		// Check if there are some manual steps required:
+		$aAvailableModules = GetAvailableModules($oP);
+		$aManualSteps = array();
+		foreach($aParamValues['module'] as $sModuleId)
+		{
+			if (!empty($aAvailableModules[$sModuleId]['doc.manual_setup']))
+			{
+				$aManualSteps[$aAvailableModules[$sModuleId]['label']] = $aAvailableModules[$sModuleId]['doc.manual_setup'];
+			}
+		}
+		if (count($aManualSteps) > 0)
+		{
+			$oP->add("<h2>Manual operations required</h2>");
+			$oP->p("In order to complete the installation, the following manual operations are required:");
+			foreach($aManualSteps as $sModuleLabel => $sUrl)
+			{
+				$oP->p("<a href=\"$sUrl\" target=\"_blank\">Manual instructions for $sModuleLabel</a>");
+			}
 		}
 		else
 		{
-			$oP->add("<h1>iTop configuration wizard</h1>\n");
-			$oP->add("<h2>Step 5: Configuration completed</h2>\n");
-			
-			@unlink(FINAL_CONFIG_FILE); // remove the aborted config
-			$oP->error("Error: Failed to login for user: '$sAuthUser'\n");
-
-			$oP->add("<form id=\"theForm\" method=\"post\">\n");
-			$oP->add("<button type=\"button\" onClick=\"return DoGoBack($iCurrentStep);\"><< Back</button>\n");
-			AddParamsToForm($oP, $aParamValues);
-			$oP->add("<input type=\"hidden\" name=\"operation\" value=\"step0\">\n");
-			$oP->add("</form>\n");
+			$oP->add("<h2>Congratulations for installing iTop</h2>");
+			$oP->ok("The initialization completed successfully.");
 		}
+		// Form goes here.. No back button since the job is done !
+		$oP->add('<table style="width:600px;border:0;padding:0;"><tr>');
+		$oP->add("<td><a style=\"background:transparent;padding:0;\" title=\"Free: Register your iTop version.\" href=\"http://www.combodo.com/register?product=iTop&version=".urlencode(ITOP_VERSION." revision ".ITOP_REVISION)."\" target=\"_blank\"><img style=\"border:0\" src=\"../images/setup-register.gif\"/></td></a>");
+		$oP->add("<td><a style=\"background:transparent;padding:0;\" title=\"Get Professional Support from Combodo\" href=\"http://www.combodo.com/itopsupport\" target=\"_blank\"><img style=\"border:0\" src=\"../images/setup-support.gif\"/></td></a>");
+		$oP->add("<td><a style=\"background:transparent;padding:0;\" title=\"Get Professional Training from Combodo\" href=\"http://www.combodo.com/itoptraining\" target=\"_blank\"><img style=\"border:0\" src=\"../images/setup-training.gif\"/></td></a>");
+		$oP->add('</tr></table>');
+		$oP->add("<p style=\"text-align:center;width:100%\"><button type=\"submit\">Enter iTop</button></p>\n");
+		$oP->add("</form>\n");
 	}
 	catch(Exception $e)
 	{
@@ -1181,9 +1371,9 @@ function SetupFinished(SetupWebPage $oP, $aParamValues, $iCurrentStep, Config $o
 		$oP->p($e->getHtmlDesc());
 		$oP->p("Did you forget to remove the previous (read-only) configuration file ?");
 		$oP->add("<form id=\"theForm\" method=\"post\">\n");
-		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"step0\">\n");
-		AddParamsToForm($oP, $aParamValues);
-		$oP->add("<button type=\"button\" onClick=\"return DoGoBack($iCurrentStep);\"><< Back</button>\n");
+		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"step7\">\n");
+		AddParamsToForm($oP, $aParamValues, array('previous_step'));
+		$oP->add("<button type=\"button\" onClick=\"return DoGoBack(7);\"><< Back</button>\n");
 		$oP->add("</form>\n");
 	}
 }
@@ -1193,19 +1383,27 @@ function SetupFinished(SetupWebPage $oP, $aParamValues, $iCurrentStep, Config $o
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 clearstatcache(); // Make sure we know what we are doing !
+// Set a long (at least 4 minutes) execution time for the setup to avoid timeouts during this phase
+ini_set('max_execution_time', max(240, ini_get('max_execution_time')));
+// While running the setup it is desirable to see any error that may happen
+ini_set('display_errors', true);
+ini_set('display_startup_errors', true);
+
+$aParams = array('mode', 'previous_step', 'licence_ok', 'db_server', 'db_user', 'db_pwd','db_name', 'new_db_name', 'db_prefix', 'module', 'sample_data', 'auth_user', 'auth_pwd', 'language');
+foreach($aParams as $sName)
+{
+	$aParamValues[$sName] = utils::ReadParam($sName, '');
+}
+
 if (file_exists(FINAL_CONFIG_FILE))
 {
 	// The configuration file already exists
-	if (is_writable(FINAL_CONFIG_FILE))
-	{
-		$oP->warning("<b>Warning:</b> a configuration file '".FINAL_CONFIG_FILE."' already exists, and will be overwritten.");
-	}
-	else
+	if (!is_writable(FINAL_CONFIG_FILE))
 	{
 		$oP->add("<h1>iTop configuration wizard</h1>\n");
 		$oP->add("<h2>Fatal error</h2>\n");
 		$oP->error("<b>Error:</b> the configuration file '".FINAL_CONFIG_FILE."' already exists and cannot be overwritten.");
-		$oP->p("The wizard cannot create the configuration file for you. Please remove the file '<b>".realpath(FINAL_CONFIG_FILE)."</b>' or change its access-rights/read-only flag before continuing.");
+		$oP->p("The wizard cannot modify the configuration file for you. If you want to upgrade iTop, please make sure that the file '<b>".realpath(FINAL_CONFIG_FILE)."</b>' can be modified by the web server.");
 		$oP->output();
 		exit;
 	}
@@ -1245,18 +1443,6 @@ catch(Exception $e)
 }
 try
 {
-	// Set a long (at least 4 minutes) execution time for the setup to avoid timeouts during this phase
-	ini_set('max_execution_time', max(240, ini_get('max_execution_time')));
-	// While running the setup it is desirable to see any error that may happen
-	ini_set('display_errors', true);
-	ini_set('display_startup_errors', true);
-	
-	$aParams = array('licence_ok', 'db_server', 'db_user', 'db_pwd','db_name', 'new_db_name', 'db_prefix', 'module', 'sample_data', 'auth_user', 'auth_pwd', 'language');
-	foreach($aParams as $sName)
-	{
-		$aParamValues[$sName] = utils::ReadParam($sName, '');
-	}
-	
 	switch($sOperation)
 	{
 		case 'step0':
@@ -1287,7 +1473,6 @@ try
 		$oP->log("Info - ========= Wizard step 4 ========");
 		ModulesSelection($oP, $aParamValues, 4, $oConfig);
 		break;
-		
 	
 		case 'step5':
 		$oP->no_cache();
@@ -1300,13 +1485,19 @@ try
 		$oP->log("Info - ========= Wizard step 6 ========");
 		SampleDataSelection($oP, $aParamValues, 6, $oConfig);
 		break;
-	
+
 		case 'step7':
 		$oP->no_cache();
 		$oP->log("Info - ========= Wizard step 7 ========");
-		SetupFinished($oP, $aParamValues, 7, $oConfig);
+		DisplaySummary($oP, $aParamValues, 7, $oConfig);
 		break;
 	
+		case 'step8':
+		$oP->no_cache();
+		$oP->log("Info - ========= Wizard step 8 ========");
+		SetupFinished($oP, $aParamValues, 8, $oConfig);
+		break;
+			
 		default:
 		$oP->error("Error: unsupported operation '$sOperation'");
 		

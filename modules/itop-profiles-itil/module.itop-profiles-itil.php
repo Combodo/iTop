@@ -75,11 +75,12 @@ class CreateITILProfilesInstaller extends ModuleInstallerAPI
 		return $oConfiguration;
 	}
 
-	public static function AfterDatabaseCreation(Config $oConfiguration)
+	public static function AfterDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
 	{
 		self::ComputeITILProfiles();
 		//self::ComputeBasicProfiles();
-		self::DoCreateProfiles();
+		$bFirstInstall = empty($sPreviousVersion);
+		self::DoCreateProfiles($bFirstInstall);
 		UserRights::FlushPrivileges(true /* reset admin cache */);
 	}
 	
@@ -298,10 +299,14 @@ class CreateITILProfilesInstaller extends ModuleInstallerAPI
 		DBObject::BulkInsertFlush();
 	}
 	
-	public static function DoCreateProfiles()
+	public static function DoCreateProfiles($bFirstInstall = true)
 	{
-		URP_Profiles::DoCreateAdminProfile();
-		URP_Profiles::DoCreateUserPortalProfile();
+		if ($bFirstInstall)
+		{
+			// Makae sure we create these special profiles only once
+			URP_Profiles::DoCreateAdminProfile();
+			URP_Profiles::DoCreateUserPortalProfile();
+		}
 
 		foreach(self::$m_aProfiles as $sName => $aProfileData)
 		{
