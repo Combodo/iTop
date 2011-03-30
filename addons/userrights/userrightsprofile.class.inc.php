@@ -509,7 +509,6 @@ class UserRightsProfile extends UserRightsAddOnAPI
 
 	public function Init()
 	{
-		MetaModel::RegisterPlugin('userrights', 'ACbyProfile');
 	}
 
 

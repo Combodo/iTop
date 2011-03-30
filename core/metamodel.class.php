@@ -538,7 +538,7 @@ abstract class MetaModel
 
 	final static protected function DBEnumTables()
 	{
-		// This API do not rely on our capability to query the DB and retrieve
+		// This API does not rely on our capability to query the DB and retrieve
 		// the list of existing tables
 		// Rather, it uses the list of expected tables, corresponding to the data model
 		$aTables = array();
@@ -1277,6 +1277,31 @@ abstract class MetaModel
 			//	}
 			//}
 		}
+
+		// Build the list of available extensions
+		//
+		$aInterfaces = array('iApplicationUIExtension', 'iApplicationObjectExtension');
+		foreach($aInterfaces as $sInterface)
+		{
+			self::$m_aExtensionClasses[$sInterface] = array();
+		}
+
+		foreach(get_declared_classes() as $sPHPClass)
+		{
+			$oRefClass = new ReflectionClass($sPHPClass);
+			$oExtensionInstance = null;
+			foreach($aInterfaces as $sInterface)
+			{
+				if ($oRefClass->implementsInterface($sInterface))
+				{
+					if (is_null($oExtensionInstance))
+					{
+						$oExtensionInstance = new $sPHPClass;
+					}
+					self::$m_aExtensionClasses[$sInterface][] = $oExtensionInstance;
+				}
+			}
+		}
 	}
 
 	// To be overriden, must be called for any object class (optimization)
@@ -1782,6 +1807,22 @@ abstract class MetaModel
 				// hit!
 				$oSelect = clone self::$m_aQueryStructCache[$sOqlId];
 			}
+			elseif (function_exists('apc_fetch'))
+			{
+				// Note: For versions of APC older than 3.0.17, fetch() accepts only one parameter
+				//
+				$sAppIdentity = self::GetConfig()->Get('session_name');
+				$sOqlAPCCacheId = $sAppIdentity.'-query-cache-'.$sOqlId;
+				$oKPI = new ExecutionKPI();
+				$result = apc_fetch($sOqlAPCCacheId);
+				$oKPI->ComputeStats('Query APC (fetch)', $sOqlQuery);
+
+				if (is_object($result))
+				{
+					$oSelect = $result;
+					self::$m_aQueryStructCache[$sOqlId] = $oSelect;
+				}
+			}
 		}
 
 		if (!isset($oSelect))
@@ -1792,9 +1833,20 @@ abstract class MetaModel
 
 			$oKPI = new ExecutionKPI();
 			$oSelect = self::MakeQuery($oFilter->GetSelectedClasses(), $oQBExpr, $aClassAliases, $aTableAliases, $oFilter, array(), true /* main query */);
+			$oSelect->SetSourceOQL($sOqlQuery);
 			$oKPI->ComputeStats('MakeQuery (select)', $sOqlQuery);
 
-			self::$m_aQueryStructCache[$sOqlId] = clone $oSelect;
+			if (self::$m_bQueryCacheEnabled)
+			{
+				if (function_exists('apc_store'))
+				{
+					$oKPI = new ExecutionKPI();
+					apc_store($sOqlAPCCacheId, $oSelect);
+					$oKPI->ComputeStats('Query APC (store)', $sOqlQuery);
+				}
+
+				self::$m_aQueryStructCache[$sOqlId] = clone $oSelect;
+			}
 		}
 
 		// Check the order by specification, and prefix with the class alias
@@ -2697,26 +2749,13 @@ abstract class MetaModel
 
 	protected static function DBCreateTables()
 	{
-		list($aErrors, $aSugFix) = self::DBCheckFormat();
+		list($aErrors, $aSugFix, $aCondensedQueries) = self::DBCheckFormat();
 
-		$aSQL = array();
-		foreach ($aSugFix as $sClass => $aTarget)
+		//$sSQL = implode('; ', $aCondensedQueries); Does not work - multiple queries not allowed
+		foreach($aCondensedQueries as $sQuery)
 		{
-			foreach ($aTarget as $aQueries)
-			{
-				foreach ($aQueries as $sQuery)
-				{
-					if (!empty($sQuery))
-					{
-						//$aSQL[] = $sQuery;
-						// forces a refresh of cached information
-						CMDBSource::CreateTable($sQuery);
-					}
-				}
-			}
+			CMDBSource::CreateTable($sQuery);
 		}
-		// does not work -how to have multiple statements in a single query?
-		// $sDoCreateAll = implode(" ; ", $aSQL);
 	}
 
 	protected static function DBCreateViews()
@@ -2906,6 +2945,12 @@ abstract class MetaModel
 	{
 		$aErrors = array();
 		$aSugFix = array();
+
+		// A new way of representing things to be done - quicker to execute !
+		$aCreateTable = array(); // array of <table> => <table options>
+		$aCreateTableItems = array(); // array of <table> => array of <create definition>
+		$aAlterTableItems = array(); // array of <table> => <alter specification>
+		
 		foreach (self::GetClasses() as $sClass)
 		{
 			if (!self::HasTable($sClass)) continue;
@@ -2915,17 +2960,24 @@ abstract class MetaModel
 			$sTable = self::DBGetTable($sClass);
 			$sKeyField = self::DBGetKey($sClass);
 			$sAutoIncrement = (self::IsAutoIncrementKey($sClass) ? "AUTO_INCREMENT" : "");
+			$sKeyFieldDefinition = "`$sKeyField` INT(11) NOT NULL $sAutoIncrement PRIMARY KEY";
 			if (!CMDBSource::IsTable($sTable))
 			{
 				$aErrors[$sClass]['*'][] = "table '$sTable' could not be found into the DB";
-				$aSugFix[$sClass]['*'][] = "CREATE TABLE `$sTable` (`$sKeyField` INT(11) NOT NULL $sAutoIncrement PRIMARY KEY) ENGINE = ".MYSQL_ENGINE." CHARACTER SET utf8 COLLATE utf8_unicode_ci";
+				$aSugFix[$sClass]['*'][] = "CREATE TABLE `$sTable` ($sKeyFieldDefinition) ENGINE = ".MYSQL_ENGINE." CHARACTER SET utf8 COLLATE utf8_unicode_ci";
+				$aCreateTable[$sTable] = "ENGINE = ".MYSQL_ENGINE." CHARACTER SET utf8 COLLATE utf8_unicode_ci";
+				$aCreateTableItems[$sTable][$sKeyField] = $sKeyFieldDefinition;
 			}
 			// Check that the key field exists
 			//
 			elseif (!CMDBSource::IsField($sTable, $sKeyField))
 			{
 				$aErrors[$sClass]['id'][] = "key '$sKeyField' (table $sTable) could not be found";
-				$aSugFix[$sClass]['id'][] = "ALTER TABLE `$sTable` ADD `$sKeyField` INT(11) NOT NULL $sAutoIncrement PRIMARY KEY";
+				$aSugFix[$sClass]['id'][] = "ALTER TABLE `$sTable` ADD $sKeyFieldDefinition";
+				if (!array_key_exists($sTable, $aCreateTable))
+				{
+					$aAlterTableItems[$sTable][$sKeyField] = "ADD $sKeyFieldDefinition";
+				}
 			}
 			else
 			{
@@ -2935,11 +2987,19 @@ abstract class MetaModel
 				{
 					$aErrors[$sClass]['id'][] = "key '$sKeyField' is not a key for table '$sTable'";
 					$aSugFix[$sClass]['id'][] = "ALTER TABLE `$sTable`, DROP PRIMARY KEY, ADD PRIMARY key(`$sKeyField`)";
+					if (!array_key_exists($sTable, $aCreateTable))
+					{
+						$aAlterTableItems[$sTable][$sKeyField] = "CHANGE `$sKeyField` $sKeyFieldDefinition";
+					}
 				}
 				if (self::IsAutoIncrementKey($sClass) && !CMDBSource::IsAutoIncrement($sTable, $sKeyField))
 				{
 					$aErrors[$sClass]['id'][] = "key '$sKeyField' (table $sTable) is not automatically incremented";
-					$aSugFix[$sClass]['id'][] = "ALTER TABLE `$sTable` CHANGE `$sKeyField` `$sKeyField` INT(11) NOT NULL AUTO_INCREMENT";
+					$aSugFix[$sClass]['id'][] = "ALTER TABLE `$sTable` CHANGE `$sKeyField` $sKeyFieldDefinition";
+					if (!array_key_exists($sTable, $aCreateTable))
+					{
+						$aAlterTableItems[$sTable][$sKeyField] = "CHANGE `$sKeyField` $sKeyFieldDefinition";
+					}
 				}
 			}
 			
@@ -2955,14 +3015,30 @@ abstract class MetaModel
 				foreach($oAttDef->GetSQLColumns() as $sField => $sDBFieldType)
 				{
 					$bIndexNeeded = $oAttDef->RequiresIndex();
-					$sFieldSpecs = $oAttDef->IsNullAllowed() ? "$sDBFieldType NULL" : "$sDBFieldType NOT NULL";
+					$sFieldDefinition = "`$sField` ".($oAttDef->IsNullAllowed() ? "$sDBFieldType NULL" : "$sDBFieldType NOT NULL");
 					if (!CMDBSource::IsField($sTable, $sField))
 					{
 						$aErrors[$sClass][$sAttCode][] = "field '$sField' could not be found in table '$sTable'";
-						$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` ADD `$sField` $sFieldSpecs";
+						$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` ADD $sFieldDefinition";
 						if ($bIndexNeeded)
 						{
 							$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` ADD INDEX (`$sField`)";
+						}
+						if (array_key_exists($sTable, $aCreateTable))
+						{
+							$aCreateTableItems[$sTable][$sField] = $sFieldDefinition;
+							if ($bIndexNeeded)
+							{
+								$aCreateTableItems[$sTable][$sField.'_ix'] = "INDEX (`$sField`)";
+							}
+						}
+						else
+						{
+							$aAlterTableItems[$sTable][$sField] = "ADD $sFieldDefinition";
+							if ($bIndexNeeded)
+							{
+								$aAlterTableItems[$sTable][$sField.'_ix'] = "ADD INDEX (`$sField`)";
+							}
 						}
 					}
 					else
@@ -2990,7 +3066,8 @@ abstract class MetaModel
 						} 
 						if ($bToBeChanged)
 						{
-							$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` CHANGE `$sField` `$sField` $sFieldSpecs";
+							$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` CHANGE `$sField` $sFieldDefinition";
+							$aAlterTableItems[$sTable][$sField] = "CHANGE `$sField` $sFieldDefinition";
 						}
 
 						// Create indexes (external keys only... so far)
@@ -2999,12 +3076,26 @@ abstract class MetaModel
 						{
 							$aErrors[$sClass][$sAttCode][] = "Foreign key '$sField' in table '$sTable' should have an index";
 							$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` ADD INDEX (`$sField`)";
+							$aAlterTableItems[$sTable][$sField.'_ix'] = "ADD INDEX (`$sField`)";
 						}
 					}
 				}
 			}
 		}
-		return array($aErrors, $aSugFix);
+
+		$aCondensedQueries = array();
+		foreach($aCreateTable as $sTable => $sTableOptions)
+		{
+			$sTableItems = implode(', ', $aCreateTableItems[$sTable]);
+			$aCondensedQueries[] = "CREATE TABLE `$sTable` ($sTableItems) $sTableOptions";
+		}
+		foreach($aAlterTableItems as $sTable => $aChangeList)
+		{
+			$sChangeList = implode(', ', $aChangeList);
+			$aCondensedQueries[] = "ALTER TABLE `$sTable` $sChangeList";
+		}
+
+		return array($aErrors, $aSugFix, $aCondensedQueries);
 	}
 
 	public static function DBCheckViews()
@@ -3462,36 +3553,9 @@ abstract class MetaModel
 	{
 		self::LoadConfig($sConfigFile);
 
-		$aInterfaces = array('iApplicationUIExtension', 'iApplicationObjectExtension');
-		foreach($aInterfaces as $sInterface)
-		{
-			self::$m_aExtensionClasses[$sInterface] = array();
-		}
-
-		foreach(get_declared_classes() as $sPHPClass)
-		{
-			$oRefClass = new ReflectionClass($sPHPClass);
-			$oExtensionInstance = null;
-			foreach($aInterfaces as $sInterface)
-			{
-				if ($oRefClass->implementsInterface($sInterface))
-				{
-					if (is_null($oExtensionInstance))
-					{
-						$oExtensionInstance = new $sPHPClass;
-					}
-					self::$m_aExtensionClasses[$sInterface][] = $oExtensionInstance;
-				}
-			}
-		}
-
 		if ($bModelOnly) return;
 
 		CMDBSource::SelectDB(self::$m_sDBName);
-
-		// Some of the init could not be done earlier (requiring classes to be declared and DB to be accessible)
-		// To be deprecated
-		self::InitPlugins();
 
 		foreach(get_declared_classes() as $sPHPClass)
 		{
@@ -3550,13 +3614,14 @@ abstract class MetaModel
 
 		// Note: load the dictionary as soon as possible, because it might be
 		//       needed when some error occur
-		if (!Dict::InCache())
+		$sAppIdentity = self::GetConfig()->Get('session_name');
+		if (!Dict::InCache($sAppIdentity))
 		{
 			foreach (self::$m_oConfig->GetDictionaries() as $sModule => $sToInclude)
 			{
-				self::Plugin($sConfigFile, 'dictionaries', $sToInclude);
+				self::IncludeModule($sConfigFile, 'dictionaries', $sToInclude);
 			}
-			Dict::InitCache();
+			Dict::InitCache($sAppIdentity);
 		}
 		// Set the language... after the dictionaries have been loaded!
 		Dict::SetDefaultLanguage(self::$m_oConfig->GetDefaultLanguage());
@@ -3567,19 +3632,19 @@ abstract class MetaModel
 
 		foreach (self::$m_oConfig->GetAppModules() as $sModule => $sToInclude)
 		{
-			self::Plugin($sConfigFile, 'application', $sToInclude);
+			self::IncludeModule($sConfigFile, 'application', $sToInclude);
 		}
 		foreach (self::$m_oConfig->GetDataModels() as $sModule => $sToInclude)
 		{
-			self::Plugin($sConfigFile, 'business', $sToInclude);
+			self::IncludeModule($sConfigFile, 'business', $sToInclude);
 		}
 		foreach (self::$m_oConfig->GetWebServiceCategories() as $sModule => $sToInclude)
 		{
-			self::Plugin($sConfigFile, 'webservice', $sToInclude);
+			self::IncludeModule($sConfigFile, 'webservice', $sToInclude);
 		}
 		foreach (self::$m_oConfig->GetAddons() as $sModule => $sToInclude)
 		{
-			self::Plugin($sConfigFile, 'addons', $sToInclude);
+			self::IncludeModule($sConfigFile, 'addons', $sToInclude);
 		}
 
 		$sServer = self::$m_oConfig->GetDBHost();
@@ -3590,13 +3655,76 @@ abstract class MetaModel
 		$sCharacterSet = self::$m_oConfig->GetDBCharacterSet();
 		$sCollation = self::$m_oConfig->GetDBCollation();
 
-		$oKPI = new ExecutionKPI();
+		if (function_exists('apc_fetch'))
+		{
+			$oKPI = new ExecutionKPI();
+			// Note: For versions of APC older than 3.0.17, fetch() accepts only one parameter
+			//
+			$sAppIdentity = self::GetConfig()->Get('session_name');
+			$sOqlAPCCacheId = $sAppIdentity.'-metamodel';
+			$result = apc_fetch($sOqlAPCCacheId);
 
-		// The include have been included, let's browse the existing classes and
-		// develop some data based on the proposed model
-		self::InitClasses($sTablePrefix);
+			if (is_array($result))
+			{
+				// todo - verifier que toutes les classes mentionnees ici sont chargees dans InitClasses()
+				self::$m_aExtensionClasses = $result['m_aExtensionClasses'];
+				self::$m_Category2Class = $result['m_Category2Class'];
+				self::$m_aRootClasses = $result['m_aRootClasses'];
+				self::$m_aParentClasses = $result['m_aParentClasses']; 
+				self::$m_aChildClasses = $result['m_aChildClasses'];
+				self::$m_aClassParams = $result['m_aClassParams'];
+				self::$m_aAttribDefs = $result['m_aAttribDefs'];
+				self::$m_aAttribOrigins = $result['m_aAttribOrigins'];
+				self::$m_aExtKeyFriends = $result['m_aExtKeyFriends'];
+				self::$m_aIgnoredAttributes = $result['m_aIgnoredAttributes'];
+				self::$m_aFilterDefs = $result['m_aFilterDefs'];
+				self::$m_aFilterOrigins = $result['m_aFilterOrigins'];
+				self::$m_aListInfos = $result['m_aListInfos'];
+				self::$m_aListData = $result['m_aListData'];
+				self::$m_aRelationInfos = $result['m_aRelationInfos'];
+				self::$m_aStates = $result['m_aStates'];
+				self::$m_aStimuli = $result['m_aStimuli'];
+				self::$m_aTransitions = $result['m_aTransitions'];
+			}
+			$oKPI->ComputeAndReport('Metamodel APC (fetch + read)');
+		}
 
-		$oKPI->ComputeAndReport('Initialization of Data model structures');
+      if (count(self::$m_aAttribDefs) == 0)
+      {
+			// The includes have been included, let's browse the existing classes and
+			// develop some data based on the proposed model
+			$oKPI = new ExecutionKPI();
+
+			self::InitClasses($sTablePrefix);
+
+			$oKPI->ComputeAndReport('Initialization of Data model structures');
+			if (function_exists('apc_store'))
+			{
+				$oKPI = new ExecutionKPI();
+
+				$aCache = array();
+				$aCache['m_aExtensionClasses'] = self::$m_aExtensionClasses;
+				$aCache['m_Category2Class'] = self::$m_Category2Class;
+				$aCache['m_aRootClasses'] = self::$m_aRootClasses; // array of "classname" => "rootclass"
+				$aCache['m_aParentClasses'] = self::$m_aParentClasses; // array of ("classname" => array of "parentclass") 
+				$aCache['m_aChildClasses'] = self::$m_aChildClasses; // array of ("classname" => array of "childclass")
+				$aCache['m_aClassParams'] = self::$m_aClassParams; // array of ("classname" => array of class information)
+				$aCache['m_aAttribDefs'] = self::$m_aAttribDefs; // array of ("classname" => array of attributes)
+				$aCache['m_aAttribOrigins'] = self::$m_aAttribOrigins; // array of ("classname" => array of ("attcode"=>"sourceclass"))
+				$aCache['m_aExtKeyFriends'] = self::$m_aExtKeyFriends; // array of ("classname" => array of ("indirect ext key attcode"=> array of ("relative ext field")))
+				$aCache['m_aIgnoredAttributes'] = self::$m_aIgnoredAttributes; //array of ("classname" => array of ("attcode")
+				$aCache['m_aFilterDefs'] = self::$m_aFilterDefs; // array of ("classname" => array filterdef)
+				$aCache['m_aFilterOrigins'] = self::$m_aFilterOrigins; // array of ("classname" => array of ("attcode"=>"sourceclass"))
+				$aCache['m_aListInfos'] = self::$m_aListInfos; // array of ("listcode" => various info on the list, common to every classes)
+				$aCache['m_aListData'] = self::$m_aListData; // array of ("classname" => array of "listcode" => list)
+				$aCache['m_aRelationInfos'] = self::$m_aRelationInfos; // array of ("relcode" => various info on the list, common to every classes)
+				$aCache['m_aStates'] = self::$m_aStates; // array of ("classname" => array of "statecode"=>array('label'=>..., attribute_inherit=> attribute_list=>...))
+				$aCache['m_aStimuli'] = self::$m_aStimuli; // array of ("classname" => array of ("stimuluscode"=>array('label'=>...)))
+				$aCache['m_aTransitions'] = self::$m_aTransitions; // array of ("classname" => array of ("statcode_from"=>array of ("stimuluscode" => array('target_state'=>..., 'actions'=>array of handlers procs, 'user_restriction'=>TBD)))
+				apc_store($sOqlAPCCacheId, $aCache);
+				$oKPI->ComputeAndReport('Metamodel APC (store)');
+			}
+		}
 
 		self::$m_sDBName = $sSource;
 		self::$m_sTablePrefix = $sTablePrefix;
@@ -3617,16 +3745,7 @@ abstract class MetaModel
 
 	protected static $m_aExtensionClasses = array();
 
-	protected static $m_aPlugins = array();
-	public static function RegisterPlugin($sType, $sName, $aInitCallSpec = array())
-	{
-		self::$m_aPlugins[$sName] = array(
-			'type' => $sType,
-			'init' => $aInitCallSpec,
-		);
-	}
-
-	protected static function Plugin($sConfigFile, $sModuleType, $sToInclude)
+	protected static function IncludeModule($sConfigFile, $sModuleType, $sToInclude)
 	{
 		$sFirstChar = substr($sToInclude, 0, 1);
 		$sSecondChar = substr($sToInclude, 1, 1);
@@ -3656,24 +3775,6 @@ abstract class MetaModel
 		require_once($sFile);
 	}
 
-	// #@# to be deprecated!
-	//
-	protected static function InitPlugins()
-	{
-		foreach(self::$m_aPlugins as $sName => $aData)
-		{
-			$aCallSpec = @$aData['init'];
-			if (count($aCallSpec) == 2)
-			{
-				if (!is_callable($aCallSpec))
-				{
-					throw new CoreException('Wrong declaration in plugin', array('plugin' => $aData['name'], 'type' => $aData['type'], 'class' => $aData['class'], 'init' => $aData['init'])); 
-				}
-				call_user_func($aCallSpec);
-			}
-		}
-	}
-
 	// Building an object
 	//
 	//
@@ -3698,8 +3799,8 @@ abstract class MetaModel
 			// NOTE: Quick and VERY dirty caching mechanism which relies on
 			//       the fact that the string '987654321' will never appear in the
 			//       standard query
-			//       This will be replaced for sure with a prepared statement
-			//       or a view... next optimization to come! 
+			//       This could be simplified a little, relying solely on the query cache,
+			//       but this would slow down -by how much time?- the application
 			$oFilter = new DBObjectSearch($sClass);
 			$oFilter->AddCondition('id', 987654321, '=');
 			if ($bAllowAllData)
@@ -3717,7 +3818,7 @@ abstract class MetaModel
 			self::$aQueryCacheGetObjectHits[$sClass] += 1;
 //			echo " -load $sClass/$iKey- ".self::$aQueryCacheGetObjectHits[$sClass]."<br/>\n";
 		}
-		$sSQL = str_replace('987654321', CMDBSource::Quote($iKey), $sSQL);
+		$sSQL = str_replace(CMDBSource::Quote(987654321), CMDBSource::Quote($iKey), $sSQL);
 		$res = CMDBSource::Query($sSQL);
 		
 		$aRow = CMDBSource::FetchArray($res);
@@ -4019,6 +4120,41 @@ abstract class MetaModel
 		else
 		{
 			return array();
+		}
+	}
+
+	public static function GetCacheEntries()
+	{
+		if (!function_exists('apc_cache_info')) return array();
+
+		$aCacheUserData = apc_cache_info('user');  
+		$sAppIdentity = MetaModel::GetConfig()->Get('session_name');
+		$sPrefix = $sAppIdentity.'-';
+
+		$aEntries = array();
+		foreach($aCacheUserData['cache_list'] as $i => $aEntry)
+		{
+			$sEntryKey = $aEntry['info'];
+			if (strpos($sEntryKey, $sPrefix) === 0)
+			{
+				$sCleanKey = substr($sEntryKey, strlen($sPrefix));
+				$aEntries[$sCleanKey] = $aEntry;
+			}
+		}
+		return $aEntries;
+	}
+
+	public static function ResetCache()
+	{
+		if (!function_exists('apc_delete')) return;
+
+		$sAppIdentity = MetaModel::GetConfig()->Get('session_name');
+		Dict::ResetCache($sAppIdentity);
+
+		foreach(self::GetCacheEntries() as $sKey => $aAPCInfo)
+		{
+			$sAPCKey = $aAPCInfo['info'];
+			apc_delete($sAPCKey);
 		}
 	}
 } // class MetaModel

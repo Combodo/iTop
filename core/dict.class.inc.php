@@ -232,21 +232,21 @@ class Dict
 		MyHelpers::var_dump_html(self::$m_aData);
 	}
 	
-	public static function InCache()
+	public static function InCache($sApplicationPrefix)
 	{
 		if (function_exists('apc_fetch'))
 		{
 			$bResult = false;
 			// Note: For versions of APC older than 3.0.17, fetch() accepts only one parameter
 			//
-			self::$m_aData = apc_fetch('dict');
+			self::$m_aData = apc_fetch($sApplicationPrefix.'-dict');
 			if (is_bool(self::$m_aData) && (self::$m_aData === false))
 			{
 				self::$m_aData = array();
 			}
 			else
 			{
-				self::$m_aLanguages = apc_fetch('languages');
+				self::$m_aLanguages = apc_fetch($sApplicationPrefix.'-languages');
 				if (is_bool(self::$m_aLanguages) && (self::$m_aLanguages === false))
 				{
 					self::$m_aLanguages = array();
@@ -261,12 +261,21 @@ class Dict
 		return false;
 	}
 	
-	public static function InitCache()
+	public static function InitCache($sApplicationPrefix)
 	{
 		if (function_exists('apc_store'))
 		{
-			apc_store('languages', self::$m_aLanguages);
-			apc_store('dict', self::$m_aData);
+			apc_store($sApplicationPrefix.'-languages', self::$m_aLanguages);
+			apc_store($sApplicationPrefix.'-dict', self::$m_aData);
+		}
+	}
+
+	public static function ResetCache($sApplicationPrefix)
+	{
+		if (function_exists('apc_delete'))
+		{
+			apc_delete($sApplicationPrefix.'-languages');
+			apc_delete($sApplicationPrefix.'-dict');
 		}
 	}
 }

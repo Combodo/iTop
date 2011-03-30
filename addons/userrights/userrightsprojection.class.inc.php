@@ -660,7 +660,8 @@ class UserRightsProjection extends UserRightsAddOnAPI
 
 	public function Init()
 	{
-		MetaModel::RegisterPlugin('userrights', 'ACbyProfile', array($this, 'CacheData'));
+		// CacheData to be invoked in a module extension
+		//MetaModel::RegisterPlugin('userrights', 'ACbyProfile', array($this, 'CacheData'));
 	}
 
 	protected $m_aDimensions = array(); // id -> object

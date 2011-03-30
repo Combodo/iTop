@@ -37,6 +37,7 @@ require_once('cmdbsource.class.inc.php');
 
 class SQLQuery
 {
+	private $m_SourceOQL = '';
 	private $m_sTable = '';
 	private $m_sTableAlias = '';
 	private $m_aFields = array();
@@ -67,6 +68,16 @@ class SQLQuery
 		$this->m_bToDelete = $bToDelete;
 		$this->m_aValues = $aValues;
 		$this->m_oSelectedIdField = $oSelectedIdField;
+	}
+
+	public function SetSourceOQL($sOQL)
+	{
+		$this->m_SourceOQL = $sOQL;
+	}
+
+	public function GetSourceOQL()
+	{
+		return $this->m_SourceOQL;
 	}
 
 	public function DisplayHtml()
