@@ -2016,6 +2016,26 @@ abstract class MetaModel
 					$oQBExpr->AddSelect($sClassAlias.$sAttCode.$sColId, new FieldExpression($sAttCode.$sColId, $sClassAlias));
 				}
 			}
+
+			// Transform the full text condition into additional condition expression
+			$aFullText = $oFilter->GetCriteria_FullText();
+			if (count($aFullText) > 0)
+			{
+				$aFullTextFields = array();
+				foreach (self::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+				{
+					if (!$oAttDef->IsScalar()) continue;
+					if ($oAttDef->IsExternalKey()) continue;
+					$aFullTextFields[] = new FieldExpression($sAttCode, $sClassAlias);
+				}
+				$oTextFields = new CharConcatWSExpression(' ', $aFullTextFields);
+				
+				foreach($aFullText as $sFTNeedle)
+				{
+					$oNewCond = new BinaryExpression($oTextFields, 'LIKE', new ScalarExpression("%$sFTNeedle%"));
+					$oQBExpr->AddCondition($oNewCond);
+				}
+			}
 		}
 
 		$aExpectedAtts = array(); // array of (attcode => fieldexpression)
@@ -2281,22 +2301,9 @@ abstract class MetaModel
 			}
 		}
 
-		// #@# todo - See what a full text search condition should be
-		// 2 - WHERE / Full text search condition
-		//
-		if ($bIsOnQueriedClass)
-		{
-			$aFullText = $oFilter->GetCriteria_FullText();
-		}
-		else
-		{
-			// Pourquoi ???
-			$aFullText = array();
-		}
-
 		// 3 - The whole stuff, for this table only
 		//
-		$oSelectBase = new SQLQuery($sTable, $sTableAlias, array(), $aFullText, $bIsOnQueriedClass, $aUpdateValues, $oSelectedIdField);
+		$oSelectBase = new SQLQuery($sTable, $sTableAlias, array(), $bIsOnQueriedClass, $aUpdateValues, $oSelectedIdField);
 
 		// 4 - The external keys -> joins...
 		//

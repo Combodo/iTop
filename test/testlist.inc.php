@@ -50,7 +50,7 @@ class TestSQLQuery extends TestScenarioOnDB
 			$sTable = 'myTable',
 			$sTableAlias = 'myTableAlias',
 			$aFields = array('column1'=>new FieldExpression('column1', 'myTableAlias'), 'column2'=>new FieldExpression('column2', 'myTableAlias')),
-			$aFullTextNeedles = array('column1'),
+//			$aFullTextNeedles = array('column1'),
 			$bToDelete = false,
 			$aValues = array()
 		);
@@ -60,7 +60,7 @@ class TestSQLQuery extends TestScenarioOnDB
 			$sTable = 'myTable1',
 			$sTableAlias = 'myTable1Alias',
 			$aFields = array('column1_1'=>new FieldExpression('column1', 'myTableAlias'), 'column1_2'=>new FieldExpression('column1', 'myTableAlias')),
-			$aFullTextNeedles = array(),
+//			$aFullTextNeedles = array(),
 			$bToDelete = false,
 			$aValues = array()
 		);
@@ -69,7 +69,7 @@ class TestSQLQuery extends TestScenarioOnDB
 			$sTable = 'myTable2',
 			$sTableAlias = 'myTable2Alias',
 			$aFields = array('column2_1'=>new FieldExpression('column2', 'myTableAlias'), 'column2_2'=>new FieldExpression('column2', 'myTableAlias')),
-			$aFullTextNeedles = array(),
+//			$aFullTextNeedles = array(),
 			$bToDelete = false,
 			$aValues = array()
 		);

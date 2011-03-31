@@ -682,6 +682,33 @@ class CharConcatExpression extends Expression
 	}
 }
 
+
+class CharConcatWSExpression extends CharConcatExpression
+{
+	protected $m_separator;
+
+	public function __construct($separator, $aExpressions)
+	{
+		$this->m_separator = $separator;
+		parent::__construct($aExpressions);
+	}
+
+	// recursive rendering
+	public function Render(&$aArgs = null, $bRetrofitParams = false)
+	{
+		$aRes = array();
+		foreach ($this->m_aExpressions as $oExpr)
+		{
+			$sCol = $oExpr->Render($aArgs, $bRetrofitParams);
+			// Concat will be globally NULL if one single argument is null ! 
+			$aRes[] = "COALESCE($sCol, '')";
+		}
+		$sSep = CMDBSource::Quote($this->m_separator);
+		return "CAST(CONCAT_WS($sSep, ".implode(', ', $aRes).") AS CHAR)";
+	}
+}
+
+
 class QueryBuilderExpressions
 {
 	protected $m_oConditionExpr;

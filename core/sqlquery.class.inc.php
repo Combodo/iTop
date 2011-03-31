@@ -42,13 +42,12 @@ class SQLQuery
 	private $m_sTableAlias = '';
 	private $m_aFields = array();
 	private $m_oConditionExpr = null;
-	private $m_aFullTextNeedles = array();
 	private $m_bToDelete = true; // The current table must be listed for deletion ?
 	private $m_aValues = array(); // Values to set in case of an update query
 	private $m_oSelectedIdField = null;
 	private $m_aJoinSelects = array();
 
-	public function __construct($sTable, $sTableAlias, $aFields, $aFullTextNeedles = array(), $bToDelete = true, $aValues = array(), $oSelectedIdField = null)
+	public function __construct($sTable, $sTableAlias, $aFields, $bToDelete = true, $aValues = array(), $oSelectedIdField = null)
 	{
 		// This check is not needed but for developping purposes
 		//if (!CMDBSource::IsTable($sTable))
@@ -64,7 +63,6 @@ class SQLQuery
 		$this->m_sTableAlias = $sTableAlias;
 		$this->m_aFields = $aFields;
 		$this->m_oConditionExpr = null;
-		$this->m_aFullTextNeedles = $aFullTextNeedles;
 		$this->m_bToDelete = $bToDelete;
 		$this->m_aValues = $aValues;
 		$this->m_oSelectedIdField = $oSelectedIdField;
@@ -95,16 +93,6 @@ class SQLQuery
 		echo "<b>$this->m_sTable</b>$sFields<br/>\n";
 		// #@# todo - display html of an expression tree
 		//$this->m_oConditionExpr->DisplayHtml()
-		if (count($this->m_aFullTextNeedles) > 0)
-		{
-			echo "Full text criteria...<br/>\n";
-			echo "<ul class=\"treeview\">\n";
-			foreach ($this->m_aFullTextNeedles as $sFTNeedle)
-			{
-				echo "<li>$sFTNeedle</li>\n";
-			}
-			echo "</ul>";
-		}
 		if (count($this->m_aJoinSelects) > 0)
 		{
 			echo "Joined to...<br/>\n";
@@ -381,35 +369,7 @@ class SQLQuery
 	private function privRender(&$aFrom, &$aFields, &$oCondition, &$aDelTables, &$aSetValues, &$aSelectedIdFields)
 	{
 		$sTableAlias = $this->privRenderSingleTable($aFrom, $aFields, $aDelTables, $aSetValues, $aSelectedIdFields);
-
-		// Add the full text search condition, based on each and every requested field
-		//
-		// To be updated with a real full text search based on the mySQL settings
-		// (then it might move somewhere else !)
-		//
 		$oCondition = $this->m_oConditionExpr;
-		if ((count($aFields) > 0) && (count($this->m_aFullTextNeedles) > 0))
-		{
-			$sFields = implode(', ', $aFields);
-			$oFullTextExpr = Expression::FromSQL("CONCAT_WS(' ', $sFields)");
-			
-			// The cast is necessary because the CONCAT result in a binary string:
-			// if any of the field is a binary string => case sensitive comparison
-			//
-			foreach($this->m_aFullTextNeedles as $sFTNeedle)
-			{
-				$oNewCond = new BinaryExpression($oFullTextExpr, 'LIKE', new ScalarExpression("%$sFTNeedle%"));
-				if (is_null($oCondition))
-				{
-					$oCondition = $oNewCond;
-				}
-				else
-				{
-					$oCondition = $oCondition->LogAnd($oNewCond);
-				}
-			}
-		}
-
 		return $sTableAlias; 
 	}
 
