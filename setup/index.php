@@ -962,7 +962,7 @@ function ModulesSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, $oConf
 	}
 	$oP->add("<table style=\"width:100%\"><tr>\n");
 	$oP->add("<td style=\"text-align:left;\"><button type=\"button\" onClick=\"return DoGoBack($iPrevStep)\"><< Back</button></td>\n");
-	$oP->add("<td style=\"text-align:right;\"><button type=\"submit\" \">Next >></button></td>\n");
+	$oP->add("<td style=\"text-align:right;\"><button type=\"submit\">Next >></button></td>\n");
 	$oP->add("</tr></table>\n");
 	$oP->add("</form>\n");
 	$oP->add_ready_script("$('.read-only').click( function() { $(this).attr('checked','checked'); } );");
