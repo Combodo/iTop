@@ -29,6 +29,7 @@ define('INSTALL_LOG_FILE', APPROOT.'/setup.log');
 define ('MODULE_ACTION_OPTIONAL', 1);
 define ('MODULE_ACTION_MANDATORY', 2);
 define ('MODULE_ACTION_IMPOSSIBLE', 3);
+define ('ROOT_MODULE', '_Root_'); // Convention to store IN MEMORY the name/version of the root module i.e. application
 
 date_default_timezone_set('Europe/Paris');
 class SetupWebPage extends NiceWebPage
@@ -159,6 +160,16 @@ table.formTable {
     text-align: center;
     margin: 5px;
 }
+h3.clickable {
+	background: url(../images/plus.gif) no-repeat left;
+	padding-left:16px;
+	cursor: hand;	
+}
+h3.clickable.open {
+	background: url(../images/minus.gif) no-repeat left;
+	padding-left:16px;
+	cursor: hand;	
+}
 		");
 	}
 	public function info($sText)
@@ -216,6 +227,22 @@ table.formTable {
 		$this->add("</table>\n");
 	}
 	
+	public function collapsible($sId, $sTitle, $aItems, $bOpen = true)
+	{
+		$this->add("<h3 class=\"clickable open\" id=\"{$sId}\">$sTitle</h3>");
+		$this->p('<ul id="'.$sId.'_list">');
+		foreach($aItems as $sItem)
+		{
+			$this->p("<li>$sItem</li>\n");
+		}		
+		$this->p('</ul>');
+		$this->add_ready_script("$('#{$sId}').click( function() { $(this).toggleClass('open'); $('#{$sId}_list').toggle();} );\n");
+		if (!$bOpen)
+		{
+			$this->add_ready_script("$('#{$sId}').toggleClass('open'); $('#{$sId}_list').toggle();\n");
+		}	
+	}
+	
 	public function output()
 	{
 		$this->s_content = "<div id=\"header\"><h1><a href=\"http://www.combodo.com/itop\" target=\"_blank\"><img title=\"iTop by Combodo\" src=\"../images/itop-logo.png\"></a>&nbsp;{$this->s_title}</h1>\n</div><div id=\"setup\">{$this->s_content}\n</div>\n";
@@ -252,6 +279,7 @@ table.formTable {
 			fclose($hLogFile);
 		}
 	}
+	
 
 	static $m_aModuleArgs = array(
 		'label' => 'One line description shown during the interactive setup',
@@ -451,9 +479,11 @@ function GetAvailableModules($oP = null)
 function AnalyzeInstallation($oConfig)
 {
 	$aRes = array(
-		'iTop' => array(
+		ROOT_MODULE => array(
 			'version_db' => '',
+			'name_db' => '',
 			'version_code' => ITOP_VERSION.'.'.ITOP_REVISION,
+			'name_code' => ITOP_APPLICATION,
 		)
 	);
 
@@ -463,30 +493,30 @@ function AnalyzeInstallation($oConfig)
 		list($sModuleName, $sModuleVersion) = GetModuleName($sModuleId);
 
 		$sModuleAppVersion = $aModuleInfo['itop_version'];
-      $aModuleInfo['version_db'] = '';
-      $aModuleInfo['version_code'] = $sModuleVersion;
+		$aModuleInfo['version_db'] = '';
+		$aModuleInfo['version_code'] = $sModuleVersion;
 
 		if (!in_array($sModuleAppVersion, array('1.0.0', '1.0.1', '1.0.2')))
 		{
 			// This module is NOT compatible with the current version
-      	$aModuleInfo['install'] = array(
-      		'flag' => MODULE_ACTION_IMPOSSIBLE,
-      		'message' => 'the module is not compatible with the current version of the application'
-      	);
+      		$aModuleInfo['install'] = array(
+      			'flag' => MODULE_ACTION_IMPOSSIBLE,
+      			'message' => 'the module is not compatible with the current version of the application'
+      		);
 		}
       elseif ($aModuleInfo['mandatory'])
       {
-      	$aModuleInfo['install'] = array(
-      		'flag' => MODULE_ACTION_MANDATORY,
-      		'message' => 'the module is part of the application'
-      	);
+			$aModuleInfo['install'] = array(
+      			'flag' => MODULE_ACTION_MANDATORY,
+      			'message' => 'the module is part of the application'
+      		);
 		}
 		else
 		{
-      	$aModuleInfo['install'] = array(
-      		'flag' => MODULE_ACTION_OPTIONAL,
-      		'message' => ''
-      	);
+			$aModuleInfo['install'] = array(
+      			'flag' => MODULE_ACTION_OPTIONAL,
+      			'message' => ''
+      		);
 		}
 		$aRes[$sModuleName] = $aModuleInfo;
 	}
@@ -504,28 +534,33 @@ function AnalyzeInstallation($oConfig)
 
 	// Build the list of installed module (get the latest installation)
 	//
-   $aInstallByModule = array(); // array of <module> => array ('installed' => timestamp, 'version' => <version>)
+	$aInstallByModule = array(); // array of <module> => array ('installed' => timestamp, 'version' => <version>)
 	foreach ($aSelectInstall as $aInstall)
-   {
-   	//$aInstall['comment']; // unsused
-   	//$aInstall['parent_id']; // unsused
-   	$iInstalled = strtotime($aInstall['installed']);
-   	$sModuleName = $aInstall['name'];
-   	$sModuleVersion = $aInstall['version'];
+	{
+		//$aInstall['comment']; // unsused
+		$iInstalled = strtotime($aInstall['installed']);
+		$sModuleName = $aInstall['name'];
+		$sModuleVersion = $aInstall['version'];
 
-		if ($sModuleName == 'itop')
+		if ($aInstall['parent_id'] == 0)
 		{
-			$aRes['iTop']['version_db'] = $sModuleVersion;
-			continue;
+			$sModuleName = ROOT_MODULE;
 		}
 
-      if (array_key_exists($sModuleName, $aInstallByModule))
-      {
-      	if ($iInstalled < $aInstallByModule[$sModuleName]['installed'])
+      	if (array_key_exists($sModuleName, $aInstallByModule))
       	{
-      		continue;
-      	}
+	      	if ($iInstalled < $aInstallByModule[$sModuleName]['installed'])
+	      	{
+	      		continue;
+	      	}
 		}
+
+		if ($aInstall['parent_id'] == 0)
+		{
+			$aRes[$sModuleName]['version_db'] = $sModuleVersion;
+			$aRes[$sModuleName]['name_db'] = $aInstall['name'];
+		}
+
 		$aInstallByModule[$sModuleName]['installed'] = $iInstalled;
 		$aInstallByModule[$sModuleName]['version'] = $sModuleVersion;
    }
@@ -534,26 +569,28 @@ function AnalyzeInstallation($oConfig)
 	//
    foreach ($aInstallByModule as $sModuleName => $aModuleDB)
    {
-   	if (!array_key_exists($sModuleName, $aRes))
-   	{
-   		// A module was installed, it is not proposed in the new build... skip 
-   		continue;
-   	}
-   	$aRes[$sModuleName]['version_db'] = $aModuleDB['version'];
+   		if ($sModuleName == ROOT_MODULE) continue; // Skip the main module
+   		
+		if (!array_key_exists($sModuleName, $aRes))
+		{
+			// A module was installed, it is not proposed in the new build... skip 
+			continue;
+		}
+		$aRes[$sModuleName]['version_db'] = $aModuleDB['version'];
 
-      if ($aRes[$sModuleName]['install']['flag'] == MODULE_ACTION_MANDATORY)
-      {
-      	$aRes[$sModuleName]['uninstall'] = array(
-      		'flag' => MODULE_ACTION_IMPOSSIBLE,
-      		'message' => 'the module is part of the application'
-      	);
+		if ($aRes[$sModuleName]['install']['flag'] == MODULE_ACTION_MANDATORY)
+		{
+			$aRes[$sModuleName]['uninstall'] = array(
+				'flag' => MODULE_ACTION_IMPOSSIBLE,
+				'message' => 'the module is part of the application'
+			);
 		}
 		else
 		{
-      	$aRes[$sModuleName]['uninstall'] = array(
-      		'flag' => MODULE_ACTION_OPTIONAL,
-      		'message' => ''
-      	);
+			$aRes[$sModuleName]['uninstall'] = array(
+				'flag' => MODULE_ACTION_OPTIONAL,
+				'message' => ''
+			);
 		}
 	}
 
@@ -641,7 +678,7 @@ function RecordInstallation(Config $oConfig, $aSelectedModules)
 {
 	// Record main installation
 	$oInstallRec = new ModuleInstallation();
-	$oInstallRec->Set('name', 'itop');
+	$oInstallRec->Set('name', ITOP_APPLICATION);
 	$oInstallRec->Set('version', ITOP_VERSION.'.'.ITOP_REVISION);
 	$oInstallRec->Set('comment', "Done by the setup program\nBuilt on ".ITOP_BUILD_DATE);
 	$oInstallRec->Set('parent_id', 0); // root module

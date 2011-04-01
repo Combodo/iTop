@@ -303,7 +303,7 @@ class CreateITILProfilesInstaller extends ModuleInstallerAPI
 	{
 		if ($bFirstInstall)
 		{
-			// Makae sure we create these special profiles only once
+			// Make sure we create these special profiles only once
 			URP_Profiles::DoCreateAdminProfile();
 			URP_Profiles::DoCreateUserPortalProfile();
 		}

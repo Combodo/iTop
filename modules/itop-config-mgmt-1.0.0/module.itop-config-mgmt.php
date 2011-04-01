@@ -54,7 +54,7 @@ SetupWebPage::AddModule(
 		
 		// Documentation
 		//
-		'doc.manual_setup' => '', // No manual installation required
+		'doc.manual_setup' => '/doc/itop-documentation.htm#Installation', // Some manual installation required
 		'doc.more_information' => '/doc/itop-documentation.htm#ConfigMgmt',
 
 		// Default settings

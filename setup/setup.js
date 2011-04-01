@@ -8,6 +8,7 @@ function NameIsValid(name)
 function DoGoBack(iStep)
 {
 	$('input[name=operation]').val('step'+iStep);
+	$(':button').attr('disabled', 'disabled');
 	$('#theForm').submit(); // Submit the form
 	return true; 
 }
@@ -117,9 +118,13 @@ function DoSubmit(sMsg, iStep)
 			bResult = false;
 		}
 	}
-	if (bResult && (sMsg != ''))
+	if (bResult)
 	{
-		$('#setup').block({message: '<img src="../images/indicator.gif">&nbsp;'+sMsg});
+		$(':button').attr('disabled', 'disabled');
+		if ((sMsg != ''))
+		{
+			$('#setup').block({message: '<img src="../images/indicator.gif">&nbsp;'+sMsg});
+		}
 	}
 	return bResult;
 }
@@ -130,7 +135,7 @@ function DoUpdateDBSchema()
 	{
 		// Call the asynchronous page that performs the creation/update of the DB Schema
 		$('#log').html('');
-		$('#setup').block({message: '<p>Updating DB schema...<br/><div id=\"progress\">0%</div></p>'});
+		$('#setup').block({message: '<p><span id="setup_msg">Updating DB schema...</span><br/><div id=\"progress\">0%</div></p>'});
 		$('#progress').progression( {Current:5, Maximum: 100, aBackgroundImg: 'orange-progress.gif', aTextColor: '#000000'} );
 		$('#log').load( 'ajax.dataloader.php',
 						{ 
@@ -158,7 +163,7 @@ function DoUpdateProfiles(response, status, xhr)
 	{
 		// Call the asynchronous page that performs the creation/update of the DB Schema
 		$('#log').html('');
-		$('#setup').block({message: '<p>Updating Profiles...<br/><div id=\"progress\">0%</div></p>'});
+		$('#setup_msg').text('Updating Profiles...');
 		$('#progress').progression( {Current:40,  Maximum: 100, aBackgroundImg: 'orange-progress.gif', aTextColor: '#000000'} );
 		$('#log').load( 'ajax.dataloader.php',
 				{ 
@@ -208,7 +213,7 @@ function DoLoadDataAsynchronous(response, status, xhr)
 		else
 		{
 			$('#log').html('');
-			$('#setup').block({message: '<p>Loading data...<br/><div id=\"progress\">0%</div></p>'});
+			$('#setup_msg').text('Loading data...');
 			$('#progress').progression( {Current: 60, Maximum: 100, aBackgroundImg: 'orange-progress.gif', aTextColor: '#000000'} );
 //			$('#log').ajaxError(
 //					function(e, xhr, settings, exception)

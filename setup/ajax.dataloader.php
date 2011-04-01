@@ -166,7 +166,7 @@ try
 	
 		foreach($aAvailableModules as $sModuleId => $aModule)
 		{
-			if (($sModuleId != 'iTop') && in_array($sModuleId, $aSelectedModules) &&
+			if (($sModuleId != ROOT_MODULE) && in_array($sModuleId, $aSelectedModules) &&
 			     isset($aAvailableModules[$sModuleId]['installer']) )
 			{
 				$sModuleInstallerClass = $aAvailableModules[$sModuleId]['installer'];
