@@ -483,7 +483,8 @@ function DisplaySearchSet($oP, $oFilter, $bSearchForm = true, $sBaseClass = '', 
 	{
 		$oBlock = new DisplayBlock($oFilter, 'csv', false);
 		$oBlock->Display($oP, 1);
-		$oP->add_ready_script(" $('#csv').css('height', '95%');"); // adjust the size of the block
+		// Adjust the size of the Textarea containing the CSV to fit almost all the remaining space
+		$oP->add_ready_script(" $('#1>textarea').height($('#1').parent().height() - $('#0').outerHeight() - 30).width( $('#1').parent().width() - 20);"); // adjust the size of the block
 	}
 	else
 	{
@@ -676,7 +677,7 @@ try
 			$oP->set_title(Dict::S('UI:SearchResultsPageTitle'));
 			// TO DO: limit the search filter by the user context
 			$oFilter = CMDBSearchFilter::unserialize($sFilter); // TO DO : check that the filter is valid
-		DisplaySearchSet($oP, $oFilter, $bSearchForm, '' /* sBaseClass */, $sFormat);
+			DisplaySearchSet($oP, $oFilter, $bSearchForm, '' /* sBaseClass */, $sFormat);
 		break;
 	
 		///////////////////////////////////////////////////////////////////////////////////////////
