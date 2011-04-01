@@ -1825,7 +1825,7 @@ EOF
 				$aErrors = array();
 				foreach($aExpectedAttributes as $sAttCode => $iExpectCode)
 				{
-					$iFlags = $oObj_>GetAttributeFlags($sAttCode);
+					$iFlags = $oObj->GetAttributeFlags($sAttCode);
 					if (($iExpectCode & (OPT_ATT_MUSTCHANGE|OPT_ATT_MUSTPROMPT)) || ($oObj->Get($sAttCode) == '') ) 
 					{
 						$paramValue = utils::ReadPostedParam("attr_$sAttCode", '');
