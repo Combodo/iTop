@@ -226,14 +226,6 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 			$aDisplayConfig['consequence'] = array('label' => 'Done', 'description' => Dict::S('UI:Delete:Done+'));
 			$oP->table($aDisplayConfig, $aDisplayData);
 		}
-
-		// Final report
-		foreach($aObjects as $oObj)
-		{
-			$sName = $oObj->GetName();
-			$sClassLabel = MetaModel::GetName(get_class($oObj));
-			$oP->add("<h1>".Dict::Format('UI:Delete:_Name_Class_Deleted', $sName, $sClassLabel)."</h1>\n");
-		}
 	}
 	else
 	{
