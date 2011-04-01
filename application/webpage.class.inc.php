@@ -204,7 +204,7 @@ class WebPage
 	 */
     public function add_linked_script($s_linked_script)
     {
-        $this->a_linked_scripts[] = $s_linked_script;
+        $this->a_linked_scripts[$s_linked_script] = $s_linked_script;
     }
 
 	/**
@@ -284,11 +284,21 @@ class WebPage
         echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n";
         echo "<html>\n";
         echo "<head>\n";
-         echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
+        echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
         echo "<title>{$this->s_title}</title>\n";
         echo $this->get_base_tag();
         foreach($this->a_linked_scripts as $s_script)
         {
+        	// Make sure that the URL to the script contains the application's version number
+        	// so that the new script do NOT get reloaded from the cache when the application is upgraded
+        	if (strpos('?', $s_script) === false)
+        	{
+        		$s_script .= "?version=".ITOP_VERSION;
+        	}
+        	else
+        	{
+        		$s_script .= "&version=".ITOP_VERSION;
+        	}
             echo "<script type=\"text/javascript\" src=\"$s_script\"></script>\n";
         }
         if (count($this->a_scripts)>0)

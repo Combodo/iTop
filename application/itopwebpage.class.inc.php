@@ -547,6 +547,16 @@ EOF
         }
         foreach($this->a_linked_scripts as $s_script)
         {
+         	// Make sure that the URL to the script contains the application's version number
+        	// so that the new script do NOT get reloaded from the cache when the application is upgraded
+        	if (strpos('?', $s_script) === false)
+        	{
+        		$s_script .= "?version=".ITOP_VERSION;
+        	}
+        	else
+        	{
+        		$s_script .= "&version=".ITOP_VERSION;
+        	}
             echo "<script type=\"text/javascript\" src=\"$s_script\"></script>\n";
         }
         if (count($this->m_aReadyScripts)>0)
