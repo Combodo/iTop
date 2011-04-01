@@ -1940,7 +1940,7 @@ EOF
 		
 		if (count($aFields) > 0)
 		{
-			$sMessage =  "Error: Circular dependencies between the fields ! <pre>".print_r($aFields, true)."</pre>";
+			$sMessage =  "Error: Circular dependencies between the fields (or field missing in ZList) ! <pre>".print_r($aFields, true)."</pre>";
 			throw(new Exception($sMessage));
 		}
 		return $aResult;
