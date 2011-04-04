@@ -113,7 +113,7 @@ function GetUploadTmpDir()
     }    
     return $sPath;
 }
- 
+
 /**
  * Helper function to check if the current version of PHP
  * is compatible with the application
@@ -289,6 +289,13 @@ function CheckPHPVersion(SetupWebPage $oP)
 		{
 			$oP->log_info("memory_limit is $iMemoryLimit, ok.");		
 		}
+	}
+	
+	// Special case for APC
+	if (extension_loaded('apc'))
+	{
+		$sAPCVersion = phpversion('apc');
+		$aOk[] = "APC detected (version $sAPCVersion). The APC cache will be used to speed-up iTop.";
 	}
 
 	if (!$bResult)
