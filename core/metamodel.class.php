@@ -221,7 +221,8 @@ abstract class MetaModel
 	private static $m_bSkipCheckToWrite = false;
 	private static $m_bSkipCheckExtKeys = false;
 
-   private static $m_bUseAPCCache = false;
+	private static $m_bUseAPCCache = false;
+	private static $m_iQueryCacheTTL = 3600;
 
 	private static $m_bQueryCacheEnabled = false;
 	private static $m_bTraceQueries = false;
@@ -1843,7 +1844,7 @@ abstract class MetaModel
 				if (self::$m_bUseAPCCache)
 				{
 					$oKPI = new ExecutionKPI();
-					apc_store($sOqlAPCCacheId, $oSelect);
+					apc_store($sOqlAPCCacheId, $oSelect, self::$m_iQueryCacheTTL);
 					$oKPI->ComputeStats('Query APC (store)', $sOqlQuery);
 				}
 
@@ -3625,6 +3626,7 @@ abstract class MetaModel
 										&& self::$m_oConfig->Get('apc_cache.enabled')
 										&& function_exists('apc_fetch')
 										&& function_exists('apc_store');
+		self::$m_iQueryCacheTTL = self::$m_oConfig->Get('apc_cache.query_ttl');
 
 		// Note: load the dictionary as soon as possible, because it might be
 		//       needed when some error occur
