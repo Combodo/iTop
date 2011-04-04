@@ -49,12 +49,17 @@ class ormCaseLog {
 	{
 		return $this->m_aIndex;
 	}
+
+	public function __toString()
+	{
+		return $this->m_sLog;
+	}
 	
-	public function GetAsHTML(WebPage $oP = null, $bEditMode = false)
+	public function GetAsHTML(WebPage $oP = null, $bEditMode = false, $aTransfoHandler = null)
 	{
 		$sHtml = '';
-		$iPos = strlen($this->m_sLog);
-		for($index=0; $index < count($this->m_aIndex); $index++)
+		$iPos = 0;
+		for($index=count($this->m_aIndex)-1 ; $index >= 0 ; $index--)
 		{
 			if ($index < count($this->m_aIndex) - CASELOG_VISIBLE_ITEMS)
 			{
@@ -66,16 +71,57 @@ class ormCaseLog {
 				$sOpen = ' open';
 				$sDisplay = '';
 			}
-			$iStart = $iPos - $this->m_aIndex[$index]['text_length'];
-			$sTextEntry = substr($this->m_sLog, $iStart, $this->m_aIndex[$index]['text_length']);
-			$iPos = $iStart - $this->m_aIndex[$index]['separator_length'];
+			$iPos += $this->m_aIndex[$index]['separator_length'];
+			$sTextEntry = substr($this->m_sLog, $iPos, $this->m_aIndex[$index]['text_length']);
+			$sTextEntry = str_replace("\n", "<br/>", htmlentities($sTextEntry, ENT_QUOTES, 'UTF-8'));
+			if (!is_null($aTransfoHandler))
+			{
+				$sTextEntry = call_user_func($aTransfoHandler, $sTextEntry);
+			}
+			$iPos += $this->m_aIndex[$index]['text_length'];
+
 			$sEntry = '<div class="caselog_header'.$sOpen.'">';
 			$sEntry .= sprintf(CASELOG_HEADER_FORMAT, $this->m_aIndex[$index]['date']->format(CASELOG_DATE_FORMAT), $this->m_aIndex[$index]['user_name']);
 			$sEntry .= '</div>';
 			$sEntry .= '<div class="caselog_entry"'.$sDisplay.'>';
-			$sEntry .= str_replace("\n", "<br/>", htmlentities($sTextEntry, ENT_QUOTES, 'UTF-8'));
+			$sEntry .= $sTextEntry;
 			$sEntry .= '</div>';
-			$sHtml = $sEntry . $sHtml;
+			$sHtml = $sHtml.$sEntry;
+		}
+
+		// Process the case of an eventual remainder (quick migration of AttributeText fields)
+		if ($iPos < (strlen($this->m_sLog) - 1))
+		{
+			$sTextEntry = substr($this->m_sLog, $iPos);
+			$sTextEntry = str_replace("\n", "<br/>", htmlentities($sTextEntry, ENT_QUOTES, 'UTF-8'));
+			if (!is_null($aTransfoHandler))
+			{
+				$sTextEntry = call_user_func($aTransfoHandler, $sTextEntry);
+			}
+
+			if (count($this->m_aIndex) == 0)
+			{
+				$sHtml .= "<div>$sTextEntry</div>\n";
+			}
+			else
+			{
+				if (count($this->m_aIndex) - CASELOG_VISIBLE_ITEMS > 0)
+				{
+					$sOpen = '';
+					$sDisplay = 'style="display:none;"';
+				}
+				else
+				{
+					$sOpen = ' open';
+					$sDisplay = '';
+				}
+				$sHtml .= '<div class="caselog_header'.$sOpen.'">';
+				$sHtml .= '&nbsp;';
+				$sHtml .= '</div>';
+				$sHtml .= '<div class="caselog_entry"'.$sDisplay.'>';
+				$sHtml .= $sTextEntry;
+				$sHtml .= '</div>';
+			}
 		}
 		$sHtml = '<div class="caselog">'.$sHtml.'</div>';
 		return $sHtml;
@@ -99,6 +145,17 @@ class ormCaseLog {
 			'text_length' => $iTextlength,	
 			'separator_length' => $iSepLength,	
 		);
+	}
+
+	/**
+	 * Get the latest entry from the log
+	 */
+	public function GetLatestEntry()
+	{
+		$iLast = count($this->m_aIndex) - 1;
+		$aLastEntry = $this->m_aIndex[$iLast];
+		$sRes = substr($this->m_sLog, $aLastEntry['separator_length'], $aLastEntry['text_length']);
+		return $sRes;
 	}
 }
 ?>

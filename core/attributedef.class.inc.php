@@ -274,11 +274,6 @@ abstract class AttributeDefinition
 
 	public function GetAsHTML($sValue, $oHostObject = null)
 	{
-		if ($sValue instanceof ormCaseLog)
-		{
-			echo "<p>AttributeCode: ".$this->GetCode()."</p>";
-			echo debug_print_backtrace();
-		}
 		return Str::pure2html((string)$sValue);
 	}
 
@@ -1124,206 +1119,6 @@ class AttributeClass extends AttributeString
 }
 
 /**
- * An attibute that stores a case log (i.e journal) 
- *
- * @package     iTopORM
- */
-class AttributeCaseLog extends AttributeText
-{
-	public function GetBasicFilterOperators()
-	{
-		return array(
-			"="=>"equals",
-			"!="=>"differs from",
-			"Like"=>"equals (no case)",
-			"NotLike"=>"differs from (no case)",
-			"Contains"=>"contains",
-			"Begins with"=>"begins with",
-			"Finishes with"=>"finishes with"
-		);
-	}
-	public function GetBasicFilterLooseOperator()
-	{
-		return "Contains";
-	}
-
-	public function GetBasicFilterSQLExpr($sOpCode, $value)
-	{
-		$sQValue = CMDBSource::Quote($value);
-		switch ($sOpCode)
-		{
-		case '=':
-		case '!=':
-			return $this->GetSQLExpr()." $sOpCode $sQValue";
-		case 'Begins with':
-			return $this->GetSQLExpr()." LIKE ".CMDBSource::Quote("$value%");
-		case 'Finishes with':
-			return $this->GetSQLExpr()." LIKE ".CMDBSource::Quote("%$value");
-		case 'Contains':
-			return $this->GetSQLExpr()." LIKE ".CMDBSource::Quote("%$value%");
-		case 'NotLike':
-			return $this->GetSQLExpr()." NOT LIKE $sQValue";
-		case 'Like':
-		default:
-			return $this->GetSQLExpr()." LIKE $sQValue";
-		}
-	} 
-
-	public function GetNullValue()
-	{
-		return '';
-	} 
-
-	public function IsNull($proposedValue)
-	{
-		if (!($proposedValue instanceof ormCaseLog))
-		{
-			return ($proposedValue == '');
-		}
-		return ($proposedValue->GetText() == '');
-	} 
-
-	public function ScalarToSQL($value)
-	{
-		if (!is_string($value) && !is_null($value))
-		{
-			throw new CoreWarning('Expected the attribute value to be a string', array('found_type' => gettype($value), 'value' => $value, 'class' => $this->GetCode(), 'attribute' => $this->GetHostClass()));
-		}
-		return $value;
-	}
-	public function GetEditClass() {return "CaseLog";}
-	public function GetEditValue($sValue) { return ''; } // New 'edit' value is always blank since it will be appended to the existing log	
-	public function IsDirectField() {return true;} 
-	public function IsScalar() {return true;} 
-	public function IsWritable() {return true;} 
-	public function GetDefaultValue() {return new ormCaseLog();}
-	public function IsNullAllowed() {return $this->GetOptional("is_null_allowed", false);}
-	public function RequiresIndex() { return false; }
-	public function Equals($val1, $val2) {return (count($val1->GetIndex()) == count($val2->GetIndex()));}
-	public function GetMaxSize() { return null; }
-	public function CheckFormat($value) { return true; }
-	
-
-
-	// Facilitate things: allow the user to Set the value from a string
-	public function MakeRealValue($proposedValue, $oHostObj)
-	{
-		if (!($proposedValue instanceof ormCaseLog))
-		{
-			// Append the new value if an instance of the object is supplied
-			if ($oHostObj != null)
-			{
-				$oCaseLog = clone($oHostObj->GetOriginal($this->GetCode()));
-			}
-			else
-			{
-				$oCaseLog = new ormCaseLog();
-			}
-			echo "Added log entry: $proposedValue";
-			$oCaseLog->AddLogEntry(parent::MakeRealValue($proposedValue, $oHostObj));
-			return $oCaseLog;
-		}
-		return $proposedValue;
-	}
-
-	public function GetSQLExpressions($sPrefix = '')
-	{
-		if ($sPrefix == '')
-		{
-			$sPrefix = $this->GetCode();
-		}
-		$aColumns = array();
-		// Note: to optimize things, the existence of the attribute is determined by the existence of one column with an empty suffix
-		$aColumns[''] = $sPrefix;
-		$aColumns['_index'] = $sPrefix.'_index';
-		return $aColumns;
-	}
-
-	public function FromSQLToValue($aCols, $sPrefix = '')
-	{
-		if (!isset($aCols[$sPrefix]))
-		{
-			$sAvailable = implode(', ', array_keys($aCols));
-			throw new MissingColumnException("Missing column '$sPrefix' from {$sAvailable}");
-		} 
-		$sLog = $aCols[$sPrefix];
-
-		if (!isset($aCols[$sPrefix.'_index'])) 
-		{
-			$sAvailable = implode(', ', array_keys($aCols));
-			throw new MissingColumnException("Missing column '".$sPrefix."_index' from {$sAvailable}");
-		} 
-		$aIndex = unserialize($aCols[$sPrefix.'_index']);
-
-		$value = new ormCaseLog($sLog, $aIndex);
-		return $value;
-	}
-
-	public function GetSQLValues($value)
-	{
-		if (!($value instanceOf ormCaseLog))
-		{
-			$value = new ormCaseLog('');
-		}
-		$aValues = array();
-		$aValues[$this->GetCode()] = $value->GetText();
-		$aValues[$this->GetCode().'_index'] = serialize($value->GetIndex());
-
-		return $aValues;
-	}
-
-	public function GetSQLColumns()
-	{
-		$aColumns = array();
-		$aColumns[$this->GetCode()] = 'LONGTEXT'; // 2^32 (4 Gb)
-		$aColumns[$this->GetCode().'_index'] = 'BLOB';
-		return $aColumns;
-	}
-
-	public function GetFilterDefinitions()
-	{
-		return array($this->GetCode() => new FilterFromAttribute($this));
-	}
-
-	public function GetAsHTML($value, $oHostObject = null)
-	{
-		if ($value instanceOf ormCaseLog)
-		{
-			return $value->GetAsHTML(null, false);
-		}
-		else
-		{
-			return '';
-		}
-	}
-
-
-	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null)
-	{
-		if ($value instanceOf ormCaseLog)
-		{
-			return parent::GetAsCSV($value->GetText(), $sSeparator, $sTextQualifier, $oHostObject);
-		}
-		else
-		{
-			return '';
-		}
-	}
-	
-	public function GetAsXML($value, $oHostObject = null)
-	{
-		if ($value instanceOf ormCaseLog)
-		{
-			return parent::GetAsXML($value->GetText(), $oHostObject);
-		}
-		else
-		{
-			return '';
-		}
-	}
-}
-
-/**
  * An attibute that matches one of the language codes availables in the dictionnary 
  *
  * @package     iTopORM
@@ -1532,11 +1327,9 @@ class AttributeText extends AttributeString
 		return 65535;
 	}
 
-	public function GetAsHTML($sValue, $oHostObject = null)
+	static public function RenderWikiHtml($sText)
 	{
-		$sValue = parent::GetAsHTML($sValue);
-
-		if (preg_match_all(WIKI_OBJECT_REGEXP, $sValue, $aAllMatches, PREG_SET_ORDER))
+		if (preg_match_all(WIKI_OBJECT_REGEXP, $sText, $aAllMatches, PREG_SET_ORDER))
 		{
 			foreach($aAllMatches as $iPos => $aMatches)
 			{
@@ -1549,20 +1342,27 @@ class AttributeText extends AttributeString
 					if (is_object($oObj))
 					{
 						// Propose a std link to the object
-						$sValue = str_replace($aMatches[0], $oObj->GetHyperlink(), $sValue);
+						$sText = str_replace($aMatches[0], $oObj->GetHyperlink(), $sText);
 					}
 					else
 					{
 						// Propose a std link to the object
 						$sClassLabel = MetaModel::GetName($sClass);
-						$sValue = str_replace($aMatches[0], "<span class=\"wiki_broken_link\">$sClassLabel:$sName</span>", $sValue);
+						$sText = str_replace($aMatches[0], "<span class=\"wiki_broken_link\">$sClassLabel:$sName</span>", $sText);
 						// Later: propose a link to create a new object
 						// Anyhow... there is no easy way to suggest default values based on the given FRIENDLY name
-						//$sValue = preg_replace('/\[\[(.+):(.+)\]\]/', '<a href="./UI.php?operation=new&class='.$sClass.'&default[att1]=xxx&default[att2]=yyy">'.$sName.'</a>', $sValue);
+						//$sText = preg_replace('/\[\[(.+):(.+)\]\]/', '<a href="./UI.php?operation=new&class='.$sClass.'&default[att1]=xxx&default[att2]=yyy">'.$sName.'</a>', $sText);
 					}
 				}
 			}
 		}
+		return $sText;
+	}
+
+	public function GetAsHTML($sValue, $oHostObject = null)
+	{
+		$sValue = parent::GetAsHTML($sValue);
+		$sValue = self::RenderWikiHtml($sValue);
 		return str_replace("\n", "<br>\n", $sValue);
 	}
 
@@ -1628,6 +1428,178 @@ class AttributeLongText extends AttributeText
 		// Is there a way to know the current limitation for mysql?
 		// See mysql_field_len()
 		return 65535*1024; // Limited... still 64 Mb!
+	}
+}
+
+/**
+ * An attibute that stores a case log (i.e journal) 
+ *
+ * @package     iTopORM
+ */
+class AttributeCaseLog extends AttributeText
+{
+	public function GetNullValue()
+	{
+		return '';
+	} 
+
+	public function IsNull($proposedValue)
+	{
+		if (!($proposedValue instanceof ormCaseLog))
+		{
+			return ($proposedValue == '');
+		}
+		return ($proposedValue->GetText() == '');
+	} 
+
+	public function ScalarToSQL($value)
+	{
+		if (!is_string($value) && !is_null($value))
+		{
+			throw new CoreWarning('Expected the attribute value to be a string', array('found_type' => gettype($value), 'value' => $value, 'class' => $this->GetCode(), 'attribute' => $this->GetHostClass()));
+		}
+		return $value;
+	}
+	public function GetEditClass() {return "CaseLog";}
+	public function GetEditValue($sValue) { return ''; } // New 'edit' value is always blank since it will be appended to the existing log	
+	public function GetDefaultValue() {return new ormCaseLog();}
+	public function Equals($val1, $val2) {return ($val1->GetText() == $val2->GetText());}
+	
+
+	// Facilitate things: allow the user to Set the value from a string
+	public function MakeRealValue($proposedValue, $oHostObj)
+	{
+		if (!($proposedValue instanceof ormCaseLog))
+		{
+			// Append the new value if an instance of the object is supplied
+			//
+			$oPreviousLog = null;
+			if ($oHostObj != null)
+			{
+				$oPreviousLog = $oHostObj->Get($this->GetCode());
+				if (!is_object($oPreviousLog))
+				{
+					$oPreviousLog = $oHostObj->GetOriginal($this->GetCode());;
+				}
+				
+			}
+			if (is_object($oPreviousLog))
+			{
+				$oCaseLog = clone($oPreviousLog);
+			}
+			else
+			{
+				$oCaseLog = new ormCaseLog();
+			}
+			if (strlen($proposedValue) > 0)
+			{
+				$oCaseLog->AddLogEntry(parent::MakeRealValue($proposedValue, $oHostObj));
+			}
+			return $oCaseLog;
+		}
+		return $proposedValue;
+	}
+
+	public function GetSQLExpressions($sPrefix = '')
+	{
+		if ($sPrefix == '')
+		{
+			$sPrefix = $this->GetCode();
+		}
+		$aColumns = array();
+		// Note: to optimize things, the existence of the attribute is determined by the existence of one column with an empty suffix
+		$aColumns[''] = $sPrefix;
+		$aColumns['_index'] = $sPrefix.'_index';
+		return $aColumns;
+	}
+
+	public function FromSQLToValue($aCols, $sPrefix = '')
+	{
+		if (!isset($aCols[$sPrefix]))
+		{
+			$sAvailable = implode(', ', array_keys($aCols));
+			throw new MissingColumnException("Missing column '$sPrefix' from {$sAvailable}");
+		} 
+		$sLog = $aCols[$sPrefix];
+
+		if (isset($aCols[$sPrefix.'_index'])) 
+		{
+			$sIndex = $aCols[$sPrefix.'_index'];
+		}
+		else
+		{
+			// For backward compatibility, allow the current state to be: 1 log, no index
+			$sIndex = '';
+		}
+
+		if (strlen($sIndex) > 0)
+		{ 
+			$aIndex = unserialize($sIndex);
+			$value = new ormCaseLog($sLog, $aIndex);
+		}
+		else
+		{
+			$value = new ormCaseLog($sLog);
+		}
+		return $value;
+	}
+
+	public function GetSQLValues($value)
+	{
+		if (!($value instanceOf ormCaseLog))
+		{
+			$value = new ormCaseLog('');
+		}
+		$aValues = array();
+		$aValues[$this->GetCode()] = $value->GetText();
+		$aValues[$this->GetCode().'_index'] = serialize($value->GetIndex());
+
+		return $aValues;
+	}
+
+	public function GetSQLColumns()
+	{
+		$aColumns = array();
+		$aColumns[$this->GetCode()] = 'LONGTEXT'; // 2^32 (4 Gb)
+		$aColumns[$this->GetCode().'_index'] = 'BLOB';
+		return $aColumns;
+	}
+
+	public function GetAsHTML($value, $oHostObject = null)
+	{
+		if ($value instanceOf ormCaseLog)
+		{
+			return $value->GetAsHTML(null, false, array(__class__, 'RenderWikiHtml'));
+		}
+		else
+		{
+			return '';
+		}
+	}
+
+
+	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null)
+	{
+		if ($value instanceOf ormCaseLog)
+		{
+			return parent::GetAsCSV($value->GetText(), $sSeparator, $sTextQualifier, $oHostObject);
+		}
+		else
+		{
+			return '';
+		}
+	}
+	
+	public function GetAsXML($value, $oHostObject = null)
+	{
+		if ($value instanceOf ormCaseLog)
+		{
+			return parent::GetAsXML($value->GetText(), $oHostObject);
+		}
+		else
+		{
+			return '';
+		}
 	}
 }
 

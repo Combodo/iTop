@@ -232,7 +232,14 @@ class CMDBChangeOpSetAttributeScalar extends CMDBChangeOpSetAttribute
 				}
 				else
 				{
-					$sResult = Dict::Format('Change:AttName_SetTo_NewValue_PreviousValue_OldValue', $sAttName, $sNewValue, $sOldValue);
+					if (strlen($sOldValue) == 0)
+					{
+						$sResult = Dict::Format('Change:AttName_SetTo', $sAttName, $sNewValue);
+					}
+					else
+					{
+						$sResult = Dict::Format('Change:AttName_SetTo_NewValue_PreviousValue_OldValue', $sAttName, $sNewValue, $sOldValue);
+					}
 				}
 			}
 			elseif($bIsHtml && $oAttDef->IsExternalKey())
@@ -241,6 +248,14 @@ class CMDBChangeOpSetAttributeScalar extends CMDBChangeOpSetAttribute
 				$sFrom = MetaModel::GetHyperLink($sTargetClass, $sOldValue);
 				$sTo = MetaModel::GetHyperLink($sTargetClass, $sNewValue);
 				$sResult = "$sAttName set to $sTo (previous: $sFrom)";
+				if (strlen($sFrom) == 0)
+				{
+					$sResult = Dict::Format('Change:AttName_SetTo', $sAttName, $sTo);
+				}
+				else
+				{
+					$sResult = Dict::Format('Change:AttName_SetTo_NewValue_PreviousValue_OldValue', $sAttName, $sTo, $sFrom);
+				}
 			}
 			elseif ($oAttDef instanceOf AttributeBlob)
 			{
@@ -248,7 +263,14 @@ class CMDBChangeOpSetAttributeScalar extends CMDBChangeOpSetAttribute
 			}
 			else
 			{
-				$sResult = Dict::Format('Change:AttName_SetTo_NewValue_PreviousValue_OldValue', $sAttName, $sNewValue, $sOldValue);
+				if (strlen($sOldValue) == 0)
+				{
+					$sResult = Dict::Format('Change:AttName_SetTo', $sAttName, $sNewValue);
+				}
+				else
+				{
+					$sResult = Dict::Format('Change:AttName_SetTo_NewValue_PreviousValue_OldValue', $sAttName, $sNewValue, $sOldValue);
+				}
 			}
 		}
 		return $sResult;

@@ -107,6 +107,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Change:ObjectCreated' => 'Объект создан',
 	'Change:ObjectDeleted' => 'Объект удалён',
 	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => '%1$s установлено в %2$s (предыдущее значение: %3$s)',
+	'Change:AttName_SetTo' => '%1$s установлено в %2$s',
 	'Change:Text_AppendedTo_AttName' => '%1$s добавлено к %2$s',
 	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s изменено, предыдущее значение: %2$s',
 	'Change:AttName_Changed' => '%1$s изменено',

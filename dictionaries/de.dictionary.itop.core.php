@@ -203,6 +203,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Change:ObjectDeleted' => 'Object deleted',
 	'Change:ObjectModified' => 'Object modified',
 	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => '%1$s geändert zu %2$s (vorheriger Wert: %3$s)',
+	'Change:AttName_SetTo' => '%1$s geändert zu %2$s',
 	'Change:Text_AppendedTo_AttName' => '%1$s zugefügt an %2$s',
 	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s modifiziert, vorheriger Wert: %2$s',
 	'Change:AttName_Changed' => '%1$s modifiziert',

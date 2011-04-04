@@ -177,6 +177,18 @@ abstract class CMDBObject extends DBObject
 				$oMyChangeOp->Set("prevdata", $original);
 				$iId = $oMyChangeOp->DBInsertNoReload();
 			}
+			elseif ($oAttDef instanceOf AttributeCaseLog)
+			{
+				$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeScalar");
+				$oMyChangeOp->Set("change", $oChange->GetKey());
+				$oMyChangeOp->Set("objclass", get_class($this));
+				$oMyChangeOp->Set("objkey", $this->GetKey());
+				$oMyChangeOp->Set("attcode", $sAttCode);
+
+				$oMyChangeOp->Set("oldvalue", '');
+				$oMyChangeOp->Set("newvalue", $value->GetLatestEntry());
+				$iId = $oMyChangeOp->DBInsertNoReload();
+			}
 			elseif ($oAttDef instanceOf AttributeText)
 			{
 				// Data blobs

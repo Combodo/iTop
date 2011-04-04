@@ -108,6 +108,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Change:ObjectCreated' => 'Nesne yaratıldı',
 	'Change:ObjectDeleted' => 'Nesne silindi',
 	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => '%1$s\'nin değeri %2$s olarak atandı (önceki değer: %3$s)',
+	'Change:AttName_SetTo' => '%1$s\'nin değeri %2$s olarak atandı',
 	'Change:Text_AppendedTo_AttName' => '%2$s\'ye %1$s eklendi',
 	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$\'nin değeri deiştirildi, önceki değer: %2$s',
 	'Change:AttName_Changed' => '%1$s değiştirildi',
