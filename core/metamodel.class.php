@@ -4130,9 +4130,14 @@ abstract class MetaModel
 		}
 	}
 
-	public static function GetCacheEntries($sAppIdentity)
+	public static function GetCacheEntries(Config $oConfig = null)
 	{
 		if (!function_exists('apc_cache_info')) return array();
+		if (is_null($oConfig))
+		{
+			$oConfig = self::GetConfig();
+		}
+		$sAppIdentity = $oConfig->Get('session_name');
 
 		$aCacheUserData = apc_cache_info('user');  
 		$sPrefix = $sAppIdentity.'-';
@@ -4150,14 +4155,18 @@ abstract class MetaModel
 		return $aEntries;
 	}
 
-	public static function ResetCache(Config $oConfig)
+	public static function ResetCache(Config $oConfig = null)
 	{
 		if (!function_exists('apc_delete')) return;
-
+		if (is_null($oConfig))
+		{
+			$oConfig = self::GetConfig();
+		}
 		$sAppIdentity = $oConfig->Get('session_name');
+
 		Dict::ResetCache($sAppIdentity);
 
-		foreach(self::GetCacheEntries($sAppIdentity) as $sKey => $aAPCInfo)
+		foreach(self::GetCacheEntries($oConfig) as $sKey => $aAPCInfo)
 		{
 			$sAPCKey = $aAPCInfo['info'];
 			apc_delete($sAPCKey);
