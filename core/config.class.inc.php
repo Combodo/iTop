@@ -278,6 +278,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
+		'apc_cache.enabled' => array(
+			'type' => 'bool',
+			'description' => 'If set, the APC cache is allowed (the PHP extension must also be active)',
+			'default' => true,
+			'value' => true,
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
 	);
 
 	public function IsProperty($sPropCode)

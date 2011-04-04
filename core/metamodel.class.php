@@ -221,6 +221,8 @@ abstract class MetaModel
 	private static $m_bSkipCheckToWrite = false;
 	private static $m_bSkipCheckExtKeys = false;
 
+   private static $m_bUseAPCCache = false;
+
 	private static $m_bQueryCacheEnabled = false;
 	private static $m_bTraceQueries = false;
 	private static $m_aQueriesLog = array();
@@ -1807,7 +1809,7 @@ abstract class MetaModel
 				// hit!
 				$oSelect = clone self::$m_aQueryStructCache[$sOqlId];
 			}
-			elseif (function_exists('apc_fetch'))
+			elseif (self::$m_bUseAPCCache)
 			{
 				// Note: For versions of APC older than 3.0.17, fetch() accepts only one parameter
 				//
@@ -1838,7 +1840,7 @@ abstract class MetaModel
 
 			if (self::$m_bQueryCacheEnabled)
 			{
-				if (function_exists('apc_store'))
+				if (self::$m_bUseAPCCache)
 				{
 					$oKPI = new ExecutionKPI();
 					apc_store($sOqlAPCCacheId, $oSelect);
@@ -3556,9 +3558,9 @@ abstract class MetaModel
 		}
 	}
 
-	public static function Startup($sConfigFile, $bModelOnly = false, $bUseCache = true)
+	public static function Startup($sConfigFile, $bModelOnly = false, $bAllowCache = true)
 	{
-		self::LoadConfig($sConfigFile, $bUseCache);
+		self::LoadConfig($sConfigFile, $bAllowCache);
 
 		if ($bModelOnly) return;
 
@@ -3580,10 +3582,10 @@ abstract class MetaModel
 		}
 	}
 
-	public static function LoadConfig($sConfigFile, $bUseCache = false)
+	public static function LoadConfig($sConfigFile, $bAllowCache = false)
 	{
 		self::$m_oConfig = new Config($sConfigFile);
-		
+
 		// Set log ASAP
 		if (self::$m_oConfig->GetLogGlobal())
 		{
@@ -3619,16 +3621,24 @@ abstract class MetaModel
 		self::$m_bSkipCheckToWrite = self::$m_oConfig->Get('skip_check_to_write');
 		self::$m_bSkipCheckExtKeys = self::$m_oConfig->Get('skip_check_ext_keys');
 
+		self::$m_bUseAPCCache = $bAllowCache
+										&& self::$m_oConfig->Get('apc_cache.enabled')
+										&& function_exists('apc_fetch')
+										&& function_exists('apc_store');
+
 		// Note: load the dictionary as soon as possible, because it might be
 		//       needed when some error occur
 		$sAppIdentity = self::GetConfig()->Get('session_name');
-		if (!Dict::InCache($sAppIdentity))
+		if (!self::$m_bUseAPCCache || !Dict::InCache($sAppIdentity))
 		{
 			foreach (self::$m_oConfig->GetDictionaries() as $sModule => $sToInclude)
 			{
 				self::IncludeModule($sConfigFile, 'dictionaries', $sToInclude);
 			}
-			Dict::InitCache($sAppIdentity);
+			if (self::$m_bUseAPCCache)
+			{
+				Dict::InitCache($sAppIdentity);
+			}
 		}
 		// Set the language... after the dictionaries have been loaded!
 		Dict::SetDefaultLanguage(self::$m_oConfig->GetDefaultLanguage());
@@ -3662,7 +3672,7 @@ abstract class MetaModel
 		$sCharacterSet = self::$m_oConfig->GetDBCharacterSet();
 		$sCollation = self::$m_oConfig->GetDBCollation();
 
-		if ($bUseCache && function_exists('apc_fetch'))
+		if (self::$m_bUseAPCCache)
 		{
 			$oKPI = new ExecutionKPI();
 			// Note: For versions of APC older than 3.0.17, fetch() accepts only one parameter
@@ -3705,7 +3715,7 @@ abstract class MetaModel
 			self::InitClasses($sTablePrefix);
 
 			$oKPI->ComputeAndReport('Initialization of Data model structures');
-			if ($bUseCache && function_exists('apc_store'))
+			if (self::$m_bUseAPCCache)
 			{
 				$oKPI = new ExecutionKPI();
 
