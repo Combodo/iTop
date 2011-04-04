@@ -424,7 +424,7 @@ function InitDataModel($sConfigFileName, $bModelOnly = true, $bUseCache = false)
 	if ($bUseCache)
 	{
 		// Reset the cache for the first use !
-		$oConfig = new Config($sConfigFileName, false);
+		$oConfig = new Config($sConfigFileName, true /* Load Config */);
 		MetaModel::ResetCache($oConfig);
 	}
 
