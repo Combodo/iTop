@@ -552,6 +552,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:SynchroAtt:update_policy+' => 'Behavior of the updated field',
 	'Core:SynchroAtt:reconciliation_attcode' => 'Reconciliation Key',
 	'Core:SynchroAtt:reconciliation_attcode+' => 'Attribute Code for the External Key Reconciliation',
+	'Core:SyncDataExchangeComment' => '(DataExchange)',
+	'Core:Synchro:ListOfDataSources' => 'List of data sources:',
+	'Core:Synchro:LastSynchro' => 'Last synchronization:',
+	'Core:Synchro:ThisObjectIsSynchronized' => 'This object is synchronized with an external data source',
+	'Core:Synchro:TheObjectWasCreatedBy_Source' => 'The object was <b>created</b> by the external data source %1$s',
+	'Core:Synchro:TheObjectCanBeDeletedBy_Source' => 'The object <b>can be deleted</b> by the external data source %1$s',
 
 			
 ));

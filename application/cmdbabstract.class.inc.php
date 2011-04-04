@@ -110,19 +110,19 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		if ($oReplicaSet->Count() > 0)
 		{
 			$bSynchronized = true;
-			$sTip = "<p>The object is synchronized with an external data source</p>";
+			$sTip = "<p>".Dict::S('Core:Synchro:ThisObjectIsSynchronized')."</p>";
 			while($aData = $oReplicaSet->FetchAssoc())
 			{
 				// Assumption: $aData['datasource'] will not be null because the data source id is always set...
 				$sApplicationURL = $aData['datasource']->GetApplicationUrl($this, $aData['replica']);
-				$sLink = '';
+				$sLink = $aData['datasource']->GetName();
 				if (!empty($sApplicationURL))
 				{
-				$sLink = "<a href=\"$sApplicationURL\" target=\"_blank\">".$aData['datasource']->GetName()."</a>";
+					$sLink = "<a href=\"$sApplicationURL\" target=\"_blank\">".$aData['datasource']->GetName()."</a>";
 				}
 				if ($aData['replica']->Get('status_dest_creator') == 1)
 				{
-					$sTip .= "<p>The object was <b>created</b> by the external data source $sLink</p>";
+					$sTip .= "<p>".Dict::Format('Core:Synchro:TheObjectWasCreatedBy_Source', $sLink)."</p>";
 					$bCreated = true;
 				}
 				if ($bCreated)
@@ -131,23 +131,25 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 					if (($sDeletePolicy == 'delete') || ($sDeletePolicy == 'update_then_delete'))
 					{
 						$bCanBeDeleted = true;
-						$sTip .= "<p>The object <b>can be deleted</b> by the external data source $sLink</p>";
+						$sTip .= "<p>".Dict::Format('Core:Synchro:TheObjectCanBeDeletedBy_Source', $sLink)."</p>";
 					}
 				}
 				$aMasterSources[$aData['datasource']->GetKey()]['datasource'] = $aData['datasource'];
 				$aMasterSources[$aData['datasource']->GetKey()]['url'] = $sLink;
+				$aMasterSources[$aData['datasource']->GetKey()]['last_synchro'] = $aData['replica']->Get('status_last_seen');
 			}
 		}
 		
 		$sSynchroIcon = '';
 		if ($bSynchronized)
 		{
-			$sTip .= "<p><b>List of data sources:</b></p>";
+			$sTip .= "<p><b>".Dict::S('Core:Synchro:ListOfDataSources')."</b></p>";
 			foreach($aMasterSources as $aStruct)
 			{
 				$oDataSource = $aStruct['datasource'];
 				$sLink = $aStruct['url'];
-				$sTip .= "<p style=\"white-space:nowrap\">".$oDataSource->GetIcon(true, 'style="vertical-align:middle"')."&nbsp;$sLink</p>";
+				$sTip .= "<p style=\"white-space:nowrap\">".$oDataSource->GetIcon(true, 'style="vertical-align:middle"')."&nbsp;$sLink<br/>";
+				$sTip .= Dict::S('Core:Synchro:LastSynchro').'<br/>'.$aStruct['last_synchro']."</p>";
 			}
 			$sSynchroIcon = '&nbsp;<img style="vertical-align:middle;" id="synchro_icon" src="../images/locked.png"/>';
 			$oPage->add_ready_script("$('#synchro_icon').qtip( { content: '$sTip', show: 'mouseover', hide: 'unfocus', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );");
@@ -384,6 +386,8 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 						$val = $this->GetFieldAsHtml($sClass, $sAttCode, $sStateAttCode);
 						if ($val != null)
 						{
+							/*
+							 * Removed for now...
 							// Check if the attribute is not mastered by a synchro...
 							$aReasons = array();
 							$iSynchroFlags = $this->GetSynchroReplicaFlags($sAttCode, $aReasons);
@@ -400,6 +404,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 							}
 
 							$val['comments'] = $sSynchroIcon;
+							*/
 							// The field is visible, add it to the current column
 							$aDetails[$sTab][$sColIndex][] = $val;
 							$iInputId++;

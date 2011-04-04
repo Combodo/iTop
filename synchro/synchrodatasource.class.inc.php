@@ -301,14 +301,14 @@ EOF
 			$oPage->add($this->HtmlBox('obj_obsoleted', $aData, '#630'));
 			$oPage->add("</tr>\n<tr>");
 			$sOQL = urlencode($sBaseOQL." AND status='obsolete'");
-			$oPage->add($this->HtmlBox('obj_disappeared_errors', $aData, '#C00', '', " <a style=\"color:#fff\" href=\"../synchro/replica?operation=oql&datasource=$iDSid&oql=$sOQL\" id=\"disappeared_errors_link\">Show</a>"));
+			$oPage->add($this->HtmlBox('obj_disappeared_errors', $aData, '#C00', '', " <a style=\"color:#fff\" href=\"../synchro/replica.php?operation=oql&datasource=$iDSid&oql=$sOQL\" id=\"disappeared_errors_link\">Show</a>"));
 			$oPage->add("</tr>\n<tr>");
 			$oPage->add($this->HtmlBox('repl_existing', $aData, '#093', 'rowspan="3"').'<td rowspan="3" class="arrow">=&gt;</td>'.$this->HtmlBox('obj_unchanged', $aData, '#393'));
 			$oPage->add("</tr>\n<tr>");
 			$oPage->add($this->HtmlBox('obj_updated', $aData, '#3C3'));
 			$oPage->add("</tr>\n<tr>");
 			$sOQL = urlencode($sBaseOQL." AND status='modified'");
-			$oPage->add($this->HtmlBox('obj_updated_errors', $aData, '#C00', '', " <a style=\"color:#fff\" href=\"../synchro/replica?operation=oql&datasource=$iDSid&oql=$sOQL\" id=\"updated_errors_link\">Show</a>"));
+			$oPage->add($this->HtmlBox('obj_updated_errors', $aData, '#C00', '', " <a style=\"color:#fff\" href=\"../synchro/replica.php?operation=oql&datasource=$iDSid&oql=$sOQL\" id=\"updated_errors_link\">Show</a>"));
 			$oPage->add("</tr>\n<tr>");
 			$oPage->add($this->HtmlBox('repl_new', $aData, '#339', 'rowspan="4"').'<td rowspan="4" class="arrow">=&gt;</td>'.$this->HtmlBox('obj_new_unchanged', $aData, '#393'));
 			$oPage->add("</tr>\n<tr>");
@@ -317,7 +317,7 @@ EOF
 			$oPage->add($this->HtmlBox('obj_created', $aData, '#339'));
 			$oPage->add("</tr>\n<tr>");
 			$sOQL = urlencode($sBaseOQL." AND status='new'");
-			$oPage->add($this->HtmlBox('obj_new_errors', $aData, '#C00', '', " <a style=\"color:#fff\" href=\"../synchro/replica?operation=oql&datasource=$iDSid&oql=$sOQL\" id=\"new_errors_link\">Show</a>"));
+			$oPage->add($this->HtmlBox('obj_new_errors', $aData, '#C00', '', " <a style=\"color:#fff\" href=\"../synchro/replica.php?operation=oql&datasource=$iDSid&oql=$sOQL\" id=\"new_errors_link\">Show</a>"));
 			$oPage->add("</tr>\n</table>\n");
 			$oPage->add('</td></tr></table>');
 			$oPage->add_ready_script("UpdateSynoptics('$iLastLog')");
@@ -659,7 +659,7 @@ EOF
 		$oMyChange = MetaModel::NewObject("CMDBChange");
 		$oMyChange->Set("date", time());
 		$sUserString = CMDBChange::GetCurrentUserName();
-		$oMyChange->Set("userinfo", $sUserString);
+		$oMyChange->Set("userinfo", $sUserString.' '.Dict::S('Core:SyncDataExchangeComment'));
 		$iChangeId = $oMyChange->DBInsert();
 
 		// Start logging this execution (stats + protection against reentrance)
@@ -763,7 +763,7 @@ EOF
 		}
 		elseif ($this->Get('reconciliation_policy') == 'use_primary_key')
 		{
-			// Override the setings made at the attribute level !
+			// Override the settings made at the attribute level !
 			$aReconciliationKeys = array("primary_key" => null);
 		}
 
@@ -840,11 +840,12 @@ EOF
 				}
 				$oReplica->UpdateDestObject($aToUpdate, $oMyChange, $oStatLog);
 				$oReplica->Set('status', 'obsolete');
+				$oReplica->Set('info_last_synchro', date('Y-m-d H:i:s'));
 				$oReplica->DBUpdateTracked($oMyChange);
 				break;
 
-         case 'delete':
-         default:
+         	case 'delete':
+         	default:
 				$oStatLog->AddTrace("Destination object to be DELETED", $oReplica);
 				$oReplica->DeleteDestObject($oMyChange, $oStatLog);
 			}
@@ -862,7 +863,7 @@ EOF
 
 		while($oReplica = $oSetToSync->Fetch())
 		{
-			$oReplica->Synchro($this, $aReconciliationKeys, $aAttributes, $oMyChange, $oStatLog);
+			$oReplica->Synchro($this, $aReconciliationKeys, $aAttributes, $oMyChange, $oStatLog);			
 		}
 		
 		// Get all the replicas that are to be deleted
@@ -1446,6 +1447,7 @@ class SynchroReplica extends DBObject implements iDisplay
 				$oDestObj->DBUpdateTracked($oChange);
 				$oStatLog->AddTrace('Updated object - Values: {'.implode(', ', $aValueTrace).'}', $this);
 				$oStatLog->Inc($sStatsCode.'_updated');
+				$this->Set('info_last_modified', date('Y-m-d H:i:s'));
 			}
 			else
 			{
@@ -1489,6 +1491,7 @@ class SynchroReplica extends DBObject implements iDisplay
 			$this->Set('status_dest_creator', true);
 			$this->Set('status_last_error', '');
 			$this->Set('status', 'synchronized');
+			$this->Set('info_creation_date', date('Y-m-d H:i:s'));
 
 			$oStatLog->AddTrace("Created (".implode(', ', $aValueTrace).")", $this);
 			$oStatLog->Inc('stats_nb_obj_created');
@@ -1520,6 +1523,7 @@ class SynchroReplica extends DBObject implements iDisplay
 				{
 					$oDestObj->Set($sAttCode, $value);
 				}
+				$this->Set('info_last_modified', date('Y-m-d H:i:s'));
 				$oDestObj->DBUpdateTracked($oChange);
 				$oStatLog->AddTrace("Replica marked as obsolete", $this);
 				$oStatLog->Inc('stats_nb_obj_obsoleted');
@@ -1719,7 +1723,7 @@ class SynchroReplica extends DBObject implements iDisplay
 {
 	$oAdminMenu = new MenuGroup('AdminTools', 80 /* fRank */);
 	new OQLMenuNode('DataSources', 'SELECT SynchroDataSource', $oAdminMenu->GetIndex(), 12 /* fRank */, true, 'SynchroDataSource', UR_ACTION_MODIFY, UR_ALLOWED_YES);
-	new OQLMenuNode('Replicas', 'SELECT SynchroReplica', $oAdminMenu->GetIndex(), 12 /* fRank */, true, 'SynchroReplica', UR_ACTION_MODIFY, UR_ALLOWED_YES);
-	new WebPageMenuNode('Test:RunSynchro', '../synchro/synchro_exec.php', $oAdminMenu->GetIndex(), 13 /* fRank */, 'SynchroDataSource');
+//	new OQLMenuNode('Replicas', 'SELECT SynchroReplica', $oAdminMenu->GetIndex(), 12 /* fRank */, true, 'SynchroReplica', UR_ACTION_MODIFY, UR_ALLOWED_YES);
+//	new WebPageMenuNode('Test:RunSynchro', '../synchro/synchro_exec.php', $oAdminMenu->GetIndex(), 13 /* fRank */, 'SynchroDataSource');
 }	
 ?>
