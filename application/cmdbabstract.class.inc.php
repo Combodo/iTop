@@ -1272,6 +1272,15 @@ EOF
 					$sHTMLValue = "<table><tr><td><textarea class=\"resizable\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">$sEditValue</textarea></td><td>{$sValidationField}</td></tr></table>";
 				break;
 
+				case 'CaseLog':
+					$aEventsList[] ='validate';
+					$aEventsList[] ='keyup';
+					$aEventsList[] ='change';
+					$sEditValue = $oAttDef->GetEditValue($value);
+					$sPreviousLog = $oAttDef->GetAsHTML($value);
+					$sHTMLValue = "<div style=\"overflow:auto;border:1px #999 solid; background:#fff;\"><table style=\"width:100%\"><tr><td><textarea class=\"resizable\" style=\"border:0;width:100%\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">$sEditValue</textarea>$sPreviousLog</td><td>{$sValidationField}</td></tr></table></div>";
+				break;
+
 				case 'HTML':
 					$oWidget = new UIHTMLEditorWidget($iId, $sAttCode, $sNameSuffix, $sFieldPrefix, $sHelpText, $sValidationField, $value, $bMandatory);
 					$sHTMLValue = $oWidget->Display($oPage, $aArgs);

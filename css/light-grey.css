@@ -144,7 +144,9 @@ td.label {
     color: #000000;
     nobackground-color:#f6f6f6;
     padding: 0.25em;
-    font-weight:bold;	
+    font-weight:bold;
+    vertical-align: top;
+    text-align: right;	
 }
 
 .ui-widget-content td a, p a, p a:visited, td a, td a:visited {
@@ -963,4 +965,21 @@ span.form_validation {
 	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;
 	border-radius: 10px;
+}
+.caselog_header {
+	padding:3px;
+	border-top:1px solid #fff;
+	background: #ddd url(../images/plus.gif) left no-repeat;
+	padding-left: 16px;
+	cursor: pointer;
+	width:100%;
+}
+.caselog_header.open {
+	background: #ddd url(../images/minus.gif) left no-repeat;
+}
+.caselog_entry {
+	padding:3px;
+	padding-left: 16px;
+	border-bottom:1px #999 solid;
+	width:100%;
 }

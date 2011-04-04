@@ -339,7 +339,7 @@ abstract class DBObject
 			}
 		}
 
-		$realvalue = $oAttDef->MakeRealValue($value);
+		$realvalue = $oAttDef->MakeRealValue($value, $this);
 		$this->m_aCurrValues[$sAttCode] = $realvalue;
 
 		// The object has changed, reset caches

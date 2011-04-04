@@ -27,6 +27,7 @@
 require_once('MyHelpers.class.inc.php');
 require_once('ormdocument.class.inc.php');
 require_once('ormpassword.class.inc.php');
+require_once('ormcaselog.class.inc.php');
 
 /**
  * MissingColumnException - sent if an attribute is being created but the column is missing in the row 
@@ -203,7 +204,7 @@ abstract class AttributeDefinition
 	public function GetNullValue() {return null;} 
 	public function IsNull($proposedValue) {return is_null($proposedValue);} 
 
-	public function MakeRealValue($proposedValue) {return $proposedValue;} // force an allowed value (type conversion and possibly forces a value as mySQL would do upon writing!)
+	public function MakeRealValue($proposedValue, $oHostObj) {return $proposedValue;} // force an allowed value (type conversion and possibly forces a value as mySQL would do upon writing!)
 	public function Equals($val1, $val2) {return ($val1 == $val2);}
 
 	public function GetSQLExpressions($sPrefix = '') {return array();} // returns suffix/expression pairs (1 in most of the cases), for READING (Select)
@@ -273,6 +274,11 @@ abstract class AttributeDefinition
 
 	public function GetAsHTML($sValue, $oHostObject = null)
 	{
+		if ($sValue instanceof ormCaseLog)
+		{
+			echo "<p>AttributeCode: ".$this->GetCode()."</p>";
+			echo debug_print_backtrace();
+		}
 		return Str::pure2html((string)$sValue);
 	}
 
@@ -645,7 +651,7 @@ class AttributeDBFieldVoid extends AttributeDefinition
 	public function IsScalar() {return true;} 
 	public function IsWritable() {return true;} 
 	public function GetSQLExpr()    {return $this->Get("sql");}
-	public function GetDefaultValue() {return $this->MakeRealValue("");}
+	public function GetDefaultValue() {return $this->MakeRealValue("", null);}
 	public function IsNullAllowed() {return false;}
 
 	// 
@@ -661,7 +667,7 @@ class AttributeDBFieldVoid extends AttributeDefinition
 
 	public function FromSQLToValue($aCols, $sPrefix = '')
 	{
-		$value = $this->MakeRealValue($aCols[$sPrefix.'']);
+		$value = $this->MakeRealValue($aCols[$sPrefix.''], null);
 		return $value;
 	}
 	public function GetSQLValues($value)
@@ -718,7 +724,7 @@ class AttributeDBField extends AttributeDBFieldVoid
 	{
 		return array_merge(parent::ListExpectedParams(), array("default_value", "is_null_allowed"));
 	}
-	public function GetDefaultValue() {return $this->MakeRealValue($this->Get("default_value"));}
+	public function GetDefaultValue() {return $this->MakeRealValue($this->Get("default_value"), null);}
 	public function IsNullAllowed() {return $this->Get("is_null_allowed");}
 }
 
@@ -801,7 +807,7 @@ class AttributeInteger extends AttributeDBField
 		return is_null($proposedValue);
 	} 
 
-	public function MakeRealValue($proposedValue)
+	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		if (is_null($proposedValue)) return null;
 		if ($proposedValue === '') return null; // 0 is transformed into '' !
@@ -899,7 +905,7 @@ class AttributeDecimal extends AttributeDBField
 		return is_null($proposedValue);
 	} 
 
-	public function MakeRealValue($proposedValue)
+	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		if (is_null($proposedValue)) return null;
 		if ($proposedValue == '') return null;
@@ -929,7 +935,7 @@ class AttributeBoolean extends AttributeInteger
 	public function GetEditClass() {return "Integer";}
 	protected function GetSQLCol() {return "TINYINT(1)";}
 	
-	public function MakeRealValue($proposedValue)
+	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		if (is_null($proposedValue)) return null;
 		if ($proposedValue === '') return null;
@@ -1041,7 +1047,7 @@ class AttributeString extends AttributeDBField
 		return ($proposedValue == '');
 	} 
 
-	public function MakeRealValue($proposedValue)
+	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		if (is_null($proposedValue)) return '';
 		return (string)$proposedValue;
@@ -1115,6 +1121,206 @@ class AttributeClass extends AttributeString
 		return '=';
 	}
 	
+}
+
+/**
+ * An attibute that stores a case log (i.e journal) 
+ *
+ * @package     iTopORM
+ */
+class AttributeCaseLog extends AttributeText
+{
+	public function GetBasicFilterOperators()
+	{
+		return array(
+			"="=>"equals",
+			"!="=>"differs from",
+			"Like"=>"equals (no case)",
+			"NotLike"=>"differs from (no case)",
+			"Contains"=>"contains",
+			"Begins with"=>"begins with",
+			"Finishes with"=>"finishes with"
+		);
+	}
+	public function GetBasicFilterLooseOperator()
+	{
+		return "Contains";
+	}
+
+	public function GetBasicFilterSQLExpr($sOpCode, $value)
+	{
+		$sQValue = CMDBSource::Quote($value);
+		switch ($sOpCode)
+		{
+		case '=':
+		case '!=':
+			return $this->GetSQLExpr()." $sOpCode $sQValue";
+		case 'Begins with':
+			return $this->GetSQLExpr()." LIKE ".CMDBSource::Quote("$value%");
+		case 'Finishes with':
+			return $this->GetSQLExpr()." LIKE ".CMDBSource::Quote("%$value");
+		case 'Contains':
+			return $this->GetSQLExpr()." LIKE ".CMDBSource::Quote("%$value%");
+		case 'NotLike':
+			return $this->GetSQLExpr()." NOT LIKE $sQValue";
+		case 'Like':
+		default:
+			return $this->GetSQLExpr()." LIKE $sQValue";
+		}
+	} 
+
+	public function GetNullValue()
+	{
+		return '';
+	} 
+
+	public function IsNull($proposedValue)
+	{
+		if (!($proposedValue instanceof ormCaseLog))
+		{
+			return ($proposedValue == '');
+		}
+		return ($proposedValue->GetText() == '');
+	} 
+
+	public function ScalarToSQL($value)
+	{
+		if (!is_string($value) && !is_null($value))
+		{
+			throw new CoreWarning('Expected the attribute value to be a string', array('found_type' => gettype($value), 'value' => $value, 'class' => $this->GetCode(), 'attribute' => $this->GetHostClass()));
+		}
+		return $value;
+	}
+	public function GetEditClass() {return "CaseLog";}
+	public function GetEditValue($sValue) { return ''; } // New 'edit' value is always blank since it will be appended to the existing log	
+	public function IsDirectField() {return true;} 
+	public function IsScalar() {return true;} 
+	public function IsWritable() {return true;} 
+	public function GetDefaultValue() {return new ormCaseLog();}
+	public function IsNullAllowed() {return $this->GetOptional("is_null_allowed", false);}
+	public function RequiresIndex() { return false; }
+	public function Equals($val1, $val2) {return (count($val1->GetIndex()) == count($val2->GetIndex()));}
+	public function GetMaxSize() { return null; }
+	public function CheckFormat($value) { return true; }
+	
+
+
+	// Facilitate things: allow the user to Set the value from a string
+	public function MakeRealValue($proposedValue, $oHostObj)
+	{
+		if (!($proposedValue instanceof ormCaseLog))
+		{
+			// Append the new value if an instance of the object is supplied
+			if ($oHostObj != null)
+			{
+				$oCaseLog = clone($oHostObj->GetOriginal($this->GetCode()));
+			}
+			else
+			{
+				$oCaseLog = new ormCaseLog();
+			}
+			echo "Added log entry: $proposedValue";
+			$oCaseLog->AddLogEntry(parent::MakeRealValue($proposedValue, $oHostObj));
+			return $oCaseLog;
+		}
+		return $proposedValue;
+	}
+
+	public function GetSQLExpressions($sPrefix = '')
+	{
+		if ($sPrefix == '')
+		{
+			$sPrefix = $this->GetCode();
+		}
+		$aColumns = array();
+		// Note: to optimize things, the existence of the attribute is determined by the existence of one column with an empty suffix
+		$aColumns[''] = $sPrefix;
+		$aColumns['_index'] = $sPrefix.'_index';
+		return $aColumns;
+	}
+
+	public function FromSQLToValue($aCols, $sPrefix = '')
+	{
+		if (!isset($aCols[$sPrefix]))
+		{
+			$sAvailable = implode(', ', array_keys($aCols));
+			throw new MissingColumnException("Missing column '$sPrefix' from {$sAvailable}");
+		} 
+		$sLog = $aCols[$sPrefix];
+
+		if (!isset($aCols[$sPrefix.'_index'])) 
+		{
+			$sAvailable = implode(', ', array_keys($aCols));
+			throw new MissingColumnException("Missing column '".$sPrefix."_index' from {$sAvailable}");
+		} 
+		$aIndex = unserialize($aCols[$sPrefix.'_index']);
+
+		$value = new ormCaseLog($sLog, $aIndex);
+		return $value;
+	}
+
+	public function GetSQLValues($value)
+	{
+		if (!($value instanceOf ormCaseLog))
+		{
+			$value = new ormCaseLog('');
+		}
+		$aValues = array();
+		$aValues[$this->GetCode()] = $value->GetText();
+		$aValues[$this->GetCode().'_index'] = serialize($value->GetIndex());
+
+		return $aValues;
+	}
+
+	public function GetSQLColumns()
+	{
+		$aColumns = array();
+		$aColumns[$this->GetCode()] = 'LONGTEXT'; // 2^32 (4 Gb)
+		$aColumns[$this->GetCode().'_index'] = 'BLOB';
+		return $aColumns;
+	}
+
+	public function GetFilterDefinitions()
+	{
+		return array($this->GetCode() => new FilterFromAttribute($this));
+	}
+
+	public function GetAsHTML($value, $oHostObject = null)
+	{
+		if ($value instanceOf ormCaseLog)
+		{
+			return $value->GetAsHTML(null, false);
+		}
+		else
+		{
+			return '';
+		}
+	}
+
+
+	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null)
+	{
+		if ($value instanceOf ormCaseLog)
+		{
+			return parent::GetAsCSV($value->GetText(), $sSeparator, $sTextQualifier, $oHostObject);
+		}
+		else
+		{
+			return '';
+		}
+	}
+	
+	public function GetAsXML($value, $oHostObject = null)
+	{
+		if ($value instanceOf ormCaseLog)
+		{
+			return parent::GetAsXML($value->GetText(), $oHostObject);
+		}
+		else
+		{
+			return '';
+		}
+	}
 }
 
 /**
@@ -1278,7 +1484,7 @@ class AttributeEncryptedString extends AttributeString
 		return array();
 	}
 
-	public function MakeRealValue($proposedValue)
+	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		if (is_null($proposedValue)) return null;
 		return (string)$proposedValue;
@@ -1379,7 +1585,7 @@ class AttributeText extends AttributeString
 		return $sValue;
 	}
 
-	public function MakeRealValue($proposedValue)
+	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		$sValue = $proposedValue;
 		if (preg_match_all(WIKI_OBJECT_REGEXP, $sValue, $aAllMatches, PREG_SET_ORDER))
@@ -1631,10 +1837,10 @@ class AttributeEnum extends AttributeString
   	 * @param mixed $proposedValue The value to be set for the attribute
   	 * @return mixed The actual value that will be set
   	 */
-	public function MakeRealValue($proposedValue)
+	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		if ($proposedValue == '') return null;
-		return parent::MakeRealValue($proposedValue);
+		return parent::MakeRealValue($proposedValue, $oHostObj);
 	}
 }
 
@@ -1766,7 +1972,7 @@ class AttributeDateTime extends AttributeDBField
 		}
 	}
 	
-	public function MakeRealValue($proposedValue)
+	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		if (is_null($proposedValue))
 		{
@@ -1901,7 +2107,7 @@ class AttributeDuration extends AttributeInteger
 		return 0;
 	}
 
-	public function MakeRealValue($proposedValue)
+	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		if (is_null($proposedValue)) return null;
 		if (!is_numeric($proposedValue)) return null;
@@ -2146,7 +2352,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		return ($proposedValue == 0);
 	} 
 
-	public function MakeRealValue($proposedValue)
+	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		if (is_null($proposedValue)) return 0;
 		if ($proposedValue === '') return 0;
@@ -2337,10 +2543,10 @@ class AttributeExternalField extends AttributeDefinition
 		return $oExtAttDef->IsNull($proposedValue);
 	} 
 
-	public function MakeRealValue($proposedValue)
+	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		$oExtAttDef = $this->GetExtAttDef();
-		return $oExtAttDef->MakeRealValue($proposedValue);
+		return $oExtAttDef->MakeRealValue($proposedValue, $oHostObj);
 	}
 
 	public function ScalarToSQL($value)
@@ -2434,7 +2640,7 @@ class AttributeBlob extends AttributeDefinition
 
 
 	// Facilitate things: allow the user to Set the value from a string
-	public function MakeRealValue($proposedValue)
+	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		if (!is_object($proposedValue))
 		{
@@ -2580,7 +2786,7 @@ class AttributeOneWayPassword extends AttributeDefinition
 	public function IsNullAllowed() {return $this->GetOptional("is_null_allowed", false);}
 
 	// Facilitate things: allow the user to Set the value from a string or from an ormPassword (already encrypted)
-	public function MakeRealValue($proposedValue)
+	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		$oPassword = $proposedValue;
 		if (!is_object($oPassword))
@@ -2727,7 +2933,7 @@ class AttributeTable extends AttributeText
 	}
 
 	// Facilitate things: allow the user to Set the value from a string
-	public function MakeRealValue($proposedValue)
+	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		if (!is_array($proposedValue))
 		{
@@ -2743,12 +2949,12 @@ class AttributeTable extends AttributeText
 			$value = @unserialize($aCols[$sPrefix.'']);
 			if ($value === false)
 			{
-				$value = $this->MakeRealValue($aCols[$sPrefix.'']);
+				$value = $this->MakeRealValue($aCols[$sPrefix.''], null);
 			}
 		}
 		catch(Exception $e)
 		{
-			$value = $this->MakeRealValue($aCols[$sPrefix.'']);
+			$value = $this->MakeRealValue($aCols[$sPrefix.''], null);
 		}
 
 		return $value;
@@ -2797,7 +3003,7 @@ class AttributePropertySet extends AttributeTable
 	protected function GetSQLCol() {return "TEXT";}
 
 	// Facilitate things: allow the user to Set the value from a string
-	public function MakeRealValue($proposedValue)
+	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		if (!is_array($proposedValue))
 		{
@@ -2853,7 +3059,7 @@ class AttributeComputedFieldVoid extends AttributeDefinition
 	public function IsScalar() {return true;} 
 	public function IsWritable() {return false;} 
 	public function GetSQLExpr()    {return null;}
-	public function GetDefaultValue() {return $this->MakeRealValue("");}
+	public function GetDefaultValue() {return $this->MakeRealValue("", null);}
 	public function IsNullAllowed() {return false;}
 
 	// 

@@ -189,6 +189,10 @@ abstract class CMDBObject extends DBObject
 				if (array_key_exists($sAttCode, $aOrigValues))
 				{
 					$original = $aOrigValues[$sAttCode];
+					if ($original instanceof ormCaseLog)
+					{
+						$original = $original->GetText();
+					}
 				}
 				else
 				{
