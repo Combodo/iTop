@@ -37,6 +37,7 @@ class iTopWebPage extends NiceWebPage
 	private $m_sCurrentTabContainer;
 	private $m_sCurrentTab;
 	private $m_sMessage;
+	private $m_sInitScript;
 	
     public function __construct($sTitle)
     {
@@ -72,13 +73,12 @@ class iTopWebPage extends NiceWebPage
 		$this->add_linked_script("../js/ckeditor/ckeditor.js");
 		$this->add_linked_script("../js/ckeditor/adapters/jquery.js");
 		$this->add_linked_script("../js/jquery.qtip-1.0.min.js");
-		$this->add_ready_script(
-<<<EOF
+		$this->m_sInitScript =
+<<< EOF
 	try
 	{
-	var myLayout; // a var is required because this page utilizes: myLayout.allowOverflow() method
-
-	$(document).ready(function () {
+		var myLayout; // a var is required because this page utilizes: myLayout.allowOverflow() method
+	
 		// Layout
 		paneSize = GetUserPreference('menu_size', 300)
 		myLayout = $('body').layout({
@@ -130,10 +130,32 @@ class iTopWebPage extends NiceWebPage
 		{
 			myLayout.close('west');
 		}
-
+	
 		// Accordion Menu
 		$("#accordion").accordion({ header: "h3", navigation: true, autoHeight: false, collapsible: false, icons: false }); // collapsible will be enabled once the item will be selected
- 	});
+	
+		// Tabs, using JQuery BBQ to store the history
+		// The "tab widgets" to handle.
+		var tabs = $('div[id^=tabbedContent]');
+		    
+		// This selector will be reused when selecting actual tab widget A elements.
+		var tab_a_selector = 'ul.ui-tabs-nav a';
+		  
+		// Enable tabs on all tab widgets. The `event` property must be overridden so
+		// that the tabs aren't changed on click, and any custom event name can be
+		// specified. Note that if you define a callback for the 'select' event, it
+		// will be executed for the selected tab whenever the hash changes.
+		tabs.tabs({ event: 'change' });
+	}
+	catch(err)
+	{
+		// Do something with the error !
+		alert(err);
+	}
+EOF
+;
+		$this->add_ready_script(
+<<< EOF
 	//add new widget called TruncatedList to properly display truncated lists when they are sorted
 	$.tablesorter.addWidget({ 
 	    // give the widget a id 
@@ -214,12 +236,6 @@ class iTopWebPage extends NiceWebPage
 	    
 	// This selector will be reused when selecting actual tab widget A elements.
 	var tab_a_selector = 'ul.ui-tabs-nav a';
-	  
-	// Enable tabs on all tab widgets. The `event` property must be overridden so
-	// that the tabs aren't changed on click, and any custom event name can be
-	// specified. Note that if you define a callback for the 'select' event, it
-	// will be executed for the selected tab whenever the hash changes.
-	tabs.tabs({ event: 'change' });
 	  
 	// Define our own click handler for the tabs, overriding the default.
 	tabs.find( tab_a_selector ).click(function()
@@ -334,20 +350,8 @@ class iTopWebPage extends NiceWebPage
 	$('#ModalDlg').dialog({ autoOpen: false, modal: true, width: 0.8*docWidth }); // JQuery UI dialogs
 	ShowDebug();
 	$('#logOffBtn>ul').popupmenu();
-//	$.history.init(history_callback);
-//	$("a[rel='history']").click(function()
-//	{
-//		$.history.load(this.href.replace(/^.*#/, ''));
-//		return false;
-//	});
-	}
-	catch(err)
-	{
-		// Do something with the error !
-		alert(err);
-	}
 	
-	//$('.display_block').draggable(); // make the blocks draggable
+	$('.caselog_header').click( function () { $(this).toggleClass('open').next('.caselog_entry').toggle(); });
 EOF
 );
 		$sUserPrefs = appUserPreferences::GetAsJSON();
@@ -559,9 +563,10 @@ EOF
         	}
             echo "<script type=\"text/javascript\" src=\"$s_script\"></script>\n";
         }
+		$this->add_script("\$(document).ready(function() {\n{$this->m_sInitScript};\nwindow.setTimeout('onDelayedReady()',10)\n});");
         if (count($this->m_aReadyScripts)>0)
         {
-			$this->add_script("\$(document).ready(function() {\n".implode("\n", $this->m_aReadyScripts)."\n});");
+			$this->add_script("\nonDelayedReady = function() {\n".implode("\n", $this->m_aReadyScripts)."\n}\n");
 		}
         if (count($this->a_scripts)>0)
         {
