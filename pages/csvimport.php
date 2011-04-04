@@ -477,7 +477,7 @@ try
 		
 		$iUnchanged = count($aRes) - $iErrors - $iModified - $iCreated;
 		$sHtml .= '</table>';
-		$oPage->add('<div class="wizContainer">');
+		$oPage->add('<div class="wizContainer" style="width:auto;display:inline-block;">');
 		$oPage->add('<form enctype="multipart/form-data" id="wizForm" method="post">');
 		$oPage->add('<input type="hidden" name="step" value="'.($iCurrentStep+1).'"/>');
 		$oPage->add('<input type="hidden" name="separator" value="'.htmlentities($sSeparator, ENT_QUOTES, 'UTF-8').'"/>');
@@ -527,7 +527,7 @@ try
 		$oPage->add('<input type="checkbox" checked id="show_modified" onClick="ToggleRows(\'row_modified\')"/>&nbsp;<img src="../images/modified.png">&nbsp;'.sprintf($aDisplayFilters['modified'], $iModified).'&nbsp&nbsp;');
 		$oPage->add('<input type="checkbox" checked id="show_created" onClick="ToggleRows(\'row_added\')"/>&nbsp;<img src="../images/added.png">&nbsp;'.sprintf($aDisplayFilters['added'], $iCreated).'&nbsp&nbsp;');
 		$oPage->add('<input type="checkbox" checked id="show_errors" onClick="ToggleRows(\'row_error\')"/>&nbsp;<img src="../images/error.png">&nbsp;'.sprintf($aDisplayFilters['errors'], $iErrors).'</p>');
-		$oPage->add('<div style="overflow-y:auto" class="white">');
+		$oPage->add('<div class="white" style="display:inline-block">');
 		$oPage->add($sHtml);
 		$oPage->add('</div> <!-- end of preview -->');
 		$oPage->add('<p>');
