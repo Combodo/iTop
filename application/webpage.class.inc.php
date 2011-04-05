@@ -246,7 +246,7 @@ class WebPage
 	 */
 	public function GetDetails($aFields)
 	{
-		$sHtml = "<table>\n";
+		$sHtml = "<table class=\"details\">\n";
 		$sHtml .= "<tbody>\n";
 		foreach($aFields as $aAttrib)
 		{
