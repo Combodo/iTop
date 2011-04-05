@@ -139,14 +139,22 @@ tr.clicked td {
 }
 
 td.label {
+	vertical-align: top;
+}
+td.label span {
     font-family: Tahoma, Verdana, Arial, Helvetica;
     font-size: 12px;
     color: #000000;
-    nobackground-color:#f6f6f6;
-    padding: 0.25em;
+    padding: 5px;
+    padding-right: 10px;	
     font-weight:bold;
     vertical-align: top;
-    text-align: right;	
+    text-align: right;
+    display: block;
+}
+fieldset td.label span {
+    padding: 3px;
+    padding-right: 10px;	
 }
 
 .ui-widget-content td a, p a, p a:visited, td a, td a:visited {
@@ -966,6 +974,9 @@ span.form_validation {
 	-webkit-border-radius: 10px;
 	border-radius: 10px;
 }
+.caselog {
+	overflow-x: hidden;
+}
 .caselog_header {
 	padding:3px;
 	border-top:1px solid #fff;
@@ -982,4 +993,19 @@ span.form_validation {
 	padding-left: 16px;
 	border-bottom:1px #999 solid;
 	width:100%;
+}
+table.details {
+  border-collapse: collapse;
+  noborder-bottom: 2px #fff solid;
+  width:100%;
+}
+table.details>tbody>tr>td {
+	noborder-top: 2px #fff solid;
+	padding-bottom: 5px;
+	padding-top: 3px;
+	background: transparent url(../images/details_sep.gif) bottom repeat-x;
+}
+fieldset table.details>tbody>tr>td {
+	padding-top: 3px;
+	background: transparent;
 }

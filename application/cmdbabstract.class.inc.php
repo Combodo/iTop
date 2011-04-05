@@ -1495,7 +1495,7 @@ EOF
 								{
 									// State attribute is always read-only from the UI
 									$sHTMLValue = $this->GetStateLabel();
-									$aVal = array('label' => $oAttDef->GetLabel(), 'value' => $sHTMLValue, 'comments' => $sComments, 'infos' => $sInfos);
+									$aVal = array('label' => '<span>'.$oAttDef->GetLabel().'</span>', 'value' => $sHTMLValue, 'comments' => $sComments, 'infos' => $sInfos);
 								}
 								else
 								{				
