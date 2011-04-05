@@ -3628,6 +3628,19 @@ abstract class MetaModel
 										&& function_exists('apc_store');
 		self::$m_iQueryCacheTTL = self::$m_oConfig->Get('apc_cache.query_ttl');
 
+		// PHP timezone first...
+		//
+		$sPHPTimezone = self::$m_oConfig->Get('timezone');
+		if ($sPHPTimezone == '')
+		{
+			// Leave as is... up to the admin to set a value somewhere...
+			//$sPHPTimezone = date_default_timezone_get();
+		}
+		else
+		{
+			date_default_timezone_set($sPHPTimezone);
+		}
+
 		// Note: load the dictionary as soon as possible, because it might be
 		//       needed when some error occur
 		$sAppIdentity = self::GetConfig()->Get('session_name');
@@ -3750,6 +3763,7 @@ abstract class MetaModel
 
 		CMDBSource::Init($sServer, $sUser, $sPwd); // do not select the DB (could not exist)
 		CMDBSource::SetCharacterSet($sCharacterSet, $sCollation);
+		// Later when timezone implementation is correctly done: CMDBSource::SetTimezone($sDBTimezone);
 	}
 
 	public static function GetModuleSetting($sModule, $sProperty, $defaultvalue = null)

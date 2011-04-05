@@ -84,6 +84,17 @@ class CMDBSource
 		}
 	}
 
+	public static function SetTimezone($sTimezone = null)
+	{
+		// Note: requires the installation of MySQL special tables,
+		//       otherwise, only 'SYSTEM' or "+10:00' may be specified which is NOT sufficient because of day light saving times
+		if (!is_null($sTimezone))
+		{
+			$sQuotedTimezone = self::Quote($sTimezone);
+			self::Query("SET time_zone = $sQuotedTimezone");
+		}
+	}
+
 	public static function ListDB()
 	{
 		$aDBs = self::QueryToCol('SHOW DATABASES', 'Database');

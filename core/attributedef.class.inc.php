@@ -1823,20 +1823,6 @@ class AttributeEnum extends AttributeString
  */
 class AttributeDateTime extends AttributeDBField
 {
-	//const MYDATETIMEZONE = "UTC";
-	const MYDATETIMEZONE = "Europe/Paris";
-	static protected $const_TIMEZONE = null; // set once for all upon object construct 
-
-	static public function InitStatics()
-	{
-		// Init static constant once for all (remove when PHP allows real static const)
-		self::$const_TIMEZONE = new DateTimeZone(self::MYDATETIMEZONE);
-
-		// #@# Init default timezone -> do not get a notice... to be improved !!!
-		// duplicated in the email test page (the mail function does trigger a notice as well)
-		date_default_timezone_set(self::MYDATETIMEZONE);
-	}
-
 	static protected function GetDateFormat()
 	{
 		return "Y-m-d H:i:s";
@@ -1852,10 +1838,9 @@ class AttributeDateTime extends AttributeDBField
 	protected function GetSQLCol() {return "TIMESTAMP";}
 	public static function GetAsUnixSeconds($value)
 	{
-		$oDeadlineDateTime = new DateTime($value, self::$const_TIMEZONE);
+		$oDeadlineDateTime = new DateTime($value);
 		$iUnixSeconds = $oDeadlineDateTime->format('U');
 		return $iUnixSeconds;
-		
 	}
 
 	// #@# THIS HAS TO REVISED
@@ -2153,11 +2138,6 @@ class AttributeDate extends AttributeDateTime
 		return "Y-m-d";
 	}
 
-	static public function InitStatics()
-	{
-		// Nothing to do...
-	}
-
 	static protected function ListExpectedParams()
 	{
 		return parent::ListExpectedParams();
@@ -2172,9 +2152,6 @@ class AttributeDate extends AttributeDateTime
 		return "^[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))$";
 	}
 }
-
-// Init static constant once for all (remove when PHP allows real static const)
-AttributeDate::InitStatics();
 
 /**
  * A dead line stored as a date & time
@@ -2233,9 +2210,6 @@ class AttributeDeadline extends AttributeDateTime
 		return $sResult;
 	}
 }
-// Init static constant once for all (remove when PHP allows real static const)
-AttributeDateTime::InitStatics();
-
 
 /**
  * Map a foreign key to an attribute 

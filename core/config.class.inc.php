@@ -286,6 +286,24 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
+		'apc_cache.query_ttl' => array(
+			'type' => 'integer',
+			'description' => 'Time to live set in APC for the prepared queries (seconds - 0 means no timeout)',
+			'default' => 3600,
+			'value' => 3600,
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
+		'timezone' => array(
+			'type' => 'string',
+			'description' => 'Timezone (reference: http://php.net/manual/en/timezones.php). If empty, it will be left unchanged and MUST be explicitely configured in PHP',
+			// examples... not used (nor 'description')
+			'examples' => array('America/Sao_Paulo', 'America/New_York (standing for EDT)', 'America/Los_Angeles (standing for PDT)', 'Asia/Istanbul', 'Asia/Singapore', 'Africa/Casablanca', 'Australia/Sydney'),
+			'default' => 'Europe/Paris',
+			'value' => 'Europe/Paris',
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
 	);
 
 	public function IsProperty($sPropCode)
