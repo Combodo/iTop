@@ -130,7 +130,7 @@ abstract class TriggerOnStateChange extends TriggerOnObject
 		MetaModel::Init_SetZListItems('details', array('description', 'target_class', 'state', 'action_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'target_class', 'state')); // Attributes to be displayed for a list
 		// Search criteria
-//		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('standard_search', array('description', 'target_class', 'state')); // Criteria of the std search form
 //		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
 	}
 }
@@ -141,7 +141,7 @@ class TriggerOnStateEnter extends TriggerOnStateChange
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb",
+			"category" => "core/cmdb,bizmodel",
 			"key_type" => "autoincrement",
 			"name_attcode" => "description",
 			"state_attcode" => "",
@@ -158,7 +158,7 @@ class TriggerOnStateEnter extends TriggerOnStateChange
 		MetaModel::Init_SetZListItems('details', array('description', 'target_class', 'state', 'action_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('target_class', 'state')); // Attributes to be displayed for a list
 		// Search criteria
-//		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('standard_search', array('description', 'target_class', 'state')); // Criteria of the std search form
 //		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
 	}
 }
@@ -169,7 +169,7 @@ class TriggerOnStateLeave extends TriggerOnStateChange
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb",
+			"category" => "core/cmdb,bizmodel",
 			"key_type" => "autoincrement",
 			"name_attcode" => "description",
 			"state_attcode" => "",
@@ -186,7 +186,7 @@ class TriggerOnStateLeave extends TriggerOnStateChange
 		MetaModel::Init_SetZListItems('details', array('description', 'target_class', 'state', 'action_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('target_class', 'state')); // Attributes to be displayed for a list
 		// Search criteria
-//		MetaModel::Init_SetZListItems('standard_search', array('')); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('standard_search', array('description', 'target_class', 'state')); // Criteria of the std search form
 //		MetaModel::Init_SetZListItems('advanced_search', array('')); // Criteria of the advanced search form
 	}
 }
@@ -197,7 +197,7 @@ class TriggerOnObjectCreate extends TriggerOnObject
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb",
+			"category" => "core/cmdb,bizmodel",
 			"key_type" => "autoincrement",
 			"name_attcode" => "description",
 			"state_attcode" => "",
@@ -214,7 +214,7 @@ class TriggerOnObjectCreate extends TriggerOnObject
 		MetaModel::Init_SetZListItems('details', array('description', 'target_class', 'action_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'target_class')); // Attributes to be displayed for a list
 		// Search criteria
-//		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('standard_search', array('description', 'target_class')); // Criteria of the std search form
 //		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
 	}
 }
@@ -225,7 +225,7 @@ class lnkTriggerAction extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb",
+			"category" => "core/cmdb,bizmodel",
 			"key_type" => "autoincrement",
 			"name_attcode" => "",
 			"state_attcode" => "",
