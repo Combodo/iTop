@@ -36,7 +36,14 @@ LoginWebPage::DoLogin(true); // Check user rights and prompt if needed (must be 
 $oAppContext = new ApplicationContext();
 
 $oP = new iTopWebPage(Dict::S('UI:UniversalSearchTitle'));
-
+$oP->add_linked_script("../js/json.js");
+$oP->add_linked_script("../js/forms-json-utils.js");
+$oP->add_linked_script("../js/wizardhelper.js");
+$oP->add_linked_script("../js/wizard.utils.js");
+$oP->add_linked_script("../js/linkswidget.js");
+$oP->add_linked_script("../js/extkeywidget.js");
+$oP->add_linked_script("../js/jquery.blockUI.js");
+		
 // From now on the context is limited to the the selected organization ??
 
 // Now render the content of the page
@@ -98,6 +105,7 @@ if ($oFilter != null)
 	$aExtraParams = $oAppContext->GetAsHash();
 	$aExtraParams['open'] = true;
 	$aExtraParams['baseClass'] = $sBaseClass;
+	$aExtraParams['action'] = '../pages/UniversalSearch.php';
 	//$aExtraParams['class'] = $sClassName;
 	$oBlock->Display($oP, 0, $aExtraParams);
 

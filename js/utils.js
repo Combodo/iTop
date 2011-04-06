@@ -135,9 +135,10 @@ function ReloadSearchForm(divId, sClassName, sBaseClass, sContext)
 			aSubmit [index ] = { data:oFormEvents.submit[index].data, namespace:oFormEvents.submit[index].namespace, handler:  oFormEvents.submit[index].handler};
 		}
 	}
+	sAction =  $('#ds_'+divId+' form').attr('action');
 
 	$.post('../pages/ajax.render.php?'+sContext,
-	   { operation: 'search_form', className: sClassName, baseClass: sBaseClass, currentId: divId },
+	   { operation: 'search_form', className: sClassName, baseClass: sBaseClass, currentId: divId, action: sAction },
 	   function(data) {
 		   oDiv.empty();
 		   oDiv.append(data);

@@ -89,7 +89,7 @@ try
 		{
 			// Search form: no current object
 			$oObj = null;
-			$currentValue = 'eviV bulgroZ';
+			$currentValue = '';
 		}
 		$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, array('this' => $oObj));
 		$oWidget = new UIExtKeyWidget($sAttCode, $sClass, '', $aAllowedValues, $currentValue, $iInputId, false, $sSuffix, '');
@@ -364,9 +364,10 @@ try
 		$sClass = utils::ReadParam('className', '');
 		$sRootClass = utils::ReadParam('baseClass', '');
 		$currentId = utils::ReadParam('currentId', '');
+		$sAction = utils::ReadParam('action', '');
 		$oFilter = new DBObjectSearch($sClass);
 		$oSet = new CMDBObjectSet($oFilter); 
-		$sHtml = cmdbAbstractObject::GetSearchForm($oPage, $oSet, array('currentId' => $currentId, 'baseClass' => $sRootClass));
+		$sHtml = cmdbAbstractObject::GetSearchForm($oPage, $oSet, array('currentId' => $currentId, 'baseClass' => $sRootClass, 'action' => $sAction));
 		$oPage->add($sHtml);
 		break;
 		

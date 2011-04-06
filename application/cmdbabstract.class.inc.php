@@ -319,7 +319,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 				// Display notifications regarding the object
 				$iId = $this->GetKey();
 				$oBlock = new DisplayBlock(DBObjectSearch::FromOQL("SELECT EventNotificationEmail AS Ev JOIN TriggerOnObject AS T ON Ev.trigger_id = T.id WHERE T.target_class IN ('$sClassList') AND Ev.object_id = $iId"), 'list', false);
-				$oBlock->Display($oPage, 'notifications', array());
+				$oBlock->Display($oPage, 'notifications', array('menu' => false));
 			}
 		}
 
@@ -1076,7 +1076,8 @@ EOF
 			$sClassesCombo = MetaModel::GetName($sClassName);
 		}
 		$oUnlimitedFilter = new DBObjectSearch($sClassName);
-		$sHtml .= "<form id=\"fs_{$sSearchFormId}\" action=\"../pages/UI.php\">\n"; // Don't use $_SERVER['SCRIPT_NAME'] since the form may be called asynchronously (from ajax.php)
+		$sAction = (isset($aExtraParams['action'])) ? $aExtraParams['action'] : '../pages/UI.php';
+		$sHtml .= "<form id=\"fs_{$sSearchFormId}\" action=\"{$sAction}\">\n"; // Don't use $_SERVER['SCRIPT_NAME'] since the form may be called asynchronously (from ajax.php)
 		$sHtml .= "<h2>".Dict::Format('UI:SearchFor_Class_Objects', $sClassesCombo)."</h2>\n";
 		$index = 0;
 		$sHtml .= "<p>\n";
@@ -1281,9 +1282,10 @@ EOF
 					$aEventsList[] ='validate';
 					$aEventsList[] ='keyup';
 					$aEventsList[] ='change';
+					$sHeader = '<div class="caselog_input_header">&nbsp;'.Dict::S('UI:CaseLogTypeYourTextHere').'</div>';
 					$sEditValue = $oAttDef->GetEditValue($value);
 					$sPreviousLog = $oAttDef->GetAsHTML($value);
-					$sHTMLValue = "<div style=\"overflow:auto;border:1px #999 solid; background:#fff;\"><table style=\"width:100%\"><tr><td><textarea class=\"resizable\" style=\"border:0;width:100%\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">$sEditValue</textarea>$sPreviousLog</td><td>{$sValidationField}</td></tr></table></div>";
+					$sHTMLValue = "<div style=\"overflow:auto;border:1px #999 solid; background:#fff;\"><table style=\"width:100%\"><tr><td>$sHeader<textarea class=\"resizable\" style=\"border:0;width:100%\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">$sEditValue</textarea>$sPreviousLog</td><td>{$sValidationField}</td></tr></table></div>";
 				break;
 
 				case 'HTML':
