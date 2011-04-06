@@ -943,6 +943,14 @@ try
 			$oDummyObj->DisplayModifyForm($oP, array('fieldsComments' => $aComments, 'noRelations' => true, 'custom_operation' => 'preview_or_modify_all', 'custom_button' => Dict::S('UI:Button:PreviewModifications'), 'selectObj' => $sSelectedObj, 'filter' => $sFilter, 'preview_mode' => true, 'disabled_fields' => '{}'));
 			$oP->add("</div>\n");
 			$oP->add_ready_script($sReadyScript);
+			$sURL = "./UI.php?operation=search&filter=$sFilter&".$oAppContext->GetForLink();
+			$oP->add_ready_script(
+<<<EOF
+$('.wizContainer button.cancel').unbind('click');
+$('.wizContainer button.cancel').click( function() { window.location.href = '$sURL'; } );
+EOF
+);
+
 		} // Else no object selected ???
 		else
 		{
@@ -965,13 +973,13 @@ try
 		$aHeaders = array(
 			'form::select' => array('label' => "<input type=\"checkbox\" onClick=\"CheckAll('.selectList:not(:disabled)', this.checked);\"></input>", 'description' => Dict::S('UI:SelectAllToggle+')),
 			'object' => array('label' => MetaModel::GetName($sClass), 'description' => Dict::S('UI:ModifiedObject')),
-			'status' => array('label' => Dict::S('UI:ModifyAllStatus'), 'description' => Dict::S('UI:ModifyAllStatus+')),
-			'errors' => array('label' => Dict::S('UI:ModifyAllErrors'), 'description' => Dict::S('UI:ModifyAllErrors+')),
+			'status' => array('label' => Dict::S('UI:BulkModifyStatus'), 'description' => Dict::S('UI:BulkModifyStatus+')),
+			'errors' => array('label' => Dict::S('UI:BulkModifyErrors'), 'description' => Dict::S('UI:BulkModifyErrors+')),
 		);
 		$aRows = array();
 
 		$oP->add("<div class=\"page_header\">\n");
-		$oP->add("<h1>".MetamOdel::GetClassIcon($sClass)."&nbsp;".Dict::Format('UI:Modify_N_ObjectsOf_Class', count($aSelectedObj), $sClass)."</h1>\n");
+		$oP->add("<h1>".MetaModel::GetClassIcon($sClass)."&nbsp;".Dict::Format('UI:Modify_N_ObjectsOf_Class', count($aSelectedObj), $sClass)."</h1>\n");
 		$oP->add("</div>\n");
 		$oP->set_title(Dict::Format('UI:Modify_N_ObjectsOf_Class', count($aSelectedObj), $sClass));
 		if (!$bPreview)
@@ -980,8 +988,7 @@ try
 			$sTransactionId = utils::ReadPostedParam('transaction_id', '');
 			if (!utils::IsTransactionValid($sTransactionId, false))
 			{
-				$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
-				$oP->p("<strong>".Dict::S('UI:Error:ObjectAlreadyUpdated')."</strong>\n");
+				throw new Exception(Dict::S('UI:Error:ObjectAlreadyUpdated'));
 			}
 			$oMyChange = MetaModel::NewObject("CMDBChange");
 			$oMyChange->Set("date", time());
@@ -1023,6 +1030,7 @@ try
 			}
 		}
 		$oP->Table($aHeaders, $aRows);
+		$sURL = "./UI.php?operation=search&filter=$sFilter&".$oAppContext->GetForLink();
 		if ($bPreview)
 		{
 			// Form to submit:
@@ -1030,11 +1038,12 @@ try
 			$aDefaults = utils::ReadParam('default', array());
 			$oP->add($oAppContext->GetForForm());
 			$oP->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
+			$oP->add("<input type=\"hidden\" name=\"filter\" value=\"$sFilter\">\n");
 			$oP->add("<input type=\"hidden\" name=\"selectObj\" value=\"$sSelectedObj\">\n");
 			$oP->add("<input type=\"hidden\" name=\"operation\" value=\"preview_or_modify_all\">\n");
 			$oP->add("<input type=\"hidden\" name=\"preview_mode\" value=\"0\">\n");
 			$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
-			$oP->add("<button type=\"button\" class=\"action cancel\">".Dict::S('UI:Button:Cancel')."</button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
+			$oP->add("<button type=\"button\" class=\"action cancel\" onClick=\"window.location.href='$sURL'\">".Dict::S('UI:Button:Cancel')."</button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
 			$oP->add("<button type=\"submit\" class=\"action\"><span>".Dict::S('UI:Button:ModifyAll')."</span></button>\n");
 			foreach($_POST as $sKey => $value)
 			{
@@ -1047,7 +1056,8 @@ try
 		}
 		else
 		{
-			$oP->add("<button type=\"submit\" class=\"action\"><span>".Dict::S('UI:Button:Done')."</span></button>\n");
+			$sURL = "./UI.php?operation=search&filter=$sFilter&".$oAppContext->GetForLink();
+			$oP->add("<button type=\"button\" onClick=\"window.location.href='$sURL'\" class=\"action\"><span>".Dict::S('UI:Button:Done')."</span></button>\n");
 		}
 		break;
 
@@ -1516,15 +1526,19 @@ try
 						$sReadyScript .= "$('#multi_values_$sAttCode').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );\n";
 						$sComments .= '<div class="multi_values" id="multi_values_'.$sAttCode.'">'.count($aValues[$sAttCode]).'</div>';
 					}
-					$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => "<span id=\"field_$sAttCode\">$sHTMLValue</span>", 'comments' => $sComments);
+					$aDetails[] = array('label' => '<span>'.$oAttDef->GetLabel().'</span>', 'value' => "<span id=\"field_$sAttCode\">$sHTMLValue</span>", 'comments' => $sComments);
 					$aFieldsMap[$sAttCode] = $sAttCode;
 					$iFieldIndex++;
 				}
 			}
+			$oP->add('<div class="ui-widget-content">');
 			$oObj->DisplayBareProperties($oP);
+			$oP->add('</div>');
 			$oP->add("<div class=\"wizContainer\">\n");
 			$oP->add("<form id=\"apply_stimulus\" method=\"post\" onSubmit=\"return CheckFields('apply_stimulus', true);\">\n");
+			$oP->add("<table><tr><td>\n");
 			$oP->details($aDetails);
+			$oP->add("</td></tr></table>\n");
 			$oP->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
 			$oP->add("<input type=\"hidden\" name=\"operation\" value=\"bulk_apply_stimulus\">\n");
 			$oP->add("<input type=\"hidden\" name=\"preview_mode\" value=\"1\">\n");
@@ -1534,7 +1548,8 @@ try
 			$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
 			$oP->add($oAppContext->GetForForm());
 			$oP->add("<input type=\"hidden\" name=\"selectObject\" value=\"".implode(',',$aSelectObject)."\">\n");
-			$oP->add("<input type=\"button\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"window.history.back()\">&nbsp;&nbsp;&nbsp;&nbsp;\n");
+			$sURL = "./UI.php?operation=search&filter=$sFilter&".$oAppContext->GetForLink();
+			$oP->add("<input type=\"button\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"window.location.href='$sURL'\">&nbsp;&nbsp;&nbsp;&nbsp;\n");
 			$oP->add("<button type=\"submit\" class=\"action\"><span>$sActionLabel</span></button>\n");
 			$oP->add("</form>\n");
 			$oP->add("</div>\n");
@@ -1724,7 +1739,9 @@ EOF
 			$oP->add("<h1>$sActionLabel - <span class=\"hilite\">{$oObj->GetName()}</span></h1>\n");
 			$oP->set_title($sActionLabel);
 			$oP->add("</div>\n");
+			$oP->add('<div class="ui-widget-content">');
 			$oObj->DisplayBareProperties($oP);
+			$oP->add('</div>');
 			$aTargetState = $aTargetStates[$sTargetState];
 			$aExpectedAttributes = $aTargetState['attribute_list'];
 			$oP->add("<h1>$sActionDetails</h1>\n");
@@ -1745,12 +1762,14 @@ EOF
 					$oAttDef = $aAttributesDef[$sAttCode];
 					$aArgs = array('this' => $oObj);
 					$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, $sClass, $sAttCode, $oAttDef, $oObj->Get($sAttCode), $oObj->GetEditValue($sAttCode), 'att_'.$iFieldIndex, '', $iExpectCode, $aArgs);
-					$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => "<span id=\"field_att_$iFieldIndex\">$sHTMLValue</span>");
+					$aDetails[] = array('label' => '<span>'.$oAttDef->GetLabel().'</span>', 'value' => "<span id=\"field_att_$iFieldIndex\">$sHTMLValue</span>");
 					$aFieldsMap[$sAttCode] = 'att_'.$iFieldIndex;
 					$iFieldIndex++;
 				}
 			}
+			$oP->add('<table><tr><td>');
 			$oP->details($aDetails);
+			$oP->add('</td></tr></table>');
 			$oP->add("<input type=\"hidden\" name=\"id\" value=\"$id\" id=\"id\">\n");
 			$aFieldsMap['id'] = 'id';
 			$oP->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
