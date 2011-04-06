@@ -1257,7 +1257,6 @@ class SynchroReplica extends DBObject implements iDisplay
 
 		MetaModel::Init_AddAttribute(new AttributeDateTime("info_creation_date", array("allowed_values"=>null, "sql"=>"info_creation_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDateTime("info_last_modified", array("allowed_values"=>null, "sql"=>"info_last_modified", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeDateTime("info_last_synchro", array("allowed_values"=>null, "sql"=>"info_last_synchro", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('sync_source_id', 'dest_id', 'dest_class', 'status_last_seen', 'status', 'status_dest_creator', 'status_last_error', 'info_creation_date', 'info_last_modified', 'info_last_synchro')); // Attributes to be displayed for the complete details
@@ -1718,8 +1717,8 @@ class SynchroReplica extends DBObject implements iDisplay
 	}
 }
 
-// TO DO: finalize.... admins only ? which options ? troubleshoot WebPageMenuNode::__construct(.... sEnableClass...) ?
-//if (UserRights::IsAdministrator())
+// Only for admins
+if (UserRights::IsAdministrator())
 {
 	$oAdminMenu = new MenuGroup('AdminTools', 80 /* fRank */);
 	new OQLMenuNode('DataSources', 'SELECT SynchroDataSource', $oAdminMenu->GetIndex(), 12 /* fRank */, true, 'SynchroDataSource', UR_ACTION_MODIFY, UR_ALLOWED_YES);

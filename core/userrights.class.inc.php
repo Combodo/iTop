@@ -920,7 +920,7 @@ class StimulusChecker extends ActionChecker
 	{
 		$sClass = $this->oFilter->GetClass();
 		$oSet = new DBObjectSet($this->oFilter);
-		$iActionAllowed = UserRights::IsStimulusAllowed($sClass, $oSet, $this->iActionCode);
+		$iActionAllowed = UserRights::IsStimulusAllowed($sClass,  $this->iActionCode, $oSet);
 		if ($iActionAllowed == UR_ALLOWED_NO)
 		{
 			$this->iAllowedCount = 0;
