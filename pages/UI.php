@@ -420,12 +420,16 @@ function DisplayWelcomePopup(WebPage $oP)
 				$sTitle = addslashes(Dict::S('UI:WelcomeMenu:Title'));
 				$oP->add_ready_script(
 <<<EOF
-	$('#welcome_popup').dialog( { width:'80%', title: '$sTitle', autoOpen: true, modal:true,
+	$('#welcome_popup').dialog( { width:'80%', height: 'auto', title: '$sTitle', autoOpen: true, modal:true,
 								  close: function() {
 								  	var bDisplay = $('#display_welcome_popup:checked').length;
 								  	SetUserPreference('welcome_popup', bDisplay, true); 
 								  }
 								  });
+	if ($('#welcome_popup').height() > ($(window).height()-70))
+	{
+		$('#welcome_popup').height($(window).height()-70);
+	}
 EOF
 );
 				$_SESSION['welcome'] = 'ok';

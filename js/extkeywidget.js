@@ -54,6 +54,15 @@ function ExtKeyWidget(id, sClass, sAttCode, sSuffix, bSelectMode, oWizHelper)
 	this.UpdateSizes = function()
 	{
 		var dlg = $('#ac_dlg_'+me.id);
+		// Adjust the dialog's size to fit into the screen
+		if (dlg.width() > ($(window).width()-40))
+		{
+			dlg.width($(window).width()-40);
+		}
+		if (dlg.height() > ($(window).height()-70))
+		{
+			dlg.height($(window).height()-70);
+		}
 		var searchForm = dlg.find('div.display_block:first'); // Top search form, enclosing display_block
 		var results = $('#dr_'+me.id);
 		padding_right = parseInt(dlg.css('padding-right').replace('px', ''));
@@ -224,6 +233,15 @@ function ExtKeyWidget(id, sClass, sAttCode, sSuffix, bSelectMode, oWizHelper)
 				// Modify the action of the cancel button
 				$('#ac_create_'+me.id+' button.cancel').unbind('click').click( me.CloseCreateObject );
 				me.ajax_request = null;
+				// Adjust the dialog's size to fit into the screen
+				if ($('#ac_create_'+me.id).width() > ($(window).width()-40))
+				{
+					$('#ac_create_'+me.id).width($(window).width()-40);
+				}
+				if ($('#ac_create_'+me.id).height() > ($(window).height()-70))
+				{
+					$('#ac_create_'+me.id).height($(window).height()-70);
+				}
 			},
 			'html'
 		);
