@@ -417,7 +417,7 @@ function PopulateDataFilesList(SetupWebPage $oP, $aParamValues, $oConfig)
 
 	foreach($aAvailableModules as $sModuleId => $aModule)
 	{
-		if (($sModuleId != ROOT_MODULE) && $aModule['visible'])
+		if (($sModuleId != ROOT_MODULE))
 		{
 			if (in_array($sModuleId, $aParamValues['module']))
 			{
@@ -504,6 +504,11 @@ function BuildConfig(SetupWebpage $oP, Config &$oConfig, $aParamValues, $aAvaila
 	// Initialize the arrays below with default values for the application...
 	$aAddOns = $oConfig->GetAddOns();
 	$aAppModules = $oConfig->GetAppModules();
+	// New module in 1.1: synchro, when migrating an *old* configuration file to 1.1 the module may be missing
+	if (!in_array('synchro/synchrodatasource.class.inc.php', $aAppModules))
+	{
+		$aAppModules[] = 'synchro/synchrodatasource.class.inc.php';
+	}
 	$aDataModels = $oConfig->GetDataModels();
 	$aWebServiceCategories = $oConfig->GetWebServiceCategories();
 	$aDictionaries = $oConfig->GetDictionaries();
