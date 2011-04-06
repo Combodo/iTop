@@ -524,7 +524,11 @@ abstract class DBObject
 		//
 		if (empty($sLabel))
 		{
-			$sLabel = MetaModel::GetName($sObjClass)." #$sObjKey";
+			// If the object if not issued from a query but constructed programmatically
+			// the label may be empty. In this case run a query to get the object's friendly name
+			$oTmpObj = MetaModel::GetObject($sObjClass, $sObjKey);
+			$sLabel = $oTmpObj->GetName();
+			//$sLabel = MetaModel::GetName($sObjClass)." #$sObjKey";
 		}
 		$sHint = MetaModel::GetName($sObjClass)."::$sObjKey";
 		return "<a href=\"{$sAbsoluteUrl}{$sPage}?operation=details&class=$sObjClass&id=$sObjKey&".$oAppContext->GetForLink()."\" title=\"$sHint\">$sLabel</a>";
