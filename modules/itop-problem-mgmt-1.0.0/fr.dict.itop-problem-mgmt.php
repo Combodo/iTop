@@ -52,8 +52,8 @@
 
 
 Dict::Add('FR FR', 'French', 'Français', array(
-        'Menu:ProblemManagement' => 'Gestion des Problèmes',
-        'Menu:ProblemManagement+' => 'Gestion des Problèmes',
+        'Menu:ProblemManagement' => 'Gestion des problèmes',
+        'Menu:ProblemManagement+' => 'Gestion des problèmes',
     	'Menu:Problem:Overview' => 'Vue d\'ensemble',
     	'Menu:Problem:Overview+' => 'Vue d\'ensemble',
     	'Menu:NewProblem' => 'Nouveau Problème',

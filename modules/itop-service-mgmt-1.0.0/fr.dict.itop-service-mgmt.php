@@ -35,7 +35,7 @@
 
 
 Dict::Add('FR FR', 'French', 'Français', array(
-'Menu:ServiceManagement' => 'Gestion des Services',
+'Menu:ServiceManagement' => 'Gestion des services',
 'Menu:ServiceManagement+' => '',
 'Menu:Service:Overview' => 'Vue d\'ensemble',
 'Menu:Service:Overview+' => 'Vue d\'ensemble de la Gestion des Services',
