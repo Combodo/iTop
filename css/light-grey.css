@@ -154,9 +154,26 @@ td.label span {
 }
 fieldset td.label span {
     padding: 3px;
-    padding-right: 10px;	
+    padding-right: 10px;
+}
+fieldset {
+    margin-top: 3px;	
+    -moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	border-radius: 6px;
+	border-style: solid;
+	border-color: #ddd;
 }
 
+legend {
+	padding:8px;
+	color: #fff;
+	background-color: #1C94C4;
+	font-weight: bold;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	border-radius: 6px;
+}
 .ui-widget-content td a, p a, p a:visited, td a, td a:visited {
 	text-decoration:none;
 	color: #1C94C4;
@@ -977,6 +994,13 @@ span.form_validation {
 .caselog {
 	overflow-x: hidden;
 }
+.caselog_input_header {
+	padding-top:3px;
+	padding-bottom:3px;
+	border-top:1px solid #fff;
+	background: #ddd;
+	width:100%;
+}
 .caselog_header {
 	padding:3px;
 	border-top:1px solid #fff;
@@ -1000,12 +1024,12 @@ table.details {
   width:100%;
 }
 table.details>tbody>tr>td {
-	noborder-top: 2px #fff solid;
+	border-bottom: 2px #ddd solid;
 	padding-bottom: 5px;
 	padding-top: 3px;
-	background: transparent url(../images/details_sep.gif) bottom repeat-x;
 }
 fieldset table.details>tbody>tr>td {
 	padding-top: 3px;
 	background: transparent;
+	border: 0;
 }

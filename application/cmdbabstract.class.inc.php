@@ -1275,17 +1275,49 @@ EOF
 					$aEventsList[] ='keyup';
 					$aEventsList[] ='change';
 					$sEditValue = $oAttDef->GetEditValue($value);
-					$sHTMLValue = "<table><tr><td><textarea class=\"resizable\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">$sEditValue</textarea></td><td>{$sValidationField}</td></tr></table>";
+					$aStyles = array();
+					$sStyle = '';
+					$sWidth = $oAttDef->GetWidth('width', '');
+					if (!empty($sWidth))
+					{
+						$aStyles[] = 'width:'.$sWidth;
+					}
+					$sHeight = $oAttDef->GetHeight('height', '');
+					if (!empty($sHeight))
+					{
+						$aStyles[] = 'height:'.$sHeight;
+					}
+					if (count($aStyles) > 0)
+					{
+						$sStyle = 'style="'.implode('; ', $aStyles).'"';
+					}
+					$sHTMLValue = "<table><tr><td><textarea class=\"resizable\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\" $sStyle>$sEditValue</textarea></td><td>{$sValidationField}</td></tr></table>";
 				break;
 
 				case 'CaseLog':
 					$aEventsList[] ='validate';
 					$aEventsList[] ='keyup';
 					$aEventsList[] ='change';
+					$aStyles = array("overflow:auto;border:1px #999 solid; background:#fff");
+					$sStyle = '';
+					$sWidth = $oAttDef->GetWidth('width', '');
+					if (!empty($sWidth))
+					{
+						$aStyles[] = 'width:'.$sWidth;
+					}
+					$sHeight = $oAttDef->GetHeight('height', '');
+					if (!empty($sHeight))
+					{
+						$aStyles[] = 'height:'.$sHeight;
+					}
+					if (count($aStyles) > 0)
+					{
+						$sStyle = 'style="'.implode('; ', $aStyles).'"';
+					}
 					$sHeader = '<div class="caselog_input_header">&nbsp;'.Dict::S('UI:CaseLogTypeYourTextHere').'</div>';
 					$sEditValue = $oAttDef->GetEditValue($value);
 					$sPreviousLog = $oAttDef->GetAsHTML($value);
-					$sHTMLValue = "<div style=\"overflow:auto;border:1px #999 solid; background:#fff;\"><table style=\"width:100%\"><tr><td>$sHeader<textarea class=\"resizable\" style=\"border:0;width:100%\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">$sEditValue</textarea>$sPreviousLog</td><td>{$sValidationField}</td></tr></table></div>";
+					$sHTMLValue = "<div $sStyle><table style=\"width:100%\"><tr><td>$sHeader<textarea style=\"border:0;width:100%\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">$sEditValue</textarea>$sPreviousLog</td><td>{$sValidationField}</td></tr></table></div>";
 				break;
 
 				case 'HTML':
@@ -1529,7 +1561,7 @@ EOF
 											}
 
 											// Attribute is read-only
-											$sHTMLValue = $this->GetAsHTML($sAttCode);;
+											$sHTMLValue = $this->GetAsHTML($sAttCode);
 											$sHTMLValue .= '<input type="hidden" id="'.$sInputId.'" name="attr_'.$sPrefix.$sAttCode.'" value="'.htmlentities($this->Get($sAttCode), ENT_QUOTES, 'UTF-8').'"/>';
 											$aFieldsMap[$sAttCode] = $sInputId;
 											$sComments = $sSynchroIcon;

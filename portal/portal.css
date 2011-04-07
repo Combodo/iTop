@@ -114,6 +114,7 @@ a.button span {
 }
 #request_details table {
 	border: #f1f1f6 2px solid;
+	text-align: left;
 }
 #form_details {
 	display: inline-block;

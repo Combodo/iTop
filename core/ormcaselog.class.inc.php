@@ -14,8 +14,6 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-define('CASELOG_DATE_FORMAT', 'Y-m-d H:i:s');
-define('CASELOG_HEADER_FORMAT', 'On %1$s, %2$s wrote:');
 define('CASELOG_VISIBLE_ITEMS', 2);
 define('CASELOG_SEPARATOR', "\n".'========== %1$s : %2$s (%3$d) ============'."\n\n");
 
@@ -81,7 +79,7 @@ class ormCaseLog {
 			$iPos += $this->m_aIndex[$index]['text_length'];
 
 			$sEntry = '<div class="caselog_header'.$sOpen.'">';
-			$sEntry .= sprintf(CASELOG_HEADER_FORMAT, $this->m_aIndex[$index]['date']->format(CASELOG_DATE_FORMAT), $this->m_aIndex[$index]['user_name']);
+			$sEntry .= sprintf(Dict::S('UI:CaseLog:Header_Date_UserName'), $this->m_aIndex[$index]['date']->format(Dict::S('UI:CaseLog:DateFormat')), $this->m_aIndex[$index]['user_name']);
 			$sEntry .= '</div>';
 			$sEntry .= '<div class="caselog_entry"'.$sDisplay.'>';
 			$sEntry .= $sTextEntry;
@@ -116,7 +114,7 @@ class ormCaseLog {
 					$sDisplay = '';
 				}
 				$sHtml .= '<div class="caselog_header'.$sOpen.'">';
-				$sHtml .= '&nbsp;';
+				$sHtml .= Dict::S('UI:CaseLog:InitialValue');
 				$sHtml .= '</div>';
 				$sHtml .= '<div class="caselog_entry"'.$sDisplay.'>';
 				$sHtml .= $sTextEntry;
@@ -133,7 +131,7 @@ class ormCaseLog {
 	 */
 	public function AddLogEntry($sText)
 	{
-		$sDate = date(CASELOG_DATE_FORMAT);
+		$sDate = date(Dict::S('UI:CaseLog:DateFormat'));
 		$sSeparator = sprintf(CASELOG_SEPARATOR, $sDate, UserRights::GetUserFriendlyName(), UserRights::GetUserId());
 		$iSepLength = strlen($sSeparator);
 		$iTextlength = strlen($sText);

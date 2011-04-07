@@ -1412,6 +1412,16 @@ class AttributeText extends AttributeString
 	{
 		return Str::pure2xml($value);
 	}
+	
+	public function GetWidth()
+	{
+		return $this->GetOptional('width', '');		
+	}
+	
+	public function GetHeight()
+	{
+		return $this->GetOptional('height', '');		
+	}
 }
 
 /**

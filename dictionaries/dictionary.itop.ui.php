@@ -907,5 +907,9 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:AttemptingToSetAReadOnlyAttribute_Name' => 'Attempting to set the read-only field: %1$s',
 	'UI:FailedToApplyStimuli' => 'The action has failed.',
 	'UI:StimulusModify_N_ObjectsOf_Class' => '%1$s: Modifying %2$d objects of class %3$s',
+	'UI:CaseLogTypeYourTextHere' => 'Type your text here:',
+	'UI:CaseLog:DateFormat' => 'Y-m-d H:i:s',
+	'UI:CaseLog:Header_Date_UserName' => '%1$s - %2$s:',
+	'UI:CaseLog:InitialValue' => 'Initial value:',
 ));
 ?>

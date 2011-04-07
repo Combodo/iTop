@@ -220,9 +220,9 @@ function RequestCreationForm($oP, $oUserOrg)
 		$oRequest->Set('servicesubcategory_id', $aParameters['servicesubcategory_id']);
 		
 		$oAttDef = MetaModel::GetAttributeDef('UserRequest', 'service_id');
-		$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => htmlentities($oService->GetName(), ENT_QUOTES, 'UTF-8'));
+		$aDetails[] = array('label' => '<span>'.$oAttDef->GetLabel().'</span>', 'value' => htmlentities($oService->GetName(), ENT_QUOTES, 'UTF-8'));
 		$oAttDef = MetaModel::GetAttributeDef('UserRequest', 'servicesubcategory_id');
-		$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => htmlentities($oSubService->GetName(), ENT_QUOTES, 'UTF-8'));
+		$aDetails[] = array('label' => '<span>'.$oAttDef->GetLabel().'</span>', 'value' => htmlentities($oSubService->GetName(), ENT_QUOTES, 'UTF-8'));
 		$iFlags = 0;
 		foreach($aList as $sAttCode)
 		{
@@ -247,9 +247,9 @@ function RequestCreationForm($oP, $oUserOrg)
 				
 			$aFieldsMap[$sAttCode] = 'attr_'.$sAttCode;
 			$sValue = $oRequest->GetFormElementForField($oP, get_class($oRequest), $sAttCode, $oAttDef, $value, '', 'attr_'.$sAttCode, '', $iFlags, $aArgs);
-			$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $sValue);
+			$aDetails[] = array('label' => '<span>'.$oAttDef->GetLabel().'</span>', 'value' => $sValue);
 		}
-		$aDetails[] = array('label' => Dict::S('Portal:Attachments'), 'value' => '&nbsp;');
+		$aDetails[] = array('label' => '<span>'.Dict::S('Portal:Attachments').'</span>', 'value' => '&nbsp;');
 		$aDetails[] = array('label' => '&nbsp;', 'value' => '<div id="attachments"></div><p><button type="button" onClick="AddAttachment();">'.Dict::S('Portal:AddAttachment').'</button/></p>');
 		$oP->add_linked_script("../js/json.js");
 		$oP->add_linked_script("../js/forms-json-utils.js");
@@ -261,8 +261,9 @@ function RequestCreationForm($oP, $oUserOrg)
 		$oP->add("<div class=\"wizContainer\" id=\"form_request_description\">\n");
 		$oP->add("<h1 id=\"title_request_form\">".Dict::S('Portal:DescriptionOfTheRequest')."</h1>\n");
 		$oP->add("<form action=\"../portal/index.php\" enctype=\"multipart/form-data\" id=\"request_form\" method=\"post\">\n");
-		$oP->add("<table>\n");
+		$oP->add("<table><tr><td>\n");
 		$oP->details($aDetails);
+		$oP->add("</td></tr></table>\n");
 		DumpHiddenParams($oP, $aList, $aParameters);
 		$oP->add("<input type=\"hidden\" name=\"step\" value=\"3\">");
 		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"create_request\">");
@@ -562,7 +563,7 @@ function DisplayRequestDetails($oP, UserRequest $oRequest)
 			$aDetails[] = array('label' => '<span title="'.MetaModel::GetDescription('UserRequest', $sAttCode).'">'.MetaModel::GetLabel('UserRequest', $sAttCode).'</span>', 'value' => $sDisplayValue);
 		}
 	}
-	$oP->add('<div id="request_details">');
+	$oP->add('<div id="request_details" class="ui-widget-content">');
 	$sOQL = 'SELECT FileDoc AS Doc JOIN lnkTicketToDoc AS L ON L.document_id = Doc.id WHERE L.ticket_id = :request_id';
 	$oSearch = DBObjectSearch::FromOQL($sOQL);
 	$oSet = new CMDBObjectSet($oSearch, array(), array('request_id' => $oRequest->GetKey()));
