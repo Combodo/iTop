@@ -939,6 +939,21 @@ try
 				}
 			}				
 			
+			$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
+			if (($sStateAttCode != '') && ($oDummyObj->GetState() == ''))
+			{
+				// Hmmm, it's not gonna work like this ! Set a default value for the "state"
+				// Maybe we should use the "state" that is the most common among the objects...
+				$aMultiValues = $aValues[$sStateAttCode];
+				uasort($aMultiValues, 'MyComparison');
+				foreach($aMultiValues as $sCurrValue => $aVal)
+				{
+					$oDummyObj->Set($sStateAttCode, $sCurrValue);
+					break;
+				}				
+				//$oStateAtt = MetaModel::GetAttributeDef($sClass, $sStateAttCode);
+				//$oDummyObj->Set($sStateAttCode, $oStateAtt->GetDefaultValue());
+			}
 			$oP->add("<div class=\"page_header\">\n");
 			$oP->add("<h1>".$oDummyObj->GetIcon()."&nbsp;".Dict::Format('UI:Modify_M_ObjectsOf_Class_OutOf_N', $iAllowedCount, $sClass, $iAllowedCount)."</h1>\n");
 			$oP->add("</div>\n");
@@ -1500,6 +1515,10 @@ EOF
 					$aArgs = array('this' => $oObj);
 					$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, $sClass, $sAttCode, $oAttDef, $oObj->Get($sAttCode), $oObj->GetEditValue($sAttCode), $sAttCode, '', $iExpectCode, $aArgs);
 					$sComments = '<input type="checkbox" checked id="enable_'.$sAttCode.'"  onClick="ToogleField(this.checked, \''.$sAttCode.'\')"/>';
+					if (!isset($aValues[$sAttCode]))
+					{
+						$aValues[$sAttCode] = array();
+					}
 					if (count($aValues[$sAttCode]) == 1)
 					{
 						$sComments .= '<div class="mono_value">1</div>';
