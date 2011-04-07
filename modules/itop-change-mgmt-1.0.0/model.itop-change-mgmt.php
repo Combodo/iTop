@@ -372,7 +372,19 @@ class RoutineChange extends Change
 		MetaModel::Init_InheritAttributes();
 		MetaModel::Init_InheritLifecycle();
 
-		MetaModel::Init_SetZListItems('details', array('title', 'org_id', 'description','ticket_log', 'start_date', 'end_date','document_list', 'ci_list', 'contact_list','incident_list', 'status', 'reason', 'requestor_id', 'workgroup_id', 'creation_date', 'last_update', 'close_date', 'impact', 'agent_id', 'agent_email', 'supervisor_group_id', 'supervisor_id', 'manager_group_id', 'manager_id', 'outage', 'fallback'));
+		MetaModel::Init_SetZListItems('details', array('document_list', 'ci_list', 'contact_list','incident_list',
+			'col:col1' => array(
+				'fieldset:Ticket:baseinfo' => array('ref','title','org_id','status','reason','impact','description', ),
+				'fieldset:Ticket:moreinfo' => array('outage', 'fallback',),
+				'fieldset:Ticket:log' => array('ticket_log'),),
+			'col:col2' => array(
+				'fieldset:Ticket:date' => array('creation_date','start_date','last_update','close_date',),
+				'fieldset:Ticket:contact' => array('requestor_id','workgroup_id','agent_id','supervisor_group_id', 'supervisor_id', 'manager_group_id', 'manager_id',),
+				)
+
+		));
+
+		//MetaModel::Init_SetZListItems('details', array('title', 'org_id', 'description','ticket_log', 'start_date', 'end_date','document_list', 'ci_list', 'contact_list','incident_list', 'status', 'reason', 'requestor_id', 'workgroup_id', 'creation_date', 'last_update', 'close_date', 'impact', 'agent_id', 'agent_email', 'supervisor_group_id', 'supervisor_id', 'manager_group_id', 'manager_id', 'outage', 'fallback'));
 		MetaModel::Init_SetZListItems('advanced_search', array('ref', 'title', 'org_id', 'start_date', 'end_date','status', 'reason', 'requestor_id', 'workgroup_id', 'creation_date', 'last_update', 'close_date', 'impact', 'agent_id', 'agent_email', 'supervisor_group_id', 'supervisor_id', 'manager_group_id', 'manager_id', 'outage'));
 		MetaModel::Init_SetZListItems('standard_search', array('ref', 'title', 'org_id', 'start_date','end_date', 'status', 'reason', 'requestor_id', 'workgroup_id', 'creation_date', 'last_update', 'close_date', 'impact', 'agent_id', 'agent_email', 'supervisor_group_id', 'supervisor_id', 'manager_group_id', 'manager_id', 'outage'));
 		MetaModel::Init_SetZListItems('list', array('title', 'org_id', 'start_date', 'status', 'requestor_id'));
@@ -460,7 +472,20 @@ class NormalChange extends ApprovedChange
 		MetaModel::Init_AddAttribute(new AttributeDateTime("acceptance_date", array("allowed_values"=>null, "sql"=>"acceptance_date", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("acceptance_comment", array("allowed_values"=>null, "sql"=>"acceptance_comment", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('title', 'org_id', 'description','ticket_log', 'start_date','end_date', 'document_list', 'ci_list', 'contact_list','incident_list', 'status', 'reason', 'requestor_id', 'workgroup_id', 'creation_date', 'last_update','close_date', 'impact', 'agent_id', 'agent_email', 'supervisor_group_id', 'supervisor_id', 'manager_group_id', 'manager_id', 'outage', 'fallback', 'approval_date', 'approval_comment', 'acceptance_date', 'acceptance_comment'));
+
+		MetaModel::Init_SetZListItems('details', array('document_list', 'ci_list', 'contact_list','incident_list',
+			'col:col1' => array(
+				'fieldset:Ticket:baseinfo' => array('ref','title','org_id','status','reason','impact','description', ),
+				'fieldset:Ticket:moreinfo' => array('acceptance_comment','approval_comment','outage', 'fallback',),
+				'fieldset:Ticket:log' => array('ticket_log'),),
+			'col:col2' => array(
+				'fieldset:Ticket:date' => array('creation_date','start_date','last_update','acceptance_date','approval_date','close_date',),
+				'fieldset:Ticket:contact' => array('requestor_id','workgroup_id','agent_id','supervisor_group_id', 'supervisor_id', 'manager_group_id', 'manager_id',),
+				)
+
+		));
+
+//		MetaModel::Init_SetZListItems('details', array('title', 'org_id', 'description','ticket_log', 'start_date','end_date', 'document_list', 'ci_list', 'contact_list','incident_list', 'status', 'reason', 'requestor_id', 'workgroup_id', 'creation_date', 'last_update','close_date', 'impact', 'agent_id', 'agent_email', 'supervisor_group_id', 'supervisor_id', 'manager_group_id', 'manager_id', 'outage', 'fallback', 'approval_date', 'approval_comment', 'acceptance_date', 'acceptance_comment'));
 		MetaModel::Init_SetZListItems('advanced_search', array('ref', 'title', 'org_id', 'start_date', 'end_date','status', 'reason', 'requestor_id', 'workgroup_id', 'creation_date', 'last_update', 'close_date', 'impact', 'agent_id', 'agent_email', 'supervisor_group_id', 'supervisor_id', 'manager_group_id', 'manager_id', 'outage'));
 		MetaModel::Init_SetZListItems('standard_search', array('ref', 'title', 'org_id', 'start_date','end_date', 'status', 'reason', 'requestor_id', 'workgroup_id', 'impact', 'agent_id', 'agent_email', 'supervisor_group_id', 'supervisor_id', 'manager_group_id', 'manager_id', 'outage'));
 		MetaModel::Init_SetZListItems('list', array('title', 'org_id', 'start_date', 'status', 'requestor_id'));
@@ -519,7 +544,19 @@ class EmergencyChange extends ApprovedChange
 		MetaModel::Init_InheritAttributes();
 		MetaModel::Init_InheritLifecycle();
 
-		MetaModel::Init_SetZListItems('details', array('title', 'org_id', 'description','ticket_log', 'start_date', 'end_date','document_list', 'ci_list', 'contact_list','incident_list', 'status', 'reason', 'requestor_id', 'workgroup_id', 'creation_date', 'last_update', 'close_date', 'impact', 'agent_id', 'agent_email', 'supervisor_group_id', 'supervisor_id', 'manager_group_id', 'manager_id', 'outage', 'fallback', 'approval_date', 'approval_comment'));
+		MetaModel::Init_SetZListItems('details', array('document_list', 'ci_list', 'contact_list','incident_list',
+			'col:col1' => array(
+				'fieldset:Ticket:baseinfo' => array('ref','title','org_id','status','reason','impact','description', ),
+				'fieldset:Ticket:moreinfo' => array('approval_comment','outage', 'fallback',),
+				'fieldset:Ticket:log' => array('ticket_log'),),
+			'col:col2' => array(
+				'fieldset:Ticket:date' => array('creation_date','start_date','last_update','approval_date','close_date',),
+				'fieldset:Ticket:contact' => array('requestor_id','workgroup_id','agent_id','supervisor_group_id', 'supervisor_id', 'manager_group_id', 'manager_id',),
+				)
+
+		));
+
+//		MetaModel::Init_SetZListItems('details', array('title', 'org_id', 'description','ticket_log', 'start_date', 'end_date','document_list', 'ci_list', 'contact_list','incident_list', 'status', 'reason', 'requestor_id', 'workgroup_id', 'creation_date', 'last_update', 'close_date', 'impact', 'agent_id', 'agent_email', 'supervisor_group_id', 'supervisor_id', 'manager_group_id', 'manager_id', 'outage', 'fallback', 'approval_date', 'approval_comment'));
 		MetaModel::Init_SetZListItems('advanced_search', array('ref', 'title', 'org_id', 'start_date','end_date', 'status', 'reason', 'requestor_id', 'workgroup_id', 'impact', 'agent_id', 'agent_email', 'supervisor_group_id', 'supervisor_id', 'manager_group_id', 'manager_id', 'outage', 'approval_date'));
 		MetaModel::Init_SetZListItems('standard_search', array('ref', 'title', 'org_id', 'start_date', 'end_date','status', 'reason', 'requestor_id', 'workgroup_id', 'creation_date', 'last_update', 'close_date', 'impact', 'agent_id', 'agent_email', 'supervisor_group_id', 'supervisor_id', 'manager_group_id', 'manager_id', 'outage', 'approval_date'));
 		MetaModel::Init_SetZListItems('list', array('title', 'org_id', 'start_date', 'status', 'requestor_id'));

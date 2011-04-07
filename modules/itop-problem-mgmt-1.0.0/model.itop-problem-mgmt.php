@@ -68,8 +68,21 @@ class Problem extends Ticket
                 MetaModel::Init_AddAttribute(new AttributeDateTime("resolution_date", array("allowed_values"=>null, "sql"=>"resolution_date", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
                 MetaModel::Init_AddAttribute(new AttributeLinkedSet("knownerrors_list", array("linked_class"=>"KnownError", "ext_key_to_me"=>"problem_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 
+		MetaModel::Init_SetZListItems('details', array('document_list', 'ci_list', 'contact_list','incident_list',
+			'col:col1' => array(
+				'fieldset:Ticket:baseinfo' => array('ref','title','org_id','status','priority','service_id','servicesubcategory_id','product' ),
+				'fieldset:Ticket:moreinfo' => array('impact','urgency','description',),
+				'fieldset:Ticket:log' => array('ticket_log'),),
+			'col:col2' => array(
+				'fieldset:Ticket:date' => array('start_date','last_update','assignment_date','close_date',),
+				'fieldset:Ticket:contact' => array('workgroup_id','agent_id',),
+				'fieldset:Ticket:relation' => array('related_change_id',),
+				)
 
-		MetaModel::Init_SetZListItems('details', array('ref', 'title', 'org_id', 'description', 'ticket_log', 'start_date','knownerrors_list', 'document_list', 'ci_list', 'contact_list','incident_list', 'status', 'service_id', 'servicesubcategory_id','product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_change_id', 'close_date', 'last_update', 'assignment_date'));
+		));
+
+
+//		MetaModel::Init_SetZListItems('details', array('ref', 'title', 'org_id', 'description', 'ticket_log', 'start_date','knownerrors_list', 'document_list', 'ci_list', 'contact_list','incident_list', 'status', 'service_id', 'servicesubcategory_id','product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_change_id', 'close_date', 'last_update', 'assignment_date'));
 		MetaModel::Init_SetZListItems('advanced_search', array('ref', 'title', 'org_id', 'start_date', 'status', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_change_id', 'close_date'));
 		MetaModel::Init_SetZListItems('standard_search', array('ref', 'title', 'org_id', 'start_date', 'status', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'close_date'));
 		MetaModel::Init_SetZListItems('list', array('title', 'org_id', 'start_date', 'status', 'service_id', 'priority'));
@@ -111,6 +124,7 @@ class Problem extends Ticket
                                         'title' => OPT_ATT_READONLY,
                                         'org_id' => OPT_ATT_READONLY,
                                         'ticket_log' => OPT_ATT_NORMAL,
+					'assignment_date' => OPT_ATT_READONLY,
                                         'description' => OPT_ATT_READONLY,
                                         'agent_id' => OPT_ATT_MUSTPROMPT | OPT_ATT_MANDATORY,
                                         'agent_email' => OPT_ATT_READONLY,

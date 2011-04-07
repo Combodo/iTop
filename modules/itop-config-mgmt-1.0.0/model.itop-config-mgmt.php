@@ -165,7 +165,7 @@ class Person extends Contact
 		MetaModel::Init_SetZListItems('details', array('name','first_name', 'org_id', 'status', 'location_id', 'email', 'phone', 'employee_id','team_list', 'contract_list', 'service_list', 'ticket_list', 'ci_list'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'org_id', 'email', 'phone', 'location_id', 'first_name', 'employee_id'));
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'org_id', 'email', 'phone', 'location_id', 'first_name', 'employee_id'));
-		MetaModel::Init_SetZListItems('list', array('first_name','status', 'org_id', 'email', 'phone', 'location_id'));
+		MetaModel::Init_SetZListItems('list', array('name','first_name','status', 'org_id', 'email', 'phone', 'location_id'));
 	}
 }
 class Team extends Contact
@@ -817,7 +817,7 @@ class DatabaseInstance extends FunctionalCI
 		(
 			"category" => "bizmodel,searchable,configmgmt",
 			"key_type" => "autoincrement",
-			"name_attcode" => array('name', 'db_server_instance_name'),
+			"name_attcode" => array('name', 'db_server_instance_id_friendlyname'),
 			"state_attcode" => "",
 			"reconc_keys" => array("name","org_id","owner_name","db_server_instance_id","db_server_instance_name"),
 			"db_table" => "databaseinstance",

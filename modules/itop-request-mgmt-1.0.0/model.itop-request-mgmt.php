@@ -47,7 +47,21 @@ class UserRequest extends ResponseTicket
 		MetaModel::Init_AddAttribute(new AttributeEnum("request_type", array("allowed_values"=>new ValueSetEnum('service request,issue,information'), "sql"=>"request_type", "default_value"=>"service request", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("freeze_reason", array("allowed_values"=>null, "sql"=>"freeze_reason", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('ref', 'title', 'org_id', 'description', 'request_type','ticket_log', 'start_date', 'tto_escalation_deadline', 'ttr_escalation_deadline', 'document_list', 'ci_list', 'contact_list','incident_list', 'status', 'caller_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'close_date', 'last_update', 'assignment_date', 'closure_deadline', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment', 'freeze_reason'));
+
+		MetaModel::Init_SetZListItems('details', array('document_list', 'ci_list', 'contact_list','incident_list',
+			'col:col1' => array(
+				'fieldset:Ticket:baseinfo' => array('ref','title','org_id','status','priority','service_id','servicesubcategory_id','product' ),
+				'fieldset:Ticket:moreinfo' => array('impact','urgency','description','resolution_code', 'solution', 'user_satisfaction', 'user_commment','freeze_reason'),
+				'fieldset:Ticket:log' => array('ticket_log'),),
+			'col:col2' => array(
+				'fieldset:Ticket:date' => array('start_date','last_update','assignment_date','tto_escalation_deadline', 'ttr_escalation_deadline', 'close_date',  'closure_deadline',),
+				'fieldset:Ticket:contact' => array('caller_id','workgroup_id','agent_id',),
+				'fieldset:Ticket:relation' => array('related_problem_id', 'related_change_id',),
+				)
+
+		));
+
+//		MetaModel::Init_SetZListItems('details', array('ref', 'title', 'org_id', 'description', 'request_type','ticket_log', 'start_date', 'tto_escalation_deadline', 'ttr_escalation_deadline', 'document_list', 'ci_list', 'contact_list','incident_list', 'status', 'caller_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'close_date', 'last_update', 'assignment_date', 'closure_deadline', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment', 'freeze_reason'));
 		MetaModel::Init_SetZListItems('advanced_search', array('ref', 'title', 'org_id', 'start_date', 'status', 'caller_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'related_problem_id', 'related_change_id', 'close_date', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
 		MetaModel::Init_SetZListItems('standard_search', array('ref', 'title', 'org_id', 'request_type','start_date', 'status', 'caller_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'agent_email', 'close_date', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment'));
 		MetaModel::Init_SetZListItems('list', array('title', 'org_id', 'start_date', 'status', 'service_id', 'priority', 'workgroup_id', 'agent_id'));

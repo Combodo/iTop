@@ -53,9 +53,9 @@ abstract class Ticket extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("contact_list", array("linked_class"=>"lnkTicketToContact", "ext_key_to_me"=>"ticket_id", "ext_key_to_remote"=>"contact_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("incident_list", array("linked_class"=>"lnkTicketToIncident", "ext_key_to_me"=>"ticket_id", "ext_key_to_remote"=>"incident_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('ref', 'title', 'description', 'ticket_log', 'start_date', 'document_list', 'ci_list', 'contact_list','incident_list'));
-		MetaModel::Init_SetZListItems('advanced_search', array('finalclass', 'ref', 'title', 'ticket_log', 'start_date'));
-		MetaModel::Init_SetZListItems('standard_search', array('finalclass', 'ref', 'title', 'ticket_log', 'start_date'));
+		MetaModel::Init_SetZListItems('details', array('ref', 'title', 'description',  'start_date','ticket_log', 'document_list', 'ci_list', 'contact_list','incident_list'));
+		MetaModel::Init_SetZListItems('advanced_search', array('finalclass', 'ref', 'title',  'start_date'));
+		MetaModel::Init_SetZListItems('standard_search', array('finalclass', 'ref', 'title',  'start_date'));
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'ref', 'title', 'ticket_log', 'start_date'));
 	}
 }
@@ -581,6 +581,7 @@ abstract class ResponseTicket extends Ticket
 		// $oFirstContact = MetaModel::GetObject('bizPerson', 6);
 		// $oNewLink = new lnkContactTicket();
 		// $oNewLink->Set('contact_id', 6);
+
 		// $oNewLink->Set('role', 'created before');
 		// $oToNotify->AddObject($oNewLink);
 

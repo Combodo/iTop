@@ -67,7 +67,17 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Ticket/Attribute:finalclass+' => '',
 ));
 
+// Fieldset translation
+Dict::Add('EN US', 'English', 'English', array(
 
+	'Ticket:baseinfo' => 'General Information',
+	'Ticket:date' => 'Dates',
+	'Ticket:contact' => 'Contacts',
+	'Ticket:moreinfo' => 'More Information',
+	'Ticket:relation' => 'Relations',
+	'Ticket:log' => 'Communications',
+
+));
 //
 // Class: lnkTicketToDoc
 //
