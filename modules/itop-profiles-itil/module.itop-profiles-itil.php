@@ -355,6 +355,9 @@ class CreateITILProfilesInstaller extends ModuleInstallerAPI
 			'Service' => MetaModel::GetClasses('servicemgmt'),
 			'Call' => MetaModel::GetClasses('requestmgmt'),
 			'KnownError' => MetaModel::GetClasses('knownerrormgmt'),
+			'LnkTickets' => MetaModel::GetClasses('lnkticket'),
+			'LnkIncidents' => MetaModel::GetClasses('lnkincident'),
+			'LnkServices' => MetaModel::GetClasses('lnkservice'),
 		);
 		
 		self::$m_aProfiles = array(
@@ -372,7 +375,7 @@ class CreateITILProfilesInstaller extends ModuleInstallerAPI
 			'Service Desk Agent' => array(
 				'description' => 'Person in charge of creating incident reports',
 				'write_modules' => 'Incident,Call',
-				'delete_modules' => 'Incident,Call',
+				'delete_modules' => 'LnkTickets,LnkIncidents',
 				'stimuli' => array(
 					'Incident' => 'ev_assign',
 					'UserRequest' => 'ev_assign',
@@ -381,7 +384,7 @@ class CreateITILProfilesInstaller extends ModuleInstallerAPI
 			'Support Agent' => array(
 				'description' => 'Person analyzing and solving the current incidents',
 				'write_modules' => 'Incident',
-				'delete_modules' => 'Incident',
+				'delete_modules' => 'LnkTickets,LnkIncidents',
 				'stimuli' => array(
 					'Incident' => 'ev_assign,ev_reassign,ev_resolve,ev_close',
 					'UserRequest' => 'ev_assign,ev_reassign,ev_resolve,ev_close,ev_freeze',
@@ -390,7 +393,7 @@ class CreateITILProfilesInstaller extends ModuleInstallerAPI
 			'Problem Manager' => array(
 				'description' => 'Person analyzing and solving the current problems',
 				'write_modules' => 'Problem,KnownError',
-				'delete_modules' => 'Problem,KnownError',
+				'delete_modules' => 'LnkTickets',
 				'stimuli' => array(
 					'Problem' => 'ev_assign,ev_reassign,ev_resolve,ev_close',
 				),
@@ -399,7 +402,7 @@ class CreateITILProfilesInstaller extends ModuleInstallerAPI
 			'Change Implementor' => array(
 				'description' => 'Person executing the changes',
 				'write_modules' => 'Change',
-				'delete_modules' => 'Change',
+				'delete_modules' => 'LnkTickets',
 				'stimuli' => array(
 					'NormalChange' => 'ev_plan,ev_replan,ev_implement,ev_monitor',
 					'EmergencyChange' => 'ev_plan,ev_replan,ev_implement,ev_monitor',
@@ -409,7 +412,7 @@ class CreateITILProfilesInstaller extends ModuleInstallerAPI
 			'Change Supervisor' => array(
 				'description' => 'Person responsible for the overall change execution',
 				'write_modules' => 'Change',
-				'delete_modules' => 'Change',
+				'delete_modules' => 'LnkTickets',
 				'stimuli' => array(
 					'NormalChange' => 'ev_validate,ev_reject,ev_assign,ev_reopen,ev_finish',
 					'EmergencyChange' => 'ev_assign,ev_reopen,ev_finish',
@@ -419,7 +422,7 @@ class CreateITILProfilesInstaller extends ModuleInstallerAPI
 			'Change Approver' => array(
 				'description' => 'Person who could be impacted by some changes',
 				'write_modules' => 'Change',
-				'delete_modules' => 'Change',
+				'delete_modules' => 'LnkTickets',
 				'stimuli' => array(
 					'NormalChange' => 'ev_approve,ev_notapprove',
 					'EmergencyChange' => 'ev_approve,ev_notapprove',
@@ -429,14 +432,14 @@ class CreateITILProfilesInstaller extends ModuleInstallerAPI
 			'Service Manager' => array(
 				'description' => 'Person responsible for the service delivered to the [internal] customer',
 				'write_modules' => 'Service',
-				'delete_modules' => 'Service',
+				'delete_modules' => 'LnkServices',
 				'stimuli' => array(
 				),
 			),
 			'Document author' => array(
 				'description' => 'Any person who could contribute to documentation',
 				'write_modules' => 'Documentation',
-				'delete_modules' => 'Documentation',
+				'delete_modules' => 'Documentation,LnkTickets',
 				'stimuli' => array(
 				),
 			),

@@ -195,7 +195,7 @@ class lnkTicketToIncident extends cmdbAbstractObject
         {
                 $aParams = array
                 (
-                        "category" => "bizmodel,searchable,incidentmgmt,requestmgmt",
+                        "category" => "bizmodel,searchable,incidentmgmt,requestmgmt,lnkincident",
                         "key_type" => "autoincrement",
                         "name_attcode" => "ticket_id",
                         "state_attcode" => "",

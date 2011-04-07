@@ -30,7 +30,7 @@ abstract class Ticket extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable,incidentmgmt,requestmgmt,changemgmt,problemmgmt",
+			"category" => "bizmodel,searchable",
 			"key_type" => "autoincrement",
 			"name_attcode" => "ref",
 			"state_attcode" => "",
@@ -46,7 +46,7 @@ abstract class Ticket extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeString("ref", array("allowed_values"=>null, "sql"=>"ref", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("title", array("allowed_values"=>null, "sql"=>"title", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("description", array("allowed_values"=>null, "sql"=>"description", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeText("ticket_log", array("allowed_values"=>null, "sql"=>"ticket_log", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeCaseLog("ticket_log", array("allowed_values"=>null, "sql"=>"ticket_log", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDateTime("start_date", array("allowed_values"=>null, "sql"=>"start_date", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("document_list", array("linked_class"=>"lnkTicketToDoc", "ext_key_to_me"=>"ticket_id", "ext_key_to_remote"=>"document_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("ci_list", array("linked_class"=>"lnkTicketToCI", "ext_key_to_me"=>"ticket_id", "ext_key_to_remote"=>"ci_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
@@ -66,7 +66,7 @@ class lnkTicketToDoc extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable,incidentmgmt,requestmgmt,changemgmt,problemmgmt",
+			"category" => "bizmodel,searchable,incidentmgmt,requestmgmt,changemgmt,problemmgmt,lnkticket",
 			"key_type" => "autoincrement",
 			"name_attcode" => "ticket_id",
 			"state_attcode" => "",
@@ -97,7 +97,7 @@ class lnkTicketToContact extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable,incidentmgmt,requestmgmt,changemgmt,problemmgmt",
+			"category" => "bizmodel,searchable,incidentmgmt,requestmgmt,changemgmt,problemmgmt,lnkticket",
 			"key_type" => "autoincrement",
 			"name_attcode" => "ticket_id",
 			"state_attcode" => "",
@@ -130,7 +130,7 @@ class lnkTicketToCI extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable,incidentmgmt,requestmgmt,changemgmt,problemmgmt",
+			"category" => "bizmodel,searchable,incidentmgmt,requestmgmt,changemgmt,problemmgmt,lnkticket",
 			"key_type" => "autoincrement",
 			"name_attcode" => "ticket_id",
 			"state_attcode" => "",
@@ -165,7 +165,7 @@ abstract class ResponseTicket extends Ticket
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,incidentmgmt,requestmgmt",
+			"category" => "bizmodel",
 			"key_type" => "autoincrement",
 			"name_attcode" => "ref",
 			"state_attcode" => "status",

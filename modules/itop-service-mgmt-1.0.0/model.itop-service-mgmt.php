@@ -185,7 +185,7 @@ class lnkContractToSLA extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable,servicemgmt",
+			"category" => "bizmodel,searchable,servicemgmt,lnkservice",
 			"key_type" => "autoincrement",
 			"name_attcode" => "contract_id",
 			"state_attcode" => "",
@@ -218,7 +218,7 @@ class lnkContractToDoc extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable,servicemgmt",
+			"category" => "bizmodel,searchable,servicemgmt,lnkservice",
 			"key_type" => "autoincrement",
 			"name_attcode" => "contract_id",
 			"state_attcode" => "",
@@ -251,7 +251,7 @@ class lnkContractToContact extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable,servicemgmt",
+			"category" => "bizmodel,searchable,servicemgmt,lnkservice",
 			"key_type" => "autoincrement",
 			"name_attcode" => "contract_id",
 			"state_attcode" => "",
@@ -284,7 +284,7 @@ class lnkContractToCI extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable,servicemgmt",
+			"category" => "bizmodel,searchable,servicemgmt,lnkservice",
 			"key_type" => "autoincrement",
 			"name_attcode" => "contract_id",
 			"state_attcode" => "",
@@ -464,7 +464,7 @@ class lnkSLTToSLA extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable,servicemgmt",
+			"category" => "bizmodel,searchable,servicemgmt,lnkservice",
 			"key_type" => "autoincrement",
 			"name_attcode" => "sla_id",
 			"state_attcode" => "",
@@ -499,7 +499,7 @@ class lnkServiceToDoc extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable,servicemgmt",
+			"category" => "bizmodel,searchable,servicemgmt,lnkservice",
 			"key_type" => "autoincrement",
 			"name_attcode" => "service_id",
 			"state_attcode" => "",
@@ -532,7 +532,7 @@ class lnkServiceToContact extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable,servicemgmt",
+			"category" => "bizmodel,searchable,servicemgmt,lnkservice",
 			"key_type" => "autoincrement",
 			"name_attcode" => "service_id",
 			"state_attcode" => "",
@@ -565,7 +565,7 @@ class lnkServiceToCI extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable,servicemgmt",
+			"category" => "bizmodel,searchable,servicemgmt,lnkservice",
 			"key_type" => "autoincrement",
 			"name_attcode" => "service_id",
 			"state_attcode" => "",
