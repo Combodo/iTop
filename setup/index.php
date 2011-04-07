@@ -502,16 +502,12 @@ function AddHiddenParam($oP, $sName, $value)
 function BuildConfig(SetupWebpage $oP, Config &$oConfig, $aParamValues, $aAvailableModules)
 {
 	// Initialize the arrays below with default values for the application...
-	$aAddOns = $oConfig->GetAddOns();
-	$aAppModules = $oConfig->GetAppModules();
-	// New module in 1.1: synchro, when migrating an *old* configuration file to 1.1 the module may be missing
-	if (!in_array('synchro/synchrodatasource.class.inc.php', $aAppModules))
-	{
-		$aAppModules[] = 'synchro/synchrodatasource.class.inc.php';
-	}
-	$aDataModels = $oConfig->GetDataModels();
-	$aWebServiceCategories = $oConfig->GetWebServiceCategories();
-	$aDictionaries = $oConfig->GetDictionaries();
+	$oEmptyConfig = new Config('dummy_file', false); // Do NOT load any config file, just set the default values
+	$aAddOns = $oEmptyConfig->GetAddOns();
+	$aAppModules = $oEmptyConfig->GetAppModules();
+	$aDataModels = $oEmptyConfig->GetDataModels();
+	$aWebServiceCategories = $oEmptyConfig->GetWebServiceCategories();
+	$aDictionaries = $oEmptyConfig->GetDictionaries();
 	// Merge the values with the ones provided by the modules
 	// Make sure when don't load the same file twice...
 	foreach($aParamValues['module'] as $sModuleId)
