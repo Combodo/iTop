@@ -76,18 +76,31 @@ class SynchroDataSource extends cmdbAbstractObject
 
 		MetaModel::Init_AddAttribute(new AttributeLinkedSet("attribute_list", array("linked_class"=>"SynchroAttribute", "ext_key_to_me"=>"sync_source_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 		// Not used yet !
-		MetaModel::Init_AddAttribute(new AttributeEnum("user_delete_policy", array("allowed_values"=>new ValueSetEnum('never,depends,always'), "sql"=>"user_delete_policy", "default_value"=>"always", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("user_delete_policy", array("allowed_values"=>new ValueSetEnum('everybody,administrators,nobody'), "sql"=>"user_delete_policy", "default_value"=>"nobody", "is_null_allowed"=>true, "depends_on"=>array())));
 
 		MetaModel::Init_AddAttribute(new AttributeURL("url_icon", array("allowed_values"=>null, "sql"=>"url_icon", "default_value"=>null, "is_null_allowed"=>true, "target"=> '_top', "depends_on"=>array())));
 		// The field below is not a real URL since it can contain placeholders like $replica->primary_key$ which are not syntactically allowed in a real URL
 		MetaModel::Init_AddAttribute(new AttributeString("url_application", array("allowed_values"=>null, "sql"=>"url_application", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('name', 'description', 'url_icon', 'url_application', 'scope_class', /*'scope_restriction', */'status', 'user_id', 'full_load_periodicity', 'reconciliation_policy', 'action_on_zero', 'action_on_one', 'action_on_multiple', 'delete_policy', 'delete_policy_update', 'delete_policy_retention' /*'attribute_list'*/)); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('name', 'description', 'url_icon', 'url_application', 'scope_class', /*'scope_restriction', */'status', 'user_id', 'full_load_periodicity', 'reconciliation_policy', 'action_on_zero', 'action_on_one', 'action_on_multiple', 'delete_policy', 'delete_policy_update', 'delete_policy_retention', 'user_delete_policy')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('scope_class', 'status', 'user_id', 'full_load_periodicity')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'scope_class', 'user_id')); // Criteria of the std search form
 //		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
+	}
+
+	public static $m_oCurrentTask = null;
+	public static function GetCurrentTaskId()
+	{
+		if (is_object(self::$m_oCurrentTask))
+		{
+			return self::$m_oCurrentTask->GetKey();
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	public function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
@@ -406,13 +419,13 @@ EOF
 		return str_replace($aSearches, $aReplacements, $this->Get('url_application'));
 	}
 	
-	public function GetAttributeFlags($sAttCode)
+	public function GetAttributeFlags($sAttCode, &$aReasons = array())
 	{
 		if (($sAttCode == 'scope_class') && (!$this->IsNew()))
 		{
 			return OPT_ATT_READONLY;
 		}
-		return parent::GetAttributeFlags($sAttCode);
+		return parent::GetAttributeFlags($sAttCode, $aReasons);
 	}
 		
 	public function UpdateObject($sFormPrefix = '')
@@ -690,6 +703,7 @@ EOF
 
 		$oStatLog->DBInsertTracked($oMyChange);
 
+		self::$m_oCurrentTask = $this;
 		try
 		{
 			$this->DoSynchronize($oLastFullLoadStartDate, $oMyChange, $oStatLog);
@@ -713,6 +727,7 @@ EOF
 			$oStatLog->Set('last_error', $e->getMessage());
 			$oStatLog->DBUpdateTracked($oMyChange);
 		}
+		self::$m_oCurrentTask = null;
 		return $oStatLog;
 	}
 
@@ -998,7 +1013,7 @@ class SynchroAttribute extends cmdbAbstractObject
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("sync_source_id", array("targetclass"=>"SynchroDataSource", "jointype"=> "", "allowed_values"=>null, "sql"=>"sync_source_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("sync_source_id", array("targetclass"=>"SynchroDataSource", "jointype"=> "", "allowed_values"=>null, "sql"=>"sync_source_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_SILENT, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("attcode", array("allowed_values"=>null, "sql"=>"attcode", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeBoolean("update", array("allowed_values"=>null, "sql"=>"update", "default_value"=>true, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeBoolean("reconcile", array("allowed_values"=>null, "sql"=>"reconcile", "default_value"=>false, "is_null_allowed"=>false, "depends_on"=>array())));
@@ -1113,7 +1128,7 @@ class SynchroLog extends DBObject
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 //		MetaModel::Init_AddAttribute(new AttributeString("userinfo", array("allowed_values"=>null, "sql"=>"userinfo", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("sync_source_id", array("targetclass"=>"SynchroDataSource", "jointype"=> "", "allowed_values"=>null, "sql"=>"sync_source_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("sync_source_id", array("targetclass"=>"SynchroDataSource", "jointype"=> "", "allowed_values"=>null, "sql"=>"sync_source_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_SILENT, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDateTime("start_date", array("allowed_values"=>null, "sql"=>"start_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDateTime("end_date", array("allowed_values"=>null, "sql"=>"end_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('running,completed,error'), "sql"=>"status", "default_value"=>"running", "is_null_allowed"=>false, "depends_on"=>array())));
@@ -1244,7 +1259,7 @@ class SynchroReplica extends DBObject implements iDisplay
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("sync_source_id", array("targetclass"=>"SynchroDataSource", "jointype"=> "", "allowed_values"=>null, "sql"=>"sync_source_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("sync_source_id", array("targetclass"=>"SynchroDataSource", "jointype"=> "", "allowed_values"=>null, "sql"=>"sync_source_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_SILENT, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("base_class", array("allowed_values"=>null, "extkey_attcode"=> 'sync_source_id', "target_attcode"=>"scope_class")));
 
 		MetaModel::Init_AddAttribute(new AttributeInteger("dest_id", array("allowed_values"=>null, "sql"=>"dest_id", "default_value"=>0, "is_null_allowed"=>true, "depends_on"=>array())));
@@ -1273,7 +1288,7 @@ class SynchroReplica extends DBObject implements iDisplay
 
 	// Overload the deletion -> the replica has been created by the mean of a trigger,
 	//                          it will be deleted by the mean of a trigger too
-	public function DBDelete()
+	public function DBDelete(&$oDeletionPlan = null)
 	{
 		$oDataSource = MetaModel::GetObject('SynchroDataSource', $this->Get('sync_source_id'));
 		$sTable = $oDataSource->GetDataTable();

@@ -28,102 +28,26 @@
  */
 function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 {
-	$bFoundStopper = false;
-	$bFoundManuelOp = false; // A manual operation is needed
-	$bFoundManualDel = false; // Manual deletion (or change an ext key) is needed
-	$bFoundSecurityIssue = false; // Some operation not allowed to the end-user
+	$oDeletionPlan = new DeletionPlan();
 
-	$iTotalDelete = 0; // count of object that must be deleted
-	$iTotalReset = 0; // count of object for which an ext key will be reset (to 0)
-	$aTotalDeletedObjs = array();
-	$aTotalResetedObjs = array();
-
-	$aRequestedByUser = array();
 	foreach($aObjects as $oObj)
 	{
-		$aRequestedByUser[] = $oObj->GetKey();
-	}
-	
-	foreach($aObjects as $oObj)
-	{
-		// Evaluate the impact on the DB integrity
-		//
-		$aDeletedObjs = array();
-		$aResetedObjs = array();
-		$oObj->GetDeletionScheme($aDeletedObjs, $aResetedObjs);
-
-		// Evaluate feasibility (user access control)
-		//
-		foreach ($aDeletedObjs as $sRemoteClass => $aDeletes)
+		if ($bDeleteConfirmed)
 		{
-			$iTotalDelete += count($aDeletes);
-			foreach ($aDeletes as $iId => $aData)
-			{
-				$oToDelete = $aData['to_delete'];
-				$aTotalDeletedObjs[$sRemoteClass][$iId]['to_delete'] = $oToDelete;
-				if (in_array($iId, $aRequestedByUser))
-				{
-					$aTotalDeletedObjs[$sRemoteClass][$iId]['requested_by_user'] = true;
-				}
-				$bDeleteAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_DELETE, DBObjectSet::FromObject($oToDelete));
-				$aTotalDeletedObjs[$sRemoteClass][$iId]['auto_delete'] = $aData['auto_delete'];
-				if (!$bDeleteAllowed)
-				{
-					$aTotalDeletedObjs[$sRemoteClass][$iId]['issue'] = Dict::S('UI:Delete:NotAllowedToDelete');
-					$bFoundStopper = true;
-					$bFoundSecurityIssue = true;
-				}
-				elseif (isset($aData['issues']) && (count($aData['issues']) > 0))
-				{
-					$sIssueDesc = implode(', ', $aData['issues']);
-					$aTotalDeletedObjs[$sRemoteClass][$iId]['issue'] = $sIssueDesc;
-					$bFoundStopper = true;
-					$bFoundManuelOp = true;
-				}
-	
-				$bAutoDel = $aData['auto_delete'];
-				if (!$bAutoDel)
-				{
-					$bFoundStopper = true;
-					$bFoundManualDel = true;
-				}
-			}
-		}
+			// Prepare the change reporting
+			//
+			$oMyChange = MetaModel::NewObject("CMDBChange");
+			$oMyChange->Set("date", time());
+			$sUserString = CMDBChange::GetCurrentUserName();
+			$oMyChange->Set("userinfo", $sUserString);
+			$oMyChange->DBInsert();
 
-		foreach ($aResetedObjs as $sRemoteClass => $aToReset)
-		{
-			$iTotalReset += count($aToReset);
-			foreach ($aToReset as $iId => $aData)
-			{
-				$oToReset = $aData['to_reset'];
-				$aExtKeyLabels = array();
-				$aForbiddenKeys = array(); // keys on which the current user is not allowed to write
-				foreach ($aData['attributes'] as $sRemoteExtKey => $aRemoteAttDef)
-				{
-					$bUpdateAllowed = UserRights::IsActionAllowedOnAttribute($sClass, $sRemoteExtKey, UR_ACTION_MODIFY, DBObjectSet::FromObject($oToReset));
-					if (!$bUpdateAllowed)
-					{
-						$bFoundStopper = true;
-						$bFoundSecurityIssue = true;
-						$aForbiddenKeys[] = $aRemoteAttDef->GetLabel();
-					}
-					$aExtKeyLabels[] = $aRemoteAttDef->GetLabel();
-				}
-				$aResetedObjs[$sRemoteClass][$iId]['attributes_list'] = implode(', ', $aExtKeyLabels); 
-				$aTotalResetedObjs[$sRemoteClass][$iId]['attributes_list'] = $aResetedObjs[$sRemoteClass][$iId]['attributes_list'];
-				$aTotalResetedObjs[$sRemoteClass][$iId]['attributes'] = $aResetedObjs[$sRemoteClass][$iId]['attributes'];
-				if (count($aForbiddenKeys) > 0)
-				{
-					$aTotalResetedObjs[$sRemoteClass][$iId]['issue'] = Dict::Format('UI:Delete:NotAllowedToUpdate_Fields',implode(', ', $aForbiddenKeys));
-				}
-				else
-				{
-					$aTotalResetedObjs[$sRemoteClass][$iId]['to_reset'] = $oToReset;
-				}
-			}
+			$oObj->DBDeleteTracked($oMyChange, null, $oDeletionPlan);
 		}
-		// Count of dependent objects (+ the current one)
-		$iTotalTargets = $iTotalDelete + $iTotalReset;
+		else
+		{
+			$oObj->CheckToDelete($oDeletionPlan);
+		}
 	}
 	
 	if ($bDeleteConfirmed)
@@ -138,37 +62,29 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 			$oP->add("<h1>".Dict::Format('UI:Title:BulkDeletionOf_Count_ObjectsOf_Class', count($aObjects), MetaModel::GetName($sClass))."</h1>\n");		
 		}
 		// Security - do not allow the user to force a forbidden delete by the mean of page arguments...
-		if ($bFoundSecurityIssue)
+		if ($oDeletionPlan->FoundSecurityIssue())
 		{
 			throw new CoreException(Dict::S('UI:Error:NotEnoughRightsToDelete'));
 		}
-		if ($bFoundManuelOp)
+		if ($oDeletionPlan->FoundManualOperation())
 		{
 			throw new CoreException(Dict::S('UI:Error:CannotDeleteBecauseManualOpNeeded'));
 		}
-		if ($bFoundManualDel)
+		if ($oDeletionPlan->FoundManualDelete())
 		{
 			throw new CoreException(Dict::S('UI:Error:CannotDeleteBecauseOfDepencies'));
 		}
 
-		// Prepare the change reporting
-		//
-		$oMyChange = MetaModel::NewObject("CMDBChange");
-		$oMyChange->Set("date", time());
-		$sUserString = CMDBChange::GetCurrentUserName();
-		$oMyChange->Set("userinfo", $sUserString);
-		$oMyChange->DBInsert();
-
-		// Delete dependencies
+		// Report deletions
 		//
 		$aDisplayData = array();
-		foreach ($aTotalDeletedObjs as $sRemoteClass => $aDeletes)
+		foreach ($oDeletionPlan->ListDeletes() as $sTargetClass => $aDeletes)
 		{
 			foreach ($aDeletes as $iId => $aData)
 			{
 				$oToDelete = $aData['to_delete'];
 
-				if (isset($aData['requested_by_user']))
+				if (isset($aData['requested_explicitely']))
 				{
 					$sMessage = Dict::S('UI:Delete:Deleted');
 				}
@@ -181,35 +97,27 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 					'object' => $oToDelete->GetHyperLink(),
 					'consequence' => $sMessage,
 				);
-
-				$oToDelete->DBDeleteTracked($oMyChange);
 			}
 		}
 	
-		// Update dependencies
+		// Report updates
 		//
-		foreach ($aTotalResetedObjs as $sRemoteClass => $aToReset)
+		foreach ($oDeletionPlan->ListUpdates() as $sTargetClass => $aToUpdate)
 		{
-			foreach ($aToReset as $iId => $aData)
+			foreach ($aToUpdate as $iId => $aData)
 			{
-				$oToReset = $aData['to_reset'];
+				$oToUpdate = $aData['to_reset'];
 				$aDisplayData[] = array(
-					'class' => MetaModel::GetName(get_class($oToReset)),
-					'object' => $oToReset->GetHyperLink(),
+					'class' => MetaModel::GetName(get_class($oToUpdate)),
+					'object' => $oToUpdate->GetHyperLink(),
 					'consequence' => Dict::Format('UI:Delete:AutomaticResetOf_Fields', $aData['attributes_list']),
 				);
-
-				foreach ($aData['attributes'] as $sRemoteExtKey => $aRemoteAttDef)
-				{
-					$oToReset->Set($sRemoteExtKey, 0);
-					$oToReset->DBUpdateTracked($oMyChange);
-				}
 			}
 		}
 
 		// Report automatic jobs
 		//
-		if ($iTotalTargets > 0)
+		if ($oDeletionPlan->GetTargetCount() > 0)
 		{
 			if (count($aObjects) == 1)
 			{
@@ -241,17 +149,17 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 		// Explain what should be done
 		//
 		$aDisplayData = array();
-		foreach ($aTotalDeletedObjs as $sRemoteClass => $aDeletes)
+		foreach ($oDeletionPlan->ListDeletes() as $sTargetClass => $aDeletes)
 		{
 			foreach ($aDeletes as $iId => $aData)
 			{
 				$oToDelete = $aData['to_delete'];
-				$bAutoDel = $aData['auto_delete'];
+				$bAutoDel = (($aData['mode'] == DEL_SILENT) || ($aData['mode'] == DEL_AUTO));
 				if (array_key_exists('issue', $aData))
 				{
 					if ($bAutoDel)
 					{
-						if (isset($aData['requested_by_user']))
+						if (isset($aData['requested_explicitely']))
 						{
 							$sConsequence = Dict::Format('UI:Delete:CannotDeleteBecause', $aData['issue']);
 						}
@@ -269,7 +177,7 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 				{
 					if ($bAutoDel)
 					{
-						if (isset($aData['requested_by_user']))
+						if (isset($aData['requested_explicitely']))
 						{
 	                  $sConsequence = ''; // not applicable
 						}
@@ -290,11 +198,11 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 				);
 			}
 		}
-		foreach ($aTotalResetedObjs as $sRemoteClass => $aToReset)
+		foreach ($oDeletionPlan->ListUpdates() as $sRemoteClass => $aToUpdate)
 		{
-			foreach ($aToReset as $iId => $aData)
+			foreach ($aToUpdate as $iId => $aData)
 			{
-				$oToReset = $aData['to_reset'];
+				$oToUpdate = $aData['to_reset'];
 				if (array_key_exists('issue', $aData))
 				{
 					$sConsequence = Dict::Format('UI:Delete:CannotUpdateBecause_Issue', $aData['issue']);
@@ -304,29 +212,29 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 					$sConsequence = Dict::Format('UI:Delete:WillAutomaticallyUpdate_Fields', $aData['attributes_list']);
 				}
 				$aDisplayData[] = array(
-					'class' => MetaModel::GetName(get_class($oToReset)),
-					'object' => $oToReset->GetHyperLink(),
+					'class' => MetaModel::GetName(get_class($oToUpdate)),
+					'object' => $oToUpdate->GetHyperLink(),
 					'consequence' => $sConsequence,
 				);
 			}
 		}
 
-      $iInducedDeletions = $iTotalTargets - count($aObjects);
-		if ($iInducedDeletions > 0)
+      $iImpactedIndirectly = $oDeletionPlan->GetTargetCount() - count($aObjects);
+		if ($iImpactedIndirectly > 0)
 		{
 			if (count($aObjects) == 1)
 			{
 				$oObj = $aObjects[0];
-				$oP->p(Dict::Format('UI:Delete:Count_Objects/LinksReferencing_Object', $iInducedDeletions, $oObj->GetName()));
+				$oP->p(Dict::Format('UI:Delete:Count_Objects/LinksReferencing_Object', $iImpactedIndirectly, $oObj->GetName()));
 			}
 			else
 			{
-				$oP->p(Dict::Format('UI:Delete:Count_Objects/LinksReferencingTheObjects', $iInducedDeletions));
+				$oP->p(Dict::Format('UI:Delete:Count_Objects/LinksReferencingTheObjects', $iImpactedIndirectly));
 			}
 			$oP->p(Dict::S('UI:Delete:ReferencesMustBeDeletedToEnsureIntegrity'));
 		}
 
-		if (($iInducedDeletions > 0) || $bFoundStopper)
+		if (($iImpactedIndirectly > 0) || $oDeletionPlan->FoundStopper())
 		{
 			$aDisplayConfig = array();
 			$aDisplayConfig['class'] = array('label' => 'Class', 'description' => '');
@@ -335,13 +243,13 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 			$oP->table($aDisplayConfig, $aDisplayData);
 		}
 
-		if ($bFoundStopper)
+		if ($oDeletionPlan->FoundStopper())
 		{
-			if ($bFoundSecurityIssue)
+			if ($oDeletionPlan->FoundSecurityIssue())
 			{
 				$oP->p(Dict::S('UI:Delete:SorryDeletionNotAllowed'));
 			}
-			elseif ($bFoundManualDel)
+			elseif ($oDeletionPlan->FoundManualOperation())
 			{
 				$oP->p(Dict::S('UI:Delete:PleaseDoTheManualOperations'));
 			}
@@ -390,7 +298,6 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 			}
 		}
 	}
-
 }
 
 /**

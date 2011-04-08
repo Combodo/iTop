@@ -169,9 +169,9 @@ class appUserPreferences extends DBObject
 	* Overloading this function here to secure a fix done right before the release
 	* The real fix should be to implement this verb in DBObject	
 	*/
-	public function DBDeleteTracked(CMDBChange $oChange, $bSkipStrongSecurity = null)
+	public function DBDeleteTracked(CMDBChange $oChange, $bSkipStrongSecurity = null, &$oDeletionPlan = null)
 	{
-		$this->DBDelete();
+		$this->DBDelete($oDeletionPlan);
 	}
 }
 ?>

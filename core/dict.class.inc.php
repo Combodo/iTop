@@ -163,6 +163,7 @@ class Dict
 	{
 		$sLocalizedFormat = self::S($sFormatCode);
 		$aArguments = func_get_args();
+		array_shift($aArguments);
 		
 		if ($sLocalizedFormat == $sFormatCode)
 		{
@@ -170,7 +171,6 @@ class Dict
 			return $sFormatCode.' - '.implode(', ', $aArguments);
 		}
 
-		array_shift($aArguments);
 		return vsprintf($sLocalizedFormat, $aArguments);
 	}
 

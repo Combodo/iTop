@@ -24,6 +24,8 @@
  */
 
 require_once('metamodel.class.php');
+require_once('deletionplan.class.inc.php');
+
 
 /**
  * A persistent object, as defined by the metamodel 
@@ -49,6 +51,7 @@ abstract class DBObject
 										// The object may have incorrect external keys, then any attempt of reload must be avoided
 	private $m_bCheckStatus = null; // Means: the object has been verified and is consistent with integrity rules
 													//        if null, then the check has to be performed again to know the status
+	protected $m_bSecurityIssue = null;
 	protected $m_aCheckIssues = null;
 	protected $m_aDeleteIssues = null;
 
@@ -153,7 +156,7 @@ abstract class DBObject
 	protected function Reload()
 	{
 		assert($this->m_bIsInDB);
-		$aRow = MetaModel::MakeSingleRow(get_class($this), $this->m_iKey);
+		$aRow = MetaModel::MakeSingleRow(get_class($this), $this->m_iKey, false/*, $this->m_bAllowAllData*/);
 		if (empty($aRow))
 		{
 			throw new CoreException("Failed to reload object of class '".get_class($this)."', id = ".$this->m_iKey);
@@ -671,7 +674,7 @@ abstract class DBObject
 	 * @param string $sAttCode The code of the attribute
 	 * @return integer Flags: the binary combination of the flags applicable to this attribute
 	 */	 	  	 	
-	public function GetAttributeFlags($sAttCode)
+	public function GetAttributeFlags($sAttCode, &$aReasons = array())
 	{
 		$iFlags = 0; // By default (if no life cycle) no flag at all
 		$sStateAttCode = MetaModel::GetStateAttributeCode(get_class($this));
@@ -765,6 +768,7 @@ abstract class DBObject
 		$this->DoComputeValues();
 
 		$this->m_aCheckIssues = array();
+		$aChanges = $this->ListChanges();
 
 		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode=>$oAttDef)
 		{
@@ -786,6 +790,27 @@ abstract class DBObject
 		{
 			// $res contains the error description
 			$this->m_aCheckIssues[] = "Consistency rules not followed: $res";
+		}
+
+		// Synchronization: are we attempting to modify an attribute for which an external source is master?
+		//
+		if ($this->m_bIsInDB && $this->InSyncScope() && (count($aChanges) > 0))
+		{
+			foreach($aChanges as $sAttCode => $value)
+			{
+				$iFlags = $this->GetSynchroReplicaFlags($sAttCode, $aReasons);
+				if ($iFlags & OPT_ATT_SLAVE)
+				{
+					// Note: $aReasonInfo['name'] could be reported (the task owning the attribute)
+					$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+					$sAttLabel = $oAttDef->GetLabel();
+					foreach($aReasons as $aReasonInfo)
+					{
+						// Todo: associate the attribute code with the error
+						$this->m_aCheckIssues[] = Dict::Format('UI:AttemptingToSetASlaveAttribute_Name', $sAttLabel);
+					}
+				}
+			}
 		}
 	}
 
@@ -809,7 +834,7 @@ abstract class DBObject
 				$this->m_bCheckStatus = false;
 			}
 		}
-		return array($this->m_bCheckStatus, $this->m_aCheckIssues);
+		return array($this->m_bCheckStatus, $this->m_aCheckIssues, $this->m_bSecurityIssue);
 	}
 
 	// check if it is allowed to delete the existing object from the database
@@ -817,10 +842,57 @@ abstract class DBObject
 	protected function DoCheckToDelete()
 	{
 		$this->m_aDeleteIssues = array(); // Ok
+
+		if ($this->InSyncScope())
+		{
+			$oReplicaSet = $this->GetMasterReplica();
+			if ($oReplicaSet->Count() > 0)
+			{
+				while($aData = $oReplicaSet->FetchAssoc())
+				{
+					if ($aData['datasource']->GetKey() == SynchroDataSource::GetCurrentTaskId())
+					{
+						// The current task has the right to delete the object
+						continue;
+					}
+					
+					if ($aData['replica']->Get('status_dest_creator') != 1)
+					{
+						// The object is not owned by the task
+						continue;
+					}
+
+					$sLink = $aData['datasource']->GetName();
+					$sUserDeletePolicy = $aData['datasource']->Get('user_delete_policy');
+					switch($sUserDeletePolicy)
+					{
+					case 'nobody':
+						$this->m_aDeleteIssues[] = Dict::Format('Core:Synchro:TheObjectCannotBeDeletedByUser_Source', $sLink);
+						break;
+
+					case 'administrators':
+						if (!UserRights::IsAdministrator())
+						{
+							$this->m_aDeleteIssues[] = Dict::Format('Core:Synchro:TheObjectCannotBeDeletedByUser_Source', $sLink);
+						}
+						break;
+
+					case 'everybody':
+					default:
+						// Ok
+						break;
+					}
+				}
+			}
+		}
 	}
 
-  	// final public function CheckToDelete() - THE EQUIVALENT OF CheckToWrite IS NOT AVAILABLE
-  	// Todo - split the "DeleteObject()" function (UI.php) and move the generic part in cmdbAbstractObject, etc. 
+  	final public function CheckToDelete(&$oDeletionPlan)
+  	{
+		$this->MakeDeletionPlan($oDeletionPlan);
+		$oDeletionPlan->ComputeResults();
+		return (!$oDeletionPlan->FoundStopper());
+	} 
 
 	protected function ListChangedValues(array $aProposal)
 	{
@@ -1079,7 +1151,8 @@ abstract class DBObject
 		list($bRes, $aIssues) = $this->CheckToWrite();
 		if (!$bRes)
 		{
-			throw new CoreException("Object not following integrity rules - it will not be written into the DB", array('class' => $sClass, 'id' => $this->GetKey(), 'issues' => $aIssues));
+			$sIssues = implode(', ', $aIssues);
+			throw new CoreException("Object not following integrity rules", array('issues' => $sIssues, 'class' => get_class($this), 'id' => $this->GetKey()));
 		}
 
 		// First query built upon on the root class, because the ID must be created first
@@ -1176,7 +1249,8 @@ abstract class DBObject
 		list($bRes, $aIssues) = $this->CheckToWrite();
 		if (!$bRes)
 		{
-			throw new CoreException("Object not following integrity rules - it will not be written into the DB", array('class' => get_class($this), 'id' => $this->GetKey(), 'issues' => $aIssues));
+			$sIssues = implode(', ', $aIssues);
+			throw new CoreException("Object not following integrity rules", array('issues' => $sIssues, 'class' => get_class($this), 'id' => $this->GetKey()));
 		}
 
 		$bHasANewExternalKeyValue = false;
@@ -1245,24 +1319,16 @@ abstract class DBObject
 		CMDBSource::DeleteFrom($sDeleteSQL);
 	}
 
-	private function DBDeleteInternal()
-	{
-		$sClass = get_class($this);
-
-		foreach(MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL) as $sParentClass)
-		{
-			$this->DBDeleteSingleTable($sParentClass);
-		}
-	}
-	
-	// Delete a record
-	public function DBDelete()
+	private function DBDeleteSingleObject()
 	{
 		$this->OnDelete();
 
 		if (!MetaModel::DBIsReadOnly())
 		{
-			$this->DBDeleteInternal();
+			foreach(MetaModel::EnumParentClasses(get_class($this), ENUM_PARENT_CLASSES_ALL) as $sParentClass)
+			{
+				$this->DBDeleteSingleTable($sParentClass);
+			}
 		}
 
 		$this->AfterDelete();
@@ -1271,9 +1337,53 @@ abstract class DBObject
 		$this->m_iKey = null;
 	}
 
-	public function DBDeleteTracked(CMDBChange $oVoid)
+	// Delete an object... and guarantee data integrity
+	//
+	public function DBDelete(&$oDeletionPlan = null)
 	{
-		$this->DBDelete();
+		if (is_null($oDeletionPlan))
+		{
+			$oDeletionPlan = new DeletionPlan();
+		}
+		$this->MakeDeletionPlan($oDeletionPlan);
+		$oDeletionPlan->ComputeResults();
+
+		if ($oDeletionPlan->FoundStopper())
+		{
+			$aIssues = $oDeletionPlan->GetIssues();
+			throw new DeleteException('Found issue(s)', array('target_class' => get_class($this), 'target_id' => $this->GetKey(), 'issues' => implode(', ', $aIssues)));	
+		}
+		else
+		{
+			foreach ($oDeletionPlan->ListDeletes() as $sClass => $aToDelete)
+			{
+				foreach ($aToDelete as $iId => $aData)
+				{
+					$oToDelete = $aData['to_delete'];
+					$oToDelete->DBDeleteSingleObject();
+				}
+			}
+
+			foreach ($oDeletionPlan->ListUpdates() as $sClass => $aToUpdate)
+			{
+				foreach ($aToUpdate as $iId => $aData)
+				{
+					$oToUpdate = $aData['to_reset'];
+					foreach ($aData['attributes'] as $sRemoteExtKey => $aRemoteAttDef)
+					{
+						$oToUpdate->Set($sRemoteExtKey, 0);
+						$oToUpdate->DBUpdate();
+					}
+				}
+			}
+		}
+
+		return $oDeletionPlan;
+	}
+
+	public function DBDeleteTracked(CMDBChange $oVoid, $bSkipStrongSecurity = null, &$oDeletionPlan = null)
+	{
+		$this->DBDelete($oDeletionPlan);
 	}
 
 	public function EnumTransitions()
@@ -1447,7 +1557,7 @@ abstract class DBObject
 		return $aResults;
 	}
 
-	public function GetReferencingObjects()
+	public function GetReferencingObjects($bAllowAllData = false)
 	{
 		$aDependentObjects = array();
 		$aRererencingMe = MetaModel::EnumReferencingClasses(get_class($this));
@@ -1460,6 +1570,10 @@ abstract class DBObject
 
 				$oSearch = new DBObjectSearch($sRemoteClass);
 				$oSearch->AddCondition($sExtKeyAttCode, $this->GetKey(), '=');
+				if ($bAllowAllData)
+				{
+					$oSearch->AllowAllData();
+				}
 				$oSet = new CMDBObjectSet($oSearch);
 				if ($oSet->Count() > 0)
 				{
@@ -1473,14 +1587,12 @@ abstract class DBObject
 		return $aDependentObjects;
 	}
 
-	/**
-	 *		$aDeletedObjs = array(); // [class][key] => structure
-	 *		$aResetedObjs = array(); // [class][key] => object
-	 */	 	
-	public function GetDeletionScheme(&$aDeletedObjs, &$aResetedObjs, $aVisited = array())
+	private function MakeDeletionPlan(&$oDeletionPlan, $aVisited = array(), $iDeleteOption = null)
 	{
 		$sClass = get_class($this);
 		$iThisId = $this->GetKey();
+
+		$iDeleteOption = $oDeletionPlan->AddToDelete($this, $iDeleteOption);
 
 		if (array_key_exists($sClass, $aVisited))
 		{
@@ -1491,13 +1603,16 @@ abstract class DBObject
 		}
 		$aVisited[$sClass] = $iThisId;
 
-		$aDeletedObjs[$sClass][$iThisId]['to_delete'] = $this;
-		$aDeletedObjs[$sClass][$iThisId]['auto_delete'] = true;
+		if ($iDeleteOption == DEL_MANUAL)
+		{
+			// Stop the recursion here
+			return;
+		}
 		// Check the node itself
 		$this->DoCheckToDelete();
-		$aDeletedObjs[$sClass][$iThisId]['issues'] = $this->m_aDeleteIssues;
+		$oDeletionPlan->SetDeletionIssues($this, $this->m_aDeleteIssues, $this->m_bSecurityIssue);
 	
-		$aDependentObjects = $this->GetReferencingObjects();
+		$aDependentObjects = $this->GetReferencingObjects(true /* allow all data */);
 		foreach ($aDependentObjects as $sRemoteClass => $aPotentialDeletes)
 		{
 			foreach ($aPotentialDeletes as $sRemoteExtKey => $aData)
@@ -1512,44 +1627,12 @@ abstract class DBObject
 					if ($oAttDef->IsNullAllowed())
 					{
 						// Optional external key, list to reset
-						if (!array_key_exists($sRemoteClass, $aResetedObjs) || !array_key_exists($iId, $aResetedObjs[$sRemoteClass]))
-						{
-							$aResetedObjs[$sRemoteClass][$iId]['to_reset'] = $oDependentObj;
-						}
-						$aResetedObjs[$sRemoteClass][$iId]['attributes'][$sRemoteExtKey] = $oAttDef;
+						$oDeletionPlan->AddToUpdate($oDependentObj, $oAttDef);
 					}
 					else
 					{
 						// Mandatory external key, list to delete
-						if (array_key_exists($sRemoteClass, $aDeletedObjs) && array_key_exists($iId, $aDeletedObjs[$sRemoteClass]))
-						{
-							$iCurrentOption = $aDeletedObjs[$sRemoteClass][$iId];
-							if ($iCurrentOption == DEL_AUTO)
-							{
-								// be conservative, take the new option
-								// (DEL_MANUAL has precedence over DEL_AUTO)
-								$aDeletedObjs[$sRemoteClass][$iId]['auto_delete'] = ($iDeletePropagationOption == DEL_AUTO); 
-							}
-							else
-							{
-								// DEL_MANUAL... leave it as is, it HAS to be verified anyway
-							}
-						}
-						else
-						{
-							// First time we find the given object in the list
-							// (and most likely case is that no other occurence will be found)
-							if ($iDeletePropagationOption == DEL_AUTO)
-							{
-							// Recursively inspect this object
-								$oDependentObj->GetDeletionScheme($aDeletedObjs, $aResetedObjs, $aVisited);
-							}
-							else
-							{
-								$aDeletedObjs[$sRemoteClass][$iId]['to_delete'] = $oDependentObj;
-								$aDeletedObjs[$sRemoteClass][$iId]['auto_delete'] = false;
-							} 
-						}
+						$oDependentObj->MakeDeletionPlan($oDeletionPlan, $aVisited, $iDeletePropagationOption);
 					}
 				}
 			}
@@ -1565,10 +1648,10 @@ abstract class DBObject
 	{
 		if ($this->m_oMasterReplicaSet == null)
 		{
-			$aParentClasses = MetaModel::EnumParentClasses(get_class($this), ENUM_PARENT_CLASSES_ALL);
-			$sClassesList = "'".implode("','", $aParentClasses)."'";
-			$sOQL = "SELECT replica,datasource FROM SynchroReplica AS replica JOIN SynchroDataSource AS datasource ON replica.sync_source_id=datasource.id WHERE datasource.scope_class IN ($sClassesList) AND replica.dest_id = :dest_id";
-			$oReplicaSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL), array() /* order by*/, array('dest_id' => $this->GetKey()));
+			//$aParentClasses = MetaModel::EnumParentClasses(get_class($this), ENUM_PARENT_CLASSES_ALL);
+			//$sClassesList = "'".implode("','", $aParentClasses)."'";
+			$sOQL = "SELECT replica,datasource FROM SynchroReplica AS replica JOIN SynchroDataSource AS datasource ON replica.sync_source_id=datasource.id WHERE replica.dest_class = :dest_class AND replica.dest_id = :dest_id";
+			$oReplicaSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL), array() /* order by*/, array('dest_class' => get_class($this), 'dest_id' => $this->GetKey()));
 			$this->m_oMasterReplicaSet = $oReplicaSet;
 		}
 		else
@@ -1584,6 +1667,11 @@ abstract class DBObject
 		$oSet = $this->GetMasterReplica();
 		while($aData = $oSet->FetchAssoc())
 		{
+			if ($aData['datasource']->GetKey() == SynchroDataSource::GetCurrentTaskId())
+			{
+				// Ignore the current task (check to write => ok)
+				continue;
+			}
 			// Assumption: $aData['datasource'] will not be null because the data source id is always set...
 			$oReplica = $aData['replica'];
 			$oSource = $aData['datasource'];
@@ -1599,6 +1687,29 @@ abstract class DBObject
 			}
 		}
 		return $iFlags;
+	}
+
+	public function InSyncScope()
+	{
+		return true;
+
+		// TODO - FINALIZE THIS OPTIMIZATION
+		//
+		// Optimization: cache the list of Data Sources and classes candidates for synchro
+		//
+		static $aSynchroClasses = null;
+		if (is_null($aSynchroClasses))
+		{
+			$aSynchroClasses = array();
+			$sOQL = "SELECT SynchroDataSource AS datasource";
+			$oSourceSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL), array() /* order by*/, array());
+			while($oSource = $oSourceSet->Fetch())
+			{
+				$sTarget = $oSource->Get('scope_class');
+				$aSynchroClasses[] = $oSource;
+			}
+		}
+		// to be continued...
 	}
 }
 

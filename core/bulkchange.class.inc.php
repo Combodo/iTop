@@ -620,7 +620,14 @@ class BulkChange
 			//
 			if ($oChange)
 			{
-				$oTargetObj->DBUpdateTracked($oChange);
+				try
+				{
+					$oTargetObj->DBUpdateTracked($oChange);
+				}
+				catch(CoreException $e)
+				{
+					$aResult[$iRow]["__STATUS__"] = new RowStatus_Issue($e->getMessage());
+				}
 			}
 		}
 		else
@@ -649,12 +656,19 @@ class BulkChange
 		if (count($aChangedFields) > 0)
 		{
 			$aResult[$iRow]["__STATUS__"] = new RowStatus_Disappeared(count($aChangedFields));
-	
+
 			// Optionaly record the results
 			//
 			if ($oChange)
 			{
-				$oTargetObj->DBUpdateTracked($oChange);
+				try
+				{
+					$oTargetObj->DBUpdateTracked($oChange);
+				}
+				catch(CoreException $e)
+				{
+					$aResult[$iRow]["__STATUS__"] = new RowStatus_Issue($e->getMessage());
+				}
 			}
 		}
 		else

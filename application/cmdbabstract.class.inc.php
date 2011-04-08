@@ -102,15 +102,16 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		$oBlock->Display($oPage, -1);
 	
 		// Master data sources
+		$sSynchroIcon = '';
 		$oReplicaSet = $this->GetMasterReplica();
 		$bSynchronized = false;
-		$bCreated = false;
-		$bCanBeDeleted = false;
+		$oCreatorTask = null;
+		$bCanBeDeletedByTask = false;
+		$bCanBeDeletedByUser = true;
 		$aMasterSources = array();
 		if ($oReplicaSet->Count() > 0)
 		{
 			$bSynchronized = true;
-			$sTip = "<p>".Dict::S('Core:Synchro:ThisObjectIsSynchronized')."</p>";
 			while($aData = $oReplicaSet->FetchAssoc())
 			{
 				// Assumption: $aData['datasource'] will not be null because the data source id is always set...
@@ -122,27 +123,59 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 				}
 				if ($aData['replica']->Get('status_dest_creator') == 1)
 				{
-					$sTip .= "<p>".Dict::Format('Core:Synchro:TheObjectWasCreatedBy_Source', $sLink)."</p>";
-					$bCreated = true;
+					$oCreatorTask = $aData['datasource'];
+					$bCreatedByTask = true;
 				}
-				if ($bCreated)
+				else
+				{
+					$bCreatedByTask = false;
+				}
+				if ($bCreatedByTask)
 				{
 					$sDeletePolicy = $aData['datasource']->Get('delete_policy');
 					if (($sDeletePolicy == 'delete') || ($sDeletePolicy == 'update_then_delete'))
 					{
-						$bCanBeDeleted = true;
-						$sTip .= "<p>".Dict::Format('Core:Synchro:TheObjectCanBeDeletedBy_Source', $sLink)."</p>";
+						$bCanBeDeletedByTask = true;
+					}
+					$sUserDeletePolicy = $aData['datasource']->Get('user_delete_policy');
+					if ($sUserDeletePolicy == 'nobody')
+					{
+						$bCanBeDeletedByUser = false;
+					}
+					elseif (($sUserDeletePolicy == 'administrators') && !UserRights::IsAdministrator())
+					{
+						$bCanBeDeletedByUser = false;
+					}
+					else // everybody...
+					{
 					}
 				}
 				$aMasterSources[$aData['datasource']->GetKey()]['datasource'] = $aData['datasource'];
 				$aMasterSources[$aData['datasource']->GetKey()]['url'] = $sLink;
 				$aMasterSources[$aData['datasource']->GetKey()]['last_synchro'] = $aData['replica']->Get('status_last_seen');
 			}
-		}
-		
-		$sSynchroIcon = '';
-		if ($bSynchronized)
-		{
+
+			if (is_object($oCreatorTask))
+			{
+				$sTaskUrl = $aMasterSources[$oCreatorTask->GetKey()]['url'];
+				if (!$bCanBeDeletedByUser)
+				{
+					$sTip = "<p>".Dict::Format('Core:Synchro:TheObjectCannotBeDeletedByUser_Source', $sTaskUrl)."</p>";
+				}
+				else
+				{
+					$sTip = "<p>".Dict::Format('Core:Synchro:TheObjectWasCreatedBy_Source', $sTaskUrl)."</p>";
+				}
+				if ($bCanBeDeletedByTask)
+				{
+					$sTip .= "<p>".Dict::Format('Core:Synchro:TheObjectCanBeDeletedBy_Source', $sTaskUrl)."</p>";
+				}
+			}
+			else
+			{
+				$sTip = "<p>".Dict::S('Core:Synchro:ThisObjectIsSynchronized')."</p>";
+			}
+
 			$sTip .= "<p><b>".Dict::S('Core:Synchro:ListOfDataSources')."</b></p>";
 			foreach($aMasterSources as $aStruct)
 			{
@@ -2203,7 +2236,7 @@ EOF
 		return parent::BulkUpdateTracked_Internal($oFilter, $aValues);
 	}
 
-	protected function DBDeleteTracked_Internal()
+	protected function DBDeleteTracked_Internal(&$oDeletionPlan = null)
 	{
 		// Invoke extensions before the deletion (the deletion will do some cleanup and we might loose some information
 		foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
@@ -2211,7 +2244,7 @@ EOF
 			$oExtensionInstance->OnDBDelete($this, self::$m_oCurrChange);
 		}
 
-		return parent::DBDeleteTracked_Internal();
+		return parent::DBDeleteTracked_Internal($oDeletionPlan);
 	}
 
 	protected static function BulkDeleteTracked_Internal(DBObjectSearch $oFilter)
@@ -2223,6 +2256,9 @@ EOF
 	public function DoCheckToWrite()
 	{
 		parent::DoCheckToWrite();
+
+		// Plugins
+		//
 		foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 		{
 			$aNewIssues = $oExtensionInstance->OnCheckToWrite($this);
@@ -2231,11 +2267,37 @@ EOF
 				$this->m_aCheckIssues = array_merge($this->m_aCheckIssues, $aNewIssues);
 			}
 		}
+
+		// User rights
+		//
+		$aChanges = $this->ListChanges();
+		if (count($aChanges) > 0)
+		{
+			$aForbiddenFields = array();
+			foreach ($this->ListChanges() as $sAttCode => $value)
+			{
+				$bUpdateAllowed = UserRights::IsActionAllowedOnAttribute(get_class($this), $sAttCode, UR_ACTION_MODIFY, DBObjectSet::FromObject($this));
+				if (!$bUpdateAllowed)
+				{
+					$oAttCode = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+					$aForbiddenFields[] = $oAttCode->GetLabel();
+				}
+				if (count($aForbiddenFields) > 0)
+				{
+					// Security issue
+					$this->m_bSecurityIssue = true;
+					$this->m_aCheckIssues[] = Dict::Format('UI:Delete:NotAllowedToUpdate_Fields',implode(', ', $aForbiddenFields));
+				}
+			}
+		}
 	}
 
 	protected function DoCheckToDelete()
 	{
 		parent::DoCheckToDelete();
+
+		// Plugins
+		//
 		foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 		{
 			$aNewIssues = $oExtensionInstance->OnCheckToDelete($this);
@@ -2243,6 +2305,16 @@ EOF
 			{
 				$this->m_aDeleteIssues = array_merge($this->m_aDeleteIssues, $aNewIssues);
 			}
+		}
+
+		// User rights
+		//
+		$bDeleteAllowed = UserRights::IsActionAllowed(get_class($this), UR_ACTION_DELETE, DBObjectSet::FromObject($this));
+		if (!$bDeleteAllowed)
+		{
+			// Security issue
+			$this->m_bSecurityIssue = true;
+			$this->m_aDeleteIssues[] = Dict::S('UI:Delete:NotAllowedToDelete');
 		}
 	}
 

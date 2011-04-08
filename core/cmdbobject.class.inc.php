@@ -369,28 +369,28 @@ abstract class CMDBObject extends DBObject
 		return $ret;
 	}
 
-	public function DBDelete()
+	public function DBDelete(&$oDeletionPlan = null)
 	{
 		if(!self::$m_oCurrChange)
 		{
 			throw new CoreException("DBDelete() could not be used here, please use DBDeleteTracked() instead");
 		}
-		return $this->DBDeleteTracked_Internal();
+		return $this->DBDeleteTracked_Internal($oDeletionPlan);
 	}
 
-	public function DBDeleteTracked(CMDBChange $oChange, $bSkipStrongSecurity = null)
+	public function DBDeleteTracked(CMDBChange $oChange, $bSkipStrongSecurity = null, &$oDeletionPlan = null)
 	{
 		$this->CheckUserRights($bSkipStrongSecurity, UR_ACTION_DELETE);
 
 		self::$m_oCurrChange = $oChange;
-		$this->DBDeleteTracked_Internal();
+		$this->DBDeleteTracked_Internal($oDeletionPlan);
 		self::$m_oCurrChange = null;
 	}
 
-	protected function DBDeleteTracked_Internal()
+	protected function DBDeleteTracked_Internal(&$oDeletionPlan = null)
 	{
 		$prevkey = $this->GetKey();
-		$ret = parent::DBDelete();
+		$ret = parent::DBDelete($oDeletionPlan);
 		$this->RecordObjDeletion(self::$m_oCurrChange, $prevkey);
 		return $ret;
 	}

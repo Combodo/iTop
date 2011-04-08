@@ -560,8 +560,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:Synchro:ThisObjectIsSynchronized' => 'This object is synchronized with an external data source',
 	'Core:Synchro:TheObjectWasCreatedBy_Source' => 'The object was <b>created</b> by the external data source %1$s',
 	'Core:Synchro:TheObjectCanBeDeletedBy_Source' => 'The object <b>can be deleted</b> by the external data source %1$s',
-
-			
+	'Core:Synchro:TheObjectCannotBeDeletedByUser_Source' => 'You <b>cannot delete the object</b> because it is owned by the external data source %1$s',
 ));
 
 //
