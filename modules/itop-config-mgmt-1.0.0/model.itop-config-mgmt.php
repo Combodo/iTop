@@ -709,7 +709,7 @@ abstract class SoftwareInstance extends FunctionalCI
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("device_id", array("targetclass"=>"Device", "jointype"=>null, "allowed_values"=>new ValueSetObjects('SELECT Device WHERE org_id = :this->org_id'), "sql"=>"device_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array("org_id"))));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("device_id", array("targetclass"=>"Device", "jointype"=>null, "allowed_values"=>new ValueSetObjects('SELECT Device WHERE org_id = :this->org_id'), "sql"=>"device_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array("org_id"))));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("device_name", array("allowed_values"=>null, "extkey_attcode"=>"device_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("licence_id", array("targetclass"=>"Licence", "jointype"=>null, "allowed_values"=>new ValueSetObjects('SELECT Licence WHERE org_id = :this->org_id'), "sql"=>"licence_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array("org_id"))));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("licence_name", array("allowed_values"=>null, "extkey_attcode"=>"licence_id", "target_attcode"=>"name", "is_null_allowed"=>true, "depends_on"=>array())));
