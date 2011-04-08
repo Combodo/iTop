@@ -537,11 +537,10 @@ class DBObjectSet
 	public function ComputeCommonObject(&$aValues)
 	{
 		$sClass = $this->GetClass();
-		$aList = MetaModel::FlattenZlist(MetaModel::GetZListItems($sClass, 'details'));
+		$aList = MetaModel::ListAttributeDefs($sClass);
 		$aValues = array();
-		foreach($aList as $sAttCode)
+		foreach($aList as $sAttCode => $oAttDef)
 		{
-			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 			if ($oAttDef->IsScalar())
 			{
 				$aValues[$sAttCode] = array();
@@ -550,9 +549,8 @@ class DBObjectSet
 		$this->Rewind();
 		while($oObj = $this->Fetch())
 		{
-			foreach($aList as $sAttCode)
+			foreach($aList as $sAttCode => $oAttDef)
 			{
-				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 				if ($oAttDef->IsScalar() && $oAttDef->IsWritable())
 				{
 					$currValue = $oObj->Get($sAttCode);
@@ -586,9 +584,8 @@ class DBObjectSet
 		$sReadyScript = '';
 		$aDependsOn = array();
 		$sFormPrefix = '2_';
-		foreach($aList as $sAttCode)
+		foreach($aList as $sAttCode => $oAttDef)
 		{
-			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 			if ($oAttDef->IsScalar() && $oAttDef->IsWritable())
 			{
 				if ($oAttDef->GetEditClass() == 'One Way Password')

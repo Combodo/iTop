@@ -175,6 +175,16 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	{
 		$oPage->add($this->GetBareProperties($oPage, $bEditMode));		
 
+		// Special case to display the case log, if any...
+		if (MetaModel::IsValidAttCode(get_class($this), 'ticket_log'))
+		{
+			$oAttDef = MetaModel::GetAttributeDef(get_class($this), 'ticket_log');
+			if ($oAttDef instanceof AttributeCaseLog)
+			{
+				$this->DisplayCaseLog($oPage, 'ticket_log', '', '', false);
+			}
+		}
+
 		foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
 		{
 			$oExtensionInstance->OnDisplayProperties($this, $oPage, $bEditMode);
@@ -1298,7 +1308,7 @@ EOF
 					$aEventsList[] ='validate';
 					$aEventsList[] ='keyup';
 					$aEventsList[] ='change';
-					$aStyles = array("overflow:auto;border:1px #999 solid; background:#fff");
+					$aStyles = array();
 					$sStyle = '';
 					$sWidth = $oAttDef->GetWidth('width', '');
 					if (!empty($sWidth))
@@ -1316,8 +1326,8 @@ EOF
 					}
 					$sHeader = '<div class="caselog_input_header">&nbsp;'.Dict::S('UI:CaseLogTypeYourTextHere').'</div>';
 					$sEditValue = $oAttDef->GetEditValue($value);
-					$sPreviousLog = $oAttDef->GetAsHTML($value);
-					$sHTMLValue = "<div $sStyle><table style=\"width:100%\"><tr><td>$sHeader<textarea style=\"border:0;width:100%\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">$sEditValue</textarea>$sPreviousLog</td><td>{$sValidationField}</td></tr></table></div>";
+					$sPreviousLog = $value->GetAsHTML();
+					$sHTMLValue = "<div class=\"caselog\" $sStyle><table style=\"width:100%;\"><tr><td>$sHeader<textarea style=\"border:0;width:100%\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">$sEditValue</textarea>$sPreviousLog</td><td>{$sValidationField}</td></tr></table></div>";
 				break;
 
 				case 'HTML':
@@ -1606,6 +1616,18 @@ EOF
 			$oPage->add('</tr></table>');
 		}
 
+		// Special case to display the case log, if any...
+		if (MetaModel::IsValidAttCode($sClass, 'ticket_log'))
+		{
+			$oAttDef = MetaModel::GetAttributeDef($sClass, 'ticket_log');
+			if ($oAttDef instanceof AttributeCaseLog)
+			{
+				$sComments = isset($aFieldsComments['ticket_log']) ? $aFieldsComments['ticket_log'] : '&nbsp;';
+				$this->DisplayCaseLog($oPage, 'ticket_log', $sComments, $sPrefix, true);
+				$sInputId = $this->m_iFormId.'_ticket_log';
+				$aFieldsMap['ticket_log'] = $sInputId;
+			}
+		}
 		// Now display the relations, one tab per relation
 		if (!isset($aExtraParams['noRelations']))
 		{
@@ -2221,6 +2243,62 @@ EOF
 			{
 				$this->m_aDeleteIssues = array_merge($this->m_aDeleteIssues, $aNewIssues);
 			}
+		}
+	}
+
+	/**
+	 * Special display where the case log uses the whole "screen" at the bottom of the "Properties" tab
+	 */
+	public function DisplayCaseLog(WebPage $oPage, $sAttCode, $sComment = '', $sPrefix = '', $bEditMode = false)
+	{
+		$oPage->SetCurrentTab(Dict::S('UI:PropertiesTab'));
+		$sClass = get_class($this);
+		$iFlags = $this->GetAttributeFlags($sAttCode);
+		if ( $iFlags & OPT_ATT_HIDDEN)
+		{
+			// The case log is hidden do nothing
+		}
+		else
+		{
+			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+			$sInputId = $this->m_iFormId.'_'.$sAttCode;
+			
+			if ((!$bEditMode) || ($iFlags & (OPT_ATT_READONLY|OPT_ATT_SLAVE)))
+			{
+				// Check if the attribute is not read-only becuase of a synchro...
+				$aReasons = array();
+				$sSynchroIcon = '';
+				if ($iFlags & OPT_ATT_SLAVE)
+				{
+					$iSynchroFlags = $this->GetSynchroReplicaFlags($sAttCode, $aReasons);
+					$sSynchroIcon = "&nbsp;<img id=\"synchro_$sInputId\" src=\"../images/transp-lock.png\" style=\"vertical-align:middle\"/>";
+					$sTip = '';
+					foreach($aReasons as $aRow)
+					{
+						$sTip .= "<p>Synchronized with {$aRow['name']} - {$aRow['description']}</p>";
+					}
+					$oPage->add_ready_script("$('#synchro_$sInputId').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );");
+				}
+
+				// Attribute is read-only
+				$sHTMLValue = $this->GetAsHTML($sAttCode);
+				$sHTMLValue .= '<input type="hidden" id="'.$sInputId.'" name="attr_'.$sPrefix.$sAttCode.'" value="'.htmlentities($this->Get($sAttCode), ENT_QUOTES, 'UTF-8').'"/>';
+				$aFieldsMap[$sAttCode] = $sInputId;
+				$sComment .= $sSynchroIcon;
+			}
+			else
+			{
+				$sValue = $this->Get($sAttCode);
+				$sDisplayValue = $this->GetEditValue($sAttCode);
+				$aArgs = array('this' => $this, 'formPrefix' => $sPrefix);
+				$sHTMLValue = "<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
+				$aFieldsMap[$sAttCode] = $sInputId;
+				
+			}
+			//$aVal = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>', 'value' => $sHTMLValue, 'comments' => $sComments, 'infos' => $sInfos);
+			$oPage->add('<fieldset><legend>'.$oAttDef->GetLabel().'&nbsp<span>'.$sComment.'</span></legend>');
+			$oPage->add($sHTMLValue);
+			$oPage->add('</fieldset>');
 		}
 	}
 }

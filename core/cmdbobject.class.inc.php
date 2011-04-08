@@ -179,14 +179,13 @@ abstract class CMDBObject extends DBObject
 			}
 			elseif ($oAttDef instanceOf AttributeCaseLog)
 			{
-				$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeScalar");
+				$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeCaseLog");
 				$oMyChangeOp->Set("change", $oChange->GetKey());
 				$oMyChangeOp->Set("objclass", get_class($this));
 				$oMyChangeOp->Set("objkey", $this->GetKey());
 				$oMyChangeOp->Set("attcode", $sAttCode);
 
-				$oMyChangeOp->Set("oldvalue", '');
-				$oMyChangeOp->Set("newvalue", $value->GetLatestEntry());
+				$oMyChangeOp->Set("lastentry", $value->GetLatestEntryIndex());
 				$iId = $oMyChangeOp->DBInsertNoReload();
 			}
 			elseif ($oAttDef instanceOf AttributeText)

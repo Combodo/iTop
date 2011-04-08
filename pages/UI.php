@@ -818,11 +818,10 @@ try
 			$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL));
 			
 			// Compute the distribution of the values for each field to determine which of the "scalar" fields are homogenous
-			$aList = MetaModel::FlattenZlist(MetaModel::GetZListItems($sClass, 'details'));
+			$aList = MetaModel::ListAttributeDefs($sClass);
 			$aValues = array();
-			foreach($aList as $sAttCode)
+			foreach($aList as $sAttCode => $oAttDef)
 			{
-				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 				if ($oAttDef->IsScalar())
 				{
 					$aValues[$sAttCode] = array();
@@ -830,9 +829,8 @@ try
 			}
 			while($oObj = $oSet->Fetch())
 			{
-				foreach($aList as $sAttCode)
+				foreach($aList as $sAttCode => $oAttDef)
 				{
-					$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 					if ($oAttDef->IsScalar() && $oAttDef->IsWritable())
 					{
 						$currValue = $oObj->Get($sAttCode);
@@ -864,9 +862,8 @@ try
 			$sReadyScript = '';
 			$aDependsOn = array();
 			$sFormPrefix = '2_';
-			foreach($aList as $sAttCode)
+			foreach($aList as $sAttCode => $oAttDef)
 			{
-				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 				$aPrerequisites = MetaModel::GetPrequisiteAttributes($sClass, $sAttCode); // List of attributes that are needed for the current one
 				if (count($aPrerequisites) > 0)
 				{

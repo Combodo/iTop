@@ -72,7 +72,7 @@ class Problem extends Ticket
 			'col:col1' => array(
 				'fieldset:Ticket:baseinfo' => array('ref','title','org_id','status','priority','service_id','servicesubcategory_id','product' ),
 				'fieldset:Ticket:moreinfo' => array('impact','urgency','description',),
-				'fieldset:Ticket:log' => array('ticket_log'),),
+				),
 			'col:col2' => array(
 				'fieldset:Ticket:date' => array('start_date','last_update','assignment_date','close_date',),
 				'fieldset:Ticket:contact' => array('workgroup_id','agent_id',),

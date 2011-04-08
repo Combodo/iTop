@@ -376,7 +376,7 @@ class RoutineChange extends Change
 			'col:col1' => array(
 				'fieldset:Ticket:baseinfo' => array('ref','title','org_id','status','reason','impact','description', ),
 				'fieldset:Ticket:moreinfo' => array('outage', 'fallback',),
-				'fieldset:Ticket:log' => array('ticket_log'),),
+				),
 			'col:col2' => array(
 				'fieldset:Ticket:date' => array('creation_date','start_date','last_update','close_date',),
 				'fieldset:Ticket:contact' => array('requestor_id','workgroup_id','agent_id','supervisor_group_id', 'supervisor_id', 'manager_group_id', 'manager_id',),
@@ -477,7 +477,7 @@ class NormalChange extends ApprovedChange
 			'col:col1' => array(
 				'fieldset:Ticket:baseinfo' => array('ref','title','org_id','status','reason','impact','description', ),
 				'fieldset:Ticket:moreinfo' => array('acceptance_comment','approval_comment','outage', 'fallback',),
-				'fieldset:Ticket:log' => array('ticket_log'),),
+				),
 			'col:col2' => array(
 				'fieldset:Ticket:date' => array('creation_date','start_date','last_update','acceptance_date','approval_date','close_date',),
 				'fieldset:Ticket:contact' => array('requestor_id','workgroup_id','agent_id','supervisor_group_id', 'supervisor_id', 'manager_group_id', 'manager_id',),
@@ -548,7 +548,7 @@ class EmergencyChange extends ApprovedChange
 			'col:col1' => array(
 				'fieldset:Ticket:baseinfo' => array('ref','title','org_id','status','reason','impact','description', ),
 				'fieldset:Ticket:moreinfo' => array('approval_comment','outage', 'fallback',),
-				'fieldset:Ticket:log' => array('ticket_log'),),
+				),
 			'col:col2' => array(
 				'fieldset:Ticket:date' => array('creation_date','start_date','last_update','approval_date','close_date',),
 				'fieldset:Ticket:contact' => array('requestor_id','workgroup_id','agent_id','supervisor_group_id', 'supervisor_id', 'manager_group_id', 'manager_id',),

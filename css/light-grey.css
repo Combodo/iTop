@@ -1,6 +1,6 @@
 /* CSS Document */
 body {
-    font-family: Tahoma, Verdana, Arial, Helevtica;
+    font-family: Tahoma, Verdana, Arial, Helvetica;
     font-size: 10pt;
     background-color: #fff;
     color:#000000;
@@ -10,7 +10,7 @@ body {
 }
 
 .raw_output {
-    font-family: Courier-New, Courier, Arial, Helevtica;
+    font-family: Courier-New, Courier, Arial, Helvetica;
     font-size: 8pt;
     background-color: #eeeeee;
     color: #000000;
@@ -166,6 +166,8 @@ fieldset {
 }
 
 legend {
+    font-family: Tahoma, Verdana, Arial, Helvetica;
+    font-size: 12px;
 	padding:8px;
 	color: #fff;
 	background-color: #1C94C4;
@@ -993,6 +995,11 @@ span.form_validation {
 }
 .caselog {
 	overflow-x: hidden;
+	display: block;
+	overflow-y: auto;
+	border: 1px #ddd solid;
+    font-family: Tahoma, Verdana, Arial, Helvetica;
+    font-size: 12px;
 }
 .caselog_input_header {
 	padding-top:3px;
@@ -1016,7 +1023,8 @@ span.form_validation {
 	padding:3px;
 	padding-left: 16px;
 	border-bottom:1px #999 solid;
-	width:100%;
+	margin-left:0;
+	margin-right:0;
 }
 table.details {
   border-collapse: collapse;

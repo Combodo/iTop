@@ -50,7 +50,7 @@ class Incident extends ResponseTicket
 			'col:col1' => array(
 				'fieldset:Ticket:baseinfo' => array('ref','title','org_id','status','priority','service_id','servicesubcategory_id','product' ),
 				'fieldset:Ticket:moreinfo' => array('impact','urgency','description','resolution_code', 'solution', 'user_satisfaction', 'user_commment',),
-				'fieldset:Ticket:log' => array('ticket_log'),),
+				),
 			'col:col2' => array(
 				'fieldset:Ticket:date' => array('start_date','last_update','assignment_date','tto_escalation_deadline', 'ttr_escalation_deadline', 'close_date','closure_deadline',),
 				'fieldset:Ticket:contact' => array('caller_id','workgroup_id','agent_id',),

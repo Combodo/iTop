@@ -121,7 +121,6 @@ class ormCaseLog {
 				$sHtml .= '</div>';
 			}
 		}
-		$sHtml = '<div class="caselog">'.$sHtml.'</div>';
 		return $sHtml;
 	}
 	
@@ -147,6 +146,7 @@ class ormCaseLog {
 
 	/**
 	 * Get the latest entry from the log
+	 * @return string
 	 */
 	public function GetLatestEntry()
 	{
@@ -154,6 +154,16 @@ class ormCaseLog {
 		$aLastEntry = $this->m_aIndex[$iLast];
 		$sRes = substr($this->m_sLog, $aLastEntry['separator_length'], $aLastEntry['text_length']);
 		return $sRes;
+	}
+
+	/**
+	 * Get the index of the latest entry from the log
+	 * @return integer
+	 */
+	public function GetLatestEntryIndex()
+	{
+		$iLast = count($this->m_aIndex) - 1;
+		return $iLast;
 	}
 }
 ?>

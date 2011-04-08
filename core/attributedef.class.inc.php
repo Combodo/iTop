@@ -1363,7 +1363,22 @@ class AttributeText extends AttributeString
 	{
 		$sValue = parent::GetAsHTML($sValue);
 		$sValue = self::RenderWikiHtml($sValue);
-		return str_replace("\n", "<br>\n", $sValue);
+		$aStyles = array();
+		if ($this->GetWidth() != '')
+		{
+			$aStyles[] = 'width:'.$this->GetWidth();
+		}
+		if ($this->GetHeight() != '')
+		{
+			$aStyles[] = 'height:'.$this->GetHeight();
+		}
+		$sStyle = '';
+		if (count($aStyles) > 0)
+		{
+			$aStyles[] = 'overflow:auto';
+			$sStyle = 'style="'.implode(';', $aStyles).'"';
+		}
+		return "<div $sStyle>".str_replace("\n", "<br>\n", $sValue).'</div>';
 	}
 
 	public function GetEditValue($sValue)
@@ -1579,13 +1594,27 @@ class AttributeCaseLog extends AttributeText
 	{
 		if ($value instanceOf ormCaseLog)
 		{
-			return $value->GetAsHTML(null, false, array(__class__, 'RenderWikiHtml'));
+			$sContent = $value->GetAsHTML(null, false, array(__class__, 'RenderWikiHtml'));
 		}
 		else
 		{
-			return '';
+			$sContent = '';
 		}
-	}
+		$aStyles = array();
+		if ($this->GetWidth() != '')
+		{
+			$aStyles[] = 'width:'.$this->GetWidth();
+		}
+		if ($this->GetHeight() != '')
+		{
+			$aStyles[] = 'height:'.$this->GetHeight();
+		}
+		$sStyle = '';
+		if (count($aStyles) > 0)
+		{
+			$sStyle = 'style="'.implode(';', $aStyles).'"';
+		}
+		return "<div class=\"caselog\" $sStyle>".str_replace("\n", "<br>\n", $sContent).'</div>';	}
 
 
 	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null)
