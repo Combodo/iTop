@@ -86,6 +86,8 @@ abstract class Change extends Ticket
 				"attribute_inherit" => null,
 				"attribute_list" => array(
 					'start_date' => OPT_ATT_HIDDEN,
+					'end_date' => OPT_ATT_HIDDEN,
+					'close_date' => OPT_ATT_HIDDEN,
 					'ticket_log' => OPT_ATT_HIDDEN,
 					'impact' => OPT_ATT_HIDDEN,
 					'outage' => OPT_ATT_HIDDEN,
@@ -97,8 +99,6 @@ abstract class Change extends Ticket
 					'workgroup_id' => OPT_ATT_HIDDEN,
 					'creation_date' => OPT_ATT_READONLY,
 					'last_update' => OPT_ATT_READONLY,
-					'end_date' => OPT_ATT_HIDDEN,
-					'close_date' => OPT_ATT_HIDDEN,
 					'agent_id' => OPT_ATT_HIDDEN,
 					'agent_email' => OPT_ATT_HIDDEN,
 					'supervisor_group_id' => OPT_ATT_HIDDEN,
@@ -151,7 +151,7 @@ abstract class Change extends Ticket
 			array(
 				"attribute_inherit" => 'assigned',
 				"attribute_list" => array(
-					'ticket_log' => OPT_ATT_MANDATORY,
+					'ticket_log' => OPT_ATT_NORMAL,
 					'requestor_id' => OPT_ATT_READONLY,
 					'org_id' => OPT_ATT_READONLY,
 					'workgroup_id' => OPT_ATT_READONLY,
