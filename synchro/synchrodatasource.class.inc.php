@@ -83,7 +83,14 @@ class SynchroDataSource extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeString("url_application", array("allowed_values"=>null, "sql"=>"url_application", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('name', 'description', 'url_icon', 'url_application', 'scope_class', /*'scope_restriction', */'status', 'user_id', 'full_load_periodicity', 'reconciliation_policy', 'action_on_zero', 'action_on_one', 'action_on_multiple', 'delete_policy', 'delete_policy_update', 'delete_policy_retention', 'user_delete_policy')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array(
+			'col:0'=> array(
+				'fieldset:SynchroDataSource:Description' => array('name','description','status','scope_class','user_id','url_icon','url_application')),
+			'col:1'=> array(
+				'fieldset:SynchroDataSource:Reconciliation' => array('reconciliation_policy','action_on_zero','action_on_one','action_on_multiple'),
+				'fieldset:SynchroDataSource:Deletion' => array('user_delete_policy','full_load_periodicity','delete_policy','delete_policy_update','delete_policy_retention'))
+			)
+		);		
 		MetaModel::Init_SetZListItems('list', array('scope_class', 'status', 'user_id', 'full_load_periodicity')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'scope_class', 'user_id')); // Criteria of the std search form
@@ -1274,7 +1281,13 @@ class SynchroReplica extends DBObject implements iDisplay
 		MetaModel::Init_AddAttribute(new AttributeDateTime("info_last_modified", array("allowed_values"=>null, "sql"=>"info_last_modified", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('sync_source_id', 'dest_id', 'dest_class', 'status_last_seen', 'status', 'status_dest_creator', 'status_last_error', 'info_creation_date', 'info_last_modified', 'info_last_synchro')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('' .
+			'col:0'=> array(
+				'fieldset:SynchroDataSource:Definition' => array('sync_source_id','dest_id','dest_class'),
+				'fieldset:SynchroDataSource:Status' => array('status','status_last_seen','status_dest_creator','status_last_error'),
+				'fieldset:SynchroDataSource:Information' => array('info_creation_date','info_last_modified'))
+			)
+		);
 		MetaModel::Init_SetZListItems('list', array('sync_source_id', 'dest_id', 'dest_class', 'status_last_seen', 'status', 'status_dest_creator', 'status_last_error')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('sync_source_id', 'status_last_seen', 'status', 'status_dest_creator', 'dest_class', 'dest_id', 'status_last_error')); // Criteria of the std search form

@@ -497,6 +497,43 @@ Dict::Add('EN US', 'English', 'English', array(
 // Synchro Data Source
 //
 Dict::Add('EN US', 'English', 'English', array(
+	'Class:SynchroDataSource/Attribute:name' => 'Name',
+	'Class:SynchroDataSource/Attribute:name+' => 'Name',
+	'Class:SynchroDataSource/Attribute:description' => 'Description',
+	'Class:SynchroDataSource/Attribute:status' => 'Status', //TODO: enum values
+	'Class:SynchroDataSource/Attribute:scope_class' => 'Target class',
+	'Class:SynchroDataSource/Attribute:user_id' => 'User',
+	'Class:SynchroDataSource/Attribute:url_icon' => 'Icon\'s hyperlink',
+	'Class:SynchroDataSource/Attribute:url_icon+' => 'Hyperlink a (small) image representing the application with which iTop is synchronized',
+	'Class:SynchroDataSource/Attribute:url_application' => 'Application\'s hyperlink',
+	'Class:SynchroDataSource/Attribute:url_application+' => 'Hyperlink to the iTop object in the external application with which iTop is synchronized (if applicable). Possible placeholders: $this->attribute$ and $replica->primary_key$',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Reconciliation policy', //TODO enum values
+	'Class:SynchroDataSource/Attribute:full_load_periodicity' => 'Full load interval',
+	'Class:SynchroDataSource/Attribute:full_load_periodicity+' => 'A complete reload of all data must occur at least as often as specified here',
+	'Class:SynchroDataSource/Attribute:action_on_zero' => 'Action on zero',
+	'Class:SynchroDataSource/Attribute:action_on_zero+' => 'Action taken when the search returns no object',
+	'Class:SynchroDataSource/Attribute:action_on_one' => 'Action on one',
+	'Class:SynchroDataSource/Attribute:action_on_one+' => 'Action taken when the search returns exactly one object',
+	'Class:SynchroDataSource/Attribute:action_on_multiple' => 'Action on many',
+	'Class:SynchroDataSource/Attribute:action_on_multiple+' => 'Action taken when the search returns more than one object',
+	'Class:SynchroDataSource/Attribute:user_delete_policy' => 'Users allowed',
+	'Class:SynchroDataSource/Attribute:user_delete_policy+' => 'Who is allowed to delete synchronized objects',
+	'Class:SynchroDataSource/Attribute:user_delete_policy' => 'Users allowed',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:never' => 'Nobody',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:depends' => 'Administrators only',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:always' => 'All allowed users',
+	'Class:SynchroDataSource/Attribute:delete_policy_update' => 'Update rules',
+	'Class:SynchroDataSource/Attribute:delete_policy_update+' => 'Syntax: field_name:value; ...',
+	'Class:SynchroDataSource/Attribute:delete_policy_retention' => 'Retention Duration',
+	'Class:SynchroDataSource/Attribute:delete_policy_retention+' => 'How much time an obsolete object is kept before being deleted',
+
+	'SynchroDataSource:Description' => 'Description',
+	'SynchroDataSource:Reconciliation' => 'Search &amp; reconciliation',
+	'SynchroDataSource:Deletion' => 'Deletion rules',
+	'SynchroDataSource:Status' => 'Status',
+	'SynchroDataSource:Information' => 'Information',
+
+	
 	'Core:SynchroAttributes' => 'Attributes',
 	'Core:SynchroStatus' => 'Status',
 	'Core:Synchro:ErrorsLabel' => 'Errors',	
