@@ -526,14 +526,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:SynchroDataSource/Attribute:delete_policy_update+' => 'Syntax: field_name:value; ...',
 	'Class:SynchroDataSource/Attribute:delete_policy_retention' => 'Retention Duration',
 	'Class:SynchroDataSource/Attribute:delete_policy_retention+' => 'How much time an obsolete object is kept before being deleted',
-
 	'SynchroDataSource:Description' => 'Description',
 	'SynchroDataSource:Reconciliation' => 'Search &amp; reconciliation',
 	'SynchroDataSource:Deletion' => 'Deletion rules',
 	'SynchroDataSource:Status' => 'Status',
 	'SynchroDataSource:Information' => 'Information',
-
-	
+	'SynchroDataSource:Definition' => 'Definition',
 	'Core:SynchroAttributes' => 'Attributes',
 	'Core:SynchroStatus' => 'Status',
 	'Core:Synchro:ErrorsLabel' => 'Errors',	
@@ -598,6 +596,11 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:Synchro:TheObjectWasCreatedBy_Source' => 'The object was <b>created</b> by the external data source %1$s',
 	'Core:Synchro:TheObjectCanBeDeletedBy_Source' => 'The object <b>can be deleted</b> by the external data source %1$s',
 	'Core:Synchro:TheObjectCannotBeDeletedByUser_Source' => 'You <b>cannot delete the object</b> because it is owned by the external data source %1$s',
+	'TitleSynchroExecution' => 'Execution of the synchronization',
+	'Class:SynchroDataSource:DataTable' => 'Database table: %1$s',
+	'Core:SyncDataSourceObsolete' => 'The data source is marked as obsolete. Operation cancelled.',
+	'Core:SyncDataSourceAccessRestriction' => 'Only adminstrators or the user specified in the data source can execute this operation. Operation cancelled.',
+	'Core:SyncTooManyMissingReplicas' => 'All replicas are missing from import. Did the import actually run? Operation cancelled.',
 ));
 
 //

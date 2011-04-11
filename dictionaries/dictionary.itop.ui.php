@@ -911,5 +911,9 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:CaseLog:DateFormat' => 'Y-m-d H:i:s',
 	'UI:CaseLog:Header_Date_UserName' => '%1$s - %2$s:',
 	'UI:CaseLog:InitialValue' => 'Initial value:',
+	'UI:AttemptingToSetASlaveAttribute_Name' => 'The field %1$s is not writable because it is mastered by the data synchronization. Value not set.',
+	'UI:ActionNotAllowed' => 'You are not allowed to perform this action on these objects.',
+	'UI:BulkAction:NoObjectSelected' => 'Please select at least one object to perform this operation',
+	'UI:AttemptingToChangeASlaveAttribute_Name' => 'The field %1$s is not writable because it is mastered by the data synchronization. Value remains unchanged.',
 ));
 ?>
