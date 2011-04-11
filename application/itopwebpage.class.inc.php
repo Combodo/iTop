@@ -805,7 +805,8 @@ EOF
         {
             echo "<div id=\"rawOutput\" title=\"Debug Output\"><div style=\"height:500px; overflow-y:auto;\">$s_captured_output</div></div>\n";
         }
-        echo $this->s_deferred_content;
+		echo "<div id=\"at_the_end\">".$this->s_deferred_content."</div>";
+//		echo $this->s_deferred_content;
 		echo "<div style=\"display:none\" title=\"ex2\" id=\"ex2\">Please wait...</div>\n"; // jqModal Window
 		echo "<div style=\"display:none\" title=\"dialog\" id=\"ModalDlg\"></div>";
 		echo "<div style=\"display:none\" id=\"ajax_content\"></div>";

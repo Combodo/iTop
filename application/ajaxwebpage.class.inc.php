@@ -173,6 +173,12 @@ EOF
             echo implode("\n", $this->a_scripts);
             echo "\n</script>\n";
         }
+        if (!empty($this->s_deferred_content))
+        {
+            echo "<script type=\"text/javascript\">\n";
+            echo "\$('body').append('".$this->s_deferred_content."');\n";
+            echo "\n</script>\n";
+        }
         if (!empty($this->m_sReadyScript))
         {
 	        echo "<script type=\"text/javascript\">\n";

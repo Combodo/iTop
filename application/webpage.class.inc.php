@@ -339,7 +339,7 @@ class WebPage
         {
             echo "<div class=\"raw_output\">$s_captured_output</div>\n";
         }
-        echo $this->s_deferred_content;
+        echo '<div id="at_the_end">'.$this->s_deferred_content.'</div>';
         echo "</body>\n";
         echo "</html>\n";
     }
