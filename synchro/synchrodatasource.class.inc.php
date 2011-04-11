@@ -862,7 +862,6 @@ EOF
 				}
 				$oReplica->UpdateDestObject($aToUpdate, $oMyChange, $oStatLog);
 				$oReplica->Set('status', 'obsolete');
-				$oReplica->Set('info_last_synchro', date('Y-m-d H:i:s'));
 				$oReplica->DBUpdateTracked($oMyChange);
 				break;
 
