@@ -1025,6 +1025,11 @@ span.form_validation {
 	border-bottom:1px #999 solid;
 	margin-left:0;
 	margin-right:0;
+ 	white-space: pre-wrap; /* css-3 */
+    white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+    white-space: -pre-wrap; /* Opera 4-6 */
+    white-space: -o-pre-wrap; /* Opera 7 */
+    word-wrap: break-word; /* Internet Explorer 5.5+, CSS3 */
 }
 table.details {
   border-collapse: collapse;

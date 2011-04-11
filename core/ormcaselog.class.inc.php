@@ -55,7 +55,7 @@ class ormCaseLog {
 	
 	public function GetAsHTML(WebPage $oP = null, $bEditMode = false, $aTransfoHandler = null)
 	{
-		$sHtml = '';
+		$sHtml = '<table style="width:100%;table-layout:fixed"><tr><td>'; // Use table-layout:fixed to force the with to be independent from the actual content
 		$iPos = 0;
 		for($index=count($this->m_aIndex)-1 ; $index >= 0 ; $index--)
 		{
@@ -99,7 +99,9 @@ class ormCaseLog {
 
 			if (count($this->m_aIndex) == 0)
 			{
-				$sHtml .= "<div>$sTextEntry</div>\n";
+				$sHtml .= '<div class="caselog_entry open">';
+				$sHtml .= $sTextEntry;
+				$sHtml .= '</div>';
 			}
 			else
 			{
@@ -121,6 +123,7 @@ class ormCaseLog {
 				$sHtml .= '</div>';
 			}
 		}
+		$sHtml .= '</td></tr></table>';
 		return $sHtml;
 	}
 	
