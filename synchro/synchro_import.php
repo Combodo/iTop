@@ -322,18 +322,6 @@ try
 
 	//////////////////////////////////////////////////
 	//
-	// Security
-	//
-	// #@# todo - implement
-	/*
-	if (!$oDataSource->IsUserAllowed(UserRights::GetUserId())
-	{
-		throw new SecurityException(Dict::Format('UI:Error:DataExchangeNotAllowed', UserRights::GetUserFriendlyName()));
-	}
-	*/
-
-	//////////////////////////////////////////////////
-	//
 	// Parse first line, check attributes, analyse the request
 	//
 	if ($sCharSet == 'UTF-8')

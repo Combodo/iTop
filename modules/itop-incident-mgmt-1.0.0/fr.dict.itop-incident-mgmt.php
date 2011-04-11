@@ -62,7 +62,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Incident+' => '',
 	'Class:Incident/Stimulus:ev_assign' => 'Assigner',
 	'Class:Incident/Stimulus:ev_assign+' => '',
-	'Class:Incident/Stimulus:ev_reassign' => 'Reassigner',
+	'Class:Incident/Stimulus:ev_reassign' => 'Réassigner',
 	'Class:Incident/Stimulus:ev_reassign+' => '',
 	'Class:Incident/Stimulus:ev_timeout' => 'ev_timeout',
 	'Class:Incident/Stimulus:ev_timeout+' => '',
@@ -70,6 +70,17 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Incident/Stimulus:ev_resolve+' => '',
 	'Class:Incident/Stimulus:ev_close' => 'Fermer',
 	'Class:Incident/Stimulus:ev_close+' => '',
-));
+	'Class:lnkTicketToIncident' => 'Class:lnkTicketToIncident~~',
+	'Class:lnkTicketToIncident+' => '',
+	'Class:lnkTicketToIncident/Attribute:ticket_id' => 'Ticket',
+	'Class:lnkTicketToIncident/Attribute:ticket_id+' => '',
+	'Class:lnkTicketToIncident/Attribute:ticket_ref' => 'Réf. Ticket',
+	'Class:lnkTicketToIncident/Attribute:ticket_ref+' => '',
+	'Class:lnkTicketToIncident/Attribute:incident_id' => 'Incident',
+	'Class:lnkTicketToIncident/Attribute:incident_id+' => '',
+	'Class:lnkTicketToIncident/Attribute:incident_ref' => 'Réf. Ticket',
+	'Class:lnkTicketToIncident/Attribute:incident_ref+' => '',
+	'Class:lnkTicketToIncident/Attribute:reason' => 'Raison',
+	'Class:lnkTicketToIncident/Attribute:reason+' => '',));
 
 ?>

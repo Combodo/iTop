@@ -155,7 +155,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Change/Stimulus:ev_approve+' => '',
 	'Class:Change/Stimulus:ev_replan' => 'Replannifier',
 	'Class:Change/Stimulus:ev_replan+' => '',
-	'Class:Change/Stimulus:ev_notapprove' => 'Désapprouver',
+	'Class:Change/Stimulus:ev_notapprove' => 'Ne pas approuver',
 	'Class:Change/Stimulus:ev_notapprove+' => '',
 	'Class:Change/Stimulus:ev_implement' => 'Marquer comme effectué',
 	'Class:Change/Stimulus:ev_implement+' => '',
@@ -164,7 +164,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Change/Stimulus:ev_finish' => 'Fermer',
 	'Class:Change/Stimulus:ev_finish+' => '',
 ));
-
 
 //
 // Class: RoutineChange
@@ -203,6 +202,12 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:RoutineChange/Stimulus:ev_monitor+' => '',
 	'Class:RoutineChange/Stimulus:ev_finish' => 'Fermer',
 	'Class:RoutineChange/Stimulus:ev_finish+' => '',
+	'Class:RoutineChange/Stimulus:ev_reject' => 'Refuser',
+	'Class:RoutineChange/Stimulus:ev_reject+' => '',
+	'Class:RoutineChange/Stimulus:ev_approve' => 'Approver',
+	'Class:RoutineChange/Stimulus:ev_approve+' => '',
+	'Class:RoutineChange/Stimulus:ev_notapprove' => 'Ne pas approver',
+	'Class:RoutineChange/Stimulus:ev_notapprove+' => '',
 ));
 
 //
@@ -230,7 +235,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ApprovedChange/Stimulus:ev_approve+' => '',
 	'Class:ApprovedChange/Stimulus:ev_replan' => 'Replannifier',
 	'Class:ApprovedChange/Stimulus:ev_replan+' => '',
-	'Class:ApprovedChange/Stimulus:ev_notapprove' => 'Désapprouver',
+	'Class:ApprovedChange/Stimulus:ev_notapprove' => 'Ne pas approuver',
 	'Class:ApprovedChange/Stimulus:ev_notapprove+' => '',
 	'Class:ApprovedChange/Stimulus:ev_implement' => 'Marquer comme effectué',
 	'Class:ApprovedChange/Stimulus:ev_implement+' => '',
@@ -284,7 +289,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:NormalChange/Stimulus:ev_approve+' => '',
 	'Class:NormalChange/Stimulus:ev_replan' => 'Replannifier',
 	'Class:NormalChange/Stimulus:ev_replan+' => '',
-	'Class:NormalChange/Stimulus:ev_notapprove' => 'Désapprouver',
+	'Class:NormalChange/Stimulus:ev_notapprove' => 'Ne pas approuver',
 	'Class:NormalChange/Stimulus:ev_notapprove+' => '',
 	'Class:NormalChange/Stimulus:ev_implement' => 'Marquer comme effectué',
 	'Class:NormalChange/Stimulus:ev_implement+' => '',
@@ -335,7 +340,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:EmergencyChange/Stimulus:ev_approve+' => '',
 	'Class:EmergencyChange/Stimulus:ev_replan' => 'Replannifier',
 	'Class:EmergencyChange/Stimulus:ev_replan+' => '',
-	'Class:EmergencyChange/Stimulus:ev_notapprove' => 'Désapprouver',
+	'Class:EmergencyChange/Stimulus:ev_notapprove' => 'Ne pas approuver',
 	'Class:EmergencyChange/Stimulus:ev_notapprove+' => '',
 	'Class:EmergencyChange/Stimulus:ev_implement' => 'Marquer comme effectué',
 	'Class:EmergencyChange/Stimulus:ev_implement+' => '',

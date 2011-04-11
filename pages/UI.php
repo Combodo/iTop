@@ -1345,7 +1345,6 @@ EOF
 		break;
 		
 		case 'bulk_stimulus':
-		$oP->set_title(Dict::S('UI:ApplyStimulusMultiple'));
 		$sFilter = utils::ReadParam('filter', '');
 		$sStimulus = utils::ReadParam('stimulus', '');
 		$sState = utils::ReadParam('state', '');
@@ -1359,6 +1358,7 @@ EOF
 		if (count($aSelectObject) == 0)
 		{
 			// Nothing to do, no object was selected !
+			throw new ApplicationException(Dict::S('UI:BulkAction:NoObjectSelected'));
 		}
 		else
 		{
