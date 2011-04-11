@@ -152,7 +152,7 @@ class lnkCustomerContractToProviderContract extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable,servicemgmt",
+			"category" => "bizmodel,searchable,servicemgmt,lnkservice",
 			"key_type" => "autoincrement",
 			"name_attcode" => "customer_contract_id",
 			"state_attcode" => "",

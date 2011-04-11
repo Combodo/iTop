@@ -358,6 +358,7 @@ class CreateITILProfilesInstaller extends ModuleInstallerAPI
 			'LnkTickets' => MetaModel::GetClasses('lnkticket'),
 			'LnkIncidents' => MetaModel::GetClasses('lnkincident'),
 			'LnkServices' => MetaModel::GetClasses('lnkservice'),
+			'LnkKnownErrors' => MetaModel::GetClasses('lnkknownerror'),
 		);
 		
 		self::$m_aProfiles = array(
@@ -393,7 +394,7 @@ class CreateITILProfilesInstaller extends ModuleInstallerAPI
 			'Problem Manager' => array(
 				'description' => 'Person analyzing and solving the current problems',
 				'write_modules' => 'Problem,KnownError',
-				'delete_modules' => 'LnkTickets',
+				'delete_modules' => 'LnkTickets,LnkKnownErrors',
 				'stimuli' => array(
 					'Problem' => 'ev_assign,ev_reassign,ev_resolve,ev_close',
 				),

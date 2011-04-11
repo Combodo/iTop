@@ -65,10 +65,10 @@ class KnownError extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeString("error_code", array("allowed_values"=>null, "sql"=>"error_code", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("domain", array("allowed_values"=>new ValueSetEnum("Network, Server, Application, Desktop"), "sql"=>"domain", "default_value"=>"Application", "is_null_allowed"=>false, "depends_on"=>array())));
 	  	MetaModel::Init_AddAttribute(new AttributeString("vendor", array("allowed_values"=>null, "sql"=>"vendor", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-    		MetaModel::Init_AddAttribute(new AttributeString("model", array("allowed_values"=>null, "sql"=>"model", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-    		MetaModel::Init_AddAttribute(new AttributeString("version", array("allowed_values"=>null, "sql"=>"version", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-       		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("ci_list", array("linked_class"=>"lnkInfraError", "ext_key_to_me"=>"error_id", "ext_key_to_remote"=>"infra_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
-      		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("document_list", array("linked_class"=>"lnkDocumentError", "ext_key_to_me"=>"error_id", "ext_key_to_remote"=>"doc_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
+    	MetaModel::Init_AddAttribute(new AttributeString("model", array("allowed_values"=>null, "sql"=>"model", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+    	MetaModel::Init_AddAttribute(new AttributeString("version", array("allowed_values"=>null, "sql"=>"version", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+       	MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("ci_list", array("linked_class"=>"lnkInfraError", "ext_key_to_me"=>"error_id", "ext_key_to_remote"=>"infra_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
+      	MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("document_list", array("linked_class"=>"lnkDocumentError", "ext_key_to_me"=>"error_id", "ext_key_to_remote"=>"doc_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 
 
 
@@ -93,7 +93,7 @@ class lnkInfraError extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable,knownerrormgmt",
+			"category" => "bizmodel,searchable,knownerrormgmt,lnkknownerror",
 			"name" => "InfraErrorLinks",
 			"description" => "Infra related to a known error",
 			"key_type" => "autoincrement",
@@ -112,7 +112,7 @@ class lnkInfraError extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalField("infra_status", array("allowed_values"=>null, "extkey_attcode"=> 'infra_id', "target_attcode"=>"status")));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("error_id", array("targetclass"=>"KnownError", "jointype"=> '', "allowed_values"=>null, "sql"=>"error_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("error_name", array( "allowed_values"=>null, "extkey_attcode"=> 'error_id', "target_attcode"=>"name")));
-	        MetaModel::Init_AddAttribute(new AttributeString("reason", array("allowed_values"=>null, "sql"=>"dummy", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+	    MetaModel::Init_AddAttribute(new AttributeString("reason", array("allowed_values"=>null, "sql"=>"dummy", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
 		
 		// Display lists
@@ -137,7 +137,7 @@ class lnkDocumentError extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "bizmodel,searchable,knownerrormgmt",
+			"category" => "bizmodel,searchable,knownerrormgmt,lnkknownerror",
 			"name" => "DocumentsErrorLinks",
 			"description" => "A link between a document and a known error",
 			"key_type" => "autoincrement",
