@@ -144,7 +144,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:User/Attribute:profile_list+' => 'Rôles, ouvrants les droits d\'accès',
 	'Class:User/Attribute:allowed_org_list' => 'Organisations permises',
 	'Class:User/Attribute:allowed_org_list+' => 'L\'utilisateur a le droit de voir les données des organisations listées ici. Si aucune organisation n\'est spécifiée, alors aucune restriction ne s\'applique.',
-	'Class:User/Error:LoginMustBeUnique' => 'Le login doit être unique - \\\"%1s\\\" est déjà utilisé.',
+	'Class:User/Error:LoginMustBeUnique' => 'Le login doit être unique - "%1s" est déjà utilisé.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'L\'utilisateur doit avoir au moins un profil.',
 	'Class:URP_Dimensions' => 'Dimension',
 	'Class:URP_Dimensions+' => 'Dimension applicative (défini des silos)',
@@ -252,17 +252,17 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Error:MandatoryTemplateParameter_object_id' => 'Le paramètre object_id est obligatoire quand link_attr est spécifié. Vérifiez la définition du modèle.',
 	'UI:Error:MandatoryTemplateParameter_target_attr' => 'Le paramètre taarget_attr est obligatoire quand link_attr est spécifié. Vérifiez la définition du modèle.',
 	'UI:Error:MandatoryTemplateParameter_group_by' => 'Le paramètre group_by est obligatoire. Vérifiez la définition du modèle.',
-	'UI:Error:InvalidGroupByFields' => 'Liste des champs \\\"group by\\\" incorrecte: \\\"%1$s\\\".',
-	'UI:Error:UnsupportedStyleOfBlock' => 'Erreur: style de bloc(\\\"%1$s\\\") inconnu.',
+	'UI:Error:InvalidGroupByFields' => 'Liste des champs "group by" incorrecte: "%1$s".',
+	'UI:Error:UnsupportedStyleOfBlock' => 'Erreur: style de bloc("%1$s") inconnu.',
 	'UI:Error:IncorrectLinkDefinition_LinkedClass_Class' => 'la définition du lien est incorrecte: la classe d\'objets à gérer: %1$s n\'est référencée par aucune clef externe de la classe %2$s',
 	'UI:Error:Object_Class_Id_NotFound' => 'L\'objet: %1$s:%2$d est introuvable.',
 	'UI:Error:WizardCircularReferenceInDependencies' => 'Erreur: Référence circulaire entre les dépendences entre champs, vérifiez le modèle de données.',
 	'UI:Error:UploadedFileTooBig' => 'Le fichier téléchargé est trop gros. (La taille maximale autorisée est %1$s). Vérifiez la valeur des variables upload_max_filesize et post_max_size dans la configuration PHP.',
 	'UI:Error:UploadedFileTruncated.' => 'Le fichier téléchargé a été tronqué !',
 	'UI:Error:NoTmpDir' => 'Il n\'y a aucun répertoire temporaire de défini.',
-	'UI:Error:CannotWriteToTmp_Dir' => 'Impossible d\'écrire le fichier temporaire sur disque. upload_tmp_dir = \\\"%1$s\\\".',
-	'UI:Error:UploadStoppedByExtension_FileName' => 'Téléchargement arrêté à cause de l\'extension. (Nom du fichier original = \\\"%1$s\\\").',
-	'UI:Error:UploadFailedUnknownCause_Code' => 'Le téléchargement a échoué pour une raison inconnue. (Code d\'erreur = \\\"%1$s\\\").',
+	'UI:Error:CannotWriteToTmp_Dir' => 'Impossible d\'écrire le fichier temporaire sur disque. upload_tmp_dir = "%1$s".',
+	'UI:Error:UploadStoppedByExtension_FileName' => 'Téléchargement arrêté à cause de l\'extension. (Nom du fichier original = "%1$s").',
+	'UI:Error:UploadFailedUnknownCause_Code' => 'Le téléchargement a échoué pour une raison inconnue. (Code d\'erreur = "%1$s").',
 	'UI:Error:1ParametersMissing' => 'Erreur: Pour effectuer cette opération il manque le paramètre suivant: %1$s.',
 	'UI:Error:2ParametersMissing' => 'Erreur: Pour effectuer cette opération il manque les paramètres suivants: %1$s and %2$s.',
 	'UI:Error:3ParametersMissing' => 'Erreur: Pour effectuer cette opération il manque les paramètres suivants: %1$s, %2$s and %3$s.',
@@ -277,7 +277,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Error:BulkModifyNotAllowedOn_Class' => 'Vous n\'êtes pas autorisé à faire une modification massive sur les objets de type %1$s',
 	'UI:Error:ObjectAlreadyCloned' => 'Erreur: l\'objet a déjà été dupliqué !',
 	'UI:Error:ObjectAlreadyCreated' => 'Erreur: l\'objet a déjà été créé !',
-	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Erreur: le stimulus \\\"%1$s\\\" n\'est pas valide pour l\'objet %2$s dans l\'état \\\"%3$s\\\".',
+	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Erreur: le stimulus "%1$s" n\'est pas valide pour l\'objet %2$s dans l\'état "%3$s".',
 	'UI:GroupBy:Count' => 'Nombre',
 	'UI:GroupBy:Count+' => 'Nombre d\'éléments',
 	'UI:CountOfObjects' => '%1$d objets correspondants aux critères.',
@@ -362,7 +362,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Title:BulkImport+' => 'Assistant d\'import CSV',
 	'UI:Title:BulkSynchro_nbItem_ofClass_class' => 'Synchronisation de %1$d éléments de type %2$s',
 	'UI:CSVImport:ClassesSelectOne' => '-- choisir une valeur --',
-	'UI:CSVImport:ErrorExtendedAttCode' => 'Erreur interne: \\\"%1$s\\\" n\'est pas une code correct car \\\"%2$s\\\" n\'est pas une clef externe de la classe \\\"%3$s\\\"',
+	'UI:CSVImport:ErrorExtendedAttCode' => 'Erreur interne: "%1$s" n\'est pas une code correct car "%2$s" n\'est pas une clef externe de la classe "%3$s"',
 	'UI:CSVImport:ObjectsWillStayUnchanged' => '%1$d objets(s) resteront inchangés.',
 	'UI:CSVImport:ObjectsWillBeModified' => '%1$d objets(s) seront modifiés.',
 	'UI:CSVImport:ObjectsWillBeAdded' => '%1$d objets(s) seront créés.',
@@ -381,7 +381,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:CSVImport:SeparatorSemicolon+' => '; (point-virgule)',
 	'UI:CSVImport:SeparatorTab+' => 'tab',
 	'UI:CSVImport:SeparatorOther' => 'autre :',
-	'UI:CSVImport:QualifierDoubleQuote+' => '\\\" (guillemet double)',
+	'UI:CSVImport:QualifierDoubleQuote+' => '" (guillemet double)',
 	'UI:CSVImport:QualifierSimpleQuote+' => '\' (guillemet simple / apostrophe)',
 	'UI:CSVImport:QualifierOther' => 'autre :',
 	'UI:CSVImport:TreatFirstLineAsHeader' => 'La première ligne est l\'en-tête (noms des colonnes)',
@@ -398,7 +398,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:CSVImport:CommentsAndHeader' => 'Comments and header',
 	'UI:CSVImport:SelectClass' => 'Sélectionner le type d\'objets à importer:',
 	'UI:CSVImport:AdvancedMode' => 'Mode expert',
-	'UI:CSVImport:AdvancedMode+' => 'En mode expert, l\'\\\"id\\\" (clef primaire) des objets peut être utilisé pour renommer des objets.Cependant la colonne \\\"id\\\" (si elle est présente) ne peut être utilisée que comme clef de recherche et ne peut pas être combinée avec une autre clef de recherche.',
+	'UI:CSVImport:AdvancedMode+' => 'En mode expert, l\'"id" (clef primaire) des objets peut être utilisé pour renommer des objets.Cependant la colonne "id" (si elle est présente) ne peut être utilisée que comme clef de recherche et ne peut pas être combinée avec une autre clef de recherche.',
 	'UI:CSVImport:SelectAClassFirst' => 'Pour configurer la correspondance, choississez d\'abord un type ci-dessus.',
 	'UI:CSVImport:HeaderFields' => 'Champs',
 	'UI:CSVImport:HeaderMappings' => 'Correspondance',
@@ -435,7 +435,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Schema:AllClasses' => 'Toutes les classes',
 	'UI:Schema:ExternalKey_To' => 'Clef externe vers %1$s',
 	'UI:Schema:Columns_Description' => 'Colonnes : <em>%1$s</em>',
-	'UI:Schema:Default_Description' => 'Valeur par défaut: \\\"%1$s\\\"',
+	'UI:Schema:Default_Description' => 'Valeur par défaut: "%1$s"',
 	'UI:Schema:NullAllowed' => 'Null autorisé',
 	'UI:Schema:NullNotAllowed' => 'Null interdit',
 	'UI:Schema:Attributes' => 'Attributs',
@@ -494,7 +494,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:ManageObjectsOf_Class_LinkedWith_Class_Instance' => 'Gérer les objets de type %1$s liés à %3$s (%2$s)',
 	'UI:AddLinkedObjectsOf_Class' => 'Ajouter des objets de type %1$s...',
 	'UI:RemoveLinkedObjectsOf_Class' => 'Enlever les objets sélectionnés',
-	'UI:Message:EmptyList:UseAdd' => 'La liste est vide, utilisez le bouton \\\"Ajouter...\\\" pour ajouter des objets.',
+	'UI:Message:EmptyList:UseAdd' => 'La liste est vide, utilisez le bouton "Ajouter..." pour ajouter des objets.',
 	'UI:Message:EmptyList:UseSearchForm' => 'Utilisez le formulaire de recherche ci-dessus pour trouver les objets à ajouter.',
 	'UI:Wizard:FinalStepTitle' => 'Dernière étape: confirmation',
 	'UI:Title:DeletionOf_Object' => 'Suppression de %1$s',
@@ -536,13 +536,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:ObjectDoesNotExist' => 'Désolé cet objet n\'existe pas (où vous n\'êtes pas autorisé à l\'afficher).',
 	'UI:SearchResultsPageTitle' => 'iTop - Résultats de la recherche',
 	'UI:Search:NoSearch' => 'Rien à rechercher',
-	'UI:FullTextSearchTitle_Text' => 'Résultats pour \\\"%1$s\\\" :',
+	'UI:FullTextSearchTitle_Text' => 'Résultats pour "%1$s" :',
 	'UI:Search:Count_ObjectsOf_Class_Found' => 'Trouvé %1$d objet(s) de type %2$s.',
 	'UI:Search:NoObjectFound' => 'Aucun objet trouvé.',
 	'UI:ModificationPageTitle_Object_Class' => 'iTop - %2$s - Modification de %1$s',
-	'UI:ModificationTitle_Class_Object' => '%1$s - Modification de <span class=\\\\\"hilite\\\\\">%2$s</span>',
+	'UI:ModificationTitle_Class_Object' => '%1$s - Modification de <span class="hilite">%2$s</span>',
 	'UI:ClonePageTitle_Object_Class' => 'iTop - %2$s - Duplication de %1$s',
-	'UI:CloneTitle_Class_Object' => ' %1$s - Duplication de <span class=\\\\\"hilite\\\\\">%2$s</span>',
+	'UI:CloneTitle_Class_Object' => ' %1$s - Duplication de <span class="hilite">%2$s</span>',
 	'UI:CreationPageTitle_Class' => 'iTop - Création d\'un objet de type %1$s ',
 	'UI:CreationTitle_Class' => 'Création d\'un objet de type %1$s',
 	'UI:SelectTheTypeOf_Class_ToCreate' => 'Sélectionnez le type de %1$s à créer :',
@@ -651,20 +651,20 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:ExportMenu+' => 'Exportation des résultats d\'une requête en HTML, CSV ou XML',
 	'Menu:NotificationsMenu' => 'Notifications',
 	'Menu:NotificationsMenu+' => 'Configuration des Notifications',
-	'UI:NotificationsMenu:Title' => 'Configuration des <span class=\\\"hilite\\\">Notifications</span>',
+	'UI:NotificationsMenu:Title' => 'Configuration des <span class="hilite">Notifications</span>',
 	'UI:NotificationsMenu:Help' => 'Aide',
 	'UI:NotificationsMenu:HelpContent' => '<p>Dans iTop les notifications sont totalement configurables. Elles sont basées sur deux types d\'objets: <i>déclencheurs et actions</i>.</p>
 <p><i><b>Les déclencheurs</b></i> définissent quand une notification doit être exécutée. Il y a 3 types de déclencheurs pour couvrir les 3 différentes phases de la vie d\'un objet:
 <ol>
-	<li>un déclencheur \\\"OnCreate\\\" est exécuté quand un objet d\'une classe spécifique est créé.</li>
-	<li>un déclencheur \\\"OnEnter\\\" est exécuté avant que l\'objet n\'entre dans un état donné (en venant d\'un autre état du cycle de vie)</li>
-	<li>un déclencheur \\\"OnLeave\\\" est exécuté  quand l\'objet quitte un état spécifié</li>
+	<li>un déclencheur "OnCreate" est exécuté quand un objet d\'une classe spécifique est créé.</li>
+	<li>un déclencheur "OnEnter" est exécuté avant que l\'objet n\'entre dans un état donné (en venant d\'un autre état du cycle de vie)</li>
+	<li>un déclencheur "OnLeave" est exécuté  quand l\'objet quitte un état spécifié</li>
 </ol>
 </p>
 <p>
 <i><b>Les actions</b></i> définissent ce qui doit être exécuté. Pour le moment il existe un seul type d\'action: l\'envoi de mail.
 Les actions de type mail définissent le modèle du message ainsi que les autres paramètres (destinataires, importance, etc.)</p>
-<p>Une page spéciale: <a href=\\\"../setup/email.test.php\\\" target=\\\"_blank\\\">email.test.php</a> permet de tester votre configuration mail PHP.</p>
+<p>Une page spéciale: <a href="../setup/email.test.php" target="_blank">email.test.php</a> permet de tester votre configuration mail PHP.</p>
 <p>Les actions doivent être associées à des déclencheurs pour pouvoir être exécutées.
 Lors de l\'association à un déclencheur, on attribue à chaque action un numéro d\'ordre, qui définit la séquence des actions à exécuter.</p>',
 	'UI:NotificationsMenu:Triggers' => 'Déclencheurs',
