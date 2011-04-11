@@ -75,7 +75,6 @@ function ExtKeyWidget(id, sClass, sAttCode, sSuffix, bSelectMode, oWizHelper)
 		results.height(height - form_height - 40); // Leave some space for the buttons
 	}
 	
-	
 	this.UpdateButtons = function()
 	{
 		var okBtn = $('#btn_ok_'+me.id);
@@ -93,7 +92,7 @@ function ExtKeyWidget(id, sClass, sAttCode, sSuffix, bSelectMode, oWizHelper)
 	{
 		var theMap = { sAttCode: me.sAttCode,
 					   iInputId: me.id,
-					   sSuffix: me.sSuffix,
+					   sSuffix: me.sSuffix
 					 }
 		
 		// Gather the parameters from the search form
