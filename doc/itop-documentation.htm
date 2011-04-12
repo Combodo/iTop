@@ -74,22 +74,19 @@ a.internal:hover {
 <div id="banner"><span>Installation Help</span></div>
 <div id="content">
 <h1><a name="Installation">Completing the iTop installation</a></h1>
+<p>Under Construction </p>
 <p>In order to operate properly, iTop maintenance operations and asynchronous tasks must be executed on a regular basis.
-In order to ease the installation, all the background tasks have been grouped to be launched from a single file: <tt>webservices/cron.php</tt>
-which is called from either <tt>cron.bat</tt> or <tt>cron.sh</tt> depending on the operating system. This file must then be scheduled to be executed on a regular basis.</p>
-<h2>Scheduling cron.bat on Windows</h2>
+In order to ease the installation, all the background tasks have been grouped to be launched from a single file: <tt>webservices/cron.php</tt></p>
+<h2>Scheduling cron.php on Windows</h2>
 <ol>
-<li>Edit the content of cron.bat to supply the correct user name and password to connect to iTop</p>
-<li>Use schedtask.exe or the 'at' command to schedule cron.bat to run every minute.</li>
+<li>To be documented</p>
+<li>Use schedtask.exe or the 'at' command to schedule cron.php to run every minute. Refer to cron.php and the Readme file for the options/parameters.</li>
 </ol>
 
-<h2>Scheduling cron.sh on Linux/Unix</h2>
+<h2>Scheduling cron.php on Linux/Unix</h2>
 <ol>
-<li>Edit the content of cron.sh to supply the correct user name and password to connect to iTop</p>
-<li>Add the following line to the crontab file:<br/>
-(Adjust the path /var/www/itop/webservices to the correct location for iTop)<br/><br/>
-<div class="code">*    *    *    *    *     /var/www/itop/webservices/cron.sh > /dev/null 2>&1</div>
-</li>
+<li>To be documented</li>
+<li>Use the cron command to schedule the execution of cron.php every minute. Refer to cron.php and the Readme file for the options/parameters.</li>
 </ol>
 
 <h1><a name="Modules">iTop Modules</a></h1>
