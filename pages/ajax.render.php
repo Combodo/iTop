@@ -97,6 +97,20 @@ try
 		break;
 	
 		// ui.extkeywidget
+		case 'objectSearchForm':
+		$sTargetClass = utils::ReadParam('sRemoteClass', '');
+		$sAttCode = utils::ReadParam('sAttCode', '');
+		$iInputId = utils::ReadParam('iInputId', '');
+		$sSuffix = utils::ReadParam('sSuffix', '');
+		$sValue = utils::ReadParam('sValue', '');
+		//$oWizardHelper = WizardHelper::FromJSON($sJson);
+		//$oObj = $oWizardHelper->GetTargetObject();
+		$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, array() /*array('this' => $oObj)*/);
+		$oWidget = new UIExtKeyWidget($sAttCode, $sClass, '', $aAllowedValues, $sValue, $iInputId, false, $sSuffix, '');
+		$oWidget->GetSearchDialog($oPage);
+		break;
+
+		// ui.extkeywidget
 		case 'objectCreationForm':
 		$sTargetClass = utils::ReadParam('sRemoteClass', '');
 		$sAttCode = utils::ReadParam('sAttCode', '');

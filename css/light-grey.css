@@ -1046,3 +1046,6 @@ fieldset table.details>tbody>tr>td {
 	background: transparent;
 	border: 0;
 }
+.ac_dlg_loading {
+	background: white url('../images/indicator.gif') right center no-repeat;
+}

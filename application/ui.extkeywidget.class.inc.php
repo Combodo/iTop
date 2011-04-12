@@ -175,7 +175,6 @@ EOF
 			$sHTMLValue .= "<input type=\"hidden\" id=\"$this->iId\" name=\"{$sAttrFieldPrefix}{$this->sFieldPrefix}{$this->sAttCode}{$this->sNameSuffix}\" value=\"$this->value\" />\n";
 	
 			// Scripts to start the autocomplete and bind some events to it
-			$sDialogTitle = addslashes($this->sTitle);
 			$oPage->add_ready_script(
 <<<EOF
 		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sClass}', '{$this->sAttCode}', '{$this->sNameSuffix}', $sSelectMode, $sWizHelper);
@@ -184,11 +183,10 @@ EOF
 		$('#label_$this->iId').blur(function() { $(this).search(); } );
 		$('#label_$this->iId').result( function(event, data, formatted) { OnAutoComplete('{$this->iId}', event, data, formatted); } );
 		$('#$this->iId').bind('update', function() { oACWidget_{$this->iId}.Update(); } );
-		$('#ac_dlg_$this->iId').dialog({ width: $(window).width()*0.8, height: $(window).height()*0.8, autoOpen: false, modal: true, title: '$sDialogTitle', resizeStop: oACWidget_{$this->iId}.UpdateSizes, close: oACWidget_{$this->iId}.OnClose });
-
 EOF
 );
-			$oPage->add_at_the_end($this->GetSearchDialog($oPage)); // To prevent adding forms inside the main form
+			//$oPage->add_at_the_end($this->GetSearchDialog($oPage)); // To prevent adding forms inside the main form
+			$oPage->add_at_the_end('<div id="ac_dlg_'.$this->iId.'"></div>'); // The place where to download the search dialog is outside of the main form (to prevent nested forms)
 
 		}
 		if ($bCreate)
@@ -201,9 +199,9 @@ EOF
 		return $sHTMLValue;
 	}
 	
-	protected function GetSearchDialog(WebPage $oPage)
+	public function GetSearchDialog(WebPage $oPage)
 	{
-		$sHTML = '<div id="ac_dlg_'.$this->iId.'"><div class="wizContainer" style="vertical-align:top;"><div id="dc_'.$this->iId.'">';
+		$sHTML = '<div class="wizContainer" style="vertical-align:top;"><div id="dc_'.$this->iId.'">';
 
 		$oFilter = new DBObjectSearch($this->sTargetClass);
 		$oSet = new CMDBObjectSet($oFilter);
@@ -216,12 +214,17 @@ EOF
 		$sHTML .= "<input type=\"button\" id=\"btn_cancel_{$this->iId}\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"$('#ac_dlg_{$this->iId}').dialog('close');\">&nbsp;&nbsp;";
 		$sHTML .= "<input type=\"button\" id=\"btn_ok_{$this->iId}\" value=\"".Dict::S('UI:Button:Ok')."\"  onClick=\"oACWidget_{$this->iId}.DoOk();\">";
 		$sHTML .= "</form>\n";
-		$sHTML .= '</div></div></div>';
+		$sHTML .= '</div></div>';
 
-		$oPage->add_ready_script("$('#fs_{$this->iId}').bind('submit.uiAutocomplete', oACWidget_{$this->iId}.DoSearchObjects);");
-		$oPage->add_ready_script("$('#dc_{$this->iId}').resize(oACWidget_{$this->iId}.UpdateSizes);");
-
-		return $sHTML;
+		$sDialogTitle = addslashes($this->sTitle);
+		$oPage->add_ready_script(
+<<<EOF
+		$('#ac_dlg_{$this->iId}').dialog({ width: $(window).width()*0.8, height: $(window).height()*0.8, autoOpen: false, modal: true, title: '$sDialogTitle', resizeStop: oACWidget_{$this->iId}.UpdateSizes, close: oACWidget_{$this->iId}.OnClose });
+		$('#fs_{$this->iId}').bind('submit.uiAutocomplete', oACWidget_{$this->iId}.DoSearchObjects);
+		$('#dc_{$this->iId}').resize(oACWidget_{$this->iId}.UpdateSizes);
+EOF
+);
+		$oPage->add($sHTML);
 	}
 
 	/**
