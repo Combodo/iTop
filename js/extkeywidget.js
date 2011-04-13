@@ -46,9 +46,42 @@ function ExtKeyWidget(id, sClass, sAttCode, sSuffix, bSelectMode, oWizHelper)
 	this.Search = function()
 	{
 		if($('#'+me.id).attr('disabled')) return; // Disabled, do nothing
-		$('#ac_dlg_'+me.id).dialog('open');
-		this.UpdateSizes();
-		this.UpdateButtons();
+		var value = $('#'+me.id).val(); // Current value
+		
+		// Query the server to get the form to search for target objects
+		if (me.bSelectMode)
+		{
+			me.v_html = $('#v_'+me.id).html();
+			$('#v_'+me.id).html('<img src="../images/indicator.gif" />');
+		}
+		else
+		{
+			$('#label_'+me.id).addClass('ac_dlg_loading');
+		}
+		var theMap = { sAttCode: me.sAttCode,
+				   iInputId: me.id,
+				   sSuffix: me.sSuffix,
+				   'class': me.sClass,
+				   sValue: value,
+				   operation: 'objectSearchForm'
+				 }
+	
+		// Make sure that we cancel any pending request before issuing another
+		// since responses may arrive in arbitrary order
+		me.StopPendingRequest();
+		
+		// Run the query and get the result back directly in HTML
+		me.ajax_request = $.post( '../pages/ajax.render.php', theMap, 
+			function(data)
+			{
+				$('#ac_dlg_'+me.id).html(data);
+				$('#ac_dlg_'+me.id).dialog('open');
+				me.UpdateSizes();
+				me.UpdateButtons();
+				me.ajax_request = null;
+			},
+			'html'
+		);
 	}
 	
 	this.UpdateSizes = function()
@@ -151,7 +184,7 @@ function ExtKeyWidget(id, sClass, sAttCode, sSuffix, bSelectMode, oWizHelper)
 	{
 		var iObjectId = $('#fr_'+me.id+' input[name=selectObject]:checked').val();
 		$('#ac_dlg_'+this.id).dialog('close');
-		$('#label_'+this.id).addClass('ac_loading');
+		$('#label_'+this.id).addClass('ac_dlg_loading');
 
 		// Query the server again to get the display name of the selected object
 		var theMap = { sAttCode: me.sAttCode,
@@ -171,7 +204,7 @@ function ExtKeyWidget(id, sClass, sAttCode, sSuffix, bSelectMode, oWizHelper)
 			function(data)
 			{
 				$('#label_'+me.id).val(data.name);
-				$('#label_'+me.id).removeClass('ac_loading');
+				$('#label_'+me.id).removeClass('ac_dlg_loading');
 				$('#'+me.id).val(iObjectId);
 				$('#'+me.id).trigger('validate');
 				$('#label_'+me.id).focus();
@@ -188,12 +221,15 @@ function ExtKeyWidget(id, sClass, sAttCode, sSuffix, bSelectMode, oWizHelper)
 	// dialog is very slow. So empty it each time.
 	this.OnClose = function()
 	{
+		me.StopPendingRequest();
 		// called by the dialog, so in the context 'this' points to the jQueryObject
 		if (me.emptyOnClose)
 		{
 			$('#dr_'+me.id).html(me.emptyHtml);
 		}
+		$('#label_'+me.id).removeClass('ac_dlg_loading');
 		$('#label_'+me.id).focus();
+		me.ajax_request = null;
 	}
 	
 	this.CreateObject = function(oWizHelper)
@@ -207,7 +243,7 @@ function ExtKeyWidget(id, sClass, sAttCode, sSuffix, bSelectMode, oWizHelper)
 		}
 		else
 		{
-			$('#label_'+me.id).addClass('ac_loading');
+			$('#label_'+me.id).addClass('ac_dlg_loading');
 		}
 		me.oWizardHelper.UpdateWizard();
 		var theMap = { sAttCode: me.sAttCode,
@@ -259,7 +295,7 @@ function ExtKeyWidget(id, sClass, sAttCode, sSuffix, bSelectMode, oWizHelper)
 		}
 		else
 		{
-			$('#label_'+me.id).removeClass('ac_loading');
+			$('#label_'+me.id).removeClass('ac_dlg_loading');
 		}
 		$('#label_'+me.id).focus();
 		$('#ac_create_'+me.id).dialog("destroy");
@@ -317,7 +353,7 @@ function ExtKeyWidget(id, sClass, sAttCode, sSuffix, bSelectMode, oWizHelper)
 						// Put the value corresponding to the newly created object in the autocomplete
 						$('#label_'+me.id).val(data.name);
 						$('#'+me.id).val(data.id);
-						$('#label_'+me.id).removeClass('ac_loading');
+						$('#label_'+me.id).removeClass('ac_dlg_loading');
 						$('#label_'+me.id).focus();
 					}
 					$('#'+me.id).trigger('validate');
