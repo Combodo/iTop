@@ -660,7 +660,7 @@ function LicenceAcknowledgement($oP, $aParamValues, $iCurrentStep)
 	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");	
 	$oP->add("<table style=\"width:100%\"><tr>\n");
 	$oP->add("<td style=\"text-align:left;\"><button type=\"button\" onClick=\"return DoGoBack($iPrevStep)\"><< Back</button></td>\n");
-	$oP->add("<td style=\"text-align:right;\"><button type=\"submit\" onClick=\"return DoSubmit('', $iCurrentStep)\">Next >></button></td>\n");
+	$oP->add("<td style=\"text-align:right;\"><input type=\"submit\" onClick=\"return DoSubmit('', $iCurrentStep)\" value=\" Next >> \"/></td>\n");
 	$oP->add("</tr></table>\n");
 	$oP->add("</form>\n");
 }
@@ -696,7 +696,7 @@ function DatabaseServerSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep)
 		$oP->add("<h2 class=\"next\">Next: Database instance Selection</h2>\n");
 		$oP->add("<table style=\"width:100%\"><tr>\n");
 		$oP->add("<td style=\"text-align:left;\"><button type=\"button\" onClick=\"return DoGoBack($iPrevStep)\"><< Back</button></td>\n");
-		$oP->add("<td style=\"text-align:right;\"><button type=\"submit\" onClick=\"return DoSubmit('Connecting to the database...', $iCurrentStep);\">Next >></button></td>\n");
+		$oP->add("<td style=\"text-align:right;\"><input type=\"submit\" onClick=\"return DoSubmit('Connecting to the database...', $iCurrentStep);\" value=\" Next >> \"/></td>\n");
 		$oP->add("</tr></table>\n");
 	}
 	else
@@ -792,7 +792,7 @@ function DatabaseInstanceSelection(SetupWebPage $oP, $aParamValues, $iCurrentSte
 		$oP->add("<h2 class=\"next\">Next: iTop modules selection</h2>\n");
 		$oP->add("<table style=\"width:100%\"><tr>\n");
 		$oP->add("<td style=\"text-align:left;\"><button type=\"button\" onClick=\"return DoGoBack($iPrevStep)\"><< Back</button></td>\n");
-		$oP->add("<td style=\"text-align:right;\"><button type=\"submit\" onClick=\"return DoSubmit('', $iCurrentStep);\">Next >></button></td>\n");
+		$oP->add("<td style=\"text-align:right;\"><input type=\"submit\" onClick=\"return DoSubmit('', $iCurrentStep);\" value=\" Next >> \"/></td>\n");
 		$oP->add("</tr></table>\n");
 	}
 	$oP->add("</form>\n");
@@ -979,7 +979,7 @@ function ModulesSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, $oConf
 	}
 	$oP->add("<table style=\"width:100%\"><tr>\n");
 	$oP->add("<td style=\"text-align:left;\"><button type=\"button\" onClick=\"return DoGoBack($iPrevStep)\"><< Back</button></td>\n");
-	$oP->add("<td style=\"text-align:right;\"><button type=\"submit\" onClick=\"return DoSubmit('', 4)\">Next >></button></td>\n");
+	$oP->add("<td style=\"text-align:right;\"><input type=\"submit\" onClick=\"return DoSubmit('', 4)\" value=\" Next >> \"/></td>\n");
 	$oP->add("</tr></table>\n");
 	$oP->add("</form>\n");
 	$oP->add_ready_script("$('.read-only').click( function() { $(this).attr('checked','checked'); } );");
@@ -1033,7 +1033,7 @@ function AdminAccountDefinition(SetupWebPage $oP, $aParamValues, $iCurrentStep, 
 	$oP->add("<h2 class=\"next\">Next: Sample data selection</h2>\n");
 	$oP->add("<table style=\"width:100%\"><tr>\n");
 	$oP->add("<td style=\"text-align:left;\"><button type=\"button\" onClick=\"return DoGoBack(4)\"><< Back</button></td>\n");
-	$oP->add("<td style=\"text-align:right;\"><button type=\"submit\" onClick=\"return DoSubmit('', 5);\">Next >></button></td>\n");
+	$oP->add("<td style=\"text-align:right;\"><input type=\"submit\" onClick=\"return DoSubmit('', 5);\" value=\" Next >> \"/></td>\n");
 	$oP->add("</tr></table>\n");
 
 	// Form goes here
@@ -1099,7 +1099,7 @@ function SampleDataSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, Con
 	$oP->add("<h2 class=\"next\">Next: Installation summary</h2>\n");
 	$oP->add("<table style=\"width:100%\"><tr>\n");
 	$oP->add("<td style=\"text-align:left;\"><button type=\"button\" onClick=\"return DoGoBack($iPrevStep)\"><< Back</button></td>\n");
-	$oP->add("<td style=\"text-align:right;\"><button type=\"submit\" onClick=\"DoSubmit('', 6)\"> Next >></button></td>\n");
+	$oP->add("<td style=\"text-align:right;\"><input type=\"submit\" onClick=\"DoSubmit('', 6)\" value=\" Next >> \"/></td>\n");
 	$oP->add("</tr></table>\n");
 	$oP->add("</form>\n");
 }
