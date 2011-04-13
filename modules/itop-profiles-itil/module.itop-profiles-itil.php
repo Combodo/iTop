@@ -83,110 +83,11 @@ class CreateITILProfilesInstaller extends ModuleInstallerAPI
 		self::DoCreateProfiles($bFirstInstall);
 		UserRights::FlushPrivileges(true /* reset admin cache */);
 	}
-	
-	protected static $m_aActions = array(
-		UR_ACTION_READ => 'Read',
-		UR_ACTION_MODIFY => 'Modify',
-		UR_ACTION_DELETE => 'Delete',
-		UR_ACTION_BULK_READ => 'Bulk Read',
-		UR_ACTION_BULK_MODIFY => 'Bulk Modify',
-		UR_ACTION_BULK_DELETE => 'Bulk Delete',
-	);
 
 	// Note: It is possible to specify the same class in several modules
 	//
 	protected static $m_aModules = array();
 	protected static $m_aProfiles = array();
-
-
-	protected static $m_aCacheActionGrants = null;
-	protected static $m_aCacheStimulusGrants = null;
-	protected static $m_aCacheProfiles = null;
-	
-	protected static function DoCreateActionGrant($iProfile, $iAction, $sClass, $bPermission = true)
-	{
-		$sAction = self::$m_aActions[$iAction];
-	
-		if (is_null(self::$m_aCacheActionGrants))
-		{
-			self::$m_aCacheActionGrants = array();
-			$oFilterAll = new DBObjectSearch('URP_ActionGrant');
-			$oSet = new DBObjectSet($oFilterAll);
-			while ($oGrant = $oSet->Fetch())
-			{
-				self::$m_aCacheActionGrants[$oGrant->Get('profileid').'-'.$oGrant->Get('action').'-'.$oGrant->Get('class')] = $oGrant->GetKey();
-			}
-		}	
-
-		$sCacheKey = "$iProfile-$sAction-$sClass";
-		if (isset(self::$m_aCacheActionGrants[$sCacheKey]))
-		{
-			return self::$m_aCacheActionGrants[$sCacheKey];
-		}
-
-		$oNewObj = MetaModel::NewObject("URP_ActionGrant");
-		$oNewObj->Set('profileid', $iProfile);
-		$oNewObj->Set('permission', $bPermission ? 'yes' : 'no');
-		$oNewObj->Set('class', $sClass);
-		$oNewObj->Set('action', $sAction);
-		$iId = $oNewObj->DBInsertNoReload();
-		self::$m_aCacheActionGrants[$sCacheKey] = $iId;	
-		return $iId;
-	}
-	
-	protected static function DoCreateStimulusGrant($iProfile, $sStimulusCode, $sClass)
-	{
-		if (is_null(self::$m_aCacheStimulusGrants))
-		{
-			self::$m_aCacheStimulusGrants = array();
-			$oFilterAll = new DBObjectSearch('URP_StimulusGrant');
-			$oSet = new DBObjectSet($oFilterAll);
-			while ($oGrant = $oSet->Fetch())
-			{
-				self::$m_aCacheStimulusGrants[$oGrant->Get('profileid').'-'.$oGrant->Get('stimulus').'-'.$oGrant->Get('class')] = $oGrant->GetKey();
-			}
-		}	
-
-		$sCacheKey = "$iProfile-$sStimulusCode-$sClass";
-		if (isset(self::$m_aCacheStimulusGrants[$sCacheKey]))
-		{
-			return self::$m_aCacheStimulusGrants[$sCacheKey];
-		}
-		$oNewObj = MetaModel::NewObject("URP_StimulusGrant");
-		$oNewObj->Set('profileid', $iProfile);
-		$oNewObj->Set('permission', 'yes');
-		$oNewObj->Set('class', $sClass);
-		$oNewObj->Set('stimulus', $sStimulusCode);
-		$iId = $oNewObj->DBInsertNoReload();
-		self::$m_aCacheStimulusGrants[$sCacheKey] = $iId;	
-		return $iId;
-	}
-	
-	protected static function DoCreateProfile($sName, $sDescription)
-	{
-		if (is_null(self::$m_aCacheProfiles))
-		{
-			self::$m_aCacheProfiles = array();
-			$oFilterAll = new DBObjectSearch('URP_Profiles');
-			$oSet = new DBObjectSet($oFilterAll);
-			while ($oProfile = $oSet->Fetch())
-			{
-				self::$m_aCacheProfiles[$oProfile->Get('name')] = $oProfile->GetKey();
-			}
-		}	
-
-		$sCacheKey = $sName;
-		if (isset(self::$m_aCacheProfiles[$sCacheKey]))
-		{
-			return self::$m_aCacheProfiles[$sCacheKey];
-		}
-		$oNewObj = MetaModel::NewObject("URP_Profiles");
-		$oNewObj->Set('name', $sName);
-		$oNewObj->Set('description', $sDescription);
-		$iId = $oNewObj->DBInsertNoReload();
-		self::$m_aCacheProfiles[$sCacheKey] = $iId;	
-		return $iId;
-	}
 	
 	protected static function DoSetupProfile($sName, $aProfileData)
 	{
@@ -209,7 +110,7 @@ class CreateITILProfilesInstaller extends ModuleInstallerAPI
 		}
 		$aStimuli = $aProfileData['stimuli'];
 		
-		$iProfile = self::DoCreateProfile($sName, $sDescription);
+		$iProfile = URP_Profiles::DoCreateProfile($sName, $sDescription);
 	
 		// Warning: BulkInsert is working because we will load one single class
 		//          having one single table !
@@ -221,8 +122,8 @@ class CreateITILProfilesInstaller extends ModuleInstallerAPI
 		//
 		foreach (MetaModel::GetClasses('bizmodel') as $sClass)
 		{
-			self::DoCreateActionGrant($iProfile, UR_ACTION_READ, $sClass);
-			self::DoCreateActionGrant($iProfile, UR_ACTION_BULK_READ, $sClass);
+			URP_Profiles::DoCreateActionGrant($iProfile, UR_ACTION_READ, $sClass);
+			URP_Profiles::DoCreateActionGrant($iProfile, UR_ACTION_BULK_READ, $sClass);
 		}
 	
 		// Grant write for given modules
@@ -242,8 +143,8 @@ class CreateITILProfilesInstaller extends ModuleInstallerAPI
 			{
 				throw new CoreException("Invalid class name '$sClass'");
 			}
-			self::DoCreateActionGrant($iProfile, UR_ACTION_MODIFY, $sClass);
-			self::DoCreateActionGrant($iProfile, UR_ACTION_BULK_MODIFY, $sClass);
+			URP_Profiles::DoCreateActionGrant($iProfile, UR_ACTION_MODIFY, $sClass);
+			URP_Profiles::DoCreateActionGrant($iProfile, UR_ACTION_BULK_MODIFY, $sClass);
 		}
 		
 		// Grant delete for given modules
@@ -263,9 +164,9 @@ class CreateITILProfilesInstaller extends ModuleInstallerAPI
 			{
 				throw new CoreException("Invalid class name '$sClass'");
 			}
-			self::DoCreateActionGrant($iProfile, UR_ACTION_DELETE, $sClass);
+			URP_Profiles::DoCreateActionGrant($iProfile, UR_ACTION_DELETE, $sClass);
 			// By default, do not allow bulk deletion operations for standard users
-			// self::DoCreateActionGrant($iProfile, UR_ACTION_BULK_DELETE, $sClass);
+			// URP_Profiles::DoCreateActionGrant($iProfile, UR_ACTION_BULK_DELETE, $sClass);
 		}
 		
 		// Grant stimuli for given classes
@@ -292,21 +193,40 @@ class CreateITILProfilesInstaller extends ModuleInstallerAPI
 			}
 			foreach ($aAllowedStimuli as $sStimulusCode)
 			{
-				self::DoCreateStimulusGrant($iProfile, $sStimulusCode, $sClass);
+				URP_Profiles::DoCreateStimulusGrant($iProfile, $sStimulusCode, $sClass);
 			}
 		}
 		// Again: this is working only because action/stimulus grant are classes made of a single table!
 		DBObject::BulkInsertFlush();
 	}
 	
+	/*
+	* Create the built-in User Portal profile with its reserved name
+	*/	
+	public static function DoCreateUserPortalProfile()
+	{
+		$iNewId =  URP_Profiles::DoCreateProfile(PORTAL_PROFILE_NAME, 'Has the rights to access to the user portal. People having this profile will not be allowed to access the standard application, they will be automatically redirected to the user portal.', true /* reserved name */);
+		
+		// Grant read rights for everything
+		//
+		foreach (MetaModel::GetClasses('bizmodel') as $sClass)
+		{
+			URP_Profiles::DoCreateActionGrant($iNewId, UR_ACTION_READ, $sClass);
+			URP_Profiles::DoCreateActionGrant($iNewId, UR_ACTION_BULK_READ, $sClass);
+		}
+		// Can create UserRequests and attach Documents to it
+		URP_Profiles::DoCreateActionGrant($iNewId, UR_ACTION_MODIFY, 'UserRequest');
+		URP_Profiles::DoCreateActionGrant($iNewId, UR_ACTION_MODIFY, 'lnkTicketToDoc');
+		URP_Profiles::DoCreateActionGrant($iNewId, UR_ACTION_DELETE, 'lnkTicketToDoc');
+		URP_Profiles::DoCreateActionGrant($iNewId, UR_ACTION_MODIFY, 'FileDoc');
+		// Can close user requests
+		URP_Profiles::DoCreateStimulusGrant($iNewId, 'ev_close', 'UserRequest');
+	}
+
 	public static function DoCreateProfiles($bFirstInstall = true)
 	{
-		if ($bFirstInstall)
-		{
-			// Make sure we create these special profiles only once
-			URP_Profiles::DoCreateAdminProfile();
-			URP_Profiles::DoCreateUserPortalProfile();
-		}
+		URP_Profiles::DoCreateAdminProfile(); // Will be created only if it does not exist
+		self::DoCreateUserPortalProfile(); // Will be created only if it does not exist and updated otherwise
 
 		foreach(self::$m_aProfiles as $sName => $aProfileData)
 		{

@@ -107,28 +107,115 @@ class URP_Profiles extends UserRightsBaseClassGUI
 		$this->m_bCheckReservedNames = false;
 	}
 
+	
+	protected static $m_aActions = array(
+		UR_ACTION_READ => 'Read',
+		UR_ACTION_MODIFY => 'Modify',
+		UR_ACTION_DELETE => 'Delete',
+		UR_ACTION_BULK_READ => 'Bulk Read',
+		UR_ACTION_BULK_MODIFY => 'Bulk Modify',
+		UR_ACTION_BULK_DELETE => 'Bulk Delete',
+	);
+
+	protected static $m_aCacheActionGrants = null;
+	protected static $m_aCacheStimulusGrants = null;
+	protected static $m_aCacheProfiles = null;
+	
+	public static function DoCreateProfile($sName, $sDescription, $bReservedName = false)
+	{
+		if (is_null(self::$m_aCacheProfiles))
+		{
+			self::$m_aCacheProfiles = array();
+			$oFilterAll = new DBObjectSearch('URP_Profiles');
+			$oSet = new DBObjectSet($oFilterAll);
+			while ($oProfile = $oSet->Fetch())
+			{
+				self::$m_aCacheProfiles[$oProfile->Get('name')] = $oProfile->GetKey();
+			}
+		}	
+
+		$sCacheKey = $sName;
+		if (isset(self::$m_aCacheProfiles[$sCacheKey]))
+		{
+			return self::$m_aCacheProfiles[$sCacheKey];
+		}
+		$oNewObj = MetaModel::NewObject("URP_Profiles");
+		$oNewObj->Set('name', $sName);
+		$oNewObj->Set('description', $sDescription);
+		if ($bReservedName)
+		{
+			$oNewObj->DisableCheckOnReservedNames();			
+		}
+		$iId = $oNewObj->DBInsertNoReload();
+		self::$m_aCacheProfiles[$sCacheKey] = $iId;	
+		return $iId;
+	}
+	
+	public static function DoCreateActionGrant($iProfile, $iAction, $sClass, $bPermission = true)
+	{
+		$sAction = self::$m_aActions[$iAction];
+	
+		if (is_null(self::$m_aCacheActionGrants))
+		{
+			self::$m_aCacheActionGrants = array();
+			$oFilterAll = new DBObjectSearch('URP_ActionGrant');
+			$oSet = new DBObjectSet($oFilterAll);
+			while ($oGrant = $oSet->Fetch())
+			{
+				self::$m_aCacheActionGrants[$oGrant->Get('profileid').'-'.$oGrant->Get('action').'-'.$oGrant->Get('class')] = $oGrant->GetKey();
+			}
+		}	
+
+		$sCacheKey = "$iProfile-$sAction-$sClass";
+		if (isset(self::$m_aCacheActionGrants[$sCacheKey]))
+		{
+			return self::$m_aCacheActionGrants[$sCacheKey];
+		}
+
+		$oNewObj = MetaModel::NewObject("URP_ActionGrant");
+		$oNewObj->Set('profileid', $iProfile);
+		$oNewObj->Set('permission', $bPermission ? 'yes' : 'no');
+		$oNewObj->Set('class', $sClass);
+		$oNewObj->Set('action', $sAction);
+		$iId = $oNewObj->DBInsertNoReload();
+		self::$m_aCacheActionGrants[$sCacheKey] = $iId;	
+		return $iId;
+	}
+	
+	public static function DoCreateStimulusGrant($iProfile, $sStimulusCode, $sClass)
+	{
+		if (is_null(self::$m_aCacheStimulusGrants))
+		{
+			self::$m_aCacheStimulusGrants = array();
+			$oFilterAll = new DBObjectSearch('URP_StimulusGrant');
+			$oSet = new DBObjectSet($oFilterAll);
+			while ($oGrant = $oSet->Fetch())
+			{
+				self::$m_aCacheStimulusGrants[$oGrant->Get('profileid').'-'.$oGrant->Get('stimulus').'-'.$oGrant->Get('class')] = $oGrant->GetKey();
+			}
+		}	
+
+		$sCacheKey = "$iProfile-$sStimulusCode-$sClass";
+		if (isset(self::$m_aCacheStimulusGrants[$sCacheKey]))
+		{
+			return self::$m_aCacheStimulusGrants[$sCacheKey];
+		}
+		$oNewObj = MetaModel::NewObject("URP_StimulusGrant");
+		$oNewObj->Set('profileid', $iProfile);
+		$oNewObj->Set('permission', 'yes');
+		$oNewObj->Set('class', $sClass);
+		$oNewObj->Set('stimulus', $sStimulusCode);
+		$iId = $oNewObj->DBInsertNoReload();
+		self::$m_aCacheStimulusGrants[$sCacheKey] = $iId;	
+		return $iId;
+	}
+	
 	/*
 	* Create the built-in Administrator profile with its reserved name
 	*/	
 	public static function DoCreateAdminProfile()
 	{
-		$oNewObj = MetaModel::NewObject("URP_Profiles");
-		$oNewObj->Set('name', ADMIN_PROFILE_NAME);
-		$oNewObj->Set('description', 'Has the rights on everything (bypassing any control)');
-		$oNewObj->DisableCheckOnReservedNames();
-		$iNewId = $oNewObj->DBInsertNoReload();
-	}
-
-	/*
-	* Create the built-in User Portal profile with its reserved name
-	*/	
-	public static function DoCreateUserPortalProfile()
-	{
-		$oNewObj = MetaModel::NewObject("URP_Profiles");
-		$oNewObj->Set('name', PORTAL_PROFILE_NAME);
-		$oNewObj->Set('description', 'Has the rights to access to the user portal. People having this profile will not be allowed to access the standard application, they will be automatically redirected to the user portal.');
-		$oNewObj->DisableCheckOnReservedNames();
-		$iNewId = $oNewObj->DBInsertNoReload();
+		self::DoCreateProfile(ADMIN_PROFILE_NAME, 'Has the rights on everything (bypassing any control)', true /* reserved name */);
 	}
 
 	/*
