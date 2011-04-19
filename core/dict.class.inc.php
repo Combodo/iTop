@@ -57,6 +57,9 @@ define('DICT_ERR_EXCEPTION', 2); // when a string is missing, throw an exception
 
 class Dict
 {
+	protected static $m_bTraceFiles = false;
+	protected static $m_aEntryFiles = array();
+
 	protected static $m_iErrorMode = DICT_ERR_STRING;
 	protected static $m_sDefaultLanguage = 'EN US';
 	protected static $m_sCurrentLanguage = null; // No language selected by default
@@ -64,6 +67,16 @@ class Dict
 	protected static $m_aLanguages = array(); // array( code => array( 'description' => '...', 'localized_description' => '...') ...)
 	protected static $m_aData = array();
 
+
+	public static function EnableTraceFiles()
+	{
+		self::$m_bTraceFiles = true;
+	}
+
+	public static function GetEntryFiles()
+	{
+		return self::$m_aEntryFiles;
+	}
 
 	public static function SetDefaultLanguage($sLanguageCode)
 	{
@@ -179,14 +192,32 @@ class Dict
 	// sEnglishLanguageDesc: Description of the language code, in English. i.e. French (France)
 	// sLocalizedLanguageDesc: Description of the language code, in its own language. i.e. Français (France)
 	// aEntries: Hash array of dictionnary entries
+	// ~~ or ~* can be used to indicate entries still to be translated. 
 	public static function Add($sLanguageCode, $sEnglishLanguageDesc, $sLocalizedLanguageDesc, $aEntries)
 	{
+		if (self::$m_bTraceFiles)
+		{
+			$aBacktrace = debug_backtrace();
+			$sFile = $aBacktrace[0]["file"];
+
+			foreach($aEntries as $sKey => $sValue)
+			{
+				self::$m_aEntryFiles[$sLanguageCode][$sKey] = array(
+					'file' => $sFile,
+					'value' => $sValue
+				);
+			}
+		}
+
 		if (!array_key_exists($sLanguageCode, self::$m_aLanguages))
 		{
 			self::$m_aLanguages[$sLanguageCode] = array('description' => $sEnglishLanguageDesc, 'localized_description' => $sLocalizedLanguageDesc);
 			self::$m_aData[$sLanguageCode] = array();
 		}
-		self::$m_aData[$sLanguageCode] = array_merge(self::$m_aData[$sLanguageCode], $aEntries);
+		foreach($aEntries as $sCode => $sValue)
+		{
+			self::$m_aData[$sLanguageCode][$sCode] = self::FilterString($sValue);
+		}
 	}
 
 	public static function MakeStats($sLanguageCode, $sLanguageRef = 'EN US')
@@ -277,6 +308,11 @@ class Dict
 			apc_delete($sApplicationPrefix.'-languages');
 			apc_delete($sApplicationPrefix.'-dict');
 		}
+	}
+	
+	protected static function FilterString($s)
+	{
+		return str_replace(array('~~', '~*'), '', $s);
 	}
 }
 ?>
