@@ -15,42 +15,11 @@
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 /**
- * Localized data
- *
- * @author      Erwan Taloc <erwan.taloc@combodo.com>
- * @author      Romain Quetiez <romain.quetiez@combodo.com>
- * @author      Denis Flaven <denis.flaven@combodo.com>
- * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
+ * @author	Erwan Taloc <erwan.taloc@combodo.com>
+ * @author	Romain Quetiez <romain.quetiez@combodo.com>
+ * @author	Denis Flaven <denis.flaven@combodo.com>
+ * @licence	http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//
-// Class: KnownError
-//
 
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:KnownError' => 'Erreur Connue',
@@ -79,8 +48,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:KnownError/Attribute:domain+' => '',
 	'Class:KnownError/Attribute:domain/Value:Application' => 'Application',
 	'Class:KnownError/Attribute:domain/Value:Application+' => 'Application',
-	'Class:KnownError/Attribute:domain/Value:Desktop' => 'Desktop',
-	'Class:KnownError/Attribute:domain/Value:Desktop+' => 'Desktop',
+	'Class:KnownError/Attribute:domain/Value:Desktop' => 'Desktop~~',
+	'Class:KnownError/Attribute:domain/Value:Desktop+' => 'Desktop~*',
 	'Class:KnownError/Attribute:domain/Value:Network' => 'Réseau',
 	'Class:KnownError/Attribute:domain/Value:Network+' => 'Réseau',
 	'Class:KnownError/Attribute:domain/Value:Server' => 'Serveur',
@@ -95,14 +64,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:KnownError/Attribute:ci_list+' => '',
 	'Class:KnownError/Attribute:document_list' => 'Documents',
 	'Class:KnownError/Attribute:document_list+' => '',
-));
-
-
-//
-// Class: lnkInfraError
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkInfraError' => 'Lien erreur CI',
 	'Class:lnkInfraError+' => 'CIs liés à une erreur connue',
 	'Class:lnkInfraError/Attribute:infra_id' => 'CI',
@@ -117,13 +78,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkInfraError/Attribute:error_name+' => '',
 	'Class:lnkInfraError/Attribute:reason' => 'Raison',
 	'Class:lnkInfraError/Attribute:reason+' => '',
-));
-
-//
-// Class: lnkDocumentError
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkDocumentError' => 'Lien erreur document',
 	'Class:lnkDocumentError+' => 'Lien entre une erreur et un document',
 	'Class:lnkDocumentError/Attribute:doc_id' => 'Document',
@@ -136,18 +90,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkDocumentError/Attribute:error_name+' => '',
 	'Class:lnkDocumentError/Attribute:link_type' => 'Information',
 	'Class:lnkDocumentError/Attribute:link_type+' => '',
+	'Menu:NewError' => 'Nouvelle Erreur connue',
+	'Menu:NewError+' => 'Creation d\'une nouvelle erreur connue',
+	'Menu:SearchError' => 'Rechercher des erreurs connues',
+	'Menu:SearchError+' => 'Rechercher des erreurs connues',
 ));
-
-Dict::Add('FR FR', 'FRench', 'Français', array(
-        'Menu:ProblemManagement' => 'Gestion des Problèmes',
-        'Menu:ProblemManagement+' => 'Gestion des Problèmes',
-        'Menu:NewError' => 'Nouvelle Erreur connue',
-        'Menu:NewError+' => 'Creation d\'une nouvelle erreur connue',
-        'Menu:SearchError' => 'Rechercher des erreurs connues',
-        'Menu:SearchError+' => 'Rechercher des erreurs connues',
-        'Menu:Problem:KnownErrors' => 'Toutes les erreurs connues',
-        'Menu:Problem:KnownErrors+' => 'Toutes les erreurs connues',
-));
-
-
 ?>

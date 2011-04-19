@@ -15,79 +15,16 @@
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 /**
- * Localized data
- *
- * @author      Erwan Taloc <erwan.taloc@combodo.com>
- * @author      Romain Quetiez <romain.quetiez@combodo.com>
- * @author      Denis Flaven <denis.flaven@combodo.com>
- * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
+ * @author	Erwan Taloc <erwan.taloc@combodo.com>
+ * @author	Romain Quetiez <romain.quetiez@combodo.com>
+ * @author	Denis Flaven <denis.flaven@combodo.com>
+ * @licence	http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-
-
-
-Dict::Add('FR FR', 'French', 'Français', array(
-        'Menu:ProblemManagement' => 'Gestion des problèmes',
-        'Menu:ProblemManagement+' => 'Gestion des problèmes',
-    	'Menu:Problem:Overview' => 'Vue d\'ensemble',
-    	'Menu:Problem:Overview+' => 'Vue d\'ensemble',
-    	'Menu:NewProblem' => 'Nouveau problème',
-    	'Menu:NewProblem+' => 'Nouveau problème',
-    	'Menu:SearchProblems' => 'Rechercer des problèmes',
-    	'Menu:SearchProblems+' => 'Rechercher des problèmes',
-    	'Menu:Problem:KnownErrors' => 'Erreurs connues',
-    	'Menu:Problem:KnownErrors+' => 'Erreurs connues',
-    	'Menu:Problem:Shortcuts' => 'Raccourcis',
-        'Menu:Problem:MyProblems' => 'Mes problèmes',
-        'Menu:Problem:MyProblems+' => 'Mes problèmes',
-        'Menu:Problem:OpenProblems' => 'Problèmes ouverts',
-        'Menu:Problem:OpenProblems+' => 'Problèmes ouverts',
-	'UI-ProblemManagementOverview-ProblemByService' => 'Problèmes par service',
-	'UI-ProblemManagementOverview-ProblemByService+' => 'Problèmes par service',
-	'UI-ProblemManagementOverview-ProblemByPriority' => 'Problèmes par priorité',
-	'UI-ProblemManagementOverview-ProblemByPriority+' => 'Problèmes par priorité',
-	'UI-ProblemManagementOverview-ProblemUnassigned' => 'Problèmes non affectés à un agent',
-	'UI-ProblemManagementOverview-ProblemUnassigned+' => 'Problèmes non affectés à un agent',
-	'UI:ProblemMgmtMenuOverview:Title' => 'Tableau de bord de la Gestion des Problèmes',
-	'UI:ProblemMgmtMenuOverview:Title+' => 'Tableau de bord de la Gestion des Problèmes',
-
-));
-
-
-
-//
-// Class: Problem
-//
 
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Problem' => 'Problème',
 	'Class:Problem+' => '',
-	'Class:Problem/Attribute:status' => 'Status',
+	'Class:Problem/Attribute:status' => 'Etat',
 	'Class:Problem/Attribute:status+' => '',
 	'Class:Problem/Attribute:status/Value:new' => 'Nouveau',
 	'Class:Problem/Attribute:status/Value:new+' => '',
@@ -167,6 +104,28 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Problem/Stimulus:ev_resolve+' => '',
 	'Class:Problem/Stimulus:ev_close' => 'Fermer',
 	'Class:Problem/Stimulus:ev_close+' => '',
+	'Menu:Problem:KnownErrors' => 'Erreurs connues',
+	'Menu:Problem:KnownErrors+' => 'Erreurs connues',
+	'Menu:ProblemManagement' => 'Gestion des problèmes',
+	'Menu:ProblemManagement+' => 'Gestion des problèmes',
+	'Menu:Problem:Overview' => 'Vue d\'ensemble',
+	'Menu:Problem:Overview+' => 'Vue d\'ensemble',
+	'Menu:NewProblem' => 'Nouveau problème',
+	'Menu:NewProblem+' => 'Nouveau problème',
+	'Menu:SearchProblems' => 'Rechercer des problèmes',
+	'Menu:SearchProblems+' => 'Rechercher des problèmes',
+	'Menu:Problem:Shortcuts' => 'Raccourcis',
+	'Menu:Problem:MyProblems' => 'Mes problèmes',
+	'Menu:Problem:MyProblems+' => 'Mes problèmes',
+	'Menu:Problem:OpenProblems' => 'Problèmes ouverts',
+	'Menu:Problem:OpenProblems+' => 'Problèmes ouverts',
+	'UI-ProblemManagementOverview-ProblemByService' => 'Problèmes par service',
+	'UI-ProblemManagementOverview-ProblemByService+' => 'Problèmes par service',
+	'UI-ProblemManagementOverview-ProblemByPriority' => 'Problèmes par priorité',
+	'UI-ProblemManagementOverview-ProblemByPriority+' => 'Problèmes par priorité',
+	'UI-ProblemManagementOverview-ProblemUnassigned' => 'Problèmes non affectés à un agent',
+	'UI-ProblemManagementOverview-ProblemUnassigned+' => 'Problèmes non affectés à un agent',
+	'UI:ProblemMgmtMenuOverview:Title' => 'Tableau de bord de la Gestion des Problèmes',
+	'UI:ProblemMgmtMenuOverview:Title+' => 'Tableau de bord de la Gestion des Problèmes',
 ));
-
 ?>

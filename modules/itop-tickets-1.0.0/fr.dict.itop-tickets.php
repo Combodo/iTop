@@ -15,64 +15,11 @@
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 /**
- * Localized data
- *
- * @author      Erwan Taloc <erwan.taloc@combodo.com>
- * @author      Romain Quetiez <romain.quetiez@combodo.com>
- * @author      Denis Flaven <denis.flaven@combodo.com>
- * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
+ * @author	Erwan Taloc <erwan.taloc@combodo.com>
+ * @author	Romain Quetiez <romain.quetiez@combodo.com>
+ * @author	Denis Flaven <denis.flaven@combodo.com>
+ * @licence	http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//
-// Class: Ticket
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:Ticket' => 'Ticket',
-	'Class:Ticket+' => '',
-	'Class:Ticket/Attribute:ref' => 'Référence',
-	'Class:Ticket/Attribute:ref+' => '',
-	'Class:Ticket/Attribute:title' => 'Titre',
-	'Class:Ticket/Attribute:title+' => '',
-	'Class:Ticket/Attribute:ticket_log' => 'Journal',
-	'Class:Ticket/Attribute:ticket_log+' => '',
-	'Class:Ticket/Attribute:start_date' => 'Début',
-	'Class:Ticket/Attribute:start_date+' => '',
-	'Class:Ticket/Attribute:document_list' => 'Documents',
-	'Class:Ticket/Attribute:document_list+' => 'Documents liés au ticket',
-	'Class:Ticket/Attribute:ci_list' => 'CIs',
-	'Class:Ticket/Attribute:ci_list+' => 'CIs concernés par le ticket',
-	'Class:Ticket/Attribute:contact_list' => 'Contacts',
-	'Class:Ticket/Attribute:contact_list+' => 'Team et personnes concernées par le ticket',
-	'Class:Ticket/Attribute:finalclass' => 'Type',
-	'Class:Ticket/Attribute:finalclass+' => '',
-));
-
-// Fieldset translation
-Dict::Add('FR FR', 'French', 'Français', array(
-
-	'Ticket:baseinfo' => 'Informations générales',
-	'Ticket:date' => 'Dates',
-	'Ticket:contact' => 'Contacts',
-	'Ticket:moreinfo' => 'Informations complémentaires',
-	'Ticket:relation' => 'Relations',
-	'Ticket:log' => 'Communications',
-
-));
-
-//
-// Class: lnkTicketToDoc
-//
 
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkTicketToDoc' => 'Ticket/Document',
@@ -85,13 +32,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkTicketToDoc/Attribute:document_id+' => '',
 	'Class:lnkTicketToDoc/Attribute:document_name' => 'Document',
 	'Class:lnkTicketToDoc/Attribute:document_name+' => '',
-));
-
-//
-// Class: lnkTicketToContact
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkTicketToContact' => 'Ticket/Contact',
 	'Class:lnkTicketToContact+' => '',
 	'Class:lnkTicketToContact/Attribute:ticket_id' => 'Ticket',
@@ -104,15 +44,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkTicketToContact/Attribute:contact_name+' => '',
 	'Class:lnkTicketToContact/Attribute:contact_email' => 'Email',
 	'Class:lnkTicketToContact/Attribute:contact_email+' => '',
-	'Class:lnkTicketToContact/Attribute:role' => 'Role',
+	'Class:lnkTicketToContact/Attribute:role' => 'Rôle',
 	'Class:lnkTicketToContact/Attribute:role+' => '',
-));
-
-//
-// Class: lnkTicketToCI
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkTicketToCI' => 'Ticket/CI',
 	'Class:lnkTicketToCI+' => '',
 	'Class:lnkTicketToCI/Attribute:ticket_id' => 'Ticket',
@@ -125,43 +58,70 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkTicketToCI/Attribute:ci_name+' => '',
 	'Class:lnkTicketToCI/Attribute:ci_status' => 'Etat du CI',
 	'Class:lnkTicketToCI/Attribute:ci_status+' => '',
-));
-
-//
-// Class: ResponseTicket
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:lnkTicketToCI/Attribute:impact' => 'Impact',
+	'Class:lnkTicketToCI/Attribute:impact+' => '',
+	'Class:Ticket' => 'Ticket',
+	'Class:Ticket+' => '',
+	'Class:Ticket/Attribute:ref' => 'Référence',
+	'Class:Ticket/Attribute:ref+' => '',
+	'Class:Ticket/Attribute:title' => 'Titre',
+	'Class:Ticket/Attribute:title+' => '',
+	'Class:Ticket/Attribute:description' => 'Description',
+	'Class:Ticket/Attribute:description+' => '',
+	'Class:Ticket/Attribute:ticket_log' => 'Journal',
+	'Class:Ticket/Attribute:ticket_log+' => '',
+	'Class:Ticket/Attribute:start_date' => 'Début',
+	'Class:Ticket/Attribute:start_date+' => '',
+	'Class:Ticket/Attribute:document_list' => 'Documents',
+	'Class:Ticket/Attribute:document_list+' => 'Documents liés au ticket',
+	'Class:Ticket/Attribute:ci_list' => 'CIs',
+	'Class:Ticket/Attribute:ci_list+' => 'CIs concernés par le ticket',
+	'Class:Ticket/Attribute:contact_list' => 'Contacts',
+	'Class:Ticket/Attribute:contact_list+' => 'Equipes et personnes concernées par le ticket',
+	'Class:Ticket/Attribute:incident_list' => 'Incidents liés',
+	'Class:Ticket/Attribute:incident_list+' => '',
+	'Class:Ticket/Attribute:finalclass' => 'Type',
+	'Class:Ticket/Attribute:finalclass+' => '',
+	'Ticket:baseinfo' => 'Informations générales',
+	'Ticket:date' => 'Dates',
+	'Ticket:contact' => 'Contacts',
+	'Ticket:moreinfo' => 'Informations complémentaires',
+	'Ticket:relation' => 'Relations',
+	'Ticket:log' => 'Communications',
 	'Class:ResponseTicket' => 'Ticket de Reponse',
 	'Class:ResponseTicket+' => '',
 	'Class:ResponseTicket/Attribute:status' => 'Etat',
 	'Class:ResponseTicket/Attribute:status+' => '',
 	'Class:ResponseTicket/Attribute:status/Value:new' => 'Nouveau',
 	'Class:ResponseTicket/Attribute:status/Value:new+' => 'Nouvellement créé',
-	'Class:ResponseTicket/Attribute:status/Value:frozen' => 'En attente',
-	'Class:ResponseTicket/Attribute:status/Value:frozen+' => 'Traitement interrompu',
 	'Class:ResponseTicket/Attribute:status/Value:escalated_tto' => 'En escalade, non assigné',
 	'Class:ResponseTicket/Attribute:status/Value:escalated_tto+' => '',
 	'Class:ResponseTicket/Attribute:status/Value:assigned' => 'Assigné',
 	'Class:ResponseTicket/Attribute:status/Value:assigned+' => '',
 	'Class:ResponseTicket/Attribute:status/Value:escalated_ttr' => 'En escalade, non résolu',
 	'Class:ResponseTicket/Attribute:status/Value:escalated_ttr+' => '',
+	'Class:ResponseTicket/Attribute:status/Value:frozen' => 'En attente',
+	'Class:ResponseTicket/Attribute:status/Value:frozen+' => 'Traitement interrompu',
 	'Class:ResponseTicket/Attribute:status/Value:resolved' => 'Résolu',
 	'Class:ResponseTicket/Attribute:status/Value:resolved+' => '',
 	'Class:ResponseTicket/Attribute:status/Value:closed' => 'Fermé',
 	'Class:ResponseTicket/Attribute:status/Value:closed+' => '',
 	'Class:ResponseTicket/Attribute:caller_id' => 'Appelant',
 	'Class:ResponseTicket/Attribute:caller_id+' => '',
-	'Class:ResponseTicket/Attribute:workgroup_name' => 'Groupe de travail',
-	'Class:ResponseTicket/Attribute:workgroup_name+' => '',
+	'Class:ResponseTicket/Attribute:caller_email' => 'Email',
+	'Class:ResponseTicket/Attribute:caller_email+' => '',
 	'Class:ResponseTicket/Attribute:org_id' => 'Client',
 	'Class:ResponseTicket/Attribute:org_id+' => '',
 	'Class:ResponseTicket/Attribute:org_name' => 'Client',
 	'Class:ResponseTicket/Attribute:org_name+' => '',
 	'Class:ResponseTicket/Attribute:service_id' => 'Service',
 	'Class:ResponseTicket/Attribute:service_id+' => '',
+	'Class:ResponseTicket/Attribute:service_name' => 'Nom',
+	'Class:ResponseTicket/Attribute:service_name+' => '',
 	'Class:ResponseTicket/Attribute:servicesubcategory_id' => 'Elément de service',
 	'Class:ResponseTicket/Attribute:servicesubcategory_id+' => '',
+	'Class:ResponseTicket/Attribute:servicesubcategory_name' => 'Nom',
+	'Class:ResponseTicket/Attribute:servicesubcategory_name+' => '',
 	'Class:ResponseTicket/Attribute:product' => 'Produit',
 	'Class:ResponseTicket/Attribute:product+' => '',
 	'Class:ResponseTicket/Attribute:impact' => 'Impact',
@@ -190,12 +150,18 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ResponseTicket/Attribute:priority/Value:3+' => '',
 	'Class:ResponseTicket/Attribute:workgroup_id' => 'Groupe de travail',
 	'Class:ResponseTicket/Attribute:workgroup_id+' => '',
+	'Class:ResponseTicket/Attribute:workgroup_name' => 'Groupe de travail',
+	'Class:ResponseTicket/Attribute:workgroup_name+' => '',
 	'Class:ResponseTicket/Attribute:agent_id' => 'Agent',
 	'Class:ResponseTicket/Attribute:agent_id+' => '',
 	'Class:ResponseTicket/Attribute:agent_name' => 'Agent',
 	'Class:ResponseTicket/Attribute:agent_name+' => '',
 	'Class:ResponseTicket/Attribute:agent_email' => 'Email de l\'agent',
 	'Class:ResponseTicket/Attribute:agent_email+' => '',
+	'Class:ResponseTicket/Attribute:related_problem_id' => 'Problèmes liés',
+	'Class:ResponseTicket/Attribute:related_problem_id+' => '',
+	'Class:ResponseTicket/Attribute:related_problem_ref' => 'Réf.',
+	'Class:ResponseTicket/Attribute:related_problem_ref+' => '',
 	'Class:ResponseTicket/Attribute:related_change_id' => 'Intervention liée',
 	'Class:ResponseTicket/Attribute:related_change_id+' => '',
 	'Class:ResponseTicket/Attribute:related_change_ref' => 'Intervention liée',
@@ -206,6 +172,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ResponseTicket/Attribute:last_update+' => '',
 	'Class:ResponseTicket/Attribute:assignment_date' => 'Assigné',
 	'Class:ResponseTicket/Attribute:assignment_date+' => '',
+	'Class:ResponseTicket/Attribute:resolution_date' => 'Date de Résolution',
+	'Class:ResponseTicket/Attribute:resolution_date+' => '',
 	'Class:ResponseTicket/Attribute:tto_escalation_deadline' => 'Heure limite d\'escalade',
 	'Class:ResponseTicket/Attribute:tto_escalation_deadline+' => 'Heure limite d\'escalade faute d\'assignation',
 	'Class:ResponseTicket/Attribute:ttr_escalation_deadline' => 'Heure limite d\'escalade',
@@ -247,6 +215,4 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ResponseTicket/Stimulus:ev_close' => 'Fermer',
 	'Class:ResponseTicket/Stimulus:ev_close+' => '',
 ));
-
-
 ?>

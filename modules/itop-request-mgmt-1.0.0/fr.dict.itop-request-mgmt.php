@@ -15,15 +15,37 @@
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 /**
- * Localized data
- *
- * @author      Erwan Taloc <erwan.taloc@combodo.com>
- * @author      Romain Quetiez <romain.quetiez@combodo.com>
- * @author      Denis Flaven <denis.flaven@combodo.com>
- * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
+ * @author	Erwan Taloc <erwan.taloc@combodo.com>
+ * @author	Romain Quetiez <romain.quetiez@combodo.com>
+ * @author	Denis Flaven <denis.flaven@combodo.com>
+ * @licence	http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
 Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:UserRequest' => 'Demande Utilisateur',
+	'Class:UserRequest+' => '',
+	'Class:UserRequest/Attribute:request_type' => 'Type de Requête',
+	'Class:UserRequest/Attribute:request_type+' => '',
+	'Class:UserRequest/Attribute:request_type/Value:information' => 'Information',
+	'Class:UserRequest/Attribute:request_type/Value:information+' => '',
+	'Class:UserRequest/Attribute:request_type/Value:issue' => 'Problème',
+	'Class:UserRequest/Attribute:request_type/Value:issue+' => '',
+	'Class:UserRequest/Attribute:request_type/Value:service request' => 'Demande de service',
+	'Class:UserRequest/Attribute:request_type/Value:service request+' => '',
+	'Class:UserRequest/Attribute:freeze_reason' => 'Raison de la suspension',
+	'Class:UserRequest/Attribute:freeze_reason+' => '',
+	'Class:UserRequest/Stimulus:ev_assign' => 'Assigner',
+	'Class:UserRequest/Stimulus:ev_assign+' => 'Assigner et traiter la demande',
+	'Class:UserRequest/Stimulus:ev_reassign' => 'Réassigner',
+	'Class:UserRequest/Stimulus:ev_reassign+' => '',
+	'Class:UserRequest/Stimulus:ev_timeout' => 'ev_timeout',
+	'Class:UserRequest/Stimulus:ev_timeout+' => '',
+	'Class:UserRequest/Stimulus:ev_resolve' => 'Marquer comme résolu',
+	'Class:UserRequest/Stimulus:ev_resolve+' => '',
+	'Class:UserRequest/Stimulus:ev_close' => 'Fermer',
+	'Class:UserRequest/Stimulus:ev_close+' => '',
+	'Class:UserRequest/Stimulus:ev_freeze' => 'Suspendre',
+	'Class:UserRequest/Stimulus:ev_freeze+' => '',
 	'Menu:RequestManagement' => 'Gestion des demandes',
 	'Menu:RequestManagement+' => 'Gestion des demandes utilisateurs',
 	'Menu:UserRequest:Overview' => 'Vue d\'ensemble',
@@ -41,38 +63,4 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:UserRequest:OpenRequests' => 'Demandes en cours',
 	'Menu:UserRequest:OpenRequests+' => 'Toutes les demandes utilisateurs en cours',
 ));
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//
-// Class: UserRequest
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:UserRequest' => 'Demande Utilisateur',
-	'Class:UserRequest+' => '',
-	'Class:UserRequest/Attribute:freeze_reason' => 'Raison de la suspension',
-	'Class:UserRequest/Attribute:freeze_reason+' => '',
-	'Class:UserRequest/Stimulus:ev_assign' => 'Assigner',
-	'Class:UserRequest/Stimulus:ev_assign+' => 'Assigner et traiter la demande',
-	'Class:UserRequest/Stimulus:ev_freeze' => 'Suspendre',
-	'Class:UserRequest/Stimulus:ev_freeze+' => '',
-	'Class:UserRequest/Stimulus:ev_reassign' => 'Réassigner',
-	'Class:UserRequest/Stimulus:ev_reassign+' => '',
-	'Class:UserRequest/Stimulus:ev_timeout' => 'ev_timeout',
-	'Class:UserRequest/Stimulus:ev_timeout+' => '',
-	'Class:UserRequest/Stimulus:ev_resolve' => 'Marquer comme résolu',
-	'Class:UserRequest/Stimulus:ev_resolve+' => '',
-	'Class:UserRequest/Stimulus:ev_close' => 'Fermer',
-	'Class:UserRequest/Stimulus:ev_close+' => '',
-));
-
 ?>

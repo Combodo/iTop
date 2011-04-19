@@ -15,15 +15,89 @@
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 /**
- * Localized data
- *
- * @author      Erwan Taloc <erwan.taloc@combodo.com>
- * @author      Romain Quetiez <romain.quetiez@combodo.com>
- * @author      Denis Flaven <denis.flaven@combodo.com>
- * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
+ * @author	Erwan Taloc <erwan.taloc@combodo.com>
+ * @author	Romain Quetiez <romain.quetiez@combodo.com>
+ * @author	Denis Flaven <denis.flaven@combodo.com>
+ * @licence	http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
 Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:RoutineChange' => 'Ticket de Changement de Routine',
+	'Class:RoutineChange+' => '',
+	'Class:RoutineChange/Stimulus:ev_validate' => 'Valider',
+	'Class:RoutineChange/Stimulus:ev_validate+' => '',
+	'Class:RoutineChange/Stimulus:ev_reject' => 'Refuser',
+	'Class:RoutineChange/Stimulus:ev_reject+' => '',
+	'Class:RoutineChange/Stimulus:ev_assign' => 'Assigner',
+	'Class:RoutineChange/Stimulus:ev_assign+' => '',
+	'Class:RoutineChange/Stimulus:ev_reopen' => 'Réouvrir',
+	'Class:RoutineChange/Stimulus:ev_reopen+' => '',
+	'Class:RoutineChange/Stimulus:ev_plan' => 'Plannifier',
+	'Class:RoutineChange/Stimulus:ev_plan+' => '',
+	'Class:RoutineChange/Stimulus:ev_approve' => 'Approver',
+	'Class:RoutineChange/Stimulus:ev_approve+' => '',
+	'Class:RoutineChange/Stimulus:ev_replan' => 'Replannifier',
+	'Class:RoutineChange/Stimulus:ev_replan+' => '',
+	'Class:RoutineChange/Stimulus:ev_notapprove' => 'Ne pas approver',
+	'Class:RoutineChange/Stimulus:ev_notapprove+' => '',
+	'Class:RoutineChange/Stimulus:ev_implement' => 'Marquer comme effectué',
+	'Class:RoutineChange/Stimulus:ev_implement+' => '',
+	'Class:RoutineChange/Stimulus:ev_monitor' => 'Marquer comme suivi',
+	'Class:RoutineChange/Stimulus:ev_monitor+' => '',
+	'Class:RoutineChange/Stimulus:ev_finish' => 'Fermer',
+	'Class:RoutineChange/Stimulus:ev_finish+' => '',
+	'Class:NormalChange' => 'Ticket de Changement',
+	'Class:NormalChange+' => '',
+	'Class:NormalChange/Attribute:acceptance_date' => 'Date d\'acceptation',
+	'Class:NormalChange/Attribute:acceptance_date+' => '',
+	'Class:NormalChange/Attribute:acceptance_comment' => 'Commentaire sur l\'acceptation',
+	'Class:NormalChange/Attribute:acceptance_comment+' => '',
+	'Class:NormalChange/Stimulus:ev_validate' => 'Valider',
+	'Class:NormalChange/Stimulus:ev_validate+' => '',
+	'Class:NormalChange/Stimulus:ev_reject' => 'Rejeter',
+	'Class:NormalChange/Stimulus:ev_reject+' => '',
+	'Class:NormalChange/Stimulus:ev_assign' => 'Assigner',
+	'Class:NormalChange/Stimulus:ev_assign+' => '',
+	'Class:NormalChange/Stimulus:ev_reopen' => 'Réouvrir',
+	'Class:NormalChange/Stimulus:ev_reopen+' => '',
+	'Class:NormalChange/Stimulus:ev_plan' => 'Plannifier',
+	'Class:NormalChange/Stimulus:ev_plan+' => '',
+	'Class:NormalChange/Stimulus:ev_approve' => 'Approuver',
+	'Class:NormalChange/Stimulus:ev_approve+' => '',
+	'Class:NormalChange/Stimulus:ev_replan' => 'Replannifier',
+	'Class:NormalChange/Stimulus:ev_replan+' => '',
+	'Class:NormalChange/Stimulus:ev_notapprove' => 'Ne pas approuver',
+	'Class:NormalChange/Stimulus:ev_notapprove+' => '',
+	'Class:NormalChange/Stimulus:ev_implement' => 'Marquer comme effectué',
+	'Class:NormalChange/Stimulus:ev_implement+' => '',
+	'Class:NormalChange/Stimulus:ev_monitor' => 'Marquer comme suivi',
+	'Class:NormalChange/Stimulus:ev_monitor+' => '',
+	'Class:NormalChange/Stimulus:ev_finish' => 'Fermer',
+	'Class:NormalChange/Stimulus:ev_finish+' => '',
+	'Class:EmergencyChange' => 'Ticket de Changement d\'Urgence',
+	'Class:EmergencyChange+' => '',
+	'Class:EmergencyChange/Stimulus:ev_validate' => 'Valider',
+	'Class:EmergencyChange/Stimulus:ev_validate+' => '',
+	'Class:EmergencyChange/Stimulus:ev_reject' => 'Rejeter',
+	'Class:EmergencyChange/Stimulus:ev_reject+' => '',
+	'Class:EmergencyChange/Stimulus:ev_assign' => 'Assigner',
+	'Class:EmergencyChange/Stimulus:ev_assign+' => '',
+	'Class:EmergencyChange/Stimulus:ev_reopen' => 'Réouvrir',
+	'Class:EmergencyChange/Stimulus:ev_reopen+' => '',
+	'Class:EmergencyChange/Stimulus:ev_plan' => 'Plannifier',
+	'Class:EmergencyChange/Stimulus:ev_plan+' => '',
+	'Class:EmergencyChange/Stimulus:ev_approve' => 'Approuver',
+	'Class:EmergencyChange/Stimulus:ev_approve+' => '',
+	'Class:EmergencyChange/Stimulus:ev_replan' => 'Replannifier',
+	'Class:EmergencyChange/Stimulus:ev_replan+' => '',
+	'Class:EmergencyChange/Stimulus:ev_notapprove' => 'Ne pas approuver',
+	'Class:EmergencyChange/Stimulus:ev_notapprove+' => '',
+	'Class:EmergencyChange/Stimulus:ev_implement' => 'Marquer comme effectué',
+	'Class:EmergencyChange/Stimulus:ev_implement+' => '',
+	'Class:EmergencyChange/Stimulus:ev_monitor' => 'Marquer comme suivi',
+	'Class:EmergencyChange/Stimulus:ev_monitor+' => '',
+	'Class:EmergencyChange/Stimulus:ev_finish' => 'Fermer',
+	'Class:EmergencyChange/Stimulus:ev_finish+' => '',
 	'Menu:ChangeManagement' => 'Gestion des changements',
 	'Menu:Change:Overview' => 'Vue d\'ensemble',
 	'Menu:Change:Overview+' => '',
@@ -41,24 +115,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:Changes+' => 'Tickets de changement ouverts',
 	'Menu:MyChanges' => 'Mes tickets',
 	'Menu:MyChanges+' => 'Tickets de changement qui me sont assignés',
-));
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-
-//
-// Class: Change
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Change' => 'Ticket de changement',
 	'Class:Change+' => '',
 	'Class:Change/Attribute:start_date' => 'Début de l\'intervention',
@@ -163,15 +219,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Change/Stimulus:ev_monitor+' => '',
 	'Class:Change/Stimulus:ev_finish' => 'Fermer',
 	'Class:Change/Stimulus:ev_finish+' => '',
-));
-
-//
-// Class: RoutineChange
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:RoutineChange' => 'Ticket de Changement de Routine',
-	'Class:RoutineChange+' => '',
 	'Class:RoutineChange/Attribute:status/Value:new' => 'Nouveau',
 	'Class:RoutineChange/Attribute:status/Value:new+' => '',
 	'Class:RoutineChange/Attribute:status/Value:assigned' => 'Assigné',
@@ -186,36 +233,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:RoutineChange/Attribute:status/Value:monitored+' => '',
 	'Class:RoutineChange/Attribute:status/Value:closed' => 'Fermé',
 	'Class:RoutineChange/Attribute:status/Value:closed+' => '',
-	'Class:RoutineChange/Stimulus:ev_validate' => 'Valider',
-	'Class:RoutineChange/Stimulus:ev_validate+' => '',
-	'Class:RoutineChange/Stimulus:ev_assign' => 'Assigner',
-	'Class:RoutineChange/Stimulus:ev_assign+' => '',
-	'Class:RoutineChange/Stimulus:ev_reopen' => 'Réouvrir',
-	'Class:RoutineChange/Stimulus:ev_reopen+' => '',
-	'Class:RoutineChange/Stimulus:ev_plan' => 'Plannifier',
-	'Class:RoutineChange/Stimulus:ev_plan+' => '',
-	'Class:RoutineChange/Stimulus:ev_replan' => 'Replannifier',
-	'Class:RoutineChange/Stimulus:ev_replan+' => '',
-	'Class:RoutineChange/Stimulus:ev_implement' => 'Marquer comme effectué',
-	'Class:RoutineChange/Stimulus:ev_implement+' => '',
-	'Class:RoutineChange/Stimulus:ev_monitor' => 'Marquer comme suivi',
-	'Class:RoutineChange/Stimulus:ev_monitor+' => '',
-	'Class:RoutineChange/Stimulus:ev_finish' => 'Fermer',
-	'Class:RoutineChange/Stimulus:ev_finish+' => '',
-	'Class:RoutineChange/Stimulus:ev_reject' => 'Refuser',
-	'Class:RoutineChange/Stimulus:ev_reject+' => '',
-	'Class:RoutineChange/Stimulus:ev_approve' => 'Approver',
-	'Class:RoutineChange/Stimulus:ev_approve+' => '',
-	'Class:RoutineChange/Stimulus:ev_notapprove' => 'Ne pas approver',
-	'Class:RoutineChange/Stimulus:ev_notapprove+' => '',
-));
-
-//
-// Class: ApprovedChange
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:ApprovedChange' => 'Approved Changes',
+	'Class:ApprovedChange' => 'Changements approuvés',
 	'Class:ApprovedChange+' => '',
 	'Class:ApprovedChange/Attribute:approval_date' => 'Date d\'approbation',
 	'Class:ApprovedChange/Attribute:approval_date+' => '',
@@ -243,14 +261,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ApprovedChange/Stimulus:ev_monitor+' => '',
 	'Class:ApprovedChange/Stimulus:ev_finish' => 'Fermer',
 	'Class:ApprovedChange/Stimulus:ev_finish+' => '',
-));
-//
-// Class: NormalChange
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:NormalChange' => 'Ticket de Changement',
-	'Class:NormalChange+' => '',
 	'Class:NormalChange/Attribute:status/Value:new' => 'Nouveau',
 	'Class:NormalChange/Attribute:status/Value:new+' => '',
 	'Class:NormalChange/Attribute:status/Value:validated' => 'Validé',
@@ -271,44 +281,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:NormalChange/Attribute:status/Value:monitored+' => '',
 	'Class:NormalChange/Attribute:status/Value:closed' => 'Fermé',
 	'Class:NormalChange/Attribute:status/Value:closed+' => '',
-	'Class:NormalChange/Attribute:acceptance_date' => 'Date d\'acceptation',
-	'Class:NormalChange/Attribute:acceptance_date+' => '',
-	'Class:NormalChange/Attribute:acceptance_comment' => 'Commentaire sur l\'acceptation',
-	'Class:NormalChange/Attribute:acceptance_comment+' => '',
-	'Class:NormalChange/Stimulus:ev_validate' => 'Valider',
-	'Class:NormalChange/Stimulus:ev_validate+' => '',
-	'Class:NormalChange/Stimulus:ev_reject' => 'Rejeter',
-	'Class:NormalChange/Stimulus:ev_reject+' => '',
-	'Class:NormalChange/Stimulus:ev_assign' => 'Assigner',
-	'Class:NormalChange/Stimulus:ev_assign+' => '',
-	'Class:NormalChange/Stimulus:ev_reopen' => 'Réouvrir',
-	'Class:NormalChange/Stimulus:ev_reopen+' => '',
-	'Class:NormalChange/Stimulus:ev_plan' => 'Plannifier',
-	'Class:NormalChange/Stimulus:ev_plan+' => '',
-	'Class:NormalChange/Stimulus:ev_approve' => 'Approuver',
-	'Class:NormalChange/Stimulus:ev_approve+' => '',
-	'Class:NormalChange/Stimulus:ev_replan' => 'Replannifier',
-	'Class:NormalChange/Stimulus:ev_replan+' => '',
-	'Class:NormalChange/Stimulus:ev_notapprove' => 'Ne pas approuver',
-	'Class:NormalChange/Stimulus:ev_notapprove+' => '',
-	'Class:NormalChange/Stimulus:ev_implement' => 'Marquer comme effectué',
-	'Class:NormalChange/Stimulus:ev_implement+' => '',
-	'Class:NormalChange/Stimulus:ev_monitor' => 'Marquer comme suivi',
-	'Class:NormalChange/Stimulus:ev_monitor+' => '',
-	'Class:NormalChange/Stimulus:ev_finish' => 'Fermer',
-	'Class:NormalChange/Stimulus:ev_finish+' => '',
-));
-
-//
-// Class: EmergencyChange
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:EmergencyChange' => 'Ticket de Changement d\'Urgence',
-	'Class:EmergencyChange+' => '',
-	'Class:EmergencyChange/Attribute:status/Value:new' => 'New',
+	'Class:EmergencyChange/Attribute:status/Value:new' => 'Nouveau',
 	'Class:EmergencyChange/Attribute:status/Value:new+' => '',
-	'Class:EmergencyChange/Attribute:status/Value:validated' => 'Validated',
+	'Class:EmergencyChange/Attribute:status/Value:validated' => 'Validé',
 	'Class:EmergencyChange/Attribute:status/Value:validated+' => '',
 	'Class:EmergencyChange/Attribute:status/Value:rejected' => 'Rejeté',
 	'Class:EmergencyChange/Attribute:status/Value:rejected+' => '',
@@ -324,30 +299,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:EmergencyChange/Attribute:status/Value:implemented+' => '',
 	'Class:EmergencyChange/Attribute:status/Value:monitored' => 'En cours de suivi',
 	'Class:EmergencyChange/Attribute:status/Value:monitored+' => '',
-	'Class:EmergencyChange/Attribute:status/Value:closed' => 'Closed',
+	'Class:EmergencyChange/Attribute:status/Value:closed' => 'Fermé',
 	'Class:EmergencyChange/Attribute:status/Value:closed+' => '',
-	'Class:EmergencyChange/Stimulus:ev_validate' => 'Valider',
-	'Class:EmergencyChange/Stimulus:ev_validate+' => '',
-	'Class:EmergencyChange/Stimulus:ev_reject' => 'Rejeter',
-	'Class:EmergencyChange/Stimulus:ev_reject+' => '',
-	'Class:EmergencyChange/Stimulus:ev_assign' => 'Assigner',
-	'Class:EmergencyChange/Stimulus:ev_assign+' => '',
-	'Class:EmergencyChange/Stimulus:ev_reopen' => 'Réouvrir',
-	'Class:EmergencyChange/Stimulus:ev_reopen+' => '',
-	'Class:EmergencyChange/Stimulus:ev_plan' => 'Plannifier',
-	'Class:EmergencyChange/Stimulus:ev_plan+' => '',
-	'Class:EmergencyChange/Stimulus:ev_approve' => 'Approuver',
-	'Class:EmergencyChange/Stimulus:ev_approve+' => '',
-	'Class:EmergencyChange/Stimulus:ev_replan' => 'Replannifier',
-	'Class:EmergencyChange/Stimulus:ev_replan+' => '',
-	'Class:EmergencyChange/Stimulus:ev_notapprove' => 'Ne pas approuver',
-	'Class:EmergencyChange/Stimulus:ev_notapprove+' => '',
-	'Class:EmergencyChange/Stimulus:ev_implement' => 'Marquer comme effectué',
-	'Class:EmergencyChange/Stimulus:ev_implement+' => '',
-	'Class:EmergencyChange/Stimulus:ev_monitor' => 'Marquer comme suivi',
-	'Class:EmergencyChange/Stimulus:ev_monitor+' => '',
-	'Class:EmergencyChange/Stimulus:ev_finish' => 'Fermer',
-	'Class:EmergencyChange/Stimulus:ev_finish+' => '',
 ));
-
 ?>

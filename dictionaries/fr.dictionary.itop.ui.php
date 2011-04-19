@@ -15,10 +15,10 @@
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 /**
- * @author      Erwan Taloc <erwan.taloc@combodo.com>
- * @author      Romain Quetiez <romain.quetiez@combodo.com>
- * @author      Denis Flaven <denis.flaven@combodo.com>
- * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
+ * @author	Erwan Taloc <erwan.taloc@combodo.com>
+ * @author	Romain Quetiez <romain.quetiez@combodo.com>
+ * @author	Denis Flaven <denis.flaven@combodo.com>
+ * @licence	http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
 Dict::Add('FR FR', 'French', 'Français', array(
@@ -38,10 +38,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:AuditRule/Attribute:valid_flag/Value:true+' => '',
 	'Class:AuditRule/Attribute:category_id' => 'Catégorie',
 	'Class:AuditRule/Attribute:category_id+' => '',
-	'Class:AuditRule/Attribute:category_name' => 'Category',
+	'Class:AuditRule/Attribute:category_name' => 'Categorie',
 	'Class:AuditRule/Attribute:category_name+' => '',
 	'Class:AuditCategory' => 'Catégorie d\'audit',
-	'Class:AuditCategory+' => 'A section inside the overall audit',
+	'Class:AuditCategory+' => 'Une section de l\'audit',
 	'Class:AuditCategory/Attribute:name' => 'Nom',
 	'Class:AuditCategory/Attribute:name+' => 'Nom raccourci',
 	'Class:AuditCategory/Attribute:description' => 'Description',
@@ -393,9 +393,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:CSVImport:Tab:Templates' => 'Modèles',
 	'UI:CSVImport:PasteData' => 'Collez ici les données à importer:',
 	'UI:CSVImport:PickClassForTemplate' => 'Choisissez un modèle à télécharger: ',
-	'UI:CSVImport:SeparatorCharacter' => 'Separator character:',
-	'UI:CSVImport:TextQualifierCharacter' => 'Text qualifier character',
-	'UI:CSVImport:CommentsAndHeader' => 'Comments and header',
+	'UI:CSVImport:SeparatorCharacter' => 'Séparateur:',
+	'UI:CSVImport:TextQualifierCharacter' => 'Délimiteur de texte',
+	'UI:CSVImport:CommentsAndHeader' => 'Commentaires et en-tête',
 	'UI:CSVImport:SelectClass' => 'Sélectionner le type d\'objets à importer:',
 	'UI:CSVImport:AdvancedMode' => 'Mode expert',
 	'UI:CSVImport:AdvancedMode+' => 'En mode expert, l\'"id" (clef primaire) des objets peut être utilisé pour renommer des objets.Cependant la colonne "id" (si elle est présente) ne peut être utilisée que comme clef de recherche et ne peut pas être combinée avec une autre clef de recherche.',
@@ -502,7 +502,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Delete:NotAllowedToDelete' => 'Vous n\'êtes pas autorisé à supprimer cet objet',
 	'UI:Delete:NotAllowedToUpdate_Fields' => 'Vous n\'êtes pas autorisé à mettre à jour les champs suivants : %1$s',
 	'UI:Error:NotEnoughRightsToDelete' => 'Cet objet ne peut pas être supprimé car l\'utilisateur courant n\'a pas les droits nécessaires.',
-	'UI:Error:CannotDeleteBecause' => 'This object could not be deleted because: %1$s',
+	'UI:Error:CannotDeleteBecause' => 'Cet objet ne peut pas être effacé. Raison: %1$s',
 	'UI:Error:CannotDeleteBecauseOfDepencies' => 'Cet objet ne peut pas être supprimé, des opérations manuelles sont nécessaire avant sa suppression.',
 	'UI:Error:CannotDeleteBecauseManualOpNeeded' => 'Des opération manuelles sont nécessaires avant de pouvoir effacer cet objet',
 	'UI:Archive_User_OnBehalfOf_User' => '%1$s pour %2$s',

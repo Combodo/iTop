@@ -15,15 +15,37 @@
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 /**
- * Localized data
- *
- * @author      Erwan Taloc <erwan.taloc@combodo.com>
- * @author      Romain Quetiez <romain.quetiez@combodo.com>
- * @author      Denis Flaven <denis.flaven@combodo.com>
- * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
+ * @author	Erwan Taloc <erwan.taloc@combodo.com>
+ * @author	Romain Quetiez <romain.quetiez@combodo.com>
+ * @author	Denis Flaven <denis.flaven@combodo.com>
+ * @licence	http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
 Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Incident' => 'Ticket d\'Incident',
+	'Class:Incident+' => '',
+	'Class:Incident/Stimulus:ev_assign' => 'Assigner',
+	'Class:Incident/Stimulus:ev_assign+' => '',
+	'Class:Incident/Stimulus:ev_reassign' => 'Réassigner',
+	'Class:Incident/Stimulus:ev_reassign+' => '',
+	'Class:Incident/Stimulus:ev_timeout' => 'ev_timeout',
+	'Class:Incident/Stimulus:ev_timeout+' => '',
+	'Class:Incident/Stimulus:ev_resolve' => 'Marquer comme résolu',
+	'Class:Incident/Stimulus:ev_resolve+' => '',
+	'Class:Incident/Stimulus:ev_close' => 'Fermer',
+	'Class:Incident/Stimulus:ev_close+' => '',
+	'Class:lnkTicketToIncident' => 'lien Incident/Ticket',
+	'Class:lnkTicketToIncident+' => '',
+	'Class:lnkTicketToIncident/Attribute:ticket_id' => 'Ticket',
+	'Class:lnkTicketToIncident/Attribute:ticket_id+' => '',
+	'Class:lnkTicketToIncident/Attribute:ticket_ref' => 'Réf. Ticket',
+	'Class:lnkTicketToIncident/Attribute:ticket_ref+' => '',
+	'Class:lnkTicketToIncident/Attribute:incident_id' => 'Incident',
+	'Class:lnkTicketToIncident/Attribute:incident_id+' => '',
+	'Class:lnkTicketToIncident/Attribute:incident_ref' => 'Réf. Ticket',
+	'Class:lnkTicketToIncident/Attribute:incident_ref+' => '',
+	'Class:lnkTicketToIncident/Attribute:reason' => 'Raison',
+	'Class:lnkTicketToIncident/Attribute:reason+' => '',
 	'Menu:IncidentManagement' => 'Gestion des incidents',
 	'Menu:IncidentManagement+' => 'Gestion des incidents',
 	'Menu:Incident:Overview' => 'Vue d\'ensemble',
@@ -40,47 +62,5 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:Incident:EscalatedIncidents+' => 'Ticket d\'incident en cours d\'escalade',
 	'Menu:Incident:OpenIncidents' => 'Ticket ouverts',
 	'Menu:Incident:OpenIncidents+' => 'Tous les tickets d\'incident ouverts',
-
 ));
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//
-// Class: Incident
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:Incident' => 'Ticket d\'Incident',
-	'Class:Incident+' => '',
-	'Class:Incident/Stimulus:ev_assign' => 'Assigner',
-	'Class:Incident/Stimulus:ev_assign+' => '',
-	'Class:Incident/Stimulus:ev_reassign' => 'Réassigner',
-	'Class:Incident/Stimulus:ev_reassign+' => '',
-	'Class:Incident/Stimulus:ev_timeout' => 'ev_timeout',
-	'Class:Incident/Stimulus:ev_timeout+' => '',
-	'Class:Incident/Stimulus:ev_resolve' => 'Marquer comme résolu',
-	'Class:Incident/Stimulus:ev_resolve+' => '',
-	'Class:Incident/Stimulus:ev_close' => 'Fermer',
-	'Class:Incident/Stimulus:ev_close+' => '',
-	'Class:lnkTicketToIncident' => 'Class:lnkTicketToIncident~~',
-	'Class:lnkTicketToIncident+' => '',
-	'Class:lnkTicketToIncident/Attribute:ticket_id' => 'Ticket',
-	'Class:lnkTicketToIncident/Attribute:ticket_id+' => '',
-	'Class:lnkTicketToIncident/Attribute:ticket_ref' => 'Réf. Ticket',
-	'Class:lnkTicketToIncident/Attribute:ticket_ref+' => '',
-	'Class:lnkTicketToIncident/Attribute:incident_id' => 'Incident',
-	'Class:lnkTicketToIncident/Attribute:incident_id+' => '',
-	'Class:lnkTicketToIncident/Attribute:incident_ref' => 'Réf. Ticket',
-	'Class:lnkTicketToIncident/Attribute:incident_ref+' => '',
-	'Class:lnkTicketToIncident/Attribute:reason' => 'Raison',
-	'Class:lnkTicketToIncident/Attribute:reason+' => '',));
-
 ?>
