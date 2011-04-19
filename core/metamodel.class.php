@@ -129,9 +129,17 @@ abstract class MetaModel
 	//
 	///////////////////////////////////////////////////////////////////////////
 
+	private static $m_bTraceSourceFiles = false;
+	private static $m_aClassToFile = array();
+
+	public static function GetClassFiles()
+	{
+		return self::$m_aClassToFile;
+	}
+
 	// Purpose: workaround the following limitation = PHP5 does not allow to know the class (derived from the current one)
 	// from which a static function is called (__CLASS__ and self are interpreted during parsing)
-	private static function GetCallersPHPClass($sExpectedFunctionName = null)
+	private static function GetCallersPHPClass($sExpectedFunctionName = null, $bRecordSourceFile = false)
 	{
 		//var_dump(debug_backtrace());
 		$aBacktrace = debug_backtrace();
@@ -141,6 +149,10 @@ abstract class MetaModel
 		if (!empty($sExpectedFunctionName))
 		{
 			assert('$aBacktrace[2]["function"] == $sExpectedFunctionName');
+		}
+		if ($bRecordSourceFile)
+		{
+			self::$m_aClassToFile[$aBacktrace[2]["class"]] = $aBacktrace[1]["file"];
 		}
 		return $aBacktrace[2]["class"];
 	}
@@ -1333,7 +1345,7 @@ abstract class MetaModel
 			"db_finalclass_field" => "database field wich is the reference to the actual class of the object, considering that this will be a compound class",
 		);		
 
-		$sClass = self::GetCallersPHPClass("Init");
+		$sClass = self::GetCallersPHPClass("Init", self::$m_bTraceSourceFiles);
 
 		foreach($aMandatParams as $sParamName=>$sParamDesc)
 		{
@@ -3559,8 +3571,10 @@ abstract class MetaModel
 		}
 	}
 
-	public static function Startup($sConfigFile, $bModelOnly = false, $bAllowCache = true)
+	public static function Startup($sConfigFile, $bModelOnly = false, $bAllowCache = true, $bTraceSourceFiles = false)
 	{
+		self::$m_bTraceSourceFiles = $bTraceSourceFiles;
+
 		self::LoadConfig($sConfigFile, $bAllowCache);
 
 		if ($bModelOnly) return;
