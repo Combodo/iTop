@@ -197,8 +197,26 @@ function ReadMandatoryParam($oP, $sParam)
 
 if (utils::IsModeCLI())
 {
-	$oP = new CLIPage("iTop - Data Exchange");
+	$oP = new CLIPage(Dict::S("TitleSynchroExecution"));
+}
+else
+{
+	$oP = new WebPage(Dict::S("TitleSynchroExecution"));
+}
 
+try
+{
+	utils::UseParamFile();
+}
+catch(Exception $e)
+{
+	$oP->p("Error: ".$e->GetMessage());
+	$oP->output();
+	exit -2;
+}
+
+if (utils::IsModeCLI())
+{
 	// Next steps:
 	//   specific arguments: 'csvfile'
 	//   
@@ -212,13 +230,15 @@ if (utils::IsModeCLI())
 	else
 	{
 		$oP->p("Access restricted or wrong credentials ('$sAuthUser')");
-		exit;
+		$oP->output();
+		exit -1;
 	}
 
 	if (!is_readable($sCsvFile))
 	{
 		$oP->p("Input file could not be found or could not be read: '$sCsvFile'");
-		exit;
+		$oP->output();
+		exit -1;
 	}
 	$sCSVData = file_get_contents($sCsvFile);
 
@@ -229,7 +249,6 @@ else
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
-	$oP = new CSVPage("iTop - Data Exchange");
 	$sCSVData = utils::ReadPostedParam('csvdata');
 }
 

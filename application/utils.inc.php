@@ -42,6 +42,60 @@ class utils
 	private static $m_sConfigFile = ITOP_CONFIG_FILE;
 	private static $m_oConfig = null;
 
+	// Parameters loaded from a file, parameters of the page/command line still have precedence
+	private static $m_aParamsFromFile = null;
+
+	protected static function LoadParamFile($sParamFile)
+	{
+		if (!file_exists($sParamFile))
+		{
+			throw new Exception("Could not find the parameter file: '$sParamFile'");
+		}
+		if (!is_readable($sParamFile))
+		{
+			throw new Exception("Could not load parameter file: '$sParamFile'");
+		}
+		$sParams = file_get_contents($sParamFile);
+
+		if (is_null(self::$m_aParamsFromFile))
+		{
+			self::$m_aParamsFromFile = array();
+		}
+
+		$aParamLines = explode("\n", $sParams);
+		foreach ($aParamLines as $sLine)
+		{
+			$sLine = trim($sLine);
+
+			// Ignore the line after a '#'
+			if (($iCommentPos = strpos($sLine, '#')) !== false)
+			{
+				$sLine = substr($sLine, 0, $iCommentPos);
+				$sLine = trim($sLine);
+			}
+
+			// Note: the line is supposed to be already trimmed
+			if (preg_match('/^(\S*)\s*=(.*)$/', $sLine, $aMatches))
+			{
+				$sParam = $aMatches[1];
+				$value = trim($aMatches[2]);
+				self::$m_aParamsFromFile[$sParam] = $value;
+			}
+		}
+	}
+
+	public static function UseParamFile($sParamFileArgName = 'param_file', $bAllowCLI = true)
+	{
+		$sFileSpec = self::ReadParam($sParamFileArgName, '', $bAllowCLI);
+		foreach(explode(',', $sFileSpec) as $sFile)
+		{
+			$sFile = trim($sFile);
+			if (!empty($sFile))
+			{
+				self::LoadParamFile($sFile);
+			}
+		}
+	}
 
 	public static function IsModeCLI()
 	{
@@ -62,6 +116,15 @@ class utils
 	{
 		global $argv;
 		$retValue = $defaultValue;
+
+		if (!is_null(self::$m_aParamsFromFile))
+		{
+			if (isset(self::$m_aParamsFromFile[$sName]))
+			{
+				$retValue = self::$m_aParamsFromFile[$sName];
+			}
+		}
+
 		if (isset($_REQUEST[$sName]))
 		{
 			$retValue = $_REQUEST[$sName];

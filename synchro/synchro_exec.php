@@ -77,7 +77,25 @@ function ReadMandatoryParam($oP, $sParam)
 if (utils::IsModeCLI())
 {
 	$oP = new CLIPage(Dict::S("TitleSynchroExecution"));
+}
+else
+{
+	$oP = new WebPage(Dict::S("TitleSynchroExecution"));
+}
 
+try
+{
+	utils::UseParamFile();
+}
+catch(Exception $e)
+{
+	$oP->p("Error: ".$e->GetMessage());
+	$oP->output();
+	exit -2;
+}
+
+if (utils::IsModeCLI())
+{
 	// Next steps:
 	//   specific arguments: 'csvfile'
 	//   
@@ -100,7 +118,6 @@ else
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
-	$oP = new WebPage(Dict::S("TitleSynchroExecution"));
 	$sDataSourcesList = utils::ReadParam('data_sources', null, true);
 	
 	if ($sDataSourcesList == null)

@@ -107,8 +107,26 @@ function CronExec($oP, $aBackgroundProcesses, $bVerbose)
 
 if (utils::IsModeCLI())
 {
-	$oP = new CLIPage("iTop - Bulk import");
+	$oP = new CLIPage("iTop - CRON");
+}
+else
+{
+	$oP = new WebPage("iTop - CRON");
+}
 
+try
+{
+	utils::UseParamFile();
+}
+catch(Exception $e)
+{
+	$oP->p("Error: ".$e->GetMessage());
+	$oP->output();
+	exit -2;
+}
+
+if (utils::IsModeCLI())
+{
 	// Next steps:
 	//   specific arguments: 'csvfile'
 	//   
@@ -121,7 +139,8 @@ if (utils::IsModeCLI())
 	else
 	{
 		$oP->p("Access wrong credentials ('$sAuthUser')");
-		exit;
+		$oP->output();
+		exit -1;
 	}
 }
 else
@@ -129,15 +148,13 @@ else
 	$_SESSION['login_mode'] = 'basic';
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
-
-	$oP = new WebPage("iTop - CRON");
 }
 
 if (!UserRights::IsAdministrator())
 {
 	$oP->p("Access restricted to administrators");
 	$oP->Output();
-	exit;
+	exit -1;
 }
 
 
