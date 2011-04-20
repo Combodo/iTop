@@ -1309,12 +1309,25 @@ class AttributeEncryptedString extends AttributeString
 	}
 }
 
+
+// Wiki formatting - experimental
+//
+// [[<objClass>:<objName>]]
+// Example: [[Server:db1.tnut.com]]
+define('WIKI_OBJECT_REGEXP', '/\[\[(.+):(.+)\]\]/U');
+
+// <url>
+// Example: http://romain:trustno1@127.0.0.1:8888/iTop-trunk/modules/itop-caches/itop-caches.php?agument=machin%20#monAncre
+define('WIKI_URL', "/(https?|ftp)\:\/\/([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?([a-z0-9-.]{3,})(\:[0-9]{2,5})?(\/([a-z0-9+\$_-]\.?)+)*\/?(\?[a-z+&\$_.-][a-z0-9;:@&%=+\/\$_.-]*)?(#[a-z_.-][a-z0-9+\$_.-]*)?/i");
+//                   SHEME............. USER.................... PASSWORD...................... HOST/IP......... PORT.......... PATH...................... GET................................... ANCHOR....................
+// Origin of this regexp: http://www.php.net/manual/fr/function.preg-match.php#93824
+
+
 /**
  * Map a text column (size > ?) to an attribute 
  *
  * @package     iTopORM
  */
-define('WIKI_OBJECT_REGEXP', '/\[\[(.+):(.+)\]\]/U');
 class AttributeText extends AttributeString
 {
 	public function GetEditClass() {return "Text";}
@@ -1329,6 +1342,15 @@ class AttributeText extends AttributeString
 
 	static public function RenderWikiHtml($sText)
 	{
+		if (preg_match_all(WIKI_URL, $sText, $aAllMatches, PREG_SET_ORDER))
+		{
+			foreach($aAllMatches as $iPos => $aMatches)
+			{
+				$sUrl = $aMatches[0];
+				$sHLink = "<a href=\"$sUrl\">$sUrl</a>"; 
+				$sText = str_replace($sUrl, $sHLink, $sText);
+			}
+		}
 		if (preg_match_all(WIKI_OBJECT_REGEXP, $sText, $aAllMatches, PREG_SET_ORDER))
 		{
 			foreach($aAllMatches as $iPos => $aMatches)
