@@ -40,7 +40,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:Incident:EscalatedIncidents+' => 'Escalated Incidents',
 	'Menu:Incident:OpenIncidents' => 'All Open Incidents',
 	'Menu:Incident:OpenIncidents+' => 'All Open Incidents',
-
 ));
 
 
@@ -73,6 +72,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Incident/Stimulus:ev_resolve+' => '',
 	'Class:Incident/Stimulus:ev_close' => 'Close',
 	'Class:Incident/Stimulus:ev_close+' => '',
+	'Class:lnkTicketToIncident' => 'Ticket to Incident',
+	'Class:lnkTicketToIncident/Attribute:ticket_id' => 'Ticket',
+	'Class:lnkTicketToIncident/Attribute:incident_id' => 'Incident',
+	'Class:lnkTicketToIncident/Attribute:reason' => 'Reason',
 ));
 
 ?>
