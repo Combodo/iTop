@@ -216,6 +216,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:SynchroDataSource/Attribute:status/Value:production+' => '',
 	'Class:SynchroDataSource/Attribute:user_id' => 'Utilisateur',
 	'Class:SynchroDataSource/Attribute:user_id+' => 'Seul cet utilisateur (et les administrateurs) peuvent exécuter cette synchronisation',
+	'Class:SynchroDataSource/Attribute:notify_contact_id' => 'Contact à notifier',
+	'Class:SynchroDataSource/Attribute:notify_contact_id+' => 'Contact à notifier en cas d\'erreur',
 	'Class:SynchroDataSource/Attribute:scope_class' => 'Type cible',
 	'Class:SynchroDataSource/Attribute:scope_class+' => 'Type d\'objets à synchroniser',
 	'Class:SynchroDataSource/Attribute:scope_restriction' => 'Restriction',

@@ -503,6 +503,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:SynchroDataSource/Attribute:status' => 'Status', //TODO: enum values
 	'Class:SynchroDataSource/Attribute:scope_class' => 'Target class',
 	'Class:SynchroDataSource/Attribute:user_id' => 'User',
+	'Class:SynchroDataSource/Attribute:notify_contact_id' => 'Contact to notify',
+	'Class:SynchroDataSource/Attribute:notify_contact_id+' => 'Contact to notify in case of error',
 	'Class:SynchroDataSource/Attribute:url_icon' => 'Icon\'s hyperlink',
 	'Class:SynchroDataSource/Attribute:url_icon+' => 'Hyperlink a (small) image representing the application with which iTop is synchronized',
 	'Class:SynchroDataSource/Attribute:url_application' => 'Application\'s hyperlink',
@@ -600,7 +602,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:SynchroDataSource:DataTable' => 'Database table: %1$s',
 	'Core:SyncDataSourceObsolete' => 'The data source is marked as obsolete. Operation cancelled.',
 	'Core:SyncDataSourceAccessRestriction' => 'Only adminstrators or the user specified in the data source can execute this operation. Operation cancelled.',
-	'Core:SyncTooManyMissingReplicas' => 'All replicas are missing from import. Did the import actually run? Operation cancelled.',
+	'Core:SyncTooManyMissingReplicas' => 'All records have been untouched for some time (all of the objects could be deleted). Please check that the process that writes into the synchronization table is still running. Operation cancelled.',
 
 	'Class:AsyncSendEmail' => 'Email (asynchronous)',
 	'Class:AsyncSendEmail/Attribute:to' => 'To',
