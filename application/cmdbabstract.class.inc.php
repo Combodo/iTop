@@ -2292,9 +2292,9 @@ EOF
 		}
 	}
 
-	protected function DoCheckToDelete()
+	protected function DoCheckToDelete(&$oDeletionPlan)
 	{
-		parent::DoCheckToDelete();
+		parent::DoCheckToDelete($oDeletionPlan);
 
 		// Plugins
 		//

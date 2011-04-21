@@ -839,7 +839,7 @@ abstract class DBObject
 
 	// check if it is allowed to delete the existing object from the database
 	// a displayable error is returned
-	protected function DoCheckToDelete()
+	protected function DoCheckToDelete(&$oDeletionPlan)
 	{
 		$this->m_aDeleteIssues = array(); // Ok
 
@@ -850,20 +850,25 @@ abstract class DBObject
 			{
 				while($aData = $oReplicaSet->FetchAssoc())
 				{
-					if ($aData['datasource']->GetKey() == SynchroDataSource::GetCurrentTaskId())
+					$oDataSource = $aData['datasource'];
+					$oReplica = $aData['replica'];
+
+					$oDeletionPlan->AddToDelete($oReplica, DEL_SILENT);
+
+					if ($oDataSource->GetKey() == SynchroDataSource::GetCurrentTaskId())
 					{
 						// The current task has the right to delete the object
 						continue;
 					}
 					
-					if ($aData['replica']->Get('status_dest_creator') != 1)
+					if ($oReplica->Get('status_dest_creator') != 1)
 					{
 						// The object is not owned by the task
 						continue;
 					}
 
-					$sLink = $aData['datasource']->GetName();
-					$sUserDeletePolicy = $aData['datasource']->Get('user_delete_policy');
+					$sLink = $oDataSource->GetName();
+					$sUserDeletePolicy = $oDataSource->Get('user_delete_policy');
 					switch($sUserDeletePolicy)
 					{
 					case 'nobody':
@@ -1319,7 +1324,7 @@ abstract class DBObject
 		CMDBSource::DeleteFrom($sDeleteSQL);
 	}
 
-	private function DBDeleteSingleObject()
+	protected function DBDeleteSingleObject()
 	{
 		$this->OnDelete();
 
@@ -1609,7 +1614,7 @@ abstract class DBObject
 			return;
 		}
 		// Check the node itself
-		$this->DoCheckToDelete();
+		$this->DoCheckToDelete($oDeletionPlan);
 		$oDeletionPlan->SetDeletionIssues($this, $this->m_aDeleteIssues, $this->m_bSecurityIssue);
 	
 		$aDependentObjects = $this->GetReferencingObjects(true /* allow all data */);

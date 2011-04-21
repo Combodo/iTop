@@ -1300,13 +1300,20 @@ class SynchroReplica extends DBObject implements iDisplay
 
 	// Overload the deletion -> the replica has been created by the mean of a trigger,
 	//                          it will be deleted by the mean of a trigger too
-	public function DBDelete(&$oDeletionPlan = null)
+	protected function DBDeleteSingleObject()
 	{
-		$oDataSource = MetaModel::GetObject('SynchroDataSource', $this->Get('sync_source_id'));
-		$sTable = $oDataSource->GetDataTable();
+		$this->OnDelete();
 
-		$sSQL = "DELETE FROM `$sTable` WHERE id = '{$this->GetKey()}'";
-		CMDBSource::Query($sSQL);
+		if (!MetaModel::DBIsReadOnly())
+		{
+			$oDataSource = MetaModel::GetObject('SynchroDataSource', $this->Get('sync_source_id'));
+			$sTable = $oDataSource->GetDataTable();
+	
+			$sSQL = "DELETE FROM `$sTable` WHERE id = '{$this->GetKey()}'";
+			CMDBSource::Query($sSQL);
+		}
+
+		$this->AfterDelete();
 
 		$this->m_bIsInDB = false;
 		$this->m_iKey = null;
