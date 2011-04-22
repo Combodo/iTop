@@ -931,8 +931,8 @@ EOF
 			case 'update_then_delete':
 				$oStatLog->AddTrace("Destination object to be updated", $oReplica);
 				$aToUpdate = array();
-				$aToUpdate = explode(';', $this->Get('delete_policy_update')); //ex: 'status:obsolete;description:stopped',
-				foreach($aToUpdate as $sUpdateSpec)
+				$aToUpdateSpec = explode(';', $this->Get('delete_policy_update')); //ex: 'status:obsolete;description:stopped',
+				foreach($aToUpdateSpec as $sUpdateSpec)
 				{
 					$aUpdateSpec = explode(':', $sUpdateSpec);
 					if (count($aUpdateSpec) == 2)
@@ -942,8 +942,13 @@ EOF
 						$aToUpdate[$sAttCode] = $sValue;
 					}
 				}
+				$oReplica->Set('status_last_error', '');
 				$oReplica->UpdateDestObject($aToUpdate, $oMyChange, $oStatLog);
-				$oReplica->Set('status', 'obsolete');
+				if ($oReplica->Get('status_last_error') == '')
+				{
+					// Change the status of the replica IIF
+					$oReplica->Set('status', 'obsolete');
+				}
 				$oReplica->DBUpdateTracked($oMyChange);
 				break;
 
@@ -1648,6 +1653,10 @@ class SynchroReplica extends DBObject implements iDisplay
 				$oDestObj = MetaModel::GetObject($this->Get('dest_class'), $this->Get('dest_id'));
 				foreach($aValues as $sAttCode => $value)
 				{
+					if (!MetaModel::IsValidAttCode(get_class($oDestObj), $sAttCode))
+					{
+						throw new Exception("Unknown attribute code '$sAttCode'");
+					} 
 					$oDestObj->Set($sAttCode, $value);
 				}
 				$this->Set('info_last_modified', date('Y-m-d H:i:s'));
