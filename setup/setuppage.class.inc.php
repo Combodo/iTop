@@ -344,7 +344,7 @@ h3.clickable.open {
 				while (($sFile = readdir($hDir)) !== false)
 				{
 					$aMatches = array();
-					if (preg_match("/^[^\\.]+.dict.$sModuleName.php$/i", $sFile, $aMatches)) // Dictionary files are name <Lang>.dict.<ModuleName>.php
+					if (preg_match("/^[^\\.]+.dict.$sModuleName.php$/i", $sFile, $aMatches)) // Dictionary files named like <Lang>.dict.<ModuleName>.php are loaded automatically
 					{
 						self::$m_aModules[$sId]['dictionary'][] = self::$m_sModulePath.'/'.$sFile;
 					}
