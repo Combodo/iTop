@@ -28,7 +28,6 @@ jQuery.fn.popupmenu = function ()
 			if ( (previous_popup == null) || (previous_popup.get(0) != popupmenu.get(0))) // Comparing the DOM objects
 			{
 				// The user clicked in a different menu, let's open it
-				popupmenu.bgiframe();
 				popupmenu.positionBy({ target: $(this), 
 										targetPos: 	4, 
 										elementPos: 0,
