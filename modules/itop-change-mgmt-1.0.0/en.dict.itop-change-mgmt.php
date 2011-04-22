@@ -202,6 +202,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:RoutineChange/Stimulus:ev_monitor+' => '',
 	'Class:RoutineChange/Stimulus:ev_finish' => 'Finish',
 	'Class:RoutineChange/Stimulus:ev_finish+' => '',
+	'Class:RoutineChange/Stimulus:ev_reject' => 'Reject',
+	'Class:RoutineChange/Stimulus:ev_approve' => 'Approve',
+	'Class:RoutineChange/Stimulus:ev_notapprove' => 'Do Not Approve',
 ));
 
 //
