@@ -666,6 +666,50 @@ EOF
 		// TO DO - check that triggers get dropped with the table
 	}
 
+	protected function SendNotification($sSubject, $sBody)
+	{
+		$iContact = $this->Get('notify_contact_id');
+		if ($iContact == 0)
+		{
+			// Leave silently...
+			return;
+		}
+		$oContact = MetaModel::GetObject('Contact', $iContact);
+
+		// Determine the email attribute (the first one will be our choice)
+		$sEmailAttCode = null;
+		foreach (MetaModel::ListAttributeDefs(get_class($oContact)) as $sAttCode => $oAttDef)
+		{
+			if ($oAttDef instanceof AttributeEmailAddress)
+			{
+				$sEmailAttCode = $sAttCode;
+				// we've got one, exit the loop
+				break;
+			}
+		}
+		if (is_null($sEmailAttCode))
+		{
+			// Leave silently...
+			return;
+		}
+
+		$sTo = $oContact->Get($sEmailAttCode);
+		$sFrom = $sTo;
+		$sBody = '<p>Data synchronization: '.$this->GetHyperlink().'</p>'.$sBody;
+
+		$sSubject = 'iTop Data Sync - '.$this->GetName().' - '.$sSubject;
+
+		$oEmail = new Email();
+		$oEmail->SetRecipientTO($sTo);
+		$oEmail->SetRecipientFrom($sFrom);
+		$oEmail->SetSubject($sSubject);
+		$oEmail->SetBody($sBody);
+		if ($oEmail->Send($aIssues) == EMAIL_SEND_ERROR)
+		{
+			// mmmm, what can I do?
+		}
+	}
+
 	/**
 	 * Perform a synchronization between the data stored in the replicas (&synchro_data_xxx_xx table)
 	 * and the iTop objects. If the lastFullLoadStartDate is NOT specified then the full_load_periodicity
@@ -715,10 +759,44 @@ EOF
 		try
 		{
 			$this->DoSynchronize($oLastFullLoadStartDate, $oMyChange, $oStatLog);
-
 			$oStatLog->Set('end_date', time());
 			$oStatLog->Set('status', 'completed');
 			$oStatLog->DBUpdateTracked($oMyChange);
+
+			$iErrors = $oStatLog->GetErrorCount();
+			if ($iErrors > 0)
+			{
+				$sIssuesOQL = "SELECT SynchroReplica WHERE sync_source_id=".$this->GetKey()." AND status_last_error!=''";
+				$sAbsoluteUrl = utils::GetAbsoluteUrlPath();
+				$sIssuesURL = "$sAbsoluteUrl../synchro/replica.php?operation=oql&datasource=".$this->GetKey()."&oql=".urlencode($sIssuesOQL);
+				$sSeeIssues = "<p></p>";
+
+				$sStatistics = "<h1>Statistics</h1>\n";
+				$sStatistics .= "<ul>\n";
+				$sStatistics .= "<li>".$oStatLog->GetLabel('start_date').": ".$oStatLog->Get('start_date')."</li>\n";
+				$sStatistics .= "<li>".$oStatLog->GetLabel('end_date').": ".$oStatLog->Get('end_date')."</li>\n";
+				$sStatistics .= "<li>".$oStatLog->GetLabel('stats_nb_replica_seen').": ".$oStatLog->Get('stats_nb_replica_seen')."</li>\n";
+				$sStatistics .= "<li>".$oStatLog->GetLabel('stats_nb_replica_total').": ".$oStatLog->Get('stats_nb_replica_total')."</li>\n";
+				$sStatistics .= "<li>".$oStatLog->GetLabel('stats_nb_obj_deleted').": ".$oStatLog->Get('stats_nb_obj_deleted')."</li>\n";
+				$sStatistics .= "<li>".$oStatLog->GetLabel('stats_nb_obj_deleted_errors').": ".$oStatLog->Get('stats_nb_obj_deleted_errors')."</li>\n";
+				$sStatistics .= "<li>".$oStatLog->GetLabel('stats_nb_obj_obsoleted').": ".$oStatLog->Get('stats_nb_obj_obsoleted')."</li>\n";
+				$sStatistics .= "<li>".$oStatLog->GetLabel('stats_nb_obj_obsoleted_errors').": ".$oStatLog->Get('stats_nb_obj_obsoleted_errors')."</li>\n";
+				$sStatistics .= "<li>".$oStatLog->GetLabel('stats_nb_obj_created').": ".$oStatLog->Get('stats_nb_obj_created')."</li>\n";
+				$sStatistics .= "<li>".$oStatLog->GetLabel('stats_nb_obj_created_errors').": ".$oStatLog->Get('stats_nb_obj_created_errors')."</li>\n";
+				$sStatistics .= "<li>".$oStatLog->GetLabel('stats_nb_obj_updated').": ".$oStatLog->Get('stats_nb_obj_updated')."</li>\n";
+				$sStatistics .= "<li>".$oStatLog->GetLabel('stats_nb_obj_updated_errors').": ".$oStatLog->Get('stats_nb_obj_updated_errors')."</li>\n";
+				$sStatistics .= "<li>".$oStatLog->GetLabel('stats_nb_replica_reconciled_errors').": ".$oStatLog->Get('stats_nb_replica_reconciled_errors')."</li>\n";
+				$sStatistics .= "<li>".$oStatLog->GetLabel('stats_nb_replica_disappeared_no_action').": ".$oStatLog->Get('stats_nb_replica_disappeared_no_action')."</li>\n";
+				$sStatistics .= "<li>".$oStatLog->GetLabel('stats_nb_obj_new_updated').": ".$oStatLog->Get('stats_nb_obj_new_updated')."</li>\n";
+				$sStatistics .= "<li>".$oStatLog->GetLabel('stats_nb_obj_new_unchanged').": ".$oStatLog->Get('stats_nb_obj_new_unchanged')."</li>\n";
+				$sStatistics .= "</ul>\n";
+
+				$this->SendNotification("errors ($iErrors)", "<p>The synchronization has been executed, $iErrors errors have been encountered. Click <a href=\"$sIssuesURL\">here</a> to see the records being currently in error.</p>".$sStatistics);
+			}
+			else
+			{
+				//$this->SendNotification('success', '<p>The synchronization has been successfully executed.</p>');
+			}
 		}
 		catch (SynchroExceptionNotStarted $e)
 		{
@@ -727,6 +805,7 @@ EOF
 			$oStatLog->Set('status', 'error');
 			$oStatLog->Set('last_error', $e->getMessage());
 			$oStatLog->DBDeleteTracked($oMyChange);
+			$this->SendNotification('fatal error', '<p>The synchronization could not start: \''.$e->getMessage().'\'</p><p>Please check its configuration</p>');
 		}
 		catch (Exception $e)
 		{
@@ -734,8 +813,10 @@ EOF
 			$oStatLog->Set('status', 'error');
 			$oStatLog->Set('last_error', $e->getMessage());
 			$oStatLog->DBUpdateTracked($oMyChange);
+			$this->SendNotification('exception', '<p>The synchronization has been interrupted: \''.$e->getMessage().'\'</p><p>Please contact the application support team</p>');
 		}
 		self::$m_oCurrentTask = null;
+
 		return $oStatLog;
 	}
 
@@ -885,7 +966,8 @@ EOF
 
 		while($oReplica = $oSetToSync->Fetch())
 		{
-			$oReplica->Synchro($this, $aReconciliationKeys, $aAttributes, $oMyChange, $oStatLog);			
+			$oReplica->Synchro($this, $aReconciliationKeys, $aAttributes, $oMyChange, $oStatLog);
+			$oReplica->DBUpdateTracked($oMyChange);			
 		}
 		
 		// Get all the replicas that are to be deleted
@@ -1170,6 +1252,18 @@ class SynchroLog extends DBObject
 	}
 	
 	/**
+	 * Helper
+	 */
+	 function GetErrorCount()
+	 {
+	 	return $this->Get('stats_nb_obj_deleted_errors')
+	 			+ $this->Get('stats_nb_obj_obsoleted_errors')
+	 			+ $this->Get('stats_nb_obj_created_errors')
+	 			+ $this->Get('stats_nb_obj_updated_errors')
+	 			+ $this->Get('stats_nb_replica_reconciled_errors');
+	 }
+
+	/**
 	 * Increments a statistics counter
 	 */
 	function Inc($sCode)
@@ -1367,8 +1461,8 @@ class SynchroReplica extends DBObject implements iDisplay
 				else
 				{
 					// Reconciliation could not be performed - log and EXIT
-					$oStatLog->AddTrace("Could not reconcile on null value: ".$sFilterCode, $this);
-					$this->SetLastError('Could not reconcile on null value: '.$sFilterCode);
+					$oStatLog->AddTrace("Could not reconcile on null value for attribute '$sFilterCode'", $this);
+					$this->SetLastError("Could not reconcile on null value for attribute '$sFilterCode'");
 					$oStatLog->Inc('stats_nb_replica_reconciled_errors');
 					return;
 				}
@@ -1455,7 +1549,6 @@ class SynchroReplica extends DBObject implements iDisplay
 			
 			default: // Do nothing in all other cases
 		}
-		$this->DBUpdateTracked($oChange);
 	}
 	
 	/**

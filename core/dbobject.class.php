@@ -353,6 +353,12 @@ abstract class DBObject
 		$this->RegisterAsDirty();
 	}
 
+	public function GetLabel($sAttCode)
+	{
+		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+		return $oAttDef->GetLabel();
+	}
+
 	public function Get($sAttCode)
 	{
 		if (!array_key_exists($sAttCode, MetaModel::ListAttributeDefs(get_class($this))))
