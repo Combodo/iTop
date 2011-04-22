@@ -45,14 +45,6 @@ SetupWebPage::AddModule(
 		'datamodel' => array(
 			'model.authent-external.php',
 		),
-		'dictionary' => array(
-			'en.dict.authent-external.php',
-			'fr.dict.authent-external.php',
-			'de.dict.authent-external.php',
-			'ru.dict.authent-external.php',
-			'tr.dict.authent-external.php',
-			'zh.dict.authent-external.php',
-		),
 		'data.struct' => array(
 			//'data.struct.authent-ldap.xml',
 		),

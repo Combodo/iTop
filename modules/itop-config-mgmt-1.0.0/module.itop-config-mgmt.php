@@ -23,16 +23,6 @@ SetupWebPage::AddModule(
 		'datamodel' => array(
 			'model.itop-config-mgmt.php',
 		),
-		'dictionary' => array(
-			'en.dict.itop-config-mgmt.php',
-			'fr.dict.itop-config-mgmt.php',
-			'es_cr.dict.itop-config-mgmt.php',
-			'de.dict.itop-config-mgmt.php',
-			'pt_br.dict.itop-config-mgmt.php',
-			'ru.dict.itop-config-mgmt.php',
-			'tr.dict.itop-config-mgmt.php',
-			'zh.dict.itop-config-mgmt.php',
-		),
 		'data.struct' => array(
 			'data.struct.Audit.xml',
 		),

@@ -22,14 +22,6 @@ SetupWebPage::AddModule(
 		'datamodel' => array(
 			'model.authent-local.php',
 		),
-		'dictionary' => array(
-			'en.dict.authent-local.php',
-			'fr.dict.authent-local.php',
-			'de.dict.authent-local.php',
-			'ru.dict.authent-local.php',
-			'tr.dict.authent-local.php',
-			'zh.dict.authent-local.php',
-		),
 		'data.struct' => array(
 			//'data.struct.authent-local.xml',
 		),

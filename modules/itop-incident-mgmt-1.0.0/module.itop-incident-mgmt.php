@@ -25,16 +25,6 @@ SetupWebPage::AddModule(
 		'datamodel' => array(
 			'model.itop-incident-mgmt.php',
 		),
-		'dictionary' => array(
-			'en.dict.itop-incident-mgmt.php',
-			'fr.dict.itop-incident-mgmt.php',
-			'es_cr.dict.itop-incident-mgmt.php',
-			'de.dict.itop-incident-mgmt.php',
-			'pt_br.dict.itop-incident-mgmt.php',
-			'ru.dict.itop-incident-mgmt.php',
-			'tr.dict.itop-incident-mgmt.php',
-			'zh.dict.itop-incident-mgmt.php',
-		),
 		'data.struct' => array(
 			'data.struct.ta-triggers.xml',
 			'data.struct.ta-links.xml',

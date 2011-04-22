@@ -39,11 +39,6 @@ SetupWebPage::AddModule(
 		'webservice' => array(
 			//'webservices.itop-profiles-itil.php',
 		),
-		'dictionary' => array(
-			//'en.dict.itop-profiles-itil.php',
-			//'fr.dict.itop-profiles-itil.php',
-			//'de.dict.itop-profiles-itil.php',
-		),
 		'data.struct' => array(
 			//'data.struct.itop-profiles-itil.xml',
 		),

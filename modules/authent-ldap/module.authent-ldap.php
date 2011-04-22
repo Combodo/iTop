@@ -28,14 +28,6 @@ SetupWebPage::AddModule(
 		'datamodel' => array(
 			'model.authent-ldap.php',
 		),
-		'dictionary' => array(
-			'en.dict.authent-ldap.php',
-			'fr.dict.authent-ldap.php',
-			'de.dict.authent-ldap.php',
-			'ru.dict.authent-ldap.php',
-			'tr.dict.authent-ldap.php',
-			'zh.dict.authent-ldap.php',
-		),
 		'data.struct' => array(
 			//'data.struct.authent-ldap.xml',
 		),

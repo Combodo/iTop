@@ -24,16 +24,6 @@ SetupWebPage::AddModule(
 		'datamodel' => array(
 			'model.itop-request-mgmt.php',
 		),
-		'dictionary' => array(
-			'en.dict.itop-request-mgmt.php',
-			'fr.dict.itop-request-mgmt.php',
-			'es_cr.dict.itop-request-mgmt.php',
-			'de.dict.itop-request-mgmt.php',
-			'pt_br.dict.itop-request-mgmt.php',
-			'ru.dict.itop-request-mgmt.php',
-			'tr.dict.itop-request-mgmt.php',
-			'zh.dict.itop-request-mgmt.php',
-		),
 		'data.struct' => array(
 			'data.struct.ta-triggers.xml',
 			'data.struct.ta-links.xml',

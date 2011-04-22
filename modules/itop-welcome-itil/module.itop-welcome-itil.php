@@ -26,11 +26,6 @@ SetupWebPage::AddModule(
 		'webservice' => array(
 			//'webservices.itop-welcome-itil.php',
 		),
-		'dictionary' => array(
-			//'en.dict.itop-welcome-itil.php',
-			//'fr.dict.itop-welcome-itil.php',
-			//'de.dict.itop-welcome-itil.php',
-		),
 		'data.struct' => array(
 			//'data.struct.itop-welcome-itil.xml',
 		),

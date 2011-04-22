@@ -24,16 +24,6 @@ SetupWebPage::AddModule(
 		'datamodel' => array(
 			'model.itop-change-mgmt.php',
 		),
-		'dictionary' => array(
-			'en.dict.itop-change-mgmt.php',
-			'fr.dict.itop-change-mgmt.php',
-			'es_cr.dict.itop-change-mgmt.php',
-			'de.dict.itop-change-mgmt.php',
-			'pt_br.dict.itop-change-mgmt.php',
-			'ru.dict.itop-change-mgmt.php',
-			'tr.dict.itop-change-mgmt.php',
-			'zh.dict.itop-change-mgmt.php',
-		),
 		'data.struct' => array(
 			//'data.struct.itop-change-mgmt.xml',
 		),
