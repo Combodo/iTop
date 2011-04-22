@@ -377,7 +377,14 @@ class DisplayBlock
 				$sLabels = array();
 				while($oObj = $this->m_oSet->Fetch())
 				{
-					$sValue = $oObj->Get($sGroupByField);
+					if (isset($aExtraParams['group_by_expr']))
+					{
+						eval("\$sValue = ".sprintf($aExtraParams['group_by_expr'],  $oObj->Get($sGroupByField)).';');
+					}
+					else
+					{
+						$sValue = $oObj->Get($sGroupByField);
+					}
 					$aGroupBy[$sValue] = isset($aGroupBy[$sValue]) ? $aGroupBy[$sValue]+1 : 1;
 					$sLabels[$sValue] = $oObj->GetAsHtml($sGroupByField);
 				}
@@ -760,11 +767,12 @@ EOF
 			$sChartType = isset($aExtraParams['chart_type']) ? $aExtraParams['chart_type'] : 'pie';
 			$sTitle = isset($aExtraParams['chart_title']) ? $aExtraParams['chart_title'] : '';
 			$sGroupBy = isset($aExtraParams['group_by']) ? $aExtraParams['group_by'] : '';
+			$sGroupByExpr = isset($aExtraParams['group_by_expr']) ? '&params[group_by_expr]='.$aExtraParams['group_by_expr'] : '';
 			$sFilter = $this->m_oFilter->serialize();
 			$sHtml .= "<div id=\"my_chart_{$iChartCounter}\">If the chart does not display, <a href=\"http://get.adobe.com/flash/\" target=\"_blank\">install Flash</a></div>\n";
 			$oPage->add_script("function ofc_resize(left, width, top, height) { /* do nothing special */ }");
 			$oPage->add_ready_script("swfobject.embedSWF(\"../images/open-flash-chart.swf\", \"my_chart_{$iChartCounter}\", \"100%\", \"300\",\"9.0.0\", \"expressInstall.swf\",
-			{\"data-file\":\"".urlencode("../pages/ajax.render.php?operation=open_flash_chart&params[group_by]=$sGroupBy&params[chart_type]=$sChartType&params[chart_title]=$sTitle&filter=".$sFilter)."\"}, {wmode: 'transparent'} );\n");
+			{\"data-file\":\"".urlencode("../pages/ajax.render.php?operation=open_flash_chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[chart_type]=$sChartType&params[chart_title]=$sTitle&filter=".$sFilter)."\"}, {wmode: 'transparent'} );\n");
 			$iChartCounter++;
 			break;
 			
@@ -784,7 +792,14 @@ EOF
 					$aGroupBy = array();
 					while($oObj = $this->m_oSet->Fetch())
 					{
-						$sValue = $oObj->Get($sGroupByField);
+						if (isset($aExtraParams['group_by_expr']))
+						{
+							eval("\$sValue = ".sprintf($aExtraParams['group_by_expr'],  $oObj->Get($sGroupByField)).';');
+						}
+						else
+						{
+							$sValue = $oObj->Get($sGroupByField);
+						}
 						$aGroupBy[$sValue] = isset($aGroupBy[$sValue]) ? $aGroupBy[$sValue]+1 : 1;
 					}
 					$sFilter = urlencode($this->m_oFilter->serialize());
@@ -840,7 +855,14 @@ EOF
 					$aGroupBy = array();
 					while($oObj = $this->m_oSet->Fetch())
 					{
-						$sValue = $oObj->Get($sGroupByField);
+						if (isset($aExtraParams['group_by_expr']))
+						{
+							eval("\$sValue = ".sprintf($aExtraParams['group_by_expr'],  $oObj->Get($sGroupByField)).';');
+						}
+						else
+						{
+							$sValue = $oObj->Get($sGroupByField);
+						}
 						$aGroupBy[$sValue] = isset($aGroupBy[$sValue]) ? $aGroupBy[$sValue]+1 : 1;
 					}
 					$sFilter = urlencode($this->m_oFilter->serialize());
