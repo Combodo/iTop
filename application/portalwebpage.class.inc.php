@@ -58,7 +58,6 @@ class PortalWebPage extends NiceWebPage
 		$this->add_linked_script("../js/jquery.tablehover.js");
 		$this->add_linked_script("../js/jquery.treeview.js");
 		$this->add_linked_script("../js/jquery.autocomplete.js");
-		$this->add_linked_script("../js/jquery.bgiframe.js");
 		$this->add_linked_script("../js/jquery.positionBy.js");
 		$this->add_linked_script("../js/jquery.popupmenu.js");
 		$this->add_linked_script("../js/date.js");
