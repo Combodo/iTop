@@ -110,12 +110,13 @@ abstract class DBObject
 	// Returns an Id for memory objects
 	static protected function GetNextTempId($sClass)
 	{
-		if (!array_key_exists($sClass, self::$m_aMemoryObjectsByClass))
+		$sRootClass = MetaModel::GetRootClass($sClass);
+		if (!array_key_exists($sRootClass, self::$m_aMemoryObjectsByClass))
 		{
-			self::$m_aMemoryObjectsByClass[$sClass] = 0;
+			self::$m_aMemoryObjectsByClass[$sRootClass] = 0;
 		}
-		self::$m_aMemoryObjectsByClass[$sClass]++;
-		return (- self::$m_aMemoryObjectsByClass[$sClass]);
+		self::$m_aMemoryObjectsByClass[$sRootClass]++;
+		return (- self::$m_aMemoryObjectsByClass[$sRootClass]);
 	}
 
 	public function __toString()
