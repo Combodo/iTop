@@ -40,6 +40,7 @@ interface iApplicationUIExtension
 
 interface iApplicationObjectExtension
 {
+	public function OnIsModified($oObject);
 	public function OnCheckToWrite($oObject);
 	public function OnCheckToDelete($oObject);
 	public function OnDBUpdate($oObject, $oChange = null);

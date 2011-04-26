@@ -2253,6 +2253,24 @@ EOF
 		return parent::BulkDeleteTracked_Internal($oFilter);
 	}
 
+	public function IsModified()
+	{
+		if (parent::IsModified())
+		{
+			return true;
+		}
+
+		// Plugins
+		//
+		foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
+		{
+			if ($oExtensionInstance->OnIsModified($this))
+			{
+				return true;
+			}
+		}
+	}
+
 	public function DoCheckToWrite()
 	{
 		parent::DoCheckToWrite();
