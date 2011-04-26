@@ -58,6 +58,7 @@ Marco Tulio for the Portuguese (Brazilian) translation
 Vladimir Shilov for the Russian translation
 Izzet Sirin for the Turkish translation
 Deng Lixin for the Chinese translation
+Marialaura Colantoni for the Italian translation
 Schlobinux for the fix of the setup temporary file verification.
 
 2. INSTALLATION
