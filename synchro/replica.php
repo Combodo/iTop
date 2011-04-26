@@ -79,5 +79,3 @@ catch(Exception $e)
 
 $oP->output();
 ?>
-
-?>
