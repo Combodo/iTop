@@ -133,7 +133,7 @@ class SynchroDataSource extends cmdbAbstractObject
 			$aValues = array();
 			foreach(MetaModel::ListAttributeDefs($this->GetTargetClass()) as $sAttCode=>$oAttDef)
 			{
-				if ($oAttDef->IsScalar() && $oAttDef->IsWritable())
+				if ($oAttDef->IsWritable())
 				{
 					if (isset($aAttributes[$sAttCode]))
 					{
@@ -146,53 +146,73 @@ class SynchroDataSource extends cmdbAbstractObject
 							$oAttribute = new SynchroAttExtKey();
 							$oAttribute->Set('reconciliation_attcode', ''); // Blank means by pkey
 						}
-						else
+						elseif ($oAttDef->IsLinkSet() && $oAttDef->IsIndirect())
+						{
+							$oAttribute = new SynchroAttLinkSet();
+							// Todo - add these settings into the form
+							$oAttribute->Set('row_separator', MetaModel::GetConfig()->Get('link_set_item_separator'));
+							$oAttribute->Set('attribute_separator', MetaModel::GetConfig()->Get('link_set_attribute_separator'));
+							$oAttribute->Set('value_separator', MetaModel::GetConfig()->Get('link_set_value_separator'));
+							$oAttribute->Set('attribute_qualifier', MetaModel::GetConfig()->Get('link_set_attribute_qualifier'));
+						}
+						elseif ($oAttDef->IsScalar())
 						{
 							$oAttribute = new SynchroAttribute();
 						}
-						$oAttribute->Set('sync_source_id', $this->GetKey());
-						$oAttribute->Set('attcode', $sAttCode);
-						$oAttribute->Set('reconcile', MetaModel::IsReconcKey($this->GetTargetClass(), $sAttCode) ? 1 : 0);
-						$oAttribute->Set('update', 1);
-						$oAttribute->Set('update_policy', 'master_locked');
-					}
-					if (!$bEditMode)
-					{
-						// Read-only mode
-						$aRow['reconciliation'] = $oAttribute->Get('reconcile') == 1 ? Dict::S('Core:SynchroReconcile:Yes') :  Dict::S('Core:SynchroReconcile:No'); 
-						$aRow['update'] = $oAttribute->Get('update') == 1 ?  Dict::S('Core:SynchroUpdate:Yes') :  Dict::S('Core:SynchroUpdate:No');
-						$aRow['attcode'] = MetaModel::GetLabel($this->GetTargetClass(), $oAttribute->Get('attcode')); 
-						$aRow['update_policy'] = $oAttribute->GetAsHTML('update_policy');
-						if ($oAttDef->IsExternalKey())
+						else
 						{
-							$aRow['reconciliation_attcode'] = $oAttribute->GetAsHTML('reconciliation_attcode');
+							$oAttribute = null;
+						}
+
+						if (!is_null($oAttribute))
+						{
+							$oAttribute->Set('sync_source_id', $this->GetKey());
+							$oAttribute->Set('attcode', $sAttCode);
+							$oAttribute->Set('reconcile', MetaModel::IsReconcKey($this->GetTargetClass(), $sAttCode) ? 1 : 0);
+							$oAttribute->Set('update', 1);
+							$oAttribute->Set('update_policy', 'master_locked');
+						}
+					}
+					if (!is_null($oAttribute))
+					{
+						if (!$bEditMode)
+						{
+							// Read-only mode
+							$aRow['reconciliation'] = $oAttribute->Get('reconcile') == 1 ? Dict::S('Core:SynchroReconcile:Yes') :  Dict::S('Core:SynchroReconcile:No'); 
+							$aRow['update'] = $oAttribute->Get('update') == 1 ?  Dict::S('Core:SynchroUpdate:Yes') :  Dict::S('Core:SynchroUpdate:No');
+							$aRow['attcode'] = MetaModel::GetLabel($this->GetTargetClass(), $oAttribute->Get('attcode')); 
+							$aRow['update_policy'] = $oAttribute->GetAsHTML('update_policy');
+							if ($oAttDef->IsExternalKey())
+							{
+								$aRow['reconciliation_attcode'] = $oAttribute->GetAsHTML('reconciliation_attcode');
+							}
+							else
+							{
+								$aRow['reconciliation_attcode'] = '&nbsp;';
+							}
 						}
 						else
 						{
-							$aRow['reconciliation_attcode'] = '&nbsp;';
+							// Edit mode
+							$sAttCode = $oAttribute->Get('attcode');
+							$sChecked = $oAttribute->Get('reconcile') == 1 ? 'checked' : '';
+							$aRow['reconciliation'] = "<input type=\"checkbox\" name=\"reconciliation[$sAttCode]\" $sChecked/>"; 
+							$sChecked = $oAttribute->Get('update') == 1 ? 'checked' : '';
+							$aRow['update'] = "<input type=\"checkbox\" name=\"update[$sAttCode]\" $sChecked/>"; 
+							$aRow['attcode'] = MetaModel::GetLabel($this->GetTargetClass(), $oAttribute->Get('attcode'));
+							$oUpdateAttDef = MetaModel::GetAttributeDef(get_class($oAttribute), 'update_policy'); 
+							$aRow['update_policy'] = cmdbAbstractObject::GetFormElementForField($oPage, get_class($oAttribute), 'update_policy', $oUpdateAttDef, $oAttribute->Get('update_policy'), '', 'update_policy_'.$sAttCode, "[$sAttCode]");
+							if ($oAttDef->IsExternalKey())
+							{
+								$aRow['reconciliation_attcode'] = $oAttribute->GetReconciliationFormElement($oAttDef->GetTargetClass(), "attr_reconciliation_attcode[$sAttCode]");
+							}
+							else
+							{
+								$aRow['reconciliation_attcode'] = '&nbsp;';
+							}
 						}
+						$aValues[] = $aRow;
 					}
-					else
-					{
-						// Edit mode
-						$sAttCode = $oAttribute->Get('attcode');
-						$sChecked = $oAttribute->Get('reconcile') == 1 ? 'checked' : '';
-						$aRow['reconciliation'] = "<input type=\"checkbox\" name=\"reconciliation[$sAttCode]\" $sChecked/>"; 
-						$sChecked = $oAttribute->Get('update') == 1 ? 'checked' : '';
-						$aRow['update'] = "<input type=\"checkbox\" name=\"update[$sAttCode]\" $sChecked/>"; 
-						$aRow['attcode'] = MetaModel::GetLabel($this->GetTargetClass(), $oAttribute->Get('attcode'));
-						$oUpdateAttDef = MetaModel::GetAttributeDef(get_class($oAttribute), 'update_policy'); 
-						$aRow['update_policy'] = cmdbAbstractObject::GetFormElementForField($oPage, get_class($oAttribute), 'update_policy', $oUpdateAttDef, $oAttribute->Get('update_policy'), '', 'update_policy_'.$sAttCode, "[$sAttCode]");
-						if ($oAttDef->IsExternalKey())
-						{
-							$aRow['reconciliation_attcode'] = $oAttribute->GetReconciliationFormElement($oAttDef->GetTargetClass(), "attr_reconciliation_attcode[$sAttCode]");
-						}
-						else
-						{
-							$aRow['reconciliation_attcode'] = '&nbsp;';
-						}
-					}
-					$aValues[] = $aRow;
 				}
 			}
 			$oPage->p(Dict::Format('Class:SynchroDataSource:DataTable', $this->GetDataTable()));
@@ -462,6 +482,15 @@ EOF
 					$oAttribute = new SynchroAttExtKey();
 					$oAttribute->Set('reconciliation_attcode', ''); // Blank means by pkey
 				}
+				elseif ($oAttDef->IsLinkSet() && $oAttDef->IsIndirect())
+				{
+					$oAttribute = new SynchroAttLinkSet();
+					// Todo - set those value from the form
+					$oAttribute->Set('row_separator', MetaModel::GetConfig()->Get('link_set_item_separator'));
+					$oAttribute->Set('attribute_separator', MetaModel::GetConfig()->Get('link_set_attribute_separator'));
+					$oAttribute->Set('value_separator', MetaModel::GetConfig()->Get('link_set_value_separator'));
+					$oAttribute->Set('attribute_qualifier', MetaModel::GetConfig()->Get('link_set_attribute_qualifier'));
+				}
 				else
 				{
 					$oAttribute = new SynchroAttribute();
@@ -490,6 +519,9 @@ EOF
 			{
 				$oAttribute->Set('reconciliation_attcode', $aReconciliation[$sAttCode]);
 			}
+			elseif ($oAttribute instanceof SynchroAttLinkSet)
+			{
+			}
 			$oAttributeSet->AddObject($oAttribute);
 		}
 		$this->Set('attribute_list', $oAttributeSet);
@@ -512,7 +544,7 @@ EOF
 			{
 				foreach(MetaModel::ListAttributeDefs($this->GetTargetClass()) as $sAttCode=>$oAttDef)
 				{
-					if ($oAttDef->IsScalar() && $oAttDef->IsWritable())
+					if ($oAttDef->IsWritable())
 					{
 						$oAttDef = MetaModel::GetAttributeDef($this->GetTargetClass(), $sAttCode);
 						if ($oAttDef->IsExternalKey())
@@ -520,16 +552,33 @@ EOF
 							$oAttribute = new SynchroAttExtKey();
 							$oAttribute->Set('reconciliation_attcode', ''); // Blank means by pkey
 						}
-						else
+						elseif ($oAttDef->IsLinkSet() && $oAttDef->IsIndirect())
+						{
+							$oAttribute = new SynchroAttLinkSet();
+							// Todo - set those value from the form
+							$oAttribute->Set('row_separator', MetaModel::GetConfig()->Get('link_set_item_separator'));
+							$oAttribute->Set('attribute_separator', MetaModel::GetConfig()->Get('link_set_attribute_separator'));
+							$oAttribute->Set('value_separator', MetaModel::GetConfig()->Get('link_set_value_separator'));
+							$oAttribute->Set('attribute_qualifier', MetaModel::GetConfig()->Get('link_set_attribute_qualifier'));
+						}
+						elseif ($oAttDef->IsScalar())
 						{
 							$oAttribute = new SynchroAttribute();
 						}
-						$oAttribute->Set('sync_source_id', $this->GetKey());
-						$oAttribute->Set('attcode', $sAttCode);
-						$oAttribute->Set('reconcile', MetaModel::IsReconcKey($this->GetTargetClass(), $sAttCode) ? 1 : 0);
-						$oAttribute->Set('update', 1);
-						$oAttribute->Set('update_policy', 'master_locked');
-						$oAttributeSet->AddObject($oAttribute);
+						else
+						{
+							$oAttribute = null;
+						}
+
+						if (!is_null($oAttribute))
+						{
+							$oAttribute->Set('sync_source_id', $this->GetKey());
+							$oAttribute->Set('attcode', $sAttCode);
+							$oAttribute->Set('reconcile', MetaModel::IsReconcKey($this->GetTargetClass(), $sAttCode) ? 1 : 0);
+							$oAttribute->Set('update', 1);
+							$oAttribute->Set('update_policy', 'master_locked');
+							$oAttributeSet->AddObject($oAttribute);
+						}
 					}
 				}
 				$this->Set('attribute_list', $oAttributeSet);
@@ -551,6 +600,7 @@ EOF
 				if ($oSynchroAttribute->Get('reconcile') == 1)
 				{
 					$bReconciliationKey = true; // At least one key is defined
+					break;
 				}
 			}
 			if (!$bReconciliationKey)
@@ -889,13 +939,11 @@ EOF
 		foreach($aAttCodesToUpdate as $sAttCode => $oSyncAtt)
 		{
 			$oAttDef = MetaModel::GetAttributeDef($this->GetTargetClass(), $sAttCode);
-			if ($oAttDef->IsWritable() && $oAttDef->IsScalar())
+			if ($oAttDef->IsWritable())
 			{
 				$aAttributes[$sAttCode] = $oSyncAtt;
 			}
 		}
-
-		$sDeletePolicy = $this->Get('delete_policy');
 
 		// Count the replicas
 		$sSelectAll  = "SELECT SynchroReplica WHERE sync_source_id = :source_id";
@@ -914,50 +962,60 @@ EOF
 				$sInterval = "-$iLoadPeriodicity seconds";
 				$oLastFullLoadStartDate->Modify($sInterval);
 			}
+			else
+			{
+				$oLastFullLoadStartDate = new DateTime('1970-01-01');
+			}
 		}
 		$sLimitDate = $oLastFullLoadStartDate->Format('Y-m-d H:i:s');	
 		$oStatLog->AddTrace("Limit Date: $sLimitDate");
-		$sSelectToObsolete  = "SELECT SynchroReplica WHERE sync_source_id = :source_id AND status IN ('new', 'synchronized', 'modified', 'orphan') AND status_last_seen < :last_import";
-		$oSetToObsolete = new DBObjectSet(DBObjectSearch::FromOQL($sSelectToObsolete), array() /* order by*/, array('source_id' => $this->GetKey(), 'last_import' => $sLimitDate));
-		if (($iCountAllReplicas > 10) && ($iCountAllReplicas == $oSetToObsolete->Count()))
-		{
-			throw new SynchroExceptionNotStarted(Dict::S('Core:SyncTooManyMissingReplicas'));
-		} 
-		while($oReplica = $oSetToObsolete->Fetch())
-		{
-			switch ($sDeletePolicy)
-			{
-			case 'update':
-			case 'update_then_delete':
-				$oStatLog->AddTrace("Destination object to be updated", $oReplica);
-				$aToUpdate = array();
-				$aToUpdateSpec = explode(';', $this->Get('delete_policy_update')); //ex: 'status:obsolete;description:stopped',
-				foreach($aToUpdateSpec as $sUpdateSpec)
-				{
-					$aUpdateSpec = explode(':', $sUpdateSpec);
-					if (count($aUpdateSpec) == 2)
-					{
-						$sAttCode = $aUpdateSpec[0];
-						$sValue = $aUpdateSpec[1];
-						$aToUpdate[$sAttCode] = $sValue;
-					}
-				}
-				$oReplica->Set('status_last_error', '');
-				$oReplica->UpdateDestObject($aToUpdate, $oMyChange, $oStatLog);
-				if ($oReplica->Get('status_last_error') == '')
-				{
-					// Change the status of the replica IIF
-					$oReplica->Set('status', 'obsolete');
-				}
-				$oReplica->DBUpdateTracked($oMyChange);
-				break;
 
-         	case 'delete':
-         	default:
-				$oStatLog->AddTrace("Destination object to be DELETED", $oReplica);
-				$oReplica->DeleteDestObject($oMyChange, $oStatLog);
+		$sDeletePolicy = $this->Get('delete_policy');
+		
+		if ($sDeletePolicy != 'ignore')
+		{
+			$sSelectToObsolete  = "SELECT SynchroReplica WHERE sync_source_id = :source_id AND status IN ('new', 'synchronized', 'modified', 'orphan') AND status_last_seen < :last_import";
+			$oSetToObsolete = new DBObjectSet(DBObjectSearch::FromOQL($sSelectToObsolete), array() /* order by*/, array('source_id' => $this->GetKey(), 'last_import' => $sLimitDate));
+			if (($iCountAllReplicas > 10) && ($iCountAllReplicas == $oSetToObsolete->Count()))
+			{
+				throw new SynchroExceptionNotStarted(Dict::S('Core:SyncTooManyMissingReplicas'));
+			} 
+			while($oReplica = $oSetToObsolete->Fetch())
+			{
+				switch ($sDeletePolicy)
+				{
+				case 'update':
+				case 'update_then_delete':
+					$oStatLog->AddTrace("Destination object to be updated", $oReplica);
+					$aToUpdate = array();
+					$aToUpdateSpec = explode(';', $this->Get('delete_policy_update')); //ex: 'status:obsolete;description:stopped',
+					foreach($aToUpdateSpec as $sUpdateSpec)
+					{
+						$aUpdateSpec = explode(':', $sUpdateSpec);
+						if (count($aUpdateSpec) == 2)
+						{
+							$sAttCode = $aUpdateSpec[0];
+							$sValue = $aUpdateSpec[1];
+							$aToUpdate[$sAttCode] = $sValue;
+						}
+					}
+					$oReplica->Set('status_last_error', '');
+					$oReplica->UpdateDestObject($aToUpdate, $oMyChange, $oStatLog);
+					if ($oReplica->Get('status_last_error') == '')
+					{
+						// Change the status of the replica IIF
+						$oReplica->Set('status', 'obsolete');
+					}
+					$oReplica->DBUpdateTracked($oMyChange);
+					break;
+	
+	         	case 'delete':
+	         	default:
+					$oStatLog->AddTrace("Destination object to be DELETED", $oReplica);
+					$oReplica->DeleteDestObject($oMyChange, $oStatLog);
+				}
 			}
-		}
+		} // if ($sDeletePolicy != 'ignore'
 
 		//Count "seen" objects
 		$sSelectSeen  = "SELECT SynchroReplica WHERE sync_source_id = :source_id AND status IN ('new', 'synchronized', 'modified', 'orphan') AND status_last_seen >= :last_import";
@@ -1080,11 +1138,6 @@ EOF
 			$oLog = $oSet->Fetch();
 			$date = $oLog->Get('end_date');
 		}
-		else
-		{
-			// TO DO: remove trace
-			echo "<p>No completed log found</p>\n";
-		}
 		return $date;
 	}
 }
@@ -1190,9 +1243,11 @@ class SynchroAttLinkSet extends SynchroAttribute
 		MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeString("row_separator", array("allowed_values"=>null, "sql"=>"row_separator", "default_value"=>'|', "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("attribute_separator", array("allowed_values"=>null, "sql"=>"attribute_separator", "default_value"=>';', "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("value_separator", array("allowed_values"=>null, "sql"=>"value_separator", "default_value"=>':', "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("attribute_qualifier", array("allowed_values"=>null, "sql"=>"attribute_qualifier", "default_value"=>'\'', "is_null_allowed"=>true, "depends_on"=>array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('sync_source_id', 'attcode', 'update', 'reconcile', 'update_policy', 'row_separator', 'attribute_separator')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('sync_source_id', 'attcode', 'update', 'reconcile', 'update_policy', 'row_separator', 'attribute_separator', 'value_separator', 'attribute_qualifier')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('sync_source_id', 'attcode', 'update', 'reconcile', 'update_policy')); // Attributes to be displayed for a list
 
 		// Search criteria
@@ -1562,17 +1617,17 @@ class SynchroReplica extends DBObject implements iDisplay
 	protected function UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange, &$oStatLog, $sStatsCode, $sStatsCodeError)
 	{
 		$aValueTrace = array();
-		foreach($aAttributes as $sAttCode => $oSyncAtt)
-		{
-			$value = $this->GetValueFromExtData($sAttCode, $oSyncAtt, $oStatLog);
-			if (!is_null($value))
-			{
-				$oDestObj->Set($sAttCode, $value);
-				$aValueTrace[] = "$sAttCode: $value";
-			}
-		}
 		try
 		{
+			foreach($aAttributes as $sAttCode => $oSyncAtt)
+			{
+				$value = $this->GetValueFromExtData($sAttCode, $oSyncAtt, $oStatLog);
+				if (!is_null($value))
+				{
+					$oDestObj->Set($sAttCode, $value);
+					$aValueTrace[] = "$sAttCode: $value";
+				}
+			}
 			// Really modified ?
 			if ($oDestObj->IsModified())
 			{
@@ -1703,18 +1758,26 @@ class SynchroReplica extends DBObject implements iDisplay
 
 	/**
 	 * Get the value from the 'Extended Data' located in the synchro_data_xxx table for this replica
+	 * Note: sExtAttCode could be a standard attcode, or 'primary_key'	 
 	 */
-	protected function GetValueFromExtData($sAttCode, $oSyncAtt, &$oStatLog)
+	protected function GetValueFromExtData($sExtAttCode, $oSyncAtt, &$oStatLog)
 	{
 		// $aData should contain attributes defined either for reconciliation or create/update
 		$aData = $this->GetExtendedData();
 
+		if ($sExtAttCode == 'primary_key')
+		{
+			return $aData['primary_key'];
+		}
+
+		// $sExtAttCode is a valid attribute code
+		// 
 		$sClass = $this->Get('base_class');
-		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+		$oAttDef = MetaModel::GetAttributeDef($sClass, $sExtAttCode);
 
 		if (!is_null($oSyncAtt) && ($oSyncAtt instanceof SynchroAttExtKey))
 		{
-			$rawValue = $aData[$sAttCode];
+			$rawValue = $aData[$sExtAttCode];
 			if (is_null($rawValue))
 			{
 				// Null means "ignore" this attribute
@@ -1733,7 +1796,7 @@ class SynchroReplica extends DBObject implements iDisplay
 				else
 				{
 					// Note: differs from null (in which case the value would be left unchanged)
-					$oStatLog->AddTrace("Could not find [unique] object for '$sAttCode': searched on $sReconcAttCode = '$rawValue'", $this);
+					$oStatLog->AddTrace("Could not find [unique] object for '$sExtAttCode': searched on $sReconcAttCode = '$rawValue'", $this);
 					$retValue = 0;
 				}
 			}
@@ -1741,6 +1804,17 @@ class SynchroReplica extends DBObject implements iDisplay
 			{
 				$retValue = $rawValue;
 			}
+		}
+		elseif (!is_null($oSyncAtt) && ($oSyncAtt instanceof SynchroAttLinkSet))
+		{
+			$rawValue = $aData[$sExtAttCode];
+			if (is_null($rawValue))
+			{
+				// Null means "ignore" this attribute
+				return null;
+			}
+			// MakeValueFromString() throws an exception in case of failure
+			$retValue = $oAttDef->MakeValueFromString($rawValue, $oSyncAtt->Get('row_separator'), $oSyncAtt->Get('attribute_separator'), $oSyncAtt->Get('value_separator'), $oSyncAtt->Get('attribute_qualifier'));
 		}
 		else
 		{
@@ -1754,7 +1828,7 @@ class SynchroReplica extends DBObject implements iDisplay
 					return null;
 				}
 			}
-			$retValue = $oAttDef->FromImportToValue($aData, $sAttCode);
+			$retValue = $oAttDef->FromImportToValue($aData, $sExtAttCode);
 		}
 
 		return $retValue;

@@ -454,22 +454,29 @@ class AttributeLinkedSet extends AttributeDefinition
 
 	public function DuplicatesAllowed() {return false;} // No duplicates for 1:n links, never
 
+	public function GetImportColumns()
+	{
+		$aColumns = array();
+		$aColumns[$this->GetCode()] = 'TEXT';
+		return $aColumns;
+	}
+
 	// Specific to this kind of attribute : transform a string into a value
 	public function MakeValueFromString($sProposedValue, $sSepItem = null, $sSepAttribute = null, $sSepValue = null, $sAttributeQualifier = null)
 	{
-		if (is_null($sSepItem))
+		if (is_null($sSepItem) || empty($sSepItem))
 		{
 			$sSepItem = MetaModel::GetConfig()->Get('link_set_item_separator');
 		}
-		if (is_null($sSepAttribute))
+		if (is_null($sSepAttribute) || empty($sSepAttribute))
 		{
 			$sSepAttribute = MetaModel::GetConfig()->Get('link_set_attribute_separator');
 		}
-		if (is_null($sSepValue))
+		if (is_null($sSepValue) || empty($sSepValue))
 		{
 			$sSepValue = MetaModel::GetConfig()->Get('link_set_value_separator');
 		}
-		if (is_null($sAttributeQualifier))
+		if (is_null($sAttributeQualifier) || empty($sAttributeQualifier))
 		{
 			$sAttributeQualifier = MetaModel::GetConfig()->Get('link_set_attribute_qualifier');
 		}
