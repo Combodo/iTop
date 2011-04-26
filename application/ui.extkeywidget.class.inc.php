@@ -181,6 +181,7 @@ EOF
 		oACWidget_{$this->iId}.emptyHtml = "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>$sMessage</p></div>";
 		$('#label_$this->iId').autocomplete('./ajax.render.php', { scroll:true, minChars:{$iMinChars}, formatItem:formatItem, autoFill:false, matchContains:true, keyHolder:'#{$this->iId}', extraParams:{operation:'autocomplete', sclass:'{$this->sClass}',attCode:'{$this->sAttCode}'}});
 		$('#label_$this->iId').blur(function() { $(this).search(); } );
+		$('#label_$this->iId').keyup(function() { if ($(this).val() == '') { $('#$this->iId').val(''); } } ); // Useful for search forms: empty value in the "label", means no value, immediatly !
 		$('#label_$this->iId').result( function(event, data, formatted) { OnAutoComplete('{$this->iId}', event, data, formatted); } );
 		$('#$this->iId').bind('update', function() { oACWidget_{$this->iId}.Update(); } );
 EOF
