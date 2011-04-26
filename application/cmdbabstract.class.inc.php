@@ -1799,7 +1799,7 @@ EOF
 		return $oObj->DisplayModifyForm( $oPage, $aExtraParams);
 	}
 
-	protected static function ProcessZlist($aList, $aDetails, $sCurrentTab, $sCurrentCol, $sCurrentSet)
+	public static function ProcessZlist($aList, $aDetails, $sCurrentTab, $sCurrentCol, $sCurrentSet)
 	{
 		//echo "<pre>ZList: ";
 		//print_r($aList);

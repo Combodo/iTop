@@ -50,7 +50,7 @@ class UserRequest extends ResponseTicket
 
 		MetaModel::Init_SetZListItems('details', array('document_list', 'ci_list', 'contact_list','incident_list',
 			'col:col1' => array(
-				'fieldset:Ticket:baseinfo' => array('ref','title','org_id','status','priority','service_id','servicesubcategory_id','product' ),
+				'fieldset:Ticket:baseinfo' => array('ref','title','org_id','status','priority','request_type','service_id','servicesubcategory_id','product' ),
 				'fieldset:Ticket:moreinfo' => array('impact','urgency','description','resolution_code', 'solution', 'user_satisfaction', 'user_commment','freeze_reason'),
 				),
 			'col:col2' => array(

@@ -111,6 +111,8 @@ a.button span {
 }
 #request_details {
 	display: inline-block;
+	width:800px;
+	text-align: left;
 }
 #request_details table {
 	border: #f1f1f6 2px solid;

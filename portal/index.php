@@ -550,23 +550,99 @@ function ListResolvedRequests(WebPage $oP)
  */
 function DisplayRequestDetails($oP, UserRequest $oRequest)
 {
-	$aList = array('ref', 'status', 'title', 'description', 'request_type','ticket_log', 'start_date', 'tto_escalation_deadline', 'ttr_escalation_deadline', 'caller_id', 'service_id', 'servicesubcategory_id', 'product', 'impact', 'urgency', 'priority', 'workgroup_id', 'agent_id', 'related_problem_id', 'related_change_id', 'close_date', 'last_update', 'assignment_date', 'closure_deadline', 'resolution_code', 'solution', 'user_satisfaction', 'user_commment', 'freeze_reason');
+	// Identical to the standard 'details' ZList of UserRequest, except that the field 'org_id' has been removed
+	$aList = array(
+		'col:col1' => array(
+			'fieldset:Ticket:baseinfo' => array('ref','title','request_type','status','priority','service_id','servicesubcategory_id','product' ),
+			'fieldset:Ticket:moreinfo' => array('impact','urgency','description','resolution_code', 'solution', 'user_satisfaction', 'user_commment','freeze_reason'),
+			),
+		'col:col2' => array(
+			'fieldset:Ticket:date' => array('start_date','last_update','assignment_date','tto_escalation_deadline', 'ttr_escalation_deadline', 'close_date',  'closure_deadline',),
+			'fieldset:Ticket:contact' => array('caller_id','workgroup_id','agent_id',),
+			'fieldset:Ticket:relation' => array('related_problem_id', 'related_change_id'),
+			)
+
+	);
+
+	// Similar to CMDBAbstractObject::GetBareProperties except that: multiple tabs are not supported and GetFieldAsHtml is customized
+	// in order to NOT display any hyperlink
 	$aDetails = array();
-	foreach($aList as $sAttCode)
-	{
-		$iFlags = $oRequest->GetAttributeFlags($sAttCode);
-		$oAttDef = MetaModel::GetAttributeDef(get_class($oRequest), $sAttCode);
-		if ( (!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0) )
-		{
-			// Don't display linked set and non-visible attributes (in this state)
-			$sDisplayValue = GetFieldAsHtml($oRequest, $sAttCode);
-			$aDetails[] = array('label' => '<span title="'.MetaModel::GetDescription('UserRequest', $sAttCode).'">'.MetaModel::GetLabel('UserRequest', $sAttCode).'</span>', 'value' => $sDisplayValue);
-		}
-	}
 	$oP->add('<div id="request_details" class="ui-widget-content">');
+
+	$aDetailsStruct = CMDBAbstractObject::ProcessZlist($aList, array('UI:PropertiesTab' => array()), 'UI:PropertiesTab', 'col1', '');
+	// Compute the list of properties to display, first the attributes in the 'details' list, then 
+	// all the remaining attributes that are not external fields
+	$aDetails = array();
+	$iInputId = 0;
+	foreach($aDetailsStruct as $sTab => $aCols )
+	{
+		$aDetails[$sTab] = array();
+		ksort($aCols);
+		$oP->add('<table style="vertical-align:top"><tr>');
+		foreach($aCols as $sColIndex => $aFieldsets)
+		{
+			$oP->add('<td style="vertical-align:top">');
+			//$aDetails[$sTab][$sColIndex] = array();
+			$sLabel = '';
+			$sPreviousLabel = '';
+			$aDetails[$sTab][$sColIndex] = array();
+			foreach($aFieldsets as $sFieldsetName => $aFields)
+			{
+				if (!empty($sFieldsetName) && ($sFieldsetName[0] != '_'))
+				{
+					$sLabel = $sFieldsetName;
+				}
+				else
+				{
+					$sLabel = '';
+				}
+				if ($sLabel != $sPreviousLabel)
+				{
+					if (!empty($sPreviousLabel))
+					{
+						$oP->add('<fieldset>');
+						$oP->add('<legend>'.Dict::S($sPreviousLabel).'</legend>');
+					}
+					$oP->Details($aDetails[$sTab][$sColIndex]);
+					if (!empty($sPreviousLabel))
+					{
+						$oP->add('</fieldset>');
+					}
+					$aDetails[$sTab][$sColIndex] = array();
+					$sPreviousLabel = $sLabel;
+				}
+				foreach($aFields as $sAttCode)
+				{
+					$iFlags = $oRequest->GetAttributeFlags($sAttCode);
+					if ( ($iFlags & OPT_ATT_HIDDEN) == 0)
+					{
+						// The field is visible, add it to the current column
+						$val = GetFieldAsHtml($oRequest, $sAttCode);
+						$aDetails[$sTab][$sColIndex][] = array( 'label' => '<span title="'.MetaModel::GetDescription('UserRequest', $sAttCode).'">'.MetaModel::GetLabel('UserRequest', $sAttCode).'</span>', 'value' => $val);
+						$iInputId++;
+					}				
+				}
+			}
+			if (!empty($sPreviousLabel))
+			{
+				$oP->add('<fieldset>');
+				$oP->add('<legend>'.Dict::S($sFieldsetName).'</legend>');
+			}
+			$oP->Details($aDetails[$sTab][$sColIndex]);
+			if (!empty($sPreviousLabel))
+			{
+				$oP->add('</fieldset>');
+			}
+			$oP->add('</td>');
+		}
+		$oP->add('</tr></table>');
+	}
+
+	// Attachments
 	$sOQL = 'SELECT FileDoc AS Doc JOIN lnkTicketToDoc AS L ON L.document_id = Doc.id WHERE L.ticket_id = :request_id';
 	$oSearch = DBObjectSearch::FromOQL($sOQL);
 	$oSet = new CMDBObjectSet($oSearch, array(), array('request_id' => $oRequest->GetKey()));
+	$aDetails = array();
 	if ($oSet->Count() > 0)
 	{
 		$sAttachements = '<table>';
@@ -577,7 +653,12 @@ function DisplayRequestDetails($oP, UserRequest $oRequest)
 		$sAttachements .= '</table>';
 		$aDetails[] = array('label' => Dict::S('Portal:Attachments'), 'value' => $sAttachements);
 	}
-	$oP->details($aDetails);
+	$oP->Details($aDetails);
+	
+	// Case log
+	$oP->add('<fieldset><legend>'.MetaModel::GetLabel('UserRequest', 'ticket_log').'</legend>');
+	$oP->add(GetFieldAsHtml($oRequest, 'ticket_log'));
+	$oP->add('</fieldset>');
 	$oP->add('</div>');
 }
 
