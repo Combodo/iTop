@@ -1,4 +1,4 @@
-iTop - version 1.1.0 Beta - 12-04-2011
+iTop - version 1.1.0 RC - 04-05-2011
 Readme file
 
 1.   ABOUT THIS RELEASE
@@ -74,9 +74,9 @@ server and browsing web pages. iTop can be installed on Apache and IIS.
 
 End-user configuration:
 Although iTop should work with most modern web browsers, the application has been
-tested mostly Firefox 3, IE8, Safari 5 and Chrome. iTop was designed for at least a
-1024x768 screen resolution. For the graphical view of the impact analysis, Flash
-version 8 or higher is required.
+tested mostly with Firefox 3, IE8, IE9, Safari 5 and Chrome. iTop was designed for
+at least a 1024x768 screen resolution. For the graphical view of the impact analysis,
+Flash version 8 or higher is required.
 
 2.2. Install procedure
      -----------------
@@ -156,10 +156,12 @@ Synchronization with external application: an integrated utility to help in deve
 
 Localization
 ------------
+Added Italian translation, thanks to Marialaura Colantoni.
 English dictionary completion.
 Improvements to the French translation.
 
-We are working actively at providing localization packages online, and statuses about the progress for each target language.
+More information on the localization (completion progress, how to contribute) here:
+http://www.combodo.com/itop-localization/
 
 
 Minor changes
@@ -181,18 +183,24 @@ Search forms enhancement: when a search criteria is an external (foreign) key, u
 #352 Web Service CreateTicket: Search the service subcategory given the found service_id (if not already specified)
 Automatic deletion of links lnkSolutionToCI
 Keep track of the application's usage: an entry in the log is added each time a user connects to the application. (This feature is disabled by default)
-Wiki: add links to objects in text attributes (e.g. [[Server:dv1.combodo.com]] will be seen as a Url to the object in iTop.
 Check SLA for tickets moved to a new page: cron.php. See dedicated section.
 Email sent in asynchronous mode (relying on cron.php - see dedicated section)
+Aligned the display of the case log (and properties) of a ticket in the User Portal to what is done in the normal UI: better look (multi-column, fieldsets, wider case log at the bottom).
+New option group_by_expr for "group_by' display blocks (to be used in templates) to specify a PHP expression to use for the group by. This allows to build dashboards where dates are grouped by the day of the month, for example.
+#370 standard argument for CLI/REST services: param_file
 
+Wiki formatting. The attributes of type 'AttributeText' or derived, allow some special formatting:
+- links to objects: [[Server:db1.my-company.com]] will be seen as a Url to the server named 'db1.my-company.com' in iTop.
+- url are detected and displayed as hyperlinks
 
 Optimizations:
 - Delayed startup for all non-important javascript effects to speed-up the display of the pages.
-- Implementation of the APC cache. Settings: apc_cache.query_ttl (defaults to 3600s) and apc_cache.enabled = true by default (beta)
+- Implementation of the APC cache. Settings: apc_cache.query_ttl (defaults to 3600s) and apc_cache.enabled = true by default
 
 New implementation of the setup:
 - support of upgrade or reinstallation
 - optimizations (3 times faster)
+- dictionary files (<Lang>.dict.<ModuleName>.php) loaded automatically without the need to specify them explicitely in the module definition file.
 
 
 Bugs fixed
@@ -217,7 +225,8 @@ In read-only mode, stimulus must not be allowed
 Display of relationships: Removed a "assertion failed" error message, and fixed an incorrect detection of the maximum recursion level
 #351: undefined variable sClass...
 CSV import web service - cosmetics on the reporting in case the data set is empty
-
+#388 Browser compatibility: Fixed issues with IE9 (Removed the 'bgiframe' javascript , which was designed for fixing IE6 issues only and causes troubles with IE9.)
+#385	Issue with auto-complete in search forms
 
 
 3.2. Known limitations (https://sourceforge.net/apps/trac/itop/report/3)
@@ -240,7 +249,5 @@ Internet Explorer 7 is not supported (neither IE7 nor IE8 in compatibility mode)
 #372	APC Cache not efficient (multi org usage, global search)
 #373	Error when deleting two network devices connected to each other
 #382	Search form / base class lost after a search
-#385	Issue with auto-complete in search forms
-#386	Deletion of synchronized objects not complete (if allowed)
-#378	Data synchronization: update then delete does not stop if update does not work
 #377	Case log: exclude the index from the views
+#388  IE9: edition fields not resizable
