@@ -299,7 +299,7 @@ class CreateITILProfilesInstaller extends ModuleInstallerAPI
 			),
 			'Support Agent' => array(
 				'description' => 'Person analyzing and solving the current incidents',
-				'write_modules' => 'Incident',
+				'write_modules' => 'Incident,Call',
 				'delete_modules' => 'LnkTickets,LnkIncidents',
 				'stimuli' => array(
 					'Incident' => 'ev_assign,ev_reassign,ev_resolve,ev_close',
