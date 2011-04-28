@@ -36,6 +36,7 @@ The source code of iTop can be found on SourceForge: http://itop.sourceforge.net
 - Modify all utility: select a set of objects and force a value on all of them, or close a set of tickets in a few steps.
 - Tickets: the form have been redesigned with some focus on the case log.
 - iTop takes advantage of the APC cache.
+- Italian and Hungarian localizations are now part of iTop
 
 
 
@@ -64,6 +65,7 @@ Izzet Sirin for the Turkish translation
 Deng Lixin for the Chinese translation
 Marialaura Colantoni for the Italian translation
 Schlobinux for the fix of the setup temporary file verification.
+Gabor Kiss for the Hungarian translation 
 
 2. INSTALLATION
    ============
@@ -249,4 +251,4 @@ Internet Explorer 7 is not supported (neither IE7 nor IE8 in compatibility mode)
 #373	Error when deleting two network devices connected to each other
 #382	Search form / base class lost after a search
 #377	Case log: exclude the index from the views
-#388  IE9: edition fields not resizable
+#388	IE9: edition fields not resizable
