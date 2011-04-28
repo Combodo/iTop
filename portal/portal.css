@@ -114,6 +114,9 @@ a.button span {
 	width:800px;
 	text-align: left;
 }
+#request_details_log {
+	width:774px;
+}
 #request_details table {
 	border: #f1f1f6 2px solid;
 	text-align: left;

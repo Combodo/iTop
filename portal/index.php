@@ -655,10 +655,20 @@ function DisplayRequestDetails($oP, UserRequest $oRequest)
 	}
 	$oP->Details($aDetails);
 	
-	// Case log
-	$oP->add('<fieldset><legend>'.MetaModel::GetLabel('UserRequest', 'ticket_log').'</legend>');
-	$oP->add(GetFieldAsHtml($oRequest, 'ticket_log'));
+	// Case log... editable so that users can post comments
+	$oP->add("<form action=\"../portal/index.php\" id=\"request_form\" method=\"post\">\n");
+	$oP->add("<input type=\"hidden\" name=\"id\" value=\"".$oRequest->GetKey()."\">");
+	$oP->add("<input type=\"hidden\" name=\"step\" value=\"3\">");
+	$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
+	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"details\">");
+	$oP->add('<fieldset id="request_details_log"><legend>'.MetaModel::GetLabel('UserRequest', 'ticket_log').'</legend>');
+	$oAttDef = MetaModel::GetAttributeDef(get_class($oRequest), 'ticket_log');
+	$oValue = $oRequest->Get('ticket_log');
+	$oP->add($oRequest->GetFormElementForField($oP, get_class($oRequest), 'ticket_log', $oAttDef, $oValue, $sDisplayValue = '', $iId = 'att_ticket_log'));
+	//$oP->add(GetFieldAsHtml($oRequest, 'ticket_log'));
 	$oP->add('</fieldset>');
+	$oP->p('<input type="submit" value="'.Dict::S('UI:Button:Ok').'">');
+	$oP->add('</form>');
 	$oP->add('</div>');
 }
 
@@ -845,7 +855,56 @@ function RequestDetails(WebPage $oP, $id)
 		case 2:
 		DoCloseRequest($oP, $oRequest);
 		break;
+
+		case 3:
+		AddComment($oP, $oRequest);
+		break;
+		
+		default:
+		//  Should never happen
+		DisplayMainMenu($oP);
 	}
+}
+
+/**
+ * Adds a comment to the specified UserRequest and displays the main menu
+ * @param WebPage $oP The current web page for the output
+ * @param $id ID of the object to update
+ * @return void
+ */
+function AddComment($oP, $id)
+{
+	$oRequest = FindRequest($id);
+	if (!is_object($oRequest))
+	{
+		DisplayMainMenu($oP);
+		return;
+	}
+	$sTransactionId = utils::ReadPostedParam('transaction_id', '');
+	if (!utils::IsTransactionValid($sTransactionId))
+	{
+		$oP->add("<h1>".Dict::S('UI:Error:ObjectAlreadyUpdated')."</h1>\n");
+		DisplayMainMenu($oP);
+		return;
+	}
+	$sComment = trim(utils::ReadPostedParam('attr_ticket_log'));
+	if (!empty($sComment))
+	{
+		$oRequest->Set('ticket_log', $sComment);
+	
+		$oMyChange = MetaModel::NewObject("CMDBChange");
+		$oMyChange->Set("date", time());
+		$sUserString = CMDBChange::GetCurrentUserName();
+		$oMyChange->Set("userinfo", $sUserString);
+		$iChangeId = $oMyChange->DBInsert();
+		$oRequest->DBUpdateTracked($oMyChange);
+		$oP->p("<h1>".Dict::Format('UI:Class_Object_Updated', MetaModel::GetName(get_class($oRequest)), $oRequest->GetName())."</h1>\n");
+	}
+	else
+	{
+		$oP->p("<h1>".Dict::Format('UI:Class_Object_NotUpdated', MetaModel::GetName(get_class($oRequest)), $oRequest->GetName())."</h1>\n");
+	}
+	DisplayMainMenu($oP);
 }
 
 /**
