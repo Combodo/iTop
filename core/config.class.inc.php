@@ -257,8 +257,8 @@ class Config
 		'cron_max_execution_time' => array(
 			'type' => 'integer',
 			'description' => 'Duration (seconds) of the page cron.php, must be shorter than php setting max_execution_time and shorter than the web server response timeout',
-			'default' => 60,
-			'value' => 60,
+			'default' => 600,
+			'value' => 600,
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
