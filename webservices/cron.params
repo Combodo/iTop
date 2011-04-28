@@ -1,0 +1,6 @@
+# CRON parameters file used by cron.cmd
+#
+# Warning: make sure that this file is NOT readable by the web server
+
+auth_user=admin
+auth_pwd=admin
