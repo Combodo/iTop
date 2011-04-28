@@ -1638,9 +1638,9 @@ class TestImportREST extends TestWebServices
 					'class' => 'NetworkDevice',
 					'output' => 'details',
 					'separator' => ';',
-					'reconciliationkeys' => 'org_id->name,name',
+					'reconciliationkeys' => 'org_id,Name',
 					),
-				'csvdata' => 'name;management_ip;importance;org_id->name;type
+				'csvdata' => 'name;management_ip;importance;Owner organization->Name;type
 									truc-machin-bidule;172.15.255.150;high;My Company/Department;switch
 									10.15.255.222;10.15.255.222;high;My Company/Department;switch',
 			),

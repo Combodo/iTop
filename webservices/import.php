@@ -344,7 +344,13 @@ try
 
 	//////////////////////////////////////////////////
 	//
-	// Make translated header reference
+	// Make translated column reference
+	//
+	// array of <LowercaseTranslatedName> => <ExtendedAttCode>
+	//
+	// Examples:
+	//   'organization' => 'org_id'
+	//   'organization->name' => 'org_id->name'
 	//
 	$aFriendlyToInternalAttCode = array();
 	foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
@@ -487,9 +493,19 @@ try
 		$sReconcKey = trim($sReconcKey);
 		if (empty($sReconcKey)) continue; // skip empty spec
 
+		if (array_key_exists(strtolower($sReconcKey), $aFriendlyToInternalAttCode))
+		{
+			// Translate from a translated name to codes
+			$sReconcKey = $aFriendlyToInternalAttCode[strtolower($sReconcKey)];
+		}
+
+		// Check that the reconciliation key is either a given column, or an external key
 		if (!in_array($sReconcKey, $aFieldList))
 		{
-			throw new BulkLoadException("Reconciliation keys not found in the input columns '$sReconcKey' (class: '$sClass')");
+			if (!array_key_exists($sReconcKey, $aExtKeys))
+			{
+				throw new BulkLoadException("Reconciliation keys not found in the input columns '$sReconcKey' (class: '$sClass')");
+			}
 		}
 
 		if (preg_match('/^(.+)->(.+)$/', trim($sReconcKey), $aMatches))
