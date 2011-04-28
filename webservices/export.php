@@ -23,7 +23,8 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
-require_once('../approot.inc.php');
+if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
+require_once(__DIR__.'/../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/nicewebpage.class.inc.php');
 require_once(APPROOT.'/application/csvpage.class.inc.php');
