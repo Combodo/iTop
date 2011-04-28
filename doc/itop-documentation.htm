@@ -74,19 +74,33 @@ a.internal:hover {
 <div id="banner"><span>Installation Help</span></div>
 <div id="content">
 <h1><a name="Installation">Completing the iTop installation</a></h1>
-<p>Under Construction </p>
+<h2>cron.php - overview</h2>
 <p>In order to operate properly, iTop maintenance operations and asynchronous tasks must be executed on a regular basis.
 In order to ease the installation, all the background tasks have been grouped to be launched from a single file: <tt>webservices/cron.php</tt></p>
+<p>The following features will require the activation of CRON.PHP</p>
+<ul>
+   <li><b>Asynchronous emails</b>. By default, this option is disabled. To enable it, set 'email_asynchronous' to 1 in the configuration file</li>
+   <li><b>Check ticket SLA</b>. Tickets reaching the limits will be passed into Escalation TTO/TTR states</li>
+</ul>
+</p>
+<p>More information about CRON in the <a href="https://sourceforge.net/apps/mediawiki/itop/index.php?title=Cron.php">Wiki</a></p>
 <h2>Scheduling cron.php on Windows</h2>
 <ol>
-<li>To be documented</p>
-<li>Use schedtask.exe or the 'at' command to schedule cron.php to run every minute. Refer to cron.php and the Readme file for the options/parameters.</li>
+<li>Edit the file <em>&lt;itop root&gt</em>/webservices/<b>cron.params</b> to set the credentials used for cronified tasks (requires administator privileges)</li>
+<li>Edit the file <em>&lt;itop root&gt</em>/webservices/<b>cron.cmd</b>, and set the relevant path for your installation of PHP. If you need a strong security, then you will have to change also the path to the parameters file <em>&lt;itop root&gt</em>/webservices/<b>cron.params</b> and move this file to a place where it is not easy to read its contents.</li>
+<li>Schedule the execution of cron.cmd:
+  <pre>schtasks.exe /create /tn "iTop CRON" /sc minute /mo 1 /tr "\"<em>&lt;itop root&gt</em>/webservices/cron.cmd\""</pre>
+</li> 
 </ol>
+
 
 <h2>Scheduling cron.php on Linux/Unix</h2>
 <ol>
-<li>To be documented</li>
-<li>Use the cron command to schedule the execution of cron.php every minute. Refer to cron.php and the Readme file for the options/parameters.</li>
+<li>Edit the file <em>&lt;itop root&gt</em>/webservices/<b>cron.params</b> to set the credentials used for cronified tasks (requires administator privileges)</li>
+<li>If you want strong security: move the file <em>&lt;itop root&gt</em>/webservices/<b>cron.params</b> into a directory not in the scope of the web server (Apache), and make it be readable only by the account that will execute the cron</li>
+<li>Edit the crontab and add the following line:
+   <pre>* * * * * /usr/bin/php <em>&lt;itop root&gt</em>/webservices/cron.php --param_file=<em>&lt;itop root&gt</em>/webservices/cron.params</pre>
+</li>
 </ol>
 
 <h1><a name="Modules">iTop Modules</a></h1>
@@ -97,7 +111,7 @@ In order to ease the installation, all the background tasks have been grouped to
 <p>This module allows IT operators to document all items they have under their control, it implements a CMDB following the ITIL best practices. The module provides a logical model of the IT infrastructure by identifying, controlling, maintaining and verifying the version of all existing Configuration Items (CIs).
 Relationships between CIs are also documented in the Configuration Management module, so that IT engineers can easily analyze dependencies within the infrastructure and understand the impact due to incidents or changes.</p>
 <p>Out of the box, iTop 1.0 allows you to manage:</p>
-<ul>
+<ul>           
 <li>Persons and Teams</li> 
 <li>Locations</li>
 <li>Business Processes</li>
@@ -111,7 +125,7 @@ Relationships between CIs are also documented in the Configuration Management mo
 <p><i>This module is the base for all other iTop modules and is automatically installed with iTop</i></p>
 
 <!-- Service Management Module -->
-
+                                       
 <h2 id="Service"><a name="ServiceMgmt">Service Management</a></h2>
 <p>This module allows you to define and maintain the Services provided by your organization, the contracts with your customers and providers and the available Service Levels for each of Service.</p>
 <p>Using this module, you can document:</p>

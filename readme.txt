@@ -16,11 +16,14 @@ Readme file
 Thank you for downloading the ninth packaged release of iTop.
 This version comes with a few new features and bug fixes.
 
-Additional documentation can be downloaded from http://www.combodo.com/itopdocumentation
+A wiki is now available: https://sourceforge.net/apps/mediawiki/itop/index.php?title=ITop_Documentation
+Additional documentation can be downloaded from there:
  - User guide
  - Administrator guide
  - Customization guide
  - Implementation guide
+Wiki articles complete the documentation for advanced/specific concerns.
+
 
 iTop is released under the GPL (v3) license. (Check license.txt in this directory).
 The source code of iTop can be found on SourceForge: http://itop.sourceforge.net
@@ -28,7 +31,8 @@ The source code of iTop can be found on SourceForge: http://itop.sourceforge.net
 1.1 What's new?
     ---------------------------
 - Data synchronization. As a consultant, use advanced tools to integrate tightly iTop
-  with an external application. The documentation is not yet available. Contact us at support@combodo.com for more information.
+  with an external application. Documentation is available on the brand new iTop wiki:
+  https://sourceforge.net/apps/mediawiki/itop/index.php?title=Data_Synchronization
 - Modify all utility: select a set of objects and force a value on all of them, or close a set of tickets in a few steps.
 - Tickets: the form have been redesigned with some focus on the case log.
 - iTop takes advantage of the APC cache.
@@ -102,15 +106,7 @@ The following features will require the activation of CRON.PHP:
  - asynchronous emails. By default, this option is disabled. To enable it, set 'email_asynchronous' to 1 in the configuration file.
  - check ticket SLA. Tickets reaching the limits will be passed into Escalation TTO/TTR states.
 
-To activate CRON.PHP, run it in CLI mode:
-php -q /var/www/itop/webservices/cron.php --auth_user=mylogin --auth_pwd=mypwd
-
-CRON.PHP could also be run in HTTP mode, relying on the standard iTop webservices login mechanism (?login_mode=basic).
-
-CRON.PHP will terminate after 1 hour. This value can be tuned: change cron_max_execution_time in the configuration file.
-Please make sure that the other timeouts (PHP, eventually your web server) are greater than cron_max_execution_time.
-Most of the time CRON.PHP does not use CPU resources. It has been designed so that it is shoud be running at anytime.
-
+More information into the Wiki: https://sourceforge.net/apps/mediawiki/itop/index.php?title=Cron.php
 
 2.4. Migrating from 1.0, 1.0.1 or 1.0.2
      ----------------------------------
@@ -214,19 +210,21 @@ Cosmetic: changed error message when dependencies cannot be solved
 #366 Global search case sensitive or not working at all (issue with COLLATION)
 #360 Wrong COUNT when using JOINS (+ other conditions)
 #340 Fixed OQL parsing issue - parameters in IN()/NOT IN() clauses
-#313: Provider contracts are filtered on the 'provider_id' - for filtering in the UI via the drop-down list of Organizations and for the security profiles ("Allowed Organizations").  The mapping for 'org_id', if any, is now taken into account by the security.
-#336: verification of the directory of the temporary config file was wrong... however the script still assumes that the temporary config file and the final one are stored in the same place... at the root of the iTop installation.
+#313 Provider contracts are filtered on the 'provider_id' - for filtering in the UI via the drop-down list of Organizations and for the security profiles ("Allowed Organizations").  The mapping for 'org_id', if any, is now taken into account by the security.
+#336 verification of the directory of the temporary config file was wrong... however the script still assumes that the temporary config file and the final one are stored in the same place... at the root of the iTop installation.
 #348 Multi-column queries not working fine with open joins and if null values to be displayed
 #356 Audit results filtered by context
 #357 Audit results list not expandable
-#353: no menu for DBServerInstance objects.
+#353 no menu for DBServerInstance objects.
 #305 Specified the charset in any call to htmlentities()
 In read-only mode, stimulus must not be allowed
 Display of relationships: Removed a "assertion failed" error message, and fixed an incorrect detection of the maximum recursion level
-#351: undefined variable sClass...
+#351 undefined variable sClass...
 CSV import web service - cosmetics on the reporting in case the data set is empty
 #388 Browser compatibility: Fixed issues with IE9 (Removed the 'bgiframe' javascript , which was designed for fixing IE6 issues only and causes troubles with IE9.)
-#385	Issue with auto-complete in search forms
+#385 Issue with auto-complete in search forms
+#394 Web service in CLI mode failing with error "could not find approot.inc.php"
+#395 Web service in CLI mode failing with no message
 
 
 3.2. Known limitations (https://sourceforge.net/apps/trac/itop/report/3)
