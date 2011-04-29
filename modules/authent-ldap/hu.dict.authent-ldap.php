@@ -19,9 +19,9 @@
  */
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:UserLDAP' => 'LDAP felhaszn‡l—',
+	'Class:UserLDAP' => 'LDAP felhasznÃ¡lÃ³',
 	'Class:UserLDAP+' => '',
-	'Class:UserLDAP/Attribute:password' => 'Jelsz—',
+	'Class:UserLDAP/Attribute:password' => 'JelszÃ³',
 	'Class:UserLDAP/Attribute:password+' => '',
 ));
 ?>

@@ -19,9 +19,9 @@
  */
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:UserLocal' => 'iTop felhaszn‡l—',
+	'Class:UserLocal' => 'iTop felhasznÃ¡lÃ³',
 	'Class:UserLocal+' => '',
-	'Class:UserLocal/Attribute:password' => 'Jelsz—',
+	'Class:UserLocal/Attribute:password' => 'JelszÃ³',
 	'Class:UserLocal/Attribute:password+' => '',
 ));
 ?>
