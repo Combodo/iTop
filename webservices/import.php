@@ -352,17 +352,28 @@ try
 	//   'organization' => 'org_id'
 	//   'organization->name' => 'org_id->name'
 	//
+	// Note: it may happen that an external field has the same label as the external key
+	//       in that case, we consider that the external key has precedence
+	//
 	$aFriendlyToInternalAttCode = array();
 	foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
 	{
-	  	$aFriendlyToInternalAttCode[strtolower(BulkChange::GetFriendlyAttCodeName($sClass, $sAttCode))] = $sAttCode;
+	  	$sFriendlyName = strtolower(BulkChange::GetFriendlyAttCodeName($sClass, $sAttCode));
+	  	if (!$oAttDef->IsExternalField() || !array_key_exists($sFriendlyName, $aFriendlyToInternalAttCode))
+	  	{
+		  	$aFriendlyToInternalAttCode[$sFriendlyName] = $sAttCode;
+		}
 	  	if ($oAttDef->IsExternalKey(EXTKEY_RELATIVE))
 	  	{
 	  		$sRemoteClass = $oAttDef->GetTargetClass();
 			foreach(MetaModel::ListAttributeDefs($sRemoteClass) as $sRemoteAttCode => $oRemoteAttDef)
 		  	{
-		  		$sAttCodeEx = $sAttCode.'->'.$sRemoteAttCode;
-		  		$aFriendlyToInternalAttCode[strtolower(BulkChange::GetFriendlyAttCodeName($sClass, $sAttCodeEx))] = $sAttCodeEx;
+	  			$sAttCodeEx = $sAttCode.'->'.$sRemoteAttCode;
+	  			$sFriendlyName = strtolower(BulkChange::GetFriendlyAttCodeName($sClass, $sAttCodeEx));
+		  		if (!array_key_exists($sFriendlyName, $aFriendlyToInternalAttCode))
+		  		{
+		  			$aFriendlyToInternalAttCode[$sFriendlyName] = $sAttCodeEx;
+		  		}
 		  	}
 		}
    }
