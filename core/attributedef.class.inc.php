@@ -1643,7 +1643,7 @@ class AttributeCaseLog extends AttributeText
 		{
 			$sStyle = 'style="'.implode(';', $aStyles).'"';
 		}
-		return "<div class=\"caselog\" $sStyle>".str_replace("\n", "<br>\n", $sContent).'</div>';	}
+		return "<div class=\"caselog\" $sStyle>".$sContent.'</div>';	}
 
 
 	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null)

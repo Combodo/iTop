@@ -71,7 +71,7 @@ class ormCaseLog {
 			}
 			$iPos += $this->m_aIndex[$index]['separator_length'];
 			$sTextEntry = substr($this->m_sLog, $iPos, $this->m_aIndex[$index]['text_length']);
-			$sTextEntry = str_replace("\n", "<br/>", htmlentities($sTextEntry, ENT_QUOTES, 'UTF-8'));
+			$sTextEntry = str_replace(array("\r\n", "\n", "\r"), "<br/>", htmlentities($sTextEntry, ENT_QUOTES, 'UTF-8'));
 			if (!is_null($aTransfoHandler))
 			{
 				$sTextEntry = call_user_func($aTransfoHandler, $sTextEntry);
@@ -91,7 +91,7 @@ class ormCaseLog {
 		if ($iPos < (strlen($this->m_sLog) - 1))
 		{
 			$sTextEntry = substr($this->m_sLog, $iPos);
-			$sTextEntry = str_replace("\n", "<br/>", htmlentities($sTextEntry, ENT_QUOTES, 'UTF-8'));
+			$sTextEntry = str_replace(array("\r\n", "\n", "\r"), "<br/>", htmlentities($sTextEntry, ENT_QUOTES, 'UTF-8'));
 			if (!is_null($aTransfoHandler))
 			{
 				$sTextEntry = call_user_func($aTransfoHandler, $sTextEntry);
