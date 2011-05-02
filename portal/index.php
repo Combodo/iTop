@@ -548,7 +548,7 @@ function ListResolvedRequests(WebPage $oP)
  * @param UserRequest $oRequest The object to display
  * @return void
  */
-function DisplayRequestDetails($oP, UserRequest $oRequest)
+function DisplayRequestDetails($oP, UserRequest $oRequest, $bEditMode = true)
 {
 	// Identical to the standard 'details' ZList of UserRequest, except that the field 'org_id' has been removed
 	$aList = array(
@@ -656,19 +656,29 @@ function DisplayRequestDetails($oP, UserRequest $oRequest)
 	$oP->Details($aDetails);
 	
 	// Case log... editable so that users can post comments
-	$oP->add("<form action=\"../portal/index.php\" id=\"request_form\" method=\"post\">\n");
-	$oP->add("<input type=\"hidden\" name=\"id\" value=\"".$oRequest->GetKey()."\">");
-	$oP->add("<input type=\"hidden\" name=\"step\" value=\"3\">");
-	$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
-	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"details\">");
-	$oP->add('<fieldset id="request_details_log"><legend>'.MetaModel::GetLabel('UserRequest', 'ticket_log').'</legend>');
-	$oAttDef = MetaModel::GetAttributeDef(get_class($oRequest), 'ticket_log');
-	$oValue = $oRequest->Get('ticket_log');
-	$oP->add($oRequest->GetFormElementForField($oP, get_class($oRequest), 'ticket_log', $oAttDef, $oValue, $sDisplayValue = '', $iId = 'att_ticket_log'));
-	//$oP->add(GetFieldAsHtml($oRequest, 'ticket_log'));
-	$oP->add('</fieldset>');
-	$oP->p('<input type="submit" value="'.Dict::S('UI:Button:Ok').'">');
-	$oP->add('</form>');
+	if ($bEditMode)
+	{
+		$oP->add("<form action=\"../portal/index.php\" id=\"request_form\" method=\"post\">\n");
+		$oP->add("<input type=\"hidden\" name=\"id\" value=\"".$oRequest->GetKey()."\">");
+		$oP->add("<input type=\"hidden\" name=\"step\" value=\"3\">");
+		$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
+		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"details\">");
+		$oP->add('<fieldset id="request_details_log"><legend>'.MetaModel::GetLabel('UserRequest', 'ticket_log').'</legend>');
+		$oAttDef = MetaModel::GetAttributeDef(get_class($oRequest), 'ticket_log');
+		$oValue = $oRequest->Get('ticket_log');
+		$oP->add($oRequest->GetFormElementForField($oP, get_class($oRequest), 'ticket_log', $oAttDef, $oValue, $sDisplayValue = '', $iId = 'att_ticket_log'));
+		//$oP->add(GetFieldAsHtml($oRequest, 'ticket_log'));
+		$oP->add('</fieldset>');
+		$oP->p('<input type="submit" value="'.Dict::S('UI:Button:Ok').'">');
+		$oP->add('</form>');
+	}
+	else
+	{
+		$oP->add('<fieldset id="request_details_log"><legend>'.MetaModel::GetLabel('UserRequest', 'ticket_log').'</legend>');
+		$oP->add(GetFieldAsHtml($oRequest, 'ticket_log'));
+		$oP->add('</fieldset>');
+		
+	}
 	$oP->add('</div>');
 }
 
@@ -682,10 +692,6 @@ function DisplayResolvedRequestForm($oP, UserRequest $oRequest)
 {
 	$oP->add("<div class=\"wizContainer\" id=\"form_close_request\">\n");
 	$oP->add("<form action=\"../portal/index.php\" id=\"request_form\" method=\"post\">\n");
-	$oP->add('<table id="close_form_table"><tr><td style="vertical-align:top;">');
-	$oP->add("<h1 id=\"title_request_details\">".Dict::Format('Portal:TitleRequestDetailsFor_Request', $oRequest->GetName())."</h1>\n");
-	DisplayRequestDetails($oP, $oRequest);
-	$oP->add('</td><td style="vertical-align:top;">');
 	$aArgs = array('this' => $oRequest);
 	$sClass = get_class($oRequest);
 
@@ -720,9 +726,11 @@ function DisplayResolvedRequestForm($oP, UserRequest $oRequest)
 	$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
 	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"details\">");
 	$oP->p("<input type=\"submit\" value=\"".Dict::S('Portal:Button:CloseTicket')."\">");
-	$oP->add('</td></tr></table>');
 	$oP->add("</form>");
 	$oP->add("</div>\n");
+	$oP->add("<h1 id=\"title_request_details\">".Dict::Format('Portal:TitleRequestDetailsFor_Request', $oRequest->GetName())."</h1>\n");
+	DisplayRequestDetails($oP, $oRequest, false /* bEditMode */);
+
 	$oP->add_ready_script(
 <<<EOF
 		// Starts the validation when the page is ready

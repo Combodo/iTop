@@ -114,6 +114,11 @@ a.button span {
 	width:800px;
 	text-align: left;
 }
+#form_close_request {
+	display: inline-block;
+	width:800px;
+	text-align: left;
+}
 #request_details_log {
 	width:774px;
 }
