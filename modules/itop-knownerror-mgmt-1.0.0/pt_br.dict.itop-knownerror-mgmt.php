@@ -15,133 +15,88 @@
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 /**
- * Localized data
- *
- * @author      Erwan Taloc <erwan.taloc@combodo.com>
- * @author      Romain Quetiez <romain.quetiez@combodo.com>
- * @author      Denis Flaven <denis.flaven@combodo.com>
- * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
+ * @author	Erwan Taloc <erwan.taloc@combodo.com>
+ * @author	Romain Quetiez <romain.quetiez@combodo.com>
+ * @author	Denis Flaven <denis.flaven@combodo.com>
+ * @author	Marco Tulio <mtulio@opensolucoes.com.br>
+
+ * @licence	http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:KnownError' => 'Known Error',
-	'Class:KnownError+' => 'Error documented for a known issue',
-	'Class:KnownError/Attribute:name' => 'Name',
+	'Class:KnownError' => 'Erros conhecidos',
+	'Class:KnownError+' => 'Erro documentado de um problema conhecido',
+	'Class:KnownError/Attribute:name' => 'Nome',
 	'Class:KnownError/Attribute:name+' => '',
-	'Class:KnownError/Attribute:org_id' => 'Customer',
+	'Class:KnownError/Attribute:org_id' => 'Cliente',
 	'Class:KnownError/Attribute:org_id+' => '',
-	'Class:KnownError/Attribute:cust_name' => 'Customer Name',
-	'Class:KnownError/Attribute:cust_name+' => '',
-	'Class:KnownError/Attribute:problem_id' => 'Related Problem',
+	'Class:KnownError/Attribute:problem_id' => 'Problema relacionado',
 	'Class:KnownError/Attribute:problem_id+' => '',
-	'Class:KnownError/Attribute:problem_ref' => 'Ref',
-	'Class:KnownError/Attribute:problem_ref+' => '',
-	'Class:KnownError/Attribute:symptom' => 'Symptom',
+	'Class:KnownError/Attribute:symptom' => 'Sintoma',
 	'Class:KnownError/Attribute:symptom+' => '',
-	'Class:KnownError/Attribute:root_cause' => 'Root Cause',
+	'Class:KnownError/Attribute:root_cause' => 'Origem causa',
 	'Class:KnownError/Attribute:root_cause+' => '',
-	'Class:KnownError/Attribute:workaround' => 'Workaround',
+	'Class:KnownError/Attribute:workaround' => 'Solução',
 	'Class:KnownError/Attribute:workaround+' => '',
-	'Class:KnownError/Attribute:solution' => 'Solution',
+	'Class:KnownError/Attribute:solution' => 'Solução',
 	'Class:KnownError/Attribute:solution+' => '',
-	'Class:KnownError/Attribute:error_code' => 'Error Code',
+	'Class:KnownError/Attribute:error_code' => 'Código erro',
 	'Class:KnownError/Attribute:error_code+' => '',
-	'Class:KnownError/Attribute:domain' => 'Domain',
+	'Class:KnownError/Attribute:domain' => 'Domínio',
 	'Class:KnownError/Attribute:domain+' => '',
-	'Class:KnownError/Attribute:domain/Value:Application' => 'Application',
-	'Class:KnownError/Attribute:domain/Value:Application+' => 'Application',
+	'Class:KnownError/Attribute:domain/Value:Application' => 'Aplicação',
+	'Class:KnownError/Attribute:domain/Value:Application+' => 'Aplicação',
 	'Class:KnownError/Attribute:domain/Value:Desktop' => 'Desktop',
 	'Class:KnownError/Attribute:domain/Value:Desktop+' => 'Desktop',
-	'Class:KnownError/Attribute:domain/Value:Network' => 'Network',
-	'Class:KnownError/Attribute:domain/Value:Network+' => 'Network',
-	'Class:KnownError/Attribute:domain/Value:Server' => 'Server',
-	'Class:KnownError/Attribute:domain/Value:Server+' => 'Server',
-	'Class:KnownError/Attribute:vendor' => 'Vendor',
+	'Class:KnownError/Attribute:domain/Value:Network' => 'Rede',
+	'Class:KnownError/Attribute:domain/Value:Network+' => 'Rede',
+	'Class:KnownError/Attribute:domain/Value:Server' => 'Servidor',
+	'Class:KnownError/Attribute:domain/Value:Server+' => 'Servidor',
+	'Class:KnownError/Attribute:vendor' => 'Vendedor',
 	'Class:KnownError/Attribute:vendor+' => '',
-	'Class:KnownError/Attribute:model' => 'Model',
+	'Class:KnownError/Attribute:model' => 'Modelo',
 	'Class:KnownError/Attribute:model+' => '',
-	'Class:KnownError/Attribute:version' => 'Version',
+	'Class:KnownError/Attribute:version' => 'Versão',
 	'Class:KnownError/Attribute:version+' => '',
 	'Class:KnownError/Attribute:ci_list' => 'CIs',
 	'Class:KnownError/Attribute:ci_list+' => '',
-	'Class:KnownError/Attribute:document_list' => 'Documents',
+	'Class:KnownError/Attribute:document_list' => 'Documentos',
 	'Class:KnownError/Attribute:document_list+' => '',
-));
-
-
-//
-// Class: lnkInfraError
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkInfraError' => 'InfraErrorLinks',
-	'Class:lnkInfraError+' => 'Infra related to a known error',
+	'Class:lnkInfraError+' => 'Infra relacionada a um erro conhecido',
 	'Class:lnkInfraError/Attribute:infra_id' => 'CI',
 	'Class:lnkInfraError/Attribute:infra_id+' => '',
-	'Class:lnkInfraError/Attribute:infra_name' => 'CI Name',
-	'Class:lnkInfraError/Attribute:infra_name+' => '',
-	'Class:lnkInfraError/Attribute:infra_status' => 'CI Status',
-	'Class:lnkInfraError/Attribute:infra_status+' => '',
-	'Class:lnkInfraError/Attribute:error_id' => 'Error',
+	'Class:lnkInfraError/Attribute:error_id' => 'Erro',
 	'Class:lnkInfraError/Attribute:error_id+' => '',
-	'Class:lnkInfraError/Attribute:error_name' => 'Error name',
-	'Class:lnkInfraError/Attribute:error_name+' => '',
-	'Class:lnkInfraError/Attribute:reason' => 'Reason',
+	'Class:lnkInfraError/Attribute:reason' => 'Razão',
 	'Class:lnkInfraError/Attribute:reason+' => '',
-));
-
-//
-// Class: lnkDocumentError
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:lnkDocumentError' => 'DocumentsErrorLinks',
-	'Class:lnkDocumentError+' => 'A link between a document and a known error',
-	'Class:lnkDocumentError/Attribute:doc_id' => 'Document',
+	'Class:lnkDocumentError' => 'DocumentosErroLinks',
+	'Class:lnkDocumentError+' => 'Ligação entre um documento e um erro conhecido',
+	'Class:lnkDocumentError/Attribute:doc_id' => 'Documento',
 	'Class:lnkDocumentError/Attribute:doc_id+' => '',
-	'Class:lnkDocumentError/Attribute:doc_name' => 'Document Name',
-	'Class:lnkDocumentError/Attribute:doc_name+' => '',
-	'Class:lnkDocumentError/Attribute:error_id' => 'Error',
+	'Class:lnkDocumentError/Attribute:error_id' => 'Erro',
 	'Class:lnkDocumentError/Attribute:error_id+' => '',
-	'Class:lnkDocumentError/Attribute:error_name' => 'Error Name',
-	'Class:lnkDocumentError/Attribute:error_name+' => '',
-	'Class:lnkDocumentError/Attribute:link_type' => 'Information',
+	'Class:lnkDocumentError/Attribute:link_type' => 'Informação',
 	'Class:lnkDocumentError/Attribute:link_type+' => '',
+	'Class:KnownError/Attribute:cust_name' => 'Nome cliente',
+	'Class:KnownError/Attribute:cust_name+' => '',
+	'Class:KnownError/Attribute:problem_ref' => 'Ref',
+	'Class:KnownError/Attribute:problem_ref+' => '',
+	'Class:lnkInfraError/Attribute:infra_name' => 'Nome CI',
+	'Class:lnkInfraError/Attribute:infra_name+' => '',
+	'Class:lnkInfraError/Attribute:infra_status' => 'Status CI',
+	'Class:lnkInfraError/Attribute:infra_status+' => '',
+	'Class:lnkInfraError/Attribute:error_name' => 'Nome Erro',
+	'Class:lnkInfraError/Attribute:error_name+' => '',
+	'Class:lnkDocumentError/Attribute:doc_name' => 'Nome Documento',
+	'Class:lnkDocumentError/Attribute:doc_name+' => '',
+	'Class:lnkDocumentError/Attribute:error_name' => 'Nome Erro',
+	'Class:lnkDocumentError/Attribute:error_name+' => '',
+	'Menu:NewError' => 'Novo erro conhecido',
+	'Menu:NewError+' => 'Criação de um novo erro conhecido',
+	'Menu:SearchError' => 'Pesquisar Erros Conhecidos',
+	'Menu:SearchError+' => 'Pesquisar Erros Conhecidos',
+	'Menu:Problem:KnownErrors' => 'Todos Erros Conhecidos',
+	'Menu:Problem:KnownErrors+' => 'Todos Erros Conhecidos',
 ));
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Menu:NewError' => 'New Known Error',
-	'Menu:NewError+' => 'Creation of a new known error',
-	'Menu:SearchError' => 'Search for Known Errors',
-	'Menu:SearchError+' => 'Search for Known Errors',
-	'Menu:Problem:KnownErrors' => 'All Known Errors',
-    'Menu:Problem:KnownErrors+' => 'All Known Errors',
-));
-
 ?>

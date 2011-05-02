@@ -15,248 +15,122 @@
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 /**
- * Localized data
- *
- * @author      Erwan Taloc <erwan.taloc@combodo.com>
- * @author      Romain Quetiez <romain.quetiez@combodo.com>
- * @author      Denis Flaven <denis.flaven@combodo.com>
- * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
+ * @author	Erwan Taloc <erwan.taloc@combodo.com>
+ * @author	Romain Quetiez <romain.quetiez@combodo.com>
+ * @author	Denis Flaven <denis.flaven@combodo.com>
+ * @author	Marco Tulio <mtulio@opensolucoes.com.br>
+
+ * @licence	http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
-
-Dict::Add('PT BR', 'English', 'English', array(
-	'Core:AttributeLinkedSet' => 'Array of objects',
-	'Core:AttributeLinkedSet+' => 'Any kind of objects [subclass] of the same class',
-
-	'Core:AttributeLinkedSetIndirect' => 'Array of objects (N-N)',
-	'Core:AttributeLinkedSetIndirect+' => 'Any kind of objects [subclass] of the same class',
-
-	'Core:AttributeInteger' => 'Integer',
-	'Core:AttributeInteger+' => 'Numeric value (could be negative)',
-
-	'Core:AttributeDecimal' => 'Decimal',
-	'Core:AttributeDecimal+' => 'Decimal value (could be negative)',
-
-	'Core:AttributeBoolean' => 'Boolean',
-	'Core:AttributeBoolean+' => 'Boolean',
-
-	'Core:AttributeString' => 'String',
-	'Core:AttributeString+' => 'Alphanumeric string',
-
-	'Core:AttributeClass' => 'Class',
-	'Core:AttributeClass+' => 'Class',
-
-	'Core:AttributeApplicationLanguage' => 'User language',
-	'Core:AttributeApplicationLanguage+' => 'Language and country (EN US)',
-
-	'Core:AttributeFinalClass' => 'Class (auto)',
-	'Core:AttributeFinalClass+' => 'Real class of the object (automatically created by the core)',
-
-	'Core:AttributePassword' => 'Password',
-	'Core:AttributePassword+' => 'Password of an external device',
-
- 	'Core:AttributeEncryptedString' => 'Encrypted string',
-	'Core:AttributeEncryptedString+' => 'String encrypted with a local key',
-
-	'Core:AttributeText' => 'Text',
-	'Core:AttributeText+' => 'Multiline character string',
-
-	'Core:AttributeHTML' => 'HTML',
-	'Core:AttributeHTML+' => 'HTML string',
-
-	'Core:AttributeEmailAddress' => 'Email address',
-	'Core:AttributeEmailAddress+' => 'Email address',
-
-	'Core:AttributeIPAddress' => 'IP address',
-	'Core:AttributeIPAddress+' => 'IP address',
-
-	'Core:AttributeOQL' => 'OQL',
-	'Core:AttributeOQL+' => 'Object Query Langage expression',
-
-	'Core:AttributeEnum' => 'Enum',
-	'Core:AttributeEnum+' => 'List of predefined alphanumeric strings',
-
-	'Core:AttributeTemplateString' => 'Template string',
-	'Core:AttributeTemplateString+' => 'String containing placeholders',
-
-	'Core:AttributeTemplateText' => 'Template text',
-	'Core:AttributeTemplateText+' => 'Text containing placeholders',
-
-	'Core:AttributeTemplateHTML' => 'Template HTML',
-	'Core:AttributeTemplateHTML+' => 'HTML containing placeholders',
-
-	'Core:AttributeDateTime' => 'Date/time',
-	'Core:AttributeDateTime+' => 'Date and time (year-month-day hh:mm:ss)',
-
-	'Core:AttributeDate' => 'Date',
-	'Core:AttributeDate+' => 'Date (year-month-day)',
-
-	'Core:AttributeDeadline' => 'Deadline',
-	'Core:AttributeDeadline+' => 'Date, displayed relatively to the current time',
-
-	'Core:AttributeExternalKey' => 'External key',
-	'Core:AttributeExternalKey+' => 'External (or foreign) key',
-
-	'Core:AttributeExternalField' => 'External field',
-	'Core:AttributeExternalField+' => 'Field mapped from an external key',
-
-	'Core:AttributeURL' => 'URL',
-	'Core:AttributeURL+' => 'Absolute or relative URL as a text string',
-
-	'Core:AttributeBlob' => 'Blob',
-	'Core:AttributeBlob+' => 'Any binary content (document)',
-
-	'Core:AttributeOneWayPassword' => 'One way password',
-	'Core:AttributeOneWayPassword+' => 'One way encrypted (hashed) password',
-
-	'Core:AttributeTable' => 'Table',
-	'Core:AttributeTable+' => 'Indexed array having two dimensions',
-
-	'Core:AttributePropertySet' => 'Properties',
-	'Core:AttributePropertySet+' => 'List of untyped properties (name and value)',
-));
-
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'core/cmdb'
-//////////////////////////////////////////////////////////////////////
-//
-
-//
-// Class: CMDBChange
-//
-
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:CMDBChange' => 'Mudan&ccedil;as',
-	'Class:CMDBChange+' => 'Monitoramento Mudan&ccedil;as',
+	'Class:ActionEmail' => 'Email notificação',
+	'Class:ActionEmail+' => '',
+	'Class:ActionEmail/Attribute:test_recipient' => 'Teste destino',
+	'Class:ActionEmail/Attribute:test_recipient+' => 'Destinatário o status está como "Teste"',
+	'Class:ActionEmail/Attribute:from' => 'De',
+	'Class:ActionEmail/Attribute:from+' => 'Será enviado dentro do cabeçalho do email',
+	'Class:ActionEmail/Attribute:reply_to' => 'Responder para',
+	'Class:ActionEmail/Attribute:reply_to+' => 'Será enviado dentro do cabeçalho do email',
+	'Class:ActionEmail/Attribute:to' => 'Para',
+	'Class:ActionEmail/Attribute:to+' => 'Destinatário para o email',
+	'Class:ActionEmail/Attribute:cc' => 'Cc',
+	'Class:ActionEmail/Attribute:cc+' => 'Com cópia',
+	'Class:ActionEmail/Attribute:bcc' => 'bcc',
+	'Class:ActionEmail/Attribute:bcc+' => 'Com cópia oculta',
+	'Class:ActionEmail/Attribute:subject' => 'assunto',
+	'Class:ActionEmail/Attribute:subject+' => 'Título do email',
+	'Class:ActionEmail/Attribute:body' => 'corpo',
+	'Class:ActionEmail/Attribute:body+' => 'Conteúdo do email',
+	'Class:ActionEmail/Attribute:importance' => 'importância',
+	'Class:ActionEmail/Attribute:importance+' => 'Flag importância',
+	'Class:ActionEmail/Attribute:importance/Value:high' => 'alto',
+	'Class:ActionEmail/Attribute:importance/Value:high+' => 'alto',
+	'Class:ActionEmail/Attribute:importance/Value:low' => 'baixo',
+	'Class:ActionEmail/Attribute:importance/Value:low+' => 'baixo',
+	'Class:ActionEmail/Attribute:importance/Value:normal' => 'normal',
+	'Class:ActionEmail/Attribute:importance/Value:normal+' => 'normal',
+	'Class:TriggerOnStateEnter' => 'Trigger (ao entrar em um estado)',
+	'Class:TriggerOnStateEnter+' => 'Trigger sobre a mudança de estado do objeto - entrar',
+	'Class:TriggerOnStateLeave' => 'Trigger (na saída de um estado)',
+	'Class:TriggerOnStateLeave+' => 'Trigger sobre a mudança de estado do objeto - deixando',
+	'Class:TriggerOnObjectCreate' => 'Trigger (sobre a criação do objeto)',
+	'Class:TriggerOnObjectCreate+' => 'Trigger sobre a criação do objeto de [uma classe filha de] uma determinada classe',
+	'Class:lnkTriggerAction' => 'Ação/Trigger',
+	'Class:lnkTriggerAction+' => 'Ligação entre uma trigger e uma ação',
+	'Class:lnkTriggerAction/Attribute:action_id' => 'Ação',
+	'Class:lnkTriggerAction/Attribute:action_id+' => 'Ação a ser executada',
+	'Class:lnkTriggerAction/Attribute:trigger_id' => 'Trigger',
+	'Class:lnkTriggerAction/Attribute:trigger_id+' => '',
+	'Class:lnkTriggerAction/Attribute:order' => 'Ordem',
+	'Class:lnkTriggerAction/Attribute:order+' => 'AAções executadas ordem',
+	'Class:AsyncSendEmail' => 'Email (assíncrono)',
+	'Class:AsyncSendEmail/Attribute:to' => 'Para',
+	'Class:AsyncSendEmail/Attribute:subject' => 'Assunto',
+	'Class:AsyncSendEmail/Attribute:body' => 'Corpo',
+	'Class:AsyncSendEmail/Attribute:header' => 'Cabeçalho',
+	'Class:CMDBChange' => 'Mudanças',
+	'Class:CMDBChange+' => 'Monitoramento Mudanças',
 	'Class:CMDBChange/Attribute:date' => 'data',
-	'Class:CMDBChange/Attribute:date+' => 'data e hora que as mudan&ccedil;as tenham sido registradas.',
+	'Class:CMDBChange/Attribute:date+' => 'data e hora que as mudanças tenham sido registradas.',
 	'Class:CMDBChange/Attribute:userinfo' => 'misc. info',
-	'Class:CMDBChange/Attribute:userinfo+' => 'Solicitante definido informa&ccedil;&atilde;o',
-));
-
-//
-// Class: CMDBChangeOp
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:CMDBChangeOp' => 'Opera&ccedil;&atilde;o Mudan&ccedil;a',
-	'Class:CMDBChangeOp+' => 'Controle Opera&ccedil;&atilde;o Mudan&ccedil;a',
-	'Class:CMDBChangeOp/Attribute:change' => 'mudan&ccedil;as',
-	'Class:CMDBChangeOp/Attribute:change+' => 'mudan&ccedil;as',
-	'Class:CMDBChangeOp/Attribute:date' => 'data',
-	'Class:CMDBChangeOp/Attribute:date+' => 'data e hora das mudan&ccedil;as',
-	'Class:CMDBChangeOp/Attribute:userinfo' => 'usu&aacute;rio',
-	'Class:CMDBChangeOp/Attribute:userinfo+' => 'quem fez esta mudan&ccedil;as',
+	'Class:CMDBChange/Attribute:userinfo+' => 'Solicitante definido informação',
+	'Class:CMDBChangeOp' => 'Operação Mudança',
+	'Class:CMDBChangeOp+' => 'Controle Operação Mudança',
+	'Class:CMDBChangeOp/Attribute:change' => 'mudanças',
+	'Class:CMDBChangeOp/Attribute:change+' => 'mudanças',
 	'Class:CMDBChangeOp/Attribute:objclass' => 'classe objeto',
 	'Class:CMDBChangeOp/Attribute:objclass+' => 'classe objeto',
 	'Class:CMDBChangeOp/Attribute:objkey' => 'id objeto',
 	'Class:CMDBChangeOp/Attribute:objkey+' => 'objeto',
 	'Class:CMDBChangeOp/Attribute:finalclass' => 'tipo',
 	'Class:CMDBChangeOp/Attribute:finalclass+' => '',
-));
-
-//
-// Class: CMDBChangeOpCreate
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:CMDBChangeOpCreate' => 'objeto criado',
-	'Class:CMDBChangeOpCreate+' => 'Controle cria&ccedil;&atilde;o objeto',
-));
-
-//
-// Class: CMDBChangeOpDelete
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Class:CMDBChangeOpCreate+' => 'Controle criação objeto',
 	'Class:CMDBChangeOpDelete' => 'objeto apagado',
 	'Class:CMDBChangeOpDelete+' => 'Controle objeto eliminado',
-));
-
-//
-// Class: CMDBChangeOpSetAttribute
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:CMDBChangeOpSetAttribute' => 'objeto alterado',
 	'Class:CMDBChangeOpSetAttribute+' => 'Controle do objeto alterado',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode' => 'Atributo',
-	'Class:CMDBChangeOpSetAttribute/Attribute:attcode+' => 'c&oacute;digo da modifica&ccedil;&atilde;o',
-));
-
-//
-// Class: CMDBChangeOpSetAttributeScalar
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:CMDBChangeOpSetAttributeScalar' => 'mudan&ccedil;a propriedade',
-	'Class:CMDBChangeOpSetAttributeScalar+' => 'controle da mudan&ccedil;a propriedade do objeto',
+	'Class:CMDBChangeOpSetAttribute/Attribute:attcode+' => 'código da modificação',
+	'Class:CMDBChangeOpSetAttributeScalar' => 'mudança propriedade',
+	'Class:CMDBChangeOpSetAttributeScalar+' => 'controle da mudança propriedade do objeto',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue' => 'Valor anterior',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue+' => 'valores anteriores do atributo',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue' => 'Novo valor',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue+' => 'novo valor do atributo',
-));
-
-//
-// Class: CMDBChangeOpSetAttributeBlob
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:CMDBChangeOpSetAttributeBlob' => 'mudan&ccedil;a dado',
-	'Class:CMDBChangeOpSetAttributeBlob+' => 'controle mudan&ccedil;a dado',
+	'Class:CMDBChangeOpSetAttributeBlob' => 'mudança dado',
+	'Class:CMDBChangeOpSetAttributeBlob+' => 'controle mudança dado',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata' => 'Dado anterior',
-	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata+' => 'conte&uacute;do anterior do atributo',
-));
-
-//
-// Class: CMDBChangeOpSetAttributeText
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:CMDBChangeOpSetAttributeText' => 'mudan&ccedil;a texto',
-	'Class:CMDBChangeOpSetAttributeText+' => 'controle mudan&ccedil;a texto',
+	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata+' => 'conteúdo anterior do atributo',
+	'Class:CMDBChangeOpSetAttributeOneWayPassword' => 'Senha criptografada',
+	'Class:CMDBChangeOpSetAttributeOneWayPassword/Attribute:prev_pwd' => 'Valores anteriores',
+	'Class:CMDBChangeOpSetAttributeEncrypted' => 'Campo criptografado',
+	'Class:CMDBChangeOpSetAttributeEncrypted/Attribute:prevstring' => 'Valores anteriores',
+	'Class:CMDBChangeOpSetAttributeText' => 'mudança texto',
+	'Class:CMDBChangeOpSetAttributeText+' => 'controle mudança texto',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata' => 'Dado anterior',
-	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata+' => 'conte&uacute;do anterior do atributo',
-));
-
-//
-// Class: Event
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata+' => 'conteúdo anterior do atributo',
+	'Class:CMDBChangeOpSetAttributeCaseLog' => 'Caso Log',
+	'Class:CMDBChangeOpSetAttributeCaseLog/Attribute:lastentry' => 'Última entrada',
 	'Class:Event' => 'Log Eventos',
-	'Class:Event+' => 'An application internal event',
+	'Class:Event+' => 'Um pedido de evento interno',
 	'Class:Event/Attribute:message' => 'mensagem',
-	'Class:Event/Attribute:message+' => 'descri&ccedil;&atilde;o curta do evento',
+	'Class:Event/Attribute:message+' => 'descrição curta do evento',
 	'Class:Event/Attribute:date' => 'data',
-	'Class:Event/Attribute:date+' => 'data e hora em que as mudan&ccedil;as tenham sido registadas',
-	'Class:Event/Attribute:userinfo' => 'info usu&acute;rio',
-	'Class:Event/Attribute:userinfo+' => 'identifica&ccedil;&atilde;o do usu&aacute;rio queestava fazendo a a&ccedil;&atilde;o e desencadeou este evento',
+	'Class:Event/Attribute:date+' => 'data e hora em que as mudanças tenham sido registadas',
+	'Class:Event/Attribute:userinfo' => 'info usuário',
+	'Class:Event/Attribute:userinfo+' => 'identificação do usuário queestava fazendo a ação e desencadeou este evento',
 	'Class:Event/Attribute:finalclass' => 'tipo',
 	'Class:Event/Attribute:finalclass+' => '',
-));
-
-//
-// Class: EventNotification
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:EventNotification' => 'Notifica&ccedil;&atilde;o evento',
+	'Class:EventNotification' => 'Notificação evento',
 	'Class:EventNotification+' => 'Trace of a notification that has been sent',
 	'Class:EventNotification/Attribute:trigger_id' => 'Trigger',
-	'Class:EventNotification/Attribute:trigger_id+' => 'conta usu&aacute;rio',
-	'Class:EventNotification/Attribute:action_id' => 'usu&aacute;rio',
-	'Class:EventNotification/Attribute:action_id+' => 'conta usu&aacute;rio',
+	'Class:EventNotification/Attribute:trigger_id+' => 'conta usuário',
+	'Class:EventNotification/Attribute:action_id' => 'usuário',
+	'Class:EventNotification/Attribute:action_id+' => 'conta usuário',
 	'Class:EventNotification/Attribute:object_id' => 'Objeto id',
 	'Class:EventNotification/Attribute:object_id+' => 'objeto id (classe definida pela trigger ?)',
-));
-
-//
-// Class: EventNotificationEmail
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:EventNotificationEmail' => 'Enviando evento Email',
 	'Class:EventNotificationEmail+' => 'Controle de um email que foi enviado',
 	'Class:EventNotificationEmail/Attribute:to' => 'Para',
@@ -271,201 +145,344 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:EventNotificationEmail/Attribute:subject+' => 'Assunto',
 	'Class:EventNotificationEmail/Attribute:body' => 'Corpo',
 	'Class:EventNotificationEmail/Attribute:body+' => 'Corpo',
-));
-
-//
-// Class: EventIssue
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:EventIssue' => 'Emiss&atilde;o de evento',
-	'Class:EventIssue+' => 'Controle da emiss&atilde;o (aten&ccedil;&atilde;o, erros, etc.)',
-	'Class:EventIssue/Attribute:issue' => 'Emiss&atilde;o',
+	'Class:EventIssue' => 'Emissão de evento',
+	'Class:EventIssue+' => 'Controle da emissão (atenção, erros, etc.)',
+	'Class:EventIssue/Attribute:issue' => 'Emissão',
 	'Class:EventIssue/Attribute:issue+' => 'O que aconteceu?',
 	'Class:EventIssue/Attribute:impact' => 'Impacto',
-	'Class:EventIssue/Attribute:impact+' => 'Quais s&atilde;o as consequ&ecirc;ncias?',
-	'Class:EventIssue/Attribute:page' => 'P&aacute;gina',
+	'Class:EventIssue/Attribute:impact+' => 'Quais são as consequências?',
+	'Class:EventIssue/Attribute:page' => 'Página',
 	'Class:EventIssue/Attribute:page+' => 'HTTP ponto de entrada',
 	'Class:EventIssue/Attribute:arguments_post' => 'Postados argumentos',
 	'Class:EventIssue/Attribute:arguments_post+' => 'HTTP POST argumentos',
 	'Class:EventIssue/Attribute:arguments_get' => 'URL argumentos',
 	'Class:EventIssue/Attribute:arguments_get+' => 'HTTP GET argumentos',
-	'Class:EventIssue/Attribute:callstack' => 'Callstack',
-	'Class:EventIssue/Attribute:callstack+' => 'Call stack',
+	'Class:EventIssue/Attribute:callstack' => 'PilhaChamada',
+	'Class:EventIssue/Attribute:callstack+' => 'Pilha de chamada',
 	'Class:EventIssue/Attribute:data' => 'Dado',
-	'Class:EventIssue/Attribute:data+' => 'Mais informa&ccedil;&otilde;es',
-));
-
-//
-// Class: EventWebService
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Class:EventIssue/Attribute:data+' => 'Mais informações',
 	'Class:EventWebService' => 'Evento Web service',
 	'Class:EventWebService+' => 'Controle chamado do web service',
-	'Class:EventWebService/Attribute:verb' => 'Verb',
-	'Class:EventWebService/Attribute:verb+' => 'Nome da opera&ccedil;&atilde;o',
+	'Class:EventWebService/Attribute:verb' => 'Verbo',
+	'Class:EventWebService/Attribute:verb+' => 'Nome da operação',
 	'Class:EventWebService/Attribute:result' => 'Resultado',
-	'Class:EventWebService/Attribute:result+' => 'Vis&atilde;o geral successos/falhas',
+	'Class:EventWebService/Attribute:result+' => 'Visão geral successos/falhas',
 	'Class:EventWebService/Attribute:log_info' => 'Info log',
 	'Class:EventWebService/Attribute:log_info+' => 'Resultado info log',
-	'Class:EventWebService/Attribute:log_warning' => 'Log aten&ccedil;&atilde;o',
-	'Class:EventWebService/Attribute:log_warning+' => 'Resultado Log aten&ccedil;&atilde;o',
+	'Class:EventWebService/Attribute:log_warning' => 'Log atenção',
+	'Class:EventWebService/Attribute:log_warning+' => 'Resultado Log atenção',
 	'Class:EventWebService/Attribute:log_error' => 'Log erro',
 	'Class:EventWebService/Attribute:log_error+' => 'Resultado log erro',
 	'Class:EventWebService/Attribute:data' => 'Dado',
 	'Class:EventWebService/Attribute:data+' => 'Resultado dado',
-));
-
-//
-// Class: Action
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:Action' => 'Personalizar A&ccedil;&atilde;o',
-	'Class:Action+' => 'A&ccedil;&atilde;o definida usu&aacute;rio',
+	'Class:EventLoginUsage' => 'Uso Login',
+	'Class:EventLoginUsage+' => '',
+	'Class:EventLoginUsage/Attribute:user_id' => 'Entrar',
+	'Class:EventLoginUsage/Attribute:user_id+' => '',
+	'Class:SynchroDataSource' => 'Fontes de dados de sincronização',
+	'Class:SynchroDataSource/Attribute:name' => 'Nome',
+	'Class:SynchroDataSource/Attribute:name+' => '',
+	'Class:SynchroDataSource/Attribute:description' => 'Descrição',
+	'Class:SynchroDataSource/Attribute:status' => 'Status',
+	'Class:SynchroDataSource/Attribute:status/Value:implementation' => 'Implementação',
+	'Class:SynchroDataSource/Attribute:status/Value:obsolete' => 'Obsoleto',
+	'Class:SynchroDataSource/Attribute:status/Value:production' => 'Produção',
+	'Class:SynchroDataSource/Attribute:user_id' => 'Usuário',
+	'Class:SynchroDataSource/Attribute:notify_contact_id' => 'Contato para notificação',
+	'Class:SynchroDataSource/Attribute:notify_contact_id+' => '',
+	'Class:SynchroDataSource/Attribute:scope_class' => 'Classe alvo',
+	'Class:SynchroDataSource/Attribute:scope_restriction' => 'Restrição de escopo',
+	'Class:SynchroDataSource/Attribute:full_load_periodicity' => 'Intervalo de carga total',
+	'Class:SynchroDataSource/Attribute:full_load_periodicity+' => '',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Política de conciliação',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_attributes' => 'Use os atributos',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_primary_key' => 'Use o campo primary_key',
+	'Class:SynchroDataSource/Attribute:action_on_zero' => 'Ação sobre o zero',
+	'Class:SynchroDataSource/Attribute:action_on_zero+' => '',
+	'Class:SynchroDataSource/Attribute:action_on_zero/Value:create' => 'Criar',
+	'Class:SynchroDataSource/Attribute:action_on_zero/Value:error' => 'Erro',
+	'Class:SynchroDataSource/Attribute:action_on_one' => 'Ação sobre o um',
+	'Class:SynchroDataSource/Attribute:action_on_one+' => '',
+	'Class:SynchroDataSource/Attribute:action_on_one/Value:error' => 'Erro',
+	'Class:SynchroDataSource/Attribute:action_on_one/Value:update' => 'Atualizar',
+	'Class:SynchroDataSource/Attribute:action_on_multiple' => 'Ação em muitos',
+	'Class:SynchroDataSource/Attribute:action_on_multiple+' => '',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:create' => 'Criar',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:error' => 'Erro',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:take_first' => 'Pegue o primeiro (acaso?)',
+	'Class:SynchroDataSource/Attribute:delete_policy' => 'Apagar política',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:delete' => 'Apagar',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:ignore' => 'Ignorar',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:update' => 'Atualizar',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:update_then_delete' => 'Atualizar, em seguida, Apagar',
+	'Class:SynchroDataSource/Attribute:delete_policy_update' => 'Atualizar regra',
+	'Class:SynchroDataSource/Attribute:delete_policy_update+' => '',
+	'Class:SynchroDataSource/Attribute:delete_policy_retention' => 'Retenção Duração',
+	'Class:SynchroDataSource/Attribute:delete_policy_retention+' => '',
+	'Class:SynchroDataSource/Attribute:attribute_list' => 'Lista atributos',
+	'Class:SynchroDataSource/Attribute:user_delete_policy' => 'Usuários permitidos',
+	'Class:SynchroDataSource/Attribute:user_delete_policy+' => '',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:administrators' => 'Somente administradores',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:everybody' => 'Toda permissão para excluir esses objetos',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:nobody' => 'Ninguém',
+	'Class:SynchroDataSource/Attribute:url_icon' => 'Icone\'s hyperlink',
+	'Class:SynchroDataSource/Attribute:url_icon+' => '',
+	'Class:SynchroDataSource/Attribute:url_application' => 'Aplicação hyperlink',
+	'Class:SynchroDataSource/Attribute:url_application+' => '',
+	'Class:SynchroAttribute' => 'Synchro atributo',
+	'Class:SynchroAttribute/Attribute:sync_source_id' => 'Sycnhro origem dado',
+	'Class:SynchroAttribute/Attribute:attcode' => 'Código atributo',
+	'Class:SynchroAttribute/Attribute:update' => 'Atualizar',
+	'Class:SynchroAttribute/Attribute:reconcile' => 'Reconciliar',
+	'Class:SynchroAttribute/Attribute:update_policy' => 'Atualizar política',
+	'Class:SynchroAttribute/Attribute:update_policy/Value:master_locked' => 'Bloqueado',
+	'Class:SynchroAttribute/Attribute:update_policy/Value:master_unlocked' => 'Desbloqueado',
+	'Class:SynchroAttribute/Attribute:update_policy/Value:write_if_empty' => 'Inicializar se vazio',
+	'Class:SynchroAttribute/Attribute:finalclass' => 'Classe',
+	'Class:SynchroAttExtKey' => 'Atributo sincronia (ExtKey)',
+	'Class:SynchroAttExtKey/Attribute:reconciliation_attcode' => 'Reconciliar atributos',
+	'Class:SynchroAttLinkSet' => 'Atributo sincronia (Linkset)',
+	'Class:SynchroAttLinkSet/Attribute:row_separator' => 'Separador linhas',
+	'Class:SynchroAttLinkSet/Attribute:attribute_separator' => 'Separador atributos',
+	'Class:SynchroLog' => 'Sincronia Log',
+	'Class:SynchroLog/Attribute:sync_source_id' => 'Sincronização fonte dados',
+	'Class:SynchroLog/Attribute:start_date' => 'Data início',
+	'Class:SynchroLog/Attribute:end_date' => 'Data final',
+	'Class:SynchroLog/Attribute:status' => 'Status',
+	'Class:SynchroLog/Attribute:status/Value:completed' => 'Completado',
+	'Class:SynchroLog/Attribute:status/Value:error' => 'Erro',
+	'Class:SynchroLog/Attribute:status/Value:running' => 'Em execução',
+	'Class:SynchroLog/Attribute:stats_nb_replica_seen' => 'Nro réplica visita',
+	'Class:SynchroLog/Attribute:stats_nb_replica_total' => 'Nro réplica total',
+	'Class:SynchroLog/Attribute:stats_nb_obj_deleted' => 'Nro objetos apagados',
+	'Class:SynchroLog/Attribute:stats_nb_obj_deleted_errors' => 'Nro de erros enquanto apagando',
+	'Class:SynchroLog/Attribute:stats_nb_obj_obsoleted' => 'Nro objetos obsoletos',
+	'Class:SynchroLog/Attribute:stats_nb_obj_obsoleted_errors' => 'Nro de erros enquanto obsoletos',
+	'Class:SynchroLog/Attribute:stats_nb_obj_created' => 'Nro objetos criados',
+	'Class:SynchroLog/Attribute:stats_nb_obj_created_errors' => 'Nro de erros enquanto criando',
+	'Class:SynchroLog/Attribute:stats_nb_obj_updated' => 'Nro objetos atualizados',
+	'Class:SynchroLog/Attribute:stats_nb_obj_updated_errors' => 'Nro erros enquanto atualizando',
+	'Class:SynchroLog/Attribute:stats_nb_replica_reconciled_errors' => 'Nro de erros durante reconciliação',
+	'Class:SynchroLog/Attribute:stats_nb_replica_disappeared_no_action' => 'Nro réplica desaparecido',
+	'Class:SynchroLog/Attribute:stats_nb_obj_new_updated' => 'Nro objetos atualizados',
+	'Class:SynchroLog/Attribute:stats_nb_obj_new_unchanged' => 'Nro objetos não alterados',
+	'Class:SynchroLog/Attribute:last_error' => 'Último erro',
+	'Class:SynchroLog/Attribute:traces' => 'Traços',
+	'Class:SynchroReplica' => 'Synchro Réplica',
+	'Class:SynchroReplica/Attribute:sync_source_id' => 'Synchro origem dado',
+	'Class:SynchroReplica/Attribute:dest_id' => 'Destino objeto (ID)',
+	'Class:SynchroReplica/Attribute:dest_class' => 'Tipo Destino',
+	'Class:SynchroReplica/Attribute:status_last_seen' => 'Última visita',
+	'Class:SynchroReplica/Attribute:status' => 'Status',
+	'Class:SynchroReplica/Attribute:status/Value:modified' => 'Modificação',
+	'Class:SynchroReplica/Attribute:status/Value:new' => 'Novo',
+	'Class:SynchroReplica/Attribute:status/Value:obsolete' => 'Obsoleto',
+	'Class:SynchroReplica/Attribute:status/Value:orphan' => 'Orfão',
+	'Class:SynchroReplica/Attribute:status/Value:synchronized' => 'Sincronizado',
+	'Class:SynchroReplica/Attribute:status_dest_creator' => 'Objeto criado?',
+	'Class:SynchroReplica/Attribute:status_last_error' => 'Último erro',
+	'Class:SynchroReplica/Attribute:info_creation_date' => 'Data criação',
+	'Class:SynchroReplica/Attribute:info_last_modified' => 'Última data modificação',
+	'Class:appUserPreferences' => 'Preferências usuário',
+	'Class:appUserPreferences/Attribute:userid' => 'Usuários',
+	'Class:appUserPreferences/Attribute:preferences' => 'Prefs',
+	'Core:AttributeLinkedSet' => 'Ordem de objetos',
+	'Core:AttributeLinkedSet+' => 'Qualquer tipo objeto [sub-classe] da mesma classe',
+	'Core:AttributeLinkedSetIndirect' => 'Ordem de objetos (N-N)',
+	'Core:AttributeLinkedSetIndirect+' => 'Qualquer tipo objeto [sub-classe] da mesma classe',
+	'Core:AttributeInteger' => 'Inteiro',
+	'Core:AttributeInteger+' => 'Valor número (não pode ser negativo)',
+	'Core:AttributeDecimal' => 'Decimal',
+	'Core:AttributeDecimal+' => 'Valor decimal (não pode ser negativo)',
+	'Core:AttributeBoolean' => 'Boolean',
+	'Core:AttributeBoolean+' => 'Boolean',
+	'Core:AttributeString' => 'String',
+	'Core:AttributeString+' => 'String alfa-numéricos',
+	'Core:AttributeClass' => 'Classe',
+	'Core:AttributeClass+' => 'Classe',
+	'Core:AttributeApplicationLanguage' => 'Linguagem Usuário',
+	'Core:AttributeApplicationLanguage+' => 'Linguagem e País (pt BR)',
+	'Core:AttributeFinalClass' => 'Classe (auto)',
+	'Core:AttributeFinalClass+' => 'Classe real do objeto (automaticamente criado pelo núcleo)',
+	'Core:AttributePassword' => 'Senha',
+	'Core:AttributePassword+' => 'Senha de um dispositivo externo',
+	'Core:AttributeEncryptedString' => 'Senha criptografado',
+	'Core:AttributeEncryptedString+' => 'String criptografada com uma chave local',
+	'Core:AttributeText' => 'Texto',
+	'Core:AttributeText+' => 'Cadeia de caracteres multi-linhas',
+	'Core:AttributeHTML' => 'HTML',
+	'Core:AttributeHTML+' => 'HTML string',
+	'Core:AttributeEmailAddress' => 'Endereço Email',
+	'Core:AttributeEmailAddress+' => 'Endereço Email',
+	'Core:AttributeIPAddress' => 'Endereço IP',
+	'Core:AttributeIPAddress+' => 'Endereço IP',
+	'Core:AttributeOQL' => 'OQL',
+	'Core:AttributeOQL+' => 'Expressão linguagem consulta objetos',
+	'Core:AttributeEnum' => 'Enum',
+	'Core:AttributeEnum+' => 'Lista de pré-seqüências alfanuméricas',
+	'Core:AttributeTemplateString' => 'Modelo string',
+	'Core:AttributeTemplateString+' => 'String contendo espaços reservados',
+	'Core:AttributeTemplateText' => 'Modelo texto',
+	'Core:AttributeTemplateText+' => 'Texto contendo espaços reservados',
+	'Core:AttributeTemplateHTML' => 'Modelo HTML',
+	'Core:AttributeTemplateHTML+' => 'HTML contendo espaços reservados',
+	'Core:AttributeDateTime' => 'Data/hora',
+	'Core:AttributeDateTime+' => 'Data e hora (ano-mês-dia hh:mm:ss)',
+	'Core:AttributeDate' => 'Data',
+	'Core:AttributeDate+' => 'Data (ano-mês-dia)',
+	'Core:AttributeDeadline' => 'Prazo',
+	'Core:AttributeDeadline+' => 'Data, apresentada em relação ao tempo real',
+	'Core:AttributeExternalKey' => 'Chave externa',
+	'Core:AttributeExternalKey+' => 'Chave externa (ou estrangeira)',
+	'Core:AttributeExternalField' => 'Campo externo',
+	'Core:AttributeExternalField+' => 'Campo mapeado por uma chave externa',
+	'Core:AttributeURL' => 'URL',
+	'Core:AttributeURL+' => 'URL absoluta ou relativa, como uma seqüência de texto',
+	'Core:AttributeBlob' => 'Blob',
+	'Core:AttributeBlob+' => 'Qualquer conteúdo binário (documento)',
+	'Core:AttributeOneWayPassword' => 'Uma forma senha',
+	'Core:AttributeOneWayPassword+' => 'One way encrypted (hashed) password',
+	'Core:AttributeTable' => 'Tabela',
+	'Core:AttributeTable+' => 'Matriz cadastrada ter duas dimensões',
+	'Core:AttributePropertySet' => 'Propriedades',
+	'Core:AttributePropertySet+' => 'Lista de propriedades não tipado (nome e valor)',
+	'Class:CMDBChangeOp/Attribute:date' => 'data',
+	'Class:CMDBChangeOp/Attribute:date+' => 'data e hora das mudanças',
+	'Class:CMDBChangeOp/Attribute:userinfo' => 'usuário',
+	'Class:CMDBChangeOp/Attribute:userinfo+' => 'quem fez esta mudanças',
+	'Change:ObjectCreated' => 'Objeto criado',
+	'Change:ObjectDeleted' => 'Objeto apagado',
+	'Change:ObjectModified' => 'Objeto modificado',
+	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => '%1$s configurado para %2$s (valor anterior: %3$s)',
+	'Change:AttName_SetTo' => '%1$s configurado para %2$s',
+	'Change:Text_AppendedTo_AttName' => '%1$s anexado ao %2$s',
+	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s modificado, valor anterior: %2$s',
+	'Change:AttName_Changed' => '%1$s modificado',
+	'Change:AttName_EntryAdded' => '%1$s modificado, nova entrada adicionada.',
+	'Class:EventLoginUsage/Attribute:contact_name' => 'Nome usuário',
+	'Class:EventLoginUsage/Attribute:contact_name+' => '',
+	'Class:EventLoginUsage/Attribute:contact_email' => 'Email usuários',
+	'Class:EventLoginUsage/Attribute:contact_email+' => '',
+	'Class:Action' => 'Personalizar Ação',
+	'Class:Action+' => 'Ação definida usuário',
 	'Class:Action/Attribute:name' => 'Nome',
 	'Class:Action/Attribute:name+' => '',
-	'Class:Action/Attribute:description' => 'Descri&ccedil;&atilde;o',
+	'Class:Action/Attribute:description' => 'Descrição',
 	'Class:Action/Attribute:description+' => '',
 	'Class:Action/Attribute:status' => 'Status',
-	'Class:Action/Attribute:status+' => 'Em produ&ccedil;&atilde;o ou ?',
-	'Class:Action/Attribute:status/Value:test' => 'Que est&aacute; sendo testado',
-	'Class:Action/Attribute:status/Value:test+' => 'Que est&aacute; sendo testado',
-	'Class:Action/Attribute:status/Value:enabled' => 'Em produ&ccedil;&atilde;o',
-	'Class:Action/Attribute:status/Value:enabled+' => 'Em produ&ccedil;&atilde;o',
+	'Class:Action/Attribute:status+' => 'Em produção ou ?',
+	'Class:Action/Attribute:status/Value:test' => 'Que está sendo testado',
+	'Class:Action/Attribute:status/Value:test+' => 'Que está sendo testado',
+	'Class:Action/Attribute:status/Value:enabled' => 'Em produção',
+	'Class:Action/Attribute:status/Value:enabled+' => 'Em produção',
 	'Class:Action/Attribute:status/Value:disabled' => 'Inativo',
 	'Class:Action/Attribute:status/Value:disabled+' => 'Inativo',
 	'Class:Action/Attribute:trigger_list' => 'Triggers relacionados',
-	'Class:Action/Attribute:trigger_list+' => 'Triggers ligado a esta a&ccedil;&atilde;o',
+	'Class:Action/Attribute:trigger_list+' => 'Triggers ligado a esta ação',
 	'Class:Action/Attribute:finalclass' => 'Tipo',
 	'Class:Action/Attribute:finalclass+' => '',
-));
-
-//
-// Class: ActionNotification
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:ActionNotification' => 'Notifica&ccedil;&atilde;o',
-	'Class:ActionNotification+' => 'Notifica&ccedil;&atilde;o (abstrato)',
-));
-
-//
-// Class: ActionEmail
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:ActionEmail' => 'Email notifica&ccedil;&atilde;o',
-	'Class:ActionEmail+' => '',
-	'Class:ActionEmail/Attribute:test_recipient' => 'Teste destino',
-	'Class:ActionEmail/Attribute:test_recipient+' => 'Destinat&aacute;rio o status est&aacute; como "Teste"',
-	'Class:ActionEmail/Attribute:from' => 'De',
-	'Class:ActionEmail/Attribute:from+' => 'Ser&aacute; enviado dentro do cabe&ccedil;alho do email',
-	'Class:ActionEmail/Attribute:reply_to' => 'Responder para',
-	'Class:ActionEmail/Attribute:reply_to+' => 'Ser&aacute; enviado dentro do cabe&ccedil;alho do email',
-	'Class:ActionEmail/Attribute:to' => 'Para',
-	'Class:ActionEmail/Attribute:to+' => 'Destinat&aacute;rio para o email',
-	'Class:ActionEmail/Attribute:cc' => 'Cc',
-	'Class:ActionEmail/Attribute:cc+' => 'Com c&oacute;pia',
-	'Class:ActionEmail/Attribute:bcc' => 'bcc',
-	'Class:ActionEmail/Attribute:bcc+' => 'Com c&oacute;pia oculta',
-	'Class:ActionEmail/Attribute:subject' => 'assunto',
-	'Class:ActionEmail/Attribute:subject+' => 'T&iacute;tulo do email',
-	'Class:ActionEmail/Attribute:body' => 'corpo',
-	'Class:ActionEmail/Attribute:body+' => 'Conte&uacute;do do email',
-	'Class:ActionEmail/Attribute:importance' => 'import&acirc;ncia',
-	'Class:ActionEmail/Attribute:importance+' => 'Flag import&acirc;ncia',
-	'Class:ActionEmail/Attribute:importance/Value:low' => 'baixo',
-	'Class:ActionEmail/Attribute:importance/Value:low+' => 'baixo',
-	'Class:ActionEmail/Attribute:importance/Value:normal' => 'normal',
-	'Class:ActionEmail/Attribute:importance/Value:normal+' => 'normal',
-	'Class:ActionEmail/Attribute:importance/Value:high' => 'alto',
-	'Class:ActionEmail/Attribute:importance/Value:high+' => 'alto',
-));
-
-//
-// Class: Trigger
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Class:ActionNotification' => 'Notificação',
+	'Class:ActionNotification+' => 'Notificação (abstrato)',
 	'Class:Trigger' => 'Trigger',
 	'Class:Trigger+' => 'Personalizar manipulador de eventos',
-	'Class:Trigger/Attribute:description' => 'Descri&ccedil;&atilde;o',
-	'Class:Trigger/Attribute:description+' => 'uma linha descri&ccedil;&atilde;o',
-	'Class:Trigger/Attribute:action_list' => 'A&ccedil;&otilde;es desencadeadas',
-	'Class:Trigger/Attribute:action_list+' => 'A&ccedil;&otilde;es executadas quando a Trigger é ativado',
+	'Class:Trigger/Attribute:description' => 'Descrição',
+	'Class:Trigger/Attribute:description+' => 'uma linha descrição',
+	'Class:Trigger/Attribute:action_list' => 'Ações desencadeadas',
+	'Class:Trigger/Attribute:action_list+' => 'Ações executadas quando a Trigger é ativado',
 	'Class:Trigger/Attribute:finalclass' => 'Tipo',
 	'Class:Trigger/Attribute:finalclass+' => '',
-));
-
-//
-// Class: TriggerOnObject
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:TriggerOnObject' => 'Trigger (classe dependente)',
 	'Class:TriggerOnObject+' => 'Trigger em uma determinada classe de objetos',
 	'Class:TriggerOnObject/Attribute:target_class' => 'Alvo classe',
 	'Class:TriggerOnObject/Attribute:target_class+' => '',
-));
-
-//
-// Class: TriggerOnStateChange
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:TriggerOnStateChange' => 'Trigger (em estato mudan&ccedil;a)',
-	'Class:TriggerOnStateChange+' => 'Trigger sobre a mudan&ccedil;a de estado do objeto',
+	'Class:TriggerOnStateChange' => 'Trigger (em estato mudança)',
+	'Class:TriggerOnStateChange+' => 'Trigger sobre a mudança de estado do objeto',
 	'Class:TriggerOnStateChange/Attribute:state' => 'Estado',
 	'Class:TriggerOnStateChange/Attribute:state+' => '',
-));
-
-//
-// Class: TriggerOnStateEnter
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:TriggerOnStateEnter' => 'Trigger (ao entrar em um estado)',
-	'Class:TriggerOnStateEnter+' => 'Trigger sobre a mudan&ccedil;a de estado do objeto - entrar',
-));
-
-//
-// Class: TriggerOnStateLeave
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:TriggerOnStateLeave' => 'Trigger (na saída de um estado)',
-	'Class:TriggerOnStateLeave+' => 'Trigger sobre a mudan&ccedil;a de estado do objeto - deixando',
-));
-
-//
-// Class: TriggerOnObjectCreate
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:TriggerOnObjectCreate' => 'Trigger (sobre a cria&ccedil;&atilde;o do objeto)',
-	'Class:TriggerOnObjectCreate+' => 'Trigger sobre a cria&ccedil;&atilde;o do objeto de [uma classe filha de] uma determinada classe',
-));
-
-//
-// Class: lnkTriggerAction
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:lnkTriggerAction' => 'A&ccedil;&atilde;o/Trigger',
-	'Class:lnkTriggerAction+' => 'Liga&ccedil;&atilde;o entre uma trigger e uma a&ccedil;&atilde;o',
-	'Class:lnkTriggerAction/Attribute:action_id' => 'A&ccedil;&atilde;o',
-	'Class:lnkTriggerAction/Attribute:action_id+' => 'A&ccedil;&atilde;o a ser executada',
-	'Class:lnkTriggerAction/Attribute:action_name' => 'A&ccedil;&atilde;o',
+	'Class:lnkTriggerAction/Attribute:action_name' => 'Ação',
 	'Class:lnkTriggerAction/Attribute:action_name+' => '',
-	'Class:lnkTriggerAction/Attribute:trigger_id' => 'Trigger',
-	'Class:lnkTriggerAction/Attribute:trigger_id+' => '',
 	'Class:lnkTriggerAction/Attribute:trigger_name' => 'Trigger',
 	'Class:lnkTriggerAction/Attribute:trigger_name+' => '',
-	'Class:lnkTriggerAction/Attribute:order' => 'Ordem',
-	'Class:lnkTriggerAction/Attribute:order+' => 'AA&ccedil;&otilde;es executadas ordem',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:never' => 'Ninguém',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:depends' => 'Somente administradores',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:always' => 'Todos usuários permitidos',
+	'SynchroDataSource:Description' => 'Descrição',
+	'SynchroDataSource:Reconciliation' => 'Pesquisar &amp; reconciliação',
+	'SynchroDataSource:Deletion' => 'Apagar regras',
+	'SynchroDataSource:Status' => 'Status',
+	'SynchroDataSource:Information' => 'Informação',
+	'SynchroDataSource:Definition' => 'Definição',
+	'Core:SynchroAttributes' => 'Atributos',
+	'Core:SynchroStatus' => 'Status',
+	'Core:Synchro:ErrorsLabel' => 'Erro',
+	'Core:Synchro:CreatedLabel' => 'Criado',
+	'Core:Synchro:ModifiedLabel' => 'Modificado',
+	'Core:Synchro:UnchangedLabel' => 'Não alterado',
+	'Core:Synchro:ReconciledErrorsLabel' => 'Erro',
+	'Core:Synchro:ReconciledLabel' => 'Reconciliação',
+	'Core:Synchro:ReconciledNewLabel' => 'Criado',
+	'Core:SynchroReconcile:Yes' => 'Sim',
+	'Core:SynchroReconcile:No' => 'Não',
+	'Core:SynchroUpdate:Yes' => 'Sim',
+	'Core:SynchroUpdate:No' => 'Não',
+	'Core:Synchro:LastestStatus' => 'Último Status',
+	'Core:Synchro:History' => 'Histórico de sincronização',
+	'Core:Synchro:NeverRun' => 'Este sincronismo nunca foi executado. Sem registo ainda.',
+	'Core:Synchro:SynchroEndedOn_Date' => 'A última sincronização terminou em% 1 $ s.',
+	'Core:Synchro:SynchroRunningStartedOn_Date' => 'A sincronização começou em $1$s e em execução ainda...',
+	'Menu:DataSources' => 'Fontes de dados de sincronização',
+	'Menu:DataSources+' => '',
+	'Core:Synchro:label_repl_ignored' => 'Ignorado (%1$s)',
+	'Core:Synchro:label_repl_disappeared' => 'Desaparecido (%1$s)',
+	'Core:Synchro:label_repl_existing' => 'Existente (%1$s)',
+	'Core:Synchro:label_repl_new' => 'Novo (%1$s)',
+	'Core:Synchro:label_obj_deleted' => 'Apagado (%1$s)',
+	'Core:Synchro:label_obj_obsoleted' => 'Obsoleto (%1$s)',
+	'Core:Synchro:label_obj_disappeared_errors' => 'Erros (%1$s)',
+	'Core:Synchro:label_obj_disappeared_no_action' => 'Nenhuma ação (%1$s)',
+	'Core:Synchro:label_obj_unchanged' => 'Não alterado (%1$s)',
+	'Core:Synchro:label_obj_updated' => 'Atualizado (%1$s)',
+	'Core:Synchro:label_obj_updated_errors' => 'Erros (%1$s)',
+	'Core:Synchro:label_obj_new_unchanged' => 'Não alterado (%1$s)',
+	'Core:Synchro:label_obj_new_updated' => 'Atualizado (%1$s)',
+	'Core:Synchro:label_obj_created' => 'Criado (%1$s)',
+	'Core:Synchro:label_obj_new_errors' => 'Erros (%1$s)',
+	'Core:SynchroLogTitle' => '%1$s - %2$s',
+	'Core:Synchro:Nb_Replica' => 'Réplica processadas: %1$s',
+	'Core:Synchro:Nb_Class:Objects' => '%1$s: %2$s',
+	'Class:SynchroDataSource/Error:AtLeastOneReconciliationKeyMustBeSpecified' => 'Na chave de reconciliação pelo menos um deve ser especificado, ou a política de reconciliação deve ser o de utilizar a chave primária.',
+	'Class:SynchroDataSource/Error:DeleteRetentionDurationMustBeSpecified' => 'Um período de retenção a apagar deve ser especificado, desde que os objetos serão excluídos após ser marcado como obsoleto.',
+	'Class:SynchroDataSource/Error:DeletePolicyUpdateMustBeSpecified' => 'Objetos obsoletos devem ser atualizados, mas nenhuma atualização é especificado.',
+	'Core:SynchroReplica:PublicData' => 'Dados públicos',
+	'Core:SynchroReplica:PrivateDetails' => 'Detalhes privativos',
+	'Core:SynchroReplica:BackToDataSource' => 'Voltar para a fonte de dados sincronizada:: %1$s',
+	'Core:SynchroReplica:ListOfReplicas' => 'Lista de réplica',
+	'Core:SynchroAttExtKey:ReconciliationById' => 'id (Chave primária)',
+	'Core:SynchroAtt:attcode' => 'Atributos',
+	'Core:SynchroAtt:attcode+' => '',
+	'Core:SynchroAtt:reconciliation' => 'Reconciliação?',
+	'Core:SynchroAtt:reconciliation+' => '',
+	'Core:SynchroAtt:update' => 'Atualizar?',
+	'Core:SynchroAtt:update+' => '',
+	'Core:SynchroAtt:update_policy' => 'Atualização Política',
+	'Core:SynchroAtt:update_policy+' => '',
+	'Core:SynchroAtt:reconciliation_attcode' => 'Chave reconciliação',
+	'Core:SynchroAtt:reconciliation_attcode+' => '',
+	'Core:SyncDataExchangeComment' => '(DataExchange)',
+	'Core:Synchro:ListOfDataSources' => 'Lista de fontes de dados:',
+	'Core:Synchro:LastSynchro' => 'Última sincronização:',
+	'Core:Synchro:ThisObjectIsSynchronized' => 'Este objeto é sincronizado com uma fonte de dados externa',
+	'Core:Synchro:TheObjectWasCreatedBy_Source' => 'O objeto foi <b>criado</b> por uma fonte dados externa %1$s',
+	'Core:Synchro:TheObjectCanBeDeletedBy_Source' => 'O objeto <b>não pode ser apagado</b> por uma fonte dados externa %1$s',
+	'Core:Synchro:TheObjectCannotBeDeletedByUser_Source' => 'Você <b>não pode apagar o objeto</b> porque é propriedade de uma fonte dados externa %1$s',
+	'TitleSynchroExecution' => 'Execução da sincronização',
+	'Class:SynchroDataSource:DataTable' => 'Tabela de banco de dados: %1$s',
+	'Core:SyncDataSourceObsolete' => 'A fonte de dados está marcada como obsoleto. Operação cancelada.',
+	'Core:SyncDataSourceAccessRestriction' => 'Somente administradores ou o usuário especificado na fonte de dados pode executar essa operação. Operação cancelada.',
+	'Core:SyncTooManyMissingReplicas' => 'Todos os registros foram tocados por algum tempo (todos os objetos podem ser apagados). Verifique se o processo que grava na tabela de sincronização ainda está em execução. Operação cancelada.',
+	'Core:Duration_Seconds' => '%1$ds',
+	'Core:Duration_Minutes_Seconds' => '%1$dmin %2$ds',
+	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',
+	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds',
 ));
-
-
 ?>

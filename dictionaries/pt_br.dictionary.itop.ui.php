@@ -15,78 +15,12 @@
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 /**
- * Localized data
- *
- * @author      Erwan Taloc <erwan.taloc@combodo.com>
- * @author      Romain Quetiez <romain.quetiez@combodo.com>
- * @author      Denis Flaven <denis.flaven@combodo.com>
- * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
+ * @author	Erwan Taloc <erwan.taloc@combodo.com>
+ * @author	Romain Quetiez <romain.quetiez@combodo.com>
+ * @author	Denis Flaven <denis.flaven@combodo.com>
+
+ * @licence	http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
-
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'gui'
-//////////////////////////////////////////////////////////////////////
-//
-
-//
-// Class: menuNode
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:menuNode' => 'menuNode',
-	'Class:menuNode+' => 'Menu principal configuracoes elementos',
-	'Class:menuNode/Attribute:name' => 'Nome menu',
-	'Class:menuNode/Attribute:name+' => 'Nome curto para este menu',
-	'Class:menuNode/Attribute:label' => 'Descricao do menu',
-	'Class:menuNode/Attribute:label+' => 'Descricao longa para este menu',
-	'Class:menuNode/Attribute:hyperlink' => 'Hyperlink',
-	'Class:menuNode/Attribute:hyperlink+' => 'Hyperlink para a p&aacute;gina',
-	'Class:menuNode/Attribute:icon_path' => 'Icones menu',
-	'Class:menuNode/Attribute:icon_path+' => 'Caminho parra o icone do menu',
-	'Class:menuNode/Attribute:template' => 'Modelo',
-	'Class:menuNode/Attribute:template+' => 'Modelo HTML para ver',
-	'Class:menuNode/Attribute:type' => 'Tipo',
-	'Class:menuNode/Attribute:type+' => 'Tipo de menu',
-	'Class:menuNode/Attribute:type/Value:application' => 'aplicacao',
-	'Class:menuNode/Attribute:type/Value:application+' => 'aplicacao',
-	'Class:menuNode/Attribute:type/Value:user' => 'usuario',
-	'Class:menuNode/Attribute:type/Value:user+' => 'usuario',
-	'Class:menuNode/Attribute:type/Value:administrator' => 'administrador',
-	'Class:menuNode/Attribute:type/Value:administrator+' => 'administrador',
-	'Class:menuNode/Attribute:rank' => 'Mostrar rank',
-	'Class:menuNode/Attribute:rank+' => 'Ordem de classificação para exibir o menu',
-	'Class:menuNode/Attribute:parent_id' => 'Item Menu principal',
-	'Class:menuNode/Attribute:parent_id+' => 'Item Menu principal',
-	'Class:menuNode/Attribute:parent_name' => 'Item Menu principal',
-	'Class:menuNode/Attribute:parent_name+' => 'Item Menu principal',
-	'Class:menuNode/Attribute:user_id' => 'Proprietario do menu',
-	'Class:menuNode/Attribute:user_id+' => 'O usuário que possui este menu (menu para usuario definido)',
-));
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'application'
-//////////////////////////////////////////////////////////////////////
-//
-
-//
-// Class: AuditCategory
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:AuditCategory' => 'AuditCategory',
-	'Class:AuditCategory+' => 'Uma seção dentro da auditoria global',
-	'Class:AuditCategory/Attribute:name' => 'Nome categoria',
-	'Class:AuditCategory/Attribute:name+' => 'Nome curto da categoria',
-	'Class:AuditCategory/Attribute:description' => 'Descricao categoria auditoria',
-	'Class:AuditCategory/Attribute:description+' => 'Descricao longa para a categoria auditoria',
-	'Class:AuditCategory/Attribute:definition_set' => 'Definicao configuracao',
-	'Class:AuditCategory/Attribute:definition_set+' => 'Expressão OQL que define o conjunto de objetos de auditoria',
-));
-
-//
-// Class: AuditRule
-//
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:AuditRule' => 'AuditRule',
@@ -99,57 +33,22 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:AuditRule/Attribute:query+' => 'A expressão OQL a executar',
 	'Class:AuditRule/Attribute:valid_flag' => 'Objetos validos?',
 	'Class:AuditRule/Attribute:valid_flag+' => 'True se a regra retorna os objetos válido, false caso contrário',
-	'Class:AuditRule/Attribute:valid_flag/Value:true' => 'verdadeiro',
-	'Class:AuditRule/Attribute:valid_flag/Value:true+' => 'verdadeiro',
 	'Class:AuditRule/Attribute:valid_flag/Value:false' => 'falso',
 	'Class:AuditRule/Attribute:valid_flag/Value:false+' => 'falso',
+	'Class:AuditRule/Attribute:valid_flag/Value:true' => 'verdadeiro',
+	'Class:AuditRule/Attribute:valid_flag/Value:true+' => 'verdadeiro',
 	'Class:AuditRule/Attribute:category_id' => 'Categoria',
 	'Class:AuditRule/Attribute:category_id+' => 'A categoria para esta regra',
-	'Class:AuditRule/Attribute:category_name' => 'Categoria',
-	'Class:AuditRule/Attribute:category_name+' => 'Nome da categoria para esta regra',
-));
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'addon/userrights'
-//////////////////////////////////////////////////////////////////////
-//
-
-//
-// Class: URP_Users
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:URP_Users' => 'Usuario',
-	'Class:URP_Users+' => 'Usuarios e credenciais',
-	'Class:URP_Users/Attribute:userid' => 'Contatos (pessoa)',
-	'Class:URP_Users/Attribute:userid+' => 'Os dados pessoais a partir dos dados de negócio',
-	'Class:URP_Users/Attribute:last_name' => 'Ultimo nome',
-	'Class:URP_Users/Attribute:last_name+' => 'Nome do contato correspondente',
-	'Class:URP_Users/Attribute:first_name' => 'Primeiro nome',
-	'Class:URP_Users/Attribute:first_name+' => 'Primeiro nome do contato correspondente',
-	'Class:URP_Users/Attribute:email' => 'Email',
-	'Class:URP_Users/Attribute:email+' => 'Email do contato correspondente',
-	'Class:URP_Users/Attribute:login' => 'Usuario',
-	'Class:URP_Users/Attribute:login+' => 'identificação do usuário',
-	'Class:URP_Users/Attribute:password' => 'Senha',
-	'Class:URP_Users/Attribute:password+' => 'autenticação/senha usuário',
-	'Class:URP_Users/Attribute:language' => 'Linguagem',
-	'Class:URP_Users/Attribute:language+' => 'linguagem usuário',
-	'Class:URP_Users/Attribute:language/Value:EN US' => 'Ingles',
-	'Class:URP_Users/Attribute:language/Value:EN US+' => 'Ingles U.S.',
-	'Class:URP_Users/Attribute:language/Value:FR FR' => 'Frances',
-	'Class:URP_Users/Attribute:language/Value:FR FR+' => 'FR FR',
-	'Class:URP_Users/Attribute:language/Value:PT BR' => 'Brazilian',
-	'Class:URP_Users/Attribute:language/Value:PT BR+' => 'PT BR',
-	'Class:URP_Users/Attribute:profile_list' => 'Profiles',
-	'Class:URP_Users/Attribute:profile_list+' => 'Regras, permissao direitos para esta pessoa',
-));
-
-//
-// Class: URP_Profiles
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Class:AuditCategory' => 'AuditCategory',
+	'Class:AuditCategory+' => 'Uma seção dentro da auditoria global',
+	'Class:AuditCategory/Attribute:name' => 'Nome categoria',
+	'Class:AuditCategory/Attribute:name+' => 'Nome curto da categoria',
+	'Class:AuditCategory/Attribute:description' => 'Descricao categoria auditoria',
+	'Class:AuditCategory/Attribute:description+' => 'Descricao longa para a categoria auditoria',
+	'Class:AuditCategory/Attribute:definition_set' => 'Definicao configuracao',
+	'Class:AuditCategory/Attribute:definition_set+' => 'Expressão OQL que define o conjunto de objetos de auditoria',
+	'Class:AuditCategory/Attribute:rules_list' => 'Auditar Regras',
+	'Class:AuditCategory/Attribute:rules_list+' => '',
 	'Class:URP_Profiles' => 'Profile',
 	'Class:URP_Profiles+' => 'Profile usuario',
 	'Class:URP_Profiles/Attribute:name' => 'Nome',
@@ -158,13 +57,84 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:URP_Profiles/Attribute:description+' => 'uma linha descricao',
 	'Class:URP_Profiles/Attribute:user_list' => 'Usuarios',
 	'Class:URP_Profiles/Attribute:user_list+' => 'pessoas possuem esta regra',
-));
-
-//
-// Class: URP_Dimensions
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Class:URP_UserProfile' => 'Usuario para profile',
+	'Class:URP_UserProfile+' => 'profiles usuario',
+	'Class:URP_UserProfile/Attribute:userid' => 'Usuario',
+	'Class:URP_UserProfile/Attribute:userid+' => 'conta usuario',
+	'Class:URP_UserProfile/Attribute:profileid' => 'Profile',
+	'Class:URP_UserProfile/Attribute:profileid+' => 'profile utilizada',
+	'Class:URP_UserProfile/Attribute:reason' => 'Razao',
+	'Class:URP_UserProfile/Attribute:reason+' => 'explicar porque este usuario teve ter esta regra',
+	'Class:URP_UserOrg' => 'Organização usuário',
+	'Class:URP_UserOrg+' => '',
+	'Class:URP_UserOrg/Attribute:userid' => 'Usuário',
+	'Class:URP_UserOrg/Attribute:userid+' => '',
+	'Class:URP_UserOrg/Attribute:allowed_org_id' => 'Organização',
+	'Class:URP_UserOrg/Attribute:allowed_org_id+' => '',
+	'Class:URP_UserOrg/Attribute:reason' => 'Razão',
+	'Class:URP_UserOrg/Attribute:reason+' => '',
+	'Class:URP_ActionGrant' => 'action_permission',
+	'Class:URP_ActionGrant+' => 'permissões nas classes',
+	'Class:URP_ActionGrant/Attribute:profileid' => 'Profile',
+	'Class:URP_ActionGrant/Attribute:profileid+' => 'profiles usadas',
+	'Class:URP_ActionGrant/Attribute:class' => 'Class',
+	'Class:URP_ActionGrant/Attribute:class+' => 'Target class',
+	'Class:URP_ActionGrant/Attribute:permission' => 'Permission',
+	'Class:URP_ActionGrant/Attribute:permission+' => 'allowed or not allowed?',
+	'Class:URP_ActionGrant/Attribute:permission/Value:no' => 'no',
+	'Class:URP_ActionGrant/Attribute:permission/Value:no+' => 'no',
+	'Class:URP_ActionGrant/Attribute:permission/Value:yes' => 'yes',
+	'Class:URP_ActionGrant/Attribute:permission/Value:yes+' => 'yes',
+	'Class:URP_ActionGrant/Attribute:action' => 'Action',
+	'Class:URP_ActionGrant/Attribute:action+' => 'operations to perform on the given class',
+	'Class:URP_StimulusGrant' => 'stimulus_permission',
+	'Class:URP_StimulusGrant+' => 'permissions on stimilus in the life cycle of the object',
+	'Class:URP_StimulusGrant/Attribute:profileid' => 'Profile',
+	'Class:URP_StimulusGrant/Attribute:profileid+' => 'usage profile',
+	'Class:URP_StimulusGrant/Attribute:class' => 'Class',
+	'Class:URP_StimulusGrant/Attribute:class+' => 'Target class',
+	'Class:URP_StimulusGrant/Attribute:permission' => 'Permission',
+	'Class:URP_StimulusGrant/Attribute:permission+' => 'allowed or not allowed?',
+	'Class:URP_StimulusGrant/Attribute:permission/Value:no' => 'no',
+	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => 'no',
+	'Class:URP_StimulusGrant/Attribute:permission/Value:yes' => 'yes',
+	'Class:URP_StimulusGrant/Attribute:permission/Value:yes+' => 'yes',
+	'Class:URP_StimulusGrant/Attribute:stimulus' => 'Stimulus',
+	'Class:URP_StimulusGrant/Attribute:stimulus+' => 'stimulus code',
+	'Class:URP_AttributeGrant' => 'attribute_permission',
+	'Class:URP_AttributeGrant+' => 'permissions at the attributes level',
+	'Class:URP_AttributeGrant/Attribute:actiongrantid' => 'Action grant',
+	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => 'action grant',
+	'Class:URP_AttributeGrant/Attribute:attcode' => 'Attribute',
+	'Class:URP_AttributeGrant/Attribute:attcode+' => 'attribute code',
+	'Class:AuditRule/Attribute:category_name' => 'Categoria',
+	'Class:AuditRule/Attribute:category_name+' => 'Nome da categoria para esta regra',
+	'Class:User' => 'Usuário',
+	'Class:User+' => '',
+	'Class:User/Attribute:finalclass' => 'Tipo de conta',
+	'Class:User/Attribute:finalclass+' => '',
+	'Class:User/Attribute:contactid' => 'Contato (pessoa)',
+	'Class:User/Attribute:contactid+' => '',
+	'Class:User/Attribute:last_name' => 'Último nome',
+	'Class:User/Attribute:last_name+' => '',
+	'Class:User/Attribute:first_name' => 'Primeiro nome',
+	'Class:User/Attribute:first_name+' => '',
+	'Class:User/Attribute:email' => 'Email',
+	'Class:User/Attribute:email+' => '',
+	'Class:User/Attribute:login' => 'Entrar',
+	'Class:User/Attribute:login+' => '',
+	'Class:User/Attribute:language' => 'Linguagem',
+	'Class:User/Attribute:language+' => '',
+	'Class:User/Attribute:language/Value:EN US' => 'Inglês',
+	'Class:User/Attribute:language/Value:EN US+' => '',
+	'Class:User/Attribute:language/Value:FR FR' => 'Francês',
+	'Class:User/Attribute:language/Value:FR FR+' => '',
+	'Class:User/Attribute:profile_list' => 'Profiles',
+	'Class:User/Attribute:profile_list+' => '',
+	'Class:User/Attribute:allowed_org_list' => 'Organizações permitidas',
+	'Class:User/Attribute:allowed_org_list+' => '',
+	'Class:User/Error:LoginMustBeUnique' => 'Login deve ser único - "%1s" já está sendo utilizado.',
+	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Pelo menos um perfil deve ser atribuído a este usuário.',
 	'Class:URP_Dimensions' => 'dimensão',
 	'Class:URP_Dimensions+' => 'dimensão aplicação',
 	'Class:URP_Dimensions/Attribute:name' => 'Nome',
@@ -173,32 +143,14 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:URP_Dimensions/Attribute:description+' => 'one line description',
 	'Class:URP_Dimensions/Attribute:type' => 'Tipo',
 	'Class:URP_Dimensions/Attribute:type+' => 'nome classe ou tipo dado (unidade projetada)',
-));
-
-//
-// Class: URP_UserProfile
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:URP_UserProfile' => 'Usuario para profile',
-	'Class:URP_UserProfile+' => 'profiles usuario',
-	'Class:URP_UserProfile/Attribute:userid' => 'Usuario',
-	'Class:URP_UserProfile/Attribute:userid+' => 'conta usuario',
 	'Class:URP_UserProfile/Attribute:userlogin' => 'Login',
 	'Class:URP_UserProfile/Attribute:userlogin+' => 'Login Usuario\'s',
-	'Class:URP_UserProfile/Attribute:profileid' => 'Profile',
-	'Class:URP_UserProfile/Attribute:profileid+' => 'profile utilizada',
 	'Class:URP_UserProfile/Attribute:profile' => 'Profile',
 	'Class:URP_UserProfile/Attribute:profile+' => 'Nome profile',
-	'Class:URP_UserProfile/Attribute:reason' => 'Razao',
-	'Class:URP_UserProfile/Attribute:reason+' => 'explicar porque este usuario teve ter esta regra',
-));
-
-//
-// Class: URP_ProfileProjection
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Class:URP_UserOrg/Attribute:userlogin' => 'Entrar',
+	'Class:URP_UserOrg/Attribute:userlogin+' => '',
+	'Class:URP_UserOrg/Attribute:allowed_org_name' => 'Organização',
+	'Class:URP_UserOrg/Attribute:allowed_org_name+' => '',
 	'Class:URP_ProfileProjection' => 'profile_projection',
 	'Class:URP_ProfileProjection+' => 'profile projections',
 	'Class:URP_ProfileProjection/Attribute:dimensionid' => 'Dimension',
@@ -213,13 +165,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:URP_ProfileProjection/Attribute:value+' => 'OQL expression (using $user) | constant |  | +attribute code',
 	'Class:URP_ProfileProjection/Attribute:attribute' => 'Attribute',
 	'Class:URP_ProfileProjection/Attribute:attribute+' => 'Target attribute code (optional)',
-));
-
-//
-// Class: URP_ClassProjection
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:URP_ClassProjection' => 'class_projection',
 	'Class:URP_ClassProjection+' => 'class projections',
 	'Class:URP_ClassProjection/Attribute:dimensionid' => 'Dimension',
@@ -232,78 +177,15 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:URP_ClassProjection/Attribute:value+' => 'OQL expression (using $this) | constant |  | +attribute code',
 	'Class:URP_ClassProjection/Attribute:attribute' => 'Attribute',
 	'Class:URP_ClassProjection/Attribute:attribute+' => 'Target attribute code (optional)',
-));
-
-//
-// Class: URP_ActionGrant
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:URP_ActionGrant' => 'action_permission',
-	'Class:URP_ActionGrant+' => 'permissões nas classes',
-	'Class:URP_ActionGrant/Attribute:profileid' => 'Profile',
-	'Class:URP_ActionGrant/Attribute:profileid+' => 'profiles usadas',
 	'Class:URP_ActionGrant/Attribute:profile' => 'Profile',
 	'Class:URP_ActionGrant/Attribute:profile+' => 'usage profile',
-	'Class:URP_ActionGrant/Attribute:class' => 'Class',
-	'Class:URP_ActionGrant/Attribute:class+' => 'Target class',
-	'Class:URP_ActionGrant/Attribute:permission' => 'Permission',
-	'Class:URP_ActionGrant/Attribute:permission+' => 'allowed or not allowed?',
-	'Class:URP_ActionGrant/Attribute:permission/Value:yes' => 'yes',
-	'Class:URP_ActionGrant/Attribute:permission/Value:yes+' => 'yes',
-	'Class:URP_ActionGrant/Attribute:permission/Value:no' => 'no',
-	'Class:URP_ActionGrant/Attribute:permission/Value:no+' => 'no',
-	'Class:URP_ActionGrant/Attribute:action' => 'Action',
-	'Class:URP_ActionGrant/Attribute:action+' => 'operations to perform on the given class',
-));
-
-//
-// Class: URP_StimulusGrant
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:URP_StimulusGrant' => 'stimulus_permission',
-	'Class:URP_StimulusGrant+' => 'permissions on stimilus in the life cycle of the object',
-	'Class:URP_StimulusGrant/Attribute:profileid' => 'Profile',
-	'Class:URP_StimulusGrant/Attribute:profileid+' => 'usage profile',
 	'Class:URP_StimulusGrant/Attribute:profile' => 'Profile',
 	'Class:URP_StimulusGrant/Attribute:profile+' => 'usage profile',
-	'Class:URP_StimulusGrant/Attribute:class' => 'Class',
-	'Class:URP_StimulusGrant/Attribute:class+' => 'Target class',
-	'Class:URP_StimulusGrant/Attribute:permission' => 'Permission',
-	'Class:URP_StimulusGrant/Attribute:permission+' => 'allowed or not allowed?',
-	'Class:URP_StimulusGrant/Attribute:permission/Value:yes' => 'yes',
-	'Class:URP_StimulusGrant/Attribute:permission/Value:yes+' => 'yes',
-	'Class:URP_StimulusGrant/Attribute:permission/Value:no' => 'no',
-	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => 'no',
-	'Class:URP_StimulusGrant/Attribute:stimulus' => 'Stimulus',
-	'Class:URP_StimulusGrant/Attribute:stimulus+' => 'stimulus code',
-));
-
-//
-// Class: URP_AttributeGrant
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:URP_AttributeGrant' => 'attribute_permission',
-	'Class:URP_AttributeGrant+' => 'permissions at the attributes level',
-	'Class:URP_AttributeGrant/Attribute:actiongrantid' => 'Action grant',
-	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => 'action grant',
-	'Class:URP_AttributeGrant/Attribute:attcode' => 'Attribute',
-	'Class:URP_AttributeGrant/Attribute:attcode+' => 'attribute code',
-));
-
-//
-// String from the User Interface: menu, messages, buttons, etc...
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:WelcomeMenu' => 'Bem-vindo',
 	'Menu:WelcomeMenu+' => 'Bem-vindo ao iTop',
 	'Menu:WelcomeMenuPage' => 'Bem-vindo',
 	'Menu:WelcomeMenuPage+' => 'Bem-vindo ao iTop',
 	'UI:WelcomeMenu:Title' => 'Bem-vindo ao iTop',
-
 	'UI:WelcomeMenu:LeftBlock' => '<p>iTop é um completo, livre, portal IT.</p>
 <ul>Inclui:
 <li>completo CMDB (Configuration management database) documentar e gerenciar inventários IT.</li>
@@ -314,7 +196,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 <li>painéis para obter rapidamente uma visão geral de TI.</li>
 </ul>
 <p>Todos os módulos podem ser configurados, passo a passo, cada um, independente dos outros..</p>',
-
 	'UI:WelcomeMenu:RightBlock' => '<p>iTop é um provedor de serviço, que permite gerenciar facilmente múltiplos clientes ou organizações.
 <ul>iTop, oferece um conjunto rico em recursos de processos de negócios que:
 <li>melhora a eficácia da gestão de TI</li> 
@@ -330,14 +211,11 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 <li>Manage the most important asset of your IT: Documentation.</li>
 </ul>
 </p>',
-
-
 	'UI:WelcomeMenu:AllOpenRequests' => 'Chamados Abertos: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Solicitações de usuários atribuído a mim',
 	'UI:WelcomeMenu:OpenIncidents' => 'Incidentes Abertos: %1$d',
 	'UI:WelcomeMenu:AllConfigItems' => 'Configuração Itens: %1$d',
 	'UI:WelcomeMenu:MyIncidents' => 'Incidentes atribuídas a mim',
-
 	'UI:AllOrganizations' => ' Todas Organizações ',
 	'UI:YourSearch' => 'Pesquisar',
 	'UI:LoggedAsMessage' => 'Conectado como %1$s',
@@ -350,6 +228,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Button:Cancel' => 'Cancelar',
 	'UI:Button:Apply' => 'Aplicar',
 	'UI:Button:Back' => ' << Voltar ',
+	'UI:Button:Restart' => ' |<< Reiniciar ',
 	'UI:Button:Next' => ' Proximo >> ',
 	'UI:Button:Finish' => ' Finalizar ',
 	'UI:Button:DoImport' => ' Executar para importar ! ',
@@ -366,7 +245,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Button:Create' => ' Criar ',
 	'UI:Button:Delete' => ' Apagar ! ',
 	'UI:Button:ChangePassword' => ' Alterar senha ',
-
+	'UI:Button:ResetPassword' => ' Resetar senha ',
 	'UI:SearchToggle' => 'Pesquisar',
 	'UI:ClickToCreateNew' => 'Criar um(a) novo(a) %1$s',
 	'UI:SearchFor_Class' => 'Pesquisa para %1$s objetos',
@@ -385,7 +264,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Error:CannotWriteToTmp_Dir' => 'Desabilitado escrever o arquivo temporario no disco. upload_tmp_dir = "%1$s".',
 	'UI:Error:UploadStoppedByExtension_FileName' => 'Upload parado por extensao. (Nome original arquivo = "%1$s").',
 	'UI:Error:UploadFailedUnknownCause_Code' => 'Upload de arquivo falhou, causa desconhecida. (Erro codigo = "%1$s").',
-	
 	'UI:Error:1ParametersMissing' => 'Erro: o seguinte parametro deve ser especificado para esta operacao: %1$s.',
 	'UI:Error:2ParametersMissing' => 'Erro: os seguinte parametros devem ser especificados para esta operacao: %1$s e %2$s.',
 	'UI:Error:3ParametersMissing' => 'Erro: os seguinte parametros devem ser especificados para esta operacao: %1$s, %2$s e %3$s.',
@@ -397,18 +275,19 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Error:ObjectsAlreadyDeleted' => 'Erro: objeto já pode ter sido eliminada!',
 	'UI:Error:BulkDeleteNotAllowedOn_Class' => 'Permissão negado para executar uma exclusão em massa de objetos da classe %1$s',
 	'UI:Error:DeleteNotAllowedOn_Class' => 'Permissão negado para apagar objeto da classe %1$s',
+	'UI:Error:BulkModifyNotAllowedOn_Class' => 'Você não tem permissão para realizar uma atualização em massa de objetos na classe %1$s',
 	'UI:Error:ObjectAlreadyCloned' => 'Erro: o objeto ja foi clonado!',
 	'UI:Error:ObjectAlreadyCreated' => 'Erro: o objeto ja foi criado!',
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Erro: invalid stimulus "%1$s" on object %2$s in state "%3$s".',
-	
-	
 	'UI:GroupBy:Count' => 'Contagem',
-	'UI:GroupBy:Count+' => 'N&uacute;mero de elementos',
+	'UI:GroupBy:Count+' => 'Número de elementos',
 	'UI:CountOfObjects' => '%1$d objetos que correspondem aos criterios.',
+	'UI_CountOfObjectsShort' => '%1$d objetos.',
 	'UI:NoObject_Class_ToDisplay' => 'Nenhum %1$s para mostrar',
 	'UI:History:LastModified_On_By' => 'Ultima modificacao de %1$s por %2$s.',
 	'UI:HistoryTab' => 'Historico',
-	'UI:History:BulkImports' => 'History',
+	'UI:NotificationsTab' => 'Notificações',
+	'UI:History:BulkImports' => 'Histórico',
 	'UI:History:BulkImports+' => 'List of CSV imports (last first)',
 	'UI:History:BulkImportDetails' => 'Changes resulting from the CSV import performed on %1$s (by %2$s)',
 	'UI:History:Date' => 'Data',
@@ -417,6 +296,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:History:User+' => 'Usuario que fez alteração',
 	'UI:History:Changes' => 'Alterações',
 	'UI:History:Changes+' => 'Alterações feita no objeto',
+	'UI:History:StatsCreations' => 'Criado',
+	'UI:History:StatsCreations+' => '',
 	'UI:History:StatsModifs' => 'Modified',
 	'UI:History:StatsModifs+' => 'Count of objects modified',
 	'UI:History:StatsDeletes' => 'Deleted',
@@ -430,13 +311,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Menu:CSVExport' => 'Exportar CSV',
 	'UI:Menu:Modify' => 'Modificar...',
 	'UI:Menu:Delete' => 'Apagar...',
-	'UI:Menu:Manage' => 'Gerencia...',
 	'UI:Menu:BulkDelete' => 'Apagar...',
 	'UI:UndefinedObject' => 'indefinido',
 	'UI:Document:OpenInNewWindow:Download' => 'Abrir em nova janela: %1$s, Download: %2$s',
-	'UI:SelectAllToggle+' => 'Selecionar / Deselecionar todos',
+	'UI:SelectAllToggle+' => 'Marque todos / Desmarque todos',
 	'UI:TruncatedResults' => '%1$d objetos mostrados out of %2$d',
 	'UI:DisplayAll' => 'Mostrar todos',
+	'UI:CollapseList' => 'Recolher',
 	'UI:CountOfResults' => '%1$d objeto(s)',
 	'UI:ChangesLogTitle' => 'Alteracoes log (%1$d):',
 	'UI:EmptyChangesLogTitle' => 'Alteracoes log esta limpo',
@@ -459,12 +340,16 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Login:RetypeNewPasswordPrompt' => 'Digite novamente a senha',
 	'UI:Login:IncorrectOldPassword' => 'Erro: senha incorreta',
 	'UI:LogOffMenu' => 'Sair',
+	'UI:LogOff:ThankYou' => 'Obrigado por usar o sistema',
+	'UI:LogOff:ClickHereToLoginAgain' => 'Clique aqui para acessar novamente...',
 	'UI:ChangePwdMenu' => 'Alterar senha...',
+	'UI:Login:PasswordChanged' => 'Senha configurada com sucesso!',
 	'UI:AccessRO-All' => 'iTop is read-only',
 	'UI:AccessRO-Users' => 'iTop is read-only for end-users',
 	'UI:Login:RetypePwdDoesNotMatch' => 'A nova senha nao confere!',
 	'UI:Button:Login' => 'Enter iTop',
 	'UI:Login:Error:AccessRestricted' => 'iTop accesso restrito. Por favor, contate o suporte.',
+	'UI:Login:Error:AccessAdmin' => 'Acesso restrito a pessoas com privilégios de administrador. Por favor, contate um administrador.',
 	'UI:CSVImport:MappingSelectOne' => '-- selecione um --',
 	'UI:CSVImport:MappingNotApplicable' => '-- ignore este campo --',
 	'UI:CSVImport:NoData' => 'Conjunto vazio de dados..., forneca alguns dados!',
@@ -476,6 +361,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:CSVImport:idField' => 'id (Chave primaria)',
 	'UI:Title:BulkImport' => 'iTop - Importacao em massa',
 	'UI:Title:BulkImport+' => 'CSV Assistente de Importacao',
+	'UI:Title:BulkSynchro_nbItem_ofClass_class' => 'Sincronização de %1$d objetos da classe %2$s',
 	'UI:CSVImport:ClassesSelectOne' => '-- selecione um --',
 	'UI:CSVImport:ErrorExtendedAttCode' => 'Erro interno: "%1$s" e um codigo incorreto, pois "%2$s" NAO e chave externa da classe "%3$s"',
 	'UI:CSVImport:ObjectsWillStayUnchanged' => '%1$d objeto(s) permanecera inalterados.',
@@ -485,7 +371,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:CSVImport:ObjectsRemainedUnchanged' => '%1$d objeto(s) manteve-se inalterada.',
 	'UI:CSVImport:ObjectsWereModified' => '%1$d objeto(s) foram modificados.',
 	'UI:CSVImport:ObjectsWereAdded' => '%1$d objeto(s) foram adicionados.',
-	'UI:CSVImport:ObjectsAddErrors' => '%1$d objeto(s) apresentam erros.',
+	'UI:CSVImport:ObjectsHadErrors' => '%1$d objeto(s) teve erros.',
 	'UI:Title:CSVImportStep2' => 'Step 2 of 5: CSV opcoes dados',
 	'UI:Title:CSVImportStep3' => 'Step 3 of 5: Mapeamento de dados',
 	'UI:Title:CSVImportStep4' => 'Step 4 of 5: Simulacao Importacao',
@@ -513,26 +399,23 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:CSVImport:CommentsAndHeader' => 'Comments and header',
 	'UI:CSVImport:SelectClass' => 'Select the class to import:',
 	'UI:CSVImport:AdvancedMode' => 'Advanced mode',
-	'UI:CSVImport:AdvancedMode+' => 'In advanced mode the "id" (primary key) of the objects can be used to update and rename objects.' .
-									'However the column "id" (if present) can only be used as a search criteria and can not be combined with any other search criteria.',
+	'UI:CSVImport:AdvancedMode+' => 'In advanced mode the "id" (primary key) of the objects can be used to update and rename objects.However the column "id" (if present) can only be used as a search criteria and can not be combined with any other search criteria.',
 	'UI:CSVImport:SelectAClassFirst' => 'To configure the mapping, select a class first.',
 	'UI:CSVImport:HeaderFields' => 'Fields',
 	'UI:CSVImport:HeaderMappings' => 'Mappings',
 	'UI:CSVImport:HeaderSearch' => 'Search?',
 	'UI:CSVImport:AlertIncompleteMapping' => 'Please select a mapping for every field.',
 	'UI:CSVImport:AlertNoSearchCriteria' => 'Please select at least one search criteria',
-	
+	'UI:CSVImport:Encoding' => 'Codificação de caracteres',
 	'UI:UniversalSearchTitle' => 'iTop - Pesquisa universal',
 	'UI:UniversalSearch:Error' => 'Erro: %1$s',
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Selecione a classe para pesquisa: ',
-	
 	'UI:Audit:Title' => 'iTop - CMDB Auditoria',
 	'UI:Audit:InteractiveAudit' => 'Interactive Audit',
 	'UI:Audit:HeaderAuditRule' => 'Audit Rule',
 	'UI:Audit:HeaderNbObjects' => '# Objects',
 	'UI:Audit:HeaderNbErrors' => '# Errors',
 	'UI:Audit:PercentageOk' => '% Ok',
-	
 	'UI:RunQuery:Title' => 'iTop - OQL Query Evaluation',
 	'UI:RunQuery:QueryExamples' => 'Query Examples',
 	'UI:RunQuery:HeaderPurpose' => 'Purpose',
@@ -544,7 +427,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:RunQuery:DevelopedQuery' => 'Redevelopped query expression: ',
 	'UI:RunQuery:SerializedFilter' => 'Serialized filter: ',
 	'UI:RunQuery:Error' => 'An error occured while running the query: %1$s',
-	
 	'UI:Schema:Title' => 'iTop objects schema',
 	'UI:Schema:CategoryMenuItem' => 'Category <b>%1$s</b>',
 	'UI:Schema:Relationships' => 'Relationships',
@@ -563,7 +445,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Schema:Label' => 'Label',
 	'UI:Schema:Label+' => 'Label of the attribute',
 	'UI:Schema:Type' => 'Type',
-	
 	'UI:Schema:Type+' => 'Data type of the attribute',
 	'UI:Schema:Origin' => 'Origin',
 	'UI:Schema:Origin+' => 'The base class in which this attribute is defined',
@@ -604,45 +485,46 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Schema:LifeCycleAttributeMustChange' => 'Must change',
 	'UI:Schema:LifeCycleAttributeMustPrompt' => 'User will be prompted to change the value',
 	'UI:Schema:LifeCycleEmptyList' => 'lista limpa',
-	
 	'UI:LinksWidget:Autocomplete+' => 'Type the first 3 characters...',
 	'UI:Combo:SelectValue' => '--- select a value ---',
 	'UI:Label:SelectedObjects' => 'Objetos selecionados: ',
-	'UI:Label:AvailableObjects' => 'Objetos dispon&iacute;veis: ',
+	'UI:Label:AvailableObjects' => 'Objetos disponíveis: ',
 	'UI:Link_Class_Attributes' => '%1$s atributos',
-	'UI:SelectAllToggle+' => 'Marque todos / Desmarque todos',
 	'UI:AddObjectsOf_Class_LinkedWith_Class_Instance' => 'Adionar %1$s objetos ligados com %2$s: %3$s',
+	'UI:AddObjectsOf_Class_LinkedWith_Class' => 'Adicionado %1$s objetos ligados com o %2$s',
 	'UI:ManageObjectsOf_Class_LinkedWith_Class_Instance' => 'Manage %1$s objects linked with %2$s: %3$s',
 	'UI:AddLinkedObjectsOf_Class' => 'Adicionado %1$ss...',
 	'UI:RemoveLinkedObjectsOf_Class' => 'Apagado objeto(s) selecionado(s)',
-	'UI:Message:EmptyList:UseAdd' => 'A lista est&aacute; limpa, use o &iacute;cone "Adicionar..." para adicionar elementos.',
-	'UI:Message:EmptyList:UseSearchForm' => 'Use o formul&aacute;rio Pesquisa para pesquisar objetos a ser adicionado.',
-	
+	'UI:Message:EmptyList:UseAdd' => 'A lista está limpa, use o ícone "Adicionar..." para adicionar elementos.',
+	'UI:Message:EmptyList:UseSearchForm' => 'Use o formulário Pesquisa para pesquisar objetos a ser adicionado.',
 	'UI:Wizard:FinalStepTitle' => 'Passo Final: confirmação',
 	'UI:Title:DeletionOf_Object' => 'Eliminação de %1$s',
 	'UI:Title:BulkDeletionOf_Count_ObjectsOf_Class' => 'Bulk deletion of %1$d objects of class %2$s',
 	'UI:Delete:NotAllowedToDelete' => 'Permissão negado para eliminar este objeto',
 	'UI:Delete:NotAllowedToUpdate_Fields' => 'Permissão negado para atualizar o(s) seguinte(s) campo(s): %1$s',
+	'UI:Error:NotEnoughRightsToDelete' => 'Este objeto não pode ser apagado pelo usuário não ter direitos administrativos',
 	'UI:Error:CannotDeleteBecause' => 'This object could not be deleted because: %1$s',
-	'UI:Error:NotEnoughRightsToDelete' => 'Este objeto não pode ser apagado pelo usu&aacute;rio não ter direitos administrativos',
 	'UI:Error:CannotDeleteBecauseOfDepencies' => 'This object could not be deleted because some manual operations must be performed prior to that',
+	'UI:Error:CannotDeleteBecauseManualOpNeeded' => 'Este objeto não pode ser excluído porque algumas operações manuais devem ser realizadas antes que',
 	'UI:Archive_User_OnBehalfOf_User' => '%1$s em nome de %2$s',
+	'UI:Delete:Deleted' => 'apagado',
 	'UI:Delete:AutomaticallyDeleted' => 'eliminado automaticamente',
-	'UI:Delete:AutomaticResetOf_Fields' => 'reset autom&aacute;tico dos campo(s): %1$s',
-	'UI:Delete:CleaningUpRefencesTo_Object' => 'Limpar todas as refer&ecirc;ncias a %1$s...',
+	'UI:Delete:AutomaticResetOf_Fields' => 'reset automático dos campo(s): %1$s',
+	'UI:Delete:CleaningUpRefencesTo_Object' => 'Limpar todas as referências a %1$s...',
 	'UI:Delete:CleaningUpRefencesTo_Several_ObjectsOf_Class' => 'Limpando todas as referências ao objeto %1$d da classe %2$s...',
 	'UI:Delete:Done+' => 'What was done...',
 	'UI:Delete:_Name_Class_Deleted' => '%1$s - %2$s eliminado.',
 	'UI:Delete:ConfirmDeletionOf_Name' => 'Eliminação de %1$s',
 	'UI:Delete:ConfirmDeletionOf_Count_ObjectsOf_Class' => 'Eliminação do objeto %1$d da classe %2$s',
-//	'UI:Delete:ShouldBeDeletedAtomaticallyButNotPossible' => 'Should be automaticaly deleted, but this is not feasible: %1$s',
-//	'UI:Delete:MustBeDeletedManuallyButNotPossible' => 'Must be deleted manually, but this is not feasible: %1$s',
-	'UI:Delete:WillBeDeletedAutomatically' => 'Ser&aacute; automaticamente exclu&iacute;do',
-	'UI:Delete:MustBeDeletedManually' => 'Deve ser exclu&iacute;do manualmente',
+	'UI:Delete:CannotDeleteBecause' => 'Não pode ser apagado: %1$s',
+	'UI:Delete:ShouldBeDeletedAtomaticallyButNotPossible' => 'Deve ser automaticamente excluído, mas isso não é viável: %1$s',
+	'UI:Delete:MustBeDeletedManuallyButNotPossible' => 'Deve ser excluído manualmente, mas isso não é viável: %1$s',
+	'UI:Delete:WillBeDeletedAutomatically' => 'Será automaticamente excluído',
+	'UI:Delete:MustBeDeletedManually' => 'Deve ser excluído manualmente',
 	'UI:Delete:CannotUpdateBecause_Issue' => 'Devem ser atualizados automaticamente, mas: %1$s',
-	'UI:Delete:WillAutomaticallyUpdate_Fields' => 'ser&aacute; automaticamente atualizado (reset: %1$s)',
+	'UI:Delete:WillAutomaticallyUpdate_Fields' => 'será automaticamente atualizado (reset: %1$s)',
 	'UI:Delete:Count_Objects/LinksReferencing_Object' => '%1$d objects/links are referencing %2$s',
-	'UI:Delete:Count_Objects/LinksReferencingTheObjects' => '%1$d objects/links are referencing some of the objects to be deleted',	
+	'UI:Delete:Count_Objects/LinksReferencingTheObjects' => '%1$d objects/links are referencing some of the objects to be deleted',
 	'UI:Delete:ReferencesMustBeDeletedToEnsureIntegrity' => 'To ensure Database integrity, any reference should be further eliminated',
 	'UI:Delete:Consequence+' => 'What will be done',
 	'UI:Delete:SorryDeletionNotAllowed' => 'Sorry, you are not allowed to delete this object, see the detailed explanations above',
@@ -652,7 +534,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:WelcomeToITop' => 'Bem-vindo ao iTop',
 	'UI:DetailsPageTitle' => 'iTop - %1$s - %2$s detalhes',
 	'UI:ErrorPageTitle' => 'iTop - Erro',
-	'UI:ObjectDoesNotExist' => 'Desculpe, este objeto não existe (ou voc&ecirc; não tem permissão para v&ecirc;-lo).',
+	'UI:ObjectDoesNotExist' => 'Desculpe, este objeto não existe (ou você não tem permissão para vê-lo).',
 	'UI:SearchResultsPageTitle' => 'iTop - Pesquisa resultados',
 	'UI:Search:NoSearch' => 'Nada para pesquisar',
 	'UI:FullTextSearchTitle_Text' => 'Resultados para "%1$s":',
@@ -672,11 +554,12 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:PageTitle:ObjectCreated' => 'iTop Objeto criado.',
 	'UI:Title:Object_Of_Class_Created' => '%1$s - %2$s criado.',
 	'UI:Apply_Stimulus_On_Object_In_State_ToTarget_State' => 'Applying %1$s on object: %2$s in state %3$s to target state: %4$s.',
+	'UI:ObjectCouldNotBeWritten' => 'O objeto não pôde ser gravado: %1$s',
 	'UI:PageTitle:FatalError' => 'iTop - Erro fatal',
+	'UI:SystemIntrusion' => 'Acesso negado. Você tentou executar uma operação que não é permitido para você.',
 	'UI:FatalErrorMessage' => 'Erro fatal, não pode continuar.',
 	'UI:Error_Details' => 'Erro: %1$s.',
-
-	'UI:PageTitle:ClassProjections'	=> 'iTop user management - class projections',
+	'UI:PageTitle:ClassProjections' => 'iTop user management - class projections',
 	'UI:PageTitle:ProfileProjections' => 'iTop user management - profile projections',
 	'UI:UserManagement:Class' => 'Class',
 	'UI:UserManagement:Class+' => 'Class of objects',
@@ -714,72 +597,59 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:UserManagement:NoLifeCycleApplicable+' => 'No lifecycle has been defined for this class',
 	'UI:UserManagement:GrantMatrix' => 'Grant Matrix',
 	'UI:UserManagement:LinkBetween_User_And_Profile' => 'Link between %1$s and %2$s',
-	
+	'UI:UserManagement:LinkBetween_User_And_Org' => 'Link entre %1$s e %2$s',
 	'Menu:AdminTools' => 'Ferramentas administrativa',
 	'Menu:AdminTools+' => 'Ferramentas administrativa',
-	'Menu:AdminTools?' => 'Ferramentas permitidas somente para usu&aacute;rio com profile administrador',
-
+	'Menu:AdminTools?' => 'Ferramentas permitidas somente para usuário com profile administrador',
 	'UI:ChangeManagementMenu' => 'Gerenciamento Mudanças',
 	'UI:ChangeManagementMenu+' => 'Gerenciamento Mudanças',
 	'UI:ChangeManagementMenu:Title' => 'Visão geral Mudanças',
 	'UI-ChangeManagementMenu-ChangesByType' => 'Mudanças por tipo',
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Mudanças por status',
 	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'Mudanças por grupo de trabalho',
-	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Mudanças não atribu&iacute;das',
-
-	'UI:ConfigurationItemsMenu'=> 'Configuração Itens',
-	'UI:ConfigurationItemsMenu+'=> 'Todos dispositivos',
+	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Mudanças não atribuídas',
+	'UI:ConfigurationItemsMenu' => 'Configuração Itens',
+	'UI:ConfigurationItemsMenu+' => 'Todos dispositivos',
 	'UI:ConfigurationItemsMenu:Title' => 'Visão geral Configuração Itens',
 	'UI-ConfigurationItemsMenu-ServersByCriticity' => 'Servidores por criticidade',
 	'UI-ConfigurationItemsMenu-PCsByCriticity' => 'PCs por criticidade',
 	'UI-ConfigurationItemsMenu-NWDevicesByCriticity' => 'Dispositivo de rede por criticidade',
 	'UI-ConfigurationItemsMenu-ApplicationsByCriticity' => 'Aplicação por criticidade',
-	
 	'UI:ConfigurationManagementMenu' => 'Gerenciamento Configuração',
 	'UI:ConfigurationManagementMenu+' => 'Gerenciamento Configuração',
 	'UI:ConfigurationManagementMenu:Title' => 'Visão geral Infra-estrutura',
 	'UI-ConfigurationManagementMenu-InfraByType' => 'Objetos Infra-estrutura por tipo',
 	'UI-ConfigurationManagementMenu-InfraByStatus' => 'Objetos Infra-estrutura por status',
-
-'UI:ConfigMgmtMenuOverview:Title' => 'Painel para Gerenciamento Configuração',
-'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => 'Configuração Itens por status',
-'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => 'Configuração Itens por tipo',
-
-'UI:RequestMgmtMenuOverview:Title' => 'Painel para Gerenciamento de Pedido',
-'UI-RequestManagementOverview-RequestByService' => 'User Requests by service',
-'UI-RequestManagementOverview-RequestByPriority' => 'User Requests by priority',
-'UI-RequestManagementOverview-RequestUnassigned' => 'User Requests not yet assigned to an agent',
-
-'UI:IncidentMgmtMenuOverview:Title' => 'Painel para Gerenciamento Incidentes',
-'UI-IncidentManagementOverview-IncidentByService' => 'Incidentes por serviço',
-'UI-IncidentManagementOverview-IncidentByPriority' => 'Incidentes por prioridade',
-'UI-IncidentManagementOverview-IncidentUnassigned' => 'Incidentes não atribu&iacute;dos para agentes',
-
-'UI:ChangeMgmtMenuOverview:Title' => 'Painel para Gerenciamento Mudanças',
-'UI-ChangeManagementOverview-ChangeByType' => 'Mudanças por tipo',
-'UI-ChangeManagementOverview-ChangeUnassigned' => 'Mudanças não atribu&iacute;dos para agentes',
-'UI-ChangeManagementOverview-ChangeWithOutage' => 'Interrupç&otilde;es devido a mudanças',
-
-'UI:ServiceMgmtMenuOverview:Title' => 'Painel para Gerenciamento Serviço',
-'UI-ServiceManagementOverview-CustomerContractToRenew' => 'Contratos de clientes deverão serem renovados em 30 dias',
-'UI-ServiceManagementOverview-ProviderContractToRenew' => 'Contratos de prestação a serem renovados em 30 dias',
-
+	'UI:ConfigMgmtMenuOverview:Title' => 'Painel para Gerenciamento Configuração',
+	'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => 'Configuração Itens por status',
+	'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => 'Configuração Itens por tipo',
+	'UI:RequestMgmtMenuOverview:Title' => 'Painel para Gerenciamento Solicitação',
+	'UI-RequestManagementOverview-RequestByService' => 'Chamados usuários por serviço',
+	'UI-RequestManagementOverview-RequestByPriority' => 'Chamados usuários por prioridade',
+	'UI-RequestManagementOverview-RequestUnassigned' => 'Chamados usuários não atribuídos a agentes',
+	'UI:IncidentMgmtMenuOverview:Title' => 'Painel para Gerenciamento Incidentes',
+	'UI-IncidentManagementOverview-IncidentByService' => 'Incidentes por serviço',
+	'UI-IncidentManagementOverview-IncidentByPriority' => 'Incidentes por prioridade',
+	'UI-IncidentManagementOverview-IncidentUnassigned' => 'Incidentes não atribuídos para agentes',
+	'UI:ChangeMgmtMenuOverview:Title' => 'Painel para Gerenciamento Mudanças',
+	'UI-ChangeManagementOverview-ChangeByType' => 'Mudanças por tipo',
+	'UI-ChangeManagementOverview-ChangeUnassigned' => 'Mudanças não atribuídos para agentes',
+	'UI-ChangeManagementOverview-ChangeWithOutage' => 'Interrupções devido a mudanças',
+	'UI:ServiceMgmtMenuOverview:Title' => 'Painel para Gerenciamento Serviço',
+	'UI-ServiceManagementOverview-CustomerContractToRenew' => 'Contratos de clientes deverão ser renovados em 30 dias',
+	'UI-ServiceManagementOverview-ProviderContractToRenew' => 'Contratos de prestação a serem renovados em 30 dias',
 	'UI:ContactsMenu' => 'Contatos',
 	'UI:ContactsMenu+' => 'Contatos',
 	'UI:ContactsMenu:Title' => 'Visão global contatos',
 	'UI-ContactsMenu-ContactsByLocation' => 'Contatos por Localização',
 	'UI-ContactsMenu-ContactsByType' => 'Contatos por tipo',
 	'UI-ContactsMenu-ContactsByStatus' => 'Contatos por status',
-
 	'Menu:CSVImportMenu' => 'Importacao CSV',
 	'Menu:CSVImportMenu+' => 'Bulk creation or update',
-	
 	'Menu:DataModelMenu' => 'Modelo dados',
 	'Menu:DataModelMenu+' => 'Visao geral do Modelo dados',
-	
 	'Menu:ExportMenu' => 'Exportar',
 	'Menu:ExportMenu+' => 'Exportar o resultado de qualquer consulta em HTML, CSV or XML',
-	
 	'Menu:NotificationsMenu' => 'Notificações',
 	'Menu:NotificationsMenu+' => 'Configuração da notificações',
 	'UI:NotificationsMenu:Title' => 'Configuração da <span class="hilite">Notificações</span>',
@@ -806,47 +676,96 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:NotificationsMenu:OnStateLeave' => 'Quando um objeto deixa um determinado estado',
 	'UI:NotificationsMenu:Actions' => 'Acoes',
 	'UI:NotificationsMenu:AvailableActions' => 'Acoes disponiveis',
-	
+	'Menu:AuditCategories' => 'Auditar Categorias',
+	'Menu:AuditCategories+' => '',
+	'Menu:Notifications:Title' => 'Auditar Categorias',
 	'Menu:RunQueriesMenu' => 'Executar consultas',
 	'Menu:RunQueriesMenu+' => 'Executar qualquer consulta',
-	
 	'Menu:DataAdministration' => 'Administracao de dados',
 	'Menu:DataAdministration+' => 'Administracao de dados',
-	
 	'Menu:UniversalSearchMenu' => 'Pesquisa Universal',
 	'Menu:UniversalSearchMenu+' => 'Pesquisa por nada...',
-	
 	'Menu:ApplicationLogMenu' => 'Log de l\'aplicacao',
 	'Menu:ApplicationLogMenu+' => 'Log de l\'aplicacao',
 	'Menu:ApplicationLogMenu:Title' => 'Log de l\'aplicacao',
-
 	'Menu:UserManagementMenu' => 'Gerenciamento Usuario',
 	'Menu:UserManagementMenu+' => 'Gerenciamento usuario',
-
 	'Menu:ProfilesMenu' => 'Profiles',
 	'Menu:ProfilesMenu+' => 'Profiles',
 	'Menu:ProfilesMenu:Title' => 'Profiles',
-
 	'Menu:UserAccountsMenu' => 'Contas usuarios',
 	'Menu:UserAccountsMenu+' => 'Contas usuarios',
-	'Menu:UserAccountsMenu:Title' => 'Contas usuarios',	
-
+	'Menu:UserAccountsMenu:Title' => 'Contas usuarios',
 	'UI:iTopVersion:Short' => 'iTop versão %1$s',
 	'UI:iTopVersion:Long' => 'iTop versão %1$s-%2$s built on %3$s',
 	'UI:PropertiesTab' => 'Propriedades',
-
 	'UI:OpenDocumentInNewWindow_' => 'Abrir este documento em uma nova janela: %1$s',
 	'UI:DownloadDocument_' => 'Baixar este documento: %1$s',
-	'UI:Document:NoPreview' => 'Nã h&aacute; visualização dispon&iacute;vel para este tipo de documento',
-
+	'UI:Document:NoPreview' => 'Nã há visualização disponível para este tipo de documento',
 	'UI:DeadlineMissedBy_duration' => 'Perdido por %1$s',
-	'UI:Deadline_LessThan1Min' => '< 1 min',		
-	'UI:Deadline_Minutes' => '%1$d min',			
-	'UI:Deadline_Hours_Minutes' => '%1$dh %2$dmin',			
+	'UI:Deadline_LessThan1Min' => '< 1 min',
+	'UI:Deadline_Minutes' => '%1$d min',
+	'UI:Deadline_Hours_Minutes' => '%1$dh %2$dmin',
 	'UI:Deadline_Days_Hours_Minutes' => '%1$dd %2$dh %3$dmin',
 	'UI:Help' => 'Ajuda',
+	'UI:PasswordConfirm' => '(Confirmar)',
+	'UI:BeforeAdding_Class_ObjectsSaveThisObject' => 'Antes de adicionar mais %1$s objetos, salvar este objeto.',
+	'UI:DisplayThisMessageAtStartup' => 'Visualizar esta mensagem ao entrar',
+	'UI:RelationshipGraph' => 'Visualização gráfica',
+	'UI:RelationshipList' => 'Lista',
+	'UI:OperationCancelled' => 'Operação cancelada',
+	'Portal:Title' => 'Portal do usuário',
+	'Portal:Refresh' => 'Atualizar',
+	'Portal:Back' => 'Voltar',
+	'Portal:CreateNewRequest' => 'Criar uma nova requisição',
+	'Portal:ChangeMyPassword' => 'Alterar minha senha',
+	'Portal:Disconnect' => 'Sair',
+	'Portal:OpenRequests' => 'Minhas requisições abertas',
+	'Portal:ResolvedRequests' => 'Minhas requisições resolvidas',
+	'Portal:SelectService' => 'Selecione um serviço do catálogo:',
+	'Portal:PleaseSelectOneService' => 'Por favor, selecione um serviço',
+	'Portal:SelectSubcategoryFrom_Service' => 'Selecione uma sub-categoria para o serviço %1$s:',
+	'Portal:PleaseSelectAServiceSubCategory' => 'Por favor, selecione uma sub-categoria',
+	'Portal:DescriptionOfTheRequest' => 'Digite a descrição de sua solicitação:',
+	'Portal:TitleRequestDetailsFor_Request' => 'Detalhes para requisição %1$s:',
+	'Portal:NoOpenRequest' => 'Nenhuma requisição neste categoria.',
+	'Portal:Button:CloseTicket' => 'Fechar este ticket',
+	'Portal:EnterYourCommentsOnTicket' => 'Digite os seus comentários sobre a resolução deste incidente:',
+	'Portal:ErrorNoContactForThisUser' => 'Erro: o usuátio atual não está associado com um contato/pessoa. Por favor, contate o administrador.',
+	'Portal:Attachments' => 'Anexos',
+	'Portal:AddAttachment' => ' Adicionar anexos ',
+	'Portal:RemoveAttachment' => ' Remover anexos ',
+	'Portal:Attachment_No_To_Ticket_Name' => 'Anexado #%1$d para %2$s (%3$s)',
+	'Enum:Undefined' => 'Indefinido',
+	'UI:DurationForm_Days_Hours_Minutes_Seconds' => '%1$s Dias %2$s Horas %3$s Minutos %4$s Segundos',
+	'UI:ModifyAllPageTitle' => 'Modificar Todos',
+	'UI:Modify_N_ObjectsOf_Class' => 'Modificando %1$d objetos da classe %2$s',
+	'UI:Modify_M_ObjectsOf_Class_OutOf_N' => 'Modificando %1$d objetos da classe %2$s fora do %3$d',
+	'UI:Menu:ModifyAll' => 'Modificar...',
+	'UI:Button:ModifyAll' => 'Modificar todos',
+	'UI:Button:PreviewModifications' => 'Modificações anteriores >>',
+	'UI:ModifiedObject' => 'Objeto Modificado',
+	'UI:BulkModifyStatus' => 'Operação',
+	'UI:BulkModifyStatus+' => '',
+	'UI:BulkModifyErrors' => 'Erros (se algum)',
+	'UI:BulkModifyErrors+' => '',
+	'UI:BulkModifyStatusOk' => 'Ok',
+	'UI:BulkModifyStatusError' => 'Erro',
+	'UI:BulkModifyStatusModified' => 'Modificado',
+	'UI:BulkModifyStatusSkipped' => 'Ignorado',
+	'UI:BulkModify_Count_DistinctValues' => '%1$d valores distintos:',
+	'UI:BulkModify:Value_Exists_N_Times' => '%1$s, %2$d tempo',
+	'UI:BulkModify:N_MoreValues' => '%1$d mais valores...',
+	'UI:AttemptingToSetAReadOnlyAttribute_Name' => 'Tentativa de definir o campo só de leitura: %1$s',
+	'UI:FailedToApplyStimuli' => 'A ação falhou.',
+	'UI:StimulusModify_N_ObjectsOf_Class' => '%1$s: Modificando %2$d objetos da classe %3$s',
+	'UI:CaseLogTypeYourTextHere' => 'Digite seu texto aqui:',
+	'UI:CaseLog:DateFormat' => 'A-m-d H:i:s',
+	'UI:CaseLog:Header_Date_UserName' => '%1$s - %2$s:',
+	'UI:CaseLog:InitialValue' => 'Valor inicial:',
+	'UI:AttemptingToSetASlaveAttribute_Name' => 'O campo %1$s não é gravável, porque é dominado pela sincronização de dados. Valor não definido.',
+	'UI:ActionNotAllowed' => 'Você não tem permissão para executar esta ação sobre estes objetos.',
+	'UI:BulkAction:NoObjectSelected' => 'Por favor, selecione pelo menos um objeto para realizar esta operação',
+	'UI:AttemptingToChangeASlaveAttribute_Name' => 'O campo %1$s não é gravável, porque é dominado pela sincronização de dados. Relação mantém-se inalterado',
 ));
-
-
-
 ?>

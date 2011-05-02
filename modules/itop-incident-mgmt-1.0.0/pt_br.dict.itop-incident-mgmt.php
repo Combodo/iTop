@@ -15,54 +15,20 @@
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 /**
- * Localized data
- *
- * @author      Erwan Taloc <erwan.taloc@combodo.com>
- * @author      Romain Quetiez <romain.quetiez@combodo.com>
- * @author      Denis Flaven <denis.flaven@combodo.com>
- * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
+ * @author	Erwan Taloc <erwan.taloc@combodo.com>
+ * @author	Romain Quetiez <romain.quetiez@combodo.com>
+ * @author	Denis Flaven <denis.flaven@combodo.com>
+ * @author	Marco Tulio <mtulio@opensolucoes.com.br>
+
+ * @licence	http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Menu:IncidentManagement' => 'Gerenciamento Incidentes',
-	'Menu:IncidentManagement+' => 'Gerenciamento Incidentes',
-	'Menu:Incident:Overview' => 'Vis&atilde;o Geral',
-	'Menu:Incident:Overview+' => 'Vis&atilde;o Geral',
-	'Menu:NewIncident' => 'Novo Incidente',
-	'Menu:NewIncident+' => 'Novo Incidente',
-	'Menu:SearchIncidents' => 'Pesquisa para Incidentes',
-	'Menu:SearchIncidents+' => 'Pesquisa para Incidentes',
-	'Menu:Incident:Shortcuts' => 'Atalhos',
-	'Menu:Incident:Shortcuts+' => '',
-	'Menu:Incident:MyIncidents' => 'Incidentes atribu&iacute;do a mim',
-	'Menu:Incident:MyIncidents+' => 'Incidentes atribu&iacute; para mim (como agente)',
-	'Menu:Incident:EscalatedIncidents' => 'Incidentes encaminhados',
-	'Menu:Incident:EscalatedIncidents+' => 'Incidentes encaminhados',
-	'Menu:Incident:OpenIncidents' => 'Todos Incidentes abertos',
-	'Menu:Incident:OpenIncidents+' => 'Todos Incidentes abertos',
-
-));
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//
-// Class: Incident
-//
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Incident' => 'Incidentes',
 	'Class:Incident+' => '',
-	'Class:Incident/Stimulus:ev_assign' => 'Atribu&iacute;r',
+	'Class:Incident/Stimulus:ev_assign' => 'Atribuír',
 	'Class:Incident/Stimulus:ev_assign+' => '',
-	'Class:Incident/Stimulus:ev_reassign' => 'Re-atribu&iacute;r',
+	'Class:Incident/Stimulus:ev_reassign' => 'Re-atribuír',
 	'Class:Incident/Stimulus:ev_reassign+' => '',
 	'Class:Incident/Stimulus:ev_timeout' => 'ev_timeout',
 	'Class:Incident/Stimulus:ev_timeout+' => '',
@@ -70,6 +36,25 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Incident/Stimulus:ev_resolve+' => '',
 	'Class:Incident/Stimulus:ev_close' => 'Fechado',
 	'Class:Incident/Stimulus:ev_close+' => '',
+	'Class:lnkTicketToIncident' => 'Ticket to Incident~~',
+	'Class:lnkTicketToIncident/Attribute:ticket_id' => 'Ticket~~',
+	'Class:lnkTicketToIncident/Attribute:incident_id' => 'Incidentes',
+	'Class:lnkTicketToIncident/Attribute:reason' => 'Razão',
+	'Menu:IncidentManagement' => 'Gerenciamento Incidentes',
+	'Menu:IncidentManagement+' => 'Gerenciamento Incidentes',
+	'Menu:Incident:Overview' => 'Visão Geral',
+	'Menu:Incident:Overview+' => 'Visão Geral',
+	'Menu:NewIncident' => 'Novo Incidente',
+	'Menu:NewIncident+' => 'Novo Incidente',
+	'Menu:SearchIncidents' => 'Pesquisa para Incidentes',
+	'Menu:SearchIncidents+' => 'Pesquisa para Incidentes',
+	'Menu:Incident:Shortcuts' => 'Atalhos',
+	'Menu:Incident:Shortcuts+' => '',
+	'Menu:Incident:MyIncidents' => 'Incidentes atribuído a mim',
+	'Menu:Incident:MyIncidents+' => 'Incidentes atribuí para mim (como agente)',
+	'Menu:Incident:EscalatedIncidents' => 'Incidentes encaminhados',
+	'Menu:Incident:EscalatedIncidents+' => 'Incidentes encaminhados',
+	'Menu:Incident:OpenIncidents' => 'Todos Incidentes abertos',
+	'Menu:Incident:OpenIncidents+' => 'Todos Incidentes abertos',
 ));
-
 ?>
