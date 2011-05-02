@@ -15,34 +15,36 @@
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 /**
- * Localized data
- *
- * @author      Erwan Taloc <erwan.taloc@combodo.com>
- * @author      Romain Quetiez <romain.quetiez@combodo.com>
- * @author      Denis Flaven <denis.flaven@combodo.com>
- * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
+ * @author	Erwan Taloc <erwan.taloc@combodo.com>
+ * @author	Romain Quetiez <romain.quetiez@combodo.com>
+ * @author	Denis Flaven <denis.flaven@combodo.com>
+
+ * @licence	http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-
-//
-// Class: Ticket
-//
-
-//
-// Class: Ticket
-//
-
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
+	'Class:lnkTicketToDoc' => 'Ticket/Documento',
+	'Class:lnkTicketToDoc+' => '',
+	'Class:lnkTicketToDoc/Attribute:ticket_id' => 'Ticket',
+	'Class:lnkTicketToDoc/Attribute:ticket_id+' => '',
+	'Class:lnkTicketToDoc/Attribute:document_id' => 'Documento',
+	'Class:lnkTicketToDoc/Attribute:document_id+' => '',
+	'Class:lnkTicketToContact' => 'Ticket/Contatto',
+	'Class:lnkTicketToContact+' => '',
+	'Class:lnkTicketToContact/Attribute:ticket_id' => 'Ticket',
+	'Class:lnkTicketToContact/Attribute:ticket_id+' => '',
+	'Class:lnkTicketToContact/Attribute:contact_id' => 'Contatto',
+	'Class:lnkTicketToContact/Attribute:contact_id+' => '',
+	'Class:lnkTicketToContact/Attribute:role' => 'Ruolo',
+	'Class:lnkTicketToContact/Attribute:role+' => '',
+	'Class:lnkTicketToCI' => 'Ticket/CI',
+	'Class:lnkTicketToCI+' => '',
+	'Class:lnkTicketToCI/Attribute:ticket_id' => 'Ticket',
+	'Class:lnkTicketToCI/Attribute:ticket_id+' => '',
+	'Class:lnkTicketToCI/Attribute:ci_id' => 'CI',
+	'Class:lnkTicketToCI/Attribute:ci_id+' => '',
+	'Class:lnkTicketToCI/Attribute:impact' => 'Impatto',
+	'Class:lnkTicketToCI/Attribute:impact+' => '',
 	'Class:Ticket' => 'Ticket',
 	'Class:Ticket+' => '',
 	'Class:Ticket/Attribute:ref' => 'Ref',
@@ -65,74 +67,28 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Ticket/Attribute:incident_list+' => '',
 	'Class:Ticket/Attribute:finalclass' => 'Tipo',
 	'Class:Ticket/Attribute:finalclass+' => '',
-));
-
-
-//
-// Class: lnkTicketToDoc
-//
-
-Dict::Add('IT IT', 'Italian', 'Italian', array(
-	'Class:lnkTicketToDoc' => 'Ticket/Documento',
-	'Class:lnkTicketToDoc+' => '',
-	'Class:lnkTicketToDoc/Attribute:ticket_id' => 'Ticket',
-	'Class:lnkTicketToDoc/Attribute:ticket_id+' => '',
+	'Ticket:baseinfo' => 'Infomazioni Generali',
+	'Ticket:date' => 'Date',
+	'Ticket:contact' => 'Contatti',
+	'Ticket:moreinfo' => 'Più informazioni',
+	'Ticket:relation' => 'Relazioni',
+	'Ticket:log' => 'Communicazioni',
 	'Class:lnkTicketToDoc/Attribute:ticket_ref' => 'Ticket #',
 	'Class:lnkTicketToDoc/Attribute:ticket_ref+' => '',
-	'Class:lnkTicketToDoc/Attribute:document_id' => 'Documento',
-	'Class:lnkTicketToDoc/Attribute:document_id+' => '',
 	'Class:lnkTicketToDoc/Attribute:document_name' => 'Documento',
 	'Class:lnkTicketToDoc/Attribute:document_name+' => '',
-));
-
-//
-// Class: lnkTicketToContact
-//
-
-Dict::Add('IT IT', 'Italian', 'Italian', array(
-	'Class:lnkTicketToContact' => 'Ticket/Contatto',
-	'Class:lnkTicketToContact+' => '',
-	'Class:lnkTicketToContact/Attribute:ticket_id' => 'Ticket',
-	'Class:lnkTicketToContact/Attribute:ticket_id+' => '',
 	'Class:lnkTicketToContact/Attribute:ticket_ref' => 'Ticket #',
 	'Class:lnkTicketToContact/Attribute:ticket_ref+' => '',
-	'Class:lnkTicketToContact/Attribute:contact_id' => 'Contatto',
-	'Class:lnkTicketToContact/Attribute:contact_id+' => '',
 	'Class:lnkTicketToContact/Attribute:contact_name' => 'Contatto',
 	'Class:lnkTicketToContact/Attribute:contact_name+' => '',
 	'Class:lnkTicketToContact/Attribute:contact_email' => 'Email',
 	'Class:lnkTicketToContact/Attribute:contact_email+' => '',
-	'Class:lnkTicketToContact/Attribute:role' => 'Ruolo',
-	'Class:lnkTicketToContact/Attribute:role+' => '',
-));
-
-//
-// Class: lnkTicketToCI
-//
-
-Dict::Add('IT IT', 'Italian', 'Italian', array(
-	'Class:lnkTicketToCI' => 'Ticket/CI',
-	'Class:lnkTicketToCI+' => '',
-	'Class:lnkTicketToCI/Attribute:ticket_id' => 'Ticket',
-	'Class:lnkTicketToCI/Attribute:ticket_id+' => '',
 	'Class:lnkTicketToCI/Attribute:ticket_ref' => 'Ticket #',
 	'Class:lnkTicketToCI/Attribute:ticket_ref+' => '',
-	'Class:lnkTicketToCI/Attribute:ci_id' => 'CI',
-	'Class:lnkTicketToCI/Attribute:ci_id+' => '',
 	'Class:lnkTicketToCI/Attribute:ci_name' => 'CI',
 	'Class:lnkTicketToCI/Attribute:ci_name+' => '',
 	'Class:lnkTicketToCI/Attribute:ci_status' => 'CI stato',
 	'Class:lnkTicketToCI/Attribute:ci_status+' => '',
-	'Class:lnkTicketToCI/Attribute:impact' => 'Impatto',
-	'Class:lnkTicketToCI/Attribute:impact+' => '',
-));
-
-
-//
-// Class: ResponseTicket
-//
-
-Dict::Add('IT IT', 'Italian', 'Italian', array(
 	'Class:ResponseTicket' => 'Ticket di risposta',
 	'Class:ResponseTicket+' => '',
 	'Class:ResponseTicket/Attribute:status' => 'Stato',
@@ -260,8 +216,4 @@ Dict::Add('IT IT', 'Italian', 'Italian', array(
 	'Class:ResponseTicket/Stimulus:ev_close' => 'Chiudi',
 	'Class:ResponseTicket/Stimulus:ev_close+' => '',
 ));
-
-
-
-
 ?>

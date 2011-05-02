@@ -15,15 +15,30 @@
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 /**
- * Localized data
- *
- * @author      Erwan Taloc <erwan.taloc@combodo.com>
- * @author      Romain Quetiez <romain.quetiez@combodo.com>
- * @author      Denis Flaven <denis.flaven@combodo.com>
- * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
+ * @author	Erwan Taloc <erwan.taloc@combodo.com>
+ * @author	Romain Quetiez <romain.quetiez@combodo.com>
+ * @author	Denis Flaven <denis.flaven@combodo.com>
+
+ * @licence	http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
+	'Class:Incident' => 'Incidente',
+	'Class:Incident+' => '',
+	'Class:Incident/Stimulus:ev_assign' => 'Assegna',
+	'Class:Incident/Stimulus:ev_assign+' => '',
+	'Class:Incident/Stimulus:ev_reassign' => 'Riassegna',
+	'Class:Incident/Stimulus:ev_reassign+' => '',
+	'Class:Incident/Stimulus:ev_timeout' => 'ev_timeout',
+	'Class:Incident/Stimulus:ev_timeout+' => '',
+	'Class:Incident/Stimulus:ev_resolve' => 'Segnala come risolto',
+	'Class:Incident/Stimulus:ev_resolve+' => '',
+	'Class:Incident/Stimulus:ev_close' => 'Chiuso',
+	'Class:Incident/Stimulus:ev_close+' => '',
+	'Class:lnkTicketToIncident' => 'Ticket per Incidente',
+	'Class:lnkTicketToIncident/Attribute:ticket_id' => 'Ticket',
+	'Class:lnkTicketToIncident/Attribute:incident_id' => 'Incidente',
+	'Class:lnkTicketToIncident/Attribute:reason' => 'Motivo',
 	'Menu:IncidentManagement' => 'Gestione Incidente',
 	'Menu:IncidentManagement+' => 'Gestione Incidente',
 	'Menu:Incident:Overview' => 'Panoramica',
@@ -40,36 +55,5 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Menu:Incident:EscalatedIncidents+' => 'Incidenti in escalation',
 	'Menu:Incident:OpenIncidents' => 'Tutti gli Incidenti Aperti',
 	'Menu:Incident:OpenIncidents+' => 'Tutti gli Incidenti Aperti',
-
 ));
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//
-// Class: Incident
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Class:Incident' => 'Incidente',
-	'Class:Incident+' => '',
-	'Class:Incident/Stimulus:ev_assign' => 'Assegnare',
-	'Class:Incident/Stimulus:ev_assign+' => '',
-	'Class:Incident/Stimulus:ev_reassign' => 'Riassegnare',
-	'Class:Incident/Stimulus:ev_reassign+' => '',
-	'Class:Incident/Stimulus:ev_timeout' => 'ev_timeout',
-	'Class:Incident/Stimulus:ev_timeout+' => '',
-	'Class:Incident/Stimulus:ev_resolve' => 'Segnala come risolto',
-	'Class:Incident/Stimulus:ev_resolve+' => '',
-	'Class:Incident/Stimulus:ev_close' => 'Chiuso',
-	'Class:Incident/Stimulus:ev_close+' => '',
-));
-
 ?>

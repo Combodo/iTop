@@ -15,15 +15,38 @@
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 /**
- * Localized data
- *
- * @author      Erwan Taloc <erwan.taloc@combodo.com>
- * @author      Romain Quetiez <romain.quetiez@combodo.com>
- * @author      Denis Flaven <denis.flaven@combodo.com>
- * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
+ * @author	Erwan Taloc <erwan.taloc@combodo.com>
+ * @author	Romain Quetiez <romain.quetiez@combodo.com>
+ * @author	Denis Flaven <denis.flaven@combodo.com>
+
+ * @licence	http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
+	'Class:UserRequest' => 'Richiesta dell\'utente',
+	'Class:UserRequest+' => '',
+	'Class:UserRequest/Attribute:request_type' => 'Tipo di Richiesta',
+	'Class:UserRequest/Attribute:request_type+' => '',
+	'Class:UserRequest/Attribute:request_type/Value:information' => 'Informazione',
+	'Class:UserRequest/Attribute:request_type/Value:information+' => 'Informazione',
+	'Class:UserRequest/Attribute:request_type/Value:issue' => 'Problema',
+	'Class:UserRequest/Attribute:request_type/Value:issue+' => 'Problema',
+	'Class:UserRequest/Attribute:request_type/Value:service request' => 'Richiesta di assistenza',
+	'Class:UserRequest/Attribute:request_type/Value:service request+' => 'Richiesta di assistenza',
+	'Class:UserRequest/Attribute:freeze_reason' => 'Motivo dell\'attesa',
+	'Class:UserRequest/Attribute:freeze_reason+' => '',
+	'Class:UserRequest/Stimulus:ev_assign' => 'Assegna',
+	'Class:UserRequest/Stimulus:ev_assign+' => '',
+	'Class:UserRequest/Stimulus:ev_reassign' => 'Riassegna',
+	'Class:UserRequest/Stimulus:ev_reassign+' => '',
+	'Class:UserRequest/Stimulus:ev_timeout' => 'ev_timeout',
+	'Class:UserRequest/Stimulus:ev_timeout+' => '',
+	'Class:UserRequest/Stimulus:ev_resolve' => 'Segna come risolto',
+	'Class:UserRequest/Stimulus:ev_resolve+' => '',
+	'Class:UserRequest/Stimulus:ev_close' => 'Chiuso',
+	'Class:UserRequest/Stimulus:ev_close+' => '',
+	'Class:UserRequest/Stimulus:ev_freeze' => 'Segna come in attesa',
+	'Class:UserRequest/Stimulus:ev_freeze+' => '',
 	'Menu:RequestManagement' => 'Servizio di assistenza',
 	'Menu:RequestManagement+' => 'Servizio di assistenza',
 	'Menu:UserRequest:Overview' => 'Panoramica',
@@ -41,46 +64,4 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Menu:UserRequest:OpenRequests' => 'Tutte le richieste aperte',
 	'Menu:UserRequest:OpenRequests+' => 'Tutte le richieste aperte',
 ));
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//
-// Class: UserRequest
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Class:UserRequest' => 'Richiesta dell\'utente',
-	'Class:UserRequest+' => '',
-	'Class:UserRequest/Attribute:request_type' => 'Tipo di Richiesta',
-	'Class:UserRequest/Attribute:request_type+' => '',
-	'Class:UserRequest/Attribute:request_type/Value:information' => 'Informazione',
-	'Class:UserRequest/Attribute:request_type/Value:information+' => 'Informazione',
-	'Class:UserRequest/Attribute:request_type/Value:issue' => 'Problema',
-	'Class:UserRequest/Attribute:request_type/Value:issue+' => 'Problema',
-	'Class:UserRequest/Attribute:request_type/Value:service request' => 'Richiesta di assistenza',
-	'Class:UserRequest/Attribute:request_type/Value:service request+' => 'Richiesta di assistenza',
-	'Class:UserRequest/Attribute:freeze_reason' => 'Motivo dell\'attesa',
-	'Class:UserRequest/Attribute:freeze_reason+' => '',
-	'Class:UserRequest/Stimulus:ev_assign' => 'Assegnare',
-	'Class:UserRequest/Stimulus:ev_assign+' => '',
-	'Class:UserRequest/Stimulus:ev_reassign' => 'Riassegnare',
-	'Class:UserRequest/Stimulus:ev_reassign+' => '',
-	'Class:UserRequest/Stimulus:ev_timeout' => 'ev_timeout',
-	'Class:UserRequest/Stimulus:ev_timeout+' => '',
-	'Class:UserRequest/Stimulus:ev_resolve' => 'Segna come risolto',
-	'Class:UserRequest/Stimulus:ev_resolve+' => '',
-	'Class:UserRequest/Stimulus:ev_close' => 'Chiuso',
-	'Class:UserRequest/Stimulus:ev_close+' => '',
-	'Class:UserRequest/Stimulus:ev_freeze' => 'Segna come in attesa',
-	'Class:UserRequest/Stimulus:ev_freeze+' => '',
-));
-
 ?>

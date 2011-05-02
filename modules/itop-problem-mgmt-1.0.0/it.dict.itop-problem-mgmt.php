@@ -15,69 +15,12 @@
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 /**
- * Localized data
- *
- * @author      Erwan Taloc <erwan.taloc@combodo.com>
- * @author      Romain Quetiez <romain.quetiez@combodo.com>
- * @author      Denis Flaven <denis.flaven@combodo.com>
- * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
+ * @author	Erwan Taloc <erwan.taloc@combodo.com>
+ * @author	Romain Quetiez <romain.quetiez@combodo.com>
+ * @author	Denis Flaven <denis.flaven@combodo.com>
+
+ * @licence	http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-
-
-
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
-        'Menu:ProblemManagement' => 'Gestione dei Problemi',
-        'Menu:ProblemManagement+' => 'Gestione dei Problemi',
-    	'Menu:Problem:Overview' => 'Panoramica',
-    	'Menu:Problem:Overview+' => 'Panoramica',
-    	'Menu:NewProblem' => 'Nuovo Problema',
-    	'Menu:NewProblem+' => 'Nuovo Problema',
-    	'Menu:SearchProblems' => 'Ricerca per Problema',
-    	'Menu:SearchProblems+' => 'Ricerca per Problema',
-    	'Menu:Problem:Shortcuts' => 'Scorciatoia',
-        'Menu:Problem:MyProblems' => 'I Miei Problemi',
-        'Menu:Problem:MyProblems+' => 'I Miei Problemi',
-        'Menu:Problem:OpenProblems' => 'Tutti i Problemi Aperti',
-        'Menu:Problem:OpenProblems+' => 'Tutti i Problemi Aperti',
-	'UI-ProblemManagementOverview-ProblemByService' => 'Problemi per Servizio',
-	'UI-ProblemManagementOverview-ProblemByService+' => 'Problemi per Servizio',
-	'UI-ProblemManagementOverview-ProblemByPriority' => 'Problemi per Priorità',
-	'UI-ProblemManagementOverview-ProblemByPriority+' => 'Problemi per Priorità',
-	'UI-ProblemManagementOverview-ProblemUnassigned' => 'Problemi non assegnati',
-	'UI-ProblemManagementOverview-ProblemUnassigned+' => 'Problemi non assegnati',
-	'UI:ProblemMgmtMenuOverview:Title' => 'Dashboard per la gestione dei problemi',
-	'UI:ProblemMgmtMenuOverview:Title+' => 'Dashboard per la gestione dei problemi',
-
-));
-//
-// Class: Problem
-//
 
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Problem' => 'Problema',
@@ -94,16 +37,10 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Problem/Attribute:status/Value:closed+' => '',
 	'Class:Problem/Attribute:org_id' => 'Cliente',
 	'Class:Problem/Attribute:org_id+' => '',
-	'Class:Problem/Attribute:org_name' => 'Nome',
-	'Class:Problem/Attribute:org_name+' => 'Nome Comune',
 	'Class:Problem/Attribute:service_id' => 'Servizio',
 	'Class:Problem/Attribute:service_id+' => '',
-	'Class:Problem/Attribute:service_name' => 'Nome',
-	'Class:Problem/Attribute:service_name+' => '',
 	'Class:Problem/Attribute:servicesubcategory_id' => 'Categoria di servizio',
 	'Class:Problem/Attribute:servicesubcategory_id+' => '',
-	'Class:Problem/Attribute:servicesubcategory_name' => 'Nome',
-	'Class:Problem/Attribute:servicesubcategory_name+' => '',
 	'Class:Problem/Attribute:product' => 'Prodotto',
 	'Class:Problem/Attribute:product+' => '',
 	'Class:Problem/Attribute:impact' => 'Impatto',
@@ -132,18 +69,10 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Problem/Attribute:priority/Value:3+' => '',
 	'Class:Problem/Attribute:workgroup_id' => 'Gruppo di lavoro',
 	'Class:Problem/Attribute:workgroup_id+' => '',
-	'Class:Problem/Attribute:workgroup_name' => 'Nome',
-	'Class:Problem/Attribute:workgroup_name+' => '',
 	'Class:Problem/Attribute:agent_id' => 'Agente',
 	'Class:Problem/Attribute:agent_id+' => '',
-	'Class:Problem/Attribute:agent_name' => 'Nome dell\Agente',
-	'Class:Problem/Attribute:agent_name+' => '',
-	'Class:Problem/Attribute:agent_email' => 'Email dell\'Agente',
-	'Class:Problem/Attribute:agent_email+' => '',
-	'Class:Problem/Attribute:related_change_id' => 'Cambi Correalati',
+	'Class:Problem/Attribute:related_change_id' => 'Cambi Correlati',
 	'Class:Problem/Attribute:related_change_id+' => '',
-	'Class:Problem/Attribute:related_change_ref' => 'Ref',
-	'Class:Problem/Attribute:related_change_ref+' => '',
 	'Class:Problem/Attribute:close_date' => 'Data di Chiusura',
 	'Class:Problem/Attribute:close_date+' => '',
 	'Class:Problem/Attribute:last_update' => 'Ultimo Aggiornamento',
@@ -162,6 +91,40 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Problem/Stimulus:ev_resolve+' => '',
 	'Class:Problem/Stimulus:ev_close' => 'Chiudere',
 	'Class:Problem/Stimulus:ev_close+' => '',
+	'Menu:ProblemManagement' => 'Gestione dei Problemi',
+	'Menu:ProblemManagement+' => 'Gestione dei Problemi',
+	'Menu:Problem:Overview' => 'Panoramica',
+	'Menu:Problem:Overview+' => 'Panoramica',
+	'Menu:NewProblem' => 'Nuovo Problema',
+	'Menu:NewProblem+' => 'Nuovo Problema',
+	'Menu:SearchProblems' => 'Ricerca per Problema',
+	'Menu:SearchProblems+' => 'Ricerca per Problema',
+	'Menu:Problem:Shortcuts' => 'Scorciatoia',
+	'Menu:Problem:MyProblems' => 'I Miei Problemi',
+	'Menu:Problem:MyProblems+' => 'I Miei Problemi',
+	'Menu:Problem:OpenProblems' => 'Tutti i Problemi Aperti',
+	'Menu:Problem:OpenProblems+' => 'Tutti i Problemi Aperti',
+	'UI-ProblemManagementOverview-ProblemByService' => 'Problemi per Servizio',
+	'UI-ProblemManagementOverview-ProblemByService+' => 'Problemi per Servizio',
+	'UI-ProblemManagementOverview-ProblemByPriority' => 'Problemi per Priorità',
+	'UI-ProblemManagementOverview-ProblemByPriority+' => 'Problemi per Priorità',
+	'UI-ProblemManagementOverview-ProblemUnassigned' => 'Problemi non assegnati',
+	'UI-ProblemManagementOverview-ProblemUnassigned+' => 'Problemi non assegnati',
+	'UI:ProblemMgmtMenuOverview:Title' => 'Dashboard per la gestione dei problemi',
+	'UI:ProblemMgmtMenuOverview:Title+' => 'Dashboard per la gestione dei problemi',
+	'Class:Problem/Attribute:org_name' => 'Nome',
+	'Class:Problem/Attribute:org_name+' => 'Nome Comune',
+	'Class:Problem/Attribute:service_name' => 'Nome',
+	'Class:Problem/Attribute:service_name+' => '',
+	'Class:Problem/Attribute:servicesubcategory_name' => 'Nome',
+	'Class:Problem/Attribute:servicesubcategory_name+' => '',
+	'Class:Problem/Attribute:workgroup_name' => 'Nome',
+	'Class:Problem/Attribute:workgroup_name+' => '',
+	'Class:Problem/Attribute:agent_name' => 'Nome dell\Agente',
+	'Class:Problem/Attribute:agent_name+' => '',
+	'Class:Problem/Attribute:agent_email' => 'Email dell\'Agente',
+	'Class:Problem/Attribute:agent_email+' => '',
+	'Class:Problem/Attribute:related_change_ref' => 'Ref',
+	'Class:Problem/Attribute:related_change_ref+' => '',
 ));
-
 ?>
