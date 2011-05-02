@@ -702,7 +702,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:Subnet' => 'Sous-réseaux',
 	'Menu:Subnet+' => 'Tous les sous-réseaux',
 	'Menu:NetworkDevice' => 'Equipments réseau',
-	'Menu:NetworkDevice+' => 'Tous les équipments réseau',
+	'Menu:NetworkDevice+' => 'Tous les équipements réseau',
 	'Menu:Server' => 'Serveurs',
 	'Menu:Server+' => 'Tous les serveurs',
 	'Menu:Printer' => 'Imprimantes',
