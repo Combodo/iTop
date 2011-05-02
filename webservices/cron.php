@@ -22,20 +22,13 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
-echo "coucou\n";
 if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 require_once(__DIR__.'/../approot.inc.php');
-echo "coucou\n";
 require_once(APPROOT.'/application/application.inc.php');
-echo "coucou\n";
 require_once(APPROOT.'/application/nicewebpage.class.inc.php');
-echo "coucou\n";
 require_once(APPROOT.'/application/webpage.class.inc.php');
-echo "coucou\n";
 require_once(APPROOT.'/application/clipage.class.inc.php');
-echo "apres cli page\n";
 require_once(APPROOT.'/application/startup.inc.php');
-echo "apres startup\n";
 
 
 
@@ -57,11 +50,11 @@ function UsageAndExit($oP)
 	if ($bModeCLI)
 	{
 		$oP->p("USAGE:\n");
-		$oP->p("php -q cron.php --auth_user=<login> --auth_pwd=<password> [--verbose=1]\n");		
+		$oP->p("php -q cron.php --auth_user=<login> --auth_pwd=<password> [--param_file=<file>] [--verbose=1]\n");		
 	}
 	else
 	{
-		$oP->p("Optional parameter: verbose\n");		
+		$oP->p("Optional parameters: verbose, param_file\n");		
 	}
 	$oP->output();
 	exit -2;
