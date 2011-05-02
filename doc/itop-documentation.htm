@@ -77,17 +77,17 @@ a.internal:hover {
 <h2>cron.php - overview</h2>
 <p>In order to operate properly, iTop maintenance operations and asynchronous tasks must be executed on a regular basis.
 In order to ease the installation, all the background tasks have been grouped to be launched from a single file: <tt>webservices/cron.php</tt></p>
-<p>The following features will require the activation of CRON.PHP</p>
+<p>The following features require the activation of cron.php</p>
 <ul>
    <li><b>Asynchronous emails</b>. By default, this option is disabled. To enable it, set 'email_asynchronous' to 1 in the configuration file</li>
    <li><b>Check ticket SLA</b>. Tickets reaching the limits will be passed into Escalation TTO/TTR states</li>
 </ul>
 </p>
-<p>More information about CRON in the <a href="https://sourceforge.net/apps/mediawiki/itop/index.php?title=Cron.php">Wiki</a></p>
+<p>For more information about cron.php, check the <a href="https://sourceforge.net/apps/mediawiki/itop/index.php?title=Cron.php">Wiki</a></p>
 <h2>Scheduling cron.php on Windows</h2>
 <ol>
 <li>Edit the file <em>&lt;itop root&gt</em>/webservices/<b>cron.params</b> to set the credentials used for cronified tasks (requires administator privileges)</li>
-<li>Edit the file <em>&lt;itop root&gt</em>/webservices/<b>cron.cmd</b>, and set the relevant path for your installation of PHP. If you need a strong security, then you will have to change also the path to the parameters file <em>&lt;itop root&gt</em>/webservices/<b>cron.params</b> and move this file to a place where it is not easy to read its contents.</li>
+<li>Edit the file <em>&lt;itop root&gt</em>/webservices/<b>cron.cmd</b>, and set the relevant path for your installation of PHP. If you care about security, it is recommended to change also the path to the parameters file <em>&lt;itop root&gt</em>/webservices/<b>cron.params</b> and move this file to a place where its content is not served by the web server.</li>
 <li>Schedule the execution of cron.cmd:
   <pre>schtasks.exe /create /tn "iTop CRON" /sc minute /mo 1 /tr "\"<em>&lt;itop root&gt</em>/webservices/cron.cmd\""</pre>
 </li> 
@@ -97,7 +97,7 @@ In order to ease the installation, all the background tasks have been grouped to
 <h2>Scheduling cron.php on Linux/Unix</h2>
 <ol>
 <li>Edit the file <em>&lt;itop root&gt</em>/webservices/<b>cron.params</b> to set the credentials used for cronified tasks (requires administator privileges)</li>
-<li>If you want strong security: move the file <em>&lt;itop root&gt</em>/webservices/<b>cron.params</b> into a directory not in the scope of the web server (Apache), and make it be readable only by the account that will execute the cron</li>
+<li>If you care about security: move the file <em>&lt;itop root&gt</em>/webservices/<b>cron.params</b> into a directory not in the scope of the web server (Apache), and make it be readable only by the account that will execute the cron</li>
 <li>Edit the crontab and add the following line:
    <pre>* * * * * /usr/bin/php <em>&lt;itop root&gt</em>/webservices/cron.php --param_file=<em>&lt;itop root&gt</em>/webservices/cron.params</pre>
 </li>

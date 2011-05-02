@@ -1,4 +1,4 @@
-iTop - version 1.1.0 RC - 04-05-2011
+iTop - version 1.1.0 - 04-05-2011
 Readme file
 
 1.   ABOUT THIS RELEASE
