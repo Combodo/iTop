@@ -345,14 +345,17 @@ class utils
      * @param $bForceHTTPS bool True to force HTTPS, false otherwise
      * @return string The absolute URL to the server's root, without the first slash
      */                   
-	static public function GetAbsoluteUrlRoot($bForceHTTPS = false)
+	static public function GetAbsoluteUrlAppRoot($sCurrentRelativePath = '', $bForceHTTPS = false)
 	{
 		$sAbsoluteUrl = self::GetAbsoluteUrl(false, $bForceHTTPS); // False => Don't get the query string
-		$sServerPos = 3 + strpos($sAbsoluteUrl, '://');
-		$iFirstSlashPos = strpos($sAbsoluteUrl, '/', $sServerPos);
-		if ($iFirstSlashPos !== false)
+		$sAppRootPos = strpos($sAbsoluteUrl, $sCurrentRelativePath);
+		if ($sAppRootPos !== false)
 		{
-			$sAbsoluteUrl = substr($sAbsoluteUrl, 0, $iFirstSlashPos); // remove the current page, keep just the path, without the first /
+			$sAbsoluteUrl = substr($sAbsoluteUrl, 0, $sAppRootPos); // remove the current page and path
+		}
+		else
+		{
+			throw new Exception("Failed to determine application root path $sAbsoluteUrl ($sCurrentRelativePath)");
 		}
 		return $sAbsoluteUrl;
 	}

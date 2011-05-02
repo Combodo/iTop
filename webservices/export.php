@@ -59,21 +59,13 @@ if (!empty($sExpression))
 			{
 				case 'html':
 				$oP = new NiceWebPage("iTop - Export");
+
 				// The HTML output is made for pages located in the /pages/ folder
 				// since this page is in a different folder, let's adjust the HTML 'base' attribute
 				// to make the relative hyperlinks in the page work
-				$sServerName = $_SERVER['SERVER_NAME'];
-				$sProtocol = (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']!='off')) ? 'https' : 'http';
-				if ($sProtocol == 'http')
-				{
-					$sPort = ($_SERVER['SERVER_PORT'] == 80) ? '' : ':'.$_SERVER['SERVER_PORT'];
-				}
-				else
-				{
-					$sPort = ($_SERVER['SERVER_PORT'] == 443) ? '' : ':'.$_SERVER['SERVER_PORT'];
-				}
-				$sUrl = "$sProtocol://{$sServerName}{$sPort}/pages/";
-				$oP->set_base($sUrl);
+				$sUrl = utils::GetAbsoluteUrlAppRoot('/webservices/');
+				$oP->set_base($sUrl.'/pages/');
+
 				$oResultBlock = new DisplayBlock($oFilter, 'list', false, array('menu' => false, 'display_limit' => false, 'zlist' => 'details'));
 				$oResultBlock->Display($oP, 'expresult');
 				break;
