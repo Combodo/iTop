@@ -1,12 +1,12 @@
 Prerequisites:
 
 iTop requires
-- A web server running PHP 5.2.0 or higher, with PCRE, SESSION, mysql, iconv, simplexml and soap support.
+- A web server running PHP 5.2.0 or higher, with PCRE, SESSION, mysql, iconv, simplexml, hash, json and soap support.
   If you wish to use LDAP authentication, then LDAP support must be enabled in PHP. 
 - A connection to MySQL 5.0 or higher
 
 Web browser support:
-iTop is developed using FireFox 3.x and tested with IE 7 and IE 8.
+iTop is developed using FireFox 3.x and tested with IE 8, IE 9, Safari 5 and Chrome.
 
 Installation:
 
