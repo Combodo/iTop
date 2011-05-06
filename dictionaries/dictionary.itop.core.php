@@ -591,7 +591,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:SynchroAtt:update_policy+' => 'Behavior of the updated field',
 	'Core:SynchroAtt:reconciliation_attcode' => 'Reconciliation Key',
 	'Core:SynchroAtt:reconciliation_attcode+' => 'Attribute Code for the External Key Reconciliation',
-	'Core:SyncDataExchangeComment' => '(DataExchange)',
+	'Core:SyncDataExchangeComment' => '(Data Synchro)',
 	'Core:Synchro:ListOfDataSources' => 'List of data sources:',
 	'Core:Synchro:LastSynchro' => 'Last synchronization:',
 	'Core:Synchro:ThisObjectIsSynchronized' => 'This object is synchronized with an external data source',
