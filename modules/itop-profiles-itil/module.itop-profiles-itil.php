@@ -200,6 +200,10 @@ class CreateITILProfilesInstaller extends ModuleInstallerAPI
 	*/	
 	public static function DoCreateUserPortalProfile()
 	{
+		// Do not attempt to create this profile if the module 'User Request Management' is not installed
+		// Note: ideally, the creation of this profile should be moved to the 'User Request Management' module
+		if (!MetaModel::IsValidClass('UserRequest')) return;
+
 		$iNewId =  URP_Profiles::DoCreateProfile(PORTAL_PROFILE_NAME, 'Has the rights to access to the user portal. People having this profile will not be allowed to access the standard application, they will be automatically redirected to the user portal.', true /* reserved name */);
 		
 		// Grant read rights for everything
