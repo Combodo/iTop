@@ -1535,7 +1535,13 @@ abstract class MetaModel
 		{
 			if (is_array($attCode))
 			{
-				self::Init_CheckZListItems($attCode, $sTargetClass);
+				// Note: to make sure that the values will be updated recursively,
+				//  do not pass $attCode, but $aItems[$iFoo] instead
+				self::Init_CheckZListItems($aItems[$iFoo], $sTargetClass);
+				if (count($aItems[$iFoo]) == 0)
+				{
+					unset($aItems[$iFoo]);
+				}
 			}
 			else if (isset(self::$m_aIgnoredAttributes[$sTargetClass][$attCode]))
 			{
