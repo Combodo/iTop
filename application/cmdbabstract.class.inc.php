@@ -209,12 +209,11 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		$oPage->add($this->GetBareProperties($oPage, $bEditMode));		
 
 		// Special case to display the case log, if any...
-		if (MetaModel::IsValidAttCode(get_class($this), 'ticket_log'))
+		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef)
 		{
-			$oAttDef = MetaModel::GetAttributeDef(get_class($this), 'ticket_log');
 			if ($oAttDef instanceof AttributeCaseLog)
 			{
-				$this->DisplayCaseLog($oPage, 'ticket_log', '', '', false);
+				$this->DisplayCaseLog($oPage, $sAttCode, '', '', false);
 			}
 		}
 
@@ -1650,15 +1649,14 @@ EOF
 		}
 
 		// Special case to display the case log, if any...
-		if (MetaModel::IsValidAttCode($sClass, 'ticket_log'))
+		foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
 		{
-			$oAttDef = MetaModel::GetAttributeDef($sClass, 'ticket_log');
 			if ($oAttDef instanceof AttributeCaseLog)
 			{
-				$sComments = isset($aFieldsComments['ticket_log']) ? $aFieldsComments['ticket_log'] : '&nbsp;';
-				$this->DisplayCaseLog($oPage, 'ticket_log', $sComments, $sPrefix, true);
-				$sInputId = $this->m_iFormId.'_ticket_log';
-				$aFieldsMap['ticket_log'] = $sInputId;
+				$sComments = isset($aFieldsComments[$sAttCode]) ? $aFieldsComments[$sAttCode] : '&nbsp;';
+				$this->DisplayCaseLog($oPage, $sAttCode, $sComments, $sPrefix, true);
+				$sInputId = $this->m_iFormId.'_'.$sAttCode;
+				$aFieldsMap[$sAttCode] = $sInputId;
 			}
 		}
 		// Now display the relations, one tab per relation
