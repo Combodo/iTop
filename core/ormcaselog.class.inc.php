@@ -79,7 +79,10 @@ class ormCaseLog {
 			$iPos += $this->m_aIndex[$index]['text_length'];
 
 			$sEntry = '<div class="caselog_header'.$sOpen.'">';
+			// Temporary workaround: PHP < 5.3 issues an irrelevant warning -see trac #408
+			$iPrevLevel = error_reporting(E_ERROR);
 			$sEntry .= sprintf(Dict::S('UI:CaseLog:Header_Date_UserName'), $this->m_aIndex[$index]['date']->format(Dict::S('UI:CaseLog:DateFormat')), $this->m_aIndex[$index]['user_name']);
+			error_reporting($iPrevLevel);
 			$sEntry .= '</div>';
 			$sEntry .= '<div class="caselog_entry"'.$sDisplay.'>';
 			$sEntry .= $sTextEntry;
