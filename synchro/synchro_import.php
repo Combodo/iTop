@@ -91,6 +91,13 @@ $aPageParams = array
 		'default' => 'UTF-8',
 		'description' => 'Character set encoding of the CSV data: UTF-8, ISO-8859-1, WINDOWS-1251, WINDOWS-1252, ISO-8859-15',
 	),
+	'date_format' => array
+	(
+		'mandatory' => false,
+		'modes' => 'http,cli',
+		'default' => '',
+		'description' => 'Input date format (used both for dates and datetimes) - Examples: %Y-%m-%d, %d/%m/%Y (Europe) - no transformation is applied if the argument is omitted',
+	),
 	'separator' => array
 	(
 		'mandatory' => false,
@@ -192,6 +199,22 @@ function ReadMandatoryParam($oP, $sParam)
 	return trim($sValue);
 }
 
+function ChangeDateFormat($sProposedDate, $sDateFormat)
+{
+	// Make sure this is a valid MySQL datetime
+	$iTime = utils::StringToTime($sProposedDate, $sDateFormat);
+	if ($iTime !== false)
+	{
+		$sDate = date('Y-m-d H:i:s', $iTime);
+		return $sDate;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+
 /////////////////////////////////
 // Main program
 
@@ -264,12 +287,19 @@ try
 	$sSep = ReadParam($oP, 'separator');
 	$sQualifier = ReadParam($oP, 'qualifier');
 	$sCharSet = ReadParam($oP, 'charset');
+	$sDateFormat = ReadParam($oP, 'date_format');
 	$sOutput = ReadParam($oP, 'output');
 //	$sReportLevel = ReadParam($oP, 'reportlevel');
 	$sSimulate = ReadParam($oP, 'simulate');
 	$sComment = ReadParam($oP, 'comment');
 
 	$oLoadStartDate = new DateTime(); // Now
+
+   // Note about date formatting: These MySQL settings are read-only... and in fact unused :-(
+	// SET SESSION date_format = '%d/%m/%Y';
+   // SET SESSION datetime_format = '%d/%m/%Y %H:%i:%s';
+   // Therefore, we have to allow users to transform the format according to a given specification: date_format
+
 
 	//////////////////////////////////////////////////
 	//
@@ -358,8 +388,21 @@ try
 
 	// Check columns
 	$aColumns = $oDataSource->GetSQLColumns();
+	$aDateColumns = $oDataSource->GetDateSQLColumns();
+	$aIsDateToTransform = array();
+	$aDateToTransformReport = array();
 	foreach($aInputColumns as $iFieldId => $sInputColumn)
 	{
+		if ((strlen($sDateFormat) > 0) && (array_key_exists($sInputColumn, $aDateColumns)))
+		{
+			$aIsDateToTransform[$iFieldId] = true;
+			$aDateToTransformReport[] = $sInputColumn;
+		}
+		else
+		{
+			$aIsDateToTransform[$iFieldId] = false;
+		}
+
 		if ($sInputColumn == 'primary_key')
 		{
 			$iPrimaryKeyCol = $iFieldId;
@@ -420,6 +463,22 @@ try
 					{
 						$aValues[] = 'NULL';
 					}
+					elseif ($aIsDateToTransform[$iCol])
+					{
+						$sDate = ChangeDateFormat($value, $sDateFormat);
+						if ($sDate === false)
+						{
+							$aValues[] = CMDBSource::Quote('');
+							if ($sOutput == 'details')
+							{
+								$oP->add("$iRow: Wrong format for date field: '$value' (skipped column)\n");
+							}
+						}
+						else
+						{
+							$aValues[] = CMDBSource::Quote($sDate);
+						}
+					}
 					else
 					{
 						$aValues[] = CMDBSource::Quote($value);
@@ -446,7 +505,26 @@ try
 					if ($iCol == $iPrimaryKeyCol) continue;
 		
 					$sCol = $aInputColumns[$iCol];
-					$aValuePairs[] = "`$sCol` = ".CMDBSource::Quote($aRow[$iCol]);
+					if ($aIsDateToTransform[$iCol])
+					{
+						$sDate = ChangeDateFormat($aRow[$iCol], $sDateFormat);
+						if ($sDate === false)
+						{
+							// Skip this column spec
+							if ($sOutput == 'details')
+							{
+								$oP->add("$iRow: Wrong format for date field: '".$aRow[$iCol]."' (skipped column)\n");
+							}
+						}
+						else
+						{
+							$aValuePairs[] = "`$sCol` = ".CMDBSource::Quote($sDate);
+						}
+					}
+					else
+					{
+						$aValuePairs[] = "`$sCol` = ".CMDBSource::Quote($aRow[$iCol]);
+					}
 				}
 				$sValuePairs = implode(', ', $aValuePairs);
 				$sUpdateQuery = "UPDATE `$sTable` SET $sValuePairs WHERE $sReconciliationCondition";
@@ -469,6 +547,14 @@ try
 			$oP->add_comment("Separator: ".$sSep);
 			$oP->add_comment("Qualifier: ".$sQualifier);
 			$oP->add_comment("Charset Encoding:".$sCharSet);
+			if (strlen($sDateFormat) > 0)
+			{
+				$oP->add_comment("Date format: '$sDateFormat', applied to columns {".implode(', ', $aDateToTransformReport)."}");
+			}
+			else
+			{
+				$oP->add_comment("Date format: <none>");
+			}
 			$oP->add_comment("Data Size: ".strlen($sCSVData));
 			$oP->add_comment("Data Lines: ".$iLineCount);
 			$oP->add_comment("Columns: ".implode(', ', $aInputColumns));

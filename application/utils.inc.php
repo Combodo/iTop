@@ -264,12 +264,59 @@ class utils
         return $iReturn;
     }
 
-    /**
-     * Returns an absolute URL to the current page
-     * @param $bQueryString bool True to also get the query string, false otherwise
-     * @param $bForceHTTPS bool True to force HTTPS, false otherwise
-     * @return string The absolute URL to the current page
-     */                   
+	/**
+	 * Helper function to convert a string to a date, given a format specification. It replaces strtotime which does not allow for specifying a date in a french format (for instance)
+	 * Example: StringToTime('01/05/11 12:03:45', '%d/%m/%y %H:%i:%s')
+	 * @param string $sDate
+	 * @param string $sFormat
+	 * @return timestamp or false if the input format is not correct
+	 */	 	  
+	public static function StringToTime($sDate, $sFormat)
+	{
+	   // Source: http://php.net/manual/fr/function.strftime.php
+		// (alternative: http://www.php.net/manual/fr/datetime.formats.date.php)
+		static $aDateTokens = null;
+		static $aDateRegexps = null;
+		if (is_null($aDateTokens))
+		{
+		   $aSpec = array(
+				'%d' =>'(?<day>[0-9]{2})',
+				'%m' => '(?<month>[0-9]{2})',
+				'%y' => '(?<year>[0-9]{2})',
+				'%Y' => '(?<year>[0-9]{4})',
+				'%H' => '(?<hour>[0-2][0-9])',
+				'%i' => '(?<minute>[0-5][0-9])',
+				'%s' => '(?<second>[0-5][0-9])',
+				);
+			$aDateTokens = array_keys($aSpec);
+			$aDateRegexps = array_values($aSpec);
+		}
+	   
+	   $sDateRegexp = str_replace($aDateTokens, $aDateRegexps, $sFormat);
+	   
+	   if (preg_match('!^(?<head>)'.$sDateRegexp.'(?<tail>)$!', $sDate, $aMatches))
+	   {
+			$sYear = isset($aMatches['year']) ? $aMatches['year'] : 0;
+			$sMonth = isset($aMatches['month']) ? $aMatches['month'] : 1;
+			$sDay = isset($aMatches['day']) ? $aMatches['day'] : 1;
+			$sHour = isset($aMatches['hour']) ? $aMatches['hour'] : 0;
+			$sMinute = isset($aMatches['minute']) ? $aMatches['minute'] : 0;
+			$sSecond = isset($aMatches['second']) ? $aMatches['second'] : 0;
+			return strtotime("$sYear-$sMonth-$sDay $sHour:$sMinute:$sSecond");
+		}
+	   else
+	   {
+	   	return false;
+	   }
+	   // http://www.spaweditor.com/scripts/regex/index.php
+	}
+
+	/**
+	 * Returns an absolute URL to the current page
+	 * @param $bQueryString bool True to also get the query string, false otherwise
+	 * @param $bForceHTTPS bool True to force HTTPS, false otherwise
+	 * @return string The absolute URL to the current page
+	 */                   
 	static public function GetAbsoluteUrl($bQueryString = true, $bForceHTTPS = false)
 	{
 		// Build an absolute URL to this page on this server/port
@@ -313,16 +360,16 @@ class utils
 			}
 			$_SERVER['REQUEST_URI'] = $sPath;
 		}
-   		$sPath = $_SERVER['REQUEST_URI'];
-        if (!$bQueryString)
-        {
-            // remove all the parameters from the query string
-            $iQuestionMarkPos = strpos($sPath, '?');
-            if ($iQuestionMarkPos !== false)
-            {
-                $sPath = substr($sPath, 0, $iQuestionMarkPos);
-            }
-        } 
+		$sPath = $_SERVER['REQUEST_URI'];
+		if (!$bQueryString)
+		{
+			// remove all the parameters from the query string
+			$iQuestionMarkPos = strpos($sPath, '?');
+			if ($iQuestionMarkPos !== false)
+			{
+				$sPath = substr($sPath, 0, $iQuestionMarkPos);
+			}
+		} 
 		$sUrl = "$sProtocol://{$sServerName}{$sPort}{$sPath}";
 		
 		return $sUrl;

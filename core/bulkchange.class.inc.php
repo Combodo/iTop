@@ -252,8 +252,9 @@ class BulkChange
 	protected $m_aReconcilKeys; // attcode (attcode = 'id' for the pkey)
 	protected $m_sSynchroScope; // OQL - if specified, then the missing items will be reported
 	protected $m_aOnDisappear; // array of attcode => value, values to be set when an object gets out of scope (ignored if no scope has been defined)
+	protected $m_sDateFormat; // Date format specification, see utils::StringToTime()
 
-	public function __construct($sClass, $aData, $aAttList, $aExtKeys, $aReconcilKeys, $sSynchroScope = null, $aOnDisappear = null)
+	public function __construct($sClass, $aData, $aAttList, $aExtKeys, $aReconcilKeys, $sSynchroScope = null, $aOnDisappear = null, $sDateFormat = null)
 	{
 		$this->m_sClass = $sClass;
 		$this->m_aData = $aData;
@@ -262,6 +263,7 @@ class BulkChange
 		$this->m_aExtKeys = $aExtKeys;
 		$this->m_sSynchroScope = $sSynchroScope;
 		$this->m_aOnDisappear = $aOnDisappear;
+		$this->m_sDateFormat = $sDateFormat;
 	}
 
 	protected $m_bReportHtml = false;
@@ -412,7 +414,7 @@ class BulkChange
 				}
 			}
 			else
-			{ 
+			{
 				$res = $oTargetObj->CheckValue($sAttCode, $aRowData[$iCol]);
 				if ($res === true)
 				{
@@ -702,6 +704,35 @@ class BulkChange
 			exit;
 		}
 
+		$aResult = array();
+
+		if (!is_null($this->m_sDateFormat) && (strlen($this->m_sDateFormat) > 0))
+		{
+			// Translate dates from the source data
+			//
+			foreach ($this->m_aAttList as $sAttCode => $iCol)
+			{
+				$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
+				if ($oAttDef instanceof AttributeDateTime)
+				{
+					foreach($this->m_aData as $iRow => $aRowData)
+					{
+						$sNewDate = utils::StringToTime($this->m_aData[$iRow][$iCol], $this->m_sDateFormat);
+						if ($sNewDate !== false)
+						{
+							// Todo - improve the reporting
+							$this->m_aData[$iRow][$iCol] = $sNewDate;
+						}
+						else
+						{
+							// Leave the cell unchanged
+							$aResult[$iRow]["__STATUS__"]= new RowStatus_Issue("wrong date format");
+							$aResult[$iRow][$sAttCode] = new CellStatus_Issue(null, $this->m_aData[$iRow][$iCol], 'Wrong date format');
+						}
+					}
+				}
+			}
+		}
 
 		// Compute the results
 		//
@@ -709,9 +740,13 @@ class BulkChange
 		{
 			$aVisited = array();
 		}
-		$aResult = array();
 		foreach($this->m_aData as $iRow => $aRowData)
 		{
+			if (isset($aResult[$iRow]["__STATUS__"]))
+			{
+				// An issue at the earlier steps - skip the rest
+				continue;
+			}
 			$oReconciliationFilter = new CMDBSearchFilter($this->m_sClass);
 			$bSkipQuery = false;
 			foreach($this->m_aReconcilKeys as $sAttCode)
@@ -798,8 +833,28 @@ class BulkChange
 					$aResult[$iRow]["finalclass"]= 'n/a';
 				}
 			}
-	
-			// Whatever happened, do report the reconciliation values
+		}
+
+		if (!is_null($this->m_sSynchroScope))
+		{
+			// Compute the delta between the scope and visited objects
+			$oScopeSearch = DBObjectSearch::FromOQL($this->m_sSynchroScope);
+			$oScopeSet = new DBObjectSet($oScopeSearch);
+			while ($oObj = $oScopeSet->Fetch())
+			{
+				$iObj = $oObj->GetKey();
+				if (!in_array($iObj, $aVisited))
+				{
+					$iRow++;
+					$this->UpdateMissingObject($aResult, $iRow, $oObj, $oChange);
+				}
+			}
+		}
+
+		// Fill in the blanks - the result matrix is expected to be 100% complete
+		//
+		foreach($this->m_aData as $iRow => $aRowData)
+		{
 			foreach($this->m_aAttList as $iCol)
 			{
 				if (!array_key_exists($iCol, $aResult[$iRow]))
@@ -820,22 +875,6 @@ class BulkChange
 						// The foreign attribute is one of our reconciliation key
 						$aResult[$iRow][$iCol] = new CellStatus_Void($aRowData[$iCol]);
 					}
-				}
-			}
-		}
-
-		if (!is_null($this->m_sSynchroScope))
-		{
-			// Compute the delta between the scope and visited objects
-			$oScopeSearch = DBObjectSearch::FromOQL($this->m_sSynchroScope);
-			$oScopeSet = new DBObjectSet($oScopeSearch);
-			while ($oObj = $oScopeSet->Fetch())
-			{
-				$iObj = $oObj->GetKey();
-				if (!in_array($iObj, $aVisited))
-				{
-					$iRow++;
-					$this->UpdateMissingObject($aResult, $iRow, $oObj, $oChange);
 				}
 			}
 		}

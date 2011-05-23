@@ -1095,6 +1095,24 @@ EOF
 		return $aColumns;
 	}
 	
+	/**
+	 * Get the list of Date and Datetime SQL columns
+	 */
+	public function GetDateSQLColumns()
+	{
+		$aDateAttributes = array();
+		
+		$sClass = $this->GetTargetClass();
+		foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+		{
+			if ($oAttDef instanceof AttributeDateTime)
+			{
+				$aDateAttributes[] = $sAttCode;
+			}
+		}
+		return $this->GetSQLColumns($aDateAttributes);
+	}
+
 	public function IsRunning()
 	{
 		$sOQL = "SELECT SynchroLog WHERE sync_source_id = :source_id AND status='running'";

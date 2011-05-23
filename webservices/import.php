@@ -90,6 +90,13 @@ $aPageParams = array
 		'default' => 'UTF-8',
 		'description' => 'Character set encoding of the CSV data: UTF-8, ISO-8859-1, WINDOWS-1251, WINDOWS-1252, ISO-8859-15',
 	),
+	'date_format' => array
+	(
+		'mandatory' => false,
+		'modes' => 'http,cli',
+		'default' => '',
+		'description' => 'Input date format (used both for dates and datetimes) - Examples: %Y-%m-%d, %d/%m/%Y (Europe) - no transformation is applied if the argument is omitted',
+	),
 	'separator' => array
 	(
 		'mandatory' => false,
@@ -269,6 +276,7 @@ try
 	$sSep = ReadParam($oP, 'separator');
 	$sQualifier = ReadParam($oP, 'qualifier');
 	$sCharSet = ReadParam($oP, 'charset');
+	$sDateFormat = ReadParam($oP, 'date_format');
 	$sOutput = ReadParam($oP, 'output');
 //	$sReportLevel = ReadParam($oP, 'reportlevel');
 	$sReconcKeys = ReadParam($oP, 'reconciliationkeys');
@@ -304,6 +312,11 @@ try
 		throw new BulkLoadException("Unknown output format: '$sOutput'");
 	}
 
+	if (strlen($sDateFormat) == 0)
+	{
+		$sDateFormat = null;
+	}
+	
 /*
 	$aReportLevels = explode('|', $sReportLevel);
 	foreach($aReportLevels as $sLevel)
@@ -331,6 +344,14 @@ try
 		$oP->add_comment("Separator: ".$sSep);
 		$oP->add_comment("Qualifier: ".$sQualifier);
 		$oP->add_comment("Charset Encoding:".$sCharSet);
+		if (strlen($sDateFormat) > 0)
+		{
+			$oP->add_comment("Date format: '$sDateFormat'");
+		}
+		else
+		{
+			$oP->add_comment("Date format: <none>");
+		}
 		$oP->add_comment("Data Size: ".strlen($sCSVData));
 	}
 	//////////////////////////////////////////////////
@@ -592,7 +613,10 @@ try
 		$aData,
 		$aAttList,
 		$aExtKeys,
-		$aFinalReconcilKeys
+		$aFinalReconcilKeys,
+		null, // synchro scope
+		null, // on delete
+		$sDateFormat
 	);
 
 	if ($bSimulate)
