@@ -79,10 +79,29 @@ class ormCaseLog {
 			$iPos += $this->m_aIndex[$index]['text_length'];
 
 			$sEntry = '<div class="caselog_header'.$sOpen.'">';
-			// Temporary workaround: PHP < 5.3 issues an irrelevant warning -see trac #408
-			$iPrevLevel = error_reporting(E_ERROR);
-			$sEntry .= sprintf(Dict::S('UI:CaseLog:Header_Date_UserName'), $this->m_aIndex[$index]['date']->format(Dict::S('UI:CaseLog:DateFormat')), $this->m_aIndex[$index]['user_name']);
-			error_reporting($iPrevLevel);
+			// Workaround: PHP < 5.3 cannot unserialize correctly DateTime objects,
+			// therefore we have changed the format. To preserve the compatibility with existing
+			// installations of iTop, both format are allowed:
+			//     the 'date' item is either a DateTime object, or a unix timestamp
+			if (is_int($this->m_aIndex[$index]['date']))
+			{
+				// Unix timestamp
+				$sDate = date(Dict::S('UI:CaseLog:DateFormat'), $this->m_aIndex[$index]['date']);
+			}
+			elseif (is_object($this->m_aIndex[$index]['date']))
+			{
+				if (version_compare(phpversion(), '5.3.0', '>='))
+				{
+					// DateTime
+					$sDate = $this->m_aIndex[$index]['date']->format(Dict::S('UI:CaseLog:DateFormat'));
+				}
+				else
+				{
+					// No Warning... but the date is unknown
+					$sDate = '';
+				}
+			}
+			$sEntry .= sprintf(Dict::S('UI:CaseLog:Header_Date_UserName'), $sDate, $this->m_aIndex[$index]['user_name']);
 			$sEntry .= '</div>';
 			$sEntry .= '<div class="caselog_entry"'.$sDisplay.'>';
 			$sEntry .= $sTextEntry;
@@ -144,7 +163,7 @@ class ormCaseLog {
 		$this->m_aIndex[] = array(
 			'user_name' => UserRights::GetUserFriendlyName(),	
 			'user_id' => UserRights::GetUserId(),	
-			'date' => new DateTime(),	
+			'date' => time(),	
 			'text_length' => $iTextlength,	
 			'separator_length' => $iSepLength,	
 		);
