@@ -2513,7 +2513,7 @@ abstract class MetaModel
 						if (!is_null($aAllowedValues))
 						{
 							$sDefaultValue = $oAttDef->GetDefaultValue();
-							if (!array_key_exists($sDefaultValue, $aAllowedValues))
+							if (is_string($sDefaultValue) && !array_key_exists($sDefaultValue, $aAllowedValues))
 							{
 								$aErrors[$sClass][] = "Default value '".$sDefaultValue."' for attribute $sAttCode is not an allowed value";
 								$aSugFix[$sClass][] = "Please pickup the default value out of {'".implode(", ", array_keys($aAllowedValues))."'}";
