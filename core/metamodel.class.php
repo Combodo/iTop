@@ -1024,6 +1024,11 @@ abstract class MetaModel
 		return $oFltDef->GetAllowedValues($aArgs, $sContains);
 	}
 
+	public static function GetAllowedValuesAsObjectSet($sClass, $sAttCode, $aArgs = array(), $sContains = '')
+	{
+		$oAttDef = self::GetAttributeDef($sClass, $sAttCode);
+		return $oAttDef->GetAllowedValuesAsObjectSet($aArgs, $sContains);
+	}
 	//
 	// Businezz model declaration verbs (should be static)
 	//

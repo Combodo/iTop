@@ -2339,6 +2339,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 
 	public function GetAllowedValues($aArgs = array(), $sContains = '')
 	{
+		//throw new Exception("GetAllowedValues on ext key has been deprecated");
 		try
 		{
 			return parent::GetAllowedValues($aArgs, $sContains);
@@ -2349,6 +2350,13 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 			$oValSetDef = new ValueSetObjects('SELECT '.$this->GetTargetClass());
 			return $oValSetDef->GetValues($aArgs, $sContains);
 		}
+	}
+
+	public function GetAllowedValuesAsObjectSet($aArgs = array(), $sContains = '')
+	{
+		$oValSetDef = $this->GetValuesDef();
+		$oSet = $oValSetDef->ToObjectSet($aArgs, $sContains);
+		return $oSet;
 	}
 
 	public function GetDeletionPropagationOption()

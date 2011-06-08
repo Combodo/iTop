@@ -353,7 +353,10 @@ class DBObjectSet
 
 	public function Rewind()
 	{
-		$this->Seek(0);
+		if ($this->m_bLoaded)
+		{
+			$this->Seek(0);
+		}
 	}
 
 	public function Seek($iRow)

@@ -1156,47 +1156,49 @@ EOF
 					}
 				}
 			}
-			$aAllowedValues = MetaModel::GetAllowedValues_flt($sClassName, $sFilterCode, $aExtraParams);
-			if ($aAllowedValues != null)
-			{
-				$oAttDef = MetaModel::GetAttributeDef($sClassName, $sFilterCode);
 
-				if ($oAttDef->IsExternalKey())
-				{
-					$iFieldSize = $oAttDef->GetMaxSize();
-					$iMaxComboLength = $oAttDef->GetMaximumComboLength();
-					$oWidget = new UIExtKeyWidget($sFilterCode, $sClassName, $oAttDef->GetLabel(), $aAllowedValues, $sFilterValue, 'search_'.$sFilterCode, false, '', '', '');
-					$sHtml .= "<label>".MetaModel::GetFilterLabel($sClassName, $sFilterCode).":</label>&nbsp;";
-					$sHtml .= $oWidget->Display($oPage, $aExtraParams, true /* bSearchMode */);
-				}
-				else
-				{
-				//Enum field or external key, display a combo
-				$sValue = "<select name=\"$sFilterCode\">\n";
-				$sValue .= "<option value=\"\">".Dict::S('UI:SearchValue:Any')."</option>\n";
-				foreach($aAllowedValues as $key => $value)
-				{
-					if ($sFilterValue == $key)
-					{
-						$sSelected = ' selected';
-					}
-					else
-					{
-						$sSelected = '';
-					}
-					$sValue .= "<option value=\"$key\"$sSelected>$value</option>\n";
-				}
-				$sValue .= "</select>\n";
-				$sHtml .= "<label>".MetaModel::GetFilterLabel($sClassName, $sFilterCode).":</label>&nbsp;$sValue\n";
-				}				
-				unset($aExtraParams[$sFilterCode]);
+			$oAttDef = MetaModel::GetAttributeDef($sClassName, $sFilterCode);
+			if ($oAttDef->IsExternalKey())
+			{
+				$sTargetClass = $oAttDef->GetTargetClass();
+				$oAllowedValues = new DBObjectSet(new DBObjectSearch($sTargetClass));
+
+				$iFieldSize = $oAttDef->GetMaxSize();
+				$iMaxComboLength = $oAttDef->GetMaximumComboLength();
+				$oWidget = new UIExtKeyWidget($sFilterCode, $sClassName, $oAttDef->GetLabel(), $oAllowedValues, $sFilterValue, 'search_'.$sFilterCode, false, '', '', '');
+				$sHtml .= "<label>".MetaModel::GetFilterLabel($sClassName, $sFilterCode).":</label>&nbsp;";
+				$sHtml .= $oWidget->Display($oPage, $aExtraParams, true /* bSearchMode */);
 			}
 			else
 			{
-				// Any value is possible, display an input box
-				$sHtml .= "<label>".MetaModel::GetFilterLabel($sClassName, $sFilterCode).":</label>&nbsp;<input class=\"textSearch\" name=\"$sFilterCode\" value=\"$sFilterValue\"/>\n";
-				unset($aExtraParams[$sFilterCode]);
+				$aAllowedValues = MetaModel::GetAllowedValues_flt($sClassName, $sFilterCode, $aExtraParams);
+				if (is_null($aAllowedValues))
+				{
+					// Any value is possible, display an input box
+					$sHtml .= "<label>".MetaModel::GetFilterLabel($sClassName, $sFilterCode).":</label>&nbsp;<input class=\"textSearch\" name=\"$sFilterCode\" value=\"$sFilterValue\"/>\n";
+				}
+				else
+				{
+					//Enum field, display a combo
+					$sValue = "<select name=\"$sFilterCode\">\n";
+					$sValue .= "<option value=\"\">".Dict::S('UI:SearchValue:Any')."</option>\n";
+					foreach($aAllowedValues as $key => $value)
+					{
+						if ($sFilterValue == $key)
+						{
+							$sSelected = ' selected';
+						}
+						else
+						{
+							$sSelected = '';
+						}
+						$sValue .= "<option value=\"$key\"$sSelected>$value</option>\n";
+					}
+					$sValue .= "</select>\n";
+					$sHtml .= "<label>".MetaModel::GetFilterLabel($sClassName, $sFilterCode).":</label>&nbsp;$sValue\n";
+				}				
 			}
+			unset($aExtraParams[$sFilterCode]);
 			$index++;
 			$sHtml .= '</span> ';
 		}
@@ -1406,10 +1408,10 @@ EOF
 					$aEventsList[] ='validate';
 					$aEventsList[] ='change';
 
-					$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, $aArgs);
+					$oAllowedValues = MetaModel::GetAllowedValuesAsObjectSet($sClass, $sAttCode, $aArgs);
 					$iFieldSize = $oAttDef->GetMaxSize();
 					$iMaxComboLength = $oAttDef->GetMaximumComboLength();
-					$oWidget = new UIExtKeyWidget($sAttCode, $sClass, $oAttDef->GetLabel(), $aAllowedValues, $value, $iId, $bMandatory, $sNameSuffix, $sFieldPrefix, $sFormPrefix);
+					$oWidget = new UIExtKeyWidget($sAttCode, $sClass, $oAttDef->GetLabel(), $oAllowedValues, $value, $iId, $bMandatory, $sNameSuffix, $sFieldPrefix, $sFormPrefix);
 					$sHTMLValue = $oWidget->Display($oPage, $aArgs);
 					$sHTMLValue .= "<!-- iFlags: $iFlags bMandatory: $bMandatory -->\n";
 					break;
@@ -1777,20 +1779,36 @@ EOF
 		// Now fill-in the fields with default/supplied values
 		foreach($aList as $sAttCode)
 		{
-			$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, $aArgs);
 			if (isset($aArgs['default'][$sAttCode]))
 			{
 				$oObj->Set($sAttCode, $aArgs['default'][$sAttCode]);			
 			}
-			elseif (count($aAllowedValues) == 1)
+			else
 			{
-				// If the field is mandatory, set it to the only possible value
 				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+
+				// If the field is mandatory, set it to the only possible value
 				$iFlags = $oObj->GetAttributeFlags($sAttCode);
-				if ( (!$oAttDef->IsNullAllowed()) || ($iFlags & OPT_ATT_MANDATORY))
+				if ((!$oAttDef->IsNullAllowed()) || ($iFlags & OPT_ATT_MANDATORY))
 				{
-					$aValues = array_keys($aAllowedValues);
-					$oObj->Set($sAttCode, $aValues[0]);
+					if ($oAttDef->IsExternalKey())
+					{
+						$oAllowedValues = MetaModel::GetAllowedValuesAsObjectSet($sClass, $sAttCode, $aArgs);
+						if ($oAllowedValues->Count() == 1)
+						{
+							$oRemoteObj = $oAllowedValues->Fetch();
+							$oObj->Set($sAttCode, $oRemoteObj->GetKey());
+						}
+					}
+					else
+					{
+						$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, $aArgs);
+						if (count($aAllowedValues) == 1)
+						{
+							$aValues = array_keys($aAllowedValues);
+							$oObj->Set($sAttCode, $aValues[0]);
+						}
+					}
 				}
 			}
 		}

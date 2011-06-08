@@ -68,8 +68,10 @@ class UIExtKeyWidget
 	protected $sNameSuffix;
 	protected $iId;
 	protected $sTitle;
+
+	protected $oAllowedValues = null;
 	
-	public function __construct($sAttCode, $sClass, $sTitle, $aAllowedValues, $value, $iInputId, $bMandatory, $sNameSuffix = '', $sFieldPrefix = '', $sFormPrefix = '')
+	public function __construct($sAttCode, $sClass, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sNameSuffix = '', $sFieldPrefix = '', $sFormPrefix = '')
 	{
 		self::$iWidgetIndex++;
 		$this->sAttCode = $sAttCode;
@@ -77,7 +79,7 @@ class UIExtKeyWidget
 		$this->oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 		$this->sNameSuffix = $sNameSuffix;
 		$this->iId = $iInputId;
-		$this->aAllowedValues = $aAllowedValues;
+		$this->oAllowedValues = $oAllowedValues;
 		$this->value = $value;
 		$this->sFieldPrefix = $sFieldPrefix;
 		$this->sTargetClass = $this->oAttDef->GetTargetClass();
@@ -110,7 +112,11 @@ class UIExtKeyWidget
 		{
 			$sWizHelper = 'oWizardHelper'.$this->sFormPrefix;
 		}
-		if (count($this->aAllowedValues) < $this->oAttDef->GetMaximumComboLength())
+		if (is_null($this->oAllowedValues))
+		{
+			throw new Exception('Implementation: null value for allowed values definition');
+		}
+		elseif ($this->oAllowedValues->Count() < $this->oAttDef->GetMaximumComboLength())
 		{
 			// Few choices, use a normal 'select'
 			$sSelectMode = 'true';
@@ -127,9 +133,13 @@ class UIExtKeyWidget
 			{
 				$sHTMLValue .= "<option value=\"\">".Dict::S('UI:SelectOne')."</option>\n";
 			}
-			foreach($this->aAllowedValues as $key => $display_value)
+			$this->oAllowedValues->Rewind();
+			while($oObj = $this->oAllowedValues->Fetch())
 			{
-				if ((count($this->aAllowedValues) == 1) && ($this->bMandatory == 'true') )
+				$key = $oObj->GetKey();
+				$display_value = $oObj->Get('friendlyname');
+
+				if (($this->oAllowedValues->Count() == 1) && ($this->bMandatory == 'true') )
 				{
 					// When there is only once choice, select it by default
 					$sSelected = ' selected';
@@ -168,7 +178,7 @@ EOF
 			$iFieldSize = $this->oAttDef->GetMaxSize();
 	
 			// the input for the auto-complete
-			$sHTMLValue = "<input count=\"".count($this->aAllowedValues)."\" type=\"text\" id=\"label_$this->iId\" size=\"30\" maxlength=\"$iFieldSize\" value=\"$sDisplayValue\"/>&nbsp;";
+			$sHTMLValue = "<input count=\"".$this->oAllowedValues->Count()."\" type=\"text\" id=\"label_$this->iId\" size=\"30\" maxlength=\"$iFieldSize\" value=\"$sDisplayValue\"/>&nbsp;";
 			$sHTMLValue .= "<a class=\"no-arrow\" href=\"javascript:oACWidget_{$this->iId}.Search();\"><img id=\"mini_search_{$this->iId}\" style=\"border:0;vertical-align:middle;\" src=\"../images/mini_search.gif\" /></a>&nbsp;";
 	
 			// another hidden input to store & pass the object's Id
@@ -236,19 +246,11 @@ EOF
 	 */
 	public function SearchObjectsToSelect(WebPage $oP, $sTargetClass = '')
 	{
-		if ($sTargetClass != '')
+		if (is_null($this->oAllowedValues))
 		{
-			// assert(MetaModel::IsParentClass($this->m_sRemoteClass, $sRemoteClass));
-			$oFilter = new DBObjectSearch($sTargetClass);
+			throw new Exception('Implementation: null value for allowed values definition');
 		}
-		else
-		{
-			// No remote class specified use the one defined in the linkedset
-			$oFilter = new DBObjectSearch($this->sTargetClass);		
-		}
-		$oFilter->AddCondition('id', array_keys($this->aAllowedValues), 'IN');
-		$oSet = new CMDBObjectSet($oFilter);
-		$oBlock = new DisplayBlock($oFilter, 'list', false);
+		$oBlock = new DisplayBlock($this->oAllowedValues->GetFilter(), 'list', false);
 		$oBlock->Display($oP, $this->iId, array('menu' => false, 'selection_mode' => true, 'selection_type' => 'single', 'display_limit' => false)); // Don't display the 'Actions' menu on the results
 	}
 	

@@ -91,8 +91,8 @@ try
 			$oObj = null;
 			$currentValue = '';
 		}
-		$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, array('this' => $oObj));
-		$oWidget = new UIExtKeyWidget($sAttCode, $sClass, '', $aAllowedValues, $currentValue, $iInputId, false, $sSuffix, '');
+		$oAllowedValues = MetaModel::GetAllowedValuesAsObjectSet($sClass, $sAttCode, array('this' => $oObj));
+		$oWidget = new UIExtKeyWidget($sAttCode, $sClass, '', $oAllowedValues, $currentValue, $iInputId, false, $sSuffix, '');
 		$oWidget->SearchObjectsToSelect($oPage, $sTargetClass);	
 		break;
 	
@@ -105,8 +105,8 @@ try
 		$sValue = utils::ReadParam('sValue', '');
 		//$oWizardHelper = WizardHelper::FromJSON($sJson);
 		//$oObj = $oWizardHelper->GetTargetObject();
-		$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, array() /*array('this' => $oObj)*/);
-		$oWidget = new UIExtKeyWidget($sAttCode, $sClass, '', $aAllowedValues, $sValue, $iInputId, false, $sSuffix, '');
+		$oAllowedValues = MetaModel::GetAllowedValuesAsObjectSet($sClass, $sAttCode, array() /*array('this' => $oObj)*/);
+		$oWidget = new UIExtKeyWidget($sAttCode, $sClass, '', $oAllowedValues, $sValue, $iInputId, false, $sSuffix, '');
 		$oWidget->GetSearchDialog($oPage);
 		break;
 
@@ -119,8 +119,8 @@ try
 		$sJson = utils::ReadParam('json', '');
 		$oWizardHelper = WizardHelper::FromJSON($sJson);
 		$oObj = $oWizardHelper->GetTargetObject();
-		$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, array('this' => $oObj));
-		$oWidget = new UIExtKeyWidget($sAttCode, $sClass, '', $aAllowedValues, $oObj->Get($sAttCode), $iInputId, false, $sSuffix, '');
+		$oAllowedValues = MetaModel::GetAllowedValuesAsObjectSet($sClass, $sAttCode, array('this' => $oObj));
+		$oWidget = new UIExtKeyWidget($sAttCode, $sClass, '', $oAllowedValues, $oObj->Get($sAttCode), $iInputId, false, $sSuffix, '');
 		$oWidget->GetObjectCreationForm($oPage);
 		break;
 		
@@ -133,9 +133,9 @@ try
 		$sJson = utils::ReadParam('json', '');
 		$oWizardHelper = WizardHelper::FromJSON($sJson);
 		$oObj = $oWizardHelper->GetTargetObject();
-		$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, array('this' => $oObj));
+		$oAllowedValues = MetaModel::GetAllowedValuesAsObjectSet($sClass, $sAttCode, array('this' => $oObj));
 		// The iInputId of the autocomplete is the prefix for the form used to create the target object
-		$oWidget = new UIExtKeyWidget($sAttCode, $sClass, '', $aAllowedValues, null, $iInputId, false, $sSuffix, $oWizardHelper->GetFormPrefix());
+		$oWidget = new UIExtKeyWidget($sAttCode, $sClass, '', $oAllowedValues, null, $iInputId, false, $sSuffix, $oWizardHelper->GetFormPrefix());
 		$aResult = $oWidget->DoCreateObject($oPage);
 		echo json_encode($aResult);	
 		break;
@@ -147,7 +147,7 @@ try
 		$iInputId = utils::ReadParam('iInputId', '');
 		$iObjectId = utils::ReadParam('iObjectId', '');
 		$sSuffix = utils::ReadParam('sSuffix', '');
-		$oWidget = new UIExtKeyWidget($sAttCode, $sClass, '', array(), '', $iInputId, $sSuffix, '');
+		$oWidget = new UIExtKeyWidget($sAttCode, $sClass, '', null, '', $iInputId, $sSuffix, '');
 		$sName = $oWidget->GetObjectName($iObjectId);
 		echo json_encode(array('name' => $sName));	
 		break;

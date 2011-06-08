@@ -101,6 +101,22 @@ class ValueSetObjects extends ValueSetDefinition
 		$this->m_bAllowAllData = $bAllowAllData;
 	}
 
+
+	public function ToObjectSet($aArgs = array(), $sContains = '')
+	{
+		if ($this->m_bAllowAllData)
+		{
+			$oFilter = DBObjectSearch::FromOQL_AllData($this->m_sFilterExpr);
+		}
+		else
+		{
+			$oFilter = DBObjectSearch::FromOQL($this->m_sFilterExpr);
+		}
+
+		return new DBObjectSet($oFilter, $this->m_aOrderBy, $aArgs);
+	}
+
+
 	protected function LoadValues($aArgs)
 	{
 		$this->m_aValues = array();
