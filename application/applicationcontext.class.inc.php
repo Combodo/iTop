@@ -54,7 +54,7 @@ class ApplicationContext
 	 */
 	protected function ReadContext()
 	{
-		if (empty(self::$aDefaultValues))
+		if (!isset(self::$aDefaultValues))
 		{
 			self::$aDefaultValues = array();
 			$aContext = utils::ReadParam('c', array());
