@@ -92,6 +92,41 @@ EOF
 	{
 		switch($sLoginType)
 		{
+			case 'cas':
+			$sCASIncludePath =  MetaModel::GetConfig()->Get('cas_include_path');
+			include_once($sCASIncludePath.'/CAS.php');
+			
+			$bCASDebug = MetaModel::GetConfig()->Get('cas_debug');
+			if ($bCASDebug)
+			{
+				phpCAS::setDebug(APPROOT.'/error.log');
+			}
+			
+			// Initialize phpCAS
+			$sCASVersion = MetaModel::GetConfig()->Get('cas_version');
+			$sCASHost = MetaModel::GetConfig()->Get('cas_host');
+			$iCASPort = MetaModel::GetConfig()->Get('cas_port');
+			$sCASContext = MetaModel::GetConfig()->Get('cas_context');
+			phpCAS::client(CAS_VERSION_2_0, $sCASHost, $iCASPort, $sCASContext);
+			
+			$sCASCACertPath = MetaModel::GetConfig()->Get('cas_server_ca_cert_path');
+			if (empty($sCASCACertPath))
+			{
+				// If no certificate authority is provided, do not attempt to validate
+				// the server's certificate
+				// THIS SETTING IS NOT RECOMMENDED FOR PRODUCTION. 
+				// VALIDATING THE CAS SERVER IS CRUCIAL TO THE SECURITY OF THE CAS PROTOCOL! 
+				phpCAS::setNoCasServerValidation();
+			}
+			else
+			{
+				phpCAS::setCasServerCACert($sCASCACertPath);
+			}
+			
+			// force CAS authentication
+			phpCAS::forceAuthentication(); // Will redirect the user and exit since the user is not yet authenticated
+			break;
+			
 			case 'basic':
 			case 'url':
 			$this->add_header('WWW-Authenticate: Basic realm="'.Dict::Format('UI:iTopVersion:Short', ITOP_VERSION));
@@ -241,6 +276,47 @@ EOF
 				$sLoginType = $aAllowedLoginTypes[$index];
 				switch($sLoginType)
 				{
+					case 'cas':
+					$sCASIncludePath =  MetaModel::GetConfig()->Get('cas_include_path');
+					include_once($sCASIncludePath.'/CAS.php');
+					
+					$bCASDebug = MetaModel::GetConfig()->Get('cas_debug');
+					if ($bCASDebug)
+					{
+						phpCAS::setDebug(APPROOT.'/error.log');
+					}
+					
+					// Initialize phpCAS
+					$sCASVersion = MetaModel::GetConfig()->Get('cas_version');
+					$sCASHost = MetaModel::GetConfig()->Get('cas_host');
+					$iCASPort = MetaModel::GetConfig()->Get('cas_port');
+					$sCASContext = MetaModel::GetConfig()->Get('cas_context');
+					phpCAS::client(CAS_VERSION_2_0, $sCASHost, $iCASPort, $sCASContext);
+					
+					$sCASCACertPath = MetaModel::GetConfig()->Get('cas_server_ca_cert_path');
+					if (empty($sCASCACertPath))
+					{
+						// If no certificate authority is provided, do not attempt to validate
+						// the server's certificate
+						// THIS SETTING IS NOT RECOMMENDED FOR PRODUCTION. 
+						// VALIDATING THE CAS SERVER IS CRUCIAL TO THE SECURITY OF THE CAS PROTOCOL! 
+						phpCAS::setNoCasServerValidation();
+					}
+					else
+					{
+						phpCAS::setCasServerCACert($sCASCACertPath);
+					}
+					
+					// check CAS authentication
+					if (phpCAS::isAuthenticated())
+					{
+						$sAuthUser = phpCAS::getUser();
+						$sAuthPwd = '';
+						$sLoginMode = 'cas';
+						$sAuthentication = 'external';
+					}
+					break;
+					
 					case 'form':
 					// iTop standard mode: form based authentication
 					$sAuthUser = utils::ReadPostedParam('auth_user', '');
@@ -316,6 +392,7 @@ EOF
 			{
 				if (!UserRights::CheckCredentials($sAuthUser, $sAuthPwd, $sAuthentication))
 				{
+					//echo "Check Credentials returned false for user $sAuthUser!";
 					self::ResetSession();
 					$oPage = new LoginWebPage();
 					$oPage->DisplayLoginForm( $sLoginMode, true /* failed attempt */);

@@ -304,6 +304,69 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
+		'cas_include_path' => array(
+			'type' => 'string',
+			'description' => 'The path where to find the phpCAS library',
+			// examples... not used (nor 'description')
+			'default' => '/usr/share/php',
+			'value' => '/usr/share/php',
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
+		'cas_version' => array(
+			'type' => 'string',
+			'description' => 'The CAS protocol version to use',
+			// examples... not used (nor 'description')
+			'default' => '2.0',
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
+		'cas_host' => array(
+			'type' => 'string',
+			'description' => 'The name of the CAS host',
+			// examples... not used (nor 'description')
+			'default' => '',
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
+		'cas_port' => array(
+			'type' => 'integer',
+			'description' => 'The port used by the CAS server',
+			// examples... not used (nor 'description')
+			'default' => 443,
+			'value' => 443,
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
+		'cas_context' => array(
+			'type' => 'string',
+			'description' => 'The CAS context',
+			// examples... not used (nor 'description')
+			'default' => '',
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
+		'cas_server_ca_cert_path' => array(
+			'type' => 'string',
+			'description' => 'The path where to find the certificate of the CA for validating the certificate of the CAS server',
+			// examples... not used (nor 'description')
+			'default' => '',
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
+		'cas_debug' => array(
+			'type' => 'bool',
+			'description' => 'Activate the CAS debug',
+			// examples... not used (nor 'description')
+			'default' => false,
+			'value' => false,
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
 	);
 
 	public function IsProperty($sPropCode)
