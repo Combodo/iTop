@@ -47,6 +47,7 @@ class DBObjectSet
 		$this->m_iLimitCount = $iLimitCount;
 		$this->m_iLimitStart = $iLimitStart;
 
+		$this->m_iCount = null; // null if unknown yet
 		$this->m_bLoaded = false; // true when the filter has been used OR the set is built step by step (AddObject...)
 		$this->m_aData = array(); // array of (row => array of (classalias) => object/null)
 		$this->m_aId2Row = array(); // array of (pkey => index in m_aData)
@@ -307,13 +308,17 @@ class DBObjectSet
 		}
 		else
 		{
-			$sSQL = MetaModel::MakeSelectQuery($this->m_oFilter, $this->m_aOrderBy, $this->m_aArgs, null, 0, 0, true);
-			$resQuery = CMDBSource::Query($sSQL);
-			if (!$resQuery) return 0;
-	
-			$aRow = CMDBSource::FetchArray($resQuery);
-			CMDBSource::FreeResult($resQuery);
-			return $aRow['COUNT'];
+			if (is_null($this->m_iCount))
+			{
+				$sSQL = MetaModel::MakeSelectQuery($this->m_oFilter, $this->m_aOrderBy, $this->m_aArgs, null, 0, 0, true);
+				$resQuery = CMDBSource::Query($sSQL);
+				if (!$resQuery) return 0;
+		
+				$aRow = CMDBSource::FetchArray($resQuery);
+				CMDBSource::FreeResult($resQuery);
+				$this->m_iCount = $aRow['COUNT'];
+			}
+			return $this->m_iCount;
 		}
 	}
 
