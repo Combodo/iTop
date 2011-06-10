@@ -60,10 +60,12 @@ abstract class ValueSetDefinition
 		}
 		if (strlen($sContains) == 0)
 		{
+			// No filtering
 			$aRet = $this->m_aValues;
 		}
 		else
 		{
+			// Filter on results containing the needle <sContain>
 			$aRet = array();
 			foreach ($this->m_aValues as $sKey=>$sValue)
 			{
@@ -73,6 +75,7 @@ abstract class ValueSetDefinition
 				}
 			}
 		}
+		// Sort on the display value
 		asort($aRet);
 		return $aRet;
 	}
@@ -88,6 +91,7 @@ abstract class ValueSetDefinition
  */
 class ValueSetObjects extends ValueSetDefinition
 {
+	protected $m_sContains;
 	protected $m_sFilterExpr; // in OQL
 	protected $m_sValueAttCode;
 	protected $m_aOrderBy;
@@ -95,6 +99,7 @@ class ValueSetObjects extends ValueSetDefinition
 
 	public function __construct($sFilterExp, $sValueAttCode = '', $aOrderBy = array(), $bAllowAllData = false)
 	{
+		$this->m_sContains = '';
 		$this->m_sFilterExpr = $sFilterExp;
 		$this->m_sValueAttCode = $sValueAttCode;
 		$this->m_aOrderBy = $aOrderBy;
@@ -116,9 +121,22 @@ class ValueSetObjects extends ValueSetDefinition
 		return new DBObjectSet($oFilter, $this->m_aOrderBy, $aArgs);
 	}
 
-
-	protected function LoadValues($aArgs)
+	public function GetValues($aArgs, $sContains = '')
 	{
+		if (!$this->m_bIsLoaded || ($sContains != $this->m_sContains))
+		{
+			$this->LoadValues($aArgs, $sContains);
+			$this->m_bIsLoaded = true;
+		}
+		// The results are already filtered and sorted (on friendly name)
+		$aRet = $this->m_aValues;
+		return $aRet;
+	}
+
+	protected function LoadValues($aArgs, $sContains = '')
+	{
+		$this->m_sContains = $sContains;
+
 		$this->m_aValues = array();
 		
 		if ($this->m_bAllowAllData)
@@ -130,6 +148,11 @@ class ValueSetObjects extends ValueSetDefinition
 			$oFilter = DBObjectSearch::FromOQL($this->m_sFilterExpr);
 		}
 		if (!$oFilter) return false;
+
+		$oValueExpr = new ScalarExpression('%'.$sContains.'%');
+		$oNameExpr = new FieldExpression('friendlyname', $oFilter->GetClassAlias());
+		$oNewCondition = new BinaryExpression($oNameExpr, 'LIKE', $oValueExpr);
+		$oFilter->AddConditionExpression($oNewCondition);
 
 		$oObjects = new DBObjectSet($oFilter, $this->m_aOrderBy, $aArgs);
 		while ($oObject = $oObjects->Fetch())
