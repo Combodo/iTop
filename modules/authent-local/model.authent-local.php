@@ -77,12 +77,6 @@ class UserLocal extends UserInternal
 		return true;
 	}
 
-	public function CanLogOff()
-	{
-		// Internal authentication allows everybody to log off
-		return true;
-	}
-
 	public function ChangePassword($sOldPassword, $sNewPassword)
 	{
 		$oPassword = $this->Get('password'); // ormPassword object

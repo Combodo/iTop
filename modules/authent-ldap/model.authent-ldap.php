@@ -158,12 +158,6 @@ class UserLDAP extends UserInternal
 		return false;
 	}
 
-	public function CanLogOff()
-	{
-		// Internal authentication allows everybody to log off
-		return true;
-	}
-
 	public function ChangePassword($sOldPassword, $sNewPassword)
 	{
 		return false;

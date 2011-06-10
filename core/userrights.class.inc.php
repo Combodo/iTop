@@ -405,18 +405,6 @@ class UserRights
 		}
 	}
 
-	public static function CanLogOff()
-	{
-		if (!is_null(self::$m_oUser))
-		{
- 			return self::$m_oUser->CanLogOff();
-		}
-		else
-		{
-			return false;
-		}
-	}
-
 	public static function ChangePassword($sOldPassword, $sNewPassword, $sName = '')
 	{
 		if (empty($sName))

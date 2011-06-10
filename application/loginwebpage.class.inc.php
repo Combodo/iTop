@@ -27,8 +27,9 @@ require_once(APPROOT."/application/nicewebpage.class.inc.php");
 /**
  * Web page used for displaying the login form
  */
+
 class LoginWebPage extends NiceWebPage
-{
+{	
     public function __construct()
     {
         parent::__construct("iTop Login");
@@ -93,36 +94,7 @@ EOF
 		switch($sLoginType)
 		{
 			case 'cas':
-			$sCASIncludePath =  MetaModel::GetConfig()->Get('cas_include_path');
-			include_once($sCASIncludePath.'/CAS.php');
-			
-			$bCASDebug = MetaModel::GetConfig()->Get('cas_debug');
-			if ($bCASDebug)
-			{
-				phpCAS::setDebug(APPROOT.'/error.log');
-			}
-			
-			// Initialize phpCAS
-			$sCASVersion = MetaModel::GetConfig()->Get('cas_version');
-			$sCASHost = MetaModel::GetConfig()->Get('cas_host');
-			$iCASPort = MetaModel::GetConfig()->Get('cas_port');
-			$sCASContext = MetaModel::GetConfig()->Get('cas_context');
-			phpCAS::client(CAS_VERSION_2_0, $sCASHost, $iCASPort, $sCASContext);
-			
-			$sCASCACertPath = MetaModel::GetConfig()->Get('cas_server_ca_cert_path');
-			if (empty($sCASCACertPath))
-			{
-				// If no certificate authority is provided, do not attempt to validate
-				// the server's certificate
-				// THIS SETTING IS NOT RECOMMENDED FOR PRODUCTION. 
-				// VALIDATING THE CAS SERVER IS CRUCIAL TO THE SECURITY OF THE CAS PROTOCOL! 
-				phpCAS::setNoCasServerValidation();
-			}
-			else
-			{
-				phpCAS::setCasServerCACert($sCASCACertPath);
-			}
-			
+			utils::InitCASClient();					
 			// force CAS authentication
 			phpCAS::forceAuthentication(); // Will redirect the user and exit since the user is not yet authenticated
 			break;
@@ -277,36 +249,7 @@ EOF
 				switch($sLoginType)
 				{
 					case 'cas':
-					$sCASIncludePath =  MetaModel::GetConfig()->Get('cas_include_path');
-					include_once($sCASIncludePath.'/CAS.php');
-					
-					$bCASDebug = MetaModel::GetConfig()->Get('cas_debug');
-					if ($bCASDebug)
-					{
-						phpCAS::setDebug(APPROOT.'/error.log');
-					}
-					
-					// Initialize phpCAS
-					$sCASVersion = MetaModel::GetConfig()->Get('cas_version');
-					$sCASHost = MetaModel::GetConfig()->Get('cas_host');
-					$iCASPort = MetaModel::GetConfig()->Get('cas_port');
-					$sCASContext = MetaModel::GetConfig()->Get('cas_context');
-					phpCAS::client(CAS_VERSION_2_0, $sCASHost, $iCASPort, $sCASContext);
-					
-					$sCASCACertPath = MetaModel::GetConfig()->Get('cas_server_ca_cert_path');
-					if (empty($sCASCACertPath))
-					{
-						// If no certificate authority is provided, do not attempt to validate
-						// the server's certificate
-						// THIS SETTING IS NOT RECOMMENDED FOR PRODUCTION. 
-						// VALIDATING THE CAS SERVER IS CRUCIAL TO THE SECURITY OF THE CAS PROTOCOL! 
-						phpCAS::setNoCasServerValidation();
-					}
-					else
-					{
-						phpCAS::setCasServerCACert($sCASCACertPath);
-					}
-					
+					utils::InitCASClient();					
 					// check CAS authentication
 					if (phpCAS::isAuthenticated())
 					{

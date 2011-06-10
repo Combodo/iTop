@@ -27,21 +27,31 @@ $operation = utils::ReadParam('operation', '');
 require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 session_name(MetaModel::GetConfig()->Get('session_name'));
 session_start();
+$bPortal = utils::ReadParam('portal', false);
+$sUrl = utils::GetAbsoluteUrlAppRoot('pages/logoff.php');
+if ($bPortal)
+{
+	$sUrl .= 'portal/';
+}
+else
+{
+	$sUrl .= 'pages/UI.php';
+}
+$sLoginMode = isset($_SESSION['login_mode']) ? $_SESSION['login_mode'] : '';
 LoginWebPage::ResetSession();
+switch($sLoginMode)
+{
+	case 'cas':
+	utils::InitCASClient();					
+	phpCAS::logoutWithUrl($sUrl); // Redirects to the CAS logout page
+	break;
+}
 $oPage = new LoginWebPage();
 $sVersionShort = Dict::Format('UI:iTopVersion:Short', ITOP_VERSION);
 $oPage->add("<div id=\"login-logo\"><a href=\"http://www.combodo.com/itop\"><img title=\"$sVersionShort\" src=\"../images/itop-logo-external.png\"></a></div>\n");
 $oPage->add("<div id=\"login\">\n");
 $oPage->add("<h1>".Dict::S('UI:LogOff:ThankYou')."</h1>\n");
-$bPortal = utils::ReadParam('portal', false);
-if ($bPortal)
-{
-	$sUrl = '../portal/';
-}
-else
-{
-	$sUrl = '../pages/UI.php';
-}
+
 $oPage->add("<p><a href=\"$sUrl\">".Dict::S('UI:LogOff:ClickHereToLoginAgain')."</a></p>");
 $oPage->add("</div>\n");
 $oPage->output();

@@ -144,7 +144,7 @@ class iTopWebPage extends NiceWebPage
 		// that the tabs aren't changed on click, and any custom event name can be
 		// specified. Note that if you define a callback for the 'select' event, it
 		// will be executed for the selected tab whenever the hash changes.
-		tabs.tabs({ event: 'change' });
+		tabs.tabs({ event: 'change'});
 	}
 	catch(err)
 	{
@@ -665,7 +665,7 @@ EOF
 		$sLogOffMenu = "<span id=\"logOffBtn\"><ul><li><img src=\"../images/onOffBtn.png\"><ul>";
 		$sLogOffMenu .= "<li><span>$sLogonMessage</span></li>\n";
 		
-		if (utils::CanLogOff() && UserRights::CanLogOff())
+		if (utils::CanLogOff())
 		{
 			//$sLogOffMenu .= "<li><a href=\"../pages/UI.php?loginop=logoff\">".Dict::S('UI:LogOffMenu')."</a></li>\n";
 			$sLogOffMenu .= "<li><a href=\"../pages/logoff.php\">".Dict::S('UI:LogOffMenu')."</a></li>\n";

@@ -79,12 +79,6 @@ class UserExternal extends User
 		return false;
 	}
 
-	public function CanLogOff()
-	{
-		// External authentication: iTop has no way to force a log off
-		return false;
-	}
-
 	public function ChangePassword($sOldPassword, $sNewPassword)
 	{
 		return false;

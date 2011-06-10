@@ -41,6 +41,7 @@ class utils
 {
 	private static $m_sConfigFile = ITOP_CONFIG_FILE;
 	private static $m_oConfig = null;
+	private static $m_bCASClient = false;
 
 	// Parameters loaded from a file, parameters of the page/command line still have precedence
 	private static $m_aParamsFromFile = null;
@@ -416,7 +417,65 @@ class utils
 	 */
 	static function CanLogOff()
 	{
-		return (isset($_SESSION['login_mode']) && $_SESSION['login_mode'] == 'form');
+		$bResult = false;
+		if(isset($_SESSION['login_mode']))
+		{
+			$sLoginMode = $_SESSION['login_mode'];
+			switch($sLoginMode)
+			{
+				case 'external':
+				$bResult = false;
+				break;
+	
+				case 'form':
+				case 'basic':
+				case 'url':
+				case 'cas':
+				default:
+				$bResult = true;
+				
+			}			
+		}
+		return $bResult;
 	}
+	
+	/**
+	 * Initializes the CAS client
+	 */
+	 static function InitCASClient()
+	 {
+		$sCASIncludePath =  MetaModel::GetConfig()->Get('cas_include_path');
+		include_once($sCASIncludePath.'/CAS.php');
+		
+		$bCASDebug = MetaModel::GetConfig()->Get('cas_debug');
+		if ($bCASDebug)
+		{
+			phpCAS::setDebug(APPROOT.'/error.log');
+		}
+		
+		if (!self::$m_bCASClient)
+		{
+			// Initialize phpCAS
+			$sCASVersion = MetaModel::GetConfig()->Get('cas_version');
+			$sCASHost = MetaModel::GetConfig()->Get('cas_host');
+			$iCASPort = MetaModel::GetConfig()->Get('cas_port');
+			$sCASContext = MetaModel::GetConfig()->Get('cas_context');
+			phpCAS::client($sCASVersion, $sCASHost, $iCASPort, $sCASContext, false /* session already started */);
+			self::$m_bCASClient = true;
+			$sCASCACertPath = MetaModel::GetConfig()->Get('cas_server_ca_cert_path');
+			if (empty($sCASCACertPath))
+			{
+				// If no certificate authority is provided, do not attempt to validate
+				// the server's certificate
+				// THIS SETTING IS NOT RECOMMENDED FOR PRODUCTION. 
+				// VALIDATING THE CAS SERVER IS CRUCIAL TO THE SECURITY OF THE CAS PROTOCOL! 
+				phpCAS::setNoCasServerValidation();
+			}
+			else
+			{
+				phpCAS::setCasServerCACert($sCASCACertPath);
+			}			
+		}
+	 }
 }
 ?>
