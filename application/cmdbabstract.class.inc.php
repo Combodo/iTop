@@ -1182,9 +1182,11 @@ EOF
 
 				$iFieldSize = $oAttDef->GetMaxSize();
 				$iMaxComboLength = $oAttDef->GetMaximumComboLength();
-				$oWidget = new UIExtKeyWidget($sFilterCode, $sClassName, $oAttDef->GetLabel(), $oAllowedValues, $sFilterValue, 'search_'.$sFilterCode, false, '', '', '');
 				$sHtml .= "<label>".MetaModel::GetFilterLabel($sClassName, $sFilterCode).":</label>&nbsp;";
-				$sHtml .= $oWidget->Display($oPage, $aExtraParams, true /* bSearchMode */);
+				$aExtKeyParams = $aExtraParams;
+				$aExtKeyParams['iFieldSize'] = $oAttDef->GetMaxSize();
+				$aExtKeyParams['iMinChars'] = $oAttDef->GetMinAutoCompleteChars();
+				$sHtml .= UIExtKeyWidget::DisplayFromAttCode($oPage, $sFilterCode, $sClassName, $oAttDef->GetLabel(), $oAllowedValues, $sFilterValue, $sSearchFormId.'search_'.$sFilterCode, false, $sFilterCode, '', $aExtKeyParams, true);
 			}
 			else
 			{
@@ -1426,10 +1428,11 @@ EOF
 					$aEventsList[] ='change';
 
 					$oAllowedValues = MetaModel::GetAllowedValuesAsObjectSet($sClass, $sAttCode, $aArgs);
-					$iFieldSize = $oAttDef->GetMaxSize();
-					$iMaxComboLength = $oAttDef->GetMaximumComboLength();
-					$oWidget = new UIExtKeyWidget($sAttCode, $sClass, $oAttDef->GetLabel(), $oAllowedValues, $value, $iId, $bMandatory, $sNameSuffix, $sFieldPrefix, $sFormPrefix);
-					$sHTMLValue = $oWidget->Display($oPage, $aArgs);
+					$sFieldName = $sFieldPrefix.$sAttCode.$sNameSuffix;
+					$aExtKeyParams = $aArgs;
+					$aExtKeyParams['iFieldSize'] = $oAttDef->GetMaxSize();
+					$aExtKeyParams['iMinChars'] = $oAttDef->GetMinAutoCompleteChars();	
+					$sHTMLValue = UIExtKeyWidget::DisplayFromAttCode($oPage, $sAttCode, $sClass, $oAttDef->GetLabel(), $oAllowedValues, $value, $iId, $bMandatory, $sFieldName, $sFormPrefix, $aArgs);
 					$sHTMLValue .= "<!-- iFlags: $iFlags bMandatory: $bMandatory -->\n";
 					break;
 					

@@ -63,29 +63,24 @@ require_once(APPROOT.'/application/displayblock.class.inc.php');
 
 class UIExtKeyWidget 
 {
-	protected static $iWidgetIndex = 0;
-	protected $sAttCode;
-	protected $sNameSuffix;
 	protected $iId;
-	protected $sTitle;
-
-	protected $oAllowedValues = null;
+	protected $sTargetClass;
 	
-	public function __construct($sAttCode, $sClass, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sNameSuffix = '', $sFieldPrefix = '', $sFormPrefix = '')
+	//public function __construct($sAttCode, $sClass, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sNameSuffix = '', $sFieldPrefix = '', $sFormPrefix = '')
+	static public function DisplayFromAttCode($oPage, $sAttCode, $sClass, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sFieldName = '', $sFormPrefix = '', $aArgs, $bSearchMode = false)
 	{
-		self::$iWidgetIndex++;
-		$this->sAttCode = $sAttCode;
-		$this->sClass = $sClass;
-		$this->oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-		$this->sNameSuffix = $sNameSuffix;
+		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+		$sTargetClass = $oAttDef->GetTargetClass();
+		$iMaxComboLength = $oAttDef->GetMaximumComboLength();
+		$bAllowTargetCreation = $oAttDef->AllowTargetCreation();
+		$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId);
+		return $oWidget->Display($oPage, $iMaxComboLength, $bAllowTargetCreation, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sFieldName, $sFormPrefix, $aArgs, $bSearchMode);
+	}
+
+	public function __construct($sTargetClass, $iInputId)
+	{
+		$this->sTargetClass = $sTargetClass;
 		$this->iId = $iInputId;
-		$this->oAllowedValues = $oAllowedValues;
-		$this->value = $value;
-		$this->sFieldPrefix = $sFieldPrefix;
-		$this->sTargetClass = $this->oAttDef->GetTargetClass();
-		$this->sTitle = $sTitle;
-		$this->sFormPrefix = $sFormPrefix;
-		$this->bMandatory = $bMandatory;
 	}
 	
 	/**
@@ -94,37 +89,40 @@ class UIExtKeyWidget
 	 * @param Hash $aArgs Extra context arguments
 	 * @return string The HTML fragment to be inserted into the page
 	 */
-	public function Display(WebPage $oPage, $aArgs = array(), $bSearchMode = false)
+	public function Display(WebPage $oPage, $iMaxComboLength, $bAllowTargetCreation, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sFieldName, $sFormPrefix = '', $aArgs = array(), $bSearchMode = false)
 	{
+		$sTitle = addslashes($sTitle);	
 		$oPage->add_linked_script('../js/extkeywidget.js');
 		$oPage->add_linked_script('../js/forms-json-utils.js');
 		
-		$bCreate = (!$bSearchMode) && (!MetaModel::IsAbstract($this->sTargetClass)) && (UserRights::IsActionAllowed($this->sTargetClass, UR_ACTION_BULK_MODIFY) && $this->oAttDef->AllowTargetCreation());
+		$bCreate = (!$bSearchMode) && (!MetaModel::IsAbstract($this->sTargetClass)) && (UserRights::IsActionAllowed($this->sTargetClass, UR_ACTION_BULK_MODIFY) && $bAllowTargetCreation);
 		$sMessage = Dict::S('UI:Message:EmptyList:UseSearchForm');
 		$sAttrFieldPrefix = ($bSearchMode) ? '' : 'attr_';
 
 		$sHTMLValue = "<span style=\"white-space:nowrap\">"; // no wrap
+		$sFilter = addslashes($oAllowedValues->GetFilter()->ToOQL());
 		if($bSearchMode)
 		{
 			$sWizHelper = 'null';
+			$sWizHelperJSON = "''";
 		} 
 		else
 		{
-			$sWizHelper = 'oWizardHelper'.$this->sFormPrefix;
+			$sWizHelper = 'oWizardHelper'.$sFormPrefix;
+			$sWizHelperJSON = $sWizHelper.'.ToJSON()';
 		}
-		if (is_null($this->oAllowedValues))
+		if (is_null($oAllowedValues))
 		{
 			throw new Exception('Implementation: null value for allowed values definition');
 		}
-		elseif ($this->oAllowedValues->Count() < $this->oAttDef->GetMaximumComboLength())
+		elseif ($oAllowedValues->Count() < $iMaxComboLength)
 		{
 			// Few choices, use a normal 'select'
 			$sSelectMode = 'true';
 			
-			$sHelpText = $this->oAttDef->GetHelpOnEdition();
-
-			// In case there are no valid values, the select will be empty, thus blocking the user from validating the form
-			$sHTMLValue = "<select title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$this->sFieldPrefix}{$this->sAttCode}{$this->sNameSuffix}\" id=\"$this->iId\">\n";
+			$sHelpText = ''; //$this->oAttDef->GetHelpOnEdition();
+			
+			$sHTMLValue = "<select title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" id=\"$this->iId\">\n";
 			if ($bSearchMode)
 			{
 				$sHTMLValue .= "<option value=\"\">".Dict::S('UI:SearchValue:Any')."</option>\n";			
@@ -133,27 +131,27 @@ class UIExtKeyWidget
 			{
 				$sHTMLValue .= "<option value=\"\">".Dict::S('UI:SelectOne')."</option>\n";
 			}
-			$this->oAllowedValues->Rewind();
-			while($oObj = $this->oAllowedValues->Fetch())
+			$oAllowedValues->Rewind();
+			while($oObj = $oAllowedValues->Fetch())
 			{
 				$key = $oObj->GetKey();
 				$display_value = $oObj->Get('friendlyname');
 
-				if (($this->oAllowedValues->Count() == 1) && ($this->bMandatory == 'true') )
+				if (($oAllowedValues->Count() == 1) && ($bMandatory == 'true') )
 				{
 					// When there is only once choice, select it by default
 					$sSelected = ' selected';
 				}
 				else
 				{
-					$sSelected = ($this->value == $key) ? ' selected' : '';
+					$sSelected = ($value == $key) ? ' selected' : '';
 				}
 				$sHTMLValue .= "<option value=\"$key\"$sSelected>$display_value</option>\n";
 			}
 			$sHTMLValue .= "</select>\n";
 			$oPage->add_ready_script(
 <<<EOF
-		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sClass}', '{$this->sAttCode}', '{$this->sNameSuffix}', $sSelectMode, $sWizHelper);
+		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sTargetClass}', '$sFilter', '$sTitle', true, $sWizHelper);
 		oACWidget_{$this->iId}.emptyHtml = "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>$sMessage</p></div>";
 		$('#$this->iId').bind('update', function() { oACWidget_{$this->iId}.Update(); } );
 
@@ -165,52 +163,63 @@ EOF
 			// Too many choices, use an autocomplete
 			$sSelectMode = 'false';
 		
-			if ($this->oAttDef->IsNull($this->value)) // Null values are displayed as ''
+			if (is_null($value) || ($value == 0)) // Null values are displayed as ''
 			{
-				$sDisplayValue = '';
+				$sDisplayValue = isset($aArgs['sDefaultValue']) ? $aArgs['sDefaultValue'] : '';
 			}
 			else
 			{
-				$sDisplayValue = $this->GetObjectName($this->value);
+				$sDisplayValue = $this->GetObjectName($value);
 			}
-			$sFormPrefix = $this->sFormPrefix;
-			$iMinChars = $this->oAttDef->GetMinAutoCompleteChars();
-			$iFieldSize = $this->oAttDef->GetMaxSize();
+			$iMinChars = isset($aArgs['iMinChars']) ? $aArgs['iMinChars'] : 3; //@@@ $this->oAttDef->GetMinAutoCompleteChars();
+			$iFieldSize = isset($aArgs['iFieldSize']) ? $aArgs['iFieldSize'] : 30; //@@@ $this->oAttDef->GetMaxSize();
+			$iDropDownSize = 10;
 	
 			// the input for the auto-complete
-			$sHTMLValue = "<input count=\"".$this->oAllowedValues->Count()."\" type=\"text\" id=\"label_$this->iId\" size=\"30\" maxlength=\"$iFieldSize\" value=\"$sDisplayValue\"/>&nbsp;";
+			$sHTMLValue = "<input count=\"".$oAllowedValues->Count()."\" type=\"text\" id=\"label_$this->iId\" size=\"$iFieldSize\" maxlength=\"$iDropDownSize\" value=\"$sDisplayValue\"/>&nbsp;";
 			$sHTMLValue .= "<a class=\"no-arrow\" href=\"javascript:oACWidget_{$this->iId}.Search();\"><img id=\"mini_search_{$this->iId}\" style=\"border:0;vertical-align:middle;\" src=\"../images/mini_search.gif\" /></a>&nbsp;";
 	
 			// another hidden input to store & pass the object's Id
-			$sHTMLValue .= "<input type=\"hidden\" id=\"$this->iId\" name=\"{$sAttrFieldPrefix}{$this->sFieldPrefix}{$this->sAttCode}{$this->sNameSuffix}\" value=\"$this->value\" />\n";
+			$sHTMLValue .= "<input type=\"hidden\" id=\"$this->iId\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" value=\"$value\" />\n";
 	
 			// Scripts to start the autocomplete and bind some events to it
 			$oPage->add_ready_script(
 <<<EOF
-		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sClass}', '{$this->sAttCode}', '{$this->sNameSuffix}', $sSelectMode, $sWizHelper);
+		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sTargetClass}', '$sFilter', '$sTitle', false, $sWizHelper);
 		oACWidget_{$this->iId}.emptyHtml = "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>$sMessage</p></div>";
-		$('#label_$this->iId').autocomplete('./ajax.render.php', { scroll:true, minChars:{$iMinChars}, formatItem:formatItem, autoFill:false, matchContains:true, keyHolder:'#{$this->iId}', extraParams:{operation:'autocomplete', sclass:'{$this->sClass}',attCode:'{$this->sAttCode}'}});
+		$('#label_$this->iId').autocomplete('./ajax.render.php', { scroll:true, minChars:{$iMinChars}, formatItem:formatItem, autoFill:false, matchContains:true, keyHolder:'#{$this->iId}', extraParams:{operation:'ac_extkey', sTargetClass:'{$this->sTargetClass}',sFilter:'$sFilter', json: $sWizHelperJSON }});
 		$('#label_$this->iId').blur(function() { $(this).search(); } );
 		$('#label_$this->iId').keyup(function() { if ($(this).val() == '') { $('#$this->iId').val(''); } } ); // Useful for search forms: empty value in the "label", means no value, immediatly !
 		$('#label_$this->iId').result( function(event, data, formatted) { OnAutoComplete('{$this->iId}', event, data, formatted); } );
 		$('#$this->iId').bind('update', function() { oACWidget_{$this->iId}.Update(); } );
+		if ($('#ac_dlg_{$this->iId}').length == 0)
+		{
+			$('body').append('<div id="ac_dlg_{$this->iId}"></div>');
+		}
 EOF
 );
 			//$oPage->add_at_the_end($this->GetSearchDialog($oPage)); // To prevent adding forms inside the main form
-			$oPage->add_at_the_end('<div id="ac_dlg_'.$this->iId.'"></div>'); // The place where to download the search dialog is outside of the main form (to prevent nested forms)
+			//$oPage->add_at_the_end('<div id="ac_dlg_'.$this->iId.'"></div>'); // The place where to download the search dialog is outside of the main form (to prevent nested forms)
 
 		}
 		if ($bCreate)
 		{
 			$sHTMLValue .= "<a class=\"no-arrow\" href=\"javascript:oACWidget_{$this->iId}.CreateObject();\"><img id=\"mini_add_{$this->iId}\" style=\"border:0;vertical-align:middle;\" src=\"../images/mini_add.gif\" /></a>&nbsp;";
-			$oPage->add_at_the_end('<div id="ajax_'.$this->iId.'"></div>');
+			$oPage->add_ready_script(
+<<<EOF
+		if ($('#ajax_{$this->iId}').length == 0)
+		{
+			$('body').append('<div id="ajax_{$this->iId}"></div>');
+		}
+EOF
+);
 		}
 		$sHTMLValue .= "<span id=\"v_{$this->iId}\"></span>";
 		$sHTMLValue .= "</span>"; // end of no wrap
 		return $sHTMLValue;
 	}
 	
-	public function GetSearchDialog(WebPage $oPage)
+	public function GetSearchDialog(WebPage $oPage, $sTitle)
 	{
 		$sHTML = '<div class="wizContainer" style="vertical-align:top;"><div id="dc_'.$this->iId.'">';
 
@@ -227,7 +236,7 @@ EOF
 		$sHTML .= "</form>\n";
 		$sHTML .= '</div></div>';
 
-		$sDialogTitle = addslashes($this->sTitle);
+		$sDialogTitle = addslashes($sTitle);
 		$oPage->add_ready_script(
 <<<EOF
 		$('#ac_dlg_{$this->iId}').dialog({ width: $(window).width()*0.8, height: $(window).height()*0.8, autoOpen: false, modal: true, title: '$sDialogTitle', resizeStop: oACWidget_{$this->iId}.UpdateSizes, close: oACWidget_{$this->iId}.OnClose });
@@ -244,14 +253,48 @@ EOF
 	 * @param string $sRemoteClass Name of the "remote" class to perform the search on, must be a derived class of m_sRemoteClass
 	 * @param Array $aAlreadyLinkedIds List of IDs of objects of "remote" class already linked, to be filtered out of the search
 	 */
-	public function SearchObjectsToSelect(WebPage $oP, $sTargetClass = '')
+	public function SearchObjectsToSelect(WebPage $oP, $sFilter, $sRemoteClass = '', $oObj = null)
 	{
-		if (is_null($this->oAllowedValues))
+		if (is_null($sFilter))
 		{
 			throw new Exception('Implementation: null value for allowed values definition');
 		}
-		$oBlock = new DisplayBlock($this->oAllowedValues->GetFilter(), 'list', false);
-		$oBlock->Display($oP, $this->iId, array('menu' => false, 'selection_mode' => true, 'selection_type' => 'single', 'display_limit' => false)); // Don't display the 'Actions' menu on the results
+		try
+		{
+			$oFilter = DBObjectSearch::FromOQL($sFilter);
+			$oBlock = new DisplayBlock($oFilter, 'list', false);
+			$oBlock->Display($oP, $this->iId, array('this' => $oObj, 'menu' => false, 'selection_mode' => true, 'selection_type' => 'single', 'display_limit' => false)); // Don't display the 'Actions' menu on the results
+		}
+		catch(MissingQueryArgument $e)
+		{
+			// When used in a search form the $this parameter may be missing, in this case return all possible values...
+			// TODO check if we can improve this behavior...
+			$sOQL = 'SELECT '.$sRemoteClass;
+			$oFilter = DBObjectSearch::FromOQL($sOQL);
+			$oBlock = new DisplayBlock($oFilter, 'list', false);
+			$oBlock->Display($oP, $this->iId, array('menu' => false, 'selection_mode' => true, 'selection_type' => 'single', 'display_limit' => false)); // Don't display the 'Actions' menu on the results
+		}
+	}
+	
+	/**
+	 * Search for objects to be selected
+	 * @param WebPage $oP The page used for the output (usually an AjaxWebPage)
+	 * @param string $sFilter The OQL expression used to define/limit limit the scope of possible values
+	 * @param DBObject $oObj The current object for the OQL context
+	 * @param string $sContains The text of the autocomplete to filter the results
+	 */
+	public function AutoComplete(WebPage $oP, $sFilter, $oObj = null, $sContains)
+	{
+		if (is_null($sFilter))
+		{
+			throw new Exception('Implementation: null value for allowed values definition');
+		}
+		$oValuesSet = new ValueSetObjects($sFilter);
+		$aValues = $oValuesSet->GetValues(array('this' => $oObj), $sContains);
+		foreach($aValues as $sKey => $sFriendlyName)
+		{
+			$oP->add($sFriendlyName."|".$sKey."\n");
+		}
 	}
 	
 	/**
@@ -285,7 +328,7 @@ EOF
 	public function DoCreateObject($oPage)
 	{
 		$oObj = MetaModel::NewObject($this->sTargetClass);
-		$aErrors = $oObj->UpdateObject($this->sFormPrefix.$this->iId);
+		$aErrors = $oObj->UpdateObject($this->iId);
 		if (count($aErrors) == 0)
 		{
 			$oMyChange = MetaModel::NewObject("CMDBChange");

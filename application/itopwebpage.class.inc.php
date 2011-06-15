@@ -464,10 +464,12 @@ EOF
 			break;
 			
 			default:
+			$sHtml = '';
 			$oAppContext = new ApplicationContext();
 			$iCurrentOrganization = $oAppContext->GetCurrentValue('org_id');
 			$sHtml = '<div id="SiloSelection">';
-			$sHtml .= '<form style="display:inline" action="'.$_SERVER['PHP_SELF'].'"><select class="org_combo" name="c[org_id]" title="Pick an organization" onChange="this.form.submit();">';
+			$sHtml .= '<form style="display:inline" action="'.$_SERVER['PHP_SELF'].'">'; //<select class="org_combo" name="c[org_id]" title="Pick an organization" onChange="this.form.submit();">';
+/*
 			$sSelected = ($iCurrentOrganization == '') ? ' selected' : '';
 			$sHtml .= '<option value=""'.$sSelected.'>'.Dict::S('UI:AllOrganizations').'</option>';
 			while($oOrg = $oSet->Fetch())
@@ -485,6 +487,11 @@ EOF
 				$sHtml .= '<option title="'.$oOrg->GetName().'" value="'.$oOrg->GetKey().'"'.$sSelected.'>'.$oOrg->GetName().'</option>';
 			}
 			$sHtml .= '</select>';
+*/
+			$oAllowedValues = new DBObjectSet(DBObjectSearch::FromOQL('SELECT Organization'));
+			$oWidget = new UIExtKeyWidget('Organization', 'org_id');
+			$sHtml .= $oWidget->Display($this, 50, false, '', $oAllowedValues, $iCurrentOrganization, 'org_id', false, 'c[org_id]', '', array('iFieldSize' => 20, 'sDefaultValue' => Dict::S('UI:AllOrganizations')), $bSearchMode = true);
+			$sHtml .= '<input type="image" src="../images/play.png" style="vertical-align:middle;"> ';
 			// Add other dimensions/context information to this form
 //			$oAppContext = new ApplicationContext();
 			$oAppContext->Reset('org_id'); // org_id is handled above and we want to be able to change it here !
@@ -509,6 +516,7 @@ EOF
 	 */
     public function output()
     {
+		$sForm = $this->GetSiloSelectionForm();
 		$this->DisplayMenu(); // Compute the menu
 
 		// Put here the 'ready scripts' that must be executed after all others
@@ -619,10 +627,7 @@ EOF
 			// 2) clicking on it will erase it
 			$sText = Dict::S("UI:YourSearch");
 			$sOnClick = " onclick=\"this.value='';this.onclick=null;\"";
-		}
-
-		$sForm = $this->GetSiloSelectionForm();
-		
+		}		
 		// Render the tabs in the page (if any)
 		foreach($this->m_aTabs as $sTabContainerName => $m_aTabs)
 		{
