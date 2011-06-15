@@ -13,12 +13,12 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-function ExtKeyWidget(id, sClass, sAttCode, sSuffix, bSelectMode, oWizHelper)
+function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper)
 {
 	this.id = id;
-	this.sClass = sClass;
-	this.sAttCode = sAttCode;
-	this.sSuffix = sSuffix;
+	this.sTargetClass = sTargetClass;
+	this.sFilter = sFilter;
+	this.sTitle = sTitle;
 	this.emptyHtml = ''; // content to be displayed when the search results are empty (when opening the dialog) 
 	this.emptyOnClose = true; // Workaround for the JQuery dialog being very slow when opening and closing if the content contains many INPUT tags
 	this.oWizardHelper = oWizHelper;
@@ -60,9 +60,8 @@ function ExtKeyWidget(id, sClass, sAttCode, sSuffix, bSelectMode, oWizHelper)
 		}
 		var theMap = { sAttCode: me.sAttCode,
 				   iInputId: me.id,
-				   sSuffix: me.sSuffix,
-				   'class': me.sClass,
-				   sValue: value,
+				   sTitle: me.sTitle,
+				   sTargetClass: me.sTargetClass,
 				   operation: 'objectSearchForm'
 				 }
 	
@@ -123,9 +122,9 @@ function ExtKeyWidget(id, sClass, sAttCode, sSuffix, bSelectMode, oWizHelper)
 	
 	this.DoSearchObjects = function(id)
 	{
-		var theMap = { sAttCode: me.sAttCode,
+		var theMap = { sTargetClass: me.sTargetClass,
 					   iInputId: me.id,
-					   sSuffix: me.sSuffix
+					   sFilter: me.sFilter
 					 }
 		
 		// Gather the parameters from the search form
@@ -151,7 +150,6 @@ function ExtKeyWidget(id, sClass, sAttCode, sSuffix, bSelectMode, oWizHelper)
 		}
 		
 		theMap['sRemoteClass'] = theMap['class'];  // swap 'class' (defined in the form) and 'remoteClass'
-		theMap['class'] = me.sClass;
 		theMap.operation = 'searchObjectsToSelect'; // Override what is defined in the form itself
 		
 		sSearchAreaId = '#dr_'+me.id;
@@ -187,11 +185,9 @@ function ExtKeyWidget(id, sClass, sAttCode, sSuffix, bSelectMode, oWizHelper)
 		$('#label_'+this.id).addClass('ac_dlg_loading');
 
 		// Query the server again to get the display name of the selected object
-		var theMap = { sAttCode: me.sAttCode,
+		var theMap = { sTargetClass: me.sTargetClass,
 				   iInputId: me.id,
 				   iObjectId: iObjectId,
-				   sSuffix: me.sSuffix,
-				   'class': me.sClass,
 				   operation: 'getObjectName'
 				 }
 	
@@ -246,10 +242,8 @@ function ExtKeyWidget(id, sClass, sAttCode, sSuffix, bSelectMode, oWizHelper)
 			$('#label_'+me.id).addClass('ac_dlg_loading');
 		}
 		me.oWizardHelper.UpdateWizard();
-		var theMap = { sAttCode: me.sAttCode,
+		var theMap = { sTargetClass: me.sTargetClass,
 				   iInputId: me.id,
-				   sSuffix: me.sSuffix,
-				   'class': me.sClass,
 				   'json': me.oWizardHelper.ToJSON(),
 				   operation: 'objectCreationForm'
 				 }
@@ -309,10 +303,8 @@ function ExtKeyWidget(id, sClass, sAttCode, sSuffix, bSelectMode, oWizHelper)
 		if (CheckFields(sFormId, true))
 		{
 			$('#'+sFormId).block();
-			var theMap = { sAttCode: me.sAttCode,
+			var theMap = { sTargetClass: me.sTargetClass,
 					   iInputId: me.id,
-					   sSuffix: me.sSuffix,
-					   'class': me.sClass,
 					   'json': me.oWizardHelper.ToJSON()
 					 }
 
