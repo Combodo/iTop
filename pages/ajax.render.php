@@ -72,85 +72,88 @@ try
 		$oWidget->SearchObjectsToAdd($oPage, $sRemoteClass, $aAlreadyLinked);	
 		break;
 		
+		////////////////////////////////////////////////////////////
+		
 		// ui.extkeywidget
 		case 'searchObjectsToSelect':
-		$sTargetClass = utils::ReadParam('sRemoteClass', '');
-		$sAttCode = utils::ReadParam('sAttCode', '');
+		$sTargetClass = utils::ReadParam('sTargetClass', '');
 		$iInputId = utils::ReadParam('iInputId', '');
-		$sSuffix = utils::ReadParam('sSuffix', '');
+		$sRemoteClass = utils::ReadParam('sRemoteClass', '');
+		$sFilter = utils::ReadParam('sFilter');
 		$sJson = utils::ReadParam('json', '');
 		if (!empty($sJson))
 		{
-		$oWizardHelper = WizardHelper::FromJSON($sJson);
-		$oObj = $oWizardHelper->GetTargetObject();
-			$currentValue = $oObj->Get($sAttCode);
+			$oWizardHelper = WizardHelper::FromJSON($sJson);
+			$oObj = $oWizardHelper->GetTargetObject();
 		}
 		else
 		{
 			// Search form: no current object
 			$oObj = null;
-			$currentValue = '';
 		}
-		$oAllowedValues = MetaModel::GetAllowedValuesAsObjectSet($sClass, $sAttCode, array('this' => $oObj));
-		$oWidget = new UIExtKeyWidget($sAttCode, $sClass, '', $oAllowedValues, $currentValue, $iInputId, false, $sSuffix, '');
-		$oWidget->SearchObjectsToSelect($oPage, $sTargetClass);	
+		$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId);
+		$oWidget->SearchObjectsToSelect($oPage, $sFilter, $sRemoteClass, $oObj);	
+		break;
+	
+		// ui.extkeywidget: autocomplete
+		case 'ac_extkey':
+		$sTargetClass = utils::ReadParam('sTargetClass', '');
+		$iInputId = utils::ReadParam('iInputId', '');
+		$sFilter = utils::ReadParam('sFilter');
+		$sJson = utils::ReadParam('json', '');
+		$sContains = utils::ReadParam('q', '');
+		if (!empty($sJson))
+		{
+			$oWizardHelper = WizardHelper::FromJSON($sJson);
+			$oObj = $oWizardHelper->GetTargetObject();
+		}
+		else
+		{
+			// Search form: no current object
+			$oObj = null;
+		}
+		$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId);
+		$oWidget->AutoComplete($oPage, $sFilter, $oObj, $sContains);
 		break;
 	
 		// ui.extkeywidget
 		case 'objectSearchForm':
-		$sTargetClass = utils::ReadParam('sRemoteClass', '');
-		$sAttCode = utils::ReadParam('sAttCode', '');
+		$sTargetClass = utils::ReadParam('sTargetClass', '');
 		$iInputId = utils::ReadParam('iInputId', '');
-		$sSuffix = utils::ReadParam('sSuffix', '');
-		$sValue = utils::ReadParam('sValue', '');
-		//$oWizardHelper = WizardHelper::FromJSON($sJson);
-		//$oObj = $oWizardHelper->GetTargetObject();
-		$oAllowedValues = MetaModel::GetAllowedValuesAsObjectSet($sClass, $sAttCode, array() /*array('this' => $oObj)*/);
-		$oWidget = new UIExtKeyWidget($sAttCode, $sClass, '', $oAllowedValues, $sValue, $iInputId, false, $sSuffix, '');
-		$oWidget->GetSearchDialog($oPage);
+		$sTitle = utils::ReadParam('sTitle');
+		$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId);
+		$oWidget->GetSearchDialog($oPage, $sTitle);
 		break;
 
 		// ui.extkeywidget
 		case 'objectCreationForm':
-		$sTargetClass = utils::ReadParam('sRemoteClass', '');
-		$sAttCode = utils::ReadParam('sAttCode', '');
+		$sTargetClass = utils::ReadParam('sTargetClass', '');
 		$iInputId = utils::ReadParam('iInputId', '');
-		$sSuffix = utils::ReadParam('sSuffix', '');
-		$sJson = utils::ReadParam('json', '');
-		$oWizardHelper = WizardHelper::FromJSON($sJson);
-		$oObj = $oWizardHelper->GetTargetObject();
-		$oAllowedValues = MetaModel::GetAllowedValuesAsObjectSet($sClass, $sAttCode, array('this' => $oObj));
-		$oWidget = new UIExtKeyWidget($sAttCode, $sClass, '', $oAllowedValues, $oObj->Get($sAttCode), $iInputId, false, $sSuffix, '');
+		$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId);
 		$oWidget->GetObjectCreationForm($oPage);
 		break;
 		
 		// ui.extkeywidget
 		case 'doCreateObject':
-		$sTargetClass = utils::ReadParam('sRemoteClass', '');
-		$sAttCode = utils::ReadParam('sAttCode', '');
+		$sTargetClass = utils::ReadParam('sTargetClass', '');
 		$iInputId = utils::ReadParam('iInputId', '');
-		$sSuffix = utils::ReadParam('sSuffix', '');
-		$sJson = utils::ReadParam('json', '');
-		$oWizardHelper = WizardHelper::FromJSON($sJson);
-		$oObj = $oWizardHelper->GetTargetObject();
-		$oAllowedValues = MetaModel::GetAllowedValuesAsObjectSet($sClass, $sAttCode, array('this' => $oObj));
-		// The iInputId of the autocomplete is the prefix for the form used to create the target object
-		$oWidget = new UIExtKeyWidget($sAttCode, $sClass, '', $oAllowedValues, null, $iInputId, false, $sSuffix, $oWizardHelper->GetFormPrefix());
+		$sFormPrefix = utils::ReadParam('sFormPrefix', '');
+		$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId);
 		$aResult = $oWidget->DoCreateObject($oPage);
-		echo json_encode($aResult);	
+		echo json_encode($aResult);
 		break;
 		
 		// ui.extkeywidget
 		case 'getObjectName':
 		$sTargetClass = utils::ReadParam('sTargetClass', '');
-		$sAttCode = utils::ReadParam('sAttCode', '');
 		$iInputId = utils::ReadParam('iInputId', '');
 		$iObjectId = utils::ReadParam('iObjectId', '');
-		$sSuffix = utils::ReadParam('sSuffix', '');
-		$oWidget = new UIExtKeyWidget($sAttCode, $sClass, '', null, '', $iInputId, $sSuffix, '');
+		$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId);
 		$sName = $oWidget->GetObjectName($iObjectId);
 		echo json_encode(array('name' => $sName));	
 		break;
+		
+		////////////////////////////////////////////////////
 		
 		// ui.linkswidget
 		case 'doAddObjects':
@@ -297,31 +300,7 @@ try
 		$oDisplayBlock->RenderContent($oPage);
 		$oPage->Add("<input type=\"button\" class=\"jqmClose\" value=\" Close \" />\n");
 		break;
-			
-		case 'autocomplete':
-		$key = utils::ReadParam('id', 0);
-		$sClass = utils::ReadParam('sclass', 'bizContact');
-		$sAttCode = utils::ReadParam('attCode', 'name');
-		$sOrg = utils::ReadParam('org_id', '');
-		$sName = utils::ReadParam('q', '');
-		$iMaxCount = utils::ReadParam('max', 30);
-		$aArgs = array();
-		if (!empty($key))
-		{
-			if ($oThis = MetaModel::GetObject($sClass, $key))
-			{
-				$aArgs['*this*'] = $oThis;
-				$aArgs['this'] = $oThis;
-			}
-		} 
-		$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, $aArgs, $sName);
-		$iCount = 0;
-		foreach($aAllowedValues as $key => $value)
-		{
-			$oPage->add($value."|".$key."\n");
-		}
-		break;
-		
+
 		case 'link':
 		$sClass = utils::ReadParam('sclass', 'logInfra');
 		$sAttCode = utils::ReadParam('attCode', 'name');
