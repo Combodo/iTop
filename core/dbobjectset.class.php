@@ -43,6 +43,7 @@ class DBObjectSet
 		$this->m_oFilter = $oFilter;
 		$this->m_aOrderBy = $aOrderBy;
 		$this->m_aArgs = $aArgs;
+		$this->m_aAttToLoad = null;
 		$this->m_aExtendedDataSpec = $aExtendedDataSpec;
 		$this->m_iLimitCount = $iLimitCount;
 		$this->m_iLimitStart = $iLimitStart;
@@ -76,6 +77,39 @@ class DBObjectSet
 			$sRet .= "</ul>\n";
 		}
 		return $sRet;
+	}
+
+	public function OptimizeColumnLoad($aAttToLoad)
+	{
+		if (is_null($aAttToLoad))
+		{
+			$this->m_aAttToLoad = null;
+		}
+		else
+		{
+			// Complete the attribute list with the attribute codes
+			$aAttToLoadWithAttDef = array();
+			foreach($aAttToLoad as $sClassAlias => $aAttList)
+			{
+				$aSelectedClasses = $this->m_oFilter->GetSelectedClasses();
+				$sClass = $aSelectedClasses[$sClassAlias];
+				foreach($aAttList as $sAttToLoad)
+				{
+					$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttToLoad);
+					$aAttToLoadWithAttDef[$sClassAlias][$sAttToLoad] = $oAttDef;
+					if ($oAttDef->IsExternalKey())
+					{
+						// Add the external key friendly name anytime
+						$oFriendlyNameAttDef = MetaModel::GetAttributeDef($sClass, $sAttToLoad.'_friendlyname');
+						$aAttToLoadWithAttDef[$sClassAlias][$sAttToLoad.'_friendlyname'] = $oFriendlyNameAttDef;
+					}
+				}
+				// Add the friendly name anytime
+				$oFriendlyNameAttDef = MetaModel::GetAttributeDef($sClass, 'friendlyname');
+				$aAttToLoadWithAttDef[$sClassAlias]['friendlyname'] = $oFriendlyNameAttDef;
+			}
+			$this->m_aAttToLoad = $aAttToLoadWithAttDef;
+		}
 	}
 
 	static public function FromObject($oObject)
@@ -270,11 +304,11 @@ class DBObjectSet
 
 		if ($this->m_iLimitCount > 0)
 		{
-			$sSQL = MetaModel::MakeSelectQuery($this->m_oFilter, $this->m_aOrderBy, $this->m_aArgs, $this->m_aExtendedDataSpec, $this->m_iLimitCount, $this->m_iLimitStart);
+			$sSQL = MetaModel::MakeSelectQuery($this->m_oFilter, $this->m_aOrderBy, $this->m_aArgs, $this->m_aAttToLoad, $this->m_aExtendedDataSpec, $this->m_iLimitCount, $this->m_iLimitStart);
 		}
 		else
 		{
-			$sSQL = MetaModel::MakeSelectQuery($this->m_oFilter, $this->m_aOrderBy, $this->m_aArgs, $this->m_aExtendedDataSpec);
+			$sSQL = MetaModel::MakeSelectQuery($this->m_oFilter, $this->m_aOrderBy, $this->m_aArgs, $this->m_aAttToLoad, $this->m_aExtendedDataSpec);
 		}
 		$resQuery = CMDBSource::Query($sSQL);
 		if (!$resQuery) return;
@@ -291,7 +325,7 @@ class DBObjectSet
 				}
 				else
 				{
-					$oObject = MetaModel::GetObjectByRow($sClass, $aRow, $sClassAlias, $this->m_aExtendedDataSpec);
+					$oObject = MetaModel::GetObjectByRow($sClass, $aRow, $sClassAlias, $this->m_aAttToLoad, $this->m_aExtendedDataSpec);
 				}
 				$aObjects[$sClassAlias] = $oObject;
 			}
@@ -310,7 +344,7 @@ class DBObjectSet
 		{
 			if (is_null($this->m_iCount))
 			{
-				$sSQL = MetaModel::MakeSelectQuery($this->m_oFilter, $this->m_aOrderBy, $this->m_aArgs, null, 0, 0, true);
+				$sSQL = MetaModel::MakeSelectQuery($this->m_oFilter, $this->m_aOrderBy, $this->m_aArgs, null, null, 0, 0, true);
 				$resQuery = CMDBSource::Query($sSQL);
 				if (!$resQuery) return 0;
 		

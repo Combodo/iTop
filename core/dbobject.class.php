@@ -62,15 +62,15 @@ abstract class DBObject
 	protected $m_oMasterReplicaSet = null; // Set of SynchroReplica related to this object
 
 	// Use the MetaModel::NewObject to build an object (do we have to force it?)
-	public function __construct($aRow = null, $sClassAlias = '', $aExtendedDataSpec = null)
+	public function __construct($aRow = null, $sClassAlias = '', $aAttToLoad = null, $aExtendedDataSpec = null)
 	{
 		if (!empty($aRow))
 		{
-			$this->FromRow($aRow, $sClassAlias, $aExtendedDataSpec);
+			$this->FromRow($aRow, $sClassAlias, $aAttToLoad, $aExtendedDataSpec);
 			$this->m_bFullyLoaded = $this->IsFullyLoaded();
 			return;
 		}
-		// Creation of brand new object
+		// Creation of a brand new object
 		//
 
 		$this->m_iKey = self::GetNextTempId(get_class($this));
@@ -82,8 +82,8 @@ abstract class DBObject
 			$this->m_aOrigValues[$sAttCode] = null;
 			if ($oAttDef->IsExternalField())
 			{
-				// This field has to be read from the DB 
-				$this->m_aLoadedAtt[$sAttCode] = false;
+				// This field has to be read from the DB
+				// Leave the flag unset (optimization) 
 			}
 			else
 			{
@@ -194,7 +194,7 @@ abstract class DBObject
 		$this->m_bFullyLoaded = true;
 	}
 
-	protected function FromRow($aRow, $sClassAlias = '', $aExtendedDataSpec = null)
+	protected function FromRow($aRow, $sClassAlias = '', $aAttToLoad = null, $aExtendedDataSpec = null)
 	{
 		if (strlen($sClassAlias) == 0)
 		{
@@ -235,11 +235,17 @@ abstract class DBObject
 		// Build the object from an array of "attCode"=>"value")
 		//
 		$bFullyLoaded = true; // ... set to false if any attribute is not found
-		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode=>$oAttDef)
+		if (is_null($aAttToLoad) || !array_key_exists($sClassAlias, $aAttToLoad))
 		{
-			// Say something, whatever the type of attribute
-			$this->m_aLoadedAtt[$sAttCode] = false;
-
+			$aAttList = MetaModel::ListAttributeDefs(get_class($this));
+		}
+		else
+		{
+			$aAttList = $aAttToLoad[$sClassAlias];
+		}
+		
+		foreach($aAttList as $sAttCode=>$oAttDef)
+		{
 			// Skip links (could not be loaded by the mean of this query)
 			if ($oAttDef->IsLinkSet()) continue;
 
@@ -366,7 +372,7 @@ abstract class DBObject
 		{
 			throw new CoreException("Unknown attribute code '$sAttCode' for the class ".get_class($this));
 		}
-		if ($this->m_bIsInDB && !$this->m_aLoadedAtt[$sAttCode] && !$this->m_bDirty)
+		if ($this->m_bIsInDB && !isset($this->m_aLoadedAtt[$sAttCode]) && !$this->m_bDirty)
 		{
 			// #@# non-scalar attributes.... handle that differently
 			$this->Reload();
@@ -616,23 +622,7 @@ abstract class DBObject
 
 	public function GetName()
 	{
-		$aNameSpec = MetaModel::GetNameSpec(get_class($this));
-		$sFormat = $aNameSpec[0];
-		$aAttributes = $aNameSpec[1];                                                     
-
-		$aValues = array();
-      foreach ($aAttributes as $sAttCode)
-      {
-      	if (empty($sAttCode))
-      	{
-      		$aValues[] = $this->m_iKey;
-			}
-			else
-			{
-				$aValues[] = $this->Get($sAttCode);
-			}
-		}
-		return vsprintf($sFormat, $aValues);
+		return $this->Get('friendlyname');
 	}
 
 	public function GetState()

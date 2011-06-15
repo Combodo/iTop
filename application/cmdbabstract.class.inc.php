@@ -562,6 +562,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		$sZListName = isset($aExtraParams['zlist']) ? ($aExtraParams['zlist']) : 'list';
 		$aList = self::FlattenZList(MetaModel::GetZListItems($sClassName, $sZListName));
 		$aList = array_merge($aList, $aExtraFields);
+
 		// Filter the list to removed linked set since we are not able to display them here
 		foreach($aList as $index => $sAttCode)
 		{
@@ -572,6 +573,11 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 				unset($aList[$index]);
 			}
 		}
+
+		// Load only the requested columns
+		$sClassAlias = $oSet->GetFilter()->GetClassAlias();
+		$oSet->OptimizeColumnLoad(array($sClassAlias => $aList));
+
 		if (!empty($sLinkageAttribute))
 		{
 			// The set to display is in fact a set of links between the object specified in the $sLinkageAttribute
@@ -802,6 +808,17 @@ EOF
 				$aAttribs[$sAttCode.'_'.$sAlias] = array('label' => MetaModel::GetLabel($sClassName, $sAttCode), 'description' => MetaModel::GetDescription($sClassName, $sAttCode));
 			}
 		}
+		// Load only the requested columns
+		$aAttToLoad = array(); // attributes to load
+		foreach($aAuthorizedClasses as $sAlias => $sClassName)
+		{
+			foreach($aList[$sClassName] as $sAttCode)
+			{
+				$aAttToLoad[$sAlias][] = $sAttCode;
+			}
+		}
+		$oSet->OptimizeColumnLoad($aAttToLoad);
+
 		$aValues = array();
 		$oSet->Seek(0);
 		$bDisplayLimit = isset($aExtraParams['display_limit']) ? $aExtraParams['display_limit'] : true;

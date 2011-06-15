@@ -1778,7 +1778,7 @@ abstract class MetaModel
 		return $aScalarArgs;
 	}
 
-	public static function MakeSelectQuery(DBObjectSearch $oFilter, $aOrderBy = array(), $aArgs = array(), $aExtendedDataSpec = null, $iLimitCount = 0, $iLimitStart = 0, $bGetCount = false)
+	public static function MakeSelectQuery(DBObjectSearch $oFilter, $aOrderBy = array(), $aArgs = array(), $aAttToLoad = null, $aExtendedDataSpec = null, $iLimitCount = 0, $iLimitStart = 0, $bGetCount = false)
 	{
 		// Hide objects that are not visible to the current user
 		//
@@ -1805,7 +1805,16 @@ abstract class MetaModel
 		{
 			// Need to identify the query
 			$sOqlQuery = $oFilter->ToOql();
-			$sOqlId = md5($sOqlQuery);
+
+			$sRawId = $sOqlQuery;
+			if (!is_null($aAttToLoad))
+			{
+				foreach($aAttToLoad as $sAlias => $aAttributes)
+				{
+					$sRawId = $sOqlQuery.'|'.implode(',', array_keys($aAttributes));
+				}
+			}
+			$sOqlId = md5($sRawId);
 		}
 		else
 		{
@@ -1851,6 +1860,43 @@ abstract class MetaModel
 			}
 		}
 
+		// Check the order by specification, and prefix with the class alias
+		// and make sure that the ordering columns are going to be selected
+		//
+		$aOrderSpec = array();
+		foreach ($aOrderBy as $sFieldAlias => $bAscending)
+		{
+			MyHelpers::CheckValueInArray('field name in ORDER BY spec', $sFieldAlias, self::GetAttributesList($oFilter->GetFirstJoinedClass()));
+			if (!is_bool($bAscending))
+			{
+				throw new CoreException("Wrong direction in ORDER BY spec, found '$bAscending' and expecting a boolean value");
+			}
+			$sFirstClassAlias = $oFilter->GetFirstJoinedClassAlias();
+			$aOrderSpec[$sFirstClassAlias.$sFieldAlias] = $bAscending;
+
+			// Make sure that the columns used for sorting are present in the loaded columns
+			if (!is_null($aAttToLoad) && !isset($aAttToLoad[$sFirstClassAlias][$sFieldAlias]))
+			{
+				$aAttToLoad[$sFirstClassAlias][$sFieldAlias] = MetaModel::GetAttributeDef($oFilter->GetFirstJoinedClass(), $sFieldAlias);
+			}			
+		}
+		// By default, force the name attribute to be the ordering key
+		//
+		if (empty($aOrderSpec))
+		{
+			foreach ($oFilter->GetSelectedClasses() as $sSelectedAlias => $sSelectedClass)
+			{
+				// By default, simply order on the "friendlyname" attribute, ascending
+				$aOrderSpec[$sSelectedAlias."friendlyname"] = true;
+
+				// Make sure that the columns used for sorting are present in the loaded columns
+				if (!is_null($aAttToLoad) && !isset($aAttToLoad[$sSelectedAlias]["friendlyname"]))
+				{
+					$aAttToLoad[$sSelectedAlias]["friendlyname"] = MetaModel::GetAttributeDef($sSelectedClass, "friendlyname");
+				}			
+			}
+		}
+
 		if (!isset($oSelect))
 		{
 			$aClassAliases = array();
@@ -1858,7 +1904,7 @@ abstract class MetaModel
 			$oQBExpr = new QueryBuilderExpressions(array(), $oFilter->GetCriteria());
 
 			$oKPI = new ExecutionKPI();
-			$oSelect = self::MakeQuery($oFilter->GetSelectedClasses(), $oQBExpr, $aClassAliases, $aTableAliases, $oFilter, array(), true /* main query */);
+			$oSelect = self::MakeQuery($oFilter->GetSelectedClasses(), $oQBExpr, $aClassAliases, $aTableAliases, $oFilter, $aAttToLoad, array(), true /* main query */);
 			$oSelect->SetSourceOQL($sOqlQuery);
 			$oKPI->ComputeStats('MakeQuery (select)', $sOqlQuery);
 
@@ -1872,29 +1918,6 @@ abstract class MetaModel
 				}
 
 				self::$m_aQueryStructCache[$sOqlId] = clone $oSelect;
-			}
-		}
-
-		// Check the order by specification, and prefix with the class alias
-		//
-		$aOrderSpec = array();
-		foreach ($aOrderBy as $sFieldAlias => $bAscending)
-		{
-			MyHelpers::CheckValueInArray('field name in ORDER BY spec', $sFieldAlias, self::GetAttributesList($oFilter->GetFirstJoinedClass()));
-			if (!is_bool($bAscending))
-			{
-				throw new CoreException("Wrong direction in ORDER BY spec, found '$bAscending' and expecting a boolean value");
-			}
-			$aOrderSpec[$oFilter->GetFirstJoinedClassAlias().$sFieldAlias] = $bAscending;
-		}
-		// By default, force the name attribute to be the ordering key
-		//
-		if (empty($aOrderSpec))
-		{
-			foreach ($oFilter->GetSelectedClasses() as $sSelectedAlias => $sSelectedClass)
-			{
-				// By default, simply order on the "friendlyname" attribute, ascending
-				$aOrderSpec[$sSelectedAlias."friendlyname"] = true;
 			}
 		}
 
@@ -1994,7 +2017,7 @@ abstract class MetaModel
 		$aClassAliases = array();
 		$aTableAliases = array();
 		$oQBExpr = new QueryBuilderExpressions(array(), $oFilter->GetCriteria());
-		$oSelect = self::MakeQuery($oFilter->GetSelectedClasses(), $oQBExpr, $aClassAliases, $aTableAliases, $oFilter, array(), true /* main query */);
+		$oSelect = self::MakeQuery($oFilter->GetSelectedClasses(), $oQBExpr, $aClassAliases, $aTableAliases, $oFilter, null, array(), true /* main query */);
 		$aScalarArgs = array_merge(self::PrepareQueryArguments($aArgs), $oFilter->GetInternalParams());
 		return $oSelect->RenderDelete($aScalarArgs);
 	}
@@ -2005,12 +2028,12 @@ abstract class MetaModel
 		$aClassAliases = array();
 		$aTableAliases = array();
 		$oQBExpr = new QueryBuilderExpressions(array(), $oFilter->GetCriteria());
-		$oSelect = self::MakeQuery($oFilter->GetSelectedClasses(), $oQBExpr, $aClassAliases, $aTableAliases, $oFilter, $aValues, true /* main query */);
+		$oSelect = self::MakeQuery($oFilter->GetSelectedClasses(), $oQBExpr, $aClassAliases, $aTableAliases, $oFilter, null, $aValues, true /* main query */);
 		$aScalarArgs = array_merge(self::PrepareQueryArguments($aArgs), $oFilter->GetInternalParams());
 		return $oSelect->RenderUpdate($aScalarArgs);
 	}
 
-	private static function MakeQuery($aSelectedClasses, &$oQBExpr, &$aClassAliases, &$aTableAliases, DBObjectSearch $oFilter, $aValues = array(), $bIsMainQuery = false)
+	private static function MakeQuery($aSelectedClasses, &$oQBExpr, &$aClassAliases, &$aTableAliases, DBObjectSearch $oFilter, $aAttToLoad = null, $aValues = array(), $bIsMainQuery = false)
 	{
 		// Note: query class might be different than the class of the filter
 		// -> this occurs when we are linking our class to an external class (referenced by, or pointing to)
@@ -2033,7 +2056,15 @@ abstract class MetaModel
 			// default to the whole list of attributes + the very std id/finalclass
 			$oQBExpr->AddSelect($sClassAlias.'id', new FieldExpression('id', $sClassAlias));
 
-			foreach (self::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+			if (is_null($aAttToLoad) || !array_key_exists($sClassAlias, $aAttToLoad))
+			{
+				$aAttList = self::ListAttributeDefs($sClass);
+			}
+			else
+			{
+				$aAttList = $aAttToLoad[$sClassAlias];
+			}
+			foreach ($aAttList as $sAttCode => $oAttDef)
 			{
 				if (!$oAttDef->IsScalar()) continue;
 				
@@ -2185,7 +2216,7 @@ abstract class MetaModel
 				$sForeignClassAlias = $oForeignFilter->GetFirstJoinedClassAlias();
 				$oQBExpr->PushJoinField(new FieldExpression($sForeignKeyAttCode, $sForeignClassAlias));
 
-				$oSelectForeign = self::MakeQuery($aSelectedClasses, $oQBExpr, $aClassAliases, $aTableAliases, $oForeignFilter);
+				$oSelectForeign = self::MakeQuery($aSelectedClasses, $oQBExpr, $aClassAliases, $aTableAliases, $oForeignFilter, $aAttToLoad);
 
 				$oJoinExpr = $oQBExpr->PopJoinField();
 				$sForeignKeyTable = $oJoinExpr->GetParent();
@@ -3888,7 +3919,7 @@ abstract class MetaModel
 		return $aRow;
 	}
 
-	public static function GetObjectByRow($sClass, $aRow, $sClassAlias = '', $aExtendedDataSpec = null)
+	public static function GetObjectByRow($sClass, $aRow, $sClassAlias = '', $aAttToLoad = null, $aExtendedDataSpec = null)
 	{
 		self::_check_subclass($sClass);	
 
@@ -3917,7 +3948,7 @@ abstract class MetaModel
 			// do the job for the real target class
 			$sClass = $aRow[$sClassAlias."finalclass"];
 		}
-		return new $sClass($aRow, $sClassAlias, $aExtendedDataSpec);
+		return new $sClass($aRow, $sClassAlias, $aAttToLoad, $aExtendedDataSpec);
 	}
 
 	public static function GetObject($sClass, $iKey, $bMustBeFound = true, $bAllowAllData = false)
