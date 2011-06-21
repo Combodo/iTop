@@ -35,7 +35,7 @@ class DisplayTemplate
 	
 	public function __construct($sTemplate)
 	{
-		$this->m_aTags = array('itopblock', 'itopcheck', 'itoptabs', 'itoptab', 'itoptoggle', 'itopstring');
+		$this->m_aTags = array('itopblock', 'itopcheck', 'itoptabs', 'itoptab', 'itoptoggle', 'itopstring', 'sqlblock');
 		$this->m_sTemplate = $sTemplate;
 	}
 	
@@ -203,6 +203,12 @@ class DisplayTemplate
 				$oPage->add(Dict::S($sContent));
 			break;
 			
+			case 'sqlblock':
+				$oBlock = SqlBlock::FromTemplate($sContent);
+				$oBlock->RenderContent($oPage);
+			break;
+			
+
 			case 'itopblock': // No longer used, handled by DisplayBlock::FromTemplate see above
 				$oPage->add("<!-- Application Error: should be handled by DisplayBlock::FromTemplate -->");
 			break;

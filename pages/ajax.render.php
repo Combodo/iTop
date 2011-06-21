@@ -207,6 +207,7 @@ try
 		$oPage->add_script("oWizardHelper{$sFormPrefix}.m_oData=".$oWizardHelper->ToJSON().";\noWizardHelper{$sFormPrefix}.UpdateFields();\n");
 		break;
 			
+		// DisplayBlock
 		case 'ajax':
 		if ($sFilter != "")
 		{
