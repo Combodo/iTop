@@ -271,7 +271,7 @@ class DisplayBlock
 				 $("#'.$sId.'").append(data);
 				 $("#'.$sId.'").removeClass("loading");
 				 // Check each "listResults" table for a checkbox in the first column and make the first column sortable only if it does not contain a checkbox in the header
-				 $("#'.$sId.'".listResults").each( function()
+				 $("#'.$sId.'.listResults").each( function()
 					{
 						var table = $(this);
 						var id = $(this).parent();
