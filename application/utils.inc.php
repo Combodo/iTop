@@ -394,7 +394,7 @@ class utils
      * @param $bForceHTTPS bool True to force HTTPS, false otherwise
      * @return string The absolute URL to the server's root, without the first slash
      */                   
-	static public function GetAbsoluteUrlAppRoot($sCurrentRelativePath = '', $bForceHTTPS = false)
+	static public function GetAbsoluteUrlAppRoot($sCurrentRelativePathUNUSED = '', $bForceHTTPS = false)
 	{
 		$sAbsoluteUrl = self::GetAbsoluteUrl(false, $bForceHTTPS); // False => Don't get the query string
 		$sCurrentScript = realpath($_SERVER['SCRIPT_FILENAME']);
