@@ -398,7 +398,9 @@ class utils
 	{
 		$sAbsoluteUrl = self::GetAbsoluteUrl(false, $bForceHTTPS); // False => Don't get the query string
 		$sCurrentScript = realpath($_SERVER['SCRIPT_FILENAME']);
-		$sCurrentRelativePath = str_replace(APPROOT, '', $sCurrentScript);
+		$sCurrentScript = str_replace('\\', '/', $sCurrentScript); // canonical path
+		$sAppRoot = str_replace('\\', '/', APPROOT); // canonical path
+		$sCurrentRelativePath = str_replace($sAppRoot, '', $sCurrentScript);
 	
 		$sAppRootPos = strpos($sAbsoluteUrl, $sCurrentRelativePath);
 		if ($sAppRootPos !== false)
@@ -407,7 +409,7 @@ class utils
 		}
 		else
 		{
-			throw new Exception("Failed to determine application root path $sAbsoluteUrl ($sCurrentRelativePath)");
+			throw new Exception("Failed to determine application root path $sAbsoluteUrl ($sCurrentRelativePath) APPROOT:'$sAppRoot'");
 		}
 		return $sAbsoluteUrl;
 	}
