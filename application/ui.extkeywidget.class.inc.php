@@ -174,10 +174,9 @@ EOF
 			}
 			$iMinChars = isset($aArgs['iMinChars']) ? $aArgs['iMinChars'] : 3; //@@@ $this->oAttDef->GetMinAutoCompleteChars();
 			$iFieldSize = isset($aArgs['iFieldSize']) ? $aArgs['iFieldSize'] : 30; //@@@ $this->oAttDef->GetMaxSize();
-			$iDropDownSize = 10;
 	
 			// the input for the auto-complete
-			$sHTMLValue = "<input count=\"".$oAllowedValues->Count()."\" type=\"text\" id=\"label_$this->iId\" size=\"$iFieldSize\" maxlength=\"$iDropDownSize\" value=\"$sDisplayValue\"/>&nbsp;";
+			$sHTMLValue = "<input count=\"".$oAllowedValues->Count()."\" type=\"text\" id=\"label_$this->iId\" size=\"$iFieldSize\" value=\"$sDisplayValue\"/>&nbsp;";
 			$sHTMLValue .= "<a class=\"no-arrow\" href=\"javascript:oACWidget_{$this->iId}.Search();\"><img id=\"mini_search_{$this->iId}\" style=\"border:0;vertical-align:middle;\" src=\"../images/mini_search.gif\" /></a>&nbsp;";
 	
 			// another hidden input to store & pass the object's Id
@@ -294,7 +293,7 @@ EOF
 		$aValues = $oValuesSet->GetValues(array('this' => $oObj), $sContains);
 		foreach($aValues as $sKey => $sFriendlyName)
 		{
-			$oP->add($sFriendlyName."|".$sKey."\n");
+			$oP->add(trim($sFriendlyName)."|".$sKey."\n");
 		}
 	}
 	
