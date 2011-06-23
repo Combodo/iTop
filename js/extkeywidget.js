@@ -78,6 +78,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 				me.UpdateSizes();
 				me.UpdateButtons();
 				me.ajax_request = null;
+				me.DoSearchObjects();
 			},
 			'html'
 		);
@@ -110,7 +111,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 	this.UpdateButtons = function()
 	{
 		var okBtn = $('#btn_ok_'+me.id);
-		if ($('#fr_'+me.id+' input[name=selectObject]:checked').length > 0)
+		if ($('#count_'+me.id).val() > 0)
 		{
 			okBtn.attr('disabled', '');
 		}
@@ -167,10 +168,12 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			{
 				$(sSearchAreaId).html(data);
 				$(sSearchAreaId+' .listResults').tableHover();
-				$(sSearchAreaId+' .listResults').tablesorter( { headers: {0: {sorter: false}}, widgets: ['myZebra', 'truncatedList']} ); // sortable and zebra tables
 				$('#fr_'+me.id+' input:radio').click(function() { me.UpdateButtons(); });
 				me.UpdateButtons();
 				me.ajax_request = null;
+				$('#count_'+me.id).change(function(){
+					me.UpdateButtons();
+				});
 			},
 			'html'
 		);

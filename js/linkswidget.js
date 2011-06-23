@@ -59,6 +59,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates)
 	{
 		$('#dlg_'+me.id).dialog('open');
 		this.UpdateSizes(null, null);
+		this.SearchObjectsToAdd();
 	}
 	
 	this.SearchObjectsToAdd = function()
@@ -101,7 +102,10 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates)
 			{
 				$(sSearchAreaId).html(data);
 				$(sSearchAreaId+' .listResults').tableHover();
-				$(sSearchAreaId+' .listResults').tablesorter( { headers: {0: {sorter: false}}, widgets: ['myZebra', 'truncatedList']} ); // sortable and zebra tables
+				$('#count_'+me.id).change(function(){
+					var c = this.value;
+					me.UpdateButtons(c);
+				});
 				$(sSearchAreaId).unblock();		
 			},
 			'html'
@@ -110,6 +114,19 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates)
 		return false; // Don't submit the form, stay in the current page !
 	}
 
+	this.UpdateButtons = function(iCount)
+	{
+		var okBtn = $('#btn_ok_'+me.id);
+		if (iCount > 0)
+		{
+			okBtn.attr('disabled', '');
+		}
+		else
+		{
+			okBtn.attr('disabled', 'disabled');
+		}
+	}
+	
 	this.DoAddObjects = function()
 	{
 		var theMap = { sAttCode: me.sAttCode,
@@ -120,30 +137,59 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates)
 				 	 }
 		
 		// Gather the parameters from the search form
-		$('#SearchResultsToAdd_'+me.id+' :checked').each(
-			function(i)
-			{
-				if ( (this.name != '') && ((this.type != 'checkbox') || (this.checked)) ) 
-				{
-					//console.log(this.type);
-					arrayExpr = /\[\]$/;
-					if (arrayExpr.test(this.name))
-					{
-						// Array
-						if (theMap[this.name] == undefined)
-						{
-							theMap[this.name] = new Array();
-						}
-						theMap[this.name].push(this.value);
-					}
-					else
+		var context = $('#SearchResultsToAdd_'+me.id);
+		var selectionMode = $(':input[name=selectionMode]', context);
+		if (selectionMode.length > 0)
+		{
+			// Paginated table retrieve the mode and the exceptions
+			var sMode = selectionMode.val();
+			theMap['selectionMode'] = sMode;
+			$('#fs_SearchFormToAdd_'+me.id+' :input').each(
+					function(i)
 					{
 						theMap[this.name] = this.value;
 					}
+				);
+			theMap['sRemoteClass'] = theMap['class'];  // swap 'class' (defined in the form) and 'remoteClass'
+			theMap['class'] = me.sClass;
+			$(' :input[name^=storedSelection]', context).each(function() {
+				if (theMap[this.name] == undefined)
+				{
+					theMap[this.name] = new Array();
+				}
+				theMap[this.name].push(this.value);
+				$(this).remove(); // Remove the selection for the next time the dialog re-opens
+			});
+		}
+//		else
+//		{
+			// Normal table, retrieve all the checked check-boxes
+			$(':checked[name^=selectObject]', context).each(
+				function(i)
+				{
+					if ( (this.name != '') && ((this.type != 'checkbox') || (this.checked)) ) 
+					{
+						//console.log(this.type);
+						arrayExpr = /\[\]$/;
+						if (arrayExpr.test(this.name))
+						{
+							// Array
+							if (theMap[this.name] == undefined)
+							{
+								theMap[this.name] = new Array();
+							}
+							theMap[this.name].push(this.value);
+						}
+						else
+						{
+							theMap[this.name] = this.value;
+						}						
+					}
 					$(this).parents('tr:first').remove(); // Remove the whole line, so that, next time the dialog gets displayed it's no longer there
 				}
-			}
-		);
+			);
+//		}
+		
 		theMap['operation'] = 'doAddObjects';
 		$('#busy_'+me.iInputId).html('&nbsp;<img src="../images/indicator.gif"/>');
 		// Run the query and display the results

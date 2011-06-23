@@ -39,12 +39,12 @@ function ReloadTruncatedList(divId, sSerializedFilter, sExtraParams)
 						if (checkbox)
 						{
 							// There is a checkbox in the first column, don't make it sortable
-							table.tablesorter( { headers: { 0: {sorter: false}}, widgets: ['myZebra', 'truncatedList']} ); // sortable and zebra tables
+							table.tablesorter( { headers: { 0: {sorter: false}}, widgets: ['myZebra', 'truncatedList']} ).tablesorterPager({container: $("#pager")}); // sortable and zebra tables
 						}
 						else
 						{
 							// There is NO checkbox in the first column, all columns are considered sortable
-							table.tablesorter( { widgets: ['myZebra', 'truncatedList']} ); // sortable and zebra tables
+							table.tablesorter( { widgets: ['myZebra', 'truncatedList']} ).tablesorterPager({container: $("#pager"), totalRows:97, filter: sSerializedFilter, extra_params: sExtraParams }); // sortable and zebra tables
 						}
 					});
 				 $('#'+divId).unblock();
@@ -210,9 +210,14 @@ function CheckAll(sSelector, bValue)
 {
 	var value = bValue;
 	$(sSelector).each( function() {
-		this.checked = value;
+		if (this.checked != value)
+		{	
+			this.checked = value;
+			$(this).trigger('change');
+		}
 	});
 }
+
 
 /**
  * Toggle (enabled/disabled) the specified field of a form
