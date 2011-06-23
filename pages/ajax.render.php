@@ -50,6 +50,114 @@ try
 
 	switch($operation)
 	{
+		case 'pagination':
+		$sExtraParams = stripslashes(utils::ReadParam('extra_params', ''));
+		$aExtraParams = array();
+		if (!empty($sExtraParams))
+		{
+			$aExtraParams = json_decode(str_replace("'", '"', $sExtraParams), true /* associative array */);
+		}
+		if ($sEncoding == 'oql')
+		{
+			$oFilter = CMDBSearchFilter::FromOQL($sFilter);
+		}
+		else
+		{
+			$oFilter = CMDBSearchFilter::unserialize($sFilter);
+		}
+		$iStart = utils::ReadParam('start',0);
+		$iEnd = utils::ReadParam('end',1);
+		$iSortCol = utils::ReadParam('sort_col',null);
+		$sSelectMode = utils::ReadParam('select_mode', '');
+		$bDisplayKey = utils::ReadParam('display_key', 'true') == 'true';
+		$aList = utils::ReadParam('display_list', array());
+
+		$sClassName = $oFilter->GetClass();
+		//$aList = cmdbAbstractObject::FlattenZList(MetaModel::GetZListItems($sClassName, 'list'));
+
+		// Filter the list to removed linked set since we are not able to display them here
+		$aOrderBy = array();
+		$aConfig = array();
+		$iSortIndex = 0;
+		if ($sSelectMode != '')
+		{
+			$aConfig['form::select'] = array();
+			$iSortIndex++; // Take into account the extra (non-sortable) column for the checkbox/radio button.
+		}
+		if ($bDisplayKey)
+		{
+			$aConfig['key'] = array();
+			if ($iSortIndex == $iSortCol)
+			{
+				$aOrderBy['friendlyname'] = (utils::ReadParam('sort_order', 'asc') == 'asc');
+			}
+			$iSortIndex++;
+		}
+		foreach($aList as $sAttCode)
+		{
+			$aConfig[$sAttCode] = array();
+		}
+
+		foreach($aList as $index => $sAttCode)
+		{
+			$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
+			if ($oAttDef instanceof AttributeLinkedSet)
+			{
+				// Removed from the display list
+				unset($aList[$index]);
+			}
+			if ($iSortCol == $iSortIndex)
+			{
+				if ($oAttDef->IsExternalKey())
+				{
+					$sSortCol = $sAttCode.'_friendlyname';
+				}
+				else
+				{
+					$sSortCol = $sAttCode;
+				}
+				$aOrderBy[$sSortCol] = (utils::ReadParam('sort_order', 'asc') == 'asc');
+			}
+			$iSortIndex++;
+		}
+
+		// Load only the requested columns
+		$oSet = new DBObjectSet($oFilter, $aOrderBy, $aExtraParams, null, $iEnd-$iStart, $iStart);
+		$sClassAlias = $oSet->GetFilter()->GetClassAlias();
+		$oSet->OptimizeColumnLoad(array($sClassAlias => $aList));
+		
+		while($oObj = $oSet->Fetch())
+		{
+			$aRow = array();
+			$sDisabled = '';
+			switch ($sSelectMode)
+			{
+				case 'single':
+				$aRow['form::select'] = "<input type=\"radio\" $sDisabled name=\"selectObject\" value=\"".$oObj->GetKey()."\"></input>";
+				break;
+				
+				case 'multiple':
+				$aRow['form::select'] = "<input type=\"checkBox\" $sDisabled name=\"selectObject[]\" value=\"".$oObj->GetKey()."\"></input>";
+				break;
+			}
+			if ($bDisplayKey)
+			{
+				$aRow['key'] = $oObj->GetHyperLink();
+			}
+			$sHilightClass = $oObj->GetHilightClass();
+			if ($sHilightClass != '')
+			{
+				$aRow['@class'] = $sHilightClass;	
+			}
+			foreach($aList as $sAttCode)
+			{
+				$aRow[$sAttCode] = $oObj->GetAsHTML($sAttCode);
+			}
+			$sRow = $oPage->GetTableRow($aRow, $aConfig);
+			$oPage->add($sRow);
+		}
+		break;
+		
 		case 'addObjects':
 		require_once(APPROOT.'/application/uilinkswizard.class.inc.php');
 		$sClass = utils::ReadParam('class', '', 'get');
@@ -160,10 +268,10 @@ try
 		$sAttCode = utils::ReadParam('sAttCode', '');
 		$iInputId = utils::ReadParam('iInputId', '');
 		$sSuffix = utils::ReadParam('sSuffix', '');
+		$sRemoteClass = utils::ReadParam('sRemoteClass', '');
 		$bDuplicates = (utils::ReadParam('bDuplicates', 'false') == 'false') ? false : true;
-		$aLinkedObjectIds = utils::ReadParam('selectObject', array());
 		$oWidget = new UILinksWidget($sClass, $sAttCode, $iInputId, $sSuffix, $bDuplicates);
-		$oWidget->DoAddObjects($oPage, $aLinkedObjectIds);	
+		$oWidget->DoAddObjects($oPage, $sRemoteClass);	
 		break;
 			
 		case 'wizard_helper_preview':
@@ -226,6 +334,8 @@ try
 				$oFilter = CMDBSearchFilter::unserialize($sFilter);
 			}
 			$oDisplayBlock = new DisplayBlock($oFilter, $sStyle, false);
+			$aExtraParams['display_limit'] = true;
+			$aExtraParams['truncated'] = true;
 			$oDisplayBlock->RenderContent($oPage, $aExtraParams);
 		}
 		else

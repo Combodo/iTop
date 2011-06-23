@@ -282,8 +282,16 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 			else
 			{
 				$oP->p('<h1>'.Dict::Format('UI:Delect:Confirm_Count_ObjectsOf_Class', count($aObjects), MetaModel::GetName($sClass)).'</h1>');
-				$oSet = CMDBobjectSet::FromArray($sClass, $aObjects);
+				foreach($aObjects as $oObj)
+				{
+					$aKeys[] = $oObj->GetKey();
+				}
+				$oFilter = new DBObjectSearch($sClass);
+				$oFilter->AddCondition('id', $aKeys, 'IN');
+				$oSet = new CMDBobjectSet($oFilter);
+				$oP->add('<div id="0">');
 				CMDBAbstractObject::DisplaySet($oP, $oSet, array('display_limit' => false, 'menu' => false));
+				$oP->add("</div>\n");
 				$oP->add("<form method=\"post\">\n");
 				$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::ReadParam('transaction_id')."\">\n");
 				$oP->add("<input type=\"hidden\" name=\"operation\" value=\"bulk_delete_confirmed\">\n");
@@ -715,7 +723,8 @@ try
 		case 'form_for_modify_all': // Form to modify multiple objects (bulk modify)
 		$sFilter = utils::ReadParam('filter', '');
 		$sClass = utils::ReadParam('class', '');
-		$aSelectedObj = utils::ReadParam('selectObject', array());
+		$oFullSetFilter = DBObjectSearch::unserialize($sFilter);
+		$aSelectedObj = ReadMultipleSelection($oFullSetFilter);
 		if (count($aSelectedObj) > 0)
 		{
 			$iAllowedCount = count($aSelectedObj);
@@ -1181,6 +1190,7 @@ EOF
 			$oP->add("<form method=\"post\">\n");
 			$oP->add("<input type=\"hidden\" name=\"operation\" value=\"bulk_delete\">\n");
 			$oP->add("<input type=\"hidden\" name=\"class\" value=\"".$oFilter->GetClass()."\">\n");
+			$oP->add("<input type=\"hidden\" name=\"filter\" value=\"".$oFilter->Serialize()."\">\n");
 			$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
 			$oBlock->Display($oP, 1, array('selection_type' => 'multiple', 'selection_mode' => true, 'display_limit' => false, 'menu' => false));
 			$oP->add("<input type=\"button\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"window.history.back()\">&nbsp;&nbsp;<input type=\"submit\" value=\"".Dict::S('UI:Button:Next')."\">\n");
@@ -1202,7 +1212,9 @@ EOF
 		case 'bulk_delete': // Actual bulk deletion (if confirmed)
 			$sClass = utils::ReadPostedParam('class', '');
 			$sClassLabel = MetaModel::GetName($sClass);
-			$aSelectObject = utils::ReadPostedParam('selectObject', '');
+			$sFilter = utils::ReadPostedParam('filter', '');
+			$oFullSetFilter = DBObjectSearch::unserialize($sFilter);
+			$aSelectObject = utils::ReadMultipleSelection($oFullSetFilter);
 			$aObjects = array();
 			if ( empty($sClass) || empty($aSelectObject)) // TO DO: check that the class name is valid !
 			{
@@ -1348,13 +1360,13 @@ EOF
 		$sFilter = utils::ReadParam('filter', '');
 		$sStimulus = utils::ReadParam('stimulus', '');
 		$sState = utils::ReadParam('state', '');
-		$aSelectObject = utils::ReadPostedParam('selectObject', array());
 		if (empty($sFilter) || empty($sStimulus) || empty($sState))
 		{
 			throw new ApplicationException(Dict::Format('UI:Error:3ParametersMissing', 'filter', 'stimulus', 'state'));
 		}
 		$oFilter = DBObjectSearch::unserialize($sFilter);
 		$sClass = $oFilter->GetClass();	
+		$aSelectedObj = ReadMultipleSelection($oFilter);
 		if (count($aSelectObject) == 0)
 		{
 			// Nothing to do, no object was selected !
