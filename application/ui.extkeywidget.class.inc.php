@@ -233,6 +233,7 @@ EOF
 		$sHTML .= "</div>\n";
 		$sHTML .= "<input type=\"button\" id=\"btn_cancel_{$this->iId}\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"$('#ac_dlg_{$this->iId}').dialog('close');\">&nbsp;&nbsp;";
 		$sHTML .= "<input type=\"button\" id=\"btn_ok_{$this->iId}\" value=\"".Dict::S('UI:Button:Ok')."\"  onClick=\"oACWidget_{$this->iId}.DoOk();\">";
+		$sHTML .= "<input type=\"hidden\" id=\"count_{$this->iId}\" value=\"0\">";
 		$sHTML .= "</form>\n";
 		$sHTML .= '</div></div>';
 
@@ -263,7 +264,7 @@ EOF
 		{
 			$oFilter = DBObjectSearch::FromOQL($sFilter);
 			$oBlock = new DisplayBlock($oFilter, 'list', false);
-			$oBlock->Display($oP, $this->iId, array('this' => $oObj, 'menu' => false, 'selection_mode' => true, 'selection_type' => 'single', 'display_limit' => false)); // Don't display the 'Actions' menu on the results
+			$oBlock->Display($oP, $this->iId.'_results', array('this' => $oObj, 'cssCount'=> '#count_'.$this->iId, 'menu' => false, 'selection_mode' => true, 'selection_type' => 'single', 'display_limit' => false)); // Don't display the 'Actions' menu on the results
 		}
 		catch(MissingQueryArgument $e)
 		{
@@ -272,7 +273,7 @@ EOF
 			$sOQL = 'SELECT '.$sRemoteClass;
 			$oFilter = DBObjectSearch::FromOQL($sOQL);
 			$oBlock = new DisplayBlock($oFilter, 'list', false);
-			$oBlock->Display($oP, $this->iId, array('menu' => false, 'selection_mode' => true, 'selection_type' => 'single', 'display_limit' => false)); // Don't display the 'Actions' menu on the results
+			$oBlock->Display($oP, $this->iId.'_results', array('cssCount'=> '#count_'.$this->iId, 'menu' => false, 'selection_mode' => true, 'selection_type' => 'single', 'display_limit' => false)); // Don't display the 'Actions' menu on the results
 		}
 	}
 	

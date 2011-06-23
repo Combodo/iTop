@@ -270,7 +270,8 @@ EOF
 		$sHtml .= "<div id=\"SearchResultsToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}\" style=\"vertical-align:top;background: #fff;height:100%;overflow:auto;padding:0;border:0;\">\n";
 		$sHtml .= "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>".Dict::S('UI:Message:EmptyList:UseSearchForm')."</p></div>\n";
 		$sHtml .= "</div>\n";
-		$sHtml .= "<input type=\"button\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"$('#dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}').dialog('close');\">&nbsp;&nbsp;<input type=\"submit\" value=\"".Dict::S('UI:Button:Add')."\">";
+		$sHtml .= "<input type=\"hidden\" id=\"count_{$this->m_sAttCode}{$this->m_sNameSuffix}\" value=\"0\"/>";
+		$sHtml .= "<input type=\"button\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"$('#dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}').dialog('close');\">&nbsp;&nbsp;<input id=\"btn_ok_{$this->m_sAttCode}{$this->m_sNameSuffix}\" type=\"submit\" value=\"".Dict::S('UI:Button:Add')."\">";
 		$sHtml .= "</div>\n";
 		$sHtml .= "</form>\n";
 		$sHtml .= "</div>\n";
@@ -332,12 +333,23 @@ EOF
 		}
 		$oSet = new CMDBObjectSet($oFilter);
 		$oBlock = new DisplayBlock($oFilter, 'list', false);
-		$oBlock->Display($oP, 'ResultsToAdd', array('menu' => false, 'selection_mode' => true, 'display_limit' => false)); // Don't display the 'Actions' menu on the results
+		$oBlock->Display($oP, "ResultsToAdd_{$this->m_sAttCode}", array('menu' => false, 'cssCount'=> '#count_'.$this->m_sAttCode.$this->m_sNameSuffix , 'selection_mode' => true, 'display_limit' => false)); // Don't display the 'Actions' menu on the results
 	}
 	
-	public function DoAddObjects(WebPage $oP, $aLinkedObjectIds = array())
+	public function DoAddObjects(WebPage $oP, $sRemoteClass)
 	{
-		$aTable = array();
+		if ($sRemoteClass != '')
+		{
+			// assert(MetaModel::IsParentClass($this->m_sRemoteClass, $sRemoteClass));
+			$oFullSetFilter = new DBObjectSearch($sRemoteClass);
+		}
+		else
+		{
+			// No remote class specified use the one defined in the linkedset
+			$oFullSetFilter = new DBObjectSearch($this->m_sRemoteClass);		
+		}
+		$aLinkedObjectIds = utils::ReadMultipleSelection($oFullSetFilter);
+
 		foreach($aLinkedObjectIds as $iObjectId)
 		{
 			$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $iObjectId);

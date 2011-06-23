@@ -154,26 +154,32 @@ class WebPage
 		$sHtml .= "<tbody>\n";
 		foreach($aData as $aRow)
 		{
-			if (isset($aRow['@class'])) // Row specific class, for hilighting certain rows
-			{
-				$sHtml .= "<tr class=\"{$aRow['@class']}\">\n";				
-			}
-			else
-			{
-				$sHtml .= "<tr>\n";
-			}
-			foreach($aConfig as $sName=>$aAttribs)
-			{
-				$aMatches = array();
-				$sClass = isset($aAttribs['class']) ? 'class="'.$aAttribs['class'].'"' : '';
-				$sValue = ($aRow[$sName] === '') ? '&nbsp;' : $aRow[$sName];
-				$sHtml .= "<td $sClass>$sValue</td>\n";
-			}
-			$sHtml .= "</tr>\n";
+			$sHtml .= $this->GetTableRow($aRow, $aConfig);
 		}
 		$sHtml .= "</tbody>\n";
 		$sHtml .= "</table>\n";
 		return $sHtml;
+	}
+	
+	public function GetTableRow($aRow, $aConfig)
+	{
+		$sHtml = '';
+		if (isset($aRow['@class'])) // Row specific class, for hilighting certain rows
+		{
+			$sHtml .= "<tr class=\"{$aRow['@class']}\">";				
+		}
+		else
+		{
+			$sHtml .= "<tr>";
+		}
+		foreach($aConfig as $sName=>$aAttribs)
+		{
+			$sClass = isset($aAttribs['class']) ? 'class="'.$aAttribs['class'].'"' : '';
+			$sValue = ($aRow[$sName] === '') ? '&nbsp;' : $aRow[$sName];
+			$sHtml .= "<td $sClass>$sValue</td>";
+		}
+		$sHtml .= "</tr>";
+		return $sHtml;	
 	}
     
 	/**

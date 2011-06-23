@@ -72,6 +72,7 @@ class iTopWebPage extends NiceWebPage
 		$this->add_linked_script("../js/ckeditor/ckeditor.js");
 		$this->add_linked_script("../js/ckeditor/adapters/jquery.js");
 		$this->add_linked_script("../js/jquery.qtip-1.0.min.js");
+		$this->add_linked_script("../js/jquery.tablesorter.pager.js");
 		$this->m_sInitScript =
 <<< EOF
 	try
@@ -289,23 +290,6 @@ EOF
 	  
 	// End of Tabs handling
 	$("table.listResults").tableHover(); // hover tables
-	// Check each 'listResults' table for a checkbox in the first column and make the first column sortable only if it does not contain a checkbox in the header
-	$(".listResults").each( function()
-		{
-			var table = $(this);
-			var id = $(this).parent();
-			var checkbox = (table.find('th:first :checkbox').length > 0);
-			if (checkbox)
-			{
-				// There is a checkbox in the first column, don't make it sortable
-				table.tablesorter( { headers: { 0: {sorter: false}}, widgets: ['myZebra', 'truncatedList']} ); // sortable and zebra tables
-			}
-			else
-			{
-				// There is NO checkbox in the first column, all columns are considered sortable
-				table.tablesorter( { widgets: ['myZebra', 'truncatedList']} ); // sortable and zebra tables
-			}
-		});
 	$(".date-pick").datepicker({
 			showOn: 'button',
 			buttonImage: '../images/calendar.png',
@@ -368,10 +352,6 @@ EOF
 //			}
 //		}
 
-		function formatItem(row) {
-			return row[0];
-		}
-		
 		function goBack()
 		{
 			window.history.back();

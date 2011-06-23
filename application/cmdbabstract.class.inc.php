@@ -560,8 +560,15 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		$sClassName = $oSet->GetFilter()->GetClass();
 		$aAttribs = array();
 		$sZListName = isset($aExtraParams['zlist']) ? ($aExtraParams['zlist']) : 'list';
-		$aList = self::FlattenZList(MetaModel::GetZListItems($sClassName, $sZListName));
-		$aList = array_merge($aList, $aExtraFields);
+		if ($sZListName !== false)
+		{
+			$aList = self::FlattenZList(MetaModel::GetZListItems($sClassName, $sZListName));
+			$aList = array_merge($aList, $aExtraFields);
+		}
+		else
+		{
+			$aList = $aExtraFields;
+		}
 
 		// Filter the list to removed linked set since we are not able to display them here
 		foreach($aList as $index => $sAttCode)
@@ -616,7 +623,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		{
 			if (!$bSingleSelectMode)
 			{
-				$aAttribs['form::select'] = array('label' => "<input type=\"checkbox\" onClick=\"CheckAll('.selectList{$iListId}:not(:disabled)', this.checked);\"></input>", 'description' => Dict::S('UI:SelectAllToggle+'));
+				$aAttribs['form::select'] = array('label' => "<input type=\"checkbox\" onClick=\"CheckAll('.selectList{$iListId}:not(:disabled)', this.checked);\" class=\"checkAll\"></input>", 'description' => Dict::S('UI:SelectAllToggle+'));
 			}
 			else
 			{
@@ -634,14 +641,14 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		$aValues = array();
 		$bDisplayLimit = isset($aExtraParams['display_limit']) ? $aExtraParams['display_limit'] : true;
 		$iMaxObjects = -1;
-		if ($bDisplayLimit && $bTruncated)
-		{
+		//if ($bDisplayLimit && $bTruncated)
+		//{
 			if ($oSet->Count() > MetaModel::GetConfig()->GetMaxDisplayLimit())
 			{
 				$iMaxObjects = MetaModel::GetConfig()->GetMinDisplayLimit();
 				$oSet->SetLimit($iMaxObjects);
 			}
-		}
+		//}
 		$oSet->Seek(0);
 		while (($oObj = $oSet->Fetch()) && ($iMaxObjects != 0))
 		{
@@ -699,58 +706,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		{
 			$aExtraParams['query_params'][$sName] = $sValue;
 		}
-		if ($bDisplayLimit && $bTruncated && ($oSet->Count() > MetaModel::GetConfig()->GetMaxDisplayLimit()))
-		{
-			// list truncated
-			$aExtraParams['display_limit'] = true;
-			$sHtml .= '<tr class="containerHeader"><td><span id="lbl_'.$iListId.'">'.$sCollapsedLabel.'</span>&nbsp;&nbsp;<a class="truncated" id="trc_'.$iListId.'">'.$sLinkLabel.'</a></td><td>';
-			$oPage->add_ready_script(
-<<<EOF
-	$('#$iListId table.listResults').addClass('truncated');
-	$('#$iListId table.listResults tr:last td').addClass('truncated');
-EOF
-);
-		}
-		else if ($bDisplayLimit && !$bTruncated && ($oSet->Count() > MetaModel::GetConfig()->GetMaxDisplayLimit()))
-		{
-			// Collapsible list
-			$aExtraParams['display_limit'] = true;
-			$sHtml .= '<tr class="containerHeader"><td><span id="lbl_'.$iListId.'">'.Dict::Format('UI:CountOfResults', $oSet->Count()).'</span><a class="truncated" id="trc_'.$iListId.'">'.Dict::S('UI:CollapseList').'</a></td><td>';
-		}
-		$aExtraParams['truncated'] = false; // To expand the full list when clicked
-		$sExtraParamsExpand = addslashes(str_replace('"', "'", json_encode($aExtraParams))); // JSON encode, change the style of the quotes and escape them
-		$oPage->add_ready_script(
-<<<EOF
-	// Handle truncated lists
-	$('#trc_$iListId').click(function()
-	{
-		var state = {};
-		
-		var currentState = $.bbq.getState( this.id, true ) || 'close';	  
-		// Toggle the state!
-		if (currentState == 'close')
-		{
-			state[ this.id ] = 'open';
-		}
-		else
-		{
-			state[ this.id ] = 'close';			
-		}
-		$.bbq.pushState( state );
-		$(this).trigger(state[this.id]);	
-	});
-	$('#trc_$iListId').unbind('open');
-	$('#trc_$iListId').bind('open', function()
-	{
-		ReloadTruncatedList('$iListId', '$sFilter', '$sExtraParamsExpand');
-	});
-	$('#trc_$iListId').unbind('close');	
-	$('#trc_$iListId').bind('close', function()
-	{
-		TruncateList('$iListId', $iMinDisplayLimit, '$sCollapsedLabel', '$sLinkLabel');
-	});
-EOF
-);
+
 		if ($bDisplayMenu)
 		{
 			$oMenuBlock = new MenuBlock($oSet->GetFilter());
@@ -768,6 +724,80 @@ EOF
 		$sHtml .= $oPage->GetTable($aAttribs, $aValues);
 		$sHtml .= '</td></tr>';
 		$sHtml .= '</table>';
+		if ($oSet->Count() > MetaModel::GetConfig()->GetMaxDisplayLimit())
+		{
+			$iCount = $oSet->Count();
+$sHtml =
+<<<EOF
+<div id="pager{$iListId}" class="pager">
+		</p><span id="total">0</span> items.&nbsp;&nbsp;<span class="selectedCount"></span> item(s) selected.</p>
+		<p><table class="pagination"><tr><td>Pages:</td><td><img src="../images/first.png" class="first"/></td>
+		<td><img src="../images/prev.png" class="prev"/></td>
+		<td><span id="index"></span></td>
+		<td><img src="../images/next.png" class="next"/></td>
+		<td><img src="../images/last.png" class="last"/></td>
+		<td><select class="pagesize">
+			<option selected="selected" value="10">10</option>
+			<option value="20">20</option>
+			<option value="30">30</option>
+			<option  value="40">40</option>
+		</select>
+		items per page.</td>
+		<td><span id="loading">&nbsp;</span></td>
+		</tr>
+		</table>
+		
+		<input type="hidden" name="selectionMode" value="positive"></input>
+</div>
+EOF
+.$sHtml;
+			//$oP->add_ready_script("table.tablesorter( { headers: { 0: {sorter: false}}, widgets: ['myZebra', 'truncatedList']} ).tablesorterPager({container: $('#pager')});\n");
+			$sExtraParams = addslashes(str_replace('"', "'", json_encode($aExtraParams))); // JSON encode, change the style of the quotes and escape them
+			$sSelectMode = '';
+			$sHeaders = '';
+			if ($bSelectMode)
+			{
+				$sSelectMode = $bSingleSelectMode ? 'single' : 'multiple';
+				$sHeaders = 'headers: { 0: {sorter: false}},';
+			}
+			$sDisplayKey = ($bViewLink) ? 'true' : 'false';
+			$sDisplayList = json_encode($aList);
+			$sCssCount = isset($aExtraParams['cssCount']) ? ", cssCount: '{$aExtraParams['cssCount']}'" : '';
+			$oPage->add_ready_script("$('#{$iListId} table.listResults').tablesorter( { $sHeaders widgets: ['myZebra', 'truncatedList']} ).tablesorterPager({container: $('#pager{$iListId}'), totalRows:$iCount, filter: '$sFilter', extra_params: '$sExtraParams', select_mode: '$sSelectMode', displayKey: $sDisplayKey, displayList: $sDisplayList $sCssCount});\n");
+		}
+		else
+		{
+			$sHeaders = '';
+			if ($bSelectMode)
+			{
+				$sHeaders = 'headers: { 0: {sorter: false}},';
+			}
+			$oPage->add_ready_script("$('#{$iListId} table.listResults').tablesorter( { $sHeaders widgets: ['myZebra', 'truncatedList']} );\n");
+			// Manage how we update the 'Ok/Add' buttons that depend on the number of selected items
+			if (isset($aExtraParams['cssCount']))
+			{
+				$sCssCount = $aExtraParams['cssCount'];
+				if ($bSingleSelectMode)
+				{
+					$sSelectSelector = ":radio[name^=selectObj]";
+				}
+				else
+				{
+					$sSelectSelector = ":checkbox[name^=selectObj]";
+				}
+				$oPage->add_ready_script(
+<<<EOF
+	$('#{$iListId} table.listResults $sSelectSelector').change(function() {
+		var c = $('{$sCssCount}');							
+		var v = $('#{$iListId} table.listResults $sSelectSelector:checked').length;
+		c.val(v);
+		c.trigger('change');	
+	});
+EOF
+				);
+			}
+		}
+
 		return $sHtml;
 	}
 	
@@ -1898,7 +1928,7 @@ EOF
 		return $aDetails;
 	}
 
-	protected static function FlattenZList($aList)
+	static function FlattenZList($aList)
 	{
 		$aResult = array();
 		foreach($aList as $value)

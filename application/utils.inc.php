@@ -217,6 +217,43 @@ class utils
 		return $oDocument;
 	}
 	
+	/**
+	 * Interprets the results posted by a normal or paginated list (in multiple selection mode)
+	 * @param $oFullSetFilter DBObjectSearch The criteria defining the whole sets of objects being selected
+	 * @return Array An arry of object IDs corresponding to the objects selected in the set
+	 */	
+	public static function ReadMultipleSelection($oFullSetFilter)
+	{
+		$aSelectedObj = utils::ReadParam('selectObject', array());
+		$sSelectionMode = utils::ReadParam('selectionMode', '');
+		if ($sSelectionMode != '')
+		{
+			// Paginated selection
+			$aExceptions = utils::ReadParam('storedSelection', array());
+			if ($sSelectionMode == 'positive')
+			{
+				// Only the explicitely listed items are selected
+				$aSelectedObj = $aExceptions;
+			}
+			else
+			{
+				// All items of the set are selected, except the one explicitely listed
+				$aSelectedObj = array();
+				$oFullSet = new DBObjectSet($oFullSetFilter);
+				$sClassAlias = $oFullSetFilter->GetClassAlias();
+				$oFullSet->OptimizeColumnLoad(array($sClassAlias => array('friendlyname'))); // We really need only the IDs but it does not work since id is not a real field
+				while($oObj = $oFullSet->Fetch())
+				{
+					if (!in_array($oObj->GetKey(), $aExceptions))
+					{
+						$aSelectedObj[] = $oObj->GetKey();
+					}
+				}
+			}
+		}
+		return $aSelectedObj;
+	}
+
 	public static function GetNewTransactionId()
 	{
 		return privUITransaction::GetNewTransactionId();
