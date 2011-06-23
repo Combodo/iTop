@@ -107,7 +107,14 @@ class DBObjectSet
 				// Add the friendly name anytime
 				$oFriendlyNameAttDef = MetaModel::GetAttributeDef($sClass, 'friendlyname');
 				$aAttToLoadWithAttDef[$sClassAlias]['friendlyname'] = $oFriendlyNameAttDef;
+
+				// Make sure that the final class is requested anytime, whatever the specification (needed for object construction!)
+				if (!MetaModel::IsStandaloneClass($sClass) && !array_key_exists('finalclass', $aAttList))
+				{
+					$aAttToLoadWithAttDef[$sClassAlias]['finalclass'] = MetaModel::GetAttributeDef($sClass, 'finalclass');
+				}
 			}
+
 			$this->m_aAttToLoad = $aAttToLoadWithAttDef;
 		}
 	}
