@@ -1049,3 +1049,9 @@ fieldset table.details>tbody>tr>td {
 .ac_dlg_loading {
 	background: white url('../images/indicator.gif') right center no-repeat;
 }
+table.pagination {
+	display:inline-block;
+}
+table.pagination tr td {
+	padding: 3px;
+}
