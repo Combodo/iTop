@@ -266,6 +266,12 @@ function CheckPHPVersion(SetupWebPage $oP)
 		$aErrors[] = "'magic_quotes_gpc' is set to On. Please turn it Off before continuing. You may want to check the PHP configuration file(s): '$sPhpIniFile'. Be aware that this setting can also be overridden in the apache configuration.";
 		$bResult = false;
 	}
+  	if (magic_quotes_runtime())
+  	{
+		$aErrors[] = "'magic_quotes_runtime' is set to On. Please turn it Off before continuing. You may want to check the PHP configuration file(s): '$sPhpIniFile'. Be aware that this setting can also be overridden in the apache configuration.";
+		$bResult = false;
+	}
+
 	
 	$sMemoryLimit = trim(ini_get('memory_limit'));
 	if (empty($sMemoryLimit))
