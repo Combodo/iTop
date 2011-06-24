@@ -221,6 +221,11 @@ class DBObjectSearch
 		// ? is that usefull/enough, do I need to rebuild the list after the subqueries ?
 	}
 
+	public function MergeConditionExpression($oExpression)
+	{
+		$this->m_oSearchCondition = $this->m_oSearchCondition->LogOr($oExpression); 
+	}
+
 	public function AddConditionExpression($oExpression)
 	{
 		$this->m_oSearchCondition = $this->m_oSearchCondition->LogAnd($oExpression); 
@@ -318,6 +323,61 @@ class DBObjectSearch
 		}
 
 		$this->AddConditionExpression($oNewCondition);
+	}
+
+	/**
+	 * Specify a condition on external keys or link sets
+	 * @param sAttSpec Can be either an attribute code or extkey->[sAttSpec] or linkset->[sAttSpec] and so on, recursively
+	 *                 Example: infra_list->ci_id->location_id->country	 
+	 * @param value The value to match
+	 * @return void
+	 */
+	public function AddConditionAdvanced($sAttSpec, $value)
+	{
+		$sClass = $this->GetClass();
+
+		$iPos = strpos($sAttSpec, '->');
+		if ($iPos !== false)
+		{
+			$sAttCode = substr($sAttSpec, 0, $iPos);
+			$sSubSpec = substr($sAttSpec, $iPos + 2);
+
+			if (!MetaModel::IsValidAttCode($sClass, $sAttCode))
+			{
+				throw new Exception("Invalid attribute code '$sClass/$sAttCode' in condition specification '$sAttSpec'");
+			}
+
+			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+			if ($oAttDef->IsLinkSet())
+			{
+				$sTargetClass = $oAttDef->GetLinkedClass();
+				$sExtKeyToMe = $oAttDef->GetExtKeyToMe();
+
+				$oNewFilter = new DBObjectSearch($sTargetClass);
+				$oNewFilter->AddConditionAdvanced($sSubSpec, $value);
+
+				$this->AddCondition_ReferencedBy($oNewFilter, $sExtKeyToMe);
+			}
+			elseif ($oAttDef->IsExternalKey(EXTKEY_ABSOLUTE))
+			{
+				$sTargetClass = $oAttDef->GetTargetClass(EXTKEY_ABSOLUTE);
+
+				$oNewFilter = new DBObjectSearch($sTargetClass);
+				$oNewFilter->AddConditionAdvanced($sSubSpec, $value);
+
+				$this->AddCondition_PointingTo($oNewFilter, $sAttCode);
+			}
+			else
+			{
+				throw new Exception("Attribute specification '$sAttSpec', '$sAttCode' should be either a link set or an external key");
+			}
+		}
+		else
+		{
+			// $sAttSpec is an attribute code
+			//
+			$this->AddCondition($sAttSpec, $value);
+		}
 	}
 
 	public function AddCondition_FullText($sFullText)

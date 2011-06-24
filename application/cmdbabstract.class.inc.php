@@ -752,7 +752,8 @@ $sHtml =
 EOF
 .$sHtml;
 			//$oP->add_ready_script("table.tablesorter( { headers: { 0: {sorter: false}}, widgets: ['myZebra', 'truncatedList']} ).tablesorterPager({container: $('#pager')});\n");
-			$sExtraParams = addslashes(str_replace('"', "'", json_encode($aExtraParams))); // JSON encode, change the style of the quotes and escape them
+			$aArgs = $oSet->GetArgs();
+			$sExtraParams = addslashes(str_replace('"', "'", json_encode(array_merge($aExtraParams, $aArgs)))); // JSON encode, change the style of the quotes and escape them
 			$sSelectMode = '';
 			$sHeaders = '';
 			if ($bSelectMode)

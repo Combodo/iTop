@@ -51,7 +51,7 @@ try
 	switch($operation)
 	{
 		case 'pagination':
-		$sExtraParams = stripslashes(utils::ReadParam('extra_params', ''));
+		$sExtraParams = stripslashes(utils::ReadParam('extra_param', ''));
 		$aExtraParams = array();
 		if (!empty($sExtraParams))
 		{

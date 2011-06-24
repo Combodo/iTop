@@ -32,6 +32,7 @@
 class DBObjectSet
 {
 	private $m_oFilter;
+	private $m_aAddedIds; // Ids of objects added
 	private $m_aOrderBy;
 	public $m_bLoaded;
 	private $m_aData;
@@ -41,6 +42,7 @@ class DBObjectSet
 	public function __construct(DBObjectSearch $oFilter, $aOrderBy = array(), $aArgs = array(), $aExtendedDataSpec = null, $iLimitCount = 0, $iLimitStart = 0)
 	{
 		$this->m_oFilter = $oFilter;
+		$this->m_aAddedIds = array();
 		$this->m_aOrderBy = $aOrderBy;
 		$this->m_aArgs = $aArgs;
 		$this->m_aAttToLoad = null;
@@ -128,7 +130,8 @@ class DBObjectSet
 
 	static public function FromScratch($sClass)
 	{
-		$oFilter = new CMDBSearchFilter($sClass);
+		$oFilter = new DBObjectSearch($sClass);
+		$oFilter->AddConditionExpression(new FalseExpression());
 		$oRetSet = new self($oFilter);
 		$oRetSet->m_bLoaded = true; // no DB load
 		return $oRetSet;
@@ -138,9 +141,7 @@ class DBObjectSet
 	// input = array of objects
 	static public function FromArray($sClass, $aObjects)
 	{
-		$oFilter = new CMDBSearchFilter($sClass);
-		$oRetSet = new self($oFilter);
-		$oRetSet->m_bLoaded = true; // no DB load
+		$oRetSet = self::FromScratch($sClass);
 		$oRetSet->AddObjectArray($aObjects, $sClass);
 		return $oRetSet;
 	} 
@@ -268,8 +269,19 @@ class DBObjectSet
 
 	public function GetFilter()
 	{
-		// #@# This is false as soon as the set has been manipulated (AddObject...)
-		return $this->m_oFilter;
+		if (count($this->m_aAddedIds) == 0)
+		{
+			return $this->m_oFilter;
+		}
+		else
+		{
+			$oFilter = $this->m_oFilter;
+			$oIdListExpr = ListExpression::FromScalars($this->m_aAddedIds);
+			$oIdExpr = new FieldExpression('id', $oFilter->GetClassAlias());
+			$oIdInList = new BinaryExpression($oIdExpr, 'IN', $oIdListExpr);
+			$oFilter->MergeConditionExpression($oIdInList);
+			return $oFilter;
+		}
 	}
 
 	public function GetClass()
@@ -285,6 +297,11 @@ class DBObjectSet
 	public function GetRootClass()
 	{
 		return MetaModel::GetRootClass($this->GetClass());
+	}
+
+	public function GetArgs()
+	{
+		return $this->m_aArgs;
 	}
 
 	public function SetLimit($iLimitCount, $iLimitStart = 0)
@@ -427,6 +444,7 @@ class DBObjectSet
 		if (!is_null($oObject))
 		{
 			$this->m_aId2Row[$sClassAlias][$oObject->GetKey()] = $iNextPos;
+			$this->m_aAddedIds[] = $oObject->GetKey();
 		}
 	}
 
@@ -442,6 +460,7 @@ class DBObjectSet
 			if (!is_null($oObject))
 			{
 				$this->m_aId2Row[$sClassAlias][$oObject->GetKey()] = $iNextPos;
+				$this->m_aAddedIds[] = $oObject->GetKey();
 			}
 		}
 	}

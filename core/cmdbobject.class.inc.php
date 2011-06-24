@@ -498,24 +498,22 @@ class CMDBObjectSet extends DBObjectSet
 	static public function FromScratch($sClass)
 	{
 		$oFilter = new CMDBSearchFilter($sClass);
-		$oRetSet = new CMDBObjectSet($oFilter); // THE ONLY DIFF IS HERE
-		// NOTE: THIS DOES NOT WORK IF m_bLoaded is private...
-		// BUT IT THAT CASE YOU DO NOT GET ANY ERROR !!!!!
+		$oFilter->AddConditionExpression(new FalseExpression());
+		$oRetSet = new self($oFilter);
+		// NOTE: THIS DOES NOT WORK IF m_bLoaded is private in the base class (and you will not get any error message)
 		$oRetSet->m_bLoaded = true; // no DB load
 		return $oRetSet;
 	} 
 
+	// create an object set ex nihilo
+	// input = array of objects
 	static public function FromArray($sClass, $aObjects)
 	{
-		$oFilter = new CMDBSearchFilter($sClass);
-		$oRetSet = new CMDBObjectSet($oFilter); // THE ONLY DIFF IS HERE
-		// NOTE: THIS DOES NOT WORK IF m_bLoaded is private...
-		// BUT IT THAT CASE YOU DO NOT GET ANY ERROR !!!!!
-		$oRetSet->m_bLoaded = true; // no DB load
-		$oRetSet->AddObjectArray($aObjects);
+		$oRetSet = self::FromScratch($sClass);
+		$oRetSet->AddObjectArray($aObjects, $sClass);
 		return $oRetSet;
 	} 
-	
+
 	static public function FromArrayAssoc($aClasses, $aObjects)
 	{
 		// In a perfect world, we should create a complete tree of DBObjectSearch,
