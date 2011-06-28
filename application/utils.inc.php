@@ -349,77 +349,13 @@ class utils
 	   // http://www.spaweditor.com/scripts/regex/index.php
 	}
 
-	/**
-	 * Returns an absolute URL to the current page
-	 * @param $bQueryString bool True to also get the query string, false otherwise
-	 * @param $bForceHTTPS bool True to force HTTPS, false otherwise
-	 * @return string The absolute URL to the current page
-	 */                   
-	static public function GetAbsoluteUrl($bQueryString = true, $bForceHTTPS = false)
-	{
-		// Build an absolute URL to this page on this server/port
-		$sServerName = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : '';
-		if (MetaModel::GetConfig()->GetSecureConnectionRequired())
-		{
-			// If a secure connection is required, or if the URL is requested to start with HTTPS
-			// then any URL must start with https !
-			$bForceHTTPS = true;
-		}
-		if ($bForceHTTPS)
-		{
-			$sProtocol = 'https';
-			$sPort = '';
-		}
-		else
-		{
-			$sProtocol = (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']!="off")) ? 'https' : 'http';
-			$iPort = isset($_SERVER['SERVER_PORT']) ? $_SERVER['SERVER_PORT'] : 80;
-			if ($sProtocol == 'http')
-			{
-				$sPort = ($iPort == 80) ? '' : ':'.$iPort;
-			}
-			else
-			{
-				$sPort = ($iPort == 443) ? '' : ':'.$iPort;
-			}
-		}
-		// $_SERVER['REQUEST_URI'] is empty when running on IIS
-		// Let's use Ivan Tcholakov's fix (found on www.dokeos.com)
-		if (!empty($_SERVER['REQUEST_URI']))
-		{
-			$sPath = $_SERVER['REQUEST_URI'];
-		}
-		else
-		{
-			$sPath = $_SERVER['SCRIPT_NAME'];
-			if (!empty($_SERVER['QUERY_STRING']))
-			{
-				$sPath .= '?'.$_SERVER['QUERY_STRING'];
-			}
-			$_SERVER['REQUEST_URI'] = $sPath;
-		}
-		$sPath = $_SERVER['REQUEST_URI'];
-		if (!$bQueryString)
-		{
-			// remove all the parameters from the query string
-			$iQuestionMarkPos = strpos($sPath, '?');
-			if ($iQuestionMarkPos !== false)
-			{
-				$sPath = substr($sPath, 0, $iQuestionMarkPos);
-			}
-		} 
-		$sUrl = "$sProtocol://{$sServerName}{$sPort}{$sPath}";
-		
-		return $sUrl;
-	}
-	
     /**
      * Returns the absolute URL to the server's root path
      * @param $sCurrentRelativePath string NO MORE USED, kept for backward compatibility only !
      * @param $bForceHTTPS bool True to force HTTPS, false otherwise
      * @return string The absolute URL to the server's root, without the first slash
      */                   
-	static public function GetAbsoluteUrlAppRoot($sCurrentRelativePathUNUSED = '', $bForceHTTPS = false)
+	static public function GetAbsoluteUrlAppRoot()
 	{
 		return MetaModel::GetConfig()->Get('app_root_url');
 	}

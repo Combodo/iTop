@@ -97,7 +97,7 @@ function GetRelatedObjectsAsXml(DBObject $oObj, $sRelationName, &$oLinks, &$oXml
 
 function BuildIconPath($sIconPath)
 {
-	$sFullURL = utils::GetAbsoluteUrlAppRoot(false, false);
+	$sFullURL = utils::GetAbsoluteUrlAppRoot();
 	return $sFullURL.'pages/'.$sIconPath;
 }
 
