@@ -32,7 +32,7 @@
 class DBObjectSet
 {
 	private $m_oFilter;
-	private $m_aAddedIds; // Ids of objects added
+	private $m_aAddedIds; // Ids of objects added (discrete lists)
 	private $m_aOrderBy;
 	public $m_bLoaded;
 	private $m_aData;
@@ -275,8 +275,9 @@ class DBObjectSet
 		}
 		else
 		{
-			$oFilter = $this->m_oFilter;
-			$oIdListExpr = ListExpression::FromScalars($this->m_aAddedIds);
+			$oFilter = clone $this->m_oFilter;
+
+			$oIdListExpr = ListExpression::FromScalars(array_keys($this->m_aAddedIds));
 			$oIdExpr = new FieldExpression('id', $oFilter->GetClassAlias());
 			$oIdInList = new BinaryExpression($oIdExpr, 'IN', $oIdListExpr);
 			$oFilter->MergeConditionExpression($oIdInList);
@@ -351,9 +352,10 @@ class DBObjectSet
 				{
 					$oObject = MetaModel::GetObjectByRow($sClass, $aRow, $sClassAlias, $this->m_aAttToLoad, $this->m_aExtendedDataSpec);
 				}
+
 				$aObjects[$sClassAlias] = $oObject;
 			}
-			$this->AddObjectExtended($aObjects);
+			$this->AddObjectExtended($aObjects, true /* internal load */);
 		}
 		CMDBSource::FreeResult($resQuery);
 	}
@@ -444,11 +446,11 @@ class DBObjectSet
 		if (!is_null($oObject))
 		{
 			$this->m_aId2Row[$sClassAlias][$oObject->GetKey()] = $iNextPos;
-			$this->m_aAddedIds[] = $oObject->GetKey();
+			$this->m_aAddedIds[$oObject->GetKey()] = true;
 		}
 	}
 
-	protected function AddObjectExtended($aObjectArray)
+	protected function AddObjectExtended($aObjectArray, $bInternalLoad = false)
 	{
 		if (!$this->m_bLoaded) $this->Load();
 
@@ -460,7 +462,10 @@ class DBObjectSet
 			if (!is_null($oObject))
 			{
 				$this->m_aId2Row[$sClassAlias][$oObject->GetKey()] = $iNextPos;
-				$this->m_aAddedIds[] = $oObject->GetKey();
+				if (!$bInternalLoad)
+				{
+					$this->m_aAddedIds[$oObject->GetKey()] = true;
+				}
 			}
 		}
 	}
