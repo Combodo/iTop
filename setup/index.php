@@ -261,15 +261,21 @@ function CheckPHPVersion(SetupWebPage $oP)
 	$oP->log("Info - max_file_uploads: ".ini_get('max_file_uploads'));
 
 	// Check some more ini settings here, needed for file upload
-  	if (get_magic_quotes_gpc())
-  	{
-		$aErrors[] = "'magic_quotes_gpc' is set to On. Please turn it Off before continuing. You may want to check the PHP configuration file(s): '$sPhpIniFile'. Be aware that this setting can also be overridden in the apache configuration.";
-		$bResult = false;
+	if (function_exists('get_magic_quotes_gpc'))
+	{
+	  	if (@get_magic_quotes_gpc())
+	  	{
+			$aErrors[] = "'magic_quotes_gpc' is set to On. Please turn it Off before continuing. You may want to check the PHP configuration file(s): '$sPhpIniFile'. Be aware that this setting can also be overridden in the apache configuration.";
+			$bResult = false;
+		}
 	}
-  	if (magic_quotes_runtime())
-  	{
-		$aErrors[] = "'magic_quotes_runtime' is set to On. Please turn it Off before continuing. You may want to check the PHP configuration file(s): '$sPhpIniFile'. Be aware that this setting can also be overridden in the apache configuration.";
-		$bResult = false;
+	if (function_exists('magic_quotes_runtime'))
+	{
+	  	if (@magic_quotes_runtime())
+	  	{
+			$aErrors[] = "'magic_quotes_runtime' is set to On. Please turn it Off before continuing. You may want to check the PHP configuration file(s): '$sPhpIniFile'. Be aware that this setting can also be overridden in the apache configuration.";
+			$bResult = false;
+		}
 	}
 
 	
