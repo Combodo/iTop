@@ -35,6 +35,8 @@ require_once(APPROOT.'/application/startup.inc.php');
 require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
+ApplicationContext::SetUrlMakerClass('iTopStandardURLMaker');
+
 $sOperation = utils::ReadParam('operation', 'menu');
 $oAppContext = new ApplicationContext();
 $iActiveNodeId = utils::ReadParam('menu', -1);
@@ -63,8 +65,8 @@ if (!empty($sExpression))
 				// The HTML output is made for pages located in the /pages/ folder
 				// since this page is in a different folder, let's adjust the HTML 'base' attribute
 				// to make the relative hyperlinks in the page work
-				$sUrl = utils::GetAbsoluteUrlAppRoot('/webservices/');
-				$oP->set_base($sUrl.'/pages/');
+				$sUrl = utils::GetAbsoluteUrlAppRoot();
+				$oP->set_base($sUrl.'pages/');
 
 				$oResultBlock = new DisplayBlock($oFilter, 'list', false, array('menu' => false, 'display_limit' => false, 'zlist' => 'details'));
 				$oResultBlock->Display($oP, 'expresult');

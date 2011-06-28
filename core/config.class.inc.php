@@ -58,7 +58,6 @@ define ('DEFAULT_MAX_DISPLAY_LIMIT', 15);
 define ('DEFAULT_STANDARD_RELOAD_INTERVAL', 5*60);
 define ('DEFAULT_FAST_RELOAD_INTERVAL', 1*60);
 define ('DEFAULT_SECURE_CONNECTION_REQUIRED', false);
-define ('DEFAULT_HTTPS_HYPERLINKS', false);
 define ('DEFAULT_ALLOWED_LOGIN_TYPES', 'form|basic|external');
 define ('DEFAULT_EXT_AUTH_VARIABLE', '$_SERVER[\'REMOTE_USER\']');
 define ('DEFAULT_ENCRYPTION_KEY', '@iT0pEncr1pti0n!'); // We'll use a random value, later...
@@ -85,6 +84,14 @@ class Config
 	// New way to store the settings !
 	//
 	protected $m_aSettings = array(
+		'app_root_url' => array(
+			'type' => 'string',
+			'description' => 'Root URL used for navigating within the application, or from an email to the application',
+			'default' => '',
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
 		'skip_check_to_write' => array(
 			'type' => 'bool',
 			'description' => 'Disable data format and integrity checks to boost up data load (insert or update)',
@@ -452,13 +459,6 @@ class Config
 	protected $m_bSecureConnectionRequired;
 
 	/**
-	 * @var boolean Forces iTop to output hyperlinks starting with https:// even
-	 *              if the current page is not using https. This can be useful when
-	 *              the application runs behind a SSL gateway
-	 */	 	
-	protected $m_bHttpsHyperlinks;
-
-	/**
 	 * @var string Langage code, default if the user language is undefined
 	 */	 	
 	protected $m_sDefaultLanguage;
@@ -559,7 +559,6 @@ class Config
 		$this->m_iStandardReloadInterval = DEFAULT_STANDARD_RELOAD_INTERVAL;
 		$this->m_iFastReloadInterval = DEFAULT_FAST_RELOAD_INTERVAL;
 		$this->m_bSecureConnectionRequired = DEFAULT_SECURE_CONNECTION_REQUIRED;
-		$this->m_bHttpsHyperlinks = DEFAULT_HTTPS_HYPERLINKS;
 		$this->m_sDefaultLanguage = 'EN US';
 		$this->m_sAllowedLoginTypes = DEFAULT_ALLOWED_LOGIN_TYPES;
 		$this->m_sExtAuthVariable = DEFAULT_EXT_AUTH_VARIABLE;
@@ -573,6 +572,18 @@ class Config
 			$this->Load($sConfigFile);
 			$this->Verify();
 		}
+
+      // Application root url: set a default value, then normalize it
+      $sAppRootUrl = trim($this->Get('app_root_url'));
+		if (strlen($sAppRootUrl) == 0)
+      {
+			$sAppRootUrl = utils::GetDefaultUrlAppRoot();
+		}
+		if (substr($sAppRootUrl, -1, 1) != '/')
+		{
+			$sAppRootUrl .= '/';
+		}
+		$this->Set('app_root_url', $sAppRootUrl);
 	}
 
 	protected function CheckFile($sPurpose, $sFileName)
@@ -681,7 +692,6 @@ class Config
 		$this->m_iStandardReloadInterval = isset($MySettings['standard_reload_interval']) ? trim($MySettings['standard_reload_interval']) : DEFAULT_STANDARD_RELOAD_INTERVAL;
 		$this->m_iFastReloadInterval = isset($MySettings['fast_reload_interval']) ? trim($MySettings['fast_reload_interval']) : DEFAULT_FAST_RELOAD_INTERVAL;
 		$this->m_bSecureConnectionRequired = isset($MySettings['secure_connection_required']) ? (bool) trim($MySettings['secure_connection_required']) : DEFAULT_SECURE_CONNECTION_REQUIRED;
-		$this->m_bHttpsHyperlinks = isset($MySettings['https_hyperlinks']) ? (bool) trim($MySettings['https_hyperlinks']) : DEFAULT_HTTPS_HYPERLINKS;
 
 		$this->m_aModuleSettings = isset($MyModuleSettings) ?  $MyModuleSettings : array();
 
@@ -857,11 +867,6 @@ class Config
 		return $this->m_bSecureConnectionRequired;
 	}
 
-	public function GetHttpsHyperlinks()
-	{
-		return $this->m_bHttpsHyperlinks;
-	}
-
 	public function GetDefaultLanguage()
 	{
 		return $this->m_sDefaultLanguage;
@@ -967,11 +972,6 @@ class Config
 		$this->m_bSecureConnectionRequired = $bSecureConnectionRequired;
 	}
 
-	public function SetHttpsHyperlinks($bHttpsHyperlinks)
-	{
-		$this->m_bHttpsHyperlinks = $bHttpsHyperlinks;
-	}
-
 	public function SetDefaultLanguage($sLanguageCode)
 	{
 		$this->m_sDefaultLanguage = $sLanguageCode;
@@ -1037,7 +1037,6 @@ class Config
 		$aSettings['standard_reload_interval'] = $this->m_iStandardReloadInterval;
 		$aSettings['fast_reload_interval'] = $this->m_iFastReloadInterval;
 		$aSettings['secure_connection_required'] = $this->m_bSecureConnectionRequired;
-		$aSettings['https_hyperlinks'] = $this->m_bHttpsHyperlinks;
 		$aSettings['default_language'] = $this->m_sDefaultLanguage;
 		$aSettings['allowed_login_types'] = $this->m_sAllowedLoginTypes;
 		$aSettings['encryption_key'] = $this->m_sEncryptionKey;
@@ -1132,7 +1131,6 @@ class Config
 			fwrite($hFile, "\t'standard_reload_interval' => {$this->m_iStandardReloadInterval},\n");
 			fwrite($hFile, "\t'fast_reload_interval' => {$this->m_iFastReloadInterval},\n");
 			fwrite($hFile, "\t'secure_connection_required' => ".($this->m_bSecureConnectionRequired ? 'true' : 'false').",\n");
-			fwrite($hFile, "\t'https_hyperlinks' => ".($this->m_bHttpsHyperlinks ? 'true' : 'false').",\n");
 			fwrite($hFile, "\t'default_language' => '{$this->m_sDefaultLanguage}',\n");
 			fwrite($hFile, "\t'allowed_login_types' => '{$this->m_sAllowedLoginTypes}',\n");
 			fwrite($hFile, "\t'encryption_key' => '{$this->m_sEncryptionKey}',\n");

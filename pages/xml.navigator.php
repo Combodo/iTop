@@ -97,10 +97,8 @@ function GetRelatedObjectsAsXml(DBObject $oObj, $sRelationName, &$oLinks, &$oXml
 
 function BuildIconPath($sIconPath)
 {
-	$sFullURL = utils::GetAbsoluteURL(false, false);
-	$iLastSlashPos = strrpos($sFullURL, '/');
-	$sFullURLPath = substr($sFullURL, 0, 1 + $iLastSlashPos);
-	return $sFullURLPath.$sIconPath;
+	$sFullURL = utils::GetAbsoluteUrlAppRoot(false, false);
+	return $sFullURL.'pages/'.$sIconPath;
 }
 
 require_once(APPROOT.'/application/startup.inc.php');

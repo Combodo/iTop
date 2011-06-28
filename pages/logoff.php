@@ -28,7 +28,7 @@ require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 session_name(MetaModel::GetConfig()->Get('session_name'));
 session_start();
 $bPortal = utils::ReadParam('portal', false);
-$sUrl = utils::GetAbsoluteUrlAppRoot('pages/logoff.php');
+$sUrl = utils::GetAbsoluteUrlAppRoot();
 if ($bPortal)
 {
 	$sUrl .= 'portal/';

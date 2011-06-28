@@ -528,13 +528,9 @@ abstract class DBObject
 		return $oAtt->GetAsCSV($this->GetOriginal($sAttCode), $sSeparator, $sTextQualifier, $this);
 	}
 
-	protected static function MakeHyperLink($sObjClass, $sObjKey, $sLabel = '')
+	protected static function MakeHyperLink($sObjClass, $sObjKey, $sLabel = '', $sUrlMakerClass = null, $bWithNavigationContext = true)
 	{
 		if ($sObjKey <= 0) return '<em>'.Dict::S('UI:UndefinedObject').'</em>'; // Objects built in memory have negative IDs
-
-		$oAppContext = new ApplicationContext();	
-		$sPage = self::ComputeUIPage($sObjClass);
-		$sAbsoluteUrl = utils::GetAbsoluteUrlPath();
 
 		// Safety net
 		//
@@ -547,25 +543,23 @@ abstract class DBObject
 			//$sLabel = MetaModel::GetName($sObjClass)." #$sObjKey";
 		}
 		$sHint = MetaModel::GetName($sObjClass)."::$sObjKey";
-		return "<a href=\"{$sAbsoluteUrl}{$sPage}?operation=details&class=$sObjClass&id=$sObjKey&".$oAppContext->GetForLink()."\" title=\"$sHint\">$sLabel</a>";
+		$sUrl = ApplicationContext::MakeObjectUrl($sObjClass, $sObjKey, $sUrlMakerClass, $bWithNavigationContext);
+		if (strlen($sUrl) > 0)
+		{
+			return "<a href=\"$sUrl\" title=\"$sHint\">$sLabel</a>";
+		}
+		else
+		{
+			return $sLabel;
+		}
 	}
 
-	public function GetHyperlink()
+	public function GetHyperlink($sUrlMakerClass = null, $bWithNavigationContext = true)
 	{
-		if ($this->IsNew()) return '<em>'.Dict::S('UI:UndefinedObject').'</em>'; // Objects built in memory have negative IDs
-
-		$oAppContext = new ApplicationContext();	
-		$sPage = $this->GetUIPage();
-		$sAbsoluteUrl = utils::GetAbsoluteUrlPath();
-		$sObjClass = get_class($this);
-		$sObjKey = $this->GetKey();
-
-		$sLabel = $this->GetName();
-		$sHint = MetaModel::GetName($sObjClass)."::$sObjKey";
-		return "<a href=\"{$sAbsoluteUrl}{$sPage}?operation=details&class=$sObjClass&id=$sObjKey&".$oAppContext->GetForLink()."\" title=\"$sHint\">$sLabel</a>";
+		return self::MakeHyperLink(get_class($this), $this->GetKey(), $this->GetName(), $sUrlMakerClass, $bWithNavigationContext);
 	}
 	
-	public static function ComputeUIPage($sClass)
+	public static function ComputeStandardUIPage($sClass)
 	{
 		static $aUIPagesCache = array(); // Cache to store the php page used to display each class of object
 		if (!isset($aUIPagesCache[$sClass]))
@@ -1464,10 +1458,8 @@ abstract class DBObject
 			$aScalarArgs[$sArgName] = $this->GetKey();
 			$aScalarArgs[$sArgName.'->id'] = $this->GetKey();
 			$aScalarArgs[$sArgName.'->object()'] = $this;
-			$aScalarArgs[$sArgName.'->hyperlink()'] = $this->GetHyperlink();
-			// #@# Prototype for a user portal - to be dehardcoded later
-			$sToPortal = utils::GetAbsoluteUrlPath().'../portal/index.php?operation=details&id='.$this->GetKey();
-			$aScalarArgs[$sArgName.'->hyperlink(portal)'] = '<a href="'.$sToPortal.'">'.$this->GetName().'</a>';
+			$aScalarArgs[$sArgName.'->hyperlink()'] = $this->GetHyperlink('iTopStandardURLMaker', false);
+			$aScalarArgs[$sArgName.'->hyperlink(portal)'] = $this->GetHyperlink('PortalURLMaker', false);
 			$aScalarArgs[$sArgName.'->name()'] = $this->GetName();
 		
 			$sClass = get_class($this);

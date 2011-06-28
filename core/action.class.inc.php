@@ -274,25 +274,33 @@ class ActionEmail extends ActionNotification
 
 	protected function _DoExecute($oTrigger, $aContextArgs, &$oLog)
 	{
-		$this->m_iRecipients = 0;
-		$this->m_aMailErrors = array();
-		$bRes = false; // until we do succeed in sending the email
-
-		// Determine recicipients
-		//
-		$sTo = $this->FindRecipients('to', $aContextArgs);
-		$sCC = $this->FindRecipients('cc', $aContextArgs);
-		$sBCC = $this->FindRecipients('bcc', $aContextArgs);
-
-		$sFrom = $this->Get('from');
-		$sReplyTo = $this->Get('reply_to');
-
-		$sSubject = MetaModel::ApplyParams($this->Get('subject'), $aContextArgs);
-		$sBody = MetaModel::ApplyParams($this->Get('body'), $aContextArgs);
-		
-		$oObj = $aContextArgs['this->object()'];
-		$sServerIP = $_SERVER['SERVER_ADDR']; //gethostbyname(gethostname());
-		$sReference = '<iTop/'.get_class($oObj).'/'.$oObj->GetKey().'@'.$sServerIP.'>';
+		$sPreviousUrlMaker = ApplicationContext::SetUrlMakerClass();
+		try
+		{
+			$this->m_iRecipients = 0;
+			$this->m_aMailErrors = array();
+			$bRes = false; // until we do succeed in sending the email
+	
+			// Determine recicipients
+			//
+			$sTo = $this->FindRecipients('to', $aContextArgs);
+			$sCC = $this->FindRecipients('cc', $aContextArgs);
+			$sBCC = $this->FindRecipients('bcc', $aContextArgs);
+	
+			$sFrom = $this->Get('from');
+			$sReplyTo = $this->Get('reply_to');
+	
+			$sSubject = MetaModel::ApplyParams($this->Get('subject'), $aContextArgs);
+			$sBody = MetaModel::ApplyParams($this->Get('body'), $aContextArgs);
+			
+			$oObj = $aContextArgs['this->object()'];
+			$sReference = '<iTop/'.get_class($oObj).'/'.$oObj->GetKey().'>';
+		}
+		catch(Exception $e)
+		{
+  			ApplicationContext::SetUrlMakerClass($sPreviousUrlMaker);
+  			throw $e;
+  		}
 
 		if (!is_null($oLog))
 		{

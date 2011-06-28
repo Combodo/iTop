@@ -999,8 +999,9 @@ class MenuBlock extends DisplayBlock
 		$sClass = $this->m_oFilter->GetClass();
 		$oSet = new CMDBObjectSet($this->m_oFilter);
 		$sFilter = $this->m_oFilter->serialize();
+		$sFilterDesc = $this->m_oFilter->ToOql();
 		$aActions = array();
-		$sUIPage = cmdbAbstractObject::ComputeUIPage($sClass);
+		$sUIPage = cmdbAbstractObject::ComputeStandardUIPage($sClass);
 		// 1:n links, populate the target object as a default value when creating a new linked object
 		if (isset($aExtraParams['target_attr']))
 		{
@@ -1032,7 +1033,6 @@ class MenuBlock extends DisplayBlock
 			// Just one object in the set, possible actions are "new / clone / modify and delete"
 			if (!isset($aExtraParams['link_attr']))
 			{
-				$sUrl = utils::GetAbsoluteUrl(false);
 				if ($bIsModifyAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:Modify'), 'url' => "../pages/$sUIPage?operation=modify&class=$sClass&id=$id&$sContext#"); }
 				if ($bIsModifyAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:New'), 'url' => "../pages/$sUIPage?operation=new&class=$sClass&$sContext{$sDefault}"); }
 				if ($bIsDeleteAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:Delete'), 'url' => "../pages/$sUIPage?operation=delete&class=$sClass&id=$id&$sContext"); }
@@ -1068,7 +1068,8 @@ class MenuBlock extends DisplayBlock
 				}
 				$this->AddMenuSeparator($aActions);
 				// Static menus: Email this page & CSV Export
-				$aActions[] = array ('label' => Dict::S('UI:Menu:EMail'), 'url' => "mailto:?subject=".$oObj->GetName()."&body=".urlencode("$sUrl?operation=details&class=$sClass&id=$id&$sContext"));
+				$sUrl = ApplicationContext::MakeObjectUrl($sClass, $id);
+				$aActions[] = array ('label' => Dict::S('UI:Menu:EMail'), 'url' => "mailto:?subject=".$oObj->GetName()."&body=".urlencode($sUrl));
 				$aActions[] = array ('label' => Dict::S('UI:Menu:CSVExport'), 'url' => "../pages/$sUIPage?operation=search&filter=$sFilter&format=csv&$sContext");
 			}
 			else
@@ -1112,7 +1113,6 @@ class MenuBlock extends DisplayBlock
 			else
 			{
 				// many objects in the set, possible actions are: new / modify all / delete all
-				$sUrl = utils::GetAbsoluteUrl();
 				if ($bIsModifyAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:New'), 'url' => "../pages/$sUIPage?operation=new&class=$sClass&$sContext{$sDefault}"); }
 				if ($bIsBulkModifyAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:ModifyAll'), 'url' => "../pages/$sUIPage?operation=select_for_modify_all&class=$sClass&filter=$sFilter&sContext"); }
 				if ($bIsBulkDeleteAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:BulkDelete'), 'url' => "../pages/$sUIPage?operation=select_for_deletion&filter=$sFilter&$sContext"); }
@@ -1157,7 +1157,8 @@ class MenuBlock extends DisplayBlock
 					}
 				}
 				$this->AddMenuSeparator($aActions);
-				$aActions[] = array ('label' => Dict::S('UI:Menu:EMail'), 'url' => "mailto:?subject=".$oSet->GetFilter()->__DescribeHTML()."&body=".urlencode("$sUrl?operation=search&filter=$sFilter&$sContext"));
+				$sUrl = utils::GetAbsoluteUrlAppRoot();
+				$aActions[] = array ('label' => Dict::S('UI:Menu:EMail'), 'url' => "mailto:?subject=$sFilterDesc&body=".urlencode("{$sUrl}pages/$sUIPage?operation=search&filter=$sFilter&$sContext"));
 				$aActions[] = array ('label' => Dict::S('UI:Menu:CSVExport'), 'url' => "../pages/$sUIPage?operation=search&filter=$sFilter&format=csv&$sContext");
 			}
 			$this->AddMenuSeparator($aActions);

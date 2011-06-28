@@ -39,11 +39,14 @@ class iTopWebPage extends NiceWebPage
 	private $m_sMessage;
 	private $m_sInitScript;
 	
-    public function __construct($sTitle)
-    {
-        parent::__construct($sTitle);
-        $this->m_sCurrentTabContainer = '';
-        $this->m_sCurrentTab = '';
+	public function __construct($sTitle)
+	{
+		parent::__construct($sTitle);
+
+		ApplicationContext::SetUrlMakerClass('iTopStandardURLMaker');
+
+		$this->m_sCurrentTabContainer = '';
+		$this->m_sCurrentTab = '';
 		$this->m_aTabs = array();
 		$this->m_sMenu = "";
 		$this->m_sMessage = '';

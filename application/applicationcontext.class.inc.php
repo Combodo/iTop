@@ -24,6 +24,43 @@
  */
 
 require_once(APPROOT."/application/utils.inc.php");
+
+/**
+ * Interface for directing end-users to the relevant application
+ */ 
+interface iDBObjectURLMaker
+{
+	public static function MakeObjectURL($sClass, $iId);
+}
+
+/**
+ * Direct end-users to the standard iTop application: UI.php
+ */ 
+class iTopStandardURLMaker implements iDBObjectURLMaker
+{
+	public static function MakeObjectURL($sClass, $iId)
+	{
+		$sPage = DBObject::ComputeStandardUIPage($sClass);
+		$sAbsoluteUrl = utils::GetAbsoluteUrlAppRoot();
+		$sUrl = "{$sAbsoluteUrl}pages/$sPage?operation=details&class=$sClass&id=$iId";
+		return $sUrl;
+	}
+}
+
+/**
+ * Direct end-users to the standard Portal application
+ */ 
+class PortalURLMaker implements iDBObjectURLMaker
+{
+	public static function MakeObjectURL($sClass, $iId)
+	{
+		$sAbsoluteUrl = utils::GetAbsoluteUrlAppRoot();
+		$sUrl = "{$sAbsoluteUrl}portal/index.php?operation=details&class=$sClass&id=$iId";
+		return $sUrl;
+	}
+}
+
+
 /**
  * Helper class to store and manipulate the parameters that make the application's context
  *
@@ -165,6 +202,73 @@ class ApplicationContext
 		{
 			unset($this->aValues[$sParamName]);
 		}
+	}
+
+	static $m_sUrlMakerClass = null;
+
+	/**
+	 * Set the current application url provider
+	 * @param sClass string Class implementing iDBObjectURLMaker	 
+	 * @return void
+	 */
+	public static function SetUrlMakerClass($sClass = 'iTopStandardURLMaker')
+	{
+		$sPrevious = self::GetUrlMakerClass();
+
+		self::$m_sUrlMakerClass = $sClass;
+		$_SESSION['UrlMakerClass'] = $sClass;
+
+		return $sPrevious;
+	}
+
+	/**
+	 * Get the current application url provider
+	 * @return string the name of the class
+	 */
+	public static function GetUrlMakerClass()
+	{
+		if (is_null(self::$m_sUrlMakerClass))
+		{
+			if (isset($_SESSION['UrlMakerClass']))
+			{
+				self::$m_sUrlMakerClass = $_SESSION['UrlMakerClass'];
+			}
+			else
+			{
+				self::$m_sUrlMakerClass = 'iTopStandardURLMaker';
+			}
+		}
+		return self::$m_sUrlMakerClass;
+	}
+
+	/**
+	 * Get the current application url provider
+	 * @return string the name of the class
+	 */
+   public static function MakeObjectUrl($sObjClass, $sObjKey, $sUrlMakerClass = null, $bWithNavigationContext = true)
+   {
+   	$oAppContext = new ApplicationContext();
+
+      if (is_null($sUrlMakerClass))
+      {
+			$sUrlMakerClass = self::GetUrlMakerClass();
+		}
+		$sUrl = call_user_func(array($sUrlMakerClass, 'MakeObjectUrl'), $sObjClass, $sObjKey);
+		if (strlen($sUrl) > 0)
+		{
+			if ($bWithNavigationContext)
+			{
+				return $sUrl."&".$oAppContext->GetForLink();
+			}
+			else
+			{
+				return $sUrl;
+			}
+		}
+		else
+		{
+			return '';
+		}	
 	}
 }
 ?>

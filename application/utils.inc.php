@@ -359,7 +359,7 @@ class utils
 	{
 		// Build an absolute URL to this page on this server/port
 		$sServerName = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : '';
-		if (MetaModel::GetConfig()->GetSecureConnectionRequired() || MetaModel::GetConfig()->GetHttpsHyperlinks())
+		if (MetaModel::GetConfig()->GetSecureConnectionRequired())
 		{
 			// If a secure connection is required, or if the URL is requested to start with HTTPS
 			// then any URL must start with https !
@@ -414,18 +414,6 @@ class utils
 	}
 	
     /**
-     * Returns the absolute URL PATH of the current page
-     * @param $bForceHTTPS bool True to force HTTPS, false otherwise
-     * @return string The absolute URL to the current page
-     */                   
-	static public function GetAbsoluteUrlPath($bForceHTTPS = false)
-	{
-		$sAbsoluteUrl = self::GetAbsoluteUrl(false, $bForceHTTPS); // False => Don't get the query string
-		$sAbsoluteUrl = substr($sAbsoluteUrl, 0, 1+strrpos($sAbsoluteUrl, '/')); // remove the current page, keep just the path, up to the last /
-		return $sAbsoluteUrl;
-	}
-
-    /**
      * Returns the absolute URL to the server's root path
      * @param $sCurrentRelativePath string NO MORE USED, kept for backward compatibility only !
      * @param $bForceHTTPS bool True to force HTTPS, false otherwise
@@ -433,7 +421,48 @@ class utils
      */                   
 	static public function GetAbsoluteUrlAppRoot($sCurrentRelativePathUNUSED = '', $bForceHTTPS = false)
 	{
-		$sAbsoluteUrl = self::GetAbsoluteUrl(false, $bForceHTTPS); // False => Don't get the query string
+		return MetaModel::GetConfig()->Get('app_root_url');
+	}
+
+	static public function GetDefaultUrlAppRoot()
+	{
+		// Build an absolute URL to this page on this server/port
+		$sServerName = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : '';
+		$sProtocol = (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']!="off")) ? 'https' : 'http';
+		$iPort = isset($_SERVER['SERVER_PORT']) ? $_SERVER['SERVER_PORT'] : 80;
+		if ($sProtocol == 'http')
+		{
+			$sPort = ($iPort == 80) ? '' : ':'.$iPort;
+		}
+		else
+		{
+			$sPort = ($iPort == 443) ? '' : ':'.$iPort;
+		}
+		// $_SERVER['REQUEST_URI'] is empty when running on IIS
+		// Let's use Ivan Tcholakov's fix (found on www.dokeos.com)
+		if (!empty($_SERVER['REQUEST_URI']))
+		{
+			$sPath = $_SERVER['REQUEST_URI'];
+		}
+		else
+		{
+			$sPath = $_SERVER['SCRIPT_NAME'];
+			if (!empty($_SERVER['QUERY_STRING']))
+			{
+				$sPath .= '?'.$_SERVER['QUERY_STRING'];
+			}
+			$_SERVER['REQUEST_URI'] = $sPath;
+		}
+		$sPath = $_SERVER['REQUEST_URI'];
+
+		// remove all the parameters from the query string
+		$iQuestionMarkPos = strpos($sPath, '?');
+		if ($iQuestionMarkPos !== false)
+		{
+			$sPath = substr($sPath, 0, $iQuestionMarkPos);
+		}
+		$sAbsoluteUrl = "$sProtocol://{$sServerName}{$sPort}{$sPath}";
+
 		$sCurrentScript = realpath($_SERVER['SCRIPT_FILENAME']);
 		$sCurrentScript = str_replace('\\', '/', $sCurrentScript); // canonical path
 		$sAppRoot = str_replace('\\', '/', APPROOT); // canonical path
@@ -442,13 +471,13 @@ class utils
 		$sAppRootPos = strpos($sAbsoluteUrl, $sCurrentRelativePath);
 		if ($sAppRootPos !== false)
 		{
-			$sAbsoluteUrl = substr($sAbsoluteUrl, 0, $sAppRootPos); // remove the current page and path
+			$sAppRootUrl = substr($sAbsoluteUrl, 0, $sAppRootPos); // remove the current page and path
 		}
 		else
 		{
 			throw new Exception("Failed to determine application root path $sAbsoluteUrl ($sCurrentRelativePath) APPROOT:'$sAppRoot'");
 		}
-		return $sAbsoluteUrl;
+		return $sAppRootUrl;
 	}
 
 	/**

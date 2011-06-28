@@ -817,8 +817,8 @@ EOF
 			if ($iErrors > 0)
 			{
 				$sIssuesOQL = "SELECT SynchroReplica WHERE sync_source_id=".$this->GetKey()." AND status_last_error!=''";
-				$sAbsoluteUrl = utils::GetAbsoluteUrlPath();
-				$sIssuesURL = "$sAbsoluteUrl../synchro/replica.php?operation=oql&datasource=".$this->GetKey()."&oql=".urlencode($sIssuesOQL);
+				$sAbsoluteUrl = utils::GetAbsoluteUrlAppRoot();
+				$sIssuesURL = "{$sAbsoluteUrl}synchro/replica.php?operation=oql&datasource=".$this->GetKey()."&oql=".urlencode($sIssuesOQL);
 				$sSeeIssues = "<p></p>";
 
 				$sStatistics = "<h1>Statistics</h1>\n";

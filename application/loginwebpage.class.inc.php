@@ -223,10 +223,8 @@ EOF
 	{
 		if (self::SecureConnectionRequired() && !self::IsConnectionSecure())
 		{
-			// Non secured URL... redirect to a secured one
-			$sUrl = Utils::GetAbsoluteUrl(true /* query string */, true /* force HTTPS */);
-			header("Location: $sUrl");			
-			exit;
+			// Non secured URL... request for a secure connection
+			throw new Exception('Secure connection required!');			
 		}
 
 		$aAllowedLoginTypes = MetaModel::GetConfig()->GetAllowedLoginTypes();
