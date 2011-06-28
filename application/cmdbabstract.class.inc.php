@@ -2367,12 +2367,12 @@ EOF
 					$oAttCode = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
 					$aForbiddenFields[] = $oAttCode->GetLabel();
 				}
-				if (count($aForbiddenFields) > 0)
-				{
-					// Security issue
-					$this->m_bSecurityIssue = true;
-					$this->m_aCheckIssues[] = Dict::Format('UI:Delete:NotAllowedToUpdate_Fields',implode(', ', $aForbiddenFields));
-				}
+			}
+			if (count($aForbiddenFields) > 0)
+			{
+				// Security issue
+				$this->m_bSecurityIssue = true;
+				$this->m_aCheckIssues[] = Dict::Format('UI:Delete:NotAllowedToUpdate_Fields',implode(', ', $aForbiddenFields));
 			}
 		}
 	}
