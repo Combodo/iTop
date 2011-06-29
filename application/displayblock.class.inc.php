@@ -1072,16 +1072,6 @@ class MenuBlock extends DisplayBlock
 				$aActions[] = array ('label' => Dict::S('UI:Menu:EMail'), 'url' => "mailto:?subject=".$oObj->GetName()."&body=".urlencode($sUrl));
 				$aActions[] = array ('label' => Dict::S('UI:Menu:CSVExport'), 'url' => "../pages/$sUIPage?operation=search&filter=$sFilter&format=csv&$sContext");
 			}
-			else
-			{
-				// List of links, the only actions are 'Add...' and 'Manage...'
-				$id = $aExtraParams['object_id'];
-				$sTargetAttr = $aExtraParams['target_attr'];
-				$oAttDef = MetaModel::GetAttributeDef($sClass, $sTargetAttr);
-				$sTargetClass = $oAttDef->GetTargetClass();
-				if ($bIsModifyAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:Add'), 'url' => "../pages/$sUIPage?operation=modify_links&class=$sClass&link_attr=".$aExtraParams['link_attr']."&target_class=$sTargetClass&id=$id&addObjects=true&$sContext"); }
-				if ($bIsModifyAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:Manage'), 'url' => "../pages/$sUIPage?operation=modify_links&class=$sClass&link_attr=".$aExtraParams['link_attr']."&target_class=$sTargetClass&id=$id&sContext"); }
-			}
 			$this->AddMenuSeparator($aActions);
 			foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
 			{

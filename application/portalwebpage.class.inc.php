@@ -108,8 +108,6 @@ try
 	    } 
 	});
 		
-	$("table.listResults").tableHover(); // hover tables
-	$(".listResults").tablesorter( { widgets: ['myZebra', 'truncatedList']} ); // sortable and zebra tables
 	$(".date-pick").datepicker({
 			showOn: 'button',
 			buttonImage: '../images/calendar.png',

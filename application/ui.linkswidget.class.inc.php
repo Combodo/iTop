@@ -336,18 +336,8 @@ EOF
 		$oBlock->Display($oP, "ResultsToAdd_{$this->m_sAttCode}", array('menu' => false, 'cssCount'=> '#count_'.$this->m_sAttCode.$this->m_sNameSuffix , 'selection_mode' => true, 'display_limit' => false)); // Don't display the 'Actions' menu on the results
 	}
 	
-	public function DoAddObjects(WebPage $oP, $sRemoteClass)
+	public function DoAddObjects(WebPage $oP, $oFullSetFilter)
 	{
-		if ($sRemoteClass != '')
-		{
-			// assert(MetaModel::IsParentClass($this->m_sRemoteClass, $sRemoteClass));
-			$oFullSetFilter = new DBObjectSearch($sRemoteClass);
-		}
-		else
-		{
-			// No remote class specified use the one defined in the linkedset
-			$oFullSetFilter = new DBObjectSearch($this->m_sRemoteClass);		
-		}
 		$aLinkedObjectIds = utils::ReadMultipleSelection($oFullSetFilter);
 
 		foreach($aLinkedObjectIds as $iObjectId)
