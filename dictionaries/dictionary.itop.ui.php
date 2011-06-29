@@ -915,5 +915,9 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:ActionNotAllowed' => 'You are not allowed to perform this action on these objects.',
 	'UI:BulkAction:NoObjectSelected' => 'Please select at least one object to perform this operation',
 	'UI:AttemptingToChangeASlaveAttribute_Name' => 'The field %1$s is not writable because it is mastered by the data synchronization. Value remains unchanged.',
+	'UI:Pagination:HeaderSelection' => 'Total: %1$s objects (%2$s objects selected).',
+	'UI:Pagination:HeaderNoSelection' => 'Total: %1$s objects.',
+	'UI:Pagination:PageSize' => '%1$s objects per page',
+	'UI:Pagination:PagesLabel' => 'Pages:',
 ));
 ?>

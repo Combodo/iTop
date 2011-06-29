@@ -765,5 +765,9 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:ActionNotAllowed' => 'Vous n\'êtes pas autorisé à exécuter cette opération sur ces objets.',
 	'UI:BulkAction:NoObjectSelected' => 'Veuillez s\électionner au moins un objet pour cette opération.',
 	'UI:AttemptingToChangeASlaveAttribute_Name' => 'Le champ %1$s ne peut pas être modifié car il est géré par une synchronisation avec une source de données. Valeur inchangée.',
+	'UI:Pagination:HeaderSelection' => 'Total: %1$s éléments / %2$s éléments sélectionné(s).',
+	'UI:Pagination:HeaderNoSelection' => 'Total: %1$s éléments.',
+	'UI:Pagination:PageSize' => '%1$s éléments par page',
+	'UI:Pagination:PagesLabel' => 'Pages:',
 ));
 ?>
