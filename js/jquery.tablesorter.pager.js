@@ -147,6 +147,12 @@ function sprintf(format, etc) {
 			
 			function getData(table, start, end)
 			{
+				if (table.ajax_request)
+				{
+					table.ajax_request.abort();
+					table.ajax_request = null;
+				}
+
 				var c = table.config;
 				var s = c.sortList[0];
 				var s_col = null;
@@ -157,7 +163,7 @@ function sprintf(format, etc) {
 					s_order = (s[1] == 0) ? 'asc' : 'desc';
 				}
 				$('#loading', table.config.container).html('<img src="../images/indicator.gif" />');
-				$.post("../pages/ajax.render.php",
+				table.ajax_request = $.post("../pages/ajax.render.php",
 						{ operation: 'pagination',
 						  filter: c.filter,
 						  extra_param: c.extra_params,
@@ -171,6 +177,7 @@ function sprintf(format, etc) {
 						},
 					    function(data)
 					    {
+							table.ajax_request = null; // Ajax request completed
 							oData = $(data);
 							var tableBody = $(table.tBodies[0]);
 							
@@ -251,6 +258,7 @@ function sprintf(format, etc) {
 							updatePageDisplay(c);
 							updateCounter(table, table.config.container);
 							renderPager(table, table.config.container);
+							$(table).tableHover();
 							$('#loading', table.config.container).empty();
 					   });
 			}
@@ -353,6 +361,8 @@ function sprintf(format, etc) {
 					
 					var table = this, pager = config.container;
 				
+					this.ajax_request = null;
+					
 					$(this).trigger("appendCache");
 					
 					config.size = parseInt($(".pagesize",pager).val());

@@ -38,7 +38,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 	{
 		if (me.ajax_request)
 		{
-			me.ajax_request.Abort();
+			me.ajax_request.abort();
 			me.ajax_request = null;
 		}
 	}
@@ -183,7 +183,16 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 	
 	this.DoOk = function()
 	{
-		var iObjectId = $('#fr_'+me.id+' input[name=selectObject]:checked').val();
+		var s = $('#'+me.id+'_results').find(':input[name^=storedSelection]');
+		var iObjectId = 0;
+		if (s.length > 0)
+		{
+			iObjectId = s.val();
+		}
+		else
+		{
+			iObjectId = $('#fr_'+me.id+' input[name=selectObject]:checked').val();
+		}
 		$('#ac_dlg_'+this.id).dialog('close');
 		$('#label_'+this.id).addClass('ac_dlg_loading');
 

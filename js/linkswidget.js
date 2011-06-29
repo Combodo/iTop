@@ -70,6 +70,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates)
 					   bDuplicates: me.bDuplicates
 					 }
 		
+		me.UpdateButtons(0);
 		// Gather the parameters from the search form
 		$('#SearchFormToAdd_'+me.id+' :input').each(
 			function(i)
