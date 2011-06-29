@@ -727,22 +727,38 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		if ($oSet->Count() > MetaModel::GetConfig()->GetMaxDisplayLimit())
 		{
 			$iCount = $oSet->Count();
+			if ($bSelectMode)
+			{
+				$sHeader = Dict::Format('UI:Pagination:HeaderSelection', '<span id="total">0</span>', '<span class="selectedCount"></span>');
+			}
+			else
+			{
+				$sHeader = Dict::Format('UI:Pagination:HeaderNoSelection', '<span id="total">0</span>');
+			}
+			$sCombo = '<select class="pagesize">';
+			for($iPage = 1; $iPage < 5; $iPage++)
+			{
+				$sSelected = '';
+				if ($iPage == 1)
+				{
+					$sSelected = 'selected="selected"';
+				}
+				$iNbItems = $iPage * MetaModel::GetConfig()->GetMinDisplayLimit();
+				$sCombo .= "<option  $sSelected value=\"$iNbItems\">$iNbItems</option>";
+			}
+			$sCombo .= '</select>';
+			$sPages = Dict::S('UI:Pagination:PagesLabel');
+			$sPageSizeCombo = Dict::Format('UI:Pagination:PageSize', $sCombo);
 $sHtml =
 <<<EOF
 <div id="pager{$iListId}" class="pager">
-		</p><span id="total">0</span> items.&nbsp;&nbsp;<span class="selectedCount"></span> item(s) selected.</p>
-		<p><table class="pagination"><tr><td>Pages:</td><td><img src="../images/first.png" class="first"/></td>
+		</p>$sHeader</p>
+		<p><table class="pagination"><tr><td>$sPages</td><td><img src="../images/first.png" class="first"/></td>
 		<td><img src="../images/prev.png" class="prev"/></td>
 		<td><span id="index"></span></td>
 		<td><img src="../images/next.png" class="next"/></td>
 		<td><img src="../images/last.png" class="last"/></td>
-		<td><select class="pagesize">
-			<option selected="selected" value="10">10</option>
-			<option value="20">20</option>
-			<option value="30">30</option>
-			<option  value="40">40</option>
-		</select>
-		items per page.</td>
+		<td>$sPageSizeCombo</td>
 		<td><span id="loading">&nbsp;</span></td>
 		</tr>
 		</table>
@@ -751,7 +767,6 @@ $sHtml =
 </div>
 EOF
 .$sHtml;
-			//$oP->add_ready_script("table.tablesorter( { headers: { 0: {sorter: false}}, widgets: ['myZebra', 'truncatedList']} ).tablesorterPager({container: $('#pager')});\n");
 			$aArgs = $oSet->GetArgs();
 			$sExtraParams = addslashes(str_replace('"', "'", json_encode(array_merge($aExtraParams, $aArgs)))); // JSON encode, change the style of the quotes and escape them
 			$sSelectMode = '';
@@ -773,7 +788,7 @@ EOF
 			{
 				$sHeaders = 'headers: { 0: {sorter: false}},';
 			}
-			$oPage->add_ready_script("$('#{$iListId} table.listResults').tablesorter( { $sHeaders widgets: ['myZebra', 'truncatedList']} );\n");
+			$oPage->add_ready_script("$('#{$iListId} table.listResults').tableHover().tablesorter( { $sHeaders widgets: ['myZebra', 'truncatedList']} );\n");
 			// Manage how we update the 'Ok/Add' buttons that depend on the number of selected items
 			if (isset($aExtraParams['cssCount']))
 			{
