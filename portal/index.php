@@ -485,7 +485,7 @@ function GetFieldAsHtml($oObj, $sAttCode)
 		{
 			$aRow = array();
 			
-			$aRow['key'] = '<a href="./index.php?operation=details&id='.$oRequest->GetKey().'">'.$oRequest->Get('ref').'</a>';
+			$aRow['key'] = '<a href="'.utils::GetAbsoluteUrlAppRoot().'portal/index.php?operation=details&id='.$oRequest->GetKey().'">'.$oRequest->Get('ref').'</a>';
 			$sHilightClass = $oRequest->GetHilightClass();
 			if ($sHilightClass != '')
 			{
@@ -498,6 +498,12 @@ function GetFieldAsHtml($oObj, $sAttCode)
 			$aValues[$oRequest->GetKey()] = $aRow;
 		}
 		$oP->Table($aAttribs, $aValues);
+		// Temprory until we merge re-use the paginated tables:
+		$oP->add_ready_script(
+<<<EOF
+		$('table.listResults').tableHover().tablesorter( { widgets: ['myZebra', 'truncatedList']} );
+EOF
+		);
 	}
 	else
 	{
@@ -613,13 +619,16 @@ function DisplayRequestDetails($oP, UserRequest $oRequest, $bEditMode = true)
 				}
 				foreach($aFields as $sAttCode)
 				{
-					$iFlags = $oRequest->GetAttributeFlags($sAttCode);
-					if ( ($iFlags & OPT_ATT_HIDDEN) == 0)
+					if (MetaModel::IsValidAttCode(get_class($oRequest), $sAttCode))
 					{
-						// The field is visible, add it to the current column
-						$val = GetFieldAsHtml($oRequest, $sAttCode);
-						$aDetails[$sTab][$sColIndex][] = array( 'label' => '<span title="'.MetaModel::GetDescription('UserRequest', $sAttCode).'">'.MetaModel::GetLabel('UserRequest', $sAttCode).'</span>', 'value' => $val);
-						$iInputId++;
+						$iFlags = $oRequest->GetAttributeFlags($sAttCode);
+						if ( ($iFlags & OPT_ATT_HIDDEN) == 0)
+						{
+							// The field is visible, add it to the current column
+							$val = GetFieldAsHtml($oRequest, $sAttCode);
+							$aDetails[$sTab][$sColIndex][] = array( 'label' => '<span title="'.MetaModel::GetDescription('UserRequest', $sAttCode).'">'.MetaModel::GetLabel('UserRequest', $sAttCode).'</span>', 'value' => $val);
+							$iInputId++;
+						}
 					}				
 				}
 			}
