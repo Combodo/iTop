@@ -47,6 +47,12 @@ class bar_value
 	{
 		$this->tip = $tip;
 	}
+	
+	function on_click( $event )
+	{
+		$tmp = 'on-click';
+		$this->$tmp = $event;
+	}
 }
 
 class bar extends bar_base
