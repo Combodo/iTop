@@ -83,7 +83,7 @@ class SqlBlock
 	 */
 	public static function FromTemplate($sTemplate)
 	{
-		$oXml = simplexml_load_string('<root>'.$sTemplate.'</root>');
+		$oXml = simplexml_load_string('<root>'.$sTemplate.'</root>', 'SimpleXMLElement', LIBXML_NOCDATA);
 		if (false)
 		{
 			// Debug
@@ -175,8 +175,17 @@ class SqlBlock
 			{
 				$this->m_aColumns[$sName]['label'] = $sName;
 			}
-			if (isset($aColumnData['drilldown']))
+			if (isset($aColumnData['drilldown']) && !empty($aColumnData['drilldown']))
 			{
+				// Check if the OQL is valid
+				try
+				{
+					$this->m_aColumns[$sName]['filter'] = DBObjectSearch::FromOQL($aColumnData['drilldown']);
+				}
+				catch(OQLException $e)
+				{
+					unset($aColumnData['drilldown']);
+				}
 			}
 		}
 
@@ -193,15 +202,18 @@ class SqlBlock
 			$sXColName = $aColNames[0];
 			$sYColName = $aColNames[1]; 
 			$aData = array();
+			$aRows = array();
 			while($aRow = CMDBSource::FetchArray($res))
 			{
 				$aData[$aRow[$sXColName]] = $aRow[$sYColName];
+				$aRows[$aRow[$sXColName]] = $aRow;
 			}
-			$this->RenderChart($oPage, $sId, $aData);
+			$this->RenderChart($oPage, $sId, $aData, $this->m_aColumns[$sYColName]['drilldown'], $aRows);
 			break;
 
 		default:
 		case 'table':
+			$oAppContext = new ApplicationContext();
 			$aDisplayConfig = array();
 			foreach($this->m_aColumns as $sName => $aColumnData)
 			{
@@ -211,12 +223,28 @@ class SqlBlock
 			$aDisplayData = array();
 			while($aRow = CMDBSource::FetchArray($res))
 			{
+				$aSQLColNames = array_keys($aRow);
 				$aDisplayRow = array();
 				foreach($this->m_aColumns as $sName => $aColumnData)
 				{
-					$aDisplayRow[$sName] = $aRow[$sName];
+					if (isset($aColumnData['filter']))
+					{
+						$sFilter = $aColumnData['drilldown'];
+						$sClass = $aColumnData['filter']->GetClass();
+						$sFilter = str_replace('SELECT '.$sClass, '', $sFilter);
+						foreach($aSQLColNames as $sColName)
+						{
+							$sFilter = str_replace(':'.$sColName, "'".addslashes( $aRow[$sColName] )."'", $sFilter);
+						}
+						$sURL = '../pages/UI.php?operation=search_oql&search_form=0&oql_class='.$sClass.'&oql_clause='.urlencode($sFilter).'&format=html?'.$oAppContext->GetForLink();
+						$aDisplayRow[$sName] = '<a href="'.$sURL.'">'.$aRow[$sName]."</a>";					
+					}
+					else
+					{
+						$aDisplayRow[$sName] = $aRow[$sName];
+					}
 				}
-				$aDisplayData[] = $aRow;
+				$aDisplayData[] = $aDisplayRow;
 			}
 			$oPage->table($aDisplayConfig, $aDisplayData);
 			break;
@@ -229,17 +257,40 @@ class SqlBlock
 		return $sHtml;
 	}
 
-	protected function RenderChart($oPage, $sId, $aValues)
+	protected function RenderChart($oPage, $sId, $aValues, $sDrillDown = '', $aRows = array())
 	{
 		// 1- Compute Open Flash Chart data
 		//
 		$aValueKeys = array();
+		$index = 0;
+		if ($sDrillDown != '')
+		{
+			$oFilter = DBObjectSearch::FromOQL($sDrillDown);
+			$sClass = $oFilter->GetClass();
+			$sOQLClause = str_replace('SELECT '.$sClass, '', $sDrillDown);
+			$aSQLColNames = array_keys(current($aRows)); // Read the list of columns from the current (i.e. first) element of the array
+			$oAppContext = new ApplicationContext();
+			$sURL = '../pages/UI.php?operation=search_oql&search_form=0&oql_class='.$sClass.'&format=html&'.$oAppContext->GetForLink().'&oql_clause=';				
+			$aURLs = array();
+		}
 		foreach($aValues as $key => $value)
 		{
 			// Make sure that values are integers (so that max() will work....)
 			// and build an array of STRING with the keys (numeric keys are transformed into string by PHP :-(
 			$aValues[$key] = (int)$value;
 			$aValueKeys[] = (string)$key;
+			
+			// Build the custom query for the 'drill down' on each element
+			if ($sDrillDown != '')
+			{
+				$sFilter = $sOQLClause;
+				foreach($aSQLColNames as $sColName)
+				{
+					$sFilter = str_replace(':'.$sColName, "'".addslashes( $aRows[$key][$sColName] )."'", $sFilter);
+					$aURLs[$index] = $sURL.urlencode($sFilter);
+				}
+			}
+			$index++;
 		}
 	
 		$oChart = new open_flash_chart();
@@ -266,8 +317,15 @@ class SqlBlock
 			//echo "oYAxis->set_range(0, $iTop, $iMultiplier);\n";
 			$oYAxis->set_range(0, $iTop, $iMultiplier);
 			$oChart->set_y_axis( $oYAxis );
-		
-			$oChartElement->set_values(array_values($aValues));
+			$aBarValues = array();
+			foreach($aValues as $iValue)
+			{
+				$oBarValue = new bar_value($iValue);
+				$oBarValue->on_click("ofc_drilldown_{$sId}");
+				$aBarValues[] = $oBarValue;
+			}
+			$oChartElement->set_values($aBarValues);	
+			//$oChartElement->set_values(array_values($aValues));
 			$oXAxis = new x_axis();
 			$oXLabels = new x_axis_labels();
 			// set them vertical
@@ -289,7 +347,9 @@ class SqlBlock
 			$aData = array();
 			foreach($aValues as $sValue => $iValue)
 			{
-				$aData[] = new pie_value($iValue, $sValue); //@@ BUG: not passed via ajax !!!
+				$oPieValue = new pie_value($iValue, $sValue); //@@ BUG: not passed via ajax !!!
+				$oPieValue->on_click("ofc_drilldown_{$sId}");
+				$aData[] = $oPieValue;
 			}
 	
 			$oChartElement->set_values( $aData );
@@ -304,6 +364,11 @@ class SqlBlock
 			
 		$sData = $oChart->toPrettyString();
 		$sData = json_encode($sData);
+		$sURLList = '';
+		foreach($aURLs as $index => $sURL)
+		{
+			$sURLList .= "\taURLs[$index] = '".addslashes($sURL)."';\n";
+		}
 
 		// 2- Declare the Javascript function that will render the chart data\
 		//
@@ -313,12 +378,21 @@ function ofc_get_data_{$sId}()
 {
 	return $sData;
 }
+
+function ofc_drilldown_{$sId}(index)
+{
+	var aURLs = new Array();
+{$sURLList}
+	var sURL = aURLs[index];
+	
+	window.location.href = sURL; // Navigate ! 
+}
 EOF
 		);
 		
 		// 3- Insert the Open Flash chart
 		//
-		$oPage->add("<div id=\"$sId\">If blah blah cd romain<div>\n");
+		$oPage->add("<div id=\"$sId\"><div>\n");
 		$oPage->add_ready_script(
 <<<EOF
 swfobject.embedSWF(	"../images/open-flash-chart.swf", 
