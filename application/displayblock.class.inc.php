@@ -772,13 +772,57 @@ EOF
 			$sHtml .= "<div id=\"my_chart_{$iChartCounter}\">If the chart does not display, <a href=\"http://get.adobe.com/flash/\" target=\"_blank\">install Flash</a></div>\n";
 			$oPage->add_script("function ofc_resize(left, width, top, height) { /* do nothing special */ }");
 			$oPage->add_ready_script("swfobject.embedSWF(\"../images/open-flash-chart.swf\", \"my_chart_{$iChartCounter}\", \"100%\", \"300\",\"9.0.0\", \"expressInstall.swf\",
-			{\"data-file\":\"".urlencode("../pages/ajax.render.php?operation=open_flash_chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[chart_type]=$sChartType&params[chart_title]=$sTitle&filter=".$sFilter)."\"}, {wmode: 'transparent'} );\n");
+			{\"data-file\":\"".urlencode("../pages/ajax.render.php?operation=open_flash_chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[chart_type]=$sChartType&params[chart_title]=$sTitle&id=$sId&filter=".$sFilter)."\"}, {wmode: 'transparent'} );\n");
 			$iChartCounter++;
+			if (isset($aExtraParams['group_by']))
+			{
+				$sGroupByField = $aExtraParams['group_by'];
+				$aGroupBy = array();
+				while($oObj = $this->m_oSet->Fetch())
+				{
+					if (isset($aExtraParams['group_by_expr']))
+					{
+						eval("\$sValue = ".sprintf($aExtraParams['group_by_expr'],  $oObj->Get($sGroupByField)).';');
+					}
+					else
+					{
+						$sValue = $oObj->Get($sGroupByField);
+					}
+					$aGroupBy[$sValue] = isset($aGroupBy[$sValue]) ? $aGroupBy[$sValue]+1 : 1;
+				}
+				$sFilter = urlencode($this->m_oFilter->serialize());
+				$aData = array();
+				$aLabels = array();
+				$idx = 0;
+				foreach($aGroupBy as $sValue => $iValue)
+				{
+					$oDrillDownFilter = clone $this->m_oFilter;
+					$oDrillDownFilter->AddCondition($sGroupByField, $sValue, '=');
+					$aURLs[$idx] = $oDrillDownFilter->serialize();
+					$idx++;
+				}
+				$sURLList = '';
+				foreach($aURLs as $index => $sURL)
+				{
+					$sURLList .= "\taURLs[$index] = '".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&format=html&filter=".addslashes($sURL)."';\n";
+				}
+				$oPage->add_script(
+<<<EOF
+function ofc_drill_down_{$sId}(index)
+{
+	var aURLs = new Array();
+{$sURLList}
+	window.location.href=aURLs[index];
+}
+EOF
+				);
+			}
 			break;
 			
 			case 'open_flash_chart_ajax':
 			require_once(APPROOT.'/pages/php-ofc-library/open-flash-chart.php');
 			$sChartType = isset($aExtraParams['chart_type']) ? $aExtraParams['chart_type'] : 'pie';
+			$sId = utils::ReadParam('id', '');
 
 			$oChart = new open_flash_chart();
 			switch($sChartType)
@@ -805,12 +849,15 @@ EOF
 					$sFilter = urlencode($this->m_oFilter->serialize());
 					$aData = array();
 					$aLabels = array();
+					$maxValue = 0;
 					foreach($aGroupBy as $sValue => $iValue)
 					{
-						$aData[] = $iValue;
+						$oBarValue = new bar_value($iValue);
+						$oBarValue->on_click("ofc_drill_down_$sId");
+						$aData[] = $oBarValue;
+						if ($iValue > $maxValue) $maxValue = $iValue;
 						$aLabels[] = $sValue;
 					}
-					$maxValue = max($aData);
 					$oYAxis = new y_axis();
 					$aMagicValues = array(1,2,5,10);
 					$iMultiplier = 1;
@@ -869,7 +916,9 @@ EOF
 					$aData = array();
 					foreach($aGroupBy as $sValue => $iValue)
 					{
-						$aData[] = new pie_value($iValue, $sValue); //@@ BUG: not passed via ajax !!!
+						$PieValue = new pie_value($iValue, $sValue); //@@ BUG: not passed via ajax !!!
+						$PieValue->on_click("ofc_drill_down_$sId");
+						$aData[] = $PieValue;
 					}
 	
 	

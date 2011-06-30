@@ -236,7 +236,7 @@ class SqlBlock
 						{
 							$sFilter = str_replace(':'.$sColName, "'".addslashes( $aRow[$sColName] )."'", $sFilter);
 						}
-						$sURL = '../pages/UI.php?operation=search_oql&search_form=0&oql_class='.$sClass.'&oql_clause='.urlencode($sFilter).'&format=html?'.$oAppContext->GetForLink();
+						$sURL = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search_oql&search_form=0&oql_class='.$sClass.'&oql_clause='.urlencode($sFilter).'&format=html?'.$oAppContext->GetForLink();
 						$aDisplayRow[$sName] = '<a href="'.$sURL.'">'.$aRow[$sName]."</a>";					
 					}
 					else
@@ -270,7 +270,7 @@ class SqlBlock
 			$sOQLClause = str_replace('SELECT '.$sClass, '', $sDrillDown);
 			$aSQLColNames = array_keys(current($aRows)); // Read the list of columns from the current (i.e. first) element of the array
 			$oAppContext = new ApplicationContext();
-			$sURL = '../pages/UI.php?operation=search_oql&search_form=0&oql_class='.$sClass.'&format=html&'.$oAppContext->GetForLink().'&oql_clause=';				
+			$sURL = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search_oql&search_form=0&oql_class='.$sClass.'&format=html&'.$oAppContext->GetForLink().'&oql_clause=';				
 			$aURLs = array();
 		}
 		foreach($aValues as $key => $value)
