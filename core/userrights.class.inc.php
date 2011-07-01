@@ -597,8 +597,6 @@ class UserRights
 		if (!self::CheckLogin()) return true;
 
 		if (self::IsAdministrator()) return true;
-		// Portal users actions are limited by the portal page...
-		if (self::IsPortalUser()) return true;
 
 		if (MetaModel::HasCategory($sClass, 'bizmodel'))
 		{
