@@ -44,15 +44,16 @@ try
 	{
 		$sObjClass = $oFilter->GetClass();		
 		$aContextParams = $oAppContext->GetNames();
-		if (is_callable("$sObjClass::MapContextParam"))
+		$aCallSpec = array($sObjClass, 'MapContextParam');
+		if (is_callable($aCallSpec))
 		{
 			foreach($aContextParams as $sParamName)
 			{
 				$sValue = $oAppContext->GetCurrentValue($sParamName, null);
 				if ($sValue != null)
 				{
-					$sAttCode = eval("return $sObjClass::MapContextParam('$sParamName');"); // Returns null when there is no mapping for this parameter
-					if ($sAttCode != null)
+					$sAttCode = call_user_func($aCallSpec, $sParamName); // Returns null when there is no mapping for this parameter
+					if ($sAttCode != null && MetaModel::IsValidAttCode($sObjClass, $sAttCode))
 					{
 						$oFilter->AddCondition($sAttCode, $sValue);
 					}

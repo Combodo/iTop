@@ -751,15 +751,22 @@ exit;
 
 		// Determine how to position the objects of this class
 		//
+		$aCallSpec = array($sClass, 'MapContextParam');
 		if ($sClass == 'Organization')
 		{
 			$sAttCode = 'id';
 		}
-		elseif (is_callable("$sClass::MapContextParam"))
+		elseif (is_callable($aCallSpec))
 		{
-			$sAttCode = eval("return $sClass::MapContextParam('org_id');"); // Returns null when there is no mapping for this parameter
+			$sAttCode = call_user_func($aCallSpec, 'org_id'); // Returns null when there is no mapping for this parameter
+
 			if ($sAttCode == null)
 			{
+				return true;
+			}
+			if (!MetaModel::IsValidAttCode($sClass, $sAttCode))
+			{
+				// Skip silently. The data model checker will tell you something about this...
 				return true;
 			}
 		}
