@@ -2185,6 +2185,7 @@ class AttributeDuration extends AttributeInteger
 	
 	static function SplitDuration($duration)
 	{
+		$duration = (int) $duration;
 		$days = floor($duration / 86400);
 		$hours = floor(($duration - (86400*$days)) / 3600);
 		$minutes = floor(($duration - (86400*$days + 3600*$hours)) / 60);
