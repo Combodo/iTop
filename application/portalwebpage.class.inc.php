@@ -27,6 +27,8 @@ require_once(APPROOT."/application/nicewebpage.class.inc.php");
 require_once(APPROOT."/application/applicationcontext.class.inc.php");
 require_once(APPROOT."/application/user.preferences.class.inc.php");
 
+define ('PARAM_ARROW_SEP', '_x_');
+
 /**
  * Web page with some associated CSS and scripts (jquery) for a fancier display
  * of the Portal web page
@@ -36,10 +38,12 @@ class PortalWebPage extends NiceWebPage
 	/**
 	 * Portal menu
 	 */
+	protected $m_sWelcomeMsg;
 	protected $m_aMenuButtons;
 	
     public function __construct($sTitle, $sAlternateStyleSheet = '')
     {
+    	$this->m_sWelcomeMsg = '';
     	$this->m_aMenuButtons = array();
         parent::__construct($sTitle);
 		$this->add_header("Content-type: text/html; charset=utf-8");
@@ -140,19 +144,33 @@ EOF
 		return bResult;
 	}
 
-	function GoBack()
+	function GoBack(sFormId)
 	{
-		var form = $('#request_form');
-		var step = $('input[name=step]');
+		var form = $('#'+sFormId);
+		var step_back = $('input[name=step_back]');
 
 		form.unbind('submit'); // De-activate validation
-		step.val(step.val() -2); // To go Back one step: next step is x, current step is x-1, previous step is x-2
+
+		step_back.val(1);
 		form.submit(); // Go
 	}
 EOF
 );
 		
 	}
+
+	public function SetCurrentTab($sTabLabel = '')
+	{
+	}
+
+	/**
+	 * Specify a welcome message (optional)
+	 */
+	public function SetWelcomeMessage($sMsg)
+	{
+		$this->m_sWelcomeMsg = $sMsg;
+	}
+		 	
 	
 	/**
 	 * Add a button to the portal's main menu
@@ -170,7 +188,7 @@ EOF
 		{
 			$sMenu .= "<a class=\"button\" id=\"{$aMenuItem['id']}\" href=\"{$aMenuItem['hyperlink']}\"><span>".Dict::S($aMenuItem['label'])."</span></a>";
 		}
-		$this->s_content = '<div id="portal"><div id="banner"><div id="logo"></div>'.$sMenu.'</div><div id="content">'.$this->s_content.'</div></div>';
+		$this->s_content = '<div id="portal"><div id="banner"><div id="logo"></div>'.$sMenu.'<div id ="welcome">'.$this->m_sWelcomeMsg.'</div></div><div id="content">'.$this->s_content.'</div></div>';
 		parent::output();
 	}
 
@@ -181,7 +199,7 @@ EOF
 	 * @param String $sEmptyListMessage Message displayed whenever the list is empty
 	 * @return string The HTML text representing the list
 	 */
-	 function DisplaySet($oSet, $aZList, $sEmptyListMessage = '')
+	 public function DisplaySet($oSet, $aZList, $sEmptyListMessage = '')
 	 {
 		if ($oSet->Count() > 0)
 		{
@@ -222,7 +240,7 @@ EOF
 					}
 					foreach($aZList as $sAttCode)
 					{
-						$aRow[$sAttCode] = GetFieldAsHtml($oObj, $sAttCode);
+						$aRow[$sAttCode] = $oObj->GetAsHTML($sAttCode);
 					}
 					$aValues[$oObj->GetKey()] = $aRow;
 				}
@@ -234,13 +252,14 @@ EOF
 			$this->add($sEmptyListMessage);
 		}
 	}
+
 	/**
 	 * Display the attributes of an object (no title, no form)
 	 * @param Object $oObj Any kind of object
 	 * @param aAttList The list of attributes to display
 	 * @return void
 	 */
-	function DisplayObjectDetails($oObj, $aAttList)
+	public function DisplayObjectDetails($oObj, $aAttList)
 	{
 		$sClass = get_class($oObj);
 		$aDetails = array();
@@ -251,32 +270,23 @@ EOF
 			if ( (!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0) )
 			{
 				// Don't display linked set and non-visible attributes (in this state)
-				$sDisplayValue = GetFieldAsHtml($oObj, $sAttCode);
+				$sDisplayValue = $oObj->GetAsHTML($sAttCode);
 				$aDetails[] = array('label' => '<span title="'.MetaModel::GetDescription($sClass, $sAttCode).'">'.MetaModel::GetLabel($sClass, $sAttCode).'</span>', 'value' => $sDisplayValue);
 			}
-		}
-		if (false) // Attachements !!!!!
-		{
-			$sAttachements = '<table>';
-			while($oDoc = $oDocSet->Fetch())
-			{
-				$sAttachements .= '<tr><td>'.$oDoc->GetAsHtml('contents').'</td></tr>';
-			}
-			$sAttachements .= '</table>';
-			$aDetails[] = array('label' => Dict::S('Portal:Attachments'), 'value' => $sAttachements);
 		}
 		$this->details($aDetails);
 	}
 	
 	/**
-	 * xxxx
+	 * DisplayObjectLinkset
 	 * @param Object $oObj Any kind of object
 	 * @param $sLinkSetAttCode The attribute code of the link set attribute to display
 	 * @param $sRemoteAttCode The external key on the linked class, pointing to the remote objects
-	 * @param $aZList The list of attribute of the remote object 
+	 * @param $aZList The list of attribute of the remote object
+	 * @param $sEmptyListMessage The message to display if the list is empty	  
 	 * @return void
 	 */
-	function DisplayObjectLinkset($oObj, $sLinkSetAttCode, $sRemoteAttCode, $aZList, $sEmptyListMessage = '')
+	public function DisplayObjectLinkset($oObj, $sLinkSetAttCode, $sRemoteAttCode, $aZList, $sEmptyListMessage = '')
 	{
 		if (empty($sEmptyListMessage))
 		{
@@ -313,7 +323,7 @@ EOF
 				}
 				foreach($aZList as $sAttCode)
 				{
-					$aRow[$sAttCode] = GetFieldAsHtml($oObj, $sAttCode);
+					$aRow[$sAttCode] = $oObj->GetAsHTML($sAttCode);
 				}
 				$aValues[$oObj->GetKey()] = $aRow;
 			}
@@ -330,7 +340,7 @@ EOF
 	{
 		if (is_null($sFieldName))
 		{
-			$sFieldName = str_replace('->', '_x_', $sAttSpec);
+			$sFieldName = str_replace('->', PARAM_ARROW_SEP, $sAttSpec);
 		}
 
 		$iPos = strpos($sAttSpec, '->');
@@ -440,6 +450,67 @@ EOF
 		$this->add("</form>\n");
 	}
 
+	/**
+	 * Read parameters from the page
+	 * Parameters that were absent from the page's parameters are not set in the resulting hash array
+	 * @input string $sMethod Either get or post
+	 * @return Hash Array of name => value corresponding to the parameters that were passed to the page
+	 */
+	public function ReadAllParams($sParamList, $sPrefix = 'attr_', $sMethod = 'get')
+	{
+		$aParams = explode(',', $sParamList);
+		$aValues = array();
+		foreach($aParams as $sName)
+		{
+			$sName = trim($sName);
+			$value = utils::ReadParam($sPrefix.$sName, null, $sMethod);
+			if (!is_null($value))
+			{
+				$aValues[$sName] = $value;
+			}
+		}
+		return $aValues;
+	}
+
+	/**
+	 * Outputs a list of parameters as hidden fields
+	 * Example: attr_dummy[-123][id] = "blah"
+	 * @param Hash $aParameters Array name => value for the parameters
+	 * @param Array $aExclude The list of parameters that must not be handled this way (probably already in the visible part of the form)
+	 * @return void
+	 */
+	protected function DumpHiddenParamsInternal($sName, $value)
+	{
+		if (is_array($value))
+		{
+			foreach($value as $sKey => $item)
+			{
+				$this->DumpHiddenParamsInternal($sName.'['.$sKey.']', $item);
+			}
+		}
+		else
+		{
+			$this->Add("<input type=\"hidden\" name=\"$sName\" value=\"$value\">");
+		}
+	}
+
+	/**
+	 * Outputs a list of parameters as hidden field into the current page
+	 * (must be called when inside a form)
+	 * @param Hash $aParameters Array name => value for the parameters
+	 * @param Array $aExclude The list of parameters that must not be handled this way (probably already in the visible part of the form)
+	 * @return void
+	 */
+	public function DumpHiddenParams($aParameters, $aExclude = null, $sPrefix = 'attr_')
+	{
+		foreach($aParameters as $sAttCode => $value)
+		{
+			if (is_null($aExclude) || !in_array($sAttCode, $aExclude))
+			{
+				$this->DumpHiddenParamsInternal($sPrefix.$sAttCode, $value);
+			}
+		}
+	}
 
 	public function PostedParamsToFilter($sClass, $aAttList, $sPrefix)
 	{
@@ -447,7 +518,7 @@ EOF
 		$iCountParams = 0;
 		foreach($aAttList as $sAttSpec)
 		{
-			$sFieldName = str_replace('->', '_x_', $sAttSpec);
+			$sFieldName = str_replace('->', PARAM_ARROW_SEP, $sAttSpec);
 			$value = utils::ReadPostedParam($sPrefix.$sFieldName, null);
 			if (!is_null($value) && strlen($value) > 0)
 			{
@@ -464,5 +535,174 @@ EOF
 			return $oFilter;
 		}
 	}
+
+	/**
+	 * Updates the object form POSTED arguments, and writes it into the DB (applies a stimuli if requested)
+	 * @param DBObject $oObj The object to update
+	 * @return void
+	 */
+	public function DoUpdateObjectFromPostedForm(DBObject $oObj)
+	{
+		$sTransactionId = utils::ReadPostedParam('transaction_id', '');
+		if (!utils::IsTransactionValid($sTransactionId))
+		{
+			throw new Exception(Dict::S('UI:Error:ObjectAlreadyUpdated'));
+		}
+	
+		$sClass = get_class($oObj);
+	
+	
+		// TODO - Secure this: specify the list of attributes that can be updated
+		//        the list must correspond to the attributes proposed in the form
+		$oObj->UpdateObject(/* Form prefix */);
+	
+	   // Optional: apply a stimulus
+	   //
+		$sStimulus = trim(utils::ReadPostedParam('apply_stimulus', ''));
+	   if (!empty($sStimulus))
+	   {
+			if (!$oObj->ApplyStimulus($sStimulus))
+			{
+				throw new Exception("Cannot apply stimulus '$sStimulus' to {$oObj->GetName()}");
+			}
+		}
+	
+		// Record the change
+		//
+		$oMyChange = MetaModel::NewObject("CMDBChange");
+		$oMyChange->Set("date", time());
+		$sUserString = CMDBChange::GetCurrentUserName();
+		$oMyChange->Set("userinfo", $sUserString);
+		$iChangeId = $oMyChange->DBInsert();
+		$oObj->DBUpdateTracked($oMyChange);
+	
+		$this->p("<h1>".Dict::Format('UI:Class_Object_Updated', MetaModel::GetName(get_class($oObj)), $oObj->GetName())."</h1>\n");
+	}
+
+	/**
+	 * Find the object of the specified Class/ID.
+	 * @param WebPage $oP The current page
+	 * @return DBObject The found object, or throws an exception in case of failure
+	 */
+	public function FindObjectFromArgs()
+	{
+		$sClass = utils::ReadParam('class', '');
+		$iId = utils::ReadParam('id', 0);
+	
+		if (empty($sClass))
+		{
+			throw new Exception("Missing argument 'class'");
+		}
+		if (!MetaModel::IsValidClass($sClass))
+		{
+			throw new Exception("Wrong value for argument 'class': $sClass");
+		}
+		if ($iId == 0)
+		{
+			throw new Exception("Missing argument 'id'");
+		}
+		$oObj = MetaModel::GetObject($sClass, $iId, false);
+		if (!is_object($oObj))
+		{
+			throw new Exception("Could not find the object $sClass/$iId");
+		}
+		return $oObj;
+	}
+
+	var $m_sWizardId = null;
+
+	public function WizardFormStart($sId = '', $sNextStep = null, $bAttachment = false, $sMethod = 'post')
+	{
+		$this->m_sWizardId = $sId;
+
+		// multipart... needed for file upload
+		$this->add("<form id=\"{$this->m_sWizardId}\" method=\"$sMethod\" enctype=\"multipart/form-data\">\n");
+
+		$aPreviousSteps = $this->GetWizardStepHistory();
+		if (utils::ReadParam('step_back', 0) == 1)
+		{
+			// Back into the past history
+			array_pop($aPreviousSteps);
+		}
+		else
+		{
+			// Moving forward
+			array_push($aPreviousSteps, utils::ReadParam('next_step'));
+		}
+
+		$sStepHistory = implode(',', $aPreviousSteps);
+		$this->add("<input type=\"hidden\" name=\"step_history\" value=\"$sStepHistory\">");
+
+		if (!is_null($sNextStep))
+		{		
+			$this->add("<input type=\"hidden\" name=\"next_step\" value=\"$sNextStep\">");
+		}
+		$this->add("<input type=\"hidden\" name=\"step_back\" value=\"0\">");
+
+		$sTransactionId = utils::GetNewTransactionId();
+		$this->SetTransactionId($sTransactionId);
+		$this->add("<input type=\"hidden\" name=\"transaction_id\" value=\"$sTransactionId\">\n");
+	}
+
+
+	public function WizardFormEnd()
+	{
+		$this->add("</form>\n");
+	}
+
+	public function GetWizardStep()
+	{
+		if (utils::ReadParam('step_back', 0) == 1)
+		{
+			// Take the value into the history - one level above
+			$aPreviousSteps = $this->GetWizardStepHistory();
+			array_pop($aPreviousSteps);
+			return end($aPreviousSteps);
+		}
+		else
+		{
+			return utils::ReadParam('next_step');
+		}
+	}
+
+	protected function GetWizardStepHistory()
+	{
+		$sRawHistory = trim(utils::ReadParam('step_history', ''));
+		if (strlen($sRawHistory) == 0)
+		{
+			return array();
+		}
+		else
+		{
+			return explode(',', $sRawHistory);
+		}
+	}
+
+	public function WizardButtonBackNext()
+	{
+		$this->p("<input type=\"submit\" value=\"".Dict::S('UI:Button:Back')."\"  onClick=\"GoBack('{$this->m_sWizardId}');\">&nbsp;<input type=\"submit\" value=\"".Dict::S('UI:Button:Next')."\">");
+	}
+
+	public function WizardButtonBackFinish()
+	{
+		$this->p("<input type=\"submit\" value=\"".Dict::S('UI:Button:Back')."\" onClick=\"GoBack('{$this->m_sWizardId}');\">&nbsp;<input type=\"submit\" value=\"".Dict::S('UI:Button:Finish')."\">");
+	}
+
+	public function WizardButtonNext()
+	{
+		$this->p("<input type=\"submit\" value=\"".Dict::S('UI:Button:Next')."\">");
+	}
+
+	public function WizardCheckSelectionOnSubmit($sMessageIfNoSelection)
+	{
+		$this->add_ready_script(
+<<<EOF
+	$('#{$this->m_sWizardId}').submit(function() {
+		return CheckSelection('$sMessageIfNoSelection');
+	});
+EOF
+		);
+	}
 }
+
 ?>
