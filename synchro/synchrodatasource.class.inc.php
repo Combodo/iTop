@@ -1621,7 +1621,7 @@ class SynchroReplica extends DBObject implements iDisplay
 			}
 			else
 			{
-				$this->UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange, $oStatLog, 'stats_nb_obj', 'stats_nb_obj_updated_errors');
+				$this->UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange, $oStatLog, '', 'stats_nb_obj_updated_errors');
 			}
 			break;
 			
@@ -1651,13 +1651,19 @@ class SynchroReplica extends DBObject implements iDisplay
 			{
 				$oDestObj->DBUpdateTracked($oChange);
 				$oStatLog->AddTrace('Updated object - Values: {'.implode(', ', $aValueTrace).'}', $this);
-				$oStatLog->Inc($sStatsCode.'_updated');
+				if ($sStatsCode != '')
+				{
+					$oStatLog->Inc($sStatsCode.'_updated');
+				}
 				$this->Set('info_last_modified', date('Y-m-d H:i:s'));
 			}
 			else
 			{
 				$oStatLog->AddTrace('Unchanged object', $this);
-				$oStatLog->Inc($sStatsCode.'_unchanged');
+				if ($sStatsCode != '')
+				{
+					$oStatLog->Inc($sStatsCode.'_unchanged');
+				}
 			}
 
 			$this->Set('status_last_error', '');
