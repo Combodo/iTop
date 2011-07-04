@@ -724,7 +724,7 @@ try
 		$sFilter = utils::ReadParam('filter', '');
 		$sClass = utils::ReadParam('class', '');
 		$oFullSetFilter = DBObjectSearch::unserialize($sFilter);
-		$aSelectedObj = ReadMultipleSelection($oFullSetFilter);
+		$aSelectedObj = utils::ReadMultipleSelection($oFullSetFilter);
 		if (count($aSelectedObj) > 0)
 		{
 			$iAllowedCount = count($aSelectedObj);
@@ -1366,7 +1366,7 @@ EOF
 		}
 		$oFilter = DBObjectSearch::unserialize($sFilter);
 		$sClass = $oFilter->GetClass();	
-		$aSelectedObj = ReadMultipleSelection($oFilter);
+		$aSelectedObj = utils::ReadMultipleSelection($oFilter);
 		if (count($aSelectObject) == 0)
 		{
 			// Nothing to do, no object was selected !
