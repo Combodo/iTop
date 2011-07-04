@@ -27,7 +27,12 @@ require_once(APPROOT."/application/nicewebpage.class.inc.php");
 require_once(APPROOT."/application/applicationcontext.class.inc.php");
 require_once(APPROOT."/application/user.preferences.class.inc.php");
 
-define ('PARAM_ARROW_SEP', '_x_');
+define('BUTTON_CANCEL', 1);
+define('BUTTON_BACK', 2);
+define('BUTTON_NEXT', 4);
+define('BUTTON_FINISH', 8);
+
+define('PARAM_ARROW_SEP', '_x_');
 
 /**
  * Web page with some associated CSS and scripts (jquery) for a fancier display
@@ -154,6 +159,14 @@ EOF
 		step_back.val(1);
 		form.submit(); // Go
 	}
+
+	function GoHome()
+	{
+		var form = $('FORM');
+		form.unbind('submit'); // De-activate validation
+		window.location.href = '?operation=';
+		return false;
+	}
 EOF
 );
 		
@@ -179,16 +192,25 @@ EOF
 	{
 		$this->m_aMenuButtons[] = array('id' => $sId, 'label' => $sLabel, 'hyperlink' => $sHyperlink);
 	}
+
+	var $m_bEnableDisconnectButton = true;
+	public function EnableDisconnectButton($bEnable)
+	{
+		$this->m_bEnableDisconnectButton = $bEnable;
+	}
 	
 	public function output()
 	{
 		$sMenu = '';
-		$this->AddMenuButton('logoff', 'Portal:Disconnect', '../pages/logoff.php'); // This menu is always present and is the last one
+		if ($this->m_bEnableDisconnectButton)
+		{
+			$this->AddMenuButton('logoff', 'Portal:Disconnect', '../pages/logoff.php'); // This menu is always present and is the last one
+		}
 		foreach($this->m_aMenuButtons as $aMenuItem)
 		{
 			$sMenu .= "<a class=\"button\" id=\"{$aMenuItem['id']}\" href=\"{$aMenuItem['hyperlink']}\"><span>".Dict::S($aMenuItem['label'])."</span></a>";
 		}
-		$this->s_content = '<div id="portal"><div id="banner"><div id="logo"></div>'.$sMenu.'<div id ="welcome">'.$this->m_sWelcomeMsg.'</div></div><div id="content">'.$this->s_content.'</div></div>';
+		$this->s_content = '<div id="portal"><div id="welcome">'.$this->m_sWelcomeMsg.'</div><div id="banner"><div id="logo"></div>'.$sMenu.'</div><div id="content">'.$this->s_content.'</div></div>';
 		parent::output();
 	}
 
@@ -644,6 +666,30 @@ EOF
 		$this->add("<input type=\"hidden\" name=\"transaction_id\" value=\"$sTransactionId\">\n");
 	}
 
+	public function WizardFormButtons($iButtonFlags)
+	{
+		$aButtons = array();
+		if ($iButtonFlags & BUTTON_CANCEL)
+		{
+			$aButtons[] = "<input id=\"btn_cancel\" type=\"button\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"GoHome();\">";
+		}
+		if ($iButtonFlags & BUTTON_BACK)
+		{
+			$aButtons[] = "<input id=\"btn_back\" type=\"submit\" value=\"".Dict::S('UI:Button:Back')."\"  onClick=\"GoBack('{$this->m_sWizardId}');\">";
+		}
+		if ($iButtonFlags & BUTTON_NEXT)
+		{
+			$aButtons[] = "<input id=\"btn_next\" type=\"submit\" value=\"".Dict::S('UI:Button:Next')."\">";
+		}
+		if ($iButtonFlags & BUTTON_FINISH)
+		{
+			$aButtons[] = "<input id=\"btn_finish\" type=\"submit\" value=\"".Dict::S('UI:Button:Finish')."\">";
+		}
+
+		$this->add('<div id="buttons">');
+		$this->add(implode('', $aButtons));
+		$this->add('</div>');
+	}
 
 	public function WizardFormEnd()
 	{
@@ -676,21 +722,6 @@ EOF
 		{
 			return explode(',', $sRawHistory);
 		}
-	}
-
-	public function WizardButtonBackNext()
-	{
-		$this->p("<input type=\"submit\" value=\"".Dict::S('UI:Button:Back')."\"  onClick=\"GoBack('{$this->m_sWizardId}');\">&nbsp;<input type=\"submit\" value=\"".Dict::S('UI:Button:Next')."\">");
-	}
-
-	public function WizardButtonBackFinish()
-	{
-		$this->p("<input type=\"submit\" value=\"".Dict::S('UI:Button:Back')."\" onClick=\"GoBack('{$this->m_sWizardId}');\">&nbsp;<input type=\"submit\" value=\"".Dict::S('UI:Button:Finish')."\">");
-	}
-
-	public function WizardButtonNext()
-	{
-		$this->p("<input type=\"submit\" value=\"".Dict::S('UI:Button:Next')."\">");
 	}
 
 	public function WizardCheckSelectionOnSubmit($sMessageIfNoSelection)
