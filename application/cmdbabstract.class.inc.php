@@ -2151,16 +2151,20 @@ EOF
 	/**
 	 * Updates the object from the POSTed parameters
 	 */
-	public function UpdateObject($sFormPrefix = '')
+	public function UpdateObject($sFormPrefix = '', $aAttList = null)
 	{
 		$aErrors = array();
-		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode=>$oAttDef)
+		if (!is_array($aAttList))
 		{
+			$sAttList = $this->FlattenZList(MetaModel::GetZListItems(get_class($this), 'details'));
+		}
+		foreach($sAttList as $sAttCode)
+		{
+			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+			
 			if ($oAttDef->IsLinkSet() && $oAttDef->IsIndirect())
 			{
 				$aLinks = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null);
-				if (is_null($aLinks)) continue;
-				
 				$sLinkedClass = $oAttDef->GetLinkedClass();
 				$sExtKeyToRemote = $oAttDef->GetExtKeyToRemote();
 				$sExtKeyToMe = $oAttDef->GetExtKeyToMe();
