@@ -1366,7 +1366,7 @@ EOF
 		}
 		$oFilter = DBObjectSearch::unserialize($sFilter);
 		$sClass = $oFilter->GetClass();	
-		$aSelectedObj = utils::ReadMultipleSelection($oFilter);
+		$aSelectObj = utils::ReadMultipleSelection($oFilter);
 		if (count($aSelectObject) == 0)
 		{
 			// Nothing to do, no object was selected !
