@@ -2156,9 +2156,9 @@ EOF
 		$aErrors = array();
 		if (!is_array($aAttList))
 		{
-			$sAttList = $this->FlattenZList(MetaModel::GetZListItems(get_class($this), 'details'));
+			$aAttList = $this->FlattenZList(MetaModel::GetZListItems(get_class($this), 'details'));
 		}
-		foreach($sAttList as $sAttCode)
+		foreach($aAttList as $sAttCode)
 		{
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
 			

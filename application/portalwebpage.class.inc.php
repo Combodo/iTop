@@ -561,9 +561,10 @@ EOF
 	/**
 	 * Updates the object form POSTED arguments, and writes it into the DB (applies a stimuli if requested)
 	 * @param DBObject $oObj The object to update
+	 * $param array $aAttList If set, this will limit the list of updated attributes	 
 	 * @return void
 	 */
-	public function DoUpdateObjectFromPostedForm(DBObject $oObj)
+	public function DoUpdateObjectFromPostedForm(DBObject $oObj, $aAttList = null)
 	{
 		$sTransactionId = utils::ReadPostedParam('transaction_id', '');
 		if (!utils::IsTransactionValid($sTransactionId))
@@ -573,10 +574,7 @@ EOF
 	
 		$sClass = get_class($oObj);
 	
-	
-		// TODO - Secure this: specify the list of attributes that can be updated
-		//        the list must correspond to the attributes proposed in the form
-		$oObj->UpdateObject(/* Form prefix */);
+		$oObj->UpdateObject('' /* form prefix */, $aAttList);
 	
 	   // Optional: apply a stimulus
 	   //
@@ -606,7 +604,7 @@ EOF
 	 * @param WebPage $oP The current page
 	 * @return DBObject The found object, or throws an exception in case of failure
 	 */
-	public function FindObjectFromArgs()
+	public function FindObjectFromArgs($aAllowedClasses = null)
 	{
 		$sClass = utils::ReadParam('class', '');
 		$iId = utils::ReadParam('id', 0);
@@ -623,6 +621,23 @@ EOF
 		{
 			throw new Exception("Missing argument 'id'");
 		}
+
+		if(!is_null($aAllowedClasses))
+		{
+			$bAllowed = false;
+			foreach($aAllowedClasses as $sParentClass)
+			{
+				if (MetaModel::IsParentClass($sParentClass, $sClass))
+				{
+					$bAllowed = true;
+				}
+			}
+			if (!$bAllowed)
+			{
+				throw new Exception("Class '$sClass not allowed in this implementation'");
+			}
+		}
+
 		$oObj = MetaModel::GetObject($sClass, $iId, false);
 		if (!is_object($oObj))
 		{
