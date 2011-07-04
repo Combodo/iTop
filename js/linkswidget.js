@@ -162,7 +162,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates)
 				$(this).remove(); // Remove the selection for the next time the dialog re-opens
 			});
 			// Retrieve the 'filter' definition
-			var table = $('#ResultsToAdd_member_list').find('table.listResults')[0];
+			var table = $('#ResultsToAdd_'+me.id).find('table.listResults')[0];
 			theMap['filter'] = table.config.filter;
 			theMap['extra_params'] = table.config.extra_params;
 		}
