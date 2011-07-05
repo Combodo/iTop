@@ -1564,7 +1564,8 @@ EOF
 		}
 		$iTransactionId = utils::GetNewTransactionId();
 		$oPage->SetTransactionId($iTransactionId);
-		$oPage->add("<form action=\"$sFormAction\" id=\"form_{$this->m_iFormId}\" enctype=\"multipart/form-data\" method=\"post\" onSubmit=\"return CheckFields('form_{$this->m_iFormId}', true)\">\n");
+		$oPage->add("<form action=\"$sFormAction\" id=\"form_{$this->m_iFormId}\" enctype=\"multipart/form-data\" method=\"post\" onSubmit=\"return OnSubmit('form_{$this->m_iFormId}');\">\n");
+		$oPage->add_ready_script("$(window).unload(function() { OnUnload('$iTransactionId') } );\n");
 
 		$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB, $sPrefix);
 		$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);

@@ -283,7 +283,7 @@ function RequestCreationForm($oP, $oUserOrg)
 		// Starts the validation when the page is ready
 		CheckFields('request_form', false);
 		$('#request_form').submit( function() {
-			return CheckFields('request_form', true);
+			return OnSubmit('request_form');
 		});
 EOF
 );
@@ -745,7 +745,7 @@ function DisplayResolvedRequestForm($oP, UserRequest $oRequest)
 		// Starts the validation when the page is ready
 		CheckFields('request_form', false);
 		$('#request_form').submit( function() {
-			return CheckFields('request_form', true);
+			return OnSubmit('request_form');
 		});
 EOF
 );

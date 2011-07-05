@@ -485,7 +485,19 @@ try
 		// Can be useful in case a user got some corrupted prefs...
 		appUserPreferences::ClearPreferences();
 		break;
-	
+
+		case 'on_form_cancel':
+		// Called when a creation/modification form is cancelled by the end-user
+		// Let's take this opportunity to inform the plug-ins so that they can perform some cleanup
+		$iTransactionId = utils::ReadParam('transaction_id', 0);
+		$sTempId = session_id().'_'.$iTransactionId;
+		foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
+		{
+			$oExtensionInstance->OnFormCancel($sTempId);
+		}
+		
+		break;
+			
 		default:
 		$oPage->p("Invalid query.");
 	}

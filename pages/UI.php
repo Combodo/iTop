@@ -1474,7 +1474,7 @@ EOF
 			$oObj->DisplayBareProperties($oP);
 			$oP->add('</div>');
 			$oP->add("<div class=\"wizContainer\">\n");
-			$oP->add("<form id=\"apply_stimulus\" method=\"post\" onSubmit=\"return CheckFields('apply_stimulus', true);\">\n");
+			$oP->add("<form id=\"apply_stimulus\" method=\"post\" onSubmit=\"return OnSubmit('apply_stimulus');\">\n");
 			$oP->add("<table><tr><td>\n");
 			$oP->details($aDetails);
 			$oP->add("</td></tr></table>\n");
@@ -1685,7 +1685,7 @@ EOF
 			$aExpectedAttributes = $aTargetState['attribute_list'];
 			$oP->add("<h1>$sActionDetails</h1>\n");
 			$oP->add("<div class=\"wizContainer\">\n");
-			$oP->add("<form id=\"apply_stimulus\" method=\"post\" onSubmit=\"return CheckFields('apply_stimulus', true);\">\n");
+			$oP->add("<form id=\"apply_stimulus\" method=\"post\" onSubmit=\"return OnSubmit('apply_stimulus');\">\n");
 			$aDetails = array();
 			$iFieldIndex = 0;
 			$aFieldsMap = array();

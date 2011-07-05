@@ -10,6 +10,8 @@ var oObj = {};
 // of Id 'att_2' in the form 
 var aFieldsMap = new Array;
 
+window.bInSubmit = false; // For handling form cancellation via OnBeforeUnload events
+
 // Update the whole object from the form and also update its
 // JSON (serialized) representation in the (hidden) field
 function UpdateObjectFromForm(aFieldsMap, oObj)
@@ -116,6 +118,28 @@ function ActivateStep(iTargetStep)
 //		);
 //	}
 //}
+function OnUnload(sTransactionId)
+{
+	if (!window.bInSubmit)
+	{
+		// If it's not a submit, then it's a "cancel" (Pressing the Cancel button, closing the window, using the back button...)
+		$.post('../pages/ajax.render.php', {operation: 'on_form_cancel', transaction_id: sTransactionId }, function()
+		{
+			// Do nothing for now...
+		});
+	}
+}
+
+function OnSubmit(sFormId)
+{
+	window.bInSubmit=true; // This is a submit, make sure that when the page gets unloaded we don't cancel the action
+	var bResult = CheckFields(sFormId, true);
+	if (!bResult)
+	{
+		window.bInSubmit = false; // Submit is/will be canceled
+	}
+	return bResult;
+}
 
 // Store the result of the form validation... there may be several forms per page, beware
 var oFormErrors = { err_form0: 0 };
@@ -129,7 +153,7 @@ function CheckFields(sFormId, bDisplayAlert)
 	// The two 'fields' below will be updated when the 'validate' event is processed
 	oFormErrors['err_'+sFormId] = 0;		// Number of errors encountered when validating the form
 	oFormErrors['input_'+sFormId] = null;	// First 'input' with an error, to set the focus to it
-	$('#'+sFormId+' :input').each( function()
+	$('#'+sFormId+' :input[type!=hidden]').each( function()
 	{
 		validateEventResult = $(this).trigger('validate', sFormId);
 	}
