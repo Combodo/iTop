@@ -456,9 +456,9 @@ EOF
 		return parent::GetAttributeFlags($sAttCode, $aReasons);
 	}
 		
-	public function UpdateObject($sFormPrefix = '')
+	public function UpdateObject($sFormPrefix = '', $sAttList = null)
 	{
-		parent::UpdateObject($sFormPrefix);
+		parent::UpdateObject($sFormPrefix, $sAttList);
 		// And now read the other post parameters...
 		$oAttributeSet = $this->Get('attribute_list');
 		$aAttributes = array();

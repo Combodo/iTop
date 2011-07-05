@@ -2069,59 +2069,34 @@ EOF
 	/**
 	 * Updates the object from the POSTed parameters
 	 */
-	public function UpdateObject($sFormPrefix = '')
+	public function UpdateObject($sFormPrefix = '', $aAttList = null)
 	{
 		$aErrors = array();
-		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode=>$oAttDef)
+		if (!is_array($aAttList))
 		{
-			if ($oAttDef->IsLinkSet() && $oAttDef->IsIndirect())
-			{
-				$aLinks = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null);
-				if (is_null($aLinks)) continue;
-				
-				$sLinkedClass = $oAttDef->GetLinkedClass();
-				$sExtKeyToRemote = $oAttDef->GetExtKeyToRemote();
-				$sExtKeyToMe = $oAttDef->GetExtKeyToMe();
-				$oLinkedSet = DBObjectSet::FromScratch($sLinkedClass);
-				if (is_array($aLinks))
-				{
-					foreach($aLinks as $id => $aData)
-					{
-						if (is_numeric($id))
-						{
-							if ($id < 0)
-							{
-								// New link to be created, the opposite of the id (-$id) is the ID of the remote object
-								$oLink = MetaModel::NewObject($sLinkedClass);
-								$oLink->Set($sExtKeyToRemote, -$id);
-								$oLink->Set($sExtKeyToMe, $this->GetKey());
-							}
-							else
-							{
-								// Existing link, potentially to be updated...
-								$oLink = MetaModel::GetObject($sLinkedClass, $id);
-							}
-							// Now populate the attributes
-							foreach($aData as $sName => $value)
-							{
-								if (MetaModel::IsValidAttCode($sLinkedClass, $sName))
-								{
-									$oLinkAttDef = MetaModel::GetAttributeDef($sLinkedClass, $sName);
-									if ($oLinkAttDef->IsWritable())
-									{
-										$oLink->Set($sName, $value);
-									}
-								}
-							}
-							$oLinkedSet->AddObject($oLink);
-						}
-					}
-				}
-				$this->Set($sAttCode, $oLinkedSet);
-			}
-			else if ($oAttDef->IsWritable())
+			$aAttList = $this->FlattenZList(MetaModel::GetZListItems(get_class($this), 'details'));
+			// Special case to process the case log, if any...
+			// WARNING: if you change this also check the functions DisplayModifyForm and DisplayCaseLog
+			foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef)
 			{
 				$iFlags = $this->GetAttributeFlags($sAttCode);
+				if ($oAttDef instanceof AttributeCaseLog)
+				{
+					if (!($iFlags & (OPT_ATT_HIDDEN|OPT_ATT_SLAVE|OPT_ATT_READONLY)))
+					{
+						// The case log is editable, append it to the list of fields to retrieve
+						$aAttList[] = $sAttCode;
+					}
+				}
+			}
+		}
+		foreach($aAttList as $sAttCode)
+		{
+			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+			
+			$iFlags = $this->GetAttributeFlags($sAttCode);
+			if ($oAttDef->IsWritable())
+			{
 				if ( $iFlags & (OPT_ATT_HIDDEN | OPT_ATT_READONLY))
 				{
 					// Non-visible, or read-only attribute, do nothing
@@ -2133,6 +2108,49 @@ EOF
 					{
 						$aErrors[] = Dict::Format('UI:AttemptingToSetASlaveAttribute_Name', $oAttDef->GetLabel());
 					}
+				}
+				elseif ($oAttDef->IsLinkSet() && $oAttDef->IsIndirect())
+				{
+					$aLinks = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null);
+					$sLinkedClass = $oAttDef->GetLinkedClass();
+					$sExtKeyToRemote = $oAttDef->GetExtKeyToRemote();
+					$sExtKeyToMe = $oAttDef->GetExtKeyToMe();
+					$oLinkedSet = DBObjectSet::FromScratch($sLinkedClass);
+					if (is_array($aLinks))
+					{
+						foreach($aLinks as $id => $aData)
+						{
+							if (is_numeric($id))
+							{
+								if ($id < 0)
+								{
+									// New link to be created, the opposite of the id (-$id) is the ID of the remote object
+									$oLink = MetaModel::NewObject($sLinkedClass);
+									$oLink->Set($sExtKeyToRemote, -$id);
+									$oLink->Set($sExtKeyToMe, $this->GetKey());
+								}
+								else
+								{
+									// Existing link, potentially to be updated...
+									$oLink = MetaModel::GetObject($sLinkedClass, $id);
+								}
+								// Now populate the attributes
+								foreach($aData as $sName => $value)
+								{
+									if (MetaModel::IsValidAttCode($sLinkedClass, $sName))
+									{
+										$oLinkAttDef = MetaModel::GetAttributeDef($sLinkedClass, $sName);
+										if ($oLinkAttDef->IsWritable())
+										{
+											$oLink->Set($sName, $value);
+										}
+									}
+								}
+								$oLinkedSet->AddObject($oLink);
+							}
+						}
+					}
+					$this->Set($sAttCode, $oLinkedSet);
 				}
 				elseif ($oAttDef->GetEditClass() == 'Document')
 				{
