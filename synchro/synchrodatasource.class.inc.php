@@ -1299,7 +1299,7 @@ class SynchroLog extends DBObject
 		MetaModel::Init_AddAttribute(new AttributeInteger("stats_nb_obj_new_updated", array("allowed_values"=>null, "sql"=>"stats_nb_obj_new_updated", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeInteger("stats_nb_obj_new_unchanged", array("allowed_values"=>null, "sql"=>"stats_nb_obj_new_unchanged", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
 
-		MetaModel::Init_AddAttribute(new AttributeString("last_error", array("allowed_values"=>null, "sql"=>"last_error", "default_value"=>'', "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeText("last_error", array("allowed_values"=>null, "sql"=>"last_error", "default_value"=>'', "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLongText("traces", array("allowed_values"=>null, "sql"=>"traces", "default_value"=>'', "is_null_allowed"=>true, "depends_on"=>array())));
 
 		// Display lists
@@ -1603,7 +1603,7 @@ class SynchroReplica extends DBObject implements iDisplay
 			}
 			else
 			{
-				$this->UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange, $oStatLog, 'stats_nb_obj', 'stats_nb_obj_updated_errors');
+				$this->UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange, $oStatLog, '', 'stats_nb_obj_updated_errors');
 			}
 			break;
 			
@@ -1633,13 +1633,19 @@ class SynchroReplica extends DBObject implements iDisplay
 			{
 				$oDestObj->DBUpdateTracked($oChange);
 				$oStatLog->AddTrace('Updated object - Values: {'.implode(', ', $aValueTrace).'}', $this);
-				$oStatLog->Inc($sStatsCode.'_updated');
+				if ($sStatsCode != '')
+				{
+					$oStatLog->Inc($sStatsCode.'_updated');
+				}
 				$this->Set('info_last_modified', date('Y-m-d H:i:s'));
 			}
 			else
 			{
 				$oStatLog->AddTrace('Unchanged object', $this);
-				$oStatLog->Inc($sStatsCode.'_unchanged');
+				if ($sStatsCode != '')
+				{
+					$oStatLog->Inc($sStatsCode.'_unchanged');
+				}
 			}
 
 			$this->Set('status_last_error', '');
