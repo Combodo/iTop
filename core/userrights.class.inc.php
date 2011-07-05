@@ -905,6 +905,8 @@ class StimulusChecker extends ActionChecker
 	public function IsAllowed()
 	{
 		$sClass = $this->oFilter->GetClass();
+		if (MetaModel::IsAbstract($sClass)) return UR_ALLOWED_NO; // Safeguard, not implemented if the base class of the set is abstract !
+		
 		$oSet = new DBObjectSet($this->oFilter);
 		$iActionAllowed = UserRights::IsStimulusAllowed($sClass,  $this->iActionCode, $oSet);
 		if ($iActionAllowed == UR_ALLOWED_NO)
