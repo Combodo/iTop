@@ -158,16 +158,6 @@ try
 		}
 		break;
 		
-		case 'addObjects':
-		require_once(APPROOT.'/application/uilinkswizard.class.inc.php');
-		$sClass = utils::ReadParam('class', '', 'get');
-		$sLinkedClass = utils::ReadParam('linkedClass', '');
-		$sLinkageAttr = utils::ReadParam('linkageAttr', '');
-		$iObjectId = utils::ReadParam('objectId', '');
-		$oLinksWizard = new UILinksWizard($sClass,  $sLinkageAttr, $iObjectId, $sLinkedClass);
-		$oLinksWizard->DisplayAddForm($oPage);
-		break;
-		
 		// ui.linkswidget
 		case 'searchObjectsToAdd':
 		$sRemoteClass = utils::ReadParam('sRemoteClass', '');
@@ -268,10 +258,18 @@ try
 		$sAttCode = utils::ReadParam('sAttCode', '');
 		$iInputId = utils::ReadParam('iInputId', '');
 		$sSuffix = utils::ReadParam('sSuffix', '');
-		$sRemoteClass = utils::ReadParam('sRemoteClass', '');
+		$sRemoteClass = utils::ReadParam('sRemoteClass', $sClass);
 		$bDuplicates = (utils::ReadParam('bDuplicates', 'false') == 'false') ? false : true;
 		$oWidget = new UILinksWidget($sClass, $sAttCode, $iInputId, $sSuffix, $bDuplicates);
-		$oWidget->DoAddObjects($oPage, $sRemoteClass);	
+		if ($sFilter != '')
+		{
+			$oFullSetFilter = DBObjectSearch::unserialize($sFilter);
+		}
+		else
+		{
+			$oFullSetFilter = new DBObjectSearch($sRemoteClass);		
+		}
+		$oWidget->DoAddObjects($oPage, $oFullSetFilter);	
 		break;
 			
 		case 'wizard_helper_preview':
@@ -354,14 +352,6 @@ try
 		$oFilter = new DBObjectSearch($sClass);
 		$oFilter->AddCondition('id', $key, '=');
 		$oDisplayBlock = new DisplayBlock($oFilter, 'details', false);
-		$oDisplayBlock->RenderContent($oPage);
-		break;
-		
-		case 'preview':
-		$key = utils::ReadParam('id', 0);
-		$oFilter = new DBObjectSearch($sClass);
-		$oFilter->AddCondition('id', $key, '=');
-		$oDisplayBlock = new DisplayBlock($oFilter, 'preview', false);
 		$oDisplayBlock->RenderContent($oPage);
 		break;
 		
