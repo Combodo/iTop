@@ -1349,13 +1349,21 @@ class AttributeText extends AttributeString
 
 	static public function RenderWikiHtml($sText)
 	{
-		if (preg_match_all(WIKI_URL, $sText, $aAllMatches, PREG_SET_ORDER))
+		if (preg_match_all(WIKI_URL, $sText, $aAllMatches, PREG_SET_ORDER /* important !*/ |PREG_OFFSET_CAPTURE /* important ! */))
 		{
-			foreach($aAllMatches as $iPos => $aMatches)
+			$aUrls = array();
+			$i = count($aAllMatches);
+			// Replace the URLs by an actual hyperlink <a href="...">...</a>
+			// Let's do it backwards so that the initial positions are not modified by the replacement
+			// This works if the matches are captured: in the order they occur in the string  AND
+			// with their offset (i.e. position) inside the string
+			while($i > 0)
 			{
-				$sUrl = $aMatches[0];
-				$sHLink = "<a href=\"$sUrl\">$sUrl</a>"; 
-				$sText = str_replace($sUrl, $sHLink, $sText);
+				$i--;
+				$sUrl = $aAllMatches[$i][0][0]; // String corresponding to the main pattern
+				$iPos = $aAllMatches[$i][0][1]; // Position of the main pattern
+				$sText = substr_replace($sText, "<a href=\"$sUrl\">$sUrl</a>", $iPos, strlen($sUrl));
+				
 			}
 		}
 		if (preg_match_all(WIKI_OBJECT_REGEXP, $sText, $aAllMatches, PREG_SET_ORDER))
