@@ -1352,7 +1352,6 @@ class AttributeText extends AttributeString
 		if (preg_match_all(WIKI_URL, $sText, $aAllMatches, PREG_SET_ORDER /* important !*/ |PREG_OFFSET_CAPTURE /* important ! */))
 		{
 			$aUrls = array();
-			echo "<pre>".print_r($aAllMatches,true)."</pre><br/>\n";
 			$i = count($aAllMatches);
 			// Replace the URLs by an actual hyperlink <a href="...">...</a>
 			// Let's do it backwards so that the initial positions are not modified by the replacement
@@ -1363,7 +1362,6 @@ class AttributeText extends AttributeString
 				$i--;
 				$sUrl = $aAllMatches[$i][0][0]; // String corresponding to the main pattern
 				$iPos = $aAllMatches[$i][0][1]; // Position of the main pattern
-				echo "<p>Replacing: '$sUrl', located at: $iPos, length: ".strlen($sUrl)."</p>\n";
 				$sText = substr_replace($sText, "<a href=\"$sUrl\">$sUrl</a>", $iPos, strlen($sUrl));
 				
 			}
