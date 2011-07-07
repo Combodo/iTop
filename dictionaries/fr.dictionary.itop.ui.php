@@ -697,7 +697,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:iTopVersion:Short' => 'iTop version %1$s',
 	'UI:iTopVersion:Long' => 'iTop version %1$s-%2$s du %3$s',
 	'UI:PropertiesTab' => 'Propriétés',
-	'UI:OpenDocumentInNewWindow_' => 'Ouvrir de document dans un autre fenêtre: %1$s',
+	'UI:OpenDocumentInNewWindow_' => 'Ouvrir ce document dans uns autre fenêtre: %1$s',
 	'UI:DownloadDocument_' => 'Télécharger ce document: %1$s',
 	'UI:Document:NoPreview' => 'L\'aperçu n\'est pas disponible pour ce type de documents',
 	'UI:DeadlineMissedBy_duration' => 'Passé de %1$s',
