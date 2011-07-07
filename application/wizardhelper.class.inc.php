@@ -98,7 +98,7 @@ class WizardHelper
 				{
 					if ($bReadUploadedFiles)
 					{
-						$oDocument = utils::ReadPostedDocument('file_'.$sAttCode);
+						$oDocument = utils::ReadPostedDocument('attr_'.$sAttCode, 'fcontents');
 						$oObj->Set($sAttCode, $oDocument);
 					}
 					else

@@ -1013,7 +1013,6 @@ EOF
 			{
 				$aArgs[$key] = $oAppContext->GetCurrentValue($key);	
 			}
-
 			// If the specified class has subclasses, ask the user an instance of which class to create
 			$aSubClasses = MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL); // Including the specified class itself
 			$aPossibleClasses = array();
@@ -1047,26 +1046,32 @@ EOF
 				$oP->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel));
 				$oP->add("<h1>".MetaModel::GetClassIcon($sRealClass)."&nbsp;".Dict::Format('UI:CreationTitle_Class', $sClassLabel)."</h1>\n");
 				$oP->add("<div class=\"wizContainer\">\n");
-				$aDefaults = utils::ReadParam('default', array());
-				$aContext = $oAppContext->GetAsHash();
-				foreach( $oAppContext->GetNames() as $key)
-				{
-					$aDefaults[$key] = $oAppContext->GetCurrentValue($key);	
-				}
+
 				// Set all the default values in an object and clone this "default" object
 				$oObjToClone = MetaModel::NewObject($sRealClass);
-				foreach($aDefaults as $sName => $value)
+
+				// 1st - set context values
+				$aContext = $oAppContext->GetAsHash();
+				foreach($oAppContext->GetNames() as $key)
 				{
-					if (MetaModel::IsValidAttCode($sRealClass, $sName))
+					if (MetaModel::IsValidAttCode($sRealClass, $key))
 					{
-						$oAttDef = MetaModel::GetAttributeDef($sRealClass, $sName);
+						$oAttDef = MetaModel::GetAttributeDef($sRealClass, $key);
 						if ($oAttDef->IsWritable())
 						{
-							$oObjToClone->Set($sName, $value);
+							$value = $oAppContext->GetCurrentValue($key, null);
+							if (!is_null($value))
+							{
+								$oObjToClone->Set($key, $value);
+							}
 						}
 					}
 				}
-				cmdbAbstractObject::DisplayCreationForm($oP, $sRealClass, $oObjToClone, array('default' => $aDefaults));
+
+				// 2nd - set values from the page argument 'default'
+				$oObjToClone->UpdateObjectFromArg('default');
+
+				cmdbAbstractObject::DisplayCreationForm($oP, $sRealClass, $oObjToClone, array('XXXXXXdefault' => $aDefaults=null));
 				$oP->add("</div>\n");
 			}
 			else

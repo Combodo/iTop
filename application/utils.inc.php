@@ -151,18 +151,25 @@ class utils
 	/**
 	 * Reads an uploaded file and turns it into an ormDocument object - Triggers an exception in case of error
 	 * @param string $sName Name of the input used from uploading the file	 
+	 * @param string $sIndex If Name is an array of posted files, then the index must be used to point out the file	 
 	 * @return ormDocument The uploaded file (can be 'empty' if nothing was uploaded)
 	 */	 	 
-	public static function  ReadPostedDocument($sName)
+	public static function  ReadPostedDocument($sName, $sIndex = null)
 	{
 		$oDocument = new ormDocument(); // an empty document
 		if(isset($_FILES[$sName]))
 		{
-			switch($_FILES[$sName]['error'])
+			$aFileInfo = $_FILES[$sName];
+
+			$sError = is_null($sIndex) ? $aFileInfo['error'] : $aFileInfo['error'][$sIndex];
+			switch($sError)
 			{
 				case UPLOAD_ERR_OK:
-				$doc_content = file_get_contents($_FILES[$sName]['tmp_name']);
-				$sMimeType = $_FILES[$sName]['type'];
+				$sTmpName = is_null($sIndex) ? $aFileInfo['tmp_name'] : $aFileInfo['tmp_name'][$sIndex];
+				$sMimeType = is_null($sIndex) ? $aFileInfo['type'] : $aFileInfo['type'][$sIndex];
+				$sName = is_null($sIndex) ? $aFileInfo['name'] : $aFileInfo['name'][$sIndex];
+
+				$doc_content = file_get_contents($sTmpName);
 				if (function_exists('finfo_file'))
 				{
 					// as of PHP 5.3 the fileinfo extension is bundled within PHP
@@ -180,7 +187,7 @@ class utils
 					}
 					@finfo_close($rInfo);
 				}
-				$oDocument = new ormDocument($doc_content, $sMimeType, $_FILES[$sName]['name']);
+				$oDocument = new ormDocument($doc_content, $sMimeType, $sName);
 				break;
 				
 				case UPLOAD_ERR_NO_FILE:
@@ -205,11 +212,12 @@ class utils
 				break;
 
 				case UPLOAD_ERR_EXTENSION:
-				throw new FileUploadException(Dict::Format('UI:Error:UploadStoppedByExtension_FileName', $_FILES[$sName]['name']));
+				$sName = is_null($sIndex) ? $aFileInfo['name'] : $aFileInfo['name'][$sIndex];
+				throw new FileUploadException(Dict::Format('UI:Error:UploadStoppedByExtension_FileName', $sName));
 				break;
 				
 				default:
-				throw new FileUploadException(Dict::Format('UI:Error:UploadFailedUnknownCause_Code', $_FILES[$sName]['error']));
+				throw new FileUploadException(Dict::Format('UI:Error:UploadFailedUnknownCause_Code', $sError));
 				break;
 
 			}

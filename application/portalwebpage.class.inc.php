@@ -167,6 +167,12 @@ EOF
 		window.location.href = '?operation=';
 		return false;
 	}
+
+	function SetWizardNextStep(sStep)
+	{
+		var next_step = $('input[id=next_step]');
+		next_step.val(sStep);
+	}
 EOF
 );
 		
@@ -668,17 +674,17 @@ EOF
 		}
 
 		$sStepHistory = implode(',', $aPreviousSteps);
-		$this->add("<input type=\"hidden\" name=\"step_history\" value=\"$sStepHistory\">");
+		$this->add("<input type=\"hidden\" id=\"step_history\" name=\"step_history\" value=\"$sStepHistory\">");
 
 		if (!is_null($sNextStep))
 		{		
-			$this->add("<input type=\"hidden\" name=\"next_step\" value=\"$sNextStep\">");
+			$this->add("<input type=\"hidden\" id=\"next_step\" name=\"next_step\" value=\"$sNextStep\">");
 		}
-		$this->add("<input type=\"hidden\" name=\"step_back\" value=\"0\">");
+		$this->add("<input type=\"hidden\" id=\"step_back\" name=\"step_back\" value=\"0\">");
 
 		$sTransactionId = utils::GetNewTransactionId();
 		$this->SetTransactionId($sTransactionId);
-		$this->add("<input type=\"hidden\" name=\"transaction_id\" value=\"$sTransactionId\">\n");
+		$this->add("<input type=\"hidden\" id=\"transaction_id\" name=\"transaction_id\" value=\"$sTransactionId\">\n");
 		$oPage->add_ready_script("$(window).unload(function() { OnUnload('$sTransactionId') } );\n");
 	}
 

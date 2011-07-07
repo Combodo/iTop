@@ -219,10 +219,18 @@ class UILinksWidget
 		while($oCurrentLink = $oValue->Fetch())
 		{
 			$aRow = array();
-			$key = $oCurrentLink->GetKey();
 			$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $oCurrentLink->Get($this->m_sExtKeyToRemote));
+			if ($oCurrentLink->IsNew())
+			{
+				$key = -$oLinkedObj->GetKey();
+				$aForm[$key] = $this->GetFormRow($oPage, $oLinkedObj, $key, $aArgs);
+			}
+			else
+			{
+				$key = $oCurrentLink->GetKey();
+				$aForm[$key] = $this->GetFormRow($oPage, $oLinkedObj, $oCurrentLink, $aArgs);
+			}
 
-			$aForm[$key] = $this->GetFormRow($oPage, $oLinkedObj, $oCurrentLink, $aArgs);
 		}
 		$sHtmlValue .= $this->DisplayFormTable($oPage, $this->m_aTableConfig, $aForm);
 		$sDuplicates = ($this->m_bDuplicatesAllowed) ? 'true' : 'false';

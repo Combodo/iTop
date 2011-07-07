@@ -153,7 +153,7 @@ function CheckFields(sFormId, bDisplayAlert)
 	// The two 'fields' below will be updated when the 'validate' event is processed
 	oFormErrors['err_'+sFormId] = 0;		// Number of errors encountered when validating the form
 	oFormErrors['input_'+sFormId] = null;	// First 'input' with an error, to set the focus to it
-	$('#'+sFormId+' :input[type!=hidden]').each( function()
+	$('#'+sFormId+' :input').each( function()
 	{
 		validateEventResult = $(this).trigger('validate', sFormId);
 	}

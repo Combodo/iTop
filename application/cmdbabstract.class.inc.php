@@ -1426,7 +1426,7 @@ EOF
 					}
 					$sHeader = '<div class="caselog_input_header">&nbsp;'.Dict::S('UI:CaseLogTypeYourTextHere').'</div>';
 					$sEditValue = $oAttDef->GetEditValue($value);
-					$sPreviousLog = $value->GetAsHTML();
+					$sPreviousLog = is_object($value) ? $value->GetAsHTML() : '';
 					$sHTMLValue = "<div class=\"caselog\" $sStyle><table style=\"width:100%;\"><tr><td>$sHeader<textarea style=\"border:0;width:100%\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">$sEditValue</textarea>$sPreviousLog</td><td>{$sValidationField}</td></tr></table></div>";
 				break;
 
@@ -1453,9 +1453,9 @@ EOF
 					}
 					$iMaxFileSize = utils::ConvertToBytes(ini_get('upload_max_filesize'));
 					$sHTMLValue = "<input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"$iMaxFileSize\" />\n";
-					$sHTMLValue .= "<input name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" type=\"hidden\" id=\"$iId\" \" value=\"$sFileName\"/>\n";
+					$sHTMLValue .= "<input name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}[filename]\" type=\"hidden\" id=\"$iId\" \" value=\"$sFileName\"/>\n";
 					$sHTMLValue .= "<span id=\"name_$iInputId\">$sFileName</span><br/>\n";
-					$sHTMLValue .= "<input title=\"$sHelpText\" name=\"file_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" type=\"file\" id=\"file_$iId\" onChange=\"UpdateFileName('$iId', this.value)\"/>&nbsp;{$sValidationField}\n";
+					$sHTMLValue .= "<input title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}[fcontents]\" type=\"file\" id=\"file_$iId\" onChange=\"UpdateFileName('$iId', this.value)\"/>&nbsp;{$sValidationField}\n";
 				break;
 				
 				case 'List':
@@ -1806,6 +1806,7 @@ EOF
 );
 		$oPage->add_ready_script(
 <<<EOF
+		oWizardHelper$sPrefix.UpdateWizard();
 		// Starts the validation when the page is ready
 		CheckFields('form_{$this->m_iFormId}', false);
 
@@ -2152,11 +2153,12 @@ EOF
 	}
 	
 	/**
-	 * Updates the object from the POSTed parameters
+	 * Updates the object from a flat array of values
+	 * @param array $aAttList array of attcode
+	 * @return array of attcodes that can be used for writing on the current object
 	 */
-	public function UpdateObject($sFormPrefix = '', $aAttList = null)
+	public function GetWriteableAttList($aAttList, &$aErrors)
 	{
-		$aErrors = array();
 		if (!is_array($aAttList))
 		{
 			$aAttList = $this->FlattenZList(MetaModel::GetZListItems(get_class($this), 'details'));
@@ -2175,6 +2177,8 @@ EOF
 				}
 			}
 		}
+
+		$aWriteableAttList = array();
 		foreach($aAttList as $sAttCode)
 		{
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
@@ -2188,111 +2192,169 @@ EOF
 				}
 				elseif($iFlags & OPT_ATT_SLAVE)
 				{
-					$value = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null);
-					if (!is_null($value) && ($value != $this->Get($sAttCode)))
-					{
-						$aErrors[] = Dict::Format('UI:AttemptingToSetASlaveAttribute_Name', $oAttDef->GetLabel());
-					}
-				}
-				elseif ($oAttDef->IsLinkSet() && $oAttDef->IsIndirect())
-				{
-					$aLinks = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null);
-					$sLinkedClass = $oAttDef->GetLinkedClass();
-					$sExtKeyToRemote = $oAttDef->GetExtKeyToRemote();
-					$sExtKeyToMe = $oAttDef->GetExtKeyToMe();
-					$oLinkedSet = DBObjectSet::FromScratch($sLinkedClass);
-					if (is_array($aLinks))
-					{
-						foreach($aLinks as $id => $aData)
-						{
-							if (is_numeric($id))
-							{
-								if ($id < 0)
-								{
-									// New link to be created, the opposite of the id (-$id) is the ID of the remote object
-									$oLink = MetaModel::NewObject($sLinkedClass);
-									$oLink->Set($sExtKeyToRemote, -$id);
-									$oLink->Set($sExtKeyToMe, $this->GetKey());
-								}
-								else
-								{
-									// Existing link, potentially to be updated...
-									$oLink = MetaModel::GetObject($sLinkedClass, $id);
-								}
-								// Now populate the attributes
-								foreach($aData as $sName => $value)
-								{
-									if (MetaModel::IsValidAttCode($sLinkedClass, $sName))
-									{
-										$oLinkAttDef = MetaModel::GetAttributeDef($sLinkedClass, $sName);
-										if ($oLinkAttDef->IsWritable())
-										{
-											$oLink->Set($sName, $value);
-										}
-									}
-								}
-								$oLinkedSet->AddObject($oLink);
-							}
-						}
-					}
-					$this->Set($sAttCode, $oLinkedSet);
-				}
-				elseif ($oAttDef->GetEditClass() == 'Document')
-				{
-					// There should be an uploaded file with the named attr_<attCode>
-					$oDocument = utils::ReadPostedDocument("file_{$sFormPrefix}{$sAttCode}");
-					if (!$oDocument->IsEmpty())
-					{
-						// A new file has been uploaded
-						$this->Set($sAttCode, $oDocument);
-					}
-				}
-				elseif ($oAttDef->GetEditClass() == 'One Way Password')
-				{
-					// Check if the password was typed/changed
-					$bChanged = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_changed", false);
-					if ($bChanged)
-					{
-						// The password has been changed or set
-						$rawValue = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null);
-						$this->Set($sAttCode, $rawValue);
-					}
-				}
-				elseif ($oAttDef->GetEditClass() == 'Duration')
-				{
-					$rawValue = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null);
-					if (!is_array($rawValue)) continue;
-
-					$iValue = (((24*$rawValue['d'])+$rawValue['h'])*60 +$rawValue['m'])*60 + $rawValue['s'];
-					$this->Set($sAttCode, $iValue);
-					$previousValue = $this->Get($sAttCode);
-					if ($previousValue !== $iValue)
-					{
-						$this->Set($sAttCode, $iValue);
-					}
+					$aErrors[] = Dict::Format('UI:AttemptingToSetASlaveAttribute_Name', $oAttDef->GetLabel());
 				}
 				else
 				{
-					$rawValue = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null);
-					if (!is_null($rawValue))
+					$aWriteableAttList[$sAttCode] = $oAttDef;
+				}
+			}
+		}
+		return $aWriteableAttList;
+	}
+
+	/**
+	 * Updates the object from a flat array of values
+	 * @param string $aValues array of attcode => scalar or array (N-N links)
+	 * @return void
+	 */
+	public function UpdateObjectFromArray($aValues)
+	{
+		foreach($aValues as $sAttCode => $value)
+		{
+			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+			if ($oAttDef->IsLinkSet() && $oAttDef->IsIndirect())
+			{
+				$aLinks = $value;
+				$sLinkedClass = $oAttDef->GetLinkedClass();
+				$sExtKeyToRemote = $oAttDef->GetExtKeyToRemote();
+				$sExtKeyToMe = $oAttDef->GetExtKeyToMe();
+				$oLinkedSet = DBObjectSet::FromScratch($sLinkedClass);
+				if (is_array($aLinks))
+				{
+					foreach($aLinks as $id => $aData)
 					{
-						$aAttributes[$sAttCode] = trim($rawValue);
-						$previousValue = $this->Get($sAttCode);
-						if ($previousValue !== $aAttributes[$sAttCode])
+						if (is_numeric($id))
 						{
-							$this->Set($sAttCode, $aAttributes[$sAttCode]);
+							if ($id < 0)
+							{
+								// New link to be created, the opposite of the id (-$id) is the ID of the remote object
+								$oLink = MetaModel::NewObject($sLinkedClass);
+								$oLink->Set($sExtKeyToRemote, -$id);
+								$oLink->Set($sExtKeyToMe, $this->GetKey());
+							}
+							else
+							{
+								// Existing link, potentially to be updated...
+								$oLink = MetaModel::GetObject($sLinkedClass, $id);
+							}
+							// Now populate the attributes
+							foreach($aData as $sName => $value)
+							{
+								if (MetaModel::IsValidAttCode($sLinkedClass, $sName))
+								{
+									$oLinkAttDef = MetaModel::GetAttributeDef($sLinkedClass, $sName);
+									if ($oLinkAttDef->IsWritable())
+									{
+										$oLink->Set($sName, $value);
+									}
+								}
+							}
+							$oLinkedSet->AddObject($oLink);
 						}
+					}
+				}
+				$this->Set($sAttCode, $oLinkedSet);
+			}
+			elseif ($oAttDef->GetEditClass() == 'Document')
+			{
+				// There should be an uploaded file with the named attr_<attCode>
+				$oDocument = $value['fcontents'];
+				if (!$oDocument->IsEmpty())
+				{
+					// A new file has been uploaded
+					$this->Set($sAttCode, $oDocument);
+				}
+			}
+			elseif ($oAttDef->GetEditClass() == 'One Way Password')
+			{
+				// Check if the password was typed/changed
+				$aPwdData = $value;
+				if (!is_null($aPwdData) && $aPwdData['changed'])
+				{
+					// The password has been changed or set
+					$this->Set($sAttCode, $aPwdData['value']);
+				}
+			}
+			elseif ($oAttDef->GetEditClass() == 'Duration')
+			{
+				$aDurationData = $value;
+				if (!is_array($aDurationData)) continue;
+
+				$iValue = (((24*$aDurationData['d'])+$aDurationData['h'])*60 +$aDurationData['m'])*60 + $aDurationData['s'];
+				$this->Set($sAttCode, $iValue);
+				$previousValue = $this->Get($sAttCode);
+				if ($previousValue !== $iValue)
+				{
+					$this->Set($sAttCode, $iValue);
+				}
+			}
+			else
+			{
+				if (!is_null($value))
+				{
+					$aAttributes[$sAttCode] = trim($value);
+					$previousValue = $this->Get($sAttCode);
+					if ($previousValue !== $aAttributes[$sAttCode])
+					{
+						$this->Set($sAttCode, $aAttributes[$sAttCode]);
 					}
 				}
 			}
 		}
-		
+	}
+
+	/**
+	 * Updates the object from the POSTed parameters (form)
+	 */
+	public function UpdateObject($sFormPrefix = '', $aAttList = null)
+	{
+		$aErrors = array();
+		$aValues = array();
+		foreach($this->GetWriteableAttList($aAttList, $aErrors) as $sAttCode => $oAttDef)
+		{
+			if ($oAttDef->GetEditClass() == 'Document')
+			{
+				$value = array('fcontents' => utils::ReadPostedDocument("attr_{$sFormPrefix}{$sAttCode}", 'fcontents'));
+			}
+			else
+			{
+				$value = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null);
+			}
+			if (!is_null($value))
+			{
+				$aValues[$sAttCode] = $value;
+			}
+		}
+		$this->UpdateObjectFromArray($aValues);
+
 		// Invoke extensions after the update of the object from the form
 		foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 		{
 			$oExtensionInstance->OnFormSubmit($this, $sFormPrefix);
 		}
 		
+		return $aErrors;
+	}
+
+	/**
+	 * Updates the object from a given page argument
+	 */
+	public function UpdateObjectFromArg($sArgName, $aAttList = null)
+	{
+		$aErrors = array();
+
+		$aRawValues = utils::ReadParam($sArgName, array());
+
+		$aValues = array();
+		foreach($this->GetWriteableAttList($aAttList, $aErrors) as $sAttCode => $oAttDef)
+		{
+			if (isset($aRawValues[$sAttCode]))
+			{
+				$aValues[$sAttCode] = $aRawValues[$sAttCode];
+			}
+		}
+		$this->UpdateObjectFromArray($aValues);
 		return $aErrors;
 	}
 
