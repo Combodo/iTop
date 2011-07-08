@@ -695,7 +695,7 @@ EOF
 		$sTransactionId = utils::GetNewTransactionId();
 		$this->SetTransactionId($sTransactionId);
 		$this->add("<input type=\"hidden\" id=\"transaction_id\" name=\"transaction_id\" value=\"$sTransactionId\">\n");
-		$oPage->add_ready_script("$(window).unload(function() { OnUnload('$sTransactionId') } );\n");
+		$this->add_ready_script("$(window).unload(function() { OnUnload('$sTransactionId') } );\n");
 	}
 
 	public function WizardFormButtons($iButtonFlags)
