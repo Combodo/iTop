@@ -86,9 +86,25 @@ Dict::Add('EN US', 'English', 'English', array(
 
 	'Core:AttributeDateTime' => 'Date/time',
 	'Core:AttributeDateTime+' => 'Date and time (year-month-day hh:mm:ss)',
+	'Core:AttributeDateTime?SmartSearch' => '
+<p>
+	Date format:<br/>
+	<b>yyyy-mm-dd hh:mm:ss</b><br/>
+	Example: 2011-07-19 18:40:00
+</p>
+<p>
+Operators:<br/>
+	<b>&gt;</b><em>date</em><br/>
+	<b>&lt;</b><em>date</em><br/>
+	<b>[</b><em>date</em>,<em>date</em><b>]</b>
+</p>
+<p>
+If the time is omitted, it defaults to 00:00:00
+</p>',
 
 	'Core:AttributeDate' => 'Date',
 	'Core:AttributeDate+' => 'Date (year-month-day)',
+	'Core:AttributeDate?SmartSearch' => '',
 
 	'Core:AttributeDeadline' => 'Deadline',
 	'Core:AttributeDeadline+' => 'Date, displayed relatively to the current time',

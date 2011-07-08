@@ -77,6 +77,7 @@ class PortalWebPage extends NiceWebPage
 		$this->add_linked_script("../js/utils.js");
 		$this->add_linked_script("../js/forms-json-utils.js");
 		$this->add_linked_script("../js/swfobject.js");
+		$this->add_linked_script("../js/jquery.qtip-1.0.min.js");
 		$this->add_ready_script(
 <<<EOF
 try
@@ -454,6 +455,15 @@ EOF
 			}				
 			unset($aExtraParams[$sFieldName]);
 			$this->add('</span> ');
+
+			$sTip = $oAttDef->GetHelpOnSmartSearch();
+			if (strlen($sTip) > 0)
+			{
+				$sTip = addslashes($sTip);
+				$sTip = str_replace(array("\n", "\r"), " ", $sTip);
+				// :input does represent in form visible input (INPUT, SELECT, TEXTAREA)
+				$this->add_ready_script("$(':input[name={$sPrefix}$sFieldName]').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );");
+			}
 		}
 	}
 	

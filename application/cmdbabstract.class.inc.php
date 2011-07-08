@@ -1265,6 +1265,16 @@ EOF
 				}				
 			}
 			unset($aExtraParams[$sFilterCode]);
+			
+			// Finally, add a tooltip if one is defined for this attribute definition
+			$sTip = $oAttDef->GetHelpOnSmartSearch();
+			if (strlen($sTip) > 0)
+			{
+				$sTip = addslashes($sTip);
+				$sTip = str_replace(array("\n", "\r"), " ", $sTip);
+				// :input does represent in form visible input (INPUT, SELECT, TEXTAREA)
+				$oPage->add_ready_script("$('form#fs_$sSearchFormId :input[name={$sFilterCode}]').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );");
+			}
 			$index++;
 			$sHtml .= '</span> ';
 		}

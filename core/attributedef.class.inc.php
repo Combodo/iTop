@@ -186,6 +186,21 @@ abstract class AttributeDefinition
 	}
 	public function GetDescription() {return Dict::S('Class:'.$this->m_sHostClass.'/Attribute:'.$this->m_sCode.'+', '');} 
 	public function GetHelpOnEdition() {return Dict::S('Class:'.$this->m_sHostClass.'/Attribute:'.$this->m_sCode.'?', '');} 
+
+	public function GetHelpOnSmartSearch()
+	{
+		$aParents = array_merge(array(get_class($this) => get_class($this)), class_parents($this));
+		foreach ($aParents as $sClass)
+		{
+			$sHelp = Dict::S("Core:$sClass?SmartSearch", '-missing-');
+			if ($sHelp != '-missing-')
+			{
+				return $sHelp;
+			}
+		} 
+		return '';
+	} 
+
 	public function GetDescription_Obsolete()
 	{
 		// Written for compatibility with a data model written prior to version 0.9.1

@@ -436,8 +436,24 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Core:AttributeTemplateHTML+' => 'HTML contenant des espaces réservés pour des données iTop',
 	'Core:AttributeDateTime' => 'Date/heure',
 	'Core:AttributeDateTime+' => 'Date et heure (année-mois-jour hh:mm:ss)',
+	'Core:AttributeDateTime?SmartSearch' => '
+<p>
+	Format de date :<br/>
+	<b>aaaa-mm-jj hh:mm:ss</b><br/>
+	Exemple : 2011-07-19 18:40:00
+</p>
+<p>
+Opérateurs :<br/>
+	<b>&gt;</b><em>date</em><br/>
+	<b>&lt;</b><em>date</em><br/>
+	<b>[</b><em>date</em>,<em>date</em><b>]</b>
+</p>
+<p>
+Si l\'heure n\'est pas spécifiée, cela revient à 00:00:00 (minuit)
+</p>',
 	'Core:AttributeDate' => 'Date',
 	'Core:AttributeDate+' => 'Date (année-mois-jour)',
+	'Core:AttributeDate?SmartSearch' => '',
 	'Core:AttributeDeadline' => 'Délai',
 	'Core:AttributeDeadline+' => 'Date/heure exprimée relativement à l\'heure courante',
 	'Core:AttributeExternalKey' => 'Clé externe',
