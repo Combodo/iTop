@@ -1071,7 +1071,7 @@ EOF
 				// 2nd - set values from the page argument 'default'
 				$oObjToClone->UpdateObjectFromArg('default');
 
-				cmdbAbstractObject::DisplayCreationForm($oP, $sRealClass, $oObjToClone, array('XXXXXXdefault' => $aDefaults=null));
+				cmdbAbstractObject::DisplayCreationForm($oP, $sRealClass, $oObjToClone, array());
 				$oP->add("</div>\n");
 			}
 			else
@@ -1089,8 +1089,27 @@ EOF
 				$oP->add("<input type=\"hidden\" name=\"operation\" value=\"new\">\n");
 				foreach($aDefaults as $key => $value)
 				{
-					$oP->add("<input type=\"hidden\" name=\"default[$key]\" value=\"$value\">\n");
-					$aDefaults[$key] = $value;	
+					if (is_array($value))
+					{
+						foreach($value as $key2 => $value2)
+						{
+							if (is_array($value2))
+							{
+								foreach($value2 as $key3 => $value3)
+								{
+									$oP->add("<input type=\"hidden\" name=\"default[$key][$key2][$key3]\" value=\"$value3\">\n");	
+								}
+							}
+							else
+							{
+								$oP->add("<input type=\"hidden\" name=\"default[$key][$key2]\" value=\"$value2\">\n");	
+							}
+						}
+					}
+					else
+					{
+						$oP->add("<input type=\"hidden\" name=\"default[$key]\" value=\"$value\">\n");	
+					}
 				}
 				$oP->add('<select name="class">');
 				asort($aPossibleClasses);
