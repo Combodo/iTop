@@ -217,7 +217,7 @@ EOF
 		{
 			$sMenu .= "<a class=\"button\" id=\"{$aMenuItem['id']}\" href=\"{$aMenuItem['hyperlink']}\"><span>".Dict::S($aMenuItem['label'])."</span></a>";
 		}
-		$this->s_content = '<div id="portal"><div id="welcome">'.$this->m_sWelcomeMsg.'</div><div id="banner"><div id="logo"></div>'.$sMenu.'</div><div id="content">'.$this->s_content.'</div></div>';
+		$this->s_content = '<div id="portal"><div id="welcome">'.$this->m_sWelcomeMsg.'</div><div id="banner"><div id="logo"></div><div id="menu">'.$sMenu.'</div></div><div id="content">'.$this->s_content.'</div></div>';
 		parent::output();
 	}
 
@@ -470,6 +470,15 @@ EOF
 	
 	public function DisplaySearchForm($sClass, $aAttList, $aExtraParams, $sPrefix)
 	{
+		$this->add("<div id=\"ds_$sPrefix\" class=\"SearchDrawer DrawerClosed\">\n");
+		$this->add_ready_script(
+<<<EOF
+		$("#dh_$sPrefix").click( function() {
+		$("#ds_$sPrefix").slideToggle('normal', function() { $("#ds_$sPrefix").parent().resize(); } );
+		$("#dh_$sPrefix").toggleClass('open');
+	});
+EOF
+		);
 		$this->add("<form id=\"search_$sClass\" action=\"\" method=\"post\">\n"); // Don't use $_SERVER['SCRIPT_NAME'] since the form may be called asynchronously (from ajax.php)
 	//	$this->add("<h2>".Dict::Format('UI:SearchFor_Class_Objects', 'xxxxxx')."</h2>\n");
 		$this->add("<p>\n");
@@ -486,6 +495,9 @@ EOF
 		}
 	//	$this->add($oAppContext->GetForForm());
 		$this->add("</form>\n");
+ 		$this->add("</div>\n");
+ 		$this->add("<div class=\"HRDrawer\"></div>\n");
+ 		$this->add("<div id=\"dh_$sPrefix\" class=\"DrawerHandle\">".Dict::S('UI:SearchToggle')."</div>\n");
 	}
 
 	/**
