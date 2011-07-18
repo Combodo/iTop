@@ -486,9 +486,9 @@ abstract class ResponseTicket extends Ticket
 		$aSLT = $this->ComputeSLT('TTO');
 		if ($aSLT != null)
 		{
-			//echo "<p>TTO: SLT found: {$aSLT['SLT']}, value: {$aSLT['value']}</p>\n";
-			$iStartDate = AttributeDateTime::GetAsUnixSeconds($this->Get('start_date'));		
-			$this->Set('tto_escalation_deadline', $iStartDate + $aSLT['value']);
+			$oStartDate = new DateTime($this->Get('start_date'));
+			$oDeadline = SLAComputation::GetDeadline($this, $aSLT['value'], $oStartDate);		
+			$this->Set('tto_escalation_deadline', $oDeadline->format('U'));
 		}
 		else
 		{
@@ -497,9 +497,9 @@ abstract class ResponseTicket extends Ticket
 		$aSLT = $this->ComputeSLT('TTR');
 		if ($aSLT != null)
 		{
-			//echo "<p>TTR: SLT found: {$aSLT['SLT']}, value: {$aSLT['value']}</p>\n";
-			$iStartDate = AttributeDateTime::GetAsUnixSeconds($this->Get('start_date'));		
-			$this->Set('ttr_escalation_deadline', $iStartDate + $aSLT['value']);
+			$oStartDate = new DateTime($this->Get('start_date'));
+			$oDeadline = SLAComputation::GetDeadline($this, $aSLT['value'], $oStartDate);		
+			$this->Set('ttr_escalation_deadline', $oDeadline->format('U'));
 		}
 		else
 		{
