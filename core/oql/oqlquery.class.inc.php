@@ -59,6 +59,7 @@ class OqlJoinSpec
 	protected $m_oClassAlias;
 	protected $m_oLeftField;
 	protected $m_oRightField;
+	protected $m_sOperator;
 
 	protected $m_oNextJoinspec;
 
@@ -68,6 +69,8 @@ class OqlJoinSpec
 		$this->m_oClassAlias = $oClassAlias;
 		$this->m_oLeftField = $oExpression->GetLeftExpr();
 		$this->m_oRightField = $oExpression->GetRightExpr();
+		$this->m_oRightField = $oExpression->GetRightExpr();
+		$this->m_sOperator = $oExpression->GetOperator();
 	}
 
 	public function GetClass()
@@ -95,6 +98,10 @@ class OqlJoinSpec
 	public function GetRightField()
 	{
 		return $this->m_oRightField;
+	}
+	public function GetOperator()
+	{
+		return $this->m_sOperator;
 	}
 }
 

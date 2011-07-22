@@ -172,9 +172,25 @@ class SQLQuery
 			"righttablealias" => $sRightTableAlias
 		);
 	}
-	public function AddInnerJoin($oSQLQuery, $sLeftField, $sRightField, $sRigthtTable = '')
+	public function AddInnerJoin($oSQLQuery, $sLeftField, $sRightField, $sRightTable = '')
 	{
-		$this->AddJoin("inner", $oSQLQuery, $sLeftField, $sRightField, $sRigthtTable);
+		$this->AddJoin("inner", $oSQLQuery, $sLeftField, $sRightField, $sRightTable);
+	}
+	public function AddInnerJoinTree($oSQLQuery, $sLeftField, $sRightFieldLeft, $sRightFieldRight, $sRightTableAlias = '', $iOperatorCode = TREE_OPERATOR_BELOW)
+	{
+		assert((get_class($oSQLQuery) == __CLASS__) || is_subclass_of($oSQLQuery, __CLASS__));
+		if (empty($sRightTableAlias))
+		{
+			$sRightTableAlias = $oSQLQuery->m_sTableAlias;
+		}
+		$this->m_aJoinSelects[] = array(
+			"jointype" => 'inner_tree',
+			"select" => $oSQLQuery,
+			"leftfield" => $sLeftField,
+			"rightfield_left" => $sRightFieldLeft,
+			"rightfield_right" => $sRightFieldRight,
+			"righttablealias" => $sRightTableAlias,
+			"tree_operator" => $iOperatorCode);
 	}
 	public function AddLeftJoin($oSQLQuery, $sLeftField, $sRightField)
 	{
@@ -227,7 +243,6 @@ class SQLQuery
 		$aSetValues = array();
 		$aSelectedIdFields = array();
 		$this->privRender($aFrom, $aFields, $oCondition, $aDelTables, $aSetValues, $aSelectedIdFields);
-
 		$sFrom   = self::ClauseFrom($aFrom);
 		$sValues = self::ClauseValues($aSetValues);
 		$sWhere  = self::ClauseWhere($oCondition, $aArgs);
@@ -315,6 +330,7 @@ class SQLQuery
 					$sFrom .= " ".self::ClauseFrom($aJoinInfo["subfrom"]);
 					break;
 				case "inner":
+				case "inner_tree":
 					$sFrom .= " INNER JOIN (`".$aJoinInfo["tablename"]."` AS `$sTableAlias`";
 					$sFrom .= " ".self::ClauseFrom($aJoinInfo["subfrom"]);
 					$sFrom .= ") ON ".$aJoinInfo["joincondition"];
@@ -368,12 +384,12 @@ class SQLQuery
 	// Purpose: prepare the query data, once for all
 	private function privRender(&$aFrom, &$aFields, &$oCondition, &$aDelTables, &$aSetValues, &$aSelectedIdFields)
 	{
-		$sTableAlias = $this->privRenderSingleTable($aFrom, $aFields, $aDelTables, $aSetValues, $aSelectedIdFields);
+		$sTableAlias = $this->privRenderSingleTable($aFrom, $aFields, $aDelTables, $aSetValues, $aSelectedIdFields, '', array('jointype' => 'first'));
 		$oCondition = $this->m_oConditionExpr;
 		return $sTableAlias; 
 	}
 
-	private function privRenderSingleTable(&$aFrom, &$aFields, &$aDelTables, &$aSetValues, &$aSelectedIdFields, $sJoinType = 'first', $sCallerAlias = '', $sLeftField = '', $sRightField = '', $sRightTableAlias = '')
+	private function privRenderSingleTable(&$aFrom, &$aFields, &$aDelTables, &$aSetValues, &$aSelectedIdFields, $sCallerAlias = '', $aJoinData)
 	{
 		$aActualTableFields = CMDBSource::GetTableFieldsList($this->m_sTable);
 
@@ -381,12 +397,15 @@ class SQLQuery
 
 		// Handle the various kinds of join (or first table in the list)
 		//
-		if (empty($sRightTableAlias))
+		if (empty($aJoinData['righttablealias']))
 		{
 			$sRightTableAlias = $this->m_sTableAlias;
 		}
-		$sJoinCond = "`$sCallerAlias`.`$sLeftField` = `$sRightTableAlias`.`$sRightField`";
-		switch ($sJoinType)
+		else
+		{
+			$sRightTableAlias = $aJoinData['righttablealias'];
+		}
+		switch ($aJoinData['jointype'])
 		{
 			case "first":
 				$aFrom[$this->m_sTableAlias] = array("jointype"=>"first", "tablename"=>$this->m_sTable, "joincondition"=>"");
@@ -394,7 +413,33 @@ class SQLQuery
 			case "inner":
 			case "left":
 			// table or tablealias ???
-				$aFrom[$this->m_sTableAlias] = array("jointype"=>$sJoinType, "tablename"=>$this->m_sTable, "joincondition"=>"$sJoinCond");
+				$sJoinCond = "`$sCallerAlias`.`{$aJoinData['leftfield']}` = `$sRightTableAlias`.`{$aJoinData['rightfield']}`";
+				$aFrom[$this->m_sTableAlias] = array("jointype"=>$aJoinData['jointype'], "tablename"=>$this->m_sTable, "joincondition"=>"$sJoinCond");
+				break;
+			case "inner_tree":
+				$sNodeLeft = "`$sCallerAlias`.`{$aJoinData['leftfield']}`";
+				$sRootLeft = "`$sRightTableAlias`.`{$aJoinData['rightfield_left']}`";
+				$sRootRight = "`$sRightTableAlias`.`{$aJoinData['rightfield_right']}`";
+				switch($aJoinData['tree_operator'])
+				{
+					case TREE_OPERATOR_BELOW:
+					$sJoinCond = "$sNodeLeft >= $sRootLeft AND $sNodeLeft <= $sRootRight";
+					break;
+					
+					case TREE_OPERATOR_BELOW_STRICT:
+					$sJoinCond = "$sNodeLeft > $sRootLeft AND $sNodeLeft < $sRootRight";
+					break;
+					
+					case TREE_OPERATOR_NOT_BELOW: // Complementary of 'BELOW'
+					$sJoinCond = "$sNodeLeft < $sRootLeft OR $sNodeLeft > $sRootRight";
+					break;
+					
+					case TREE_OPERATOR_NOT_BELOW_STRICT: // Complementary of BELOW_STRICT
+					$sJoinCond = "$sNodeLeft <= $sRootLeft OR $sNodeLeft >= $sRootRight";
+					break;
+					
+				}
+				$aFrom[$this->m_sTableAlias] = array("jointype"=>$aJoinData['jointype'], "tablename"=>$this->m_sTable, "joincondition"=>"$sJoinCond");
 				break;
 		}
 
@@ -409,6 +454,7 @@ class SQLQuery
 		{
 			$aDelTables[] = "`{$this->m_sTableAlias}`";
 		}
+//echo "<p>in privRenderSingleTable this->m_aValues<pre>".print_r($this->m_aValues, true)."</pre></p>\n";	
 		foreach($this->m_aValues as $sFieldName=>$value)
 		{
 			$aSetValues["`{$this->m_sTableAlias}`.`$sFieldName`"] = $value; // quoted further!
@@ -424,13 +470,13 @@ class SQLQuery
 		$aTempFrom = array(); // temporary subset of 'from' specs, to be grouped in the final query
 		foreach ($this->m_aJoinSelects as $aJoinData)
 		{
-			$sJoinType = $aJoinData["jointype"];
 			$oRightSelect = $aJoinData["select"];
-			$sLeftField = $aJoinData["leftfield"];
-			$sRightField = $aJoinData["rightfield"];
-			$sRightTableAlias = $aJoinData["righttablealias"];
+//			$sJoinType = $aJoinData["jointype"];
+//			$sLeftField = $aJoinData["leftfield"];
+//			$sRightField = $aJoinData["rightfield"];
+//			$sRightTableAlias = $aJoinData["righttablealias"];
 
-			$sJoinTableAlias = $oRightSelect->privRenderSingleTable($aTempFrom, $aFields, $aDelTables, $aSetValues, $aSelectedIdFields, $sJoinType, $this->m_sTableAlias, $sLeftField, $sRightField, $sRightTableAlias);
+			$sJoinTableAlias = $oRightSelect->privRenderSingleTable($aTempFrom, $aFields, $aDelTables, $aSetValues, $aSelectedIdFields, $this->m_sTableAlias, $aJoinData);
 		}
 		$aFrom[$this->m_sTableAlias]['subfrom'] = $aTempFrom;
 

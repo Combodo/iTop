@@ -95,6 +95,7 @@ class ValueSetObjects extends ValueSetDefinition
 	protected $m_sFilterExpr; // in OQL
 	protected $m_sValueAttCode;
 	protected $m_aOrderBy;
+	protected $m_aExtraConditions;
 	private $m_bAllowAllData;
 
 	public function __construct($sFilterExp, $sValueAttCode = '', $aOrderBy = array(), $bAllowAllData = false)
@@ -104,8 +105,13 @@ class ValueSetObjects extends ValueSetDefinition
 		$this->m_sValueAttCode = $sValueAttCode;
 		$this->m_aOrderBy = $aOrderBy;
 		$this->m_bAllowAllData = $bAllowAllData;
+		$this->m_aExtraConditions = array();
 	}
 
+	public function AddCondition(DBObjectSearch $oFilter)
+	{
+		$this->m_aExtraConditions[] = $oFilter;		
+	}
 
 	public function ToObjectSet($aArgs = array(), $sContains = '')
 	{
@@ -116,6 +122,10 @@ class ValueSetObjects extends ValueSetDefinition
 		else
 		{
 			$oFilter = DBObjectSearch::FromOQL($this->m_sFilterExpr);
+		}
+		foreach($this->m_aExtraConditions as $oExtraFilter)
+		{
+			$oFilter->MergeWith($oExtraFilter);
 		}
 
 		return new DBObjectSet($oFilter, $this->m_aOrderBy, $aArgs);
@@ -148,6 +158,10 @@ class ValueSetObjects extends ValueSetDefinition
 			$oFilter = DBObjectSearch::FromOQL($this->m_sFilterExpr);
 		}
 		if (!$oFilter) return false;
+		foreach($this->m_aExtraConditions as $oExtraFilter)
+		{
+			$oFilter->MergeWith($oExtraFilter);
+		}
 
 		$oValueExpr = new ScalarExpression('%'.$sContains.'%');
 		$oNameExpr = new FieldExpression('friendlyname', $oFilter->GetClassAlias());
@@ -285,6 +299,34 @@ class ValueSetEnum extends ValueSetDefinition
 			$aValues = array();
 		}
 		$this->m_aValues = $aValues;
+		return true;
+	}
+}
+
+/**
+ * Fixed set values, defined as a range: 0..59 (with an optional increment)
+ *
+ * @package     iTopORM
+ */
+class ValueSetRange extends ValueSetDefinition
+{
+	protected $m_iStart;
+	protected $m_iEnd;
+
+	public function __construct($iStart, $iEnd, $iStep = 1)
+	{
+		$this->m_iStart = $iStart;
+		$this->m_iEnd = $iEnd;
+		$this->m_iStep = $iStep;
+	}
+
+	protected function LoadValues($aArgs)
+	{
+		$iValue = $this->m_iStart;
+		for($iValue = $this->m_iStart; $iValue <= $this->m_iEnd; $iValue += $this->m_iStep)
+		{
+			$this->m_aValues[$iValue] = $iValue;
+		}
 		return true;
 	}
 }

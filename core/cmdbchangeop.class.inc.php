@@ -212,6 +212,8 @@ class CMDBChangeOpSetAttributeScalar extends CMDBChangeOpSetAttribute
 		$oMonoObjectSet = new DBObjectSet($oTargetSearch);
 		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES)
 		{
+			if (!MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode'))) return ''; // Protects against renammed attributes...
+
 			$oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
 			$sAttName = $oAttDef->GetLabel();
 			$sNewValue = $this->Get('newvalue');

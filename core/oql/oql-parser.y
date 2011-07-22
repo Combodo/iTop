@@ -78,6 +78,10 @@ join_item(A) ::= JOIN class_name(X) ON join_condition(C).
 }
 
 join_condition(A) ::= field_id(X) EQ field_id(Y). { A = new BinaryOqlExpression(X, '=', Y); }
+join_condition(A) ::= field_id(X) BELOW field_id(Y). { A = new BinaryOqlExpression(X, 'BELOW', Y); }
+join_condition(A) ::= field_id(X) BELOW_STRICT field_id(Y). { A = new BinaryOqlExpression(X, 'BELOW_STRICT', Y); }
+join_condition(A) ::= field_id(X) NOT_BELOW field_id(Y). { A = new BinaryOqlExpression(X, 'NOT_BELOW', Y); }
+join_condition(A) ::= field_id(X) NOT_BELOW_STRICT field_id(Y). { A = new BinaryOqlExpression(X, 'NOT_BELOW_STRICT', Y); }
 
 condition(A) ::= expression_prio4(X). { A = X; }
 

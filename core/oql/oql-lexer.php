@@ -104,155 +104,159 @@ class OQLLexerRaw
         if ($this->count >= strlen($this->data)) {
             return false; // end of input
         }
-    	do {
-	    	$rules = array(
-    			'/^[ \t\n\r]+/',
-    			'/^SELECT/',
-    			'/^FROM/',
-    			'/^AS/',
-    			'/^WHERE/',
-    			'/^JOIN/',
-    			'/^ON/',
-    			'/^\//',
-    			'/^\\*/',
-    			'/^\\+/',
-    			'/^-/',
-    			'/^AND/',
-    			'/^OR/',
-    			'/^,/',
-    			'/^\\(/',
-    			'/^\\)/',
-    			'/^REGEXP/',
-    			'/^=/',
-    			'/^!=/',
-    			'/^>/',
-    			'/^</',
-    			'/^>=/',
-    			'/^<=/',
-    			'/^LIKE/',
-    			'/^NOT LIKE/',
-    			'/^IN/',
-    			'/^NOT IN/',
-    			'/^INTERVAL/',
-    			'/^IF/',
-    			'/^ELT/',
-    			'/^COALESCE/',
-    			'/^ISNULL/',
-    			'/^CONCAT/',
-    			'/^SUBSTR/',
-    			'/^TRIM/',
-    			'/^DATE/',
-    			'/^DATE_FORMAT/',
-    			'/^CURRENT_DATE/',
-    			'/^NOW/',
-    			'/^TIME/',
-    			'/^TO_DAYS/',
-    			'/^FROM_DAYS/',
-    			'/^YEAR/',
-    			'/^MONTH/',
-    			'/^DAY/',
-    			'/^HOUR/',
-    			'/^MINUTE/',
-    			'/^SECOND/',
-    			'/^DATE_ADD/',
-    			'/^DATE_SUB/',
-    			'/^ROUND/',
-    			'/^FLOOR/',
-    			'/^INET_ATON/',
-    			'/^INET_NTOA/',
-    			'/^[0-9]+|0x[0-9a-fA-F]+/',
-    			'/^\"([^\\\\\"]|\\\\\"|\\\\\\\\)*\"|'.chr(94).chr(39).'([^\\\\'.chr(39).']|\\\\'.chr(39).'|\\\\\\\\)*'.chr(39).'/',
-    			'/^([_a-zA-Z][_a-zA-Z0-9]*|`[^`]+`)/',
-    			'/^:([_a-zA-Z][_a-zA-Z0-9]*->[_a-zA-Z][_a-zA-Z0-9]*|[_a-zA-Z][_a-zA-Z0-9]*)/',
-    			'/^\\./',
-	    	);
-	    	$match = false;
-	    	foreach ($rules as $index => $rule) {
-	    		if (preg_match($rule, substr($this->data, $this->count), $yymatches)) {
-	            	if ($match) {
-	            	    if (strlen($yymatches[0]) > strlen($match[0][0])) {
-	            	    	$match = array($yymatches, $index); // matches, token
-	            	    }
-	            	} else {
-	            		$match = array($yymatches, $index);
-	            	}
-	            }
-	    	}
-	    	if (!$match) {
-	            throw new Exception('Unexpected input at line' . $this->line .
-	                ': ' . $this->data[$this->count]);
-	    	}
-	    	$this->token = $match[1];
-	    	$this->value = $match[0][0];
-	    	$yysubmatches = $match[0];
-	    	array_shift($yysubmatches);
-	    	if (!$yysubmatches) {
-	    		$yysubmatches = array();
-	    	}
-	        $r = $this->{'yy_r1_' . $this->token}($yysubmatches);
-	        if ($r === null) {
-	            $this->count += strlen($this->value);
-	            $this->line += substr_count($this->value, "\n");
-	            // accept this token
-	            return true;
-	        } elseif ($r === true) {
-	            // we have changed state
-	            // process this token in the new state
-	            return $this->yylex();
-	        } elseif ($r === false) {
-	            $this->count += strlen($this->value);
-	            $this->line += substr_count($this->value, "\n");
-	            if ($this->count >= strlen($this->data)) {
-	                return false; // end of input
-	            }
-	            // skip this token
-	            continue;
-	        } else {
-	            $yy_yymore_patterns = array_slice($rules, $this->token, true);
-	            // yymore is needed
-	            do {
-	                if (!isset($yy_yymore_patterns[$this->token])) {
-	                    throw new Exception('cannot do yymore for the last token');
-	                }
-			    	$match = false;
-	                foreach ($yy_yymore_patterns[$this->token] as $index => $rule) {
-	                	if (preg_match('/' . $rule . '/',
-	                      	  substr($this->data, $this->count), $yymatches)) {
-	                    	$yymatches = array_filter($yymatches, 'strlen'); // remove empty sub-patterns
-			            	if ($match) {
-			            	    if (strlen($yymatches[0]) > strlen($match[0][0])) {
-			            	    	$match = array($yymatches, $index); // matches, token
-			            	    }
-			            	} else {
-			            		$match = array($yymatches, $index);
-			            	}
-			            }
-			    	}
-			    	if (!$match) {
-			            throw new Exception('Unexpected input at line' . $this->line .
-			                ': ' . $this->data[$this->count]);
-			    	}
-			    	$this->token = $match[1];
-			    	$this->value = $match[0][0];
-			    	$yysubmatches = $match[0];
-			    	array_shift($yysubmatches);
-			    	if (!$yysubmatches) {
-			    		$yysubmatches = array();
-			    	}
-	                $this->line = substr_count($this->value, "\n");
-	                $r = $this->{'yy_r1_' . $this->token}();
-	            } while ($r !== null || !$r);
-		        if ($r === true) {
-		            // we have changed state
-		            // process this token in the new state
-		            return $this->yylex();
-		        } else {
-	                // accept
-	                $this->count += strlen($this->value);
-	                $this->line += substr_count($this->value, "\n");
-	                return true;
-		        }
-	        }
+        do {
+            $rules = array(
+                '/\G[ \t\n\r]+/ ',
+                '/\GSELECT/ ',
+                '/\GFROM/ ',
+                '/\GAS/ ',
+                '/\GWHERE/ ',
+                '/\GJOIN/ ',
+                '/\GON/ ',
+                '/\G\// ',
+                '/\G\\*/ ',
+                '/\G\\+/ ',
+                '/\G-/ ',
+                '/\GAND/ ',
+                '/\GOR/ ',
+                '/\G,/ ',
+                '/\G\\(/ ',
+                '/\G\\)/ ',
+                '/\GREGEXP/ ',
+                '/\G=/ ',
+                '/\G!=/ ',
+                '/\G>/ ',
+                '/\G</ ',
+                '/\G>=/ ',
+                '/\G<=/ ',
+                '/\GLIKE/ ',
+                '/\GNOT LIKE/ ',
+                '/\GIN/ ',
+                '/\GNOT IN/ ',
+                '/\GINTERVAL/ ',
+                '/\GIF/ ',
+                '/\GELT/ ',
+                '/\GCOALESCE/ ',
+                '/\GISNULL/ ',
+                '/\GCONCAT/ ',
+                '/\GSUBSTR/ ',
+                '/\GTRIM/ ',
+                '/\GDATE/ ',
+                '/\GDATE_FORMAT/ ',
+                '/\GCURRENT_DATE/ ',
+                '/\GNOW/ ',
+                '/\GTIME/ ',
+                '/\GTO_DAYS/ ',
+                '/\GFROM_DAYS/ ',
+                '/\GYEAR/ ',
+                '/\GMONTH/ ',
+                '/\GDAY/ ',
+                '/\GHOUR/ ',
+                '/\GMINUTE/ ',
+                '/\GSECOND/ ',
+                '/\GDATE_ADD/ ',
+                '/\GDATE_SUB/ ',
+                '/\GROUND/ ',
+                '/\GFLOOR/ ',
+                '/\GINET_ATON/ ',
+                '/\GINET_NTOA/ ',
+                '/\GBELOW/ ',
+                '/\GBELOW STRICT/ ',
+                '/\GNOT BELOW/ ',
+                '/\GNOT BELOW STRICT/ ',
+                '/\G[0-9]+|0x[0-9a-fA-F]+/ ',
+                '/\G\"([^\\\\\"]|\\\\\"|\\\\\\\\)*\"|'.chr(94).chr(39).'([^\\\\'.chr(39).']|\\\\'.chr(39).'|\\\\\\\\)*'.chr(39).'/ ',
+                '/\G([_a-zA-Z][_a-zA-Z0-9]*|`[^`]+`)/ ',
+                '/\G:([_a-zA-Z][_a-zA-Z0-9]*->[_a-zA-Z][_a-zA-Z0-9]*|[_a-zA-Z][_a-zA-Z0-9]*)/ ',
+                '/\G\\./ ',
+            );
+            $match = false;
+            foreach ($rules as $index => $rule) {
+                if (preg_match($rule, substr($this->data, $this->count), $yymatches)) {
+                    if ($match) {
+                        if (strlen($yymatches[0]) > strlen($match[0][0])) {
+                            $match = array($yymatches, $index); // matches, token
+                        }
+                    } else {
+                        $match = array($yymatches, $index);
+                    }
+                }
+            }
+            if (!$match) {
+                throw new Exception('Unexpected input at line ' . $this->line .
+                    ': ' . $this->data[$this->count]);
+            }
+            $this->token = $match[1];
+            $this->value = $match[0][0];
+            $yysubmatches = $match[0];
+            array_shift($yysubmatches);
+            if (!$yysubmatches) {
+                $yysubmatches = array();
+            }
+            $r = $this->{'yy_r1_' . $this->token}($yysubmatches);
+            if ($r === null) {
+                $this->count += strlen($this->value);
+                $this->line += substr_count($this->value, "\n");
+                // accept this token
+                return true;
+            } elseif ($r === true) {
+                // we have changed state
+                // process this token in the new state
+                return $this->yylex();
+            } elseif ($r === false) {
+                $this->count += strlen($this->value);
+                $this->line += substr_count($this->value, "\n");
+                if ($this->count >= strlen($this->data)) {
+                    return false; // end of input
+                }
+                // skip this token
+                continue;
+            } else {
+                $yy_yymore_patterns = array_slice($rules, $this->token, true);
+                // yymore is needed
+                do {
+                    if (!isset($yy_yymore_patterns[$this->token])) {
+                        throw new Exception('cannot do yymore for the last token');
+                    }
+                    $match = false;
+                    foreach ($yy_yymore_patterns[$this->token] as $index => $rule) {
+                        if (preg_match('/' . $rule . '/',
+                                $this->data, $yymatches, null, $this->count)) {
+                            $yymatches = array_filter($yymatches, 'strlen'); // remove empty sub-patterns
+                            if ($match) {
+                                if (strlen($yymatches[0]) > strlen($match[0][0])) {
+                                    $match = array($yymatches, $index); // matches, token
+                                }
+                            } else {
+                                $match = array($yymatches, $index);
+                            }
+                        }
+                    }
+                    if (!$match) {
+                        throw new Exception('Unexpected input at line ' . $this->line .
+                            ': ' . $this->data[$this->count]);
+                    }
+                    $this->token = $match[1];
+                    $this->value = $match[0][0];
+                    $yysubmatches = $match[0];
+                    array_shift($yysubmatches);
+                    if (!$yysubmatches) {
+                        $yysubmatches = array();
+                    }
+                    $this->line = substr_count($this->value, "\n");
+                    $r = $this->{'yy_r1_' . $this->token}();
+                } while ($r !== null || !$r);
+                if ($r === true) {
+                    // we have changed state
+                    // process this token in the new state
+                    return $this->yylex();
+                } else {
+                    // accept
+                    $this->count += strlen($this->value);
+                    $this->line += substr_count($this->value, "\n");
+                    return true;
+                }
+            }
         } while (true);
 
     } // end function
@@ -530,24 +534,44 @@ class OQLLexerRaw
     function yy_r1_54($yy_subpatterns)
     {
 
-	$this->token = OQLParser::NUMVAL;
+	$this->token = OQLParser::BELOW;
     }
     function yy_r1_55($yy_subpatterns)
     {
 
-	$this->token = OQLParser::STRVAL;
+	$this->token = OQLParser::BELOW_STRICT;
     }
     function yy_r1_56($yy_subpatterns)
     {
 
-	$this->token = OQLParser::NAME;
+	$this->token = OQLParser::NOT_BELOW;
     }
     function yy_r1_57($yy_subpatterns)
     {
 
-	$this->token = OQLParser::VARNAME;
+	$this->token = OQLParser::NOT_BELOW_STRICT;
     }
     function yy_r1_58($yy_subpatterns)
+    {
+
+	$this->token = OQLParser::NUMVAL;
+    }
+    function yy_r1_59($yy_subpatterns)
+    {
+
+	$this->token = OQLParser::STRVAL;
+    }
+    function yy_r1_60($yy_subpatterns)
+    {
+
+	$this->token = OQLParser::NAME;
+    }
+    function yy_r1_61($yy_subpatterns)
+    {
+
+	$this->token = OQLParser::VARNAME;
+    }
+    function yy_r1_62($yy_subpatterns)
     {
 
 	$this->token = OQLParser::DOT;

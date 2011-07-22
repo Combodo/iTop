@@ -699,7 +699,11 @@ abstract class MetaModel
 
 	final static public function GetAttributeDef($sClass, $sAttCode)
 	{
-		self::_check_subclass($sClass);	
+		self::_check_subclass($sClass);
+if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
+{
+	echo "<p>$sAttCode is NOT a valid attribute of class $sClass.</p>";
+}
 		return self::$m_aAttribDefs[$sClass][$sAttCode];
 	}
 
@@ -1666,6 +1670,23 @@ abstract class MetaModel
 		self::_check_subclass($sClass);
 		return (self::GetRootClass($sClass) == $sClass);
 	}
+	/**
+	 * Tells if a class contains a hierarchical key, and if so what is its AttCode
+	 * @return mixed String = sAttCode or false if the class is not part of a hierarchy
+	 */
+	public static function IsHierarchicalClass($sClass)
+	{
+		$sHierarchicalKeyCode = false;
+		foreach (self::ListAttributeDefs($sClass) as $sAttCode => $oAtt)
+		{
+			if ($oAtt->IsHierarchicalKey())
+			{
+				$sHierarchicalKeyCode = $sAttCode; // Found the hierarchical key, no need to continue
+				break;
+			}
+		}
+		return $sHierarchicalKeyCode;
+	}
 	public static function EnumRootClasses()
 	{
 		return array_unique(self::$m_aRootClasses);
@@ -1943,6 +1964,7 @@ abstract class MetaModel
 		try
 		{
 			$sRes = $oSelect->RenderSelect($aOrderSpec, $aScalarArgs, $iLimitCount, $iLimitStart, $bGetCount);
+//echo "<p>MakeQuery: $sRes</p>";
 		}
 		catch (MissingQueryArgument $e)
 		{
@@ -2094,8 +2116,9 @@ abstract class MetaModel
 				}
 			}
 		}
-
+//echo "<p>oQBExpr ".__LINE__.": <pre>\n".print_r($oQBExpr, true)."</pre></p>\n";
 		$aExpectedAtts = array(); // array of (attcode => fieldexpression)
+//echo "<p>".__LINE__.": GetUnresolvedFields($sClassAlias, ...)</p>\n";
 		$oQBExpr->GetUnresolvedFields($sClassAlias, $aExpectedAtts);
 
 		// Compute a clear view of required joins (from the current class)
@@ -2120,17 +2143,22 @@ abstract class MetaModel
 			}
 		}
 		// Get all Ext keys used by the filter
-		foreach ($oFilter->GetCriteria_PointingTo() as $sKeyAttCode => $trash)
+		foreach ($oFilter->GetCriteria_PointingTo() as $sKeyAttCode => $aPointingTo)
 		{
-			$sKeyTableClass = self::$m_aAttribOrigins[$sClass][$sKeyAttCode];
-			$aExtKeys[$sKeyTableClass][$sKeyAttCode] = array();
+			if (array_key_exists(TREE_OPERATOR_EQUALS, $aPointingTo))
+			{
+				$sKeyTableClass = self::$m_aAttribOrigins[$sClass][$sKeyAttCode];
+				$aExtKeys[$sKeyTableClass][$sKeyAttCode] = array();
+			}
 		}
 
 		if (array_key_exists('friendlyname', $aExpectedAtts))
 		{
 			$aTranslateNow = array();
 			$aTranslateNow[$sClassAlias]['friendlyname'] = self::GetNameExpression($sClass, $sClassAlias);
+//echo "<p>oQBExpr ".__LINE__.": <pre>\n".print_r($oQBExpr, true)."</pre></p>\n";
 			$oQBExpr->Translate($aTranslateNow, false);
+//echo "<p>oQBExpr ".__LINE__.": <pre>\n".print_r($oQBExpr, true)."</pre></p>\n";
 
 			$aNameSpec = self::GetNameSpec($sClass);
 			foreach($aNameSpec[1] as $i => $sAttCode)
@@ -2188,6 +2216,7 @@ abstract class MetaModel
 		foreach(self::EnumParentClasses($sClass) as $sParentClass)
 		{
 			if (!self::HasTable($sParentClass)) continue;
+//echo "<p>Parent class: $sParentClass... let's call MakeQuerySingleTable()</p>";
 			self::DbgTrace("Parent class: $sParentClass... let's call MakeQuerySingleTable()");
 			$oSelectParentTable = self::MakeQuerySingleTable($aSelectedClasses, $oQBExpr, $aClassAliases, $aTableAliases, $oFilter, $sParentClass, $aExtKeys, $aValues);
 			if (is_null($oSelectBase))
@@ -2272,6 +2301,7 @@ abstract class MetaModel
 	protected static function MakeQuerySingleTable($aSelectedClasses, &$oQBExpr, &$aClassAliases, &$aTableAliases, $oFilter, $sTableClass, $aExtKeys, $aValues)
 	{
 		// $aExtKeys is an array of sTableClass => array of (sAttCode (keys) => array of sAttCode (fields))
+//echo "MAKEQUERY($sTableClass)-liste des clefs externes($sTableClass): <pre>".print_r($aExtKeys, true)."</pre><br/>\n";
 
 		// Prepare the query for a single table (compound objects)
 		// Ignores the items (attributes/filters) that are not on the target table
@@ -2346,6 +2376,7 @@ abstract class MetaModel
 			}
 			else
 			{
+//echo "<p>MakeQuerySingleTable: Field $sAttCode is part of the table $sTable (named: $sTableAlias)</p>";
 				// standard field, or external key
 				// add it to the output
 				foreach ($oAttDef->GetSQLExpressions() as $sColId => $sSQLExpr)
@@ -2362,92 +2393,257 @@ abstract class MetaModel
 		//
 		$oSelectBase = new SQLQuery($sTable, $sTableAlias, array(), $bIsOnQueriedClass, $aUpdateValues, $oSelectedIdField);
 
+//echo "MAKEQUERY- Classe $sTableClass<br/>\n";
 		// 4 - The external keys -> joins...
 		//
+		$aAllPointingTo = $oFilter->GetCriteria_PointingTo();
+
 		if (array_key_exists($sTableClass, $aExtKeys))
 		{
 			foreach ($aExtKeys[$sTableClass] as $sKeyAttCode => $aExtFields)
 			{
-				$oKeyAttDef = self::GetAttributeDef($sTargetClass, $sKeyAttCode);
+				$oKeyAttDef = self::GetAttributeDef($sTableClass, $sKeyAttCode);
 
-				$oExtFilter = $oFilter->GetCriteria_PointingTo($sKeyAttCode);
-
-				// In case the join was not explicitely defined in the filter,
-				// we need to do it now
-				if (empty($oExtFilter))
+				$aPointingTo = $oFilter->GetCriteria_PointingTo($sKeyAttCode);
+//echo "MAKEQUERY-Cle '$sKeyAttCode'<br/>\n";
+				if (!array_key_exists(TREE_OPERATOR_EQUALS, $aPointingTo))
 				{
+//echo "MAKEQUERY-Ajoutons l'operateur TREE_OPERATOR_EQUALS pour $sKeyAttCode<br/>\n";
+					// The join was not explicitely defined in the filter,
+					// we need to do it now
 					$sKeyClass =  $oKeyAttDef->GetTargetClass();
 					$sKeyClassAlias = self::GenerateUniqueAlias($aClassAliases, $sKeyClass.'_'.$sKeyAttCode, $sKeyClass);
 					$oExtFilter = new DBObjectSearch($sKeyClass, $sKeyClassAlias);
-				}
-				else
-				{
-					// The aliases should not conflict because normalization occured while building the filter
-					$sKeyClass =  $oExtFilter->GetFirstJoinedClass();
-					$sKeyClassAlias = $oExtFilter->GetFirstJoinedClassAlias();
-					
-					// Note: there is no search condition in $oExtFilter, because normalization did merge the condition onto the top of the filter tree 
-				}
 
-				// Specify expected attributes for the target class query
-				// ... and use the current alias !
-				$aTranslateNow = array(); // Translation for external fields - must be performed before the join is done (recursion...)
-				foreach($aExtFields as $sAttCode => $oAtt)
+					$aAllPointingTo[$sKeyAttCode][TREE_OPERATOR_EQUALS] = $oExtFilter;
+				}
+			}
+		}
+//echo "MAKEQUERY-liste des clefs de jointure: <pre>".print_r(array_keys($aAllPointingTo), true)."</pre><br/>\n";
+				
+		foreach ($aAllPointingTo as $sKeyAttCode => $aPointingTo)
+		{
+			foreach($aPointingTo as $iOperatorCode => $oExtFilter)
+			{
+				if (!MetaModel::IsValidAttCode($sTableClass, $sKeyAttCode)) continue; // Not defined in the class, skip it
+				// The aliases should not conflict because normalization occured while building the filter
+				$oKeyAttDef = self::GetAttributeDef($sTableClass, $sKeyAttCode);
+				$sKeyClass =  $oExtFilter->GetFirstJoinedClass();
+				$sKeyClassAlias = $oExtFilter->GetFirstJoinedClassAlias();
+
+//echo "MAKEQUERY-$sTableClass::$sKeyAttCode Foreach PointingTo($iOperatorCode) <span style=\"color:red\">$sKeyClass (alias:$sKeyClassAlias)</span><br/>\n";
+				
+				// Note: there is no search condition in $oExtFilter, because normalization did merge the condition onto the top of the filter tree 
+
+				if ($iOperatorCode == TREE_OPERATOR_EQUALS)
 				{
-					if ($oAtt instanceof AttributeFriendlyName)
+					// Specify expected attributes for the target class query
+					// ... and use the current alias !
+					$aTranslateNow = array(); // Translation for external fields - must be performed before the join is done (recursion...)
+//echo "MAKEQUERY-array_key_exists($sTableClass, \$aExtKeys)<br/>\n";
+					if (array_key_exists($sTableClass, $aExtKeys) && array_key_exists($sKeyAttCode, $aExtKeys[$sTableClass]))
 					{
-						// Note: for a given ext key, there is one single attribute "friendly name"
-						$aTranslateNow[$sTargetAlias][$sAttCode] = new FieldExpression('friendlyname', $sKeyClassAlias);
-					}
-					else
-					{
-						$sExtAttCode = $oAtt->GetExtAttCode();
-						// Translate mainclass.extfield => remoteclassalias.remotefieldcode
-						$oRemoteAttDef = self::GetAttributeDef($sKeyClass, $sExtAttCode);
-						foreach ($oRemoteAttDef->GetSQLExpressions() as $sColID => $sRemoteAttExpr)
+						foreach($aExtKeys[$sTableClass][$sKeyAttCode] as $sAttCode => $oAtt)
 						{
-							$aTranslateNow[$sTargetAlias][$sAttCode.$sColId] = new FieldExpression($sExtAttCode, $sKeyClassAlias);
+//echo "MAKEQUERY aExtKeys[$sTableClass][$sKeyAttCode] => $sAttCode-oAtt: <pre>".print_r($oAtt, true)."</pre><br/>\n";
+							if ($oAtt instanceof AttributeFriendlyName)
+							{
+								// Note: for a given ext key, there is one single attribute "friendly name"
+								$aTranslateNow[$sTargetAlias][$sAttCode] = new FieldExpression('friendlyname', $sKeyClassAlias);
+//echo "<p><b>aTranslateNow[$sTargetAlias][$sAttCode] = new FieldExpression('friendlyname', $sKeyClassAlias);</b></p>\n";
+							}
+							else
+							{
+								$sExtAttCode = $oAtt->GetExtAttCode();
+								// Translate mainclass.extfield => remoteclassalias.remotefieldcode
+								$oRemoteAttDef = self::GetAttributeDef($sKeyClass, $sExtAttCode);
+								foreach ($oRemoteAttDef->GetSQLExpressions() as $sColID => $sRemoteAttExpr)
+								{
+									$aTranslateNow[$sTargetAlias][$sAttCode.$sColId] = new FieldExpression($sExtAttCode, $sKeyClassAlias);
+//echo "<p><b>aTranslateNow[$sTargetAlias][$sAttCode.$sColId] = new FieldExpression($sExtAttCode, $sKeyClassAlias);</b></p>\n";
+								}
+//echo "<p><b>ExtAttr2: $sTargetAlias.$sAttCode to $sKeyClassAlias.$sRemoteAttExpr (class: $sKeyClass)</b></p>\n";
+							}
 						}
-						//#@# debug - echo "<p>$sTargetAlias.$sAttCode to $sKeyClassAlias.$sRemoteAttExpr (class: $sKeyClass)</p>\n";
+						// Translate prior to recursing
+						//
+//echo "<p>oQBExpr ".__LINE__.": <pre>\n".print_r($oQBExpr, true)."\n".print_r($aTranslateNow, true)."</pre></p>\n";
+						$oQBExpr->Translate($aTranslateNow, false);
+//echo "<p>oQBExpr ".__LINE__.": <pre>\n".print_r($oQBExpr, true)."</pre></p>\n";
+		
+//echo "<p>External key $sKeyAttCode (class: $sKeyClass), call MakeQuery()/p>\n";
+						self::DbgTrace("External key $sKeyAttCode (class: $sKeyClass), call MakeQuery()");
+						$oQBExpr->PushJoinField(new FieldExpression('id', $sKeyClassAlias));
+		
+//echo "<p>Recursive MakeQuery ".__LINE__.": <pre>\n".print_r($aSelectedClasses, true)."</pre></p>\n";
+						$oSelectExtKey = self::MakeQuery($aSelectedClasses, $oQBExpr, $aClassAliases, $aTableAliases, $oExtFilter);
+		
+						$oJoinExpr = $oQBExpr->PopJoinField();
+						$sExternalKeyTable = $oJoinExpr->GetParent();
+						$sExternalKeyField = $oJoinExpr->GetName();
+		
+						$aCols = $oKeyAttDef->GetSQLExpressions(); // Workaround a PHP bug: sometimes issuing a Notice if invoking current(somefunc())
+						$sLocalKeyField = current($aCols); // get the first column for an external key
+		
+						self::DbgTrace("External key $sKeyAttCode, Join on $sLocalKeyField = $sExternalKeyField");
+						if ($oKeyAttDef->IsNullAllowed())
+						{
+							$oSelectBase->AddLeftJoin($oSelectExtKey, $sLocalKeyField, $sExternalKeyField, $sExternalKeyTable);
+						}
+						else
+						{
+							$oSelectBase->AddInnerJoin($oSelectExtKey, $sLocalKeyField, $sExternalKeyField, $sExternalKeyTable);
+						}
 					}
-				}
-				// Translate prior to recursing
-				//
-				$oQBExpr->Translate($aTranslateNow, false);
-
-				self::DbgTrace("External key $sKeyAttCode (class: $sKeyClass), call MakeQuery()");
-
-				$oQBExpr->PushJoinField(new FieldExpression('id', $sKeyClassAlias));
-
-				$oSelectExtKey = self::MakeQuery($aSelectedClasses, $oQBExpr, $aClassAliases, $aTableAliases, $oExtFilter);
-
-				$oJoinExpr = $oQBExpr->PopJoinField();
-				$sExternalKeyTable = $oJoinExpr->GetParent();
-				$sExternalKeyField = $oJoinExpr->GetName();
-
-				$aCols = $oKeyAttDef->GetSQLExpressions(); // Workaround a PHP bug: sometimes issuing a Notice if invoking current(somefunc())
-				$sLocalKeyField = current($aCols); // get the first column for an external key
-
-				self::DbgTrace("External key $sKeyAttCode, Join on $sLocalKeyField = $sExternalKeyField");
-				if ($oKeyAttDef->IsNullAllowed())
-				{
-					$oSelectBase->AddLeftJoin($oSelectExtKey, $sLocalKeyField, $sExternalKeyField, $sExternalKeyTable);
 				}
 				else
 				{
-					$oSelectBase->AddInnerJoin($oSelectExtKey, $sLocalKeyField, $sExternalKeyField, $sExternalKeyTable);
+					$oQBExpr->PushJoinField(new FieldExpression($sKeyAttCode, $sKeyClassAlias));
+					$oSelectExtKey = self::MakeQuery($aSelectedClasses, $oQBExpr, $aClassAliases, $aTableAliases, $oExtFilter);
+					$oJoinExpr = $oQBExpr->PopJoinField();
+//echo "MAKEQUERY-PopJoinField pour $sKeyAttCode, $sKeyClassAlias: <pre>".print_r($oJoinExpr, true)."</pre><br/>\n";
+					$sExternalKeyTable = $oJoinExpr->GetParent();
+					$sExternalKeyField = $oJoinExpr->GetName();
+					$sLeftIndex = $sExternalKeyField.'_left'; // TODO use GetSQLLeft()
+					$sRightIndex = $sExternalKeyField.'_right'; // TODO use GetSQLRight()
+
+					$LocalKeyLeft = $oKeyAttDef->GetSQLLeft();
+//echo "MAKEQUERY-LocalKeyLeft pour $sKeyAttCode => $LocalKeyLeft<br/>\n";
+
+					$oSelectBase->AddInnerJoinTree($oSelectExtKey, $LocalKeyLeft, $sLeftIndex, $sRightIndex, $sExternalKeyTable, $iOperatorCode);
 				}
 			}
 		}
 
 		// Translate the selected columns
 		//
+//echo "<p>oQBExpr ".__LINE__.": <pre>\n".print_r($oQBExpr, true)."</pre></p>\n";
 		$oQBExpr->Translate($aTranslation, false);
+//echo "<p>oQBExpr ".__LINE__.": <pre>\n".print_r($oQBExpr, true)."</pre></p>\n";
 
 		//MyHelpers::var_dump_html($oSelectBase->RenderSelect());
 		return $oSelectBase;
 	}
 
+	/**
+	 * Special processing for the hierarchical keys stored as nested sets
+	 * @param $iId integer The identifier of the parent
+	 * @param $oAttDef AttributeDefinition The attribute corresponding to the hierarchical key
+	 * @param $stable string The name of the database table containing the hierarchical key 
+	 */
+	public static function HKInsertChildUnder($iId, $oAttDef, $sTable)
+	{
+		// Get the parent id.right value
+		if ($iId == 0)
+		{
+			// No parent, insert completely at the right of the tree
+			$sSQL = "SELECT max(`".$oAttDef->GetSQLRight()."`) AS max FROM `$sTable`";
+			$aRes = CMDBSource::QueryToArray($sSQL);
+			if (count($aRes) == 0)
+			{
+				$iMyRight = 1;
+			}
+			else
+			{
+				$iMyRight = $aRes[0]['max']+1;
+			}
+		}
+		else
+		{
+			$sSQL = "SELECT `".$oAttDef->GetSQLRight()."` FROM `$sTable` WHERE id=".$iId;
+			$iMyRight = CMDBSource::QueryToScalar($sSQL);
+			$sSQLUpdateRight = "UPDATE `$sTable` SET `".$oAttDef->GetSQLRight()."` = `".$oAttDef->GetSQLRight()."` + 2 WHERE `".$oAttDef->GetSQLRight()."` >= $iMyRight";
+			CMDBSource::Query($sSQLUpdateRight);
+			$sSQLUpdateLeft = "UPDATE `$sTable` SET `".$oAttDef->GetSQLLeft()."` = `".$oAttDef->GetSQLLeft()."` + 2 WHERE `".$oAttDef->GetSQLLeft()."` > $iMyRight";
+			CMDBSource::Query($sSQLUpdateLeft);
+		}
+		return array($oAttDef->GetSQLRight() =>  $iMyRight+1, $oAttDef->GetSQLLeft() => $iMyRight);
+	}
+
+	/**
+	 * Special processing for the hierarchical keys stored as nested sets: temporary remove the branch
+	 * @param $iId integer The identifier of the parent
+	 * @param $oAttDef AttributeDefinition The attribute corresponding to the hierarchical key
+	 * @param $sTable string The name of the database table containing the hierarchical key 
+	 */
+	public static function HKTemporaryCutBranch($iMyLeft, $iMyRight, $oAttDef, $sTable)
+	{
+		$iDelta = $iMyRight - $iMyLeft + 1;
+		$sSQL = "UPDATE `$sTable` SET `".$oAttDef->GetSQLRight()."` = $iMyLeft - `".$oAttDef->GetSQLRight()."`, `".$oAttDef->GetSQLLeft()."` = $iMyLeft - `".$oAttDef->GetSQLLeft();
+		$sSQL .= "` WHERE  `".$oAttDef->GetSQLLeft()."`> $iMyLeft AND `".$oAttDef->GetSQLRight()."`< $iMyRight";
+		CMDBSource::Query($sSQL);
+		$sSQL = "UPDATE `$sTable` SET `".$oAttDef->GetSQLLeft()."` = `".$oAttDef->GetSQLLeft()."` - $iDelta WHERE `".$oAttDef->GetSQLLeft()."` > $iMyRight";
+		CMDBSource::Query($sSQL);
+		$sSQL = "UPDATE `$sTable` SET `".$oAttDef->GetSQLRight()."` = `".$oAttDef->GetSQLRight()."` - $iDelta WHERE `".$oAttDef->GetSQLRight()."` > $iMyRight";
+		CMDBSource::Query($sSQL);
+	}
+
+	/**
+	 * Special processing for the hierarchical keys stored as nested sets: replug the temporary removed branch
+	 * @param $iId integer The identifier of the parent
+	 * @param $oAttDef AttributeDefinition The attribute corresponding to the hierarchical key
+	 * @param $sTable string The name of the database table containing the hierarchical key 
+	 */
+	public static function HKReplugBranch($iNewLeft, $iNewRight, $oAttDef, $sTable)
+	{
+		$iDelta = $iNewRight - $iNewLeft + 1;
+		$sSQL = "UPDATE `$sTable` SET `".$oAttDef->GetSQLLeft()."` = `".$oAttDef->GetSQLLeft()."` + $iDelta WHERE `".$oAttDef->GetSQLLeft()."` > $iNewLeft";
+		CMDBSource::Query($sSQL);
+		$sSQL = "UPDATE `$sTable` SET `".$oAttDef->GetSQLRight()."` = `".$oAttDef->GetSQLRight()."` + $iDelta WHERE `".$oAttDef->GetSQLRight()."` >= $iNewLeft";
+		CMDBSource::Query($sSQL);
+		$sSQL = "UPDATE `$sTable` SET `".$oAttDef->GetSQLRight()."` = $iNewLeft - `".$oAttDef->GetSQLRight()."`, `".$oAttDef->GetSQLLeft()."` = $iNewLeft - `".$oAttDef->GetSQLLeft()."` WHERE `".$oAttDef->GetSQLRight()."`< 0";
+		CMDBSource::Query($sSQL);
+	}
+
+	/**
+	 * Initializes (i.e converts) a hierarchy stored using a 'parent_id' external key
+	 * into a hierarchy stored with a HierarchicalKey, by initializing the _left and _right values
+	 * to correspond to the existing hierarchy in the database
+	 * @param $sClass string Name of the class to process
+	 * @param $sAttCode string Code of the attribute to process
+	 */
+	public static function HKInit($sClass, $sAttCode)
+	{
+		$idx = 1;
+		$oAttDef = self::GetAttributeDef($sClass, $sAttCode);
+		$sTable = self::DBGetTable($sClass, $sAttCode);
+		if ($oAttDef->IsHierarchicalKey())
+		{
+			try
+			{
+				CMDBSource::Query('START TRANSACTION');
+				self::HKInitChildren($sTable, $sAttCode, $oAttDef, 0, $idx);
+				CMDBSource::Query('COMMIT');
+			}
+			catch(Exception $e)
+			{
+				CMDBSource::Query('ROLLBACK');
+				throw new Exception("An error occured (".$e->getMessage().") while initializing the hierarchy for ($sClass, $sAttCode). The database was not modified.");
+			}
+		}
+	}
+	
+	/**
+	 * Recursive helper function called by HKInit
+	 */
+	protected static function HKInitChildren($sTable, $sAttCode, $oAttDef, $iId, &$iCurrIndex)
+	{
+		$sSQL = "SELECT id FROM `$sTable` WHERE `$sAttCode` = $iId";
+		$aRes = CMDBSource::QueryToArray($sSQL);
+		$aTree = array();
+		$sLeft = $oAttDef->GetSQLLeft();
+		$sRight = $oAttDef->GetSQLRight();
+		foreach($aRes as $aValues)
+		{
+			$iChildId = $aValues['id'];
+			$iLeft = $iCurrIndex++;
+			$aChildren = self::HKInitChildren($sTable, $sAttCode, $oAttDef, $iChildId, $iCurrIndex);
+			$iRight = $iCurrIndex++;
+			$sSQL = "UPDATE `$sTable` SET `$sLeft` = $iLeft, `$sRight` = $iRight WHERE id= $iChildId";
+			CMDBSource::Query($sSQL);
+		}
+	}
+	
 	public static function GenerateUniqueAlias(&$aAliases, $sNewName, $sRealName)
 	{
 		if (!array_key_exists($sNewName, $aAliases))

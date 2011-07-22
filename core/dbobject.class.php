@@ -719,6 +719,14 @@ abstract class DBObject
 					return "Target object not found ($sTargetClass::$toCheck)";
 				}
 			}
+			if ($oAtt->IsHierarchicalKey())
+			{
+				// This check cannot be deactivated since otherwise the user may break things by a CSV import of a bulk modify
+				if ($toCheck == $this->GetKey())
+				{
+					return "An object can not be its own parent in a hierarchy (".$oAtt->Getlabel()." = $toCheck)";
+				}
+			}
 		}
 		elseif ($oAtt->IsScalar())
 		{
@@ -1067,6 +1075,8 @@ abstract class DBObject
 			$aValuesToWrite[] = CMDBSource::Quote($this->m_iKey);
 		}
 
+		$aHierarchicalKeys = array();
+		
 		foreach(MetaModel::ListAttributeDefs($sTableClass) as $sAttCode=>$oAttDef)
 		{
 			// Skip this attribute if not defined in this table
@@ -1076,6 +1086,10 @@ abstract class DBObject
 			{
 				$aFieldsToWrite[] = "`$sColumn`"; 
 				$aValuesToWrite[] = CMDBSource::Quote($sValue);
+			}
+			if ($oAttDef->IsHierarchicalKey())
+			{
+				$aHierarchicalKeys[$sAttCode] = $oAttDef;
 			}
 		}
 
@@ -1099,6 +1113,17 @@ abstract class DBObject
 			}
 			else
 			{
+				if (count($aHierarchicalKeys) > 0)
+				{
+					foreach($aHierarchicalKeys as $sAttCode => $oAttDef)
+					{
+						$aValues = MetaModel::HKInsertChildUnder($this->m_aCurrValues[$sAttCode], $oAttDef, $sTable);
+						$aFieldsToWrite[] = '`'.$oAttDef->GetSQLRight().'`';
+						$aValuesToWrite[] = $aValues[$oAttDef->GetSQLRight()];
+						$aFieldsToWrite[] = '`'.$oAttDef->GetSQLLeft().'`';
+						$aValuesToWrite[] = $aValues[$oAttDef->GetSQLLeft()];
+					}
+				}
 				$sInsertSQL = "INSERT INTO `$sTable` (".join(",", $aFieldsToWrite).") VALUES (".join(", ", $aValuesToWrite).")";
 				$iNewKey = CMDBSource::InsertInto($sInsertSQL);
 			}
@@ -1250,22 +1275,68 @@ abstract class DBObject
 		}
 
 		$bHasANewExternalKeyValue = false;
+		$aHierarchicalKeys = array();
 		foreach($aChanges as $sAttCode => $valuecurr)
 		{
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
 			if ($oAttDef->IsExternalKey()) $bHasANewExternalKeyValue = true;
 			if (!$oAttDef->IsDirectField()) unset($aChanges[$sAttCode]);
+			if ($oAttDef->IsHierarchicalKey())
+			{
+				$aHierarchicalKeys[$sAttCode] = $oAttDef;
+			}
 		}
 
-		// Update scalar attributes
-		if (count($aChanges) != 0)
+		if (!MetaModel::DBIsReadOnly())
 		{
-			$oFilter = new DBObjectSearch(get_class($this));
-			$oFilter->AddCondition('id', $this->m_iKey, '=');
-	
-			$sSQL = MetaModel::MakeUpdateQuery($oFilter, $aChanges);
-			if (!MetaModel::DBIsReadOnly())
+			// Update the left & right indexes for each hierarchical key
+			foreach($aHierarchicalKeys as $sAttCode => $oAttDef)
 			{
+				$sTable = $sTable = MetaModel::DBGetTable(get_class($this), $sAttCode);
+				$sSQL = "SELECT `".$oAttDef->GetSQLRight()."` AS `right`, `".$oAttDef->GetSQLLeft()."` AS `left` FROM `$sTable` WHERE id=".$this->GetKey();
+				$aRes = CMDBSource::QueryToArray($sSQL);
+				$iMyLeft = $aRes[0]['left'];
+				$iMyRight = $aRes[0]['right'];
+				$iDelta =$iMyRight - $iMyLeft + 1;
+				MetaModel::HKTemporaryCutBranch($iMyLeft, $iMyRight, $oAttDef, $sTable);
+				
+				if ($aChanges[$sAttCode] == 0)
+				{
+					// No new parent, insert completely at the right of the tree
+					$sSQL = "SELECT max(`".$oAttDef->GetSQLRight()."`) AS max FROM `$sTable`";
+					$aRes = CMDBSource::QueryToArray($sSQL);
+					if (count($aRes) == 0)
+					{
+						$iNewLeft = 1;
+					}
+					else
+					{
+						$iNewLeft = $aRes[0]['max']+1;
+					}
+				}
+				else
+				{
+					// Insert at the right of the specified parent
+					$sSQL = "SELECT `".$oAttDef->GetSQLRight()."` FROM `$sTable` WHERE id=".((int)$aChanges[$sAttCode]);
+					$iNewLeft = CMDBSource::QueryToScalar($sSQL);
+				}
+
+				MetaModel::HKReplugBranch($iNewLeft, $iNewLeft + $iDelta - 1, $oAttDef, $sTable);
+
+				$aHKChanges = array();
+				$aHKChanges[$sAttCode] = $aChanges[$sAttCode];
+				$aHKChanges[$oAttDef->GetSQLLeft()] = $iNewLeft;
+				$aHKChanges[$oAttDef->GetSQLRight()] = $iNewLeft + $iDelta - 1;
+				$aChanges[$sAttCode] = $aHKChanges; // the 3 values will be stored by MakeUpdateQuery below
+			}
+			
+			// Update scalar attributes
+			if (count($aChanges) != 0)
+			{
+				$oFilter = new DBObjectSearch(get_class($this));
+				$oFilter->AddCondition('id', $this->m_iKey, '=');
+		
+				$sSQL = MetaModel::MakeUpdateQuery($oFilter, $aChanges);
 				CMDBSource::Query($sSQL);
 			}
 		}
@@ -1321,6 +1392,34 @@ abstract class DBObject
 
 		if (!MetaModel::DBIsReadOnly())
 		{
+			foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef)
+			{
+				if ($oAttDef->IsHierarchicalKey())
+				{
+					// Update the left & right indexes for each hierarchical key
+					$sTable = $sTable = MetaModel::DBGetTable(get_class($this), $sAttCode);
+					$sSQL = "SELECT `".$oAttDef->GetSQLRight()."` AS `right`, `".$oAttDef->GetSQLLeft()."` AS `left` FROM `$sTable` WHERE id=".$this->GetKey();
+					$aRes = CMDBSource::QueryToArray($sSQL);
+					$iMyLeft = $aRes[0]['left'];
+					$iMyRight = $aRes[0]['right'];
+					$iDelta =$iMyRight - $iMyLeft + 1;
+					MetaModel::HKTemporaryCutBranch($iMyLeft, $iMyRight, $oAttDef, $sTable);
+
+					// No new parent, insert completely at the right of the tree
+					$sSQL = "SELECT max(`".$oAttDef->GetSQLRight()."`) AS max FROM `$sTable`";
+					$aRes = CMDBSource::QueryToArray($sSQL);
+					if (count($aRes) == 0)
+					{
+						$iNewLeft = 1;
+					}
+					else
+					{
+						$iNewLeft = $aRes[0]['max']+1;
+					}
+					MetaModel::HKReplugBranch($iNewLeft, $iNewLeft + $iDelta - 1, $oAttDef, $sTable);
+				}
+			}
+
 			foreach(MetaModel::EnumParentClasses(get_class($this), ENUM_PARENT_CLASSES_ALL) as $sParentClass)
 			{
 				$this->DBDeleteSingleTable($sParentClass);

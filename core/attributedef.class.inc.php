@@ -167,6 +167,7 @@ abstract class AttributeDefinition
 	public function IsScalar() {return false;} 
 	public function IsLinkSet() {return false;} 
 	public function IsExternalKey($iType = EXTKEY_RELATIVE) {return false;} 
+	public function IsHierarchicalKey() {return false;}
 	public function IsExternalField() {return false;} 
 	public function IsWritable() {return false;} 
 	public function IsNullAllowed() {return true;} 
@@ -2419,6 +2420,115 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 	public function AllowTargetCreation()
 	{
 		return $this->GetOptional('allow_target_creation', MetaModel::GetConfig()->Get('allow_target_creation'));
+	}
+}
+
+/**
+ * Special kind of External Key to manage a hierarchy of objects
+ */
+class AttributeHierarchicalKey extends AttributeExternalKey
+{
+	static protected function ListExpectedParams()
+	{
+		$aParams = parent::ListExpectedParams();
+		//unset($aParams[array_search('targetclass', $aParams)]);
+		
+		//print_r($aParams);
+		return $aParams; // TODO: mettre les bons parametres ici !!
+	}
+
+	public function GetEditClass() {return "ExtKey";}
+	public function RequiresIndex()
+	{
+		return true;
+	}
+
+	public function IsHierarchicalKey() {return true;}
+	public function GetKeyAttDef($iType = EXTKEY_RELATIVE){return $this;}
+	public function GetKeyAttCode() {return $this->GetCode();} 
+	
+
+	public function GetBasicFilterOperators()
+	{
+		return parent::GetBasicFilterOperators();
+	}
+	public function GetBasicFilterLooseOperator()
+	{
+		return parent::GetBasicFilterLooseOperator();
+	}
+
+	public function GetSQLColumns()
+	{
+		$aColumns = array();
+		$aColumns[$this->GetCode()] = 'INT(11)';
+		$aColumns[$this->GetSQLLeft()] = 'INT(11)';
+		$aColumns[$this->GetSQLRight()] = 'INT(11)';
+		return $aColumns;
+	}
+	public function GetSQLRight()
+	{
+		return $this->GetCode().'_right';
+	}
+	public function GetSQLLeft()
+	{
+		return $this->GetCode().'_left';
+	}
+
+	public function GetSQLValues($value)
+	{
+		if (!is_array($value))
+		{
+			$aValues[$this->GetCode()] = $value;
+		}
+		else
+		{
+			$aValues = array();
+			$aValues[$this->GetCode()] = $value[$this->GetCode()];
+			$aValues[$this->GetSQLRight()] = $value[$this->GetSQLRight()];
+			$aValues[$this->GetSQLLeft()] = $value[$this->GetSQLLeft()];
+		}
+		return $aValues;
+	}
+
+	public function GetAllowedValues($aArgs = array(), $sContains = '')
+	{
+		if (array_key_exists('this', $aArgs))
+		{
+			// Hierarchical keys have one more constraint: the "parent value" cannot be
+			// "under" themselves
+			$iRootId = $aArgs['this']->GetKey();
+			if ($iRootId > 0) // ignore objects that do no exist in the database...
+			{
+				$oValSetDef = $this->GetValuesDef();
+				$sClass = $this->GetHostClass(); // host class  == target class for HK
+				$oFilter = DBObjectSearch::FromOQL("SELECT $sClass AS node JOIN $sClass AS root ON node.".$this->GetCode()." NOT BELOW root.id WHERE root.id = $iRootId");
+				$oValSetDef->AddCondition($oFilter);
+			}
+		}
+		else
+		{
+			return parent::GetAllowedValues($aArgs, $sContains);
+		}
+	}
+
+	public function GetAllowedValuesAsObjectSet($aArgs = array(), $sContains = '')
+	{
+		$oValSetDef = $this->GetValuesDef();
+		if (array_key_exists('this', $aArgs))
+		{
+			// Hierarchical keys have one more constraint: the "parent value" cannot be
+			// "under" themselves
+			$iRootId = $aArgs['this']->GetKey();
+			if ($iRootId > 0) // ignore objects that do no exist in the database...
+			{
+				$aValuesSetDef = $this->GetValuesDef();
+				$sClass = $this->GetHostClass(); // host class  == target class for HK
+				$oFilter = DBObjectSearch::FromOQL("SELECT $sClass AS node JOIN $sClass AS root ON node.".$this->GetCode()." NOT BELOW root.id WHERE root.id = $iRootId");
+				$oValSetDef->AddCondition($oFilter);
+			}
+		}
+		$oSet = $oValSetDef->ToObjectSet($aArgs, $sContains);
+		return $oSet;
 	}
 }
 

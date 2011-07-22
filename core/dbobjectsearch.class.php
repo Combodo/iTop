@@ -22,6 +22,12 @@
  * @author      Denis Flaven <denis.flaven@combodo.com>
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
+ 
+define('TREE_OPERATOR_EQUALS', 0);
+define('TREE_OPERATOR_BELOW', 1);
+define('TREE_OPERATOR_BELOW_STRICT', 2);
+define('TREE_OPERATOR_NOT_BELOW', 3);
+define('TREE_OPERATOR_NOT_BELOW_STRICT', 4);
 
 class DBObjectSearch
 {
@@ -107,6 +113,7 @@ class DBObjectSearch
 		if (count($this->m_aPointingTo) > 0) return false;
 		if (count($this->m_aReferencedBy) > 0) return false;
 		if (count($this->m_aRelatedTo) > 0) return false;
+		if (count($this->m_aParentConditions) > 0) return false;
 		return true;
 	}
 	
@@ -115,13 +122,39 @@ class DBObjectSearch
 		// To replace __Describe
 	}
 
-	public function DescribeConditionPointTo($sExtKeyAttCode)
+	public function DescribeConditionPointTo($sExtKeyAttCode, $aPointingTo)
 	{
-		if (!isset($this->m_aPointingTo[$sExtKeyAttCode])) return "";
-		$oFilter = $this->m_aPointingTo[$sExtKeyAttCode];
-		if ($oFilter->IsAny()) return "";
-		$oAtt = MetaModel::GetAttributeDef($this->GetClass(), $sExtKeyAttCode);
-		return $oAtt->GetLabel()." having ({$oFilter->DescribeConditions()})";
+		if (empty($aPointingTo)) return "";
+		foreach($aPointingTo as $iOperatorCode => $oFilter)
+		{
+			if ($oFilter->IsAny()) break;
+			$oAtt = MetaModel::GetAttributeDef($this->GetClass(), $sExtKeyAttCode);
+			$sOperator = '';
+			switch($iOperatorCode)
+			{
+				case TREE_OPERATOR_EQUALS:
+				$sOperator = 'having';
+				break;
+	
+				case TREE_OPERATOR_BELOW:
+				$sOperator = 'below';
+				break;
+	
+				case TREE_OPERATOR_BELOW_STRICT:
+				$sOperator = 'strictly below';
+				break;
+	
+				case TREE_OPERATOR_NOT_BELOW:
+				$sOperator = 'not below';
+				break;
+	
+				case TREE_OPERATOR_NOT_BELOW_STRICT:
+				$sOperator = 'strictly not below';
+				break;
+			}
+			$aDescription[] = $oAtt->GetLabel()."$sOperator ({$oFilter->DescribeConditions()})";
+		}
+		return implode(' and ', $aDescription);
 	}
 
 	public function DescribeConditionRefBy($sForeignClass, $sForeignExtKeyAttCode)
@@ -141,6 +174,7 @@ class DBObjectSearch
 		return "related ($sRelCode... peut mieux faire !, $iMaxDepth dig depth) to a {$oFilter->GetClass()} ({$oFilter->DescribeConditions()})";
 	}
 
+
 	public function DescribeConditions()
 	{
 		$aConditions = array();
@@ -159,10 +193,9 @@ class DBObjectSearch
 		$aConditions[] = $this->RenderCondition();
 
 		$aCondPoint = array();
-		foreach($this->m_aPointingTo as $sExtKeyAttCode=>$oFilter)
+		foreach($this->m_aPointingTo as $sExtKeyAttCode => $aPointingTo)
 		{
-			if ($oFilter->IsAny()) continue;
-			$aCondPoint[] = $this->DescribeConditionPointTo($sExtKeyAttCode);
+			$aCondPoint[] = $this->DescribeConditionPointTo($sExtKeyAttCode, $aPointingTo);
 		}
 		if (count($aCondPoint) > 0)
 		{
@@ -185,6 +218,11 @@ class DBObjectSearch
 		if (count($aCondReferred) > 0)
 		{
 			$aConditions[] = implode(" and ", $aCondReferred);
+		}
+
+		foreach ($this->m_aParentConditions as $aRelInfo)
+		{
+			$aCondReferred[] = $this->DescribeConditionParent($aRelInfo);
 		}
 
 		return implode(" and ", $aConditions);		
@@ -210,6 +248,9 @@ class DBObjectSearch
 	protected function TransferConditionExpression($oFilter, $aTranslation)
 	{
 		$oTranslated = $oFilter->GetCriteria()->Translate($aTranslation, false, false /* leave unresolved fields */);
+//echo "<p>TransferConditionExpression:<br/>";
+//echo "Adding Conditions:<br/><pre>".print_r($oTranslated, true)."</pre>\n";
+//echo "</p>";
 		$this->AddConditionExpression($oTranslated);
 		// #@# what about collisions in parameter names ???
 		$this->m_aParams = array_merge($this->m_aParams, $oFilter->m_aParams);
@@ -218,6 +259,7 @@ class DBObjectSearch
 	public function ResetCondition()
 	{
 		$this->m_oSearchCondition = new TrueExpression();
+		$this->m_aParentConditions = array();
 		// ? is that usefull/enough, do I need to rebuild the list after the subqueries ?
 	}
 
@@ -385,25 +427,47 @@ class DBObjectSearch
 		$this->m_aFullText[] = $sFullText;
 	}
 
+	public function AddCondition_Parent($sAttCode, $iOperatorCode, $oExpression)
+	{
+		$oAttDef = MetaModel::GetAttributeDef($this->GetClass(), $sAttCode);
+		if (!$oAttDef instanceof AttributeHierarchicalKey)
+		{
+			throw new Exception("AddCondition_Parent can only be used on hierarchical keys. '$sAttCode' is not a hierarchical key.");
+		}
+		$this->m_aParentConditions[] = array(
+			'attCode' => $sAttCode,
+			'operator' => $iOperatorCode,
+			'expression' => $oExpression,
+		);
+	}
+	
 	protected function AddToNameSpace(&$aClassAliases, &$aAliasTranslation)
 	{
 		$sOrigAlias = $this->GetClassAlias();
 		if (array_key_exists($sOrigAlias, $aClassAliases))
 		{
 			$sNewAlias = MetaModel::GenerateUniqueAlias($aClassAliases, $sOrigAlias, $this->GetClass());
+//echo "<h1>Generating a new alias for $sOrigAlias (already used). It is now: $sNewAlias</h1>\n";
 			$this->m_aSelectedClasses[$sNewAlias] = $this->GetClass();
 			unset($this->m_aSelectedClasses[$sOrigAlias]);
+
+			$this->m_aClasses[$sNewAlias] = $this->GetClass();
+			unset($this->m_aClasses[$sOrigAlias]);
 
 			// Translate the condition expression with the new alias
 			$aAliasTranslation[$sOrigAlias]['*'] = $sNewAlias;
 		}
 
+//echo "<h1>Adding the alias for ".$this->GetClass().". as ".$this->GetClassAlias()."</h1>\n";
 		// add the alias into the filter aliases list
 		$aClassAliases[$this->GetClassAlias()] = $this->GetClass();
 		
-		foreach($this->m_aPointingTo as $sExtKeyAttCode=>$oFilter)
+		foreach($this->m_aPointingTo as $sExtKeyAttCode=>$aPointingTo)
 		{
-			$oFilter->AddToNameSpace($aClassAliases, $aAliasTranslation);
+			foreach($aPointingTo as $iOperatorCode => $oFilter)
+			{
+				$oFilter->AddToNameSpace($aClassAliases, $aAliasTranslation);
+			}
 		}
 
 		foreach($this->m_aReferencedBy as $sForeignClass=>$aReferences)
@@ -415,16 +479,17 @@ class DBObjectSearch
 		}
 	}
 
-	public function AddCondition_PointingTo(DBObjectSearch $oFilter, $sExtKeyAttCode)
+	public function AddCondition_PointingTo(DBObjectSearch $oFilter, $sExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS)
 	{
 		$aAliasTranslation = array();
-		$res = $this->AddCondition_PointingTo_InNameSpace($oFilter, $sExtKeyAttCode, $this->m_aClasses, $aAliasTranslation);
+		$res = $this->AddCondition_PointingTo_InNameSpace($oFilter, $sExtKeyAttCode, $this->m_aClasses, $aAliasTranslation, $iOperatorCode);
 		$this->TransferConditionExpression($oFilter, $aAliasTranslation);
 		return $res;
 	}
 
-	protected function AddCondition_PointingTo_InNameSpace(DBObjectSearch $oFilter, $sExtKeyAttCode, &$aClassAliases, &$aAliasTranslation)
+	protected function AddCondition_PointingTo_InNameSpace(DBObjectSearch $oFilter, $sExtKeyAttCode, &$aClassAliases, &$aAliasTranslation, $iOperatorCode)
 	{
+//echo "<p style=\"color:green\">Calling: AddCondition_PointingTo_InNameSpace([".implode(',', $aClassAliases)."], [".implode(',', $aAliasTranslation)."]);</p>";
 		if (!MetaModel::IsValidKeyAttCode($this->GetClass(), $sExtKeyAttCode))
 		{
 			throw new CoreWarning("The attribute code '$sExtKeyAttCode' is not an external key of the class '{$this->GetClass()}' - the condition will be ignored");
@@ -434,20 +499,36 @@ class DBObjectSearch
 		{
 			throw new CoreException("The specified filter (pointing to {$oFilter->GetClass()}) is not compatible with the key '{$this->GetClass()}::$sExtKeyAttCode', which is pointing to {$oAttExtKey->GetTargetClass()}");
 		}
+		if(($iOperatorCode != TREE_OPERATOR_EQUALS) && !($oAttExtKey instanceof AttributeHierarchicalKey))
+		{
+			throw new CoreException("The specified tree operator $isOperatorCode is not applicable to the key '{$this->GetClass()}::$sExtKeyAttCode', which is not a HierarchicalKey");
+		}
 
 		if (array_key_exists($sExtKeyAttCode, $this->m_aPointingTo))
 		{
-			$this->m_aPointingTo[$sExtKeyAttCode]->MergeWith_InNamespace($oFilter, $aClassAliases, $aAliasTranslation);
+			if (array_key_exists($iOperatorCode, $this->m_aPointingTo[$sExtKeyAttCode]))
+			{
+				// Same ext key and same operator, merge the filters together
+				$this->m_aPointingTo[$sExtKeyAttCode][$iOperatorCode]->MergeWith_InNamespace($oFilter, $aClassAliases, $aAliasTranslation);
+			}
+			else
+			{
+//echo "<p style=\"color:red\">Calling: AddToNameSpace([".implode(',', $aClassAliases)."], [".implode(',', $aAliasTranslation)."]);</p>";
+				$oFilter->AddToNamespace($aClassAliases, $aAliasTranslation);
+	
+				$this->m_aPointingTo[$sExtKeyAttCode][$iOperatorCode] = $oFilter;
+			}
 		}
 		else
 		{
+//echo "<p style=\"color:red\">Calling: AddToNameSpace([".implode(',', $aClassAliases)."], [".implode(',', $aAliasTranslation)."]);</p>";
 			$oFilter->AddToNamespace($aClassAliases, $aAliasTranslation);
 
 			// #@# The condition expression found in that filter should not be used - could be another kind of structure like a join spec tree !!!!
 			// $oNewFilter = clone $oFilter;
 			// $oNewFilter->ResetCondition();
 
-			$this->m_aPointingTo[$sExtKeyAttCode] = $oFilter;
+			$this->m_aPointingTo[$sExtKeyAttCode][$iOperatorCode] = $oFilter;
 		}
 	}
 
@@ -491,6 +572,7 @@ class DBObjectSearch
 	public function AddCondition_LinkedTo(DBObjectSearch $oLinkFilter, $sExtKeyAttCodeToMe, $sExtKeyAttCodeTarget, DBObjectSearch $oFilterTarget)
 	{
 		$oLinkFilterFinal = clone $oLinkFilter;
+		// todo : new function prototype
 		$oLinkFilterFinal->AddCondition_PointingTo($sExtKeyAttCodeToMe);
 
 		$this->AddCondition_ReferencedBy($oLinkFilterFinal, $sExtKeyAttCodeToMe);
@@ -523,9 +605,12 @@ class DBObjectSearch
 		$this->m_aFullText = array_merge($this->m_aFullText, $oFilter->m_aFullText);
 		$this->m_aRelatedTo = array_merge($this->m_aRelatedTo, $oFilter->m_aRelatedTo);
 
-		foreach($oFilter->m_aPointingTo as $sExtKeyAttCode=>$oExtFilter)
+		foreach($oFilter->m_aPointingTo as $sExtKeyAttCode=>$aPointingTo)
 		{
-			$this->AddCondition_PointingTo_InNamespace($oExtFilter, $sExtKeyAttCode, $aClassAliases, $aAliasTranslation);
+			foreach($aPointingTo as $iOperatorCode => $oExtFilter)
+			{
+				$this->AddCondition_PointingTo_InNamespace($oExtFilter, $sExtKeyAttCode, $aClassAliases, $aAliasTranslation, $iOperatorCode);
+			}
 		}
 		foreach($oFilter->m_aReferencedBy as $sForeignClass => $aReferences)
 		{
@@ -544,7 +629,7 @@ class DBObjectSearch
 		{
 			return $this->m_aPointingTo;
 		}
-		if (!array_key_exists($sKeyAttCode, $this->m_aPointingTo)) return null;
+		if (!array_key_exists($sKeyAttCode, $this->m_aPointingTo)) return array();
 		return $this->m_aPointingTo[$sKeyAttCode];
 	}
 	public function GetCriteria_ReferencedBy($sRemoteClass = "", $sForeignExtKeyAttCode = "")
@@ -710,10 +795,36 @@ class DBObjectSearch
 	protected function ToOQL_Joins()
 	{
 		$sRes = '';
-		foreach($this->m_aPointingTo as $sExtKey=>$oFilter)
+		foreach($this->m_aPointingTo as $sExtKey => $aPointingTo)
 		{
-			$sRes .= ' JOIN '.$oFilter->GetClass().' AS '.$oFilter->GetClassAlias().' ON '.$this->GetClassAlias().'.'.$sExtKey.' = '.$oFilter->GetClassAlias().'.id';
-			$sRes .= $oFilter->ToOQL_Joins();
+			foreach($aPointingTo as $iOperatorCode => $oFilter)
+			{
+				switch($iOperatorCode)
+				{
+					case TREE_OPERATOR_EQUALS:
+					$sOperator = ' = ';
+					break;
+					
+					case TREE_OPERATOR_BELOW:
+					$sOperator = ' BELOW ';
+					break;
+					
+					case TREE_OPERATOR_BELOW_STRICT:
+					$sOperator = ' BELOW STRICT ';
+					break;
+					
+					case TREE_OPERATOR_NOT_BELOW:
+					$sOperator = ' NOT BELOW ';
+					break;
+					
+					case TREE_OPERATOR_NOT_BELOW_STRICT:
+					$sOperator = ' NOT BELOW STRICT ';
+					break;
+					
+				}
+				$sRes .= ' JOIN '.$oFilter->GetClass().' AS '.$oFilter->GetClassAlias().' ON '.$this->GetClassAlias().'.'.$sExtKey.$sOperator.$oFilter->GetClassAlias().'.id';
+				$sRes .= $oFilter->ToOQL_Joins();				
+			}
 		}
 		foreach($this->m_aReferencedBy as $sForeignClass=>$aReferences)
 		{
@@ -926,7 +1037,26 @@ class DBObjectSearch
 				}
 				else
 				{
-					$aJoinItems[$sFromClass]->AddCondition_PointingTo($aJoinItems[$sToClass], $sExtKeyAttCode);
+					$sOperator = $oJoinSpec->GetOperator();
+					switch($sOperator)
+					{
+						case '=':
+						$iOperatorCode = TREE_OPERATOR_EQUALS;
+						break;
+						case 'BELOW':
+						$iOperatorCode = TREE_OPERATOR_BELOW;
+						break;
+						case 'BELOW_STRICT':
+						$iOperatorCode = TREE_OPERATOR_BELOW_STRICT;
+						break;
+						case 'NOT_BELOW':
+						$iOperatorCode = TREE_OPERATOR_NOT_BELOW;
+						break;
+						case 'NOT_BELOW_STRICT':
+						$iOperatorCode = TREE_OPERATOR_NOT_BELOW_STRICT;
+						break;
+					}
+					$aJoinItems[$sFromClass]->AddCondition_PointingTo($aJoinItems[$sToClass], $sExtKeyAttCode, $iOperatorCode);
 				}
 			}
 		}
