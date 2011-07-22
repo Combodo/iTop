@@ -981,7 +981,7 @@ function ModulesSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, $oConf
 	$oP->add("</fieldset>\n");
 	if ($aParamValues['mode'] == 'upgrade')
 	{
-		$oP->add("<h2 class=\"next\">Next: Sample data selection</h2>\n");
+		$oP->add("<h2 class=\"next\">Next: Application path</h2>\n");
 		AddHiddenParam($oP, 'operation', 'step6');
 	}
 	else
@@ -1042,13 +1042,58 @@ function AdminAccountDefinition(SetupWebPage $oP, $aParamValues, $iCurrentStep, 
 	$aForm[] = array('label' => "Retype password$sRedStar:", 'input' => "<input  id=\"auth_pwd2\" type=\"password\" name=\"auth_pwd2\" value=\"{$aParamValues['auth_pwd']}\">");
 	$oP->form($aForm);
 	$oP->add("</fieldset>\n");
-	$oP->add("<h2 class=\"next\">Next: Sample data selection</h2>\n");
+	$oP->add("<h2 class=\"next\">Next: Application path</h2>\n");
 	$oP->add("<table style=\"width:100%\"><tr>\n");
 	$oP->add("<td style=\"text-align:left;\"><button type=\"button\" onClick=\"return DoGoBack(4)\"><< Back</button></td>\n");
 	$oP->add("<td style=\"text-align:right;\"><input type=\"submit\" onClick=\"return DoSubmit('', 5);\" value=\" Next >> \"/></td>\n");
 	$oP->add("</tr></table>\n");
 
 	// Form goes here
+	$oP->add("</form>\n");
+}
+
+
+/**
+ * Display the form for validating/entering the URL (path) to the application
+ * which consists in
+ */  
+function ApplicationPathSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, Config $oConfig)
+{
+	$sNextOperation = 'step7';
+	if ($aParamValues['mode'] == 'upgrade')
+	{
+		$iPrevStep = 4;
+	}
+	else
+	{
+		$iPrevStep = 5;
+	}
+
+	$oP->set_title("Application Path");
+
+	$oP->add("<form id=\"theForm\" method=\"post\"\">\n");
+	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
+	AddParamsToForm($oP, $aParamValues, array('application_path'));
+
+	try
+	{
+		$sDefaultAppPath = 	utils::GetDefaultUrlAppRoot();		
+	}
+	catch(Exception $e)
+	{
+		$sDefaultAppPath = 'http://<your_host>/itop';
+	}
+	$sAppPath = empty($aParamValues['application_path']) ? $sDefaultAppPath : $aParamValues['application_path'];
+
+	$oP->add("<h2>Enter the URL that will be used to connect to the application</h2>\n");
+	$oP->p("<fieldset><legend> Application URL </legend>\n");
+	$oP->p("<input type=\"text\" id=\"application_path\" size=\"60\" name=\"application_path\" value=\"$sAppPath\">\n");
+	$oP->p("</fieldset>\n");	
+	$oP->add("<h2 class=\"next\">Next: Sample data selection</h2>\n");
+	$oP->add("<table style=\"width:100%\"><tr>\n");
+	$oP->add("<td style=\"text-align:left;\"><button type=\"button\" onClick=\"return DoGoBack($iPrevStep)\"><< Back</button></td>\n");
+	$oP->add("<td style=\"text-align:right;\"><input type=\"submit\" onClick=\"return DoSubmit('', 6)\" value=\" Next >> \"/></td>\n");
+	$oP->add("</tr></table>\n");
 	$oP->add("</form>\n");
 }
 
@@ -1060,15 +1105,8 @@ function AdminAccountDefinition(SetupWebPage $oP, $aParamValues, $iCurrentStep, 
  */  
 function SampleDataSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, Config $oConfig)
 {
-	$sNextOperation = 'step7';
-	if ($aParamValues['mode'] == 'upgrade')
-	{
-		$iPrevStep = 4;
-	}
-	else
-	{
-		$iPrevStep = 5;
-	}
+	$sNextOperation = 'step8';
+	$iPrevStep = 6;
 
 	$oP->set_title("Application initialization");
 	$sAdminUser = $aParamValues['auth_user'];
@@ -1081,6 +1119,7 @@ function SampleDataSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, Con
 	$aAvailableModules = AnalyzeInstallation($oConfig);
 	BuildConfig($oP, $oConfig, $aParamValues, $aAvailableModules); // Load all the includes based on the modules selected
 
+	$oConfig->Set('app_root_url', $aParamValues['application_path']);
 	// in case of upgrade, the value is already present in the config file
 	$oConfig->WriteToFile(TMP_CONFIG_FILE);
 
@@ -1111,7 +1150,7 @@ function SampleDataSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, Con
 	$oP->add("<h2 class=\"next\">Next: Installation summary</h2>\n");
 	$oP->add("<table style=\"width:100%\"><tr>\n");
 	$oP->add("<td style=\"text-align:left;\"><button type=\"button\" onClick=\"return DoGoBack($iPrevStep)\"><< Back</button></td>\n");
-	$oP->add("<td style=\"text-align:right;\"><input type=\"submit\" onClick=\"DoSubmit('', 6)\" value=\" Next >> \"/></td>\n");
+	$oP->add("<td style=\"text-align:right;\"><input type=\"submit\" onClick=\"DoSubmit('', 7)\" value=\" Next >> \"/></td>\n");
 	$oP->add("</tr></table>\n");
 	$oP->add("</form>\n");
 }
@@ -1179,6 +1218,9 @@ function DisplaySummary(SetupWebPage $oP, $aParamValues, $iCurrentStep, Config $
 		}
 		$oP->collapsible('sample_data', "Sample Data", array($sSampleData));
 		
+		// Application Path
+		$oP->collapsible('application_path', "Application path", array('URL:'.htmlentities($aParamValues['application_path'], ENT_QUOTES, 'UTF-8')));
+
 		// Admin account
 		$oP->collapsible('admin_account', "Administrator account", array('Login:'.htmlentities($aParamValues['auth_user'], ENT_QUOTES, 'UTF-8')));
 		// Default language
@@ -1190,9 +1232,9 @@ function DisplaySummary(SetupWebPage $oP, $aParamValues, $iCurrentStep, Config $
 		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"step8\">\n");
 		AddParamsToForm($oP, $aParamValues);
 		$oP->add("<table style=\"width:100%\"><tr>\n");
-		$oP->add("<td style=\"text-align:left;\"><button type=\"button\" onClick=\"return DoGoBack(6)\"><< Back</button></td>\n");
+		$oP->add("<td style=\"text-align:left;\"><button type=\"button\" onClick=\"return DoGoBack(7)\"><< Back</button></td>\n");
 		// Note: the Next >> button is NOT a submit, since moving to the next page is triggered asynchronously
-		$oP->add("<td style=\"text-align:right;\"><button type=\"button\" onClick=\"DoSubmit('Installing...', 7)\"> Install ! >></button></td>\n");
+		$oP->add("<td style=\"text-align:right;\"><button type=\"button\" onClick=\"DoSubmit('Installing...', 9)\"> Install ! >></button></td>\n");
 		$oP->add("</tr></table>\n");
 		$oP->add("</form>\n");
 		break;
@@ -1289,6 +1331,9 @@ function DisplaySummary(SetupWebPage $oP, $aParamValues, $iCurrentStep, Config $
 			$sSampleData = 'No sample data will be loaded.';
 		}
 		$oP->collapsible('sample_data', "Sample Data", array($sSampleData));
+
+		// Application Path
+		$oP->collapsible('application_path', "Application path", array('URL:'.htmlentities($aParamValues['application_path'], ENT_QUOTES, 'UTF-8')));
 		
 		$oP->add('</div>');
 		$oP->add("<form id=\"theForm\" method=\"post\">\n");
@@ -1453,7 +1498,7 @@ ini_set('max_execution_time', max(240, ini_get('max_execution_time')));
 ini_set('display_errors', true);
 ini_set('display_startup_errors', true);
 
-$aParams = array('mode', 'previous_step', 'licence_ok', 'db_server', 'db_user', 'db_pwd','db_name', 'new_db_name', 'db_prefix', 'module', 'sample_data', 'auth_user', 'auth_pwd', 'language');
+$aParams = array('mode', 'previous_step', 'licence_ok', 'db_server', 'db_user', 'db_pwd','db_name', 'new_db_name', 'db_prefix', 'module', 'sample_data', 'auth_user', 'auth_pwd', 'language', 'application_path');
 foreach($aParams as $sName)
 {
 	$aParamValues[$sName] = utils::ReadParam($sName, '');
@@ -1547,18 +1592,24 @@ try
 		case 'step6':
 		$oP->no_cache();
 		$oP->log("Info - ========= Wizard step 6 ========");
-		SampleDataSelection($oP, $aParamValues, 6, $oConfig);
+		ApplicationPathSelection($oP, $aParamValues, 6, $oConfig);
 		break;
 
 		case 'step7':
 		$oP->no_cache();
 		$oP->log("Info - ========= Wizard step 7 ========");
-		DisplaySummary($oP, $aParamValues, 7, $oConfig);
+		SampleDataSelection($oP, $aParamValues, 6, $oConfig);
 		break;
-	
+
 		case 'step8':
 		$oP->no_cache();
 		$oP->log("Info - ========= Wizard step 8 ========");
+		DisplaySummary($oP, $aParamValues, 7, $oConfig);
+		break;
+	
+		case 'step9':
+		$oP->no_cache();
+		$oP->log("Info - ========= Wizard step 9 ========");
 		SetupFinished($oP, $aParamValues, 8, $oConfig);
 		break;
 			

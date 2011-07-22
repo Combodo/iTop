@@ -103,10 +103,29 @@ function DoSubmit(sMsg, iStep)
 		}
 		break;
 		
-		case 6: // Sample data selection
+		case 6: // application path
+		var appPath = new String($('#application_path').val());
+		if (appPath == '')
+		{
+			alert('Please specify the URL to the application');
+			bResult = false;
+		}
+		else
+		{
+			var bMatch = appPath.match(/^http(?:s)?\:\/\//);
+		if (!bMatch)
+		{
+			alert('"'+appPath+'" does not look like a valid URL for the application...\nPlease check your input.');
+			bResult = false;
+		}
+		}
+
 		break;
-		
-		case 7: // Display Summary: launch DoUpdateDBSchema to start the asynchronous update
+			
+		case 7: // Sample data selection
+			break;
+			
+		case 8: // Display Summary: launch DoUpdateDBSchema to start the asynchronous update
 		bResult = DoUpdateDBSchema();
 		break;
 
