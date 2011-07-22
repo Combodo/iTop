@@ -343,8 +343,12 @@ function OnAutoComplete(id, event, data, formatted)
 	if (data)
 	{
 		// A valid match was found: data[0] => label, data[1] => value
-		$('#'+id).val(data[1]);
-		$('#'+id).trigger('change');
+		if (data[1] != $('#'+id).val())
+		{
+			$('#'+id).val(data[1]);
+			$('#'+id).trigger('change');
+			$('#'+id).trigger('extkeychange');
+		}
 	}
 	else
 	{

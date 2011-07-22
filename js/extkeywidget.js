@@ -213,8 +213,13 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			{
 				$('#label_'+me.id).val(data.name);
 				$('#label_'+me.id).removeClass('ac_dlg_loading');
+				var prevValue = $('#'+me.id).val();
 				$('#'+me.id).val(iObjectId);
-				$('#'+me.id).trigger('validate');
+				if (prevValue != iObjectId)
+				{
+					$('#'+me.id).trigger('validate');
+					$('#'+me.id).trigger('extkeychange');
+				}	
 				$('#label_'+me.id).focus();
 				me.ajax_request = null;
 			},
@@ -361,6 +366,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 						$('#label_'+me.id).focus();
 					}
 					$('#'+me.id).trigger('validate');
+					$('#'+me.id).trigger('extkeychange');
 					me.ajax_request = null;
 				},
 				'json'
@@ -377,6 +383,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			$('#label_'+me.id).attr('disabled', 'disabled');
 			$('#label_'+me.id).css({'background': 'transparent'});
 			$('#mini_add_'+me.id).hide();
+			$('#mini_tree_'+me.id).hide();
 			$('#mini_search_'+me.id).hide();
 		}
 		else
@@ -384,7 +391,124 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			$('#label_'+me.id).attr('disabled', '');
 			$('#label_'+me.id).css({'background': '#fff url(../images/ac-background.gif) no-repeat right'});
 			$('#mini_add_'+me.id).show();
+			$('#mini_tree_'+me.id).show();
 			$('#mini_search_'+me.id).show();
 		}
 	}
+	
+	this.HKDisplay = function()
+	{
+		var theMap = { sTargetClass: me.sTargetClass,
+				   	   sInputId: me.id,
+				   	   sFilter: me.sFilter,
+				   	   value: $('#'+me.id).val()
+					};
+	
+		if (me.bSelectMode)
+		{
+			me.v_html = $('#v_'+me.id).html();
+			$('#v_'+me.id).html('<img src="../images/indicator.gif" />');
+		}
+		else
+		{
+			$('#label_'+me.id).addClass('ac_dlg_loading');
+		}
+		if (me.oWizardHelper == null)
+		{
+			theMap['json'] = '';
+		}
+		else
+		{
+			// Not inside a "search form", updating a real object
+			me.oWizardHelper.UpdateWizard();
+			theMap['json'] = me.oWizardHelper.ToJSON();
+		}
+		
+		theMap['sRemoteClass'] = me.sTargetClass;
+		theMap.operation = 'displayHierarchy';
+		
+		// Make sure that we cancel any pending request before issuing another
+		// since responses may arrive in arbitrary order
+		me.StopPendingRequest();
+		
+		// Run the query and display the results
+		me.ajax_request = $.post( '../pages/ajax.render.php', theMap, 
+			function(data)
+			{
+				$('#ac_tree_'+me.id).html(data);
+				var maxHeight = $(window).height()-110;
+				$('#tree_'+me.id).css({maxHeight: maxHeight});
+			},
+			'html'
+		);
+	}
+
+	this.OnHKResize = function(event, ui)
+	{
+		var dh = ui.size.height - ui.originalSize.height;
+		if (dh != 0)
+		{
+			var dlg_content = $('#dlg_tree_'+me.id+' .wizContainer');
+			var h = dlg_content.height();
+			dlg_content.height(h + dh);
+			var tree = $('#tree_'+me.id);
+			var h = tree.height();
+			tree.height(h + dh - 1);
+		}
+	}
+	
+	this.OnHKClose = function()
+	{
+		if (me.bSelectMode)
+		{
+			$('#v_'+me.id).html(me.v_html);
+		}
+		else
+		{
+			$('#label_'+me.id).removeClass('ac_dlg_loading');
+		}
+		$('#label_'+me.id).focus();
+		$('#dlg_tree_'+me.id).dialog("destroy");
+		$('#dlg_tree_'+me.id).remove();
+	}
+
+	this.DoHKOk = function()
+	{
+		iObjectId = $('#tree_'+me.id+' input[name=selectObject]:checked').val();
+
+		$('#dlg_tree_'+me.id).dialog('close');
+
+		// Query the server again to get the display name of the selected object
+		var theMap = { sTargetClass: me.sTargetClass,
+				   iInputId: me.id,
+				   iObjectId: iObjectId,
+				   operation: 'getObjectName'
+				 }
+	
+		// Make sure that we cancel any pending request before issuing another
+		// since responses may arrive in arbitrary order
+		me.StopPendingRequest();
+		
+		// Run the query and get the result back directly in JSON
+		me.ajax_request = $.post( '../pages/ajax.render.php', theMap, 
+			function(data)
+			{
+				$('#label_'+me.id).val(data.name);
+				$('#label_'+me.id).removeClass('ac_dlg_loading');
+				var prevValue = $('#'+me.id).val();
+				$('#'+me.id).val(iObjectId);
+				if (prevValue != iObjectId)
+				{
+					$('#'+me.id).trigger('validate');
+					$('#'+me.id).trigger('extkeychange');
+				}
+				$('#label_'+me.id).focus();
+				me.ajax_request = null;
+			},
+			'json'
+		);
+		
+		return false; // Do NOT submit the form in case we are called by OnSubmit...
+	}
+	
 }
