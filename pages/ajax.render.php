@@ -251,6 +251,27 @@ try
 		echo json_encode(array('name' => $sName));	
 		break;
 		
+		// ui.extkeywidget
+		case 'displayHierarchy':
+		$sTargetClass = utils::ReadParam('sTargetClass', '');
+		$sInputId = utils::ReadParam('sInputId', '');
+		$sFilter = utils::ReadParam('sFilter');
+		$sJson = utils::ReadParam('json', '');
+		$currValue = utils::ReadParam('value', '');
+		if (!empty($sJson))
+		{
+			$oWizardHelper = WizardHelper::FromJSON($sJson);
+			$oObj = $oWizardHelper->GetTargetObject();
+		}
+		else
+		{
+			// Search form: no current object
+			$oObj = null;
+		}
+		$oWidget = new UIExtKeyWidget($sTargetClass, $sInputId);
+		$oWidget->DisplayHierarchy($oPage, $sFilter, $currValue);
+		break;
+		
 		////////////////////////////////////////////////////
 		
 		// ui.linkswidget
