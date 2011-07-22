@@ -419,7 +419,18 @@ class utils
 		}
 		else
 		{
-			throw new Exception("Failed to determine application root path $sAbsoluteUrl ($sCurrentRelativePath) APPROOT:'$sAppRoot'");
+			// Second attempt without index.php at the end...
+			$sCurrentRelativePath = str_replace('index.php', '', $sCurrentRelativePath);
+			$sAppRootPos = strpos($sAbsoluteUrl, $sCurrentRelativePath);
+			if ($sAppRootPos !== false)
+			{
+				$sAppRootUrl = substr($sAbsoluteUrl, 0, $sAppRootPos); // remove the current page and path
+			}
+			else
+			{
+				// No luck...
+				throw new Exception("Failed to determine application root path $sAbsoluteUrl ($sCurrentRelativePath) APPROOT:'$sAppRoot'");
+			}			
 		}
 		return $sAppRootUrl;
 	}
