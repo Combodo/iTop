@@ -155,6 +155,7 @@ class UIExtKeyWidget
 		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sTargetClass}', '$sFilter', '$sTitle', true, $sWizHelper);
 		oACWidget_{$this->iId}.emptyHtml = "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>$sMessage</p></div>";
 		$('#$this->iId').bind('update', function() { oACWidget_{$this->iId}.Update(); } );
+		$('#$this->iId').bind('change', function() { $(this).trigger('extkeychange') } );
 
 EOF
 );
@@ -198,9 +199,18 @@ EOF
 		}
 EOF
 );
-			//$oPage->add_at_the_end($this->GetSearchDialog($oPage)); // To prevent adding forms inside the main form
-			//$oPage->add_at_the_end('<div id="ac_dlg_'.$this->iId.'"></div>'); // The place where to download the search dialog is outside of the main form (to prevent nested forms)
-
+		}
+		if (MetaModel::IsHierarchicalClass($this->sTargetClass) !== false)
+		{
+			$sHTMLValue .= "<a class=\"no-arrow\" href=\"javascript:oACWidget_{$this->iId}.HKDisplay();\"><img id=\"mini_tree_{$this->iId}\" style=\"border:0;vertical-align:middle;\" src=\"../images/mini_tree.gif\" /></a>&nbsp;";
+			$oPage->add_ready_script(
+<<<EOF
+			if ($('#ac_tree_{$this->iId}').length == 0)
+			{
+				$('body').append('<div id="ac_tree_{$this->iId}"></div>');
+			}		
+EOF
+);
 		}
 		if ($bCreate)
 		{
@@ -324,6 +334,44 @@ EOF
 	}
 
 	/**
+	 * Display the hierarchy of the 'target' class
+	 */
+	public function DisplayHierarchy(WebPage $oPage, $sFilter, $currValue)
+	{
+		$sDialogTitle = addslashes(Dict::Format('UI:HierarchyOf_Class', MetaModel::GetName($this->sTargetClass)));
+		$oPage->add('<div id="dlg_tree_'.$this->iId.'"><div class="wizContainer" style="vertical-align:top;"><div style="overflow:auto;background:#fff;margin-bottom:5px;" id="tree_'.$this->iId.'">');
+		$oPage->add('<table style="width:100%"><tr><td>');
+		if (is_null($sFilter))
+		{
+			throw new Exception('Implementation: null value for allowed values definition');
+		}
+		try
+		{
+			$oFilter = DBObjectSearch::FromOQL($sFilter);
+			$oSet = new DBObjectSet($oFilter);
+		}
+		catch(MissingQueryArgument $e)
+		{
+			// When used in a search form the $this parameter may be missing, in this case return all possible values...
+			// TODO check if we can improve this behavior...
+			$sOQL = 'SELECT '.$this->m_sTargetClass;
+			$oFilter = DBObjectSearch::FromOQL($sOQL);
+			$oSet = new DBObjectSet($oFilter);
+		}
+
+		$this->DumpTree($oPage, $oSet, 'parent_id', $currValue);
+
+		$oPage->add('</td></tr></table>');
+		$oPage->add('</div>');
+		$oPage->add("<input type=\"button\" id=\"btn_cancel_{$this->iId}\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"$('#dlg_tree_{$this->iId}').dialog('close');\">&nbsp;&nbsp;");
+		$oPage->add("<input type=\"button\" id=\"btn_ok_{$this->iId}\" value=\"".Dict::S('UI:Button:Ok')."\"  onClick=\"oACWidget_{$this->iId}.DoHKOk();\">");
+		
+		$oPage->add('</div></div>');
+		$oPage->add_ready_script("\$('#tree_$this->iId ul').treeview();\n");
+		$oPage->add_ready_script("\$('#dlg_tree_$this->iId').dialog({ width: 'auto', height: 'auto', autoOpen: true, modal: true, title: '$sDialogTitle', resizeStop: oACWidget_{$this->iId}.OnHKResize, close: oACWidget_{$this->iId}.OnHKClose });\n");
+	}
+
+	/**
 	 * Get the form to create a new object of the 'target' class
 	 */
 	public function DoCreateObject($oPage)
@@ -345,5 +393,68 @@ EOF
 			return array('name' => implode(' ', $aErrors), 'id' => 0);		
 		}
 	}
+
+	function DumpTree($oP, $oSet, $sParentAttCode, $currValue)
+	{
+		$aTree = array();
+		$aNodes = array();
+		while($oObj = $oSet->Fetch())
+		{
+			$iParentId = $oObj->Get($sParentAttCode);
+			if (!isset($aTree[$iParentId]))
+			{
+				$aTree[$iParentId] = array();
+			}
+			$aTree[$iParentId][$oObj->GetKey()] = $oObj->GetName();
+			$aNodes[$oObj->GetKey()] = $oObj;
+		}
+		
+		$aParents = array_keys($aTree);
+		$aRoots = array();
+		foreach($aParents as $id)
+		{
+			if (!array_key_exists($id, $aNodes))
+			{
+				$aRoots[] = $id;
+			}
+		}
+		foreach($aRoots as $iRootId)
+		{
+			$this->DumpNodes($oP, $iRootId, $aTree, $aNodes, $currValue);
+		}
+	}
+	
+	function DumpNodes($oP, $iRootId, $aTree, $aNodes, $currValue)
+	{
+		$bSelect = true;
+		$bMultiple = false;
+		$sSelect = '';
+		if (array_key_exists($iRootId, $aTree))
+		{
+			$aSortedRoots = $aTree[$iRootId];
+			asort($aSortedRoots);
+			$oP->add("<ul>\n");
+			foreach($aSortedRoots as $id => $sName)
+			{
+				if ($bSelect)
+				{
+					$sChecked = ($aNodes[$id]->GetKey() == $currValue) ? 'checked' : '';
+					if ($bMultiple)
+					{
+						$sSelect = '<input type="checkbox" value="'.$aNodes[$id]->GetKey().'" name="selectObject[]" '.$sChecked.'>&nbsp;';
+					}
+					else
+					{
+						$sSelect = '<input type="radio" value="'.$aNodes[$id]->GetKey().'" name="selectObject" '.$sChecked.'>&nbsp;';
+					}
+				}
+				$oP->add('<li>'.$sSelect.$aNodes[$id]->GetHyperlink());
+				$this->DumpNodes($oP, $id, $aTree, $aNodes, $currValue);
+				$oP->add("</li>\n");
+			}
+			$oP->add("</ul>\n");
+		}
+	}
+
 }
 ?>

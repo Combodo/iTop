@@ -362,7 +362,7 @@ class DisplayBlock
 
 					if (!is_null($condition))
 					{
-						$this->m_oFilter->AddCondition($sFilterCode, $condition); // Use the default 'loose' operator
+						$this->AddCondition($sFilterCode, $condition);
 					}
 				}
 			}
@@ -636,7 +636,7 @@ class DisplayBlock
 					$sContextParamValue = $oAppContext->GetCurrentValue($sFilterCode, null);
 					if (!is_null($sContextParamValue) && ! empty($sContextParamValue) && MetaModel::IsValidFilterCode($sClass, $sFilterCode))
 					{
-						$this->m_oFilter->AddCondition($sFilterCode, $sContextParamValue); // Use the default 'loose' operator
+						$this->AddCondition($sFilterCode, $sContextParamValue);
 					}
 				}
 				$aQueryParams = array();
@@ -678,7 +678,7 @@ class DisplayBlock
 					$sContextParamValue = $oAppContext->GetCurrentValue($sFilterCode, null);
 					if (!is_null($sContextParamValue) && ! empty($sContextParamValue) && MetaModel::IsValidFilterCode($sClass, $sFilterCode))
 					{
-						$this->m_oFilter->AddCondition($sFilterCode, $sContextParamValue); // Use the default 'loose' operator
+						$this->AddCondition($sFilterCode, $sContextParamValue);
 					}
 				}
 				$aQueryParams = array();
@@ -943,6 +943,43 @@ EOF
 			$sHtml .= Dict::format('UI:Error:UnsupportedStyleOfBlock', $this->m_sStyle);
 		}
 		return $sHtml;
+	}
+	
+	/**
+	 * Add a condition (restriction) to the current DBObjectSearch on which the display block is based
+	 * taking into account the hierarchical keys for which the condition is based on the 'below' operator
+	 */
+	protected function AddCondition($sFilterCode, $condition)
+	{
+		$sClass = $this->m_oFilter->GetClass();
+		$bConditionAdded = false;
+		
+		// If the condition is an external key with a class having a hierarchy, use a "below" criteria
+		if (MetaModel::IsValidAttCode($sClass, $sFilterCode))
+		{
+			$oAttDef = MetaModel::GetAttributeDef($sClass, $sFilterCode);
+
+			if ($oAttDef->IsExternalKey())
+			{
+				$sHierarchicalKeyCode = MetaModel::IsHierarchicalClass($oAttDef->GetTargetClass());
+				
+				if ($sHierarchicalKeyCode !== false)
+				{
+					$oFilter = new DBObjectSearch($oAttDef->GetTargetClass());
+					$oFilter->AddCondition('id', $condition);
+					$oHKFilter = new DBObjectSearch($oAttDef->GetTargetClass());
+					$oHKFilter->AddCondition_PointingTo($oFilter, $sHierarchicalKeyCode, TREE_OPERATOR_BELOW); // Use the 'below' operator by default
+					$this->m_oFilter->AddCondition_PointingTo($oHKFilter, $sFilterCode);
+					$bConditionAdded = true;
+				}
+			}
+		}
+		
+		// In all other cases, just add the condition directly
+		if (!$bConditionAdded)
+		{
+			$this->m_oFilter->AddCondition($sFilterCode, $condition); // Use the default 'loose' operator
+		}
 	}
 }
 
