@@ -289,7 +289,7 @@ function LoadNextDataFile(response, status, xhr)
 		{
 			// We're done
 			$("#progress").progression({ Current: 100, Maximum: 100, aBackgroundImg: 'orange-progress.gif', aTextColor: '#000000' });
-			$('#setup').unblock();
+			//$('#setup').unblock();
 			$('#GoToNextStep').submit(); // Use the hidden form to navigate to the next step
 		}
 	}

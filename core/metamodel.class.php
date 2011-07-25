@@ -2596,29 +2596,66 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 	}
 
 	/**
+	 * Check (and updates if needed) the hierarchical keys
+	 * @param $bForceComputation boolean If true, the _left and _right parameters will be recomputed even if some values already exist in the DB	 
+	 */	 	
+	public static function CheckHKeys($bForceComputation = false)
+	{
+		foreach (self::GetClasses() as $sClass)
+		{
+			if (!self::HasTable($sClass)) continue;
+
+			foreach(self::ListAttributeDefs($sClass) as $sAttCode=>$oAttDef)
+			{
+				// Check (once) all the attributes that are hierarchical keys
+				if((self::GetAttributeOrigin($sClass, $sAttCode) == $sClass) && $oAttDef->IsHierarchicalKey())
+				{
+					self::HKInit($sClass, $sAttCode, $bForceComputation);
+				}
+			}
+		}
+	}
+
+	/**
 	 * Initializes (i.e converts) a hierarchy stored using a 'parent_id' external key
 	 * into a hierarchy stored with a HierarchicalKey, by initializing the _left and _right values
 	 * to correspond to the existing hierarchy in the database
 	 * @param $sClass string Name of the class to process
 	 * @param $sAttCode string Code of the attribute to process
+	 * @param $bForceComputation boolean If true, the _left and _right parameters will be recomputed even if some values already exist in the DB	 
 	 */
-	public static function HKInit($sClass, $sAttCode)
+	public static function HKInit($sClass, $sAttCode, $bForceComputation = false)
 	{
 		$idx = 1;
+		$bUpdateNeeded = $bForceComputation;
 		$oAttDef = self::GetAttributeDef($sClass, $sAttCode);
 		$sTable = self::DBGetTable($sClass, $sAttCode);
 		if ($oAttDef->IsHierarchicalKey())
 		{
-			try
+			if (!$bForceComputation)
 			{
-				CMDBSource::Query('START TRANSACTION');
-				self::HKInitChildren($sTable, $sAttCode, $oAttDef, 0, $idx);
-				CMDBSource::Query('COMMIT');
+				// Check if some values already exist in the table for the _right value, if so, do nothing
+				$sRight = $oAttDef->GetSQLRight();
+				$sSQL = "SELECT MAX(`$sRight`) AS MaxRight FROM `$sTable`";
+				$iMaxRight = CMDBSource::QueryToScalar($sSQL);
+				if ($iMaxRight == 0)
+				{
+					$bUpdateNeeded = true;
+				}
 			}
-			catch(Exception $e)
+			if ($bUpdateNeeded)
 			{
-				CMDBSource::Query('ROLLBACK');
-				throw new Exception("An error occured (".$e->getMessage().") while initializing the hierarchy for ($sClass, $sAttCode). The database was not modified.");
+				try
+				{
+					CMDBSource::Query('START TRANSACTION');
+					self::HKInitChildren($sTable, $sAttCode, $oAttDef, 0, $idx);
+					CMDBSource::Query('COMMIT');
+				}
+				catch(Exception $e)
+				{
+					CMDBSource::Query('ROLLBACK');
+					throw new Exception("An error occured (".$e->getMessage().") while initializing the hierarchy for ($sClass, $sAttCode). The database was not modified.");
+				}
 			}
 		}
 	}

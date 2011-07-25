@@ -1229,12 +1229,12 @@ function DisplaySummary(SetupWebPage $oP, $aParamValues, $iCurrentStep, Config $
 		$oP->add('</div>');
 		
 		$oP->add("<form id=\"theForm\" method=\"post\">\n");
-		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"step8\">\n");
+		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"step9\">\n");
 		AddParamsToForm($oP, $aParamValues);
 		$oP->add("<table style=\"width:100%\"><tr>\n");
 		$oP->add("<td style=\"text-align:left;\"><button type=\"button\" onClick=\"return DoGoBack(7)\"><< Back</button></td>\n");
 		// Note: the Next >> button is NOT a submit, since moving to the next page is triggered asynchronously
-		$oP->add("<td style=\"text-align:right;\"><button type=\"button\" onClick=\"DoSubmit('Installing...', 9)\"> Install ! >></button></td>\n");
+		$oP->add("<td style=\"text-align:right;\"><button type=\"button\" onClick=\"DoSubmit('Installing...', 8)\"> Install ! </button></td>\n");
 		$oP->add("</tr></table>\n");
 		$oP->add("</form>\n");
 		break;
@@ -1342,7 +1342,7 @@ function DisplaySummary(SetupWebPage $oP, $aParamValues, $iCurrentStep, Config $
 		$oP->add("<table style=\"width:100%\"><tr>\n");
 		$oP->add("<td style=\"text-align:left;\"><button type=\"button\" onClick=\"DoGoBack(6)\"><< Back</button></td>\n");
 		// Note: the Next >> button is NOT a submit, since moving to the next page is triggered asynchronously
-		$oP->add("<td style=\"text-align:right;\"><button type=\"button\" onClick=\"DoSubmit('', 7)\"> Upgrade ! >></button></td>\n");
+		$oP->add("<td style=\"text-align:right;\"><button type=\"button\" onClick=\"DoSubmit('', 8)\"> Upgrade ! </button></td>\n");
 		$oP->add("</tr></table>\n");
 		$oP->add("</form>\n");
 		break;
@@ -1354,7 +1354,7 @@ function DisplaySummary(SetupWebPage $oP, $aParamValues, $iCurrentStep, Config $
 	// have been processed
 	$oP->add("<form id=\"GoToNextStep\" method=\"post\">\n");
 	AddParamsToForm($oP, $aParamValues);
-	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"step8\">\n");
+	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"step9\">\n");
 	$oP->add("</form>\n");
 	
 	$oP->add("<div id=\"log\" style=\"color:#F00;\"></div>\n");
