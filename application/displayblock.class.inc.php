@@ -270,23 +270,6 @@ class DisplayBlock
 				 $("#'.$sId.'").empty();
 				 $("#'.$sId.'").append(data);
 				 $("#'.$sId.'").removeClass("loading");
-				 // Check each "listResults" table for a checkbox in the first column and make the first column sortable only if it does not contain a checkbox in the header
-				 $("#'.$sId.'.listResults").each( function()
-					{
-						var table = $(this);
-						var id = $(this).parent();
-						var checkbox = (table.find(\'th:first :checkbox\').length > 0);
-						if (checkbox)
-						{
-							// There is a checkbox in the first column, do not make it sortable
-							table.tablesorter( { headers: { 0: {sorter: false}}, widgets: [\'myZebra\', \'truncatedList\']} ); // sortable and zebra tables
-						}
-						else
-						{
-							// There is NO checkbox in the first column, all columns are considered sortable
-							table.tablesorter( { widgets: [\'myZebra\', \'truncatedList\']} ); // sortable and zebra tables
-						}
-					});	
 				}
 			 );
 			 </script>';

@@ -504,6 +504,9 @@ EOF
 	// Since the event is only triggered when the hash changes, we need to trigger
 	// the event now, to handle the hash the page may have loaded with.
 	$(window).trigger( 'hashchange' );
+	
+	// Some table are sort-able, some are not, let's fix this
+	$('table.listResults').each( function() { FixTableSorter($(this)); } );
 
 EOF
 );

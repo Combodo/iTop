@@ -272,3 +272,22 @@ function PropagateCheckBox(bCurrValue, aFieldsList, bCheck)
 		}
 	}
 }
+
+function FixTableSorter(table)
+{
+	if ($('th.header', table).length == 0)
+	{
+		// Table is not sort-able, let's fix it
+		var checkbox = (table.find('th:first :checkbox').length > 0);
+		if (checkbox)
+		{
+			// There is a checkbox in the first column, don't make it sort-able
+			table.tablesorter( { headers: { 0: {sorter: false}}, widgets: ['myZebra', 'truncatedList']} ); // sort-able and zebra tables
+		}
+		else
+		{
+			// There is NO checkbox in the first column, all columns are considered sort-able
+			table.tablesorter( { widgets: ['myZebra', 'truncatedList']} ); // sort-able and zebra tables
+		}
+	}
+}
