@@ -276,6 +276,8 @@ function sprintf(format, etc) {
 				if (e > nb)
 				{
 					e = nb;
+					s = e - 5;
+					if (s < 0) s = 0;
 				}
 				txt = '';
 				for(var i=s; i<e; i++)
@@ -285,6 +287,10 @@ function sprintf(format, etc) {
 					if (i != c.page)
 					{
 						link = ' <a href="#" class="no-arrow" page="'+i+'" id="gotopage_'+i+'">'+page+'</a> ';
+					}
+					else
+					{
+						link = ' <a href="#" class="no-arrow curr_page" page="'+i+'">'+page+'</a> ';
 					}
 					txt += link;
 				}
