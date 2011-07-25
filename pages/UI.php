@@ -442,6 +442,7 @@ function DisplayMultipleSelectionForm($oP, $oFilter, $sNextOperation, $oChecker,
 		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
 		$oP->add("<input type=\"hidden\" name=\"class\" value=\"".$oFilter->GetClass()."\">\n");
 		$oP->add("<input type=\"hidden\" name=\"filter\" value=\"".$oFilter->Serialize()."\">\n");
+		$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
 		foreach($aExtraFormParams as $sName => $sValue)
 		{
 			$oP->add("<input type=\"hidden\" name=\"$sName\" value=\"$sValue\">\n");
@@ -450,7 +451,15 @@ function DisplayMultipleSelectionForm($oP, $oFilter, $sNextOperation, $oChecker,
 		$oBlock->Display($oP, 1, $aExtraParams);
 		$oP->add("<input type=\"button\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"window.history.back()\">&nbsp;&nbsp;<input type=\"submit\" value=\"".Dict::S('UI:Button:Next')."\">\n");
 		$oP->add("</form>\n");
-		$oP->add_ready_script("CheckAll('.selectList1:not(:disabled)', true);\n");
+		$oP->add_ready_script(
+<<<EOF
+	$(':checkbox[name^=selectObject]').change(function() {					
+		var v = $('#1 table.listResults :checkbox[name^=selectObject]:checked').length;
+		$('#1 .selectedCount').text(v);
+	});
+	CheckAll('.selectList1:not(:disabled)', true);
+EOF
+);
 }
 
 /***********************************************************************************
@@ -1212,18 +1221,10 @@ EOF
 			$oP->add("<h1>".Dict::S('UI:BulkDeleteTitle')."</h1>\n");
 			// TO DO: limit the search filter by the user context
 			$oFilter = CMDBSearchFilter::unserialize($sFilter); // TO DO : check that the filter is valid
-			$oSet = new DBObjectSet($oFilter);
-			$oBlock = new DisplayBlock($oFilter, 'list', false);
-			$oP->add("<form method=\"post\">\n");
-			$oP->add("<input type=\"hidden\" name=\"operation\" value=\"bulk_delete\">\n");
-			$oP->add("<input type=\"hidden\" name=\"class\" value=\"".$oFilter->GetClass()."\">\n");
-			$oP->add("<input type=\"hidden\" name=\"filter\" value=\"".$oFilter->Serialize()."\">\n");
-			$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
-			$oBlock->Display($oP, 1, array('selection_type' => 'multiple', 'selection_mode' => true, 'display_limit' => false, 'menu' => false));
-			$oP->add("<input type=\"button\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"window.history.back()\">&nbsp;&nbsp;<input type=\"submit\" value=\"".Dict::S('UI:Button:Next')."\">\n");
-			$oP->add("</form>\n");
+			$oChecker = new ActionChecker($oFilter, UR_ACTION_BULK_DELETE);
+			DisplayMultipleSelectionForm($oP, $oFilter, 'bulk_delete', $oChecker);
 		break;
-		
+
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		case 'bulk_delete_confirmed': // Confirm bulk deletion of objects

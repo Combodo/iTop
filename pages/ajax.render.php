@@ -67,7 +67,7 @@ try
 		}
 		$iStart = utils::ReadParam('start',0);
 		$iEnd = utils::ReadParam('end',1);
-		$iSortCol = utils::ReadParam('sort_col',null);
+		$iSortCol = utils::ReadParam('sort_col','null');
 		$sSelectMode = utils::ReadParam('select_mode', '');
 		$bDisplayKey = utils::ReadParam('display_key', 'true') == 'true';
 		$aList = utils::ReadParam('display_list', array());
@@ -87,7 +87,7 @@ try
 		if ($bDisplayKey)
 		{
 			$aConfig['key'] = array();
-			if ($iSortIndex == $iSortCol)
+			if (($iSortCol != 'null') && ($iSortIndex == $iSortCol))
 			{
 				$aOrderBy['friendlyname'] = (utils::ReadParam('sort_order', 'asc') == 'asc');
 			}
@@ -119,6 +119,15 @@ try
 				$aOrderBy[$sSortCol] = (utils::ReadParam('sort_order', 'asc') == 'asc');
 			}
 			$iSortIndex++;
+		}
+		
+		if (count($aOrderBy) == 0)
+		{
+			$aOrderBy['friendlyname'] = true; // By default, sort by name
+		}
+		else
+		{
+//			$oPage->add("</p>ICI: OrderBy already set to: <pre>'".print_r($aOrderBy, true)."'</pre></p>\n");		
 		}
 
 		// Load only the requested columns
