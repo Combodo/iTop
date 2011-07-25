@@ -1055,3 +1055,23 @@ table.pagination {
 table.pagination tr td {
 	padding: 3px;
 }
+.pager {
+	float:left;
+}
+.pager p {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+.pager td a {
+	min-width: 20px;
+	display:inline-block;
+	text-align: center;
+}
+
+.pager td a.curr_page {
+	color: #fff;
+	background: #999;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+}
