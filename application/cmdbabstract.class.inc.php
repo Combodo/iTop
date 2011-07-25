@@ -725,17 +725,17 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		$sHtml .= $oPage->GetTable($aAttribs, $aValues);
 		$sHtml .= '</td></tr>';
 		$sHtml .= '</table>';
+		$iCount = $oSet->Count();
+		if ($bSelectMode)
+		{
+			$sHeader = Dict::Format('UI:Pagination:HeaderSelection', '<span id="total">'.$iCount.'</span>', '<span class="selectedCount">0</span>');
+		}
+		else
+		{
+			$sHeader = Dict::Format('UI:Pagination:HeaderNoSelection', '<span id="total">'.$iCount.'</span>');
+		}
 		if ($oSet->Count() > MetaModel::GetConfig()->GetMaxDisplayLimit())
 		{
-			$iCount = $oSet->Count();
-			if ($bSelectMode)
-			{
-				$sHeader = Dict::Format('UI:Pagination:HeaderSelection', '<span id="total">0</span>', '<span class="selectedCount"></span>');
-			}
-			else
-			{
-				$sHeader = Dict::Format('UI:Pagination:HeaderNoSelection', '<span id="total">0</span>');
-			}
 			$sCombo = '<select class="pagesize">';
 			for($iPage = 1; $iPage < 5; $iPage++)
 			{
@@ -753,7 +753,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 $sHtml =
 <<<EOF
 <div id="pager{$iListId}" class="pager">
-		</p>$sHeader</p>
+		<p>$sHeader</p>
 		<p><table class="pagination"><tr><td>$sPages</td><td><img src="../images/first.png" class="first"/></td>
 		<td><img src="../images/prev.png" class="prev"/></td>
 		<td><span id="index"></span></td>
@@ -784,6 +784,13 @@ EOF
 		}
 		else
 		{
+$sHtml =
+<<<EOF
+<div id="pager{$iListId}" class="pager">
+		<p>$sHeader</p>
+</div>
+EOF
+.$sHtml;
 			$sHeaders = '';
 			if ($bSelectMode)
 			{
@@ -808,6 +815,7 @@ EOF
 		var c = $('{$sCssCount}');							
 		var v = $('#{$iListId} table.listResults $sSelectSelector:checked').length;
 		c.val(v);
+		$('#{$iListId} .selectedCount').text(v);
 		c.trigger('change');	
 	});
 EOF
