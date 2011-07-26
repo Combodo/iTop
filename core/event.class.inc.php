@@ -90,7 +90,7 @@ class Event extends DBObject implements iDisplay
 
 	public static function GetUIPage()
 	{
-		return '../pages/UI.php';
+		return 'UI.php';
 	}
 
 	function DisplayDetails(WebPage $oPage, $bEditMode = false)
