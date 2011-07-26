@@ -251,10 +251,63 @@ EOF
 					// check CAS authentication
 					if (phpCAS::isAuthenticated())
 					{
-						$sAuthUser = phpCAS::getUser();
-						$sAuthPwd = '';
-						$sLoginMode = 'cas';
-						$sAuthentication = 'external';
+						// Check is a membership is required
+						$sCASMemberships = MetaModel::GetConfig()->Get('cas_memberof');
+						$bFound =  false;
+						if (!empty($sCASMemberships))
+						{
+							if (phpCAS::hasAttributes('memberOf'))
+							{
+								// A list of groups is specified, the user must a be member of (at least) one of them to pass
+								$aCASMemberships = array();
+								$aTmp = explode(',', $sCASMemberships);
+								foreach($aTmp as $sGroupName)
+								{
+									$aCASMemberships[] = trim($sGroupName); // Just in case remove spaces...
+								}
+	
+								$aMemberOf = phpCAS::getAttributes('memberOf');
+								if (!is_array($aMemberOf)) $aMemberOf = array($aMemberOf); // Just one entry, turn it into an array
+								
+								foreach($aCASMemberships as $sGroupName)
+								{
+									if (in_array($sGroupName, $aMemberOf))
+									{
+										$bFound = true;
+										break;
+									}	
+								}
+							}
+							else
+							{
+								// Too bad, the user is not part of any of the group => not allowed
+							}
+						}
+						else
+						{
+							// No membership required, anybody will pass
+							$bFound = true;
+						}
+						
+						if ($bFound)
+						{
+							$sAuthUser = phpCAS::getUser();
+							$sAuthPwd = '';
+							$sLoginMode = 'cas';
+							$sAuthentication = 'external';
+						}
+						else
+						{
+							// The user is not part of the allowed groups, => log out
+							$sUrl = utils::GetAbsoluteUrlAppRoot();
+							$sUrl .= 'pages/UI.php';
+							$sCASLogoutUrl = MetaModel::GetConfig()->Get('cas_logout_redirect_service');
+							if (empty($sCASLogoutUrl))
+							{
+								$sCASLogoutUrl = $sUrl;
+							}
+							phpCAS::logoutWithRedirectService($sCASLogoutUrl); // Redirects to the CAS logout page
+						}
 					}
 					break;
 					
