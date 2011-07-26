@@ -1761,9 +1761,19 @@ class SynchroReplica extends DBObject implements iDisplay
 			try
 			{
 				$oDestObj = MetaModel::GetObject($this->Get('dest_class'), $this->Get('dest_id'));
-				$oDestObj->DBDeleteTracked($oChange);
-				$this->DBDeleteTracked($oChange);
-				$oStatLog->Inc('stats_nb_obj_deleted');
+				$oCheckDeletionPlan = new DeletionPlan();
+				if ($oDestObj->CheckToDelete($oCheckDeletionPlan))
+				{
+					$oActualDeletionPlan = new DeletionPlan();
+					$oDestObj->DBDeleteTracked($oChange, null, $oActualDeletionPlan);
+					$this->DBDeleteTracked($oChange);
+					$oStatLog->Inc('stats_nb_obj_deleted');
+				}
+				else
+				{
+					$sIssues = implode("\n", $oCheckDeletionPlan->GetIssues());
+					throw(new Exception($sIssues));
+				}
 			}
 			catch(Exception $e)
 			{
