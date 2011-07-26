@@ -35,7 +35,16 @@ div#portal #logo {
 	line-height: 48px;
 	padding-right:50px;
 }
-
+div#menu {
+	display: block;
+	width: auto;
+	position: absolute;
+	top: 0;
+	left: 200px;
+	right: 0px;
+	line-height: 48px;
+	height: 48px;
+}
 #portal_menu {
 	height: 60px;
 }
@@ -72,6 +81,7 @@ a.button span {
 }
 
 #logoff {
+	display: block;
 	float: right;
 	background: url(../images/logoff.png) right center no-repeat;
 }
