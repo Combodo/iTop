@@ -178,36 +178,6 @@ class DisplayBlock
 	public function Display(WebPage $oPage, $sId, $aExtraParams = array())
 	{
 		$oPage->add($this->GetDisplay($oPage, $sId, $aExtraParams));
-		/*
-		$aExtraParams = array_merge($aExtraParams, $this->m_aParams);
-		$aExtraParams['block_id'] = $sId;
-		if (!$this->m_bAsynchronous)
-		{
-			// render now
-			$oPage->add("<div id=\"$sId\" class=\"display_block\">\n");
-			$this->RenderContent($oPage, $aExtraParams);
-			$oPage->add("</div>\n");
-		}
-		else
-		{
-			// render it as an Ajax (asynchronous) call
-			$sFilter = $this->m_oFilter->serialize();
-			$oPage->add("<div id=\"$sId\" class=\"display_block loading\">\n");
-			$oPage->p("<img src=\"../images/indicator_arrows.gif\"> Loading...");
-			$oPage->add("</div>\n");
-			$oPage->add('
-			<script language="javascript">
-			$.post("ajax.render.php?style='.$this->m_sStyle.'",
-			   { operation: "ajax", filter: "$sFilter" },
-			   function(data){
-				 $("#'.$sId.'").empty();
-				 $("#'.$sId.'").append(data);
-				 $("#'.$sId.'").removeClass("loading");
-				}
-			 );
-			 </script>'); // TO DO: add support for $aExtraParams in asynchronous/Ajax mode
-		}
-		*/
 	}
 	
 	public function GetDisplay(WebPage $oPage, $sId, $aExtraParams = array())

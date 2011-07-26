@@ -50,6 +50,7 @@ class iTopWebPage extends NiceWebPage
 		$this->m_aTabs = array();
 		$this->m_sMenu = "";
 		$this->m_sMessage = '';
+		$sAbsURLAppRoot = addslashes(utils::GetAbsoluteUrlAppRoot()); // Pass it to Javascript scripts
 		$oAppContext = new ApplicationContext();
 		$sExtraParams = $oAppContext->GetForLink();
 		$this->add_header("Content-type: text/html; charset=utf-8");
@@ -380,6 +381,11 @@ EOF
 			{
 				$('#rawOutput').dialog( {autoOpen: true, modal:false});
 			}
+		}
+		
+		function GetAbsoluteUrlAppRoot()
+		{
+			return '$sAbsURLAppRoot';
 		}
 		
 		var oUserPreferences = $sUserPrefs;

@@ -999,7 +999,7 @@ EOF
 <<<EOF
 	function OnTruncatedHistoryToggle(bShowAll)
 	{
-		$.get('../pages/ajax.render.php?{$sAppContext}', {operation: 'displayCSVHistory', showall: bShowAll}, function(data)
+		$.get(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?{$sAppContext}', {operation: 'displayCSVHistory', showall: bShowAll}, function(data)
 			{
 				$('#$sAjaxDivId').html(data);
 				var table = $('#$sAjaxDivId .listResults');

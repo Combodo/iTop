@@ -76,7 +76,7 @@ function ReloadBlock(divId, sStyle, sSerializedFilter, sExtraParams)
 {
 	$('#'+divId).block();
 	//$('#'+divId).blockUI();
-	$.post('../pages/ajax.render.php?style='+sStyle,
+	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?style='+sStyle,
 	   { operation: 'ajax', filter: sSerializedFilter, extra_params: sExtraParams },
 	   function(data){
 		 $('#'+divId).empty();
@@ -119,7 +119,7 @@ function ReloadSearchForm(divId, sClassName, sBaseClass, sContext)
 	}
 	sAction =  $('#ds_'+divId+' form').attr('action');
 
-	$.post('../pages/ajax.render.php?'+sContext,
+	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?'+sContext,
 	   { operation: 'search_form', className: sClassName, baseClass: sBaseClass, currentId: divId, action: sAction },
 	   function(data) {
 		   oDiv.empty();
@@ -165,7 +165,7 @@ function SetUserPreference(sPreferenceCode, sPrefValue, bPersistent)
     oUserPreferences[sPreferenceCode] = sPrefValue;
     if (bPersistent && (sPrefValue != sPreviousValue))
     {
-    	ajax_request = $.post('../pages/ajax.render.php',
+    	ajax_request = $.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
     						  { operation: 'set_pref', code: sPreferenceCode, value: sPrefValue} ); // Make it persistent
     }
 }

@@ -163,7 +163,7 @@ function sprintf(format, etc) {
 					s_order = (s[1] == 0) ? 'asc' : 'desc';
 				}
 				$('#loading', table.config.container).html('<img src="../images/indicator.gif" />');
-				table.ajax_request = $.post("../pages/ajax.render.php",
+				table.ajax_request = $.post(GetAbsoluteUrlAppRoot()+"pages/ajax.render.php",
 						{ operation: 'pagination',
 						  filter: c.filter,
 						  extra_param: c.extra_params,

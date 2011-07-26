@@ -140,7 +140,7 @@ function WizardHelper(sClass, sFormPrefix, sState)
 	{
 		//console.log('data sent:', this.ToJSON());
 		//console.log('oWizard:', this);
-		$.post('../pages/ajax.render.php',
+		$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
 		   { operation: 'wizard_helper', json_obj: this.ToJSON() },
 			function(html){
 				$('#ajax_content').html(html);

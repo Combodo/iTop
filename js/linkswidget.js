@@ -98,7 +98,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates)
 		$(sSearchAreaId).block();
 		
 		// Run the query and display the results
-		$.post( '../pages/ajax.render.php', theMap, 
+		$.post( GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', theMap, 
 			function(data)
 			{
 				$(sSearchAreaId).html(data);
@@ -198,7 +198,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates)
 		theMap['operation'] = 'doAddObjects';
 		$('#busy_'+me.iInputId).html('&nbsp;<img src="../images/indicator.gif"/>');
 		// Run the query and display the results
-		$.post( '../pages/ajax.render.php', theMap, 
+		$.post( GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', theMap, 
 			function(data)
 			{
 				//console.log('Data: ' + data);

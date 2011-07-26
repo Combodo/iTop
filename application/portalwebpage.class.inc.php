@@ -55,6 +55,7 @@ class PortalWebPage extends NiceWebPage
 		$this->add_header("Cache-control: no-cache");
 		$this->add_linked_stylesheet("../css/jquery.treeview.css");
 		$this->add_linked_stylesheet("../css/jquery.autocomplete.css");
+		$sAbsURLAppRoot = addslashes(utils::GetAbsoluteUrlAppRoot()); // Pass it to Javascript scripts
 		if ($sAlternateStyleSheet != '')
 		{
 			$this->add_linked_stylesheet("../portal/$sAlternateStyleSheet/portal.css");
@@ -150,6 +151,12 @@ EOF
 		return bResult;
 	}
 
+		
+	function GetAbsoluteUrlAppRoot()
+	{
+		return '$sAbsURLAppRoot';
+	}
+		
 	function GoBack(sFormId)
 	{
 		var form = $('#'+sFormId);

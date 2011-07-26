@@ -927,7 +927,7 @@ EOF
 				ajax_request = null;
 			}
 	
-			ajax_request = $.post('ajax.csvimport.php',
+			ajax_request = $.post(GetAbsoluteUrlAppRoot()+'pages/ajax.csvimport.php',
 				   { operation: 'display_mapping_form', enctype: 'multipart/form-data', csvdata: csv_data, separator: separator, 
 				   	 qualifier: text_qualifier, nb_lines_skipped: nb_lines_skipped, header_line: header_line, class_name: class_name,
 				   	 advanced: advanced, encoding: encoding },
@@ -1225,7 +1225,7 @@ EOF
 			ajax_request = null;
 		}
 		
-		ajax_request = $.post('ajax.csvimport.php',
+		ajax_request = $.post(GetAbsoluteUrlAppRoot()+'pages/ajax.csvimport.php',
 			   { operation: 'parser_preview', enctype: 'multipart/form-data', csvdata: $("#csvdata_truncated").val(), separator: separator, qualifier: text_qualifier, nb_lines_skipped: nb_lines_skipped, header_line: header_line, encoding: encoding },
 			   function(data) {
 				 $('#preview').empty();
@@ -1385,7 +1385,7 @@ if (ajax_request != null)
 	ajax_request = null;
 }
 
-ajax_request = $.post('ajax.csvimport.php',
+ajax_request = $.post(GetAbsoluteUrlAppRoot()+'pages/ajax.csvimport.php',
 	   { operation: 'get_csv_template', class_name: sClassName },
 	   function(data) {
 		 $('#template').empty();

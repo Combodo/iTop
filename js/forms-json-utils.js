@@ -90,40 +90,12 @@ function ActivateStep(iTargetStep)
 	//$('#wizStep'+(iTargetStep)).block({ message: null });
 }
 
-
-//function AjaxGetValuesDef(oObj, sClass, sAttCode, iFieldId)
-//{
-//	var oJSON = document.getElementById(sJsonFieldId);
-//	$.get('ajax.render.php?class=' + sClass + '&json_obj=' + oJSON.value + '&att_code=' + sAttCode,
-//	   { operation: "allowed_values" },
-//	   function(data){
-//		 //$('#field_'+iFieldId).html(data);
-//		}
-//	);
-//}
-//
-//function AjaxGetDefaultValue(oObj, sClass, sAttCode, iFieldId)
-//{
-//	// Asynchronously call the server to provide a default value if the field is
-//	// empty
-//	if (oObj['m_aCurrValues'][sAttCode] == '')
-//	{
-//		var oJSON = document.getElementById(sJsonFieldId);
-//		$.get('../pages/ajax.render.php?class=' + sClass + '&json_obj=' + oJSON.value + '&att_code=' + sAttCode,
-//		   { operation: "default_value" },
-//		   function(json_data){
-//			 var oObj = ReloadObjectFromServer(json_data);
-//			 UpdateFieldFromObject(iFieldId, aFieldsMap, oObj)
-//			}
-//		);
-//	}
-//}
 function OnUnload(sTransactionId)
 {
 	if (!window.bInSubmit)
 	{
 		// If it's not a submit, then it's a "cancel" (Pressing the Cancel button, closing the window, using the back button...)
-		$.post('../pages/ajax.render.php', {operation: 'on_form_cancel', transaction_id: sTransactionId }, function()
+		$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', {operation: 'on_form_cancel', transaction_id: sTransactionId }, function()
 		{
 			// Do nothing for now...
 		});

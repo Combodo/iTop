@@ -1899,7 +1899,7 @@ EOF
 				ajax_request = null;
 			}
 	
-			ajax_request = $.get('xml.navigator.php', { 'class': sClass, id: iId, relation: sRelation, format: 'html' },
+			ajax_request = $.get(GetAbsoluteUrlAppRoot()+'pages/xml.navigator.php', { 'class': sClass, id: iId, relation: sRelation, format: 'html' },
 					function(data)
 					{
 						$('#impacted_objects').empty();
