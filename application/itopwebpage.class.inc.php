@@ -361,7 +361,7 @@ EOF
 		{
 			if (id > 0)
 			{
-				window.location.href = './UI.php?operation=details&class='+sClass+'&id='+id;
+				window.location.href = GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=details&class='+sClass+'&id='+id;
 			}
 			else
 			{
@@ -372,7 +372,7 @@ EOF
 		
 		function BackToList(sClass)
 		{
-			window.location.href = './UI.php?operation=search_oql&oql_class='+sClass+'&oql_clause=WHERE id=0';
+			window.location.href = GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=search_oql&oql_class='+sClass+'&oql_clause=WHERE id=0';
 		}
 
 		function ShowDebug()
@@ -661,11 +661,11 @@ EOF
 		if (utils::CanLogOff())
 		{
 			//$sLogOffMenu .= "<li><a href=\"../pages/UI.php?loginop=logoff\">".Dict::S('UI:LogOffMenu')."</a></li>\n";
-			$sLogOffMenu .= "<li><a href=\"../pages/logoff.php\">".Dict::S('UI:LogOffMenu')."</a></li>\n";
+			$sLogOffMenu .= "<li><a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/logoff.php\">".Dict::S('UI:LogOffMenu')."</a></li>\n";
 		}
 		if (UserRights::CanChangePassword())
 		{
-			$sLogOffMenu .= "<li><a href=\"../pages/UI.php?loginop=change_pwd\">".Dict::S('UI:ChangePwdMenu')."</a></li>\n";
+			$sLogOffMenu .= "<li><a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?loginop=change_pwd\">".Dict::S('UI:ChangePwdMenu')."</a></li>\n";
 		}
 		$sLogOffMenu .= "</ul>\n</li>\n</ul></span>\n";
 
@@ -731,7 +731,7 @@ EOF
 		echo '<div class="ui-layout-center">';
 		echo '	<div id="top-bar" style="width:100%">';
 		echo $sApplicationBanner;
-		echo '		<div id="global-search"><form action="../pages/UI.php"><table><tr><td></td><td id="g-search-input"><input type="text" name="text" value="'.$sText.'"'.$sOnClick.'/></td>';
+		echo '		<div id="global-search"><form action="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php"><table><tr><td></td><td id="g-search-input"><input type="text" name="text" value="'.$sText.'"'.$sOnClick.'/></td>';
 		echo '<td><input type="image" src="../images/searchBtn.png"/></a></td>';
 		echo '<td><a style="background:transparent;" href="'.$sOnlineHelpUrl.'" target="_blank"><img style="border:0;padding-left:20px;padding-right:10px;" title="'.Dict::S('UI:Help').'" src="../images/help.png"/></td>';
 		echo '<td style="padding-right:20px;padding-left:10px;">'.$sLogOffMenu.'</td><td><input type="hidden" name="operation" value="full_text"/></td></tr></table></form></div>';
@@ -743,55 +743,7 @@ EOF
 		echo '	<!-- End of page content -->';
 		echo '	</div>';
 		echo '</div>';
-/*		
-		echo "<div class=\"iTopLogo\" title=\"$sVersionString\"><span>iTop</span></div>\n";
-		//echo "<div id=\"GlobalSearch\"><div style=\"border: 1px solid #999; padding:1px; background-color:#fff;\"><img src=\"../images/magnifier.gif\"/><input style=\"border:0\" type=\"text\" size=\"15\" title=\"Global Search\"></input></div></div>\n";
-		$sText = Utils::ReadParam('text', '');
-		$sOnClick = "";
-		if (empty($sText))
-		{
-			// if no search text is supplied then
-			// 1) the search text is filled with "your search"
-			// 2) clicking on it will erase it
-			$sText = Dict::S("UI:YourSearch");
-			$sOnClick = " onclick=\"this.value='';this.onclick=null;\"";
-		}
-		$sUserName = UserRights::GetUser();
-		$sIsAdmin = UserRights::IsAdministrator() ? '(Administrator)' : '';
-		if (UserRights::IsAdministrator())
-		{
-			$sLogonMessage = Dict::Format('UI:LoggedAsMessage+Admin', $sUserName);
-		}
-		else
-		{
-			$sLogonMessage = Dict::Format('UI:LoggedAsMessage', $sUserName);		
-		}
-		$sLogOffBtn = Dict::S('UI:Button:Logoff');
-		$sSearchBtn = Dict::S('UI:Button:GlobalSearch');
-		echo "<div id=\"Login\" style=\"position:absolute; top:18px; right:16px; width:600px;\">{$sLogonMessage}&nbsp;&nbsp;";
-		echo "<form action=\"../pages/UI.php\" method=\"post\" style=\"display:inline\">\n";
-		echo "<input type=\"submit\" value=\"$sLogOffBtn\" />\n";
-		echo "<input type=\"hidden\" name=\"loginop\" value=\"logoff\" />\n";
-		echo "</form>\n";
-		echo "<form action=\"../pages/UI.php\" style=\"display:inline\"><div style=\"padding:1px; background-color:#fff;display:inline;\"><img src=\"../images/magnifier.gif\"/><input style=\"border:0\" type=\"text\" size=\"15\" title=\"Global Search\" name=\"text\" value=\"$sText\"$sOnClick></input></div><input type=\"submit\" value=\"$sSearchBtn\" />
-			  <input type=\"hidden\" name=\"operation\" value=\"full_text\" /></form>\n";
-		echo "</div>\n";
 
-		echo "</div>\n";
-
-		// Display the menu
-		echo "<div id=\"MySplitter\">\n";
-		echo "  <div id=\"LeftPane\">\n";
-		echo $this->m_sMenu;
-		echo "  </div> <!-- LeftPane -->\n";
-		
-		echo "<div id=\"RightPane\">\n";
-    
-        
-		// Display the page's content
-        echo $this->s_content;
-
-*/
         // Add the captured output
         if (trim($s_captured_output) != "")
         {

@@ -1404,7 +1404,7 @@ class AttributeText extends AttributeString
 						$sText = str_replace($aMatches[0], "<span class=\"wiki_broken_link\">$sClassLabel:$sName</span>", $sText);
 						// Later: propose a link to create a new object
 						// Anyhow... there is no easy way to suggest default values based on the given FRIENDLY name
-						//$sText = preg_replace('/\[\[(.+):(.+)\]\]/', '<a href="./UI.php?operation=new&class='.$sClass.'&default[att1]=xxx&default[att2]=yyy">'.$sName.'</a>', $sText);
+						//$sText = preg_replace('/\[\[(.+):(.+)\]\]/', '<a href="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=new&class='.$sClass.'&default[att1]=xxx&default[att2]=yyy">'.$sName.'</a>', $sText);
 					}
 				}
 			}

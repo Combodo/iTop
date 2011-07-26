@@ -327,7 +327,7 @@ abstract class MenuNode
 	public function GetHyperlink($aExtraParams)
 	{
 		$aExtraParams['c[menu]'] = $this->GetIndex();
-		return $this->AddParams('../pages/UI.php', $aExtraParams);
+		return $this->AddParams(utils::GetAbsoluteUrlAppRoot().'pages/UI.php', $aExtraParams);
 	}
 	
 	/**
@@ -652,7 +652,7 @@ class NewObjectMenuNode extends MenuNode
 
 	public function GetHyperlink($aExtraParams)
 	{
-		$sHyperlink = '../pages/UI.php?operation=new&class='.$this->sClass;
+		$sHyperlink = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=new&class='.$this->sClass;
 		$aExtraParams['c[menu]'] = $this->GetIndex();
 		return $this->AddParams($sHyperlink, $aExtraParams);
 	}

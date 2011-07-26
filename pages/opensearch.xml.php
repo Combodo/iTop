@@ -22,11 +22,15 @@
  * @author      Denis Flaven <denis.flaven@combodo.com>
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
+require_once('../approot.inc.php');
+require_once(APPROOT.'/application/application.inc.php');
+require_once(APPROOT.'/application/startup.inc.php');
 
-	$sFullUrl = 'http'.((isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']!='off')) ? 's' : '').'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname($_SERVER['SCRIPT_NAME']).'/UI.php';
-	$sICOFullUrl = 'http'.((isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']!='off')) ? 's' : '').'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname($_SERVER['SCRIPT_NAME']).'/../images/iTop-icon.ico';
-	$sPNGFullUrl = 'http'.((isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']!='off')) ? 's' : '').'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname($_SERVER['SCRIPT_NAME']).'/../images/iTop-icon.png';
-	header('Content-type: text/xml');
+
+$sFullUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php';
+$sICOFullUrl = utils::GetAbsoluteUrlAppRoot().'/images/iTop-icon.ico';
+$sPNGFullUrl = utils::GetAbsoluteUrlAppRoot().'images/iTop-icon.png';
+header('Content-type: text/xml');
 ?>
 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/" xmlns:moz="http://www.mozilla.org/2006/browser/search/">
 <ShortName>iTop</ShortName>

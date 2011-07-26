@@ -105,7 +105,7 @@ if ($oFilter != null)
 	$aExtraParams = $oAppContext->GetAsHash();
 	$aExtraParams['open'] = true;
 	$aExtraParams['baseClass'] = $sBaseClass;
-	$aExtraParams['action'] = '../pages/UniversalSearch.php';
+	$aExtraParams['action'] = utils::GetAbsoluteUrlAppRoot().'pages/UniversalSearch.php';
 	//$aExtraParams['class'] = $sClassName;
 	$oBlock->Display($oP, 0, $aExtraParams);
 

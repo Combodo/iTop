@@ -689,7 +689,7 @@ class BenchmarkDataCreation
 		foreach($this->m_aCreatedByClass as $sClass => $aClassIds)
 		{
 			$iSample = reset($aClassIds);
-			$sSample = "<a href=\"../pages/UI.php?operation=details&class=$sClass&id=$iSample\">sample</a>";
+			$sSample = "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=details&class=$sClass&id=$iSample\">sample</a>";
 	
 			$iDuration = number_format(array_sum($this->m_aStatsByClass[$sClass]), 3);
 			$fDurationMin = number_format(min($this->m_aStatsByClass[$sClass]), 3);

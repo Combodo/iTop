@@ -21,7 +21,7 @@ function ReloadTruncatedList(divId, sSerializedFilter, sExtraParams)
 			console.log('Uh,uh, exception !');
 		}
 	}
-	aTruncatedLists[divId] = $.post('../pages/ajax.render.php?style=list',
+	aTruncatedLists[divId] = $.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?style=list',
 	   { operation: 'ajax', filter: sSerializedFilter, extra_params: sExtraParams },
 	     function(data)
 	     {

@@ -156,7 +156,7 @@ function WizardHelper(sClass, sFormPrefix, sState)
 	{
 		//console.log('data sent:', this.ToJSON());
 		//console.log('oWizard:', this);
-		$('#'+divId).load('../pages/ajax.render.php?operation=wizard_helper_preview',
+		$('#'+divId).load(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?operation=wizard_helper_preview',
 		   	{'json_obj': this.ToJSON()},
 			function(responseText, textStatus, XMLHttpRequest){
 				$('#wizStep'+ G_iCurrentStep).unblock( {fadeOut: 0} );

@@ -87,7 +87,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	}
 	public static function GetUIPage()
 	{
-		return '../pages/UI.php';
+		return 'UI.php';
 	}
 	
 	function DisplayBareHeader(WebPage $oPage, $bEditMode = false)
@@ -1190,7 +1190,7 @@ EOF
 			$sClassesCombo = MetaModel::GetName($sClassName);
 		}
 		$oUnlimitedFilter = new DBObjectSearch($sClassName);
-		$sAction = (isset($aExtraParams['action'])) ? $aExtraParams['action'] : '../pages/UI.php';
+		$sAction = (isset($aExtraParams['action'])) ? $aExtraParams['action'] : utils::GetAbsoluteUrlAppRoot().'pages/UI.php';
 		$sHtml .= "<form id=\"fs_{$sSearchFormId}\" action=\"{$sAction}\">\n"; // Don't use $_SERVER['SCRIPT_NAME'] since the form may be called asynchronously (from ajax.php)
 		$sHtml .= "<h2>".Dict::Format('UI:SearchFor_Class_Objects', $sClassesCombo)."</h2>\n";
 		$index = 0;
@@ -1806,7 +1806,7 @@ EOF
 			$oPage->add("<button type=\"submit\" class=\"action\"><span>{$sApplyButton}</span></button>\n");
 		}
 		// Hook the cancel button via jQuery so that it can be unhooked easily as well if needed
-		$sDefaultUrl = '../pages/UI.php?operation=cancel';
+		$sDefaultUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=cancel&'.$oAppContext->GetForLink();
 		$oPage->add_ready_script("$('#form_{$this->m_iFormId} button.cancel').click( function() { BackToDetails('$sClass', $iKey, '$sDefaultUrl')} );");
 		$oPage->add("</form>\n");
 		
@@ -2030,7 +2030,7 @@ EOF
 			{
 				case 'text/html':
 				case 'text/xml':
-				$oPage->add("<iframe id='preview_$sAttCode' src=\"../pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode\" width=\"100%\" height=\"400\">Loading...</iframe>\n");
+				$oPage->add("<iframe id='preview_$sAttCode' src=\"".utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode\" width=\"100%\" height=\"400\">Loading...</iframe>\n");
 				break;
 				
 				default:
@@ -2042,7 +2042,7 @@ EOF
 			switch($oDoc->GetMimeType())
 			{
 				case 'application/pdf':
-				$oPage->add("<iframe id='preview_$sAttCode' src=\"../pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode\" width=\"100%\" height=\"400\">Loading...</iframe>\n");
+				$oPage->add("<iframe id='preview_$sAttCode' src=\"".utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode\" width=\"100%\" height=\"400\">Loading...</iframe>\n");
 				break;
 
 				default:
@@ -2051,7 +2051,7 @@ EOF
 			break;
 			
 			case 'image':
-			$oPage->add("<img src=\"../pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode\" />\n");
+			$oPage->add("<img src=\"".utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode\" />\n");
 			break;
 			
 			default:

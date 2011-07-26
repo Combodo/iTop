@@ -299,8 +299,7 @@ EOF
 						else
 						{
 							// The user is not part of the allowed groups, => log out
-							$sUrl = utils::GetAbsoluteUrlAppRoot();
-							$sUrl .= 'pages/UI.php';
+							$sUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php';
 							$sCASLogoutUrl = MetaModel::GetConfig()->Get('cas_logout_redirect_service');
 							if (empty($sCASLogoutUrl))
 							{
@@ -483,14 +482,14 @@ EOF
 			require_once(APPROOT.'/setup/setuppage.class.inc.php');
 			$oP = new SetupWebPage(Dict::S('UI:PageTitle:FatalError'));
 			$oP->add("<h1>".Dict::S('UI:Login:Error:AccessAdmin')."</h1>\n");	
-			$oP->p("<a href=\"../pages/logoff.php\">".Dict::S('UI:LogOffMenu')."</a>");
+			$oP->p("<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/logoff.php\">".Dict::S('UI:LogOffMenu')."</a>");
 			$oP->output();
 			exit;
 		}
 		elseif ( (!$bIsAllowedToPortalUsers) && (UserRights::IsPortalUser()))
 		{
 			// No rights to be here, redirect to the portal
-			header('Location: ../portal/index.php');
+			header('Location: '.utils::GetAbsoluteUrlAppRoot().'portal/index.php');
 		}
 		return $sMessage;
 	}

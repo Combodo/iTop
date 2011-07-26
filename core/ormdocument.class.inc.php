@@ -105,7 +105,7 @@ class ormDocument
 	 */	 	 	
 	public function GetDisplayLink($sClass, $Id, $sAttCode)
 	{
-		return "<a href=\"../pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode\" target=\"_blank\" >".$this->GetFileName()."</a>\n";
+		return "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode\" target=\"_blank\" >".$this->GetFileName()."</a>\n";
 	}
 	
 	/**
@@ -114,7 +114,7 @@ class ormDocument
 	 */	 	 	
 	public function GetDownloadLink($sClass, $Id, $sAttCode)
 	{
-		return "<a href=\"../pages/ajax.render.php?operation=download_document&class=$sClass&id=$Id&field=$sAttCode\">".$this->GetFileName()."</a>\n";
+		return "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=download_document&class=$sClass&id=$Id&field=$sAttCode\">".$this->GetFileName()."</a>\n";
 	}
 }
 ?>

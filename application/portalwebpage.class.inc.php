@@ -218,7 +218,7 @@ EOF
 		$sMenu = '';
 		if ($this->m_bEnableDisconnectButton)
 		{
-			$this->AddMenuButton('logoff', 'Portal:Disconnect', '../pages/logoff.php'); // This menu is always present and is the last one
+			$this->AddMenuButton('logoff', 'Portal:Disconnect', utils::GetAbsoluteUrlAppRoot().'pages/logoff.php'); // This menu is always present and is the last one
 		}
 		foreach($this->m_aMenuButtons as $aMenuItem)
 		{

@@ -53,7 +53,7 @@ class UIWizard
 	{
 		if ($iStepIndex == 1) // one big form that contains everything, to make sure that the uploaded files are posted too
 		{
-			$this->m_oPage->add("<form method=\"post\" enctype=\"multipart/form-data\" action=\"../pages/UI.php\">\n");
+			$this->m_oPage->add("<form method=\"post\" enctype=\"multipart/form-data\" action=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php\">\n");
 		}
 		$this->m_oPage->add("<div class=\"wizContainer\" id=\"wizStep$iStepIndex\" style=\"display:none;\">\n");
 		$this->m_oPage->add("<a name=\"step$iStepIndex\" />\n");
