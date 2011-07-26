@@ -42,8 +42,13 @@ LoginWebPage::ResetSession();
 switch($sLoginMode)
 {
 	case 'cas':
+	$sCASLogoutUrl = MetaModel::GetConfig()->Get('cas_logout_redirect_service');
+	if (empty($sCASLogoutUrl))
+	{
+		$sCASLogoutUrl = $sUrl;
+	}
 	utils::InitCASClient();					
-	phpCAS::logoutWithUrl($sUrl); // Redirects to the CAS logout page
+	phpCAS::logoutWithRedirectService($sCASLogoutUrl); // Redirects to the CAS logout page
 	break;
 }
 $oPage = new LoginWebPage();
