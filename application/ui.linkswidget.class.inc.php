@@ -182,17 +182,17 @@ class UILinksWidget
 		
 		// Content
 		$sHtml .= "</tbody>\n";
-		if (count($aData) == 0)
+		$sEmptyRowStyle = '';
+		if (count($aData) != 0)
 		{
-			$sHtml .= "<tr id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_empty_row\"><td colspan=\"".count($aConfig)."\" style=\"text-align:center;\">".Dict::S('UI:Message:EmptyList:UseAdd')."<input type=\"hidden\" name=\"attr_{$this->m_sAttCode}{$this->m_sNameSuffix}\" value=\"\"></td></td>";
+			$sEmptyRowStyle = 'style="display:none;"';
 		}
-		else
+
+		$sHtml .= "<tr $sEmptyRowStyle id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_empty_row\"><td colspan=\"".count($aConfig)."\" style=\"text-align:center;\">".Dict::S('UI:Message:EmptyList:UseAdd')."<input type=\"hidden\" name=\"attr_{$this->m_sAttCode}{$this->m_sNameSuffix}\" value=\"\"></td></td>";
+		foreach($aData as $iRowId => $aRow)
 		{
-			foreach($aData as $iRowId => $aRow)
-			{
-				$sHtml .= $this->DisplayFormRow($oP, $aConfig, $aRow, $iRowId);
-			}		
-		}
+			$sHtml .= $this->DisplayFormRow($oP, $aConfig, $aRow, $iRowId);
+		}		
 		$sHtml .= "</tbody>\n";
 		
 		// Footer

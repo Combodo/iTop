@@ -610,7 +610,7 @@ EOF
 	
 		$sClass = get_class($oObj);
 	
-		$oObj->UpdateObject('' /* form prefix */, $aAttList);
+		$oObj->UpdateObjectFromPostedForm('' /* form prefix */, $aAttList);
 	
 	   // Optional: apply a stimulus
 	   //

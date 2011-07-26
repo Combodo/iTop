@@ -377,7 +377,7 @@ EOF
 	public function DoCreateObject($oPage)
 	{
 		$oObj = MetaModel::NewObject($this->sTargetClass);
-		$aErrors = $oObj->UpdateObject($this->iId);
+		$aErrors = $oObj->UpdateObjectFromPostedForm($this->iId);
 		if (count($aErrors) == 0)
 		{
 			$oMyChange = MetaModel::NewObject("CMDBChange");

@@ -40,6 +40,12 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates)
 		// Re-run the zebra plugin to properly highlight the remaining lines & and take into account the removed ones
 		$('#linkedset_'+this.id+' .listResults').trigger('update').trigger("applyWidgets");
 		
+		if ($('$linkedset_'+this.id+' .selection').length == 0)
+		{
+			// All items were removed: add a dummy hidden input to make sure that the linkset will be updated (emptied) when posted
+			$('#'+me.id+'_empty_row').show();
+		}
+		
 	}
 
 	this.OnSelectChange = function()
@@ -204,7 +210,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates)
 				//console.log('Data: ' + data);
 				if (data != '')
 				{
-					$('#'+me.id+'_empty_row').remove();
+					$('#'+me.id+'_empty_row').hide();
 					$('#linkedset_'+me.id+' .listResults tbody').append(data);
 					$('#linkedset_'+me.id+' .listResults').trigger('update');
 					$('#linkedset_'+me.id+' .listResults').tableHover();

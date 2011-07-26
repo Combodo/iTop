@@ -971,7 +971,7 @@ EOF
 		foreach($aSelectedObj as $iId)
 		{
 			$oObj = MetaModel::GetObject($sClass, $iId);
-			$aErrors = $oObj->UpdateObject('');
+			$aErrors = $oObj->UpdateObjectFromPostedForm('');
 			$bResult = (count($aErrors) == 0);
 			if ($bResult)
 			{
@@ -1187,7 +1187,7 @@ EOF
 			}
 			else
 			{
-				$oObj->UpdateObject();
+				$oObj->UpdateObjectFromPostedForm();
 
 				if (!$oObj->IsModified())
 				{
@@ -1320,7 +1320,7 @@ EOF
 		else
 		{
 			$oObj = MetaModel::NewObject($sClass);
-			$oObj->UpdateObject();
+			$oObj->UpdateObjectFromPostedForm();
 		}
 		if (isset($oObj) && is_object($oObj))
 		{

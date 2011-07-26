@@ -456,7 +456,7 @@ EOF
 		return parent::GetAttributeFlags($sAttCode, $aReasons);
 	}
 		
-	public function UpdateObject($sFormPrefix = '', $sAttList = null)
+	public function UpdateObjectFromPostedForm($sFormPrefix = '', $sAttList = null)
 	{
 		parent::UpdateObject($sFormPrefix, $sAttList);
 		// And now read the other post parameters...

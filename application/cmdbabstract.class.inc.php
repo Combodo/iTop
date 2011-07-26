@@ -2325,7 +2325,7 @@ EOF
 	/**
 	 * Updates the object from the POSTed parameters (form)
 	 */
-	public function UpdateObject($sFormPrefix = '', $aAttList = null)
+	public function UpdateObjectFromPostedForm($sFormPrefix = '', $aAttList = null)
 	{
 		$aErrors = array();
 		$aValues = array();
