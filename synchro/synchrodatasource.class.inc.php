@@ -647,6 +647,7 @@ EOF
 		parent::AfterInsert();
 
 		$sTable = $this->GetDataTable();
+		$sReplicaTable = MetaModel::DBGetTable('SynchroReplica');
 
 		$aColumns = $this->GetSQLColumns();
 		
@@ -669,7 +670,7 @@ EOF
 		$sTriggerInsert = "CREATE TRIGGER `{$sTable}_bi` BEFORE INSERT ON $sTable";
 		$sTriggerInsert .= "   FOR EACH ROW";
 		$sTriggerInsert .= "   BEGIN";
-		$sTriggerInsert .= "      INSERT INTO priv_sync_replica (sync_source_id, status_last_seen, `status`) VALUES ({$this->GetKey()}, NOW(), 'new');";
+		$sTriggerInsert .= "      INSERT INTO {$sReplicaTable} (sync_source_id, status_last_seen, `status`) VALUES ({$this->GetKey()}, NOW(), 'new');";
 		$sTriggerInsert .= "      SET NEW.id = LAST_INSERT_ID();";
 		$sTriggerInsert .= "   END;";
 		CMDBSource::Query($sTriggerInsert);
@@ -691,7 +692,7 @@ EOF
 		$sTriggerUpdate .= "   FOR EACH ROW";
 		$sTriggerUpdate .= "   BEGIN";
 		$sTriggerUpdate .= "      IF @itopuser is null THEN";
-		$sTriggerUpdate .= "         UPDATE priv_sync_replica SET status_last_seen = NOW(), `status` = IF(`status` = 'obsolete', IF(`dest_id` IS NULL, 'new', 'modified'), IF(`status` IN ('synchronized') AND ($sIsModified), 'modified', `status`)) WHERE sync_source_id = {$this->GetKey()} AND id = OLD.id;";
+		$sTriggerUpdate .= "         UPDATE {$sReplicaTable} SET status_last_seen = NOW(), `status` = IF(`status` = 'obsolete', IF(`dest_id` IS NULL, 'new', 'modified'), IF(`status` IN ('synchronized') AND ($sIsModified), 'modified', `status`)) WHERE sync_source_id = {$this->GetKey()} AND id = OLD.id;";
 		$sTriggerUpdate .= "         SET NEW.id = OLD.id;"; // make sure this id won't change
 		$sTriggerUpdate .= "      END IF;";
 		$sTriggerUpdate .= "   END;";
@@ -700,7 +701,7 @@ EOF
 		$sTriggerInsert = "CREATE TRIGGER `{$sTable}_ad` AFTER DELETE ON $sTable";
 		$sTriggerInsert .= "   FOR EACH ROW";
 		$sTriggerInsert .= "   BEGIN";
-		$sTriggerInsert .= "      DELETE FROM priv_sync_replica WHERE id = OLD.id;";
+		$sTriggerInsert .= "      DELETE FROM {$sReplicaTable} WHERE id = OLD.id;";
 		$sTriggerInsert .= "   END;";
 		CMDBSource::Query($sTriggerInsert);
 	}
