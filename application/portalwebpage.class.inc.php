@@ -127,7 +127,7 @@ try
 			changeMonth: true,
 			changeYear: true
 		});
-	$('.resizable').resizable(); // Make resizable everything that claims to be resizable !
+	//$('.resizable').resizable(); // Make resizable everything that claims to be resizable !
 	$('.caselog_header').click( function () { $(this).toggleClass('open').next('.caselog_entry').toggle(); });
 }
 catch(err)
@@ -468,9 +468,10 @@ EOF
 	}
 	
 	
-	public function DisplaySearchForm($sClass, $aAttList, $aExtraParams, $sPrefix)
+	public function DisplaySearchForm($sClass, $aAttList, $aExtraParams, $sPrefix, $bClosed = true)
 	{
-		$this->add("<div id=\"ds_$sPrefix\" class=\"SearchDrawer DrawerClosed\">\n");
+		$sCSSClass = ($bClosed) ? 'DrawerClosed' : '';
+		$this->add("<div id=\"ds_$sPrefix\" class=\"SearchDrawer $sCSSClass\">\n");
 		$this->add_ready_script(
 <<<EOF
 		$("#dh_$sPrefix").click( function() {
