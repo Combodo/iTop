@@ -365,6 +365,24 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
+		'cas_logout_redirect_service' => array(
+			'type' => 'string',
+			'description' => 'The redirect service (URL) to use when logging-out with CAS',
+			// examples... not used (nor 'description')
+			'default' => '',
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
+		'cas_memberof' => array(
+			'type' => 'string',
+			'description' => 'A comma separated list of group names that the user must be member of (works only with SAML)',
+			// examples... not used (nor 'description')
+			'default' => '',
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
 		'cas_debug' => array(
 			'type' => 'bool',
 			'description' => 'Activate the CAS debug',
