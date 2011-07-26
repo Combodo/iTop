@@ -582,7 +582,7 @@ EOF
             }
             echo "</style>\n";
         }
-		echo "<link rel=\"search\" type=\"application/opensearchdescription+xml\" title=\"iTop\" href=\"./opensearch.xml.php\" />\n";
+		echo "<link rel=\"search\" type=\"application/opensearchdescription+xml\" title=\"iTop\" href=\"".utils::GetAbsoluteUrlAppRoot()."opensearch.xml.php\" />\n";
         echo "</head>\n";
         echo "<body>\n";
 
@@ -606,7 +606,7 @@ EOF
 		}
 
 		// Render the text of the global search form
-		$sText = Utils::ReadParam('text', '');
+		$sText = htmlentities(utils::ReadParam('text', ''), ENT_QUOTES, 'UTF-8');
 		$sOnClick = "";
 		if (empty($sText))
 		{

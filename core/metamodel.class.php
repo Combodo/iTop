@@ -310,13 +310,23 @@ abstract class MetaModel
 			return self::GetName($sClass);
 		}
 	}
-	final static public function GetClassFromLabel($sClassLabel)
+	final static public function GetClassFromLabel($sClassLabel, $bCaseSensitive = true)
 	{
 		foreach(self::GetClasses() as $sClass)
 		{
-			if (self::GetName($sClass) == $sClassLabel)
+			if ($bCaseSensitive)
 			{
-				return $sClass;
+				if (self::GetName($sClass) == $sClassLabel)
+				{
+					return $sClass;
+				}
+			}
+			else
+			{
+				if (strcasecmp(self::GetName($sClass), $sClassLabel) == 0)
+				{
+					return $sClass;
+				}				
 			}
 		}
 		return null;
