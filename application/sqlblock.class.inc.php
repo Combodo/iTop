@@ -214,6 +214,11 @@ class SqlBlock
 		default:
 		case 'table':
 			$oAppContext = new ApplicationContext();
+			$sContext = $oAppContext->GetForLink();
+			if (!empty($sContext))
+			{
+				$sContext = '&'.$sContext;
+			}
 			$aDisplayConfig = array();
 			foreach($this->m_aColumns as $sName => $aColumnData)
 			{
@@ -236,7 +241,7 @@ class SqlBlock
 						{
 							$sFilter = str_replace(':'.$sColName, "'".addslashes( $aRow[$sColName] )."'", $sFilter);
 						}
-						$sURL = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search_oql&search_form=0&oql_class='.$sClass.'&oql_clause='.urlencode($sFilter).'&format=html?'.$oAppContext->GetForLink();
+						$sURL = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search_oql&search_form=0&oql_class='.$sClass.'&oql_clause='.urlencode($sFilter).'&format=html'.$sContext;
 						$aDisplayRow[$sName] = '<a href="'.$sURL.'">'.$aRow[$sName]."</a>";					
 					}
 					else

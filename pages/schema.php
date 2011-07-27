@@ -36,24 +36,24 @@ LoginWebPage::DoLogin(true); // Check user rights and prompt if needed (must be 
 /**
  * Helper for this page -> link to a class
  */
-function MakeClassHLink($sClass)
+function MakeClassHLink($sClass, $sContext)
 {
-	return "<a href=\"?operation=details_class&class=$sClass\" title=\"".MetaModel::GetClassDescription($sClass)."\">".MetaModel::GetName($sClass)."</a>";
+	return "<a href=\"?operation=details_class&class=$sClass{$sContext}\" title=\"".MetaModel::GetClassDescription($sClass)."\">".MetaModel::GetName($sClass)."</a>";
 }
 
 /**
  * Helper for this page -> link to a class
  */
-function MakeRelationHLink($sRelCode)
+function MakeRelationHLink($sRelCode, $sContext)
 {
 	$sDesc = MetaModel::GetRelationDescription($sRelCode);
-	return "<a href=\"?operation=details_relation&relcode=$sRelCode\" title=\"$sDesc\">".$sRelCode."</a>";
+	return "<a href=\"?operation=details_relation&relcode=$sRelCode{$sContext}\" title=\"$sDesc\">".$sRelCode."</a>";
 }
 
 /**
  * Helper for the global list and the details of a given class
  */
-function DisplaySubclasses($oPage, $sClass)
+function DisplaySubclasses($oPage, $sClass, $sContext)
 {
 	$aChildClasses = MetaModel::EnumChildClasses($sClass);
 	if (count($aChildClasses) != 0)
@@ -75,8 +75,8 @@ function DisplaySubclasses($oPage, $sClass)
 			// Skip indirect childs, they will be handled somewhere else
 			if (MetaModel::GetParentPersistentClass($sClassName) == $sClass)
 			{
-					$oPage->add("<li>".MakeClassHLink($sClassName)."\n");
-					DisplaySubclasses($oPage, $sClassName);
+					$oPage->add("<li>".MakeClassHLink($sClassName, $sContext)."\n");
+					DisplaySubclasses($oPage, $sClassName, $sContext);
 					$oPage->add("</li>\n");
 			}
 		}
@@ -87,7 +87,7 @@ function DisplaySubclasses($oPage, $sClass)
 /**
  * Helper for the global list and the details of a given class
  */
-function DisplayReferencingClasses($oPage, $sClass)
+function DisplayReferencingClasses($oPage, $sClass, $sContext)
 {
 	$bSkipLinkingClasses = false;
 	$aRefs = MetaModel::EnumReferencingClasses($sClass, $bSkipLinkingClasses);
@@ -98,7 +98,7 @@ function DisplayReferencingClasses($oPage, $sClass)
 		{
 			foreach ($aRemoteKeys as $sExtKeyAttCode => $oExtKeyAttDef)
 			{
-				$oPage->add("<li>".Dict::Format('UI:Schema:Class_ReferencingClasses_From_By', $sClass, MakeClassHLink($sRemoteClass), $sExtKeyAttCode)."</li>\n");
+				$oPage->add("<li>".Dict::Format('UI:Schema:Class_ReferencingClasses_From_By', $sClass, MakeClassHLink($sRemoteClass, $sContext), $sExtKeyAttCode)."</li>\n");
 			}
 		}
 		$oPage->add("</ul>\n");
@@ -108,7 +108,7 @@ function DisplayReferencingClasses($oPage, $sClass)
 /**
  * Helper for the global list and the details of a given class
  */
-function DisplayLinkingClasses($oPage, $sClass)
+function DisplayLinkingClasses($oPage, $sClass, $sContext)
 {
 	$bSkipLinkingClasses = false;
 	$aRefs = MetaModel::EnumLinkingClasses($sClass);
@@ -119,7 +119,7 @@ function DisplayLinkingClasses($oPage, $sClass)
 		{
 			foreach($aRemoteClasses as $sExtKeyAttCode => $sRemoteClass)
 			{
-				$oPage->add("<li>".Dict::Format('UI:Schema:Class_IsLinkedTo_Class_Via_ClassAndAttribute', $sClass, MakeClassHLink($sRemoteClass), MakeClassHLink($sLinkClass), $sExtKeyAttCode));
+				$oPage->add("<li>".Dict::Format('UI:Schema:Class_IsLinkedTo_Class_Via_ClassAndAttribute', $sClass, MakeClassHLink($sRemoteClass, $sContext), MakeClassHLink($sLinkClass, $sContext), $sExtKeyAttCode));
 			}
 		}
 		$oPage->add("</ul>\n");
@@ -129,7 +129,7 @@ function DisplayLinkingClasses($oPage, $sClass)
 /**
  * Helper for the global list and the details of a given class
  */
-function DisplayRelatedClassesBestInClass($oPage, $sClass, $iLevels = 20, &$aVisitedClasses = array(), $bSubtree = true)
+function DisplayRelatedClassesBestInClass($oPage, $sClass, $iLevels = 20, &$aVisitedClasses = array(), $bSubtree = true, $sContext)
 {
 	if ($iLevels <= 0) return;
 	$iLevels--;
@@ -140,7 +140,7 @@ function DisplayRelatedClassesBestInClass($oPage, $sClass, $iLevels = 20, &$aVis
 	if ($bSubtree) $oPage->add("<ul class=\"treeview\">\n");
 	foreach (MetaModel::EnumParentClasses($sClass) as $sParentClass)
 	{
-		DisplayRelatedClassesBestInClass($oPage, $sParentClass, $iLevels, $aVisitedClasses, false);
+		DisplayRelatedClassesBestInClass($oPage, $sParentClass, $iLevels, $aVisitedClasses, false, $sContext);
 	}
 	////$oPage->add("<div style=\"background-color:#ccc; border: 1px dashed #333;\">");
 	foreach (MetaModel::EnumReferencedClasses($sClass) as $sExtKeyAttCode => $sRemoteClass)
@@ -148,8 +148,8 @@ function DisplayRelatedClassesBestInClass($oPage, $sClass, $iLevels = 20, &$aVis
 		$sVisited = (array_key_exists($sRemoteClass, $aVisitedClasses)) ? " ..." : "";
 		if (MetaModel::GetAttributeOrigin($sClass, $sExtKeyAttCode) == $sClass)
 		{
-			$oPage->add("<li>$sClass| <em>$sExtKeyAttCode</em> =&gt;".MakeClassHLink($sRemoteClass)."$sVisited</li>\n");
-			DisplayRelatedClassesBestInClass($oPage, $sRemoteClass, $iLevels, $aVisitedClasses);
+			$oPage->add("<li>$sClass| <em>$sExtKeyAttCode</em> =&gt;".MakeClassHLink($sRemoteClass, $sContext)."$sVisited</li>\n");
+			DisplayRelatedClassesBestInClass($oPage, $sRemoteClass, $iLevels, $aVisitedClasses, true, $sContext);
 		}
 	}
 	foreach (MetaModel::EnumReferencingClasses($sClass) as $sRemoteClass => $aRemoteKeys)
@@ -157,8 +157,8 @@ function DisplayRelatedClassesBestInClass($oPage, $sClass, $iLevels = 20, &$aVis
 		foreach ($aRemoteKeys as $sExtKeyAttCode => $oExtKeyAttDef)
 		{
 			$sVisited = (array_key_exists($sRemoteClass, $aVisitedClasses)) ? " ..." : "";
-			$oPage->add("<li>$sClass| &lt;=".MakeClassHLink($sRemoteClass)."::<em>$sExtKeyAttCode</em>$sVisited</li>\n");
-			DisplayRelatedClassesBestInClass($oPage, $sRemoteClass, $iLevels, $aVisitedClasses);
+			$oPage->add("<li>$sClass| &lt;=".MakeClassHLink($sRemoteClass, $sContext)."::<em>$sExtKeyAttCode</em>$sVisited</li>\n");
+			DisplayRelatedClassesBestInClass($oPage, $sRemoteClass, $iLevels, $aVisitedClasses, true, $sContext);
 		}
 	}
 	////$oPage->add("</div>");
@@ -168,16 +168,17 @@ function DisplayRelatedClassesBestInClass($oPage, $sClass, $iLevels = 20, &$aVis
 /**
  * Helper for the list of classes related to the given class
  */
-function DisplayRelatedClasses($oPage, $sClass)
+function DisplayRelatedClasses($oPage, $sClass, $sContext)
 {
 	$oPage->add("<h3>".Dict::Format('UI:Schema:Links:1-n', $sClass)."</h3>\n");
-	DisplayReferencingClasses($oPage, $sClass);
+	DisplayReferencingClasses($oPage, $sClass, $sContext);
 
 	$oPage->add("<h3>".Dict::Format('UI:Schema:Links:n-n', $sClass)."</h3>\n");
-	DisplayLinkingClasses($oPage, $sClass);
+	DisplayLinkingClasses($oPage, $sClass, $sContext);
 
 	$oPage->add("<h3>".Dict::S('UI:Schema:Links:All')."</h3>\n");
-	DisplayRelatedClassesBestInClass($oPage, $sClass, 4);
+	$aEmpty = array();
+	DisplayRelatedClassesBestInClass($oPage, $sClass, 4, $aEmpty, true, $sContext);
 }
 
 /**
@@ -279,7 +280,7 @@ function DisplayTriggers($oPage, $sClass)
 /**
  * Display the list of classes from the business model
  */
-function DisplayClassesList($oPage)
+function DisplayClassesList($oPage, $sContext)
 {
 	$oPage->add("<h1>".Dict::S('UI:Schema:Title')."</h1>\n");
 
@@ -303,13 +304,13 @@ function DisplayClassesList($oPage)
 	{
 		if (MetaModel::IsRootClass($sClassName))
 		{
-			$oPage->add("<li class=\"closed\">".MakeClassHLink($sClassName)."\n");
-			DisplaySubclasses($oPage, $sClassName);
+			$oPage->add("<li class=\"closed\">".MakeClassHLink($sClassName, $sContext)."\n");
+			DisplaySubclasses($oPage, $sClassName, $sContext);
 			$oPage->add("</li>\n");
 		}
 		elseif (MetaModel::IsStandaloneClass($sClassName))
 		{
-			$oPage->add("<li>".MakeClassHLink($sClassName)."</li>\n");
+			$oPage->add("<li>".MakeClassHLink($sClassName, $sContext)."</li>\n");
 		}
 	}
 	$oPage->add("</ul>\n");
@@ -319,7 +320,7 @@ function DisplayClassesList($oPage)
 	$oPage->add("<ul id=\"ClassesRelationships\" class=\"treeview\">\n");
 	foreach (MetaModel::EnumRelations() as $sRelCode)
 	{
-		$oPage->add("<li>".MakeRelationHLink($sRelCode)."\n");
+		$oPage->add("<li>".MakeRelationHLink($sRelCode, $sContext)."\n");
 		$oPage->add("<ul>\n");
 		$oPage->add("<li>Description: ".htmlentities(MetaModel::GetRelationDescription($sRelCode), ENT_QUOTES, 'UTF-8')."</li>\n");
 		$oPage->add("<li>Verb up: ".htmlentities(MetaModel::GetRelationVerbUp($sRelCode), ENT_QUOTES, 'UTF-8')."</li>\n");
@@ -335,7 +336,7 @@ function DisplayClassesList($oPage)
 /**
  * Display the details of a given class of objects
  */
-function DisplayClassDetails($oPage, $sClass)
+function DisplayClassDetails($oPage, $sClass, $sContext)
 {
 	$oPage->add("<h2>$sClass - ".MetaModel::GetClassDescription($sClass)."</h2>\n");
 	if (MetaModel::IsAbstract($sClass))
@@ -352,7 +353,7 @@ function DisplayClassDetails($oPage, $sClass)
 	$aParentClasses = array();
 	foreach(MetaModel::EnumParentClasses($sClass) as $sParentClass)
 	{
-		$aParentClasses[] = MakeClassHLink($sParentClass);
+		$aParentClasses[] = MakeClassHLink($sParentClass, $sContext);
 	}
 	if (count($aParentClasses) > 0)
 	{
@@ -362,13 +363,13 @@ function DisplayClassDetails($oPage, $sClass)
 	{
 		$sParents = '';
 	}
-	$oPage->p("[<a href=\"?operation='list'\">".Dict::S('UI:Schema:AllClasses')."</a>] $sParents");
+	$oPage->p("[<a href=\"?operation=list{$sContext}\">".Dict::S('UI:Schema:AllClasses')."</a>] $sParents");
 
 	if (MetaModel::HasChildrenClasses($sClass))
 	{
 		$oPage->add("<ul id=\"ClassHierarchy\">");
 		$oPage->add("<li class=\"closed\">".$sClass."\n");
-		DisplaySubclasses($oPage, $sClass);
+		DisplaySubclasses($oPage, $sClass,$sContext);
 		$oPage->add("</li>\n");
 		$oPage->add("</ul>\n");
 		$oPage->add_ready_script('$("#ClassHierarchy").treeview();');	
@@ -382,7 +383,7 @@ function DisplayClassDetails($oPage, $sClass)
 	{
 		if ($oAttDef->IsExternalKey())
 		{
-		   $sValue = Dict::Format('UI:Schema:ExternalKey_To',MakeClassHLink($oAttDef->GetTargetClass()));
+		   $sValue = Dict::Format('UI:Schema:ExternalKey_To',MakeClassHLink($oAttDef->GetTargetClass(), $sContext));
 		}
 		else
 		{
@@ -446,19 +447,19 @@ function DisplayClassDetails($oPage, $sClass)
 	$oPage->table($aConfig, $aDetails);
 
 	$oPage->SetCurrentTab(Dict::S('UI:Schema:ChildClasses'));
-	DisplaySubclasses($oPage, $sClass);
+	DisplaySubclasses($oPage, $sClass, $sContext);
 
 	$oPage->SetCurrentTab(Dict::S('UI:Schema:ReferencingClasses'));
-	DisplayReferencingClasses($oPage, $sClass);
+	DisplayReferencingClasses($oPage, $sClass, $sContext);
 
 	$oPage->SetCurrentTab(Dict::S('UI:Schema:RelatedClasses'));
-	DisplayRelatedClasses($oPage, $sClass);
+	DisplayRelatedClasses($oPage, $sClass, $sContext);
 
 	$oPage->SetCurrentTab(Dict::S('UI:Schema:LifeCycle'));
-	DisplayLifecycle($oPage, $sClass);
+	DisplayLifecycle($oPage, $sClass, $sContext);
 
 	$oPage->SetCurrentTab(Dict::S('UI:Schema:Triggers'));
-	DisplayTriggers($oPage, $sClass);
+	DisplayTriggers($oPage, $sClass, $sContext);
 
 	$oPage->SetCurrentTab();
 	$oPage->SetCurrentTabContainer();
@@ -468,7 +469,7 @@ function DisplayClassDetails($oPage, $sClass)
 /**
  * Display the details of a given relation (e.g. "impacts")
  */
-function DisplayRelationDetails($oPage, $sRelCode)
+function DisplayRelationDetails($oPage, $sRelCode, $sContext)
 {
 	$sDesc = MetaModel::GetRelationDescription($sRelCode);
 	$sVerbDown = MetaModel::GetRelationVerbDown($sRelCode);
@@ -483,7 +484,7 @@ function DisplayRelationDetails($oPage, $sRelCode)
 		$aRelQueries = MetaModel::EnumRelationQueries($sClass, $sRelCode);
 		if (count($aRelQueries) > 0)
 		{
-			$oPage->add("<li>class ".MakeClassHLink($sClass)."\n");
+			$oPage->add("<li>class ".MakeClassHLink($sClass, $sContext)."\n");
 			$oPage->add("<ul>\n");
 			foreach ($aRelQueries as $sRelKey => $aQuery)
 			{
@@ -508,6 +509,11 @@ function DisplayRelationDetails($oPage, $sRelCode)
 
 // Display the menu on the left
 $oAppContext = new ApplicationContext();
+$sContext = $oAppContext->GetForLink();
+if (!empty($sContext))
+{
+	$sContext = '&'.$sContext;
+}
 $operation = utils::ReadParam('operation', '');
 
 $oPage = new iTopWebPage(Dict::S('UI:Schema:Title'));
@@ -519,17 +525,17 @@ switch($operation)
 {
 	case 'details_class':
 	$sClass = utils::ReadParam('class', 'logRealObject');
-	DisplayClassDetails($oPage, $sClass);
+	DisplayClassDetails($oPage, $sClass, $sContext);
 	break;
 	
 	case 'details_relation':
 	$sRelCode = utils::ReadParam('relcode', '');
-	DisplayRelationDetails($oPage, $sRelCode);
+	DisplayRelationDetails($oPage, $sRelCode, $sContext);
 	break;
 	
 	case 'list':
 	default:
-	DisplayClassesList($oPage);
+	DisplayClassesList($oPage, $sContext);
 }
 
 $oPage->output();

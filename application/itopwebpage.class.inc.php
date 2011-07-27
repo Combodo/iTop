@@ -53,6 +53,7 @@ class iTopWebPage extends NiceWebPage
 		$sAbsURLAppRoot = addslashes(utils::GetAbsoluteUrlAppRoot()); // Pass it to Javascript scripts
 		$oAppContext = new ApplicationContext();
 		$sExtraParams = $oAppContext->GetForLink();
+		$sAppContext = addslashes($sExtraParams);
 		$this->add_header("Content-type: text/html; charset=utf-8");
 		$this->add_header("Cache-control: no-cache");
 		$this->add_linked_stylesheet("../css/jquery.treeview.css");
@@ -361,18 +362,18 @@ EOF
 		{
 			if (id > 0)
 			{
-				window.location.href = GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=details&class='+sClass+'&id='+id;
+				window.location.href = AddAppContext(GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=details&class='+sClass+'&id='+id);
 			}
 			else
 			{
-				window.location.href = sDefaultUrl;				
+				window.location.href = sDefaultUrl; // Already contains the context...				
 			}
 		}
 
 		
 		function BackToList(sClass)
 		{
-			window.location.href = GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=search_oql&oql_class='+sClass+'&oql_clause=WHERE id=0';
+			window.location.href = AddAppContext(GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=search_oql&oql_class='+sClass+'&oql_clause=WHERE id=0');
 		}
 
 		function ShowDebug()
@@ -386,6 +387,19 @@ EOF
 		function GetAbsoluteUrlAppRoot()
 		{
 			return '$sAbsURLAppRoot';
+		}
+		
+		function AddAppContext(sURL)
+		{
+			var sContext = '$sAppContext';
+			if (sContext.length > 0)
+			{
+				if (sURL.indexOf('?') == -1)
+				{
+					return sURL+'?'+sContext;
+				}				
+			}
+			return sURL+'&'+sContext;
 		}
 		
 		var oUserPreferences = $sUserPrefs;
@@ -585,7 +599,6 @@ EOF
 		echo "<link rel=\"search\" type=\"application/opensearchdescription+xml\" title=\"iTop\" href=\"".utils::GetAbsoluteUrlAppRoot()."opensearch.xml.php\" />\n";
         echo "</head>\n";
         echo "<body>\n";
-
 
 
 

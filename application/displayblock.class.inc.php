@@ -718,6 +718,12 @@ EOF
 			
 			case 'open_flash_chart':
 			static $iChartCounter = 0;
+			$oAppContext = new ApplicationContext();
+			$sContext = $oAppContext->GetForLink();
+			if (!empty($sContext))
+			{
+				$sContext = '&'.$sContext;
+			}
 			$sChartType = isset($aExtraParams['chart_type']) ? $aExtraParams['chart_type'] : 'pie';
 			$sTitle = isset($aExtraParams['chart_title']) ? $aExtraParams['chart_title'] : '';
 			$sGroupBy = isset($aExtraParams['group_by']) ? $aExtraParams['group_by'] : '';
@@ -748,6 +754,7 @@ EOF
 				$aData = array();
 				$aLabels = array();
 				$idx = 0;
+				$aURLs = array();
 				foreach($aGroupBy as $sValue => $iValue)
 				{
 					$oDrillDownFilter = clone $this->m_oFilter;
@@ -758,7 +765,7 @@ EOF
 				$sURLList = '';
 				foreach($aURLs as $index => $sURL)
 				{
-					$sURLList .= "\taURLs[$index] = '".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&format=html&filter=".addslashes($sURL)."';\n";
+					$sURLList .= "\taURLs[$index] = '".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&format=html{$sContext}&filter=".addslashes($sURL)."';\n";
 				}
 				$oPage->add_script(
 <<<EOF

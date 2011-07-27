@@ -55,6 +55,8 @@ function ShowExamples($oP, $sExpression)
 	);
 
 	$aDisplayData = array();
+	$oAppContext = new ApplicationContext();
+	$sContext = $oAppContext->GetForForm();
 	foreach($aExamples as $sTopic => $aQueries)
 	{
 		foreach($aQueries as $sDescription => $sOql)
@@ -73,7 +75,7 @@ function ShowExamples($oP, $sExpression)
 			$aDisplayData[Dict::S('UI:RunQuery:QueryExamples')][] = array(
 				'desc' => "<div style=\"$sHighlight\">".htmlentities($sDescription, ENT_QUOTES, 'UTF-8')."</div>",
 				'oql' => "<div style=\"$sHighlight\">".htmlentities($sOql, ENT_QUOTES, 'UTF-8')."</div>",
-				'go' => "<form method=\"get\"><input type=\"hidden\" name=\"expression\" value=\"$sOql\"><input type=\"submit\" value=\"".Dict::S('UI:Button:Test')."\" $sDisable></form>\n",
+				'go' => "<form method=\"get\"><input type=\"hidden\" name=\"expression\" value=\"$sOql\"><input type=\"submit\" value=\"".Dict::S('UI:Button:Test')."\" $sDisable>$sContext</form>\n",
 			);
 		}
 	}
@@ -121,6 +123,7 @@ try
 	$oP->add(Dict::S('UI:RunQuery:ExpressionToEvaluate')."<br/>\n");
 	$oP->add("<textarea cols=\"120\" rows=\"8\" name=\"expression\">$sExpression</textarea>\n");
 	$oP->add("<input type=\"submit\" value=\"".Dict::S('UI:Button:Evaluate')."\">\n");
+	$oP->add($oAppContext->GetForForm());
 	$oP->add("</form>\n");
 
 	if (!empty($sExpression))
