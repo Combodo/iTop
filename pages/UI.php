@@ -1744,23 +1744,61 @@ EOF
 			$aDetails = array();
 			$iFieldIndex = 0;
 			$aFieldsMap = array();
-			foreach($aExpectedAttributes as $sAttCode => $iExpectCode)
+
+			$aDetailsList = $oObj->FlattenZList(MetaModel::GetZListItems($sClass, 'details'));
+			// Order the fields based on their dependencies, set the fields for which there is only one possible value
+			// and perform this in the order of dependencies to avoid dead-ends
+			$aDeps = array();
+			foreach($aDetailsList as $sAttCode)
 			{
-				// Prompt for an attribute if
-				// - the attribute must be changed or must be displayed to the user for confirmation
-				// - or the field is mandatory and currently empty
-				if ( ($iExpectCode & (OPT_ATT_MUSTCHANGE | OPT_ATT_MUSTPROMPT)) ||
-					 (($iExpectCode & OPT_ATT_MANDATORY) && ($oObj->Get($sAttCode) == '')) ) 
+				$aDeps[$sAttCode] = MetaModel::GetPrequisiteAttributes($sClass, $sAttCode);
+			}
+			$aList = $oObj->OrderDependentFields($aDeps);
+
+			foreach($aList as $sAttCode)
+			{
+				// Consider only the "expected" fields for the target state
+				if (array_key_exists($sAttCode, $aExpectedAttributes))
 				{
-					$aAttributesDef = MetaModel::ListAttributeDefs($sClass);
-					$oAttDef = $aAttributesDef[$sAttCode];
-					$aArgs = array('this' => $oObj);
-					$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, $sClass, $sAttCode, $oAttDef, $oObj->Get($sAttCode), $oObj->GetEditValue($sAttCode), 'att_'.$iFieldIndex, '', $iExpectCode, $aArgs);
-					$aDetails[] = array('label' => '<span>'.$oAttDef->GetLabel().'</span>', 'value' => "<span id=\"field_att_$iFieldIndex\">$sHTMLValue</span>");
-					$aFieldsMap[$sAttCode] = 'att_'.$iFieldIndex;
-					$iFieldIndex++;
+					$iExpectCode = $aExpectedAttributes[$sAttCode];
+					// Prompt for an attribute if
+					// - the attribute must be changed or must be displayed to the user for confirmation
+					// - or the field is mandatory and currently empty
+					if ( ($iExpectCode & (OPT_ATT_MUSTCHANGE | OPT_ATT_MUSTPROMPT)) ||
+						 (($iExpectCode & OPT_ATT_MANDATORY) && ($oObj->Get($sAttCode) == '')) ) 
+					{
+						$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+						$aArgs = array('this' => $oObj);
+						// If the field is mandatory, set it to the only possible value
+						if ((!$oAttDef->IsNullAllowed()) || ($iExpectCode & OPT_ATT_MANDATORY))
+						{
+							if ($oAttDef->IsExternalKey())
+							{
+								$oAllowedValues = MetaModel::GetAllowedValuesAsObjectSet($sClass, $sAttCode, $aArgs);
+								if ($oAllowedValues->Count() == 1)
+								{
+									$oRemoteObj = $oAllowedValues->Fetch();
+									$oObj->Set($sAttCode, $oRemoteObj->GetKey());
+								}
+							}
+							else
+							{
+								$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, $aArgs);
+								if (count($aAllowedValues) == 1)
+								{
+									$aValues = array_keys($aAllowedValues);
+									$oObj->Set($sAttCode, $aValues[0]);
+								}
+							}
+						}
+						$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, $sClass, $sAttCode, $oAttDef, $oObj->Get($sAttCode), $oObj->GetEditValue($sAttCode), 'att_'.$iFieldIndex, '', $iExpectCode, $aArgs);
+						$aDetails[] = array('label' => '<span>'.$oAttDef->GetLabel().'</span>', 'value' => "<span id=\"field_att_$iFieldIndex\">$sHTMLValue</span>");
+						$aFieldsMap[$sAttCode] = 'att_'.$iFieldIndex;
+						$iFieldIndex++;
+					}
 				}
 			}
+
 			$oP->add('<table><tr><td>');
 			$oP->details($aDetails);
 			$oP->add('</td></tr></table>');
