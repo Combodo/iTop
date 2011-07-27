@@ -212,13 +212,27 @@ class CMDBChangeOpSetAttributeScalar extends CMDBChangeOpSetAttribute
 		$oMonoObjectSet = new DBObjectSet($oTargetSearch);
 		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES)
 		{
-			if (!MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode'))) return ''; // Protects against renammed attributes...
+			if (!MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode'))) return ''; // Protects against renamed attributes...
 
 			$oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
 			$sAttName = $oAttDef->GetLabel();
 			$sNewValue = $this->Get('newvalue');
 			$sOldValue = $this->Get('oldvalue');
-			if ( (($oAttDef->GetType() == 'String') || ($oAttDef->GetType() == 'Text')) &&
+			if ($oAttDef instanceof AttributeEnum)
+			{
+				// translate the enum values
+				$sOldValue = $oAttDef->GetAsHTML($sOldValue);
+				$sNewValue = $oAttDef->GetAsHTML($sNewValue);
+				if (strlen($sOldValue) == 0)
+				{
+					$sResult = Dict::Format('Change:AttName_SetTo', $sAttName, $sNewValue);
+				}
+				else
+				{
+					$sResult = Dict::Format('Change:AttName_SetTo_NewValue_PreviousValue_OldValue', $sAttName, $sNewValue, $sOldValue);
+				}				
+			}
+			elseif ( (($oAttDef->GetType() == 'String') || ($oAttDef->GetType() == 'Text')) &&
 				 (strlen($sNewValue) > strlen($sOldValue)) )
 			{
 				// Check if some text was not appended to the field
