@@ -769,5 +769,6 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Pagination:HeaderNoSelection' => 'Total: %1$s éléments.',
 	'UI:Pagination:PageSize' => '%1$s éléments par page',
 	'UI:Pagination:PagesLabel' => 'Pages:',
+	'UI:Pagination:All' => 'Tous',
 ));
 ?>

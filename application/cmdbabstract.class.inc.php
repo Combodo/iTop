@@ -747,6 +747,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 				$iNbItems = $iPage * MetaModel::GetConfig()->GetMinDisplayLimit();
 				$sCombo .= "<option  $sSelected value=\"$iNbItems\">$iNbItems</option>";
 			}
+			$sCombo .= "<option  $sSelected value=\"-1\">".Dict::S('UI:Pagination:All')."</option>";
 			$sCombo .= '</select>';
 			$sPages = Dict::S('UI:Pagination:PagesLabel');
 			$sPageSizeCombo = Dict::Format('UI:Pagination:PageSize', $sCombo);

@@ -919,5 +919,6 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Pagination:HeaderNoSelection' => 'Total: %1$s objects.',
 	'UI:Pagination:PageSize' => '%1$s objects per page',
 	'UI:Pagination:PagesLabel' => 'Pages:',
+	'UI:Pagination:All' => 'All',
 ));
 ?>

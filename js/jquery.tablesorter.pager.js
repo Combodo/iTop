@@ -15,6 +15,10 @@ function sprintf(format, etc) {
 			
 			function setPageSize(table,size) {
 				var c = table.config;
+				if (size == -1)
+				{
+					size = c.totalRows;
+				}
 				c.size = size;
 				c.totalPages = Math.ceil(c.totalRows / c.size);
 				c.pagerPositionSet = false;
