@@ -113,11 +113,22 @@ function DoSubmit(sMsg, iStep)
 		else
 		{
 			var bMatch = appPath.match(/^http(?:s)?\:\/\//);
-		if (!bMatch)
-		{
-			alert('"'+appPath+'" does not look like a valid URL for the application...\nPlease check your input.');
-			bResult = false;
-		}
+			if (!bMatch)
+			{
+				alert('"'+appPath+'" does not look like a valid URL for the application...\nPlease check your input.');
+				bResult = false;
+			}
+			else
+			{
+				// Make sure that the root URL ends with a slash
+				var bMatch = appPath.match(/\/$/);
+				if (!bMatch)
+				{
+					// If not, add a slash at the end
+					appPath += '/';
+					$('#application_path').val(appPath);
+				}
+			}
 		}
 
 		break;
