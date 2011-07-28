@@ -322,7 +322,7 @@ class Config
 		),
 		'cas_version' => array(
 			'type' => 'string',
-			'description' => 'The CAS protocol version to use',
+			'description' => 'The CAS protocol version to use: "1.0" (CAS v1), "2.0" (CAS v2) or "S1" (SAML V1) )',
 			// examples... not used (nor 'description')
 			'default' => '2.0',
 			'value' => '',
@@ -376,7 +376,7 @@ class Config
 		),
 		'cas_memberof' => array(
 			'type' => 'string',
-			'description' => 'A comma separated list of group names that the user must be member of (works only with SAML)',
+			'description' => 'A semicolon separated list of group names that the user must be member of (works only with SAML - e.g. cas_version=> "S1")',
 			// examples... not used (nor 'description')
 			'default' => '',
 			'value' => '',

@@ -256,31 +256,39 @@ EOF
 						$bFound =  false;
 						if (!empty($sCASMemberships))
 						{
-							if (phpCAS::hasAttributes('memberOf'))
+							if (phpCAS::hasAttribute('memberOf'))
 							{
 								// A list of groups is specified, the user must a be member of (at least) one of them to pass
 								$aCASMemberships = array();
-								$aTmp = explode(',', $sCASMemberships);
+								$aTmp = explode(';', $sCASMemberships);
+								setlocale(LC_ALL, "en_US.utf8"); // !!! WARNING: this is needed to have  the iconv //TRANSLIT working fine below !!!
 								foreach($aTmp as $sGroupName)
 								{
-									$aCASMemberships[] = trim($sGroupName); // Just in case remove spaces...
+									$aCASMemberships[] = trim(iconv('UTF-8', 'ASCII//TRANSLIT', $sGroupName)); // Just in case remove accents and spaces...
 								}
 	
-								$aMemberOf = phpCAS::getAttributes('memberOf');
+								$aMemberOf = phpCAS::getAttribute('memberOf');
 								if (!is_array($aMemberOf)) $aMemberOf = array($aMemberOf); // Just one entry, turn it into an array
-								
-								foreach($aCASMemberships as $sGroupName)
+								$aFilteredGroupNames = array();
+								foreach($aMemberOf as $sGroupName)
 								{
-									if (in_array($sGroupName, $aMemberOf))
+									$sGroupName = trim(iconv('UTF-8', 'ASCII//TRANSLIT', $sGroupName)); // Remove accents and spaces as well
+									$aFilteredGroupNames[] = $sGroupName;
+									if (in_array($sGroupName, $aCASMemberships))
 									{
 										$bFound = true;
 										break;
 									}	
 								}
+								if(!$bFound)
+								{
+									phpCAS :: log("User ".phpCAS::getUser().", none of his/her groups (".implode('; ', $aFilteredGroupNames).") match any of the required groups: ".implode('; ', $aCASMemberships));
+								}
 							}
 							else
 							{
 								// Too bad, the user is not part of any of the group => not allowed
+								phpCAS :: log("No 'memberOf' attribute found for user ".phpCAS::getUser().". Are you using the SAML protocol (S1) ?");
 							}
 						}
 						else
