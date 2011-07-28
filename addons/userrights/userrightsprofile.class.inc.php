@@ -780,8 +780,6 @@ exit;
 			// All of them are visible
 			return true;
 		}
-		$oExpression = new FieldExpression($sAttCode, $sClass);
-
 		// Position the user
 		//
 		@$aUserOrgs = $this->m_aUserOrgs[$oUser->GetKey()];
@@ -791,12 +789,52 @@ exit;
 			return true;
 		}
 
+		$oExpression = new FieldExpression($sAttCode, $sClass);
+		$oFilter  = new DBObjectSearch($sClass);
 		$aIds = array_keys($aUserOrgs);
 		$oListExpr = ListExpression::FromScalars($aIds);
-		$oCondition = new BinaryExpression($oExpression, 'IN', $oListExpr);
-
-		$oFilter  = new DBObjectSearch($sClass);
-		$oFilter->AddConditionExpression($oCondition);
+		
+		// Check if the condition points to a hierarchical key
+		if ($sAttCode == 'id')
+		{
+			// Filtering on the objects themselves
+			$sHierarchicalKeyCode = MetaModel::IsHierarchicalClass($sClass);
+			
+			if ($sHierarchicalKeyCode !== false)
+			{
+				$oRootFilter = new DBObjectSearch($sClass);
+				$oCondition = new BinaryExpression($oExpression, 'IN', $oListExpr);
+				$oRootFilter->AddConditionExpression($oCondition);
+				$oFilter->AddCondition_PointingTo($oRootFilter, $sHierarchicalKeyCode, TREE_OPERATOR_BELOW); // Use the 'below' operator by default
+				$bConditionAdded = true;
+			}
+		}
+		else
+		{
+			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+			$bConditionAdded = false;
+			if ($oAttDef->IsExternalKey())
+			{
+				$sHierarchicalKeyCode = MetaModel::IsHierarchicalClass($oAttDef->GetTargetClass());
+				
+				if ($sHierarchicalKeyCode !== false)
+				{
+					$oRootFilter = new DBObjectSearch($oAttDef->GetTargetClass());
+					$oExpression = new FieldExpression('id', $oAttDef->GetTargetClass());
+					$oCondition = new BinaryExpression($oExpression, 'IN', $oListExpr);
+					$oRootFilter->AddConditionExpression($oCondition);
+					$oHKFilter = new DBObjectSearch($oAttDef->GetTargetClass());
+					$oHKFilter->AddCondition_PointingTo($oRootFilter, $sHierarchicalKeyCode, TREE_OPERATOR_BELOW); // Use the 'below' operator by default
+					$oFilter->AddCondition_PointingTo($oHKFilter, $sAttCode);
+					$bConditionAdded = true;
+				}
+			}
+		}
+		if (!$bConditionAdded)
+		{
+			$oCondition = new BinaryExpression($oExpression, 'IN', $oListExpr);
+			$oFilter->AddConditionExpression($oCondition);
+		}
 		return $oFilter;
 	}
 

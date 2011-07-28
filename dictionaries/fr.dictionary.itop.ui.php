@@ -770,5 +770,6 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Pagination:PageSize' => '%1$s éléments par page',
 	'UI:Pagination:PagesLabel' => 'Pages:',
 	'UI:Pagination:All' => 'Tous',
+	'UI:HierarchyOf_Class' => 'Hiérarchie de type %1$s',
 ));
 ?>

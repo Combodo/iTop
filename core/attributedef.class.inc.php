@@ -2431,9 +2431,10 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 	static protected function ListExpectedParams()
 	{
 		$aParams = parent::ListExpectedParams();
-		//unset($aParams[array_search('targetclass', $aParams)]);
-		
-		//print_r($aParams);
+		$idx = array_search('targetclass', $aParams);
+		unset($aParams[$idx]);
+		$idx = array_search('jointype', $aParams);
+		unset($aParams[$idx]);
 		return $aParams; // TODO: mettre les bons parametres ici !!
 	}
 
@@ -2444,9 +2445,9 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 	}
 
 	public function IsHierarchicalKey() {return true;}
+	public function GetTargetClass($iType = EXTKEY_RELATIVE) {return $this->GetHostClass();}
 	public function GetKeyAttDef($iType = EXTKEY_RELATIVE){return $this;}
-	public function GetKeyAttCode() {return $this->GetCode();} 
-	
+	public function GetKeyAttCode() {return $this->GetCode();}
 
 	public function GetBasicFilterOperators()
 	{
@@ -2637,8 +2638,8 @@ class AttributeExternalField extends AttributeDefinition
 	public function GetExtAttDef()
 	{
 		$oKeyAttDef = $this->GetKeyAttDef();
-		$oExtAttDef = MetaModel::GetAttributeDef($oKeyAttDef->Get("targetclass"), $this->Get("target_attcode"));
-		if (!is_object($oExtAttDef)) throw new CoreException("Invalid external field ".$this->GetCode()." in class ".$this->GetHostClass().". The class ".$oKeyAttDef->Get("targetclass")." has no attribute ".$this->Get("target_attcode"));
+		$oExtAttDef = MetaModel::GetAttributeDef($oKeyAttDef->GetTargetClass(), $this->Get("target_attcode"));
+		if (!is_object($oExtAttDef)) throw new CoreException("Invalid external field ".$this->GetCode()." in class ".$this->GetHostClass().". The class ".$oKeyAttDef->GetTargetClass()." has no attribute ".$this->Get("target_attcode"));
 		return $oExtAttDef;
 	}
 

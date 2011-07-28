@@ -1487,7 +1487,10 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 		if ($sAttCode == 'finalclass') throw new Exception('Using a reserved keyword in metamodel declaration: '.$sAttCode);
 		if ($sAttCode == 'friendlyname') throw new Exception('Using a reserved keyword in metamodel declaration: '.$sAttCode);
 	
-		$sTargetClass = self::GetCallersPHPClass("Init");		
+		$sTargetClass = self::GetCallersPHPClass("Init");
+		// Set the "host class" as soon as possible, since HierarchicalKeys use it for their 'target class' as well
+		// and this needs to be know early (for Init_IsKnowClass 19 lines below)		
+		$oAtt->SetHostClass($sTargetClass);
 
 		// Some attributes could refer to a class
 		// declared in a module which is currently not installed/active
@@ -1527,12 +1530,7 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 
 		self::$m_aAttribDefs[$sTargetClass][$oAtt->GetCode()] = $oAtt;
 		self::$m_aAttribOrigins[$sTargetClass][$oAtt->GetCode()] = $sTargetClass;
-		// Note: it looks redundant to put targetclass there, but a mix occurs when inheritance is used
-		
-		// Specific case of external fields:
-		// I wanted to simplify the syntax of the declaration of objects in the biz model
-		// Therefore, the reference to the host class is set there 
-		$oAtt->SetHostClass($sTargetClass);
+		// Note: it looks redundant to put targetclass there, but a mix occurs when inheritance is used		
 	}
 
 	public static function Init_SetZListItems($sListCode, $aItems)
