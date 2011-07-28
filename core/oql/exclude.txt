@@ -3,5 +3,6 @@
 # since they are used solely for constructing other files during the build process
 #
 build.cmd
+build.bash
 oql-lexer.plex
 oql-parser.y
