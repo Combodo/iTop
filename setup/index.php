@@ -605,7 +605,7 @@ function WelcomeAndCheckPrerequisites(SetupWebPage $oP, $aParamValues, $iCurrent
 			}
 			else
 			{
-				$oP->ok("Version ".$aVersion[ROOT_MODULE]['version_db']." of iTop detected.<br/>The application will be upgraded to version ".$aVersion[ITOP_APPLICATION]['version_code'].".");
+				$oP->ok("Version ".$aVersion[ROOT_MODULE]['version_db']." of iTop detected.<br/>The application will be upgraded to version ".$aVersion[ROOT_MODULE]['version_code'].".");
 			}
 			AddHiddenParam($oP, 'db_server', $oConfig->GetDBHost());
 			AddHiddenParam($oP, 'db_user', $oConfig->GetDBUser());
