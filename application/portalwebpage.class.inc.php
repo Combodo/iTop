@@ -158,8 +158,7 @@ EOF
 	{
 		return '$sAbsURLAppRoot';
 	}
-		
-		
+	
 	function AddAppContext(sURL)
 	{
 		var sContext = '$sAppContext';
@@ -168,11 +167,12 @@ EOF
 			if (sURL.indexOf('?') == -1)
 			{
 				return sURL+'?'+sContext;
-			}
+			}				
+			return sURL+'&'+sContext;
 		}
-		return sURL+'&'+sContext;
+		return sURL;
 	}
-
+	
 	function GoBack(sFormId)
 	{
 		var form = $('#'+sFormId);

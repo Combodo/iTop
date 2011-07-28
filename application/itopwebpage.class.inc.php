@@ -398,8 +398,9 @@ EOF
 				{
 					return sURL+'?'+sContext;
 				}				
+				return sURL+'&'+sContext;
 			}
-			return sURL+'&'+sContext;
+			return sURL;
 		}
 		
 		var oUserPreferences = $sUserPrefs;
