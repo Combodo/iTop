@@ -44,7 +44,7 @@ class SLAComputation
 			throw new CoreException("Could not select this module, '$sModuleName' in not a valid class name");
 			return;
 		}
-		if (!is_subclass_of($sClassName, 'SLAComputationAddOnAPI'))
+		if (($sClassName != 'SLAComputationAddOnAPI') && !is_subclass_of($sClassName, 'SLAComputationAddOnAPI'))
 		{
 			throw new CoreException("Could not select this module, the class '$sClassName' is not derived from SLAComputationAddOnAPI (parent class:".get_parent_class($sClassName)." )");
 			return;
