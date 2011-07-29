@@ -53,9 +53,47 @@ try
 				if ($sValue != null)
 				{
 					$sAttCode = call_user_func($aCallSpec, $sParamName); // Returns null when there is no mapping for this parameter
-					if ($sAttCode != null && MetaModel::IsValidAttCode($sObjClass, $sAttCode))
+					if ( ($sAttCode != null) && MetaModel::IsValidAttCode($sObjClass, $sAttCode))
 					{
-						$oFilter->AddCondition($sAttCode, $sValue);
+						$oFilter  = new DBObjectSearch($sObjClass);
+
+						// Check if the condition points to a hierarchical key
+						if ($sAttCode == 'id')
+						{
+							// Filtering on the objects themselves
+							$sHierarchicalKeyCode = MetaModel::IsHierarchicalClass($sObjClass);
+							
+							if ($sHierarchicalKeyCode !== false)
+							{
+								$oRootFilter = new DBObjectSearch($sObjClass);
+								$oRootFilter->AddCondition($sAttCode, $sValue);
+								$oFilter->AddCondition_PointingTo($oRootFilter, $sHierarchicalKeyCode, TREE_OPERATOR_BELOW); // Use the 'below' operator by default
+								$bConditionAdded = true;
+							}
+						}
+						else
+						{
+							$oAttDef = MetaModel::GetAttributeDef($sObjClass, $sAttCode);
+							$bConditionAdded = false;
+							if ($oAttDef->IsExternalKey())
+							{
+								$sHierarchicalKeyCode = MetaModel::IsHierarchicalClass($oAttDef->GetTargetClass());
+								
+								if ($sHierarchicalKeyCode !== false)
+								{
+									$oRootFilter = new DBObjectSearch($oAttDef->GetTargetClass());
+									$oRootFilter->AddCondition('id', $sValue);
+									$oHKFilter = new DBObjectSearch($oAttDef->GetTargetClass());
+									$oHKFilter->AddCondition_PointingTo($oRootFilter, $sHierarchicalKeyCode, TREE_OPERATOR_BELOW); // Use the 'below' operator by default
+									$oFilter->AddCondition_PointingTo($oHKFilter, $sAttCode);
+									$bConditionAdded = true;
+								}
+							}
+						}
+						if (!$bConditionAdded)
+						{
+							$oFilter->AddCondition($sAttCode, $sValue);
+						}
 					}
 				}
 			}
