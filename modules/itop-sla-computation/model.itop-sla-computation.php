@@ -113,5 +113,5 @@ class SLAComputationAddOnAPI
 		return $oResult;
 	}
 }
-//SLAComputation::SelectModule('SLAComputationAddOnAPI');
+SLAComputation::SelectModule('SLAComputationAddOnAPI');
 ?>
