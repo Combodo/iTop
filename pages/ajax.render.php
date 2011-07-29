@@ -278,7 +278,7 @@ try
 			$oObj = null;
 		}
 		$oWidget = new UIExtKeyWidget($sTargetClass, $sInputId);
-		$oWidget->DisplayHierarchy($oPage, $sFilter, $currValue);
+		$oWidget->DisplayHierarchy($oPage, $sFilter, $currValue, $oObj);
 		break;
 		
 		////////////////////////////////////////////////////

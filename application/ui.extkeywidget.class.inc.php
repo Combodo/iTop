@@ -336,7 +336,7 @@ EOF
 	/**
 	 * Display the hierarchy of the 'target' class
 	 */
-	public function DisplayHierarchy(WebPage $oPage, $sFilter, $currValue)
+	public function DisplayHierarchy(WebPage $oPage, $sFilter, $currValue, $oObj)
 	{
 		$sDialogTitle = addslashes(Dict::Format('UI:HierarchyOf_Class', MetaModel::GetName($this->sTargetClass)));
 		$oPage->add('<div id="dlg_tree_'.$this->iId.'"><div class="wizContainer" style="vertical-align:top;"><div style="overflow:auto;background:#fff;margin-bottom:5px;" id="tree_'.$this->iId.'">');
@@ -348,7 +348,7 @@ EOF
 		try
 		{
 			$oFilter = DBObjectSearch::FromOQL($sFilter);
-			$oSet = new DBObjectSet($oFilter);
+			$oSet = new DBObjectSet($oFilter, array(), array('this' => $oObj));
 		}
 		catch(MissingQueryArgument $e)
 		{
