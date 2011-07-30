@@ -196,6 +196,12 @@ class TestOQLParser extends TestFunction
 			'SELECT B,A FROM A JOIN B ON A.myB = B.id WHERE A.col1 = 2' => true,
 			'SELECT  A, B,C FROM A JOIN B ON A.myB = B.id' => false,
 			'SELECT C FROM A JOIN B ON A.myB = B.id WHERE A.col1 = 2' => false,
+			'SELECT A JOIN B ON A.myB BELOW B.id WHERE A.col1 = 2' => true,
+			'SELECT A JOIN B ON A.myB = B.id JOIN C ON C.parent_id BELOW B.id WHERE A.col1 = 2 AND B.id = 3' => true,
+			'SELECT A JOIN B ON A.myB = B.id JOIN C ON C.parent_id BELOW STRICT B.id WHERE A.col1 = 2 AND B.id = 3' => true,
+			'SELECT A JOIN B ON A.myB = B.id JOIN C ON C.parent_id NOT BELOW B.id WHERE A.col1 = 2 AND B.id = 3' => true,
+			'SELECT A JOIN B ON A.myB = B.id JOIN C ON C.parent_id NOT BELOW STRICT B.id WHERE A.col1 = 2 AND B.id = 3' => true,
+			'SELECT A JOIN B ON A.myB = B.id JOIN C ON C.parent_id = B.id WHERE A.col1 BELOW 2 AND B.id = 3' => false,
 		);
 
 		$iErrors = 0;
@@ -204,7 +210,15 @@ class TestOQLParser extends TestFunction
 		{
 			$sIsOk = $bIsCorrectQuery ? 'good' : 'bad';
 			echo "<h4>Testing query: $sQuery ($sIsOk)</h4>\n";
-			$bRet = $this->TestQuery($sQuery, $bIsCorrectQuery);
+			try
+			{
+				$bRet = $this->TestQuery($sQuery, $bIsCorrectQuery);
+			}
+			catch(Exception $e)
+			{
+				$this->m_aErrors[] = "Exception: ".$e->getMessage();
+				$bRet = false;
+			}
 			if (!$bRet) $iErrors++;
 		}
 		
