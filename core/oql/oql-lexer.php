@@ -580,7 +580,7 @@ class OQLLexerRaw
 
 }
 
-define('UNEXPECTED_INPUT_AT_LINE', 'Unexpected input at line');
+define('UNEXPECTED_INPUT_AT_LINE', 'Unexpected input at line ');
 
 class OQLLexerException extends OQLException
 {
@@ -597,11 +597,11 @@ class OQLLexer extends OQLLexerRaw
 		return max(0, $this->count - strlen($this->value));
 	}
 
-   function yylex()
-   {
-      try
-      {
-      	return parent::yylex();
+	function yylex()
+	{
+   		try
+		{
+      		return parent::yylex();
 		}
 		catch (Exception $e)
 		{
