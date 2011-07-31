@@ -55,7 +55,7 @@ class Organization extends cmdbAbstractObject
 
 		MetaModel::Init_SetZListItems('details', array('name', 'code', 'status', 'parent_id'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'code', 'status'));
-		MetaModel::Init_SetZListItems('standard_search', array('name', 'code', 'status'));
+		MetaModel::Init_SetZListItems('standard_search', array('name', 'code', 'status', 'parent_id'));
 		MetaModel::Init_SetZListItems('list', array('status', 'parent_id'));
 	}
 }
@@ -95,7 +95,7 @@ class Location extends cmdbAbstractObject
 
 		MetaModel::Init_SetZListItems('details', array('name', 'status', 'org_id', 'address', 'postal_code', 'city', 'country', 'parent_id', 'contact_list', 'infra_list'));
 		MetaModel::Init_SetZListItems('advanced_search', array('name', 'status', 'org_id', 'country'));
-		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'org_id', 'city', 'country'));
+		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'org_id', 'city', 'country', 'parent_id'));
 		MetaModel::Init_SetZListItems('list', array('status', 'org_id', 'city', 'country'));
 	}
 }
