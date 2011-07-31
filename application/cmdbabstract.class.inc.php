@@ -241,7 +241,14 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 			// Display mode
 			if (!$oAttDef->IsLinkset()) continue; // Process only linkset attributes...
 			
-			$oPage->SetCurrentTab($oAttDef->GetLabel());
+			$oSet = new DBObjectSet($this->Get($sAttCode)->GetFilter());
+			$iCount = $oSet->Count();
+			$sCount = '';
+			if ($iCount != 0)
+			{
+				$sCount = " ($iCount)";
+			}
+			$oPage->SetCurrentTab($oAttDef->GetLabel().$sCount);
 			if ($bEditMode)
 			{
 				$iFlags = $this->GetAttributeFlags($sAttCode);
@@ -1676,7 +1683,7 @@ EOF
 										if ($iFlags & (OPT_ATT_READONLY|OPT_ATT_SLAVE))
 										{
 
-											// Check if the attribute is not read-only becuase of a synchro...
+											// Check if the attribute is not read-only because of a synchro...
 											$aReasons = array();
 											$sSynchroIcon = '';
 											if ($iFlags & OPT_ATT_SLAVE)
