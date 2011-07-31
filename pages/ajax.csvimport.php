@@ -374,37 +374,34 @@ EOF
 
 		case 'get_csv_template':
 		$sClassName = utils::ReadParam('class_name');
-		$oSearch = new DBObjectSearch($sClassName);
-		$oSearch->AddCondition('id', 0, '='); // Make sure we create an empty set
-		$oSet = new CMDBObjectSet($oSearch);
-		$sResult = cmdbAbstractObject::GetSetAsCSV($oSet, array('showMandatoryFields' => true));
-		//$aCSV = explode("\n", $sCSV);
-		// If there are more than one line, let's assume that the first line is a comment and skip it.
-		//if (count($aCSV) > 1)
-		//{
-		//	$sResult = $aCSV[0];
-		//}
-		//else
-		//{
-		//	$sResult = $sCSV;
-		//}
-
-		$sClassDisplayName = MetaModel::GetName($sClassName);
-		$sDisposition = utils::ReadParam('disposition', 'inline');
-		if ($sDisposition == 'attachment')
+		if (MetaModel::IsValidClass($sClassName))
 		{
-			$oPage = new CSVPage("");
-			$oPage->add_header("Content-type: text/csv; charset=utf-8");
-			$oPage->add_header("Content-disposition: attachment; filename=\"{$sClassDisplayName}.csv\"");
-			$oPage->no_cache();		
-			$oPage->add($sResult);	
+			$oSearch = new DBObjectSearch($sClassName);
+			$oSearch->AddCondition('id', 0, '='); // Make sure we create an empty set
+			$oSet = new CMDBObjectSet($oSearch);
+			$sResult = cmdbAbstractObject::GetSetAsCSV($oSet, array('showMandatoryFields' => true));
+	
+			$sClassDisplayName = MetaModel::GetName($sClassName);
+			$sDisposition = utils::ReadParam('disposition', 'inline');
+			if ($sDisposition == 'attachment')
+			{
+				$oPage = new CSVPage("");
+				$oPage->add_header("Content-type: text/csv; charset=utf-8");
+				$oPage->add_header("Content-disposition: attachment; filename=\"{$sClassDisplayName}.csv\"");
+				$oPage->no_cache();		
+				$oPage->add($sResult);	
+			}
+			else
+			{
+				$oPage = new ajax_page("");
+				$oPage->no_cache();
+				$oPage->add('<p style="text-align:center"><a style="text-decoration:none" href="'.utils::GetAbsoluteUrlAppRoot().'pages/ajax.csvimport.php?operation=get_csv_template&disposition=attachment&class_name='.$sClassName.'"><img border="0" src="../images/csv.png"><br/>'.$sClassDisplayName.'.csv</a></p>');		
+				$oPage->add('<p><textarea rows="5" cols="100">'.$sResult.'</textarea></p>');
+			}		
 		}
 		else
 		{
 			$oPage = new ajax_page("");
-			$oPage->no_cache();
-			$oPage->add('<p style="text-align:center"><a style="text-decoration:none" href="'.utils::GetAbsoluteUrlAppRoot().'pages/ajax.csvimport.php?operation=get_csv_template&disposition=attachment&class_name='.$sClassName.'"><img border="0" src="../images/csv.png"><br/>'.$sClassDisplayName.'.csv</a></p>');		
-			$oPage->add('<p><textarea rows="5" cols="100">'.$sResult.'</textarea></p>');
 		}
 		break;
 	}
