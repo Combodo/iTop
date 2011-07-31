@@ -422,6 +422,12 @@ try
 	foreach($aRawFieldList as $iFieldId => $sFieldName)
 	{
 		$sFieldName = trim($sFieldName);
+		$aMatches = array();
+		if (preg_match('/^(.+)\*$/', $sFieldName, $aMatches))
+		{
+			// Ignore any trailing "star" (*) that simply indicates a mandatory field
+			$sFieldName = $aMatches[1];
+		}
 		if (array_key_exists(strtolower($sFieldName), $aFriendlyToInternalAttCode))
 		{
 			$aFieldList[$iFieldId] = $aFriendlyToInternalAttCode[strtolower($sFieldName)];
@@ -437,11 +443,6 @@ try
 	foreach($aFieldList as $iFieldId => $sFieldName)
 	{
 		$aMatches = array();
-		if (preg_match('/^(.+)\*$/', $sFieldName, $aMatches))
-		{
-			// Ignore any trailing "star" (*) that simply indicates a mandatory field
-			$sFieldName = $aMatches[1];
-		}
 		if (preg_match('/^(.+)->(.+)$/', trim($sFieldName), $aMatches))
 		{
 			// The column has been specified as "extkey->attcode"
