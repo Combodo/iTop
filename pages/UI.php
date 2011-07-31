@@ -1087,22 +1087,7 @@ EOF
 				$oObjToClone = MetaModel::NewObject($sRealClass);
 
 				// 1st - set context values
-				$aContext = $oAppContext->GetAsHash();
-				foreach($oAppContext->GetNames() as $key)
-				{
-					if (MetaModel::IsValidAttCode($sRealClass, $key))
-					{
-						$oAttDef = MetaModel::GetAttributeDef($sRealClass, $key);
-						if ($oAttDef->IsWritable())
-						{
-							$value = $oAppContext->GetCurrentValue($key, null);
-							if (!is_null($value))
-							{
-								$oObjToClone->Set($key, $value);
-							}
-						}
-					}
-				}
+				$oAppContext->InitObjectFromContext($oObjToClone);
 
 				// 2nd - set values from the page argument 'default'
 				$oObjToClone->UpdateObjectFromArg('default');

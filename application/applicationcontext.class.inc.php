@@ -204,6 +204,35 @@ class ApplicationContext
 		}
 	}
 
+	/**
+	 * Initializes the given object with the default values provided by the context
+	 */
+	public function InitObjectFromContext(DBObject &$oObj)
+	{
+		$sClass = get_class($oObj);
+		foreach($this->GetNames() as $key)
+		{
+			$aCallSpec = array($sClass, 'MapContextParam');
+			if (is_callable($aCallSpec))
+			{
+				$sAttCode = call_user_func($aCallSpec, $key); // Returns null when there is no mapping for this parameter					
+			}
+
+			if (MetaModel::IsValidAttCode($sClass, $sAttCode))
+			{
+				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+				if ($oAttDef->IsWritable())
+				{
+					$value = $this->GetCurrentValue($key, null);
+					if (!is_null($value))
+					{
+						$oObj->Set($sAttCode, $value);
+					}
+				}
+			}
+		}		
+	}
+	
 	static $m_sUrlMakerClass = null;
 
 	/**
