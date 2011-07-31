@@ -106,7 +106,7 @@ class ProviderContract extends Contract
 		}
 		else
 		{
-			return $sContextParam;
+			return parent::MapContextParam($sContextParam); // Ask the parent what to do with other parameters...
 		}
 	}
 }
