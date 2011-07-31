@@ -504,5 +504,16 @@ class utils
 			}			
 		}
 	 }
+	 
+	 static function DebugBacktrace($iLimit = 5)
+	 {
+		$aFullTrace = debug_backtrace();
+		$aLightTrace = array();
+		for($i=1; ($i<=$iLimit && $i < count($aFullTrace)); $i++) // Skip the last function call... which is the call to this function !
+		{
+			$aLightTrace[$i] = $aFullTrace[$i]['function'].'(), called from line '.$aFullTrace[$i]['line'].' in '.$aFullTrace[$i]['file'];
+		}
+		echo "<p><pre>".print_r($aLightTrace, true)."</pre></p>\n";
+	 }
 }
 ?>
