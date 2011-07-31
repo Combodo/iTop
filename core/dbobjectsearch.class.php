@@ -39,6 +39,7 @@ class DBObjectSearch
 	private $m_aPointingTo;
 	private $m_aReferencedBy;
 	private $m_aRelatedTo;
+	private $m_bDataFiltered;
 
 	// By default, some information may be hidden to the current user
 	// But it may happen that we need to disable that feature
@@ -59,10 +60,13 @@ class DBObjectSearch
 		$this->m_aPointingTo = array();
 		$this->m_aReferencedBy = array();
 		$this->m_aRelatedTo = array();
+		$this->m_bDataFiltered = false;
 	}
 
 	public function AllowAllData() {$this->m_bAllowAllData = true;}
 	public function IsAllDataAllowed() {return $this->m_bAllowAllData;}
+	public function IsDataFiltered() {return $this->m_bDataFiltered; }
+	public function SetDataFiltered() {$this->m_bDataFiltered = true;}
 
 	public function GetClassName($sAlias) {return $this->m_aClasses[$sAlias];}
 	public function GetJoinedClasses() {return $this->m_aClasses;}
@@ -247,10 +251,11 @@ class DBObjectSearch
 
 	protected function TransferConditionExpression($oFilter, $aTranslation)
 	{
-		$oTranslated = $oFilter->GetCriteria()->Translate($aTranslation, false, false /* leave unresolved fields */);
 //echo "<p>TransferConditionExpression:<br/>";
-//echo "Adding Conditions:<br/><pre>".print_r($oTranslated, true)."</pre>\n";
+//echo "Adding Conditions:<br/><pre>oFilter:\n".print_r($oFilter, true)."\naTranslation:\n".print_r($aTranslation, true)."</pre>\n";
 //echo "</p>";
+		$oTranslated = $oFilter->GetCriteria()->Translate($aTranslation, false, false /* leave unresolved fields */);
+//echo "Adding Conditions (translated):<br/><pre>".print_r($oTranslated, true)."</pre>\n";
 		$this->AddConditionExpression($oTranslated);
 		// #@# what about collisions in parameter names ???
 		$this->m_aParams = array_merge($this->m_aParams, $oFilter->m_aParams);
@@ -441,32 +446,38 @@ class DBObjectSearch
 		);
 	}
 	
-	protected function AddToNameSpace(&$aClassAliases, &$aAliasTranslation)
+	protected function AddToNameSpace(&$aClassAliases, &$aAliasTranslation, $bTranslateMainAlias = true)
 	{
-		$sOrigAlias = $this->GetClassAlias();
-		if (array_key_exists($sOrigAlias, $aClassAliases))
+		if ($bTranslateMainAlias)
 		{
-			$sNewAlias = MetaModel::GenerateUniqueAlias($aClassAliases, $sOrigAlias, $this->GetClass());
-//echo "<h1>Generating a new alias for $sOrigAlias (already used). It is now: $sNewAlias</h1>\n";
-			$this->m_aSelectedClasses[$sNewAlias] = $this->GetClass();
-			unset($this->m_aSelectedClasses[$sOrigAlias]);
-
-			$this->m_aClasses[$sNewAlias] = $this->GetClass();
-			unset($this->m_aClasses[$sOrigAlias]);
-
-			// Translate the condition expression with the new alias
-			$aAliasTranslation[$sOrigAlias]['*'] = $sNewAlias;
+			$sOrigAlias = $this->GetClassAlias();
+			if (array_key_exists($sOrigAlias, $aClassAliases))
+			{
+				$sNewAlias = MetaModel::GenerateUniqueAlias($aClassAliases, $sOrigAlias, $this->GetClass());
+//echo "<p>Generating a new alias for $sOrigAlias (already used). It is now: $sNewAlias</p>\n";
+				$this->m_aSelectedClasses[$sNewAlias] = $this->GetClass();
+				unset($this->m_aSelectedClasses[$sOrigAlias]);
+	
+				$this->m_aClasses[$sNewAlias] = $this->GetClass();
+				unset($this->m_aClasses[$sOrigAlias]);
+	
+				// Translate the condition expression with the new alias
+				$aAliasTranslation[$sOrigAlias]['*'] = $sNewAlias;
+			}
+	
+//echo "<p>Adding the alias ".$this->GetClass()." as ".$this->GetClassAlias()."</p>\n";
+			// add the alias into the filter aliases list
+			$aClassAliases[$this->GetClassAlias()] = $this->GetClass();
 		}
-
-//echo "<h1>Adding the alias for ".$this->GetClass().". as ".$this->GetClassAlias()."</h1>\n";
-		// add the alias into the filter aliases list
-		$aClassAliases[$this->GetClassAlias()] = $this->GetClass();
 		
 		foreach($this->m_aPointingTo as $sExtKeyAttCode=>$aPointingTo)
 		{
-			foreach($aPointingTo as $iOperatorCode => $oFilter)
+			foreach($aPointingTo as $iOperatorCode => $aFilter)
 			{
-				$oFilter->AddToNameSpace($aClassAliases, $aAliasTranslation);
+				foreach($aFilter as $sAlias => $oFilter)
+				{
+					$oFilter->AddToNameSpace($aClassAliases, $aAliasTranslation);
+				}
 			}
 		}
 
@@ -489,7 +500,7 @@ class DBObjectSearch
 
 	protected function AddCondition_PointingTo_InNameSpace(DBObjectSearch $oFilter, $sExtKeyAttCode, &$aClassAliases, &$aAliasTranslation, $iOperatorCode)
 	{
-//echo "<p style=\"color:green\">Calling: AddCondition_PointingTo_InNameSpace([".implode(',', $aClassAliases)."], [".implode(',', $aAliasTranslation)."]);</p>";
+//echo "<p style=\"color:green\">Calling: AddCondition_PointingTo_InNameSpace([<pre>".print_r($aClassAliases, true)."</pre></br>], [<pre>".print_r($aAliasTranslation, true)."</pre>]);</p>";
 		if (!MetaModel::IsValidKeyAttCode($this->GetClass(), $sExtKeyAttCode))
 		{
 			throw new CoreWarning("The attribute code '$sExtKeyAttCode' is not an external key of the class '{$this->GetClass()}' - the condition will be ignored");
@@ -504,31 +515,36 @@ class DBObjectSearch
 			throw new CoreException("The specified tree operator $isOperatorCode is not applicable to the key '{$this->GetClass()}::$sExtKeyAttCode', which is not a HierarchicalKey");
 		}
 
+		$bSamePointingTo = false;
 		if (array_key_exists($sExtKeyAttCode, $this->m_aPointingTo))
 		{
 			if (array_key_exists($iOperatorCode, $this->m_aPointingTo[$sExtKeyAttCode]))
 			{
-				// Same ext key and same operator, merge the filters together
-				$this->m_aPointingTo[$sExtKeyAttCode][$iOperatorCode]->MergeWith_InNamespace($oFilter, $aClassAliases, $aAliasTranslation);
+				if (array_key_exists($oFilter->GetClassAlias(), $this->m_aPointingTo[$sExtKeyAttCode][$iOperatorCode]))
+				{
+//echo "<p style=\"color:red\">[".__LINE__."]this->m_aPointingTo[$sExtKeyAttCode][$iOperatorCode][".$oFilter->GetFirstJoinedClassAlias()."]:<pre>\n".print_r($this->m_aPointingTo[$sExtKeyAttCode][$iOperatorCode], true)."</pre>;</p>";
+					$bSamePointingTo = true;
+				}
 			}
-			else
-			{
-//echo "<p style=\"color:red\">Calling: AddToNameSpace([".implode(',', $aClassAliases)."], [".implode(',', $aAliasTranslation)."]);</p>";
-				$oFilter->AddToNamespace($aClassAliases, $aAliasTranslation);
-	
-				$this->m_aPointingTo[$sExtKeyAttCode][$iOperatorCode] = $oFilter;
-			}
+		}
+
+//echo "<p style=\"color:red\">[".__LINE__."]Calling: AddToNameSpace([".implode(',', $aClassAliases)."], [".implode(',', $aAliasTranslation)."]);</p>";
+		if ($bSamePointingTo)
+		{
+//echo "<p style=\"color:red\">[".__LINE__."]AddPointingTo: Merging filters for [$sExtKeyAttCode][$iOperatorCode][".$oFilter->GetClassAlias()."]</p>";
+			// Same ext key, alias and same operator, merge the filters together
+//			$sAlias = $oFilter->GetClassAlias();
+//echo "<p style=\"color:red\">[".__LINE__."]before: AddToNameSpace(aClassAliases[<pre>\n".print_r($aClassAliases, true)."</pre>], aAliasTranslation[<pre>\n".print_r($aAliasTranslation, true)."</pre>]);</p>";
+			$oFilter->AddToNamespace($aClassAliases, $aAliasTranslation, true /* Don't translate the main alias */);
+//echo "<p style=\"color:blue\">[".__LINE__."]after: AddToNameSpace(aClassAliases[<pre>\n".print_r($aClassAliases, true)."</pre>], aAliasTranslation[<pre>\n".print_r($aAliasTranslation, true)."</pre>]);</p>";
+//			$this->m_aPointingTo[$sExtKeyAttCode][$iOperatorCode][$sAlias]->MergeWith($oFilter, $aClassAliases, $aAliasTranslation);
+			$this->m_aPointingTo[$sExtKeyAttCode][$iOperatorCode][$oFilter->GetClassAlias()] = $oFilter;
 		}
 		else
 		{
-//echo "<p style=\"color:red\">Calling: AddToNameSpace([".implode(',', $aClassAliases)."], [".implode(',', $aAliasTranslation)."]);</p>";
+//echo "<p style=\"color:red\">[".__LINE__."]AddPointingTo: Adding a new PointingTo filter for [$sExtKeyAttCode][$iOperatorCode][".$oFilter->GetClassAlias()."]</p>";
 			$oFilter->AddToNamespace($aClassAliases, $aAliasTranslation);
-
-			// #@# The condition expression found in that filter should not be used - could be another kind of structure like a join spec tree !!!!
-			// $oNewFilter = clone $oFilter;
-			// $oNewFilter->ResetCondition();
-
-			$this->m_aPointingTo[$sExtKeyAttCode][$iOperatorCode] = $oFilter;
+			$this->m_aPointingTo[$sExtKeyAttCode][$iOperatorCode][$oFilter->GetClassAlias()] = $oFilter;
 		}
 	}
 
@@ -607,9 +623,12 @@ class DBObjectSearch
 
 		foreach($oFilter->m_aPointingTo as $sExtKeyAttCode=>$aPointingTo)
 		{
-			foreach($aPointingTo as $iOperatorCode => $oExtFilter)
+			foreach($aPointingTo as $iOperatorCode => $aFilter)
 			{
-				$this->AddCondition_PointingTo_InNamespace($oExtFilter, $sExtKeyAttCode, $aClassAliases, $aAliasTranslation, $iOperatorCode);
+				foreach($aFilter as $sAlias => $oExtFilter)
+				{
+					$this->AddCondition_PointingTo_InNamespace($oExtFilter, $sExtKeyAttCode, $aClassAliases, $aAliasTranslation, $iOperatorCode);
+				}
 			}
 		}
 		foreach($oFilter->m_aReferencedBy as $sForeignClass => $aReferences)
@@ -797,33 +816,36 @@ class DBObjectSearch
 		$sRes = '';
 		foreach($this->m_aPointingTo as $sExtKey => $aPointingTo)
 		{
-			foreach($aPointingTo as $iOperatorCode => $oFilter)
+			foreach($aPointingTo as $iOperatorCode => $aFilter)
 			{
-				switch($iOperatorCode)
+				foreach($aFilter as $sAlias => $oFilter)
 				{
-					case TREE_OPERATOR_EQUALS:
-					$sOperator = ' = ';
-					break;
-					
-					case TREE_OPERATOR_BELOW:
-					$sOperator = ' BELOW ';
-					break;
-					
-					case TREE_OPERATOR_BELOW_STRICT:
-					$sOperator = ' BELOW STRICT ';
-					break;
-					
-					case TREE_OPERATOR_NOT_BELOW:
-					$sOperator = ' NOT BELOW ';
-					break;
-					
-					case TREE_OPERATOR_NOT_BELOW_STRICT:
-					$sOperator = ' NOT BELOW STRICT ';
-					break;
-					
+					switch($iOperatorCode)
+					{
+						case TREE_OPERATOR_EQUALS:
+						$sOperator = ' = ';
+						break;
+						
+						case TREE_OPERATOR_BELOW:
+						$sOperator = ' BELOW ';
+						break;
+						
+						case TREE_OPERATOR_BELOW_STRICT:
+						$sOperator = ' BELOW STRICT ';
+						break;
+						
+						case TREE_OPERATOR_NOT_BELOW:
+						$sOperator = ' NOT BELOW ';
+						break;
+						
+						case TREE_OPERATOR_NOT_BELOW_STRICT:
+						$sOperator = ' NOT BELOW STRICT ';
+						break;
+						
+					}
+					$sRes .= ' JOIN '.$oFilter->GetClass().' AS '.$oFilter->GetClassAlias().' ON '.$this->GetClassAlias().'.'.$sExtKey.$sOperator.$oFilter->GetClassAlias().'.id';
+					$sRes .= $oFilter->ToOQL_Joins();				
 				}
-				$sRes .= ' JOIN '.$oFilter->GetClass().' AS '.$oFilter->GetClassAlias().' ON '.$this->GetClassAlias().'.'.$sExtKey.$sOperator.$oFilter->GetClassAlias().'.id';
-				$sRes .= $oFilter->ToOQL_Joins();				
 			}
 		}
 		foreach($this->m_aReferencedBy as $sForeignClass=>$aReferences)

@@ -1811,7 +1811,7 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 	{
 		// Hide objects that are not visible to the current user
 		//
-		if (!$oFilter->IsAllDataAllowed())
+		if (!$oFilter->IsAllDataAllowed() && !$oFilter->IsDataFiltered())
 		{
 			$oVisibleObjects = UserRights::GetSelectFilter($oFilter->GetClass());
 			if ($oVisibleObjects === false)
@@ -1822,6 +1822,7 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 			if (is_object($oVisibleObjects))
 			{
 				$oFilter->MergeWith($oVisibleObjects);
+				$oFilter->SetDataFiltered();
 			}
 			else
 			{
@@ -2423,7 +2424,7 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 					$sKeyClassAlias = self::GenerateUniqueAlias($aClassAliases, $sKeyClass.'_'.$sKeyAttCode, $sKeyClass);
 					$oExtFilter = new DBObjectSearch($sKeyClass, $sKeyClassAlias);
 
-					$aAllPointingTo[$sKeyAttCode][TREE_OPERATOR_EQUALS] = $oExtFilter;
+					$aAllPointingTo[$sKeyAttCode][TREE_OPERATOR_EQUALS][$sKeyClassAlias] = $oExtFilter;
 				}
 			}
 		}
@@ -2431,94 +2432,97 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 				
 		foreach ($aAllPointingTo as $sKeyAttCode => $aPointingTo)
 		{
-			foreach($aPointingTo as $iOperatorCode => $oExtFilter)
+			foreach($aPointingTo as $iOperatorCode => $aFilter)
 			{
-				if (!MetaModel::IsValidAttCode($sTableClass, $sKeyAttCode)) continue; // Not defined in the class, skip it
-				// The aliases should not conflict because normalization occured while building the filter
-				$oKeyAttDef = self::GetAttributeDef($sTableClass, $sKeyAttCode);
-				$sKeyClass =  $oExtFilter->GetFirstJoinedClass();
-				$sKeyClassAlias = $oExtFilter->GetFirstJoinedClassAlias();
+				foreach($aFilter as $sAlias => $oExtFilter)
+				{
+					if (!MetaModel::IsValidAttCode($sTableClass, $sKeyAttCode)) continue; // Not defined in the class, skip it
+					// The aliases should not conflict because normalization occured while building the filter
+					$oKeyAttDef = self::GetAttributeDef($sTableClass, $sKeyAttCode);
+					$sKeyClass =  $oExtFilter->GetFirstJoinedClass();
+					$sKeyClassAlias = $oExtFilter->GetFirstJoinedClassAlias();
 
 //echo "MAKEQUERY-$sTableClass::$sKeyAttCode Foreach PointingTo($iOperatorCode) <span style=\"color:red\">$sKeyClass (alias:$sKeyClassAlias)</span><br/>\n";
 				
-				// Note: there is no search condition in $oExtFilter, because normalization did merge the condition onto the top of the filter tree 
+					// Note: there is no search condition in $oExtFilter, because normalization did merge the condition onto the top of the filter tree 
 
-				if ($iOperatorCode == TREE_OPERATOR_EQUALS)
-				{
-					// Specify expected attributes for the target class query
-					// ... and use the current alias !
-					$aTranslateNow = array(); // Translation for external fields - must be performed before the join is done (recursion...)
-//echo "MAKEQUERY-array_key_exists($sTableClass, \$aExtKeys)<br/>\n";
-					if (array_key_exists($sTableClass, $aExtKeys) && array_key_exists($sKeyAttCode, $aExtKeys[$sTableClass]))
+					if ($iOperatorCode == TREE_OPERATOR_EQUALS)
 					{
-						foreach($aExtKeys[$sTableClass][$sKeyAttCode] as $sAttCode => $oAtt)
+						// Specify expected attributes for the target class query
+						// ... and use the current alias !
+						$aTranslateNow = array(); // Translation for external fields - must be performed before the join is done (recursion...)
+//echo "MAKEQUERY-array_key_exists($sTableClass, \$aExtKeys)<br/>\n";
+						if (array_key_exists($sTableClass, $aExtKeys) && array_key_exists($sKeyAttCode, $aExtKeys[$sTableClass]))
 						{
+							foreach($aExtKeys[$sTableClass][$sKeyAttCode] as $sAttCode => $oAtt)
+							{
 //echo "MAKEQUERY aExtKeys[$sTableClass][$sKeyAttCode] => $sAttCode-oAtt: <pre>".print_r($oAtt, true)."</pre><br/>\n";
-							if ($oAtt instanceof AttributeFriendlyName)
-							{
-								// Note: for a given ext key, there is one single attribute "friendly name"
-								$aTranslateNow[$sTargetAlias][$sAttCode] = new FieldExpression('friendlyname', $sKeyClassAlias);
-//echo "<p><b>aTranslateNow[$sTargetAlias][$sAttCode] = new FieldExpression('friendlyname', $sKeyClassAlias);</b></p>\n";
-							}
-							else
-							{
-								$sExtAttCode = $oAtt->GetExtAttCode();
-								// Translate mainclass.extfield => remoteclassalias.remotefieldcode
-								$oRemoteAttDef = self::GetAttributeDef($sKeyClass, $sExtAttCode);
-								foreach ($oRemoteAttDef->GetSQLExpressions() as $sColID => $sRemoteAttExpr)
+								if ($oAtt instanceof AttributeFriendlyName)
 								{
-									$aTranslateNow[$sTargetAlias][$sAttCode.$sColId] = new FieldExpression($sExtAttCode, $sKeyClassAlias);
-//echo "<p><b>aTranslateNow[$sTargetAlias][$sAttCode.$sColId] = new FieldExpression($sExtAttCode, $sKeyClassAlias);</b></p>\n";
+									// Note: for a given ext key, there is one single attribute "friendly name"
+									$aTranslateNow[$sTargetAlias][$sAttCode] = new FieldExpression('friendlyname', $sKeyClassAlias);
+//echo "<p><b>aTranslateNow[$sTargetAlias][$sAttCode] = new FieldExpression('friendlyname', $sKeyClassAlias);</b></p>\n";
 								}
+								else
+								{
+									$sExtAttCode = $oAtt->GetExtAttCode();
+									// Translate mainclass.extfield => remoteclassalias.remotefieldcode
+									$oRemoteAttDef = self::GetAttributeDef($sKeyClass, $sExtAttCode);
+									foreach ($oRemoteAttDef->GetSQLExpressions() as $sColID => $sRemoteAttExpr)
+									{
+										$aTranslateNow[$sTargetAlias][$sAttCode.$sColId] = new FieldExpression($sExtAttCode, $sKeyClassAlias);
+//echo "<p><b>aTranslateNow[$sTargetAlias][$sAttCode.$sColId] = new FieldExpression($sExtAttCode, $sKeyClassAlias);</b></p>\n";
+									}
 //echo "<p><b>ExtAttr2: $sTargetAlias.$sAttCode to $sKeyClassAlias.$sRemoteAttExpr (class: $sKeyClass)</b></p>\n";
+								}
 							}
-						}
-						// Translate prior to recursing
-						//
+							// Translate prior to recursing
+							//
 //echo "<p>oQBExpr ".__LINE__.": <pre>\n".print_r($oQBExpr, true)."\n".print_r($aTranslateNow, true)."</pre></p>\n";
-						$oQBExpr->Translate($aTranslateNow, false);
+							$oQBExpr->Translate($aTranslateNow, false);
 //echo "<p>oQBExpr ".__LINE__.": <pre>\n".print_r($oQBExpr, true)."</pre></p>\n";
 		
 //echo "<p>External key $sKeyAttCode (class: $sKeyClass), call MakeQuery()/p>\n";
-						self::DbgTrace("External key $sKeyAttCode (class: $sKeyClass), call MakeQuery()");
-						$oQBExpr->PushJoinField(new FieldExpression('id', $sKeyClassAlias));
-		
+							self::DbgTrace("External key $sKeyAttCode (class: $sKeyClass), call MakeQuery()");
+							$oQBExpr->PushJoinField(new FieldExpression('id', $sKeyClassAlias));
+			
 //echo "<p>Recursive MakeQuery ".__LINE__.": <pre>\n".print_r($aSelectedClasses, true)."</pre></p>\n";
-						$oSelectExtKey = self::MakeQuery($aSelectedClasses, $oQBExpr, $aClassAliases, $aTableAliases, $oExtFilter);
-		
-						$oJoinExpr = $oQBExpr->PopJoinField();
-						$sExternalKeyTable = $oJoinExpr->GetParent();
-						$sExternalKeyField = $oJoinExpr->GetName();
-		
-						$aCols = $oKeyAttDef->GetSQLExpressions(); // Workaround a PHP bug: sometimes issuing a Notice if invoking current(somefunc())
-						$sLocalKeyField = current($aCols); // get the first column for an external key
-		
-						self::DbgTrace("External key $sKeyAttCode, Join on $sLocalKeyField = $sExternalKeyField");
-						if ($oKeyAttDef->IsNullAllowed())
-						{
-							$oSelectBase->AddLeftJoin($oSelectExtKey, $sLocalKeyField, $sExternalKeyField, $sExternalKeyTable);
-						}
-						else
-						{
-							$oSelectBase->AddInnerJoin($oSelectExtKey, $sLocalKeyField, $sExternalKeyField, $sExternalKeyTable);
+							$oSelectExtKey = self::MakeQuery($aSelectedClasses, $oQBExpr, $aClassAliases, $aTableAliases, $oExtFilter);
+			
+							$oJoinExpr = $oQBExpr->PopJoinField();
+							$sExternalKeyTable = $oJoinExpr->GetParent();
+							$sExternalKeyField = $oJoinExpr->GetName();
+			
+							$aCols = $oKeyAttDef->GetSQLExpressions(); // Workaround a PHP bug: sometimes issuing a Notice if invoking current(somefunc())
+							$sLocalKeyField = current($aCols); // get the first column for an external key
+			
+							self::DbgTrace("External key $sKeyAttCode, Join on $sLocalKeyField = $sExternalKeyField");
+							if ($oKeyAttDef->IsNullAllowed())
+							{
+								$oSelectBase->AddLeftJoin($oSelectExtKey, $sLocalKeyField, $sExternalKeyField, $sExternalKeyTable);
+							}
+							else
+							{
+								$oSelectBase->AddInnerJoin($oSelectExtKey, $sLocalKeyField, $sExternalKeyField, $sExternalKeyTable);
+							}
 						}
 					}
-				}
-				else
-				{
-					$oQBExpr->PushJoinField(new FieldExpression($sKeyAttCode, $sKeyClassAlias));
-					$oSelectExtKey = self::MakeQuery($aSelectedClasses, $oQBExpr, $aClassAliases, $aTableAliases, $oExtFilter);
-					$oJoinExpr = $oQBExpr->PopJoinField();
+					else
+					{
+						$oQBExpr->PushJoinField(new FieldExpression($sKeyAttCode, $sKeyClassAlias));
+						$oSelectExtKey = self::MakeQuery($aSelectedClasses, $oQBExpr, $aClassAliases, $aTableAliases, $oExtFilter);
+						$oJoinExpr = $oQBExpr->PopJoinField();
 //echo "MAKEQUERY-PopJoinField pour $sKeyAttCode, $sKeyClassAlias: <pre>".print_r($oJoinExpr, true)."</pre><br/>\n";
-					$sExternalKeyTable = $oJoinExpr->GetParent();
-					$sExternalKeyField = $oJoinExpr->GetName();
-					$sLeftIndex = $sExternalKeyField.'_left'; // TODO use GetSQLLeft()
-					$sRightIndex = $sExternalKeyField.'_right'; // TODO use GetSQLRight()
-
-					$LocalKeyLeft = $oKeyAttDef->GetSQLLeft();
+						$sExternalKeyTable = $oJoinExpr->GetParent();
+						$sExternalKeyField = $oJoinExpr->GetName();
+						$sLeftIndex = $sExternalKeyField.'_left'; // TODO use GetSQLLeft()
+						$sRightIndex = $sExternalKeyField.'_right'; // TODO use GetSQLRight()
+	
+						$LocalKeyLeft = $oKeyAttDef->GetSQLLeft();
 //echo "MAKEQUERY-LocalKeyLeft pour $sKeyAttCode => $LocalKeyLeft<br/>\n";
-
-					$oSelectBase->AddInnerJoinTree($oSelectExtKey, $LocalKeyLeft, $sLeftIndex, $sRightIndex, $sExternalKeyTable, $iOperatorCode);
+	
+						$oSelectBase->AddInnerJoinTree($oSelectExtKey, $LocalKeyLeft, $sLeftIndex, $sRightIndex, $sExternalKeyTable, $iOperatorCode);
+					}
 				}
 			}
 		}
