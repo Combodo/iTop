@@ -1173,7 +1173,7 @@ class Config
 			
 			fwrite($hFile, "\n/**\n");
 			fwrite($hFile, " *\n");
-			fwrite($hFile, " * Data model modules to be loaded. Names should be specified as absolute paths\n");
+			fwrite($hFile, " * Data model modules to be loaded. Names are specified as relative paths\n");
 			fwrite($hFile, " *\n");
 			fwrite($hFile, " */\n");
 			fwrite($hFile, "\$MyModules = array(\n");
