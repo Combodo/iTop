@@ -610,6 +610,10 @@ class Config
 		{
 			throw new ConfigException("Could not find $sPurpose file", array('file' => $sFileName));
 		}
+		if (!is_readable($sFileName))
+		{
+			throw new ConfigException("Could not read $sPurpose file (the file exists but cannot be read). Do you have the rights to access this file?", array('file' => $sFileName));			
+		}
 	}
 
 	protected function Load($sConfigFile)
