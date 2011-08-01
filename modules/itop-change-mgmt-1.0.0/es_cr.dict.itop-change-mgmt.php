@@ -32,7 +32,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Menu:WaitingApproval' => 'Cambios esperando ser aprovados',
 	'Menu:WaitingApproval+' => '',
 	'Menu:Changes' => 'Cambios abiertos',
-	'Menu:Changes+' => '',
+	'Menu:Changes+' => 'Todos los Cambios abiertos',
 	'Menu:MyChanges' => 'Cambios asignados a mí',
 	'Menu:MyChanges+' => 'Cambios asignados a mí (como Agente)',
 ));

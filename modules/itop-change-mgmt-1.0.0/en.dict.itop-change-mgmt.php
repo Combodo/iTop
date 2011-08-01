@@ -38,7 +38,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:WaitingApproval' => 'Changes awaiting approval',
 	'Menu:WaitingApproval+' => '',
 	'Menu:Changes' => 'Opened changes',
-	'Menu:Changes+' => '',
+	'Menu:Changes+' => 'All Opened Changes',
 	'Menu:MyChanges' => 'Changes assigned to me',
 	'Menu:MyChanges+' => 'Changes assigned to me (as Agent)',
 ));

@@ -110,7 +110,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Menu:WaitingApproval' => 'Modifiche in attesa di approvazione',
 	'Menu:WaitingApproval+' => '',
 	'Menu:Changes' => 'Modifiche aperte',
-	'Menu:Changes+' => '',
+	'Menu:Changes+' => 'Tutte le Modifiche aperte',
 	'Menu:MyChanges' => 'Modifiche assegnate a me',
 	'Menu:MyChanges+' => 'Modifiche assegnato a me (come Agent)',
 	'Class:Change' => 'Cambio',

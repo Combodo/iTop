@@ -38,7 +38,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:WaitingApproval' => 'Changes, die Genehmigung erwarten',
 	'Menu:WaitingApproval+' => '',
 	'Menu:Changes' => 'Offene Changes',
-	'Menu:Changes+' => '',
+	'Menu:Changes+' => 'Alle Offene Changes',
 	'Menu:MyChanges' => 'An mich zugewiesene Changes',
 	'Menu:MyChanges+' => 'An mich zugewiesene Changes (als Bearbeiter)',
 ));
