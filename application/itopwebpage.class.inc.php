@@ -468,7 +468,7 @@ EOF
 			$oAppContext = new ApplicationContext();
 			$iCurrentOrganization = $oAppContext->GetCurrentValue('org_id');
 			$sHtml = '<div id="SiloSelection">';
-			$sHtml .= '<form style="display:inline" action="'.$_SERVER['PHP_SELF'].'">'; //<select class="org_combo" name="c[org_id]" title="Pick an organization" onChange="this.form.submit();">';
+			$sHtml .= '<form style="display:inline" action="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php">'; //<select class="org_combo" name="c[org_id]" title="Pick an organization" onChange="this.form.submit();">';
 /*
 			$sSelected = ($iCurrentOrganization == '') ? ' selected' : '';
 			$sHtml .= '<option value=""'.$sSelected.'>'.Dict::S('UI:AllOrganizations').'</option>';
@@ -495,7 +495,8 @@ EOF
 			$this->add_ready_script("$('#label_org_id').click( function() { $(this).val(''); $('#org_id').val(''); return true; } );\n");
 			// Add other dimensions/context information to this form
 			$oAppContext->Reset('org_id'); // org_id is handled above and we want to be able to change it here !
-			$sHtml .= $oAppContext->GetForForm();		
+			$oAppContext->Reset('menu'); // don't pass the menu, since a menu may expect more parameters
+			$sHtml .= $oAppContext->GetForForm(); // Pass what remains, if anything...
 			$sHtml .= '</form>';
 			$sHtml .= '</div>';
 		}
