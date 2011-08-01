@@ -46,16 +46,12 @@ class XMLDataLoader
 	protected $m_aWarnings;
 	protected $m_iCountCreated;
 
-	public function __construct($sConfigFileName = null)
+	public function __construct()
 	{
 		$this->m_aKeys = array();
 		$this->m_aObjectsCache = array();
 		$this->m_oChange = null;
 		$this->m_sCacheFileName = KEYS_CACHE_FILE;
-		if ($sConfigFileName != null)
-		{
-			$this->InitDataModel($sConfigFileName);
-		}
 		$this->LoadKeysCache();
 		$this->m_bSessionActive = true;
 		$this->m_aErrors = array();
@@ -118,31 +114,7 @@ class XMLDataLoader
 			$this->ClearKeysCache();
 		}
 	}
-	
-	/**
-	 * Initializes the ORM (MetaModel)
-	 */	 	
-	protected function InitDataModel($sConfigFileName)
-	{
-		require_once(APPROOT.'/core/log.class.inc.php');
-		require_once(APPROOT.'/core/kpi.class.inc.php');
-		require_once(APPROOT.'/core/coreexception.class.inc.php');
-		require_once(APPROOT.'/core/dict.class.inc.php');
-		require_once(APPROOT.'/core/attributedef.class.inc.php');
-		require_once(APPROOT.'/core/filterdef.class.inc.php');
-		require_once(APPROOT.'/core/stimulus.class.inc.php');
-		require_once(APPROOT.'/core/MyHelpers.class.inc.php');
-		require_once(APPROOT.'/core/expression.class.inc.php');
-		require_once(APPROOT.'/core/cmdbsource.class.inc.php');
-		require_once(APPROOT.'/core/sqlquery.class.inc.php');
-		require_once(APPROOT.'/core/dbobject.class.php');
-		require_once(APPROOT.'/core/dbobjectsearch.class.php');
-		require_once(APPROOT.'/core/dbobjectset.class.php');
-		require_once(APPROOT.'/application/cmdbabstract.class.inc.php');
-		require_once(APPROOT.'/core/userrights.class.inc.php');
-		MetaModel::Startup($sConfigFileName);
-	}
-	
+			
 	/**
 	 * Stores the keys & object cache in a file
 	 */

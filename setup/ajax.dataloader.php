@@ -210,7 +210,8 @@ try
 			throw(new Exception("File $sFileName does not exist"));
 		}
 		
-		$oDataLoader = new XMLDataLoader(TMP_CONFIG_FILE); // When called by the wizard, the final config is not yet there
+		InitDataModel(TMP_CONFIG_FILE, false);  // When called by the wizard, the final config is not yet there
+		$oDataLoader = new XMLDataLoader(); 
 		if ($sSessionStatus == 'start')
 		{
 			$oChange = MetaModel::NewObject("CMDBChange");

@@ -1203,13 +1203,11 @@ abstract class DBObject
 
 		// Activate any existing trigger 
 		$sClass = get_class($this);
-		$oSet = new DBObjectSet(new DBObjectSearch('TriggerOnObjectCreate'));
+		$sClassList = implode("', '", MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
+		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectCreate AS t WHERE t.target_class IN ('$sClassList')"));
 		while ($oTrigger = $oSet->Fetch())
 		{
-			if (MetaModel::IsParentClass($oTrigger->Get('target_class'), $sClass))
-			{
-				$oTrigger->DoActivate($this->ToArgs('this'));
-			}
+			$oTrigger->DoActivate($this->ToArgs('this'));
 		}
 
 		return $this->m_iKey;
