@@ -224,7 +224,6 @@ abstract class ResponseTicket extends Ticket
 				"attribute_inherit" => null,
 				"attribute_list" => array(
 					'ref' => OPT_ATT_READONLY,
-					'ticket_log' => OPT_ATT_HIDDEN,
 					'caller_id' => OPT_ATT_MANDATORY,
 					'related_change_id' => OPT_ATT_HIDDEN,
 					'description' => OPT_ATT_MUSTCHANGE,
