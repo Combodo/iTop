@@ -53,6 +53,48 @@ class BasicServices extends WebServicesBase
 		return $sVersionString;
 	}
 
+	public function CreateRequestTicket($sLogin, $sPassword, $sTitle, $sDescription, $oCallerDesc, $oCustomerDesc, $oServiceDesc, $oServiceSubcategoryDesc, $sProduct, $oWorkgroupDesc, $aSOAPImpactedCIs, $sImpact, $sUrgency)
+	{
+		if (!UserRights::CheckCredentials($sLogin, $sPassword))
+		{
+			$oRes = new WebServiceResultFailedLogin($sLogin);
+			$this->LogUsage(__FUNCTION__, $oRes);
+
+			return $oRes->ToSoapStructure();
+		}
+		UserRights::Login($sLogin);
+
+		$aCallerDesc = self::SoapStructToExternalKeySearch($oCallerDesc);
+		$aCustomerDesc = self::SoapStructToExternalKeySearch($oCustomerDesc);
+		$aServiceDesc = self::SoapStructToExternalKeySearch($oServiceDesc);
+		$aServiceSubcategoryDesc = self::SoapStructToExternalKeySearch($oServiceSubcategoryDesc);
+		$aWorkgroupDesc = self::SoapStructToExternalKeySearch($oWorkgroupDesc);
+
+		$aImpactedCIs = array();
+		if (is_null($aSOAPImpactedCIs)) $aSOAPImpactedCIs = array();
+		foreach($aSOAPImpactedCIs as $oImpactedCIs)
+		{
+			$aImpactedCIs[] = self::SoapStructToLinkCreationSpec($oImpactedCIs);
+		}
+
+		$oRes = $this->_CreateResponseTicket
+		(
+			'UserRequest',
+			$sTitle,
+			$sDescription,
+			$aCallerDesc,
+			$aCustomerDesc,
+			$aServiceDesc,
+			$aServiceSubcategoryDesc,
+			$sProduct,
+			$aWorkgroupDesc,
+			$aImpactedCIs,
+			$sImpact,
+			$sUrgency
+		);
+		return $oRes->ToSoapStructure();
+	}
+
 	public function CreateIncidentTicket($sLogin, $sPassword, $sTitle, $sDescription, $oCallerDesc, $oCustomerDesc, $oServiceDesc, $oServiceSubcategoryDesc, $sProduct, $oWorkgroupDesc, $aSOAPImpactedCIs, $sImpact, $sUrgency)
 	{
 		if (!UserRights::CheckCredentials($sLogin, $sPassword))
@@ -77,8 +119,9 @@ class BasicServices extends WebServicesBase
 			$aImpactedCIs[] = self::SoapStructToLinkCreationSpec($oImpactedCIs);
 		}
 
-		$oRes = $this->_CreateIncidentTicket
+		$oRes = $this->_CreateResponseTicket
 		(
+			'Incident',
 			$sTitle,
 			$sDescription,
 			$aCallerDesc,
@@ -93,11 +136,12 @@ class BasicServices extends WebServicesBase
 		);
 		return $oRes->ToSoapStructure();
 	}
-
+	
 	/**
-	 * Create an incident ticket from a monitoring system
+	 * Create an ResponseTicket (Incident or UserRequest) from an external system
 	 * Some CIs might be specified (by their name/IP)
 	 *	 
+	 * @param string sClass The class of the ticket: Incident or UserRequest
 	 * @param string sTitle
 	 * @param string sDescription
 	 * @param array aCallerDesc
@@ -112,7 +156,7 @@ class BasicServices extends WebServicesBase
 	 *
 	 * @return WebServiceResult
 	 */
-	protected function _CreateIncidentTicket($sTitle, $sDescription, $aCallerDesc, $aCustomerDesc, $aServiceDesc, $aServiceSubcategoryDesc, $sProduct, $aWorkgroupDesc, $aImpactedCIs, $sImpact, $sUrgency)
+	protected function _CreateResponseTicket($sClass, $sTitle, $sDescription, $aCallerDesc, $aCustomerDesc, $aServiceDesc, $aServiceSubcategoryDesc, $sProduct, $aWorkgroupDesc, $aImpactedCIs, $sImpact, $sUrgency)
 	{
 
 		$oRes = new WebServiceResult();
@@ -124,7 +168,7 @@ class BasicServices extends WebServicesBase
 			$oMyChange->Set("userinfo", "Administrator");
 			$iChangeId = $oMyChange->DBInsertNoReload();
 	
-			$oNewTicket = MetaModel::NewObject('Incident');
+			$oNewTicket = MetaModel::NewObject($sClass);
 			$this->MyObjectSetScalar('title', 'title', $sTitle, $oNewTicket, $oRes);
 			$this->MyObjectSetScalar('description', 'description', $sDescription, $oNewTicket, $oRes);
 

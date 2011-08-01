@@ -143,6 +143,21 @@
 	<message name="GetVersionResponse">
 		<part name="GetVersionReturn" type="xsd:string"/>
 	</message>
+	<message name="CreateRequestTicket">
+		<part name="login" type="xsd:string"/>
+		<part name="password" type="xsd:string"/>
+		<part name="title" type="xsd:string"/>
+		<part name="description" type="xsd:string"/>
+		<part name="caller" type="typens:ExternalKeySearch"/>
+		<part name="customer" type="typens:ExternalKeySearch"/>
+		<part name="service" type="typens:ExternalKeySearch"/>
+		<part name="service_subcategory" type="typens:ExternalKeySearch"/>
+		<part name="product" type="xsd:string"/>
+		<part name="workgroup" type="typens:ExternalKeySearch"/>
+		<part name="impacted_cis" type="typens:ArrayOfLinkCreationSpec"/>
+		<part name="impact" type="xsd:string"/>
+		<part name="urgency" type="xsd:string"/>
+	</message>
 	<message name="CreateIncidentTicket">
 		<part name="login" type="xsd:string"/>
 		<part name="password" type="xsd:string"/>
@@ -161,6 +176,9 @@
 	<message name="CreateIncidentTicketResponse">
 		<part name="CreateIncidentTicketReturn" type="typens:Result"/>
 	</message>
+	<message name="CreateRequestTicketResponse">
+		<part name="CreateRequestTicketReturn" type="typens:Result"/>
+	</message>
 	<message name="SearchObjects">
 		<part name="login" type="xsd:string"/>
 		<part name="password" type="xsd:string"/>
@@ -177,6 +195,13 @@
 			</wsdl:documentation> -->
 			<input message="typens:GetVersion"/>
 			<output message="typens:GetVersionResponse"/>
+		</operation>
+		<operation name="CreateRequestTicket">
+			<!-- <wsdl:documentation>
+				Create a ticket, return information about reconciliation on external keys and the created ticket
+			</wsdl:documentation> -->
+			<input message="typens:CreateRequestTicket"/>
+			<output message="typens:CreateRequestTicketResponse"/>
 		</operation>
 		<operation name="CreateIncidentTicket">
 			<wsdl:documentation>
@@ -196,6 +221,15 @@
 	<binding name="WebServiceBinding" type="typens:WebServicePortType">
 		<soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
 		<operation name="GetVersion">
+			<soap:operation soapAction="urn:WebServiceAction"/>
+			<input>
+				<soap:body namespace="urn:ITop" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body namespace="urn:ITop" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		<operation name="CreateRequestTicket">
 			<soap:operation soapAction="urn:WebServiceAction"/>
 			<input>
 				<soap:body namespace="urn:ITop" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
