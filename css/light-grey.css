@@ -1062,16 +1062,20 @@ table.pagination tr td {
 	margin-top: 0;
 	margin-bottom: 0;
 }
-.pager td a {
+.pager td span {
 	min-width: 20px;
 	display:inline-block;
 	text-align: center;
+	cursor: pointer;
 }
 
-.pager td a.curr_page {
+.pager td span.curr_page {
 	color: #fff;
 	background: #999;
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
 	border-radius: 4px;
+}
+img.prev, img.first, img.next, img.last {
+	cursor: pointer;
 }

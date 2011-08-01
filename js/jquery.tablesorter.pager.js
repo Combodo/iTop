@@ -290,11 +290,11 @@ function sprintf(format, etc) {
 					var link = ' '+page+' ';
 					if (i != c.page)
 					{
-						link = ' <a href="#" class="no-arrow" page="'+i+'" id="gotopage_'+i+'">'+page+'</a> ';
+						link = ' <span page="'+i+'" id="gotopage_'+i+'">'+page+'</span> ';
 					}
 					else
 					{
-						link = ' <a href="#" class="no-arrow curr_page" page="'+i+'">'+page+'</a> ';
+						link = ' <span class="curr_page" page="'+i+'">'+page+'</span> ';
 					}
 					txt += link;
 				}
