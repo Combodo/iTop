@@ -602,6 +602,28 @@ class AttributeLinkedSet extends AttributeDefinition
 				}
 			}
 
+			// Check (roughly) if such a link is valid
+			$aErrors = array();
+			foreach(MetaModel::ListAttributeDefs($sTargetClass) as $sAttCode => $oAttDef)
+			{
+				if ($oAttDef->IsExternalKey())
+				{
+					if (($oAttDef->GetTargetClass() == $this->GetHostClass()) || (is_subclass_of($this->GetHostClass(), $oAttDef->GetTargetClass())))
+					{
+						continue; // Don't check the key to self
+					}
+				}
+				
+				if ($oAttDef->IsWritable() && $oAttDef->IsNull($oLink->Get($sAttCode)) && !$oAttDef->IsNullAllowed())
+				{
+					$aErrors[] = $sAttCode;
+				}
+			}
+			if (count($aErrors) > 0)
+			{
+				throw new CoreException("Missing value for mandatory attribute(s): ".implode(', ', $aErrors));
+			}
+
 			$aLinks[] = $oLink;
 		}
 		$oSet = DBObjectSet::FromArray($sTargetClass, $aLinks);
