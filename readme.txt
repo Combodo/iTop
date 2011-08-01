@@ -1,4 +1,4 @@
-iTop - version 1.1.0 - 04-05-2011
+iTop - version 1.2.0-alpha - 02-Aug-2011
 Readme file
 
 1.   ABOUT THIS RELEASE
@@ -13,7 +13,7 @@ Readme file
 
 1. ABOUT THIS RELEASE
    ==================
-Thank you for downloading the ninth packaged release of iTop.
+Thank you for downloading the tenth packaged release of iTop.
 This version comes with a few new features and bug fixes.
 
 A wiki is now available: https://sourceforge.net/apps/mediawiki/itop/index.php?title=ITop_Documentation
@@ -30,24 +30,19 @@ The source code of iTop can be found on SourceForge: http://itop.sourceforge.net
 
 1.1 What's new?
     ---------------------------
-- Data synchronization. As a consultant, use advanced tools to integrate tightly iTop
-  with an external application. Documentation is available on the brand new iTop wiki:
-  https://sourceforge.net/apps/mediawiki/itop/index.php?title=Data_Synchronization
-- Modify all utility: select a set of objects and force a value on all of them, or close a set of tickets in a few steps.
-- Tickets: the form have been redesigned with some focus on the case log.
-- iTop takes advantage of the APC cache.
-- Italian and Hungarian localizations are now part of iTop
+- Japanese localization is now part of iTop
+- Paginated display: when a list contains lots of data it is displayed page per page
+- Quite a few performance improvements to make iTop behave properly with huge data sets
+- Hierarchical keys: parent/child relationships can now be described using a special type of key, and then queried efficiently in the database
 
 
-
-1.2 Should I upgrade to 1.1.0?
+1.2 Should I upgrade to 1.2.0?
     ---------------------------
-You are manipulating huge data sets, and need to perform bulk changes but you are still not familiar with the powerful CSV import feature.
-You are using the helpdesk modules (Incident and User Request Management), and want to improve the productivity of agents.
-You need to integrate with an inventory tool. iTop 1.1 comes with synchronization tools.
-You are running iTop on a slow system: iTop now takes advantage of the APC cache. The response time could be divided by 5!
+- If you are manipulating big sets of data (several thousands of objects in one go)
+- If you care about organizations or locations hierarchy
+- If you speak/read Japanese
 
-If any of the above items is important for you, then you should upgrade your version of iTop.
+Then you'll benefit from iTop 1.2 and it's probably worth upgrading. 
 
 
 1.3 Special Thanks To:
@@ -65,7 +60,8 @@ Izzet Sirin for the Turkish translation
 Deng Lixin for the Chinese translation
 Marialaura Colantoni for the Italian translation
 Schlobinux for the fix of the setup temporary file verification.
-Gabor Kiss for the Hungarian translation 
+Gabor Kiss for the Hungarian translation
+Tadashi Kaneda for the Japanese translation
 
 2. INSTALLATION
    ============
@@ -110,8 +106,8 @@ The following features will require the activation of CRON.PHP:
 
 More information into the Wiki: https://sourceforge.net/apps/mediawiki/itop/index.php?title=Cron.php
 
-2.4. Migrating from 1.0, 1.0.1 or 1.0.2
-     ----------------------------------
+2.4. Migrating from 1.0, 1.0.1, 1.0.2 or 1.1
+     ---------------------------------------
 The upgrade procedure has changed. We recommend you to copy the files of the new version must be copied to a
 new directory. The updgrade will modify the database schema. This new schema is not compatible with the previous versions of iTop.
 
@@ -135,28 +131,19 @@ Please refer to the migration guide available at http://www.combodo.com/itopdocu
 3. FEATURES
    ========
 
-3.1. Changes since 1.0.2
+3.1. Changes since 1.1
      -------------------
 
-Version 1.1.0 brings a few major changes.
+Version 1.2.0 brings a few major changes.
 
 Major changes
 -------------
-Ticket forms: simple changes for a better productivity:
-- The case log is no more a simple text area: it is now a real log, making it more readable in case of very long discussions.
-- Enhanced layout: attributes are grouped, and the case log can take 100% of the width of the window.
-
-Bulk modify and bulk actions on tickets
-A new wizard to update a given set of objects. E.g.: close a set of incident tickets, or move a set of Servers from a location to another.
-
-Synchronization with external application: an integrated utility to help in developing an integration between iTop and an external (master database). E.g.: integration with inventory tools like OCS-NG.
-
+- Paginated display
+- Management of hierarchy of objects
 
 Localization
 ------------
-Added Italian translation, thanks to Marialaura Colantoni.
-English dictionary completion.
-Improvements to the French translation.
+Added Japanese translation, thanks to Tadashi Kaneda.
 
 More information on the localization (completion progress, how to contribute) here:
 http://www.combodo.com/itop-localization/
@@ -164,71 +151,12 @@ http://www.combodo.com/itop-localization/
 
 Minor changes
 -------------
-#347 Let customers update the tickets they have submitted via the portal
-#149 Friendly names: objects such as persons/DB instance/interfaces have a name made of several attributes and formatted in the dictionary
-Plugin API - alpha version - the basis for extending iTop seamlessly... to bo continued...
-#365 Give the user some feedback when the password was successfully changed/set. Note that iTop does not check that the new password is different from the old one.
-OQL: IS_NULL() and REGEXP have been added.
-Adjusted the default ITIL profiles definitions
-Revised styles for a nicer/cleaner display of the details and forms.
-Changed the default character collation to be consistent with the DB definition.
-#362 New capability for attributes derived from AttributeString: specify a validation_pattern (regexp)
-#328 Added the capability to import/export link sets in CSV format
-Search forms enhancement: when a search criteria is an external (foreign) key, use an autocomplete instead of of drop-down list, when the number of different values is too big, as in other forms.
-#355 CSV Import (non interactive) now supporting localized column headers, making it possible to import directly data generated by the interactive export. NOTE: to achieve this, the default separator is now the coma (whereas the default separator in XCel sheets is the semicolumn)
-#271 Internal - Removed a workaround made unnecessary with fix [1108]
-#156 make sure the hierarchical ZLists are supported everywhere.
-#344 default search behavior for enumerated attributes (and similar types: 'Class', 'Language' and 'FinalClass') is now a strict '=' instead of 'contains'.
-#352 Web Service CreateTicket: Search the service subcategory given the found service_id (if not already specified)
-Automatic deletion of links lnkSolutionToCI
-Keep track of the application's usage: an entry in the log is added each time a user connects to the application. (This feature is disabled by default)
-Check SLA for tickets moved to a new page: cron.php. See dedicated section.
-Email sent in asynchronous mode (relying on cron.php - see dedicated section)
-Aligned the display of the case log (and properties) of a ticket in the User Portal to what is done in the normal UI: better look (multi-column, fieldsets, wider case log at the bottom).
-New option group_by_expr for "group_by' display blocks (to be used in templates) to specify a PHP expression to use for the group by. This allows to build dashboards where dates are grouped by the day of the month, for example.
-#370 standard argument for CLI/REST services: param_file
-
-Wiki formatting. The attributes of type 'AttributeText' or derived, allow some special formatting:
-- links to objects: [[Server:db1.my-company.com]] will be seen as a Url to the server named 'db1.my-company.com' in iTop.
-- url are detected and displayed as hyperlinks
-
-Optimizations:
-- Delayed startup for all non-important javascript effects to speed-up the display of the pages.
-- Implementation of the APC cache. Settings: apc_cache.query_ttl (defaults to 3600s) and apc_cache.enabled = true by default
-
-New implementation of the setup:
-- support of upgrade or reinstallation
-- optimizations (3 times faster)
-- dictionary files (<Lang>.dict.<ModuleName>.php) loaded automatically without the need to specify them explicitely in the module definition file.
-
+- Keywords in global search (Trac#130): you can type "server:dbserver" (without the quotes) and the global search will search for the text "dbserver" only on the class "server"
 
 Bugs fixed
 ----------
 The complete list of active tickets can be reviewed at http://sourceforge.net/apps/trac/itop/report/1
 
-#375: Display scroll bars appropriately when dealing with big CSV load jobs.
-Protect against javascript js files being kept in the browser's cache when upgrading an iTop instance.
-Deletion: the message "object deleted" was displayed twice since the last review of the deletion
-Cosmetic: changed error message when dependencies cannot be solved
-#366 Global search case sensitive or not working at all (issue with COLLATION)
-#360 Wrong COUNT when using JOINS (+ other conditions)
-#340 Fixed OQL parsing issue - parameters in IN()/NOT IN() clauses
-#313 Provider contracts are filtered on the 'provider_id' - for filtering in the UI via the drop-down list of Organizations and for the security profiles ("Allowed Organizations").  The mapping for 'org_id', if any, is now taken into account by the security.
-#336 verification of the directory of the temporary config file was wrong... however the script still assumes that the temporary config file and the final one are stored in the same place... at the root of the iTop installation.
-#348 Multi-column queries not working fine with open joins and if null values to be displayed
-#356 Audit results filtered by context
-#357 Audit results list not expandable
-#353 no menu for DBServerInstance objects.
-#305 Specified the charset in any call to htmlentities()
-In read-only mode, stimulus must not be allowed
-Display of relationships: Removed a "assertion failed" error message, and fixed an incorrect detection of the maximum recursion level
-#351 undefined variable sClass...
-CSV import web service - cosmetics on the reporting in case the data set is empty
-#388 Browser compatibility: Fixed issues with IE9 (Removed the 'bgiframe' javascript , which was designed for fixing IE6 issues only and causes troubles with IE9.)
-#385 Issue with auto-complete in search forms
-#394 Web service in CLI mode failing with error "could not find approot.inc.php"
-#395 Web service in CLI mode failing with no message
-#301 Logoff/Logon from the portal: removed the forced redirection to the portal -this was very confusing when logging again as administrator 
 
 3.2. Known limitations (https://sourceforge.net/apps/trac/itop/report/3)
      -----------------
