@@ -249,8 +249,12 @@ function RequestCreationForm($oP, $oUserOrg)
 			$sValue = $oRequest->GetFormElementForField($oP, get_class($oRequest), $sAttCode, $oAttDef, $value, '', 'attr_'.$sAttCode, '', $iFlags, $aArgs);
 			$aDetails[] = array('label' => '<span>'.$oAttDef->GetLabel().'</span>', 'value' => $sValue);
 		}
-		$aDetails[] = array('label' => '<span>'.Dict::S('Portal:Attachments').'</span>', 'value' => '&nbsp;');
-		$aDetails[] = array('label' => '&nbsp;', 'value' => '<div id="attachments"></div><p><button type="button" onClick="AddAttachment();">'.Dict::S('Portal:AddAttachment').'</button/></p>');
+		if (!class_exists('AttachmentPlugIn'))
+		{
+			// the Attachement plug-ins is not installed, do it the old way
+			$aDetails[] = array('label' => '<span>'.Dict::S('Portal:Attachments').'</span>', 'value' => '&nbsp;');
+			$aDetails[] = array('label' => '&nbsp;', 'value' => '<div id="attachments"></div><p><button type="button" onClick="AddAttachment();">'.Dict::S('Portal:AddAttachment').'</button/></p>');
+		}
 		$oP->add_linked_script("../js/json.js");
 		$oP->add_linked_script("../js/forms-json-utils.js");
 		$oP->add_linked_script("../js/wizardhelper.js");
@@ -263,11 +267,20 @@ function RequestCreationForm($oP, $oUserOrg)
 		$oP->add("<form action=\"../portal/index.php\" enctype=\"multipart/form-data\" id=\"request_form\" method=\"post\">\n");
 		$oP->add("<table><tr><td>\n");
 		$oP->details($aDetails);
+
+		$sTransactionId = utils::GetNewTransactionId();
+		$oP->SetTransactionId($sTransactionId); // Must be set before calling the plug-in
+		if (class_exists('AttachmentPlugIn'))
+		{
+			$oAttPlugin = new AttachmentPlugIn();
+			$oAttPlugin->OnDisplayRelations($oRequest, $oP, true /* edit */);
+		}
+
 		$oP->add("</td></tr></table>\n");
 		DumpHiddenParams($oP, $aList, $aParameters);
 		$oP->add("<input type=\"hidden\" name=\"step\" value=\"3\">");
 		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"create_request\">");
-		$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
+		$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"$sTransactionId\">\n");
 		$oP->p("<input type=\"submit\" value=\"".Dict::S('UI:Button:Back')."\" onClick=\"GoBack();\">&nbsp;<input type=\"submit\" value=\"".Dict::S('UI:Button:Finish')."\">");
 		$oP->add("</form>");
 		$oP->add("</div>\n");
@@ -285,6 +298,7 @@ function RequestCreationForm($oP, $oUserOrg)
 		$('#request_form').submit( function() {
 			return OnSubmit('request_form');
 		});
+		$(window).unload(function() { OnUnload('$sTransactionId') } );
 EOF
 );
 		$sBtnLabel = Dict::S('Portal:RemoveAttachment');
@@ -366,28 +380,37 @@ function DoCreateRequest($oP, $oUserOrg)
 		$oRequest->DBInsertTracked($oMyChange);
 		$oP->add("<h1>".Dict::Format('UI:Title:Object_Of_Class_Created', $oRequest->GetName(), MetaModel::GetName(get_class($oRequest)))."</h1>\n");
 		
-		// Now process the attachements (if any)
-		$index = 0;
-		foreach($_FILES as $sName => $void)
+		if (class_exists('AttachmentPlugIn'))
 		{
-			$oAttachment = utils::ReadPostedDocument($sName);
-			if (!$oAttachment->IsEmpty())
+			// New way: use the plug-in
+			$oAttPlugin = new AttachmentPlugIn();
+			$oAttPlugin->OnFormSubmit($oRequest);
+		}
+		else
+		{
+			// Old way: create linked documents
+			$index = 0;
+			foreach($_FILES as $sName => $void)
 			{
-				$index++;
-				// Create a document and attach it to the created ticket
-				$oDoc = new FileDoc();
-				$oDoc->Set('name', Dict::Format('Portal:Attachment_No_To_Ticket_Name', $index, $oRequest->GetName(), $oAttachment->GetFileName()));
-				$oDoc->Set('org_id', $oUserOrg->GetKey());
-				$oDoc->Set('description', $oAttachment->GetFileName());
-				$oDoc->Set('contents', $oAttachment);
-				$oDoc->DBInsertTracked($oMyChange);
-				// Link the document to the ticket
-				$oLink = new lnkTicketToDoc();
-				$oLink->Set('ticket_id', $oRequest->GetKey());
-				$oLink->Set('document_id', $oDoc->GetKey());
-				$oLink->DBInsertTracked($oMyChange);
-			}
-		}		
+				$oAttachment = utils::ReadPostedDocument($sName);
+				if (!$oAttachment->IsEmpty())
+				{
+					$index++;
+					// Create a document and attach it to the created ticket
+					$oDoc = new FileDoc();
+					$oDoc->Set('name', Dict::Format('Portal:Attachment_No_To_Ticket_Name', $index, $oRequest->GetName(), $oAttachment->GetFileName()));
+					$oDoc->Set('org_id', $oUserOrg->GetKey());
+					$oDoc->Set('description', $oAttachment->GetFileName());
+					$oDoc->Set('contents', $oAttachment);
+					$oDoc->DBInsertTracked($oMyChange);
+					// Link the document to the ticket
+					$oLink = new lnkTicketToDoc();
+					$oLink->Set('ticket_id', $oRequest->GetKey());
+					$oLink->Set('document_id', $oDoc->GetKey());
+					$oLink->DBInsertTracked($oMyChange);
+				}
+			}		
+		}
 		DisplayMainMenu($oP);
 	}
 	else
@@ -647,22 +670,25 @@ function DisplayRequestDetails($oP, UserRequest $oRequest, $bEditMode = true)
 		$oP->add('</tr></table>');
 	}
 
-	// Attachments
-	$sOQL = 'SELECT FileDoc AS Doc JOIN lnkTicketToDoc AS L ON L.document_id = Doc.id WHERE L.ticket_id = :request_id';
-	$oSearch = DBObjectSearch::FromOQL($sOQL);
-	$oSet = new CMDBObjectSet($oSearch, array(), array('request_id' => $oRequest->GetKey()));
-	$aDetails = array();
-	if ($oSet->Count() > 0)
+	if (!class_exists('AttachmentPlugIn'))
 	{
-		$sAttachements = '<table>';
-		while($oDoc = $oSet->Fetch())
+		// Attachments, the old way
+		$sOQL = 'SELECT FileDoc AS Doc JOIN lnkTicketToDoc AS L ON L.document_id = Doc.id WHERE L.ticket_id = :request_id';
+		$oSearch = DBObjectSearch::FromOQL($sOQL);
+		$oSet = new CMDBObjectSet($oSearch, array(), array('request_id' => $oRequest->GetKey()));
+		$aDetails = array();
+		if ($oSet->Count() > 0)
 		{
-			$sAttachements .= '<tr><td>'.$oDoc->GetAsHtml('contents').'</td></tr>';
+			$sAttachements = '<table>';
+			while($oDoc = $oSet->Fetch())
+			{
+				$sAttachements .= '<tr><td>'.$oDoc->GetAsHtml('contents').'</td></tr>';
+			}
+			$sAttachements .= '</table>';
+			$aDetails[] = array('label' => Dict::S('Portal:Attachments'), 'value' => $sAttachements);
 		}
-		$sAttachements .= '</table>';
-		$aDetails[] = array('label' => Dict::S('Portal:Attachments'), 'value' => $sAttachements);
+		$oP->Details($aDetails);
 	}
-	$oP->Details($aDetails);
 	
 	// Case log... editable so that users can post comments
 	if ($bEditMode)
@@ -670,7 +696,9 @@ function DisplayRequestDetails($oP, UserRequest $oRequest, $bEditMode = true)
 		$oP->add("<form action=\"../portal/index.php\" id=\"request_form\" method=\"post\">\n");
 		$oP->add("<input type=\"hidden\" name=\"id\" value=\"".$oRequest->GetKey()."\">");
 		$oP->add("<input type=\"hidden\" name=\"step\" value=\"3\">");
-		$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
+		$sTransactionId = utils::GetNewTransactionId();
+		$oP->SetTransactionId($sTransactionId);
+		$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"$sTransactionId\">\n");
 		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"details\">");
 		$oP->add('<fieldset id="request_details_log"><legend>'.MetaModel::GetLabel('UserRequest', 'ticket_log').'</legend>');
 		$oAttDef = MetaModel::GetAttributeDef(get_class($oRequest), 'ticket_log');
@@ -678,15 +706,30 @@ function DisplayRequestDetails($oP, UserRequest $oRequest, $bEditMode = true)
 		$oP->add($oRequest->GetFormElementForField($oP, get_class($oRequest), 'ticket_log', $oAttDef, $oValue, $sDisplayValue = '', $iId = 'att_ticket_log'));
 		//$oP->add(GetFieldAsHtml($oRequest, 'ticket_log'));
 		$oP->add('</fieldset>');
+		if (class_exists('AttachmentPlugIn'))
+		{
+			$oAttPlugin = new AttachmentPlugIn();
+			$oAttPlugin->OnDisplayRelations($oRequest, $oP, true /* edit */);
+		}
 		$oP->p('<input type="submit" value="'.Dict::S('UI:Button:Ok').'">');
 		$oP->add('</form>');
+		$oP->add_ready_script(
+<<<EOF
+		$('#request_form').submit( function() { return OnSubmit('request_form'); });
+		$(window).unload(function() { OnUnload('$sTransactionId') } );
+EOF
+		);
 	}
 	else
 	{
 		$oP->add('<fieldset id="request_details_log"><legend>'.MetaModel::GetLabel('UserRequest', 'ticket_log').'</legend>');
 		$oP->add(GetFieldAsHtml($oRequest, 'ticket_log'));
 		$oP->add('</fieldset>');
-		
+		if (class_exists('AttachmentPlugIn'))
+		{
+			$oAttPlugin = new AttachmentPlugIn();
+			$oAttPlugin->OnDisplayRelations($oRequest, $oP, false /* edit */);
+		}
 	}
 	$oP->add('</div>');
 }
@@ -908,7 +951,14 @@ function AddComment($oP, $id)
 	if (!empty($sComment))
 	{
 		$oRequest->Set('ticket_log', $sComment);
-	
+	}
+	if (class_exists('AttachmentPlugIn'))
+	{
+		$oAttPlugin = new AttachmentPlugIn();
+		$oAttPlugin->OnFormSubmit($oRequest, '');
+	}
+	if ($oRequest->IsModified())
+	{
 		$oMyChange = MetaModel::NewObject("CMDBChange");
 		$oMyChange->Set("date", time());
 		$sUserString = CMDBChange::GetCurrentUserName();
