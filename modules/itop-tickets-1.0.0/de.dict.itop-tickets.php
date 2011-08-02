@@ -20,6 +20,7 @@
  * @author   Erwan Taloc <erwan.taloc@combodo.com>
  * @author   Romain Quetiez <romain.quetiez@combodo.com>
  * @author   Denis Flaven <denis.flaven@combodo.com>
+ * @author   Stephan Rosenke <stephan.rosenke@itomig.de>
  * @license   http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
@@ -61,6 +62,18 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Ticket/Attribute:incident_list+' => '',
 	'Class:Ticket/Attribute:finalclass' => 'Typ',
 	'Class:Ticket/Attribute:finalclass+' => '',
+));
+
+// Fieldset translation
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+
+	'Ticket:baseinfo' => 'Allgemeine Informationen',
+	'Ticket:date' => 'Daten',
+	'Ticket:contact' => 'Kontakte',
+	'Ticket:moreinfo' => 'weitergehende Informationen',
+	'Ticket:relation' => 'Beziehungen',
+	'Ticket:log' => 'Kommunikation',
+
 ));
 
 //
@@ -245,9 +258,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:ResponseTicket/Attribute:user_satisfaction/Value:4+' => '4',
 	'Class:ResponseTicket/Attribute:user_commment' => 'Benutzerkommentar',
 	'Class:ResponseTicket/Attribute:user_commment+' => '',
-	'Class:ResponseTicket/Stimulus:ev_assign' => 'Verteilen',
+	'Class:ResponseTicket/Stimulus:ev_assign' => 'Zuweisen',
 	'Class:ResponseTicket/Stimulus:ev_assign+' => '',
-	'Class:ResponseTicket/Stimulus:ev_reassign' => 'Neu verteilen',
+	'Class:ResponseTicket/Stimulus:ev_reassign' => 'Neu zuweisen',
 	'Class:ResponseTicket/Stimulus:ev_reassign+' => '',
 	'Class:ResponseTicket/Stimulus:ev_timeout' => 'ev-Timeout',
 	'Class:ResponseTicket/Stimulus:ev_timeout+' => '',

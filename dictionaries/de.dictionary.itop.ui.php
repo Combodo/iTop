@@ -20,6 +20,7 @@
  * @author   Erwan Taloc <erwan.taloc@combodo.com>
  * @author   Romain Quetiez <romain.quetiez@combodo.com>
  * @author   Denis Flaven <denis.flaven@combodo.com>
+ * @author   Stephan Rosenke <stephan.rosenke@itomig.de>
  * @license   http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
@@ -100,7 +101,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:AuditRule/Attribute:query' => 'Durchzuführende Abfrage',
 	'Class:AuditRule/Attribute:query+' => 'Die auszuführende OQL-Abfrage',
 	'Class:AuditRule/Attribute:valid_flag' => 'Gültiges Objekt?',
-	'Class:AuditRule/Attribute:valid_flag+' => 'True falls die Regel ein gültiges Objekt zurückgibt, andernfalls false',
+	'Class:AuditRule/Attribute:valid_flag+' => 'true falls die Regel ein gültiges Objekt zurückgibt, andernfalls false',
 	'Class:AuditRule/Attribute:valid_flag/Value:true' => 'true',
 	'Class:AuditRule/Attribute:valid_flag/Value:true+' => 'true',
 	'Class:AuditRule/Attribute:valid_flag/Value:false' => 'false',
@@ -340,7 +341,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 <p>Alle Module können nacheinander und vollständig unabhängig voneinander eingerichtet werden.</p>',
 
 	'UI:WelcomeMenu:RightBlock' => '<p>iTop ist mandantenfähig, es erlaubt IT-Technikern, auf einfache Art eine Vielzahl an Kunden und Firmen zu verwalten.
-<ul>iTop bietet ein umfangreiches Set an Business-Prozessen, die..
+<ul>iTop bietet ein umfangreiches Set an Business-Prozessen, die
 <li>die Effizienz des IT-Managements steigern,</li> 
 <li>die die Performance des IT-Betriebs steuern,</li> 
 <li>die Kundenzufriedenheit verbessern und Führungskräften Einsicht in die Business Performance ermöglichen.</li>
@@ -348,7 +349,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 </p>
 <p>iTop ist komplett offen, damit es sich bestmöglich in Ihre derzeitige IT-Management-Infrastruktur integriert.</p>
 <p>
-<ul>Die neue Generation des IT Operational Portals ermöglicht Ihnen ...
+<ul>Die neue Generation des IT Operational Portals ermöglicht Ihnen
 <li>ein besseres Management in einer immer komplexeren IT-Landschaft,</li>
 <li>die ITIL-Prozesse gemäß dem Rhythmus Ihres Unternehmens einzuführen,</li>
 <li>und ein besseres Verwalten des wichtigsten Bestandteiles Ihrer IT: der Dokumentation.</li>
@@ -487,15 +488,15 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:LogOff:ThankYou' => 'Vielen Dank dafür, dass Sie iTop benutzen!',
 	'UI:LogOff:ClickHereToLoginAgain' => 'Klicken Sie hier, um sich wieder anzumelden...',
 	'UI:ChangePwdMenu' => 'Passwort ändern...',
-	'UI:AccessRO-All' => 'iTop is read-only',
-	'UI:AccessRO-Users' => 'iTop is read-only for end-users',
-	'UI:Login:RetypePwdDoesNotMatch' => 'Neues Passwort und das wiederholte Passwort entsprechen nicht überein!',
-	'UI:Button:Login' => 'iTop betreten',
+	'UI:AccessRO-All' => 'iTop ist nur lesbar',
+	'UI:AccessRO-Users' => 'iTop ist nur lesbar für Endnutzer',
+	'UI:Login:RetypePwdDoesNotMatch' => 'Neues Passwort und das wiederholte Passwort stimmen nicht überein!',
+	'UI:Button:Login' => 'in iTop anmelden',
 	'UI:Login:Error:AccessRestricted' => 'Der iTop-Zugang ist gesperrt. Bitte kontaktieren Sie einen iTop-Administrator.',
 	'UI:Login:Error:AccessAdmin' => 'Zugang nur für Personen mit Administratorrechten. Bitte kontaktieren Sie Ihren iTop-Administrator.',
 	'UI:CSVImport:MappingSelectOne' => 'Bitte wählen',
 	'UI:CSVImport:MappingNotApplicable' => '-- Dieses Feld ignorieren --',
-	'UI:CSVImport:NoData' => 'Keine Daten eingegeben...Bitte geben Sie Daten ein!',
+	'UI:CSVImport:NoData' => 'Keine Daten eingegeben ... bitte geben Sie Daten ein!',
 	'UI:Title:DataPreview' => 'Datenvorschau',
 	'UI:CSVImport:ErrorOnlyOneColumn' => 'Fehler: die Daten behinhalten nur eine Spalte. Haben Sie das dazugehörige Trennzeichen ausgewählt?',
 	'UI:CSVImport:FieldName' => 'Feld %1$d',
@@ -505,7 +506,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Title:BulkImport' => 'iTop - Massenimport',
 	'UI:Title:BulkImport+' => 'CSV-Import-Assistent',
 	'UI:CSVImport:ClassesSelectOne' => 'Bitte wählen',
-	'UI:CSVImport:ErrorExtendedAttCode' => 'Interner Fehler: "%1$s" ist ungültiger Code. Begründung "%2$s" ist NICHT ein externe Schlüssel der Klasse "%3$s"',
+	'UI:CSVImport:ErrorExtendedAttCode' => 'Interner Fehler: "%1$s" ist ungültiger Code. Begründung "%2$s" ist NICHT ein externer Schlüssel der Klasse "%3$s"',
 	'UI:CSVImport:ObjectsWillStayUnchanged' => '%1$d Objekte bleiben unverändert.',
 	'UI:CSVImport:ObjectsWillBeModified' => '%1$d Objekte werden verändert.',
 	'UI:CSVImport:ObjectsWillBeAdded' => '%1$d Objekte werden hinzugefügt.',
@@ -577,7 +578,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Schema:Title' => 'iTop Objekte-Schema',
 	'UI:Schema:CategoryMenuItem' => 'Kategorie <b>%1$s</b>',
 	'UI:Schema:Relationships' => 'Wechselseite Beziehungen',
-	'UI:Schema:AbstractClass' => 'Abstrakte Klasse: kein Objekt dieser Klasse kann instanziiert werden.',
+	'UI:Schema:AbstractClass' => 'Abstrakte Klasse: ein Objekt dieser Klasse kann nicht instanziiert werden.',
 	'UI:Schema:NonAbstractClass' => 'Keine abstrakte Klasse: Objekte dieser Klasse können instanziiert werden.',
 	'UI:Schema:ClassHierarchyTitle' => 'Klassenhierarchie',
 	'UI:Schema:AllClasses' => 'Alle Klassen',
@@ -653,7 +654,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Title:BulkDeletionOf_Count_ObjectsOf_Class' => 'Massenlöschung von %1$d Objekten der %2$s',
 	'UI:Delete:NotAllowedToDelete' => 'Sie sind nicht berechtigt, dieses Objekt zu löschen.',
 	'UI:Delete:NotAllowedToUpdate_Fields' => 'Sie sind nicht berechtigt, die folgenden Felder zu aktualisieren: %1$s',
-	'UI:Error:CannotDeleteBecause' => 'This object could not be deleted because: %1$s',
+	'UI:Error:CannotDeleteBecause' => 'Dieses Objekt konnte aus folgendem Grunund nicht gelöscht werden: %1$s',
 	'UI:Error:NotEnoughRightsToDelete' => 'Dieses Objekt konnte nicht gelöscht werden, da der derzeitige Benutzer nicht die notwendigen Rechte dazu besitzt.',
 	'UI:Error:CannotDeleteBecauseOfDepencies' => 'Dieses Objekt konnte nicht gelöscht werden, da zuerst dazu einige manuelle Operationen durchgeführt werden müssen.',
 	'UI:Archive_User_OnBehalfOf_User' => '%1$s im Auftrag von %2$s',
@@ -675,19 +676,19 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Delete:Count_Objects/LinksReferencingTheObjects' => '%1$d Objekte/Links referenzieren einige der zu löschenden Objekte',	
 	'UI:Delete:ReferencesMustBeDeletedToEnsureIntegrity' => 'Um Datenbankintegrität sicherzustellen sollten alle weiteren Referenzen entfernt werden.',
 	'UI:Delete:Consequence+' => 'Was getan wird',
-	'UI:Delete:SorryDeletionNotAllowed' => 'Entschuldigung, Ihnen ist es nicht gestattet, dieses Objekt zu löschen. Eine ausführliche Erklärung dazu finden Sie oben',
+	'UI:Delete:SorryDeletionNotAllowed' => 'Leider ist Ihnen nicht gestattet, dieses Objekt zu löschen. Eine ausführliche Erklärung dazu finden Sie oben',
 	'UI:Delete:PleaseDoTheManualOperations' => 'Bitte führen Sie die oben aufgelisteten manuellen Operationen zuerst durch, bevor Sie dieses Objekt löschen.',
 	'UI:Delect:Confirm_Object' => 'Bitte bestätigen Sie, dass Sie %1$s löschen möchten.',
 	'UI:Delect:Confirm_Count_ObjectsOf_Class' => 'Bitte bestätigen Sie, dasss Sie die folgenden %1$d Objekte der Klasse %2$s löschen möchten.',
 	'UI:WelcomeToITop' => 'Willkommen bei iTop',
 	'UI:DetailsPageTitle' => 'iTop - %1$s - %2$s Details',
 	'UI:ErrorPageTitle' => 'iTop - Fehler',
-	'UI:ObjectDoesNotExist' => 'Entschuldigung, dieses Objekt exisitert nicht oder Sie sind nicht berechtigt es einzusehen.',
+	'UI:ObjectDoesNotExist' => 'Leider existiert dieses Objekt nicht oder Sie sind nicht berechtigt es einzusehen.',
 	'UI:SearchResultsPageTitle' => 'iTop - Suchergebnisse',
-	'UI:Search:NoSearch' => 'Nichts, wonach man suchen kann...',
+	'UI:Search:NoSearch' => 'Kein Suchbegriff eingegeben',
 	'UI:FullTextSearchTitle_Text' => 'Ergebnisse für "%1$s":',
 	'UI:Search:Count_ObjectsOf_Class_Found' => '%1$d Objekt(e) der Klasse %2$s gefunden.',
-	'UI:Search:NoObjectFound' => 'Kein Objekt gefunden.',
+	'UI:Search:NoObjectFound' => 'Kein Objekt gefunden',
 	'UI:ModificationPageTitle_Object_Class' => 'iTop - %1$s - %2$s Änderungen',
 	'UI:ModificationTitle_Class_Object' => 'Änderungen von %1$s: <span class=\"hilite\">%2$s</span>',
 	'UI:ClonePageTitle_Object_Class' => 'iTop - Dupliziere %1$s - %2$s Änderung',
@@ -703,7 +704,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Title:Object_Of_Class_Created' => '%1$s - %2$s erstellt.',
 	'UI:Apply_Stimulus_On_Object_In_State_ToTarget_State' => 'Anwenden von %1$s auf Objekt: %2$s in Status %3$s zu Zielstatus: %4$s.',
 	'UI:PageTitle:FatalError' => 'iTop - Fataler Fehler',
-	'UI:FatalErrorMessage' => 'Fataler Fehler! iTop kann leider nicht forfahren.',
+	'UI:FatalErrorMessage' => 'Fataler Fehler! iTop kann leider nicht fortfahren.',
 	'UI:Error_Details' => 'Fehler: %1$s.',
 
 	'UI:PageTitle:ClassProjections'	=> 'iTop Benutzerverwaltung - Klassenabbildung',
@@ -714,7 +715,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:UserManagement:ProjectedObject+' => 'Geschütztes Objekt',
 	'UI:UserManagement:AnyObject' => '* beliebig *',
 	'UI:UserManagement:User' => 'Benutzer',
-	'UI:UserManagement:User+' => 'Benutzer, der in Abbildung beteilgt ist.',
+	'UI:UserManagement:User+' => 'Benutzer, der in Abbildung beteiligt ist.',
 	'UI:UserManagement:Profile' => 'Profil',
 	'UI:UserManagement:Profile+' => 'Profil, in welchem die Abbildung spezifiziert wird.',
 	'UI:UserManagement:Action:Read' => 'Lesen',

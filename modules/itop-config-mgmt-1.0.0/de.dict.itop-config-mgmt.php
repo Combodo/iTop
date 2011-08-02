@@ -20,6 +20,7 @@
  * @author   Erwan Taloc <erwan.taloc@combodo.com>
  * @author   Romain Quetiez <romain.quetiez@combodo.com>
  * @author   Denis Flaven <denis.flaven@combodo.com>
+ * @author   Stephan Rosenke <stephan.rosenke@itomig.de>
  * @license   http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
@@ -29,12 +30,12 @@
 //
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Relation:impacts/Description' => 'Elemente betroffen von',
-	'Relation:impacts/VerbUp' => 'Auswirkung...',
-	'Relation:impacts/VerbDown' => 'Elemente betroffen von...',
+	'Relation:impacts/Description' => 'Elemente betroffen von ...',
+	'Relation:impacts/VerbUp' => 'Auswirkung ...',
+	'Relation:impacts/VerbDown' => 'Elemente betroffen von ...',
 	'Relation:depends on/Description' => 'Elemente, die von diesem Element abhängen',
-	'Relation:depends on/VerbUp' => 'Hängt ab von...',
-	'Relation:depends on/VerbDown' => 'Wirkt auf...',
+	'Relation:depends on/VerbUp' => 'Hängt ab von ...',
+	'Relation:depends on/VerbDown' => 'Wirkt auf ...',
 ));
 
 
@@ -400,7 +401,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Subnet/Attribute:description+' => '',
 	'Class:Subnet/Attribute:ip' => 'IP',
 	'Class:Subnet/Attribute:ip+' => '',
-	'Class:Subnet/Attribute:ip_mask' => 'IP-Maske',
+	'Class:Subnet/Attribute:ip_mask' => 'Subnetz-Maske',
 	'Class:Subnet/Attribute:ip_mask+' => '',
 ));
 
@@ -692,7 +693,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:NetworkInterface/Attribute:physical_type/Value:vlan+' => '',
 	'Class:NetworkInterface/Attribute:ip_address' => 'IP-Adresse',
 	'Class:NetworkInterface/Attribute:ip_address+' => '',
-	'Class:NetworkInterface/Attribute:ip_mask' => 'IP-Maske',
+	'Class:NetworkInterface/Attribute:ip_mask' => 'Subnetz-Maske',
 	'Class:NetworkInterface/Attribute:ip_mask+' => '',
 	'Class:NetworkInterface/Attribute:mac_address' => 'MAC-Adresse',
 	'Class:NetworkInterface/Attribute:mac_address+' => '',
@@ -972,10 +973,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 'Class:Subnet/Tab:IPUsage' => 'IP-Adressverwendung',
-'Class:Subnet/Tab:IPUsage-explain' => 'Interfaces haben einen IP-Bereich von: <em>%1$s</em> bis <em>%2$s</em>',
+'Class:Subnet/Tab:IPUsage-explain' => 'Interfaces haben eine IP-Adresse aus dem Bereich von <em>%1$s</em> bis <em>%2$s</em>',
 'Class:Subnet/Tab:FreeIPs' => 'Freie IPs',
 'Class:Subnet/Tab:FreeIPs-count' => 'Freie IPs: %1$s',
-'Class:Subnet/Tab:FreeIPs-explain' => 'Hier ist eine Auswahl aus 10 freie IP-Adressen',
+'Class:Subnet/Tab:FreeIPs-explain' => 'Auszug zehn freier IP-Adressen',
 ));
 
 //

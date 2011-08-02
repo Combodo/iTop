@@ -20,6 +20,7 @@
  * @author      Erwan Taloc <erwan.taloc@combodo.com>
  * @author      Romain Quetiez <romain.quetiez@combodo.com>
  * @author      Denis Flaven <denis.flaven@combodo.com>
+ * @author      Stephan Rosenke <stephan.rosenke@itomig.de>
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
@@ -39,7 +40,7 @@
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserLDAP' => 'LDAP-Benutzer',
-	'Class:UserLDAP+' => 'Benutzer,der über LDAP authenifiziert wird',
+	'Class:UserLDAP+' => 'Benutzer,der über LDAP authentifiziert wird',
 	'Class:UserLDAP/Attribute:password' => 'Passwort',
 	'Class:UserLDAP/Attribute:password+' => 'Benutzerpasswort',
 ));

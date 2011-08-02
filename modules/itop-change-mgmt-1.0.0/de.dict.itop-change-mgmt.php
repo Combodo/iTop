@@ -20,6 +20,7 @@
  * @author      Erwan Taloc <erwan.taloc@combodo.com>
  * @author      Romain Quetiez <romain.quetiez@combodo.com>
  * @author      Denis Flaven <denis.flaven@combodo.com>
+ * @author      Stephan Rosenke <stephan.rosenke@itomig.de>
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
@@ -33,9 +34,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:SearchChanges+' => 'Nach Change Tickets suchen',
 	'Menu:Change:Shortcuts' => 'Shortcuts',
 	'Menu:Change:Shortcuts+' => '',
-	'Menu:WaitingAcceptance' => 'Changes, die Bestätigung erwarten',
+	'Menu:WaitingAcceptance' => 'Changes, die auf Bestätigung warten',
 	'Menu:WaitingAcceptance+' => '',
-	'Menu:WaitingApproval' => 'Changes, die Genehmigung erwarten',
+	'Menu:WaitingApproval' => 'Changes, die auf Genehmigung warten',
 	'Menu:WaitingApproval+' => '',
 	'Menu:Changes' => 'Offene Changes',
 	'Menu:Changes+' => 'Alle Offene Changes',

@@ -20,6 +20,7 @@
  * @author   Erwan Taloc <erwan.taloc@combodo.com>
  * @author   Romain Quetiez <romain.quetiez@combodo.com>
  * @author   Denis Flaven <denis.flaven@combodo.com>
+ * @author   Stephan Rosenke <stephan.rosenke@itomig.de>
  * @license   http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
@@ -31,11 +32,11 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:NewUserRequest' => 'Neue Benutzeranfrage erstellen',
 	'Menu:NewUserRequest+' => 'Neue Benutzeranfrage erstellen',
 	'Menu:SearchUserRequests' => 'Nach einem Benutzer-Request suchen',
-	'Menu:SearchUserRequests+' => 'Rechercher parmi les demandes utilisateur',
+	'Menu:SearchUserRequests+' => 'Nach einem Benutzer-Request suchen',
 	'Menu:UserRequest:Shortcuts' => 'Shortcuts',
 	'Menu:UserRequest:Shortcuts+' => 'Shortcuts',
 	'Menu:UserRequest:MyRequests' => 'Anfragen, die mich betreffen',
-	'Menu:UserRequest:MyRequests+' => 'Anfragen, die mich betreffen (als Bearbeiter)',
+	'Menu:UserRequest:MyRequests+' => 'Anfragen, die mich als Bearbeiter betreffen',
 	'Menu:UserRequest:EscalatedRequests' => 'Eskalierte Anfragen',
 	'Menu:UserRequest:EscalatedRequests+' => 'Eskalierte Anfragen',
 	'Menu:UserRequest:OpenRequests' => 'Alle offenen Anfragen',
@@ -67,13 +68,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserRequest/Attribute:request_type/Value:issue+' => 'Problem',
 	'Class:UserRequest/Attribute:request_type/Value:service request' => 'Service-Anfrage',
 	'Class:UserRequest/Attribute:request_type/Value:service request+' => 'Service-Anfrage',
-	'Class:UserRequest/Attribute:freeze_reason' => 'Grund für nicht erledigen',
+	'Class:UserRequest/Attribute:freeze_reason' => 'Grund für Nicht-Erledigung',
 	'Class:UserRequest/Attribute:freeze_reason+' => '',
-	'Class:UserRequest/Stimulus:ev_assign' => 'Zuteilen',
+	'Class:UserRequest/Stimulus:ev_assign' => 'Zuweisen',
 	'Class:UserRequest/Stimulus:ev_assign+' => '',
 	'Class:UserRequest/Stimulus:ev_freeze' => 'Als unerledigt markieren',
 	'Class:UserRequest/Stimulus:ev_freeze+' => '',
-	'Class:UserRequest/Stimulus:ev_reassign' => 'Umverteilen',
+	'Class:UserRequest/Stimulus:ev_reassign' => 'Neu zuweisen',
 	'Class:UserRequest/Stimulus:ev_reassign+' => '',
 	'Class:UserRequest/Stimulus:ev_timeout' => 'ev-Timeout',
 	'Class:UserRequest/Stimulus:ev_timeout+' => '',

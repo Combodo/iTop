@@ -20,6 +20,7 @@
  * @author      Erwan Taloc <erwan.taloc@combodo.com>
  * @author      Romain Quetiez <romain.quetiez@combodo.com>
  * @author      Denis Flaven <denis.flaven@combodo.com>
+ * @author      Stephan Rosenke <stephan.rosenke@itomig.de>
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
@@ -54,7 +55,7 @@
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:KnownError' => 'Known Error',
-	'Class:KnownError+' => 'Dokumentierter Fehler für eine bekannte Ursaches',
+	'Class:KnownError+' => 'Dokumentierter Fehler für ein bestehendes Issue',
 	'Class:KnownError/Attribute:name' => 'Name',
 	'Class:KnownError/Attribute:name+' => '',
 	'Class:KnownError/Attribute:org_id' => 'Kunde',
@@ -63,7 +64,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:KnownError/Attribute:cust_name+' => '',
 	'Class:KnownError/Attribute:problem_id' => 'Dazugehöriges Problem',
 	'Class:KnownError/Attribute:problem_id+' => '',
-	'Class:KnownError/Attribute:problem_ref' => 'Refernz',
+	'Class:KnownError/Attribute:problem_ref' => 'Referenz',
 	'Class:KnownError/Attribute:problem_ref+' => '',
 	'Class:KnownError/Attribute:symptom' => 'Symptom',
 	'Class:KnownError/Attribute:symptom+' => '',
@@ -104,7 +105,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkInfraError' => 'InfraErrorLinks',
-	'Class:lnkInfraError+' => 'Infra related to a known error',
+	'Class:lnkInfraError+' => 'Infrastruktur bezogen auf einen bekannten Fehler',
 	'Class:lnkInfraError/Attribute:infra_id' => 'CI',
 	'Class:lnkInfraError/Attribute:infra_id+' => '',
 	'Class:lnkInfraError/Attribute:infra_name' => 'CI-Name',
@@ -141,7 +142,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
         'Menu:ProblemManagement' => 'Problem Management', // Duplicated from Pb Mgmt module, since the two modules are independent
         'Menu:ProblemManagement+' => 'Problem Management',// and the KEDB may be installed independently of the Pb Mgmt module
-        'Menu:NewError' => 'Neues bekannte Fehler',
+        'Menu:NewError' => 'Neuer bekannter Fehler',
         'Menu:NewError+' => '',
         'Menu:SearchError' => 'Nach bekannten Fehler suchen',
         'Menu:SearchError+' => '',
