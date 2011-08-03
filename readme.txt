@@ -163,7 +163,6 @@ Minor changes
 Improved import.php and synchro_import.php: added 'date_format' (example: %d/%m/%Y %H:%i:%s)
 - When needed the drop-down list of organizations is replaced by an autocomplete
 Templates: new type of block = sqlblock, allows for displaying tables/charts based in SQL queries (much quicker for some 'Group By' operations)
-New implementation for displaying long lists: pagination
 Added support of 'drill-down' (i.e on_click) on bar charts
 Added drill-down capability to the SQL blocks
 New feature: online help on search inputs (date format and operators) a tooltip appears when the user clicks a date/search field
@@ -171,6 +170,7 @@ Better (?) handling of object deletion issues during a data synchro...
 #130: keywords to narrow the scope of the global search (e.g. server:webserver searches "webserver" only in the "server" objects)
 Use the new HierarchicalKeys for Organization, Groups and Locations and use the hierarchy of organization for the profiles/user rights.
 Added a new web service to create UserRequest tickets (similarly to Incidents tickets). Based on code from Vincenzo Todisco.
+
 Bug fix: when changing the currently selected organization, go back to the initial (Welcome) menu instead of trying to stay on the same menu... which caused troubles (e.g. "New Contact" => assertion failed)
 Improved error handling when loading linkedset as attributes in one go in CSV import
 Don't make the Ticket's case log hidden in the 'New' state, since it's not hidden in the portal !
