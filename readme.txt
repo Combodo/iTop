@@ -1,4 +1,4 @@
-iTop - version 1.2.0-alpha - 02-Aug-2011
+iTop - version 1.2.0-alpha - 03-Aug-2011
 Readme file
 
 1.   ABOUT THIS RELEASE
@@ -7,7 +7,7 @@ Readme file
 2.2. Install procedure
 2.3. Migration from previous version
 3.   FEATURES
-3.1. Changes since 1.0
+3.1. Changes since 1.1
 3.2. Known limitations
 3.3. Known issues
 
@@ -33,16 +33,17 @@ The source code of iTop can be found on SourceForge: http://itop.sourceforge.net
 - Japanese localization is now part of iTop
 - Paginated display: when a list contains lots of data it is displayed page per page
 - Quite a few performance improvements to make iTop behave properly with huge data sets
-- Hierarchical keys: parent/child relationships can now be described using a special type of key, and then queried efficiently in the database
-
+- Hierarchical keys: parent/child relationships can now be described using a special type of key, and then queried efficiently in the database (Used by Organization, Location and Group)
+- CAS authentication: iTop now supports single-sign-on with JA-SIG CAS
 
 1.2 Should I upgrade to 1.2.0?
     ---------------------------
 - If you are manipulating big sets of data (several thousands of objects in one go)
 - If you care about organizations or locations hierarchy
 - If you speak/read Japanese
+- If you already use JA-SIG CAS (www.jasig.org/cas) for example with a Liferay portal
 
-Then you'll benefit from iTop 1.2 and it's probably worth upgrading. 
+then you'll benefit from iTop 1.2 and it's probably worth upgrading.
 
 
 1.3 Special Thanks To:
@@ -62,6 +63,9 @@ Marialaura Colantoni for the Italian translation
 Schlobinux for the fix of the setup temporary file verification.
 Gabor Kiss for the Hungarian translation
 Tadashi Kaneda for the Japanese translation
+Stephan Rosenke for his contribution to the German translation
+Antoine Coetsier for the CAS support and tests
+Vincenzo Todisco for his contribution to the enhancement of the webservices
 
 2. INSTALLATION
    ============
@@ -108,11 +112,15 @@ More information into the Wiki: https://sourceforge.net/apps/mediawiki/itop/inde
 
 2.4. Migrating from 1.0, 1.0.1, 1.0.2 or 1.1
      ---------------------------------------
-The upgrade procedure has changed. We recommend you to copy the files of the new version must be copied to a
-new directory. The updgrade will modify the database schema. This new schema is not compatible with the previous versions of iTop.
+You can simply overwrite the files from the previous version with the new ones but we recommend that you copy the files of the new version to new directory.
+After installing the files, you MUST run the setup by
+1) Marking the file config-itop.php as read-write for the web server
+2) Poiting you web browser to http://<your_itop>/setup
+The updgrade will modify the database schema. Be aware that this new schema is not compatible with the previous versions of iTop.
 
 If you are executing the upgrade on a production instance of iTop, it is a good practice to make a backup of the database and the configuration file (config-itop.php) prior to running the upgrade.
 
+Step by step instructions:
 1) Unpack the files contained in the zipped package, and copy the content of the "web"
 directory in a directory served by your web server.
 2) Point your web browser to the URL corresponding to the directory where the files
@@ -120,7 +128,7 @@ have been unpackaged.
 3) Select "Upgrade an existing iTop instance"
 4) Follow the instructions.
 
-5) If you were using tickets: CheckSLAForTickets.php has been deprecated in favour of cron.php - see section 2.3.
+5) If you were using tickets: CheckSLAForTickets.php (from 1.0 up to 1.0.2) has been deprecated in favour of cron.php - see section 2.3.
 
 
 2.5. Migrating from 0.9
@@ -140,22 +148,80 @@ Major changes
 -------------
 - Paginated display
 - Management of hierarchy of objects
+- CAS integration: added support of JA-SIG Central Authentication Service (CAS) with log-off support, using phpCAS API.
 
 Localization
 ------------
-Added Japanese translation, thanks to Tadashi Kaneda.
+The Japanese translation was added, thanks to Tadashi Kaneda.
+The German translation was updated by Stephan Rosenke
 
 More information on the localization (completion progress, how to contribute) here:
 http://www.combodo.com/itop-localization/
 
-
 Minor changes
 -------------
-- Keywords in global search (Trac#130): you can type "server:dbserver" (without the quotes) and the global search will search for the text "dbserver" only on the class "server"
+Improved import.php and synchro_import.php: added 'date_format' (example: %d/%m/%Y %H:%i:%s)
+- When needed the drop-down list of organizations is replaced by an autocomplete
+Templates: new type of block = sqlblock, allows for displaying tables/charts based in SQL queries (much quicker for some 'Group By' operations)
+New implementation for displaying long lists: pagination
+Added support of 'drill-down' (i.e on_click) on bar charts
+Added drill-down capability to the SQL blocks
+New feature: online help on search inputs (date format and operators) a tooltip appears when the user clicks a date/search field
+Better (?) handling of object deletion issues during a data synchro...
+#130: keywords to narrow the scope of the global search (e.g. server:webserver searches "webserver" only in the "server" objects)
+Use the new HierarchicalKeys for Organization, Groups and Locations and use the hierarchy of organization for the profiles/user rights.
+Added a new web service to create UserRequest tickets (similarly to Incidents tickets). Based on code from Vincenzo Todisco.
+Bug fix: when changing the currently selected organization, go back to the initial (Welcome) menu instead of trying to stay on the same menu... which caused troubles (e.g. "New Contact" => assertion failed)
+Improved error handling when loading linkedset as attributes in one go in CSV import
+Don't make the Ticket's case log hidden in the 'New' state, since it's not hidden in the portal !
+Better error message if the configuration file exists but is not readable
+In CLI mode, do not depend on the current directory for synchro/import.php and synchro/synchro.php: the scripts can now be run from anywhere.
+New module to easily manage attachments in one click instead of creating a separate 'Document' object. If this module is installed, portal users will create attachments instead of linked documents when uploading files with their ticket
+Added a new type of 'Trigger': TriggerOnPortalUpdate, called when the end-user updates a ticket via the portal.
 
 Bugs fixed
 ----------
 The complete list of active tickets can be reviewed at http://sourceforge.net/apps/trac/itop/report/1
+
+#122 Optimized the load of data set (do not load unused columns, that can cause some tmp tables to get too big for memory)
+#403 Partial installation not working (error on ticket form)
+#404: context lost when doing certain actions. What was fixed:
+  - Run Query
+  - Display Data Model Schema
+  - Drill-down in charts (OQL & SQL)
+  - Paginated lists (actually a regression)
+  What remains:
+  - Global search...
+  - Drill-down in Flash "impacts / depends on"
+#405 Could not install without the module 'User Request Management'
+#408 Case log not working with PHP < 5.3 - the fix preserves the compatibility with installed version (but the dates are lost)
+#410 Added translation for ticket status (and other enum fields) when displaying the History tab.
+#415 Could not limit user on some organization (symptom: wrong queries... org_id does not exist...)
+#420 Data synchro logs: increased the size of the attribute last_error
+#422 (detection of magic_quotes_runtime)
+#423 Fixed issues with application root URL = f(mode CLI, modules, web server techno, etc.)
+#427 Unable to remove all items from a linkset when editing an object.
+#424 Error when updating the Data Synchro statistics
+#429: web browser can crash when a text field contains several times the same URL !!!
+#433: Database triggers creation was incorrect when iTop was installed with a 'prefix' for the DB tables.
+Dashboard templates: fixed issue with asynchronous mode (still some cosmetic issues) with itopblock and the table format
+n:n wizard, context was lost when searching for objects of a derived class to be added.
+'Apply stimulus multiple" was saying: "Please select at least one object"
+Make sure that the flash object respects the z-order otherwise the hierarchy/organization picker appears behind the Flash in Chrome and IE.
+Fixed issues when adding/removing modules during the setup:
+ - When adding modules: the data model was not refreshed in the cache before attempting to load "structure" (or "sample") data
+ - When removing a module: remaining (invalid) triggers were still used.
+A title was missing for the menu 'All Opened Changes' at the top of the page
+Fixed the parsing of OQL error messages: should be able to report the line number (usually 1) and the character where the error happened
+Don't display an error (assertion failed) if the user selects nothing (i.e -- select one --) in the "CSV template" tab.
+
+
+Performance Enhancements
+------------------------
+Do not load the full set of items when it comes to displaying an autocomplete!
+Displaying 1000 object would take real long if many organizations are loaded into iTop (querying all the orgs for each object)
+Cache the Count of items in an object set
+Autocomplete = do not load every object when determining the list of matches
 
 
 3.2. Known limitations (https://sourceforge.net/apps/trac/itop/report/3)
@@ -163,7 +229,9 @@ The complete list of active tickets can be reviewed at http://sourceforge.net/ap
 #71   The same MySQL credentials are used during the setup and for running the application.
 #257  Could not delete more than 997 items when SUHOSIN is installed with its default settings (See TRAC)
 #265  Add reconciliations keys into CSV template
-Internet Explorer 7 is not supported (neither IE7 nor IE8 in compatibility mode)
+
+Internet Explorer 6 is not supported (neither IE7 nor IE8 in compatibility mode)
+Tested with IE8 and IE9. Be aware that there are certain limitations when using IE8 in "security mode" (when running IE on a Windows 2008 Server for example)
 
 
 3.3. Known issues (https://sourceforge.net/apps/trac/itop/report/3)
