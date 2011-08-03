@@ -453,6 +453,15 @@ Dict::Add('EN US', 'English', 'English', array(
 ));
 
 //
+// Class: TriggerOnPortalUpdate
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:TriggerOnPortalUpdate' => 'Trigger (when updated from the portal)',
+	'Class:TriggerOnPortalUpdate+' => 'Trigger on a end-user\'s update from the portal',
+));
+
+//
 // Class: TriggerOnStateChange
 //
 

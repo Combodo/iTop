@@ -966,6 +966,14 @@ function AddComment($oP, $id)
 		$iChangeId = $oMyChange->DBInsert();
 		$oRequest->DBUpdateTracked($oMyChange);
 		$oP->p("<h1>".Dict::Format('UI:Class_Object_Updated', MetaModel::GetName(get_class($oRequest)), $oRequest->GetName())."</h1>\n");
+		
+		// If there is any trigger for the Portal Update, then activate them
+		$sOQL = "SELECT TriggerOnPortalUpdate WHERE target_class ='UserRequest'";
+		$oSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL));
+		while($oTrigger = $oSet->Fetch())
+		{
+			$oTrigger->DoActivate($oRequest->ToArgs('this'));
+		}
 	}
 	else
 	{

@@ -48,6 +48,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ActionEmail/Attribute:importance/Value:low+' => '',
 	'Class:ActionEmail/Attribute:importance/Value:normal' => 'Normale',
 	'Class:ActionEmail/Attribute:importance/Value:normal+' => '',
+	'Class:TriggerOnPortalUdpate' => 'Déclencheur sur mise à jour depuis le portail',
+	'Class:TriggerOnPortalUdpate+' => '',
 	'Class:TriggerOnStateEnter' => 'Déclencheur sur un objet entrant dans un état',
 	'Class:TriggerOnStateEnter+' => '',
 	'Class:TriggerOnStateLeave' => 'Déclencheur sur un objet quitant un état',

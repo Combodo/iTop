@@ -353,6 +353,12 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		}
 		$oPage->SetCurrentTab('');
 
+		foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
+		{
+			$oExtensionInstance->OnDisplayRelations($this, $oPage, $bEditMode);
+		}
+
+		// Display Notifications after the other tabs since this tab disappears in edition
 		if (!$bEditMode)
 		{
 			// Get the actual class of the current object
@@ -364,18 +370,15 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 			$oTriggerSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObject AS T WHERE T.target_class IN ('$sClassList')"));
 			if ($oTriggerSet->Count() > 0)
 			{
-				$oPage->SetCurrentTab(Dict::S('UI:NotificationsTab'));
-		
 				// Display notifications regarding the object
 				$iId = $this->GetKey();
-				$oBlock = new DisplayBlock(DBObjectSearch::FromOQL("SELECT EventNotificationEmail AS Ev JOIN TriggerOnObject AS T ON Ev.trigger_id = T.id WHERE T.target_class IN ('$sClassList') AND Ev.object_id = $iId"), 'list', false);
+				$oNotifSearch = DBObjectSearch::FromOQL("SELECT EventNotificationEmail AS Ev JOIN TriggerOnObject AS T ON Ev.trigger_id = T.id WHERE T.target_class IN ('$sClassList') AND Ev.object_id = $iId");
+				$oNotifSet = new DBObjectSet($oNotifSearch);
+				$sCount = ($oNotifSet->Count() > 0) ? ' ('.$oNotifSet->Count().')' : '';
+				$oPage->SetCurrentTab(Dict::S('UI:NotificationsTab').$sCount);
+				$oBlock = new DisplayBlock($oNotifSearch, 'list', false);
 				$oBlock->Display($oPage, 'notifications', array('menu' => false));
 			}
-		}
-
-		foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
-		{
-			$oExtensionInstance->OnDisplayRelations($this, $oPage, $bEditMode);
 		}
 	}
 
