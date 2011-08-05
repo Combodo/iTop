@@ -771,5 +771,9 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Pagination:PagesLabel' => 'Pages:',
 	'UI:Pagination:All' => 'Tous',
 	'UI:HierarchyOf_Class' => 'Hiérarchie de type %1$s',
+	'UI:Preferences' => 'Preferences...',
+	'UI:FavoriteOrganizations' => 'Mes Organisations Favorites',
+	'UI:FavoriteOrganizations+' => 'Cochez dans la liste ci-dessous les organisations que vous voulez voir listées dans le menu principal. '.
+								   'Ceci n\'est pas un réglage de sécurité. Les objets de toutes les organisations sont toujours visibles en choisissant "Toutes les Organisations" dans le menu.',
 ));
 ?>

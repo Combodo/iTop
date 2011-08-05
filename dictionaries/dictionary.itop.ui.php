@@ -921,5 +921,9 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Pagination:PagesLabel' => 'Pages:',
 	'UI:Pagination:All' => 'All',
 	'UI:HierarchyOf_Class' => 'Hierarchy of %1$s',
+	'UI:Preferences' => 'Preferences...',
+	'UI:FavoriteOrganizations' => 'My Favorite Organizations',
+	'UI:FavoriteOrganizations+' => 'Check in the list below the organizations that you want to see in the drop-down menu for a quick access. '.
+								   'Note that this is not a security setting, objects from any organization are still visible and can be accessed by selecting "All Organizations" in the drop-down list.',
 ));
 ?>

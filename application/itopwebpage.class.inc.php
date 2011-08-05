@@ -443,11 +443,19 @@ EOF
 	{
 		// List of visible Organizations
 		$iCount = 0;
+		$oSet = null;
 		if (MetaModel::IsValidClass('Organization'))
 		{
+			// Display the list of favorite organizations... but keeping in mind what is the real number of organizations
+			$aFavoriteOrgs = appUserPreferences::GetPref('favorite_orgs', null);
 			$oSearchFilter = new DBObjectSearch('Organization');
 			$oSet = new CMDBObjectSet($oSearchFilter);
-			$iCount = $oSet->Count();
+			$iCount = $oSet->Count(); // real number of visible orgs
+			if (!empty($aFavoriteOrgs))
+			{
+				$oSearchFilter->AddCondition('id', $aFavoriteOrgs, 'IN');
+			}
+			$oSet = new CMDBObjectSet($oSearchFilter); // List of favorite orgs
 		}
 		switch($iCount)
 		{
@@ -488,9 +496,9 @@ EOF
 			}
 			$sHtml .= '</select>';
 */
-			$oAllowedValues = new DBObjectSet(DBObjectSearch::FromOQL('SELECT Organization'));
+			$sFavoriteOrgs = '';
 			$oWidget = new UIExtKeyWidget('Organization', 'org_id');
-			$sHtml .= $oWidget->Display($this, 50, false, '', $oAllowedValues, $iCurrentOrganization, 'org_id', false, 'c[org_id]', '', array('iFieldSize' => 20, 'sDefaultValue' => Dict::S('UI:AllOrganizations')), $bSearchMode = true);
+			$sHtml .= $oWidget->Display($this, 50, false, '', $oSet, $iCurrentOrganization, 'org_id', false, 'c[org_id]', '', array('iFieldSize' => 20, 'sDefaultValue' => Dict::S('UI:AllOrganizations')), $bSearchMode = true);
 			$this->add_ready_script('$("#org_id").bind("extkeychange", function() { $("#SiloSelection form").submit(); } )');
 			$this->add_ready_script("$('#label_org_id').click( function() { $(this).val(''); $('#org_id').val(''); return true; } );\n");
 			// Add other dimensions/context information to this form
@@ -672,6 +680,7 @@ EOF
 		}
 		$sLogOffMenu = "<span id=\"logOffBtn\"><ul><li><img src=\"../images/onOffBtn.png\"><ul>";
 		$sLogOffMenu .= "<li><span>$sLogonMessage</span></li>\n";
+		$sLogOffMenu .= "<li><a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/preferences.php\">".Dict::S('UI:Preferences')."</a></li>\n";
 		
 		if (utils::CanLogOff())
 		{
