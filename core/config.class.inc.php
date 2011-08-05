@@ -392,6 +392,15 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
+		'deadline_format' => array(
+			'type' => 'string',
+			'description' => 'The format used for displaying "deadline" attributes: any string with the following placeholders: $date$, $difference$',
+			// examples... $date$ ($deadline$)
+			'default' => '$difference$',
+			'value' => '$difference$',
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
 	);
 
 	public function IsProperty($sPropCode)

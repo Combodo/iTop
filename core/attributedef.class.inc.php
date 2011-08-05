@@ -2280,17 +2280,20 @@ class AttributeDeadline extends AttributeDateTime
 		$sResult = '';
 		if ($value !== null)
 		{
-			$value = AttributeDateTime::GetAsUnixSeconds($value);
-			$difference = $value - time();
+			$iValue = AttributeDateTime::GetAsUnixSeconds($value);
+			$sDate = parent::GetAsHTML($value, $oHostObject);
+			$difference = $iValue - time();
 	
 			if ($difference >= 0)
 			{
-				$sResult = self::FormatDuration($difference);
+				$sDifference = self::FormatDuration($difference);
 			}
 			else
 			{
-				$sResult = Dict::Format('UI:DeadlineMissedBy_duration', self::FormatDuration(-$difference));
+				$sDifference = Dict::Format('UI:DeadlineMissedBy_duration', self::FormatDuration(-$difference));
 			}
+			$sFormat = MetaModel::GetConfig()->Get('deadline_format', '$difference$');
+			$sResult = str_replace(array('$date$', '$difference$'), array($sDate, $sDifference), $sFormat);
 		}
 		return $sResult;
 	}
