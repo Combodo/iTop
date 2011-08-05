@@ -401,6 +401,15 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
+		'display_actions_at_top' => array(
+			'type' => 'bool',
+			'description' => 'Whether or not the actions/buttons should be displayed at the top of the screen',
+			// examples... not used
+			'default' => true,
+			'value' => false,
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
 	);
 
 	public function IsProperty($sPropCode)

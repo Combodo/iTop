@@ -1510,9 +1510,14 @@ EOF
 					$iFieldIndex++;
 				}
 			}
-			$oP->add('<div class="ui-widget-content">');
-			$oObj->DisplayBareProperties($oP);
-			$oP->add('</div>');
+			$bDisplayFormAtTop = MetaModel::GetConfig()->Get('display_actions_at_top');
+			if (!$bDisplayFormAtTop)
+			{
+				// Displays the ticket details BEFORE the actions
+				$oP->add('<div class="ui-widget-content">');
+				$oObj->DisplayBareProperties($oP);
+				$oP->add('</div>');
+			}
 			$oP->add("<div class=\"wizContainer\">\n");
 			$oP->add("<form id=\"apply_stimulus\" method=\"post\" onSubmit=\"return OnSubmit('apply_stimulus');\">\n");
 			$oP->add("<table><tr><td>\n");
@@ -1532,6 +1537,13 @@ EOF
 			$oP->add("<button type=\"submit\" class=\"action\"><span>$sActionLabel</span></button>\n");
 			$oP->add("</form>\n");
 			$oP->add("</div>\n");
+			if ($bDisplayFormAtTop)
+			{
+				// Displays the ticket details BEFORE the actions
+				$oP->add('<div class="ui-widget-content">');
+				$oObj->DisplayBareProperties($oP);
+				$oP->add('</div>');
+			}
 			$iFieldsCount = count($aFieldsMap);
 			$sJsonFieldsMap = json_encode($aFieldsMap);
 	
@@ -1718,12 +1730,17 @@ EOF
 			$oP->add("<h1>$sActionLabel - <span class=\"hilite\">{$oObj->GetName()}</span></h1>\n");
 			$oP->set_title($sActionLabel);
 			$oP->add("</div>\n");
-			$oP->add('<div class="ui-widget-content">');
-			$oObj->DisplayBareProperties($oP);
-			$oP->add('</div>');
 			$aTargetState = $aTargetStates[$sTargetState];
 			$aExpectedAttributes = $aTargetState['attribute_list'];
 			$oP->add("<h1>$sActionDetails</h1>\n");
+			$bDisplayFormAtTop = MetaModel::GetConfig()->Get('display_actions_at_top');
+			if (!$bDisplayFormAtTop)
+			{
+				// Displays the ticket details BEFORE the actions
+				$oP->add('<div class="ui-widget-content">');
+				$oObj->DisplayBareProperties($oP);
+				$oP->add('</div>');
+			}
 			$oP->add("<div class=\"wizContainer\">\n");
 			$oP->add("<form id=\"apply_stimulus\" method=\"post\" onSubmit=\"return OnSubmit('apply_stimulus');\">\n");
 			$aDetails = array();
@@ -1798,6 +1815,13 @@ EOF
 			$oP->add("<button type=\"submit\" class=\"action\"><span>$sActionLabel</span></button>\n");
 			$oP->add("</form>\n");
 			$oP->add("</div>\n");
+			if ($bDisplayFormAtTop)
+			{
+				// Displays the ticket details AFTER the actions
+				$oP->add('<div class="ui-widget-content">');
+				$oObj->DisplayBareProperties($oP);
+				$oP->add('</div>');
+			}
 
 			$iFieldsCount = count($aFieldsMap);
 			$sJsonFieldsMap = json_encode($aFieldsMap);
