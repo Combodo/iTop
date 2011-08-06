@@ -1520,24 +1520,39 @@ EOF
 					$iFieldSize = $oAttDef->GetMaxSize();
 					if ($aAllowedValues !== null)
 					{
-						// Discrete list of values, use a SELECT
-						$sHTMLValue = "<select title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" id=\"$iId\">\n";
-						$sHTMLValue .= "<option value=\"\">".Dict::S('UI:SelectOne')."</option>\n";
-						foreach($aAllowedValues as $key => $display_value)
+						// Discrete list of values, use a SELECT or RADIO buttons depending on the config
+						$sDisplayStyle = $oAttDef->GetDisplayStyle();
+						switch($sDisplayStyle)
 						{
-							if ((count($aAllowedValues) == 1) && ($bMandatory == 'true') )
+							case 'radio':
+							case 'radio_horizontal':
+							case 'radio_vertical':
+							$sHTMLValue = '';
+							$bVertical = ($sDisplayStyle != 'radio_horizontal');
+							$sHTMLValue = $oPage->GetRadioButtons($aAllowedValues, $value, $iId, "{$sFieldPrefix}{$sAttCode}{$sNameSuffix}", $bMandatory, $bVertical, $sValidationField);
+							$aEventsList[] ='change';
+							break;
+							
+							case 'select':
+							default:
+							$sHTMLValue = "<select title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" id=\"$iId\">\n";
+							$sHTMLValue .= "<option value=\"\">".Dict::S('UI:SelectOne')."</option>\n";
+							foreach($aAllowedValues as $key => $display_value)
 							{
-								// When there is only once choice, select it by default
-								$sSelected = ' selected';
+								if ((count($aAllowedValues) == 1) && ($bMandatory == 'true') )
+								{
+									// When there is only once choice, select it by default
+									$sSelected = ' selected';
+								}
+								else
+								{
+									$sSelected = ($value == $key) ? ' selected' : '';
+								}
+								$sHTMLValue .= "<option value=\"$key\"$sSelected>$display_value</option>\n";
 							}
-							else
-							{
-								$sSelected = ($value == $key) ? ' selected' : '';
-							}
-							$sHTMLValue .= "<option value=\"$key\"$sSelected>$display_value</option>\n";
+							$sHTMLValue .= "</select>&nbsp;{$sValidationField}\n";
+							$aEventsList[] ='change';
 						}
-						$sHTMLValue .= "</select>&nbsp;{$sValidationField}\n";
-						$aEventsList[] ='change';
 					}
 					else
 					{

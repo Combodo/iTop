@@ -73,8 +73,9 @@ class UIExtKeyWidget
 		$sTargetClass = $oAttDef->GetTargetClass();
 		$iMaxComboLength = $oAttDef->GetMaximumComboLength();
 		$bAllowTargetCreation = $oAttDef->AllowTargetCreation();
+		$sDisplayStyle = $oAttDef->GetDisplayStyle();
 		$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId);
-		return $oWidget->Display($oPage, $iMaxComboLength, $bAllowTargetCreation, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sFieldName, $sFormPrefix, $aArgs, $bSearchMode);
+		return $oWidget->Display($oPage, $iMaxComboLength, $bAllowTargetCreation, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sFieldName, $sFormPrefix, $aArgs, $bSearchMode, $sDisplayStyle);
 	}
 
 	public function __construct($sTargetClass, $iInputId)
@@ -89,13 +90,14 @@ class UIExtKeyWidget
 	 * @param Hash $aArgs Extra context arguments
 	 * @return string The HTML fragment to be inserted into the page
 	 */
-	public function Display(WebPage $oPage, $iMaxComboLength, $bAllowTargetCreation, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sFieldName, $sFormPrefix = '', $aArgs = array(), $bSearchMode = false)
+	public function Display(WebPage $oPage, $iMaxComboLength, $bAllowTargetCreation, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sFieldName, $sFormPrefix = '', $aArgs = array(), $bSearchMode = false, $sDisplayStyle = 'select')
 	{
 		$sTitle = addslashes($sTitle);	
 		$oPage->add_linked_script('../js/extkeywidget.js');
 		$oPage->add_linked_script('../js/forms-json-utils.js');
 		
 		$bCreate = (!$bSearchMode) && (!MetaModel::IsAbstract($this->sTargetClass)) && (UserRights::IsActionAllowed($this->sTargetClass, UR_ACTION_BULK_MODIFY) && $bAllowTargetCreation);
+		$bExtensions = true;
 		$sMessage = Dict::S('UI:Message:EmptyList:UseSearchForm');
 		$sAttrFieldPrefix = ($bSearchMode) ? '' : 'attr_';
 
@@ -117,40 +119,60 @@ class UIExtKeyWidget
 		}
 		elseif ($oAllowedValues->Count() < $iMaxComboLength)
 		{
-			// Few choices, use a normal 'select'
-			$sSelectMode = 'true';
-			
-			$sHelpText = ''; //$this->oAttDef->GetHelpOnEdition();
-			
-			$sHTMLValue = "<select title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" id=\"$this->iId\">\n";
-			if ($bSearchMode)
+			// Discrete list of values, use a SELECT or RADIO buttons depending on the config
+			switch($sDisplayStyle)
 			{
-				$sDisplayValue = isset($aArgs['sDefaultValue']) ? $aArgs['sDefaultValue'] : Dict::S('UI:SearchValue:Any');
-				$sHTMLValue .= "<option value=\"\">$sDisplayValue</option>\n";			
-			}
-			else
-			{
-				$sHTMLValue .= "<option value=\"\">".Dict::S('UI:SelectOne')."</option>\n";
-			}
-			$oAllowedValues->Rewind();
-			while($oObj = $oAllowedValues->Fetch())
-			{
-				$key = $oObj->GetKey();
-				$display_value = $oObj->Get('friendlyname');
-
-				if (($oAllowedValues->Count() == 1) && ($bMandatory == 'true') )
+				case 'radio':
+				case 'radio_horizontal':
+				case 'radio_vertical':
+				$sHTMLValue = '';
+				$bVertical = ($sDisplayStyle != 'radio_horizontal');
+				$bExtensions = false;
+				$oAllowedValues->Rewind();
+				$aAllowedValues = array();
+				while($oObj = $oAllowedValues->Fetch())
 				{
-					// When there is only once choice, select it by default
-					$sSelected = ' selected';
+					$aAllowedValues[$oObj->GetKey()] = $oObj->Get('friendlyname');
+				}				
+				$sHTMLValue = $oPage->GetRadioButtons($aAllowedValues, $value, $this->iId, "{$sAttrFieldPrefix}{$sFieldName}", $bMandatory, $bVertical, '' /* TODO: manage validation field */);
+				$aEventsList[] ='change';
+				break;
+
+				case 'select':
+				default:
+				$sSelectMode = 'true';
+				
+				$sHelpText = ''; //$this->oAttDef->GetHelpOnEdition();
+				
+				$sHTMLValue = "<select title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" id=\"$this->iId\">\n";
+				if ($bSearchMode)
+				{
+					$sDisplayValue = isset($aArgs['sDefaultValue']) ? $aArgs['sDefaultValue'] : Dict::S('UI:SearchValue:Any');
+					$sHTMLValue .= "<option value=\"\">$sDisplayValue</option>\n";			
 				}
 				else
 				{
-					$sSelected = ($value == $key) ? ' selected' : '';
+					$sHTMLValue .= "<option value=\"\">".Dict::S('UI:SelectOne')."</option>\n";
 				}
-				$sHTMLValue .= "<option value=\"$key\"$sSelected>$display_value</option>\n";
-			}
-			$sHTMLValue .= "</select>\n";
-			$oPage->add_ready_script(
+				$oAllowedValues->Rewind();
+				while($oObj = $oAllowedValues->Fetch())
+				{
+					$key = $oObj->GetKey();
+					$display_value = $oObj->Get('friendlyname');
+	
+					if (($oAllowedValues->Count() == 1) && ($bMandatory == 'true') )
+					{
+						// When there is only once choice, select it by default
+						$sSelected = ' selected';
+					}
+					else
+					{
+						$sSelected = ($value == $key) ? ' selected' : '';
+					}
+					$sHTMLValue .= "<option value=\"$key\"$sSelected>$display_value</option>\n";
+				}
+				$sHTMLValue .= "</select>\n";
+				$oPage->add_ready_script(
 <<<EOF
 		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sTargetClass}', '$sFilter', '$sTitle', true, $sWizHelper);
 		oACWidget_{$this->iId}.emptyHtml = "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>$sMessage</p></div>";
@@ -158,7 +180,8 @@ class UIExtKeyWidget
 		$('#$this->iId').bind('change', function() { $(this).trigger('extkeychange') } );
 
 EOF
-);
+				);
+			} // Switch
 		}
 		else
 		{
@@ -200,7 +223,7 @@ EOF
 EOF
 );
 		}
-		if (MetaModel::IsHierarchicalClass($this->sTargetClass) !== false)
+		if ($bExtensions && MetaModel::IsHierarchicalClass($this->sTargetClass) !== false)
 		{
 			$sHTMLValue .= "<a class=\"no-arrow\" href=\"javascript:oACWidget_{$this->iId}.HKDisplay();\"><img id=\"mini_tree_{$this->iId}\" style=\"border:0;vertical-align:middle;\" src=\"../images/mini_tree.gif\" /></a>&nbsp;";
 			$oPage->add_ready_script(
@@ -212,7 +235,7 @@ EOF
 EOF
 );
 		}
-		if ($bCreate)
+		if ($bCreate && $bExtensions)
 		{
 			$sHTMLValue .= "<a class=\"no-arrow\" href=\"javascript:oACWidget_{$this->iId}.CreateObject();\"><img id=\"mini_add_{$this->iId}\" style=\"border:0;vertical-align:middle;\" src=\"../images/mini_add.gif\" /></a>&nbsp;";
 			$oPage->add_ready_script(

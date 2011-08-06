@@ -1109,6 +1109,11 @@ class AttributeString extends AttributeDBField
 		$sEscaped = str_replace($sFrom, $sTo, (string)$sValue);
 		return $sTextQualifier.$sEscaped.$sTextQualifier;
 	}
+
+	public function GetDisplayStyle()
+	{
+		return $this->GetOptional('display_style', 'select');
+	}
 }
 
 /**
@@ -2355,6 +2360,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 	public function GetTargetClass($iType = EXTKEY_RELATIVE) {return $this->Get("targetclass");}
 	public function GetKeyAttDef($iType = EXTKEY_RELATIVE){return $this;}
 	public function GetKeyAttCode() {return $this->GetCode();} 
+	public function GetDisplayStyle() { return $this->GetOptional('display_style', 'select'); }
 	
 
 	public function GetDefaultValue() {return 0;}

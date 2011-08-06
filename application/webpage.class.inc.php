@@ -275,6 +275,53 @@ class WebPage
 		$sHtml .= "</table>\n";
 		return $sHtml;
     }
+
+	/**
+	 * Build a set of radio buttons suitable for editing a field/attribute of an object (including its validation)
+	 * @param $aAllowedValues hash Array of value => display_value
+	 * @param $value mixed Current value for the field/attribute
+	 * @param $iId mixed Unique Id for the input control in the page
+	 * @param $sFieldName string The name of the field, attr_<$sFieldName> will hold the value for the field
+	 * @param $bMandatory bool Whether or not the field is mandatory
+	 * @param $bVertical bool Disposition of the radio buttons vertical or horizontal
+	 * @param $sValidationField string HTML fragment holding the validation field (exclamation icon...)
+	 * @return string The HTML fragment corresponding to the radio buttons
+	 */
+	public function GetRadioButtons($aAllowedValues, $value, $iId, $sFieldName, $bMandatory, $bVertical, $sValidationField)
+	{
+		$idx = 0;
+		$sHTMLValue = '';
+		foreach($aAllowedValues as $key => $display_value)
+		{
+			if ((count($aAllowedValues) == 1) && ($bMandatory == 'true') )
+			{
+				// When there is only once choice, select it by default
+				$sSelected = ' checked';
+			}
+			else
+			{
+				$sSelected = ($value == $key) ? ' checked' : '';
+			}
+			$sHTMLValue .= "<input type=\"radio\" id=\"{$iId}_{$key}\" name=\"attr_radio_$sFieldName\" onChange=\"$('#{$iId}').val(this.value).trigger('change');\" value=\"$key\"$sSelected><label class=\"radio\" for=\"{$iId}_{$key}\">&nbsp;$display_value</label>&nbsp;";
+			if ($bVertical)
+			{
+				if ($idx == 0)
+				{
+					// Validation icon at the end of the first line
+					$sHTMLValue .= "&nbsp;{$sValidationField}\n";							
+				}
+				$sHTMLValue .= "<br>\n";
+			}
+			$idx++;
+		}
+		$sHTMLValue .= "<input type=\"hidden\" id=\"$iId\" name=\"attr_$sFieldName\" value=\"$value\"/>";
+		if (!$bVertical)					
+		{
+			// Validation icon at the end of the line
+			$sHTMLValue .= "&nbsp;{$sValidationField}\n";
+		}
+		return $sHTMLValue;
+	}
 	
 	/**
 	 * Outputs (via some echo) the complete HTML page by assembling all its elements
