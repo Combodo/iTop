@@ -273,6 +273,9 @@ function RequestCreationForm($oP, $oUserOrg)
 		if (class_exists('AttachmentPlugIn'))
 		{
 			$oAttPlugin = new AttachmentPlugIn();
+			// depending on the plug-in's configuration, the attachments are displayed either in the 'properties' or in the 'relations'
+			// in the portal, both are handled the same way... it does not matter
+			$oAttPlugin->OnDisplayProperties($oRequest, $oP, true /* edit */);
 			$oAttPlugin->OnDisplayRelations($oRequest, $oP, true /* edit */);
 		}
 
@@ -709,6 +712,9 @@ function DisplayRequestDetails($oP, UserRequest $oRequest, $bEditMode = true)
 		if (class_exists('AttachmentPlugIn'))
 		{
 			$oAttPlugin = new AttachmentPlugIn();
+			// depending on the plug-in's configuration, the attachments are displayed either in the 'properties' or in the 'relations'
+			// in the portal, both are handled the same way... it does not matter
+			$oAttPlugin->OnDisplayProperties($oRequest, $oP, true /* edit */);
 			$oAttPlugin->OnDisplayRelations($oRequest, $oP, true /* edit */);
 		}
 		$oP->p('<input type="submit" value="'.Dict::S('UI:Button:Ok').'">');
@@ -728,6 +734,9 @@ EOF
 		if (class_exists('AttachmentPlugIn'))
 		{
 			$oAttPlugin = new AttachmentPlugIn();
+			// depending on the plug-in's configuration, the attachments are displayed either in the 'properties' or in the 'relations'
+			// in the portal, both are handled the same way... it does not matter
+			$oAttPlugin->OnDisplayProperties($oRequest, $oP, false /* edit */);
 			$oAttPlugin->OnDisplayRelations($oRequest, $oP, false /* edit */);
 		}
 	}
