@@ -233,7 +233,6 @@ class DisplayTemplate
 		<itopblock blockclass="HistoryBlock" type="toggle" encoding="text/oql">SELECT CMDBChangeOp WHERE objkey = $id$ AND objclass = \'$class$\'</itopblock>
 		</div>
 		<img src="../../images/connect_to_network.png" style="margin-top:-10px; margin-right:10px; float:right">
-		<itopblock blockclass="DisplayBlock" asynchronous="false" type="bare_details" encoding="text/oql">SELECT NetworkDevice AS d WHERE d.id = $id$</itopblock>
 		<itoptabs>
 			<itoptab name="Interfaces">
 				<itopblock blockclass="DisplayBlock" type="list" encoding="text/oql">SELECT Interface AS i WHERE i.device_id = $id$</itopblock>
@@ -251,6 +250,92 @@ class DisplayTemplate
 		$oTemplate = new DisplayTemplate($sTemplate);
 		$oTemplate->Render($oPage, array('class'=>'Network device','pkey'=> 271, 'name' => 'deliversw01.mecanorama.fr', 'org_id' => 3));
 		$oPage->output();
+	}
+}
+
+/**
+ * Special type of template for displaying the details of an object
+ * On top of the defaut 'blocks' managed by the parent class, the following placeholders
+ * are available in such a template:
+ * $attribute_code$ An attribute of the object (in edit mode this is the input for the attribute)
+ * $attribute_code->label()$ The label of an attribute
+ * $PlugIn:plugInClass->properties()$ The ouput of OnDisplayProperties of the specified plugInClass
+ */
+class ObjectDetailsTemplate extends DisplayTemplate
+{
+	public function __construct($sTemplate, $oObj, $sFormPrefix = '')
+	{
+		parent::__construct($sTemplate);
+		$this->m_oObj = $oObj;
+		$this->m_sPrefix = $sFormPrefix;
+	}
+	
+	public function Render(WebPage $oPage, $aParams = array(), $bEditMode = false)
+	{
+		$aTemplateFields = array();
+		preg_match_all('/\\$([a-z0-9_]+)\\$/', $this->m_sTemplate, $aMatches);
+		$aTemplateFields = $aMatches[1];
+		$aFieldsMap = array();
+
+		$sClass = get_class($this->m_oObj);
+		// Renders the fields used in the template
+		foreach(MetaModel::ListAttributeDefs(get_class($this->m_oObj)) as $sAttCode => $oAttDef)
+		{
+			$aParams[$sAttCode.'->label()'] = $oAttDef->GetLabel();
+			$iInputId = 'Z_'.$sAttCode; // TODO: generate a real/unique prefix...
+			if (in_array($sAttCode, $aTemplateFields))
+			{
+				$iFlags = $this->m_oObj->GetAttributeFlags($sAttCode);
+				if ($iFlags & OPT_ATT_HIDDEN)
+				{
+					$aParams[$sAttCode.'->label()'] = '';
+					$aParams[$sAttCode] = '';
+				}
+				elseif ($bEditMode && !($iFlags && OPT_ATT_READONLY)) //TODO: check the data synchro status...
+				{
+					$aParams[$sAttCode] = "<span id=\"field_{$iInputId}\">".$this->m_oObj->GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef,
+						$this->m_oObj->Get($sAttCode),
+						$this->m_oObj->GetEditValue($sAttCode),
+						$iInputId, // InputID
+						'',
+						$iFlags,
+						array('this' => $this->m_oObj) // aArgs
+					).'</span>';
+					$aFieldsMap[$sAttCode] = $iInputId;
+				}
+				else 
+				{
+					$aParams[$sAttCode] = $this->m_oObj->GetAsHTML($sAttCode);
+				}
+			}
+		}
+		
+		// Renders the PlugIns used in the template
+		preg_match_all('/\\$PlugIn:([A-Za-z0-9_]+)->properties\\(\\)\\$/', $this->m_sTemplate, $aMatches);
+		$aPlugInProperties = $aMatches[1];
+		foreach($aPlugInProperties as $sPlugInClass)
+		{
+			$oInstance = MetaModel::GetPlugins('iApplicationUIExtension', $sPlugInClass);
+			if ($oInstance != null) // Safety check...
+			{
+				$offset = $oPage->start_capture();
+				$oInstance->OnDisplayProperties($this->m_oObj, $oPage, $bEditMode);
+				$sContent = $oPage->end_capture($offset);
+				$aParams["PlugIn:{$sPlugInClass}->properties()"]= $sContent;			
+			}
+			else
+			{
+				$aParams["PlugIn:{$sPlugInClass}->properties()"]= "Missing PlugIn: $sPlugInClass";				
+			}			
+		}
+
+		$offset = $oPage->start_capture();
+		parent::Render($oPage, $aParams);
+		$sContent = $oPage->end_capture($offset);
+		// Remove empty table rows in case some attributes are hidden...
+		$sContent = preg_replace('/<tr[^>]*>\s*(<td[^>]*>\s*<\\/td>)+\s*<\\/tr>/im', '', $sContent);
+		$oPage->add($sContent);
+		return $aFieldsMap;
 	}
 }
 

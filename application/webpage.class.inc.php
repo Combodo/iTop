@@ -246,6 +246,28 @@ class WebPage
 
 		$this->add($this->GetDetails($aFields));
     }
+
+	/**
+	 * Records the current state of the 'html' part of the page output
+	 * @return mixed The current state of the 'html' output
+	 */    
+    public function start_capture()
+    {
+    	return strlen($this->s_content);
+    }
+    
+    /**
+     * Returns the part of the html output that occurred since the call to start_capture
+     * and removes this part from the current html output
+     * @param $offset mixed The value returned by start_capture
+     * @return string The part of the html output that was added since the call to start_capture
+     */
+    public function end_capture($offset)
+    {
+    	$sCaptured = substr($this->s_content, $offset);
+    	$this->s_content = substr($this->s_content, 0, $offset);
+    	return $sCaptured;
+    }
 	
 	/**
 	 * Build a special kind of TABLE useful for displaying the details of an object from a hash array of data
@@ -302,7 +324,7 @@ class WebPage
 			{
 				$sSelected = ($value == $key) ? ' checked' : '';
 			}
-			$sHTMLValue .= "<input type=\"radio\" id=\"{$iId}_{$key}\" name=\"attr_radio_$sFieldName\" onChange=\"$('#{$iId}').val(this.value).trigger('change');\" value=\"$key\"$sSelected><label class=\"radio\" for=\"{$iId}_{$key}\">&nbsp;$display_value</label>&nbsp;";
+			$sHTMLValue .= "<input type=\"radio\" id=\"{$iId}_{$key}\" name=\"radio_$sFieldName\" onChange=\"$('#{$iId}').val(this.value).trigger('change');\" value=\"$key\"$sSelected><label class=\"radio\" for=\"{$iId}_{$key}\">&nbsp;$display_value</label>&nbsp;";
 			if ($bVertical)
 			{
 				if ($idx == 0)
@@ -314,7 +336,7 @@ class WebPage
 			}
 			$idx++;
 		}
-		$sHTMLValue .= "<input type=\"hidden\" id=\"$iId\" name=\"attr_$sFieldName\" value=\"$value\"/>";
+		$sHTMLValue .= "<input type=\"hidden\" id=\"$iId\" name=\"$sFieldName\" value=\"$value\"/>";
 		if (!$bVertical)					
 		{
 			// Validation icon at the end of the line

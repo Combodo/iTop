@@ -204,9 +204,9 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		$oBlock->Display($oPage, -1);
 	}
 
-	function DisplayBareProperties(WebPage $oPage, $bEditMode = false)
+	function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '')
 	{
-		$oPage->add($this->GetBareProperties($oPage, $bEditMode));		
+		$aFieldsMap = $this->GetBareProperties($oPage, $bEditMode, $sPrefix);		
 
 		// Special case to display the case log, if any...
 		// WARNING: if you modify the loop below, also check the corresponding code in UpdateObject and DisplayModifyForm
@@ -214,7 +214,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		{
 			if ($oAttDef instanceof AttributeCaseLog)
 			{
-				$this->DisplayCaseLog($oPage, $sAttCode, '', '', false);
+				$this->DisplayCaseLog($oPage, $sAttCode, '', '', $bEditMode);
 			}
 		}
 
@@ -222,6 +222,8 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		{
 			$oExtensionInstance->OnDisplayProperties($this, $oPage, $bEditMode);
 		}
+		
+		return $aFieldsMap;
 	}
 
 	function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
@@ -382,7 +384,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		}
 	}
 
-	function GetBareProperties(WebPage $oPage, $bEditMode = false)
+	function GetBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix)
 	{
 		$sHtml = '';
 		$oAppContext = new ApplicationContext();	
@@ -396,6 +398,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		$sHtml = '';
 		$aDetails = array();
 		$iInputId = 0;
+		$aFieldsMap = array();
 		foreach($aDetailsStruct as $sTab => $aCols )
 		{
 			$aDetails[$sTab] = array();
@@ -436,28 +439,94 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 					}
 					foreach($aFields as $sAttCode)
 					{
-						$val = $this->GetFieldAsHtml($sClass, $sAttCode, $sStateAttCode);
+						if ($bEditMode)
+						{
+
+
+						$sComments = isset($aFieldsComments[$sAttCode]) ? $aFieldsComments[$sAttCode] : '&nbsp;';
+						$sInfos = '&nbsp;';
+						$iFlags = $this->GetAttributeFlags($sAttCode);
+						$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+						if ( (!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0))
+						{
+							if ($oAttDef->IsWritable())
+							{
+								if ($sStateAttCode == $sAttCode)
+								{
+									// State attribute is always read-only from the UI
+									$sHTMLValue = $this->GetStateLabel();
+									$val = array('label' => '<span>'.$oAttDef->GetLabel().'</span>', 'value' => $sHTMLValue, 'comments' => $sComments, 'infos' => $sInfos);
+								}
+								else
+								{				
+									$sInputId = $this->m_iFormId.'_'.$sAttCode;
+									if ($iFlags & OPT_ATT_HIDDEN)
+									{
+										// Attribute is hidden, add a hidden input
+										$oPage->add('<input type="hidden" id="'.$sInputId.'" name="attr_'.$sPrefix.$sAttCode.'" value="'.htmlentities($this->Get($sAttCode), ENT_QUOTES, 'UTF-8').'"/>');
+										$aFieldsMap[$sAttCode] = $sInputId;
+									}
+									else
+									{
+										if ($iFlags & (OPT_ATT_READONLY|OPT_ATT_SLAVE))
+										{
+
+											// Check if the attribute is not read-only because of a synchro...
+											$aReasons = array();
+											$sSynchroIcon = '';
+											if ($iFlags & OPT_ATT_SLAVE)
+											{
+												$iSynchroFlags = $this->GetSynchroReplicaFlags($sAttCode, $aReasons);
+												$sSynchroIcon = "&nbsp;<img id=\"synchro_$sInputId\" src=\"../images/transp-lock.png\" style=\"vertical-align:middle\"/>";
+												$sTip = '';
+												foreach($aReasons as $aRow)
+												{
+													$sTip .= "<p>Synchronized with {$aRow['name']} - {$aRow['description']}</p>";
+												}
+												$oPage->add_ready_script("$('#synchro_$sInputId').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );");
+											}
+
+											// Attribute is read-only
+											$sHTMLValue = $this->GetAsHTML($sAttCode);
+											$sHTMLValue .= '<input type="hidden" id="'.$sInputId.'" name="attr_'.$sPrefix.$sAttCode.'" value="'.htmlentities($this->Get($sAttCode), ENT_QUOTES, 'UTF-8').'"/>';
+											$aFieldsMap[$sAttCode] = $sInputId;
+											$sComments = $sSynchroIcon;
+										}
+										else
+										{
+											$sValue = $this->Get($sAttCode);
+											$sDisplayValue = $this->GetEditValue($sAttCode);
+											$aArgs = array('this' => $this, 'formPrefix' => $sPrefix);
+											$sHTMLValue = "<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
+											$aFieldsMap[$sAttCode] = $sInputId;
+											
+										}
+										$val = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>', 'value' => $sHTMLValue, 'comments' => $sComments, 'infos' => $sInfos);
+									}
+								}
+							}
+							else
+							{
+								$val = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>', 'value' => $this->GetAsHTML($sAttCode), 'comments' => $sComments, 'infos' => $sInfos);			
+							}
+						}
+						else
+						{
+							$val = null; // Skip this field
+						}
+
+
+
+							
+						}
+						else
+						{
+							// !bEditMode
+							$val = $this->GetFieldAsHtml($sClass, $sAttCode, $sStateAttCode);
+						}
+
 						if ($val != null)
 						{
-							/*
-							 * Removed for now...
-							// Check if the attribute is not mastered by a synchro...
-							$aReasons = array();
-							$iSynchroFlags = $this->GetSynchroReplicaFlags($sAttCode, $aReasons);
-							$sSynchroIcon = '';
-							if ($iSynchroFlags & OPT_ATT_SLAVE)
-							{
-								$sSynchroIcon = "&nbsp;<img id=\"synchro_$iInputId\" src=\"../images/transp-lock.png\" style=\"vertical-align:middle\"/>";
-								$sTip = '';
-								foreach($aReasons as $aRow)
-								{
-									$sTip .= "<p>Synchronized with {$aRow['name']} - {$aRow['description']}</p>";
-								}
-								$oPage->add_ready_script("$('#synchro_$iInputId').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );");
-							}
-
-							$val['comments'] = $sSynchroIcon;
-							*/
 							// The field is visible, add it to the current column
 							$aDetails[$sTab][$sColIndex][] = $val;
 							$iInputId++;
@@ -478,7 +547,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 			}
 			$oPage->add('</tr></table>');
 		}
-		return $sHtml;
+		return $aFieldsMap;
 	}
 
 	
@@ -1606,174 +1675,65 @@ EOF
 		{
 			$sFormAction = $aExtraParams['action'];
 		}
+		// Custom label for the apply button ?
+		if (isset($aExtraParams['custom_button']))
+		{
+			$sApplyButton = $aExtraParams['custom_button'];			
+		}
+		else if ($iKey > 0)
+		{
+			$sApplyButton = Dict::S('UI:Button:Apply');
+		}
+		else
+		{
+			$sApplyButton = Dict::S('UI:Button:Create');
+		}
+		// Custom operation for the form ?
+		if (isset($aExtraParams['custom_operation']))
+		{
+			$sOperation = $aExtraParams['custom_operation'];			
+		}
+		else if ($iKey > 0)
+		{
+			$sOperation = 'apply_modify';
+		}
+		else
+		{
+			$sOperation = 'apply_new';
+		}
+		if ($iKey > 0)
+		{
+			// The object already exists in the database, it's a modification
+			$sButtons = "<input type=\"hidden\" name=\"id\" value=\"$iKey\">\n";
+			$sButtons .= "<input type=\"hidden\" name=\"operation\" value=\"{$sOperation}\">\n";			
+			$sButtons .= "<button type=\"button\" class=\"action cancel\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;&nbsp;&nbsp;\n";
+			$sButtons .= "<button type=\"submit\" class=\"action\"><span>{$sApplyButton}</span></button>\n";
+		}
+		else
+		{
+			// The object does not exist in the database it's a creation
+			$sButtons = "<input type=\"hidden\" name=\"operation\" value=\"$sOperation\">\n";			
+			$sButtons .= "<button type=\"button\" class=\"action cancel\">".Dict::S('UI:Button:Cancel')."</button>&nbsp;&nbsp;&nbsp;&nbsp;\n";
+			$sButtons .= "<button type=\"submit\" class=\"action\"><span>{$sApplyButton}</span></button>\n";
+		}
+
+
+		$bDisplayActionsAtTop = MetaModel::GetConfig()->Get('display_actions_at_top');
 		$iTransactionId = utils::GetNewTransactionId();
 		$oPage->SetTransactionId($iTransactionId);
 		$oPage->add("<form action=\"$sFormAction\" id=\"form_{$this->m_iFormId}\" enctype=\"multipart/form-data\" method=\"post\" onSubmit=\"return OnSubmit('form_{$this->m_iFormId}');\">\n");
 		$oPage->add_ready_script("$(window).unload(function() { OnUnload('$iTransactionId') } );\n");
 
+		if ($bDisplayActionsAtTop)
+		{
+			$oPage->add($sButtons);
+		}
+
 		$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB, $sPrefix);
 		$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
 		$oPage->SetCurrentTab(Dict::S('UI:PropertiesTab'));
-//		$aDetailsList = $this->FLattenZList(MetaModel::GetZListItems($sClass, 'details'));
-		//$aFullList = MetaModel::ListAttributeDefs($sClass);
-		$aList = array();
-		// Compute the list of properties to display, first the attributes in the 'details' list, then 
-		// all the remaining attributes that are not external fields
-//		foreach($aDetailsList as $sAttCode)
-//		{
-//			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-//			if (!$oAttDef->IsExternalField())
-//			{
-//				$aList[] = $sAttCode;
-//			}
-//		}
 
-		$aDetailsList = MetaModel::GetZListItems($sClass, 'details');
-		$aDetailsStruct = self::ProcessZlist($aDetailsList, array('UI:PropertiesTab' => array()), 'UI:PropertiesTab', 'col1', '');
-		$sHtml = '';
-		$aDetails = array();
-		foreach($aDetailsStruct as $sTab => $aCols )
-		{
-			$aDetails[$sTab] = array();
-			ksort($aCols);
-			$oPage->SetCurrentTab(Dict::S($sTab));
-			$oPage->add('<table style="vertical-align:top"><tr>');
-			foreach($aCols as $sColIndex => $aFieldsets)
-			{
-				$sLabel = '';
-				$sPreviousLabel = '';
-				$aDetails[$sTab][$sColIndex] = array();
-				$oPage->add('<td style="vertical-align:top">');
-				//$aDetails[$sTab][$sColIndex] = array();
-				foreach($aFieldsets as $sFieldsetName => $aFields)
-				{
-					if (!empty($sFieldsetName) && ($sFieldsetName[0]!='_'))
-					{
-						$sLabel = $sFieldsetName;
-					}
-					else
-					{
-						$sLabel = '';
-					}
-					if ($sLabel != $sPreviousLabel)
-					{
-						if (!empty($sPreviousLabel))
-						{
-							$oPage->add('<fieldset>');
-							$oPage->add('<legend>'.Dict::S($sPreviousLabel).'</legend>');
-						}
-						$oPage->Details($aDetails[$sTab][$sColIndex]);
-						if (!empty($sPreviousLabel))
-						{
-							$oPage->add('</fieldset>');
-						}
-						$aDetails[$sTab][$sColIndex] = array();
-						$sPreviousLabel = $sLabel;
-					}
-					foreach($aFields as $sAttCode)
-					{
-						$aVal = null;
-						$sComments = isset($aFieldsComments[$sAttCode]) ? $aFieldsComments[$sAttCode] : '&nbsp;';
-						$sInfos = '&nbsp;';
-						$iFlags = $this->GetAttributeFlags($sAttCode);
-						$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-						if ( (!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0))
-						{
-							if ($oAttDef->IsWritable())
-							{
-								if ($sStateAttCode == $sAttCode)
-								{
-									// State attribute is always read-only from the UI
-									$sHTMLValue = $this->GetStateLabel();
-									$aVal = array('label' => '<span>'.$oAttDef->GetLabel().'</span>', 'value' => $sHTMLValue, 'comments' => $sComments, 'infos' => $sInfos);
-								}
-								else
-								{				
-									$sInputId = $this->m_iFormId.'_'.$sAttCode;
-									if ($iFlags & OPT_ATT_HIDDEN)
-									{
-										// Attribute is hidden, add a hidden input
-										$oPage->add('<input type="hidden" id="'.$sInputId.'" name="attr_'.$sPrefix.$sAttCode.'" value="'.htmlentities($this->Get($sAttCode), ENT_QUOTES, 'UTF-8').'"/>');
-										$aFieldsMap[$sAttCode] = $sInputId;
-									}
-									else
-									{
-										if ($iFlags & (OPT_ATT_READONLY|OPT_ATT_SLAVE))
-										{
-
-											// Check if the attribute is not read-only because of a synchro...
-											$aReasons = array();
-											$sSynchroIcon = '';
-											if ($iFlags & OPT_ATT_SLAVE)
-											{
-												$iSynchroFlags = $this->GetSynchroReplicaFlags($sAttCode, $aReasons);
-												$sSynchroIcon = "&nbsp;<img id=\"synchro_$sInputId\" src=\"../images/transp-lock.png\" style=\"vertical-align:middle\"/>";
-												$sTip = '';
-												foreach($aReasons as $aRow)
-												{
-													$sTip .= "<p>Synchronized with {$aRow['name']} - {$aRow['description']}</p>";
-												}
-												$oPage->add_ready_script("$('#synchro_$sInputId').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );");
-											}
-
-											// Attribute is read-only
-											$sHTMLValue = $this->GetAsHTML($sAttCode);
-											$sHTMLValue .= '<input type="hidden" id="'.$sInputId.'" name="attr_'.$sPrefix.$sAttCode.'" value="'.htmlentities($this->Get($sAttCode), ENT_QUOTES, 'UTF-8').'"/>';
-											$aFieldsMap[$sAttCode] = $sInputId;
-											$sComments = $sSynchroIcon;
-										}
-										else
-										{
-											$sValue = $this->Get($sAttCode);
-											$sDisplayValue = $this->GetEditValue($sAttCode);
-											$aArgs = array('this' => $this, 'formPrefix' => $sPrefix);
-											$sHTMLValue = "<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
-											$aFieldsMap[$sAttCode] = $sInputId;
-											
-										}
-										$aVal = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>', 'value' => $sHTMLValue, 'comments' => $sComments, 'infos' => $sInfos);
-									}
-								}
-							}
-							else
-							{
-								$aVal = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>', 'value' => $this->GetAsHTML($sAttCode), 'comments' => $sComments, 'infos' => $sInfos);			
-							}
-						}
-						if ($aVal != null)
-						{
-							// The field is visible, add it to the current column
-							$aDetails[$sTab][$sColIndex][] = $aVal;
-						}				
-					}
-				}
-				if (!empty($sPreviousLabel))
-				{
-					$oPage->add('<fieldset>');
-					$oPage->add('<legend>'.Dict::S($sPreviousLabel).'</legend>');
-				}
-				$oPage->Details($aDetails[$sTab][$sColIndex]);
-				if (!empty($sPreviousLabel))
-				{
-					$oPage->add('</fieldset>');
-				}
-				$oPage->add('</td>');
-			}
-			$oPage->add('</tr></table>');
-		}
-
-		// Special case to display the case log, if any...
-		// WARNING: if you modify the loop below, also check the corresponding code in UpdateObject and DisplayDetails
-		foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
-		{
-			if ($oAttDef instanceof AttributeCaseLog)
-			{
-				$sComments = isset($aFieldsComments[$sAttCode]) ? $aFieldsComments[$sAttCode] : '&nbsp;';
-				$this->DisplayCaseLog($oPage, $sAttCode, $sComments, $sPrefix, true);
-				$sInputId = $this->m_iFormId.'_'.$sAttCode;
-				$aFieldsMap[$sAttCode] = $sInputId;
-			}
-		}
+		$aFieldsMap = $this->DisplayBareProperties($oPage, true, $sPrefix);
 		// Now display the relations, one tab per relation
 		if (!isset($aExtraParams['noRelations']))
 		{
@@ -1788,49 +1748,11 @@ EOF
 			$oPage->add("<input type=\"hidden\" name=\"$sName\" value=\"$value\">\n");
 		}
 		$oPage->add($oAppContext->GetForForm());
-		// Custom operation for the form ?
-		if (isset($aExtraParams['custom_operation']))
+		if ($bDisplayActionsAtTop)
 		{
-			$sOperation = $aExtraParams['custom_operation'];			
-		}
-		else if ($iKey > 0)
-		{
-			$sOperation = 'apply_modify';
-		}
-		else
-		{
-			$sOperation = 'apply_new';
+			$oPage->add($sButtons);
 		}
 
-		// Custom label for the apply button ?
-		if (isset($aExtraParams['custom_button']))
-		{
-			$sApplyButton = $aExtraParams['custom_button'];			
-		}
-		else if ($iKey > 0)
-		{
-			$sApplyButton = Dict::S('UI:Button:Apply');
-		}
-		else
-		{
-			$sApplyButton = Dict::S('UI:Button:Create');
-		}
-
-		if ($iKey > 0)
-		{
-			// The object already exists in the database, it's a modification
-			$oPage->add("<input type=\"hidden\" name=\"id\" value=\"$iKey\">\n");
-			$oPage->add("<input type=\"hidden\" name=\"operation\" value=\"{$sOperation}\">\n");			
-			$oPage->add("<button type=\"button\" class=\"action cancel\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
-			$oPage->add("<button type=\"submit\" class=\"action\"><span>{$sApplyButton}</span></button>\n");
-		}
-		else
-		{
-			// The object does not exist in the database it's a creation
-			$oPage->add("<input type=\"hidden\" name=\"operation\" value=\"$sOperation\">\n");			
-			$oPage->add("<button type=\"button\" class=\"action cancel\">".Dict::S('UI:Button:Cancel')."</button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
-			$oPage->add("<button type=\"submit\" class=\"action\"><span>{$sApplyButton}</span></button>\n");
-		}
 		// Hook the cancel button via jQuery so that it can be unhooked easily as well if needed
 		$sDefaultUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=cancel&'.$oAppContext->GetForLink();
 		$oPage->add_ready_script("$('#form_{$this->m_iFormId} button.cancel').click( function() { BackToDetails('$sClass', $iKey, '$sDefaultUrl')} );");

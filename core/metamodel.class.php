@@ -1332,7 +1332,7 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 					{
 						$oExtensionInstance = new $sPHPClass;
 					}
-					self::$m_aExtensionClasses[$sInterface][] = $oExtensionInstance;
+					self::$m_aExtensionClasses[$sInterface][$sPHPClass] = $oExtensionInstance;
 				}
 			}
 		}
@@ -4455,6 +4455,22 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 		{
 			return array();
 		}
+	}
+
+	/**
+	 * Returns the instance of the specified plug-ins for the given interface
+	 */
+	public static function GetPlugins($sInterface, $sClassName)
+	{
+		$oInstance = null;
+		if (array_key_exists($sInterface, self::$m_aExtensionClasses))
+		{
+			if (array_key_exists($sClassName, self::$m_aExtensionClasses[$sInterface]))
+			{
+				return self::$m_aExtensionClasses[$sInterface][$sClassName];
+			}
+		}
+		return $oInstance;
 	}
 
 	public static function GetCacheEntries(Config $oConfig = null)

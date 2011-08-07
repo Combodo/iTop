@@ -675,13 +675,6 @@ class DisplayBlock
 			$sHtml .= '<a class="summary" href="'.$sHyperlink.'">'.Dict::Format(str_replace('_', ':', $sLabel), $iCount).'</a>';
 			break;
 			
-			case 'bare_details':
-			while($oObj = $this->m_oSet->Fetch())
-			{
-				$sHtml .= $oObj->GetBareProperties($oPage);
-			}
-			break;
-			
 			case 'csv':
 			$sHtml .= "<textarea style=\"width:95%;height:98%\">\n";
 			$sHtml .= cmdbAbstractObject::GetSetAsCSV($this->m_oSet);
