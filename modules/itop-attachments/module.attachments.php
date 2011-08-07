@@ -58,7 +58,8 @@ SetupWebPage::AddModule(
 		// Default settings
 		//
 		'settings' => array(
-			'allowed_classes' => array('Ticket'), // List of classes for which the "Attachments" tab is visible
+			'allowed_classes' => array('Ticket'), // List of classes for which to manage "Attachments"
+			'position' => 'relations', // Where to display the attachments: relations | properties
 		),
 	)
 );

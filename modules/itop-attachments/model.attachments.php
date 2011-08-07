@@ -67,18 +67,186 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 {
 	public function OnDisplayProperties($oObject, WebPage $oPage, $bEditMode = false)
 	{
+		if ($this->GetAttachmentsPosition() == 'properties')
+		{
+			$this->DisplayAttachments($oObject, $oPage, $bEditMode);		
+		}
 	}
 
 	public function OnDisplayRelations($oObject, WebPage $oPage, $bEditMode = false)
 	{
-		$bDisplayTab = $this->IsTargetObject($oObject);
+		if ($this->GetAttachmentsPosition() == 'relations')
+		{
+			$this->DisplayAttachments($oObject, $oPage, $bEditMode);		
+		}
+	}
+
+	public function OnFormSubmit($oObject, $sFormPrefix = '')
+	{
+		if ($this->IsTargetObject($oObject))
+		{
+			// For new objects attachments are processed in OnDBInsert
+			if (!$oObject->IsNew())
+			{
+				self::UpdateAttachments($oObject);
+			}
+		}
+	}
+
+	protected function GetMaxUpload()
+	{
+		$iMaxUpload = ini_get('upload_max_filesize');
+		if (!$iMaxUpload)
+		{
+			$sRet = Dict::S('Attachments:UploadNotAllowedOnThisSystem');
+		}
+		else
+		{
+			$iMaxUpload = utils::ConvertToBytes($iMaxUpload);
+			if ($iMaxUpload > 1024*1024*1024)
+			{
+				$sRet = Dict::Format('Attachment:Max_Go', sprintf('%0.2f', $iMaxUpload/(1024*1024*1024)));
+			}
+			else if ($iMaxUpload > 1024*1024)
+			{
+				$sRet = Dict::Format('Attachment:Max_Mo', sprintf('%0.2f', $iMaxUpload/(1024*1024)));
+			}
+			else
+			{
+				$sRet = Dict::Format('Attachment:Max_Ko', sprintf('%0.2f', $iMaxUpload/(1024)));
+			}
+		}
+		return $sRet;
+	}
+	
+	public function OnFormCancel($sTempId)
+	{
+		// Delete all "pending" attachments for this form
+		$sOQL = 'SELECT Attachment WHERE temp_id = :temp_id';
+		$oSearch = DBObjectSearch::FromOQL($sOQL);
+		$oSet = new DBObjectSet($oSearch, array(), array('temp_id' => $sTempId));
+		while($oAttachment = $oSet->Fetch())
+		{
+			$oAttachment->DBDelete();
+			// Pending attachment, don't mention it in the history
+		}
+	}
+
+	public function EnumUsedAttributes($oObject)
+	{
+		return array();
+	}
+
+	public function GetIcon($oObject)
+	{
+		return '';
+	}
+
+	public function GetHilightClass($oObject)
+	{
+		// Possible return values are:
+		// HILIGHT_CLASS_CRITICAL, HILIGHT_CLASS_WARNING, HILIGHT_CLASS_OK, HILIGHT_CLASS_NONE	
+		return HILIGHT_CLASS_NONE;
+	}
+
+	public function EnumAllowedActions(DBObjectSet $oSet)
+	{
+		// No action
+		return array();
+    }
+
+	public function OnIsModified($oObject)
+	{
+		if ($this->IsTargetObject($oObject))
+		{
+			$aAttachmentIds = utils::ReadParam('attachments', array());
+			$aRemovedAttachmentIds = utils::ReadParam('removed_attachments', array());
+			if ( (count($aAttachmentIds) > 0) || (count($aRemovedAttachmentIds) > 0) )
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public function OnCheckToWrite($oObject)
+	{
+		return array();
+	}
+
+	public function OnCheckToDelete($oObject)
+	{
+		return array();
+	}
+
+	public function OnDBUpdate($oObject, $oChange = null)
+	{
+	}
+	
+	public function OnDBInsert($oObject, $oChange = null)
+	{
+		if ($this->IsTargetObject($oObject))
+		{
+			self::UpdateAttachments($oObject, $oChange);
+		}
+	}
+	
+	public function OnDBDelete($oObject, $oChange = null)
+	{
+		if ($this->IsTargetObject($oObject))
+		{
+			$oSearch = DBObjectSearch::FromOQL("SELECT Attachment WHERE item_class = :class AND item_id = :item_id");
+			$oSet = new DBObjectSet($oSearch, array(), array('class' => get_class($oObject), 'item_id' => $oObject->GetKey()));
+			while ($oAttachment = $oSet->Fetch())
+			{
+				$oAttachment->DBDelete();
+			}
+		}			
+	}
+
+	///////////////////////////////////////////////////////////////////////////////////////////////////////
+	//
+	// Plug-ins specific functions
+	//
+	///////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	protected function IsTargetObject($oObject)
+	{
+		$aAllowedClasses = MetaModel::GetModuleSetting('itop-attachments', 'allowed_classes', array('Ticket'));
+		foreach($aAllowedClasses as $sAllowedClass)
+		{
+			if ($oObject instanceof $sAllowedClass)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	protected function GetAttachmentsPosition()
+	{
+		return MetaModel::GetModuleSetting('itop-attachments', 'position', 'relations');
+	}
+
+	var $m_bDeleteEnabled = true;
+
+	public function EnableDelete($bEnabled)
+	{
+		$this->m_bDeleteEnabled = $bEnabled;
+	}
+
+	public function DisplayAttachments($oObject, WebPage $oPage, $bEditMode = false)
+	{
 		// Exit here if the class is not allowed
-		if (!$bDisplayTab) return;
+		if (!$this->IsTargetObject($oObject)) return;
 		
 		$oSearch = DBObjectSearch::FromOQL("SELECT Attachment WHERE item_class = :class AND item_id = :item_id");
 		$oSet = new DBObjectSet($oSearch, array(), array('class' => get_class($oObject), 'item_id' => $oObject->GetKey()));
-		$sTitle = ($oSet->Count() > 0)? Dict::Format('Attachments:TabTitle_Count', $oSet->Count()) : Dict::S('Attachments:EmptyTabTitle');
-		$oPage->SetCurrentTab($sTitle);
+		if ($this->GetAttachmentsPosition() == 'relations')
+		{
+			$sTitle = ($oSet->Count() > 0)? Dict::Format('Attachments:TabTitle_Count', $oSet->Count()) : Dict::S('Attachments:EmptyTabTitle');
+			$oPage->SetCurrentTab($sTitle);
+		}
 		$oPage->add_style(
 <<<EOF
 .attachment {
@@ -215,156 +383,6 @@ EOF
 			}
 		}
 	}
-
-	public function OnFormSubmit($oObject, $sFormPrefix = '')
-	{
-		if ($this->IsTargetObject($oObject))
-		{
-			// For new objects attachments are processed in OnDBInsert
-			if (!$oObject->IsNew())
-			{
-				self::UpdateAttachments($oObject);
-			}
-		}
-	}
-
-	protected function GetMaxUpload()
-	{
-		$iMaxUpload = ini_get('upload_max_filesize');
-		if (!$iMaxUpload)
-		{
-			$sRet = Dict::S('Attachments:UploadNotAllowedOnThisSystem');
-		}
-		else
-		{
-			$iMaxUpload = utils::ConvertToBytes($iMaxUpload);
-			if ($iMaxUpload > 1024*1024*1024)
-			{
-				$sRet = Dict::Format('Attachment:Max_Go', sprintf('%0.2f', $iMaxUpload/(1024*1024*1024)));
-			}
-			else if ($iMaxUpload > 1024*1024)
-			{
-				$sRet = Dict::Format('Attachment:Max_Mo', sprintf('%0.2f', $iMaxUpload/(1024*1024)));
-			}
-			else
-			{
-				$sRet = Dict::Format('Attachment:Max_Ko', sprintf('%0.2f', $iMaxUpload/(1024)));
-			}
-		}
-		return $sRet;
-	}
-	
-	public function OnFormCancel($sTempId)
-	{
-		// Delete all "pending" attachments for this form
-		$sOQL = 'SELECT Attachment WHERE temp_id = :temp_id';
-		$oSearch = DBObjectSearch::FromOQL($sOQL);
-		$oSet = new DBObjectSet($oSearch, array(), array('temp_id' => $sTempId));
-		while($oAttachment = $oSet->Fetch())
-		{
-			$oAttachment->DBDelete();
-			// Pending attachment, don't mention it in the history
-		}
-	}
-
-	public function EnumUsedAttributes($oObject)
-	{
-		return array();
-	}
-
-	public function GetIcon($oObject)
-	{
-		return '';
-	}
-
-	public function GetHilightClass($oObject)
-	{
-		// Possible return values are:
-		// HILIGHT_CLASS_CRITICAL, HILIGHT_CLASS_WARNING, HILIGHT_CLASS_OK, HILIGHT_CLASS_NONE	
-		return HILIGHT_CLASS_NONE;
-	}
-
-	public function EnumAllowedActions(DBObjectSet $oSet)
-	{
-		// No action
-		return array();
-    }
-
-	public function OnIsModified($oObject)
-	{
-		if ($this->IsTargetObject($oObject))
-		{
-			$aAttachmentIds = utils::ReadParam('attachments', array());
-			$aRemovedAttachmentIds = utils::ReadParam('removed_attachments', array());
-			if ( (count($aAttachmentIds) > 0) || (count($aRemovedAttachmentIds) > 0) )
-			{
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public function OnCheckToWrite($oObject)
-	{
-		return array();
-	}
-
-	public function OnCheckToDelete($oObject)
-	{
-		return array();
-	}
-
-	public function OnDBUpdate($oObject, $oChange = null)
-	{
-	}
-	
-	public function OnDBInsert($oObject, $oChange = null)
-	{
-		if ($this->IsTargetObject($oObject))
-		{
-			self::UpdateAttachments($oObject, $oChange);
-		}
-	}
-	
-	public function OnDBDelete($oObject, $oChange = null)
-	{
-		if ($this->IsTargetObject($oObject))
-		{
-			$oSearch = DBObjectSearch::FromOQL("SELECT Attachment WHERE item_class = :class AND item_id = :item_id");
-			$oSet = new DBObjectSet($oSearch, array(), array('class' => get_class($oObject), 'item_id' => $oObject->GetKey()));
-			while ($oAttachment = $oSet->Fetch())
-			{
-				$oAttachment->DBDelete();
-			}
-		}			
-	}
-
-	///////////////////////////////////////////////////////////////////////////////////////////////////////
-	//
-	// Plug-ins specific functions
-	//
-	///////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	protected function IsTargetObject($oObject)
-	{
-		$aAllowedClasses = MetaModel::GetModuleSetting('attachments', 'allowed_classes', array('Ticket'));
-		foreach($aAllowedClasses as $sAllowedClass)
-		{
-			if ($oObject instanceof $sAllowedClass)
-			{
-				return true;
-			}
-		}
-		return false;
-	}
-
-	var $m_bDeleteEnabled = true;
-
-	public function EnableDelete($bEnabled)
-	{
-		$this->m_bDeleteEnabled = $bEnabled;
-	}
-
 
 	protected static function UpdateAttachments($oObject, $oChange = null)
 	{
