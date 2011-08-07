@@ -109,11 +109,11 @@ class DeletionPlan
 			{
 				$this->m_iToUpdate++;
 
-            $oObject = $aData['to_reset'];
+				$oObject = $aData['to_reset'];
 				$aExtKeyLabels = array();
 				foreach ($aData['attributes'] as $sRemoteExtKey => $aRemoteAttDef)
 				{
-					$oObject->Set($sRemoteExtKey, 0);
+					$oObject->Set($sRemoteExtKey, $aData['values'][$sRemoteExtKey]);
 					$aExtKeyLabels[] = $aRemoteAttDef->GetLabel();
 				}
 				$this->m_aToUpdate[$sClass][$iId]['attributes_list'] = implode(', ', $aExtKeyLabels); 
@@ -264,7 +264,7 @@ class DeletionPlan
 		}
 	}
 
-	public function AddToUpdate($oObject, $oAttDef)
+	public function AddToUpdate($oObject, $oAttDef, $value = 0)
 	{
 		$sClass = get_class($oObject);
 		$iId = $oObject->GetKey();
@@ -281,6 +281,7 @@ class DeletionPlan
 				);
 			}
 			$this->m_aToUpdate[$sClass][$iId]['attributes'][$oAttDef->GetCode()] = $oAttDef;
+			$this->m_aToUpdate[$sClass][$iId]['values'][$oAttDef->GetCode()] = $value;
 		}
 	}
 }

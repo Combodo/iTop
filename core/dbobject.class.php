@@ -1403,7 +1403,7 @@ abstract class DBObject
 					$iDelta =$iMyRight - $iMyLeft + 1;
 					MetaModel::HKTemporaryCutBranch($iMyLeft, $iMyRight, $oAttDef, $sTable);
 
-					// No new parent, insert completely at the right of the tree
+					// No new parent for now, insert completely at the right of the tree
 					$sSQL = "SELECT max(`".$oAttDef->GetSQLRight()."`) AS max FROM `$sTable`";
 					$aRes = CMDBSource::QueryToArray($sSQL);
 					if (count($aRes) == 0)
@@ -1464,7 +1464,7 @@ abstract class DBObject
 					$oToUpdate = $aData['to_reset'];
 					foreach ($aData['attributes'] as $sRemoteExtKey => $aRemoteAttDef)
 					{
-						$oToUpdate->Set($sRemoteExtKey, 0);
+						$oToUpdate->Set($sRemoteExtKey, $aData['values'][$sRemoteExtKey]);
 						$oToUpdate->DBUpdate();
 					}
 				}
@@ -1718,7 +1718,16 @@ abstract class DBObject
 					if ($oAttDef->IsNullAllowed())
 					{
 						// Optional external key, list to reset
-						$oDeletionPlan->AddToUpdate($oDependentObj, $oAttDef);
+						if (($iDeletePropagationOption == DEL_MOVEUP) && ($oAttDef->IsHierarchicalKey()))
+						{
+							// Move the child up one level i.e. set the same parent as the current object
+							$iParentId = $this->Get($oAttDef->GetCode());
+							$oDeletionPlan->AddToUpdate($oDependentObj, $oAttDef, $iParentId);
+						}
+						else
+						{
+							$oDeletionPlan->AddToUpdate($oDependentObj, $oAttDef);
+						}
 					}
 					else
 					{

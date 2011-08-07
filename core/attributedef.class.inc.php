@@ -64,7 +64,14 @@ define('DEL_MANUAL', 1);
  * @package     iTopORM
  */
 define('DEL_AUTO', 2);
+/**
+ * Fully silent delete... not yet implemented
+ */
 define('DEL_SILENT', 2);
+/**
+ * For HierarchicalKeys only: move all the children up one level automatically
+ */
+define('DEL_MOVEUP', 3);
 
 
 /**
