@@ -319,7 +319,29 @@ class DisplayBlock
 					}
 				}
 			}
-			$this->m_oSet = new CMDBObjectSet($this->m_oFilter, array(), $aQueryParams);
+			$aOrderBy = array();
+			if (isset($aExtraParams['order_by']))
+			{
+				// Convert the string describing the order_by parameter into an array
+				// The syntax is +attCode1,-attCode2
+				// attCode1 => ascending, attCode2 => descending
+				$aTemp = explode(',', $aExtraParams['order_by']);
+				foreach($aTemp as $sTemp)
+				{
+					$aMatches = array();
+					if (preg_match('/^([+-])?(.+)$/', $sTemp, $aMatches))
+					{
+						$bAscending = true;
+						if ($aMatches[1] == '-')
+						{
+							$bAscending  = false;
+						}
+						$aOrderBy[$aMatches[2]] = $bAscending;
+					}					
+				}
+			}
+			
+			$this->m_oSet = new CMDBObjectSet($this->m_oFilter, $aOrderBy, $aQueryParams);
 		}
 		switch($this->m_sStyle)
 		{
@@ -1065,7 +1087,7 @@ class MenuBlock extends DisplayBlock
 			case 0:
 			// No object in the set, the only possible action is "new"
 			$bIsModifyAllowed =  (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES);
-			if ($bIsModifyAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:New'), 'url' => "{$sRootUrl}page/$sUIPage?operation=new&class=$sClass{$sContext}{$sDefault}"); }
+			if ($bIsModifyAllowed) { $aActions['UI:Menu:New'] = array ('label' => Dict::S('UI:Menu:New'), 'url' => "{$sRootUrl}page/$sUIPage?operation=new&class=$sClass{$sContext}{$sDefault}"); }
 			break;
 			
 			case 1:
@@ -1078,9 +1100,9 @@ class MenuBlock extends DisplayBlock
 			// Just one object in the set, possible actions are "new / clone / modify and delete"
 			if (!isset($aExtraParams['link_attr']))
 			{
-				if ($bIsModifyAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:Modify'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=modify&class=$sClass&id=$id{$sContext}#"); }
-				if ($bIsModifyAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:New'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=new&class=$sClass{$sContext}{$sDefault}"); }
-				if ($bIsDeleteAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:Delete'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=delete&class=$sClass&id=$id{$sContext}"); }
+				if ($bIsModifyAllowed) { $aActions['UI:Menu:Modify'] = array ('label' => Dict::S('UI:Menu:Modify'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=modify&class=$sClass&id=$id{$sContext}#"); }
+				if ($bIsModifyAllowed) { $aActions['UI:Menu:New'] = array ('label' => Dict::S('UI:Menu:New'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=new&class=$sClass{$sContext}{$sDefault}"); }
+				if ($bIsDeleteAllowed) { $aActions['UI:Menu:Delete'] = array ('label' => Dict::S('UI:Menu:Delete'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=delete&class=$sClass&id=$id{$sContext}"); }
 				// Transitions / Stimuli
 				$aTransitions = $oObj->EnumTransitions();
 				if (count($aTransitions))
@@ -1093,7 +1115,7 @@ class MenuBlock extends DisplayBlock
 						switch($iActionAllowed)
 						{
 							case UR_ALLOWED_YES:
-							$aActions[] = array('label' => $aStimuli[$sStimulusCode]->GetLabel(), 'url' => "{$sRootUrl}pages/UI.php?operation=stimulus&stimulus=$sStimulusCode&class=$sClass&id=$id{$sContext}");
+							$aActions[$sStimulusCode] = array('label' => $aStimuli[$sStimulusCode]->GetLabel(), 'url' => "{$sRootUrl}pages/UI.php?operation=stimulus&stimulus=$sStimulusCode&class=$sClass&id=$id{$sContext}");
 							break;
 							
 							default:
@@ -1108,14 +1130,14 @@ class MenuBlock extends DisplayBlock
 					$this->AddMenuSeparator($aActions);
 					foreach($aRelations as $sRelationCode)
 					{
-						$aActions[] = array ('label' => MetaModel::GetRelationVerbUp($sRelationCode), 'url' => "{$sRootUrl}pages/$sUIPage?operation=swf_navigator&relation=$sRelationCode&class=$sClass&id=$id{$sContext}");
+						$aActions[$sRelationCode] = array ('label' => MetaModel::GetRelationVerbUp($sRelationCode), 'url' => "{$sRootUrl}pages/$sUIPage?operation=swf_navigator&relation=$sRelationCode&class=$sClass&id=$id{$sContext}");
 					}
 				}
 				$this->AddMenuSeparator($aActions);
 				// Static menus: Email this page & CSV Export
 				$sUrl = ApplicationContext::MakeObjectUrl($sClass, $id);
-				$aActions[] = array ('label' => Dict::S('UI:Menu:EMail'), 'url' => "mailto:?subject=".$oObj->GetName()."&body=".urlencode($sUrl));
-				$aActions[] = array ('label' => Dict::S('UI:Menu:CSVExport'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=search&filter=$sFilter&format=csv{$sContext}");
+				$aActions['UI:Menu:EMail'] = array ('label' => Dict::S('UI:Menu:EMail'), 'url' => "mailto:?subject=".$oObj->GetName()."&body=".urlencode($sUrl));
+				$aActions['UI:Menu:CSVExport'] = array ('label' => Dict::S('UI:Menu:CSVExport'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=search&filter=$sFilter&format=csv{$sContext}");
 			}
 			$this->AddMenuSeparator($aActions);
 			foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
@@ -1123,7 +1145,7 @@ class MenuBlock extends DisplayBlock
 				$oSet->Rewind();
 				foreach($oExtensionInstance->EnumAllowedActions($oSet) as $sLabel => $sUrl)
 				{
-					$aActions[] = array ('label' => $sLabel, 'url' => $sUrl);
+					$aActions[$sLabel] = array ('label' => $sLabel, 'url' => $sUrl);
 				}
 			}
 			break;
@@ -1141,16 +1163,16 @@ class MenuBlock extends DisplayBlock
 				$oAttDef = MetaModel::GetAttributeDef($sClass, $sTargetAttr);
 				$sTargetClass = $oAttDef->GetTargetClass();
 				$bIsDeleteAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_DELETE, $oSet);
-				if ($bIsModifyAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:Add'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=modify_links&class=$sClass&link_attr=".$aExtraParams['link_attr']."&target_class=$sTargetClass&id=$id&addObjects=true{$sContext}"); }
-				if ($bIsBulkModifyAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:Manage'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=modify_links&class=$sClass&link_attr=".$aExtraParams['link_attr']."&target_class=$sTargetClass&id=$id{$sContext}"); }
+				if ($bIsModifyAllowed) { $aActions['UI:Menu:Add'] = array ('label' => Dict::S('UI:Menu:Add'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=modify_links&class=$sClass&link_attr=".$aExtraParams['link_attr']."&target_class=$sTargetClass&id=$id&addObjects=true{$sContext}"); }
+				if ($bIsBulkModifyAllowed) { $aActions['UI:Menu:Manage'] = array ('label' => Dict::S('UI:Menu:Manage'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=modify_links&class=$sClass&link_attr=".$aExtraParams['link_attr']."&target_class=$sTargetClass&id=$id{$sContext}"); }
 				//if ($bIsBulkDeleteAllowed) { $aActions[] = array ('label' => 'Remove All...', 'url' => "#"); }
 			}
 			else
 			{
 				// many objects in the set, possible actions are: new / modify all / delete all
-				if ($bIsModifyAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:New'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=new&class=$sClass{$sContext}{$sDefault}"); }
-				if ($bIsBulkModifyAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:ModifyAll'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=select_for_modify_all&class=$sClass&filter=$sFilter{$sContext}"); }
-				if ($bIsBulkDeleteAllowed) { $aActions[] = array ('label' => Dict::S('UI:Menu:BulkDelete'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=select_for_deletion&filter=$sFilter{$sContext}"); }
+				if ($bIsModifyAllowed) { $aActions['UI:Menu:New'] = array ('label' => Dict::S('UI:Menu:New'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=new&class=$sClass{$sContext}{$sDefault}"); }
+				if ($bIsBulkModifyAllowed) { $aActions['UI:Menu:ModifyAll'] = array ('label' => Dict::S('UI:Menu:ModifyAll'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=select_for_modify_all&class=$sClass&filter=$sFilter{$sContext}"); }
+				if ($bIsBulkDeleteAllowed) { $aActions['UI:Menu:BulkDelete'] = array ('label' => Dict::S('UI:Menu:BulkDelete'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=select_for_deletion&filter=$sFilter{$sContext}"); }
 
 				// Stimuli
 				$aStates = MetaModel::EnumStates($sClass);
@@ -1181,7 +1203,7 @@ class MenuBlock extends DisplayBlock
 								{
 									case UR_ALLOWED_YES:
 									case UR_ALLOWED_DEPENDS:
-									$aActions[] = array('label' => $aStimuli[$sStimulusCode]->GetLabel(), 'url' => "{$sRootUrl}pages/UI.php?operation=select_bulk_stimulus&stimulus=$sStimulusCode&state=$sState&class=$sClass&filter=$sFilter{$sContext}");
+									$aActions[$sStimulusCode] = array('label' => $aStimuli[$sStimulusCode]->GetLabel(), 'url' => "{$sRootUrl}pages/UI.php?operation=select_bulk_stimulus&stimulus=$sStimulusCode&state=$sState&class=$sClass&filter=$sFilter{$sContext}");
 									break;
 									
 									default:
@@ -1193,8 +1215,8 @@ class MenuBlock extends DisplayBlock
 				}
 				$this->AddMenuSeparator($aActions);
 				$sUrl = utils::GetAbsoluteUrlAppRoot();
-				$aActions[] = array ('label' => Dict::S('UI:Menu:EMail'), 'url' => "mailto:?subject=$sFilterDesc&body=".urlencode("{$sUrl}pages/$sUIPage?operation=search&filter=$sFilter{$sContext}"));
-				$aActions[] = array ('label' => Dict::S('UI:Menu:CSVExport'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=search&filter=$sFilter&format=csv{$sContext}");
+				$aActions['UI:Menu:EMail'] = array ('label' => Dict::S('UI:Menu:EMail'), 'url' => "mailto:?subject=$sFilterDesc&body=".urlencode("{$sUrl}pages/$sUIPage?operation=search&filter=$sFilter{$sContext}"));
+				$aActions['UI:Menu:CSVExport'] = array ('label' => Dict::S('UI:Menu:CSVExport'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=search&filter=$sFilter&format=csv{$sContext}");
 			}
 			$this->AddMenuSeparator($aActions);
 			foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
@@ -1202,24 +1224,45 @@ class MenuBlock extends DisplayBlock
 				$oSet->Rewind();
 				foreach($oExtensionInstance->EnumAllowedActions($oSet) as $sLabel => $sUrl)
 				{
-					$aActions[] = array ('label' => $sLabel, 'url' => $sUrl);
+					$aActions[$sLabel] = array ('label' => $sLabel, 'url' => $sUrl);
 				}
 			}
 		}
+		$aFavorites = array('UI:Menu:Modify', 'UI:Menu:New', /*'UI:Menu:Delete'*/);
+		$aCallSpec = array($sClass, 'GetShortcutActions');
+		$aShortcutActions = call_user_func($aCallSpec);
+		
 		$sHtml .= "<div class=\"itop_popup\"><ul>\n<li>".Dict::S('UI:Menu:Actions')."\n<ul>\n";
-		foreach ($aActions as $aAction)
+		$sPrevUrl = '';
+		foreach ($aActions as $key => $aAction)
 		{
-			$sClass = isset($aAction['class']) ? " class=\"{$aAction['class']}\"" : "";
-			if (empty($aAction['url']))
+			if (in_array($key, $aShortcutActions))
 			{
-				$sHtml .= "<li>{$aAction['label']}</li>\n";			
+				$aFavoriteActions[] = $aAction;
 			}
 			else
 			{
-				$sHtml .= "<li><a href=\"{$aAction['url']}\"$sClass>{$aAction['label']}</a></li>\n";
+				$sClass = isset($aAction['class']) ? " class=\"{$aAction['class']}\"" : "";
+				if (empty($aAction['url']))
+				{
+					if ($sPrevUrl != '') // Don't output consecutively two separators...
+					{
+						$sHtml .= "<li>{$aAction['label']}</li>\n";			
+					}
+					$sPrevUrl = '';
+				}
+				else
+				{
+					$sHtml .= "<li><a href=\"{$aAction['url']}\"$sClass>{$aAction['label']}</a></li>\n";
+					$sPrevUrl = $aAction['url'];
+				}
 			}
 		}
-		$sHtml .= "</ul>\n</li>\n</ul></div>\n";
+		$sHtml .= "</ul>\n</li>\n</ul></div>";
+		foreach(array_reverse($aFavoriteActions) as $aAction)
+		{
+			$sHtml .= "<div class=\"actions_button\"><a href='{$aAction['url']}'>{$aAction['label']}</a></div>";			
+		}
 		static $bPopupScript = false;
 		if (!$bPopupScript)
 		{
@@ -1240,9 +1283,11 @@ class MenuBlock extends DisplayBlock
 		$sSeparator = '<hr class="menu-separator"/>';
 		if (count($aActions) > 0) // Make sure that the separator is not the first item in the menu
 		{
-			if ($aActions[count($aActions)-1]['label'] != $sSeparator) // Make sure there are no 2 consecutive separators
+			$aKeys = array_keys($aActions);
+			$sLastKey = array_pop($aKeys);
+			if ($aActions[$sLastKey]['label'] != $sSeparator) // Make sure there are no 2 consecutive separators
 			{
-				$aActions[] = array('label' => $sSeparator, 'url' => '');
+				$aActions['sep_'.(count($aActions)-1)] = array('label' => $sSeparator, 'url' => '');
 			}
 		}
 	}	

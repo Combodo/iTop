@@ -2102,6 +2102,14 @@ EOF
 	}
 	
 	/**
+	 * Get the list of actions to be displayed as 'shortcuts' (i.e buttons) instead of inside the Actions popup menu
+	 */
+	 public static function GetShortcutActions()
+	 {
+	 	return array('UI:Menu:New', 'UI:Menu:Modify');
+	 }
+	
+	/**
 	 * Maps the given context parameter name to the appropriate filter/search code for this class
 	 * @param string $sContextParam Name of the context parameter, i.e. 'org_id'
 	 * @return string Filter code, i.e. 'customer_id'
