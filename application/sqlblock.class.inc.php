@@ -268,7 +268,7 @@ class SqlBlock
 		//
 		$aValueKeys = array();
 		$index = 0;
-		if ($sDrillDown != '')
+		if ((count($aValues) > 0) && ($sDrillDown != ''))
 		{
 			$oFilter = DBObjectSearch::FromOQL($sDrillDown);
 			$sClass = $oFilter->GetClass();
@@ -276,8 +276,8 @@ class SqlBlock
 			$aSQLColNames = array_keys(current($aRows)); // Read the list of columns from the current (i.e. first) element of the array
 			$oAppContext = new ApplicationContext();
 			$sURL = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search_oql&search_form=0&oql_class='.$sClass.'&format=html&'.$oAppContext->GetForLink().'&oql_clause=';				
-			$aURLs = array();
 		}
+		$aURLs = array();
 		foreach($aValues as $key => $value)
 		{
 			// Make sure that values are integers (so that max() will work....)
@@ -304,7 +304,14 @@ class SqlBlock
 		{
 			$oChartElement = new bar_glass();
 		
-			$maxValue = max($aValues);
+			if (count($aValues) > 0)
+			{
+				$maxValue = max($aValues);
+			}
+			else
+			{
+				$maxValue = 1;
+			}
 			$oYAxis = new y_axis();
 			$aMagicValues = array(1,2,5,10);
 			$iMultiplier = 1;
@@ -369,11 +376,6 @@ class SqlBlock
 			
 		$sData = $oChart->toPrettyString();
 		$sData = json_encode($sData);
-		$sURLList = '';
-		foreach($aURLs as $index => $sURL)
-		{
-			$sURLList .= "\taURLs[$index] = '".addslashes($sURL)."';\n";
-		}
 
 		// 2- Declare the Javascript function that will render the chart data\
 		//
@@ -383,7 +385,19 @@ function ofc_get_data_{$sId}()
 {
 	return $sData;
 }
+EOF
+		);
+		
+		if (count($aURLs) > 0)
+		{
+			$sURLList = '';
+			foreach($aURLs as $index => $sURL)
+			{
+				$sURLList .= "\taURLs[$index] = '".addslashes($sURL)."';\n";
+			}
 
+			$oPage->add_script(
+<<< EOF
 function ofc_drilldown_{$sId}(index)
 {
 	var aURLs = new Array();
@@ -393,8 +407,9 @@ function ofc_drilldown_{$sId}(index)
 	window.location.href = sURL; // Navigate ! 
 }
 EOF
-		);
-		
+			);
+		}
+
 		// 3- Insert the Open Flash chart
 		//
 		$oPage->add("<div id=\"$sId\"><div>\n");
