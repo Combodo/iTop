@@ -1717,7 +1717,26 @@ EOF
 			$sButtons .= "<button type=\"submit\" class=\"action\"><span>{$sApplyButton}</span></button>\n";
 		}
 
-
+		$aTransitions = $this->EnumTransitions();
+		if (count($aTransitions))
+		{
+			$oSetToCheckRights = DBObjectSet::FromObject($this);
+			$aStimuli = Metamodel::EnumStimuli($sClass);
+			foreach($aTransitions as $sStimulusCode => $aTransitionDef)
+			{
+				$iActionAllowed = (get_class($aStimuli[$sStimulusCode]) == 'StimulusUserAction') ? UserRights::IsStimulusAllowed($sClass, $sStimulusCode, $oSetToCheckRights) : UR_ALLOWED_NO;
+				switch($iActionAllowed)
+				{
+					case UR_ALLOWED_YES:
+					$sButtons .= "<button type=\"submit\" name=\"next_action\" value=\"{$sStimulusCode}\" class=\"action\"><span>".$aStimuli[$sStimulusCode]->GetLabel()."</span></button>\n";
+					break;
+					
+					default:
+					// Do nothing
+				}
+			}
+		}
+				
 		$bDisplayActionsAtTop = MetaModel::GetConfig()->Get('display_actions_at_top');
 		$iTransactionId = utils::GetNewTransactionId();
 		$oPage->SetTransactionId($iTransactionId);
@@ -2529,6 +2548,55 @@ EOF
 			$oPage->add($sHTMLValue);
 			$oPage->add('</fieldset>');
 		}
+	}
+	
+	public function GetExpectedAttributes($sCurrentState, $sStimulus, $bOnlyNewOnes)
+	{
+		$aTransitions = $this->EnumTransitions();
+		$aStimuli = MetaModel::EnumStimuli(get_class($this));
+		if (!isset($aTransitions[$sStimulus]))
+		{
+			// Invalid stimulus
+			throw new ApplicationException(Dict::Format('UI:Error:Invalid_Stimulus_On_Object_In_State', $sStimulus, $oObj->GetName(), $oObj->GetStateLabel()));
+		}
+		$aTransition = $aTransitions[$sStimulus];
+		$sTargetState = $aTransition['target_state'];
+		$aTargetStates = MetaModel::EnumStates(get_class($this));
+		$aTargetState = $aTargetStates[$sTargetState];
+		$aCurrentState = $aTargetStates[$this->GetState()];
+		$aExpectedAttributes = $aTargetState['attribute_list'];
+		$aCurrentAttributes = $aCurrentState['attribute_list'];
+
+		$aComputedAttributes = array();
+		foreach($aExpectedAttributes as $sAttCode => $iExpectCode)
+		{
+			if (!array_key_exists($sAttCode, $aCurrentAttributes))
+			{
+				$aComputedAttributes[$sAttCode] = $iExpectCode;
+			}
+			else
+			{
+				if ( !($aCurrentAttributes[$sAttCode] & (OPT_ATT_HIDDEN|OPT_ATT_READONLY)) )
+				{
+					$iExpectCode = $iExpectCode & ~(OPT_ATT_MUSTPROMPT|OPT_ATT_MUSTCHANGE); // Already prompted/changed, reset the flags
+				}
+				//TODO: better check if the attribute is not *null*
+				if ( ($iExpectCode & OPT_ATT_MANDATORY) && ($this->Get($sAttCode) != ''))
+				{
+					$iExpectCode = $iExpectCode & ~(OPT_ATT_MANDATORY); // If the attribute is present, then no need to request its presence
+				}
+
+				$aComputedAttributes[$sAttCode] = $iExpectCode;								
+			}
+
+			$aComputedAttributes[$sAttCode] = $aComputedAttributes[$sAttCode] & ~(OPT_ATT_READONLY|OPT_ATT_HIDDEN); // Don't care about this form now
+
+			if ($aComputedAttributes[$sAttCode] == 0)
+			{
+				unset($aComputedAttributes[$sAttCode]);
+			}
+		}
+		return $aComputedAttributes;
 	}
 }
 ?>

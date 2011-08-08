@@ -354,6 +354,52 @@ EOF
 }
 
 /**
+ * Apply the 'next-action' to the given object or redirect to the page that prompts for additional information if needed
+ * @param $oP WebPage The page for the output
+ * @param $oObj CMDBObject The object to process
+ * @param $sNextAction string The code of the stimulus for the 'action' (i.e. Transition) to apply
+ * @param $oMyChange CMDBChange The change used to log the modifications or null is none is available (a new one will be created)
+ */
+function ApplyNextAction(Webpage $oP, CMDBObject $oObj, $sNextAction, $oMyChange)
+{
+	// Here handle the apply stimulus
+	$aTransitions = $oObj->EnumTransitions();
+	$aStimuli = MetaModel::EnumStimuli(get_class($oObj));
+	if (!isset($aTransitions[$sNextAction]))
+	{
+		// Invalid stimulus
+		throw new ApplicationException(Dict::Format('UI:Error:Invalid_Stimulus_On_Object_In_State', $sNextAction, $oObj->GetName(), $oObj->GetStateLabel()));
+	}
+	// Get the list of missing mandatory fields for the target state, considering only the changes from the previous form (i.e don't prompt twice)
+	$aExpectedAttributes = $oObj->GetExpectedAttributes($oObj->GetState(), $sNextAction, true /* $bOnlyNewOnes */);
+	
+	if (count($aExpectedAttributes) == 0)
+	{
+		// If all the mandatory fields are already present, just apply the transition silently...
+		if ($oObj->ApplyStimulus($sNextAction))
+		{
+			if ($oMyChange == null)
+			{
+				$oMyChange = MetaModel::NewObject("CMDBChange");
+				$oMyChange->Set("date", time());
+				$sUserString = CMDBChange::GetCurrentUserName();
+				$oMyChange->Set("userinfo", $sUserString);
+				$iChangeId = $oMyChange->DBInsert();							
+			}
+			$oObj->DBUpdateTracked($oMyChange);
+		}
+		$oObj->DisplayDetails($oP);
+	}
+	else
+	{
+		// redirect to the 'stimulus' action
+		$oAppContext = new ApplicationContext();
+//echo "<p>Missing Attributes <pre>".print_r($aExpectedAttributes, true)."</pre></p>\n";
+		
+		$oP->add_header('Location: '.utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=stimulus&class='.get_class($oObj).'&stimulus='.$sNextAction.'&id='.$oObj->getKey().'&'.$oAppContext->GetForLink());
+	}
+}
+/**
  * Displays the details of an object
  * @param $oP WebPage Page for the output
  * @param $sClass string The name of the class of the object
@@ -1172,6 +1218,7 @@ EOF
 			}
 			else
 			{
+				$oMyChange = null;
 				$oObj->UpdateObjectFromPostedForm();
 
 				if (!$oObj->IsModified())
@@ -1217,7 +1264,16 @@ EOF
 			if ($bDisplayDetails)
 			{
 				$oObj = MetaModel::GetObject(get_class($oObj), $oObj->GetKey()); //Workaround: reload the object so that the linkedset are displayed properly
-				$oObj->DisplayDetails($oP);
+				$sNextAction = utils::ReadPostedParam('next_action', '');
+				if (!empty($sNextAction))
+				{
+					ApplyNextAction($oP, $oObj, $sNextAction, $oMyChange);
+				}
+				else
+				{
+					// Nothing more to do
+					$oObj->DisplayDetails($oP);
+				}
 			}
 		break;
 
@@ -1324,7 +1380,18 @@ EOF
 				utils::RemoveTransaction($sTransactionId);
 				$oP->set_title(Dict::S('UI:PageTitle:ObjectCreated'));
 				$oP->add("<h1>".Dict::Format('UI:Title:Object_Of_Class_Created', $oObj->GetName(), $sClassLabel)."</h1>\n");
-				$oObj->DisplayDetails($oP);
+				$oObj = MetaModel::GetObject(get_class($oObj), $oObj->GetKey()); //Workaround: reload the object so that the linkedset are displayed properly
+
+				$sNextAction = utils::ReadPostedParam('next_action', '');
+				if (!empty($sNextAction))
+				{
+					ApplyNextAction($oP, $oObj, $sNextAction, $oMyChange);
+				}
+				else
+				{
+					// Nothing more to do
+					$oObj->DisplayDetails($oP);
+				}
 			}
 			else
 			{
@@ -1902,16 +1969,16 @@ EOF
 				}
 				if (count($aErrors) == 0)
 				{
-				if ($oObj->ApplyStimulus($sStimulus))
-				{
-					$oMyChange = MetaModel::NewObject("CMDBChange");
-					$oMyChange->Set("date", time());
-					$sUserString = CMDBChange::GetCurrentUserName();
-					$oMyChange->Set("userinfo", $sUserString);
-					$iChangeId = $oMyChange->DBInsert();
-					$oObj->DBUpdateTracked($oMyChange);
-					$oP->p(Dict::Format('UI:Class_Object_Updated', MetaModel::GetName(get_class($oObj)), $oObj->GetName()));
-				}
+					if ($oObj->ApplyStimulus($sStimulus))
+					{
+						$oMyChange = MetaModel::NewObject("CMDBChange");
+						$oMyChange->Set("date", time());
+						$sUserString = CMDBChange::GetCurrentUserName();
+						$oMyChange->Set("userinfo", $sUserString);
+						$iChangeId = $oMyChange->DBInsert();
+						$oObj->DBUpdateTracked($oMyChange);
+						$oP->p(Dict::Format('UI:Class_Object_Updated', MetaModel::GetName(get_class($oObj)), $oObj->GetName()));
+					}
 					else
 					{
 						$oP->p(Dict::S('UI:FailedToApplyStimuli'));
