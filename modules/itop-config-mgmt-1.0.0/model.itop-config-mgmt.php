@@ -360,12 +360,12 @@ class FileDoc extends Document
 	public function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '')
 	{
 		if (!$bEditMode)
-	{
-		$oPage->SetCurrentTab(Dict::S('Class:Document:PreviewTab'));
-		$oPage->add($this->DisplayDocumentInline($oPage, 'contents'));
-		$oPage->SetCurrentTab(Dict::S('UI:PropertiesTab'));
+		{
+			$oPage->SetCurrentTab(Dict::S('Class:Document:PreviewTab'));
+			$oPage->add($this->DisplayDocumentInline($oPage, 'contents'));
+			$oPage->SetCurrentTab(Dict::S('UI:PropertiesTab'));
 		}
-		parent::DisplayBareProperties($oPage, $bEditMode);
+		parent::DisplayBareProperties($oPage, $bEditMode, $sPrefix);
 		
 	}
 }
