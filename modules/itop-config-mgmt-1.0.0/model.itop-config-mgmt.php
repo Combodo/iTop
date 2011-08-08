@@ -357,7 +357,7 @@ class FileDoc extends Document
 	 * Overload the display of the properties to add a tab (the first one)
 	 * with the preview of the document
 	 */
-	public function DisplayBareProperties(WebPage $oPage, $bEditMode = false)
+	public function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '')
 	{
 		if (!$bEditMode)
 	{
