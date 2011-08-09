@@ -1577,10 +1577,10 @@ EOF
 					$iFieldIndex++;
 				}
 			}
-			$bDisplayFormAtTop = MetaModel::GetConfig()->Get('display_actions_at_top');
-			if (!$bDisplayFormAtTop)
+			$sButtonsPosition = MetaModel::GetConfig()->Get('buttons_position');
+			if ($sButtonsPosition != 'bottom')
 			{
-				// Displays the ticket details BEFORE the actions
+				// top or both: Displays the ticket details BEFORE the actions
 				$oP->add('<div class="ui-widget-content">');
 				$oObj->DisplayBareProperties($oP);
 				$oP->add('</div>');
@@ -1604,9 +1604,9 @@ EOF
 			$oP->add("<button type=\"submit\" class=\"action\"><span>$sActionLabel</span></button>\n");
 			$oP->add("</form>\n");
 			$oP->add("</div>\n");
-			if ($bDisplayFormAtTop)
+			if ($sButtonsPosition == 'bottom')
 			{
-				// Displays the ticket details BEFORE the actions
+				// bottom or both: Displays the ticket details AFTER the actions
 				$oP->add('<div class="ui-widget-content">');
 				$oObj->DisplayBareProperties($oP);
 				$oP->add('</div>');
@@ -1800,10 +1800,10 @@ EOF
 			$aTargetState = $aTargetStates[$sTargetState];
 			$aExpectedAttributes = $aTargetState['attribute_list'];
 			$oP->add("<h1>$sActionDetails</h1>\n");
-			$bDisplayFormAtTop = MetaModel::GetConfig()->Get('display_actions_at_top');
-			if (!$bDisplayFormAtTop)
+			$sButtonsPosition = MetaModel::GetConfig()->Get('buttons_position');
+			if ($sButtonsPosition == 'bottom')
 			{
-				// Displays the ticket details BEFORE the actions
+				// bottom: Displays the ticket details BEFORE the actions
 				$oP->add('<div class="ui-widget-content">');
 				$oObj->DisplayBareProperties($oP);
 				$oP->add('</div>');
@@ -1882,9 +1882,9 @@ EOF
 			$oP->add("<button type=\"submit\" class=\"action\"><span>$sActionLabel</span></button>\n");
 			$oP->add("</form>\n");
 			$oP->add("</div>\n");
-			if ($bDisplayFormAtTop)
+			if ($sButtonsPosition != 'top')
 			{
-				// Displays the ticket details AFTER the actions
+				// bottom or both: Displays the ticket details AFTER the actions
 				$oP->add('<div class="ui-widget-content">');
 				$oObj->DisplayBareProperties($oP);
 				$oP->add('</div>');

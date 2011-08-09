@@ -1737,14 +1737,15 @@ EOF
 			}
 		}
 				
-		$bDisplayActionsAtTop = MetaModel::GetConfig()->Get('display_actions_at_top');
+		$sButtonsPosition = MetaModel::GetConfig()->Get('buttons_position');
 		$iTransactionId = utils::GetNewTransactionId();
 		$oPage->SetTransactionId($iTransactionId);
 		$oPage->add("<form action=\"$sFormAction\" id=\"form_{$this->m_iFormId}\" enctype=\"multipart/form-data\" method=\"post\" onSubmit=\"return OnSubmit('form_{$this->m_iFormId}');\">\n");
 		$oPage->add_ready_script("$(window).unload(function() { OnUnload('$iTransactionId') } );\n");
 
-		if ($bDisplayActionsAtTop)
+		if ($sButtonsPosition != 'bottom')
 		{
+			// top or both, display the buttons here
 			$oPage->add($sButtons);
 		}
 
@@ -1767,8 +1768,9 @@ EOF
 			$oPage->add("<input type=\"hidden\" name=\"$sName\" value=\"$value\">\n");
 		}
 		$oPage->add($oAppContext->GetForForm());
-		if ($bDisplayActionsAtTop)
+		if ($sButtonsPosition != 'top')
 		{
+			// bottom or both: display the buttons here
 			$oPage->add($sButtons);
 		}
 

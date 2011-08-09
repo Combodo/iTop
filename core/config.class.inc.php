@@ -401,12 +401,12 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
-		'display_actions_at_top' => array(
-			'type' => 'bool',
-			'description' => 'Whether or not the actions/buttons should be displayed at the top of the screen',
+		'buttons_position' => array(
+			'type' => 'string',
+			'description' => 'Position of the forms buttons: bottom | top | both',
 			// examples... not used
-			'default' => true,
-			'value' => false,
+			'default' => 'both',
+			'value' => 'both',
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
