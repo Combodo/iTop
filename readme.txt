@@ -1,4 +1,4 @@
-iTop - version 1.2.0-alpha - 03-Aug-2011
+iTop - version 1.2.0-beta - 09-Aug-2011
 Readme file
 
 1.   ABOUT THIS RELEASE
@@ -16,7 +16,7 @@ Readme file
 Thank you for downloading the tenth packaged release of iTop.
 This version comes with a few new features and bug fixes.
 
-A wiki is now available: https://sourceforge.net/apps/mediawiki/itop/index.php?title=ITop_Documentation
+A wiki is available: https://sourceforge.net/apps/mediawiki/itop/index.php?title=ITop_Documentation
 Additional documentation can be downloaded from there:
  - User guide
  - Administrator guide
@@ -33,7 +33,8 @@ The source code of iTop can be found on SourceForge: http://itop.sourceforge.net
 - Japanese localization is now part of iTop
 - Paginated display: when a list contains lots of data it is displayed page per page
 - Quite a few performance improvements to make iTop behave properly with huge data sets
-- Hierarchical keys: parent/child relationships can now be described using a special type of key, and then queried efficiently in the database (Used by Organization, Location and Group)
+- Hierarchical keys: parent/child relationships can now be described using a special type of key,
+  and then queried efficiently in the database (Used by Organization, Location and Group)
 - CAS authentication: iTop now supports single-sign-on with JA-SIG CAS
 
 1.2 Should I upgrade to 1.2.0?
@@ -147,7 +148,7 @@ Version 1.2.0 brings a few major changes.
 Major changes
 -------------
 - Paginated display
-- Management of hierarchy of objects
+- Management of hierarchy of objects: implemented for Organizations, Groups and Locations and taken into account by the profiles/user rights.
 - CAS integration: added support of JA-SIG Central Authentication Service (CAS) with log-off support, using phpCAS API.
 
 Localization
@@ -161,16 +162,14 @@ http://www.combodo.com/itop-localization/
 Minor changes
 -------------
 Improved import.php and synchro_import.php: added 'date_format' (example: %d/%m/%Y %H:%i:%s)
-- When needed the drop-down list of organizations is replaced by an autocomplete
+When needed the drop-down list of organizations is replaced by an autocomplete
 Templates: new type of block = sqlblock, allows for displaying tables/charts based in SQL queries (much quicker for some 'Group By' operations)
-Added support of 'drill-down' (i.e on_click) on bar charts
-Added drill-down capability to the SQL blocks
+Added support of 'drill-down' (i.e on_click) on bar and pie charts
+Added SQL blocks
 New feature: online help on search inputs (date format and operators) a tooltip appears when the user clicks a date/search field
-Better (?) handling of object deletion issues during a data synchro...
+Better handling of object deletion issues during a data synchro...
 #130: keywords to narrow the scope of the global search (e.g. server:webserver searches "webserver" only in the "server" objects)
-Use the new HierarchicalKeys for Organization, Groups and Locations and use the hierarchy of organization for the profiles/user rights.
 Added a new web service to create UserRequest tickets (similarly to Incidents tickets). Based on code from Vincenzo Todisco.
-
 Bug fix: when changing the currently selected organization, go back to the initial (Welcome) menu instead of trying to stay on the same menu... which caused troubles (e.g. "New Contact" => assertion failed)
 Improved error handling when loading linkedset as attributes in one go in CSV import
 Don't make the Ticket's case log hidden in the 'New' state, since it's not hidden in the portal !
@@ -178,6 +177,10 @@ Better error message if the configuration file exists but is not readable
 In CLI mode, do not depend on the current directory for synchro/import.php and synchro/synchro.php: the scripts can now be run from anywhere.
 New module to easily manage attachments in one click instead of creating a separate 'Document' object. If this module is installed, portal users will create attachments instead of linked documents when uploading files with their ticket
 Added a new type of 'Trigger': TriggerOnPortalUpdate, called when the end-user updates a ticket via the portal.
+The deadlines display format can be configured.
+Lists can be displayed either as combo boxes (default and original behavior) or radio buttons, either horizontal or vertical.
+In the templates or menus, the sort order can be specified.
+Developers: DisplayBareProperties now called both in read and edition modes.
 
 Bugs fixed
 ----------
@@ -215,6 +218,13 @@ A title was missing for the menu 'All Opened Changes' at the top of the page
 Fixed the parsing of OQL error messages: should be able to report the line number (usually 1) and the character where the error happened
 Don't display an error (assertion failed) if the user selects nothing (i.e -- select one --) in the "CSV template" tab.
 
+Productivity Enhancements
+-------------------------
+Quicker path to create or modify objects: buttons directly accessible next to the Actions popup menu.
+Limit the drop down menu to your favorite organizations: use the user preferences menu next to the Logoff button.
+For tickets, create/modify and apply an action in one step; E.g. Create and assign in one click. 
+Form validation buttons (Ok/Cancel) showed on top and bottom. Can be tuned (top, bottom or both).
+
 
 Performance Enhancements
 ------------------------
@@ -248,3 +258,12 @@ Tested with IE8 and IE9. Be aware that there are certain limitations when using 
 #382	Search form / base class lost after a search
 #377	Case log: exclude the index from the views
 #388	IE9: edition fields not resizable
+#444 	Sort order not visible / lost on refresh
+#443 	Objects remain in the database after de-installing some modules
+#442 	Useless profiles installed
+#441 	/doc redirects to Apache documentation!
+#440 	Missing "lock" icon on some fields 	Data Synchronization
+#439 	Display the modifications to a linkedset in the main object's history
+#438 	The selection of Organizations using the hierarchy does not work on IE8 in security mode
+#437 	Update all does not warn that some fields were not modified 		
+#436 	Cannot type "All Organizations" 	
