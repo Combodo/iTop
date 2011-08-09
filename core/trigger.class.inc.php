@@ -105,6 +105,34 @@ abstract class TriggerOnObject extends Trigger
 //		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
 	}
 }
+/**
+ * To trigger notifications when a ticket is updated from the portal
+ */
+class TriggerOnPortalUpdate extends TriggerOnObject
+{
+	public static function Init()
+	{
+		$aParams = array
+		(
+			"category" => "core/cmdb",
+			"key_type" => "autoincrement",
+			"name_attcode" => "description",
+			"state_attcode" => "",
+			"reconc_keys" => array(),
+			"db_table" => "priv_trigger_onportalupdate",
+			"db_key_field" => "id",
+			"db_finalclass_field" => "",
+			"display_template" => "",
+		);
+		MetaModel::Init_Params($aParams);
+		MetaModel::Init_InheritAttributes();
+
+		// Display lists
+		MetaModel::Init_SetZListItems('details', array('description', 'target_class', 'action_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('finalclass', 'target_class', 'description')); // Attributes to be displayed for a list
+		// Search criteria
+	}
+}
 
 abstract class TriggerOnStateChange extends TriggerOnObject
 {
