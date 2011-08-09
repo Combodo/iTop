@@ -244,7 +244,7 @@ abstract class ResponseTicket extends Ticket
 					'urgency' => OPT_ATT_MUSTCHANGE,
 					'priority' => OPT_ATT_READONLY,
 					'workgroup_id' => OPT_ATT_MUSTCHANGE,
-					'agent_id' => OPT_ATT_HIDDEN,
+					'agent_id' => OPT_ATT_NORMAL,
 					'agent_email' => OPT_ATT_HIDDEN,
 					'resolution_code' => OPT_ATT_HIDDEN,
 					'solution' => OPT_ATT_HIDDEN,
