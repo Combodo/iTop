@@ -404,6 +404,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:History:Changes+' => '对该对象所做的变更',
 	'UI:Loading' => '载入...',
 	'UI:Menu:Actions' => '动作',
+	'UI:Menu:OtherActions' => '其他操作',
 	'UI:Menu:New' => '新建...',
 	'UI:Menu:Add' => '添加...',
 	'UI:Menu:Manage' => '管理...',

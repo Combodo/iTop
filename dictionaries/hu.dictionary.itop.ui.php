@@ -302,6 +302,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:History:StatsDeletes+' => '',
 	'UI:Loading' => 'Betöltés...',
 	'UI:Menu:Actions' => 'Akciók',
+	'UI:Menu:OtherActions' => 'Egyéb Akciók',
 	'UI:Menu:New' => 'Új...',
 	'UI:Menu:Add' => 'Hozzáad...',
 	'UI:Menu:Manage' => 'Kezel...',

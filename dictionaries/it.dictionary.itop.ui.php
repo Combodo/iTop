@@ -305,6 +305,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:History:StatsDeletes+' => '',
 	'UI:Loading' => 'Caricamento...',
 	'UI:Menu:Actions' => 'Azioni',
+	'UI:Menu:OtherActions' => 'Altre Azioni',
 	'UI:Menu:New' => 'Nuovo...',
 	'UI:Menu:Add' => 'Aggiungi...',
 	'UI:Menu:Manage' => 'Gestischi...',

@@ -414,6 +414,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:History:Changes+' => 'Chambios hechos al objeto',
 	'UI:Loading' => 'Cargando...',
 	'UI:Menu:Actions' => 'Acciones',
+	'UI:Menu:OtherActions' => 'Otras Acciones',
 	'UI:Menu:New' => 'Nuevo...',
 	'UI:History:StatsCreations' => 'Created',
 	'UI:History:StatsCreations+' => 'Count of objects created',

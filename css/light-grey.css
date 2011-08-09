@@ -402,8 +402,10 @@ div.itop_popup {
 
 div.itop_popup > ul {
 	height:19px;
+	line-height: 17px;
+	vertical-align: middle;
 	display:block;
-	width:70px; /* Nasty work-around for IE... en attendant mieux */
+	nowidth:70px; /* Nasty work-around for IE... en attendant mieux */
 	padding-left: 5px;
 	background: url(../images/actions_left.png) no-repeat top left;
 	cursor: pointer;
@@ -414,7 +416,7 @@ div.itop_popup > ul > li {
 	list-style: none;
 	font-size: 11px;
 	font-family: Tahoma,sans-serif;
-	height: 19px;
+	height: 17px;
 	padding-right: 16px;
 	padding-left: 4px;
 	background: url(../images/actions_right.png) no-repeat top right transparent;
@@ -1100,5 +1102,6 @@ div.actions_button a, .actions_button a:hover, .actions_button a:visited {
 	padding-left: 4px;
 	text-decoration: none;
 	height:17px;
+	line-height: 17px;
 	display: block;
 }

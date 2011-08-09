@@ -418,6 +418,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 					       'UI:History:StatsDeletes+' => '削除されたオブジェクト数', //'Count of objects deleted',
 					       'UI:Loading' => '読み込み...', //'Loading...',
 					       'UI:Menu:Actions' => '実行...', //'Actions',
+       'UI:Menu:OtherActions' => '実行...', //'Actions',
 					       'UI:Menu:New' => '新規...', //'New...',
 					       'UI:Menu:Add' => '追加...', //'Add...',
 					       'UI:Menu:Manage' => '管理する...', //'Manage...',

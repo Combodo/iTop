@@ -416,6 +416,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:History:StatsDeletes+' => 'Count of objects deleted',
 	'UI:Loading' => 'Loading...',
 	'UI:Menu:Actions' => 'Actions',
+	'UI:Menu:OtherActions' => 'Other Actions',
 	'UI:Menu:New' => 'New...',
 	'UI:Menu:Add' => 'Add...',
 	'UI:Menu:Manage' => 'Manage...',

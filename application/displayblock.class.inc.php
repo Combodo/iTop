@@ -1231,8 +1231,23 @@ class MenuBlock extends DisplayBlock
 		$aFavorites = array('UI:Menu:Modify', 'UI:Menu:New', /*'UI:Menu:Delete'*/);
 		$aCallSpec = array($sClass, 'GetShortcutActions');
 		$aShortcutActions = call_user_func($aCallSpec);
+		foreach ($aActions as $key => $aAction)
+		{
+			if (in_array($key, $aShortcutActions))
+			{
+				$aFavoriteActions[] = $aAction;
+				unset($aActions[$key]);
+			}
+		}
 		
-		$sHtml .= "<div class=\"itop_popup\"><ul>\n<li>".Dict::S('UI:Menu:Actions')."\n<ul>\n";
+		if (count($aFavoriteActions) > 0)
+		{
+			$sHtml .= "<div class=\"itop_popup\"><ul>\n<li>".Dict::S('UI:Menu:OtherActions')."\n<ul>\n";
+		}
+		else
+		{
+			$sHtml .= "<div class=\"itop_popup\"><ul>\n<li>".Dict::S('UI:Menu:Actions')."\n<ul>\n";
+		}	
 		$sPrevUrl = '';
 		foreach ($aActions as $key => $aAction)
 		{

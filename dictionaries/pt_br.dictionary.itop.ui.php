@@ -304,6 +304,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:History:StatsDeletes+' => 'Count of objects deleted',
 	'UI:Loading' => 'Carregando...',
 	'UI:Menu:Actions' => 'Ações',
+	'UI:Menu:OtherActions' => 'Outras Ações',
 	'UI:Menu:New' => 'Novo...',
 	'UI:Menu:Add' => 'Adicionar...',
 	'UI:Menu:Manage' => 'Gerencia...',

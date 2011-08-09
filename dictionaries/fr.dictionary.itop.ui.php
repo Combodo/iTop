@@ -303,6 +303,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:History:StatsDeletes+' => 'Nombre d\'objets effacés',
 	'UI:Loading' => 'Chargement...',
 	'UI:Menu:Actions' => 'Actions',
+	'UI:Menu:OtherActions' => 'Autres Actions',
 	'UI:Menu:New' => 'Créer...',
 	'UI:Menu:Add' => 'Ajouter...',
 	'UI:Menu:Manage' => 'Gérer...',

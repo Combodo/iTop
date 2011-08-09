@@ -405,6 +405,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:History:Changes+' => 'Nesneye yapılan değişiklikler',
 	'UI:Loading' => 'Yükleniyor...',
 	'UI:Menu:Actions' => 'İşlemler',
+	'UI:Menu:OtherActions' => 'Diğer İşlemler',
 	'UI:Menu:New' => 'Yeni...',
 	'UI:Menu:Add' => 'Ekle...',
 	'UI:Menu:Manage' => 'Yönet...',

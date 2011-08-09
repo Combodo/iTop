@@ -406,6 +406,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:History:Changes+' => 'Изменения, внесенные в объект',
 	'UI:Loading' => 'Загрузка...',
 	'UI:Menu:Actions' => 'Действия',
+	'UI:Menu:OtherActions' => 'Другие Действия',
 	'UI:Menu:New' => 'Новый...',
 	'UI:Menu:Add' => 'Добавить...',
 	'UI:Menu:Manage' => 'Управление...',
