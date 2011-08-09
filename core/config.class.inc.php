@@ -86,7 +86,7 @@ class Config
 	protected $m_aSettings = array(
 		'app_root_url' => array(
 			'type' => 'string',
-			'description' => 'Root URL used for navigating within the application, or from an email to the application',
+			'description' => 'Root URL used for navigating within the application, or from an email to the application (you can put $SERVER_NAME$ as a placeholder for the server\'s name)',
 			'default' => '',
 			'value' => '',
 			'source_of_value' => '',

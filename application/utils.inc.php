@@ -27,6 +27,7 @@ require_once(APPROOT.'/core/config.class.inc.php');
 require_once(APPROOT.'/application/transaction.class.inc.php');
 
 define('ITOP_CONFIG_FILE', APPROOT.'/config-itop.php');
+define('SERVER_NAME_PLACEHOLDER', '$SERVER_NAME$');
 
 class FileUploadException extends Exception
 {
@@ -365,7 +366,21 @@ class utils
      */                   
 	static public function GetAbsoluteUrlAppRoot()
 	{
-		return MetaModel::GetConfig()->Get('app_root_url');
+		$sUrl = MetaModel::GetConfig()->Get('app_root_url');
+		if (strpos($sUrl, SERVER_NAME_PLACEHOLDER) > -1)
+		{
+			if (isset($_SERVER['SERVER_NAME']))
+			{
+				$sServerName = $_SERVER['SERVER_NAME'];
+			}
+			else
+			{
+				// CLI mode ?
+				$sServerName = php_uname('n');
+			}
+			$sUrl = str_replace(SERVER_NAME_PLACEHOLDER, $sServerName, $sUrl);
+		}
+		return $sUrl;
 	}
 
 	static public function GetDefaultUrlAppRoot()
