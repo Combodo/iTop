@@ -723,7 +723,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		$iMaxObjects = -1;
 		//if ($bDisplayLimit && $bTruncated)
 		//{
-			if ($oSet->Count() > MetaModel::GetConfig()->GetMaxDisplayLimit())
+			if ($bDisplayLimit && ($oSet->Count() > MetaModel::GetConfig()->GetMaxDisplayLimit()))
 			{
 				$iMaxObjects = MetaModel::GetConfig()->GetMinDisplayLimit();
 				$oSet->SetLimit($iMaxObjects);
@@ -813,7 +813,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		{
 			$sHeader = Dict::Format('UI:Pagination:HeaderNoSelection', '<span id="total">'.$iCount.'</span>');
 		}
-		if ($oSet->Count() > MetaModel::GetConfig()->GetMaxDisplayLimit())
+		if ($bDisplayLimit && ($oSet->Count() > MetaModel::GetConfig()->GetMaxDisplayLimit()))
 		{
 			$sCombo = '<select class="pagesize">';
 			for($iPage = 1; $iPage < 5; $iPage++)
@@ -860,7 +860,7 @@ EOF
 			$sDisplayKey = ($bViewLink) ? 'true' : 'false';
 			$sDisplayList = json_encode($aList);
 			$sCssCount = isset($aExtraParams['cssCount']) ? ", cssCount: '{$aExtraParams['cssCount']}'" : '';
-			$oPage->add_ready_script("$('#{$iListId} table.listResults').tablesorter( { $sHeaders widgets: ['myZebra', 'truncatedList']} ).tablesorterPager({container: $('#pager{$iListId}'), totalRows:$iCount, filter: '$sFilter', extra_params: '$sExtraParams', select_mode: '$sSelectMode', displayKey: $sDisplayKey, displayList: $sDisplayList $sCssCount});\n");
+			$oPage->add_ready_script("$('#{$iListId} table.listResults').tablesorter( { $sHeaders widgets: ['myZebra', 'truncatedList']} ).tablesorterPager({container: $('#pager{$iListId}'), totalRows:$iCount, size: $iPage, filter: '$sFilter', extra_params: '$sExtraParams', select_mode: '$sSelectMode', displayKey: $sDisplayKey, displayList: $sDisplayList $sCssCount});\n");
 		}
 		else
 		{
