@@ -416,6 +416,10 @@ class Config
 	{
 		return (array_key_exists($sPropCode, $this->m_aSettings));
 	}
+	public function GetDescription($sPropCode)
+	{
+		return $this->m_aSettings[$sPropCode];
+	}
 
 	public function Set($sPropCode, $value, $sSourceDesc = 'unknown')
 	{
