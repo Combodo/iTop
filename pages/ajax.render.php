@@ -189,7 +189,7 @@ try
 		$sTargetClass = utils::ReadParam('sTargetClass', '');
 		$iInputId = utils::ReadParam('iInputId', '');
 		$sRemoteClass = utils::ReadParam('sRemoteClass', '');
-		$sFilter = utils::ReadParam('sFilter', false, 'raw_data');
+		$sFilter = utils::ReadParam('sFilter', '', false, 'raw_data');
 		$sJson = utils::ReadParam('json', '', false, 'raw_data');
 		if (!empty($sJson))
 		{
@@ -209,7 +209,7 @@ try
 		case 'ac_extkey':
 		$sTargetClass = utils::ReadParam('sTargetClass', '');
 		$iInputId = utils::ReadParam('iInputId', '');
-		$sFilter = utils::ReadParam('sFilter', false, 'raw_data');
+		$sFilter = utils::ReadParam('sFilter', '', false, 'raw_data');
 		$sJson = utils::ReadParam('json', '', false, 'raw_data');
 		$sContains = utils::ReadParam('q', '', false, 'raw_data');
 		if (!empty($sJson))
@@ -231,7 +231,7 @@ try
 		$oPage->SetContentType('text/html');
 		$sTargetClass = utils::ReadParam('sTargetClass', '');
 		$iInputId = utils::ReadParam('iInputId', '');
-		$sTitle = utils::ReadParam('sTitle', false, 'raw_data');
+		$sTitle = utils::ReadParam('sTitle', '', false, 'raw_data');
 		$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId);
 		$oWidget->GetSearchDialog($oPage, $sTitle);
 		break;
