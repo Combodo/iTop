@@ -141,7 +141,7 @@ try
 		SetupWebPage::log_info("Update Database Schema.");
 		InitDataModel(TMP_CONFIG_FILE, true);  // load data model and connect to the database
 		$sMode = Utils::ReadParam('mode', 'install');
-		$sSelectedModules = Utils::ReadParam('selected_modules', '');
+		$sSelectedModules = Utils::ReadParam('selected_modules', '', false, 'raw_data');
 		$aSelectedModules = explode(',', $sSelectedModules);
 		if(!CreateDatabaseStructure(MetaModel::GetConfig(), $aSelectedModules, $sMode))
 		{
@@ -153,7 +153,7 @@ try
 		case 'after_db_create':
 		SetupWebPage::log_info('After Database Creation');
 		$sMode = Utils::ReadParam('mode', 'install');
-		$sSelectedModules = Utils::ReadParam('selected_modules', '');
+		$sSelectedModules = Utils::ReadParam('selected_modules', '', false, 'raw_data');
 		$aSelectedModules = explode(',', $sSelectedModules);
 		InitDataModel(TMP_CONFIG_FILE, true);  // load data model and connect to the database
 		
@@ -186,8 +186,8 @@ try
 		if($sMode == 'install')
 		{
 			// Create the admin user only in case of installation
-			$sAdminUser = Utils::ReadParam('auth_user', '');
-			$sAdminPwd = Utils::ReadParam('auth_pwd', '');
+			$sAdminUser = Utils::ReadParam('auth_user', '', false, 'raw_data');
+			$sAdminPwd = Utils::ReadParam('auth_pwd', '', false, 'raw_data');
 			$sLanguage = Utils::ReadParam('language', '');
 			if (!CreateAdminAccount(MetaModel::GetConfig(), $sAdminUser, $sAdminPwd, $sLanguage))
 			{
@@ -201,7 +201,7 @@ try
 		break;
 		
 		case 'load_data': // Load data files
-		$sFileName = Utils::ReadParam('file', '');
+		$sFileName = Utils::ReadParam('file', '', false, 'raw_data');
 		$sSessionStatus = Utils::ReadParam('session_status', '');
 		$iPercent = (integer)Utils::ReadParam('percent', 0);
 		SetupWebPage::log_info("Loading file: $sFileName");

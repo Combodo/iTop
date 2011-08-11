@@ -196,7 +196,7 @@ class utils
 			}
 			else
 			{
-				$retValue = filter_var($value, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=>'/^[A-Za-z0-9_=-]*$/'))); // the '=' equal character is used in serialized filters
+				$retValue = filter_var($value, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=>'/^[ A-Za-z0-9_=-]*$/'))); // the '=' equal character is used in serialized filters
 			}
 			break;
 			
