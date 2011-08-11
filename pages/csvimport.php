@@ -191,10 +191,10 @@ try
 	function ProcessCSVData(WebPage $oPage, $bSimulate = true)
 	{
 		$aResult = array();
-		$sCSVData = utils::ReadParam('csvdata', '');
+		$sCSVData = utils::ReadParam('csvdata', '', false, 'raw_data');
 		$sCSVDataTruncated = utils::ReadParam('csvdata_truncated', '');
-		$sSeparator = utils::ReadParam('separator', ',');
-		$sTextQualifier = utils::ReadParam('text_qualifier', '"');
+		$sSeparator = utils::ReadParam('separator', ',', false, 'raw_data');
+		$sTextQualifier = utils::ReadParam('text_qualifier', '"', false, 'raw_data');
 		$bHeaderLine = (utils::ReadParam('header_line', '0') == 1);
 		$iRealSkippedLines = $iSkippedLines = utils::ReadParam('nb_skipped_lines', '0');
 		$sClassName = utils::ReadParam('class_name', '');
@@ -203,7 +203,7 @@ try
 		$iCurrentStep = $bSimulate ? 4 : 5;
 		$bAdvanced = utils::ReadParam('advanced', 0);
 		$sEncoding = utils::ReadParam('encoding', 'UTF-8');
-		$sSynchroScope = utils::ReadParam('synchro_scope', '');
+		$sSynchroScope = utils::ReadParam('synchro_scope', '', false, 'raw_data');
 		if (!empty($sSynchroScope))
 		{
 			$oSearch = DBObjectSearch::FromOQL($sSynchroScope);
@@ -789,18 +789,18 @@ EOF
 	 */
 	function SelectMapping(WebPage $oPage)
 	{
-		$sCSVData = utils::ReadParam('csvdata', '');
-		$sCSVDataTruncated = utils::ReadParam('csvdata_truncated', '');;
-		$sSeparator = utils::ReadParam('separator', ',');
+		$sCSVData = utils::ReadParam('csvdata', '', false, 'raw_data');
+		$sCSVDataTruncated = utils::ReadParam('csvdata_truncated', '', false, 'raw_data');
+		$sSeparator = utils::ReadParam('separator', ',', false, 'raw_data');
 		if ($sSeparator == 'tab') $sSeparator = "\t";
 		if ($sSeparator == 'other')
 		{
-			$sSeparator = utils::ReadParam('other_separator', ',');
+			$sSeparator = utils::ReadParam('other_separator', ',', false, 'raw_data');
 		}
-		$sTextQualifier = utils::ReadParam('text_qualifier', '"');
+		$sTextQualifier = utils::ReadParam('text_qualifier', '"', false, 'raw_data');
 		if ($sTextQualifier == 'other')
 		{
-			$sTextQualifier = utils::ReadParam('other_qualifier', '"');
+			$sTextQualifier = utils::ReadParam('other_qualifier', '"', false, 'raw_data');
 		}
 		$bHeaderLine = (utils::ReadParam('header_line', '0') == 1);
 		$iSkippedLines = 0;
@@ -812,7 +812,7 @@ EOF
 		$bAdvanced = utils::ReadParam('advanced', 0);
 		$sEncoding = utils::ReadParam('encoding', 'UTF-8');
 	
-		$sSynchroScope = utils::ReadParam('synchro_scope', '');
+		$sSynchroScope = utils::ReadParam('synchro_scope', '', false, 'raw_data');
 		if (!empty($sSynchroScope))
 		{
 			$oSearch = DBObjectSearch::FromOQL($sSynchroScope);
@@ -1064,7 +1064,7 @@ EOF
 			break;
 			
 			default:
-			$sCSVData = utils::ReadPostedParam('csvdata', '');
+			$sCSVData = utils::ReadPostedParam('csvdata', '', 'raw_data');
 		}
 		$sEncoding = utils::ReadParam('encoding', 'UTF-8');
 	
@@ -1080,7 +1080,7 @@ EOF
 	
 		$aGuesses = GuessParameters($sUTF8Data); // Try to predict the parameters, based on the input data
 		
-		$sSeparator = utils::ReadParam('separator', '');
+		$sSeparator = utils::ReadParam('separator', '', false, 'raw_data');
 		if ($sSeparator == '') // May be set to an empty value by the previous page
 		{
 			$sSeparator = $aGuesses['separator'];	
@@ -1089,7 +1089,7 @@ EOF
 		$bBoxSkipLines = utils::ReadParam('box_skiplines', 0);
 		if ($sSeparator == 'tab') $sSeparator = "\t";
 		$sOtherSeparator = in_array($sSeparator, array(',', ';', "\t")) ? '' : $sSeparator;
-		$sTextQualifier = utils::ReadParam('text_qualifier', '');
+		$sTextQualifier = utils::ReadParam('text_qualifier', '', false, 'raw_data');
 		if ($sTextQualifier == '') // May be set to an empty value by the previous page
 		{
 			$sTextQualifier = $aGuesses['qualifier'];	
@@ -1127,7 +1127,7 @@ EOF
 			$sCSVDataTruncated = '';
 		}
 
-		$sSynchroScope = utils::ReadParam('synchro_scope', '');
+		$sSynchroScope = utils::ReadParam('synchro_scope', '', false, 'raw_data');
 		if (!empty($sSynchroScope))
 		{
 			$oSearch = DBObjectSearch::FromOQL($sSynchroScope);
@@ -1263,7 +1263,7 @@ EOF
 		$aPossibleEncodings = array_merge($aPossibleEncodings, $aExtraCharsets);
 		asort($aPossibleEncodings);
 	
-		$sSynchroScope = utils::ReadParam('synchro_scope', '');
+		$sSynchroScope = utils::ReadParam('synchro_scope', '', false, 'raw_data');
 		if (!empty($sSynchroScope))
 		{
 			$oSearch = DBObjectSearch::FromOQL($sSynchroScope);
@@ -1281,8 +1281,8 @@ EOF
 		$oPage->add("<div><p><h1>".Dict::S('UI:Title:BulkImport+')."</h1></p></div>\n");
 		$oPage->AddTabContainer('tabs1');	
 	
-		$sSeparator = utils::ReadParam('separator', '');
-		$sTextQualifier = utils::ReadParam('text_qualifier', '');
+		$sSeparator = utils::ReadParam('separator', '', false, 'raw_data');
+		$sTextQualifier = utils::ReadParam('text_qualifier', '', false, 'raw_data');
 		$bHeaderLine = utils::ReadParam('header_line', true);
 		$iSkippedLines = utils::ReadParam('nb_skipped_lines', '');
 		$sClassName = utils::ReadParam('class_name', '');
@@ -1322,7 +1322,7 @@ EOF
 		$sFileLoadHtml .= '</form></div>';
 		
 		$oPage->AddToTab('tabs1', Dict::S('UI:CSVImport:Tab:LoadFromFile'), $sFileLoadHtml);	
-		$sCSVData = utils::ReadParam('csvdata', '');
+		$sCSVData = utils::ReadParam('csvdata', '', false, 'raw_data');
 		$sPasteDataHtml = '<div><form enctype="multipart/form-data" method="post"><p>'.Dict::S('UI:CSVImport:PasteData').'</p>'.
 						  '<p><textarea cols="100" rows="30" name="csvdata">'.htmlentities($sCSVData, ENT_QUOTES, 'UTF-8').'</textarea></p>';
 		$sPasteDataHtml .= '<p>'.Dict::S('UI:CSVImport:Encoding').': ';

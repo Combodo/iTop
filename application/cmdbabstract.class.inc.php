@@ -1287,7 +1287,7 @@ EOF
 			//$oAppContext->Reset($sFilterCode); // Make sure the same parameter will not be passed twice
 			$sHtml .= '<span style="white-space: nowrap;padding:5px;display:inline-block;">';
 			$sFilterValue = '';
-			$sFilterValue = utils::ReadParam($sFilterCode, '');
+			$sFilterValue = utils::ReadParam($sFilterCode, '', false, 'raw_data');
 			$sFilterOpCode = null; // Use the default 'loose' OpCode
 			if (empty($sFilterValue))
 			{
@@ -1970,7 +1970,7 @@ EOF
 				$oDocument = $this->Get($sAttCode);
 				$sDisplayValue = $this->GetAsHTML($sAttCode);
 				$sDisplayValue .= "<br/>".Dict::Format('UI:OpenDocumentInNewWindow_', $oDocument->GetDisplayLink(get_class($this), $this->GetKey(), $sAttCode)).", \n";
-				$sDisplayValue .= "<br/>".Dict::Format('UI:DownloadDocument_', $oDocument->GetDisplayLink(get_class($this), $this->GetKey(), $sAttCode)).", \n";
+				$sDisplayValue .= "<br/>".Dict::Format('UI:DownloadDocument_', $oDocument->GetDownloadLink(get_class($this), $this->GetKey(), $sAttCode)).", \n";
 			}
 			else
 			{
@@ -2314,7 +2314,7 @@ EOF
 			}
 			else
 			{
-				$value = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null);
+				$value = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null, 'raw_data');
 			}
 			if (!is_null($value))
 			{

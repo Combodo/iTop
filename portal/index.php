@@ -834,7 +834,7 @@ function DoCloseRequest($oP, UserRequest $oRequest)
 		if ( ($iExpectCode & (OPT_ATT_MUSTCHANGE | OPT_ATT_MUSTPROMPT)) ||
 			 (($iExpectCode & OPT_ATT_MANDATORY) && ($oRequest->Get($sAttCode) == '')) ) 
 		{
-			$value = utils::ReadPostedParam('attr_'.$sAttCode, null);
+			$value = utils::ReadPostedParam('attr_'.$sAttCode, null, 'raw_data');
 			if (!is_null($value))
 			{
 				$oRequest->Set($sAttCode, $value);
@@ -956,7 +956,7 @@ function AddComment($oP, $id)
 		DisplayMainMenu($oP);
 		return;
 	}
-	$sComment = trim(utils::ReadPostedParam('attr_ticket_log'));
+	$sComment = trim(utils::ReadPostedParam('attr_ticket_log', '', 'raw_data'));
 	if (!empty($sComment))
 	{
 		$oRequest->Set('ticket_log', $sComment);

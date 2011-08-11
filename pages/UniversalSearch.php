@@ -49,8 +49,8 @@ $oP->add_linked_script("../js/jquery.blockUI.js");
 // Now render the content of the page
 $sBaseClass = utils::ReadParam('baseClass', 'Organization');
 $sClass = utils::ReadParam('class', $sBaseClass);
-$sOQLClause = utils::ReadParam('oql_clause', '');
-$sFilter = utils::ReadParam('filter', '');
+$sOQLClause = utils::ReadParam('oql_clause', '', false, 'raw_data');
+$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
 $sOperation = utils::ReadParam('operation', '');
 
 // First part: select the class to search for

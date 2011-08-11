@@ -262,7 +262,7 @@ else
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
-	$sCSVData = utils::ReadPostedParam('csvdata');
+	$sCSVData = utils::ReadPostedParam('csvdata', '', 'raw_data');
 }
 
 

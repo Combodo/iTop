@@ -174,25 +174,25 @@ h3.clickable.open {
 	}
 	public function info($sText)
 	{
-		$this->add("<p class=\"info\">$sText</p>\n");
+		$this->add("<p class=\"info\">".htmlentities($sText, ENT_COMPAT, 'UTF-8')."</p>\n");
 		$this->log_info($sText);
 	}
 	
 	public function ok($sText)
 	{
-		$this->add("<p class=\"ok\">$sText</p>\n");
+		$this->add("<p class=\"ok\">".htmlentities($sText, ENT_COMPAT, 'UTF-8')."</p>\n");
 		$this->log_ok($sText);
 	}
 	
 	public function warning($sText)
 	{
-		$this->add("<p class=\"warning\">$sText</p>\n");
+		$this->add("<p class=\"warning\">".htmlentities($sText, ENT_COMPAT, 'UTF-8')."</p>\n");
 		$this->log_warning($sText);
 	}
 	
 	public function error($sText)
 	{
-		$this->add("<p class=\"error\">$sText</p>\n");
+		$this->add("<p class=\"error\">".htmlentities($sText, ENT_COMPAT, 'UTF-8')."</p>\n");
 		$this->log_error($sText);
 	}
 	

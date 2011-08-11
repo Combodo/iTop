@@ -52,8 +52,8 @@ class UIPasswordWidget
 	{
 		$sCode = $this->sAttCode.$this->sNameSuffix;
 		$iWidgetIndex = self::$iWidgetIndex;
-		$sPasswordValue = utils::ReadPostedParam("attr_{$sCode}[value]", '*****');
-		$sConfirmPasswordValue = utils::ReadPostedParam("attr_{$sCode}[confirm]", '*****');
+		$sPasswordValue = utils::ReadPostedParam("attr_{$sCode}[value]", '*****', 'raw_data');
+		$sConfirmPasswordValue = utils::ReadPostedParam("attr_{$sCode}[confirm]", '*****', 'raw_data');
 		$sChangedValue = (($sPasswordValue != '*****') || ($sConfirmPasswordValue != '*****')) ? 1 : 0;
 		$sHtmlValue = '';
 		$sHtmlValue = '<input type="password" maxlength="255" name="attr_'.$sCode.'[value]" id="'.$this->iId.'" value="'.htmlentities($sPasswordValue, ENT_QUOTES, 'UTF-8').'"/>&nbsp;<span class="form_validation" id="v_'.$this->iId.'"></span><br/>';

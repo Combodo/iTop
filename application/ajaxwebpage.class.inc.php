@@ -50,6 +50,7 @@ class ajax_page extends WebPage
 		$this->m_sCurrentTabContainer = '';
         $this->m_sCurrentTab = '';
 		$this->m_aTabs = array();
+		$this->sContentDisposition = 'inline';
     }	
 
 	public function AddTabContainer($sTabContainer, $sPrefix = '')
@@ -92,11 +93,22 @@ class ajax_page extends WebPage
      */	  
     public function output()
     {
+    	if (!empty($this->sContentType))
+    	{
+			$this->add_header('Content-type: '.$this->sContentType);
+    	}
+    	else
+    	{
+			$this->add_header('Content-type: text/html');
+    	}
+    	if (!empty($this->sContentDisposition))
+    	{
+			$this->add_header('Content-Disposition: '.$this->sContentDisposition.'; filename="'.$this->sContentFileName.'"');
+    	}
         foreach($this->a_headers as $s_header)
         {
             header($s_header);
         }
-
 		if (count($this->m_aTabs) > 0)
 		{
 					$this->add_ready_script(
@@ -165,7 +177,15 @@ EOF
 	
         $s_captured_output = ob_get_contents();
         ob_end_clean();
-        echo $this->s_content;
+        if (($this->sContentType == 'text/html') &&  ($this->sContentDisposition == 'inline'))
+        {
+        	// inline content != attachment && html => filter all scripts for malicious XSS scripts
+        	echo self::FilterXSS($this->s_content);
+        }
+        else
+        {
+        	echo $this->s_content;
+        }
         //echo $this->s_deferred_content;
         if (count($this->a_scripts) > 0)
         {
@@ -187,7 +207,7 @@ EOF
         }
 		if (trim($s_captured_output) != "")
         {
-            echo $s_captured_output;
+        	echo self::FilterXSS($s_captured_output);
         }
     }
 
@@ -220,9 +240,6 @@ EOF
 	 */	 	 	
 	public function add_ready_script($sScript)
 	{
-		// Does nothing in ajax rendered content.. for now...
-		// Maybe we should add this as a simple <script> tag at the end of the output
-		// considering that at this time everything in the page is "ready"...
 		$this->m_sReadyScript .= $sScript;
 	}
 	
@@ -236,6 +253,10 @@ EOF
 		return 0;
 	}
 	
+	public static function FilterXSS($sHTML)
+	{
+		return str_ireplace(array('<script', '</script>'), array('<!-- <removed-script', '</removed-script> -->'), $sHTML);
+	}
 }
 
 ?>

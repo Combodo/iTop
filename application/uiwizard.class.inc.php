@@ -112,8 +112,7 @@ class UIWizard
 		<input type=\"button\" value=\"".Dict::S('UI:Button:Next')."\" onClick=\"GoToStep($iStepIndex, 1+$iStepIndex)\" />
 		<input type=\"button\" value=\"".Dict::S('UI:Button:Finish')."\" $sDisabled onClick=\"GoToStep($iStepIndex, 1+$nbSteps)\" />
 		</div>\n");
-		$this->m_oPage->add("
-<script type=\"text/javascript\">
+		$this->m_oPage->add_script("
 function OnEnterStep{$iStepIndex}()
 {
 	oWizardHelper.ResetQuery();
@@ -123,7 +122,7 @@ $sJSHandlerCode
 
 	oWizardHelper.AjaxQueryServer();
 }
-</script>\n");
+");
 		$this->m_oPage->add("</div>\n\n");
 	}	
 
@@ -139,16 +138,15 @@ $sJSHandlerCode
 		$this->m_oPage->add("<input type=\"hidden\" name=\"operation\" value=\"wizard_apply_new\" />\n");
 		$this->m_oPage->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\" />\n");
 		$this->m_oPage->add("<input type=\"hidden\" id=\"wizard_json_obj\" name=\"json_obj\" value=\"\" />\n");
-		$this->m_oPage->add("<script type=\"text/javascript\">\n");
-		$this->m_oPage->add("function OnEnterStep$iStepIndex() {\n");
+		$sScript = "function OnEnterStep$iStepIndex() {\n";
 		foreach($aFieldsMap as $iInputId => $sAttCode)
 		{
-			$this->m_oPage->add("\toWizardHelper.UpdateCurrentValue('$sAttCode');\n");		
+			$sScript .= "\toWizardHelper.UpdateCurrentValue('$sAttCode');\n";		
 		}
-		$this->m_oPage->add("\toWizardHelper.Preview('object_preview');\n");		
-		$this->m_oPage->add("\t$('#wizard_json_obj').val(oWizardHelper.ToJSON());\n");		
-		$this->m_oPage->add("}\n");
-		$this->m_oPage->add("</script>\n");
+		$sScript .= "\toWizardHelper.Preview('object_preview');\n";		
+		$sScript .= "\t$('#wizard_json_obj').val(oWizardHelper.ToJSON());\n";		
+		$sScript .= "}\n";
+		$this->m_oPage->add_script($sScript);
 		$this->m_oPage->add("<div id=\"object_preview\">\n");
 		$this->m_oPage->add("</div>\n");
 		$this->m_oPage->add($oAppContext->GetForForm());		

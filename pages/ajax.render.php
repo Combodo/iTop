@@ -43,7 +43,7 @@ try
 	$oPage->no_cache();
 	
 	$operation = utils::ReadParam('operation', '');
-	$sFilter = stripslashes(utils::ReadParam('filter', ''));
+	$sFilter = stripslashes(utils::ReadParam('filter', '', false, 'raw_data'));
 	$sEncoding = utils::ReadParam('encoding', 'serialize');
 	$sClass = utils::ReadParam('class', 'MissingAjaxParam');
 	$sStyle = utils::ReadParam('style', 'list');
@@ -51,7 +51,8 @@ try
 	switch($operation)
 	{
 		case 'pagination':
-		$sExtraParams = stripslashes(utils::ReadParam('extra_param', ''));
+		$oPage->SetContentType('text/html');
+		$sExtraParams = stripslashes(utils::ReadParam('extra_param', '', false, 'raw_data'));
 		$aExtraParams = array();
 		if (!empty($sExtraParams))
 		{
@@ -169,6 +170,7 @@ try
 		
 		// ui.linkswidget
 		case 'searchObjectsToAdd':
+		$oPage->SetContentType('text/html');
 		$sRemoteClass = utils::ReadParam('sRemoteClass', '');
 		$sAttCode = utils::ReadParam('sAttCode', '');
 		$iInputId = utils::ReadParam('iInputId', '');
@@ -183,11 +185,12 @@ try
 		
 		// ui.extkeywidget
 		case 'searchObjectsToSelect':
+		$oPage->SetContentType('text/html');
 		$sTargetClass = utils::ReadParam('sTargetClass', '');
 		$iInputId = utils::ReadParam('iInputId', '');
 		$sRemoteClass = utils::ReadParam('sRemoteClass', '');
-		$sFilter = utils::ReadParam('sFilter');
-		$sJson = utils::ReadParam('json', '');
+		$sFilter = utils::ReadParam('sFilter', false, 'raw_data');
+		$sJson = utils::ReadParam('json', '', false, 'raw_data');
 		if (!empty($sJson))
 		{
 			$oWizardHelper = WizardHelper::FromJSON($sJson);
@@ -206,9 +209,9 @@ try
 		case 'ac_extkey':
 		$sTargetClass = utils::ReadParam('sTargetClass', '');
 		$iInputId = utils::ReadParam('iInputId', '');
-		$sFilter = utils::ReadParam('sFilter');
-		$sJson = utils::ReadParam('json', '');
-		$sContains = utils::ReadParam('q', '');
+		$sFilter = utils::ReadParam('sFilter', false, 'raw_data');
+		$sJson = utils::ReadParam('json', '', false, 'raw_data');
+		$sContains = utils::ReadParam('q', '', false, 'raw_data');
 		if (!empty($sJson))
 		{
 			$oWizardHelper = WizardHelper::FromJSON($sJson);
@@ -225,9 +228,10 @@ try
 	
 		// ui.extkeywidget
 		case 'objectSearchForm':
+		$oPage->SetContentType('text/html');
 		$sTargetClass = utils::ReadParam('sTargetClass', '');
 		$iInputId = utils::ReadParam('iInputId', '');
-		$sTitle = utils::ReadParam('sTitle');
+		$sTitle = utils::ReadParam('sTitle', false, 'raw_data');
 		$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId);
 		$oWidget->GetSearchDialog($oPage, $sTitle);
 		break;
@@ -262,10 +266,11 @@ try
 		
 		// ui.extkeywidget
 		case 'displayHierarchy':
+		$oPage->SetContentType('text/html');
 		$sTargetClass = utils::ReadParam('sTargetClass', '');
 		$sInputId = utils::ReadParam('sInputId', '');
-		$sFilter = utils::ReadParam('sFilter');
-		$sJson = utils::ReadParam('json', '');
+		$sFilter = utils::ReadParam('sFilter', '', false, 'raw_data');
+		$sJson = utils::ReadParam('json', '', false, 'raw_data');
 		$currValue = utils::ReadParam('value', '');
 		if (!empty($sJson))
 		{
@@ -285,6 +290,7 @@ try
 		
 		// ui.linkswidget
 		case 'doAddObjects':
+		$oPage->SetContentType('text/html');
 		$sAttCode = utils::ReadParam('sAttCode', '');
 		$iInputId = utils::ReadParam('iInputId', '');
 		$sSuffix = utils::ReadParam('sSuffix', '');
@@ -303,14 +309,16 @@ try
 		break;
 			
 		case 'wizard_helper_preview':
-		$sJson = utils::ReadParam('json_obj', '');
+		$oPage->SetContentType('text/html');
+		$sJson = utils::ReadParam('json_obj', '', false, 'raw_data');
 		$oWizardHelper = WizardHelper::FromJSON($sJson);
 		$oObj = $oWizardHelper->GetTargetObject();
 		$oObj->DisplayBareProperties($oPage); 
 		break;
 		
 		case 'wizard_helper':
-		$sJson = utils::ReadParam('json_obj', '');
+		$oPage->SetContentType('application/json');
+		$sJson = utils::ReadParam('json_obj', '', false, 'raw_data');
 		$oWizardHelper = WizardHelper::FromJSON($sJson);
 		$oObj = $oWizardHelper->GetTargetObject(); 
 		$sClass = $oWizardHelper->GetTargetClass();
@@ -345,6 +353,7 @@ try
 			
 		// DisplayBlock
 		case 'ajax':
+		$oPage->SetContentType('text/html');
 		if ($sFilter != "")
 		{
 			$sExtraParams = stripslashes(utils::ReadParam('extra_params', ''));
@@ -373,11 +382,13 @@ try
 		break;
 		
 		case 'displayCSVHistory':
+		$oPage->SetContentType('text/html');
 		$bShowAll = (utils::ReadParam('showall', 'false') == 'true');
 		BulkChange::DisplayImportHistory($oPage, true, $bShowAll);
 		break;
 		
 		case 'details':
+		$oPage->SetContentType('text/html');
 		$key = utils::ReadParam('id', 0);
 		$oFilter = new DBObjectSearch($sClass);
 		$oFilter->AddCondition('id', $key, '=');
@@ -386,6 +397,7 @@ try
 		break;
 		
 		case 'pie_chart':
+		$oPage->SetContentType('application/json');
 		$sGroupBy = utils::ReadParam('group_by', '');
 		if ($sFilter != '')
 		{
@@ -408,6 +420,7 @@ try
 		break;
 		
 		case 'open_flash_chart':
+		$oPage->SetContentType('application/json');
 		$aParams = utils::ReadParam('params', array());
 		if ($sFilter != '')
 		{
@@ -423,6 +436,7 @@ try
 		break;
 	
 		case 'modal_details':
+		$oPage->SetContentType('text/html');
 		$key = utils::ReadParam('id', 0);
 		$oFilter = new DBObjectSearch($sClass);
 		$oFilter->AddCondition('id', $key, '=');
@@ -433,6 +447,7 @@ try
 		break;
 
 		case 'link':
+		$oPage->SetContentType('text/html');
 		$sClass = utils::ReadParam('sclass', 'logInfra');
 		$sAttCode = utils::ReadParam('attCode', 'name');
 		//$sOrg = utils::ReadParam('org_id', '');
@@ -449,15 +464,9 @@ try
 			$iCount++;
 		}
 		break;
-		
-		case 'create':
-			case 'create_menu':
-			$sClass = utils::ReadParam('class', '');
-			$sFilter = utils::ReadParam('filter', '');
-			menuNode::DisplayCreationForm($oPage, $sClass, $sFilter);
-		break;
 	
 		case 'combo_options':
+		$oPage->SetContentType('text/html');
 		$oFilter = CMDBSearchFilter::FromOQL($sFilter);
 		$oSet = new CMDBObjectSet($oFilter);
 		while( $oObj = $oSet->fetch())
@@ -480,11 +489,12 @@ try
 		$sField = utils::ReadParam('field', '');
 		if (!empty($sClass) && !empty($id) && !empty($sField))
 		{
-			DownloadDocument($oPage, $sClass, $id, $sField, 'attachement');
+			DownloadDocument($oPage, $sClass, $id, $sField, 'attachment');
 		}
 		break;
 		
 		case 'search_form':
+		$oPage->SetContentType('text/html');
 		$sClass = utils::ReadParam('className', '');
 		$sRootClass = utils::ReadParam('baseClass', '');
 		$currentId = utils::ReadParam('currentId', '');
@@ -497,7 +507,7 @@ try
 		
 		case 'set_pref':
 		$sCode = utils::ReadPostedParam('code', '');
-		$sValue = utils::ReadPostedParam('value', '');
+		$sValue = utils::ReadPostedParam('value', '', 'raw_data');
 		appUserPreferences::SetPref($sCode, $sValue);
 		break;
 	
@@ -542,7 +552,7 @@ catch (Exception $e)
  * @param string $sContentDisposition Either 'inline' or 'attachment'
  * @return none
  */   
-function DownloadDocument(WebPage $oPage, $sClass, $id, $sAttCode, $sContentDisposition = 'attachement')
+function DownloadDocument(WebPage $oPage, $sClass, $id, $sAttCode, $sContentDisposition = 'attachment')
 {
 	try
 	{
@@ -552,8 +562,8 @@ function DownloadDocument(WebPage $oPage, $sClass, $id, $sAttCode, $sContentDisp
 			$oDocument = $oObj->Get($sAttCode);
 			if (is_object($oDocument))
 			{
-				$oPage->add_header('Content-type: '.$oDocument->GetMimeType());
-				$oPage->add_header('Content-Disposition: '.$sContentDisposition.'; filename="'.$oDocument->GetFileName().'"');
+				$oPage->SetContentType($oDocument->GetMimeType());
+				$oPage->SetContentDisposition($sContentDisposition,$oDocument->GetFileName());
 				$oPage->add($oDocument->GetData());
 			}
 		}

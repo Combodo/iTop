@@ -100,7 +100,7 @@ $oAppContext = new ApplicationContext();
 $oP = new iTopWebPage(Dict::S('UI:RunQuery:Title'));
 
 // Main program
-$sExpression = utils::ReadParam('expression', '');
+$sExpression = utils::ReadParam('expression', '', false, 'raw_data');
 $sEncoding = utils::ReadParam('encoding', 'oql');
 
 ShowExamples($oP, $sExpression);

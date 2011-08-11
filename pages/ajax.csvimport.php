@@ -224,13 +224,14 @@ try
 		case 'parser_preview':
 		$oPage = new ajax_page("");
 		$oPage->no_cache();
-		$sSeparator = utils::ReadParam('separator', ',');
+		$oPage->SetContentType('text/html');
+		$sSeparator = utils::ReadParam('separator', ',', false, 'raw_data');
 		if ($sSeparator == 'tab') $sSeparator = "\t";
-		$sTextQualifier = utils::ReadParam('qualifier', '"');
+		$sTextQualifier = utils::ReadParam('qualifier', '"', false, 'raw_data');
 		$iLinesToSkip = utils::ReadParam('nb_lines_skipped', 0);
 		$bFirstLineAsHeader = utils::ReadParam('header_line', true);
 		$sEncoding = utils::ReadParam('encoding', 'UTF-8');
-		$sData = stripslashes(utils::ReadParam('csvdata', true));
+		$sData = stripslashes(utils::ReadParam('csvdata', true, false, 'raw_data'));
 		$oCSVParser = new CSVParser($sData, $sSeparator, $sTextQualifier);
 		$aData = $oCSVParser->ToArray($iLinesToSkip);
 		$iTarget = count($aData);
@@ -284,11 +285,12 @@ try
 		case 'display_mapping_form':
 		$oPage = new ajax_page("");
 		$oPage->no_cache();
-		$sSeparator = utils::ReadParam('separator', ',');
-		$sTextQualifier = utils::ReadParam('qualifier', '"');
+		$oPage->SetContentType('text/html');
+		$sSeparator = utils::ReadParam('separator', ',', false, 'raw_data');
+		$sTextQualifier = utils::ReadParam('qualifier', '"', false, 'raw_data');
 		$iLinesToSkip = utils::ReadParam('nb_lines_skipped', 0);
 		$bFirstLineAsHeader = utils::ReadParam('header_line', false);
-		$sData = stripslashes(utils::ReadParam('csvdata', ''));
+		$sData = stripslashes(utils::ReadParam('csvdata', '', false, 'raw_data'));
 		$sClassName = utils::ReadParam('class_name', '');
 		$bAdvanced = utils::ReadParam('advanced', false);
 		$sEncoding = utils::ReadParam('encoding', 'UTF-8');

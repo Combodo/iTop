@@ -48,7 +48,7 @@ try
 		break;
 		
 		case 'oql':
-		$sOQL = utils::ReadParam('oql', null);
+		$sOQL = utils::ReadParam('oql', null, false, 'raw_data');
 		if ($sOQL == null)
 		{
 			throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'oql'));

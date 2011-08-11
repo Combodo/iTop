@@ -114,7 +114,7 @@ class utils
 	}
 
 
-	public static function ReadParam($sName, $defaultValue = "", $bAllowCLI = false)
+	public static function ReadParam($sName, $defaultValue = "", $bAllowCLI = false, $sSanitizationFilter = 'parameter')
 	{
 		global $argv;
 		$retValue = $defaultValue;
@@ -141,12 +141,71 @@ class utils
 				}
 			}
 		}
-		return $retValue;
+		return self::Sanitize($retValue, $defaultValue, $sSanitizationFilter);
 	}
 	
-	public static function ReadPostedParam($sName, $defaultValue = "")
+	public static function ReadPostedParam($sName, $defaultValue = '', $sSanitizationFilter = 'parameter')
 	{
-		return isset($_POST[$sName]) ? $_POST[$sName] : $defaultValue;
+		$retValue = isset($_POST[$sName]) ? $_POST[$sName] : $defaultValue;
+		return self::Sanitize($retValue, $defaultValue, $sSanitizationFilter);
+	}
+	
+	public static function Sanitize($value, $defaultValue, $sSanitizationFilter)
+	{
+		$retValue = self::Sanitize_Internal($value, $sSanitizationFilter);
+		if ($retValue === false)
+		{
+			$retValue = $defaultValue;
+		}
+		return $retValue;		
+	}
+	
+	protected static function Sanitize_Internal($value, $sSanitizationFilter)
+	{
+		switch($sSanitizationFilter)
+		{
+			case 'integer':
+			$retValue = filter_var($value, FILTER_SANITIZE_NUMBER_INT);
+			break;
+			
+			case 'class':
+			$retValue = $value;
+			if (!MetaModel::IsValidClass($value))
+			{
+				$retValue = false;
+			}
+			break;
+
+			case 'string':
+			$retValue = filter_var($value, FILTER_SANITIZE_SPECIAL_CHARS);
+			break;
+			
+			case 'parameter':
+			if (is_array($value))
+			{
+				$retValue = array();
+				foreach($value as $key => $val)
+				{
+					$retValue[$key] = self::Sanitize_Internal($val, $sSanitizationFilter); // recursively check arrays
+					if ($retValue[$key] === false)
+					{
+						$retValue = false;
+						break;
+					}
+				}
+			}
+			else
+			{
+				$retValue = filter_var($value, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=>'/^[A-Za-z0-9_=-]*$/'))); // the '=' equal character is used in serialized filters
+			}
+			break;
+			
+			default:
+			case 'raw_data':
+			$retValue = $value;
+			// Do nothing
+		}
+		return $retValue;		
 	}
 	
 	/**

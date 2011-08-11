@@ -416,10 +416,9 @@ function CheckServerConnection(SetupWebPage $oP, $sDBServer, $sDBUser, $sDBPwd)
 function PopulateDataFilesList(SetupWebPage $oP, $aParamValues, $oConfig)
 {
 
-	$oP->add("<script type=\"text/javascript\">\n");
-	$oP->add("function PopulateDataFilesList()\n");
-	$oP->add("{\n");
-	$oP->add("if (aFilesToLoad.length > 0)  return;"); // Populate the list only once...
+	$sScript = "function PopulateDataFilesList()\n";
+	$sScript .= "{\n";
+	$sScript .= "if (aFilesToLoad.length > 0)  return;"; // Populate the list only once...
 
 	$aAvailableModules = AnalyzeInstallation($oConfig);
 
@@ -452,7 +451,7 @@ function PopulateDataFilesList(SetupWebPage $oP, $aParamValues, $oConfig)
 		// Under Windows, it is a must to escape backslashes (not an issue until a folder name starts with t or n, etc...)
 		$sFile = APPROOT.$sFile;
 		$sFile = str_replace('\\', '\\\\', $sFile);
-		$oP->add("aFilesToLoad[aFilesToLoad.length] = '$sFile';\n");
+		$sScript .= "aFilesToLoad[aFilesToLoad.length] = '$sFile';\n";
 	}
 
 	// Sample data - loaded IIF wished by the user
@@ -464,11 +463,11 @@ function PopulateDataFilesList(SetupWebPage $oP, $aParamValues, $oConfig)
 			// Under Windows, it is a must to escape backslashes (not an issue until a folder name starts with t or n, etc...)
 			$sFile = APPROOT.$sFile;
 			$sFile = str_replace('\\', '\\\\', $sFile);
-			$oP->add("aFilesToLoad[aFilesToLoad.length] = '$sFile';\n");
+			$sScript .= "aFilesToLoad[aFilesToLoad.length] = '$sFile';\n";
 		}
 	}
-	$oP->add("}\n");
-	$oP->add("</script>\n");
+	$sScript .= "}\n";
+	$oP->add_script($sScript);
 }
 
 /**

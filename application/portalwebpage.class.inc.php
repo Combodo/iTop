@@ -593,7 +593,7 @@ EOF
 		foreach($aAttList as $sAttSpec)
 		{
 			$sFieldName = str_replace('->', PARAM_ARROW_SEP, $sAttSpec);
-			$value = utils::ReadPostedParam($sPrefix.$sFieldName, null);
+			$value = utils::ReadPostedParam($sPrefix.$sFieldName, null, 'raw_data');
 			if (!is_null($value) && strlen($value) > 0)
 			{
 				$oFilter->AddConditionAdvanced($sAttSpec, $value);

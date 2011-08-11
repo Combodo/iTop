@@ -232,8 +232,7 @@ class DisplayBlock
 			$sHtml .= "<div id=\"$sId\" class=\"display_block loading\">\n";
 			$sHtml .= $oPage->GetP("<img src=\"../images/indicator_arrows.gif\"> ".Dict::S('UI:Loading'));
 			$sHtml .= "</div>\n";
-			$sHtml .= '
-			<script language="javascript">
+			$oPage->add_script('
 			$.post("ajax.render.php?style='.$this->m_sStyle.'",
 			   { operation: "ajax", filter: "'.$sFilter.'", extra_params: "'.$sExtraParams.'" },
 			   function(data){
@@ -242,14 +241,11 @@ class DisplayBlock
 				 $("#'.$sId.'").removeClass("loading");
 				}
 			 );
-			 </script>';
+			 ');
 		}
 		if ($bAutoReload)
 		{
-			$sHtml .= '
-			<script language="javascript">
-			setInterval("ReloadBlock(\''.$sId.'\', \''.$this->m_sStyle.'\', \''.$sFilter.'\', \"'.$sExtraParams.'\")", '.$iReloadInterval.');
-			 </script>';
+			$oPage->add_script('setInterval("ReloadBlock(\''.$sId.'\', \''.$this->m_sStyle.'\', \''.$sFilter.'\', \"'.$sExtraParams.'\")", '.$iReloadInterval.');');
 		}
 		return $sHtml;
 	}
@@ -299,7 +295,7 @@ class DisplayBlock
 				}
 				foreach($aFilterCodes as $sFilterCode)
 				{
-					$sExternalFilterValue = utils::ReadParam($sFilterCode, '');
+					$sExternalFilterValue = utils::ReadParam($sFilterCode, '', false, 'raw_data');
 					$condition = null;
 					if (isset($aExtraParams[$sFilterCode]))
 					{

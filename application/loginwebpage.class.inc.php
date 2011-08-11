@@ -110,8 +110,8 @@ EOF
 			case 'external':
 			case 'form':
 			default: // In case the settings get messed up...
-			$sAuthUser = utils::ReadParam('auth_user', '');
-			$sAuthPwd = utils::ReadParam('suggest_pwd', '');
+			$sAuthUser = utils::ReadParam('auth_user', '', true, 'raw_data');
+			$sAuthPwd = utils::ReadParam('suggest_pwd', '', true, 'raw_data');
 	
 			$sVersionShort = Dict::Format('UI:iTopVersion:Short', ITOP_VERSION);
 			$this->add("<div id=\"login-logo\"><a href=\"http://www.combodo.com/itop\"><img title=\"$sVersionShort\" src=\"../images/itop-logo-external.png\"></a></div>\n");
@@ -140,8 +140,8 @@ EOF
 
 	public function DisplayChangePwdForm($bFailedLogin = false)
 	{
-		$sAuthUser = utils::ReadParam('auth_user', '');
-		$sAuthPwd = utils::ReadParam('suggest_pwd', '');
+		$sAuthUser = utils::ReadParam('auth_user', '', false, 'raw_data');
+		$sAuthPwd = utils::ReadParam('suggest_pwd', '', false, 'raw_data');
 
 		$sVersionShort = Dict::Format('UI:iTopVersion:Short', ITOP_VERSION);
 		$sInconsistenPwdMsg = Dict::S('UI:Login:RetypePwdDoesNotMatch');
@@ -320,8 +320,8 @@ EOF
 					
 					case 'form':
 					// iTop standard mode: form based authentication
-					$sAuthUser = utils::ReadPostedParam('auth_user', '');
-					$sAuthPwd = utils::ReadPostedParam('auth_pwd', '');
+					$sAuthUser = utils::ReadPostedParam('auth_user', '', 'raw_data');
+					$sAuthPwd = utils::ReadPostedParam('auth_pwd', '', 'raw_data');
 					if ($sAuthUser != '')
 					{
 						$sLoginMode = 'form';
@@ -361,10 +361,10 @@ EOF
 
 					case 'url':
 					// Credentials passed directly in the url
-					$sAuthUser = utils::ReadParam('auth_user', '');
+					$sAuthUser = utils::ReadParam('auth_user', '', false, 'raw_data');
 					if ($sAuthUser != '')
 					{
-						$sAuthPwd = utils::ReadParam('auth_pwd', '');
+						$sAuthPwd = utils::ReadParam('auth_pwd', '', false, 'raw_data');
 						$sLoginMode = 'url';
 					}		
 					break;	
@@ -472,8 +472,8 @@ EOF
 		{
 			$sAuthUser = $_SESSION['auth_user'];
 			UserRights::Login($sAuthUser); // Set the user's language
-			$sOldPwd = utils::ReadPostedParam('old_pwd');
-			$sNewPwd = utils::ReadPostedParam('new_pwd');
+			$sOldPwd = utils::ReadPostedParam('old_pwd', 'raw_data');
+			$sNewPwd = utils::ReadPostedParam('new_pwd', 'raw_data');
 			if (UserRights::CanChangePassword() && ((!UserRights::CheckCredentials($sAuthUser, $sOldPwd)) || (!UserRights::ChangePassword($sOldPwd, $sNewPwd))))
 			{
 				$oPage = new LoginWebPage();

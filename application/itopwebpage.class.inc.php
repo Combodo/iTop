@@ -733,16 +733,16 @@ EOF
 		echo '<div id="left-pane" class="ui-layout-west">';
 		echo '<!-- Beginning of the left pane -->';
 		echo '	<div id="header-logo">';
-		echo '	<div id="top-left"></div><div id="logo"><a href="http://www.combodo.com/itop"><img src="../images/itop-logo.png" title="'.$sVersionString.'" style="border:0; margin-top:16px; margin-right:40px;"/></a></div>';
+		echo '	<div id="top-left"></div><div id="logo"><a href="http://www.combodo.com/itop"><img src="../images/itop-logo.png" title="'.self::FilterXSS($sVersionString).'" style="border:0; margin-top:16px; margin-right:40px;"/></a></div>';
 		echo '	</div>';
 		echo '	<div class="header-menu">';
 		echo '		<div class="icon ui-state-default ui-corner-all"><span id="tPinMenu" class="ui-icon ui-icon-pin-w">pin</span></div>';
-		echo '		<div style="text-align:center;">'.$sForm.'</div>';
+		echo '		<div style="text-align:center;">'.self::FilterXSS($sForm).'</div>';
 		echo '	</div>';
 		echo '	<div id="menu" class="ui-layout-content">';
 		echo '		<div id="inner_menu">';
 		echo '			<div id="accordion">';
-		echo $this->m_sMenu;
+		echo self::FilterXSS($this->m_sMenu);
 		echo '			<!-- Beginning of the accordion menu -->';
 		echo '			<!-- End of the accordion menu-->';
 		echo '			</div>';
@@ -754,16 +754,16 @@ EOF
 
 		echo '<div class="ui-layout-center">';
 		echo '	<div id="top-bar" style="width:100%">';
-		echo $sApplicationBanner;
-		echo '		<div id="global-search"><form action="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php"><table><tr><td></td><td id="g-search-input"><input type="text" name="text" value="'.$sText.'"'.$sOnClick.'/></td>';
+		echo self::FilterXSS($sApplicationBanner);
+		echo '		<div id="global-search"><form action="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php"><table><tr><td></td><td id="g-search-input"><input type="text" name="text" value="'.self::FilterXSS($sText).'"'.$sOnClick.'/></td>';
 		echo '<td><input type="image" src="../images/searchBtn.png"/></a></td>';
 		echo '<td><a style="background:transparent;" href="'.$sOnlineHelpUrl.'" target="_blank"><img style="border:0;padding-left:20px;padding-right:10px;" title="'.Dict::S('UI:Help').'" src="../images/help.png"/></td>';
-		echo '<td style="padding-right:20px;padding-left:10px;">'.$sLogOffMenu.'</td><td><input type="hidden" name="operation" value="full_text"/></td></tr></table></form></div>';
+		echo '<td style="padding-right:20px;padding-left:10px;">'.self::FilterXSS($sLogOffMenu).'</td><td><input type="hidden" name="operation" value="full_text"/></td></tr></table></form></div>';
 		//echo '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="hidden" name="operation" value="full_text"/></td></tr></table></form></div>';
 		echo '	</div>';
 		echo '	<div class="ui-layout-content">';
 		echo '	<!-- Beginning of page content -->';
-		echo $this->s_content;
+		echo self::FilterXSS($this->s_content);
 		echo '	<!-- End of page content -->';
 		echo '	</div>';
 		echo '</div>';
@@ -771,9 +771,9 @@ EOF
         // Add the captured output
         if (trim($s_captured_output) != "")
         {
-            echo "<div id=\"rawOutput\" title=\"Debug Output\"><div style=\"height:500px; overflow-y:auto;\">$s_captured_output</div></div>\n";
+            echo "<div id=\"rawOutput\" title=\"Debug Output\"><div style=\"height:500px; overflow-y:auto;\">".self::FilterXSS($s_captured_output)."</div></div>\n";
         }
-		echo "<div id=\"at_the_end\">".$this->s_deferred_content."</div>";
+		echo "<div id=\"at_the_end\">".self::FilterXSS($this->s_deferred_content)."</div>";
 //		echo $this->s_deferred_content;
 		echo "<div style=\"display:none\" title=\"ex2\" id=\"ex2\">Please wait...</div>\n"; // jqModal Window
 		echo "<div style=\"display:none\" title=\"dialog\" id=\"ModalDlg\"></div>";

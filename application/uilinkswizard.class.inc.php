@@ -97,8 +97,7 @@ class UILinksWizard
 		$oP->add("<input type=\"hidden\" name=\"linking_attcode\" value=\"{$this->m_sLinkingAttCode}\">\n");
 		$oP->add("<h1>".Dict::Format('UI:ManageObjectsOf_Class_LinkedWith_Class_Instance', MetaModel::GetName($this->m_sLinkedClass), MetaModel::GetName(get_class($oTargetObj)), "<span class=\"hilite\">".$oTargetObj->GetHyperlink()."</span>")."</h1>\n");
 		$oP->add("</div>\n");
-		$oP->add("<script type=\"text/javascript\">\n");
-		$oP->add(
+		$oP->add_script(
 <<<EOF
 		function OnSelectChange()
 		{
@@ -257,7 +256,6 @@ class UILinksWizard
 		}
 EOF
 );
-		$oP->Add("</script>\n");
 		$oP->add_ready_script("InitForm();");
 		$oFilter = new DBObjectSearch($this->m_sClass);
 		$oFilter->AddCondition($this->m_sLinkageAttr, $this->m_iObjectId, '=');

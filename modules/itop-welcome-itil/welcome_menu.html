@@ -84,33 +84,6 @@ a.summary:hover {
 	text-decoration: underline;
 }
 </style>
-<script>
-var sSerialized = '';
-function DumpPositions()
-{
-	sSerialized = $('.sortable').sortable('serialize', {key: 'menu'});
-	alert(sSerialized);
-}
-
-function RestorePositions()
-{	height: auto;
-    var arr = $('#main_menu .main_container').get();    
-    arr.reverse();
-
-	var sTemp = sSerialized.replace(/menu=/g, '');
-	alert(sTemp);
-	var aSerialized = sTemp.split('&');
-	console.log(aSerialized);
-    $.each(aSerialized, function(i,v) {
-      console.log(i+' => '+v);
-      var $menu = $('#menu_'+v);
-      if ($menu.length >  0) // Check that the menu exists
-      {
-      	$('#main_menu').append($menu);
-      }
-    });
-}
-</script>
 <div id="main_menu" class="sortable persistent">
 
 <div id="menu_1" class="main_container v-resizable">

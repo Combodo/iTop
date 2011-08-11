@@ -47,7 +47,10 @@ class WebPage
     protected $a_base;
     protected $iNextId;
     protected $iTransactionId;
-    
+	protected $sContentType;
+	protected $sContentDisposition;
+	protected $sContentFileName;
+	    
     public function __construct($s_title)
     {
         $this->s_title = $s_title;
@@ -61,6 +64,9 @@ class WebPage
         $this->a_base = array( 'href' => '', 'target' => '');
         $this->iNextId = 0;
         $this->iTransactionId = 0;
+        $this->sContentType = '';
+        $this->sContentDisposition = '';
+        $this->sContentFileName = '';
         ob_start(); // Start capturing the output
     }
 	
@@ -359,7 +365,7 @@ class WebPage
         echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n";
         echo "<html>\n";
         echo "<head>\n";
-        echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
+		echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
         echo "<title>{$this->s_title}</title>\n";
         echo $this->get_base_tag();
         foreach($this->a_linked_scripts as $s_script)
@@ -409,12 +415,12 @@ class WebPage
         }
         echo "</head>\n";
         echo "<body>\n";
-        echo $this->s_content;
+        echo self::FilterXSS($this->s_content);
         if (trim($s_captured_output) != "")
         {
-            echo "<div class=\"raw_output\">$s_captured_output</div>\n";
+            echo "<div class=\"raw_output\">".self::FilterXSS($s_captured_output)."</div>\n";
         }
-        echo '<div id="at_the_end">'.$this->s_deferred_content.'</div>';
+        echo '<div id="at_the_end">'.self::FilterXSS($this->s_deferred_content).'</div>';
         echo "</body>\n";
         echo "</html>\n";
     }
@@ -459,7 +465,29 @@ class WebPage
 	{
 		return $this->iNextId++;
 	}
-	
+
+	/**
+	 * Set the content-type (mime type) for the page's content
+	 * @param $sContentType string
+	 * @return void
+	 */
+	public function SetContentType($sContentType)
+	{
+		$this->sContentType = $sContentType;
+	}
+		
+	/**
+	 * Set the content-disposition (mime type) for the page's content
+	 * @param $sDisposition string The disposition: 'inline' or 'attachment'
+	 * @param $sFileName string The original name of the file
+	 * @return void
+	 */
+	public function SetContentDisposition($sDisposition, $sFileName)
+	{
+		$this->sContentDisposition = $sDisposition;
+		$this->sContentFileName = $sFileName;
+	}
+		
 	/**
 	 * Set the transactionId of the current form
 	 * @param $iTransactionId integer
@@ -477,6 +505,11 @@ class WebPage
 	public function GetTransactionId()
 	{
 		return $this->iTransactionId;
+	}
+	
+	public static function FilterXSS($sHTML)
+	{
+		return str_ireplace('<script', '&lt;script', $sHTML);
 	}
 }
 ?>
