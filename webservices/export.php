@@ -43,7 +43,7 @@ $iActiveNodeId = utils::ReadParam('menu', -1);
 $currentOrganization = utils::ReadParam('org_id', '');
 
 // Main program
-$sExpression = utils::ReadParam('expression', '');
+$sExpression = utils::ReadParam('expression', '', true /* Allow CLI */, 'raw_data');
 $sFormat = strtolower(utils::ReadParam('format', 'html'));
 $sFields = utils::ReadParam('fields', ''); // CSV field list (allows to specify link set attributes, still not taken into account for XML export)
 
