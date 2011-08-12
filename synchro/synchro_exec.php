@@ -61,9 +61,9 @@ function UsageAndExit($oP)
 	exit -2;
 }
 
-function ReadMandatoryParam($oP, $sParam)
+function ReadMandatoryParam($oP, $sParam, $sSanitizationFilter = 'parameter')
 {
-	$sValue = utils::ReadParam($sParam, null, true /* Allow CLI */);
+	$sValue = utils::ReadParam($sParam, null, true /* Allow CLI */, $sSanitizationFilter);
 	if (is_null($sValue))
 	{
 		$oP->p("ERROR: Missing argument '$sParam'\n");
@@ -100,9 +100,9 @@ if (utils::IsModeCLI())
 	// Next steps:
 	//   specific arguments: 'csvfile'
 	//   
-	$sAuthUser = ReadMandatoryParam($oP, 'auth_user');
-	$sAuthPwd = ReadMandatoryParam($oP, 'auth_pwd');
-	$sDataSourcesList = ReadMandatoryParam($oP, 'data_sources');
+	$sAuthUser = ReadMandatoryParam($oP, 'auth_user', 'raw_data');
+	$sAuthPwd = ReadMandatoryParam($oP, 'auth_pwd', 'raw_data');
+	$sDataSourcesList = ReadMandatoryParam($oP, 'data_sources', 'raw_data'); // May contain commas
 	if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd))
 	{
 		UserRights::Login($sAuthUser); // Login & set the user's language
@@ -119,7 +119,7 @@ else
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
-	$sDataSourcesList = utils::ReadParam('data_sources', null, true);
+	$sDataSourcesList = utils::ReadParam('data_sources', null, true, 'raw_data');
 	
 	if ($sDataSourcesList == null)
 	{

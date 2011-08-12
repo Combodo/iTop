@@ -181,6 +181,7 @@ class utils
 			break;
 			
 			case 'parameter':
+			case 'field_name':
 			if (is_array($value))
 			{
 				$retValue = array();
@@ -196,8 +197,19 @@ class utils
 			}
 			else
 			{
-				$retValue = filter_var($value, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=>'/^[ A-Za-z0-9_=-]*$/'))); // the '=' equal character is used in serialized filters
+				switch($sSanitizationFilter)
+				{
+					case 'parameter':
+					$retValue = filter_var($value, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=>'/^[ A-Za-z0-9_=-]*$/'))); // the '=' equal character is used in serialized filters
+					break;
+					
+					case 'field_name':
+					$retValue = filter_var($value, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=>'/^[A-Za-z0-9_]+(->[A-Za-z0-9_]+)*$/'))); // att_code or att_code->name or AttCode->Name or AttCode->Key2->Name
+					break;
+				}
 			}
+			break;
+			
 			break;
 			
 			default:

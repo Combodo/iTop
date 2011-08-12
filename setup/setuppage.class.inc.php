@@ -677,7 +677,7 @@ function CreateDatabaseStructure(Config $oConfig, $aSelectedModules, $sMode)
 			MetaModel::DBCreate();
 			SetupWebPage::log_ok("Database structure successfully created.");
 			// Check (and update only if it seems needed) the hierarchical keys
-			MetaModel::CheckHKeys(false /* bForceUpdate */);
+			MetaModel::CheckHKeys(false /* bDiagnosticsOnly */, false /* bVerbose*/, false /* bForceUpdate */);
 		}
 		else
 		{

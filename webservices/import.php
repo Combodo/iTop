@@ -181,22 +181,22 @@ function UsageAndExit($oP)
 }
 
 
-function ReadParam($oP, $sParam)
+function ReadParam($oP, $sParam, $sSanitizationFilter = 'parameter')
 {
 	global $aPageParams;
 	assert(isset($aPageParams[$sParam]));
 	assert(!$aPageParams[$sParam]['mandatory']);
-	$sValue = utils::ReadParam($sParam, $aPageParams[$sParam]['default'], true /* Allow CLI */);
+	$sValue = utils::ReadParam($sParam, $aPageParams[$sParam]['default'], true /* Allow CLI */, $sSanitizationFilter);
 	return trim($sValue);
 }
 
-function ReadMandatoryParam($oP, $sParam)
+function ReadMandatoryParam($oP, $sParam, $sSanitizationFilter)
 {
 	global $aPageParams;
 	assert(isset($aPageParams[$sParam]));
 	assert($aPageParams[$sParam]['mandatory']);
 
-	$sValue = utils::ReadParam($sParam, null, true /* Allow CLI */);
+	$sValue = utils::ReadParam($sParam, null, true /* Allow CLI */, $sSanitizationFilter);
 	if (is_null($sValue))
 	{
 		$oP->p("ERROR: Missing argument '$sParam'\n");
@@ -233,9 +233,9 @@ if (utils::IsModeCLI())
 	// Next steps:
 	//   specific arguments: 'csvfile'
 	//   
-	$sAuthUser = ReadMandatoryParam($oP, 'auth_user');
-	$sAuthPwd = ReadMandatoryParam($oP, 'auth_pwd');
-	$sCsvFile = ReadMandatoryParam($oP, 'csvfile');
+	$sAuthUser = ReadMandatoryParam($oP, 'auth_user', 'raw_data');
+	$sAuthPwd = ReadMandatoryParam($oP, 'auth_pwd', 'raw_data');
+	$sCsvFile = ReadMandatoryParam($oP, 'csvfile', 'raw_data');
 	if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd))
 	{
 		UserRights::Login($sAuthUser); // Login & set the user's language
@@ -272,16 +272,16 @@ try
 	//
 	// Read parameters
 	//
-	$sClass = ReadMandatoryParam($oP, 'class');
-	$sSep = ReadParam($oP, 'separator');
-	$sQualifier = ReadParam($oP, 'qualifier');
-	$sCharSet = ReadParam($oP, 'charset');
-	$sDateFormat = ReadParam($oP, 'date_format');
+	$sClass = ReadMandatoryParam($oP, 'class', 'class');
+	$sSep = ReadParam($oP, 'separator', 'raw_data');
+	$sQualifier = ReadParam($oP, 'qualifier', 'raw_data');
+	$sCharSet = ReadParam($oP, 'charset', 'raw_data');
+	$sDateFormat = ReadParam($oP, 'date_format', 'raw_data');
 	$sOutput = ReadParam($oP, 'output');
 //	$sReportLevel = ReadParam($oP, 'reportlevel');
-	$sReconcKeys = ReadParam($oP, 'reconciliationkeys');
+	$sReconcKeys = ReadParam($oP, 'reconciliationkeys', 'field_name');
 	$sSimulate = ReadParam($oP, 'simulate');
-	$sComment = ReadParam($oP, 'comment');
+	$sComment = ReadParam($oP, 'comment', 'raw_data');
 
 	//////////////////////////////////////////////////
 	//

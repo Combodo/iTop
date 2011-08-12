@@ -32,9 +32,9 @@ require_once(APPROOT.'/application/startup.inc.php');
 
 
 
-function ReadMandatoryParam($oP, $sParam)
+function ReadMandatoryParam($oP, $sParam, $sSanitizationFilter = 'parameter')
 {
-	$sValue = utils::ReadParam($sParam, null, true /* Allow CLI */);
+	$sValue = utils::ReadParam($sParam, null, true /* Allow CLI */, $sSanitizationFilter);
 	if (is_null($sValue))
 	{
 		$oP->p("ERROR: Missing argument '$sParam'\n");
@@ -130,8 +130,8 @@ if (utils::IsModeCLI())
 	// Next steps:
 	//   specific arguments: 'csvfile'
 	//   
-	$sAuthUser = ReadMandatoryParam($oP, 'auth_user');
-	$sAuthPwd = ReadMandatoryParam($oP, 'auth_pwd');
+	$sAuthUser = ReadMandatoryParam($oP, 'auth_user', 'raw_data');
+	$sAuthPwd = ReadMandatoryParam($oP, 'auth_pwd', 'raw_data');
 	if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd))
 	{
 		UserRights::Login($sAuthUser); // Login & set the user's language
