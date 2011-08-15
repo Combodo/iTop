@@ -63,7 +63,7 @@ class SLAComputation
 	}
 	
 	/**
-	 * Get the date/time correspnding to a given delay in the future from the present
+	 * Get the date/time corresponding to a given delay in the future from the present
 	 * considering only the valid (open) hours for a specified ticket
 	 * @param $oTicket Ticket The ticket for which to compute the deadline
 	 * @param $iDuration integer The duration (in seconds) in the future
@@ -77,6 +77,18 @@ class SLAComputation
 			$oStartDate = new DateTime();
 		}
 		return self::$m_oAddOn->GetDeadline($oTicket, $iDuration, $oStartDate);
+	}
+
+	/**
+	 * Get duration (considering only open hours) elapsed bewteen two given DateTimes
+	 * @param $oTicket Ticket The ticket for which to compute the deadline
+	 * @param $oStartDate DateTime The starting point for the computation (default = now)
+	 * @param $oEndDate DateTime The ending point for the computation (default = now)
+	 * @return integer The duration (number of seconds) of open hours elapsed between the two dates
+	 */
+	public static function GetOpenDuration($oTicket, DateTime $oStartDate, DateTime $oEndDate)
+	{
+		return self::$m_oAddOn->GetOpenDuration($oTicket, $oStartDate, $oEndDate);
 	}
 }
 
@@ -97,7 +109,7 @@ class SLAComputationAddOnAPI
 	}	
 
 	/**
-	 * Get the date/time correspnding to a given delay in the future from the present
+	 * Get the date/time corresponding to a given delay in the future from the present
 	 * considering only the valid (open) hours for a specified ticket
 	 * @param $oTicket Ticket The ticket for which to compute the deadline
 	 * @param $iDuration integer The duration (in seconds) in the future
@@ -111,6 +123,18 @@ class SLAComputationAddOnAPI
 		$oResult = clone $oStartDate;
 		$oResult->modify('+'.$iDuration.' seconds');
 		return $oResult;
+	}
+	
+	/**
+	 * Get duration (considering only open hours) elapsed bewteen two given DateTimes
+	 * @param $oTicket Ticket The ticket for which to compute the duration
+	 * @param $oStartDate DateTime The starting point for the computation (default = now)
+	 * @param $oEndDate DateTime The ending point for the computation (default = now)
+	 * @return integer The duration (number of seconds) of open hours elapsed between the two dates
+	 */
+	public static function GetOpenDuration($oTicket, DateTime $oStartDate, DateTime $oEndDate)
+	{
+		return abs($oEndDate->format('U') - $oStartDate-format('U'));
 	}
 }
 SLAComputation::SelectModule('SLAComputationAddOnAPI');
