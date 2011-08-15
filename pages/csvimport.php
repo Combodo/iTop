@@ -192,12 +192,12 @@ try
 	{
 		$aResult = array();
 		$sCSVData = utils::ReadParam('csvdata', '', false, 'raw_data');
-		$sCSVDataTruncated = utils::ReadParam('csvdata_truncated', '');
+		$sCSVDataTruncated = utils::ReadParam('csvdata_truncated', '', false, 'raw_data');
 		$sSeparator = utils::ReadParam('separator', ',', false, 'raw_data');
 		$sTextQualifier = utils::ReadParam('text_qualifier', '"', false, 'raw_data');
 		$bHeaderLine = (utils::ReadParam('header_line', '0') == 1);
 		$iRealSkippedLines = $iSkippedLines = utils::ReadParam('nb_skipped_lines', '0');
-		$sClassName = utils::ReadParam('class_name', '');
+		$sClassName = utils::ReadParam('class_name', '', false, 'class');
 		$aFieldsMapping = utils::ReadParam('field', array(), false, 'field_name');
 		$aSearchFields = utils::ReadParam('search_field', array(), false, 'field_name');
 		$iCurrentStep = $bSimulate ? 4 : 5;
@@ -506,8 +506,6 @@ try
 		{
 			$oPage->add('<input type="hidden" name="search_field['.$index.']" value="1"/>');
 		}
-		$aFieldsMapping = utils::ReadParam('field', array());
-		$aSearchFields = utils::ReadParam('search_field', array());
 		$aDisplayFilters = array();
 		if ($bSimulate)
 		{
@@ -808,7 +806,7 @@ EOF
 		{
 			$iSkippedLines = utils::ReadParam('nb_skipped_lines', '0');
 		}
-		$sClassName = utils::ReadParam('class_name', '');
+		$sClassName = utils::ReadParam('class_name', '', false, 'class');
 		$bAdvanced = utils::ReadParam('advanced', 0);
 		$sEncoding = utils::ReadParam('encoding', 'UTF-8');
 	
@@ -1096,7 +1094,7 @@ EOF
 		}
 		$sOtherTextQualifier = in_array($sTextQualifier, array('"', "'")) ? '' : $sTextQualifier;
 		$bHeaderLine = utils::ReadParam('header_line', 0);
-		$sClassName = utils::ReadParam('class_name', '');
+		$sClassName = utils::ReadParam('class_name', '', false, 'class');
 		$bAdvanced = utils::ReadParam('advanced', 0);
 		
 		// Create a truncated version of the data used for the fast preview

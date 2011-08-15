@@ -45,7 +45,7 @@ try
 	$operation = utils::ReadParam('operation', '');
 	$sFilter = stripslashes(utils::ReadParam('filter', '', false, 'raw_data'));
 	$sEncoding = utils::ReadParam('encoding', 'serialize');
-	$sClass = utils::ReadParam('class', 'MissingAjaxParam');
+	$sClass = utils::ReadParam('class', 'MissingAjaxParam', false, 'class');
 	$sStyle = utils::ReadParam('style', 'list');
 
 	switch($operation)
@@ -171,7 +171,7 @@ try
 		// ui.linkswidget
 		case 'searchObjectsToAdd':
 		$oPage->SetContentType('text/html');
-		$sRemoteClass = utils::ReadParam('sRemoteClass', '');
+		$sRemoteClass = utils::ReadParam('sRemoteClass', '', false, 'class');
 		$sAttCode = utils::ReadParam('sAttCode', '');
 		$iInputId = utils::ReadParam('iInputId', '');
 		$sSuffix = utils::ReadParam('sSuffix', '');
@@ -186,9 +186,9 @@ try
 		// ui.extkeywidget
 		case 'searchObjectsToSelect':
 		$oPage->SetContentType('text/html');
-		$sTargetClass = utils::ReadParam('sTargetClass', '');
+		$sTargetClass = utils::ReadParam('sTargetClass', '', false, 'class');
 		$iInputId = utils::ReadParam('iInputId', '');
-		$sRemoteClass = utils::ReadParam('sRemoteClass', '');
+		$sRemoteClass = utils::ReadParam('sRemoteClass', '', false, 'class');
 		$sFilter = utils::ReadParam('sFilter', '', false, 'raw_data');
 		$sJson = utils::ReadParam('json', '', false, 'raw_data');
 		if (!empty($sJson))
@@ -207,7 +207,7 @@ try
 	
 		// ui.extkeywidget: autocomplete
 		case 'ac_extkey':
-		$sTargetClass = utils::ReadParam('sTargetClass', '');
+		$sTargetClass = utils::ReadParam('sTargetClass', '', false, 'class');
 		$iInputId = utils::ReadParam('iInputId', '');
 		$sFilter = utils::ReadParam('sFilter', '', false, 'raw_data');
 		$sJson = utils::ReadParam('json', '', false, 'raw_data');
@@ -229,7 +229,7 @@ try
 		// ui.extkeywidget
 		case 'objectSearchForm':
 		$oPage->SetContentType('text/html');
-		$sTargetClass = utils::ReadParam('sTargetClass', '');
+		$sTargetClass = utils::ReadParam('sTargetClass', '', false, 'class');
 		$iInputId = utils::ReadParam('iInputId', '');
 		$sTitle = utils::ReadParam('sTitle', '', false, 'raw_data');
 		$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId);
@@ -238,7 +238,7 @@ try
 
 		// ui.extkeywidget
 		case 'objectCreationForm':
-		$sTargetClass = utils::ReadParam('sTargetClass', '');
+		$sTargetClass = utils::ReadParam('sTargetClass', '', false, 'class');
 		$iInputId = utils::ReadParam('iInputId', '');
 		$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId);
 		$oWidget->GetObjectCreationForm($oPage);
@@ -246,7 +246,7 @@ try
 		
 		// ui.extkeywidget
 		case 'doCreateObject':
-		$sTargetClass = utils::ReadParam('sTargetClass', '');
+		$sTargetClass = utils::ReadParam('sTargetClass', '', false, 'class');
 		$iInputId = utils::ReadParam('iInputId', '');
 		$sFormPrefix = utils::ReadParam('sFormPrefix', '');
 		$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId);
@@ -256,7 +256,7 @@ try
 		
 		// ui.extkeywidget
 		case 'getObjectName':
-		$sTargetClass = utils::ReadParam('sTargetClass', '');
+		$sTargetClass = utils::ReadParam('sTargetClass', '', false, 'class');
 		$iInputId = utils::ReadParam('iInputId', '');
 		$iObjectId = utils::ReadParam('iObjectId', '');
 		$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId);
@@ -267,7 +267,7 @@ try
 		// ui.extkeywidget
 		case 'displayHierarchy':
 		$oPage->SetContentType('text/html');
-		$sTargetClass = utils::ReadParam('sTargetClass', '');
+		$sTargetClass = utils::ReadParam('sTargetClass', '', false, 'class');
 		$sInputId = utils::ReadParam('sInputId', '');
 		$sFilter = utils::ReadParam('sFilter', '', false, 'raw_data');
 		$sJson = utils::ReadParam('json', '', false, 'raw_data');
@@ -294,7 +294,7 @@ try
 		$sAttCode = utils::ReadParam('sAttCode', '');
 		$iInputId = utils::ReadParam('iInputId', '');
 		$sSuffix = utils::ReadParam('sSuffix', '');
-		$sRemoteClass = utils::ReadParam('sRemoteClass', $sClass);
+		$sRemoteClass = utils::ReadParam('sRemoteClass', $sClass, false, 'class');
 		$bDuplicates = (utils::ReadParam('bDuplicates', 'false') == 'false') ? false : true;
 		$oWidget = new UILinksWidget($sClass, $sAttCode, $iInputId, $sSuffix, $bDuplicates);
 		if ($sFilter != '')
@@ -448,7 +448,7 @@ try
 
 		case 'link':
 		$oPage->SetContentType('text/html');
-		$sClass = utils::ReadParam('sclass', 'logInfra');
+		$sClass = utils::ReadParam('sclass', 'logInfra', false, 'class');
 		$sAttCode = utils::ReadParam('attCode', 'name');
 		//$sOrg = utils::ReadParam('org_id', '');
 		$sName = utils::ReadParam('q', '');
@@ -495,8 +495,8 @@ try
 		
 		case 'search_form':
 		$oPage->SetContentType('text/html');
-		$sClass = utils::ReadParam('className', '');
-		$sRootClass = utils::ReadParam('baseClass', '');
+		$sClass = utils::ReadParam('className', '', false, 'class');
+		$sRootClass = utils::ReadParam('baseClass', '', false, 'class');
 		$currentId = utils::ReadParam('currentId', '');
 		$sAction = utils::ReadParam('action', '');
 		$oFilter = new DBObjectSearch($sClass);

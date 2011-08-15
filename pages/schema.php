@@ -524,7 +524,7 @@ $operation = utils::ReadParam('operation', '');
 switch($operation)
 {
 	case 'details_class':
-	$sClass = utils::ReadParam('class', 'logRealObject');
+	$sClass = utils::ReadParam('class', 'logRealObject', false, 'class');
 	DisplayClassDetails($oPage, $sClass, $sContext);
 	break;
 	

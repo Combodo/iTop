@@ -108,7 +108,7 @@ function GraphvizLifecycle($sClass)
 	return $sDotFileContent;
 }
 
-$sClass = utils::ReadParam('class', 'bizIncidentTicket');
+$sClass = utils::ReadParam('class', 'bizIncidentTicket', false, 'class');
 $sDir = dirname(__FILE__);
 $sImageFilePath = $sDir."/../images/lifecycle/".$sClass.".png";
 $sDotExecutable = MetaModel::GetConfig()->Get('graphviz_path');

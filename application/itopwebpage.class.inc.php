@@ -629,7 +629,7 @@ EOF
 		}
 
 		// Render the text of the global search form
-		$sText = htmlentities(utils::ReadParam('text', ''), ENT_QUOTES, 'UTF-8');
+		$sText = htmlentities(utils::ReadParam('text', '', false, 'raw_data'), ENT_QUOTES, 'UTF-8');
 		$sOnClick = "";
 		if (empty($sText))
 		{

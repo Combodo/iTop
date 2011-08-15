@@ -47,8 +47,8 @@ $oP->add_linked_script("../js/jquery.blockUI.js");
 // From now on the context is limited to the the selected organization ??
 
 // Now render the content of the page
-$sBaseClass = utils::ReadParam('baseClass', 'Organization');
-$sClass = utils::ReadParam('class', $sBaseClass);
+$sBaseClass = utils::ReadParam('baseClass', 'Organization', false, 'class');
+$sClass = utils::ReadParam('class', $sBaseClass, false, 'class');
 $sOQLClause = utils::ReadParam('oql_clause', '', false, 'raw_data');
 $sFilter = utils::ReadParam('filter', '', false, 'raw_data');
 $sOperation = utils::ReadParam('operation', '');

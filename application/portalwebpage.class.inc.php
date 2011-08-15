@@ -427,7 +427,7 @@ EOF
 			//
 			$this->add('<span style="white-space: nowrap;padding:5px;display:inline-block;">');
 			$sFilterValue = '';
-			$sFilterValue = utils::ReadParam($sPrefix.$sFieldName, '');
+			$sFilterValue = utils::ReadParam($sPrefix.$sFieldName, '', false, 'raw_data');
 			$sFilterOpCode = null; // Use the default 'loose' OpCode
 			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttSpec);
 			if ($oAttDef->IsExternalKey())
@@ -530,14 +530,14 @@ EOF
 	 * @input string $sMethod Either get or post
 	 * @return Hash Array of name => value corresponding to the parameters that were passed to the page
 	 */
-	public function ReadAllParams($sParamList, $sPrefix = 'attr_', $sMethod = 'get')
+	public function ReadAllParams($sParamList, $sPrefix = 'attr_')
 	{
 		$aParams = explode(',', $sParamList);
 		$aValues = array();
 		foreach($aParams as $sName)
 		{
 			$sName = trim($sName);
-			$value = utils::ReadParam($sPrefix.$sName, null, $sMethod);
+			$value = utils::ReadParam($sPrefix.$sName, null, false, 'raw_data');
 			if (!is_null($value))
 			{
 				$aValues[$sName] = $value;
@@ -658,8 +658,8 @@ EOF
 	 */
 	public function FindObjectFromArgs($aAllowedClasses = null)
 	{
-		$sClass = utils::ReadParam('class', '');
-		$iId = utils::ReadParam('id', 0);
+		$sClass = utils::ReadParam('class', '', true, 'class');
+		$iId = utils::ReadParam('id', 0, true, 'integer');
 	
 		if (empty($sClass))
 		{
@@ -781,7 +781,7 @@ EOF
 
 	protected function GetWizardStepHistory()
 	{
-		$sRawHistory = trim(utils::ReadParam('step_history', ''));
+		$sRawHistory = trim(utils::ReadParam('step_history', '', false, 'raw_data'));
 		if (strlen($sRawHistory) == 0)
 		{
 			return array();

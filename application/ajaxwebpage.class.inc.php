@@ -45,11 +45,12 @@ class ajax_page extends WebPage
     {
         parent::__construct($s_title);
         $this->m_sReadyScript = "";
-		$this->add_header("Content-type: text/html; charset=utf-8");
+		//$this->add_header("Content-type: text/html; charset=utf-8");
 		$this->add_header("Cache-control: no-cache");
 		$this->m_sCurrentTabContainer = '';
         $this->m_sCurrentTab = '';
 		$this->m_aTabs = array();
+		$this->sContentType = 'text/html';
 		$this->sContentDisposition = 'inline';
     }	
 
@@ -96,10 +97,6 @@ class ajax_page extends WebPage
     	if (!empty($this->sContentType))
     	{
 			$this->add_header('Content-type: '.$this->sContentType);
-    	}
-    	else
-    	{
-			$this->add_header('Content-type: text/html');
     	}
     	if (!empty($this->sContentDisposition))
     	{

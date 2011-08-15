@@ -86,7 +86,7 @@ header("Expires: Fri, 17 Jul 1970 05:00:00 GMT");    // Date in the past
 /**
  * Main program
  */
-$sFileName = Utils::ReadParam('file', '');
+$sFileName = Utils::ReadParam('file', '', false, 'raw_data');
 
 $oP = new WebPage("iTop - Backoffice data loader");
 

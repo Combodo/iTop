@@ -49,7 +49,7 @@ try
 			'att_id' => 0,
 			'msg' => ''
 		);
-		$sObjClass = stripslashes(utils::ReadParam('obj_class', ''));
+		$sObjClass = stripslashes(utils::ReadParam('obj_class', '', false, 'class'));
 		$sTempId = utils::ReadParam('temp_id', '');
 		if (empty($sObjClass))
 		{

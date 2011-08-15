@@ -1834,7 +1834,7 @@ class TestImportREST extends TestWebServices
 			),
 		); 
 
-     	$sSubTests = utils::ReadParam('subtests', null);
+     	$sSubTests = utils::ReadParam('subtests', null, true, 'raw_data');
      	if (is_null($sSubTests))
      	{
 			foreach ($aLoads as $iTestId => $aLoadSpec)

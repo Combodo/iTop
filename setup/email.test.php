@@ -200,8 +200,8 @@ try
 		
 		case 'step2':
 		$oP->no_cache();
-		$sTo = Utils::ReadParam('to');
-		$sFrom = Utils::ReadParam('from');
+		$sTo = Utils::ReadParam('to', '', false, 'raw_data');
+		$sFrom = Utils::ReadParam('from', '', false, 'raw_data');
 		if (strlen($sFrom) == 0)
 		{
 			$sFrom = $sTo;

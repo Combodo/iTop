@@ -1388,8 +1388,8 @@ EOF
 		$sHtml .= "<form id=\"formOQL{$iSearchFormId}\"><table style=\"width:80%;\"><tr style=\"vertical-align:top\">\n";
 		$sHtml .= "<td style=\"text-align:right\"><label>SELECT&nbsp;</label><select name=\"oql_class\">";
 		$aClasses = MetaModel::EnumChildClasses($sClassName, ENUM_CHILD_CLASSES_ALL);
-		$sSelectedClass = utils::ReadParam('oql_class', $sClassName);
-		$sOQLClause = utils::ReadParam('oql_clause', '');
+		$sSelectedClass = utils::ReadParam('oql_class', $sClassName, false, 'class');
+		$sOQLClause = utils::ReadParam('oql_clause', '', false, 'raw_data');
 		asort($aClasses);
 		foreach($aClasses as $sChildClass)
 		{
@@ -2339,7 +2339,7 @@ EOF
 	{
 		$aErrors = array();
 
-		$aRawValues = utils::ReadParam($sArgName, array());
+		$aRawValues = utils::ReadParam($sArgName, array(), '', 'raw_data');
 
 		$aValues = array();
 		foreach($this->GetWriteableAttList($aAttList, $aErrors) as $sAttCode => $oAttDef)

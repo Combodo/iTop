@@ -591,9 +591,9 @@ try
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		case 'search_oql': // OQL query
-			$sOQLClass = utils::ReadParam('oql_class', '');
-			$sBaseClass = utils::ReadParam('base_class', $sOQLClass);
-			$sOQLClause = utils::ReadParam('oql_clause', '');
+			$sOQLClass = utils::ReadParam('oql_class', '', false, 'class');
+			$sBaseClass = utils::ReadParam('base_class', $sOQLClass, false, 'class');
+			$sOQLClause = utils::ReadParam('oql_clause', '', false, 'raw_data');
 			$sFormat = utils::ReadParam('format', '');
 			$bSearchForm = utils::ReadParam('search_form', true);
 			$sTitle = utils::ReadParam('title', 'UI:SearchResultsPageTitle');
@@ -629,7 +629,7 @@ try
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		case 'search_form': // Search form
-			$sClass = utils::ReadParam('class', '');
+			$sClass = utils::ReadParam('class', '', false, 'class');
 			$sFormat = utils::ReadParam('format', 'html');
 			$bSearchForm = utils::ReadParam('search_form', true);
 			if (empty($sClass))
@@ -644,7 +644,7 @@ try
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		case 'search': // Serialized CMDBSearchFilter
-			$sFilter = utils::ReadParam('filter', '');
+			$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
 			$sFormat = utils::ReadParam('format', '');
 			$bSearchForm = utils::ReadParam('search_form', true);
 			if (empty($sFilter))
@@ -660,7 +660,7 @@ try
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		case 'full_text': // Global "google-like" search
-			$sFullText = trim(utils::ReadParam('text', ''));
+			$sFullText = trim(utils::ReadParam('text', '', false, 'raw_data'));
 			if (empty($sFullText))
 			{
 				$oP->p(Dict::S('UI:Search:NoSearch'));
@@ -752,7 +752,7 @@ try
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		case 'modify': // Form to modify an object
-			$sClass = utils::ReadParam('class', '');
+			$sClass = utils::ReadParam('class', '', false, 'class');
 			$sClassLabel = MetaModel::GetName($sClass);
 			$id = utils::ReadParam('id', '');
 			if ( empty($sClass) || empty($id)) // TO DO: check that the class name is valid !
@@ -790,7 +790,7 @@ try
 
 		case 'select_for_modify_all': // Select the list of objects to be modified (bulk modify)
 		$oP->set_title(Dict::S('UI:ModifyAllPageTitle'));
-		$sFilter = utils::ReadParam('filter', '');
+		$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
 		if (empty($sFilter))
 		{
 			throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'filter'));
@@ -806,8 +806,8 @@ try
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		case 'form_for_modify_all': // Form to modify multiple objects (bulk modify)
-		$sFilter = utils::ReadParam('filter', '');
-		$sClass = utils::ReadParam('class', '');
+		$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
+		$sClass = utils::ReadParam('class', '', false, 'class');
 		$oFullSetFilter = DBObjectSearch::unserialize($sFilter);
 		$aSelectedObj = utils::ReadMultipleSelection($oFullSetFilter);
 		if (count($aSelectedObj) > 0)
@@ -978,8 +978,8 @@ EOF
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		case 'preview_or_modify_all': // Preview or apply bulk modify
-		$sFilter = utils::ReadParam('filter', '');
-		$sClass = utils::ReadParam('class', '');
+		$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
+		$sClass = utils::ReadParam('class', '', false, 'class');
 		$bPreview = utils::ReadParam('preview_mode', '');
 		$sSelectedObj = utils::ReadParam('selectObj', '');
 		if ( empty($sClass) || empty($sSelectedObj)) // TO DO: check that the class name is valid !
@@ -1081,7 +1081,7 @@ EOF
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		case 'new': // Form to create a new object
-			$sClass = utils::ReadParam('class', '');
+			$sClass = utils::ReadParam('class', '', false, 'class');
 			$sStateCode = utils::ReadParam('state', '');
 			$bCheckSubClass = utils::ReadParam('checkSubclass', true);
 			if ( empty($sClass) )
@@ -1089,7 +1089,7 @@ EOF
 				throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'class'));
 			}
 
-			$aArgs = utils::ReadParam('default', array());
+			$aArgs = utils::ReadParam('default', array(), false, 'raw_data');
 			$aContext = $oAppContext->GetAsHash();
 			foreach( $oAppContext->GetNames() as $key)
 			{
@@ -1149,7 +1149,7 @@ EOF
 				$oP->add("<div class=\"wizContainer\">\n");
 				$oP->add('<form>');
 				$oP->add('<p>'.Dict::Format('UI:SelectTheTypeOf_Class_ToCreate', $sClassLabel));
-				$aDefaults = utils::ReadParam('default', array());
+				$aDefaults = utils::ReadParam('default', array(), false, 'raw_data');
 				$oP->add($oAppContext->GetForForm());
 				$oP->add("<input type=\"hidden\" name=\"checkSubclass\" value=\"0\">\n");
 				$oP->add("<input type=\"hidden\" name=\"state\" value=\"$sStateCode\">\n");
@@ -1280,7 +1280,7 @@ EOF
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		case 'select_for_deletion': // Select multiple objects for deletion
-			$sFilter = utils::ReadParam('filter', '');
+			$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
 			if (empty($sFilter))
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'filter'));
@@ -1332,7 +1332,7 @@ EOF
 
 		case 'delete':				// Deletion (preview)
 		case 'delete_confirmed':	// Deletion (confirmed)
-		$sClass = utils::ReadParam('class', '');
+		$sClass = utils::ReadParam('class', '', false, 'class');
 		$sClassLabel = MetaModel::GetName($sClass);
 		$id = utils::ReadParam('id', '');
 		$oObj = MetaModel::GetObject($sClass, $id);
@@ -1347,7 +1347,7 @@ EOF
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		case 'apply_new': // Creation of a new object
-		$sClass = utils::ReadPostedParam('class', '');
+		$sClass = utils::ReadPostedParam('class', '', 'class');
 		$sClassLabel = MetaModel::GetName($sClass);
 		$sTransactionId = utils::ReadPostedParam('transaction_id', '');
 		if ( empty($sClass) ) // TO DO: check that the class name is valid !
@@ -1441,7 +1441,7 @@ EOF
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		case 'select_bulk_stimulus': // Form displayed when applying a stimulus to many objects
-		$sFilter = utils::ReadParam('filter', '');
+		$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
 		$sStimulus = utils::ReadParam('stimulus', '');
 		$sState = utils::ReadParam('state', '');
 		if (empty($sFilter) || empty($sStimulus) || empty($sState))
@@ -1464,7 +1464,7 @@ EOF
 		break;
 		
 		case 'bulk_stimulus':
-		$sFilter = utils::ReadParam('filter', '');
+		$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
 		$sStimulus = utils::ReadParam('stimulus', '');
 		$sState = utils::ReadParam('state', '');
 		if (empty($sFilter) || empty($sStimulus) || empty($sState))
@@ -1771,7 +1771,7 @@ EOF
 		break;
 
 		case 'stimulus': // Form displayed when applying a stimulus (state change)
-		$sClass = utils::ReadParam('class', '');
+		$sClass = utils::ReadParam('class', '', false, 'class');
 		$id = utils::ReadParam('id', '');
 		$sStimulus = utils::ReadParam('stimulus', '');
 		if ( empty($sClass) || empty($id) ||  empty($sStimulus) ) // TO DO: check that the class name is valid !
@@ -2001,7 +2001,7 @@ EOF
 		///////////////////////////////////////////////////////////////////////////////////////////
 		
 		case 'swf_navigator': // Graphical display of the relations "impact" / "depends on"
-		$sClass = utils::ReadParam('class', '');
+		$sClass = utils::ReadParam('class', '', false, 'class');
 		$id = utils::ReadParam('id', 0);
 		$sRelation = utils::ReadParam('relation', 'impact');
 		

@@ -1500,7 +1500,7 @@ ini_set('display_startup_errors', true);
 $aParams = array('mode', 'previous_step', 'licence_ok', 'db_server', 'db_user', 'db_pwd','db_name', 'new_db_name', 'db_prefix', 'module', 'sample_data', 'auth_user', 'auth_pwd', 'language', 'application_path');
 foreach($aParams as $sName)
 {
-	$aParamValues[$sName] = utils::ReadParam($sName, '');
+	$aParamValues[$sName] = utils::ReadParam($sName, '', false, 'raw_data');
 }
 
 if (file_exists(FINAL_CONFIG_FILE))

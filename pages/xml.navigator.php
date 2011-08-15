@@ -112,7 +112,7 @@ LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 $oPage = new ajax_page("");
 $oPage->no_cache();
 
-$sClass = utils::ReadParam('class', 'Contact');
+$sClass = utils::ReadParam('class', 'Contact', false, 'class');
 $id = utils::ReadParam('id', 1);
 $sRelation = utils::ReadParam('relation', 'impacts');
 $aValidRelations = MetaModel::EnumRelations();

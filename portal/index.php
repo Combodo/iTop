@@ -61,13 +61,13 @@ function DumpHiddenParams($oP, $aInteractive, $aParameters)
  * @input string $sMethod Either get or post
  * @return Hash Array of name => value corresponding to the parameters that were passed to the page
  */
-function ReadAllParams($sMethod = 'get')
+function ReadAllParams()
 {
 	$aParams = GetParamsList();
 	$aValues = array();
 	foreach($aParams as $sName)
 	{
-		$value = utils::ReadParam('attr_'.$sName, null, $sMethod);
+		$value = utils::ReadParam('attr_'.$sName, null, false, 'raw_data');
 		if (!is_null($value))
 		{
 			$aValues[$sName] = $value;
