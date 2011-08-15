@@ -2609,10 +2609,13 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 
 	/**
 	 * Check (and updates if needed) the hierarchical keys
+	 * @param $bDiagnosticsOnly boolean If true only a diagnostic pass will be run, returning true or false
+	 * @param $bVerbose boolean Displays some information about what is done/what needs to be done	 
 	 * @param $bForceComputation boolean If true, the _left and _right parameters will be recomputed even if some values already exist in the DB	 
 	 */	 	
-	public static function CheckHKeys($bForceComputation = false)
+	public static function CheckHKeys($bDiagnosticsOnly = false, $bVerbose = false, $bForceComputation = false)
 	{
+		$bChangeNeeded = false;
 		foreach (self::GetClasses() as $sClass)
 		{
 			if (!self::HasTable($sClass)) continue;
@@ -2622,10 +2625,20 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 				// Check (once) all the attributes that are hierarchical keys
 				if((self::GetAttributeOrigin($sClass, $sAttCode) == $sClass) && $oAttDef->IsHierarchicalKey())
 				{
-					self::HKInit($sClass, $sAttCode, $bForceComputation);
+					if ($bVerbose)
+					{
+						echo "The attribute $sAttCode from $sClass is a hierarchical key.\n";				
+					}
+					$bResult = self::HKInit($sClass, $sAttCode, $bDiagnosticsOnly, $bVerbose, $bForceComputation);
+					$bChangeNeeded |= $bResult;
+					if ($bVerbose && !$bResult)
+					{
+						echo "Ok, the attribute $sAttCode from class $sClass seems up to date.\n";				
+					}
 				}
 			}
 		}
+		return $bChangeNeeded;
 	}
 
 	/**
@@ -2634,9 +2647,12 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 	 * to correspond to the existing hierarchy in the database
 	 * @param $sClass string Name of the class to process
 	 * @param $sAttCode string Code of the attribute to process
-	 * @param $bForceComputation boolean If true, the _left and _right parameters will be recomputed even if some values already exist in the DB	 
+	 * @param $bDiagnosticsOnly boolean If true only a diagnostic pass will be run, returning true or false
+	 * @param $bVerbose boolean Displays some information about what is done/what needs to be done	 
+	 * @param $bForceComputation boolean If true, the _left and _right parameters will be recomputed even if some values already exist in the DB
+	 * @return true if an update is needed (diagnostics only) / was performed	 
 	 */
-	public static function HKInit($sClass, $sAttCode, $bForceComputation = false)
+	public static function HKInit($sClass, $sAttCode, $bDiagnosticsOnly = false, $bVerbose = false, $bForceComputation = false)
 	{
 		$idx = 1;
 		$bUpdateNeeded = $bForceComputation;
@@ -2644,24 +2660,35 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 		$sTable = self::DBGetTable($sClass, $sAttCode);
 		if ($oAttDef->IsHierarchicalKey())
 		{
-			if (!$bForceComputation)
+			// Check if some values already exist in the table for the _right value, if so, do nothing
+			$sRight = $oAttDef->GetSQLRight();
+			$sSQL = "SELECT MAX(`$sRight`) AS MaxRight FROM `$sTable`";
+			$iMaxRight = CMDBSource::QueryToScalar($sSQL);
+			$sSQL = "SELECT COUNT(`$sRight`) AS Count FROM `$sTable`";
+			$iCount = CMDBSource::QueryToScalar($sSQL);
+			if (!$bForceComputation && ($iCount != 0) && ($iMaxRight == 0))
 			{
-				// Check if some values already exist in the table for the _right value, if so, do nothing
-				$sRight = $oAttDef->GetSQLRight();
-				$sSQL = "SELECT MAX(`$sRight`) AS MaxRight FROM `$sTable`";
-				$iMaxRight = CMDBSource::QueryToScalar($sSQL);
-				if ($iMaxRight == 0)
+				$bUpdateNeeded = true;
+				if ($bVerbose)
 				{
-					$bUpdateNeeded = true;
+					echo "The table '$sTable' must be updated to compute the fields $sRight and ".$oAttDef->GetSQLLeft()."\n";
 				}
 			}
-			if ($bUpdateNeeded)
+			if ($bForceComputation && !$bDiagnosticsOnly)
+			{
+				echo "Rebuilding the fields $sRight and ".$oAttDef->GetSQLLeft()." from table '$sTable'...\n";
+			}
+			if ($bUpdateNeeded && !$bDiagnosticsOnly)
 			{
 				try
 				{
 					CMDBSource::Query('START TRANSACTION');
 					self::HKInitChildren($sTable, $sAttCode, $oAttDef, 0, $idx);
 					CMDBSource::Query('COMMIT');
+					if ($bVerbose)
+					{
+						echo "Ok, table '$sTable' successfully updated.\n";
+					}
 				}
 				catch(Exception $e)
 				{
@@ -2670,6 +2697,7 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 				}
 			}
 		}
+		return $bUpdateNeeded;
 	}
 	
 	/**
@@ -2691,6 +2719,30 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 			$sSQL = "UPDATE `$sTable` SET `$sLeft` = $iLeft, `$sRight` = $iRight WHERE id= $iChildId";
 			CMDBSource::Query($sSQL);
 		}
+	}
+	
+	public static function CheckDataSources($bDiagnostics, $bVerbose)
+	{
+		$sOQL = 'SELECT SynchroDataSource';
+		$oSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL));
+		$bFixNeeded = false;
+		if ($bVerbose && $oSet->Count() == 0)
+		{
+			echo "There are no Data Sources in the database.\n";
+		}
+		while($oSource = $oSet->Fetch())
+		{
+			if ($bVerbose)
+			{
+				echo "Checking Data Source '".$oSource->GetName()."'...\n";
+				$bFixNeeded = $bFixNeeded | $oSource->CheckDBConsistency($bDiagnostics, $bVerbose);
+			}
+		}
+		if (!$bFixNeeded && $bVerbose)
+		{
+			echo "Ok.\n";
+		}
+		return $bFixNeeded;	
 	}
 	
 	public static function GenerateUniqueAlias(&$aAliases, $sNewName, $sRealName)

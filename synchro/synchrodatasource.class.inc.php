@@ -476,27 +476,7 @@ EOF
 		{
 			if(!isset($aAttributes[$sAttCode]))
 			{
-				$oAttDef = MetaModel::GetAttributeDef($this->GetTargetClass(), $sAttCode);
-				if ($oAttDef->IsExternalKey())
-				{
-					$oAttribute = new SynchroAttExtKey();
-					$oAttribute->Set('reconciliation_attcode', ''); // Blank means by pkey
-				}
-				elseif ($oAttDef->IsLinkSet() && $oAttDef->IsIndirect())
-				{
-					$oAttribute = new SynchroAttLinkSet();
-					// Todo - set those value from the form
-					$oAttribute->Set('row_separator', MetaModel::GetConfig()->Get('link_set_item_separator'));
-					$oAttribute->Set('attribute_separator', MetaModel::GetConfig()->Get('link_set_attribute_separator'));
-					$oAttribute->Set('value_separator', MetaModel::GetConfig()->Get('link_set_value_separator'));
-					$oAttribute->Set('attribute_qualifier', MetaModel::GetConfig()->Get('link_set_attribute_qualifier'));
-				}
-				else
-				{
-					$oAttribute = new SynchroAttribute();
-				}
-				$oAttribute->Set('sync_source_id', $this->GetKey());
-				$oAttribute->Set('attcode', $sAttCode);
+				$oAttribute = $this->CreateSynchroAtt($sAttCode);
 			}
 			else
 			{
@@ -527,9 +507,40 @@ EOF
 		$this->Set('attribute_list', $oAttributeSet);
 	}
 	
-	/*
-	* Overload the standard behavior
-	*/	
+	/**
+	 * Creates a new SynchroAttXXX object in memory with the default values
+	 */
+	protected function CreateSynchroAtt($sAttCode)
+	{
+		$oAttDef = MetaModel::GetAttributeDef($this->GetTargetClass(), $sAttCode);
+		if ($oAttDef->IsExternalKey())
+		{
+			$oAttribute = new SynchroAttExtKey();
+			$oAttribute->Set('reconciliation_attcode', ''); // Blank means by pkey
+		}
+		elseif ($oAttDef->IsLinkSet() && $oAttDef->IsIndirect())
+		{
+			$oAttribute = new SynchroAttLinkSet();
+			// Todo - set those value from the form
+			$oAttribute->Set('row_separator', MetaModel::GetConfig()->Get('link_set_item_separator'));
+			$oAttribute->Set('attribute_separator', MetaModel::GetConfig()->Get('link_set_attribute_separator'));
+			$oAttribute->Set('value_separator', MetaModel::GetConfig()->Get('link_set_value_separator'));
+			$oAttribute->Set('attribute_qualifier', MetaModel::GetConfig()->Get('link_set_attribute_qualifier'));
+		}
+		else
+		{
+			$oAttribute = new SynchroAttribute();
+		}
+		$oAttribute->Set('sync_source_id', $this->GetKey());
+		$oAttribute->Set('attcode', $sAttCode);
+		$oAttribute->Set('reconcile', 0);
+		$oAttribute->Set('update', 0);
+		$oAttribute->Set('update_policy', 'master_locked');
+		return $oAttribute;
+	}
+	/**
+	 * Overload the standard behavior
+	 */	
 	public function ComputeValues()
 	{
 		parent::ComputeValues();
@@ -667,13 +678,31 @@ EOF
 		$sCreateTable = "CREATE TABLE `$sTable` ($sFieldDefs) ENGINE = innodb;";
 		CMDBSource::Query($sCreateTable);
 
+		$aTriggers = $this->GetTriggersDefinition();
+		foreach($aTriggers as $key => $sTriggerSQL)
+		{
+			CMDBSource::Query($sTriggerSQL);
+		}
+	}
+
+	/**
+	 * Gets the definitions of the 3 triggers: before insert, before update and after delete
+	 * @return array An array with 3 entries, one for each of the SQL queries
+	 */
+	protected function GetTriggersDefinition()
+	{
+		$sTable = $this->GetDataTable();
+		$sReplicaTable = MetaModel::DBGetTable('SynchroReplica');
+		$aColumns = $this->GetSQLColumns();
+		$aResult = array();
+
 		$sTriggerInsert = "CREATE TRIGGER `{$sTable}_bi` BEFORE INSERT ON $sTable";
 		$sTriggerInsert .= "   FOR EACH ROW";
 		$sTriggerInsert .= "   BEGIN";
 		$sTriggerInsert .= "      INSERT INTO {$sReplicaTable} (sync_source_id, status_last_seen, `status`) VALUES ({$this->GetKey()}, NOW(), 'new');";
 		$sTriggerInsert .= "      SET NEW.id = LAST_INSERT_ID();";
 		$sTriggerInsert .= "   END;";
-		CMDBSource::Query($sTriggerInsert);
+		$aResult['bi'] = $sTriggerInsert;
 
 		$aModified = array();
 		foreach($aColumns as $sColumn => $ColSpec)
@@ -696,14 +725,15 @@ EOF
 		$sTriggerUpdate .= "         SET NEW.id = OLD.id;"; // make sure this id won't change
 		$sTriggerUpdate .= "      END IF;";
 		$sTriggerUpdate .= "   END;";
-		CMDBSource::Query($sTriggerUpdate);
+		$aResult['bu'] = $sTriggerUpdate;
 
-		$sTriggerInsert = "CREATE TRIGGER `{$sTable}_ad` AFTER DELETE ON $sTable";
-		$sTriggerInsert .= "   FOR EACH ROW";
-		$sTriggerInsert .= "   BEGIN";
-		$sTriggerInsert .= "      DELETE FROM {$sReplicaTable} WHERE id = OLD.id;";
-		$sTriggerInsert .= "   END;";
-		CMDBSource::Query($sTriggerInsert);
+		$sTriggerDelete = "CREATE TRIGGER `{$sTable}_ad` AFTER DELETE ON $sTable";
+		$sTriggerDelete .= "   FOR EACH ROW";
+		$sTriggerDelete .= "   BEGIN";
+		$sTriggerDelete .= "      DELETE FROM {$sReplicaTable} WHERE id = OLD.id;";
+		$sTriggerDelete .= "   END;";
+		$aResult['ad'] = $sTriggerDelete;
+		return $aResult;
 	}
 	
 	protected function AfterDelete()
@@ -717,6 +747,113 @@ EOF
 		// TO DO - check that triggers get dropped with the table
 	}
 
+	/**
+	 * Checks if the data source definition is consistent with the schema of the target class
+	 * @param $bDiagnostics boolean True to only diagnose the consistency, false to actually apply some changes
+	 * @param $bVerbose boolean True to get some information in the std output (echo)
+	 * @return bool Whether or not the database needs fixing for this data source
+	 */
+	public function CheckDBConsistency($bDiagnostics, $bVerbose, $oChange = null)
+	{
+		$bFixNeeded = false;
+		$aMissingFields = array();
+		$oAttributeSet = $this->Get('attribute_list');
+		$aAttributes = array();
+
+		while($oAttribute = $oAttributeSet->Fetch())
+		{
+			$aAttributes[$oAttribute->Get('attcode')] = $oAttribute;
+		}
+
+		foreach(MetaModel::ListAttributeDefs($this->GetTargetClass()) as $sAttCode=>$oAttDef)
+		{
+			if ($oAttDef->IsWritable())
+			{
+				if (!isset($aAttributes[$sAttCode]))
+				{
+					$bFixNeeded = true;
+					$aMissingFields[] = $sAttCode;
+					// New field missing...
+					if ($bDiagnostics)
+					{
+						// Report the issue
+						if ($bVerbose)
+						{
+							echo "Missing field description for the field '$sAttCode', for the data synchro task ".$this->GetName()." (".$this->GetKey()."), will be created with default values.\n";
+						}
+					}
+					else
+					{
+						if ($oChange == null)
+						{
+							$oChange = MetaModel::NewObject("CMDBChange");
+							$oChange->Set("date", time());
+							$sUserString = CMDBChange::GetCurrentUserName();
+							$oChange->Set("userinfo", $sUserString);
+							$oChange->DBInsert();	
+						}
+						// Fix the issue
+						$oAttribute = $this->CreateSynchroAtt($sAttCode);
+						$oAttribute->DBInsertTracked($oChange);
+					}
+				}
+			}
+		}
+		$sTable = $this->GetDataTable();
+		if ($bFixNeeded)
+		{
+			// The structure of the table needs adjusting
+			$aColumns = $this->GetSQLColumns($aMissingFields);
+			$aFieldDefs = array();
+			foreach($aColumns as $sAttCode => $sColumnDef)
+			{
+				$aFieldDefs[] = "$sAttCode $sColumnDef";
+			}
+			$sAlterTable = "ALTER TABLE `$sTable` ADD (".implode(',', $aFieldDefs).");";
+
+			// The triggers as well must be adjusted
+			$aTriggers = array();
+			$aTriggersDefs = $this->GetTriggersDefinition();
+			$aTriggers[] = "DROP TRIGGER IF EXISTS {$sTable}_bi;";
+			$aTriggers[] = $aTriggersDefs['bi'];
+			$aTriggers[] = "DROP TRIGGER IF EXISTS {$sTable}_bu;";
+			$aTriggers[] = $aTriggersDefs['bu'];
+			$aTriggers[] = "DROP TRIGGER IF EXISTS {$sTable}_ad;";
+			$aTriggers[] = $aTriggersDefs['ad'];
+			
+			if ($bDiagnostics)
+			{
+				if  ($bVerbose)
+				{
+					// Report the issue
+					echo "The structure of the table $sTable for the data synchro task ".$this->GetName()." (".$this->GetKey().") must be altered (missing fields: ".implode(',', $aMissingFields).").\n";
+					echo "$sAlterTable\n";
+					echo "The trigger {$sTable}_bi, {$sTable}_bu, {$sTable}_ad for the data synchro task ".$this->GetName()." (".$this->GetKey().") must be re-created.\n";
+					echo implode("\n", $aTriggers)."\n";
+				}
+			}
+			else
+			{
+				// Fix the issue
+				CMDBSource::Query($sAlterTable);
+				if ($bVerbose)
+				{
+					echo "$sAlterTable\n";
+				}
+
+				foreach($aTriggers as $sSQL)
+				{
+					CMDBSource::Query($sSQL);
+					if ($bVerbose)
+					{
+						echo "$sSQL\n";
+					}
+				}
+			}
+		}
+			
+		return $bFixNeeded;
+	}
 	protected function SendNotification($sSubject, $sBody)
 	{
 		$iContact = $this->Get('notify_contact_id');
