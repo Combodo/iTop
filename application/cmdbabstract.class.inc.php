@@ -487,8 +487,8 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 											}
 
 											// Attribute is read-only
-											$sHTMLValue = $this->GetAsHTML($sAttCode);
-											$sHTMLValue .= '<input type="hidden" id="'.$sInputId.'" name="attr_'.$sPrefix.$sAttCode.'" value="'.htmlentities($this->Get($sAttCode), ENT_QUOTES, 'UTF-8').'"/>';
+											$sHTMLValue = "<span id=\"field_{$sInputId}\">".$this->GetAsHTML($sAttCode);
+											$sHTMLValue .= '<input type="hidden" id="'.$sInputId.'" name="attr_'.$sPrefix.$sAttCode.'" value="'.htmlentities($this->Get($sAttCode), ENT_QUOTES, 'UTF-8').'"/></span>';
 											$aFieldsMap[$sAttCode] = $sInputId;
 											$sComments = $sSynchroIcon;
 										}

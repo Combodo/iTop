@@ -125,7 +125,7 @@ class WizardHelper
 		{
 			$oObj->Set(MetaModel::GetStateAttributeCode($this->m_aData['m_sClass']), $this->m_aData['m_sState']);
 		}
-
+		$oObj->DoComputeValues();
 		return $oObj;
 	}
 	

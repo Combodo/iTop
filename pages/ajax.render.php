@@ -317,7 +317,7 @@ try
 		break;
 		
 		case 'wizard_helper':
-		$oPage->SetContentType('application/json');
+		$oPage->SetContentType('text/html');
 		$sJson = utils::ReadParam('json_obj', '', false, 'raw_data');
 		$oWizardHelper = WizardHelper::FromJSON($sJson);
 		$oObj = $oWizardHelper->GetTargetObject(); 
@@ -335,17 +335,27 @@ try
 			$sId = $oWizardHelper->GetIdForField($sAttCode);
 			if ($sId != '')
 			{
-				// It may happen that the field we'd like to update does not
-				// exist in the form. For example, if the field should be hidden/read-only
-				// in the current state of the object
-				$value = $oObj->Get($sAttCode);
-				$displayValue = $oObj->GetEditValue($sAttCode);
-				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-				$iFlags = MetaModel::GetAttributeFlags($sClass, $oObj->GetState(), $sAttCode);
-				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $value, $displayValue, $sId, '', $iFlags, array('this' => $oObj, 'formPrefix' => $sFormPrefix));
-				// Make sure that we immediatly validate the field when we reload it
-				$oPage->add_ready_script("$('#$sId').trigger('validate');");
-				$oWizardHelper->SetAllowedValuesHtml($sAttCode, $sHTMLValue);
+				$iFlags = $oObj->GetAttributeFlags($sAttCode);
+				if ($iFlags & OPT_ATT_READONLY)
+				{
+					$sHTMLValue = "<span id=\"field_{$sId}\">".$oObj->GetAsHTML($sAttCode);
+					$sHTMLValue .= '<input type="hidden" id="'.$sId.'" name="attr_'.$sFormPrefix.$sAttCode.'" value="'.htmlentities($this->Get($sAttCode), ENT_QUOTES, 'UTF-8').'"/></span>';
+					$oWizardHelper->SetAllowedValuesHtml($sAttCode, $sHTMLValue);
+				}
+				else
+				{
+					// It may happen that the field we'd like to update does not
+					// exist in the form. For example, if the field should be hidden/read-only
+					// in the current state of the object
+					$value = $oObj->Get($sAttCode);
+					$displayValue = $oObj->GetEditValue($sAttCode);
+					$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+					$iFlags = MetaModel::GetAttributeFlags($sClass, $oObj->GetState(), $sAttCode);
+					$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $value, $displayValue, $sId, '', $iFlags, array('this' => $oObj, 'formPrefix' => $sFormPrefix));
+					// Make sure that we immediately validate the field when we reload it
+					$oPage->add_ready_script("$('#$sId').trigger('validate');");
+					$oWizardHelper->SetAllowedValuesHtml($sAttCode, $sHTMLValue);
+				}
 			}
 		}
 		$oPage->add_script("oWizardHelper{$sFormPrefix}.m_oData=".$oWizardHelper->ToJSON().";\noWizardHelper{$sFormPrefix}.UpdateFields();\n");
