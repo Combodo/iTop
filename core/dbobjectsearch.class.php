@@ -65,6 +65,7 @@ class DBObjectSearch
 		$this->m_aReferencedBy = array();
 		$this->m_aRelatedTo = array();
 		$this->m_bDataFiltered = false;
+		$this->m_aParentConditions = array();
 	}
 
 	public function AllowAllData() {$this->m_bAllowAllData = true;}
@@ -271,16 +272,63 @@ class DBObjectSearch
 
 	protected function TransferConditionExpression($oFilter, $aTranslation)
 	{
+		// Prevent collisions in the parameter names by renaming them if needed
+		foreach($this->m_aParams as $sParam => $value)
+		{
+			if (array_key_exists($sParam, $oFilter->m_aParams) && ($value != $oFilter->m_aParams[$sParam]))
+			{
+				// Generate a new and unique name for the collinding parameter
+				$index = 1;
+				while(array_key_exists($sParam.$index, $oFilter->m_aParams))
+				{
+					$index++;
+				}
+				$secondValue = $oFilter->m_aParams[$sParam];
+				$oFilter->RenameParam($sParam, $sParam.$index);
+				unset($oFilter->m_aParams[$sParam]);
+				$oFilter->m_aParams[$sParam.$index] = $secondValue;
+			}
+		}
 //echo "<p>TransferConditionExpression:<br/>";
 //echo "Adding Conditions:<br/><pre>oFilter:\n".print_r($oFilter, true)."\naTranslation:\n".print_r($aTranslation, true)."</pre>\n";
 //echo "</p>";
 		$oTranslated = $oFilter->GetCriteria()->Translate($aTranslation, false, false /* leave unresolved fields */);
 //echo "Adding Conditions (translated):<br/><pre>".print_r($oTranslated, true)."</pre>\n";
 		$this->AddConditionExpression($oTranslated);
-		// #@# what about collisions in parameter names ???
 		$this->m_aParams = array_merge($this->m_aParams, $oFilter->m_aParams);
 	}
 
+	protected function RenameParam($sOldName, $sNewName)
+	{
+		$this->m_oSearchCondition->RenameParam($sOldName, $sNewName);
+		foreach($this->m_aRelatedTo as $aRelatedTo)
+		{
+			$aRelatedTo['flt']->RenameParam($sOldName, $sNewName);
+		}
+		foreach($this->m_aPointingTo as $sExtKeyAttCode=>$aPointingTo)
+		{
+			foreach($aPointingTo as $iOperatorCode => $aFilter)
+			{
+				foreach($aFilter as $sAlias => $oExtFilter)
+				{
+					$oExtFilter->RenameParam($sOldName, $sNewName);
+				}
+			}
+		}
+		foreach($this->m_aReferencedBy as $sForeignClass => $aReferences)
+		{
+			foreach($aReferences as $sForeignExtKeyAttCode => $oForeignFilter)
+			{
+				$oForeignFilter->RenameParam($sOldName, $sNewName);
+			}
+		}
+
+		foreach($this->m_aParentConditions as $aParent)
+		{
+			$aParent['expression']->RenameParam($sOldName, $sNewName);	
+		}
+	}
+	
 	public function ResetCondition()
 	{
 		$this->m_oSearchCondition = new TrueExpression();

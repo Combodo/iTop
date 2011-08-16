@@ -84,6 +84,8 @@ abstract class Expression
 	{
 		return new BinaryExpression($this, 'OR', $oExpr);
 	}
+	
+	abstract public function RenameParam($sOldName, $sNewName);
 }
 
 class SQLExpression extends Expression
@@ -118,6 +120,11 @@ class SQLExpression extends Expression
 	public function ListRequiredFields()
 	{
 		return array();
+	}
+	
+	public function RenameParam($sOldName, $sNewName)
+	{
+		// Do nothing, since there is nothing to rename
 	}
 }
 
@@ -205,6 +212,12 @@ class BinaryExpression extends Expression
 		$aRight = $this->GetRightExpr()->ListRequiredFields();
 		return array_merge($aLeft, $aRight);
 	}
+	
+	public function RenameParam($sOldName, $sNewName)
+	{
+		$this->GetLeftExpr()->RenameParam($sOldName, $sNewName);
+		$this->GetRightExpr()->RenameParam($sOldName, $sNewName);
+	}
 }
 
 
@@ -255,6 +268,12 @@ class UnaryExpression extends Expression
 	public function ListRequiredFields()
 	{
 		return array();
+	}
+	
+	public function RenameParam($sOldName, $sNewName)
+	{
+		// Do nothing
+		// really ? what about :param{$iParamIndex} ??
 	}
 }
 
@@ -429,6 +448,14 @@ class VariableExpression extends UnaryExpression
 			throw new MissingQueryArgument('Missing query argument', array('expecting'=>$this->m_sName, 'available'=>$aArgs));
 		}
 	}
+	
+	public function RenameParam($sOldName, $sNewName)
+	{
+		if ($this->m_sName == $sOldName)
+		{
+			$this->m_sName = $sNewName;
+		}
+	}
 }
 
 // Temporary, until we implement functions and expression casting!
@@ -501,6 +528,15 @@ class ListExpression extends Expression
 		}
 		return $aRes;
 	}
+	
+	public function RenameParam($sOldName, $sNewName)
+	{
+		$aRes = array();
+		foreach ($this->m_aExpressions as $key => $oExpr)
+		{
+			$this->m_aExpressions[$key] = $oExpr->RenameParam($sOldName, $sNewName);
+		}
+	}	
 }
 
 
@@ -569,6 +605,14 @@ class FunctionExpression extends Expression
 		}
 		return $aRes;
 	}
+	
+	public function RenameParam($sOldName, $sNewName)
+	{
+		foreach ($this->m_aArgs as $key => $oExpr)
+		{
+			$this->m_aArgs[$key] = $oExpr->RenameParam($sOldName, $sNewName);
+		}
+	}	
 }
 
 class IntervalExpression extends Expression
@@ -618,6 +662,11 @@ class IntervalExpression extends Expression
 	{
 		return array();
 	}
+	
+	public function RenameParam($sOldName, $sNewName)
+	{
+		$this->m_oValue->RenameParam($sOldName, $sNewName);
+	}	
 }
 
 class CharConcatExpression extends Expression
@@ -680,6 +729,14 @@ class CharConcatExpression extends Expression
 		}
 		return $aRes;
 	}
+
+	public function RenameParam($sOldName, $sNewName)
+	{
+		foreach ($this->m_aExpressions as $key => $oExpr)
+		{
+			$this->m_aExpressions[$key] = $oExpr->RenameParam($sOldName, $sNewName);
+		}
+	}	
 }
 
 
@@ -776,6 +833,19 @@ class QueryBuilderExpressions
 		foreach($this->m_aJoinFields as $index => $oExpression)
 		{
 			$this->m_aJoinFields[$index] = $oExpression->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
+		}
+	}
+
+	public function RenameParam($sOldName, $sNewName)
+	{
+		$this->m_oConditionExpr->RenameParam($sOldName, $sNewName);
+		foreach($this->m_aSelectExpr as $sColAlias => $oExpr)
+		{
+			$this->m_aSelectExpr[$sColAlias] = $oExpr->RenameParam($sOldName, $sNewName);
+		}
+		foreach($this->m_aJoinFields as $index => $oExpression)
+		{
+			$this->m_aJoinFields[$index] = $oExpression->RenameParam($sOldName, $sNewName);
 		}
 	}
 }
