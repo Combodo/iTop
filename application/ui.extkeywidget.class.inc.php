@@ -392,7 +392,8 @@ EOF
 			$oSet = new DBObjectSet($oFilter);
 		}
 
-		$this->DumpTree($oPage, $oSet, 'parent_id', $currValue);
+		$sHKAttCode = MetaModel::IsHierarchicalClass($this->sTargetClass);
+		$this->DumpTree($oPage, $oSet, $sHKAttCode, $currValue);
 
 		$oPage->add('</td></tr></table>');
 		$oPage->add('</div>');
