@@ -341,7 +341,7 @@ EOF
 		}
 		$oSet = new CMDBObjectSet($oFilter);
 		$oBlock = new DisplayBlock($oFilter, 'list', false);
-		$oBlock->Display($oP, "ResultsToAdd_{$this->m_sAttCode}", array('menu' => false, 'cssCount'=> '#count_'.$this->m_sAttCode.$this->m_sNameSuffix , 'selection_mode' => true, 'display_limit' => false)); // Don't display the 'Actions' menu on the results
+		$oBlock->Display($oP, "ResultsToAdd_{$this->m_sAttCode}", array('menu' => false, 'cssCount'=> '#count_'.$this->m_sAttCode.$this->m_sNameSuffix , 'selection_mode' => true)); // Don't display the 'Actions' menu on the results
 	}
 	
 	public function DoAddObjects(WebPage $oP, $oFullSetFilter)

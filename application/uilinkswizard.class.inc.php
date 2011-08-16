@@ -393,7 +393,7 @@ EOF
 		$oFilter = new DBObjectSearch($this->m_sLinkedClass);
 		$oSet = new CMDBObjectSet($oFilter);
 		$oBlock = new DisplayBlock($oFilter, 'list', false);
-		$oBlock->Display($oP, 'ResultsToAdd', array('menu' => false, 'selection_mode' => true, 'display_limit' => false)); // Don't display the 'Actions' menu on the results
+		$oBlock->Display($oP, 'ResultsToAdd', array('menu' => false, 'selection_mode' => true)); // Don't display the 'Actions' menu on the results
 	}
 	
 	public function DoAddObjects(WebPage $oP, $aLinkedObjectIds = array())
