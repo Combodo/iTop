@@ -2519,9 +2519,10 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 						$sRightIndex = $sExternalKeyField.'_right'; // TODO use GetSQLRight()
 	
 						$LocalKeyLeft = $oKeyAttDef->GetSQLLeft();
+						$LocalKeyRight = $oKeyAttDef->GetSQLRight();
 //echo "MAKEQUERY-LocalKeyLeft pour $sKeyAttCode => $LocalKeyLeft<br/>\n";
 	
-						$oSelectBase->AddInnerJoinTree($oSelectExtKey, $LocalKeyLeft, $sLeftIndex, $sRightIndex, $sExternalKeyTable, $iOperatorCode);
+						$oSelectBase->AddInnerJoinTree($oSelectExtKey, $LocalKeyLeft, $LocalKeyRight, $sLeftIndex, $sRightIndex, $sExternalKeyTable, $iOperatorCode);
 					}
 				}
 			}

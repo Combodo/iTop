@@ -163,7 +163,6 @@ class SQLQuery
 //		{
 //			throw new CoreException("Unknown field '$sRightField' in table '".$sRightTable."'");
 //		}
-
 		$this->m_aJoinSelects[] = array(
 			"jointype" => $sJoinType,
 			"select" => $oSQLQuery,
@@ -176,7 +175,7 @@ class SQLQuery
 	{
 		$this->AddJoin("inner", $oSQLQuery, $sLeftField, $sRightField, $sRightTable);
 	}
-	public function AddInnerJoinTree($oSQLQuery, $sLeftField, $sRightFieldLeft, $sRightFieldRight, $sRightTableAlias = '', $iOperatorCode = TREE_OPERATOR_BELOW)
+	public function AddInnerJoinTree($oSQLQuery, $sLeftFieldLeft, $sLeftFieldRight, $sRightFieldLeft, $sRightFieldRight, $sRightTableAlias = '', $iOperatorCode = TREE_OPERATOR_BELOW)
 	{
 		assert((get_class($oSQLQuery) == __CLASS__) || is_subclass_of($oSQLQuery, __CLASS__));
 		if (empty($sRightTableAlias))
@@ -186,7 +185,8 @@ class SQLQuery
 		$this->m_aJoinSelects[] = array(
 			"jointype" => 'inner_tree',
 			"select" => $oSQLQuery,
-			"leftfield" => $sLeftField,
+			"leftfield" => $sLeftFieldLeft,
+			"rightfield" => $sLeftFieldRight,
 			"rightfield_left" => $sRightFieldLeft,
 			"rightfield_right" => $sRightFieldRight,
 			"righttablealias" => $sRightTableAlias,
@@ -418,6 +418,7 @@ class SQLQuery
 				break;
 			case "inner_tree":
 				$sNodeLeft = "`$sCallerAlias`.`{$aJoinData['leftfield']}`";
+				$sNodeRight = "`$sCallerAlias`.`{$aJoinData['rightfield']}`";
 				$sRootLeft = "`$sRightTableAlias`.`{$aJoinData['rightfield_left']}`";
 				$sRootRight = "`$sRightTableAlias`.`{$aJoinData['rightfield_right']}`";
 				switch($aJoinData['tree_operator'])
@@ -436,6 +437,22 @@ class SQLQuery
 					
 					case TREE_OPERATOR_NOT_BELOW_STRICT: // Complementary of BELOW_STRICT
 					$sJoinCond = "$sNodeLeft <= $sRootLeft OR $sNodeLeft >= $sRootRight";
+					break;
+
+					case TREE_OPERATOR_ABOVE:
+					$sJoinCond = "$sNodeLeft <= $sRootLeft AND $sNodeRight >= $sRootRight";
+					break;
+					
+					case TREE_OPERATOR_ABOVE_STRICT:
+					$sJoinCond = "$sNodeLeft < $sRootLeft AND $sNodeRight > $sRootRight";
+					break;
+					
+					case TREE_OPERATOR_NOT_ABOVE: // Complementary of 'ABOVE'
+					$sJoinCond = "$sNodeLeft > $sRootLeft OR $sNodeRight < $sRootRight";
+					break;
+					
+					case TREE_OPERATOR_NOT_ABOVE_STRICT: // Complementary of ABOVE_STRICT
+					$sJoinCond = "$sNodeLeft >= $sRootLeft OR $sNodeRight <= $sRootRight";
 					break;
 					
 				}

@@ -28,6 +28,10 @@ define('TREE_OPERATOR_BELOW', 1);
 define('TREE_OPERATOR_BELOW_STRICT', 2);
 define('TREE_OPERATOR_NOT_BELOW', 3);
 define('TREE_OPERATOR_NOT_BELOW_STRICT', 4);
+define('TREE_OPERATOR_ABOVE', 5);
+define('TREE_OPERATOR_ABOVE_STRICT', 6);
+define('TREE_OPERATOR_NOT_ABOVE', 7);
+define('TREE_OPERATOR_NOT_ABOVE_STRICT', 8);
 
 class DBObjectSearch
 {
@@ -154,6 +158,22 @@ class DBObjectSearch
 	
 				case TREE_OPERATOR_NOT_BELOW_STRICT:
 				$sOperator = 'strictly not below';
+				break;
+
+				case TREE_OPERATOR_ABOVE:
+				$sOperator = 'above';
+				break;
+	
+				case TREE_OPERATOR_ABOVE_STRICT:
+				$sOperator = 'strictly above';
+				break;
+	
+				case TREE_OPERATOR_NOT_ABOVE:
+				$sOperator = 'not above';
+				break;
+	
+				case TREE_OPERATOR_NOT_ABOVE_STRICT:
+				$sOperator = 'strictly not above';
 				break;
 			}
 			$aDescription[] = $oAtt->GetLabel()."$sOperator ({$oFilter->DescribeConditions()})";
@@ -842,6 +862,22 @@ class DBObjectSearch
 						$sOperator = ' NOT BELOW STRICT ';
 						break;
 						
+						case TREE_OPERATOR_ABOVE:
+						$sOperator = ' ABOVE ';
+						break;
+						
+						case TREE_OPERATOR_ABOVE_STRICT:
+						$sOperator = ' ABOVE STRICT ';
+						break;
+						
+						case TREE_OPERATOR_NOT_ABOVE:
+						$sOperator = ' NOT ABOVE ';
+						break;
+						
+						case TREE_OPERATOR_NOT_ABOVE_STRICT:
+						$sOperator = ' NOT ABOVE STRICT ';
+						break;
+						
 					}
 					$sRes .= ' JOIN '.$oFilter->GetClass().' AS '.$oFilter->GetClassAlias().' ON '.$this->GetClassAlias().'.'.$sExtKey.$sOperator.$oFilter->GetClassAlias().'.id';
 					$sRes .= $oFilter->ToOQL_Joins();				
@@ -1076,6 +1112,18 @@ class DBObjectSearch
 						break;
 						case 'NOT_BELOW_STRICT':
 						$iOperatorCode = TREE_OPERATOR_NOT_BELOW_STRICT;
+						break;
+						case 'ABOVE':
+						$iOperatorCode = TREE_OPERATOR_ABOVE;
+						break;
+						case 'ABOVE_STRICT':
+						$iOperatorCode = TREE_OPERATOR_ABOVE_STRICT;
+						break;
+						case 'NOT_ABOVE':
+						$iOperatorCode = TREE_OPERATOR_NOT_ABOVE;
+						break;
+						case 'NOT_ABOVE_STRICT':
+						$iOperatorCode = TREE_OPERATOR_NOT_ABOVE_STRICT;
 						break;
 					}
 					$aJoinItems[$sFromClass]->AddCondition_PointingTo($aJoinItems[$sToClass], $sExtKeyAttCode, $iOperatorCode);

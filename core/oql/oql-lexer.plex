@@ -136,6 +136,10 @@ below            = "BELOW"
 below_strict     = "BELOW STRICT"
 not_below        = "NOT BELOW"
 not_below_strict = "NOT BELOW STRICT"
+above            = "ABOVE"
+above_strict     = "ABOVE STRICT"
+not_above        = "NOT ABOVE"
+not_above_strict = "NOT ABOVE STRICT"
 numval     = /[0-9]+|0x[0-9a-fA-F]+/
 strval     = /"([^\\"]|\\"|\\\\)*"|'.chr(94).chr(39).'([^\\'.chr(39).']|\\'.chr(39).'|\\\\)*'.chr(39).'/
 name       = /([_a-zA-Z][_a-zA-Z0-9]*|`[^`]+`)/
@@ -317,6 +321,18 @@ not_below {
 }
 not_below_strict {
 	$this->token = OQLParser::NOT_BELOW_STRICT;
+}
+above {
+	$this->token = OQLParser::ABOVE;
+}
+above_strict {
+	$this->token = OQLParser::ABOVE_STRICT;
+}
+not_above {
+	$this->token = OQLParser::NOT_ABOVE;
+}
+not_above_strict {
+	$this->token = OQLParser::NOT_ABOVE_STRICT;
 }
 numval {
 	$this->token = OQLParser::NUMVAL;

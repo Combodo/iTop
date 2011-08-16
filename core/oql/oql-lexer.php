@@ -164,6 +164,10 @@ class OQLLexerRaw
                 '/\GBELOW STRICT/ ',
                 '/\GNOT BELOW/ ',
                 '/\GNOT BELOW STRICT/ ',
+                '/\GABOVE/ ',
+                '/\GABOVE STRICT/ ',
+                '/\GNOT ABOVE/ ',
+                '/\GNOT ABOVE STRICT/ ',
                 '/\G[0-9]+|0x[0-9a-fA-F]+/ ',
                 '/\G\"([^\\\\\"]|\\\\\"|\\\\\\\\)*\"|'.chr(94).chr(39).'([^\\\\'.chr(39).']|\\\\'.chr(39).'|\\\\\\\\)*'.chr(39).'/ ',
                 '/\G([_a-zA-Z][_a-zA-Z0-9]*|`[^`]+`)/ ',
@@ -554,24 +558,44 @@ class OQLLexerRaw
     function yy_r1_58($yy_subpatterns)
     {
 
-	$this->token = OQLParser::NUMVAL;
+	$this->token = OQLParser::ABOVE;
     }
     function yy_r1_59($yy_subpatterns)
     {
 
-	$this->token = OQLParser::STRVAL;
+	$this->token = OQLParser::ABOVE_STRICT;
     }
     function yy_r1_60($yy_subpatterns)
     {
 
-	$this->token = OQLParser::NAME;
+	$this->token = OQLParser::NOT_ABOVE;
     }
     function yy_r1_61($yy_subpatterns)
     {
 
-	$this->token = OQLParser::VARNAME;
+	$this->token = OQLParser::NOT_ABOVE_STRICT;
     }
     function yy_r1_62($yy_subpatterns)
+    {
+
+	$this->token = OQLParser::NUMVAL;
+    }
+    function yy_r1_63($yy_subpatterns)
+    {
+
+	$this->token = OQLParser::STRVAL;
+    }
+    function yy_r1_64($yy_subpatterns)
+    {
+
+	$this->token = OQLParser::NAME;
+    }
+    function yy_r1_65($yy_subpatterns)
+    {
+
+	$this->token = OQLParser::VARNAME;
+    }
+    function yy_r1_66($yy_subpatterns)
     {
 
 	$this->token = OQLParser::DOT;
@@ -580,7 +604,7 @@ class OQLLexerRaw
 
 }
 
-define('UNEXPECTED_INPUT_AT_LINE', 'Unexpected input at line ');
+define('UNEXPECTED_INPUT_AT_LINE', 'Unexpected input at line');
 
 class OQLLexerException extends OQLException
 {
@@ -597,11 +621,11 @@ class OQLLexer extends OQLLexerRaw
 		return max(0, $this->count - strlen($this->value));
 	}
 
-	function yylex()
-	{
-   		try
-		{
-      		return parent::yylex();
+   function yylex()
+   {
+      try
+      {
+      	return parent::yylex();
 		}
 		catch (Exception $e)
 		{

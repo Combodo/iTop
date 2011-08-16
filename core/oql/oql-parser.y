@@ -82,6 +82,10 @@ join_condition(A) ::= field_id(X) BELOW field_id(Y). { A = new BinaryOqlExpressi
 join_condition(A) ::= field_id(X) BELOW_STRICT field_id(Y). { A = new BinaryOqlExpression(X, 'BELOW_STRICT', Y); }
 join_condition(A) ::= field_id(X) NOT_BELOW field_id(Y). { A = new BinaryOqlExpression(X, 'NOT_BELOW', Y); }
 join_condition(A) ::= field_id(X) NOT_BELOW_STRICT field_id(Y). { A = new BinaryOqlExpression(X, 'NOT_BELOW_STRICT', Y); }
+join_condition(A) ::= field_id(X) ABOVE field_id(Y). { A = new BinaryOqlExpression(X, 'ABOVE', Y); }
+join_condition(A) ::= field_id(X) ABOVE_STRICT field_id(Y). { A = new BinaryOqlExpression(X, 'ABOVE_STRICT', Y); }
+join_condition(A) ::= field_id(X) NOT_ABOVE field_id(Y). { A = new BinaryOqlExpression(X, 'NOT_ABOVE', Y); }
+join_condition(A) ::= field_id(X) NOT_ABOVE_STRICT field_id(Y). { A = new BinaryOqlExpression(X, 'NOT_ABOVE_STRICT', Y); }
 
 condition(A) ::= expression_prio4(X). { A = X; }
 
