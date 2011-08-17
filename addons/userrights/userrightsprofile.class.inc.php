@@ -538,8 +538,8 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		$oChange->Set("userinfo", "Initialization");
 		$iChangeId = $oChange->DBInsert();
 
-		// Support drastic data model changes: no organization class !
-		if (MetaModel::IsValidClass('Organization'))
+		// Support drastic data model changes: no organization class (or not writable)!
+		if (MetaModel::IsValidClass('Organization') && !MetaModel::IsAbstract('Organization'))
 		{
 			$oOrg = new Organization();
 			$oOrg->Set('name', 'My Company/Department');
@@ -551,8 +551,8 @@ class UserRightsProfile extends UserRightsAddOnAPI
 			$iOrgId = 0;
 		}
 
-		// Support drastic data model changes: no Person class !
-		if (MetaModel::IsValidClass('Person'))
+		// Support drastic data model changes: no Person class  (or not writable)!
+		if (MetaModel::IsValidClass('Person') && !MetaModel::IsAbstract('Person'))
 		{
 			$oContact = new Person();
 			$oContact->Set('name', 'My last name');
