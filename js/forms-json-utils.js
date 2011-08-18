@@ -295,6 +295,35 @@ function ValidatePasswordField(id, sFormId)
 	return true;
 }
 
+//Special validation function for case log fields, taking into account the history
+// to determine if the field is empty or not
+function ValidateCaseLogField(sFieldId, bMandatory, sFormId)
+{
+	bValid = true;
+	
+	if ($('#'+sFieldId).attr('disabled'))
+	{
+		bValid = true; // disabled fields are not checked
+	}
+	else if (!bMandatory)
+	{
+		bValid = true;
+	}
+	else
+	{
+		if (bMandatory)
+		{
+			var count = $('#'+sFieldId+'_count').val();
+			if ( (count == 0) && ($('#'+sFieldId).val() == '') )
+			{
+				// No previous entry and no content typed
+				bValid = false;
+			}
+		}
+	}
+	ReportFieldValidationStatus(sFieldId, sFormId, bValid);
+	return bValid;
+}
 // Manage a 'duration' field
 function UpdateDuration(iId)
 {
