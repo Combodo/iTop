@@ -1510,9 +1510,6 @@ EOF
 				break;
 
 				case 'CaseLog':
-					$aEventsList[] ='validate';
-					$aEventsList[] ='keyup';
-					$aEventsList[] ='change';
 					$aStyles = array();
 					$sStyle = '';
 					$sWidth = $oAttDef->GetWidth('width', '');
@@ -1532,7 +1529,10 @@ EOF
 					$sHeader = '<div class="caselog_input_header">&nbsp;'.Dict::S('UI:CaseLogTypeYourTextHere').'</div>';
 					$sEditValue = $oAttDef->GetEditValue($value);
 					$sPreviousLog = is_object($value) ? $value->GetAsHTML() : '';
-					$sHTMLValue = "<div class=\"caselog\" $sStyle><table style=\"width:100%;\"><tr><td>$sHeader<textarea style=\"border:0;width:100%\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">$sEditValue</textarea>$sPreviousLog</td><td>{$sValidationField}</td></tr></table></div>";
+					$iEntriesCount = is_object($value) ? count($value->GetIndex()) : 0;
+					$sHidden = "<input type=\"hidden\" id=\"{$iId}_count\" value=\"$iEntriesCount\"/>"; // To know how many entries the case log already contains
+					$sHTMLValue = "<div class=\"caselog\" $sStyle><table style=\"width:100%;\"><tr><td>$sHeader<textarea style=\"border:0;width:100%\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">$sEditValue</textarea>$sPreviousLog</td><td>{$sValidationField}</td></tr></table>$sHidden</div>";
+					$oPage->add_ready_script("$('#$iId').bind('keyup change validate', function(evt, sFormId) { return ValidateCaseLogField('$iId', $bMandatory, sFormId) } );"); // Custom validation function
 				break;
 
 				case 'HTML':
