@@ -1985,7 +1985,7 @@ class AttributeDateTime extends AttributeDBField
 		{
 			if (empty($default))
 			{
-				$default = date(self::GetDateFormat());
+				$default = date($this->GetDateFormat());
 			}
 		}
 
