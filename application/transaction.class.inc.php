@@ -38,11 +38,11 @@ class privUITransaction
 		// Strictly speaking, the two lines below should be grouped together
 		// by a critical section
 		// sem_acquire($rSemIdentified);
-		$id = 1 + count($_SESSION['transactions']);
+		$id = str_replace(array('.', ' '), '', microtime()); //1 + count($_SESSION['transactions']);
 		$_SESSION['transactions'][$id] = true;
 		// sem_release($rSemIdentified);
 		
-		return sprintf("%d", $id);
+		return (string)$id;
 	}
 
 	/**
