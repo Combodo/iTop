@@ -345,41 +345,19 @@ EOF
 			$sEmptyListMessage = Dict::S('UI:Search:NoObjectFound');
 		}
 	
-		$oSet = $oObj->Get($sLinkSetAttCode);
-	
-		if ($oSet->Count() > 0)
+		$oLinkSet = $oObj->Get($sLinkSetAttCode);
+		if ($oLinkSet->Count() > 0)
 		{
-			$sClass = $oSet->GetClass();
+			$sClass = $oLinkSet->GetClass();
 			$oExtKeyToRemote = MetaModel::GetAttributeDef($sClass, $sRemoteAttCode);
 			$sRemoteClass = $oExtKeyToRemote->GetTargetClass();			
 	
-			$aAttribs = array();
-			$aValues = array();
-			$aAttribs['key'] = array('label' => MetaModel::GetName($sRemoteClass), 'description' => '');
-			foreach($aZList as $sAttCode)
-			{
-				$oAttDef = MetaModel::GetAttributeDef($sRemoteClass, $sAttCode);
-				$aAttribs[$sAttCode] = array('label' => $oAttDef->GetLabel(), 'description' => $oAttDef->GetDescription());
-			}
-			while($oLink = $oSet->Fetch())
-			{
-				$aRow = array();
-	
-				$oObj = MetaModel::GetObject($sRemoteClass, $oLink->Get($sRemoteAttCode));
-	
-				$aRow['key'] = '<a href="./index.php?operation=details&class='.get_class($oObj).'&id='.$oObj->GetKey().'">'.$oObj->Get('friendlyname').'</a>';
-				$sHilightClass = $oObj->GetHilightClass();
-				if ($sHilightClass != '')
-				{
-					$aRow['@class'] = $sHilightClass;	
-				}
-				foreach($aZList as $sAttCode)
-				{
-					$aRow[$sAttCode] = $oObj->GetAsHTML($sAttCode);
-				}
-				$aValues[$oObj->GetKey()] = $aRow;
-			}
-			$this->Table($aAttribs, $aValues);
+			$oObjSearch = new DBObjectSearch($sRemoteClass);
+			$oObjSearch->AddCondition_ReferencedBy($oLinkSet->GetFilter(), $sRemoteAttCode);
+
+			$aExtraParams = array('menu' => false, 'zlist' => false, 'extra_fields' => implode(',', $aZList));
+			$oBlock = new DisplayBlock($oObjSearch, 'list', false);
+			$oBlock->Display($this, 1, $aExtraParams);
 		}
 		elseif (strlen($sEmptyListMessage) > 0)
 		{
