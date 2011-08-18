@@ -2665,7 +2665,7 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 			$sRight = $oAttDef->GetSQLRight();
 			$sSQL = "SELECT MAX(`$sRight`) AS MaxRight FROM `$sTable`";
 			$iMaxRight = CMDBSource::QueryToScalar($sSQL);
-			$sSQL = "SELECT COUNT(`$sRight`) AS Count FROM `$sTable`";
+			$sSQL = "SELECT COUNT(*) AS Count FROM `$sTable`"; // Note: COUNT(field) returns zero if the given field contains only NULLs
 			$iCount = CMDBSource::QueryToScalar($sSQL);
 			if (!$bForceComputation && ($iCount != 0) && ($iMaxRight == 0))
 			{
