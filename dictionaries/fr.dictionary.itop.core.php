@@ -48,11 +48,11 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ActionEmail/Attribute:importance/Value:low+' => '',
 	'Class:ActionEmail/Attribute:importance/Value:normal' => 'Normale',
 	'Class:ActionEmail/Attribute:importance/Value:normal+' => '',
-	'Class:TriggerOnPortalUdpate' => 'Déclencheur sur mise à jour depuis le portail',
-	'Class:TriggerOnPortalUdpate+' => '',
+	'Class:TriggerOnPortalUpdate' => 'Déclencheur sur mise à jour depuis le portail',
+	'Class:TriggerOnPortalUpdate+' => '',
 	'Class:TriggerOnStateEnter' => 'Déclencheur sur un objet entrant dans un état',
 	'Class:TriggerOnStateEnter+' => '',
-	'Class:TriggerOnStateLeave' => 'Déclencheur sur un objet quitant un état',
+	'Class:TriggerOnStateLeave' => 'Déclencheur sur un objet quittant un état',
 	'Class:TriggerOnStateLeave+' => '',
 	'Class:TriggerOnObjectCreate' => 'Déclencheur sur la création d\'un objet',
 	'Class:TriggerOnObjectCreate+' => '',
@@ -455,7 +455,18 @@ Si l\'heure n\'est pas spécifiée, cela revient à 00:00:00 (minuit)
 </p>',
 	'Core:AttributeDate' => 'Date',
 	'Core:AttributeDate+' => 'Date (année-mois-jour)',
-	'Core:AttributeDate?SmartSearch' => '',
+	'Core:AttributeDate?SmartSearch' => '
+<p>
+	Format de date :<br/>
+	<b>aaaa-mm-jj</b><br/>
+	Exemple : 2011-07-19
+</p>
+<p>
+Opérateurs :<br/>
+	<b>&gt;</b><em>date</em><br/>
+	<b>&lt;</b><em>date</em><br/>
+	<b>[</b><em>date</em>,<em>date</em><b>]</b>
+</p>',
 	'Core:AttributeDeadline' => 'Délai',
 	'Core:AttributeDeadline+' => 'Date/heure exprimée relativement à l\'heure courante',
 	'Core:AttributeExternalKey' => 'Clé externe',
@@ -501,7 +512,7 @@ Si l\'heure n\'est pas spécifiée, cela revient à 00:00:00 (minuit)
 	'Class:Action/Attribute:finalclass+' => '',
 	'Class:ActionNotification' => 'notification',
 	'Class:ActionNotification+' => '',
-	'Class:Trigger' => 'trigger',
+	'Class:Trigger' => 'Déclencheur',
 	'Class:Trigger+' => '',
 	'Class:Trigger/Attribute:description' => 'Description',
 	'Class:Trigger/Attribute:description+' => '',
