@@ -451,9 +451,9 @@ class Subnet extends cmdbAbstractObject
 			$bit_ip = ip2long($this->Get('ip'));
 			$bit_mask = ip2long($this->Get('ip_mask'));
 	
-			$iIPMin = ($bit_ip & $bit_mask) + 1; // exclude the first one: identifies the subnet itsel
-			$iIPMax = ($bit_ip | (~$bit_mask)) - 1; // exclude the last one : reserved for DHCP
-	
+			$iIPMin = sprintf('%u', ($bit_ip & $bit_mask) | 1); // exclude the first one: identifies the subnet itself
+			$iIPMax = sprintf('%u', (($bit_ip | (~$bit_mask))) & 0xfffffffe); // exclude the last one : broadcast address
+			
 			$sIPMin = long2ip($iIPMin);
 			$sIPMax = long2ip($iIPMax);
 	
@@ -465,7 +465,7 @@ class Subnet extends cmdbAbstractObject
 			$oBlock->Display($oPage, 'nwif', array('menu' => false));
 	
 			$iCountUsed = $oIfSet->Count();
-			$iCountRange = $iIPMax - $iIPMin;
+			$iCountRange = $iIPMax - $iIPMin; // On 32-bit systems the substraction will be computed using floats for values greater than PHP_MAX_INT;
 			$iFreeCount =  $iCountRange - $iCountUsed;
 	
 			$oPage->SetCurrentTab(Dict::S('Class:Subnet/Tab:FreeIPs'));
