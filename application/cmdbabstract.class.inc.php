@@ -1448,6 +1448,12 @@ EOF
 			switch($oAttDef->GetEditClass())
 			{
 				case 'Date':
+				$aEventsList[] ='validate';
+				$aEventsList[] ='keyup';
+				$aEventsList[] ='change';
+				$sHTMLValue = "<input title=\"$sHelpText\" class=\"date-pick\" type=\"text\" size=\"12\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"$value\" id=\"$iId\"/>&nbsp;{$sValidationField}";
+				break;
+
 				case 'DateTime':
 				$aEventsList[] ='validate';
 				$aEventsList[] ='keyup';
