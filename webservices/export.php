@@ -45,7 +45,13 @@ $currentOrganization = utils::ReadParam('org_id', '');
 // Main program
 $sExpression = utils::ReadParam('expression', '', true /* Allow CLI */, 'raw_data');
 $sFormat = strtolower(utils::ReadParam('format', 'html'));
+
 $sFields = utils::ReadParam('fields', '', true, 'raw_data'); // CSV field list (allows to specify link set attributes, still not taken into account for XML export)
+$aFields = explode(',', $sFields);
+foreach($aFields as &$sField)
+{
+	$sField = trim($sField);
+}
 
 $oP = null;
 
@@ -68,12 +74,33 @@ if (!empty($sExpression))
 				$sUrl = utils::GetAbsoluteUrlAppRoot();
 				$oP->set_base($sUrl.'pages/');
 
-				$oResultBlock = new DisplayBlock($oFilter, 'list', false, array('menu' => false, 'display_limit' => false, 'zlist' => 'details'));
+				if(count($aFields) > 0)
+				{
+					$iSearch = array_search('id', $aFields);
+					if ($iSearch !== false)
+					{
+						$bViewLink = true;
+						unset($aFields[$iSearch]);
+					}
+					else
+					{
+						$bViewLink = false;
+					}
+					$sFields = implode(',', $aFields);
+					$aExtraParams = array('menu' => false, 'display_limit' => false, 'zlist' => false, 'extra_fields' => $sFields, 'view_link' => $bViewLink);
+				}
+				else
+				{
+					$aExtraParams = array('menu' => false, 'display_limit' => false, 'zlist' => 'details');
+				}
+
+				$oResultBlock = new DisplayBlock($oFilter, 'list', false, $aExtraParams);
 				$oResultBlock->Display($oP, 'expresult');
 				break;
 				
 				case 'csv':
 				$oP = new CSVPage("iTop - Export");
+				$sFields = implode(',', $aFields);
 				cmdbAbstractObject::DisplaySetAsCSV($oP, $oSet, array('fields' => $sFields));
 				break;
 				
@@ -103,6 +130,7 @@ if (!$oP)
 	$oP->p("<strong>Parameters:</strong>");
 	$oP->p("<ul><li>expression: an OQL expression (URL encoded if needed)</li>
 			    <li>format: (optional, default is html) the desired output format. Can be one of 'html', 'csv' or 'xml'</li>
+			    <li>fields: (optional, no effect on XML format) list of fields (attribute codes) separated by a coma</li>
 		    </ul>");
 }
 
