@@ -979,6 +979,10 @@ EOF
 
 		case 'preview_or_modify_all': // Preview or apply bulk modify
 		$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
+		// TO DO: limit the search filter by the user context
+		$oFilter = DBObjectSearch::unserialize($sFilter); // TO DO : check that the filter is valid
+		$oChecker = new ActionChecker($oFilter, UR_ACTION_BULK_MODIFY);
+
 		$sClass = utils::ReadParam('class', '', false, 'class');
 		$bPreview = utils::ReadParam('preview_mode', '');
 		$sSelectedObj = utils::ReadParam('selectObj', '');
