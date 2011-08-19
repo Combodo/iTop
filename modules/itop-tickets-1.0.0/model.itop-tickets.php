@@ -227,7 +227,6 @@ abstract class ResponseTicket extends Ticket
 					'caller_id' => OPT_ATT_MANDATORY,
 					'related_change_id' => OPT_ATT_HIDDEN,
 					'description' => OPT_ATT_MUSTCHANGE,
-					'contact_list' => OPT_ATT_READONLY,
 					'start_date' => OPT_ATT_READONLY,
 					'last_update' => OPT_ATT_READONLY,
 					'assignment_date' => OPT_ATT_HIDDEN,
