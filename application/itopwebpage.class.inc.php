@@ -288,7 +288,20 @@ EOF
 			}
 		});
 	});
-	  
+	
+	// Shortcut menu actions
+	$('.actions_button a').click( function() {
+		aMatches = /#(.*)$/.exec(window.location.href);
+		if (aMatches != null)
+		{
+			currentHash = aMatches[1];
+			if ( /#(.*)$/.test(this.href))
+			{
+				this.href = this.href.replace(/#(.*)$/, '#'+currentHash);
+			}
+		}
+	});
+
 	// End of Tabs handling
 	$("table.listResults").tableHover(); // hover tables
 	$(".date-pick").datepicker({
