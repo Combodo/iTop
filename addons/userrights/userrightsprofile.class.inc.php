@@ -795,6 +795,7 @@ exit;
 		$oListExpr = ListExpression::FromScalars($aIds);
 		
 		// Check if the condition points to a hierarchical key
+		$bConditionAdded = false;
 		if ($sAttCode == 'id')
 		{
 			// Filtering on the objects themselves
@@ -812,7 +813,6 @@ exit;
 		else
 		{
 			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-			$bConditionAdded = false;
 			if ($oAttDef->IsExternalKey())
 			{
 				$sHierarchicalKeyCode = MetaModel::IsHierarchicalClass($oAttDef->GetTargetClass());
