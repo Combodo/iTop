@@ -189,7 +189,7 @@ EOF
 		DumpHiddenParams($oP, array('servicesubcategory_id'), $aParameters);
 		$oP->add("<input type=\"hidden\" name=\"step\" value=\"2\">");
 		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"create_request\">");
-		$oP->p("<input type=\"submit\" value=\"".Dict::S('UI:Button:Back')."\"  onClick=\"GoBack();\">&nbsp;<input type=\"submit\" value=\"".Dict::S('UI:Button:Next')."\">");
+		$oP->p("<input type=\"submit\" value=\"".Dict::S('UI:Button:Back')."\"  onClick=\"$('#request_form input[name=step]').val(0); $('#request_form').unbind('submit');\"\">&nbsp;<input type=\"submit\" value=\"".Dict::S('UI:Button:Next')."\">");
 		$oP->add("</form>");
 		$oP->add("</div>\n");
 	}
@@ -284,7 +284,7 @@ function RequestCreationForm($oP, $oUserOrg)
 		$oP->add("<input type=\"hidden\" name=\"step\" value=\"3\">");
 		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"create_request\">");
 		$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"$sTransactionId\">\n");
-		$oP->p("<input type=\"submit\" value=\"".Dict::S('UI:Button:Back')."\" onClick=\"GoBack();\">&nbsp;<input type=\"submit\" value=\"".Dict::S('UI:Button:Finish')."\">");
+		$oP->p("<input type=\"submit\" value=\"".Dict::S('UI:Button:Back')."\" onClick=\"$('#request_form input[name=step]').val(1); $('#request_form').unbind('submit');\">&nbsp;<input type=\"submit\" value=\"".Dict::S('UI:Button:Finish')."\">");
 		$oP->add("</form>");
 		$oP->add("</div>\n");
 		$iFieldsCount = count($aFieldsMap);
