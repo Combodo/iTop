@@ -201,7 +201,7 @@ EOF
 	
 			// the input for the auto-complete
 			$sHTMLValue = "<input count=\"".$oAllowedValues->Count()."\" type=\"text\" id=\"label_$this->iId\" size=\"$iFieldSize\" value=\"$sDisplayValue\"/>&nbsp;";
-			$sHTMLValue .= "<a class=\"no-arrow\" href=\"javascript:oACWidget_{$this->iId}.Search();\"><img id=\"mini_search_{$this->iId}\" style=\"border:0;vertical-align:middle;\" src=\"../images/mini_search.gif\" /></a>&nbsp;";
+			$sHTMLValue .= "<img id=\"mini_search_{$this->iId}\" style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"../images/mini_search.gif\" onClick=\"oACWidget_{$this->iId}.Search();\"/>&nbsp;";
 	
 			// another hidden input to store & pass the object's Id
 			$sHTMLValue .= "<input type=\"hidden\" id=\"$this->iId\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" value=\"$value\" />\n";
@@ -224,7 +224,7 @@ EOF
 		}
 		if ($bExtensions && MetaModel::IsHierarchicalClass($this->sTargetClass) !== false)
 		{
-			$sHTMLValue .= "<a class=\"no-arrow\" href=\"javascript:oACWidget_{$this->iId}.HKDisplay();\"><img id=\"mini_tree_{$this->iId}\" style=\"border:0;vertical-align:middle;\" src=\"../images/mini_tree.gif\" /></a>&nbsp;";
+			$sHTMLValue .= "<img id=\"mini_tree_{$this->iId}\" style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"../images/mini_tree.gif\" onClick=\"oACWidget_{$this->iId}.HKDisplay();\"/>&nbsp;";
 			$oPage->add_ready_script(
 <<<EOF
 			if ($('#ac_tree_{$this->iId}').length == 0)
@@ -236,7 +236,7 @@ EOF
 		}
 		if ($bCreate && $bExtensions)
 		{
-			$sHTMLValue .= "<a class=\"no-arrow\" href=\"javascript:oACWidget_{$this->iId}.CreateObject();\"><img id=\"mini_add_{$this->iId}\" style=\"border:0;vertical-align:middle;\" src=\"../images/mini_add.gif\" /></a>&nbsp;";
+			$sHTMLValue .= "<img id=\"mini_add_{$this->iId}\" style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"../images/mini_add.gif\" onClick=\"oACWidget_{$this->iId}.CreateObject();\"/>&nbsp;";
 			$oPage->add_ready_script(
 <<<EOF
 		if ($('#ajax_{$this->iId}').length == 0)

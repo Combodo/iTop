@@ -1015,7 +1015,7 @@ EOF
 				$sFilter = $oSet->GetFilter()->serialize();
 				$aExtraParams['display_limit'] = false; // To expand the full list
 				$sExtraParams = addslashes(str_replace('"', "'", json_encode($aExtraParams))); // JSON encode, change the style of the quotes and escape them
-				$sHtml .= '<tr class="containerHeader"><td>'.Dict::Format('UI:TruncatedResults', MetaModel::GetConfig()->GetMinDisplayLimit(), $oSet->Count()).'&nbsp;&nbsp;<a href="Javascript:ReloadTruncatedList(\''.$divId.'\', \''.$sFilter.'\', \''.$sExtraParams.'\');">'.Dict::S('UI:DisplayAll').'</a></td><td>';
+				$sHtml .= '<tr class="containerHeader"><td>'.Dict::Format('UI:TruncatedResults', MetaModel::GetConfig()->GetMinDisplayLimit(), $oSet->Count()).'&nbsp;&nbsp;<span style=\"cursor:pointer;\" onClick="Javascript:ReloadTruncatedList(\''.$divId.'\', \''.$sFilter.'\', \''.$sExtraParams.'\');">'.Dict::S('UI:DisplayAll').'</span></td><td>';
 				$oPage->add_ready_script("$('#{$divId} table.listResults').addClass('truncated');");
 				$oPage->add_ready_script("$('#{$divId} table.listResults tr:last td').addClass('truncated');");
 			}
@@ -1748,7 +1748,19 @@ EOF
 		$iTransactionId = utils::GetNewTransactionId();
 		$oPage->SetTransactionId($iTransactionId);
 		$oPage->add("<form action=\"$sFormAction\" id=\"form_{$this->m_iFormId}\" enctype=\"multipart/form-data\" method=\"post\" onSubmit=\"return OnSubmit('form_{$this->m_iFormId}');\">\n");
-		$oPage->add_ready_script("$(window).unload(function() { OnUnload('$iTransactionId') } );\n");
+		$sConfirmationMessage = addslashes(Dict::S('UI:NavigateAwayConfirmationMessage'));
+		$oPage->add_ready_script(
+<<<EOF
+	$(window).unload(function() { return OnUnload('$iTransactionId') } );
+	window.onbeforeunload = function() {
+		if (!window.bInSubmit && !window.bInCancel)
+		{
+			return '$sConfirmationMessage';	
+		}
+		// return nothing ! safer for IE
+	};
+EOF
+);
 
 		if ($sButtonsPosition != 'bottom')
 		{

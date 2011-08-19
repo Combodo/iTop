@@ -360,6 +360,7 @@ EOF
 		
 		function BackToDetails(sClass, id, sDefaultUrl)
 		{
+			window.bInCancel = true;
 			if (id > 0)
 			{
 				window.location.href = AddAppContext(GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=details&class='+sClass+'&id='+id);
@@ -375,7 +376,7 @@ EOF
 		{
 			window.location.href = AddAppContext(GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=search_oql&oql_class='+sClass+'&oql_clause=WHERE id=0');
 		}
-
+		
 		function ShowDebug()
 		{
 			if ($('#rawOutput > div').html() != '')
