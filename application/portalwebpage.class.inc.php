@@ -34,6 +34,10 @@ define('BUTTON_FINISH', 8);
 
 define('PARAM_ARROW_SEP', '_x_');
 
+class TransactionException extends Exception
+{
+}
+
 /**
  * Web page with some associated CSS and scripts (jquery) for a fancier display
  * of the Portal web page
@@ -599,7 +603,7 @@ EOF
 		$sTransactionId = utils::ReadPostedParam('transaction_id', '');
 		if (!utils::IsTransactionValid($sTransactionId))
 		{
-			throw new Exception(Dict::S('UI:Error:ObjectAlreadyUpdated'));
+			throw new TransactionException();
 		}
 	
 		$sClass = get_class($oObj);
