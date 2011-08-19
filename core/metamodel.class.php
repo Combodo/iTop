@@ -974,21 +974,13 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 	{
 		$sStateAttrCode = self::GetStateAttributeCode($sClass);
 		$oAttDef = self::GetAttributeDef($sClass, $sStateAttrCode);
-		// Be consistent with what is done for enums, since states are defined as enums...
-		return Dict::S("Class:".$oAttDef->GetHostClass()."/Attribute:$sStateAttrCode/Value:$sStateValue");
-
-		// I've decided the current implementation, because I need
-		// to get the description as well -GetAllowedValues does not render the description,
-		// so far...
-		// Could have been implemented the following way (not tested
-		// $oStateAttrDef = self::GetAttributeDef($sClass, $sStateAttrCode);
-		// $aAllowedValues = $oStateAttrDef->GetAllowedValues();
-		// return $aAllowedValues[$sStateValue];
+		return $oAttDef->GetValueLabel($sStateValue);
 	}
 	public static function GetStateDescription($sClass, $sStateValue)
 	{
 		$sStateAttrCode = self::GetStateAttributeCode($sClass);
-		return Dict::S("Class:$sClass/Attribute:$sStateAttrCode/Value:$sStateValue+", '');
+		$oAttDef = self::GetAttributeDef($sClass, $sStateAttrCode);
+		return $oAttDef->GetValueDescription($sStateValue);
 	}
 
 	public static function EnumTransitions($sClass, $sStateCode)
@@ -1426,19 +1418,10 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 				self::$m_aAttribOrigins[$sTargetClass] = array();
 			}
 			self::$m_aAttribDefs[$sTargetClass] = self::object_array_mergeclone(self::$m_aAttribDefs[$sTargetClass], self::$m_aAttribDefs[$sSourceClass]);
-			// Note: while investigating on some issues related to attribute inheritance,
-			//       I found out that the notion of "host class" is unclear
-			//       For stability reasons, and also because a workaround has been found
-			//       I leave it unchanged, but later it could be a good thing to force
-			//       attribute host class to the new class (See code below)
-			//       In that case, we will have to review the attribute labels
-			//       (currently relying on host class => the original declaration
-			//       of the attribute)
-			//       See TRAC #148
-			//       foreach(self::$m_aAttribDefs[$sTargetClass] as $sAttCode => $oAttDef)
-			//       {
-			//       	$oAttDef->SetHostClass($sTargetClass);
-			//       }
+			foreach(self::$m_aAttribDefs[$sTargetClass] as $sAttCode => $oAttDef)
+			{
+				$oAttDef->SetHostClass($sTargetClass);
+			}
 			self::$m_aAttribOrigins[$sTargetClass] = array_merge(self::$m_aAttribOrigins[$sTargetClass], self::$m_aAttribOrigins[$sSourceClass]);
 		}
 		// Build root class information
@@ -1677,6 +1660,17 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 	{
 		self::_check_subclass($sClass);
 		return (self::GetRootClass($sClass) == $sClass);
+	}
+	public static function GetParentClass($sClass)
+	{
+		if (count(self::$m_aParentClasses[$sClass]) == 0)
+		{
+			return null;
+		}
+		else
+		{
+			return end(self::$m_aParentClasses[$sClass]);
+		}
 	}
 	/**
 	 * Tells if a class contains a hierarchical key, and if so what is its AttCode

@@ -179,7 +179,26 @@ abstract class AttributeDefinition
 	public function IsWritable() {return false;} 
 	public function IsNullAllowed() {return true;} 
 	public function GetCode() {return $this->m_sCode;} 
-	public function GetLabel() {return Dict::S('Class:'.$this->m_sHostClass.'/Attribute:'.$this->m_sCode, $this->m_sCode);}
+
+	public function GetLabel()
+	{
+		$sLabel = Dict::S('Class:'.$this->m_sHostClass.'/Attribute:'.$this->m_sCode, '');
+		if (strlen($sLabel) == 0)
+		{
+			$sLabel = $this->m_sCode;
+			$sParentClass = MetaModel::GetParentClass($this->m_sHostClass);
+			if ($sParentClass)
+			{
+				if (MetaModel::IsValidAttCode($sParentClass, $this->m_sCode))
+				{
+					$oAttDef = MetaModel::GetAttributeDef($sParentClass, $this->m_sCode);
+					$sLabel = $oAttDef->GetLabel();
+				}
+			}
+		}
+		return $sLabel;
+	}
+
 	public function GetLabel_Obsolete()
 	{
 		// Written for compatibility with a data model written prior to version 0.9.1
@@ -192,8 +211,42 @@ abstract class AttributeDefinition
 			return $this->GetLabel();
 		}
 	}
-	public function GetDescription() {return Dict::S('Class:'.$this->m_sHostClass.'/Attribute:'.$this->m_sCode.'+', '');} 
-	public function GetHelpOnEdition() {return Dict::S('Class:'.$this->m_sHostClass.'/Attribute:'.$this->m_sCode.'?', '');} 
+
+	public function GetDescription()
+	{
+		$sDescription = Dict::S('Class:'.$this->m_sHostClass.'/Attribute:'.$this->m_sCode.'+', '');
+		if (strlen($sDescription) == 0)
+		{
+			$sParentClass = MetaModel::GetParentClass($this->m_sHostClass);
+			if ($sParentClass)
+			{
+				if (MetaModel::IsValidAttCode($sParentClass, $this->m_sCode))
+				{
+					$oAttDef = MetaModel::GetAttributeDef($sParentClass, $this->m_sCode);
+					$sDescription = $oAttDef->GetDescription();
+				}
+			}
+		}
+		return $sDescription;
+	} 
+
+	public function GetHelpOnEdition()
+	{
+		$sHelp = Dict::S('Class:'.$this->m_sHostClass.'/Attribute:'.$this->m_sCode.'?', '');
+		if (strlen($sHelp) == 0)
+		{
+			$sParentClass = MetaModel::GetParentClass($this->m_sHostClass);
+			if ($sParentClass)
+			{
+				if (MetaModel::IsValidAttCode($sParentClass, $this->m_sCode))
+				{
+					$oAttDef = MetaModel::GetAttributeDef($sParentClass, $this->m_sCode);
+					$sHelp = $oAttDef->GetHelpOnEdition();
+				}
+			}
+		}
+		return $sHelp;
+	} 
 
 	public function GetHelpOnSmartSearch()
 	{
@@ -1895,7 +1948,7 @@ class AttributeEnum extends AttributeString
 		return parent::GetBasicFilterSQLExpr($sOpCode, $value);
 	} 
 
-	public function GetAsHTML($sValue, $oHostObject = null)
+	public function GetValueLabel($sValue)
 	{
 		if (is_null($sValue))
 		{
@@ -1904,17 +1957,61 @@ class AttributeEnum extends AttributeString
 		}
 		else
 		{
-			$sLabel = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue, $sValue);
+			$sLabel = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue, '');
+			if (strlen($sLabel) == 0)
+			{
+				$sLabel = $sValue;
+				$sParentClass = MetaModel::GetParentClass($this->m_sHostClass);
+				if ($sParentClass)
+				{
+					if (MetaModel::IsValidAttCode($sParentClass, $this->m_sCode))
+					{
+						$oAttDef = MetaModel::GetAttributeDef($sParentClass, $this->m_sCode);
+						$sLabel = $oAttDef->GetValueLabel($sValue);
+					}
+				}
+			}
 		}
-		$sDescription = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue.'+', $sValue);
+		return $sLabel;
+	}
+
+	public function GetValueDescription($sValue)
+	{
+		if (is_null($sValue))
+		{
+			// Unless a specific label is defined for the null value of this enum, use a generic "undefined" label		
+			$sDescription = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue.'+', Dict::S('Enum:Undefined'));
+		}
+		else
+		{
+			$sDescription = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue.'+', '');
+			if (strlen($sDescription) == 0)
+			{
+				$sParentClass = MetaModel::GetParentClass($this->m_sHostClass);
+				if ($sParentClass)
+				{
+					if (MetaModel::IsValidAttCode($sParentClass, $this->m_sCode))
+					{
+						$oAttDef = MetaModel::GetAttributeDef($sParentClass, $this->m_sCode);
+						$sDescription = $oAttDef->GetValueDescription($sValue);
+					}
+				}
+			}
+		}
+		return $sDescription;
+	}
+
+	public function GetAsHTML($sValue, $oHostObject = null)
+	{
+		$sLabel = $this->GetValueLabel($sValue);
+		$sDescription = $this->GetValueDescription($sValue);
 		// later, we could imagine a detailed description in the title
 		return "<span title=\"$sDescription\">".parent::GetAsHtml($sLabel)."</span>";
 	}
 
 	public function GetEditValue($sValue)
 	{
-		$sLabel = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue, $sValue);
-		return $sLabel;
+		return $this->GetValueLabel($sValue);
 	}
 
 	public function GetAllowedValues($aArgs = array(), $sContains = '')
@@ -1924,7 +2021,7 @@ class AttributeEnum extends AttributeString
 		$aLocalizedValues = array();
 		foreach ($aRawValues as $sKey => $sValue)
 		{
-			$aLocalizedValues[$sKey] = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sKey, $sKey);
+			$aLocalizedValues[$sKey] = $this->GetValueLabel($sKey);
 		}
   		return $aLocalizedValues;
   	}
@@ -2466,6 +2563,8 @@ class AttributeExternalKey extends AttributeDBFieldVoid
  */
 class AttributeHierarchicalKey extends AttributeExternalKey
 {
+	protected $m_sTargetClass;
+
 	static protected function ListExpectedParams()
 	{
 		$aParams = parent::ListExpectedParams();
@@ -2480,6 +2579,18 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 	public function RequiresIndex()
 	{
 		return true;
+	}
+
+	/*
+	*  The target class is the class for which the attribute has been defined first
+	*/	
+	public function SetHostClass($sHostClass)
+	{
+		if (!isset($this->m_sTargetClass))
+		{
+			$this->m_sTargetClass = $sHostClass;
+		}
+		parent::SetHostClass($sHostClass);
 	}
 
 	public function IsHierarchicalKey() {return true;}

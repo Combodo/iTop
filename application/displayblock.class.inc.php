@@ -672,7 +672,7 @@ class DisplayBlock
 					$oFilter->AddCondition($sStateAttrCode, $sStateValue, '=');
 					$oSet = new DBObjectSet($oFilter);
 					$aCounts[$sStateValue] = $oSet->Count();
-					$aStateLabels[$sStateValue] = Dict::S("Class:".$oAttDef->GetHostClass()."/Attribute:$sStateAttrCode/Value:$sStateValue");
+					$aStateLabels[$sStateValue] = $oAttDef->GetValueLabel($sStateValue);
 					if ($aCounts[$sStateValue] == 0)
 					{
 						$aCounts[$sStateValue] = '-';
