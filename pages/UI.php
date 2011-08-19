@@ -94,7 +94,7 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 				}
 				$aDisplayData[] = array(
 					'class' => MetaModel::GetName(get_class($oToDelete)),
-					'object' => $oToDelete->GetHyperLink(),
+					'object' => $oToDelete->GetName(),
 					'consequence' => $sMessage,
 				);
 			}

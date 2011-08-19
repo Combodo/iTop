@@ -1396,7 +1396,7 @@ abstract class DBObject
 				{
 					// Update the left & right indexes for each hierarchical key
 					$sTable = $sTable = MetaModel::DBGetTable(get_class($this), $sAttCode);
-					$sSQL = "SELECT `".$oAttDef->GetSQLRight()."` AS `right`, `".$oAttDef->GetSQLLeft()."` AS `left` FROM `$sTable` WHERE id=".$this->GetKey();
+					$sSQL = "SELECT `".$oAttDef->GetSQLRight()."` AS `right`, `".$oAttDef->GetSQLLeft()."` AS `left` FROM `$sTable` WHERE id=".CMDBSource::Quote($this->m_iKey);
 					$aRes = CMDBSource::QueryToArray($sSQL);
 					$iMyLeft = $aRes[0]['left'];
 					$iMyRight = $aRes[0]['right'];
@@ -1453,7 +1453,14 @@ abstract class DBObject
 				foreach ($aToDelete as $iId => $aData)
 				{
 					$oToDelete = $aData['to_delete'];
-					$oToDelete->DBDeleteSingleObject();
+					// The deletion based on a deletion plan should not be done for each oject if the deletion plan is common (Trac #457)
+					// because for each object we would try to update all the preceding ones... that are already deleted
+					// A better approach would be to change the API to apply the DBDelete on the deletion plan itself... just once
+					// As a temporary fix: delete only the objects that are still to be deleted...
+					if ($oToDelete->m_bIsInDB)
+					{
+						$oToDelete->DBDeleteSingleObject();
+					}
 				}
 			}
 
