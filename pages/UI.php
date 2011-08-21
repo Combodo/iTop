@@ -985,7 +985,7 @@ EOF
 
 		$sClass = utils::ReadParam('class', '', false, 'class');
 		$bPreview = utils::ReadParam('preview_mode', '');
-		$sSelectedObj = utils::ReadParam('selectObj', '');
+		$sSelectedObj = utils::ReadParam('selectObj', '', false, 'raw_data');
 		if ( empty($sClass) || empty($sSelectedObj)) // TO DO: check that the class name is valid !
 		{
 			throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'selectObj'));
@@ -1582,9 +1582,9 @@ EOF
 				}
 			}
 			$sButtonsPosition = MetaModel::GetConfig()->Get('buttons_position');
-			if ($sButtonsPosition != 'bottom')
+			if ($sButtonsPosition == 'bottom')
 			{
-				// top or both: Displays the ticket details BEFORE the actions
+				// bottom: Displays the ticket details BEFORE the actions
 				$oP->add('<div class="ui-widget-content">');
 				$oObj->DisplayBareProperties($oP);
 				$oP->add('</div>');
@@ -1608,9 +1608,9 @@ EOF
 			$oP->add("<button type=\"submit\" class=\"action\"><span>$sActionLabel</span></button>\n");
 			$oP->add("</form>\n");
 			$oP->add("</div>\n");
-			if ($sButtonsPosition == 'bottom')
+			if ($sButtonsPosition != 'bottom')
 			{
-				// bottom or both: Displays the ticket details AFTER the actions
+				// top or both: Displays the ticket details AFTER the actions
 				$oP->add('<div class="ui-widget-content">');
 				$oObj->DisplayBareProperties($oP);
 				$oP->add('</div>');
@@ -1638,10 +1638,10 @@ EOF
 		
 		case 'bulk_apply_stimulus':
 		$bPreviewMode = utils::ReadPostedParam('preview_mode', false);
-		$sFilter = utils::ReadPostedParam('filter', '');
+		$sFilter = utils::ReadPostedParam('filter', '', false, 'raw_data');
 		$sStimulus = utils::ReadPostedParam('stimulus', '');
 		$sState = utils::ReadPostedParam('state', '');
-		$sSelectObject = utils::ReadPostedParam('selectObject', '');
+		$sSelectObject = utils::ReadPostedParam('selectObject', '', false, 'raw_data');
 		$aSelectObject = explode(',', $sSelectObject);
 
 		if (empty($sFilter) || empty($sStimulus) || empty($sState))

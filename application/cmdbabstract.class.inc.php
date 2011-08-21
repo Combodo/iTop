@@ -204,9 +204,9 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		$oBlock->Display($oPage, -1);
 	}
 
-	function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '')
+	function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '', $aExtraParams = array())
 	{
-		$aFieldsMap = $this->GetBareProperties($oPage, $bEditMode, $sPrefix);		
+		$aFieldsMap = $this->GetBareProperties($oPage, $bEditMode, $sPrefix, $aExtraParams);		
 
 		// Special case to display the case log, if any...
 		// WARNING: if you modify the loop below, also check the corresponding code in UpdateObject and DisplayModifyForm
@@ -384,7 +384,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		}
 	}
 
-	function GetBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix)
+	function GetBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix, $aExtraParams = array())
 	{
 		$sHtml = '';
 		$oAppContext = new ApplicationContext();	
@@ -399,6 +399,9 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		$aDetails = array();
 		$iInputId = 0;
 		$aFieldsMap = array();
+		$aFieldsComments = (isset($aExtraParams['fieldsComments'])) ? $aExtraParams['fieldsComments'] : array();
+		$bFieldComments = (count($aFieldsComments) > 0);
+		
 		foreach($aDetailsStruct as $sTab => $aCols )
 		{
 			$aDetails[$sTab] = array();
@@ -1772,7 +1775,7 @@ EOF
 		$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
 		$oPage->SetCurrentTab(Dict::S('UI:PropertiesTab'));
 
-		$aFieldsMap = $this->DisplayBareProperties($oPage, true, $sPrefix);
+		$aFieldsMap = $this->DisplayBareProperties($oPage, true, $sPrefix, $aExtraParams);
 		// Now display the relations, one tab per relation
 		if (!isset($aExtraParams['noRelations']))
 		{
