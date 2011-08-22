@@ -342,7 +342,7 @@ EOF
 	 * @param $sEmptyListMessage The message to display if the list is empty	  
 	 * @return void
 	 */
-	public function DisplayObjectLinkset($oObj, $sLinkSetAttCode, $sRemoteAttCode, $aZList, $sEmptyListMessage = '')
+	public function DisplayObjectLinkset($oObj, $sLinkSetAttCode, $sRemoteAttCode, $aZList, $sEmptyListMessage = '', $oSearchRestriction = null)
 	{
 		if (empty($sEmptyListMessage))
 		{
@@ -356,7 +356,14 @@ EOF
 			$oExtKeyToRemote = MetaModel::GetAttributeDef($sClass, $sRemoteAttCode);
 			$sRemoteClass = $oExtKeyToRemote->GetTargetClass();			
 	
-			$oObjSearch = new DBObjectSearch($sRemoteClass);
+			if (is_null($oSearchRestriction))
+			{
+				$oObjSearch = new DBObjectSearch($sRemoteClass);
+			}
+			else
+			{
+				$oObjSearch = $oSearchRestriction;
+			}
 			$oObjSearch->AddCondition_ReferencedBy($oLinkSet->GetFilter(), $sRemoteAttCode);
 
 			$aExtraParams = array('menu' => false, 'zlist' => false, 'extra_fields' => implode(',', $aZList));
