@@ -88,7 +88,7 @@ class utils
 
 	public static function UseParamFile($sParamFileArgName = 'param_file', $bAllowCLI = true)
 	{
-		$sFileSpec = self::ReadParam($sParamFileArgName, '', $bAllowCLI);
+		$sFileSpec = self::ReadParam($sParamFileArgName, '', $bAllowCLI, 'raw_data');
 		foreach(explode(',', $sFileSpec) as $sFile)
 		{
 			$sFile = trim($sFile);
