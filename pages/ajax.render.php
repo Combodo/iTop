@@ -366,7 +366,7 @@ try
 		$oPage->SetContentType('text/html');
 		if ($sFilter != "")
 		{
-			$sExtraParams = stripslashes(utils::ReadParam('extra_params', ''));
+			$sExtraParams = stripslashes(utils::ReadParam('extra_params', '', false, 'raw_data'));
 			$aExtraParams = array();
 			if (!empty($sExtraParams))
 			{
