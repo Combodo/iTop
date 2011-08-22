@@ -347,6 +347,7 @@ class DisplayBlock
 				$sGroupByField = $aExtraParams['group_by'];
 				$aGroupBy = array();
 				$sLabels = array();
+				$iTotalCount = $this->m_oSet->Count();
 				while($oObj = $this->m_oSet->Fetch())
 				{
 					if (isset($aExtraParams['group_by_expr']))
@@ -373,6 +374,8 @@ class DisplayBlock
 					'group' => array('label' => MetaModel::GetLabel($this->m_oFilter->GetClass(), $sGroupByField), 'description' => ''),
 					'value' => array('label'=> Dict::S('UI:GroupBy:Count'), 'description' => Dict::S('UI:GroupBy:Count+'))
 				);
+				$sFormat = isset($aExtraParams['format']) ? $aExtraParams['format'] : 'UI:Pagination:HeaderNoSelection';
+				$sHtml .= $oPage->GetP(Dict::Format($sFormat, $iTotalCount));
 				$sHtml .= $oPage->GetTable($aAttribs, $aData);
 			}
 			else
