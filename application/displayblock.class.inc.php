@@ -1224,6 +1224,7 @@ class MenuBlock extends DisplayBlock
 				}
 			}
 		}
+		$aFavoriteActions = array();
 		$aFavorites = array('UI:Menu:Modify', 'UI:Menu:New', /*'UI:Menu:Delete'*/);
 		$aCallSpec = array($sClass, 'GetShortcutActions');
 		$aShortcutActions = call_user_func($aCallSpec);
