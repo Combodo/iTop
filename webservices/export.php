@@ -48,9 +48,14 @@ $sFormat = strtolower(utils::ReadParam('format', 'html'));
 
 $sFields = utils::ReadParam('fields', '', true, 'raw_data'); // CSV field list (allows to specify link set attributes, still not taken into account for XML export)
 $aFields = explode(',', $sFields);
-foreach($aFields as &$sField)
+// Clean the list of columns (empty it if every string is empty)
+foreach($aFields as $index => $sField)
 {
-	$sField = trim($sField);
+	$aFields[$index] = trim($sField);
+	if(strlen($aFields[$index]) == 0)
+	{
+		unset($aFields[$index]);
+	}
 }
 
 $oP = null;
