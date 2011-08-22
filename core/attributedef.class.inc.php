@@ -2594,7 +2594,7 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 	}
 
 	public function IsHierarchicalKey() {return true;}
-	public function GetTargetClass($iType = EXTKEY_RELATIVE) {return $this->GetHostClass();}
+	public function GetTargetClass($iType = EXTKEY_RELATIVE) {return $this->m_sTargetClass;}
 	public function GetKeyAttDef($iType = EXTKEY_RELATIVE){return $this;}
 	public function GetKeyAttCode() {return $this->GetCode();}
 

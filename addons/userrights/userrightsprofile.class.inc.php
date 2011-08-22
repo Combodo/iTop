@@ -538,6 +538,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		$oChange->Set("userinfo", "Initialization");
 		$iChangeId = $oChange->DBInsert();
 
+		$iContactid = 0;
 		// Support drastic data model changes: no organization class (or not writable)!
 		if (MetaModel::IsValidClass('Organization') && !MetaModel::IsAbstract('Organization'))
 		{
@@ -545,34 +546,27 @@ class UserRightsProfile extends UserRightsAddOnAPI
 			$oOrg->Set('name', 'My Company/Department');
 			$oOrg->Set('code', 'SOMECODE');
 			$iOrgId = $oOrg->DBInsertTrackedNoReload($oChange, true /* skip security */);
-		}
-		else
-		{
-			$iOrgId = 0;
+
+			// Support drastic data model changes: no Person class  (or not writable)!
+			if (MetaModel::IsValidClass('Person') && !MetaModel::IsAbstract('Person'))
+			{
+				$oContact = new Person();
+				$oContact->Set('name', 'My last name');
+				$oContact->Set('first_name', 'My first name');
+				if (MetaModel::IsValidAttCode('Person', 'org_id'))
+				{
+					$oContact->Set('org_id', $iOrgId);
+				}
+				$oContact->Set('email', 'my.email@foo.org');
+				$iContactId = $oContact->DBInsertTrackedNoReload($oChange, true /* skip security */);
+			}
 		}
 
-		// Support drastic data model changes: no Person class  (or not writable)!
-		if (MetaModel::IsValidClass('Person') && !MetaModel::IsAbstract('Person'))
-		{
-			$oContact = new Person();
-			$oContact->Set('name', 'My last name');
-			$oContact->Set('first_name', 'My first name');
-			if (MetaModel::IsValidAttCode('Person', 'org_id'))
-			{
-				$oContact->Set('org_id', $iOrgId);
-			}
-			$oContact->Set('email', 'my.email@foo.org');
-			$iContactId = $oContact->DBInsertTrackedNoReload($oChange, true /* skip security */);
-		}
-		else
-		{
-			$iContactId = 0;
-		}
 
 		$oUser = new UserLocal();
 		$oUser->Set('login', $sAdminUser);
 		$oUser->Set('password', $sAdminPwd);
-		if (MetaModel::IsValidAttCode('UserLocal', 'contactid'))
+		if (MetaModel::IsValidAttCode('UserLocal', 'contactid') && ($iContactId != 0))
 		{
 			$oUser->Set('contactid', $iContactId);
 		}
