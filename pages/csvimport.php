@@ -198,7 +198,7 @@ try
 		$bHeaderLine = (utils::ReadParam('header_line', '0') == 1);
 		$iRealSkippedLines = $iSkippedLines = utils::ReadParam('nb_skipped_lines', '0');
 		$sClassName = utils::ReadParam('class_name', '', false, 'class');
-		$aFieldsMapping = utils::ReadParam('field', array(), false, 'field_name');
+		$aFieldsMapping = utils::ReadParam('field', array(), false, 'raw_data');
 		$aSearchFields = utils::ReadParam('search_field', array(), false, 'field_name');
 		$iCurrentStep = $bSimulate ? 4 : 5;
 		$bAdvanced = utils::ReadParam('advanced', 0);
