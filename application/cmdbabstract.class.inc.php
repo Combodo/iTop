@@ -2146,8 +2146,10 @@ EOF
 	
 	/**
 	 * Get the list of actions to be displayed as 'shortcuts' (i.e buttons) instead of inside the Actions popup menu
+	 * @param $sFinalClass string The actual class of the objects for which to display the menu
+	 * @return Array the list of menu codes (i.e dictionary entries) that can be displayed as shortcuts next to the actions menu
 	 */
-	 public static function GetShortcutActions()
+	 public static function GetShortcutActions($sFinalClass)
 	 {
 	 	return array('UI:Menu:New', 'UI:Menu:Modify');
 	 }

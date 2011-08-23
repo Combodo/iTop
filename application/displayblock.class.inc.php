@@ -1228,9 +1228,8 @@ class MenuBlock extends DisplayBlock
 			}
 		}
 		$aFavoriteActions = array();
-		$aFavorites = array('UI:Menu:Modify', 'UI:Menu:New', /*'UI:Menu:Delete'*/);
 		$aCallSpec = array($sClass, 'GetShortcutActions');
-		$aShortcutActions = call_user_func($aCallSpec);
+		$aShortcutActions = call_user_func($aCallSpec, $sClass);
 		foreach ($aActions as $key => $aAction)
 		{
 			if (in_array($key, $aShortcutActions))
