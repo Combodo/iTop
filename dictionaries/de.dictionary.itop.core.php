@@ -96,7 +96,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Core:AttributeTemplateHTML+' => 'HTML mit Platzhaltern',
 
 	'Core:AttributeDateTime' => 'Datum/Uhrzeit',
-	'Core:AttributeDateTime+' => 'DAtum und Uhrzeit (Jahr-Monat-Tag hh:mm:ss)',
+	'Core:AttributeDateTime+' => 'Datum und Uhrzeit (Jahr-Monat-Tag hh:mm:ss)',
 
 	'Core:AttributeDate' => 'Datum',
 	'Core:AttributeDate+' => 'Datum (Jahr-Monat-Tag)',
@@ -439,7 +439,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:TriggerOnStateEnter' => 'Trigger (beim Eintritt eines Status)',
-	'Class:TriggerOnStateEnter+' => 'Trigger bei Eintritt einer Objektstatusänderungg',
+	'Class:TriggerOnStateEnter+' => 'Trigger bei Eintritt einer Objektstatusänderung',
 ));
 
 //
@@ -448,7 +448,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:TriggerOnStateLeave' => 'Trigger (beim Verlassen eines Status)',
-	'Class:TriggerOnStateLeave+' => 'Trigger beim Verlassen einer Objektstatusänderungg',
+	'Class:TriggerOnStateLeave+' => 'Trigger beim Verlassen einer Objektstatusänderung',
 ));
 
 //
@@ -498,7 +498,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Abgleichsvorgehen', //TODO enum values
 	'Class:SynchroDataSource/Attribute:full_load_periodicity' => 'Intervall zwischen zwei vollständigen Reloads',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity+' => 'Ein vollständiger Reload des gesamten Datenbestands muß mindestens in diesem Intervall erfolgen',
-	'Class:SynchroDataSource/Attribute:action_on_zero' => 'Verhalten bei null Treffern',
+	'Class:SynchroDataSource/Attribute:action_on_zero' => 'Verhalten bei keinen Treffern',
 	'Class:SynchroDataSource/Attribute:action_on_zero+' => 'Verhalten, wenn die Suche keine Objekte zurückgibt',
 	'Class:SynchroDataSource/Attribute:action_on_one' => 'Verhalten bei einem Treffer',
 	'Class:SynchroDataSource/Attribute:action_on_one+' => 'Verhalten, wenn die Suche genau ein Objekt zurückgibt',
@@ -585,7 +585,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Core:Synchro:TheObjectCanBeDeletedBy_Source' => 'Das Objekt kann durch die externe Datenquelle %1$s <b>gelöscht werden</b>.',
 	'Core:Synchro:TheObjectCannotBeDeletedByUser_Source' => 'Sie <b>können das Objekt nicht löschen</b>, weil es zur externen Datenquelle %1$s gehört',
 	'TitleSynchroExecution' => 'Ausführung der Synchronisation',
-	'Class:SynchroDataSource:DataTable' => 'Databanktabelle: %1$s',
+	'Class:SynchroDataSource:DataTable' => 'Datenbanktabelle: %1$s',
 	'Core:SyncDataSourceObsolete' => 'Die Datenquelle ist als obsolet markiert. Operation abgebrochen.',
 	'Core:SyncDataSourceAccessRestriction' => 'Nur Administratoren oder die in der Datenquelle angegebenen Benutzer können diese Operation ausführen. Operation abgebrochen.',
 	'Core:SyncTooManyMissingReplicas' => 'Alle Einträge wurden seit längerem nicht aktualisiert, alle Objekte könnten gelöscht werden. Bitte überprüfen Sie die Funktionalität der Synchronisation. Operation abgebrochen.',

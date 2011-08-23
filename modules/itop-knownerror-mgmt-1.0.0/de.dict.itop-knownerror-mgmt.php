@@ -140,8 +140,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 ));
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-        'Menu:ProblemManagement' => 'Problem Management', // Duplicated from Pb Mgmt module, since the two modules are independent
-        'Menu:ProblemManagement+' => 'Problem Management',// and the KEDB may be installed independently of the Pb Mgmt module
+        'Menu:ProblemManagement' => 'Problem-Management', // Duplicated from Pb Mgmt module, since the two modules are independent
+        'Menu:ProblemManagement+' => 'Problem-Management',// and the KEDB may be installed independently of the Pb Mgmt module
         'Menu:NewError' => 'Neuer bekannter Fehler',
         'Menu:NewError+' => '',
         'Menu:SearchError' => 'Nach bekannten Fehler suchen',

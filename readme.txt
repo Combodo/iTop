@@ -51,7 +51,7 @@ then you'll benefit from iTop 1.2 and it's probably worth upgrading.
     -----------------
 Bruno Bonfils for his guidance about LDAP and authentication.
 Randall Badilla Castro for the Spanish translation.
-Jonathan Lucas and David Gumbel from ITOMIG Gmbh, for the German translation.
+Jonathan Lucas, Stephan Rosenke and David Gümbel from ITOMIG GmbH, for the German translation.
 Christian Lempereur and Olivier Fouquet for their feedbacks.
 Everaldo Coelho and the Oxygen Team for their wonderful icons.
 The JQuery team and the all the jQuery plugins authors for developing such a powerful library.
@@ -64,7 +64,6 @@ Marialaura Colantoni for the Italian translation
 Schlobinux for the fix of the setup temporary file verification.
 Gabor Kiss for the Hungarian translation
 Tadashi Kaneda for the Japanese translation
-Stephan Rosenke for his contribution to the German translation
 Antoine Coetsier for the CAS support and tests
 Vincenzo Todisco for his contribution to the enhancement of the webservices
 

@@ -24,27 +24,17 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//
-// Class: UserLDAP
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:UserLDAP' => 'LDAP-Benutzer',
-	'Class:UserLDAP+' => 'Benutzer, der über LDAP authentifiziert wird',
-	'Class:UserLDAP/Attribute:password' => 'Passwort',
-	'Class:UserLDAP/Attribute:password+' => 'Benutzerpasswort',
+Dict::Add('EN US', 'English', 'English', array(
+	'Attachments:TabTitle_Count' => 'Attachments (%1$d)',
+	'Attachments:EmptyTabTitle' => 'Attachments',
+	'Attachments:FieldsetTitle' => 'Attachments',
+	'Attachments:DeleteBtn' => 'Löschen',
+	'Attachments:History_File_Added' => 'Attachment %1$s hinzugefügt.',
+	'Attachments:History_File_Removed' => 'Attachment %1$s entfernt.',
+	'Attachments:AddAttachment' => 'Attachment hinzufügen: ',
+	'Attachments:UploadNotAllowedOnThisSystem' => 'Datei-Upload auf diesem System NICHT erlaubt.',
+	'Attachment:Max_Go' => '(Maximale Datei-Größe: %1$s Go)',
+	'Attachment:Max_Mo' => '(Maximale Datei-Größe: %1$s Mo)',
+	'Attachment:Max_Ko' => '(Maximale Datei-Größe: %1$s Ko)',
 ));
-
-
-
 ?>
