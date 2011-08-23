@@ -933,7 +933,7 @@ class StimulusChecker extends ActionChecker
 					// of IsActionAllowed does not perform a 'per instance' check, we could
 					// skip this second validation phase and assume it would return UR_ALLOWED_YES
 					$oObjSet = DBObjectSet::FromArray($sClass, array($oObj));
-					if (UserRights::IsActionAllowed($sClass, $this->iActionCode, $oObjSet) == UR_ALLOWED_NO)
+					if (!UserRights::IsStimulusAllowed($sClass, $this->iActionCode, $oObjSet))
 					{
 						$this->aAllowedIDs[$oObj->GetKey()] = false;
 					}
