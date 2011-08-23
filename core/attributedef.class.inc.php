@@ -2650,7 +2650,7 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 			if ($iRootId > 0) // ignore objects that do no exist in the database...
 			{
 				$oValSetDef = $this->GetValuesDef();
-				$sClass = $this->GetHostClass(); // host class  == target class for HK
+				$sClass = $this->m_sTargetClass;
 				$oFilter = DBObjectSearch::FromOQL("SELECT $sClass AS node JOIN $sClass AS root ON node.".$this->GetCode()." NOT BELOW root.id WHERE root.id = $iRootId");
 				$oValSetDef->AddCondition($oFilter);
 			}
@@ -2672,7 +2672,7 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 			if ($iRootId > 0) // ignore objects that do no exist in the database...
 			{
 				$aValuesSetDef = $this->GetValuesDef();
-				$sClass = $this->GetHostClass(); // host class  == target class for HK
+				$sClass = $this->m_sTargetClass;
 				$oFilter = DBObjectSearch::FromOQL("SELECT $sClass AS node JOIN $sClass AS root ON node.".$this->GetCode()." NOT BELOW root.id WHERE root.id = $iRootId");
 				$oValSetDef->AddCondition($oFilter);
 			}
