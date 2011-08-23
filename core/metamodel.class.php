@@ -2440,14 +2440,14 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 				
 					// Note: there is no search condition in $oExtFilter, because normalization did merge the condition onto the top of the filter tree 
 
-					if ($iOperatorCode == TREE_OPERATOR_EQUALS)
-					{
-						// Specify expected attributes for the target class query
-						// ... and use the current alias !
-						$aTranslateNow = array(); // Translation for external fields - must be performed before the join is done (recursion...)
 //echo "MAKEQUERY-array_key_exists($sTableClass, \$aExtKeys)<br/>\n";
-						if (array_key_exists($sTableClass, $aExtKeys) && array_key_exists($sKeyAttCode, $aExtKeys[$sTableClass]))
+					if (array_key_exists($sTableClass, $aExtKeys) && array_key_exists($sKeyAttCode, $aExtKeys[$sTableClass]))
+					{
+						if ($iOperatorCode == TREE_OPERATOR_EQUALS)
 						{
+							// Specify expected attributes for the target class query
+							// ... and use the current alias !
+							$aTranslateNow = array(); // Translation for external fields - must be performed before the join is done (recursion...)
 							foreach($aExtKeys[$sTableClass][$sKeyAttCode] as $sAttCode => $oAtt)
 							{
 //echo "MAKEQUERY aExtKeys[$sTableClass][$sKeyAttCode] => $sAttCode-oAtt: <pre>".print_r($oAtt, true)."</pre><br/>\n";
@@ -2500,23 +2500,23 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 								$oSelectBase->AddInnerJoin($oSelectExtKey, $sLocalKeyField, $sExternalKeyField, $sExternalKeyTable);
 							}
 						}
-					}
-					else
-					{
-						$oQBExpr->PushJoinField(new FieldExpression($sKeyAttCode, $sKeyClassAlias));
-						$oSelectExtKey = self::MakeQuery($aSelectedClasses, $oQBExpr, $aClassAliases, $aTableAliases, $oExtFilter);
-						$oJoinExpr = $oQBExpr->PopJoinField();
+						else
+						{
+							$oQBExpr->PushJoinField(new FieldExpression($sKeyAttCode, $sKeyClassAlias));
+							$oSelectExtKey = self::MakeQuery($aSelectedClasses, $oQBExpr, $aClassAliases, $aTableAliases, $oExtFilter);
+							$oJoinExpr = $oQBExpr->PopJoinField();
 //echo "MAKEQUERY-PopJoinField pour $sKeyAttCode, $sKeyClassAlias: <pre>".print_r($oJoinExpr, true)."</pre><br/>\n";
-						$sExternalKeyTable = $oJoinExpr->GetParent();
-						$sExternalKeyField = $oJoinExpr->GetName();
-						$sLeftIndex = $sExternalKeyField.'_left'; // TODO use GetSQLLeft()
-						$sRightIndex = $sExternalKeyField.'_right'; // TODO use GetSQLRight()
-	
-						$LocalKeyLeft = $oKeyAttDef->GetSQLLeft();
-						$LocalKeyRight = $oKeyAttDef->GetSQLRight();
+							$sExternalKeyTable = $oJoinExpr->GetParent();
+							$sExternalKeyField = $oJoinExpr->GetName();
+							$sLeftIndex = $sExternalKeyField.'_left'; // TODO use GetSQLLeft()
+							$sRightIndex = $sExternalKeyField.'_right'; // TODO use GetSQLRight()
+		
+							$LocalKeyLeft = $oKeyAttDef->GetSQLLeft();
+							$LocalKeyRight = $oKeyAttDef->GetSQLRight();
 //echo "MAKEQUERY-LocalKeyLeft pour $sKeyAttCode => $LocalKeyLeft<br/>\n";
-	
-						$oSelectBase->AddInnerJoinTree($oSelectExtKey, $LocalKeyLeft, $LocalKeyRight, $sLeftIndex, $sRightIndex, $sExternalKeyTable, $iOperatorCode);
+		
+							$oSelectBase->AddInnerJoinTree($oSelectExtKey, $LocalKeyLeft, $LocalKeyRight, $sLeftIndex, $sRightIndex, $sExternalKeyTable, $iOperatorCode);
+						}
 					}
 				}
 			}
