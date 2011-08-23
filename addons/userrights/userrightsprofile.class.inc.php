@@ -538,7 +538,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		$oChange->Set("userinfo", "Initialization");
 		$iChangeId = $oChange->DBInsert();
 
-		$iContactid = 0;
+		$iContactId = 0;
 		// Support drastic data model changes: no organization class (or not writable)!
 		if (MetaModel::IsValidClass('Organization') && !MetaModel::IsAbstract('Organization'))
 		{
