@@ -553,29 +553,8 @@ class Config
 			// Default AddOn, always present can be moved to an official iTop Module later if needed
 			'user rights' => 'addons/userrights/userrightsprofile.class.inc.php',
 		);
-		$this->m_aDictionaries = array(
-			// Default dictionaries, always present can be moved to an official iTop Module later if needed
-			'dictionaries/dictionary.itop.core.php',
-			'dictionaries/dictionary.itop.ui.php',		// Support for English
-			'dictionaries/fr.dictionary.itop.ui.php',	// Support for French
-			'dictionaries/fr.dictionary.itop.core.php',	// Support for French
-			'dictionaries/es_cr.dictionary.itop.ui.php',	// Support for Spanish (from Costa Rica)
-			'dictionaries/es_cr.dictionary.itop.core.php',	// Support for Spanish (from Costa Rica)
-			'dictionaries/de.dictionary.itop.ui.php',	// Support for German
-			'dictionaries/de.dictionary.itop.core.php',	// Support for German
-			'dictionaries/pt_br.dictionary.itop.ui.php',	// Support for Brazilian Portuguese
-			'dictionaries/pt_br.dictionary.itop.core.php',	// Support for Brazilian Portuguese
-			'dictionaries/ru.dictionary.itop.ui.php',	// Support for Russian
-			'dictionaries/ru.dictionary.itop.core.php',	// Support for Russian
-			'dictionaries/tr.dictionary.itop.ui.php',	// Support for Turkish
-			'dictionaries/tr.dictionary.itop.core.php',	// Support for Turkish
-			'dictionaries/zh.dictionary.itop.ui.php',	// Support for Chinese
-			'dictionaries/zh.dictionary.itop.core.php',	// Support for Chinese
-			'dictionaries/it.dictionary.itop.ui.php',	// Support for Italian
-			'dictionaries/it.dictionary.itop.core.php',	// Support for Italian
-			'dictionaries/hu.dictionary.itop.ui.php',	// Support for Hungarian
-			'dictionaries/hu.dictionary.itop.core.php',	// Support for Hungarian
-		);
+		$this->m_aDictionaries = self::ScanDictionariesDir();
+		
 		foreach($this->m_aSettings as $sPropCode => $aSettingInfo)
 		{
 			$this->m_aSettings[$sPropCode]['value'] = $aSettingInfo['default'];
@@ -1241,6 +1220,26 @@ class Config
 		{
 			throw new ConfigException("Could not write to configuration file", array('file' => $sFileName));
 		}
+	}
+	
+	protected static function ScanDictionariesDir()
+	{
+		$aResult = array();
+		// Populate automatically the list of dictionary files
+		$sDir = APPROOT.'/dictionaries';
+		if ($hDir = @opendir($sDir))
+		{
+			while (($sFile = readdir($hDir)) !== false)
+			{
+				$aMatches = array();
+				if (preg_match("/^([^\.]+\.)?dictionary\.itop\.(ui|core)\.php$/i", $sFile, $aMatches)) // Dictionary files named like [<Lang>.]dictionary.[core|ui].php are loaded automatically
+				{
+					$aResult[] = 'dictionaries/'.$sFile;
+				}
+			}
+			closedir($hDir);
+		}
+		return $aResult;
 	}
 }
 ?>
