@@ -746,7 +746,7 @@ exit;
 		// Determine how to position the objects of this class
 		//
 		$aCallSpec = array($sClass, 'MapContextParam');
-		if ($sClass == 'Organization')
+		if (($sClass == 'Organization') || is_subclass_of($sClass, 'Organization'))
 		{
 			$sAttCode = 'id';
 		}
@@ -790,6 +790,7 @@ exit;
 		
 		// Check if the condition points to a hierarchical key
 		$bConditionAdded = false;
+
 		if ($sAttCode == 'id')
 		{
 			// Filtering on the objects themselves
