@@ -614,20 +614,33 @@ EOF
 		}
 	
 		$sClass = get_class($oObj);
-	
-		$oObj->UpdateObjectFromPostedForm('' /* form prefix */, $aAttList);
-	
-	   // Optional: apply a stimulus
-	   //
+
 		$sStimulus = trim(utils::ReadPostedParam('apply_stimulus', ''));
-	   if (!empty($sStimulus))
-	   {
+		$sTargetState = '';
+		if (!empty($sStimulus))
+		{
+			// Compute the target state
+
+			$aTransitions = $oObj->EnumTransitions();
+			if (!isset($aTransitions[$sStimulus]))
+			{
+				throw new ApplicationException(Dict::Format('UI:Error:Invalid_Stimulus_On_Object_In_State', $sStimulus, $oObj->GetName(), $oObj->GetStateLabel()));
+			}
+			$sTargetState = $aTransitions[$sStimulus]['target_state'];
+		}
+			
+		$oObj->UpdateObjectFromPostedForm('' /* form prefix */, $aAttList, $sTargetState);
+
+		// Optional: apply a stimulus
+		//
+		if (!empty($sStimulus))
+		{
 			if (!$oObj->ApplyStimulus($sStimulus))
 			{
-				throw new Exception("Cannot apply stimulus '$sStimulus' to {$oObj->GetName()}");
+					throw new Exception("Cannot apply stimulus '$sStimulus' to {$oObj->GetName()}");
 			}
 		}
-	
+		
 		// Record the change
 		//
 		$oMyChange = MetaModel::NewObject("CMDBChange");
@@ -636,7 +649,7 @@ EOF
 		$oMyChange->Set("userinfo", $sUserString);
 		$iChangeId = $oMyChange->DBInsert();
 		$oObj->DBUpdateTracked($oMyChange);
-	
+		
 		$this->p("<h1>".Dict::Format('UI:Class_Object_Updated', MetaModel::GetName(get_class($oObj)), $oObj->GetName())."</h1>\n");
 	}
 
