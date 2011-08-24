@@ -662,16 +662,25 @@ abstract class DBObject
 	/**
 	 * Returns the set of flags (OPT_ATT_HIDDEN, OPT_ATT_READONLY, OPT_ATT_MANDATORY...)
 	 * for the given attribute in the current state of the object
-	 * @param string $sAttCode The code of the attribute
+	 * @param $sAttCode string $sAttCode The code of the attribute
+	 * @param $aReasons array To store the reasons why the attribute is read-only (info about the synchro replicas)
+	 * @param $sTargetState string The target state in which to evalutate the flags, if empty the current state will be used
 	 * @return integer Flags: the binary combination of the flags applicable to this attribute
 	 */	 	  	 	
-	public function GetAttributeFlags($sAttCode, &$aReasons = array())
+	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
 	{
 		$iFlags = 0; // By default (if no life cycle) no flag at all
 		$sStateAttCode = MetaModel::GetStateAttributeCode(get_class($this));
 		if (!empty($sStateAttCode))
 		{
-			$iFlags = MetaModel::GetAttributeFlags(get_class($this), $this->Get($sStateAttCode), $sAttCode);
+			if ($sTargetState != '')
+			{
+				$iFlags = MetaModel::GetAttributeFlags(get_class($this), $sTargetState, $sAttCode);			
+			}
+			else
+			{
+				$iFlags = MetaModel::GetAttributeFlags(get_class($this), $this->Get($sStateAttCode), $sAttCode);
+			}
 		}
 		$aReasons = array();
 		$iSynchroFlags = $this->GetSynchroReplicaFlags($sAttCode, $aReasons);
