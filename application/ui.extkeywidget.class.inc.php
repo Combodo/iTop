@@ -326,7 +326,7 @@ EOF
 		$aValues = $oValuesSet->GetValues(array('this' => $oObj), $sContains);
 		foreach($aValues as $sKey => $sFriendlyName)
 		{
-			$oP->add(trim(htmlentities($sFriendlyName, ENT_COMPAT, 'UTF-8'))."|".$sKey."\n");
+			$oP->add(trim($sFriendlyName)."|".$sKey."\n");
 		}
 	}
 	
