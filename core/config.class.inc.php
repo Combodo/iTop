@@ -410,6 +410,15 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
+		'shortcut_actions' => array(
+			'type' => 'string',
+			'description' => 'Actions that are available as direct buttons next to the "Actions" menu',
+			// examples... not used
+			'default' => 'UI:Menu:Modify,UI:Menu:New',
+			'value' => 'UI:Menu:Modify',
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
 	);
 
 	public function IsProperty($sPropCode)
