@@ -1415,7 +1415,7 @@ EOF
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		case 'wizard_apply_new': // no more used ???
-		$sJson = utils::ReadPostedParam('json_obj', '');
+		$sJson = utils::ReadPostedParam('json_obj', '', 'raw_data');
 		$oWizardHelper = WizardHelper::FromJSON($sJson);
 		$sTransactionId = utils::ReadPostedParam('transaction_id', '');
 		if (!utils::IsTransactionValid($sTransactionId))
@@ -1716,7 +1716,7 @@ EOF
 							$iFlags = $oObj->GetAttributeFlags($sAttCode);
 							if (($iExpectCode & (OPT_ATT_MUSTCHANGE|OPT_ATT_MUSTPROMPT)) || ($oObj->Get($sAttCode) == '') ) 
 							{
-								$paramValue = utils::ReadPostedParam("attr_$sAttCode", '');
+								$paramValue = utils::ReadPostedParam("attr_$sAttCode", '', 'raw_data');
 								if ( ($iFlags & OPT_ATT_SLAVE) && ($paramValue != $oObj->Get($sAttCode)) )
 								{
 									$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
@@ -1959,7 +1959,7 @@ EOF
 					$iFlags = $oObj->GetAttributeFlags($sAttCode);
 					if (($iExpectCode & (OPT_ATT_MUSTCHANGE|OPT_ATT_MUSTPROMPT)) || ($oObj->Get($sAttCode) == '') ) 
 					{
-						$paramValue = utils::ReadPostedParam("attr_$sAttCode", '');
+						$paramValue = utils::ReadPostedParam("attr_$sAttCode", '', 'raw_data');
 						if ( ($iFlags & OPT_ATT_SLAVE) && ($paramValue != $oObj->Get($sAttCode)))
 						{
 							$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
