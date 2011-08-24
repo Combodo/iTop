@@ -2151,7 +2151,9 @@ EOF
 	 */
 	 public static function GetShortcutActions($sFinalClass)
 	 {
-	 	return array('UI:Menu:New', 'UI:Menu:Modify');
+	 	$sShortcutActions = MetaModel::GetConfig()->Get('shortcut_actions');
+	 	$aShortcutActions = explode(',', $sShortcutActions);
+	 	return $aShortcutActions;
 	 }
 	
 	/**
