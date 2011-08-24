@@ -447,18 +447,18 @@ EOF
 		return str_replace($aSearches, $aReplacements, $this->Get('url_application'));
 	}
 	
-	public function GetAttributeFlags($sAttCode, &$aReasons = array())
+	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
 	{
 		if (($sAttCode == 'scope_class') && (!$this->IsNew()))
 		{
 			return OPT_ATT_READONLY;
 		}
-		return parent::GetAttributeFlags($sAttCode, $aReasons);
+		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
 	}
 		
-	public function UpdateObjectFromPostedForm($sFormPrefix = '', $sAttList = null)
+	public function UpdateObjectFromPostedForm($sFormPrefix = '', $sAttList = null, $sTargetState = '')
 	{
-		parent::UpdateObjectFromPostedForm($sFormPrefix, $sAttList);
+		parent::UpdateObjectFromPostedForm($sFormPrefix, $sAttList, $sTargetState);
 		// And now read the other post parameters...
 		$oAttributeSet = $this->Get('attribute_list');
 		$aAttributes = array();
