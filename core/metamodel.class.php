@@ -1536,11 +1536,22 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 
 	public static function Init_AddAttribute(AttributeDefinition $oAtt)
 	{
-		$sAttCode = $oAtt->GetCode();
-		if ($sAttCode == 'finalclass') throw new Exception('Using a reserved keyword in metamodel declaration: '.$sAttCode);
-		if ($sAttCode == 'friendlyname') throw new Exception('Using a reserved keyword in metamodel declaration: '.$sAttCode);
-	
 		$sTargetClass = self::GetCallersPHPClass("Init");
+
+		$sAttCode = $oAtt->GetCode();
+		if ($sAttCode == 'finalclass')
+		{
+			throw new Exception("Declaration of $sTargetClass: using the reserved keyword '$sAttCode' in attribute declaration");
+		}
+		if ($sAttCode == 'friendlyname')
+		{
+			throw new Exception("Declaration of $sTargetClass: using the reserved keyword '$sAttCode' in attribute declaration");
+		}
+		if (array_key_exists($sAttCode, self::$m_aAttribDefs[$sTargetClass]))
+		{
+			throw new Exception("Declaration of $sTargetClass: attempting to redeclare the inherited attribute '$sAttCode', originaly declared in ".self::$m_aAttribOrigins[$sTargetClass][$sAttCode]);
+		}
+	
 		// Set the "host class" as soon as possible, since HierarchicalKeys use it for their 'target class' as well
 		// and this needs to be know early (for Init_IsKnowClass 19 lines below)		
 		$oAtt->SetHostClass($sTargetClass);
