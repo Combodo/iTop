@@ -186,7 +186,8 @@ class ormCaseLog {
 	 */
 	public function GetLatestEntryIndex()
 	{
-		$iLast = end(array_keys($this->m_aIndex));
+		$aKeys = array_keys($this->m_aIndex);
+		$iLast = end($aKeys); // Strict standards: the parameter passed to 'end' must be a variable since it is passed by reference
 		return $iLast;
 	}
 }
