@@ -977,7 +977,9 @@ function AddComment($oP, $id)
 		$oP->p("<h1>".Dict::Format('UI:Class_Object_Updated', MetaModel::GetName(get_class($oRequest)), $oRequest->GetName())."</h1>\n");
 		
 		// If there is any trigger for the Portal Update, then activate them
-		$sOQL = "SELECT TriggerOnPortalUpdate WHERE target_class ='UserRequest'";
+		$aClasses = MetaModel::EnumParentClasses(get_class($oRequest), ENUM_PARENT_CLASSES_ALL);
+		$aClasses = CMDBSource::Quote($aClasses);
+		$sOQL = "SELECT TriggerOnPortalUpdate WHERE target_class IN (".implode(',', $aClasses).")";
 		$oSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL));
 		while($oTrigger = $oSet->Fetch())
 		{
