@@ -51,7 +51,7 @@ function CheckEmailSetting($oP)
 		$sPhpIniFile = 'php.ini';
 	}
 
-	$bIsWindows = (array_key_exists('WINDIR', $_SERVER));
+	$bIsWindows = (array_key_exists('WINDIR', $_SERVER) || array_key_exists('windir', $_SERVER));
 	if ($bIsWindows)
 	{	
 		$sSmtpServer = ini_get('SMTP');
