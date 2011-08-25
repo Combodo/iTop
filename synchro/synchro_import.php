@@ -143,6 +143,13 @@ $aPageParams = array
 		'default' => '',
 		'description' => 'Comment to be added into the change log',
 	),
+	'no_stop_on_import_error' => array
+	(
+		'mandatory' => false,
+		'modes' => 'http,cli',
+		'default' => '0',
+		'description' => 'Don\'t stop the import in case of SQL import error. By default the import will stop at the first error (and rollback all changes). If this flag is set to 1 the import will continue anyway',
+	),
 );
 
 function UsageAndExit($oP)
@@ -293,6 +300,7 @@ try
 //	$sReportLevel = ReadParam($oP, 'reportlevel');
 	$sSimulate = ReadParam($oP, 'simulate');
 	$sComment = ReadParam($oP, 'comment', 'raw_data');
+	$sNoStopOnImportError = ReadParam($oP, 'no_stop_on_import_error');
 
 	$oLoadStartDate = new DateTime(); // Now
 
@@ -487,7 +495,22 @@ try
 				}
 				$sValues = implode(', ', $aValues);
 				$sInsert = "INSERT INTO `$sTable` ($sInsertColumns) VALUES ($sValues)";
-				CMDBSource::Query($sInsert);
+				try
+				{
+					CMDBSource::Query($sInsert);
+				}
+				catch(Exception $e)
+				{
+					if ($sNoStopOnImportError == '1')
+					{
+						$iCountErrors++;
+						$oP->add("$iRow: Import error '".$e->getMessage()."' (continuing)...\n");
+					}
+					else // Fatal error
+					{
+						throw $e;
+					}
+				}
 			}
 			elseif ($iCount == 1)
 			{
@@ -529,7 +552,22 @@ try
 				}
 				$sValuePairs = implode(', ', $aValuePairs);
 				$sUpdateQuery = "UPDATE `$sTable` SET $sValuePairs WHERE $sReconciliationCondition";
-				CMDBSource::Query($sUpdateQuery);
+				try
+				{
+					CMDBSource::Query($sUpdateQuery);
+				}
+				catch(Exception $e)
+				{
+					if ($sNoStopOnImportError == '1')
+					{
+						$iCountErrors++;
+						$oP->add("$iRow: Import error '".$e->getMessage()."' (continuing)...\n");
+					}
+					else // Fatal error
+					{
+						throw $e;
+					}
+				}
 			}
 			else
 			{
