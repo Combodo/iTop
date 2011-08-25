@@ -175,8 +175,7 @@ class ormCaseLog {
 	 */
 	public function GetLatestEntry()
 	{
-		$iLast = count($this->m_aIndex) - 1;
-		$aLastEntry = $this->m_aIndex[$iLast];
+		$aLastEntry = end($this->m_aIndex);
 		$sRes = substr($this->m_sLog, $aLastEntry['separator_length'], $aLastEntry['text_length']);
 		return $sRes;
 	}
@@ -187,7 +186,7 @@ class ormCaseLog {
 	 */
 	public function GetLatestEntryIndex()
 	{
-		$iLast = count($this->m_aIndex) - 1;
+		$iLast = end(array_keys($this->m_aIndex));
 		return $iLast;
 	}
 }
