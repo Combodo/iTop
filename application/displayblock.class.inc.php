@@ -1229,14 +1229,21 @@ class MenuBlock extends DisplayBlock
 		}
 		$aFavoriteActions = array();
 		$aCallSpec = array($sClass, 'GetShortcutActions');
-		$aShortcutActions = call_user_func($aCallSpec, $sClass);
-		foreach ($aActions as $key => $aAction)
+		if (is_callable($aCallSpec))
 		{
-			if (in_array($key, $aShortcutActions))
+			$aShortcutActions = call_user_func($aCallSpec, $sClass);
+			foreach ($aActions as $key => $aAction)
 			{
-				$aFavoriteActions[] = $aAction;
-				unset($aActions[$key]);
+				if (in_array($key, $aShortcutActions))
+				{
+					$aFavoriteActions[] = $aAction;
+					unset($aActions[$key]);
+				}
 			}
+		}
+		else
+		{
+			$aShortcutActions = array();
 		}
 		
 		if (count($aFavoriteActions) > 0)
