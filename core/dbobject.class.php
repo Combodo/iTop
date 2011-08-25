@@ -687,6 +687,23 @@ abstract class DBObject
 		return $iFlags | $iSynchroFlags; // Combine both sets of flags
 	}
 
+	/**
+	 * Returns the set of flags (OPT_ATT_HIDDEN, OPT_ATT_READONLY, OPT_ATT_MANDATORY...)
+	 * for the given attribute for the current state of the object considered as an INITIAL state
+	 * @param string $sAttCode The code of the attribute
+	 * @return integer Flags: the binary combination of the flags applicable to this attribute
+	 */	 	  	 	
+	public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
+	{
+		$iFlags = 0;
+		$sStateAttCode = MetaModel::GetStateAttributeCode(get_class($this));
+		if (!empty($sStateAttCode))
+		{
+			$iFlags = MetaModel::GetInitialStateAttributeFlags(get_class($this), $this->Get($sStateAttCode), $sAttCode);
+		}
+		return $iFlags; // No need to care about the synchro flags since we'll be creating a new object anyway
+	}
+
 	// check if the given (or current) value is suitable for the attribute
 	// return true if successfull
 	// return the error desciption otherwise

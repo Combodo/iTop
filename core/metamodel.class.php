@@ -958,6 +958,36 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 		}
 	}
 
+	/*
+	* Enumerate all possible initial states, including the default one
+	*/
+	public static function EnumInitialStates($sClass)
+	{
+		if (array_key_exists($sClass, self::$m_aStates))
+		{
+			$aRet = array();
+			// Add the states for which the flag 'is_initial_state' is set to <true>
+			foreach(self::$m_aStates[$sClass] as $aStateCode => $aProps)
+			{
+				if (isset($aProps['initial_state_path']))
+				{
+					$aRet[$aStateCode] = $aProps['initial_state_path'];
+				}
+			}
+			// Add the default initial state
+			$sMainInitialState = self::GetDefaultState($sClass);
+			if (!isset($aRet[$sMainInitialState]))
+			{
+				$aRet[$sMainInitialState] = array();
+			}
+			return $aRet;
+		}
+		else
+		{
+			return array();
+		}
+	}
+
 	public static function EnumStimuli($sClass)
 	{
 		if (array_key_exists($sClass, self::$m_aStimuli))
@@ -1014,6 +1044,46 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 		return $iFlags;
 	}
 	
+	/**
+	 * Combines the flags from the all states that compose the initial_state_path
+	 */
+	public static function GetInitialStateAttributeFlags($sClass, $sState, $sAttCode)
+	{
+		$iFlags = self::GetAttributeFlags($sClass, $sState, $sAttCode); // Be default set the same flags as the 'target' state
+		$sStateAttCode = self::GetStateAttributeCode($sClass);
+		if (!empty($sStateAttCode))
+		{
+			$aStates = MetaModel::EnumInitialStates($sClass);
+			if (array_key_exists($sState, $aStates))
+			{
+				$bReadOnly = (($iFlags & OPT_ATT_READONLY) == OPT_ATT_READONLY);
+				$bHidden = (($iFlags & OPT_ATT_HIDDEN) == OPT_ATT_HIDDEN);
+				foreach($aStates[$sState] as $sPrevState)
+				{
+					$iPrevFlags = self::GetAttributeFlags($sClass, $sPrevState, $sAttCode);
+					$bReadOnly = $bReadOnly && (($iPrevFlags & OPT_ATT_READONLY) == OPT_ATT_READONLY); // if it is/was not readonly => then it's not
+					$bHidden = $bHidden && (($iPrevFlags & OPT_ATT_HIDDEN) == OPT_ATT_HIDDEN); // if it is/was not hidden => then it's not
+				}
+				if ($bReadOnly)
+				{
+					$iFlags = $iFlags | OPT_ATT_READONLY;
+				}
+				else
+				{
+					$iFlags = $iFlags & ~OPT_ATT_READONLY;
+				}
+				if ($bHidden)
+				{
+					$iFlags = $iFlags | OPT_ATT_HIDDEN;
+				}
+				else
+				{
+					$iFlags = $iFlags & ~OPT_ATT_HIDDEN;
+				}
+			}
+		}
+		return $iFlags;
+	}
 	//
 	// Allowed values
 	//

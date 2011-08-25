@@ -927,5 +927,6 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:FavoriteOrganizations+' => 'Check in the list below the organizations that you want to see in the drop-down menu for a quick access. '.
 								   'Note that this is not a security setting, objects from any organization are still visible and can be accessed by selecting "All Organizations" in the drop-down list.',
 	'UI:NavigateAwayConfirmationMessage' => 'Any modification will be discarded.',
+	'UI:Create_Class_InState' => 'Create the %1$s in state: ',
 ));
 ?>

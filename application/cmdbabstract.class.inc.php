@@ -214,7 +214,8 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		{
 			if ($oAttDef instanceof AttributeCaseLog)
 			{
-				$this->DisplayCaseLog($oPage, $sAttCode, '', '', $bEditMode);
+				$sComment = (isset($aExtraParams['fieldsComments'][$sAttCode])) ? $aExtraParams['fieldsComments'][$sAttCode] : '';
+				$this->DisplayCaseLog($oPage, $sAttCode, $sComment, $sPrefix, $bEditMode);
 			}
 		}
 
@@ -253,7 +254,14 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 			$oPage->SetCurrentTab($oAttDef->GetLabel().$sCount);
 			if ($bEditMode)
 			{
-				$iFlags = $this->GetAttributeFlags($sAttCode);
+				if ($this->IsNew())
+				{
+					$iFlags = $this->GetInitialStateAttributeFlags($sAttCode);
+				}
+				else
+				{
+					$iFlags = $this->GetAttributeFlags($sAttCode);
+				}
 				$sInputId = $this->m_iFormId.'_'.$sAttCode;
 				if (get_class($oAttDef) == 'AttributeLinkedSet')
 				{
@@ -448,7 +456,18 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 
 						$sComments = isset($aFieldsComments[$sAttCode]) ? $aFieldsComments[$sAttCode] : '&nbsp;';
 						$sInfos = '&nbsp;';
-						$iFlags = $this->GetAttributeFlags($sAttCode);
+						if ($this->IsNew())
+						{
+							$iFlags = $this->GetInitialStateAttributeFlags($sAttCode);
+						}
+						else
+						{
+							$iFlags = $this->GetAttributeFlags($sAttCode);
+						}
+						if (($iFlags & OPT_ATT_MANDATORY) && $this->IsNew())
+						{
+							$iFlags = $iFlags & ~OPT_ATT_READONLY; // Mandatory fields cannot be read-only when creating an object
+						}
 						$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 						if ( (!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0))
 						{
@@ -1728,8 +1747,9 @@ EOF
 		}
 
 		$aTransitions = $this->EnumTransitions();
-		if (count($aTransitions))
+		if (!isset($aExtraParams['custom_operation']) && count($aTransitions))
 		{
+			// transitions are displayed only for the standard new/modify actions, not for modify_all or any other case...
 			$oSetToCheckRights = DBObjectSet::FromObject($this);
 			$aStimuli = Metamodel::EnumStimuli($sClass);
 			foreach($aTransitions as $sStimulusCode => $aTransitionDef)
@@ -1748,9 +1768,31 @@ EOF
 		}
 				
 		$sButtonsPosition = MetaModel::GetConfig()->Get('buttons_position');
-		$iTransactionId = utils::GetNewTransactionId();
+		$iTransactionId = isset($aExtraParams['transaction_id']) ? $aExtraParams['transaction_id'] : utils::GetNewTransactionId();
 		$oPage->SetTransactionId($iTransactionId);
 		$oPage->add("<form action=\"$sFormAction\" id=\"form_{$this->m_iFormId}\" enctype=\"multipart/form-data\" method=\"post\" onSubmit=\"return OnSubmit('form_{$this->m_iFormId}');\">\n");
+		$sStatesSelection = '';
+		if (!isset($aExtraParams['custom_operation']) && $this->IsNew())
+		{
+			$aInitialStates = MetaModel::EnumInitialStates($sClass);
+			//$aInitialStates = array('new' => 'foo', 'closed' => 'bar');
+			if (count($aInitialStates) > 1)
+			{
+				$sStatesSelection = Dict::Format('UI:Create_Class_InState', MetaModel::GetName($sClass)).'<select name="obj_state" class="state_select_'.$this->m_iFormId.'">';
+				foreach($aInitialStates as $sStateCode => $sStateData)
+				{
+					$sSelected = '';
+					if ($sStateCode == $this->GetState())
+					{
+						$sSelected = ' selected';
+					}
+					$sStatesSelection .= '<option value="'.$sStateCode.'"'.$sSelected.'>'.MetaModel::GetStateLabel($sClass, $sStateCode).'</option>';
+				}
+				$sStatesSelection .= '</select>';
+				$oPage->add_ready_script("$('.state_select_{$this->m_iFormId}').change( function() { oWizardHelper$sPrefix.ReloadObjectCreationForm('form_{$this->m_iFormId}', $(this).val()); } );");
+			}
+		}
+
 		$sConfirmationMessage = addslashes(Dict::S('UI:NavigateAwayConfirmationMessage'));
 		$oPage->add_ready_script(
 <<<EOF
@@ -1768,6 +1810,7 @@ EOF
 		if ($sButtonsPosition != 'bottom')
 		{
 			// top or both, display the buttons here
+			$oPage->p($sStatesSelection);
 			$oPage->add($sButtons);
 		}
 
@@ -1793,6 +1836,7 @@ EOF
 		if ($sButtonsPosition != 'top')
 		{
 			// bottom or both: display the buttons here
+			$oPage->p($sStatesSelection);
 			$oPage->add($sButtons);
 		}
 
@@ -1829,6 +1873,7 @@ EOF
 		$sClass = ($oObjectToClone == null) ? $sClass : get_class($oObjectToClone);
 		$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
 		$aStates = MetaModel::EnumStates($sClass);
+		$sStatesSelection = '';
 		
 		if ($oObjectToClone == null)
 		{
@@ -1843,6 +1888,7 @@ EOF
 		{
 			$oObj = clone $oObjectToClone;
 		}
+
 		// Pre-fill the object with default values, when there is only on possible choice
 		// AND the field is mandatory (otherwise there is always the possiblity to let it empty)
 		$aArgs['this'] = $oObj;
@@ -1867,7 +1913,7 @@ EOF
 				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 
 				// If the field is mandatory, set it to the only possible value
-				$iFlags = $oObj->GetAttributeFlags($sAttCode);
+				$iFlags = $oObj->GetInitialStateAttributeFlags($sAttCode);
 				if ((!$oAttDef->IsNullAllowed()) || ($iFlags & OPT_ATT_MANDATORY))
 				{
 					if ($oAttDef->IsExternalKey())
@@ -1977,7 +2023,14 @@ EOF
 	protected function GetFieldAsHtml($sClass, $sAttCode, $sStateAttCode)
 	{
 		$retVal = null;
-		$iFlags = $this->GetAttributeFlags($sAttCode);
+		if ($this->IsNew())
+		{
+			$iFlags = $this->GetInitialStateAttributeFlags($sAttCode);
+		}
+		else
+		{
+			$iFlags = $this->GetAttributeFlags($sAttCode);
+		}
 		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 		if ( (!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0) )
 		{
@@ -2189,8 +2242,15 @@ EOF
 			// WARNING: if you change this also check the functions DisplayModifyForm and DisplayCaseLog
 			foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef)
 			{
-				$aVoid = array();
-				$iFlags = $this->GetAttributeFlags($sAttCode, $aVoid, $sTargetState);
+				if ($this->IsNew())
+				{
+					$iFlags = $this->GetInitialStateAttributeFlags($sAttCode);
+				}
+				else
+				{
+					$aVoid = array();
+					$iFlags = $this->GetAttributeFlags($sAttCode, $aVoid, $sTargetState);
+				}
 				if ($oAttDef instanceof AttributeCaseLog)
 				{
 					if (!($iFlags & (OPT_ATT_HIDDEN|OPT_ATT_SLAVE|OPT_ATT_READONLY)))
@@ -2206,8 +2266,15 @@ EOF
 		{
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
 			
-			$aVoid = array();
-			$iFlags = $this->GetAttributeFlags($sAttCode, $aVoid, $sTargetState);
+			if ($this->IsNew())
+			{
+				$iFlags = $this->GetInitialStateAttributeFlags($sAttCode);
+			}
+			else
+			{
+				$aVoid = array();
+				$iFlags = $this->GetAttributeFlags($sAttCode, $aVoid, $sTargetState);
+			}
 			if ($oAttDef->IsWritable())
 			{
 				if ( $iFlags & (OPT_ATT_HIDDEN | OPT_ATT_READONLY))
@@ -2532,7 +2599,14 @@ EOF
 	{
 		$oPage->SetCurrentTab(Dict::S('UI:PropertiesTab'));
 		$sClass = get_class($this);
-		$iFlags = $this->GetAttributeFlags($sAttCode);
+		if ($this->IsNew())
+		{
+			$iFlags = $this->GetInitialStateAttributeFlags($sAttCode);
+		}
+		else
+		{
+			$iFlags = $this->GetAttributeFlags($sAttCode);
+		}
 		if ( $iFlags & OPT_ATT_HIDDEN)
 		{
 			// The case log is hidden do nothing
@@ -2544,7 +2618,7 @@ EOF
 			
 			if ((!$bEditMode) || ($iFlags & (OPT_ATT_READONLY|OPT_ATT_SLAVE)))
 			{
-				// Check if the attribute is not read-only becuase of a synchro...
+				// Check if the attribute is not read-only because of a synchro...
 				$aReasons = array();
 				$sSynchroIcon = '';
 				if ($iFlags & OPT_ATT_SLAVE)
@@ -2570,12 +2644,17 @@ EOF
 				$sValue = $this->Get($sAttCode);
 				$sDisplayValue = $this->GetEditValue($sAttCode);
 				$aArgs = array('this' => $this, 'formPrefix' => $sPrefix);
-				$sHTMLValue = "<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
+				$sHTMLValue = '';
+				if ($sComment != '')
+				{
+					$sHTMLValue = '<span>'.$sComment.'</span><br/>';
+				}
+				$sHTMLValue .= "<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
 				$aFieldsMap[$sAttCode] = $sInputId;
 				
 			}
 			//$aVal = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>', 'value' => $sHTMLValue, 'comments' => $sComments, 'infos' => $sInfos);
-			$oPage->add('<fieldset><legend>'.$oAttDef->GetLabel().'&nbsp<span>'.$sComment.'</span></legend>');
+			$oPage->add('<fieldset><legend>'.$oAttDef->GetLabel().'</legend>');
 			$oPage->add($sHTMLValue);
 			$oPage->add('</fieldset>');
 		}

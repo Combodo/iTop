@@ -96,11 +96,11 @@ class WebPage
     }
     
 	/**
-	 * Add any text or HTML fragment at the end of the body of the page
+	 * Add any text or HTML fragment (identified by an ID) at the end of the body of the page
 	 * This is useful to add hidden content, DIVs or FORMs that should not
 	 * be embedded into each other.	 	 
 	 */
-    public function add_at_the_end($s_html)
+    public function add_at_the_end($s_html, $sId = '')
     {
         $this->s_deferred_content .= $s_html;
     }

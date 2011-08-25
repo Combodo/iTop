@@ -243,7 +243,7 @@ EOF
 		$sHtmlValue .= "&nbsp;&nbsp;&nbsp;<input id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_btnAdd\" type=\"button\" value=\"".Dict::Format('UI:AddLinkedObjectsOf_Class', MetaModel::GetName($this->m_sRemoteClass))."\" onClick=\"oWidget{$this->m_iInputId}.AddObjects();\"></span>\n";
 		$sHtmlValue .= "<span style=\"clear:both;\"><p>&nbsp;</p></span>\n";
 		$sHtmlValue .= "</div>\n";
-		$oPage->add_at_the_end($this->GetObjectPickerDialog($oPage)); // To prevent adding forms inside the main form
+		$oPage->add_at_the_end($this->GetObjectPickerDialog($oPage), "dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}"); // To prevent adding forms inside the main form
 		return $sHtmlValue;
 	}
 	         

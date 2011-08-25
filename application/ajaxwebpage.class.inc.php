@@ -193,7 +193,7 @@ EOF
         if (!empty($this->s_deferred_content))
         {
             echo "<script type=\"text/javascript\">\n";
-            echo "\$('body').append('".$this->s_deferred_content."');\n";
+            echo "\$('body').append('".addslashes(str_replace("\n", '', $this->s_deferred_content))."');\n";
             echo "\n</script>\n";
         }
         if (!empty($this->m_sReadyScript))
@@ -228,6 +228,20 @@ EOF
         {
             parent::add($sHtml);
         }
+    }
+
+	/**
+	 * Add any text or HTML fragment (identified by an ID) at the end of the body of the page
+	 * This is useful to add hidden content, DIVs or FORMs that should not
+	 * be embedded into each other.	 	 
+	 */
+    public function add_at_the_end($s_html, $sId = '')
+    {
+    	if ($sId != '')
+    	{
+	    	$this->add_script("$('#{$sId}').remove();"); // Remove any previous instance of the same Id
+    	}
+        $this->s_deferred_content .= $s_html;
     }
 	
 	/**

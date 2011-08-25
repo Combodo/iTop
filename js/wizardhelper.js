@@ -189,4 +189,21 @@ function WizardHelper(sClass, sFormPrefix, sState)
 		}
 		this.AjaxQueryServer();
 	}
+	
+	this.ReloadObjectCreationForm = function(sFormId, sTargetState)
+	{
+		$('#'+sFormId).block();
+		this.UpdateWizard();
+		this.ResetQuery();
+		var sTransactionId = $('input[name=transaction_id]').val();
+		$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
+			{ json_obj: this.ToJSON(), operation: 'obj_creation_form', target_state: sTargetState, transaction_id: sTransactionId },
+			function(data)
+			{
+				$('#'+sFormId).html(data);
+				onDelayedReady();
+				$('#'+sFormId).unblock();
+			}
+		);		
+	}
 }

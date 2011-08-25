@@ -835,6 +835,10 @@ try
 					if ($oAttDef->IsScalar() && $oAttDef->IsWritable())
 					{
 						$currValue = $oObj->Get($sAttCode);
+						if ($oAttDef instanceof AttributeCaseLog)
+						{
+							$currValue = '';
+						}
 						if (is_object($currValue)) continue; // Skip non scalar values...
 						if(!array_key_exists($currValue, $aValues[$sAttCode]))
 						{
@@ -1365,6 +1369,12 @@ EOF
 		else
 		{
 			$oObj = MetaModel::NewObject($sClass);
+			$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
+			if (!empty($sStateAttCode))
+			{
+				$sTargetState = utils::ReadPostedParam('obj_state', '');
+				$oObj->Set($sStateAttCode, $sTargetState);
+			}
 			$oObj->UpdateObjectFromPostedForm();
 		}
 		if (isset($oObj) && is_object($oObj))

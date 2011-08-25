@@ -335,7 +335,14 @@ try
 			$sId = $oWizardHelper->GetIdForField($sAttCode);
 			if ($sId != '')
 			{
-				$iFlags = $oObj->GetAttributeFlags($sAttCode);
+				if ($oObj->IsNew())
+				{
+					$iFlags = $oObj->GetInitialStateAttributeFlags($sAttCode);
+				}
+				else
+				{
+					$iFlags = $oObj->GetAttributeFlags($sAttCode);
+				}
 				if ($iFlags & OPT_ATT_READONLY)
 				{
 					$sHTMLValue = "<span id=\"field_{$sId}\">".$oObj->GetAsHTML($sAttCode);
@@ -360,7 +367,19 @@ try
 		}
 		$oPage->add_script("oWizardHelper{$sFormPrefix}.m_oData=".$oWizardHelper->ToJSON().";\noWizardHelper{$sFormPrefix}.UpdateFields();\n");
 		break;
-			
+		
+		case 'obj_creation_form':
+		$oPage->SetContentType('text/html');
+		$sJson = utils::ReadParam('json_obj', '', false, 'raw_data');
+		$oWizardHelper = WizardHelper::FromJSON($sJson);
+		$oObj = $oWizardHelper->GetTargetObject(); 
+		$sClass = $oWizardHelper->GetTargetClass();
+		$sTargetState = utils::ReadParam('target_state', '');
+		$iTransactionId = utils::ReadParam('transaction_id', '');
+		$oObj->Set(MetaModel::GetStateAttributeCode($sClass), $sTargetState);
+		cmdbAbstractObject::DisplayCreationForm($oPage, $sClass, $oObj, array(), array('action' => utils::GetAbsoluteUrlAppRoot().'pages/UI.php', 'transcation_id' => $iTransactionId)); 
+		break;
+		
 		// DisplayBlock
 		case 'ajax':
 		$oPage->SetContentType('text/html');

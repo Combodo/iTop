@@ -777,5 +777,6 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:FavoriteOrganizations+' => 'Cochez dans la liste ci-dessous les organisations que vous voulez voir listées dans le menu principal. '.
 								   'Ceci n\'est pas un réglage de sécurité. Les objets de toutes les organisations sont toujours visibles en choisissant "Toutes les Organisations" dans le menu.',
 	'UI:NavigateAwayConfirmationMessage' => 'Toute modification sera perdue.',
+	'UI:Create_Class_InState' => 'Créer l\'objet %1$s dans l\'état: ',
 ));
 ?>
