@@ -650,6 +650,16 @@ EOF
 		$iChangeId = $oMyChange->DBInsert();
 		$oObj->DBUpdateTracked($oMyChange);
 		
+		// Trigger ?
+		//
+		$aClasses = MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL);
+		$sClassList = implode(", ", CMDBSource::Quote($aClasses));
+		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnPortalUpdate AS t WHERE t.target_class IN ($sClassList)"));
+		while ($oTrigger = $oSet->Fetch())
+		{
+			$oTrigger->DoActivate($oObj->ToArgs('this'));
+		}
+
 		$this->p("<h1>".Dict::Format('UI:Class_Object_Updated', MetaModel::GetName(get_class($oObj)), $oObj->GetName())."</h1>\n");
 	}
 
