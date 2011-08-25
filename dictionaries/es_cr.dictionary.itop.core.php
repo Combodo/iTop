@@ -29,7 +29,7 @@
 //////////////////////////////////////////////////////////////////////
 //
 
-Dict::Add('ES CR', 'English', 'English', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Core:AttributeLinkedSet' => 'Array of objects',
 	'Core:AttributeLinkedSet+' => 'Any kind of objects [subclass] of the same class',
 
