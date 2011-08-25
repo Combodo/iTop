@@ -1586,6 +1586,13 @@ abstract class DBObject
 					$aScalarArgs[$sArgName.'->html('.$sAttCode.')'] = $sAsHtml;
 					$aScalarArgs[$sArgName.'->label('.$sAttCode.')'] = strip_tags($sAsHtml);
 				}
+				// Do something for case logs... quick N' dirty...
+				if ($aScalarArgs[$sArgName.'->'.$sAttCode] instanceof ormCaseLog)
+				{
+					$oCaseLog = $aScalarArgs[$sArgName.'->'.$sAttCode];
+					$aScalarArgs[$sArgName.'->'.$sAttCode] = $oCaseLog->GetText();
+					$aScalarArgs[$sArgName.'->head('.$sAttCode.')'] = $oCaseLog->GetLatestEntry();
+				}
 			}
 			$this->m_aAsArgs = $aScalarArgs;
 			$oKPI->ComputeStats('ToArgs', get_class($this));
