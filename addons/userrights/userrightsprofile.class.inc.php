@@ -598,7 +598,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 
 	protected $m_aProfiles; // id -> object
 	protected $m_aUserProfiles; // userid,profileid -> object
-	protected $m_aUserOrgs; // userid,orgid -> object
+	protected $m_aUserOrgs; // userid -> orgid
 
 	// Those arrays could be completed on demand (inheriting parent permissions)
 	protected $m_aClassActionGrants = null; // profile, class, action -> actiongrantid (or false if NO, or null/missing if undefined)
@@ -606,6 +606,11 @@ class UserRightsProfile extends UserRightsAddOnAPI
 
 	// Built on demand, could be optimized if necessary (doing a query for each attribute that needs to be read)
 	protected $m_aObjectActionGrants = array();
+
+	protected function GetUserOrgs($oUser, $sClass)
+	{
+		return @$this->m_aUserOrgs[$oUser->GetKey()];
+	}
 
 	public function ResetCache()
 	{
@@ -678,7 +683,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		$this->m_aUserOrgs = array();
 		while ($oUserOrg = $oUserOrgSet->Fetch())
 		{
-			$this->m_aUserOrgs[$oUserOrg->Get('userid')][$oUserOrg->Get('allowed_org_id')] = $oUserOrg;
+			$this->m_aUserOrgs[$oUserOrg->Get('userid')][] = $oUserOrg->Get('allowed_org_id');
 		}
 
 		$this->m_aClassStimulusGrants = array();
@@ -776,8 +781,8 @@ exit;
 		}
 		// Position the user
 		//
-		@$aUserOrgs = $this->m_aUserOrgs[$oUser->GetKey()];
-		if (!isset($aUserOrgs) || count($aUserOrgs) == 0)
+		$aUserOrgs = $this->GetUserOrgs($oUser, $sClass);
+		if (is_null($aUserOrgs) || count($aUserOrgs) == 0)
 		{
 			// No position means 'Everywhere'
 			return true;
@@ -785,8 +790,7 @@ exit;
 
 		$oExpression = new FieldExpression($sAttCode, $sClass);
 		$oFilter  = new DBObjectSearch($sClass);
-		$aIds = array_keys($aUserOrgs);
-		$oListExpr = ListExpression::FromScalars($aIds);
+		$oListExpr = ListExpression::FromScalars($aUserOrgs);
 		
 		// Check if the condition points to a hierarchical key
 		$bConditionAdded = false;
