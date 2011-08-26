@@ -105,7 +105,7 @@ function sprintf(format, etc) {
 				$(':input[name^=storedSelection]', pager).remove();
 			}
 			
-			function updateSelection(table, pager, id, value)
+			function storeSelection(table, pager, id, value)
 			{
 				var valueToStore = value;
 				if (table.config.selectionMode == 'negative')
@@ -130,6 +130,12 @@ function sprintf(format, etc) {
 						$('#'+id, pager).remove();
 					}
 				}
+				updateCounter(table, pager);
+			}
+			
+			function loadSelection(table, pager)
+			{
+				table.config.selectionMode = $(pager).find(':input[name=selectionMode]').val();
 				updateCounter(table, pager);
 			}
 			
@@ -205,53 +211,7 @@ function sprintf(format, etc) {
 							}
 							
 							fixPosition(table,tableBody);
-							if (c.selectionMode == 'negative')
-							{
-								$(table).find(':checkbox[name^=selectObj]').attr('checked', true);
-							}
-							
-							if (table.config.select_mode == 'multiple')
-							{
-								$(table).find(':checkbox[name^=selectObj]').each(function() {
-									var id = parseInt(this.value, 10);
-									if ($('#'+id, table.config.container).length > 0)
-									{
-										if (c.selectionMode == 'positive')
-										{
-											$(this).attr('checked', true);
-										}
-										else
-										{
-											$(this).attr('checked', false);
-										}
-									}
-								});
-	
-								$(table).find(':checkbox[name^=selectObj]').change(function() {
-									updateSelection(table, table.config.container, this.value, this.checked);
-								});
-							}
-							else if (table.config.select_mode == 'single')
-							{
-								$(table).find('input[name^=selectObject]:radio').each(function() {
-									var id = parseInt(this.value, 10);
-									if ($('#'+id, table.config.container).length > 0)
-									{
-										if (c.selectionMode == 'positive')
-										{
-											$(this).attr('checked', true);
-										}
-										else
-										{
-											$(this).attr('checked', false);
-										}
-									}
-								});
-	
-								$(table).find('input[name^=selectObject]:radio').change(function() {
-									updateSelection(table, table.config.container, this.value, this.checked);
-								});
-							}
+							applySelection(table);
 							
 							$(table).trigger("applyWidgets");
 							
@@ -265,6 +225,58 @@ function sprintf(format, etc) {
 							$(table).tableHover();
 							$('#loading', table.config.container).empty();
 					   });
+			}
+			
+			function applySelection(table)
+			{
+				var c = table.config;
+				if (c.selectionMode == 'negative')
+				{
+					$(table).find(':checkbox[name^=selectObj]').attr('checked', true);
+				}
+				
+				if (table.config.select_mode == 'multiple')
+				{
+					$(table).find(':checkbox[name^=selectObj]').each(function() {
+						var id = parseInt(this.value, 10);
+						if ($('#'+id, table.config.container).length > 0)
+						{
+							if (c.selectionMode == 'positive')
+							{
+								$(this).attr('checked', true);
+							}
+							else
+							{
+								$(this).attr('checked', false);
+							}
+						}
+					});
+
+					$(table).find(':checkbox[name^=selectObj]').change(function() {
+						storeSelection(table, table.config.container, this.value, this.checked);
+					});
+				}
+				else if (table.config.select_mode == 'single')
+				{
+					$(table).find('input[name^=selectObject]:radio').each(function() {
+						var id = parseInt(this.value, 10);
+						if ($('#'+id, table.config.container).length > 0)
+						{
+							if (c.selectionMode == 'positive')
+							{
+								$(this).attr('checked', true);
+							}
+							else
+							{
+								$(this).attr('checked', false);
+							}
+						}
+					});
+
+					$(table).find('input[name^=selectObject]:radio').change(function() {
+						storeSelection(table, table.config.container, this.value, this.checked);
+					});
+				}
 			}
 			
 			function renderPager(table, pager)
@@ -400,9 +412,13 @@ function sprintf(format, etc) {
 					$(table).find(':checkbox.checkAll').removeAttr('onclick').click(function() {
 						return checkAll(table, pager, this.checked);
 					});
+
+					$(table).bind('load_selection', function() {
+						loadSelection(table, pager);
+						applySelection(table);
+					});
 				});
 			};
-			
 		}
 	});
 	// extend plugin scope
