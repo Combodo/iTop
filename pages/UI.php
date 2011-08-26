@@ -1373,7 +1373,10 @@ EOF
 			if (!empty($sStateAttCode))
 			{
 				$sTargetState = utils::ReadPostedParam('obj_state', '');
-				$oObj->Set($sStateAttCode, $sTargetState);
+				if ($sTargetState != '')
+				{
+					$oObj->Set($sStateAttCode, $sTargetState);
+				}
 			}
 			$oObj->UpdateObjectFromPostedForm();
 		}
