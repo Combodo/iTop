@@ -63,7 +63,20 @@ function DisplayPreferences($oP)
 		// All checked
 		$oP->add_ready_script(
 <<<EOF
+	var pager = $('#user_prefs form .pager');
+	if (pager.length > 0)
+	{
+		console.log("PAGINATED display");
+		// paginated display, restore the selection
+		$(':input[name=selectionMode]', pager).val('negative');
+		$('#user_prefs table.listResults').trigger('load_selection');
+		
+	}
+	else
+	{
+		console.log("Non-paginated display");
 		CheckAll('#user_prefs .listResults :checkbox:not(:disabled)', true);
+	}
 EOF
 );
 	}
@@ -72,15 +85,32 @@ EOF
 		$sChecked = implode('","', $aFavoriteOrgs);
 		$oP->add_ready_script(
 <<<EOF
-	$('#user_prefs form :checkbox[name^=selectObject]').each( function()
+	var aChecked = ["$sChecked"];
+	var pager = $('#user_prefs form .pager');
+	if (pager.length > 0)
+	{
+		console.log("PAGINATED display");
+		// paginated display, restore the selection
+		$(':input[name=selectionMode]', pager).val('positive');
+		for (i=0; i<aChecked.length; i++)
 		{
-			var aChecked = ["$sChecked"];
-			if ($.inArray($(this).val(), aChecked) > -1)
+			pager.append('<input type="hidden" name="storedSelection[]" id="'+aChecked[i]+'" value="'+aChecked[i]+'"/>');
+		}
+		$('#user_prefs table.listResults').trigger('load_selection');
+		
+	}
+	else
+	{
+		console.log("Non-paginated display");
+		$('#user_prefs form :checkbox[name^=selectObject]').each( function()
 			{
-				$(this).attr('checked', true);
-				$(this).trigger('change');
-			}
-		});
+				if ($.inArray($(this).val(), aChecked) > -1)
+				{
+					$(this).attr('checked', true);
+					$(this).trigger('change');
+				}
+			});
+	}
 EOF
 );
 	}}
