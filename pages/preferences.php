@@ -63,18 +63,16 @@ function DisplayPreferences($oP)
 		// All checked
 		$oP->add_ready_script(
 <<<EOF
-	var pager = $('#user_prefs form .pager');
-	if (pager.length > 0)
+	if ($('#user_prefs table.pagination').length > 0)
 	{
-		console.log("PAGINATED display");
 		// paginated display, restore the selection
+		var pager = $('#user_prefs form .pager');
 		$(':input[name=selectionMode]', pager).val('negative');
 		$('#user_prefs table.listResults').trigger('load_selection');
 		
 	}
 	else
 	{
-		console.log("Non-paginated display");
 		CheckAll('#user_prefs .listResults :checkbox:not(:disabled)', true);
 	}
 EOF
@@ -86,11 +84,10 @@ EOF
 		$oP->add_ready_script(
 <<<EOF
 	var aChecked = ["$sChecked"];
-	var pager = $('#user_prefs form .pager');
-	if (pager.length > 0)
+	if ($('#user_prefs table.pagination').length > 0)
 	{
-		console.log("PAGINATED display");
 		// paginated display, restore the selection
+		var pager = $('#user_prefs form .pager');
 		$(':input[name=selectionMode]', pager).val('positive');
 		for (i=0; i<aChecked.length; i++)
 		{
@@ -101,7 +98,6 @@ EOF
 	}
 	else
 	{
-		console.log("Non-paginated display");
 		$('#user_prefs form :checkbox[name^=selectObject]').each( function()
 			{
 				if ($.inArray($(this).val(), aChecked) > -1)
