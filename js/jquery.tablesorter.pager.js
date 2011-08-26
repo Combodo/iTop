@@ -387,7 +387,7 @@ function sprintf(format, etc) {
 					
 					$(this).trigger("appendCache");
 					
-					config.size = parseInt($(".pagesize",pager).val());
+					setPageSize(table,parseInt($(".pagesize",pager).val()));
 					
 					$(config.cssFirst,pager).click(function() {
 						moveToFirstPage(table);
