@@ -677,7 +677,7 @@ function CreateDatabaseStructure(Config $oConfig, $aSelectedModules, $sMode)
 			MetaModel::DBCreate();
 			SetupWebPage::log_ok("Database structure successfully created.");
 			// Check (and update only if it seems needed) the hierarchical keys
-			MetaModel::CheckHKeys(false /* bDiagnosticsOnly */, false /* bVerbose*/, false /* bForceUpdate */);
+			MetaModel::CheckHKeys(false /* bDiagnosticsOnly */, false /* bVerbose*/, true /* bForceUpdate */); // Since in 1.2-beta the detection was buggy, let's force the rebuilding of HKeys
 		}
 		else
 		{
