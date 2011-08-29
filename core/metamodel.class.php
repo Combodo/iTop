@@ -3582,6 +3582,7 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 				$oFilter->AllowAllData();
 				$sSQL = self::MakeSelectQuery($oFilter);
 				$aErrors[$sClass]['*'][] = "Missing view for class: $sClass";
+				$aSugFix[$sClass]['*'][] = "DROP VIEW IF EXISTS `$sView`";
 				$aSugFix[$sClass]['*'][] = "CREATE VIEW `$sView` AS $sSQL";
 			}
 		}
