@@ -675,9 +675,19 @@ function CreateDatabaseStructure(Config $oConfig, $aSelectedModules, $sMode)
 		if (MetaModel::DBExists(/* bMustBeComplete */ false))
 		{
 			MetaModel::DBCreate();
-			SetupWebPage::log_ok("Database structure successfully created.");
+			SetupWebPage::log_ok("Database structure successfully updated.");
+
 			// Check (and update only if it seems needed) the hierarchical keys
-			MetaModel::CheckHKeys(false /* bDiagnosticsOnly */, false /* bVerbose*/, true /* bForceUpdate */); // Since in 1.2-beta the detection was buggy, let's force the rebuilding of HKeys
+			ob_start();
+			MetaModel::CheckHKeys(false /* bDiagnosticsOnly */, true /* bVerbose*/, true /* bForceUpdate */); // Since in 1.2-beta the detection was buggy, let's force the rebuilding of HKeys
+			$sFeedback = ob_get_clean();
+			SetupWebPage::log_ok("Hierchical keys rebuilt: $sFeedback");
+
+			// Check (and fix) data sync configuration
+			ob_start();
+			MetaModel::CheckDataSources(false /*$bDiagnostics*/, true/*$bVerbose*/);
+			$sFeedback = ob_get_clean();
+			SetupWebPage::log_ok("Data sources checked: $sFeedback");
 		}
 		else
 		{
