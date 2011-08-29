@@ -696,10 +696,10 @@ EOF
 		$aColumns = $this->GetSQLColumns();
 		$aResult = array();
 
-		$sTriggerInsert = "CREATE TRIGGER `{$sTable}_bi` BEFORE INSERT ON $sTable";
+		$sTriggerInsert = "CREATE TRIGGER `{$sTable}_bi` BEFORE INSERT ON `$sTable`";
 		$sTriggerInsert .= "   FOR EACH ROW";
 		$sTriggerInsert .= "   BEGIN";
-		$sTriggerInsert .= "      INSERT INTO {$sReplicaTable} (sync_source_id, status_last_seen, `status`) VALUES ({$this->GetKey()}, NOW(), 'new');";
+		$sTriggerInsert .= "      INSERT INTO `{$sReplicaTable}` (`sync_source_id`, `status_last_seen`, `status`) VALUES ({$this->GetKey()}, NOW(), 'new');";
 		$sTriggerInsert .= "      SET NEW.id = LAST_INSERT_ID();";
 		$sTriggerInsert .= "   END;";
 		$aResult['bi'] = $sTriggerInsert;
@@ -717,20 +717,20 @@ EOF
 		// status is forced to "new" if the replica was obsoleted directly from the state "new" (dest_id = null)
 		// otherwise, if status was either 'obsolete' or 'synchronized' it is turned into 'modified' or 'synchronized' depending on the changes
 		// otherwise, the status is left as is
-		$sTriggerUpdate = "CREATE TRIGGER `{$sTable}_bu` BEFORE UPDATE ON $sTable";
+		$sTriggerUpdate = "CREATE TRIGGER `{$sTable}_bu` BEFORE UPDATE ON `$sTable`";
 		$sTriggerUpdate .= "   FOR EACH ROW";
 		$sTriggerUpdate .= "   BEGIN";
 		$sTriggerUpdate .= "      IF @itopuser is null THEN";
-		$sTriggerUpdate .= "         UPDATE {$sReplicaTable} SET status_last_seen = NOW(), `status` = IF(`status` = 'obsolete', IF(`dest_id` IS NULL, 'new', 'modified'), IF(`status` IN ('synchronized') AND ($sIsModified), 'modified', `status`)) WHERE sync_source_id = {$this->GetKey()} AND id = OLD.id;";
+		$sTriggerUpdate .= "         UPDATE `{$sReplicaTable}` SET status_last_seen = NOW(), `status` = IF(`status` = 'obsolete', IF(`dest_id` IS NULL, 'new', 'modified'), IF(`status` IN ('synchronized') AND ($sIsModified), 'modified', `status`)) WHERE sync_source_id = {$this->GetKey()} AND id = OLD.id;";
 		$sTriggerUpdate .= "         SET NEW.id = OLD.id;"; // make sure this id won't change
 		$sTriggerUpdate .= "      END IF;";
 		$sTriggerUpdate .= "   END;";
 		$aResult['bu'] = $sTriggerUpdate;
 
-		$sTriggerDelete = "CREATE TRIGGER `{$sTable}_ad` AFTER DELETE ON $sTable";
+		$sTriggerDelete = "CREATE TRIGGER `{$sTable}_ad` AFTER DELETE ON `$sTable`";
 		$sTriggerDelete .= "   FOR EACH ROW";
 		$sTriggerDelete .= "   BEGIN";
-		$sTriggerDelete .= "      DELETE FROM {$sReplicaTable} WHERE id = OLD.id;";
+		$sTriggerDelete .= "      DELETE FROM `{$sReplicaTable}` WHERE id = OLD.id;";
 		$sTriggerDelete .= "   END;";
 		$aResult['ad'] = $sTriggerDelete;
 		return $aResult;
@@ -762,64 +762,91 @@ EOF
 
 		while($oAttribute = $oAttributeSet->Fetch())
 		{
-			$aAttributes[$oAttribute->Get('attcode')] = $oAttribute;
+			$sAttCode = $oAttribute->Get('attcode');
+			if (MetaModel::IsValidAttCode($this->GetTargetClass(), $sAttCode))
+			{ 
+				$aAttributes[$sAttCode] = $oAttribute;
+			}
+			else
+			{
+				// Old field remaining
+				if ($bVerbose)
+				{
+					echo "Irrelevant field description for the field '$sAttCode', for the data synchro task ".$this->GetName()." (".$this->GetKey()."), will be removed.\n";
+				}
+				$bFixNeeded = true;
+				if (!$bDiagnostics)
+				{
+					if ($oChange == null)
+					{
+						$oChange = MetaModel::NewObject("CMDBChange");
+						$oChange->Set("date", time());
+						$sUserString = CMDBChange::GetCurrentUserName();
+						$oChange->Set("userinfo", $sUserString);
+						$oChange->DBInsert();	
+					}
+					// Fix the issue
+					$oAttribute->DBDeleteTracked($oChange);
+				}
+			}
+
 		}
 
-		foreach(MetaModel::ListAttributeDefs($this->GetTargetClass()) as $sAttCode=>$oAttDef)
+		foreach($this->ListTargetAttributes() as $sAttCode=>$oAttDef)
 		{
-			if ($oAttDef->IsWritable())
+			if (!isset($aAttributes[$sAttCode]))
 			{
-				if (!isset($aAttributes[$sAttCode]))
+				$bFixNeeded = true;
+				$aMissingFields[] = $sAttCode;
+				// New field missing...
+				if ($bVerbose)
 				{
-					$bFixNeeded = true;
-					$aMissingFields[] = $sAttCode;
-					// New field missing...
-					if ($bDiagnostics)
+					echo "Missing field description for the field '$sAttCode', for the data synchro task ".$this->GetName()." (".$this->GetKey()."), will be created with default values.\n";
+				}
+				if (!$bDiagnostics)
+				{
+					if ($oChange == null)
 					{
-						// Report the issue
-						if ($bVerbose)
-						{
-							echo "Missing field description for the field '$sAttCode', for the data synchro task ".$this->GetName()." (".$this->GetKey()."), will be created with default values.\n";
-						}
+						$oChange = MetaModel::NewObject("CMDBChange");
+						$oChange->Set("date", time());
+						$sUserString = CMDBChange::GetCurrentUserName();
+						$oChange->Set("userinfo", $sUserString);
+						$oChange->DBInsert();	
 					}
-					else
-					{
-						if ($oChange == null)
-						{
-							$oChange = MetaModel::NewObject("CMDBChange");
-							$oChange->Set("date", time());
-							$sUserString = CMDBChange::GetCurrentUserName();
-							$oChange->Set("userinfo", $sUserString);
-							$oChange->DBInsert();	
-						}
-						// Fix the issue
-						$oAttribute = $this->CreateSynchroAtt($sAttCode);
-						$oAttribute->DBInsertTracked($oChange);
-					}
+					// Fix the issue
+					$oAttribute = $this->CreateSynchroAtt($sAttCode);
+					$oAttribute->DBInsertTracked($oChange);
 				}
 			}
 		}
 		$sTable = $this->GetDataTable();
-		if ($bFixNeeded)
+		if ($bFixNeeded && (count($aMissingFields) > 0))
 		{
+			$aRepairQueries = array();
+
 			// The structure of the table needs adjusting
 			$aColumns = $this->GetSQLColumns($aMissingFields);
 			$aFieldDefs = array();
 			foreach($aColumns as $sAttCode => $sColumnDef)
 			{
-				$aFieldDefs[] = "$sAttCode $sColumnDef";
+				if (CMDBSource::IsField($sTable, $sAttCode))
+				{
+					$aRepairQueries[] = "ALTER TABLE `$sTable` DROP COLUMN `$sAttCode`;";
+				}
+
+				$aFieldDefs[] = "`$sAttCode` $sColumnDef";
 			}
-			$sAlterTable = "ALTER TABLE `$sTable` ADD (".implode(',', $aFieldDefs).");";
+
+			$aRepairQueries[] = "ALTER TABLE `$sTable` ADD (".implode(',', $aFieldDefs).");";
 
 			// The triggers as well must be adjusted
-			$aTriggers = array();
 			$aTriggersDefs = $this->GetTriggersDefinition();
-			$aTriggers[] = "DROP TRIGGER IF EXISTS {$sTable}_bi;";
-			$aTriggers[] = $aTriggersDefs['bi'];
-			$aTriggers[] = "DROP TRIGGER IF EXISTS {$sTable}_bu;";
-			$aTriggers[] = $aTriggersDefs['bu'];
-			$aTriggers[] = "DROP TRIGGER IF EXISTS {$sTable}_ad;";
-			$aTriggers[] = $aTriggersDefs['ad'];
+			$aRepairQueries[] = "DROP TRIGGER IF EXISTS `{$sTable}_bi`;";
+			$aRepairQueries[] = $aTriggersDefs['bi'];
+			$aRepairQueries[] = "DROP TRIGGER IF EXISTS `{$sTable}_bu`;";
+			$aRepairQueries[] = $aTriggersDefs['bu'];
+			$aRepairQueries[] = "DROP TRIGGER IF EXISTS `{$sTable}_ad`;";
+			$aRepairQueries[] = $aTriggersDefs['ad'];
 			
 			if ($bDiagnostics)
 			{
@@ -827,21 +854,14 @@ EOF
 				{
 					// Report the issue
 					echo "The structure of the table $sTable for the data synchro task ".$this->GetName()." (".$this->GetKey().") must be altered (missing fields: ".implode(',', $aMissingFields).").\n";
-					echo "$sAlterTable\n";
 					echo "The trigger {$sTable}_bi, {$sTable}_bu, {$sTable}_ad for the data synchro task ".$this->GetName()." (".$this->GetKey().") must be re-created.\n";
-					echo implode("\n", $aTriggers)."\n";
+					echo implode("\n", $aRepairQueries)."\n";
 				}
 			}
 			else
 			{
 				// Fix the issue
-				CMDBSource::Query($sAlterTable);
-				if ($bVerbose)
-				{
-					echo "$sAlterTable\n";
-				}
-
-				foreach($aTriggers as $sSQL)
+				foreach($aRepairQueries as $sSQL)
 				{
 					CMDBSource::Query($sSQL);
 					if ($bVerbose)
@@ -851,7 +871,7 @@ EOF
 				}
 			}
 		}
-			
+
 		return $bFixNeeded;
 	}
 	protected function SendNotification($sSubject, $sBody)
@@ -1193,6 +1213,24 @@ EOF
 			}
 		}
 	}
+
+	/**
+	 * Get the list of attributes eligible to the synchronization	 
+	 */
+	public function ListTargetAttributes()
+	{
+		$aRet = array();
+		foreach(MetaModel::ListAttributeDefs($this->GetTargetClass()) as $sAttCode => $oAttDef)
+		{
+			if ($sAttCode == 'finalclass') continue;
+			if (!$oAttDef->IsWritable()) continue;
+			if ($oAttDef->IsLinkSet() && !$oAttDef->IsIndirect()) continue;
+
+			$aRet[$sAttCode] = $oAttDef;
+		}
+		return $aRet;
+	}
+
 	
 	/**
 	 * Get the list of SQL columns corresponding to a particular list of attribute codes
@@ -1206,9 +1244,8 @@ EOF
 		if (is_null($aAttributeCodes))
 		{
 			$aAttributeCodes = array();
-			foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+			foreach($this->ListTargetAttributes() as $sAttCode => $oAttDef)
 			{
-				if ($sAttCode == 'finalclass') continue;
 				$aAttributeCodes[] = $sAttCode;
 			}
 		}
