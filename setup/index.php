@@ -37,6 +37,7 @@ define('FINAL_CONFIG_FILE', APPROOT.'/config-itop.php');
 define('PHP_MIN_VERSION', '5.2.0');
 define('MYSQL_MIN_VERSION', '5.0.0');
 define('MIN_MEMORY_LIMIT', 32*1024*1024);
+define('SUHOSIN_GET_MAX_VALUE_LENGTH', 1024); 
 
 $sOperation = Utils::ReadParam('operation', 'step0');
 $oP = new SetupWebPage('iTop configuration wizard');
@@ -310,6 +311,23 @@ function CheckPHPVersion(SetupWebPage $oP)
 		$aOk[] = "APC detected (version $sAPCVersion). The APC cache will be used to speed-up iTop.";
 	}
 
+	// Special case Suhosin extension
+	if (extension_loaded('suhosin'))
+	{
+		$sSuhosinVersion = phpversion('suhosin');
+		$aOk[] = "Suhosin extension detected (version $sSuhosinVersion).";
+		
+		$iGetMaxValueLength = ini_get('suhosin.get.max_value_length');
+		if ($iGetMaxValueLength < SUHOSIN_GET_MAX_VALUE_LENGTH)
+		{
+			$aErrors[] = "suhosin.get.max_value_length ($iGetMaxValueLength) is too small, the minimum value to run iTop is ".SUHOSIN_GET_MAX_VALUE_LENGTH.". This value is set by the PHP configuration file(s): '$sPhpIniFile'. Be aware that this setting can also be overridden in the apache configuration.";		
+			$bResult = false;
+		}
+		else
+		{
+			$oP->log_info("suhosin.get.max_value_length = $iGetMaxValueLength, ok.");		
+		}
+	}
 	if (!$bResult)
 	{
 		$sTitle = 'Checking prerequisites: Failed !';
