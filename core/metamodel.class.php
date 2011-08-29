@@ -3443,7 +3443,7 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 			// Check that any defined field exists
 			//
 			$aTableInfo = CMDBSource::GetTableInfo($sTable);
-
+			$aTableInfo['Fields'][$sKeyField]['used'] = true;
 			foreach(self::ListAttributeDefs($sClass) as $sAttCode=>$oAttDef)
 			{
 				// Skip this attribute if not originaly defined in this class
@@ -3451,6 +3451,9 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 
 				foreach($oAttDef->GetSQLColumns() as $sField => $sDBFieldType)
 				{
+					// Keep track of columns used by iTop
+					$aTableInfo['Fields'][$sField]['used'] = true;
+
 					$bIndexNeeded = $oAttDef->RequiresIndex();
 					$sFieldDefinition = "`$sField` ".($oAttDef->IsNullAllowed() ? "$sDBFieldType NULL" : "$sDBFieldType NOT NULL");
 					if (!CMDBSource::IsField($sTable, $sField))
@@ -3516,6 +3519,14 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 							$aAlterTableItems[$sTable][$sField.'_ix'] = "ADD INDEX (`$sField`)";
 						}
 					}
+				}
+			}
+			// Find out unused columns
+			foreach($aTableInfo['Fields'] as $sField => $aFieldData)
+			{
+				if (!isset($aFieldData['used']) || !$aFieldData['used'])
+				{
+					$aErrors[$sClass]['*'][] = "Column '$sField' in table '$sTable' is not used";
 				}
 			}
 		}
