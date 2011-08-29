@@ -1116,13 +1116,29 @@ class NetworkInterface extends ConnectableCI
 
 	protected function UpdateConnectedInterface()
 	{
+		$iPrevTargetIf = $this->m_aOrigValues['connected_if']; // The interface this interface was connected to
+ 			
+		if ($iPrevTargetIf != 0)
+		{
+			// The interface was previosuly connected to another interface. Make sure that we reset this 'previously connected interface'
+			$oPrevConnectedIf = MetaModel::GetObject('NetworkInterface', $iPrevTargetIf, false);
+			if (!is_null($oPrevConnectedIf))
+			{
+				$oPrevConnectedIf->Set('connected_if', 0);			
+				// Need to backup the current change, because it is reset when DBUpdateTracked is complete
+				$oCurrChange = self::$m_oCurrChange;
+				$oPrevConnectedIf->DBUpdateTracked($oCurrChange);
+				self::$m_oCurrChange = $oCurrChange;
+			}
+		}
+
 		$oConnIf = MetaModel::GetObject('NetworkInterface', $this->Get('connected_if'), false /* no exception if not found */);
 		if (!is_null($oConnIf))
 		{
 			$sLink = $this->Get('link_type');
 			$sConnLink = ($sLink == 'uplink') ? 'downlink' : 'uplink';
-
-			if (($oConnIf->Get('connected_if') != $this->GetKey()) || ($sConnLink != $oConnIf->Get('link_type')))
+  
+ 			if (($oConnIf->Get('connected_if') != $this->GetKey()) || ($sConnLink != $oConnIf->Get('link_type')))
 			{
 				// Something has to be changed on the connected interface...
 				if ($oConnIf->Get('connected_if') != $this->GetKey())
