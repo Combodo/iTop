@@ -915,7 +915,7 @@ EOF
         }
         else
         {
-            parent::start_capture();
+            return parent::start_capture();
         }
     }
 
@@ -930,7 +930,7 @@ EOF
     	if (is_array($offset))
     	{
 	    	$sCaptured = substr($this->m_aTabs[$offset['tc']][$offset['tab']], $offset['offset']);
-	    	$this->m_aTabs[$offset['tc']][$offset['tab']] = substr($this->m_aTabs[$offset['tc']][$offset['tab']], 0, $offset['offset']);    		
+	    	$this->m_aTabs[$offset['tc']][$offset['tab']] = substr($this->m_aTabs[$offset['tc']][$offset['tab']], 0, $offset['offset']);
     	}
     	else
     	{

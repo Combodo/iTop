@@ -273,27 +273,73 @@ class ObjectDetailsTemplate extends DisplayTemplate
 	public function Render(WebPage $oPage, $aParams = array(), $bEditMode = false)
 	{
 		$aTemplateFields = array();
-		preg_match_all('/\\$([a-z0-9_]+)\\$/', $this->m_sTemplate, $aMatches);
+		preg_match_all('/\\$this->([a-z0-9_]+)\\$/', $this->m_sTemplate, $aMatches);
 		$aTemplateFields = $aMatches[1];
+		preg_match_all('/\\$this->field\\(([a-z0-9_]+)\\)\\$/', $this->m_sTemplate, $aMatches);
+		$aTemplateFields = array_merge($aTemplateFields, $aMatches[1]);
+		$aFieldsComments = (isset($aParams['fieldsComments'])) ? $aParams['fieldsComments'] : array();
 		$aFieldsMap = array();
 
 		$sClass = get_class($this->m_oObj);
 		// Renders the fields used in the template
 		foreach(MetaModel::ListAttributeDefs(get_class($this->m_oObj)) as $sAttCode => $oAttDef)
 		{
-			$aParams[$sAttCode.'->label()'] = $oAttDef->GetLabel();
-			$iInputId = 'Z_'.$sAttCode; // TODO: generate a real/unique prefix...
+			$aParams['this->label('.$sAttCode.')'] = $oAttDef->GetLabel();
+			$aParams['this->comments('.$sAttCode.')'] = isset($aFieldsComments[$sAttCode]) ? $aFieldsComments[$sAttCode] : '';
+			$iInputId = '2_'.$sAttCode; // TODO: generate a real/unique prefix...
 			if (in_array($sAttCode, $aTemplateFields))
 			{
+				if ($this->m_oObj->IsNew())
+				{
+					$iFlags = $this->m_oObj->GetInitialStateAttributeFlags($sAttCode);
+				}
+				else
+				{
 				$iFlags = $this->m_oObj->GetAttributeFlags($sAttCode);
+				}
+				if (($iFlags & OPT_ATT_MANDATORY) && $this->m_oObj->IsNew())
+				{
+					$iFlags = $iFlags & ~OPT_ATT_READONLY; // Mandatory fields cannot be read-only when creating an object
+				}
+				
 				if ($iFlags & OPT_ATT_HIDDEN)
 				{
-					$aParams[$sAttCode.'->label()'] = '';
-					$aParams[$sAttCode] = '';
+					$aParams['this->label('.$sAttCode.')'] = '';
+					$aParams['this->field('.$sAttCode.')'] = '';
+					$aParams['this->comments('.$sAttCode.')'] = '';
+					$aParams['this->'.$sAttCode] = '';
 				}
-				elseif ($bEditMode && !($iFlags && OPT_ATT_READONLY)) //TODO: check the data synchro status...
+				else
 				{
-					$aParams[$sAttCode] = "<span id=\"field_{$iInputId}\">".$this->m_oObj->GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef,
+					if ($bEditMode && ($iFlags & (OPT_ATT_READONLY|OPT_ATT_SLAVE)))
+					{
+	
+						// Check if the attribute is not read-only because of a synchro...
+						$aReasons = array();
+						$sSynchroIcon = '';
+						if ($iFlags & OPT_ATT_SLAVE)
+						{
+							$iSynchroFlags = $this->m_oObj->GetSynchroReplicaFlags($sAttCode, $aReasons);
+							$sSynchroIcon = "&nbsp;<img id=\"synchro_$sInputId\" src=\"../images/transp-lock.png\" style=\"vertical-align:middle\"/>";
+							$sTip = '';
+							foreach($aReasons as $aRow)
+							{
+								$sTip .= "<p>Synchronized with {$aRow['name']} - {$aRow['description']}</p>";
+							}
+							$oPage->add_ready_script("$('#synchro_$iInputId').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );");
+						}
+	
+						// Attribute is read-only
+						$sHTMLValue = "<span id=\"field_{$iInputId}\">".$this->m_oObj->GetAsHTML($sAttCode);
+						$sHTMLValue .= '<input type="hidden" id="'.$iInputId.'" name="attr_'.$sAttCode.'" value="'.htmlentities($this->m_oObj->Get($sAttCode), ENT_QUOTES, 'UTF-8').'"/></span>';
+						$aFieldsMap[$sAttCode] = $iInputId;
+						$aParams['this->comments('.$sAttCode.')'] = $sSynchroIcon;
+					}
+	
+	
+					if ($bEditMode && !($iFlags & OPT_ATT_READONLY)) //TODO: check the data synchro status...
+					{
+						$aParams['this->field('.$sAttCode.')'] = "<span id=\"field_{$iInputId}\">".$this->m_oObj->GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef,
 						$this->m_oObj->Get($sAttCode),
 						$this->m_oObj->GetEditValue($sAttCode),
 						$iInputId, // InputID
@@ -305,7 +351,9 @@ class ObjectDetailsTemplate extends DisplayTemplate
 				}
 				else 
 				{
-					$aParams[$sAttCode] = $this->m_oObj->GetAsHTML($sAttCode);
+						$aParams['this->field('.$sAttCode.')'] = $this->m_oObj->GetAsHTML($sAttCode);
+					}
+					$aParams['this->'.$sAttCode] = "<table><tr><td class=\"label\">".$aParams['this->label('.$sAttCode.')'].":</td><td>".$aParams['this->field('.$sAttCode.')']."</td><td>".$aParams['this->comments('.$sAttCode.')']."</td></tr></table>";					
 				}
 			}
 		}
