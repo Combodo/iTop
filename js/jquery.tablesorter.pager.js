@@ -15,6 +15,7 @@ function sprintf(format, etc) {
 			
 			function setPageSize(table,size) {
 				var c = table.config;
+				c.selectedSize = size;
 				if (size == -1)
 				{
 					size = c.totalRows;
@@ -224,6 +225,8 @@ function sprintf(format, etc) {
 							renderPager(table, table.config.container);
 							$(table).tableHover();
 							$('#loading', table.config.container).empty();
+
+							saveParams(table.config);
 					   });
 			}
 			
@@ -348,6 +351,45 @@ function sprintf(format, etc) {
 				
 				renderTable(table,rows);
 			};
+			
+			function saveParams(config) {
+				
+				var sPagerId = config.container.attr('id');
+
+				var params = { size: config.selectedSize, page: config.page, sortList: config.sortList };
+				if (window.pager_params == undefined)
+				{
+					window.pager_params = {};
+				}
+				window.pager_params[sPagerId] = params;
+			};
+
+			function restoreParams(table) {
+				
+				var sPagerId = config.container.attr('id');
+				if (window.pager_params != undefined)
+				{
+					params = window.pager_params[sPagerId];
+
+					if (params != undefined)
+					{
+						if (table.config.sortList != params.sortList)
+						{
+							$(table).trigger("sorton", [params.sortList]);
+						}
+						if (table.config.selectedSize != params.size)
+						{
+							$(table.config.cssPageSize, table.config.container).val(params.size);
+							setPageSize(table, params.size);
+						}
+						if (table.config.page != params.page)
+						{
+							table.config.page = params.page;
+							moveToPage(table);
+						}
+					}
+				}
+			};
 						
 			this.defaults = {
 				size: 10,
@@ -380,7 +422,7 @@ function sprintf(format, etc) {
 				return this.each(function() {	
 					
 					config = $.extend(this.config, $.tablesorterPager.defaults, settings);
-					
+
 					var table = this, pager = config.container;
 				
 					this.ajax_request = null;
@@ -388,6 +430,8 @@ function sprintf(format, etc) {
 					$(this).trigger("appendCache");
 					
 					setPageSize(table,parseInt($(".pagesize",pager).val()));
+					config.selectedSize = parseInt($(".pagesize",pager).val());
+					restoreParams(table, config);
 					
 					$(config.cssFirst,pager).click(function() {
 						moveToFirstPage(table);
