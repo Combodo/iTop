@@ -2283,7 +2283,7 @@ EOF
 				}
 				elseif($iFlags & OPT_ATT_SLAVE)
 				{
-					$aErrors[] = Dict::Format('UI:AttemptingToSetASlaveAttribute_Name', $oAttDef->GetLabel());
+					$aErrors[$sAttCode] = Dict::Format('UI:AttemptingToSetASlaveAttribute_Name', $oAttDef->GetLabel());
 				}
 				else
 				{
@@ -2400,10 +2400,14 @@ EOF
 	 */
 	public function UpdateObjectFromPostedForm($sFormPrefix = '', $aAttList = null, $sTargetState = '')
 	{
-		$aErrors = array();
-		$aValues = array();
-		foreach($this->GetWriteableAttList($aAttList, $aErrors, $sTargetState) as $sAttCode => $oAttDef)
+		if (is_null($aAttList))
 		{
+			$aAttList = array_keys(MetaModel::ListAttributeDefs(get_class($this)));
+		}
+		$aValues = array();
+		foreach($aAttList as $sAttCode)
+		{
+			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
 			if ($oAttDef->GetEditClass() == 'Document')
 			{
 				$value = array('fcontents' => utils::ReadPostedDocument("attr_{$sFormPrefix}{$sAttCode}", 'fcontents'));
@@ -2417,7 +2421,14 @@ EOF
 				$aValues[$sAttCode] = $value;
 			}
 		}
-		$this->UpdateObjectFromArray($aValues);
+
+		$aErrors = array();
+		$aFinalValues = array();
+		foreach($this->GetWriteableAttList(array_keys($aValues), $aErrors, $sTargetState) as $sAttCode => $oAttDef)
+		{
+			$aFinalValues[$sAttCode] = $aValues[$sAttCode];
+		}
+		$this->UpdateObjectFromArray($aFinalValues);
 
 		// Invoke extensions after the update of the object from the form
 		foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
@@ -2433,19 +2444,27 @@ EOF
 	 */
 	public function UpdateObjectFromArg($sArgName, $aAttList = null, $sTargetState = '')
 	{
-		$aErrors = array();
-
+		if (is_null($aAttList))
+		{
+			$aAttList = array_keys(MetaModel::ListAttributeDefs(get_class($this)));
+		}
 		$aRawValues = utils::ReadParam($sArgName, array(), '', 'raw_data');
-
 		$aValues = array();
-		foreach($this->GetWriteableAttList($aAttList, $aErrors, $sTargetState) as $sAttCode => $oAttDef)
+		foreach($aAttList as $sAttCode)
 		{
 			if (isset($aRawValues[$sAttCode]))
 			{
 				$aValues[$sAttCode] = $aRawValues[$sAttCode];
 			}
 		}
-		$this->UpdateObjectFromArray($aValues);
+
+		$aErrors = array();
+		$aFinalValues = array();
+		foreach($this->GetWriteableAttList(array_keys($aValues), $aErrors, $sTargetState) as $sAttCode => $oAttDef)
+		{
+			$aFinalValues[$sAttCode] = $aValues[$sAttCode];
+		}
+		$this->UpdateObjectFromArray($aFinalValues);
 		return $aErrors;
 	}
 
