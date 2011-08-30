@@ -13,7 +13,7 @@ function sprintf(format, etc) {
 				var s = $(c.cssPageDisplay,c.container).val((c.page+1) + c.seperator + c.totalPages);	
 			}
 			
-			function setPageSize(table,size) {
+			function setPageSize(table,size, bReload) {
 				var c = table.config;
 				c.selectedSize = size;
 				if (size == -1)
@@ -23,7 +23,10 @@ function sprintf(format, etc) {
 				c.size = size;
 				c.totalPages = Math.ceil(c.totalRows / c.size);
 				c.pagerPositionSet = false;
-				moveToPage(table);
+				if (bReload)
+				{
+					moveToPage(table);
+				}
 				fixPosition(table);
 			}
 			
@@ -373,19 +376,11 @@ function sprintf(format, etc) {
 
 					if (params != undefined)
 					{
+						$(table.config.cssPageSize, table.config.container).val(params.size);
+						setPageSize(table, params.size, false); // false => don't trigger a reload
 						if (table.config.sortList != params.sortList)
 						{
-							$(table).trigger("sorton", [params.sortList]);
-						}
-						if (table.config.selectedSize != params.size)
-						{
-							$(table.config.cssPageSize, table.config.container).val(params.size);
-							setPageSize(table, params.size);
-						}
-						if (table.config.page != params.page)
-						{
-							table.config.page = params.page;
-							moveToPage(table);
+							$(table).trigger("sorton", [params.sortList]); // triggers a reload anyway
 						}
 					}
 				}
@@ -427,12 +422,12 @@ function sprintf(format, etc) {
 				
 					this.ajax_request = null;
 					
-					$(this).trigger("appendCache");
-					
-					setPageSize(table,parseInt($(".pagesize",pager).val()));
 					config.selectedSize = parseInt($(".pagesize",pager).val());
+					setPageSize(table,config.selectedSize, false);
 					restoreParams(table, config);
 					
+					$(this).trigger("appendCache"); // Load the data
+
 					$(config.cssFirst,pager).click(function() {
 						moveToFirstPage(table);
 						return false;
@@ -450,7 +445,7 @@ function sprintf(format, etc) {
 						return false;
 					});
 					$(config.cssPageSize,pager).change(function() {
-						setPageSize(table,parseInt($(this).val()));
+						setPageSize(table,parseInt($(this).val()), true);
 						return false;
 					});
 					$(table).find(':checkbox.checkAll').removeAttr('onclick').click(function() {
