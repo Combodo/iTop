@@ -608,7 +608,7 @@ class lnkServiceToCI extends cmdbAbstractObject
 
 $oServiceManagementGroup = new MenuGroup('ServiceManagement', 60 /* fRank */);
 $iRank = 0;
-new TemplateMenuNode('Service:Overview', '../modules/itop-service-mgmt-1.0.0/overview.html', $oServiceManagementGroup->GetIndex() /* oParent */, $iRank++ /* fRank */);
+new TemplateMenuNode('Service:Overview', dirname(__FILE__).'/overview.html', $oServiceManagementGroup->GetIndex() /* oParent */, $iRank++ /* fRank */);
 new OQLMenuNode('ProviderContract', 'SELECT ProviderContract', $oServiceManagementGroup->GetIndex(), $iRank++,true /* bsearch */);
 new OQLMenuNode('CustomerContract', 'SELECT CustomerContract', $oServiceManagementGroup->GetIndex(),  $iRank++,true /* bsearch */);
 new OQLMenuNode('Service', 'SELECT Service', $oServiceManagementGroup->GetIndex(), $iRank++,true /* bsearch */);

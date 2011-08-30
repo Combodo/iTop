@@ -1623,10 +1623,10 @@ new OQLMenuNode('DBServer', 'SELECT DBServer', $iTopology, 40 /* fRank */);
 $oConfigManagementGroup = new MenuGroup('ConfigManagement', 20 /* fRank */);
 
 // Create an entry, based on a custom template, for the Configuration management overview, under the top-level group
-new TemplateMenuNode('ConfigManagementOverview', utils::GetAbsoluteUrlAppRoot().'modules/itop-config-mgmt-1.0.0/overview.html', $oConfigManagementGroup->GetIndex(), 0 /* fRank */);
+new TemplateMenuNode('ConfigManagementOverview', dirname(__FILE__).'/overview.html', $oConfigManagementGroup->GetIndex(), 0 /* fRank */);
 
 
-$oContactNode = new TemplateMenuNode('Contact', utils::GetAbsoluteUrlAppRoot().'modules/itop-config-mgmt-1.0.0/contacts_menu.html', $oConfigManagementGroup->GetIndex(), 1 /* fRank */);
+$oContactNode = new TemplateMenuNode('Contact', dirname(__FILE__).'/contacts_menu.html', $oConfigManagementGroup->GetIndex(), 1 /* fRank */);
 new NewObjectMenuNode('NewContact', 'Contact', $oContactNode->GetIndex(), 1 /* fRank */);
 new SearchMenuNode('SearchContacts', 'Contact', $oContactNode->GetIndex(), 2 /* fRank */);
 
@@ -1635,7 +1635,7 @@ new OQLMenuNode('Location', 'SELECT Location', $oConfigManagementGroup->GetIndex
 new OQLMenuNode('Group', 'SELECT Group', $oConfigManagementGroup->GetIndex(), 4 /* fRank */, true /* bSearch */);
 
 
-$oCINode = new TemplateMenuNode('ConfigManagementCI', utils::GetAbsoluteUrlAppRoot().'modules/itop-config-mgmt-1.0.0/cis_menu.html', $oConfigManagementGroup->GetIndex(), 5 /* fRank */);
+$oCINode = new TemplateMenuNode('ConfigManagementCI', dirname(__FILE__).'/cis_menu.html', $oConfigManagementGroup->GetIndex(), 5 /* fRank */);
 new NewObjectMenuNode('NewCI', 'FunctionalCI', $oCINode->GetIndex(), 0 /* fRank */);
 new SearchMenuNode('SearchCIs', 'FunctionalCI', $oCINode->GetIndex(), 1 /* fRank */);
 

@@ -199,7 +199,7 @@ class UserRequest extends ResponseTicket
 
 $oMyMenuGroup = new MenuGroup('RequestManagement', 30 /* fRank */);
 
-new TemplateMenuNode('UserRequest:Overview', '../modules/itop-request-mgmt-1.0.0/overview.html', $oMyMenuGroup->GetIndex() /* oParent */, 0 /* fRank */);
+new TemplateMenuNode('UserRequest:Overview', dirname(__FILE__).'/overview.html', $oMyMenuGroup->GetIndex() /* oParent */, 0 /* fRank */);
 new NewObjectMenuNode('NewUserRequest', 'UserRequest', $oMyMenuGroup->GetIndex(), 1 /* fRank */);
 new SearchMenuNode('SearchUserRequests', 'UserRequest', $oMyMenuGroup->GetIndex(), 2 /* fRank */);
 $oShortcutNode = new TemplateMenuNode('UserRequest:Shortcuts', '', $oMyMenuGroup->GetIndex(), 3 /* fRank */);

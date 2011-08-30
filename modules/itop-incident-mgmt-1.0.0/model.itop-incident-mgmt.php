@@ -237,7 +237,7 @@ class lnkTicketToIncident extends cmdbAbstractObject
 
 
 $oMyMenuGroup = new MenuGroup('IncidentManagement', 40 /* fRank */);
-new TemplateMenuNode('Incident:Overview', '../modules/itop-incident-mgmt-1.0.0/overview.html', $oMyMenuGroup->GetIndex() /* oParent */, 0 /* fRank */);
+new TemplateMenuNode('Incident:Overview', dirname(__FILE__).'/overview.html', $oMyMenuGroup->GetIndex() /* oParent */, 0 /* fRank */);
 new NewObjectMenuNode('NewIncident', 'Incident', $oMyMenuGroup->GetIndex(), 1 /* fRank */);
 new SearchMenuNode('SearchIncidents', 'Incident', $oMyMenuGroup->GetIndex(), 2 /* fRank */);
 $oShortcutNode = new TemplateMenuNode('Incident:Shortcuts', '', $oMyMenuGroup->GetIndex(), 3 /* fRank */);

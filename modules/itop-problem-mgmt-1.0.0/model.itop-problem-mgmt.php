@@ -244,7 +244,7 @@ class Problem extends Ticket
 
 $oMyMenuGroup = new MenuGroup('ProblemManagement', 42 /* fRank */); // Will create if it does not exist
 $iIndex = $oMyMenuGroup->GetIndex();
-new TemplateMenuNode('Problem:Overview', '../modules/itop-problem-mgmt-1.0.0/overview.html', $iIndex /* oParent */, 0 /* fRank */);
+new TemplateMenuNode('Problem:Overview', dirname(__FILE__).'/overview.html', $iIndex /* oParent */, 0 /* fRank */);
 new NewObjectMenuNode('NewProblem', 'Problem', $iIndex, 1 /* fRank */);
 new SearchMenuNode('SearchProblems', 'Problem', $iIndex, 2 /* fRank */);
 $oShortcutNode = new TemplateMenuNode('Problem:Shortcuts', '', $iIndex, 5 /* fRank */);
