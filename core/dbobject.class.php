@@ -538,8 +538,16 @@ abstract class DBObject
 		{
 			// If the object if not issued from a query but constructed programmatically
 			// the label may be empty. In this case run a query to get the object's friendly name
-			$oTmpObj = MetaModel::GetObject($sObjClass, $sObjKey);
-			$sLabel = $oTmpObj->GetName();
+			$oTmpObj = MetaModel::GetObject($sObjClass, $sObjKey, false);
+			if (is_object($oTmpObj))
+			{
+				$sLabel = $oTmpObj->GetName();
+			}
+			else
+			{
+				// May happen in case the target object is not in the list of allowed values for this attribute
+				$sLabel = "<em>$sObjClass::$sObjKey</em>";
+			}
 			//$sLabel = MetaModel::GetName($sObjClass)." #$sObjKey";
 		}
 		$sHint = MetaModel::GetName($sObjClass)."::$sObjKey";
