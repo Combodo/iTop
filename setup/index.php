@@ -1055,8 +1055,8 @@ function AdminAccountDefinition(SetupWebPage $oP, $aParamValues, $iCurrentStep, 
 	$sDefaultCode = $oConfig->GetDefaultLanguage();
 	foreach($aAvailableLanguages as $sLangCode => $aInfo)
 	{
-		$sSelected = ($sLangCode == $sDefaultCode ) ? 'selected ' : '';
-		$sLanguages.="<option value=\"{$sLangCode}\">{$aInfo['description']} ({$aInfo['localized_description']})</option>";
+		$sSelected = ($sLangCode == $sDefaultCode ) ? 'selected' : '';
+		$sLanguages.="<option $sSelected value=\"{$sLangCode}\">{$aInfo['description']} ({$aInfo['localized_description']})</option>";
 	}
 	
 	$aForm[] = array('label' => "Default Language$sRedStar:", 'input' => "<select id=\"language\" name=\"language\">$sLanguages</option>");
