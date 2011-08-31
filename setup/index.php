@@ -249,7 +249,7 @@ function CheckPHPVersion(SetupWebPage $oP)
 
   	if (!ini_get('upload_max_filesize'))
   	{
-		$aErrors[] = "File upload is not allowed on this server (file_uploads = ".ini_get('file_uploads').").";
+		$aErrors[] = "File upload is not allowed on this server (upload_max_filesize = ".ini_get('upload_max_filesize').").";
 	}
 
 	$iMaxFileUploads = ini_get('max_file_uploads');
@@ -258,7 +258,18 @@ function CheckPHPVersion(SetupWebPage $oP)
 		$aErrors[] = "File upload is not allowed on this server (max_file_uploads = ".ini_get('max_file_uploads').").";
 		$bResult = false;
 	}
+	
+	$iMaxUploadSize = utils::ConvertToBytes(ini_get('upload_max_filesize'));
+	$iMaxPostSize = utils::ConvertToBytes(ini_get('post_max_size'));
+
+	if ($iMaxPostSize <= $iMaxUploadSize)
+	{
+		$aWarnings[] = "post_max_size (".ini_get('post_max_size').") must be bigger than upload_max_filesize (".ini_get('upload_max_filesize')."). You may want to check the PHP configuration file(s): '$sPhpIniFile'. Be aware that this setting can also be overridden in the apache configuration.";
+	}
+
+
 	$oP->log("Info - upload_max_filesize: ".ini_get('upload_max_filesize'));
+	$oP->log("Info - post_max_size: ".ini_get('post_max_size'));
 	$oP->log("Info - max_file_uploads: ".ini_get('max_file_uploads'));
 
 	// Check some more ini settings here, needed for file upload
