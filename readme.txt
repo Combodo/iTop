@@ -1,4 +1,4 @@
-iTop - version 1.2.0-beta - 09-Aug-2011
+iTop - version 1.2.0 - 06-Sep-2011
 Readme file
 
 1.   ABOUT THIS RELEASE
@@ -180,6 +180,22 @@ The deadlines display format can be configured.
 Lists can be displayed either as combo boxes (default and original behavior) or radio buttons, either horizontal or vertical.
 In the templates or menus, the sort order can be specified.
 Developers: DisplayBareProperties now called both in read and edition modes.
+#446: XSS vulnerabilities
+Security: protected bulk modify against HTTP/Post piracy
+Added the display of the total count of objects in overviews.
+Different display for 'Date' fields: shorter field than DateTime since there is no "time" part.
+A mandatory case log field is now considered as 'filled' if it contains a previous entry
+#148 Allow overloading attribute/enum labels in the dictionary
+Warning (popup) message when navigating away from an edition form.
+#452 Export.php - field list can be specified also for HTML output
+German localization update, thanks to Stephan Rosenke.
+Shortcut actions (parameter in the config file)
+Notifications: case log in plain text (this->case_log) or the latest entry (this->head(case_log))
+Allow creation of an ticket in a different initial state via the new 'initial_state_path' attribute.
+Support update of CaseLog fields in bulk_modify mode.
+Detection of the Suhosin extension during the installation and tell the user if the get_max_value is too small.
+#284: Improved verification to the PHP file upload settings to avoid troubles later
+
 
 Bugs fixed
 ----------
@@ -216,6 +232,24 @@ Fixed issues when adding/removing modules during the setup:
 A title was missing for the menu 'All Opened Changes' at the top of the page
 Fixed the parsing of OQL error messages: should be able to report the line number (usually 1) and the character where the error happened
 Don't display an error (assertion failed) if the user selects nothing (i.e -- select one --) in the "CSV template" tab.
+Display/download links on documents that were both doing exactly the same thing
+Fixed the display of 'Used IP Addresses' (i.e. Network interfaces) in the details of a Subnet object.
+Fixed the computation of IPs in a subnet that failed (returned negative numbers) on some versions of PHP compiled in 32-bit.
+Enhanced interface for complex SLA computations...
+#447: interfaces not showing up on the details of a server when an org is selected: there were collisions in the internal query parameters names ! This is now fixed.
+The default value for Date fields is different than for DateTime fields: no 'time' part at the end (use the attribute's own format)
+#458: back button was asking to fill the mandatory fields !
+Support the selection (via an autocomplete) in a list that contains duplicates
+#457: crash when deleting two organizations.
+Accented characters not displayed within autocomplete selection controls
+Email test: under IIS it was not detecting Windows correctly, and the help message was therefore completely wrong.
+Dictionary: English was proposed twice in the list of available languages!
+#465: incorrect logic when resetting the 'ConnectedToInterface'
+Upgrade: fails to recreate a view when is has become invalid (missing attribute)
+#363 Charts not displaying with IE8 + IIS + HTTPS
+#373 Error when deleting two network devices connected to each other
+#258 Context automatically set when specifying an organization in a search form
+#444 Sort order not visible / lost on refresh
 
 Productivity Enhancements
 -------------------------
@@ -223,6 +257,7 @@ Quicker path to create or modify objects: buttons directly accessible next to th
 Limit the drop down menu to your favorite organizations: use the user preferences menu next to the Logoff button.
 For tickets, create/modify and apply an action in one step; E.g. Create and assign in one click. 
 Form validation buttons (Ok/Cancel) showed on top and bottom. Can be tuned (top, bottom or both).
+The paginated presentation allows a quicker navigation for really large data sets.
 
 
 Performance Enhancements
@@ -236,9 +271,9 @@ Autocomplete = do not load every object when determining the list of matches
 3.2. Known limitations (https://sourceforge.net/apps/trac/itop/report/3)
      -----------------
 #71   The same MySQL credentials are used during the setup and for running the application.
-#257  Could not delete more than 997 items when SUHOSIN is installed with its default settings (See TRAC)
 #265  Add reconciliations keys into CSV template
 
+Suhosin can interfere with iTop. More information can be found here: https://sourceforge.net/apps/mediawiki/itop/index.php?title=ITop_and_Suhosin
 Internet Explorer 6 is not supported (neither IE7 nor IE8 in compatibility mode)
 Tested with IE8 and IE9. Be aware that there are certain limitations when using IE8 in "security mode" (when running IE on a Windows 2008 Server for example)
 
@@ -246,23 +281,25 @@ Tested with IE8 and IE9. Be aware that there are certain limitations when using 
 3.3. Known issues (https://sourceforge.net/apps/trac/itop/report/3)
      ------------
 #259	Not instantaneously logged off when the administrator deletes a user account
-#245	Search form gets too specialized: after searching on a subclass it not possible to select the base class again
 #175	When moving backward in the CSV import wizard, some settings may be reset (e.g column mapping)
 #174	CSV import not displaying the labels of enums
-#258	Context automatically set when specifying an organization in a search form
 #273	The administrator can delete his/her own user account
-#363	Flash charts and IE8
 #372	APC Cache not efficient (multi org usage, global search)
-#373	Error when deleting two network devices connected to each other
 #382	Search form / base class lost after a search
 #377	Case log: exclude the index from the views
 #388	IE9: edition fields not resizable
-#444 	Sort order not visible / lost on refresh
 #443 	Objects remain in the database after de-installing some modules
 #442 	Useless profiles installed
 #441 	/doc redirects to Apache documentation!
-#440 	Missing "lock" icon on some fields 	Data Synchronization
 #439 	Display the modifications to a linkedset in the main object's history
 #438 	The selection of Organizations using the hierarchy does not work on IE8 in security mode
-#437 	Update all does not warn that some fields were not modified 		
 #436 	Cannot type "All Organizations" 	
+#398 	Import CSV: Unchanged attributes marked as "modified"
+#381 	Deletion of dependencies could fail in a multi-org environment
+#241 	"status" is a free-text field when configuring a Trigger
+#358 	Multi-column queries sometimes returning an empty set
+#383 	OQL: negative integers not allowed
+#399 	Copy/paste from iTop's CaseLog looses tabs
+#343 	CKEditor (HTML Editor) not compatible with direct object creation on ExtKeys
+#350 	Object edition form: validation does not tell which field has a problem
+#317 	Edition of a Document - opens the second tab
