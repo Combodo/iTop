@@ -219,6 +219,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 				{
 					$('#'+me.id).trigger('validate');
 					$('#'+me.id).trigger('extkeychange');
+					$('#'+me.id).trigger('change');
 				}	
 				$('#label_'+me.id).focus();
 				me.ajax_request = null;
@@ -367,6 +368,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 					}
 					$('#'+me.id).trigger('validate');
 					$('#'+me.id).trigger('extkeychange');
+					$('#'+me.id).trigger('change');
 					me.ajax_request = null;
 				},
 				'json'
@@ -501,6 +503,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 				{
 					$('#'+me.id).trigger('validate');
 					$('#'+me.id).trigger('extkeychange');
+					$('#'+me.id).trigger('change');
 				}
 				$('#label_'+me.id).focus();
 				me.ajax_request = null;
