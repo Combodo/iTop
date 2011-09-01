@@ -849,7 +849,7 @@ class ActionChecker
 	{
 		$sClass = $this->oFilter->GetClass();
 		$oSet = new DBObjectSet($this->oFilter);
-		$iActionAllowed = UserRights::IsActionAllowed($sClass, $oSet, $this->iActionCode);
+		$iActionAllowed = UserRights::IsActionAllowed($sClass, $this->iActionCode, $oSet);
 		if ($iActionAllowed == UR_ALLOWED_DEPENDS)
 		{
 			// Check for each object if the action is allowed or not
