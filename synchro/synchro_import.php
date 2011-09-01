@@ -290,7 +290,7 @@ try
 	//
 	// Read parameters
 	//
-	$iDataSourceId = ReadMandatoryParam($oP, 'data_source_id');
+	$iDataSourceId = ReadMandatoryParam($oP, 'data_source_id', 'raw_data');
 	$sSynchronize = ReadParam($oP, 'synchronize');
 	$sSep = ReadParam($oP, 'separator', 'raw_data');
 	$sQualifier = ReadParam($oP, 'qualifier', 'raw_data');
