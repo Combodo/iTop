@@ -460,11 +460,14 @@ EOF
 		$oSet = null;
 		if (MetaModel::IsValidClass('Organization'))
 		{
-			// Display the list of favorite organizations... but keeping in mind what is the real number of organizations
+			// Display the list of *favorite* organizations... but keeping in mind what is the real number of organizations
 			$aFavoriteOrgs = appUserPreferences::GetPref('favorite_orgs', null);
 			$oSearchFilter = new DBObjectSearch('Organization');
 			$oSet = new CMDBObjectSet($oSearchFilter);
-			$iCount = $oSet->Count(); // real number of visible orgs
+			$iCount = $oSet->Count(); // total number of existing Orgs
+			
+			// Now get the list of Orgs to be displayed in the menu
+			$oSearchFilter = DBObjectSearch::FromOQL(ApplicationMenu::GetFavoriteSiloQuery());
 			if (!empty($aFavoriteOrgs))
 			{
 				$oSearchFilter->AddCondition('id', $aFavoriteOrgs, 'IN');

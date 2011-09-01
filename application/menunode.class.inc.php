@@ -61,6 +61,27 @@ class ApplicationMenu
 {
 	static $aRootMenus = array();
 	static $aMenusIndex = array();
+	static $sFavoriteSiloQuery = 'SELECT Organization';
+	
+	/**
+	 * Set the query used to limit the list of displayed organizations in the drop-down menu
+	 * @param $sOQL string The OQL query returning a list of Organization objects
+	 * @return none
+	 */
+	static public function SetFavoriteSiloQuery($sOQL)
+	{
+		self::$sFavoriteSiloQuery = $sOQL;
+	}
+	
+	/**
+	 * Get the query used to limit the list of displayed organizations in the drop-down menu
+	 * @return string The OQL query returning a list of Organization objects
+	 */
+	static public function GetFavoriteSiloQuery()
+	{
+		return self::$sFavoriteSiloQuery;
+	}
+	
 	
 	/**
 	 * Main function to add a menu entry into the application, can be called during the definition

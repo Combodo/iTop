@@ -1607,6 +1607,10 @@ class lnkProcessToSolution extends cmdbAbstractObject
 // implement this dirty workaround that makes it...
 require_once(APPROOT.'modules/itop-welcome-itil/model.itop-welcome-itil.php');
 
+// Starting with iTop 1.2 you can restrict the list of organizations displayed in the drop-down list
+// by specifying a query as shown below. Note that this is NOT a security settings, since the
+// choice 'All Organizations' will always be available in the menu
+ApplicationMenu::SetFavoriteSiloQuery('SELECT Organization');
 
 $oAdminMenu = new MenuGroup('DataAdministration', 70 /* fRank */, 'Organization', UR_ACTION_MODIFY, UR_ALLOWED_YES|UR_ALLOWED_DEPENDS);
 $iAdminGroup = $oAdminMenu->GetIndex();

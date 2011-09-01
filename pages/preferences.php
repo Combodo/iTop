@@ -37,7 +37,7 @@ function DisplayPreferences($oP)
 	$oAppContext = new ApplicationContext();
 
 	// Favorite organizations: the organizations listed in the drop-down menu
-	$sOQL = 'SELECT Organization';
+	$sOQL = ApplicationMenu::GetFavoriteSiloQuery();
 	$oFilter = DBObjectSearch::FromOQL($sOQL);
 	$oBlock = new DisplayBlock($oFilter, 'list', false);
 
