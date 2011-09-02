@@ -1086,7 +1086,7 @@ class MenuBlock extends DisplayBlock
 			case 0:
 			// No object in the set, the only possible action is "new"
 			$bIsModifyAllowed =  (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES);
-			if ($bIsModifyAllowed) { $aActions['UI:Menu:New'] = array ('label' => Dict::S('UI:Menu:New'), 'url' => "{$sRootUrl}page/$sUIPage?operation=new&class=$sClass{$sContext}{$sDefault}"); }
+			if ($bIsModifyAllowed) { $aActions['UI:Menu:New'] = array ('label' => Dict::S('UI:Menu:New'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=new&class=$sClass{$sContext}{$sDefault}"); }
 			break;
 			
 			case 1:
