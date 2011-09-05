@@ -1071,10 +1071,19 @@ EOF
 					$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 					if ($oAttDef->IsExternalKey())
 					{
-						$oOldTarget = MetaModel::GetObject($oAttDef->GetTargetClass(), $oOperation->Get('oldvalue'));
-						$oNewTarget = MetaModel::GetObject($oAttDef->GetTargetClass(), $oOperation->Get('newvalue'));
-						$sOldValue = $oOldTarget->GetHyperlink();
-						$sNewValue = $oNewTarget->GetHyperlink();
+						$sOldValue = Dict::S('UI:UndefinedObject');
+						if ($oOperation->Get('oldvalue') != 0)
+						{
+							$oOldTarget = MetaModel::GetObject($oAttDef->GetTargetClass(), $oOperation->Get('oldvalue'));
+							$sOldValue = $oOldTarget->GetHyperlink();
+						}
+						
+						$sNewValue = Dict::S('UI:UndefinedObject');
+						if ($oOperation->Get('newvalue') != 0)
+						{
+							$oNewTarget = MetaModel::GetObject($oAttDef->GetTargetClass(), $oOperation->Get('newvalue'));
+							$sNewValue = $oNewTarget->GetHyperlink();
+						}
 					}
 					else
 					{
