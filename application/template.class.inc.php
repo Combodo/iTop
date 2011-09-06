@@ -353,7 +353,7 @@ class ObjectDetailsTemplate extends DisplayTemplate
 				{
 						$aParams['this->field('.$sAttCode.')'] = $this->m_oObj->GetAsHTML($sAttCode);
 					}
-					$aParams['this->'.$sAttCode] = "<table><tr><td class=\"label\">".$aParams['this->label('.$sAttCode.')'].":</td><td>".$aParams['this->field('.$sAttCode.')']."</td><td>".$aParams['this->comments('.$sAttCode.')']."</td></tr></table>";					
+					$aParams['this->'.$sAttCode] = "<table class=\"field\"><tr><td class=\"label\">".$aParams['this->label('.$sAttCode.')'].":</td><td>".$aParams['this->field('.$sAttCode.')']."</td><td>".$aParams['this->comments('.$sAttCode.')']."</td></tr></table>";					
 				}
 			}
 		}

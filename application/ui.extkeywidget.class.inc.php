@@ -125,6 +125,7 @@ class UIExtKeyWidget
 				case 'radio':
 				case 'radio_horizontal':
 				case 'radio_vertical':
+				$sValidationField = "<span id=\"v_{$this->iId}\"></span>";
 				$sHTMLValue = '';
 				$bVertical = ($sDisplayStyle != 'radio_horizontal');
 				$bExtensions = false;
@@ -134,7 +135,7 @@ class UIExtKeyWidget
 				{
 					$aAllowedValues[$oObj->GetKey()] = $oObj->Get('friendlyname');
 				}				
-				$sHTMLValue = $oPage->GetRadioButtons($aAllowedValues, $value, $this->iId, "{$sAttrFieldPrefix}{$sFieldName}", $bMandatory, $bVertical, '' /* TODO: manage validation field */);
+				$sHTMLValue = $oPage->GetRadioButtons($aAllowedValues, $value, $this->iId, "{$sAttrFieldPrefix}{$sFieldName}", $bMandatory, $bVertical, $sValidationField);
 				$aEventsList[] ='change';
 				break;
 
@@ -246,7 +247,10 @@ EOF
 EOF
 );
 		}
-		$sHTMLValue .= "<span id=\"v_{$this->iId}\"></span>";
+		if ($sDisplayStyle == 'select')
+		{
+			$sHTMLValue .= "<span id=\"v_{$this->iId}\"></span>";
+		}
 		$sHTMLValue .= "</span>"; // end of no wrap
 		return $sHTMLValue;
 	}
