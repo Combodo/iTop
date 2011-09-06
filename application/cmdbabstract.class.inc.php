@@ -1627,7 +1627,7 @@ EOF
 							case 'radio_vertical':
 							$sHTMLValue = '';
 							$bVertical = ($sDisplayStyle != 'radio_horizontal');
-							$sHTMLValue = $oPage->GetRadioButtons($aAllowedValues, $value, $iId, "{$sFieldPrefix}{$sAttCode}{$sNameSuffix}", $bMandatory, $bVertical, $sValidationField);
+							$sHTMLValue = $oPage->GetRadioButtons($aAllowedValues, $value, $iId, "attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}", $bMandatory, $bVertical, $sValidationField);
 							$aEventsList[] ='change';
 							break;
 							
