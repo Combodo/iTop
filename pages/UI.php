@@ -257,14 +257,17 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 			{
 				$oP->p(Dict::S('UI:Delete:PleaseDoTheManualOperations'));
 			}		
+			$oAppContext = new ApplicationContext();
 			$oP->add("<form method=\"post\">\n");
 			$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::ReadParam('transaction_id')."\">\n");
 			$oP->add("<input type=\"button\" onclick=\"window.history.back();\" value=\"".Dict::S('UI:Button:Back')."\">\n");
 			$oP->add("<input DISABLED type=\"submit\" name=\"\" value=\"".Dict::S('UI:Button:Delete')."\">\n");
+			$oP->add($oAppContext->GetForForm());
 			$oP->add("</form>\n");
 		}
 		else
 		{
+			$oAppContext = new ApplicationContext();
 			if (count($aObjects) == 1)
 			{
 				$oObj = $aObjects[0];
@@ -277,6 +280,7 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 				$oP->add("<input type=\"hidden\" name=\"id\" value=\"$id\">\n");
 				$oP->add("<input type=\"button\" onclick=\"window.history.back();\" value=\"".Dict::S('UI:Button:Back')."\">\n");
 				$oP->add("<input type=\"submit\" name=\"\" value=\"".Dict::S('UI:Button:Delete')."\">\n");
+				$oP->add($oAppContext->GetForForm());
 				$oP->add("</form>\n");
 			}
 			else
@@ -302,6 +306,7 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 				}
 				$oP->add("<input type=\"button\" onclick=\"window.history.back();\" value=\"".Dict::S('UI:Button:Back')."\">\n");
 				$oP->add("<input type=\"submit\" name=\"\" value=\"".Dict::S('UI:Button:Delete')."\">\n");
+				$oP->add($oAppContext->GetForForm());
 				$oP->add("</form>\n");
 			}
 		}
@@ -493,7 +498,7 @@ function DisplayMultipleSelectionForm($oP, $oFilter, $sNextOperation, $oChecker,
 		{
 			$oP->add("<input type=\"hidden\" name=\"$sName\" value=\"$sValue\">\n");
 		}
-			$oP->add($oAppContext->GetForForm());
+		$oP->add($oAppContext->GetForForm());
 		$oBlock->Display($oP, 1, $aExtraParams);
 		$oP->add("<input type=\"button\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"window.history.back()\">&nbsp;&nbsp;<input type=\"submit\" value=\"".Dict::S('UI:Button:Next')."\">\n");
 		$oP->add("</form>\n");
