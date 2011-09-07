@@ -124,7 +124,7 @@ try
 			{
 				$aValidIds[] = $oObj->GetKey(); 
 			}
-			$oFilter = $oDefinitionFilter;
+			$oFilter = clone $oDefinitionFilter;
 			$oFilter->AddCondition('id', $aValidIds, 'NOTIN');
 			$oErrorObjectSet = new CMDBObjectSet($oFilter);
 		}
