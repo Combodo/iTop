@@ -1,4 +1,4 @@
-iTop - version 1.2.0 - 06-Sep-2011
+﻿iTop - version 1.2.0 - 06-Sep-2011
 Readme file
 
 1.   ABOUT THIS RELEASE
@@ -56,7 +56,7 @@ Christian Lempereur and Olivier Fouquet for their feedbacks.
 Everaldo Coelho and the Oxygen Team for their wonderful icons.
 The JQuery team and the all the jQuery plugins authors for developing such a powerful library.
 Phil Eddies for the numerous feedbacks provided, and the first implementation of CKEdit
-Marco Tulio for the Portuguese (Brazilian) translation
+Marco Tulio and Bruno Cassaro for the Portuguese (Brazilian) translation
 Vladimir Shilov for the Russian translation
 Izzet Sirin for the Turkish translation
 Deng Lixin for the Chinese translation
@@ -250,6 +250,7 @@ Upgrade: fails to recreate a view when is has become invalid (missing attribute)
 #373 Error when deleting two network devices connected to each other
 #258 Context automatically set when specifying an organization in a search form
 #444 Sort order not visible / lost on refresh
+Crashing when displaying the details of a change in the CSV load history
 
 Productivity Enhancements
 -------------------------
