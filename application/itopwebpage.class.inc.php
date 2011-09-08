@@ -569,7 +569,7 @@ EOF
         // Make sure that Internet Explorer renders the page using its latest/highest/greatest standards !
         echo "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n";
         echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
-        echo "<title>{$this->s_title}</title>\n";
+        echo "<title>".htmlentities($this->s_title, ENT_QUOTES, 'UTF-8')."</title>\n";
         echo $this->get_base_tag();
         // Stylesheets MUST be loaded before any scripts otherwise
         // jQuery scripts may face some spurious problems (like failing on a 'reload')
@@ -750,7 +750,7 @@ EOF
 		echo '<div id="left-pane" class="ui-layout-west">';
 		echo '<!-- Beginning of the left pane -->';
 		echo '	<div id="header-logo">';
-		echo '	<div id="top-left"></div><div id="logo"><a href="http://www.combodo.com/itop"><img src="../images/itop-logo.png" title="'.self::FilterXSS($sVersionString).'" style="border:0; margin-top:16px; margin-right:40px;"/></a></div>';
+		echo '	<div id="top-left"></div><div id="logo"><a href="http://www.combodo.com/itop"><img src="../images/itop-logo.png" title="'.htmlentities($sVersionString, ENT_QUOTES, 'UTF-8').'" style="border:0; margin-top:16px; margin-right:40px;"/></a></div>';
 		echo '	</div>';
 		echo '	<div class="header-menu">';
 		echo '		<div class="icon ui-state-default ui-corner-all"><span id="tPinMenu" class="ui-icon ui-icon-pin-w">pin</span></div>';
@@ -772,7 +772,7 @@ EOF
 		echo '<div class="ui-layout-center">';
 		echo '	<div id="top-bar" style="width:100%">';
 		echo self::FilterXSS($sApplicationBanner);
-		echo '		<div id="global-search"><form action="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php"><table><tr><td></td><td id="g-search-input"><input type="text" name="text" value="'.self::FilterXSS($sText).'"'.$sOnClick.'/></td>';
+		echo '		<div id="global-search"><form action="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php"><table><tr><td></td><td id="g-search-input"><input type="text" name="text" value="'.$sText.'"'.$sOnClick.'/></td>';
 		echo '<td><input type="image" src="../images/searchBtn.png"/></a></td>';
 		echo '<td><a style="background:transparent;" href="'.$sOnlineHelpUrl.'" target="_blank"><img style="border:0;padding-left:20px;padding-right:10px;" title="'.Dict::S('UI:Help').'" src="../images/help.png"/></td>';
 		echo '<td style="padding-right:20px;padding-left:10px;">'.self::FilterXSS($sLogOffMenu).'</td><td><input type="hidden" name="operation" value="full_text"/></td></tr></table></form></div>';
