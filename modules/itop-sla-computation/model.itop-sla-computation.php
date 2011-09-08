@@ -134,7 +134,7 @@ class SLAComputationAddOnAPI
 	 */
 	public static function GetOpenDuration($oTicket, DateTime $oStartDate, DateTime $oEndDate)
 	{
-		return abs($oEndDate->format('U') - $oStartDate-format('U'));
+		return abs($oEndDate->format('U') - $oStartDate->format('U'));
 	}
 }
 SLAComputation::SelectModule('SLAComputationAddOnAPI');
