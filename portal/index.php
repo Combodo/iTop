@@ -50,7 +50,7 @@ function DumpHiddenParams($oP, $aInteractive, $aParameters)
 	{
 		if (!in_array($sAttCode, $aInteractive))
 		{
-			$oP->Add("<input type=\"hidden\" name=\"attr_$sAttCode\" value=\"$value\">");
+			$oP->Add("<input type=\"hidden\" name=\"attr_$sAttCode\" value=\"".htmlentities($value)."\">");
 		}
 	}
 }
