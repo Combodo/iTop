@@ -141,7 +141,6 @@ EOF
 	public function DisplayChangePwdForm($bFailedLogin = false)
 	{
 		$sAuthUser = utils::ReadParam('auth_user', '', false, 'raw_data');
-		$sAuthPwd = utils::ReadParam('suggest_pwd', '', false, 'raw_data');
 
 		$sVersionShort = Dict::Format('UI:iTopVersion:Short', ITOP_VERSION);
 		$sInconsistenPwdMsg = Dict::S('UI:Login:RetypePwdDoesNotMatch');

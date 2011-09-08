@@ -1034,7 +1034,7 @@ class HistoryBlock extends DisplayBlock
 		$aValues = array();
 		foreach($aChanges as $aChange)
 		{
-			$aValues[] = array('date' => $aChange['date'], 'userinfo' => $aChange['userinfo'], 'log' => "<ul><li>".implode('</li><li>', $aChange['log'])."</li></ul>");
+			$aValues[] = array('date' => $aChange['date'], 'userinfo' => htmlentities($aChange['userinfo']), 'log' => "<ul><li>".implode('</li><li>', $aChange['log'])."</li></ul>");
 		}
 		$sHtml .= $oPage->GetTable($aAttribs, $aValues);
 		return $sHtml;
@@ -1135,7 +1135,7 @@ class MenuBlock extends DisplayBlock
 				$this->AddMenuSeparator($aActions);
 				// Static menus: Email this page & CSV Export
 				$sUrl = ApplicationContext::MakeObjectUrl($sClass, $id);
-				$aActions['UI:Menu:EMail'] = array ('label' => Dict::S('UI:Menu:EMail'), 'url' => "mailto:?subject=".$oObj->GetName()."&body=".urlencode($sUrl));
+				$aActions['UI:Menu:EMail'] = array ('label' => Dict::S('UI:Menu:EMail'), 'url' => "mailto:?subject=".urlencode($oObj->GetRawName())."&body=".urlencode($sUrl));
 				$aActions['UI:Menu:CSVExport'] = array ('label' => Dict::S('UI:Menu:CSVExport'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=search&filter=$sFilter&format=csv{$sContext}");
 			}
 			$this->AddMenuSeparator($aActions);

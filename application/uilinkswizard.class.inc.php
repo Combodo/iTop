@@ -85,7 +85,7 @@ class UILinksWizard
 		$sTargetClass = $oAttDef->GetTargetClass();
 		$oTargetObj = MetaModel::GetObject($sTargetClass, $this->m_iObjectId);
 
-		$oP->set_title("iTop - ".MetaModel::GetName($this->m_sLinkedClass)." objects linked with ".MetaModel::GetName(get_class($oTargetObj)).": ".$oTargetObj->GetName());
+		$oP->set_title("iTop - ".MetaModel::GetName($this->m_sLinkedClass)." objects linked with ".MetaModel::GetName(get_class($oTargetObj)).": ".$oTargetObj->GetRawName());
 		$oP->add("<div class=\"wizContainer\">\n");
 		$oP->add("<form method=\"post\">\n");
 		$oP->add("<div class=\"page_header\">\n");

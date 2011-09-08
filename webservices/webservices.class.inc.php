@@ -135,7 +135,7 @@ class WebServiceResult
 	{
 		$this->m_aResult[$sLabel] = array(
 			'id' => $oObject->GetKey(),
-			'name' => $oObject->GetName(),
+			'name' => $oObject->GetRawName(),
 			'url' => $oObject->GetHyperlink(),
 		);
 	}

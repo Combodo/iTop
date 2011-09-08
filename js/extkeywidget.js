@@ -354,7 +354,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 					if (me.bSelectMode)
 					{
 						// Add the newly created object to the drop-down list and select it
-						$('<option/>', { value : data.id }).text(data.name).appendTo('#'+me.id);
+						$('<option/>', { value : data.id }).html(data.name).appendTo('#'+me.id);
 						$('#'+me.id+' option[value="'+data.id+'"]').attr('selected', 'selected');
 						$('#'+me.id).focus();
 					}

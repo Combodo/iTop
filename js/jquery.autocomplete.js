@@ -388,7 +388,7 @@ $.Autocompleter = function(input, options) {
 		for (var i=0; i < rows.length; i++) {
 			var row = $.trim(rows[i]);
 			if (row) {
-				row = row.split("|");
+				row = row.split("\t");
 				parsed[parsed.length] = {
 					data: row,
 					value: row[0],
@@ -668,6 +668,8 @@ $.Autocompleter.Select = function (options, input, select, config) {
 			var formatted = options.formatItem(data[i].data, i+1, max, data[i].value, term);
 			if ( formatted === false )
 				continue;
+			// Escape dangerous characters to prevent XSS vulnerabilities
+			formatted = formatted.replace('&', '&amp;').replace('"', '&quot;').replace('>', '&gt;').replace('<', '&lt;');
 			var li = $("<li/>").html( options.highlight(formatted, term) ).addClass(i%2 == 0 ? "ac_even" : "ac_odd").appendTo(list)[0];
 			$.data(li, "ac_data", data[i]);
 		}

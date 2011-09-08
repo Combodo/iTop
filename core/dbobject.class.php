@@ -622,7 +622,23 @@ abstract class DBObject
 		return MetaModel::GetClassIcon(get_class($this), $bImgTag);
 	}
 
+	/**
+	 * Gets the name of an object in a safe manner for displaying inside a web page
+	 * @return string
+	 */
 	public function GetName()
+	{
+		return htmlentities($this->GetRawName(), ENT_QUOTES, 'UTF-8');
+	}
+
+	/**
+	 * Gets the raw name of an object, this is not safe for displaying inside a web page
+	 * since the " < > characters are not escaped and the name may contain some XSS script
+	 * instructions.
+	 * Use this function only for internal computations or for an output to a non-HTML destination
+	 * @return string
+	 */
+	public function GetRawName()
 	{
 		return $this->Get('friendlyname');
 	}

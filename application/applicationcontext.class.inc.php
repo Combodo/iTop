@@ -163,7 +163,7 @@ class ApplicationContext
 		$sContext = "";
 		foreach($this->aValues as $sName => $sValue)
 		{
-			$sContext .= "<input type=\"hidden\" name=\"c[$sName]\" value=\"$sValue\" />\n";
+			$sContext .= "<input type=\"hidden\" name=\"c[$sName]\" value=\"".htmlentities($sValue)."\" />\n";
 		}
 		return $sContext;
 	}

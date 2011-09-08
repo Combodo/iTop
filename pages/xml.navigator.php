@@ -77,8 +77,8 @@ function GetRelatedObjectsAsXml(DBObject $oObj, $sRelationName, &$oLinks, &$oXml
 				$oLinkedNode = $oXmlDoc->CreateElement('node');
 				$oLinkedNode->SetAttribute('id', $oTargetObj->GetKey());
 				$oLinkedNode->SetAttribute('obj_class', get_class($oTargetObj));
-				$oLinkedNode->SetAttribute('obj_class_name', MetaModel::GetName(get_class($oTargetObj)));
-				$oLinkedNode->SetAttribute('name', $oTargetObj->GetName());
+				$oLinkedNode->SetAttribute('obj_class_name', htmlspecialchars(MetaModel::GetName(get_class($oTargetObj))));
+				$oLinkedNode->SetAttribute('name', htmlspecialchars($oTargetObj->GetRawName())); // htmlentities is too much for XML
 				$oLinkedNode->SetAttribute('icon', BuildIconPath($oTargetObj->GetIcon(false /* No IMG tag */)));
 				AddNodeDetails($oLinkedNode, $oTargetObj);
 				$oSubLinks = $oXmlDoc->CreateElement('links');
@@ -158,15 +158,15 @@ try
 			$oXmlNode = $oXmlDoc->CreateElement('node');
 			$oXmlNode->SetAttribute('id', $oObj->GetKey());
 			$oXmlNode->SetAttribute('obj_class', get_class($oObj));
-			$oXmlNode->SetAttribute('obj_class_name', MetaModel::GetName(get_class($oObj)));
-			$oXmlNode->SetAttribute('name', $oObj->GetName());
+			$oXmlNode->SetAttribute('obj_class_name', htmlspecialchars(MetaModel::GetName(get_class($oObj))));
+			$oXmlNode->SetAttribute('name',  htmlspecialchars($oObj->GetRawName()));
 			$oXmlNode->SetAttribute('icon', BuildIconPath($oObj->GetIcon(false /* No IMG tag */))); // Hard coded for the moment
 			AddNodeDetails($oXmlNode, $oObj);
 			
 			$oLinks = $oXmlDoc->CreateElement("links");
 		
 			$oXmlRoot->SetAttribute('position', 'left');
-			$oXmlRoot->SetAttribute('title', MetaModel::GetRelationDescription($sRelation).' '.$oObj->GetName());
+			$oXmlRoot->SetAttribute('title', MetaModel::GetRelationDescription($sRelation).' '. htmlspecialchars($oObj->GetRawName()));
 			GetRelatedObjectsAsXml($oObj, $sRelation, $oLinks, $oXmlDoc, $oXmlNode);
 			
 			$oXmlRoot->AppendChild($oXmlNode);

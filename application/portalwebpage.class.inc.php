@@ -288,7 +288,7 @@ EOF
 				{
 					$aRow = array();
 					
-					$aRow['key'] = '<a href="./index.php?operation=details&class='.get_class($oObj).'&id='.$oObj->GetKey().'">'.$oObj->Get('friendlyname').'</a>';
+					$aRow['key'] = '<a href="./index.php?operation=details&class='.get_class($oObj).'&id='.$oObj->GetKey().'">'.$oObj->GetName().'</a>';
 					$sHilightClass = $oObj->GetHilightClass();
 					if ($sHilightClass != '')
 					{

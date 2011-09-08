@@ -97,7 +97,7 @@ class URP_Profiles extends UserRightsBaseClass
 	
 	function DoShowGrantSumary($oPage)
 	{
-		if ($this->GetName() == "Administrator")
+		if ($this->GetRawName() == "Administrator")
 		{
 			// Looks dirty, but ok that's THE ONE
 			$oPage->p(Dict::S('UI:UserManagement:AdminProfile+'));

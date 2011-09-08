@@ -199,7 +199,7 @@ try
 			while($oAuditRule = $oRulesSet->fetch() )
 			{
 				$aRow = array();
-				$aRow['description'] = $oAuditRule->Get('name');
+				$aRow['description'] = $oAuditRule->GetName();
 				if ($iCount == 0)
 				{
 					// nothing to check, really !

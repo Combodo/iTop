@@ -133,7 +133,7 @@ class UIExtKeyWidget
 				$aAllowedValues = array();
 				while($oObj = $oAllowedValues->Fetch())
 				{
-					$aAllowedValues[$oObj->GetKey()] = $oObj->Get('friendlyname');
+					$aAllowedValues[$oObj->GetKey()] = $oObj->GetName();
 				}				
 				$sHTMLValue = $oPage->GetRadioButtons($aAllowedValues, $value, $this->iId, "{$sAttrFieldPrefix}{$sFieldName}", $bMandatory, $bVertical, $sValidationField);
 				$aEventsList[] ='change';
@@ -159,7 +159,7 @@ class UIExtKeyWidget
 				while($oObj = $oAllowedValues->Fetch())
 				{
 					$key = $oObj->GetKey();
-					$display_value = $oObj->Get('friendlyname');
+					$display_value = $oObj->GetName();
 	
 					if (($oAllowedValues->Count() == 1) && ($bMandatory == 'true') )
 					{
@@ -326,11 +326,11 @@ EOF
 		{
 			throw new Exception('Implementation: null value for allowed values definition');
 		}
-		$oValuesSet = new ValueSetObjects($sFilter);
+		$oValuesSet = new ValueSetObjects($sFilter, 'friendlyname'); // Bypass GetName() to avoid the encoding by htmlentities
 		$aValues = $oValuesSet->GetValues(array('this' => $oObj), $sContains);
 		foreach($aValues as $sKey => $sFriendlyName)
 		{
-			$oP->add(trim($sFriendlyName)."|".$sKey."\n");
+			$oP->add(trim($sFriendlyName)."\t".$sKey."\n");
 		}
 	}
 	

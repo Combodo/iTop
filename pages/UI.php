@@ -424,7 +424,7 @@ function DisplayDetails($oP, $sClass, $oObj, $id)
 	{
 		throw new SecurityException('User not allowed to view this object', array('class' => $sClass, 'id' => $id));
 	}
-	$oP->set_title(Dict::Format('UI:DetailsPageTitle', $oObj->GetName(), $sClassLabel));
+	$oP->set_title(Dict::Format('UI:DetailsPageTitle', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
 	$oObj->DisplayDetails($oP);
 }
 
@@ -780,7 +780,7 @@ try
 					throw new SecurityException('User not allowed to modify this object', array('class' => $sClass, 'id' => $id));
 				}
 				// Note: code duplicated to the case 'apply_modify' when a data integrity issue has been found
-				$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
+				$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
 				$oP->add("<div class=\"page_header\">\n");
 				$oP->add("<h1>".$oObj->GetIcon()."&nbsp;".Dict::Format('UI:ModificationTitle_Class_Object', $sClassLabel, $oObj->GetName())."</h1>\n");
 				$oP->add("</div>\n");
@@ -1226,7 +1226,7 @@ EOF
 			}
 			elseif (!utils::IsTransactionValid($sTransactionId, false))
 			{
-				$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
+				$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
 				$oP->p("<strong>".Dict::S('UI:Error:ObjectAlreadyUpdated')."</strong>\n");
 			}
 			else
@@ -1236,7 +1236,7 @@ EOF
 
 				if (!$oObj->IsModified())
 				{
-					$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
+					$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
 					$oP->p(Dict::Format('UI:Class_Object_NotUpdated', MetaModel::GetName(get_class($oObj)), $oObj->GetName()));
 				}
 				else
@@ -1244,7 +1244,7 @@ EOF
 					list($bRes, $aIssues) = $oObj->CheckToWrite();
 					if ($bRes)
 					{
-						$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
+						$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
 						$oP->add("<h1>".Dict::Format('UI:ModificationTitle_Class_Object', $sClassLabel, $oObj->GetName())."</h1>\n");
 
 						$oMyChange = MetaModel::NewObject("CMDBChange");
@@ -1262,7 +1262,7 @@ EOF
 						$bDisplayDetails = false;
 						// Found issues, explain and give the user a second chance
 						//
-						$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
+						$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
 						$oP->add("<div class=\"page_header\">\n");
 						$oP->add("<h1>".$oObj->GetIcon()."&nbsp;".Dict::Format('UI:ModificationTitle_Class_Object', $sClassLabel, $oObj->GetName())."</h1>\n");
 						$oP->add("</div>\n");
