@@ -1034,7 +1034,7 @@ class HistoryBlock extends DisplayBlock
 		$aValues = array();
 		foreach($aChanges as $aChange)
 		{
-			$aValues[] = array('date' => $aChange['date'], 'userinfo' => htmlentities($aChange['userinfo']), 'log' => "<ul><li>".implode('</li><li>', $aChange['log'])."</li></ul>");
+			$aValues[] = array('date' => $aChange['date'], 'userinfo' => htmlentities($aChange['userinfo'], ENT_QUOTES, 'UTF-8'), 'log' => "<ul><li>".implode('</li><li>', $aChange['log'])."</li></ul>");
 		}
 		$sHtml .= $oPage->GetTable($aAttribs, $aValues);
 		return $sHtml;
