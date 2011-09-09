@@ -1797,7 +1797,7 @@ class SynchroReplica extends DBObject implements iDisplay
 			}
 			else
 			{
-				$this->UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange, $oStatLog, '', 'stats_nb_obj_updated_errors');
+				$this->UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange, $oStatLog, 'stats_nb_obj', 'stats_nb_obj_updated_errors');
 			}
 			break;
 			
@@ -1827,7 +1827,7 @@ class SynchroReplica extends DBObject implements iDisplay
 			{
 				$oDestObj->DBUpdateTracked($oChange);
 				$oStatLog->AddTrace('Updated object - Values: {'.implode(', ', $aValueTrace).'}', $this);
-				if ($sStatsCode != '')
+				if (($sStatsCode != '') &&(MetaModel::IsValidAttCode(get_class($oStatLog), $sStatsCode.'_updated')))
 				{
 					$oStatLog->Inc($sStatsCode.'_updated');
 				}
@@ -1836,7 +1836,7 @@ class SynchroReplica extends DBObject implements iDisplay
 			else
 			{
 				$oStatLog->AddTrace('Unchanged object', $this);
-				if ($sStatsCode != '')
+				if (($sStatsCode != '') &&(MetaModel::IsValidAttCode(get_class($oStatLog), $sStatsCode.'_unchanged')))
 				{
 					$oStatLog->Inc($sStatsCode.'_unchanged');
 				}
