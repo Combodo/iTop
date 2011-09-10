@@ -57,6 +57,7 @@
 			graphics.drawRoundRect( 0, 0, _tf.textWidth+PADDING*4, _tf.textHeight+PADDING*4, ROUND );
 			graphics.endFill();
 			this.alpha = MIN_ALPHA;
+			this.visible = false;
 		}
 		// You have to call this after
 		// the tooltip has been added to the
@@ -118,6 +119,7 @@
 		
 		private function fadeIn( i:uint ):void
 		{
+			this.visible = true;
 			if (this.alpha < (1.0 - ALPHA_INC))
 			{
 				this.alpha += ALPHA_INC;
@@ -137,6 +139,7 @@
 			else
 			{
 				this.alpha = 0.0;
+				this.visible = false;
 			}
 			//trace("-- Tooltip alpha: "+this.alpha+" ALPHA_INC:"+ALPHA_INC);
 		}

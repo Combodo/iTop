@@ -57,8 +57,8 @@
 			m_sDataUrl = ReadParam('xmlUrl', 'http://localhost:81/pages/xml.navigator.php?operation=relation');
 			m_sDetailsUrl = ReadParam('drillUrl', 'http://localhost/pages/UI.php?operation=details');
 			m_sRelation = ReadParam('relation', 'impacts');
-			m_sObjClass = ReadParam('obj_class', 'Server');
-			m_sObjId = ReadParam('obj_id', '1');
+			m_sObjClass = ReadParam('obj_class', 'DBServerInstance');
+			m_sObjId = ReadParam('obj_id', '7');
 			m_sStartPosition = ReadParam('start_pos', 'left');
 		}
 		
@@ -129,7 +129,7 @@
 				//trace("Data loaded." + myXML);
 				//trace("===========================");
 				parseXMLData(null, myXML, 0, 0);
-				m_sTitle.text = myXML.attribute("title");
+				m_sTitle.text = decodeEntities(myXML.attribute("title").toString());
 				m_oZoomSlider.enabled = true;
 				addEventListener(Event.ENTER_FRAME, drawLines);
 				m_oZoomSlider.value = 100;
@@ -195,12 +195,17 @@
 			}
 		}
 		
+		function decodeEntities(str: String)
+		{
+			return str.replace(/&amp;/g, '&').replace(/&gt;/g, '>').replace(/&lt;/g, '<').replace(/&quot;/g, '"').replace(/&apos;/g, "'");
+		}
+		
 		function addNode(oParent:GraphNode, oXMLData:XML, iChildIndex:Number, iChildCount:Number)
 		{
 			var sClass:String  = oXMLData.@obj_class;
 			var sClassName:String  = oXMLData.@obj_class_name;
 			var iId = oXMLData.@id;
-			var sLabel:String = oXMLData.@name;
+			var sLabel:String = decodeEntities(oXMLData.@name);
 			var sIcon:String = oXMLData.@icon;
 			var oDetails:Object = new Object;
 			var sZlist:String = oXMLData.@zlist;
