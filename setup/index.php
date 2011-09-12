@@ -925,7 +925,15 @@ function ModulesSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, $oConf
 		$sModuleLabel = $aModule['label'];
 		$sModuleHelp = $aModule['doc.more_information'];
 		//$sClass = ($aModule['mandatory']) ? 'class="read-only"' : '';
-		$sMoreInfo = (!empty($aModule['doc.more_information'])) ? "<a href=\"..{$aModule['doc.more_information']}\" target=\"_blank\">more info</a>": '';
+		try
+		{
+			$sDefaultAppPath = 	utils::GetDefaultUrlAppRoot();		
+		}
+		catch(Exception $e)
+		{
+			$sDefaultAppPath = '..';
+		}
+		$sMoreInfo = (!empty($aModule['doc.more_information'])) ? "<a href=\"$sDefaultAppPath{$aModule['doc.more_information']}\" target=\"_blank\">more info</a>": '';
 		if ($aModule['category'] == 'authentication')
 		{
 			// For now authentication modules are always on and hidden
@@ -1471,11 +1479,12 @@ function SetupFinished(SetupWebPage $oP, $aParamValues, $iCurrentStep, Config $o
 		// Check if there are some manual steps required:
 		$aAvailableModules = AnalyzeInstallation($oConfig);
 		$aManualSteps = array();
+		$sRootUrl = utils::GetAbsoluteUrlAppRoot();
 		foreach($aParamValues['module'] as $sModuleId)
 		{
 			if (!empty($aAvailableModules[$sModuleId]['doc.manual_setup']))
 			{
-				$aManualSteps[$aAvailableModules[$sModuleId]['label']] = $aAvailableModules[$sModuleId]['doc.manual_setup'];
+				$aManualSteps[$aAvailableModules[$sModuleId]['label']] = $sRootUrl.$aAvailableModules[$sModuleId]['doc.manual_setup'];
 			}
 		}
 		if (count($aManualSteps) > 0)
