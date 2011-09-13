@@ -1,4 +1,4 @@
-﻿iTop - version 1.2.0 - 06-Sep-2011
+﻿iTop - version 1.2.0 - 14-Sep-2011
 Readme file
 
 1.   ABOUT THIS RELEASE
@@ -66,6 +66,7 @@ Gabor Kiss for the Hungarian translation
 Tadashi Kaneda for the Japanese translation
 Antoine Coetsier for the CAS support and tests
 Vincenzo Todisco for his contribution to the enhancement of the webservices
+Tobias Glemser and Sabri Saleh for their consulting about iTop security
 
 2. INSTALLATION
    ============
