@@ -86,8 +86,8 @@ class EMail
 		set_error_handler(array($this, 'mail_error_handler'));
 		$bRes = mail
 		(
-			$this->m_sTo,
-			$this->m_sSubject,
+			str_replace(array("\n", "\r"), ' ', $this->m_sTo), // Prevent header injection
+			str_replace(array("\n", "\r"), ' ', $this->m_sSubject), // Prevent header injection
 			$this->m_sBody,
 			$sHeaders
 		);
