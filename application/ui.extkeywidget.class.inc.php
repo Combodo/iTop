@@ -73,7 +73,14 @@ class UIExtKeyWidget
 		$sTargetClass = $oAttDef->GetTargetClass();
 		$iMaxComboLength = $oAttDef->GetMaximumComboLength();
 		$bAllowTargetCreation = $oAttDef->AllowTargetCreation();
-		$sDisplayStyle = $oAttDef->GetDisplayStyle();
+		if (!$bSearchMode)
+		{
+			$sDisplayStyle = $oAttDef->GetDisplayStyle();
+		}
+		else
+		{
+			$sDisplayStyle = 'select'; // In search mode, always use a drop-down list
+		}
 		$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId);
 		return $oWidget->Display($oPage, $iMaxComboLength, $bAllowTargetCreation, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sFieldName, $sFormPrefix, $aArgs, $bSearchMode, $sDisplayStyle);
 	}
