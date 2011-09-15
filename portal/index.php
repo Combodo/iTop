@@ -39,6 +39,27 @@ define('ALL_PARAMS', 'from_service_id,org_id,caller_id,service_id,servicesubcate
 
 
 /**
+ * Direct end-users to the standard Portal application
+ */ 
+class MyPortalURLMaker implements iDBObjectURLMaker
+{
+	public static function MakeObjectURL($sClass, $iId)
+	{
+		switch($sClass)
+		{
+		case 'UserRequest':
+			$sAbsoluteUrl = utils::GetAbsoluteUrlAppRoot();
+			$sUrl = "{$sAbsoluteUrl}portal/index.php?operation=details&class=$sClass&id=$iId";
+			return $sUrl;
+
+		default:
+			return '';
+		}
+	}
+}
+
+
+/**
  * Displays the portal main menu
  * @param WebPage $oP The current web page
  * @return void
@@ -466,7 +487,7 @@ function ListClosedTickets(WebPage $oP)
 	$iUser = UserRights::GetUserId();
 	if ($iUser > 0)
 	{
-		$oSearch->AddCondition('caller_id', $iUser + 12345);
+		$oSearch->AddCondition('caller_id', $iUser);
 	}
 	$oSet1 = new CMDBObjectSet($oSearch);
 	$oP->add("<p>\n");
@@ -742,7 +763,7 @@ try
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 	LoginWebPage::DoLogin(false /* bMustBeAdmin */, true /* IsAllowedToPortalUsers */); // Check user rights and prompt if needed
 
-   ApplicationContext::SetUrlMakerClass('PortalURLMaker');
+   ApplicationContext::SetUrlMakerClass('MyPortalURLMaker');
 
 	$oUserOrg = GetUserOrg();
 
