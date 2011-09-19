@@ -180,7 +180,7 @@ abstract class AttributeDefinition
 	public function IsNullAllowed() {return true;} 
 	public function GetCode() {return $this->m_sCode;} 
 
-	public function GetLabel()
+	public function GetLabel($sDefault = '')
 	{
 		$sLabel = Dict::S('Class:'.$this->m_sHostClass.'/Attribute:'.$this->m_sCode, '');
 		if (strlen($sLabel) == 0)
@@ -192,8 +192,13 @@ abstract class AttributeDefinition
 				if (MetaModel::IsValidAttCode($sParentClass, $this->m_sCode))
 				{
 					$oAttDef = MetaModel::GetAttributeDef($sParentClass, $this->m_sCode);
-					$sLabel = $oAttDef->GetLabel();
+					$sLabel = $oAttDef->GetLabel($sDefault);
 				}
+			}
+			else
+			{
+				// Nothing defined in the class hierarchy: return the default value
+				$sLabel = $sDefault;
 			}
 		}
 		return $sLabel;
@@ -212,7 +217,7 @@ abstract class AttributeDefinition
 		}
 	}
 
-	public function GetDescription()
+	public function GetDescription($sDefault = '')
 	{
 		$sDescription = Dict::S('Class:'.$this->m_sHostClass.'/Attribute:'.$this->m_sCode.'+', '');
 		if (strlen($sDescription) == 0)
@@ -223,14 +228,19 @@ abstract class AttributeDefinition
 				if (MetaModel::IsValidAttCode($sParentClass, $this->m_sCode))
 				{
 					$oAttDef = MetaModel::GetAttributeDef($sParentClass, $this->m_sCode);
-					$sDescription = $oAttDef->GetDescription();
+					$sDescription = $oAttDef->GetDescription($sDefault);
 				}
+			}
+			else
+			{
+				// Nothing defined in the class hierarchy: return the default value
+				$sDescription = $sDefault;
 			}
 		}
 		return $sDescription;
 	} 
 
-	public function GetHelpOnEdition()
+	public function GetHelpOnEdition($sDefault = '')
 	{
 		$sHelp = Dict::S('Class:'.$this->m_sHostClass.'/Attribute:'.$this->m_sCode.'?', '');
 		if (strlen($sHelp) == 0)
@@ -241,8 +251,13 @@ abstract class AttributeDefinition
 				if (MetaModel::IsValidAttCode($sParentClass, $this->m_sCode))
 				{
 					$oAttDef = MetaModel::GetAttributeDef($sParentClass, $this->m_sCode);
-					$sHelp = $oAttDef->GetHelpOnEdition();
+					$sHelp = $oAttDef->GetHelpOnEdition($sDefault);
 				}
+			}
+			else
+			{
+				// Nothing defined in the class hierarchy: return the default value
+				$sHelp = $sDefault;
 			}
 		}
 		return $sHelp;
@@ -2718,19 +2733,19 @@ class AttributeExternalField extends AttributeDefinition
 	{
 		$oRemoteAtt = $this->GetExtAttDef();
 		$sDefault = $oRemoteAtt->GetLabel();
-		return Dict::S('Class:'.$this->m_sHostClass.'/Attribute:'.$this->m_sCode, $sDefault);
+		return parent::GetLabel($sDefault);
 	}
 	public function GetDescription()
 	{
 		$oRemoteAtt = $this->GetExtAttDef();
 		$sDefault = $oRemoteAtt->GetDescription();
-		return Dict::S('Class:'.$this->m_sHostClass.'/Attribute:'.$this->m_sCode.'+', $sDefault);
+		return parent::GetDescription($sDefault);
 	} 
 	public function GetHelpOnEdition()
 	{
 		$oRemoteAtt = $this->GetExtAttDef();
 		$sDefault = $oRemoteAtt->GetHelpOnEdition();
-		return Dict::S('Class:'.$this->m_sHostClass.'/Attribute:'.$this->m_sCode.'?', $sDefault);
+		return parent::GetHelpOnEdition($sDefault);
 	} 
 
 	public function IsExternalKey($iType = EXTKEY_RELATIVE)
