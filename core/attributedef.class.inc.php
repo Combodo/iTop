@@ -2729,19 +2729,19 @@ class AttributeExternalField extends AttributeDefinition
 		} 
 	}
 
-	public function GetLabel()
+	public function GetLabel($sDefault = '')
 	{
 		$oRemoteAtt = $this->GetExtAttDef();
 		$sDefault = $oRemoteAtt->GetLabel();
 		return parent::GetLabel($sDefault);
 	}
-	public function GetDescription()
+	public function GetDescription($sDefault = '')
 	{
 		$oRemoteAtt = $this->GetExtAttDef();
 		$sDefault = $oRemoteAtt->GetDescription();
 		return parent::GetDescription($sDefault);
 	} 
-	public function GetHelpOnEdition()
+	public function GetHelpOnEdition($sDefault = '')
 	{
 		$oRemoteAtt = $this->GetExtAttDef();
 		$sDefault = $oRemoteAtt->GetHelpOnEdition();
