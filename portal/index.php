@@ -431,7 +431,7 @@ function ListOpenRequests(WebPage $oP)
 
 	$sOQL = 'SELECT UserRequest WHERE org_id = :org_id AND status NOT IN ("closed")';
 	$oSearch = DBObjectSearch::FromOQL($sOQL);
-	$iUser = UserRights::GetUserId();
+	$iUser = UserRights::GetContactId();
 	if ($iUser > 0)
 	{
 		$oSearch->AddCondition('caller_id', $iUser);
@@ -452,7 +452,7 @@ function ListResolvedRequests(WebPage $oP)
 
 	$sOQL = 'SELECT UserRequest WHERE org_id = :org_id AND status = "resolved"';
 	$oSearch = DBObjectSearch::FromOQL($sOQL);
-	$iUser = UserRights::GetUserId();
+	$iUser = UserRights::GetContactId();
 	if ($iUser > 0)
 	{
 		$oSearch->AddCondition('caller_id', $iUser);
@@ -484,7 +484,7 @@ function ListClosedTickets(WebPage $oP)
 	}
 	$oSearch->AddCondition('org_id', $oUserOrg->GetKey());
 	$oSearch->AddCondition('status', 'closed');
-	$iUser = UserRights::GetUserId();
+	$iUser = UserRights::GetContactId();
 	if ($iUser > 0)
 	{
 		$oSearch->AddCondition('caller_id', $iUser);
