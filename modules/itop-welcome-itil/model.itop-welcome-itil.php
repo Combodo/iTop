@@ -63,4 +63,24 @@ class ItopWelcome extends ModuleHandlerAPI
 	}
 }
 
+/**
+ * Direct end-users to the standard Portal application
+ */ 
+class MyPortalURLMaker implements iDBObjectURLMaker
+{
+	public static function MakeObjectURL($sClass, $iId)
+	{
+		switch($sClass)
+		{
+		case 'UserRequest':
+			$sAbsoluteUrl = utils::GetAbsoluteUrlAppRoot();
+			$sUrl = "{$sAbsoluteUrl}portal/index.php?operation=details&class=$sClass&id=$iId";
+			return $sUrl;
+
+		default:
+			return '';
+		}
+	}
+}
+
 ?>

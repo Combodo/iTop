@@ -38,26 +38,6 @@ define('VALIDATE_SERVICESUBCATEGORY_QUERY', 'SELECT ServiceSubcategory AS Sub JO
 define('ALL_PARAMS', 'from_service_id,org_id,caller_id,service_id,servicesubcategory_id,title,description,impact,urgency,workgroup_id,moreinfo,caller_id,start_date,end_date,duration,impact_duration');
 
 
-/**
- * Direct end-users to the standard Portal application
- */ 
-class MyPortalURLMaker implements iDBObjectURLMaker
-{
-	public static function MakeObjectURL($sClass, $iId)
-	{
-		switch($sClass)
-		{
-		case 'UserRequest':
-			$sAbsoluteUrl = utils::GetAbsoluteUrlAppRoot();
-			$sUrl = "{$sAbsoluteUrl}portal/index.php?operation=details&class=$sClass&id=$iId";
-			return $sUrl;
-
-		default:
-			return '';
-		}
-	}
-}
-
 
 /**
  * Displays the portal main menu
