@@ -277,9 +277,9 @@ try
 	$sQualifier = ReadParam($oP, 'qualifier', 'raw_data');
 	$sCharSet = ReadParam($oP, 'charset', 'raw_data');
 	$sDateFormat = ReadParam($oP, 'date_format', 'raw_data');
-	$sOutput = ReadParam($oP, 'output');
+	$sOutput = ReadParam($oP, 'output', 'string');
 //	$sReportLevel = ReadParam($oP, 'reportlevel');
-	$sReconcKeys = ReadParam($oP, 'reconciliationkeys', 'field_name');
+	$sReconcKeys = ReadParam($oP, 'reconciliationkeys', 'raw_data');
 	$sSimulate = ReadParam($oP, 'simulate');
 	$sComment = ReadParam($oP, 'comment', 'raw_data');
 
@@ -434,9 +434,12 @@ try
 		}
 		else
 		{
-			$aFieldList[$iFieldId] = $sFieldName;
+			// Secure the field names against XSS injection (no <> neither " chars)
+			$sSafeName = str_replace(array('"', '<', '>'), '', $sFieldName);
+			$aFieldList[$iFieldId] = $sSafeName;
 		}
-	}	
+	}
+	// Note: at this stage the list of fields is supposed to be made of attcodes (and the symbol '->')	
 
 	$aAttList = array();
 	$aExtKeys = array();
@@ -537,7 +540,9 @@ try
 		{
 			if (!array_key_exists($sReconcKey, $aExtKeys))
 			{
-				throw new BulkLoadException("Reconciliation keys not found in the input columns '$sReconcKey' (class: '$sClass')");
+				// Protect against XSS injection
+				$sSafeName = str_replace(array('"', '<', '>'), '', $sReconcKey);
+				throw new BulkLoadException("Reconciliation key not found in the input columns: '$sSafeName'");
 			}
 		}
 
