@@ -22,6 +22,112 @@
  * @author      Denis Flaven <denis.flaven@combodo.com>
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
+/**
+ * Adds the context parameters to the audit query
+ */
+function FilterByContext(DBObjectSearch &$oFilter, ApplicationContext $oAppContext)
+{
+	$sObjClass = $oFilter->GetClass();		
+	$aContextParams = $oAppContext->GetNames();
+	$aCallSpec = array($sObjClass, 'MapContextParam');
+	if (is_callable($aCallSpec))
+	{
+		foreach($aContextParams as $sParamName)
+		{
+			$sValue = $oAppContext->GetCurrentValue($sParamName, null);
+			if ($sValue != null)
+			{
+				$sAttCode = call_user_func($aCallSpec, $sParamName); // Returns null when there is no mapping for this parameter
+				if ( ($sAttCode != null) && MetaModel::IsValidAttCode($sObjClass, $sAttCode))
+				{
+					// Check if the condition points to a hierarchical key
+					if ($sAttCode == 'id')
+					{
+						// Filtering on the objects themselves
+						$sHierarchicalKeyCode = MetaModel::IsHierarchicalClass($sObjClass);
+						
+						if ($sHierarchicalKeyCode !== false)
+						{
+							$oRootFilter = new DBObjectSearch($sObjClass);
+							$oRootFilter->AddCondition($sAttCode, $sValue);
+							$oFilter->AddCondition_PointingTo($oRootFilter, $sHierarchicalKeyCode, TREE_OPERATOR_BELOW); // Use the 'below' operator by default
+							$bConditionAdded = true;
+						}
+					}
+					else
+					{
+						$oAttDef = MetaModel::GetAttributeDef($sObjClass, $sAttCode);
+						$bConditionAdded = false;
+						if ($oAttDef->IsExternalKey())
+						{
+							$sHierarchicalKeyCode = MetaModel::IsHierarchicalClass($oAttDef->GetTargetClass());
+							
+							if ($sHierarchicalKeyCode !== false)
+							{
+								$oRootFilter = new DBObjectSearch($oAttDef->GetTargetClass());
+								$oRootFilter->AddCondition('id', $sValue);
+								$oHKFilter = new DBObjectSearch($oAttDef->GetTargetClass());
+								$oHKFilter->AddCondition_PointingTo($oRootFilter, $sHierarchicalKeyCode, TREE_OPERATOR_BELOW); // Use the 'below' operator by default
+								$oFilter->AddCondition_PointingTo($oHKFilter, $sAttCode);
+								$bConditionAdded = true;
+							}
+						}
+					}
+					if (!$bConditionAdded)
+					{
+						$oFilter->AddCondition($sAttCode, $sValue);
+					}
+				}
+			}
+		}
+	}
+}
+
+function GetRuleResultSet($iRuleId, $oDefinitionFilter, $oAppContext)
+{
+	$oRule = MetaModel::GetObject('AuditRule', $iRuleId);
+	$sOql = $oRule->Get('query');
+	$oRuleFilter = DBObjectSearch::FromOQL($sOql);
+	FilterByContext($oRuleFilter, $oAppContext); // Not needed since this filter is a subset of the definition filter, but may speedup things
+
+	if ($oRule->Get('valid_flag') == 'false')
+	{
+		// The query returns directly the invalid elements
+		$oFilter = $oRuleFilter; 
+		$oFilter->MergeWith($oDefinitionFilter);
+		$oErrorObjectSet = new CMDBObjectSet($oFilter);
+	}
+	else
+	{
+		// The query returns only the valid elements, all the others are invalid
+		$oFilter = $oRuleFilter; 
+		$oErrorObjectSet = new CMDBObjectSet($oFilter);
+		$aValidIds = array(0); // Make sure that we have at least one value in the list
+		while($oObj = $oErrorObjectSet->Fetch())
+		{
+			$aValidIds[] = $oObj->GetKey(); 
+		}
+		$oFilter = clone $oDefinitionFilter;
+		$oFilter->AddCondition('id', $aValidIds, 'NOTIN');
+		$oErrorObjectSet = new CMDBObjectSet($oFilter);
+	}
+	return $oErrorObjectSet;
+}
+
+function GetReportColor($iTotal, $iErrors)
+{
+	$sResult = 'red';
+	if ( ($iTotal == 0) || ($iErrors / $iTotal) <= 0.05 )
+	{
+		$sResult = 'green';
+	}
+	else if ( ($iErrors / $iTotal) <= 0.25 )
+	{
+		$sResult = 'orange';
+	}
+	return $sResult;
+}
+
 try
 {
 	require_once('../approot.inc.php');
@@ -36,114 +142,6 @@ try
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 	
 	$oP = new iTopWebPage(Dict::S('UI:Audit:Title'));
-	
-	/**
-	 * Adds the context parameters to the audit query
-	 */
-	function FilterByContext(DBObjectSearch &$oFilter, ApplicationContext $oAppContext)
-	{
-		$sObjClass = $oFilter->GetClass();		
-		$aContextParams = $oAppContext->GetNames();
-		$aCallSpec = array($sObjClass, 'MapContextParam');
-		if (is_callable($aCallSpec))
-		{
-			foreach($aContextParams as $sParamName)
-			{
-				$sValue = $oAppContext->GetCurrentValue($sParamName, null);
-				if ($sValue != null)
-				{
-					$sAttCode = call_user_func($aCallSpec, $sParamName); // Returns null when there is no mapping for this parameter
-					if ( ($sAttCode != null) && MetaModel::IsValidAttCode($sObjClass, $sAttCode))
-					{
-						$oFilter  = new DBObjectSearch($sObjClass);
-
-						// Check if the condition points to a hierarchical key
-						if ($sAttCode == 'id')
-						{
-							// Filtering on the objects themselves
-							$sHierarchicalKeyCode = MetaModel::IsHierarchicalClass($sObjClass);
-							
-							if ($sHierarchicalKeyCode !== false)
-							{
-								$oRootFilter = new DBObjectSearch($sObjClass);
-								$oRootFilter->AddCondition($sAttCode, $sValue);
-								$oFilter->AddCondition_PointingTo($oRootFilter, $sHierarchicalKeyCode, TREE_OPERATOR_BELOW); // Use the 'below' operator by default
-								$bConditionAdded = true;
-							}
-						}
-						else
-						{
-							$oAttDef = MetaModel::GetAttributeDef($sObjClass, $sAttCode);
-							$bConditionAdded = false;
-							if ($oAttDef->IsExternalKey())
-							{
-								$sHierarchicalKeyCode = MetaModel::IsHierarchicalClass($oAttDef->GetTargetClass());
-								
-								if ($sHierarchicalKeyCode !== false)
-								{
-									$oRootFilter = new DBObjectSearch($oAttDef->GetTargetClass());
-									$oRootFilter->AddCondition('id', $sValue);
-									$oHKFilter = new DBObjectSearch($oAttDef->GetTargetClass());
-									$oHKFilter->AddCondition_PointingTo($oRootFilter, $sHierarchicalKeyCode, TREE_OPERATOR_BELOW); // Use the 'below' operator by default
-									$oFilter->AddCondition_PointingTo($oHKFilter, $sAttCode);
-									$bConditionAdded = true;
-								}
-							}
-						}
-						if (!$bConditionAdded)
-						{
-							$oFilter->AddCondition($sAttCode, $sValue);
-						}
-					}
-				}
-			}
-		}
-	}
-
-	function GetRuleResultSet($iRuleId, $oDefinitionFilter, $oAppContext)
-	{
-		$oRule = MetaModel::GetObject('AuditRule', $iRuleId);
-		$sOql = $oRule->Get('query');
-		$oRuleFilter = DBObjectSearch::FromOQL($sOql);
-		FilterByContext($oRuleFilter, $oAppContext); // Not needed since this filter is a subset of the definition filter, but may speedup things
-
-		if ($oRule->Get('valid_flag') == 'false')
-		{
-			// The query returns directly the invalid elements
-			$oFilter = $oRuleFilter; 
-			$oFilter->MergeWith($oDefinitionFilter);
-			$oErrorObjectSet = new CMDBObjectSet($oFilter);
-		}
-		else
-		{
-			// The query returns only the valid elements, all the others are invalid
-			$oFilter = $oRuleFilter; 
-			$oErrorObjectSet = new CMDBObjectSet($oFilter);
-			$aValidIds = array(0); // Make sure that we have at least one value in the list
-			while($oObj = $oErrorObjectSet->Fetch())
-			{
-				$aValidIds[] = $oObj->GetKey(); 
-			}
-			$oFilter = clone $oDefinitionFilter;
-			$oFilter->AddCondition('id', $aValidIds, 'NOTIN');
-			$oErrorObjectSet = new CMDBObjectSet($oFilter);
-		}
-		return $oErrorObjectSet;
-	}
-	
-	function GetReportColor($iTotal, $iErrors)
-	{
-		$sResult = 'red';
-		if ( ($iTotal == 0) || ($iErrors / $iTotal) <= 0.05 )
-		{
-			$sResult = 'green';
-		}
-		else if ( ($iErrors / $iTotal) <= 0.25 )
-		{
-			$sResult = 'orange';
-		}
-		return $sResult;
-	}
 	
 	switch($operation)
 	{
