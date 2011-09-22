@@ -35,5 +35,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Attachment:Max_Go' => '(Taille de fichier max.: %1$s Gb)',
 	'Attachment:Max_Mo' => '(Taille de fichier max.: %1$s Mb)',
 	'Attachment:Max_Ko' => '(Taille de fichier max.: %1$s Kb)',
+	'Attachments:NoAttachment' => 'Aucune pièce jointe.',	
 ));
 ?>

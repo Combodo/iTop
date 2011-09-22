@@ -474,14 +474,21 @@ EOF
 		else
 		{
 			$oPage->add('<span id="attachments">');
-			while ($oAttachment = $oSet->Fetch())
+			if ($oSet->Count() == 0)
 			{
-				$iAttId = $oAttachment->GetKey();
-				$oDoc = $oAttachment->Get('contents');
-				$sFileName = $oDoc->GetFileName();
-				$sIcon = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($sFileName);
-				$sDownloadLink = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php/?operation=download_document&class=Attachment&id='.$iAttId.'&field=contents';
-				$oPage->add('<div class="attachment" id="attachment_'.$iAttId.'"><a href="'.$sDownloadLink.'"><img src="'.$sIcon.'"><br/>'.$sFileName.'</a><input type="hidden" name="attachments[]" value="'.$iAttId.'"/><br/>&nbsp;&nbsp;</div>');
+				$oPage->add(Dict::S('Attachments:NoAttachment'));	
+			}
+			else
+			{
+				while ($oAttachment = $oSet->Fetch())
+				{
+					$iAttId = $oAttachment->GetKey();
+					$oDoc = $oAttachment->Get('contents');
+					$sFileName = $oDoc->GetFileName();
+					$sIcon = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($sFileName);
+					$sDownloadLink = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php/?operation=download_document&class=Attachment&id='.$iAttId.'&field=contents';
+					$oPage->add('<div class="attachment" id="attachment_'.$iAttId.'"><a href="'.$sDownloadLink.'"><img src="'.$sIcon.'"><br/>'.$sFileName.'</a><input type="hidden" name="attachments[]" value="'.$iAttId.'"/><br/>&nbsp;&nbsp;</div>');
+				}
 			}
 		}
 	}
