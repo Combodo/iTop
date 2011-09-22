@@ -378,7 +378,7 @@ try
 		$sTargetState = utils::ReadParam('target_state', '');
 		$iTransactionId = utils::ReadParam('transaction_id', '');
 		$oObj->Set(MetaModel::GetStateAttributeCode($sClass), $sTargetState);
-		cmdbAbstractObject::DisplayCreationForm($oPage, $sClass, $oObj, array(), array('action' => utils::GetAbsoluteUrlAppRoot().'pages/UI.php', 'transcation_id' => $iTransactionId)); 
+		cmdbAbstractObject::DisplayCreationForm($oPage, $sClass, $oObj, array(), array('action' => utils::GetAbsoluteUrlAppRoot().'pages/UI.php', 'transaction_id' => $iTransactionId)); 
 		break;
 		
 		// DisplayBlock
