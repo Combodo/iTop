@@ -35,7 +35,15 @@ class DisplayTemplate
 	
 	public function __construct($sTemplate)
 	{
-		$this->m_aTags = array('itopblock', 'itopcheck', 'itoptabs', 'itoptab', 'itoptoggle', 'itopstring', 'sqlblock');
+		$this->m_aTags = array (
+			'itopblock',
+			'itopcheck',
+			'itoptabs',
+			'itoptab',
+			'itoptoggle',
+			'itopstring',
+			'sqlblock'
+		);
 		$this->m_sTemplate = $sTemplate;
 	}
 	
@@ -208,7 +216,6 @@ class DisplayTemplate
 				$oBlock->RenderContent($oPage);
 			break;
 			
-
 			case 'itopblock': // No longer used, handled by DisplayBlock::FromTemplate see above
 				$oPage->add("<!-- Application Error: should be handled by DisplayBlock::FromTemplate -->");
 			break;
@@ -272,6 +279,7 @@ class ObjectDetailsTemplate extends DisplayTemplate
 	
 	public function Render(WebPage $oPage, $aParams = array(), $bEditMode = false)
 	{
+		$sStateAttCode = MetaModel :: GetStateAttributeCode(get_class($this->m_oObj));
 		$aTemplateFields = array();
 		preg_match_all('/\\$this->([a-z0-9_]+)\\$/', $this->m_sTemplate, $aMatches);
 		$aTemplateFields = $aMatches[1];
@@ -302,6 +310,11 @@ class ObjectDetailsTemplate extends DisplayTemplate
 					$iFlags = $iFlags & ~OPT_ATT_READONLY; // Mandatory fields cannot be read-only when creating an object
 				}
 				
+				if ((!$oAttDef->IsWritable()) || ($sStateAttCode == $sAttCode))
+				{
+					$iFlags = $iFlags | OPT_ATT_READONLY;
+				}
+
 				if ($iFlags & OPT_ATT_HIDDEN)
 				{
 					$aParams['this->label('.$sAttCode.')'] = '';
@@ -313,7 +326,6 @@ class ObjectDetailsTemplate extends DisplayTemplate
 				{
 					if ($bEditMode && ($iFlags & (OPT_ATT_READONLY|OPT_ATT_SLAVE)))
 					{
-	
 						// Check if the attribute is not read-only because of a synchro...
 						$aReasons = array();
 						$sSynchroIcon = '';
@@ -335,7 +347,6 @@ class ObjectDetailsTemplate extends DisplayTemplate
 						$aFieldsMap[$sAttCode] = $iInputId;
 						$aParams['this->comments('.$sAttCode.')'] = $sSynchroIcon;
 					}
-	
 	
 					if ($bEditMode && !($iFlags & OPT_ATT_READONLY)) //TODO: check the data synchro status...
 					{
@@ -388,5 +399,4 @@ class ObjectDetailsTemplate extends DisplayTemplate
 }
 
 //DisplayTemplate::UnitTest();
-
 ?>

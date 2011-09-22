@@ -834,6 +834,11 @@ EOF
 		return $sPreviousTab;
 	}
 	
+	public function GetCurrentTab()
+	{
+		return $this->m_sCurrentTab;
+	}
+	
 	/**
 	 * Make the given tab the active one, as if it were clicked
 	 * DOES NOT WORK: apparently in the *old* version of jquery

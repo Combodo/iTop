@@ -88,6 +88,11 @@ class ajax_page extends WebPage
 		return $sPreviousTab;
 	}
 	
+	public function GetCurrentTab()
+	{
+		return $this->m_sCurrentTab;
+	}
+	
     /**
      * Echoes the content of the whole page
      * @return void
@@ -228,6 +233,44 @@ EOF
         {
             parent::add($sHtml);
         }
+    }
+
+	/**
+	 * Records the current state of the 'html' part of the page output
+	 * @return mixed The current state of the 'html' output
+	 */    
+    public function start_capture()
+    {
+        if (!empty($this->m_sCurrentTabContainer) && !empty($this->m_sCurrentTab))
+        {
+        	$iOffset = isset($this->m_aTabs[$this->m_sCurrentTabContainer][$this->m_sCurrentTab]) ? strlen($this->m_aTabs[$this->m_sCurrentTabContainer][$this->m_sCurrentTab]): 0;
+            return array('tc' => $this->m_sCurrentTabContainer, 'tab' => $this->m_sCurrentTab, 'offset' => $iOffset);
+        }
+        else
+        {
+            return parent::start_capture();
+        }
+    }
+
+    /**
+     * Returns the part of the html output that occurred since the call to start_capture
+     * and removes this part from the current html output
+     * @param $offset mixed The value returned by start_capture
+     * @return string The part of the html output that was added since the call to start_capture
+     */    
+    public function end_capture($offset)
+    {
+    	if (is_array($offset))
+    	{
+    		if ($this->m_sCurrentTab != $offset['tab']) echo "<p>le TAB a changé !!! currentTab: ".$this->m_sCurrentTab."</p>";
+	    	$sCaptured = substr($this->m_aTabs[$offset['tc']]['content'][$offset['tab']], $offset['offset']);
+	    	$this->m_aTabs[$offset['tc']]['content'][$offset['tab']] = substr($this->m_aTabs[$offset['tc']]['content'][$offset['tab']], 0, $offset['offset']);
+    	}
+    	else
+    	{
+    		$sCaptured = parent::end_capture($offset);
+    	}
+    	return $sCaptured;
     }
 
 	/**
