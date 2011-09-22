@@ -104,7 +104,7 @@ class AttachmentInstaller extends ModuleInstallerAPI
 		CMDBSource::Query($sRepair);
 
 		SetupWebPage::log_info("Initializing attachment/item_org_id - zero to the container");
-		$oSearch = DBObjectSearch::FromOQL("SELECT `$sTableName` WHERE item_org_id = 0");
+		$oSearch = DBObjectSearch::FromOQL("SELECT Attachment WHERE item_org_id = 0");
 		$oSet = new DBObjectSet($oSearch);
 		$iUpdated = 0;
 		while ($oAttachment = $oSet->Fetch())
