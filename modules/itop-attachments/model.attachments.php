@@ -394,7 +394,7 @@ EOF
 	function ajaxFileUpload()
 	{
 		//starting setting some animation when the ajax starts and completes
-		$("#loading").ajaxStart(function(){
+		$("#attachment_loading").ajaxStart(function(){
 			$(this).show();
 		}).ajaxComplete(function(){
 			$(this).hide();
@@ -462,9 +462,9 @@ EOF
 			$oPage->add('</span>');			
 			$oPage->add('<div style="clear:both"></div>');			
 			$sMaxUpload = $this->GetMaxUpload();
-			$oPage->p(Dict::S('Attachments:AddAttachment').'<input type="file" name="file" id="file" onChange="ajaxFileUpload();"><span style="display:none;" id="loading">&nbsp;<img src="../images/indicator.gif"></span> '.$sMaxUpload);
+			$oPage->p(Dict::S('Attachments:AddAttachment').'<input type="file" name="file" id="file" onChange="ajaxFileUpload();"><span style="display:none;" id="attachment_loading">&nbsp;<img src="../images/indicator.gif"></span> '.$sMaxUpload);
 			//$oPage->p('<input type="button" onClick="ajaxFileUpload();" value=" Upload !">');
-			$oPage->p('<span style="display:none;" id="loading">Loading, please wait...</span>');
+			$oPage->p('<span style="display:none;" id="attachment_loading">Loading, please wait...</span>');
 			$oPage->add('</fieldset>');
 			if ($this->m_bDeleteEnabled)
 			{
