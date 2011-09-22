@@ -897,6 +897,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Portal:TitleRequestDetailsFor_Request' => 'リクエスト%1$sの詳細：', // Details for request %1$s:',
 	'Portal:NoOpenRequest' => '本カテゴリにリクエストはありません', // 'No request in this category.',
 	'Portal:NoClosedRequest' => 'No request in this category',
+	'Portal:Button:ReopenTicket' => 'Reopen this ticket',
 	'Portal:Button:CloseTicket' => '本チケットを閉じます。', // 'Close this ticket',
 	'Portal:Button:UpdateRequest' => 'Update the request',
 	'Portal:EnterYourCommentsOnTicket' => '本チケットの解決について、コメントを入力してください。', // 'Enter your comments about the resolution of this ticket:',

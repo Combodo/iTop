@@ -735,6 +735,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'Portal:TitleRequestDetailsFor_Request' => 'Detalhes para requisição %1$s:',
 	'Portal:NoOpenRequest' => 'Nenhuma requisição neste categoria.',
 	'Portal:NoClosedRequest' => 'Nenhuma requisição neste categoria.',
+	'Portal:Button:ReopenTicket' => 'Reopen this ticket',
 	'Portal:Button:CloseTicket' => 'Fechar este ticket',
 	'Portal:Button:UpdateRequest' => 'Update the request',
 	'Portal:EnterYourCommentsOnTicket' => 'Digite os seus comentários sobre a resolução deste incidente:',

@@ -737,6 +737,7 @@ Quando è associata a un trigger, ad ogni azione è assegnato un numero "ordine"
 	'Portal:TitleRequestDetailsFor_Request' => 'Dettagli per la richiesta %1$s:',
 	'Portal:NoOpenRequest' => 'Nessuna richiesta in questa categoria.',
 	'Portal:NoClosedRequest' => 'Nessuna richiesta in questa categoria.',
+	'Portal:Button:ReopenTicket' => 'Reopen this ticket',
 	'Portal:Button:CloseTicket' => 'Chiudi questo ticket',
 	'Portal:Button:UpdateRequest' => 'Update the request',
 	'Portal:EnterYourCommentsOnTicket' => 'Inserisci il tuo commento sulla risoluzione di questo ticket:',

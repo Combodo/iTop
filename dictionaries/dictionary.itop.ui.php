@@ -883,6 +883,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'Portal:TitleRequestDetailsFor_Request' => 'Details for request %1$s:',
 	'Portal:NoOpenRequest' => 'No request in this category',
 	'Portal:NoClosedRequest' => 'No request in this category',
+	'Portal:Button:ReopenTicket' => 'Reopen this ticket',
 	'Portal:Button:CloseTicket' => 'Close this ticket',
 	'Portal:Button:UpdateRequest' => 'Update the request',
 	'Portal:EnterYourCommentsOnTicket' => 'Enter your comments about the resolution of this ticket:',

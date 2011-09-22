@@ -865,6 +865,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Portal:TitleRequestDetailsFor_Request' => 'Подробности запроса %1$s:',
 	'Portal:NoOpenRequest' => 'Нет запросов в этой категории.',
 	'Portal:NoClosedRequest' => 'No request in this category',
+	'Portal:Button:ReopenTicket' => 'Reopen this ticket',
 	'Portal:Button:CloseTicket' => 'Закрыть этот "тикет"',
 	'Portal:Button:UpdateRequest' => 'Update the request',
 	'Portal:EnterYourCommentsOnTicket' => 'Введите ваши каментарии по решению этого "тикета":',

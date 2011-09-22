@@ -906,6 +906,7 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'Portal:TitleRequestDetailsFor_Request' => 'Details für Request %1$s:',
 	'Portal:NoOpenRequest' => 'Keinen Request in dieser Kategorie',
 	'Portal:NoClosedRequest' => 'Keinen Request in dieser Kategorie',
+	'Portal:Button:ReopenTicket' => 'Reopen this ticket',
 	'Portal:Button:CloseTicket' => 'Dieses Ticket schließen',
 	'Portal:Button:UpdateRequest' => 'Update the request',
 	'Portal:EnterYourCommentsOnTicket' => 'Geben Sie einen Kommentar zur Lösung dieses Tickets ein:',

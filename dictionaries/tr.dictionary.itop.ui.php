@@ -864,6 +864,7 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'Portal:TitleRequestDetailsFor_Request' => 'İsteğin detayı %1$s:',
 	'Portal:NoOpenRequest' => 'Bu kategoride istek yok.',
 	'Portal:NoClosedRequest' => 'Bu kategoride istek yok.',
+	'Portal:Button:ReopenTicket' => 'Reopen this ticket',
 	'Portal:Button:CloseTicket' => 'Çağrıyı kapat',
 	'Portal:Button:UpdateRequest' => 'Update the request',
 	'Portal:EnterYourCommentsOnTicket' => 'İsteğin çözümüne yönelik açıklamalar:',

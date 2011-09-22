@@ -733,6 +733,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'Portal:TitleRequestDetailsFor_Request' => 'Détails de votre requête %1$s:',
 	'Portal:NoOpenRequest' => 'Aucune requête.',
 	'Portal:NoClosedRequest' => 'Aucune requête.',
+	'Portal:Button:ReopenTicket' => 'Réouvrir cette requête',
 	'Portal:Button:CloseTicket' => 'Clôre cette requête',
 	'Portal:Button:UpdateRequest' => 'Mettre à jour la requête',
 	'Portal:EnterYourCommentsOnTicket' => 'Vos commentaires à propos du traitement de cette requête:',

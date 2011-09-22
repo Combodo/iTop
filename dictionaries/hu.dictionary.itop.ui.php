@@ -732,6 +732,7 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 	'Portal:TitleRequestDetailsFor_Request' => '%1$s kérés részletei:',
 	'Portal:NoOpenRequest' => 'A kategóriához nem tartozik nyitott kérés.',
 	'Portal:NoClosedRequest' => 'No request in this category',
+	'Portal:Button:ReopenTicket' => 'Reopen this ticket',
 	'Portal:Button:CloseTicket' => 'Hibajegy lezárása',
 	'Portal:Button:UpdateRequest' => 'Update the request',
 	'Portal:EnterYourCommentsOnTicket' => 'Adjon megjegyzést a megoldáshoz:',
