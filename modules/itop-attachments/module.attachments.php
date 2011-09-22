@@ -30,6 +30,7 @@ SetupWebPage::AddModule(
 		),
 		'mandatory' => false,
 		'visible' => true,
+		'installer' => 'AttachmentInstaller',
 
 		// Components
 		//
@@ -63,4 +64,61 @@ SetupWebPage::AddModule(
 		),
 	)
 );
+
+// Module installation handler
+//
+class AttachmentInstaller extends ModuleInstallerAPI
+{
+	public static function BeforeWritingConfig(Config $oConfiguration)
+	{
+		// If you want to override/force some configuration values, do it here
+		return $oConfiguration;
+	}
+
+	/**
+	 * Handler called before creating or upgrading the database schema
+	 * @param $oConfiguration Config The new configuration of the application
+	 * @param $sPreviousVersion string PRevious version number of the module (empty string in case of first install)
+	 * @param $sCurrentVersion string Current version number of the module
+	 */
+	public static function BeforeDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
+	{
+		// If you want to migrate data from one format to another, do it here
+	}
+	
+	/**
+	 * Handler called after the creation/update of the database schema
+	 * @param $oConfiguration Config The new configuration of the application
+	 * @param $sPreviousVersion string PRevious version number of the module (empty string in case of first install)
+	 * @param $sCurrentVersion string Current version number of the module
+	 */
+	public static function AfterDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
+	{
+		// For each record having item_org_id unset,
+		//    get the org_id from the container object 
+		//
+		// Prerequisite: change null into 0 (workaround to the fact that we cannot use IS NULL in OQL)
+		SetupWebPage::log_info("Initializing attachment/item_org_id - null to zero"); 
+		$sRepair = "UPDATE `Attachment` SET `item_org_id` = 0 WHERE `item_org_id` IS NULL";
+		CMDBSource::Query($sRepair);
+
+		SetupWebPage::log_info("Initializing attachment/item_org_id - zero to the container"); 
+		$oSearch = DBObjectSearch::FromOQL('SELECT Attachment WHERE item_org_id = 0');
+		$oSet = new DBObjectSet($oSearch);
+		$iUpdated = 0;
+		while ($oAttachment = $oSet->Fetch())
+		{
+			$oContainer = MetaModel::GetObject($oAttachment->Get('item_class'), $oAttachment->Get('item_id'), false /* must be found */, true /* allow all data */);
+			if ($oContainer)
+			{
+				$oAttachment->SetItem($oContainer, true /*updateonchange*/);
+				$iUpdated++;
+			}
+		}
+
+		SetupWebPage::log_info("Initializing attachment/item_org_id - $iUpdated records have been adjusted"); 
+	}
+}
+
+
 ?>

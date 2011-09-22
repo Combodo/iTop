@@ -63,25 +63,25 @@ try
 		{
 			try
 			{
-		   		$oDoc = utils::ReadPostedDocument('file');
-		   		$oAttachment = MetaModel::NewObject('Attachment');
-		   		$oAttachment->Set('expire', time() + 3600); // one hour...
-		   		$oAttachment->Set('temp_id', $sTempId);
-		   		$oAttachment->Set('item_class', $sObjClass);
-		   		$oAttachment->Set('item_id', 0);
-		   		$oAttachment->Set('contents', $oDoc);
-		   		$iAttId = $oAttachment->DBInsert();
-		   		
-		   		$aResult['msg'] = $oDoc->GetFileName();
-		   		$aResult['icon'] = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($oDoc->GetFileName());
-		   		$aResult['att_id'] = $iAttId;
+				$oDoc = utils::ReadPostedDocument('file');
+				$oAttachment = MetaModel::NewObject('Attachment');
+				$oAttachment->Set('expire', time() + 3600); // one hour...
+				$oAttachment->Set('temp_id', $sTempId);
+				$oAttachment->Set('item_class', $sObjClass);
+				$oAttachment->SetDefaultOrgId();
+				$oAttachment->Set('contents', $oDoc);
+				$iAttId = $oAttachment->DBInsert();
+				
+				$aResult['msg'] = $oDoc->GetFileName();
+				$aResult['icon'] = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($oDoc->GetFileName());
+				$aResult['att_id'] = $iAttId;
 			}
 			catch (FileUploadException $e)
 			{
 					$aResult['error'] = $e->GetMessage();
 			}
-	   }
-	   $oPage->add(json_encode($aResult));
+		}
+		$oPage->add(json_encode($aResult));
 		break;
 	
 	case 'remove':

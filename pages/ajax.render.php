@@ -592,16 +592,17 @@ function DownloadDocument(WebPage $oPage, $sClass, $id, $sAttCode, $sContentDisp
 {
 	try
 	{
-		$oObj = MetaModel::GetObject($sClass, $id);
-		if (is_object($oObj))
+		$oObj = MetaModel::GetObject($sClass, $id, false, false);
+		if (!is_object($oObj))
 		{
-			$oDocument = $oObj->Get($sAttCode);
-			if (is_object($oDocument))
-			{
-				$oPage->SetContentType($oDocument->GetMimeType());
-				$oPage->SetContentDisposition($sContentDisposition,$oDocument->GetFileName());
-				$oPage->add($oDocument->GetData());
-			}
+			throw new Exception("Invalid id ($id) for class '$sClass' - the object does not exist or you are not allowed to view it");
+		}
+		$oDocument = $oObj->Get($sAttCode);
+		if (is_object($oDocument))
+		{
+			$oPage->SetContentType($oDocument->GetMimeType());
+			$oPage->SetContentDisposition($sContentDisposition,$oDocument->GetFileName());
+			$oPage->add($oDocument->GetData());
 		}
 	}
 	catch(Exception $e)
