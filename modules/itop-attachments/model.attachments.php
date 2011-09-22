@@ -34,7 +34,7 @@ class Attachment extends DBObject
 	{
 		$aParams = array
 		(
-			"category" => "addon",
+			"category" => "addon,bizmodel",
 			"key_type" => "autoincrement",
 			"name_attcode" => array('item_class', 'temp_id'),
 			"state_attcode" => "",
@@ -51,13 +51,105 @@ class Attachment extends DBObject
 
 		MetaModel::Init_AddAttribute(new AttributeString("item_class", array("allowed_values"=>null, "sql"=>"item_class", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("item_id", array("allowed_values"=>null, "sql"=>"item_id", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeInteger("item_org_id", array("allowed_values"=>null, "sql"=>"item_org_id", "default_value"=>0, "is_null_allowed"=>true, "depends_on"=>array())));
 
 		MetaModel::Init_AddAttribute(new AttributeBlob("contents", array("depends_on"=>array())));
 
-		MetaModel::Init_SetZListItems('details', array('temp_id', 'item_class', 'item_id'));
+		MetaModel::Init_SetZListItems('details', array('temp_id', 'item_class', 'item_id', 'item_org_id'));
 		MetaModel::Init_SetZListItems('advanced_search', array('temp_id', 'item_class', 'item_id'));
 		MetaModel::Init_SetZListItems('standard_search', array('temp_id', 'item_class', 'item_id'));
 		MetaModel::Init_SetZListItems('list', array('temp_id', 'item_class', 'item_id'));
+	}
+
+	/**
+	 * Maps the given context parameter name to the appropriate filter/search code for this class
+	 * @param string $sContextParam Name of the context parameter, e.g. 'org_id'
+	 * @return string Filter code, e.g. 'customer_id'
+	 */
+	public static function MapContextParam($sContextParam)
+	{
+		if ($sContextParam == 'org_id')
+		{
+			return 'item_org_id';
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	/**
+	 * Set/Update all of the '_item' fields
+	 * @param object $oItem Container item
+	 * @return void
+	 */
+	public function SetItem($oItem, $bUpdateOnChange = false)
+	{
+		$sClass = get_class($oItem);
+		$iItemId = $oItem->GetKey();
+
+ 		$this->Set('item_class', $sClass);
+ 		$this->Set('item_id', $iItemId);
+
+		$aCallSpec = array($sClass, 'MapContextParam');
+		if (is_callable($aCallSpec))
+		{
+			$sAttCode = call_user_func($aCallSpec, 'org_id'); // Returns null when there is no mapping for this parameter					
+			if (MetaModel::IsValidAttCode($sClass, $sAttCode))
+			{
+				$iOrgId = $oItem->Get($sAttCode);
+				if ($iOrgId > 0)
+				{
+					if ($iOrgId != $this->Get('item_org_id'))
+					{
+						$this->Set('item_org_id', $iOrgId);
+						if ($bUpdateOnChange)
+						{
+							$this->DBUpdate();
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Give a default value for item_org_id (if relevant...)
+	 * @return void
+	 */
+	public function SetDefaultOrgId()
+	{
+		// First check that the organization CAN be fetched from the target class
+		//
+		$sClass = $this->Get('item_class');
+		$aCallSpec = array($sClass, 'MapContextParam');
+		if (is_callable($aCallSpec))
+		{
+			$sAttCode = call_user_func($aCallSpec, 'org_id'); // Returns null when there is no mapping for this parameter					
+			if (MetaModel::IsValidAttCode($sClass, $sAttCode))
+			{
+				// Second: check that the organization CAN be fetched from the current user
+				//
+				if (MetaModel::IsValidClass('Person'))
+				{
+					$aCallSpec = array($sClass, 'MapContextParam');
+					if (is_callable($aCallSpec))
+					{
+						$sAttCode = call_user_func($aCallSpec, 'org_id'); // Returns null when there is no mapping for this parameter					
+						if (MetaModel::IsValidAttCode($sClass, $sAttCode))
+						{
+							// OK - try it
+							//
+							$oCurrentPerson = MetaModel::GetObject('Person', UserRights::GetContactId(), false);
+							if ($oCurrentPerson)
+							{
+						 		$this->Set('item_org_id', $oCurrentPerson->Get($sAttCode));
+						 	}
+						}
+					}
+				}
+			}
+		}
 	}
 
 	// Todo - implement a cleanup function (see a way to do that generic !)
@@ -181,6 +273,16 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 
 	public function OnDBUpdate($oObject, $oChange = null)
 	{
+		if ($this->IsTargetObject($oObject))
+		{
+			// Get all current attachments
+			$oSearch = DBObjectSearch::FromOQL("SELECT Attachment WHERE item_class = :class AND item_id = :item_id");
+			$oSet = new DBObjectSet($oSearch, array(), array('class' => get_class($oObject), 'item_id' => $oObject->GetKey()));
+			while ($oAttachment = $oSet->Fetch())
+			{
+				$oAttachment->SetItem($oObject, true /*updateonchange*/);
+			}			
+		}
 	}
 	
 	public function OnDBInsert($oObject, $oChange = null)
@@ -424,7 +526,7 @@ EOF
 					}
 					else
 					{
-						$oAttachment->Set('item_id', $oObject->GetKey());
+						$oAttachment->SetItem($oObject);
 						$oAttachment->Set('temp_id', '');
 						$oAttachment->DBUpdate();
 						// temporary attachment confirmed, list it in the history
