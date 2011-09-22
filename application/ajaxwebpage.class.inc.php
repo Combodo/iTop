@@ -243,7 +243,7 @@ EOF
     {
         if (!empty($this->m_sCurrentTabContainer) && !empty($this->m_sCurrentTab))
         {
-        	$iOffset = isset($this->m_aTabs[$this->m_sCurrentTabContainer][$this->m_sCurrentTab]) ? strlen($this->m_aTabs[$this->m_sCurrentTabContainer][$this->m_sCurrentTab]): 0;
+        	$iOffset = isset($this->m_aTabs[$this->m_sCurrentTabContainer]['content'][$this->m_sCurrentTab]) ? strlen($this->m_aTabs[$this->m_sCurrentTabContainer]['content'][$this->m_sCurrentTab]): 0;
             return array('tc' => $this->m_sCurrentTabContainer, 'tab' => $this->m_sCurrentTab, 'offset' => $iOffset);
         }
         else
@@ -262,9 +262,15 @@ EOF
     {
     	if (is_array($offset))
     	{
-    		if ($this->m_sCurrentTab != $offset['tab']) echo "<p>le TAB a changé !!! currentTab: ".$this->m_sCurrentTab."</p>";
-	    	$sCaptured = substr($this->m_aTabs[$offset['tc']]['content'][$offset['tab']], $offset['offset']);
-	    	$this->m_aTabs[$offset['tc']]['content'][$offset['tab']] = substr($this->m_aTabs[$offset['tc']]['content'][$offset['tab']], 0, $offset['offset']);
+    		if (isset($this->m_aTabs[$offset['tc']]['content'][$offset['tab']]))
+    		{
+		    	$sCaptured = substr($this->m_aTabs[$offset['tc']]['content'][$offset['tab']], $offset['offset']);
+		    	$this->m_aTabs[$offset['tc']]['content'][$offset['tab']] = substr($this->m_aTabs[$offset['tc']]['content'][$offset['tab']], 0, $offset['offset']);
+    		}
+    		else
+    		{
+    			$sCaptured = '';
+    		}
     	}
     	else
     	{

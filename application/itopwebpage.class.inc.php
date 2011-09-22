@@ -937,8 +937,15 @@ EOF
     {
     	if (is_array($offset))
     	{
-	    	$sCaptured = substr($this->m_aTabs[$offset['tc']][$offset['tab']], $offset['offset']);
-	    	$this->m_aTabs[$offset['tc']][$offset['tab']] = substr($this->m_aTabs[$offset['tc']][$offset['tab']], 0, $offset['offset']);
+    		if (isset($this->m_aTabs[$offset['tc']][$offset['tab']]))
+    		{
+		    	$sCaptured = substr($this->m_aTabs[$offset['tc']][$offset['tab']], $offset['offset']);
+		    	$this->m_aTabs[$offset['tc']][$offset['tab']] = substr($this->m_aTabs[$offset['tc']][$offset['tab']], 0, $offset['offset']);
+    		}
+    		else
+    		{
+    			$sCaptured = '';
+    		}
     	}
     	else
     	{
