@@ -36,5 +36,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Attachment:Max_Go' => '(Maximale Datei-Größe: %1$s Go)',
 	'Attachment:Max_Mo' => '(Maximale Datei-Größe: %1$s Mo)',
 	'Attachment:Max_Ko' => '(Maximale Datei-Größe: %1$s Ko)',
+	'Attachments:NoAttachment' => 'Kein Attachment.',
 ));
 ?>

@@ -394,7 +394,7 @@ EOF
 	function ajaxFileUpload()
 	{
 		//starting setting some animation when the ajax starts and completes
-		$("#loading").ajaxStart(function(){
+		$("#attachment_loading").ajaxStart(function(){
 			$(this).show();
 		}).ajaxComplete(function(){
 			$(this).hide();
@@ -462,9 +462,9 @@ EOF
 			$oPage->add('</span>');			
 			$oPage->add('<div style="clear:both"></div>');			
 			$sMaxUpload = $this->GetMaxUpload();
-			$oPage->p(Dict::S('Attachments:AddAttachment').'<input type="file" name="file" id="file" onChange="ajaxFileUpload();"><span style="display:none;" id="loading">&nbsp;<img src="../images/indicator.gif"></span> '.$sMaxUpload);
+			$oPage->p(Dict::S('Attachments:AddAttachment').'<input type="file" name="file" id="file" onChange="ajaxFileUpload();"><span style="display:none;" id="attachment_loading">&nbsp;<img src="../images/indicator.gif"></span> '.$sMaxUpload);
 			//$oPage->p('<input type="button" onClick="ajaxFileUpload();" value=" Upload !">');
-			$oPage->p('<span style="display:none;" id="loading">Loading, please wait...</span>');
+			$oPage->p('<span style="display:none;" id="attachment_loading">Loading, please wait...</span>');
 			$oPage->add('</fieldset>');
 			if ($this->m_bDeleteEnabled)
 			{
@@ -474,14 +474,21 @@ EOF
 		else
 		{
 			$oPage->add('<span id="attachments">');
-			while ($oAttachment = $oSet->Fetch())
+			if ($oSet->Count() == 0)
 			{
-				$iAttId = $oAttachment->GetKey();
-				$oDoc = $oAttachment->Get('contents');
-				$sFileName = $oDoc->GetFileName();
-				$sIcon = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($sFileName);
-				$sDownloadLink = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php/?operation=download_document&class=Attachment&id='.$iAttId.'&field=contents';
-				$oPage->add('<div class="attachment" id="attachment_'.$iAttId.'"><a href="'.$sDownloadLink.'"><img src="'.$sIcon.'"><br/>'.$sFileName.'</a><input type="hidden" name="attachments[]" value="'.$iAttId.'"/><br/>&nbsp;&nbsp;</div>');
+				$oPage->add(Dict::S('Attachments:NoAttachment'));	
+			}
+			else
+			{
+				while ($oAttachment = $oSet->Fetch())
+				{
+					$iAttId = $oAttachment->GetKey();
+					$oDoc = $oAttachment->Get('contents');
+					$sFileName = $oDoc->GetFileName();
+					$sIcon = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($sFileName);
+					$sDownloadLink = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php/?operation=download_document&class=Attachment&id='.$iAttId.'&field=contents';
+					$oPage->add('<div class="attachment" id="attachment_'.$iAttId.'"><a href="'.$sDownloadLink.'"><img src="'.$sIcon.'"><br/>'.$sFileName.'</a><input type="hidden" name="attachments[]" value="'.$iAttId.'"/><br/>&nbsp;&nbsp;</div>');
+				}
 			}
 		}
 	}
