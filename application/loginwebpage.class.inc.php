@@ -346,12 +346,10 @@ EOF
 					case 'external':
 					// Web server supplied authentication
 					$bExternalAuth = false;
-                    $sExtAuthVar = MetaModel::GetConfig()->GetExternalAuthenticationVariable(); // In which variable is the info passed ?
-                    $sEval = '$bExternalAuth = isset('.$sExtAuthVar.');';
-                    eval($sEval);
-                    if ($bExternalAuth)
-                    {
-						eval('$sAuthUser = '.$sExtAuthVar.';'); // Retrieve the value
+					$sExtAuthVar = MetaModel::GetConfig()->GetExternalAuthenticationVariable(); // In which variable is the info passed ?
+					eval('$sAuthUser = isset('.$sExtAuthVar.') ? '.$sExtAuthVar.' : false;'); // Retrieve the value
+					if ($sAuthUser && (strlen($sAuthUser) > 0))
+					{
 						$sAuthPwd = ''; // No password in this case the web server already authentified the user...
 						$sLoginMode = 'external';
 						$sAuthentication = 'external';
