@@ -623,7 +623,7 @@ EOF
             }
             echo "</style>\n";
         }
-		echo "<link rel=\"search\" type=\"application/opensearchdescription+xml\" title=\"iTop\" href=\"".utils::GetAbsoluteUrlAppRoot()."opensearch.xml.php\" />\n";
+		echo "<link rel=\"search\" type=\"application/opensearchdescription+xml\" title=\"iTop\" href=\"".utils::GetAbsoluteUrlAppRoot()."pages/opensearch.xml.php\" />\n";
         echo "</head>\n";
         echo "<body>\n";
 
