@@ -108,7 +108,7 @@ function SelectServiceCategory($oP, $oUserOrg)
 		{
 			$sChecked = "checked";
 		}
-		$oP->p("<tr><td style=\"vertical-align:top\"><p><input name=\"attr_service_id\" $sChecked type=\"radio\" id=\"service_$id\" value=\"$id\"></p></td><td style=\"vertical-align:top\"><p><b><label for=\"service_$id\">".htmlentities($oService->GetName(), ENT_QUOTES, 'UTF-8')."</label></b></p>");
+		$oP->p("<tr><td style=\"vertical-align:top\"><p><input name=\"attr_service_id\" $sChecked type=\"radio\" id=\"service_$id\" value=\"$id\"></p></td><td style=\"vertical-align:top\"><p><b><label for=\"service_$id\">".$oService->GetName()."</label></b></p>");
 		$oP->p("<p>".$oService->GetAsHTML('description')."</p></td></tr>");		
 	}
 	$oP->add("</table>\n");	
@@ -144,7 +144,7 @@ function SelectServiceSubCategory($oP, $oUserOrg)
 	if (is_object($oServiceCategory))
 	{
 		$oP->add("<div class=\"wizContainer\" id=\"form_select_servicesubcategory\">\n");
-		$oP->add("<h1 id=\"select_subcategory\">".Dict::Format('Portal:SelectSubcategoryFrom_Service', htmlentities($oServiceCategory->GetName(), ENT_QUOTES, 'UTF-8'))."</h1>\n");
+		$oP->add("<h1 id=\"select_subcategory\">".Dict::Format('Portal:SelectSubcategoryFrom_Service', $oServiceCategory->GetName())."</h1>\n");
 		$oP->WizardFormStart('request_wizard', $iDefaultWizNext);
 		$oP->add("<table>\n");
 		while($oSubService = $oSet->Fetch())
@@ -163,7 +163,7 @@ function SelectServiceSubCategory($oP, $oUserOrg)
 			$oP->add("</td>");
 
 			$oP->add("<td style=\"vertical-align:top\">");
-			$oP->add("<p><b><label for=\"servicesubcategory_$id\">".htmlentities($oSubService->GetName(), ENT_QUOTES, 'UTF-8')."</label></b></p>");
+			$oP->add("<p><b><label for=\"servicesubcategory_$id\">".$oSubService->GetName()."</label></b></p>");
 			$oP->add("<p>".$oSubService->GetAsHTML('description')."</p>");
 			$oP->add("</td>");
 			$oP->add("</tr>");
@@ -221,9 +221,9 @@ EOF
 		$oRequest->Set('servicesubcategory_id', $aParameters['servicesubcategory_id']);
 		
 		$oAttDef = MetaModel::GetAttributeDef('UserRequest', 'service_id');
-		$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => htmlentities($oServiceCategory->GetName(), ENT_QUOTES, 'UTF-8'));
+		$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $oServiceCategory->GetName());
 		$oAttDef = MetaModel::GetAttributeDef('UserRequest', 'servicesubcategory_id');
-		$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => htmlentities($oServiceSubCategory->GetName(), ENT_QUOTES, 'UTF-8'));
+		$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $oServiceSubCategory->GetName());
 
 		$iFlags = 0;
 		foreach($aList as $sAttCode)
