@@ -834,6 +834,11 @@ EOF
 		return $sPreviousTab;
 	}
 	
+	public function GetCurrentTab()
+	{
+		return $this->m_sCurrentTab;
+	}
+	
 	/**
 	 * Make the given tab the active one, as if it were clicked
 	 * DOES NOT WORK: apparently in the *old* version of jquery
@@ -932,8 +937,15 @@ EOF
     {
     	if (is_array($offset))
     	{
-	    	$sCaptured = substr($this->m_aTabs[$offset['tc']][$offset['tab']], $offset['offset']);
-	    	$this->m_aTabs[$offset['tc']][$offset['tab']] = substr($this->m_aTabs[$offset['tc']][$offset['tab']], 0, $offset['offset']);
+    		if (isset($this->m_aTabs[$offset['tc']][$offset['tab']]))
+    		{
+		    	$sCaptured = substr($this->m_aTabs[$offset['tc']][$offset['tab']], $offset['offset']);
+		    	$this->m_aTabs[$offset['tc']][$offset['tab']] = substr($this->m_aTabs[$offset['tc']][$offset['tab']], 0, $offset['offset']);
+    		}
+    		else
+    		{
+    			$sCaptured = '';
+    		}
     	}
     	else
     	{

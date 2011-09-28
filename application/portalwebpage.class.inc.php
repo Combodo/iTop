@@ -147,9 +147,18 @@ EOF
 
 	$this->add_script(
 <<<EOF
-	function CheckSelection(sMessage)
+	function CheckSelection(sMessage, sInputId)
 	{
-		var bResult = ($('input:checked').length > 0);
+		var bResult;
+		if (sInputId.length > 0)
+		{
+			bResult = ($('input[name='+sInputId+']:checked').length > 0);
+		}
+		else
+		{
+			// First select found...
+			bResult = ($('input:checked').length > 0);
+		}
 		if (!bResult)
 		{
 			alert(sMessage);
@@ -804,12 +813,12 @@ EOF
 		}
 	}
 
-	public function WizardCheckSelectionOnSubmit($sMessageIfNoSelection)
+	public function WizardCheckSelectionOnSubmit($sMessageIfNoSelection, $sInputName = '')
 	{
 		$this->add_ready_script(
 <<<EOF
 	$('#{$this->m_sWizardId}').submit(function() {
-		return CheckSelection('$sMessageIfNoSelection');
+		return CheckSelection('$sMessageIfNoSelection', '$sInputName');
 	});
 EOF
 		);
