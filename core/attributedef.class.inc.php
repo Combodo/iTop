@@ -206,6 +206,15 @@ abstract class AttributeDefinition
 		}
 		return $sLabel;
 	}
+	
+	/**
+	 * Get the label corresponding to the given value
+	 * To be overloaded for localized enums
+	 */
+	public function GetValueLabel($sValue)
+	{
+		return GetAsHTML($sValue);
+	}
 
 	public function GetLabel_Obsolete()
 	{
@@ -1333,7 +1342,12 @@ class AttributeFinalClass extends AttributeString
 	{
 		return '=';
 	}
-
+	
+	public function GetValueLabel($sValue)
+	{
+		if (empty($sValue)) return '';
+		return MetaModel::GetName($sValue);
+	}
 }
 
 
