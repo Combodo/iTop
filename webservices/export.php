@@ -32,6 +32,17 @@ require_once(APPROOT.'/application/xmlpage.class.inc.php');
 
 require_once(APPROOT.'/application/startup.inc.php');
 
+try
+{
+	// Do this before loging, in order to allow setting user credentials from within the file
+	utils::UseParamFile();
+}
+catch(Exception $e)
+{
+	echo "Error: ".$e->GetMessage()."<br/>\n";
+	exit -2;
+}
+
 require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
@@ -72,6 +83,12 @@ if (!empty($sExpression))
 			{
 				case 'html':
 				$oP = new NiceWebPage("iTop - Export");
+
+				// Integration within MS-Excel web queries + HTTPS + IIS:
+				// MS-IIS set these header values with no-cache... while Excel fails to do the job if using HTTPS
+				// Then the fix is to force the reset of header values Pragma and Cache-control 
+				header("Pragma:", true);
+				header("Cache-control:", true);
 
 				// The HTML output is made for pages located in the /pages/ folder
 				// since this page is in a different folder, let's adjust the HTML 'base' attribute
