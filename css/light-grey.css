@@ -1105,3 +1105,6 @@ div.actions_button a, .actions_button a:hover, .actions_button a:visited {
 	line-height: 17px;
 	display: block;
 }
+select#org_id {
+	max-width: 90%;
+}
