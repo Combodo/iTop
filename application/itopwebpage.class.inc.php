@@ -624,6 +624,8 @@ EOF
             echo "</style>\n";
         }
 		echo "<link rel=\"search\" type=\"application/opensearchdescription+xml\" title=\"iTop\" href=\"".utils::GetAbsoluteUrlAppRoot()."pages/opensearch.xml.php\" />\n";
+		echo "<link rel=\"shortcut icon\" href=\"".utils::GetAbsoluteUrlAppRoot()."images/favicon.ico\" />\n";
+		
         echo "</head>\n";
         echo "<body>\n";
 

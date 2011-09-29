@@ -413,6 +413,7 @@ class WebPage
             }
             echo "</style>\n";
         }
+ 		echo "<link rel=\"shortcut icon\" href=\"".utils::GetAbsoluteUrlAppRoot()."images/favicon.ico\" />\n";
         echo "</head>\n";
         echo "<body>\n";
         echo self::FilterXSS($this->s_content);
