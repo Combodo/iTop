@@ -557,6 +557,10 @@ class UserRightsProfile extends UserRightsAddOnAPI
 				{
 					$oContact->Set('org_id', $iOrgId);
 				}
+				if (MetaModel::IsValidAttCode('Person', 'phone'))
+				{
+					$oContact->Set('phone', '+00 000 000 000');
+				}
 				$oContact->Set('email', 'my.email@foo.org');
 				$iContactId = $oContact->DBInsertTrackedNoReload($oChange, true /* skip security */);
 			}
