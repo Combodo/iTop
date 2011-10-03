@@ -383,6 +383,24 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
+		'cas_user_synchro' => array(
+			'type' => 'bool',
+			'description' => 'Whether or not to synchronize users with CAS/LDAP',
+			// examples... not used (nor 'description')
+			'default' => 0,
+			'value' => 0,
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
+		'cas_profile_pattern' => array(
+			'type' => 'string',
+			'description' => 'A regular expression pattern to extract the name of the iTop profile from the name of an LDAP/CAS group',
+			// examples... not used (nor 'description')
+			'default' => '/^cn=([^,]+),/',
+			'value' => '/^cn=([^,]+),/',
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
 		'cas_debug' => array(
 			'type' => 'bool',
 			'description' => 'Activate the CAS debug',
