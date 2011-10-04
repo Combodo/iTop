@@ -146,7 +146,12 @@ class iTopWebPage extends NiceWebPage
 		// that the tabs aren't changed on click, and any custom event name can be
 		// specified. Note that if you define a callback for the 'select' event, it
 		// will be executed for the selected tab whenever the hash changes.
-		tabs.tabs({ event: 'change'});
+		tabs.tabs({ event: 'change', 'show': function(event, ui) {
+				$('.resizable', ui.panel).resizable(); // Make resizable everything that claims to be resizable !
+			}
+		});
+		
+		$('.resizable').filter(':visible').resizable();
 	}
 	catch(err)
 	{
@@ -198,7 +203,6 @@ EOF
 	    } 
 	});
 
-	$('.resizable').resizable(); // Make resizable everything that claims to be resizable !
 	// Adjust initial size
 	$('.v-resizable').each( function()
 		{
