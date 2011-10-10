@@ -29,8 +29,8 @@ class MySQLException extends CoreException
 {
 	public function __construct($sIssue, $aContext)
 	{
-		$aContext['mysql_error'] = mysql_error();
-		$aContext['mysql_errno'] = mysql_errno();
+		$aContext['mysql_error'] = CMDBSource::GetError();
+		$aContext['mysql_errno'] = CMDBSource::GetErrNo();;
 		parent::__construct($sIssue, $aContext);
 	}
 }
@@ -56,13 +56,13 @@ class CMDBSource
 		self::$m_sDBUser = $sUser;
 		self::$m_sDBPwd = $sPwd;
 		self::$m_sDBName = $sSource;
-		if (!self::$m_resDBLink = mysql_connect($sServer, $sUser, $sPwd))
+		if (!self::$m_resDBLink = mysqli_connect($sServer, $sUser, $sPwd))
 		{
 			throw new MySQLException('Could not connect to the DB server', array('host'=>$sServer, 'user'=>$sUser));
 		}
 		if (!empty($sSource))
 		{
-			if (!mysql_select_db($sSource, self::$m_resDBLink))
+			if (!((bool)mysqli_query(self::$m_resDBLink, "USE $sSource")))
 			{
 				throw new MySQLException('Could not select DB', array('host'=>$sServer, 'user'=>$sUser, 'db_name'=>$sSource));
 			}
@@ -118,7 +118,7 @@ class CMDBSource
 		{
 			// In case we don't have rights to enumerate the databases
 			// Let's try to connect directly
-			return @mysql_select_db($sSource, self::$m_resDBLink);
+			return @((bool)mysqli_query(self::$m_resDBLink, "USE $sSource"));
 		}
 
 	}
@@ -131,7 +131,7 @@ class CMDBSource
 	
 	public static function SelectDB($sSource)
 	{
-		if (!mysql_select_db($sSource, self::$m_resDBLink))
+		if (!((bool)mysqli_query(self::$m_resDBLink, "USE $sSource")))
 		{
 			throw new MySQLException('Could not select DB', array('db_name'=>$sSource));
 		}
@@ -171,6 +171,16 @@ class CMDBSource
 		return $res;
 	}
 
+	public static function GetErrNo()
+	{
+		return mysqli_errno(self::$m_resDBLink);
+	}
+
+	public static function GetError()
+	{
+		return mysqli_error(self::$m_resDBLink);
+	}
+
 	public static function DBHost() {return self::$m_sDBHost;}
 	public static function DBUser() {return self::$m_sDBUser;}
 	public static function DBPwd() {return self::$m_sDBPwd;}
@@ -208,7 +218,7 @@ class CMDBSource
 		// Quote if not a number or a numeric string
 		if ($bAlways || is_string($value))
 		{
-			$value = $cQuoteStyle . mysql_real_escape_string($value, self::$m_resDBLink) . $cQuoteStyle;
+			$value = $cQuoteStyle . mysqli_real_escape_string(self::$m_resDBLink, $value) . $cQuoteStyle;
 		}
 		return $value;
 	}
@@ -222,7 +232,7 @@ class CMDBSource
 		// $sSQLQuery .= MyHelpers::MakeSQLComment($aTraceInf);
 	  
 		$oKPI = new ExecutionKPI();
-		$result = mysql_query($sSQLQuery, self::$m_resDBLink);
+		$result = mysqli_query(self::$m_resDBLink, $sSQLQuery);
 		if (!$result) 
 		{
 			throw new MySQLException('Failed to issue SQL query', array('query' => $sSQLQuery));
@@ -236,15 +246,21 @@ class CMDBSource
 	{
 		$sSQL = "SHOW TABLE STATUS LIKE '$sTable'";
 		$result = self::Query($sSQL);
-		$aRow = mysql_fetch_assoc($result);
+		$aRow = mysqli_fetch_assoc($result);
 		$iNextInsertId = $aRow['Auto_increment'];
 		return $iNextInsertId;
 	}
 
 	public static function GetInsertId()
 	{
-		return mysql_insert_id(self::$m_resDBLink);
+		$iRes = mysqli_insert_id(self::$m_resDBLink);
+		if (is_null($iRes))
+		{
+			return 0;
+		}
+		return $iRes;
 	}
+
 	public static function InsertInto($sSQLQuery)
 	{
 		if (self::Query($sSQLQuery))
@@ -261,37 +277,37 @@ class CMDBSource
 
 	public static function QueryToScalar($sSql)
 	{
-		$result = mysql_query($sSql, self::$m_resDBLink);
+		$result = mysqli_query(self::$m_resDBLink, $sSql);
 		if (!$result)
 		{
 			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql));
 		}
-		if ($aRow = mysql_fetch_array($result, MYSQL_BOTH))
+		if ($aRow = mysqli_fetch_array($result, MYSQLI_BOTH))
 		{
 			$res = $aRow[0];
 		}
 		else
 		{
-			mysql_free_result($result);
+			mysqli_free_result($result);
 			throw new MySQLException('Found no result for query', array('query' => $sSql));
 		}
-		mysql_free_result($result);
+		mysqli_free_result($result);
 		return $res;
 	}
 
 	public static function QueryToArray($sSql)
 	{
 		$aData = array();
-		$result = mysql_query($sSql, self::$m_resDBLink);
+		$result = mysqli_query(self::$m_resDBLink, $sSql);
 		if (!$result)
 		{
 			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql));
 		}
-		while ($aRow = mysql_fetch_array($result, MYSQL_BOTH))
+		while ($aRow = mysqli_fetch_array($result, MYSQLI_BOTH))
 		{
 			$aData[] = $aRow;
 		}
-		mysql_free_result($result);
+		mysqli_free_result($result);
 		return $aData;
 	}
 
@@ -309,7 +325,7 @@ class CMDBSource
 	public static function ExplainQuery($sSql)
 	{
 		$aData = array();
-		$result = mysql_query("EXPLAIN $sSql", self::$m_resDBLink);
+		$result = mysqli_query(self::$m_resDBLink, "EXPLAIN $sSql");
 		if (!$result)
 		{
 			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql));
@@ -318,62 +334,62 @@ class CMDBSource
 		$aNames = self::GetColumns($result);
 
 		$aData[] = $aNames;
-		while ($aRow = mysql_fetch_array($result, MYSQL_ASSOC))
+		while ($aRow = mysqli_fetch_array($result, MYSQLI_ASSOC))
 		{
 			$aData[] = $aRow;
 		}
-		mysql_free_result($result);
+		mysqli_free_result($result);
 		return $aData;
 	}
 
 	public static function TestQuery($sSql)
 	{
-		$result = mysql_query("EXPLAIN $sSql", self::$m_resDBLink);
+		$result = mysqli_query(self::$m_resDBLink, "EXPLAIN $sSql");
 		if (!$result)
 		{
-			return mysql_error();
+			return self::GetError();
 		}
 
-		mysql_free_result($result);
+		mysqli_free_result($result);
 		return '';
 	}
 
 	public static function NbRows($result)
 	{
-		return mysql_num_rows($result);
+		return mysqli_num_rows($result);
 	}
 
 	public static function FetchArray($result)
 	{
-		return mysql_fetch_array($result, MYSQL_ASSOC);
+		return mysqli_fetch_array($result, MYSQLI_ASSOC);
 	}
 
 	public static function GetColumns($result)
 	{
 		$aNames = array();
-		for ($i = 0; $i < mysql_num_fields($result) ; $i++)
+		for ($i = 0; $i < (($___mysqli_tmp = mysqli_num_fields($result)) ? $___mysqli_tmp : 0) ; $i++)
 		{
-		   $meta = mysql_fetch_field($result, $i);
-		   if (!$meta)
-		   {
+			$meta = mysqli_fetch_field_direct($result, $i);
+			if (!$meta)
+			{
 				throw new MySQLException('mysql_fetch_field: No information available', array('query'=>$sSql, 'i'=>$i));
-		   }
-		   else
-		   {
-	   		$aNames[] = $meta->name;
-		   }
+			}
+			else
+			{
+				$aNames[] = $meta->name;
+			}
 		}
 		return $aNames;
 	}
 
 	public static function Seek($result, $iRow)
 	{
-		return mysql_data_seek($result, $iRow);
+		return mysqli_data_seek($result, $iRow);
 	}
 
 	public static function FreeResult($result)
 	{
-		return mysql_free_result($result);
+		return ((mysqli_free_result($result) || (is_object($result) && (get_class($result) == "mysqli_result"))) ? true : false);
 	}
 
 	public static function IsTable($sTable)
@@ -511,18 +527,18 @@ class CMDBSource
 	public static function DumpTable($sTable)
 	{
 		$sSql = "SELECT * FROM `$sTable`";
-		$result = mysql_query($sSql, self::$m_resDBLink);
+		$result = mysqli_query(self::$m_resDBLink, $sSql);
 		if (!$result)
 		{
 			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql));
 		}
 
 		$aRows = array();
-		while ($aRow = mysql_fetch_array($result, MYSQL_ASSOC))
+		while ($aRow = mysqli_fetch_array($result, MYSQLI_ASSOC))
 		{
 			$aRows[] = $aRow;
 		}
-		mysql_free_result($result);
+		mysqli_free_result($result);
 		return $aRows;
 	}
 	
@@ -560,12 +576,12 @@ class CMDBSource
 		}
 
 		$aRes = array();
-		while ($aRow = mysql_fetch_array($result, MYSQL_NUM))
+		while ($aRow = mysqli_fetch_array($result, MYSQLI_NUM))
 		{
 			// so far, only one column...
 			$aRes[] = implode('/', $aRow);
 		}
-		mysql_free_result($result);
+		mysqli_free_result($result);
 		// so far, only one line...
 		return implode(', ', $aRes);
 	}
@@ -585,14 +601,14 @@ class CMDBSource
 			throw new CoreException("Current user not allowed to check the status", array('mysql_error' => $e->getMessage()));
 		}
 
-		if (mysql_num_rows($result) == 0)
+		if (mysqli_num_rows($result) == 0)
 		{
 			return false;
 		}
 
 		// Returns one single row anytime
-		$aRow = mysql_fetch_array($result, MYSQL_ASSOC);
-		mysql_free_result($result);
+		$aRow = mysqli_fetch_array($result, MYSQLI_ASSOC);
+		mysqli_free_result($result);
 
 		if (!isset($aRow['Slave_IO_Running']))
 		{
