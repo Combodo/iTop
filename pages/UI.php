@@ -920,10 +920,31 @@ EOF
 			$iChangeId = $oMyChange->DBInsert();
 			utils::RemoveTransaction($sTransactionId);
 		}
+		// Explicitely build the list of attributes to update since we do NOT update the linksets
+		// because they are not part of the form
+		$aAttList = cmdbAbstractObject::FlattenZList(MetaModel::GetZListItems($sClass, 'details'));
+		foreach($aAttList as $index => $sAttCode)
+		{
+			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+			if ($oAttDef->IsLinkset())
+			{
+				unset($aAttList[$index]);
+			}
+		}
+		// Special case to process the case log, if any...
+		// WARNING: if you change this also check the functions DisplayModifyForm and DisplayCaseLog
+		foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+		{
+			if ($oAttDef instanceof AttributeCaseLog)
+			{
+				$aAttList[] = $sAttCode;
+			}
+		}
+		
 		foreach($aSelectedObj as $iId)
 		{
 			$oObj = MetaModel::GetObject($sClass, $iId);
-			$aErrors = $oObj->UpdateObject('');
+			$aErrors = $oObj->UpdateObject('', $aAttList);
 			$bResult = (count($aErrors) == 0);
 			if ($bResult)
 			{

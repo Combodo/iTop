@@ -1862,7 +1862,7 @@ EOF
 		return $aDetails;
 	}
 
-	protected static function FlattenZList($aList)
+	public static function FlattenZList($aList)
 	{
 		$aResult = array();
 		foreach($aList as $value)
