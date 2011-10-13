@@ -73,8 +73,14 @@ class EMail
 	{
 		$sHeaders  = 'MIME-Version: 1.0' . "\r\n";
 		// ! the case is important for MS-Outlook
-		$sHeaders .= 'Content-Type: text/html; charset=UTF-8' . "\r\n";
-		$sHeaders .= 'Content-Transfer-Encoding: 8bit' . "\r\n";
+		if (!array_key_exists('Content-Type', $this->m_aHeaders))
+		{
+			$sHeaders .= 'Content-Type: text/html; charset=UTF-8' . "\r\n";
+		}
+		if (!array_key_exists('Content-Transfer-Encoding', $this->m_aHeaders))
+		{
+			$sHeaders .= 'Content-Transfer-Encoding: 8bit' . "\r\n";
+		}
 		foreach ($this->m_aHeaders as $sKey => $sValue)
 		{
 			$sHeaders .= "$sKey: $sValue\r\n";
