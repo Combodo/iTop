@@ -625,10 +625,6 @@ class UserRights
 
 		if (MetaModel::HasCategory($sClass, 'bizmodel'))
 		{
-			// #@# Temporary?????
-			// The read access is controlled in MetaModel::MakeSelectQuery()
-			if ($iActionCode == UR_ACTION_READ) return true;
-
 			if (is_null($oUser))
 			{
 				$oUser = self::$m_oUser;
