@@ -3522,11 +3522,20 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 				}
 			}
 			// Find out unused columns
+			//
 			foreach($aTableInfo['Fields'] as $sField => $aFieldData)
 			{
 				if (!isset($aFieldData['used']) || !$aFieldData['used'])
 				{
 					$aErrors[$sClass]['*'][] = "Column '$sField' in table '$sTable' is not used";
+					if (!CMDBSource::IsNullAllowed($sTable, $sField))
+					{
+						// Allow null values so that new record can be inserted
+						// without specifying the value of this unknown column
+						$sFieldDefinition = "`$sField` ".CMDBSource::GetFieldType($sTable, $sField).' NULL';
+						$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` CHANGE `$sField` $sFieldDefinition";
+						$aAlterTableItems[$sTable][$sField] = "CHANGE `$sField` $sFieldDefinition";
+					}
 				}
 			}
 		}
