@@ -163,6 +163,11 @@ class EMail
 		$this->m_oMessage->addPart($sText, $sMimeType);
 	}
 
+	public function AddAttachment($data, $sFileName, $sMimeType)
+	{
+		$this->m_oMessage->attach(Swift_Attachment::newInstance($data, $sFileName, $sMimeType));
+	}
+
 	public function SetSubject($aSubject)
 	{
 		$this->m_oMessage->setSubject($aSubject);

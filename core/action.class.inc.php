@@ -275,7 +275,6 @@ class ActionEmail extends ActionNotification
 	protected function _DoExecute($oTrigger, $aContextArgs, &$oLog)
 	{
 		$sPreviousUrlMaker = ApplicationContext::SetUrlMakerClass();
-		$aHeaders = array();
 		try
 		{
 			$this->m_iRecipients = 0;
@@ -295,9 +294,8 @@ class ActionEmail extends ActionNotification
 			$sBody = MetaModel::ApplyParams($this->Get('body'), $aContextArgs);
 			
 			$oObj = $aContextArgs['this->object()'];
-			$sMessageId = sprintf('<iTop_%s_%d_%f@%s.openitop.org>', get_class($oObj), $oObj->GetKey(), microtime(true /* get as float*/), MetaModel::GetConfig()->Get('session_name'));
-			$sReference = $sMessageId;
-			$aHeaders['Message-ID'] = $sMessageId;
+			$sMessageId = sprintf('iTop_%s_%d_%f@%s.openitop.org', get_class($oObj), $oObj->GetKey(), microtime(true /* get as float*/), MetaModel::GetConfig()->Get('session_name'));
+			$sReference = '<'.$sMessageId.'>';
 		}
 		catch(Exception $e)
 		{
@@ -318,7 +316,7 @@ class ActionEmail extends ActionNotification
 			if (isset($sBody))     $oLog->Set('body', $sBody);
 		}
 
-		$oEmail = new EMail('', '', '', $aHeaders);
+		$oEmail = new EMail();
 
 		if ($this->IsBeingTested())
 		{
@@ -341,6 +339,7 @@ class ActionEmail extends ActionNotification
 			$oEmail->SetRecipientTO($this->Get('test_recipient'));
 			$oEmail->SetRecipientFrom($this->Get('test_recipient'));
 			$oEmail->SetReferences($sReference);
+			$oEmail->SetMessageId($sMessageId);
 		}
 		else
 		{
@@ -352,6 +351,7 @@ class ActionEmail extends ActionNotification
 			$oEmail->SetRecipientFrom($sFrom);
 			$oEmail->SetRecipientReplyTo($sReplyTo);
 			$oEmail->SetReferences($sReference);
+			$oEmail->SetMessageId($sMessageId);
 		}
 
 		if (empty($this->m_aMailErrors))
