@@ -140,8 +140,7 @@ class AsyncSendEmail extends AsyncTask
 
 		MetaModel::Init_AddAttribute(new AttributeText("to", array("allowed_values"=>null, "sql"=>"to", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("subject", array("allowed_values"=>null, "sql"=>"subject", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeText("body", array("allowed_values"=>null, "sql"=>"body", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeText("header", array("allowed_values"=>null, "sql"=>"header", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeText("message", array("allowed_values"=>null, "sql"=>"message", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 
 		// Display lists
 //		MetaModel::Init_SetZListItems('details', array('name', 'description', 'status', 'test_recipient', 'from', 'reply_to', 'to', 'cc', 'bcc', 'subject', 'body', 'importance', 'trigger_list')); // Attributes to be displayed for the complete details
@@ -151,31 +150,26 @@ class AsyncSendEmail extends AsyncTask
 //		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
 	}
 
-	static public function AddToQueue($sTo, $sSubject, $sBody, $aHeaders, $oLog)
+	static public function AddToQueue(EMail $oEMail, $oLog)
 	{
 		$oNew = MetaModel::NewObject(__class__);
 		if ($oLog)
 		{
 			$oNew->Set('event_id', $oLog->GetKey());
 		}
-		$oNew->Set('to', $sTo);
-		$oNew->Set('subject', $sSubject);
-		$oNew->Set('body', $sBody);
-		$sHeaders = serialize($aHeaders);
-		$oNew->Set('header', $sHeaders);
+		$oNew->Set('to', $oEMail->GetRecipientTO(true /* string */));
+		$oNew->Set('subject', $oEMail->GetSubject());
+
+		$sMessage = serialize($oEMail);
+		$oNew->Set('message', $sMessage);
 		$oNew->DBInsert();
 	}
 
 	public function DoProcess()
 	{
-		$sTo = $this->Get('to');
-		$sSubject = $this->Get('subject');
-		$sBody = $this->Get('body');
-		$sHeaders = $this->Get('header');
-		$aHeaders = unserialize($sHeaders);
-
-		$oEmail = new EMail($sTo, $sSubject, $sBody, $aHeaders);
-		$iRes = $oEmail->Send($aIssues, true /* force synchro !!!!! */);
+		$sMessage = $this->Get('message');
+		$oEMail = unserialize($sMessage);
+		$iRes = $oEMail->Send($aIssues, true /* force synchro !!!!! */);
 		switch ($iRes)
 		{
 		case EMAIL_SEND_OK:

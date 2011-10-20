@@ -15,14 +15,18 @@
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 /**
- * Send an mail (for notification, testing,... purposes)
- * #@# TODO - replace by a more sophisticated mean (and update the prototype) 
+ * Send an email (abstraction for synchronous/asynchronous modes)
  *
  * @author      Erwan Taloc <erwan.taloc@combodo.com>
  * @author      Romain Quetiez <romain.quetiez@combodo.com>
  * @author      Denis Flaven <denis.flaven@combodo.com>
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
+
+require_once(APPROOT.'/lib/swiftmailer/lib/swift_required.php');
+
+Swift_Preferences::getInstance()->setCharset('UTF-8');
+
 
 define ('EMAIL_SEND_OK', 0);
 define ('EMAIL_SEND_PENDING', 1);
@@ -31,34 +35,32 @@ define ('EMAIL_SEND_ERROR', 2);
 
 class EMail
 {
-	protected $m_sBody;
-	protected $m_sSubject;
-	protected $m_sTo;
-	protected $m_aHeaders; // array of key=>value
+	protected static $m_oConfig = null;
 
-	public function __construct($sTo = '', $sSubject = '', $sBody = '', $aHeaders = array())
+	public function LoadConfig($sConfigFile = ITOP_CONFIG_FILE)
 	{
-		$this->m_sTo = $sTo;
-		$this->m_sSubject = $sSubject;
-		$this->m_sBody = $sBody;
-		$this->m_aHeaders = $aHeaders;
+		if (is_null(self::$m_oConfig))
+		{
+			self::$m_oConfig = new Config($sConfigFile);
+		}
 	}
 
-	// Errors management : not that simple because we need that function to be
-	// executed in the background, while making sure that any issue would be reported clearly
-	protected $m_aMailErrors; //array of strings explaining the issues
 
-	public function mail_error_handler($errno, $errstr, $errfile, $errline)
+	protected $m_oMessage;
+
+	public function __construct()
 	{
-		$sCleanMessage= str_replace("mail() [<a href='function.mail'>function.mail</a>]: ", "", $errstr);
-		$this->m_aMailErrors[] = $sCleanMessage;
+		$this->m_oMessage = Swift_Message::newInstance();
+
+		$oEncoder = new Swift_Mime_ContentEncoder_PlainContentEncoder('8bit');
+		$this->m_oMessage->setEncoder($oEncoder);
 	}
 
   	protected function SendAsynchronous(&$aIssues, $oLog = null)
 	{
 		try
 		{
-			AsyncSendEmail::AddToQueue($this->m_sTo, $this->m_sSubject, $this->m_sBody, $this->m_aHeaders, $oLog);
+			AsyncSendEmail::AddToQueue($this, $oLog);
 		}
 		catch(Exception $e)
 		{
@@ -71,40 +73,37 @@ class EMail
 
 	protected function SendSynchronous(&$aIssues, $oLog = null)
 	{
-		$sHeaders  = 'MIME-Version: 1.0' . "\r\n";
-		// ! the case is important for MS-Outlook
-		if (!array_key_exists('Content-Type', $this->m_aHeaders))
+		$this->LoadConfig();
+
+		$sTransport = self::$m_oConfig->Get('email_transport');
+		switch ($sTransport)
 		{
-			$sHeaders .= 'Content-Type: text/html; charset=UTF-8' . "\r\n";
-		}
-		if (!array_key_exists('Content-Transfer-Encoding', $this->m_aHeaders))
-		{
-			$sHeaders .= 'Content-Transfer-Encoding: 8bit' . "\r\n";
-		}
-		foreach ($this->m_aHeaders as $sKey => $sValue)
-		{
-			$sHeaders .= "$sKey: $sValue\r\n";
+		case 'SMTP':
+			$sHost = self::$m_oConfig->Get('email_transport_smtp.host');
+			$sPort = self::$m_oConfig->Get('email_transport_smtp.port');
+			$sEncryption = self::$m_oConfig->Get('email_transport_smtp.encryption');
+			$sUserName = self::$m_oConfig->Get('email_transport_smtp.username');
+			$sPassword = self::$m_oConfig->Get('email_transport_smtp.password');
+
+			$oTransport = Swift_SmtpTransport::newInstance($sHost, $sPort, $sEncryption);
+			if (strlen($sUserName) > 0)
+			{
+				$oTransport->setUsername($sUserName);
+				$oTransport->setPassword($sPassword);
+			}
+			break;
+
+		case 'PHPMail':
+		default:
+			$oTransport = Swift_MailTransport::newInstance();
 		}
 
-		// Under Windows (not yet proven for Linux/PHP) mail may issue a warning
-		// that I could not mask (tried error_reporting(), etc.)
-		$this->m_aMailErrors = array();
-		set_error_handler(array($this, 'mail_error_handler'));
-		$bRes = mail
-		(
-			str_replace(array("\n", "\r"), ' ', $this->m_sTo), // Prevent header injection
-			str_replace(array("\n", "\r"), ' ', $this->m_sSubject), // Prevent header injection
-			$this->m_sBody,
-			$sHeaders
-		);
-		restore_error_handler();
-		if (!$bRes && empty($this->m_aMailErrors))
+		$oMailer = Swift_Mailer::newInstance($oTransport);
+
+		$iSent = $oMailer->send($this->m_oMessage);
+		if ($iSent === false)
 		{
-			$this->m_aMailErrors[] = 'Unknown reason';
-		}
-		if (count($this->m_aMailErrors) > 0)
-		{
-			$aIssues = $this->m_aMailErrors;
+			$aIssues = 'une erreur s\'est produite... mais quoi !!!';
 			return EMAIL_SEND_ERROR;
 		}
 		else
@@ -134,12 +133,19 @@ class EMail
 		}
 	}
 
-	protected function AddToHeader($sKey, $sValue)
+	public function AddToHeader($sKey, $sValue)
 	{
 		if (strlen($sValue) > 0)
 		{
-			$this->m_aHeaders[$sKey] = $sValue;
+			$oHeaders = $this->m_oMessage->getHeaders();
+			$oHeaders->addTextHeader($sKey, $sValue);
 		}
+	}
+
+	public function SetMessageId($sId)
+	{
+		// Note: Swift will add the angle brackets for you
+		$this->m_oMessage->SetId($sId);
 	}
 	
 	public function SetReferences($sReferences)
@@ -147,19 +153,55 @@ class EMail
 		$this->AddToHeader('References', $sReferences);
 	}
 
-	public function SetBody($sBody)
+	public function SetBody($sBody, $sMimeType = 'text/html')
 	{
-		$this->m_sBody = $sBody;
+		$this->m_oMessage->setBody($sBody, $sMimeType);
+	}
+
+	public function AddPart($sText, $sMimeType = 'text/html')
+	{
+		$this->m_oMessage->addPart($sText, $sMimeType);
 	}
 
 	public function SetSubject($aSubject)
 	{
-		$this->m_sSubject = $aSubject;
+		$this->m_oMessage->setSubject($aSubject);
+	}
+
+	public function GetSubject()
+	{
+		return $this->m_oMessage->getSubject();
 	}
 
 	public function SetRecipientTO($sAddress)
 	{
-		$this->m_sTo = $sAddress;
+		$this->m_oMessage->setTo($sAddress);
+	}
+
+	public function GetRecipientTO($bAsString = false)
+	{
+		$aRes = $this->m_oMessage->getTo();
+		if ($bAsString)
+		{
+			$aStrings = array();
+			foreach ($aRes as $sEmail => $sName)
+			{
+				if (is_null($sName))
+				{
+					$aStrings[] = $sEmail;
+				}
+				else
+				{
+					$sName = str_replace(array('<', '>'), '', $sName);
+					$aStrings[] = "$sName <$sEmail>";
+				}
+			}
+			return implode(', ', $aStrings);
+		}
+		else
+		{
+			return $aRes;
+		}
 	}
 
 	public function SetRecipientCC($sAddress)
@@ -174,12 +216,7 @@ class EMail
 
 	public function SetRecipientFrom($sAddress)
 	{
-		$this->AddToHeader('From', $sAddress);
-
-		// This is required on Windows because otherwise I would get the error
-		// "sendmail_from" not set in php.ini" even if it is correctly working
-		// (apparently, once it worked the SMTP server won't claim anymore for it)
-		ini_set("sendmail_from", $sAddress);
+		$this->m_oMessage->setFrom($sAddress);
 	}
 
 	public function SetRecipientReplyTo($sAddress)
