@@ -35,6 +35,7 @@ class EMail
 	protected $m_sSubject;
 	protected $m_sTo;
 	protected $m_aHeaders; // array of key=>value
+	protected $m_aAttachments;
 
 	public function __construct($sTo = '', $sSubject = '', $sBody = '', $aHeaders = array())
 	{
@@ -42,6 +43,7 @@ class EMail
 		$this->m_sSubject = $sSubject;
 		$this->m_sBody = $sBody;
 		$this->m_aHeaders = $aHeaders;
+		$this->m_aAttachments = array();
 	}
 
 	// Errors management : not that simple because we need that function to be
@@ -116,6 +118,7 @@ class EMail
 
 	public function Send(&$aIssues, $bForceSynchronous = false, $oLog = null)
 	{	
+		$this->BuildMessage(); // assemble the attachments into the header/body structure
 		if ($bForceSynchronous)
 		{
 			return $this->SendSynchronous($aIssues, $oLog);
@@ -187,6 +190,36 @@ class EMail
 		$this->AddToHeader('Reply-To', $sAddress);
 	}
 
+	public function AddAttachment($data, $sFileName, $sMimeType)
+	{
+		$this->m_aAttachments[] = array('data' => $data, 'filename' => $sFileName, 'mimeType' => $sMimeType);
+	}
+	
+	/**
+	 * Takes care of the attachments (if any) to build the header/body of the message before storing or sending it
+	 */
+	protected function BuildMessage()
+	{
+		if (count($this->m_aAttachments) == 0) return; // Nothing to do if there are no attachments
+
+		$sDelimiter = '== iTopEmailPart---'.md5(date('r', time()))." ==";
+ 		$sContentType = isset($this->m_aHeaders['Content-Type']) ? $this->m_aHeaders['Content-Type'] : 'text/html';
+ 		$sContentHeader = "Content-Type: $sContentType\r\n";
+ 		$this->m_aHeaders['Content-Type'] = "multipart/mixed; boundary=\"{$sDelimiter}\"";
+
+		$aAttachments = array();
+ 		foreach($this->m_aAttachments as $aAttach)
+ 		{
+	 		$sAttachmentHeader = "Content-Type: {$aAttach['mimeType']};\r\n Name=\"{$aAttach['filename']}\"\r\n";
+	  		$sAttachmentHeader .= "Content-Transfer-Encoding: base64\r\nContent-Disposition: attachment;\r\n filename=\"{$aAttach['filename']}\"\r\n";
+	  		$sAttachmentHeader .= "\r\n";
+			$sAttachment = chunk_split(base64_encode($aAttach['data']));
+			$aAttachments[] = $sAttachmentHeader.$sAttachment."\r\n";
+ 		}
+	  	$this->m_sBody = "This is a multi-part message in MIME format.\r\n--".$sDelimiter."\r\n".$sContentHeader."\r\n".$this->m_sBody."\r\n--".$sDelimiter."\r\n";
+	  	$this->m_sBody .= implode("--".$sDelimiter."\r\n", $aAttachments);
+	  	$this->m_sBody .= "--".$sDelimiter."--";
+	}
 }
 
 ?>
