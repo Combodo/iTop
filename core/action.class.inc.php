@@ -183,6 +183,7 @@ class ActionEmail extends ActionNotification
 		try
 		{
 			$oSearch = DBObjectSearch::FromOQL($sOQL);
+			$oSearch->AllowAllData();
 		}
 		catch (OQLException $e)
 		{
