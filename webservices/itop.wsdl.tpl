@@ -8,10 +8,10 @@
 			<!-- Added the following import tag to pass the Eclipse validation -->
 			<xsd:import namespace="http://schemas.xmlsoap.org/soap/encoding/" />
 			<xsd:complexType name="SearchCondition">
-				<wsdl:documentation>
+				<!--wsdl:documentation>
 					A criteria to restrict a search (strict search is performed)
 					Example: name = 'myserver.combodo.fr'
-				</wsdl:documentation>
+				</wsdl:documentation -->
 				<xsd:all>
 					<xsd:element name="attcode" type="xsd:string"/>
 					<xsd:element name="value" type="xsd:string"/> <!-- should be anyType but this one is not well supported by Eclipse -->
@@ -25,20 +25,20 @@
 				</xsd:complexContent>
 			</xsd:complexType>
 			<xsd:complexType name="ExternalKeySearch">
-				<wsdl:documentation>
+				<!-- wsdl:documentation>
 					Specifies [how to find] a value for an external key.
 					the class of object to search for will depend on the usage that is being made, therefore the search conditions that may be used will vary depending on the parameter that is concerned.
 					If one criteria is not relevant, then the match will not be attempted and warning will be logged (or an error if the target external key is mandatory)
 					Example: match on customer = 'Demo' and type = 'Router'
-				</wsdl:documentation>
+				</wsdl:documentation -->
 				<xsd:all>
 					<xsd:element name="conditions" type="typens:ArrayOfSearchCondition"/>
 				</xsd:all>
 			</xsd:complexType>
 			<xsd:complexType name="AttributeValue">
-				<wsdl:documentation>
+				<!-- wsdl:documentation>
 					Specifies a value to set
-				</wsdl:documentation>
+				</wsdl:documentation -->
 				<xsd:all>
 					<xsd:element name="attcode" type="xsd:string"/>
 					<xsd:element name="value" type="xsd:string"/> <!-- should be anyType but this one is not well supported by Eclipse -->
@@ -52,9 +52,9 @@
 				</xsd:complexContent>
 			</xsd:complexType>
 			<xsd:complexType name="LinkCreationSpec">
-				<wsdl:documentation>
+				<!-- wsdl:documentation>
 					Specifies [how to match] one item to attach and what values should be set on the newly created link.
-				</wsdl:documentation>
+				</wsdl:documentation -->
 				<xsd:all>
 					<xsd:element name="class" type="xsd:string"/>
 					<xsd:element name="conditions" type="typens:ArrayOfSearchCondition"/>
@@ -69,9 +69,9 @@
 				</xsd:complexContent>
 			</xsd:complexType>
 			<xsd:complexType name="LogMessage">
-				<wsdl:documentation>
+				<!-- wsdl:documentation>
 					An event that happened during the execution of the web service
-				</wsdl:documentation>
+				</wsdl:documentation -->
 				<xsd:all>
 					<xsd:element name="text" type="xsd:string"/>
 				</xsd:all>
@@ -84,9 +84,9 @@
 				</xsd:complexContent>
 			</xsd:complexType>
 			<xsd:complexType name="ResultLog">
-				<wsdl:documentation>
+				<!-- wsdl:documentation>
 					A Log of events of the same category
-				</wsdl:documentation>
+				</wsdl:documentation -->
 				<xsd:all>
 					<xsd:element name="messages" type="typens:ArrayOfLogMessage"/>
 				</xsd:all>
@@ -105,10 +105,10 @@
 				</xsd:complexContent>
 			</xsd:complexType>
 			<xsd:complexType name="ResultMessage">
-				<wsdl:documentation>
+				<!-- wsdl:documentation>
 					Output expected, depending on the operation invoked.
 					Example: CreateIncidentTicket will return 'created' => basic information on the created ticket
-				</wsdl:documentation>
+				</wsdl:documentation -->
 				<xsd:all>
 					<xsd:element name="label" type="xsd:string"/>
 					<xsd:element name="values" type="typens:ArrayOfResultData"/>
@@ -122,12 +122,12 @@
 				</xsd:complexContent>
 			</xsd:complexType>
 			<xsd:complexType name="Result">
-				<wsdl:documentation>
+				<!-- wsdl:documentation>
 					Standard result structure returned by all of the operations, excepted GetVersion (returning a string)
 					result holds returned data if the status is set to true
 					errors, warnings and infos will help in understanding what happened (unknown identifiers, object matching issues/results)
 					This resulting structure is being tracked into the application log as well.
-				</wsdl:documentation>
+				</wsdl:documentation -->
 				<xsd:all>
 					<xsd:element name="status" type="xsd:boolean"/>
 					<xsd:element name="result" type="typens:ArrayOfResultMessage"/>
@@ -189,31 +189,31 @@
 	</message>
 	<portType name="WebServicePortType">
 		<operation name="GetVersion">
-			<wsdl:documentation>
+			<!-- wsdl:documentation>
 				Get the current version of Itop
 				As this service is very simple, it is a test to get trained for more complex operations 
-			</wsdl:documentation> -->
+			</wsdl:documentation --> -->
 			<input message="typens:GetVersion"/>
 			<output message="typens:GetVersionResponse"/>
 		</operation>
 		<operation name="CreateRequestTicket">
-			<wsdl:documentation>
+			<!-- wsdl:documentation>
 				Create a ticket, return information about reconciliation on external keys and the created ticket
-			</wsdl:documentation>
+			</wsdl:documentation -->
 			<input message="typens:CreateRequestTicket"/>
 			<output message="typens:CreateRequestTicketResponse"/>
 		</operation>
 		<operation name="CreateIncidentTicket">
-			<wsdl:documentation>
+			<!-- wsdl:documentation>
 				Create a ticket, return information about reconciliation on external keys and the created ticket
-			</wsdl:documentation>
+			</wsdl:documentation -->
 			<input message="typens:CreateIncidentTicket"/>
 			<output message="typens:CreateIncidentTicketResponse"/>
 		</operation>
 		<operation name="SearchObjects">
-			<wsdl:documentation>
+			<!-- wsdl:documentation>
 				Create a ticket, return information about reconciliation on external keys and the created ticket
-			</wsdl:documentation>
+			</wsdl:documentation -->
 			<input message="typens:SearchObjects"/>
 			<output message="typens:SearchObjectsResponse"/>
 		</operation>
@@ -258,9 +258,9 @@
 		</operation>
 	</binding>
 	<service name="ITopService">
-		<wsdl:documentation>
+		<!-- wsdl:documentation>
 			ITop is the central solution for managing your IT infrastructure
-		</wsdl:documentation>
+		</wsdl:documentation -->
 		<port name="WebServicePort" binding="typens:WebServiceBinding">
 			<soap:address location="___SOAP_SERVER_URI___"/>
 		</port>
