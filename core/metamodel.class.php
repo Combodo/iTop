@@ -676,10 +676,38 @@ abstract class MetaModel
 		if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass])) return false;
 		return (self::$m_aAttribDefs[$sClass][$sAttCode]->IsExternalKey());
 	}
-	final static public function IsValidAttCode($sClass, $sAttCode)
+	final static public function IsValidAttCode($sClass, $sAttCode, $bExtended = false)
 	{
 		if (!array_key_exists($sClass, self::$m_aAttribDefs)) return false;
-		return (array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]));
+
+		if ($bExtended)
+		{
+			if (($iPos = strpos($sAttCode, '->')) === false)
+			{
+				$bRes = array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]);
+			}
+			else
+			{
+				$sExtKeyAttCode = substr($sAttCode, 0, $iPos);
+				$sRemoteAttCode = substr($sAttCode, $iPos + 2);
+				if (MetaModel::IsValidAttCode($sClass, $sExtKeyAttCode))
+				{
+					$oKeyAttDef = MetaModel::GetAttributeDef($sClass, $sExtKeyAttCode);
+					$sRemoteClass = $oKeyAttDef->GetTargetClass();
+					$bRes = MetaModel::IsValidAttCode($sRemoteClass, $sRemoteAttCode, true);
+				}
+				else
+				{
+					$bRes = false;
+				}
+			}
+		}
+		else
+		{
+			$bRes = array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]);
+		}
+		
+		return $bRes;
 	}
 	final static public function IsAttributeOrigin($sClass, $sAttCode)
 	{

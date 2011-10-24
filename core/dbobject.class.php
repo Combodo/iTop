@@ -368,6 +368,34 @@ abstract class DBObject
 
 	public function Get($sAttCode)
 	{
+		if (($iPos = strpos($sAttCode, '->')) === false)
+		{
+			return $this->GetStrict($sAttCode);
+		}
+		else
+		{
+			$sExtKeyAttCode = substr($sAttCode, 0, $iPos);
+			$sRemoteAttCode = substr($sAttCode, $iPos + 2);
+			if (!MetaModel::IsValidAttCode(get_class($this), $sExtKeyAttCode))
+			{
+				throw new CoreException("Unknown external key '$sExtKeyAttCode' for the class ".get_class($this));
+			}
+			$oKeyAttDef = MetaModel::GetAttributeDef(get_class($this), $sExtKeyAttCode);
+			$sRemoteClass = $oKeyAttDef->GetTargetClass();
+			$oRemoteObj = MetaModel::GetObject($sRemoteClass, $this->GetStrict($sExtKeyAttCode), false);
+			if (is_null($oRemoteObj))
+			{
+				return '';
+			}
+			else
+			{
+				return $oRemoteObj->Get($sRemoteAttCode);
+			}
+		}
+	}
+
+	public function GetStrict($sAttCode)
+	{
 		if (!array_key_exists($sAttCode, MetaModel::ListAttributeDefs(get_class($this))))
 		{
 			throw new CoreException("Unknown attribute code '$sAttCode' for the class ".get_class($this));

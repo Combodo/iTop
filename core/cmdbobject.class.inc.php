@@ -76,6 +76,7 @@ require_once('cmdbchangeop.class.inc.php');
 // Romain: temporary moved into application.inc.php (see explanations there)
 //require_once('event.class.inc.php');
 
+require_once('templatestring.class.inc.php');
 require_once('csvparser.class.inc.php');
 require_once('bulkchange.class.inc.php');
 
