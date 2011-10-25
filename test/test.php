@@ -104,7 +104,7 @@ if ($sTodo == '')
 		
 		$sName = call_user_func(array($sClassName, 'GetName'));
 		$sDescription = call_user_func(array($sClassName, 'GetDescription'));
-		echo "<li><a href=\"?todo=exec&testid=$sClassName\">$sName</a> ($sDescription)</li\n";
+		echo "<li><a href=\"?todo=exec&testid=$sClassName\">$sName</a> ($sDescription)</li>\n";
 	}
 	echo "</ul>\n";
 }

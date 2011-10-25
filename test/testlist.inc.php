@@ -2454,8 +2454,8 @@ $aCreateTicketSpecs = array(
 			'initial situation blah blah blah', /* sInitialSituation */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Demo'))), /* aCustomerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Computers and peripherals'))), /* aServiceDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Troubleshooting'))), /* aServiceSubcategoryDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Telecom and connectivity'))), /* aServiceDesc */
+			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Network Troubleshooting'))), /* aServiceSubcategoryDesc */
 			'sub product of the service', /* sProduct */
 			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Hardware support'))), /* aWorkgroupDesc */
 			array(
@@ -2817,6 +2817,7 @@ abstract class TestSoap extends TestSoapWebService
 		foreach ($this->m_aTestSpecs as $iPos => $aWebService)
 		{
 			echo "<h2>SOAP call #$iPos - {$aWebService['verb']}</h2>\n";
+			echo "<p>Using WSDL: $sWsdlUriForService</p>\n";
 			echo "<p>{$aWebService['explain result']}</p>\n";
 
 			$sWsdlUriForService = $sWsdlUri.'?service_category='.$aWebService['service_category'];
