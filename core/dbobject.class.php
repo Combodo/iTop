@@ -145,8 +145,7 @@ abstract class DBObject
 	{
 		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode=>$oAttDef)
 		{
-			@$bIsLoaded = $this->m_aLoadedAtt[$sAttCode];
-			if ($bIsLoaded !== true)
+			if (!isset($this->m_aLoadedAtt[$sAttCode]) || !$this->m_aLoadedAtt[$sAttCode])
 			{
 				return false;
 			}
