@@ -389,6 +389,7 @@ EOF
 	{
 		$('#attachment_'+att_id).attr('name', 'removed_attachments[]');
 		$('#display_attachment_'+att_id).hide();
+		$('#attachment_plugin').trigger('remove_attachment', [att_id]);
 		return false; // Do not submit the form !
 	}
 	function ajaxFileUpload()
@@ -433,6 +434,8 @@ EOF
 							{
 								$('#display_attachment_'+data.att_id).hover( function() { $(this).children(':button').toggleClass('btn_hidden'); } );
 							}
+							$('#attachment_plugin').trigger('add_attachment', [data.att_id, data.msg]);
+							
 							//alert(data.msg);
 						}
 					}
@@ -465,6 +468,7 @@ EOF
 			$oPage->p(Dict::S('Attachments:AddAttachment').'<input type="file" name="file" id="file" onChange="ajaxFileUpload();"><span style="display:none;" id="attachment_loading">&nbsp;<img src="../images/indicator.gif"></span> '.$sMaxUpload);
 			//$oPage->p('<input type="button" onClick="ajaxFileUpload();" value=" Upload !">');
 			$oPage->p('<span style="display:none;" id="attachment_loading">Loading, please wait...</span>');
+			$oPage->p('<input type="hidden" id="attachment_plugin"/>');
 			$oPage->add('</fieldset>');
 			if ($this->m_bDeleteEnabled)
 			{
