@@ -145,6 +145,8 @@ class EMail
 	public function SetMessageId($sId)
 	{
 		// Note: Swift will add the angle brackets for you
+		// so let's remove the angle brackets if present, for historical reasons
+		$sId = str_replace(array('<', '>'), '', $sId);
 		$this->m_oMessage->SetId($sId);
 	}
 	
@@ -219,9 +221,16 @@ class EMail
 		$this->AddToHeader('Bcc', $sAddress);
 	}
 
-	public function SetRecipientFrom($sAddress)
+	public function SetRecipientFrom($sAddress, $sLabel = '')
 	{
-		$this->m_oMessage->setFrom($sAddress);
+		if ($sLabel != '')
+		{
+			$this->m_oMessage->setFrom(array($sAddress => $sLabel));		
+		}
+		else
+		{
+			$this->m_oMessage->setFrom($sAddress);
+		}
 	}
 
 	public function SetRecipientReplyTo($sAddress)
