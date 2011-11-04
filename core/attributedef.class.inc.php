@@ -116,20 +116,12 @@ abstract class AttributeDefinition
 		$this->m_aParams = $aParams;
 		$this->ConsistencyCheck();
 	}
-	public function OverloadParams($aParams)
+
+	public function GetParams()
 	{
-		foreach ($aParams as $sParam => $value)
-		{
-			if (!array_key_exists($sParam, $this->m_aParams))
-			{
-				throw new CoreException("Unknown attribute definition parameter '$sParam', please select a value in {".implode(", ", array_keys($this->m_aParams))."}");
-			}
-			else
-			{
-				$this->m_aParams[$sParam] = $value;
-			}
-		}
+		return $this->m_aParams;
 	}
+
 	public function SetHostClass($sHostClass)
 	{
 		$this->m_sHostClass = $sHostClass;

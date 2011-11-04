@@ -50,21 +50,6 @@ abstract class FilterDefinition
 		$this->ConsistencyCheck();
 	}
 
-	public function OverloadParams($aParams)
-	{
-		foreach ($aParams as $sParam => $value)
-		{
-			if (!array_key_exists($sParam, $this->m_aParams))
-			{
-				throw new CoreException("Unknown attribute definition parameter '$sParam', please select a value in {".implode(", ", $this->m_aParams)."}");
-			}
-			else
-			{
-				$this->m_aParams[$sParam] = $value;
-			}
-		}
-	}
-
 	// to be overloaded
 	static protected function ListExpectedParams()
 	{

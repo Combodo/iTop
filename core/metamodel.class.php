@@ -1542,16 +1542,6 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 			self::$m_aChildClasses[$sAncestorClass][] = $sTargetClass;
 		}
 	}
-	public static function Init_OverloadAttributeParams($sAttCode, $aParams)
-	{
-		$sTargetClass = self::GetCallersPHPClass("Init");
-		
-		if (!self::IsValidAttCode($sTargetClass, $sAttCode))
-		{
-			throw new CoreException("Could not overload '$sAttCode', expecting a code from {".implode(", ", self::GetAttributesList($sTargetClass))."}");
-		}
-		self::$m_aAttribDefs[$sTargetClass][$sAttCode]->OverloadParams($aParams);
-	}
 
 	protected static function Init_IsKnownClass($sClass)
 	{
