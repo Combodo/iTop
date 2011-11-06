@@ -121,6 +121,9 @@ class UILinksWidget
 		{
 			// form for creating a new record
 			$sPrefix .= "[$linkObjOrId][";
+			$oNewLinkObj = MetaModel::NewObject($this->m_sLinkedClass);
+			$oNewLinkObj->Set($this->m_sExtKeyToRemote, -$linkObjOrId);
+			$oNewLinkObj->ComputeValues();
 			$sNameSuffix = "]"; // To make a tabular form
 			$aArgs['prefix'] = $sPrefix;
 			$aRow['form::checkbox'] = "<input class=\"selection\" type=\"checkbox\" onClick=\"oWidget".$this->m_iInputId.".OnSelectChange();\" value=\"$linkObjOrId\">";
@@ -130,7 +133,7 @@ class UILinksWidget
 				$sFieldId = $this->m_iInputId.'_'.$sFieldCode.'['.$linkObjOrId.']';
 				$sSafeId = str_replace(array('[',']','-'), '_', $sFieldId);
 				$oAttDef = MetaModel::GetAttributeDef($this->m_sLinkedClass, $sFieldCode);
-				$aRow[$sFieldCode] = cmdbAbstractObject::GetFormElementForField($oP, $this->m_sLinkedClass, $sFieldCode, $oAttDef, '' /* TO DO/ call GetDefaultValue($oObject->ToArgs()) */, '' /* DisplayValue */, $sSafeId /* id */, $sNameSuffix, 0, $aArgs);
+				$aRow[$sFieldCode] = cmdbAbstractObject::GetFormElementForField($oP, $this->m_sLinkedClass, $sFieldCode, $oAttDef, $oNewLinkObj->Get($sFieldCode) /* TO DO/ call GetDefaultValue($oObject->ToArgs()) */, '' /* DisplayValue */, $sSafeId /* id */, $sNameSuffix, 0, $aArgs);
 			}
 		}
 
