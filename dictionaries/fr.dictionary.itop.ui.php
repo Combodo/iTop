@@ -416,6 +416,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Audit:HeaderNbObjects' => 'Nb d\'Objets',
 	'UI:Audit:HeaderNbErrors' => 'Nb d\'Erreurs',
 	'UI:Audit:PercentageOk' => '% Ok',
+	'UI:Audit:ErrorIn_Rule_Reason' => 'Erreur OQL dans la règle %1$s: %2$s.',
+	'UI:Audit:ErrorIn_Category_Reason' => 'Erreur OQL dans la catégorie %1$s: %2$s.',
 	'UI:RunQuery:Title' => 'iTop - Evaluation de requêtes OQL',
 	'UI:RunQuery:QueryExamples' => 'Exemples de requêtes',
 	'UI:RunQuery:HeaderPurpose' => 'Objectif',
