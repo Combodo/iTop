@@ -532,7 +532,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Audit:HeaderNbObjects' => '# Objects',
 	'UI:Audit:HeaderNbErrors' => '# Errors',
 	'UI:Audit:PercentageOk' => '% Ok',
-	
+	'UI:Audit:ErrorIn_Rule_Reason' => 'OQL Error in the Rule %1$s: %2$s.',
+	'UI:Audit:ErrorIn_Category_Reason' => 'OQL Error in the Category %1$s: %2$s.',
+
 	'UI:RunQuery:Title' => 'iTop - OQL Query Evaluation',
 	'UI:RunQuery:QueryExamples' => 'Query Examples',
 	'UI:RunQuery:HeaderPurpose' => 'Purpose',

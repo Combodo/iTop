@@ -177,52 +177,77 @@ try
 		$oP->add("</tr>\n");
 		while($oAuditCategory = $oCategoriesSet->fetch())
 		{
-			$oDefinitionFilter = DBObjectSearch::FromOQL($oAuditCategory->Get('definition_set'));
-			FilterByContext($oDefinitionFilter, $oAppContext);
-			
-			$aObjectsWithErrors = array();
-			if (!empty($currentOrganization))
+			try
 			{
-				if (MetaModel::IsValidFilterCode($oDefinitionFilter->GetClass(), 'org_id'))
+				$oDefinitionFilter = DBObjectSearch::FromOQL($oAuditCategory->Get('definition_set'));
+				FilterByContext($oDefinitionFilter, $oAppContext);
+				
+				$aObjectsWithErrors = array();
+				if (!empty($currentOrganization))
 				{
-					$oDefinitionFilter->AddCondition('org_id', $currentOrganization, '=');
+					if (MetaModel::IsValidFilterCode($oDefinitionFilter->GetClass(), 'org_id'))
+					{
+						$oDefinitionFilter->AddCondition('org_id', $currentOrganization, '=');
+					}
+				}
+				$aResults = array();
+				$oDefinitionSet = new CMDBObjectSet($oDefinitionFilter);
+				$iCount = $oDefinitionSet->Count();
+				$oRulesFilter = new CMDBSearchFilter('AuditRule');
+				$oRulesFilter->AddCondition('category_id', $oAuditCategory->GetKey(), '=');
+				$oRulesSet = new DBObjectSet($oRulesFilter);
+				while($oAuditRule = $oRulesSet->fetch() )
+				{
+					$aRow = array();
+					$aRow['description'] = $oAuditRule->GetName();
+					if ($iCount == 0)
+					{
+						// nothing to check, really !
+						$aRow['nb_errors'] = "<a href=\"?operation=errors&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."\">0</a>"; 
+						$aRow['percent_ok'] = '100.00';
+						$aRow['class'] = GetReportColor($iCount, 0);
+					}
+					else
+					{
+						try
+						{
+							$oRuleFilter = DBObjectSearch::FromOQL($oAuditRule->Get('query'));
+							$oErrorObjectSet = GetRuleResultSet($oAuditRule->GetKey(), $oDefinitionFilter, $oAppContext);
+							$iErrorsCount = $oErrorObjectSet->Count();
+							while($oObj = $oErrorObjectSet->Fetch())
+							{
+								$aObjectsWithErrors[$oObj->GetKey()] = true;
+							}
+							$aRow['nb_errors'] = ($iErrorsCount == 0) ? '0' : "<a href=\"?operation=errors&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."&".$oAppContext->GetForLink()."\">$iErrorsCount</a>"; 
+							$aRow['percent_ok'] = sprintf('%.2f', 100.0 * (($iCount - $iErrorsCount) / $iCount));
+							$aRow['class'] = GetReportColor($iCount, $iErrorsCount);							
+						}
+						catch(Exception $e)
+						{
+							$aRow['nb_errors'] = "OQL Error"; 
+							$aRow['percent_ok'] = 'n/a';
+							$aRow['class'] = 'red';
+							$sMessage = Dict::Format('UI:Audit:ErrorIn_Rule_Reason', $oAuditRule->GetHyperlink(), $e->getMessage());
+							$oP->p("<img style=\"vertical-align:middle\" src=\"../images/stop-mid.png\"/>&nbsp;".$sMessage);
+													}
+					}
+					$aResults[] = $aRow;
+					$iTotalErrors = count($aObjectsWithErrors);
+					$sOverallPercentOk = ($iCount == 0) ? '100.00' : sprintf('%.2f', 100.0 * (($iCount - $iTotalErrors) / $iCount));
+					$sClass = GetReportColor($iCount, $iTotalErrors);
+		
 				}
 			}
-			$aResults = array();
-			$oDefinitionSet = new CMDBObjectSet($oDefinitionFilter);
-			$iCount = $oDefinitionSet->Count();
-			$oRulesFilter = new CMDBSearchFilter('AuditRule');
-			$oRulesFilter->AddCondition('category_id', $oAuditCategory->GetKey(), '=');
-			$oRulesSet = new DBObjectSet($oRulesFilter);
-			while($oAuditRule = $oRulesSet->fetch() )
+			catch(Exception $e)
 			{
 				$aRow = array();
-				$aRow['description'] = $oAuditRule->GetName();
-				if ($iCount == 0)
-				{
-					// nothing to check, really !
-					$aRow['nb_errors'] = "<a href=\"?operation=errors&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."\">0</a>"; 
-					$aRow['percent_ok'] = '100.00';
-					$aRow['class'] = GetReportColor($iCount, 0);
-				}
-				else
-				{
-					$oRuleFilter = DBObjectSearch::FromOQL($oAuditRule->Get('query'));
-					$oErrorObjectSet = GetRuleResultSet($oAuditRule->GetKey(), $oDefinitionFilter, $oAppContext);
-					$iErrorsCount = $oErrorObjectSet->Count();
-					while($oObj = $oErrorObjectSet->Fetch())
-					{
-						$aObjectsWithErrors[$oObj->GetKey()] = true;
-					}
-					$aRow['nb_errors'] = ($iErrorsCount == 0) ? '0' : "<a href=\"?operation=errors&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."&".$oAppContext->GetForLink()."\">$iErrorsCount</a>"; 
-					$aRow['percent_ok'] = sprintf('%.2f', 100.0 * (($iCount - $iErrorsCount) / $iCount));
-					$aRow['class'] = GetReportColor($iCount, $iErrorsCount);
-				}
-				$aResults[] = $aRow;
-				$iTotalErrors = count($aObjectsWithErrors);
-				$sOverallPercentOk = ($iCount == 0) ? '100.00' : sprintf('%.2f', 100.0 * (($iCount - $iTotalErrors) / $iCount));
-				$sClass = GetReportColor($iCount, $iTotalErrors);
-	
+				$aRow['description'] = "OQL error";
+				$aRow['nb_errors'] = "n/a"; 
+				$aRow['percent_ok'] = '';
+				$aRow['class'] = 'red';				
+				$sMessage = Dict::Format('UI:Audit:ErrorIn_Category_Reason', $oAuditCategory->GetHyperlink(), $e->getMessage());
+				$oP->p("<img style=\"vertical-align:middle\" src=\"../images/stop-mid.png\"/>&nbsp;".$sMessage);
+				$aResults[] = $aRow;					
 			}
 			$oP->add("<tr>\n");
 			$oP->add("<th><img src=\"../images/minus.gif\"></th><th class=\"alignLeft\">".$oAuditCategory->GetName()."</th><th class=\"alignRight\">$iCount</th><th class=\"alignRight\">$iTotalErrors</th><th class=\"alignRight $sClass\">$sOverallPercentOk %</th>\n");
