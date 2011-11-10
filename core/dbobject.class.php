@@ -1606,10 +1606,8 @@ abstract class DBObject
 			// if one call fails, the whole is considered as failed
 			if (!$bRet) $bSuccess = false;
 		}
-
 		if ($bSuccess)
 		{
-			$this->Reload(); // in case an action modified something (like an object pointed to by an ext key)
 			// Change state triggers...
 			$sClass = get_class($this);
 			$sClassList = implode("', '", MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
