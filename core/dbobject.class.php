@@ -1608,19 +1608,23 @@ abstract class DBObject
 			if (!$bRet) $bSuccess = false;
 		}
 
-		// Change state triggers...
-		$sClass = get_class($this);
-		$sClassList = implode("', '", MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
-		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnStateLeave AS t WHERE t.target_class IN ('$sClassList') AND t.state='$sPreviousState'"));
-		while ($oTrigger = $oSet->Fetch())
+		if ($bSuccess)
 		{
-			$oTrigger->DoActivate($this->ToArgs('this'));
-		}
-
-		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnStateEnter AS t WHERE t.target_class IN ('$sClassList') AND t.state='$sNewState'"));
-		while ($oTrigger = $oSet->Fetch())
-		{
-			$oTrigger->DoActivate($this->ToArgs('this'));
+			$this->Reload(); // in case an action modified something (like an object pointed to by an ext key)
+			// Change state triggers...
+			$sClass = get_class($this);
+			$sClassList = implode("', '", MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
+			$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnStateLeave AS t WHERE t.target_class IN ('$sClassList') AND t.state='$sPreviousState'"));
+			while ($oTrigger = $oSet->Fetch())
+			{
+				$oTrigger->DoActivate($this->ToArgs('this'));
+			}
+	
+			$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnStateEnter AS t WHERE t.target_class IN ('$sClassList') AND t.state='$sNewState'"));
+			while ($oTrigger = $oSet->Fetch())
+			{
+				$oTrigger->DoActivate($this->ToArgs('this'));
+			}
 		}
 
 		return $bSuccess;
