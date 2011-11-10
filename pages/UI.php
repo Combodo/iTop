@@ -1578,12 +1578,7 @@ EOF
 						{
 							$sDisplayValue = empty($aVal['display']) ? '<i>'.Dict::S('Enum:Undefined').'</i>' : str_replace(array("\n", "\r"), " ", $aVal['display']);
 							$sTip .= "<li>".Dict::Format('UI:BulkModify:Value_Exists_N_Times', $sDisplayValue, $aVal['count'])."</li>";
-							$index++;
-							if ($iMaxCount == $index)
-							{
-								$sTip .= "<li>".(count($aMultiValues) - $iMaxCount)." more different values...</li>";
-								break;
-							}					
+							$index++;					
 							if ($iMaxCount == $index)
 							{
 								$sTip .= "<li>".Dict::Format('UI:BulkModify:N_MoreValues', count($aValues[$sAttCode]) - $iMaxCount)."</li>";
