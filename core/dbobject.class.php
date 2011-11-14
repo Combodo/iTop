@@ -153,7 +153,7 @@ abstract class DBObject
 		return true;
 	}
 
-	protected function Reload()
+	public function Reload()
 	{
 		assert($this->m_bIsInDB);
 		$aRow = MetaModel::MakeSingleRow(get_class($this), $this->m_iKey, false/*, $this->m_bAllowAllData*/);
