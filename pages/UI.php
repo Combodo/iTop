@@ -393,6 +393,7 @@ function ApplyNextAction(Webpage $oP, CMDBObject $oObj, $sNextAction, $oMyChange
 			}
 			$oObj->DBUpdateTracked($oMyChange);
 		}
+		$oObj->Reload();
 		$oObj->DisplayDetails($oP);
 	}
 	else
@@ -842,7 +843,7 @@ try
 						$currValue = $oObj->Get($sAttCode);
 						if ($oAttDef instanceof AttributeCaseLog)
 						{
-							$currValue = '';
+							$currValue = ' '; // Don't put an empty string, in case the field would be considered as mandatory...
 						}
 						if (is_object($currValue)) continue; // Skip non scalar values...
 						if(!array_key_exists($currValue, $aValues[$sAttCode]))
@@ -2006,6 +2007,7 @@ EOF
 					$oP->p(implode('</p><p>', $aErrors));
 				}
 			}
+			$oObj->Reload();
 			$oObj->DisplayDetails($oP);
 		}
 		else
