@@ -393,6 +393,7 @@ function ApplyNextAction(Webpage $oP, CMDBObject $oObj, $sNextAction, $oMyChange
 			}
 			$oObj->DBUpdateTracked($oMyChange);
 		}
+		$oObj->Reload();
 		$oObj->DisplayDetails($oP);
 	}
 	else
@@ -2006,6 +2007,7 @@ EOF
 					$oP->p(implode('</p><p>', $aErrors));
 				}
 			}
+			$oObj->Reload();
 			$oObj->DisplayDetails($oP);
 		}
 		else
