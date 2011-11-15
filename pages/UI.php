@@ -936,6 +936,7 @@ try
 								}					
 							}
 							$sTip .= "</ul></p>";
+							$sTip = addslashes($sTip);
 							$sReadyScript .= "$('#multi_values_$sAttCode').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );";
 	
 							$oDummyObj->Set($sAttCode, null);
@@ -1587,6 +1588,7 @@ EOF
 							}					
 						}
 						$sTip .= "</ul></p>";
+						$sTip = addslashes($sTip);
 						$sReadyScript .= "$('#multi_values_$sAttCode').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );\n";
 						$sComments .= '<div class="multi_values" id="multi_values_'.$sAttCode.'">'.count($aValues[$sAttCode]).'</div>';
 					}
