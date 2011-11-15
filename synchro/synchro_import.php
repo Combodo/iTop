@@ -223,6 +223,14 @@ function ChangeDateFormat($sProposedDate, $sDateFormat)
 }
 
 
+class CLILikeWebPage extends WebPage
+{
+	public function add_comment($sText)
+	{
+		$this->add('#'.$sText."<br/>\n");
+	}
+}
+
 /////////////////////////////////
 // Main program
 
@@ -232,7 +240,7 @@ if (utils::IsModeCLI())
 }
 else
 {
-	$oP = new WebPage(Dict::S("TitleSynchroExecution"));
+	$oP = new CLILikeWebPage(Dict::S("TitleSynchroExecution"));
 }
 
 try

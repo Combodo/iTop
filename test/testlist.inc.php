@@ -1999,6 +1999,7 @@ class TestDataExchange extends TestBizModel
 
 		foreach($aTargetData as $iRow => $aExpectedObjects)
 		{
+			sleep(2);
 			// Check the status (while ignoring existing objects)
 			//
 			if (empty($sExistingIds))
@@ -2360,7 +2361,7 @@ class TestDataExchange extends TestBizModel
 					),
 					array(
 						array('obj_C', 2, 'obj_C', 'production'),
-					),
+				),
 				),
 				'target_data' => array(
 					array('org_id', 'name', 'status'),
@@ -2402,7 +2403,7 @@ class TestDataExchange extends TestBizModel
 						array(2, 'obj_B', 'implementation'),
 						array(2, 'obj_C', 'production'),
 						array(2, 'obj_D', 'obsolete'),
-					),
+				),
 				),
 				'attributes' => array(
 					'org_id' => array(

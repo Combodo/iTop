@@ -1158,11 +1158,19 @@ EOF
 						}
 					}
 					$oReplica->Set('status_last_error', '');
-					$oReplica->UpdateDestObject($aToUpdate, $oMyChange, $oStatLog);
-					if ($oReplica->Get('status_last_error') == '')
+					if ($oReplica->Get('dest_id') == '')
 					{
-						// Change the status of the replica IIF
 						$oReplica->Set('status', 'obsolete');
+						$oStatLog->Inc('stats_nb_replica_disappeared_no_action');
+					}
+					else
+					{
+						$oReplica->UpdateDestObject($aToUpdate, $oMyChange, $oStatLog);
+						if ($oReplica->Get('status_last_error') == '')
+						{
+							// Change the status of the replica IIF
+							$oReplica->Set('status', 'obsolete');
+						}
 					}
 					$oReplica->DBUpdateTracked($oMyChange);
 					break;
@@ -1182,8 +1190,8 @@ EOF
 		
 		// Get all the replicas that are 'new' or modified
 		//
-		$sSelectToSync  = "SELECT SynchroReplica WHERE (status = 'new' OR status = 'modified') AND sync_source_id = :source_id";
-		$oSetToSync = new DBObjectSet(DBObjectSearch::FromOQL($sSelectToSync), array() /* order by*/, array('source_id' => $this->GetKey()) /* aArgs */, $aExtDataSpec, 0 /* limitCount */, 0 /* limitStart */);
+		$sSelectToSync  = "SELECT SynchroReplica WHERE (status = 'new' OR status = 'modified') AND sync_source_id = :source_id AND status_last_seen >= :last_import";
+		$oSetToSync = new DBObjectSet(DBObjectSearch::FromOQL($sSelectToSync), array() /* order by*/, array('source_id' => $this->GetKey(), 'last_import' => $sLimitDate) /* aArgs */, $aExtDataSpec, 0 /* limitCount */, 0 /* limitStart */);
 
 		while($oReplica = $oSetToSync->Fetch())
 		{
@@ -1741,6 +1749,7 @@ class SynchroReplica extends DBObject implements iDisplay
 				else // assumed to be 'error'
 				{
 					$oStatLog->AddTrace("Failed to reconcile (no match)", $this);
+					// Recoverable error
 					$this->SetLastError('Could not find a match for reconciliation');
 					$oStatLog->Inc('stats_nb_replica_reconciled_errors');
 				}
@@ -1759,6 +1768,7 @@ class SynchroReplica extends DBObject implements iDisplay
 				{
 					// assumed to be 'error'
 					$oStatLog->AddTrace("Failed to reconcile (1 match)", $this);
+					// Recoverable error
 					$this->SetLastError('Found a match while expecting several');
 					$oStatLog->Inc('stats_nb_replica_reconciled_errors');
 				}
@@ -1769,6 +1779,7 @@ class SynchroReplica extends DBObject implements iDisplay
 				if ($oDataSource->Get('action_on_multiple') == 'error')
 				{
 					$oStatLog->AddTrace("Failed to reconcile (N>1 matches)", $this);
+					// Recoverable error
 					$this->SetLastError($iCount.' destination objects match the reconciliation criterias: '.$sConditionDesc);
 					$oStatLog->Inc('stats_nb_replica_reconciled_errors');
 				}
