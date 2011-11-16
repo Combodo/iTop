@@ -1107,7 +1107,7 @@ class MenuBlock extends DisplayBlock
 				if (count($aTransitions))
 				{
 					$this->AddMenuSeparator($aActions);
-					$aStimuli = Metamodel::EnumStimuli($sClass);
+					$aStimuli = Metamodel::EnumStimuli(get_class($oObj));
 					foreach($aTransitions as $sStimulusCode => $aTransitionDef)
 					{
 						$iActionAllowed = (get_class($aStimuli[$sStimulusCode]) == 'StimulusUserAction') ? UserRights::IsStimulusAllowed($sClass, $sStimulusCode, $oSet) : UR_ALLOWED_NO;
