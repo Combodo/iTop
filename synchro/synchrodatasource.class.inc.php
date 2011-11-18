@@ -251,6 +251,19 @@ class SynchroDataSource extends cmdbAbstractObject
 				$sEndDate = $oLastLog->Get('end_date');
 				$iLastLog = $oLastLog->GetKey();
 				$oPage->p('<h2>'.Dict::Format('Core:Synchro:SynchroEndedOn_Date', $sEndDate).'</h2>');
+				$sOQL = "SELECT SynchroReplica WHERE sync_source_id=$iDSid";
+				$oSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL));
+				$iCountAllReplicas = $oSet->Count();
+				$sAllReplicas = "<a href=\"../synchro/replica.php?operation=oql&datasource=$iDSid&oql=$sOQL\">$iCountAllReplicas</a>";
+				$sOQL = "SELECT SynchroReplica WHERE sync_source_id=$iDSid AND status_last_error !=''";
+				$oSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL));
+				$iCountAllErrors = $oSet->Count();
+				$sAllErrors = "<a href=\"../synchro/replica.php?operation=oql&datasource=$iDSid&oql=$sOQL\">$iCountAllErrors</a>";
+				$sOQL = "SELECT SynchroReplica WHERE sync_source_id=$iDSid AND status_last_warning !=''";
+				$oSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL));
+				$iCountAllWarnings = $oSet->Count();
+				$sAllWarnings = "<a href=\"../synchro/replica.php?operation=oql&datasource=$iDSid&oql=$sOQL\">$iCountAllWarnings</a>";
+				$oPage->p('<h2>'.Dict::Format('Core:Synchro:ListReplicas_AllReplicas_Errors_Warnings', $sAllReplicas, $sAllErrors, $sAllWarnings).'</h2>');
 			}
 
 			$oPage->add('<table class="synoptics"><tr><td style="color:#333;vertical-align:top">');
@@ -273,6 +286,18 @@ class SynchroDataSource extends cmdbAbstractObject
 			$sScript .= "};\n";
 			$sScript .= <<<EOF
 			var sLastLog = '$iLastLog';
+	function ToggleSynoptics(sId, bShow)
+	{
+		if (bShow)
+		{
+			$(sId).show();
+		}
+		else
+		{
+			$(sId).hide();
+		}
+	}
+	
 	function UpdateSynoptics(id)
 	{
 		var aValues = aSynchroLog[id];
@@ -310,6 +335,12 @@ class SynchroDataSource extends cmdbAbstractObject
 		{
 			$('#disappeared_errors_link').hide();
 		}
+		
+		ToggleSynoptics('#cw_obj_created_warnings', aValues['obj_created_warnings'] > 0);
+		ToggleSynoptics('#cw_obj_new_updated_warnings', aValues['obj_new_updated_warnings'] > 0);
+		ToggleSynoptics('#cw_obj_new_unchanged_warnings', aValues['obj_new_unchanged_warnings'] > 0);
+		ToggleSynoptics('#cw_obj_updated_warnings', aValues['obj_updated_warnings'] > 0);
+		ToggleSynoptics('#cw_obj_unchanged_warnings', aValues['obj_unchanged_warnings'] > 0);
 	}
 EOF
 ;
@@ -375,6 +406,10 @@ EOF
 		$sCount = "<span id=\"c_{$sId}\">$iCount</span>";
 		$sLabel = Dict::Format('Core:Synchro:label_'.$sId, $sCount);
 		$sOpacity = ($iCount==0) ? "opacity:0.3;" : "";
+		if (isset($aData[$sId.'_warnings']))
+		{
+			$sLabel .= " <span id=\"cw_{$sId}_warnings\"><img src=\"../images/error.png\" style=\"vertical-align:middle\"/>  (<span id=\"c_{$sId}_warnings\">".$aData[$sId.'_warnings']."</span>)</span>";
+		}
 
 		return "<td id=\"$sId\" style=\"background-color:$sColor;$sOpacity;\" {$sHTMLAttribs}>{$sLabel}{$sErrorLink}</td>";
 	}
@@ -387,11 +422,15 @@ EOF
 			'obj_disappeared_errors' => $oLastLog->Get('stats_nb_obj_obsoleted_errors') + $oLastLog->Get('stats_nb_obj_deleted_errors'),
 			'obj_disappeared_no_action' => $oLastLog->Get('stats_nb_replica_disappeared_no_action'),
 			'obj_updated' => $oLastLog->Get('stats_nb_obj_updated'),
+			'obj_updated_warnings' => $oLastLog->Get('stats_nb_obj_updated_warnings'),
 			'obj_updated_errors' => $oLastLog->Get('stats_nb_obj_updated_errors'),
 			'obj_new_updated' => $oLastLog->Get('stats_nb_obj_new_updated'),
+			'obj_new_updated_warnings' => $oLastLog->Get('stats_nb_obj_new_updated_warnings'),
 			'obj_new_unchanged' => $oLastLog->Get('stats_nb_obj_new_unchanged'),
 			'obj_created' => $oLastLog->Get('stats_nb_obj_created'),
+			'obj_created_warnings' => $oLastLog->Get('stats_nb_obj_created_warnings'),
 			'obj_created_errors' => $oLastLog->Get('stats_nb_obj_created_errors'),
+			'obj_unchanged_warnings' => $oLastLog->Get('stats_nb_obj_unchanged_warnings'),
 		);
 		$iReconciledErrors = $oLastLog->Get('stats_nb_replica_reconciled_errors');
 		$iDisappeared = $aData['obj_disappeared_errors'] + $aData['obj_obsoleted'] + $aData['obj_deleted'] + $aData['obj_disappeared_no_action'];
@@ -949,13 +988,18 @@ EOF
 		$oStatLog->Set('stats_nb_obj_obsoleted_errors', 0);
 		$oStatLog->Set('stats_nb_obj_created', 0);
 		$oStatLog->Set('stats_nb_obj_created_errors', 0);
+		$oStatLog->Set('stats_nb_obj_created_warnings', 0);
 		$oStatLog->Set('stats_nb_obj_updated', 0);
+		$oStatLog->Set('stats_nb_obj_updated_warnings', 0);
 		$oStatLog->Set('stats_nb_obj_updated_errors', 0);
-//		$oStatLog->Set('stats_nb_replica_reconciled', 0);
+		$oStatLog->Set('stats_nb_obj_unchanged_warnings', 0);
+		//		$oStatLog->Set('stats_nb_replica_reconciled', 0);
 		$oStatLog->Set('stats_nb_replica_reconciled_errors', 0);
 		$oStatLog->Set('stats_nb_replica_disappeared_no_action', 0);
 		$oStatLog->Set('stats_nb_obj_new_updated', 0);
+		$oStatLog->Set('stats_nb_obj_new_updated_warnings', 0);
 		$oStatLog->Set('stats_nb_obj_new_unchanged',0);
+		$oStatLog->Set('stats_nb_obj_new_unchanged_warnings',0);
 		
 		$sSelectTotal  = "SELECT SynchroReplica WHERE sync_source_id = :source_id";
 		$oSetTotal = new DBObjectSet(DBObjectSearch::FromOQL($sSelectTotal), array() /* order by*/, array('source_id' => $this->GetKey()));
@@ -989,14 +1033,14 @@ EOF
 				$sStatistics .= "<li>".$oStatLog->GetLabel('stats_nb_obj_deleted_errors').": ".$oStatLog->Get('stats_nb_obj_deleted_errors')."</li>\n";
 				$sStatistics .= "<li>".$oStatLog->GetLabel('stats_nb_obj_obsoleted').": ".$oStatLog->Get('stats_nb_obj_obsoleted')."</li>\n";
 				$sStatistics .= "<li>".$oStatLog->GetLabel('stats_nb_obj_obsoleted_errors').": ".$oStatLog->Get('stats_nb_obj_obsoleted_errors')."</li>\n";
-				$sStatistics .= "<li>".$oStatLog->GetLabel('stats_nb_obj_created').": ".$oStatLog->Get('stats_nb_obj_created')."</li>\n";
+				$sStatistics .= "<li>".$oStatLog->GetLabel('stats_nb_obj_created').": ".$oStatLog->Get('stats_nb_obj_created')." (".$oStatLog->Get('stats_nb_obj_created_warnings')." warnings)"."</li>\n";
 				$sStatistics .= "<li>".$oStatLog->GetLabel('stats_nb_obj_created_errors').": ".$oStatLog->Get('stats_nb_obj_created_errors')."</li>\n";
-				$sStatistics .= "<li>".$oStatLog->GetLabel('stats_nb_obj_updated').": ".$oStatLog->Get('stats_nb_obj_updated')."</li>\n";
+				$sStatistics .= "<li>".$oStatLog->GetLabel('stats_nb_obj_updated').": ".$oStatLog->Get('stats_nb_obj_updated')." (".$oStatLog->Get('stats_nb_obj_updated_warnings')." warnings)"."</li>\n";
 				$sStatistics .= "<li>".$oStatLog->GetLabel('stats_nb_obj_updated_errors').": ".$oStatLog->Get('stats_nb_obj_updated_errors')."</li>\n";
 				$sStatistics .= "<li>".$oStatLog->GetLabel('stats_nb_replica_reconciled_errors').": ".$oStatLog->Get('stats_nb_replica_reconciled_errors')."</li>\n";
 				$sStatistics .= "<li>".$oStatLog->GetLabel('stats_nb_replica_disappeared_no_action').": ".$oStatLog->Get('stats_nb_replica_disappeared_no_action')."</li>\n";
-				$sStatistics .= "<li>".$oStatLog->GetLabel('stats_nb_obj_new_updated').": ".$oStatLog->Get('stats_nb_obj_new_updated')."</li>\n";
-				$sStatistics .= "<li>".$oStatLog->GetLabel('stats_nb_obj_new_unchanged').": ".$oStatLog->Get('stats_nb_obj_new_unchanged')."</li>\n";
+				$sStatistics .= "<li>".$oStatLog->GetLabel('stats_nb_obj_new_updated').": ".$oStatLog->Get('stats_nb_obj_new_updated')." (".$oStatLog->Get('stats_nb_obj_new_updated_warnings')." warnings)"."</li>\n";
+				$sStatistics .= "<li>".$oStatLog->GetLabel('stats_nb_obj_new_unchanged').": ".$oStatLog->Get('stats_nb_obj_new_unchanged')." (".$oStatLog->Get('stats_nb_obj_new_unchanged_warnings')." warnings)"."</li>\n";
 				$sStatistics .= "</ul>\n";
 
 				$this->SendNotification("errors ($iErrors)", "<p>The synchronization has been executed, $iErrors errors have been encountered. Click <a href=\"$sIssuesURL\">here</a> to see the records being currently in error.</p>".$sStatistics);
@@ -1180,10 +1224,10 @@ EOF
 		$oSetSeen = new DBObjectSet(DBObjectSearch::FromOQL($sSelectSeen), array() /* order by*/, array('source_id' => $this->GetKey(), 'last_import' => $sLimitDate));
 		$oStatLog->Set('stats_nb_replica_seen', $oSetSeen->Count());
 		
-		// Get all the replicas that are 'new' or modified
+		// Get all the replicas that are 'new' or modified or synchronized with a warning
 		//
-		$sSelectToSync  = "SELECT SynchroReplica WHERE (status = 'new' OR status = 'modified') AND sync_source_id = :source_id";
-		$oSetToSync = new DBObjectSet(DBObjectSearch::FromOQL($sSelectToSync), array() /* order by*/, array('source_id' => $this->GetKey()) /* aArgs */, $aExtDataSpec, 0 /* limitCount */, 0 /* limitStart */);
+		$sSelectToSync  = "SELECT SynchroReplica WHERE (status = 'new' OR status = 'modified' OR (status = 'synchronized' AND status_last_warning != '')) AND sync_source_id = :source_id AND status_last_seen >= :last_import";
+		$oSetToSync = new DBObjectSet(DBObjectSearch::FromOQL($sSelectToSync), array() /* order by*/, array('source_id' => $this->GetKey(), 'last_import' => $sLimitDate) /* aArgs */, $aExtDataSpec, 0 /* limitCount */, 0 /* limitStart */);
 
 		while($oReplica = $oSetToSync->Fetch())
 		{
@@ -1484,15 +1528,20 @@ class SynchroLog extends DBObject
 		MetaModel::Init_AddAttribute(new AttributeInteger("stats_nb_obj_obsoleted_errors", array("allowed_values"=>null, "sql"=>"stats_nb_obj_obsoleted_errors", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeInteger("stats_nb_obj_created", array("allowed_values"=>null, "sql"=>"stats_nb_obj_created", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeInteger("stats_nb_obj_created_errors", array("allowed_values"=>null, "sql"=>"stats_nb_obj_created_errors", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeInteger("stats_nb_obj_created_warnings", array("allowed_values"=>null, "sql"=>"stats_nb_obj_created_warnings", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeInteger("stats_nb_obj_updated", array("allowed_values"=>null, "sql"=>"stats_nb_obj_updated", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeInteger("stats_nb_obj_updated_errors", array("allowed_values"=>null, "sql"=>"stats_nb_obj_updated_errors", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
-//		MetaModel::Init_AddAttribute(new AttributeInteger("stats_nb_replica_reconciled", array("allowed_values"=>null, "sql"=>"stats_nb_replica_reconciled", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeInteger("stats_nb_obj_updated_warnings", array("allowed_values"=>null, "sql"=>"stats_nb_obj_updated_warnings", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeInteger("stats_nb_obj_unchanged_warnings", array("allowed_values"=>null, "sql"=>"stats_nb_obj_unchanged_warnings", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
+		//		MetaModel::Init_AddAttribute(new AttributeInteger("stats_nb_replica_reconciled", array("allowed_values"=>null, "sql"=>"stats_nb_replica_reconciled", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeInteger("stats_nb_replica_reconciled_errors", array("allowed_values"=>null, "sql"=>"stats_nb_replica_reconciled_errors", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeInteger("stats_nb_replica_disappeared_no_action", array("allowed_values"=>null, "sql"=>"stats_nb_replica_disappeared_no_action", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
 
 		MetaModel::Init_AddAttribute(new AttributeInteger("stats_nb_obj_new_updated", array("allowed_values"=>null, "sql"=>"stats_nb_obj_new_updated", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeInteger("stats_nb_obj_new_updated_warnings", array("allowed_values"=>null, "sql"=>"stats_nb_obj_new_updated_warnings", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeInteger("stats_nb_obj_new_unchanged", array("allowed_values"=>null, "sql"=>"stats_nb_obj_new_unchanged", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
-
+		MetaModel::Init_AddAttribute(new AttributeInteger("stats_nb_obj_new_unchanged_warnings", array("allowed_values"=>null, "sql"=>"stats_nb_obj_new_unchanged_warnings", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
+		
 		MetaModel::Init_AddAttribute(new AttributeText("last_error", array("allowed_values"=>null, "sql"=>"last_error", "default_value"=>'', "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLongText("traces", array("allowed_values"=>null, "sql"=>"traces", "default_value"=>'', "is_null_allowed"=>true, "depends_on"=>array())));
 
@@ -1596,6 +1645,7 @@ class SynchroLog extends DBObject
 class SynchroReplica extends DBObject implements iDisplay
 {
 	static $aSearches = array(); // Cache of OQL queries used for reconciliation (per data source)
+	protected $aWarnings;
 	
 	public static function Init()
 	{
@@ -1624,7 +1674,8 @@ class SynchroReplica extends DBObject implements iDisplay
 		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('new,synchronized,modified,orphan,obsolete'), "sql"=>"status", "default_value"=>"new", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeBoolean("status_dest_creator", array("allowed_values"=>null, "sql"=>"status_dest_creator", "default_value"=>0, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("status_last_error", array("allowed_values"=>null, "sql"=>"status_last_error", "default_value"=>'', "is_null_allowed"=>true, "depends_on"=>array())));
-
+		MetaModel::Init_AddAttribute(new AttributeString("status_last_warning", array("allowed_values"=>null, "sql"=>"status_last_warning", "default_value"=>'', "is_null_allowed"=>true, "depends_on"=>array())));
+		
 		MetaModel::Init_AddAttribute(new AttributeDateTime("info_creation_date", array("allowed_values"=>null, "sql"=>"info_creation_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDateTime("info_last_modified", array("allowed_values"=>null, "sql"=>"info_last_modified", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
@@ -1632,17 +1683,65 @@ class SynchroReplica extends DBObject implements iDisplay
 		MetaModel::Init_SetZListItems('details', array('' .
 			'col:0'=> array(
 				'fieldset:SynchroDataSource:Definition' => array('sync_source_id','dest_id','dest_class'),
-				'fieldset:SynchroDataSource:Status' => array('status','status_last_seen','status_dest_creator','status_last_error'),
+				'fieldset:SynchroDataSource:Status' => array('status','status_last_seen','status_dest_creator','status_last_error','status_last_warning'),
 				'fieldset:SynchroDataSource:Information' => array('info_creation_date','info_last_modified'))
 			)
 		);
-		MetaModel::Init_SetZListItems('list', array('sync_source_id', 'dest_id', 'dest_class', 'status_last_seen', 'status', 'status_dest_creator', 'status_last_error')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('list', array('sync_source_id', 'dest_id', 'dest_class', 'status_last_seen', 'status', 'status_dest_creator', 'status_last_error', 'status_last_warning')); // Attributes to be displayed for a list
 		// Search criteria
-		MetaModel::Init_SetZListItems('standard_search', array('sync_source_id', 'status_last_seen', 'status', 'status_dest_creator', 'dest_class', 'dest_id', 'status_last_error')); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('standard_search', array('sync_source_id', 'status_last_seen', 'status', 'status_dest_creator', 'dest_class', 'dest_id', 'status_last_error', 'status_last_warning')); // Criteria of the std search form
 //		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
 	}
+	
+	public function __construct($aRow = null, $sClassAlias = '', $aAttToLoad = null, $aExtendedDataSpec = null)
+	{
+		parent::__construct($aRow, $sClassAlias, $aAttToLoad, $aExtendedDataSpec);
+		$this->aWarnings = array();
+	}
 
-  	public function DBInsert()
+ 	protected function AddWarning($sWarningMessage)
+	{
+		$this->aWarnings[] = $sWarningMessage;
+	}
+
+ 	protected function ResetWarnings()
+	{
+		$this->aWarnings = array();
+	}
+
+	protected function HasWarnings()
+	{
+		return (count($this->aWarnings) > 0);
+	}
+
+	protected function RecordWarnings()
+	{
+		$sWarningMessage = '';
+		$MAX_WARNING_LENGTH = 255;
+		switch(count($this->aWarnings))
+		{
+			case 0:
+			$sWarningMessage = '';
+			break;
+			
+			case 1:
+			$sWarningMessage = $this->aWarnings[0];
+			break;
+			
+			default:
+			$sWarningMessage = count($this->aWarnings)." warnings: ".implode(' '.$this->aWarnings);
+			break;
+		}
+
+		if (strlen($sWarningMessage) > $MAX_WARNING_LENGTH)
+		{
+			$sWarningMessage = substr($sWarningMessage, 0, $MAX_WARNING_LENGTH - 3).'...';
+		}
+		
+		$this->Set('status_last_warning', $sWarningMessage);
+	}
+
+	public function DBInsert()
 	{
 		throw new CoreException('A synchronization replica must be created only by the mean of triggers');
 	}
@@ -1688,6 +1787,7 @@ class SynchroReplica extends DBObject implements iDisplay
 	
 	public function Synchro($oDataSource, $aReconciliationKeys, $aAttributes, $oChange, &$oStatLog)
 	{
+		$this->ResetWarnings();
 		switch($this->Get('status'))
 		{
 			case 'new':
@@ -1714,6 +1814,7 @@ class SynchroReplica extends DBObject implements iDisplay
 				}
 				else
 				{
+					// TO DO: can we retry this ??
 					// Reconciliation could not be performed - log and EXIT
 					$oStatLog->AddTrace("Could not reconcile on null value for attribute '$sFilterCode'", $this);
 					$this->SetLastError("Could not reconcile on null value for attribute '$sFilterCode'");
@@ -1737,6 +1838,10 @@ class SynchroReplica extends DBObject implements iDisplay
 				if ($oDataSource->Get('action_on_zero') == 'create')
 				{
 					$this->CreateObjectFromReplica($oDataSource->GetTargetClass(), $aAttributes, $oChange, $oStatLog);
+					if ($this->HasWarnings())
+					{
+						$oStatLog->Inc('stats_nb_obj_created_warnings');
+					}
 				}
 				else // assumed to be 'error'
 				{
@@ -1751,9 +1856,20 @@ class SynchroReplica extends DBObject implements iDisplay
 				if ($oDataSource->Get('action_on_one') == 'update')
 				{
 					$oDestObj = $oDestSet->Fetch();
-					$this->UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange, $oStatLog, 'stats_nb_obj_new', 'stats_nb_replica_reconciled_errors');
+					$bModified = $this->UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange, $oStatLog, 'stats_nb_obj_new', 'stats_nb_replica_reconciled_errors');
 					$this->Set('dest_id', $oDestObj->GetKey());
 					$this->Set('dest_class', get_class($oDestObj));
+					if ($this->HasWarnings())
+					{
+						if ($bModified)
+						{
+							$oStatLog->Inc('stats_nb_obj_new_updated_warnings');
+						}
+						else
+						{
+							$oStatLog->Inc('stats_nb_obj_new_unchanged_warnings');
+						}
+					}
 				}
 				else
 				{
@@ -1775,20 +1891,37 @@ class SynchroReplica extends DBObject implements iDisplay
 				elseif ($oDataSource->Get('action_on_multiple') == 'create')
 				{
 					$this->CreateObjectFromReplica($oDataSource->GetTargetClass(), $aAttributes, $oChange, $oStatLog);
+					if ($this->HasWarnings())
+					{
+						$oStatLog->Inc('stats_nb_obj_created_warnings');
+					}
 				}
 				else
 				{
 					// assumed to be 'take_first'
 					$oDestObj = $oDestSet->Fetch();
-					$this->UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange, $oStatLog, 'stats_nb_obj_new', 'stats_nb_replica_reconciled_errors');
+					$bModified = $this->UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange, $oStatLog, 'stats_nb_obj_new', 'stats_nb_replica_reconciled_errors');
 					$this->Set('dest_id', $oDestObj->GetKey());
 					$this->Set('dest_class', get_class($oDestObj));
+					if ($this->HasWarnings())
+					{
+						if ($bModified)
+						{
+							$oStatLog->Inc('stats_nb_obj_new_updated_warnings');
+						}
+						else
+						{
+							$oStatLog->Inc('stats_nb_obj_new_unchanged_warnings');
+						}
+					}
 				}
 			}
+			$this->RecordWarnings();
 			break;
 			
+			case 'synchronized': // try to recover synchronized replicas with warnings
 			case 'modified':
-			$oDestObj = MetaModel::GetObject($oDataSource->GetTargetClass(), $this->Get('dest_id'));
+				$oDestObj = MetaModel::GetObject($oDataSource->GetTargetClass(), $this->Get('dest_id'));
 			if ($oDestObj == null)
 			{
 				$this->Set('status', 'orphan'); // The destination object has been deleted !
@@ -1797,8 +1930,20 @@ class SynchroReplica extends DBObject implements iDisplay
 			}
 			else
 			{
-				$this->UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange, $oStatLog, 'stats_nb_obj', 'stats_nb_obj_updated_errors');
+				$bModified = $this->UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange, $oStatLog, 'stats_nb_obj', 'stats_nb_obj_updated_errors');
+				if ($this->HasWarnings())
+				{
+					if ($bModified)
+					{
+						$oStatLog->Inc('stats_nb_obj_updated_warnings');
+					}
+					else
+					{
+						$oStatLog->Inc('stats_nb_obj_unchanged_warnings');
+					}
+				}
 			}
+			$this->RecordWarnings();
 			break;
 			
 			default: // Do nothing in all other cases
@@ -1811,6 +1956,7 @@ class SynchroReplica extends DBObject implements iDisplay
 	protected function UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange, &$oStatLog, $sStatsCode, $sStatsCodeError)
 	{
 		$aValueTrace = array();
+		$bModified = false;
 		try
 		{
 			foreach($aAttributes as $sAttCode => $oSyncAtt)
@@ -1826,6 +1972,7 @@ class SynchroReplica extends DBObject implements iDisplay
 			if ($oDestObj->IsModified())
 			{
 				$oDestObj->DBUpdateTracked($oChange);
+				$bModified = true;
 				$oStatLog->AddTrace('Updated object - Values: {'.implode(', ', $aValueTrace).'}', $this);
 				if (($sStatsCode != '') &&(MetaModel::IsValidAttCode(get_class($oStatLog), $sStatsCode.'_updated')))
 				{
@@ -1851,6 +1998,7 @@ class SynchroReplica extends DBObject implements iDisplay
 			$this->SetLastError('Unable to update destination object: ', $e);
 			$oStatLog->Inc($sStatsCodeError);
 		}
+		return $bModified;
 	}
 
 	/**
@@ -1983,6 +2131,7 @@ class SynchroReplica extends DBObject implements iDisplay
 		// $sExtAttCode is a valid attribute code
 		// 
 		$sClass = $this->Get('base_class');
+
 		$oAttDef = MetaModel::GetAttributeDef($sClass, $sExtAttCode);
 
 		if (!is_null($oSyncAtt) && ($oSyncAtt instanceof SynchroAttExtKey))
@@ -2007,6 +2156,7 @@ class SynchroReplica extends DBObject implements iDisplay
 				{
 					// Note: differs from null (in which case the value would be left unchanged)
 					$oStatLog->AddTrace("Could not find [unique] object for '$sExtAttCode': searched on $sReconcAttCode = '$rawValue'", $this);
+					$this->AddWarning("Could not find [unique] object for '$sExtAttCode': searched on $sReconcAttCode = '$rawValue'");
 					$retValue = 0;
 				}
 			}
@@ -2108,6 +2258,14 @@ class SynchroReplica extends DBObject implements iDisplay
 		}
 		$oPage->Details($aDetails);
 		$oPage->add('</fieldset>');
+		$oDestObj = MetaModel::GetObject($this->Get('dest_class'), $this->Get('dest_id'), false);
+		if (is_object($oDestObj))
+		{
+			$oPage->add('<fieldset>');
+			$oPage->add('<legend>'.Dict::Format('Core:SynchroReplica:TargetObject', $oDestObj->GetHyperlink()).'</legend>');
+				$oDestObj->DisplayBareProperties($oPage, false, $aExtraParams);
+			$oPage->add('<fieldset>');
+		}
 		$oPage->add('</td><td>');
 		$oPage->add('<fieldset>');
 		$oPage->add('<legend>'.Dict::S('Core:SynchroReplica:PublicData').'</legend>');

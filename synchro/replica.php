@@ -53,6 +53,9 @@ try
 		{
 			throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'oql'));
 		}
+		$oFilter = DBObjectSearch::FromOQL($sOQL);
+		$oBlock1 = new DisplayBlock($oFilter, 'search', false, array('menu'=>false));
+		$oBlock1->Display($oP, 0);
 		$oP->add('<p class="page-header">'.MetaModel::GetClassIcon('SynchroReplica').Dict::S('Core:SynchroReplica:ListOfReplicas').'</p>');
 		$iSourceId = utils::ReadParam('datasource', null);
 		if ($iSourceId != null)
@@ -60,7 +63,6 @@ try
 			$oSource = MetaModel::GetObject('SynchroDataSource', $iSourceId);
 			$oP->p(Dict::Format('Core:SynchroReplica:BackToDataSource', $oSource->GetHyperlink()).'</a>');
 		}
-		$oFilter = DBObjectSearch::FromOQL($sOQL);
 		$oBlock = new DisplayBlock($oFilter, 'list', false, array('menu'=>false));
 		$oBlock->Display($oP, 1);
 		break;
