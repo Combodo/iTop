@@ -947,6 +947,33 @@ class AttributeInteger extends AttributeDBField
 }
 
 /**
+ * Display an integer between 0 and 100 as a percentage / horizontal bar graph 
+ *
+ * @package     iTopORM
+ */
+class AttributePercentage extends AttributeInteger
+{
+	public function GetAsHTML($sValue, $oHostObject = null)
+	{
+		$iWidth = 5; // Number of em...
+		if ($sValue > 90)
+		{
+			$sColor = "#cc3300";
+		}
+		else if ($sValue > 50)
+		{
+			$sColor = "#cccc00";
+		}
+		else
+		{
+			$sColor = "#33cc00";
+		}
+		$iPercentWidth = $iWidth * $sValue / 100;
+		return "<div style=\"width:{$iWidth}em;-moz-border-radius: 3px;-webkit-border-radius: 3px;border-radius: 3px;display:inline-block;border: 1px #ccc solid;\"><div style=\"width:{$iPercentWidth}em; display:inline-block;background-color:$sColor;\"><span></span></div></div>&nbsp;$sValue %";
+	}
+}
+
+/**
  * Map a decimal value column (suitable for financial computations) to an attribute
  * internally in PHP such numbers are represented as string. Should you want to perform
  * a calculation on them, it is recommended to use the BC Math functions in order to
