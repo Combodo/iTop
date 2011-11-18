@@ -955,12 +955,21 @@ class AttributePercentage extends AttributeInteger
 {
 	public function GetAsHTML($sValue, $oHostObject = null)
 	{
-		$iWidth = 5; // Number of em...
-		if ($sValue > 90)
+		$iWidth = 5; // Total width of the percentage bar graph, in em...
+		$iValue = (int)$sValue;
+		if ($iValue > 100)
+		{
+			$iValue = 100;
+		}
+		else if ($iValue < 0)
+		{
+			$iValue = 0;
+		}
+		if ($iValue > 90)
 		{
 			$sColor = "#cc3300";
 		}
-		else if ($sValue > 50)
+		else if ($iValue > 50)
 		{
 			$sColor = "#cccc00";
 		}
@@ -968,7 +977,7 @@ class AttributePercentage extends AttributeInteger
 		{
 			$sColor = "#33cc00";
 		}
-		$iPercentWidth = $iWidth * $sValue / 100;
+		$iPercentWidth = ($iWidth * $iValue) / 100;
 		return "<div style=\"width:{$iWidth}em;-moz-border-radius: 3px;-webkit-border-radius: 3px;border-radius: 3px;display:inline-block;border: 1px #ccc solid;\"><div style=\"width:{$iPercentWidth}em; display:inline-block;background-color:$sColor;\"><span></span></div></div>&nbsp;$sValue %";
 	}
 }
