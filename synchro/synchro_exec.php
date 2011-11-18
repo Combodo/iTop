@@ -166,12 +166,12 @@ foreach(explode(',', $sDataSourcesList) as $iSDS)
 			$oP->p("Objects deletion errors: ".$oStatLog->Get('stats_nb_obj_deleted_errors'));
 			$oP->p("Objects obsoleted: ".$oStatLog->Get('stats_nb_obj_obsoleted'));
 			$oP->p("Objects obsolescence errors: ".$oStatLog->Get('stats_nb_obj_obsoleted_errors'));
-			$oP->p("Objects created: ".$oStatLog->Get('stats_nb_obj_created'));
+			$oP->p("Objects created: ".$oStatLog->Get('stats_nb_obj_created')." (".$oStatLog->Get('stats_nb_obj_created_warnings')." warnings)");
 			$oP->p("Objects creation errors: ".$oStatLog->Get('stats_nb_obj_created_errors'));
-			$oP->p("Objects updated: ".$oStatLog->Get('stats_nb_obj_updated'));
+			$oP->p("Objects updated: ".$oStatLog->Get('stats_nb_obj_updated')." (".$oStatLog->Get('stats_nb_obj_updated_warnings')." warnings)");
 			$oP->p("Objects update errors: ".$oStatLog->Get('stats_nb_obj_updated_errors'));
-			$oP->p("Objects reconciled (updated): ".$oStatLog->Get('stats_nb_obj_new_updated'));
-			$oP->p("Objects reconciled (unchanged): ".$oStatLog->Get('stats_nb_obj_new_unchanged'));
+			$oP->p("Objects reconciled (updated): ".$oStatLog->Get('stats_nb_obj_new_updated')." (".$oStatLog->Get('stats_nb_obj_new_updated_warnings')." warnings)");
+			$oP->p("Objects reconciled (unchanged): ".$oStatLog->Get('stats_nb_obj_new_unchanged')." (".$oStatLog->Get('stats_nb_obj_new_updated_warnings')." warnings)");
 			$oP->p("Objects reconciliation errors: ".$oStatLog->Get('stats_nb_replica_reconciled_errors'));
 			$oP->p("Replica disappeared, no action taken: ".$oStatLog->Get('stats_nb_replica_disappeared_no_action'));
 		}
