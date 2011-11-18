@@ -176,6 +176,10 @@ legend {
 	-webkit-border-radius: 6px;
 	border-radius: 6px;
 }
+.ui-widget-content td legend a, .ui-widget-content td legend a:hover, .ui-widget-content td legend a:visited {
+	color: #fff;
+}
+
 .ui-widget-content td a, p a, p a:visited, td a, td a:visited {
 	text-decoration:none;
 	color: #1C94C4;
