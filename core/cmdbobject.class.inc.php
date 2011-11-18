@@ -280,9 +280,10 @@ abstract class CMDBObject extends DBObject
 	{
 		$this->CheckUserRights($bSkipStrongSecurity, UR_ACTION_MODIFY);
 
+		$oPreviousChange = self::$m_oCurrChange;
 		self::$m_oCurrChange = $oChange;
 		$ret = $this->DBInsertTracked_Internal();
-		self::$m_oCurrChange = null;
+		self::$m_oCurrChange = $oPreviousChange;
 		return $ret;
 	}
 
@@ -290,9 +291,10 @@ abstract class CMDBObject extends DBObject
 	{
 		$this->CheckUserRights($bSkipStrongSecurity, UR_ACTION_MODIFY);
 
+		$oPreviousChange = self::$m_oCurrChange;
 		self::$m_oCurrChange = $oChange;
 		$ret = $this->DBInsertTracked_Internal(true);
-		self::$m_oCurrChange = null;
+		self::$m_oCurrChange = $oPreviousChange;
 		return $ret;
 	}
 
@@ -321,9 +323,10 @@ abstract class CMDBObject extends DBObject
 
 	public function DBCloneTracked(CMDBChange $oChange, $newKey = null)
 	{
+		$oPreviousChange = self::$m_oCurrChange;
 		self::$m_oCurrChange = $oChange;
 		$this->DBCloneTracked_Internal($newKey);
-		self::$m_oCurrChange = null;
+		self::$m_oCurrChange = $oPreviousChange;
 	}
 
 	protected function DBCloneTracked_Internal($newKey = null)
@@ -348,9 +351,10 @@ abstract class CMDBObject extends DBObject
 	{
 		$this->CheckUserRights($bSkipStrongSecurity, UR_ACTION_MODIFY);
 
+		$oPreviousChange = self::$m_oCurrChange;
 		self::$m_oCurrChange = $oChange;
 		$this->DBUpdateTracked_Internal();
-		self::$m_oCurrChange = null;
+		self::$m_oCurrChange = $oPreviousChange;
 	}
 
 	protected function DBUpdateTracked_Internal()
@@ -383,9 +387,10 @@ abstract class CMDBObject extends DBObject
 	{
 		$this->CheckUserRights($bSkipStrongSecurity, UR_ACTION_DELETE);
 
+		$oPreviousChange = self::$m_oCurrChange;
 		self::$m_oCurrChange = $oChange;
 		$this->DBDeleteTracked_Internal($oDeletionPlan);
-		self::$m_oCurrChange = null;
+		self::$m_oCurrChange = $oPreviousChange;
 	}
 
 	protected function DBDeleteTracked_Internal(&$oDeletionPlan = null)
@@ -407,9 +412,10 @@ abstract class CMDBObject extends DBObject
 
 	public static function BulkDeleteTracked(CMDBChange $oChange, DBObjectSearch $oFilter)
 	{
+		$oPreviousChange = self::$m_oCurrChange;
 		self::$m_oCurrChange = $oChange;
 		$this->BulkDeleteTracked_Internal($oFilter);
-		self::$m_oCurrChange = null;
+		self::$m_oCurrChange = $oPreviousChange;
 	}
 
 	protected static function BulkDeleteTracked_Internal(DBObjectSearch $oFilter)
@@ -446,9 +452,10 @@ abstract class CMDBObject extends DBObject
 
 	public static function BulkUpdateTracked(CMDBChange $oChange, DBObjectSearch $oFilter, array $aValues)
 	{
+		$oPreviousChange = self::$m_oCurrChange;
 		self::$m_oCurrChange = $oChange;
 		$this->BulkUpdateTracked_Internal($oFilter, $aValues);
-		self::$m_oCurrChange = null;
+		self::$m_oCurrChange = $oPreviousChange;
 	}
 
 	protected static function BulkUpdateTracked_Internal(DBObjectSearch $oFilter, array $aValues)
