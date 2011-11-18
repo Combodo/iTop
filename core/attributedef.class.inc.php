@@ -978,7 +978,7 @@ class AttributePercentage extends AttributeInteger
 			$sColor = "#33cc00";
 		}
 		$iPercentWidth = ($iWidth * $iValue) / 100;
-		return "<div style=\"width:{$iWidth}em;-moz-border-radius: 3px;-webkit-border-radius: 3px;border-radius: 3px;display:inline-block;border: 1px #ccc solid;\"><div style=\"width:{$iPercentWidth}em; display:inline-block;background-color:$sColor;\"><span></span></div></div>&nbsp;$sValue %";
+		return "<div style=\"width:{$iWidth}em;-moz-border-radius: 3px;-webkit-border-radius: 3px;border-radius: 3px;display:inline-block;border: 1px #ccc solid;\"><div style=\"width:{$iPercentWidth}em; display:inline-block;background-color:$sColor;\">&nbsp;</div></div>&nbsp;$sValue %";
 	}
 }
 
