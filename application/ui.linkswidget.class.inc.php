@@ -244,7 +244,7 @@ class UILinksWidget
 		}
 		$sHtmlValue .= $this->DisplayFormTable($oPage, $this->m_aTableConfig, $aForm);
 		$sDuplicates = ($this->m_bDuplicatesAllowed) ? 'true' : 'false';
-		$sWizHelper = 'oWizardHelper'.$this->m_sFormPrefix;
+		$sWizHelper = 'oWizardHelper'.$sFormPrefix;
 		$oPage->add_ready_script(<<<EOF
 		oWidget{$this->m_iInputId} = new LinksWidget('{$this->m_sAttCode}{$this->m_sNameSuffix}', '{$this->m_sClass}', '{$this->m_sAttCode}', '{$this->m_iInputId}', '{$this->m_sNameSuffix}', $sDuplicates, $sWizHelper);
 		oWidget{$this->m_iInputId}.Init();
