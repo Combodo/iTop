@@ -1566,7 +1566,8 @@ EOF
 					$aEventsList[] ='validate';
 					$aEventsList[] ='change';
 					$oWidget = new UILinksWidget($sClass, $sAttCode, $iId, $sNameSuffix, $oAttDef->DuplicatesAllowed(), $aArgs);
-					$sHTMLValue = $oWidget->Display($oPage, $value, array(), '', $this);
+					$oObj = isset($aArgs['this']) ? $aArgs['this'] : null;
+					$sHTMLValue = $oWidget->Display($oPage, $value, array(), $sFormPrefix, $oObj);
 				break;
 							
 				case 'Document':
