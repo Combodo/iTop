@@ -97,7 +97,7 @@ class Dict
 	}
 
 
-	public static function GetCurrentLanguage()
+	public static function GetUserLanguage()
 	{
 		if (self::$m_sCurrentLanguage == null) // May happen when no user is logged in (i.e login screen, non authentifed page)
 		{
@@ -124,12 +124,12 @@ class Dict
 	{
 		// Attempt to find the string in the user language
 		//
-		if (!array_key_exists(self::GetCurrentLanguage(), self::$m_aData))
+		if (!array_key_exists(self::GetUserLanguage(), self::$m_aData))
 		{
 			// It may happen, when something happens before the dictionnaries get loaded
 			return $sStringCode;
 		}
-		$aCurrentDictionary = self::$m_aData[self::GetCurrentLanguage()];
+		$aCurrentDictionary = self::$m_aData[self::GetUserLanguage()];
 		if (array_key_exists($sStringCode, $aCurrentDictionary))
 		{
 			return $aCurrentDictionary[$sStringCode];
