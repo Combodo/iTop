@@ -297,6 +297,9 @@ try
 		$sSuffix = utils::ReadParam('sSuffix', '');
 		$sRemoteClass = utils::ReadParam('sRemoteClass', $sClass, false, 'class');
 		$bDuplicates = (utils::ReadParam('bDuplicates', 'false') == 'false') ? false : true;
+		$sJson = utils::ReadParam('json', '', false, 'raw_data');
+		$oWizardHelper = WizardHelper::FromJSON($sJson);
+		$oObj = $oWizardHelper->GetTargetObject();
 		$oWidget = new UILinksWidget($sClass, $sAttCode, $iInputId, $sSuffix, $bDuplicates);
 		if ($sFilter != '')
 		{
@@ -306,7 +309,7 @@ try
 		{
 			$oFullSetFilter = new DBObjectSearch($sRemoteClass);		
 		}
-		$oWidget->DoAddObjects($oPage, $oFullSetFilter);	
+		$oWidget->DoAddObjects($oPage, $oFullSetFilter, $oObj);	
 		break;
 			
 		case 'wizard_helper_preview':

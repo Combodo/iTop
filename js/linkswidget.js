@@ -1,5 +1,5 @@
 // JavaScript Document
-function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates)
+function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizHelper)
 {
 	this.id = id;
 	this.iInputId = iInputId;
@@ -7,6 +7,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates)
 	this.sAttCode = sAttCode;
 	this.sSuffix = sSuffix;
 	this.bDuplicates = bDuplicates;
+	this.oWizardHelper = oWizHelper;
 	var me = this;
 	this.Init = function()
 	{
@@ -202,6 +203,16 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates)
 //		}
 		
 		theMap['operation'] = 'doAddObjects';
+		if (me.oWizardHelper == null)
+		{
+			theMap['json'] = '';
+		}
+		else
+		{
+			// Not inside a "search form", updating a real object
+			me.oWizardHelper.UpdateWizard();
+			theMap['json'] = me.oWizardHelper.ToJSON();
+		}
 		$('#busy_'+me.iInputId).html('&nbsp;<img src="../images/indicator.gif"/>');
 		// Run the query and display the results
 		$.post( GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', theMap, 
