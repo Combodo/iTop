@@ -1565,8 +1565,8 @@ EOF
 				case 'LinkedSet':
 					$aEventsList[] ='validate';
 					$aEventsList[] ='change';
-					$oWidget = new UILinksWidget($sClass, $sAttCode, $iId, $sNameSuffix, $oAttDef->DuplicatesAllowed());
-					$sHTMLValue = $oWidget->Display($oPage, $value);
+					$oWidget = new UILinksWidget($sClass, $sAttCode, $iId, $sNameSuffix, $oAttDef->DuplicatesAllowed(), $aArgs);
+					$sHTMLValue = $oWidget->Display($oPage, $value, array(), '', $this);
 				break;
 							
 				case 'Document':
@@ -1733,7 +1733,7 @@ EOF
 		if ($iKey > 0)
 		{
 			// The object already exists in the database, it's a modification
-			$sButtons = "<input type=\"hidden\" name=\"id\" value=\"$iKey\">\n";
+			$sButtons = "<input id=\"{$sPrefix}_id\" type=\"hidden\" name=\"id\" value=\"$iKey\">\n";
 			$sButtons .= "<input type=\"hidden\" name=\"operation\" value=\"{$sOperation}\">\n";			
 			$sButtons .= "<button type=\"button\" class=\"action cancel\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;&nbsp;&nbsp;\n";
 			$sButtons .= "<button type=\"submit\" class=\"action\"><span>{$sApplyButton}</span></button>\n";
@@ -1819,6 +1819,10 @@ EOF
 		$oPage->SetCurrentTab(Dict::S('UI:PropertiesTab'));
 
 		$aFieldsMap = $this->DisplayBareProperties($oPage, true, $sPrefix, $aExtraParams);
+		if ($iKey > 0)
+		{
+			$aFieldsMap['id'] = $sPrefix.'_id';
+		}
 		// Now display the relations, one tab per relation
 		if (!isset($aExtraParams['noRelations']))
 		{
