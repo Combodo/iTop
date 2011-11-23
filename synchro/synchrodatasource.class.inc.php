@@ -1729,7 +1729,7 @@ class SynchroReplica extends DBObject implements iDisplay
 			break;
 			
 			default:
-			$sWarningMessage = count($this->aWarnings)." warnings: ".implode(' '.$this->aWarnings);
+			$sWarningMessage = count($this->aWarnings)." warnings: ".implode(' ', $this->aWarnings);
 			break;
 		}
 
@@ -1837,10 +1837,18 @@ class SynchroReplica extends DBObject implements iDisplay
 				$oStatLog->AddTrace("Nothing found on: $sConditionDesc", $this);
 				if ($oDataSource->Get('action_on_zero') == 'create')
 				{
-					$this->CreateObjectFromReplica($oDataSource->GetTargetClass(), $aAttributes, $oChange, $oStatLog);
-					if ($this->HasWarnings())
+					$bCreated = $this->CreateObjectFromReplica($oDataSource->GetTargetClass(), $aAttributes, $oChange, $oStatLog);
+					if ($bCreated)
 					{
-						$oStatLog->Inc('stats_nb_obj_created_warnings');
+						if ($this->HasWarnings())
+						{
+							$oStatLog->Inc('stats_nb_obj_created_warnings');
+						}
+					}
+					else
+					{
+						// Creation error has precedence over any warning
+						$this->ResetWarnings();
 					}
 				}
 				else // assumed to be 'error'
@@ -1890,10 +1898,18 @@ class SynchroReplica extends DBObject implements iDisplay
 				}
 				elseif ($oDataSource->Get('action_on_multiple') == 'create')
 				{
-					$this->CreateObjectFromReplica($oDataSource->GetTargetClass(), $aAttributes, $oChange, $oStatLog);
-					if ($this->HasWarnings())
+					$bCreated = $this->CreateObjectFromReplica($oDataSource->GetTargetClass(), $aAttributes, $oChange, $oStatLog);
+					if ($bCreated)
 					{
-						$oStatLog->Inc('stats_nb_obj_created_warnings');
+						if ($this->HasWarnings())
+						{
+							$oStatLog->Inc('stats_nb_obj_created_warnings');
+						}
+					}
+					else
+					{
+						// Creation error has precedence over any warning
+						$this->ResetWarnings();
 					}
 				}
 				else
@@ -2003,9 +2019,11 @@ class SynchroReplica extends DBObject implements iDisplay
 
 	/**
 	 * Creates the destination object populating it with the Extended data found in the synchro_data_XXXX table
+	 * @return bool Whether or not the object was created
 	 */	
 	protected function CreateObjectFromReplica($sClass, $aAttributes, $oChange, &$oStatLog)
 	{
+		$bCreated = false;
 		$oDestObj = MetaModel::NewObject($sClass);
 		try
 		{
@@ -2027,6 +2045,7 @@ class SynchroReplica extends DBObject implements iDisplay
 			$this->Set('status_last_error', '');
 			$this->Set('status', 'synchronized');
 			$this->Set('info_creation_date', date('Y-m-d H:i:s'));
+			$bCreated = true;
 
 			$oStatLog->AddTrace("Created (".implode(', ', $aValueTrace).")", $this);
 			$oStatLog->Inc('stats_nb_obj_created');
@@ -2037,6 +2056,7 @@ class SynchroReplica extends DBObject implements iDisplay
 			$this->SetLastError('Unable to create destination object: ', $e);
 			$oStatLog->Inc('stats_nb_obj_created_errors');
 		}
+		return $bCreated;
 	}
 	
 	/**
@@ -2154,9 +2174,12 @@ class SynchroReplica extends DBObject implements iDisplay
 				}
 				else
 				{
-					// Note: differs from null (in which case the value would be left unchanged)
-					$oStatLog->AddTrace("Could not find [unique] object for '$sExtAttCode': searched on $sReconcAttCode = '$rawValue'", $this);
-					$this->AddWarning("Could not find [unique] object for '$sExtAttCode': searched on $sReconcAttCode = '$rawValue'");
+					if ($rawValue != '')
+					{
+						// Note: differs from null (in which case the value would be left unchanged)
+						$oStatLog->AddTrace("Could not find [unique] object for '$sExtAttCode': searched on $sReconcAttCode = '$rawValue'", $this);
+						$this->AddWarning("Could not find [unique] object for '$sExtAttCode': searched on $sReconcAttCode = '$rawValue'");
+					}
 					$retValue = 0;
 				}
 			}
