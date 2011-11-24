@@ -153,16 +153,25 @@ class ormCaseLog {
 	 * Add a new entry to the log and updates the internal index
 	 * @param $sText string The text of the new entry 
 	 */
-	public function AddLogEntry($sText)
+	public function AddLogEntry($sText, $sOnBehalfOf = '')
 	{
 		$sDate = date(Dict::S('UI:CaseLog:DateFormat'));
-		$sSeparator = sprintf(CASELOG_SEPARATOR, $sDate, UserRights::GetUserFriendlyName(), UserRights::GetUserId());
+		if ($sOnBehalfOf == '')
+		{
+			$sOnBehalfOf = UserRights::GetUserFriendlyName();
+			$iUserId = UserRights::GetUserId();
+		}
+		else
+		{
+			$iUserId = null;
+		}
+		$sSeparator = sprintf(CASELOG_SEPARATOR, $sDate, $sOnBehalfOf, $iUserId);
 		$iSepLength = strlen($sSeparator);
 		$iTextlength = strlen($sText);
 		$this->m_sLog = $sSeparator.$sText.$this->m_sLog; // Latest entry printed first
 		$this->m_aIndex[] = array(
-			'user_name' => UserRights::GetUserFriendlyName(),	
-			'user_id' => UserRights::GetUserId(),	
+			'user_name' => $sOnBehalfOf,	
+			'user_id' => $iUserId,	
 			'date' => time(),	
 			'text_length' => $iTextlength,	
 			'separator_length' => $iSepLength,	
