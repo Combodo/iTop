@@ -274,7 +274,24 @@ EOF
 									phpCAS::log("Info: user if a member of the group: ".$sGroupName);
 									$sGroupName = trim(iconv('UTF-8', 'ASCII//TRANSLIT', $sGroupName)); // Remove accents and spaces as well
 									$aFilteredGroupNames[] = $sGroupName;
-									if (in_array($sGroupName, $aCASMemberships))
+									$bIsMember = false;
+									foreach($aCASMemberships as $sCASPattern)
+									{
+										if (self::IsPattern($sCASPattern))
+										{
+											if (preg_match($sCASPattern, $sGroupName))
+											{
+												$bIsMember = true;
+												break;
+											}
+										}
+										else if ($sPattern == $sGroupName)
+										{
+											$bIsMember = true;
+											break;
+										}
+									}
+									if ($bIsMember)
 									{
 										$bCASUserSynchro = MetaModel::GetConfig()->Get('cas_user_synchro');
 										if ($bCASUserSynchro)
@@ -614,6 +631,18 @@ EOF
 			}
 		}
 	}
-
+	
+	protected static function IsPattern($sCASPattern)
+	{
+		if ((substr($sCASPattern, 0, 1) == '/') && (substr($sCASPattern, -1) == '/'))
+		{
+			// the string is enclosed by slashes, let's assume it's a pattern
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 } // End of class
 ?>
