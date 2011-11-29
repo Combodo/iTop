@@ -597,6 +597,7 @@ EOF
 			$oUser = new UserExternal();
 			$oUser->Set('login', $sEmail);
 			$oUser->Set('contactid', $iContactId);
+			$oUser->Set('language', MetaModel::GetConfig()->GetDefaultLanguage());
 		}
 		else
 		{
