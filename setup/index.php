@@ -37,7 +37,7 @@ define('FINAL_CONFIG_FILE', APPROOT.'/config-itop.php');
 define('PHP_MIN_VERSION', '5.2.0');
 define('MYSQL_MIN_VERSION', '5.0.0');
 define('MIN_MEMORY_LIMIT', 32*1024*1024);
-define('SUHOSIN_GET_MAX_VALUE_LENGTH', 1024); 
+define('SUHOSIN_GET_MAX_VALUE_LENGTH', 2048); 
 
 $sOperation = Utils::ReadParam('operation', 'step0');
 $oP = new SetupWebPage('iTop configuration wizard');
