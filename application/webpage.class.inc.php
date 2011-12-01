@@ -372,13 +372,13 @@ class WebPage
         {
         	// Make sure that the URL to the script contains the application's version number
         	// so that the new script do NOT get reloaded from the cache when the application is upgraded
-        	if (strpos('?', $s_script) === false)
+        	if (strpos($s_script, '?') === false)
         	{
-        		$s_script .= "?version=".ITOP_VERSION;
+        		$s_script .= "?itopversion=".ITOP_VERSION;
         	}
         	else
         	{
-        		$s_script .= "&version=".ITOP_VERSION;
+        		$s_script .= "&itopversion=".ITOP_VERSION;
         	}
             echo "<script type=\"text/javascript\" src=\"$s_script\"></script>\n";
         }
