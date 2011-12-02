@@ -520,7 +520,7 @@ abstract class DBObject
 		}
 		else
 		{
-			$sEditValue = $oAtt->GetEditValue($this->Get($sAttCode));
+			$sEditValue = $oAtt->GetEditValue($this->Get($sAttCode), $this);
 		}
 		return $sEditValue;
 	}

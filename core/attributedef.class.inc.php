@@ -368,7 +368,7 @@ abstract class AttributeDefinition
 		return array();
 	}
 
-	public function GetEditValue($sValue)
+	public function GetEditValue($sValue, $oHostObj = null)
 	{
 		return (string)$sValue;
 	}
@@ -1587,7 +1587,7 @@ class AttributeText extends AttributeString
 		return "<div $sStyle>".str_replace("\n", "<br>\n", $sValue).'</div>';
 	}
 
-	public function GetEditValue($sValue)
+	public function GetEditValue($sValue, $oHostObj = null)
 	{
 		if (preg_match_all(WIKI_OBJECT_REGEXP, $sValue, $aAllMatches, PREG_SET_ORDER))
 		{
@@ -1692,7 +1692,7 @@ class AttributeCaseLog extends AttributeText
 		return $value;
 	}
 	public function GetEditClass() {return "CaseLog";}
-	public function GetEditValue($sValue) { return ''; } // New 'edit' value is always blank since it will be appended to the existing log	
+	public function GetEditValue($sValue, $oHostObj = null) { return ''; } // New 'edit' value is always blank since it will be appended to the existing log	
 	public function GetDefaultValue() {return new ormCaseLog();}
 	public function Equals($val1, $val2) {return ($val1->GetText() == $val2->GetText());}
 	
@@ -2075,7 +2075,7 @@ class AttributeEnum extends AttributeString
 		return "<span title=\"$sDescription\">".parent::GetAsHtml($sLabel)."</span>";
 	}
 
-	public function GetEditValue($sValue)
+	public function GetEditValue($sValue, $oHostObj = null)
 	{
 		return $this->GetValueLabel($sValue);
 	}
