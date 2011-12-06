@@ -2692,6 +2692,28 @@ $aCreateTicketSpecs = array(
 			'1', /* sUrgency */
 		),
 	),
+	array(
+		'service_category' => '',
+		'verb' => 'SearchObjects',
+		'expected result' => true,
+		'explain result' => '',
+		'args' => array(
+			'admin', /* sLogin */
+			'admin', /* sPassword */
+			'SELECT Incident WHERE id > 20', /* sOQL */
+		),
+	),
+	array(
+		'service_category' => '',
+		'verb' => 'SearchObjects',
+		'expected result' => false,
+		'explain result' => 'wrong OQL',
+		'args' => array(
+			'admin', /* sLogin */
+			'admin', /* sPassword */
+			'SELECT ThisClassDoesNotExist', /* sOQL */
+		),
+	),
 );
 
 
