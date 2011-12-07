@@ -2069,8 +2069,6 @@ EOF
 						$('#impacted_objects').empty();
 						$('#impacted_objects').append(data);
 						$('#impacted_objects').unblock();
-						$('#impacted_objects .listResults').tablesorter( { widgets: ['myZebra', 'truncatedList']} ); // sortable and zebra tables
-						$('#impacted_objects table.listResults').tableHover(); // hover tables
 					}
 			);
 		}
