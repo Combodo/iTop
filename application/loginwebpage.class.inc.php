@@ -191,15 +191,10 @@ EOF
 			$sPreviousLoginMode = '';
 		}
 		// Unset all of the session variables.
-		$_SESSION = array();
+		unset($_SESSION['auth_user']);
+		unset($_SESSION['login_mode']);
 		// If it's desired to kill the session, also delete the session cookie.
 		// Note: This will destroy the session, and not just the session data!
-		if (isset($_COOKIE[session_name()]))
-		{
-			setcookie(session_name(), '', time()-3600, '/');
-		}		
-		// Finally, destroy the session.
-		session_destroy();
 	}
 
 	static function SecureConnectionRequired()
@@ -458,8 +453,6 @@ EOF
 	{
 		$sMessage  = ''; // In case we need to return a message to the calling web page
 		$operation = utils::ReadParam('loginop', '');
-		session_name(MetaModel::GetConfig()->Get('session_name'));
-		session_start();
 
 		if ($operation == 'logoff')
 		{
