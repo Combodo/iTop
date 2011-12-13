@@ -1445,12 +1445,14 @@ EOF
 			$aMapCriteria[$aCriteria['filtercode']][] = array('value' => $aCriteria['value'], 'opcode' => $aCriteria['opcode']);
 		}
 		$aList = MetaModel::GetZListItems($sClassName, 'standard_search');
+		$aConsts = $oSet->ListConstantFields(); // Some fields are constants based on the query/context
+		$sClassAlias = $oSet->GetFilter()->GetClassAlias();
 		foreach($aList as $sFilterCode)
 		{
 			//$oAppContext->Reset($sFilterCode); // Make sure the same parameter will not be passed twice
 			$sHtml .= '<span style="white-space: nowrap;padding:5px;display:inline-block;">';
-			$sFilterValue = '';
-			$sFilterValue = utils::ReadParam($sFilterCode, '', false, 'raw_data');
+			$sFilterValue = isset($aConsts[$sClassAlias][$sFilterCode]) ? $aConsts[$sClassAlias][$sFilterCode] : '';
+			$sFilterValue = utils::ReadParam($sFilterCode, $sFilterValue, false, 'raw_data');
 			$sFilterOpCode = null; // Use the default 'loose' OpCode
 			if (empty($sFilterValue))
 			{

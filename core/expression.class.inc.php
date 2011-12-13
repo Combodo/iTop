@@ -40,7 +40,10 @@ abstract class Expression
 	abstract public function ListRequiredFields();
 
 	abstract public function IsTrue();
-
+	
+	// recursively builds an array of [classAlias][fieldName] => value
+	abstract public function ListConstantFields();
+	
 	public function RequiresField($sClass, $sFieldName)
 	{
 		// #@# todo - optimize : this is called quite often when building a single query !
@@ -122,6 +125,11 @@ class SQLExpression extends Expression
 		return array();
 	}
 	
+	public function ListConstantFields()
+	{
+		return array();
+	}
+	
 	public function RenameParam($sOldName, $sNewName)
 	{
 		// Do nothing, since there is nothing to rename
@@ -164,11 +172,11 @@ class BinaryExpression extends Expression
 		// return true if we are certain that it will be true
 		if ($this->m_sOperator == 'AND')
 		{
-			if ($this->m_oLeftExpr->IsTrue() && $this->m_oLeftExpr->IsTrue()) return true;
+			if ($this->m_oLeftExpr->IsTrue() && $this->m_oRightExpr->IsTrue()) return true;
 		}
 		return false;
 	}
-
+	
 	public function GetLeftExpr()
 	{
 		return $this->m_oLeftExpr;
@@ -211,6 +219,36 @@ class BinaryExpression extends Expression
 		$aLeft = $this->GetLeftExpr()->ListRequiredFields();
 		$aRight = $this->GetRightExpr()->ListRequiredFields();
 		return array_merge($aLeft, $aRight);
+	}
+	
+	
+	/**
+	 * List all constant expression of the form <field> = <scalar> or <field> = :<variable>
+	 * Could be extended to support <field> = <function><constant_expression>
+	 */
+	public function ListConstantFields()
+	{
+		$aResult = array();
+		if ($this->m_sOperator == '=')
+		{
+			if (($this->m_oLeftExpr instanceof FieldExpression) && ($this->m_oRightExpr instanceof ScalarExpression))
+			{
+				$aResult[$this->m_oLeftExpr->GetParent()][$this->m_oLeftExpr->GetName()] = $this->m_oRightExpr;
+			}
+			else if (($this->m_oRightExpr instanceof FieldExpression) && ($this->m_oLeftExpr instanceof ScalarExpression))
+			{
+				$aResult[$this->m_oRightExpr->GetParent()][$this->m_oRightExpr->GetName()] = $this->m_oLeftExpr;
+			}
+			else if (($this->m_oLeftExpr instanceof FieldExpression) && ($this->m_oRightExpr instanceof VariableExpression))
+			{
+				$aResult[$this->m_oLeftExpr->GetParent()][$this->m_oLeftExpr->GetName()] = $this->m_oRightExpr;
+			}
+			else if (($this->m_oRightExpr instanceof FieldExpression) && ($this->m_oLeftExpr instanceof VariableExpression))
+			{
+				$aResult[$this->m_oRightExpr->GetParent()][$this->m_oRightExpr->GetName()] = $this->m_oLeftExpr;
+			}
+		}
+		return $aResult;
 	}
 	
 	public function RenameParam($sOldName, $sNewName)
@@ -266,6 +304,11 @@ class UnaryExpression extends Expression
 	}
 
 	public function ListRequiredFields()
+	{
+		return array();
+	}
+
+	public function ListConstantFields()
 	{
 		return array();
 	}
@@ -529,6 +572,16 @@ class ListExpression extends Expression
 		return $aRes;
 	}
 	
+	public function ListConstantFields()
+	{
+		$aRes = array();
+		foreach ($this->m_aExpressions as $oExpr)
+		{
+			$aRes = array_merge($aRes, $oExpr->ListConstantFields());
+		}
+		return $aRes;
+	}
+	
 	public function RenameParam($sOldName, $sNewName)
 	{
 		$aRes = array();
@@ -606,6 +659,16 @@ class FunctionExpression extends Expression
 		return $aRes;
 	}
 	
+	public function ListConstantFields()
+	{
+		$aRes = array();
+		foreach ($this->m_aArgs as $oExpr)
+		{
+			$aRes = array_merge($aRes, $oExpr->ListConstantFields());
+		}
+		return $aRes;
+	}
+	
 	public function RenameParam($sOldName, $sNewName)
 	{
 		foreach ($this->m_aArgs as $key => $oExpr)
@@ -659,6 +722,11 @@ class IntervalExpression extends Expression
 	}
 
 	public function ListRequiredFields()
+	{
+		return array();
+	}
+
+	public function ListConstantFields()
 	{
 		return array();
 	}
@@ -726,6 +794,16 @@ class CharConcatExpression extends Expression
 		foreach ($this->m_aExpressions as $oExpr)
 		{
 			$aRes = array_merge($aRes, $oExpr->ListRequiredFields());
+		}
+		return $aRes;
+	}
+
+	public function ListConstantFields()
+	{
+		$aRes = array();
+		foreach ($this->m_aExpressions as $oExpr)
+		{
+			$aRes = array_merge($aRes, $oExpr->ListConstantFields());
 		}
 		return $aRes;
 	}

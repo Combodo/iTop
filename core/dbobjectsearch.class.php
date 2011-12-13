@@ -742,6 +742,11 @@ class DBObjectSearch
 		return $this->m_aParams;
 	}
 
+	public function ListConstantFields()
+	{
+		return $this->m_oSearchCondition->ListConstantFields();
+	}
+	
 	public function RenderCondition()
 	{
 		return $this->m_oSearchCondition->Render($this->m_aParams, false);

@@ -65,6 +65,7 @@ class UIExtKeyWidget
 {
 	protected $iId;
 	protected $sTargetClass;
+	protected $sAttCode;
 	
 	//public function __construct($sAttCode, $sClass, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sNameSuffix = '', $sFieldPrefix = '', $sFormPrefix = '')
 	static public function DisplayFromAttCode($oPage, $sAttCode, $sClass, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sFieldName = '', $sFormPrefix = '', $aArgs, $bSearchMode = false)
@@ -81,14 +82,15 @@ class UIExtKeyWidget
 		{
 			$sDisplayStyle = 'select'; // In search mode, always use a drop-down list
 		}
-		$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId);
+		$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId, $sAttCode);
 		return $oWidget->Display($oPage, $iMaxComboLength, $bAllowTargetCreation, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sFieldName, $sFormPrefix, $aArgs, $bSearchMode, $sDisplayStyle);
 	}
 
-	public function __construct($sTargetClass, $iInputId)
+	public function __construct($sTargetClass, $iInputId, $sAttCode = '')
 	{
 		$this->sTargetClass = $sTargetClass;
 		$this->iId = $iInputId;
+		$this->sAttCode = $sAttCode;
 	}
 	
 	/**
@@ -182,7 +184,7 @@ class UIExtKeyWidget
 				$sHTMLValue .= "</select>\n";
 				$oPage->add_ready_script(
 <<<EOF
-		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sTargetClass}', '$sFilter', '$sTitle', true, $sWizHelper);
+		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sTargetClass}', '$sFilter', '$sTitle', true, $sWizHelper, '{$this->sAttCode}');
 		oACWidget_{$this->iId}.emptyHtml = "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>$sMessage</p></div>";
 		$('#$this->iId').bind('update', function() { oACWidget_{$this->iId}.Update(); } );
 		$('#$this->iId').bind('change', function() { $(this).trigger('extkeychange') } );
@@ -217,7 +219,7 @@ EOF
 			// Scripts to start the autocomplete and bind some events to it
 			$oPage->add_ready_script(
 <<<EOF
-		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sTargetClass}', '$sFilter', '$sTitle', false, $sWizHelper);
+		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sTargetClass}', '$sFilter', '$sTitle', false, $sWizHelper, '{$this->sAttCode}');
 		oACWidget_{$this->iId}.emptyHtml = "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>$sMessage</p></div>";
 		$('#label_$this->iId').autocomplete(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', { scroll:true, minChars:{$iMinChars}, autoFill:false, matchContains:true, mustMatch: true, keyHolder:'#{$this->iId}', extraParams:{operation:'ac_extkey', sTargetClass:'{$this->sTargetClass}',sFilter:'$sFilter', json: function() { return $sWizHelperJSON; } }});
 		$('#label_$this->iId').keyup(function() { if ($(this).val() == '') { $('#$this->iId').val(''); } } ); // Useful for search forms: empty value in the "label", means no value, immediatly !
@@ -262,13 +264,24 @@ EOF
 		return $sHTMLValue;
 	}
 	
-	public function GetSearchDialog(WebPage $oPage, $sTitle)
+	public function GetSearchDialog(WebPage $oPage, $sTitle, $oCurrObject = null)
 	{
 		$sHTML = '<div class="wizContainer" style="vertical-align:top;"><div id="dc_'.$this->iId.'">';
 
-		$oFilter = new DBObjectSearch($this->sTargetClass);
-		$oSet = new CMDBObjectSet($oFilter);
-		$oBlock = new DisplayBlock($oFilter, 'search', false);
+		if ( ($oCurrObject != null) && ($this->sAttCode != ''))
+		{
+			$oAttDef = MetaModel::GetAttributeDef(get_class($oCurrObject), $this->sAttCode);
+			$aParams = array('query_params' => array('this' => $oCurrObject));
+			$oSet = $oAttDef->GetAllowedValuesAsObjectSet($aParams);
+			$oFilter = $oSet->GetFilter();
+		}
+		else
+		{
+			$aParam = array();
+			$oFilter = new DBObjectSearch($this->sTargetClass);
+			$oSet = new CMDBObjectSet($oFilter);
+		}
+		$oBlock = new DisplayBlock($oFilter, 'search', false, $aParams);
 		$sHTML .= $oBlock->GetDisplay($oPage, $this->iId, array('open' => true, 'currentId' => $this->iId));
 		$sHTML .= "<form id=\"fr_{$this->iId}\" OnSubmit=\"return oACWidget_{$this->iId}.DoOk();\">\n";
 		$sHTML .= "<div id=\"dr_{$this->iId}\" style=\"vertical-align:top;background: #fff;height:100%;overflow:auto;padding:0;border:0;\">\n";
@@ -353,7 +366,7 @@ EOF
 	/**
 	 * Get the form to create a new object of the 'target' class
 	 */
-	public function GetObjectCreationForm(WebPage $oPage)
+	public function GetObjectCreationForm(WebPage $oPage, $oCurrObject)
 	{
 		// Set all the default values in an object and clone this "default" object
 		$oNewObj = MetaModel::NewObject($this->sTargetClass);
@@ -362,7 +375,24 @@ EOF
 		$oAppContext = new ApplicationContext();
 		$oAppContext->InitObjectFromContext($oNewObj);
 
-		// 2nd - set values from the page argument 'default'
+		// 2nd set the default values from the constraint on the external key... if any
+		if ( ($oCurrObject != null) && ($this->sAttCode != ''))
+		{
+			$oAttDef = MetaModel::GetAttributeDef(get_class($oCurrObject), $this->sAttCode);
+			$aParams = array('this' => $oCurrObject);
+			$oSet = $oAttDef->GetAllowedValuesAsObjectSet($aParams);
+			$aConsts = $oSet->ListConstantFields();
+			$sClassAlias = $oSet->GetFilter()->GetClassAlias();
+			if (isset($aConsts[$sClassAlias]))
+			{
+				foreach($aConsts[$sClassAlias] as $sAttCode => $value)
+				{
+					$oNewObj->Set($sAttCode, $value);
+				}
+			}
+		}
+		
+		// 3rd - set values from the page argument 'default'
 		$oNewObj->UpdateObjectFromArg('default');
 
 		$sDialogTitle = addslashes($this->sTitle);
