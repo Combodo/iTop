@@ -316,6 +316,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Document:OpenInNewWindow:Download' => 'Ouvrir dans un nouvelle fenêtre: %1$s, Télécharger: %2$s',
 	'UI:SelectAllToggle+' => 'Tout sélectionner / Tout déselectionner',
 	'UI:TruncatedResults' => '%1$d objets affichés sur %2$d',
+	'UI:SplitDateTime-Date' => 'date',
+	'UI:SplitDateTime-Time' => 'heure',
 	'UI:DisplayAll' => 'Tout afficher',
 	'UI:CollapseList' => 'Refermer',
 	'UI:CountOfResults' => '%1$d objet(s)',

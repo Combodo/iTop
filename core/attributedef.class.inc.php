@@ -162,6 +162,10 @@ abstract class AttributeDefinition
 		return "";
 		// e.g: return array("Site", "infrid", "name");
 	} 
+	public function GetFinalAttDef()
+	{
+		return $this;
+	}
 	public function IsDirectField() {return false;} 
 	public function IsScalar() {return false;} 
 	public function IsLinkSet() {return false;} 
@@ -2761,6 +2765,13 @@ class AttributeExternalField extends AttributeDefinition
 	}
 
 	public function GetEditClass() {return "ExtField";}
+
+	public function GetFinalAttDef()
+	{
+		$oExtAttDef = $this->GetExtAttDef();
+		return $oExtAttDef->GetFinalAttDef(); 
+	}
+
 	protected function GetSQLCol()
 	{
 		// throw new CoreException("external attribute: does it make any sense to request its type ?");  
