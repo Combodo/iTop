@@ -13,12 +13,13 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper)
+function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper, sAttCode)
 {
 	this.id = id;
 	this.sTargetClass = sTargetClass;
 	this.sFilter = sFilter;
 	this.sTitle = sTitle;
+	this.sAttCode = sAttCode;
 	this.emptyHtml = ''; // content to be displayed when the search results are empty (when opening the dialog) 
 	this.emptyOnClose = true; // Workaround for the JQuery dialog being very slow when opening and closing if the content contains many INPUT tags
 	this.oWizardHelper = oWizHelper;
@@ -61,10 +62,22 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		var theMap = { sAttCode: me.sAttCode,
 				   iInputId: me.id,
 				   sTitle: me.sTitle,
+				   sAttCode: me.sAttCode,
 				   sTargetClass: me.sTargetClass,
 				   operation: 'objectSearchForm'
 				 }
 	
+		if (me.oWizardHelper == null)
+		{
+			theMap['json'] = '';
+		}
+		else
+		{
+			// Not inside a "search form", updating a real object
+			me.oWizardHelper.UpdateWizard();
+			theMap['json'] = me.oWizardHelper.ToJSON();
+		}
+
 		// Make sure that we cancel any pending request before issuing another
 		// since responses may arrive in arbitrary order
 		me.StopPendingRequest();
@@ -152,6 +165,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		
 		theMap['sRemoteClass'] = theMap['class'];  // swap 'class' (defined in the form) and 'remoteClass'
 		theMap.operation = 'searchObjectsToSelect'; // Override what is defined in the form itself
+		theMap.sAttCode = me.sAttCode,
 		
 		sSearchAreaId = '#dr_'+me.id;
 		//$(sSearchAreaId).html('<div style="text-align:center;width:100%;height:24px;vertical-align:middle;"><img src="../images/indicator.gif" /></div>');
@@ -200,6 +214,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		var theMap = { sTargetClass: me.sTargetClass,
 				   iInputId: me.id,
 				   iObjectId: iObjectId,
+				   sAttCode: me.sAttCode,
 				   operation: 'getObjectName'
 				 }
 	
@@ -262,6 +277,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		me.oWizardHelper.UpdateWizard();
 		var theMap = { sTargetClass: me.sTargetClass,
 				   iInputId: me.id,
+				   sAttCode: me.sAttCode,
 				   'json': me.oWizardHelper.ToJSON(),
 				   operation: 'objectCreationForm'
 				 }
@@ -323,6 +339,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			$('#'+sFormId).block();
 			var theMap = { sTargetClass: me.sTargetClass,
 					   iInputId: me.id,
+					   sAttCode: me.sAttCode,
 					   'json': me.oWizardHelper.ToJSON()
 					 }
 
@@ -403,6 +420,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		var theMap = { sTargetClass: me.sTargetClass,
 				   	   sInputId: me.id,
 				   	   sFilter: me.sFilter,
+				   	   sAttCode: me.sAttCode,
 				   	   value: $('#'+me.id).val()
 					};
 	
@@ -484,6 +502,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		var theMap = { sTargetClass: me.sTargetClass,
 				   iInputId: me.id,
 				   iObjectId: iObjectId,
+				   sAttCode: me.sAttCode,
 				   operation: 'getObjectName'
 				 }
 	

@@ -192,6 +192,7 @@ try
 		$sRemoteClass = utils::ReadParam('sRemoteClass', '', false, 'class');
 		$sFilter = utils::ReadParam('sFilter', '', false, 'raw_data');
 		$sJson = utils::ReadParam('json', '', false, 'raw_data');
+		$sAttCode = utils::ReadParam('sAttCode', '');
 		if (!empty($sJson))
 		{
 			$oWizardHelper = WizardHelper::FromJSON($sJson);
@@ -202,7 +203,7 @@ try
 			// Search form: no current object
 			$oObj = null;
 		}
-		$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId);
+		$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId, $sAttCode);
 		$oWidget->SearchObjectsToSelect($oPage, $sFilter, $sRemoteClass, $oObj);	
 		break;
 	
@@ -233,16 +234,40 @@ try
 		$sTargetClass = utils::ReadParam('sTargetClass', '', false, 'class');
 		$iInputId = utils::ReadParam('iInputId', '');
 		$sTitle = utils::ReadParam('sTitle', '', false, 'raw_data');
-		$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId);
-		$oWidget->GetSearchDialog($oPage, $sTitle);
+		$sAttCode = utils::ReadParam('sAttCode', '');
+		$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId, $sAttCode);
+		$sJson = utils::ReadParam('json', '', false, 'raw_data');
+		if (!empty($sJson))
+		{
+			$oWizardHelper = WizardHelper::FromJSON($sJson);
+			$oObj = $oWizardHelper->GetTargetObject();
+		}
+		else
+		{
+			// Search form: no current object
+			$oObj = null;
+		}
+		$oWidget->GetSearchDialog($oPage, $sTitle, $oObj);
 		break;
 
 		// ui.extkeywidget
 		case 'objectCreationForm':
 		$sTargetClass = utils::ReadParam('sTargetClass', '', false, 'class');
 		$iInputId = utils::ReadParam('iInputId', '');
-		$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId);
-		$oWidget->GetObjectCreationForm($oPage);
+		$sAttCode = utils::ReadParam('sAttCode', '');
+		$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId, $sAttCode);
+		$sJson = utils::ReadParam('json', '', false, 'raw_data');
+		if (!empty($sJson))
+		{
+			$oWizardHelper = WizardHelper::FromJSON($sJson);
+			$oObj = $oWizardHelper->GetTargetObject();
+		}
+		else
+		{
+			// Search form: no current object
+			$oObj = null;
+		}
+		$oWidget->GetObjectCreationForm($oPage, $oObj);
 		break;
 		
 		// ui.extkeywidget
@@ -250,7 +275,8 @@ try
 		$sTargetClass = utils::ReadParam('sTargetClass', '', false, 'class');
 		$iInputId = utils::ReadParam('iInputId', '');
 		$sFormPrefix = utils::ReadParam('sFormPrefix', '');
-		$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId);
+		$sAttCode = utils::ReadParam('sAttCode', '');
+		$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId, $sAttCode);
 		$aResult = $oWidget->DoCreateObject($oPage);
 		echo json_encode($aResult);
 		break;

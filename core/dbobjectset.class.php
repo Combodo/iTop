@@ -687,6 +687,45 @@ class DBObjectSet
 		$this->Rewind();
 		return $oCommonObj;
 	}
+
+	/**
+	 * List the constant fields (and their value) in the given query
+	 * @return Hash [Alias][AttCode] => value
+	 */
+	public function ListConstantFields()
+	{
+		$aScalarArgs = array();
+		foreach($this->m_aArgs as $sArgName => $value)
+		{
+			if (MetaModel::IsValidObject($value))
+			{
+				$aScalarArgs = array_merge($aScalarArgs, $value->ToArgs($sArgName));
+			}
+			else
+			{
+				$aScalarArgs[$sArgName] = (string) $value;
+			}
+		}
+		$aScalarArgs['current_contact_id'] = UserRights::GetContactId();
+		
+		$aConst = $this->m_oFilter->ListConstantFields();
+		
+		foreach($aConst as $sClassAlias => $aVals)
+		{
+			foreach($aVals as $sCode => $oExpr)
+			{
+				if ($oExpr instanceof ScalarExpression)
+				{
+					$aConst[$sClassAlias][$sCode] = $oExpr->GetValue();
+				}
+				else //Variable
+				{
+					$aConst[$sClassAlias][$sCode] = $aScalarArgs[$oExpr->GetName()];
+				}
+			}
+		}
+		return $aConst;		
+	}
 }
 
 /**

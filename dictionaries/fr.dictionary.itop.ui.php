@@ -716,6 +716,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:DisplayThisMessageAtStartup' => 'Afficher ce message au démarrage',
 	'UI:RelationshipGraph' => 'Vue graphique',
 	'UI:RelationshipList' => 'Liste',
+	'UI:ElementsDisplayed' => 'Eléments Affichés',
 	'UI:OperationCancelled' => 'Opération Annulée',
 	'Portal:Title' => 'Portail utilisateur iTop',
 	'Portal:Refresh' => 'Rafraîchir',
