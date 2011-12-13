@@ -126,6 +126,19 @@ if (!empty($sExpression))
 				cmdbAbstractObject::DisplaySetAsCSV($oP, $oSet, array('fields' => $sFields));
 				break;
 				
+				case 'spreadsheet':
+				$oP = new WebPage("iTop - Export for spreadsheet");
+
+				// Integration within MS-Excel web queries + HTTPS + IIS:
+				// MS-IIS set these header values with no-cache... while Excel fails to do the job if using HTTPS
+				// Then the fix is to force the reset of header values Pragma and Cache-control 
+				header("Pragma:", true);
+				header("Cache-control:", true);
+
+				$sFields = implode(',', $aFields);
+				cmdbAbstractObject::DisplaySetAsHTMLSpreadsheet($oP, $oSet, array('fields' => $sFields));
+				break;
+
 				case 'xml':
 				$oP = new XMLPage("iTop - Export", true /* passthrough */);
 				cmdbAbstractObject::DisplaySetAsXML($oP, $oSet);

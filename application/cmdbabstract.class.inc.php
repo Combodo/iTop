@@ -1172,6 +1172,146 @@ EOF
 		return $sHtml;
 	}
 	
+	static function DisplaySetAsHTMLSpreadsheet(WebPage $oPage, CMDBObjectSet $oSet, $aParams = array())
+	{
+		$oPage->add(self::GetSetAsHTMLSpreadsheet($oSet, $aParams));
+	}
+	
+	static function GetSetAsHTMLSpreadsheet(DBObjectSet $oSet, $aParams = array())
+	{
+		$aFields = null;
+		if (isset($aParams['fields']) && (strlen($aParams['fields']) > 0))
+		{
+			$aFields = explode(',', $aParams['fields']);
+		}
+
+		$aList = array();
+
+		$oAppContext = new ApplicationContext();
+		$aClasses = $oSet->GetFilter()->GetSelectedClasses();
+		$aAuthorizedClasses = array();
+		foreach($aClasses as $sAlias => $sClassName)
+		{
+			if (UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $oSet) && (UR_ALLOWED_YES || UR_ALLOWED_DEPENDS))
+			{
+				$aAuthorizedClasses[$sAlias] = $sClassName;
+			}
+		}
+		$aAttribs = array();
+		$aHeader = array();
+		foreach($aAuthorizedClasses as $sAlias => $sClassName)
+		{
+			foreach(MetaModel::ListAttributeDefs($sClassName) as $sAttCode => $oAttDef)
+			{
+				if (is_null($aFields) || (count($aFields) == 0))
+				{
+					// Standard list of attributes (no link sets)
+					if ($oAttDef->IsScalar() && ($oAttDef->IsWritable() || $oAttDef->IsExternalField()))
+					{
+						$aList[$sClassName][$sAttCode] = $oAttDef;
+					}
+				}
+				else
+				{
+					// User defined list of attributes
+					if (in_array($sAttCode, $aFields))
+					{
+						$aList[$sClassName][$sAttCode] = $oAttDef;
+					}
+				}
+			}
+			$aHeader[] = 'id';
+			foreach($aList[$sClassName] as $sAttCode => $oAttDef)
+			{
+				$sStar = '';
+				if ($oAttDef->IsExternalField())
+				{
+					$sExtKeyLabel = MetaModel::GetLabel($sClassName, $oAttDef->GetKeyAttCode());
+					$oExtKeyAttDef = MetaModel::GetAttributeDef($sClassName, $oAttDef->GetKeyAttCode());
+					if (!$oExtKeyAttDef->IsNullAllowed() && isset($aParams['showMandatoryFields']))
+					{
+						$sStar = '*';
+					}
+					$sRemoteAttLabel = MetaModel::GetLabel($oAttDef->GetTargetClass(), $oAttDef->GetExtAttCode());
+					$oTargetAttDef = MetaModel::GetAttributeDef($oAttDef->GetTargetClass(), $oAttDef->GetExtAttCode());
+					$sSuffix = '';
+					if ($oTargetAttDef->IsExternalKey())
+					{
+						$sSuffix = '->id';
+					}
+					$sColLabel = $sExtKeyLabel.'->'.$sRemoteAttLabel.$sSuffix.$sStar;
+				}
+				else
+				{
+					if (!$oAttDef->IsNullAllowed() && isset($aParams['showMandatoryFields']))
+					{
+						$sStar = '*';
+					}
+					$sColLabel = MetaModel::GetLabel($sClassName, $sAttCode).$sStar;
+				}
+				$oFinalAttDef = $oAttDef->GetFinalAttDef();
+				if (get_class($oFinalAttDef) == 'AttributeDateTime')
+				{
+					$aHeader[] = $sColLabel.' ('.Dict::S('UI:SplitDateTime-Date').')';
+					$aHeader[] = $sColLabel.' ('.Dict::S('UI:SplitDateTime-Time').')';
+				}
+				else
+				{
+					$aHeader[] = $sColLabel;
+				}
+			}
+		}
+
+
+		$sHtml = "<table border=\"1\">\n";
+		$sHtml .= "<tr>\n";
+		$sHtml .= "<td>".implode("</td><td>", $aHeader)."</td>\n";
+		$sHtml .= "</tr>\n";
+		$oSet->Seek(0);
+		while ($aObjects = $oSet->FetchAssoc())
+		{
+			$aRow = array();
+			foreach($aAuthorizedClasses as $sAlias => $sClassName)
+			{
+				$oObj = $aObjects[$sAlias];
+				if (is_null($oObj))
+				{
+					$aRow[] = '';
+				}
+				else
+				{
+					$aRow[] = '<td>'.$oObj->GetKey().'</td>';
+				}
+				foreach($aList[$sClassName] as $sAttCode => $oAttDef)
+				{
+					if (is_null($oObj))
+					{
+						$aRow[] = '';
+					}
+					else
+					{
+						$oFinalAttDef = $oAttDef->GetFinalAttDef();
+						if (get_class($oFinalAttDef) == 'AttributeDateTime')
+						{
+							$iDate = AttributeDateTime::GetAsUnixSeconds($oObj->Get($sAttCode));
+							$aRow[] = '<td>'.date('Y-m-d', $iDate).'</td>';
+							$aRow[] = '<td>'.date('h:i:s', $iDate).'</td>';
+						}
+						else
+						{
+							$aRow[] = '<td>'.(string) $oObj->Get($sAttCode).'</td>';
+						}
+					}
+				}
+			}
+			$sHtml .= implode("\n", $aRow);
+			$sHtml .= "</tr>\n";
+		}
+		$sHtml .= "</table>\n";
+		
+		return $sHtml;
+	}
+	
 	static function DisplaySetAsXML(WebPage $oPage, CMDBObjectSet $oSet, $aParams = array())
 	{
 		$oAppContext = new ApplicationContext();
