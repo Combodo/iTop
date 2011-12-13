@@ -2109,7 +2109,7 @@ EOF
 	DisplayWelcomePopup($oP);
 	$oP->output();	
 }
-catch(xxxCoreException $e)
+catch(CoreException $e)
 {
 	require_once(APPROOT.'/setup/setuppage.class.inc.php');
 	$oP = new SetupWebPage(Dict::S('UI:PageTitle:FatalError'));
@@ -2152,7 +2152,7 @@ catch(xxxCoreException $e)
 	// For debugging only
 	//throw $e;
 }
-catch(xxxException $e)
+catch(Exception $e)
 {
 	require_once(APPROOT.'/setup/setuppage.class.inc.php');
 	$oP = new SetupWebPage(Dict::S('UI:PageTitle:FatalError'));
