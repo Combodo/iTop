@@ -120,29 +120,62 @@ try
 		// leave $sExpression as is
 	}
 
-	$oP->add("<form method=\"get\">\n");
-	$oP->add(Dict::S('UI:RunQuery:ExpressionToEvaluate')."<br/>\n");
-	$oP->add("<textarea cols=\"120\" rows=\"8\" name=\"expression\">$sExpression</textarea>\n");
-	$oP->add("<input type=\"submit\" value=\"".Dict::S('UI:Button:Evaluate')."\">\n");
-	$oP->add($oAppContext->GetForForm());
-	$oP->add("</form>\n");
+	$oFilter = null;
+	$aArgs = array();
 
 	if (!empty($sExpression))
 	{
 		$oFilter = DBObjectSearch::FromOQL($sExpression);
 		if ($oFilter)
 		{
-			$oP->add("<h3>Query results</h3>\n");
-			
-			$oResultBlock = new DisplayBlock($oFilter, 'list', false);
-			$oResultBlock->Display($oP, 'runquery');
-
-			$oP->p('');
-			$oP->StartCollapsibleSection(Dict::S('UI:RunQuery:MoreInfo'), false);
-			$oP->p(Dict::S('UI:RunQuery:DevelopedQuery').$oFilter->ToOQL());
-			$oP->p(Dict::S('UI:RunQuery:SerializedFilter').$oFilter->serialize());
-			$oP->EndCollapsibleSection();
+			$aArgs = array();
+			foreach($oFilter->GetQueryParams() as $sParam => $foo)
+			{
+				$value = utils::ReadParam('arg_'.$sParam, null, true, 'raw_data');
+				if (!is_null($value))
+				{
+					$aArgs[$sParam] = $value;
+				}
+				else
+				{
+					$aArgs[$sParam] = '';
+				}
+			}
+			$oFilter->SetInternalParams($aArgs);
 		}
+	}
+
+	$oP->add("<form method=\"get\">\n");
+	$oP->add(Dict::S('UI:RunQuery:ExpressionToEvaluate')."<br/>\n");
+	$oP->add("<textarea cols=\"120\" rows=\"8\" name=\"expression\">$sExpression</textarea>\n");
+
+	if (count($aArgs) > 0)
+	{
+		$oP->add("<div class=\"wizContainer\">\n");
+		$oP->add("<h3>Query arguments</h3>\n");
+		foreach($aArgs as $sParam => $sValue)
+		{
+			$oP->p("$sParam: <input type=\"string\" name=\"arg_$sParam\" value=\"$sValue\">\n");
+		}
+		$oP->add("</div>\n"); 
+	}
+
+	$oP->add("<input type=\"submit\" value=\"".Dict::S('UI:Button:Evaluate')."\">\n");
+	$oP->add($oAppContext->GetForForm());
+	$oP->add("</form>\n");
+
+	if ($oFilter)
+	{
+		$oP->add("<h3>Query results</h3>\n");
+		
+		$oResultBlock = new DisplayBlock($oFilter, 'list', false);
+		$oResultBlock->Display($oP, 'runquery');
+
+		$oP->p('');
+		$oP->StartCollapsibleSection(Dict::S('UI:RunQuery:MoreInfo'), false);
+		$oP->p(Dict::S('UI:RunQuery:DevelopedQuery').$oFilter->ToOQL());
+		$oP->p(Dict::S('UI:RunQuery:SerializedFilter').$oFilter->serialize());
+		$oP->EndCollapsibleSection();
 	}
 }
 catch(CoreException $e)

@@ -2275,7 +2275,7 @@ class SynchroReplica extends DBObject implements iDisplay
 		$this->DisplayBareProperties($oPage, $bEditMode);
 	}
 	
-	function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $aExtraParams = array())
+	function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '', $aExtraParams = array())
 	{
 		if ($bEditMode) return; // Not editable
 		
@@ -2297,7 +2297,7 @@ class SynchroReplica extends DBObject implements iDisplay
 		{
 			$oPage->add('<fieldset>');
 			$oPage->add('<legend>'.Dict::Format('Core:SynchroReplica:TargetObject', $oDestObj->GetHyperlink()).'</legend>');
-				$oDestObj->DisplayBareProperties($oPage, false, $aExtraParams);
+				$oDestObj->DisplayBareProperties($oPage, false, $sPrefix, $aExtraParams);
 			$oPage->add('<fieldset>');
 		}
 		$oPage->add('</td><td>');

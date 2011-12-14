@@ -365,7 +365,7 @@ class FileDoc extends Document
 			$oPage->add($this->DisplayDocumentInline($oPage, 'contents'));
 			$oPage->SetCurrentTab(Dict::S('UI:PropertiesTab'));
 		}
-		parent::DisplayBareProperties($oPage, $bEditMode, $sPrefix);
+		parent::DisplayBareProperties($oPage, $bEditMode, $sPrefix, $aExtraParams);
 		
 	}
 }

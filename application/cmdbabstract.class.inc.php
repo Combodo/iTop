@@ -1653,6 +1653,7 @@ EOF
 					$sHTMLValue = "<input title=\"$sHelpText\" type=\"password\" size=\"30\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($value, ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/>&nbsp;{$sValidationField}";
 				break;
 				
+				case 'OQLExpression':
 				case 'Text':
 					$aEventsList[] ='validate';
 					$aEventsList[] ='keyup';
@@ -1674,7 +1675,21 @@ EOF
 					{
 						$sStyle = 'style="'.implode('; ', $aStyles).'"';
 					}
-					$sHTMLValue = "<table><tr><td><textarea class=\"resizable\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\" $sStyle>".htmlentities($sEditValue, ENT_QUOTES, 'UTF-8')."</textarea></td><td>{$sValidationField}</td></tr></table>";
+					if ($oAttDef->GetEditClass() == 'OQLExpression')
+					{
+						$sTestResId = 'query_res_'.$sFieldPrefix.$sAttCode.$sNameSuffix; //$oPage->GetUniqueId();
+						$sBaseUrl = utils::GetAbsoluteUrlAppRoot().'pages/run_query.php?expression=';
+						$sInitialUrl = $sBaseUrl.urlencode($sEditValue);
+						$sAdditionalStuff = "<a id=\"$sTestResId\" target=\"_blank\" href=\"$sInitialUrl\">".Dict::S('UI:Edit:TestQuery')."</a>";
+						$oPage->add_ready_script("$('#$iId').bind('change keyup', function(evt, sFormId) { $('#$sTestResId').attr('href', '$sBaseUrl'+encodeURIComponent($(this).val())); } );");
+					}
+					else
+					{
+						$sAdditionalStuff = "";
+					}
+					// Ok, the text area is drawn here
+					$sHTMLValue = "<table><tr><td><textarea class=\"resizable\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\" $sStyle>".htmlentities($sEditValue, ENT_QUOTES, 'UTF-8')."</textarea>$sAdditionalStuff</td><td>{$sValidationField}</td></tr></table>";
+
 				break;
 
 				case 'CaseLog':
