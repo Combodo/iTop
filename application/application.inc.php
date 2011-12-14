@@ -29,6 +29,7 @@ require_once(APPROOT.'/application/displayblock.class.inc.php');
 require_once(APPROOT.'/application/sqlblock.class.inc.php');
 require_once(APPROOT.'/application/audit.category.class.inc.php');
 require_once(APPROOT.'/application/audit.rule.class.inc.php');
+require_once(APPROOT.'/application/query.class.inc.php');
 //require_once(APPROOT.'/application/menunode.class.inc.php');
 require_once(APPROOT.'/application/utils.inc.php');
 

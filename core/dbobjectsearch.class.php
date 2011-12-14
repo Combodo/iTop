@@ -737,9 +737,22 @@ class DBObjectSearch
 	{
 		return $this->m_aRelatedTo;
 	}
+
+	public function SetInternalParams($aParams)
+	{
+		return $this->m_aParams = $aParams;
+	}
+
 	public function GetInternalParams()
 	{
 		return $this->m_aParams;
+	}
+
+	public function GetQueryParams()
+	{
+		$aParams = array();
+		$this->m_oSearchCondition->Render($aParams, true);
+		return $aParams;
 	}
 
 	public function ListConstantFields()

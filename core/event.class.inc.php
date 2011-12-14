@@ -103,7 +103,7 @@ class Event extends DBObject implements iDisplay
 		$this->DisplayBareProperties($oPage, $bEditMode);
 	}
 	
-	function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $aExtraParams = array())
+	function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '', $aExtraParams = array())
 	{
 		if ($bEditMode) return; // Not editable
 		

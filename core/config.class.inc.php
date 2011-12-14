@@ -562,6 +562,7 @@ class Config
 			'application/menunode.class.inc.php',
 			'application/user.preferences.class.inc.php',
 			'application/audit.rule.class.inc.php',
+			'application/query.class.inc.php',
 // Romain - That's dirty, because those classes are in fact part of the core
 //          but I needed those classes to be derived from cmdbAbstractObject
 //          (to be managed via the GUI) and this class in not really known from

@@ -1880,6 +1880,7 @@ class AttributeIPAddress extends AttributeString
  */
 class AttributeOQL extends AttributeText
 {
+	public function GetEditClass() {return "OQLExpression";}
 }
 
 /**

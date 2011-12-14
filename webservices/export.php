@@ -55,6 +55,22 @@ $currentOrganization = utils::ReadParam('org_id', '');
 
 // Main program
 $sExpression = utils::ReadParam('expression', '', true /* Allow CLI */, 'raw_data');
+if (strlen($sExpression) == 0)
+{
+	$sQueryId = trim(utils::ReadParam('query', '', true /* Allow CLI */, 'raw_data'));
+	if (strlen($sQueryId) > 0)
+	{
+		$oSearch = DBObjectSearch::FromOQL('SELECT QueryOQL WHERE id = :query_id', array('query_id' => $sQueryId));
+		$oQueries = new DBObjectSet($oSearch);
+		if ($oQueries->Count() > 0)
+		{
+			$oQuery = $oQueries->Fetch();
+			$sExpression = $oQuery->Get('oql');
+		}
+	}
+}
+
+
 $sFormat = strtolower(utils::ReadParam('format', 'html'));
 
 $sFields = utils::ReadParam('fields', '', true, 'raw_data'); // CSV field list (allows to specify link set attributes, still not taken into account for XML export)
@@ -76,9 +92,21 @@ if (!empty($sExpression))
 	try
 	{
 		$oFilter = DBObjectSearch::FromOQL($sExpression);
+
+		$aArgs = array();
+		foreach($oFilter->GetQueryParams() as $sParam => $foo)
+		{
+			$value = utils::ReadParam('arg_'.$sParam, null, true, 'raw_data');
+			if (!is_null($value))
+			{
+				$aArgs[$sParam] = $value;
+			}
+		}
+		$oFilter->SetInternalParams($aArgs);
+
 		if ($oFilter)
 		{
-			$oSet = new CMDBObjectSet($oFilter);
+			$oSet = new CMDBObjectSet($oFilter, array(), $aArgs);
 			switch($sFormat)
 			{
 				case 'html':
@@ -164,7 +192,9 @@ if (!$oP)
 	$oP->p("<strong>General purpose export page.</strong>");
 	$oP->p("<strong>Parameters:</strong>");
 	$oP->p("<ul><li>expression: an OQL expression (URL encoded if needed)</li>
-			    <li>format: (optional, default is html) the desired output format. Can be one of 'html', 'csv' or 'xml'</li>
+			    <li>query: (alternative to 'expression') the id of an entry from the query phrasebook</li>
+			    <li>arg_xxx: (needed if the query has parameters) the value of the parameter 'xxx'</li>
+			    <li>format: (optional, default is html) the desired output format. Can be one of 'html', 'spreadsheet', 'csv' or 'xml'</li>
 			    <li>fields: (optional, no effect on XML format) list of fields (attribute codes) separated by a coma</li>
 		    </ul>");
 }

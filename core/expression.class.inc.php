@@ -282,16 +282,7 @@ class UnaryExpression extends Expression
 	// recursive rendering
 	public function Render(&$aArgs = null, $bRetrofitParams = false)
 	{
-		if ($bRetrofitParams)
-		{
-			$iParamIndex = count($aArgs) + 1; // 1-based indexation
-			$aArgs['param'.$iParamIndex] = $this->m_value;
-			return ':param'.$iParamIndex;
-		}
-		else
-		{
-			return CMDBSource::Quote($this->m_value);
-		}
+		return CMDBSource::Quote($this->m_value);
 	}
 
 	public function GetUnresolvedFields($sAlias, &$aUnresolved)
@@ -483,7 +474,7 @@ class VariableExpression extends UnaryExpression
 		}
 		elseif ($bRetrofitParams)
 		{
-			//$aArgs[$this->m_sName] = null;
+			$aArgs[$this->m_sName] = null;
 			return ':'.$this->m_sName;
 		}
 		else

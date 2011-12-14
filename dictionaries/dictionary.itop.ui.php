@@ -76,6 +76,24 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:AuditRule/Attribute:category_name+' => 'Name of the category for this rule',
 ));
 
+//
+// Class: QueryOQL
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:Query' => 'Query',
+	'Class:Query+' => 'A query is a data set defined in a dynamic way',
+	'Class:Query/Attribute:name' => 'Name',
+	'Class:Query/Attribute:name+' => 'Identifies the query',
+	'Class:Query/Attribute:description' => 'Description',
+	'Class:Query/Attribute:description+' => 'Long description for the query (purpose, usage, etc.)',
+
+	'Class:QueryOQL' => 'OQL Query',
+	'Class:QueryOQL+' => 'A query based on the Object Query Language',
+	'Class:QueryOQL/Attribute:oql' => 'Expression',
+	'Class:QueryOQL/Attribute:oql+' => 'OQL Expression',
+));
+
 //////////////////////////////////////////////////////////////////////
 // Classes in 'addon/userrights'
 //////////////////////////////////////////////////////////////////////
@@ -548,7 +566,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:RunQuery:DevelopedQuery' => 'Redevelopped query expression: ',
 	'UI:RunQuery:SerializedFilter' => 'Serialized filter: ',
 	'UI:RunQuery:Error' => 'An error occured while running the query: %1$s',
-	
+	'UI:Query:UrlForExcel' => 'URL to use for MS-Excel web queries',
 	'UI:Schema:Title' => 'iTop objects schema',
 	'UI:Schema:CategoryMenuItem' => 'Category <b>%1$s</b>',
 	'UI:Schema:Relationships' => 'Relationships',
@@ -608,8 +626,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Schema:LifeCycleAttributeMustChange' => 'Must change',
 	'UI:Schema:LifeCycleAttributeMustPrompt' => 'User will be prompted to change the value',
 	'UI:Schema:LifeCycleEmptyList' => 'empty list',
-	
 	'UI:LinksWidget:Autocomplete+' => 'Type the first 3 characters...',
+	'UI:Edit:TestQuery' => 'Test query',
 	'UI:Combo:SelectValue' => '--- select a value ---',
 	'UI:Label:SelectedObjects' => 'Selected objects: ',
 	'UI:Label:AvailableObjects' => 'Available objects: ',
@@ -622,7 +640,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:RemoveLinkedObjectsOf_Class' => 'Remove selected objects',
 	'UI:Message:EmptyList:UseAdd' => 'The list is empty, use the "Add..." button to add elements.',
 	'UI:Message:EmptyList:UseSearchForm' => 'Use the search form above to search for objects to be added.',
-	
 	'UI:Wizard:FinalStepTitle' => 'Final step: confirmation',
 	'UI:Title:DeletionOf_Object' => 'Deletion of %1$s',
 	'UI:Title:BulkDeletionOf_Count_ObjectsOf_Class' => 'Bulk deletion of %1$d objects of class %2$s',
@@ -824,6 +841,9 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	
 	'Menu:RunQueriesMenu' => 'Run Queries',
 	'Menu:RunQueriesMenu+' => 'Run any query',
+	
+	'Menu:QueryMenu' => 'Query phrasebook',
+	'Menu:QueryMenu+' => 'Query phrasebook',
 	
 	'Menu:DataAdministration' => 'Data administration',
 	'Menu:DataAdministration+' => 'Data administration',
