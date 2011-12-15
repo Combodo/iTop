@@ -36,6 +36,8 @@ abstract class Expression
 	// recursive rendering (aArgs used as input by default, or used as output if bRetrofitParams set to True
 	abstract public function Render(&$aArgs = null, $bRetrofitParams = false);
 
+	abstract public function ApplyParameters($aArgs);
+	
 	// recursively builds an array of class => fieldname
 	abstract public function ListRequiredFields();
 
@@ -111,6 +113,10 @@ class SQLExpression extends Expression
 		return $this->m_sSQL;
 	}
 
+	public function ApplyParameters($aArgs)
+	{
+	}
+	
 	public function GetUnresolvedFields($sAlias, &$aUnresolved)
 	{
 	}
@@ -200,7 +206,27 @@ class BinaryExpression extends Expression
 		$sRight = $this->GetRightExpr()->Render($aArgs, $bRetrofitParams);
 		return "($sLeft $sOperator $sRight)";
 	}
-
+	
+	public function ApplyParameters($aArgs)
+	{
+		if ($this->m_oLeftExpr instanceof VariableExpression)
+		{
+			$this->m_oLeftExpr = $this->m_oLeftExpr->GetAsScalar($aArgs);
+		}
+		else //if ($this->m_oLeftExpr instanceof Expression)
+		{
+			$this->m_oLeftExpr->ApplyParameters($aArgs);
+		}
+		if ($this->m_oRightExpr instanceof VariableExpression)
+		{
+			$this->m_oRightExpr = $this->m_oRightExpr->GetAsScalar($aArgs);
+		}
+		else //if ($this->m_oRightExpr instanceof Expression)
+		{
+			$this->m_oRightExpr->ApplyParameters($aArgs);
+		}
+	}
+	
 	public function GetUnresolvedFields($sAlias, &$aUnresolved)
 	{
 		$this->GetLeftExpr()->GetUnresolvedFields($sAlias, $aUnresolved);
@@ -247,6 +273,14 @@ class BinaryExpression extends Expression
 			{
 				$aResult[$this->m_oRightExpr->GetParent()][$this->m_oRightExpr->GetName()] = $this->m_oLeftExpr;
 			}
+			else
+			{
+				$aResult = array_merge($this->m_oRightExpr->ListConstantFields(), $this->m_oLeftExpr->ListConstantFields()) ;
+			}
+		}
+		else
+		{
+			$aResult = array_merge($this->m_oRightExpr->ListConstantFields(), $this->m_oLeftExpr->ListConstantFields()) ;
 		}
 		return $aResult;
 	}
@@ -285,6 +319,10 @@ class UnaryExpression extends Expression
 		return CMDBSource::Quote($this->m_value);
 	}
 
+	public function ApplyParameters($aArgs)
+	{
+	}
+	
 	public function GetUnresolvedFields($sAlias, &$aUnresolved)
 	{
 	}
@@ -490,6 +528,20 @@ class VariableExpression extends UnaryExpression
 			$this->m_sName = $sNewName;
 		}
 	}
+	
+	public function GetAsScalar($aArgs)
+	{
+		$value = '';
+		if (array_key_exists($this->m_sName, $aArgs))
+		{
+			$value = $aArgs[$this->m_sName];
+		}
+		else
+		{
+			throw new MissingQueryArgument('Missing query argument', array('expecting'=>$this->m_sName, 'available'=>array_keys($aArgs)));
+		}
+		return new ScalarExpression($value);
+	}
 }
 
 // Temporary, until we implement functions and expression casting!
@@ -535,6 +587,22 @@ class ListExpression extends Expression
 		return '('.implode(', ', $aRes).')';
 	}
 
+	public function ApplyParameters($aArgs)
+	{
+		$aRes = array();
+		foreach ($this->m_aExpressions as $idx => $oExpr)
+		{
+			if ($oExpr instanceof VariableExpression)
+			{
+				$this->m_aExpressions[$idx] = $oExpr->GetAsScalar();
+			}
+			else
+			{
+				$oExpr->ApplyParameters($aArgs);
+			}
+		}
+	}
+	
 	public function GetUnresolvedFields($sAlias, &$aUnresolved)
 	{
 		foreach ($this->m_aExpressions as $oExpr)
@@ -622,6 +690,22 @@ class FunctionExpression extends Expression
 		return $this->m_sVerb.'('.implode(', ', $aRes).')';
 	}
 
+	public function ApplyParameters($aArgs)
+	{
+		$aRes = array();
+		foreach ($this->m_aArgs as $idx => $oExpr)
+		{
+			if ($oExpr instanceof VariableExpression)
+			{
+				$this->m_aArgs[$idx] = $oExpr->GetAsScalar($aArgs);
+			}
+			else
+			{
+				$oExpr->ApplyParameters($aArgs);
+			}
+		}
+	}
+
 	public function GetUnresolvedFields($sAlias, &$aUnresolved)
 	{
 		foreach ($this->m_aArgs as $oExpr)
@@ -702,6 +786,18 @@ class IntervalExpression extends Expression
 		return 'INTERVAL '.$this->m_oValue->Render($aArgs, $bRetrofitParams).' '.$this->m_sUnit;
 	}
 
+	public function ApplyParameters($aArgs)
+	{
+		if ($this->m_oValue instanceof VariableExpression)
+		{
+			$this->m_oValue = $this->m_oValue->GetAsScalar($aArgs);
+		}
+		else
+		{
+			$this->m_oValue->ApplyParameters($aArgs);
+		}
+	}
+		
 	public function GetUnresolvedFields($sAlias, &$aUnresolved)
 	{
 		$this->m_oValue->GetUnresolvedFields($sAlias, $aUnresolved);
@@ -759,6 +855,22 @@ class CharConcatExpression extends Expression
 			$aRes[] = "COALESCE($sCol, '')";
 		}
 		return "CAST(CONCAT(".implode(', ', $aRes).") AS CHAR)";
+	}
+
+	public function ApplyParameters($aArgs)
+	{
+		$aRes = array();
+		foreach ($this->m_aExpressions as $idx => $oExpr)
+		{
+			if ($oExpr instanceof VariableExpression)
+			{
+				$this->m_aExpressions[$idx] = $oExpr->GetAsScalar();
+			}
+			else
+			{
+				$this->m_aExpressions->ApplyParameters($aArgs);
+			}
+		}
 	}
 
 	public function GetUnresolvedFields($sAlias, &$aUnresolved)

@@ -694,22 +694,9 @@ class DBObjectSet
 	 */
 	public function ListConstantFields()
 	{
-		$aScalarArgs = array();
-		foreach($this->m_aArgs as $sArgName => $value)
-		{
-			if (MetaModel::IsValidObject($value))
-			{
-				$aScalarArgs = array_merge($aScalarArgs, $value->ToArgs($sArgName));
-			}
-			else
-			{
-				$aScalarArgs[$sArgName] = (string) $value;
-			}
-		}
-		$aScalarArgs['current_contact_id'] = UserRights::GetContactId();
-		
+		$aScalarArgs = $this->ExpandArgs();
 		$aConst = $this->m_oFilter->ListConstantFields();
-		
+				
 		foreach($aConst as $sClassAlias => $aVals)
 		{
 			foreach($aVals as $sCode => $oExpr)
@@ -725,6 +712,30 @@ class DBObjectSet
 			}
 		}
 		return $aConst;		
+	}
+	
+	protected function ExpandArgs($aArgs)
+	{
+		$aScalarArgs = array();
+		foreach($this->m_aArgs as $sArgName => $value)
+		{
+			if (MetaModel::IsValidObject($value))
+			{
+				$aScalarArgs = array_merge($aScalarArgs, $value->ToArgs($sArgName));
+			}
+			else
+			{
+				$aScalarArgs[$sArgName] = (string) $value;
+			}
+		}
+		$aScalarArgs['current_contact_id'] = UserRights::GetContactId();
+		return $aScalarArgs;		
+	}
+	
+	public function ApplyParameters()
+	{
+		$aScalarArgs = $this->ExpandArgs();
+		$this->m_oFilter->ApplyParameters($aScalarArgs);
 	}
 }
 
