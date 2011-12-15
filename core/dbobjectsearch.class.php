@@ -765,6 +765,15 @@ class DBObjectSearch
 		return $this->m_oSearchCondition->Render($this->m_aParams, false);
 	}
 
+	/**
+	 * Turn the parameters (:xxx) into scalar values in order to easily
+	 * serialize a search
+	 */
+	public function ApplyParameters($aArgs)
+	{
+		return $this->m_oSearchCondition->ApplyParameters(array_merge($this->m_aParams, $aArgs));
+	}
+	
 	public function serialize($bDevelopParams = false, $aContextParams = null)
 	{
 		$sOql = $this->ToOql($bDevelopParams, $aContextParams);

@@ -319,7 +319,7 @@ EOF
 		try
 		{
 			$oFilter = DBObjectSearch::FromOQL($sFilter);
-			$oBlock = new DisplayBlock($oFilter, 'list', false);
+			$oBlock = new DisplayBlock($oFilter, 'list', false, array('query_params' => array('this' => $oObj)));
 			$oBlock->Display($oP, $this->iId.'_results', array('this' => $oObj, 'cssCount'=> '#count_'.$this->iId, 'menu' => false, 'selection_mode' => true, 'selection_type' => 'single')); // Don't display the 'Actions' menu on the results
 		}
 		catch(MissingQueryArgument $e)
@@ -328,8 +328,8 @@ EOF
 			// TODO check if we can improve this behavior...
 			$sOQL = 'SELECT '.$sRemoteClass;
 			$oFilter = DBObjectSearch::FromOQL($sOQL);
-			$oBlock = new DisplayBlock($oFilter, 'list', false);
-			$oBlock->Display($oP, $this->iId.'_results', array('cssCount'=> '#count_'.$this->iId, 'menu' => false, 'selection_mode' => true, 'selection_type' => 'single')); // Don't display the 'Actions' menu on the results
+			//$oBlock = new DisplayBlock($oFilter, 'list', false);
+			//$oBlock->Display($oP, $this->iId.'_results', array('cssCount'=> '#count_'.$this->iId, 'menu' => false, 'selection_mode' => true, 'selection_type' => 'single')); // Don't display the 'Actions' menu on the results
 		}
 	}
 	

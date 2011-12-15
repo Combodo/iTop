@@ -883,7 +883,9 @@ EOF
 			$sDisplayList = json_encode($aList);
 			$sCssCount = isset($aExtraParams['cssCount']) ? ", cssCount: '{$aExtraParams['cssCount']}'" : '';
 			$iPageSize = MetaModel::GetConfig()->GetMinDisplayLimit();
-			$oPage->add_ready_script("$('#{$iListId} table.listResults').tablesorter( { $sHeaders widgets: ['myZebra', 'truncatedList']} ).tablesorterPager({container: $('#pager{$iListId}'), totalRows:$iCount, size: $iPageSize, filter: '$sFilter', extra_params: '$sExtraParams', select_mode: '$sSelectMode', displayKey: $sDisplayKey, displayList: $sDisplayList $sCssCount});\n");
+			$oSet->ApplyParameters();
+			$sOQL = addslashes($oSet->GetFilter()->serialize());
+			$oPage->add_ready_script("$('#{$iListId} table.listResults').tablesorter( { $sHeaders widgets: ['myZebra', 'truncatedList']} ).tablesorterPager({container: $('#pager{$iListId}'), totalRows:$iCount, size: $iPageSize, filter: '$sOQL', extra_params: '$sExtraParams', select_mode: '$sSelectMode', displayKey: $sDisplayKey, displayList: $sDisplayList $sCssCount});\n");
 		}
 		else
 		{
