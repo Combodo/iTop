@@ -716,7 +716,7 @@ class DBObjectSet
 	
 	protected function ExpandArgs($aArgs)
 	{
-		$aScalarArgs = array();
+		$aScalarArgs = $this->m_oFilter->GetInternalParams();
 		foreach($this->m_aArgs as $sArgName => $value)
 		{
 			if (MetaModel::IsValidObject($value))

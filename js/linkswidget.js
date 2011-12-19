@@ -64,9 +64,28 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 	
 	this.AddObjects  = function()
 	{
-		$('#dlg_'+me.id).dialog('open');
-		this.UpdateSizes(null, null);
-		this.SearchObjectsToAdd();
+		var me = this;
+		$('#'+me.id+'_indicatorAdd').html('&nbsp;<img src="../images/indicator.gif"/>');
+		me.oWizardHelper.UpdateWizard();
+		var theMap = { sAttCode: me.sAttCode,
+				   iInputId: me.iInputId,
+				   sSuffix: me.sSuffix,
+				   bDuplicates: me.bDuplicates,
+				   'class' : me.sClass,
+				   operation: 'addObjects',
+				   json: me.oWizardHelper.ToJSON()
+				 };
+		$.post( GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', theMap, 
+				function(data)
+				{
+					$('#dlg_'+me.id).html(data);
+					$('#dlg_'+me.id).dialog('open');
+					me.UpdateSizes(null, null);
+					me.SearchObjectsToAdd();
+					$('#'+me.id+'_indicatorAdd').html('');
+				},
+				'html'
+			);
 	}
 	
 	this.SearchObjectsToAdd = function()
