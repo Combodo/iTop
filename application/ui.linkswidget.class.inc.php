@@ -251,10 +251,10 @@ class UILinksWidget
 EOF
 );
 		$sHtmlValue .= "<span style=\"float:left;\">&nbsp;&nbsp;&nbsp;<img src=\"../images/tv-item-last.gif\">&nbsp;&nbsp;<input id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_btnRemove\" type=\"button\" value=\"".Dict::S('UI:RemoveLinkedObjectsOf_Class')."\" onClick=\"oWidget{$this->m_iInputId}.RemoveSelected();\" >";
-		$sHtmlValue .= "&nbsp;&nbsp;&nbsp;<input id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_btnAdd\" type=\"button\" value=\"".Dict::Format('UI:AddLinkedObjectsOf_Class', MetaModel::GetName($this->m_sRemoteClass))."\" onClick=\"oWidget{$this->m_iInputId}.AddObjects();\"></span>\n";
+		$sHtmlValue .= "&nbsp;&nbsp;&nbsp;<input id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_btnAdd\" type=\"button\" value=\"".Dict::Format('UI:AddLinkedObjectsOf_Class', MetaModel::GetName($this->m_sRemoteClass))."\" onClick=\"oWidget{$this->m_iInputId}.AddObjects();\"><span id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_indicatorAdd\"></span></span>\n";
 		$sHtmlValue .= "<span style=\"clear:both;\"><p>&nbsp;</p></span>\n";
 		$sHtmlValue .= "</div>\n";
-		$oPage->add_at_the_end($this->GetObjectPickerDialog($oPage), "dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}"); // To prevent adding forms inside the main form
+		$oPage->add_at_the_end("<div id=\"dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}\"></div>"); // To prevent adding forms inside the main form
 		return $sHtmlValue;
 	}
 	         
@@ -277,12 +277,11 @@ EOF
 		return $sTargetClass;
 	}
 	
-	protected function GetObjectPickerDialog($oPage)
+	public function GetObjectPickerDialog($oPage, $oCurrentObj)
 	{
-		$sHtml = "<div id=\"dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}\">";
 		$sHtml .= "<div class=\"wizContainer\" style=\"vertical-align:top;\">\n";
 		$oFilter = new DBObjectSearch($this->m_sRemoteClass);
-		$oSet = new CMDBObjectSet($oFilter);
+		$this->SetSearchDefaultFromContext($oCurrentObj, $oFilter);
 		$oBlock = new DisplayBlock($oFilter, 'search', false);
 		$sHtml .= $oBlock->GetDisplay($oPage, "SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}", array('open' => true));
 		$sHtml .= "<form id=\"ObjectsAddForm_{$this->m_sAttCode}{$this->m_sNameSuffix}\" OnSubmit=\"return oWidget{$this->m_iInputId}.DoAddObjects(this.id);\">\n";
@@ -293,12 +292,11 @@ EOF
 		$sHtml .= "<input type=\"button\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"$('#dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}').dialog('close');\">&nbsp;&nbsp;<input id=\"btn_ok_{$this->m_sAttCode}{$this->m_sNameSuffix}\" disabled=\"disabled\" type=\"submit\" value=\"".Dict::S('UI:Button:Add')."\">";
 		$sHtml .= "</div>\n";
 		$sHtml .= "</form>\n";
-		$sHtml .= "</div>\n";
+		$oPage->add($sHtml);
 		$oPage->add_ready_script("$('#dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}').dialog({ width: $(window).width()*0.8, height: $(window).height()*0.8, autoOpen: false, modal: true, resizeStop: oWidget{$this->m_iInputId}.UpdateSizes });");
 		$oPage->add_ready_script("$('#dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}').dialog('option', {title:'".addslashes(Dict::Format('UI:AddObjectsOf_Class_LinkedWith_Class', MetaModel::GetName($this->m_sLinkedClass), MetaModel::GetName($this->m_sClass)))."'});");
 		$oPage->add_ready_script("$('#SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix} form').bind('submit.uilinksWizard', oWidget{$this->m_iInputId}.SearchObjectsToAdd);");
 		$oPage->add_ready_script("$('#SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}').resize(oWidget{$this->m_iInputId}.UpdateSizes);");
-		return $sHtml;
 	}
 
 	/**
@@ -370,6 +368,48 @@ EOF
 			else
 			{
 				$oP->p(Dict::Format('UI:Error:Object_Class_Id_NotFound', $this->m_sLinkedClass, $iObjectId));
+			}
+		}
+	}
+	
+	/**
+	 * Initializes the default search parameters based on 1) a 'current' object and 2) the silos defined by the context
+	 * @param DBObject $oSourceObj
+	 * @param DBObjectSearch $oSearch
+	 */
+	protected function SetSearchDefaultFromContext($oSourceObj, &$oSearch)
+	{
+		$oAppContext = new ApplicationContext();
+		$sSrcClass = get_class($oSourceObj);
+		$sDestClass = $oSearch->GetClass();
+		foreach($oAppContext->GetNames() as $key)
+		{
+			// Find the value of the object corresponding to each 'context' parameter
+			$aCallSpec = array($sSrcClass, 'MapContextParam');
+			$sAttCode = '';
+			if (is_callable($aCallSpec))
+			{
+				$sAttCode = call_user_func($aCallSpec, $key); // Returns null when there is no mapping for this parameter					
+			}
+
+			if (MetaModel::IsValidAttCode($sSrcClass, $sAttCode))
+			{
+				$oAttDef = MetaModel::GetAttributeDef($sSrcClass, $sAttCode);
+				$defaultValue = $oSourceObj->Get($sAttCode);
+
+				// Find the attcode for the same 'context' parameter in the destination class
+				// and sets its value as the default value for the search condition
+				$aCallSpec = array($sDestClass, 'MapContextParam');
+				$sAttCode = '';
+				if (is_callable($aCallSpec))
+				{
+					$sAttCode = call_user_func($aCallSpec, $key); // Returns null when there is no mapping for this parameter					
+				}
+	
+				if (MetaModel::IsValidAttCode($sDestClass, $sAttCode) && !empty($defaultValue))
+				{
+					$oSearch->AddCondition($sAttCode, $defaultValue);
+				}
 			}
 		}
 	}

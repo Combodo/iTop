@@ -73,7 +73,6 @@ try
 		$sSelectMode = utils::ReadParam('select_mode', '');
 		$bDisplayKey = utils::ReadParam('display_key', 'true') == 'true';
 		$aList = utils::ReadParam('display_list', array());
-
 		$sClassName = $oFilter->GetClass();
 		//$aList = cmdbAbstractObject::FlattenZList(MetaModel::GetZListItems($sClassName, 'list'));
 
@@ -167,6 +166,28 @@ try
 			$sRow = $oPage->GetTableRow($aRow, $aConfig);
 			$oPage->add($sRow);
 		}
+		break;
+		
+		// ui.linkswidget
+		case 'addObjects':
+		$oPage->SetContentType('text/html');
+		$sAttCode = utils::ReadParam('sAttCode', '');
+		$iInputId = utils::ReadParam('iInputId', '');
+		$sSuffix = utils::ReadParam('sSuffix', '');
+		$bDuplicates = (utils::ReadParam('bDuplicates', 'false') == 'false') ? false : true;
+		$sJson = utils::ReadParam('json', '', false, 'raw_data');
+		if (!empty($sJson))
+		{
+			$oWizardHelper = WizardHelper::FromJSON($sJson);
+			$oObj = $oWizardHelper->GetTargetObject();
+		}
+		else
+		{
+			// Search form: no current object
+			$oObj = null;
+		}
+		$oWidget = new UILinksWidget($sClass, $sAttCode, $iInputId, $sSuffix, $bDuplicates);
+		$oWidget->GetObjectPickerDialog($oPage, $oObj);	
 		break;
 		
 		// ui.linkswidget
