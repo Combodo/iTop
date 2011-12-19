@@ -119,8 +119,18 @@ function ReloadSearchForm(divId, sClassName, sBaseClass, sContext)
 	}
 	sAction =  $('#ds_'+divId+' form').attr('action');
 
-	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?'+sContext,
-	   { operation: 'search_form', className: sClassName, baseClass: sBaseClass, currentId: divId, action: sAction },
+	// Save the current values in the form
+	var oMap = {};
+	$('#ds_'+divId+" form :input[name!='']").each(function() {
+		oMap[this.name] = this.value;
+	});
+	oMap.operation = 'search_form';
+	oMap.className = sClassName;
+	oMap.baseClass = sBaseClass;
+	oMap.currentId = divId;
+	oMap.action = sAction;
+	
+	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?'+sContext, oMap,
 	   function(data) {
 		   oDiv.empty();
 		   oDiv.append(data);
