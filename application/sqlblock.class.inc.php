@@ -40,13 +40,15 @@ class SqlBlock
 	protected $m_aColumns;
 	protected $m_sTitle;
 	protected $m_sType;
+	protected $m_aParams;
 	                            
-	public function __construct($sQuery, $aColumns, $sTitle, $sType)
+	public function __construct($sQuery, $aColumns, $sTitle, $sType, $aParams = array())
 	{
 		$this->m_sQuery = $sQuery;
 		$this->m_aColumns = $aColumns;
 		$this->m_sTitle = $sTitle;
 		$this->m_sType = $sType;
+		$this->m_aParams = $aParams;
 	}
 	
 	/**
@@ -54,9 +56,14 @@ class SqlBlock
 	/*
 	 *
 	 *		<sqlblock>
-	 *			<sql>SELECT date_format(start_date, '%d') AS Date, count(*) AS Count FROM ticket WHERE DATE_SUB(NOW(), INTERVAL 15 DAY) &lt; start_date AND finalclass = 'UserIssue' GROUP BY date_format(start_date, '%d')</sql>
+	 *			<sql>SELECT date_format(start_date, '%d') AS Date, count(*) AS Count FROM ticket WHERE DATE_SUB(NOW(), INTERVAL 15 DAY) &lt; start_date AND finalclass = 'UserIssue' GROUP BY date_format(start_date, '%d') AND $CONDITION(param1, ticket.org_id)$</sql>
 	 *			<type>table</type>
 	 *			<title>UserRequest:Overview-Title</title>
+	 *			<parameter>
+	 * 				<name>param1</name>
+	 * 				<type>context</type>
+	 * 				<mapping>org_id</mapping>
+	 * 			</parameter>
 	 *			<column>
 	 *				<name>Date</name>
 	 *				<label>UserRequest:Overview-Date</label>
@@ -73,6 +80,11 @@ class SqlBlock
 	 * - sql: a (My)SQL query. Do not forget to use html entities (e.g. &lt; for <)
 	 * - type: table (default), bars or pie. If bars or pie is selected only the two first columns are taken into account.
 	 * - title: optional title, typed in clear or given as a dictionnary entry
+	 * - parameter: specifies how to map the context parameters (namely org_id) to a given named parameter in the query.
+	 *   The expression $CONDITION(<param_name>, <sql_column_name>) will be automatically replaced by:
+	 *   either the string "1" if there is no restriction on the organisation in iTop
+	 *   or the string "(<sql_column_name>=<value_of_org_id>)" if there is a limitation to one organizations in iTop
+	 *   or the string "(<sql_column_name> IN (<values_of_org_id>))" if there is a limitation to a given set of organizations in iTop
 	 * - column: specification of a column (not displayed if omitted)
 	 * - column / name: name of the column in the SQL query (use aliases)
 	 * - column / label: label, typed in clear or given as a dictionnary entry
@@ -144,8 +156,96 @@ class SqlBlock
 				}
 			}
 		}
-
-		return new SqlBlock($sQuery, $aColumns, $sTitle, $sType);		
+		$aParams = array();
+		if (isset($oXml->parameter))
+		{
+			foreach ($oXml->parameter AS $oParamData)
+			{
+				if (!isset($oParamData->name))
+				{
+					throw new Exception("Missing tag 'name' for parameter in sqlblock/column");
+				}
+				$sName = (string) $oParamData->name;
+				if (strlen($sName) == 0)
+				{
+					throw new Exception("Empty tag 'name' for parameter in sqlblock/column");
+				}
+				if (!isset($oParamData->mapping))
+				{
+					throw new Exception("Missing tag 'mapping' for parameter in sqlblock/column");
+				}
+				$sMapping = (string) $oParamData->mapping;
+				if (strlen($sMapping) == 0)
+				{
+					throw new Exception("Empty tag 'mapping' for parameter in sqlblock/column");
+				}
+				
+				if (isset($oParamData->type))
+				{
+					$sType = $oParamData->type;
+				}
+				else
+				{
+					$sType = 'context';
+				}
+				$aParams[$sName] = array('mapping' => $sMapping, 'type' => $sType);
+			}
+		}
+		
+		return new SqlBlock($sQuery, $aColumns, $sTitle, $sType, $aParams);		
+	}
+	
+	/**
+	 * Applies the defined parameters into the SQL query
+	 * @return string the SQL query to execute
+	 */
+	public function BuildQuery()
+	{
+		$oAppContext = new ApplicationContext();
+		$sQuery = $this->m_sQuery;
+		$sQuery = str_replace('$DB_PREFIX$', MetaModel::GetConfig()->GetDBSubname(), $sQuery); // put the tables DB prefix (if any)
+		foreach($this->m_aParams as $sName => $aParam)
+		{
+			if ($aParam['type'] == 'context')
+			{
+				$sSearchPattern = '/\$CONDITION\('.$sName.',([^\)]+)\)\$/';
+				$value = $oAppContext->GetCurrentValue($aParam['mapping']);
+				if (empty($value))
+				{
+					$sSQLExpr = '(1)';
+				}
+				else
+				{
+					// Special case for managing the hierarchy of organizations
+					if (($aParam['mapping'] == 'org_id') && ( MetaModel::IsValidClass('Organization')))
+					{
+						$sHierarchicalKeyCode = MetaModel::IsHierarchicalClass('Organization');
+						if ($sHierarchicalKeyCode != false)
+						{
+							// organizations are in hierarchy... gather all the orgs below the given one...
+							$sOQL = "SELECT Organization AS node JOIN Organization AS root ON node.$sHierarchicalKeyCode BELOW root.id WHERE root.id = :value";
+							$oSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('value' => $value));
+							$aOrgIds = array();
+							while($oOrg = $oSet->Fetch())
+							{
+								$aOrgIds[]= $oOrg->GetKey();
+							}
+							$sSQLExpr = '($1 IN('.implode(',', $aOrgIds).'))';
+						}
+						else
+						{
+							$sSQLExpr = '($1 = '.CMDBSource::Quote($value).')';
+						}
+					}
+					else
+					{
+						$sSQLExpr = '($1 = '.CMDBSource::Quote($value).')';
+					}
+				}
+				$sQuery = preg_replace($sSearchPattern, $sSQLExpr, $sQuery);
+			}
+		}
+		return $sQuery;
 	}
 	
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())
@@ -160,7 +260,8 @@ class SqlBlock
 		}
 //		$oPage->add($this->GetRenderContent($oPage, $aExtraParams, $sId));
 
-		$res = CMDBSource::Query($this->m_sQuery);
+		$sQuery = $this->BuildQuery();
+		$res = CMDBSource::Query($sQuery);
 		$aQueryCols = CMDBSource::GetColumns($res);
 
 		// Prepare column definitions (check + give default values)
