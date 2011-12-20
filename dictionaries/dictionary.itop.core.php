@@ -639,6 +639,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:SyncDataSourceObsolete' => 'The data source is marked as obsolete. Operation cancelled.',
 	'Core:SyncDataSourceAccessRestriction' => 'Only adminstrators or the user specified in the data source can execute this operation. Operation cancelled.',
 	'Core:SyncTooManyMissingReplicas' => 'All records have been untouched for some time (all of the objects could be deleted). Please check that the process that writes into the synchronization table is still running. Operation cancelled.',
+	'Core:SyncSplitModeCLIOnly' => 'The synchronization can be executed in chunks only if run in mode CLI',
 	'Core:Synchro:ListReplicas_AllReplicas_Errors_Warnings' => '%1$s replicas, %2$s error(s), %3$s warning(s).',
 	'Core:SynchroReplica:TargetObject' => 'Synchronized Object: %1$s',
 	'Class:AsyncSendEmail' => 'Email (asynchronous)',
@@ -733,6 +734,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:appUserPreferences' => 'User Preferences',
 	'Class:appUserPreferences/Attribute:userid' => 'User',
 	'Class:appUserPreferences/Attribute:preferences' => 'Prefs',
+	'Core:ExecProcess:Code1' => 'Wrong command or command finished with errors (e.g. wrong script name)',
+	'Core:ExecProcess:Code255' => 'PHP Error (parsing, or runtime)',
 ));
 
 //

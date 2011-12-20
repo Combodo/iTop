@@ -120,6 +120,13 @@ $aPageParams = array
 		'default' => 'summary',
 		'description' => '[retcode] to return the count of lines in error, [summary] to return a concise report, [details] to get a detailed report (each line listed)',
 	),
+	'max_chunk_size' => array
+	(
+		'mandatory' => false,
+		'modes' => 'cli',
+		'default' => '0',
+		'description' => 'Limit on the count of records that can be loaded at once while performing the synchronization',
+	),
 /*
 	'reportlevel' => array
 	(
@@ -621,7 +628,8 @@ try
 		//
 		if ($bSynchronize)
 		{
-			$oStatLog = $oDataSource->Synchronize($oLoadStartDate);
+			$oSynchroExec = new SynchroExecution($oDataSource, $oLoadStartDate);
+			$oStatLog = $oSynchroExec->Process();
 			$oP->add_comment('Synchronization---');
 			$oP->add_comment('------------------');
 			if ($sOutput == 'details')

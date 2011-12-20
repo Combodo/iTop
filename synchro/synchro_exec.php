@@ -51,7 +51,7 @@ function UsageAndExit($oP)
 	if ($bModeCLI)
 	{
 		$oP->p("USAGE:\n");
-		$oP->p("php -q synchro_exec.php --auth_user=<login> --auth_pwd=<password> --data_sources=<comma_separated_list_of_data_sources>\n");		
+		$oP->p("php -q synchro_exec.php --auth_user=<login> --auth_pwd=<password> --data_sources=<comma_separated_list_of_data_sources> [max_chunk_size=<limit the count of replica loaded in a single pass>]\n");		
 	}
 	else
 	{
@@ -147,7 +147,8 @@ foreach(explode(',', $sDataSourcesList) as $iSDS)
 		}
 		try
 		{
-			$oStatLog = $oSynchroDataSource->Synchronize(null);
+			$oSynchroExec = new SynchroExecution($oSynchroDataSource);
+			$oStatLog = $oSynchroExec->Process();
 			if ($bSimulate)
 			{
 				CMDBSource::Query('ROLLBACK');

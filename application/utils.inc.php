@@ -46,6 +46,7 @@ class utils
 
 	// Parameters loaded from a file, parameters of the page/command line still have precedence
 	private static $m_aParamsFromFile = null;
+	private static $m_aParamSource = array();
 
 	protected static function LoadParamFile($sParamFile)
 	{
@@ -82,6 +83,7 @@ class utils
 				$sParam = $aMatches[1];
 				$value = trim($aMatches[2]);
 				self::$m_aParamsFromFile[$sParam] = $value;
+				self::$m_aParamSource[$sParam] = $sParamFile;
 			}
 		}
 	}
@@ -96,6 +98,25 @@ class utils
 			{
 				self::LoadParamFile($sFile);
 			}
+		}
+	}
+
+	/**
+	 * Return the source file from which the parameter has been found,
+	 * usefull when it comes to pass user credential to a process executed
+	 * in the background	 
+	 * @param $sName Parameter name
+	 * @return The file name if any, or null
+	 */
+	public static function GetParamSourceFile($sName)
+	{
+		if (array_key_exists($sName, self::$m_aParamSource))
+		{
+			return self::$m_aParamSource[$sName];
+		}
+		else
+		{
+			return null;
 		}
 	}
 
@@ -152,10 +173,18 @@ class utils
 	
 	public static function Sanitize($value, $defaultValue, $sSanitizationFilter)
 	{
-		$retValue = self::Sanitize_Internal($value, $sSanitizationFilter);
-		if ($retValue === false)
+		if ($value === $defaultValue)
 		{
-			$retValue = $defaultValue;
+			// Preserve the real default value (can be used to detect missing mandatory parameters)
+			$retValue = $value;
+		}
+		else
+		{
+			$retValue = self::Sanitize_Internal($value, $sSanitizationFilter);
+			if ($retValue === false)
+			{
+				$retValue = $defaultValue;
+			}
 		}
 		return $retValue;		
 	}
@@ -601,5 +630,86 @@ class utils
 		}
 		echo "<p><pre>".print_r($aLightTrace, true)."</pre></p>\n";
 	 }
+
+	/**
+	 * Execute the given iTop PHP script, passing it the current credentials
+	 * Only CLI mode is supported, because of the need to hand the credentials over to the next process
+	 * Throws an exception if the execution fails or could not be attempted (config issue)
+	 * @param string $sScript Name and relative path to the file (relative to the iTop root dir)
+	 * @param hash $aArguments Associative array of 'arg' => 'value'
+	 * @return array(iCode, array(output lines))
+	 */	 	  
+	/**
+	 */
+	static function ExecITopScript($sScriptName, $aArguments)
+	{
+		$aDisabled = explode(', ', ini_get('disable_functions'));
+		if (in_array('exec', $aDisabled))
+		{
+			throw new Exception("The PHP exec() function has been disabled on this server");
+		}
+
+		$sPHPExec = trim(MetaModel::GetConfig()->Get('php_path'));
+		if (strlen($sPHPExec) == 0)
+		{
+			throw new Exception("The path to php must not be empty. Please set a value for 'php_path' in your configuration file.");
+		}
+
+		$sAuthUser = self::ReadParam('auth_user', '', 'raw_data');
+		$sAuthPwd = self::ReadParam('auth_pwd', '', 'raw_data');
+		$sParamFile = self::GetParamSourceFile('auth_user');
+		if (is_null($sParamFile))
+		{
+			$aArguments['auth_user'] = $sAuthUser;
+			$aArguments['auth_pwd'] = $sAuthPwd;
+		}
+		else
+		{
+			$aArguments['param_file'] = $sParamFile;
+		}
+		
+		$aArgs = array();
+		foreach($aArguments as $sName => $value)
+		{
+			// Note: See comment from the 23-Apr-2004 03:30 in the PHP documentation
+			//    It suggests to rely on pctnl_* function instead of using escapeshellargs
+			$aArgs[] = "--$sName=".escapeshellarg($value);
+		}
+		$sArgs = implode(' ', $aArgs);
+		
+		$sScript = realpath(APPROOT.$sScriptName);
+		if (!file_exists($sScript))
+		{
+			throw new Exception("Could not find the script file '$sScriptName' from the directory '".APPROOT."'");
+		}
+
+		$sCommand = '"'.$sPHPExec.'" '.escapeshellarg($sScript).' -- '.$sArgs;
+
+		if (version_compare(phpversion(), '5.3.0', '<'))
+		{
+			if (substr(PHP_OS,0,3) == 'WIN')
+			{
+				// Under Windows, and for PHP 5.2.x, the whole command has to be quoted
+				// Cf PHP doc: http://php.net/manual/fr/function.exec.php, comment from the 27-Dec-2010
+				$sCommand = '"'.$sCommand.'"';
+			}
+		}
+
+		$sLastLine = exec($sCommand, $aOutput, $iRes);
+		if ($iRes == 1)
+		{
+			throw new Exception(Dict::S('Core:ExecProcess:Code1')." - ".$sCommand);
+		}
+		elseif ($iRes == 255)
+		{
+			$sErrors = implode("\n", $aOutput);
+			throw new Exception(Dict::S('Core:ExecProcess:Code255')." - ".$sCommand.":\n".$sErrors);
+		}
+
+		//$aOutput[] = $sCommand;
+		return array($iRes, $aOutput);
+	}
+
+
 }
 ?>
