@@ -714,7 +714,7 @@ class DBObjectSet
 		return $aConst;		
 	}
 	
-	protected function ExpandArgs($aArgs)
+	protected function ExpandArgs()
 	{
 		$aScalarArgs = $this->m_oFilter->GetInternalParams();
 		foreach($this->m_aArgs as $sArgName => $value)
