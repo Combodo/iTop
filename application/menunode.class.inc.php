@@ -104,6 +104,11 @@ class ApplicationMenu
 				self::$aMenusIndex[$iParentIndex]['children'][] = array ('rank' => $fRank, 'index' => $index);
 			}
 		}
+		else
+		{
+			// the menu already exists, let's combine the conditions that make it visible
+			self::$aMenusIndex[$index]['node']->AddCondition($oMenuNode);
+		}
 		return $index;
 	}
 	
@@ -287,22 +292,22 @@ abstract class MenuNode
 	/**
 	 * Class of objects to check if the menu is enabled, null if none
 	 */
-	protected $m_sEnableClass;
+	protected $m_aEnableClasses;
 
 	/**
 	 * User Rights Action code to check if the menu is enabled, null if none
 	 */
-	protected $m_iEnableAction;
+	protected $m_aEnableActions;
 
 	/**
 	 * User Rights allowed results (actually a bitmask) to check if the menu is enabled, null if none
 	 */
-	protected $m_iEnableActionResults;
+	protected $m_aEnableActionResults;
 
 	/**
 	 * Stimulus to check: if the user can 'apply' this stimulus, then she/he can see this menu
 	 */	
-	protected $m_sEnableStimulus;
+	protected $m_aEnableStimuli;
 	
 	/**
 	 * Create a menu item, sets the condition to have it displayed and inserts it into the application's main menu
@@ -318,10 +323,10 @@ abstract class MenuNode
 	public function __construct($sMenuId, $iParentIndex = -1, $fRank = 0, $sEnableClass = null, $iActionCode = null, $iAllowedResults = UR_ALLOWED_YES, $sEnableStimulus = null)
 	{
 		$this->sMenuId = $sMenuId;
-		$this->m_sEnableClass = $sEnableClass;
-		$this->m_iEnableAction = $iActionCode;
-		$this->m_iEnableActionResults = $iAllowedResults;
-		$this->m_sEnableStimulus = $sEnableStimulus;
+		$this->m_aEnableClasses = array($sEnableClass);
+		$this->m_aEnableActions = array($iActionCode);
+		$this->m_aEnableActionResults = array($iAllowedResults);
+		$this->m_aEnableStimuli = array($sEnableStimulus);
 		$this->index = ApplicationMenu::InsertMenu($this, $iParentIndex, $fRank);
 	}
 	
@@ -352,37 +357,53 @@ abstract class MenuNode
 	}
 	
 	/**
+	 * Add a limiting display condition for the same menu node. The conditions will be combined with a AND
+	 * @param $oMenuNode MenuNode Another definition of the same menu node, with potentially different access restriction
+	 * @return void
+	 */
+	public function AddCondition(MenuNode $oMenuNode)
+	{
+		foreach($oMenuNode->m_aEnableClasses as $index => $sClass )
+		{
+			$this->m_aEnableClasses[] = $sClass;
+			$this->m_aEnableActions[] = $oMenuNode->m_aEnableActions[$index];
+			$this->m_aEnableActionResults[] = $oMenuNode->m_aEnableActionResults[$index];
+			$this->m_aEnableStimuli[] = $oMenuNode->m_aEnableStimuli[$index];
+		}
+	}
+	/**
 	 * Tells whether the menu is enabled (i.e. displayed) for the current user
 	 * @return bool True if enabled, false otherwise
 	 */
 	public function IsEnabled()
 	{
-		if ($this->m_sEnableClass != null)
+		foreach($this->m_aEnableClasses as $index => $sClass)
 		{
-			if (MetaModel::IsValidClass($this->m_sEnableClass))
+			if ($sClass != null)
 			{
-				if ($this->m_sEnableStimulus != null)
+				if (MetaModel::IsValidClass($sClass))
 				{
-					if (!UserRights::IsStimulusAllowed($this->m_sEnableClass, $this->m_sEnableStimulus))
+					if ($this->m_aEnableStimuli[$index] != null)
 					{
-						return false;
+						if (!UserRights::IsStimulusAllowed($sClass, $this->m_aEnableStimuli[$index]))
+						{
+							return false;
+						}
+					}
+					if ($this->m_aEnableActions[$index] != null)
+					{
+						$iResult = UserRights::IsActionAllowed($sClass, $this->m_aEnableActions[$index]);
+						if (!($iResult & $this->m_aEnableActionResults[$index]))
+						{
+							return false;
+						}
 					}
 				}
-				if ($this->m_iEnableAction != null)
+				else
 				{
-					$iResult = UserRights::IsActionAllowed($this->m_sEnableClass, $this->m_iEnableAction);
-					if (($iResult & $this->m_iEnableActionResults))
-					{
-						return true;
-					}
-					else
-					{
-						return false;
-					}
+					return false;
 				}
-				return true;
 			}
-			return false;
 		}
 		return true;
 	}
