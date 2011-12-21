@@ -1,4 +1,4 @@
-﻿iTop - version 1.2.0 - 14-Sep-2011
+﻿iTop - version 1.2.1 - 22-Dec-2011
 Readme file
 
 1.   ABOUT THIS RELEASE
@@ -7,14 +7,14 @@ Readme file
 2.2. Install procedure
 2.3. Migration from previous version
 3.   FEATURES
-3.1. Changes since 1.1
+3.1. Changes since 1.2
 3.2. Known limitations
 3.3. Known issues
 
 1. ABOUT THIS RELEASE
    ==================
-Thank you for downloading the tenth packaged release of iTop.
-This version comes with a few new features and bug fixes.
+Thank you for downloading the eleventh packaged release of iTop.
+This version is mostyl a maintenance release that fixes a few bugs of iTop 1.2.
 
 A wiki is available: https://sourceforge.net/apps/mediawiki/itop/index.php?title=ITop_Documentation
 Additional documentation can be downloaded from there:
@@ -30,21 +30,29 @@ The source code of iTop can be found on SourceForge: http://itop.sourceforge.net
 
 1.1 What's new?
     ---------------------------
-- Japanese localization is now part of iTop
-- Paginated display: when a list contains lots of data it is displayed page per page
-- Quite a few performance improvements to make iTop behave properly with huge data sets
-- Hierarchical keys: parent/child relationships can now be described using a special type of key,
-  and then queried efficiently in the database (Used by Organization, Location and Group)
-- CAS authentication: iTop now supports single-sign-on with JA-SIG CAS
+This version mostly consists in bug fixes for iTop 1.2, however there a few new features:
 
-1.2 Should I upgrade to 1.2.0?
+- Better display of the impact analysis view: Allows to filter the classes of objects displayed in the
+  graphical view. The view now resizes to fit your browser's window.
+
+- Query phrase book: create, test and store your OQL queries in the "Query Phrasebook" for an easy export
+  via the "Export" menu, without the limitation of the URL length in Excel web queries ! A new export format
+  "spreadsheet" was aded, specifically for running as Excel web queries (dates are split between date and time)
+
+- Enhanced data synchronization:
+  - For performing huge synchronizations with little memory (despite PHP's memory leaks), the execution of the data
+    synchronization (in CLI mode only) can be run by chunk of x elements by specifying --max_chunk_size=x on the
+    command line to synchro_import.php or synchro_exec.php. Try to set this value to 1000 to run with 128 MB of memory.
+  - When an (optional) external key cannot be reconciled, log a warning on the replica. the replicas containing a
+    warning are then processed everytime in case the ext key changes.
+  - Also improved the search/display of replicas for an easier troubleshooting of the synchronization.
+
+
+1.2 Should I upgrade to 1.2.1?
     ---------------------------
-- If you are manipulating big sets of data (several thousands of objects in one go)
-- If you care about organizations or locations hierarchy
-- If you speak/read Japanese
-- If you already use JA-SIG CAS (www.jasig.org/cas) for example with a Liferay portal
-
-then you'll benefit from iTop 1.2 and it's probably worth upgrading.
+Considering that there more than 20 bug fixes and very few new features we recommended you to upgrade
+to this new version. Especially if you are using the data synchronization with big sets of data, you can benefit
+from the new "chunk" mode by just adding a parameter to the command line !
 
 
 1.3 Special Thanks To:
@@ -111,8 +119,8 @@ The following features will require the activation of CRON.PHP:
 
 More information into the Wiki: https://sourceforge.net/apps/mediawiki/itop/index.php?title=Cron.php
 
-2.4. Migrating from 1.0, 1.0.1, 1.0.2 or 1.1
-     ---------------------------------------
+2.4. Migrating from 1.0, 1.0.1, 1.0.2, 1.1 or 1.2
+     --------------------------------------------
 You can simply overwrite the files from the previous version with the new ones but we recommend that you copy the files of the new version to new directory.
 After installing the files, you MUST run the setup by
 1) Marking the file config-itop.php as read-write for the web server
@@ -140,135 +148,76 @@ Please refer to the migration guide available at http://www.combodo.com/itopdocu
 3. FEATURES
    ========
 
-3.1. Changes since 1.1
+3.1. Changes since 1.2
      -------------------
 
-Version 1.2.0 brings a few major changes.
+Version 1.2.1 brings a few major changes.
 
 Major changes
 -------------
-- Paginated display
-- Management of hierarchy of objects: implemented for Organizations, Groups and Locations and taken into account by the profiles/user rights.
-- CAS integration: added support of JA-SIG Central Authentication Service (CAS) with log-off support, using phpCAS API.
+- Better display of the impact analysis view: Allows to filter the classes of objects displayed in the
+  graphical view. The view now resizes to fit your browser's window.
+
+- Query phrase book: create, test and store your OQL queries in the "Query Phrasebook" for an easy export
+  via the "Export" menu, without the limitation of the URL length in Excel web queries ! A new export format
+  "spreadsheet" was aded, specifically for running as Excel web queries (dates are split between date and time)
+
+- Enhanced data synchronization:
+  - For performing huge synchronizations with little memory (despite PHP's memory leaks), the execution of the data
+    synchronization (in CLI mode only) can be run by chunk of x elements by specifying --max_chunk_size=x on the
+    command line to synchro_import.php or synchro_exec.php. Try to set this value to 1000 to run with 128 MB of memory.
+  - When an (optional) external key cannot be reconciled, log a warning on the replica. the replicas containing a
+    warning are then processed everytime in case the ext key changes.
+  - Also improved the search/display of replicas for an easier troubleshooting of the synchronization.
 
 Localization
 ------------
-The Japanese translation was added, thanks to Tadashi Kaneda.
-The German translation was updated by Stephan Rosenke
+No big changes in localization for this release.
 
 More information on the localization (completion progress, how to contribute) here:
 http://www.combodo.com/itop-localization/
 
 Minor changes
 -------------
-Improved import.php and synchro_import.php: added 'date_format' (example: %d/%m/%Y %H:%i:%s)
-When needed the drop-down list of organizations is replaced by an autocomplete
-Templates: new type of block = sqlblock, allows for displaying tables/charts based in SQL queries (much quicker for some 'Group By' operations)
-Added support of 'drill-down' (i.e on_click) on bar and pie charts
-Added SQL blocks
-New feature: online help on search inputs (date format and operators) a tooltip appears when the user clicks a date/search field
-Better handling of object deletion issues during a data synchro...
-#130: keywords to narrow the scope of the global search (e.g. server:webserver searches "webserver" only in the "server" objects)
-Added a new web service to create UserRequest tickets (similarly to Incidents tickets). Based on code from Vincenzo Todisco.
-Bug fix: when changing the currently selected organization, go back to the initial (Welcome) menu instead of trying to stay on the same menu... which caused troubles (e.g. "New Contact" => assertion failed)
-Improved error handling when loading linkedset as attributes in one go in CSV import
-Don't make the Ticket's case log hidden in the 'New' state, since it's not hidden in the portal !
-Better error message if the configuration file exists but is not readable
-In CLI mode, do not depend on the current directory for synchro/import.php and synchro/synchro.php: the scripts can now be run from anywhere.
-New module to easily manage attachments in one click instead of creating a separate 'Document' object. If this module is installed, portal users will create attachments instead of linked documents when uploading files with their ticket
-Added a new type of 'Trigger': TriggerOnPortalUpdate, called when the end-user updates a ticket via the portal.
-The deadlines display format can be configured.
-Lists can be displayed either as combo boxes (default and original behavior) or radio buttons, either horizontal or vertical.
-In the templates or menus, the sort order can be specified.
-Developers: DisplayBareProperties now called both in read and edition modes.
-#446: XSS vulnerabilities
-Security: protected bulk modify against HTTP/Post piracy
-Added the display of the total count of objects in overviews.
-Different display for 'Date' fields: shorter field than DateTime since there is no "time" part.
-A mandatory case log field is now considered as 'filled' if it contains a previous entry
-#148 Allow overloading attribute/enum labels in the dictionary
-Warning (popup) message when navigating away from an edition form.
-#452 Export.php - field list can be specified also for HTML output
-German localization update, thanks to Stephan Rosenke.
-Shortcut actions (parameter in the config file)
-Notifications: case log in plain text (this->case_log) or the latest entry (this->head(case_log))
-Allow creation of an ticket in a different initial state via the new 'initial_state_path' attribute.
-Support update of CaseLog fields in bulk_modify mode.
-Detection of the Suhosin extension during the installation and tell the user if the get_max_value is too small.
-#284: Improved verification to the PHP file upload settings to avoid troubles later
+Automatic synchro of CAS/LDAP users: it is possible to have iTop automatically create the user record when an authorized user connects through CAS
+ - Use the default language when creating a new user from CAS
+ - Support patterns for casMemberof
 
+Better error handling in case of OQL error in the audit page, now the error is properly trapped and indicates which query is the cuase of the error.
+
+Added a link to a favicon (icon in the browser's bar and tab)
+
+Allow a module to restrict the access to a given menu/group by redeclaring the menu with restricted rights. All rights are combined with the AND operator.
 
 Bugs fixed
 ----------
 The complete list of active tickets can be reviewed at http://sourceforge.net/apps/trac/itop/report/1
 
-#122 Optimized the load of data set (do not load unused columns, that can cause some tmp tables to get too big for memory)
-#403 Partial installation not working (error on ticket form)
-#404: context lost when doing certain actions. What was fixed:
-  - Run Query
-  - Display Data Model Schema
-  - Drill-down in charts (OQL & SQL)
-  - Paginated lists (actually a regression)
-  What remains:
-  - Global search...
-  - Drill-down in Flash "impacts / depends on"
-#405 Could not install without the module 'User Request Management'
-#408 Case log not working with PHP < 5.3 - the fix preserves the compatibility with installed version (but the dates are lost)
-#410 Added translation for ticket status (and other enum fields) when displaying the History tab.
-#415 Could not limit user on some organization (symptom: wrong queries... org_id does not exist...)
-#420 Data synchro logs: increased the size of the attribute last_error
-#422 (detection of magic_quotes_runtime)
-#423 Fixed issues with application root URL = f(mode CLI, modules, web server techno, etc.)
-#427 Unable to remove all items from a linkset when editing an object.
-#424 Error when updating the Data Synchro statistics
-#429: web browser can crash when a text field contains several times the same URL !!!
-#433: Database triggers creation was incorrect when iTop was installed with a 'prefix' for the DB tables.
-Dashboard templates: fixed issue with asynchronous mode (still some cosmetic issues) with itopblock and the table format
-n:n wizard, context was lost when searching for objects of a derived class to be added.
-'Apply stimulus multiple" was saying: "Please select at least one object"
-Make sure that the flash object respects the z-order otherwise the hierarchy/organization picker appears behind the Flash in Chrome and IE.
-Fixed issues when adding/removing modules during the setup:
- - When adding modules: the data model was not refreshed in the cache before attempting to load "structure" (or "sample") data
- - When removing a module: remaining (invalid) triggers were still used.
-A title was missing for the menu 'All Opened Changes' at the top of the page
-Fixed the parsing of OQL error messages: should be able to report the line number (usually 1) and the character where the error happened
-Don't display an error (assertion failed) if the user selects nothing (i.e -- select one --) in the "CSV template" tab.
-Display/download links on documents that were both doing exactly the same thing
-Fixed the display of 'Used IP Addresses' (i.e. Network interfaces) in the details of a Subnet object.
-Fixed the computation of IPs in a subnet that failed (returned negative numbers) on some versions of PHP compiled in 32-bit.
-Enhanced interface for complex SLA computations...
-#447: interfaces not showing up on the details of a server when an org is selected: there were collisions in the internal query parameters names ! This is now fixed.
-The default value for Date fields is different than for DateTime fields: no 'time' part at the end (use the attribute's own format)
-#458: back button was asking to fill the mandatory fields !
-Support the selection (via an autocomplete) in a list that contains duplicates
-#457: crash when deleting two organizations.
-Accented characters not displayed within autocomplete selection controls
-Email test: under IIS it was not detecting Windows correctly, and the help message was therefore completely wrong.
-Dictionary: English was proposed twice in the list of available languages!
-#465: incorrect logic when resetting the 'ConnectedToInterface'
-Upgrade: fails to recreate a view when is has become invalid (missing attribute)
-#363 Charts not displaying with IE8 + IIS + HTTPS
-#373 Error when deleting two network devices connected to each other
-#258 Context automatically set when specifying an organization in a search form
-#444 Sort order not visible / lost on refresh
-Crashing when displaying the details of a change in the CSV load history
+#494 It seems that PHPSoap does not understand the <wsdl:documentation> tag, let's put them as comments
+#493 Incorrect display of Users' Grant Matrix
+#487 Resizable text areas disappeared when located on the second tab !
+#486 Fixed SQL dashboards limitations
+#485 Export.php improved for integration into Excel / web queries (bug with IIS/HTTPS, limitation on the size of the OQL)
+     Export for MS Excel web queries: format=spreadsheet Improved the end-user experience with Excel and the web queries (added a phrasebook)
+     + link to test the OQL attributes (query phrasebook or email actions, etc.) including the handlink of query arguments)
+     + fixed wrong prototypes for a few implementations of GetBareProperties()
+#484 Fixed issue with IIS ("Wrong password" at first prompt)
+#482 OpenSearch (integration with your browser's search bar) was broken.
+#482 The setting 'min_autocomplete_chars' zas not taken into account
+#480 The 'min_autocomplete_chars' settings was not taken into account.
+#478 Fixed issue in the audit: the results are wrong whenever an organization is selected
+#477 Could not specify more than one reconciliation key (regression) + took the opportunity to enhance protection against XSS injection (using column names in the data)
+#473 Could not load NW interfaces (reconciliation issue) - merged from trunk
 
-Productivity Enhancements
--------------------------
-Quicker path to create or modify objects: buttons directly accessible next to the Actions popup menu.
-Limit the drop down menu to your favorite organizations: use the user preferences menu next to the Logoff button.
-For tickets, create/modify and apply an action in one step; E.g. Create and assign in one click. 
-Form validation buttons (Ok/Cancel) showed on top and bottom. Can be tuned (top, bottom or both).
-The paginated presentation allows a quicker navigation for really large data sets.
-
-
-Performance Enhancements
-------------------------
-Do not load the full set of items when it comes to displaying an autocomplete!
-Displaying 1000 object would take real long if many organizations are loaded into iTop (querying all the orgs for each object)
-Cache the Count of items in an object set
-Autocomplete = do not load every object when determining the list of matches
-
+Other bugs not listed in Trac:
+Security issue: the attachments were visible by anybody (by forming URLs manually), whatever the allowed organizations. The change requires the execution of the setup/migration procedure.
+Apply the AllowedValues constraints(as default values)  when selecting elements via the "magnifier" button or creating an new element via the "plus" button.
+Paginated lists were broken in the Impact Analysis "List" tab
+Incorrectly appending a parameter ?version= to linked scripts already containing a parameter in their URL, also changed the parameter name to 'itopversion' to avoid collisions
+Always apply the AllowedValues constraints(as default values)  when selecting elements via the "magnifier" button or creating an new element via the "plus" button... also make sure that allowed values is enforced
+When searching objects to add to the current object (when managing n:n relationships), set the default search params in order to stay in the current silo.
+Fixed issue: nobody in the list of persons to notify for portal users (security takes precedence)
+In the setup: increased Suhosin minimum value for get_max_value to 2048 due to a bug seen on some installations
 
 3.2. Known limitations (https://sourceforge.net/apps/trac/itop/report/3)
      -----------------
@@ -277,7 +226,7 @@ Autocomplete = do not load every object when determining the list of matches
 
 Suhosin can interfere with iTop. More information can be found here: https://sourceforge.net/apps/mediawiki/itop/index.php?title=ITop_and_Suhosin
 Internet Explorer 6 is not supported (neither IE7 nor IE8 in compatibility mode)
-Tested with IE8 and IE9. Be aware that there are certain limitations when using IE8 in "security mode" (when running IE on a Windows 2008 Server for example)
+Tested with IE8 and IE9, Firefox 3.6 up to Firefox 8 and Chrome. Be aware that there are certain limitations when using IE8 in "security mode" (when running IE on a Windows 2008 Server for example)
 
 
 3.3. Known issues (https://sourceforge.net/apps/trac/itop/report/3)
