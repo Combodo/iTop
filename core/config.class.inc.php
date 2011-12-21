@@ -124,6 +124,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'php_path' => array(
+			'type' => 'string',
+			'description' => 'Path to the php executable in CLI mode',
+			'default' => 'php',
+			'value' => 'php',
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
 		'session_name' => array(
 			'type' => 'string',
 			'description' => 'The name of the cookie used to store the PHP session id',

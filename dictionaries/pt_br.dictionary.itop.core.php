@@ -429,7 +429,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:Synchro:History' => 'Histórico de sincronização',
 	'Core:Synchro:NeverRun' => 'Este sincronismo nunca foi executado. Sem registo ainda.',
 	'Core:Synchro:SynchroEndedOn_Date' => 'A última sincronização terminou em% 1 $ s.',
-	'Core:Synchro:SynchroRunningStartedOn_Date' => 'A sincronização começou em $1$s e em execução ainda...',
+	'Core:Synchro:SynchroRunningStartedOn_Date' => 'A sincronização começou em %1$s e em execução ainda...',
 	'Menu:DataSources' => 'Fontes de dados de sincronização',
 	'Menu:DataSources+' => '',
 	'Core:Synchro:label_repl_ignored' => 'Ignorado (%1$s)',

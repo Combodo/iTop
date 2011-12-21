@@ -537,7 +537,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Core:Synchro:History' => 'Verlauf der Synchronisation',
 	'Core:Synchro:NeverRun' => 'Synchronisation noch nicht erfolgt. Kein Protokoll verfügbar.',
 	'Core:Synchro:SynchroEndedOn_Date' => 'Die letzte Synchronisation endete um %1$s.',
-	'Core:Synchro:SynchroRunningStartedOn_Date' => 'Die Synchronisation, die um $1$s gestartet wurde, läuft noch ...',
+	'Core:Synchro:SynchroRunningStartedOn_Date' => 'Die Synchronisation, die um %1$s gestartet wurde, läuft noch ...',
 	'Menu:DataSources' => 'Datenquellen für die Synchronisation',
 	'Menu:DataSources+' => 'Alle Datenquellen für die Synchronisation',
 	'Core:Synchro:label_repl_ignored' => 'Ignoriert (%1$s)',

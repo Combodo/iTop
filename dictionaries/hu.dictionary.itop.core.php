@@ -422,7 +422,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Core:Synchro:History' => 'Szinkronizáció történet',
 	'Core:Synchro:NeverRun' => 'Ez a szinkronizáció még soha nem futott. Nincs még napló bejegyzés.',
 	'Core:Synchro:SynchroEndedOn_Date' => 'Az utolsó szinkronizáció lefutásának időpontja: %1$s.',
-	'Core:Synchro:SynchroRunningStartedOn_Date' => 'Az szinkronizáció elindut $1$s, de még fut.',
+	'Core:Synchro:SynchroRunningStartedOn_Date' => 'Az szinkronizáció elindut %1$s, de még fut.',
 	'Menu:DataSources' => 'Szinkronizált adatforrások',
 	'Menu:DataSources+' => '',
 	'Core:Synchro:label_repl_ignored' => 'Figyelmen kívül hagyott (%1$s)',

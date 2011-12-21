@@ -932,7 +932,7 @@ abstract class DBObject
 
 					$oDeletionPlan->AddToDelete($oReplica, DEL_SILENT);
 
-					if ($oDataSource->GetKey() == SynchroDataSource::GetCurrentTaskId())
+					if ($oDataSource->GetKey() == SynchroExecution::GetCurrentTaskId())
 					{
 						// The current task has the right to delete the object
 						continue;
@@ -1862,7 +1862,7 @@ abstract class DBObject
 		$oSet = $this->GetMasterReplica();
 		while($aData = $oSet->FetchAssoc())
 		{
-			if ($aData['datasource']->GetKey() == SynchroDataSource::GetCurrentTaskId())
+			if ($aData['datasource']->GetKey() == SynchroExecution::GetCurrentTaskId())
 			{
 				// Ignore the current task (check to write => ok)
 				continue;

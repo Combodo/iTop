@@ -191,6 +191,16 @@ class ExecutionKPI
 			return $output[1] * 1024;
 		}
 	}
+
+	static public function memory_get_peak_usage($bRealUsage = false)
+	{
+		if (function_exists('memory_get_peak_usage'))
+		{
+			return memory_get_peak_usage($bRealUsage);
+		}
+		// PHP > 5.2.1 - this verb depends on a compilation option
+		return 0;
+	}
 }
 
 class ApplicationStartupKPI extends ExecutionKPI

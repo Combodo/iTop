@@ -426,7 +426,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Core:Synchro:History' => 'Storia della sincronizzazione',
 	'Core:Synchro:NeverRun' => 'Questa sincronizzazione non è mai stata eseguita. Nessun Log ancora...',
 	'Core:Synchro:SynchroEndedOn_Date' => 'L\'ultima sincronizzazione si è conclusa il %1$s.~~',
-	'Core:Synchro:SynchroRunningStartedOn_Date' => 'La sincronizzazione è iniziata il $1$s è ancora in esecuzione...~~',
+	'Core:Synchro:SynchroRunningStartedOn_Date' => 'La sincronizzazione è iniziata il %1$s è ancora in esecuzione...~~',
 	'Menu:DataSources' => 'Sorgente di sincronizzazione dei dati',
 	'Menu:DataSources+' => '',
 	'Core:Synchro:label_repl_ignored' => 'Ignorato(%1$s)',
