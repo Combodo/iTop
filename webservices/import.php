@@ -102,7 +102,7 @@ $aPageParams = array
 		'mandatory' => false,
 		'modes' => 'http,cli',
 		'default' => ',',
-		'description' => 'column separator in CSV data',
+		'description' => 'column separator in CSV data (1 char, or \'tab\')',
 	),
 	'qualifier' => array
 	(
@@ -282,6 +282,11 @@ try
 	$sReconcKeys = ReadParam($oP, 'reconciliationkeys', 'raw_data');
 	$sSimulate = ReadParam($oP, 'simulate');
 	$sComment = ReadParam($oP, 'comment', 'raw_data');
+
+	if (strtolower(trim($sSep)) == 'tab')
+	{
+		$sSep = "\t";
+	}
 
 	//////////////////////////////////////////////////
 	//

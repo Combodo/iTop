@@ -104,7 +104,7 @@ $aPageParams = array
 		'mandatory' => false,
 		'modes' => 'http,cli',
 		'default' => ';',
-		'description' => 'column separator in CSV data',
+		'description' => 'column separator in CSV data (1 char, or \'tab\')',
 	),
 	'qualifier' => array
 	(
@@ -316,6 +316,11 @@ try
 	$sSimulate = ReadParam($oP, 'simulate');
 	$sComment = ReadParam($oP, 'comment', 'raw_data');
 	$sNoStopOnImportError = ReadParam($oP, 'no_stop_on_import_error');
+
+	if (strtolower(trim($sSep)) == 'tab')
+	{
+		$sSep = "\t";
+	}
 
 	$oLoadStartDate = new DateTime(); // Now
 
