@@ -588,7 +588,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 					       'UI:Schema:Triggers' => 'トリガ', //'Triggers',
 					       'UI:Schema:Relation_Code_Description' => 'リレーション <em>%1$s</em> (%2$s)', //'Relation <em>%1$s</em> (%2$s)',
 					       'UI:Schema:RelationDown_Description' => '下へ: %1$s', //'Down: %1$s',
-					       'UI:Schema:RelationUp_Description' => '上へ: $1$s', //'Up: %1$s',
+					       'UI:Schema:RelationUp_Description' => '上へ: %1$s', //'Up: %1$s',
 					       'UI:Schema:RelationPropagates' => '%1$s: %2$d レベルへ伝播、クエリ：%3$s', //'%1$s: propagate to %2$d levels, query: %3$s',
 					       'UI:Schema:RelationDoesNotPropagate' => '%1$s: 伝播しない (%2$d レベル), クエリ: %3$s', //'%1$s: does not propagates (%2$d levels), query: %3$s',
 					       'UI:Schema:Class_ReferencingClasses_From_By' => '%1$s は%2$s クラスから %3$s フィールドにより参照されている', //'%1$s is referenced by the class %2$s via the field %3$s',
@@ -613,7 +613,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 					       'UI:Link_Class_Attributes' => '%1$s 属性', //'%1$s attributes',
 					       'UI:SelectAllToggle+' => '全部を選択 / 全部を非選択', //'Select All / Deselect All',
 					       'UI:AddObjectsOf_Class_LinkedWith_Class_Instance' => '%2$s にリンクされた%1$sオブジェクトを追加：%3$s', //'Add %1$s objects linked with %2$s: %3$s',
-					       'UI:AddObjectsOf_Class_LinkedWith_Class' => '$1$s オブジェクトを%2$sとのリンクに追加', //'Add %1$s objects to link with the %2$s',
+					       'UI:AddObjectsOf_Class_LinkedWith_Class' => '%1$s オブジェクトを%2$sとのリンクに追加', //'Add %1$s objects to link with the %2$s',
 					       'UI:ManageObjectsOf_Class_LinkedWith_Class_Instance' => '%2$s とりんくされた%1$sオブジェクトを管理する: %3$s', //'Manage %1$s objects linked with %2$s: %3$s',
 					       'UI:AddLinkedObjectsOf_Class' => '%1$s を追加...', //'Add %1$ss...',
 					       'UI:RemoveLinkedObjectsOf_Class' => '選択したオブジェクトを除外', //'Remove selected objects',
@@ -860,8 +860,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:iTopVersion:Long' => 'iTopバージョン%1$s-%2$s, %3$sビルド', // 'iTop version %1$s-%2$s built on %3$s',
 	'UI:PropertiesTab' => 'プロパティ', // 'Properties',
 
-	'UI:OpenDocumentInNewWindow_' => '新規ウィンドウで本ドキュメント: $1$sを開く', // 'Open this document in a new window: %1$s',
-	'UI:DownloadDocument_' => '本ドキュメント: $1$sをダウンロードする', // 'Download this document: %1$s',
+	'UI:OpenDocumentInNewWindow_' => '新規ウィンドウで本ドキュメント: %1$sを開く', // 'Open this document in a new window: %1$s',
+	'UI:DownloadDocument_' => '本ドキュメント: %1$sをダウンロードする', // 'Download this document: %1$s',
 	'UI:Document:NoPreview' => 'このタイプのドキュメントはプレビューできません。', // 'No preview is available for this type of document',
 
 	'UI:DeadlineMissedBy_duration' => '%1$s によって消去されました。', // 'Missed  by %1$s',

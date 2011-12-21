@@ -587,7 +587,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:Synchro:History' => 'Synchronization History',
 	'Core:Synchro:NeverRun' => 'This synchro was never run. No log yet.',
 	'Core:Synchro:SynchroEndedOn_Date' => 'The latest synchronization ended on %1$s.',
-	'Core:Synchro:SynchroRunningStartedOn_Date' => 'The synchronization started on $1$s is still running...',
+	'Core:Synchro:SynchroRunningStartedOn_Date' => 'The synchronization started on %1$s is still running...',
 	'Menu:DataSources' => 'Synchronization Data Sources',
 	'Menu:DataSources+' => 'All Synchronization Data Sources',
 	'Core:Synchro:label_repl_ignored' => 'Ignored (%1$s)',

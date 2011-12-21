@@ -556,7 +556,7 @@ Opérateurs :<br/>
 	'Core:Synchro:History' => 'Historique de synchronisation',
 	'Core:Synchro:NeverRun' => 'Aucun historique, la synchronisation n\'a pas encore fonctionné',
 	'Core:Synchro:SynchroEndedOn_Date' => 'La dernière synchronisation s\'est terminée à: %1$s.',
-	'Core:Synchro:SynchroRunningStartedOn_Date' => 'Synchronisation en cours (début à $1$s)',
+	'Core:Synchro:SynchroRunningStartedOn_Date' => 'Synchronisation en cours (début à %1$s)',
 	'Menu:DataSources' => 'Synchronisation',
 	'Menu:DataSources+' => '',
 	'Core:Synchro:label_repl_ignored' => 'Ignorés (%1$s)',
