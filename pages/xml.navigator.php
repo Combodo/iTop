@@ -59,9 +59,10 @@ function AddNodeDetails(&$oNode, $oObj)
  * @param DBObject $oObj The current object
  * @param string $sRelation The name of the relation to search with
  */
-function GetRelatedObjectsAsXml(DBObject $oObj, $sRelationName, &$oLinks, &$oXmlDoc, &$oXmlNode, $iDepth = 0)
+function GetRelatedObjectsAsXml(DBObject $oObj, $sRelationName, &$oLinks, &$oXmlDoc, &$oXmlNode, $iDepth = 0, $aExcludedClasses)
 {
 	$aResults = array();
+	$bAddLinks = false;
 	$oObj->GetRelatedObjects($sRelationName, 1 /* iMaxDepth */, $aResults);
 	if ($iDepth > MAX_RECURSION_DEPTH) return;
 	
@@ -71,25 +72,33 @@ function GetRelatedObjectsAsXml(DBObject $oObj, $sRelationName, &$oLinks, &$oXml
 		{
 			if (is_object($oTargetObj))
 			{
-				$oLinkingNode =   $oXmlDoc->CreateElement('link');
-				$oLinkingNode->SetAttribute('relation', $sRelationName);
-				$oLinkingNode->SetAttribute('arrow', 1); // Such relations have a direction, display an arrow
-				$oLinkedNode = $oXmlDoc->CreateElement('node');
-				$oLinkedNode->SetAttribute('id', $oTargetObj->GetKey());
-				$oLinkedNode->SetAttribute('obj_class', get_class($oTargetObj));
-				$oLinkedNode->SetAttribute('obj_class_name', htmlspecialchars(MetaModel::GetName(get_class($oTargetObj))));
-				$oLinkedNode->SetAttribute('name', htmlspecialchars($oTargetObj->GetRawName())); // htmlentities is too much for XML
-				$oLinkedNode->SetAttribute('icon', BuildIconPath($oTargetObj->GetIcon(false /* No IMG tag */)));
-				AddNodeDetails($oLinkedNode, $oTargetObj);
-				$oSubLinks = $oXmlDoc->CreateElement('links');
-				// Recurse
-				GetRelatedObjectsAsXml($oTargetObj, $sRelationName, $oSubLinks, $oXmlDoc, $oLinkedNode, $iDepth++);
-				$oLinkingNode->AppendChild($oLinkedNode);
-				$oLinks->AppendChild($oLinkingNode);
+				if (in_array(get_class($oTargetObj), $aExcludedClasses))
+				{
+					GetRelatedObjectsAsXml($oTargetObj, $sRelationName, $oLinks, $oXmlDoc, $oXmlNode, $iDepth++, $aExcludedClasses);
+				}
+				else
+				{
+					$oLinkingNode =   $oXmlDoc->CreateElement('link');
+					$oLinkingNode->SetAttribute('relation', $sRelationName);
+					$oLinkingNode->SetAttribute('arrow', 1); // Such relations have a direction, display an arrow
+					$oLinkedNode = $oXmlDoc->CreateElement('node');
+					$oLinkedNode->SetAttribute('id', $oTargetObj->GetKey());
+					$oLinkedNode->SetAttribute('obj_class', get_class($oTargetObj));
+					$oLinkedNode->SetAttribute('obj_class_name', htmlspecialchars(MetaModel::GetName(get_class($oTargetObj))));
+					$oLinkedNode->SetAttribute('name', htmlspecialchars($oTargetObj->GetRawName())); // htmlentities is too much for XML
+					$oLinkedNode->SetAttribute('icon', BuildIconPath($oTargetObj->GetIcon(false /* No IMG tag */)));
+					AddNodeDetails($oLinkedNode, $oTargetObj);
+					$oSubLinks = $oXmlDoc->CreateElement('links');
+					// Recurse
+					GetRelatedObjectsAsXml($oTargetObj, $sRelationName, $oSubLinks, $oXmlDoc, $oLinkedNode, $iDepth++, $aExcludedClasses);
+					$oLinkingNode->AppendChild($oLinkedNode);
+					$oLinks->AppendChild($oLinkingNode);
+					$bAddLinks = true;
+				}
 			}
 		}
 	}
-	if (count($aResults) > 0)
+	if ($bAddLinks)
 	{
 		$oXmlNode->AppendChild($oLinks);
 	}
@@ -117,6 +126,9 @@ $id = utils::ReadParam('id', 1);
 $sRelation = utils::ReadParam('relation', 'impacts');
 $aValidRelations = MetaModel::EnumRelations();
 $sFormat = utils::ReadParam('format', 'xml');
+$sExcludedClasses = utils::ReadParam('exclude', '', false, 'raw_data');
+$aExcludedClasses = explode(',', $sExcludedClasses);
+
 
 if (!in_array($sRelation, $aValidRelations))
 {
@@ -167,7 +179,7 @@ try
 		
 			$oXmlRoot->SetAttribute('position', 'left');
 			$oXmlRoot->SetAttribute('title', MetaModel::GetRelationDescription($sRelation).' '. htmlspecialchars($oObj->GetRawName()));
-			GetRelatedObjectsAsXml($oObj, $sRelation, $oLinks, $oXmlDoc, $oXmlNode);
+			GetRelatedObjectsAsXml($oObj, $sRelation, $oLinks, $oXmlDoc, $oXmlNode, 0, $aExcludedClasses);
 			
 			$oXmlRoot->AppendChild($oXmlNode);
 			$oXmlDoc->AppendChild($oXmlRoot);

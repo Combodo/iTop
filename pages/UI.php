@@ -2029,25 +2029,101 @@ EOF
 		$oP->AddTabContainer('Navigator');
 		$oP->SetCurrentTabContainer('Navigator');
 		$oP->SetCurrentTab(Dict::S('UI:RelationshipGraph'));
+
+		$oP->add("<div id=\"ds_flash\" class=\"SearchDrawer\">\n");
+		$oP->add_ready_script(
+<<<EOF
+	$("#dh_flash").click( function() {
+		$("#ds_flash").slideToggle('normal', function() { $("#ds_flash").parent().resize(); } );
+		$("#dh_flash").toggleClass('open');
+	});
+EOF
+		);
+ 		$aElements = MetaModel::GetSubclasses('FunctionalCI');
+		$aResults = array();
+		$aSortedElements = array();
+		$oObj = MetaModel::GetObject($sClass, $id);
+		$oObj->GetRelatedObjects($sRelation, 20 /* iMaxDepth */, $aResults);
+		foreach($aResults as $sClassIdx => $aObjects)
+		{
+			foreach($aObjects as $oCurrObj)
+			{
+				$sSubClass = get_class($oCurrObj);
+				$aSortedElements[$sSubClass] = MetaModel::GetName($sSubClass);
+			}
+		}
+		
+		asort($aSortedElements);
+		$idx = 0;
+		foreach($aSortedElements as $sSubClass => $sClassName)
+		{
+			$oP->add("<span style=\"padding-right:2em; white-space:nowrap;\"><input type=\"checkbox\" id=\"exclude_$idx\" name=\"excluded[]\" value=\"$sSubClass\" checked onChange=\"DoReload()\"><label for=\"exclude_$idx\">&nbsp;".MetaModel::GetClassIcon($sSubClass)."&nbsp;$sClassName</label></span> ");
+			$idx++;	
+		}
+ 		$oP->add("</div>\n");
+ 		$oP->add("<div class=\"HRDrawer\"></div>\n");
+ 		$oP->add("<div id=\"dh_flash\" class=\"DrawerHandle\">".Dict::S('UI:ElementsDisplayed')."</div>\n");
+		
 		$width = 1000;
 		$height = 700;
 		$sDrillUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details&'.$oAppContext->GetForLink();
 		$sParams = "pWidth=$width&pHeight=$height&drillUrl=".urlencode($sDrillUrl)."&displayController=false&xmlUrl=".urlencode("./xml.navigator.php")."&obj_class=$sClass&obj_id=$id&relation=$sRelation";
 		
-		$oP->add("<div style=\"z-index:1;background:white\"><object style=\"z-index:2\" classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0\" width=\"$width\" height=\"$height\" id=\"navigator\" align=\"middle\">
-		<param name=\"allowScriptAccess\" value=\"sameDomain\" />
+		$oP->add("<div style=\"z-index:1;background:white;width:100%;height:{$height}px\"><object style=\"z-index:2\" classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0\" width=\"100%\" height=\"$height\" id=\"navigator\" align=\"middle\">
+		<param name=\"allowScriptAccess\" value=\"always\" />
 		<param name=\"allowFullScreen\" value=\"false\" />
 		<param name=\"FlashVars\" value=\"$sParams\" />
 		<param name=\"wmode\" value=\"transparent\"> 
 		<param name=\"movie\" value=\"../navigator/navigator.swf\" /><param name=\"quality\" value=\"high\" /><param name=\"bgcolor\" value=\"#ffffff\" />
-		<embed src=\"../navigator/navigator.swf\" wmode=\"transparent\" flashVars=\"$sParams\" quality=\"high\" bgcolor=\"#ffffff\" width=\"$width\" height=\"$height\" name=\"navigator\" align=\"middle\" allowScriptAccess=\"sameDomain\" allowFullScreen=\"false\" type=\"application/x-shockwave-flash\" pluginspage=\"http://www.adobe.com/go/getflashplayer\" />
+		<embed src=\"../navigator/navigator.swf\" wmode=\"transparent\" flashVars=\"$sParams\" quality=\"high\" bgcolor=\"#ffffff\" width=\"100%\" height=\"$height\" name=\"navigator\" align=\"middle\" swliveconnect=\"true\" allowScriptAccess=\"always\" allowFullScreen=\"false\" type=\"application/x-shockwave-flash\" pluginspage=\"http://www.adobe.com/go/getflashplayer\" />
 		</object></div>\n");
 		$oP->SetCurrentTab(Dict::S('UI:RelationshipList'));
 		$oP->add("<div id=\"impacted_objects\" style=\"width:100%;background-color:#fff;padding:10px;\"><p style=\"height:150px;\">&nbsp;</p></div>");
+		$oP->add_script(
+<<<EOF
+function getFlashMovieObject(movieName)
+{
+  if (window.document[movieName]) 
+  {
+      return window.document[movieName];
+  }
+  if (navigator.appName.indexOf("Microsoft Internet")==-1)
+  {
+    if (document.embeds && document.embeds[movieName])
+      return document.embeds[movieName]; 
+  }
+  else // if (navigator.appName.indexOf("Microsoft Internet")!=-1)
+  {
+    return document.getElementById(movieName);
+  }
+}
+
+	function DoReload()
+	{
+		var oMovie = getFlashMovieObject('navigator');
+		try
+		{
+			var aExcluded = [];
+			$('input[name^=excluded]').each( function() {
+				if (!$(this).attr('checked'))
+				{
+					aExcluded.push($(this).val());
+				}
+			} );
+			oMovie.Filter(aExcluded.join(','));
+		//oMovie.SetVariable("/:message", "foo");
+		}
+		catch(err)
+		{
+			alert(err);
+		}
+	}
+EOF
+);
 		$oP->add_ready_script(
 <<<EOF
 	var ajax_request = null;
-	
+
 	function UpdateImpactedObjects(sClass, iId, sRelation)
 	{
 		var class_name = sClass; //$('select[name=class_name]').val();

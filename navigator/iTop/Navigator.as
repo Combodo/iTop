@@ -8,6 +8,8 @@
 	import fl.controls.Slider; 
 	import fl.events.SliderEvent; 
 	import fl.controls.Label; 
+	// For callbacks from Javascript
+	import flash.external.ExternalInterface;
 
 	// The main canvas
 	public class Navigator extends MovieClip
@@ -26,6 +28,7 @@
 		protected var m_sRelation:String;
 		protected var m_sObjClass:String;
 		protected var m_sObjId:String;
+		protected var m_sExclude:String;
 		
 		// Constants
 		protected var m_RADIUS = 150;
@@ -43,14 +46,60 @@
 		{
 			m_aLinks = new Array();
 			m_aNodes = new Array();
+			m_sExclude = '';
 			m_fZoom = 1;
 			initParameters();
-			doLoadData();
+			var success = true;
+			if (ExternalInterface.available) 
+			{
+				//Security.allowDomain(loader.contentLoaderInfo.url);
+				//the addCallback registers a function to be called from javascript, and this is what you wanted to do:
+				try
+				{
+					ExternalInterface.addCallback("Filter", DoFilter);
+				}
+				catch(err)
+				{
+					m_sTitle.text = 'E: '+err.description;
+					success = false
+				}
+			}
+			
+			if (success)
+			{
+				//m_sTitle.text = 'Ok...';
+				doLoadData();
+			}
+			else
+			{
+				m_sTitle.text = 'Failed to addCallback';
+			}
+			
 			addEventListener(Event.ENTER_FRAME, initGraphics);
 			//Stop scaling the flash content
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 		}
 		
+		function Reset()
+		{
+			m_aLinks = new Array();
+			for (var i:String in m_aNodes)
+			{
+				m_oCanvas.removeChild(m_aNodes[i]);
+			}
+			m_aNodes = new Array();
+			removeEventListener(Event.ENTER_FRAME, drawLines);
+			stage.removeEventListener(MouseEvent.MOUSE_DOWN, mouseDown)  
+			stage.removeEventListener(MouseEvent.MOUSE_UP, mouseReleased);
+		}
+		
+		function DoFilter(sExcludeList:String):void
+		{
+			//do something
+			m_sExclude = sExcludeList;
+			doLoadData();
+		}
+
 		protected function initParameters():void
 		{
 			
@@ -70,6 +119,8 @@
 			m_oCanvas.scaleY = m_fZoom;
 			// Handle listeners...
 			removeEventListener(Event.ENTER_FRAME,initGraphics);
+			m_oZoomSlider.value = 100;
+			m_oZoomSlider.addEventListener(SliderEvent.CHANGE, onZoomChange);
 		}
 		function mouseDown(event:MouseEvent):void 
 		{ 
@@ -99,19 +150,22 @@
 			m_oCanvas.scaleX = m_fZoom;
 			m_oCanvas.scaleY = m_fZoom;
 		}
-		function GetZommLevel()
+		function GetZoomLevel()
 		{
 			return m_fZoom;
 		}
 		
 		function doLoadData()
 		{
+			m_sTitle.text = "Loading...";
+			m_oPreloader.visible = true;
+			m_oZoomSlider.enabled = true;
 			var sSeparator:String = '?';
 			if (m_sDataUrl.indexOf(sSeparator) != -1)
 			{
 				sSeparator = '&';
 			}
-			var myString:String = m_sDataUrl+sSeparator+'relation='+m_sRelation+'&class='+m_sObjClass+'&id='+m_sObjId;
+			var myString:String = m_sDataUrl+sSeparator+'relation='+m_sRelation+'&class='+m_sObjClass+'&id='+m_sObjId+'&exclude='+m_sExclude;
 			trace("Requesting:"+myString);
 			var myXMLURL:URLRequest = new URLRequest(myString);
 			m_oLoader = new URLLoader();
@@ -125,6 +179,7 @@
 		{
 			try
 			{
+				Reset();
 				var myXML:XML = XML(m_oLoader.data);
 				//trace("Data loaded." + myXML);
 				//trace("===========================");
@@ -132,8 +187,6 @@
 				m_sTitle.text = decodeEntities(myXML.attribute("title").toString());
 				m_oZoomSlider.enabled = true;
 				addEventListener(Event.ENTER_FRAME, drawLines);
-				m_oZoomSlider.value = 100;
-				m_oZoomSlider.addEventListener(SliderEvent.CHANGE, onZoomChange);
 				stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseDown)  
 				stage.addEventListener(MouseEvent.MOUSE_UP, mouseReleased);
 				//trace('======= Initial Posistions =========');
@@ -155,8 +208,7 @@
 			{
 				if (m_oPreloader != null)
 				{
-					removeChild(m_oPreloader);
-					m_oPreloader = null;
+					m_oPreloader.visible = false;
 				}
 			}
 		}
@@ -165,8 +217,7 @@
 		{
 				if (m_oPreloader != null)
 				{
-					removeChild(m_oPreloader);
-					m_oPreloader = null;
+					m_oPreloader.visible = false;
 				}
 				m_sTitle.text = "I/O Error: unable to load the graph data ("+event+")";
 		}
