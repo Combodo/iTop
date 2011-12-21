@@ -1990,13 +1990,16 @@ class SynchroReplica extends DBObject implements iDisplay
 		}
 		$oPage->Details($aDetails);
 		$oPage->add('</fieldset>');
-		$oDestObj = MetaModel::GetObject($this->Get('dest_class'), $this->Get('dest_id'), false);
-		if (is_object($oDestObj))
+		if (strlen($this->Get('dest_class')) > 0)
 		{
-			$oPage->add('<fieldset>');
-			$oPage->add('<legend>'.Dict::Format('Core:SynchroReplica:TargetObject', $oDestObj->GetHyperlink()).'</legend>');
-				$oDestObj->DisplayBareProperties($oPage, false, $sPrefix, $aExtraParams);
-			$oPage->add('<fieldset>');
+			$oDestObj = MetaModel::GetObject($this->Get('dest_class'), $this->Get('dest_id'), false);
+			if (is_object($oDestObj))
+			{
+				$oPage->add('<fieldset>');
+				$oPage->add('<legend>'.Dict::Format('Core:SynchroReplica:TargetObject', $oDestObj->GetHyperlink()).'</legend>');
+					$oDestObj->DisplayBareProperties($oPage, false, $sPrefix, $aExtraParams);
+				$oPage->add('<fieldset>');
+			}
 		}
 		$oPage->add('</td><td>');
 		$oPage->add('<fieldset>');
