@@ -1234,6 +1234,8 @@ class SynchroLog extends DBObject
 		MetaModel::Init_AddAttribute(new AttributeText("last_error", array("allowed_values"=>null, "sql"=>"last_error", "default_value"=>'', "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLongText("traces", array("allowed_values"=>null, "sql"=>"traces", "default_value"=>'', "is_null_allowed"=>true, "depends_on"=>array())));
 
+		MetaModel::Init_AddAttribute(new AttributeInteger("memory_usage_peak", array("allowed_values"=>null, "sql"=>"memory_usage_peak", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
+
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('sync_source_id', 'start_date', 'end_date', 'status', 'stats_nb_replica_total', 'stats_nb_replica_seen', 'stats_nb_obj_created', /*'stats_nb_replica_reconciled',*/ 'stats_nb_obj_updated', 'stats_nb_obj_obsoleted', 'stats_nb_obj_deleted',
 														'stats_nb_obj_created_errors', 'stats_nb_replica_reconciled_errors', 'stats_nb_replica_disappeared_no_action', 'stats_nb_obj_updated_errors', 'stats_nb_obj_obsoleted_errors', 'stats_nb_obj_deleted_errors', 'stats_nb_obj_new_unchanged', 'stats_nb_obj_new_updated', 'traces')); // Attributes to be displayed for the complete details
@@ -1338,6 +1340,8 @@ class SynchroLog extends DBObject
 	protected function OnUpdate()
 	{
 		$this->TraceToText();
+		$sMemPeak = max($this->Get('memory_usage_peak'), ExecutionKPI::memory_get_peak_usage());
+		$this->Set('memory_usage_peak', $sMemPeak);
 		parent::OnUpdate();
 	}
 }
