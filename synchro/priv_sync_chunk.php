@@ -115,11 +115,13 @@ try
 	}
 	if ($oSynchroExec->DoSynchronizeChunk($oLog, $oChange, $iChunkSize))
 	{
+		// The last line MUST follow this convention
 		$oP->p("continue");
 	}
 	else
 	{
-		$oP->p("done!");
+		// The last line MUST follow this convention
+		$oP->p("finished");
 	}
 	$oP->output();
 }

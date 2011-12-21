@@ -2112,7 +2112,8 @@ class SynchroExecution
 		
 		$sSelectTotal  = "SELECT SynchroReplica WHERE sync_source_id = :source_id";
 		$oSetTotal = new DBObjectSet(DBObjectSearch::FromOQL($sSelectTotal), array() /* order by*/, array('source_id' => $this->m_oDataSource->GetKey()));
-		$this->m_oStatLog->Set('stats_nb_replica_total', $oSetTotal->Count());
+		$this->m_iCountAllReplicas = $oSetTotal->Count();
+		$this->m_oStatLog->Set('stats_nb_replica_total', $this->m_iCountAllReplicas);
 
 		$this->m_oStatLog->DBInsertTracked($this->m_oChange);
 	}
@@ -2214,12 +2215,6 @@ class SynchroExecution
 				$this->m_aAttributes[$sAttCode] = $oSyncAtt;
 			}
 		}
-
-		// Count the replicas
-		$sSelectAll  = "SELECT SynchroReplica WHERE sync_source_id = :source_id";
-		$oSetAll = new DBObjectSet(DBObjectSearch::FromOQL($sSelectAll), array() /* order by*/, array('source_id' => $this->m_oDataSource->GetKey()));
-		$this->m_iCountAllReplicas = $oSetAll->Count();
-		$this->m_oStatLog->Set('stats_nb_replica_total', $this->m_iCountAllReplicas);
 
 		// Compute and keep track of the limit date taken into account for obsoleting replicas
 		//
@@ -2361,23 +2356,34 @@ class SynchroExecution
 				$aArguments['step_count'] = $iStepCount;
 				$iStepCount++;
 
-				$this->m_oStatLog->AddTrace("Launching a separate process: step $iStepCount");
-
 				list ($iRes, $aOut) = utils::ExecITopScript('synchro/priv_sync_chunk.php', $aArguments);
 
-				$this->m_oStatLog->AddTrace("The script replied:");
-				foreach ($aOut as $sOut)
-				{
-					$this->m_oStatLog->AddTrace(">>> $sOut");
-				}
-	
+				// Reload the log that has been modified by the processes
+				$this->m_oStatLog->Reload();
+
 				$sLastRes = strtolower(trim(end($aOut)));
-				$bContinue = ($sLastRes == 'continue');
+				switch($sLastRes)
+				{
+				case 'continue':
+					$bContinue = true;
+					break;
+
+				case 'finished':
+					$bContinue = false;
+					break;
+
+				default:
+					$this->m_oStatLog->AddTrace("The script did not reply with the expected keywords:");
+					$aIndentedOut = array();
+					foreach ($aOut as $sOut)
+					{
+						$aIndentedOut[] = "-> $sOut";
+						$this->m_oStatLog->AddTrace(">>> $sOut");
+					}
+					throw new Exception("Encountered an error in an underspinned process:\n".implode("\n", $aIndentedOut));
+				}
 			}
 			while ($bContinue);
-			
-			// Reload the log that has been modified by the processes
-			$this->m_oStatLog->Reload();
 		}
 		else
 		{
