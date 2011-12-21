@@ -886,6 +886,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:RelationshipGraph' => 'Graphical view',
 	'UI:RelationshipList' => 'List',
 	'UI:OperationCancelled' => 'Operation Cancelled',
+	'UI:ElementsDisplayed' => 'Filtering',
 
 	'Portal:Title' => 'iTop user portal',
 	'Portal:Refresh' => 'Refresh',
