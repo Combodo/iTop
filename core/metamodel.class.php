@@ -1989,7 +1989,10 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 		$aOrderSpec = array();
 		foreach ($aOrderBy as $sFieldAlias => $bAscending)
 		{
-			MyHelpers::CheckValueInArray('field name in ORDER BY spec', $sFieldAlias, self::GetAttributesList($oFilter->GetFirstJoinedClass()));
+			if ($sFieldAlias != 'id')
+			{
+				MyHelpers::CheckValueInArray('field name in ORDER BY spec', $sFieldAlias, self::GetAttributesList($oFilter->GetFirstJoinedClass()));
+			}
 			if (!is_bool($bAscending))
 			{
 				throw new CoreException("Wrong direction in ORDER BY spec, found '$bAscending' and expecting a boolean value");

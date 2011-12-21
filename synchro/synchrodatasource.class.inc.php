@@ -2361,7 +2361,15 @@ class SynchroExecution
 				$aArguments['step_count'] = $iStepCount;
 				$iStepCount++;
 
+				$this->m_oStatLog->AddTrace("Launching a separate process: step $iStepCount");
+
 				list ($iRes, $aOut) = utils::ExecITopScript('synchro/priv_sync_chunk.php', $aArguments);
+
+				$this->m_oStatLog->AddTrace("The script replied:");
+				foreach ($aOut as $sOut)
+				{
+					$this->m_oStatLog->AddTrace(">>> $sOut");
+				}
 	
 				$sLastRes = strtolower(trim(end($aOut)));
 				$bContinue = ($sLastRes == 'continue');
@@ -2447,8 +2455,9 @@ class SynchroExecution
 
 			if ($iMaxReplica)
 			{
-				// Re-build the object set and set a LIMIT
-				$oSetToProcess = new DBObjectSet(DBObjectSearch::FromOQL($sSelectToObsolete), array() /* order by*/, array('source_id' => $this->m_oDataSource->GetKey(), 'last_import' => $sLimitDate, 'curr_pos' => $iCurrPos));
+				// Consider a given subset, starting from replica iCurrPos, limited to the count of iMaxReplica
+				// The replica have to be ordered by id
+				$oSetToProcess = new DBObjectSet(DBObjectSearch::FromOQL($sSelectToObsolete), array('id'=>true) /* order by*/, array('source_id' => $this->m_oDataSource->GetKey(), 'last_import' => $sLimitDate, 'curr_pos' => $iCurrPos));
 				$oSetToProcess->SetLimit($iMaxReplica);
 			}
 			else
@@ -2542,8 +2551,9 @@ class SynchroExecution
 
 		if ($iMaxReplica)
 		{
-			// Re-build the object set and set a LIMIT
-			$oSetToProcess = new DBObjectSet(DBObjectSearch::FromOQL($sSelectToSync), array() /* order by*/, array('source_id' => $this->m_oDataSource->GetKey(), 'last_import' => $sLimitDate, 'curr_pos' => $iCurrPos), $this->m_aExtDataSpec);
+			// Consider a given subset, starting from replica iCurrPos, limited to the count of iMaxReplica
+			// The replica have to be ordered by id
+			$oSetToProcess = new DBObjectSet(DBObjectSearch::FromOQL($sSelectToSync), array('id'=>true) /* order by*/, array('source_id' => $this->m_oDataSource->GetKey(), 'last_import' => $sLimitDate, 'curr_pos' => $iCurrPos), $this->m_aExtDataSpec);
 			$oSetToProcess->SetLimit($iMaxReplica);
 		}
 		else
@@ -2608,14 +2618,15 @@ class SynchroExecution
 		{
 			$this->m_oStatLog->AddTrace("Deletion date: $sDeletionDate");
 		}
-		$sSelectToDelete  = "SELECT SynchroReplica WHERE id > :curr_pos AND sync_source_id = :source_id AND status IN ('obsolete') AND status_last_seen < :last_import";
+		$sSelectToDelete = "SELECT SynchroReplica WHERE id > :curr_pos AND sync_source_id = :source_id AND status IN ('obsolete') AND status_last_seen < :last_import";
 		$oSetScope = new DBObjectSet(DBObjectSearch::FromOQL($sSelectToDelete), array() /* order by*/, array('source_id' => $this->m_oDataSource->GetKey(), 'last_import' => $sDeletionDate, 'curr_pos' => $iCurrPos));
 		$iCountScope = $oSetScope->Count();
 
 		if ($iMaxReplica)
 		{
-			// Re-build the object set and set a LIMIT
-			$oSetToProcess = new DBObjectSet(DBObjectSearch::FromOQL($sSelectToDelete), array() /* order by*/, array('source_id' => $this->m_oDataSource->GetKey(), 'last_import' => $sDeletionDate, 'curr_pos' => $iCurrPos));
+			// Consider a given subset, starting from replica iCurrPos, limited to the count of iMaxReplica
+			// The replica have to be ordered by id
+			$oSetToProcess = new DBObjectSet(DBObjectSearch::FromOQL($sSelectToDelete), array('id'=>true) /* order by*/, array('source_id' => $this->m_oDataSource->GetKey(), 'last_import' => $sDeletionDate, 'curr_pos' => $iCurrPos));
 			$oSetToProcess->SetLimit($iMaxReplica);
 		}
 		else
