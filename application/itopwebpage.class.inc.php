@@ -519,7 +519,7 @@ EOF
 */
 			$sFavoriteOrgs = '';
 			$oWidget = new UIExtKeyWidget('Organization', 'org_id');
-			$sHtml .= $oWidget->Display($this, 50, false, '', $oSet, $iCurrentOrganization, 'org_id', false, 'c[org_id]', '', array('iFieldSize' => 20, 'sDefaultValue' => Dict::S('UI:AllOrganizations')), $bSearchMode = true);
+			$sHtml .= $oWidget->Display($this, 50, false, '', $oSet, $iCurrentOrganization, 'org_id', false, 'c[org_id]', '', array('iFieldSize' => 20, 'iMinChars' => MetaModel::GetConfig()->Get('min_autocomplete_chars'), 'sDefaultValue' => Dict::S('UI:AllOrganizations')), $bSearchMode = true);
 			$this->add_ready_script('$("#org_id").bind("extkeychange", function() { $("#SiloSelection form").submit(); } )');
 			$this->add_ready_script("$('#label_org_id').click( function() { $(this).val(''); $('#org_id').val(''); return true; } );\n");
 			// Add other dimensions/context information to this form

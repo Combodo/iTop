@@ -1770,7 +1770,7 @@ EOF
 					$aExtKeyParams = $aArgs;
 					$aExtKeyParams['iFieldSize'] = $oAttDef->GetMaxSize();
 					$aExtKeyParams['iMinChars'] = $oAttDef->GetMinAutoCompleteChars();	
-					$sHTMLValue = UIExtKeyWidget::DisplayFromAttCode($oPage, $sAttCode, $sClass, $oAttDef->GetLabel(), $oAllowedValues, $value, $iId, $bMandatory, $sFieldName, $sFormPrefix, $aArgs);
+					$sHTMLValue = UIExtKeyWidget::DisplayFromAttCode($oPage, $sAttCode, $sClass, $oAttDef->GetLabel(), $oAllowedValues, $value, $iId, $bMandatory, $sFieldName, $sFormPrefix, $aExtKeyParams);
 					$sHTMLValue .= "<!-- iFlags: $iFlags bMandatory: $bMandatory -->\n";
 					break;
 					
