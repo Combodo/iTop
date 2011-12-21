@@ -288,6 +288,7 @@ class SynchroDataSource extends cmdbAbstractObject
 	function UpdateSynoptics(id)
 	{
 		var aValues = aSynchroLog[id];
+		if (aValues == undefined) return;
 		
 		for (var sKey in aValues)
 		{
