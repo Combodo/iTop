@@ -29,6 +29,7 @@ require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/nicewebpage.class.inc.php');
 require_once(APPROOT.'/application/csvpage.class.inc.php');
 require_once(APPROOT.'/application/xmlpage.class.inc.php');
+require_once(APPROOT.'/application/clipage.class.inc.php');
 
 require_once(APPROOT.'/application/startup.inc.php');
 
@@ -43,10 +44,30 @@ catch(Exception $e)
 	exit -2;
 }
 
-require_once(APPROOT.'/application/loginwebpage.class.inc.php');
-LoginWebPage::DoLogin(); // Check user rights and prompt if needed
+if (utils::IsModeCLI()) 
+{
+	$sAuthUser = utils::ReadParam('auth_user', null, true /* Allow CLI */, 'raw_data'); 
+	$sAuthPwd = utils::ReadParam('auth_pwd', null, true /* Allow CLI */, 'raw_data'); 
 
+	if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd)) 
+	{ 
+		UserRights::Login($sAuthUser); // Login & set the user's language 
+	} 
+	else 
+	{ 
+		$oP = new CLIPage("iTop - Export"); 
+		$oP->p("Access restricted or wrong credentials ('$sAuthUser')"); 
+		$oP->output(); 
+		exit -1; 
+	}
+} 
+else 
+{
+	require_once(APPROOT.'/application/loginwebpage.class.inc.php'); 
+	LoginWebPage::DoLogin(); // Check user rights and prompt if needed 
+}
 ApplicationContext::SetUrlMakerClass('iTopStandardURLMaker');
+
 
 $sOperation = utils::ReadParam('operation', 'menu');
 $oAppContext = new ApplicationContext();
@@ -71,7 +92,7 @@ if (strlen($sExpression) == 0)
 }
 
 
-$sFormat = strtolower(utils::ReadParam('format', 'html'));
+$sFormat = strtolower(utils::ReadParam('format', 'html', true /* Allow CLI */));
 
 $sFields = utils::ReadParam('fields', '', true, 'raw_data'); // CSV field list (allows to specify link set attributes, still not taken into account for XML export)
 $aFields = explode(',', $sFields);
@@ -188,15 +209,22 @@ if (!empty($sExpression))
 if (!$oP)
 {
 	// Display a short message about how to use this page
-	$oP = new WebPage("iTop - Export");
-	$oP->p("<strong>General purpose export page.</strong>");
-	$oP->p("<strong>Parameters:</strong>");
-	$oP->p("<ul><li>expression: an OQL expression (URL encoded if needed)</li>
-			    <li>query: (alternative to 'expression') the id of an entry from the query phrasebook</li>
-			    <li>arg_xxx: (needed if the query has parameters) the value of the parameter 'xxx'</li>
-			    <li>format: (optional, default is html) the desired output format. Can be one of 'html', 'spreadsheet', 'csv' or 'xml'</li>
-			    <li>fields: (optional, no effect on XML format) list of fields (attribute codes) separated by a coma</li>
-		    </ul>");
+	$bModeCLI = utils::IsModeCLI();
+	if ($bModeCLI)
+	{
+		$oP = new CLIPage("iTop - Export");
+	}
+	else
+	{
+		$oP = new WebPage("iTop - Export");
+	} 
+	$oP->p("General purpose export page.");
+	$oP->p("Parameters:");
+	$oP->p(" * expression: an OQL expression (URL encoded if needed)");
+	$oP->p(" * query: (alternative to 'expression') the id of an entry from the query phrasebook");
+	$oP->p(" * arg_xxx: (needed if the query has parameters) the value of the parameter 'xxx'");
+	$oP->p(" * format: (optional, default is html) the desired output format. Can be one of 'html', 'spreadsheet', 'csv' or 'xml'");
+	$oP->p(" * fields: (optional, no effect on XML format) list of fields (attribute codes) separated by a coma");
 }
 
 $oP->output();
