@@ -1,4 +1,4 @@
-﻿iTop - version 1.2.1 - 22-Dec-2011
+iTop - version 1.2.1 - 22-Dec-2011
 Readme file
 
 1.   ABOUT THIS RELEASE
@@ -14,7 +14,7 @@ Readme file
 1. ABOUT THIS RELEASE
    ==================
 Thank you for downloading the eleventh packaged release of iTop.
-This version is mostyl a maintenance release that fixes a few bugs of iTop 1.2.
+This version is mostly a maintenance release that fixes a few bugs of iTop 1.2.
 
 A wiki is available: https://sourceforge.net/apps/mediawiki/itop/index.php?title=ITop_Documentation
 Additional documentation can be downloaded from there:
@@ -30,19 +30,21 @@ The source code of iTop can be found on SourceForge: http://itop.sourceforge.net
 
 1.1 What's new?
     ---------------------------
-This version mostly consists in bug fixes for iTop 1.2, however there a few new features:
+This version mostly consists in bug fixes for iTop 1.2, however there are a few new features:
 
 - Better display of the impact analysis view: Allows to filter the classes of objects displayed in the
-  graphical view. The view now resizes to fit your browser's window.
+  graphical view. The view now resizes to fit the window of your browser.
 
 - Query phrase book: create, test and store your OQL queries in the "Query Phrasebook" for an easy export
   via the "Export" menu, without the limitation of the URL length in Excel web queries ! A new export format
-  "spreadsheet" was aded, specifically for running as Excel web queries (dates are split between date and time)
+  "spreadsheet" has been added, specifically for running as Excel web queries (dates are split between date and time)
 
 - Enhanced data synchronization:
   - For performing huge synchronizations with little memory (despite PHP's memory leaks), the execution of the data
     synchronization (in CLI mode only) can be run by chunk of x elements by specifying --max_chunk_size=x on the
     command line to synchro_import.php or synchro_exec.php. Try to set this value to 1000 to run with 128 MB of memory.
+    As of now, there is no easy mean to check wether the execution has been split or not, and to evaluate the real benefit of this feature.
+	 To do this, you will have to look into the database, in table priv_sync_log. The column memory_usage_peak gives you the maximum amount of memory used throughout the whole execution.  
   - When an (optional) external key cannot be reconciled, log a warning on the replica. the replicas containing a
     warning are then processed everytime in case the ext key changes.
   - Also improved the search/display of replicas for an easier troubleshooting of the synchronization.
@@ -75,6 +77,7 @@ Tadashi Kaneda for the Japanese translation
 Antoine Coetsier for the CAS support and tests
 Vincenzo Todisco for his contribution to the enhancement of the webservices
 Tobias Glemser and Sabri Saleh for their consulting about iTop security
+Claudio Cesar Sanchez Tejeda for his contribution to bug fixes on the export and data synchronization
 
 2. INSTALLATION
    ============
@@ -203,7 +206,7 @@ The complete list of active tickets can be reviewed at http://sourceforge.net/ap
      + fixed wrong prototypes for a few implementations of GetBareProperties()
 #484 Fixed issue with IIS ("Wrong password" at first prompt)
 #482 OpenSearch (integration with your browser's search bar) was broken.
-#482 The setting 'min_autocomplete_chars' zas not taken into account
+#482 The setting 'min_autocomplete_chars' was not taken into account
 #480 The 'min_autocomplete_chars' settings was not taken into account.
 #478 Fixed issue in the audit: the results are wrong whenever an organization is selected
 #477 Could not specify more than one reconciliation key (regression) + took the opportunity to enhance protection against XSS injection (using column names in the data)
