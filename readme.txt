@@ -193,6 +193,7 @@ Bugs fixed
 ----------
 The complete list of active tickets can be reviewed at http://sourceforge.net/apps/trac/itop/report/1
 
+#512 Command line mode (CLI) is now supported for the 'export' page. With either the --auth_user and --auth_pwd parameters or --param_file
 #494 It seems that PHPSoap does not understand the <wsdl:documentation> tag, let's put them as comments
 #493 Incorrect display of Users' Grant Matrix
 #487 Resizable text areas disappeared when located on the second tab !
