@@ -147,7 +147,9 @@ class EMail
 		// Note: Swift will add the angle brackets for you
 		// so let's remove the angle brackets if present, for historical reasons
 		$sId = str_replace(array('<', '>'), '', $sId);
-		$this->m_oMessage->SetId($sId);
+		
+		$oMsgId = $this->m_oMessage->getHeaders()->get('Message-ID');
+		$oMsgId->SetId($sId);
 	}
 	
 	public function SetReferences($sReferences)
