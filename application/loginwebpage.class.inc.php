@@ -87,6 +87,7 @@ h1 {
 }
 EOF
 );
+		$this->set_base(utils::GetAbsoluteUrlAppRoot().'pages/');
 	}
 	
 	public function DisplayLoginForm($sLoginType, $bFailedLogin = false)
