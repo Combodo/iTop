@@ -428,7 +428,7 @@ class UserRights
 	{
 		if (self::$m_sSelfRegisterAddOn != null)
 		{
-			call_user_func(array($m_sSelfRegisterAddOn, 'UpdateUser'), $oUser, $sLoginMode, $sAuthentication);
+			call_user_func(array(self::$m_sSelfRegisterAddOn, 'UpdateUser'), $oUser, $sLoginMode, $sAuthentication);
 		}
 	}
 	
