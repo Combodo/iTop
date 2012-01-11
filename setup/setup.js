@@ -161,103 +161,69 @@ function DoSubmit(sMsg, iStep)
 
 function DoCompileDataModel()
 {
-	try
-	{
-		// Call the asynchronous page that performs the compilation of the data model and the creation of the configuration file
-		$('#log').html('');
-		$('#setup').block({message: '<p><span id="setup_msg">Preparing data model...</span><br/><div id=\"progress\">0%</div></p>'});
-		$('#progress').progression( {Current:5, Maximum: 100, aBackgroundImg: 'orange-progress.gif', aTextColor: '#000000'} );
-		$('#log').load( 'ajax.dataloader.php',
-						{ 
-							'operation': 'compile_data_model',
-							'selected_modules': GetSelectedModules(),
-							'mode': $(':input[name=mode]').val(),
-							'source_dir': $(':input[name=source_dir]').val(),
-							'target_dir': $(':input[name=target_dir]').val()
-						},
-						DoUpdateDBSchema, 'html');
-	}
-	catch(err)
-	{
-		alert('An exception occured: '+err);
-	}
-	return false; // Do NOT submit the form yet
+	$('#log').html('');
+	$('#setup').block({message: '<p><span id="setup_msg">Preparing data model...</span><br/><div id=\"progress\">0%</div></p>'});
+	$('#progress').progression( {Current:5, Maximum: 100, aBackgroundImg: 'orange-progress.gif', aTextColor: '#000000'} );
+
+	var sSelectedModules = GetSelectedModules();
+	var sMode = $(':input[name=mode]').val();
+	var sSourceDir = $(':input[name=source_dir]').val();
+	var sTargetDir = $(':input[name=target_dir]').val();
+	
+	// Call the asynchronous page that performs the compilation of the data model and the creation of the configuration file
+	AsyncCompileDataModel(sSelectedModules, sMode, sSourceDir, sTargetDir, function(response, status, xhr) {
+		$('#log').html(response);
+		DoUpdateDBSchema();
+	});
 }
 
 function DoUpdateDBSchema()
 {
-	try
-	{
-		// Call the asynchronous page that performs the creation/update of the DB Schema
-		$('#log').html('');
-		$('#setup').block({message: '<p><span id="setup_msg">Updating DB schema...</span><br/><div id=\"progress\">5%</div></p>'});
-		$('#progress').progression( {Current:10, Maximum: 100, aBackgroundImg: 'orange-progress.gif', aTextColor: '#000000'} );
-		$('#log').load( 'ajax.dataloader.php',
-						{ 
-							'operation': 'update_db_schema',
-							'selected_modules': GetSelectedModules(),
-							'mode': $(':input[name=mode]').val(),
-							'db_server': $(':input[name=db_server]').val(),
-							'db_user': $(':input[name=db_user]').val(),
-							'db_pwd': $(':input[name=db_pwd]').val(),
-							'db_name': $(':input[name=db_name]').val(),
-							'new_db_name': $(':input[name=new_db_name]').val(),
-							'db_prefix': $(':input[name=db_prefix]').val(),
-							'modules_dir': $(':input[name=target_dir]').val()
-						},
-						DoUpdateProfiles, 'html');
-	}
-	catch(err)
-	{
-		alert('An exception occured: '+err);
-	}
-	return false; // Do NOT submit the form yet
+	$('#log').html('');
+	$('#setup').block({message: '<p><span id="setup_msg">Updating DB schema...</span><br/><div id=\"progress\">5%</div></p>'});
+	$('#progress').progression( {Current:10, Maximum: 100, aBackgroundImg: 'orange-progress.gif', aTextColor: '#000000'} );
+
+	var sSelectedModules = GetSelectedModules();
+	var sMode = $(':input[name=mode]').val();
+	var sModulesDir = $(':input[name=target_dir]').val();
+	var sDBServer = $(':input[name=db_server]').val();
+	var sDBUser = $(':input[name=db_user]').val();
+	var sDBPwd = $(':input[name=db_pwd]').val();
+	var sDBName = $(':input[name=db_name]').val();
+	var sNewDBName = $(':input[name=new_db_name]').val();
+	var sDBPrefix = $(':input[name=db_prefix]').val();
+	
+	// Call the asynchronous page that performs the creation/update of the DB Schema
+	AsyncUpdateDBSchema(sSelectedModules, sMode, sModulesDir, sDBServer, sDBUser, sDBPwd, sDBName, sNewDBName, sDBPrefix, function(response, status, xhr) {
+		$('#log').html(response);
+		DoUpdateProfiles();
+	});
 }
 
-function DoUpdateProfiles(response, status, xhr)
+function DoUpdateProfiles()
 {
-	if (status == 'error')
-	{
-		$('#setup').unblock();
-		return; // An error occurred !
-	}
-	try
-	{
-		// Call the asynchronous page that performs the creation/update of the DB Schema
-		$('#log').html('');
-		$('#setup_msg').text('Updating Profiles...');
-		$('#progress').progression( {Current:40,  Maximum: 100, aBackgroundImg: 'orange-progress.gif', aTextColor: '#000000'} );
-		$('#log').load( 'ajax.dataloader.php',
-				{ 
-					'operation': 'after_db_create',
-					'selected_modules': GetSelectedModules(),
-					'mode': $(':input[name=mode]').val(),
-					'db_server': $(':input[name=db_server]').val(),
-					'db_user': $(':input[name=db_user]').val(),
-					'db_pwd': $(':input[name=db_pwd]').val(),
-					'db_name': $(':input[name=db_name]').val(),
-					'new_db_name': $(':input[name=new_db_name]').val(),
-					'db_prefix': $(':input[name=db_prefix]').val(),
-					'modules_dir': $(':input[name=target_dir]').val(),
-					'auth_user': $(':input[name=auth_user]').val(),
-					'auth_pwd': $(':input[name=auth_pwd]').val(),
-					'language': $(':input[name=language]').val()
-				},
-				DoLoadDataAsynchronous, 'html');
-//		$('#log').ajaxError(
-//				function(e, xhr, settings, exception)
-//				{
-//					bStopAysncProcess = true;
-//					alert('Fatal error detected: '+ xhr.responseText);
-//					$('#log').append(xhr.responseText);
-//					$('#setup').unblock();
-//				} );
-	}
-	catch(err)
-	{
-		alert('An exception occured: '+err);
-	}
-	return true; // Continue loading the data
+	$('#log').html('');
+	$('#setup_msg').text('Updating Profiles...');
+	$('#progress').progression( {Current:40,  Maximum: 100, aBackgroundImg: 'orange-progress.gif', aTextColor: '#000000'} );
+
+	var sSelectedModules = GetSelectedModules();
+	var sMode = $(':input[name=mode]').val();
+	var sModulesDir = $(':input[name=target_dir]').val();
+	var sDBServer = $(':input[name=db_server]').val();
+	var sDBUser = $(':input[name=db_user]').val();
+	var sDBPwd = $(':input[name=db_pwd]').val();
+	var sDBName = $(':input[name=db_name]').val();
+	var sNewDBName = $(':input[name=new_db_name]').val();
+	var sDBPrefix = $(':input[name=db_prefix]').val();
+	var sAuthUser = $(':input[name=auth_user]').val();
+	var sAuthPwd = $(':input[name=auth_pwd]').val();
+	var sLanguage =  $(':input[name=language]').val();
+	
+	// Call the asynchronous page that performs the creation/update of the DB Schema
+	AsyncUpdateProfiles(sSelectedModules, sMode, sModulesDir, sDBServer, sDBUser, sDBPwd, sDBName, sNewDBName, sDBPrefix, sAuthUser, sAuthPwd, sLanguage, function(response, status, xhr) {
+		$('#log').html(response);
+		DoLoadDataAsynchronous();
+	});
 }
 
 var aFilesToLoad = new Array();
