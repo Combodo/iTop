@@ -49,7 +49,10 @@ function DisplayMainMenu(WebPage $oP)
 	$oP->AddMenuButton('showongoing', 'Portal:ShowOngoing', './index.php?operation=show_ongoing');
 	$oP->AddMenuButton('newrequest', 'Portal:CreateNewRequest', './index.php?operation=create_request');
 	$oP->AddMenuButton('showclosed', 'Portal:ShowClosed', './index.php?operation=show_closed');
-	$oP->AddMenuButton('change_pwd', 'Portal:ChangeMyPassword', './index.php?loginop=change_pwd');
+	if (UserRights::CanChangePassword())
+	{
+		$oP->AddMenuButton('change_pwd', 'Portal:ChangeMyPassword', './index.php?loginop=change_pwd');
+	}
 }
 
 /**
@@ -756,7 +759,7 @@ try
 
 	$oP = new PortalWebPage(Dict::S('Portal:Title'), $sAlternateStylesheet);
 
-   $oP->EnableDisconnectButton(true);
+   $oP->EnableDisconnectButton(utils::CanLogOff());
    $oP->SetWelcomeMessage(Dict::Format('Portal:WelcomeUserOrg', UserRights::GetUserFriendlyName(), $oUserOrg->GetName()));
 
 	if (is_object($oUserOrg))
