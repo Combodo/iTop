@@ -296,6 +296,35 @@ abstract class UserInternal extends User
 }
 
 /**
+ * Self register extension  
+ *
+ * @package     iTopORM
+ */
+interface iSelfRegister
+{
+	/**
+	 * Called when no user is found in iTop for the corresponding 'name'. This method
+	 * can create/synchronize the User in iTop with an external source (such as AD/LDAP) on the fly
+	 * @param string $sName The typed-in user name
+	 * @param string $sPassword The typed-in password
+	 * @param string $sLoginMode The login method used (cas|form|basic|url)
+	 * @param string $sAuthentication The authentication method used (any|internal|external)
+	 * @return bool true if the user is a valid one, false otherwise
+	 */
+	public static function CheckCredentialsAndCreateUser($sName, $sPassword, $sLoginMode, $sAuthentication);
+	
+	/**
+	 * Called after the user has been authenticated and found in iTop. This method can
+	 * Update the user's definition on the fly (profiles...) to keep it in sync with an external source 
+	 * @param User $oUser The user to update/synchronize
+	 * @param string $sLoginMode The login mode used (cas|form|basic|url)
+	 * @param string $sAuthentication The authentication method used
+	 * @return void
+	 */
+	public static function UpdateUser(User $oUser, $sLoginMode, $sAuthentication);
+}
+
+/**
  * User management core API  
  *
  * @package     iTopORM
@@ -305,6 +334,7 @@ class UserRights
 	protected static $m_oAddOn;
 	protected static $m_oUser;
 	protected static $m_oRealUser;
+	protected static $m_sSelfRegisterAddOn = null;
 
 	public static function SelectModule($sModuleName)
 	{
@@ -322,6 +352,15 @@ class UserRights
 		self::$m_oAddOn->Init();
 		self::$m_oUser = null;
 		self::$m_oRealUser = null;
+	}
+
+	public static function SelectSelfRegister($sModuleName)
+	{
+		if (!class_exists($sModuleName))
+		{
+			throw new CoreException("Could not select the class, '$sModuleName' for self register, is not a valid class name");
+		}
+		self::$m_sSelfRegisterAddOn = $sModuleName;
 	}
 
 	public static function GetModuleInstance()
@@ -361,21 +400,38 @@ class UserRights
 		return true;
 	}
 
-	public static function CheckCredentials($sName, $sPassword, $sAuthentication = 'any')
+	public static function CheckCredentials($sName, $sPassword, $sLoginMode = 'form', $sAuthentication = 'any')
 	{
 		$oUser = self::FindUser($sName, $sAuthentication);
 		if (is_null($oUser))
 		{
-			return false;
+			return self::CheckCredentialsAndCreateUser($sName, $sPassword, $sLoginMode, $sAuthentication);
 		}
 
 		if (!$oUser->CheckCredentials($sPassword))
 		{
 			return false;
 		}
+		self::UpdateUser($oUser, $sLoginMode, $sAuthentication);
 		return true;
 	}
+	
+	public static function CheckCredentialsAndCreateUser($sName, $sPassword, $sLoginMode, $sAuthentication)
+	{
+		if (self::$m_sSelfRegisterAddOn != null)
+		{
+			return call_user_func(array(self::$m_sSelfRegisterAddOn, 'CheckCredentialsAndCreateUser'), $sName, $sPassword, $sLoginMode, $sAuthentication);
+		}
+	}
 
+	public static function UpdateUser($oUser, $sLoginMode, $sAuthentication)
+	{
+		if (self::$m_sSelfRegisterAddOn != null)
+		{
+			call_user_func(array($m_sSelfRegisterAddOn, 'UpdateUser'), $oUser, $sLoginMode, $sAuthentication);
+		}
+	}
+	
 	public static function TrustWebServerContext()
 	{
 		if (!is_null(self::$m_oUser))
@@ -965,4 +1021,270 @@ class StimulusChecker extends ActionChecker
 		return $this->iState;
 	}		
 }
+
+/**
+ * Self-register extension to allow the automatic creation & update of CAS users
+ * 
+ * @package iTopORM
+ *
+ */
+class CAS_SelfRegister implements iSelfRegister
+{
+	/**
+	 * Called when no user is found in iTop for the corresponding 'name'. This method
+	 * can create/synchronize the User in iTop with an external source (such as AD/LDAP) on the fly
+	 * @param string $sName The CAS authenticated user name
+	 * @param string $sPassword Ignored
+	 * @param string $sLoginMode The login mode used (cas|form|basic|url)
+	 * @param string $sAuthentication The authentication method used
+	 * @return bool true if the user is a valid one, false otherwise
+	 */
+	public static function CheckCredentialsAndCreateUser($sName, $sPassword, $sLoginMode, $sAuthentication)
+	{
+		if ($sLoginMode != 'cas') return false; // Must be authenticated via CAS
+
+		$sCASMemberships = MetaModel::GetConfig()->Get('cas_memberof');
+		$bFound =  false;
+		if (!empty($sCASMemberships))
+		{
+			if (phpCAS::hasAttribute('memberOf'))
+			{
+				// A list of groups is specified, the user must a be member of (at least) one of them to pass
+				$aCASMemberships = array();
+				$aTmp = explode(';', $sCASMemberships);
+				setlocale(LC_ALL, "en_US.utf8"); // !!! WARNING: this is needed to have  the iconv //TRANSLIT working fine below !!!
+				foreach($aTmp as $sGroupName)
+				{
+					$aCASMemberships[] = trim(iconv('UTF-8', 'ASCII//TRANSLIT', $sGroupName)); // Just in case remove accents and spaces...
+				}
+
+				$aMemberOf = phpCAS::getAttribute('memberOf');
+				if (!is_array($aMemberOf)) $aMemberOf = array($aMemberOf); // Just one entry, turn it into an array
+				$aFilteredGroupNames = array();
+				foreach($aMemberOf as $sGroupName)
+				{
+					phpCAS::log("Info: user if a member of the group: ".$sGroupName);
+					$sGroupName = trim(iconv('UTF-8', 'ASCII//TRANSLIT', $sGroupName)); // Remove accents and spaces as well
+					$aFilteredGroupNames[] = $sGroupName;
+					if (in_array($sGroupName, $aCASMemberships))
+					{
+						$bCASUserSynchro = MetaModel::GetConfig()->Get('cas_user_synchro');
+						if ($bCASUserSynchro)
+						{
+							// If needed create a new user for this email/profile
+							phpCAS::log('Info: cas_user_synchro is ON');
+							$bFound = self::CreateCASUser(phpCAS::getUser(), $aMemberOf);
+						}
+						else
+						{
+							phpCAS::log('Info: cas_user_synchro is OFF');
+						}
+						$bFound = true;
+						break;
+					}	
+				}
+				if(!$bFound)
+				{
+					phpCAS::log("User ".phpCAS::getUser().", none of his/her groups (".implode('; ', $aFilteredGroupNames).") match any of the required groups: ".implode('; ', $aCASMemberships));
+				}
+			}
+			else
+			{
+				// Too bad, the user is not part of any of the group => not allowed
+				phpCAS::log("No 'memberOf' attribute found for user ".phpCAS::getUser().". Are you using the SAML protocol (S1) ?");
+			}
+		}
+		else
+		{
+			// No membership required, anybody will pass
+			$bFound = true;
+		}
+		
+		if (!$bFound)
+		{
+			// The user is not part of the allowed groups, => log out
+			$sUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php';
+			$sCASLogoutUrl = MetaModel::GetConfig()->Get('cas_logout_redirect_service');
+			if (empty($sCASLogoutUrl))
+			{
+				$sCASLogoutUrl = $sUrl;
+			}
+			phpCAS::logoutWithRedirectService($sCASLogoutUrl); // Redirects to the CAS logout page
+			// Will never return !			
+		}
+		return $bFound;
+	}
+	
+	/**
+	 * Called after the user has been authenticated and found in iTop. This method can
+	 * Update the user's definition (profiles...) on the fly to keep it in sync with an external source 
+	 * @param User $oUser The user to update/synchronize
+	 * @param string $sLoginMode The login mode used (cas|form|basic|url)
+	 * @param string $sAuthentication The authentication method used
+	 * @return void
+	 */
+	public static function UpdateUser(User $oUser, $sLoginMode, $sAuthentication)
+	{
+		if (($sLoginMode == 'cas') && (phpCAS::hasAttribute('memberOf')))
+		{
+			$aMemberOf = phpCAS::getAttribute('memberOf');
+			if (!is_array($aMemberOf)) $aMemberOf = array($aMemberOf); // Just one entry, turn it into an array
+			
+			return self::SetProfilesFromCAS($oUser, $aMemberOf);
+		}
+		// No groups defined in CAS or not CAS at all: do nothing...
+		return true;
+	}
+	
+	/**
+	 * Helper method to create a CAS based user
+	 * @param string $sEmail
+	 * @param array $aGroups
+	 * @return bool true on success, false otherwise
+	 */
+	protected static function CreateCASUser($sEmail, $aGroups)
+	{
+		if (!MetaModel::IsValidClass('URP_Profiles'))
+		{
+			phpCAS::log("URP_Profiles is not a valid class. Automatic creation of Users is not supported in this context, sorry.");
+			return false;
+		}
+				
+		$oUser = MetaModel::GetObjectByName('UserExternal', $sEmail, false);
+		if ($oUser == null)
+		{
+			// Create the user, link it to a contact
+			phpCAS::log("Info: the user '$sEmail' does not exist. A new UserExternal will be created.");
+			$oSearch = new DBObjectSearch('Person');
+			$oSearch->AddCondition('email', $sEmail);
+			$oSet = new DBObjectSet($oSearch);
+			$iContactId = 0;
+			switch($oSet->Count())
+			{
+				case 0:
+				phpCAS::log("Error: found no contact with the email: '$sEmail'. Cannot create the user in iTop.");
+				return;
+
+				case 1:
+				$oContact = $oSet->Fetch();
+				$iContactId = $oContact->GetKey();
+				phpCAS::log("Info: Found 1 contact '".$oContact->GetName()."' (id=$iContactId) corresponding to the email '$sEmail'.");
+				break;
+
+				default:
+				phpCAS::log("Error: ".$oSet->Count()." contacts have the same email: '$sEmail'. Cannot create a user for this email.");
+				return;
+			}
+			
+			$oUser = new UserExternal();
+			$oUser->Set('login', $sEmail);
+			$oUser->Set('contactid', $iContactId);
+			$oUser->Set('language', MetaModel::GetConfig()->GetDefaultLanguage());
+		}
+		else
+		{
+			phpCAS::log("Info: the user '$sEmail' already exists (id=".$oUser->GetKey().").");
+		}
+
+		// Now synchronize the profiles
+		if (!self::SetProfilesFromCAS($oUser, $Groups))
+		{
+			return false;
+		}
+		else 
+		{
+			if ($oUser->IsNew() || $oUser->IsModified())
+			{
+				$oMyChange = MetaModel::NewObject("CMDBChange");
+				$oMyChange->Set("date", time());
+				$oMyChange->Set("userinfo", 'CAS/LDAP Synchro');
+				$oMyChange->DBInsert();
+				if ($oUser->IsNew())
+				{
+					$oUser->DBInsertTracked($oMyChange);
+				}
+				else
+				{
+					$oUser->DBUpdateTracked($oMyChange);
+				}
+			}
+			
+			return true;
+		}
+	}
+	
+	protected static function SetProfilesFromCAS($oUser, $Groups)
+	{
+		if (!MetaModel::IsValidClass('URP_Profiles'))
+		{
+			phpCAS::log("URP_Profiles is not a valid class. Automatic creation of Users is not supported in this context, sorry.");
+			return false;
+		}
+		
+		// read all the existing profiles
+		$oProfilesSearch = new DBObjectSearch('URP_Profiles');
+		$oProfilesSet = new DBObjectSet($oProfilesSearch);
+		$aAllProfiles = array();
+		while($oProfile = $oProfilesSet->Fetch())
+		{
+			$aAllProfiles[strtolower($oProfile->GetName())] = $oProfile->GetKey();
+		}
+		
+		// Translate the CAS/LDAP group names into iTop profile names
+		$aProfiles = array();
+		$sPattern = MetaModel::GetConfig()->Get('cas_profile_pattern');
+		foreach($aGroups as $sGroupName)
+		{
+			if (preg_match($sPattern, $sGroupName, $aMatches))
+			{
+				if (array_key_exists(strtolower($aMatches[1]), $aAllProfiles))
+				{
+					$aProfiles[] = $aAllProfiles[strtolower($aMatches[1])];
+				}
+				else
+				{
+					phpCAS::log("Warning: {$aMatches[1]} is not a valid iTop profile (extracted from group name: '$sGroupName'). Ignored.");
+				}
+			}
+		}
+		if (count($aProfiles) == 0)
+		{
+			phpCAS::log("Error: no group name matches the pattern: '$sPattern'. The user '$sEmail' has no profiles in iTop, and therefore cannot be created.");
+			return false;
+		}
+		
+		// Now synchronize the profiles
+		$oProfilesSet = DBObjectSet::FromScratch('URP_UserProfile');
+		foreach($aProfiles as $iProfileId)
+		{
+			$oLink = new URP_UserProfile();
+			$oLink->Set('profileid', $iProfileId);
+			$oLink->Set('reason', 'CAS/LDAP Synchro');
+			$oProfilesSet->AddObject($oLink);
+		}
+		$oUser->Set('profile_list', $oProfilesSet);
+		phpCAS::log("Info: the user $sEmail (id=".$oUser->GetKey().") now has the following profiles: '".implode("', '", $aProfiles)."'.");
+		return true;
+	}
+	/**
+	 * Helper function to check if the supplied string is a litteral string or a regular expression pattern
+	 * @param string $sCASPattern
+	 * @return bool True if it's a regular expression pattern, false otherwise
+	 */
+	protected static function IsPattern($sCASPattern)
+	{
+		if ((substr($sCASPattern, 0, 1) == '/') && (substr($sCASPattern, -1) == '/'))
+		{
+			// the string is enclosed by slashes, let's assume it's a pattern
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+}
+
+// By default enable the 'CAS_SelfRegister' defined above
+UserRights::SelectSelfRegister('CAS_SelfRegister');
 ?>
