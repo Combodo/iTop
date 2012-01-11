@@ -709,7 +709,7 @@ class BenchmarkDataCreation
 /**
  * Ask the user what are the settings for the data load
  */  
-function DisplayStep1(SetupWebPage $oP)
+function DisplayStep1(SetupPage $oP)
 {
 	$sNextOperation = 'step2';
 	$oP->add("<h1>iTop benchmarking</h1>\n");
@@ -775,7 +775,7 @@ function DisplayStep1(SetupWebPage $oP)
 LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
 $sOperation = Utils::ReadParam('operation', 'step1');
-$oP = new SetupWebPage('iTop benchmark utility');
+$oP = new SetupPage('iTop benchmark utility');
 
 ExecutionKPI::EnableDuration();
 $oKPI = new ExecutionKPI();

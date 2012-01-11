@@ -26,7 +26,7 @@
 /**
  * This page is called to perform "asynchronously" the setup actions
  * parameters
- * 'operation': one of 'update_db_schema', 'after_db_creation', 'file'
+ * 'operation': one of 'compile_data_model', 'update_db_schema', 'after_db_creation', 'file'
  * 
  * if 'operation' == 'update_db_schema': 
  * 'mode': install | upgrade
@@ -51,7 +51,7 @@ if (empty($sMemoryLimit))
 	// On some PHP installations, memory_limit does not exist as a PHP setting!
 	// (encountered on a 5.2.0 under Windows)
 	// In that case, ini_set will not work, let's keep track of this and proceed with the data load
-	SetupWebPage::log_info("No memory limit has been defined in this instance of PHP");		
+	SetupPage::log_info("No memory limit has been defined in this instance of PHP");		
 }
 else
 {
@@ -62,11 +62,11 @@ else
 	{
 		if (ini_set('memory_limit', SAFE_MINIMUM_MEMORY) === FALSE)
 		{
-			SetupWebPage::log_error("memory_limit is too small: $iMemoryLimit and can not be increased by the script itself.");		
+			SetupPage::log_error("memory_limit is too small: $iMemoryLimit and can not be increased by the script itself.");		
 		}
 		else
 		{
-			SetupWebPage::log_info("memory_limit increased from $iMemoryLimit to ".SAFE_MINIMUM_MEMORY.".");		
+			SetupPage::log_info("memory_limit increased from $iMemoryLimit to ".SAFE_MINIMUM_MEMORY.".");		
 		}
 	}
 
@@ -84,7 +84,7 @@ function FatalErrorCatcher($sOutput)
 		}
 		$sOutput = "$errors\n";
 		// Logging to a file does not work if the whole memory is exhausted...		
-		//SetupWebPage::log_error("Fatal error - in $__FILE__ , $errors");
+		//SetupPage::log_error("Fatal error - in $__FILE__ , $errors");
 	}
 	return $sOutput;
 }
@@ -95,7 +95,7 @@ function FatalErrorCatcher($sOutput)
  */
 function CreateAdminAccount(Config $oConfig, $sAdminUser, $sAdminPwd, $sLanguage)
 {
-	SetupWebPage::log_info('CreateAdminAccount');
+	SetupPage::log_info('CreateAdminAccount');
 
 	if (UserRights::CreateAdministrator($sAdminUser, $sAdminPwd, $sLanguage))
 	{
@@ -136,49 +136,137 @@ try
 {
 	switch($sOperation)
 	{
-		
-		case 'update_db_schema':
-		SetupWebPage::log_info("Update Database Schema.");
-		InitDataModel(TMP_CONFIG_FILE, true);  // load data model and connect to the database
-		$sMode = Utils::ReadParam('mode', 'install');
+		//////////////////////////////
+		//
+		case 'compile_data_model':
+		//
+		SetupPage::log_info("Compiling data model.");
+
+		require_once(APPROOT.'designer/modulediscovery.class.inc.php');
+		require_once(APPROOT.'designer/modelfactory.inc.class.php');
+		require_once(APPROOT.'designer/compiler.inc.class.php');
+
 		$sSelectedModules = Utils::ReadParam('selected_modules', '', false, 'raw_data');
 		$aSelectedModules = explode(',', $sSelectedModules);
-		if(!CreateDatabaseStructure(MetaModel::GetConfig(), $aSelectedModules, $sMode))
+
+		$sWorkspace = Utils::ReadParam('workspace_dir', '', false, 'raw_data');
+		$sSourceDir = Utils::ReadParam('source_dir', '', false, 'raw_data');
+		$sTargetDir = Utils::ReadParam('target_dir', '', false, 'raw_data');
+		if (empty($sSourceDir) || empty($sTargetDir))
+		{
+			throw new Exception("missing parameter source_dir and/or target_dir");
+		}		
+
+		$sSourcePath = APPROOT.$sSourceDir;
+		$sTargetPath = APPROOT.$sTargetDir;
+		if (!is_dir($sSourcePath))
+		{
+			throw new Exception("Failed to find the source directory '$sSourcePath', please check the rights of the web server");
+		}		
+		if (!is_dir($sTargetPath) && !mkdir($sTargetPath))
+		{
+			throw new Exception("Failed to create directory '$sTargetPath', please check the rights of the web server");
+		}		
+		// owner:rwx user/group:rx
+		chmod($sTargetPath, 0755);
+
+		$oFactory = new ModelFactory($sSourcePath);
+		$aModules = $oFactory->FindModules();
+
+		foreach($aModules as $foo => $oModule)
+		{
+			$sModule = $oModule->GetName();
+			if (in_array($sModule, $aSelectedModules))
+			{
+				$oFactory->LoadModule($oModule);
+			}
+		}
+		if (strlen($sWorkspace) > 0)
+		{
+			$oWorkspace = new MFWorkspace(APPROOT.$sWorkspace);
+			if (file_exists($oWorkspace->GetWorkspacePath()))
+			{
+				$oFactory->LoadModule($oWorkspace);
+			}
+		}
+		//$oFactory->Dump();
+		
+		$oMFCompiler = new MFCompiler($oFactory, $sSourcePath);
+		$oMFCompiler->Compile($sTargetPath);
+		SetupPage::log_info("Data model successfully compiled to '$sTargetPath'.");
+		break;
+		
+		//////////////////////////////
+		//
+		case 'update_db_schema':
+		//
+		SetupPage::log_info("Update Database Schema.");
+
+		$oConfig = new Config(TMP_CONFIG_FILE, false /* Don't try to load it */);
+
+		$aParamValues = array(
+			'db_server' => utils::ReadParam('db_server', '', false, 'raw_data'),
+			'db_user' => utils::ReadParam('db_user', '', false, 'raw_data'),
+			'db_pwd' => utils::ReadParam('db_pwd', '', false, 'raw_data'),
+			'db_name' => utils::ReadParam('db_name', '', false, 'raw_data'),
+			'new_db_name' => utils::ReadParam('new_db_name', '', false, 'raw_data'),
+			'db_prefix' => utils::ReadParam('db_prefix', '', false, 'raw_data')
+		);
+		$sModuleDir = Utils::ReadParam('modules_dir', '');
+		UpdateConfigSettings($oConfig, $aParamValues, $sModuleDir);
+
+		InitDataModel($oConfig, true);  // load data model only
+
+		$sMode = Utils::ReadParam('mode', 'install');
+		if(!CreateDatabaseStructure(MetaModel::GetConfig(), $sMode))
 		{
 			throw(new Exception("Failed to create/upgrade the database structure"));		
 		}
-		SetupWebPage::log_info("Database Schema Successfully Updated.");
+		SetupPage::log_info("Database Schema Successfully Updated.");
 		break;
 		
+		//////////////////////////////
+		//
 		case 'after_db_create':
-		SetupWebPage::log_info('After Database Creation');
+		//
+		SetupPage::log_info('After Database Creation');
+
+		$oConfig = new Config(TMP_CONFIG_FILE, false /* Don't try to load it */);
+
+		$aParamValues = array(
+			'db_server' => utils::ReadParam('db_server', '', false, 'raw_data'),
+			'db_user' => utils::ReadParam('db_user', '', false, 'raw_data'),
+			'db_pwd' => utils::ReadParam('db_pwd', '', false, 'raw_data'),
+			'db_name' => utils::ReadParam('db_name', '', false, 'raw_data'),
+			'new_db_name' => utils::ReadParam('new_db_name', '', false, 'raw_data'),
+			'db_prefix' => utils::ReadParam('db_prefix', '', false, 'raw_data')
+		);
+		$sModuleDir = Utils::ReadParam('modules_dir', '');
+		UpdateConfigSettings($oConfig, $aParamValues, $sModuleDir);
+
+		InitDataModel($oConfig, false);  // load data model and connect to the database
+
 		$sMode = Utils::ReadParam('mode', 'install');
 		$sSelectedModules = Utils::ReadParam('selected_modules', '', false, 'raw_data');
 		$aSelectedModules = explode(',', $sSelectedModules);
-		InitDataModel(TMP_CONFIG_FILE, true);  // load data model and connect to the database
 		
 		// Perform here additional DB setup... profiles, etc...
-
-		$aAvailableModules = AnalyzeInstallation(MetaModel::GetConfig());
-	
-		$aStructureDataFiles = array();
-		$aSampleDataFiles = array();
-	
+		//
+		$aAvailableModules = AnalyzeInstallation(MetaModel::GetConfig(), $sModuleDir);
 		foreach($aAvailableModules as $sModuleId => $aModule)
 		{
 			if (($sModuleId != ROOT_MODULE) && in_array($sModuleId, $aSelectedModules) &&
 			     isset($aAvailableModules[$sModuleId]['installer']) )
 			{
 				$sModuleInstallerClass = $aAvailableModules[$sModuleId]['installer'];
-				SetupWebPage::log_info("Calling Module Handler: $sModuleInstallerClass::AfterDatabaseCreation(oConfig, {$aModule['version_db']}, {$aModule['version_code']})");
+				SetupPage::log_info("Calling Module Handler: $sModuleInstallerClass::AfterDatabaseCreation(oConfig, {$aModule['version_db']}, {$aModule['version_code']})");
 				// The validity of the sModuleInstallerClass has been established in BuildConfig() 
 				$aCallSpec = array($sModuleInstallerClass, 'AfterDatabaseCreation');
 				call_user_func_array($aCallSpec, array(MetaModel::GetConfig(), $aModule['version_db'], $aModule['version_code']));								
 			}
 		}
 
-
-		if (!RecordInstallation(MetaModel::GetConfig(), $aSelectedModules))
+		if (!RecordInstallation($oConfig, $aSelectedModules, $sModuleDir))
 		{
 			throw(new Exception("Failed to record the installation information"));
 		}
@@ -195,22 +283,39 @@ try
 			}
 			else
 			{
-				SetupWebPage::log_info("Administrator account '$sAdminUser' created.");
+				SetupPage::log_info("Administrator account '$sAdminUser' created.");
 			}
 		}
 		break;
 		
+		//////////////////////////////
+		//
 		case 'load_data': // Load data files
+		//
 		$sFileName = Utils::ReadParam('file', '', false, 'raw_data');
 		$sSessionStatus = Utils::ReadParam('session_status', '');
 		$iPercent = (integer)Utils::ReadParam('percent', 0);
-		SetupWebPage::log_info("Loading file: $sFileName");
+		SetupPage::log_info("Loading file: $sFileName");
 		if (empty($sFileName) || !file_exists($sFileName))
 		{
 			throw(new Exception("File $sFileName does not exist"));
 		}
-		
-		InitDataModel(TMP_CONFIG_FILE, false);  // When called by the wizard, the final config is not yet there
+
+		$oConfig = new Config(TMP_CONFIG_FILE, false /* Don't try to load it */);
+
+		$aParamValues = array(
+			'db_server' => utils::ReadParam('db_server', '', false, 'raw_data'),
+			'db_user' => utils::ReadParam('db_user', '', false, 'raw_data'),
+			'db_pwd' => utils::ReadParam('db_pwd', '', false, 'raw_data'),
+			'db_name' => utils::ReadParam('db_name', '', false, 'raw_data'),
+			'new_db_name' => utils::ReadParam('new_db_name', '', false, 'raw_data'),
+			'db_prefix' => utils::ReadParam('db_prefix', '', false, 'raw_data')
+		);
+		$sModuleDir = Utils::ReadParam('modules_dir', '');
+		UpdateConfigSettings($oConfig, $aParamValues, $sModuleDir);
+
+		InitDataModel($oConfig, false);  // load data model and connect to the database
+
 		$oDataLoader = new XMLDataLoader(); 
 		if ($sSessionStatus == 'start')
 		{
@@ -218,18 +323,18 @@ try
 			$oChange->Set("date", time());
 			$oChange->Set("userinfo", "Initialization");
 			$iChangeId = $oChange->DBInsert();
-			SetupWebPage::log_info("starting data load session");
+			SetupPage::log_info("starting data load session");
 			$oDataLoader->StartSession($oChange);
 		}
 	
 		$oDataLoader->LoadFile($sFileName);
 		$sResult = sprintf("loading of %s done. (Overall %d %% completed).", basename($sFileName), $iPercent);
-		SetupWebPage::log_info($sResult);
+		SetupPage::log_info($sResult);
 	
 		if ($sSessionStatus == 'end')
 		{
 		    $oDataLoader->EndSession();
-		    SetupWebPage::log_info("ending data load session");
+		    SetupPage::log_info("ending data load session");
 		}
 		break;
 		
@@ -242,18 +347,18 @@ catch(Exception $e)
 	header("HTTP/1.0 500 Internal server error.");
 	echo "<p>An error happened while processing the installation:</p>\n";
 	echo '<p>'.$e."</p>\n";
-	SetupWebPage::log_error("An error happened while processing the installation: ".$e);
+	SetupPage::log_error("An error happened while processing the installation: ".$e);
 }
 
 if (function_exists('memory_get_peak_usage'))
 {
 	if ($sOperation == 'file')
 	{
-		SetupWebPage::log_info("loading file '$sFileName', peak memory usage. ".memory_get_peak_usage());
+		SetupPage::log_info("loading file '$sFileName', peak memory usage. ".memory_get_peak_usage());
 	}
 	else
 	{
-		SetupWebPage::log_info("operation '$sOperation', peak memory usage. ".memory_get_peak_usage());
+		SetupPage::log_info("operation '$sOperation', peak memory usage. ".memory_get_peak_usage());
 	}
 }
 ?>

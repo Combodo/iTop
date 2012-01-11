@@ -433,7 +433,7 @@ EOF
 		if ($bMustBeAdmin && !UserRights::IsAdministrator())
 		{	
 			require_once(APPROOT.'/setup/setuppage.class.inc.php');
-			$oP = new SetupWebPage(Dict::S('UI:PageTitle:FatalError'));
+			$oP = new SetupPage(Dict::S('UI:PageTitle:FatalError'));
 			$oP->add("<h1>".Dict::S('UI:Login:Error:AccessAdmin')."</h1>\n");	
 			$oP->p("<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/logoff.php\">".Dict::S('UI:LogOffMenu')."</a>");
 			$oP->output();

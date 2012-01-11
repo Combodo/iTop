@@ -186,7 +186,7 @@ class XMLDataLoader
 		{
 			if (!MetaModel::IsValidClass($sClass))
 			{
-				SetupWebPage::log_error("Unknown class - $sClass");
+				SetupPage::log_error("Unknown class - $sClass");
 				throw(new Exception("Unknown class - $sClass"));
 			}
 
@@ -207,7 +207,7 @@ class XMLDataLoader
 				if (!MetaModel::IsValidAttCode($sClass, $sAttCode))
 				{
 					$sMsg = "Unknown attribute code - $sClass/$sAttCode";
-					SetupWebPage::log_error($sMsg);
+					SetupPage::log_error($sMsg);
 					throw(new Exception($sMsg));
 				}
 
@@ -229,7 +229,7 @@ class XMLDataLoader
 							else
 							{
 								$sMsg = "Ext key not reconcilied - $sClass/$iSrcId - $sAttCode: '".$sQuery."' - found $iMatches matche(s)";
-								SetupWebPage::log_error($sMsg);
+								SetupPage::log_error($sMsg);
 								$this->m_aErrors[] = $sMsg;
 								$iExtKey = 0;
 							}
@@ -271,7 +271,7 @@ class XMLDataLoader
 						{
 							// $res contains the error description
 							$sMsg = "Value not allowed - $sClass/$iSrcId - $sAttCode: '".$oSubNode."' ; $res";
-							SetupWebPage::log_error($sMsg);
+							SetupPage::log_error($sMsg);
 							$this->m_aErrors[] = $sMsg;
 						}
 						$oTargetObj->Set($sAttCode, $value);
@@ -352,7 +352,7 @@ class XMLDataLoader
 		}
 		catch(Exception $e)
 		{
-			SetupWebPage::log_error("An object could not be recorded - $sClass/$iSrcId - ".$e->getMessage());
+			SetupPage::log_error("An object could not be recorded - $sClass/$iSrcId - ".$e->getMessage());
 			$this->m_aErrors[] = "An object could not be recorded - $sClass/$iSrcId - ".$e->getMessage();
 		}
 		$aParentClasses = MetaModel::EnumParentClasses($sClass);
@@ -387,7 +387,7 @@ class XMLDataLoader
 						if ($iExtKey == 0)
 						{
 							$sMsg = "unresolved extkey in $sClass::".$oTargetObj->GetKey()."(".$oTargetObj->GetName().")::$sAttCode=$sTargetClass::$iTempKey";
-							SetupWebPage::log_warning($sMsg);
+							SetupPage::log_warning($sMsg);
 							$this->m_aWarnings[] = $sMsg;
 							//echo "<pre>aKeys[".$sTargetClass."]:\n";
 							//print_r($this->m_aKeys[$sTargetClass]);

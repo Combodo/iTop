@@ -32,7 +32,7 @@ require_once(APPROOT.'/core/email.class.inc.php');
 require_once('./setuppage.class.inc.php');
 
 $sOperation = Utils::ReadParam('operation', 'step1');
-$oP = new SetupWebPage('iTop email test utility');
+$oP = new SetupPage('iTop email test utility');
 
 
 /**
@@ -110,7 +110,7 @@ function CheckEmailSetting($oP)
  * Display the form for the first step of the test wizard
  * which consists in a basic check of the configuration and display of a form for testing
  */  
-function DisplayStep1(SetupWebPage $oP)
+function DisplayStep1(SetupPage $oP)
 {
 	$sNextOperation = 'step2';
 	$oP->add("<h1>iTop email test</h1>\n");
@@ -145,7 +145,7 @@ function DisplayStep1(SetupWebPage $oP)
  * Display the form for the second step of the configuration wizard
  * which consists in sending an email, which maybe a problem under Windows
  */  
-function DisplayStep2(SetupWebPage $oP, $sFrom, $sTo)
+function DisplayStep2(SetupPage $oP, $sFrom, $sTo)
 {
 	//$sNextOperation = 'step3';
 	$oP->add("<h1>iTop configuration wizard</h1>\n");

@@ -40,7 +40,7 @@ define('MIN_MEMORY_LIMIT', 32*1024*1024);
 define('SUHOSIN_GET_MAX_VALUE_LENGTH', 2048); 
 
 $sOperation = Utils::ReadParam('operation', 'step0');
-$oP = new SetupWebPage('iTop configuration wizard');
+$oP = new SetupPage('iTop configuration wizard');
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Various helper function
@@ -120,7 +120,7 @@ function GetUploadTmpDir()
  * is compatible with the application
  * @return boolean true if this is Ok, false otherwise
  */
-function CheckPHPVersion(SetupWebPage $oP)
+function CheckPHPVersion(SetupPage $oP)
 {
 	$bResult = true;
 	$aErrors = array();
@@ -380,7 +380,7 @@ function CheckPHPVersion(SetupWebPage $oP)
  * the existing databases
  * @return Array The list of databases found in the server
  */
-function CheckServerConnection(SetupWebPage $oP, $sDBServer, $sDBUser, $sDBPwd)
+function CheckServerConnection(SetupPage $oP, $sDBServer, $sDBUser, $sDBPwd)
 {
 	$aResult = array();
 	$oP->log('Info - CheckServerConnection');
@@ -442,14 +442,14 @@ function CheckServerConnection(SetupWebPage $oP, $sDBServer, $sDBUser, $sDBPwd)
 /**
  * Scans the ./data directory for XML files and output them as a Javascript array
  */ 
-function PopulateDataFilesList(SetupWebPage $oP, $aParamValues, $oConfig)
+function PopulateDataFilesList(SetupPage $oP, $aParamValues, $oConfig)
 {
 
 	$sScript = "function PopulateDataFilesList()\n";
 	$sScript .= "{\n";
 	$sScript .= "if (aFilesToLoad.length > 0)  return;"; // Populate the list only once...
 
-	$aAvailableModules = AnalyzeInstallation($oConfig);
+	$aAvailableModules = AnalyzeInstallation($oConfig, $aParamValues['source_dir']);
 
 	$sMode = $aParamValues['mode'];
 	$aStructureDataFiles = array();
@@ -501,11 +501,11 @@ function PopulateDataFilesList(SetupWebPage $oP, $aParamValues, $oConfig)
 
 /**
  * Add some parameters as hidden inputs into a form
- * @param SetupWebpage $oP The page to insert the form elements into
+ * @param SetupPage $oP The page to insert the form elements into
  * @param Hash $aParamValues The pairs name/value to be stored in the form
  * @param Array $aExcludeParams A list of parameters to exclude from the previous hash
  */
-function AddParamsToForm(SetupWebpage $oP, $aParamValues, $aExcludeParams = array())
+function AddParamsToForm(SetupPage $oP, $aParamValues, $aExcludeParams = array())
 {
 	foreach($aParamValues as $sName => $value)
 	{
@@ -537,63 +537,36 @@ function AddHiddenParam($oP, $sName, $value)
 }
 
 /**
- * Build the config file from the parameters (especially the selected modules)
- */
-function BuildConfig(SetupWebpage $oP, Config &$oConfig, $aParamValues, $aAvailableModules)
+ * Helper function to get the available languages from the given directory
+ * @param $sDir Path to the dictionary
+ * @return an array of language code => description
+ */    
+function GetAvailableLanguages($sDir)
 {
-	// Initialize the arrays below with default values for the application...
-	$oEmptyConfig = new Config('dummy_file', false); // Do NOT load any config file, just set the default values
-	$aAddOns = $oEmptyConfig->GetAddOns();
-	$aAppModules = $oEmptyConfig->GetAppModules();
-	$aDataModels = $oEmptyConfig->GetDataModels();
-	$aWebServiceCategories = $oEmptyConfig->GetWebServiceCategories();
-	$aDictionaries = $oEmptyConfig->GetDictionaries();
-	// Merge the values with the ones provided by the modules
-	// Make sure when don't load the same file twice...
-	foreach($aParamValues['module'] as $sModuleId)
+	require_once(APPROOT.'/core/coreexception.class.inc.php');
+	require_once(APPROOT.'/core/dict.class.inc.php');
+
+	$aFiles = scandir($sDir);
+	foreach($aFiles as $sFile)
 	{
-		$oP->log('Installed iTop module: '. $sModuleId);
-		if (isset($aAvailableModules[$sModuleId]['datamodel']))
+		if ($sFile == '.' || $sFile == '..' || $sFile == '.svn')
 		{
-			$aDataModels = array_unique(array_merge($aDataModels, $aAvailableModules[$sModuleId]['datamodel']));
+			// Skip
+			continue;
 		}
-		if (isset($aAvailableModules[$sModuleId]['webservice']))
+
+		$sFilePath = $sDir.'/'.$sFile;
+		if (is_file($sFilePath) && preg_match('/^.+\.dict.*\.php$/i', $sFilePath, $aMatches))
 		{
-			$aWebServiceCategories = array_unique(array_merge($aWebServiceCategories, $aAvailableModules[$sModuleId]['webservice']));
-		}
-		if (isset($aAvailableModules[$sModuleId]['dictionary']))
-		{
-			$aDictionaries = array_unique(array_merge($aDictionaries, $aAvailableModules[$sModuleId]['dictionary']));
-		}
-		if (isset($aAvailableModules[$sModuleId]['settings']))
-		{
-			foreach($aAvailableModules[$sModuleId]['settings'] as $sProperty => $value)
-			{
-				list($sName, $sVersion) = GetModuleName($sModuleId);
-				$oConfig->SetModuleSetting($sName, $sProperty, $value);
-			}
-		}
-		if (isset($aAvailableModules[$sModuleId]['installer']))
-		{
-			$sModuleInstallerClass = $aAvailableModules[$sModuleId]['installer'];
-			if (!class_exists($sModuleInstallerClass))
-			{
-				throw new Exception("Wrong installer class: '$sModuleInstallerClass' is not a PHP class - Module: ".$aAvailableModules[$sModuleId]['label']);
-			}
-			if (!is_subclass_of($sModuleInstallerClass, 'ModuleInstallerAPI'))
-			{
-				throw new Exception("Wrong installer class: '$sModuleInstallerClass' is not derived from 'ModuleInstallerAPI' - Module: ".$aAvailableModules[$sModuleId]['label']);
-			}
-			$aCallSpec = array($sModuleInstallerClass, 'BeforeWritingConfig');
-			$oConfig = call_user_func_array($aCallSpec, array($oConfig));
+			require_once($sFilePath);
 		}
 	}
-	$oConfig->SetAddOns($aAddOns);
-	$oConfig->SetAppModules($aAppModules);
-	$oConfig->SetDataModels($aDataModels);
-	$oConfig->SetWebServiceCategories($aWebServiceCategories);
-	$oConfig->SetDictionaries($aDictionaries);
+
+	return Dict::GetLanguages();
 }
+
+
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Handling of the different steps of the setup wizard
@@ -602,7 +575,7 @@ function BuildConfig(SetupWebpage $oP, Config &$oConfig, $aParamValues, $aAvaila
 /**
  * Displays the welcome screen and check some basic prerequisites
  */
-function WelcomeAndCheckPrerequisites(SetupWebPage $oP, $aParamValues, $iCurrentStep)
+function WelcomeAndCheckPrerequisites(SetupPage $oP, $aParamValues, $iCurrentStep)
 {
 	$sNextOperation = 'step'.($iCurrentStep+1);
 	$aParamValues['previous_step'] = 0;
@@ -620,9 +593,8 @@ function WelcomeAndCheckPrerequisites(SetupWebPage $oP, $aParamValues, $iCurrent
 	if (file_exists(FINAL_CONFIG_FILE))
 	{
 		$oConfig = new Config(FINAL_CONFIG_FILE);
-		$oConfig->WriteToFile(TMP_CONFIG_FILE);
 		
-		$aVersion = AnalyzeInstallation($oConfig);
+		$aVersion = AnalyzeInstallation($oConfig, $aParamValues['source_dir']);
 		if (!empty($aVersion[ROOT_MODULE]['version_db']))
 		{
 			$aPreviousParams = array('mode', 'db_server', 'db_user', 'db_pwd','db_name', 'new_db_name', 'db_prefix');
@@ -641,6 +613,8 @@ function WelcomeAndCheckPrerequisites(SetupWebPage $oP, $aParamValues, $iCurrent
 			AddHiddenParam($oP, 'db_name', $oConfig->GetDBName());
 			AddHiddenParam($oP, 'db_prefix', $oConfig->GetDBSubname());
 			AddHiddenParam($oP, 'mode', $sMode);
+			AddHiddenParam($oP, 'source_dir', 'whichsourcedir');
+			AddHiddenParam($oP, 'target_dir', 'whichtargetdir');
 			if (CheckPHPVersion($oP))
 			{
 				$oP->add("<h2 class=\"next\">Next: Licence agreement</h2>\n");
@@ -664,7 +638,12 @@ function WelcomeAndCheckPrerequisites(SetupWebPage $oP, $aParamValues, $iCurrent
 		$oP->p("<input id=\"choice_upgrade\" type=\"radio\" value=\"upgrade\" $sChecked name=\"mode\"><label for=\"choice_upgrade\">&nbsp;Upgrade an existing iTop instance</label>");
 		$oP->add("<h2 class=\"next\">Next: Licence agreement</h2>\n");
 		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
-		$aPreviousParams = array('mode');
+
+		//AddHiddenParam($oP, 'source_dir', 'datamodel');
+		AddHiddenParam($oP, 'source_dir', 'modules'); // not ready for the big bang ?
+		AddHiddenParam($oP, 'target_dir', 'env-production');
+		
+		$aPreviousParams = array('mode', 'source_dir', 'target_dir');
 		AddParamsToForm($oP, $aParamValues, $aPreviousParams);
 		$oP->add("<table style=\"width:100%\"><tr>\n");
 		$oP->add("<td style=\"text-align:right;\"><button type=\"submit\">Next >></button></td>\n");
@@ -709,7 +688,7 @@ function LicenceAcknowledgement($oP, $aParamValues, $iCurrentStep)
  * Display the form for the first step of the configuration wizard
  * which consists in the database server selection
  */  
-function DatabaseServerSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep)
+function DatabaseServerSelection(SetupPage $oP, $aParamValues, $iCurrentStep)
 {
 	$sNextOperation = 'step'.($iCurrentStep+1);
 	$iPrevStep = 1;
@@ -752,7 +731,7 @@ function DatabaseServerSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep)
  * 1) Validating the parameters by connecting to the database server
  * 2) Prompting to select an existing database or to create a new one  
  */  
-function DatabaseInstanceSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, $oConfig)
+function DatabaseInstanceSelection(SetupPage $oP, $aParamValues, $iCurrentStep, $oConfig)
 {
 	$sNextOperation = 'step'.($iCurrentStep+1);
 	$iPrevStep = 2;
@@ -773,12 +752,6 @@ function DatabaseInstanceSelection(SetupWebPage $oP, $aParamValues, $iCurrentSte
 	}
 	else
 	{
-		// Connection is Ok, save it and continue the setup wizard
-		$oConfig->SetDBHost($sDBServer);
-		$oConfig->SetDBUser($sDBUser);
-		$oConfig->SetDBPwd($sDBPwd);
-		$oConfig->WriteToFile();
-
 		$oP->add("<fieldset><legend>Select the database instance to use for iTop<span class=\"hilite\">*</span></legend>\n");
 		$aForm = array();
 		$bExistingChecked = false;
@@ -841,28 +814,17 @@ function DatabaseInstanceSelection(SetupWebPage $oP, $aParamValues, $iCurrentSte
 /**
  * Display the form to select the iTop modules to be installed
  */  
-function ModulesSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, $oConfig)
+function ModulesSelection(SetupPage $oP, $aParamValues, $iCurrentStep, $oConfig)
 {
 	$sNextOperation = 'step'.($iCurrentStep+1);
 	$aParamValues['previous_step'] = $iCurrentStep; // Come back here	
 	
-	$sDBName = $aParamValues['db_name'];
-	if ($sDBName == '')
-	{
-		$sDBName = $aParamValues['new_db_name'];
-	}
-
-	$sDBPrefix = $aParamValues['db_prefix'];
-	$oConfig->SetDBName($sDBName);
-	$oConfig->SetDBSubname($sDBPrefix);
-	$oConfig->WriteToFile(TMP_CONFIG_FILE);
-
 	$oP->add("<form id=\"theForm\" method=\"post\">\n");
 	AddParamsToForm($oP, $aParamValues, array('module'));
 	$sRedStar = '<span class="hilite">*</span>';
 	$oP->set_title("iTop modules selection");
 
-	$aAvailableModules = AnalyzeInstallation($oConfig);
+	$aAvailableModules = AnalyzeInstallation($oConfig, $aParamValues['source_dir']);
 	
 	// Form goes here
 	if ($aParamValues['mode'] == 'upgrade')
@@ -1040,7 +1002,7 @@ function ModulesSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, $oConf
  * 2) Creating the database structure  
  * 3) Prompting for the admin account to be created  
  */  
-function AdminAccountDefinition(SetupWebPage $oP, $aParamValues, $iCurrentStep, Config $oConfig)
+function AdminAccountDefinition(SetupPage $oP, $aParamValues, $iCurrentStep, Config $oConfig)
 {
 	$sNextOperation = 'step'.($iCurrentStep+1);
 	$aParamValues['previous_step'] = $iCurrentStep; // Come back here	
@@ -1050,15 +1012,11 @@ function AdminAccountDefinition(SetupWebPage $oP, $aParamValues, $iCurrentStep, 
 	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
 	AddParamsToForm($oP, $aParamValues, array('auth_user', 'auth_pwd', 'language'));
 
-	$aAvailableModules = AnalyzeInstallation($oConfig);
-	BuildConfig($oP, $oConfig, $aParamValues, $aAvailableModules); // Load all the includes based on the modules selected
-	$oConfig->WriteToFile(TMP_CONFIG_FILE);
-	InitDataModel(TMP_CONFIG_FILE, true); // Needed to know the available languages
 	$sRedStar = "<span class=\"hilite\">*</span>";
 	$oP->add("<h2>Default language for the application:</h2>\n");
 	// Possible languages (depends on the dictionaries loaded in the config)
 	$aForm = array();
-	$aAvailableLanguages = Dict::GetLanguages();
+	$aAvailableLanguages = GetAvailableLanguages(APPROOT.'dictionaries');
 	$sLanguages = '';
 	$sDefaultCode = $oConfig->GetDefaultLanguage();
 	foreach($aAvailableLanguages as $sLangCode => $aInfo)
@@ -1093,7 +1051,7 @@ function AdminAccountDefinition(SetupWebPage $oP, $aParamValues, $iCurrentStep, 
  * Display the form for validating/entering the URL (path) to the application
  * which consists in
  */  
-function ApplicationPathSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, Config $oConfig)
+function ApplicationPathSelection(SetupPage $oP, $aParamValues, $iCurrentStep, Config $oConfig)
 {
 	$sNextOperation = 'step7';
 	if ($aParamValues['mode'] == 'upgrade')
@@ -1139,42 +1097,16 @@ function ApplicationPathSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep
  * 1) Creating the admin user account
  * 2) Prompting to load some sample data  
  */  
-function SampleDataSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, Config $oConfig)
+function SampleDataSelection(SetupPage $oP, $aParamValues, $iCurrentStep, Config $oConfig)
 {
 	$sNextOperation = 'step8';
 	$iPrevStep = 6;
 
 	$oP->set_title("Application initialization");
-	$sAdminUser = $aParamValues['auth_user'];
-	$sAdminPwd = $aParamValues['auth_pwd'];
-	$sLanguage = $aParamValues['language'];
-	if (($aParamValues['mode'] == 'install') ||  $oConfig->GetDefaultLanguage() == '')
-	{
-		$oConfig->SetDefaultLanguage($aParamValues['language']);
-	}
-	$aAvailableModules = AnalyzeInstallation($oConfig);
-	BuildConfig($oP, $oConfig, $aParamValues, $aAvailableModules); // Load all the includes based on the modules selected
-
-	$oConfig->Set('app_root_url', $aParamValues['application_path']);
-	// in case of upgrade, the value is already present in the config file
-	$oConfig->WriteToFile(TMP_CONFIG_FILE);
 
 	$oP->add("<form id=\"theForm\" method=\"post\"\">\n");
 	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
 	AddParamsToForm($oP, $aParamValues, array('sample_data'));
-
-	InitDataModel(TMP_CONFIG_FILE, true);  // load data model and connect to the database
-	$aAvailableModules = GetAvailableModules($oP);
-	foreach($aParamValues['module'] as $sModuleId)
-	{
-		if (isset($aAvailableModules[$sModuleId]['installer']))
-		{
-			$sModuleInstallerClass = $aAvailableModules[$sModuleId]['installer'];
-			// The validity of the sModuleInstallerClass has been established in BuildConfig() 
-			$aCallSpec = array($sModuleInstallerClass, 'AfterDatabaseCreation');
-			call_user_func_array($aCallSpec, array($oConfig));
-		}
-	}
 
 	$oP->add("<h2>Loading of sample data</h2>\n");
 	$oP->p("<fieldset><legend> Do you want to load sample data into the database ? </legend>\n");
@@ -1194,13 +1126,10 @@ function SampleDataSelection(SetupWebPage $oP, $aParamValues, $iCurrentStep, Con
 /**
  * Displays the summary of the actions to be taken
  */
-function DisplaySummary(SetupWebPage $oP, $aParamValues, $iCurrentStep, Config $oConfig)
+function DisplaySummary(SetupPage $oP, $aParamValues, $iCurrentStep, Config $oConfig)
 {
 	$sMode = $aParamValues['mode'];
-	$aAvailableModules = AnalyzeInstallation($oConfig);
-	BuildConfig($oP, $oConfig, $aParamValues, $aAvailableModules); // Load all the includes based on the modules selected
-	$oConfig->WriteToFile(TMP_CONFIG_FILE);
-	InitDataModel(TMP_CONFIG_FILE, true); // Needed to know the available languages
+	$aAvailableModules = AnalyzeInstallation($oConfig, $aParamValues['source_dir']);
 	
 	$aInstall = array();
 	$aUpgrade = array();
@@ -1260,7 +1189,7 @@ function DisplaySummary(SetupWebPage $oP, $aParamValues, $iCurrentStep, Config $
 		// Admin account
 		$oP->collapsible('admin_account', "Administrator account", array('Login:'.htmlentities($aParamValues['auth_user'], ENT_QUOTES, 'UTF-8')));
 		// Default language
-		$aAvailableLanguages = Dict::GetLanguages();
+		$aAvailableLanguages = GetAvailableLanguages(APPROOT.'dictionaries');
 		$oP->collapsible('language', "Default application language", array( $aAvailableLanguages[$aParamValues['language']]['description']." (".$aAvailableLanguages[$aParamValues['language']]['localized_description'].")"));
 		$oP->add('</div>');
 		
@@ -1415,7 +1344,7 @@ EOF
  * 1) Creating the final configuration file
  * 2) Prompting the user to make the file read-only  
  */  
-function SetupFinished(SetupWebPage $oP, $aParamValues, $iCurrentStep, Config $oConfig)
+function SetupFinished(SetupPage $oP, $aParamValues, $iCurrentStep, Config $oConfig)
 {
 	$sAuthUser = $aParamValues['auth_user'];
 	$sAuthPwd = $aParamValues['auth_pwd'];
@@ -1437,12 +1366,14 @@ function SetupFinished(SetupWebPage $oP, $aParamValues, $iCurrentStep, Config $o
 		// NON case sensitive
 		$oConfig->SetDBCollation('utf8_unicode_ci');
 		
-		
+		// Final config update: add the modules
+		UpdateConfigSettings($oConfig, $aParamValues, $aParamValues['target_dir']);
+
 		// Write the final configuration file
 		$oConfig->WriteToFile(FINAL_CONFIG_FILE);
 
 		// Start the application
-		InitDataModel(FINAL_CONFIG_FILE, false, true); // Load model, startup DB and load the cache
+		InitDataModel($oConfig, false, true); // Load model, startup DB and load the cache
 		if ($aParamValues['mode'] == 'install')
 		{
 			if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd))
@@ -1477,7 +1408,7 @@ function SetupFinished(SetupWebPage $oP, $aParamValues, $iCurrentStep, Config $o
 		$oP->add("<form id=\"theForm\" method=\"get\" action=\"../index.php\">\n");
 
 		// Check if there are some manual steps required:
-		$aAvailableModules = AnalyzeInstallation($oConfig);
+		$aAvailableModules = AnalyzeInstallation($oConfig, $aParamValues['target_dir']);
 		$aManualSteps = array();
 		$sRootUrl = utils::GetAbsoluteUrlAppRoot();
 		foreach($aParamValues['module'] as $sModuleId)
@@ -1535,7 +1466,7 @@ ini_set('max_execution_time', max(240, ini_get('max_execution_time')));
 ini_set('display_errors', true);
 ini_set('display_startup_errors', true);
 
-$aParams = array('mode', 'previous_step', 'licence_ok', 'db_server', 'db_user', 'db_pwd','db_name', 'new_db_name', 'db_prefix', 'module', 'sample_data', 'auth_user', 'auth_pwd', 'language', 'application_path');
+$aParams = array('mode', 'previous_step', 'licence_ok', 'db_server', 'db_user', 'db_pwd','db_name', 'new_db_name', 'db_prefix', 'module', 'sample_data', 'auth_user', 'auth_pwd', 'language', 'application_path', 'source_dir', 'target_dir');
 foreach($aParams as $sName)
 {
 	$aParamValues[$sName] = utils::ReadParam($sName, '', false, 'raw_data');
@@ -1578,15 +1509,10 @@ else
 	}
 	
 }
-try
-{
-	$oConfig = new Config(TMP_CONFIG_FILE);
-}
-catch(Exception $e)
-{
-	// We'll end here when the tmp config file does not exist. It's normal
-	$oConfig = new Config(TMP_CONFIG_FILE, false /* Don't try to load it */);
-}
+
+$oConfig = new Config(TMP_CONFIG_FILE, false /* Don't try to load it */);
+UpdateConfigSettings($oConfig, $aParamValues);
+
 try
 {
 	switch($sOperation)

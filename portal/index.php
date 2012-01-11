@@ -816,7 +816,7 @@ try
 catch(CoreException $e)
 {
 	require_once(APPROOT.'/setup/setuppage.class.inc.php');
-	$oP = new SetupWebPage(Dict::S('UI:PageTitle:FatalError'));
+	$oP = new SetupPage(Dict::S('UI:PageTitle:FatalError'));
 	$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");	
 	$oP->error(Dict::Format('UI:Error_Details', $e->getHtmlDesc()));	
 	$oP->output();
@@ -852,7 +852,7 @@ catch(CoreException $e)
 catch(Exception $e)
 {
 	require_once(APPROOT.'/setup/setuppage.class.inc.php');
-	$oP = new SetupWebPage(Dict::S('UI:PageTitle:FatalError'));
+	$oP = new SetupPage(Dict::S('UI:PageTitle:FatalError'));
 	$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");	
 	$oP->error(Dict::Format('UI:Error_Details', $e->getMessage()));	
 	$oP->output();

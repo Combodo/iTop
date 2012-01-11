@@ -98,12 +98,12 @@ class AttachmentInstaller extends ModuleInstallerAPI
 		//    get the org_id from the container object 
 		//
 		// Prerequisite: change null into 0 (workaround to the fact that we cannot use IS NULL in OQL)
-		SetupWebPage::log_info("Initializing attachment/item_org_id - null to zero"); 
+		SetupPage::log_info("Initializing attachment/item_org_id - null to zero"); 
 		$sTableName = MetaModel::DBGetTable('Attachment');
 		$sRepair = "UPDATE `$sTableName` SET `item_org_id` = 0 WHERE `item_org_id` IS NULL";
 		CMDBSource::Query($sRepair);
 
-		SetupWebPage::log_info("Initializing attachment/item_org_id - zero to the container");
+		SetupPage::log_info("Initializing attachment/item_org_id - zero to the container");
 		$oSearch = DBObjectSearch::FromOQL("SELECT Attachment WHERE item_org_id = 0");
 		$oSet = new DBObjectSet($oSearch);
 		$iUpdated = 0;
@@ -117,7 +117,7 @@ class AttachmentInstaller extends ModuleInstallerAPI
 			}
 		}
 
-		SetupWebPage::log_info("Initializing attachment/item_org_id - $iUpdated records have been adjusted"); 
+		SetupPage::log_info("Initializing attachment/item_org_id - $iUpdated records have been adjusted"); 
 	}
 }
 

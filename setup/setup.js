@@ -136,8 +136,8 @@ function DoSubmit(sMsg, iStep)
 		case 7: // Sample data selection
 			break;
 			
-		case 8: // Display Summary: launch DoUpdateDBSchema to start the asynchronous update
-		bResult = DoUpdateDBSchema();
+		case 8: // Display Summary: launch DoCompileDataModel to start the asynchronous update
+		bResult = DoCompileDataModel();
 		break;
 
 		// Email test page
@@ -159,19 +159,51 @@ function DoSubmit(sMsg, iStep)
 	return bResult;
 }
 
+function DoCompileDataModel()
+{
+	try
+	{
+		// Call the asynchronous page that performs the compilation of the data model and the creation of the configuration file
+		$('#log').html('');
+		$('#setup').block({message: '<p><span id="setup_msg">Preparing data model...</span><br/><div id=\"progress\">0%</div></p>'});
+		$('#progress').progression( {Current:5, Maximum: 100, aBackgroundImg: 'orange-progress.gif', aTextColor: '#000000'} );
+		$('#log').load( 'ajax.dataloader.php',
+						{ 
+							'operation': 'compile_data_model',
+							'selected_modules': GetSelectedModules(),
+							'mode': $(':input[name=mode]').val(),
+							'source_dir': $(':input[name=source_dir]').val(),
+							'target_dir': $(':input[name=target_dir]').val()
+						},
+						DoUpdateDBSchema, 'html');
+	}
+	catch(err)
+	{
+		alert('An exception occured: '+err);
+	}
+	return false; // Do NOT submit the form yet
+}
+
 function DoUpdateDBSchema()
 {
 	try
 	{
 		// Call the asynchronous page that performs the creation/update of the DB Schema
 		$('#log').html('');
-		$('#setup').block({message: '<p><span id="setup_msg">Updating DB schema...</span><br/><div id=\"progress\">0%</div></p>'});
-		$('#progress').progression( {Current:5, Maximum: 100, aBackgroundImg: 'orange-progress.gif', aTextColor: '#000000'} );
+		$('#setup').block({message: '<p><span id="setup_msg">Updating DB schema...</span><br/><div id=\"progress\">5%</div></p>'});
+		$('#progress').progression( {Current:10, Maximum: 100, aBackgroundImg: 'orange-progress.gif', aTextColor: '#000000'} );
 		$('#log').load( 'ajax.dataloader.php',
 						{ 
 							'operation': 'update_db_schema',
 							'selected_modules': GetSelectedModules(),
-							'mode': $(':input[name=mode]').val()
+							'mode': $(':input[name=mode]').val(),
+							'db_server': $(':input[name=db_server]').val(),
+							'db_user': $(':input[name=db_user]').val(),
+							'db_pwd': $(':input[name=db_pwd]').val(),
+							'db_name': $(':input[name=db_name]').val(),
+							'new_db_name': $(':input[name=new_db_name]').val(),
+							'db_prefix': $(':input[name=db_prefix]').val(),
+							'modules_dir': $(':input[name=target_dir]').val()
 						},
 						DoUpdateProfiles, 'html');
 	}
@@ -200,6 +232,13 @@ function DoUpdateProfiles(response, status, xhr)
 					'operation': 'after_db_create',
 					'selected_modules': GetSelectedModules(),
 					'mode': $(':input[name=mode]').val(),
+					'db_server': $(':input[name=db_server]').val(),
+					'db_user': $(':input[name=db_user]').val(),
+					'db_pwd': $(':input[name=db_pwd]').val(),
+					'db_name': $(':input[name=db_name]').val(),
+					'new_db_name': $(':input[name=new_db_name]').val(),
+					'db_prefix': $(':input[name=db_prefix]').val(),
+					'modules_dir': $(':input[name=target_dir]').val(),
 					'auth_user': $(':input[name=auth_user]').val(),
 					'auth_pwd': $(':input[name=auth_pwd]').val(),
 					'language': $(':input[name=language]').val()
@@ -294,7 +333,22 @@ function LoadNextDataFile(response, status, xhr)
 			//alert('Loading file '+sFileName+' ('+iPercent+' %) - '+sSessionStatus);
 			$("#progress").progression({ Current: iPercent, Maximum: 100, aBackgroundImg: 'orange-progress.gif', aTextColor: '#000000' });
 			iCounter++;
-			$('#log').load( 'ajax.dataloader.php', { 'operation': 'load_data', 'file': sFileName, 'percent': iPercent, 'session_status': sSessionStatus }, LoadNextDataFile, 'html');
+			$('#log').load( 'ajax.dataloader.php',
+				{
+					'selected_modules': GetSelectedModules(),
+					'db_server': $(':input[name=db_server]').val(),
+					'db_user': $(':input[name=db_user]').val(),
+					'db_pwd': $(':input[name=db_pwd]').val(),
+					'db_name': $(':input[name=db_name]').val(),
+					'new_db_name': $(':input[name=new_db_name]').val(),
+					'db_prefix': $(':input[name=db_prefix]').val(),
+					'modules_dir': $(':input[name=target_dir]').val(),
+					'operation': 'load_data',
+					'file': sFileName,
+					'percent': iPercent,
+					'session_status': sSessionStatus
+				},
+				LoadNextDataFile, 'html');
 		}
 		else
 		{

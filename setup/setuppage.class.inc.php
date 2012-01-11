@@ -24,6 +24,8 @@
  */
 
 require_once(APPROOT."/application/nicewebpage.class.inc.php");
+require_once(APPROOT."designer/modulediscovery.class.inc.php");
+
 define('INSTALL_LOG_FILE', APPROOT.'/setup.log');
 
 define ('MODULE_ACTION_OPTIONAL', 1);
@@ -32,7 +34,7 @@ define ('MODULE_ACTION_IMPOSSIBLE', 3);
 define ('ROOT_MODULE', '_Root_'); // Convention to store IN MEMORY the name/version of the root module i.e. application
 
 date_default_timezone_set('Europe/Paris');
-class SetupWebPage extends NiceWebPage
+class SetupPage extends NiceWebPage
 {
     public function __construct($sTitle)
     {
@@ -279,146 +281,120 @@ h3.clickable.open {
 			fclose($hLogFile);
 		}
 	}
-	
-
-	static $m_aModuleArgs = array(
-		'label' => 'One line description shown during the interactive setup',
-		'dependencies' => 'array of module ids',
-		'mandatory' => 'boolean',
-		'visible' => 'boolean',
-		'datamodel' =>  'array of data model files',
-		//'dictionary' => 'array of dictionary files', // No longer mandatory, now automated
-		'data.struct' => 'array of structural data files',
-		'data.sample' => 'array of sample data files',
-		'doc.manual_setup' => 'url',
-		'doc.more_information' => 'url',
-	);
-	
-	static $m_aModules = array();
-	
-	// All the entries below are list of file paths relative to the module directory
-	static $m_aFilesList = array('datamodel', 'webservice', 'dictionary', 'data.struct', 'data.sample');
-
-	static $m_sModulePath = null;
-	public static function SetModulePath($sModulePath)
-	{
-		self::$m_sModulePath = $sModulePath;
-	}
-
-	public static function AddModule($sFilePath, $sId, $aArgs)
-	{
-		if (!array_key_exists('itop_version', $aArgs))
-		{
-			// Assume 1.0.2
-			$aArgs['itop_version'] = '1.0.2';
-		}
-		foreach (self::$m_aModuleArgs as $sArgName => $sArgDesc)
-		{
-			if (!array_key_exists($sArgName, $aArgs))
-			{
-				throw new Exception("Module '$sId': missing argument '$sArgName'");
-		   }
-		}
-
-		self::$m_aModules[$sId] = $aArgs;
-
-		foreach(self::$m_aFilesList as $sAttribute)
-		{
-			if (isset(self::$m_aModules[$sId][$sAttribute]))
-			{
-				// All the items below are list of files, that are relative to the current file
-				// being loaded, let's update their path to store path relative to the application directory
-				foreach(self::$m_aModules[$sId][$sAttribute] as $idx => $sRelativePath)
-				{
-					self::$m_aModules[$sId][$sAttribute][$idx] = self::$m_sModulePath.'/'.$sRelativePath;
-				}
-			}
-		}
-		// Populate automatically the list of dictionary files
-		if(preg_match('|^([^/]+)|', $sId, $aMatches)) // ModuleName = everything before the first forward slash
-		{
-			$sModuleName = $aMatches[1];
-			$sDir = dirname($sFilePath);
-			if ($hDir = opendir($sDir))
-			{
-				while (($sFile = readdir($hDir)) !== false)
-				{
-					$aMatches = array();
-					if (preg_match("/^[^\\.]+.dict.$sModuleName.php$/i", $sFile, $aMatches)) // Dictionary files named like <Lang>.dict.<ModuleName>.php are loaded automatically
-					{
-						self::$m_aModules[$sId]['dictionary'][] = self::$m_sModulePath.'/'.$sFile;
-					}
-				}
-				closedir($hDir);
-			}
-		}
-	}
-	public static function GetModules($oP = null)
-	{
-		// Order the modules to take into account their inter-dependencies
-		$aDependencies = array();
-		foreach(self::$m_aModules as $sId => $aModule)
-		{
-			$aDependencies[$sId] = $aModule['dependencies'];
-		}
-		$aOrderedModules = array();
-		$iLoopCount = 1;
-		while(($iLoopCount < count(self::$m_aModules)) && (count($aDependencies) > 0) )
-		{
-			foreach($aDependencies as $sId => $aRemainingDeps)
-			{
-				$bDependenciesSolved = true;
-				foreach($aRemainingDeps as $sDepId)
-				{
-					if (!in_array($sDepId, $aOrderedModules))
-					{
-						$bDependenciesSolved = false;
-					}
-				}
-				if ($bDependenciesSolved)
-				{
-					$aOrderedModules[] = $sId;
-					unset($aDependencies[$sId]);
-				}
-			}
-			$iLoopCount++;
-		}
-		if (count($aDependencies) >0)
-		{
-			$sHtml = "<ul><b>Warning: the following modules have unmet dependencies, and have been ignored:</b>\n";			
-			foreach($aDependencies as $sId => $aDeps)
-			{
-				$aModule = self::$m_aModules[$sId];
-				$sHtml.= "<li>{$aModule['label']} (id: $sId), depends on: ".implode(', ', $aDeps)."</li>";
-			}
-			$sHtml .= "</ul>\n";
-			if (is_object($oP))
-			{
-				$oP->warning($sHtml);
-			}
-			else
-			{
-				self::log_warning($sHtml);
-			}
-		}
-		// Return the ordered list, so that the dependencies are met...
-		$aResult = array();
-		foreach($aOrderedModules as $sId)
-		{
-			$aResult[$sId] = self::$m_aModules[$sId];
-		}
-		return $aResult;
-	}
 } // End of class
+
+
+/**
+ * Helper function to initialize a configuration from the page arguments
+ */
+function UpdateConfigSettings(&$oConfig, $aParamValues, $sModulesDir = null)
+{
+	if (isset($aParamValues['application_path']))
+	{
+		$oConfig->Set('app_root_url', $aParamValues['application_path']);
+	}
+	if (isset($aParamValues['mode']) && isset($aParamValues['language']))
+	{
+		if (($aParamValues['mode'] == 'install') ||  $oConfig->GetDefaultLanguage() == '')
+		{
+			$oConfig->SetDefaultLanguage($aParamValues['language']);
+		}
+	}
+	if (isset($aParamValues['db_server']))
+	{
+		$oConfig->SetDBHost($aParamValues['db_server']);
+		$oConfig->SetDBUser($aParamValues['db_user']);
+		$oConfig->SetDBPwd($aParamValues['db_pwd']);
+		$sDBName = $aParamValues['db_name'];
+		if ($sDBName == '')
+		{
+			$sDBName = $aParamValues['new_db_name'];
+		}
+		$oConfig->SetDBName($sDBName);
+		$oConfig->SetDBSubname($aParamValues['db_prefix']);
+	}
+
+	if (!is_null($sModulesDir))
+	{
+		if (isset($aParamValues['selected_modules']))
+		{
+			$aSelectedModules = explode(',', $aParamValues['selected_modules']);
+		}
+		else
+		{
+			$aSelectedModules = null;
+		}
+
+		// Initialize the arrays below with default values for the application...
+		$oEmptyConfig = new Config('dummy_file', false); // Do NOT load any config file, just set the default values
+		$aAddOns = $oEmptyConfig->GetAddOns();
+		$aAppModules = $oEmptyConfig->GetAppModules();
+		$aDataModels = $oEmptyConfig->GetDataModels();
+		$aWebServiceCategories = $oEmptyConfig->GetWebServiceCategories();
+		$aDictionaries = $oEmptyConfig->GetDictionaries();
+		// Merge the values with the ones provided by the modules
+		// Make sure when don't load the same file twice...
+
+		$aModules = ModuleDiscovery::GetAvailableModules(APPROOT, $sModulesDir);
+		foreach($aModules as $sModuleId => $aModuleInfo)
+		{
+			list($sModuleName, $sModuleVersion) = ModuleDiscovery::GetModuleName($sModuleId);
+			if (is_null($aSelectedModules) || in_array($sModuleName, $aSelectedModules))
+			{
+				if (isset($aModuleInfo['datamodel']))
+				{
+					$aDataModels = array_unique(array_merge($aDataModels, $aModuleInfo['datamodel']));
+				}
+				if (isset($aModuleInfo['webservice']))
+				{
+					$aWebServiceCategories = array_unique(array_merge($aWebServiceCategories, $aModuleInfo['webservice']));
+				}
+				if (isset($aModuleInfo['dictionary']))
+				{
+					$aDictionaries = array_unique(array_merge($aDictionaries, $aModuleInfo['dictionary']));
+				}
+				if (isset($aModuleInfo['settings']))
+				{
+					foreach($aModuleInfo['settings'] as $sProperty => $value)
+					{
+						list($sName, $sVersion) = ModuleDiscovery::GetModuleName($sModuleId);
+						$oConfig->SetModuleSetting($sName, $sProperty, $value);
+					}
+				}
+				if (isset($aModuleInfo['installer']))
+				{
+					$sModuleInstallerClass = $aModuleInfo['installer'];
+					if (!class_exists($sModuleInstallerClass))
+					{
+						throw new Exception("Wrong installer class: '$sModuleInstallerClass' is not a PHP class - Module: ".$aModuleInfo['label']);
+					}
+					if (!is_subclass_of($sModuleInstallerClass, 'ModuleInstallerAPI'))
+					{
+						throw new Exception("Wrong installer class: '$sModuleInstallerClass' is not derived from 'ModuleInstallerAPI' - Module: ".$aModuleInfo['label']);
+					}
+					$aCallSpec = array($sModuleInstallerClass, 'BeforeWritingConfig');
+					$oConfig = call_user_func_array($aCallSpec, array($oConfig));
+				}
+			}
+		}
+		$oConfig->SetAddOns($aAddOns);
+		$oConfig->SetAppModules($aAppModules);
+		$oConfig->SetDataModels($aDataModels);
+		$oConfig->SetWebServiceCategories($aWebServiceCategories);
+		$oConfig->SetDictionaries($aDictionaries);
+	}
+}
+
+
 
 /**
  * Helper function to initialize the ORM and load the data model
  * from the given file
- * @param $sConfigFileName string The name of the configuration file to load
+ * @param $oConfig object The configuration (volatile, not necessarily already on disk)
  * @param $bModelOnly boolean Whether or not to allow loading a data model with no corresponding DB 
  * @return none
  */    
-function InitDataModel($sConfigFileName, $bModelOnly = true, $bUseCache = false)
+function InitDataModel($oConfig, $bModelOnly = true, $bUseCache = false)
 {
 	require_once(APPROOT.'/core/log.class.inc.php');
 	require_once(APPROOT.'/core/kpi.class.inc.php');
@@ -437,40 +413,30 @@ function InitDataModel($sConfigFileName, $bModelOnly = true, $bUseCache = false)
 	require_once(APPROOT.'/application/cmdbabstract.class.inc.php');
 	require_once(APPROOT.'/core/userrights.class.inc.php');
 	require_once(APPROOT.'/setup/moduleinstallation.class.inc.php');
-	SetupWebPage::log_info("MetaModel::Startup from file '$sConfigFileName' (ModelOnly = $bModelOnly)");
+
+	$sConfigFile = $oConfig->GetLoadedFile();
+	if (strlen($sConfigFile) > 0)
+	{
+		SetupPage::log_info("MetaModel::Startup from $sConfigFile (ModelOnly = $bModelOnly)");
+	}
+	else
+	{
+		SetupPage::log_info("MetaModel::Startup (ModelOnly = $bModelOnly)");
+	}
 
 	if ($bUseCache)
 	{
 		// Reset the cache for the first use !
-		$oConfig = new Config($sConfigFileName, true /* Load Config */);
 		MetaModel::ResetCache($oConfig);
 	}
 
-	MetaModel::Startup($sConfigFileName, $bModelOnly, $bUseCache);
-}
-
-/**
- * Search (on the disk) for all defined iTop modules, load them and returns the list (as an array)
- * of the possible iTop modules to install
- * @param none
- * @return Hash A big array moduleID => ModuleData
- */
-function GetAvailableModules($oP = null)
-{
-	clearstatcache();
-	ListModuleFiles('modules');
-	return SetupWebPage::GetModules($oP);
+	MetaModel::Startup($oConfig, $bModelOnly, $bUseCache);
 }
 
 /**
  * Analyzes the current installation and the possibilities
  * 
- * @param $oP SetupWebPage For accessing the list of loaded modules
- * @param $sDBServer string Name/IP of the DB server
- * @param $sDBUser username for the DB server connection
- * @param $sDBPwd password for the DB server connection
- * @param $sDBName Name of the database instance
- * @param $sDBPrefix Prefix for the iTop tables in the DB instance
+ * @param $oConfig Config Defines the target environment (DB)
  * @return hash Array with the following format:
  * array =>
  *     'iTop' => array(
@@ -494,7 +460,7 @@ function GetAvailableModules($oP = null)
  *     )
  * )
  */     
-function AnalyzeInstallation($oConfig)
+function AnalyzeInstallation($oConfig, $sModulesRelativePath)
 {
 	$aRes = array(
 		ROOT_MODULE => array(
@@ -505,10 +471,10 @@ function AnalyzeInstallation($oConfig)
 		)
 	);
 
-	$aModules = GetAvailableModules();
+	$aModules = ModuleDiscovery::GetAvailableModules(APPROOT, $sModulesRelativePath);
 	foreach($aModules as $sModuleId => $aModuleInfo)
 	{
-		list($sModuleName, $sModuleVersion) = GetModuleName($sModuleId);
+		list($sModuleName, $sModuleVersion) = ModuleDiscovery::GetModuleName($sModuleId);
 
 		$sModuleAppVersion = $aModuleInfo['itop_version'];
 		$aModuleInfo['version_db'] = '';
@@ -615,39 +581,19 @@ function AnalyzeInstallation($oConfig)
 	return $aRes;
 }
 
-
-/**
- * Helper function to interpret the name of a module
- * @param $sModuleId string Identifier of the module, in the form 'name/version'
- * @return array(name, version)
- */    
-function GetModuleName($sModuleId)
-{
-	if (preg_match('!^(.*)/(.*)$!', $sModuleId, $aMatches))
-	{
-		$sName = $aMatches[1];
-		$sVersion = $aMatches[2];
-	}
-	else
-	{
-		$sName = $sModuleId;
-		$sVersion = "";
-	}
-	return array($sName, $sVersion);
-}
 /**
  * Helper function to create the database structure
  * @return boolean true on success, false otherwise
  */
-function CreateDatabaseStructure(Config $oConfig, $aSelectedModules, $sMode)
+function CreateDatabaseStructure(Config $oConfig, $sMode)
 {
 	if (strlen($oConfig->GetDBSubname()) > 0)
 	{
-		SetupWebPage::log_info("Creating the structure in '".$oConfig->GetDBName()."' (table names prefixed by '".$oConfig->GetDBSubname()."').");
+		SetupPage::log_info("Creating the structure in '".$oConfig->GetDBName()."' (table names prefixed by '".$oConfig->GetDBSubname()."').");
 	}
 	else
 	{
-		SetupWebPage::log_info("Creating the structure in '".$oConfig->GetDBSubname()."'.");
+		SetupPage::log_info("Creating the structure in '".$oConfig->GetDBSubname()."'.");
 	}
 
 	//MetaModel::CheckDefinitions();
@@ -656,7 +602,7 @@ function CreateDatabaseStructure(Config $oConfig, $aSelectedModules, $sMode)
 		if (!MetaModel::DBExists(/* bMustBeComplete */ false))
 		{
 			MetaModel::DBCreate();
-			SetupWebPage::log_ok("Database structure successfully created.");
+			SetupPage::log_ok("Database structure successfully created.");
 		}
 		else
 		{
@@ -675,19 +621,19 @@ function CreateDatabaseStructure(Config $oConfig, $aSelectedModules, $sMode)
 		if (MetaModel::DBExists(/* bMustBeComplete */ false))
 		{
 			MetaModel::DBCreate();
-			SetupWebPage::log_ok("Database structure successfully updated.");
+			SetupPage::log_ok("Database structure successfully updated.");
 
 			// Check (and update only if it seems needed) the hierarchical keys
 			ob_start();
 			MetaModel::CheckHKeys(false /* bDiagnosticsOnly */, true /* bVerbose*/, true /* bForceUpdate */); // Since in 1.2-beta the detection was buggy, let's force the rebuilding of HKeys
 			$sFeedback = ob_get_clean();
-			SetupWebPage::log_ok("Hierchical keys rebuilt: $sFeedback");
+			SetupPage::log_ok("Hierchical keys rebuilt: $sFeedback");
 
 			// Check (and fix) data sync configuration
 			ob_start();
 			MetaModel::CheckDataSources(false /*$bDiagnostics*/, true/*$bVerbose*/);
 			$sFeedback = ob_get_clean();
-			SetupWebPage::log_ok("Data sources checked: $sFeedback");
+			SetupPage::log_ok("Data sources checked: $sFeedback");
 		}
 		else
 		{
@@ -704,7 +650,7 @@ function CreateDatabaseStructure(Config $oConfig, $aSelectedModules, $sMode)
 	return true;
 }
 
-function RecordInstallation(Config $oConfig, $aSelectedModules)
+function RecordInstallation(Config $oConfig, $aSelectedModules, $sModulesRelativePath)
 {
 	// Record main installation
 	$oInstallRec = new ModuleInstallation();
@@ -716,7 +662,7 @@ function RecordInstallation(Config $oConfig, $aSelectedModules)
 
 	// Record installed modules
 	//
-	$aAvailableModules = AnalyzeInstallation($oConfig);
+	$aAvailableModules = AnalyzeInstallation($oConfig, $sModulesRelativePath);
 	foreach($aSelectedModules as $sModuleId)
 	{
 		$aModuleData = $aAvailableModules[$sModuleId];
@@ -757,43 +703,4 @@ function RecordInstallation(Config $oConfig, $aSelectedModules)
 	return true;	
 }
 
-function ListModuleFiles($sRelDir)
-{
-	$sDirectory = APPROOT.'/'.$sRelDir;
-	//echo "<p>$sDirectory</p>\n";
-	if ($hDir = opendir($sDirectory))
-	{
-		// This is the correct way to loop over the directory. (according to the documentation)
-		while (($sFile = readdir($hDir)) !== false)
-		{
-			$aMatches = array();
-			if (is_dir($sDirectory.'/'.$sFile))
-			{
-				if (($sFile != '.') && ($sFile != '..') && ($sFile != '.svn'))
-				{
-					ListModuleFiles($sRelDir.'/'.$sFile);
-				}
-			}
-			else if (preg_match('/^module\.(.*).php$/i', $sFile, $aMatches))
-			{
-				SetupWebPage::SetModulePath($sRelDir);
-				try
-				{
-					//echo "<p>Loading: $sDirectory/$sFile...</p>\n";
-					require_once($sDirectory.'/'.$sFile);
-					//echo "<p>Done.</p>\n";
-				}
-				catch(Exception $e)
-				{
-					// Continue...
-				}
-			}
-		}
-		closedir($hDir);
-	}
-	else
-	{
-		throw new Exception("Data directory (".$sDirectory.") not found or not readable.");
-	}
-}
 ?>

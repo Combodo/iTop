@@ -1599,14 +1599,6 @@ class lnkProcessToSolution extends cmdbAbstractObject
 // Create the top-level group. fRank = 1, means it will be inserted after the group '0', which is usually 'Welcome'
 
 
-// Note (RQ) :
-// After 1.0.1, the welcome page and menus have been removed from the application
-// and put into a separate module "itop-welcome-itil"
-// Until we develop a migration utility, and as would like to preserve the
-// capability to upgrade iTop without any manual operation, we have decided to
-// implement this dirty workaround that makes it...
-require_once(APPROOT.'modules/itop-welcome-itil/model.itop-welcome-itil.php');
-
 // Starting with iTop 1.2 you can restrict the list of organizations displayed in the drop-down list
 // by specifying a query as shown below. Note that this is NOT a security settings, since the
 // choice 'All Organizations' will always be available in the menu

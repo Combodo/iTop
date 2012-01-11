@@ -825,7 +825,11 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 
 	final static public function GetClassFilterDef($sClass, $sFilterCode)
 	{
-		self::_check_subclass($sClass);	
+		self::_check_subclass($sClass);
+		if (!array_key_exists($sFilterCode, self::$m_aFilterDefs[$sClass]))
+		{
+			throw new CoreException("Unknown filter code '$sFilterCode' for class '$sClass'");
+		}
 		return self::$m_aFilterDefs[$sClass][$sFilterCode];
 	}
 
@@ -4028,11 +4032,19 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 		}
 	}
 
-	public static function Startup($sConfigFile, $bModelOnly = false, $bAllowCache = true, $bTraceSourceFiles = false)
+	public static function Startup($config, $bModelOnly = false, $bAllowCache = true, $bTraceSourceFiles = false)
 	{
 		self::$m_bTraceSourceFiles = $bTraceSourceFiles;
 
-		self::LoadConfig($sConfigFile, $bAllowCache);
+		// $config can be either a filename, or a Configuration object (volatile!)
+		if ($config instanceof Config)
+		{
+			self::LoadConfig($config, $bAllowCache);
+		}
+		else
+		{
+			self::LoadConfig(new Config($config), $bAllowCache);
+		}
 
 		if ($bModelOnly) return;
 
@@ -4054,9 +4066,9 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 		}
 	}
 
-	public static function LoadConfig($sConfigFile, $bAllowCache = false)
+	public static function LoadConfig($oConfiguration, $bAllowCache = false)
 	{
-		self::$m_oConfig = new Config($sConfigFile);
+		self::$m_oConfig = $oConfiguration;
 
 		// Set log ASAP
 		if (self::$m_oConfig->GetLogGlobal())
@@ -4119,7 +4131,7 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 		{
 			foreach (self::$m_oConfig->GetDictionaries() as $sModule => $sToInclude)
 			{
-				self::IncludeModule($sConfigFile, 'dictionaries', $sToInclude);
+				self::IncludeModule('dictionaries', $sToInclude);
 			}
 			if (self::$m_bUseAPCCache)
 			{
@@ -4135,19 +4147,19 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 
 		foreach (self::$m_oConfig->GetAppModules() as $sModule => $sToInclude)
 		{
-			self::IncludeModule($sConfigFile, 'application', $sToInclude);
+			self::IncludeModule('application', $sToInclude);
 		}
 		foreach (self::$m_oConfig->GetDataModels() as $sModule => $sToInclude)
 		{
-			self::IncludeModule($sConfigFile, 'business', $sToInclude);
+			self::IncludeModule('business', $sToInclude);
 		}
 		foreach (self::$m_oConfig->GetWebServiceCategories() as $sModule => $sToInclude)
 		{
-			self::IncludeModule($sConfigFile, 'webservice', $sToInclude);
+			self::IncludeModule('webservice', $sToInclude);
 		}
 		foreach (self::$m_oConfig->GetAddons() as $sModule => $sToInclude)
 		{
-			self::IncludeModule($sConfigFile, 'addons', $sToInclude);
+			self::IncludeModule('addons', $sToInclude);
 		}
 
 		$sServer = self::$m_oConfig->GetDBHost();
@@ -4249,7 +4261,7 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 
 	protected static $m_aExtensionClasses = array();
 
-	protected static function IncludeModule($sConfigFile, $sModuleType, $sToInclude)
+	protected static function IncludeModule($sModuleType, $sToInclude)
 	{
 		$sFirstChar = substr($sToInclude, 0, 1);
 		$sSecondChar = substr($sToInclude, 1, 1);
@@ -4274,6 +4286,7 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 		}
 		if (!file_exists($sFile))
 		{
+			$sConfigFile = self::$m_oConfig->GetLoadedFile();
 			throw new CoreException('Wrong filename in configuration file', array('file' => $sConfigFile, 'module' => $sModuleType, 'filename' => $sFile));
 		}
 		require_once($sFile);

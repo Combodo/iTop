@@ -551,8 +551,8 @@ class Config
 	protected $m_bLogNotification;
 	protected $m_bLogIssue;
 	protected $m_bLogWebService;
-	protected $m_bLogKpiDuration; // private setting
-	protected $m_bLogKpiMemory; // private setting
+	protected $m_bLogKPIDuration; // private setting
+	protected $m_bLogKPIMemory; // private setting
 	protected $m_bDebugQueries; // private setting
 	protected $m_bQueryCacheEnabled; // private setting
 
