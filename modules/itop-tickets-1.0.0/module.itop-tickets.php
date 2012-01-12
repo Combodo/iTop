@@ -23,6 +23,7 @@ SetupWebPage::AddModule(
 		//
 		'datamodel' => array(
 			'model.itop-tickets.php',
+			'main.itop-tickets.php',
 		),
 		'data.struct' => array(
 			'data.struct.ta-actions.xml',

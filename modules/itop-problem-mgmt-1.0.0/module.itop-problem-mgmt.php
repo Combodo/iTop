@@ -24,6 +24,7 @@ SetupWebPage::AddModule(
 		//
 		'datamodel' => array(
 			'model.itop-problem-mgmt.php',
+			'main.itop-problem-mgmt.php',
 		),
 		'data.struct' => array(
 			//'data.struct.itop-problem-mgmt.xml',

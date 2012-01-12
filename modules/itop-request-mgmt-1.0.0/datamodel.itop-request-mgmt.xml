@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classes><class name="UserRequest" category="bizmodel,searchable,requestmgmt" parent="ResponseTicket" abstract="false" key_type="autoincrement" db_table="ticket_request" db_key_field="id" db_final_class_field=""><properties><comment><![CDATA[/**
+ * Persistent classes for a CMDB
+ *
+ * @author      Erwan Taloc <erwan.taloc@combodo.com>
+ * @author      Romain Quetiez <romain.quetiez@combodo.com>
+ * @author      Denis Flaven <denis.flaven@combodo.com>
+ * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
+ */]]></comment><naming format="%1$s"><attributes><attribute name="ref"/></attributes></naming><display_template></display_template><icon>../modules/itop-request-mgmt-1.0.0/images/user-request.png</icon><reconciliation><attributes><attribute name="ref"/></attributes></reconciliation></properties><fields><field name="request_type" type="Enum" sql="request_type" default_value="service request" is_null_allowed="false"><values><value>service request</value><value>issue</value><value>information</value></values></field><field name="freeze_reason" type="String" sql="freeze_reason" default_value="" is_null_allowed="true"/></fields><lifecycle attribute="status"><stimuli><stimulus name="ev_assign" type="StimulusUserAction"/><stimulus name="ev_reassign" type="StimulusUserAction"/><stimulus name="ev_timeout" type="StimulusInternal"/><stimulus name="ev_resolve" type="StimulusUserAction"/><stimulus name="ev_close" type="StimulusUserAction"/><stimulus name="ev_freeze" type="StimulusUserAction"/></stimuli><states><state name="new"><flags><attribute name="ref" read_only="1"/><attribute name="title"/><attribute name="description"/><attribute name="ticket_log"/><attribute name="start_date" read_only="1"/><attribute name="document_list"/><attribute name="ci_list"/><attribute name="contact_list"/><attribute name="incident_list"/><attribute name="status"/><attribute name="caller_id" mandatory="1"/><attribute name="caller_email"/><attribute name="org_id"/><attribute name="org_name"/><attribute name="service_id"/><attribute name="service_name"/><attribute name="servicesubcategory_id"/><attribute name="servicesubcategory_name"/><attribute name="product"/><attribute name="impact"/><attribute name="urgency"/><attribute name="priority" read_only="1"/><attribute name="workgroup_id"/><attribute name="workgroup_name"/><attribute name="agent_id"/><attribute name="agent_name"/><attribute name="agent_email" hidden="1"/><attribute name="related_problem_id" hidden="1"/><attribute name="related_problem_ref"/><attribute name="related_change_id" hidden="1"/><attribute name="related_change_ref"/><attribute name="close_date" hidden="1"/><attribute name="last_update" read_only="1"/><attribute name="assignment_date" hidden="1"/><attribute name="resolution_date" hidden="1"/><attribute name="tto_escalation_deadline" read_only="1"/><attribute name="ttr_escalation_deadline" hidden="1"/><attribute name="closure_deadline" hidden="1"/><attribute name="resolution_code" hidden="1"/><attribute name="solution" hidden="1"/><attribute name="user_satisfaction" hidden="1"/><attribute name="user_commment" hidden="1"/><attribute name="request_type" mandatory="1"/><attribute name="freeze_reason" hidden="1"/><attribute name="related_change_id_finalclass_recall"/></flags><transitions><transition stimulus="ev_assign" target="assigned"><actions><action verb="SetAssignedDate"/></actions></transition><transition stimulus="ev_timeout" target="escalated_tto"><actions/></transition></transitions></state><state name="escalated_tto"><flags><attribute name="ref" read_only="1"/><attribute name="title"/><attribute name="description"/><attribute name="ticket_log"/><attribute name="start_date" read_only="1"/><attribute name="document_list"/><attribute name="ci_list"/><attribute name="contact_list"/><attribute name="incident_list"/><attribute name="status"/><attribute name="caller_id" mandatory="1"/><attribute name="caller_email"/><attribute name="org_id"/><attribute name="org_name"/><attribute name="service_id"/><attribute name="service_name"/><attribute name="servicesubcategory_id"/><attribute name="servicesubcategory_name"/><attribute name="product"/><attribute name="impact"/><attribute name="urgency"/><attribute name="priority" read_only="1"/><attribute name="workgroup_id"/><attribute name="workgroup_name"/><attribute name="agent_id"/><attribute name="agent_name"/><attribute name="agent_email" hidden="1"/><attribute name="related_problem_id" hidden="1"/><attribute name="related_problem_ref"/><attribute name="related_change_id" hidden="1"/><attribute name="related_change_ref"/><attribute name="close_date" hidden="1"/><attribute name="last_update" read_only="1"/><attribute name="assignment_date" hidden="1"/><attribute name="resolution_date" hidden="1"/><attribute name="tto_escalation_deadline" read_only="1"/><attribute name="ttr_escalation_deadline" hidden="1"/><attribute name="closure_deadline" hidden="1"/><attribute name="resolution_code" hidden="1"/><attribute name="solution" hidden="1"/><attribute name="user_satisfaction" hidden="1"/><attribute name="user_commment" hidden="1"/><attribute name="request_type" mandatory="1"/><attribute name="freeze_reason" hidden="1"/><attribute name="related_change_id_finalclass_recall"/></flags><transitions><transition stimulus="ev_assign" target="assigned"><actions><action verb="SetAssignedDate"/></actions></transition></transitions></state><state name="assigned"><flags><attribute name="ref" read_only="1"/><attribute name="title" read_only="1"/><attribute name="description" read_only="1"/><attribute name="ticket_log"/><attribute name="start_date" read_only="1"/><attribute name="document_list"/><attribute name="ci_list"/><attribute name="contact_list"/><attribute name="incident_list"/><attribute name="status"/><attribute name="caller_id" read_only="1"/><attribute name="caller_email"/><attribute name="org_id" read_only="1"/><attribute name="org_name"/><attribute name="service_id"/><attribute name="service_name"/><attribute name="servicesubcategory_id"/><attribute name="servicesubcategory_name"/><attribute name="product"/><attribute name="impact"/><attribute name="urgency"/><attribute name="priority" read_only="1"/><attribute name="workgroup_id" mandatory="1"/><attribute name="workgroup_name"/><attribute name="agent_id" mandatory="1"/><attribute name="agent_name"/><attribute name="agent_email" read_only="1"/><attribute name="related_problem_id"/><attribute name="related_problem_ref"/><attribute name="related_change_id"/><attribute name="related_change_ref"/><attribute name="close_date" hidden="1"/><attribute name="last_update" read_only="1"/><attribute name="assignment_date" hidden="1"/><attribute name="resolution_date" hidden="1"/><attribute name="tto_escalation_deadline" hidden="1"/><attribute name="ttr_escalation_deadline" read_only="1"/><attribute name="closure_deadline" hidden="1"/><attribute name="resolution_code" hidden="1"/><attribute name="solution" hidden="1"/><attribute name="user_satisfaction" hidden="1"/><attribute name="user_commment" hidden="1"/><attribute name="request_type" mandatory="1"/><attribute name="freeze_reason" hidden="1"/><attribute name="related_change_id_finalclass_recall"/></flags><transitions><transition stimulus="ev_reassign" target="assigned"><actions/></transition><transition stimulus="ev_timeout" target="escalated_ttr"><actions/></transition><transition stimulus="ev_resolve" target="resolved"><actions><action verb="SetResolveDate"/><action verb="SetClosureDeadline"/></actions></transition><transition stimulus="ev_freeze" target="frozen"><actions/></transition></transitions></state><state name="escalated_ttr"><flags><attribute name="ref" read_only="1"/><attribute name="title" read_only="1"/><attribute name="description" read_only="1"/><attribute name="ticket_log"/><attribute name="start_date" read_only="1"/><attribute name="document_list"/><attribute name="ci_list"/><attribute name="contact_list"/><attribute name="incident_list"/><attribute name="status"/><attribute name="caller_id" read_only="1"/><attribute name="caller_email"/><attribute name="org_id" read_only="1"/><attribute name="org_name"/><attribute name="service_id"/><attribute name="service_name"/><attribute name="servicesubcategory_id"/><attribute name="servicesubcategory_name"/><attribute name="product"/><attribute name="impact"/><attribute name="urgency"/><attribute name="priority" read_only="1"/><attribute name="workgroup_id" mandatory="1"/><attribute name="workgroup_name"/><attribute name="agent_id" mandatory="1"/><attribute name="agent_name"/><attribute name="agent_email" read_only="1"/><attribute name="related_problem_id"/><attribute name="related_problem_ref"/><attribute name="related_change_id"/><attribute name="related_change_ref"/><attribute name="close_date" hidden="1"/><attribute name="last_update" read_only="1"/><attribute name="assignment_date" hidden="1"/><attribute name="resolution_date" hidden="1"/><attribute name="tto_escalation_deadline" hidden="1"/><attribute name="ttr_escalation_deadline" read_only="1"/><attribute name="closure_deadline" hidden="1"/><attribute name="resolution_code" hidden="1"/><attribute name="solution" hidden="1"/><attribute name="user_satisfaction" hidden="1"/><attribute name="user_commment" hidden="1"/><attribute name="request_type" mandatory="1"/><attribute name="freeze_reason" hidden="1"/><attribute name="related_change_id_finalclass_recall"/></flags><transitions><transition stimulus="ev_reassign" target="escalated_ttr"><actions/></transition><transition stimulus="ev_resolve" target="resolved"><actions><action verb="SetResolveDate"/><action verb="SetClosureDeadline"/></actions></transition></transitions></state><state name="frozen"><flags><attribute name="ref" read_only="1"/><attribute name="title" read_only="1"/><attribute name="description" read_only="1"/><attribute name="ticket_log"/><attribute name="start_date" read_only="1"/><attribute name="document_list"/><attribute name="ci_list"/><attribute name="contact_list"/><attribute name="incident_list"/><attribute name="status"/><attribute name="caller_id" read_only="1"/><attribute name="caller_email"/><attribute name="org_id" read_only="1"/><attribute name="org_name"/><attribute name="service_id"/><attribute name="service_name"/><attribute name="servicesubcategory_id"/><attribute name="servicesubcategory_name"/><attribute name="product"/><attribute name="impact"/><attribute name="urgency"/><attribute name="priority" read_only="1"/><attribute name="workgroup_id" mandatory="1"/><attribute name="workgroup_name"/><attribute name="agent_id" mandatory="1"/><attribute name="agent_name"/><attribute name="agent_email" read_only="1"/><attribute name="related_problem_id"/><attribute name="related_problem_ref"/><attribute name="related_change_id"/><attribute name="related_change_ref"/><attribute name="close_date" hidden="1"/><attribute name="last_update" read_only="1"/><attribute name="assignment_date" hidden="1"/><attribute name="resolution_date" hidden="1"/><attribute name="tto_escalation_deadline" hidden="1"/><attribute name="ttr_escalation_deadline" read_only="1"/><attribute name="closure_deadline" hidden="1"/><attribute name="resolution_code" hidden="1"/><attribute name="solution" hidden="1"/><attribute name="user_satisfaction" hidden="1"/><attribute name="user_commment" hidden="1"/><attribute name="request_type" mandatory="1"/><attribute name="freeze_reason" mandatory="1"/><attribute name="related_change_id_finalclass_recall"/></flags><transitions><transition stimulus="ev_timeout" target="escalated_ttr"><actions/></transition><transition stimulus="ev_assign" target="assigned"><actions/></transition><transition stimulus="ev_resolve" target="resolved"><actions/></transition></transitions></state><state name="resolved"><flags><attribute name="ref" read_only="1"/><attribute name="title" read_only="1"/><attribute name="description" read_only="1"/><attribute name="ticket_log"/><attribute name="start_date" read_only="1"/><attribute name="document_list"/><attribute name="ci_list"/><attribute name="contact_list"/><attribute name="incident_list"/><attribute name="status"/><attribute name="caller_id" read_only="1"/><attribute name="caller_email"/><attribute name="org_id" read_only="1"/><attribute name="org_name"/><attribute name="service_id" read_only="1"/><attribute name="service_name"/><attribute name="servicesubcategory_id" read_only="1"/><attribute name="servicesubcategory_name"/><attribute name="product" read_only="1"/><attribute name="impact" read_only="1"/><attribute name="urgency" read_only="1"/><attribute name="priority" read_only="1"/><attribute name="workgroup_id" read_only="1"/><attribute name="workgroup_name"/><attribute name="agent_id" read_only="1"/><attribute name="agent_name"/><attribute name="agent_email" read_only="1"/><attribute name="related_problem_id"/><attribute name="related_problem_ref"/><attribute name="related_change_id"/><attribute name="related_change_ref"/><attribute name="close_date" hidden="1"/><attribute name="last_update" read_only="1"/><attribute name="assignment_date" hidden="1"/><attribute name="resolution_date" hidden="1"/><attribute name="tto_escalation_deadline" hidden="1"/><attribute name="ttr_escalation_deadline" hidden="1"/><attribute name="closure_deadline" read_only="1"/><attribute name="resolution_code"/><attribute name="solution"/><attribute name="user_satisfaction" hidden="1"/><attribute name="user_commment" hidden="1"/><attribute name="request_type" mandatory="1"/><attribute name="freeze_reason" hidden="1"/><attribute name="related_change_id_finalclass_recall"/></flags><transitions><transition stimulus="ev_reassign" target="assigned"><actions/></transition><transition stimulus="ev_close" target="closed"><actions><action verb="SetClosureDate"/></actions></transition></transitions></state><state name="closed"><flags><attribute name="ref" read_only="1"/><attribute name="title" read_only="1"/><attribute name="description" read_only="1"/><attribute name="ticket_log" read_only="1"/><attribute name="start_date" read_only="1"/><attribute name="document_list"/><attribute name="ci_list"/><attribute name="contact_list"/><attribute name="incident_list"/><attribute name="status"/><attribute name="caller_id" read_only="1"/><attribute name="caller_email"/><attribute name="org_id" read_only="1"/><attribute name="org_name"/><attribute name="service_id" read_only="1"/><attribute name="service_name"/><attribute name="servicesubcategory_id" read_only="1"/><attribute name="servicesubcategory_name"/><attribute name="product" read_only="1"/><attribute name="impact" read_only="1"/><attribute name="urgency" read_only="1"/><attribute name="priority" read_only="1"/><attribute name="workgroup_id" read_only="1"/><attribute name="workgroup_name"/><attribute name="agent_id" read_only="1"/><attribute name="agent_name"/><attribute name="agent_email" read_only="1"/><attribute name="related_problem_id"/><attribute name="related_problem_ref"/><attribute name="related_change_id"/><attribute name="related_change_ref"/><attribute name="close_date" read_only="1"/><attribute name="last_update" read_only="1"/><attribute name="assignment_date" hidden="1"/><attribute name="resolution_date" hidden="1"/><attribute name="tto_escalation_deadline" hidden="1"/><attribute name="ttr_escalation_deadline" hidden="1"/><attribute name="closure_deadline" hidden="1"/><attribute name="resolution_code" read_only="1"/><attribute name="solution" read_only="1"/><attribute name="user_satisfaction"/><attribute name="user_commment"/><attribute name="request_type" read_only="1"/><attribute name="freeze_reason" hidden="1"/><attribute name="related_change_id_finalclass_recall"/></flags><transitions/></state></states></lifecycle><methods><method name="ComputeValues" static="false" access="public" type="Overload-DBObject"><![CDATA[	public function ComputeValues()
+	{
+		$sCurrRef = $this->Get('ref');
+		if (strlen($sCurrRef) == 0)
+		{
+			$iKey = $this->GetKey();
+			if ($iKey < 0)
+			{
+				// Object not yet in the Database
+				$iKey = MetaModel::GetNextKey(get_class($this));
+			}
+			$sName = sprintf('R-%06d', $iKey);
+			$this->Set('ref', $sName);
+		}
+
+		return parent::ComputeValues();
+	}]]></method><method name="GetIcon" static="false" access="public" type="Overload-DBObject"><comment><![CDATA[/**
+	 * Get the icon representing this object
+	 * @param boolean $bImgTag If true the result is a full IMG tag (or an emtpy string if no icon is defined)
+	 * @return string Either the full IMG tag ($bImgTag == true) or just the path to the icon file
+	 */]]></comment><![CDATA[	public function GetIcon($bImgTag = true)
+	{
+		$sStatus = $this->Get('status');
+		switch($this->GetState())
+		{
+
+			case 'escalated_tto':
+			case 'escalated_ttr':
+			$sIcon = self::MakeIconFromName('user-request-escalated.png');
+			break;
+			
+			case 'resolved':
+			case 'closed':
+			$sIcon = self::MakeIconFromName('user-request-closed.png');
+			break;
+
+			case 'new':
+			$sIcon = self::MakeIconFromName('user-request.png');
+			$oEscalationDeadline = $this->Get('tto_escalation_deadline');
+			if ($oEscalationDeadline != null)
+			{
+				// A SLA is running
+				$iStartDate = AttributeDateTime::GetAsUnixSeconds($this->Get('start_date'));
+				$iEscalationDeadline = AttributeDateTime::GetAsUnixSeconds($oEscalationDeadline);
+				$ratio = ($iEscalationDeadline - time())/($iEscalationDeadline - $iStartDate);
+				if ($ratio <= 0)
+				{
+					$sIcon = self::MakeIconFromName('user-request-escalated.png');
+				}
+				else if ($ratio <= 0.25)
+				{
+					$sIcon = self::MakeIconFromName('user-request-deadline.png');
+				}
+			}
+			break;
+			
+			case 'assigned':
+			$sIcon = self::MakeIconFromName('user-request.png');
+			$oEscalationDeadline = $this->Get('ttr_escalation_deadline');
+			if ($oEscalationDeadline != null)
+			{
+				// A SLA is running
+				$iStartDate = AttributeDateTime::GetAsUnixSeconds($this->Get('start_date'));
+				$iEscalationDeadline = AttributeDateTime::GetAsUnixSeconds($oEscalationDeadline);
+				$ratio = ($iEscalationDeadline - time())/($iEscalationDeadline - $iStartDate);
+				if ($ratio <= 0)
+				{
+					$sIcon = self::MakeIconFromName('user-request-escalated.png');
+				}
+				else if ($ratio <= 0.25)
+				{
+					$sIcon = self::MakeIconFromName('user-request-deadline.png');
+				}
+			}
+			break;
+
+			
+			default:
+			$sIcon = MetaModel::GetClassIcon(get_class($this), $bImgTag);
+		}
+		return $sIcon;
+	}]]></method><method name="MakeIconFromName" static="true" access="protected" type="Overload-DBObject"><![CDATA[	protected static function MakeIconFromName($sIconName, $bImgTag = true)
+	{
+		$sIcon = '';
+		if ($sIconName != '')
+		{
+			$sPath = '../modules/itop-request-mgmt-1.0.0/images/'.$sIconName;
+			if ($bImgTag)
+			{
+				$sIcon = "<img src=\"$sPath\" style=\"vertical-align:middle;\"/>";
+			}
+			else
+			{
+				$sIcon  = $sPath;
+			}
+		}
+		return $sIcon;
+	}]]></method></methods><presentation><details><items><item>document_list</item><item>ci_list</item><item>contact_list</item><item>incident_list</item><item key="col:col1"><items><item key="fieldset:Ticket:baseinfo"><items><item>ref</item><item>title</item><item>org_id</item><item>status</item><item>priority</item><item>request_type</item><item>service_id</item><item>servicesubcategory_id</item><item>product</item></items></item><item key="fieldset:Ticket:moreinfo"><items><item>impact</item><item>urgency</item><item>description</item><item>resolution_code</item><item>solution</item><item>user_satisfaction</item><item>user_commment</item><item>freeze_reason</item></items></item></items></item><item key="col:col2"><items><item key="fieldset:Ticket:date"><items><item>start_date</item><item>last_update</item><item>assignment_date</item><item>tto_escalation_deadline</item><item>ttr_escalation_deadline</item><item>close_date</item><item>closure_deadline</item></items></item><item key="fieldset:Ticket:contact"><items><item>caller_id</item><item>workgroup_id</item><item>agent_id</item></items></item><item key="fieldset:Ticket:relation"><items><item>related_problem_id</item><item>related_change_id</item></items></item></items></item></items></details><search><items><item>ref</item><item>title</item><item>org_id</item><item>request_type</item><item>start_date</item><item>status</item><item>caller_id</item><item>service_id</item><item>servicesubcategory_id</item><item>product</item><item>impact</item><item>urgency</item><item>priority</item><item>workgroup_id</item><item>agent_id</item><item>agent_email</item><item>close_date</item><item>resolution_code</item><item>solution</item><item>user_satisfaction</item><item>user_commment</item></items></search><list><items><item>title</item><item>org_id</item><item>start_date</item><item>status</item><item>service_id</item><item>priority</item><item>workgroup_id</item><item>agent_id</item></items></list></presentation></class></classes>

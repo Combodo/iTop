@@ -24,6 +24,7 @@ SetupWebPage::AddModule(
 		//
 		'datamodel' => array(
 			'model.itop-incident-mgmt.php',
+			'main.itop-incident-mgmt.php',
 		),
 		'data.struct' => array(
 			'data.struct.ta-triggers.xml',

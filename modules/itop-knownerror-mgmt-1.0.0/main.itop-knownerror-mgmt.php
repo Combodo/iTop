@@ -14,13 +14,11 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-/**
- * Persistent classes for a CMDB
- *
- * @author      Erwan Taloc <erwan.taloc@combodo.com>
- * @author      Romain Quetiez <romain.quetiez@combodo.com>
- * @author      Denis Flaven <denis.flaven@combodo.com>
- * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
- */
+$oMyMenuGroup = new MenuGroup('ProblemManagement', 42 /* fRank */);
+$iIndex = $oMyMenuGroup->GetIndex();
+new NewObjectMenuNode('NewError', 'KnownError', $iIndex, 3 /* fRank */);
+new SearchMenuNode('SearchError', 'KnownError', $iIndex, 4 /* fRank */);
+$oShortcutNode = new TemplateMenuNode('Problem:Shortcuts', '', $iIndex, 5 /* fRank */);
+new OQLMenuNode('Problem:KnownErrors', 'SELECT KnownError', $oShortcutNode->GetIndex(), 3 /* fRank */,true /*bsearch */);
 
 ?>

@@ -35,7 +35,8 @@ SetupWebPage::AddModule(
 		// Components
 		//
 		'datamodel' => array(
-			'model.attachments.php'
+			'model.itop-attachments.php',
+			'main.attachments.php',
 		),
 		'webservice' => array(
 			
