@@ -163,7 +163,7 @@ function DoCompileDataModel()
 {
 	$('#log').html('');
 	$('#setup').block({message: '<p><span id="setup_msg">Preparing data model...</span><br/><div id=\"progress\">0%</div></p>'});
-	$('#progress').progression( {Current:5, Maximum: 100, aBackgroundImg: 'orange-progress.gif', aTextColor: '#000000'} );
+	$('#progress').progression( {Current:5, Maximum: 100, aBackgroundImg: GetAbsoluteUrlAppRoot()+'setup/orange-progress.gif', aTextColor: '#000000'} );
 
 	var sSelectedModules = GetSelectedModules();
 	var sMode = $(':input[name=mode]').val();
@@ -171,7 +171,7 @@ function DoCompileDataModel()
 	var sTargetDir = $(':input[name=target_dir]').val();
 	
 	// Call the asynchronous page that performs the compilation of the data model and the creation of the configuration file
-	AsyncCompileDataModel(sSelectedModules, sMode, sSourceDir, sTargetDir, function(response, status, xhr) {
+	AsyncCompileDataModel(sSelectedModules, sMode, sSourceDir, sTargetDir, '', function(response, status, xhr) {
 		$('#log').html(response);
 		DoUpdateDBSchema();
 	});
@@ -181,7 +181,7 @@ function DoUpdateDBSchema()
 {
 	$('#log').html('');
 	$('#setup').block({message: '<p><span id="setup_msg">Updating DB schema...</span><br/><div id=\"progress\">5%</div></p>'});
-	$('#progress').progression( {Current:10, Maximum: 100, aBackgroundImg: 'orange-progress.gif', aTextColor: '#000000'} );
+	$('#progress').progression( {Current:10, Maximum: 100, aBackgroundImg: GetAbsoluteUrlAppRoot()+'setup/orange-progress.gif', aTextColor: '#000000'} );
 
 	var sSelectedModules = GetSelectedModules();
 	var sMode = $(':input[name=mode]').val();
@@ -204,7 +204,7 @@ function DoUpdateProfiles()
 {
 	$('#log').html('');
 	$('#setup_msg').text('Updating Profiles...');
-	$('#progress').progression( {Current:40,  Maximum: 100, aBackgroundImg: 'orange-progress.gif', aTextColor: '#000000'} );
+	$('#progress').progression( {Current:40,  Maximum: 100, aBackgroundImg: GetAbsoluteUrlAppRoot()+'setup/orange-progress.gif', aTextColor: '#000000'} );
 
 	var sSelectedModules = GetSelectedModules();
 	var sMode = $(':input[name=mode]').val();
@@ -249,7 +249,7 @@ function DoLoadDataAsynchronous(response, status, xhr)
 		{
 			$('#log').html('');
 			$('#setup_msg').text('Loading data...');
-			$('#progress').progression( {Current: 60, Maximum: 100, aBackgroundImg: 'orange-progress.gif', aTextColor: '#000000'} );
+			$('#progress').progression( {Current: 60, Maximum: 100, aBackgroundImg: GetAbsoluteUrlAppRoot()+'setup/orange-progress.gif', aTextColor: '#000000'} );
 //			$('#log').ajaxError(
 //					function(e, xhr, settings, exception)
 //					{
@@ -297,9 +297,9 @@ function LoadNextDataFile(response, status, xhr)
 			iPercent = 60+Math.round((40.0 * (1+iCounter)) / aFilesToLoad.length);
 			sFileName = aFilesToLoad[iCounter];
 			//alert('Loading file '+sFileName+' ('+iPercent+' %) - '+sSessionStatus);
-			$("#progress").progression({ Current: iPercent, Maximum: 100, aBackgroundImg: 'orange-progress.gif', aTextColor: '#000000' });
+			$("#progress").progression({ Current: iPercent, Maximum: 100, aBackgroundImg: GetAbsoluteUrlAppRoot()+'setup/orange-progress.gif', aTextColor: '#000000' });
 			iCounter++;
-			$('#log').load( 'ajax.dataloader.php',
+			$('#log').load( GetAbsoluteUrlAppRoot()+'setup/ajax.dataloader.php',
 				{
 					'selected_modules': GetSelectedModules(),
 					'db_server': $(':input[name=db_server]').val(),
@@ -319,7 +319,7 @@ function LoadNextDataFile(response, status, xhr)
 		else
 		{
 			// We're done
-			$("#progress").progression({ Current: 100, Maximum: 100, aBackgroundImg: 'orange-progress.gif', aTextColor: '#000000' });
+			$("#progress").progression({ Current: 100, Maximum: 100, aBackgroundImg: GetAbsoluteUrlAppRoot()+'setup/orange-progress.gif', aTextColor: '#000000' });
 			//$('#setup').unblock();
 			$('#GoToNextStep').submit(); // Use the hidden form to navigate to the next step
 		}

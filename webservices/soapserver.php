@@ -34,7 +34,7 @@ require_once(APPROOT.'/application/startup.inc.php');
 $sWsdlUri = 'http'.((isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']!='off')) ? 's' : '').'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname($_SERVER['SCRIPT_NAME']).'/../webservices/itop.wsdl.php';
 if (isset($_REQUEST['service_category']) && (!empty($_REQUEST['service_category'])))
 {
-	$sWsdlUri .= "?service_category=".$_REQUEST['service_category'];
+	$sWsdlUri .= "soapserver.php?service_category=".$_REQUEST['service_category'];
 }
 
 

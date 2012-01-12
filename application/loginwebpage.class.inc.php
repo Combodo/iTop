@@ -89,7 +89,6 @@ h1 {
 }
 EOF
 );
-		$this->set_base(utils::GetAbsoluteUrlAppRoot().'pages/');
 	}
 	
 	public static function SetLoginFailedMessage($sMessage)

@@ -203,7 +203,7 @@ try
 					if ($iCount == 0)
 					{
 						// nothing to check, really !
-						$aRow['nb_errors'] = "<a href=\"?operation=errors&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."\">0</a>"; 
+						$aRow['nb_errors'] = "<a href=\"audit.php?operation=errors&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."\">0</a>"; 
 						$aRow['percent_ok'] = '100.00';
 						$aRow['class'] = GetReportColor($iCount, 0);
 					}
@@ -218,7 +218,7 @@ try
 							{
 								$aObjectsWithErrors[$oObj->GetKey()] = true;
 							}
-							$aRow['nb_errors'] = ($iErrorsCount == 0) ? '0' : "<a href=\"?operation=errors&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."&".$oAppContext->GetForLink()."\">$iErrorsCount</a>"; 
+							$aRow['nb_errors'] = ($iErrorsCount == 0) ? '0' : "<a href=\"audit.php?operation=errors&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."&".$oAppContext->GetForLink()."\">$iErrorsCount</a>"; 
 							$aRow['percent_ok'] = sprintf('%.2f', 100.0 * (($iCount - $iErrorsCount) / $iCount));
 							$aRow['class'] = GetReportColor($iCount, $iErrorsCount);							
 						}

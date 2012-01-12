@@ -30,30 +30,30 @@ require_once(APPROOT."/application/webpage.class.inc.php");
 class NiceWebPage extends WebPage
 {
 	var $m_aReadyScripts;
+	var $m_sRootUrl;
 	
     public function __construct($s_title)
     {
         parent::__construct($s_title);
 		$this->m_aReadyScripts = array();
 		$this->add_linked_script("../js/jquery-1.4.2.min.js");
-		//$this->add_linked_script("../js/jquery.history_remote.pack.js");
 		$this->add_linked_stylesheet('../css/ui-lightness/jquery-ui-1.8.2.custom.css');
 		$this->add_linked_script('../js/jquery-ui-1.8.2.custom.min.js');
-		//$this->add_linked_script("../js/ui.resizable.js");
-//		$this->add_linked_script("../js/ui.tabs.js");
 		$this->add_linked_script("../js/hovertip.js");
-//		$this->add_linked_script("../js/jqModal.js");
 		$this->add_linked_stylesheet("../css/light-grey.css");
-//		$this->add_linked_stylesheet("../js/themes/light/light.tabs.css");
-		//$this->add_linked_stylesheet("../css/jquery.tabs-ie.css", "lte IE 7");
-//		$this->add_linked_stylesheet("../css/jqModal.css");
-		$this->add_ready_script('    window.setTimeout(hovertipInit, 1);');
+
+		$this->m_sRootUrl = '../'; 		
     }
 	
+    public function SetRootUrl($sRootUrl)
+    {
+    	$this->m_sRootUrl = $sRootUrl;
+    }
+    
 	public function small_p($sText)
 	{
 		$this->add("<p style=\"font-size:smaller\">$sText</p>\n");
-	}	
+	}
 
 	// By Rom, used by CSVImport and Advanced search
 	public function MakeClassesSelect($sName, $sDefaultValue, $iWidthPx, $iActionCode = null)
@@ -100,6 +100,16 @@ class NiceWebPage extends WebPage
 	 */
     public function output()
     {
+    	$sAbsURLAppRoot = addslashes($this->m_sRootUrl);
+		$this->add_script(
+<<<EOF
+function GetAbsoluteUrlAppRoot()
+{
+	return '$sAbsURLAppRoot';
+}
+EOF
+		);
+		$this->set_base($this->m_sRootUrl.'pages/');
         if (count($this->m_aReadyScripts)>0)
         {
 			$this->add_script("\$(document).ready(function() {\n".implode("\n", $this->m_aReadyScripts)."\n});");

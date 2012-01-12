@@ -7,17 +7,18 @@
  * @param string sTargetDir The target directory (is created if needed) for compiled modules
  * @return void
  */ 
-function AsyncCompileDataModel(sSelectedModules, sMode, sSourceDir, sTargetDir, OnCompleteFn)
+function AsyncCompileDataModel(sSelectedModules, sMode, sSourceDir, sTargetDir, sWorkspaceDir, OnCompleteFn)
 {
 	try
 	{
-		$.post( 'ajax.dataloader.php',
+		$.post( GetAbsoluteUrlAppRoot()+'setup/ajax.dataloader.php',
 						{ 
 							'operation': 'compile_data_model',
 							'selected_modules': sSelectedModules,
 							'mode': sMode,
 							'source_dir': sSourceDir,
-							'target_dir': sTargetDir
+							'target_dir': sTargetDir,
+							'workspace_dir': sWorkspaceDir
 						},
 						OnCompleteFn, 'html');
 	}
@@ -45,7 +46,7 @@ function AsyncUpdateDBSchema(sSelectedModules, sMode, sModulesDir, sDBServer, sD
 {
 	try
 	{
-		$.post( 'ajax.dataloader.php',
+		$.post( GetAbsoluteUrlAppRoot()+'setup/ajax.dataloader.php',
 						{ 
 							'operation': 'update_db_schema',
 							'selected_modules': sSelectedModules,
@@ -86,7 +87,7 @@ function AsyncUpdateProfiles(sSelectedModules, sMode, sModulesDir, sDBServer, sD
 {
 	try
 	{
-		$.post( 'ajax.dataloader.php',
+		$.post( GetAbsoluteUrlAppRoot()+'setup/ajax.dataloader.php',
 						{ 
 							'operation': 'after_db_create',
 							'selected_modules': sSelectedModules,

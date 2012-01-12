@@ -40,8 +40,8 @@ class SetupPage extends NiceWebPage
     {
         parent::__construct($sTitle);
    		$this->add_linked_script("../js/jquery.blockUI.js");
-   		$this->add_linked_script("./setup.js");
-   		$this->add_linked_script("./setup_environment.js");
+   		$this->add_linked_script("../setup/setup.js");
+   		$this->add_linked_script("../setup/setup_environment.js");
         $this->add_style("
 body {
 	background-color: #eee;
@@ -425,7 +425,7 @@ function InitDataModel($oConfig, $bModelOnly = true, $bUseCache = false)
 		SetupPage::log_info("MetaModel::Startup (ModelOnly = $bModelOnly)");
 	}
 
-	if ($bUseCache)
+	if (!$bUseCache)
 	{
 		// Reset the cache for the first use !
 		MetaModel::ResetCache($oConfig);

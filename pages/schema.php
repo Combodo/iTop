@@ -38,7 +38,7 @@ LoginWebPage::DoLogin(true); // Check user rights and prompt if needed (must be 
  */
 function MakeClassHLink($sClass, $sContext)
 {
-	return "<a href=\"?operation=details_class&class=$sClass{$sContext}\" title=\"".MetaModel::GetClassDescription($sClass)."\">".MetaModel::GetName($sClass)."</a>";
+	return "<a href=\"schema.php?operation=details_class&class=$sClass{$sContext}\" title=\"".MetaModel::GetClassDescription($sClass)."\">".MetaModel::GetName($sClass)."</a>";
 }
 
 /**
@@ -47,7 +47,7 @@ function MakeClassHLink($sClass, $sContext)
 function MakeRelationHLink($sRelCode, $sContext)
 {
 	$sDesc = MetaModel::GetRelationDescription($sRelCode);
-	return "<a href=\"?operation=details_relation&relcode=$sRelCode{$sContext}\" title=\"$sDesc\">".$sRelCode."</a>";
+	return "<a href=\"schema.php?operation=details_relation&relcode=$sRelCode{$sContext}\" title=\"$sDesc\">".$sRelCode."</a>";
 }
 
 /**
@@ -363,7 +363,7 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 	{
 		$sParents = '';
 	}
-	$oPage->p("[<a href=\"?operation=list{$sContext}\">".Dict::S('UI:Schema:AllClasses')."</a>] $sParents");
+	$oPage->p("[<a href=\"schema.php?operation=list{$sContext}\">".Dict::S('UI:Schema:AllClasses')."</a>] $sParents");
 
 	if (MetaModel::HasChildrenClasses($sClass))
 	{

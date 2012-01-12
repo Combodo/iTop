@@ -917,7 +917,7 @@ class BulkChange
 		$aDetails = array();
 		while ($oChange = $oBulkChanges->Fetch())
 		{
-			$sDate = '<a href="?step=10&changeid='.$oChange->GetKey().'&'.$oAppContext->GetForLink().'">'.$oChange->Get('date').'</a>';
+			$sDate = '<a href="csvimport.php?step=10&changeid='.$oChange->GetKey().'&'.$oAppContext->GetForLink().'">'.$oChange->Get('date').'</a>';
 			$sUser = $oChange->GetUserName();
 			if (preg_match('/^(.*)\\(CSV\\)$/i', $oChange->Get('userinfo'), $aMatches))
 			{

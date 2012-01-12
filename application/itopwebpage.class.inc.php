@@ -50,7 +50,7 @@ class iTopWebPage extends NiceWebPage
 		$this->m_aTabs = array();
 		$this->m_sMenu = "";
 		$this->m_sMessage = '';
-		$sAbsURLAppRoot = addslashes(utils::GetAbsoluteUrlAppRoot()); // Pass it to Javascript scripts
+		$this->SetRootUrl(utils::GetAbsoluteUrlAppRoot());
 		$oAppContext = new ApplicationContext();
 		$sExtraParams = $oAppContext->GetForLink();
 		$sAppContext = addslashes($sExtraParams);
@@ -402,11 +402,6 @@ EOF
 			}
 		}
 		
-		function GetAbsoluteUrlAppRoot()
-		{
-			return '$sAbsURLAppRoot';
-		}
-		
 		function AddAppContext(sURL)
 		{
 			var sContext = '$sAppContext';
@@ -546,6 +541,16 @@ EOF
 	 */
     public function output()
     {
+    	$sAbsURLAppRoot = addslashes($this->m_sRootUrl);
+		$this->add_script(
+<<<EOF
+function GetAbsoluteUrlAppRoot()
+{
+	return '$sAbsURLAppRoot';
+}
+EOF
+		);
+		$this->set_base($this->m_sRootUrl.'pages/');
 		$sForm = $this->GetSiloSelectionForm();
 		$this->DisplayMenu(); // Compute the menu
 

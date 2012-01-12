@@ -660,7 +660,7 @@ function LicenceAcknowledgement($oP, $aParamValues, $iCurrentStep)
 	
 	$oP->set_title('License agreement');
 	$oP->add('<h2>iTop is released by <a href="http://www.combodo.com" target="_blank">Combodo SARL</a> under the terms of the GPL V3 license. In order to use iTop you must accept the terms of this license.</h2>');
-	$oP->add("<iframe style=\"width: 100%; height: 350px; overflow-y:auto; font-size:0.8em;\" src=\"./licence.html\">Next: Database server selection</iframe>\n");
+	$oP->add("<iframe style=\"width: 100%; height: 350px; overflow-y:auto; font-size:0.8em;\" src=\"../setup/licence.html\">Next: Database server selection</iframe>\n");
 	$oP->add("<form id=\"theForm\" method=\"post\">\n");
 	AddParamsToForm($oP, $aParamValues, array('licence_ok'));
 
@@ -1151,6 +1151,7 @@ function DisplaySummary(SetupPage $oP, $aParamValues, $iCurrentStep, Config $oCo
 			}
 		}
 		$oP->set_title('Installation Summary');
+		$oP->SetRootUrl($aParamValues['application_path']);
 		$oP->add("<h3>iTop version ".$aAvailableModules[ROOT_MODULE]['version_code']." will be installed.</h3>");
 
 		$oP->add('<div id="summary_content" style="height:350px;overflow-y:auto;border:1px solid #999;padding-left:1em;">');
@@ -1325,7 +1326,7 @@ function DisplaySummary(SetupPage $oP, $aParamValues, $iCurrentStep, Config $oCo
 	$oP->add("</form>\n");
 	
 	$oP->add("<div id=\"log\" style=\"color:#F00;\"></div>\n");
-	$oP->add_linked_script('./jquery.progression.js');
+	$oP->add_linked_script('../setup/jquery.progression.js');
 	PopulateDataFilesList($oP, $aParamValues, $oConfig);
 	$oP->add_ready_script(
 <<<EOF
