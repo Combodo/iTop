@@ -121,8 +121,6 @@ require_once(APPROOT.'/core/kpi.class.inc.php');
 require_once(APPROOT.'/core/cmdbsource.class.inc.php');
 require_once('./xmldataloader.class.inc.php');
 
-define('TMP_CONFIG_FILE', APPROOT.'/tmp-config-itop.php');
-//define('FINAL_CONFIG_FILE', APPROOT.'/config-itop.php');
 
 // Never cache this page
 header("Cache-Control: no-cache, must-revalidate");  // HTTP/1.1
@@ -202,7 +200,7 @@ try
 		//
 		SetupPage::log_info("Update Database Schema.");
 
-		$oConfig = new Config(TMP_CONFIG_FILE, false /* Don't try to load it */);
+		$oConfig = new Config();
 
 		$aParamValues = array(
 			'db_server' => utils::ReadParam('db_server', '', false, 'raw_data'),
@@ -231,7 +229,7 @@ try
 		//
 		SetupPage::log_info('After Database Creation');
 
-		$oConfig = new Config(TMP_CONFIG_FILE, false /* Don't try to load it */);
+		$oConfig = new Config();
 
 		$aParamValues = array(
 			'db_server' => utils::ReadParam('db_server', '', false, 'raw_data'),
@@ -301,7 +299,7 @@ try
 			throw(new Exception("File $sFileName does not exist"));
 		}
 
-		$oConfig = new Config(TMP_CONFIG_FILE, false /* Don't try to load it */);
+		$oConfig = new Config();
 
 		$aParamValues = array(
 			'db_server' => utils::ReadParam('db_server', '', false, 'raw_data'),

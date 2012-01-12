@@ -29,12 +29,14 @@ session_name('itop-'.md5(APPROOT));
 session_start();
 if (isset($_SESSION['itop_env']))
 {
-	$sConfigFile = $_SESSION['itop_env'];
+	$sEnv = $_SESSION['itop_env'];
 }
 else
 {
-	$sConfigFile = ITOP_CONFIG_FILE;
+	$sEnv = ITOP_DEFAULT_ENV;
+	$_SESSION['itop_env'] = ITOP_DEFAULT_ENV;
 }
+$sConfigFile = APPCONF.$sEnv.'/'.ITOP_CONFIG_FILE;
 MetaModel::Startup($sConfigFile);
 
 ?>

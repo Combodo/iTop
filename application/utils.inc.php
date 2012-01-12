@@ -26,7 +26,9 @@
 require_once(APPROOT.'/core/config.class.inc.php');
 require_once(APPROOT.'/application/transaction.class.inc.php');
 
-define('ITOP_CONFIG_FILE', APPROOT.'/config-itop.php');
+define('ITOP_CONFIG_FILE', 'config-itop.php');
+define('ITOP_DEFAULT_CONFIG_FILE', APPCONF.ITOP_DEFAULT_ENV.'/'.ITOP_CONFIG_FILE);
+
 define('SERVER_NAME_PLACEHOLDER', '$SERVER_NAME$');
 
 class FileUploadException extends Exception
@@ -40,7 +42,6 @@ class FileUploadException extends Exception
  */
 class utils
 {
-	private static $m_sConfigFile = ITOP_CONFIG_FILE;
 	private static $m_oConfig = null;
 	private static $m_bCASClient = false;
 
@@ -710,6 +711,28 @@ class utils
 		return array($iRes, $aOutput);
 	}
 
+	/**
+	 * Get the current environment
+	 */
+	public static function GetCurrentEnvironment()
+	{
+		if (isset($_SESSION['itop_env']))
+		{
+			return $_SESSION['itop_env'];
+		}
+		else
+		{
+			return ITOP_DEFAULT_ENV;
+		}
+	}
+	
+	/**
+	 * Get target configuration file name (including full path)
+	 */
+	public static function GetConfigFilePath()
+	{
+		return APPCONF.self::GetCurrentEnvironment().'/'.ITOP_CONFIG_FILE;
+	}
 
 }
 ?>

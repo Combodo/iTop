@@ -609,9 +609,14 @@ class Config
 	 */
 	 protected $m_aCharsets;
 
-	public function __construct($sConfigFile, $bLoadConfig = true)
+	public function __construct($sConfigFile = null, $bLoadConfig = true)
 	{
 		$this->m_sFile = $sConfigFile;
+		if (is_null($sConfigFile))
+		{
+			$bLoadConfig = false;
+		}
+
 		$this->m_aAppModules = array(
 			// Some default modules, always present can be move to an official iTop Module later if needed
 			'application/transaction.class.inc.php',
@@ -1108,13 +1113,17 @@ class Config
 	{
 		$this->m_aCharsets[$sIconvCode] = $sDisplayName;
 	}	
-	public function FileIsWritable()
-	{
-		return is_writable($this->m_sFile);
-	}
+
 	public function GetLoadedFile()
 	{
-		return $this->m_sFile;
+		if (is_null($this->m_sFile))
+		{
+			return '';
+		}
+		else
+		{
+			return $this->m_sFile;
+		}
 	}
 	
 	/**

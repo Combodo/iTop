@@ -32,8 +32,6 @@ require_once(APPROOT.'/core/cmdbsource.class.inc.php');
 require_once(APPROOT.'/setup/setuppage.class.inc.php');
 require_once(APPROOT.'/setup/moduleinstaller.class.inc.php');
 
-define('TMP_CONFIG_FILE', APPROOT.'/tmp-config-itop.php');
-define('FINAL_CONFIG_FILE', APPROOT.'/config-itop.php');
 define('PHP_MIN_VERSION', '5.2.0');
 define('MYSQL_MIN_VERSION', '5.0.0');
 define('MIN_MEMORY_LIMIT', 32*1024*1024);
@@ -589,10 +587,12 @@ function WelcomeAndCheckPrerequisites(SetupPage $oP, $aParamValues, $iCurrentSte
 	$oP->add("<form id=\"theForm\" method=\"post\" onSubmit=\"return DoSubmit('', 0)\">\n");
 	$sMode = 'install'; // Fresh install
 
+	$sConfigFile = utils::GetConfigFilePath();
+
 	// Check for a previous version
-	if (file_exists(FINAL_CONFIG_FILE))
+	if (file_exists($sConfigFile))
 	{
-		$oConfig = new Config(FINAL_CONFIG_FILE);
+		$oConfig = new Config($sConfigFile);
 		
 		$aVersion = AnalyzeInstallation($oConfig, $aParamValues['source_dir']);
 		if (!empty($aVersion[ROOT_MODULE]['version_db']))
@@ -641,7 +641,7 @@ function WelcomeAndCheckPrerequisites(SetupPage $oP, $aParamValues, $iCurrentSte
 
 		//AddHiddenParam($oP, 'source_dir', 'datamodel');
 		AddHiddenParam($oP, 'source_dir', 'modules'); // not ready for the big bang ?
-		AddHiddenParam($oP, 'target_dir', 'env-production');
+		AddHiddenParam($oP, 'target_dir', 'env-'.utils::GetCurrentEnvironment());
 		
 		$aPreviousParams = array('mode', 'source_dir', 'target_dir');
 		AddParamsToForm($oP, $aParamValues, $aPreviousParams);
@@ -667,7 +667,8 @@ function LicenceAcknowledgement($oP, $aParamValues, $iCurrentStep)
 	$sChecked = $aParamValues['licence_ok'] == 1 ? 'checked' : '';
 	$oP->add("<h2><input id=\"licence_ok\" type=\"checkbox\" name=\"licence_ok\" value=\"1\" $sChecked><label for=\"licence_ok\">I accept the terms of this licence agreement</label></h2>\n");
 
-	if (file_exists(FINAL_CONFIG_FILE))
+	$sConfigFile = utils::GetConfigFilePath();
+	if (file_exists($sConfigFile))
 	{
 		$oP->add("<h2 class=\"next\">Next: Modules selection</h2>\n");		
 		$sNextOperation = 'step4';
@@ -826,10 +827,11 @@ function ModulesSelection(SetupPage $oP, $aParamValues, $iCurrentStep, $oConfig)
 
 	$aAvailableModules = AnalyzeInstallation($oConfig, $aParamValues['source_dir']);
 	
+	$sConfigFile = utils::GetConfigFilePath();
 	// Form goes here
 	if ($aParamValues['mode'] == 'upgrade')
 	{
-		if (file_exists(FINAL_CONFIG_FILE))
+		if (file_exists($sConfigFile))
 		{
 			$iPrevStep = 1; // depends on where we came from		
 		}
@@ -1018,7 +1020,7 @@ function AdminAccountDefinition(SetupPage $oP, $aParamValues, $iCurrentStep, Con
 	$aForm = array();
 	$aAvailableLanguages = GetAvailableLanguages(APPROOT.'dictionaries');
 	$sLanguages = '';
-	$sDefaultCode = $oConfig->GetDefaultLanguage();
+	$sDefaultCode = 'EN US';
 	foreach($aAvailableLanguages as $sLangCode => $aInfo)
 	{
 		$sSelected = ($sLangCode == $sDefaultCode ) ? 'selected' : '';
@@ -1353,14 +1355,12 @@ function SetupFinished(SetupPage $oP, $aParamValues, $iCurrentStep, Config $oCon
 
 	try
 	{
-		$sSessionName = $oConfig->Get('session_name');
-		if ($sSessionName != '')
-		{
-			$sSessionName = sprintf('iTop-%x', rand());
-			$oConfig->Set('session_name', $sSessionName);
-		}
-		session_name($sSessionName);
+		session_name('itop-'.md5(APPROOT));
 		session_start();
+		if (!isset($_SESSION['itop_env']))
+		{
+			$_SESSION['itop_env'] = ITOP_DEFAULT_ENV;
+		}
 		
 		// Migration: force utf8_unicode_ci as the collation to make the global search
 		// NON case sensitive
@@ -1370,7 +1370,12 @@ function SetupFinished(SetupPage $oP, $aParamValues, $iCurrentStep, Config $oCon
 		UpdateConfigSettings($oConfig, $aParamValues, $aParamValues['target_dir']);
 
 		// Write the final configuration file
-		$oConfig->WriteToFile(FINAL_CONFIG_FILE);
+		$sConfigFile = utils::GetConfigFilePath();
+		$sConfigDir = dirname($sConfigFile);
+		@mkdir($sConfigDir);
+		@chmod($sConfigDir, 0770); // RWX for owner and group, nothing for others
+
+		$oConfig->WriteToFile($sConfigFile);
 
 		// Start the application
 		InitDataModel($oConfig, false, true); // Load model, startup DB and load the cache
@@ -1387,7 +1392,7 @@ function SetupFinished(SetupPage $oP, $aParamValues, $iCurrentStep, Config $oCon
 				$oP->add("<h1>iTop configuration wizard</h1>\n");
 				$oP->add("<h2>Step 5: Configuration completed</h2>\n");
 				
-				@unlink(FINAL_CONFIG_FILE); // remove the aborted config
+				@unlink($sConfigFile); // remove the aborted config
 				$oP->error("Error: Failed to login for user: '$sAuthUser'\n");
 	
 				$oP->add("<form id=\"theForm\" method=\"post\">\n");
@@ -1399,10 +1404,8 @@ function SetupFinished(SetupPage $oP, $aParamValues, $iCurrentStep, Config $oCon
 			}
 		}
 			
-		// remove the tmp config file
-		@unlink(TMP_CONFIG_FILE);
 		// try to make the final config file read-only
-		@chmod(FINAL_CONFIG_FILE, 0440); // Read-only for owner and group, nothing for others
+		@chmod($sConfigFile, 0440); // Read-only for owner and group, nothing for others
 		
 		$oP->set_title("Setup complete");
 		$oP->add("<form id=\"theForm\" method=\"get\" action=\"../index.php\">\n");
@@ -1471,16 +1474,16 @@ foreach($aParams as $sName)
 {
 	$aParamValues[$sName] = utils::ReadParam($sName, '', false, 'raw_data');
 }
-
-if (file_exists(FINAL_CONFIG_FILE))
+$sConfigFile = utils::GetConfigFilePath();
+if (file_exists($sConfigFile))
 {
 	// The configuration file already exists
-	if (!is_writable(FINAL_CONFIG_FILE))
+	if (!is_writable($sConfigFile))
 	{
 		$oP->add("<h1>iTop configuration wizard</h1>\n");
 		$oP->add("<h2>Fatal error</h2>\n");
-		$oP->error("<b>Error:</b> the configuration file '".FINAL_CONFIG_FILE."' already exists and cannot be overwritten.");
-		$oP->p("The wizard cannot modify the configuration file for you. If you want to upgrade iTop, please make sure that the file '<b>".realpath(FINAL_CONFIG_FILE)."</b>' can be modified by the web server.");
+		$oP->error("<b>Error:</b> the configuration file '".$sConfigFile."' already exists and cannot be overwritten.");
+		$oP->p("The wizard cannot modify the configuration file for you. If you want to upgrade iTop, please make sure that the file '<b>".realpath($sConfigFile)."</b>' can be modified by the web server.");
 		$oP->output();
 		exit;
 	}
@@ -1488,29 +1491,29 @@ if (file_exists(FINAL_CONFIG_FILE))
 else
 {
 	// No configuration file yet
-	// Check that the wizard can write into the root dir to create the configuration file
-	if (!is_writable(dirname(TMP_CONFIG_FILE)))
+	// Check that the wizard can write into the conf dir to create the configuration file
+	if (!is_writable(APPCONF))
 	{
 		$oP->add("<h1>iTop configuration wizard</h1>\n");
 		$oP->add("<h2>Fatal error</h2>\n");
 		$oP->error("<b>Error:</b> the directory where to store the configuration file is not writable.");
-		$oP->p("The wizard cannot create the configuration file for you. Please make sure that the directory '<b>".realpath(dirname(TMP_CONFIG_FILE))."</b>' is writable for the web server.");
+		$oP->p("The wizard cannot create the configuration file for you. Please make sure that the directory '<b>".realpath(APPCONF)."</b>' is writable for the web server.");
 		$oP->output();
 		exit;
 	}
-	if (!is_writable(dirname(TMP_CONFIG_FILE).'/setup'))
+	if (!is_writable(APPROOT.'setup'))
 	{
 		$oP->add("<h1>iTop configuration wizard</h1>\n");
 		$oP->add("<h2>Fatal error</h2>\n");
 		$oP->error("<b>Error:</b> the directory where to store temporary setup files is not writable.");
-		$oP->p("The wizard cannot create operate. Please make sure that the directory '<b>".realpath(dirname(TMP_CONFIG_FILE))."/setup</b>' is writable for the web server.");
+		$oP->p("The wizard cannot create operate. Please make sure that the directory '<b>".realpath(APPROOT.'setup')."</b>' is writable for the web server.");
 		$oP->output();
 		exit;
 	}
 	
 }
 
-$oConfig = new Config(TMP_CONFIG_FILE, false /* Don't try to load it */);
+$oConfig = new Config();
 UpdateConfigSettings($oConfig, $aParamValues);
 
 try

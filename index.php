@@ -1,5 +1,5 @@
 <?php
-$sConfigFile = 'config-itop.php';
+$sConfigFile = 'conf/production/config-itop.php';
 $sStartPage = './pages/UI.php';
 $sSetupPage = './setup/index.php';
 

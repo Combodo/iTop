@@ -295,7 +295,7 @@ class ActionEmail extends ActionNotification
 			$sBody = MetaModel::ApplyParams($this->Get('body'), $aContextArgs);
 			
 			$oObj = $aContextArgs['this->object()'];
-			$sMessageId = sprintf('iTop_%s_%d_%f@%s.openitop.org', get_class($oObj), $oObj->GetKey(), microtime(true /* get as float*/), MetaModel::GetConfig()->Get('session_name'));
+			$sMessageId = sprintf('iTop_%s_%d_%f@%s.openitop.org', get_class($oObj), $oObj->GetKey(), microtime(true /* get as float*/), MetaModel::GetEnvironmentId());
 			$sReference = '<'.$sMessageId.'>';
 		}
 		catch(Exception $e)

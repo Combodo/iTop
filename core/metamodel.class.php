@@ -1973,8 +1973,7 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 			{
 				// Note: For versions of APC older than 3.0.17, fetch() accepts only one parameter
 				//
-				$sAppIdentity = self::GetConfig()->Get('session_name');
-				$sOqlAPCCacheId = $sAppIdentity.'-query-cache-'.$sOqlId;
+				$sOqlAPCCacheId = 'itop-'.MetaModel::GetEnvironmentId().'-query-cache-'.$sOqlId;
 				$oKPI = new ExecutionKPI();
 				$result = apc_fetch($sOqlAPCCacheId);
 				$oKPI->ComputeStats('Query APC (fetch)', $sOqlQuery);
@@ -4126,7 +4125,7 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 
 		// Note: load the dictionary as soon as possible, because it might be
 		//       needed when some error occur
-		$sAppIdentity = self::GetConfig()->Get('session_name');
+		$sAppIdentity = 'itop-'.MetaModel::GetEnvironmentId();
 		if (!self::$m_bUseAPCCache || !Dict::InCache($sAppIdentity))
 		{
 			foreach (self::$m_oConfig->GetDictionaries() as $sModule => $sToInclude)
@@ -4175,8 +4174,7 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 			$oKPI = new ExecutionKPI();
 			// Note: For versions of APC older than 3.0.17, fetch() accepts only one parameter
 			//
-			$sAppIdentity = self::GetConfig()->Get('session_name');
-			$sOqlAPCCacheId = $sAppIdentity.'-metamodel';
+			$sOqlAPCCacheId = 'itop-'.MetaModel::GetEnvironmentId().'-metamodel';
 			$result = apc_fetch($sOqlAPCCacheId);
 
 			if (is_array($result))
@@ -4257,6 +4255,11 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 	public static function GetConfig()
 	{
 		return self::$m_oConfig;
+	}
+
+	public static function GetEnvironmentId()
+	{
+		return md5(APPROOT).'-'.utils::GetCurrentEnvironment();
 	}
 
 	protected static $m_aExtensionClasses = array();
@@ -4663,10 +4666,8 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 		{
 			$oConfig = self::GetConfig();
 		}
-		$sAppIdentity = $oConfig->Get('session_name');
-
 		$aCacheUserData = apc_cache_info('user');  
-		$sPrefix = $sAppIdentity.'-';
+		$sPrefix = 'itop-'.MetaModel::GetEnvironmentId().'-';
 
 		$aEntries = array();
 		foreach($aCacheUserData['cache_list'] as $i => $aEntry)
@@ -4688,8 +4689,8 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 		{
 			$oConfig = self::GetConfig();
 		}
-		$sAppIdentity = $oConfig->Get('session_name');
 
+		$sAppIdentity = 'itop-'.MetaModel::GetEnvironmentId();
 		Dict::ResetCache($sAppIdentity);
 
 		foreach(self::GetCacheEntries($oConfig) as $sKey => $aAPCInfo)

@@ -37,7 +37,7 @@ class EMail
 {
 	protected static $m_oConfig = null;
 
-	public function LoadConfig($sConfigFile = ITOP_CONFIG_FILE)
+	public function LoadConfig($sConfigFile = ITOP_DEFAULT_CONFIG_FILE)
 	{
 		if (is_null(self::$m_oConfig))
 		{
