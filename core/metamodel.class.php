@@ -375,7 +375,7 @@ abstract class MetaModel
 			$sParentClass = self::GetParentPersistentClass($sClass);
 			if (strlen($sParentClass) > 0)
 			{
-				return self::GetClassIcon($sParentClass);
+				return self::GetClassIcon($sParentClass, $bImgTag, $sMoreStyles);
 			}
 		}
 		if ($bImgTag && ($sIcon != ''))
