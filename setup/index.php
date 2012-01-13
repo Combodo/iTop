@@ -588,6 +588,7 @@ function WelcomeAndCheckPrerequisites(SetupPage $oP, $aParamValues, $iCurrentSte
 	$sMode = 'install'; // Fresh install
 
 	$sConfigFile = utils::GetConfigFilePath();
+	$oP->log_info("Target configuration file: ".$sConfigFile);		
 
 	// Check for a previous version
 	if (file_exists($sConfigFile))
@@ -1370,6 +1371,14 @@ function SetupFinished(SetupPage $oP, $aParamValues, $iCurrentStep, Config $oCon
 		// Final config update: add the modules
 		UpdateConfigSettings($oConfig, $aParamValues, $aParamValues['target_dir']);
 
+		// Make sure the root configuration directory exists
+		if (!file_exists(APPCONF))
+		{
+			mkdir(APPCONF);
+			chmod(APPCONF, 0770); // RWX for owner and group, nothing for others
+			$oP->log_info("Created configuration directory: ".APPCONF);		
+		}
+
 		// Write the final configuration file
 		$sConfigFile = utils::GetConfigFilePath();
 		$sConfigDir = dirname($sConfigFile);
@@ -1493,12 +1502,20 @@ else
 {
 	// No configuration file yet
 	// Check that the wizard can write into the conf dir to create the configuration file
-	if (!is_writable(APPCONF))
+	if (file_exists(APPCONF))
+	{
+		$sTestedDir = APPCONF;
+	}
+	else
+	{
+		$sTestedDir = APPROOT;
+	}
+	if (!is_writable($sTestedDir))
 	{
 		$oP->add("<h1>iTop configuration wizard</h1>\n");
 		$oP->add("<h2>Fatal error</h2>\n");
 		$oP->error("<b>Error:</b> the directory where to store the configuration file is not writable.");
-		$oP->p("The wizard cannot create the configuration file for you. Please make sure that the directory '<b>".realpath(APPCONF)."</b>' is writable for the web server.");
+		$oP->p("The wizard cannot create the configuration file for you. Please make sure that the directory '<b>".realpath($sTestedDir)."</b>' is writable for the web server.");
 		$oP->output();
 		exit;
 	}
