@@ -312,6 +312,7 @@ EOF;
 	protected function FlagsToPHP($oAttNode)
 	{
 		static $aNodeAttributeToFlag = array(
+			'mandatory' => 'OPT_ATT_MANDATORY',
 			'read_only' => 'OPT_ATT_READONLY',
 			'must_prompt' => 'OPT_ATT_MUSTPROMPT',
 			'must_change' => 'OPT_ATT_MUSTCHANGE',
