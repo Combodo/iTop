@@ -24,7 +24,7 @@
  */
 
 require_once(APPROOT."/application/nicewebpage.class.inc.php");
-require_once(APPROOT."designer/modulediscovery.class.inc.php");
+require_once(APPROOT."setup/modulediscovery.class.inc.php");
 
 define('INSTALL_LOG_FILE', APPROOT.'/setup.log');
 

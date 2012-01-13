@@ -140,9 +140,9 @@ try
 		//
 		SetupPage::log_info("Compiling data model.");
 
-		require_once(APPROOT.'designer/modulediscovery.class.inc.php');
-		require_once(APPROOT.'designer/modelfactory.inc.class.php');
-		require_once(APPROOT.'designer/compiler.inc.class.php');
+		require_once(APPROOT.'setup/modulediscovery.class.inc.php');
+		require_once(APPROOT.'setup/modelfactory.class.inc.php');
+		require_once(APPROOT.'setup/compiler.class.inc.php');
 
 		$sSelectedModules = Utils::ReadParam('selected_modules', '', false, 'raw_data');
 		$aSelectedModules = explode(',', $sSelectedModules);
