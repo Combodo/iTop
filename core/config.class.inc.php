@@ -84,6 +84,14 @@ class Config
 	// New way to store the settings !
 	//
 	protected $m_aSettings = array(
+		'app_env_label' => array(
+			'type' => 'string',
+			'description' => 'Label displayed to describe the current application environnment, defaults to the environment name (e.g. "production")',
+			'default' => '',
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
 		'app_root_url' => array(
 			'type' => 'string',
 			'description' => 'Root URL used for navigating within the application, or from an email to the application (you can put $SERVER_NAME$ as a placeholder for the server\'s name)',
@@ -1334,5 +1342,107 @@ class Config
 		}
 		return $aResult;
 	}
+
+	/**
+	 * Helper function to initialize a configuration from the page arguments
+	 */
+	public function UpdateFromParams($aParamValues, $sModulesDir = null)
+	{
+		if (isset($aParamValues['application_path']))
+		{
+			$this->Set('app_root_url', $aParamValues['application_path']);
+		}
+		if (isset($aParamValues['mode']) && isset($aParamValues['language']))
+		{
+			if (($aParamValues['mode'] == 'install') ||  $this->GetDefaultLanguage() == '')
+			{
+				$this->SetDefaultLanguage($aParamValues['language']);
+			}
+		}
+		if (isset($aParamValues['db_server']))
+		{
+			$this->SetDBHost($aParamValues['db_server']);
+			$this->SetDBUser($aParamValues['db_user']);
+			$this->SetDBPwd($aParamValues['db_pwd']);
+			$sDBName = $aParamValues['db_name'];
+			if ($sDBName == '')
+			{
+				$sDBName = $aParamValues['new_db_name'];
+			}
+			$this->SetDBName($sDBName);
+			$this->SetDBSubname($aParamValues['db_prefix']);
+		}
+	
+		if (!is_null($sModulesDir))
+		{
+			if (isset($aParamValues['selected_modules']))
+			{
+				$aSelectedModules = explode(',', $aParamValues['selected_modules']);
+			}
+			else
+			{
+				$aSelectedModules = null;
+			}
+	
+			// Initialize the arrays below with default values for the application...
+			$oEmptyConfig = new Config('dummy_file', false); // Do NOT load any config file, just set the default values
+			$aAddOns = $oEmptyConfig->GetAddOns();
+			$aAppModules = $oEmptyConfig->GetAppModules();
+			$aDataModels = $oEmptyConfig->GetDataModels();
+			$aWebServiceCategories = $oEmptyConfig->GetWebServiceCategories();
+			$aDictionaries = $oEmptyConfig->GetDictionaries();
+			// Merge the values with the ones provided by the modules
+			// Make sure when don't load the same file twice...
+	
+			$aModules = ModuleDiscovery::GetAvailableModules(APPROOT, $sModulesDir);
+			foreach($aModules as $sModuleId => $aModuleInfo)
+			{
+				list($sModuleName, $sModuleVersion) = ModuleDiscovery::GetModuleName($sModuleId);
+				if (is_null($aSelectedModules) || in_array($sModuleName, $aSelectedModules))
+				{
+					if (isset($aModuleInfo['datamodel']))
+					{
+						$aDataModels = array_unique(array_merge($aDataModels, $aModuleInfo['datamodel']));
+					}
+					if (isset($aModuleInfo['webservice']))
+					{
+						$aWebServiceCategories = array_unique(array_merge($aWebServiceCategories, $aModuleInfo['webservice']));
+					}
+					if (isset($aModuleInfo['dictionary']))
+					{
+						$aDictionaries = array_unique(array_merge($aDictionaries, $aModuleInfo['dictionary']));
+					}
+					if (isset($aModuleInfo['settings']))
+					{
+						foreach($aModuleInfo['settings'] as $sProperty => $value)
+						{
+							list($sName, $sVersion) = ModuleDiscovery::GetModuleName($sModuleId);
+							$this->SetModuleSetting($sName, $sProperty, $value);
+						}
+					}
+					if (isset($aModuleInfo['installer']))
+					{
+						$sModuleInstallerClass = $aModuleInfo['installer'];
+						if (!class_exists($sModuleInstallerClass))
+						{
+							throw new Exception("Wrong installer class: '$sModuleInstallerClass' is not a PHP class - Module: ".$aModuleInfo['label']);
+						}
+						if (!is_subclass_of($sModuleInstallerClass, 'ModuleInstallerAPI'))
+						{
+							throw new Exception("Wrong installer class: '$sModuleInstallerClass' is not derived from 'ModuleInstallerAPI' - Module: ".$aModuleInfo['label']);
+						}
+						$aCallSpec = array($sModuleInstallerClass, 'BeforeWritingConfig');
+						call_user_func_array($aCallSpec, array($this));
+					}
+				}
+			}
+			$this->SetAddOns($aAddOns);
+			$this->SetAppModules($aAppModules);
+			$this->SetDataModels($aDataModels);
+			$this->SetWebServiceCategories($aWebServiceCategories);
+			$this->SetDictionaries($aDictionaries);
+		}
+	}
+
 }
 ?>

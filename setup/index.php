@@ -1369,7 +1369,7 @@ function SetupFinished(SetupPage $oP, $aParamValues, $iCurrentStep, Config $oCon
 		$oConfig->SetDBCollation('utf8_unicode_ci');
 		
 		// Final config update: add the modules
-		UpdateConfigSettings($oConfig, $aParamValues, $aParamValues['target_dir']);
+		$oConfig->UpdateFromParams($aParamValues, $aParamValues['target_dir']);
 
 		// Make sure the root configuration directory exists
 		if (!file_exists(APPCONF))
@@ -1532,7 +1532,7 @@ else
 }
 
 $oConfig = new Config();
-UpdateConfigSettings($oConfig, $aParamValues);
+$oConfig->UpdateFromParams($aParamValues);
 
 try
 {

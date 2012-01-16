@@ -734,10 +734,11 @@ EOF
 				$sRestrictions = Dict::S('UI:AccessRO-Users');
 		}
 
+		$sApplicationBanner = '';
 		if (strlen($sRestrictions) > 0)
 		{
 			$sAdminMessage = trim(MetaModel::GetConfig()->Get('access_message'));
-			$sApplicationBanner = '<div id="admin-banner">';
+			$sApplicationBanner .= '<div id="admin-banner">';
 			$sApplicationBanner .= '<img src="../images/locked.png" style="vertical-align:middle;">';
 			$sApplicationBanner .= '&nbsp;<b>'.$sRestrictions.'</b>';
 			if (strlen($sAdminMessage) > 0)
@@ -746,13 +747,21 @@ EOF
 			}
 			$sApplicationBanner .= '</div>';
 		}
-		else if(strlen($this->m_sMessage))
+
+		if(strlen($this->m_sMessage))
 		{
-			$sApplicationBanner = '<div id="admin-banner"><span style="padding:5px;">'.$this->m_sMessage.'<span></div>';
+			$sApplicationBanner .= '<div id="admin-banner"><span style="padding:5px;">'.$this->m_sMessage.'<span></div>';
 		}
-		else
+
+		$sEnvironment = utils::GetCurrentEnvironment();
+		if($sEnvironment != 'production')
 		{
-			$sApplicationBanner = '';
+			$sEnvLabel = trim(MetaModel::GetConfig()->Get('app_env_label'));
+			if (strlen($sEnvLabel) == 0)
+			{
+				$sEnvLabel = $sEnvironment;
+			}
+			$sApplicationBanner .= '<div id="admin-banner"><span style="padding:5px;">'.Dict::Format('UI:ApplicationEnvironment', $sEnvLabel).'<span></div>';
 		}
 
 		$sOnlineHelpUrl = MetaModel::GetConfig()->Get('online_help');

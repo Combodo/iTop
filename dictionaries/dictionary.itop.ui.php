@@ -480,6 +480,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Login:PasswordChanged' => 'Password successfully set !',
 	'UI:AccessRO-All' => 'iTop is read-only',
 	'UI:AccessRO-Users' => 'iTop is read-only for end-users',
+	'UI:ApplicationEnvironment' => 'Application environment: %1$s',
 	'UI:Login:RetypePwdDoesNotMatch' => 'New password and retyped new password do not match !',
 	'UI:Button:Login' => 'Enter iTop',
 	'UI:Login:Error:AccessRestricted' => 'iTop access is restricted. Please, contact an iTop administrator.',

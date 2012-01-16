@@ -358,6 +358,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Login:PasswordChanged' => 'Mot de passe mis à jour !',
 	'UI:AccessRO-All' => 'iTop est en lecture seule',
 	'UI:AccessRO-Users' => 'iTop est en lecture seule pour les utilisateurs finaux',
+	'UI:ApplicationEnvironment' => 'Environnement applicatif: %1$s',
 	'UI:Login:RetypePwdDoesNotMatch' => 'Les deux saisies du nouveau mot de passe ne sont pas identiques !',
 	'UI:Button:Login' => 'Entrer dans iTop',
 	'UI:Login:Error:AccessRestricted' => 'L\'accès à iTop est soumis à autorisation. Merci de contacter votre administrateur iTop.',

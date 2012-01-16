@@ -211,7 +211,7 @@ try
 			'db_prefix' => utils::ReadParam('db_prefix', '', false, 'raw_data')
 		);
 		$sModuleDir = Utils::ReadParam('modules_dir', '');
-		UpdateConfigSettings($oConfig, $aParamValues, $sModuleDir);
+		$oConfig->UpdateFromParams($aParamValues, $sModuleDir);
 
 		InitDataModel($oConfig, true);  // load data model only
 
@@ -240,7 +240,7 @@ try
 			'db_prefix' => utils::ReadParam('db_prefix', '', false, 'raw_data')
 		);
 		$sModuleDir = Utils::ReadParam('modules_dir', '');
-		UpdateConfigSettings($oConfig, $aParamValues, $sModuleDir);
+		$oConfig->UpdateFromParams($aParamValues, $sModuleDir);
 
 		InitDataModel($oConfig, false);  // load data model and connect to the database
 
@@ -310,7 +310,7 @@ try
 			'db_prefix' => utils::ReadParam('db_prefix', '', false, 'raw_data')
 		);
 		$sModuleDir = Utils::ReadParam('modules_dir', '');
-		UpdateConfigSettings($oConfig, $aParamValues, $sModuleDir);
+		$oConfig->UpdateFromParams($aParamValues, $sModuleDir);
 
 		InitDataModel($oConfig, false);  // load data model and connect to the database
 
