@@ -460,10 +460,8 @@ class utils
 	}
 
     /**
-     * Returns the absolute URL to the server's root path
-     * @param $sCurrentRelativePath string NO MORE USED, kept for backward compatibility only !
-     * @param $bForceHTTPS bool True to force HTTPS, false otherwise
-     * @return string The absolute URL to the server's root, without the first slash
+     * Returns the absolute URL to the application root path
+     * @return string The absolute URL to the application root, without the first slash
      */                   
 	static public function GetAbsoluteUrlAppRoot()
 	{
@@ -757,5 +755,14 @@ class utils
 		return APPCONF.self::GetCurrentEnvironment().'/'.ITOP_CONFIG_FILE;
 	}
 
+    /**
+     * Returns the absolute URL to the modules root path
+     * @return string ...
+     */                   
+	static public function GetAbsoluteUrlModulesRoot()
+	{
+		$sUrl = self::GetAbsoluteUrlAppRoot().'env-'.self::GetCurrentEnvironment().'/';
+		return $sUrl;
+	}
 }
 ?>

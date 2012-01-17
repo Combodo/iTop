@@ -542,11 +542,16 @@ EOF
     public function output()
     {
     	$sAbsURLAppRoot = addslashes($this->m_sRootUrl);
+    	$sAbsURLModulesRoot = addslashes(utils::GetAbsoluteUrlModulesRoot());
 		$this->add_script(
 <<<EOF
 function GetAbsoluteUrlAppRoot()
 {
 	return '$sAbsURLAppRoot';
+}
+function GetAbsoluteUrlModulesRoot()
+{
+	return '$sAbsURLModulesRoot';
 }
 EOF
 		);

@@ -738,10 +738,6 @@ abstract class MetaModel
 	final static public function GetAttributeDef($sClass, $sAttCode)
 	{
 		self::_check_subclass($sClass);
-if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
-{
-	echo "<p>$sAttCode is NOT a valid attribute of class $sClass.</p>";
-}
 		return self::$m_aAttribDefs[$sClass][$sAttCode];
 	}
 
@@ -4033,6 +4029,8 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 
 	public static function Startup($config, $bModelOnly = false, $bAllowCache = true, $bTraceSourceFiles = false)
 	{
+		define('MODULESROOT', APPROOT.'env-'.utils::GetCurrentEnvironment().'/');
+
 		self::$m_bTraceSourceFiles = $bTraceSourceFiles;
 
 		// $config can be either a filename, or a Configuration object (volatile!)
@@ -4615,6 +4613,10 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 	 */
 	static public function ApplyParams($aInput, $aParams)
 	{
+		// Declare magic parameters
+		$aParams['APP_URL'] = utils::GetAbsoluteUrlAppRoot();
+		$aParams['MODULES_URL'] = utils::GetAbsoluteUrlModulesRoot();
+
 		$aSearches = array();
 		$aReplacements = array();
 		foreach($aParams as $sSearch => $replace)

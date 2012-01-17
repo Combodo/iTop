@@ -238,7 +238,7 @@ EOF
 		{
 			$sIsDeleteEnabled = $this->m_bDeleteEnabled ? 'true' : 'false';
 			$iTransactionId = $oPage->GetTransactionId();
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'modules/itop-attachments/ajaxfileupload.js');
+			$oPage->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'itop-attachments/ajaxfileupload.js');
 			$sClass = get_class($oObject);
 			$sTempId = session_id().'_'.$iTransactionId;
 			$sDeleteBtn = Dict::S('Attachments:DeleteBtn');
@@ -273,7 +273,7 @@ EOF
 		$.ajaxFileUpload
 		(
 			{
-				url: GetAbsoluteUrlAppRoot()+'modules/itop-attachments/ajax.attachment.php?obj_class={$sClass}&temp_id={$sTempId}&operation=add', 
+				url: GetAbsoluteUrlModulesRoot()+'itop-attachments/ajax.attachment.php?obj_class={$sClass}&temp_id={$sTempId}&operation=add', 
 				secureuri:false,
 				fileElementId:'file',
 				dataType: 'json',
@@ -496,7 +496,7 @@ EOF
 			break;
 		}
 		
-		return "modules/itop-attachments/icons/$sIcon";
+		return utils::GetAbsoluteUrlModulesRoot()."itop-attachments/icons/$sIcon";
 	}
 	
 	/////////////////////////////////////////////////////////////////////////

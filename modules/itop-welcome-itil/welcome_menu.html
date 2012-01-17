@@ -90,7 +90,7 @@ a.summary:hover {
 
 <div class="main_header drag_handle" id="main_cfg">
 
-<img src="../modules/itop-config-mgmt-1.0.0/images/database.png"/>
+<img src="$MODULES_URL$itop-config-mgmt-1.0.0/images/database.png"/>
 <itopblock BlockClass="DisplayBlock" type="summary" asynchronous="false" encoding="text/oql" parameters="title[block]:Menu_ConfigManagement;context_filter:1;label[block]:UI_WelcomeMenu_AllConfigItems;status[block]:status;status_codes[block]:implementation,production,obsolete">SELECT FunctionalCI</itopblock>
 
 </div>
@@ -141,7 +141,7 @@ a.summary:hover {
 <div id="menu_2" class="main_container v-resizable">
 
 <div class="main_header drag_handle" id="main_helpdesk">
-<img src="../modules/itop-request-mgmt-1.0.0/images/user-request-deadline.png"/>
+<img src="$MODULES_URL$itop-request-mgmt-1.0.0/images/user-request-deadline.png"/>
 <itopblock BlockClass="DisplayBlock" type="summary" asynchronous="false" encoding="text/oql" parameters="title[block]:Menu_RequestManagement;context_filter:1;label[block]:UI_WelcomeMenu_AllOpenRequests;status[block]:status;status_codes[block]:new,assigned,escalated_tto,escalated_ttr,resolved">SELECT UserRequest WHERE status != "closed"</itopblock>
 </div>
 
@@ -159,7 +159,7 @@ a.summary:hover {
 <div id="menu_3" class="main_container v-resizable">
 
 <div class="main_header drag_handle" id="main_incident">
-<img src="../modules/itop-incident-mgmt-1.0.0/images/incident-escalated.png"/>
+<img src="$MODULES_URL$itop-incident-mgmt-1.0.0/images/incident-escalated.png"/>
 <itopblock BlockClass="DisplayBlock" type="summary" asynchronous="false" encoding="text/oql" parameters="title[block]:Menu_IncidentManagement;context_filter:1;label[block]:UI_WelcomeMenu_OpenIncidents;status[block]:status;status_codes[block]:new,assigned,escalated_tto,escalated_ttr,resolved">SELECT Incident WHERE status != "closed"</itopblock>
 </div>
 
