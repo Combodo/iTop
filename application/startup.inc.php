@@ -27,7 +27,13 @@ require_once(APPROOT.'/core/cmdbobject.class.inc.php');
 require_once(APPROOT.'/application/utils.inc.php');
 session_name('itop-'.md5(APPROOT));
 session_start();
-if (isset($_SESSION['itop_env']))
+if (isset($_REQUEST['switch_env']))
+{
+	$sEnv = $_REQUEST['switch_env'];
+	$_SESSION['itop_env'] = $sEnv;
+	// TODO: reset the credentials as well ??
+}
+else if (isset($_SESSION['itop_env']))
 {
 	$sEnv = $_SESSION['itop_env'];
 }

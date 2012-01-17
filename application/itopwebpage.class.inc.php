@@ -754,6 +754,7 @@ EOF
 		}
 
 		$sEnvironment = utils::GetCurrentEnvironment();
+		$sBackButton = utils::GetEnvironmentBackButton();
 		if($sEnvironment != 'production')
 		{
 			$sEnvLabel = trim(MetaModel::GetConfig()->Get('app_env_label'));
@@ -761,7 +762,7 @@ EOF
 			{
 				$sEnvLabel = $sEnvironment;
 			}
-			$sApplicationBanner .= '<div id="admin-banner"><span style="padding:5px;">'.Dict::Format('UI:ApplicationEnvironment', $sEnvLabel).'<span></div>';
+			$sApplicationBanner .= '<div id="admin-banner"><span style="padding:5px;">'.Dict::Format('UI:ApplicationEnvironment', $sEnvLabel).$sBackButton.'<span></div>';
 		}
 
 		$sOnlineHelpUrl = MetaModel::GetConfig()->Get('online_help');

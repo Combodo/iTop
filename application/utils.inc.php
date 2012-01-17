@@ -727,6 +727,29 @@ class utils
 	}
 	
 	/**
+	 * Get the "Back" button to go out of the current environment
+	 */
+	public static function GetEnvironmentBackButton()
+	{
+		if (isset($_SESSION['itop_return_env']))
+		{
+			if (isset($_SESSION['itop_return_url']))
+			{
+				$sReturnUrl = $_SESSION['itop_return_url'];
+			}
+			else
+			{
+				$sReturnUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?switch_env='.$_SESSION['itop_return_env'];
+			}
+			return '&nbsp;<button onclick="window;location.href=\''.addslashes($sReturnUrl).'\'">'.Dict::S('UI:Button:Back').'</button>';
+		}
+		else
+		{
+			return '';
+		}
+	}
+	
+	/**
 	 * Get target configuration file name (including full path)
 	 */
 	public static function GetConfigFilePath()
