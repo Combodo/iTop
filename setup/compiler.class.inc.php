@@ -144,7 +144,7 @@ EOF;
 					$sClass = $oClass->getAttribute("name");
 					try
 					{
-						$this->CompileClass($oClass, $sResultFile, $oP);
+						$this->CompileClass($oClass, $sResultFile, $sRelativeDir, $oP);
 					}
 					catch (ssDOMFormatException $e)
 					{
@@ -333,7 +333,7 @@ EOF;
 	}
 	
 	
-	protected function CompileClass($oClass, $sResFile, $oP)
+	protected function CompileClass($oClass, $sResFile, $sModuleRelativeDir, $oP)
 	{
 		$sClass = $oClass->getAttribute('name');
 		$oProperties = $this->GetUniqueElement($oClass, 'properties');
@@ -396,15 +396,15 @@ EOF;
 		$oDisplayTemplate = $this->GetOptionalElement($oProperties, 'display_template');
 		if ($oDisplayTemplate)
 		{
-			$sDisplayTemplate = $oDisplayTemplate->textContent;
-			$aClassParams['display_template'] = "'$sDisplayTemplate'";
+			$sDisplayTemplate = $sModuleRelativeDir.'/'.$oDisplayTemplate->textContent;
+			$aClassParams['display_template'] = "utils::GetAbsoluteUrlModulesRoot().'$sDisplayTemplate'";
 		}
 	
 		$oIcon = $this->GetOptionalElement($oProperties, 'icon');
 		if ($oIcon)
 		{
-			$sIcon = $oIcon->textContent;
-			$aClassParams['icon'] = "'$sIcon'";
+			$sIcon = $sModuleRelativeDir.'/'.$oIcon->textContent;
+			$aClassParams['icon'] = "utils::GetAbsoluteUrlModulesRoot().'$sIcon'";
 		}
 	
 		// Finalize class params declaration
