@@ -522,6 +522,11 @@ class ModelFactory
 	
 	protected function _priv_AlterNode(DOMNode $oNode, DOMNode $oDeltaNode)
 	{
+		foreach ($oDeltaNode->attributes as $sName => $oAttrNode)
+		{
+			$oNode->setAttribute($sName, $oAttrNode->value);
+		}
+		
 		foreach($oDeltaNode->childNodes as $oChildNode)
 		{
 			$sOperation = $oChildNode->getAttribute('_operation');
@@ -551,6 +556,12 @@ class ModelFactory
 				{
 					throw new Exception("Cannot modify the non-existing node '$sPath' in '".$oNode->getNodePath()."'");
 				}
+				break;
+				
+				case 'replaced':
+				$oNewNode = $this->oDOMDocument->importNode($oChildNode, true); // Import the node and its child nodes
+				$oToModify = $this->_priv_GetNodes($sPath, $oNode)->item(0);
+				$oNode->replaceChild($oNewNode, $oToModify);	
 				break;
 				
 				case 'created':
