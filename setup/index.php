@@ -641,7 +641,7 @@ function WelcomeAndCheckPrerequisites(SetupPage $oP, $aParamValues, $iCurrentSte
 		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
 
 		//AddHiddenParam($oP, 'source_dir', 'datamodel');
-		AddHiddenParam($oP, 'source_dir', 'modules'); // not ready for the big bang ?
+		AddHiddenParam($oP, 'source_dir', 'datamodel'); // not ready for the big bang ?
 		AddHiddenParam($oP, 'target_dir', 'env-'.utils::GetCurrentEnvironment());
 		
 		$aPreviousParams = array('mode', 'source_dir', 'target_dir');
