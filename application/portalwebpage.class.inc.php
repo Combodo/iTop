@@ -169,7 +169,7 @@ EOF
 		
 	function GetAbsoluteUrlAppRoot()
 	{
-		return '$sAbsURLAppRoot';
+		return '$sAbsURLAppRoot'+'modules/';
 	}
 	
 	function AddAppContext(sURL)

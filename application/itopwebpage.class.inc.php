@@ -407,6 +407,11 @@ EOF
 			return '$sAbsURLAppRoot';
 		}
 		
+		function GetAbsoluteUrlModulesRoot()
+		{
+			return '$sAbsURLAppRoot'+'modules/';
+		}
+		
 		function AddAppContext(sURL)
 		{
 			var sContext = '$sAppContext';

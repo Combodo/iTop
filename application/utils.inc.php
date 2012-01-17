@@ -460,8 +460,6 @@ class utils
 
     /**
      * Returns the absolute URL to the server's root path
-     * @param $sCurrentRelativePath string NO MORE USED, kept for backward compatibility only !
-     * @param $bForceHTTPS bool True to force HTTPS, false otherwise
      * @return string The absolute URL to the server's root, without the first slash
      */                   
 	static public function GetAbsoluteUrlAppRoot()
@@ -548,6 +546,17 @@ class utils
 			}			
 		}
 		return $sAppRootUrl;
+	}
+
+    /**
+     * Returns the absolute URL to the modules root path
+     * Hardcoded here for compatibility with iTop 2.0 modules     
+     * @return string The absolute URL to the modules
+     */                   
+	static public function GetAbsoluteUrlModulesRoot()
+	{
+		$sUrl = self::GetAbsoluteUrlAppRoot().'modules/';
+		return $sUrl;
 	}
 
 	/**

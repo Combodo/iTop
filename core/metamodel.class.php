@@ -4600,6 +4600,9 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 	 */
 	static public function ApplyParams($aInput, $aParams)
 	{
+		$aParams['APP_URL'] = utils::GetAbsoluteUrlAppRoot();
+		$aParams['MODULES_URL'] = utils::GetAbsoluteUrlModulesRoot();
+
 		$aSearches = array();
 		$aReplacements = array();
 		foreach($aParams as $sSearch => $replace)

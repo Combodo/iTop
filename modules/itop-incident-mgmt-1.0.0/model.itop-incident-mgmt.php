@@ -188,7 +188,7 @@ class Incident extends ResponseTicket
 		$sIcon = '';
 		if ($sIconName != '')
 		{
-			$sPath = '../modules/itop-incident-mgmt-1.0.0/images/'.$sIconName;
+			$sPath = utils::GetAbsoluteUrlModulesRoot().'itop-incident-mgmt-1.0.0/images/'.$sIconName;
 			if ($bImgTag)
 			{
 				$sIcon = "<img src=\"$sPath\" style=\"vertical-align:middle;\"/>";
