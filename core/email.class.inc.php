@@ -144,6 +144,11 @@ class EMail
 			$this->m_aHeaders[$sKey] = $sValue;
 		}
 	}
+
+	public function SetMessageId($sId)
+	{
+		$this->AddToHeader('Message-ID', $sId);
+	}
 	
 	public function SetReferences($sReferences)
 	{
