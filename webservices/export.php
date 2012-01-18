@@ -76,6 +76,8 @@ $currentOrganization = utils::ReadParam('org_id', '');
 
 // Main program
 $sExpression = utils::ReadParam('expression', '', true /* Allow CLI */, 'raw_data');
+$sFields = trim(utils::ReadParam('fields', '', true, 'raw_data')); // CSV field list (allows to specify link set attributes, still not taken into account for XML export)
+
 if (strlen($sExpression) == 0)
 {
 	$sQueryId = trim(utils::ReadParam('query', '', true /* Allow CLI */, 'raw_data'));
@@ -87,14 +89,17 @@ if (strlen($sExpression) == 0)
 		{
 			$oQuery = $oQueries->Fetch();
 			$sExpression = $oQuery->Get('oql');
+			if (strlen($sFields) == 0)
+			{
+				$sFields = trim($oQuery->Get('fields'));
+			} 
 		}
 	}
 }
 
-
 $sFormat = strtolower(utils::ReadParam('format', 'html', true /* Allow CLI */));
 
-$sFields = utils::ReadParam('fields', '', true, 'raw_data'); // CSV field list (allows to specify link set attributes, still not taken into account for XML export)
+
 $aFields = explode(',', $sFields);
 // Clean the list of columns (empty it if every string is empty)
 foreach($aFields as $index => $sField)
@@ -114,6 +119,30 @@ if (!empty($sExpression))
 	{
 		$oFilter = DBObjectSearch::FromOQL($sExpression);
 
+		// Check and adjust column names
+		//
+		foreach($aFields as $index => $sField)
+		{
+			if (preg_match('/^(.*)\.(.*)$/', $sField, $aMatches))
+			{
+				$sClassAlias = $aMatches[1];
+				$sAttCode = $aMatches[2];
+			}
+			else
+			{
+				$sClassAlias = $oFilter->GetClassAlias();
+				$sAttCode = $sField;
+				$aFields[$index] = $sClassAlias.'.'.$sAttCode;
+			}
+			$sClass = $oFilter->GetClassName($sClassAlias);
+			if (!MetaModel::IsValidAttCode($sClass, $sAttCode))
+			{
+				throw new CoreException("Invalid field specification $sField: $sAttCode is not a valid attribute for $sClass");
+			}
+		}
+
+		// Read query parameters
+		//
 		$aArgs = array();
 		foreach($oFilter->GetQueryParams() as $sParam => $foo)
 		{
@@ -195,15 +224,22 @@ if (!empty($sExpression))
 				
 				default:
 				$oP = new WebPage("iTop - Export");
-				$oP->add("Unsupported format '$sFormat'. Possible values are: html, csv or xml.");
+				$oP->add("Unsupported format '$sFormat'. Possible values are: html, csv, spreadsheet or xml.");
 			}
 		}
 	}
 	catch(Exception $e)
 	{
 		$oP = new WebPage("iTop - Export");
-		$oP->p("Error the query can not be executed.");		
-		$oP->p($e->GetHtmlDesc());		
+		$oP->p("Error the query can not be executed.");
+		if ($e instanceof CoreException)
+		{		
+			$oP->p($e->GetHtmlDesc());
+		}
+		else
+		{
+			$oP->p($e->getMessage());
+		}		
 	}
 }
 if (!$oP)
@@ -224,7 +260,7 @@ if (!$oP)
 	$oP->p(" * query: (alternative to 'expression') the id of an entry from the query phrasebook");
 	$oP->p(" * arg_xxx: (needed if the query has parameters) the value of the parameter 'xxx'");
 	$oP->p(" * format: (optional, default is html) the desired output format. Can be one of 'html', 'spreadsheet', 'csv' or 'xml'");
-	$oP->p(" * fields: (optional, no effect on XML format) list of fields (attribute codes) separated by a coma");
+	$oP->p(" * fields: (optional, no effect on XML format) list of fields (attribute codes, or alias.attcode) separated by a coma");
 }
 
 $oP->output();

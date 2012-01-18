@@ -655,8 +655,26 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		$bTruncated = isset($aExtraParams['truncated']) ? $aExtraParams['truncated'] == true : true;
 		$bSelectMode = isset($aExtraParams['selection_mode']) ? $aExtraParams['selection_mode'] == true : false;
 		$bSingleSelectMode = isset($aExtraParams['selection_type']) ? ($aExtraParams['selection_type'] == 'single') : false;
-		$aExtraFields = isset($aExtraParams['extra_fields']) ? explode(',', trim($aExtraParams['extra_fields'])) : array();
-		
+
+		$aExtraFieldsRaw = isset($aExtraParams['extra_fields']) ? explode(',', trim($aExtraParams['extra_fields'])) : array();
+		$aExtraFields = array();
+		foreach ($aExtraFieldsRaw as $sFieldName)
+		{
+			// Ignore attributes not of the main queried class
+			if (preg_match('/^(.*)\.(.*)$/', $sFieldName, $aMatches))
+			{
+				$sClassAlias = $aMatches[1];
+				$sAttCode = $aMatches[2];
+				if ($sClassAlias == $oSet->GetFilter()->GetClassAlias())
+				{
+					$aExtraFields[] = $sAttCode;
+				}
+			}
+			else
+			{
+				$aExtraFields[] = $sFieldName;
+			}
+		}
 		$sHtml = '';
 		$oAppContext = new ApplicationContext();
 		$sClassName = $oSet->GetFilter()->GetClass();
@@ -942,7 +960,28 @@ EOF
 		$bDisplayMenu = isset($aExtraParams['menu']) ? $aExtraParams['menu'] == true : true;
 		// Check if there is a list of aliases to limit the display to...
 		$aDisplayAliases = isset($aExtraParams['display_aliases']) ? explode(',', $aExtraParams['display_aliases']) : array();
-		
+		$sZListName = isset($aExtraParams['zlist']) ? ($aExtraParams['zlist']) : 'list';
+
+		$aExtraFieldsRaw = isset($aExtraParams['extra_fields']) ? explode(',', trim($aExtraParams['extra_fields'])) : array();
+		$aExtraFields = array();
+		foreach ($aExtraFieldsRaw as $sFieldName)
+		{
+			// Ignore attributes not of the main queried class
+			if (preg_match('/^(.*)\.(.*)$/', $sFieldName, $aMatches))
+			{
+				$sClassAlias = $aMatches[1];
+				$sAttCode = $aMatches[2];
+				if (array_key_exists($sClassAlias, $oSet->GetSelectedClasses()))
+				{
+					$aExtraFields[$sClassAlias][] = $sAttCode;
+				}
+			}
+			else
+			{
+				$aExtraFields['*'] = $sAttCode;
+			}
+		}
+
 		$sHtml = '';
 		$oAppContext = new ApplicationContext();
 		$aClasses = $oSet->GetFilter()->GetSelectedClasses();
@@ -958,12 +997,36 @@ EOF
 		$aAttribs = array();
 		foreach($aAuthorizedClasses as $sAlias => $sClassName) // TO DO: check if the user has enough rights to view the classes of the list...
 		{
-			$aList[$sClassName] = MetaModel::GetZListItems($sClassName, 'list');
+			if (array_key_exists($sAlias, $aExtraFields))
+			{
+				$aList[$sAlias] = $aExtraFields[$sAlias];
+			}
+			else
+			{
+				$aList[$sAlias] = array();
+			}
+			if ($sZListName !== false)
+			{
+				$aDefaultList = self::FlattenZList(MetaModel::GetZListItems($sClassName, $sZListName));
+				
+				$aList[$sAlias] = array_merge($aDefaultList, $aList[$sAlias]);
+			}
+	
+			// Filter the list to removed linked set since we are not able to display them here
+			foreach($aList[$sAlias] as $index => $sAttCode)
+			{
+				$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
+				if ($oAttDef instanceof AttributeLinkedSet)
+				{
+					// Removed from the display list
+					unset($aList[$sAlias][$index]);
+				}
+			}
 			if ($bViewLink)
 			{
 				$aAttribs['key_'.$sAlias] = array('label' => MetaModel::GetName($sClassName), 'description' => '');
 			}
-			foreach($aList[$sClassName] as $sAttCode)
+			foreach($aList[$sAlias] as $sAttCode)
 			{
 				$aAttribs[$sAttCode.'_'.$sAlias] = array('label' => MetaModel::GetLabel($sClassName, $sAttCode), 'description' => MetaModel::GetDescription($sClassName, $sAttCode));
 			}
@@ -972,7 +1035,7 @@ EOF
 		$aAttToLoad = array(); // attributes to load
 		foreach($aAuthorizedClasses as $sAlias => $sClassName)
 		{
-			foreach($aList[$sClassName] as $sAttCode)
+			foreach($aList[$sAlias] as $sAttCode)
 			{
 				$aAttToLoad[$sAlias][] = $sAttCode;
 			}
@@ -1006,7 +1069,7 @@ EOF
 						$aRow['key_'.$sAlias] = $aObjects[$sAlias]->GetHyperLink();
 					}
 				}
-				foreach($aList[$sClassName] as $sAttCode)
+				foreach($aList[$sAlias] as $sAttCode)
 				{
 					if (is_null($aObjects[$sAlias]))
 					{
@@ -1089,6 +1152,8 @@ EOF
 		$aHeader = array();
 		foreach($aAuthorizedClasses as $sAlias => $sClassName)
 		{
+			$aList[$sAlias] = array();
+
 			foreach(MetaModel::ListAttributeDefs($sClassName) as $sAttCode => $oAttDef)
 			{
 				if (is_null($aFields) || (count($aFields) == 0))
@@ -1096,20 +1161,20 @@ EOF
 					// Standard list of attributes (no link sets)
 					if ($oAttDef->IsScalar() && ($oAttDef->IsWritable() || $oAttDef->IsExternalField()))
 					{
-						$aList[$sClassName][$sAttCode] = $oAttDef;
+						$aList[$sAlias][$sAttCode] = $oAttDef;
 					}
 				}
 				else
 				{
 					// User defined list of attributes
-					if (in_array($sAttCode, $aFields))
+					if (in_array($sAttCode, $aFields) || in_array($sAlias.'.'.$sAttCode, $aFields))
 					{
-						$aList[$sClassName][$sAttCode] = $oAttDef;
+						$aList[$sAlias][$sAttCode] = $oAttDef;
 					}
 				}
 			}
 			$aHeader[] = 'id';
-			foreach($aList[$sClassName] as $sAttCode => $oAttDef)
+			foreach($aList[$sAlias] as $sAttCode => $oAttDef)
 			{
 				$sStar = '';
 				if ($oAttDef->IsExternalField())
@@ -1156,7 +1221,7 @@ EOF
 				{
 					$aRow[] = $oObj->GetKey();
 				}
-				foreach($aList[$sClassName] as $sAttCode => $oAttDef)
+				foreach($aList[$sAlias] as $sAttCode => $oAttDef)
 				{
 					if (is_null($oObj))
 					{
@@ -1203,6 +1268,8 @@ EOF
 		$aHeader = array();
 		foreach($aAuthorizedClasses as $sAlias => $sClassName)
 		{
+			$aList[$sAlias] = array();
+
 			foreach(MetaModel::ListAttributeDefs($sClassName) as $sAttCode => $oAttDef)
 			{
 				if (is_null($aFields) || (count($aFields) == 0))
@@ -1210,20 +1277,20 @@ EOF
 					// Standard list of attributes (no link sets)
 					if ($oAttDef->IsScalar() && ($oAttDef->IsWritable() || $oAttDef->IsExternalField()))
 					{
-						$aList[$sClassName][$sAttCode] = $oAttDef;
+						$aList[$sAlias][$sAttCode] = $oAttDef;
 					}
 				}
 				else
 				{
 					// User defined list of attributes
-					if (in_array($sAttCode, $aFields))
+					if (in_array($sAttCode, $aFields) || in_array($sAlias.'.'.$sAttCode, $aFields))
 					{
-						$aList[$sClassName][$sAttCode] = $oAttDef;
+						$aList[$sAlias][$sAttCode] = $oAttDef;
 					}
 				}
 			}
 			$aHeader[] = 'id';
-			foreach($aList[$sClassName] as $sAttCode => $oAttDef)
+			foreach($aList[$sAlias] as $sAttCode => $oAttDef)
 			{
 				$sStar = '';
 				if ($oAttDef->IsExternalField())
@@ -1284,7 +1351,7 @@ EOF
 				{
 					$aRow[] = '<td>'.$oObj->GetKey().'</td>';
 				}
-				foreach($aList[$sClassName] as $sAttCode => $oAttDef)
+				foreach($aList[$sAlias] as $sAttCode => $oAttDef)
 				{
 					if (is_null($oObj))
 					{
@@ -1328,7 +1395,7 @@ EOF
 		}
 		$aAttribs = array();
 		$aList = array();
-		$aList[$sClassName] = MetaModel::GetZListItems($sClassName, 'details');
+		$aList[$sAlias] = MetaModel::GetZListItems($sClassName, 'details');
 		$oPage->add("<Set>\n");
 		$oSet->Seek(0);
 		while ($aObjects = $oSet->FetchAssoc())
