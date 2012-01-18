@@ -73,7 +73,18 @@ class DBObjectSearch
 	public function IsDataFiltered() {return $this->m_bDataFiltered; }
 	public function SetDataFiltered() {$this->m_bDataFiltered = true;}
 
-	public function GetClassName($sAlias) {return $this->m_aClasses[$sAlias];}
+	public function GetClassName($sAlias)
+	{
+		if (array_key_exists($sAlias, $this->m_aClasses))
+		{
+			return $this->m_aClasses[$sAlias];
+		}
+		else
+		{
+			throw new CoreException("Invalid class alias '$sAlias'");
+		}
+	}
+
 	public function GetJoinedClasses() {return $this->m_aClasses;}
 
 	public function GetClass()
