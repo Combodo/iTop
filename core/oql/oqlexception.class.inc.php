@@ -50,7 +50,7 @@ class OQLException extends CoreException
 		parent::__construct($sMessage, 0);
 	}
 
-	public function getHtmlDesc($sHighlightHtmlBegin = '<b>', $sHighlightHtmlEnd = '</b>')
+	public function getHtmlDesc($sHighlightHtmlBegin = '<span style="font-weight: bolder">', $sHighlightHtmlEnd = '</span>')
 	{
 		$sRet = htmlentities($this->m_MyIssue.", found '".$this->m_sUnexpected."' in: ", ENT_QUOTES, 'UTF-8');
 		$sRet .= htmlentities(substr($this->m_sInput, 0, $this->m_iCol), ENT_QUOTES, 'UTF-8');
@@ -71,7 +71,27 @@ class OQLException extends CoreException
 		return $sRet;
 	}
 
-	static protected function FindClosestString($sInput, $aDictionary)
+	public function GetIssue()
+	{
+		return $this->m_MyIssue;
+	}
+
+	public function GetSuggestions()
+	{
+		return $this->m_aExpecting;
+	}
+
+	public function GetWrongWord()
+	{
+		return $this->m_sUnexpected;
+	}
+
+	public function GetColumn()
+	{
+		return $this->m_iCol;
+	}
+
+	static public function FindClosestString($sInput, $aDictionary)
 	{
 		// no shortest distance found, yet
 		$fShortest = -1;
@@ -88,7 +108,7 @@ class OQLException extends CoreException
 				return $sSuggestion;
 			}
 			
-			if ($fShortest < 0 || ($fDist < 4 && $fDist <= $fShortest))
+			if (($fDist <= 3) && ($fShortest < 0 || $fDist <= $fShortest))
 			{
 				// set the closest match, and shortest distance
 				$sRet = $sSuggestion;
