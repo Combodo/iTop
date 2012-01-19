@@ -122,10 +122,19 @@ try
 
 	$oFilter = null;
 	$aArgs = array();
+	$sSyntaxError = null;
 
 	if (!empty($sExpression))
 	{
-		$oFilter = DBObjectSearch::FromOQL($sExpression);
+		try
+		{
+			$oFilter = DBObjectSearch::FromOQL($sExpression);
+		}
+		catch(OqlException $e)
+		{
+			$sSyntaxError = $e->getHtmlDesc();
+		}
+		
 		if ($oFilter)
 		{
 			$aArgs = array();
@@ -142,6 +151,10 @@ try
 				}
 			}
 			$oFilter->SetInternalParams($aArgs);
+		}
+		elseif ($sSyntaxError)
+		{
+			// Query arguments taken from the page args
 		}
 	}
 
@@ -177,10 +190,10 @@ try
 		$oP->p(Dict::S('UI:RunQuery:SerializedFilter').$oFilter->serialize());
 		$oP->EndCollapsibleSection();
 	}
-}
-catch(CoreException $e)
-{
-	$oP->p('<b>'.Dict::Format('UI:RunQuery:Error', $e->getHtmlDesc()).'</b>');
+	elseif ($sSyntaxError)
+	{
+		$oP->p('<b>'.Dict::Format('UI:RunQuery:Error', $e->getHtmlDesc()).'</b>');
+	}
 }
 catch(Exception $e)
 {
