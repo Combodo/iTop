@@ -595,10 +595,10 @@ function WelcomeAndCheckPrerequisites(SetupPage $oP, $aParamValues, $iCurrentSte
 	{
 		$oConfig = new Config($sConfigFile);
 		
-		$aVersion = AnalyzeInstallation($oConfig, $aParamValues['source_dir']);
+		$aVersion = AnalyzeInstallation($oConfig, 'datamodel');
 		if (!empty($aVersion[ROOT_MODULE]['version_db']))
 		{
-			$aPreviousParams = array('mode', 'db_server', 'db_user', 'db_pwd','db_name', 'new_db_name', 'db_prefix');
+			$aPreviousParams = array('mode', 'db_server', 'db_user', 'db_pwd','db_name', 'new_db_name', 'db_prefix', 'source_dir', 'target_dir');
 			$sMode = 'upgrade';
 			if ($aVersion[ROOT_MODULE]['version_db'] == $aVersion[ROOT_MODULE]['version_code'])
 			{
@@ -614,8 +614,8 @@ function WelcomeAndCheckPrerequisites(SetupPage $oP, $aParamValues, $iCurrentSte
 			AddHiddenParam($oP, 'db_name', $oConfig->GetDBName());
 			AddHiddenParam($oP, 'db_prefix', $oConfig->GetDBSubname());
 			AddHiddenParam($oP, 'mode', $sMode);
-			AddHiddenParam($oP, 'source_dir', 'whichsourcedir');
-			AddHiddenParam($oP, 'target_dir', 'whichtargetdir');
+			AddHiddenParam($oP, 'source_dir', 'datamodel');
+			AddHiddenParam($oP, 'target_dir', 'env-production');
 			if (CheckPHPVersion($oP))
 			{
 				$oP->add("<h2 class=\"next\">Next: Licence agreement</h2>\n");
