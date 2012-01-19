@@ -1671,7 +1671,7 @@ class AttributeLongText extends AttributeText
  *
  * @package     iTopORM
  */
-class AttributeCaseLog extends AttributeText
+class AttributeCaseLog extends AttributeLongText
 {
 	public function GetNullValue()
 	{
