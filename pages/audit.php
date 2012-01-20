@@ -83,7 +83,7 @@ function FilterByContext(DBObjectSearch &$oFilter, ApplicationContext $oAppConte
 	}
 }
 
-function GetRuleResultSet($iRuleId, $oDefinitionFilter, $oAppContext)
+function GetRuleResultFilter($iRuleId, $oDefinitionFilter, $oAppContext)
 {
 	$oRule = MetaModel::GetObject('AuditRule', $iRuleId);
 	$sOql = $oRule->Get('query');
@@ -95,23 +95,36 @@ function GetRuleResultSet($iRuleId, $oDefinitionFilter, $oAppContext)
 		// The query returns directly the invalid elements
 		$oFilter = $oRuleFilter; 
 		$oFilter->MergeWith($oDefinitionFilter);
-		$oErrorObjectSet = new CMDBObjectSet($oFilter);
 	}
 	else
 	{
 		// The query returns only the valid elements, all the others are invalid
-		$oFilter = $oRuleFilter; 
-		$oErrorObjectSet = new CMDBObjectSet($oFilter);
-		$aValidIds = array(0); // Make sure that we have at least one value in the list
-		while($oObj = $oErrorObjectSet->Fetch())
+		$aValidRows = $oRuleFilter->ToDataArray(array('id'));
+		$aValidIds = array();
+		foreach($aValidRows as $aRow)
 		{
-			$aValidIds[] = $oObj->GetKey(); 
+			$aValidIds[] = $aRow['id'];
 		}
 		$oFilter = clone $oDefinitionFilter;
-		$oFilter->AddCondition('id', $aValidIds, 'NOTIN');
-		$oErrorObjectSet = new CMDBObjectSet($oFilter);
+		if (count($aValidIds) > 0)
+		{
+			$aInDefSet = array();
+			foreach($oDefinitionFilter->ToDataArray(array('id')) as $aRow)
+			{
+				$aInDefSet[] = $aRow['id'];
+			}
+			$aInvalids = array_diff($aInDefSet, $aValidIds);
+			if (count($aInvalids) > 0)
+			{
+				$oFilter->AddCondition('id', $aInvalids, 'IN');
+			}
+			else
+			{
+				$oFilter->AddCondition('id', 0, '=');
+			}
+		}
 	}
-	return $oErrorObjectSet;
+	return $oFilter;
 }
 
 function GetReportColor($iTotal, $iErrors)
@@ -153,7 +166,8 @@ try
 		$oDefinitionFilter = DBObjectSearch::FromOQL($oAuditCategory->Get('definition_set'));
 		FilterByContext($oDefinitionFilter, $oAppContext);
 		$oDefinitionSet = new CMDBObjectSet($oDefinitionFilter);
-		$oErrorObjectSet = GetRuleResultSet($iRuleIndex, $oDefinitionFilter, $oAppContext);
+		$oFilter = GetRuleResultFilter($iRuleIndex, $oDefinitionFilter, $oAppContext);
+		$oErrorObjectSet = new CMDBObjectSet($oFilter);
 		$oAuditRule = MetaModel::GetObject('AuditRule', $iRuleIndex);
 		$oP->add('<div class="page_header"><h1>Audit Errors: <span class="hilite">'.$oAuditRule->Get('description').'</span></h1><img style="margin-top: -20px; margin-right: 10px; float: right;" src="../images/stop.png"/></div>');
 		$oP->p('<a href="./audit.php?'.$oAppContext->GetForLink().'">[Back to audit results]</a>');
@@ -211,14 +225,14 @@ try
 					{
 						try
 						{
-							$oRuleFilter = DBObjectSearch::FromOQL($oAuditRule->Get('query'));
-							$oErrorObjectSet = GetRuleResultSet($oAuditRule->GetKey(), $oDefinitionFilter, $oAppContext);
-							$iErrorsCount = $oErrorObjectSet->Count();
-							while($oObj = $oErrorObjectSet->Fetch())
+							$oFilter = GetRuleResultFilter($oAuditRule->GetKey(), $oDefinitionFilter, $oAppContext);
+							$aErrors = $oFilter->ToDataArray(array('id'));
+							$iErrorsCount = count($aErrors);
+							foreach($aErrors as $aErrorRow)
 							{
-								$aObjectsWithErrors[$oObj->GetKey()] = true;
+								$aObjectsWithErrors[$aErrorRow['id']] = true;
 							}
-							$aRow['nb_errors'] = ($iErrorsCount == 0) ? '0' : "<a href=\"audit.php?operation=errors&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."&".$oAppContext->GetForLink()."\">$iErrorsCount</a>"; 
+							$aRow['nb_errors'] = ($iErrorsCount == 0) ? '0' : "<a href=\"?operation=errors&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."&".$oAppContext->GetForLink()."\">$iErrorsCount</a>"; 
 							$aRow['percent_ok'] = sprintf('%.2f', 100.0 * (($iCount - $iErrorsCount) / $iCount));
 							$aRow['class'] = GetReportColor($iCount, $iErrorsCount);							
 						}
@@ -229,7 +243,7 @@ try
 							$aRow['class'] = 'red';
 							$sMessage = Dict::Format('UI:Audit:ErrorIn_Rule_Reason', $oAuditRule->GetHyperlink(), $e->getMessage());
 							$oP->p("<img style=\"vertical-align:middle\" src=\"../images/stop-mid.png\"/>&nbsp;".$sMessage);
-													}
+						}
 					}
 					$aResults[] = $aRow;
 					$iTotalErrors = count($aObjectsWithErrors);
@@ -263,7 +277,6 @@ try
 		$oP->add("</td></tr>\n");
 		$oP->add("</table>\n");
 	}
-		
 	$oP->output();
 }
 catch(CoreException $e)
