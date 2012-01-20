@@ -122,8 +122,8 @@ function SelectService($oP, $oUserOrg)
 		{
 			$sChecked = "checked";
 		}
-		$oP->p("<tr><td style=\"vertical-align:top\"><p><input name=\"attr_service_id\" $sChecked type=\"radio\" id=\"svc_$id\" value=\"$id\"></p></td><td style=\"vertical-align:top\"><p><b><label for=\"svc_$id\">".htmlentities($oService->GetName(), ENT_QUOTES, 'UTF-8')."</label></b></p>");
-		$oP->p("<p>".htmlentities($oService->Get('description'), ENT_QUOTES, 'UTF-8')."</p></td></tr>");		
+		$oP->p("<tr><td style=\"vertical-align:top\"><p><input name=\"attr_service_id\" $sChecked type=\"radio\" id=\"svc_$id\" value=\"$id\"></p></td><td style=\"vertical-align:top\"><p><b><label for=\"svc_$id\">".$oService->GetName()."</label></b></p>");
+		$oP->p("<p>".$oService->Get('description')."</p></td></tr>");		
 	}
 	$oP->add("</table>\n");	
 	DumpHiddenParams($oP, array('service_id'), $aParameters);
@@ -163,7 +163,7 @@ function SelectSubService($oP, $oUserOrg)
 	if (is_object($oService))
 	{
 		$oP->add("<div class=\"wizContainer\" id=\"form_select_servicesubcategory\">\n");
-		$oP->add("<h1 id=\"select_subcategory\">".Dict::Format('Portal:SelectSubcategoryFrom_Service', htmlentities($oService->GetName(), ENT_QUOTES, 'UTF-8'))."</h1>\n");
+		$oP->add("<h1 id=\"select_subcategory\">".Dict::Format('Portal:SelectSubcategoryFrom_Service', $oService->GetName())."</h1>\n");
 		$oP->add("<form id=\"request_form\" method=\"get\">\n");
 		$oP->add("<table>\n");
 		while($oSubService = $oSet->Fetch())
@@ -174,8 +174,8 @@ function SelectSubService($oP, $oUserOrg)
 			{
 				$sChecked = "checked";
 			}
-			$oP->p("<tr><td style=\"vertical-align:top\"><p><input name=\"attr_servicesubcategory_id\" $sChecked type=\"radio\" id=\"subsvc_$id\" value=\"$id\"></p></td><td style=\"vertical-align:top\"><p><b><label for=\"subsvc_$id\">".htmlentities($oSubService->GetName(), ENT_QUOTES, 'UTF-8')."</label></b></p>");
-			$oP->p("<p>".htmlentities($oSubService->Get('description'), ENT_QUOTES, 'UTF-8')."</p></td></tr>");
+			$oP->p("<tr><td style=\"vertical-align:top\"><p><input name=\"attr_servicesubcategory_id\" $sChecked type=\"radio\" id=\"subsvc_$id\" value=\"$id\"></p></td><td style=\"vertical-align:top\"><p><b><label for=\"subsvc_$id\">".$oSubService->GetName()."</label></b></p>");
+			$oP->p("<p>".$oSubService->Get('description')."</p></td></tr>");
 		}
 		$sMessage = Dict::S('Portal:PleaseSelectAServiceSubCategory');
 		$oP->add_ready_script(
@@ -220,9 +220,9 @@ function RequestCreationForm($oP, $oUserOrg)
 		$oRequest->Set('servicesubcategory_id', $aParameters['servicesubcategory_id']);
 		
 		$oAttDef = MetaModel::GetAttributeDef('UserRequest', 'service_id');
-		$aDetails[] = array('label' => '<span>'.$oAttDef->GetLabel().'</span>', 'value' => htmlentities($oService->GetName(), ENT_QUOTES, 'UTF-8'));
+		$aDetails[] = array('label' => '<span>'.$oAttDef->GetLabel().'</span>', 'value' => $oService->GetName());
 		$oAttDef = MetaModel::GetAttributeDef('UserRequest', 'servicesubcategory_id');
-		$aDetails[] = array('label' => '<span>'.$oAttDef->GetLabel().'</span>', 'value' => htmlentities($oSubService->GetName(), ENT_QUOTES, 'UTF-8'));
+		$aDetails[] = array('label' => '<span>'.$oAttDef->GetLabel().'</span>', 'value' => $oSubService->GetName());
 		$iFlags = 0;
 		foreach($aList as $sAttCode)
 		{
