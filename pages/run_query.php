@@ -206,7 +206,7 @@ try
 				$sFixedExpression = $sBefore.$sSuggestedWord.$sAfter;
 				$sFixedExpressionHtml = $sBefore.'<span style="background-color:yellow">'.$sSuggestedWord.'</span>'.$sAfter;
 				$oP->p("Suggesting: $sFixedExpressionHtml");
-				$oP->add('<button onClick="$(\'textarea[name=expression]\').val(\''.addslashes($sFixedExpression).'\');">Use this query</button>');
+				$oP->add('<button onClick="$(\'textarea[name=expression]\').val(\''.htmlentities(addslashes($sFixedExpression)).'\');">Use this query</button>');
 			}
 			else
 			{
