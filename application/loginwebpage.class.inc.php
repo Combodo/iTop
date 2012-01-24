@@ -273,8 +273,8 @@ EOF
 					
 					case 'form':
 					// iTop standard mode: form based authentication
-					$sAuthUser = utils::ReadPostedParam('auth_user', '', 'raw_data');
-					$sAuthPwd = utils::ReadPostedParam('auth_pwd', '', 'raw_data');
+					$sAuthUser = utils::ReadPostedParam('auth_user', '', false, 'raw_data');
+					$sAuthPwd = utils::ReadPostedParam('auth_pwd', '', false, 'raw_data');
 					if ($sAuthUser != '')
 					{
 						$sLoginMode = 'form';
