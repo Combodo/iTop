@@ -147,6 +147,7 @@ EOF
 			$this->add("</table>\n");
 			$this->add("<input type=\"hidden\" name=\"loginop\" value=\"login\" />\n");
 			$this->add("</form>\n");
+			$this->add(Dict::S('UI:Login:About'));
 			$this->add("</div>\n");
 			break;
 		}
