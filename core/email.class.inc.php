@@ -95,7 +95,7 @@ class EMail
 		$bRes = mail
 		(
 			str_replace(array("\n", "\r"), ' ', $this->m_sTo), // Prevent header injection
-			str_replace(array("\n", "\r"), ' ', $this->m_sSubject), // Prevent header injection
+			$this->EncodeHeaderField($this->m_sSubject), // Prevent header injection & MIME Encode charsets
 			$this->m_sBody,
 			$sHeaders
 		);
@@ -224,6 +224,18 @@ class EMail
 	  	$this->m_sBody = "This is a multi-part message in MIME format.\r\n--".$sDelimiter."\r\n".$sContentHeader."\r\n".$this->m_sBody."\r\n--".$sDelimiter."\r\n";
 	  	$this->m_sBody .= implode("--".$sDelimiter."\r\n", $aAttachments);
 	  	$this->m_sBody .= "--".$sDelimiter."--";
+	}
+	
+	/**
+	 * MIME encode the content of a header field according to RFC2047
+	 * @param string $sFieldContent the content of the header to encode
+	 * @return string The encoded string
+	 */
+	protected function EncodeHeaderField($sFieldContent)
+	{
+		$sTemp = str_replace(array("\n", "\r"), ' ', $sFieldContent);
+		$sTemp = iconv_mime_encode('Tagada', $sTemp, array('scheme' => 'Q', 'input_charset' => 'UTF-8', 'output_charset' => 'ISO-8859-1'));
+		return preg_replace('/^Tagada: /', '', $sTemp);
 	}
 }
 
