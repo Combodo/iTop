@@ -470,6 +470,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Login:IdentifyYourself' => 'Identify yourself before continuing',
 	'UI:Login:UserNamePrompt' => 'User Name',
 	'UI:Login:PasswordPrompt' => 'Password',
+	'UI:Login:About' => '',
 	'UI:Login:ChangeYourPassword' => 'Change Your Password',
 	'UI:Login:OldPasswordPrompt' => 'Old password',
 	'UI:Login:NewPasswordPrompt' => 'New password',
