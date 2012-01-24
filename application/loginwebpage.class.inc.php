@@ -268,8 +268,8 @@ EOF
 					
 					case 'form':
 					// iTop standard mode: form based authentication
-					$sAuthUser = utils::ReadPostedParam('auth_user', '', 'raw_data');
-					$sAuthPwd = utils::ReadPostedParam('auth_pwd', '', 'raw_data');
+					$sAuthUser = utils::ReadPostedParam('auth_user', '', false, 'raw_data');
+					$sAuthPwd = utils::ReadPostedParam('auth_pwd', '', false, 'raw_data');
 					if ($sAuthUser != '')
 					{
 						$sLoginMode = 'form';
@@ -416,8 +416,8 @@ EOF
 		{
 			$sAuthUser = $_SESSION['auth_user'];
 			UserRights::Login($sAuthUser); // Set the user's language
-			$sOldPwd = utils::ReadPostedParam('old_pwd', 'raw_data');
-			$sNewPwd = utils::ReadPostedParam('new_pwd', 'raw_data');
+			$sOldPwd = utils::ReadPostedParam('old_pwd', '', false, 'raw_data');
+			$sNewPwd = utils::ReadPostedParam('new_pwd', '', false, 'raw_data');
 			if (UserRights::CanChangePassword() && ((!UserRights::CheckCredentials($sAuthUser, $sOldPwd)) || (!UserRights::ChangePassword($sOldPwd, $sNewPwd))))
 			{
 				$oPage = new LoginWebPage();
