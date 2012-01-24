@@ -3064,7 +3064,36 @@ abstract class MetaModel
 					}
 				}
 			}
-		}
+
+			// Check unicity of the SQL columns
+			//
+			if (self::HasTable($sClass))
+			{
+				$aTableColumns = array(); // array of column => attcode (the column is used by this attribute)
+				$aTableColumns[self::DBGetKey($sClass)] = 'id';
+				
+				// Check that SQL columns are declared only once
+				//
+				foreach(self::ListAttributeDefs($sClass) as $sAttCode=>$oAttDef)
+				{
+					// Skip this attribute if not originaly defined in this class
+					if (self::$m_aAttribOrigins[$sClass][$sAttCode] != $sClass) continue;
+	
+					foreach($oAttDef->GetSQLColumns() as $sField => $sDBFieldType)
+					{
+						if (array_key_exists($sField, $aTableColumns))
+						{
+							$aErrors[$sClass][] = "Column '$sField' declared for attribute $sAttCode, but already used for attribute ".$aTableColumns[$sField];
+							$aSugFix[$sClass][] = "Please find another name for the SQL column";
+						}
+						else
+						{
+							$aTableColumns[$sField] = $sAttCode;
+						}
+					}
+				}
+			}
+		} // foreach class
 		
 		if (count($aErrors) > 0)
 		{
