@@ -77,12 +77,16 @@ class ApplicationContext
 	protected $aValues;
 	protected static $aDefaultValues; // Cache shared among all instances
 	
-	public function __construct()
+	public function __construct($bReadContext = true)
 	{
 		$this->aNames = array(
 			'org_id', 'menu'
 		);
-		$this->ReadContext();
+		if ($bReadContext)
+		{
+			$this->ReadContext();			
+		}
+
 	}
 	
 	/**
