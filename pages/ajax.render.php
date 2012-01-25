@@ -442,6 +442,18 @@ try
 			{
 				$aExtraParams = json_decode(str_replace("'", '"', $sExtraParams), true /* associative array */);
 			}
+			// Restore the app context from the ExtraParams
+			$oAppContext = new ApplicationContext(false); // false => don't read the context yet !
+			$aContext = array();
+			foreach($oAppContext->GetNames() as $sName)
+			{
+				$sParamName = 'c['.$sName.']';
+				if (isset($aExtraParams[$sParamName]))
+				{
+					$aContext[$sName] = $aExtraParams[$sParamName];
+				}
+			}
+			$_REQUEST['c'] = $aContext;
 			if ($sEncoding == 'oql')
 			{
 				$oFilter = CMDBSearchFilter::FromOQL($sFilter);
