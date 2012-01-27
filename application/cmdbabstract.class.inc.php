@@ -208,6 +208,11 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	{
 		$aFieldsMap = $this->GetBareProperties($oPage, $bEditMode, $sPrefix, $aExtraParams);		
 
+		foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
+		{
+			$oExtensionInstance->OnDisplayProperties($this, $oPage, $bEditMode);
+		}
+		
 		// Special case to display the case log, if any...
 		// WARNING: if you modify the loop below, also check the corresponding code in UpdateObject and DisplayModifyForm
 		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef)
@@ -219,11 +224,6 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 			}
 		}
 
-		foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
-		{
-			$oExtensionInstance->OnDisplayProperties($this, $oPage, $bEditMode);
-		}
-		
 		return $aFieldsMap;
 	}
 
