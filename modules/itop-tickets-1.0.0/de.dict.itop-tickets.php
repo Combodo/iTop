@@ -1,45 +1,51 @@
 <?php
 // Copyright (C) 2010 Combodo SARL
 //
-//  This program is free software; you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation; version 3 of the License.
+//   This program is free software; you can redistribute it and/or modify
+//   it under the terms of the GNU General Public License as published by
+//   the Free Software Foundation; version 3 of the License.
 //
-//  This program is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-//  GNU General Public License for more details.
+//   This program is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU General Public License for more details.
 //
-//  You should have received a copy of the GNU General Public License
-//  along with this program; if not, write to the Free Software
-//  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+//   You should have received a copy of the GNU General Public License
+//   along with this program; if not, write to the Free Software
+//   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 /**
- * Localized data
- *
- * @author   Erwan Taloc <erwan.taloc@combodo.com>
- * @author   Romain Quetiez <romain.quetiez@combodo.com>
- * @author   Denis Flaven <denis.flaven@combodo.com>
- * @author   Stephan Rosenke <stephan.rosenke@itomig.de>
- * @license   http://www.opensource.org/licenses/gpl-3.0.html LGPL
+ * @author	Erwan Taloc <erwan.taloc@combodo.com>
+ * @author	Romain Quetiez <romain.quetiez@combodo.com>
+ * @author	Denis Flaven <denis.flaven@combodo.com>
+ * @author	Stephan Rosenke <stephan.rosenke@itomig.de>
+
+ * @licence	http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-
-//
-// Class: Ticket
-//
-
 Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:lnkTicketToDoc' => 'Ticket/Document',
+	'Class:lnkTicketToDoc+' => '',
+	'Class:lnkTicketToDoc/Attribute:ticket_id' => 'Ticket',
+	'Class:lnkTicketToDoc/Attribute:ticket_id+' => '',
+	'Class:lnkTicketToDoc/Attribute:document_id' => 'Dokument',
+	'Class:lnkTicketToDoc/Attribute:document_id+' => '',
+	'Class:lnkTicketToContact' => 'Ticket/Kontakt',
+	'Class:lnkTicketToContact+' => '',
+	'Class:lnkTicketToContact/Attribute:ticket_id' => 'Ticket',
+	'Class:lnkTicketToContact/Attribute:ticket_id+' => '',
+	'Class:lnkTicketToContact/Attribute:contact_id' => 'Kontakt',
+	'Class:lnkTicketToContact/Attribute:contact_id+' => '',
+	'Class:lnkTicketToContact/Attribute:role' => 'Rolle',
+	'Class:lnkTicketToContact/Attribute:role+' => '',
+	'Class:lnkTicketToCI' => 'Ticket/CI',
+	'Class:lnkTicketToCI+' => '',
+	'Class:lnkTicketToCI/Attribute:ticket_id' => 'Ticket',
+	'Class:lnkTicketToCI/Attribute:ticket_id+' => '',
+	'Class:lnkTicketToCI/Attribute:ci_id' => 'CI',
+	'Class:lnkTicketToCI/Attribute:ci_id+' => '',
+	'Class:lnkTicketToCI/Attribute:impact' => 'Auswirkung',
+	'Class:lnkTicketToCI/Attribute:impact+' => '',
 	'Class:Ticket' => 'Ticket',
 	'Class:Ticket+' => '',
 	'Class:Ticket/Attribute:ref' => 'Referenz',
@@ -62,92 +68,34 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Ticket/Attribute:incident_list+' => '',
 	'Class:Ticket/Attribute:finalclass' => 'Typ',
 	'Class:Ticket/Attribute:finalclass+' => '',
-));
-
-// Fieldset translation
-Dict::Add('DE DE', 'German', 'Deutsch', array(
-
 	'Ticket:baseinfo' => 'Allgemeine Informationen',
 	'Ticket:date' => 'Daten',
 	'Ticket:contact' => 'Kontakte',
 	'Ticket:moreinfo' => 'weitergehende Informationen',
 	'Ticket:relation' => 'Beziehungen',
 	'Ticket:log' => 'Kommunikation',
-
-));
-
-//
-// Class: lnkTicketToDoc
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:lnkTicketToDoc' => 'Ticket/Document',
-	'Class:lnkTicketToDoc+' => '',
-	'Class:lnkTicketToDoc/Attribute:ticket_id' => 'Ticket',
-	'Class:lnkTicketToDoc/Attribute:ticket_id+' => '',
 	'Class:lnkTicketToDoc/Attribute:ticket_ref' => 'Ticket #',
 	'Class:lnkTicketToDoc/Attribute:ticket_ref+' => '',
-	'Class:lnkTicketToDoc/Attribute:document_id' => 'Dokument',
-	'Class:lnkTicketToDoc/Attribute:document_id+' => '',
 	'Class:lnkTicketToDoc/Attribute:document_name' => 'Dokument',
 	'Class:lnkTicketToDoc/Attribute:document_name+' => '',
-));
-
-//
-// Class: lnkTicketToContact
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:lnkTicketToContact' => 'Ticket/Kontakt',
-	'Class:lnkTicketToContact+' => '',
-	'Class:lnkTicketToContact/Attribute:ticket_id' => 'Ticket',
-	'Class:lnkTicketToContact/Attribute:ticket_id+' => '',
 	'Class:lnkTicketToContact/Attribute:ticket_ref' => 'Ticket #',
 	'Class:lnkTicketToContact/Attribute:ticket_ref+' => '',
-	'Class:lnkTicketToContact/Attribute:contact_id' => 'Kontakt',
-	'Class:lnkTicketToContact/Attribute:contact_id+' => '',
 	'Class:lnkTicketToContact/Attribute:contact_name' => 'Kontakt',
 	'Class:lnkTicketToContact/Attribute:contact_name+' => '',
 	'Class:lnkTicketToContact/Attribute:contact_email' => 'Email',
 	'Class:lnkTicketToContact/Attribute:contact_email+' => '',
-	'Class:lnkTicketToContact/Attribute:role' => 'Rolle',
-	'Class:lnkTicketToContact/Attribute:role+' => '',
-));
-
-//
-// Class: lnkTicketToCI
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:lnkTicketToCI' => 'Ticket/CI',
-	'Class:lnkTicketToCI+' => '',
-	'Class:lnkTicketToCI/Attribute:ticket_id' => 'Ticket',
-	'Class:lnkTicketToCI/Attribute:ticket_id+' => '',
 	'Class:lnkTicketToCI/Attribute:ticket_ref' => 'Ticket #',
 	'Class:lnkTicketToCI/Attribute:ticket_ref+' => '',
-	'Class:lnkTicketToCI/Attribute:ci_id' => 'CI',
-	'Class:lnkTicketToCI/Attribute:ci_id+' => '',
 	'Class:lnkTicketToCI/Attribute:ci_name' => 'CI',
 	'Class:lnkTicketToCI/Attribute:ci_name+' => '',
 	'Class:lnkTicketToCI/Attribute:ci_status' => 'CI-Status',
 	'Class:lnkTicketToCI/Attribute:ci_status+' => '',
-	'Class:lnkTicketToCI/Attribute:impact' => 'Auswirkung',
-	'Class:lnkTicketToCI/Attribute:impact+' => '',
-));
-
-//
-// Class: ResponseTicket
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:ResponseTicket' => 'Antwortticket',
 	'Class:ResponseTicket+' => '',
 	'Class:ResponseTicket/Attribute:status' => 'Status',
 	'Class:ResponseTicket/Attribute:status+' => '',
 	'Class:ResponseTicket/Attribute:status/Value:new' => 'Neu',
 	'Class:ResponseTicket/Attribute:status/Value:new+' => 'Neu eröffnet',
-	'Class:ResponseTicket/Attribute:status/Value:frozen' => 'Unerledigt',
-	'Class:ResponseTicket/Attribute:status/Value:frozen+' => '',
 	'Class:ResponseTicket/Attribute:status/Value:escalated_tto' => 'Eskalation/TTO',
 	'Class:ResponseTicket/Attribute:status/Value:escalated_tto+' => '',
 	'Class:ResponseTicket/Attribute:status/Value:assigned' => 'Zugeteilt',
@@ -216,9 +164,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:ResponseTicket/Attribute:related_problem_id+' => '',
 	'Class:ResponseTicket/Attribute:related_problem_ref' => 'Referenz',
 	'Class:ResponseTicket/Attribute:related_problem_ref+' => '',
-	'Class:ResponseTicket/Attribute:related_change_id' => 'Verbundene Änderungen',
+	'Class:ResponseTicket/Attribute:related_change_id' => 'Verbundene Changes',
 	'Class:ResponseTicket/Attribute:related_change_id+' => '',
-	'Class:ResponseTicket/Attribute:related_change_ref' => 'Verbundene Änderungen',
+	'Class:ResponseTicket/Attribute:related_change_ref' => 'Verbundene Changes',
 	'Class:ResponseTicket/Attribute:related_change_ref+' => '',
 	'Class:ResponseTicket/Attribute:close_date' => 'Geschlossen',
 	'Class:ResponseTicket/Attribute:close_date+' => '',
@@ -269,6 +217,4 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:ResponseTicket/Stimulus:ev_close' => 'Schließen',
 	'Class:ResponseTicket/Stimulus:ev_close+' => '',
 ));
-
-
 ?>
