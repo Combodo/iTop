@@ -3506,6 +3506,43 @@ class AttributeFriendlyName extends AttributeComputedFieldVoid
 
 	public function GetKeyAttCode() {return $this->Get("extkey_attcode");} 
 
+	public function GetLabel($sDefault = null)
+	{
+		$sLabel = parent::GetLabel('');
+		if (strlen($sLabel) == 0)
+		{
+			$sKeyAttCode = $this->Get("extkey_attcode");
+			if ($sKeyAttCode == 'id')
+			{
+				return Dict::S('Core:FriendlyName-Label');
+			}
+			else
+			{
+				$oExtKeyAttDef = MetaModel::GetAttributeDef($this->GetHostClass(), $sKeyAttCode);
+				$sLabel = $oExtKeyAttDef->GetLabel($this->m_sCode);
+			}
+		}
+		return $sLabel;
+	}
+	public function GetDescription($sDefault = null)
+	{
+		$sLabel = parent::GetDescription('');
+		if (strlen($sLabel) == 0)
+		{
+			$sKeyAttCode = $this->Get("extkey_attcode");
+			if ($sKeyAttCode == 'id')
+			{
+				return Dict::S('Core:FriendlyName-Description');
+			}
+			else
+			{
+				$oExtKeyAttDef = MetaModel::GetAttributeDef($this->GetHostClass(), $sKeyAttCode);
+				$sLabel = $oExtKeyAttDef->GetDescription('');
+			}
+		}
+		return $sLabel;
+	} 
+
 	// n/a, the friendly name is made of a complex expression (see GetNameSpec)
 	protected function GetSQLCol() {return "";}	
 
