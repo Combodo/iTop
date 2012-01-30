@@ -347,6 +347,7 @@ try
 			$aMoreReconciliationKeys = array(); // Store: key => void to automatically remove duplicates
 			foreach($aReconciliationKeys as $sAttCode)
 			{
+				if (!MetaModel::IsValidAttCode($sClassName, $sAttCode)) continue;
 				$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
 				if ($oAttDef->IsExternalKey())
 				{
@@ -403,7 +404,7 @@ EOF
 		}
 		else
 		{
-			$oPage = new ajax_page("");
+			$oPage = new ajax_page("Class $sClassName is not a valid class !");
 		}
 		break;
 	}
