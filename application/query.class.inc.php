@@ -31,7 +31,7 @@ abstract class Query extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb,view_in_gui",
+			"category" => "core/cmdb,view_in_gui,application",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
@@ -63,7 +63,7 @@ class QueryOQL extends Query
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb,view_in_gui",
+			"category" => "core/cmdb,view_in_gui,application",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
