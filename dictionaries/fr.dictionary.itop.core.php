@@ -485,6 +485,13 @@ Opérateurs :<br/>
 	'Core:AttributeTable+' => 'Tableau à deux dimensions',
 	'Core:AttributePropertySet' => 'Propriétés',
 	'Core:AttributePropertySet+' => 'Liste de propriétés (nom et valeur) non typées',
+
+	'Core:AttributeFriendlyName' => 'Nom usuel (convivial)',
+	'Core:AttributeFriendlyName+' => 'Attribut créé automatiquement ; sa valeur est calculée d\'après d\'autres attributs',
+
+	'Core:FriendlyName-Label' => 'Nom',
+	'Core:FriendlyName-Description' => 'Nom usuel',
+
 	'Change:ObjectCreated' => 'Elément créé',
 	'Change:ObjectDeleted' => 'Elément effacé',
 	'Change:ObjectModified' => 'Elément modifié',

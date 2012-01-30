@@ -1244,6 +1244,10 @@ EOF
 		$oPage->add(self::GetSetAsHTMLSpreadsheet($oSet, $aParams));
 	}
 	
+	/**
+	 * Spreadsheet output: designed for end users doing some reporting
+	 * Then the ids are excluded and replaced by the corresponding friendlyname
+	 */	 	 	
 	static function GetSetAsHTMLSpreadsheet(DBObjectSet $oSet, $aParams = array())
 	{
 		$aFields = null;
@@ -1289,18 +1293,27 @@ EOF
 					}
 				}
 			}
-			$aHeader[] = 'id';
+			// Replace external key by the corresponding friendly name (if not already in the list)
 			foreach($aList[$sAlias] as $sAttCode => $oAttDef)
 			{
-				$sStar = '';
+				if ($oAttDef->IsExternalKey())
+				{
+					unset($aList[$sAlias][$sAttCode]);
+					$sFriendlyNameAttCode = $sAttCode.'_friendlyname';
+					if (!array_key_exists($sFriendlyNameAttCode, $aList[$sAlias]) && MetaModel::IsValidAttCode($sClassName, $sFriendlyNameAttCode))
+					{
+						$oFriendlyNameAtt = MetaModel::GetAttributeDef($sClassName, $sFriendlyNameAttCode);
+						$aList[$sAlias][$sFriendlyNameAttCode] = $oFriendlyNameAtt;
+					}
+				}
+			}
+
+			foreach($aList[$sAlias] as $sAttCode => $oAttDef)
+			{
 				if ($oAttDef->IsExternalField())
 				{
 					$sExtKeyLabel = MetaModel::GetLabel($sClassName, $oAttDef->GetKeyAttCode());
 					$oExtKeyAttDef = MetaModel::GetAttributeDef($sClassName, $oAttDef->GetKeyAttCode());
-					if (!$oExtKeyAttDef->IsNullAllowed() && isset($aParams['showMandatoryFields']))
-					{
-						$sStar = '*';
-					}
 					$sRemoteAttLabel = MetaModel::GetLabel($oAttDef->GetTargetClass(), $oAttDef->GetExtAttCode());
 					$oTargetAttDef = MetaModel::GetAttributeDef($oAttDef->GetTargetClass(), $oAttDef->GetExtAttCode());
 					$sSuffix = '';
@@ -1308,15 +1321,11 @@ EOF
 					{
 						$sSuffix = '->id';
 					}
-					$sColLabel = $sExtKeyLabel.'->'.$sRemoteAttLabel.$sSuffix.$sStar;
+					$sColLabel = $sExtKeyLabel.'->'.$sRemoteAttLabel.$sSuffix;
 				}
 				else
 				{
-					if (!$oAttDef->IsNullAllowed() && isset($aParams['showMandatoryFields']))
-					{
-						$sStar = '*';
-					}
-					$sColLabel = MetaModel::GetLabel($sClassName, $sAttCode).$sStar;
+					$sColLabel = MetaModel::GetLabel($sClassName, $sAttCode);
 				}
 				$oFinalAttDef = $oAttDef->GetFinalAttDef();
 				if (get_class($oFinalAttDef) == 'AttributeDateTime')
@@ -1343,19 +1352,11 @@ EOF
 			foreach($aAuthorizedClasses as $sAlias => $sClassName)
 			{
 				$oObj = $aObjects[$sAlias];
-				if (is_null($oObj))
-				{
-					$aRow[] = '';
-				}
-				else
-				{
-					$aRow[] = '<td>'.$oObj->GetKey().'</td>';
-				}
 				foreach($aList[$sAlias] as $sAttCode => $oAttDef)
 				{
 					if (is_null($oObj))
 					{
-						$aRow[] = '';
+						$aRow[] = '<td></td>';
 					}
 					else
 					{

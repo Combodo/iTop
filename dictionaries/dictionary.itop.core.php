@@ -140,6 +140,12 @@ Operators:<br/>
 
 	'Core:AttributePropertySet' => 'Properties',
 	'Core:AttributePropertySet+' => 'List of untyped properties (name and value)',
+
+	'Core:AttributeFriendlyName' => 'Friendly name',
+	'Core:AttributeFriendlyName+' => 'Attribute created automatically ; the friendly name is computed after several attributes',
+
+	'Core:FriendlyName-Label' => 'Name',
+	'Core:FriendlyName-Description' => 'Friendly name',
 ));
 
 
