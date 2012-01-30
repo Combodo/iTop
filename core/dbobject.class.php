@@ -488,7 +488,7 @@ abstract class DBObject
 		}
 
 		// That's a standard attribute (might be an ext field or a direct field, etc.)
-		return $oAtt->GetAsHTML($this->Get($sAttCode));
+		return $oAtt->GetAsHTML($this->Get($sAttCode), $this);
 	}
 
 	public function GetEditValue($sAttCode)
