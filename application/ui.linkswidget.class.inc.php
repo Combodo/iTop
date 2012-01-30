@@ -279,7 +279,7 @@ EOF
 	
 	public function GetObjectPickerDialog($oPage, $oCurrentObj)
 	{
-		$sHtml .= "<div class=\"wizContainer\" style=\"vertical-align:top;\">\n";
+		$sHtml = "<div class=\"wizContainer\" style=\"vertical-align:top;\">\n";
 		$oFilter = new DBObjectSearch($this->m_sRemoteClass);
 		$this->SetSearchDefaultFromContext($oCurrentObj, $oFilter);
 		$oBlock = new DisplayBlock($oFilter, 'search', false);
