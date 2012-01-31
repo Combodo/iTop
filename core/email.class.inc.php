@@ -208,7 +208,7 @@ class EMail
 		if (count($this->m_aAttachments) == 0) return; // Nothing to do if there are no attachments
 
 		$sDelimiter = '== iTopEmailPart---'.md5(date('r', time()))." ==";
- 		$sContentType = isset($this->m_aHeaders['Content-Type']) ? $this->m_aHeaders['Content-Type'] : 'text/html';
+ 		$sContentType = isset($this->m_aHeaders['Content-Type']) ? $this->m_aHeaders['Content-Type'] : 'text/html; charset="UTF-8"';
  		$sContentHeader = "Content-Type: $sContentType\r\n";
  		$this->m_aHeaders['Content-Type'] = "multipart/mixed; boundary=\"{$sDelimiter}\"";
 
@@ -234,7 +234,7 @@ class EMail
 	protected function EncodeHeaderField($sFieldContent)
 	{
 		$sTemp = str_replace(array("\n", "\r"), ' ', $sFieldContent);
-		$sTemp = iconv_mime_encode('Tagada', $sTemp, array('scheme' => 'Q', 'input_charset' => 'UTF-8', 'output_charset' => 'ISO-8859-1'));
+		$sTemp = iconv_mime_encode('Tagada', $sTemp, array('scheme' => 'Q', 'input-charset' => 'UTF-8', 'output-charset' => 'UTF-8'));
 		return preg_replace('/^Tagada: /', '', $sTemp);
 	}
 }
