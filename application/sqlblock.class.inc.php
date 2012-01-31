@@ -182,13 +182,13 @@ class SqlBlock
 				
 				if (isset($oParamData->type))
 				{
-					$sType = $oParamData->type;
+					$sParamType = $oParamData->type;
 				}
 				else
 				{
-					$sType = 'context';
+					$sParamType = 'context';
 				}
-				$aParams[$sName] = array('mapping' => $sMapping, 'type' => $sType);
+				$aParams[$sName] = array('mapping' => $sMapping, 'type' => $sParamType);
 			}
 		}
 		
