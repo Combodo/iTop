@@ -2039,7 +2039,6 @@ EOF
 	});
 EOF
 		);
- 		$aElements = MetaModel::GetSubclasses('FunctionalCI');
 		$aResults = array();
 		$aSortedElements = array();
 		$oObj = MetaModel::GetObject($sClass, $id);
