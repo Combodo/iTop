@@ -1187,7 +1187,7 @@ class CAS_SelfRegister implements iSelfRegister
 		}
 
 		// Now synchronize the profiles
-		if (!self::SetProfilesFromCAS($oUser, $Groups))
+		if (!self::SetProfilesFromCAS($oUser, $aGroups))
 		{
 			return false;
 		}
@@ -1213,7 +1213,7 @@ class CAS_SelfRegister implements iSelfRegister
 		}
 	}
 	
-	protected static function SetProfilesFromCAS($oUser, $Groups)
+	protected static function SetProfilesFromCAS($oUser, $aGroups)
 	{
 		if (!MetaModel::IsValidClass('URP_Profiles'))
 		{
