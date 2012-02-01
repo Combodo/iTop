@@ -52,9 +52,9 @@ This version mostly consists in bug fixes for iTop 1.2, however there are a few 
 
 1.2 Should I upgrade to 1.2.1?
     ---------------------------
-Considering that there more than 30 bug fixes and very few new features, it's probably worth upgrading to this
-new version. Especially if you are using the data synchronization with big sets of data, you can benefit from
-the new "chunk" mode by just adding a parameter to the command line !
+Considering that there more than 30 bug fixes and very few new features, it's probably quite safe to upgrade to
+this new version. If you are using the data synchronization with big sets of data, you can benefit from the new
+"chunk" mode by just adding a parameter to the command line !
 The interactive audit is now faster and uses less memory when processing big numbers of elements.
 
 
