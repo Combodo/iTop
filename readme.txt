@@ -1,4 +1,4 @@
-iTop - version 1.2.1 - 22-Dec-2011
+iTop - version 1.2.1 - 01-Feb-2012
 Readme file
 
 1.   ABOUT THIS RELEASE
@@ -52,9 +52,10 @@ This version mostly consists in bug fixes for iTop 1.2, however there are a few 
 
 1.2 Should I upgrade to 1.2.1?
     ---------------------------
-Considering that there more than 20 bug fixes and very few new features we recommended you to upgrade
-to this new version. Especially if you are using the data synchronization with big sets of data, you can benefit
-from the new "chunk" mode by just adding a parameter to the command line !
+Considering that there more than 30 bug fixes and very few new features, it's probably worth upgrading to this
+new version. Especially if you are using the data synchronization with big sets of data, you can benefit from
+the new "chunk" mode by just adding a parameter to the command line !
+The interactive audit is now faster and uses less memory when processing big numbers of elements.
 
 
 1.3 Special Thanks To:
@@ -66,7 +67,7 @@ Christian Lempereur and Olivier Fouquet for their feedbacks.
 Everaldo Coelho and the Oxygen Team for their wonderful icons.
 The JQuery team and the all the jQuery plugins authors for developing such a powerful library.
 Phil Eddies for the numerous feedbacks provided, and the first implementation of CKEdit
-Marco Tulio and Bruno Cassaro for the Portuguese (Brazilian) translation
+Marco Túlio and Bruno Cassaro for the Portuguese (Brazilian) translation
 Vladimir Shilov for the Russian translation
 Izzet Sirin for the Turkish translation
 Deng Lixin for the Chinese translation
@@ -175,7 +176,7 @@ Major changes
 
 Localization
 ------------
-No big changes in localization for this release.
+This version contains some enhancements to the German and Brazilian translations thanks to David Gümbel and Marco Túlio
 
 More information on the localization (completion progress, how to contribute) here:
 http://www.combodo.com/itop-localization/
@@ -186,16 +187,33 @@ Automatic synchro of CAS/LDAP users: it is possible to have iTop automatically c
  - Use the default language when creating a new user from CAS
  - Support patterns for casMemberof
 
-Better error handling in case of OQL error in the audit page, now the error is properly trapped and indicates which query is the cuase of the error.
+Audit:
+Better error handling in case of OQL error in the audit page, now the error is properly trapped and indicates which query is the cause of the error.
+Optimized memory usage when auditing large volumes of CIs (10'000 items was requiring 200 Mb, it now runs with 32 Mb -including the 30Mb overhead!)
 
 Added a link to a favicon (icon in the browser's bar and tab)
 
-Allow a module to restrict the access to a given menu/group by redeclaring the menu with restricted rights. All rights are combined with the AND operator.
+Allow a module to restrict the access to a given menu/group by redeclaring the menu with restricted rights.
+All rights are combined with the AND operator.
+
+Added the "search form" on top of the list of user accounts, useful to find a user in a huge list !
+
+Added the ability to display a custom welcome/disclaimer message at the bottom of the login form.
+Just put a non empty string (can contain HTML tags) in the dictionary entry 'UI:Login:About'
+
+In the Toolkit: Improved the check on data model consistency: detection of SQL columns used by two attributes
+
+Ticket's case log can now be bigger than 64 Kilobytes...
+
 
 Bugs fixed
 ----------
 The complete list of active tickets can be reviewed at http://sourceforge.net/apps/trac/itop/report/1
 
+#522 issue with non-ASCII characters in notifications subject.
+#519 Change password bug: it was not possible to for a user to change their own passord, if the (new) password contained non-alphanumeric characters !
+#518 Properly pass the context (i.e. currently selected org) to the auto-refresh lists
+#516 and #517 Improved the export (specify fields for multi-column queries) and web queries (default field list)
 #512 Command line mode (CLI) is now supported for the 'export' page. With either the --auth_user and --auth_pwd parameters or --param_file
 #494 It seems that PHPSoap does not understand the <wsdl:documentation> tag, let's put them as comments
 #493 Incorrect display of Users' Grant Matrix
@@ -208,6 +226,7 @@ The complete list of active tickets can be reviewed at http://sourceforge.net/ap
 #484 Fixed issue with IIS ("Wrong password" at first prompt)
 #482 OpenSearch (integration with your browser's search bar) was broken.
 #482 The setting 'min_autocomplete_chars' was not taken into account
+#481 localized characters in Service / Service Category name and description were not properly displayed.
 #480 The 'min_autocomplete_chars' settings was not taken into account.
 #478 Fixed issue in the audit: the results are wrong whenever an organization is selected
 #477 Could not specify more than one reconciliation key (regression) + took the opportunity to enhance protection against XSS injection (using column names in the data)
@@ -222,6 +241,13 @@ Always apply the AllowedValues constraints(as default values)  when selecting el
 When searching objects to add to the current object (when managing n:n relationships), set the default search params in order to stay in the current silo.
 Fixed issue: nobody in the list of persons to notify for portal users (security takes precedence)
 In the setup: increased Suhosin minimum value for get_max_value to 2048 due to a bug seen on some installations
+Fix to have the proper use of GetEditValue... thanks to C. Naud
+SQL Block with parameters were always displayed as table, whatever their type...
+Removed a (useless) hardcoded reference to FunctionalCI that may break inthe display of the Impact Analysis
+(Tried to) improve the display of the Synchronization Tooltip that "sometimes" does not work on IE 8...
+Put some default reconciliation keys on Actions and Triggers to ease the use of CSV import
+Protect against an empty list of reconciliation keys in the interactive CSV Import
+Export for spreadsheets: transform keys (id of the queried object or external keys) into the corresponding friendly name
 
 3.2. Known limitations (https://sourceforge.net/apps/trac/itop/report/3)
      -----------------
