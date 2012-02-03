@@ -97,6 +97,9 @@ function ShowExamples($oP, $sExpression)
 $sOperation = utils::ReadParam('operation', 'menu');
 $oAppContext = new ApplicationContext();
 
+ApplicationContext::SetPluginProperty('QueryLocalizerPlugin', 'language_code', UserRights::GetUserLanguage());
+ApplicationContext::SetPluginProperty('QueryLocalizerPlugin', 'language_code', 'FR FR');
+
 $oP = new iTopWebPage(Dict::S('UI:RunQuery:Title'));
 
 // Main program
@@ -201,4 +204,8 @@ catch(Exception $e)
 }
 
 $oP->output();
+///$oFilter = new DBObjectSearch('Server');
+///echo "<pre>\n";
+///print_r($oFilter->GetModifierProperties('QueryLocalizerPlugin'));
+///echo "</pre>\n";
 ?>

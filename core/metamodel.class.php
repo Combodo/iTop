@@ -15,6 +15,8 @@
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 require_once(APPROOT.'core/modulehandler.class.inc.php');
+require_once(APPROOT.'core/querybuildercontext.class.inc.php');
+require_once(APPROOT.'core/querymodifier.class.inc.php');
 
 /**
  * Metamodel
@@ -24,8 +26,6 @@ require_once(APPROOT.'core/modulehandler.class.inc.php');
  * @author      Denis Flaven <denis.flaven@combodo.com>
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
-
-
 
 // #@# todo: change into class const (see Doctrine)
 // Doctrine example
@@ -1404,7 +1404,7 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 
 		// Build the list of available extensions
 		//
-		$aInterfaces = array('iApplicationUIExtension', 'iApplicationObjectExtension');
+		$aInterfaces = array('iApplicationUIExtension', 'iApplicationObjectExtension', 'iQueryModifier');
 		foreach($aInterfaces as $sInterface)
 		{
 			self::$m_aExtensionClasses[$sInterface] = array();
@@ -2035,12 +2035,10 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 
 		if (!isset($oSelect))
 		{
-			$aClassAliases = array();
-			$aTableAliases = array();
-			$oQBExpr = new QueryBuilderExpressions(array(), $oFilter->GetCriteria());
+			$oBuild = new QueryBuilderContext($oFilter);
 
 			$oKPI = new ExecutionKPI();
-			$oSelect = self::MakeQuery($oFilter->GetSelectedClasses(), $oQBExpr, $aClassAliases, $aTableAliases, $oFilter, $aAttToLoad, array(), true /* main query */);
+			$oSelect = self::MakeQuery($oBuild, $oFilter, $aAttToLoad, array(), true /* main query */);
 			$oSelect->SetSourceOQL($sOqlQuery);
 			$oKPI->ComputeStats('MakeQuery (select)', $sOqlQuery);
 
@@ -2151,10 +2149,8 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 
 	public static function MakeDeleteQuery(DBObjectSearch $oFilter, $aArgs = array())
 	{
-		$aClassAliases = array();
-		$aTableAliases = array();
-		$oQBExpr = new QueryBuilderExpressions(array(), $oFilter->GetCriteria());
-		$oSelect = self::MakeQuery($oFilter->GetSelectedClasses(), $oQBExpr, $aClassAliases, $aTableAliases, $oFilter, null, array(), true /* main query */);
+		$oBuild = new QueryBuilderContext($oFilter);
+		$oSelect = self::MakeQuery($oBuild, $oFilter, null, array(), true /* main query */);
 		$aScalarArgs = array_merge(self::PrepareQueryArguments($aArgs), $oFilter->GetInternalParams());
 		return $oSelect->RenderDelete($aScalarArgs);
 	}
@@ -2162,26 +2158,20 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 	public static function MakeUpdateQuery(DBObjectSearch $oFilter, $aValues, $aArgs = array())
 	{
 		// $aValues is an array of $sAttCode => $value
-		$aClassAliases = array();
-		$aTableAliases = array();
-		$oQBExpr = new QueryBuilderExpressions(array(), $oFilter->GetCriteria());
-		$oSelect = self::MakeQuery($oFilter->GetSelectedClasses(), $oQBExpr, $aClassAliases, $aTableAliases, $oFilter, null, $aValues, true /* main query */);
+		$oBuild = new QueryBuilderContext($oFilter);
+		$oSelect = self::MakeQuery($oBuild, $oFilter, null, $aValues, true /* main query */);
 		$aScalarArgs = array_merge(self::PrepareQueryArguments($aArgs), $oFilter->GetInternalParams());
 		return $oSelect->RenderUpdate($aScalarArgs);
 	}
 
-	private static function MakeQuery($aSelectedClasses, &$oQBExpr, &$aClassAliases, &$aTableAliases, DBObjectSearch $oFilter, $aAttToLoad = null, $aValues = array(), $bIsMainQuery = false)
+	private static function MakeQuery(&$oBuild, DBObjectSearch $oFilter, $aAttToLoad = null, $aValues = array(), $bIsMainQuery = false)
 	{
 		// Note: query class might be different than the class of the filter
 		// -> this occurs when we are linking our class to an external class (referenced by, or pointing to)
 		$sClass = $oFilter->GetFirstJoinedClass();
 		$sClassAlias = $oFilter->GetFirstJoinedClassAlias();
 
-		$bIsOnQueriedClass = array_key_exists($sClassAlias, $aSelectedClasses);
-		if ($bIsOnQueriedClass)
-		{
-			$aClassAliases = array_merge($aClassAliases, $oFilter->GetJoinedClasses());
-		}
+		$bIsOnQueriedClass = array_key_exists($sClassAlias, $oBuild->GetRootFilter()->GetSelectedClasses());
 
 		self::DbgTrace("Entering: ".$oFilter->ToOQL().", ".($bIsOnQueriedClass ? "MAIN" : "SECONDARY"));
 
@@ -2191,7 +2181,7 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 		if ($bIsOnQueriedClass)
 		{
 			// default to the whole list of attributes + the very std id/finalclass
-			$oQBExpr->AddSelect($sClassAlias.'id', new FieldExpression('id', $sClassAlias));
+			$oBuild->m_oQBExpressions->AddSelect($sClassAlias.'id', new FieldExpression('id', $sClassAlias));
 
 			if (is_null($aAttToLoad) || !array_key_exists($sClassAlias, $aAttToLoad))
 			{
@@ -2207,7 +2197,7 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 				
 				foreach ($oAttDef->GetSQLExpressions() as $sColId => $sSQLExpr)
 				{
-					$oQBExpr->AddSelect($sClassAlias.$sAttCode.$sColId, new FieldExpression($sAttCode.$sColId, $sClassAlias));
+					$oBuild->m_oQBExpressions->AddSelect($sClassAlias.$sAttCode.$sColId, new FieldExpression($sAttCode.$sColId, $sClassAlias));
 				}
 			}
 
@@ -2227,14 +2217,14 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 				foreach($aFullText as $sFTNeedle)
 				{
 					$oNewCond = new BinaryExpression($oTextFields, 'LIKE', new ScalarExpression("%$sFTNeedle%"));
-					$oQBExpr->AddCondition($oNewCond);
+					$oBuild->m_oQBExpressions->AddCondition($oNewCond);
 				}
 			}
 		}
-//echo "<p>oQBExpr ".__LINE__.": <pre>\n".print_r($oQBExpr, true)."</pre></p>\n";
+//echo "<p>oQBExpr ".__LINE__.": <pre>\n".print_r($oBuild->m_oQBExpressions, true)."</pre></p>\n";
 		$aExpectedAtts = array(); // array of (attcode => fieldexpression)
 //echo "<p>".__LINE__.": GetUnresolvedFields($sClassAlias, ...)</p>\n";
-		$oQBExpr->GetUnresolvedFields($sClassAlias, $aExpectedAtts);
+		$oBuild->m_oQBExpressions->GetUnresolvedFields($sClassAlias, $aExpectedAtts);
 
 		// Compute a clear view of required joins (from the current class)
 		// Build the list of external keys:
@@ -2271,9 +2261,9 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 		{
 			$aTranslateNow = array();
 			$aTranslateNow[$sClassAlias]['friendlyname'] = self::GetNameExpression($sClass, $sClassAlias);
-//echo "<p>oQBExpr ".__LINE__.": <pre>\n".print_r($oQBExpr, true)."</pre></p>\n";
-			$oQBExpr->Translate($aTranslateNow, false);
-//echo "<p>oQBExpr ".__LINE__.": <pre>\n".print_r($oQBExpr, true)."</pre></p>\n";
+//echo "<p>oQBExpr ".__LINE__.": <pre>\n".print_r($oBuild->m_oQBExpressions, true)."</pre></p>\n";
+			$oBuild->m_oQBExpressions->Translate($aTranslateNow, false);
+//echo "<p>oQBExpr ".__LINE__.": <pre>\n".print_r($oBuild->m_oQBExpressions, true)."</pre></p>\n";
 
 			$aNameSpec = self::GetNameSpec($sClass);
 			foreach($aNameSpec[1] as $i => $sAttCode)
@@ -2315,7 +2305,7 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 		self::DbgTrace("Main (=leaf) class, call MakeQuerySingleTable()");
 		if (self::HasTable($sClass))
 		{
-			$oSelectBase = self::MakeQuerySingleTable($aSelectedClasses, $oQBExpr, $aClassAliases, $aTableAliases, $oFilter, $sClass, $aExtKeys, $aValues);
+			$oSelectBase = self::MakeQuerySingleTable($oBuild, $oFilter, $sClass, $aExtKeys, $aValues);
 		}
 		else
 		{
@@ -2324,7 +2314,7 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 			// As the join will not filter on the expected classes, we have to specify it explicitely
 			$sExpectedClasses = implode("', '", self::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL));
 			$oFinalClassRestriction = Expression::FromOQL("`$sClassAlias`.finalclass IN ('$sExpectedClasses')");
-			$oQBExpr->AddCondition($oFinalClassRestriction);
+			$oBuild->m_oQBExpressions->AddCondition($oFinalClassRestriction);
 		}
 
 		// Then we join the queries of the eventual parent classes (compound model)
@@ -2333,7 +2323,7 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 			if (!self::HasTable($sParentClass)) continue;
 //echo "<p>Parent class: $sParentClass... let's call MakeQuerySingleTable()</p>";
 			self::DbgTrace("Parent class: $sParentClass... let's call MakeQuerySingleTable()");
-			$oSelectParentTable = self::MakeQuerySingleTable($aSelectedClasses, $oQBExpr, $aClassAliases, $aTableAliases, $oFilter, $sParentClass, $aExtKeys, $aValues);
+			$oSelectParentTable = self::MakeQuerySingleTable($oBuild, $oFilter, $sParentClass, $aExtKeys, $aValues);
 			if (is_null($oSelectBase))
 			{
 				$oSelectBase = $oSelectParentTable;
@@ -2358,11 +2348,11 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 				//self::DbgTrace($oSelectForeign->RenderSelect(array()));
 
 				$sForeignClassAlias = $oForeignFilter->GetFirstJoinedClassAlias();
-				$oQBExpr->PushJoinField(new FieldExpression($sForeignKeyAttCode, $sForeignClassAlias));
+				$oBuild->m_oQBExpressions->PushJoinField(new FieldExpression($sForeignKeyAttCode, $sForeignClassAlias));
 
-				$oSelectForeign = self::MakeQuery($aSelectedClasses, $oQBExpr, $aClassAliases, $aTableAliases, $oForeignFilter, $aAttToLoad);
+				$oSelectForeign = self::MakeQuery($oBuild, $oForeignFilter, $aAttToLoad);
 
-				$oJoinExpr = $oQBExpr->PopJoinField();
+				$oJoinExpr = $oBuild->m_oQBExpressions->PopJoinField();
 				$sForeignKeyTable = $oJoinExpr->GetParent();
 				$sForeignKeyColumn = $oJoinExpr->GetName();
 				$oSelectBase->AddInnerJoin($oSelectForeign, $sKeyField, $sForeignKeyColumn, $sForeignKeyTable);
@@ -2401,8 +2391,8 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 		//
 		if ($bIsMainQuery)
 		{
-			$oSelectBase->SetCondition($oQBExpr->GetCondition());
-			$oSelectBase->SetSelect($oQBExpr->GetSelect());
+			$oSelectBase->SetCondition($oBuild->m_oQBExpressions->GetCondition());
+			$oSelectBase->SetSelect($oBuild->m_oQBExpressions->GetSelect());
 		}
 
 		// That's all... cross fingers and we'll get some working query
@@ -2413,7 +2403,7 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 		return $oSelectBase;
 	}
 
-	protected static function MakeQuerySingleTable($aSelectedClasses, &$oQBExpr, &$aClassAliases, &$aTableAliases, $oFilter, $sTableClass, $aExtKeys, $aValues)
+	protected static function MakeQuerySingleTable(&$oBuild, $oFilter, $sTableClass, $aExtKeys, $aValues)
 	{
 		// $aExtKeys is an array of sTableClass => array of (sAttCode (keys) => array of sAttCode (fields))
 //echo "MAKEQUERY($sTableClass)-liste des clefs externes($sTableClass): <pre>".print_r($aExtKeys, true)."</pre><br/>\n";
@@ -2427,13 +2417,13 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 		$sTargetClass = $oFilter->GetFirstJoinedClass();
 		$sTargetAlias = $oFilter->GetFirstJoinedClassAlias();
 		$sTable = self::DBGetTable($sTableClass);
-		$sTableAlias = self::GenerateUniqueAlias($aTableAliases, $sTargetAlias.'_'.$sTable, $sTable);
+		$sTableAlias = $oBuild->GenerateTableAlias($sTargetAlias.'_'.$sTable, $sTable);
 
 		$aTranslation = array();
 		$aExpectedAtts = array();
-		$oQBExpr->GetUnresolvedFields($sTargetAlias, $aExpectedAtts);
+		$oBuild->m_oQBExpressions->GetUnresolvedFields($sTargetAlias, $aExpectedAtts);
 		
-		$bIsOnQueriedClass = array_key_exists($sTargetAlias, $aSelectedClasses);
+		$bIsOnQueriedClass = array_key_exists($sTargetAlias, $oBuild->GetRootFilter()->GetSelectedClasses());
 		
 		self::DbgTrace("Entering: tableclass=$sTableClass, filter=".$oFilter->ToOQL().", ".($bIsOnQueriedClass ? "MAIN" : "SECONDARY"));
 
@@ -2482,6 +2472,18 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 					$aUpdateValues[$sColumn] = $sValue;
 				}
 			}
+		}
+
+		// 2 - The SQL query, for this table only
+		//
+		$oSelectBase = new SQLQuery($sTable, $sTableAlias, array(), $bIsOnQueriedClass, $aUpdateValues, $oSelectedIdField);
+
+		// 3 - Resolve expected expressions (translation table: alias.attcode => table.column)
+		//
+		foreach(self::ListAttributeDefs($sTableClass) as $sAttCode=>$oAttDef)
+		{
+			// Skip this attribute if not defined in this table
+			if (self::$m_aAttribOrigins[$sTargetClass][$sAttCode] != $sTableClass) continue;
 
 			// Select...
 			//
@@ -2498,15 +2500,16 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 				{
 					if (array_key_exists($sAttCode, $aExpectedAtts))
 					{
-						$aTranslation[$sTargetAlias][$sAttCode.$sColId] = new FieldExpressionResolved($sSQLExpr, $sTableAlias);
+						$oFieldSQLExp = new FieldExpressionResolved($sSQLExpr, $sTableAlias);
+						foreach (MetaModel::EnumPlugins('iQueryModifier') as $sPluginClass => $oQueryModifier)
+						{
+							$oFieldSQLExp = $oQueryModifier->GetFieldExpression($oBuild, $sTargetClass, $sAttCode, $sColId, $oFieldSQLExp, $oSelectBase);
+						}
+						$aTranslation[$sTargetAlias][$sAttCode.$sColId] = $oFieldSQLExp;
 					}
 				}
 			}
 		}
-
-		// 3 - The whole stuff, for this table only
-		//
-		$oSelectBase = new SQLQuery($sTable, $sTableAlias, array(), $bIsOnQueriedClass, $aUpdateValues, $oSelectedIdField);
 
 //echo "MAKEQUERY- Classe $sTableClass<br/>\n";
 		// 4 - The external keys -> joins...
@@ -2527,7 +2530,7 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 					// The join was not explicitely defined in the filter,
 					// we need to do it now
 					$sKeyClass =  $oKeyAttDef->GetTargetClass();
-					$sKeyClassAlias = self::GenerateUniqueAlias($aClassAliases, $sKeyClass.'_'.$sKeyAttCode, $sKeyClass);
+					$sKeyClassAlias = $oBuild->GenerateClassAlias($sKeyClass.'_'.$sKeyAttCode, $sKeyClass);
 					$oExtFilter = new DBObjectSearch($sKeyClass, $sKeyClassAlias);
 
 					$aAllPointingTo[$sKeyAttCode][TREE_OPERATOR_EQUALS][$sKeyClassAlias] = $oExtFilter;
@@ -2584,18 +2587,18 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 							}
 							// Translate prior to recursing
 							//
-//echo "<p>oQBExpr ".__LINE__.": <pre>\n".print_r($oQBExpr, true)."\n".print_r($aTranslateNow, true)."</pre></p>\n";
-							$oQBExpr->Translate($aTranslateNow, false);
-//echo "<p>oQBExpr ".__LINE__.": <pre>\n".print_r($oQBExpr, true)."</pre></p>\n";
+//echo "<p>oQBExpr ".__LINE__.": <pre>\n".print_r($oBuild->m_oQBExpressions, true)."\n".print_r($aTranslateNow, true)."</pre></p>\n";
+							$oBuild->m_oQBExpressions->Translate($aTranslateNow, false);
+//echo "<p>oQBExpr ".__LINE__.": <pre>\n".print_r($oBuild->m_oQBExpressions, true)."</pre></p>\n";
 		
 //echo "<p>External key $sKeyAttCode (class: $sKeyClass), call MakeQuery()/p>\n";
 							self::DbgTrace("External key $sKeyAttCode (class: $sKeyClass), call MakeQuery()");
-							$oQBExpr->PushJoinField(new FieldExpression('id', $sKeyClassAlias));
+							$oBuild->m_oQBExpressions->PushJoinField(new FieldExpression('id', $sKeyClassAlias));
 			
-//echo "<p>Recursive MakeQuery ".__LINE__.": <pre>\n".print_r($aSelectedClasses, true)."</pre></p>\n";
-							$oSelectExtKey = self::MakeQuery($aSelectedClasses, $oQBExpr, $aClassAliases, $aTableAliases, $oExtFilter);
+//echo "<p>Recursive MakeQuery ".__LINE__.": <pre>\n".print_r($oBuild->GetRootFilter()->GetSelectedClasses(), true)."</pre></p>\n";
+							$oSelectExtKey = self::MakeQuery($oBuild, $oExtFilter);
 			
-							$oJoinExpr = $oQBExpr->PopJoinField();
+							$oJoinExpr = $oBuild->m_oQBExpressions->PopJoinField();
 							$sExternalKeyTable = $oJoinExpr->GetParent();
 							$sExternalKeyField = $oJoinExpr->GetName();
 			
@@ -2615,9 +2618,9 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 					}
 					elseif(self::$m_aAttribOrigins[$sKeyClass][$sKeyAttCode] == $sTableClass)
 					{
-						$oQBExpr->PushJoinField(new FieldExpression($sKeyAttCode, $sKeyClassAlias));
-						$oSelectExtKey = self::MakeQuery($aSelectedClasses, $oQBExpr, $aClassAliases, $aTableAliases, $oExtFilter);
-						$oJoinExpr = $oQBExpr->PopJoinField();
+						$oBuild->m_oQBExpressions->PushJoinField(new FieldExpression($sKeyAttCode, $sKeyClassAlias));
+						$oSelectExtKey = self::MakeQuery($oBuild, $oExtFilter);
+						$oJoinExpr = $oBuild->m_oQBExpressions->PopJoinField();
 //echo "MAKEQUERY-PopJoinField pour $sKeyAttCode, $sKeyClassAlias: <pre>".print_r($oJoinExpr, true)."</pre><br/>\n";
 						$sExternalKeyTable = $oJoinExpr->GetParent();
 						$sExternalKeyField = $oJoinExpr->GetName();
@@ -2636,9 +2639,9 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 
 		// Translate the selected columns
 		//
-//echo "<p>oQBExpr ".__LINE__.": <pre>\n".print_r($oQBExpr, true)."</pre></p>\n";
-		$oQBExpr->Translate($aTranslation, false);
-//echo "<p>oQBExpr ".__LINE__.": <pre>\n".print_r($oQBExpr, true)."</pre></p>\n";
+//echo "<p>oQBExpr ".__LINE__.": <pre>\n".print_r($oBuild->m_oQBExpressions, true)."</pre></p>\n";
+		$oBuild->m_oQBExpressions->Translate($aTranslation, false);
+//echo "<p>oQBExpr ".__LINE__.": <pre>\n".print_r($oBuild->m_oQBExpressions, true)."</pre></p>\n";
 
 		//MyHelpers::var_dump_html($oSelectBase->RenderSelect());
 		return $oSelectBase;
@@ -4646,7 +4649,7 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 	}
 
 	/**
-	 * Returns an array of classes implementing the given interface
+	 * Returns an array of classes=>instance implementing the given interface
 	 */
 	public static function EnumPlugins($sInterface)
 	{
@@ -4730,6 +4733,5 @@ MetaModel::RegisterZList("preview", array("description"=>"All attributes visible
 
 MetaModel::RegisterZList("standard_search", array("description"=>"List of criteria for the standard search", "type"=>"filters"));
 MetaModel::RegisterZList("advanced_search", array("description"=>"List of criteria for the advanced search", "type"=>"filters"));
-
 
 ?>

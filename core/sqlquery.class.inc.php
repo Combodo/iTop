@@ -68,6 +68,11 @@ class SQLQuery
 		$this->m_oSelectedIdField = $oSelectedIdField;
 	}
 
+	public function GetTableAlias()
+	{
+		return $this->m_sTableAlias;
+	}
+
 	public function SetSourceOQL($sOQL)
 	{
 		$this->m_SourceOQL = $sOQL;
@@ -101,11 +106,20 @@ class SQLQuery
 			{
 				$sJoinType = $aJoinInfo["jointype"];
 				$oSQLQuery = $aJoinInfo["select"];
-				$sLeftField = $aJoinInfo["leftfield"];
-				$sRightField = $aJoinInfo["rightfield"];
-				$sRightTableAlias = $aJoinInfo["righttablealias"];
+				if (isset($aJoinInfo["on_expression"]))
+				{
+					$sOnCondition = $aJoinInfo["on_expression"]->Render();
 
-				echo "<li>Join '$sJoinType', $sLeftField, $sRightTableAlias.$sRightField".$oSQLQuery->DisplayHtml()."</li>\n";
+					echo "<li>Join '$sJoinType', ON ($sOnCondition)".$oSQLQuery->DisplayHtml()."</li>\n";
+				}
+				else
+				{
+					$sLeftField = $aJoinInfo["leftfield"];
+					$sRightField = $aJoinInfo["rightfield"];
+					$sRightTableAlias = $aJoinInfo["righttablealias"];
+	
+					echo "<li>Join '$sJoinType', $sLeftField, $sRightTableAlias.$sRightField".$oSQLQuery->DisplayHtml()."</li>\n";
+				}
 			}
 			echo "</ul>";
 		}
@@ -195,6 +209,24 @@ class SQLQuery
 	public function AddLeftJoin($oSQLQuery, $sLeftField, $sRightField)
 	{
 		return $this->AddJoin("left", $oSQLQuery, $sLeftField, $sRightField);
+	}
+
+	public function AddInnerJoinEx(SQLQuery $oSQLQuery, Expression $oOnExpression)
+	{
+		$this->m_aJoinSelects[] = array(
+			"jointype" => 'inner',
+			"select" => $oSQLQuery,
+			"on_expression" => $oOnExpression
+		);
+	}
+
+	public function AddLeftJoinEx(SQLQuery $oSQLQuery, Expression $oOnExpression)
+	{
+		$this->m_aJoinSelects[] = array(
+			"jointype" => 'left',
+			"select" => $oSQLQuery,
+			"on_expression" => $oOnExpression
+		);
 	}
 	
 	// Interface, build the SQL query
@@ -412,8 +444,14 @@ class SQLQuery
 				break;
 			case "inner":
 			case "left":
-			// table or tablealias ???
-				$sJoinCond = "`$sCallerAlias`.`{$aJoinData['leftfield']}` = `$sRightTableAlias`.`{$aJoinData['rightfield']}`";
+				if (isset($aJoinData["on_expression"]))
+				{
+					$sJoinCond = $aJoinData["on_expression"]->Render();
+				}
+				else
+				{
+					$sJoinCond = "`$sCallerAlias`.`{$aJoinData['leftfield']}` = `$sRightTableAlias`.`{$aJoinData['rightfield']}`";
+				}
 				$aFrom[$this->m_sTableAlias] = array("jointype"=>$aJoinData['jointype'], "tablename"=>$this->m_sTable, "joincondition"=>"$sJoinCond");
 				break;
 			case "inner_tree":
@@ -488,10 +526,6 @@ class SQLQuery
 		foreach ($this->m_aJoinSelects as $aJoinData)
 		{
 			$oRightSelect = $aJoinData["select"];
-//			$sJoinType = $aJoinData["jointype"];
-//			$sLeftField = $aJoinData["leftfield"];
-//			$sRightField = $aJoinData["rightfield"];
-//			$sRightTableAlias = $aJoinData["righttablealias"];
 
 			$sJoinTableAlias = $oRightSelect->privRenderSingleTable($aTempFrom, $aFields, $aDelTables, $aSetValues, $aSelectedIdFields, $this->m_sTableAlias, $aJoinData);
 		}
