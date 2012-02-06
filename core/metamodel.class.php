@@ -1934,12 +1934,40 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 			}
 		}
 
+		// Compute query modifiers properties (can be set in the search itself, by the context, etc.)
+		//
+		$aModifierProperties = array();
+		foreach (MetaModel::EnumPlugins('iQueryModifier') as $sPluginClass => $oQueryModifier)
+		{
+			// Lowest precedence: the application context
+			$aPluginProps = ApplicationContext::GetPluginProperties($sPluginClass);
+			// Highest precedence: programmatically specified (or OQL)
+			foreach($oFilter->GetModifierProperties($sPluginClass) as $sProp => $value)
+			{
+				$aPluginProps[$sProp] = $value;
+			}
+			if (count($aPluginProps) > 0)
+			{
+				$aModifierProperties[$sPluginClass] = $aPluginProps;
+			}
+		}
+
 		if (self::$m_bQueryCacheEnabled || self::$m_bTraceQueries)
 		{
 			// Need to identify the query
 			$sOqlQuery = $oFilter->ToOql();
 
-			$sRawId = $sOqlQuery;
+			if (count($aModifierProperties))
+			{
+				array_multisort($aModifierProperties);
+				$sModifierProperties = json_encode($aModifierProperties);
+			}
+			else
+			{
+				$sModifierProperties = '';
+			}
+
+			$sRawId = $sOqlQuery.$sModifierProperties;
 			if (!is_null($aAttToLoad))
 			{
 				foreach($aAttToLoad as $sAlias => $aAttributes)
@@ -2035,7 +2063,7 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 
 		if (!isset($oSelect))
 		{
-			$oBuild = new QueryBuilderContext($oFilter);
+			$oBuild = new QueryBuilderContext($oFilter, $aModifierProperties);
 
 			$oKPI = new ExecutionKPI();
 			$oSelect = self::MakeQuery($oBuild, $oFilter, $aAttToLoad, array(), true /* main query */);

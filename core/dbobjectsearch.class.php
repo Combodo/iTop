@@ -68,10 +68,6 @@ class DBObjectSearch
 		$this->m_aParentConditions = array();
 
 		$this->m_aModifierProperties = array();
-		foreach (MetaModel::EnumPlugins('iQueryModifier') as $sPluginClass => $oQueryModifier)
-		{
-			$this->m_aModifierProperties[$sPluginClass] = ApplicationContext::GetPluginProperties($sPluginClass);
-		}
 	}
 
 	public function AllowAllData() {$this->m_bAllowAllData = true;}

@@ -28,16 +28,19 @@ class QueryBuilderContext
 	protected $m_oRootFilter;
 	protected $m_aClassAliases;
 	protected $m_aTableAliases;
+	protected $m_aModifierProperties;
 
 	public $m_oQBExpressions;
 
-	public function __construct($oFilter)
+	public function __construct($oFilter, $aModifierProperties)
 	{
 		$this->m_oRootFilter = $oFilter;
 		$this->m_oQBExpressions = new QueryBuilderExpressions($oFilter->GetCriteria());
 
 		$this->m_aClassAliases = $oFilter->GetJoinedClasses();
 		$this->m_aTableAliases = array();
+
+		$this->m_aModifierProperties = $aModifierProperties;
 	}
 
 	public function GetRootFilter()
@@ -53,6 +56,18 @@ class QueryBuilderContext
 	public function GenerateClassAlias($sNewName, $sRealName)
 	{
 		return MetaModel::GenerateUniqueAlias($this->m_aClassAliases, $sNewName, $sRealName);
+	}
+
+	public function GetModifierProperties($sPluginClass)
+	{
+		if (array_key_exists($sPluginClass, $this->m_aModifierProperties))
+		{
+			return $this->m_aModifierProperties[$sPluginClass];
+		}
+		else
+		{
+			return array();
+		}
 	}
 }
 
