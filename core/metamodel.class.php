@@ -1936,21 +1936,7 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 
 		// Compute query modifiers properties (can be set in the search itself, by the context, etc.)
 		//
-		$aModifierProperties = array();
-		foreach (MetaModel::EnumPlugins('iQueryModifier') as $sPluginClass => $oQueryModifier)
-		{
-			// Lowest precedence: the application context
-			$aPluginProps = ApplicationContext::GetPluginProperties($sPluginClass);
-			// Highest precedence: programmatically specified (or OQL)
-			foreach($oFilter->GetModifierProperties($sPluginClass) as $sProp => $value)
-			{
-				$aPluginProps[$sProp] = $value;
-			}
-			if (count($aPluginProps) > 0)
-			{
-				$aModifierProperties[$sPluginClass] = $aPluginProps;
-			}
-		}
+		$aModifierProperties = self::MakeModifierProperties($oFilter);
 
 		if (self::$m_bQueryCacheEnabled || self::$m_bTraceQueries)
 		{
@@ -2175,9 +2161,32 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 		}
 	}
 
+	protected static function MakeModifierProperties($oFilter)
+	{
+		// Compute query modifiers properties (can be set in the search itself, by the context, etc.)
+		//
+		$aModifierProperties = array();
+		foreach (MetaModel::EnumPlugins('iQueryModifier') as $sPluginClass => $oQueryModifier)
+		{
+			// Lowest precedence: the application context
+			$aPluginProps = ApplicationContext::GetPluginProperties($sPluginClass);
+			// Highest precedence: programmatically specified (or OQL)
+			foreach($oFilter->GetModifierProperties($sPluginClass) as $sProp => $value)
+			{
+				$aPluginProps[$sProp] = $value;
+			}
+			if (count($aPluginProps) > 0)
+			{
+				$aModifierProperties[$sPluginClass] = $aPluginProps;
+			}
+		}
+		return $aModifierProperties;
+	}
+	
 	public static function MakeDeleteQuery(DBObjectSearch $oFilter, $aArgs = array())
 	{
-		$oBuild = new QueryBuilderContext($oFilter);
+		$aModifierProperties = self::MakeModifierProperties($oFilter);
+		$oBuild = new QueryBuilderContext($oFilter, $aModifierProperties);
 		$oSelect = self::MakeQuery($oBuild, $oFilter, null, array(), true /* main query */);
 		$aScalarArgs = array_merge(self::PrepareQueryArguments($aArgs), $oFilter->GetInternalParams());
 		return $oSelect->RenderDelete($aScalarArgs);
@@ -2186,7 +2195,8 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 	public static function MakeUpdateQuery(DBObjectSearch $oFilter, $aValues, $aArgs = array())
 	{
 		// $aValues is an array of $sAttCode => $value
-		$oBuild = new QueryBuilderContext($oFilter);
+		$aModifierProperties = self::MakeModifierProperties($oFilter);
+		$oBuild = new QueryBuilderContext($oFilter, $aModifierProperties);
 		$oSelect = self::MakeQuery($oBuild, $oFilter, null, $aValues, true /* main query */);
 		$aScalarArgs = array_merge(self::PrepareQueryArguments($aArgs), $oFilter->GetInternalParams());
 		return $oSelect->RenderUpdate($aScalarArgs);
