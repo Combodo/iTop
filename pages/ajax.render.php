@@ -235,18 +235,21 @@ try
 		$sFilter = utils::ReadParam('sFilter', '', false, 'raw_data');
 		$sJson = utils::ReadParam('json', '', false, 'raw_data');
 		$sContains = utils::ReadParam('q', '', false, 'raw_data');
-		if (!empty($sJson))
+		if ($sContains !='')
 		{
-			$oWizardHelper = WizardHelper::FromJSON($sJson);
-			$oObj = $oWizardHelper->GetTargetObject();
+			if (!empty($sJson))
+			{
+				$oWizardHelper = WizardHelper::FromJSON($sJson);
+				$oObj = $oWizardHelper->GetTargetObject();
+			}
+			else
+			{
+				// Search form: no current object
+				$oObj = null;
+			}
+			$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId);
+			$oWidget->AutoComplete($oPage, $sFilter, $oObj, $sContains);
 		}
-		else
-		{
-			// Search form: no current object
-			$oObj = null;
-		}
-		$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId);
-		$oWidget->AutoComplete($oPage, $sFilter, $oObj, $sContains);
 		break;
 	
 		// ui.extkeywidget
