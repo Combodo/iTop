@@ -15,12 +15,45 @@
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 /**
- * @author	Erwan Taloc <erwan.taloc@combodo.com>
- * @author	Romain Quetiez <romain.quetiez@combodo.com>
- * @author	Denis Flaven <denis.flaven@combodo.com>
-
- * @licence	http://www.opensource.org/licenses/gpl-3.0.html LGPL
+ * Localized data
+ *
+ * @author      Erwan Taloc <erwan.taloc@combodo.com>
+ * @author      Romain Quetiez <romain.quetiez@combodo.com>
+ * @author      Denis Flaven <denis.flaven@combodo.com>
+ * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
+
+
+//////////////////////////////////////////////////////////////////////
+// Classes in 'gui'
+//////////////////////////////////////////////////////////////////////
+//
+
+//////////////////////////////////////////////////////////////////////
+// Classes in 'application'
+//////////////////////////////////////////////////////////////////////
+//
+
+//
+// Class: AuditCategory
+//
+
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
+	'Class:AuditCategory' => 'Categoria di Audit',
+	'Class:AuditCategory+' => 'Una sezione all\'interno del controllo globale',
+	'Class:AuditCategory/Attribute:name' => 'Nome della categoria',
+	'Class:AuditCategory/Attribute:name+' => 'Abbreviazione per questa categoria',
+	'Class:AuditCategory/Attribute:description' => 'Descrizione della categoria di Audit',
+	'Class:AuditCategory/Attribute:description+' => 'Descrizione dettagliata della categoria di audit',
+	'Class:AuditCategory/Attribute:definition_set' => 'Insieme di definizione',
+	'Class:AuditCategory/Attribute:definition_set+' => 'Espressione OQLche definisce l\'insieme di oggetti da controllare',
+	'Class:AuditCategory/Attribute:rules_list' => 'Regole di Audit',
+	'Class:AuditCategory/Attribute:rules_list+' => 'Regolele di audit per queste categorie',
+));
+
+//
+// Class: AuditRule
+//
 
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:AuditRule' => 'Regola di Audit',
@@ -28,63 +61,219 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:AuditRule/Attribute:name' => 'Nome della regola',
 	'Class:AuditRule/Attribute:name+' => '',
 	'Class:AuditRule/Attribute:description' => 'Descrizione della regola di Audit',
-	'Class:AuditRule/Attribute:description+' => '',
+	'Class:AuditRule/Attribute:description+' => 'Descrizione dettagliata per questa regola di audit ',
 	'Class:AuditRule/Attribute:query' => 'Query da eseguire',
-	'Class:AuditRule/Attribute:query+' => '',
+	'Class:AuditRule/Attribute:query+' => 'Espressio OQL da eseguire',
 	'Class:AuditRule/Attribute:valid_flag' => 'Oggetti validi?',
-	'Class:AuditRule/Attribute:valid_flag+' => '',
-	'Class:AuditRule/Attribute:valid_flag/Value:false' => 'falso',
-	'Class:AuditRule/Attribute:valid_flag/Value:false+' => '',
+	'Class:AuditRule/Attribute:valid_flag+' => 'Vero se la regola ritorna oggetti validi, falso altrimenti ',
 	'Class:AuditRule/Attribute:valid_flag/Value:true' => 'vero',
-	'Class:AuditRule/Attribute:valid_flag/Value:true+' => '',
+	'Class:AuditRule/Attribute:valid_flag/Value:true+' => 'vero',
+	'Class:AuditRule/Attribute:valid_flag/Value:false' => 'falso',
+	'Class:AuditRule/Attribute:valid_flag/Value:false+' => 'falso',
 	'Class:AuditRule/Attribute:category_id' => 'Categoria',
-	'Class:AuditRule/Attribute:category_id+' => '',
-	'Class:AuditCategory' => 'Categoria di Audit',
-	'Class:AuditCategory+' => '',
-	'Class:AuditCategory/Attribute:name' => 'Nome della Categoria',
-	'Class:AuditCategory/Attribute:name+' => '',
-	'Class:AuditCategory/Attribute:description' => 'Descrizione della Categoria di Audit',
-	'Class:AuditCategory/Attribute:description+' => '',
-	'Class:AuditCategory/Attribute:definition_set' => 'Insieme di definizione',
-	'Class:AuditCategory/Attribute:definition_set+' => '',
-	'Class:AuditCategory/Attribute:rules_list' => 'Regole di Audit',
-	'Class:AuditCategory/Attribute:rules_list+' => '',
+	'Class:AuditRule/Attribute:category_id+' => 'Categoria per questa regola',
+	'Class:AuditRule/Attribute:category_name' => 'Categoria',
+	'Class:AuditRule/Attribute:category_name+' => 'Nome della categoria per questa regola',
+));
+
+//
+// Class: QueryOQL
+//
+
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
+	'Class:Query' => 'Query',
+	'Class:Query+' => 'Una query è un insieme di dati definito in modo dinamico',
+	'Class:Query/Attribute:name' => 'Nome',
+	'Class:Query/Attribute:name+' => 'Identificativi della query',
+	'Class:Query/Attribute:description' => 'Descrizione',
+	'Class:Query/Attribute:description+' => 'Descrizione dettagliata della query(scopo, usagoetc.)',
+	'Class:Query/Attribute:fields' => 'Campi',
+	'Class:Query/Attribute:fields+' => 'Lista di attributi separati da virgola (o alias.attributo) per l\'esportazione',
+
+	'Class:QueryOQL' => 'OQL Query',
+	'Class:QueryOQL+' => 'Una query basata su Object Query Language',
+	'Class:QueryOQL/Attribute:oql' => 'Espressione',
+	'Class:QueryOQL/Attribute:oql+' => 'Espressione OQL',
+));
+
+//////////////////////////////////////////////////////////////////////
+// Classes in 'addon/userrights'
+//////////////////////////////////////////////////////////////////////
+//
+
+//
+// Class: User
+//
+
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
+	'Class:User' => 'Utente',
+	'Class:User+' => 'Login Utente',
+	'Class:User/Attribute:finalclass' => 'Tipo di account',
+	'Class:User/Attribute:finalclass+' => '',
+	'Class:User/Attribute:contactid' => 'Contatto (persona)',
+	'Class:User/Attribute:contactid+' => 'Dettagli personali per dati aziendali',
+	'Class:User/Attribute:last_name' => 'Cognome',
+	'Class:User/Attribute:last_name+' => 'Cognome del contatto corrispondente',
+	'Class:User/Attribute:first_name' => 'Nome',
+	'Class:User/Attribute:first_name+' => 'Nome del contatto corrispondente',
+	'Class:User/Attribute:email' => 'Email',
+	'Class:User/Attribute:email+' => 'Email del contatto corrispondente',
+	'Class:User/Attribute:login' => 'Login',
+	'Class:User/Attribute:login+' => 'Stringa di identificazione dell\'utente',
+	'Class:User/Attribute:language' => 'Lingua',
+	'Class:User/Attribute:language+' => 'Lingua utente',
+	'Class:User/Attribute:language/Value:EN US' => 'English',
+	'Class:User/Attribute:language/Value:EN US+' => 'English (U.S.)',
+	'Class:User/Attribute:language/Value:IT IT' => 'Italiano',
+	'Class:User/Attribute:language/Value:IT IT+' => 'Italiano (IT)',
+	'Class:User/Attribute:language/Value:FR FR' => 'French',
+	'Class:User/Attribute:language/Value:FR FR+' => 'French (France)',
+	'Class:User/Attribute:profile_list' => 'Profili',
+	'Class:User/Attribute:profile_list+' => 'Regole per  la concessione dei diritti per quella persona',
+	'Class:User/Attribute:allowed_org_list' => 'Organizzazione Consentite',
+	'Class:User/Attribute:allowed_org_list+' => 'L\'utente finale è autorizzato a vedere i dati appartenenti alle seguenti organizzazioni. Se non è specificato organizzazione, vi è alcuna restrizione.',
+
+	'Class:User/Error:LoginMustBeUnique' => 'Il Login deve essere unico - "%1s" già usato',
+	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Almeno un profilo deve essere assegnato all\'utente.',
+));
+
+//
+// Class: URP_Profiles
+//
+
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:URP_Profiles' => 'Profilo',
 	'Class:URP_Profiles+' => '',
 	'Class:URP_Profiles/Attribute:name' => 'Nome',
 	'Class:URP_Profiles/Attribute:name+' => '',
 	'Class:URP_Profiles/Attribute:description' => 'Descrizione',
-	'Class:URP_Profiles/Attribute:description+' => '',
+	'Class:URP_Profiles/Attribute:description+' => 'una linea di descrizione',
 	'Class:URP_Profiles/Attribute:user_list' => 'Utenti',
-	'Class:URP_Profiles/Attribute:user_list+' => '',
+	'Class:URP_Profiles/Attribute:user_list+' => 'Persone che hanno questo ruuolo',
+));
+
+//
+// Class: URP_Dimensions
+//
+
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
+	'Class:URP_Dimensions' => 'dimensione',
+	'Class:URP_Dimensions+' => 'dimensione dell\'applicazione (definizione di silos))',
+	'Class:URP_Dimensions/Attribute:name' => 'Nome',
+	'Class:URP_Dimensions/Attribute:name+' => 'etichetta',
+	'Class:URP_Dimensions/Attribute:description' => 'Descrizione',
+	'Class:URP_Dimensions/Attribute:description+' => 'una linea di descrizione',
+	'Class:URP_Dimensions/Attribute:type' => 'Tipo',
+	'Class:URP_Dimensions/Attribute:type+' => 'nome della classe o tipo di dato (proiezione dell\'unità)',
+));
+
+//
+// Class: URP_UserProfile
+//
+
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:URP_UserProfile' => 'Utente da Profilare',
 	'Class:URP_UserProfile+' => '',
 	'Class:URP_UserProfile/Attribute:userid' => 'Utente',
 	'Class:URP_UserProfile/Attribute:userid+' => '',
+	'Class:URP_UserProfile/Attribute:userlogin' => 'Login',
+	'Class:URP_UserProfile/Attribute:userlogin+' => 'User\'s login',
 	'Class:URP_UserProfile/Attribute:profileid' => 'Profilo',
-	'Class:URP_UserProfile/Attribute:profileid+' => '',
+	'Class:URP_UserProfile/Attribute:profileid+' => 'utilizzo del profilo',
+	'Class:URP_UserProfile/Attribute:profile' => 'Profilo',
+	'Class:URP_UserProfile/Attribute:profile+' => 'Nome del profilo',
 	'Class:URP_UserProfile/Attribute:reason' => 'Motivo',
-	'Class:URP_UserProfile/Attribute:reason+' => '',
+	'Class:URP_UserProfile/Attribute:reason+' => 'spiega perchè questo utente dovrebbe avere questo ruolo',
+));
+
+//
+// Class: URP_UserOrg
+//
+
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:URP_UserOrg' => 'Organizzazione dell\'utente',
 	'Class:URP_UserOrg+' => '',
 	'Class:URP_UserOrg/Attribute:userid' => 'Utente',
-	'Class:URP_UserOrg/Attribute:userid+' => '',
+	'Class:URP_UserOrg/Attribute:userid+' => 'Account Utente',
+	'Class:URP_UserOrg/Attribute:userlogin' => 'Login',
+	'Class:URP_UserOrg/Attribute:userlogin+' => 'Login Utente',
 	'Class:URP_UserOrg/Attribute:allowed_org_id' => 'Organizazione',
-	'Class:URP_UserOrg/Attribute:allowed_org_id+' => '',
+	'Class:URP_UserOrg/Attribute:allowed_org_id+' => 'Organizzazione permesse',
+	'Class:URP_UserOrg/Attribute:allowed_org_name' => 'Organizzazione',
+	'Class:URP_UserOrg/Attribute:allowed_org_name+' => 'Organizzazione permesse',
 	'Class:URP_UserOrg/Attribute:reason' => 'Motivo',
 	'Class:URP_UserOrg/Attribute:reason+' => '',
+
+));
+
+//
+// Class: URP_ProfileProjection
+//
+
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
+	'Class:URP_ProfileProjection' => 'profile_projection',
+	'Class:URP_ProfileProjection+' => 'proiezioni di profilo',
+	'Class:URP_ProfileProjection/Attribute:dimensionid' => 'Dimensione',
+	'Class:URP_ProfileProjection/Attribute:dimensionid+' => 'dimensione applicazione',
+	'Class:URP_ProfileProjection/Attribute:dimension' => 'Dimensione',
+	'Class:URP_ProfileProjection/Attribute:dimension+' => 'dimensione applicazione',
+	'Class:URP_ProfileProjection/Attribute:profileid' => 'Profilo',
+	'Class:URP_ProfileProjection/Attribute:profileid+' => 'utilizzo di profilo',
+	'Class:URP_ProfileProjection/Attribute:profile' => 'Profilo',
+	'Class:URP_ProfileProjection/Attribute:profile+' => 'Nome del profilo',
+	'Class:URP_ProfileProjection/Attribute:value' => 'Valore dell\'espressione',
+	'Class:URP_ProfileProjection/Attribute:value+' => 'Espressione OQL  (uso $user) | constante|  | +codice attributo',
+	'Class:URP_ProfileProjection/Attribute:attribute' => 'Attributo',
+	'Class:URP_ProfileProjection/Attribute:attribute+' => 'Codice attributo bersaglio (opzionale)',
+));
+
+//
+// Class: URP_ClassProjection
+//
+
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
+	'Class:URP_ClassProjection' => 'class_projection',
+	'Class:URP_ClassProjection+' => 'proiezioni di classe',
+	'Class:URP_ClassProjection/Attribute:dimensionid' => 'Dimensione',
+	'Class:URP_ClassProjection/Attribute:dimensionid+' => 'dimensione dell\'applicazione',
+	'Class:URP_ClassProjection/Attribute:dimension' => 'Dimensione',
+	'Class:URP_ClassProjection/Attribute:dimension+' => 'dimensione applicazione',
+	'Class:URP_ClassProjection/Attribute:class' => 'Classe',
+	'Class:URP_ClassProjection/Attribute:class+' => 'Classe bersaglio',
+	'Class:URP_ClassProjection/Attribute:value' => 'Valore dell\'espressione',
+	'Class:URP_ClassProjection/Attribute:value+' => 'Espressione OQL (uso $this) | constante|  | +codice attributo',
+	'Class:URP_ClassProjection/Attribute:attribute' => 'Attributo',
+	'Class:URP_ClassProjection/Attribute:attribute+' => 'Codice attributo bersaglio (opzionale)',
+));
+
+//
+// Class: URP_ActionGrant
+//
+
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:URP_ActionGrant' => 'azione_autorizzazione',
-	'Class:URP_ActionGrant+' => '',
+	'Class:URP_ActionGrant+' => 'permesso su classi',
 	'Class:URP_ActionGrant/Attribute:profileid' => 'Profilo',
-	'Class:URP_ActionGrant/Attribute:profileid+' => '',
+	'Class:URP_ActionGrant/Attribute:profileid+' => 'Utilizzo del profilo',
+	'Class:URP_ActionGrant/Attribute:profile' => 'Profilo',
+	'Class:URP_ActionGrant/Attribute:profile+' => 'Utilizzo del profilo',
 	'Class:URP_ActionGrant/Attribute:class' => 'Classe',
-	'Class:URP_ActionGrant/Attribute:class+' => '',
+	'Class:URP_ActionGrant/Attribute:class+' => 'Classe bersaglio',
 	'Class:URP_ActionGrant/Attribute:permission' => 'Autorizzazione',
-	'Class:URP_ActionGrant/Attribute:permission+' => '',
+	'Class:URP_ActionGrant/Attribute:permission+' => 'permesso non permesso',
+	'Class:URP_ActionGrant/Attribute:permission/Value:yes' => 'si',
+	'Class:URP_ActionGrant/Attribute:permission/Value:yes+' => 'si',
 	'Class:URP_ActionGrant/Attribute:permission/Value:no' => 'no',
-	'Class:URP_ActionGrant/Attribute:permission/Value:no+' => '',
-	'Class:URP_ActionGrant/Attribute:permission/Value:yes' => 'yes',
-	'Class:URP_ActionGrant/Attribute:permission/Value:yes+' => '',
+	'Class:URP_ActionGrant/Attribute:permission/Value:no+' => 'no',
+	'Class:URP_ActionGrant/Attribute:action' => 'Azione',
+	'Class:URP_ActionGrant/Attribute:action+' => 'operazioni da effettuare sulla data classe',
+));
+
+//
+// Class: URP_StimulusGrant
+//
+
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:URP_ActionGrant/Attribute:action' => 'Azione',
 	'Class:URP_ActionGrant/Attribute:action+' => '',
 	'Class:URP_StimulusGrant' => 'stimulus_autorizzazione',
@@ -95,92 +284,32 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:URP_StimulusGrant/Attribute:class+' => '',
 	'Class:URP_StimulusGrant/Attribute:permission' => 'Autorizzazione',
 	'Class:URP_StimulusGrant/Attribute:permission+' => '',
+'Class:URP_StimulusGrant/Attribute:permission/Value:yes' => 'si',
+	'Class:URP_StimulusGrant/Attribute:permission/Value:yes+' => 'si',
 	'Class:URP_StimulusGrant/Attribute:permission/Value:no' => 'no',
-	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => '',
-	'Class:URP_StimulusGrant/Attribute:permission/Value:yes' => 'yes',
-	'Class:URP_StimulusGrant/Attribute:permission/Value:yes+' => '',
+	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => 'no',
 	'Class:URP_StimulusGrant/Attribute:stimulus' => 'Stimulus',
-	'Class:URP_StimulusGrant/Attribute:stimulus+' => '',
+	'Class:URP_StimulusGrant/Attribute:stimulus+' => 'Codice per lo Stimolus',
+));
+
+//
+// Class: URP_AttributeGrant
+//
+
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:URP_AttributeGrant' => 'attributo_autorizzazione',
-	'Class:URP_AttributeGrant+' => '',
+	'Class:URP_AttributeGrant+' => 'autorizzazioni a livello di attributi',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid' => 'Azione di sovvenzione',
-	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => '',
+	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => 'azione di sovvenzione',
 	'Class:URP_AttributeGrant/Attribute:attcode' => 'Attributo',
-	'Class:URP_AttributeGrant/Attribute:attcode+' => '',
-	'Class:AuditRule/Attribute:category_name' => 'Categoria',
-	'Class:AuditRule/Attribute:category_name+' => '',
-	'Class:User' => 'User~~',
-	'Class:User+' => '',
-	'Class:User/Attribute:finalclass' => 'Tipo di account',
-	'Class:User/Attribute:finalclass+' => '',
-	'Class:User/Attribute:contactid' => 'Contatto (persona)',
-	'Class:User/Attribute:contactid+' => '',
-	'Class:User/Attribute:last_name' => 'Cognome',
-	'Class:User/Attribute:last_name+' => '',
-	'Class:User/Attribute:first_name' => 'Nome',
-	'Class:User/Attribute:first_name+' => '',
-	'Class:User/Attribute:email' => 'Email',
-	'Class:User/Attribute:email+' => '',
-	'Class:User/Attribute:login' => 'Login',
-	'Class:User/Attribute:login+' => '',
-	'Class:User/Attribute:language' => 'Lingua',
-	'Class:User/Attribute:language+' => '',
-	'Class:User/Attribute:language/Value:EN US' => 'Inglese',
-	'Class:User/Attribute:language/Value:EN US+' => '',
-	'Class:User/Attribute:language/Value:FR FR' => 'Francese',
-	'Class:User/Attribute:language/Value:FR FR+' => '',
-	'Class:User/Attribute:profile_list' => 'Profili',
-	'Class:User/Attribute:profile_list+' => '',
-	'Class:User/Attribute:allowed_org_list' => 'Organizzazioni autorizzate',
-	'Class:User/Attribute:allowed_org_list+' => '',
-	'Class:User/Error:LoginMustBeUnique' => 'Login deve essere unico - "%1s" è già utilizzato.~~',
-	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Almeno un profilo deve essere assegnato a questo utente',
-	'Class:URP_Dimensions' => 'dimensione',
-	'Class:URP_Dimensions+' => '',
-	'Class:URP_Dimensions/Attribute:name' => 'Nome',
-	'Class:URP_Dimensions/Attribute:name+' => '',
-	'Class:URP_Dimensions/Attribute:description' => 'Descrizione',
-	'Class:URP_Dimensions/Attribute:description+' => '',
-	'Class:URP_Dimensions/Attribute:type' => 'Tipo',
-	'Class:URP_Dimensions/Attribute:type+' => '',
-	'Class:URP_UserProfile/Attribute:userlogin' => 'Login',
-	'Class:URP_UserProfile/Attribute:userlogin+' => '',
-	'Class:URP_UserProfile/Attribute:profile' => 'Profilo',
-	'Class:URP_UserProfile/Attribute:profile+' => '',
-	'Class:URP_UserOrg/Attribute:userlogin' => 'Login',
-	'Class:URP_UserOrg/Attribute:userlogin+' => '',
-	'Class:URP_UserOrg/Attribute:allowed_org_name' => 'Organizazione',
-	'Class:URP_UserOrg/Attribute:allowed_org_name+' => '',
-	'Class:URP_ProfileProjection' => 'profilo_proiezione',
-	'Class:URP_ProfileProjection+' => '',
-	'Class:URP_ProfileProjection/Attribute:dimensionid' => 'Dimensione',
-	'Class:URP_ProfileProjection/Attribute:dimensionid+' => '',
-	'Class:URP_ProfileProjection/Attribute:dimension' => 'Dimensione',
-	'Class:URP_ProfileProjection/Attribute:dimension+' => '',
-	'Class:URP_ProfileProjection/Attribute:profileid' => 'Profilo',
-	'Class:URP_ProfileProjection/Attribute:profileid+' => '',
-	'Class:URP_ProfileProjection/Attribute:profile' => 'Profilo',
-	'Class:URP_ProfileProjection/Attribute:profile+' => '',
-	'Class:URP_ProfileProjection/Attribute:value' => 'Valore dell\'espressione',
-	'Class:URP_ProfileProjection/Attribute:value+' => '',
-	'Class:URP_ProfileProjection/Attribute:attribute' => 'Attributo',
-	'Class:URP_ProfileProjection/Attribute:attribute+' => '',
-	'Class:URP_ClassProjection' => 'classe_proiezione',
-	'Class:URP_ClassProjection+' => '',
-	'Class:URP_ClassProjection/Attribute:dimensionid' => 'Dimensione',
-	'Class:URP_ClassProjection/Attribute:dimensionid+' => '',
-	'Class:URP_ClassProjection/Attribute:dimension' => 'Dimensione',
-	'Class:URP_ClassProjection/Attribute:dimension+' => '',
-	'Class:URP_ClassProjection/Attribute:class' => 'Classe',
-	'Class:URP_ClassProjection/Attribute:class+' => '',
-	'Class:URP_ClassProjection/Attribute:value' => 'Valore dell\'espressione',
-	'Class:URP_ClassProjection/Attribute:value+' => '',
-	'Class:URP_ClassProjection/Attribute:attribute' => 'Attributo',
-	'Class:URP_ClassProjection/Attribute:attribute+' => '',
-	'Class:URP_ActionGrant/Attribute:profile' => 'Profilo',
-	'Class:URP_ActionGrant/Attribute:profile+' => '',
-	'Class:URP_StimulusGrant/Attribute:profile' => 'Profilo',
-	'Class:URP_StimulusGrant/Attribute:profile+' => '',
+	'Class:URP_AttributeGrant/Attribute:attcode+' => 'codice attributo',
+));
+
+//
+// String from the User Interface: menu, messages, buttons, etc...
+//
+
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Menu:WelcomeMenu' => 'Benveuto',
 	'Menu:WelcomeMenu+' => '',
 	'Menu:WelcomeMenuPage' => 'Benvenuto',
@@ -280,6 +409,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
         'UI:Error:ObjectAlreadyCreated' => 'Errore: l\'oggetto è già stato creato!',
         'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Errore: stimolo non valido "%1$s" su un oggetto %2$s nello stato "%3$s".',
 
+
 	'UI:GroupBy:Count' => 'Conteggio',
 	'UI:GroupBy:Count+' => '',
 	'UI:CountOfObjects' => '%1$d oggetti corrispondenti ai criteri.',
@@ -313,6 +443,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:Menu:CSVExport' => 'CSV Export',
 	'UI:Menu:Modify' => 'Modifica...',
 	'UI:Menu:Delete' => 'Cancella...',
+	'UI:Menu:Manage' => 'Gestisci...',
 	'UI:Menu:BulkDelete' => 'Cancella...',
 	'UI:UndefinedObject' => 'non definito',
 	'UI:Document:OpenInNewWindow:Download' => 'Apri in una nuova finestra: %1$s, Scarica: %2$s',
