@@ -93,6 +93,23 @@ abstract class CMDBObject extends DBObject
 	protected static $m_oCurrChange = null;
 
 
+	public static function SetCurrentChange(CMDBChange $oChange)
+	{
+		self::$m_oCurrChange = $oChange;
+	}
+
+	//
+	// Todo: simplify the APIs and do not pass the current change as an argument anymore
+	//       SetCurrentChange to be invoked in very few cases (UI.php, CSV import, Data synchro)
+	//			GetCurrentChange to be called ONCE (!) by CMDBChangeOp::OnInsert ($this->Set('change', ..GetCurrentChange())
+	//			GetCurrentChange to create a default change if not already done in the current context
+	//
+	public static function GetCurrentChange()
+	{
+		return self::$m_oCurrChange;
+	}
+
+
 	private function RecordObjCreation(CMDBChange $oChange)
 	{
 		$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpCreate");

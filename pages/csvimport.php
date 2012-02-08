@@ -304,6 +304,9 @@ try
 			$sUserString .= ' (CSV)';
 			$oMyChange->Set("userinfo", $sUserString);
 			$iChangeId = $oMyChange->DBInsert();		
+
+			// Todo - simplify that when reworking the change tracking
+			CMDBObject::SetCurrentChange($oMyChange);
 		}
 	
 		$oBulk = new BulkChange(
