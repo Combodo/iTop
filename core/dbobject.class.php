@@ -1302,6 +1302,11 @@ abstract class DBObject
 		return $this->DBInsert();
 	}
 
+	public function DBInsertTrackedNoReload(CMDBChange $oVoid)
+	{
+		return $this->DBInsertNoReload();
+	}
+
 	// Creates a copy of the current object into the database
 	// Returns the id of the newly created object
 	public function DBClone($iNewKey = null)

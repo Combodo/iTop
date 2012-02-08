@@ -66,6 +66,8 @@ class DBObjectSearch
 		$this->m_aRelatedTo = array();
 		$this->m_bDataFiltered = false;
 		$this->m_aParentConditions = array();
+
+		$this->m_aModifierProperties = array();
 	}
 
 	public function AllowAllData() {$this->m_bAllowAllData = true;}
@@ -125,6 +127,23 @@ class DBObjectSearch
 		return $this->m_aSelectedClasses;
 	}
 
+
+	public function SetModifierProperty($sPluginClass, $sProperty, $value)
+	{
+		$this->m_aModifierProperties[$sPluginClass][$sProperty] = $value;
+	}
+
+	public function GetModifierProperties($sPluginClass)
+	{
+		if (array_key_exists($sPluginClass, $this->m_aModifierProperties))
+		{
+			return $this->m_aModifierProperties[$sPluginClass];
+		}
+		else
+		{
+			return array();
+		}
+	}
 
 	public function IsAny()
 	{

@@ -953,10 +953,10 @@ class QueryBuilderExpressions
 	protected $m_aSelectExpr;
 	protected $m_aJoinFields;
 
-	public function __construct($aSelect, $oCondition)
+	public function __construct($oCondition)
 	{
 		$this->m_oConditionExpr = $oCondition;
-		$this->m_aSelectExpr = $aSelect;
+		$this->m_aSelectExpr = array();
 		$this->m_aJoinFields = array();
 	}
 

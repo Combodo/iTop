@@ -303,5 +303,58 @@ class ApplicationContext
 			return '';
 		}	
 	}
+
+	protected static $m_aPluginProperties = null;
+
+	/**
+	 * Load plugin properties for the current session
+	 * @return void
+	 */
+	protected static function LoadPluginProperties()
+	{
+		if (isset($_SESSION['PluginProperties']))
+		{
+			self::$m_aPluginProperties = $_SESSION['PluginProperties'];
+		}
+		else
+		{
+			self::$m_aPluginProperties = array();
+		}
+	}
+
+	/**
+	 * Set plugin properties
+	 * @param sPluginClass string Class implementing any plugin interface
+	 * @param sProperty string Name of the property
+	 * @param value scalar Value (numeric or string)
+	 * @return void
+	 */
+	public static function SetPluginProperty($sPluginClass, $sProperty, $value)
+	{
+		if (is_null(self::$m_aPluginProperties)) self::LoadPluginProperties();
+
+		self::$m_aPluginProperties[$sPluginClass][$sProperty] = $value;
+		$_SESSION['PluginProperties'][$sPluginClass][$sProperty] = $value;
+	}
+
+	/**
+	 * Get plugin properties
+	 * @param sPluginClass string Class implementing any plugin interface
+	 * @return array of sProperty=>value pairs
+	 */
+	public static function GetPluginProperties($sPluginClass)
+	{
+		if (is_null(self::$m_aPluginProperties)) self::LoadPluginProperties();
+
+		if (array_key_exists($sPluginClass, self::$m_aPluginProperties))
+		{
+			return self::$m_aPluginProperties[$sPluginClass];
+		}
+		else
+		{
+			return array();
+		}
+	}
+
 }
 ?>
