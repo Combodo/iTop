@@ -137,7 +137,7 @@ class EMail
 		}
 	}
 
-	protected function AddToHeader($sKey, $sValue)
+	public function AddToHeader($sKey, $sValue)
 	{
 		if (strlen($sValue) > 0)
 		{
