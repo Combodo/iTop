@@ -4194,17 +4194,15 @@ abstract class MetaModel
 		// Note: load the dictionary as soon as possible, because it might be
 		//       needed when some error occur
 		$sAppIdentity = 'itop-'.MetaModel::GetEnvironmentId();
+		$bDictInitializedFromData = false;
 		if (!self::$m_bUseAPCCache || !Dict::InCache($sAppIdentity))
 		{
+			$bDictInitializedFromData = true;
 			foreach (self::$m_oConfig->GetDictionaries() as $sModule => $sToInclude)
 			{
 				self::IncludeModule('dictionaries', $sToInclude);
 			}
-			if (self::$m_bUseAPCCache)
-			{
-				Dict::InitCache($sAppIdentity);
-			}
-		}
+		}		
 		// Set the language... after the dictionaries have been loaded!
 		Dict::SetDefaultLanguage(self::$m_oConfig->GetDefaultLanguage());
 
@@ -4307,6 +4305,11 @@ abstract class MetaModel
 			}
 		}
 
+		if (self::$m_bUseAPCCache && $bDictInitializedFromData)
+		{
+			Dict::InitCache($sAppIdentity);
+		}
+		
 		self::$m_sDBName = $sSource;
 		self::$m_sTablePrefix = $sTablePrefix;
 
