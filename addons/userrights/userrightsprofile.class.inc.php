@@ -659,6 +659,11 @@ class UserRightsProfile extends UserRightsAddOnAPI
 
 		$oKPI = new ExecutionKPI();
 
+		if (self::HasSharing())
+		{
+			SharedObject::InitSharedClassProperties();
+		}
+
 		$oProfileSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData("SELECT URP_Profiles"));
 		$this->m_aProfiles = array(); 
 		while ($oProfile = $oProfileSet->Fetch())
@@ -683,11 +688,27 @@ class UserRightsProfile extends UserRightsAddOnAPI
 			}
 		}
 
-		$oUserOrgSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData("SELECT URP_UserOrg"));
 		$this->m_aUserOrgs = array();
-		while ($oUserOrg = $oUserOrgSet->Fetch())
+
+		$sHierarchicalKeyCode = MetaModel::IsHierarchicalClass('Organization');
+		if ($sHierarchicalKeyCode !== false)
 		{
-			$this->m_aUserOrgs[$oUserOrg->Get('userid')][] = $oUserOrg->Get('allowed_org_id');
+			$sUserOrgQuery = 'SELECT UserOrg, Org FROM Organization AS Org JOIN Organization AS Root ON Org.parent_id BELOW Root.id JOIN URP_UserOrg AS UserOrg ON UserOrg.allowed_org_id = Root.id';
+			$oUserOrgSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData($sUserOrgQuery));
+			while ($aRow = $oUserOrgSet->FetchAssoc())
+			{
+				$oUserOrg = $aRow['UserOrg'];
+				$oOrg = $aRow['Org'];
+				$this->m_aUserOrgs[$oUserOrg->Get('userid')][] = $oOrg->GetKey();
+			}
+		}
+		else
+		{
+			$oUserOrgSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData("SELECT URP_UserOrg"));
+			while ($oUserOrg = $oUserOrgSet->Fetch())
+			{
+				$this->m_aUserOrgs[$oUserOrg->Get('userid')][] = $oUserOrg->Get('allowed_org_id');
+			}
 		}
 
 		$this->m_aClassStimulusGrants = array();
@@ -742,7 +763,7 @@ exit;
 		}
 	}
 
-	public function GetSelectFilter($oUser, $sClass)
+	public function GetSelectFilter($oUser, $sClass, $aSettings = array())
 	{
 		$this->LoadCache();
 
@@ -754,33 +775,10 @@ exit;
 
 		// Determine how to position the objects of this class
 		//
-		$aCallSpec = array($sClass, 'MapContextParam');
-		if (($sClass == 'Organization') || is_subclass_of($sClass, 'Organization'))
+		$sAttCode = self::GetOwnerOrganizationAttCode($sClass);
+		if (is_null($sAttCode))
 		{
-			$sAttCode = 'id';
-		}
-		elseif (is_callable($aCallSpec))
-		{
-			$sAttCode = call_user_func($aCallSpec, 'org_id'); // Returns null when there is no mapping for this parameter
-
-			if ($sAttCode == null)
-			{
-				return true;
-			}
-			if (!MetaModel::IsValidAttCode($sClass, $sAttCode))
-			{
-				// Skip silently. The data model checker will tell you something about this...
-				return true;
-			}
-		}
-		elseif(MetaModel::IsValidAttCode($sClass, 'org_id'))
-		{
-			$sAttCode = 'org_id';
-		}
-		else
-		{
-			// The objects of this class are not positioned in this dimension
-			// All of them are visible
+			// No filtering for this object
 			return true;
 		}
 		// Position the user
@@ -796,48 +794,65 @@ exit;
 		$oFilter  = new DBObjectSearch($sClass);
 		$oListExpr = ListExpression::FromScalars($aUserOrgs);
 		
-		// Check if the condition points to a hierarchical key
-		$bConditionAdded = false;
+		$oCondition = new BinaryExpression($oExpression, 'IN', $oListExpr);
+		$oFilter->AddConditionExpression($oCondition);
 
-		if ($sAttCode == 'id')
+		if (self::HasSharing())
 		{
-			// Filtering on the objects themselves
-			$sHierarchicalKeyCode = MetaModel::IsHierarchicalClass($sClass);
-			
-			if ($sHierarchicalKeyCode !== false)
+			if (($sAttCode == 'id') && isset($aSettings['bSearchMode']) && $aSettings['bSearchMode'])
 			{
-				$oRootFilter = new DBObjectSearch($sClass);
-				$oCondition = new BinaryExpression($oExpression, 'IN', $oListExpr);
-				$oRootFilter->AddConditionExpression($oCondition);
-				$oFilter->AddCondition_PointingTo($oRootFilter, $sHierarchicalKeyCode, TREE_OPERATOR_BELOW); // Use the 'below' operator by default
-				$bConditionAdded = true;
-			}
-		}
-		else
-		{
-			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-			if ($oAttDef->IsExternalKey())
-			{
-				$sHierarchicalKeyCode = MetaModel::IsHierarchicalClass($oAttDef->GetTargetClass());
-				
-				if ($sHierarchicalKeyCode !== false)
+				// Querying organizations (or derived)
+				// and the expected list of organizations will be used as a search criteria
+				// Therefore the query can also return organization having objects shared with the allowed organizations
+				//
+				// 1) build the list of organizations sharing something with the allowed organizations
+				// Organization <== sharing_org_id == SharedObject having org_id IN {user orgs}
+				$oShareSearch = new DBObjectSearch('SharedObject');
+				$oOrgField = new FieldExpression('org_id', 'SharedObject');
+				$oShareSearch->AddConditionExpression(new BinaryExpression($oOrgField, 'IN', $oListExpr));
+	
+				$oSearchSharers = new DBObjectSearch('Organization');
+				$oSearchSharers->AllowAllData();
+				$oSearchSharers->AddCondition_ReferencedBy($oShareSearch, 'sharing_org_id');
+				$aSharers = array();
+				foreach($oSearchSharers->ToDataArray(array('id')) as $aRow)
 				{
-					$oRootFilter = new DBObjectSearch($oAttDef->GetTargetClass());
-					$oExpression = new FieldExpression('id', $oAttDef->GetTargetClass());
-					$oCondition = new BinaryExpression($oExpression, 'IN', $oListExpr);
-					$oRootFilter->AddConditionExpression($oCondition);
-					$oHKFilter = new DBObjectSearch($oAttDef->GetTargetClass());
-					$oHKFilter->AddCondition_PointingTo($oRootFilter, $sHierarchicalKeyCode, TREE_OPERATOR_BELOW); // Use the 'below' operator by default
-					$oFilter->AddCondition_PointingTo($oHKFilter, $sAttCode);
-					$bConditionAdded = true;
+					$aSharers[] = $aRow['id'];
+				}
+				// 2) Enlarge the overall results: ... OR id IN(id1, id2, id3)
+				if (count($aSharers) > 0)
+				{
+					$oSharersList = ListExpression::FromScalars($aSharers);
+					$oFilter->MergeConditionExpression(new BinaryExpression($oExpression, 'IN', $oSharersList));
 				}
 			}
-		}
-		if (!$bConditionAdded)
-		{
-			$oCondition = new BinaryExpression($oExpression, 'IN', $oListExpr);
-			$oFilter->AddConditionExpression($oCondition);
-		}
+	
+			$aShareProperties = SharedObject::GetSharedClassProperties($sClass);
+			if ($aShareProperties)
+			{
+				$sShareClass = $aShareProperties['share_class'];
+				$sShareAttCode = $aShareProperties['attcode'];
+	
+				$oSearchShares = new DBObjectSearch($sShareClass);
+				$oSearchShares->AllowAllData();
+	
+				$sHierarchicalKeyCode = MetaModel::IsHierarchicalClass('Organization');
+				$oOrgField = new FieldExpression('org_id', $sShareClass);
+				$oSearchShares->AddConditionExpression(new BinaryExpression($oOrgField, 'IN', $oListExpr));
+				$aShared = array();
+				foreach($oSearchShares->ToDataArray(array($sShareAttCode)) as $aRow)
+				{
+					$aShared[] = $aRow[$sShareAttCode];
+				}
+				if (count($aShared) > 0)
+				{
+					$oObjId = new FieldExpression('id', $sClass);
+					$oSharedIdList = ListExpression::FromScalars($aShared);
+					$oFilter->MergeConditionExpression(new BinaryExpression($oObjId, 'IN', $oSharedIdList));
+				}
+			}
+		} // if HasSharing
+
 		return $oFilter;
 	}
 
@@ -926,10 +941,76 @@ exit;
 	{
 		$this->LoadCache();
 
-		// Note: The object set is ignored because it was interesting to optimize for huge data sets
-		//       and acceptable to consider only the root class of the object set
 		$aObjectPermissions = $this->GetUserActionGrant($oUser, $sClass, $iActionCode);
-		return $aObjectPermissions['permission'];
+		$iPermission = $aObjectPermissions['permission'];
+
+		// Note: In most cases the object set is ignored because it was interesting to optimize for huge data sets
+		//       and acceptable to consider only the root class of the object set
+
+		if ($iPermission != UR_ALLOWED_YES)
+		{
+			// It is already NO for everyone... that's the final word!
+		}
+		elseif ($iActionCode == UR_ACTION_READ)
+		{
+			// We are protected by GetSelectFilter: the object set contains objects allowed or shared for reading
+		}
+		elseif ($iActionCode == UR_ACTION_BULK_READ)
+		{
+			// We are protected by GetSelectFilter: the object set contains objects allowed or shared for reading
+		}
+		elseif ($oInstanceSet)
+		{
+			// We are protected by GetSelectFilter: the object set contains objects allowed or shared for reading
+			// We have to answer NO for objects shared for reading purposes
+			if (self::HasSharing())
+			{
+				$aClassProps = SharedObject::GetSharedClassProperties($sClass);
+				if ($aClassProps)
+				{
+					// This class is shared, GetSelectFilter may allow some objects for read only
+					// But currently we are checking wether the objects might be written...
+					// Let's exclude the objects based on the relevant criteria
+
+					$sOrgAttCode = self::GetOwnerOrganizationAttCode($sClass);
+					if (!is_null($sOrgAttCode))
+					{
+						$aUserOrgs = $this->GetUserOrgs($oUser, $sClass);
+						if (!is_null($aUserOrgs) && count($aUserOrgs) > 0)
+						{
+							$iCountNO = 0;
+							$iCountYES = 0;
+							$oInstanceSet->Rewind();
+							while($oObject = $oInstanceSet->Fetch())
+							{
+								$iOrg = $oObject->Get($sOrgAttCode);
+								if (in_array($iOrg, $aUserOrgs))
+								{
+									$iCountYES++;
+								}
+								else
+								{
+									$iCountNO++;
+								}
+							}
+							if ($iCountNO == 0)
+							{
+								$iPermission = UR_ALLOWED_YES;
+							}
+							elseif ($iCountYES == 0)
+							{
+								$iPermission = UR_ALLOWED_NO;
+							}
+							else
+							{
+								$iPermission = UR_ALLOWED_DEPENDS;
+							}
+						}
+					}
+				}
+			}
+		}
+		return $iPermission;
 	}
 
 	public function IsActionAllowedOnAttribute($oUser, $sClass, $sAttCode, $iActionCode, $oInstanceSet = null)
@@ -992,6 +1073,49 @@ exit;
 	public function FlushPrivileges()
 	{
 		$this->ResetCache();
+	}
+
+	/**
+	 * Find out which attribute is corresponding the the dimension 'owner org'
+	 * returns null if no such attribute has been found (no filtering should occur)	 
+	 */	 	
+	public static function GetOwnerOrganizationAttCode($sClass)
+	{
+		$sAttCode = null;
+
+		$aCallSpec = array($sClass, 'MapContextParam');
+		if (($sClass == 'Organization') || is_subclass_of($sClass, 'Organization'))
+		{
+			$sAttCode = 'id';
+		}
+		elseif (is_callable($aCallSpec))
+		{
+			$sAttCode = call_user_func($aCallSpec, 'org_id'); // Returns null when there is no mapping for this parameter
+			if (!MetaModel::IsValidAttCode($sClass, $sAttCode))
+			{
+				// Skip silently. The data model checker will tell you something about this...
+				$sAttCode = null;
+			}
+		}
+		elseif(MetaModel::IsValidAttCode($sClass, 'org_id'))
+		{
+			$sAttCode = 'org_id';
+		}
+
+		return $sAttCode;
+	}
+
+	/**
+	 * Determine wether the objects can be shared by the mean of a class SharedObject
+	 **/
+	protected static function HasSharing()
+	{
+		static $bHasSharing;
+		if (!isset($bHasSharing))
+		{
+			$bHasSharing = class_exists('SharedObject');
+		}
+		return $bHasSharing;
 	}
 }
 

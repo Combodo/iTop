@@ -13,7 +13,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper, sAttCode)
+function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper, sAttCode, bSearchMode)
 {
 	this.id = id;
 	this.sTargetClass = sTargetClass;
@@ -25,6 +25,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 	this.oWizardHelper = oWizHelper;
 	this.ajax_request = null;
 	this.bSelectMode = bSelectMode; // true if the edited field is a SELECT, false if it's an autocomplete
+	this.bSearchMode = bSearchMode; // true if selecting a value in the context of a search form
 	this.v_html = '';
 	var me = this;
 	
@@ -64,6 +65,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 				   sTitle: me.sTitle,
 				   sAttCode: me.sAttCode,
 				   sTargetClass: me.sTargetClass,
+				   bSearchMode: me.bSearchMode,
 				   operation: 'objectSearchForm'
 				 }
 	
@@ -138,7 +140,8 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 	{
 		var theMap = { sTargetClass: me.sTargetClass,
 					   iInputId: me.id,
-					   sFilter: me.sFilter
+					   sFilter: me.sFilter,
+					   bSearchMode: me.bSearchMode
 					 }
 		
 		// Gather the parameters from the search form
@@ -215,6 +218,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 				   iInputId: me.id,
 				   iObjectId: iObjectId,
 				   sAttCode: me.sAttCode,
+				   bSearchMode: me.bSearchMode,
 				   operation: 'getObjectName'
 				 }
 	
@@ -420,6 +424,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		var theMap = { sTargetClass: me.sTargetClass,
 				   	   sInputId: me.id,
 				   	   sFilter: me.sFilter,
+				   	   bSearchMode: me.bSearchMode,
 				   	   sAttCode: me.sAttCode,
 				   	   value: $('#'+me.id).val()
 					};
@@ -503,6 +508,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 				   iInputId: me.id,
 				   iObjectId: iObjectId,
 				   sAttCode: me.sAttCode,
+				   bSearchMode: me.bSearchMode,
 				   operation: 'getObjectName'
 				 }
 	

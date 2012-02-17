@@ -220,6 +220,20 @@ class Dict
 		}
 	}
 
+	/**
+	 * Clone a string in every language (if it exists in that language)
+	 */	 	
+	public static function CloneString($sSourceCode, $sDestCode)
+	{
+		foreach(self::$m_aLanguages as $sLanguageCode => $foo)
+		{
+			if (isset(self::$m_aData[$sLanguageCode][$sSourceCode]))
+			{
+				self::$m_aData[$sLanguageCode][$sDestCode] = self::$m_aData[$sLanguageCode][$sSourceCode];
+			}
+		}
+	}
+
 	public static function MakeStats($sLanguageCode, $sLanguageRef = 'EN US')
 	{
 		$aMissing = array(); // Strings missing for the target language

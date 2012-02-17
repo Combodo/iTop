@@ -47,7 +47,7 @@ class UserRightsNull extends UserRightsAddOnAPI
 		return true;
 	}
 
-	public function GetSelectFilter($oUser, $sClass)
+	public function GetSelectFilter($oUser, $sClass, $aSettings = array())
 	{
 		$oNullFilter  = new DBObjectSearch($sClass);
 		return $oNullFilter;
