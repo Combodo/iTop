@@ -214,6 +214,7 @@ try
 		$sFilter = utils::ReadParam('sFilter', '', false, 'raw_data');
 		$sJson = utils::ReadParam('json', '', false, 'raw_data');
 		$sAttCode = utils::ReadParam('sAttCode', '');
+		$bSearchMode = (utils::ReadParam('bSearchMode', 'false') == 'true');
 		if (!empty($sJson))
 		{
 			$oWizardHelper = WizardHelper::FromJSON($sJson);
@@ -224,7 +225,7 @@ try
 			// Search form: no current object
 			$oObj = null;
 		}
-		$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId, $sAttCode);
+		$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId, $sAttCode, $bSearchMode);
 		$oWidget->SearchObjectsToSelect($oPage, $sFilter, $sRemoteClass, $oObj);	
 		break;
 	
@@ -235,18 +236,22 @@ try
 		$sFilter = utils::ReadParam('sFilter', '', false, 'raw_data');
 		$sJson = utils::ReadParam('json', '', false, 'raw_data');
 		$sContains = utils::ReadParam('q', '', false, 'raw_data');
-		if (!empty($sJson))
+		$bSearchMode = (utils::ReadParam('bSearchMode', 'false') == 'true');
+		if ($sContains !='')
 		{
-			$oWizardHelper = WizardHelper::FromJSON($sJson);
-			$oObj = $oWizardHelper->GetTargetObject();
+			if (!empty($sJson))
+			{
+				$oWizardHelper = WizardHelper::FromJSON($sJson);
+				$oObj = $oWizardHelper->GetTargetObject();
+			}
+			else
+			{
+				// Search form: no current object
+				$oObj = null;
+			}
+			$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId, '', $bSearchMode);
+			$oWidget->AutoComplete($oPage, $sFilter, $oObj, $sContains);
 		}
-		else
-		{
-			// Search form: no current object
-			$oObj = null;
-		}
-		$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId);
-		$oWidget->AutoComplete($oPage, $sFilter, $oObj, $sContains);
 		break;
 	
 		// ui.extkeywidget
@@ -256,7 +261,8 @@ try
 		$iInputId = utils::ReadParam('iInputId', '');
 		$sTitle = utils::ReadParam('sTitle', '', false, 'raw_data');
 		$sAttCode = utils::ReadParam('sAttCode', '');
-		$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId, $sAttCode);
+		$bSearchMode = (utils::ReadParam('bSearchMode', 'false') == 'true');
+		$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId, $sAttCode, $bSearchMode);
 		$sJson = utils::ReadParam('json', '', false, 'raw_data');
 		if (!empty($sJson))
 		{
@@ -276,7 +282,7 @@ try
 		$sTargetClass = utils::ReadParam('sTargetClass', '', false, 'class');
 		$iInputId = utils::ReadParam('iInputId', '');
 		$sAttCode = utils::ReadParam('sAttCode', '');
-		$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId, $sAttCode);
+		$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId, $sAttCode, false);
 		$sJson = utils::ReadParam('json', '', false, 'raw_data');
 		if (!empty($sJson))
 		{
@@ -297,7 +303,7 @@ try
 		$iInputId = utils::ReadParam('iInputId', '');
 		$sFormPrefix = utils::ReadParam('sFormPrefix', '');
 		$sAttCode = utils::ReadParam('sAttCode', '');
-		$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId, $sAttCode);
+		$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId, $sAttCode, false);
 		$aResult = $oWidget->DoCreateObject($oPage);
 		echo json_encode($aResult);
 		break;
@@ -307,7 +313,8 @@ try
 		$sTargetClass = utils::ReadParam('sTargetClass', '', false, 'class');
 		$iInputId = utils::ReadParam('iInputId', '');
 		$iObjectId = utils::ReadParam('iObjectId', '');
-		$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId);
+		$bSearchMode = (utils::ReadParam('bSearchMode', 'false') == 'true');
+		$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId, '', $bSearchMode);
 		$sName = $oWidget->GetObjectName($iObjectId);
 		echo json_encode(array('name' => $sName));	
 		break;
@@ -320,6 +327,7 @@ try
 		$sFilter = utils::ReadParam('sFilter', '', false, 'raw_data');
 		$sJson = utils::ReadParam('json', '', false, 'raw_data');
 		$currValue = utils::ReadParam('value', '');
+		$bSearchMode = (utils::ReadParam('bSearchMode', 'false') == 'true');
 		if (!empty($sJson))
 		{
 			$oWizardHelper = WizardHelper::FromJSON($sJson);
@@ -330,7 +338,7 @@ try
 			// Search form: no current object
 			$oObj = null;
 		}
-		$oWidget = new UIExtKeyWidget($sTargetClass, $sInputId);
+		$oWidget = new UIExtKeyWidget($sTargetClass, $sInputId, '', $bSearchMode);
 		$oWidget->DisplayHierarchy($oPage, $sFilter, $currValue, $oObj);
 		break;
 		
@@ -619,7 +627,7 @@ try
 		// Let's take this opportunity to inform the plug-ins so that they can perform some cleanup
 		$iTransactionId = utils::ReadParam('transaction_id', 0);
 		$sTempId = session_id().'_'.$iTransactionId;
-		foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
+		foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
 		{
 			$oExtensionInstance->OnFormCancel($sTempId);
 		}

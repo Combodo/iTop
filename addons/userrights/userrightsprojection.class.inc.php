@@ -734,7 +734,7 @@ exit;
 		return true;
 	}
 
-	public function GetSelectFilter($oUser, $sClass)
+	public function GetSelectFilter($oUser, $sClass, $aSettings = array())
 	{
 		$aConditions = array();
 		foreach ($this->m_aDimensions as $iDimension => $oDimension)

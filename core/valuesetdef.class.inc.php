@@ -97,15 +97,22 @@ class ValueSetObjects extends ValueSetDefinition
 	protected $m_aOrderBy;
 	protected $m_aExtraConditions;
 	private $m_bAllowAllData;
+	private $m_aModifierProperties;
 
-	public function __construct($sFilterExp, $sValueAttCode = '', $aOrderBy = array(), $bAllowAllData = false)
+	public function __construct($sFilterExp, $sValueAttCode = '', $aOrderBy = array(), $bAllowAllData = false, $aModifierProperties = array())
 	{
 		$this->m_sContains = '';
 		$this->m_sFilterExpr = $sFilterExp;
 		$this->m_sValueAttCode = $sValueAttCode;
 		$this->m_aOrderBy = $aOrderBy;
 		$this->m_bAllowAllData = $bAllowAllData;
+		$this->m_aModifierProperties = $aModifierProperties;
 		$this->m_aExtraConditions = array();
+	}
+
+	public function SetModifierProperty($sPluginClass, $sProperty, $value)
+	{
+		$this->m_aModifierProperties[$sPluginClass][$sProperty] = $value;
 	}
 
 	public function AddCondition(DBObjectSearch $oFilter)
@@ -126,6 +133,13 @@ class ValueSetObjects extends ValueSetDefinition
 		foreach($this->m_aExtraConditions as $oExtraFilter)
 		{
 			$oFilter->MergeWith($oExtraFilter);
+		}
+		foreach($this->m_aModifierProperties as $sPluginClass => $aProperties)
+		{
+			foreach ($aProperties as $sProperty => $value)
+			{
+				$oFilter->SetModifierProperty($sPluginClass, $sProperty, $value);
+			}
 		}
 
 		return new DBObjectSet($oFilter, $this->m_aOrderBy, $aArgs);
@@ -161,6 +175,13 @@ class ValueSetObjects extends ValueSetDefinition
 		foreach($this->m_aExtraConditions as $oExtraFilter)
 		{
 			$oFilter->MergeWith($oExtraFilter);
+		}
+		foreach($this->m_aModifierProperties as $sPluginClass => $aProperties)
+		{
+			foreach ($aProperties as $sProperty => $value)
+			{
+				$oFilter->SetModifierProperty($sPluginClass, $sProperty, $value);
+			}
 		}
 
 		$oValueExpr = new ScalarExpression('%'.$sContains.'%');

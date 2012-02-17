@@ -1548,7 +1548,9 @@ EOF
 			if ($oAttDef->IsExternalKey())
 			{
 				$sTargetClass = $oAttDef->GetTargetClass();
-				$oAllowedValues = new DBObjectSet(new DBObjectSearch($sTargetClass));
+				$oSearch = new DBObjectSearch($sTargetClass);
+				$oSearch->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', true);
+				$oAllowedValues = new DBObjectSet($oSearch);
 
 				$iFieldSize = $oAttDef->GetMaxSize();
 				$iMaxComboLength = $oAttDef->GetMaximumComboLength();
@@ -2382,7 +2384,7 @@ EOF
 		$current = HILIGHT_CLASS_NONE; // Not hilighted by default
 
 		// Invoke extensions before the deletion (the deletion will do some cleanup and we might loose some information
-		foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
+		foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
 		{
 			$new = $oExtensionInstance->GetHilightClass($this);
 			@$current = self::$m_highlightComparison[$current][$new];
@@ -2667,7 +2669,7 @@ EOF
 		$this->UpdateObjectFromArray($aFinalValues);
 
 		// Invoke extensions after the update of the object from the form
-		foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
+		foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
 		{
 			$oExtensionInstance->OnFormSubmit($this, $sFormPrefix);
 		}

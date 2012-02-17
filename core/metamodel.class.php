@@ -17,6 +17,7 @@
 require_once(APPROOT.'core/modulehandler.class.inc.php');
 require_once(APPROOT.'core/querybuildercontext.class.inc.php');
 require_once(APPROOT.'core/querymodifier.class.inc.php');
+require_once(APPROOT.'core/metamodelmodifier.inc.php');
 
 /**
  * Metamodel
@@ -1172,6 +1173,33 @@ abstract class MetaModel
 
 		self::$m_sTablePrefix = $sTablePrefix;
 
+		// Build the list of available extensions
+		//
+		$aInterfaces = array('iApplicationUIExtension', 'iApplicationObjectExtension', 'iQueryModifier', 'iOnClassInitialization');
+		foreach($aInterfaces as $sInterface)
+		{
+			self::$m_aExtensionClasses[$sInterface] = array();
+		}
+
+		foreach(get_declared_classes() as $sPHPClass)
+		{
+			$oRefClass = new ReflectionClass($sPHPClass);
+			$oExtensionInstance = null;
+			foreach($aInterfaces as $sInterface)
+			{
+				if ($oRefClass->implementsInterface($sInterface))
+				{
+					if (is_null($oExtensionInstance))
+					{
+						$oExtensionInstance = new $sPHPClass;
+					}
+					self::$m_aExtensionClasses[$sInterface][$sPHPClass] = $oExtensionInstance;
+				}
+			}
+		}
+
+		// Initialize the classes (declared attributes, etc.)
+		//
 		foreach(get_declared_classes() as $sPHPClass) {
 			if (is_subclass_of($sPHPClass, 'DBObject'))
 			{
@@ -1184,6 +1212,10 @@ abstract class MetaModel
 				if (method_exists($sPHPClass, 'Init'))
 				{
 					call_user_func(array($sPHPClass, 'Init'));
+					foreach (MetaModel::EnumPlugins('iOnClassInitialization') as $sPluginClass => $oClassInit)
+					{
+						$oClassInit->OnAfterClassInitialization($sPHPClass);
+					}
 				}
 			}
 		}
@@ -1401,31 +1433,6 @@ abstract class MetaModel
 			//	}
 			//}
 		}
-
-		// Build the list of available extensions
-		//
-		$aInterfaces = array('iApplicationUIExtension', 'iApplicationObjectExtension', 'iQueryModifier');
-		foreach($aInterfaces as $sInterface)
-		{
-			self::$m_aExtensionClasses[$sInterface] = array();
-		}
-
-		foreach(get_declared_classes() as $sPHPClass)
-		{
-			$oRefClass = new ReflectionClass($sPHPClass);
-			$oExtensionInstance = null;
-			foreach($aInterfaces as $sInterface)
-			{
-				if ($oRefClass->implementsInterface($sInterface))
-				{
-					if (is_null($oExtensionInstance))
-					{
-						$oExtensionInstance = new $sPHPClass;
-					}
-					self::$m_aExtensionClasses[$sInterface][$sPHPClass] = $oExtensionInstance;
-				}
-			}
-		}
 	}
 
 	// To be overriden, must be called for any object class (optimization)
@@ -1552,9 +1559,12 @@ abstract class MetaModel
 		return true;
 	}
 
-	public static function Init_AddAttribute(AttributeDefinition $oAtt)
+	public static function Init_AddAttribute(AttributeDefinition $oAtt, $sTargetClass = null)
 	{
-		$sTargetClass = self::GetCallersPHPClass("Init");
+		if (!$sTargetClass)
+		{
+			$sTargetClass = self::GetCallersPHPClass("Init");
+		}
 
 		$sAttCode = $oAtt->GetCode();
 		if ($sAttCode == 'finalclass')
@@ -1615,11 +1625,14 @@ abstract class MetaModel
 		// Note: it looks redundant to put targetclass there, but a mix occurs when inheritance is used		
 	}
 
-	public static function Init_SetZListItems($sListCode, $aItems)
+	public static function Init_SetZListItems($sListCode, $aItems, $sTargetClass = null)
 	{
 		MyHelpers::CheckKeyInArray('list code', $sListCode, self::$m_aListInfos);
 
-		$sTargetClass = self::GetCallersPHPClass("Init");
+		if (!$sTargetClass)
+		{
+			$sTargetClass = self::GetCallersPHPClass("Init");
+		}
 
 		// Discard attributes that do not make sense
 		// (missing classes in the current module combination, resulting in irrelevant ext key or link set)
@@ -1906,7 +1919,7 @@ abstract class MetaModel
 		//
 		if (!$oFilter->IsAllDataAllowed() && !$oFilter->IsDataFiltered())
 		{
-			$oVisibleObjects = UserRights::GetSelectFilter($oFilter->GetClass());
+			$oVisibleObjects = UserRights::GetSelectFilter($oFilter->GetClass(), $oFilter->GetModifierProperties('UserRightsGetSelectFilter'));
 			if ($oVisibleObjects === false)
 			{
 				// Make sure this is a valid search object, saying NO for all
@@ -4375,17 +4388,31 @@ abstract class MetaModel
 	{
 		$aRes = array();
 		$iTotalHits = 0;
-		foreach(self::$aQueryCacheGetObjectHits as $sClass => $iHits)
+		foreach(self::$aQueryCacheGetObjectHits as $sClassSign => $iHits)
 		{
-			$aRes[] = "$sClass: $iHits";
+			$aRes[] = "$sClassSign: $iHits";
 			$iTotalHits += $iHits;
 		}
 		return $iTotalHits.' ('.implode(', ', $aRes).')';
 	}
 
-	public static function MakeSingleRow($sClass, $iKey, $bMustBeFound = true, $bAllowAllData = false)
+	public static function MakeSingleRow($sClass, $iKey, $bMustBeFound = true, $bAllowAllData = false, $aModifierProperties = null)
 	{
-		if (!array_key_exists($sClass, self::$aQueryCacheGetObject))
+		// Build the query cache signature
+		//
+		$sQuerySign = $sClass;
+		if($bAllowAllData)
+		{
+			$sQuerySign .= '_all_';
+		}
+		if (count($aModifierProperties))
+		{
+			array_multisort($aModifierProperties);
+			$sModifierProperties = json_encode($aModifierProperties);
+			$sQuerySign .= '_all_'.md5($sModifierProperties);
+		}
+
+		if (!array_key_exists($sQuerySign, self::$aQueryCacheGetObject))
 		{
 			// NOTE: Quick and VERY dirty caching mechanism which relies on
 			//       the fact that the string '987654321' will never appear in the
@@ -4394,20 +4421,30 @@ abstract class MetaModel
 			//       but this would slow down -by how much time?- the application
 			$oFilter = new DBObjectSearch($sClass);
 			$oFilter->AddCondition('id', 987654321, '=');
+			if ($aModifierProperties)
+			{
+				foreach ($aModifierProperties as $sPluginClass => $aProperties)
+				{
+					foreach ($aProperties as $sProperty => $value)
+					{
+						$oFilter->SetModifierProperty($sPluginClass, $sProperty, $value);
+					}
+				}
+			}
 			if ($bAllowAllData)
 			{
 				$oFilter->AllowAllData();
 			}
 	
 			$sSQL = self::MakeSelectQuery($oFilter);
-			self::$aQueryCacheGetObject[$sClass] = $sSQL;
-			self::$aQueryCacheGetObjectHits[$sClass] = 0;
+			self::$aQueryCacheGetObject[$sQuerySign] = $sSQL;
+			self::$aQueryCacheGetObjectHits[$sQuerySign] = 0;
 		}
 		else
 		{
-			$sSQL = self::$aQueryCacheGetObject[$sClass];
-			self::$aQueryCacheGetObjectHits[$sClass] += 1;
-//			echo " -load $sClass/$iKey- ".self::$aQueryCacheGetObjectHits[$sClass]."<br/>\n";
+			$sSQL = self::$aQueryCacheGetObject[$sQuerySign];
+			self::$aQueryCacheGetObjectHits[$sQuerySign] += 1;
+//			echo " -load $sClass/$iKey- ".self::$aQueryCacheGetObjectHits[$sQuerySign]."<br/>\n";
 		}
 		$sSQL = str_replace(CMDBSource::Quote(987654321), CMDBSource::Quote($iKey), $sSQL);
 		$res = CMDBSource::Query($sSQL);
@@ -4453,10 +4490,10 @@ abstract class MetaModel
 		return new $sClass($aRow, $sClassAlias, $aAttToLoad, $aExtendedDataSpec);
 	}
 
-	public static function GetObject($sClass, $iKey, $bMustBeFound = true, $bAllowAllData = false)
+	public static function GetObject($sClass, $iKey, $bMustBeFound = true, $bAllowAllData = false, $aModifierProperties = null)
 	{
 		self::_check_subclass($sClass);	
-		$aRow = self::MakeSingleRow($sClass, $iKey, $bMustBeFound, $bAllowAllData);
+		$aRow = self::MakeSingleRow($sClass, $iKey, $bMustBeFound, $bAllowAllData, $aModifierProperties);
 		if (empty($aRow))
 		{
 			return null;

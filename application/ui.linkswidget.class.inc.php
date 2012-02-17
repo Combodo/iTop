@@ -62,8 +62,9 @@ class UILinksWidget
 		$this->m_aTableConfig = array();
 		$this->m_aTableConfig['form::checkbox'] = array( 'label' => "<input class=\"select_all\" type=\"checkbox\" value=\"1\" onClick=\"CheckAll('#linkedset_{$this->m_sAttCode}{$this->m_sNameSuffix} .selection', this.checked); oWidget".$this->m_iInputId.".OnSelectChange();\">", 'description' => Dict::S('UI:SelectAllToggle+'));
 
-		foreach(MetaModel::ListAttributeDefs($this->m_sLinkedClass) as $sAttCode=>$oAttDef)
+		foreach(MetaModel::FlattenZList(MetaModel::GetZListItems($this->m_sLinkedClass, 'list')) as $sAttCode)
 		{
+			$oAttDef = MetaModel::GetAttributeDef($this->m_sLinkedClass, $sAttCode);
 			if ($sStateAttCode == $sAttCode)
 			{
 				// State attribute is always hidden from the UI

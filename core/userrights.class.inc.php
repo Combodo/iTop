@@ -55,7 +55,7 @@ abstract class UserRightsAddOnAPI
 	abstract public function Init(); // loads data (possible optimizations)
 
 	// Used to build select queries showing only objects visible for the given user
-	abstract public function GetSelectFilter($sLogin, $sClass); // returns a filter object
+	abstract public function GetSelectFilter($sLogin, $sClass, $aSettings = array()); // returns a filter object
 
 	abstract public function IsActionAllowed($oUser, $sClass, $iActionCode, /*dbObjectSet*/ $oInstanceSet = null);
 	abstract public function IsStimulusAllowed($oUser, $sClass, $sStimulusCode, /*dbObjectSet*/ $oInstanceSet = null);
@@ -647,7 +647,7 @@ class UserRights
 		return true;
 	}
 
-	public static function GetSelectFilter($sClass)
+	public static function GetSelectFilter($sClass, $aSettings = array())
 	{
 		// When initializing, we need to let everything pass trough
 		if (!self::CheckLogin()) return true;
@@ -656,7 +656,7 @@ class UserRights
 
 		if (MetaModel::HasCategory($sClass, 'bizmodel'))
 		{
-			return self::$m_oAddOn->GetSelectFilter(self::$m_oUser, $sClass);
+			return self::$m_oAddOn->GetSelectFilter(self::$m_oUser, $sClass, $aSettings);
 		}
 		else
 		{

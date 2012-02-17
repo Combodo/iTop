@@ -462,11 +462,13 @@ EOF
 			// Display the list of *favorite* organizations... but keeping in mind what is the real number of organizations
 			$aFavoriteOrgs = appUserPreferences::GetPref('favorite_orgs', null);
 			$oSearchFilter = new DBObjectSearch('Organization');
+			$oSearchFilter->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', true);
 			$oSet = new CMDBObjectSet($oSearchFilter);
 			$iCount = $oSet->Count(); // total number of existing Orgs
 			
 			// Now get the list of Orgs to be displayed in the menu
 			$oSearchFilter = DBObjectSearch::FromOQL(ApplicationMenu::GetFavoriteSiloQuery());
+			$oSearchFilter->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', true);
 			if (!empty($aFavoriteOrgs))
 			{
 				$oSearchFilter->AddCondition('id', $aFavoriteOrgs, 'IN');
@@ -513,8 +515,8 @@ EOF
 			$sHtml .= '</select>';
 */
 			$sFavoriteOrgs = '';
-			$oWidget = new UIExtKeyWidget('Organization', 'org_id');
-			$sHtml .= $oWidget->Display($this, 50, false, '', $oSet, $iCurrentOrganization, 'org_id', false, 'c[org_id]', '', array('iFieldSize' => 20, 'iMinChars' => MetaModel::GetConfig()->Get('min_autocomplete_chars'), 'sDefaultValue' => Dict::S('UI:AllOrganizations')), $bSearchMode = true);
+			$oWidget = new UIExtKeyWidget('Organization', 'org_id', '', true /* search mode */);
+			$sHtml .= $oWidget->Display($this, 50, false, '', $oSet, $iCurrentOrganization, 'org_id', false, 'c[org_id]', '', array('iFieldSize' => 20, 'iMinChars' => MetaModel::GetConfig()->Get('min_autocomplete_chars'), 'sDefaultValue' => Dict::S('UI:AllOrganizations')));
 			$this->add_ready_script('$("#org_id").bind("extkeychange", function() { $("#SiloSelection form").submit(); } )');
 			$this->add_ready_script("$('#label_org_id').click( function() { $(this).val(''); $('#org_id').val(''); return true; } );\n");
 			// Add other dimensions/context information to this form
