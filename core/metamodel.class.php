@@ -4199,17 +4199,15 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 		// Note: load the dictionary as soon as possible, because it might be
 		//       needed when some error occur
 		$sAppIdentity = self::GetConfig()->Get('session_name');
+		$bDictInitializedFromData = false;
 		if (!self::$m_bUseAPCCache || !Dict::InCache($sAppIdentity))
 		{
+			$bDictInitializedFromData = true;
 			foreach (self::$m_oConfig->GetDictionaries() as $sModule => $sToInclude)
 			{
 				self::IncludeModule($sConfigFile, 'dictionaries', $sToInclude);
 			}
-			if (self::$m_bUseAPCCache)
-			{
-				Dict::InitCache($sAppIdentity);
-			}
-		}
+		}		
 		// Set the language... after the dictionaries have been loaded!
 		Dict::SetDefaultLanguage(self::$m_oConfig->GetDefaultLanguage());
 
@@ -4313,6 +4311,11 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 			}
 		}
 
+		if (self::$m_bUseAPCCache && $bDictInitializedFromData)
+		{
+			Dict::InitCache($sAppIdentity);
+		}
+		
 		self::$m_sDBName = $sSource;
 		self::$m_sTablePrefix = $sTablePrefix;
 
