@@ -115,6 +115,7 @@ class ApplicationContext
 					if (MetaModel::IsValidClass('Organization'))
 					{
 						$oSearchFilter = new DBObjectSearch('Organization');
+						$oSearchFilter->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', true);
 						$oSet = new CMDBObjectSet($oSearchFilter);
 						$iCount = $oSet->Count();
 						if ($iCount == 1)
