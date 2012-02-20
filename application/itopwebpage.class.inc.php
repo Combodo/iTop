@@ -852,6 +852,47 @@ EOF
 		return $this->m_sCurrentTab;
 	}
 	
+	public function RemoveTab($sTabLabel, $sTabContainer = null)
+	{
+		if ($sTabContainer == null)
+		{
+			$sTabContainer = $this->m_sCurrentTabContainer;
+		}
+		if (isset($this->m_aTabs[$sTabContainer][$sTabLabel]))
+		{
+			// Delete the content of the tab
+			unset($this->m_aTabs[$sTabContainer][$sTabLabel]);
+			
+			// If we just removed the active tab, let's reset the active tab
+			if (($this->m_sCurrentTabContainer == $sTabContainer) &&  ($this->m_sCurrentTab == $sTabLabel))
+			{
+				$this->m_sCurrentTab = '';
+			}
+		}
+	}
+
+	/**
+	 * Finds the tab whose title matches a given pattern
+	 * @return mixed The name of the tab as a string or false if not found
+	 */
+	public function FindTab($sPattern, $sTabContainer = null)
+	{
+		$return = false;
+		if ($sTabContainer == null)
+		{
+			$sTabContainer = $this->m_sCurrentTabContainer;
+		}
+		foreach($this->m_aTabs[$sTabContainer] as $sTabLabel => $void)
+		{
+			if (preg_match($sPattern, $sTabLabel))
+			{
+				$result = $sTabLabel;
+				break;
+			}
+		}
+		return $result;
+	}
+	
 	/**
 	 * Make the given tab the active one, as if it were clicked
 	 * DOES NOT WORK: apparently in the *old* version of jquery
