@@ -305,7 +305,8 @@ class ActionEmail extends ActionNotification
   			ApplicationContext::SetUrlMakerClass($sPreviousUrlMaker);
   			throw $e;
   		}
-
+		ApplicationContext::SetUrlMakerClass($sPreviousUrlMaker);
+		
 		if (!is_null($oLog))
 		{
 			// Note: we have to secure this because those values are calculated
