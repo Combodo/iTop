@@ -602,7 +602,7 @@ Opérateurs :<br/>
 	'Core:SynchroAtt:update_policy+' => '',
 	'Core:SynchroAtt:reconciliation_attcode' => 'Clé de recherche',
 	'Core:SynchroAtt:reconciliation_attcode+' => '',
-	'Core:SyncDataExchangeComment' => '(Synhcronisation)',
+	'Core:SyncDataExchangeComment' => '(Synchronisation)',
 	'Core:Synchro:ListOfDataSources' => 'Sources de données:',
 	'Core:Synchro:LastSynchro' => 'Dernière synchronisation:',
 	'Core:Synchro:ThisObjectIsSynchronized' => 'Cet objet est synchronisé avec une source de données',
