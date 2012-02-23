@@ -702,7 +702,7 @@ EOF
 		$aFieldDefs[] = "INDEX (primary_key)";
 		$sFieldDefs = implode(', ', $aFieldDefs);
 
-		$sCreateTable = "CREATE TABLE `$sTable` ($sFieldDefs) ENGINE = innodb;";
+		$sCreateTable = "CREATE TABLE `$sTable` ($sFieldDefs) ENGINE = ".MYSQL_ENGINE." CHARACTER SET utf8 COLLATE utf8_unicode_ci;";
 		CMDBSource::Query($sCreateTable);
 
 		$aTriggers = $this->GetTriggersDefinition();
