@@ -693,7 +693,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		$sHierarchicalKeyCode = MetaModel::IsHierarchicalClass('Organization');
 		if ($sHierarchicalKeyCode !== false)
 		{
-			$sUserOrgQuery = 'SELECT UserOrg, Org FROM Organization AS Org JOIN Organization AS Root ON Org.parent_id BELOW Root.id JOIN URP_UserOrg AS UserOrg ON UserOrg.allowed_org_id = Root.id';
+			$sUserOrgQuery = 'SELECT UserOrg, Org FROM Organization AS Org JOIN Organization AS Root ON Org.'.$sHierarchicalKeyCode.' BELOW Root.id JOIN URP_UserOrg AS UserOrg ON UserOrg.allowed_org_id = Root.id';
 			$oUserOrgSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData($sUserOrgQuery));
 			while ($aRow = $oUserOrgSet->FetchAssoc())
 			{
