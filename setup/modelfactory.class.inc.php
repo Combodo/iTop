@@ -108,6 +108,11 @@ class MFModule extends MFItem
 		return $this->sRootDir;
 	}
 
+	public function GetModuleDir()
+	{
+		return basename($this->sRootDir);
+	}
+
 	public function GetDataModelFiles()
 	{
 		return $this->aDataModels;
@@ -141,6 +146,11 @@ class MFWorkspace extends MFModule
 	public function GetWorkspacePath()
 	{
 		return $this->sRootDir.'/workspace.xml';
+	}
+	
+	public function GetName()
+	{
+		return ''; // The workspace itself has no name so that objects created inside it retain their original module's name
 	}
 }
 
@@ -330,7 +340,7 @@ class ModelFactory
 				$sOperation = $aClassData['node']->getAttribute('_operation');
 				switch($sOperation)
 				{
-					case 'created':
+					case 'added':
 					case '':
 					if (in_array($aClassData['parent'], self::$aWellKnownParents))
 					{
@@ -353,7 +363,7 @@ class ModelFactory
 					
 					case 'modified':
 					unset($aClasses[$sClassName]);
-					$this->AlterClass($aClassData['node'], $sModuleName);
+					$this->AlterClass($sClassName, $aClassData['node']);
 					break;
 				}
 			}
@@ -367,7 +377,7 @@ class ModelFactory
 			$sOperation = $aClassData['node']->getAttribute('_operation');
 			switch($sOperation)
 			{
-				case 'created':
+				case 'added':
 				case '':
 				// Add the class as a new root class
 				$this->AddClass($aClassData['node'], $sModuleName);
@@ -380,7 +390,7 @@ class ModelFactory
 				
 				case 'modified':
 				//@@TODO Handle the modification of a class here
-				$this->AlterClass($aClassData['node'], $sModuleName);
+				$this->AlterClass($sClassName, $aClassData['node']);
 				break;
 			}
 		}			
@@ -405,6 +415,17 @@ class ModelFactory
 		}
 		return $aModules;
 	}
+	
+	
+	function GetModule($sModuleName)
+	{
+		foreach(self::$aLoadedModules as $oModule)
+		{
+			if ($oModule->GetName() == $sModuleName) return $oModule;
+		}
+		return null;
+	}
+	
 	
 	/**
 	 * Check if the class specified by the given node already exists in the loaded DOM
@@ -442,7 +463,7 @@ class ModelFactory
 	 * @param string $sModuleName The name of the module in which this class is declared
 	 * @throws Exception
 	 */
-	protected function AddClass(DOMNode $oClassNode, $sModuleName)
+	public function AddClass(DOMNode $oClassNode, $sModuleName)
 	{
 		if ($oClassNode->hasAttribute('name'))
 		{
@@ -469,7 +490,10 @@ class ModelFactory
 			// The class is a subclass of a class already loaded, add it under
 			self::$aLoadedClasses[$sClassName] = $this->oDOMDocument->ImportNode($oClassNode, true /* bDeep */);
 			self::$aLoadedClasses[$sClassName]->SetAttribute('_operation', 'added');
-			self::$aLoadedClasses[$sClassName]->SetAttribute('_created_in', $sModuleName);
+			if ($sModuleName != '')
+			{
+				self::$aLoadedClasses[$sClassName]->SetAttribute('_created_in', $sModuleName);
+			}
 			self::$aLoadedClasses[$sParentClass]->AppendChild(self::$aLoadedClasses[$sClassName]);
 			$bNothingLoaded = false;
 		}
@@ -478,7 +502,10 @@ class ModelFactory
 			// Add the class as a new root class
 			self::$aLoadedClasses[$sClassName] = $this->oDOMDocument->ImportNode($oClassNode, true /* bDeep */);
 			self::$aLoadedClasses[$sClassName]->SetAttribute('_operation', 'added');
-			self::$aLoadedClasses[$sClassName]->SetAttribute('_created_in', $sModuleName);
+			if ($sModuleName != '')
+			{
+				self::$aLoadedClasses[$sClassName]->SetAttribute('_created_in', $sModuleName);
+			}
 			$this->oClasses->AppendChild(self::$aLoadedClasses[$sClassName]);
 		}
 		else
@@ -498,82 +525,165 @@ class ModelFactory
 		{
 			throw new Exception("ModelFactory::RemoveClass: Cannot remove the non existing class $sClass");
 		}
-		self::$aLoadedClasses[$sClass]->SetAttribute('_operation', 'removed');
-		
-		//TODO: also mark as removed the child classes
-	}
-
-	public function AlterClass(DOMNode $oClassNode, $sModuleName)
-	{
-		if ($oClassNode->hasAttribute('name'))
+		$oClassNode = self::$aLoadedClasses[$sClass];
+		if ($oClassNode->getAttribute('_operation') == 'added')
 		{
-			$sClassName = $oClassNode->GetAttribute('name');
+			$oClassNode->parentNode->RemoveChild($oClassNode);
+			unset(self::$aLoadedClasses[$sClass]);	
 		}
 		else
 		{
-			throw new Exception('ModelFactory::AddClass: Cannot alter a class with no name');
+			self::$aLoadedClasses[$sClass]->SetAttribute('_operation', 'removed');
+			//TODO: also mark as removed the child classes
 		}
-		if (!$this->ClassExists($oClassNode))
+		
+	}
+
+	public function AlterClass($sClassName, DOMNode $oClassNode)
+	{
+		$sOriginalName = $sClassName;
+		if ($this->ClassNameExists($sClassName))
 		{
-			throw new Exception("ModelFactory::AddClass: Cannot later the non-existing class $sClassName");
+			$oDestNode = self::$aLoadedClasses[$sClassName];
 		}
-		$this->_priv_AlterNode(self::$aLoadedClasses[$sClassName], $oClassNode);
+		else
+		{
+			$sOriginalName = $oClassNode->getAttribute('_original_name');
+			if ($this->ClassNameExists($sOriginalName))
+			{
+				// Class was renamed !
+				$oDestNode = self::$aLoadedClasses[$sOriginalName];
+			}
+			else
+			{
+				throw new Exception("ModelFactory::AddClass: Cannot alter the non-existing class $sClassName / $sOriginalName");
+			}
+		}
+		$this->_priv_AlterNode($oDestNode, $oClassNode);
+		$sClassName = $oDestNode->getAttribute('name');
+		if ($sOriginalName != $sClassName)
+		{
+			unset(self::$aLoadedClasses[$sOriginalName]);
+			self::$aLoadedClasses[$sClassName] = $oDestNode;
+		}
+		$this->_priv_SetFlag($oDestNode, 'modified');
 	}
 	
 	protected function _priv_AlterNode(DOMNode $oNode, DOMNode $oDeltaNode)
 	{
 		foreach ($oDeltaNode->attributes as $sName => $oAttrNode)
 		{
+			$sCurrentValue = $oNode->getAttribute($sName);
+			$sNewValue = $oAttrNode->value;
 			$oNode->setAttribute($sName, $oAttrNode->value);
 		}
 		
-		foreach($oDeltaNode->childNodes as $oChildNode)
+		$aSrcChildNodes = $oNode->childNodes;
+		foreach($oDeltaNode->childNodes as $index => $oChildNode)
 		{
-			$sOperation = $oChildNode->getAttribute('_operation');
-			$sPath = $oChildNode->tagName;
-			$sName = $oChildNode->getAttribute('name');
-			if ($sName != '')
+			if (!$oChildNode instanceof DOMElement)
 			{
-				$sPath .= "[@name='$sName']";
+				// Text or CData nodes are treated by position
+				$sOperation = $oChildNode->parentNode->getAttribute('_operation');
+				switch($sOperation)
+				{
+					case 'removed':
+					// ???
+					break;
+					
+					case 'modified':
+					case 'replaced':
+					case 'added':
+					$oNewNode = $this->oDOMDocument->importNode($oChildNode);
+					$oSrcChildNode = $aSrcChildNodes->item($index);
+					if ($oSrcChildNode)
+					{
+						$oNode->replaceChild($oNewNode, $oSrcChildNode);
+					}
+					else
+					{
+						$oNode->appendChild($oNewNode);
+					}
+					
+					break;
+					
+					case '':
+					// Do nothing
+				}
 			}
-			switch($sOperation)
+			else
 			{
-				case 'removed':
-				$oToRemove = $this->_priv_GetNodes($sPath, $oNode)->item(0);
-				if ($oToRemove != null)
+				$sOperation = $oChildNode->getAttribute('_operation');
+				$sPath = $oChildNode->tagName;
+				$sName = $oChildNode->getAttribute('name');
+				if ($sName != '')
 				{
-					$this->_priv_SetFlag($oToRemove, 'removed');
+					$sPath .= "[@name='$sName']";
 				}
-				break;
-				
-				case 'modified':
-				$oToModify = $this->_priv_GetNodes($sPath, $oNode)->item(0);
-				if ($oToModify != null)
+				switch($sOperation)
 				{
-					$this->_priv_AlterNode($oToModify, $oChildNode);
+					case 'removed':
+					$oToRemove = $this->_priv_GetNodes($sPath, $oNode)->item(0);
+					if ($oToRemove != null)
+					{
+						$this->_priv_SetFlag($oToRemove, 'removed');
+					}
+					break;
+					
+					case 'modified':
+					$oToModify = $this->_priv_GetNodes($sPath, $oNode)->item(0);
+					if ($oToModify != null)
+					{
+						$this->_priv_AlterNode($oToModify, $oChildNode);
+					}
+					else
+					{
+						throw new Exception("Cannot modify the non-existing node '$sPath' in '".$oNode->getNodePath()."'");
+					}
+					break;
+					
+					case 'replaced':
+					$oNewNode = $this->oDOMDocument->importNode($oChildNode, true); // Import the node and its child nodes
+					$oToModify = $this->_priv_GetNodes($sPath, $oNode)->item(0);
+					$oNode->replaceChild($oNewNode, $oToModify);	
+					break;
+					
+					case 'added':
+					$oNewNode = $this->oDOMDocument->importNode($oChildNode);
+					$oNode->appendChild($oNewNode);
+					$this->_priv_SetFlag($oNewNode, 'added');
+					break;
+					
+					case '':
+					// Do nothing
 				}
-				else
-				{
-					throw new Exception("Cannot modify the non-existing node '$sPath' in '".$oNode->getNodePath()."'");
-				}
-				break;
-				
-				case 'replaced':
-				$oNewNode = $this->oDOMDocument->importNode($oChildNode, true); // Import the node and its child nodes
-				$oToModify = $this->_priv_GetNodes($sPath, $oNode)->item(0);
-				$oNode->replaceChild($oNewNode, $oToModify);	
-				break;
-				
-				case 'created':
-				$oNewNode = $this->oDOMDocument->importNode($oChildNode);
-				$oNode->appendChild($oNewNode);
-				$this->_priv_SetFlag($oNewNode, 'created');
-				break;
-				
-				case '':
-				// Do nothing
 			}
-		}
+		}	
+	}
+	
+	public function GetClassXMLTemplate($sName, $sIcon)
+	{
+		return
+<<<EOF
+<?xml version="1.0" encoding="utf-8"?>
+<class name="$sName" parent="" db_table="" category="" abstract="" key_type="autoincrement" db_key_field="id" db_final_class_field="finalclass">
+	<properties>
+	<comment/>
+	<naming format=""><attributes/></naming>
+	<reconciliation><attributes/></reconciliation>
+	<display_template/>
+	<icon>$sIcon</icon>
+	</properties>
+	<fields/>
+	<methods/>
+	<presentation>
+		<details><items/></details>
+		<search><items/></search>
+		<list><items/></list>
+	</presentation>
+</class>
+EOF
+		;
 	}
 	/**
 	 * List all classes from the DOM, for a given module
@@ -591,6 +701,22 @@ class ModelFactory
 		return $this->_priv_GetNodes($sXPath);
 	}
 		
+	/**
+	 * List all classes from the DOM, for a given module
+	 * @param string $sModuleNale
+	 * @param bool $bFlattenLayers
+	 * @throws Exception
+	 */
+	public function ListAllClasses($bFlattenLayers = true)
+	{
+		$sXPath = "//class";
+		if ($bFlattenLayers)
+		{
+			$sXPath = "//class[@_operation!='removed']";
+		}
+		return $this->_priv_GetNodes($sXPath);
+	}
+	
 	public function GetClass($sClassName, $bFlattenLayers = true)
 	{
 		if (!$this->ClassNameExists($sClassName))
@@ -607,6 +733,34 @@ class ModelFactory
 			}
 		}
 		return $oClassNode;
+	}
+		
+	public function GetField($sClassName, $sAttCode, $bFlattenLayers = true)
+	{
+		if (!$this->ClassNameExists($sClassName))
+		{
+			return null;
+		}
+		$oClassNode = self::$aLoadedClasses[$sClassName];
+		if ($bFlattenLayers)
+		{
+			$sOperation = $oClassNode->getAttribute('_operation');
+			if ($sOperation == 'removed')
+			{
+				$oClassNode = null;
+			}
+		}
+		$sXPath = "fields/field[@name='$sAttCode']";
+		if ($bFlattenLayers)
+		{
+			$sXPath = "fields/field[(@name='$sAttCode' and (not(@_operation) or @_operation!='removed'))]";
+		}
+		$oFieldNode = $this->_priv_GetNodes($sXPath, $oClassNode)->item(0);
+		if (($oFieldNode == null) && ($oClassNode->getAttribute('parent') != ''))
+		{
+			return $this->GetField($oClassNode->getAttribute('parent'), $sAttCode, $bFlattenLayers);
+		}
+		return $oFieldNode;
 	}
 		
 	/**
@@ -631,7 +785,7 @@ class ModelFactory
 		$this->_priv_AlterField($oNewField, $sFieldType, $sSQL, $defaultValue, $bIsNullAllowed, $aExtraParams);
 		$oFields = $oClassNode->getElementsByTagName('fields')->item(0);
 		$oFields->AppendChild($oNewField);
-		$this->_priv_SetFlag($oNewField, 'created');
+		$this->_priv_SetFlag($oNewField, 'added');
 	}
 	
 	public function RemoveField(DOMNode $oClassNode, $sFieldCode)
@@ -640,8 +794,16 @@ class ModelFactory
 		$oFieldNodes = $this->_priv_GetNodes($sXPath, $oClassNode);
 		if (is_object($oFieldNodes) && (is_object($oFieldNodes->item(0))))
 		{
-			//@@TODO: if the field was 'created' => then really delete it
-			$this->_priv_SetFlag($oFieldNodes->item(0), 'removed');
+			$oFieldNode = $oFieldNodes->item(0);
+			$sOpCode = $oFieldNode->getAttribute('_operation');
+			if ($oFieldNode->getAttribute('_operation') == 'added')
+			{
+				$oFieldNode->parentNode->removeChild($oFieldNode);
+			}
+			else
+			{
+				$this->_priv_SetFlag($oFieldNode, 'removed');
+			}
 		}
 	}
 	
@@ -651,8 +813,19 @@ class ModelFactory
 		$oFieldNodes = $this->_priv_GetNodes($sXPath, $oClassNode);
 		if (is_object($oFieldNodes) && (is_object($oFieldNodes->item(0))))
 		{
-			//@@TODO: if the field was 'created' => then let it as 'created'
-			$this->_priv_SetFlag($oFieldNodes->item(0), 'modified');
+			$oFieldNode = $oFieldNodes->item(0);
+			//@@TODO: if the field was 'added' => then let it as 'added'
+			$sOpCode = $oFieldNode->getAttribute('_operation');
+			switch($sOpCode)
+			{
+				case 'added':
+				case 'modified':
+				// added or modified, let it as it is
+				break;
+				
+				default:
+				$this->_priv_SetFlag($oFieldNodes->item(0), 'modified');
+			}
 			$this->_priv_AlterField($oFieldNodes->item(0), $sFieldType, $sSQL, $defaultValue, $bIsNullAllowed, $aExtraParams);
 		}
 	}
@@ -660,14 +833,34 @@ class ModelFactory
 	protected function _priv_AlterField(DOMNode $oFieldNode, $sFieldType, $sSQL, $defaultValue, $bIsNullAllowed, $aExtraParams)
 	{
 		switch($sFieldType)
-		{
+		{			
+			case 'Blob':
+			case 'Boolean':
+			case 'CaseLog':
+			case 'Deadline':
+			case 'Duration':
+			case 'EmailAddress':
+			case 'EncryptedString':
+			case 'HTML':
+			case 'IPAddress':
+			case 'LongText':
+			case 'OQL':
+			case 'OneWayPassword':
+			case 'Password':
+			case 'Percentage':
 			case 'String':
 			case 'Text':
-			case 'IPAddress':
-			case 'EmailAddress':
-			case 'Blob':
-			break;
-				
+			case 'Text':
+			case 'TemplateHTML':
+			case 'TemplateString':
+			case 'TemplateText':
+			case 'URL':
+			case 'Date':
+			case 'DateTime':
+			case 'Decimal':
+			case 'Integer':
+			break;	
+			
 			case 'ExternalKey':
 			$this->_priv_AddFieldAttribute($oFieldNode, 'target_class', $aExtraParams);
 			// Fall through
@@ -740,7 +933,7 @@ class ModelFactory
 	protected function _priv_SetFieldValues($oFieldNode, $aExtraParams)
 	{
 		$aVals = array_key_exists('values', $aExtraParams) ? $aExtraParams['values'] : '';
-		$oValues = $oFieldNode->getElementByTagName('values')->item(0);
+		$oValues = $oFieldNode->getElementsByTagName('values')->item(0);
 
 		// No dependencies before, and no dependencies to add, exit
 		if (($oValues == null) && ($aVals == '')) return;
@@ -756,14 +949,69 @@ class ModelFactory
 		foreach($aVals as $sValue)
 		{
 			$oVal = $this->oDOMDocument->createElement('value', $sValue);
-			$oValues->addChild($oVal);
+			$oValues->appendChild($oVal);
 		}
-		$oFieldNode->addChild($oValues);
+		$oFieldNode->appendChild($oValues);
 	}
 
-	protected function _priv_SetFlag($oNode, $sFlagValue)
+	public function SetPresentation(DOMNode $oClassNode, $sPresentationCode, $aPresentation)
 	{
-		$oNode->setAttribute('_operation', $sFlagValue);
+		$oPresentation = $oClassNode->getElementsByTagName('presentation')->item(0);
+		if (!is_object($oPresentation))
+		{
+			$oPresentation = $this->oDOMDocument->createElement('presentation');
+			$oClassNode->appendChild($oPresentation);
+		}
+		$oZlist = $oPresentation->getElementsByTagName($sPresentationCode)->item(0);
+		if (is_object($oZlist))
+		{
+			// Remove the previous Zlist
+			$oPresentation->removeChild($oZlist);
+		}
+		// Create the ZList anew
+		$oZlist = $this->oDOMDocument->createElement($sPresentationCode);
+		$oPresentation->appendChild($oZlist);
+		$this->AddZListItem($oZlist, $aPresentation);
+		$this->_priv_SetFlag($oZlist, 'replaced');
+	}
+
+	protected function AddZListItem($oXMLNode, $value)
+	{
+		if (is_array($value))
+		{
+			$oXmlItems = $this->oDOMDocument->CreateElement('items');
+			$oXMLNode->appendChild($oXmlItems);
+			
+			foreach($value as $key => $item)
+			{
+				$oXmlItem = $this->oDOMDocument->CreateElement('item');
+				$oXmlItems->appendChild($oXmlItem);
+	
+				if (is_string($key))
+				{
+					$oXmlItem->SetAttribute('key', $key);
+				}
+				$this->AddZListItem($oXmlItem, $item);
+			}
+		}
+		else
+		{
+			$oXmlText = $this->oDOMDocument->CreateTextNode((string) $value);
+			$oXMLNode->appendChild($oXmlText);
+		}
+	}
+	
+	public function _priv_SetFlag($oNode, $sFlagValue)
+	{
+		$sPreviousFlag = $oNode->getAttribute('_operation');
+		if ($sPreviousFlag == 'added')
+		{
+			// Do nothing ??
+		}
+		else
+		{
+			$oNode->setAttribute('_operation', $sFlagValue);
+		}
 		if ($oNode->tagName != 'class')
 		{
 			$this->_priv_SetFlag($oNode->parentNode, 'modified');
@@ -865,7 +1113,21 @@ class ModelFactory
 		$iDepth++;
 		foreach($oNode->childNodes as $oChildNode)
 		{
-			$sOperation = $oChildNode->getAttribute('_operation');
+			$sNodeName = $oChildNode->nodeName;
+			$sNodeValue = $oChildNode->nodeValue;
+			if (!$oChildNode instanceof DOMElement)
+			{
+				$sName = '$$';
+				$sOperation = $oChildNode->parentNode->getAttribute('_operation');
+			}
+			else
+			{
+				$sName = $oChildNode->getAttribute('name');;
+				$sOperation = $oChildNode->getAttribute('_operation');
+			}
+			
+//echo str_repeat('+', $iDepth)." $sNodeName [$sName], operation: $sOperation\n";
+			
 			switch($sOperation)
 			{
 				case 'removed':
@@ -883,16 +1145,21 @@ class ModelFactory
 //echo "<p>".str_repeat('+', $iDepth).$oChildNode->getAttribute('name')." was removed...</p>";
 				break;
 
-				case 'modified':
-				case 'created':
-				//echo "<p>".str_repeat('+', $iDepth).$oChildNode->tagName.':'.$oChildNode->getAttribute('name')." was modified...</p>";
-				$oModifiedNode = $oDoc->importNode($oChildNode->cloneNode(false)); // Copies all the node's attributes, but NOT the child nodes
-				$oModifiedNode->removeAttribute('_source');
-				$this->_priv_ImportModifiedChildren($oDoc, $oModifiedNode, $oChildNode);
-				if ($oModifiedNode->tagName == 'class')
+				case 'added':
+//echo "<p>".str_repeat('+', $iDepth).$oChildNode->tagName.':'.$oChildNode->getAttribute('name')." was created...</p>";
+				$oModifiedNode = $oDoc->importNode($oChildNode, true); // Copies all the node's attributes, and the child nodes as well
+				if ($oChildNode instanceof DOMElement)
 				{
-					// classes are always located under the root node
-					$oDoc->firstChild->appendChild($oModifiedNode);
+					$oModifiedNode->removeAttribute('_source');
+					if ($oModifiedNode->tagName == 'class')
+					{
+						// classes are always located under the root node
+						$oDoc->firstChild->appendChild($oModifiedNode);
+					}
+					else
+					{
+						$oDestNode->appendChild($oModifiedNode);
+					}
 				}
 				else
 				{
@@ -900,16 +1167,56 @@ class ModelFactory
 				}
 				break;
 				
+				case 'replaced':
+//echo "<p>".str_repeat('+', $iDepth).$oChildNode->tagName.':'.$oChildNode->getAttribute('name')." was replaced...</p>";
+				$oModifiedNode = $oDoc->importNode($oChildNode, true); // Copies all the node's attributes, and the child nodes as well
+				if ($oChildNode instanceof DOMElement)
+				{
+					$oModifiedNode->removeAttribute('_source');
+				}
+				$oDestNode->appendChild($oModifiedNode);
+				break;
+				
+				case 'modified':
+//echo "<p>".str_repeat('+', $iDepth).$oChildNode->tagName.':'.$oChildNode->getAttribute('name')." was modified...</p>";
+				if ($oChildNode instanceof DOMElement)
+				{
+//echo str_repeat('+', $iDepth)." Copying (NON recursively) the modified node\n";
+					$oModifiedNode = $oDoc->importNode($oChildNode, false); // Copies all the node's attributes, but NOT the child nodes
+					$oModifiedNode->removeAttribute('_source');
+					$this->_priv_ImportModifiedChildren($oDoc, $oModifiedNode, $oChildNode);
+					if ($oModifiedNode->tagName == 'class')
+					{
+						// classes are always located under the root node
+						$oDoc->firstChild->appendChild($oModifiedNode);
+					}
+					else
+					{
+						$oDestNode->appendChild($oModifiedNode);
+					}
+				}
+				else
+				{
+//echo str_repeat('+', $iDepth)." Copying (recursively) the modified node\n";
+					$oModifiedNode = $oDoc->importNode($oChildNode, true); // Copies all the node's attributes, and the child nodes
+					$oDestNode->appendChild($oModifiedNode);
+				}
+				break;
+				
 				default:
 				// No change: search if there is not a modified child class
 				$oModifiedNode = $oDoc->importNode($oChildNode->cloneNode(false)); // Copies all the node's attributes, but NOT the child nodes
-				$oModifiedNode->removeAttribute('_source');
-				if ($oChildNode->tagName == 'class')
+//echo str_repeat('+', $iDepth)." Importing (NON recursively) the modified node\n";
+				if ($oChildNode instanceof DOMElement)
 				{
-//echo "<p>".str_repeat('+', $iDepth)."Checking if a subclass of ".$oChildNode->getAttribute('name')." was modified...</p>";
-					// classes are always located under the root node
-					$this->_priv_ImportModifiedChildren($oDoc, $oModifiedNode, $oChildNode);
+					$oModifiedNode->removeAttribute('_source');
 				}
+			}
+			if ($oChildNode->tagName == 'class')
+			{
+//echo "<p>".str_repeat('+', $iDepth)."Checking if a subclass of ".$oChildNode->getAttribute('name')." was modified...</p>";
+				// classes are always located under the root node
+				$this->_priv_ImportModifiedChildren($oDoc, $oModifiedNode, $oChildNode);
 			}
 		}
 		$iDepth--;
@@ -986,4 +1293,91 @@ class ModelFactory
 	public function _priv_SetNodeAttribute(DOMNode $oNode, $sAttributeName, $atttribueValue)
 	{
 	}
+	
+	/**
+	 * Helper to browse the DOM -could be factorized in ModelFactory
+	 * Returns the node directly under the given node, and that is supposed to be always present and unique 
+	 */ 
+	protected function GetUniqueElement($oDOMNode, $sTagName, $bMustExist = true)
+	{
+		$oNode = null;
+		foreach($oDOMNode->childNodes as $oChildNode)
+		{
+			if ($oChildNode->nodeName == $sTagName)
+			{
+				$oNode = $oChildNode;
+				break;
+			}
+		}
+		if ($bMustExist && is_null($oNode))
+		{
+			throw new DOMFormatException('Missing unique tag: '.$sTagName);
+		}
+		return $oNode;
+	}
+	
+	/**
+	 * Helper to browse the DOM -could be factorized in ModelFactory
+	 * Returns the node directly under the given node, or null is missing 
+	 */ 
+	protected function GetOptionalElement($oDOMNode, $sTagName)
+	{
+		return $this->GetUniqueElement($oDOMNode, $sTagName, false);
+	}
+	
+	
+	/**
+	 * Helper to browse the DOM -could be factorized in ModelFactory
+	 * Returns the TEXT of the given node (possibly from several subnodes) 
+	 */ 
+	protected function GetNodeText($oNode)
+	{
+		$sText = '';
+		foreach($oNode->childNodes as $oChildNode)
+		{
+			if ($oChildNode instanceof DOMCharacterData) // Base class of DOMText and DOMCdataSection
+			{
+				$sText .= $oChildNode->wholeText;
+			}
+		}
+		return $sText;
+	}
+	
+	/**
+	 * Helper to browse the DOM -could be factorized in ModelFactory
+	 * Assumes the given node to be either a text or
+	 * <items>
+	 *   <item [key]="..."]>value<item>
+	 *   <item [key]="..."]>value<item>
+	 * </items>
+	 * where value can be the either a text or an array of items... recursively 
+	 * Returns a PHP array 
+	 */ 
+	public function GetNodeAsArrayOfItems($oNode)
+	{
+		$oItems = $this->GetOptionalElement($oNode, 'items');
+		if ($oItems)
+		{
+			$res = array();
+			foreach($oItems->childNodes as $oItem)
+			{
+				// When an attribute is missing
+				if ($oItem->hasAttribute('key'))
+				{
+					$key = $oItem->getAttribute('key');
+					$res[$key] = $this->GetNodeAsArrayOfItems($oItem);
+				}
+				else
+				{
+					$res[] = $this->GetNodeAsArrayOfItems($oItem);
+				}
+			}
+		}
+		else
+		{
+			$res = $this->GetNodeText($oNode);
+		}
+		return $res;
+	}
+	
 }
