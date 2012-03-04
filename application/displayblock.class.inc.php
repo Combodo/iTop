@@ -746,7 +746,7 @@ EOF
 			$sHtml .= "<div id=\"my_chart_{$iChartCounter}\">If the chart does not display, <a href=\"http://get.adobe.com/flash/\" target=\"_blank\">install Flash</a></div>\n";
 			$oPage->add_script("function ofc_resize(left, width, top, height) { /* do nothing special */ }");
 			$oPage->add_ready_script("swfobject.embedSWF(\"../images/open-flash-chart.swf\", \"my_chart_{$iChartCounter}\", \"100%\", \"300\",\"9.0.0\", \"expressInstall.swf\",
-			{\"data-file\":\"".urlencode(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=open_flash_chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[chart_type]=$sChartType&params[chart_title]=$sTitle&id=$sId&filter=".$sFilter)."\"}, {wmode: 'transparent'} );\n");
+			{\"data-file\":\"".urlencode(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=open_flash_chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[chart_type]=$sChartType&params[chart_title]=$sTitle&params[currentId]=$sId&id=$sId&filter=".$sFilter)."\"}, {wmode: 'transparent'} );\n");
 			$iChartCounter++;
 			if (isset($aExtraParams['group_by']))
 			{
