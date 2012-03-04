@@ -503,7 +503,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Schema:LifeCycleAttributeMustPrompt' => 'L\'utilisateur se verra proposer de changer la valeur',
 	'UI:Schema:LifeCycleEmptyList' => 'liste vide',
 	'UI:LinksWidget:Autocomplete+' => 'Tapez les 3 premiers caractères...',
-	'UI:Edit:TestQuery' => 'Tester le requête',
+	'UI:Edit:TestQuery' => 'Tester la requête',
 	'UI:Combo:SelectValue' => '--- choisissez une valeur ---',
 	'UI:Label:SelectedObjects' => 'Objets sélectionnés: ',
 	'UI:Label:AvailableObjects' => 'Objets disponibles: ',
