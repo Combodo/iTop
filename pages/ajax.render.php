@@ -527,7 +527,7 @@ try
 		$oPage->add_header("Pragma: public");
 
 		$oPage->SetContentType('application/json');
-		$aParams = utils::ReadParam('params', array());
+		$aParams = utils::ReadParam('params', array(), false, 'raw_data');
 		if ($sFilter != '')
 		{
 			$oFilter = CMDBSearchFilter::unserialize($sFilter);
