@@ -32,13 +32,13 @@ require_once(APPROOT."/application/user.preferences.class.inc.php");
 class iTopWebPage extends NiceWebPage
 {
 	private $m_sMenu;
-//	private $m_currentOrganization;
+	//	private $m_currentOrganization;
 	private $m_aTabs;
 	private $m_sCurrentTabContainer;
 	private $m_sCurrentTab;
 	private $m_sMessage;
 	private $m_sInitScript;
-	
+
 	public function __construct($sTitle)
 	{
 		parent::__construct($sTitle);
@@ -159,7 +159,7 @@ class iTopWebPage extends NiceWebPage
 		alert(err);
 	}
 EOF
-;
+		;
 		$this->add_ready_script(
 <<< EOF
 	//add new widget called TruncatedList to properly display truncated lists when they are sorted
@@ -354,7 +354,7 @@ EOF
 	
 	$('.caselog_header').click( function () { $(this).toggleClass('open').next('.caselog_entry').toggle(); });
 EOF
-);
+		);
 		$sUserPrefs = appUserPreferences::GetAsJSON();
 		$this->add_script(
 <<<EOF
@@ -443,10 +443,10 @@ EOF
 		});
 
 EOF
-);
-		
-    	// Build menus from module handlers
-    	//
+		);
+
+		// Build menus from module handlers
+		//
 		foreach(get_declared_classes() as $sPHPClass)
 		{
 			if (is_subclass_of($sPHPClass, 'ModuleHandlerAPI'))
@@ -456,7 +456,7 @@ EOF
 			}
 		}
 	}
-	
+
 	public function AddToMenu($sHtml)
 	{
 		$this->m_sMenu .= $sHtml;
@@ -475,7 +475,7 @@ EOF
 			$oSearchFilter->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', true);
 			$oSet = new CMDBObjectSet($oSearchFilter);
 			$iCount = $oSet->Count(); // total number of existing Orgs
-			
+				
 			// Now get the list of Orgs to be displayed in the menu
 			$oSearchFilter = DBObjectSearch::FromOQL(ApplicationMenu::GetFavoriteSiloQuery());
 			$oSearchFilter->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', true);
@@ -488,76 +488,76 @@ EOF
 		switch($iCount)
 		{
 			case 0:
-			// No such dimension/silo => nothing to select
-			$sHtml = '<div id="SiloSelection"><!-- nothing to select --></div>';
-			break;
-			
+				// No such dimension/silo => nothing to select
+				$sHtml = '<div id="SiloSelection"><!-- nothing to select --></div>';
+				break;
+					
 			case 1:
-			// Only one possible choice... no selection, but display the value
-			$oOrg = $oSet->Fetch();
-			$sHtml = '<div id="SiloSelection">'.$oOrg->GetName().'</div>';
-			$sHtml .= '';
-			break;
-			
+				// Only one possible choice... no selection, but display the value
+				$oOrg = $oSet->Fetch();
+				$sHtml = '<div id="SiloSelection">'.$oOrg->GetName().'</div>';
+				$sHtml .= '';
+				break;
+					
 			default:
-			$sHtml = '';
-			$oAppContext = new ApplicationContext();
-			$iCurrentOrganization = $oAppContext->GetCurrentValue('org_id');
-			$sHtml = '<div id="SiloSelection">';
-			$sHtml .= '<form style="display:inline" action="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php">'; //<select class="org_combo" name="c[org_id]" title="Pick an organization" onChange="this.form.submit();">';
-/*
-			$sSelected = ($iCurrentOrganization == '') ? ' selected' : '';
-			$sHtml .= '<option value=""'.$sSelected.'>'.Dict::S('UI:AllOrganizations').'</option>';
-			while($oOrg = $oSet->Fetch())
-			{
-				if ($iCurrentOrganization == $oOrg->GetKey())
-				{
-//					$oCurrentOrganization = $oOrg;
+				$sHtml = '';
+				$oAppContext = new ApplicationContext();
+				$iCurrentOrganization = $oAppContext->GetCurrentValue('org_id');
+				$sHtml = '<div id="SiloSelection">';
+				$sHtml .= '<form style="display:inline" action="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php">'; //<select class="org_combo" name="c[org_id]" title="Pick an organization" onChange="this.form.submit();">';
+				/*
+				 $sSelected = ($iCurrentOrganization == '') ? ' selected' : '';
+				 $sHtml .= '<option value=""'.$sSelected.'>'.Dict::S('UI:AllOrganizations').'</option>';
+				 while($oOrg = $oSet->Fetch())
+				 {
+				 if ($iCurrentOrganization == $oOrg->GetKey())
+				 {
+				 //					$oCurrentOrganization = $oOrg;
 					$sSelected = " selected";
-			
-				}
-				else
-				{
+						
+					}
+					else
+					{
 					$sSelected = "";
-				}
-				$sHtml .= '<option title="'.$oOrg->GetName().'" value="'.$oOrg->GetKey().'"'.$sSelected.'>'.$oOrg->GetName().'</option>';
-			}
-			$sHtml .= '</select>';
-*/
-			$sFavoriteOrgs = '';
-			$oWidget = new UIExtKeyWidget('Organization', 'org_id', '', true /* search mode */);
-			$sHtml .= $oWidget->Display($this, 50, false, '', $oSet, $iCurrentOrganization, 'org_id', false, 'c[org_id]', '', array('iFieldSize' => 20, 'iMinChars' => MetaModel::GetConfig()->Get('min_autocomplete_chars'), 'sDefaultValue' => Dict::S('UI:AllOrganizations')));
-			$this->add_ready_script('$("#org_id").bind("extkeychange", function() { $("#SiloSelection form").submit(); } )');
-			$this->add_ready_script("$('#label_org_id').click( function() { $(this).val(''); $('#org_id').val(''); return true; } );\n");
-			// Add other dimensions/context information to this form
-			$oAppContext->Reset('org_id'); // org_id is handled above and we want to be able to change it here !
-			$oAppContext->Reset('menu'); // don't pass the menu, since a menu may expect more parameters
-			$sHtml .= $oAppContext->GetForForm(); // Pass what remains, if anything...
-			$sHtml .= '</form>';
-			$sHtml .= '</div>';
+					}
+					$sHtml .= '<option title="'.$oOrg->GetName().'" value="'.$oOrg->GetKey().'"'.$sSelected.'>'.$oOrg->GetName().'</option>';
+					}
+					$sHtml .= '</select>';
+					*/
+				$sFavoriteOrgs = '';
+				$oWidget = new UIExtKeyWidget('Organization', 'org_id', '', true /* search mode */);
+				$sHtml .= $oWidget->Display($this, 50, false, '', $oSet, $iCurrentOrganization, 'org_id', false, 'c[org_id]', '', array('iFieldSize' => 20, 'iMinChars' => MetaModel::GetConfig()->Get('min_autocomplete_chars'), 'sDefaultValue' => Dict::S('UI:AllOrganizations')));
+				$this->add_ready_script('$("#org_id").bind("extkeychange", function() { $("#SiloSelection form").submit(); } )');
+				$this->add_ready_script("$('#label_org_id').click( function() { $(this).val(''); $('#org_id').val(''); return true; } );\n");
+				// Add other dimensions/context information to this form
+				$oAppContext->Reset('org_id'); // org_id is handled above and we want to be able to change it here !
+				$oAppContext->Reset('menu'); // don't pass the menu, since a menu may expect more parameters
+				$sHtml .= $oAppContext->GetForForm(); // Pass what remains, if anything...
+				$sHtml .= '</form>';
+				$sHtml .= '</div>';
 		}
-		return $sHtml;		
+		return $sHtml;
 	}
-	
-    public function DisplayMenu()
-    {
+
+	public function DisplayMenu()
+	{
 		// Display the menu
 		$oAppContext = new ApplicationContext();
 		$iAccordionIndex = 0;
 
 		ApplicationMenu::DisplayMenu($this, $oAppContext->GetAsHash());
-    }
+	}
 
 	/**
 	 * Outputs (via some echo) the complete HTML page by assembling all its elements
 	 */
-    public function output()
-    {
+	public function output()
+	{
 		$sForm = $this->GetSiloSelectionForm();
 		$this->DisplayMenu(); // Compute the menu
 
 		// Put here the 'ready scripts' that must be executed after all others
-    	$this->add_ready_script(
+		$this->add_ready_script(
 <<<EOF
 	// Since the event is only triggered when the hash changes, we need to trigger
 	// the event now, to handle the hash the page may have loaded with.
@@ -567,78 +567,87 @@ EOF
 	$('table.listResults').each( function() { FixTableSorter($(this)); } );
 
 EOF
-);
-        foreach($this->a_headers as $s_header)
-        {
-            header($s_header);
-        }
-        $s_captured_output = ob_get_contents();
-        ob_end_clean();
-        echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n";
-        echo "<html>\n";
-        echo "<head>\n";
-        // Make sure that Internet Explorer renders the page using its latest/highest/greatest standards !
-        echo "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n";
-        echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
-        echo "<title>".htmlentities($this->s_title, ENT_QUOTES, 'UTF-8')."</title>\n";
-        echo $this->get_base_tag();
-        // Stylesheets MUST be loaded before any scripts otherwise
-        // jQuery scripts may face some spurious problems (like failing on a 'reload')
-        foreach($this->a_linked_stylesheets as $a_stylesheet)
-        {
-			if ($a_stylesheet['condition'] != "")
+		);
+		if ($this->GetOutputFormat() == 'html')
+		{
+			foreach($this->a_headers as $s_header)
 			{
-				echo "<!--[if {$a_stylesheet['condition']}]>\n";
+				header($s_header);
 			}
-            echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$a_stylesheet['link']}\" />\n";
-			if ($a_stylesheet['condition'] != "")
-			{
-				echo "<![endif]-->\n";
-			}
-        }
-        foreach($this->a_linked_scripts as $s_script)
-        {
-         	// Make sure that the URL to the script contains the application's version number
-        	// so that the new script do NOT get reloaded from the cache when the application is upgraded
-        	if (strpos($s_script, '?') === false)
-        	{
-        		$s_script .= "?itopversion=".ITOP_VERSION;
-        	}
-        	else
-        	{
-        		$s_script .= "&itopversion=".ITOP_VERSION;
-        	}
-            echo "<script type=\"text/javascript\" src=\"$s_script\"></script>\n";
-        }
-		$this->add_script("\$(document).ready(function() {\n{$this->m_sInitScript};\nwindow.setTimeout('onDelayedReady()',10)\n});");
-        if (count($this->m_aReadyScripts)>0)
-        {
-			$this->add_script("\nonDelayedReady = function() {\n".implode("\n", $this->m_aReadyScripts)."\n}\n");
 		}
-        if (count($this->a_scripts)>0)
-        {
-            echo "<script type=\"text/javascript\">\n";
-            foreach($this->a_scripts as $s_script)
-            {
-                echo "$s_script\n";
-            }
-            echo "</script>\n";
-        }
-        
-        if (count($this->a_styles)>0)
-        {
-            echo "<style>\n";
-            foreach($this->a_styles as $s_style)
-            {
-                echo "$s_style\n";
-            }
-            echo "</style>\n";
-        }
-		echo "<link rel=\"search\" type=\"application/opensearchdescription+xml\" title=\"iTop\" href=\"".utils::GetAbsoluteUrlAppRoot()."pages/opensearch.xml.php\" />\n";
-		echo "<link rel=\"shortcut icon\" href=\"".utils::GetAbsoluteUrlAppRoot()."images/favicon.ico\" />\n";
-		
-        echo "</head>\n";
-        echo "<body>\n";
+		$s_captured_output = ob_get_contents();
+		ob_end_clean();
+		$sHtml = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n";
+		$sHtml .= "<html>\n";
+		$sHtml .= "<head>\n";
+		// Make sure that Internet Explorer renders the page using its latest/highest/greatest standards !
+		$sHtml .= "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n";
+		$sHtml .= "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
+		$sHtml .= "<title>".htmlentities($this->s_title, ENT_QUOTES, 'UTF-8')."</title>\n";
+		$sHtml .= $this->get_base_tag();
+		// Stylesheets MUST be loaded before any scripts otherwise
+		// jQuery scripts may face some spurious problems (like failing on a 'reload')
+		foreach($this->a_linked_stylesheets as $a_stylesheet)
+		{
+			if ($a_stylesheet['condition'] != "")
+			{
+				$sHtml .= "<!--[if {$a_stylesheet['condition']}]>\n";
+			}
+			$sHtml .= "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$a_stylesheet['link']}\" />\n";
+			if ($a_stylesheet['condition'] != "")
+			{
+				$sHtml .= "<![endif]-->\n";
+			}
+		}
+		// special stylesheet for printing, hides the navigation gadgets
+		$sHtml .= "<link rel=\"stylesheet\" media=\"print\" type=\"text/css\" href=\"../css/print.css\" />\n";
+
+		if ($this->GetOutputFormat() == 'html')
+		{
+			foreach($this->a_linked_scripts as $s_script)
+			{
+				// Make sure that the URL to the script contains the application's version number
+				// so that the new script do NOT get reloaded from the cache when the application is upgraded
+				if (strpos($s_script, '?') === false)
+				{
+					$s_script .= "?itopversion=".ITOP_VERSION;
+				}
+				else
+				{
+					$s_script .= "&itopversion=".ITOP_VERSION;
+				}
+				$sHtml .= "<script type=\"text/javascript\" src=\"$s_script\"></script>\n";
+			}
+			$this->add_script("\$(document).ready(function() {\n{$this->m_sInitScript};\nwindow.setTimeout('onDelayedReady()',10)\n});");
+			if (count($this->m_aReadyScripts)>0)
+			{
+				$this->add_script("\nonDelayedReady = function() {\n".implode("\n", $this->m_aReadyScripts)."\n}\n");
+			}
+			if (count($this->a_scripts)>0)
+			{
+				$sHtml .= "<script type=\"text/javascript\">\n";
+				foreach($this->a_scripts as $s_script)
+				{
+					$sHtml .= "$s_script\n";
+				}
+				$sHtml .= "</script>\n";
+			}
+		}
+
+		if (count($this->a_styles)>0)
+		{
+			$sHtml .= "<style>\n";
+			foreach($this->a_styles as $s_style)
+			{
+				$sHtml .= "$s_style\n";
+			}
+			$sHtml .= "</style>\n";
+		}
+		$sHtml .= "<link rel=\"search\" type=\"application/opensearchdescription+xml\" title=\"iTop\" href=\"".utils::GetAbsoluteUrlAppRoot()."pages/opensearch.xml.php\" />\n";
+		$sHtml .= "<link rel=\"shortcut icon\" href=\"".utils::GetAbsoluteUrlAppRoot()."images/favicon.ico\" />\n";
+
+		$sHtml .= "</head>\n";
+		$sHtml .= "<body>\n";
 
 
 
@@ -668,7 +677,7 @@ EOF
 			// 2) clicking on it will erase it
 			$sText = Dict::S("UI:YourSearch");
 			$sOnClick = " onclick=\"this.value='';this.onclick=null;\"";
-		}		
+		}
 		// Render the tabs in the page (if any)
 		foreach($this->m_aTabs as $sTabContainerName => $m_aTabs)
 		{
@@ -676,149 +685,180 @@ EOF
 			$container_index = 0;
 			if (count($m_aTabs) > 0)
 			{
-			  $sTabs = "<!-- tabs -->\n<div id=\"tabbedContent_{$container_index}\" class=\"light\">\n";
-			  $sTabs .= "<ul>\n";
-			  // Display the unordered list that will be rendered as the tabs
-	          $i = 0;
-			  foreach($m_aTabs as $sTabName => $sTabContent)
-			  {
-			      $sTabs .= "<li><a href=\"#tab_$i\" class=\"tab\"><span>".htmlentities($sTabName, ENT_QUOTES, 'UTF-8')."</span></a></li>\n";
-			      $i++;
-	          }
-			  $sTabs .= "</ul>\n";
-			  // Now add the content of the tabs themselves
-			  $i = 0;
-			  foreach($m_aTabs as $sTabName => $sTabContent)
-			  {
-			      $sTabs .= "<div id=\"tab_$i\">".$sTabContent."</div>\n";
-			      $i++;
-	          }
-			  $sTabs .= "</div>\n<!-- end of tabs-->\n";
-	        }
+				$sTabs = "<!-- tabs -->\n<div id=\"tabbedContent_{$container_index}\" class=\"light\">\n";
+				$sTabs .= "<ul>\n";
+				// Display the unordered list that will be rendered as the tabs
+				$i = 0;
+				foreach($m_aTabs as $sTabName => $sTabContent)
+				{
+					$sTabs .= "<li><a href=\"#tab_$i\" class=\"tab\"><span>".htmlentities($sTabName, ENT_QUOTES, 'UTF-8')."</span></a></li>\n";
+					$i++;
+				}
+				$sTabs .= "</ul>\n";
+				// Now add the content of the tabs themselves
+				$i = 0;
+				foreach($m_aTabs as $sTabName => $sTabContent)
+				{
+					$sTabs .= "<div id=\"tab_$i\">".$sTabContent."</div>\n";
+					$i++;
+				}
+				$sTabs .= "</div>\n<!-- end of tabs-->\n";
+			}
 			$this->s_content = str_replace("\$Tabs:$sTabContainerName\$", $sTabs, $this->s_content);
 			$container_index++;
 		}
-		$sUserName = UserRights::GetUser();
-		$sIsAdmin = UserRights::IsAdministrator() ? '(Administrator)' : '';
-		if (UserRights::IsAdministrator())
-		{
-			$sLogonMessage = Dict::Format('UI:LoggedAsMessage+Admin', $sUserName);
-		}
-		else
-		{
-			$sLogonMessage = Dict::Format('UI:LoggedAsMessage', $sUserName);		
-		}
-		$sLogOffMenu = "<span id=\"logOffBtn\"><ul><li><img src=\"../images/onOffBtn.png\"><ul>";
-		$sLogOffMenu .= "<li><span>$sLogonMessage</span></li>\n";
-		$sLogOffMenu .= "<li><a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/preferences.php\">".Dict::S('UI:Preferences')."</a></li>\n";
-		
-		if (utils::CanLogOff())
-		{
-			//$sLogOffMenu .= "<li><a href=\"../pages/UI.php?loginop=logoff\">".Dict::S('UI:LogOffMenu')."</a></li>\n";
-			$sLogOffMenu .= "<li><a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/logoff.php\">".Dict::S('UI:LogOffMenu')."</a></li>\n";
-		}
-		if (UserRights::CanChangePassword())
-		{
-			$sLogOffMenu .= "<li><a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?loginop=change_pwd\">".Dict::S('UI:ChangePwdMenu')."</a></li>\n";
-		}
-		$sLogOffMenu .= "</ul>\n</li>\n</ul></span>\n";
 
-		$sRestrictions = '';
-		if (!MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE))
+		if ($this->GetOutputFormat() == 'html')
 		{
+			$sUserName = UserRights::GetUser();
+			$sIsAdmin = UserRights::IsAdministrator() ? '(Administrator)' : '';
+			if (UserRights::IsAdministrator())
+			{
+				$sLogonMessage = Dict::Format('UI:LoggedAsMessage+Admin', $sUserName);
+			}
+			else
+			{
+				$sLogonMessage = Dict::Format('UI:LoggedAsMessage', $sUserName);
+			}
+			$sLogOffMenu = "<span id=\"logOffBtn\"><ul><li><img src=\"../images/onOffBtn.png\"><ul>";
+			$sLogOffMenu .= "<li><span>$sLogonMessage</span></li>\n";
+			$sLogOffMenu .= "<li><a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/preferences.php\">".Dict::S('UI:Preferences')."</a></li>\n";
+				
+			if (utils::CanLogOff())
+			{
+				//$sLogOffMenu .= "<li><a href=\"../pages/UI.php?loginop=logoff\">".Dict::S('UI:LogOffMenu')."</a></li>\n";
+				$sLogOffMenu .= "<li><a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/logoff.php\">".Dict::S('UI:LogOffMenu')."</a></li>\n";
+			}
+			if (UserRights::CanChangePassword())
+			{
+				$sLogOffMenu .= "<li><a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?loginop=change_pwd\">".Dict::S('UI:ChangePwdMenu')."</a></li>\n";
+			}
+			$sLogOffMenu .= "</ul>\n</li>\n</ul></span>\n";
+
+			$sRestrictions = '';
 			if (!MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE))
 			{
-				$sRestrictions = Dict::S('UI:AccessRO-All');
+				if (!MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE))
+				{
+					$sRestrictions = Dict::S('UI:AccessRO-All');
+				}
 			}
-		}
-		elseif (!MetaModel::DBHasAccess(ACCESS_USER_WRITE))
-		{
-				$sRestrictions = Dict::S('UI:AccessRO-Users');
-		}
-
-		if (strlen($sRestrictions) > 0)
-		{
-			$sAdminMessage = trim(MetaModel::GetConfig()->Get('access_message'));
-			$sApplicationBanner = '<div id="admin-banner">';
-			$sApplicationBanner .= '<img src="../images/locked.png" style="vertical-align:middle;">';
-			$sApplicationBanner .= '&nbsp;<b>'.$sRestrictions.'</b>';
-			if (strlen($sAdminMessage) > 0)
+			elseif (!MetaModel::DBHasAccess(ACCESS_USER_WRITE))
 			{
-				$sApplicationBanner .= '&nbsp;<b>'.$sAdminMessage.'</b>';
+				$sRestrictions = Dict::S('UI:AccessRO-Users');
 			}
-			$sApplicationBanner .= '</div>';
-		}
-		else if(strlen($this->m_sMessage))
-		{
-			$sApplicationBanner = '<div id="admin-banner"><span style="padding:5px;">'.$this->m_sMessage.'<span></div>';
+
+			if (strlen($sRestrictions) > 0)
+			{
+				$sAdminMessage = trim(MetaModel::GetConfig()->Get('access_message'));
+				$sApplicationBanner = '<div id="admin-banner">';
+				$sApplicationBanner .= '<img src="../images/locked.png" style="vertical-align:middle;">';
+				$sApplicationBanner .= '&nbsp;<b>'.$sRestrictions.'</b>';
+				if (strlen($sAdminMessage) > 0)
+				{
+					$sApplicationBanner .= '&nbsp;<b>'.$sAdminMessage.'</b>';
+				}
+				$sApplicationBanner .= '</div>';
+			}
+			else if(strlen($this->m_sMessage))
+			{
+				$sApplicationBanner = '<div id="admin-banner"><span style="padding:5px;">'.$this->m_sMessage.'<span></div>';
+			}
+			else
+			{
+				$sApplicationBanner = '';
+			}
+
+			$sOnlineHelpUrl = MetaModel::GetConfig()->Get('online_help');
+			//$sLogOffMenu = "<span id=\"logOffBtn\" style=\"height:55px;padding:0;margin:0;\"><img src=\"../images/onOffBtn.png\"></span>";
+
+			$sHtml .= '<div id="left-pane" class="ui-layout-west">';
+			$sHtml .= '<!-- Beginning of the left pane -->';
+			$sHtml .= '	<div id="header-logo">';
+			$sHtml .= '	<div id="top-left"></div><div id="logo"><a href="http://www.combodo.com/itop"><img src="../images/itop-logo.png" title="'.htmlentities($sVersionString, ENT_QUOTES, 'UTF-8').'" style="border:0; margin-top:16px; margin-right:40px;"/></a></div>';
+			$sHtml .= '	</div>';
+			$sHtml .= '	<div class="header-menu">';
+			$sHtml .= '		<div class="icon ui-state-default ui-corner-all"><span id="tPinMenu" class="ui-icon ui-icon-pin-w">pin</span></div>';
+			$sHtml .= '		<div style="text-align:center;">'.self::FilterXSS($sForm).'</div>';
+			$sHtml .= '	</div>';
+			$sHtml .= '	<div id="menu" class="ui-layout-content">';
+			$sHtml .= '		<div id="inner_menu">';
+			$sHtml .= '			<div id="accordion">';
+			$sHtml .= self::FilterXSS($this->m_sMenu);
+			$sHtml .= '			<!-- Beginning of the accordion menu -->';
+			$sHtml .= '			<!-- End of the accordion menu-->';
+			$sHtml .= '			</div>';
+			$sHtml .= '		</div> <!-- /inner menu -->';
+			$sHtml .= '	</div> <!-- /menu -->';
+			$sHtml .= '	<div class="footer"><a href="http://www.combodo.com" title="www.combodo.com" target="_blank"><img src="../images/logo-combodo.png"/></a></div>';
+			$sHtml .= '<!-- End of the left pane -->';
+			$sHtml .= '</div>';
+
+			$sHtml .= '<div class="ui-layout-center">';
+			$sHtml .= '	<div id="top-bar" style="width:100%">';
+			$sHtml .= self::FilterXSS($sApplicationBanner);
+			$sHtml .= '		<div id="global-search"><form action="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php"><table><tr><td></td><td id="g-search-input"><input type="text" name="text" value="'.$sText.'"'.$sOnClick.'/></td>';
+			$sHtml .= '<td><input type="image" src="../images/searchBtn.png"/></a></td>';
+			$sHtml .= '<td><a style="background:transparent;" href="'.$sOnlineHelpUrl.'" target="_blank"><img style="border:0;padding-left:20px;padding-right:10px;" title="'.Dict::S('UI:Help').'" src="../images/help.png"/></td>';
+			$sHtml .= '<td style="padding-right:20px;padding-left:10px;">'.self::FilterXSS($sLogOffMenu).'</td><td><input type="hidden" name="operation" value="full_text"/></td></tr></table></form></div>';
+			//echo '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="hidden" name="operation" value="full_text"/></td></tr></table></form></div>';
+			$sHtml .= '	</div>';
+			$sHtml .= '	<div class="ui-layout-content">';
+			$sHtml .= '	<!-- Beginning of page content -->';
+			$sHtml .= self::FilterXSS($this->s_content);
+			$sHtml .= '	<!-- End of page content -->';
+			$sHtml .= '	</div>';
+			$sHtml .= '</div>';
+				
+			// Add the captured output
+			if (trim($s_captured_output) != "")
+			{
+				$sHtml .= "<div id=\"rawOutput\" title=\"Debug Output\"><div style=\"height:500px; overflow-y:auto;\">".self::FilterXSS($s_captured_output)."</div></div>\n";
+			}
+			$sHtml .= "<div id=\"at_the_end\">".self::FilterXSS($this->s_deferred_content)."</div>";
+			//		echo $this->s_deferred_content;
+			$sHtml .= "<div style=\"display:none\" title=\"ex2\" id=\"ex2\">Please wait...</div>\n"; // jqModal Window
+			$sHtml .= "<div style=\"display:none\" title=\"dialog\" id=\"ModalDlg\"></div>";
+			$sHtml .= "<div style=\"display:none\" id=\"ajax_content\"></div>";
 		}
 		else
 		{
-			$sApplicationBanner = '';
+			$sHtml .= self::FilterXSS($this->s_content);
 		}
 
-		$sOnlineHelpUrl = MetaModel::GetConfig()->Get('online_help');
-		//$sLogOffMenu = "<span id=\"logOffBtn\" style=\"height:55px;padding:0;margin:0;\"><img src=\"../images/onOffBtn.png\"></span>";
+		$sHtml .= "</body>\n";
+		$sHtml .= "</html>\n";
 
-		echo '<div id="left-pane" class="ui-layout-west">';
-		echo '<!-- Beginning of the left pane -->';
-		echo '	<div id="header-logo">';
-		echo '	<div id="top-left"></div><div id="logo"><a href="http://www.combodo.com/itop"><img src="../images/itop-logo.png" title="'.htmlentities($sVersionString, ENT_QUOTES, 'UTF-8').'" style="border:0; margin-top:16px; margin-right:40px;"/></a></div>';
-		echo '	</div>';
-		echo '	<div class="header-menu">';
-		echo '		<div class="icon ui-state-default ui-corner-all"><span id="tPinMenu" class="ui-icon ui-icon-pin-w">pin</span></div>';
-		echo '		<div style="text-align:center;">'.self::FilterXSS($sForm).'</div>';
-		echo '	</div>';
-		echo '	<div id="menu" class="ui-layout-content">';
-		echo '		<div id="inner_menu">';
-		echo '			<div id="accordion">';
-		echo self::FilterXSS($this->m_sMenu);
-		echo '			<!-- Beginning of the accordion menu -->';
-		echo '			<!-- End of the accordion menu-->';
-		echo '			</div>';
-		echo '		</div> <!-- /inner menu -->';
-		echo '	</div> <!-- /menu -->';
-		echo '	<div class="footer"><a href="http://www.combodo.com" title="www.combodo.com" target="_blank"><img src="../images/logo-combodo.png"/></a></div>';
-		echo '<!-- End of the left pane -->';
-		echo '</div>';
+		if ($this->GetOutputFormat() == 'html')
+		{
+			echo $sHtml;
+		}
+		else if ($this->GetOutputFormat() == 'pdf' && $this->IsOutputFormatAvailable('pdf') )
+		{
+			require_once(APPROOT.'lib/MPDF/mpdf.php');
+			$oMPDF = new mPDF('c');
+			$oMPDF->mirroMargins = false;
+			if ($this->a_base['href'] != '')
+			{
+				$oMPDF->setBasePath($this->a_base['href']); // Seems that the <BASE> tag is not recognized by mPDF...
+			}
+			$oMPDF->showWatermarkText = true;
+			if ($this->GetOutputOption('pdf', 'template_path'))
+			{
+				$oMPDF->setImportUse(); // Allow templates
+				$oMPDF->SetDocTemplate ($this->GetOutputOption('pdf', 'template_path'), 1);
+			}
+			$oMPDF->WriteHTML($sHtml);
+			$oMPDF->Output();
+		}
+	}
 
-		echo '<div class="ui-layout-center">';
-		echo '	<div id="top-bar" style="width:100%">';
-		echo self::FilterXSS($sApplicationBanner);
-		echo '		<div id="global-search"><form action="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php"><table><tr><td></td><td id="g-search-input"><input type="text" name="text" value="'.$sText.'"'.$sOnClick.'/></td>';
-		echo '<td><input type="image" src="../images/searchBtn.png"/></a></td>';
-		echo '<td><a style="background:transparent;" href="'.$sOnlineHelpUrl.'" target="_blank"><img style="border:0;padding-left:20px;padding-right:10px;" title="'.Dict::S('UI:Help').'" src="../images/help.png"/></td>';
-		echo '<td style="padding-right:20px;padding-left:10px;">'.self::FilterXSS($sLogOffMenu).'</td><td><input type="hidden" name="operation" value="full_text"/></td></tr></table></form></div>';
-		//echo '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="hidden" name="operation" value="full_text"/></td></tr></table></form></div>';
-		echo '	</div>';
-		echo '	<div class="ui-layout-content">';
-		echo '	<!-- Beginning of page content -->';
-		echo self::FilterXSS($this->s_content);
-		echo '	<!-- End of page content -->';
-		echo '	</div>';
-		echo '</div>';
-
-        // Add the captured output
-        if (trim($s_captured_output) != "")
-        {
-            echo "<div id=\"rawOutput\" title=\"Debug Output\"><div style=\"height:500px; overflow-y:auto;\">".self::FilterXSS($s_captured_output)."</div></div>\n";
-        }
-		echo "<div id=\"at_the_end\">".self::FilterXSS($this->s_deferred_content)."</div>";
-//		echo $this->s_deferred_content;
-		echo "<div style=\"display:none\" title=\"ex2\" id=\"ex2\">Please wait...</div>\n"; // jqModal Window
-		echo "<div style=\"display:none\" title=\"dialog\" id=\"ModalDlg\"></div>";
-		echo "<div style=\"display:none\" id=\"ajax_content\"></div>";
-
-		echo "</body>\n";
-        echo "</html>\n";
-    }
-	
 	public function AddTabContainer($sTabContainer)
 	{
 		$this->m_aTabs[$sTabContainer] = array();
 		$this->add("\$Tabs:$sTabContainer\$");
 	}
-	
+
 	public function AddToTab($sTabContainer, $sTabLabel, $sHtml)
 	{
 		if (!isset($this->m_aTabs[$sTabContainer][$sTabLabel]))
@@ -846,12 +886,12 @@ EOF
 		$this->m_sCurrentTab = $sTabLabel;
 		return $sPreviousTab;
 	}
-	
+
 	public function GetCurrentTab()
 	{
 		return $this->m_sCurrentTab;
 	}
-	
+
 	public function RemoveTab($sTabLabel, $sTabContainer = null)
 	{
 		if ($sTabContainer == null)
@@ -862,7 +902,7 @@ EOF
 		{
 			// Delete the content of the tab
 			unset($this->m_aTabs[$sTabContainer][$sTabLabel]);
-			
+				
 			// If we just removed the active tab, let's reset the active tab
 			if (($this->m_sCurrentTabContainer == $sTabContainer) &&  ($this->m_sCurrentTab == $sTabLabel))
 			{
@@ -892,7 +932,7 @@ EOF
 		}
 		return $result;
 	}
-	
+
 	/**
 	 * Make the given tab the active one, as if it were clicked
 	 * DOES NOT WORK: apparently in the *old* version of jquery
@@ -914,7 +954,7 @@ EOF
 						break;
 					}
 					$tab_index++;
-				}	
+				}
 				break;
 			}
 			$container_index++;
@@ -922,7 +962,7 @@ EOF
 		$sSelector = '#tabbedContent_'.$container_index.' > ul';
 		$this->add_ready_script("$('$sSelector').tabs('select', $tab_index);");
 	}
-	
+
 	public function StartCollapsibleSection($sSectionLabel, $bOpen = false)
 	{
 		$this->add($this->GetStartCollapsibleSection($sSectionLabel, $bOpen));
@@ -952,91 +992,69 @@ EOF
 		return "</div>";
 	}
 
-    public function add($sHtml)
-    {
-        if (!empty($this->m_sCurrentTabContainer) && !empty($this->m_sCurrentTab))
-        {
-            $this->AddToTab($this->m_sCurrentTabContainer, $this->m_sCurrentTab, $sHtml);
-        }
-        else
-        {
-            parent::add($sHtml);
-        }
-    }
-    
+	public function add($sHtml)
+	{
+		if (!empty($this->m_sCurrentTabContainer) && !empty($this->m_sCurrentTab))
+		{
+			$this->AddToTab($this->m_sCurrentTabContainer, $this->m_sCurrentTab, $sHtml);
+		}
+		else
+		{
+			parent::add($sHtml);
+		}
+	}
+
 	/**
 	 * Records the current state of the 'html' part of the page output
 	 * @return mixed The current state of the 'html' output
-	 */    
-    public function start_capture()
-    {
-        if (!empty($this->m_sCurrentTabContainer) && !empty($this->m_sCurrentTab))
-        {
-        	$iOffset = isset($this->m_aTabs[$this->m_sCurrentTabContainer][$this->m_sCurrentTab]) ? strlen($this->m_aTabs[$this->m_sCurrentTabContainer][$this->m_sCurrentTab]): 0;
-            return array('tc' => $this->m_sCurrentTabContainer, 'tab' => $this->m_sCurrentTab, 'offset' => $iOffset);
-        }
-        else
-        {
-            return parent::start_capture();
-        }
-    }
-
-    /**
-     * Returns the part of the html output that occurred since the call to start_capture
-     * and removes this part from the current html output
-     * @param $offset mixed The value returned by start_capture
-     * @return string The part of the html output that was added since the call to start_capture
-     */    
-    public function end_capture($offset)
-    {
-    	if (is_array($offset))
-    	{
-    		if (isset($this->m_aTabs[$offset['tc']][$offset['tab']]))
-    		{
-		    	$sCaptured = substr($this->m_aTabs[$offset['tc']][$offset['tab']], $offset['offset']);
-		    	$this->m_aTabs[$offset['tc']][$offset['tab']] = substr($this->m_aTabs[$offset['tc']][$offset['tab']], 0, $offset['offset']);
-    		}
-    		else
-    		{
-    			$sCaptured = '';
-    		}
-    	}
-    	else
-    	{
-    		$sCaptured = parent::end_capture($offset);
-    	}
-    	return $sCaptured;
-    }
-        
-    /**
-     * Set the message to be displayed in the 'admin-banner' section at the top of the page
-     */
-    public function SetMessage($sMessage)
-    {
-    	$this->m_sMessage = $sMessage;	
-    }
-    
-    /*
-    public function AddSearchForm($sClassName, $bOpen = false)
-    {
-    	$iSearchSectionId = 0;
-    	
-		$sStyle = $bOpen ? 'SearchDrawer' : 'SearchDrawer DrawerClosed';
-		$this->add("<div id=\"Search_$iSearchSectionId\" class=\"$sStyle\">\n");
-		$this->add("<h1>Search form for ".Metamodel::GetName($sClassName)."</h1>\n");
-		$this->add_ready_script("\$(\"#LnkSearch_$iSearchSectionId\").click(function() {\$(\"#Search_$iSearchSectionId\").slideToggle('normal'); $(\"#LnkSearch_$iSearchSectionId\").toggleClass('open');});");
-		$oFilter = new DBObjectSearch($sClassName);
-		$sFilter = $oFilter->serialize();
-		$oSet = new CMDBObjectSet($oFilter);
-		cmdbAbstractObject::DisplaySearchForm($this, $oSet, array('operation' => 'search', 'filter' => $sFilter, 'search_form' => true));
- 		$this->add("</div>\n");
- 		$this->add("<div class=\"HRDrawer\"/></div>\n");
- 		$this->add("<div id=\"LnkSearch_$iSearchSectionId\" class=\"DrawerHandle\">Search</div>\n");
-
-    	
-    	$iSearchSectionId++;
+	 */
+	public function start_capture()
+	{
+		if (!empty($this->m_sCurrentTabContainer) && !empty($this->m_sCurrentTab))
+		{
+			$iOffset = isset($this->m_aTabs[$this->m_sCurrentTabContainer][$this->m_sCurrentTab]) ? strlen($this->m_aTabs[$this->m_sCurrentTabContainer][$this->m_sCurrentTab]): 0;
+			return array('tc' => $this->m_sCurrentTabContainer, 'tab' => $this->m_sCurrentTab, 'offset' => $iOffset);
+		}
+		else
+		{
+			return parent::start_capture();
+		}
 	}
-	*/
+
+	/**
+	 * Returns the part of the html output that occurred since the call to start_capture
+	 * and removes this part from the current html output
+	 * @param $offset mixed The value returned by start_capture
+	 * @return string The part of the html output that was added since the call to start_capture
+	 */
+	public function end_capture($offset)
+	{
+		if (is_array($offset))
+		{
+			if (isset($this->m_aTabs[$offset['tc']][$offset['tab']]))
+			{
+				$sCaptured = substr($this->m_aTabs[$offset['tc']][$offset['tab']], $offset['offset']);
+				$this->m_aTabs[$offset['tc']][$offset['tab']] = substr($this->m_aTabs[$offset['tc']][$offset['tab']], 0, $offset['offset']);
+			}
+			else
+			{
+				$sCaptured = '';
+			}
+		}
+		else
+		{
+			$sCaptured = parent::end_capture($offset);
+		}
+		return $sCaptured;
+	}
+
+	/**
+	 * Set the message to be displayed in the 'admin-banner' section at the top of the page
+	 */
+	public function SetMessage($sMessage)
+	{
+		$this->m_sMessage = $sMessage;
+	}
 }
 
 ?>

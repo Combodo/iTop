@@ -50,6 +50,8 @@ class WebPage
 	protected $sContentType;
 	protected $sContentDisposition;
 	protected $sContentFileName;
+	protected $s_sOutputFormat;
+	protected $a_OutputOptions;
 	    
     public function __construct($s_title)
     {
@@ -67,6 +69,8 @@ class WebPage
         $this->sContentType = '';
         $this->sContentDisposition = '';
         $this->sContentFileName = '';
+		$this->s_OutputFormat = utils::ReadParam('output_format', 'html');
+		$this->a_OutputOptions = array();
         ob_start(); // Start capturing the output
     }
 	
@@ -514,6 +518,68 @@ class WebPage
 	public static function FilterXSS($sHTML)
 	{
 		return str_ireplace('<script', '&lt;script', $sHTML);
+	}
+	
+	/**
+	 * What is the currently selected output format
+	 * @return string The selected output format: html, pdf...
+	 */
+	public function GetOutputFormat()
+	{
+		return $this->s_OutputFormat;
+	}
+
+	/**
+	 * Check whether the desired output format is possible or not
+	 * @param string $sOutputFormat The desired output format: html, pdf...
+	 * @return bool True if the format is Ok, false otherwise
+	 */
+	function IsOutputFormatAvailable($sOutputFormat)
+	{
+		$bResult = false;
+		switch($sOutputFormat)
+		{
+			case 'html':
+			$bResult = true; // Always supported
+			break;
+			
+			case 'pdf':
+			$bResult = @is_readable(APPROOT.'lib/MPDF/mpdf.php');
+			break;
+		}
+		return $bResult;
+	}
+	
+	/** 
+	 * Retrieves the value of a named output option for the given format
+	 * @param string $sFormat The format: html or pdf
+	 * @param string $sOptionName The name of the option
+	 * @return mixed false if the option was never set or the options's value
+	 */
+	public function GetOutputOption($sFormat, $sOptionName)
+	{
+		if (isset($this->a_OutputOptions[$sFormat][$sOptionName]))
+		{
+			return $this->a_OutputOptions[$sFormat][$sOptionName];
+		}
+		return false;
+	}
+	/**
+	 * Sets a named output option for the given format
+	 * @param string $sFormat The format for which to set the option: html or pdf
+	 * @param string $sOptionName the name of the option
+	 * @param mixed $sValue The value of the option
+	 */
+	public function SetOutputOption($sFormat, $sOptionName, $sValue)
+	{
+		if (!isset($this->a_OutputOptions[$sFormat]))
+		{
+			$this->a_OutputOptions[$sFormat] = array($sOptionName => $sValue);
+		}
+		else
+		{
+			$this->a_OutputOptions[$sFormat][$sOptionName] = $sValue;
+		}
 	}
 }
 ?>
