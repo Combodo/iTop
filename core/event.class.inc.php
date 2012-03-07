@@ -340,6 +340,7 @@ class EventLoginUsage extends Event
 		MetaModel::Init_InheritAttributes();
 
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("user_id", array("targetclass"=>"User", "jointype"=> "", "allowed_values"=>null, "sql"=>"user_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
+		$aZList = array('date', 'user_id');
 		if (MetaModel::IsValidAttCode('Contact', 'name'))
 		{
 			MetaModel::Init_AddAttribute(new AttributeExternalField("contact_name", array("allowed_values"=>null, "extkey_attcode"=>"user_id", "target_attcode"=>"contactid", "is_null_allowed"=>true, "depends_on"=>array())));
@@ -351,10 +352,10 @@ class EventLoginUsage extends Event
 			$aZList[] = 'contact_email';
 		}
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('date', 'user_id', 'contact_name', 'contact_email', 'userinfo', 'message')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('date', 'user_id', 'contact_name', 'contact_email', 'userinfo')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', array_merge($aZList, array('userinfo', 'message'))); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array_merge($aZList, array('userinfo'))); // Attributes to be displayed for a list
 		// Search criteria
-		MetaModel::Init_SetZListItems('standard_search', array('date', 'user_id', 'contact_name', 'contact_email')); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('standard_search', $aZList); // Criteria of the std search form
 //		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
 	}
 }
