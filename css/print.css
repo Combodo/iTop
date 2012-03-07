@@ -1,0 +1,15 @@
+@CHARSET "UTF-8";
+#left-pane { display: none; }
+span.ui-layout-resizer { display: none; }
+#header-logo { display: none; }
+#logo { display: none; }
+div.header-menu { display:none; }
+div.footer { display:none; }
+#top-bar { display: none; }
+#menu { display: none; }
+div.actions_button { display:none; }
+div.itop_popup { display:none; }
+div.HRDrawer { display:none; }
+div.DrawerHandle { display:none; }
+a.tab { display:none; }
+div.itop-tab { border: #ccc 1px solid; margin-top: 1em; padding-bottom:1em; }
