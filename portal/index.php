@@ -33,7 +33,7 @@ define('SERVICECATEGORY_QUERY', 'SELECT Service AS s JOIN SLA AS sla ON sla.serv
 define('SERVICE_SUBCATEGORY_QUERY', 'SELECT ServiceSubcategory WHERE service_id = :svc_id');
 
 define('VALIDATE_SERVICECATEGORY_QUERY', 'SELECT Service AS s JOIN SLA AS sla ON sla.service_id=s.id JOIN lnkContractToSLA AS ln ON ln.sla_id=sla.id JOIN CustomerContract AS cc ON ln.contract_id=cc.id WHERE cc.org_id = :org_id AND s.id = :id');
-define('VALIDATE_SERVICESUBCATEGORY_QUERY', 'SELECT ServiceSubcategory AS Sub JOIN Service AS Svc ON Sub.service_id = Svc.id WHERE Svc.org_id=:org_id AND Sub.id=:id');
+define('VALIDATE_SERVICESUBCATEGORY_QUERY', 'SELECT ServiceSubcategory AS Sub JOIN Service AS Svc ON Sub.service_id = Svc.id WHERE Sub.id=:id');
 
 define('ALL_PARAMS', 'from_service_id,org_id,caller_id,service_id,servicesubcategory_id,title,description,impact,urgency,workgroup_id,moreinfo,caller_id,start_date,end_date,duration,impact_duration');
 
@@ -46,12 +46,12 @@ define('ALL_PARAMS', 'from_service_id,org_id,caller_id,service_id,servicesubcate
  */
 function DisplayMainMenu(WebPage $oP)
 {
-	$oP->AddMenuButton('showongoing', 'Portal:ShowOngoing', './index.php?operation=show_ongoing');
-	$oP->AddMenuButton('newrequest', 'Portal:CreateNewRequest', './index.php?operation=create_request');
-	$oP->AddMenuButton('showclosed', 'Portal:ShowClosed', './index.php?operation=show_closed');
+	$oP->AddMenuButton('showongoing', 'Portal:ShowOngoing', '../portal/index.php?operation=show_ongoing');
+	$oP->AddMenuButton('newrequest', 'Portal:CreateNewRequest', '../portal/index.php?operation=create_request');
+	$oP->AddMenuButton('showclosed', 'Portal:ShowClosed', '../portal/index.php?operation=show_closed');
 	if (UserRights::CanChangePassword())
 	{
-		$oP->AddMenuButton('change_pwd', 'Portal:ChangeMyPassword', './index.php?loginop=change_pwd');
+		$oP->AddMenuButton('change_pwd', 'Portal:ChangeMyPassword', '../portal/index.php?loginop=change_pwd');
 	}
 }
 
