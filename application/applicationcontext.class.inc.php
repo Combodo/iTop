@@ -221,17 +221,17 @@ class ApplicationContext
 			if (is_callable($aCallSpec))
 			{
 				$sAttCode = call_user_func($aCallSpec, $key); // Returns null when there is no mapping for this parameter					
-			}
 
-			if (MetaModel::IsValidAttCode($sClass, $sAttCode))
-			{
-				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-				if ($oAttDef->IsWritable())
+				if (MetaModel::IsValidAttCode($sClass, $sAttCode))
 				{
-					$value = $this->GetCurrentValue($key, null);
-					if (!is_null($value))
+					$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+					if ($oAttDef->IsWritable())
 					{
-						$oObj->Set($sAttCode, $value);
+						$value = $this->GetCurrentValue($key, null);
+						if (!is_null($value))
+						{
+							$oObj->Set($sAttCode, $value);
+						}
 					}
 				}
 			}

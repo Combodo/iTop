@@ -281,15 +281,18 @@ class DisplayBlock
 				$sClass = $this->m_oFilter->GetClass();
 				$aFilterCodes = array_keys(MetaModel::GetClassFilterDefs($sClass));
 				$aCallSpec = array($sClass, 'MapContextParam');
-				foreach($oAppContext->GetNames() as $sContextParam)
+				if (is_callable($aCallSpec))
 				{
-					$sParamCode = call_user_func($aCallSpec, $sContextParam); //Map context parameter to the value/filter code depending on the class
-					if (!is_null($sParamCode))
+					foreach($oAppContext->GetNames() as $sContextParam)
 					{
-						$sParamValue = $oAppContext->GetCurrentValue($sContextParam, null);
-						if (!is_null($sParamValue))
+						$sParamCode = call_user_func($aCallSpec, $sContextParam); //Map context parameter to the value/filter code depending on the class
+						if (!is_null($sParamCode))
 						{
-							$aExtraParams[$sParamCode] = $sParamValue;
+							$sParamValue = $oAppContext->GetCurrentValue($sContextParam, null);
+							if (!is_null($sParamValue))
+							{
+								$aExtraParams[$sParamCode] = $sParamValue;
+							}
 						}
 					}
 				}
