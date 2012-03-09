@@ -734,7 +734,18 @@ EOF
 		}
 		return $oClassNode;
 	}
+	
+	public function GetChildClasses($oClassNode, $bFlattenLayers = true)
+	{
+		$sXPath = "class";
+		if ($bFlattenLayers)
+		{
+			$sXPath = "class[(@_operation!='removed')]";
+		}
+		return $this->_priv_GetNodes($sXPath, $oClassNode);
+	}
 		
+	
 	public function GetField($sClassName, $sAttCode, $bFlattenLayers = true)
 	{
 		if (!$this->ClassNameExists($sClassName))
@@ -1126,7 +1137,7 @@ EOF
 				$sOperation = $oChildNode->getAttribute('_operation');
 			}
 			
-//echo str_repeat('+', $iDepth)." $sNodeName [$sName], operation: $sOperation\n";
+echo str_repeat('+', $iDepth)." $sNodeName [$sName], operation: $sOperation\n";
 			
 			switch($sOperation)
 			{
@@ -1142,22 +1153,37 @@ EOF
 				{
 					$oDestNode->appendChild($oDeletedNode);
 				}
-//echo "<p>".str_repeat('+', $iDepth).$oChildNode->getAttribute('name')." was removed...</p>";
+echo "<p>".str_repeat('+', $iDepth).$oChildNode->getAttribute('name')." was removed...</p>";
 				break;
 
 				case 'added':
-//echo "<p>".str_repeat('+', $iDepth).$oChildNode->tagName.':'.$oChildNode->getAttribute('name')." was created...</p>";
+echo "<p>".str_repeat('+', $iDepth).$oChildNode->tagName.':'.$oChildNode->getAttribute('name')." was created...</p>";
 				$oModifiedNode = $oDoc->importNode($oChildNode, true); // Copies all the node's attributes, and the child nodes as well
 				if ($oChildNode instanceof DOMElement)
 				{
 					$oModifiedNode->removeAttribute('_source');
 					if ($oModifiedNode->tagName == 'class')
 					{
+echo "<p>".str_repeat('+', $iDepth).$oChildNode->tagName.':'.$oChildNode->getAttribute('name')." inserting under 'classes'...</p>";
 						// classes are always located under the root node
 						$oDoc->firstChild->appendChild($oModifiedNode);
+						
+						// Process any subclasses: move them under the root of the document
+						$oSubclasses = $oModifiedNode->GetElementsByTagName('class');
+						$aSubClasses = array();
+						foreach($oSubclasses as $oSubclassNode)
+						{
+							$aSubClasses[] = $oSubclassNode;
+						}
+						for($index = count($aSubClasses)-1; $index >= 0; $index--)
+						{
+							$aSubClasses[$index]->parentNode->removeChild($aSubClasses[$index]);
+							$oDoc->firstChild->appendChild($aSubClasses[$index]);
+						}
 					}
 					else
 					{
+echo "<p>".str_repeat('+', $iDepth).$oChildNode->tagName.':'.$oChildNode->getAttribute('name')." inserting in the hierarchy...</p>";
 						$oDestNode->appendChild($oModifiedNode);
 					}
 				}
@@ -1168,7 +1194,7 @@ EOF
 				break;
 				
 				case 'replaced':
-//echo "<p>".str_repeat('+', $iDepth).$oChildNode->tagName.':'.$oChildNode->getAttribute('name')." was replaced...</p>";
+echo "<p>".str_repeat('+', $iDepth).$oChildNode->tagName.':'.$oChildNode->getAttribute('name')." was replaced...</p>";
 				$oModifiedNode = $oDoc->importNode($oChildNode, true); // Copies all the node's attributes, and the child nodes as well
 				if ($oChildNode instanceof DOMElement)
 				{
@@ -1178,10 +1204,10 @@ EOF
 				break;
 				
 				case 'modified':
-//echo "<p>".str_repeat('+', $iDepth).$oChildNode->tagName.':'.$oChildNode->getAttribute('name')." was modified...</p>";
+echo "<p>".str_repeat('+', $iDepth).$oChildNode->tagName.':'.$oChildNode->getAttribute('name')." was modified...</p>";
 				if ($oChildNode instanceof DOMElement)
 				{
-//echo str_repeat('+', $iDepth)." Copying (NON recursively) the modified node\n";
+echo str_repeat('+', $iDepth)." Copying (NON recursively) the modified node\n";
 					$oModifiedNode = $oDoc->importNode($oChildNode, false); // Copies all the node's attributes, but NOT the child nodes
 					$oModifiedNode->removeAttribute('_source');
 					$this->_priv_ImportModifiedChildren($oDoc, $oModifiedNode, $oChildNode);
@@ -1197,26 +1223,22 @@ EOF
 				}
 				else
 				{
-//echo str_repeat('+', $iDepth)." Copying (recursively) the modified node\n";
+echo str_repeat('+', $iDepth)." Copying (recursively) the modified node\n";
 					$oModifiedNode = $oDoc->importNode($oChildNode, true); // Copies all the node's attributes, and the child nodes
 					$oDestNode->appendChild($oModifiedNode);
 				}
 				break;
 				
 				default:
-				// No change: search if there is not a modified child class
-				$oModifiedNode = $oDoc->importNode($oChildNode->cloneNode(false)); // Copies all the node's attributes, but NOT the child nodes
-//echo str_repeat('+', $iDepth)." Importing (NON recursively) the modified node\n";
-				if ($oChildNode instanceof DOMElement)
+				// No change: do nothing
+echo "<p>".str_repeat('+', $iDepth).$oChildNode->tagName.':'.$oChildNode->getAttribute('name')." was NOT modified...</p>";
+				$oModifiedNode = $oDoc->importNode($oChildNode, true); // Importing the node for future recusrsion if needed
+				if ($oChildNode->tagName == 'class')
 				{
-					$oModifiedNode->removeAttribute('_source');
+echo "<p>".str_repeat('+', $iDepth)."Checking if a subclass of ".$oChildNode->getAttribute('name')." was modified...</p>";
+					// classes are always located under the root node
+					$this->_priv_ImportModifiedChildren($oDoc, $oModifiedNode, $oChildNode);
 				}
-			}
-			if ($oChildNode->tagName == 'class')
-			{
-//echo "<p>".str_repeat('+', $iDepth)."Checking if a subclass of ".$oChildNode->getAttribute('name')." was modified...</p>";
-				// classes are always located under the root node
-				$this->_priv_ImportModifiedChildren($oDoc, $oModifiedNode, $oChildNode);
 			}
 		}
 		$iDepth--;
