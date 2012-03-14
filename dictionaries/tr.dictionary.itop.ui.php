@@ -716,14 +716,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'İş grubuna değişiklikler',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Atanmamış Değişiklikler',
 
-	'UI:ConfigurationItemsMenu'=> 'Konfigürasyon kalemleri',
-	'UI:ConfigurationItemsMenu+'=> 'Tüm cihazlar',
-	'UI:ConfigurationItemsMenu:Title' => 'Konfigürasyon Kalemlerinin Özeti',
-	'UI-ConfigurationItemsMenu-ServersByCriticity' => 'Servers by criticality',
-	'UI-ConfigurationItemsMenu-PCsByCriticity' => 'PCs by criticality',
-	'UI-ConfigurationItemsMenu-NWDevicesByCriticity' => 'Network devices by criticality',
-	'UI-ConfigurationItemsMenu-ApplicationsByCriticity' => 'Applications by criticality',
-
 	'UI:ConfigurationManagementMenu' => 'Konfigürasyon Yönetimi',
 	'UI:ConfigurationManagementMenu+' => 'Konfigürasyon Yönetimi',
 	'UI:ConfigurationManagementMenu:Title' => 'Altyapı Özeti',

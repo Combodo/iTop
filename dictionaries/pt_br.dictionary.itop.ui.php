@@ -755,14 +755,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'Mudanças por grupo de trabalho',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Mudanças ainda não atribuídas',
 
-	'UI:ConfigurationItemsMenu'=> 'Configuração Itens',
-	'UI:ConfigurationItemsMenu+'=> 'Todos dispositivos',
-	'UI:ConfigurationItemsMenu:Title' => 'Configuração Itens visão geral',
-	'UI-ConfigurationItemsMenu-ServersByCriticity' => 'Servidores por criticidade',
-	'UI-ConfigurationItemsMenu-PCsByCriticity' => 'PCs por criticidade',
-	'UI-ConfigurationItemsMenu-NWDevicesByCriticity' => 'Dispositivos de rede por criticidade',
-	'UI-ConfigurationItemsMenu-ApplicationsByCriticity' => 'Aplicativos por criticidade',
-	
 	'UI:ConfigurationManagementMenu' => 'Gerenciamento Configurações',
 	'UI:ConfigurationManagementMenu+' => 'Gerenciamento Configurações',
 	'UI:ConfigurationManagementMenu:Title' => 'Infrastructure Overview',

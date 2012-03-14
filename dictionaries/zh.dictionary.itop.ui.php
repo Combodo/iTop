@@ -715,14 +715,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI-ChangeManagementMenu-ChangesByWorkgroup' => '按工作组划分的变更',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => '尚未指派的变更',
 
-	'UI:ConfigurationItemsMenu'=> '配置项目',
-	'UI:ConfigurationItemsMenu+'=> '所有设备',
-	'UI:ConfigurationItemsMenu:Title' => '配置项概览',
-	'UI-ConfigurationItemsMenu-ServersByCriticity' => '按关键性划分服务器',
-	'UI-ConfigurationItemsMenu-PCsByCriticity' => '按关键性划分PC',
-	'UI-ConfigurationItemsMenu-NWDevicesByCriticity' => '按关键性划分网络设备',
-	'UI-ConfigurationItemsMenu-ApplicationsByCriticity' => '按关键性划分应用程序',
-	
 	'UI:ConfigurationManagementMenu' => '配置管理',
 	'UI:ConfigurationManagementMenu+' => '配置管理',
 	'UI:ConfigurationManagementMenu:Title' => '基础架构概览',

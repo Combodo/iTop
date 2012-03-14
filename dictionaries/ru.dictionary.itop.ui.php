@@ -717,14 +717,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'Изменения по рабочей группе',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Не назначенные изменения',
 
-	'UI:ConfigurationItemsMenu'=> 'Элементы конфигурации',
-	'UI:ConfigurationItemsMenu+'=> 'Все устройства',
-	'UI:ConfigurationItemsMenu:Title' => 'Обзор элементов конфигурации',
-	'UI-ConfigurationItemsMenu-ServersByCriticity' => 'Серверы по критичности',
-	'UI-ConfigurationItemsMenu-PCsByCriticity' => 'ПК по критичности',
-	'UI-ConfigurationItemsMenu-NWDevicesByCriticity' => 'Сетевые устройства по критичности',
-	'UI-ConfigurationItemsMenu-ApplicationsByCriticity' => 'Приложения по критичности',
-	
 	'UI:ConfigurationManagementMenu' => 'Управление конфигурациями',
 	'UI:ConfigurationManagementMenu+' => 'Управление конфигурациями',
 	'UI:ConfigurationManagementMenu:Title' => 'Обзор инфраструктуры',

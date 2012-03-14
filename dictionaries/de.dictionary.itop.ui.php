@@ -759,14 +759,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'Changes nach Arbeitsgruppen',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Changes, die noch nicht zugeordnet wurden',
 
-	'UI:ConfigurationItemsMenu'=> 'Configuration Items',
-	'UI:ConfigurationItemsMenu+'=> 'Alle Geräte',
-	'UI:ConfigurationItemsMenu:Title' => 'Übersicht der Configuration Items',
-	'UI-ConfigurationItemsMenu-ServersByCriticity' => 'Server nach Business criticality',
-	'UI-ConfigurationItemsMenu-PCsByCriticity' => 'Rechner (PC) nach Business criticality',
-	'UI-ConfigurationItemsMenu-NWDevicesByCriticity' => 'Netzwerkgeräte nach Business criticality',
-	'UI-ConfigurationItemsMenu-ApplicationsByCriticity' => 'Anwendungen nach Business criticality',
-	
 	'UI:ConfigurationManagementMenu' => 'Configuration Management',
 	'UI:ConfigurationManagementMenu+' => 'Configuration Management',
 	'UI:ConfigurationManagementMenu:Title' => 'Übersicht der Infrastruktur',

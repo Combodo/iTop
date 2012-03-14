@@ -731,14 +731,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'ワークグループ別変更内容', //'Changes by workgroup',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'まだアサインされていない変更', //'Changes not yet assigned',
 
-	'UI:ConfigurationItemsMenu'=> '設定項目', //'Configuration Items',
-	'UI:ConfigurationItemsMenu+'=> 'すべてのデバイス', //'All Devices',
-	'UI:ConfigurationItemsMenu:Title' => '設定項目概観', //'Configuration Items Overview',
-	'UI-ConfigurationItemsMenu-ServersByCriticity' => 'サーバ(by criticality)', // 'Servers by criticality',
-	'UI-ConfigurationItemsMenu-PCsByCriticity' => 'PC (by criticality)', // 'PCs by criticality',
-	'UI-ConfigurationItemsMenu-NWDevicesByCriticity' => 'ネットワークデバイス (by criticality)', // 'Network devices by criticality',
-	'UI-ConfigurationItemsMenu-ApplicationsByCriticity' => 'アプリケーション (by criticality)', // 'Applications by criticality',
-	
 	'UI:ConfigurationManagementMenu' => 'コンフィグレーション管理', //'Configuration Management',
 	'UI:ConfigurationManagementMenu+' => 'コンフィグレーション管理', // 'Configuration Management',
 	'UI:ConfigurationManagementMenu:Title' => 'インフラストラクチャ概観', // 'Infrastructure Overview',

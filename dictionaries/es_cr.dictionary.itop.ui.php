@@ -723,14 +723,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'Cambios por grupo de trabajo',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Cambios no asignados aun',
 
-	'UI:ConfigurationItemsMenu'=> 'Elementos de configuracion',
-	'UI:ConfigurationItemsMenu+'=> 'Todos los dispositivos',
-	'UI:ConfigurationItemsMenu:Title' => 'Sumario de Elementos de Configuracion',
-	'UI-ConfigurationItemsMenu-ServersByCriticity' => 'Servidores por criticidad',
-	'UI-ConfigurationItemsMenu-PCsByCriticity' => 'PCs por criticidad',
-	'UI-ConfigurationItemsMenu-NWDevicesByCriticity' => 'Dispositivos de red por criticidad',
-	'UI-ConfigurationItemsMenu-ApplicationsByCriticity' => 'Aplicaciones por criticidad',
-	
 	'UI:ConfigurationManagementMenu' => 'Gestion de la Configuracion',
 	'UI:ConfigurationManagementMenu+' => 'Gestion de la Configuracion',
 	'UI:ConfigurationManagementMenu:Title' => 'Sumario de Infrastructura',
