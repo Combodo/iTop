@@ -518,7 +518,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:FunctionalCI/Attribute:org_id+' => '',
 	'Class:FunctionalCI/Attribute:owner_name' => 'Owner organization',
 	'Class:FunctionalCI/Attribute:owner_name+' => '',
-	'Class:FunctionalCI/Attribute:importance' => 'Business criticity',
+	'Class:FunctionalCI/Attribute:importance' => 'Business criticality',
 	'Class:FunctionalCI/Attribute:importance+' => '',
 	'Class:FunctionalCI/Attribute:importance/Value:high' => 'High',
 	'Class:FunctionalCI/Attribute:importance/Value:high+' => '',
