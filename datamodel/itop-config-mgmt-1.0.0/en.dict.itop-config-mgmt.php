@@ -359,7 +359,7 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:Licence' => 'Licence',
+	'Class:Licence' => 'License', // In GB, the noun is "Licence", whereas in US, it is ok with "License" anytime.
 	'Class:Licence+' => '',
 	'Class:Licence/Attribute:provider' => 'Provider',
 	'Class:Licence/Attribute:provider+' => '',
@@ -382,7 +382,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Licence/Attribute:usage_limit' => 'Usage limit',
 	'Class:Licence/Attribute:usage_limit+' => '',
 	'Class:Licence/Attribute:usage_list' => 'Usage',
-	'Class:Licence/Attribute:usage_list+' => 'Application instances using this licence',
+	'Class:Licence/Attribute:usage_list+' => 'Application instances using this license',
 ));
 
 
