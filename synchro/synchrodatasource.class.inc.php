@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010 Combodo SARL
+// Copyright (C) 2012 Combodo SARL
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License as published by
@@ -819,6 +819,7 @@ EOF
 
 		}
 
+		$sTable = $this->GetDataTable();
 		foreach($this->ListTargetAttributes() as $sAttCode=>$oAttDef)
 		{
 			if (!isset($aAttributes[$sAttCode]))
@@ -845,8 +846,48 @@ EOF
 					$oAttribute->DBInsertTracked($oChange);
 				}
 			}
+			else
+			{
+				$aColumns = $this->GetSQLColumns(array($sAttCode));
+				foreach($aColumns as $sColName => $sColumnDef)
+				{
+					$bOneColIsMissing = false;
+					if (!CMDBSource::IsField($sTable, $sColName))
+					{
+						$bFixNeeded = true;
+						$bOneColIsMissing = true;
+						if ($bVerbose)
+						{
+							if (count($aColumns) > 1)
+							{
+								echo "Missing column '$sColName', in the table '$sTable' for the data synchro task ".$this->GetName()." (".$this->GetKey()."). The columns '".implode("', '", $aColumns )." will be re-created.'.\n";
+							}
+							else
+							{
+								echo "Missing column '$sColName', in the table '$sTable' for the data synchro task ".$this->GetName()." (".$this->GetKey()."). The column '$sColName' will be added.\n";
+							}
+						}
+					}
+					else if (strcasecmp(CMDBSource::GetFieldType($sTable, $sColName), $sColumnDef) != 0)
+					{
+						$bFixNeeded = true;
+						$bOneColIsMissing = true;
+						if (count($aColumns) > 1)
+						{
+							echo "Incorrect column '$sColName' (".CMDBSource::GetFieldType($sTable, $sColName)." instead of ".$sColumnDef."), in the table '$sTable' for the data synchro task ".$this->GetName()." (".$this->GetKey()."). The columns '".implode("', '", $aColumns )." will be re-created.'.\n";
+						}
+						else
+						{
+							echo "Incorrect column '$sColName' (".CMDBSource::GetFieldType($sTable, $sColName)." instead of ".$sColumnDef."), in the table '$sTable' for the data synchro task ".$this->GetName()." (".$this->GetKey()."). The column '$sColName' will be added.\n";
+						}
+					}
+					if ($bOneColIsMissing)
+					{
+						$aMissingFields[] = $sAttCode;
+					}
+				}
+			}
 		}
-		$sTable = $this->GetDataTable();
 		if ($bFixNeeded && (count($aMissingFields) > 0))
 		{
 			$aRepairQueries = array();
@@ -858,13 +899,18 @@ EOF
 			{
 				if (CMDBSource::IsField($sTable, $sAttCode))
 				{
-					$aRepairQueries[] = "ALTER TABLE `$sTable` DROP COLUMN `$sAttCode`;";
+					$aRepairQueries[] = "ALTER TABLE `$sTable` CHANGE `$sAttCode` `$sAttCode` $sColumnDef";
+				}
+				else
+				{
+					$aFieldDefs[] = "`$sAttCode` $sColumnDef";
 				}
 
-				$aFieldDefs[] = "`$sAttCode` $sColumnDef";
 			}
-
-			$aRepairQueries[] = "ALTER TABLE `$sTable` ADD (".implode(',', $aFieldDefs).");";
+			if (count($aFieldDefs) > 0)
+			{
+				$aRepairQueries[] = "ALTER TABLE `$sTable` ADD (".implode(',', $aFieldDefs).");";
+			}
 
 			// The triggers as well must be adjusted
 			$aTriggersDefs = $this->GetTriggersDefinition();
@@ -880,7 +926,7 @@ EOF
 				if  ($bVerbose)
 				{
 					// Report the issue
-					echo "The structure of the table $sTable for the data synchro task ".$this->GetName()." (".$this->GetKey().") must be altered (missing fields: ".implode(',', $aMissingFields).").\n";
+					echo "The structure of the table $sTable for the data synchro task ".$this->GetName()." (".$this->GetKey().") must be altered (missing or incorrect fields: ".implode(',', $aMissingFields).").\n";
 					echo "The trigger {$sTable}_bi, {$sTable}_bu, {$sTable}_ad for the data synchro task ".$this->GetName()." (".$this->GetKey().") must be re-created.\n";
 					echo implode("\n", $aRepairQueries)."\n";
 				}
@@ -989,7 +1035,7 @@ EOF
 			if ($oAttDef->IsExternalKey())
 			{
 				// The pkey might be used as well as any other key column
-				$aColumns[$sAttCode] = 'VARCHAR (255)';
+				$aColumns[$sAttCode] = 'VARCHAR(255)';
 			}
 			else
 			{
