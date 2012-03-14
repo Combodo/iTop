@@ -3534,6 +3534,8 @@ class AttributeFriendlyName extends AttributeComputedFieldVoid
 
 	public function GetKeyAttCode() {return $this->Get("extkey_attcode");} 
 
+	public function GetExtAttCode() {return 'friendlyname';} 
+
 	public function GetLabel($sDefault = null)
 	{
 		$sLabel = parent::GetLabel('');

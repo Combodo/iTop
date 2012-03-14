@@ -80,7 +80,7 @@ abstract class DBObject
 		{
 			$this->m_aCurrValues[$sAttCode] = $oAttDef->GetDefaultValue();
 			$this->m_aOrigValues[$sAttCode] = null;
-			if ($oAttDef->IsExternalField())
+			if ($oAttDef->IsExternalField() || ($oAttDef instanceof AttributeFriendlyName))
 			{
 				// This field has to be read from the DB
 				// Leave the flag unset (optimization) 
@@ -301,31 +301,39 @@ abstract class DBObject
 			$this->Reload();
 		}
 
-		if ($oAttDef->IsExternalKey() && is_object($value))
+		if ($oAttDef->IsExternalKey())
 		{
-			// Setting an external key with a whole object (instead of just an ID)
-			// let's initialize also the external fields that depend on it
-			// (useful when building objects in memory and not from a query)
-			if ( (get_class($value) != $oAttDef->GetTargetClass()) && (!is_subclass_of($value, $oAttDef->GetTargetClass())))
+			if (is_object($value))
 			{
-				throw new CoreUnexpectedValue("Trying to set the value of '$sAttCode', to an object of class '".get_class($value)."', whereas it's an ExtKey to '".$oAttDef->GetTargetClass()."'. Ignored");
-			}
-			else
-			{
-				// The object has changed, reset caches
-				$this->m_bCheckStatus = null;
-				$this->m_aAsArgs = null;
+				// Setting an external key with a whole object (instead of just an ID)
+				// let's initialize also the external fields that depend on it
+				// (useful when building objects in memory and not from a query)
+				if ( (get_class($value) != $oAttDef->GetTargetClass()) && (!is_subclass_of($value, $oAttDef->GetTargetClass())))
+				{
+					throw new CoreUnexpectedValue("Trying to set the value of '$sAttCode', to an object of class '".get_class($value)."', whereas it's an ExtKey to '".$oAttDef->GetTargetClass()."'. Ignored");
+				}
 
-				$this->m_aCurrValues[$sAttCode] = $value->GetKey();
 				foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sCode => $oDef)
 				{
-					if ($oDef->IsExternalField() && ($oDef->GetKeyAttCode() == $sAttCode))
+					if (($oDef->IsExternalField() || ($oDef instanceof AttributeFriendlyName)) && ($oDef->GetKeyAttCode() == $sAttCode))
 					{
 						$this->m_aCurrValues[$sCode] = $value->Get($oDef->GetExtAttCode());
 					}
 				}
 			}
-			return;
+			else
+			{
+				// Setting an external key, but no any other information is available...
+				// Invalidate the corresponding fields so that they get reloaded in case they are needed (See Get())
+				foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sCode => $oDef)
+				{
+					if (($oDef->IsExternalField() || ($oDef instanceof AttributeFriendlyName)) && ($oDef->GetKeyAttCode() == $sAttCode))
+					{
+						$this->m_aCurrValues[$sCode] = $oDef->GetDefaultValue();
+						unset($this->m_aLoadedAtt[$sCode]);
+					}
+				}
+			}
 		}
 		if(!$oAttDef->IsScalar() && !is_object($value))
 		{
@@ -399,11 +407,63 @@ abstract class DBObject
 		{
 			throw new CoreException("Unknown attribute code '$sAttCode' for the class ".get_class($this));
 		}
-		if ($this->m_bIsInDB && !isset($this->m_aLoadedAtt[$sAttCode]) && !$this->m_bDirty)
+
+		if (isset($this->m_aLoadedAtt[$sAttCode]))
 		{
-			// #@# non-scalar attributes.... handle that differently
+			// Standard case... we have the information directly
+		}
+		elseif ($this->m_bIsInDB && !$this->m_bDirty)
+		{
+			// Lazy load (polymorphism): complete by reloading the entire object
+			// #@# non-scalar attributes.... handle that differently?
 			$this->Reload();
 		}
+		elseif ($sAttCode == 'friendlyname')
+		{
+			// The friendly name is not computed and the object is dirty
+			// Todo: implement the computation of the friendly name based on sprintf()
+			// 
+			$this->m_aCurrValues[$sAttCode] = '';
+		}
+		else
+		{
+			// Not loaded... is it related to an external key?
+			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+			if ($oAttDef->IsExternalField() || ($oAttDef instanceof AttributeFriendlyName))
+			{
+				// Let's get the object and compute all of the corresponding attributes
+				// (i.e not only the requested attribute)
+				//
+				$sExtKeyAttCode = $oAttDef->GetKeyAttCode();
+
+				if ($iRemote = $this->Get($sExtKeyAttCode))
+				{
+					$oExtKeyAttDef = MetaModel::GetAttributeDef(get_class($this), $sExtKeyAttCode);
+					$oRemote = MetaModel::GetObject($oExtKeyAttDef->GetTargetClass(), $iRemote);
+				}
+				else
+				{
+					$oRemote = null;
+				}
+
+				foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sCode => $oDef)
+				{
+					if (($oDef->IsExternalField() || ($oDef instanceof AttributeFriendlyName)) && ($oDef->GetKeyAttCode() == $sExtKeyAttCode))
+					{
+						if ($oRemote)
+						{
+							$this->m_aCurrValues[$sCode] = $oRemote->Get($oDef->GetExtAttCode());
+						}
+						else
+						{
+							$this->m_aCurrValues[$sCode] = $oDef->GetDefaultValue();
+						}
+						$this->m_aLoadedAtt[$sCode] = true;
+					}
+				}
+			}
+		}
+
 		$value = $this->m_aCurrValues[$sAttCode];
 		if ($value instanceof DBObjectSet)
 		{
@@ -1649,7 +1709,7 @@ abstract class DBObject
 			$aScalarArgs[$sArgName.'->hyperlink()'] = $this->GetHyperlink('iTopStandardURLMaker', false);
 			$aScalarArgs[$sArgName.'->hyperlink(portal)'] = $this->GetHyperlink('PortalURLMaker', false);
 			$aScalarArgs[$sArgName.'->name()'] = $this->GetName();
-		
+
 			$sClass = get_class($this);
 			foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
 			{
@@ -1669,6 +1729,7 @@ abstract class DBObject
 					$aScalarArgs[$sArgName.'->head('.$sAttCode.')'] = $oCaseLog->GetLatestEntry();
 				}
 			}
+
 			$this->m_aAsArgs = $aScalarArgs;
 			$oKPI->ComputeStats('ToArgs', get_class($this));
 		}
