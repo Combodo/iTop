@@ -899,13 +899,18 @@ EOF
 			{
 				if (CMDBSource::IsField($sTable, $sAttCode))
 				{
-					$aRepairQueries[] = "ALTER TABLE `$sTable` DROP COLUMN `$sAttCode`;";
+					$aRepairQueries[] = "ALTER TABLE `$sTable` CHANGE `$sAttCode` `$sAttCode` $sColumnDef";
+				}
+				else
+				{
+					$aFieldDefs[] = "`$sAttCode` $sColumnDef";
 				}
 
-				$aFieldDefs[] = "`$sAttCode` $sColumnDef";
 			}
-
-			$aRepairQueries[] = "ALTER TABLE `$sTable` ADD (".implode(',', $aFieldDefs).");";
+			if (count($aFieldDefs) > 0)
+			{
+				$aRepairQueries[] = "ALTER TABLE `$sTable` ADD (".implode(',', $aFieldDefs).");";
+			}
 
 			// The triggers as well must be adjusted
 			$aTriggersDefs = $this->GetTriggersDefinition();
