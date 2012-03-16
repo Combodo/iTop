@@ -114,7 +114,7 @@ class TriggerOnPortalUpdate extends TriggerOnObject
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb",
+			"category" => "core/cmdb,bizmodel",
 			"key_type" => "autoincrement",
 			"name_attcode" => "description",
 			"state_attcode" => "",
