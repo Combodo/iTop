@@ -2024,7 +2024,18 @@ abstract class MetaModel
 				throw new CoreException("Wrong direction in ORDER BY spec, found '$bAscending' and expecting a boolean value");
 			}
 			$sFirstClassAlias = $oFilter->GetFirstJoinedClassAlias();
-			$aOrderSpec[$sFirstClassAlias.$sFieldAlias] = $bAscending;
+			if (self::IsValidAttCode($oFilter->GetClass(), $sFieldAlias))
+			{
+				$oAttDef = self::GetAttributeDef($oFilter->GetClass(), $sFieldAlias);
+				foreach($oAttDef->GetOrderBySQLExpressions($sFirstClassAlias) as $sSQLExpression)
+				{
+					$aOrderSpec[$sSQLExpression] = $bAscending;
+				}
+			}
+			else
+			{
+				$aOrderSpec['`'.$sFirstClassAlias.$sFieldAlias.'`'] = $bAscending;
+			}
 
 			// Make sure that the columns used for sorting are present in the loaded columns
 			if (!is_null($aAttToLoad) && !isset($aAttToLoad[$sFirstClassAlias][$sFieldAlias]))
@@ -2039,7 +2050,7 @@ abstract class MetaModel
 			foreach ($oFilter->GetSelectedClasses() as $sSelectedAlias => $sSelectedClass)
 			{
 				// By default, simply order on the "friendlyname" attribute, ascending
-				$aOrderSpec[$sSelectedAlias."friendlyname"] = true;
+				$aOrderSpec['`'.$sSelectedAlias."friendlyname`"] = true;
 
 				// Make sure that the columns used for sorting are present in the loaded columns
 				if (!is_null($aAttToLoad) && !isset($aAttToLoad[$sSelectedAlias]["friendlyname"]))
@@ -2080,7 +2091,7 @@ abstract class MetaModel
 			foreach($aExtendedDataSpec['fields'] as $sColumn)
 			{
 				$sColRef = $oFilter->GetClassAlias().'_extdata_'.$sColumn;
-				$aExtendedFields[$sColRef] = new FieldExpressionResolved($sColumn, $sTableAlias);;
+				$aExtendedFields[$sColRef] = new FieldExpressionResolved($sColumn, $sTableAlias);
 			}
 			$oSelectExt = new SQLQuery($aExtendedDataSpec['table'], $sTableAlias, $aExtendedFields);
 			$oSelect->AddInnerJoin($oSelectExt, 'id', $aExtendedDataSpec['join_key'] /*, $sTableAlias*/);

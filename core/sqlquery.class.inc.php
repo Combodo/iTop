@@ -407,7 +407,8 @@ class SQLQuery
 		$aOrderBySpec = array();
 		foreach($aOrderBy as $sFieldAlias => $bAscending)
 		{
-			$aOrderBySpec[] = '`'.$sFieldAlias.'`'.($bAscending ? " ASC" : " DESC");
+			// Note: sFieldAlias must have backticks around column aliases
+			$aOrderBySpec[] = $sFieldAlias.($bAscending ? " ASC" : " DESC");
 		}
 		$sOrderBy = implode(", ", $aOrderBySpec);
 		return $sOrderBy;

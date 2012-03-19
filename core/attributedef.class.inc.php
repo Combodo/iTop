@@ -318,6 +318,12 @@ abstract class AttributeDefinition
 	public function GetSQLValues($value) {return array();} // returns column/value pairs (1 in most of the cases), for WRITING (Insert, Update)
 	public function RequiresIndex() {return false;}
 
+	public function GetOrderBySQLExpressions($sClassAlias)
+	{
+		// Note: This is the responsibility of this function to place backticks around column aliases
+		return array('`'.$sClassAlias.$this->GetCode().'`');
+	}
+
    // Import - differs slightly from SQL input, but identical in most cases
    //
 	public function GetImportColumns() {return $this->GetSQLColumns();}
@@ -1898,6 +1904,12 @@ class AttributeIPAddress extends AttributeString
 	{
 		$sNum = '(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])';
 		return "^($sNum\\.$sNum\\.$sNum\\.$sNum)$";
+	}
+
+	public function GetOrderBySQLExpressions($sClassAlias)
+	{
+		// Note: This is the responsibility of this function to place backticks around column aliases
+		return array('INET_ATON(`'.$sClassAlias.$this->GetCode().'`)');
 	}
 }
 
