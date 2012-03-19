@@ -252,16 +252,17 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 				$sCount = " ($iCount)";
 			}
 			$oPage->SetCurrentTab($oAttDef->GetLabel().$sCount);
-			if ($bEditMode)
+			if ($this->IsNew())
 			{
-				if ($this->IsNew())
-				{
-					$iFlags = $this->GetInitialStateAttributeFlags($sAttCode);
-				}
-				else
-				{
-					$iFlags = $this->GetAttributeFlags($sAttCode);
-				}
+				$iFlags = $this->GetInitialStateAttributeFlags($sAttCode);
+			}
+			else
+			{
+				$iFlags = $this->GetAttributeFlags($sAttCode);
+			}
+			$bReadOnly = ($iFlags & (OPT_ATT_READONLY|OPT_ATT_SLAVE));
+			if ($bEditMode && (!$bReadOnly))
+			{
 				$sInputId = $this->m_iFormId.'_'.$sAttCode;
 				if (get_class($oAttDef) == 'AttributeLinkedSet')
 				{
