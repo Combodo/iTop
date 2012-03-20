@@ -22,6 +22,11 @@
           <attribute name="ref"/>
         </attributes>
       </reconciliation>
+      <order>
+        <columns>
+          <column name="ref" ascending="false" />
+        </columns>
+      </order>
     </properties>
     <fields/>
     <lifecycle attribute="status">

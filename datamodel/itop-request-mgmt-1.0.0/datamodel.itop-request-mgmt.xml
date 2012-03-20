@@ -22,6 +22,11 @@
           <attribute name="ref"/>
         </attributes>
       </reconciliation>
+      <order>
+        <columns>
+          <column name="ref" ascending="false" />
+        </columns>
+      </order>
     </properties>
     <fields>
       <field name="request_type" type="Enum" sql="request_type" default_value="service request" is_null_allowed="false">

@@ -685,6 +685,11 @@
           <attribute name="ref"/>
         </attributes>
       </reconciliation>
+      <order>
+        <columns>
+          <column name="ref" ascending="false" />
+        </columns>
+      </order>
     </properties>
     <fields/>
     <lifecycle attribute="status">
@@ -1757,6 +1762,11 @@
           <attribute name="ref"/>
         </attributes>
       </reconciliation>
+      <order>
+        <columns>
+          <column name="ref" ascending="false" />
+        </columns>
+      </order>
     </properties>
     <fields>
       <field name="acceptance_date" type="DateTime" sql="acceptance_date" default_value="" is_null_allowed="true"/>
@@ -2372,6 +2382,11 @@
           <attribute name="ref"/>
         </attributes>
       </reconciliation>
+      <order>
+        <columns>
+          <column name="ref" ascending="false" />
+        </columns>
+      </order>
     </properties>
     <fields/>
     <lifecycle attribute="status">
