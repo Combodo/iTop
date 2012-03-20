@@ -122,15 +122,6 @@ try
 			$iSortIndex++;
 		}
 		
-		if (count($aOrderBy) == 0)
-		{
-			$aOrderBy['friendlyname'] = true; // By default, sort by name
-		}
-		else
-		{
-//			$oPage->add("</p>ICI: OrderBy already set to: <pre>'".print_r($aOrderBy, true)."'</pre></p>\n");		
-		}
-
 		// Load only the requested columns
 		$oSet = new DBObjectSet($oFilter, $aOrderBy, $aExtraParams, null, $iEnd-$iStart, $iStart);
 		$sClassAlias = $oSet->GetFilter()->GetClassAlias();

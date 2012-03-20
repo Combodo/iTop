@@ -223,12 +223,15 @@ EOF;
 	protected function GetUniqueElement($oDOMNode, $sTagName, $bMustExist = true)
 	{
 		$oNode = null;
-		foreach($oDOMNode->childNodes as $oChildNode)
+		if ($oDOMNode->hasChildNodes())
 		{
-			if ($oChildNode->nodeName == $sTagName)
+			foreach($oDOMNode->childNodes as $oChildNode)
 			{
-				$oNode = $oChildNode;
-				break;
+				if ($oChildNode->nodeName == $sTagName)
+				{
+					$oNode = $oChildNode;
+					break;
+				}
 			}
 		}
 		if ($bMustExist && is_null($oNode))
@@ -255,11 +258,14 @@ EOF;
 	protected function GetNodeText($oNode)
 	{
 		$sText = '';
-		foreach($oNode->childNodes as $oChildNode)
+		if ($oNode->hasChildNodes())
 		{
-			if ($oChildNode instanceof DOMCharacterData) // Base class of DOMText and DOMCdataSection
+			foreach($oNode->childNodes as $oChildNode)
 			{
-				$sText .= $oChildNode->wholeText;
+				if ($oChildNode instanceof DOMCharacterData) // Base class of DOMText and DOMCdataSection
+				{
+					$sText .= $oChildNode->wholeText;
+				}
 			}
 		}
 		return $sText;
@@ -281,17 +287,20 @@ EOF;
 		if ($oItems)
 		{
 			$res = array();
-			foreach($oItems->childNodes as $oItem)
+			if ($oItems->hasChildNodes())
 			{
-				// When an attribute is msising
-				if ($oItem->hasAttribute('key'))
+				foreach($oItems->childNodes as $oItem)
 				{
-					$key = $oItem->getAttribute('key');
-					$res[$key] = $this->GetNodeAsArrayOfItems($oItem);
-				}
-				else
-				{
-					$res[] = $this->GetNodeAsArrayOfItems($oItem);
+					// When an attribute is msising
+					if ($oItem->hasAttributes() && $oItem->hasAttribute('key'))
+					{
+						$key = $oItem->getAttribute('key');
+						$res[$key] = $this->GetNodeAsArrayOfItems($oItem);
+					}
+					else
+					{
+						$res[] = $this->GetNodeAsArrayOfItems($oItem);
+					}
 				}
 			}
 		}
@@ -407,6 +416,23 @@ EOF;
 			$aClassParams['icon'] = "utils::GetAbsoluteUrlModulesRoot().'$sIcon'";
 		}
 	
+		$oOrder = $this->GetOptionalElement($oProperties, 'order');
+		if ($oOrder)
+		{
+			$oColumnsNode = $this->GetUniqueElement($oOrder, 'columns');
+			$oColumns = $oColumnsNode->getElementsByTagName('column');
+			$aSortColumns = array();
+			foreach($oColumns as $oColumn)
+			{
+				$aSortColumns[] = "'".$oColumn->getAttribute('name')."' => ".(($oColumn->getAttribute('ascending') == 'true') ? 'true' : 'false');
+			}
+			if (count($aSortColumns) > 0)
+			{
+				$aClassParams['order_by_default'] = "array(".implode(", ", $aSortColumns).")";
+			}
+		}
+	
+
 		// Finalize class params declaration
 		//
 		$aClassParamsPHP = array();
