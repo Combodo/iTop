@@ -202,7 +202,7 @@ EOF
 			$("tbody tr.green_even:odd",table).removeClass('even').removeClass('green_even').addClass('green');
 		} 
 	});
-
+	
 	// Adjust initial size
 	$('.v-resizable').each( function()
 		{
@@ -844,7 +844,12 @@ EOF
 					$oMPDF->SetDocTemplate ($this->GetOutputOption('pdf', 'template_path'), 1);
 			}
 			$oMPDF->WriteHTML($sHtml);
-			$oMPDF->Output();
+			$sOutputName = $this->s_title.'.pdf';
+			if ($this->GetOutputOption('pdf', 'output_name'))
+			{
+				$sOutputName = $this->GetOutputOption('pdf', 'output_name');
+			}
+			$oMPDF->Output($sOutputName, 'I');
 		}
 	}
 
