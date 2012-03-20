@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<classes><class name="Attachment" category="addon,bizmodel" parent="DBObject" abstract="false" key_type="autoincrement" db_table="attachment" db_key_field="id" db_final_class_field=""><properties><comment><![CDATA[/**
+<classes>
+  <class name="Attachment" category="addon,bizmodel" parent="DBObject" abstract="false" key_type="autoincrement" db_table="attachment" db_key_field="id" db_final_class_field="">
+    <properties>
+      <comment><![CDATA[/**
  * Module attachments
  * 
  * A quick and easy way to upload and attach files to *any* (see Configuration below) object in the CMBD in one click
@@ -11,7 +14,31 @@
  * @author      Romain Quetiez <romain.quetiez@combodo.com>
  * @author      Denis Flaven <denis.flaven@combodo.com>
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
- */]]></comment><naming format="%1$s %2$s"><attributes><attribute name="item_class"/><attribute name="temp_id"/></attributes></naming><display_template></display_template><icon></icon><reconciliation><attributes/></reconciliation></properties><fields><field name="expire" type="DateTime" sql="expire" default_value="" is_null_allowed="false"/><field name="temp_id" type="String" sql="temp_id" default_value="" is_null_allowed="true"/><field name="item_class" type="String" sql="item_class" default_value="" is_null_allowed="false"/><field name="item_id" type="String" sql="item_id" default_value="" is_null_allowed="true"/><field name="item_org_id" type="Integer" sql="item_org_id" default_value="0" is_null_allowed="true"/><field name="contents" type="Blob"/></fields><methods><method name="MapContextParam" static="true" access="public" type="Overload-ExNihilo"><comment><![CDATA[/**
+ */]]></comment>
+      <naming format="%1$s %2$s">
+        <attributes>
+          <attribute name="item_class"/>
+          <attribute name="temp_id"/>
+        </attributes>
+      </naming>
+      <display_template></display_template>
+      <icon></icon>
+      <reconciliation>
+        <attributes>
+          <attribute name=""/>
+        </attributes>
+      </reconciliation>
+    </properties>
+    <fields>
+      <field name="expire" type="DateTime" sql="expire" default_value="" is_null_allowed="false"/>
+      <field name="temp_id" type="String" sql="temp_id" default_value="" is_null_allowed="true"/>
+      <field name="item_class" type="String" sql="item_class" default_value="" is_null_allowed="false"/>
+      <field name="item_id" type="String" sql="item_id" default_value="" is_null_allowed="true"/>
+      <field name="item_org_id" type="Integer" sql="item_org_id" default_value="0" is_null_allowed="true"/>
+      <field name="contents" type="Blob"/>
+    </fields>
+    <methods>
+      <method name="MapContextParam" static="true" access="public" type="Overload-ExNihilo"><comment><![CDATA[/**
 	 * Maps the given context parameter name to the appropriate filter/search code for this class
 	 * @param string $sContextParam Name of the context parameter, e.g. 'org_id'
 	 * @return string Filter code, e.g. 'customer_id'
@@ -25,7 +52,8 @@
 		{
 			return null;
 		}
-	}]]></method><method name="SetItem" static="false" access="public" type="Overload-ExNihilo"><comment><![CDATA[/**
+	}]]></method>
+      <method name="SetItem" static="false" access="public" type="Overload-ExNihilo"><comment><![CDATA[/**
 	 * Set/Update all of the '_item' fields
 	 * @param object $oItem Container item
 	 * @return void
@@ -57,7 +85,8 @@
 				}
 			}
 		}
-	}]]></method><method name="SetDefaultOrgId" static="false" access="public" type="Overload-ExNihilo"><comment><![CDATA[/**
+	}]]></method>
+      <method name="SetDefaultOrgId" static="false" access="public" type="Overload-ExNihilo"><comment><![CDATA[/**
 	 * Give a default value for item_org_id (if relevant...)
 	 * @return void
 	 */]]></comment><![CDATA[	public function SetDefaultOrgId()
@@ -93,4 +122,31 @@
 				}
 			}
 		}
-	}]]></method></methods><presentation><details><items><item>temp_id</item><item>item_class</item><item>item_id</item><item>item_org_id</item></items></details><search><items><item>temp_id</item><item>item_class</item><item>item_id</item></items></search><list><items><item>temp_id</item><item>item_class</item><item>item_id</item></items></list></presentation></class></classes>
+	}]]></method>
+    </methods>
+    <presentation>
+      <details>
+        <items>
+          <item>temp_id</item>
+          <item>item_class</item>
+          <item>item_id</item>
+          <item>item_org_id</item>
+        </items>
+      </details>
+      <search>
+        <items>
+          <item>temp_id</item>
+          <item>item_class</item>
+          <item>item_id</item>
+        </items>
+      </search>
+      <list>
+        <items>
+          <item>temp_id</item>
+          <item>item_class</item>
+          <item>item_id</item>
+        </items>
+      </list>
+    </presentation>
+  </class>
+</classes>
