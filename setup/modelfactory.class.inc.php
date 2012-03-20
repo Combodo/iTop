@@ -307,7 +307,7 @@ class ModelFactory
 		foreach($aDataModels as $sXmlFile)
 		{
 			$oDocument = new DOMDocument('1.0', 'UTF-8');
-			$oDocument->load($sXmlFile);
+			$oDocument->load($sXmlFile, LIBXML_NOBLANKS);
 			$oXPath = new DOMXPath($oDocument);
 			$oNodeList = $oXPath->query('//*');
 			foreach($oNodeList as $oNode)
