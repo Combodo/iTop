@@ -317,6 +317,15 @@ EOF
 			changeMonth: true,
 			changeYear: true
 		});
+		$(".datetime-pick").datepicker({
+			showOn: 'button',
+			buttonImage: '../images/calendar.png',
+			buttonImageOnly: true,
+			dateFormat: 'yy-mm-dd 00:00:00',
+			constrainInput: false,
+			changeMonth: true,
+			changeYear: true
+		});
 	// Restore the persisted sortable order, for all sortable lists... if any
 	$('.sortable').each(function()
 	{
