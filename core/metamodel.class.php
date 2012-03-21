@@ -4114,7 +4114,6 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 
 	public static function Startup($sConfigFile, $bModelOnly = false, $bAllowCache = true, $bTraceSourceFiles = false)
 	{
-		define('MODULESROOT', APPROOT.'modules/');
 		self::$m_bTraceSourceFiles = $bTraceSourceFiles;
 
 		self::LoadConfig($sConfigFile, $bAllowCache);
