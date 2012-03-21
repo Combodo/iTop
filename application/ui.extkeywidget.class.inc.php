@@ -126,7 +126,14 @@ class UIExtKeyWidget
 		} 
 		else
 		{
-			$sWizHelper = 'oWizardHelper'.$sFormPrefix;
+			if (isset($aArgs['wizHelper']))
+			{
+				$sWizHelper = $aArgs['wizHelper'];
+			}
+			else
+			{
+				$sWizHelper = 'oWizardHelper'.$sFormPrefix;
+			}
 			$sWizHelperJSON = $sWizHelper.'.ToJSON()';
 			$sJSSearchMode = 'false';
 		}

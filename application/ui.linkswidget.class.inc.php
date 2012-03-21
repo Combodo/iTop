@@ -104,12 +104,14 @@ class UILinksWidget
 	{
 		$sPrefix = "$this->m_sAttCode{$this->m_sNameSuffix}";
 		$aRow = array();
+		$aFieldsMap = array();
 		if(is_object($linkObjOrId))
 		{
 			$key = $linkObjOrId->GetKey();
 			$sPrefix .= "[$key][";
 			$sNameSuffix = "]"; // To make a tabular form
 			$aArgs['prefix'] = $sPrefix;
+			$aArgs['wizHelper'] = "oWizardHelper{$this->m_iInputId}{$key}";
 			$aArgs['this'] = $linkObjOrId;
 			$aRow['form::checkbox'] = "<input class=\"selection\" type=\"checkbox\" onClick=\"oWidget".$this->m_iInputId.".OnSelectChange();\" value=\"$key\">";
 			$aRow['form::checkbox'] .= "<input type=\"hidden\" name=\"attr_{$sPrefix}id{$sNameSuffix}\" value=\"$key\">";
@@ -119,7 +121,9 @@ class UILinksWidget
 				$sSafeId = str_replace(array('[',']','-'), '_', $sFieldId);
 				$oAttDef = MetaModel::GetAttributeDef($this->m_sLinkedClass, $sFieldCode);
 				$aRow[$sFieldCode] = cmdbAbstractObject::GetFormElementForField($oP, $this->m_sLinkedClass, $sFieldCode, $oAttDef, $linkObjOrId->Get($sFieldCode), '' /* DisplayValue */, $sSafeId, $sNameSuffix, 0, $aArgs);
+				$aFieldsMap[$sFieldCode] = $sFieldId;
 			}
+			$sState = $linkObjOrId->GetState();
 		}
 		else
 		{
@@ -131,6 +135,7 @@ class UILinksWidget
 			$oNewLinkObj->Set($this->m_sExtKeyToMe, $oCurrentObj); // Setting the extkey with the object alsoo fills the related external fields
 			$sNameSuffix = "]"; // To make a tabular form
 			$aArgs['prefix'] = $sPrefix;
+			$aArgs['wizHelper'] = "oWizardHelper{$this->m_iInputId}_".(-$linkObjOrId);
 			$aArgs['this'] = $oNewLinkObj;
 			$aRow['form::checkbox'] = "<input class=\"selection\" type=\"checkbox\" onClick=\"oWidget".$this->m_iInputId.".OnSelectChange();\" value=\"$linkObjOrId\">";
 			$aRow['form::checkbox'] .= "<input type=\"hidden\" name=\"attr_{$sPrefix}id{$sNameSuffix}\" value=\"\">";
@@ -140,9 +145,21 @@ class UILinksWidget
 				$sSafeId = str_replace(array('[',']','-'), '_', $sFieldId);
 				$oAttDef = MetaModel::GetAttributeDef($this->m_sLinkedClass, $sFieldCode);
 				$aRow[$sFieldCode] = cmdbAbstractObject::GetFormElementForField($oP, $this->m_sLinkedClass, $sFieldCode, $oAttDef, $oNewLinkObj->Get($sFieldCode) /* TO DO/ call GetDefaultValue($oObject->ToArgs()) */, '' /* DisplayValue */, $sSafeId /* id */, $sNameSuffix, 0, $aArgs);
+				$aFieldsMap[$sFieldCode] = $sFieldId;
 			}
+			$sState = '';
 		}
-
+		
+		$iFieldsCount = count($aFieldsMap);
+		$sJsonFieldsMap = json_encode($aFieldsMap);
+		
+		$oP->add_script(
+<<<EOF
+var {$aArgs['wizHelper']} = new WizardHelper('{$this->m_sLinkedClass}', '', '$sState');
+{$aArgs['wizHelper']}.SetFieldsMap($sJsonFieldsMap);
+{$aArgs['wizHelper']}.SetFieldsCount($iFieldsCount);
+EOF
+		);
 		$aRow['static::key'] = $oLinkedObj->GetHyperLink();
 		foreach(MetaModel::GetZListItems($this->m_sRemoteClass, 'list') as $sFieldCode)
 		{
