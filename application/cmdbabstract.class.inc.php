@@ -1354,6 +1354,7 @@ EOF
 			{
 				$oObj = $aObjects[$sAlias];
 				foreach($aList[$sAlias] as $sAttCode => $oAttDef)
+
 				{
 					if (is_null($oObj))
 					{
@@ -1699,7 +1700,7 @@ EOF
 				$aEventsList[] ='validate';
 				$aEventsList[] ='keyup';
 				$aEventsList[] ='change';
-				$sHTMLValue = "<input title=\"$sHelpText\" class=\"date-pick\" type=\"text\" size=\"20\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue, ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/>&nbsp;{$sValidationField}";
+				$sHTMLValue = "<input title=\"$sHelpText\" class=\"datetime-pick\" type=\"text\" size=\"20\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue, ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/>&nbsp;{$sValidationField}";
 				break;
 
 				case 'Duration':
@@ -1735,6 +1736,7 @@ EOF
 					$aStyles = array();
 					$sStyle = '';
 					$sWidth = $oAttDef->GetWidth('width', '');
+
 					if (!empty($sWidth))
 					{
 						$aStyles[] = 'width:'.$sWidth;
