@@ -136,6 +136,12 @@ function WizardHelper(sClass, sFormPrefix, sState)
 		}
 	}
 	
+	this.UpdateWizardToJSON = function ()
+	{
+		this.UpdateWizard();
+		return this.ToJSON()
+	}
+	
 	this.AjaxQueryServer = function ()
 	{
 		//console.log('data sent:', this.ToJSON());
