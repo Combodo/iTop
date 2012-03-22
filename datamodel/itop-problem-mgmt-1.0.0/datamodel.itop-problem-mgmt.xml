@@ -24,7 +24,7 @@
       </reconciliation>
       <order>
         <columns>
-          <column name="ref" ascending="false" />
+          <column name="ref" ascending="false"/>
         </columns>
       </order>
     </properties>

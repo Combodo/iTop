@@ -391,9 +391,7 @@
       </search>
       <list>
         <items>
-          <item>contract_id_finalclass_recall</item>
           <item>contract_id</item>
-          <item>document_id_finalclass_recall</item>
           <item>document_id</item>
           <item>document_type</item>
           <item>document_status</item>
@@ -445,9 +443,7 @@
       </search>
       <list>
         <items>
-          <item>contract_id_finalclass_recall</item>
           <item>contract_id</item>
-          <item>contact_id_finalclass_recall</item>
           <item>contact_id</item>
           <item>contact_email</item>
           <item>role</item>
@@ -496,9 +492,7 @@
       </search>
       <list>
         <items>
-          <item>contract_id_finalclass_recall</item>
           <item>contract_id</item>
-          <item>ci_id_finalclass_recall</item>
           <item>ci_id</item>
           <item>ci_status</item>
         </items>
@@ -861,7 +855,6 @@
       <list>
         <items>
           <item>service_id</item>
-          <item>document_id_finalclass_recall</item>
           <item>document_id</item>
           <item>document_type</item>
           <item>document_status</item>
@@ -914,7 +907,6 @@
       <list>
         <items>
           <item>service_id</item>
-          <item>contact_id_finalclass_recall</item>
           <item>contact_id</item>
           <item>contact_email</item>
           <item>role</item>
@@ -964,7 +956,6 @@
       <list>
         <items>
           <item>service_id</item>
-          <item>ci_id_finalclass_recall</item>
           <item>ci_id</item>
           <item>ci_status</item>
         </items>

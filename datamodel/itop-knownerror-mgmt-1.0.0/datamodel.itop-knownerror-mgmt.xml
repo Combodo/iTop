@@ -126,7 +126,6 @@
       </search>
       <list>
         <items>
-          <item>infra_id_finalclass_recall</item>
           <item>infra_id</item>
           <item>infra_status</item>
           <item>error_id</item>
@@ -170,12 +169,8 @@
           <item>link_type</item>
         </items>
       </details>
-      <search>
-        <items/>
-      </search>
       <list>
         <items>
-          <item>doc_id_finalclass_recall</item>
           <item>doc_id</item>
           <item>error_name</item>
           <item>link_type</item>

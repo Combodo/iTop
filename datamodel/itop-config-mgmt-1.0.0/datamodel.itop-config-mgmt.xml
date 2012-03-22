@@ -388,7 +388,6 @@
       <list>
         <items>
           <item>team_id</item>
-          <item>contact_id_finalclass_recall</item>
           <item>contact_id</item>
           <item>contact_location_id</item>
           <item>contact_email</item>
@@ -1051,7 +1050,6 @@
       <list>
         <items>
           <item>patch_id</item>
-          <item>ci_id_finalclass_recall</item>
           <item>ci_id</item>
           <item>ci_status</item>
         </items>
@@ -1246,7 +1244,6 @@
           <item>status</item>
           <item>org_id</item>
           <item>importance</item>
-          <item>device_id_finalclass_recall</item>
           <item>device_id</item>
           <item>version</item>
         </items>
@@ -1317,7 +1314,6 @@
           <item>status</item>
           <item>org_id</item>
           <item>importance</item>
-          <item>device_id_finalclass_recall</item>
           <item>device_id</item>
           <item>software_id</item>
           <item>version</item>
@@ -1387,7 +1383,6 @@
           <item>status</item>
           <item>org_id</item>
           <item>importance</item>
-          <item>device_id_finalclass_recall</item>
           <item>device_id</item>
           <item>software_id</item>
           <item>version</item>
@@ -1897,7 +1892,6 @@
           <item>status</item>
           <item>ip_address</item>
           <item>importance</item>
-          <item>device_id_finalclass_recall</item>
           <item>device_id</item>
           <item>logical_type</item>
           <item>physical_type</item>
@@ -2686,7 +2680,6 @@
       <list>
         <items>
           <item>group_id</item>
-          <item>ci_id_finalclass_recall</item>
           <item>ci_id</item>
           <item>ci_status</item>
           <item>reason</item>
@@ -2738,10 +2731,8 @@
       </search>
       <list>
         <items>
-          <item>ci_id_finalclass_recall</item>
           <item>ci_id</item>
           <item>ci_status</item>
-          <item>document_id_finalclass_recall</item>
           <item>document_id</item>
           <item>document_type</item>
           <item>document_status</item>
@@ -2794,10 +2785,8 @@
       </search>
       <list>
         <items>
-          <item>ci_id_finalclass_recall</item>
           <item>ci_id</item>
           <item>ci_status</item>
-          <item>contact_id_finalclass_recall</item>
           <item>contact_id</item>
           <item>contact_email</item>
           <item>role</item>
@@ -2849,7 +2838,6 @@
       <list>
         <items>
           <item>solution_id</item>
-          <item>ci_id_finalclass_recall</item>
           <item>ci_id</item>
           <item>ci_status</item>
           <item>utility</item>

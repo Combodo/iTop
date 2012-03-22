@@ -890,9 +890,7 @@
       </search>
       <list>
         <items>
-          <item>ticket_id_finalclass_recall</item>
           <item>ticket_id</item>
-          <item>document_id_finalclass_recall</item>
           <item>document_id</item>
         </items>
       </list>
@@ -942,9 +940,7 @@
       </search>
       <list>
         <items>
-          <item>ticket_id_finalclass_recall</item>
           <item>ticket_id</item>
-          <item>contact_id_finalclass_recall</item>
           <item>contact_id</item>
           <item>contact_email</item>
           <item>role</item>
@@ -995,9 +991,7 @@
       </search>
       <list>
         <items>
-          <item>ticket_id_finalclass_recall</item>
           <item>ticket_id</item>
-          <item>ci_id_finalclass_recall</item>
           <item>ci_id</item>
           <item>impact</item>
           <item>ci_status</item>

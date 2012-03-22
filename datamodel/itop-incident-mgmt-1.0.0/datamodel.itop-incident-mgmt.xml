@@ -24,7 +24,7 @@
       </reconciliation>
       <order>
         <columns>
-          <column name="ref" ascending="false" />
+          <column name="ref" ascending="false"/>
         </columns>
       </order>
     </properties>
@@ -698,7 +698,6 @@
       </search>
       <list>
         <items>
-          <item>ticket_id_finalclass_recall</item>
           <item>ticket_id</item>
           <item>incident_id</item>
           <item>reason</item>
