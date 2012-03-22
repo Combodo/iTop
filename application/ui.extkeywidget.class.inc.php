@@ -134,7 +134,7 @@ class UIExtKeyWidget
 			{
 				$sWizHelper = 'oWizardHelper'.$sFormPrefix;
 			}
-			$sWizHelperJSON = $sWizHelper.'.ToJSON()';
+			$sWizHelperJSON = $sWizHelper.'.UpdateWizardToJSON()';
 			$sJSSearchMode = 'false';
 		}
 		if (is_null($oAllowedValues))

@@ -134,7 +134,7 @@ class UILinksWidget
 			$oNewLinkObj = MetaModel::NewObject($this->m_sLinkedClass);
 			$oRemoteObj = MetaModel::GetObject($this->m_sRemoteClass, -$linkObjOrId);
 			$oNewLinkObj->Set($this->m_sExtKeyToRemote, $oRemoteObj); // Setting the extkey with the object alsoo fills the related external fields
-			$oNewLinkObj->Set($this->m_sExtKeyToMe, $oCurrentObj); // Setting the extkey with the object alsoo fills the related external fields
+			$oNewLinkObj->Set($this->m_sExtKeyToMe, $oCurrentObj); // Setting the extkey with the object also fills the related external fields
 			$sNameSuffix = "]"; // To make a tabular form
 			$aArgs['prefix'] = $sPrefix;
 			$aArgs['wizHelper'] = "oWizardHelper{$this->m_iInputId}_".(-$linkObjOrId);
@@ -176,7 +176,7 @@ EOF
 		
 		$sExtKeyToMeId = $this->MakeID($sPrefix.$this->m_sExtKeyToMe);
 		$aFieldsMap[$this->m_sExtKeyToMe] = $sExtKeyToMeId;
-		$aRow['form::checkbox'] .= "<input type=\"hidden\" id=\"$sExtKeyToMeId\" value=\"".$oLinkedObj->GetKey()."\">";
+		$aRow['form::checkbox'] .= "<input type=\"hidden\" id=\"$sExtKeyToMeId\" value=\"".$oCurrentObj->GetKey()."\">";
 
 		$sExtKeyToRemoteId = $this->MakeID($sPrefix.$this->m_sExtKeyToRemote);
 		$aFieldsMap[$this->m_sExtKeyToRemote] = $sExtKeyToRemoteId;
