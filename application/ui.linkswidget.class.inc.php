@@ -108,6 +108,7 @@ class UILinksWidget
 		if(is_object($linkObjOrId))
 		{
 			$key = $linkObjOrId->GetKey();
+			$iRemoteObjKey =  $linkObjOrId->Get($this->m_sExtKeyToRemote);
 			$sPrefix .= "[$key][";
 			$sNameSuffix = "]"; // To make a tabular form
 			$aArgs['prefix'] = $sPrefix;
@@ -129,6 +130,7 @@ class UILinksWidget
 		{
 			// form for creating a new record
 			$sPrefix .= "[$linkObjOrId][";
+			$iRemoteObjKey = -$linkObjOrId;
 			$oNewLinkObj = MetaModel::NewObject($this->m_sLinkedClass);
 			$oRemoteObj = MetaModel::GetObject($this->m_sRemoteClass, -$linkObjOrId);
 			$oNewLinkObj->Set($this->m_sExtKeyToRemote, $oRemoteObj); // Setting the extkey with the object alsoo fills the related external fields
@@ -148,7 +150,37 @@ class UILinksWidget
 				$aFieldsMap[$sFieldCode] = $sFieldId;
 			}
 			$sState = '';
+			$oP->add_script(
+<<<EOF
+$(".date-pick").datepicker({
+		showOn: 'button',
+		buttonImage: '../images/calendar.png',
+		buttonImageOnly: true,
+		dateFormat: 'yy-mm-dd',
+		constrainInput: false,
+		changeMonth: true,
+		changeYear: true
+	});
+$(".datetime-pick").datepicker({
+		showOn: 'button',
+		buttonImage: '../images/calendar.png',
+		buttonImageOnly: true,
+		dateFormat: 'yy-mm-dd 00:00:00',
+		constrainInput: false,
+		changeMonth: true,
+		changeYear: true
+});
+EOF
+			);
 		}
+		
+		$sExtKeyToMeId = $this->MakeID($sPrefix.$this->m_sExtKeyToMe);
+		$aFieldsMap[$this->m_sExtKeyToMe] = $sExtKeyToMeId;
+		$aRow['form::checkbox'] .= "<input type=\"hidden\" id=\"$sExtKeyToMeId\" value=\"".$oLinkedObj->GetKey()."\">";
+
+		$sExtKeyToRemoteId = $this->MakeID($sPrefix.$this->m_sExtKeyToRemote);
+		$aFieldsMap[$this->m_sExtKeyToRemote] = $sExtKeyToRemoteId;
+		$aRow['form::checkbox'] .= "<input type=\"hidden\" id=\"$sExtKeyToRemoteId\" value=\"$iRemoteObjKey\">";
 		
 		$iFieldsCount = count($aFieldsMap);
 		$sJsonFieldsMap = json_encode($aFieldsMap);
@@ -166,6 +198,11 @@ EOF
 			$aRow['static::'.$sFieldCode] = $oLinkedObj->GetAsHTML($sFieldCode);
 		}
 		return $aRow;
+	}
+	
+	protected function MakeID($sName)
+	{
+		return str_replace(array('[', ']'), '_', $sName);
 	}
 
 	/**
