@@ -1314,7 +1314,14 @@ class CAS_SelfRegister implements iSelfRegister
 			$oMyChange->Set("date", time());
 			$oMyChange->Set("userinfo", 'CAS/LDAP Synchro');
 			$oMyChange->DBInsert();
-			$oUser->DBUpdateTracked($oMyChange);
+			if ($oUser->IsNew())
+			{
+				$oUser->DBInsertTracked($oMyChange);
+			}
+			else
+			{
+				$oUser->DBUpdateTracked($oMyChange);
+			}
 		}
 		
 		return true;
