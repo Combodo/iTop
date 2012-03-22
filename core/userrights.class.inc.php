@@ -1258,11 +1258,16 @@ class CAS_SelfRegister implements iSelfRegister
 				if (array_key_exists(strtolower($aMatches[1]), $aAllProfiles))
 				{
 					$aProfiles[] = $aAllProfiles[strtolower($aMatches[1])];
+					phpCAS::log("Info: Adding the profile '{$aMatches[1]}' from CAS.");
 				}
 				else
 				{
 					phpCAS::log("Warning: {$aMatches[1]} is not a valid iTop profile (extracted from group name: '$sGroupName'). Ignored.");
 				}
+			}
+			else
+			{
+				phpCAS::log("Info: The CAS group '$sGroupName' does not seem to match an iTop pattern. Ignored.");
 			}
 		}
 		if (count($aProfiles) == 0)
@@ -1277,6 +1282,7 @@ class CAS_SelfRegister implements iSelfRegister
 				if (array_key_exists(strtolower($sDefaultProfileName), $aAllProfiles))
 				{
 					$aProfiles[] = $aAllProfiles[strtolower($sDefaultProfileName)];
+					phpCAS::log("Info: Adding the default profile '".$aAllProfiles[strtolower($sDefaultProfileName)]."' from CAS.");
 				}
 				else
 				{
@@ -1302,6 +1308,15 @@ class CAS_SelfRegister implements iSelfRegister
 		}
 		$oUser->Set('profile_list', $oProfilesSet);
 		phpCAS::log("Info: the user '".$oUser->GetName()."' (id=".$oUser->GetKey().") now has the following profiles: '".implode("', '", $aProfiles)."'.");
+		if ($oUser->IsModified())
+		{
+			$oMyChange = MetaModel::NewObject("CMDBChange");
+			$oMyChange->Set("date", time());
+			$oMyChange->Set("userinfo", 'CAS/LDAP Synchro');
+			$oMyChange->DBInsert();
+			$oUser->DBUpdateTracked($oMyChange);
+		}
+		
 		return true;
 	}
 	/**
