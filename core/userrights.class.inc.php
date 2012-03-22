@@ -1066,7 +1066,24 @@ class CAS_SelfRegister implements iSelfRegister
 					phpCAS::log("Info: user if a member of the group: ".$sGroupName);
 					$sGroupName = trim(iconv('UTF-8', 'ASCII//TRANSLIT', $sGroupName)); // Remove accents and spaces as well
 					$aFilteredGroupNames[] = $sGroupName;
-					if (in_array($sGroupName, $aCASMemberships))
+					$bIsMember = false;
+					foreach($aCASMemberships as $sCASPattern)
+					{
+						if (self::IsPattern($sCASPattern))
+						{
+							if (preg_match($sCASPattern, $sGroupName))
+							{
+								$bIsMember = true;
+								break;
+							}
+						}
+						else if ($sPattern == $sGroupName)
+						{
+							$bIsMember = true;
+							break;
+						}
+					}
+					if ($bIsMember)
 					{
 						$bCASUserSynchro = MetaModel::GetConfig()->Get('cas_user_synchro');
 						if ($bCASUserSynchro)
@@ -1125,7 +1142,8 @@ class CAS_SelfRegister implements iSelfRegister
 	 */
 	public static function UpdateUser(User $oUser, $sLoginMode, $sAuthentication)
 	{
-		if (($sLoginMode == 'cas') && (phpCAS::hasAttribute('memberOf')))
+		$bCASUpdateProfiles = MetaModel::GetConfig()->Get('cas_update_profiles');
+		if (($sLoginMode == 'cas') && $bCASUpdateProfiles && (phpCAS::hasAttribute('memberOf')))
 		{
 			$aMemberOf = phpCAS::getAttribute('memberOf');
 			if (!is_array($aMemberOf)) $aMemberOf = array($aMemberOf); // Just one entry, turn it into an array
@@ -1240,17 +1258,43 @@ class CAS_SelfRegister implements iSelfRegister
 				if (array_key_exists(strtolower($aMatches[1]), $aAllProfiles))
 				{
 					$aProfiles[] = $aAllProfiles[strtolower($aMatches[1])];
+					phpCAS::log("Info: Adding the profile '{$aMatches[1]}' from CAS.");
 				}
 				else
 				{
 					phpCAS::log("Warning: {$aMatches[1]} is not a valid iTop profile (extracted from group name: '$sGroupName'). Ignored.");
 				}
 			}
+			else
+			{
+				phpCAS::log("Info: The CAS group '$sGroupName' does not seem to match an iTop pattern. Ignored.");
+			}
 		}
 		if (count($aProfiles) == 0)
 		{
-			phpCAS::log("Error: no group name matches the pattern: '$sPattern'. The user '$sEmail' has no profiles in iTop, and therefore cannot be created.");
-			return false;
+			phpCAS::log("Info: The user '".$oUser->GetName()."' has no profiles retrieved from CAS. Default profile(s) will be used.");
+
+			// Second attempt: check if there is/are valid default profile(s)
+			$sCASDefaultProfiles = MetaModel::GetConfig()->Get('cas_default_profiles');
+			$aCASDefaultProfiles = explode(';', $sCASDefaultProfiles);
+			foreach($aCASDefaultProfiles as $sDefaultProfileName)
+			{
+				if (array_key_exists(strtolower($sDefaultProfileName), $aAllProfiles))
+				{
+					$aProfiles[] = $aAllProfiles[strtolower($sDefaultProfileName)];
+					phpCAS::log("Info: Adding the default profile '".$aAllProfiles[strtolower($sDefaultProfileName)]."' from CAS.");
+				}
+				else
+				{
+					phpCAS::log("Warning: the default profile {$sDefaultProfileName} is not a valid iTop profile. Ignored.");
+				}
+			}
+			
+			if (count($aProfiles) == 0)
+			{
+				phpCAS::log("Error: The user '".$oUser->GetName()."' has no profiles in iTop, and therefore cannot be created.");
+				return false;
+			}
 		}
 		
 		// Now synchronize the profiles
@@ -1263,7 +1307,23 @@ class CAS_SelfRegister implements iSelfRegister
 			$oProfilesSet->AddObject($oLink);
 		}
 		$oUser->Set('profile_list', $oProfilesSet);
-		phpCAS::log("Info: the user $sEmail (id=".$oUser->GetKey().") now has the following profiles: '".implode("', '", $aProfiles)."'.");
+		phpCAS::log("Info: the user '".$oUser->GetName()."' (id=".$oUser->GetKey().") now has the following profiles: '".implode("', '", $aProfiles)."'.");
+		if ($oUser->IsModified())
+		{
+			$oMyChange = MetaModel::NewObject("CMDBChange");
+			$oMyChange->Set("date", time());
+			$oMyChange->Set("userinfo", 'CAS/LDAP Synchro');
+			$oMyChange->DBInsert();
+			if ($oUser->IsNew())
+			{
+				$oUser->DBInsertTracked($oMyChange);
+			}
+			else
+			{
+				$oUser->DBUpdateTracked($oMyChange);
+			}
+		}
+		
 		return true;
 	}
 	/**

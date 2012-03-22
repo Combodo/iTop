@@ -456,12 +456,30 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
+		'cas_update_profiles' => array(
+			'type' => 'bool',
+			'description' => 'Whether or not to update the profiles of an existing user from the CAS information',
+			// examples... not used (nor 'description')
+			'default' => 0,
+			'value' => 0,
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
 		'cas_profile_pattern' => array(
 			'type' => 'string',
 			'description' => 'A regular expression pattern to extract the name of the iTop profile from the name of an LDAP/CAS group',
 			// examples... not used (nor 'description')
 			'default' => '/^cn=([^,]+),/',
 			'value' => '/^cn=([^,]+),/',
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
+		'cas_default_profiles' => array(
+			'type' => 'string',
+			'description' => 'A semi-colon separated list of iTop Profiles to use when creating a new user if no profile is retrieved from CAS',
+			// examples... not used (nor 'description')
+			'default' => 'Portal user',
+			'value' => 'Portal user',
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
