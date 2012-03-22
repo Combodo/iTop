@@ -66,10 +66,10 @@ class MFCompiler
 			$sModuleVersion = $oModule->GetVersion();
 		
 			$sModuleRootDir = realpath($oModule->GetRootDir());
-			$sRelativeDir = substr($sModuleRootDir, strlen($this->sSourceDir));
+			$sRelativeDir = substr($sModuleRootDir, strlen($this->sSourceDir) + 1);
 		
 			// Push the other module files
-			$this->CopyDirectory($sModuleRootDir, $sTargetDir.$sRelativeDir);
+			$this->CopyDirectory($sModuleRootDir, $sTargetDir.'/'.$sRelativeDir);
 		
 			$oClasses = $this->oFactory->ListClasses($sModuleName);
 			$iClassCount = $oClasses->length;
@@ -79,7 +79,7 @@ class MFCompiler
 			}
 			else
 			{
-				$sResultFile = $sTargetDir.$sRelativeDir.'/model.'.$sModuleName.'.php';
+				$sResultFile = $sTargetDir.'/'.$sRelativeDir.'/model.'.$sModuleName.'.php';
 				if (is_file($sResultFile))
 				{
 					$oP->p("Updating <a href=\"#$sModuleName\">$sResultFile</a> for module $sModuleName in version $sModuleVersion ($iClassCount classes)");
@@ -403,14 +403,14 @@ EOF;
 		$aClassParams['db_finalclass_field'] = "'".$oClass->getAttribute('db_final_class_field')."'";
 	
 		$oDisplayTemplate = $this->GetOptionalElement($oProperties, 'display_template');
-		if ($oDisplayTemplate)
+		if ($oDisplayTemplate && (strlen($oDisplayTemplate->textContent) > 0))
 		{
 			$sDisplayTemplate = $sModuleRelativeDir.'/'.$oDisplayTemplate->textContent;
 			$aClassParams['display_template'] = "utils::GetAbsoluteUrlModulesRoot().'$sDisplayTemplate'";
 		}
 	
 		$oIcon = $this->GetOptionalElement($oProperties, 'icon');
-		if ($oIcon)
+		if ($oIcon && (strlen($oIcon->textContent) > 0))
 		{
 			$sIcon = $sModuleRelativeDir.'/'.$oIcon->textContent;
 			$aClassParams['icon'] = "utils::GetAbsoluteUrlModulesRoot().'$sIcon'";
