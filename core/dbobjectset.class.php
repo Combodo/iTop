@@ -321,6 +321,20 @@ class DBObjectSet
 		return $this->m_iLimitStart;
 	}
 
+	public function GetRealSortOrder()
+	{
+		// Get the class default sort order if not specified with the API
+		//
+		if (empty($this->m_aOrderBy))
+		{
+			return MetaModel::GetOrderByDefault($this->m_oFilter->GetClass());
+		}
+		else
+		{
+			return $this->m_aOrderBy;
+		}
+	}
+
 	public function Load()
 	{
 		if ($this->m_bLoaded) return;
@@ -329,11 +343,11 @@ class DBObjectSet
 
 		if ($this->m_iLimitCount > 0)
 		{
-			$sSQL = MetaModel::MakeSelectQuery($this->m_oFilter, $this->m_aOrderBy, $this->m_aArgs, $this->m_aAttToLoad, $this->m_aExtendedDataSpec, $this->m_iLimitCount, $this->m_iLimitStart);
+			$sSQL = MetaModel::MakeSelectQuery($this->m_oFilter, $this->GetRealSortOrder(), $this->m_aArgs, $this->m_aAttToLoad, $this->m_aExtendedDataSpec, $this->m_iLimitCount, $this->m_iLimitStart);
 		}
 		else
 		{
-			$sSQL = MetaModel::MakeSelectQuery($this->m_oFilter, $this->m_aOrderBy, $this->m_aArgs, $this->m_aAttToLoad, $this->m_aExtendedDataSpec);
+			$sSQL = MetaModel::MakeSelectQuery($this->m_oFilter, $this->GetRealSortOrder(), $this->m_aArgs, $this->m_aAttToLoad, $this->m_aExtendedDataSpec);
 		}
 		$resQuery = CMDBSource::Query($sSQL);
 		if (!$resQuery) return;
@@ -370,7 +384,7 @@ class DBObjectSet
 		{
 			if (is_null($this->m_iCount))
 			{
-				$sSQL = MetaModel::MakeSelectQuery($this->m_oFilter, $this->m_aOrderBy, $this->m_aArgs, null, null, 0, 0, true);
+				$sSQL = MetaModel::MakeSelectQuery($this->m_oFilter, array(), $this->m_aArgs, null, null, 0, 0, true);
 				$resQuery = CMDBSource::Query($sSQL);
 				if (!$resQuery) return 0;
 		

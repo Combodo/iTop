@@ -494,11 +494,26 @@ abstract class MetaModel
 		self::_check_subclass($sClass);	
 		return array_key_exists("display_template", self::$m_aClassParams[$sClass]) ? self::$m_aClassParams[$sClass]["display_template"]: '';
 	}
-	final static public function GetOrderByDefault($sClass)
+
+	final static public function GetOrderByDefault($sClass, $bOnlyDeclared = false)
 	{
 		self::_check_subclass($sClass);	
-		return array_key_exists("order_by_default", self::$m_aClassParams[$sClass]) ? self::$m_aClassParams[$sClass]["order_by_default"]: array();
+		$aOrderBy = array_key_exists("order_by_default", self::$m_aClassParams[$sClass]) ? self::$m_aClassParams[$sClass]["order_by_default"]: array();
+		if ($bOnlyDeclared)
+		{
+			// Used to reverse engineer the declaration of the data model
+			return $aOrderBy;
+		}
+		else
+		{
+			if (count($aOrderBy) == 0)
+			{
+				$aOrderBy['friendlyname'] = true;
+			}
+			return $aOrderBy;
+		}
 	}
+
 	final static public function GetAttributeOrigin($sClass, $sAttCode)
 	{
 		self::_check_subclass($sClass);
@@ -2014,12 +2029,6 @@ abstract class MetaModel
 			}
 		}
 
-		// Get the class default sort order if not specified with the API
-		//
-		if (empty($aOrderBy))
-		{
-			$aOrderBy = self::GetOrderByDefault($oFilter->GetClass());
-		}
 		// Check the order by specification, and prefix with the class alias
 		// and make sure that the ordering columns are going to be selected
 		//
@@ -2053,22 +2062,6 @@ abstract class MetaModel
 			{
 				$aAttToLoad[$sFirstClassAlias][$sFieldAlias] = MetaModel::GetAttributeDef($oFilter->GetFirstJoinedClass(), $sFieldAlias);
 			}			
-		}
-		// At least, force the name attribute to be the ordering key
-		//
-		if (empty($aOrderSpec))
-		{
-			foreach ($oFilter->GetSelectedClasses() as $sSelectedAlias => $sSelectedClass)
-			{
-				// By default, simply order on the "friendlyname" attribute, ascending
-				$aOrderSpec['`'.$sSelectedAlias."friendlyname`"] = true;
-
-				// Make sure that the columns used for sorting are present in the loaded columns
-				if (!is_null($aAttToLoad) && !isset($aAttToLoad[$sSelectedAlias]["friendlyname"]))
-				{
-					$aAttToLoad[$sSelectedAlias]["friendlyname"] = MetaModel::GetAttributeDef($sSelectedClass, "friendlyname");
-				}			
-			}
 		}
 
 		if (!isset($oSelect))
