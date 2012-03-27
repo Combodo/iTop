@@ -757,19 +757,17 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		}
 		foreach($aList as $sAttCode)
 		{
-			$aAttribs[$sAttCode] = array('label' => MetaModel::GetLabel($sClassName, $sAttCode), 'description' => MetaModel::GetDescription($sClassName, $sAttCode));
+			$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
+			$aAttribs[$sAttCode] = array('label' => MetaModel::GetLabel($sClassName, $sAttCode), 'description' => $oAttDef->GetOrderByHint());
 		}
 		$aValues = array();
 		$bDisplayLimit = isset($aExtraParams['display_limit']) ? $aExtraParams['display_limit'] : true;
 		$iMaxObjects = -1;
-		//if ($bDisplayLimit && $bTruncated)
-		//{
-			if ($bDisplayLimit && ($oSet->Count() > MetaModel::GetConfig()->GetMaxDisplayLimit()))
-			{
-				$iMaxObjects = MetaModel::GetConfig()->GetMinDisplayLimit();
-				$oSet->SetLimit($iMaxObjects);
-			}
-		//}
+		if ($bDisplayLimit && ($oSet->Count() > MetaModel::GetConfig()->GetMaxDisplayLimit()))
+		{
+			$iMaxObjects = MetaModel::GetConfig()->GetMinDisplayLimit();
+			$oSet->SetLimit($iMaxObjects);
+		}
 		$oSet->Seek(0);
 		while (($oObj = $oSet->Fetch()) && ($iMaxObjects != 0))
 		{
@@ -811,14 +809,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		}
 		$sHtml .= '<table class="listContainer">';
 		$sColspan = '';
-//		if (isset($aExtraParams['block_id']))
-//		{
-//			$divId = $aExtraParams['block_id'];
-//		}
-//		else
-//		{
-//			$divId = 'missingblockid';
-//		}
+
 		$sFilter = $oSet->GetFilter()->serialize();
 		$iMinDisplayLimit = MetaModel::GetConfig()->GetMinDisplayLimit();
 		$sCollapsedLabel = Dict::Format('UI:TruncatedResults', $iMinDisplayLimit, $oSet->Count());
@@ -854,30 +845,62 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		{
 			$sHeader = Dict::Format('UI:Pagination:HeaderNoSelection', '<span id="total">'.$iCount.'</span>');
 		}
-		if ($bDisplayLimit && ($oSet->Count() > MetaModel::GetConfig()->GetMaxDisplayLimit()))
+
+		// All lists are now paginated in order to benefit from the SQL sort order
+
+		if (!$bDisplayLimit)
 		{
-			$sCombo = '<select class="pagesize">';
-			for($iPage = 1; $iPage < 5; $iPage++)
+			$sPagerStyle = 'style="display:none"'; // no limit: display the full table, so hide the "pager" UI
+			$iPageSize = -1; // Display all
+		}
+		else
+		{
+			$sPagerStyle = '';
+			$iPageSize = MetaModel::GetConfig()->GetMinDisplayLimit();
+		}
+		$iDefaultPageSize =  MetaModel::GetConfig()->GetMinDisplayLimit();
+		$sCombo = '<select class="pagesize">';
+		for($iPage = 1; $iPage < 5; $iPage++)
+		{
+			$sSelected = ($iPage == $iPageSize) ? 'selected="selected"' : '';
+			$iNbItems = $iPage * $iDefaultPageSize;
+			$sCombo .= "<option  $sSelected value=\"$iNbItems\">$iNbItems</option>";
+		}
+		$sSelected = (-1 == $iPageSize) ? 'selected="selected"' : '';
+		$sCombo .= "<option  $sSelected value=\"-1\">".Dict::S('UI:Pagination:All')."</option>";
+		$sCombo .= '</select>';
+		$sPages = Dict::S('UI:Pagination:PagesLabel');
+		$sPageSizeCombo = Dict::Format('UI:Pagination:PageSize', $sCombo);
+		
+		$iNbPages = ($iPageSize == -1) ? 1 : ceil($iCount / $iPageSize);
+		$aPagesToDisplay = array();
+		for($idx = 0; $idx <= min(4, $iNbPages-1); $idx++)
+		{
+			if ($idx == 0)
 			{
-				$sSelected = '';
-				if ($iPage == 1)
-				{
-					$sSelected = 'selected="selected"';
-				}
-				$iNbItems = $iPage * MetaModel::GetConfig()->GetMinDisplayLimit();
-				$sCombo .= "<option  $sSelected value=\"$iNbItems\">$iNbItems</option>";
+				$aPagesToDisplay[$idx] = '<span page="0" class="curr_page">1</span>';
 			}
-			$sCombo .= "<option  $sSelected value=\"-1\">".Dict::S('UI:Pagination:All')."</option>";
-			$sCombo .= '</select>';
-			$sPages = Dict::S('UI:Pagination:PagesLabel');
-			$sPageSizeCombo = Dict::Format('UI:Pagination:PageSize', $sCombo);
-$sHtml =
+			else
+			{
+				$aPagesToDisplay[$idx] = "<span id=\"gotopage_$idx\" class=\"gotopage\" page=\"$idx\">".(1+$idx)."</span>";
+			}
+		}
+		$iLastPageIdx = $iNbPages - 1;
+		if (!isset($aPagesToDisplay[$iLastPageIdx]))
+		{
+			unset($aPagesToDisplay[$idx - 1]); // remove the last page added to make room for the very last page
+			$aPagesToDisplay[$iLastPageIdx] = "<span id=\"gotopage_$iLastPageIdx\" class=\"gotopage\" page=\"$iLastPageIdx\">... $iNbPages</span>";
+		}
+		$sPagesLinks = implode('', $aPagesToDisplay);
+		$sPagesList = '['.implode(',', array_keys($aPagesToDisplay)).']';
+
+		$sHtml =
 <<<EOF
-<div id="pager{$iListId}" class="pager">
+<div id="pager{$iListId}" class="pager" $sPagerStyle>
 		<p>$sHeader</p>
 		<p><table class="pagination"><tr><td>$sPages</td><td><img src="../images/first.png" class="first"/></td>
 		<td><img src="../images/prev.png" class="prev"/></td>
-		<td><span id="index"></span></td>
+		<td><span id="index">$sPagesLinks</span></td>
 		<td><img src="../images/next.png" class="next"/></td>
 		<td><img src="../images/last.png" class="last"/></td>
 		<td>$sPageSizeCombo</td>
@@ -889,63 +912,62 @@ $sHtml =
 </div>
 EOF
 .$sHtml;
-			$aArgs = $oSet->GetArgs();
-			$sExtraParams = addslashes(str_replace('"', "'", json_encode(array_merge($aExtraParams, $aArgs)))); // JSON encode, change the style of the quotes and escape them
-			$sSelectMode = '';
-			$sHeaders = '';
-			if ($bSelectMode)
-			{
-				$sSelectMode = $bSingleSelectMode ? 'single' : 'multiple';
-				$sHeaders = 'headers: { 0: {sorter: false}},';
-			}
-			$sDisplayKey = ($bViewLink) ? 'true' : 'false';
-			$sDisplayList = json_encode($aList);
-			$sCssCount = isset($aExtraParams['cssCount']) ? ", cssCount: '{$aExtraParams['cssCount']}'" : '';
-			$iPageSize = MetaModel::GetConfig()->GetMinDisplayLimit();
-			$oSet->ApplyParameters();
-			$sOQL = addslashes($oSet->GetFilter()->serialize());
-			$oPage->add_ready_script("$('#{$iListId} table.listResults').tablesorter( { $sHeaders widgets: ['myZebra', 'truncatedList']} ).tablesorterPager({container: $('#pager{$iListId}'), totalRows:$iCount, size: $iPageSize, filter: '$sOQL', extra_params: '$sExtraParams', select_mode: '$sSelectMode', displayKey: $sDisplayKey, displayList: $sDisplayList $sCssCount});\n");
-		}
-		else
+		$aArgs = $oSet->GetArgs();
+		$sExtraParams = addslashes(str_replace('"', "'", json_encode(array_merge($aExtraParams, $aArgs)))); // JSON encode, change the style of the quotes and escape them
+		$sSelectMode = '';
+		$sHeaders = '';
+		if ($bSelectMode)
 		{
-$sHtml =
-<<<EOF
-<div id="pager{$iListId}" class="pager">
-		<p>$sHeader</p>
-</div>
-EOF
-.$sHtml;
-			$sHeaders = '';
-			if ($bSelectMode)
+			$sSelectMode = $bSingleSelectMode ? 'single' : 'multiple';
+			$sHeaders = 'headers: { 0: {sorter: false}},';
+		}
+		$sDisplayKey = ($bViewLink) ? 'true' : 'false';
+		// Protect against duplicate elements in the Zlist
+		$aUniqueOrderedList = array();
+		foreach($aList as $sAttCode)
+		{
+			$aUniqueOrderedList[$sAttCode] = true;
+		}
+		$aUniqueOrderedList = array_keys($aUniqueOrderedList);
+		$sDisplayList = json_encode($aUniqueOrderedList);
+		$sCssCount = isset($aExtraParams['cssCount']) ? ", cssCount: '{$aExtraParams['cssCount']}'" : '';
+		$oSet->ApplyParameters();
+		// Display the actual sort order of the table
+		$aRealSortOrder = $oSet->GetRealSortOrder();
+		$aDefaultSort = array();
+		$iColOffset = 0;
+		if ($bSelectMode)
+		{
+			$iColOffset += 1;
+		}
+		if ($bViewLink)
+		{
+			$iColOffset += 1;
+		}
+		foreach($aRealSortOrder as $sColCode => $bAscending)
+		{
+			$iPos = array_search($sColCode, $aUniqueOrderedList);
+			if ($iPos !== false)
 			{
-				$sHeaders = 'headers: { 0: {sorter: false}},';
+				$aDefaultSort[] = "[".($iColOffset+$iPos).",".($bAscending ? '0' : '1')."]";
 			}
-			$oPage->add_ready_script("$('#{$iListId} table.listResults').tableHover().tablesorter( { $sHeaders widgets: ['myZebra', 'truncatedList']} );\n");
-			// Manage how we update the 'Ok/Add' buttons that depend on the number of selected items
-			if (isset($aExtraParams['cssCount']))
+			else if($sColCode == 'friendlyname' && $bViewLink)
 			{
-				$sCssCount = $aExtraParams['cssCount'];
-				if ($bSingleSelectMode)
-				{
-					$sSelectSelector = ":radio[name^=selectObj]";
-				}
-				else
-				{
-					$sSelectSelector = ":checkbox[name^=selectObj]";
-				}
-				$oPage->add_ready_script(
-<<<EOF
-	$('#{$iListId} table.listResults $sSelectSelector').change(function() {
-		var c = $('{$sCssCount}');							
-		var v = $('#{$iListId} table.listResults $sSelectSelector:checked').length;
-		c.val(v);
-		$('#{$iListId} .selectedCount').text(v);
-		c.trigger('change');	
-	});
-EOF
-				);
+				$aDefaultSort[] = "[".($iColOffset-1).",".($bAscending ? '0' : '1')."]";
 			}
 		}
+		$sSortList = '';
+		if (count($aDefaultSort) > 0)
+		{
+			$sSortList = ', sortList: ['.implode(',', $aDefaultSort).']';
+		}
+		$sOQL = addslashes($oSet->GetFilter()->serialize());
+		$oPage->add_ready_script(
+<<<EOF
+var oTable = $('#{$iListId} table.listResults');
+oTable.tablesorter( { $sHeaders widgets: ['myZebra', 'truncatedList'] $sSortList} ).tablesorterPager({container: $('#pager{$iListId}'), totalRows:$iCount, size: $iPageSize, filter: '$sOQL', extra_params: '$sExtraParams', select_mode: '$sSelectMode', displayKey: $sDisplayKey, displayList: $sDisplayList $sCssCount});
+EOF
+		);
 
 		return $sHtml;
 	}

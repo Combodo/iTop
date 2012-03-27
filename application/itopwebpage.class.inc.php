@@ -51,29 +51,23 @@ class iTopWebPage extends NiceWebPage
 		$this->m_sMenu = "";
 		$this->m_sMessage = '';
 		$this->SetRootUrl(utils::GetAbsoluteUrlAppRoot());
-		$oAppContext = new ApplicationContext();
-		$sExtraParams = $oAppContext->GetForLink();
-		$sAppContext = addslashes($sExtraParams);
 		$this->add_header("Content-type: text/html; charset=utf-8");
 		$this->add_header("Cache-control: no-cache");
 		$this->add_linked_stylesheet("../css/jquery.treeview.css");
 		$this->add_linked_stylesheet("../css/jquery.autocomplete.css");
 		$this->add_linked_script('../js/jquery.layout.min.js');
 		$this->add_linked_script('../js/jquery.ba-bbq.min.js');
-		$this->add_linked_script("../js/jquery.tablehover.js");
 		$this->add_linked_script("../js/jquery.treeview.js");
 		$this->add_linked_script("../js/jquery.autocomplete.js");
 		$this->add_linked_script("../js/jquery.positionBy.js");
 		$this->add_linked_script("../js/jquery.popupmenu.js");
 		$this->add_linked_script("../js/date.js");
-		$this->add_linked_script("../js/jquery.tablesorter.min.js");
 		$this->add_linked_script("../js/jquery.blockUI.js");
 		$this->add_linked_script("../js/utils.js");
 		$this->add_linked_script("../js/swfobject.js");
 		$this->add_linked_script("../js/ckeditor/ckeditor.js");
 		$this->add_linked_script("../js/ckeditor/adapters/jquery.js");
 		$this->add_linked_script("../js/jquery.qtip-1.0.min.js");
-		$this->add_linked_script("../js/jquery.tablesorter.pager.js");
 		$this->m_sInitScript =
 <<< EOF
 	try
@@ -162,46 +156,6 @@ EOF
 		;
 		$this->add_ready_script(
 <<< EOF
-	//add new widget called TruncatedList to properly display truncated lists when they are sorted
-	$.tablesorter.addWidget({ 
-		// give the widget a id 
-		id: "truncatedList", 
-		// format is called when the on init and when a sorting has finished 
-		format: function(table)
-		{ 
-			// Check if there is a "truncated" line
-			this.truncatedList = false;  
-			if ($("tr td.truncated",table).length > 0)
-			{
-				this.truncatedList = true;
-			}
-			if (this.truncatedList)
-			{
-				$("tr td",table).removeClass('truncated');
-				$("tr:last td",table).addClass('truncated');
-			}
-		} 
-	});
-		
-	
-	$.tablesorter.addWidget({ 
-		// give the widget a id 
-		id: "myZebra", 
-		// format is called when the on init and when a sorting has finished 
-		format: function(table)
-		{
-			// Replace the 'red even' lines by 'red_even' since most browser do not support 2 classes selector in CSS, etc..
-			$("tbody tr:even",table).addClass('even');
-			$("tbody tr.red:even",table).removeClass('red').removeClass('even').addClass('red_even');
-			$("tbody tr.orange:even",table).removeClass('orange').removeClass('even').addClass('orange_even');
-			$("tbody tr.green:even",table).removeClass('green').removeClass('even').addClass('green_even');
-			// In case we sort again the table, we need to remove the added 'even' classes on odd rows
-			$("tbody tr:odd",table).removeClass('even');
-			$("tbody tr.red_even:odd",table).removeClass('even').removeClass('red_even').addClass('red');
-			$("tbody tr.orange_even:odd",table).removeClass('even').removeClass('orange_even').addClass('orange');
-			$("tbody tr.green_even:odd",table).removeClass('even').removeClass('green_even').addClass('green');
-		} 
-	});
 	
 	// Adjust initial size
 	$('.v-resizable').each( function()
@@ -307,7 +261,7 @@ EOF
 	});
 
 	// End of Tabs handling
-	$("table.listResults").tableHover(); // hover tables
+
 	$(".date-pick").datepicker({
 			showOn: 'button',
 			buttonImage: '../images/calendar.png',
@@ -408,21 +362,7 @@ EOF
 			if ($('#rawOutput > div').html() != '')
 			{
 				$('#rawOutput').dialog( {autoOpen: true, modal:false});
-						}
-				}
-				
-				function AddAppContext(sURL)
-				{
-						var sContext = '$sAppContext';
-			if (sContext.length > 0)
-			{
-				if (sURL.indexOf('?') == -1)
-				{
-					return sURL+'?'+sContext;
-				}				
-				return sURL+'&'+sContext;
 			}
-			return sURL;
 		}
 		
 		var oUserPreferences = $sUserPrefs;
@@ -535,19 +475,7 @@ EOF
 	public function output()
 	{
 		$sAbsURLAppRoot = addslashes($this->m_sRootUrl);
-		$sAbsURLModulesRoot = addslashes(utils::GetAbsoluteUrlModulesRoot());
-		$this->add_script(
-<<<EOF
-function GetAbsoluteUrlAppRoot()
-{
-	return '$sAbsURLAppRoot';
-}
-function GetAbsoluteUrlModulesRoot()
-{
-	return '$sAbsURLModulesRoot';
-}
-EOF
-		);
+
 		$this->set_base($this->m_sRootUrl.'pages/');
 		$sForm = $this->GetSiloSelectionForm();
 		$this->DisplayMenu(); // Compute the menu

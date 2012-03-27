@@ -1070,6 +1070,8 @@ table.pagination tr td {
 }
 .pager td span {
 	min-width: 20px;
+	padding-left: 2px;
+	padding-right: 2px;
 	display:inline-block;
 	text-align: center;
 	cursor: pointer;

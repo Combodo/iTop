@@ -38,12 +38,92 @@ class NiceWebPage extends WebPage
 		$this->m_aReadyScripts = array();
 		$this->add_linked_script("../js/jquery-1.4.2.min.js");
 		$this->add_linked_stylesheet('../css/ui-lightness/jquery-ui-1.8.2.custom.css');
+		$this->add_style('body { overflow: auto; }');
 		$this->add_linked_script('../js/jquery-ui-1.8.2.custom.min.js');
 		$this->add_linked_script("../js/hovertip.js");
+		// table sorting
+		$this->add_linked_script("../js/jquery.tablesorter.min.js");
+		$this->add_linked_script("../js/jquery.tablesorter.pager.js");
+		$this->add_linked_script("../js/jquery.tablehover.js");
+		$this->add_ready_script(
+<<< EOF
+	//add new widget called TruncatedList to properly display truncated lists when they are sorted
+	$.tablesorter.addWidget({ 
+		// give the widget a id 
+		id: "truncatedList", 
+		// format is called when the on init and when a sorting has finished 
+		format: function(table)
+		{ 
+			// Check if there is a "truncated" line
+			this.truncatedList = false;  
+			if ($("tr td.truncated",table).length > 0)
+			{
+				this.truncatedList = true;
+			}
+			if (this.truncatedList)
+			{
+				$("tr td",table).removeClass('truncated');
+				$("tr:last td",table).addClass('truncated');
+			}
+		} 
+	});
+	
+	$.tablesorter.addWidget({ 
+		// give the widget a id 
+		id: "myZebra", 
+		// format is called when the on init and when a sorting has finished 
+		format: function(table)
+		{
+			// Replace the 'red even' lines by 'red_even' since most browser do not support 2 classes selector in CSS, etc..
+			$("tbody tr:even",table).addClass('even');
+			$("tbody tr.red:even",table).removeClass('red').removeClass('even').addClass('red_even');
+			$("tbody tr.orange:even",table).removeClass('orange').removeClass('even').addClass('orange_even');
+			$("tbody tr.green:even",table).removeClass('green').removeClass('even').addClass('green_even');
+			// In case we sort again the table, we need to remove the added 'even' classes on odd rows
+			$("tbody tr:odd",table).removeClass('even');
+			$("tbody tr.red_even:odd",table).removeClass('even').removeClass('red_even').addClass('red');
+			$("tbody tr.orange_even:odd",table).removeClass('even').removeClass('orange_even').addClass('orange');
+			$("tbody tr.green_even:odd",table).removeClass('even').removeClass('green_even').addClass('green');
+		} 
+	});
+	$("table.listResults").tableHover(); // hover tables
+EOF
+		);
 		$this->add_linked_stylesheet("../css/light-grey.css");
 
-		$this->m_sRootUrl = '../'; 		
-    }
+		$this->m_sRootUrl = utils::GetAbsoluteUrlAppRoot(); 		
+     	$sAbsURLAppRoot = addslashes($this->m_sRootUrl);
+    	$sAbsURLModulesRoot = addslashes(utils::GetAbsoluteUrlModulesRoot());
+    	$oAppContext = new ApplicationContext();
+		$sExtraParams = $oAppContext->GetForLink();
+		$sAppContext = addslashes($sExtraParams);
+		$this->add_script(
+<<<EOF
+function GetAbsoluteUrlAppRoot()
+{
+	return '$sAbsURLAppRoot';
+}
+
+function GetAbsoluteUrlModulesRoot()
+{
+	return '$sAbsURLModulesRoot';
+}
+function AddAppContext(sURL)
+{
+	var sContext = '$sAppContext';
+	if (sContext.length > 0)
+	{
+		if (sURL.indexOf('?') == -1)
+		{
+			return sURL+'?'+sContext;
+		}				
+		return sURL+'&'+sContext;
+	}
+	return sURL;
+}
+EOF
+		);
+	}
 	
     public function SetRootUrl($sRootUrl)
     {
@@ -100,15 +180,6 @@ class NiceWebPage extends WebPage
 	 */
     public function output()
     {
-    	$sAbsURLAppRoot = addslashes($this->m_sRootUrl);
-		$this->add_script(
-<<<EOF
-function GetAbsoluteUrlAppRoot()
-{
-	return '$sAbsURLAppRoot';
-}
-EOF
-		);
 		$this->set_base($this->m_sRootUrl.'pages/');
         if (count($this->m_aReadyScripts)>0)
         {

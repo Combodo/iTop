@@ -288,40 +288,62 @@ function sprintf(format, etc) {
 			function renderPager(table, pager)
 			{
 				var c = table.config;
-				var s = c.page - 2;
+				var aPages = [0]; // first page
+				var s = c.page - 1;
 				var nb = Math.ceil(c.totalRows / c.size);
-				if (s < 0)
+				if (s < 1)
 				{
-					s = 0;
+					s = 1;
 				}
-				var e = s +5;
-				if (e > nb)
+				var e = s +3;
+				if (e >= nb)
 				{
 					e = nb;
-					s = e - 5;
-					if (s < 0) s = 0;
+					if ((e - 4) > 1)
+					{
+						s = e - 4;
+					}
 				}
-				txt = '';
 				for(var i=s; i<e; i++)
 				{
-					var page = 1+i;
-					var link = ' '+page+' ';
-					if (i != c.page)
+					aPages.push(i);
+				}
+				if ((nb > 1) && (nb > i))
+				{
+					aPages.push(nb - 1); // very last page					
+				}
+				
+				txt = '';
+				for(i=0; i<aPages.length; i++)
+				{
+					var page = 1+aPages[i];
+					var link = '';
+					var sDotsAfter = '';
+					var sDotsBefore = '';
+					if ((i == 0) && (aPages.length > 1) && (aPages[i+1] != aPages[i]+1))
 					{
-						link = ' <span page="'+i+'" id="gotopage_'+i+'">'+page+'</span> ';
+						sDotsAfter = '...'; // Gap between the last 2 page numbers
+					}
+					if ((i == aPages.length-1) && (aPages.length > 1) && (aPages[i-1] != aPages[i]-1))
+					{
+						sDotsBefore = '...'; // Gap between the first 2 page numbers
+					}
+					if (aPages[i] != c.page)
+					{
+						link = ' <span page="'+aPages[i]+'" id="gotopage_'+aPages[i]+'">'+sDotsBefore+page+sDotsAfter+'</span> ';
 					}
 					else
 					{
-						link = ' <span class="curr_page" page="'+i+'">'+page+'</span> ';
+						link = ' <span class="curr_page" page="'+aPages[i]+'">'+sDotsBefore+page+sDotsAfter+'</span> ';
 					}
 					txt += link;
 				}
 				txt += '';
 				$('#total', pager).text(c.totalRows);
 				$('#index', pager).html(txt);
-				for(var j=s; j<e; j++)
+				for(i=0; i<aPages.length; i++)
 				{
-					$('#gotopage_'+j, pager).click(function(){
+					$('#gotopage_'+aPages[i], pager).click(function(){
 						var idx = $(this).attr('page');
 						table.config.page = idx;
 						moveToPage(table);
@@ -426,7 +448,14 @@ function sprintf(format, etc) {
 					setPageSize(table,config.selectedSize, false);
 					restoreParams(table, config);
 					
-					$(this).trigger("appendCache"); // Load the data
+					//$(this).trigger("appendCache"); // Load the data
+					//console.log($.tablesorterPager);
+
+					$('.gotopage',pager).click(function() {
+						var idx = $(this).attr('page');
+						table.config.page = idx;
+						moveToPage(table);
+					});
 
 					$(config.cssFirst,pager).click(function() {
 						moveToFirstPage(table);

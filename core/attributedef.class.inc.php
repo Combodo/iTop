@@ -323,6 +323,11 @@ abstract class AttributeDefinition
 		// Note: This is the responsibility of this function to place backticks around column aliases
 		return array('`'.$sClassAlias.$this->GetCode().'`');
 	}
+	
+	public function GetOrderByHint()
+	{
+		return '';
+	}
 
    // Import - differs slightly from SQL input, but identical in most cases
    //
@@ -2119,6 +2124,13 @@ class AttributeEnum extends AttributeString
 	{
 		if ($proposedValue == '') return null;
 		return parent::MakeRealValue($proposedValue, $oHostObj);
+	}
+	
+	public function GetOrderByHint()
+	{
+		$aValues = $this->GetAllowedValues();
+	
+		return Dict::Format('UI:OrderByHint_Values', implode(', ', $aValues));
 	}
 }
 
