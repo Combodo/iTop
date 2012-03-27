@@ -1506,11 +1506,15 @@ class SynchroReplica extends DBObject implements iDisplay
 
 		if (!MetaModel::DBIsReadOnly())
 		{
-			$oDataSource = MetaModel::GetObject('SynchroDataSource', $this->Get('sync_source_id'));
-			$sTable = $oDataSource->GetDataTable();
+			$oDataSource = MetaModel::GetObject('SynchroDataSource', $this->Get('sync_source_id'), false);
+			if ($oDataSource)
+			{
+				$sTable = $oDataSource->GetDataTable();
 	
-			$sSQL = "DELETE FROM `$sTable` WHERE id = '{$this->GetKey()}'";
-			CMDBSource::Query($sSQL);
+				$sSQL = "DELETE FROM `$sTable` WHERE id = '{$this->GetKey()}'";
+				CMDBSource::Query($sSQL);
+			}
+			// else the whole datasource has probably been already deleted
 		}
 
 		$this->AfterDelete();
