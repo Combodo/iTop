@@ -1168,6 +1168,7 @@ class SynchroAttLinkSet extends SynchroAttribute
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeString("row_separator", array("allowed_values"=>null, "sql"=>"row_separator", "default_value"=>'|', "is_null_allowed"=>true, "depends_on"=>array())));
+
 		MetaModel::Init_AddAttribute(new AttributeString("attribute_separator", array("allowed_values"=>null, "sql"=>"attribute_separator", "default_value"=>';', "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("value_separator", array("allowed_values"=>null, "sql"=>"value_separator", "default_value"=>':', "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("attribute_qualifier", array("allowed_values"=>null, "sql"=>"attribute_qualifier", "default_value"=>'\'', "is_null_allowed"=>true, "depends_on"=>array())));
@@ -1460,11 +1461,15 @@ class SynchroReplica extends DBObject implements iDisplay
 
 		if (!MetaModel::DBIsReadOnly())
 		{
-			$oDataSource = MetaModel::GetObject('SynchroDataSource', $this->Get('sync_source_id'));
-			$sTable = $oDataSource->GetDataTable();
+			$oDataSource = MetaModel::GetObject('SynchroDataSource', $this->Get('sync_source_id'), false);
+			if ($oDataSource)
+			{
+				$sTable = $oDataSource->GetDataTable();
 	
-			$sSQL = "DELETE FROM `$sTable` WHERE id = '{$this->GetKey()}'";
-			CMDBSource::Query($sSQL);
+				$sSQL = "DELETE FROM `$sTable` WHERE id = '{$this->GetKey()}'";
+				CMDBSource::Query($sSQL);
+			}
+			// else the whole datasource has probably been already deleted
 		}
 
 		$this->AfterDelete();
