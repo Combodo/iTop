@@ -1691,8 +1691,21 @@ class SynchroReplica extends DBObject implements iDisplay
 				$value = $this->GetValueFromExtData($sAttCode, $oSyncAtt, $oStatLog);
 				if (!is_null($value))
 				{
-					$oDestObj->Set($sAttCode, $value);
-					$aValueTrace[] = "$sAttCode: $value";
+					if ($oSyncAtt->Get('update_policy') == 'write_if_empty')
+					{
+						$oAttDef = MetaModel::GetAttributeDef(get_class($oDestObj), $sAttCode);
+						if ($oAttDef->IsNull($oDestObj->Get($sAttCode)))
+						{
+							// The value is still "empty" in the target object, we are allowed to write the new value
+							$oDestObj->Set($sAttCode, $value);
+							$aValueTrace[] = "$sAttCode: $value";
+						}
+					}
+					else
+					{
+						$oDestObj->Set($sAttCode, $value);
+						$aValueTrace[] = "$sAttCode: $value";
+					}
 				}
 			}
 			// Really modified ?
