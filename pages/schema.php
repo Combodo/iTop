@@ -385,6 +385,10 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 		{
 		   $sValue = Dict::Format('UI:Schema:ExternalKey_To',MakeClassHLink($oAttDef->GetTargetClass(), $sContext));
 		}
+		elseif ($oAttDef->IsLinkSet())
+		{
+			$sValue = MakeClassHLink($oAttDef->GetLinkedClass(), $sContext);
+		}
 		else
 		{
 		   $sValue = $oAttDef->GetDescription();
