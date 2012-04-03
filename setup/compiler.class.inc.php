@@ -667,11 +667,14 @@ EOF;
 		$sZlists = '';
 		foreach ($aListRef as $sListCode => $sListTag)
 		{
-			$oListNode = $this->GetUniqueElement($oPresentation, $sListTag);
-			$aAttributes = $this->GetNodeAsArrayOfItems($oListNode);
-	
-			$sZAttributes = var_export($aAttributes, true);
-			$sZlists .= "		MetaModel::Init_SetZListItems('$sListCode', $sZAttributes);\n";
+			$oListNode = $this->GetOptionalElement($oPresentation, $sListTag);
+			if ($oListNode)
+			{
+				$aAttributes = $this->GetNodeAsArrayOfItems($oListNode);
+		
+				$sZAttributes = var_export($aAttributes, true);
+				$sZlists .= "		MetaModel::Init_SetZListItems('$sListCode', $sZAttributes);\n";
+			}
 		}
 	
 		// Methods
