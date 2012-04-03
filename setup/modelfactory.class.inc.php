@@ -270,6 +270,7 @@ class ModelFactory
 {
 	protected $sRootDir;
 	protected $oDOMDocument;
+	protected $oRoot;
 	protected $oClasses;
 	static protected $aLoadedClasses;
 	static protected $aWellKnownParents = array('DBObject', 'CMDBObject','cmdbAbstractObject');
@@ -280,8 +281,10 @@ class ModelFactory
 	{
 		$this->sRootDir = $sRootDir;
 		$this->oDOMDocument = new DOMDocument('1.0', 'UTF-8');
+		$this->oRoot = $this->oDOMDocument->CreateElement('itop_design');
+		$this->oDOMDocument->AppendChild($this->oRoot);
 		$this->oClasses = $this->oDOMDocument->CreateElement('classes');
-		$this->oDOMDocument->AppendChild($this->oClasses);
+		$this->oRoot->AppendChild($this->oClasses);
 		self::$aLoadedClasses = array();
 		self::$aLoadedModules = array();
 	}
@@ -315,7 +318,7 @@ class ModelFactory
 					$oNode->SetAttribute('_source', $sXmlFile);
 			}
 			$oXPath = new DOMXPath($oDocument);
-			$oNodeList = $oXPath->query('//classes/class');
+			$oNodeList = $oXPath->query('/itop_design/classes/class');
 			foreach($oNodeList as $oNode)
 			{
 				if ($oNode->hasAttribute('parent'))
@@ -1109,10 +1112,12 @@ EOF
 	public function GetDelta()
 	{
 		$oDelta = new DOMDocument('1.0', 'UTF-8');
-		$oRootNode = $oDelta->createElement('classes');
+		$oRootNode = $oDelta->createElement('itop_design');
 		$oDelta->appendChild($oRootNode);
+		$oClasses = $oDelta->createElement('classes');
+		$oRootNode->appendChild($oClasses);
 		
-		$this->_priv_ImportModifiedChildren($oDelta, $oRootNode, $this->oDOMDocument->firstChild);
+		$this->_priv_ImportModifiedChildren($oDelta, $oClasses, $this->oDOMDocument->firstChild);
 		//file_put_contents($sXMLDestPath, $oDelta->saveXML());
 		return $oDelta->saveXML();
 	}

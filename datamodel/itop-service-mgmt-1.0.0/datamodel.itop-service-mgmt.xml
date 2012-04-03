@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<classes>
-  <class name="Contract" category="bizmodel,searchable,servicemgmt" parent="cmdbAbstractObject" abstract="true" key_type="autoincrement" db_table="contract" db_key_field="id" db_final_class_field="finalclass">
-    <properties>
-      <comment><![CDATA[/**
+<itop_design>
+  <classes>
+    <class name="Contract" category="bizmodel,searchable,servicemgmt" parent="cmdbAbstractObject" abstract="true" key_type="autoincrement" db_table="contract" db_key_field="id" db_final_class_field="finalclass">
+      <properties>
+        <comment><![CDATA[/**
  * Persistent classes for a CMDB
  *
  * @author      Erwan Taloc <erwan.taloc@combodo.com>
@@ -10,103 +11,103 @@
  * @author      Denis Flaven <denis.flaven@combodo.com>
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */]]></comment>
-      <naming format="%1$s">
-        <attributes>
-          <attribute name="name"/>
-        </attributes>
-      </naming>
-      <display_template></display_template>
-      <icon>contract.png</icon>
-      <reconciliation>
-        <attributes>
-          <attribute name="name"/>
-        </attributes>
-      </reconciliation>
-    </properties>
-    <fields>
-      <field name="name" type="String" sql="name" default_value="" is_null_allowed="false"/>
-      <field name="description" type="Text" sql="description" default_value="" is_null_allowed="true"/>
-      <field name="start_date" type="DateTime" sql="start_date" default_value="" is_null_allowed="true"/>
-      <field name="end_date" type="DateTime" sql="end_date" default_value="" is_null_allowed="true"/>
-      <field name="cost" type="Integer" sql="cost" default_value="" is_null_allowed="true"/>
-      <field name="cost_currency" type="Enum" sql="cost_currency" default_value="euros" is_null_allowed="true">
-        <values>
-          <value>dollars</value>
-          <value>euros</value>
-        </values>
-      </field>
-      <field name="cost_unit" type="String" sql="cost_unit" default_value="" is_null_allowed="true"/>
-      <field name="billing_frequency" type="String" sql="billing_frequency" default_value="" is_null_allowed="true"/>
-      <field name="contact_list" type="LinkedSetIndirect" linked_class="lnkContractToContact" ext_key_to_me="contract_id" ext_key_to_remote="contact_id" count_min="0" count_max="0"/>
-      <field name="document_list" type="LinkedSetIndirect" linked_class="lnkContractToDoc" ext_key_to_me="contract_id" ext_key_to_remote="document_id" count_min="0" count_max="0"/>
-      <field name="ci_list" type="LinkedSetIndirect" linked_class="lnkContractToCI" ext_key_to_me="contract_id" ext_key_to_remote="ci_id" count_min="0" count_max="0"/>
-    </fields>
-    <methods/>
-    <presentation>
-      <details>
-        <items>
-          <item>name</item>
-          <item>description</item>
-          <item>start_date</item>
-          <item>end_date</item>
-          <item>cost</item>
-          <item>cost_currency</item>
-          <item>cost_unit</item>
-          <item>billing_frequency</item>
-          <item>contact_list</item>
-          <item>document_list</item>
-          <item>ci_list</item>
-        </items>
-      </details>
-      <search>
-        <items>
-          <item>name</item>
-          <item>description</item>
-          <item>start_date</item>
-          <item>end_date</item>
-          <item>cost</item>
-          <item>cost_currency</item>
-          <item>cost_unit</item>
-          <item>billing_frequency</item>
-        </items>
-      </search>
-      <list>
-        <items>
-          <item>description</item>
-          <item>start_date</item>
-          <item>end_date</item>
-          <item>cost</item>
-          <item>cost_currency</item>
-          <item>cost_unit</item>
-          <item>billing_frequency</item>
-        </items>
-      </list>
-    </presentation>
-  </class>
-  <class name="ProviderContract" category="bizmodel,searchable,servicemgmt" parent="Contract" abstract="false" key_type="autoincrement" db_table="providercontract" db_key_field="id" db_final_class_field="">
-    <properties>
-      <naming format="%1$s">
-        <attributes>
-          <attribute name="name"/>
-        </attributes>
-      </naming>
-      <display_template></display_template>
-      <icon>contract.png</icon>
-      <reconciliation>
-        <attributes>
-          <attribute name="name"/>
-          <attribute name="provider_id"/>
-        </attributes>
-      </reconciliation>
-    </properties>
-    <fields>
-      <field name="provider_id" type="ExternalKey" target_class="Organization" jointype="" sql="provider_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-      <field name="provider_name" type="ExternalField" extkey_attcode="provider_id" target_attcode="name"/>
-      <field name="sla" type="String" sql="sla" default_value="" is_null_allowed="true"/>
-      <field name="coverage" type="String" sql="coverage" default_value="" is_null_allowed="true"/>
-    </fields>
-    <methods>
-      <method name="MapContextParam" static="true" access="public" type="Overload-iDisplay"><comment><![CDATA[/**
+        <naming format="%1$s">
+          <attributes>
+            <attribute name="name"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon>contract.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute name="name"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field name="name" type="String" sql="name" default_value="" is_null_allowed="false"/>
+        <field name="description" type="Text" sql="description" default_value="" is_null_allowed="true"/>
+        <field name="start_date" type="DateTime" sql="start_date" default_value="" is_null_allowed="true"/>
+        <field name="end_date" type="DateTime" sql="end_date" default_value="" is_null_allowed="true"/>
+        <field name="cost" type="Integer" sql="cost" default_value="" is_null_allowed="true"/>
+        <field name="cost_currency" type="Enum" sql="cost_currency" default_value="euros" is_null_allowed="true">
+          <values>
+            <value>dollars</value>
+            <value>euros</value>
+          </values>
+        </field>
+        <field name="cost_unit" type="String" sql="cost_unit" default_value="" is_null_allowed="true"/>
+        <field name="billing_frequency" type="String" sql="billing_frequency" default_value="" is_null_allowed="true"/>
+        <field name="contact_list" type="LinkedSetIndirect" linked_class="lnkContractToContact" ext_key_to_me="contract_id" ext_key_to_remote="contact_id" count_min="0" count_max="0"/>
+        <field name="document_list" type="LinkedSetIndirect" linked_class="lnkContractToDoc" ext_key_to_me="contract_id" ext_key_to_remote="document_id" count_min="0" count_max="0"/>
+        <field name="ci_list" type="LinkedSetIndirect" linked_class="lnkContractToCI" ext_key_to_me="contract_id" ext_key_to_remote="ci_id" count_min="0" count_max="0"/>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item>name</item>
+            <item>description</item>
+            <item>start_date</item>
+            <item>end_date</item>
+            <item>cost</item>
+            <item>cost_currency</item>
+            <item>cost_unit</item>
+            <item>billing_frequency</item>
+            <item>contact_list</item>
+            <item>document_list</item>
+            <item>ci_list</item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>name</item>
+            <item>description</item>
+            <item>start_date</item>
+            <item>end_date</item>
+            <item>cost</item>
+            <item>cost_currency</item>
+            <item>cost_unit</item>
+            <item>billing_frequency</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>description</item>
+            <item>start_date</item>
+            <item>end_date</item>
+            <item>cost</item>
+            <item>cost_currency</item>
+            <item>cost_unit</item>
+            <item>billing_frequency</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class name="ProviderContract" category="bizmodel,searchable,servicemgmt" parent="Contract" abstract="false" key_type="autoincrement" db_table="providercontract" db_key_field="id" db_final_class_field="">
+      <properties>
+        <naming format="%1$s">
+          <attributes>
+            <attribute name="name"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon>contract.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute name="name"/>
+            <attribute name="provider_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field name="provider_id" type="ExternalKey" target_class="Organization" jointype="" sql="provider_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="provider_name" type="ExternalField" extkey_attcode="provider_id" target_attcode="name"/>
+        <field name="sla" type="String" sql="sla" default_value="" is_null_allowed="true"/>
+        <field name="coverage" type="String" sql="coverage" default_value="" is_null_allowed="true"/>
+      </fields>
+      <methods>
+        <method name="MapContextParam" static="true" access="public" type="Overload-iDisplay"><comment><![CDATA[/**
 	 * Maps the given context parameter name to the appropriate filter/search code for this class
 	 * @param string $sContextParam Name of the context parameter, e.g. 'org_id'
 	 * @return string Filter code, e.g. 'customer_id'
@@ -121,425 +122,425 @@
 			return parent::MapContextParam($sContextParam); // Ask the parent what to do with other parameters...
 		}
 	}]]></method>
-    </methods>
-    <presentation>
-      <details>
-        <items>
-          <item>name</item>
-          <item>description</item>
-          <item>start_date</item>
-          <item>end_date</item>
-          <item>cost</item>
-          <item>cost_currency</item>
-          <item>cost_unit</item>
-          <item>billing_frequency</item>
-          <item>contact_list</item>
-          <item>document_list</item>
-          <item>ci_list</item>
-          <item>provider_id</item>
-          <item>sla</item>
-          <item>coverage</item>
-        </items>
-      </details>
-      <search>
-        <items>
-          <item>name</item>
-          <item>description</item>
-          <item>start_date</item>
-          <item>end_date</item>
-          <item>cost</item>
-          <item>cost_currency</item>
-          <item>cost_unit</item>
-          <item>billing_frequency</item>
-          <item>provider_id</item>
-          <item>sla</item>
-          <item>coverage</item>
-        </items>
-      </search>
-      <list>
-        <items>
-          <item>start_date</item>
-          <item>end_date</item>
-          <item>provider_id</item>
-          <item>sla</item>
-          <item>coverage</item>
-        </items>
-      </list>
-    </presentation>
-  </class>
-  <class name="CustomerContract" category="bizmodel,searchable,servicemgmt" parent="Contract" abstract="false" key_type="autoincrement" db_table="customercontract" db_key_field="id" db_final_class_field="">
-    <properties>
-      <naming format="%1$s">
-        <attributes>
-          <attribute name="name"/>
-        </attributes>
-      </naming>
-      <display_template></display_template>
-      <icon>contract.png</icon>
-      <reconciliation>
-        <attributes>
-          <attribute name="name"/>
-          <attribute name="org_id"/>
-          <attribute name="provider_id"/>
-        </attributes>
-      </reconciliation>
-    </properties>
-    <fields>
-      <field name="org_id" type="ExternalKey" target_class="Organization" jointype="" sql="org_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-      <field name="org_name" type="ExternalField" extkey_attcode="org_id" target_attcode="name"/>
-      <field name="provider_id" type="ExternalKey" target_class="Organization" jointype="" sql="provider_id" is_null_allowed="true" on_target_delete="DEL_AUTO"/>
-      <field name="provider_name" type="ExternalField" extkey_attcode="provider_id" target_attcode="name"/>
-      <field name="support_team_id" type="ExternalKey" target_class="Team" jointype="" filter="SELECT Team WHERE Team.org_id = :this-&gt;provider_id" sql="support_team_id" is_null_allowed="false" on_target_delete="DEL_AUTO">
-        <dependencies>
-          <attribute name="provider_id"/>
-        </dependencies>
-      </field>
-      <field name="support_team_name" type="ExternalField" extkey_attcode="support_team_id" target_attcode="name"/>
-      <field name="sla_list" type="LinkedSetIndirect" linked_class="lnkContractToSLA" ext_key_to_me="contract_id" ext_key_to_remote="sla_id" count_min="0" count_max="0"/>
-      <field name="provider_list" type="LinkedSetIndirect" linked_class="lnkCustomerContractToProviderContract" ext_key_to_me="customer_contract_id" ext_key_to_remote="provider_contract_id" count_min="0" count_max="0"/>
-    </fields>
-    <methods/>
-    <presentation>
-      <details>
-        <items>
-          <item>name</item>
-          <item>org_id</item>
-          <item>description</item>
-          <item>start_date</item>
-          <item>end_date</item>
-          <item>cost</item>
-          <item>cost_currency</item>
-          <item>cost_unit</item>
-          <item>billing_frequency</item>
-          <item>contact_list</item>
-          <item>document_list</item>
-          <item>ci_list</item>
-          <item>provider_list</item>
-          <item>provider_id</item>
-          <item>support_team_id</item>
-          <item>sla_list</item>
-        </items>
-      </details>
-      <search>
-        <items>
-          <item>name</item>
-          <item>description</item>
-          <item>org_id</item>
-          <item>start_date</item>
-          <item>end_date</item>
-          <item>cost</item>
-          <item>cost_currency</item>
-          <item>cost_unit</item>
-          <item>billing_frequency</item>
-          <item>provider_id</item>
-          <item>support_team_id</item>
-        </items>
-      </search>
-      <list>
-        <items>
-          <item>org_id</item>
-          <item>start_date</item>
-          <item>end_date</item>
-          <item>provider_id</item>
-          <item>support_team_id</item>
-        </items>
-      </list>
-    </presentation>
-  </class>
-  <class name="lnkCustomerContractToProviderContract" category="bizmodel,searchable,servicemgmt,lnkservice" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" is_link="1" db_table="lnkcustomercontracttoprovider" db_key_field="id" db_final_class_field="">
-    <properties>
-      <naming format="%1$s">
-        <attributes>
-          <attribute name="customer_contract_id"/>
-        </attributes>
-      </naming>
-      <display_template></display_template>
-      <icon></icon>
-      <reconciliation>
-        <attributes>
-          <attribute name="customer_contract_id"/>
-          <attribute name="provider_contract_id"/>
-        </attributes>
-      </reconciliation>
-    </properties>
-    <fields>
-      <field name="customer_contract_id" type="ExternalKey" target_class="CustomerContract" jointype="" sql="customer_contract_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-      <field name="customer_contract_name" type="ExternalField" extkey_attcode="customer_contract_id" target_attcode="name"/>
-      <field name="provider_contract_id" type="ExternalKey" target_class="ProviderContract" jointype="" sql="provider_contract_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-      <field name="provider_contract_name" type="ExternalField" extkey_attcode="provider_contract_id" target_attcode="name"/>
-      <field name="provider_sla" type="ExternalField" extkey_attcode="provider_contract_id" target_attcode="sla"/>
-      <field name="provider_coverage" type="ExternalField" extkey_attcode="provider_contract_id" target_attcode="coverage"/>
-    </fields>
-    <methods/>
-    <presentation>
-      <details>
-        <items>
-          <item>customer_contract_id</item>
-          <item>provider_contract_id</item>
-          <item>provider_sla</item>
-          <item>provider_coverage</item>
-        </items>
-      </details>
-      <search>
-        <items>
-          <item>customer_contract_id</item>
-          <item>provider_contract_id</item>
-        </items>
-      </search>
-      <list>
-        <items>
-          <item>customer_contract_id</item>
-          <item>provider_contract_id</item>
-          <item>provider_sla</item>
-          <item>provider_coverage</item>
-        </items>
-      </list>
-    </presentation>
-  </class>
-  <class name="lnkContractToSLA" category="bizmodel,searchable,servicemgmt,lnkservice" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" is_link="1" db_table="lnkcontracttosla" db_key_field="id" db_final_class_field="">
-    <properties>
-      <naming format="%1$s">
-        <attributes>
-          <attribute name="contract_id"/>
-        </attributes>
-      </naming>
-      <display_template></display_template>
-      <icon></icon>
-      <reconciliation>
-        <attributes>
-          <attribute name="contract_id"/>
-          <attribute name="sla_id"/>
-        </attributes>
-      </reconciliation>
-    </properties>
-    <fields>
-      <field name="contract_id" type="ExternalKey" target_class="CustomerContract" jointype="" sql="contract_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-      <field name="contract_name" type="ExternalField" extkey_attcode="contract_id" target_attcode="name"/>
-      <field name="sla_id" type="ExternalKey" target_class="SLA" jointype="" sql="sla_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-      <field name="sla_name" type="ExternalField" extkey_attcode="sla_id" target_attcode="name"/>
-      <field name="sla_service_name" type="ExternalField" extkey_attcode="sla_id" target_attcode="service_name"/>
-      <field name="coverage" type="String" sql="coverage" default_value="" is_null_allowed="true"/>
-    </fields>
-    <methods/>
-    <presentation>
-      <details>
-        <items>
-          <item>contract_id</item>
-          <item>sla_id</item>
-          <item>sla_service_name</item>
-          <item>coverage</item>
-        </items>
-      </details>
-      <search>
-        <items>
-          <item>contract_id</item>
-          <item>sla_id</item>
-          <item>coverage</item>
-        </items>
-      </search>
-      <list>
-        <items>
-          <item>contract_id</item>
-          <item>sla_id</item>
-          <item>sla_service_name</item>
-          <item>coverage</item>
-        </items>
-      </list>
-    </presentation>
-  </class>
-  <class name="lnkContractToDoc" category="bizmodel,searchable,servicemgmt,lnkservice" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" is_link="1" db_table="lnkcontracttodoc" db_key_field="id" db_final_class_field="">
-    <properties>
-      <naming format="%1$s">
-        <attributes>
-          <attribute name="contract_id"/>
-        </attributes>
-      </naming>
-      <display_template></display_template>
-      <icon></icon>
-      <reconciliation>
-        <attributes>
-          <attribute name="contract_id"/>
-          <attribute name="document_id"/>
-        </attributes>
-      </reconciliation>
-    </properties>
-    <fields>
-      <field name="contract_id" type="ExternalKey" target_class="Contract" jointype="" sql="contract_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-      <field name="contract_name" type="ExternalField" extkey_attcode="contract_id" target_attcode="name"/>
-      <field name="document_id" type="ExternalKey" target_class="Document" jointype="" sql="document_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-      <field name="document_name" type="ExternalField" extkey_attcode="document_id" target_attcode="name"/>
-      <field name="document_type" type="ExternalField" extkey_attcode="document_id" target_attcode="type"/>
-      <field name="document_status" type="ExternalField" extkey_attcode="document_id" target_attcode="status"/>
-    </fields>
-    <methods/>
-    <presentation>
-      <details>
-        <items>
-          <item>contract_id</item>
-          <item>document_id</item>
-          <item>document_type</item>
-          <item>document_status</item>
-        </items>
-      </details>
-      <search>
-        <items>
-          <item>contract_id</item>
-          <item>document_id</item>
-          <item>document_type</item>
-          <item>document_status</item>
-        </items>
-      </search>
-      <list>
-        <items>
-          <item>contract_id</item>
-          <item>document_id</item>
-          <item>document_type</item>
-          <item>document_status</item>
-        </items>
-      </list>
-    </presentation>
-  </class>
-  <class name="lnkContractToContact" category="bizmodel,searchable,servicemgmt,lnkservice" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" is_link="1" db_table="lnkcontracttocontact" db_key_field="id" db_final_class_field="">
-    <properties>
-      <naming format="%1$s">
-        <attributes>
-          <attribute name="contract_id"/>
-        </attributes>
-      </naming>
-      <display_template></display_template>
-      <icon></icon>
-      <reconciliation>
-        <attributes>
-          <attribute name="contract_id"/>
-          <attribute name="contact_id"/>
-        </attributes>
-      </reconciliation>
-    </properties>
-    <fields>
-      <field name="contract_id" type="ExternalKey" target_class="Contract" jointype="" sql="contract_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-      <field name="contract_name" type="ExternalField" extkey_attcode="contract_id" target_attcode="name"/>
-      <field name="contact_id" type="ExternalKey" target_class="Contact" jointype="" sql="contact_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-      <field name="contact_name" type="ExternalField" extkey_attcode="contact_id" target_attcode="name"/>
-      <field name="contact_email" type="ExternalField" extkey_attcode="contact_id" target_attcode="email"/>
-      <field name="role" type="String" sql="role" default_value="" is_null_allowed="true"/>
-    </fields>
-    <methods/>
-    <presentation>
-      <details>
-        <items>
-          <item>contract_id</item>
-          <item>contact_id</item>
-          <item>contact_email</item>
-          <item>role</item>
-        </items>
-      </details>
-      <search>
-        <items>
-          <item>contract_id</item>
-          <item>contact_id</item>
-          <item>contact_email</item>
-          <item>role</item>
-        </items>
-      </search>
-      <list>
-        <items>
-          <item>contract_id</item>
-          <item>contact_id</item>
-          <item>contact_email</item>
-          <item>role</item>
-        </items>
-      </list>
-    </presentation>
-  </class>
-  <class name="lnkContractToCI" category="bizmodel,searchable,servicemgmt,lnkservice" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" is_link="1" db_table="lnkcontracttoci" db_key_field="id" db_final_class_field="">
-    <properties>
-      <naming format="%1$s">
-        <attributes>
-          <attribute name="contract_id"/>
-        </attributes>
-      </naming>
-      <display_template></display_template>
-      <icon></icon>
-      <reconciliation>
-        <attributes>
-          <attribute name="contract_id"/>
-          <attribute name="ci_id"/>
-        </attributes>
-      </reconciliation>
-    </properties>
-    <fields>
-      <field name="contract_id" type="ExternalKey" target_class="Contract" jointype="" sql="contract_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-      <field name="contract_name" type="ExternalField" extkey_attcode="contract_id" target_attcode="name"/>
-      <field name="ci_id" type="ExternalKey" target_class="FunctionalCI" jointype="" sql="ci_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-      <field name="ci_name" type="ExternalField" extkey_attcode="ci_id" target_attcode="name"/>
-      <field name="ci_status" type="ExternalField" extkey_attcode="ci_id" target_attcode="status"/>
-    </fields>
-    <methods/>
-    <presentation>
-      <details>
-        <items>
-          <item>contract_id</item>
-          <item>ci_id</item>
-          <item>ci_status</item>
-        </items>
-      </details>
-      <search>
-        <items>
-          <item>contract_id</item>
-          <item>ci_id</item>
-          <item>ci_status</item>
-        </items>
-      </search>
-      <list>
-        <items>
-          <item>contract_id</item>
-          <item>ci_id</item>
-          <item>ci_status</item>
-        </items>
-      </list>
-    </presentation>
-  </class>
-  <class name="Service" category="bizmodel,searchable,servicemgmt" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" db_table="service" db_key_field="id" db_final_class_field="">
-    <properties>
-      <naming format="%1$s">
-        <attributes>
-          <attribute name="name"/>
-        </attributes>
-      </naming>
-      <display_template></display_template>
-      <icon>service.png</icon>
-      <reconciliation>
-        <attributes>
-          <attribute name="name"/>
-          <attribute name="org_id"/>
-        </attributes>
-      </reconciliation>
-    </properties>
-    <fields>
-      <field name="org_id" type="ExternalKey" target_class="Organization" jointype="" sql="org_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-      <field name="provider_name" type="ExternalField" extkey_attcode="org_id" target_attcode="name"/>
-      <field name="name" type="String" sql="name" default_value="" is_null_allowed="true"/>
-      <field name="description" type="Text" sql="description" default_value="" is_null_allowed="true"/>
-      <field name="type" type="Enum" sql="type" default_value="IncidentManagement" is_null_allowed="true">
-        <values>
-          <value>RequestManagement</value>
-          <value>IncidentManagement</value>
-        </values>
-      </field>
-      <field name="status" type="Enum" sql="status" default_value="design" is_null_allowed="true">
-        <values>
-          <value>design</value>
-          <value>production</value>
-          <value>obsolete</value>
-        </values>
-      </field>
-      <field name="subcategory_list" type="LinkedSet" linked_class="ServiceSubcategory" ext_key_to_me="service_id" count_min="0" count_max="0"/>
-      <field name="sla_list" type="LinkedSet" linked_class="SLA" ext_key_to_me="service_id" count_min="0" count_max="0"/>
-      <field name="document_list" type="LinkedSetIndirect" linked_class="lnkServiceToDoc" ext_key_to_me="service_id" ext_key_to_remote="document_id" count_min="0" count_max="0"/>
-      <field name="contact_list" type="LinkedSetIndirect" linked_class="lnkServiceToContact" ext_key_to_me="service_id" ext_key_to_remote="contact_id" count_min="0" count_max="0"/>
-    </fields>
-    <methods>
-      <method name="DisplayBareRelations" static="false" access="public" type="Overload-cmdbAbstractObject"><![CDATA[	function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
+      </methods>
+      <presentation>
+        <details>
+          <items>
+            <item>name</item>
+            <item>description</item>
+            <item>start_date</item>
+            <item>end_date</item>
+            <item>cost</item>
+            <item>cost_currency</item>
+            <item>cost_unit</item>
+            <item>billing_frequency</item>
+            <item>contact_list</item>
+            <item>document_list</item>
+            <item>ci_list</item>
+            <item>provider_id</item>
+            <item>sla</item>
+            <item>coverage</item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>name</item>
+            <item>description</item>
+            <item>start_date</item>
+            <item>end_date</item>
+            <item>cost</item>
+            <item>cost_currency</item>
+            <item>cost_unit</item>
+            <item>billing_frequency</item>
+            <item>provider_id</item>
+            <item>sla</item>
+            <item>coverage</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>start_date</item>
+            <item>end_date</item>
+            <item>provider_id</item>
+            <item>sla</item>
+            <item>coverage</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class name="CustomerContract" category="bizmodel,searchable,servicemgmt" parent="Contract" abstract="false" key_type="autoincrement" db_table="customercontract" db_key_field="id" db_final_class_field="">
+      <properties>
+        <naming format="%1$s">
+          <attributes>
+            <attribute name="name"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon>contract.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute name="name"/>
+            <attribute name="org_id"/>
+            <attribute name="provider_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field name="org_id" type="ExternalKey" target_class="Organization" jointype="" sql="org_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="org_name" type="ExternalField" extkey_attcode="org_id" target_attcode="name"/>
+        <field name="provider_id" type="ExternalKey" target_class="Organization" jointype="" sql="provider_id" is_null_allowed="true" on_target_delete="DEL_AUTO"/>
+        <field name="provider_name" type="ExternalField" extkey_attcode="provider_id" target_attcode="name"/>
+        <field name="support_team_id" type="ExternalKey" target_class="Team" jointype="" filter="SELECT Team WHERE Team.org_id = :this-&gt;provider_id" sql="support_team_id" is_null_allowed="false" on_target_delete="DEL_AUTO">
+          <dependencies>
+            <attribute name="provider_id"/>
+          </dependencies>
+        </field>
+        <field name="support_team_name" type="ExternalField" extkey_attcode="support_team_id" target_attcode="name"/>
+        <field name="sla_list" type="LinkedSetIndirect" linked_class="lnkContractToSLA" ext_key_to_me="contract_id" ext_key_to_remote="sla_id" count_min="0" count_max="0"/>
+        <field name="provider_list" type="LinkedSetIndirect" linked_class="lnkCustomerContractToProviderContract" ext_key_to_me="customer_contract_id" ext_key_to_remote="provider_contract_id" count_min="0" count_max="0"/>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item>name</item>
+            <item>org_id</item>
+            <item>description</item>
+            <item>start_date</item>
+            <item>end_date</item>
+            <item>cost</item>
+            <item>cost_currency</item>
+            <item>cost_unit</item>
+            <item>billing_frequency</item>
+            <item>contact_list</item>
+            <item>document_list</item>
+            <item>ci_list</item>
+            <item>provider_list</item>
+            <item>provider_id</item>
+            <item>support_team_id</item>
+            <item>sla_list</item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>name</item>
+            <item>description</item>
+            <item>org_id</item>
+            <item>start_date</item>
+            <item>end_date</item>
+            <item>cost</item>
+            <item>cost_currency</item>
+            <item>cost_unit</item>
+            <item>billing_frequency</item>
+            <item>provider_id</item>
+            <item>support_team_id</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>org_id</item>
+            <item>start_date</item>
+            <item>end_date</item>
+            <item>provider_id</item>
+            <item>support_team_id</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class name="lnkCustomerContractToProviderContract" category="bizmodel,searchable,servicemgmt,lnkservice" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" is_link="1" db_table="lnkcustomercontracttoprovider" db_key_field="id" db_final_class_field="">
+      <properties>
+        <naming format="%1$s">
+          <attributes>
+            <attribute name="customer_contract_id"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon></icon>
+        <reconciliation>
+          <attributes>
+            <attribute name="customer_contract_id"/>
+            <attribute name="provider_contract_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field name="customer_contract_id" type="ExternalKey" target_class="CustomerContract" jointype="" sql="customer_contract_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="customer_contract_name" type="ExternalField" extkey_attcode="customer_contract_id" target_attcode="name"/>
+        <field name="provider_contract_id" type="ExternalKey" target_class="ProviderContract" jointype="" sql="provider_contract_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="provider_contract_name" type="ExternalField" extkey_attcode="provider_contract_id" target_attcode="name"/>
+        <field name="provider_sla" type="ExternalField" extkey_attcode="provider_contract_id" target_attcode="sla"/>
+        <field name="provider_coverage" type="ExternalField" extkey_attcode="provider_contract_id" target_attcode="coverage"/>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item>customer_contract_id</item>
+            <item>provider_contract_id</item>
+            <item>provider_sla</item>
+            <item>provider_coverage</item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>customer_contract_id</item>
+            <item>provider_contract_id</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>customer_contract_id</item>
+            <item>provider_contract_id</item>
+            <item>provider_sla</item>
+            <item>provider_coverage</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class name="lnkContractToSLA" category="bizmodel,searchable,servicemgmt,lnkservice" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" is_link="1" db_table="lnkcontracttosla" db_key_field="id" db_final_class_field="">
+      <properties>
+        <naming format="%1$s">
+          <attributes>
+            <attribute name="contract_id"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon></icon>
+        <reconciliation>
+          <attributes>
+            <attribute name="contract_id"/>
+            <attribute name="sla_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field name="contract_id" type="ExternalKey" target_class="CustomerContract" jointype="" sql="contract_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="contract_name" type="ExternalField" extkey_attcode="contract_id" target_attcode="name"/>
+        <field name="sla_id" type="ExternalKey" target_class="SLA" jointype="" sql="sla_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="sla_name" type="ExternalField" extkey_attcode="sla_id" target_attcode="name"/>
+        <field name="sla_service_name" type="ExternalField" extkey_attcode="sla_id" target_attcode="service_name"/>
+        <field name="coverage" type="String" sql="coverage" default_value="" is_null_allowed="true"/>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item>contract_id</item>
+            <item>sla_id</item>
+            <item>sla_service_name</item>
+            <item>coverage</item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>contract_id</item>
+            <item>sla_id</item>
+            <item>coverage</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>contract_id</item>
+            <item>sla_id</item>
+            <item>sla_service_name</item>
+            <item>coverage</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class name="lnkContractToDoc" category="bizmodel,searchable,servicemgmt,lnkservice" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" is_link="1" db_table="lnkcontracttodoc" db_key_field="id" db_final_class_field="">
+      <properties>
+        <naming format="%1$s">
+          <attributes>
+            <attribute name="contract_id"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon></icon>
+        <reconciliation>
+          <attributes>
+            <attribute name="contract_id"/>
+            <attribute name="document_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field name="contract_id" type="ExternalKey" target_class="Contract" jointype="" sql="contract_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="contract_name" type="ExternalField" extkey_attcode="contract_id" target_attcode="name"/>
+        <field name="document_id" type="ExternalKey" target_class="Document" jointype="" sql="document_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="document_name" type="ExternalField" extkey_attcode="document_id" target_attcode="name"/>
+        <field name="document_type" type="ExternalField" extkey_attcode="document_id" target_attcode="type"/>
+        <field name="document_status" type="ExternalField" extkey_attcode="document_id" target_attcode="status"/>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item>contract_id</item>
+            <item>document_id</item>
+            <item>document_type</item>
+            <item>document_status</item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>contract_id</item>
+            <item>document_id</item>
+            <item>document_type</item>
+            <item>document_status</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>contract_id</item>
+            <item>document_id</item>
+            <item>document_type</item>
+            <item>document_status</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class name="lnkContractToContact" category="bizmodel,searchable,servicemgmt,lnkservice" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" is_link="1" db_table="lnkcontracttocontact" db_key_field="id" db_final_class_field="">
+      <properties>
+        <naming format="%1$s">
+          <attributes>
+            <attribute name="contract_id"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon></icon>
+        <reconciliation>
+          <attributes>
+            <attribute name="contract_id"/>
+            <attribute name="contact_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field name="contract_id" type="ExternalKey" target_class="Contract" jointype="" sql="contract_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="contract_name" type="ExternalField" extkey_attcode="contract_id" target_attcode="name"/>
+        <field name="contact_id" type="ExternalKey" target_class="Contact" jointype="" sql="contact_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="contact_name" type="ExternalField" extkey_attcode="contact_id" target_attcode="name"/>
+        <field name="contact_email" type="ExternalField" extkey_attcode="contact_id" target_attcode="email"/>
+        <field name="role" type="String" sql="role" default_value="" is_null_allowed="true"/>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item>contract_id</item>
+            <item>contact_id</item>
+            <item>contact_email</item>
+            <item>role</item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>contract_id</item>
+            <item>contact_id</item>
+            <item>contact_email</item>
+            <item>role</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>contract_id</item>
+            <item>contact_id</item>
+            <item>contact_email</item>
+            <item>role</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class name="lnkContractToCI" category="bizmodel,searchable,servicemgmt,lnkservice" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" is_link="1" db_table="lnkcontracttoci" db_key_field="id" db_final_class_field="">
+      <properties>
+        <naming format="%1$s">
+          <attributes>
+            <attribute name="contract_id"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon></icon>
+        <reconciliation>
+          <attributes>
+            <attribute name="contract_id"/>
+            <attribute name="ci_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field name="contract_id" type="ExternalKey" target_class="Contract" jointype="" sql="contract_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="contract_name" type="ExternalField" extkey_attcode="contract_id" target_attcode="name"/>
+        <field name="ci_id" type="ExternalKey" target_class="FunctionalCI" jointype="" sql="ci_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="ci_name" type="ExternalField" extkey_attcode="ci_id" target_attcode="name"/>
+        <field name="ci_status" type="ExternalField" extkey_attcode="ci_id" target_attcode="status"/>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item>contract_id</item>
+            <item>ci_id</item>
+            <item>ci_status</item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>contract_id</item>
+            <item>ci_id</item>
+            <item>ci_status</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>contract_id</item>
+            <item>ci_id</item>
+            <item>ci_status</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class name="Service" category="bizmodel,searchable,servicemgmt" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" db_table="service" db_key_field="id" db_final_class_field="">
+      <properties>
+        <naming format="%1$s">
+          <attributes>
+            <attribute name="name"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon>service.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute name="name"/>
+            <attribute name="org_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field name="org_id" type="ExternalKey" target_class="Organization" jointype="" sql="org_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="provider_name" type="ExternalField" extkey_attcode="org_id" target_attcode="name"/>
+        <field name="name" type="String" sql="name" default_value="" is_null_allowed="true"/>
+        <field name="description" type="Text" sql="description" default_value="" is_null_allowed="true"/>
+        <field name="type" type="Enum" sql="type" default_value="IncidentManagement" is_null_allowed="true">
+          <values>
+            <value>RequestManagement</value>
+            <value>IncidentManagement</value>
+          </values>
+        </field>
+        <field name="status" type="Enum" sql="status" default_value="design" is_null_allowed="true">
+          <values>
+            <value>design</value>
+            <value>production</value>
+            <value>obsolete</value>
+          </values>
+        </field>
+        <field name="subcategory_list" type="LinkedSet" linked_class="ServiceSubcategory" ext_key_to_me="service_id" count_min="0" count_max="0"/>
+        <field name="sla_list" type="LinkedSet" linked_class="SLA" ext_key_to_me="service_id" count_min="0" count_max="0"/>
+        <field name="document_list" type="LinkedSetIndirect" linked_class="lnkServiceToDoc" ext_key_to_me="service_id" ext_key_to_remote="document_id" count_min="0" count_max="0"/>
+        <field name="contact_list" type="LinkedSetIndirect" linked_class="lnkServiceToContact" ext_key_to_me="service_id" ext_key_to_remote="contact_id" count_min="0" count_max="0"/>
+      </fields>
+      <methods>
+        <method name="DisplayBareRelations" static="false" access="public" type="Overload-cmdbAbstractObject"><![CDATA[	function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
 	{
 		parent::DisplayBareRelations($oPage, $bEditMode);
 		$aExtraParam = array ('menu' => false, 'block_id' => 'service');
@@ -551,415 +552,416 @@
 			self::DisplaySet($oPage,$oCustomerContracts,$aExtraParam);
 		}
 	}]]></method>
-    </methods>
-    <presentation>
-      <details>
-        <items>
-          <item>name</item>
-          <item>description</item>
-          <item>org_id</item>
-          <item>type</item>
-          <item>status</item>
-          <item>subcategory_list</item>
-          <item>sla_list</item>
-          <item>document_list</item>
-          <item>contact_list</item>
-        </items>
-      </details>
-      <search>
-        <items>
-          <item>name</item>
-          <item>description</item>
-          <item>org_id</item>
-          <item>type</item>
-          <item>status</item>
-        </items>
-      </search>
-      <list>
-        <items>
-          <item>description</item>
-          <item>org_id</item>
-          <item>type</item>
-          <item>status</item>
-        </items>
-      </list>
-    </presentation>
-  </class>
-  <class name="ServiceSubcategory" category="bizmodel,searchable,servicemgmt" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" db_table="servicesubcategory" db_key_field="id" db_final_class_field="">
-    <properties>
-      <naming format="%1$s">
-        <attributes>
-          <attribute name="name"/>
-        </attributes>
-      </naming>
-      <display_template></display_template>
-      <icon>sla.png</icon>
-      <reconciliation>
-        <attributes>
-          <attribute name="name"/>
-          <attribute name="service_id"/>
-        </attributes>
-      </reconciliation>
-    </properties>
-    <fields>
-      <field name="name" type="String" sql="name" default_value="" is_null_allowed="true"/>
-      <field name="description" type="String" sql="description" default_value="" is_null_allowed="true"/>
-      <field name="service_id" type="ExternalKey" target_class="Service" jointype="" sql="service_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
-      <field name="service_name" type="ExternalField" extkey_attcode="service_id" target_attcode="name"/>
-      <field name="org_id" type="ExternalField" extkey_attcode="service_id" target_attcode="org_id"/>
-      <field name="provider_name" type="ExternalField" extkey_attcode="service_id" target_attcode="provider_name"/>
-    </fields>
-    <methods/>
-    <presentation>
-      <details>
-        <items>
-          <item>name</item>
-          <item>org_id</item>
-          <item>service_id</item>
-          <item>description</item>
-        </items>
-      </details>
-      <search>
-        <items>
-          <item>name</item>
-          <item>description</item>
-          <item>service_id</item>
-          <item>provider_name</item>
-        </items>
-      </search>
-      <list>
-        <items>
-          <item>service_id</item>
-          <item>description</item>
-        </items>
-      </list>
-    </presentation>
-  </class>
-  <class name="SLA" category="bizmodel,searchable,servicemgmt" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" db_table="sla" db_key_field="id" db_final_class_field="">
-    <properties>
-      <naming format="%1$s">
-        <attributes>
-          <attribute name="name"/>
-        </attributes>
-      </naming>
-      <display_template></display_template>
-      <icon>sla.png</icon>
-      <reconciliation>
-        <attributes>
-          <attribute name="name"/>
-          <attribute name="service_id"/>
-        </attributes>
-      </reconciliation>
-    </properties>
-    <fields>
-      <field name="name" type="String" sql="name" default_value="" is_null_allowed="true"/>
-      <field name="service_id" type="ExternalKey" target_class="Service" jointype="" sql="service_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
-      <field name="service_name" type="ExternalField" extkey_attcode="service_id" target_attcode="name"/>
-      <field name="slt_list" type="LinkedSetIndirect" linked_class="lnkSLTToSLA" ext_key_to_me="sla_id" ext_key_to_remote="slt_id" count_min="0" count_max="0"/>
-    </fields>
-    <methods/>
-    <presentation>
-      <details>
-        <items>
-          <item>name</item>
-          <item>service_id</item>
-          <item>slt_list</item>
-        </items>
-      </details>
-      <search>
-        <items>
-          <item>name</item>
-          <item>service_id</item>
-        </items>
-      </search>
-      <list>
-        <items>
-          <item>service_id</item>
-        </items>
-      </list>
-    </presentation>
-  </class>
-  <class name="SLT" category="bizmodel,searchable,servicemgmt" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" db_table="slt" db_key_field="id" db_final_class_field="">
-    <properties>
-      <naming format="%1$s">
-        <attributes>
-          <attribute name="name"/>
-        </attributes>
-      </naming>
-      <display_template></display_template>
-      <icon>slt.png</icon>
-      <reconciliation>
-        <attributes>
-          <attribute name="name"/>
-        </attributes>
-      </reconciliation>
-    </properties>
-    <fields>
-      <field name="name" type="String" sql="name" default_value="" is_null_allowed="true"/>
-      <field name="metric" type="Enum" sql="metric" default_value="TTO" is_null_allowed="false">
-        <values>
-          <value>TTO</value>
-          <value>TTR</value>
-        </values>
-      </field>
-      <field name="ticket_priority" type="Enum" sql="ticket_priority" default_value="1" is_null_allowed="true">
-        <values>
-          <value>1</value>
-          <value>2</value>
-          <value>3</value>
-        </values>
-      </field>
-      <field name="value" type="Integer" sql="value" default_value="" is_null_allowed="true"/>
-      <field name="value_unit" type="Enum" sql="value_unit" default_value="hours" is_null_allowed="true">
-        <values>
-          <value>days</value>
-          <value>hours</value>
-          <value>minutes</value>
-        </values>
-      </field>
-      <field name="sla_list" type="LinkedSetIndirect" linked_class="lnkSLTToSLA" ext_key_to_me="slt_id" ext_key_to_remote="sla_id" count_min="0" count_max="0"/>
-    </fields>
-    <methods/>
-    <presentation>
-      <details>
-        <items>
-          <item>name</item>
-          <item>metric</item>
-          <item>ticket_priority</item>
-          <item>value</item>
-          <item>value_unit</item>
-          <item>sla_list</item>
-        </items>
-      </details>
-      <search>
-        <items>
-          <item>name</item>
-          <item>metric</item>
-          <item>ticket_priority</item>
-          <item>value</item>
-          <item>value_unit</item>
-        </items>
-      </search>
-      <list>
-        <items>
-          <item>metric</item>
-          <item>ticket_priority</item>
-          <item>value</item>
-          <item>value_unit</item>
-        </items>
-      </list>
-    </presentation>
-  </class>
-  <class name="lnkSLTToSLA" category="bizmodel,searchable,servicemgmt,lnkservice" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" is_link="1" db_table="lnkslttosla" db_key_field="id" db_final_class_field="">
-    <properties>
-      <naming format="%1$s">
-        <attributes>
-          <attribute name="sla_id"/>
-        </attributes>
-      </naming>
-      <display_template></display_template>
-      <icon></icon>
-      <reconciliation>
-        <attributes>
-          <attribute name="sla_id"/>
-          <attribute name="slt_id"/>
-        </attributes>
-      </reconciliation>
-    </properties>
-    <fields>
-      <field name="sla_id" type="ExternalKey" target_class="SLA" jointype="" sql="sla_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-      <field name="sla_name" type="ExternalField" extkey_attcode="sla_id" target_attcode="name"/>
-      <field name="slt_id" type="ExternalKey" target_class="SLT" jointype="" sql="slt_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-      <field name="slt_name" type="ExternalField" extkey_attcode="slt_id" target_attcode="name"/>
-      <field name="slt_metric" type="ExternalField" extkey_attcode="slt_id" target_attcode="metric"/>
-      <field name="slt_ticket_priority" type="ExternalField" extkey_attcode="slt_id" target_attcode="ticket_priority"/>
-      <field name="slt_value" type="ExternalField" extkey_attcode="slt_id" target_attcode="value"/>
-      <field name="slt_value_unit" type="ExternalField" extkey_attcode="slt_id" target_attcode="value_unit"/>
-    </fields>
-    <methods/>
-    <presentation>
-      <details>
-        <items>
-          <item>sla_id</item>
-          <item>slt_id</item>
-          <item>slt_metric</item>
-          <item>slt_ticket_priority</item>
-          <item>slt_value</item>
-          <item>slt_value_unit</item>
-        </items>
-      </details>
-      <search>
-        <items>
-          <item>sla_id</item>
-          <item>slt_id</item>
-          <item>slt_metric</item>
-          <item>slt_ticket_priority</item>
-          <item>slt_value</item>
-          <item>slt_value_unit</item>
-        </items>
-      </search>
-      <list>
-        <items>
-          <item>sla_id</item>
-          <item>slt_id</item>
-          <item>slt_metric</item>
-          <item>slt_ticket_priority</item>
-          <item>slt_value</item>
-          <item>slt_value_unit</item>
-        </items>
-      </list>
-    </presentation>
-  </class>
-  <class name="lnkServiceToDoc" category="bizmodel,searchable,servicemgmt,lnkservice" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" is_link="1" db_table="lnkservicetodoc" db_key_field="id" db_final_class_field="">
-    <properties>
-      <naming format="%1$s">
-        <attributes>
-          <attribute name="service_id"/>
-        </attributes>
-      </naming>
-      <display_template></display_template>
-      <icon></icon>
-      <reconciliation>
-        <attributes>
-          <attribute name="service_id"/>
-          <attribute name="document_id"/>
-        </attributes>
-      </reconciliation>
-    </properties>
-    <fields>
-      <field name="service_id" type="ExternalKey" target_class="Service" jointype="" sql="service_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-      <field name="service_name" type="ExternalField" extkey_attcode="service_id" target_attcode="name"/>
-      <field name="document_id" type="ExternalKey" target_class="Document" jointype="" sql="document_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-      <field name="document_name" type="ExternalField" extkey_attcode="document_id" target_attcode="name"/>
-      <field name="document_type" type="ExternalField" extkey_attcode="document_id" target_attcode="type"/>
-      <field name="document_status" type="ExternalField" extkey_attcode="document_id" target_attcode="status"/>
-    </fields>
-    <methods/>
-    <presentation>
-      <details>
-        <items>
-          <item>service_id</item>
-          <item>document_id</item>
-          <item>document_type</item>
-          <item>document_status</item>
-        </items>
-      </details>
-      <search>
-        <items>
-          <item>service_id</item>
-          <item>document_id</item>
-          <item>document_type</item>
-          <item>document_status</item>
-        </items>
-      </search>
-      <list>
-        <items>
-          <item>service_id</item>
-          <item>document_id</item>
-          <item>document_type</item>
-          <item>document_status</item>
-        </items>
-      </list>
-    </presentation>
-  </class>
-  <class name="lnkServiceToContact" category="bizmodel,searchable,servicemgmt,lnkservice" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" is_link="1" db_table="lnkservicetocontact" db_key_field="id" db_final_class_field="">
-    <properties>
-      <naming format="%1$s">
-        <attributes>
-          <attribute name="service_id"/>
-        </attributes>
-      </naming>
-      <display_template></display_template>
-      <icon></icon>
-      <reconciliation>
-        <attributes>
-          <attribute name="service_id"/>
-          <attribute name="contact_id"/>
-        </attributes>
-      </reconciliation>
-    </properties>
-    <fields>
-      <field name="service_id" type="ExternalKey" target_class="Service" jointype="" sql="service_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-      <field name="service_name" type="ExternalField" extkey_attcode="service_id" target_attcode="name"/>
-      <field name="contact_id" type="ExternalKey" target_class="Contact" jointype="" sql="contact_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-      <field name="contact_name" type="ExternalField" extkey_attcode="contact_id" target_attcode="name"/>
-      <field name="contact_email" type="ExternalField" extkey_attcode="contact_id" target_attcode="email"/>
-      <field name="role" type="String" sql="role" default_value="" is_null_allowed="true"/>
-    </fields>
-    <methods/>
-    <presentation>
-      <details>
-        <items>
-          <item>service_id</item>
-          <item>contact_id</item>
-          <item>contact_email</item>
-          <item>role</item>
-        </items>
-      </details>
-      <search>
-        <items>
-          <item>service_id</item>
-          <item>contact_id</item>
-          <item>contact_email</item>
-          <item>role</item>
-        </items>
-      </search>
-      <list>
-        <items>
-          <item>service_id</item>
-          <item>contact_id</item>
-          <item>contact_email</item>
-          <item>role</item>
-        </items>
-      </list>
-    </presentation>
-  </class>
-  <class name="lnkServiceToCI" category="bizmodel,searchable,servicemgmt,lnkservice" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" db_table="lnkservicetoci" db_key_field="id" db_final_class_field="">
-    <properties>
-      <naming format="%1$s">
-        <attributes>
-          <attribute name="service_id"/>
-        </attributes>
-      </naming>
-      <display_template></display_template>
-      <icon></icon>
-      <reconciliation>
-        <attributes>
-          <attribute name="service_id"/>
-          <attribute name="ci_id"/>
-        </attributes>
-      </reconciliation>
-    </properties>
-    <fields>
-      <field name="service_id" type="ExternalKey" target_class="Service" jointype="" sql="service_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-      <field name="service_name" type="ExternalField" extkey_attcode="service_id" target_attcode="name"/>
-      <field name="ci_id" type="ExternalKey" target_class="FunctionalCI" jointype="" sql="ci_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-      <field name="ci_name" type="ExternalField" extkey_attcode="ci_id" target_attcode="name"/>
-      <field name="ci_status" type="ExternalField" extkey_attcode="ci_id" target_attcode="status"/>
-    </fields>
-    <methods/>
-    <presentation>
-      <details>
-        <items>
-          <item>service_id</item>
-          <item>ci_id</item>
-          <item>ci_status</item>
-        </items>
-      </details>
-      <search>
-        <items>
-          <item>service_id</item>
-          <item>ci_id</item>
-          <item>ci_status</item>
-        </items>
-      </search>
-      <list>
-        <items>
-          <item>service_id</item>
-          <item>ci_id</item>
-          <item>ci_status</item>
-        </items>
-      </list>
-    </presentation>
-  </class>
-</classes>
+      </methods>
+      <presentation>
+        <details>
+          <items>
+            <item>name</item>
+            <item>description</item>
+            <item>org_id</item>
+            <item>type</item>
+            <item>status</item>
+            <item>subcategory_list</item>
+            <item>sla_list</item>
+            <item>document_list</item>
+            <item>contact_list</item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>name</item>
+            <item>description</item>
+            <item>org_id</item>
+            <item>type</item>
+            <item>status</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>description</item>
+            <item>org_id</item>
+            <item>type</item>
+            <item>status</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class name="ServiceSubcategory" category="bizmodel,searchable,servicemgmt" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" db_table="servicesubcategory" db_key_field="id" db_final_class_field="">
+      <properties>
+        <naming format="%1$s">
+          <attributes>
+            <attribute name="name"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon>sla.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute name="name"/>
+            <attribute name="service_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field name="name" type="String" sql="name" default_value="" is_null_allowed="true"/>
+        <field name="description" type="String" sql="description" default_value="" is_null_allowed="true"/>
+        <field name="service_id" type="ExternalKey" target_class="Service" jointype="" sql="service_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
+        <field name="service_name" type="ExternalField" extkey_attcode="service_id" target_attcode="name"/>
+        <field name="org_id" type="ExternalField" extkey_attcode="service_id" target_attcode="org_id"/>
+        <field name="provider_name" type="ExternalField" extkey_attcode="service_id" target_attcode="provider_name"/>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item>name</item>
+            <item>org_id</item>
+            <item>service_id</item>
+            <item>description</item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>name</item>
+            <item>description</item>
+            <item>service_id</item>
+            <item>provider_name</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>service_id</item>
+            <item>description</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class name="SLA" category="bizmodel,searchable,servicemgmt" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" db_table="sla" db_key_field="id" db_final_class_field="">
+      <properties>
+        <naming format="%1$s">
+          <attributes>
+            <attribute name="name"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon>sla.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute name="name"/>
+            <attribute name="service_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field name="name" type="String" sql="name" default_value="" is_null_allowed="true"/>
+        <field name="service_id" type="ExternalKey" target_class="Service" jointype="" sql="service_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
+        <field name="service_name" type="ExternalField" extkey_attcode="service_id" target_attcode="name"/>
+        <field name="slt_list" type="LinkedSetIndirect" linked_class="lnkSLTToSLA" ext_key_to_me="sla_id" ext_key_to_remote="slt_id" count_min="0" count_max="0"/>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item>name</item>
+            <item>service_id</item>
+            <item>slt_list</item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>name</item>
+            <item>service_id</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>service_id</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class name="SLT" category="bizmodel,searchable,servicemgmt" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" db_table="slt" db_key_field="id" db_final_class_field="">
+      <properties>
+        <naming format="%1$s">
+          <attributes>
+            <attribute name="name"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon>slt.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute name="name"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field name="name" type="String" sql="name" default_value="" is_null_allowed="true"/>
+        <field name="metric" type="Enum" sql="metric" default_value="TTO" is_null_allowed="false">
+          <values>
+            <value>TTO</value>
+            <value>TTR</value>
+          </values>
+        </field>
+        <field name="ticket_priority" type="Enum" sql="ticket_priority" default_value="1" is_null_allowed="true">
+          <values>
+            <value>1</value>
+            <value>2</value>
+            <value>3</value>
+          </values>
+        </field>
+        <field name="value" type="Integer" sql="value" default_value="" is_null_allowed="true"/>
+        <field name="value_unit" type="Enum" sql="value_unit" default_value="hours" is_null_allowed="true">
+          <values>
+            <value>days</value>
+            <value>hours</value>
+            <value>minutes</value>
+          </values>
+        </field>
+        <field name="sla_list" type="LinkedSetIndirect" linked_class="lnkSLTToSLA" ext_key_to_me="slt_id" ext_key_to_remote="sla_id" count_min="0" count_max="0"/>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item>name</item>
+            <item>metric</item>
+            <item>ticket_priority</item>
+            <item>value</item>
+            <item>value_unit</item>
+            <item>sla_list</item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>name</item>
+            <item>metric</item>
+            <item>ticket_priority</item>
+            <item>value</item>
+            <item>value_unit</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>metric</item>
+            <item>ticket_priority</item>
+            <item>value</item>
+            <item>value_unit</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class name="lnkSLTToSLA" category="bizmodel,searchable,servicemgmt,lnkservice" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" is_link="1" db_table="lnkslttosla" db_key_field="id" db_final_class_field="">
+      <properties>
+        <naming format="%1$s">
+          <attributes>
+            <attribute name="sla_id"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon></icon>
+        <reconciliation>
+          <attributes>
+            <attribute name="sla_id"/>
+            <attribute name="slt_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field name="sla_id" type="ExternalKey" target_class="SLA" jointype="" sql="sla_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="sla_name" type="ExternalField" extkey_attcode="sla_id" target_attcode="name"/>
+        <field name="slt_id" type="ExternalKey" target_class="SLT" jointype="" sql="slt_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="slt_name" type="ExternalField" extkey_attcode="slt_id" target_attcode="name"/>
+        <field name="slt_metric" type="ExternalField" extkey_attcode="slt_id" target_attcode="metric"/>
+        <field name="slt_ticket_priority" type="ExternalField" extkey_attcode="slt_id" target_attcode="ticket_priority"/>
+        <field name="slt_value" type="ExternalField" extkey_attcode="slt_id" target_attcode="value"/>
+        <field name="slt_value_unit" type="ExternalField" extkey_attcode="slt_id" target_attcode="value_unit"/>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item>sla_id</item>
+            <item>slt_id</item>
+            <item>slt_metric</item>
+            <item>slt_ticket_priority</item>
+            <item>slt_value</item>
+            <item>slt_value_unit</item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>sla_id</item>
+            <item>slt_id</item>
+            <item>slt_metric</item>
+            <item>slt_ticket_priority</item>
+            <item>slt_value</item>
+            <item>slt_value_unit</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>sla_id</item>
+            <item>slt_id</item>
+            <item>slt_metric</item>
+            <item>slt_ticket_priority</item>
+            <item>slt_value</item>
+            <item>slt_value_unit</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class name="lnkServiceToDoc" category="bizmodel,searchable,servicemgmt,lnkservice" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" is_link="1" db_table="lnkservicetodoc" db_key_field="id" db_final_class_field="">
+      <properties>
+        <naming format="%1$s">
+          <attributes>
+            <attribute name="service_id"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon></icon>
+        <reconciliation>
+          <attributes>
+            <attribute name="service_id"/>
+            <attribute name="document_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field name="service_id" type="ExternalKey" target_class="Service" jointype="" sql="service_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="service_name" type="ExternalField" extkey_attcode="service_id" target_attcode="name"/>
+        <field name="document_id" type="ExternalKey" target_class="Document" jointype="" sql="document_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="document_name" type="ExternalField" extkey_attcode="document_id" target_attcode="name"/>
+        <field name="document_type" type="ExternalField" extkey_attcode="document_id" target_attcode="type"/>
+        <field name="document_status" type="ExternalField" extkey_attcode="document_id" target_attcode="status"/>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item>service_id</item>
+            <item>document_id</item>
+            <item>document_type</item>
+            <item>document_status</item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>service_id</item>
+            <item>document_id</item>
+            <item>document_type</item>
+            <item>document_status</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>service_id</item>
+            <item>document_id</item>
+            <item>document_type</item>
+            <item>document_status</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class name="lnkServiceToContact" category="bizmodel,searchable,servicemgmt,lnkservice" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" is_link="1" db_table="lnkservicetocontact" db_key_field="id" db_final_class_field="">
+      <properties>
+        <naming format="%1$s">
+          <attributes>
+            <attribute name="service_id"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon></icon>
+        <reconciliation>
+          <attributes>
+            <attribute name="service_id"/>
+            <attribute name="contact_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field name="service_id" type="ExternalKey" target_class="Service" jointype="" sql="service_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="service_name" type="ExternalField" extkey_attcode="service_id" target_attcode="name"/>
+        <field name="contact_id" type="ExternalKey" target_class="Contact" jointype="" sql="contact_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="contact_name" type="ExternalField" extkey_attcode="contact_id" target_attcode="name"/>
+        <field name="contact_email" type="ExternalField" extkey_attcode="contact_id" target_attcode="email"/>
+        <field name="role" type="String" sql="role" default_value="" is_null_allowed="true"/>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item>service_id</item>
+            <item>contact_id</item>
+            <item>contact_email</item>
+            <item>role</item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>service_id</item>
+            <item>contact_id</item>
+            <item>contact_email</item>
+            <item>role</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>service_id</item>
+            <item>contact_id</item>
+            <item>contact_email</item>
+            <item>role</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class name="lnkServiceToCI" category="bizmodel,searchable,servicemgmt,lnkservice" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" db_table="lnkservicetoci" db_key_field="id" db_final_class_field="">
+      <properties>
+        <naming format="%1$s">
+          <attributes>
+            <attribute name="service_id"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon></icon>
+        <reconciliation>
+          <attributes>
+            <attribute name="service_id"/>
+            <attribute name="ci_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field name="service_id" type="ExternalKey" target_class="Service" jointype="" sql="service_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="service_name" type="ExternalField" extkey_attcode="service_id" target_attcode="name"/>
+        <field name="ci_id" type="ExternalKey" target_class="FunctionalCI" jointype="" sql="ci_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="ci_name" type="ExternalField" extkey_attcode="ci_id" target_attcode="name"/>
+        <field name="ci_status" type="ExternalField" extkey_attcode="ci_id" target_attcode="status"/>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item>service_id</item>
+            <item>ci_id</item>
+            <item>ci_status</item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>service_id</item>
+            <item>ci_id</item>
+            <item>ci_status</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>service_id</item>
+            <item>ci_id</item>
+            <item>ci_status</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+  </classes>
+</itop_design>
