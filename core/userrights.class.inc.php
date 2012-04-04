@@ -1041,6 +1041,7 @@ class CAS_SelfRegister implements iSelfRegister
 	 */
 	public static function CheckCredentialsAndCreateUser($sName, $sPassword, $sLoginMode, $sAuthentication)
 	{
+		$bOk = true;
 		if ($sLoginMode != 'cas') return false; // Must be authenticated via CAS
 
 		$sCASMemberships = MetaModel::GetConfig()->Get('cas_memberof');
@@ -1090,17 +1091,25 @@ class CAS_SelfRegister implements iSelfRegister
 						{
 							// If needed create a new user for this email/profile
 							phpCAS::log('Info: cas_user_synchro is ON');
-							$bFound = self::CreateCASUser(phpCAS::getUser(), $aMemberOf);
+							$bOk = self::CreateCASUser(phpCAS::getUser(), $aMemberOf);
+							if($bOk)
+							{
+								$bFound = true;
+							}
+							else
+							{
+								phpCAS::log("User ".phpCAS::getUser()." cannot be created in iTop. Logging off...");
+							}
 						}
 						else
 						{
 							phpCAS::log('Info: cas_user_synchro is OFF');
+							$bFound = true;
 						}
-						$bFound = true;
 						break;
 					}	
 				}
-				if(!$bFound)
+				if($bOk && !$bFound)
 				{
 					phpCAS::log("User ".phpCAS::getUser().", none of his/her groups (".implode('; ', $aFilteredGroupNames).") match any of the required groups: ".implode('; ', $aCASMemberships));
 				}
@@ -1181,7 +1190,7 @@ class CAS_SelfRegister implements iSelfRegister
 			{
 				case 0:
 				phpCAS::log("Error: found no contact with the email: '$sEmail'. Cannot create the user in iTop.");
-				return;
+				return false;
 
 				case 1:
 				$oContact = $oSet->Fetch();
@@ -1191,7 +1200,7 @@ class CAS_SelfRegister implements iSelfRegister
 
 				default:
 				phpCAS::log("Error: ".$oSet->Count()." contacts have the same email: '$sEmail'. Cannot create a user for this email.");
-				return;
+				return false;
 			}
 			
 			$oUser = new UserExternal();
