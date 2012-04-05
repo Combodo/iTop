@@ -707,4 +707,47 @@
       </presentation>
     </class>
   </classes>
+  <menus>
+    <menu id="IncidentManagement" type="MenuGroup">
+      <rank value="40"/>
+    </menu>
+    <menu id="Incident:Overview" type="TemplateMenuNode">
+      <template_file value="overview.html"/>
+      <parent value="IncidentManagement"/>
+      <rank value="0"/>
+    </menu>
+    <menu id="NewIncident" type="NewObjectMenuNode">
+      <class value="Incident"/>
+      <parent value="IncidentManagement"/>
+      <rank value="1"/>
+    </menu>
+    <menu id="SearchIncidents" type="SearchMenuNode">
+      <class value="Incident"/>
+      <parent value="IncidentManagement"/>
+      <rank value="2"/>
+    </menu>
+    <menu id="Incident:Shortcuts" type="TemplateMenuNode">
+      <template_file value=""/>
+      <parent value="IncidentManagement"/>
+      <rank value="3"/>
+    </menu>
+    <menu id="Incident:MyIncidents" type="OQLMenuNode">
+      <oql value="SELECT Incident WHERE agent_id = :current_contact_id AND status NOT IN (&quot;closed&quot;, &quot;resolved&quot;)"/>
+      <do_search value=""/>
+      <parent value="Incident:Shortcuts"/>
+      <rank value="1"/>
+    </menu>
+    <menu id="Incident:EscalatedIncidents" type="OQLMenuNode">
+      <oql value="SELECT Incident WHERE status IN (&quot;escalated_tto&quot;, &quot;escalated_ttr&quot;)"/>
+      <do_search value=""/>
+      <parent value="Incident:Shortcuts"/>
+      <rank value="2"/>
+    </menu>
+    <menu id="Incident:OpenIncidents" type="OQLMenuNode">
+      <oql value="SELECT Incident WHERE status IN (&quot;new&quot;, &quot;assigned&quot;, &quot;escalated_tto&quot;, &quot;escalated_ttr&quot;, &quot;resolved&quot;)"/>
+      <do_search value=""/>
+      <parent value="Incident:Shortcuts"/>
+      <rank value="3"/>
+    </menu>
+  </menus>
 </itop_design>

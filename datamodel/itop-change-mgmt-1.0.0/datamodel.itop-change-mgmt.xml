@@ -2958,4 +2958,53 @@
       </presentation>
     </class>
   </classes>
+  <menus>
+    <menu id="ChangeManagement" type="MenuGroup">
+      <rank value="50"/>
+    </menu>
+    <menu id="Change:Overview" type="TemplateMenuNode">
+      <template_file value="overview.html"/>
+      <parent value="ChangeManagement"/>
+      <rank value="0"/>
+    </menu>
+    <menu id="NewChange" type="NewObjectMenuNode">
+      <class value="Change"/>
+      <parent value="ChangeManagement"/>
+      <rank value="1"/>
+    </menu>
+    <menu id="SearchChanges" type="SearchMenuNode">
+      <class value="Change"/>
+      <parent value="ChangeManagement"/>
+      <rank value="2"/>
+    </menu>
+    <menu id="Change:Shortcuts" type="TemplateMenuNode">
+      <template_file value=""/>
+      <parent value="ChangeManagement"/>
+      <rank value="3"/>
+    </menu>
+    <menu id="MyChanges" type="OQLMenuNode">
+      <oql value="SELECT Change WHERE agent_id = :current_contact_id AND status NOT IN (&quot;closed&quot;, &quot;resolved&quot;)"/>
+      <do_search value=""/>
+      <parent value="Change:Shortcuts"/>
+      <rank value="1"/>
+    </menu>
+    <menu id="Changes" type="OQLMenuNode">
+      <oql value="SELECT Change WHERE status != &quot;closed&quot;"/>
+      <do_search value=""/>
+      <parent value="Change:Shortcuts"/>
+      <rank value="2"/>
+    </menu>
+    <menu id="WaitingApproval" type="OQLMenuNode">
+      <oql value="SELECT ApprovedChange WHERE status IN (&quot;plannedscheduled&quot;)"/>
+      <do_search value=""/>
+      <parent value="Change:Shortcuts"/>
+      <rank value="3"/>
+    </menu>
+    <menu id="WaitingAcceptance" type="OQLMenuNode">
+      <oql value="SELECT NormalChange WHERE status IN (&quot;new&quot;)"/>
+      <do_search value=""/>
+      <parent value="Change:Shortcuts"/>
+      <rank value="4"/>
+    </menu>
+  </menus>
 </itop_design>

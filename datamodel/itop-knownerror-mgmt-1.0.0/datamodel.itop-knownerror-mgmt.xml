@@ -180,4 +180,30 @@
       </presentation>
     </class>
   </classes>
+  <menus>
+    <menu id="ProblemManagement" type="MenuGroup">
+      <rank value="42"/>
+    </menu>
+    <menu id="NewError" type="NewObjectMenuNode">
+      <class value="KnownError"/>
+      <parent value="ProblemManagement"/>
+      <rank value="3"/>
+    </menu>
+    <menu id="SearchError" type="SearchMenuNode">
+      <class value="KnownError"/>
+      <parent value="ProblemManagement"/>
+      <rank value="4"/>
+    </menu>
+    <menu id="Problem:Shortcuts" type="TemplateMenuNode">
+      <template_file value=""/>
+      <parent value="ProblemManagement"/>
+      <rank value="5"/>
+    </menu>
+    <menu id="Problem:KnownErrors" type="OQLMenuNode">
+      <oql value="SELECT KnownError"/>
+      <do_search value="1"/>
+      <parent value="Problem:Shortcuts"/>
+      <rank value="3"/>
+    </menu>
+  </menus>
 </itop_design>

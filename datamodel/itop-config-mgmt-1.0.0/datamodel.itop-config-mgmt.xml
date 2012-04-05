@@ -2895,4 +2895,138 @@
       </presentation>
     </class>
   </classes>
+  <menus>
+    <menu id="DataAdministration" type="MenuGroup">
+      <enable_class value="Organization"/>
+      <enable_action value="UR_ACTION_MODIFY"/>
+      <enable_permission value="UR_ALLOWED_YES"/>
+      <enable_stimulus value=""/>
+      <rank value="70"/>
+    </menu>
+    <menu id="Audit" type="WebPageMenuNode">
+      <url value="$pages/audit.php"/>
+      <parent value="DataAdministration"/>
+      <rank value="33"/>
+    </menu>
+    <menu id="Catalogs" type="TemplateMenuNode">
+      <template_file value=""/>
+      <parent value="DataAdministration"/>
+      <rank value="50"/>
+    </menu>
+    <menu id="Organization" type="OQLMenuNode">
+      <oql value="SELECT Organization"/>
+      <do_search value="1"/>
+      <parent value="Catalogs"/>
+      <rank value="10"/>
+    </menu>
+    <menu id="Application" type="OQLMenuNode">
+      <oql value="SELECT Application"/>
+      <do_search value=""/>
+      <parent value="Catalogs"/>
+      <rank value="20"/>
+    </menu>
+    <menu id="DBServer" type="OQLMenuNode">
+      <oql value="SELECT DBServer"/>
+      <do_search value=""/>
+      <parent value="Catalogs"/>
+      <rank value="40"/>
+    </menu>
+    <menu id="ConfigManagement" type="MenuGroup">
+      <rank value="20"/>
+    </menu>
+    <menu id="ConfigManagementOverview" type="TemplateMenuNode">
+      <template_file value="overview.html"/>
+      <parent value="ConfigManagement"/>
+      <rank value="0"/>
+    </menu>
+    <menu id="Contact" type="TemplateMenuNode">
+      <template_file value="contacts_menu.html"/>
+      <parent value="ConfigManagement"/>
+      <rank value="1"/>
+    </menu>
+    <menu id="NewContact" type="NewObjectMenuNode">
+      <class value="Contact"/>
+      <parent value="Contact"/>
+      <rank value="1"/>
+    </menu>
+    <menu id="SearchContacts" type="SearchMenuNode">
+      <class value="Contact"/>
+      <parent value="Contact"/>
+      <rank value="2"/>
+    </menu>
+    <menu id="Document" type="OQLMenuNode">
+      <oql value="SELECT Document"/>
+      <do_search value="1"/>
+      <parent value="ConfigManagement"/>
+      <rank value="2"/>
+    </menu>
+    <menu id="Location" type="OQLMenuNode">
+      <oql value="SELECT Location"/>
+      <do_search value="1"/>
+      <parent value="ConfigManagement"/>
+      <rank value="3"/>
+    </menu>
+    <menu id="Group" type="OQLMenuNode">
+      <oql value="SELECT Group"/>
+      <do_search value="1"/>
+      <parent value="ConfigManagement"/>
+      <rank value="4"/>
+    </menu>
+    <menu id="ConfigManagementCI" type="TemplateMenuNode">
+      <template_file value="cis_menu.html"/>
+      <parent value="ConfigManagement"/>
+      <rank value="5"/>
+    </menu>
+    <menu id="NewCI" type="NewObjectMenuNode">
+      <class value="FunctionalCI"/>
+      <parent value="ConfigManagementCI"/>
+      <rank value="0"/>
+    </menu>
+    <menu id="SearchCIs" type="SearchMenuNode">
+      <class value="FunctionalCI"/>
+      <parent value="ConfigManagementCI"/>
+      <rank value="1"/>
+    </menu>
+    <menu id="ConfigManagement:Shortcuts" type="TemplateMenuNode">
+      <template_file value=""/>
+      <parent value="ConfigManagement"/>
+      <rank value="6"/>
+    </menu>
+    <menu id="Server" type="OQLMenuNode">
+      <oql value="SELECT Server"/>
+      <do_search value=""/>
+      <parent value="ConfigManagement:Shortcuts"/>
+      <rank value="1"/>
+    </menu>
+    <menu id="NetworkDevice" type="OQLMenuNode">
+      <oql value="SELECT NetworkDevice"/>
+      <do_search value=""/>
+      <parent value="ConfigManagement:Shortcuts"/>
+      <rank value="2"/>
+    </menu>
+    <menu id="Printer" type="OQLMenuNode">
+      <oql value="SELECT Printer"/>
+      <do_search value=""/>
+      <parent value="ConfigManagement:Shortcuts"/>
+      <rank value="3"/>
+    </menu>
+    <menu id="PC" type="OQLMenuNode">
+      <oql value="SELECT PC"/>
+      <do_search value=""/>
+      <parent value="ConfigManagement:Shortcuts"/>
+      <rank value="4"/>
+    </menu>
+    <menu id="BusinessProcess" type="OQLMenuNode">
+      <oql value="SELECT BusinessProcess"/>
+      <do_search value=""/>
+      <parent value="ConfigManagement:Shortcuts"/>
+      <rank value="5"/>
+    </menu>
+    <menu id="ApplicationSolution" type="OQLMenuNode">
+      <oql value="SELECT ApplicationSolution"/>
+      <do_search value=""/>
+      <parent value="ConfigManagement:Shortcuts"/>
+      <rank value="6"/>
+    </menu>
+  </menus>
 </itop_design>

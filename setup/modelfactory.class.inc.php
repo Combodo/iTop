@@ -272,7 +272,9 @@ class ModelFactory
 	protected $oDOMDocument;
 	protected $oRoot;
 	protected $oClasses;
+	protected $oMenus;
 	static protected $aLoadedClasses;
+	static protected $aLoadedMenus;
 	static protected $aWellKnownParents = array('DBObject', 'CMDBObject','cmdbAbstractObject');
 	static protected $aLoadedModules;
 	
@@ -285,7 +287,10 @@ class ModelFactory
 		$this->oDOMDocument->AppendChild($this->oRoot);
 		$this->oClasses = $this->oDOMDocument->CreateElement('classes');
 		$this->oRoot->AppendChild($this->oClasses);
+		$this->oMenus = $this->oDOMDocument->CreateElement('menus');
+		$this->oRoot->AppendChild($this->oMenus);
 		self::$aLoadedClasses = array();
+		self::$aLoadedMenus = array();
 		self::$aLoadedModules = array();
 	}
 	
@@ -293,7 +298,7 @@ class ModelFactory
 	{
 		if (is_null($oNode))
 		{
-			$oNode = $this->oClasses;
+			$oNode = $this->oMenus;
 		}
 		echo htmlentities($this->oDOMDocument->saveXML($oNode));
 	}
@@ -331,6 +336,13 @@ class ModelFactory
 				}
 				$sClassName = $oNode->GetAttribute('name');
 				$aClasses[$sClassName] = array('name' => $sClassName, 'parent' => $sParentClass, 'node' => $oNode);
+			}
+
+			// Menus - temporary for compiling ???
+			$oNodeList = $oXPath->query('/itop_design/menus/menu');
+			foreach($oNodeList as $oNode)
+			{
+				$this->AddMenu($oNode, $sModuleName);
 			}
 		}
 		
@@ -542,6 +554,12 @@ class ModelFactory
 		
 	}
 
+	/**
+	 * Modify a class within the DOM
+	 * @param string $sMenuId
+	 * @param DOMNode $oMenuNode
+	 * @throws Exception
+	 */
 	public function AlterClass($sClassName, DOMNode $oClassNode)
 	{
 		$sOriginalName = $sClassName;
@@ -571,7 +589,58 @@ class ModelFactory
 		}
 		$this->_priv_SetFlag($oDestNode, 'modified');
 	}
+
+	/**
+	 * Add the given menu to the DOM
+	 * @param DOMNode $oMenuNode
+	 * @param string $sModuleName The name of the module in which this class is declared
+	 * @throws Exception
+	 */
+	public function AddMenu($oMenuNode, $sModuleName)
+	{
+		$sMenuId = $oMenuNode->GetAttribute('id');
+
+		self::$aLoadedMenus[$sMenuId] = $this->oDOMDocument->ImportNode($oMenuNode, true /* bDeep */);
+		self::$aLoadedMenus[$sMenuId]->SetAttribute('_operation', 'added');
+		if ($sModuleName != '')
+		{
+			self::$aLoadedMenus[$sMenuId]->SetAttribute('_created_in', $sModuleName);
+		}
+		$this->oMenus->AppendChild(self::$aLoadedMenus[$sMenuId]);
+	}
 	
+	/**
+	 * Remove a menu from the DOM
+	 * @param string $sMenuId
+	 * @throws Exception
+	 */
+	public function RemoveMenu($sMenuId)
+	{
+		$oMenuNode = self::$aLoadedMenus[$sClass];
+		if ($oMenuNode->getAttribute('_operation') == 'added')
+		{
+			$oMenuNode->parentNode->RemoveChild($oMenuNode);
+			unset(self::$aLoadedMenus[$sMenuId]);	
+		}
+		else
+		{
+			self::$aLoadedMenus[$sMenuId]->SetAttribute('_operation', 'removed');
+		}
+		
+	}
+
+	/**
+	 * Modify a menu within the DOM
+	 * @param string $sMenuId
+	 * @param DOMNode $oMenuNode
+	 * @throws Exception
+	 */
+	public function AlterMenu($sMenuId, DOMNode $oMenuNode)
+	{
+		// Todo - implement... do we have to handle menu renaming ???
+	}
+
+
 	protected function _priv_AlterNode(DOMNode $oNode, DOMNode $oDeltaNode)
 	{
 		foreach ($oDeltaNode->attributes as $sName => $oAttrNode)
@@ -1072,6 +1141,22 @@ EOF
 	{
 		// Not yet implemented !!!
 		return array();
+	}
+		
+	/**
+	 * List all menus from the DOM, for a given module
+	 * @param string $sModuleName
+	 * @param bool $bFlattenLayers
+	 * @throws Exception
+	 */
+	public function ListMenus($sModuleName, $bFlattenLayers = true)
+	{
+		$sXPath = "//menu[@_created_in='$sModuleName']";
+		if ($bFlattenLayers)
+		{
+			$sXPath = "//menu[@_created_in='$sModuleName' and @_operation!='removed']";
+		}
+		return $this->_priv_GetNodes($sXPath, $this->oMenus);
 	}
 		
 	public function ApplyChanges()

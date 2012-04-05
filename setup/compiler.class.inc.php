@@ -153,6 +153,37 @@ EOF;
 					}
 				}
 			}
+
+			$oMenus = $this->oFactory->ListMenus($sModuleName);
+			$iMenuCount = $oMenus->length;
+			if ($iMenuCount == 0)
+			{
+				$oP->p("Found module without menus declared: $sModuleName");
+			}
+			else
+			{
+				$sMenusHeader =
+<<<EOF
+//
+// Menus
+//
+
+EOF;
+				file_put_contents($sResultFile, $sMenusHeader, FILE_APPEND);
+
+				foreach($oMenus as $oMenu)
+				{
+					try
+					{
+						$this->CompileMenu($oMenu, $sResultFile, $sRelativeDir, $oP);
+					}
+					catch (ssDOMFormatException $e)
+					{
+						$sClass = $oClass->getAttribute("name");
+						throw new Exception("Failed to process class '$sClass', from '$sModuleRootDir': ".$e->getMessage());
+					}
+				}
+			}
 		}
 		
 		if (count($aResultFiles))
@@ -168,6 +199,7 @@ EOF;
 		}
 		
 		$oP->output();
+		//$this->oFactory->Dump();
 	}
 
 	/**
@@ -340,8 +372,45 @@ EOF;
 		$sRes = implode(' | ', $aFlags);
 		return $sRes;
 	}
-	
-	
+
+
+	/**
+	 * Format a path (file or url) as an absolute path or relative to the module or the app
+	 */ 
+	protected function PathToPHP($sPath, $sModuleRelativeDir, $bIsUrl = false)
+	{
+		if (substr($sPath, 0, 2) == '$$')
+		{
+			// Absolute
+			$sPHP = "'".addslashes(substr($sPath, 2))."'";
+		}
+		elseif (substr($sPath, 0, 1) == '$')
+		{
+			// Relative to the application
+			if ($bIsUrl)
+			{
+				$sPHP = "utils::GetAbsoluteUrlAppRoot().'".addslashes(substr($sPath, 1))."'";
+			}
+			else
+			{
+				$sPHP = "APPROOT.'".addslashes(substr($sPath, 1))."'";
+			}
+		}
+		else
+		{
+			// Relative to the module
+			if ($bIsUrl)
+			{
+				$sPHP = "utils::GetAbsoluteUrlAppRoot().'".addslashes($sModuleRelativeDir.''.$sPath)."'";
+			}
+			else
+			{
+				$sPHP = "dirname(__FILE__).'/$sPath'";
+			}
+		}
+		return $sPHP;
+	}
+
 	protected function CompileClass($oClass, $sResFile, $sModuleRelativeDir, $oP)
 	{
 		$sClass = $oClass->getAttribute('name');
@@ -726,7 +795,85 @@ $sMethods
 }
 EOF;
 		file_put_contents($sResFile, $sPHP, FILE_APPEND);
+	}// function CompileClass()
+
+
+	protected function CompileMenu($oMenu, $sResFile, $sModuleRelativeDir, $oP)
+	{
+		$sMenuId = $oMenu->getAttribute("id");
+		$sMenuClass = $oMenu->getAttribute("type");
+
+		$oParent = $this->GetOptionalElement($oMenu, 'parent');
+		if ($oParent)
+		{
+			$sParent = $oParent->GetAttribute('value');
+			$sParentSpec = "\$__comp_menus__['$sParent']->GetIndex()";
+		}
+		else
+		{
+			$sParentSpec = '-1';
+		}
+
+		$fRank = $this->GetUniqueElement($oMenu, 'rank')->GetAttribute('value');
+		switch($sMenuClass)
+		{
+		case 'WebPageMenuNode':
+			$sUrl = $this->GetUniqueElement($oMenu, 'url')->GetAttribute('value');
+			$sUrlSpec = $this->PathToPHP($sUrl, $sModuleRelativeDir, true /* Url */);
+			$sNewMenu = "new WebPageMenuNode('$sMenuId', $sUrlSpec, $sParentSpec, $fRank);";
+			break;
+
+		case 'TemplateMenuNode':
+			$sTemplateFile = $this->GetUniqueElement($oMenu, 'template_file')->GetAttribute('value');
+			$sTemplateSpec = $this->PathToPHP($sTemplateFile, $sModuleRelativeDir);
+			$sNewMenu = "new TemplateMenuNode('$sMenuId', $sTemplateSpec, $sParentSpec, $fRank);";
+			break;
+
+		case 'OQLMenuNode':
+			$sOQL = $this->GetUniqueElement($oMenu, 'oql')->GetAttribute('value');
+			$bSearch = ($this->GetUniqueElement($oMenu, 'do_search')->GetAttribute('value') == '1') ? 'true' : 'false';
+			$sNewMenu = "new OQLMenuNode('$sMenuId', '$sOQL', $sParentSpec, $fRank, $bSearch);";
+			break;
+
+		case 'NewObjectMenuNode':
+			$sClass = $this->GetUniqueElement($oMenu, 'class')->GetAttribute('value');
+			$sNewMenu = "new NewObjectMenuNode('$sMenuId', '$sClass', $sParentSpec, $fRank);";
+			break;
+
+		case 'SearchMenuNode':
+			$sClass = $this->GetUniqueElement($oMenu, 'class')->GetAttribute('value');
+			$sNewMenu = "new SearchMenuNode('$sMenuId', '$sClass', $sParentSpec, $fRank);";
+			break;
+
+		case 'MenuGroup':
+		default:
+			if ($oEnableClass = $this->GetOptionalElement($oMenu, 'enable_class'))
+			{
+				$sEnableClass = $oEnableClass->GetAttribute('value');
+				$sEnableAction = $this->GetUniqueElement($oMenu, 'enable_action')->GetAttribute('value');
+				$sEnablePermission = $this->GetUniqueElement($oMenu, 'enable_permission')->GetAttribute('value');
+				$sEnableStimulus = $this->GetUniqueElement($oMenu, 'enable_stimulus')->GetAttribute('value');
+				if (strlen($sEnableStimulus) > 0)
+				{
+					$sNewMenu = "new MenuGroup('$sMenuId', $fRank, '$sEnableClass', $sEnableAction, $sEnablePermission, '$sEnableStimulus');";
+				}
+				else
+				{
+					$sNewMenu = "new MenuGroup('$sMenuId', $fRank, '$sEnableClass', $sEnableAction, $sEnablePermission);";
+				}
+				//$sNewMenu = "new MenuGroup('$sMenuId', $fRank, '$sEnableClass', UR_ACTION_MODIFY, UR_ALLOWED_YES|UR_ALLOWED_DEPENDS);";
+			}
+			else
+			{
+				$sNewMenu = "new MenuGroup('$sMenuId', $fRank);";
+			}
+		}
+		$sPHP = "\$__comp_menus__['$sMenuId'] = $sNewMenu\n";
+
+		file_put_contents($sResFile, $sPHP, FILE_APPEND);
 	}
 }
+
+
 
 ?>

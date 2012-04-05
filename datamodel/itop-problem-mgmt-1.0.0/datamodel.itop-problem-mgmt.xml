@@ -432,4 +432,33 @@
       </presentation>
     </class>
   </classes>
+  <menus>
+    <menu id="Problem:Overview" type="TemplateMenuNode">
+      <template_file value="overview.html"/>
+      <parent value="ProblemManagement"/>
+      <rank value="0"/>
+    </menu>
+    <menu id="NewProblem" type="NewObjectMenuNode">
+      <class value="Problem"/>
+      <parent value="ProblemManagement"/>
+      <rank value="1"/>
+    </menu>
+    <menu id="SearchProblems" type="SearchMenuNode">
+      <class value="Problem"/>
+      <parent value="ProblemManagement"/>
+      <rank value="2"/>
+    </menu>
+    <menu id="Problem:MyProblems" type="OQLMenuNode">
+      <oql value="SELECT Problem WHERE agent_id = :current_contact_id AND status NOT IN (&quot;closed&quot;, &quot;resolved&quot;)"/>
+      <do_search value=""/>
+      <parent value="Problem:Shortcuts"/>
+      <rank value="1"/>
+    </menu>
+    <menu id="Problem:OpenProblems" type="OQLMenuNode">
+      <oql value="SELECT Problem WHERE status IN (&quot;new&quot;, &quot;assigned&quot;, &quot;resolved&quot;)"/>
+      <do_search value=""/>
+      <parent value="Problem:Shortcuts"/>
+      <rank value="2"/>
+    </menu>
+  </menus>
 </itop_design>

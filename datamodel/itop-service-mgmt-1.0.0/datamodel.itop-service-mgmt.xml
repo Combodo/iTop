@@ -964,4 +964,50 @@
       </presentation>
     </class>
   </classes>
+  <menus>
+    <menu id="ServiceManagement" type="MenuGroup">
+      <rank value="60"/>
+    </menu>
+    <menu id="Service:Overview" type="TemplateMenuNode">
+      <template_file value="overview.html"/>
+      <parent value="ServiceManagement"/>
+      <rank value="0"/>
+    </menu>
+    <menu id="ProviderContract" type="OQLMenuNode">
+      <oql value="SELECT ProviderContract"/>
+      <do_search value="1"/>
+      <parent value="ServiceManagement"/>
+      <rank value="1"/>
+    </menu>
+    <menu id="CustomerContract" type="OQLMenuNode">
+      <oql value="SELECT CustomerContract"/>
+      <do_search value="1"/>
+      <parent value="ServiceManagement"/>
+      <rank value="2"/>
+    </menu>
+    <menu id="Service" type="OQLMenuNode">
+      <oql value="SELECT Service"/>
+      <do_search value="1"/>
+      <parent value="ServiceManagement"/>
+      <rank value="3"/>
+    </menu>
+    <menu id="ServiceSubcategory" type="OQLMenuNode">
+      <oql value="SELECT ServiceSubcategory"/>
+      <do_search value="1"/>
+      <parent value="ServiceManagement"/>
+      <rank value="4"/>
+    </menu>
+    <menu id="SLA" type="OQLMenuNode">
+      <oql value="SELECT SLA"/>
+      <do_search value="1"/>
+      <parent value="ServiceManagement"/>
+      <rank value="5"/>
+    </menu>
+    <menu id="SLT" type="OQLMenuNode">
+      <oql value="SELECT SLT"/>
+      <do_search value="1"/>
+      <parent value="ServiceManagement"/>
+      <rank value="6"/>
+    </menu>
+  </menus>
 </itop_design>
