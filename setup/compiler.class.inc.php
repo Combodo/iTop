@@ -868,7 +868,21 @@ EOF;
 				$sNewMenu = "new MenuGroup('$sMenuId', $fRank);";
 			}
 		}
-		$sPHP = "\$__comp_menus__['$sMenuId'] = $sNewMenu\n";
+		$sIndent = '  ';
+		$sPHPMenu = "\$__comp_menus__['$sMenuId'] = $sNewMenu";
+
+		$oAdminOnly = $this->GetOptionalElement($oMenu, 'enable_admin_only');
+		if ($oAdminOnly && $oAdminOnly->GetAttribute('value') == '1')
+		{
+			$sPHP = $sIndent."if (UserRights::IsAdministrator())\n";
+			$sPHP .= $sIndent."{\n";
+			$sPHP .= $sIndent."   $sPHPMenu\n";
+			$sPHP .= $sIndent."}\n";
+		}
+		else
+		{
+			$sPHP = $sIndent."$sPHPMenu\n";
+		}
 
 		file_put_contents($sResFile, $sPHP, FILE_APPEND);
 	}
