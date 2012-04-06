@@ -586,6 +586,10 @@ class OQLMenuNode extends MenuNode
 	public function SetParameters($aParams)
 	{
 		$this->m_aParams = $aParams;
+		foreach($aParams as $sKey => $value)
+		{
+			$this->aReflectionProperties[$sKey] = $value;
+		}
 	}
 	
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())

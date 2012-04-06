@@ -1159,6 +1159,31 @@ EOF
 		return $this->_priv_GetNodes($sXPath, $this->oMenus);
 	}
 		
+	/**
+	 * Get a menu, given its is id
+	 * @param string $sModuleName
+	 * @param bool $bFlattenLayers
+	 * @throws Exception
+	 */
+	public function GetMenu($sMenuId, $bFlattenLayers = true)
+	{
+		if (!array_key_exists($sMenuId, self::$aLoadedMenus))
+		{
+			return null;
+		}
+		$oMenuNode = self::$aLoadedMenus[$sMenuId];
+		if ($bFlattenLayers)
+		{
+			$sOperation = $oMenuNode->getAttribute('_operation');
+			if ($sOperation == 'removed')
+			{
+				$oMenuNode = null;
+			}
+		}
+		return $oMenuNode;
+	}
+	
+
 	public function ApplyChanges()
 	{
 		$oNodes = $this->ListChanges();

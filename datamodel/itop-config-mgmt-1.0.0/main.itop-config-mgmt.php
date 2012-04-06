@@ -22,43 +22,4 @@ MetaModel::RegisterRelation("depends on", array("description"=>"That impacts ", 
 // choice 'All Organizations' will always be available in the menu
 ApplicationMenu::SetFavoriteSiloQuery('SELECT Organization');
 
-$oAdminMenu = new MenuGroup('DataAdministration', 70 /* fRank */, 'Organization', UR_ACTION_MODIFY, UR_ALLOWED_YES|UR_ALLOWED_DEPENDS);
-$iAdminGroup = $oAdminMenu->GetIndex();
-
-new WebPageMenuNode('Audit', utils::GetAbsoluteUrlAppRoot().'pages/audit.php', $iAdminGroup, 33 /* fRank */);
-
-$oTypologyNode = new TemplateMenuNode('Catalogs', '', $iAdminGroup, 50 /* fRank */);
-$iTopology = $oTypologyNode->GetIndex();
-new OQLMenuNode('Organization', 'SELECT Organization', $iTopology, 10 /* fRank */, true /* bSearch */);
-new OQLMenuNode('Application', 'SELECT Application', $iTopology, 20 /* fRank */);
-new OQLMenuNode('DBServer', 'SELECT DBServer', $iTopology, 40 /* fRank */);
-
-
-$oConfigManagementGroup = new MenuGroup('ConfigManagement', 20 /* fRank */);
-
-// Create an entry, based on a custom template, for the Configuration management overview, under the top-level group
-new TemplateMenuNode('ConfigManagementOverview', dirname(__FILE__).'/overview.html', $oConfigManagementGroup->GetIndex(), 0 /* fRank */);
-
-
-$oContactNode = new TemplateMenuNode('Contact', dirname(__FILE__).'/contacts_menu.html', $oConfigManagementGroup->GetIndex(), 1 /* fRank */);
-new NewObjectMenuNode('NewContact', 'Contact', $oContactNode->GetIndex(), 1 /* fRank */);
-new SearchMenuNode('SearchContacts', 'Contact', $oContactNode->GetIndex(), 2 /* fRank */);
-
-new OQLMenuNode('Document', 'SELECT Document', $oConfigManagementGroup->GetIndex(), 2 /* fRank */, true /* bSearch */);
-new OQLMenuNode('Location', 'SELECT Location', $oConfigManagementGroup->GetIndex(), 3 /* fRank */, true /* bSearch */);
-new OQLMenuNode('Group', 'SELECT Group', $oConfigManagementGroup->GetIndex(), 4 /* fRank */, true /* bSearch */);
-
-
-$oCINode = new TemplateMenuNode('ConfigManagementCI', dirname(__FILE__).'/cis_menu.html', $oConfigManagementGroup->GetIndex(), 5 /* fRank */);
-new NewObjectMenuNode('NewCI', 'FunctionalCI', $oCINode->GetIndex(), 0 /* fRank */);
-new SearchMenuNode('SearchCIs', 'FunctionalCI', $oCINode->GetIndex(), 1 /* fRank */);
-
-$oShortcutsNode = new TemplateMenuNode('ConfigManagement:Shortcuts', '', $oConfigManagementGroup->GetIndex(), 6 /* fRank */);
-new OQLMenuNode('Server', 'SELECT Server', $oShortcutsNode->GetIndex(), 1 /* fRank */);
-new OQLMenuNode('NetworkDevice', 'SELECT NetworkDevice', $oShortcutsNode->GetIndex(), 2 /* fRank */);
-new OQLMenuNode('Printer', 'SELECT Printer', $oShortcutsNode->GetIndex(), 3 /* fRank */);
-new OQLMenuNode('PC', 'SELECT PC', $oShortcutsNode->GetIndex(), 4 /* fRank */);
-new OQLMenuNode('BusinessProcess', 'SELECT BusinessProcess', $oShortcutsNode->GetIndex(), 5 /* fRank */);
-new OQLMenuNode('ApplicationSolution', 'SELECT ApplicationSolution', $oShortcutsNode->GetIndex(), 6 /* fRank */);
-
 ?>

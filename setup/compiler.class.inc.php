@@ -171,16 +171,29 @@ EOF;
 EOF;
 				file_put_contents($sResultFile, $sMenusHeader, FILE_APPEND);
 
+				// Preliminary: determine parent menus not defined within the current module
+				$aMenusToLoad = array();
 				foreach($oMenus as $oMenu)
 				{
+					if ($oParent = $this->GetOptionalElement($oMenu, 'parent'))
+					{
+						$aMenusToLoad[] = $oParent->GetAttribute('value');
+					}
+					// Note: the order matters: the parents must be defined BEFORE
+					$aMenusToLoad[] = $oMenu->GetAttribute('id');
+				}
+				$aMenusToLoad = array_unique($aMenusToLoad);
+				foreach($aMenusToLoad as $sMenuId)
+				{
+					$oMenu = $this->oFactory->GetMenu($sMenuId);
 					try
 					{
 						$this->CompileMenu($oMenu, $sResultFile, $sRelativeDir, $oP);
 					}
 					catch (ssDOMFormatException $e)
 					{
-						$sClass = $oClass->getAttribute("name");
-						throw new Exception("Failed to process class '$sClass', from '$sModuleRootDir': ".$e->getMessage());
+						$sMenu = $oMenu->getAttribute("name");
+						throw new Exception("Failed to process menu '$sMenu', from '$sModuleRootDir': ".$e->getMessage());
 					}
 				}
 			}
@@ -868,20 +881,33 @@ EOF;
 				$sNewMenu = "new MenuGroup('$sMenuId', $fRank);";
 			}
 		}
-		$sIndent = '  ';
-		$sPHPMenu = "\$__comp_menus__['$sMenuId'] = $sNewMenu";
+
+		$sIndent = '';
+		$aPHPMenu = array("\$__comp_menus__['$sMenuId'] = $sNewMenu");
+		if ($oAutoReload = $this->GetOptionalElement($oMenu, 'auto_reload'))
+		{
+			$sAutoReload = addslashes($oAutoReload->GetAttribute("value"));
+			$aPHPMenu[] = "\$__comp_menus__['$sMenuId']->SetParameters(array('auto_reload' => '$sAutoReload'));";
+		}
 
 		$oAdminOnly = $this->GetOptionalElement($oMenu, 'enable_admin_only');
 		if ($oAdminOnly && $oAdminOnly->GetAttribute('value') == '1')
 		{
 			$sPHP = $sIndent."if (UserRights::IsAdministrator())\n";
 			$sPHP .= $sIndent."{\n";
-			$sPHP .= $sIndent."   $sPHPMenu\n";
+			foreach($aPHPMenu as $sPHPLine)
+			{
+				$sPHP .= $sIndent."   $sPHPLine\n";
+			}
 			$sPHP .= $sIndent."}\n";
 		}
 		else
 		{
-			$sPHP = $sIndent."$sPHPMenu\n";
+			$sPHP = '';
+			foreach($aPHPMenu as $sPHPLine)
+			{
+				$sPHP .= $sIndent.$sPHPLine."\n";
+			}
 		}
 
 		file_put_contents($sResFile, $sPHP, FILE_APPEND);

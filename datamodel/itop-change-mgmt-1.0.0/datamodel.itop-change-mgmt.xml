@@ -2985,24 +2985,28 @@
     <menu id="MyChanges" type="OQLMenuNode">
       <oql value="SELECT Change WHERE agent_id = :current_contact_id AND status NOT IN (&quot;closed&quot;, &quot;resolved&quot;)"/>
       <do_search value=""/>
+      <auto_reload value="fast"/>
       <parent value="Change:Shortcuts"/>
       <rank value="1"/>
     </menu>
     <menu id="Changes" type="OQLMenuNode">
       <oql value="SELECT Change WHERE status != &quot;closed&quot;"/>
       <do_search value=""/>
+      <auto_reload value="fast"/>
       <parent value="Change:Shortcuts"/>
       <rank value="2"/>
     </menu>
     <menu id="WaitingApproval" type="OQLMenuNode">
       <oql value="SELECT ApprovedChange WHERE status IN (&quot;plannedscheduled&quot;)"/>
       <do_search value=""/>
+      <auto_reload value="fast"/>
       <parent value="Change:Shortcuts"/>
       <rank value="3"/>
     </menu>
     <menu id="WaitingAcceptance" type="OQLMenuNode">
       <oql value="SELECT NormalChange WHERE status IN (&quot;new&quot;)"/>
       <do_search value=""/>
+      <auto_reload value="fast"/>
       <parent value="Change:Shortcuts"/>
       <rank value="4"/>
     </menu>

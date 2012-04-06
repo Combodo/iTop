@@ -14,17 +14,4 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-$oMyMenuGroup = new MenuGroup('ChangeManagement', 50 /* fRank */);
-new TemplateMenuNode('Change:Overview', dirname(__FILE__).'/overview.html', $oMyMenuGroup->GetIndex() /* oParent */, 0 /* fRank */);
-new NewObjectMenuNode('NewChange', 'Change', $oMyMenuGroup->GetIndex(), 1 /* fRank */);
-new SearchMenuNode('SearchChanges', 'Change', $oMyMenuGroup->GetIndex(), 2 /* fRank */);
-$oShortcutNode = new TemplateMenuNode('Change:Shortcuts', '', $oMyMenuGroup->GetIndex(), 3 /* fRank */);
-$oNode = new OQLMenuNode('MyChanges', 'SELECT Change WHERE agent_id = :current_contact_id AND status NOT IN ("closed", "resolved")', $oShortcutNode->GetIndex(), 1 /* fRank */);
-$oNode->SetParameters(array('auto_reload' => 'fast'));
-$oNode = new OQLMenuNode('Changes', 'SELECT Change WHERE status != "closed"', $oShortcutNode->GetIndex(), 2 /* fRank */);
-$oNode->SetParameters(array('auto_reload' => 'fast'));
-$oNode = new OQLMenuNode('WaitingApproval', 'SELECT ApprovedChange WHERE status IN ("plannedscheduled")', $oShortcutNode->GetIndex(), 3 /* fRank */);
-$oNode->SetParameters(array('auto_reload' => 'fast'));
-$oNode = new OQLMenuNode('WaitingAcceptance', 'SELECT NormalChange WHERE status IN ("new")', $oShortcutNode->GetIndex(), 4 /* fRank */);
-$oNode->SetParameters(array('auto_reload' => 'fast'));
 ?>

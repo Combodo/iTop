@@ -696,18 +696,21 @@
     <menu id="UserRequest:MyRequests" type="OQLMenuNode">
       <oql value="SELECT UserRequest WHERE agent_id = :current_contact_id AND status NOT IN (&quot;closed&quot;,&quot;resolved&quot;)"/>
       <do_search value=""/>
+      <auto_reload value="fast"/>
       <parent value="UserRequest:Shortcuts"/>
       <rank value="1"/>
     </menu>
     <menu id="UserRequest:EscalatedRequests" type="OQLMenuNode">
       <oql value="SELECT UserRequest WHERE status IN (&quot;escalated_tto&quot;, &quot;escalated_ttr&quot;)"/>
       <do_search value=""/>
+      <auto_reload value="fast"/>
       <parent value="UserRequest:Shortcuts"/>
       <rank value="2"/>
     </menu>
     <menu id="UserRequest:OpenRequests" type="OQLMenuNode">
       <oql value="SELECT UserRequest WHERE status IN (&quot;new&quot;, &quot;assigned&quot;, &quot;escalated_tto&quot;, &quot;escalated_ttr&quot;, &quot;frozen&quot;, &quot;resolved&quot;)"/>
       <do_search value=""/>
+      <auto_reload value="fast"/>
       <parent value="UserRequest:Shortcuts"/>
       <rank value="3"/>
     </menu>
