@@ -91,12 +91,12 @@ EOF
 		);
 		$this->add_linked_stylesheet("../css/light-grey.css");
 
-		$this->m_sRootUrl = utils::GetAbsoluteUrlAppRoot(); 		
+		$this->m_sRootUrl = $this->GetAbsoluteUrlAppRoot();
      	$sAbsURLAppRoot = addslashes($this->m_sRootUrl);
-    	$sAbsURLModulesRoot = addslashes(utils::GetAbsoluteUrlModulesRoot());
-    	$oAppContext = new ApplicationContext();
-		$sExtraParams = $oAppContext->GetForLink();
-		$sAppContext = addslashes($sExtraParams);
+    	$sAbsURLModulesRoot = addslashes($this->GetAbsoluteUrlModulesRoot());
+
+		$sAppContext = addslashes($this->GetApplicationContext());
+
 		$this->add_script(
 <<<EOF
 function GetAbsoluteUrlAppRoot()
@@ -133,6 +133,22 @@ EOF
 	public function small_p($sText)
 	{
 		$this->add("<p style=\"font-size:smaller\">$sText</p>\n");
+	}
+
+	public function GetAbsoluteUrlAppRoot()
+	{
+		return utils::GetAbsoluteUrlAppRoot();
+	}
+
+	public function GetAbsoluteUrlModulesRoot()
+	{
+		return utils::GetAbsoluteUrlModulesRoot();
+	}
+
+	function GetApplicationContext()
+	{
+		$oAppContext = new ApplicationContext();
+		return $oAppContext->GetForLink();
 	}
 
 	// By Rom, used by CSVImport and Advanced search

@@ -175,6 +175,31 @@ h3.clickable.open {
 }
 		");
 	}
+
+	/**
+	 * Overriden because the application is not fully loaded when the setup is being run
+	 */	 	
+	public function GetAbsoluteUrlAppRoot()
+	{
+		return '../';
+	}
+
+	/**
+	 * Overriden because the application is not fully loaded when the setup is being run
+	 */	 	
+	public function GetAbsoluteUrlModulesRoot()
+	{
+		return $this->GetAbsoluteUrlAppRoot().utils::GetCurrentEnvironment();
+	}
+
+	/**
+	 * Overriden because the application is not fully loaded when the setup is being run
+	 */	 	
+	function GetApplicationContext()
+	{
+		return '';
+	}
+
 	public function info($sText)
 	{
 		$this->add("<p class=\"info\">$sText</p>\n");
