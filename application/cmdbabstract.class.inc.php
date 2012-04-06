@@ -1389,7 +1389,7 @@ EOF
 						{
 							$iDate = AttributeDateTime::GetAsUnixSeconds($oObj->Get($sAttCode));
 							$aRow[] = '<td>'.date('Y-m-d', $iDate).'</td>';
-							$aRow[] = '<td>'.date('h:i:s', $iDate).'</td>';
+							$aRow[] = '<td>'.date('H:i:s', $iDate).'</td>';
 						}
 						else
 						{
