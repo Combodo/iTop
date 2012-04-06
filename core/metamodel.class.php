@@ -296,7 +296,7 @@ abstract class MetaModel
 	{
 		self::_check_subclass($sClass);
 		$sStringCode = 'Class:'.$sClass;
-		return Dict::S($sStringCode, $sClass);
+		return Dict::S($sStringCode, str_replace('_', ' ', $sClass));
 	}
 	final static public function GetName_Obsolete($sClass)
 	{

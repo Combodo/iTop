@@ -181,7 +181,7 @@ abstract class AttributeDefinition
 		// If no default value is specified, let's define the most relevant one for developping purposes
 		if (is_null($sDefault))
 		{
-			$sDefault = $this->m_sCode;
+			$sDefault = str_replace('_', ' ', $this->m_sCode);
 		}
 
 		$sLabel = Dict::S('Class:'.$this->m_sHostClass.'/Attribute:'.$this->m_sCode, '');
@@ -2048,7 +2048,7 @@ class AttributeEnum extends AttributeString
 			$sLabel = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue, '');
 			if (strlen($sLabel) == 0)
 			{
-				$sLabel = $sValue;
+				$sLabel = str_replace('_', ' ', $sValue);
 				$sParentClass = MetaModel::GetParentClass($this->m_sHostClass);
 				if ($sParentClass)
 				{
