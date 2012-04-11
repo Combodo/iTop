@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <classes>
     <class name="Incident" category="bizmodel,searchable,incidentmgmt" parent="ResponseTicket" abstract="false" key_type="autoincrement" db_table="ticket_incident" db_key_field="id" db_final_class_field="">
       <properties>
@@ -676,11 +676,11 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="ticket_id" type="ExternalKey" target_class="Ticket" jointype="" sql="ticket_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="ticket_ref" type="ExternalField" extkey_attcode="ticket_id" target_attcode="ref"/>
-        <field name="incident_id" type="ExternalKey" target_class="Incident" jointype="" sql="incident_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="incident_ref" type="ExternalField" extkey_attcode="incident_id" target_attcode="ref"/>
-        <field name="reason" type="String" sql="reason" default_value="" is_null_allowed="true"/>
+        <field name="ticket_id" xsi:type="AttributeExternalKey" target_class="Ticket" jointype="" sql="ticket_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="ticket_ref" xsi:type="AttributeExternalField" extkey_attcode="ticket_id" target_attcode="ref"/>
+        <field name="incident_id" xsi:type="AttributeExternalKey" target_class="Incident" jointype="" sql="incident_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="incident_ref" xsi:type="AttributeExternalField" extkey_attcode="incident_id" target_attcode="ref"/>
+        <field name="reason" xsi:type="AttributeString" sql="reason" default_value="" is_null_allowed="true"/>
       </fields>
       <methods/>
       <presentation>
@@ -708,49 +708,49 @@
     </class>
   </classes>
   <menus>
-    <menu id="IncidentManagement" type="MenuGroup">
+    <menu id="IncidentManagement" xsi:type="MenuGroup">
       <rank value="40"/>
     </menu>
-    <menu id="Incident:Overview" type="TemplateMenuNode">
-      <template_file value="overview.html"/>
-      <parent value="IncidentManagement"/>
+    <menu id="Incident:Overview" xsi:type="TemplateMenuNode">
       <rank value="0"/>
-    </menu>
-    <menu id="NewIncident" type="NewObjectMenuNode">
-      <class value="Incident"/>
       <parent value="IncidentManagement"/>
+      <template_file value="overview.html"/>
+    </menu>
+    <menu id="NewIncident" xsi:type="NewObjectMenuNode">
       <rank value="1"/>
-    </menu>
-    <menu id="SearchIncidents" type="SearchMenuNode">
+      <parent value="IncidentManagement"/>
       <class value="Incident"/>
-      <parent value="IncidentManagement"/>
+    </menu>
+    <menu id="SearchIncidents" xsi:type="SearchMenuNode">
       <rank value="2"/>
-    </menu>
-    <menu id="Incident:Shortcuts" type="TemplateMenuNode">
-      <template_file value=""/>
       <parent value="IncidentManagement"/>
-      <rank value="3"/>
+      <class value="Incident"/>
     </menu>
-    <menu id="Incident:MyIncidents" type="OQLMenuNode">
+    <menu id="Incident:Shortcuts" xsi:type="TemplateMenuNode">
+      <rank value="3"/>
+      <parent value="IncidentManagement"/>
+      <template_file value=""/>
+    </menu>
+    <menu id="Incident:MyIncidents" xsi:type="OQLMenuNode">
+      <rank value="1"/>
+      <parent value="Incident:Shortcuts"/>
       <oql value="SELECT Incident WHERE agent_id = :current_contact_id AND status NOT IN (&quot;closed&quot;, &quot;resolved&quot;)"/>
       <do_search value=""/>
       <auto_reload value="fast"/>
-      <parent value="Incident:Shortcuts"/>
-      <rank value="1"/>
     </menu>
-    <menu id="Incident:EscalatedIncidents" type="OQLMenuNode">
+    <menu id="Incident:EscalatedIncidents" xsi:type="OQLMenuNode">
+      <rank value="2"/>
+      <parent value="Incident:Shortcuts"/>
       <oql value="SELECT Incident WHERE status IN (&quot;escalated_tto&quot;, &quot;escalated_ttr&quot;)"/>
       <do_search value=""/>
       <auto_reload value="fast"/>
-      <parent value="Incident:Shortcuts"/>
-      <rank value="2"/>
     </menu>
-    <menu id="Incident:OpenIncidents" type="OQLMenuNode">
+    <menu id="Incident:OpenIncidents" xsi:type="OQLMenuNode">
+      <rank value="3"/>
+      <parent value="Incident:Shortcuts"/>
       <oql value="SELECT Incident WHERE status IN (&quot;new&quot;, &quot;assigned&quot;, &quot;escalated_tto&quot;, &quot;escalated_ttr&quot;, &quot;resolved&quot;)"/>
       <do_search value=""/>
       <auto_reload value="standard"/>
-      <parent value="Incident:Shortcuts"/>
-      <rank value="3"/>
     </menu>
   </menus>
 </itop_design>

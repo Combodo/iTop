@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <classes>
     <class name="Attachment" category="addon,bizmodel" parent="DBObject" abstract="false" key_type="autoincrement" db_table="attachment" db_key_field="id" db_final_class_field="">
       <properties>
@@ -31,12 +31,12 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="expire" type="DateTime" sql="expire" default_value="" is_null_allowed="false"/>
-        <field name="temp_id" type="String" sql="temp_id" default_value="" is_null_allowed="true"/>
-        <field name="item_class" type="String" sql="item_class" default_value="" is_null_allowed="false"/>
-        <field name="item_id" type="String" sql="item_id" default_value="" is_null_allowed="true"/>
-        <field name="item_org_id" type="Integer" sql="item_org_id" default_value="0" is_null_allowed="true"/>
-        <field name="contents" type="Blob"/>
+        <field name="expire" xsi:type="AttributeDateTime" sql="expire" default_value="" is_null_allowed="false"/>
+        <field name="temp_id" xsi:type="AttributeString" sql="temp_id" default_value="" is_null_allowed="true"/>
+        <field name="item_class" xsi:type="AttributeString" sql="item_class" default_value="" is_null_allowed="false"/>
+        <field name="item_id" xsi:type="AttributeString" sql="item_id" default_value="" is_null_allowed="true"/>
+        <field name="item_org_id" xsi:type="AttributeInteger" sql="item_org_id" default_value="0" is_null_allowed="true"/>
+        <field name="contents" xsi:type="AttributeBlob"/>
       </fields>
       <methods>
         <method name="MapContextParam" static="true" access="public" type="Overload-ExNihilo"><comment><![CDATA[/**

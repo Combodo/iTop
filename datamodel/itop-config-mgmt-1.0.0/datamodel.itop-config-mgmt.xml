@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <classes>
     <class name="Organization" category="bizmodel,searchable,structure" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" db_table="organization" db_key_field="id" db_final_class_field="">
       <properties>
@@ -25,16 +25,16 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="name" type="String" sql="name" default_value="" is_null_allowed="false"/>
-        <field name="code" type="String" sql="code" default_value="" is_null_allowed="true"/>
-        <field name="status" type="Enum" sql="status" default_value="active" is_null_allowed="true">
+        <field name="name" xsi:type="AttributeString" sql="name" default_value="" is_null_allowed="false"/>
+        <field name="code" xsi:type="AttributeString" sql="code" default_value="" is_null_allowed="true"/>
+        <field name="status" xsi:type="AttributeEnum" sql="status" default_value="active" is_null_allowed="true">
           <values>
             <value>active</value>
             <value>inactive</value>
           </values>
         </field>
-        <field name="parent_id" type="HierarchicalKey" sql="parent_id" is_null_allowed="true" on_target_delete="DEL_MANUAL"/>
-        <field name="parent_name" type="ExternalField" extkey_attcode="parent_id" target_attcode="name"/>
+        <field name="parent_id" xsi:type="AttributeHierarchicalKey" sql="parent_id" is_null_allowed="true" on_target_delete="DEL_MANUAL"/>
+        <field name="parent_name" xsi:type="AttributeExternalField" extkey_attcode="parent_id" target_attcode="name"/>
       </fields>
       <methods/>
       <presentation>
@@ -80,27 +80,27 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="name" type="String" sql="name" default_value="" is_null_allowed="false"/>
-        <field name="status" type="Enum" sql="status" default_value="active" is_null_allowed="true">
+        <field name="name" xsi:type="AttributeString" sql="name" default_value="" is_null_allowed="false"/>
+        <field name="status" xsi:type="AttributeEnum" sql="status" default_value="active" is_null_allowed="true">
           <values>
             <value>active</value>
             <value>inactive</value>
           </values>
         </field>
-        <field name="org_id" type="ExternalKey" target_class="Organization" jointype="" sql="org_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
-        <field name="org_name" type="ExternalField" extkey_attcode="org_id" target_attcode="name"/>
-        <field name="address" type="Text" sql="address" default_value="" is_null_allowed="true"/>
-        <field name="postal_code" type="String" sql="postal_code" default_value="" is_null_allowed="true"/>
-        <field name="city" type="String" sql="city" default_value="" is_null_allowed="true"/>
-        <field name="country" type="String" sql="country" default_value="" is_null_allowed="true"/>
-        <field name="parent_id" type="HierarchicalKey" filter="SELECT Location AS L WHERE L.org_id = :this-&gt;org_id" sql="parent_id" is_null_allowed="true" on_target_delete="DEL_MANUAL">
+        <field name="org_id" xsi:type="AttributeExternalKey" target_class="Organization" jointype="" sql="org_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
+        <field name="org_name" xsi:type="AttributeExternalField" extkey_attcode="org_id" target_attcode="name"/>
+        <field name="address" xsi:type="AttributeText" sql="address" default_value="" is_null_allowed="true"/>
+        <field name="postal_code" xsi:type="AttributeString" sql="postal_code" default_value="" is_null_allowed="true"/>
+        <field name="city" xsi:type="AttributeString" sql="city" default_value="" is_null_allowed="true"/>
+        <field name="country" xsi:type="AttributeString" sql="country" default_value="" is_null_allowed="true"/>
+        <field name="parent_id" xsi:type="AttributeHierarchicalKey" filter="SELECT Location AS L WHERE L.org_id = :this-&gt;org_id" sql="parent_id" is_null_allowed="true" on_target_delete="DEL_MANUAL">
           <dependencies>
             <attribute name="org_id"/>
           </dependencies>
         </field>
-        <field name="parent_name" type="ExternalField" extkey_attcode="parent_id" target_attcode="name"/>
-        <field name="contact_list" type="LinkedSet" linked_class="Contact" ext_key_to_me="location_id" count_min="0" count_max="0"/>
-        <field name="infra_list" type="LinkedSet" linked_class="InfrastructureCI" ext_key_to_me="location_id" count_min="0" count_max="0"/>
+        <field name="parent_name" xsi:type="AttributeExternalField" extkey_attcode="parent_id" target_attcode="name"/>
+        <field name="contact_list" xsi:type="AttributeLinkedSet" linked_class="Contact" ext_key_to_me="location_id" count_min="0" count_max="0"/>
+        <field name="infra_list" xsi:type="AttributeLinkedSet" linked_class="InfrastructureCI" ext_key_to_me="location_id" count_min="0" count_max="0"/>
       </fields>
       <methods/>
       <presentation>
@@ -157,28 +157,28 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="name" type="String" sql="name" default_value="" is_null_allowed="false"/>
-        <field name="status" type="Enum" sql="status" default_value="active" is_null_allowed="false">
+        <field name="name" xsi:type="AttributeString" sql="name" default_value="" is_null_allowed="false"/>
+        <field name="status" xsi:type="AttributeEnum" sql="status" default_value="active" is_null_allowed="false">
           <values>
             <value>active</value>
             <value>inactive</value>
           </values>
         </field>
-        <field name="org_id" type="ExternalKey" target_class="Organization" jointype="" sql="org_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
-        <field name="org_name" type="ExternalField" extkey_attcode="org_id" target_attcode="name"/>
-        <field name="email" type="EmailAddress" sql="email" default_value="" is_null_allowed="false"/>
-        <field name="phone" type="String" sql="phone" default_value="" is_null_allowed="true"/>
-        <field name="location_id" type="ExternalKey" target_class="Location" jointype="" filter="SELECT Location AS L WHERE L.org_id = :this-&gt;org_id" sql="location_id" is_null_allowed="true" on_target_delete="DEL_MANUAL">
+        <field name="org_id" xsi:type="AttributeExternalKey" target_class="Organization" jointype="" sql="org_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
+        <field name="org_name" xsi:type="AttributeExternalField" extkey_attcode="org_id" target_attcode="name"/>
+        <field name="email" xsi:type="AttributeEmailAddress" sql="email" default_value="" is_null_allowed="false"/>
+        <field name="phone" xsi:type="AttributeString" sql="phone" default_value="" is_null_allowed="true"/>
+        <field name="location_id" xsi:type="AttributeExternalKey" target_class="Location" jointype="" filter="SELECT Location AS L WHERE L.org_id = :this-&gt;org_id" sql="location_id" is_null_allowed="true" on_target_delete="DEL_MANUAL">
           <dependencies>
             <attribute name="org_id"/>
           </dependencies>
         </field>
-        <field name="location_name" type="ExternalField" extkey_attcode="location_id" target_attcode="name"/>
-        <field name="contract_list" type="LinkedSetIndirect" linked_class="lnkContractToContact" ext_key_to_me="contact_id" ext_key_to_remote="contract_id" count_min="0" count_max="0"/>
-        <field name="service_list" type="LinkedSetIndirect" linked_class="lnkServiceToContact" ext_key_to_me="contact_id" ext_key_to_remote="service_id" count_min="0" count_max="0"/>
-        <field name="ticket_list" type="LinkedSetIndirect" linked_class="lnkTicketToContact" ext_key_to_me="contact_id" ext_key_to_remote="ticket_id" count_min="0" count_max="0"/>
-        <field name="ci_list" type="LinkedSetIndirect" linked_class="lnkCIToContact" ext_key_to_me="contact_id" ext_key_to_remote="ci_id" count_min="0" count_max="0"/>
-        <field name="team_list" type="LinkedSetIndirect" linked_class="lnkTeamToContact" ext_key_to_me="contact_id" ext_key_to_remote="team_id" count_min="0" count_max="0"/>
+        <field name="location_name" xsi:type="AttributeExternalField" extkey_attcode="location_id" target_attcode="name"/>
+        <field name="contract_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkContractToContact" ext_key_to_me="contact_id" ext_key_to_remote="contract_id" count_min="0" count_max="0"/>
+        <field name="service_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkServiceToContact" ext_key_to_me="contact_id" ext_key_to_remote="service_id" count_min="0" count_max="0"/>
+        <field name="ticket_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkTicketToContact" ext_key_to_me="contact_id" ext_key_to_remote="ticket_id" count_min="0" count_max="0"/>
+        <field name="ci_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkCIToContact" ext_key_to_me="contact_id" ext_key_to_remote="ci_id" count_min="0" count_max="0"/>
+        <field name="team_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkTeamToContact" ext_key_to_me="contact_id" ext_key_to_remote="team_id" count_min="0" count_max="0"/>
       </fields>
       <methods/>
       <presentation>
@@ -239,8 +239,8 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="first_name" type="String" sql="first_name" default_value="" is_null_allowed="false"/>
-        <field name="employee_id" type="String" sql="employee_id" default_value="" is_null_allowed="true"/>
+        <field name="first_name" xsi:type="AttributeString" sql="first_name" default_value="" is_null_allowed="false"/>
+        <field name="employee_id" xsi:type="AttributeString" sql="employee_id" default_value="" is_null_allowed="true"/>
       </fields>
       <methods/>
       <presentation>
@@ -303,7 +303,7 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="member_list" type="LinkedSetIndirect" linked_class="lnkTeamToContact" ext_key_to_me="team_id" ext_key_to_remote="contact_id" count_min="0" count_max="0"/>
+        <field name="member_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkTeamToContact" ext_key_to_me="team_id" ext_key_to_remote="contact_id" count_min="0" count_max="0"/>
       </fields>
       <methods/>
       <presentation>
@@ -360,15 +360,15 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="team_id" type="ExternalKey" target_class="Team" jointype="" sql="team_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="team_name" type="ExternalField" extkey_attcode="team_id" target_attcode="name"/>
-        <field name="contact_id" type="ExternalKey" target_class="Contact" jointype="" sql="contact_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="contact_name" type="ExternalField" extkey_attcode="contact_id" target_attcode="name"/>
-        <field name="contact_location_id" type="ExternalField" extkey_attcode="contact_id" target_attcode="location_id"/>
-        <field name="contact_location_name" type="ExternalField" extkey_attcode="contact_id" target_attcode="location_name"/>
-        <field name="contact_email" type="ExternalField" extkey_attcode="contact_id" target_attcode="email"/>
-        <field name="contact_phone" type="ExternalField" extkey_attcode="contact_id" target_attcode="phone"/>
-        <field name="role" type="String" sql="role" default_value="" is_null_allowed="true"/>
+        <field name="team_id" xsi:type="AttributeExternalKey" target_class="Team" jointype="" sql="team_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="team_name" xsi:type="AttributeExternalField" extkey_attcode="team_id" target_attcode="name"/>
+        <field name="contact_id" xsi:type="AttributeExternalKey" target_class="Contact" jointype="" sql="contact_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="contact_name" xsi:type="AttributeExternalField" extkey_attcode="contact_id" target_attcode="name"/>
+        <field name="contact_location_id" xsi:type="AttributeExternalField" extkey_attcode="contact_id" target_attcode="location_id"/>
+        <field name="contact_location_name" xsi:type="AttributeExternalField" extkey_attcode="contact_id" target_attcode="location_name"/>
+        <field name="contact_email" xsi:type="AttributeExternalField" extkey_attcode="contact_id" target_attcode="email"/>
+        <field name="contact_phone" xsi:type="AttributeExternalField" extkey_attcode="contact_id" target_attcode="phone"/>
+        <field name="role" xsi:type="AttributeString" sql="role" default_value="" is_null_allowed="true"/>
       </fields>
       <methods/>
       <presentation>
@@ -416,11 +416,11 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="name" type="String" sql="name" default_value="" is_null_allowed="false"/>
-        <field name="org_id" type="ExternalKey" target_class="Organization" jointype="" sql="org_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
-        <field name="org_name" type="ExternalField" extkey_attcode="org_id" target_attcode="name"/>
-        <field name="description" type="Text" sql="description" default_value="" is_null_allowed="true"/>
-        <field name="type" type="Enum" sql="type" default_value="presentation" is_null_allowed="true">
+        <field name="name" xsi:type="AttributeString" sql="name" default_value="" is_null_allowed="false"/>
+        <field name="org_id" xsi:type="AttributeExternalKey" target_class="Organization" jointype="" sql="org_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
+        <field name="org_name" xsi:type="AttributeExternalField" extkey_attcode="org_id" target_attcode="name"/>
+        <field name="description" xsi:type="AttributeText" sql="description" default_value="" is_null_allowed="true"/>
+        <field name="type" xsi:type="AttributeEnum" sql="type" default_value="presentation" is_null_allowed="true">
           <values>
             <value>contract</value>
             <value>networkmap</value>
@@ -430,17 +430,17 @@
             <value>workinginstructions</value>
           </values>
         </field>
-        <field name="status" type="Enum" sql="status" default_value="draft" is_null_allowed="false">
+        <field name="status" xsi:type="AttributeEnum" sql="status" default_value="draft" is_null_allowed="false">
           <values>
             <value>draft</value>
             <value>published</value>
             <value>obsolete</value>
           </values>
         </field>
-        <field name="contract_list" type="LinkedSetIndirect" linked_class="lnkContractToDoc" ext_key_to_me="document_id" ext_key_to_remote="contract_id" count_min="0" count_max="0"/>
-        <field name="service_list" type="LinkedSetIndirect" linked_class="lnkServiceToDoc" ext_key_to_me="document_id" ext_key_to_remote="service_id" count_min="0" count_max="0"/>
-        <field name="ticket_list" type="LinkedSetIndirect" linked_class="lnkTicketToDoc" ext_key_to_me="document_id" ext_key_to_remote="ticket_id" count_min="0" count_max="0"/>
-        <field name="ci_list" type="LinkedSetIndirect" linked_class="lnkCIToDoc" ext_key_to_me="document_id" ext_key_to_remote="ci_id" count_min="0" count_max="0"/>
+        <field name="contract_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkContractToDoc" ext_key_to_me="document_id" ext_key_to_remote="contract_id" count_min="0" count_max="0"/>
+        <field name="service_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkServiceToDoc" ext_key_to_me="document_id" ext_key_to_remote="service_id" count_min="0" count_max="0"/>
+        <field name="ticket_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkTicketToDoc" ext_key_to_me="document_id" ext_key_to_remote="ticket_id" count_min="0" count_max="0"/>
+        <field name="ci_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkCIToDoc" ext_key_to_me="document_id" ext_key_to_remote="ci_id" count_min="0" count_max="0"/>
       </fields>
       <methods/>
       <presentation>
@@ -493,7 +493,7 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="url" type="URL" target="_blank" sql="url" default_value="" is_null_allowed="false"/>
+        <field name="url" xsi:type="AttributeURL" target="_blank" sql="url" default_value="" is_null_allowed="false"/>
       </fields>
       <methods/>
       <presentation>
@@ -549,7 +549,7 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="note" type="Text" sql="note" default_value="" is_null_allowed="true"/>
+        <field name="note" xsi:type="AttributeText" sql="note" default_value="" is_null_allowed="true"/>
       </fields>
       <methods/>
       <presentation>
@@ -605,7 +605,7 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="contents" type="Blob"/>
+        <field name="contents" xsi:type="AttributeBlob"/>
       </fields>
       <methods>
         <method name="DisplayBareProperties" static="false" access="public" type="Overload-cmdbAbstractObject"><comment><![CDATA[/**
@@ -675,17 +675,17 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="provider" type="String" sql="provider" default_value="" is_null_allowed="false"/>
-        <field name="org_id" type="ExternalKey" target_class="Organization" jointype="" sql="org_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
-        <field name="org_name" type="ExternalField" extkey_attcode="org_id" target_attcode="name"/>
-        <field name="product" type="String" sql="product" default_value="" is_null_allowed="false"/>
-        <field name="name" type="String" sql="name" default_value="" is_null_allowed="false"/>
-        <field name="start" type="Date" sql="start" default_value="" is_null_allowed="true"/>
-        <field name="end" type="Date" sql="end" default_value="" is_null_allowed="true"/>
-        <field name="licence_key" type="String" sql="licence_key" default_value="" is_null_allowed="true"/>
-        <field name="scope" type="Text" sql="scope" default_value="" is_null_allowed="true"/>
-        <field name="usage_limit" type="Integer" sql="usage_limit" default_value="" is_null_allowed="true"/>
-        <field name="usage_list" type="LinkedSet" linked_class="SoftwareInstance" ext_key_to_me="licence_id" count_min="0" count_max="0"/>
+        <field name="provider" xsi:type="AttributeString" sql="provider" default_value="" is_null_allowed="false"/>
+        <field name="org_id" xsi:type="AttributeExternalKey" target_class="Organization" jointype="" sql="org_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
+        <field name="org_name" xsi:type="AttributeExternalField" extkey_attcode="org_id" target_attcode="name"/>
+        <field name="product" xsi:type="AttributeString" sql="product" default_value="" is_null_allowed="false"/>
+        <field name="name" xsi:type="AttributeString" sql="name" default_value="" is_null_allowed="false"/>
+        <field name="start" xsi:type="AttributeDate" sql="start" default_value="" is_null_allowed="true"/>
+        <field name="end" xsi:type="AttributeDate" sql="end" default_value="" is_null_allowed="true"/>
+        <field name="licence_key" xsi:type="AttributeString" sql="licence_key" default_value="" is_null_allowed="true"/>
+        <field name="scope" xsi:type="AttributeText" sql="scope" default_value="" is_null_allowed="true"/>
+        <field name="usage_limit" xsi:type="AttributeInteger" sql="usage_limit" default_value="" is_null_allowed="true"/>
+        <field name="usage_list" xsi:type="AttributeLinkedSet" linked_class="SoftwareInstance" ext_key_to_me="licence_id" count_min="0" count_max="0"/>
       </fields>
       <methods/>
       <presentation>
@@ -746,11 +746,11 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="description" type="Text" sql="description" default_value="" is_null_allowed="true"/>
-        <field name="org_id" type="ExternalKey" target_class="Organization" jointype="" sql="org_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
-        <field name="org_name" type="ExternalField" extkey_attcode="org_id" target_attcode="name"/>
-        <field name="ip" type="IPAddress" sql="ip" default_value="" is_null_allowed="false"/>
-        <field name="ip_mask" type="IPAddress" sql="ip_mask" default_value="" is_null_allowed="false"/>
+        <field name="description" xsi:type="AttributeText" sql="description" default_value="" is_null_allowed="true"/>
+        <field name="org_id" xsi:type="AttributeExternalKey" target_class="Organization" jointype="" sql="org_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
+        <field name="org_name" xsi:type="AttributeExternalField" extkey_attcode="org_id" target_attcode="name"/>
+        <field name="ip" xsi:type="AttributeIPAddress" sql="ip" default_value="" is_null_allowed="false"/>
+        <field name="ip_mask" xsi:type="AttributeIPAddress" sql="ip_mask" default_value="" is_null_allowed="false"/>
       </fields>
       <methods>
         <method name="DisplayBareRelations" static="false" access="public" type="Overload-cmdbAbstractObject"><![CDATA[	function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
@@ -846,11 +846,11 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="name" type="String" sql="name" default_value="" is_null_allowed="false"/>
-        <field name="description" type="Text" sql="description" default_value="" is_null_allowed="true"/>
-        <field name="target_sw" type="String" sql="target_sw" default_value="" is_null_allowed="true"/>
-        <field name="version" type="String" sql="version" default_value="" is_null_allowed="true"/>
-        <field name="type" type="Enum" sql="type" default_value="security" is_null_allowed="false">
+        <field name="name" xsi:type="AttributeString" sql="name" default_value="" is_null_allowed="false"/>
+        <field name="description" xsi:type="AttributeText" sql="description" default_value="" is_null_allowed="true"/>
+        <field name="target_sw" xsi:type="AttributeString" sql="target_sw" default_value="" is_null_allowed="true"/>
+        <field name="version" xsi:type="AttributeString" sql="version" default_value="" is_null_allowed="true"/>
+        <field name="type" xsi:type="AttributeEnum" sql="type" default_value="security" is_null_allowed="false">
           <values>
             <value>application</value>
             <value>os</value>
@@ -858,7 +858,7 @@
             <value>servicepack</value>
           </values>
         </field>
-        <field name="ci_list" type="LinkedSetIndirect" linked_class="lnkPatchToCI" ext_key_to_me="patch_id" ext_key_to_remote="ci_id" count_min="0" count_max="0"/>
+        <field name="ci_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkPatchToCI" ext_key_to_me="patch_id" ext_key_to_remote="ci_id" count_min="0" count_max="0"/>
       </fields>
       <methods/>
       <presentation>
@@ -906,8 +906,8 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="name" type="String" sql="name" default_value="" is_null_allowed="false"/>
-        <field name="description" type="Text" sql="description" default_value="" is_null_allowed="true"/>
+        <field name="name" xsi:type="AttributeString" sql="name" default_value="" is_null_allowed="false"/>
+        <field name="description" xsi:type="AttributeText" sql="description" default_value="" is_null_allowed="true"/>
       </fields>
       <methods/>
       <presentation>
@@ -946,7 +946,7 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="instance_list" type="LinkedSet" linked_class="ApplicationInstance" ext_key_to_me="software_id" count_min="0" count_max="0"/>
+        <field name="instance_list" xsi:type="AttributeLinkedSet" linked_class="ApplicationInstance" ext_key_to_me="software_id" count_min="0" count_max="0"/>
       </fields>
       <methods/>
       <presentation>
@@ -986,7 +986,7 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="instance_list" type="LinkedSet" linked_class="DBServerInstance" ext_key_to_me="software_id" count_min="0" count_max="0"/>
+        <field name="instance_list" xsi:type="AttributeLinkedSet" linked_class="DBServerInstance" ext_key_to_me="software_id" count_min="0" count_max="0"/>
       </fields>
       <methods/>
       <presentation>
@@ -1027,11 +1027,11 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="patch_id" type="ExternalKey" target_class="Patch" jointype="" sql="patch_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="patch_name" type="ExternalField" extkey_attcode="patch_id" target_attcode="name"/>
-        <field name="ci_id" type="ExternalKey" target_class="Device" jointype="" sql="ci_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="ci_name" type="ExternalField" extkey_attcode="ci_id" target_attcode="name"/>
-        <field name="ci_status" type="ExternalField" extkey_attcode="ci_id" target_attcode="status"/>
+        <field name="patch_id" xsi:type="AttributeExternalKey" target_class="Patch" jointype="" sql="patch_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="patch_name" xsi:type="AttributeExternalField" extkey_attcode="patch_id" target_attcode="name"/>
+        <field name="ci_id" xsi:type="AttributeExternalKey" target_class="Device" jointype="" sql="ci_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="ci_name" xsi:type="AttributeExternalField" extkey_attcode="ci_id" target_attcode="name"/>
+        <field name="ci_status" xsi:type="AttributeExternalField" extkey_attcode="ci_id" target_attcode="status"/>
       </fields>
       <methods/>
       <presentation>
@@ -1075,28 +1075,28 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="name" type="String" sql="name" default_value="" is_null_allowed="false"/>
-        <field name="status" type="Enum" sql="status" default_value="implementation" is_null_allowed="false">
+        <field name="name" xsi:type="AttributeString" sql="name" default_value="" is_null_allowed="false"/>
+        <field name="status" xsi:type="AttributeEnum" sql="status" default_value="implementation" is_null_allowed="false">
           <values>
             <value>implementation</value>
             <value>production</value>
             <value>obsolete</value>
           </values>
         </field>
-        <field name="org_id" type="ExternalKey" target_class="Organization" jointype="" sql="org_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
-        <field name="owner_name" type="ExternalField" extkey_attcode="org_id" target_attcode="name"/>
-        <field name="importance" type="Enum" sql="importance" default_value="medium" is_null_allowed="false">
+        <field name="org_id" xsi:type="AttributeExternalKey" target_class="Organization" jointype="" sql="org_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
+        <field name="owner_name" xsi:type="AttributeExternalField" extkey_attcode="org_id" target_attcode="name"/>
+        <field name="importance" xsi:type="AttributeEnum" sql="importance" default_value="medium" is_null_allowed="false">
           <values>
             <value>low</value>
             <value>medium</value>
             <value>high</value>
           </values>
         </field>
-        <field name="contact_list" type="LinkedSetIndirect" linked_class="lnkCIToContact" ext_key_to_me="ci_id" ext_key_to_remote="contact_id" count_min="0" count_max="0"/>
-        <field name="document_list" type="LinkedSetIndirect" linked_class="lnkCIToDoc" ext_key_to_me="ci_id" ext_key_to_remote="document_id" count_min="0" count_max="0"/>
-        <field name="solution_list" type="LinkedSetIndirect" linked_class="lnkSolutionToCI" ext_key_to_me="ci_id" ext_key_to_remote="solution_id" count_min="0" count_max="0"/>
-        <field name="contract_list" type="LinkedSetIndirect" linked_class="lnkContractToCI" ext_key_to_me="ci_id" ext_key_to_remote="contract_id" count_min="0" count_max="0"/>
-        <field name="ticket_list" type="LinkedSetIndirect" linked_class="lnkTicketToCI" ext_key_to_me="ci_id" ext_key_to_remote="ticket_id" count_min="0" count_max="0"/>
+        <field name="contact_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkCIToContact" ext_key_to_me="ci_id" ext_key_to_remote="contact_id" count_min="0" count_max="0"/>
+        <field name="document_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkCIToDoc" ext_key_to_me="ci_id" ext_key_to_remote="document_id" count_min="0" count_max="0"/>
+        <field name="solution_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkSolutionToCI" ext_key_to_me="ci_id" ext_key_to_remote="solution_id" count_min="0" count_max="0"/>
+        <field name="contract_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkContractToCI" ext_key_to_me="ci_id" ext_key_to_remote="contract_id" count_min="0" count_max="0"/>
+        <field name="ticket_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkTicketToCI" ext_key_to_me="ci_id" ext_key_to_remote="ticket_id" count_min="0" count_max="0"/>
       </fields>
       <methods>
         <method name="GetRelationQueries" static="true" access="public" type="Overload-DBObject"><![CDATA[	public static function GetRelationQueries($sRelCode)
@@ -1168,20 +1168,20 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="device_id" type="ExternalKey" target_class="Device" jointype="" filter="SELECT Device WHERE org_id = :this-&gt;org_id" sql="device_id" is_null_allowed="false" on_target_delete="DEL_MANUAL">
+        <field name="device_id" xsi:type="AttributeExternalKey" target_class="Device" jointype="" filter="SELECT Device WHERE org_id = :this-&gt;org_id" sql="device_id" is_null_allowed="false" on_target_delete="DEL_MANUAL">
           <dependencies>
             <attribute name="org_id"/>
           </dependencies>
         </field>
-        <field name="device_name" type="ExternalField" extkey_attcode="device_id" target_attcode="name"/>
-        <field name="licence_id" type="ExternalKey" target_class="Licence" jointype="" filter="SELECT Licence WHERE org_id = :this-&gt;org_id" sql="licence_id" is_null_allowed="true" on_target_delete="DEL_MANUAL">
+        <field name="device_name" xsi:type="AttributeExternalField" extkey_attcode="device_id" target_attcode="name"/>
+        <field name="licence_id" xsi:type="AttributeExternalKey" target_class="Licence" jointype="" filter="SELECT Licence WHERE org_id = :this-&gt;org_id" sql="licence_id" is_null_allowed="true" on_target_delete="DEL_MANUAL">
           <dependencies>
             <attribute name="org_id"/>
           </dependencies>
         </field>
-        <field name="licence_name" type="ExternalField" extkey_attcode="licence_id" target_attcode="name"/>
-        <field name="version" type="String" sql="version" default_value="" is_null_allowed="true"/>
-        <field name="description" type="Text" sql="description" default_value="" is_null_allowed="true"/>
+        <field name="licence_name" xsi:type="AttributeExternalField" extkey_attcode="licence_id" target_attcode="name"/>
+        <field name="version" xsi:type="AttributeString" sql="version" default_value="" is_null_allowed="true"/>
+        <field name="description" xsi:type="AttributeText" sql="description" default_value="" is_null_allowed="true"/>
       </fields>
       <methods>
         <method name="ComputeValues" static="false" access="public" type="Overload-DBObject"><![CDATA[	public function ComputeValues()
@@ -1274,9 +1274,9 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="software_id" type="ExternalKey" target_class="DBServer" jointype="" sql="software_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
-        <field name="software_name" type="ExternalField" extkey_attcode="software_id" target_attcode="name"/>
-        <field name="dbinstance_list" type="LinkedSet" linked_class="DatabaseInstance" ext_key_to_me="db_server_instance_id" count_min="0" count_max="0"/>
+        <field name="software_id" xsi:type="AttributeExternalKey" target_class="DBServer" jointype="" sql="software_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
+        <field name="software_name" xsi:type="AttributeExternalField" extkey_attcode="software_id" target_attcode="name"/>
+        <field name="dbinstance_list" xsi:type="AttributeLinkedSet" linked_class="DatabaseInstance" ext_key_to_me="db_server_instance_id" count_min="0" count_max="0"/>
       </fields>
       <methods/>
       <presentation>
@@ -1345,8 +1345,8 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="software_id" type="ExternalKey" target_class="Application" jointype="" sql="software_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
-        <field name="software_name" type="ExternalField" extkey_attcode="software_id" target_attcode="name"/>
+        <field name="software_id" xsi:type="AttributeExternalKey" target_class="Application" jointype="" sql="software_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
+        <field name="software_name" xsi:type="AttributeExternalField" extkey_attcode="software_id" target_attcode="name"/>
       </fields>
       <methods/>
       <presentation>
@@ -1412,14 +1412,14 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="db_server_instance_id" type="ExternalKey" target_class="DBServerInstance" jointype="" filter="SELECT DBServerInstance WHERE org_id = :this-&gt;org_id" sql="db_server_instance_id" is_null_allowed="false" on_target_delete="DEL_MANUAL">
+        <field name="db_server_instance_id" xsi:type="AttributeExternalKey" target_class="DBServerInstance" jointype="" filter="SELECT DBServerInstance WHERE org_id = :this-&gt;org_id" sql="db_server_instance_id" is_null_allowed="false" on_target_delete="DEL_MANUAL">
           <dependencies>
             <attribute name="org_id"/>
           </dependencies>
         </field>
-        <field name="db_server_instance_name" type="ExternalField" extkey_attcode="db_server_instance_id" target_attcode="name"/>
-        <field name="db_server_instance_version" type="ExternalField" extkey_attcode="db_server_instance_id" target_attcode="version"/>
-        <field name="description" type="Text" sql="description" default_value="" is_null_allowed="true"/>
+        <field name="db_server_instance_name" xsi:type="AttributeExternalField" extkey_attcode="db_server_instance_id" target_attcode="name"/>
+        <field name="db_server_instance_version" xsi:type="AttributeExternalField" extkey_attcode="db_server_instance_id" target_attcode="version"/>
+        <field name="description" xsi:type="AttributeText" sql="description" default_value="" is_null_allowed="true"/>
       </fields>
       <methods>
         <method name="GetRelationQueries" static="true" access="public" type="Overload-DBObject"><![CDATA[	public static function GetRelationQueries($sRelCode)
@@ -1494,9 +1494,9 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="description" type="Text" sql="description" default_value="" is_null_allowed="true"/>
-        <field name="ci_list" type="LinkedSetIndirect" linked_class="lnkSolutionToCI" ext_key_to_me="solution_id" ext_key_to_remote="ci_id" count_min="0" count_max="0"/>
-        <field name="process_list" type="LinkedSetIndirect" linked_class="lnkProcessToSolution" ext_key_to_me="solution_id" ext_key_to_remote="process_id" count_min="0" count_max="0"/>
+        <field name="description" xsi:type="AttributeText" sql="description" default_value="" is_null_allowed="true"/>
+        <field name="ci_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkSolutionToCI" ext_key_to_me="solution_id" ext_key_to_remote="ci_id" count_min="0" count_max="0"/>
+        <field name="process_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkProcessToSolution" ext_key_to_me="solution_id" ext_key_to_remote="process_id" count_min="0" count_max="0"/>
       </fields>
       <methods>
         <method name="GetRelationQueries" static="true" access="public" type="Overload-DBObject"><![CDATA[	public static function GetRelationQueries($sRelCode)
@@ -1574,8 +1574,8 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="description" type="Text" sql="description" default_value="" is_null_allowed="true"/>
-        <field name="used_solution_list" type="LinkedSetIndirect" linked_class="lnkProcessToSolution" ext_key_to_me="process_id" ext_key_to_remote="solution_id" count_min="0" count_max="0"/>
+        <field name="description" xsi:type="AttributeText" sql="description" default_value="" is_null_allowed="true"/>
+        <field name="used_solution_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkProcessToSolution" ext_key_to_me="process_id" ext_key_to_remote="solution_id" count_min="0" count_max="0"/>
       </fields>
       <methods>
         <method name="GetRelationQueries" static="true" access="public" type="Overload-DBObject"><![CDATA[	public static function GetRelationQueries($sRelCode)
@@ -1645,10 +1645,10 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="brand" type="String" sql="brand" default_value="" is_null_allowed="true"/>
-        <field name="model" type="String" sql="model" default_value="" is_null_allowed="true"/>
-        <field name="serial_number" type="String" sql="serial_number" default_value="" is_null_allowed="true"/>
-        <field name="asset_ref" type="String" sql="asset_ref" default_value="" is_null_allowed="true"/>
+        <field name="brand" xsi:type="AttributeString" sql="brand" default_value="" is_null_allowed="true"/>
+        <field name="model" xsi:type="AttributeString" sql="model" default_value="" is_null_allowed="true"/>
+        <field name="serial_number" xsi:type="AttributeString" sql="serial_number" default_value="" is_null_allowed="true"/>
+        <field name="asset_ref" xsi:type="AttributeString" sql="asset_ref" default_value="" is_null_allowed="true"/>
       </fields>
       <methods/>
       <presentation>
@@ -1715,13 +1715,13 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="device_id" type="ExternalKey" target_class="Device" jointype="" filter="SELECT Device WHERE org_id = :this-&gt;org_id" sql="device_id" is_null_allowed="false" on_target_delete="DEL_AUTO">
+        <field name="device_id" xsi:type="AttributeExternalKey" target_class="Device" jointype="" filter="SELECT Device WHERE org_id = :this-&gt;org_id" sql="device_id" is_null_allowed="false" on_target_delete="DEL_AUTO">
           <dependencies>
             <attribute name="org_id"/>
           </dependencies>
         </field>
-        <field name="device_name" type="ExternalField" extkey_attcode="device_id" target_attcode="name"/>
-        <field name="logical_type" type="Enum" sql="logical_type" default_value="primary" is_null_allowed="false">
+        <field name="device_name" xsi:type="AttributeExternalField" extkey_attcode="device_id" target_attcode="name"/>
+        <field name="logical_type" xsi:type="AttributeEnum" sql="logical_type" default_value="primary" is_null_allowed="false">
           <values>
             <value>backup</value>
             <value>logical</value>
@@ -1730,7 +1730,7 @@
             <value>secondary</value>
           </values>
         </field>
-        <field name="physical_type" type="Enum" sql="physical_type" default_value="ethernet" is_null_allowed="false">
+        <field name="physical_type" xsi:type="AttributeEnum" sql="physical_type" default_value="ethernet" is_null_allowed="false">
           <values>
             <value>atm</value>
             <value>ethernet</value>
@@ -1738,11 +1738,11 @@
             <value>vlan</value>
           </values>
         </field>
-        <field name="ip_address" type="IPAddress" sql="ip_address" default_value="" is_null_allowed="true"/>
-        <field name="ip_mask" type="IPAddress" sql="ip_mask" default_value="" is_null_allowed="true"/>
-        <field name="mac_address" type="String" sql="mac_address" default_value="" is_null_allowed="true"/>
-        <field name="speed" type="Integer" sql="speed" default_value="" is_null_allowed="true"/>
-        <field name="duplex" type="Enum" sql="duplex" default_value="full" is_null_allowed="true">
+        <field name="ip_address" xsi:type="AttributeIPAddress" sql="ip_address" default_value="" is_null_allowed="true"/>
+        <field name="ip_mask" xsi:type="AttributeIPAddress" sql="ip_mask" default_value="" is_null_allowed="true"/>
+        <field name="mac_address" xsi:type="AttributeString" sql="mac_address" default_value="" is_null_allowed="true"/>
+        <field name="speed" xsi:type="AttributeInteger" sql="speed" default_value="" is_null_allowed="true"/>
+        <field name="duplex" xsi:type="AttributeEnum" sql="duplex" default_value="full" is_null_allowed="true">
           <values>
             <value>full</value>
             <value>half</value>
@@ -1750,21 +1750,21 @@
             <value>unknown</value>
           </values>
         </field>
-        <field name="connected_if" type="ExternalKey" target_class="NetworkInterface" jointype="" filter="SELECT NetworkInterface WHERE org_id = :this-&gt;org_id" sql="connected_if" is_null_allowed="true" on_target_delete="DEL_AUTO">
+        <field name="connected_if" xsi:type="AttributeExternalKey" target_class="NetworkInterface" jointype="" filter="SELECT NetworkInterface WHERE org_id = :this-&gt;org_id" sql="connected_if" is_null_allowed="true" on_target_delete="DEL_AUTO">
           <dependencies>
             <attribute name="org_id"/>
           </dependencies>
         </field>
-        <field name="connected_name" type="ExternalField" extkey_attcode="connected_if" target_attcode="name"/>
-        <field name="connected_if_device_id" type="ExternalField" extkey_attcode="connected_if" target_attcode="device_id"/>
-        <field name="connected_if_device_id_name" type="ExternalField" extkey_attcode="connected_if" target_attcode="device_name"/>
-        <field name="link_type" type="Enum" sql="link_type" default_value="uplink" is_null_allowed="false">
+        <field name="connected_name" xsi:type="AttributeExternalField" extkey_attcode="connected_if" target_attcode="name"/>
+        <field name="connected_if_device_id" xsi:type="AttributeExternalField" extkey_attcode="connected_if" target_attcode="device_id"/>
+        <field name="connected_if_device_id_name" xsi:type="AttributeExternalField" extkey_attcode="connected_if" target_attcode="device_name"/>
+        <field name="link_type" xsi:type="AttributeEnum" sql="link_type" default_value="uplink" is_null_allowed="false">
           <values>
             <value>uplink</value>
             <value>downlink</value>
           </values>
         </field>
-        <field name="connected_if_device_id_friendlyname" type="ExternalField" extkey_attcode="connected_if" target_attcode="device_id_friendlyname" is_null_allowed="true"/>
+        <field name="connected_if_device_id_friendlyname" xsi:type="AttributeExternalField" extkey_attcode="connected_if" target_attcode="device_id_friendlyname" is_null_allowed="true"/>
       </fields>
       <methods>
         <method name="GetRelationQueries" static="true" access="public" type="Overload-DBObject"><![CDATA[	public static function GetRelationQueries($sRelCode)
@@ -1920,7 +1920,7 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="nwinterface_list" type="LinkedSet" linked_class="NetworkInterface" ext_key_to_me="device_id" count_min="0" count_max="0"/>
+        <field name="nwinterface_list" xsi:type="AttributeLinkedSet" linked_class="NetworkInterface" ext_key_to_me="device_id" count_min="0" count_max="0"/>
       </fields>
       <methods>
         <method name="GetRelationQueries" static="true" access="public" type="Overload-DBObject"><![CDATA[	public static function GetRelationQueries($sRelCode)
@@ -2010,13 +2010,13 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="cpu" type="String" sql="cpu" default_value="" is_null_allowed="true"/>
-        <field name="ram" type="String" sql="ram" default_value="" is_null_allowed="true"/>
-        <field name="hdd" type="String" sql="hdd" default_value="" is_null_allowed="true"/>
-        <field name="os_family" type="String" sql="os_family" default_value="" is_null_allowed="true"/>
-        <field name="os_version" type="String" sql="os_version" default_value="" is_null_allowed="true"/>
-        <field name="application_list" type="LinkedSet" linked_class="SoftwareInstance" ext_key_to_me="device_id" count_min="0" count_max="0"/>
-        <field name="patch_list" type="LinkedSetIndirect" linked_class="lnkPatchToCI" ext_key_to_me="ci_id" ext_key_to_remote="patch_id" count_min="0" count_max="0"/>
+        <field name="cpu" xsi:type="AttributeString" sql="cpu" default_value="" is_null_allowed="true"/>
+        <field name="ram" xsi:type="AttributeString" sql="ram" default_value="" is_null_allowed="true"/>
+        <field name="hdd" xsi:type="AttributeString" sql="hdd" default_value="" is_null_allowed="true"/>
+        <field name="os_family" xsi:type="AttributeString" sql="os_family" default_value="" is_null_allowed="true"/>
+        <field name="os_version" xsi:type="AttributeString" sql="os_version" default_value="" is_null_allowed="true"/>
+        <field name="application_list" xsi:type="AttributeLinkedSet" linked_class="SoftwareInstance" ext_key_to_me="device_id" count_min="0" count_max="0"/>
+        <field name="patch_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkPatchToCI" ext_key_to_me="ci_id" ext_key_to_remote="patch_id" count_min="0" count_max="0"/>
       </fields>
       <methods/>
       <presentation>
@@ -2150,9 +2150,9 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="number" type="String" sql="number" default_value="" is_null_allowed="true"/>
-        <field name="imei" type="String" sql="IMIE" default_value="" is_null_allowed="true"/>
-        <field name="hw_pin" type="String" sql="hw_pin" default_value="" is_null_allowed="true"/>
+        <field name="number" xsi:type="AttributeString" sql="number" default_value="" is_null_allowed="true"/>
+        <field name="imei" xsi:type="AttributeString" sql="IMIE" default_value="" is_null_allowed="true"/>
+        <field name="hw_pin" xsi:type="AttributeString" sql="hw_pin" default_value="" is_null_allowed="true"/>
       </fields>
       <methods/>
       <presentation>
@@ -2222,16 +2222,16 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="description" type="Text" sql="description" default_value="" is_null_allowed="true"/>
-        <field name="location_id" type="ExternalKey" target_class="Location" jointype="" filter="SELECT Location AS l WHERE l.org_id = :this-&gt;org_id" sql="location_id" is_null_allowed="true" on_target_delete="DEL_MANUAL">
+        <field name="description" xsi:type="AttributeText" sql="description" default_value="" is_null_allowed="true"/>
+        <field name="location_id" xsi:type="AttributeExternalKey" target_class="Location" jointype="" filter="SELECT Location AS l WHERE l.org_id = :this-&gt;org_id" sql="location_id" is_null_allowed="true" on_target_delete="DEL_MANUAL">
           <dependencies>
             <attribute name="org_id"/>
           </dependencies>
         </field>
-        <field name="location_name" type="ExternalField" extkey_attcode="location_id" target_attcode="name"/>
-        <field name="location_details" type="Text" sql="location_details" default_value="" is_null_allowed="true"/>
-        <field name="management_ip" type="IPAddress" sql="management_ip" default_value="" is_null_allowed="true"/>
-        <field name="default_gateway" type="String" sql="default_gateway" default_value="" is_null_allowed="true"/>
+        <field name="location_name" xsi:type="AttributeExternalField" extkey_attcode="location_id" target_attcode="name"/>
+        <field name="location_details" xsi:type="AttributeText" sql="location_details" default_value="" is_null_allowed="true"/>
+        <field name="management_ip" xsi:type="AttributeIPAddress" sql="management_ip" default_value="" is_null_allowed="true"/>
+        <field name="default_gateway" xsi:type="AttributeString" sql="default_gateway" default_value="" is_null_allowed="true"/>
       </fields>
       <methods/>
       <presentation>
@@ -2305,7 +2305,7 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="type" type="Enum" sql="type" default_value="switch" is_null_allowed="true">
+        <field name="type" xsi:type="AttributeEnum" sql="type" default_value="switch" is_null_allowed="true">
           <values>
             <value>wanaccelerator</value>
             <value>firewall</value>
@@ -2315,10 +2315,10 @@
             <value>switch</value>
           </values>
         </field>
-        <field name="ios_version" type="String" sql="ios_version" default_value="" is_null_allowed="true"/>
-        <field name="ram" type="String" sql="ram" default_value="" is_null_allowed="true"/>
-        <field name="snmp_read" type="String" sql="snmp_read" default_value="" is_null_allowed="true"/>
-        <field name="snmp_write" type="String" sql="snmp_write" default_value="" is_null_allowed="true"/>
+        <field name="ios_version" xsi:type="AttributeString" sql="ios_version" default_value="" is_null_allowed="true"/>
+        <field name="ram" xsi:type="AttributeString" sql="ram" default_value="" is_null_allowed="true"/>
+        <field name="snmp_read" xsi:type="AttributeString" sql="snmp_read" default_value="" is_null_allowed="true"/>
+        <field name="snmp_write" xsi:type="AttributeString" sql="snmp_write" default_value="" is_null_allowed="true"/>
       </fields>
       <methods/>
       <presentation>
@@ -2400,13 +2400,13 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="cpu" type="String" sql="cpu" default_value="" is_null_allowed="true"/>
-        <field name="ram" type="String" sql="ram" default_value="" is_null_allowed="true"/>
-        <field name="hdd" type="String" sql="hdd" default_value="" is_null_allowed="true"/>
-        <field name="os_family" type="String" sql="os_family" default_value="" is_null_allowed="true"/>
-        <field name="os_version" type="String" sql="os_version" default_value="" is_null_allowed="true"/>
-        <field name="application_list" type="LinkedSet" linked_class="SoftwareInstance" ext_key_to_me="device_id" count_min="0" count_max="0"/>
-        <field name="patch_list" type="LinkedSetIndirect" linked_class="lnkPatchToCI" ext_key_to_me="ci_id" ext_key_to_remote="patch_id" count_min="0" count_max="0"/>
+        <field name="cpu" xsi:type="AttributeString" sql="cpu" default_value="" is_null_allowed="true"/>
+        <field name="ram" xsi:type="AttributeString" sql="ram" default_value="" is_null_allowed="true"/>
+        <field name="hdd" xsi:type="AttributeString" sql="hdd" default_value="" is_null_allowed="true"/>
+        <field name="os_family" xsi:type="AttributeString" sql="os_family" default_value="" is_null_allowed="true"/>
+        <field name="os_version" xsi:type="AttributeString" sql="os_version" default_value="" is_null_allowed="true"/>
+        <field name="application_list" xsi:type="AttributeLinkedSet" linked_class="SoftwareInstance" ext_key_to_me="device_id" count_min="0" count_max="0"/>
+        <field name="patch_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkPatchToCI" ext_key_to_me="ci_id" ext_key_to_remote="patch_id" count_min="0" count_max="0"/>
       </fields>
       <methods/>
       <presentation>
@@ -2490,13 +2490,13 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="type" type="Enum" sql="type" default_value="printer" is_null_allowed="true">
+        <field name="type" xsi:type="AttributeEnum" sql="type" default_value="printer" is_null_allowed="true">
           <values>
             <value>mopier</value>
             <value>printer</value>
           </values>
         </field>
-        <field name="technology" type="Enum" sql="technology" default_value="laser" is_null_allowed="true">
+        <field name="technology" xsi:type="AttributeEnum" sql="technology" default_value="laser" is_null_allowed="true">
           <values>
             <value>laser</value>
             <value>inkjet</value>
@@ -2586,25 +2586,25 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="name" type="String" sql="name" default_value="" is_null_allowed="false"/>
-        <field name="status" type="Enum" sql="status" default_value="implementation" is_null_allowed="false">
+        <field name="name" xsi:type="AttributeString" sql="name" default_value="" is_null_allowed="false"/>
+        <field name="status" xsi:type="AttributeEnum" sql="status" default_value="implementation" is_null_allowed="false">
           <values>
             <value>production</value>
             <value>implementation</value>
             <value>obsolete</value>
           </values>
         </field>
-        <field name="org_id" type="ExternalKey" target_class="Organization" jointype="" sql="org_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
-        <field name="owner_name" type="ExternalField" extkey_attcode="org_id" target_attcode="name"/>
-        <field name="description" type="Text" sql="description" default_value="" is_null_allowed="true"/>
-        <field name="type" type="String" sql="type" default_value="" is_null_allowed="true"/>
-        <field name="parent_id" type="HierarchicalKey" sql="parent_id" is_null_allowed="true" on_target_delete="DEL_MANUAL">
+        <field name="org_id" xsi:type="AttributeExternalKey" target_class="Organization" jointype="" sql="org_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
+        <field name="owner_name" xsi:type="AttributeExternalField" extkey_attcode="org_id" target_attcode="name"/>
+        <field name="description" xsi:type="AttributeText" sql="description" default_value="" is_null_allowed="true"/>
+        <field name="type" xsi:type="AttributeString" sql="type" default_value="" is_null_allowed="true"/>
+        <field name="parent_id" xsi:type="AttributeHierarchicalKey" sql="parent_id" is_null_allowed="true" on_target_delete="DEL_MANUAL">
           <dependencies>
             <attribute name="org_id"/>
           </dependencies>
         </field>
-        <field name="parent_name" type="ExternalField" extkey_attcode="parent_id" target_attcode="name"/>
-        <field name="ci_list" type="LinkedSetIndirect" linked_class="lnkGroupToCI" ext_key_to_me="group_id" ext_key_to_remote="ci_id" count_min="0" count_max="0"/>
+        <field name="parent_name" xsi:type="AttributeExternalField" extkey_attcode="parent_id" target_attcode="name"/>
+        <field name="ci_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkGroupToCI" ext_key_to_me="group_id" ext_key_to_remote="ci_id" count_min="0" count_max="0"/>
       </fields>
       <methods/>
       <presentation>
@@ -2654,12 +2654,12 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="group_id" type="ExternalKey" target_class="Group" jointype="" sql="group_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
-        <field name="group_name" type="ExternalField" extkey_attcode="group_id" target_attcode="name"/>
-        <field name="ci_id" type="ExternalKey" target_class="FunctionalCI" jointype="" sql="ci_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
-        <field name="ci_name" type="ExternalField" extkey_attcode="ci_id" target_attcode="name"/>
-        <field name="ci_status" type="ExternalField" extkey_attcode="ci_id" target_attcode="status"/>
-        <field name="reason" type="String" sql="reason" default_value="" is_null_allowed="true"/>
+        <field name="group_id" xsi:type="AttributeExternalKey" target_class="Group" jointype="" sql="group_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
+        <field name="group_name" xsi:type="AttributeExternalField" extkey_attcode="group_id" target_attcode="name"/>
+        <field name="ci_id" xsi:type="AttributeExternalKey" target_class="FunctionalCI" jointype="" sql="ci_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
+        <field name="ci_name" xsi:type="AttributeExternalField" extkey_attcode="ci_id" target_attcode="name"/>
+        <field name="ci_status" xsi:type="AttributeExternalField" extkey_attcode="ci_id" target_attcode="status"/>
+        <field name="reason" xsi:type="AttributeString" sql="reason" default_value="" is_null_allowed="true"/>
       </fields>
       <methods/>
       <presentation>
@@ -2705,13 +2705,13 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="ci_id" type="ExternalKey" target_class="FunctionalCI" jointype="" sql="ci_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="ci_name" type="ExternalField" extkey_attcode="ci_id" target_attcode="name"/>
-        <field name="ci_status" type="ExternalField" extkey_attcode="ci_id" target_attcode="status"/>
-        <field name="document_id" type="ExternalKey" target_class="Document" jointype="" sql="document_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="document_name" type="ExternalField" extkey_attcode="document_id" target_attcode="name"/>
-        <field name="document_type" type="ExternalField" extkey_attcode="document_id" target_attcode="type"/>
-        <field name="document_status" type="ExternalField" extkey_attcode="document_id" target_attcode="status"/>
+        <field name="ci_id" xsi:type="AttributeExternalKey" target_class="FunctionalCI" jointype="" sql="ci_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="ci_name" xsi:type="AttributeExternalField" extkey_attcode="ci_id" target_attcode="name"/>
+        <field name="ci_status" xsi:type="AttributeExternalField" extkey_attcode="ci_id" target_attcode="status"/>
+        <field name="document_id" xsi:type="AttributeExternalKey" target_class="Document" jointype="" sql="document_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="document_name" xsi:type="AttributeExternalField" extkey_attcode="document_id" target_attcode="name"/>
+        <field name="document_type" xsi:type="AttributeExternalField" extkey_attcode="document_id" target_attcode="type"/>
+        <field name="document_status" xsi:type="AttributeExternalField" extkey_attcode="document_id" target_attcode="status"/>
       </fields>
       <methods/>
       <presentation>
@@ -2758,13 +2758,13 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="ci_id" type="ExternalKey" target_class="FunctionalCI" jointype="" sql="ci_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="ci_name" type="ExternalField" extkey_attcode="ci_id" target_attcode="name"/>
-        <field name="ci_status" type="ExternalField" extkey_attcode="ci_id" target_attcode="status"/>
-        <field name="contact_id" type="ExternalKey" target_class="Contact" jointype="" sql="contact_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="contact_name" type="ExternalField" extkey_attcode="contact_id" target_attcode="name"/>
-        <field name="contact_email" type="ExternalField" extkey_attcode="contact_id" target_attcode="email"/>
-        <field name="role" type="String" sql="role" default_value="" is_null_allowed="true"/>
+        <field name="ci_id" xsi:type="AttributeExternalKey" target_class="FunctionalCI" jointype="" sql="ci_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="ci_name" xsi:type="AttributeExternalField" extkey_attcode="ci_id" target_attcode="name"/>
+        <field name="ci_status" xsi:type="AttributeExternalField" extkey_attcode="ci_id" target_attcode="status"/>
+        <field name="contact_id" xsi:type="AttributeExternalKey" target_class="Contact" jointype="" sql="contact_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="contact_name" xsi:type="AttributeExternalField" extkey_attcode="contact_id" target_attcode="name"/>
+        <field name="contact_email" xsi:type="AttributeExternalField" extkey_attcode="contact_id" target_attcode="email"/>
+        <field name="role" xsi:type="AttributeString" sql="role" default_value="" is_null_allowed="true"/>
       </fields>
       <methods/>
       <presentation>
@@ -2812,12 +2812,12 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="solution_id" type="ExternalKey" target_class="ApplicationSolution" jointype="" sql="solution_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="solution_name" type="ExternalField" extkey_attcode="solution_id" target_attcode="name"/>
-        <field name="ci_id" type="ExternalKey" target_class="FunctionalCI" jointype="" sql="ci_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="ci_name" type="ExternalField" extkey_attcode="ci_id" target_attcode="name"/>
-        <field name="ci_status" type="ExternalField" extkey_attcode="ci_id" target_attcode="status"/>
-        <field name="utility" type="String" sql="utility" default_value="" is_null_allowed="true"/>
+        <field name="solution_id" xsi:type="AttributeExternalKey" target_class="ApplicationSolution" jointype="" sql="solution_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="solution_name" xsi:type="AttributeExternalField" extkey_attcode="solution_id" target_attcode="name"/>
+        <field name="ci_id" xsi:type="AttributeExternalKey" target_class="FunctionalCI" jointype="" sql="ci_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="ci_name" xsi:type="AttributeExternalField" extkey_attcode="ci_id" target_attcode="name"/>
+        <field name="ci_status" xsi:type="AttributeExternalField" extkey_attcode="ci_id" target_attcode="status"/>
+        <field name="utility" xsi:type="AttributeString" sql="utility" default_value="" is_null_allowed="true"/>
       </fields>
       <methods/>
       <presentation>
@@ -2863,11 +2863,11 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="solution_id" type="ExternalKey" target_class="ApplicationSolution" jointype="" sql="solution_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="solution_name" type="ExternalField" extkey_attcode="solution_id" target_attcode="name"/>
-        <field name="process_id" type="ExternalKey" target_class="BusinessProcess" jointype="" sql="process_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="process_name" type="ExternalField" extkey_attcode="process_id" target_attcode="name"/>
-        <field name="reason" type="String" sql="reason" default_value="" is_null_allowed="true"/>
+        <field name="solution_id" xsi:type="AttributeExternalKey" target_class="ApplicationSolution" jointype="" sql="solution_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="solution_name" xsi:type="AttributeExternalField" extkey_attcode="solution_id" target_attcode="name"/>
+        <field name="process_id" xsi:type="AttributeExternalKey" target_class="BusinessProcess" jointype="" sql="process_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="process_name" xsi:type="AttributeExternalField" extkey_attcode="process_id" target_attcode="name"/>
+        <field name="reason" xsi:type="AttributeString" sql="reason" default_value="" is_null_allowed="true"/>
       </fields>
       <methods/>
       <presentation>
@@ -2896,137 +2896,137 @@
     </class>
   </classes>
   <menus>
-    <menu id="DataAdministration" type="MenuGroup">
+    <menu id="DataAdministration" xsi:type="MenuGroup">
+      <rank value="70"/>
       <enable_class value="Organization"/>
       <enable_action value="UR_ACTION_MODIFY"/>
       <enable_permission value="UR_ALLOWED_YES"/>
       <enable_stimulus value=""/>
-      <rank value="70"/>
     </menu>
-    <menu id="Audit" type="WebPageMenuNode">
-      <url value="$pages/audit.php"/>
-      <parent value="DataAdministration"/>
+    <menu id="Audit" xsi:type="WebPageMenuNode">
       <rank value="33"/>
-    </menu>
-    <menu id="Catalogs" type="TemplateMenuNode">
-      <template_file value=""/>
       <parent value="DataAdministration"/>
-      <rank value="50"/>
+      <url value="$pages/audit.php"/>
     </menu>
-    <menu id="Organization" type="OQLMenuNode">
+    <menu id="Catalogs" xsi:type="TemplateMenuNode">
+      <rank value="50"/>
+      <parent value="DataAdministration"/>
+      <template_file value=""/>
+    </menu>
+    <menu id="Organization" xsi:type="OQLMenuNode">
+      <rank value="10"/>
+      <parent value="Catalogs"/>
       <oql value="SELECT Organization"/>
       <do_search value="1"/>
-      <parent value="Catalogs"/>
-      <rank value="10"/>
     </menu>
-    <menu id="Application" type="OQLMenuNode">
+    <menu id="Application" xsi:type="OQLMenuNode">
+      <rank value="20"/>
+      <parent value="Catalogs"/>
       <oql value="SELECT Application"/>
       <do_search value=""/>
-      <parent value="Catalogs"/>
-      <rank value="20"/>
     </menu>
-    <menu id="DBServer" type="OQLMenuNode">
+    <menu id="DBServer" xsi:type="OQLMenuNode">
+      <rank value="40"/>
+      <parent value="Catalogs"/>
       <oql value="SELECT DBServer"/>
       <do_search value=""/>
-      <parent value="Catalogs"/>
-      <rank value="40"/>
     </menu>
-    <menu id="ConfigManagement" type="MenuGroup">
+    <menu id="ConfigManagement" xsi:type="MenuGroup">
       <rank value="20"/>
     </menu>
-    <menu id="ConfigManagementOverview" type="TemplateMenuNode">
-      <template_file value="overview.html"/>
-      <parent value="ConfigManagement"/>
+    <menu id="ConfigManagementOverview" xsi:type="TemplateMenuNode">
       <rank value="0"/>
-    </menu>
-    <menu id="Contact" type="TemplateMenuNode">
-      <template_file value="contacts_menu.html"/>
       <parent value="ConfigManagement"/>
-      <rank value="1"/>
+      <template_file value="overview.html"/>
     </menu>
-    <menu id="NewContact" type="NewObjectMenuNode">
-      <class value="Contact"/>
-      <parent value="Contact"/>
+    <menu id="Contact" xsi:type="TemplateMenuNode">
       <rank value="1"/>
+      <parent value="ConfigManagement"/>
+      <template_file value="contacts_menu.html"/>
     </menu>
-    <menu id="SearchContacts" type="SearchMenuNode">
-      <class value="Contact"/>
+    <menu id="NewContact" xsi:type="NewObjectMenuNode">
+      <rank value="1"/>
       <parent value="Contact"/>
+      <class value="Contact"/>
+    </menu>
+    <menu id="SearchContacts" xsi:type="SearchMenuNode">
       <rank value="2"/>
+      <parent value="Contact"/>
+      <class value="Contact"/>
     </menu>
-    <menu id="Document" type="OQLMenuNode">
+    <menu id="Document" xsi:type="OQLMenuNode">
+      <rank value="2"/>
+      <parent value="ConfigManagement"/>
       <oql value="SELECT Document"/>
       <do_search value="1"/>
-      <parent value="ConfigManagement"/>
-      <rank value="2"/>
     </menu>
-    <menu id="Location" type="OQLMenuNode">
+    <menu id="Location" xsi:type="OQLMenuNode">
+      <rank value="3"/>
+      <parent value="ConfigManagement"/>
       <oql value="SELECT Location"/>
       <do_search value="1"/>
-      <parent value="ConfigManagement"/>
-      <rank value="3"/>
     </menu>
-    <menu id="Group" type="OQLMenuNode">
+    <menu id="Group" xsi:type="OQLMenuNode">
+      <rank value="4"/>
+      <parent value="ConfigManagement"/>
       <oql value="SELECT Group"/>
       <do_search value="1"/>
-      <parent value="ConfigManagement"/>
-      <rank value="4"/>
     </menu>
-    <menu id="ConfigManagementCI" type="TemplateMenuNode">
-      <template_file value="cis_menu.html"/>
-      <parent value="ConfigManagement"/>
+    <menu id="ConfigManagementCI" xsi:type="TemplateMenuNode">
       <rank value="5"/>
-    </menu>
-    <menu id="NewCI" type="NewObjectMenuNode">
-      <class value="FunctionalCI"/>
-      <parent value="ConfigManagementCI"/>
-      <rank value="0"/>
-    </menu>
-    <menu id="SearchCIs" type="SearchMenuNode">
-      <class value="FunctionalCI"/>
-      <parent value="ConfigManagementCI"/>
-      <rank value="1"/>
-    </menu>
-    <menu id="ConfigManagement:Shortcuts" type="TemplateMenuNode">
-      <template_file value=""/>
       <parent value="ConfigManagement"/>
-      <rank value="6"/>
+      <template_file value="cis_menu.html"/>
     </menu>
-    <menu id="Server" type="OQLMenuNode">
+    <menu id="NewCI" xsi:type="NewObjectMenuNode">
+      <rank value="0"/>
+      <parent value="ConfigManagementCI"/>
+      <class value="FunctionalCI"/>
+    </menu>
+    <menu id="SearchCIs" xsi:type="SearchMenuNode">
+      <rank value="1"/>
+      <parent value="ConfigManagementCI"/>
+      <class value="FunctionalCI"/>
+    </menu>
+    <menu id="ConfigManagement:Shortcuts" xsi:type="TemplateMenuNode">
+      <rank value="6"/>
+      <parent value="ConfigManagement"/>
+      <template_file value=""/>
+    </menu>
+    <menu id="Server" xsi:type="OQLMenuNode">
+      <rank value="1"/>
+      <parent value="ConfigManagement:Shortcuts"/>
       <oql value="SELECT Server"/>
       <do_search value=""/>
-      <parent value="ConfigManagement:Shortcuts"/>
-      <rank value="1"/>
     </menu>
-    <menu id="NetworkDevice" type="OQLMenuNode">
+    <menu id="NetworkDevice" xsi:type="OQLMenuNode">
+      <rank value="2"/>
+      <parent value="ConfigManagement:Shortcuts"/>
       <oql value="SELECT NetworkDevice"/>
       <do_search value=""/>
-      <parent value="ConfigManagement:Shortcuts"/>
-      <rank value="2"/>
     </menu>
-    <menu id="Printer" type="OQLMenuNode">
+    <menu id="Printer" xsi:type="OQLMenuNode">
+      <rank value="3"/>
+      <parent value="ConfigManagement:Shortcuts"/>
       <oql value="SELECT Printer"/>
       <do_search value=""/>
-      <parent value="ConfigManagement:Shortcuts"/>
-      <rank value="3"/>
     </menu>
-    <menu id="PC" type="OQLMenuNode">
+    <menu id="PC" xsi:type="OQLMenuNode">
+      <rank value="4"/>
+      <parent value="ConfigManagement:Shortcuts"/>
       <oql value="SELECT PC"/>
       <do_search value=""/>
-      <parent value="ConfigManagement:Shortcuts"/>
-      <rank value="4"/>
     </menu>
-    <menu id="BusinessProcess" type="OQLMenuNode">
+    <menu id="BusinessProcess" xsi:type="OQLMenuNode">
+      <rank value="5"/>
+      <parent value="ConfigManagement:Shortcuts"/>
       <oql value="SELECT BusinessProcess"/>
       <do_search value=""/>
-      <parent value="ConfigManagement:Shortcuts"/>
-      <rank value="5"/>
     </menu>
-    <menu id="ApplicationSolution" type="OQLMenuNode">
+    <menu id="ApplicationSolution" xsi:type="OQLMenuNode">
+      <rank value="6"/>
+      <parent value="ConfigManagement:Shortcuts"/>
       <oql value="SELECT ApplicationSolution"/>
       <do_search value=""/>
-      <parent value="ConfigManagement:Shortcuts"/>
-      <rank value="6"/>
     </menu>
   </menus>
 </itop_design>

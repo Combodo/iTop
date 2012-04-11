@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <classes>
     <class name="UserRequest" category="bizmodel,searchable,requestmgmt" parent="ResponseTicket" abstract="false" key_type="autoincrement" db_table="ticket_request" db_key_field="id" db_final_class_field="">
       <properties>
@@ -30,14 +30,14 @@
         </order>
       </properties>
       <fields>
-        <field name="request_type" type="Enum" sql="request_type" default_value="service request" is_null_allowed="false">
+        <field name="request_type" xsi:type="AttributeEnum" sql="request_type" default_value="service request" is_null_allowed="false">
           <values>
             <value>service request</value>
             <value>issue</value>
             <value>information</value>
           </values>
         </field>
-        <field name="freeze_reason" type="String" sql="freeze_reason" default_value="" is_null_allowed="true"/>
+        <field name="freeze_reason" xsi:type="AttributeString" sql="freeze_reason" default_value="" is_null_allowed="true"/>
       </fields>
       <lifecycle attribute="status">
         <stimuli>
@@ -670,49 +670,49 @@
     </class>
   </classes>
   <menus>
-    <menu id="RequestManagement" type="MenuGroup">
+    <menu id="RequestManagement" xsi:type="MenuGroup">
       <rank value="30"/>
     </menu>
-    <menu id="UserRequest:Overview" type="TemplateMenuNode">
-      <template_file value="overview.html"/>
-      <parent value="RequestManagement"/>
+    <menu id="UserRequest:Overview" xsi:type="TemplateMenuNode">
       <rank value="0"/>
-    </menu>
-    <menu id="NewUserRequest" type="NewObjectMenuNode">
-      <class value="UserRequest"/>
       <parent value="RequestManagement"/>
+      <template_file value="overview.html"/>
+    </menu>
+    <menu id="NewUserRequest" xsi:type="NewObjectMenuNode">
       <rank value="1"/>
-    </menu>
-    <menu id="SearchUserRequests" type="SearchMenuNode">
+      <parent value="RequestManagement"/>
       <class value="UserRequest"/>
-      <parent value="RequestManagement"/>
+    </menu>
+    <menu id="SearchUserRequests" xsi:type="SearchMenuNode">
       <rank value="2"/>
-    </menu>
-    <menu id="UserRequest:Shortcuts" type="TemplateMenuNode">
-      <template_file value=""/>
       <parent value="RequestManagement"/>
-      <rank value="3"/>
+      <class value="UserRequest"/>
     </menu>
-    <menu id="UserRequest:MyRequests" type="OQLMenuNode">
+    <menu id="UserRequest:Shortcuts" xsi:type="TemplateMenuNode">
+      <rank value="3"/>
+      <parent value="RequestManagement"/>
+      <template_file value=""/>
+    </menu>
+    <menu id="UserRequest:MyRequests" xsi:type="OQLMenuNode">
+      <rank value="1"/>
+      <parent value="UserRequest:Shortcuts"/>
       <oql value="SELECT UserRequest WHERE agent_id = :current_contact_id AND status NOT IN (&quot;closed&quot;,&quot;resolved&quot;)"/>
       <do_search value=""/>
       <auto_reload value="fast"/>
-      <parent value="UserRequest:Shortcuts"/>
-      <rank value="1"/>
     </menu>
-    <menu id="UserRequest:EscalatedRequests" type="OQLMenuNode">
+    <menu id="UserRequest:EscalatedRequests" xsi:type="OQLMenuNode">
+      <rank value="2"/>
+      <parent value="UserRequest:Shortcuts"/>
       <oql value="SELECT UserRequest WHERE status IN (&quot;escalated_tto&quot;, &quot;escalated_ttr&quot;)"/>
       <do_search value=""/>
       <auto_reload value="fast"/>
-      <parent value="UserRequest:Shortcuts"/>
-      <rank value="2"/>
     </menu>
-    <menu id="UserRequest:OpenRequests" type="OQLMenuNode">
+    <menu id="UserRequest:OpenRequests" xsi:type="OQLMenuNode">
+      <rank value="3"/>
+      <parent value="UserRequest:Shortcuts"/>
       <oql value="SELECT UserRequest WHERE status IN (&quot;new&quot;, &quot;assigned&quot;, &quot;escalated_tto&quot;, &quot;escalated_ttr&quot;, &quot;frozen&quot;, &quot;resolved&quot;)"/>
       <do_search value=""/>
       <auto_reload value="fast"/>
-      <parent value="UserRequest:Shortcuts"/>
-      <rank value="3"/>
     </menu>
   </menus>
 </itop_design>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <classes>
     <class name="Problem" category="bizmodel,searchable,problemmgmt" parent="Ticket" abstract="false" key_type="autoincrement" db_table="ticket_problem" db_key_field="id" db_final_class_field="">
       <properties>
@@ -30,7 +30,7 @@
         </order>
       </properties>
       <fields>
-        <field name="status" type="Enum" sql="status" default_value="new" is_null_allowed="false">
+        <field name="status" xsi:type="AttributeEnum" sql="status" default_value="new" is_null_allowed="false">
           <values>
             <value>new</value>
             <value>assigned</value>
@@ -38,63 +38,63 @@
             <value>closed</value>
           </values>
         </field>
-        <field name="org_id" type="ExternalKey" target_class="Organization" jointype="" sql="org_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="org_name" type="ExternalField" extkey_attcode="org_id" target_attcode="name"/>
-        <field name="service_id" type="ExternalKey" target_class="Service" jointype="" filter="SELECT Service AS s JOIN SLA AS sla ON sla.service_id=s.id JOIN lnkContractToSLA AS ln ON ln.sla_id=sla.id JOIN CustomerContract AS cc ON ln.contract_id=cc.id WHERE cc.org_id =:this-&gt;org_id" sql="service_id" is_null_allowed="false" on_target_delete="DEL_MANUAL">
+        <field name="org_id" xsi:type="AttributeExternalKey" target_class="Organization" jointype="" sql="org_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="org_name" xsi:type="AttributeExternalField" extkey_attcode="org_id" target_attcode="name"/>
+        <field name="service_id" xsi:type="AttributeExternalKey" target_class="Service" jointype="" filter="SELECT Service AS s JOIN SLA AS sla ON sla.service_id=s.id JOIN lnkContractToSLA AS ln ON ln.sla_id=sla.id JOIN CustomerContract AS cc ON ln.contract_id=cc.id WHERE cc.org_id =:this-&gt;org_id" sql="service_id" is_null_allowed="false" on_target_delete="DEL_MANUAL">
           <dependencies>
             <attribute name="org_id"/>
           </dependencies>
         </field>
-        <field name="service_name" type="ExternalField" extkey_attcode="service_id" target_attcode="name"/>
-        <field name="servicesubcategory_id" type="ExternalKey" target_class="ServiceSubcategory" jointype="" filter="SELECT ServiceSubcategory WHERE service_id = :this-&gt;service_id" sql="servicesubcategory_id" is_null_allowed="false" on_target_delete="DEL_MANUAL">
+        <field name="service_name" xsi:type="AttributeExternalField" extkey_attcode="service_id" target_attcode="name"/>
+        <field name="servicesubcategory_id" xsi:type="AttributeExternalKey" target_class="ServiceSubcategory" jointype="" filter="SELECT ServiceSubcategory WHERE service_id = :this-&gt;service_id" sql="servicesubcategory_id" is_null_allowed="false" on_target_delete="DEL_MANUAL">
           <dependencies>
             <attribute name="service_id"/>
           </dependencies>
         </field>
-        <field name="servicesubcategory_name" type="ExternalField" extkey_attcode="servicesubcategory_id" target_attcode="name"/>
-        <field name="product" type="String" sql="product" default_value="" is_null_allowed="true"/>
-        <field name="impact" type="Enum" sql="impact" default_value="1" is_null_allowed="false">
+        <field name="servicesubcategory_name" xsi:type="AttributeExternalField" extkey_attcode="servicesubcategory_id" target_attcode="name"/>
+        <field name="product" xsi:type="AttributeString" sql="product" default_value="" is_null_allowed="true"/>
+        <field name="impact" xsi:type="AttributeEnum" sql="impact" default_value="1" is_null_allowed="false">
           <values>
             <value>1</value>
             <value>2</value>
             <value>3</value>
           </values>
         </field>
-        <field name="urgency" type="Enum" sql="urgency" default_value="1" is_null_allowed="false">
+        <field name="urgency" xsi:type="AttributeEnum" sql="urgency" default_value="1" is_null_allowed="false">
           <values>
             <value>1</value>
             <value>2</value>
             <value>3</value>
           </values>
         </field>
-        <field name="priority" type="Enum" sql="priority" default_value="1" is_null_allowed="false">
+        <field name="priority" xsi:type="AttributeEnum" sql="priority" default_value="1" is_null_allowed="false">
           <values>
             <value>1</value>
             <value>2</value>
             <value>3</value>
           </values>
         </field>
-        <field name="workgroup_id" type="ExternalKey" target_class="Team" jointype="" filter="SELECT Team AS t JOIN CustomerContract AS cc ON cc.support_team_id=t.id JOIN lnkContractToSLA AS ln ON ln.contract_id=cc.id JOIN SLA AS sla ON ln.sla_id=sla.id WHERE sla.service_id = :this-&gt;service_id AND cc.org_id = :this-&gt;org_id" sql="workgroup_id" is_null_allowed="false" on_target_delete="DEL_MANUAL">
+        <field name="workgroup_id" xsi:type="AttributeExternalKey" target_class="Team" jointype="" filter="SELECT Team AS t JOIN CustomerContract AS cc ON cc.support_team_id=t.id JOIN lnkContractToSLA AS ln ON ln.contract_id=cc.id JOIN SLA AS sla ON ln.sla_id=sla.id WHERE sla.service_id = :this-&gt;service_id AND cc.org_id = :this-&gt;org_id" sql="workgroup_id" is_null_allowed="false" on_target_delete="DEL_MANUAL">
           <dependencies>
             <attribute name="org_id"/>
             <attribute name="service_id"/>
           </dependencies>
         </field>
-        <field name="workgroup_name" type="ExternalField" extkey_attcode="workgroup_id" target_attcode="name"/>
-        <field name="agent_id" type="ExternalKey" target_class="Person" jointype="" filter="SELECT Person AS p JOIN lnkTeamToContact AS l ON l.contact_id=p.id JOIN Team AS t ON l.team_id=t.id WHERE t.id = :this-&gt;workgroup_id" sql="agent_id" is_null_allowed="true" on_target_delete="DEL_MANUAL">
+        <field name="workgroup_name" xsi:type="AttributeExternalField" extkey_attcode="workgroup_id" target_attcode="name"/>
+        <field name="agent_id" xsi:type="AttributeExternalKey" target_class="Person" jointype="" filter="SELECT Person AS p JOIN lnkTeamToContact AS l ON l.contact_id=p.id JOIN Team AS t ON l.team_id=t.id WHERE t.id = :this-&gt;workgroup_id" sql="agent_id" is_null_allowed="true" on_target_delete="DEL_MANUAL">
           <dependencies>
             <attribute name="workgroup_id"/>
           </dependencies>
         </field>
-        <field name="agent_name" type="ExternalField" extkey_attcode="agent_id" target_attcode="name"/>
-        <field name="agent_email" type="ExternalField" extkey_attcode="agent_id" target_attcode="email"/>
-        <field name="related_change_id" type="ExternalKey" target_class="Change" jointype="" sql="related_change_id" is_null_allowed="true" on_target_delete="DEL_MANUAL"/>
-        <field name="related_change_ref" type="ExternalField" extkey_attcode="related_change_id" target_attcode="ref"/>
-        <field name="close_date" type="DateTime" sql="close_date" default_value="" is_null_allowed="true"/>
-        <field name="last_update" type="DateTime" sql="last_update" default_value="" is_null_allowed="true"/>
-        <field name="assignment_date" type="DateTime" sql="assignment_date" default_value="" is_null_allowed="true"/>
-        <field name="resolution_date" type="DateTime" sql="resolution_date" default_value="" is_null_allowed="true"/>
-        <field name="knownerrors_list" type="LinkedSet" linked_class="KnownError" ext_key_to_me="problem_id" count_min="0" count_max="0"/>
+        <field name="agent_name" xsi:type="AttributeExternalField" extkey_attcode="agent_id" target_attcode="name"/>
+        <field name="agent_email" xsi:type="AttributeExternalField" extkey_attcode="agent_id" target_attcode="email"/>
+        <field name="related_change_id" xsi:type="AttributeExternalKey" target_class="Change" jointype="" sql="related_change_id" is_null_allowed="true" on_target_delete="DEL_MANUAL"/>
+        <field name="related_change_ref" xsi:type="AttributeExternalField" extkey_attcode="related_change_id" target_attcode="ref"/>
+        <field name="close_date" xsi:type="AttributeDateTime" sql="close_date" default_value="" is_null_allowed="true"/>
+        <field name="last_update" xsi:type="AttributeDateTime" sql="last_update" default_value="" is_null_allowed="true"/>
+        <field name="assignment_date" xsi:type="AttributeDateTime" sql="assignment_date" default_value="" is_null_allowed="true"/>
+        <field name="resolution_date" xsi:type="AttributeDateTime" sql="resolution_date" default_value="" is_null_allowed="true"/>
+        <field name="knownerrors_list" xsi:type="AttributeLinkedSet" linked_class="KnownError" ext_key_to_me="problem_id" count_min="0" count_max="0"/>
       </fields>
       <lifecycle attribute="status">
         <stimuli>
@@ -433,32 +433,32 @@
     </class>
   </classes>
   <menus>
-    <menu id="Problem:Overview" type="TemplateMenuNode">
-      <template_file value="overview.html"/>
-      <parent value="ProblemManagement"/>
+    <menu id="Problem:Overview" xsi:type="TemplateMenuNode">
       <rank value="0"/>
-    </menu>
-    <menu id="NewProblem" type="NewObjectMenuNode">
-      <class value="Problem"/>
       <parent value="ProblemManagement"/>
+      <template_file value="overview.html"/>
+    </menu>
+    <menu id="NewProblem" xsi:type="NewObjectMenuNode">
       <rank value="1"/>
-    </menu>
-    <menu id="SearchProblems" type="SearchMenuNode">
-      <class value="Problem"/>
       <parent value="ProblemManagement"/>
-      <rank value="2"/>
+      <class value="Problem"/>
     </menu>
-    <menu id="Problem:MyProblems" type="OQLMenuNode">
+    <menu id="SearchProblems" xsi:type="SearchMenuNode">
+      <rank value="2"/>
+      <parent value="ProblemManagement"/>
+      <class value="Problem"/>
+    </menu>
+    <menu id="Problem:MyProblems" xsi:type="OQLMenuNode">
+      <rank value="1"/>
+      <parent value="Problem:Shortcuts"/>
       <oql value="SELECT Problem WHERE agent_id = :current_contact_id AND status NOT IN (&quot;closed&quot;, &quot;resolved&quot;)"/>
       <do_search value=""/>
-      <parent value="Problem:Shortcuts"/>
-      <rank value="1"/>
     </menu>
-    <menu id="Problem:OpenProblems" type="OQLMenuNode">
+    <menu id="Problem:OpenProblems" xsi:type="OQLMenuNode">
+      <rank value="2"/>
+      <parent value="Problem:Shortcuts"/>
       <oql value="SELECT Problem WHERE status IN (&quot;new&quot;, &quot;assigned&quot;, &quot;resolved&quot;)"/>
       <do_search value=""/>
-      <parent value="Problem:Shortcuts"/>
-      <rank value="2"/>
     </menu>
   </menus>
 </itop_design>

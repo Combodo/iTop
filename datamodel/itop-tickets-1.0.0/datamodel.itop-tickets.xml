@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <classes>
     <class name="Ticket" category="bizmodel,searchable" parent="cmdbAbstractObject" abstract="true" key_type="autoincrement" db_table="ticket" db_key_field="id" db_final_class_field="finalclass">
       <properties>
@@ -25,15 +25,15 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="ref" type="String" sql="ref" default_value="" is_null_allowed="true"/>
-        <field name="title" type="String" sql="title" default_value="" is_null_allowed="false"/>
-        <field name="description" type="Text" sql="description" default_value="" is_null_allowed="false"/>
-        <field name="ticket_log" type="CaseLog" sql="ticket_log" default_value="" is_null_allowed="true"/>
-        <field name="start_date" type="DateTime" sql="start_date" default_value="" is_null_allowed="false"/>
-        <field name="document_list" type="LinkedSetIndirect" linked_class="lnkTicketToDoc" ext_key_to_me="ticket_id" ext_key_to_remote="document_id" count_min="0" count_max="0"/>
-        <field name="ci_list" type="LinkedSetIndirect" linked_class="lnkTicketToCI" ext_key_to_me="ticket_id" ext_key_to_remote="ci_id" count_min="0" count_max="0"/>
-        <field name="contact_list" type="LinkedSetIndirect" linked_class="lnkTicketToContact" ext_key_to_me="ticket_id" ext_key_to_remote="contact_id" count_min="0" count_max="0"/>
-        <field name="incident_list" type="LinkedSetIndirect" linked_class="lnkTicketToIncident" ext_key_to_me="ticket_id" ext_key_to_remote="incident_id" count_min="0" count_max="0"/>
+        <field name="ref" xsi:type="AttributeString" sql="ref" default_value="" is_null_allowed="true"/>
+        <field name="title" xsi:type="AttributeString" sql="title" default_value="" is_null_allowed="false"/>
+        <field name="description" xsi:type="AttributeText" sql="description" default_value="" is_null_allowed="false"/>
+        <field name="ticket_log" xsi:type="AttributeCaseLog" sql="ticket_log" default_value="" is_null_allowed="true"/>
+        <field name="start_date" xsi:type="AttributeDateTime" sql="start_date" default_value="" is_null_allowed="false"/>
+        <field name="document_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkTicketToDoc" ext_key_to_me="ticket_id" ext_key_to_remote="document_id" count_min="0" count_max="0"/>
+        <field name="ci_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkTicketToCI" ext_key_to_me="ticket_id" ext_key_to_remote="ci_id" count_min="0" count_max="0"/>
+        <field name="contact_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkTicketToContact" ext_key_to_me="ticket_id" ext_key_to_remote="contact_id" count_min="0" count_max="0"/>
+        <field name="incident_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkTicketToIncident" ext_key_to_me="ticket_id" ext_key_to_remote="incident_id" count_min="0" count_max="0"/>
       </fields>
       <methods/>
       <presentation>
@@ -84,7 +84,7 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="status" type="Enum" sql="status" default_value="new" is_null_allowed="false">
+        <field name="status" xsi:type="AttributeEnum" sql="status" default_value="new" is_null_allowed="false">
           <values>
             <value>new</value>
             <value>assigned</value>
@@ -95,74 +95,74 @@
             <value>closed</value>
           </values>
         </field>
-        <field name="caller_id" type="ExternalKey" target_class="Person" jointype="" filter="SELECT Person WHERE org_id = :this-&gt;org_id" sql="caller_id" is_null_allowed="true" on_target_delete="DEL_MANUAL">
+        <field name="caller_id" xsi:type="AttributeExternalKey" target_class="Person" jointype="" filter="SELECT Person WHERE org_id = :this-&gt;org_id" sql="caller_id" is_null_allowed="true" on_target_delete="DEL_MANUAL">
           <dependencies>
             <attribute name="org_id"/>
           </dependencies>
         </field>
-        <field name="caller_email" type="ExternalField" extkey_attcode="caller_id" target_attcode="email"/>
-        <field name="org_id" type="ExternalKey" target_class="Organization" jointype="" sql="org_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="org_name" type="ExternalField" extkey_attcode="org_id" target_attcode="name"/>
-        <field name="service_id" type="ExternalKey" target_class="Service" jointype="" filter="SELECT Service AS s JOIN SLA AS sla ON sla.service_id=s.id JOIN lnkContractToSLA AS ln ON ln.sla_id=sla.id JOIN CustomerContract AS cc ON ln.contract_id=cc.id WHERE cc.org_id =:this-&gt;org_id" sql="service_id" is_null_allowed="false" on_target_delete="DEL_MANUAL">
+        <field name="caller_email" xsi:type="AttributeExternalField" extkey_attcode="caller_id" target_attcode="email"/>
+        <field name="org_id" xsi:type="AttributeExternalKey" target_class="Organization" jointype="" sql="org_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="org_name" xsi:type="AttributeExternalField" extkey_attcode="org_id" target_attcode="name"/>
+        <field name="service_id" xsi:type="AttributeExternalKey" target_class="Service" jointype="" filter="SELECT Service AS s JOIN SLA AS sla ON sla.service_id=s.id JOIN lnkContractToSLA AS ln ON ln.sla_id=sla.id JOIN CustomerContract AS cc ON ln.contract_id=cc.id WHERE cc.org_id =:this-&gt;org_id" sql="service_id" is_null_allowed="false" on_target_delete="DEL_MANUAL">
           <dependencies>
             <attribute name="org_id"/>
           </dependencies>
         </field>
-        <field name="service_name" type="ExternalField" extkey_attcode="service_id" target_attcode="name"/>
-        <field name="servicesubcategory_id" type="ExternalKey" target_class="ServiceSubcategory" jointype="" filter="SELECT ServiceSubcategory WHERE service_id = :this-&gt;service_id" sql="servicesubcategory_id" is_null_allowed="false" on_target_delete="DEL_MANUAL">
+        <field name="service_name" xsi:type="AttributeExternalField" extkey_attcode="service_id" target_attcode="name"/>
+        <field name="servicesubcategory_id" xsi:type="AttributeExternalKey" target_class="ServiceSubcategory" jointype="" filter="SELECT ServiceSubcategory WHERE service_id = :this-&gt;service_id" sql="servicesubcategory_id" is_null_allowed="false" on_target_delete="DEL_MANUAL">
           <dependencies>
             <attribute name="service_id"/>
           </dependencies>
         </field>
-        <field name="servicesubcategory_name" type="ExternalField" extkey_attcode="servicesubcategory_id" target_attcode="name"/>
-        <field name="product" type="String" sql="product" default_value="" is_null_allowed="true"/>
-        <field name="impact" type="Enum" sql="impact" default_value="1" is_null_allowed="false">
+        <field name="servicesubcategory_name" xsi:type="AttributeExternalField" extkey_attcode="servicesubcategory_id" target_attcode="name"/>
+        <field name="product" xsi:type="AttributeString" sql="product" default_value="" is_null_allowed="true"/>
+        <field name="impact" xsi:type="AttributeEnum" sql="impact" default_value="1" is_null_allowed="false">
           <values>
             <value>1</value>
             <value>2</value>
             <value>3</value>
           </values>
         </field>
-        <field name="urgency" type="Enum" sql="urgency" default_value="1" is_null_allowed="false">
+        <field name="urgency" xsi:type="AttributeEnum" sql="urgency" default_value="1" is_null_allowed="false">
           <values>
             <value>1</value>
             <value>2</value>
             <value>3</value>
           </values>
         </field>
-        <field name="priority" type="Enum" sql="priority" default_value="1" is_null_allowed="false">
+        <field name="priority" xsi:type="AttributeEnum" sql="priority" default_value="1" is_null_allowed="false">
           <values>
             <value>1</value>
             <value>2</value>
             <value>3</value>
           </values>
         </field>
-        <field name="workgroup_id" type="ExternalKey" target_class="Team" jointype="" filter="SELECT Team AS t JOIN CustomerContract AS cc ON cc.support_team_id=t.id JOIN lnkContractToSLA AS ln ON ln.contract_id=cc.id JOIN SLA AS sla ON ln.sla_id=sla.id WHERE sla.service_id = :this-&gt;service_id AND cc.org_id = :this-&gt;org_id" sql="workgroup_id" is_null_allowed="false" on_target_delete="DEL_MANUAL">
+        <field name="workgroup_id" xsi:type="AttributeExternalKey" target_class="Team" jointype="" filter="SELECT Team AS t JOIN CustomerContract AS cc ON cc.support_team_id=t.id JOIN lnkContractToSLA AS ln ON ln.contract_id=cc.id JOIN SLA AS sla ON ln.sla_id=sla.id WHERE sla.service_id = :this-&gt;service_id AND cc.org_id = :this-&gt;org_id" sql="workgroup_id" is_null_allowed="false" on_target_delete="DEL_MANUAL">
           <dependencies>
             <attribute name="org_id"/>
             <attribute name="service_id"/>
           </dependencies>
         </field>
-        <field name="workgroup_name" type="ExternalField" extkey_attcode="workgroup_id" target_attcode="name"/>
-        <field name="agent_id" type="ExternalKey" target_class="Person" jointype="" filter="SELECT Person AS p JOIN lnkTeamToContact AS l ON l.contact_id=p.id JOIN Team AS t ON l.team_id=t.id WHERE t.id = :this-&gt;workgroup_id" sql="agent_id" is_null_allowed="true" on_target_delete="DEL_MANUAL">
+        <field name="workgroup_name" xsi:type="AttributeExternalField" extkey_attcode="workgroup_id" target_attcode="name"/>
+        <field name="agent_id" xsi:type="AttributeExternalKey" target_class="Person" jointype="" filter="SELECT Person AS p JOIN lnkTeamToContact AS l ON l.contact_id=p.id JOIN Team AS t ON l.team_id=t.id WHERE t.id = :this-&gt;workgroup_id" sql="agent_id" is_null_allowed="true" on_target_delete="DEL_MANUAL">
           <dependencies>
             <attribute name="workgroup_id"/>
           </dependencies>
         </field>
-        <field name="agent_name" type="ExternalField" extkey_attcode="agent_id" target_attcode="name"/>
-        <field name="agent_email" type="ExternalField" extkey_attcode="agent_id" target_attcode="email"/>
-        <field name="related_problem_id" type="ExternalKey" target_class="Problem" jointype="" sql="related_problem_id" is_null_allowed="true" on_target_delete="DEL_MANUAL"/>
-        <field name="related_problem_ref" type="ExternalField" extkey_attcode="related_problem_id" target_attcode="ref"/>
-        <field name="related_change_id" type="ExternalKey" target_class="Change" jointype="" sql="related_change_id" is_null_allowed="true" on_target_delete="DEL_MANUAL"/>
-        <field name="related_change_ref" type="ExternalField" extkey_attcode="related_change_id" target_attcode="ref"/>
-        <field name="close_date" type="DateTime" sql="close_date" default_value="" is_null_allowed="true"/>
-        <field name="last_update" type="DateTime" sql="last_update" default_value="" is_null_allowed="true"/>
-        <field name="assignment_date" type="DateTime" sql="assignment_date" default_value="" is_null_allowed="true"/>
-        <field name="resolution_date" type="DateTime" sql="resolution_date" default_value="" is_null_allowed="true"/>
-        <field name="tto_escalation_deadline" type="Deadline" sql="tto_escalation_deadline" default_value="" is_null_allowed="true"/>
-        <field name="ttr_escalation_deadline" type="Deadline" sql="ttr_escalation_deadline" default_value="" is_null_allowed="true"/>
-        <field name="closure_deadline" type="Deadline" sql="closure_deadline" default_value="" is_null_allowed="true"/>
-        <field name="resolution_code" type="Enum" sql="resolution_code" default_value="fixed" is_null_allowed="true">
+        <field name="agent_name" xsi:type="AttributeExternalField" extkey_attcode="agent_id" target_attcode="name"/>
+        <field name="agent_email" xsi:type="AttributeExternalField" extkey_attcode="agent_id" target_attcode="email"/>
+        <field name="related_problem_id" xsi:type="AttributeExternalKey" target_class="Problem" jointype="" sql="related_problem_id" is_null_allowed="true" on_target_delete="DEL_MANUAL"/>
+        <field name="related_problem_ref" xsi:type="AttributeExternalField" extkey_attcode="related_problem_id" target_attcode="ref"/>
+        <field name="related_change_id" xsi:type="AttributeExternalKey" target_class="Change" jointype="" sql="related_change_id" is_null_allowed="true" on_target_delete="DEL_MANUAL"/>
+        <field name="related_change_ref" xsi:type="AttributeExternalField" extkey_attcode="related_change_id" target_attcode="ref"/>
+        <field name="close_date" xsi:type="AttributeDateTime" sql="close_date" default_value="" is_null_allowed="true"/>
+        <field name="last_update" xsi:type="AttributeDateTime" sql="last_update" default_value="" is_null_allowed="true"/>
+        <field name="assignment_date" xsi:type="AttributeDateTime" sql="assignment_date" default_value="" is_null_allowed="true"/>
+        <field name="resolution_date" xsi:type="AttributeDateTime" sql="resolution_date" default_value="" is_null_allowed="true"/>
+        <field name="tto_escalation_deadline" xsi:type="AttributeDeadline" sql="tto_escalation_deadline" default_value="" is_null_allowed="true"/>
+        <field name="ttr_escalation_deadline" xsi:type="AttributeDeadline" sql="ttr_escalation_deadline" default_value="" is_null_allowed="true"/>
+        <field name="closure_deadline" xsi:type="AttributeDeadline" sql="closure_deadline" default_value="" is_null_allowed="true"/>
+        <field name="resolution_code" xsi:type="AttributeEnum" sql="resolution_code" default_value="fixed" is_null_allowed="true">
           <values>
             <value>fixed</value>
             <value>duplicate</value>
@@ -170,8 +170,8 @@
             <value>irrelevant</value>
           </values>
         </field>
-        <field name="solution" type="Text" sql="solution" default_value="" is_null_allowed="true"/>
-        <field name="user_satisfaction" type="Enum" sql="user_satisfaction" default_value="1" is_null_allowed="true">
+        <field name="solution" xsi:type="AttributeText" sql="solution" default_value="" is_null_allowed="true"/>
+        <field name="user_satisfaction" xsi:type="AttributeEnum" sql="user_satisfaction" default_value="1" is_null_allowed="true">
           <values>
             <value>1</value>
             <value>2</value>
@@ -179,7 +179,7 @@
             <value>4</value>
           </values>
         </field>
-        <field name="user_commment" type="Text" sql="user_commment" default_value="" is_null_allowed="true"/>
+        <field name="user_commment" xsi:type="AttributeText" sql="user_commment" default_value="" is_null_allowed="true"/>
       </fields>
       <lifecycle attribute="status">
         <stimuli>
@@ -870,10 +870,10 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="ticket_id" type="ExternalKey" target_class="Ticket" jointype="" sql="ticket_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="ticket_ref" type="ExternalField" extkey_attcode="ticket_id" target_attcode="ref"/>
-        <field name="document_id" type="ExternalKey" target_class="Document" jointype="" sql="document_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="document_name" type="ExternalField" extkey_attcode="document_id" target_attcode="name"/>
+        <field name="ticket_id" xsi:type="AttributeExternalKey" target_class="Ticket" jointype="" sql="ticket_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="ticket_ref" xsi:type="AttributeExternalField" extkey_attcode="ticket_id" target_attcode="ref"/>
+        <field name="document_id" xsi:type="AttributeExternalKey" target_class="Document" jointype="" sql="document_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="document_name" xsi:type="AttributeExternalField" extkey_attcode="document_id" target_attcode="name"/>
       </fields>
       <methods/>
       <presentation>
@@ -914,12 +914,12 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="ticket_id" type="ExternalKey" target_class="Ticket" jointype="" sql="ticket_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="ticket_ref" type="ExternalField" extkey_attcode="ticket_id" target_attcode="ref"/>
-        <field name="contact_id" type="ExternalKey" target_class="Contact" jointype="" sql="contact_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="contact_name" type="ExternalField" extkey_attcode="contact_id" target_attcode="name"/>
-        <field name="contact_email" type="ExternalField" extkey_attcode="contact_id" target_attcode="email"/>
-        <field name="role" type="String" sql="role" default_value="" is_null_allowed="true"/>
+        <field name="ticket_id" xsi:type="AttributeExternalKey" target_class="Ticket" jointype="" sql="ticket_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="ticket_ref" xsi:type="AttributeExternalField" extkey_attcode="ticket_id" target_attcode="ref"/>
+        <field name="contact_id" xsi:type="AttributeExternalKey" target_class="Contact" jointype="" sql="contact_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="contact_name" xsi:type="AttributeExternalField" extkey_attcode="contact_id" target_attcode="name"/>
+        <field name="contact_email" xsi:type="AttributeExternalField" extkey_attcode="contact_id" target_attcode="email"/>
+        <field name="role" xsi:type="AttributeString" sql="role" default_value="" is_null_allowed="true"/>
       </fields>
       <methods/>
       <presentation>
@@ -966,12 +966,12 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="ticket_id" type="ExternalKey" target_class="Ticket" jointype="" sql="ticket_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="ticket_ref" type="ExternalField" extkey_attcode="ticket_id" target_attcode="ref"/>
-        <field name="ci_id" type="ExternalKey" target_class="FunctionalCI" jointype="" sql="ci_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="ci_name" type="ExternalField" extkey_attcode="ci_id" target_attcode="name"/>
-        <field name="ci_status" type="ExternalField" extkey_attcode="ci_id" target_attcode="status"/>
-        <field name="impact" type="String" sql="impact" default_value="" is_null_allowed="true"/>
+        <field name="ticket_id" xsi:type="AttributeExternalKey" target_class="Ticket" jointype="" sql="ticket_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="ticket_ref" xsi:type="AttributeExternalField" extkey_attcode="ticket_id" target_attcode="ref"/>
+        <field name="ci_id" xsi:type="AttributeExternalKey" target_class="FunctionalCI" jointype="" sql="ci_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="ci_name" xsi:type="AttributeExternalField" extkey_attcode="ci_id" target_attcode="name"/>
+        <field name="ci_status" xsi:type="AttributeExternalField" extkey_attcode="ci_id" target_attcode="status"/>
+        <field name="impact" xsi:type="AttributeString" sql="impact" default_value="" is_null_allowed="true"/>
       </fields>
       <methods/>
       <presentation>

@@ -543,7 +543,7 @@ EOF;
 		{
 			// $oField
 			$sAttCode = $oField->getAttribute('name');
-			$sAttType = 'Attribute'.$oField->getAttribute('type');
+			$sAttType = $oField->getAttribute('xsi:type');
 	
 			$aDependencies = array();
 			$oDependencies = $this->GetOptionalElement($oField, 'dependencies');
@@ -814,7 +814,7 @@ EOF;
 	protected function CompileMenu($oMenu, $sResFile, $sModuleRelativeDir, $oP)
 	{
 		$sMenuId = $oMenu->getAttribute("id");
-		$sMenuClass = $oMenu->getAttribute("type");
+		$sMenuClass = $oMenu->getAttribute("xsi:type");
 
 		$oParent = $this->GetOptionalElement($oMenu, 'parent');
 		if ($oParent)

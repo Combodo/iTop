@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <classes>
     <class name="KnownError" category="bizmodel,searchable,knownerrormgmt" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" db_table="known_error" db_key_field="id" db_final_class_field="">
       <properties>
@@ -21,17 +21,17 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="name" type="String" sql="name" default_value="" is_null_allowed="false"/>
-        <field name="org_id" type="ExternalKey" target_class="Organization" jointype="" sql="cust_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
-        <field name="cust_name" type="ExternalField" extkey_attcode="org_id" target_attcode="name"/>
-        <field name="problem_id" type="ExternalKey" target_class="Problem" jointype="" sql="problem_id" is_null_allowed="true" on_target_delete="DEL_MANUAL"/>
-        <field name="problem_ref" type="ExternalField" extkey_attcode="problem_id" target_attcode="ref"/>
-        <field name="symptom" type="Text" sql="symptom" default_value="" is_null_allowed="false"/>
-        <field name="root_cause" type="Text" sql="rootcause" default_value="" is_null_allowed="true"/>
-        <field name="workaround" type="Text" sql="workaround" default_value="" is_null_allowed="true"/>
-        <field name="solution" type="Text" sql="solution" default_value="" is_null_allowed="true"/>
-        <field name="error_code" type="String" sql="error_code" default_value="" is_null_allowed="true"/>
-        <field name="domain" type="Enum" sql="domain" default_value="Application" is_null_allowed="false">
+        <field name="name" xsi:type="AttributeString" sql="name" default_value="" is_null_allowed="false"/>
+        <field name="org_id" xsi:type="AttributeExternalKey" target_class="Organization" jointype="" sql="cust_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
+        <field name="cust_name" xsi:type="AttributeExternalField" extkey_attcode="org_id" target_attcode="name"/>
+        <field name="problem_id" xsi:type="AttributeExternalKey" target_class="Problem" jointype="" sql="problem_id" is_null_allowed="true" on_target_delete="DEL_MANUAL"/>
+        <field name="problem_ref" xsi:type="AttributeExternalField" extkey_attcode="problem_id" target_attcode="ref"/>
+        <field name="symptom" xsi:type="AttributeText" sql="symptom" default_value="" is_null_allowed="false"/>
+        <field name="root_cause" xsi:type="AttributeText" sql="rootcause" default_value="" is_null_allowed="true"/>
+        <field name="workaround" xsi:type="AttributeText" sql="workaround" default_value="" is_null_allowed="true"/>
+        <field name="solution" xsi:type="AttributeText" sql="solution" default_value="" is_null_allowed="true"/>
+        <field name="error_code" xsi:type="AttributeString" sql="error_code" default_value="" is_null_allowed="true"/>
+        <field name="domain" xsi:type="AttributeEnum" sql="domain" default_value="Application" is_null_allowed="false">
           <values>
             <value>Network</value>
             <value>Server</value>
@@ -39,11 +39,11 @@
             <value>Desktop</value>
           </values>
         </field>
-        <field name="vendor" type="String" sql="vendor" default_value="" is_null_allowed="true"/>
-        <field name="model" type="String" sql="model" default_value="" is_null_allowed="true"/>
-        <field name="version" type="String" sql="version" default_value="" is_null_allowed="true"/>
-        <field name="ci_list" type="LinkedSetIndirect" linked_class="lnkInfraError" ext_key_to_me="error_id" ext_key_to_remote="infra_id" count_min="0" count_max="0"/>
-        <field name="document_list" type="LinkedSetIndirect" linked_class="lnkDocumentError" ext_key_to_me="error_id" ext_key_to_remote="doc_id" count_min="0" count_max="0"/>
+        <field name="vendor" xsi:type="AttributeString" sql="vendor" default_value="" is_null_allowed="true"/>
+        <field name="model" xsi:type="AttributeString" sql="model" default_value="" is_null_allowed="true"/>
+        <field name="version" xsi:type="AttributeString" sql="version" default_value="" is_null_allowed="true"/>
+        <field name="ci_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkInfraError" ext_key_to_me="error_id" ext_key_to_remote="infra_id" count_min="0" count_max="0"/>
+        <field name="document_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkDocumentError" ext_key_to_me="error_id" ext_key_to_remote="doc_id" count_min="0" count_max="0"/>
       </fields>
       <methods/>
       <presentation>
@@ -103,12 +103,12 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="infra_id" type="ExternalKey" target_class="FunctionalCI" jointype="" sql="infra_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="infra_name" type="ExternalField" extkey_attcode="infra_id" target_attcode="name"/>
-        <field name="infra_status" type="ExternalField" extkey_attcode="infra_id" target_attcode="status"/>
-        <field name="error_id" type="ExternalKey" target_class="KnownError" jointype="" sql="error_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="error_name" type="ExternalField" extkey_attcode="error_id" target_attcode="name"/>
-        <field name="reason" type="String" sql="dummy" default_value="" is_null_allowed="true"/>
+        <field name="infra_id" xsi:type="AttributeExternalKey" target_class="FunctionalCI" jointype="" sql="infra_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="infra_name" xsi:type="AttributeExternalField" extkey_attcode="infra_id" target_attcode="name"/>
+        <field name="infra_status" xsi:type="AttributeExternalField" extkey_attcode="infra_id" target_attcode="status"/>
+        <field name="error_id" xsi:type="AttributeExternalKey" target_class="KnownError" jointype="" sql="error_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="error_name" xsi:type="AttributeExternalField" extkey_attcode="error_id" target_attcode="name"/>
+        <field name="reason" xsi:type="AttributeString" sql="dummy" default_value="" is_null_allowed="true"/>
       </fields>
       <methods/>
       <presentation>
@@ -155,11 +155,11 @@
         </reconciliation>
       </properties>
       <fields>
-        <field name="doc_id" type="ExternalKey" target_class="Document" jointype="" sql="doc_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="doc_name" type="ExternalField" extkey_attcode="doc_id" target_attcode="name"/>
-        <field name="error_id" type="ExternalKey" target_class="KnownError" jointype="" sql="error_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="error_name" type="ExternalField" extkey_attcode="error_id" target_attcode="name"/>
-        <field name="link_type" type="String" sql="link_type" default_value="" is_null_allowed="true"/>
+        <field name="doc_id" xsi:type="AttributeExternalKey" target_class="Document" jointype="" sql="doc_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="doc_name" xsi:type="AttributeExternalField" extkey_attcode="doc_id" target_attcode="name"/>
+        <field name="error_id" xsi:type="AttributeExternalKey" target_class="KnownError" jointype="" sql="error_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
+        <field name="error_name" xsi:type="AttributeExternalField" extkey_attcode="error_id" target_attcode="name"/>
+        <field name="link_type" xsi:type="AttributeString" sql="link_type" default_value="" is_null_allowed="true"/>
       </fields>
       <methods/>
       <presentation>
@@ -181,29 +181,29 @@
     </class>
   </classes>
   <menus>
-    <menu id="ProblemManagement" type="MenuGroup">
+    <menu id="ProblemManagement" xsi:type="MenuGroup">
       <rank value="42"/>
     </menu>
-    <menu id="NewError" type="NewObjectMenuNode">
-      <class value="KnownError"/>
-      <parent value="ProblemManagement"/>
+    <menu id="NewError" xsi:type="NewObjectMenuNode">
       <rank value="3"/>
-    </menu>
-    <menu id="SearchError" type="SearchMenuNode">
+      <parent value="ProblemManagement"/>
       <class value="KnownError"/>
-      <parent value="ProblemManagement"/>
+    </menu>
+    <menu id="SearchError" xsi:type="SearchMenuNode">
       <rank value="4"/>
-    </menu>
-    <menu id="Problem:Shortcuts" type="TemplateMenuNode">
-      <template_file value=""/>
       <parent value="ProblemManagement"/>
-      <rank value="5"/>
+      <class value="KnownError"/>
     </menu>
-    <menu id="Problem:KnownErrors" type="OQLMenuNode">
+    <menu id="Problem:Shortcuts" xsi:type="TemplateMenuNode">
+      <rank value="5"/>
+      <parent value="ProblemManagement"/>
+      <template_file value=""/>
+    </menu>
+    <menu id="Problem:KnownErrors" xsi:type="OQLMenuNode">
+      <rank value="3"/>
+      <parent value="Problem:Shortcuts"/>
       <oql value="SELECT KnownError"/>
       <do_search value="1"/>
-      <parent value="Problem:Shortcuts"/>
-      <rank value="3"/>
     </menu>
   </menus>
 </itop_design>
