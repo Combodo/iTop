@@ -188,10 +188,24 @@ try
 			}
 		}
 		//$oFactory->Dump();
-		
-		$oMFCompiler = new MFCompiler($oFactory, $sSourcePath);
-		$oMFCompiler->Compile($sTargetPath);
-		SetupPage::log_info("Data model successfully compiled to '$sTargetPath'.");
+		if ($oFactory->HasLoadErrors())
+		{
+			foreach($oFactory->GetLoadErrors() as $sModuleId => $aErrors)
+			{
+				SetupPage::log_error("Data model source file (xml) could not be loaded - found errors in module: $sModuleId");
+				foreach($aErrors as $oXmlError)
+				{
+					SetupPage::log_error("Load error: File: ".$oXmlError->file." Line:".$oXmlError->line." Message:".$oXmlError->message);
+				}
+			}
+			throw new Exception("The data model could not be compiled. Please check the setup error log");
+		}
+		else
+		{
+			$oMFCompiler = new MFCompiler($oFactory, $sSourcePath);
+			$oMFCompiler->Compile($sTargetPath);
+			SetupPage::log_info("Data model successfully compiled to '$sTargetPath'.");
+		}
 		break;
 		
 		//////////////////////////////
