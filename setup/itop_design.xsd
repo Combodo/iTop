@@ -1,0 +1,501 @@
+<?xml version="1.0"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+<xsd:element name="itop_design">
+ <xsd:complexType>
+  <xsd:sequence>
+
+   <!-- Classes [0, N] -->
+   <xsd:element name="classes" minOccurs="0">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element name="class" minOccurs="0" maxOccurs="unbounded">
+       <xsd:complexType>
+        <xsd:sequence>
+         <xsd:element name="properties">
+          <xsd:complexType>
+           <xsd:sequence>
+            <xsd:element name="comment" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="naming">
+             <xsd:complexType>
+              <xsd:sequence>
+               <xsd:element name="attributes" type="ListOfAttributes"/>
+              </xsd:sequence>
+              <xsd:attribute name="format" type="xsd:string"/>
+             </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="display_template" type="xsd:string"/>
+            <xsd:element name="icon" type="xsd:string"/>
+            <xsd:element name="reconciliation">
+             <xsd:complexType>
+              <xsd:sequence>
+               <xsd:element name="attributes" type="ListOfAttributes"/>
+              </xsd:sequence>
+             </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="order" minOccurs="0">
+             <xsd:complexType>
+              <xsd:sequence>
+               <xsd:element name="columns">
+                <xsd:complexType>
+                 <xsd:sequence>
+                  <xsd:element name="column">
+                   <xsd:complexType>
+                    <xsd:attribute name="name" type="xsd:string"/>
+                    <xsd:attribute name="ascending" type="xsd:string"/>
+                   </xsd:complexType>
+                  </xsd:element>
+                 </xsd:sequence>
+                </xsd:complexType>
+               </xsd:element>
+              </xsd:sequence>
+             </xsd:complexType>
+            </xsd:element>
+           </xsd:sequence>
+          </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="fields">
+          <xsd:complexType>
+           <xsd:sequence>
+            <xsd:element name="field" type="Attribute" minOccurs="0" maxOccurs="unbounded"/>
+           </xsd:sequence>
+          </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="lifecycle" minOccurs="0">
+          <xsd:complexType>
+           <xsd:sequence>
+
+            <xsd:element name="stimuli">
+             <xsd:complexType>
+              <xsd:sequence>
+               <xsd:element name="stimulus" maxOccurs="unbounded">
+                <xsd:complexType>
+                 <xsd:attribute name="name" type="xsd:string"/>
+                 <xsd:attribute name="type" type="xsd:string"/>
+                </xsd:complexType>
+               </xsd:element>
+              </xsd:sequence>
+             </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="states">
+             <xsd:complexType>
+              <xsd:sequence>
+               <xsd:element name="state" minOccurs="0" maxOccurs="unbounded">
+                <xsd:complexType>
+                 <xsd:sequence>
+                  <xsd:element name="flags">
+                   <xsd:complexType>
+                    <xsd:sequence>
+                     <xsd:element name="attribute" maxOccurs="unbounded">
+                      <xsd:complexType>
+                       <xsd:attribute name="name" type="xsd:string"/>
+                       <xsd:attribute name="mandatory" type="xsd:string"/>
+                       <xsd:attribute name="must_prompt" type="xsd:string"/>
+                       <xsd:attribute name="must_change" type="xsd:string"/>
+                       <xsd:attribute name="hidden" type="xsd:string"/>
+                       <xsd:attribute name="read_only" type="xsd:string"/>
+                      </xsd:complexType>
+                     </xsd:element>
+                    </xsd:sequence>
+                   </xsd:complexType>
+                  </xsd:element>
+                  
+                  <xsd:element name="transitions">
+                   <xsd:complexType>
+                    <xsd:sequence>
+                     <xsd:element name="transition" minOccurs="0" maxOccurs="unbounded">
+                      <xsd:complexType>
+                       <xsd:sequence>
+                        <xsd:element name="actions">
+                         <xsd:complexType>
+                          <xsd:sequence>
+                           <xsd:element name="action" minOccurs="0" maxOccurs="unbounded">
+                            <xsd:complexType>
+                             <xsd:attribute name="verb" type="xsd:string"/>
+                            </xsd:complexType>
+                           </xsd:element>
+                          </xsd:sequence>
+                         </xsd:complexType>
+                        </xsd:element>
+                       </xsd:sequence>
+                       <xsd:attribute name="stimulus" type="xsd:string"/>
+                       <xsd:attribute name="target" type="xsd:string"/>
+                      </xsd:complexType>
+                     </xsd:element>
+                    </xsd:sequence>
+                   </xsd:complexType>
+                  </xsd:element>
+                 </xsd:sequence>
+                 <xsd:attribute name="name" type="xsd:string"/>
+                </xsd:complexType>
+               </xsd:element>
+              </xsd:sequence>
+             </xsd:complexType>
+            </xsd:element>
+
+           </xsd:sequence>
+           <xsd:attribute name="attribute" type="xsd:string"/>
+          </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="methods">
+          <xsd:complexType>
+           <xsd:sequence>
+            <xsd:element name="method" minOccurs="0" maxOccurs="unbounded">
+             <xsd:complexType mixed="true">
+              <xsd:sequence>
+               <xsd:element name="comment" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="static" type="xsd:string"/>
+              <xsd:attribute name="access" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+             </xsd:complexType>
+            </xsd:element>
+           </xsd:sequence>
+          </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="presentation">
+          <xsd:complexType>
+           <xsd:all>
+            <xsd:element name="details" type="ItemList" minOccurs="0"/>
+            <xsd:element name="search" type="ItemList" minOccurs="0"/>
+            <xsd:element name="list" type="ItemList" minOccurs="0"/>
+           </xsd:all>
+          </xsd:complexType>
+         </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="category" type="xsd:string"/>
+        <xsd:attribute name="parent" type="xsd:string"/>
+        <xsd:attribute name="abstract" type="xsd:string"/>
+        <xsd:attribute name="key_type" type="xsd:string"/>
+        <xsd:attribute name="is_link" type="xsd:string"/>
+        <xsd:attribute name="db_table" type="xsd:string"/>
+        <xsd:attribute name="db_key_field" type="xsd:string"/>
+        <xsd:attribute name="db_final_class_field" type="xsd:string"/>
+       </xsd:complexType>
+
+      </xsd:element>
+     </xsd:sequence>
+    </xsd:complexType>
+   </xsd:element>
+
+   <!-- Menus [0, N] -->
+   <xsd:element name="menus" minOccurs="0">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element name="menu" type="Menu" minOccurs="0" maxOccurs="unbounded"/>
+     </xsd:sequence>
+    </xsd:complexType>
+   </xsd:element>
+   
+  </xsd:sequence>
+ </xsd:complexType>
+</xsd:element>
+
+
+<!-- ====================================== -->
+<!-- Types for the classes                  -->
+<!-- ====================================== -->
+<xsd:complexType name="ListOfAttributes">
+ <xsd:sequence>
+  <xsd:element name="attribute" minOccurs="0" maxOccurs="unbounded">
+  </xsd:element>
+ </xsd:sequence>
+</xsd:complexType>
+
+<xsd:complexType name="Attribute">
+ <xsd:sequence>
+  <xsd:element name="dependencies" type="ListOfAttributes" minOccurs="0"/>
+ </xsd:sequence>
+ <xsd:attribute name="name" type="xsd:string"/>
+</xsd:complexType>
+
+<xsd:complexType name="AttributeSql">
+ <xsd:complexContent>
+  <xsd:extension base="Attribute">
+   <xsd:attribute name="sql" type="xsd:string"/>
+   <xsd:attribute name="is_null_allowed" type="xsd:string"/>
+  </xsd:extension>
+ </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:complexType name="AttributeBlob">
+ <xsd:complexContent>
+  <xsd:extension base="AttributeSql">
+  </xsd:extension>
+ </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:complexType name="AttributeScalar">
+ <xsd:complexContent>
+  <xsd:extension base="AttributeSql">
+   <xsd:attribute name="default_value" type="xsd:string"/>
+  </xsd:extension>
+ </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:complexType name="AttributeInteger">
+ <xsd:complexContent>
+  <xsd:extension base="AttributeScalar">
+  </xsd:extension>
+ </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:complexType name="AttributeString">
+ <xsd:complexContent>
+  <xsd:extension base="AttributeScalar">
+  </xsd:extension>
+ </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:complexType name="AttributeDate">
+ <xsd:complexContent>
+  <xsd:extension base="AttributeString">
+  </xsd:extension>
+ </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:complexType name="AttributeDateTime">
+ <xsd:complexContent>
+  <xsd:extension base="AttributeString">
+  </xsd:extension>
+ </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:complexType name="AttributeDeadline">
+ <xsd:complexContent>
+  <xsd:extension base="AttributeDateTime">
+  </xsd:extension>
+ </xsd:complexContent>
+</xsd:complexType>
+
+
+<xsd:complexType name="AttributeText">
+ <xsd:complexContent>
+  <xsd:extension base="AttributeString">
+  </xsd:extension>
+ </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:complexType name="AttributeCaseLog">
+ <xsd:complexContent>
+  <xsd:extension base="AttributeText">
+  </xsd:extension>
+ </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:complexType name="AttributeURL">
+ <xsd:complexContent>
+  <xsd:extension base="AttributeString">
+   <xsd:attribute name="target" type="xsd:string"/>
+  </xsd:extension>
+ </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:complexType name="AttributeIPAddress">
+ <xsd:complexContent>
+  <xsd:extension base="AttributeString">
+  </xsd:extension>
+ </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:complexType name="AttributeEnum">
+ <xsd:complexContent>
+  <xsd:extension base="AttributeString">
+   <xsd:sequence>
+    <xsd:element name="values">
+     <xsd:complexType>
+      <xsd:sequence>
+       <xsd:element name="value" type="xsd:string" maxOccurs="unbounded"/>
+      </xsd:sequence>
+     </xsd:complexType>
+    </xsd:element>
+   </xsd:sequence>
+  </xsd:extension>
+ </xsd:complexContent>
+</xsd:complexType>
+
+
+<xsd:complexType name="AttributeExternalKeyBase">
+ <xsd:complexContent>
+  <xsd:extension base="AttributeSql">
+   <xsd:attribute name="filter" type="xsd:string"/>
+   <xsd:attribute name="on_target_delete" type="xsd:string"/>
+  </xsd:extension>
+ </xsd:complexContent>
+</xsd:complexType>
+
+
+<xsd:complexType name="AttributeExternalKey">
+ <xsd:complexContent>
+  <xsd:extension base="AttributeExternalKeyBase">
+   <xsd:attribute name="target_class" type="xsd:string"/>
+   <xsd:attribute name="jointype" type="xsd:string"/>
+  </xsd:extension>
+ </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:complexType name="AttributeHierarchicalKey">
+ <xsd:complexContent>
+  <xsd:extension base="AttributeExternalKeyBase">
+  </xsd:extension>
+ </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:complexType name="AttributeExternalField">
+ <xsd:complexContent>
+  <xsd:extension base="AttributeSql">
+   <xsd:attribute name="extkey_attcode" type="xsd:string"/>
+   <xsd:attribute name="target_attcode" type="xsd:string"/>
+  </xsd:extension>
+ </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:complexType name="AttributeEmailAddress">
+ <xsd:complexContent>
+  <xsd:extension base="AttributeString">
+  </xsd:extension>
+ </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:complexType name="AttributeLinkedSet">
+ <xsd:complexContent>
+  <xsd:extension base="Attribute">
+   <xsd:attribute name="linked_class" type="xsd:string"/>
+   <xsd:attribute name="ext_key_to_me" type="xsd:string"/>
+   <xsd:attribute name="count_min" type="xsd:integer"/>
+   <xsd:attribute name="count_max" type="xsd:integer"/>
+  </xsd:extension>
+ </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:complexType name="AttributeLinkedSetIndirect">
+ <xsd:complexContent>
+  <xsd:extension base="AttributeLinkedSet">
+   <xsd:attribute name="ext_key_to_remote" type="xsd:string"/>
+  </xsd:extension>
+ </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:complexType name="ItemList">
+ <xsd:sequence>
+  <xsd:element name="items" type="Items" minOccurs="0"/>
+ </xsd:sequence>
+</xsd:complexType>
+
+
+<xsd:complexType name="Items">
+ <xsd:sequence>
+  <xsd:element name="item" maxOccurs="unbounded">
+   <xsd:complexType mixed="true">
+    <xsd:sequence>
+     <xsd:element name="items" type="Items" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="key" type="xsd:string"/>
+   </xsd:complexType>
+  </xsd:element>
+ </xsd:sequence>
+</xsd:complexType>
+
+
+<!-- ====================================== -->
+<!-- Types for the menus                    -->
+<!-- ====================================== -->
+<xsd:complexType name="Menu">
+ <xsd:sequence>
+  <xsd:element name="rank" type="MenuProperty"/>
+ </xsd:sequence>
+ <xsd:attribute name="id" type="xsd:string"/>
+</xsd:complexType>
+
+<xsd:complexType name="MenuGroup">
+ <xsd:complexContent>
+  <xsd:extension base="Menu">
+   <xsd:sequence>
+    <xsd:element name="enable_class" type="MenuProperty" minOccurs="0"/>
+    <xsd:element name="enable_action" type="MenuProperty" minOccurs="0"/>
+    <xsd:element name="enable_permission" type="MenuProperty" minOccurs="0"/>
+    <xsd:element name="enable_stimulus" type="MenuProperty" minOccurs="0"/>
+   </xsd:sequence>
+   <xsd:attribute name="type" type="xsd:string" fixed="MenuGroup"/>
+  </xsd:extension>
+ </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:complexType name="MenuNode">
+ <xsd:complexContent>
+  <xsd:extension base="Menu">
+   <xsd:sequence>
+    <xsd:element name="parent" type="MenuProperty"/>
+   </xsd:sequence>
+  </xsd:extension>
+ </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:complexType name="TemplateMenuNode">
+ <xsd:complexContent>
+  <xsd:extension base="MenuNode">
+   <xsd:sequence>
+    <xsd:element name="template_file" type="MenuProperty"/>
+   </xsd:sequence>
+  </xsd:extension>
+ </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:complexType name="NewObjectMenuNode">
+ <xsd:complexContent>
+  <xsd:extension base="MenuNode">
+   <xsd:sequence>
+    <xsd:element name="class" type="MenuProperty"/>
+   </xsd:sequence>
+  </xsd:extension>
+ </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:complexType name="SearchMenuNode">
+ <xsd:complexContent>
+  <xsd:extension base="MenuNode">
+   <xsd:sequence>
+    <xsd:element name="class" type="MenuProperty"/>
+   </xsd:sequence>
+  </xsd:extension>
+ </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:complexType name="OQLMenuNode">
+ <xsd:complexContent>
+  <xsd:extension base="MenuNode">
+   <xsd:sequence>
+    <xsd:element name="oql" type="MenuProperty"/>
+    <xsd:element name="do_search" type="MenuProperty"/>
+    <xsd:element name="auto_reload" type="MenuProperty" minOccurs="0"/>
+   </xsd:sequence>
+  </xsd:extension>
+ </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:complexType name="WebPageMenuNode">
+ <xsd:complexContent>
+  <xsd:extension base="MenuNode">
+   <xsd:sequence>
+    <xsd:element name="url" type="MenuProperty"/>
+   </xsd:sequence>
+  </xsd:extension>
+ </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:complexType name="MenuProperty">
+ <xsd:attribute name="value" type="xsd:string"/>
+</xsd:complexType>
+
+<xsd:simpleType name="MenuType">
+  <xsd:restriction base="xsd:string">
+    <xsd:enumeration value="MenuGroup"/>
+    <xsd:enumeration value="TemplateMenuNode"/>
+    <xsd:enumeration value="NewObjectMenuNode"/>
+    <xsd:enumeration value="SearchMenuNode"/>
+    <xsd:enumeration value="OQLMenuNode"/>
+  </xsd:restriction>
+</xsd:simpleType>
+</xsd:schema>

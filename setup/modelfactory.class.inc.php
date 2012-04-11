@@ -277,7 +277,8 @@ class ModelFactory
 	static protected $aLoadedMenus;
 	static protected $aWellKnownParents = array('DBObject', 'CMDBObject','cmdbAbstractObject');
 	static protected $aLoadedModules;
-	
+	static protected $aLoadErrors;
+
 	
 	public function __construct($sRootDir)
 	{
@@ -292,6 +293,9 @@ class ModelFactory
 		self::$aLoadedClasses = array();
 		self::$aLoadedMenus = array();
 		self::$aLoadedModules = array();
+		self::$aLoadErrors = array();
+
+		libxml_use_internal_errors(true);
 	}
 	
 	public function Dump($oNode = null)
@@ -315,7 +319,15 @@ class ModelFactory
 		foreach($aDataModels as $sXmlFile)
 		{
 			$oDocument = new DOMDocument('1.0', 'UTF-8');
+			libxml_clear_errors();
 			$oDocument->load($sXmlFile, LIBXML_NOBLANKS);
+			$bValidated = $oDocument->schemaValidate(APPROOT.'setup/itop_design.xsd');
+			$aErrors = libxml_get_errors();
+			if (count($aErrors) > 0)
+			{
+				self::$aLoadErrors[$sModuleName] = $aErrors;
+			}
+
 			$oXPath = new DOMXPath($oDocument);
 			$oNodeList = $oXPath->query('//*');
 			foreach($oNodeList as $oNode)
@@ -410,7 +422,19 @@ class ModelFactory
 			}
 		}			
 	}
-	
+
+	/**
+	 *	XML load errors (XML format and validation)
+	 */	
+	function HasLoadErrors()
+	{
+		return (count(self::$aLoadErrors) > 0);
+	}
+	function GetLoadErrors()
+	{
+		return self::$aLoadErrors;
+	}
+
 	function GetLoadedModules($bExcludeWorkspace = true)
 	{
 		if ($bExcludeWorkspace)
