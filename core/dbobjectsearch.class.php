@@ -610,7 +610,7 @@ class DBObjectSearch
 		}
 		if(($iOperatorCode != TREE_OPERATOR_EQUALS) && !($oAttExtKey instanceof AttributeHierarchicalKey))
 		{
-			throw new CoreException("The specified tree operator $isOperatorCode is not applicable to the key '{$this->GetClass()}::$sExtKeyAttCode', which is not a HierarchicalKey");
+			throw new CoreException("The specified tree operator $iOperatorCode is not applicable to the key '{$this->GetClass()}::$sExtKeyAttCode', which is not a HierarchicalKey");
 		}
 
 		$bSamePointingTo = false;
