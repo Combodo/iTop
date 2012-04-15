@@ -284,6 +284,7 @@ class ModelFactory
 	{
 		$this->sRootDir = $sRootDir;
 		$this->oDOMDocument = new DOMDocument('1.0', 'UTF-8');
+		$this->oDOMDocument->registerNodeClass('DOMElement', 'MFDOMElement');
 		$this->oRoot = $this->oDOMDocument->CreateElement('itop_design');
 		$this->oDOMDocument->AppendChild($this->oRoot);
 		$this->oClasses = $this->oDOMDocument->CreateElement('classes');
@@ -319,6 +320,7 @@ class ModelFactory
 		foreach($aDataModels as $sXmlFile)
 		{
 			$oDocument = new DOMDocument('1.0', 'UTF-8');
+			$oDocument->registerNodeClass('DOMElement', 'MFDOMElement');
 			libxml_clear_errors();
 			$oDocument->load($sXmlFile, LIBXML_NOBLANKS);
 			$bValidated = $oDocument->schemaValidate(APPROOT.'setup/itop_design.xsd');
@@ -326,6 +328,7 @@ class ModelFactory
 			if (count($aErrors) > 0)
 			{
 				self::$aLoadErrors[$sModuleName] = $aErrors;
+				return;
 			}
 
 			$oXPath = new DOMXPath($oDocument);
@@ -338,15 +341,8 @@ class ModelFactory
 			$oNodeList = $oXPath->query('/itop_design/classes/class');
 			foreach($oNodeList as $oNode)
 			{
-				if ($oNode->hasAttribute('parent'))
-				{
-					$sParentClass = $oNode->GetAttribute('parent');
-				}
-				else
-				{
-					$sParentClass = '';
-				}
-				$sClassName = $oNode->GetAttribute('name');
+				$sParentClass = $oNode->GetUniqueElement('properties')->GetChildText('parent', '');
+				$sClassName = $oNode->GetAttribute('id');
 				$aClasses[$sClassName] = array('name' => $sClassName, 'parent' => $sParentClass, 'node' => $oNode);
 			}
 
@@ -474,9 +470,9 @@ class ModelFactory
 	 */
 	protected function ClassExists(DOMNode $oClassNode)
 	{
-		if ($oClassNode->hasAttribute('name'))
+		if ($oClassNode->hasAttribute('id'))
 		{
-			$sClassName = $oClassNode->GetAttribute('name');
+			$sClassName = $oClassNode->GetAttribute('id');
 		}
 		else
 		{
@@ -504,9 +500,9 @@ class ModelFactory
 	 */
 	public function AddClass(DOMNode $oClassNode, $sModuleName)
 	{
-		if ($oClassNode->hasAttribute('name'))
+		if ($oClassNode->hasAttribute('id'))
 		{
-			$sClassName = $oClassNode->GetAttribute('name');
+			$sClassName = $oClassNode->GetAttribute('id');
 		}
 		else
 		{
@@ -517,11 +513,7 @@ class ModelFactory
 			throw new Exception("ModelFactory::AddClass: Cannot add the already existing class $sClassName");
 		}
 		
-		$sParentClass = '';
-		if ($oClassNode->hasAttribute('parent'))
-		{
-			$sParentClass = $oClassNode->GetAttribute('parent');
-		}
+		$sParentClass = $oClassNode->GetUniqueElement('properties')->GetChildText('parent', '');
 		
 		//echo "Adding class: $sClassName, parent: $sParentClass<br/>";
 		if (!in_array($sParentClass, self::$aWellKnownParents) && $this->ClassNameExists($sParentClass))
@@ -549,7 +541,7 @@ class ModelFactory
 		}
 		else
 		{
-			throw new Exception("ModelFactory::AddClass: Cannot add the class $sClassName, unknown parent class: $sParentClass");
+			throw new Exception("ModelFactory::AddClass: Cannot add the class $sClassName, unknown parent class: $sParentClass (loaded classes: ".implode(', ', array_keys(self::$aLoadedClasses)).")");
 		}
 	}
 	
@@ -605,7 +597,7 @@ class ModelFactory
 			}
 		}
 		$this->_priv_AlterNode($oDestNode, $oClassNode);
-		$sClassName = $oDestNode->getAttribute('name');
+		$sClassName = $oDestNode->getAttribute('id');
 		if ($sOriginalName != $sClassName)
 		{
 			unset(self::$aLoadedClasses[$sOriginalName]);
@@ -711,10 +703,10 @@ class ModelFactory
 			{
 				$sOperation = $oChildNode->getAttribute('_operation');
 				$sPath = $oChildNode->tagName;
-				$sName = $oChildNode->getAttribute('name');
+				$sName = $oChildNode->getAttribute('id');
 				if ($sName != '')
 				{
-					$sPath .= "[@name='$sName']";
+					$sPath .= "[@id='$sName']";
 				}
 				switch($sOperation)
 				{
@@ -762,15 +754,17 @@ class ModelFactory
 		return
 <<<EOF
 <?xml version="1.0" encoding="utf-8"?>
-<class name="$sName" parent="" db_table="" category="" abstract="" key_type="autoincrement" db_key_field="id" db_final_class_field="finalclass">
-	<properties>
+<class id="$sName">
 	<comment/>
+	<properties>
+	</properties>
 	<naming format=""><attributes/></naming>
 	<reconciliation><attributes/></reconciliation>
 	<display_template/>
 	<icon>$sIcon</icon>
 	</properties>
 	<fields/>
+	<lifecycle/>
 	<methods/>
 	<presentation>
 		<details><items/></details>
@@ -857,15 +851,15 @@ EOF
 				$oClassNode = null;
 			}
 		}
-		$sXPath = "fields/field[@name='$sAttCode']";
+		$sXPath = "fields/field[@id='$sAttCode']";
 		if ($bFlattenLayers)
 		{
-			$sXPath = "fields/field[(@name='$sAttCode' and (not(@_operation) or @_operation!='removed'))]";
+			$sXPath = "fields/field[(@id='$sAttCode' and (not(@_operation) or @_operation!='removed'))]";
 		}
 		$oFieldNode = $this->_priv_GetNodes($sXPath, $oClassNode)->item(0);
-		if (($oFieldNode == null) && ($oClassNode->getAttribute('parent') != ''))
+		if (($oFieldNode == null) && ($sParentClass = $oClassNode->GetUniqueElement('properties')->GetChildText('parent')))
 		{
-			return $this->GetField($oClassNode->getAttribute('parent'), $sAttCode, $bFlattenLayers);
+			return $this->GetField($sParentClass, $sAttCode, $bFlattenLayers);
 		}
 		return $oFieldNode;
 	}
@@ -888,7 +882,7 @@ EOF
 	public function AddField(DOMNode $oClassNode, $sFieldCode, $sFieldType, $sSQL, $defaultValue, $bIsNullAllowed, $aExtraParams)
 	{
 		$oNewField = $this->oDOMDocument->createElement('field');
-		$oNewField->setAttribute('name', $sFieldCode);
+		$oNewField->setAttribute('id', $sFieldCode);
 		$this->_priv_AlterField($oNewField, $sFieldType, $sSQL, $defaultValue, $bIsNullAllowed, $aExtraParams);
 		$oFields = $oClassNode->getElementsByTagName('fields')->item(0);
 		$oFields->AppendChild($oNewField);
@@ -897,7 +891,7 @@ EOF
 	
 	public function RemoveField(DOMNode $oClassNode, $sFieldCode)
 	{
-		$sXPath = "fields/field[@name='$sFieldCode']";
+		$sXPath = "fields/field[@id='$sFieldCode']";
 		$oFieldNodes = $this->_priv_GetNodes($sXPath, $oClassNode);
 		if (is_object($oFieldNodes) && (is_object($oFieldNodes->item(0))))
 		{
@@ -916,7 +910,7 @@ EOF
 	
 	public function AlterField(DOMNode $oClassNode, $sFieldCode, $sFieldType, $sSQL, $defaultValue, $bIsNullAllowed, $aExtraParams)
 	{
-		$sXPath = "fields/field[@name='$sFieldCode']";
+		$sXPath = "fields/field[@id='$sFieldCode']";
 		$oFieldNodes = $this->_priv_GetNodes($sXPath, $oClassNode);
 		if (is_object($oFieldNodes) && (is_object($oFieldNodes->item(0))))
 		{
@@ -1031,7 +1025,7 @@ EOF
 		foreach($aDeps as $sAttCode)
 		{
 			$oDep = $this->oDOMDocument->createElement('attribute');
-			$oDep->setAttribute('name', $sAttCode);
+			$oDep->setAttribute('id', $sAttCode);
 			$oDependencies->addChild($oDep);
 		}
 		$oFieldNode->addChild($oDependencies);
@@ -1225,7 +1219,7 @@ EOF
 				case 'removed':
 				// marked as deleted, let's remove the node from the tree
 				$oParent = $oClassNode->parentNode;
-				$sClass = $oClassNode->GetAttribute('name');
+				$sClass = $oClassNode->GetAttribute('id');
 				echo "Calling removeChild...<br/>";
 				$oParent->removeChild($oClassNode);
 				unset(self::$aLoadedClasses[$sClass]);
@@ -1246,6 +1240,7 @@ EOF
 	public function GetDelta()
 	{
 		$oDelta = new DOMDocument('1.0', 'UTF-8');
+		$oDelta->registerNodeClass('DOMElement', 'MFDOMElement');
 		$oRootNode = $oDelta->createElement('itop_design');
 		$oDelta->appendChild($oRootNode);
 		$oClasses = $oDelta->createElement('classes');
@@ -1272,7 +1267,7 @@ EOF
 			}
 			else
 			{
-				$sName = $oChildNode->getAttribute('name');;
+				$sName = $oChildNode->getAttribute('id');;
 				$sOperation = $oChildNode->getAttribute('_operation');
 			}
 			
@@ -1292,18 +1287,18 @@ echo str_repeat('+', $iDepth)." $sNodeName [$sName], operation: $sOperation\n";
 				{
 					$oDestNode->appendChild($oDeletedNode);
 				}
-echo "<p>".str_repeat('+', $iDepth).$oChildNode->getAttribute('name')." was removed...</p>";
+echo "<p>".str_repeat('+', $iDepth).$oChildNode->getAttribute('id')." was removed...</p>";
 				break;
 
 				case 'added':
-echo "<p>".str_repeat('+', $iDepth).$oChildNode->tagName.':'.$oChildNode->getAttribute('name')." was created...</p>";
+echo "<p>".str_repeat('+', $iDepth).$oChildNode->tagName.':'.$oChildNode->getAttribute('id')." was created...</p>";
 				$oModifiedNode = $oDoc->importNode($oChildNode, true); // Copies all the node's attributes, and the child nodes as well
 				if ($oChildNode instanceof DOMElement)
 				{
 					$oModifiedNode->removeAttribute('_source');
 					if ($oModifiedNode->tagName == 'class')
 					{
-echo "<p>".str_repeat('+', $iDepth).$oChildNode->tagName.':'.$oChildNode->getAttribute('name')." inserting under 'classes'...</p>";
+echo "<p>".str_repeat('+', $iDepth).$oChildNode->tagName.':'.$oChildNode->getAttribute('id')." inserting under 'classes'...</p>";
 						// classes are always located under the root node
 						$oDoc->firstChild->appendChild($oModifiedNode);
 						
@@ -1322,7 +1317,7 @@ echo "<p>".str_repeat('+', $iDepth).$oChildNode->tagName.':'.$oChildNode->getAtt
 					}
 					else
 					{
-echo "<p>".str_repeat('+', $iDepth).$oChildNode->tagName.':'.$oChildNode->getAttribute('name')." inserting in the hierarchy...</p>";
+echo "<p>".str_repeat('+', $iDepth).$oChildNode->tagName.':'.$oChildNode->getAttribute('id')." inserting in the hierarchy...</p>";
 						$oDestNode->appendChild($oModifiedNode);
 					}
 				}
@@ -1333,7 +1328,7 @@ echo "<p>".str_repeat('+', $iDepth).$oChildNode->tagName.':'.$oChildNode->getAtt
 				break;
 				
 				case 'replaced':
-echo "<p>".str_repeat('+', $iDepth).$oChildNode->tagName.':'.$oChildNode->getAttribute('name')." was replaced...</p>";
+echo "<p>".str_repeat('+', $iDepth).$oChildNode->tagName.':'.$oChildNode->getAttribute('id')." was replaced...</p>";
 				$oModifiedNode = $oDoc->importNode($oChildNode, true); // Copies all the node's attributes, and the child nodes as well
 				if ($oChildNode instanceof DOMElement)
 				{
@@ -1343,7 +1338,7 @@ echo "<p>".str_repeat('+', $iDepth).$oChildNode->tagName.':'.$oChildNode->getAtt
 				break;
 				
 				case 'modified':
-echo "<p>".str_repeat('+', $iDepth).$oChildNode->tagName.':'.$oChildNode->getAttribute('name')." was modified...</p>";
+echo "<p>".str_repeat('+', $iDepth).$oChildNode->tagName.':'.$oChildNode->getAttribute('id')." was modified...</p>";
 				if ($oChildNode instanceof DOMElement)
 				{
 echo str_repeat('+', $iDepth)." Copying (NON recursively) the modified node\n";
@@ -1370,11 +1365,11 @@ echo str_repeat('+', $iDepth)." Copying (recursively) the modified node\n";
 				
 				default:
 				// No change: do nothing
-echo "<p>".str_repeat('+', $iDepth).$oChildNode->tagName.':'.$oChildNode->getAttribute('name')." was NOT modified...</p>";
+echo "<p>".str_repeat('+', $iDepth).$oChildNode->tagName.':'.$oChildNode->getAttribute('id')." was NOT modified...</p>";
 				$oModifiedNode = $oDoc->importNode($oChildNode, true); // Importing the node for future recusrsion if needed
 				if ($oChildNode->tagName == 'class')
 				{
-echo "<p>".str_repeat('+', $iDepth)."Checking if a subclass of ".$oChildNode->getAttribute('name')." was modified...</p>";
+echo "<p>".str_repeat('+', $iDepth)."Checking if a subclass of ".$oChildNode->getAttribute('id')." was modified...</p>";
 					// classes are always located under the root node
 					$this->_priv_ImportModifiedChildren($oDoc, $oModifiedNode, $oChildNode);
 				}
@@ -1454,15 +1449,22 @@ echo "<p>".str_repeat('+', $iDepth)."Checking if a subclass of ".$oChildNode->ge
 	public function _priv_SetNodeAttribute(DOMNode $oNode, $sAttributeName, $atttribueValue)
 	{
 	}
-	
+}
+
+
+/**
+ * MFDOMElement: helper to read the information from the DOM
+ * @package ModelFactory
+ */
+class MFDOMElement extends DOMElement
+{
 	/**
-	 * Helper to browse the DOM -could be factorized in ModelFactory
-	 * Returns the node directly under the given node, and that is supposed to be always present and unique 
+	 * Returns the node directly under the given node 
 	 */ 
-	protected function GetUniqueElement($oDOMNode, $sTagName, $bMustExist = true)
+	public function GetUniqueElement($sTagName, $bMustExist = true)
 	{
 		$oNode = null;
-		foreach($oDOMNode->childNodes as $oChildNode)
+		foreach($this->childNodes as $oChildNode)
 		{
 			if ($oChildNode->nodeName == $sTagName)
 			{
@@ -1478,35 +1480,53 @@ echo "<p>".str_repeat('+', $iDepth)."Checking if a subclass of ".$oChildNode->ge
 	}
 	
 	/**
-	 * Helper to browse the DOM -could be factorized in ModelFactory
-	 * Returns the node directly under the given node, or null is missing 
+	 * Returns the node directly under the current node, or null if missing 
 	 */ 
-	protected function GetOptionalElement($oDOMNode, $sTagName)
+	public function GetOptionalElement($sTagName)
 	{
-		return $this->GetUniqueElement($oDOMNode, $sTagName, false);
+		return $this->GetUniqueElement($sTagName, false);
 	}
 	
 	
 	/**
-	 * Helper to browse the DOM -could be factorized in ModelFactory
-	 * Returns the TEXT of the given node (possibly from several subnodes) 
+	 * Returns the TEXT of the current node (possibly from several subnodes) 
 	 */ 
-	protected function GetNodeText($oNode)
+	public function GetText($sDefault = null)
 	{
-		$sText = '';
-		foreach($oNode->childNodes as $oChildNode)
+		$sText = null;
+		foreach($this->childNodes as $oChildNode)
 		{
 			if ($oChildNode instanceof DOMCharacterData) // Base class of DOMText and DOMCdataSection
 			{
+				if (is_null($sText)) $sText = '';
 				$sText .= $oChildNode->wholeText;
 			}
 		}
-		return $sText;
+		if (is_null($sText))
+		{
+			return $sDefault;
+		}
+		else
+		{
+			return $sText;
+		}
 	}
 	
 	/**
-	 * Helper to browse the DOM -could be factorized in ModelFactory
-	 * Assumes the given node to be either a text or
+	 * Get the TEXT value from the child node 
+	 */ 
+	public function GetChildText($sTagName, $sDefault = null)
+	{
+		$sRet = $sDefault;
+		if ($oChild = $this->GetOptionalElement($sTagName))
+		{
+			$sRet = $oChild->GetText($sDefault);
+		}
+		return $sRet;
+	}
+
+	/**
+	 * Assumes the current node to be either a text or
 	 * <items>
 	 *   <item [key]="..."]>value<item>
 	 *   <item [key]="..."]>value<item>
@@ -1514,31 +1534,30 @@ echo "<p>".str_repeat('+', $iDepth)."Checking if a subclass of ".$oChildNode->ge
 	 * where value can be the either a text or an array of items... recursively 
 	 * Returns a PHP array 
 	 */ 
-	public function GetNodeAsArrayOfItems($oNode)
+	public function GetNodeAsArrayOfItems()
 	{
-		$oItems = $this->GetOptionalElement($oNode, 'items');
+		$oItems = $this->GetOptionalElement('items');
 		if ($oItems)
 		{
 			$res = array();
 			foreach($oItems->childNodes as $oItem)
 			{
 				// When an attribute is missing
-				if ($oItem->hasAttribute('key'))
+				if ($oItem->hasAttribute('id'))
 				{
-					$key = $oItem->getAttribute('key');
-					$res[$key] = $this->GetNodeAsArrayOfItems($oItem);
+					$key = $oItem->getAttribute('id');
+					$res[$key] = $oItem->GetNodeAsArrayOfItems();
 				}
 				else
 				{
-					$res[] = $this->GetNodeAsArrayOfItems($oItem);
+					$res[] = $oItem->GetNodeAsArrayOfItems();
 				}
 			}
 		}
 		else
 		{
-			$res = $this->GetNodeText($oNode);
+			$res = $this->GetText();
 		}
 		return $res;
 	}
-	
 }

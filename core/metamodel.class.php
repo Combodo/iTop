@@ -1341,7 +1341,7 @@ abstract class MetaModel
 						$sRemoteAttCode = $oAttDef->GetExtAttCode()."_friendlyname";
 						$sFriendlyNameAttCode = $sAttCode.'_friendlyname';
 						// propagate "is_null_allowed" ? 
-						$oFriendlyName = new AttributeExternalField($sFriendlyNameAttCode, array("allowed_values"=>null, "extkey_attcode"=>$sKeyAttCode, "target_attcode"=>$sRemoteAttCode, "is_null_allowed"=>true, "depends_on"=>array()));
+						$oFriendlyName = new AttributeExternalField($sFriendlyNameAttCode, array("allowed_values"=>null, "extkey_attcode"=>$sKeyAttCode, "target_attcode"=>$sRemoteAttCode, "depends_on"=>array()));
 						$oFriendlyName->SetHostClass($sClass);
 						self::$m_aAttribDefs[$sClass][$sFriendlyNameAttCode] = $oFriendlyName;
 						self::$m_aAttribOrigins[$sClass][$sFriendlyNameAttCode] = $sRemoteClass;

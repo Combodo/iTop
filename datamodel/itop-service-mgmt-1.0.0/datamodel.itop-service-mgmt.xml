@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <classes>
-    <class name="Contract" category="bizmodel,searchable,servicemgmt" parent="cmdbAbstractObject" abstract="true" key_type="autoincrement" db_table="contract" db_key_field="id" db_final_class_field="finalclass">
+    <class id="Contract">
       <properties>
         <comment><![CDATA[/**
  * Persistent classes for a CMDB
@@ -11,36 +11,93 @@
  * @author      Denis Flaven <denis.flaven@combodo.com>
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */]]></comment>
-        <naming format="%1$s">
+        <category>bizmodel,searchable,servicemgmt</category>
+        <parent>cmdbAbstractObject</parent>
+        <abstract>true</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>contract</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field>finalclass</db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="name"/>
+            <attribute id="name"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>contract.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="name"/>
+            <attribute id="name"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="name" xsi:type="AttributeString" sql="name" default_value="" is_null_allowed="false"/>
-        <field name="description" xsi:type="AttributeText" sql="description" default_value="" is_null_allowed="true"/>
-        <field name="start_date" xsi:type="AttributeDateTime" sql="start_date" default_value="" is_null_allowed="true"/>
-        <field name="end_date" xsi:type="AttributeDateTime" sql="end_date" default_value="" is_null_allowed="true"/>
-        <field name="cost" xsi:type="AttributeInteger" sql="cost" default_value="" is_null_allowed="true"/>
-        <field name="cost_currency" xsi:type="AttributeEnum" sql="cost_currency" default_value="euros" is_null_allowed="true">
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value></default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="description" xsi:type="AttributeText">
+          <sql>description</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="start_date" xsi:type="AttributeDateTime">
+          <sql>start_date</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="end_date" xsi:type="AttributeDateTime">
+          <sql>end_date</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="cost" xsi:type="AttributeInteger">
+          <sql>cost</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="cost_currency" xsi:type="AttributeEnum">
           <values>
             <value>dollars</value>
             <value>euros</value>
           </values>
+          <sql>cost_currency</sql>
+          <default_value>euros</default_value>
+          <is_null_allowed>true</is_null_allowed>
         </field>
-        <field name="cost_unit" xsi:type="AttributeString" sql="cost_unit" default_value="" is_null_allowed="true"/>
-        <field name="billing_frequency" xsi:type="AttributeString" sql="billing_frequency" default_value="" is_null_allowed="true"/>
-        <field name="contact_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkContractToContact" ext_key_to_me="contract_id" ext_key_to_remote="contact_id" count_min="0" count_max="0"/>
-        <field name="document_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkContractToDoc" ext_key_to_me="contract_id" ext_key_to_remote="document_id" count_min="0" count_max="0"/>
-        <field name="ci_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkContractToCI" ext_key_to_me="contract_id" ext_key_to_remote="ci_id" count_min="0" count_max="0"/>
+        <field id="cost_unit" xsi:type="AttributeString">
+          <sql>cost_unit</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="billing_frequency" xsi:type="AttributeString">
+          <sql>billing_frequency</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="contact_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkContractToContact</linked_class>
+          <ext_key_to_me>contract_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>contact_id</ext_key_to_remote>
+        </field>
+        <field id="document_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkContractToDoc</linked_class>
+          <ext_key_to_me>contract_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>document_id</ext_key_to_remote>
+        </field>
+        <field id="ci_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkContractToCI</linked_class>
+          <ext_key_to_me>contract_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>ci_id</ext_key_to_remote>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -84,34 +141,64 @@
         </list>
       </presentation>
     </class>
-    <class name="ProviderContract" category="bizmodel,searchable,servicemgmt" parent="Contract" abstract="false" key_type="autoincrement" db_table="providercontract" db_key_field="id" db_final_class_field="">
+    <class id="ProviderContract">
       <properties>
-        <naming format="%1$s">
+        <category>bizmodel,searchable,servicemgmt</category>
+        <parent>Contract</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>providercontract</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="name"/>
+            <attribute id="name"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>contract.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="name"/>
-            <attribute name="provider_id"/>
+            <attribute id="name"/>
+            <attribute id="provider_id"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="provider_id" xsi:type="AttributeExternalKey" target_class="Organization" jointype="" sql="provider_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="provider_name" xsi:type="AttributeExternalField" extkey_attcode="provider_id" target_attcode="name"/>
-        <field name="sla" xsi:type="AttributeString" sql="sla" default_value="" is_null_allowed="true"/>
-        <field name="coverage" xsi:type="AttributeString" sql="coverage" default_value="" is_null_allowed="true"/>
+        <field id="provider_id" xsi:type="AttributeExternalKey">
+          <sql>provider_id</sql>
+          <target_class>Organization</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="provider_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>provider_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="sla" xsi:type="AttributeString">
+          <sql>sla</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="coverage" xsi:type="AttributeString">
+          <sql>coverage</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
       </fields>
       <methods>
-        <method name="MapContextParam" static="true" access="public" type="Overload-iDisplay"><comment><![CDATA[/**
+        <method id="MapContextParam">
+          <comment><![CDATA[/**
 	 * Maps the given context parameter name to the appropriate filter/search code for this class
 	 * @param string $sContextParam Name of the context parameter, e.g. 'org_id'
 	 * @return string Filter code, e.g. 'customer_id'
-	 */]]></comment><![CDATA[	public static function MapContextParam($sContextParam)
+	 */]]></comment>
+          <static>true</static>
+          <access>public</access>
+          <type>Overload-iDisplay</type>
+          <code><![CDATA[	public static function MapContextParam($sContextParam)
 	{
 		if ($sContextParam == 'org_id')
 		{
@@ -121,7 +208,8 @@
 		{
 			return parent::MapContextParam($sContextParam); // Ask the parent what to do with other parameters...
 		}
-	}]]></method>
+	}]]></code>
+        </method>
       </methods>
       <presentation>
         <details>
@@ -168,36 +256,83 @@
         </list>
       </presentation>
     </class>
-    <class name="CustomerContract" category="bizmodel,searchable,servicemgmt" parent="Contract" abstract="false" key_type="autoincrement" db_table="customercontract" db_key_field="id" db_final_class_field="">
+    <class id="CustomerContract">
       <properties>
-        <naming format="%1$s">
+        <category>bizmodel,searchable,servicemgmt</category>
+        <parent>Contract</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>customercontract</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="name"/>
+            <attribute id="name"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>contract.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="name"/>
-            <attribute name="org_id"/>
-            <attribute name="provider_id"/>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="provider_id"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="org_id" xsi:type="AttributeExternalKey" target_class="Organization" jointype="" sql="org_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="org_name" xsi:type="AttributeExternalField" extkey_attcode="org_id" target_attcode="name"/>
-        <field name="provider_id" xsi:type="AttributeExternalKey" target_class="Organization" jointype="" sql="provider_id" is_null_allowed="true" on_target_delete="DEL_AUTO"/>
-        <field name="provider_name" xsi:type="AttributeExternalField" extkey_attcode="provider_id" target_attcode="name"/>
-        <field name="support_team_id" xsi:type="AttributeExternalKey" target_class="Team" jointype="" filter="SELECT Team WHERE Team.org_id = :this-&gt;provider_id" sql="support_team_id" is_null_allowed="false" on_target_delete="DEL_AUTO">
-          <dependencies>
-            <attribute name="provider_id"/>
-          </dependencies>
+        <field id="org_id" xsi:type="AttributeExternalKey">
+          <sql>org_id</sql>
+          <target_class>Organization</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
         </field>
-        <field name="support_team_name" xsi:type="AttributeExternalField" extkey_attcode="support_team_id" target_attcode="name"/>
-        <field name="sla_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkContractToSLA" ext_key_to_me="contract_id" ext_key_to_remote="sla_id" count_min="0" count_max="0"/>
-        <field name="provider_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkCustomerContractToProviderContract" ext_key_to_me="customer_contract_id" ext_key_to_remote="provider_contract_id" count_min="0" count_max="0"/>
+        <field id="org_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>org_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="provider_id" xsi:type="AttributeExternalKey">
+          <sql>provider_id</sql>
+          <target_class>Organization</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="provider_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>provider_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="support_team_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT Team WHERE Team.org_id = :this->provider_id]]></filter>
+          <dependencies>
+            <attribute id="provider_id"/>
+          </dependencies>
+          <sql>support_team_id</sql>
+          <target_class>Team</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="support_team_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>support_team_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="sla_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkContractToSLA</linked_class>
+          <ext_key_to_me>contract_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>sla_id</ext_key_to_remote>
+        </field>
+        <field id="provider_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkCustomerContractToProviderContract</linked_class>
+          <ext_key_to_me>customer_contract_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>provider_contract_id</ext_key_to_remote>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -247,29 +382,62 @@
         </list>
       </presentation>
     </class>
-    <class name="lnkCustomerContractToProviderContract" category="bizmodel,searchable,servicemgmt,lnkservice" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" is_link="1" db_table="lnkcustomercontracttoprovider" db_key_field="id" db_final_class_field="">
+    <class id="lnkCustomerContractToProviderContract">
       <properties>
-        <naming format="%1$s">
+        <is_link>1</is_link>
+        <category>bizmodel,searchable,servicemgmt,lnkservice</category>
+        <parent>cmdbAbstractObject</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkcustomercontracttoprovider</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="customer_contract_id"/>
+            <attribute id="customer_contract_id"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon></icon>
         <reconciliation>
           <attributes>
-            <attribute name="customer_contract_id"/>
-            <attribute name="provider_contract_id"/>
+            <attribute id="customer_contract_id"/>
+            <attribute id="provider_contract_id"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="customer_contract_id" xsi:type="AttributeExternalKey" target_class="CustomerContract" jointype="" sql="customer_contract_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="customer_contract_name" xsi:type="AttributeExternalField" extkey_attcode="customer_contract_id" target_attcode="name"/>
-        <field name="provider_contract_id" xsi:type="AttributeExternalKey" target_class="ProviderContract" jointype="" sql="provider_contract_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="provider_contract_name" xsi:type="AttributeExternalField" extkey_attcode="provider_contract_id" target_attcode="name"/>
-        <field name="provider_sla" xsi:type="AttributeExternalField" extkey_attcode="provider_contract_id" target_attcode="sla"/>
-        <field name="provider_coverage" xsi:type="AttributeExternalField" extkey_attcode="provider_contract_id" target_attcode="coverage"/>
+        <field id="customer_contract_id" xsi:type="AttributeExternalKey">
+          <sql>customer_contract_id</sql>
+          <target_class>CustomerContract</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="customer_contract_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>customer_contract_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="provider_contract_id" xsi:type="AttributeExternalKey">
+          <sql>provider_contract_id</sql>
+          <target_class>ProviderContract</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="provider_contract_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>provider_contract_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="provider_sla" xsi:type="AttributeExternalField">
+          <extkey_attcode>provider_contract_id</extkey_attcode>
+          <target_attcode>sla</target_attcode>
+        </field>
+        <field id="provider_coverage" xsi:type="AttributeExternalField">
+          <extkey_attcode>provider_contract_id</extkey_attcode>
+          <target_attcode>coverage</target_attcode>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -297,29 +465,63 @@
         </list>
       </presentation>
     </class>
-    <class name="lnkContractToSLA" category="bizmodel,searchable,servicemgmt,lnkservice" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" is_link="1" db_table="lnkcontracttosla" db_key_field="id" db_final_class_field="">
+    <class id="lnkContractToSLA">
       <properties>
-        <naming format="%1$s">
+        <is_link>1</is_link>
+        <category>bizmodel,searchable,servicemgmt,lnkservice</category>
+        <parent>cmdbAbstractObject</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkcontracttosla</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="contract_id"/>
+            <attribute id="contract_id"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon></icon>
         <reconciliation>
           <attributes>
-            <attribute name="contract_id"/>
-            <attribute name="sla_id"/>
+            <attribute id="contract_id"/>
+            <attribute id="sla_id"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="contract_id" xsi:type="AttributeExternalKey" target_class="CustomerContract" jointype="" sql="contract_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="contract_name" xsi:type="AttributeExternalField" extkey_attcode="contract_id" target_attcode="name"/>
-        <field name="sla_id" xsi:type="AttributeExternalKey" target_class="SLA" jointype="" sql="sla_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="sla_name" xsi:type="AttributeExternalField" extkey_attcode="sla_id" target_attcode="name"/>
-        <field name="sla_service_name" xsi:type="AttributeExternalField" extkey_attcode="sla_id" target_attcode="service_name"/>
-        <field name="coverage" xsi:type="AttributeString" sql="coverage" default_value="" is_null_allowed="true"/>
+        <field id="contract_id" xsi:type="AttributeExternalKey">
+          <sql>contract_id</sql>
+          <target_class>CustomerContract</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="contract_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>contract_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="sla_id" xsi:type="AttributeExternalKey">
+          <sql>sla_id</sql>
+          <target_class>SLA</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="sla_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>sla_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="sla_service_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>sla_id</extkey_attcode>
+          <target_attcode>service_name</target_attcode>
+        </field>
+        <field id="coverage" xsi:type="AttributeString">
+          <sql>coverage</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -348,29 +550,62 @@
         </list>
       </presentation>
     </class>
-    <class name="lnkContractToDoc" category="bizmodel,searchable,servicemgmt,lnkservice" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" is_link="1" db_table="lnkcontracttodoc" db_key_field="id" db_final_class_field="">
+    <class id="lnkContractToDoc">
       <properties>
-        <naming format="%1$s">
+        <is_link>1</is_link>
+        <category>bizmodel,searchable,servicemgmt,lnkservice</category>
+        <parent>cmdbAbstractObject</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkcontracttodoc</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="contract_id"/>
+            <attribute id="contract_id"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon></icon>
         <reconciliation>
           <attributes>
-            <attribute name="contract_id"/>
-            <attribute name="document_id"/>
+            <attribute id="contract_id"/>
+            <attribute id="document_id"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="contract_id" xsi:type="AttributeExternalKey" target_class="Contract" jointype="" sql="contract_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="contract_name" xsi:type="AttributeExternalField" extkey_attcode="contract_id" target_attcode="name"/>
-        <field name="document_id" xsi:type="AttributeExternalKey" target_class="Document" jointype="" sql="document_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="document_name" xsi:type="AttributeExternalField" extkey_attcode="document_id" target_attcode="name"/>
-        <field name="document_type" xsi:type="AttributeExternalField" extkey_attcode="document_id" target_attcode="type"/>
-        <field name="document_status" xsi:type="AttributeExternalField" extkey_attcode="document_id" target_attcode="status"/>
+        <field id="contract_id" xsi:type="AttributeExternalKey">
+          <sql>contract_id</sql>
+          <target_class>Contract</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="contract_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>contract_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="document_id" xsi:type="AttributeExternalKey">
+          <sql>document_id</sql>
+          <target_class>Document</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="document_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>document_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="document_type" xsi:type="AttributeExternalField">
+          <extkey_attcode>document_id</extkey_attcode>
+          <target_attcode>type</target_attcode>
+        </field>
+        <field id="document_status" xsi:type="AttributeExternalField">
+          <extkey_attcode>document_id</extkey_attcode>
+          <target_attcode>status</target_attcode>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -400,29 +635,63 @@
         </list>
       </presentation>
     </class>
-    <class name="lnkContractToContact" category="bizmodel,searchable,servicemgmt,lnkservice" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" is_link="1" db_table="lnkcontracttocontact" db_key_field="id" db_final_class_field="">
+    <class id="lnkContractToContact">
       <properties>
-        <naming format="%1$s">
+        <is_link>1</is_link>
+        <category>bizmodel,searchable,servicemgmt,lnkservice</category>
+        <parent>cmdbAbstractObject</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkcontracttocontact</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="contract_id"/>
+            <attribute id="contract_id"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon></icon>
         <reconciliation>
           <attributes>
-            <attribute name="contract_id"/>
-            <attribute name="contact_id"/>
+            <attribute id="contract_id"/>
+            <attribute id="contact_id"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="contract_id" xsi:type="AttributeExternalKey" target_class="Contract" jointype="" sql="contract_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="contract_name" xsi:type="AttributeExternalField" extkey_attcode="contract_id" target_attcode="name"/>
-        <field name="contact_id" xsi:type="AttributeExternalKey" target_class="Contact" jointype="" sql="contact_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="contact_name" xsi:type="AttributeExternalField" extkey_attcode="contact_id" target_attcode="name"/>
-        <field name="contact_email" xsi:type="AttributeExternalField" extkey_attcode="contact_id" target_attcode="email"/>
-        <field name="role" xsi:type="AttributeString" sql="role" default_value="" is_null_allowed="true"/>
+        <field id="contract_id" xsi:type="AttributeExternalKey">
+          <sql>contract_id</sql>
+          <target_class>Contract</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="contract_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>contract_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="contact_id" xsi:type="AttributeExternalKey">
+          <sql>contact_id</sql>
+          <target_class>Contact</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="contact_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>contact_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="contact_email" xsi:type="AttributeExternalField">
+          <extkey_attcode>contact_id</extkey_attcode>
+          <target_attcode>email</target_attcode>
+        </field>
+        <field id="role" xsi:type="AttributeString">
+          <sql>role</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -452,28 +721,58 @@
         </list>
       </presentation>
     </class>
-    <class name="lnkContractToCI" category="bizmodel,searchable,servicemgmt,lnkservice" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" is_link="1" db_table="lnkcontracttoci" db_key_field="id" db_final_class_field="">
+    <class id="lnkContractToCI">
       <properties>
-        <naming format="%1$s">
+        <is_link>1</is_link>
+        <category>bizmodel,searchable,servicemgmt,lnkservice</category>
+        <parent>cmdbAbstractObject</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkcontracttoci</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="contract_id"/>
+            <attribute id="contract_id"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon></icon>
         <reconciliation>
           <attributes>
-            <attribute name="contract_id"/>
-            <attribute name="ci_id"/>
+            <attribute id="contract_id"/>
+            <attribute id="ci_id"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="contract_id" xsi:type="AttributeExternalKey" target_class="Contract" jointype="" sql="contract_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="contract_name" xsi:type="AttributeExternalField" extkey_attcode="contract_id" target_attcode="name"/>
-        <field name="ci_id" xsi:type="AttributeExternalKey" target_class="FunctionalCI" jointype="" sql="ci_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="ci_name" xsi:type="AttributeExternalField" extkey_attcode="ci_id" target_attcode="name"/>
-        <field name="ci_status" xsi:type="AttributeExternalField" extkey_attcode="ci_id" target_attcode="status"/>
+        <field id="contract_id" xsi:type="AttributeExternalKey">
+          <sql>contract_id</sql>
+          <target_class>Contract</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="contract_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>contract_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="ci_id" xsi:type="AttributeExternalKey">
+          <sql>ci_id</sql>
+          <target_class>FunctionalCI</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="ci_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>ci_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="ci_status" xsi:type="AttributeExternalField">
+          <extkey_attcode>ci_id</extkey_attcode>
+          <target_attcode>status</target_attcode>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -500,47 +799,104 @@
         </list>
       </presentation>
     </class>
-    <class name="Service" category="bizmodel,searchable,servicemgmt" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" db_table="service" db_key_field="id" db_final_class_field="">
+    <class id="Service">
       <properties>
-        <naming format="%1$s">
+        <category>bizmodel,searchable,servicemgmt</category>
+        <parent>cmdbAbstractObject</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>service</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="name"/>
+            <attribute id="name"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>service.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="name"/>
-            <attribute name="org_id"/>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="org_id" xsi:type="AttributeExternalKey" target_class="Organization" jointype="" sql="org_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="provider_name" xsi:type="AttributeExternalField" extkey_attcode="org_id" target_attcode="name"/>
-        <field name="name" xsi:type="AttributeString" sql="name" default_value="" is_null_allowed="true"/>
-        <field name="description" xsi:type="AttributeText" sql="description" default_value="" is_null_allowed="true"/>
-        <field name="type" xsi:type="AttributeEnum" sql="type" default_value="IncidentManagement" is_null_allowed="true">
+        <field id="org_id" xsi:type="AttributeExternalKey">
+          <sql>org_id</sql>
+          <target_class>Organization</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="provider_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>org_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="description" xsi:type="AttributeText">
+          <sql>description</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="type" xsi:type="AttributeEnum">
           <values>
             <value>RequestManagement</value>
             <value>IncidentManagement</value>
           </values>
+          <sql>type</sql>
+          <default_value>IncidentManagement</default_value>
+          <is_null_allowed>true</is_null_allowed>
         </field>
-        <field name="status" xsi:type="AttributeEnum" sql="status" default_value="design" is_null_allowed="true">
+        <field id="status" xsi:type="AttributeEnum">
           <values>
             <value>design</value>
             <value>production</value>
             <value>obsolete</value>
           </values>
+          <sql>status</sql>
+          <default_value>design</default_value>
+          <is_null_allowed>true</is_null_allowed>
         </field>
-        <field name="subcategory_list" xsi:type="AttributeLinkedSet" linked_class="ServiceSubcategory" ext_key_to_me="service_id" count_min="0" count_max="0"/>
-        <field name="sla_list" xsi:type="AttributeLinkedSet" linked_class="SLA" ext_key_to_me="service_id" count_min="0" count_max="0"/>
-        <field name="document_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkServiceToDoc" ext_key_to_me="service_id" ext_key_to_remote="document_id" count_min="0" count_max="0"/>
-        <field name="contact_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkServiceToContact" ext_key_to_me="service_id" ext_key_to_remote="contact_id" count_min="0" count_max="0"/>
+        <field id="subcategory_list" xsi:type="AttributeLinkedSet">
+          <linked_class>ServiceSubcategory</linked_class>
+          <ext_key_to_me>service_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+        </field>
+        <field id="sla_list" xsi:type="AttributeLinkedSet">
+          <linked_class>SLA</linked_class>
+          <ext_key_to_me>service_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+        </field>
+        <field id="document_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkServiceToDoc</linked_class>
+          <ext_key_to_me>service_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>document_id</ext_key_to_remote>
+        </field>
+        <field id="contact_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkServiceToContact</linked_class>
+          <ext_key_to_me>service_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>contact_id</ext_key_to_remote>
+        </field>
       </fields>
       <methods>
-        <method name="DisplayBareRelations" static="false" access="public" type="Overload-cmdbAbstractObject"><![CDATA[	function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
+        <method id="DisplayBareRelations">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-cmdbAbstractObject</type>
+          <code><![CDATA[	function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
 	{
 		parent::DisplayBareRelations($oPage, $bEditMode);
 		$aExtraParam = array ('menu' => false, 'block_id' => 'service');
@@ -551,7 +907,8 @@
 			$oCustomerContracts=new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT CustomerContract AS cc JOIN lnkContractToSLA AS ln ON ln.contract_id=cc.id JOIN SLA AS sla ON ln.sla_id=sla.id WHERE sla.service_id=$ServiceID"));
 			self::DisplaySet($oPage,$oCustomerContracts,$aExtraParam);
 		}
-	}]]></method>
+	}]]></code>
+        </method>
       </methods>
       <presentation>
         <details>
@@ -586,29 +943,60 @@
         </list>
       </presentation>
     </class>
-    <class name="ServiceSubcategory" category="bizmodel,searchable,servicemgmt" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" db_table="servicesubcategory" db_key_field="id" db_final_class_field="">
+    <class id="ServiceSubcategory">
       <properties>
-        <naming format="%1$s">
+        <category>bizmodel,searchable,servicemgmt</category>
+        <parent>cmdbAbstractObject</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>servicesubcategory</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="name"/>
+            <attribute id="name"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>sla.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="name"/>
-            <attribute name="service_id"/>
+            <attribute id="name"/>
+            <attribute id="service_id"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="name" xsi:type="AttributeString" sql="name" default_value="" is_null_allowed="true"/>
-        <field name="description" xsi:type="AttributeString" sql="description" default_value="" is_null_allowed="true"/>
-        <field name="service_id" xsi:type="AttributeExternalKey" target_class="Service" jointype="" sql="service_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
-        <field name="service_name" xsi:type="AttributeExternalField" extkey_attcode="service_id" target_attcode="name"/>
-        <field name="org_id" xsi:type="AttributeExternalField" extkey_attcode="service_id" target_attcode="org_id"/>
-        <field name="provider_name" xsi:type="AttributeExternalField" extkey_attcode="service_id" target_attcode="provider_name"/>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="description" xsi:type="AttributeString">
+          <sql>description</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="service_id" xsi:type="AttributeExternalKey">
+          <sql>service_id</sql>
+          <target_class>Service</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="service_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>service_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="org_id" xsi:type="AttributeExternalField">
+          <extkey_attcode>service_id</extkey_attcode>
+          <target_attcode>org_id</target_attcode>
+        </field>
+        <field id="provider_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>service_id</extkey_attcode>
+          <target_attcode>provider_name</target_attcode>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -636,27 +1024,54 @@
         </list>
       </presentation>
     </class>
-    <class name="SLA" category="bizmodel,searchable,servicemgmt" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" db_table="sla" db_key_field="id" db_final_class_field="">
+    <class id="SLA">
       <properties>
-        <naming format="%1$s">
+        <category>bizmodel,searchable,servicemgmt</category>
+        <parent>cmdbAbstractObject</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>sla</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="name"/>
+            <attribute id="name"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>sla.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="name"/>
-            <attribute name="service_id"/>
+            <attribute id="name"/>
+            <attribute id="service_id"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="name" xsi:type="AttributeString" sql="name" default_value="" is_null_allowed="true"/>
-        <field name="service_id" xsi:type="AttributeExternalKey" target_class="Service" jointype="" sql="service_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
-        <field name="service_name" xsi:type="AttributeExternalField" extkey_attcode="service_id" target_attcode="name"/>
-        <field name="slt_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkSLTToSLA" ext_key_to_me="sla_id" ext_key_to_remote="slt_id" count_min="0" count_max="0"/>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="service_id" xsi:type="AttributeExternalKey">
+          <sql>service_id</sql>
+          <target_class>Service</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="service_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>service_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="slt_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkSLTToSLA</linked_class>
+          <ext_key_to_me>sla_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>slt_id</ext_key_to_remote>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -680,45 +1095,76 @@
         </list>
       </presentation>
     </class>
-    <class name="SLT" category="bizmodel,searchable,servicemgmt" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" db_table="slt" db_key_field="id" db_final_class_field="">
+    <class id="SLT">
       <properties>
-        <naming format="%1$s">
+        <category>bizmodel,searchable,servicemgmt</category>
+        <parent>cmdbAbstractObject</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>slt</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="name"/>
+            <attribute id="name"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>slt.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="name"/>
+            <attribute id="name"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="name" xsi:type="AttributeString" sql="name" default_value="" is_null_allowed="true"/>
-        <field name="metric" xsi:type="AttributeEnum" sql="metric" default_value="TTO" is_null_allowed="false">
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="metric" xsi:type="AttributeEnum">
           <values>
             <value>TTO</value>
             <value>TTR</value>
           </values>
+          <sql>metric</sql>
+          <default_value>TTO</default_value>
+          <is_null_allowed>false</is_null_allowed>
         </field>
-        <field name="ticket_priority" xsi:type="AttributeEnum" sql="ticket_priority" default_value="1" is_null_allowed="true">
+        <field id="ticket_priority" xsi:type="AttributeEnum">
           <values>
             <value>1</value>
             <value>2</value>
             <value>3</value>
           </values>
+          <sql>ticket_priority</sql>
+          <default_value>1</default_value>
+          <is_null_allowed>true</is_null_allowed>
         </field>
-        <field name="value" xsi:type="AttributeInteger" sql="value" default_value="" is_null_allowed="true"/>
-        <field name="value_unit" xsi:type="AttributeEnum" sql="value_unit" default_value="hours" is_null_allowed="true">
+        <field id="value" xsi:type="AttributeInteger">
+          <sql>value</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="value_unit" xsi:type="AttributeEnum">
           <values>
             <value>days</value>
             <value>hours</value>
             <value>minutes</value>
           </values>
+          <sql>value_unit</sql>
+          <default_value>hours</default_value>
+          <is_null_allowed>true</is_null_allowed>
         </field>
-        <field name="sla_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkSLTToSLA" ext_key_to_me="slt_id" ext_key_to_remote="sla_id" count_min="0" count_max="0"/>
+        <field id="sla_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkSLTToSLA</linked_class>
+          <ext_key_to_me>slt_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>sla_id</ext_key_to_remote>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -751,31 +1197,70 @@
         </list>
       </presentation>
     </class>
-    <class name="lnkSLTToSLA" category="bizmodel,searchable,servicemgmt,lnkservice" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" is_link="1" db_table="lnkslttosla" db_key_field="id" db_final_class_field="">
+    <class id="lnkSLTToSLA">
       <properties>
-        <naming format="%1$s">
+        <is_link>1</is_link>
+        <category>bizmodel,searchable,servicemgmt,lnkservice</category>
+        <parent>cmdbAbstractObject</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkslttosla</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="sla_id"/>
+            <attribute id="sla_id"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon></icon>
         <reconciliation>
           <attributes>
-            <attribute name="sla_id"/>
-            <attribute name="slt_id"/>
+            <attribute id="sla_id"/>
+            <attribute id="slt_id"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="sla_id" xsi:type="AttributeExternalKey" target_class="SLA" jointype="" sql="sla_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="sla_name" xsi:type="AttributeExternalField" extkey_attcode="sla_id" target_attcode="name"/>
-        <field name="slt_id" xsi:type="AttributeExternalKey" target_class="SLT" jointype="" sql="slt_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="slt_name" xsi:type="AttributeExternalField" extkey_attcode="slt_id" target_attcode="name"/>
-        <field name="slt_metric" xsi:type="AttributeExternalField" extkey_attcode="slt_id" target_attcode="metric"/>
-        <field name="slt_ticket_priority" xsi:type="AttributeExternalField" extkey_attcode="slt_id" target_attcode="ticket_priority"/>
-        <field name="slt_value" xsi:type="AttributeExternalField" extkey_attcode="slt_id" target_attcode="value"/>
-        <field name="slt_value_unit" xsi:type="AttributeExternalField" extkey_attcode="slt_id" target_attcode="value_unit"/>
+        <field id="sla_id" xsi:type="AttributeExternalKey">
+          <sql>sla_id</sql>
+          <target_class>SLA</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="sla_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>sla_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="slt_id" xsi:type="AttributeExternalKey">
+          <sql>slt_id</sql>
+          <target_class>SLT</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="slt_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>slt_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="slt_metric" xsi:type="AttributeExternalField">
+          <extkey_attcode>slt_id</extkey_attcode>
+          <target_attcode>metric</target_attcode>
+        </field>
+        <field id="slt_ticket_priority" xsi:type="AttributeExternalField">
+          <extkey_attcode>slt_id</extkey_attcode>
+          <target_attcode>ticket_priority</target_attcode>
+        </field>
+        <field id="slt_value" xsi:type="AttributeExternalField">
+          <extkey_attcode>slt_id</extkey_attcode>
+          <target_attcode>value</target_attcode>
+        </field>
+        <field id="slt_value_unit" xsi:type="AttributeExternalField">
+          <extkey_attcode>slt_id</extkey_attcode>
+          <target_attcode>value_unit</target_attcode>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -811,29 +1296,62 @@
         </list>
       </presentation>
     </class>
-    <class name="lnkServiceToDoc" category="bizmodel,searchable,servicemgmt,lnkservice" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" is_link="1" db_table="lnkservicetodoc" db_key_field="id" db_final_class_field="">
+    <class id="lnkServiceToDoc">
       <properties>
-        <naming format="%1$s">
+        <is_link>1</is_link>
+        <category>bizmodel,searchable,servicemgmt,lnkservice</category>
+        <parent>cmdbAbstractObject</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkservicetodoc</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="service_id"/>
+            <attribute id="service_id"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon></icon>
         <reconciliation>
           <attributes>
-            <attribute name="service_id"/>
-            <attribute name="document_id"/>
+            <attribute id="service_id"/>
+            <attribute id="document_id"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="service_id" xsi:type="AttributeExternalKey" target_class="Service" jointype="" sql="service_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="service_name" xsi:type="AttributeExternalField" extkey_attcode="service_id" target_attcode="name"/>
-        <field name="document_id" xsi:type="AttributeExternalKey" target_class="Document" jointype="" sql="document_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="document_name" xsi:type="AttributeExternalField" extkey_attcode="document_id" target_attcode="name"/>
-        <field name="document_type" xsi:type="AttributeExternalField" extkey_attcode="document_id" target_attcode="type"/>
-        <field name="document_status" xsi:type="AttributeExternalField" extkey_attcode="document_id" target_attcode="status"/>
+        <field id="service_id" xsi:type="AttributeExternalKey">
+          <sql>service_id</sql>
+          <target_class>Service</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="service_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>service_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="document_id" xsi:type="AttributeExternalKey">
+          <sql>document_id</sql>
+          <target_class>Document</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="document_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>document_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="document_type" xsi:type="AttributeExternalField">
+          <extkey_attcode>document_id</extkey_attcode>
+          <target_attcode>type</target_attcode>
+        </field>
+        <field id="document_status" xsi:type="AttributeExternalField">
+          <extkey_attcode>document_id</extkey_attcode>
+          <target_attcode>status</target_attcode>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -863,29 +1381,63 @@
         </list>
       </presentation>
     </class>
-    <class name="lnkServiceToContact" category="bizmodel,searchable,servicemgmt,lnkservice" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" is_link="1" db_table="lnkservicetocontact" db_key_field="id" db_final_class_field="">
+    <class id="lnkServiceToContact">
       <properties>
-        <naming format="%1$s">
+        <is_link>1</is_link>
+        <category>bizmodel,searchable,servicemgmt,lnkservice</category>
+        <parent>cmdbAbstractObject</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkservicetocontact</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="service_id"/>
+            <attribute id="service_id"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon></icon>
         <reconciliation>
           <attributes>
-            <attribute name="service_id"/>
-            <attribute name="contact_id"/>
+            <attribute id="service_id"/>
+            <attribute id="contact_id"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="service_id" xsi:type="AttributeExternalKey" target_class="Service" jointype="" sql="service_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="service_name" xsi:type="AttributeExternalField" extkey_attcode="service_id" target_attcode="name"/>
-        <field name="contact_id" xsi:type="AttributeExternalKey" target_class="Contact" jointype="" sql="contact_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="contact_name" xsi:type="AttributeExternalField" extkey_attcode="contact_id" target_attcode="name"/>
-        <field name="contact_email" xsi:type="AttributeExternalField" extkey_attcode="contact_id" target_attcode="email"/>
-        <field name="role" xsi:type="AttributeString" sql="role" default_value="" is_null_allowed="true"/>
+        <field id="service_id" xsi:type="AttributeExternalKey">
+          <sql>service_id</sql>
+          <target_class>Service</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="service_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>service_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="contact_id" xsi:type="AttributeExternalKey">
+          <sql>contact_id</sql>
+          <target_class>Contact</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="contact_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>contact_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="contact_email" xsi:type="AttributeExternalField">
+          <extkey_attcode>contact_id</extkey_attcode>
+          <target_attcode>email</target_attcode>
+        </field>
+        <field id="role" xsi:type="AttributeString">
+          <sql>role</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -915,28 +1467,57 @@
         </list>
       </presentation>
     </class>
-    <class name="lnkServiceToCI" category="bizmodel,searchable,servicemgmt,lnkservice" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" db_table="lnkservicetoci" db_key_field="id" db_final_class_field="">
+    <class id="lnkServiceToCI">
       <properties>
-        <naming format="%1$s">
+        <category>bizmodel,searchable,servicemgmt,lnkservice</category>
+        <parent>cmdbAbstractObject</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkservicetoci</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="service_id"/>
+            <attribute id="service_id"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon></icon>
         <reconciliation>
           <attributes>
-            <attribute name="service_id"/>
-            <attribute name="ci_id"/>
+            <attribute id="service_id"/>
+            <attribute id="ci_id"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="service_id" xsi:type="AttributeExternalKey" target_class="Service" jointype="" sql="service_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="service_name" xsi:type="AttributeExternalField" extkey_attcode="service_id" target_attcode="name"/>
-        <field name="ci_id" xsi:type="AttributeExternalKey" target_class="FunctionalCI" jointype="" sql="ci_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="ci_name" xsi:type="AttributeExternalField" extkey_attcode="ci_id" target_attcode="name"/>
-        <field name="ci_status" xsi:type="AttributeExternalField" extkey_attcode="ci_id" target_attcode="status"/>
+        <field id="service_id" xsi:type="AttributeExternalKey">
+          <sql>service_id</sql>
+          <target_class>Service</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="service_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>service_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="ci_id" xsi:type="AttributeExternalKey">
+          <sql>ci_id</sql>
+          <target_class>FunctionalCI</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="ci_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>ci_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="ci_status" xsi:type="AttributeExternalField">
+          <extkey_attcode>ci_id</extkey_attcode>
+          <target_attcode>status</target_attcode>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -966,48 +1547,48 @@
   </classes>
   <menus>
     <menu id="ServiceManagement" xsi:type="MenuGroup">
-      <rank value="60"/>
+      <rank>60</rank>
     </menu>
     <menu id="Service:Overview" xsi:type="TemplateMenuNode">
-      <rank value="0"/>
-      <parent value="ServiceManagement"/>
-      <template_file value="overview.html"/>
+      <rank>0</rank>
+      <parent>ServiceManagement</parent>
+      <template_file>overview.html</template_file>
     </menu>
     <menu id="ProviderContract" xsi:type="OQLMenuNode">
-      <rank value="1"/>
-      <parent value="ServiceManagement"/>
-      <oql value="SELECT ProviderContract"/>
-      <do_search value="1"/>
+      <rank>1</rank>
+      <parent>ServiceManagement</parent>
+      <oql>SELECT ProviderContract</oql>
+      <do_search>1</do_search>
     </menu>
     <menu id="CustomerContract" xsi:type="OQLMenuNode">
-      <rank value="2"/>
-      <parent value="ServiceManagement"/>
-      <oql value="SELECT CustomerContract"/>
-      <do_search value="1"/>
+      <rank>2</rank>
+      <parent>ServiceManagement</parent>
+      <oql>SELECT CustomerContract</oql>
+      <do_search>1</do_search>
     </menu>
     <menu id="Service" xsi:type="OQLMenuNode">
-      <rank value="3"/>
-      <parent value="ServiceManagement"/>
-      <oql value="SELECT Service"/>
-      <do_search value="1"/>
+      <rank>3</rank>
+      <parent>ServiceManagement</parent>
+      <oql>SELECT Service</oql>
+      <do_search>1</do_search>
     </menu>
     <menu id="ServiceSubcategory" xsi:type="OQLMenuNode">
-      <rank value="4"/>
-      <parent value="ServiceManagement"/>
-      <oql value="SELECT ServiceSubcategory"/>
-      <do_search value="1"/>
+      <rank>4</rank>
+      <parent>ServiceManagement</parent>
+      <oql>SELECT ServiceSubcategory</oql>
+      <do_search>1</do_search>
     </menu>
     <menu id="SLA" xsi:type="OQLMenuNode">
-      <rank value="5"/>
-      <parent value="ServiceManagement"/>
-      <oql value="SELECT SLA"/>
-      <do_search value="1"/>
+      <rank>5</rank>
+      <parent>ServiceManagement</parent>
+      <oql>SELECT SLA</oql>
+      <do_search>1</do_search>
     </menu>
     <menu id="SLT" xsi:type="OQLMenuNode">
-      <rank value="6"/>
-      <parent value="ServiceManagement"/>
-      <oql value="SELECT SLT"/>
-      <do_search value="1"/>
+      <rank>6</rank>
+      <parent>ServiceManagement</parent>
+      <oql>SELECT SLT</oql>
+      <do_search>1</do_search>
     </menu>
   </menus>
 </itop_design>

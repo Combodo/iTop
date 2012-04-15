@@ -15,12 +15,20 @@
           <xsd:complexType>
            <xsd:sequence>
             <xsd:element name="comment" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="is_link" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="category" type="xsd:string"/>
+            <xsd:element name="parent" type="xsd:string"/>
+            <xsd:element name="abstract" type="xsd:string"/>
+            <xsd:element name="key_type" type="xsd:string"/>
+            <xsd:element name="db_table" type="xsd:string"/>
+            <xsd:element name="db_key_field" type="xsd:string"/>
+            <xsd:element name="db_final_class_field" type="xsd:string"/>
             <xsd:element name="naming">
              <xsd:complexType>
               <xsd:sequence>
+               <xsd:element name="format" type="xsd:string"/>
                <xsd:element name="attributes" type="ListOfAttributes"/>
               </xsd:sequence>
-              <xsd:attribute name="format" type="xsd:string"/>
              </xsd:complexType>
             </xsd:element>
             <xsd:element name="display_template" type="xsd:string"/>
@@ -40,8 +48,11 @@
                  <xsd:sequence>
                   <xsd:element name="column">
                    <xsd:complexType>
-                    <xsd:attribute name="name" type="xsd:string"/>
-                    <xsd:attribute name="ascending" type="xsd:string"/>
+                    <xsd:sequence>
+                     <xsd:element name="ascending" type="xsd:string"/>
+                    </xsd:sequence>
+                    <xsd:attribute name="id" type="xsd:string" use="required"/>
+                    <xsd:attribute name="order" type="xsd:string" use="required"/>
                    </xsd:complexType>
                   </xsd:element>
                  </xsd:sequence>
@@ -64,15 +75,12 @@
           <xsd:complexType>
            <xsd:sequence>
 
+            <xsd:element name="attribute" type="xsd:string"/>
+
             <xsd:element name="stimuli">
              <xsd:complexType>
               <xsd:sequence>
-               <xsd:element name="stimulus" maxOccurs="unbounded">
-                <xsd:complexType>
-                 <xsd:attribute name="name" type="xsd:string"/>
-                 <xsd:attribute name="type" type="xsd:string"/>
-                </xsd:complexType>
-               </xsd:element>
+               <xsd:element name="stimulus" type="Stimulus" maxOccurs="unbounded"/>
               </xsd:sequence>
              </xsd:complexType>
             </xsd:element>
@@ -88,12 +96,14 @@
                     <xsd:sequence>
                      <xsd:element name="attribute" maxOccurs="unbounded">
                       <xsd:complexType>
-                       <xsd:attribute name="name" type="xsd:string"/>
-                       <xsd:attribute name="mandatory" type="xsd:string"/>
-                       <xsd:attribute name="must_prompt" type="xsd:string"/>
-                       <xsd:attribute name="must_change" type="xsd:string"/>
-                       <xsd:attribute name="hidden" type="xsd:string"/>
-                       <xsd:attribute name="read_only" type="xsd:string"/>
+                       <xsd:sequence>
+                        <xsd:element name="mandatory" type="xsd:string" minOccurs="0"/>
+                        <xsd:element name="must_prompt" type="xsd:string" minOccurs="0"/>
+                        <xsd:element name="must_change" type="xsd:string" minOccurs="0"/>
+                        <xsd:element name="hidden" type="xsd:string" minOccurs="0"/>
+                        <xsd:element name="read_only" type="xsd:string" minOccurs="0"/>
+                       </xsd:sequence>
+                       <xsd:attribute name="id" type="xsd:string" use="required"/>
                       </xsd:complexType>
                      </xsd:element>
                     </xsd:sequence>
@@ -106,27 +116,29 @@
                      <xsd:element name="transition" minOccurs="0" maxOccurs="unbounded">
                       <xsd:complexType>
                        <xsd:sequence>
+                       <xsd:element name="stimulus" type="xsd:string"/>
+                       <xsd:element name="target" type="xsd:string"/>
                         <xsd:element name="actions">
                          <xsd:complexType>
                           <xsd:sequence>
                            <xsd:element name="action" minOccurs="0" maxOccurs="unbounded">
                             <xsd:complexType>
-                             <xsd:attribute name="verb" type="xsd:string"/>
+                             <xsd:sequence>
+                              <xsd:element name="verb" type="xsd:string"/>
+                             </xsd:sequence>
                             </xsd:complexType>
                            </xsd:element>
                           </xsd:sequence>
                          </xsd:complexType>
                         </xsd:element>
                        </xsd:sequence>
-                       <xsd:attribute name="stimulus" type="xsd:string"/>
-                       <xsd:attribute name="target" type="xsd:string"/>
                       </xsd:complexType>
                      </xsd:element>
                     </xsd:sequence>
                    </xsd:complexType>
                   </xsd:element>
                  </xsd:sequence>
-                 <xsd:attribute name="name" type="xsd:string"/>
+                 <xsd:attribute name="id" type="xsd:string" use="required"/>
                 </xsd:complexType>
                </xsd:element>
               </xsd:sequence>
@@ -134,7 +146,6 @@
             </xsd:element>
 
            </xsd:sequence>
-           <xsd:attribute name="attribute" type="xsd:string"/>
           </xsd:complexType>
          </xsd:element>
          <xsd:element name="methods">
@@ -144,11 +155,12 @@
              <xsd:complexType mixed="true">
               <xsd:sequence>
                <xsd:element name="comment" type="xsd:string" minOccurs="0"/>
+               <xsd:element name="static" type="xsd:string"/>
+               <xsd:element name="access" type="xsd:string"/>
+               <xsd:element name="type" type="xsd:string"/>
+               <xsd:element name="code" type="xsd:string"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string"/>
-              <xsd:attribute name="static" type="xsd:string"/>
-              <xsd:attribute name="access" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="id" type="xsd:string" use="required"/>
              </xsd:complexType>
             </xsd:element>
            </xsd:sequence>
@@ -164,15 +176,7 @@
           </xsd:complexType>
          </xsd:element>
         </xsd:sequence>
-        <xsd:attribute name="name" type="xsd:string"/>
-        <xsd:attribute name="category" type="xsd:string"/>
-        <xsd:attribute name="parent" type="xsd:string"/>
-        <xsd:attribute name="abstract" type="xsd:string"/>
-        <xsd:attribute name="key_type" type="xsd:string"/>
-        <xsd:attribute name="is_link" type="xsd:string"/>
-        <xsd:attribute name="db_table" type="xsd:string"/>
-        <xsd:attribute name="db_key_field" type="xsd:string"/>
-        <xsd:attribute name="db_final_class_field" type="xsd:string"/>
+        <xsd:attribute name="id" type="xsd:string" use="required"/>
        </xsd:complexType>
 
       </xsd:element>
@@ -195,7 +199,7 @@
 
 
 <!-- ====================================== -->
-<!-- Types for the classes                  -->
+<!-- Class: Atttributes                     -->
 <!-- ====================================== -->
 <xsd:complexType name="ListOfAttributes">
  <xsd:sequence>
@@ -206,23 +210,37 @@
 
 <xsd:complexType name="Attribute">
  <xsd:sequence>
+  <xsd:element name="filter" type="xsd:string" minOccurs="0"/>
+  <xsd:element name="values" minOccurs="0">
+   <xsd:complexType>
+    <xsd:sequence>
+     <xsd:element name="value" type="xsd:string" maxOccurs="unbounded"/>
+    </xsd:sequence>
+   </xsd:complexType>
+  </xsd:element>
   <xsd:element name="dependencies" type="ListOfAttributes" minOccurs="0"/>
  </xsd:sequence>
- <xsd:attribute name="name" type="xsd:string"/>
+ <xsd:attribute name="id" type="xsd:string" use="required"/>
 </xsd:complexType>
 
 <xsd:complexType name="AttributeSql">
  <xsd:complexContent>
   <xsd:extension base="Attribute">
-   <xsd:attribute name="sql" type="xsd:string"/>
-   <xsd:attribute name="is_null_allowed" type="xsd:string"/>
+   <xsd:sequence>
+    <xsd:element name="sql" type="xsd:string"/>
+    <xsd:element name="default_value" type="xsd:string"/>
+    <xsd:element name="is_null_allowed" type="xsd:string"/>
+   </xsd:sequence>
   </xsd:extension>
  </xsd:complexContent>
 </xsd:complexType>
 
 <xsd:complexType name="AttributeBlob">
  <xsd:complexContent>
-  <xsd:extension base="AttributeSql">
+  <xsd:extension base="Attribute">
+   <xsd:sequence>
+    <xsd:element name="is_null_allowed" type="xsd:string" minOccurs="0"/>
+   </xsd:sequence>
   </xsd:extension>
  </xsd:complexContent>
 </xsd:complexType>
@@ -230,7 +248,8 @@
 <xsd:complexType name="AttributeScalar">
  <xsd:complexContent>
   <xsd:extension base="AttributeSql">
-   <xsd:attribute name="default_value" type="xsd:string"/>
+   <xsd:sequence>
+   </xsd:sequence>
   </xsd:extension>
  </xsd:complexContent>
 </xsd:complexType>
@@ -288,7 +307,9 @@
 <xsd:complexType name="AttributeURL">
  <xsd:complexContent>
   <xsd:extension base="AttributeString">
-   <xsd:attribute name="target" type="xsd:string"/>
+   <xsd:sequence>
+    <xsd:element name="target" type="xsd:string"/>
+   </xsd:sequence>
   </xsd:extension>
  </xsd:complexContent>
 </xsd:complexType>
@@ -303,25 +324,6 @@
 <xsd:complexType name="AttributeEnum">
  <xsd:complexContent>
   <xsd:extension base="AttributeString">
-   <xsd:sequence>
-    <xsd:element name="values">
-     <xsd:complexType>
-      <xsd:sequence>
-       <xsd:element name="value" type="xsd:string" maxOccurs="unbounded"/>
-      </xsd:sequence>
-     </xsd:complexType>
-    </xsd:element>
-   </xsd:sequence>
-  </xsd:extension>
- </xsd:complexContent>
-</xsd:complexType>
-
-
-<xsd:complexType name="AttributeExternalKeyBase">
- <xsd:complexContent>
-  <xsd:extension base="AttributeSql">
-   <xsd:attribute name="filter" type="xsd:string"/>
-   <xsd:attribute name="on_target_delete" type="xsd:string"/>
   </xsd:extension>
  </xsd:complexContent>
 </xsd:complexType>
@@ -329,25 +331,39 @@
 
 <xsd:complexType name="AttributeExternalKey">
  <xsd:complexContent>
-  <xsd:extension base="AttributeExternalKeyBase">
-   <xsd:attribute name="target_class" type="xsd:string"/>
-   <xsd:attribute name="jointype" type="xsd:string"/>
+  <xsd:extension base="Attribute">
+   <xsd:sequence>
+    <xsd:element name="sql" type="xsd:string"/>
+    <xsd:element name="target_class" type="xsd:string"/>
+    <xsd:element name="is_null_allowed" type="xsd:string"/>
+    <xsd:element name="filter" type="xsd:string" minOccurs="0"/>
+    <xsd:element name="on_target_delete" type="xsd:string"/>
+    <xsd:element name="jointype" type="xsd:string" minOccurs="0"/>
+   </xsd:sequence>
   </xsd:extension>
  </xsd:complexContent>
 </xsd:complexType>
 
 <xsd:complexType name="AttributeHierarchicalKey">
  <xsd:complexContent>
-  <xsd:extension base="AttributeExternalKeyBase">
+  <xsd:extension base="Attribute">
+   <xsd:sequence>
+    <xsd:element name="sql" type="xsd:string"/>
+    <xsd:element name="is_null_allowed" type="xsd:string"/>
+    <xsd:element name="on_target_delete" type="xsd:string"/>
+    <xsd:element name="filter" type="xsd:string" minOccurs="0"/>
+   </xsd:sequence>
   </xsd:extension>
  </xsd:complexContent>
 </xsd:complexType>
 
 <xsd:complexType name="AttributeExternalField">
  <xsd:complexContent>
-  <xsd:extension base="AttributeSql">
-   <xsd:attribute name="extkey_attcode" type="xsd:string"/>
-   <xsd:attribute name="target_attcode" type="xsd:string"/>
+  <xsd:extension base="Attribute">
+   <xsd:sequence>
+    <xsd:element name="extkey_attcode" type="xsd:string"/>
+    <xsd:element name="target_attcode" type="xsd:string"/>
+   </xsd:sequence>
   </xsd:extension>
  </xsd:complexContent>
 </xsd:complexType>
@@ -362,10 +378,12 @@
 <xsd:complexType name="AttributeLinkedSet">
  <xsd:complexContent>
   <xsd:extension base="Attribute">
-   <xsd:attribute name="linked_class" type="xsd:string"/>
-   <xsd:attribute name="ext_key_to_me" type="xsd:string"/>
-   <xsd:attribute name="count_min" type="xsd:integer"/>
-   <xsd:attribute name="count_max" type="xsd:integer"/>
+   <xsd:sequence>
+    <xsd:element name="linked_class" type="xsd:string"/>
+    <xsd:element name="ext_key_to_me" type="xsd:string"/>
+    <xsd:element name="count_min" type="xsd:string"/>
+    <xsd:element name="count_max" type="xsd:string"/>
+   </xsd:sequence>
   </xsd:extension>
  </xsd:complexContent>
 </xsd:complexType>
@@ -373,10 +391,17 @@
 <xsd:complexType name="AttributeLinkedSetIndirect">
  <xsd:complexContent>
   <xsd:extension base="AttributeLinkedSet">
+   <xsd:sequence>
+    <xsd:element name="ext_key_to_remote" type="xsd:string"/>
+   </xsd:sequence>
    <xsd:attribute name="ext_key_to_remote" type="xsd:string"/>
   </xsd:extension>
  </xsd:complexContent>
 </xsd:complexType>
+
+<!-- ====================================== -->
+<!-- Class: ZList (presentation)            -->
+<!-- ====================================== -->
 
 <xsd:complexType name="ItemList">
  <xsd:sequence>
@@ -392,10 +417,32 @@
     <xsd:sequence>
      <xsd:element name="items" type="Items" minOccurs="0"/>
     </xsd:sequence>
-    <xsd:attribute name="key" type="xsd:string"/>
+    <xsd:attribute name="id" type="xsd:string"/>
    </xsd:complexType>
   </xsd:element>
  </xsd:sequence>
+</xsd:complexType>
+
+<!-- ====================================== -->
+<!-- Class: Stimulus                        -->
+<!-- ====================================== -->
+
+<xsd:complexType name="Stimulus">
+ <xsd:attribute name="id" type="xsd:string"/>
+</xsd:complexType>
+
+<xsd:complexType name="StimulusUserAction">
+ <xsd:complexContent>
+  <xsd:extension base="Stimulus">
+  </xsd:extension>
+ </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:complexType name="StimulusInternal">
+ <xsd:complexContent>
+  <xsd:extension base="Stimulus">
+  </xsd:extension>
+ </xsd:complexContent>
 </xsd:complexType>
 
 
@@ -486,7 +533,10 @@
 </xsd:complexType>
 
 <xsd:complexType name="MenuProperty">
- <xsd:attribute name="value" type="xsd:string"/>
+ <xsd:simpleContent>
+  <xsd:extension base="xsd:string">
+  </xsd:extension>
+ </xsd:simpleContent>
 </xsd:complexType>
 
 <xsd:simpleType name="MenuType">

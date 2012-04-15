@@ -1,49 +1,126 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <classes>
-    <class name="KnownError" category="bizmodel,searchable,knownerrormgmt" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" db_table="known_error" db_key_field="id" db_final_class_field="">
+    <class id="KnownError">
       <properties>
-        <comment><![CDATA[/**
+        <comment>/**
 * Description of known error
-*/]]></comment>
-        <naming format="%1$s">
+*/</comment>
+        <category>bizmodel,searchable,knownerrormgmt</category>
+        <parent>cmdbAbstractObject</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>known_error</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="name"/>
+            <attribute id="name"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>images/known-error.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="org_id"/>
-            <attribute name="name"/>
+            <attribute id="org_id"/>
+            <attribute id="name"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="name" xsi:type="AttributeString" sql="name" default_value="" is_null_allowed="false"/>
-        <field name="org_id" xsi:type="AttributeExternalKey" target_class="Organization" jointype="" sql="cust_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
-        <field name="cust_name" xsi:type="AttributeExternalField" extkey_attcode="org_id" target_attcode="name"/>
-        <field name="problem_id" xsi:type="AttributeExternalKey" target_class="Problem" jointype="" sql="problem_id" is_null_allowed="true" on_target_delete="DEL_MANUAL"/>
-        <field name="problem_ref" xsi:type="AttributeExternalField" extkey_attcode="problem_id" target_attcode="ref"/>
-        <field name="symptom" xsi:type="AttributeText" sql="symptom" default_value="" is_null_allowed="false"/>
-        <field name="root_cause" xsi:type="AttributeText" sql="rootcause" default_value="" is_null_allowed="true"/>
-        <field name="workaround" xsi:type="AttributeText" sql="workaround" default_value="" is_null_allowed="true"/>
-        <field name="solution" xsi:type="AttributeText" sql="solution" default_value="" is_null_allowed="true"/>
-        <field name="error_code" xsi:type="AttributeString" sql="error_code" default_value="" is_null_allowed="true"/>
-        <field name="domain" xsi:type="AttributeEnum" sql="domain" default_value="Application" is_null_allowed="false">
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value></default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="org_id" xsi:type="AttributeExternalKey">
+          <sql>cust_id</sql>
+          <target_class>Organization</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="cust_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>org_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="problem_id" xsi:type="AttributeExternalKey">
+          <sql>problem_id</sql>
+          <target_class>Problem</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="problem_ref" xsi:type="AttributeExternalField">
+          <extkey_attcode>problem_id</extkey_attcode>
+          <target_attcode>ref</target_attcode>
+        </field>
+        <field id="symptom" xsi:type="AttributeText">
+          <sql>symptom</sql>
+          <default_value></default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="root_cause" xsi:type="AttributeText">
+          <sql>rootcause</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="workaround" xsi:type="AttributeText">
+          <sql>workaround</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="solution" xsi:type="AttributeText">
+          <sql>solution</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="error_code" xsi:type="AttributeString">
+          <sql>error_code</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="domain" xsi:type="AttributeEnum">
           <values>
             <value>Network</value>
             <value>Server</value>
             <value>Application</value>
             <value>Desktop</value>
           </values>
+          <sql>domain</sql>
+          <default_value>Application</default_value>
+          <is_null_allowed>false</is_null_allowed>
         </field>
-        <field name="vendor" xsi:type="AttributeString" sql="vendor" default_value="" is_null_allowed="true"/>
-        <field name="model" xsi:type="AttributeString" sql="model" default_value="" is_null_allowed="true"/>
-        <field name="version" xsi:type="AttributeString" sql="version" default_value="" is_null_allowed="true"/>
-        <field name="ci_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkInfraError" ext_key_to_me="error_id" ext_key_to_remote="infra_id" count_min="0" count_max="0"/>
-        <field name="document_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkDocumentError" ext_key_to_me="error_id" ext_key_to_remote="doc_id" count_min="0" count_max="0"/>
+        <field id="vendor" xsi:type="AttributeString">
+          <sql>vendor</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="model" xsi:type="AttributeString">
+          <sql>model</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="version" xsi:type="AttributeString">
+          <sql>version</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="ci_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkInfraError</linked_class>
+          <ext_key_to_me>error_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>infra_id</ext_key_to_remote>
+        </field>
+        <field id="document_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkDocumentError</linked_class>
+          <ext_key_to_me>error_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>doc_id</ext_key_to_remote>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -85,30 +162,64 @@
         </list>
       </presentation>
     </class>
-    <class name="lnkInfraError" category="bizmodel,searchable,knownerrormgmt,lnkknownerror" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" is_link="1" db_table="infra_error_links" db_key_field="link_id" db_final_class_field="">
+    <class id="lnkInfraError">
       <properties>
-        <comment><![CDATA[/**
+        <comment>/**
 * n-n link between any Infra and a Known Error
-*/]]></comment>
-        <naming format="lnkInfraError">
+*/</comment>
+        <is_link>1</is_link>
+        <category>bizmodel,searchable,knownerrormgmt,lnkknownerror</category>
+        <parent>cmdbAbstractObject</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>infra_error_links</db_table>
+        <db_key_field>link_id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>lnkInfraError</format>
           <attributes/>
         </naming>
         <display_template></display_template>
         <icon></icon>
         <reconciliation>
           <attributes>
-            <attribute name="infra_id"/>
-            <attribute name="error_id"/>
+            <attribute id="infra_id"/>
+            <attribute id="error_id"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="infra_id" xsi:type="AttributeExternalKey" target_class="FunctionalCI" jointype="" sql="infra_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="infra_name" xsi:type="AttributeExternalField" extkey_attcode="infra_id" target_attcode="name"/>
-        <field name="infra_status" xsi:type="AttributeExternalField" extkey_attcode="infra_id" target_attcode="status"/>
-        <field name="error_id" xsi:type="AttributeExternalKey" target_class="KnownError" jointype="" sql="error_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="error_name" xsi:type="AttributeExternalField" extkey_attcode="error_id" target_attcode="name"/>
-        <field name="reason" xsi:type="AttributeString" sql="dummy" default_value="" is_null_allowed="true"/>
+        <field id="infra_id" xsi:type="AttributeExternalKey">
+          <sql>infra_id</sql>
+          <target_class>FunctionalCI</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="infra_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>infra_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="infra_status" xsi:type="AttributeExternalField">
+          <extkey_attcode>infra_id</extkey_attcode>
+          <target_attcode>status</target_attcode>
+        </field>
+        <field id="error_id" xsi:type="AttributeExternalKey">
+          <sql>error_id</sql>
+          <target_class>KnownError</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="error_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>error_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="reason" xsi:type="AttributeString">
+          <sql>dummy</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -135,31 +246,62 @@
         </list>
       </presentation>
     </class>
-    <class name="lnkDocumentError" category="bizmodel,searchable,knownerrormgmt,lnkknownerror" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" is_link="1" db_table="documents_error_link" db_key_field="link_id" db_final_class_field="">
+    <class id="lnkDocumentError">
       <properties>
-        <comment><![CDATA[/**
+        <comment>/**
 * n-n link between any Contract and a Document
-*/]]></comment>
-        <naming format="%1$s">
+*/</comment>
+        <is_link>1</is_link>
+        <category>bizmodel,searchable,knownerrormgmt,lnkknownerror</category>
+        <parent>cmdbAbstractObject</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>documents_error_link</db_table>
+        <db_key_field>link_id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="link_type"/>
+            <attribute id="link_type"/>
           </attributes>
         </naming>
         <display_template>../business/templates/default.html</display_template>
         <icon></icon>
         <reconciliation>
           <attributes>
-            <attribute name="doc_id"/>
-            <attribute name="error_id"/>
+            <attribute id="doc_id"/>
+            <attribute id="error_id"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="doc_id" xsi:type="AttributeExternalKey" target_class="Document" jointype="" sql="doc_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="doc_name" xsi:type="AttributeExternalField" extkey_attcode="doc_id" target_attcode="name"/>
-        <field name="error_id" xsi:type="AttributeExternalKey" target_class="KnownError" jointype="" sql="error_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="error_name" xsi:type="AttributeExternalField" extkey_attcode="error_id" target_attcode="name"/>
-        <field name="link_type" xsi:type="AttributeString" sql="link_type" default_value="" is_null_allowed="true"/>
+        <field id="doc_id" xsi:type="AttributeExternalKey">
+          <sql>doc_id</sql>
+          <target_class>Document</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="doc_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>doc_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="error_id" xsi:type="AttributeExternalKey">
+          <sql>error_id</sql>
+          <target_class>KnownError</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="error_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>error_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="link_type" xsi:type="AttributeString">
+          <sql>link_type</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -182,28 +324,28 @@
   </classes>
   <menus>
     <menu id="ProblemManagement" xsi:type="MenuGroup">
-      <rank value="42"/>
+      <rank>42</rank>
     </menu>
     <menu id="NewError" xsi:type="NewObjectMenuNode">
-      <rank value="3"/>
-      <parent value="ProblemManagement"/>
-      <class value="KnownError"/>
+      <rank>3</rank>
+      <parent>ProblemManagement</parent>
+      <class>KnownError</class>
     </menu>
     <menu id="SearchError" xsi:type="SearchMenuNode">
-      <rank value="4"/>
-      <parent value="ProblemManagement"/>
-      <class value="KnownError"/>
+      <rank>4</rank>
+      <parent>ProblemManagement</parent>
+      <class>KnownError</class>
     </menu>
     <menu id="Problem:Shortcuts" xsi:type="TemplateMenuNode">
-      <rank value="5"/>
-      <parent value="ProblemManagement"/>
-      <template_file value=""/>
+      <rank>5</rank>
+      <parent>ProblemManagement</parent>
+      <template_file></template_file>
     </menu>
     <menu id="Problem:KnownErrors" xsi:type="OQLMenuNode">
-      <rank value="3"/>
-      <parent value="Problem:Shortcuts"/>
-      <oql value="SELECT KnownError"/>
-      <do_search value="1"/>
+      <rank>3</rank>
+      <parent>Problem:Shortcuts</parent>
+      <oql>SELECT KnownError</oql>
+      <do_search>1</do_search>
     </menu>
   </menus>
 </itop_design>

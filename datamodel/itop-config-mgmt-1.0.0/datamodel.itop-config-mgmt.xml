@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <classes>
-    <class name="Organization" category="bizmodel,searchable,structure" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" db_table="organization" db_key_field="id" db_final_class_field="">
+    <class id="Organization">
       <properties>
         <comment><![CDATA[/**
  * Persistent classes for a CMDB
@@ -11,30 +11,56 @@
  * @author      Denis Flaven <denis.flaven@combodo.com>
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */]]></comment>
-        <naming format="%1$s">
+        <category>bizmodel,searchable,structure</category>
+        <parent>cmdbAbstractObject</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>organization</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="name"/>
+            <attribute id="name"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon></icon>
         <reconciliation>
           <attributes>
-            <attribute name="name"/>
+            <attribute id="name"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="name" xsi:type="AttributeString" sql="name" default_value="" is_null_allowed="false"/>
-        <field name="code" xsi:type="AttributeString" sql="code" default_value="" is_null_allowed="true"/>
-        <field name="status" xsi:type="AttributeEnum" sql="status" default_value="active" is_null_allowed="true">
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value></default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="code" xsi:type="AttributeString">
+          <sql>code</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="status" xsi:type="AttributeEnum">
           <values>
             <value>active</value>
             <value>inactive</value>
           </values>
+          <sql>status</sql>
+          <default_value>active</default_value>
+          <is_null_allowed>true</is_null_allowed>
         </field>
-        <field name="parent_id" xsi:type="AttributeHierarchicalKey" sql="parent_id" is_null_allowed="true" on_target_delete="DEL_MANUAL"/>
-        <field name="parent_name" xsi:type="AttributeExternalField" extkey_attcode="parent_id" target_attcode="name"/>
+        <field id="parent_id" xsi:type="AttributeHierarchicalKey">
+          <sql>parent_id</sql>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+        </field>
+        <field id="parent_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>parent_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -62,45 +88,102 @@
         </list>
       </presentation>
     </class>
-    <class name="Location" category="bizmodel,searchable,structure" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" db_table="location" db_key_field="id" db_final_class_field="">
+    <class id="Location">
       <properties>
-        <naming format="%1$s">
+        <category>bizmodel,searchable,structure</category>
+        <parent>cmdbAbstractObject</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>location</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="name"/>
+            <attribute id="name"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>images/location.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="name"/>
-            <attribute name="org_id"/>
-            <attribute name="org_name"/>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="org_name"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="name" xsi:type="AttributeString" sql="name" default_value="" is_null_allowed="false"/>
-        <field name="status" xsi:type="AttributeEnum" sql="status" default_value="active" is_null_allowed="true">
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value></default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="status" xsi:type="AttributeEnum">
           <values>
             <value>active</value>
             <value>inactive</value>
           </values>
+          <sql>status</sql>
+          <default_value>active</default_value>
+          <is_null_allowed>true</is_null_allowed>
         </field>
-        <field name="org_id" xsi:type="AttributeExternalKey" target_class="Organization" jointype="" sql="org_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
-        <field name="org_name" xsi:type="AttributeExternalField" extkey_attcode="org_id" target_attcode="name"/>
-        <field name="address" xsi:type="AttributeText" sql="address" default_value="" is_null_allowed="true"/>
-        <field name="postal_code" xsi:type="AttributeString" sql="postal_code" default_value="" is_null_allowed="true"/>
-        <field name="city" xsi:type="AttributeString" sql="city" default_value="" is_null_allowed="true"/>
-        <field name="country" xsi:type="AttributeString" sql="country" default_value="" is_null_allowed="true"/>
-        <field name="parent_id" xsi:type="AttributeHierarchicalKey" filter="SELECT Location AS L WHERE L.org_id = :this-&gt;org_id" sql="parent_id" is_null_allowed="true" on_target_delete="DEL_MANUAL">
+        <field id="org_id" xsi:type="AttributeExternalKey">
+          <sql>org_id</sql>
+          <target_class>Organization</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="org_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>org_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="address" xsi:type="AttributeText">
+          <sql>address</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="postal_code" xsi:type="AttributeString">
+          <sql>postal_code</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="city" xsi:type="AttributeString">
+          <sql>city</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="country" xsi:type="AttributeString">
+          <sql>country</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="parent_id" xsi:type="AttributeHierarchicalKey">
           <dependencies>
-            <attribute name="org_id"/>
+            <attribute id="org_id"/>
           </dependencies>
+          <sql>parent_id</sql>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <filter><![CDATA[SELECT Location AS L WHERE L.org_id = :this->org_id]]></filter>
         </field>
-        <field name="parent_name" xsi:type="AttributeExternalField" extkey_attcode="parent_id" target_attcode="name"/>
-        <field name="contact_list" xsi:type="AttributeLinkedSet" linked_class="Contact" ext_key_to_me="location_id" count_min="0" count_max="0"/>
-        <field name="infra_list" xsi:type="AttributeLinkedSet" linked_class="InfrastructureCI" ext_key_to_me="location_id" count_min="0" count_max="0"/>
+        <field id="parent_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>parent_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="contact_list" xsi:type="AttributeLinkedSet">
+          <linked_class>Contact</linked_class>
+          <ext_key_to_me>location_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+        </field>
+        <field id="infra_list" xsi:type="AttributeLinkedSet">
+          <linked_class>InfrastructureCI</linked_class>
+          <ext_key_to_me>location_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -138,47 +221,118 @@
         </list>
       </presentation>
     </class>
-    <class name="Contact" category="bizmodel,searchable,structure" parent="cmdbAbstractObject" abstract="true" key_type="autoincrement" db_table="contact" db_key_field="id" db_final_class_field="finalclass">
+    <class id="Contact">
       <properties>
-        <naming format="%1$s">
+        <category>bizmodel,searchable,structure</category>
+        <parent>cmdbAbstractObject</parent>
+        <abstract>true</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>contact</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field>finalclass</db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="name"/>
+            <attribute id="name"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>images/team.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="name"/>
-            <attribute name="org_id"/>
-            <attribute name="org_name"/>
-            <attribute name="email"/>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="org_name"/>
+            <attribute id="email"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="name" xsi:type="AttributeString" sql="name" default_value="" is_null_allowed="false"/>
-        <field name="status" xsi:type="AttributeEnum" sql="status" default_value="active" is_null_allowed="false">
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value></default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="status" xsi:type="AttributeEnum">
           <values>
             <value>active</value>
             <value>inactive</value>
           </values>
+          <sql>status</sql>
+          <default_value>active</default_value>
+          <is_null_allowed>false</is_null_allowed>
         </field>
-        <field name="org_id" xsi:type="AttributeExternalKey" target_class="Organization" jointype="" sql="org_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
-        <field name="org_name" xsi:type="AttributeExternalField" extkey_attcode="org_id" target_attcode="name"/>
-        <field name="email" xsi:type="AttributeEmailAddress" sql="email" default_value="" is_null_allowed="false"/>
-        <field name="phone" xsi:type="AttributeString" sql="phone" default_value="" is_null_allowed="true"/>
-        <field name="location_id" xsi:type="AttributeExternalKey" target_class="Location" jointype="" filter="SELECT Location AS L WHERE L.org_id = :this-&gt;org_id" sql="location_id" is_null_allowed="true" on_target_delete="DEL_MANUAL">
+        <field id="org_id" xsi:type="AttributeExternalKey">
+          <sql>org_id</sql>
+          <target_class>Organization</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="org_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>org_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="email" xsi:type="AttributeEmailAddress">
+          <sql>email</sql>
+          <default_value></default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="phone" xsi:type="AttributeString">
+          <sql>phone</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="location_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT Location AS L WHERE L.org_id = :this->org_id]]></filter>
           <dependencies>
-            <attribute name="org_id"/>
+            <attribute id="org_id"/>
           </dependencies>
+          <sql>location_id</sql>
+          <target_class>Location</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype></jointype>
         </field>
-        <field name="location_name" xsi:type="AttributeExternalField" extkey_attcode="location_id" target_attcode="name"/>
-        <field name="contract_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkContractToContact" ext_key_to_me="contact_id" ext_key_to_remote="contract_id" count_min="0" count_max="0"/>
-        <field name="service_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkServiceToContact" ext_key_to_me="contact_id" ext_key_to_remote="service_id" count_min="0" count_max="0"/>
-        <field name="ticket_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkTicketToContact" ext_key_to_me="contact_id" ext_key_to_remote="ticket_id" count_min="0" count_max="0"/>
-        <field name="ci_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkCIToContact" ext_key_to_me="contact_id" ext_key_to_remote="ci_id" count_min="0" count_max="0"/>
-        <field name="team_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkTeamToContact" ext_key_to_me="contact_id" ext_key_to_remote="team_id" count_min="0" count_max="0"/>
+        <field id="location_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>location_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="contract_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkContractToContact</linked_class>
+          <ext_key_to_me>contact_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>contract_id</ext_key_to_remote>
+        </field>
+        <field id="service_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkServiceToContact</linked_class>
+          <ext_key_to_me>contact_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>service_id</ext_key_to_remote>
+        </field>
+        <field id="ticket_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkTicketToContact</linked_class>
+          <ext_key_to_me>contact_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>ticket_id</ext_key_to_remote>
+        </field>
+        <field id="ci_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkCIToContact</linked_class>
+          <ext_key_to_me>contact_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>ci_id</ext_key_to_remote>
+        </field>
+        <field id="team_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkTeamToContact</linked_class>
+          <ext_key_to_me>contact_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>team_id</ext_key_to_remote>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -219,28 +373,44 @@
         </list>
       </presentation>
     </class>
-    <class name="Person" category="bizmodel,searchable,structure" parent="Contact" abstract="false" key_type="autoincrement" db_table="person" db_key_field="id" db_final_class_field="">
+    <class id="Person">
       <properties>
-        <naming format="%1$s %2$s">
+        <category>bizmodel,searchable,structure</category>
+        <parent>Contact</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>person</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s %2$s</format>
           <attributes>
-            <attribute name="first_name"/>
-            <attribute name="name"/>
+            <attribute id="first_name"/>
+            <attribute id="name"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>images/person.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="name"/>
-            <attribute name="first_name"/>
-            <attribute name="org_id"/>
-            <attribute name="email"/>
+            <attribute id="name"/>
+            <attribute id="first_name"/>
+            <attribute id="org_id"/>
+            <attribute id="email"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="first_name" xsi:type="AttributeString" sql="first_name" default_value="" is_null_allowed="false"/>
-        <field name="employee_id" xsi:type="AttributeString" sql="employee_id" default_value="" is_null_allowed="true"/>
+        <field id="first_name" xsi:type="AttributeString">
+          <sql>first_name</sql>
+          <default_value></default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="employee_id" xsi:type="AttributeString">
+          <sql>employee_id</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -286,24 +456,38 @@
         </list>
       </presentation>
     </class>
-    <class name="Team" category="bizmodel,searchable,structure" parent="Contact" abstract="false" key_type="autoincrement" db_table="team" db_key_field="id" db_final_class_field="">
+    <class id="Team">
       <properties>
-        <naming format="%1$s">
+        <category>bizmodel,searchable,structure</category>
+        <parent>Contact</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>team</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="name"/>
+            <attribute id="name"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>images/team.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="name"/>
-            <attribute name="org_id"/>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="member_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkTeamToContact" ext_key_to_me="team_id" ext_key_to_remote="contact_id" count_min="0" count_max="0"/>
+        <field id="member_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkTeamToContact</linked_class>
+          <ext_key_to_me>team_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>contact_id</ext_key_to_remote>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -344,31 +528,74 @@
         </list>
       </presentation>
     </class>
-    <class name="lnkTeamToContact" category="bizmodel,searchable,structure" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" is_link="1" db_table="lnkteamtocontact" db_key_field="id" db_final_class_field="">
+    <class id="lnkTeamToContact">
       <properties>
-        <naming format="%1$s">
+        <is_link>1</is_link>
+        <category>bizmodel,searchable,structure</category>
+        <parent>cmdbAbstractObject</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkteamtocontact</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="team_id"/>
+            <attribute id="team_id"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon></icon>
         <reconciliation>
           <attributes>
-            <attribute name=""/>
+            <attribute id=""/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="team_id" xsi:type="AttributeExternalKey" target_class="Team" jointype="" sql="team_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="team_name" xsi:type="AttributeExternalField" extkey_attcode="team_id" target_attcode="name"/>
-        <field name="contact_id" xsi:type="AttributeExternalKey" target_class="Contact" jointype="" sql="contact_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="contact_name" xsi:type="AttributeExternalField" extkey_attcode="contact_id" target_attcode="name"/>
-        <field name="contact_location_id" xsi:type="AttributeExternalField" extkey_attcode="contact_id" target_attcode="location_id"/>
-        <field name="contact_location_name" xsi:type="AttributeExternalField" extkey_attcode="contact_id" target_attcode="location_name"/>
-        <field name="contact_email" xsi:type="AttributeExternalField" extkey_attcode="contact_id" target_attcode="email"/>
-        <field name="contact_phone" xsi:type="AttributeExternalField" extkey_attcode="contact_id" target_attcode="phone"/>
-        <field name="role" xsi:type="AttributeString" sql="role" default_value="" is_null_allowed="true"/>
+        <field id="team_id" xsi:type="AttributeExternalKey">
+          <sql>team_id</sql>
+          <target_class>Team</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="team_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>team_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="contact_id" xsi:type="AttributeExternalKey">
+          <sql>contact_id</sql>
+          <target_class>Contact</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="contact_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>contact_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="contact_location_id" xsi:type="AttributeExternalField">
+          <extkey_attcode>contact_id</extkey_attcode>
+          <target_attcode>location_id</target_attcode>
+        </field>
+        <field id="contact_location_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>contact_id</extkey_attcode>
+          <target_attcode>location_name</target_attcode>
+        </field>
+        <field id="contact_email" xsi:type="AttributeExternalField">
+          <extkey_attcode>contact_id</extkey_attcode>
+          <target_attcode>email</target_attcode>
+        </field>
+        <field id="contact_phone" xsi:type="AttributeExternalField">
+          <extkey_attcode>contact_id</extkey_attcode>
+          <target_attcode>phone</target_attcode>
+        </field>
+        <field id="role" xsi:type="AttributeString">
+          <sql>role</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -398,29 +625,54 @@
         </list>
       </presentation>
     </class>
-    <class name="Document" category="bizmodel,searchable,documentation" parent="cmdbAbstractObject" abstract="true" key_type="autoincrement" db_table="document" db_key_field="id" db_final_class_field="finalclass">
+    <class id="Document">
       <properties>
-        <naming format="%1$s">
+        <category>bizmodel,searchable,documentation</category>
+        <parent>cmdbAbstractObject</parent>
+        <abstract>true</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>document</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field>finalclass</db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="name"/>
+            <attribute id="name"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>images/document.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="name"/>
-            <attribute name="org_id"/>
-            <attribute name="org_name"/>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="org_name"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="name" xsi:type="AttributeString" sql="name" default_value="" is_null_allowed="false"/>
-        <field name="org_id" xsi:type="AttributeExternalKey" target_class="Organization" jointype="" sql="org_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
-        <field name="org_name" xsi:type="AttributeExternalField" extkey_attcode="org_id" target_attcode="name"/>
-        <field name="description" xsi:type="AttributeText" sql="description" default_value="" is_null_allowed="true"/>
-        <field name="type" xsi:type="AttributeEnum" sql="type" default_value="presentation" is_null_allowed="true">
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value></default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="org_id" xsi:type="AttributeExternalKey">
+          <sql>org_id</sql>
+          <target_class>Organization</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="org_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>org_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="description" xsi:type="AttributeText">
+          <sql>description</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="type" xsi:type="AttributeEnum">
           <values>
             <value>contract</value>
             <value>networkmap</value>
@@ -429,18 +681,48 @@
             <value>whitePaper</value>
             <value>workinginstructions</value>
           </values>
+          <sql>type</sql>
+          <default_value>presentation</default_value>
+          <is_null_allowed>true</is_null_allowed>
         </field>
-        <field name="status" xsi:type="AttributeEnum" sql="status" default_value="draft" is_null_allowed="false">
+        <field id="status" xsi:type="AttributeEnum">
           <values>
             <value>draft</value>
             <value>published</value>
             <value>obsolete</value>
           </values>
+          <sql>status</sql>
+          <default_value>draft</default_value>
+          <is_null_allowed>false</is_null_allowed>
         </field>
-        <field name="contract_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkContractToDoc" ext_key_to_me="document_id" ext_key_to_remote="contract_id" count_min="0" count_max="0"/>
-        <field name="service_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkServiceToDoc" ext_key_to_me="document_id" ext_key_to_remote="service_id" count_min="0" count_max="0"/>
-        <field name="ticket_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkTicketToDoc" ext_key_to_me="document_id" ext_key_to_remote="ticket_id" count_min="0" count_max="0"/>
-        <field name="ci_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkCIToDoc" ext_key_to_me="document_id" ext_key_to_remote="ci_id" count_min="0" count_max="0"/>
+        <field id="contract_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkContractToDoc</linked_class>
+          <ext_key_to_me>document_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>contract_id</ext_key_to_remote>
+        </field>
+        <field id="service_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkServiceToDoc</linked_class>
+          <ext_key_to_me>document_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>service_id</ext_key_to_remote>
+        </field>
+        <field id="ticket_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkTicketToDoc</linked_class>
+          <ext_key_to_me>document_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>ticket_id</ext_key_to_remote>
+        </field>
+        <field id="ci_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkCIToDoc</linked_class>
+          <ext_key_to_me>document_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>ci_id</ext_key_to_remote>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -475,25 +757,38 @@
         </list>
       </presentation>
     </class>
-    <class name="WebDoc" category="bizmodel,searchable,documentation" parent="Document" abstract="false" key_type="autoincrement" db_table="externaldoc" db_key_field="id" db_final_class_field="">
+    <class id="WebDoc">
       <properties>
-        <naming format="%1$s">
+        <category>bizmodel,searchable,documentation</category>
+        <parent>Document</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>externaldoc</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="name"/>
+            <attribute id="name"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>images/document.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="name"/>
-            <attribute name="org_id"/>
-            <attribute name="org_name"/>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="org_name"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="url" xsi:type="AttributeURL" target="_blank" sql="url" default_value="" is_null_allowed="false"/>
+        <field id="url" xsi:type="AttributeURL">
+          <sql>url</sql>
+          <default_value></default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <target>_blank</target>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -531,25 +826,37 @@
         </list>
       </presentation>
     </class>
-    <class name="Note" category="bizmodel,searchable,documentation" parent="Document" abstract="false" key_type="autoincrement" db_table="note" db_key_field="id" db_final_class_field="">
+    <class id="Note">
       <properties>
-        <naming format="%1$s">
+        <category>bizmodel,searchable,documentation</category>
+        <parent>Document</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>note</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="name"/>
+            <attribute id="name"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>images/document.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="name"/>
-            <attribute name="org_id"/>
-            <attribute name="org_name"/>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="org_name"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="note" xsi:type="AttributeText" sql="note" default_value="" is_null_allowed="true"/>
+        <field id="note" xsi:type="AttributeText">
+          <sql>note</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -587,31 +894,44 @@
         </list>
       </presentation>
     </class>
-    <class name="FileDoc" category="bizmodel,searchable,documentation" parent="Document" abstract="false" key_type="autoincrement" db_table="filedoc" db_key_field="id" db_final_class_field="">
+    <class id="FileDoc">
       <properties>
-        <naming format="%1$s">
+        <category>bizmodel,searchable,documentation</category>
+        <parent>Document</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>filedoc</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="name"/>
+            <attribute id="name"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>images/document.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="name"/>
-            <attribute name="org_id"/>
-            <attribute name="org_name"/>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="org_name"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="contents" xsi:type="AttributeBlob"/>
+        <field id="contents" xsi:type="AttributeBlob"/>
       </fields>
       <methods>
-        <method name="DisplayBareProperties" static="false" access="public" type="Overload-cmdbAbstractObject"><comment><![CDATA[/**
+        <method id="DisplayBareProperties">
+          <comment>/**
 	 * Overload the display of the properties to add a tab (the first one)
 	 * with the preview of the document
-	 */]]></comment><![CDATA[	public function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '', $aExtraParams = array())
+	 */</comment>
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-cmdbAbstractObject</type>
+          <code><![CDATA[	public function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '', $aExtraParams = array())
 	{
 		if (!$bEditMode)
 		{
@@ -621,7 +941,8 @@
 		}
 		parent::DisplayBareProperties($oPage, $bEditMode, $sPrefix, $aExtraParams);
 		
-	}]]></method>
+	}]]></code>
+        </method>
       </methods>
       <presentation>
         <details>
@@ -657,35 +978,89 @@
         </list>
       </presentation>
     </class>
-    <class name="Licence" category="bizmodel,searchable,configmgmt" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" db_table="licence" db_key_field="id" db_final_class_field="">
+    <class id="Licence">
       <properties>
-        <naming format="%1$s">
+        <category>bizmodel,searchable,configmgmt</category>
+        <parent>cmdbAbstractObject</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>licence</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="name"/>
+            <attribute id="name"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>images/licence.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="name"/>
-            <attribute name="org_id"/>
-            <attribute name="org_name"/>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="org_name"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="provider" xsi:type="AttributeString" sql="provider" default_value="" is_null_allowed="false"/>
-        <field name="org_id" xsi:type="AttributeExternalKey" target_class="Organization" jointype="" sql="org_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
-        <field name="org_name" xsi:type="AttributeExternalField" extkey_attcode="org_id" target_attcode="name"/>
-        <field name="product" xsi:type="AttributeString" sql="product" default_value="" is_null_allowed="false"/>
-        <field name="name" xsi:type="AttributeString" sql="name" default_value="" is_null_allowed="false"/>
-        <field name="start" xsi:type="AttributeDate" sql="start" default_value="" is_null_allowed="true"/>
-        <field name="end" xsi:type="AttributeDate" sql="end" default_value="" is_null_allowed="true"/>
-        <field name="licence_key" xsi:type="AttributeString" sql="licence_key" default_value="" is_null_allowed="true"/>
-        <field name="scope" xsi:type="AttributeText" sql="scope" default_value="" is_null_allowed="true"/>
-        <field name="usage_limit" xsi:type="AttributeInteger" sql="usage_limit" default_value="" is_null_allowed="true"/>
-        <field name="usage_list" xsi:type="AttributeLinkedSet" linked_class="SoftwareInstance" ext_key_to_me="licence_id" count_min="0" count_max="0"/>
+        <field id="provider" xsi:type="AttributeString">
+          <sql>provider</sql>
+          <default_value></default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="org_id" xsi:type="AttributeExternalKey">
+          <sql>org_id</sql>
+          <target_class>Organization</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="org_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>org_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="product" xsi:type="AttributeString">
+          <sql>product</sql>
+          <default_value></default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value></default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="start" xsi:type="AttributeDate">
+          <sql>start</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="end" xsi:type="AttributeDate">
+          <sql>end</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="licence_key" xsi:type="AttributeString">
+          <sql>licence_key</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="scope" xsi:type="AttributeText">
+          <sql>scope</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="usage_limit" xsi:type="AttributeInteger">
+          <sql>usage_limit</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="usage_list" xsi:type="AttributeLinkedSet">
+          <linked_class>SoftwareInstance</linked_class>
+          <ext_key_to_me>licence_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -726,34 +1101,67 @@
         </list>
       </presentation>
     </class>
-    <class name="Subnet" category="bizmodel,searchable,configmgmt" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" db_table="subnet" db_key_field="id" db_final_class_field="">
+    <class id="Subnet">
       <properties>
-        <naming format="%1$s / %2$s">
+        <category>bizmodel,searchable,configmgmt</category>
+        <parent>cmdbAbstractObject</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>subnet</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s / %2$s</format>
           <attributes>
-            <attribute name="ip"/>
-            <attribute name="ip_mask"/>
+            <attribute id="ip"/>
+            <attribute id="ip_mask"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>images/subnet.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="ip"/>
-            <attribute name="ip_mask"/>
-            <attribute name="org_id"/>
-            <attribute name="org_name"/>
+            <attribute id="ip"/>
+            <attribute id="ip_mask"/>
+            <attribute id="org_id"/>
+            <attribute id="org_name"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="description" xsi:type="AttributeText" sql="description" default_value="" is_null_allowed="true"/>
-        <field name="org_id" xsi:type="AttributeExternalKey" target_class="Organization" jointype="" sql="org_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
-        <field name="org_name" xsi:type="AttributeExternalField" extkey_attcode="org_id" target_attcode="name"/>
-        <field name="ip" xsi:type="AttributeIPAddress" sql="ip" default_value="" is_null_allowed="false"/>
-        <field name="ip_mask" xsi:type="AttributeIPAddress" sql="ip_mask" default_value="" is_null_allowed="false"/>
+        <field id="description" xsi:type="AttributeText">
+          <sql>description</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="org_id" xsi:type="AttributeExternalKey">
+          <sql>org_id</sql>
+          <target_class>Organization</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="org_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>org_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="ip" xsi:type="AttributeIPAddress">
+          <sql>ip</sql>
+          <default_value></default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="ip_mask" xsi:type="AttributeIPAddress">
+          <sql>ip_mask</sql>
+          <default_value></default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
       </fields>
       <methods>
-        <method name="DisplayBareRelations" static="false" access="public" type="Overload-cmdbAbstractObject"><![CDATA[	function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
+        <method id="DisplayBareRelations">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-cmdbAbstractObject</type>
+          <code><![CDATA[	function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
 	{
 		parent::DisplayBareRelations($oPage, $bEditMode);
 
@@ -802,7 +1210,8 @@
 				$iAnIP++;
 			}
 		}
-	}]]></method>
+	}]]></code>
+        </method>
       </methods>
       <presentation>
         <details>
@@ -830,35 +1239,68 @@
         </list>
       </presentation>
     </class>
-    <class name="Patch" category="bizmodel,searchable,configmgmt" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" db_table="patch" db_key_field="id" db_final_class_field="">
+    <class id="Patch">
       <properties>
-        <naming format="%1$s">
+        <category>bizmodel,searchable,configmgmt</category>
+        <parent>cmdbAbstractObject</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>patch</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="name"/>
+            <attribute id="name"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>images/patch.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="name"/>
+            <attribute id="name"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="name" xsi:type="AttributeString" sql="name" default_value="" is_null_allowed="false"/>
-        <field name="description" xsi:type="AttributeText" sql="description" default_value="" is_null_allowed="true"/>
-        <field name="target_sw" xsi:type="AttributeString" sql="target_sw" default_value="" is_null_allowed="true"/>
-        <field name="version" xsi:type="AttributeString" sql="version" default_value="" is_null_allowed="true"/>
-        <field name="type" xsi:type="AttributeEnum" sql="type" default_value="security" is_null_allowed="false">
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value></default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="description" xsi:type="AttributeText">
+          <sql>description</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="target_sw" xsi:type="AttributeString">
+          <sql>target_sw</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="version" xsi:type="AttributeString">
+          <sql>version</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="type" xsi:type="AttributeEnum">
           <values>
             <value>application</value>
             <value>os</value>
             <value>security</value>
             <value>servicepack</value>
           </values>
+          <sql>type</sql>
+          <default_value>security</default_value>
+          <is_null_allowed>false</is_null_allowed>
         </field>
-        <field name="ci_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkPatchToCI" ext_key_to_me="patch_id" ext_key_to_remote="ci_id" count_min="0" count_max="0"/>
+        <field id="ci_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkPatchToCI</linked_class>
+          <ext_key_to_me>patch_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>ci_id</ext_key_to_remote>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -890,24 +1332,40 @@
         </list>
       </presentation>
     </class>
-    <class name="Software" category="bizmodel,searchable,configmgmt" parent="cmdbAbstractObject" abstract="true" key_type="autoincrement" db_table="software" db_key_field="id" db_final_class_field="finalclass">
+    <class id="Software">
       <properties>
-        <naming format="%1$s">
+        <category>bizmodel,searchable,configmgmt</category>
+        <parent>cmdbAbstractObject</parent>
+        <abstract>true</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>software</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field>finalclass</db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="name"/>
+            <attribute id="name"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>images/software.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="name"/>
+            <attribute id="name"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="name" xsi:type="AttributeString" sql="name" default_value="" is_null_allowed="false"/>
-        <field name="description" xsi:type="AttributeText" sql="description" default_value="" is_null_allowed="true"/>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value></default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="description" xsi:type="AttributeText">
+          <sql>description</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -930,63 +1388,36 @@
         </list>
       </presentation>
     </class>
-    <class name="Application" category="bizmodel,searchable,configmgmt" parent="Software" abstract="false" key_type="autoincrement" db_table="software_app" db_key_field="id" db_final_class_field="">
+    <class id="Application">
       <properties>
-        <naming format="%1$s">
+        <category>bizmodel,searchable,configmgmt</category>
+        <parent>Software</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>software_app</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="name"/>
+            <attribute id="name"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>images/software.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="name"/>
+            <attribute id="name"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="instance_list" xsi:type="AttributeLinkedSet" linked_class="ApplicationInstance" ext_key_to_me="software_id" count_min="0" count_max="0"/>
-      </fields>
-      <methods/>
-      <presentation>
-        <details>
-          <items>
-            <item>name</item>
-            <item>description</item>
-            <item>instance_list</item>
-          </items>
-        </details>
-        <search>
-          <items>
-            <item>name</item>
-            <item>description</item>
-          </items>
-        </search>
-        <list>
-          <items>
-            <item>description</item>
-          </items>
-        </list>
-      </presentation>
-    </class>
-    <class name="DBServer" category="bizmodel,searchable,configmgmt" parent="Software" abstract="false" key_type="autoincrement" db_table="software_db" db_key_field="id" db_final_class_field="">
-      <properties>
-        <naming format="%1$s">
-          <attributes>
-            <attribute name="name"/>
-          </attributes>
-        </naming>
-        <display_template></display_template>
-        <icon>images/software.png</icon>
-        <reconciliation>
-          <attributes>
-            <attribute name="name"/>
-          </attributes>
-        </reconciliation>
-      </properties>
-      <fields>
-        <field name="instance_list" xsi:type="AttributeLinkedSet" linked_class="DBServerInstance" ext_key_to_me="software_id" count_min="0" count_max="0"/>
+        <field id="instance_list" xsi:type="AttributeLinkedSet">
+          <linked_class>ApplicationInstance</linked_class>
+          <ext_key_to_me>software_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -1010,28 +1441,111 @@
         </list>
       </presentation>
     </class>
-    <class name="lnkPatchToCI" category="bizmodel,configmgmt" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" is_link="1" db_table="lnkpatchtoci" db_key_field="id" db_final_class_field="">
+    <class id="DBServer">
       <properties>
-        <naming format="%1$s">
+        <category>bizmodel,searchable,configmgmt</category>
+        <parent>Software</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>software_db</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="patch_id"/>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon>images/software.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="instance_list" xsi:type="AttributeLinkedSet">
+          <linked_class>DBServerInstance</linked_class>
+          <ext_key_to_me>software_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item>name</item>
+            <item>description</item>
+            <item>instance_list</item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>name</item>
+            <item>description</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>description</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="lnkPatchToCI">
+      <properties>
+        <is_link>1</is_link>
+        <category>bizmodel,configmgmt</category>
+        <parent>cmdbAbstractObject</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkpatchtoci</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
+          <attributes>
+            <attribute id="patch_id"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon></icon>
         <reconciliation>
           <attributes>
-            <attribute name="patch_id"/>
-            <attribute name="ci_id"/>
+            <attribute id="patch_id"/>
+            <attribute id="ci_id"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="patch_id" xsi:type="AttributeExternalKey" target_class="Patch" jointype="" sql="patch_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="patch_name" xsi:type="AttributeExternalField" extkey_attcode="patch_id" target_attcode="name"/>
-        <field name="ci_id" xsi:type="AttributeExternalKey" target_class="Device" jointype="" sql="ci_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="ci_name" xsi:type="AttributeExternalField" extkey_attcode="ci_id" target_attcode="name"/>
-        <field name="ci_status" xsi:type="AttributeExternalField" extkey_attcode="ci_id" target_attcode="status"/>
+        <field id="patch_id" xsi:type="AttributeExternalKey">
+          <sql>patch_id</sql>
+          <target_class>Patch</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="patch_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>patch_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="ci_id" xsi:type="AttributeExternalKey">
+          <sql>ci_id</sql>
+          <target_class>Device</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="ci_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>ci_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="ci_status" xsi:type="AttributeExternalField">
+          <extkey_attcode>ci_id</extkey_attcode>
+          <target_attcode>status</target_attcode>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -1057,49 +1571,110 @@
         </list>
       </presentation>
     </class>
-    <class name="FunctionalCI" category="bizmodel,searchable,configmgmt" parent="cmdbAbstractObject" abstract="true" key_type="autoincrement" db_table="functionalci" db_key_field="id" db_final_class_field="finalclass">
+    <class id="FunctionalCI">
       <properties>
-        <naming format="%1$s">
+        <category>bizmodel,searchable,configmgmt</category>
+        <parent>cmdbAbstractObject</parent>
+        <abstract>true</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>functionalci</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field>finalclass</db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="name"/>
+            <attribute id="name"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>images/server.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="name"/>
-            <attribute name="org_id"/>
-            <attribute name="owner_name"/>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="owner_name"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="name" xsi:type="AttributeString" sql="name" default_value="" is_null_allowed="false"/>
-        <field name="status" xsi:type="AttributeEnum" sql="status" default_value="implementation" is_null_allowed="false">
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value></default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="status" xsi:type="AttributeEnum">
           <values>
             <value>implementation</value>
             <value>production</value>
             <value>obsolete</value>
           </values>
+          <sql>status</sql>
+          <default_value>implementation</default_value>
+          <is_null_allowed>false</is_null_allowed>
         </field>
-        <field name="org_id" xsi:type="AttributeExternalKey" target_class="Organization" jointype="" sql="org_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
-        <field name="owner_name" xsi:type="AttributeExternalField" extkey_attcode="org_id" target_attcode="name"/>
-        <field name="importance" xsi:type="AttributeEnum" sql="importance" default_value="medium" is_null_allowed="false">
+        <field id="org_id" xsi:type="AttributeExternalKey">
+          <sql>org_id</sql>
+          <target_class>Organization</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="owner_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>org_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="importance" xsi:type="AttributeEnum">
           <values>
             <value>low</value>
             <value>medium</value>
             <value>high</value>
           </values>
+          <sql>importance</sql>
+          <default_value>medium</default_value>
+          <is_null_allowed>false</is_null_allowed>
         </field>
-        <field name="contact_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkCIToContact" ext_key_to_me="ci_id" ext_key_to_remote="contact_id" count_min="0" count_max="0"/>
-        <field name="document_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkCIToDoc" ext_key_to_me="ci_id" ext_key_to_remote="document_id" count_min="0" count_max="0"/>
-        <field name="solution_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkSolutionToCI" ext_key_to_me="ci_id" ext_key_to_remote="solution_id" count_min="0" count_max="0"/>
-        <field name="contract_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkContractToCI" ext_key_to_me="ci_id" ext_key_to_remote="contract_id" count_min="0" count_max="0"/>
-        <field name="ticket_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkTicketToCI" ext_key_to_me="ci_id" ext_key_to_remote="ticket_id" count_min="0" count_max="0"/>
+        <field id="contact_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkCIToContact</linked_class>
+          <ext_key_to_me>ci_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>contact_id</ext_key_to_remote>
+        </field>
+        <field id="document_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkCIToDoc</linked_class>
+          <ext_key_to_me>ci_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>document_id</ext_key_to_remote>
+        </field>
+        <field id="solution_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkSolutionToCI</linked_class>
+          <ext_key_to_me>ci_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>solution_id</ext_key_to_remote>
+        </field>
+        <field id="contract_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkContractToCI</linked_class>
+          <ext_key_to_me>ci_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>contract_id</ext_key_to_remote>
+        </field>
+        <field id="ticket_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkTicketToCI</linked_class>
+          <ext_key_to_me>ci_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>ticket_id</ext_key_to_remote>
+        </field>
       </fields>
       <methods>
-        <method name="GetRelationQueries" static="true" access="public" type="Overload-DBObject"><![CDATA[	public static function GetRelationQueries($sRelCode)
+        <method id="GetRelationQueries">
+          <static>true</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public static function GetRelationQueries($sRelCode)
 	{
 		switch ($sRelCode)
 		{
@@ -1113,7 +1688,8 @@
 		default:
 			return parent::GetRelationQueries($sRelCode);
 		}
-	}]]></method>
+	}]]></code>
+        </method>
       </methods>
       <presentation>
         <details>
@@ -1147,47 +1723,90 @@
         </list>
       </presentation>
     </class>
-    <class name="SoftwareInstance" category="bizmodel,searchable,configmgmt" parent="FunctionalCI" abstract="true" key_type="autoincrement" db_table="softwareinstance" db_key_field="id" db_final_class_field="">
+    <class id="SoftwareInstance">
       <properties>
-        <naming format="%1$s - %2$s">
+        <category>bizmodel,searchable,configmgmt</category>
+        <parent>FunctionalCI</parent>
+        <abstract>true</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>softwareinstance</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s - %2$s</format>
           <attributes>
-            <attribute name="name"/>
-            <attribute name="device_id_friendlyname"/>
+            <attribute id="name"/>
+            <attribute id="device_id_friendlyname"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>images/application.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="name"/>
-            <attribute name="device_id"/>
-            <attribute name="device_name"/>
-            <attribute name="org_id"/>
-            <attribute name="owner_name"/>
+            <attribute id="name"/>
+            <attribute id="device_id"/>
+            <attribute id="device_name"/>
+            <attribute id="org_id"/>
+            <attribute id="owner_name"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="device_id" xsi:type="AttributeExternalKey" target_class="Device" jointype="" filter="SELECT Device WHERE org_id = :this-&gt;org_id" sql="device_id" is_null_allowed="false" on_target_delete="DEL_MANUAL">
+        <field id="device_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT Device WHERE org_id = :this->org_id]]></filter>
           <dependencies>
-            <attribute name="org_id"/>
+            <attribute id="org_id"/>
           </dependencies>
+          <sql>device_id</sql>
+          <target_class>Device</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype></jointype>
         </field>
-        <field name="device_name" xsi:type="AttributeExternalField" extkey_attcode="device_id" target_attcode="name"/>
-        <field name="licence_id" xsi:type="AttributeExternalKey" target_class="Licence" jointype="" filter="SELECT Licence WHERE org_id = :this-&gt;org_id" sql="licence_id" is_null_allowed="true" on_target_delete="DEL_MANUAL">
+        <field id="device_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>device_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="licence_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT Licence WHERE org_id = :this->org_id]]></filter>
           <dependencies>
-            <attribute name="org_id"/>
+            <attribute id="org_id"/>
           </dependencies>
+          <sql>licence_id</sql>
+          <target_class>Licence</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype></jointype>
         </field>
-        <field name="licence_name" xsi:type="AttributeExternalField" extkey_attcode="licence_id" target_attcode="name"/>
-        <field name="version" xsi:type="AttributeString" sql="version" default_value="" is_null_allowed="true"/>
-        <field name="description" xsi:type="AttributeText" sql="description" default_value="" is_null_allowed="true"/>
+        <field id="licence_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>licence_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="version" xsi:type="AttributeString">
+          <sql>version</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="description" xsi:type="AttributeText">
+          <sql>description</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
       </fields>
       <methods>
-        <method name="ComputeValues" static="false" access="public" type="Overload-DBObject"><![CDATA[	public function ComputeValues()
+        <method id="ComputeValues">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code>	public function ComputeValues()
 	{
-	}]]></method>
-        <method name="GetRelationQueries" static="true" access="public" type="Overload-DBObject"><![CDATA[	public static function GetRelationQueries($sRelCode)
+	}</code>
+        </method>
+        <method id="GetRelationQueries">
+          <static>true</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public static function GetRelationQueries($sRelCode)
 	{
 		switch ($sRelCode)
 		{
@@ -1209,7 +1828,8 @@
 			default:
 			return parent::GetRelationQueries($sRelCode);			
 		}
-	}]]></method>
+	}]]></code>
+        </method>
       </methods>
       <presentation>
         <details>
@@ -1251,32 +1871,54 @@
         </list>
       </presentation>
     </class>
-    <class name="DBServerInstance" category="bizmodel,searchable,configmgmt" parent="SoftwareInstance" abstract="false" key_type="autoincrement" db_table="softwareinstance_dbserver" db_key_field="id" db_final_class_field="">
+    <class id="DBServerInstance">
       <properties>
-        <naming format="%1$s - %2$s">
+        <category>bizmodel,searchable,configmgmt</category>
+        <parent>SoftwareInstance</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>softwareinstance_dbserver</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s - %2$s</format>
           <attributes>
-            <attribute name="name"/>
-            <attribute name="device_id_friendlyname"/>
+            <attribute id="name"/>
+            <attribute id="device_id_friendlyname"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>images/database.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="name"/>
-            <attribute name="software_id"/>
-            <attribute name="software_name"/>
-            <attribute name="device_id"/>
-            <attribute name="device_name"/>
-            <attribute name="org_id"/>
-            <attribute name="owner_name"/>
+            <attribute id="name"/>
+            <attribute id="software_id"/>
+            <attribute id="software_name"/>
+            <attribute id="device_id"/>
+            <attribute id="device_name"/>
+            <attribute id="org_id"/>
+            <attribute id="owner_name"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="software_id" xsi:type="AttributeExternalKey" target_class="DBServer" jointype="" sql="software_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
-        <field name="software_name" xsi:type="AttributeExternalField" extkey_attcode="software_id" target_attcode="name"/>
-        <field name="dbinstance_list" xsi:type="AttributeLinkedSet" linked_class="DatabaseInstance" ext_key_to_me="db_server_instance_id" count_min="0" count_max="0"/>
+        <field id="software_id" xsi:type="AttributeExternalKey">
+          <sql>software_id</sql>
+          <target_class>DBServer</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="software_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>software_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="dbinstance_list" xsi:type="AttributeLinkedSet">
+          <linked_class>DatabaseInstance</linked_class>
+          <ext_key_to_me>db_server_instance_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -1322,31 +1964,48 @@
         </list>
       </presentation>
     </class>
-    <class name="ApplicationInstance" category="bizmodel,searchable,configmgmt" parent="SoftwareInstance" abstract="false" key_type="autoincrement" db_table="softwareinstance_application" db_key_field="id" db_final_class_field="">
+    <class id="ApplicationInstance">
       <properties>
-        <naming format="%1$s - %2$s">
+        <category>bizmodel,searchable,configmgmt</category>
+        <parent>SoftwareInstance</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>softwareinstance_application</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s - %2$s</format>
           <attributes>
-            <attribute name="name"/>
-            <attribute name="device_id_friendlyname"/>
+            <attribute id="name"/>
+            <attribute id="device_id_friendlyname"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>images/application.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="name"/>
-            <attribute name="software_id"/>
-            <attribute name="software_name"/>
-            <attribute name="device_id"/>
-            <attribute name="device_name"/>
-            <attribute name="org_id"/>
-            <attribute name="owner_name"/>
+            <attribute id="name"/>
+            <attribute id="software_id"/>
+            <attribute id="software_name"/>
+            <attribute id="device_id"/>
+            <attribute id="device_name"/>
+            <attribute id="org_id"/>
+            <attribute id="owner_name"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="software_id" xsi:type="AttributeExternalKey" target_class="Application" jointype="" sql="software_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
-        <field name="software_name" xsi:type="AttributeExternalField" extkey_attcode="software_id" target_attcode="name"/>
+        <field id="software_id" xsi:type="AttributeExternalKey">
+          <sql>software_id</sql>
+          <target_class>Application</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="software_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>software_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -1391,38 +2050,66 @@
         </list>
       </presentation>
     </class>
-    <class name="DatabaseInstance" category="bizmodel,searchable,configmgmt" parent="FunctionalCI" abstract="false" key_type="autoincrement" db_table="databaseinstance" db_key_field="id" db_final_class_field="">
+    <class id="DatabaseInstance">
       <properties>
-        <naming format="%1$s - %2$s">
+        <category>bizmodel,searchable,configmgmt</category>
+        <parent>FunctionalCI</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>databaseinstance</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s - %2$s</format>
           <attributes>
-            <attribute name="name"/>
-            <attribute name="db_server_instance_id_friendlyname"/>
+            <attribute id="name"/>
+            <attribute id="db_server_instance_id_friendlyname"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>images/database-instance.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="name"/>
-            <attribute name="org_id"/>
-            <attribute name="owner_name"/>
-            <attribute name="db_server_instance_id"/>
-            <attribute name="db_server_instance_name"/>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="owner_name"/>
+            <attribute id="db_server_instance_id"/>
+            <attribute id="db_server_instance_name"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="db_server_instance_id" xsi:type="AttributeExternalKey" target_class="DBServerInstance" jointype="" filter="SELECT DBServerInstance WHERE org_id = :this-&gt;org_id" sql="db_server_instance_id" is_null_allowed="false" on_target_delete="DEL_MANUAL">
+        <field id="db_server_instance_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT DBServerInstance WHERE org_id = :this->org_id]]></filter>
           <dependencies>
-            <attribute name="org_id"/>
+            <attribute id="org_id"/>
           </dependencies>
+          <sql>db_server_instance_id</sql>
+          <target_class>DBServerInstance</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype></jointype>
         </field>
-        <field name="db_server_instance_name" xsi:type="AttributeExternalField" extkey_attcode="db_server_instance_id" target_attcode="name"/>
-        <field name="db_server_instance_version" xsi:type="AttributeExternalField" extkey_attcode="db_server_instance_id" target_attcode="version"/>
-        <field name="description" xsi:type="AttributeText" sql="description" default_value="" is_null_allowed="true"/>
+        <field id="db_server_instance_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>db_server_instance_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="db_server_instance_version" xsi:type="AttributeExternalField">
+          <extkey_attcode>db_server_instance_id</extkey_attcode>
+          <target_attcode>version</target_attcode>
+        </field>
+        <field id="description" xsi:type="AttributeText">
+          <sql>description</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
       </fields>
       <methods>
-        <method name="GetRelationQueries" static="true" access="public" type="Overload-DBObject"><![CDATA[	public static function GetRelationQueries($sRelCode)
+        <method id="GetRelationQueries">
+          <static>true</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public static function GetRelationQueries($sRelCode)
 	{
 		switch ($sRelCode)
 		{
@@ -1436,7 +2123,8 @@
 			default:
 			return parent::GetRelationQueries($sRelCode);			
 		}
-	}]]></method>
+	}]]></code>
+        </method>
       </methods>
       <presentation>
         <details>
@@ -1476,30 +2164,58 @@
         </list>
       </presentation>
     </class>
-    <class name="ApplicationSolution" category="bizmodel,searchable,configmgmt" parent="FunctionalCI" abstract="false" key_type="autoincrement" db_table="applicationsolution" db_key_field="id" db_final_class_field="">
+    <class id="ApplicationSolution">
       <properties>
-        <naming format="%1$s">
+        <category>bizmodel,searchable,configmgmt</category>
+        <parent>FunctionalCI</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>applicationsolution</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="name"/>
+            <attribute id="name"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>images/solution.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="name"/>
-            <attribute name="org_id"/>
-            <attribute name="owner_name"/>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="owner_name"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="description" xsi:type="AttributeText" sql="description" default_value="" is_null_allowed="true"/>
-        <field name="ci_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkSolutionToCI" ext_key_to_me="solution_id" ext_key_to_remote="ci_id" count_min="0" count_max="0"/>
-        <field name="process_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkProcessToSolution" ext_key_to_me="solution_id" ext_key_to_remote="process_id" count_min="0" count_max="0"/>
+        <field id="description" xsi:type="AttributeText">
+          <sql>description</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="ci_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkSolutionToCI</linked_class>
+          <ext_key_to_me>solution_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>ci_id</ext_key_to_remote>
+        </field>
+        <field id="process_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkProcessToSolution</linked_class>
+          <ext_key_to_me>solution_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>process_id</ext_key_to_remote>
+        </field>
       </fields>
       <methods>
-        <method name="GetRelationQueries" static="true" access="public" type="Overload-DBObject"><![CDATA[	public static function GetRelationQueries($sRelCode)
+        <method id="GetRelationQueries">
+          <static>true</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public static function GetRelationQueries($sRelCode)
 	{
 		switch ($sRelCode)
 		{
@@ -1520,7 +2236,8 @@
 			default:
 			return parent::GetRelationQueries($sRelCode);			
 		}
-	}]]></method>
+	}]]></code>
+        </method>
       </methods>
       <presentation>
         <details>
@@ -1556,29 +2273,51 @@
         </list>
       </presentation>
     </class>
-    <class name="BusinessProcess" category="bizmodel,searchable,configmgmt" parent="FunctionalCI" abstract="false" key_type="autoincrement" db_table="businessprocess" db_key_field="id" db_final_class_field="">
+    <class id="BusinessProcess">
       <properties>
-        <naming format="%1$s">
+        <category>bizmodel,searchable,configmgmt</category>
+        <parent>FunctionalCI</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>businessprocess</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="name"/>
+            <attribute id="name"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>images/business-process.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="name"/>
-            <attribute name="org_id"/>
-            <attribute name="owner_name"/>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="owner_name"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="description" xsi:type="AttributeText" sql="description" default_value="" is_null_allowed="true"/>
-        <field name="used_solution_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkProcessToSolution" ext_key_to_me="process_id" ext_key_to_remote="solution_id" count_min="0" count_max="0"/>
+        <field id="description" xsi:type="AttributeText">
+          <sql>description</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="used_solution_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkProcessToSolution</linked_class>
+          <ext_key_to_me>process_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>solution_id</ext_key_to_remote>
+        </field>
       </fields>
       <methods>
-        <method name="GetRelationQueries" static="true" access="public" type="Overload-DBObject"><![CDATA[	public static function GetRelationQueries($sRelCode)
+        <method id="GetRelationQueries">
+          <static>true</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public static function GetRelationQueries($sRelCode)
 	{
 		switch ($sRelCode)
 		{
@@ -1592,7 +2331,8 @@
 			default:
 			return parent::GetRelationQueries($sRelCode);			
 		}
-	}]]></method>
+	}]]></code>
+        </method>
       </methods>
       <presentation>
         <details>
@@ -1627,28 +2367,52 @@
         </list>
       </presentation>
     </class>
-    <class name="ConnectableCI" category="bizmodel,searchable,configmgmt" parent="FunctionalCI" abstract="true" key_type="autoincrement" db_table="connectableci" db_key_field="id" db_final_class_field="">
+    <class id="ConnectableCI">
       <properties>
-        <naming format="%1$s">
+        <category>bizmodel,searchable,configmgmt</category>
+        <parent>FunctionalCI</parent>
+        <abstract>true</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>connectableci</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="name"/>
+            <attribute id="name"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>images/server.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="name"/>
-            <attribute name="org_id"/>
-            <attribute name="owner_name"/>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="owner_name"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="brand" xsi:type="AttributeString" sql="brand" default_value="" is_null_allowed="true"/>
-        <field name="model" xsi:type="AttributeString" sql="model" default_value="" is_null_allowed="true"/>
-        <field name="serial_number" xsi:type="AttributeString" sql="serial_number" default_value="" is_null_allowed="true"/>
-        <field name="asset_ref" xsi:type="AttributeString" sql="asset_ref" default_value="" is_null_allowed="true"/>
+        <field id="brand" xsi:type="AttributeString">
+          <sql>brand</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="model" xsi:type="AttributeString">
+          <sql>model</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="serial_number" xsi:type="AttributeString">
+          <sql>serial_number</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="asset_ref" xsi:type="AttributeString">
+          <sql>asset_ref</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -1695,33 +2459,50 @@
         </list>
       </presentation>
     </class>
-    <class name="NetworkInterface" category="bizmodel,searchable,configmgmt" parent="ConnectableCI" abstract="false" key_type="autoincrement" db_table="networkinterface" db_key_field="id" db_final_class_field="">
+    <class id="NetworkInterface">
       <properties>
-        <naming format="%1$s - %2$s">
+        <category>bizmodel,searchable,configmgmt</category>
+        <parent>ConnectableCI</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>networkinterface</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s - %2$s</format>
           <attributes>
-            <attribute name="device_id_friendlyname"/>
-            <attribute name="name"/>
+            <attribute id="device_id_friendlyname"/>
+            <attribute id="name"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>images/interface.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="name"/>
-            <attribute name="device_id"/>
-            <attribute name="device_name"/>
-            <attribute name="org_id"/>
+            <attribute id="name"/>
+            <attribute id="device_id"/>
+            <attribute id="device_name"/>
+            <attribute id="org_id"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="device_id" xsi:type="AttributeExternalKey" target_class="Device" jointype="" filter="SELECT Device WHERE org_id = :this-&gt;org_id" sql="device_id" is_null_allowed="false" on_target_delete="DEL_AUTO">
+        <field id="device_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT Device WHERE org_id = :this->org_id]]></filter>
           <dependencies>
-            <attribute name="org_id"/>
+            <attribute id="org_id"/>
           </dependencies>
+          <sql>device_id</sql>
+          <target_class>Device</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
         </field>
-        <field name="device_name" xsi:type="AttributeExternalField" extkey_attcode="device_id" target_attcode="name"/>
-        <field name="logical_type" xsi:type="AttributeEnum" sql="logical_type" default_value="primary" is_null_allowed="false">
+        <field id="device_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>device_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="logical_type" xsi:type="AttributeEnum">
           <values>
             <value>backup</value>
             <value>logical</value>
@@ -1729,45 +2510,95 @@
             <value>primary</value>
             <value>secondary</value>
           </values>
+          <sql>logical_type</sql>
+          <default_value>primary</default_value>
+          <is_null_allowed>false</is_null_allowed>
         </field>
-        <field name="physical_type" xsi:type="AttributeEnum" sql="physical_type" default_value="ethernet" is_null_allowed="false">
+        <field id="physical_type" xsi:type="AttributeEnum">
           <values>
             <value>atm</value>
             <value>ethernet</value>
             <value>framerelay</value>
             <value>vlan</value>
           </values>
+          <sql>physical_type</sql>
+          <default_value>ethernet</default_value>
+          <is_null_allowed>false</is_null_allowed>
         </field>
-        <field name="ip_address" xsi:type="AttributeIPAddress" sql="ip_address" default_value="" is_null_allowed="true"/>
-        <field name="ip_mask" xsi:type="AttributeIPAddress" sql="ip_mask" default_value="" is_null_allowed="true"/>
-        <field name="mac_address" xsi:type="AttributeString" sql="mac_address" default_value="" is_null_allowed="true"/>
-        <field name="speed" xsi:type="AttributeInteger" sql="speed" default_value="" is_null_allowed="true"/>
-        <field name="duplex" xsi:type="AttributeEnum" sql="duplex" default_value="full" is_null_allowed="true">
+        <field id="ip_address" xsi:type="AttributeIPAddress">
+          <sql>ip_address</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="ip_mask" xsi:type="AttributeIPAddress">
+          <sql>ip_mask</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="mac_address" xsi:type="AttributeString">
+          <sql>mac_address</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="speed" xsi:type="AttributeInteger">
+          <sql>speed</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="duplex" xsi:type="AttributeEnum">
           <values>
             <value>full</value>
             <value>half</value>
             <value>auto</value>
             <value>unknown</value>
           </values>
+          <sql>duplex</sql>
+          <default_value>full</default_value>
+          <is_null_allowed>true</is_null_allowed>
         </field>
-        <field name="connected_if" xsi:type="AttributeExternalKey" target_class="NetworkInterface" jointype="" filter="SELECT NetworkInterface WHERE org_id = :this-&gt;org_id" sql="connected_if" is_null_allowed="true" on_target_delete="DEL_AUTO">
+        <field id="connected_if" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT NetworkInterface WHERE org_id = :this->org_id]]></filter>
           <dependencies>
-            <attribute name="org_id"/>
+            <attribute id="org_id"/>
           </dependencies>
+          <sql>connected_if</sql>
+          <target_class>NetworkInterface</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
         </field>
-        <field name="connected_name" xsi:type="AttributeExternalField" extkey_attcode="connected_if" target_attcode="name"/>
-        <field name="connected_if_device_id" xsi:type="AttributeExternalField" extkey_attcode="connected_if" target_attcode="device_id"/>
-        <field name="connected_if_device_id_name" xsi:type="AttributeExternalField" extkey_attcode="connected_if" target_attcode="device_name"/>
-        <field name="link_type" xsi:type="AttributeEnum" sql="link_type" default_value="uplink" is_null_allowed="false">
+        <field id="connected_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>connected_if</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="connected_if_device_id" xsi:type="AttributeExternalField">
+          <extkey_attcode>connected_if</extkey_attcode>
+          <target_attcode>device_id</target_attcode>
+        </field>
+        <field id="connected_if_device_id_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>connected_if</extkey_attcode>
+          <target_attcode>device_name</target_attcode>
+        </field>
+        <field id="link_type" xsi:type="AttributeEnum">
           <values>
             <value>uplink</value>
             <value>downlink</value>
           </values>
+          <sql>link_type</sql>
+          <default_value>uplink</default_value>
+          <is_null_allowed>false</is_null_allowed>
         </field>
-        <field name="connected_if_device_id_friendlyname" xsi:type="AttributeExternalField" extkey_attcode="connected_if" target_attcode="device_id_friendlyname" is_null_allowed="true"/>
+        <field id="connected_if_device_id_friendlyname" xsi:type="AttributeExternalField">
+          <extkey_attcode>connected_if</extkey_attcode>
+          <target_attcode>device_id_friendlyname</target_attcode>
+        </field>
       </fields>
       <methods>
-        <method name="GetRelationQueries" static="true" access="public" type="Overload-DBObject"><![CDATA[	public static function GetRelationQueries($sRelCode)
+        <method id="GetRelationQueries">
+          <static>true</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public static function GetRelationQueries($sRelCode)
 	{
 		switch ($sRelCode)
 		{
@@ -1781,8 +2612,13 @@
 			default:
 			return parent::GetRelationQueries($sRelCode);			
 		}
-	}]]></method>
-        <method name="UpdateConnectedInterface" static="false" access="protected" type="Overload-DBObject"><![CDATA[	protected function UpdateConnectedInterface()
+	}]]></code>
+        </method>
+        <method id="UpdateConnectedInterface">
+          <static>false</static>
+          <access>protected</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	protected function UpdateConnectedInterface()
 	{
 		$iPrevTargetIf = $this->m_aOrigValues['connected_if']; // The interface this interface was connected to
  			
@@ -1832,17 +2668,28 @@
 				self::$m_oCurrChange = $oCurrChange;
 			}
 		}
-	}]]></method>
-        <method name="AfterInsert" static="false" access="protected" type="Overload-DBObject"><![CDATA[	protected function AfterInsert()
+	}]]></code>
+        </method>
+        <method id="AfterInsert">
+          <static>false</static>
+          <access>protected</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	protected function AfterInsert()
 	{
 		$this->UpdateConnectedInterface();
 		parent::AfterInsert();
-	}]]></method>
-        <method name="AfterUpdate" static="false" access="protected" type="Overload-DBObject"><![CDATA[	protected function AfterUpdate()
+	}]]></code>
+        </method>
+        <method id="AfterUpdate">
+          <static>false</static>
+          <access>protected</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	protected function AfterUpdate()
 	{
 		$this->UpdateConnectedInterface();
 		parent::AfterUpdate();
-	}]]></method>
+	}]]></code>
+        </method>
       </methods>
       <presentation>
         <details>
@@ -1902,28 +2749,45 @@
         </list>
       </presentation>
     </class>
-    <class name="Device" category="bizmodel,searchable,configmgmt" parent="ConnectableCI" abstract="true" key_type="autoincrement" db_table="device" db_key_field="id" db_final_class_field="">
+    <class id="Device">
       <properties>
-        <naming format="%1$s">
+        <category>bizmodel,searchable,configmgmt</category>
+        <parent>ConnectableCI</parent>
+        <abstract>true</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>device</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="name"/>
+            <attribute id="name"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>images/server.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="name"/>
-            <attribute name="org_id"/>
-            <attribute name="owner_name"/>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="owner_name"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="nwinterface_list" xsi:type="AttributeLinkedSet" linked_class="NetworkInterface" ext_key_to_me="device_id" count_min="0" count_max="0"/>
+        <field id="nwinterface_list" xsi:type="AttributeLinkedSet">
+          <linked_class>NetworkInterface</linked_class>
+          <ext_key_to_me>device_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+        </field>
       </fields>
       <methods>
-        <method name="GetRelationQueries" static="true" access="public" type="Overload-DBObject"><![CDATA[	public static function GetRelationQueries($sRelCode)
+        <method id="GetRelationQueries">
+          <static>true</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public static function GetRelationQueries($sRelCode)
 	{
 		switch ($sRelCode)
 		{
@@ -1945,7 +2809,8 @@
 			default:
 			return parent::GetRelationQueries($sRelCode);			
 		}
-	}]]></method>
+	}]]></code>
+        </method>
       </methods>
       <presentation>
         <details>
@@ -1992,31 +2857,70 @@
         </list>
       </presentation>
     </class>
-    <class name="PC" category="bizmodel,searchable,configmgmt" parent="Device" abstract="false" key_type="autoincrement" db_table="pc" db_key_field="id" db_final_class_field="">
+    <class id="PC">
       <properties>
-        <naming format="%1$s">
+        <category>bizmodel,searchable,configmgmt</category>
+        <parent>Device</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>pc</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="name"/>
+            <attribute id="name"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>images/laptop.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="name"/>
-            <attribute name="org_id"/>
-            <attribute name="owner_name"/>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="owner_name"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="cpu" xsi:type="AttributeString" sql="cpu" default_value="" is_null_allowed="true"/>
-        <field name="ram" xsi:type="AttributeString" sql="ram" default_value="" is_null_allowed="true"/>
-        <field name="hdd" xsi:type="AttributeString" sql="hdd" default_value="" is_null_allowed="true"/>
-        <field name="os_family" xsi:type="AttributeString" sql="os_family" default_value="" is_null_allowed="true"/>
-        <field name="os_version" xsi:type="AttributeString" sql="os_version" default_value="" is_null_allowed="true"/>
-        <field name="application_list" xsi:type="AttributeLinkedSet" linked_class="SoftwareInstance" ext_key_to_me="device_id" count_min="0" count_max="0"/>
-        <field name="patch_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkPatchToCI" ext_key_to_me="ci_id" ext_key_to_remote="patch_id" count_min="0" count_max="0"/>
+        <field id="cpu" xsi:type="AttributeString">
+          <sql>cpu</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="ram" xsi:type="AttributeString">
+          <sql>ram</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="hdd" xsi:type="AttributeString">
+          <sql>hdd</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="os_family" xsi:type="AttributeString">
+          <sql>os_family</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="os_version" xsi:type="AttributeString">
+          <sql>os_version</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="application_list" xsi:type="AttributeLinkedSet">
+          <linked_class>SoftwareInstance</linked_class>
+          <ext_key_to_me>device_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+        </field>
+        <field id="patch_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkPatchToCI</linked_class>
+          <ext_key_to_me>ci_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>patch_id</ext_key_to_remote>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -2071,20 +2975,28 @@
         </list>
       </presentation>
     </class>
-    <class name="MobileCI" category="bizmodel,searchable,configmgmt" parent="Device" abstract="true" key_type="autoincrement" db_table="mobileci" db_key_field="id" db_final_class_field="">
+    <class id="MobileCI">
       <properties>
-        <naming format="%1$s">
+        <category>bizmodel,searchable,configmgmt</category>
+        <parent>Device</parent>
+        <abstract>true</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>mobileci</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="name"/>
+            <attribute id="name"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>images/mobile-phone.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="name"/>
-            <attribute name="org_id"/>
-            <attribute name="owner_name"/>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="owner_name"/>
           </attributes>
         </reconciliation>
       </properties>
@@ -2132,27 +3044,47 @@
         </list>
       </presentation>
     </class>
-    <class name="MobilePhone" category="bizmodel,searchable,configmgmt" parent="MobileCI" abstract="false" key_type="autoincrement" db_table="mobilephone" db_key_field="id" db_final_class_field="">
+    <class id="MobilePhone">
       <properties>
-        <naming format="%1$s">
+        <category>bizmodel,searchable,configmgmt</category>
+        <parent>MobileCI</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>mobilephone</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="name"/>
+            <attribute id="name"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>images/mobile-phone.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="name"/>
-            <attribute name="org_id"/>
-            <attribute name="owner_name"/>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="owner_name"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="number" xsi:type="AttributeString" sql="number" default_value="" is_null_allowed="true"/>
-        <field name="imei" xsi:type="AttributeString" sql="IMIE" default_value="" is_null_allowed="true"/>
-        <field name="hw_pin" xsi:type="AttributeString" sql="hw_pin" default_value="" is_null_allowed="true"/>
+        <field id="number" xsi:type="AttributeString">
+          <sql>number</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="imei" xsi:type="AttributeString">
+          <sql>IMIE</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="hw_pin" xsi:type="AttributeString">
+          <sql>hw_pin</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -2202,36 +3134,69 @@
         </list>
       </presentation>
     </class>
-    <class name="InfrastructureCI" category="bizmodel,searchable,configmgmt" parent="Device" abstract="true" key_type="autoincrement" db_table="infrastructureci" db_key_field="id" db_final_class_field="">
+    <class id="InfrastructureCI">
       <properties>
-        <naming format="%1$s">
+        <category>bizmodel,searchable,configmgmt</category>
+        <parent>Device</parent>
+        <abstract>true</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>infrastructureci</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="name"/>
+            <attribute id="name"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>images/server.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="name"/>
-            <attribute name="org_id"/>
-            <attribute name="owner_name"/>
-            <attribute name="location_id"/>
-            <attribute name="location_name"/>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="owner_name"/>
+            <attribute id="location_id"/>
+            <attribute id="location_name"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="description" xsi:type="AttributeText" sql="description" default_value="" is_null_allowed="true"/>
-        <field name="location_id" xsi:type="AttributeExternalKey" target_class="Location" jointype="" filter="SELECT Location AS l WHERE l.org_id = :this-&gt;org_id" sql="location_id" is_null_allowed="true" on_target_delete="DEL_MANUAL">
-          <dependencies>
-            <attribute name="org_id"/>
-          </dependencies>
+        <field id="description" xsi:type="AttributeText">
+          <sql>description</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
         </field>
-        <field name="location_name" xsi:type="AttributeExternalField" extkey_attcode="location_id" target_attcode="name"/>
-        <field name="location_details" xsi:type="AttributeText" sql="location_details" default_value="" is_null_allowed="true"/>
-        <field name="management_ip" xsi:type="AttributeIPAddress" sql="management_ip" default_value="" is_null_allowed="true"/>
-        <field name="default_gateway" xsi:type="AttributeString" sql="default_gateway" default_value="" is_null_allowed="true"/>
+        <field id="location_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT Location AS l WHERE l.org_id = :this->org_id]]></filter>
+          <dependencies>
+            <attribute id="org_id"/>
+          </dependencies>
+          <sql>location_id</sql>
+          <target_class>Location</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="location_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>location_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="location_details" xsi:type="AttributeText">
+          <sql>location_details</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="management_ip" xsi:type="AttributeIPAddress">
+          <sql>management_ip</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="default_gateway" xsi:type="AttributeString">
+          <sql>default_gateway</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -2285,27 +3250,35 @@
         </list>
       </presentation>
     </class>
-    <class name="NetworkDevice" category="bizmodel,searchable,configmgmt" parent="InfrastructureCI" abstract="false" key_type="autoincrement" db_table="networkdevice" db_key_field="id" db_final_class_field="">
+    <class id="NetworkDevice">
       <properties>
-        <naming format="%1$s">
+        <category>bizmodel,searchable,configmgmt</category>
+        <parent>InfrastructureCI</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>networkdevice</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="name"/>
+            <attribute id="name"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>images/switch.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="name"/>
-            <attribute name="org_id"/>
-            <attribute name="owner_name"/>
-            <attribute name="location_id"/>
-            <attribute name="location_name"/>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="owner_name"/>
+            <attribute id="location_id"/>
+            <attribute id="location_name"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="type" xsi:type="AttributeEnum" sql="type" default_value="switch" is_null_allowed="true">
+        <field id="type" xsi:type="AttributeEnum">
           <values>
             <value>wanaccelerator</value>
             <value>firewall</value>
@@ -2314,11 +3287,30 @@
             <value>router</value>
             <value>switch</value>
           </values>
+          <sql>type</sql>
+          <default_value>switch</default_value>
+          <is_null_allowed>true</is_null_allowed>
         </field>
-        <field name="ios_version" xsi:type="AttributeString" sql="ios_version" default_value="" is_null_allowed="true"/>
-        <field name="ram" xsi:type="AttributeString" sql="ram" default_value="" is_null_allowed="true"/>
-        <field name="snmp_read" xsi:type="AttributeString" sql="snmp_read" default_value="" is_null_allowed="true"/>
-        <field name="snmp_write" xsi:type="AttributeString" sql="snmp_write" default_value="" is_null_allowed="true"/>
+        <field id="ios_version" xsi:type="AttributeString">
+          <sql>ios_version</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="ram" xsi:type="AttributeString">
+          <sql>ram</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="snmp_read" xsi:type="AttributeString">
+          <sql>snmp_read</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="snmp_write" xsi:type="AttributeString">
+          <sql>snmp_write</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -2380,33 +3372,72 @@
         </list>
       </presentation>
     </class>
-    <class name="Server" category="bizmodel,searchable,configmgmt" parent="InfrastructureCI" abstract="false" key_type="autoincrement" db_table="server" db_key_field="id" db_final_class_field="">
+    <class id="Server">
       <properties>
-        <naming format="%1$s">
+        <category>bizmodel,searchable,configmgmt</category>
+        <parent>InfrastructureCI</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>server</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="name"/>
+            <attribute id="name"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>images/server.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="name"/>
-            <attribute name="org_id"/>
-            <attribute name="owner_name"/>
-            <attribute name="location_id"/>
-            <attribute name="location_name"/>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="owner_name"/>
+            <attribute id="location_id"/>
+            <attribute id="location_name"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="cpu" xsi:type="AttributeString" sql="cpu" default_value="" is_null_allowed="true"/>
-        <field name="ram" xsi:type="AttributeString" sql="ram" default_value="" is_null_allowed="true"/>
-        <field name="hdd" xsi:type="AttributeString" sql="hdd" default_value="" is_null_allowed="true"/>
-        <field name="os_family" xsi:type="AttributeString" sql="os_family" default_value="" is_null_allowed="true"/>
-        <field name="os_version" xsi:type="AttributeString" sql="os_version" default_value="" is_null_allowed="true"/>
-        <field name="application_list" xsi:type="AttributeLinkedSet" linked_class="SoftwareInstance" ext_key_to_me="device_id" count_min="0" count_max="0"/>
-        <field name="patch_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkPatchToCI" ext_key_to_me="ci_id" ext_key_to_remote="patch_id" count_min="0" count_max="0"/>
+        <field id="cpu" xsi:type="AttributeString">
+          <sql>cpu</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="ram" xsi:type="AttributeString">
+          <sql>ram</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="hdd" xsi:type="AttributeString">
+          <sql>hdd</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="os_family" xsi:type="AttributeString">
+          <sql>os_family</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="os_version" xsi:type="AttributeString">
+          <sql>os_version</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="application_list" xsi:type="AttributeLinkedSet">
+          <linked_class>SoftwareInstance</linked_class>
+          <ext_key_to_me>device_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+        </field>
+        <field id="patch_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkPatchToCI</linked_class>
+          <ext_key_to_me>ci_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>patch_id</ext_key_to_remote>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -2470,38 +3501,52 @@
         </list>
       </presentation>
     </class>
-    <class name="Printer" category="bizmodel,searchable,configmgmt" parent="InfrastructureCI" abstract="false" key_type="autoincrement" db_table="printer" db_key_field="id" db_final_class_field="">
+    <class id="Printer">
       <properties>
-        <naming format="%1$s">
+        <category>bizmodel,searchable,configmgmt</category>
+        <parent>InfrastructureCI</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>printer</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="name"/>
+            <attribute id="name"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>images/printer.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="name"/>
-            <attribute name="org_id"/>
-            <attribute name="owner_name"/>
-            <attribute name="location_id"/>
-            <attribute name="location_name"/>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="owner_name"/>
+            <attribute id="location_id"/>
+            <attribute id="location_name"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="type" xsi:type="AttributeEnum" sql="type" default_value="printer" is_null_allowed="true">
+        <field id="type" xsi:type="AttributeEnum">
           <values>
             <value>mopier</value>
             <value>printer</value>
           </values>
+          <sql>type</sql>
+          <default_value>printer</default_value>
+          <is_null_allowed>true</is_null_allowed>
         </field>
-        <field name="technology" xsi:type="AttributeEnum" sql="technology" default_value="laser" is_null_allowed="true">
+        <field id="technology" xsi:type="AttributeEnum">
           <values>
             <value>laser</value>
             <value>inkjet</value>
             <value>tracer</value>
           </values>
+          <sql>technology</sql>
+          <default_value>laser</default_value>
+          <is_null_allowed>true</is_null_allowed>
         </field>
       </fields>
       <methods/>
@@ -2568,43 +3613,87 @@
         </list>
       </presentation>
     </class>
-    <class name="Group" category="bizmodel,searchable,configmgmt" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" db_table="group" db_key_field="id" db_final_class_field="">
+    <class id="Group">
       <properties>
-        <naming format="%1$s">
+        <category>bizmodel,searchable,configmgmt</category>
+        <parent>cmdbAbstractObject</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>group</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="name"/>
+            <attribute id="name"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>images/group.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="name"/>
-            <attribute name="org_id"/>
-            <attribute name="owner_name"/>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="owner_name"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="name" xsi:type="AttributeString" sql="name" default_value="" is_null_allowed="false"/>
-        <field name="status" xsi:type="AttributeEnum" sql="status" default_value="implementation" is_null_allowed="false">
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value></default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="status" xsi:type="AttributeEnum">
           <values>
             <value>production</value>
             <value>implementation</value>
             <value>obsolete</value>
           </values>
+          <sql>status</sql>
+          <default_value>implementation</default_value>
+          <is_null_allowed>false</is_null_allowed>
         </field>
-        <field name="org_id" xsi:type="AttributeExternalKey" target_class="Organization" jointype="" sql="org_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
-        <field name="owner_name" xsi:type="AttributeExternalField" extkey_attcode="org_id" target_attcode="name"/>
-        <field name="description" xsi:type="AttributeText" sql="description" default_value="" is_null_allowed="true"/>
-        <field name="type" xsi:type="AttributeString" sql="type" default_value="" is_null_allowed="true"/>
-        <field name="parent_id" xsi:type="AttributeHierarchicalKey" sql="parent_id" is_null_allowed="true" on_target_delete="DEL_MANUAL">
+        <field id="org_id" xsi:type="AttributeExternalKey">
+          <sql>org_id</sql>
+          <target_class>Organization</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="owner_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>org_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="description" xsi:type="AttributeText">
+          <sql>description</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="type" xsi:type="AttributeString">
+          <sql>type</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="parent_id" xsi:type="AttributeHierarchicalKey">
           <dependencies>
-            <attribute name="org_id"/>
+            <attribute id="org_id"/>
           </dependencies>
+          <sql>parent_id</sql>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
-        <field name="parent_name" xsi:type="AttributeExternalField" extkey_attcode="parent_id" target_attcode="name"/>
-        <field name="ci_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkGroupToCI" ext_key_to_me="group_id" ext_key_to_remote="ci_id" count_min="0" count_max="0"/>
+        <field id="parent_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>parent_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="ci_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkGroupToCI</linked_class>
+          <ext_key_to_me>group_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>ci_id</ext_key_to_remote>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -2637,29 +3726,63 @@
         </list>
       </presentation>
     </class>
-    <class name="lnkGroupToCI" category="bizmodel,configmgmt" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" is_link="1" db_table="lnkgrouptoci" db_key_field="id" db_final_class_field="">
+    <class id="lnkGroupToCI">
       <properties>
-        <naming format="%1$s">
+        <is_link>1</is_link>
+        <category>bizmodel,configmgmt</category>
+        <parent>cmdbAbstractObject</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkgrouptoci</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="group_id"/>
+            <attribute id="group_id"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon></icon>
         <reconciliation>
           <attributes>
-            <attribute name="group_id"/>
-            <attribute name="ci_id"/>
+            <attribute id="group_id"/>
+            <attribute id="ci_id"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="group_id" xsi:type="AttributeExternalKey" target_class="Group" jointype="" sql="group_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
-        <field name="group_name" xsi:type="AttributeExternalField" extkey_attcode="group_id" target_attcode="name"/>
-        <field name="ci_id" xsi:type="AttributeExternalKey" target_class="FunctionalCI" jointype="" sql="ci_id" is_null_allowed="false" on_target_delete="DEL_MANUAL"/>
-        <field name="ci_name" xsi:type="AttributeExternalField" extkey_attcode="ci_id" target_attcode="name"/>
-        <field name="ci_status" xsi:type="AttributeExternalField" extkey_attcode="ci_id" target_attcode="status"/>
-        <field name="reason" xsi:type="AttributeString" sql="reason" default_value="" is_null_allowed="true"/>
+        <field id="group_id" xsi:type="AttributeExternalKey">
+          <sql>group_id</sql>
+          <target_class>Group</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="group_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>group_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="ci_id" xsi:type="AttributeExternalKey">
+          <sql>ci_id</sql>
+          <target_class>FunctionalCI</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="ci_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>ci_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="ci_status" xsi:type="AttributeExternalField">
+          <extkey_attcode>ci_id</extkey_attcode>
+          <target_attcode>status</target_attcode>
+        </field>
+        <field id="reason" xsi:type="AttributeString">
+          <sql>reason</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -2688,30 +3811,66 @@
         </list>
       </presentation>
     </class>
-    <class name="lnkCIToDoc" category="bizmodel,configmgmt" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" is_link="1" db_table="lnkcitodoc" db_key_field="id" db_final_class_field="">
+    <class id="lnkCIToDoc">
       <properties>
-        <naming format="%1$s">
+        <is_link>1</is_link>
+        <category>bizmodel,configmgmt</category>
+        <parent>cmdbAbstractObject</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkcitodoc</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="ci_id"/>
+            <attribute id="ci_id"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon></icon>
         <reconciliation>
           <attributes>
-            <attribute name="ci_id"/>
-            <attribute name="document_id"/>
+            <attribute id="ci_id"/>
+            <attribute id="document_id"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="ci_id" xsi:type="AttributeExternalKey" target_class="FunctionalCI" jointype="" sql="ci_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="ci_name" xsi:type="AttributeExternalField" extkey_attcode="ci_id" target_attcode="name"/>
-        <field name="ci_status" xsi:type="AttributeExternalField" extkey_attcode="ci_id" target_attcode="status"/>
-        <field name="document_id" xsi:type="AttributeExternalKey" target_class="Document" jointype="" sql="document_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="document_name" xsi:type="AttributeExternalField" extkey_attcode="document_id" target_attcode="name"/>
-        <field name="document_type" xsi:type="AttributeExternalField" extkey_attcode="document_id" target_attcode="type"/>
-        <field name="document_status" xsi:type="AttributeExternalField" extkey_attcode="document_id" target_attcode="status"/>
+        <field id="ci_id" xsi:type="AttributeExternalKey">
+          <sql>ci_id</sql>
+          <target_class>FunctionalCI</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="ci_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>ci_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="ci_status" xsi:type="AttributeExternalField">
+          <extkey_attcode>ci_id</extkey_attcode>
+          <target_attcode>status</target_attcode>
+        </field>
+        <field id="document_id" xsi:type="AttributeExternalKey">
+          <sql>document_id</sql>
+          <target_class>Document</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="document_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>document_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="document_type" xsi:type="AttributeExternalField">
+          <extkey_attcode>document_id</extkey_attcode>
+          <target_attcode>type</target_attcode>
+        </field>
+        <field id="document_status" xsi:type="AttributeExternalField">
+          <extkey_attcode>document_id</extkey_attcode>
+          <target_attcode>status</target_attcode>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -2741,30 +3900,67 @@
         </list>
       </presentation>
     </class>
-    <class name="lnkCIToContact" category="bizmodel,configmgmt" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" is_link="1" db_table="lnkcitocontact" db_key_field="id" db_final_class_field="">
+    <class id="lnkCIToContact">
       <properties>
-        <naming format="%1$s">
+        <is_link>1</is_link>
+        <category>bizmodel,configmgmt</category>
+        <parent>cmdbAbstractObject</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkcitocontact</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="ci_id"/>
+            <attribute id="ci_id"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>images/contact.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="ci_id"/>
-            <attribute name="contact_id"/>
+            <attribute id="ci_id"/>
+            <attribute id="contact_id"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="ci_id" xsi:type="AttributeExternalKey" target_class="FunctionalCI" jointype="" sql="ci_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="ci_name" xsi:type="AttributeExternalField" extkey_attcode="ci_id" target_attcode="name"/>
-        <field name="ci_status" xsi:type="AttributeExternalField" extkey_attcode="ci_id" target_attcode="status"/>
-        <field name="contact_id" xsi:type="AttributeExternalKey" target_class="Contact" jointype="" sql="contact_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="contact_name" xsi:type="AttributeExternalField" extkey_attcode="contact_id" target_attcode="name"/>
-        <field name="contact_email" xsi:type="AttributeExternalField" extkey_attcode="contact_id" target_attcode="email"/>
-        <field name="role" xsi:type="AttributeString" sql="role" default_value="" is_null_allowed="true"/>
+        <field id="ci_id" xsi:type="AttributeExternalKey">
+          <sql>ci_id</sql>
+          <target_class>FunctionalCI</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="ci_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>ci_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="ci_status" xsi:type="AttributeExternalField">
+          <extkey_attcode>ci_id</extkey_attcode>
+          <target_attcode>status</target_attcode>
+        </field>
+        <field id="contact_id" xsi:type="AttributeExternalKey">
+          <sql>contact_id</sql>
+          <target_class>Contact</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="contact_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>contact_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="contact_email" xsi:type="AttributeExternalField">
+          <extkey_attcode>contact_id</extkey_attcode>
+          <target_attcode>email</target_attcode>
+        </field>
+        <field id="role" xsi:type="AttributeString">
+          <sql>role</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -2795,29 +3991,63 @@
         </list>
       </presentation>
     </class>
-    <class name="lnkSolutionToCI" category="bizmodel,configmgmt" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" is_link="1" db_table="lnksolutiontoci" db_key_field="id" db_final_class_field="">
+    <class id="lnkSolutionToCI">
       <properties>
-        <naming format="%1$s">
+        <is_link>1</is_link>
+        <category>bizmodel,configmgmt</category>
+        <parent>cmdbAbstractObject</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnksolutiontoci</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="solution_id"/>
+            <attribute id="solution_id"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon></icon>
         <reconciliation>
           <attributes>
-            <attribute name="solution_id"/>
-            <attribute name="ci_id"/>
+            <attribute id="solution_id"/>
+            <attribute id="ci_id"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="solution_id" xsi:type="AttributeExternalKey" target_class="ApplicationSolution" jointype="" sql="solution_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="solution_name" xsi:type="AttributeExternalField" extkey_attcode="solution_id" target_attcode="name"/>
-        <field name="ci_id" xsi:type="AttributeExternalKey" target_class="FunctionalCI" jointype="" sql="ci_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="ci_name" xsi:type="AttributeExternalField" extkey_attcode="ci_id" target_attcode="name"/>
-        <field name="ci_status" xsi:type="AttributeExternalField" extkey_attcode="ci_id" target_attcode="status"/>
-        <field name="utility" xsi:type="AttributeString" sql="utility" default_value="" is_null_allowed="true"/>
+        <field id="solution_id" xsi:type="AttributeExternalKey">
+          <sql>solution_id</sql>
+          <target_class>ApplicationSolution</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="solution_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>solution_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="ci_id" xsi:type="AttributeExternalKey">
+          <sql>ci_id</sql>
+          <target_class>FunctionalCI</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="ci_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>ci_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="ci_status" xsi:type="AttributeExternalField">
+          <extkey_attcode>ci_id</extkey_attcode>
+          <target_attcode>status</target_attcode>
+        </field>
+        <field id="utility" xsi:type="AttributeString">
+          <sql>utility</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -2846,28 +4076,59 @@
         </list>
       </presentation>
     </class>
-    <class name="lnkProcessToSolution" category="bizmodel,configmgmt" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" is_link="1" db_table="lnkprocesstosolution" db_key_field="id" db_final_class_field="">
+    <class id="lnkProcessToSolution">
       <properties>
-        <naming format="%1$s">
+        <is_link>1</is_link>
+        <category>bizmodel,configmgmt</category>
+        <parent>cmdbAbstractObject</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkprocesstosolution</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="solution_id"/>
+            <attribute id="solution_id"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon></icon>
         <reconciliation>
           <attributes>
-            <attribute name="solution_id"/>
-            <attribute name="process_id"/>
+            <attribute id="solution_id"/>
+            <attribute id="process_id"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="solution_id" xsi:type="AttributeExternalKey" target_class="ApplicationSolution" jointype="" sql="solution_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="solution_name" xsi:type="AttributeExternalField" extkey_attcode="solution_id" target_attcode="name"/>
-        <field name="process_id" xsi:type="AttributeExternalKey" target_class="BusinessProcess" jointype="" sql="process_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="process_name" xsi:type="AttributeExternalField" extkey_attcode="process_id" target_attcode="name"/>
-        <field name="reason" xsi:type="AttributeString" sql="reason" default_value="" is_null_allowed="true"/>
+        <field id="solution_id" xsi:type="AttributeExternalKey">
+          <sql>solution_id</sql>
+          <target_class>ApplicationSolution</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="solution_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>solution_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="process_id" xsi:type="AttributeExternalKey">
+          <sql>process_id</sql>
+          <target_class>BusinessProcess</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="process_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>process_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="reason" xsi:type="AttributeString">
+          <sql>reason</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -2897,136 +4158,136 @@
   </classes>
   <menus>
     <menu id="DataAdministration" xsi:type="MenuGroup">
-      <rank value="70"/>
-      <enable_class value="Organization"/>
-      <enable_action value="UR_ACTION_MODIFY"/>
-      <enable_permission value="UR_ALLOWED_YES"/>
-      <enable_stimulus value=""/>
+      <rank>70</rank>
+      <enable_class>Organization</enable_class>
+      <enable_action>UR_ACTION_MODIFY</enable_action>
+      <enable_permission>UR_ALLOWED_YES</enable_permission>
+      <enable_stimulus/>
     </menu>
     <menu id="Audit" xsi:type="WebPageMenuNode">
-      <rank value="33"/>
-      <parent value="DataAdministration"/>
-      <url value="$pages/audit.php"/>
+      <rank>33</rank>
+      <parent>DataAdministration</parent>
+      <url>$pages/audit.php</url>
     </menu>
     <menu id="Catalogs" xsi:type="TemplateMenuNode">
-      <rank value="50"/>
-      <parent value="DataAdministration"/>
-      <template_file value=""/>
+      <rank>50</rank>
+      <parent>DataAdministration</parent>
+      <template_file></template_file>
     </menu>
     <menu id="Organization" xsi:type="OQLMenuNode">
-      <rank value="10"/>
-      <parent value="Catalogs"/>
-      <oql value="SELECT Organization"/>
-      <do_search value="1"/>
+      <rank>10</rank>
+      <parent>Catalogs</parent>
+      <oql>SELECT Organization</oql>
+      <do_search>1</do_search>
     </menu>
     <menu id="Application" xsi:type="OQLMenuNode">
-      <rank value="20"/>
-      <parent value="Catalogs"/>
-      <oql value="SELECT Application"/>
-      <do_search value=""/>
+      <rank>20</rank>
+      <parent>Catalogs</parent>
+      <oql>SELECT Application</oql>
+      <do_search></do_search>
     </menu>
     <menu id="DBServer" xsi:type="OQLMenuNode">
-      <rank value="40"/>
-      <parent value="Catalogs"/>
-      <oql value="SELECT DBServer"/>
-      <do_search value=""/>
+      <rank>40</rank>
+      <parent>Catalogs</parent>
+      <oql>SELECT DBServer</oql>
+      <do_search></do_search>
     </menu>
     <menu id="ConfigManagement" xsi:type="MenuGroup">
-      <rank value="20"/>
+      <rank>20</rank>
     </menu>
     <menu id="ConfigManagementOverview" xsi:type="TemplateMenuNode">
-      <rank value="0"/>
-      <parent value="ConfigManagement"/>
-      <template_file value="overview.html"/>
+      <rank>0</rank>
+      <parent>ConfigManagement</parent>
+      <template_file>overview.html</template_file>
     </menu>
     <menu id="Contact" xsi:type="TemplateMenuNode">
-      <rank value="1"/>
-      <parent value="ConfigManagement"/>
-      <template_file value="contacts_menu.html"/>
+      <rank>1</rank>
+      <parent>ConfigManagement</parent>
+      <template_file>contacts_menu.html</template_file>
     </menu>
     <menu id="NewContact" xsi:type="NewObjectMenuNode">
-      <rank value="1"/>
-      <parent value="Contact"/>
-      <class value="Contact"/>
+      <rank>1</rank>
+      <parent>Contact</parent>
+      <class>Contact</class>
     </menu>
     <menu id="SearchContacts" xsi:type="SearchMenuNode">
-      <rank value="2"/>
-      <parent value="Contact"/>
-      <class value="Contact"/>
+      <rank>2</rank>
+      <parent>Contact</parent>
+      <class>Contact</class>
     </menu>
     <menu id="Document" xsi:type="OQLMenuNode">
-      <rank value="2"/>
-      <parent value="ConfigManagement"/>
-      <oql value="SELECT Document"/>
-      <do_search value="1"/>
+      <rank>2</rank>
+      <parent>ConfigManagement</parent>
+      <oql>SELECT Document</oql>
+      <do_search>1</do_search>
     </menu>
     <menu id="Location" xsi:type="OQLMenuNode">
-      <rank value="3"/>
-      <parent value="ConfigManagement"/>
-      <oql value="SELECT Location"/>
-      <do_search value="1"/>
+      <rank>3</rank>
+      <parent>ConfigManagement</parent>
+      <oql>SELECT Location</oql>
+      <do_search>1</do_search>
     </menu>
     <menu id="Group" xsi:type="OQLMenuNode">
-      <rank value="4"/>
-      <parent value="ConfigManagement"/>
-      <oql value="SELECT Group"/>
-      <do_search value="1"/>
+      <rank>4</rank>
+      <parent>ConfigManagement</parent>
+      <oql>SELECT Group</oql>
+      <do_search>1</do_search>
     </menu>
     <menu id="ConfigManagementCI" xsi:type="TemplateMenuNode">
-      <rank value="5"/>
-      <parent value="ConfigManagement"/>
-      <template_file value="cis_menu.html"/>
+      <rank>5</rank>
+      <parent>ConfigManagement</parent>
+      <template_file>cis_menu.html</template_file>
     </menu>
     <menu id="NewCI" xsi:type="NewObjectMenuNode">
-      <rank value="0"/>
-      <parent value="ConfigManagementCI"/>
-      <class value="FunctionalCI"/>
+      <rank>0</rank>
+      <parent>ConfigManagementCI</parent>
+      <class>FunctionalCI</class>
     </menu>
     <menu id="SearchCIs" xsi:type="SearchMenuNode">
-      <rank value="1"/>
-      <parent value="ConfigManagementCI"/>
-      <class value="FunctionalCI"/>
+      <rank>1</rank>
+      <parent>ConfigManagementCI</parent>
+      <class>FunctionalCI</class>
     </menu>
     <menu id="ConfigManagement:Shortcuts" xsi:type="TemplateMenuNode">
-      <rank value="6"/>
-      <parent value="ConfigManagement"/>
-      <template_file value=""/>
+      <rank>6</rank>
+      <parent>ConfigManagement</parent>
+      <template_file></template_file>
     </menu>
     <menu id="Server" xsi:type="OQLMenuNode">
-      <rank value="1"/>
-      <parent value="ConfigManagement:Shortcuts"/>
-      <oql value="SELECT Server"/>
-      <do_search value=""/>
+      <rank>1</rank>
+      <parent>ConfigManagement:Shortcuts</parent>
+      <oql>SELECT Server</oql>
+      <do_search></do_search>
     </menu>
     <menu id="NetworkDevice" xsi:type="OQLMenuNode">
-      <rank value="2"/>
-      <parent value="ConfigManagement:Shortcuts"/>
-      <oql value="SELECT NetworkDevice"/>
-      <do_search value=""/>
+      <rank>2</rank>
+      <parent>ConfigManagement:Shortcuts</parent>
+      <oql>SELECT NetworkDevice</oql>
+      <do_search></do_search>
     </menu>
     <menu id="Printer" xsi:type="OQLMenuNode">
-      <rank value="3"/>
-      <parent value="ConfigManagement:Shortcuts"/>
-      <oql value="SELECT Printer"/>
-      <do_search value=""/>
+      <rank>3</rank>
+      <parent>ConfigManagement:Shortcuts</parent>
+      <oql>SELECT Printer</oql>
+      <do_search></do_search>
     </menu>
     <menu id="PC" xsi:type="OQLMenuNode">
-      <rank value="4"/>
-      <parent value="ConfigManagement:Shortcuts"/>
-      <oql value="SELECT PC"/>
-      <do_search value=""/>
+      <rank>4</rank>
+      <parent>ConfigManagement:Shortcuts</parent>
+      <oql>SELECT PC</oql>
+      <do_search></do_search>
     </menu>
     <menu id="BusinessProcess" xsi:type="OQLMenuNode">
-      <rank value="5"/>
-      <parent value="ConfigManagement:Shortcuts"/>
-      <oql value="SELECT BusinessProcess"/>
-      <do_search value=""/>
+      <rank>5</rank>
+      <parent>ConfigManagement:Shortcuts</parent>
+      <oql>SELECT BusinessProcess</oql>
+      <do_search></do_search>
     </menu>
     <menu id="ApplicationSolution" xsi:type="OQLMenuNode">
-      <rank value="6"/>
-      <parent value="ConfigManagement:Shortcuts"/>
-      <oql value="SELECT ApplicationSolution"/>
-      <do_search value=""/>
+      <rank>6</rank>
+      <parent>ConfigManagement:Shortcuts</parent>
+      <oql>SELECT ApplicationSolution</oql>
+      <do_search></do_search>
     </menu>
   </menus>
 </itop_design>

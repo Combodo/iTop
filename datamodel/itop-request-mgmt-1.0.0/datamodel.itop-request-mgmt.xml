@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <classes>
-    <class name="UserRequest" category="bizmodel,searchable,requestmgmt" parent="ResponseTicket" abstract="false" key_type="autoincrement" db_table="ticket_request" db_key_field="id" db_final_class_field="">
+    <class id="UserRequest">
       <properties>
         <comment><![CDATA[/**
  * Persistent classes for a CMDB
@@ -11,458 +11,734 @@
  * @author      Denis Flaven <denis.flaven@combodo.com>
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */]]></comment>
-        <naming format="%1$s">
+        <category>bizmodel,searchable,requestmgmt</category>
+        <parent>ResponseTicket</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>ticket_request</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="ref"/>
+            <attribute id="ref"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>images/user-request.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="ref"/>
+            <attribute id="ref"/>
           </attributes>
         </reconciliation>
         <order>
           <columns>
-            <column name="ref" ascending="false"/>
+            <column id="ref" order="0">
+              <ascending>false</ascending>
+            </column>
           </columns>
         </order>
       </properties>
       <fields>
-        <field name="request_type" xsi:type="AttributeEnum" sql="request_type" default_value="service request" is_null_allowed="false">
+        <field id="request_type" xsi:type="AttributeEnum">
           <values>
             <value>service request</value>
             <value>issue</value>
             <value>information</value>
           </values>
+          <sql>request_type</sql>
+          <default_value>service request</default_value>
+          <is_null_allowed>false</is_null_allowed>
         </field>
-        <field name="freeze_reason" xsi:type="AttributeString" sql="freeze_reason" default_value="" is_null_allowed="true"/>
+        <field id="freeze_reason" xsi:type="AttributeString">
+          <sql>freeze_reason</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
       </fields>
-      <lifecycle attribute="status">
+      <lifecycle>
+        <attribute>status</attribute>
         <stimuli>
-          <stimulus name="ev_assign" type="StimulusUserAction"/>
-          <stimulus name="ev_reassign" type="StimulusUserAction"/>
-          <stimulus name="ev_timeout" type="StimulusInternal"/>
-          <stimulus name="ev_resolve" type="StimulusUserAction"/>
-          <stimulus name="ev_close" type="StimulusUserAction"/>
-          <stimulus name="ev_freeze" type="StimulusUserAction"/>
+          <stimulus id="ev_assign" xsi:type="StimulusUserAction"/>
+          <stimulus id="ev_reassign" xsi:type="StimulusUserAction"/>
+          <stimulus id="ev_timeout" xsi:type="StimulusInternal"/>
+          <stimulus id="ev_resolve" xsi:type="StimulusUserAction"/>
+          <stimulus id="ev_close" xsi:type="StimulusUserAction"/>
+          <stimulus id="ev_freeze" xsi:type="StimulusUserAction"/>
         </stimuli>
         <states>
-          <state name="new">
+          <state id="new">
             <flags>
-              <attribute name="ref" read_only="1"/>
-              <attribute name="title"/>
-              <attribute name="description" must_change="1"/>
-              <attribute name="ticket_log"/>
-              <attribute name="start_date" read_only="1"/>
-              <attribute name="document_list"/>
-              <attribute name="ci_list"/>
-              <attribute name="contact_list"/>
-              <attribute name="incident_list"/>
-              <attribute name="status"/>
-              <attribute name="caller_id" mandatory="1"/>
-              <attribute name="caller_email"/>
-              <attribute name="org_id" must_change="1"/>
-              <attribute name="org_name"/>
-              <attribute name="service_id" must_change="1"/>
-              <attribute name="service_name"/>
-              <attribute name="servicesubcategory_id" must_change="1"/>
-              <attribute name="servicesubcategory_name"/>
-              <attribute name="product" must_prompt="1"/>
-              <attribute name="impact" must_change="1"/>
-              <attribute name="urgency" must_change="1"/>
-              <attribute name="priority" read_only="1"/>
-              <attribute name="workgroup_id" must_change="1"/>
-              <attribute name="workgroup_name"/>
-              <attribute name="agent_id"/>
-              <attribute name="agent_name"/>
-              <attribute name="agent_email" hidden="1"/>
-              <attribute name="related_problem_id" hidden="1"/>
-              <attribute name="related_problem_ref"/>
-              <attribute name="related_change_id" hidden="1"/>
-              <attribute name="related_change_ref"/>
-              <attribute name="close_date" hidden="1"/>
-              <attribute name="last_update" read_only="1"/>
-              <attribute name="assignment_date" hidden="1"/>
-              <attribute name="resolution_date" hidden="1"/>
-              <attribute name="tto_escalation_deadline" read_only="1"/>
-              <attribute name="ttr_escalation_deadline" hidden="1"/>
-              <attribute name="closure_deadline" hidden="1"/>
-              <attribute name="resolution_code" hidden="1"/>
-              <attribute name="solution" hidden="1"/>
-              <attribute name="user_satisfaction" hidden="1"/>
-              <attribute name="user_commment" hidden="1"/>
-              <attribute name="request_type" mandatory="1"/>
-              <attribute name="freeze_reason" hidden="1"/>
-              <attribute name="related_change_id_finalclass_recall"/>
+              <attribute id="ref">
+                <read_only/>
+              </attribute>
+              <attribute id="description">
+                <must_change/>
+              </attribute>
+              <attribute id="start_date">
+                <read_only/>
+              </attribute>
+              <attribute id="caller_id">
+                <mandatory/>
+              </attribute>
+              <attribute id="org_id">
+                <must_change/>
+              </attribute>
+              <attribute id="service_id">
+                <must_change/>
+              </attribute>
+              <attribute id="servicesubcategory_id">
+                <must_change/>
+              </attribute>
+              <attribute id="product">
+                <must_prompt/>
+              </attribute>
+              <attribute id="impact">
+                <must_change/>
+              </attribute>
+              <attribute id="urgency">
+                <must_change/>
+              </attribute>
+              <attribute id="priority">
+                <read_only/>
+              </attribute>
+              <attribute id="workgroup_id">
+                <must_change/>
+              </attribute>
+              <attribute id="agent_email">
+                <hidden/>
+              </attribute>
+              <attribute id="related_problem_id">
+                <hidden/>
+              </attribute>
+              <attribute id="related_change_id">
+                <hidden/>
+              </attribute>
+              <attribute id="close_date">
+                <hidden/>
+              </attribute>
+              <attribute id="last_update">
+                <read_only/>
+              </attribute>
+              <attribute id="assignment_date">
+                <hidden/>
+              </attribute>
+              <attribute id="resolution_date">
+                <hidden/>
+              </attribute>
+              <attribute id="tto_escalation_deadline">
+                <read_only/>
+              </attribute>
+              <attribute id="ttr_escalation_deadline">
+                <hidden/>
+              </attribute>
+              <attribute id="closure_deadline">
+                <hidden/>
+              </attribute>
+              <attribute id="resolution_code">
+                <hidden/>
+              </attribute>
+              <attribute id="solution">
+                <hidden/>
+              </attribute>
+              <attribute id="user_satisfaction">
+                <hidden/>
+              </attribute>
+              <attribute id="user_commment">
+                <hidden/>
+              </attribute>
+              <attribute id="request_type">
+                <mandatory/>
+              </attribute>
+              <attribute id="freeze_reason">
+                <hidden/>
+              </attribute>
             </flags>
             <transitions>
-              <transition stimulus="ev_assign" target="assigned">
+              <transition>
+                <stimulus>ev_assign</stimulus>
+                <target>assigned</target>
                 <actions>
-                  <action verb="SetAssignedDate"/>
+                  <action>
+                    <verb>SetAssignedDate</verb>
+                  </action>
                 </actions>
               </transition>
-              <transition stimulus="ev_timeout" target="escalated_tto">
+              <transition>
+                <stimulus>ev_timeout</stimulus>
+                <target>escalated_tto</target>
                 <actions/>
               </transition>
             </transitions>
           </state>
-          <state name="escalated_tto">
+          <state id="escalated_tto">
             <flags>
-              <attribute name="ref" read_only="1"/>
-              <attribute name="title"/>
-              <attribute name="description"/>
-              <attribute name="ticket_log"/>
-              <attribute name="start_date" read_only="1"/>
-              <attribute name="document_list"/>
-              <attribute name="ci_list"/>
-              <attribute name="contact_list"/>
-              <attribute name="incident_list"/>
-              <attribute name="status"/>
-              <attribute name="caller_id" mandatory="1"/>
-              <attribute name="caller_email"/>
-              <attribute name="org_id"/>
-              <attribute name="org_name"/>
-              <attribute name="service_id"/>
-              <attribute name="service_name"/>
-              <attribute name="servicesubcategory_id"/>
-              <attribute name="servicesubcategory_name"/>
-              <attribute name="product"/>
-              <attribute name="impact"/>
-              <attribute name="urgency"/>
-              <attribute name="priority" read_only="1"/>
-              <attribute name="workgroup_id"/>
-              <attribute name="workgroup_name"/>
-              <attribute name="agent_id"/>
-              <attribute name="agent_name"/>
-              <attribute name="agent_email" hidden="1"/>
-              <attribute name="related_problem_id" hidden="1"/>
-              <attribute name="related_problem_ref"/>
-              <attribute name="related_change_id" hidden="1"/>
-              <attribute name="related_change_ref"/>
-              <attribute name="close_date" hidden="1"/>
-              <attribute name="last_update" read_only="1"/>
-              <attribute name="assignment_date" hidden="1"/>
-              <attribute name="resolution_date" hidden="1"/>
-              <attribute name="tto_escalation_deadline" read_only="1"/>
-              <attribute name="ttr_escalation_deadline" hidden="1"/>
-              <attribute name="closure_deadline" hidden="1"/>
-              <attribute name="resolution_code" hidden="1"/>
-              <attribute name="solution" hidden="1"/>
-              <attribute name="user_satisfaction" hidden="1"/>
-              <attribute name="user_commment" hidden="1"/>
-              <attribute name="request_type" mandatory="1"/>
-              <attribute name="freeze_reason" hidden="1"/>
-              <attribute name="related_change_id_finalclass_recall"/>
+              <attribute id="ref">
+                <read_only/>
+              </attribute>
+              <attribute id="start_date">
+                <read_only/>
+              </attribute>
+              <attribute id="caller_id">
+                <mandatory/>
+              </attribute>
+              <attribute id="priority">
+                <read_only/>
+              </attribute>
+              <attribute id="agent_email">
+                <hidden/>
+              </attribute>
+              <attribute id="related_problem_id">
+                <hidden/>
+              </attribute>
+              <attribute id="related_change_id">
+                <hidden/>
+              </attribute>
+              <attribute id="close_date">
+                <hidden/>
+              </attribute>
+              <attribute id="last_update">
+                <read_only/>
+              </attribute>
+              <attribute id="assignment_date">
+                <hidden/>
+              </attribute>
+              <attribute id="resolution_date">
+                <hidden/>
+              </attribute>
+              <attribute id="tto_escalation_deadline">
+                <read_only/>
+              </attribute>
+              <attribute id="ttr_escalation_deadline">
+                <hidden/>
+              </attribute>
+              <attribute id="closure_deadline">
+                <hidden/>
+              </attribute>
+              <attribute id="resolution_code">
+                <hidden/>
+              </attribute>
+              <attribute id="solution">
+                <hidden/>
+              </attribute>
+              <attribute id="user_satisfaction">
+                <hidden/>
+              </attribute>
+              <attribute id="user_commment">
+                <hidden/>
+              </attribute>
+              <attribute id="request_type">
+                <mandatory/>
+              </attribute>
+              <attribute id="freeze_reason">
+                <hidden/>
+              </attribute>
             </flags>
             <transitions>
-              <transition stimulus="ev_assign" target="assigned">
+              <transition>
+                <stimulus>ev_assign</stimulus>
+                <target>assigned</target>
                 <actions>
-                  <action verb="SetAssignedDate"/>
-                </actions>
-              </transition>
-            </transitions>
-          </state>
-          <state name="assigned">
-            <flags>
-              <attribute name="ref" read_only="1"/>
-              <attribute name="title" read_only="1"/>
-              <attribute name="description" read_only="1"/>
-              <attribute name="ticket_log"/>
-              <attribute name="start_date" read_only="1"/>
-              <attribute name="document_list"/>
-              <attribute name="ci_list"/>
-              <attribute name="contact_list"/>
-              <attribute name="incident_list"/>
-              <attribute name="status"/>
-              <attribute name="caller_id" read_only="1"/>
-              <attribute name="caller_email"/>
-              <attribute name="org_id" read_only="1"/>
-              <attribute name="org_name"/>
-              <attribute name="service_id"/>
-              <attribute name="service_name"/>
-              <attribute name="servicesubcategory_id"/>
-              <attribute name="servicesubcategory_name"/>
-              <attribute name="product"/>
-              <attribute name="impact"/>
-              <attribute name="urgency"/>
-              <attribute name="priority" read_only="1"/>
-              <attribute name="workgroup_id" mandatory="1" must_prompt="1"/>
-              <attribute name="workgroup_name"/>
-              <attribute name="agent_id" mandatory="1" must_prompt="1"/>
-              <attribute name="agent_name"/>
-              <attribute name="agent_email" read_only="1"/>
-              <attribute name="related_problem_id"/>
-              <attribute name="related_problem_ref"/>
-              <attribute name="related_change_id"/>
-              <attribute name="related_change_ref"/>
-              <attribute name="close_date" hidden="1"/>
-              <attribute name="last_update" read_only="1"/>
-              <attribute name="assignment_date" hidden="1"/>
-              <attribute name="resolution_date" hidden="1"/>
-              <attribute name="tto_escalation_deadline" hidden="1"/>
-              <attribute name="ttr_escalation_deadline" read_only="1"/>
-              <attribute name="closure_deadline" hidden="1"/>
-              <attribute name="resolution_code" hidden="1"/>
-              <attribute name="solution" hidden="1"/>
-              <attribute name="user_satisfaction" hidden="1"/>
-              <attribute name="user_commment" hidden="1"/>
-              <attribute name="request_type" mandatory="1"/>
-              <attribute name="freeze_reason" hidden="1"/>
-              <attribute name="related_change_id_finalclass_recall"/>
-            </flags>
-            <transitions>
-              <transition stimulus="ev_reassign" target="assigned">
-                <actions/>
-              </transition>
-              <transition stimulus="ev_timeout" target="escalated_ttr">
-                <actions/>
-              </transition>
-              <transition stimulus="ev_resolve" target="resolved">
-                <actions>
-                  <action verb="SetResolveDate"/>
-                  <action verb="SetClosureDeadline"/>
-                </actions>
-              </transition>
-              <transition stimulus="ev_freeze" target="frozen">
-                <actions/>
-              </transition>
-            </transitions>
-          </state>
-          <state name="escalated_ttr">
-            <flags>
-              <attribute name="ref" read_only="1"/>
-              <attribute name="title" read_only="1"/>
-              <attribute name="description" read_only="1"/>
-              <attribute name="ticket_log"/>
-              <attribute name="start_date" read_only="1"/>
-              <attribute name="document_list"/>
-              <attribute name="ci_list"/>
-              <attribute name="contact_list"/>
-              <attribute name="incident_list"/>
-              <attribute name="status"/>
-              <attribute name="caller_id" read_only="1"/>
-              <attribute name="caller_email"/>
-              <attribute name="org_id" read_only="1"/>
-              <attribute name="org_name"/>
-              <attribute name="service_id"/>
-              <attribute name="service_name"/>
-              <attribute name="servicesubcategory_id"/>
-              <attribute name="servicesubcategory_name"/>
-              <attribute name="product"/>
-              <attribute name="impact"/>
-              <attribute name="urgency"/>
-              <attribute name="priority" read_only="1"/>
-              <attribute name="workgroup_id" mandatory="1" must_prompt="1"/>
-              <attribute name="workgroup_name"/>
-              <attribute name="agent_id" mandatory="1" must_prompt="1"/>
-              <attribute name="agent_name"/>
-              <attribute name="agent_email" read_only="1"/>
-              <attribute name="related_problem_id"/>
-              <attribute name="related_problem_ref"/>
-              <attribute name="related_change_id"/>
-              <attribute name="related_change_ref"/>
-              <attribute name="close_date" hidden="1"/>
-              <attribute name="last_update" read_only="1"/>
-              <attribute name="assignment_date" hidden="1"/>
-              <attribute name="resolution_date" hidden="1"/>
-              <attribute name="tto_escalation_deadline" hidden="1"/>
-              <attribute name="ttr_escalation_deadline" read_only="1"/>
-              <attribute name="closure_deadline" hidden="1"/>
-              <attribute name="resolution_code" hidden="1"/>
-              <attribute name="solution" hidden="1"/>
-              <attribute name="user_satisfaction" hidden="1"/>
-              <attribute name="user_commment" hidden="1"/>
-              <attribute name="request_type" mandatory="1"/>
-              <attribute name="freeze_reason" hidden="1"/>
-              <attribute name="related_change_id_finalclass_recall"/>
-            </flags>
-            <transitions>
-              <transition stimulus="ev_reassign" target="escalated_ttr">
-                <actions/>
-              </transition>
-              <transition stimulus="ev_resolve" target="resolved">
-                <actions>
-                  <action verb="SetResolveDate"/>
-                  <action verb="SetClosureDeadline"/>
+                  <action>
+                    <verb>SetAssignedDate</verb>
+                  </action>
                 </actions>
               </transition>
             </transitions>
           </state>
-          <state name="frozen">
+          <state id="assigned">
             <flags>
-              <attribute name="ref" read_only="1"/>
-              <attribute name="title" read_only="1"/>
-              <attribute name="description" read_only="1"/>
-              <attribute name="ticket_log"/>
-              <attribute name="start_date" read_only="1"/>
-              <attribute name="document_list"/>
-              <attribute name="ci_list"/>
-              <attribute name="contact_list"/>
-              <attribute name="incident_list"/>
-              <attribute name="status"/>
-              <attribute name="caller_id" read_only="1"/>
-              <attribute name="caller_email"/>
-              <attribute name="org_id" read_only="1"/>
-              <attribute name="org_name"/>
-              <attribute name="service_id"/>
-              <attribute name="service_name"/>
-              <attribute name="servicesubcategory_id"/>
-              <attribute name="servicesubcategory_name"/>
-              <attribute name="product"/>
-              <attribute name="impact"/>
-              <attribute name="urgency"/>
-              <attribute name="priority" read_only="1"/>
-              <attribute name="workgroup_id" mandatory="1"/>
-              <attribute name="workgroup_name"/>
-              <attribute name="agent_id" mandatory="1"/>
-              <attribute name="agent_name"/>
-              <attribute name="agent_email" read_only="1"/>
-              <attribute name="related_problem_id"/>
-              <attribute name="related_problem_ref"/>
-              <attribute name="related_change_id"/>
-              <attribute name="related_change_ref"/>
-              <attribute name="close_date" hidden="1"/>
-              <attribute name="last_update" read_only="1"/>
-              <attribute name="assignment_date" hidden="1"/>
-              <attribute name="resolution_date" hidden="1"/>
-              <attribute name="tto_escalation_deadline" hidden="1"/>
-              <attribute name="ttr_escalation_deadline" read_only="1"/>
-              <attribute name="closure_deadline" hidden="1"/>
-              <attribute name="resolution_code" hidden="1"/>
-              <attribute name="solution" hidden="1"/>
-              <attribute name="user_satisfaction" hidden="1"/>
-              <attribute name="user_commment" hidden="1"/>
-              <attribute name="request_type" mandatory="1"/>
-              <attribute name="freeze_reason" mandatory="1" must_prompt="1"/>
-              <attribute name="related_change_id_finalclass_recall"/>
+              <attribute id="ref">
+                <read_only/>
+              </attribute>
+              <attribute id="title">
+                <read_only/>
+              </attribute>
+              <attribute id="description">
+                <read_only/>
+              </attribute>
+              <attribute id="start_date">
+                <read_only/>
+              </attribute>
+              <attribute id="caller_id">
+                <read_only/>
+              </attribute>
+              <attribute id="org_id">
+                <read_only/>
+              </attribute>
+              <attribute id="priority">
+                <read_only/>
+              </attribute>
+              <attribute id="workgroup_id">
+                <mandatory/>
+                <must_prompt/>
+              </attribute>
+              <attribute id="agent_id">
+                <mandatory/>
+                <must_prompt/>
+              </attribute>
+              <attribute id="agent_email">
+                <read_only/>
+              </attribute>
+              <attribute id="close_date">
+                <hidden/>
+              </attribute>
+              <attribute id="last_update">
+                <read_only/>
+              </attribute>
+              <attribute id="assignment_date">
+                <hidden/>
+              </attribute>
+              <attribute id="resolution_date">
+                <hidden/>
+              </attribute>
+              <attribute id="tto_escalation_deadline">
+                <hidden/>
+              </attribute>
+              <attribute id="ttr_escalation_deadline">
+                <read_only/>
+              </attribute>
+              <attribute id="closure_deadline">
+                <hidden/>
+              </attribute>
+              <attribute id="resolution_code">
+                <hidden/>
+              </attribute>
+              <attribute id="solution">
+                <hidden/>
+              </attribute>
+              <attribute id="user_satisfaction">
+                <hidden/>
+              </attribute>
+              <attribute id="user_commment">
+                <hidden/>
+              </attribute>
+              <attribute id="request_type">
+                <mandatory/>
+              </attribute>
+              <attribute id="freeze_reason">
+                <hidden/>
+              </attribute>
             </flags>
             <transitions>
-              <transition stimulus="ev_timeout" target="escalated_ttr">
+              <transition>
+                <stimulus>ev_reassign</stimulus>
+                <target>assigned</target>
                 <actions/>
               </transition>
-              <transition stimulus="ev_assign" target="assigned">
+              <transition>
+                <stimulus>ev_timeout</stimulus>
+                <target>escalated_ttr</target>
                 <actions/>
               </transition>
-              <transition stimulus="ev_resolve" target="resolved">
+              <transition>
+                <stimulus>ev_resolve</stimulus>
+                <target>resolved</target>
+                <actions>
+                  <action>
+                    <verb>SetResolveDate</verb>
+                  </action>
+                  <action>
+                    <verb>SetClosureDeadline</verb>
+                  </action>
+                </actions>
+              </transition>
+              <transition>
+                <stimulus>ev_freeze</stimulus>
+                <target>frozen</target>
                 <actions/>
               </transition>
             </transitions>
           </state>
-          <state name="resolved">
+          <state id="escalated_ttr">
             <flags>
-              <attribute name="ref" read_only="1"/>
-              <attribute name="title" read_only="1"/>
-              <attribute name="description" read_only="1"/>
-              <attribute name="ticket_log"/>
-              <attribute name="start_date" read_only="1"/>
-              <attribute name="document_list"/>
-              <attribute name="ci_list"/>
-              <attribute name="contact_list"/>
-              <attribute name="incident_list"/>
-              <attribute name="status"/>
-              <attribute name="caller_id" read_only="1"/>
-              <attribute name="caller_email"/>
-              <attribute name="org_id" read_only="1"/>
-              <attribute name="org_name"/>
-              <attribute name="service_id" read_only="1"/>
-              <attribute name="service_name"/>
-              <attribute name="servicesubcategory_id" read_only="1"/>
-              <attribute name="servicesubcategory_name"/>
-              <attribute name="product" read_only="1"/>
-              <attribute name="impact" read_only="1"/>
-              <attribute name="urgency" read_only="1"/>
-              <attribute name="priority" read_only="1"/>
-              <attribute name="workgroup_id" read_only="1"/>
-              <attribute name="workgroup_name"/>
-              <attribute name="agent_id" read_only="1"/>
-              <attribute name="agent_name"/>
-              <attribute name="agent_email" read_only="1"/>
-              <attribute name="related_problem_id"/>
-              <attribute name="related_problem_ref"/>
-              <attribute name="related_change_id"/>
-              <attribute name="related_change_ref"/>
-              <attribute name="close_date" hidden="1"/>
-              <attribute name="last_update" read_only="1"/>
-              <attribute name="assignment_date" hidden="1"/>
-              <attribute name="resolution_date" hidden="1"/>
-              <attribute name="tto_escalation_deadline" hidden="1"/>
-              <attribute name="ttr_escalation_deadline" hidden="1"/>
-              <attribute name="closure_deadline" read_only="1"/>
-              <attribute name="resolution_code" must_prompt="1"/>
-              <attribute name="solution" must_prompt="1"/>
-              <attribute name="user_satisfaction" hidden="1"/>
-              <attribute name="user_commment" hidden="1"/>
-              <attribute name="request_type" mandatory="1"/>
-              <attribute name="freeze_reason" hidden="1"/>
-              <attribute name="related_change_id_finalclass_recall"/>
+              <attribute id="ref">
+                <read_only/>
+              </attribute>
+              <attribute id="title">
+                <read_only/>
+              </attribute>
+              <attribute id="description">
+                <read_only/>
+              </attribute>
+              <attribute id="start_date">
+                <read_only/>
+              </attribute>
+              <attribute id="caller_id">
+                <read_only/>
+              </attribute>
+              <attribute id="org_id">
+                <read_only/>
+              </attribute>
+              <attribute id="priority">
+                <read_only/>
+              </attribute>
+              <attribute id="workgroup_id">
+                <mandatory/>
+                <must_prompt/>
+              </attribute>
+              <attribute id="agent_id">
+                <mandatory/>
+                <must_prompt/>
+              </attribute>
+              <attribute id="agent_email">
+                <read_only/>
+              </attribute>
+              <attribute id="close_date">
+                <hidden/>
+              </attribute>
+              <attribute id="last_update">
+                <read_only/>
+              </attribute>
+              <attribute id="assignment_date">
+                <hidden/>
+              </attribute>
+              <attribute id="resolution_date">
+                <hidden/>
+              </attribute>
+              <attribute id="tto_escalation_deadline">
+                <hidden/>
+              </attribute>
+              <attribute id="ttr_escalation_deadline">
+                <read_only/>
+              </attribute>
+              <attribute id="closure_deadline">
+                <hidden/>
+              </attribute>
+              <attribute id="resolution_code">
+                <hidden/>
+              </attribute>
+              <attribute id="solution">
+                <hidden/>
+              </attribute>
+              <attribute id="user_satisfaction">
+                <hidden/>
+              </attribute>
+              <attribute id="user_commment">
+                <hidden/>
+              </attribute>
+              <attribute id="request_type">
+                <mandatory/>
+              </attribute>
+              <attribute id="freeze_reason">
+                <hidden/>
+              </attribute>
             </flags>
             <transitions>
-              <transition stimulus="ev_reassign" target="assigned">
+              <transition>
+                <stimulus>ev_reassign</stimulus>
+                <target>escalated_ttr</target>
                 <actions/>
               </transition>
-              <transition stimulus="ev_close" target="closed">
+              <transition>
+                <stimulus>ev_resolve</stimulus>
+                <target>resolved</target>
                 <actions>
-                  <action verb="SetClosureDate"/>
+                  <action>
+                    <verb>SetResolveDate</verb>
+                  </action>
+                  <action>
+                    <verb>SetClosureDeadline</verb>
+                  </action>
                 </actions>
               </transition>
             </transitions>
           </state>
-          <state name="closed">
+          <state id="frozen">
             <flags>
-              <attribute name="ref" read_only="1"/>
-              <attribute name="title" read_only="1"/>
-              <attribute name="description" read_only="1"/>
-              <attribute name="ticket_log" read_only="1"/>
-              <attribute name="start_date" read_only="1"/>
-              <attribute name="document_list"/>
-              <attribute name="ci_list"/>
-              <attribute name="contact_list"/>
-              <attribute name="incident_list"/>
-              <attribute name="status"/>
-              <attribute name="caller_id" read_only="1"/>
-              <attribute name="caller_email"/>
-              <attribute name="org_id" read_only="1"/>
-              <attribute name="org_name"/>
-              <attribute name="service_id" read_only="1"/>
-              <attribute name="service_name"/>
-              <attribute name="servicesubcategory_id" read_only="1"/>
-              <attribute name="servicesubcategory_name"/>
-              <attribute name="product" read_only="1"/>
-              <attribute name="impact" read_only="1"/>
-              <attribute name="urgency" read_only="1"/>
-              <attribute name="priority" read_only="1"/>
-              <attribute name="workgroup_id" read_only="1"/>
-              <attribute name="workgroup_name"/>
-              <attribute name="agent_id" read_only="1"/>
-              <attribute name="agent_name"/>
-              <attribute name="agent_email" read_only="1"/>
-              <attribute name="related_problem_id"/>
-              <attribute name="related_problem_ref"/>
-              <attribute name="related_change_id"/>
-              <attribute name="related_change_ref"/>
-              <attribute name="close_date" read_only="1"/>
-              <attribute name="last_update" read_only="1"/>
-              <attribute name="assignment_date" hidden="1"/>
-              <attribute name="resolution_date" hidden="1"/>
-              <attribute name="tto_escalation_deadline" hidden="1"/>
-              <attribute name="ttr_escalation_deadline" hidden="1"/>
-              <attribute name="closure_deadline" hidden="1"/>
-              <attribute name="resolution_code" read_only="1"/>
-              <attribute name="solution" read_only="1"/>
-              <attribute name="user_satisfaction" must_prompt="1"/>
-              <attribute name="user_commment" must_prompt="1"/>
-              <attribute name="request_type" read_only="1"/>
-              <attribute name="freeze_reason" hidden="1"/>
-              <attribute name="related_change_id_finalclass_recall"/>
+              <attribute id="ref">
+                <read_only/>
+              </attribute>
+              <attribute id="title">
+                <read_only/>
+              </attribute>
+              <attribute id="description">
+                <read_only/>
+              </attribute>
+              <attribute id="start_date">
+                <read_only/>
+              </attribute>
+              <attribute id="caller_id">
+                <read_only/>
+              </attribute>
+              <attribute id="org_id">
+                <read_only/>
+              </attribute>
+              <attribute id="priority">
+                <read_only/>
+              </attribute>
+              <attribute id="workgroup_id">
+                <mandatory/>
+              </attribute>
+              <attribute id="agent_id">
+                <mandatory/>
+              </attribute>
+              <attribute id="agent_email">
+                <read_only/>
+              </attribute>
+              <attribute id="close_date">
+                <hidden/>
+              </attribute>
+              <attribute id="last_update">
+                <read_only/>
+              </attribute>
+              <attribute id="assignment_date">
+                <hidden/>
+              </attribute>
+              <attribute id="resolution_date">
+                <hidden/>
+              </attribute>
+              <attribute id="tto_escalation_deadline">
+                <hidden/>
+              </attribute>
+              <attribute id="ttr_escalation_deadline">
+                <read_only/>
+              </attribute>
+              <attribute id="closure_deadline">
+                <hidden/>
+              </attribute>
+              <attribute id="resolution_code">
+                <hidden/>
+              </attribute>
+              <attribute id="solution">
+                <hidden/>
+              </attribute>
+              <attribute id="user_satisfaction">
+                <hidden/>
+              </attribute>
+              <attribute id="user_commment">
+                <hidden/>
+              </attribute>
+              <attribute id="request_type">
+                <mandatory/>
+              </attribute>
+              <attribute id="freeze_reason">
+                <mandatory/>
+                <must_prompt/>
+              </attribute>
+            </flags>
+            <transitions>
+              <transition>
+                <stimulus>ev_timeout</stimulus>
+                <target>escalated_ttr</target>
+                <actions/>
+              </transition>
+              <transition>
+                <stimulus>ev_assign</stimulus>
+                <target>assigned</target>
+                <actions/>
+              </transition>
+              <transition>
+                <stimulus>ev_resolve</stimulus>
+                <target>resolved</target>
+                <actions/>
+              </transition>
+            </transitions>
+          </state>
+          <state id="resolved">
+            <flags>
+              <attribute id="ref">
+                <read_only/>
+              </attribute>
+              <attribute id="title">
+                <read_only/>
+              </attribute>
+              <attribute id="description">
+                <read_only/>
+              </attribute>
+              <attribute id="start_date">
+                <read_only/>
+              </attribute>
+              <attribute id="caller_id">
+                <read_only/>
+              </attribute>
+              <attribute id="org_id">
+                <read_only/>
+              </attribute>
+              <attribute id="service_id">
+                <read_only/>
+              </attribute>
+              <attribute id="servicesubcategory_id">
+                <read_only/>
+              </attribute>
+              <attribute id="product">
+                <read_only/>
+              </attribute>
+              <attribute id="impact">
+                <read_only/>
+              </attribute>
+              <attribute id="urgency">
+                <read_only/>
+              </attribute>
+              <attribute id="priority">
+                <read_only/>
+              </attribute>
+              <attribute id="workgroup_id">
+                <read_only/>
+              </attribute>
+              <attribute id="agent_id">
+                <read_only/>
+              </attribute>
+              <attribute id="agent_email">
+                <read_only/>
+              </attribute>
+              <attribute id="close_date">
+                <hidden/>
+              </attribute>
+              <attribute id="last_update">
+                <read_only/>
+              </attribute>
+              <attribute id="assignment_date">
+                <hidden/>
+              </attribute>
+              <attribute id="resolution_date">
+                <hidden/>
+              </attribute>
+              <attribute id="tto_escalation_deadline">
+                <hidden/>
+              </attribute>
+              <attribute id="ttr_escalation_deadline">
+                <hidden/>
+              </attribute>
+              <attribute id="closure_deadline">
+                <read_only/>
+              </attribute>
+              <attribute id="resolution_code">
+                <must_prompt/>
+              </attribute>
+              <attribute id="solution">
+                <must_prompt/>
+              </attribute>
+              <attribute id="user_satisfaction">
+                <hidden/>
+              </attribute>
+              <attribute id="user_commment">
+                <hidden/>
+              </attribute>
+              <attribute id="request_type">
+                <mandatory/>
+              </attribute>
+              <attribute id="freeze_reason">
+                <hidden/>
+              </attribute>
+            </flags>
+            <transitions>
+              <transition>
+                <stimulus>ev_reassign</stimulus>
+                <target>assigned</target>
+                <actions/>
+              </transition>
+              <transition>
+                <stimulus>ev_close</stimulus>
+                <target>closed</target>
+                <actions>
+                  <action>
+                    <verb>SetClosureDate</verb>
+                  </action>
+                </actions>
+              </transition>
+            </transitions>
+          </state>
+          <state id="closed">
+            <flags>
+              <attribute id="ref">
+                <read_only/>
+              </attribute>
+              <attribute id="title">
+                <read_only/>
+              </attribute>
+              <attribute id="description">
+                <read_only/>
+              </attribute>
+              <attribute id="ticket_log">
+                <read_only/>
+              </attribute>
+              <attribute id="start_date">
+                <read_only/>
+              </attribute>
+              <attribute id="caller_id">
+                <read_only/>
+              </attribute>
+              <attribute id="org_id">
+                <read_only/>
+              </attribute>
+              <attribute id="service_id">
+                <read_only/>
+              </attribute>
+              <attribute id="servicesubcategory_id">
+                <read_only/>
+              </attribute>
+              <attribute id="product">
+                <read_only/>
+              </attribute>
+              <attribute id="impact">
+                <read_only/>
+              </attribute>
+              <attribute id="urgency">
+                <read_only/>
+              </attribute>
+              <attribute id="priority">
+                <read_only/>
+              </attribute>
+              <attribute id="workgroup_id">
+                <read_only/>
+              </attribute>
+              <attribute id="agent_id">
+                <read_only/>
+              </attribute>
+              <attribute id="agent_email">
+                <read_only/>
+              </attribute>
+              <attribute id="close_date">
+                <read_only/>
+              </attribute>
+              <attribute id="last_update">
+                <read_only/>
+              </attribute>
+              <attribute id="assignment_date">
+                <hidden/>
+              </attribute>
+              <attribute id="resolution_date">
+                <hidden/>
+              </attribute>
+              <attribute id="tto_escalation_deadline">
+                <hidden/>
+              </attribute>
+              <attribute id="ttr_escalation_deadline">
+                <hidden/>
+              </attribute>
+              <attribute id="closure_deadline">
+                <hidden/>
+              </attribute>
+              <attribute id="resolution_code">
+                <read_only/>
+              </attribute>
+              <attribute id="solution">
+                <read_only/>
+              </attribute>
+              <attribute id="user_satisfaction">
+                <must_prompt/>
+              </attribute>
+              <attribute id="user_commment">
+                <must_prompt/>
+              </attribute>
+              <attribute id="request_type">
+                <read_only/>
+              </attribute>
+              <attribute id="freeze_reason">
+                <hidden/>
+              </attribute>
             </flags>
             <transitions/>
           </state>
         </states>
       </lifecycle>
       <methods>
-        <method name="ComputeValues" static="false" access="public" type="Overload-DBObject"><![CDATA[	public function ComputeValues()
+        <method id="ComputeValues">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public function ComputeValues()
 	{
 		$sCurrRef = $this->Get('ref');
 		if (strlen($sCurrRef) == 0)
@@ -478,12 +754,18 @@
 		}
 
 		return parent::ComputeValues();
-	}]]></method>
-        <method name="GetIcon" static="false" access="public" type="Overload-DBObject"><comment><![CDATA[/**
+	}]]></code>
+        </method>
+        <method id="GetIcon">
+          <comment>/**
 	 * Get the icon representing this object
 	 * @param boolean $bImgTag If true the result is a full IMG tag (or an emtpy string if no icon is defined)
 	 * @return string Either the full IMG tag ($bImgTag == true) or just the path to the icon file
-	 */]]></comment><![CDATA[	public function GetIcon($bImgTag = true)
+	 */</comment>
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public function GetIcon($bImgTag = true)
 	{
 		$sStatus = $this->Get('status');
 		switch($this->GetState())
@@ -544,8 +826,13 @@
 			$sIcon = MetaModel::GetClassIcon(get_class($this), $bImgTag);
 		}
 		return $sIcon;
-	}]]></method>
-        <method name="MakeIconFromName" static="true" access="protected" type="Overload-DBObject"><![CDATA[	protected static function MakeIconFromName($sIconName, $bImgTag = true)
+	}]]></code>
+        </method>
+        <method id="MakeIconFromName">
+          <static>true</static>
+          <access>protected</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	protected static function MakeIconFromName($sIconName, $bImgTag = true)
 	{
 		$sIcon = '';
 		if ($sIconName != '')
@@ -561,7 +848,8 @@
 			}
 		}
 		return $sIcon;
-	}]]></method>
+	}]]></code>
+        </method>
       </methods>
       <presentation>
         <details>
@@ -570,9 +858,9 @@
             <item>ci_list</item>
             <item>contact_list</item>
             <item>incident_list</item>
-            <item key="col:col1">
+            <item id="col:col1">
               <items>
-                <item key="fieldset:Ticket:baseinfo">
+                <item id="fieldset:Ticket:baseinfo">
                   <items>
                     <item>ref</item>
                     <item>title</item>
@@ -585,7 +873,7 @@
                     <item>product</item>
                   </items>
                 </item>
-                <item key="fieldset:Ticket:moreinfo">
+                <item id="fieldset:Ticket:moreinfo">
                   <items>
                     <item>impact</item>
                     <item>urgency</item>
@@ -599,9 +887,9 @@
                 </item>
               </items>
             </item>
-            <item key="col:col2">
+            <item id="col:col2">
               <items>
-                <item key="fieldset:Ticket:date">
+                <item id="fieldset:Ticket:date">
                   <items>
                     <item>start_date</item>
                     <item>last_update</item>
@@ -612,14 +900,14 @@
                     <item>closure_deadline</item>
                   </items>
                 </item>
-                <item key="fieldset:Ticket:contact">
+                <item id="fieldset:Ticket:contact">
                   <items>
                     <item>caller_id</item>
                     <item>workgroup_id</item>
                     <item>agent_id</item>
                   </items>
                 </item>
-                <item key="fieldset:Ticket:relation">
+                <item id="fieldset:Ticket:relation">
                   <items>
                     <item>related_problem_id</item>
                     <item>related_change_id</item>
@@ -671,48 +959,48 @@
   </classes>
   <menus>
     <menu id="RequestManagement" xsi:type="MenuGroup">
-      <rank value="30"/>
+      <rank>30</rank>
     </menu>
     <menu id="UserRequest:Overview" xsi:type="TemplateMenuNode">
-      <rank value="0"/>
-      <parent value="RequestManagement"/>
-      <template_file value="overview.html"/>
+      <rank>0</rank>
+      <parent>RequestManagement</parent>
+      <template_file>overview.html</template_file>
     </menu>
     <menu id="NewUserRequest" xsi:type="NewObjectMenuNode">
-      <rank value="1"/>
-      <parent value="RequestManagement"/>
-      <class value="UserRequest"/>
+      <rank>1</rank>
+      <parent>RequestManagement</parent>
+      <class>UserRequest</class>
     </menu>
     <menu id="SearchUserRequests" xsi:type="SearchMenuNode">
-      <rank value="2"/>
-      <parent value="RequestManagement"/>
-      <class value="UserRequest"/>
+      <rank>2</rank>
+      <parent>RequestManagement</parent>
+      <class>UserRequest</class>
     </menu>
     <menu id="UserRequest:Shortcuts" xsi:type="TemplateMenuNode">
-      <rank value="3"/>
-      <parent value="RequestManagement"/>
-      <template_file value=""/>
+      <rank>3</rank>
+      <parent>RequestManagement</parent>
+      <template_file></template_file>
     </menu>
     <menu id="UserRequest:MyRequests" xsi:type="OQLMenuNode">
-      <rank value="1"/>
-      <parent value="UserRequest:Shortcuts"/>
-      <oql value="SELECT UserRequest WHERE agent_id = :current_contact_id AND status NOT IN (&quot;closed&quot;,&quot;resolved&quot;)"/>
-      <do_search value=""/>
-      <auto_reload value="fast"/>
+      <rank>1</rank>
+      <parent>UserRequest:Shortcuts</parent>
+      <oql><![CDATA[SELECT UserRequest WHERE agent_id = :current_contact_id AND status NOT IN ("closed","resolved")]]></oql>
+      <do_search></do_search>
+      <auto_reload>fast</auto_reload>
     </menu>
     <menu id="UserRequest:EscalatedRequests" xsi:type="OQLMenuNode">
-      <rank value="2"/>
-      <parent value="UserRequest:Shortcuts"/>
-      <oql value="SELECT UserRequest WHERE status IN (&quot;escalated_tto&quot;, &quot;escalated_ttr&quot;)"/>
-      <do_search value=""/>
-      <auto_reload value="fast"/>
+      <rank>2</rank>
+      <parent>UserRequest:Shortcuts</parent>
+      <oql><![CDATA[SELECT UserRequest WHERE status IN ("escalated_tto", "escalated_ttr")]]></oql>
+      <do_search></do_search>
+      <auto_reload>fast</auto_reload>
     </menu>
     <menu id="UserRequest:OpenRequests" xsi:type="OQLMenuNode">
-      <rank value="3"/>
-      <parent value="UserRequest:Shortcuts"/>
-      <oql value="SELECT UserRequest WHERE status IN (&quot;new&quot;, &quot;assigned&quot;, &quot;escalated_tto&quot;, &quot;escalated_ttr&quot;, &quot;frozen&quot;, &quot;resolved&quot;)"/>
-      <do_search value=""/>
-      <auto_reload value="fast"/>
+      <rank>3</rank>
+      <parent>UserRequest:Shortcuts</parent>
+      <oql><![CDATA[SELECT UserRequest WHERE status IN ("new", "assigned", "escalated_tto", "escalated_ttr", "frozen", "resolved")]]></oql>
+      <do_search></do_search>
+      <auto_reload>fast</auto_reload>
     </menu>
   </menus>
 </itop_design>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <classes>
-    <class name="Ticket" category="bizmodel,searchable" parent="cmdbAbstractObject" abstract="true" key_type="autoincrement" db_table="ticket" db_key_field="id" db_final_class_field="finalclass">
+    <class id="Ticket">
       <properties>
         <comment><![CDATA[/**
  * Persistent classes for a CMDB
@@ -11,29 +11,81 @@
  * @author      Denis Flaven <denis.flaven@combodo.com>
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */]]></comment>
-        <naming format="%1$s">
+        <category>bizmodel,searchable</category>
+        <parent>cmdbAbstractObject</parent>
+        <abstract>true</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>ticket</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field>finalclass</db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="ref"/>
+            <attribute id="ref"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon></icon>
         <reconciliation>
           <attributes>
-            <attribute name="ref"/>
+            <attribute id="ref"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="ref" xsi:type="AttributeString" sql="ref" default_value="" is_null_allowed="true"/>
-        <field name="title" xsi:type="AttributeString" sql="title" default_value="" is_null_allowed="false"/>
-        <field name="description" xsi:type="AttributeText" sql="description" default_value="" is_null_allowed="false"/>
-        <field name="ticket_log" xsi:type="AttributeCaseLog" sql="ticket_log" default_value="" is_null_allowed="true"/>
-        <field name="start_date" xsi:type="AttributeDateTime" sql="start_date" default_value="" is_null_allowed="false"/>
-        <field name="document_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkTicketToDoc" ext_key_to_me="ticket_id" ext_key_to_remote="document_id" count_min="0" count_max="0"/>
-        <field name="ci_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkTicketToCI" ext_key_to_me="ticket_id" ext_key_to_remote="ci_id" count_min="0" count_max="0"/>
-        <field name="contact_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkTicketToContact" ext_key_to_me="ticket_id" ext_key_to_remote="contact_id" count_min="0" count_max="0"/>
-        <field name="incident_list" xsi:type="AttributeLinkedSetIndirect" linked_class="lnkTicketToIncident" ext_key_to_me="ticket_id" ext_key_to_remote="incident_id" count_min="0" count_max="0"/>
+        <field id="ref" xsi:type="AttributeString">
+          <sql>ref</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="title" xsi:type="AttributeString">
+          <sql>title</sql>
+          <default_value></default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="description" xsi:type="AttributeText">
+          <sql>description</sql>
+          <default_value></default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="ticket_log" xsi:type="AttributeCaseLog">
+          <sql>ticket_log</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="start_date" xsi:type="AttributeDateTime">
+          <sql>start_date</sql>
+          <default_value></default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="document_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkTicketToDoc</linked_class>
+          <ext_key_to_me>ticket_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>document_id</ext_key_to_remote>
+        </field>
+        <field id="ci_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkTicketToCI</linked_class>
+          <ext_key_to_me>ticket_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>ci_id</ext_key_to_remote>
+        </field>
+        <field id="contact_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkTicketToContact</linked_class>
+          <ext_key_to_me>ticket_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>contact_id</ext_key_to_remote>
+        </field>
+        <field id="incident_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkTicketToIncident</linked_class>
+          <ext_key_to_me>ticket_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>incident_id</ext_key_to_remote>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -68,23 +120,31 @@
         </list>
       </presentation>
     </class>
-    <class name="ResponseTicket" category="bizmodel" parent="Ticket" abstract="true" key_type="autoincrement" db_table="ticket_response" db_key_field="id" db_final_class_field="">
+    <class id="ResponseTicket">
       <properties>
-        <naming format="%1$s">
+        <category>bizmodel</category>
+        <parent>Ticket</parent>
+        <abstract>true</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>ticket_response</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="ref"/>
+            <attribute id="ref"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon></icon>
         <reconciliation>
           <attributes>
-            <attribute name="ref"/>
+            <attribute id="ref"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="status" xsi:type="AttributeEnum" sql="status" default_value="new" is_null_allowed="false">
+        <field id="status" xsi:type="AttributeEnum">
           <values>
             <value>new</value>
             <value>assigned</value>
@@ -94,514 +154,890 @@
             <value>resolved</value>
             <value>closed</value>
           </values>
+          <sql>status</sql>
+          <default_value>new</default_value>
+          <is_null_allowed>false</is_null_allowed>
         </field>
-        <field name="caller_id" xsi:type="AttributeExternalKey" target_class="Person" jointype="" filter="SELECT Person WHERE org_id = :this-&gt;org_id" sql="caller_id" is_null_allowed="true" on_target_delete="DEL_MANUAL">
+        <field id="caller_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT Person WHERE org_id = :this->org_id]]></filter>
           <dependencies>
-            <attribute name="org_id"/>
+            <attribute id="org_id"/>
           </dependencies>
+          <sql>caller_id</sql>
+          <target_class>Person</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype></jointype>
         </field>
-        <field name="caller_email" xsi:type="AttributeExternalField" extkey_attcode="caller_id" target_attcode="email"/>
-        <field name="org_id" xsi:type="AttributeExternalKey" target_class="Organization" jointype="" sql="org_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="org_name" xsi:type="AttributeExternalField" extkey_attcode="org_id" target_attcode="name"/>
-        <field name="service_id" xsi:type="AttributeExternalKey" target_class="Service" jointype="" filter="SELECT Service AS s JOIN SLA AS sla ON sla.service_id=s.id JOIN lnkContractToSLA AS ln ON ln.sla_id=sla.id JOIN CustomerContract AS cc ON ln.contract_id=cc.id WHERE cc.org_id =:this-&gt;org_id" sql="service_id" is_null_allowed="false" on_target_delete="DEL_MANUAL">
+        <field id="caller_email" xsi:type="AttributeExternalField">
+          <extkey_attcode>caller_id</extkey_attcode>
+          <target_attcode>email</target_attcode>
+        </field>
+        <field id="org_id" xsi:type="AttributeExternalKey">
+          <sql>org_id</sql>
+          <target_class>Organization</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="org_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>org_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="service_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT Service AS s JOIN SLA AS sla ON sla.service_id=s.id JOIN lnkContractToSLA AS ln ON ln.sla_id=sla.id JOIN CustomerContract AS cc ON ln.contract_id=cc.id WHERE cc.org_id =:this->org_id]]></filter>
           <dependencies>
-            <attribute name="org_id"/>
+            <attribute id="org_id"/>
           </dependencies>
+          <sql>service_id</sql>
+          <target_class>Service</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype></jointype>
         </field>
-        <field name="service_name" xsi:type="AttributeExternalField" extkey_attcode="service_id" target_attcode="name"/>
-        <field name="servicesubcategory_id" xsi:type="AttributeExternalKey" target_class="ServiceSubcategory" jointype="" filter="SELECT ServiceSubcategory WHERE service_id = :this-&gt;service_id" sql="servicesubcategory_id" is_null_allowed="false" on_target_delete="DEL_MANUAL">
+        <field id="service_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>service_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="servicesubcategory_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT ServiceSubcategory WHERE service_id = :this->service_id]]></filter>
           <dependencies>
-            <attribute name="service_id"/>
+            <attribute id="service_id"/>
           </dependencies>
+          <sql>servicesubcategory_id</sql>
+          <target_class>ServiceSubcategory</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype></jointype>
         </field>
-        <field name="servicesubcategory_name" xsi:type="AttributeExternalField" extkey_attcode="servicesubcategory_id" target_attcode="name"/>
-        <field name="product" xsi:type="AttributeString" sql="product" default_value="" is_null_allowed="true"/>
-        <field name="impact" xsi:type="AttributeEnum" sql="impact" default_value="1" is_null_allowed="false">
+        <field id="servicesubcategory_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>servicesubcategory_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="product" xsi:type="AttributeString">
+          <sql>product</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="impact" xsi:type="AttributeEnum">
           <values>
             <value>1</value>
             <value>2</value>
             <value>3</value>
           </values>
+          <sql>impact</sql>
+          <default_value>1</default_value>
+          <is_null_allowed>false</is_null_allowed>
         </field>
-        <field name="urgency" xsi:type="AttributeEnum" sql="urgency" default_value="1" is_null_allowed="false">
+        <field id="urgency" xsi:type="AttributeEnum">
           <values>
             <value>1</value>
             <value>2</value>
             <value>3</value>
           </values>
+          <sql>urgency</sql>
+          <default_value>1</default_value>
+          <is_null_allowed>false</is_null_allowed>
         </field>
-        <field name="priority" xsi:type="AttributeEnum" sql="priority" default_value="1" is_null_allowed="false">
+        <field id="priority" xsi:type="AttributeEnum">
           <values>
             <value>1</value>
             <value>2</value>
             <value>3</value>
           </values>
+          <sql>priority</sql>
+          <default_value>1</default_value>
+          <is_null_allowed>false</is_null_allowed>
         </field>
-        <field name="workgroup_id" xsi:type="AttributeExternalKey" target_class="Team" jointype="" filter="SELECT Team AS t JOIN CustomerContract AS cc ON cc.support_team_id=t.id JOIN lnkContractToSLA AS ln ON ln.contract_id=cc.id JOIN SLA AS sla ON ln.sla_id=sla.id WHERE sla.service_id = :this-&gt;service_id AND cc.org_id = :this-&gt;org_id" sql="workgroup_id" is_null_allowed="false" on_target_delete="DEL_MANUAL">
+        <field id="workgroup_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT Team AS t JOIN CustomerContract AS cc ON cc.support_team_id=t.id JOIN lnkContractToSLA AS ln ON ln.contract_id=cc.id JOIN SLA AS sla ON ln.sla_id=sla.id WHERE sla.service_id = :this->service_id AND cc.org_id = :this->org_id]]></filter>
           <dependencies>
-            <attribute name="org_id"/>
-            <attribute name="service_id"/>
+            <attribute id="org_id"/>
+            <attribute id="service_id"/>
           </dependencies>
+          <sql>workgroup_id</sql>
+          <target_class>Team</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype></jointype>
         </field>
-        <field name="workgroup_name" xsi:type="AttributeExternalField" extkey_attcode="workgroup_id" target_attcode="name"/>
-        <field name="agent_id" xsi:type="AttributeExternalKey" target_class="Person" jointype="" filter="SELECT Person AS p JOIN lnkTeamToContact AS l ON l.contact_id=p.id JOIN Team AS t ON l.team_id=t.id WHERE t.id = :this-&gt;workgroup_id" sql="agent_id" is_null_allowed="true" on_target_delete="DEL_MANUAL">
+        <field id="workgroup_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>workgroup_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="agent_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT Person AS p JOIN lnkTeamToContact AS l ON l.contact_id=p.id JOIN Team AS t ON l.team_id=t.id WHERE t.id = :this->workgroup_id]]></filter>
           <dependencies>
-            <attribute name="workgroup_id"/>
+            <attribute id="workgroup_id"/>
           </dependencies>
+          <sql>agent_id</sql>
+          <target_class>Person</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype></jointype>
         </field>
-        <field name="agent_name" xsi:type="AttributeExternalField" extkey_attcode="agent_id" target_attcode="name"/>
-        <field name="agent_email" xsi:type="AttributeExternalField" extkey_attcode="agent_id" target_attcode="email"/>
-        <field name="related_problem_id" xsi:type="AttributeExternalKey" target_class="Problem" jointype="" sql="related_problem_id" is_null_allowed="true" on_target_delete="DEL_MANUAL"/>
-        <field name="related_problem_ref" xsi:type="AttributeExternalField" extkey_attcode="related_problem_id" target_attcode="ref"/>
-        <field name="related_change_id" xsi:type="AttributeExternalKey" target_class="Change" jointype="" sql="related_change_id" is_null_allowed="true" on_target_delete="DEL_MANUAL"/>
-        <field name="related_change_ref" xsi:type="AttributeExternalField" extkey_attcode="related_change_id" target_attcode="ref"/>
-        <field name="close_date" xsi:type="AttributeDateTime" sql="close_date" default_value="" is_null_allowed="true"/>
-        <field name="last_update" xsi:type="AttributeDateTime" sql="last_update" default_value="" is_null_allowed="true"/>
-        <field name="assignment_date" xsi:type="AttributeDateTime" sql="assignment_date" default_value="" is_null_allowed="true"/>
-        <field name="resolution_date" xsi:type="AttributeDateTime" sql="resolution_date" default_value="" is_null_allowed="true"/>
-        <field name="tto_escalation_deadline" xsi:type="AttributeDeadline" sql="tto_escalation_deadline" default_value="" is_null_allowed="true"/>
-        <field name="ttr_escalation_deadline" xsi:type="AttributeDeadline" sql="ttr_escalation_deadline" default_value="" is_null_allowed="true"/>
-        <field name="closure_deadline" xsi:type="AttributeDeadline" sql="closure_deadline" default_value="" is_null_allowed="true"/>
-        <field name="resolution_code" xsi:type="AttributeEnum" sql="resolution_code" default_value="fixed" is_null_allowed="true">
+        <field id="agent_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>agent_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="agent_email" xsi:type="AttributeExternalField">
+          <extkey_attcode>agent_id</extkey_attcode>
+          <target_attcode>email</target_attcode>
+        </field>
+        <field id="related_problem_id" xsi:type="AttributeExternalKey">
+          <sql>related_problem_id</sql>
+          <target_class>Problem</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="related_problem_ref" xsi:type="AttributeExternalField">
+          <extkey_attcode>related_problem_id</extkey_attcode>
+          <target_attcode>ref</target_attcode>
+        </field>
+        <field id="related_change_id" xsi:type="AttributeExternalKey">
+          <sql>related_change_id</sql>
+          <target_class>Change</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="related_change_ref" xsi:type="AttributeExternalField">
+          <extkey_attcode>related_change_id</extkey_attcode>
+          <target_attcode>ref</target_attcode>
+        </field>
+        <field id="close_date" xsi:type="AttributeDateTime">
+          <sql>close_date</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="last_update" xsi:type="AttributeDateTime">
+          <sql>last_update</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="assignment_date" xsi:type="AttributeDateTime">
+          <sql>assignment_date</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="resolution_date" xsi:type="AttributeDateTime">
+          <sql>resolution_date</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="tto_escalation_deadline" xsi:type="AttributeDeadline">
+          <sql>tto_escalation_deadline</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="ttr_escalation_deadline" xsi:type="AttributeDeadline">
+          <sql>ttr_escalation_deadline</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="closure_deadline" xsi:type="AttributeDeadline">
+          <sql>closure_deadline</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="resolution_code" xsi:type="AttributeEnum">
           <values>
             <value>fixed</value>
             <value>duplicate</value>
             <value>couldnotreproduce</value>
             <value>irrelevant</value>
           </values>
+          <sql>resolution_code</sql>
+          <default_value>fixed</default_value>
+          <is_null_allowed>true</is_null_allowed>
         </field>
-        <field name="solution" xsi:type="AttributeText" sql="solution" default_value="" is_null_allowed="true"/>
-        <field name="user_satisfaction" xsi:type="AttributeEnum" sql="user_satisfaction" default_value="1" is_null_allowed="true">
+        <field id="solution" xsi:type="AttributeText">
+          <sql>solution</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="user_satisfaction" xsi:type="AttributeEnum">
           <values>
             <value>1</value>
             <value>2</value>
             <value>3</value>
             <value>4</value>
           </values>
+          <sql>user_satisfaction</sql>
+          <default_value>1</default_value>
+          <is_null_allowed>true</is_null_allowed>
         </field>
-        <field name="user_commment" xsi:type="AttributeText" sql="user_commment" default_value="" is_null_allowed="true"/>
+        <field id="user_commment" xsi:type="AttributeText">
+          <sql>user_commment</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
       </fields>
-      <lifecycle attribute="status">
+      <lifecycle>
+        <attribute>status</attribute>
         <stimuli>
-          <stimulus name="ev_assign" type="StimulusUserAction"/>
-          <stimulus name="ev_reassign" type="StimulusUserAction"/>
-          <stimulus name="ev_timeout" type="StimulusInternal"/>
-          <stimulus name="ev_resolve" type="StimulusUserAction"/>
-          <stimulus name="ev_close" type="StimulusUserAction"/>
+          <stimulus id="ev_assign" xsi:type="StimulusUserAction"/>
+          <stimulus id="ev_reassign" xsi:type="StimulusUserAction"/>
+          <stimulus id="ev_timeout" xsi:type="StimulusInternal"/>
+          <stimulus id="ev_resolve" xsi:type="StimulusUserAction"/>
+          <stimulus id="ev_close" xsi:type="StimulusUserAction"/>
         </stimuli>
         <states>
-          <state name="new">
+          <state id="new">
             <flags>
-              <attribute name="ref" read_only="1"/>
-              <attribute name="title"/>
-              <attribute name="description" must_change="1"/>
-              <attribute name="ticket_log"/>
-              <attribute name="start_date" read_only="1"/>
-              <attribute name="document_list"/>
-              <attribute name="ci_list"/>
-              <attribute name="contact_list"/>
-              <attribute name="incident_list"/>
-              <attribute name="status"/>
-              <attribute name="caller_id" mandatory="1"/>
-              <attribute name="caller_email"/>
-              <attribute name="org_id" must_change="1"/>
-              <attribute name="org_name"/>
-              <attribute name="service_id" must_change="1"/>
-              <attribute name="service_name"/>
-              <attribute name="servicesubcategory_id" must_change="1"/>
-              <attribute name="servicesubcategory_name"/>
-              <attribute name="product" must_prompt="1"/>
-              <attribute name="impact" must_change="1"/>
-              <attribute name="urgency" must_change="1"/>
-              <attribute name="priority" read_only="1"/>
-              <attribute name="workgroup_id" must_change="1"/>
-              <attribute name="workgroup_name"/>
-              <attribute name="agent_id"/>
-              <attribute name="agent_name"/>
-              <attribute name="agent_email" hidden="1"/>
-              <attribute name="related_problem_id" hidden="1"/>
-              <attribute name="related_problem_ref"/>
-              <attribute name="related_change_id" hidden="1"/>
-              <attribute name="related_change_ref"/>
-              <attribute name="close_date" hidden="1"/>
-              <attribute name="last_update" read_only="1"/>
-              <attribute name="assignment_date" hidden="1"/>
-              <attribute name="resolution_date" hidden="1"/>
-              <attribute name="tto_escalation_deadline" read_only="1"/>
-              <attribute name="ttr_escalation_deadline" hidden="1"/>
-              <attribute name="closure_deadline" hidden="1"/>
-              <attribute name="resolution_code" hidden="1"/>
-              <attribute name="solution" hidden="1"/>
-              <attribute name="user_satisfaction" hidden="1"/>
-              <attribute name="user_commment" hidden="1"/>
-              <attribute name="related_change_id_finalclass_recall"/>
+              <attribute id="ref">
+                <read_only/>
+              </attribute>
+              <attribute id="description">
+                <must_change/>
+              </attribute>
+              <attribute id="start_date">
+                <read_only/>
+              </attribute>
+              <attribute id="caller_id">
+                <mandatory/>
+              </attribute>
+              <attribute id="org_id">
+                <must_change/>
+              </attribute>
+              <attribute id="service_id">
+                <must_change/>
+              </attribute>
+              <attribute id="servicesubcategory_id">
+                <must_change/>
+              </attribute>
+              <attribute id="product">
+                <must_prompt/>
+              </attribute>
+              <attribute id="impact">
+                <must_change/>
+              </attribute>
+              <attribute id="urgency">
+                <must_change/>
+              </attribute>
+              <attribute id="priority">
+                <read_only/>
+              </attribute>
+              <attribute id="workgroup_id">
+                <must_change/>
+              </attribute>
+              <attribute id="agent_email">
+                <hidden/>
+              </attribute>
+              <attribute id="related_problem_id">
+                <hidden/>
+              </attribute>
+              <attribute id="related_change_id">
+                <hidden/>
+              </attribute>
+              <attribute id="close_date">
+                <hidden/>
+              </attribute>
+              <attribute id="last_update">
+                <read_only/>
+              </attribute>
+              <attribute id="assignment_date">
+                <hidden/>
+              </attribute>
+              <attribute id="resolution_date">
+                <hidden/>
+              </attribute>
+              <attribute id="tto_escalation_deadline">
+                <read_only/>
+              </attribute>
+              <attribute id="ttr_escalation_deadline">
+                <hidden/>
+              </attribute>
+              <attribute id="closure_deadline">
+                <hidden/>
+              </attribute>
+              <attribute id="resolution_code">
+                <hidden/>
+              </attribute>
+              <attribute id="solution">
+                <hidden/>
+              </attribute>
+              <attribute id="user_satisfaction">
+                <hidden/>
+              </attribute>
+              <attribute id="user_commment">
+                <hidden/>
+              </attribute>
             </flags>
             <transitions>
-              <transition stimulus="ev_assign" target="assigned">
+              <transition>
+                <stimulus>ev_assign</stimulus>
+                <target>assigned</target>
                 <actions>
-                  <action verb="SetAssignedDate"/>
+                  <action>
+                    <verb>SetAssignedDate</verb>
+                  </action>
                 </actions>
               </transition>
-              <transition stimulus="ev_timeout" target="escalated_tto">
+              <transition>
+                <stimulus>ev_timeout</stimulus>
+                <target>escalated_tto</target>
                 <actions/>
               </transition>
             </transitions>
           </state>
-          <state name="escalated_tto">
+          <state id="escalated_tto">
             <flags>
-              <attribute name="ref" read_only="1"/>
-              <attribute name="title"/>
-              <attribute name="description"/>
-              <attribute name="ticket_log"/>
-              <attribute name="start_date" read_only="1"/>
-              <attribute name="document_list"/>
-              <attribute name="ci_list"/>
-              <attribute name="contact_list"/>
-              <attribute name="incident_list"/>
-              <attribute name="status"/>
-              <attribute name="caller_id" mandatory="1"/>
-              <attribute name="caller_email"/>
-              <attribute name="org_id"/>
-              <attribute name="org_name"/>
-              <attribute name="service_id"/>
-              <attribute name="service_name"/>
-              <attribute name="servicesubcategory_id"/>
-              <attribute name="servicesubcategory_name"/>
-              <attribute name="product"/>
-              <attribute name="impact"/>
-              <attribute name="urgency"/>
-              <attribute name="priority" read_only="1"/>
-              <attribute name="workgroup_id"/>
-              <attribute name="workgroup_name"/>
-              <attribute name="agent_id"/>
-              <attribute name="agent_name"/>
-              <attribute name="agent_email" hidden="1"/>
-              <attribute name="related_problem_id" hidden="1"/>
-              <attribute name="related_problem_ref"/>
-              <attribute name="related_change_id" hidden="1"/>
-              <attribute name="related_change_ref"/>
-              <attribute name="close_date" hidden="1"/>
-              <attribute name="last_update" read_only="1"/>
-              <attribute name="assignment_date" hidden="1"/>
-              <attribute name="resolution_date" hidden="1"/>
-              <attribute name="tto_escalation_deadline" read_only="1"/>
-              <attribute name="ttr_escalation_deadline" hidden="1"/>
-              <attribute name="closure_deadline" hidden="1"/>
-              <attribute name="resolution_code" hidden="1"/>
-              <attribute name="solution" hidden="1"/>
-              <attribute name="user_satisfaction" hidden="1"/>
-              <attribute name="user_commment" hidden="1"/>
-              <attribute name="related_change_id_finalclass_recall"/>
+              <attribute id="ref">
+                <read_only/>
+              </attribute>
+              <attribute id="start_date">
+                <read_only/>
+              </attribute>
+              <attribute id="caller_id">
+                <mandatory/>
+              </attribute>
+              <attribute id="priority">
+                <read_only/>
+              </attribute>
+              <attribute id="agent_email">
+                <hidden/>
+              </attribute>
+              <attribute id="related_problem_id">
+                <hidden/>
+              </attribute>
+              <attribute id="related_change_id">
+                <hidden/>
+              </attribute>
+              <attribute id="close_date">
+                <hidden/>
+              </attribute>
+              <attribute id="last_update">
+                <read_only/>
+              </attribute>
+              <attribute id="assignment_date">
+                <hidden/>
+              </attribute>
+              <attribute id="resolution_date">
+                <hidden/>
+              </attribute>
+              <attribute id="tto_escalation_deadline">
+                <read_only/>
+              </attribute>
+              <attribute id="ttr_escalation_deadline">
+                <hidden/>
+              </attribute>
+              <attribute id="closure_deadline">
+                <hidden/>
+              </attribute>
+              <attribute id="resolution_code">
+                <hidden/>
+              </attribute>
+              <attribute id="solution">
+                <hidden/>
+              </attribute>
+              <attribute id="user_satisfaction">
+                <hidden/>
+              </attribute>
+              <attribute id="user_commment">
+                <hidden/>
+              </attribute>
             </flags>
             <transitions>
-              <transition stimulus="ev_assign" target="assigned">
+              <transition>
+                <stimulus>ev_assign</stimulus>
+                <target>assigned</target>
                 <actions>
-                  <action verb="SetAssignedDate"/>
+                  <action>
+                    <verb>SetAssignedDate</verb>
+                  </action>
                 </actions>
               </transition>
             </transitions>
           </state>
-          <state name="assigned">
+          <state id="assigned">
             <flags>
-              <attribute name="ref" read_only="1"/>
-              <attribute name="title" read_only="1"/>
-              <attribute name="description" read_only="1"/>
-              <attribute name="ticket_log"/>
-              <attribute name="start_date" read_only="1"/>
-              <attribute name="document_list"/>
-              <attribute name="ci_list"/>
-              <attribute name="contact_list"/>
-              <attribute name="incident_list"/>
-              <attribute name="status"/>
-              <attribute name="caller_id" read_only="1"/>
-              <attribute name="caller_email"/>
-              <attribute name="org_id" read_only="1"/>
-              <attribute name="org_name"/>
-              <attribute name="service_id"/>
-              <attribute name="service_name"/>
-              <attribute name="servicesubcategory_id"/>
-              <attribute name="servicesubcategory_name"/>
-              <attribute name="product"/>
-              <attribute name="impact"/>
-              <attribute name="urgency"/>
-              <attribute name="priority" read_only="1"/>
-              <attribute name="workgroup_id" mandatory="1" must_prompt="1"/>
-              <attribute name="workgroup_name"/>
-              <attribute name="agent_id" mandatory="1" must_prompt="1"/>
-              <attribute name="agent_name"/>
-              <attribute name="agent_email" read_only="1"/>
-              <attribute name="related_problem_id"/>
-              <attribute name="related_problem_ref"/>
-              <attribute name="related_change_id"/>
-              <attribute name="related_change_ref"/>
-              <attribute name="close_date" hidden="1"/>
-              <attribute name="last_update" read_only="1"/>
-              <attribute name="assignment_date" hidden="1"/>
-              <attribute name="resolution_date" hidden="1"/>
-              <attribute name="tto_escalation_deadline" hidden="1"/>
-              <attribute name="ttr_escalation_deadline" read_only="1"/>
-              <attribute name="closure_deadline" hidden="1"/>
-              <attribute name="resolution_code" hidden="1"/>
-              <attribute name="solution" hidden="1"/>
-              <attribute name="user_satisfaction" hidden="1"/>
-              <attribute name="user_commment" hidden="1"/>
-              <attribute name="related_change_id_finalclass_recall"/>
+              <attribute id="ref">
+                <read_only/>
+              </attribute>
+              <attribute id="title">
+                <read_only/>
+              </attribute>
+              <attribute id="description">
+                <read_only/>
+              </attribute>
+              <attribute id="start_date">
+                <read_only/>
+              </attribute>
+              <attribute id="caller_id">
+                <read_only/>
+              </attribute>
+              <attribute id="org_id">
+                <read_only/>
+              </attribute>
+              <attribute id="priority">
+                <read_only/>
+              </attribute>
+              <attribute id="workgroup_id">
+                <mandatory/>
+                <must_prompt/>
+              </attribute>
+              <attribute id="agent_id">
+                <mandatory/>
+                <must_prompt/>
+              </attribute>
+              <attribute id="agent_email">
+                <read_only/>
+              </attribute>
+              <attribute id="close_date">
+                <hidden/>
+              </attribute>
+              <attribute id="last_update">
+                <read_only/>
+              </attribute>
+              <attribute id="assignment_date">
+                <hidden/>
+              </attribute>
+              <attribute id="resolution_date">
+                <hidden/>
+              </attribute>
+              <attribute id="tto_escalation_deadline">
+                <hidden/>
+              </attribute>
+              <attribute id="ttr_escalation_deadline">
+                <read_only/>
+              </attribute>
+              <attribute id="closure_deadline">
+                <hidden/>
+              </attribute>
+              <attribute id="resolution_code">
+                <hidden/>
+              </attribute>
+              <attribute id="solution">
+                <hidden/>
+              </attribute>
+              <attribute id="user_satisfaction">
+                <hidden/>
+              </attribute>
+              <attribute id="user_commment">
+                <hidden/>
+              </attribute>
             </flags>
             <transitions>
-              <transition stimulus="ev_reassign" target="assigned">
+              <transition>
+                <stimulus>ev_reassign</stimulus>
+                <target>assigned</target>
                 <actions/>
               </transition>
-              <transition stimulus="ev_timeout" target="escalated_ttr">
+              <transition>
+                <stimulus>ev_timeout</stimulus>
+                <target>escalated_ttr</target>
                 <actions/>
               </transition>
-              <transition stimulus="ev_resolve" target="resolved">
+              <transition>
+                <stimulus>ev_resolve</stimulus>
+                <target>resolved</target>
                 <actions>
-                  <action verb="SetResolveDate"/>
-                  <action verb="SetClosureDeadline"/>
+                  <action>
+                    <verb>SetResolveDate</verb>
+                  </action>
+                  <action>
+                    <verb>SetClosureDeadline</verb>
+                  </action>
                 </actions>
               </transition>
             </transitions>
           </state>
-          <state name="escalated_ttr">
+          <state id="escalated_ttr">
             <flags>
-              <attribute name="ref" read_only="1"/>
-              <attribute name="title" read_only="1"/>
-              <attribute name="description" read_only="1"/>
-              <attribute name="ticket_log"/>
-              <attribute name="start_date" read_only="1"/>
-              <attribute name="document_list"/>
-              <attribute name="ci_list"/>
-              <attribute name="contact_list"/>
-              <attribute name="incident_list"/>
-              <attribute name="status"/>
-              <attribute name="caller_id" read_only="1"/>
-              <attribute name="caller_email"/>
-              <attribute name="org_id" read_only="1"/>
-              <attribute name="org_name"/>
-              <attribute name="service_id"/>
-              <attribute name="service_name"/>
-              <attribute name="servicesubcategory_id"/>
-              <attribute name="servicesubcategory_name"/>
-              <attribute name="product"/>
-              <attribute name="impact"/>
-              <attribute name="urgency"/>
-              <attribute name="priority" read_only="1"/>
-              <attribute name="workgroup_id" mandatory="1" must_prompt="1"/>
-              <attribute name="workgroup_name"/>
-              <attribute name="agent_id" mandatory="1" must_prompt="1"/>
-              <attribute name="agent_name"/>
-              <attribute name="agent_email" read_only="1"/>
-              <attribute name="related_problem_id"/>
-              <attribute name="related_problem_ref"/>
-              <attribute name="related_change_id"/>
-              <attribute name="related_change_ref"/>
-              <attribute name="close_date" hidden="1"/>
-              <attribute name="last_update" read_only="1"/>
-              <attribute name="assignment_date" hidden="1"/>
-              <attribute name="resolution_date" hidden="1"/>
-              <attribute name="tto_escalation_deadline" hidden="1"/>
-              <attribute name="ttr_escalation_deadline" read_only="1"/>
-              <attribute name="closure_deadline" hidden="1"/>
-              <attribute name="resolution_code" hidden="1"/>
-              <attribute name="solution" hidden="1"/>
-              <attribute name="user_satisfaction" hidden="1"/>
-              <attribute name="user_commment" hidden="1"/>
-              <attribute name="related_change_id_finalclass_recall"/>
+              <attribute id="ref">
+                <read_only/>
+              </attribute>
+              <attribute id="title">
+                <read_only/>
+              </attribute>
+              <attribute id="description">
+                <read_only/>
+              </attribute>
+              <attribute id="start_date">
+                <read_only/>
+              </attribute>
+              <attribute id="caller_id">
+                <read_only/>
+              </attribute>
+              <attribute id="org_id">
+                <read_only/>
+              </attribute>
+              <attribute id="priority">
+                <read_only/>
+              </attribute>
+              <attribute id="workgroup_id">
+                <mandatory/>
+                <must_prompt/>
+              </attribute>
+              <attribute id="agent_id">
+                <mandatory/>
+                <must_prompt/>
+              </attribute>
+              <attribute id="agent_email">
+                <read_only/>
+              </attribute>
+              <attribute id="close_date">
+                <hidden/>
+              </attribute>
+              <attribute id="last_update">
+                <read_only/>
+              </attribute>
+              <attribute id="assignment_date">
+                <hidden/>
+              </attribute>
+              <attribute id="resolution_date">
+                <hidden/>
+              </attribute>
+              <attribute id="tto_escalation_deadline">
+                <hidden/>
+              </attribute>
+              <attribute id="ttr_escalation_deadline">
+                <read_only/>
+              </attribute>
+              <attribute id="closure_deadline">
+                <hidden/>
+              </attribute>
+              <attribute id="resolution_code">
+                <hidden/>
+              </attribute>
+              <attribute id="solution">
+                <hidden/>
+              </attribute>
+              <attribute id="user_satisfaction">
+                <hidden/>
+              </attribute>
+              <attribute id="user_commment">
+                <hidden/>
+              </attribute>
             </flags>
             <transitions>
-              <transition stimulus="ev_reassign" target="escalated_ttr">
+              <transition>
+                <stimulus>ev_reassign</stimulus>
+                <target>escalated_ttr</target>
                 <actions/>
               </transition>
-              <transition stimulus="ev_resolve" target="resolved">
+              <transition>
+                <stimulus>ev_resolve</stimulus>
+                <target>resolved</target>
                 <actions>
-                  <action verb="SetResolveDate"/>
-                  <action verb="SetClosureDeadline"/>
+                  <action>
+                    <verb>SetResolveDate</verb>
+                  </action>
+                  <action>
+                    <verb>SetClosureDeadline</verb>
+                  </action>
                 </actions>
               </transition>
             </transitions>
           </state>
-          <state name="frozen">
+          <state id="frozen">
             <flags>
-              <attribute name="ref" read_only="1"/>
-              <attribute name="title" read_only="1"/>
-              <attribute name="description" read_only="1"/>
-              <attribute name="ticket_log"/>
-              <attribute name="start_date" read_only="1"/>
-              <attribute name="document_list"/>
-              <attribute name="ci_list"/>
-              <attribute name="contact_list"/>
-              <attribute name="incident_list"/>
-              <attribute name="status"/>
-              <attribute name="caller_id" read_only="1"/>
-              <attribute name="caller_email"/>
-              <attribute name="org_id" read_only="1"/>
-              <attribute name="org_name"/>
-              <attribute name="service_id"/>
-              <attribute name="service_name"/>
-              <attribute name="servicesubcategory_id"/>
-              <attribute name="servicesubcategory_name"/>
-              <attribute name="product"/>
-              <attribute name="impact"/>
-              <attribute name="urgency"/>
-              <attribute name="priority" read_only="1"/>
-              <attribute name="workgroup_id" mandatory="1"/>
-              <attribute name="workgroup_name"/>
-              <attribute name="agent_id" mandatory="1"/>
-              <attribute name="agent_name"/>
-              <attribute name="agent_email" read_only="1"/>
-              <attribute name="related_problem_id"/>
-              <attribute name="related_problem_ref"/>
-              <attribute name="related_change_id"/>
-              <attribute name="related_change_ref"/>
-              <attribute name="close_date" hidden="1"/>
-              <attribute name="last_update" read_only="1"/>
-              <attribute name="assignment_date" hidden="1"/>
-              <attribute name="resolution_date" hidden="1"/>
-              <attribute name="tto_escalation_deadline" hidden="1"/>
-              <attribute name="ttr_escalation_deadline" read_only="1"/>
-              <attribute name="closure_deadline" hidden="1"/>
-              <attribute name="resolution_code" hidden="1"/>
-              <attribute name="solution" hidden="1"/>
-              <attribute name="user_satisfaction" hidden="1"/>
-              <attribute name="user_commment" hidden="1"/>
-              <attribute name="related_change_id_finalclass_recall"/>
+              <attribute id="ref">
+                <read_only/>
+              </attribute>
+              <attribute id="title">
+                <read_only/>
+              </attribute>
+              <attribute id="description">
+                <read_only/>
+              </attribute>
+              <attribute id="start_date">
+                <read_only/>
+              </attribute>
+              <attribute id="caller_id">
+                <read_only/>
+              </attribute>
+              <attribute id="org_id">
+                <read_only/>
+              </attribute>
+              <attribute id="priority">
+                <read_only/>
+              </attribute>
+              <attribute id="workgroup_id">
+                <mandatory/>
+              </attribute>
+              <attribute id="agent_id">
+                <mandatory/>
+              </attribute>
+              <attribute id="agent_email">
+                <read_only/>
+              </attribute>
+              <attribute id="close_date">
+                <hidden/>
+              </attribute>
+              <attribute id="last_update">
+                <read_only/>
+              </attribute>
+              <attribute id="assignment_date">
+                <hidden/>
+              </attribute>
+              <attribute id="resolution_date">
+                <hidden/>
+              </attribute>
+              <attribute id="tto_escalation_deadline">
+                <hidden/>
+              </attribute>
+              <attribute id="ttr_escalation_deadline">
+                <read_only/>
+              </attribute>
+              <attribute id="closure_deadline">
+                <hidden/>
+              </attribute>
+              <attribute id="resolution_code">
+                <hidden/>
+              </attribute>
+              <attribute id="solution">
+                <hidden/>
+              </attribute>
+              <attribute id="user_satisfaction">
+                <hidden/>
+              </attribute>
+              <attribute id="user_commment">
+                <hidden/>
+              </attribute>
             </flags>
             <transitions/>
           </state>
-          <state name="resolved">
+          <state id="resolved">
             <flags>
-              <attribute name="ref" read_only="1"/>
-              <attribute name="title" read_only="1"/>
-              <attribute name="description" read_only="1"/>
-              <attribute name="ticket_log"/>
-              <attribute name="start_date" read_only="1"/>
-              <attribute name="document_list"/>
-              <attribute name="ci_list"/>
-              <attribute name="contact_list"/>
-              <attribute name="incident_list"/>
-              <attribute name="status"/>
-              <attribute name="caller_id" read_only="1"/>
-              <attribute name="caller_email"/>
-              <attribute name="org_id" read_only="1"/>
-              <attribute name="org_name"/>
-              <attribute name="service_id" read_only="1"/>
-              <attribute name="service_name"/>
-              <attribute name="servicesubcategory_id" read_only="1"/>
-              <attribute name="servicesubcategory_name"/>
-              <attribute name="product" read_only="1"/>
-              <attribute name="impact" read_only="1"/>
-              <attribute name="urgency" read_only="1"/>
-              <attribute name="priority" read_only="1"/>
-              <attribute name="workgroup_id" read_only="1"/>
-              <attribute name="workgroup_name"/>
-              <attribute name="agent_id" read_only="1"/>
-              <attribute name="agent_name"/>
-              <attribute name="agent_email" read_only="1"/>
-              <attribute name="related_problem_id"/>
-              <attribute name="related_problem_ref"/>
-              <attribute name="related_change_id"/>
-              <attribute name="related_change_ref"/>
-              <attribute name="close_date" hidden="1"/>
-              <attribute name="last_update" read_only="1"/>
-              <attribute name="assignment_date" hidden="1"/>
-              <attribute name="resolution_date" hidden="1"/>
-              <attribute name="tto_escalation_deadline" hidden="1"/>
-              <attribute name="ttr_escalation_deadline" hidden="1"/>
-              <attribute name="closure_deadline" read_only="1"/>
-              <attribute name="resolution_code" must_prompt="1"/>
-              <attribute name="solution" must_prompt="1"/>
-              <attribute name="user_satisfaction" hidden="1"/>
-              <attribute name="user_commment" hidden="1"/>
-              <attribute name="related_change_id_finalclass_recall"/>
+              <attribute id="ref">
+                <read_only/>
+              </attribute>
+              <attribute id="title">
+                <read_only/>
+              </attribute>
+              <attribute id="description">
+                <read_only/>
+              </attribute>
+              <attribute id="start_date">
+                <read_only/>
+              </attribute>
+              <attribute id="caller_id">
+                <read_only/>
+              </attribute>
+              <attribute id="org_id">
+                <read_only/>
+              </attribute>
+              <attribute id="service_id">
+                <read_only/>
+              </attribute>
+              <attribute id="servicesubcategory_id">
+                <read_only/>
+              </attribute>
+              <attribute id="product">
+                <read_only/>
+              </attribute>
+              <attribute id="impact">
+                <read_only/>
+              </attribute>
+              <attribute id="urgency">
+                <read_only/>
+              </attribute>
+              <attribute id="priority">
+                <read_only/>
+              </attribute>
+              <attribute id="workgroup_id">
+                <read_only/>
+              </attribute>
+              <attribute id="agent_id">
+                <read_only/>
+              </attribute>
+              <attribute id="agent_email">
+                <read_only/>
+              </attribute>
+              <attribute id="close_date">
+                <hidden/>
+              </attribute>
+              <attribute id="last_update">
+                <read_only/>
+              </attribute>
+              <attribute id="assignment_date">
+                <hidden/>
+              </attribute>
+              <attribute id="resolution_date">
+                <hidden/>
+              </attribute>
+              <attribute id="tto_escalation_deadline">
+                <hidden/>
+              </attribute>
+              <attribute id="ttr_escalation_deadline">
+                <hidden/>
+              </attribute>
+              <attribute id="closure_deadline">
+                <read_only/>
+              </attribute>
+              <attribute id="resolution_code">
+                <must_prompt/>
+              </attribute>
+              <attribute id="solution">
+                <must_prompt/>
+              </attribute>
+              <attribute id="user_satisfaction">
+                <hidden/>
+              </attribute>
+              <attribute id="user_commment">
+                <hidden/>
+              </attribute>
             </flags>
             <transitions>
-              <transition stimulus="ev_reassign" target="assigned">
+              <transition>
+                <stimulus>ev_reassign</stimulus>
+                <target>assigned</target>
                 <actions/>
               </transition>
-              <transition stimulus="ev_close" target="closed">
+              <transition>
+                <stimulus>ev_close</stimulus>
+                <target>closed</target>
                 <actions>
-                  <action verb="SetClosureDate"/>
+                  <action>
+                    <verb>SetClosureDate</verb>
+                  </action>
                 </actions>
               </transition>
             </transitions>
           </state>
-          <state name="closed">
+          <state id="closed">
             <flags>
-              <attribute name="ref" read_only="1"/>
-              <attribute name="title" read_only="1"/>
-              <attribute name="description" read_only="1"/>
-              <attribute name="ticket_log" read_only="1"/>
-              <attribute name="start_date" read_only="1"/>
-              <attribute name="document_list"/>
-              <attribute name="ci_list"/>
-              <attribute name="contact_list"/>
-              <attribute name="incident_list"/>
-              <attribute name="status"/>
-              <attribute name="caller_id" read_only="1"/>
-              <attribute name="caller_email"/>
-              <attribute name="org_id" read_only="1"/>
-              <attribute name="org_name"/>
-              <attribute name="service_id" read_only="1"/>
-              <attribute name="service_name"/>
-              <attribute name="servicesubcategory_id" read_only="1"/>
-              <attribute name="servicesubcategory_name"/>
-              <attribute name="product" read_only="1"/>
-              <attribute name="impact" read_only="1"/>
-              <attribute name="urgency" read_only="1"/>
-              <attribute name="priority" read_only="1"/>
-              <attribute name="workgroup_id" read_only="1"/>
-              <attribute name="workgroup_name"/>
-              <attribute name="agent_id" read_only="1"/>
-              <attribute name="agent_name"/>
-              <attribute name="agent_email" read_only="1"/>
-              <attribute name="related_problem_id"/>
-              <attribute name="related_problem_ref"/>
-              <attribute name="related_change_id"/>
-              <attribute name="related_change_ref"/>
-              <attribute name="close_date" read_only="1"/>
-              <attribute name="last_update" read_only="1"/>
-              <attribute name="assignment_date" hidden="1"/>
-              <attribute name="resolution_date" hidden="1"/>
-              <attribute name="tto_escalation_deadline" hidden="1"/>
-              <attribute name="ttr_escalation_deadline" hidden="1"/>
-              <attribute name="closure_deadline" hidden="1"/>
-              <attribute name="resolution_code" read_only="1"/>
-              <attribute name="solution" read_only="1"/>
-              <attribute name="user_satisfaction" must_prompt="1"/>
-              <attribute name="user_commment" must_prompt="1"/>
-              <attribute name="related_change_id_finalclass_recall"/>
+              <attribute id="ref">
+                <read_only/>
+              </attribute>
+              <attribute id="title">
+                <read_only/>
+              </attribute>
+              <attribute id="description">
+                <read_only/>
+              </attribute>
+              <attribute id="ticket_log">
+                <read_only/>
+              </attribute>
+              <attribute id="start_date">
+                <read_only/>
+              </attribute>
+              <attribute id="caller_id">
+                <read_only/>
+              </attribute>
+              <attribute id="org_id">
+                <read_only/>
+              </attribute>
+              <attribute id="service_id">
+                <read_only/>
+              </attribute>
+              <attribute id="servicesubcategory_id">
+                <read_only/>
+              </attribute>
+              <attribute id="product">
+                <read_only/>
+              </attribute>
+              <attribute id="impact">
+                <read_only/>
+              </attribute>
+              <attribute id="urgency">
+                <read_only/>
+              </attribute>
+              <attribute id="priority">
+                <read_only/>
+              </attribute>
+              <attribute id="workgroup_id">
+                <read_only/>
+              </attribute>
+              <attribute id="agent_id">
+                <read_only/>
+              </attribute>
+              <attribute id="agent_email">
+                <read_only/>
+              </attribute>
+              <attribute id="close_date">
+                <read_only/>
+              </attribute>
+              <attribute id="last_update">
+                <read_only/>
+              </attribute>
+              <attribute id="assignment_date">
+                <hidden/>
+              </attribute>
+              <attribute id="resolution_date">
+                <hidden/>
+              </attribute>
+              <attribute id="tto_escalation_deadline">
+                <hidden/>
+              </attribute>
+              <attribute id="ttr_escalation_deadline">
+                <hidden/>
+              </attribute>
+              <attribute id="closure_deadline">
+                <hidden/>
+              </attribute>
+              <attribute id="resolution_code">
+                <read_only/>
+              </attribute>
+              <attribute id="solution">
+                <read_only/>
+              </attribute>
+              <attribute id="user_satisfaction">
+                <must_prompt/>
+              </attribute>
+              <attribute id="user_commment">
+                <must_prompt/>
+              </attribute>
             </flags>
             <transitions/>
           </state>
         </states>
       </lifecycle>
       <methods>
-        <method name="SetClosureDeadline" static="false" access="public" type="LifecycleAction"><![CDATA[	public function SetClosureDeadline($sStimulusCode)
+        <method id="SetClosureDeadline">
+          <static>false</static>
+          <access>public</access>
+          <type>LifecycleAction</type>
+          <code><![CDATA[	public function SetClosureDeadline($sStimulusCode)
 	{
 		$iMaxWaitHours = 24;
 		$this->Set('closure_deadline', time() + $iMaxWaitHours * 3600);
 		return true;
-	}]]></method>
-        <method name="SetAssignedDate" static="false" access="public" type="LifecycleAction"><![CDATA[	public function SetAssignedDate($sStimulusCode)
+	}]]></code>
+        </method>
+        <method id="SetAssignedDate">
+          <static>false</static>
+          <access>public</access>
+          <type>LifecycleAction</type>
+          <code><![CDATA[	public function SetAssignedDate($sStimulusCode)
 	{
 		$this->Set('assignment_date', time());
 		return true;
-	}]]></method>
-        <method name="SetResolveDate" static="false" access="public" type="LifecycleAction"><![CDATA[	public function SetResolveDate($sStimulusCode)
+	}]]></code>
+        </method>
+        <method id="SetResolveDate">
+          <static>false</static>
+          <access>public</access>
+          <type>LifecycleAction</type>
+          <code><![CDATA[	public function SetResolveDate($sStimulusCode)
 	{
 		$this->Set('resolution_date', time());
 		return true;
-	}]]></method>
-        <method name="SetClosureDate" static="false" access="public" type="LifecycleAction"><![CDATA[	public function SetClosureDate($sStimulusCode)
+	}]]></code>
+        </method>
+        <method id="SetClosureDate">
+          <static>false</static>
+          <access>public</access>
+          <type>LifecycleAction</type>
+          <code><![CDATA[	public function SetClosureDate($sStimulusCode)
 	{
 		$this->Set('close_date', time());
 		return true;
-	}]]></method>
-        <method name="ComputeSLT" static="false" access="public" type="LifecycleAction"><comment><![CDATA[/**
+	}]]></code>
+        </method>
+        <method id="ComputeSLT">
+          <comment><![CDATA[/**
 	 * Determines the shortest SLT, for this ticket, for the given metric. Returns null is no SLT was found
 	 * @param string $sMetric Type of metric 'TTO', 'TTR', etc as defined in the SLT class
 	 * @return hash Array with 'SLT' => name of the SLT selected, 'value' => duration in seconds of the SLT metric, null if no SLT applies to this ticket
-	 */]]></comment><![CDATA[	public function ComputeSLT($sMetric = 'TTO')
+	 */]]></comment>
+          <static>false</static>
+          <access>public</access>
+          <type>LifecycleAction</type>
+          <code><![CDATA[	public function ComputeSLT($sMetric = 'TTO')
 	{
 		$aResult = null;
 		if (MetaModel::IsValidClass('SLT'))
@@ -656,11 +1092,17 @@
 			}
 		}
 		return $aResult;
-	}]]></method>
-        <method name="ComputePriority" static="false" access="public" type="LifecycleAction"><comment><![CDATA[/**
+	}]]></code>
+        </method>
+        <method id="ComputePriority">
+          <comment>/**
 	 * Compute the priority of the ticket based on its impact and urgency
 	 * @return integer The priority of the ticket 1(high) .. 3(low)
-	 */]]></comment><![CDATA[	public function ComputePriority()
+	 */</comment>
+          <static>false</static>
+          <access>public</access>
+          <type>LifecycleAction</type>
+          <code><![CDATA[	public function ComputePriority()
 	{
 		// priority[impact][urgency]
 		$aPriorities = array(
@@ -685,8 +1127,13 @@
 		);
 		$iPriority = $aPriorities[(int)$this->Get('impact')][(int)$this->Get('urgency')];
 		return $iPriority;		
-	}]]></method>
-        <method name="ComputeValues" static="false" access="public" type="Overload-DBObject"><![CDATA[	public function ComputeValues()
+	}]]></code>
+        </method>
+        <method id="ComputeValues">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public function ComputeValues()
 	{
 		// Compute the priority of the ticket
 		$this->Set('priority', $this->ComputePriority());
@@ -714,10 +1161,16 @@
 		{
 			$this->Set('ttr_escalation_deadline', null);
 		}
-	}]]></method>
-        <method name="GetHilightClass" static="false" access="public" type="Overload-iDisplay"><comment><![CDATA[/**
+	}]]></code>
+        </method>
+        <method id="GetHilightClass">
+          <comment><![CDATA[/**
 	 * Determines if the ticket must be hilighted in the list, if we're about to miss a SLA for instance
-	 */]]></comment><![CDATA[	public function GetHilightClass()
+	 */]]></comment>
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-iDisplay</type>
+          <code><![CDATA[	public function GetHilightClass()
 	{
 		$sHilightClass = '';
 		switch($this->GetState())
@@ -766,15 +1219,26 @@
 			break;
 		}
 		return $sHilightClass;
-	}]]></method>
-        <method name="OnInsert" static="false" access="protected" type="Overload-DBObject"><![CDATA[	protected function OnInsert()
+	}]]></code>
+        </method>
+        <method id="OnInsert">
+          <static>false</static>
+          <access>protected</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	protected function OnInsert()
 	{
 		$this->Set('last_update', time());
-	}]]></method>
-        <method name="OnUpdate" static="false" access="protected" type="Overload-DBObject"><![CDATA[	protected function OnUpdate()
+	}]]></code>
+        </method>
+        <method id="OnUpdate">
+          <static>false</static>
+          <access>protected</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	protected function OnUpdate()
 	{
 		$this->Set('last_update', time());
-	}]]></method>
+	}]]></code>
+        </method>
       </methods>
       <presentation>
         <details>
@@ -853,27 +1317,54 @@
         </list>
       </presentation>
     </class>
-    <class name="lnkTicketToDoc" category="bizmodel,searchable,incidentmgmt,requestmgmt,changemgmt,problemmgmt,lnkticket" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" is_link="1" db_table="lnktickettodoc" db_key_field="id" db_final_class_field="">
+    <class id="lnkTicketToDoc">
       <properties>
-        <naming format="%1$s">
+        <is_link>1</is_link>
+        <category>bizmodel,searchable,incidentmgmt,requestmgmt,changemgmt,problemmgmt,lnkticket</category>
+        <parent>cmdbAbstractObject</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnktickettodoc</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="ticket_id"/>
+            <attribute id="ticket_id"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon></icon>
         <reconciliation>
           <attributes>
-            <attribute name="ticket_id"/>
-            <attribute name="document_id"/>
+            <attribute id="ticket_id"/>
+            <attribute id="document_id"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="ticket_id" xsi:type="AttributeExternalKey" target_class="Ticket" jointype="" sql="ticket_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="ticket_ref" xsi:type="AttributeExternalField" extkey_attcode="ticket_id" target_attcode="ref"/>
-        <field name="document_id" xsi:type="AttributeExternalKey" target_class="Document" jointype="" sql="document_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="document_name" xsi:type="AttributeExternalField" extkey_attcode="document_id" target_attcode="name"/>
+        <field id="ticket_id" xsi:type="AttributeExternalKey">
+          <sql>ticket_id</sql>
+          <target_class>Ticket</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="ticket_ref" xsi:type="AttributeExternalField">
+          <extkey_attcode>ticket_id</extkey_attcode>
+          <target_attcode>ref</target_attcode>
+        </field>
+        <field id="document_id" xsi:type="AttributeExternalKey">
+          <sql>document_id</sql>
+          <target_class>Document</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="document_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>document_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -897,29 +1388,63 @@
         </list>
       </presentation>
     </class>
-    <class name="lnkTicketToContact" category="bizmodel,searchable,incidentmgmt,requestmgmt,changemgmt,problemmgmt,lnkticket" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" is_link="1" db_table="lnktickettocontact" db_key_field="id" db_final_class_field="">
+    <class id="lnkTicketToContact">
       <properties>
-        <naming format="%1$s">
+        <is_link>1</is_link>
+        <category>bizmodel,searchable,incidentmgmt,requestmgmt,changemgmt,problemmgmt,lnkticket</category>
+        <parent>cmdbAbstractObject</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnktickettocontact</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="ticket_id"/>
+            <attribute id="ticket_id"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon></icon>
         <reconciliation>
           <attributes>
-            <attribute name="ticket_id"/>
-            <attribute name="contact_id"/>
+            <attribute id="ticket_id"/>
+            <attribute id="contact_id"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="ticket_id" xsi:type="AttributeExternalKey" target_class="Ticket" jointype="" sql="ticket_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="ticket_ref" xsi:type="AttributeExternalField" extkey_attcode="ticket_id" target_attcode="ref"/>
-        <field name="contact_id" xsi:type="AttributeExternalKey" target_class="Contact" jointype="" sql="contact_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="contact_name" xsi:type="AttributeExternalField" extkey_attcode="contact_id" target_attcode="name"/>
-        <field name="contact_email" xsi:type="AttributeExternalField" extkey_attcode="contact_id" target_attcode="email"/>
-        <field name="role" xsi:type="AttributeString" sql="role" default_value="" is_null_allowed="true"/>
+        <field id="ticket_id" xsi:type="AttributeExternalKey">
+          <sql>ticket_id</sql>
+          <target_class>Ticket</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="ticket_ref" xsi:type="AttributeExternalField">
+          <extkey_attcode>ticket_id</extkey_attcode>
+          <target_attcode>ref</target_attcode>
+        </field>
+        <field id="contact_id" xsi:type="AttributeExternalKey">
+          <sql>contact_id</sql>
+          <target_class>Contact</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="contact_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>contact_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="contact_email" xsi:type="AttributeExternalField">
+          <extkey_attcode>contact_id</extkey_attcode>
+          <target_attcode>email</target_attcode>
+        </field>
+        <field id="role" xsi:type="AttributeString">
+          <sql>role</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -949,29 +1474,63 @@
         </list>
       </presentation>
     </class>
-    <class name="lnkTicketToCI" category="bizmodel,searchable,incidentmgmt,requestmgmt,changemgmt,problemmgmt,lnkticket" parent="cmdbAbstractObject" abstract="false" key_type="autoincrement" is_link="1" db_table="lnktickettoci" db_key_field="id" db_final_class_field="">
+    <class id="lnkTicketToCI">
       <properties>
-        <naming format="%1$s">
+        <is_link>1</is_link>
+        <category>bizmodel,searchable,incidentmgmt,requestmgmt,changemgmt,problemmgmt,lnkticket</category>
+        <parent>cmdbAbstractObject</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnktickettoci</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="ticket_id"/>
+            <attribute id="ticket_id"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon></icon>
         <reconciliation>
           <attributes>
-            <attribute name="ticket_id"/>
-            <attribute name="ci_id"/>
+            <attribute id="ticket_id"/>
+            <attribute id="ci_id"/>
           </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field name="ticket_id" xsi:type="AttributeExternalKey" target_class="Ticket" jointype="" sql="ticket_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="ticket_ref" xsi:type="AttributeExternalField" extkey_attcode="ticket_id" target_attcode="ref"/>
-        <field name="ci_id" xsi:type="AttributeExternalKey" target_class="FunctionalCI" jointype="" sql="ci_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="ci_name" xsi:type="AttributeExternalField" extkey_attcode="ci_id" target_attcode="name"/>
-        <field name="ci_status" xsi:type="AttributeExternalField" extkey_attcode="ci_id" target_attcode="status"/>
-        <field name="impact" xsi:type="AttributeString" sql="impact" default_value="" is_null_allowed="true"/>
+        <field id="ticket_id" xsi:type="AttributeExternalKey">
+          <sql>ticket_id</sql>
+          <target_class>Ticket</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="ticket_ref" xsi:type="AttributeExternalField">
+          <extkey_attcode>ticket_id</extkey_attcode>
+          <target_attcode>ref</target_attcode>
+        </field>
+        <field id="ci_id" xsi:type="AttributeExternalKey">
+          <sql>ci_id</sql>
+          <target_class>FunctionalCI</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="ci_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>ci_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="ci_status" xsi:type="AttributeExternalField">
+          <extkey_attcode>ci_id</extkey_attcode>
+          <target_attcode>status</target_attcode>
+        </field>
+        <field id="impact" xsi:type="AttributeString">
+          <sql>impact</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
       </fields>
       <methods/>
       <presentation>

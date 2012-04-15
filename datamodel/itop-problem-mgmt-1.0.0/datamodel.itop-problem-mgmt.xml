@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <classes>
-    <class name="Problem" category="bizmodel,searchable,problemmgmt" parent="Ticket" abstract="false" key_type="autoincrement" db_table="ticket_problem" db_key_field="id" db_final_class_field="">
+    <class id="Problem">
       <properties>
         <comment><![CDATA[/**
  * Persistent classes for a CMDB
@@ -11,296 +11,514 @@
  * @author      Denis Flaven <denis.flaven@combodo.com>
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */]]></comment>
-        <naming format="%1$s">
+        <category>bizmodel,searchable,problemmgmt</category>
+        <parent>Ticket</parent>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>ticket_problem</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
           <attributes>
-            <attribute name="ref"/>
+            <attribute id="ref"/>
           </attributes>
         </naming>
         <display_template></display_template>
         <icon>images/problem.png</icon>
         <reconciliation>
           <attributes>
-            <attribute name="ref"/>
+            <attribute id="ref"/>
           </attributes>
         </reconciliation>
         <order>
           <columns>
-            <column name="ref" ascending="false"/>
+            <column id="ref" order="0">
+              <ascending>false</ascending>
+            </column>
           </columns>
         </order>
       </properties>
       <fields>
-        <field name="status" xsi:type="AttributeEnum" sql="status" default_value="new" is_null_allowed="false">
+        <field id="status" xsi:type="AttributeEnum">
           <values>
             <value>new</value>
             <value>assigned</value>
             <value>resolved</value>
             <value>closed</value>
           </values>
+          <sql>status</sql>
+          <default_value>new</default_value>
+          <is_null_allowed>false</is_null_allowed>
         </field>
-        <field name="org_id" xsi:type="AttributeExternalKey" target_class="Organization" jointype="" sql="org_id" is_null_allowed="false" on_target_delete="DEL_AUTO"/>
-        <field name="org_name" xsi:type="AttributeExternalField" extkey_attcode="org_id" target_attcode="name"/>
-        <field name="service_id" xsi:type="AttributeExternalKey" target_class="Service" jointype="" filter="SELECT Service AS s JOIN SLA AS sla ON sla.service_id=s.id JOIN lnkContractToSLA AS ln ON ln.sla_id=sla.id JOIN CustomerContract AS cc ON ln.contract_id=cc.id WHERE cc.org_id =:this-&gt;org_id" sql="service_id" is_null_allowed="false" on_target_delete="DEL_MANUAL">
+        <field id="org_id" xsi:type="AttributeExternalKey">
+          <sql>org_id</sql>
+          <target_class>Organization</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="org_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>org_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="service_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT Service AS s JOIN SLA AS sla ON sla.service_id=s.id JOIN lnkContractToSLA AS ln ON ln.sla_id=sla.id JOIN CustomerContract AS cc ON ln.contract_id=cc.id WHERE cc.org_id =:this->org_id]]></filter>
           <dependencies>
-            <attribute name="org_id"/>
+            <attribute id="org_id"/>
           </dependencies>
+          <sql>service_id</sql>
+          <target_class>Service</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype></jointype>
         </field>
-        <field name="service_name" xsi:type="AttributeExternalField" extkey_attcode="service_id" target_attcode="name"/>
-        <field name="servicesubcategory_id" xsi:type="AttributeExternalKey" target_class="ServiceSubcategory" jointype="" filter="SELECT ServiceSubcategory WHERE service_id = :this-&gt;service_id" sql="servicesubcategory_id" is_null_allowed="false" on_target_delete="DEL_MANUAL">
+        <field id="service_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>service_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="servicesubcategory_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT ServiceSubcategory WHERE service_id = :this->service_id]]></filter>
           <dependencies>
-            <attribute name="service_id"/>
+            <attribute id="service_id"/>
           </dependencies>
+          <sql>servicesubcategory_id</sql>
+          <target_class>ServiceSubcategory</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype></jointype>
         </field>
-        <field name="servicesubcategory_name" xsi:type="AttributeExternalField" extkey_attcode="servicesubcategory_id" target_attcode="name"/>
-        <field name="product" xsi:type="AttributeString" sql="product" default_value="" is_null_allowed="true"/>
-        <field name="impact" xsi:type="AttributeEnum" sql="impact" default_value="1" is_null_allowed="false">
+        <field id="servicesubcategory_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>servicesubcategory_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="product" xsi:type="AttributeString">
+          <sql>product</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="impact" xsi:type="AttributeEnum">
           <values>
             <value>1</value>
             <value>2</value>
             <value>3</value>
           </values>
+          <sql>impact</sql>
+          <default_value>1</default_value>
+          <is_null_allowed>false</is_null_allowed>
         </field>
-        <field name="urgency" xsi:type="AttributeEnum" sql="urgency" default_value="1" is_null_allowed="false">
+        <field id="urgency" xsi:type="AttributeEnum">
           <values>
             <value>1</value>
             <value>2</value>
             <value>3</value>
           </values>
+          <sql>urgency</sql>
+          <default_value>1</default_value>
+          <is_null_allowed>false</is_null_allowed>
         </field>
-        <field name="priority" xsi:type="AttributeEnum" sql="priority" default_value="1" is_null_allowed="false">
+        <field id="priority" xsi:type="AttributeEnum">
           <values>
             <value>1</value>
             <value>2</value>
             <value>3</value>
           </values>
+          <sql>priority</sql>
+          <default_value>1</default_value>
+          <is_null_allowed>false</is_null_allowed>
         </field>
-        <field name="workgroup_id" xsi:type="AttributeExternalKey" target_class="Team" jointype="" filter="SELECT Team AS t JOIN CustomerContract AS cc ON cc.support_team_id=t.id JOIN lnkContractToSLA AS ln ON ln.contract_id=cc.id JOIN SLA AS sla ON ln.sla_id=sla.id WHERE sla.service_id = :this-&gt;service_id AND cc.org_id = :this-&gt;org_id" sql="workgroup_id" is_null_allowed="false" on_target_delete="DEL_MANUAL">
+        <field id="workgroup_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT Team AS t JOIN CustomerContract AS cc ON cc.support_team_id=t.id JOIN lnkContractToSLA AS ln ON ln.contract_id=cc.id JOIN SLA AS sla ON ln.sla_id=sla.id WHERE sla.service_id = :this->service_id AND cc.org_id = :this->org_id]]></filter>
           <dependencies>
-            <attribute name="org_id"/>
-            <attribute name="service_id"/>
+            <attribute id="org_id"/>
+            <attribute id="service_id"/>
           </dependencies>
+          <sql>workgroup_id</sql>
+          <target_class>Team</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype></jointype>
         </field>
-        <field name="workgroup_name" xsi:type="AttributeExternalField" extkey_attcode="workgroup_id" target_attcode="name"/>
-        <field name="agent_id" xsi:type="AttributeExternalKey" target_class="Person" jointype="" filter="SELECT Person AS p JOIN lnkTeamToContact AS l ON l.contact_id=p.id JOIN Team AS t ON l.team_id=t.id WHERE t.id = :this-&gt;workgroup_id" sql="agent_id" is_null_allowed="true" on_target_delete="DEL_MANUAL">
+        <field id="workgroup_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>workgroup_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="agent_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT Person AS p JOIN lnkTeamToContact AS l ON l.contact_id=p.id JOIN Team AS t ON l.team_id=t.id WHERE t.id = :this->workgroup_id]]></filter>
           <dependencies>
-            <attribute name="workgroup_id"/>
+            <attribute id="workgroup_id"/>
           </dependencies>
+          <sql>agent_id</sql>
+          <target_class>Person</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype></jointype>
         </field>
-        <field name="agent_name" xsi:type="AttributeExternalField" extkey_attcode="agent_id" target_attcode="name"/>
-        <field name="agent_email" xsi:type="AttributeExternalField" extkey_attcode="agent_id" target_attcode="email"/>
-        <field name="related_change_id" xsi:type="AttributeExternalKey" target_class="Change" jointype="" sql="related_change_id" is_null_allowed="true" on_target_delete="DEL_MANUAL"/>
-        <field name="related_change_ref" xsi:type="AttributeExternalField" extkey_attcode="related_change_id" target_attcode="ref"/>
-        <field name="close_date" xsi:type="AttributeDateTime" sql="close_date" default_value="" is_null_allowed="true"/>
-        <field name="last_update" xsi:type="AttributeDateTime" sql="last_update" default_value="" is_null_allowed="true"/>
-        <field name="assignment_date" xsi:type="AttributeDateTime" sql="assignment_date" default_value="" is_null_allowed="true"/>
-        <field name="resolution_date" xsi:type="AttributeDateTime" sql="resolution_date" default_value="" is_null_allowed="true"/>
-        <field name="knownerrors_list" xsi:type="AttributeLinkedSet" linked_class="KnownError" ext_key_to_me="problem_id" count_min="0" count_max="0"/>
+        <field id="agent_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>agent_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="agent_email" xsi:type="AttributeExternalField">
+          <extkey_attcode>agent_id</extkey_attcode>
+          <target_attcode>email</target_attcode>
+        </field>
+        <field id="related_change_id" xsi:type="AttributeExternalKey">
+          <sql>related_change_id</sql>
+          <target_class>Change</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype></jointype>
+        </field>
+        <field id="related_change_ref" xsi:type="AttributeExternalField">
+          <extkey_attcode>related_change_id</extkey_attcode>
+          <target_attcode>ref</target_attcode>
+        </field>
+        <field id="close_date" xsi:type="AttributeDateTime">
+          <sql>close_date</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="last_update" xsi:type="AttributeDateTime">
+          <sql>last_update</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="assignment_date" xsi:type="AttributeDateTime">
+          <sql>assignment_date</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="resolution_date" xsi:type="AttributeDateTime">
+          <sql>resolution_date</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="knownerrors_list" xsi:type="AttributeLinkedSet">
+          <linked_class>KnownError</linked_class>
+          <ext_key_to_me>problem_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+        </field>
       </fields>
-      <lifecycle attribute="status">
+      <lifecycle>
+        <attribute>status</attribute>
         <stimuli>
-          <stimulus name="ev_assign" type="StimulusUserAction"/>
-          <stimulus name="ev_reassign" type="StimulusUserAction"/>
-          <stimulus name="ev_resolve" type="StimulusUserAction"/>
-          <stimulus name="ev_close" type="StimulusUserAction"/>
+          <stimulus id="ev_assign" xsi:type="StimulusUserAction"/>
+          <stimulus id="ev_reassign" xsi:type="StimulusUserAction"/>
+          <stimulus id="ev_resolve" xsi:type="StimulusUserAction"/>
+          <stimulus id="ev_close" xsi:type="StimulusUserAction"/>
         </stimuli>
         <states>
-          <state name="new">
+          <state id="new">
             <flags>
-              <attribute name="ref" read_only="1"/>
-              <attribute name="title"/>
-              <attribute name="description" must_change="1"/>
-              <attribute name="ticket_log" hidden="1"/>
-              <attribute name="start_date" read_only="1"/>
-              <attribute name="document_list"/>
-              <attribute name="ci_list"/>
-              <attribute name="contact_list"/>
-              <attribute name="incident_list"/>
-              <attribute name="status"/>
-              <attribute name="org_id" must_change="1"/>
-              <attribute name="org_name"/>
-              <attribute name="service_id" must_change="1"/>
-              <attribute name="service_name"/>
-              <attribute name="servicesubcategory_id" must_change="1"/>
-              <attribute name="servicesubcategory_name"/>
-              <attribute name="product" must_prompt="1"/>
-              <attribute name="impact" must_change="1"/>
-              <attribute name="urgency" must_change="1"/>
-              <attribute name="priority" read_only="1"/>
-              <attribute name="workgroup_id" must_change="1"/>
-              <attribute name="workgroup_name"/>
-              <attribute name="agent_id" hidden="1"/>
-              <attribute name="agent_name"/>
-              <attribute name="agent_email" hidden="1"/>
-              <attribute name="related_change_id" hidden="1"/>
-              <attribute name="related_change_ref"/>
-              <attribute name="close_date" hidden="1"/>
-              <attribute name="last_update" read_only="1"/>
-              <attribute name="assignment_date" hidden="1"/>
-              <attribute name="resolution_date" hidden="1"/>
-              <attribute name="knownerrors_list"/>
-              <attribute name="related_change_id_finalclass_recall"/>
+              <attribute id="ref">
+                <read_only/>
+              </attribute>
+              <attribute id="description">
+                <must_change/>
+              </attribute>
+              <attribute id="ticket_log">
+                <hidden/>
+              </attribute>
+              <attribute id="start_date">
+                <read_only/>
+              </attribute>
+              <attribute id="org_id">
+                <must_change/>
+              </attribute>
+              <attribute id="service_id">
+                <must_change/>
+              </attribute>
+              <attribute id="servicesubcategory_id">
+                <must_change/>
+              </attribute>
+              <attribute id="product">
+                <must_prompt/>
+              </attribute>
+              <attribute id="impact">
+                <must_change/>
+              </attribute>
+              <attribute id="urgency">
+                <must_change/>
+              </attribute>
+              <attribute id="priority">
+                <read_only/>
+              </attribute>
+              <attribute id="workgroup_id">
+                <must_change/>
+              </attribute>
+              <attribute id="agent_id">
+                <hidden/>
+              </attribute>
+              <attribute id="agent_email">
+                <hidden/>
+              </attribute>
+              <attribute id="related_change_id">
+                <hidden/>
+              </attribute>
+              <attribute id="close_date">
+                <hidden/>
+              </attribute>
+              <attribute id="last_update">
+                <read_only/>
+              </attribute>
+              <attribute id="assignment_date">
+                <hidden/>
+              </attribute>
+              <attribute id="resolution_date">
+                <hidden/>
+              </attribute>
             </flags>
             <transitions>
-              <transition stimulus="ev_assign" target="assigned">
+              <transition>
+                <stimulus>ev_assign</stimulus>
+                <target>assigned</target>
                 <actions>
-                  <action verb="SetAssignedDate"/>
+                  <action>
+                    <verb>SetAssignedDate</verb>
+                  </action>
                 </actions>
               </transition>
             </transitions>
           </state>
-          <state name="assigned">
+          <state id="assigned">
             <flags>
-              <attribute name="ref" read_only="1"/>
-              <attribute name="title" read_only="1"/>
-              <attribute name="description" read_only="1"/>
-              <attribute name="ticket_log"/>
-              <attribute name="start_date" read_only="1"/>
-              <attribute name="document_list"/>
-              <attribute name="ci_list"/>
-              <attribute name="contact_list"/>
-              <attribute name="incident_list"/>
-              <attribute name="status"/>
-              <attribute name="org_id" read_only="1"/>
-              <attribute name="org_name"/>
-              <attribute name="service_id"/>
-              <attribute name="service_name"/>
-              <attribute name="servicesubcategory_id"/>
-              <attribute name="servicesubcategory_name"/>
-              <attribute name="product"/>
-              <attribute name="impact"/>
-              <attribute name="urgency"/>
-              <attribute name="priority" read_only="1"/>
-              <attribute name="workgroup_id" mandatory="1" must_prompt="1"/>
-              <attribute name="workgroup_name"/>
-              <attribute name="agent_id" mandatory="1" must_prompt="1"/>
-              <attribute name="agent_name"/>
-              <attribute name="agent_email" read_only="1"/>
-              <attribute name="related_change_id"/>
-              <attribute name="related_change_ref"/>
-              <attribute name="close_date" hidden="1"/>
-              <attribute name="last_update" read_only="1"/>
-              <attribute name="assignment_date" read_only="1"/>
-              <attribute name="resolution_date" hidden="1"/>
-              <attribute name="knownerrors_list"/>
-              <attribute name="related_change_id_finalclass_recall"/>
+              <attribute id="ref">
+                <read_only/>
+              </attribute>
+              <attribute id="title">
+                <read_only/>
+              </attribute>
+              <attribute id="description">
+                <read_only/>
+              </attribute>
+              <attribute id="start_date">
+                <read_only/>
+              </attribute>
+              <attribute id="org_id">
+                <read_only/>
+              </attribute>
+              <attribute id="priority">
+                <read_only/>
+              </attribute>
+              <attribute id="workgroup_id">
+                <mandatory/>
+                <must_prompt/>
+              </attribute>
+              <attribute id="agent_id">
+                <mandatory/>
+                <must_prompt/>
+              </attribute>
+              <attribute id="agent_email">
+                <read_only/>
+              </attribute>
+              <attribute id="close_date">
+                <hidden/>
+              </attribute>
+              <attribute id="last_update">
+                <read_only/>
+              </attribute>
+              <attribute id="assignment_date">
+                <read_only/>
+              </attribute>
+              <attribute id="resolution_date">
+                <hidden/>
+              </attribute>
             </flags>
             <transitions>
-              <transition stimulus="ev_reassign" target="assigned">
+              <transition>
+                <stimulus>ev_reassign</stimulus>
+                <target>assigned</target>
                 <actions/>
               </transition>
-              <transition stimulus="ev_resolve" target="resolved">
+              <transition>
+                <stimulus>ev_resolve</stimulus>
+                <target>resolved</target>
                 <actions>
-                  <action verb="SetResolveDate"/>
+                  <action>
+                    <verb>SetResolveDate</verb>
+                  </action>
                 </actions>
               </transition>
             </transitions>
           </state>
-          <state name="resolved">
+          <state id="resolved">
             <flags>
-              <attribute name="ref" read_only="1"/>
-              <attribute name="title" read_only="1"/>
-              <attribute name="description" read_only="1"/>
-              <attribute name="ticket_log"/>
-              <attribute name="start_date" read_only="1"/>
-              <attribute name="document_list"/>
-              <attribute name="ci_list"/>
-              <attribute name="contact_list"/>
-              <attribute name="incident_list"/>
-              <attribute name="status"/>
-              <attribute name="org_id" read_only="1"/>
-              <attribute name="org_name"/>
-              <attribute name="service_id" read_only="1"/>
-              <attribute name="service_name"/>
-              <attribute name="servicesubcategory_id" read_only="1"/>
-              <attribute name="servicesubcategory_name"/>
-              <attribute name="product" read_only="1"/>
-              <attribute name="impact" read_only="1"/>
-              <attribute name="urgency" read_only="1"/>
-              <attribute name="priority" read_only="1"/>
-              <attribute name="workgroup_id" read_only="1"/>
-              <attribute name="workgroup_name"/>
-              <attribute name="agent_id" read_only="1"/>
-              <attribute name="agent_name"/>
-              <attribute name="agent_email" read_only="1"/>
-              <attribute name="related_change_id"/>
-              <attribute name="related_change_ref"/>
-              <attribute name="close_date" hidden="1"/>
-              <attribute name="last_update" read_only="1"/>
-              <attribute name="assignment_date" read_only="1"/>
-              <attribute name="resolution_date" hidden="1"/>
-              <attribute name="knownerrors_list"/>
-              <attribute name="related_change_id_finalclass_recall"/>
+              <attribute id="ref">
+                <read_only/>
+              </attribute>
+              <attribute id="title">
+                <read_only/>
+              </attribute>
+              <attribute id="description">
+                <read_only/>
+              </attribute>
+              <attribute id="start_date">
+                <read_only/>
+              </attribute>
+              <attribute id="org_id">
+                <read_only/>
+              </attribute>
+              <attribute id="service_id">
+                <read_only/>
+              </attribute>
+              <attribute id="servicesubcategory_id">
+                <read_only/>
+              </attribute>
+              <attribute id="product">
+                <read_only/>
+              </attribute>
+              <attribute id="impact">
+                <read_only/>
+              </attribute>
+              <attribute id="urgency">
+                <read_only/>
+              </attribute>
+              <attribute id="priority">
+                <read_only/>
+              </attribute>
+              <attribute id="workgroup_id">
+                <read_only/>
+              </attribute>
+              <attribute id="agent_id">
+                <read_only/>
+              </attribute>
+              <attribute id="agent_email">
+                <read_only/>
+              </attribute>
+              <attribute id="close_date">
+                <hidden/>
+              </attribute>
+              <attribute id="last_update">
+                <read_only/>
+              </attribute>
+              <attribute id="assignment_date">
+                <read_only/>
+              </attribute>
+              <attribute id="resolution_date">
+                <hidden/>
+              </attribute>
             </flags>
             <transitions>
-              <transition stimulus="ev_reassign" target="assigned">
+              <transition>
+                <stimulus>ev_reassign</stimulus>
+                <target>assigned</target>
                 <actions/>
               </transition>
-              <transition stimulus="ev_close" target="closed">
+              <transition>
+                <stimulus>ev_close</stimulus>
+                <target>closed</target>
                 <actions>
-                  <action verb="SetClosureDate"/>
+                  <action>
+                    <verb>SetClosureDate</verb>
+                  </action>
                 </actions>
               </transition>
             </transitions>
           </state>
-          <state name="closed">
+          <state id="closed">
             <flags>
-              <attribute name="ref" read_only="1"/>
-              <attribute name="title" read_only="1"/>
-              <attribute name="description" read_only="1"/>
-              <attribute name="ticket_log" read_only="1"/>
-              <attribute name="start_date" read_only="1"/>
-              <attribute name="document_list"/>
-              <attribute name="ci_list"/>
-              <attribute name="contact_list"/>
-              <attribute name="incident_list"/>
-              <attribute name="status"/>
-              <attribute name="org_id" read_only="1"/>
-              <attribute name="org_name"/>
-              <attribute name="service_id" read_only="1"/>
-              <attribute name="service_name"/>
-              <attribute name="servicesubcategory_id" read_only="1"/>
-              <attribute name="servicesubcategory_name"/>
-              <attribute name="product" read_only="1"/>
-              <attribute name="impact" read_only="1"/>
-              <attribute name="urgency" read_only="1"/>
-              <attribute name="priority" read_only="1"/>
-              <attribute name="workgroup_id" read_only="1"/>
-              <attribute name="workgroup_name"/>
-              <attribute name="agent_id" read_only="1"/>
-              <attribute name="agent_name"/>
-              <attribute name="agent_email" read_only="1"/>
-              <attribute name="related_change_id"/>
-              <attribute name="related_change_ref"/>
-              <attribute name="close_date" read_only="1"/>
-              <attribute name="last_update" read_only="1"/>
-              <attribute name="assignment_date" read_only="1"/>
-              <attribute name="resolution_date" hidden="1"/>
-              <attribute name="knownerrors_list"/>
-              <attribute name="related_change_id_finalclass_recall"/>
+              <attribute id="ref">
+                <read_only/>
+              </attribute>
+              <attribute id="title">
+                <read_only/>
+              </attribute>
+              <attribute id="description">
+                <read_only/>
+              </attribute>
+              <attribute id="ticket_log">
+                <read_only/>
+              </attribute>
+              <attribute id="start_date">
+                <read_only/>
+              </attribute>
+              <attribute id="org_id">
+                <read_only/>
+              </attribute>
+              <attribute id="service_id">
+                <read_only/>
+              </attribute>
+              <attribute id="servicesubcategory_id">
+                <read_only/>
+              </attribute>
+              <attribute id="product">
+                <read_only/>
+              </attribute>
+              <attribute id="impact">
+                <read_only/>
+              </attribute>
+              <attribute id="urgency">
+                <read_only/>
+              </attribute>
+              <attribute id="priority">
+                <read_only/>
+              </attribute>
+              <attribute id="workgroup_id">
+                <read_only/>
+              </attribute>
+              <attribute id="agent_id">
+                <read_only/>
+              </attribute>
+              <attribute id="agent_email">
+                <read_only/>
+              </attribute>
+              <attribute id="close_date">
+                <read_only/>
+              </attribute>
+              <attribute id="last_update">
+                <read_only/>
+              </attribute>
+              <attribute id="assignment_date">
+                <read_only/>
+              </attribute>
+              <attribute id="resolution_date">
+                <hidden/>
+              </attribute>
             </flags>
             <transitions/>
           </state>
         </states>
       </lifecycle>
       <methods>
-        <method name="SetAssignedDate" static="false" access="public" type="LifecycleAction"><![CDATA[        public function SetAssignedDate($sStimulusCode)
+        <method id="SetAssignedDate">
+          <static>false</static>
+          <access>public</access>
+          <type>LifecycleAction</type>
+          <code><![CDATA[        public function SetAssignedDate($sStimulusCode)
         {
                 $this->Set('assignment_date', time());
                 return true;
-        }]]></method>
-        <method name="SetResolveDate" static="false" access="public" type="LifecycleAction"><![CDATA[        public function SetResolveDate($sStimulusCode)
+        }]]></code>
+        </method>
+        <method id="SetResolveDate">
+          <static>false</static>
+          <access>public</access>
+          <type>LifecycleAction</type>
+          <code><![CDATA[        public function SetResolveDate($sStimulusCode)
         {
                 $this->Set('resolution_date', time());
                 return true;
-        }]]></method>
-        <method name="SetClosureDate" static="false" access="public" type="LifecycleAction"><![CDATA[        public function SetClosureDate($sStimulusCode)
+        }]]></code>
+        </method>
+        <method id="SetClosureDate">
+          <static>false</static>
+          <access>public</access>
+          <type>LifecycleAction</type>
+          <code><![CDATA[        public function SetClosureDate($sStimulusCode)
         {
                 $this->Set('close_date', time());
                 return true;
-        }]]></method>
-        <method name="ComputePriority" static="false" access="public" type="LifecycleAction"><comment><![CDATA[/** Compute the priority of the ticket based on its impact and urgency
+        }]]></code>
+        </method>
+        <method id="ComputePriority">
+          <comment>/** Compute the priority of the ticket based on its impact and urgency
          * @return integer The priority of the ticket 1(high) .. 3(low)
-         */]]></comment><![CDATA[        public function ComputePriority()
+         */</comment>
+          <static>false</static>
+          <access>public</access>
+          <type>LifecycleAction</type>
+          <code><![CDATA[        public function ComputePriority()
         {
                 // priority[impact][urgency]
                 $aPriorities = array(
@@ -325,8 +543,13 @@
                 );
                 $iPriority = $aPriorities[(int)$this->Get('impact')][(int)$this->Get('urgency')];
                 return $iPriority;              
-        }]]></method>
-        <method name="ComputeValues" static="false" access="public" type="Overload-DBObject"><![CDATA[	public function ComputeValues()
+        }]]></code>
+        </method>
+        <method id="ComputeValues">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public function ComputeValues()
 	{
 		// Compute the priority of the ticket
 		$this->Set('priority', $this->ComputePriority());
@@ -343,7 +566,8 @@
 			$sName = sprintf('P-%06d', $iKey);
 			$this->Set('ref', $sName);
 		}
-	}]]></method>
+	}]]></code>
+        </method>
       </methods>
       <presentation>
         <details>
@@ -352,9 +576,9 @@
             <item>ci_list</item>
             <item>contact_list</item>
             <item>incident_list</item>
-            <item key="col:col1">
+            <item id="col:col1">
               <items>
-                <item key="fieldset:Ticket:baseinfo">
+                <item id="fieldset:Ticket:baseinfo">
                   <items>
                     <item>ref</item>
                     <item>title</item>
@@ -366,7 +590,7 @@
                     <item>product</item>
                   </items>
                 </item>
-                <item key="fieldset:Ticket:moreinfo">
+                <item id="fieldset:Ticket:moreinfo">
                   <items>
                     <item>impact</item>
                     <item>urgency</item>
@@ -375,9 +599,9 @@
                 </item>
               </items>
             </item>
-            <item key="col:col2">
+            <item id="col:col2">
               <items>
-                <item key="fieldset:Ticket:date">
+                <item id="fieldset:Ticket:date">
                   <items>
                     <item>start_date</item>
                     <item>last_update</item>
@@ -385,13 +609,13 @@
                     <item>close_date</item>
                   </items>
                 </item>
-                <item key="fieldset:Ticket:contact">
+                <item id="fieldset:Ticket:contact">
                   <items>
                     <item>workgroup_id</item>
                     <item>agent_id</item>
                   </items>
                 </item>
-                <item key="fieldset:Ticket:relation">
+                <item id="fieldset:Ticket:relation">
                   <items>
                     <item>related_change_id</item>
                   </items>
@@ -434,31 +658,31 @@
   </classes>
   <menus>
     <menu id="Problem:Overview" xsi:type="TemplateMenuNode">
-      <rank value="0"/>
-      <parent value="ProblemManagement"/>
-      <template_file value="overview.html"/>
+      <rank>0</rank>
+      <parent>ProblemManagement</parent>
+      <template_file>overview.html</template_file>
     </menu>
     <menu id="NewProblem" xsi:type="NewObjectMenuNode">
-      <rank value="1"/>
-      <parent value="ProblemManagement"/>
-      <class value="Problem"/>
+      <rank>1</rank>
+      <parent>ProblemManagement</parent>
+      <class>Problem</class>
     </menu>
     <menu id="SearchProblems" xsi:type="SearchMenuNode">
-      <rank value="2"/>
-      <parent value="ProblemManagement"/>
-      <class value="Problem"/>
+      <rank>2</rank>
+      <parent>ProblemManagement</parent>
+      <class>Problem</class>
     </menu>
     <menu id="Problem:MyProblems" xsi:type="OQLMenuNode">
-      <rank value="1"/>
-      <parent value="Problem:Shortcuts"/>
-      <oql value="SELECT Problem WHERE agent_id = :current_contact_id AND status NOT IN (&quot;closed&quot;, &quot;resolved&quot;)"/>
-      <do_search value=""/>
+      <rank>1</rank>
+      <parent>Problem:Shortcuts</parent>
+      <oql><![CDATA[SELECT Problem WHERE agent_id = :current_contact_id AND status NOT IN ("closed", "resolved")]]></oql>
+      <do_search></do_search>
     </menu>
     <menu id="Problem:OpenProblems" xsi:type="OQLMenuNode">
-      <rank value="2"/>
-      <parent value="Problem:Shortcuts"/>
-      <oql value="SELECT Problem WHERE status IN (&quot;new&quot;, &quot;assigned&quot;, &quot;resolved&quot;)"/>
-      <do_search value=""/>
+      <rank>2</rank>
+      <parent>Problem:Shortcuts</parent>
+      <oql><![CDATA[SELECT Problem WHERE status IN ("new", "assigned", "resolved")]]></oql>
+      <do_search></do_search>
     </menu>
   </menus>
 </itop_design>

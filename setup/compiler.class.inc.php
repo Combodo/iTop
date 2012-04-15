@@ -141,14 +141,13 @@ EOF;
 		
 				foreach($oClasses as $oClass)
 				{
-					$sClass = $oClass->getAttribute("name");
 					try
 					{
 						$this->CompileClass($oClass, $sResultFile, $sRelativeDir, $oP);
 					}
 					catch (ssDOMFormatException $e)
 					{
-						$sClass = $oClass->getAttribute("name");
+						$sClass = $oClass->getAttribute("id");
 						throw new Exception("Failed to process class '$sClass', from '$sModuleRootDir': ".$e->getMessage());
 					}
 				}
@@ -175,9 +174,9 @@ EOF;
 				$aMenusToLoad = array();
 				foreach($oMenus as $oMenu)
 				{
-					if ($oParent = $this->GetOptionalElement($oMenu, 'parent'))
+					if ($sParent = $oMenu->GetChildText('parent', null))
 					{
-						$aMenusToLoad[] = $oParent->GetAttribute('value');
+						$aMenusToLoad[] = $sParent;
 					}
 					// Note: the order matters: the parents must be defined BEFORE
 					$aMenusToLoad[] = $oMenu->GetAttribute('id');
@@ -192,7 +191,7 @@ EOF;
 					}
 					catch (ssDOMFormatException $e)
 					{
-						$sMenu = $oMenu->getAttribute("name");
+						$sMenu = $oMenu->getAttribute("id");
 						throw new Exception("Failed to process menu '$sMenu', from '$sModuleRootDir': ".$e->getMessage());
 					}
 				}
@@ -260,104 +259,6 @@ EOF;
 		}
 	}
 	
-	
-	/**
-	 * Helper to browse the DOM -could be factorized in ModelFactory
-	 * Returns the node directly under the given node, and that is supposed to be always present and unique 
-	 */ 
-	protected function GetUniqueElement($oDOMNode, $sTagName, $bMustExist = true)
-	{
-		$oNode = null;
-		if ($oDOMNode->hasChildNodes())
-		{
-			foreach($oDOMNode->childNodes as $oChildNode)
-			{
-				if ($oChildNode->nodeName == $sTagName)
-				{
-					$oNode = $oChildNode;
-					break;
-				}
-			}
-		}
-		if ($bMustExist && is_null($oNode))
-		{
-			throw new DOMFormatException('Missing unique tag: '.$sTagName);
-		}
-		return $oNode;
-	}
-	
-	/**
-	 * Helper to browse the DOM -could be factorized in ModelFactory
-	 * Returns the node directly under the given node, or null is missing 
-	 */ 
-	protected function GetOptionalElement($oDOMNode, $sTagName)
-	{
-		return $this->GetUniqueElement($oDOMNode, $sTagName, false);
-	}
-	
-	
-	/**
-	 * Helper to browse the DOM -could be factorized in ModelFactory
-	 * Returns the TEXT of the given node (possibly from several subnodes) 
-	 */ 
-	protected function GetNodeText($oNode)
-	{
-		$sText = '';
-		if ($oNode->hasChildNodes())
-		{
-			foreach($oNode->childNodes as $oChildNode)
-			{
-				if ($oChildNode instanceof DOMCharacterData) // Base class of DOMText and DOMCdataSection
-				{
-					$sText .= $oChildNode->wholeText;
-				}
-			}
-		}
-		return $sText;
-	}
-	
-	/**
-	 * Helper to browse the DOM -could be factorized in ModelFactory
-	 * Assumes the given node to be either a text or
-	 * <items>
-	 *   <item [key]="..."]>value<item>
-	 *   <item [key]="..."]>value<item>
-	 * </items>
-	 * where value can be the either a text or an array of items... recursively 
-	 * Returns a PHP array 
-	 */ 
-	protected function GetNodeAsArrayOfItems($oNode)
-	{
-		$oItems = $this->GetOptionalElement($oNode, 'items');
-		if ($oItems)
-		{
-			$res = array();
-			if ($oItems->hasChildNodes())
-			{
-				foreach($oItems->childNodes as $oItem)
-				{
-					// When an attribute is msising
-					if ($oItem->hasAttributes() && $oItem->hasAttribute('key'))
-					{
-						$key = $oItem->getAttribute('key');
-						$res[$key] = $this->GetNodeAsArrayOfItems($oItem);
-					}
-					else
-					{
-						$res[] = $this->GetNodeAsArrayOfItems($oItem);
-					}
-				}
-			}
-		}
-		else
-		{
-			$res = $this->GetNodeText($oNode);
-		}
-		return $res;
-	}
-	
-	
-	
 	/**
 	 * Helper to format the flags for an attribute, in a given state
 	 * @param object $oAttNode DOM node containing the information to build the flags
@@ -376,7 +277,7 @@ EOF;
 		$aFlags = array();
 		foreach ($aNodeAttributeToFlag as $sNodeAttribute => $sFlag)
 		{
-			$bFlag = ($oAttNode->GetAttribute($sNodeAttribute) == '1');
+			$bFlag = ($oAttNode->GetOptionalElement($sNodeAttribute) != null);
 			if ($bFlag)
 			{
 				$aFlags[] = $sFlag;
@@ -426,22 +327,22 @@ EOF;
 
 	protected function CompileClass($oClass, $sResFile, $sModuleRelativeDir, $oP)
 	{
-		$sClass = $oClass->getAttribute('name');
-		$oProperties = $this->GetUniqueElement($oClass, 'properties');
+		$sClass = $oClass->getAttribute('id');
+		$oProperties = $oClass->GetUniqueElement('properties');
 	
 		// Class caracteristics
 		//
 		$aClassParams = array();
-		$aClassParams['category'] = "'".$oClass->getAttribute('category')."'";
+		$aClassParams['category'] = "'".$oProperties->GetChildText('category')."'";
 		$aClassParams['key_type'] = "'autoincrement'";
 	
-		$oNaming = $this->GetUniqueElement($oProperties, 'naming');
-		$oNameAttributes = $this->GetUniqueElement($oNaming, 'attributes');
+		$oNaming = $oProperties->GetUniqueElement('naming');
+		$oNameAttributes = $oNaming->GetUniqueElement('attributes');
 		$oAttributes = $oNameAttributes->getElementsByTagName('attribute');
 		$aNameAttCodes = array();
 		foreach($oAttributes as $oAttribute)
 		{
-			$aNameAttCodes[] = $oAttribute->getAttribute('name');
+			$aNameAttCodes[] = $oAttribute->getAttribute('id');
 		}
 		if (count($aNameAttCodes) > 1)
 		{
@@ -459,10 +360,10 @@ EOF;
 		}
 		$aClassParams['name_attcode'] = $sNameAttCode;
 	
-		$oLifecycle = $this->GetOptionalElement($oClass, 'lifecycle');
+		$oLifecycle = $oClass->GetOptionalElement('lifecycle');
 		if ($oLifecycle)
 		{
-			$sStateAttCode = $oLifecycle->getAttribute('attribute');
+			$sStateAttCode = $oLifecycle->GetChildText('attribute');
 		}
 		else
 		{
@@ -470,43 +371,41 @@ EOF;
 		}
 		$aClassParams['state_attcode'] = "'$sStateAttCode'";
 	
-		$oReconciliation = $this->GetUniqueElement($oProperties, 'reconciliation');
+		$oReconciliation = $oProperties->GetUniqueElement('reconciliation');
 		$oReconcAttributes = $oReconciliation->getElementsByTagName('attribute');
 		$aReconcAttCodes = array();
 		foreach($oReconcAttributes as $oAttribute)
 		{
-			$aReconcAttCodes[] = $oAttribute->getAttribute('name');
+			$aReconcAttCodes[] = $oAttribute->getAttribute('id');
 		}
 		$sReconcKeys = "array('".implode("', '", $aReconcAttCodes)."')";
 		$aClassParams['reconc_keys'] = $sReconcKeys;
 	
-		$aClassParams['db_table'] = "'".$oClass->getAttribute('db_table')."'";
-		$aClassParams['db_key_field'] = "'".$oClass->getAttribute('db_key_field')."'";
-		$aClassParams['db_finalclass_field'] = "'".$oClass->getAttribute('db_final_class_field')."'";
+		$aClassParams['db_table'] = "'".$oProperties->GetChildText('db_table')."'";
+		$aClassParams['db_key_field'] = "'".$oProperties->GetChildText('db_key_field')."'";
+		$aClassParams['db_finalclass_field'] = "'".$oProperties->GetChildText('db_final_class_field')."'";
 	
-		$oDisplayTemplate = $this->GetOptionalElement($oProperties, 'display_template');
-		if ($oDisplayTemplate && (strlen($oDisplayTemplate->textContent) > 0))
+		if (($sDisplayTemplate = $oProperties->GetChildText('display_template')) && (strlen($sDisplayTemplate) > 0))
 		{
-			$sDisplayTemplate = $sModuleRelativeDir.'/'.$oDisplayTemplate->textContent;
+			$sDisplayTemplate = $sModuleRelativeDir.'/'.$sDisplayTemplate;
 			$aClassParams['display_template'] = "utils::GetAbsoluteUrlModulesRoot().'$sDisplayTemplate'";
 		}
 	
-		$oIcon = $this->GetOptionalElement($oProperties, 'icon');
-		if ($oIcon && (strlen($oIcon->textContent) > 0))
+		if (($sIcon = $oProperties->GetChildText('icon')) && (strlen($sIcon) > 0))
 		{
-			$sIcon = $sModuleRelativeDir.'/'.$oIcon->textContent;
+			$sIcon = $sModuleRelativeDir.'/'.$sIcon;
 			$aClassParams['icon'] = "utils::GetAbsoluteUrlModulesRoot().'$sIcon'";
 		}
 	
-		$oOrder = $this->GetOptionalElement($oProperties, 'order');
+		$oOrder = $oProperties->GetOptionalElement('order');
 		if ($oOrder)
 		{
-			$oColumnsNode = $this->GetUniqueElement($oOrder, 'columns');
+			$oColumnsNode = $oOrder->GetUniqueElement('columns');
 			$oColumns = $oColumnsNode->getElementsByTagName('column');
 			$aSortColumns = array();
 			foreach($oColumns as $oColumn)
 			{
-				$aSortColumns[] = "'".$oColumn->getAttribute('name')."' => ".(($oColumn->getAttribute('ascending') == 'true') ? 'true' : 'false');
+				$aSortColumns[] = "'".$oColumn->getAttribute('id')."' => ".(($oColumn->getAttribute('ascending') == 'true') ? 'true' : 'false');
 			}
 			if (count($aSortColumns) > 0)
 			{
@@ -526,15 +425,7 @@ EOF;
 	
 		// Comment on top of the class declaration
 		//
-		$oComment = $this->GetOptionalElement($oProperties, 'comment');
-		if ($oComment)
-		{
-			$sCodeComment = $oComment->textContent;
-		}
-		else
-		{
-			$sCodeComment = '';
-		}
+		$sCodeComment = $oProperties->GetChildText('comment');
 	
 		// Fields
 		//
@@ -542,17 +433,17 @@ EOF;
 		foreach($this->oFactory->ListFields($oClass) as $oField)
 		{
 			// $oField
-			$sAttCode = $oField->getAttribute('name');
+			$sAttCode = $oField->getAttribute('id');
 			$sAttType = $oField->getAttribute('xsi:type');
 	
 			$aDependencies = array();
-			$oDependencies = $this->GetOptionalElement($oField, 'dependencies');
+			$oDependencies = $oField->GetOptionalElement('dependencies');
 			if (!is_null($oDependencies))
 			{
 				$oDepNodes = $oDependencies->getElementsByTagName('attribute');
 				foreach($oDepNodes as $oDepAttribute)
 				{
-					$aDependencies[] = "'".$oDepAttribute->getAttribute('name')."'";
+					$aDependencies[] = "'".$oDepAttribute->getAttribute('id')."'";
 				}
 			}
 			$sDependencies = 'array('.implode(', ', $aDependencies).')';
@@ -561,31 +452,30 @@ EOF;
 	
 			if ($sAttType == 'AttributeLinkedSetIndirect')
 			{
-				$aParameters['linked_class'] = "'".$oField->getAttribute('linked_class')."'";
-				$aParameters['ext_key_to_me'] = "'".$oField->getAttribute('ext_key_to_me')."'";
-				$aParameters['ext_key_to_remote'] = "'".$oField->getAttribute('ext_key_to_remote')."'";
+				$aParameters['linked_class'] = "'".$oField->GetChildText('linked_class')."'";
+				$aParameters['ext_key_to_me'] = "'".$oField->GetChildText('ext_key_to_me')."'";
+				$aParameters['ext_key_to_remote'] = "'".$oField->GetChildText('ext_key_to_remote')."'";
 	// todo - utile ?
 				$aParameters['allowed_values'] = 'null';
-				$aParameters['count_min'] = $oField->getAttribute('count_min');
-				$aParameters['count_max'] = $oField->getAttribute('count_max');
+				$aParameters['count_min'] = $oField->GetChildText('count_min');
+				$aParameters['count_max'] = $oField->GetChildText('count_max');
 				$aParameters['depends_on'] = $sDependencies;
 			}
 			elseif ($sAttType == 'AttributeLinkedSet')
 			{
-				$aParameters['linked_class'] = "'".$oField->getAttribute('linked_class')."'";
-				$aParameters['ext_key_to_me'] = "'".$oField->getAttribute('ext_key_to_me')."'";
+				$aParameters['linked_class'] = "'".$oField->GetChildText('linked_class')."'";
+				$aParameters['ext_key_to_me'] = "'".$oField->GetChildText('ext_key_to_me')."'";
 	// todo - utile ?
 				$aParameters['allowed_values'] = 'null';
-				$aParameters['count_min'] = $oField->getAttribute('count_min');
-				$aParameters['count_max'] = $oField->getAttribute('count_max');
+				$aParameters['count_min'] = $oField->GetChildText('count_min');
+				$aParameters['count_max'] = $oField->GetChildText('count_max');
 				$aParameters['depends_on'] = $sDependencies;
 			}
 			elseif ($sAttType == 'AttributeExternalKey')
 			{
-				$aParameters['targetclass'] = "'".$oField->getAttribute('target_class')."'";
-	// todo = v�rifier l'utilit�
+				$aParameters['targetclass'] = "'".$oField->GetChildText('target_class')."'";
 				$aParameters['jointype'] = 'null';
-				if (($sOql = $oField->getAttribute('filter')) != '')
+				if ($sOql = $oField->GetChildText('filter'))
 				{
 					$sEscapedOql = addslashes($sOql);
 					$aParameters['allowed_values'] = "new ValueSetObjects('$sEscapedOql')"; // or "new ValueSetObjects('SELECT xxxx')"
@@ -594,14 +484,14 @@ EOF;
 				{
 					$aParameters['allowed_values'] = 'null'; // or "new ValueSetObjects('SELECT xxxx')"
 				}
-				$aParameters['sql'] = "'".$oField->getAttribute('sql')."'";
-				$aParameters['is_null_allowed'] = $oField->getAttribute('is_null_allowed') == 'true' ? 'true' : 'false';
-				$aParameters['on_target_delete'] = $oField->getAttribute('on_target_delete');
+				$aParameters['sql'] = "'".$oField->GetChildText('sql')."'";
+				$aParameters['is_null_allowed'] = $oField->GetChildText('is_null_allowed') == 'true' ? 'true' : 'false';
+				$aParameters['on_target_delete'] = $oField->GetChildText('on_target_delete');
 				$aParameters['depends_on'] = $sDependencies;
 			}
 			elseif ($sAttType == 'AttributeHierarchicalKey')
 			{
-				if (($sOql = $oField->getAttribute('filter')) != '')
+				if ($sOql = $oField->GetChildText('filter'))
 				{
 					$sEscapedOql = addslashes($sOql);
 					$aParameters['allowed_values'] = "new ValueSetObjects('$sEscapedOql')"; // or "new ValueSetObjects('SELECT xxxx')"
@@ -610,29 +500,29 @@ EOF;
 				{
 					$aParameters['allowed_values'] = 'null'; // or "new ValueSetObjects('SELECT xxxx')"
 				}
-				$aParameters['sql'] = "'".$oField->getAttribute('sql')."'";
-				$aParameters['is_null_allowed'] = $oField->getAttribute('is_null_allowed') == 'true' ? 'true' : 'false';
-				$aParameters['on_target_delete'] = $oField->getAttribute('on_target_delete');
+				$aParameters['sql'] = "'".$oField->GetChildText('sql')."'";
+				$aParameters['is_null_allowed'] = $oField->GetChildText('is_null_allowed') == 'true' ? 'true' : 'false';
+				$aParameters['on_target_delete'] = $oField->GetChildText('on_target_delete');
 				$aParameters['depends_on'] = $sDependencies;
 			}
 			elseif ($sAttType == 'AttributeExternalField')
 			{
 				$aParameters['allowed_values'] = 'null';
-				$aParameters['extkey_attcode'] = "'".$oField->getAttribute('extkey_attcode')."'";
-				$aParameters['target_attcode'] = "'".$oField->getAttribute('target_attcode')."'";
+				$aParameters['extkey_attcode'] = "'".$oField->GetChildText('extkey_attcode')."'";
+				$aParameters['target_attcode'] = "'".$oField->GetChildText('target_attcode')."'";
 			}
 			elseif ($sAttType == 'AttributeURL')
 			{
-				$aParameters['target'] = "'".$oField->getAttribute('target')."'";
+				$aParameters['target'] = "'".$oField->GetChildText('target')."'";
 				$aParameters['allowed_values'] = 'null';
-				$aParameters['sql'] = "'".$oField->getAttribute('sql')."'";
-				$aParameters['default_value'] = "'".$oField->getAttribute('default_value')."'";
-				$aParameters['is_null_allowed'] = $oField->getAttribute('is_null_allowed') == 'true' ? 'true' : 'false';
+				$aParameters['sql'] = "'".$oField->GetChildText('sql')."'";
+				$aParameters['default_value'] = "'".$oField->GetChildText('default_value')."'";
+				$aParameters['is_null_allowed'] = $oField->GetChildText('is_null_allowed') == 'true' ? 'true' : 'false';
 				$aParameters['depends_on'] = $sDependencies;
 			}
 			elseif ($sAttType == 'AttributeEnum')
 			{
-				$oValues = $this->GetUniqueElement($oField, 'values');
+				$oValues = $oField->GetUniqueElement('values');
 				$oValueNodes = $oValues->getElementsByTagName('value');
 				$aValues = array();
 				foreach($oValueNodes as $oValue)
@@ -643,9 +533,9 @@ EOF;
 	//	new style... $sValues = 'array('.implode(', ', $aValues).')';
 				$sValues = '"'.implode(',', $aValues).'"';
 				$aParameters['allowed_values'] = "new ValueSetEnum($sValues)";
-				$aParameters['sql'] = "'".$oField->getAttribute('sql')."'";
-				$aParameters['default_value'] = "'".$oField->getAttribute('default_value')."'";
-				$aParameters['is_null_allowed'] = $oField->getAttribute('is_null_allowed') == 'true' ? 'true' : 'false';
+				$aParameters['sql'] = "'".$oField->GetChildText('sql')."'";
+				$aParameters['default_value'] = "'".$oField->GetChildText('default_value')."'";
+				$aParameters['is_null_allowed'] = $oField->GetChildText('is_null_allowed') == 'true' ? 'true' : 'false';
 				$aParameters['depends_on'] = $sDependencies;
 			}
 			elseif ($sAttType == 'AttributeBlob')
@@ -655,12 +545,12 @@ EOF;
 			else
 			{
 				$aParameters['allowed_values'] = 'null'; // or "new ValueSetEnum('SELECT xxxx')"
-				$aParameters['sql'] = "'".$oField->getAttribute('sql')."'";
-				$aParameters['default_value'] = "'".$oField->getAttribute('default_value')."'";
-				$aParameters['is_null_allowed'] = $oField->getAttribute('is_null_allowed') == 'true' ? 'true' : 'false';
+				$aParameters['sql'] = "'".$oField->GetChildText('sql')."'";
+				$aParameters['default_value'] = "'".$oField->GetChildText('default_value')."'";
+				$aParameters['is_null_allowed'] = $oField->GetChildText('is_null_allowed') == 'true' ? 'true' : 'false';
 				$aParameters['depends_on'] = $sDependencies;
 				
-				if ($sValidationPattern = $oField->getAttribute('validation_pattern'))
+				if ($sValidationPattern = $oField->GetChildText('validation_pattern'))
 				{
 					$aParameters['validation_pattern'] = '"'.addslashes($sValidationPattern).'"';
 				}
@@ -683,19 +573,19 @@ EOF;
 			$sLifecycle .= "\t\t// Lifecycle (status attribute: $sStateAttCode)\n";
 			$sLifecycle .= "\t\t//\n";
 	
-			$oStimuli = $this->GetUniqueElement($oLifecycle, 'stimuli');
+			$oStimuli = $oLifecycle->GetUniqueElement('stimuli');
 			foreach ($oStimuli->getElementsByTagName('stimulus') as $oStimulus)
 			{
-				$sStimulus = $oStimulus->getAttribute('name');
-				$sStimulusClass = $oStimulus->getAttribute('type');
+				$sStimulus = $oStimulus->getAttribute('id');
+				$sStimulusClass = $oStimulus->getAttribute('xsi:type');
 	
 				$sLifecycle .= "		MetaModel::Init_DefineStimulus(new ".$sStimulusClass."(\"".$sStimulus."\", array()));\n";
 			}
 	
-			$oStates = $this->GetUniqueElement($oLifecycle, 'states');
+			$oStates = $oLifecycle->GetUniqueElement('states');
 			foreach ($oStates->getElementsByTagName('state') as $oState)
 			{
-				$sState = $oState->getAttribute('name');
+				$sState = $oState->getAttribute('id');
 	
 				$sLifecycle .= "		MetaModel::Init_DefineState(\n";
 				$sLifecycle .= "			\"".$sState."\",\n";
@@ -703,13 +593,13 @@ EOF;
 				$sLifecycle .= "				\"attribute_inherit\" => '',\n";
 				$sLifecycle .= "				\"attribute_list\" => array(\n";
 	
-				$oFlags = $this->GetUniqueElement($oState, 'flags');
+				$oFlags = $oState->GetUniqueElement('flags');
 				foreach ($oFlags->getElementsByTagName('attribute') as $oAttributeNode)
 				{
 					$sFlags = $this->FlagsToPHP($oAttributeNode);
 					if (strlen($sFlags) > 0)
 					{
-						$sAttCode = $oAttributeNode->GetAttribute('name');
+						$sAttCode = $oAttributeNode->GetAttribute('id');
 						$sLifecycle .= "					'$sAttCode' => $sFlags,\n";
 					}
 				}
@@ -718,17 +608,17 @@ EOF;
 				$sLifecycle .= "			)\n";
 				$sLifecycle .= "		);\n";
 	
-				$oTransitions = $this->GetUniqueElement($oState, 'transitions');
+				$oTransitions = $oState->GetUniqueElement('transitions');
 				foreach ($oTransitions->getElementsByTagName('transition') as $oTransition)
 				{
-					$sStimulus = $oTransition->getAttribute('stimulus');
-					$sTargetState = $oTransition->getAttribute('target');
+					$sStimulus = $oTransition->GetChildText('stimulus');
+					$sTargetState = $oTransition->GetChildText('target');
 	
-					$oActions = $this->GetUniqueElement($oTransition, 'actions');
+					$oActions = $oTransition->GetUniqueElement('actions');
 					$aVerbs = array();
 					foreach ($oActions->getElementsByTagName('action') as $oAction)
 					{
-						$sVerb = $oAction->getAttribute('verb');
+						$sVerb = $oAction->GetChildText('verb');
 						$aVerbs[] = "'$sVerb'";
 					}
 					$sActions = implode(', ', $aVerbs);
@@ -745,14 +635,14 @@ EOF;
 			'list' => 'list'
 		);
 	
-		$oPresentation = $this->GetUniqueElement($oClass, 'presentation');
+		$oPresentation = $oClass->GetUniqueElement('presentation');
 		$sZlists = '';
 		foreach ($aListRef as $sListCode => $sListTag)
 		{
-			$oListNode = $this->GetOptionalElement($oPresentation, $sListTag);
+			$oListNode = $oPresentation->GetOptionalElement($sListTag);
 			if ($oListNode)
 			{
-				$aAttributes = $this->GetNodeAsArrayOfItems($oListNode);
+				$aAttributes = $oListNode->GetNodeAsArrayOfItems();
 		
 				$sZAttributes = var_export($aAttributes, true);
 				$sZlists .= "		MetaModel::Init_SetZListItems('$sListCode', $sZAttributes);\n";
@@ -761,14 +651,13 @@ EOF;
 	
 		// Methods
 		$sMethods = "";
-		$oMethods = $this->GetUniqueElement($oClass, 'methods');
+		$oMethods = $oClass->GetUniqueElement('methods');
 		foreach($oMethods->getElementsByTagName('method') as $oMethod)
 		{
-			$sMethodCode = $this->GetNodeText($oMethod);
-			$oMethodComment = $this->GetOptionalElement($oMethod, 'comment');
-			if ($oMethodComment)
+			$sMethodCode = $oMethod->GetChildText('code');
+			if ($sMethodComment = $oMethod->GetChildText('comment', null))
 			{
-				$sMethods .= "\n\t".$oMethodComment->textContent."\n".$sMethodCode."\n";
+				$sMethods .= "\n\t$sMethodComment\n".$sMethodCode."\n";
 			}
 			else
 			{
@@ -779,15 +668,15 @@ EOF;
 		// Let's make the whole class declaration
 		//
 		$sPHP = "\n\n$sCodeComment\n";
-		if ($oClass->getAttribute('abstract') == 'true')
+		if ($oProperties->GetChildText('abstract') == 'true')
 		{
-			$sPHP .= 'abstract class '.$oClass->getAttribute('name');
+			$sPHP .= 'abstract class '.$oClass->getAttribute('id');
 		}
 		else
 		{
-			$sPHP .= 'class '.$oClass->getAttribute('name');
+			$sPHP .= 'class '.$oClass->getAttribute('id');
 		}
-		$sPHP .= " extends ".$oClass->getAttribute('parent')."\n";
+		$sPHP .= " extends ".$oClass->GetUniqueElement('properties')->GetChildText('parent', 'DBObject')."\n";
 		$sPHP .=
 <<<EOF
 {
@@ -816,10 +705,9 @@ EOF;
 		$sMenuId = $oMenu->getAttribute("id");
 		$sMenuClass = $oMenu->getAttribute("xsi:type");
 
-		$oParent = $this->GetOptionalElement($oMenu, 'parent');
-		if ($oParent)
+		$sParent = $oMenu->GetChildText('parent', null);
+		if ($sParent)
 		{
-			$sParent = $oParent->GetAttribute('value');
 			$sParentSpec = "\$__comp_menus__['$sParent']->GetIndex()";
 		}
 		else
@@ -827,45 +715,44 @@ EOF;
 			$sParentSpec = '-1';
 		}
 
-		$fRank = $this->GetUniqueElement($oMenu, 'rank')->GetAttribute('value');
+		$fRank = $oMenu->GetChildText('rank');
 		switch($sMenuClass)
 		{
 		case 'WebPageMenuNode':
-			$sUrl = $this->GetUniqueElement($oMenu, 'url')->GetAttribute('value');
+			$sUrl = $oMenu->GetChildText('url');
 			$sUrlSpec = $this->PathToPHP($sUrl, $sModuleRelativeDir, true /* Url */);
 			$sNewMenu = "new WebPageMenuNode('$sMenuId', $sUrlSpec, $sParentSpec, $fRank);";
 			break;
 
 		case 'TemplateMenuNode':
-			$sTemplateFile = $this->GetUniqueElement($oMenu, 'template_file')->GetAttribute('value');
+			$sTemplateFile = $oMenu->GetChildText('template_file');
 			$sTemplateSpec = $this->PathToPHP($sTemplateFile, $sModuleRelativeDir);
 			$sNewMenu = "new TemplateMenuNode('$sMenuId', $sTemplateSpec, $sParentSpec, $fRank);";
 			break;
 
 		case 'OQLMenuNode':
-			$sOQL = $this->GetUniqueElement($oMenu, 'oql')->GetAttribute('value');
-			$bSearch = ($this->GetUniqueElement($oMenu, 'do_search')->GetAttribute('value') == '1') ? 'true' : 'false';
+			$sOQL = $oMenu->GetChildText('oql');
+			$bSearch = ($oMenu->GetChildText('do_search') == '1') ? 'true' : 'false';
 			$sNewMenu = "new OQLMenuNode('$sMenuId', '$sOQL', $sParentSpec, $fRank, $bSearch);";
 			break;
 
 		case 'NewObjectMenuNode':
-			$sClass = $this->GetUniqueElement($oMenu, 'class')->GetAttribute('value');
+			$sClass = $oMenu->GetChildText('class');
 			$sNewMenu = "new NewObjectMenuNode('$sMenuId', '$sClass', $sParentSpec, $fRank);";
 			break;
 
 		case 'SearchMenuNode':
-			$sClass = $this->GetUniqueElement($oMenu, 'class')->GetAttribute('value');
+			$sClass = $oMenu->GetChildText('class');
 			$sNewMenu = "new SearchMenuNode('$sMenuId', '$sClass', $sParentSpec, $fRank);";
 			break;
 
 		case 'MenuGroup':
 		default:
-			if ($oEnableClass = $this->GetOptionalElement($oMenu, 'enable_class'))
+			if ($sEnableClass = $oMenu->GetChildText('enable_class'))
 			{
-				$sEnableClass = $oEnableClass->GetAttribute('value');
-				$sEnableAction = $this->GetUniqueElement($oMenu, 'enable_action')->GetAttribute('value');
-				$sEnablePermission = $this->GetUniqueElement($oMenu, 'enable_permission')->GetAttribute('value');
-				$sEnableStimulus = $this->GetUniqueElement($oMenu, 'enable_stimulus')->GetAttribute('value');
+				$sEnableAction = $oMenu->GetChildText('enable_action');
+				$sEnablePermission = $oMenu->GetChildText('enable_permission');
+				$sEnableStimulus = $oMenu->GetChildText('enable_stimulus');
 				if (strlen($sEnableStimulus) > 0)
 				{
 					$sNewMenu = "new MenuGroup('$sMenuId', $fRank, '$sEnableClass', $sEnableAction, $sEnablePermission, '$sEnableStimulus');";
@@ -884,14 +771,14 @@ EOF;
 
 		$sIndent = '';
 		$aPHPMenu = array("\$__comp_menus__['$sMenuId'] = $sNewMenu");
-		if ($oAutoReload = $this->GetOptionalElement($oMenu, 'auto_reload'))
+		if ($sAutoReload = $oMenu->GetChildText('auto_reload'))
 		{
-			$sAutoReload = addslashes($oAutoReload->GetAttribute("value"));
+			$sAutoReload = addslashes($sAutoReload);
 			$aPHPMenu[] = "\$__comp_menus__['$sMenuId']->SetParameters(array('auto_reload' => '$sAutoReload'));";
 		}
 
-		$oAdminOnly = $this->GetOptionalElement($oMenu, 'enable_admin_only');
-		if ($oAdminOnly && $oAdminOnly->GetAttribute('value') == '1')
+		$sAdminOnly = $oMenu->GetChildText('enable_admin_only');
+		if ($sAdminOnly && ($sAdminOnly == '1'))
 		{
 			$sPHP = $sIndent."if (UserRights::IsAdministrator())\n";
 			$sPHP .= $sIndent."{\n";
