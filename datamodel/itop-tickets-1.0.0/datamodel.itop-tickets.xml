@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <classes>
-    <class id="Ticket">
+    <class id="Ticket" _delta="define">
+      <parent>cmdbAbstractObject</parent>
       <properties>
         <comment><![CDATA[/**
  * Persistent classes for a CMDB
@@ -12,7 +13,6 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */]]></comment>
         <category>bizmodel,searchable</category>
-        <parent>cmdbAbstractObject</parent>
         <abstract>true</abstract>
         <key_type>autoincrement</key_type>
         <db_table>ticket</db_table>
@@ -120,10 +120,10 @@
         </list>
       </presentation>
     </class>
-    <class id="ResponseTicket">
+    <class id="ResponseTicket" _delta="define">
+      <parent>Ticket</parent>
       <properties>
         <category>bizmodel</category>
-        <parent>Ticket</parent>
         <abstract>true</abstract>
         <key_type>autoincrement</key_type>
         <db_table>ticket_response</db_table>
@@ -1317,11 +1317,11 @@
         </list>
       </presentation>
     </class>
-    <class id="lnkTicketToDoc">
+    <class id="lnkTicketToDoc" _delta="define">
+      <parent>cmdbAbstractObject</parent>
       <properties>
         <is_link>1</is_link>
         <category>bizmodel,searchable,incidentmgmt,requestmgmt,changemgmt,problemmgmt,lnkticket</category>
-        <parent>cmdbAbstractObject</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>lnktickettodoc</db_table>
@@ -1388,11 +1388,11 @@
         </list>
       </presentation>
     </class>
-    <class id="lnkTicketToContact">
+    <class id="lnkTicketToContact" _delta="define">
+      <parent>cmdbAbstractObject</parent>
       <properties>
         <is_link>1</is_link>
         <category>bizmodel,searchable,incidentmgmt,requestmgmt,changemgmt,problemmgmt,lnkticket</category>
-        <parent>cmdbAbstractObject</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>lnktickettocontact</db_table>
@@ -1474,11 +1474,11 @@
         </list>
       </presentation>
     </class>
-    <class id="lnkTicketToCI">
+    <class id="lnkTicketToCI" _delta="define">
+      <parent>cmdbAbstractObject</parent>
       <properties>
         <is_link>1</is_link>
         <category>bizmodel,searchable,incidentmgmt,requestmgmt,changemgmt,problemmgmt,lnkticket</category>
-        <parent>cmdbAbstractObject</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>lnktickettoci</db_table>

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <classes>
-    <class id="KnownError">
+    <class id="KnownError" _delta="define">
+      <parent>cmdbAbstractObject</parent>
       <properties>
         <comment>/**
 * Description of known error
 */</comment>
         <category>bizmodel,searchable,knownerrormgmt</category>
-        <parent>cmdbAbstractObject</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>known_error</db_table>
@@ -162,14 +162,14 @@
         </list>
       </presentation>
     </class>
-    <class id="lnkInfraError">
+    <class id="lnkInfraError" _delta="define">
+      <parent>cmdbAbstractObject</parent>
       <properties>
         <comment>/**
 * n-n link between any Infra and a Known Error
 */</comment>
         <is_link>1</is_link>
         <category>bizmodel,searchable,knownerrormgmt,lnkknownerror</category>
-        <parent>cmdbAbstractObject</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>infra_error_links</db_table>
@@ -246,14 +246,14 @@
         </list>
       </presentation>
     </class>
-    <class id="lnkDocumentError">
+    <class id="lnkDocumentError" _delta="define">
+      <parent>cmdbAbstractObject</parent>
       <properties>
         <comment>/**
 * n-n link between any Contract and a Document
 */</comment>
         <is_link>1</is_link>
         <category>bizmodel,searchable,knownerrormgmt,lnkknownerror</category>
-        <parent>cmdbAbstractObject</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>documents_error_link</db_table>

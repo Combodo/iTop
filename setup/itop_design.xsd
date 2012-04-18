@@ -11,13 +11,13 @@
       <xsd:element name="class" minOccurs="0" maxOccurs="unbounded">
        <xsd:complexType>
         <xsd:sequence>
+         <xsd:element name="parent" type="xsd:string" minOccurs="0"/>
          <xsd:element name="properties">
           <xsd:complexType>
            <xsd:sequence>
             <xsd:element name="comment" type="xsd:string" minOccurs="0"/>
             <xsd:element name="is_link" type="xsd:string" minOccurs="0"/>
             <xsd:element name="category" type="xsd:string"/>
-            <xsd:element name="parent" type="xsd:string"/>
             <xsd:element name="abstract" type="xsd:string"/>
             <xsd:element name="key_type" type="xsd:string"/>
             <xsd:element name="db_table" type="xsd:string"/>
@@ -177,6 +177,7 @@
          </xsd:element>
         </xsd:sequence>
         <xsd:attribute name="id" type="xsd:string" use="required"/>
+        <xsd:attribute name="_delta" type="xsd:string"/>
        </xsd:complexType>
 
       </xsd:element>

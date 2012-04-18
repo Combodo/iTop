@@ -676,7 +676,7 @@ EOF;
 		{
 			$sPHP .= 'class '.$oClass->getAttribute('id');
 		}
-		$sPHP .= " extends ".$oClass->GetUniqueElement('properties')->GetChildText('parent', 'DBObject')."\n";
+		$sPHP .= " extends ".$oClass->GetChildText('parent', 'DBObject')."\n";
 		$sPHP .=
 <<<EOF
 {

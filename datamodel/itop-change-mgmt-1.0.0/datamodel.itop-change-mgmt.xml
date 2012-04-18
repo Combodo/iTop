@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <classes>
-    <class id="Change">
+    <class id="Change" _delta="define">
+      <parent>Ticket</parent>
       <properties>
         <comment><![CDATA[/**
  * Persistent classes for a CMDB
@@ -12,7 +13,6 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */]]></comment>
         <category>bizmodel,searchable,changemgmt</category>
-        <parent>Ticket</parent>
         <abstract>true</abstract>
         <key_type>autoincrement</key_type>
         <db_table>change</db_table>
@@ -1095,10 +1095,10 @@
         </list>
       </presentation>
     </class>
-    <class id="RoutineChange">
+    <class id="RoutineChange" _delta="define">
+      <parent>Change</parent>
       <properties>
         <category>bizmodel,searchable,changemgmt</category>
-        <parent>Change</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>change_routine</db_table>
@@ -1950,10 +1950,10 @@
         </list>
       </presentation>
     </class>
-    <class id="ApprovedChange">
+    <class id="ApprovedChange" _delta="define">
+      <parent>Change</parent>
       <properties>
         <category>bizmodel,searchable,changemgmt</category>
-        <parent>Change</parent>
         <abstract>true</abstract>
         <key_type>autoincrement</key_type>
         <db_table>change_approved</db_table>
@@ -2804,10 +2804,10 @@
         </list>
       </presentation>
     </class>
-    <class id="NormalChange">
+    <class id="NormalChange" _delta="define">
+      <parent>ApprovedChange</parent>
       <properties>
         <category>bizmodel,searchable,changemgmt</category>
-        <parent>ApprovedChange</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>change_normal</db_table>
@@ -3819,10 +3819,10 @@
         </list>
       </presentation>
     </class>
-    <class id="EmergencyChange">
+    <class id="EmergencyChange" _delta="define">
+      <parent>ApprovedChange</parent>
       <properties>
         <category>bizmodel,searchable,changemgmt</category>
-        <parent>ApprovedChange</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>change_emergency</db_table>

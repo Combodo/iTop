@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <classes>
-    <class id="UserRequest">
+    <class id="UserRequest" _delta="define">
+      <parent>ResponseTicket</parent>
       <properties>
         <comment><![CDATA[/**
  * Persistent classes for a CMDB
@@ -12,7 +13,6 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */]]></comment>
         <category>bizmodel,searchable,requestmgmt</category>
-        <parent>ResponseTicket</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>ticket_request</db_table>

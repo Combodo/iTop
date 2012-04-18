@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <classes>
-    <class id="Attachment">
+    <class id="Attachment" _delta="define">
+      <parent>DBObject</parent>
       <properties>
         <comment><![CDATA[/**
  * Module attachments
@@ -17,7 +18,6 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */]]></comment>
         <category>addon,bizmodel</category>
-        <parent>DBObject</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>attachment</db_table>

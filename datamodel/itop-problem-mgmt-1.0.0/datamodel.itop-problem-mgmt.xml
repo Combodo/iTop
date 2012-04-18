@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <classes>
-    <class id="Problem">
+    <class id="Problem" _delta="define">
+      <parent>Ticket</parent>
       <properties>
         <comment><![CDATA[/**
  * Persistent classes for a CMDB
@@ -12,7 +13,6 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */]]></comment>
         <category>bizmodel,searchable,problemmgmt</category>
-        <parent>Ticket</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>ticket_problem</db_table>

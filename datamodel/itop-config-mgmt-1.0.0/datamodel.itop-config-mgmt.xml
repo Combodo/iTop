@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <classes>
-    <class id="Organization">
+    <class id="Organization" _delta="define">
+      <parent>cmdbAbstractObject</parent>
       <properties>
         <comment><![CDATA[/**
  * Persistent classes for a CMDB
@@ -12,7 +13,6 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */]]></comment>
         <category>bizmodel,searchable,structure</category>
-        <parent>cmdbAbstractObject</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>organization</db_table>
@@ -88,10 +88,10 @@
         </list>
       </presentation>
     </class>
-    <class id="Location">
+    <class id="Location" _delta="define">
+      <parent>cmdbAbstractObject</parent>
       <properties>
         <category>bizmodel,searchable,structure</category>
-        <parent>cmdbAbstractObject</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>location</db_table>
@@ -221,10 +221,10 @@
         </list>
       </presentation>
     </class>
-    <class id="Contact">
+    <class id="Contact" _delta="define">
+      <parent>cmdbAbstractObject</parent>
       <properties>
         <category>bizmodel,searchable,structure</category>
-        <parent>cmdbAbstractObject</parent>
         <abstract>true</abstract>
         <key_type>autoincrement</key_type>
         <db_table>contact</db_table>
@@ -373,10 +373,10 @@
         </list>
       </presentation>
     </class>
-    <class id="Person">
+    <class id="Person" _delta="define">
+      <parent>Contact</parent>
       <properties>
         <category>bizmodel,searchable,structure</category>
-        <parent>Contact</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>person</db_table>
@@ -456,10 +456,10 @@
         </list>
       </presentation>
     </class>
-    <class id="Team">
+    <class id="Team" _delta="define">
+      <parent>Contact</parent>
       <properties>
         <category>bizmodel,searchable,structure</category>
-        <parent>Contact</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>team</db_table>
@@ -528,11 +528,11 @@
         </list>
       </presentation>
     </class>
-    <class id="lnkTeamToContact">
+    <class id="lnkTeamToContact" _delta="define">
+      <parent>cmdbAbstractObject</parent>
       <properties>
         <is_link>1</is_link>
         <category>bizmodel,searchable,structure</category>
-        <parent>cmdbAbstractObject</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>lnkteamtocontact</db_table>
@@ -625,10 +625,10 @@
         </list>
       </presentation>
     </class>
-    <class id="Document">
+    <class id="Document" _delta="define">
+      <parent>cmdbAbstractObject</parent>
       <properties>
         <category>bizmodel,searchable,documentation</category>
-        <parent>cmdbAbstractObject</parent>
         <abstract>true</abstract>
         <key_type>autoincrement</key_type>
         <db_table>document</db_table>
@@ -757,10 +757,10 @@
         </list>
       </presentation>
     </class>
-    <class id="WebDoc">
+    <class id="WebDoc" _delta="define">
+      <parent>Document</parent>
       <properties>
         <category>bizmodel,searchable,documentation</category>
-        <parent>Document</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>externaldoc</db_table>
@@ -826,10 +826,10 @@
         </list>
       </presentation>
     </class>
-    <class id="Note">
+    <class id="Note" _delta="define">
+      <parent>Document</parent>
       <properties>
         <category>bizmodel,searchable,documentation</category>
-        <parent>Document</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>note</db_table>
@@ -894,10 +894,10 @@
         </list>
       </presentation>
     </class>
-    <class id="FileDoc">
+    <class id="FileDoc" _delta="define">
+      <parent>Document</parent>
       <properties>
         <category>bizmodel,searchable,documentation</category>
-        <parent>Document</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>filedoc</db_table>
@@ -978,10 +978,10 @@
         </list>
       </presentation>
     </class>
-    <class id="Licence">
+    <class id="Licence" _delta="define">
+      <parent>cmdbAbstractObject</parent>
       <properties>
         <category>bizmodel,searchable,configmgmt</category>
-        <parent>cmdbAbstractObject</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>licence</db_table>
@@ -1101,10 +1101,10 @@
         </list>
       </presentation>
     </class>
-    <class id="Subnet">
+    <class id="Subnet" _delta="define">
+      <parent>cmdbAbstractObject</parent>
       <properties>
         <category>bizmodel,searchable,configmgmt</category>
-        <parent>cmdbAbstractObject</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>subnet</db_table>
@@ -1239,10 +1239,10 @@
         </list>
       </presentation>
     </class>
-    <class id="Patch">
+    <class id="Patch" _delta="define">
+      <parent>cmdbAbstractObject</parent>
       <properties>
         <category>bizmodel,searchable,configmgmt</category>
-        <parent>cmdbAbstractObject</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>patch</db_table>
@@ -1332,10 +1332,10 @@
         </list>
       </presentation>
     </class>
-    <class id="Software">
+    <class id="Software" _delta="define">
+      <parent>cmdbAbstractObject</parent>
       <properties>
         <category>bizmodel,searchable,configmgmt</category>
-        <parent>cmdbAbstractObject</parent>
         <abstract>true</abstract>
         <key_type>autoincrement</key_type>
         <db_table>software</db_table>
@@ -1388,10 +1388,10 @@
         </list>
       </presentation>
     </class>
-    <class id="Application">
+    <class id="Application" _delta="define">
+      <parent>Software</parent>
       <properties>
         <category>bizmodel,searchable,configmgmt</category>
-        <parent>Software</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>software_app</db_table>
@@ -1441,10 +1441,10 @@
         </list>
       </presentation>
     </class>
-    <class id="DBServer">
+    <class id="DBServer" _delta="define">
+      <parent>Software</parent>
       <properties>
         <category>bizmodel,searchable,configmgmt</category>
-        <parent>Software</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>software_db</db_table>
@@ -1494,11 +1494,11 @@
         </list>
       </presentation>
     </class>
-    <class id="lnkPatchToCI">
+    <class id="lnkPatchToCI" _delta="define">
+      <parent>cmdbAbstractObject</parent>
       <properties>
         <is_link>1</is_link>
         <category>bizmodel,configmgmt</category>
-        <parent>cmdbAbstractObject</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>lnkpatchtoci</db_table>
@@ -1571,10 +1571,10 @@
         </list>
       </presentation>
     </class>
-    <class id="FunctionalCI">
+    <class id="FunctionalCI" _delta="define">
+      <parent>cmdbAbstractObject</parent>
       <properties>
         <category>bizmodel,searchable,configmgmt</category>
-        <parent>cmdbAbstractObject</parent>
         <abstract>true</abstract>
         <key_type>autoincrement</key_type>
         <db_table>functionalci</db_table>
@@ -1723,10 +1723,10 @@
         </list>
       </presentation>
     </class>
-    <class id="SoftwareInstance">
+    <class id="SoftwareInstance" _delta="define">
+      <parent>FunctionalCI</parent>
       <properties>
         <category>bizmodel,searchable,configmgmt</category>
-        <parent>FunctionalCI</parent>
         <abstract>true</abstract>
         <key_type>autoincrement</key_type>
         <db_table>softwareinstance</db_table>
@@ -1871,10 +1871,10 @@
         </list>
       </presentation>
     </class>
-    <class id="DBServerInstance">
+    <class id="DBServerInstance" _delta="define">
+      <parent>SoftwareInstance</parent>
       <properties>
         <category>bizmodel,searchable,configmgmt</category>
-        <parent>SoftwareInstance</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>softwareinstance_dbserver</db_table>
@@ -1964,10 +1964,10 @@
         </list>
       </presentation>
     </class>
-    <class id="ApplicationInstance">
+    <class id="ApplicationInstance" _delta="define">
+      <parent>SoftwareInstance</parent>
       <properties>
         <category>bizmodel,searchable,configmgmt</category>
-        <parent>SoftwareInstance</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>softwareinstance_application</db_table>
@@ -2050,10 +2050,10 @@
         </list>
       </presentation>
     </class>
-    <class id="DatabaseInstance">
+    <class id="DatabaseInstance" _delta="define">
+      <parent>FunctionalCI</parent>
       <properties>
         <category>bizmodel,searchable,configmgmt</category>
-        <parent>FunctionalCI</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>databaseinstance</db_table>
@@ -2164,10 +2164,10 @@
         </list>
       </presentation>
     </class>
-    <class id="ApplicationSolution">
+    <class id="ApplicationSolution" _delta="define">
+      <parent>FunctionalCI</parent>
       <properties>
         <category>bizmodel,searchable,configmgmt</category>
-        <parent>FunctionalCI</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>applicationsolution</db_table>
@@ -2273,10 +2273,10 @@
         </list>
       </presentation>
     </class>
-    <class id="BusinessProcess">
+    <class id="BusinessProcess" _delta="define">
+      <parent>FunctionalCI</parent>
       <properties>
         <category>bizmodel,searchable,configmgmt</category>
-        <parent>FunctionalCI</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>businessprocess</db_table>
@@ -2367,10 +2367,10 @@
         </list>
       </presentation>
     </class>
-    <class id="ConnectableCI">
+    <class id="ConnectableCI" _delta="define">
+      <parent>FunctionalCI</parent>
       <properties>
         <category>bizmodel,searchable,configmgmt</category>
-        <parent>FunctionalCI</parent>
         <abstract>true</abstract>
         <key_type>autoincrement</key_type>
         <db_table>connectableci</db_table>
@@ -2459,10 +2459,10 @@
         </list>
       </presentation>
     </class>
-    <class id="NetworkInterface">
+    <class id="NetworkInterface" _delta="define">
+      <parent>ConnectableCI</parent>
       <properties>
         <category>bizmodel,searchable,configmgmt</category>
-        <parent>ConnectableCI</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>networkinterface</db_table>
@@ -2749,10 +2749,10 @@
         </list>
       </presentation>
     </class>
-    <class id="Device">
+    <class id="Device" _delta="define">
+      <parent>ConnectableCI</parent>
       <properties>
         <category>bizmodel,searchable,configmgmt</category>
-        <parent>ConnectableCI</parent>
         <abstract>true</abstract>
         <key_type>autoincrement</key_type>
         <db_table>device</db_table>
@@ -2857,10 +2857,10 @@
         </list>
       </presentation>
     </class>
-    <class id="PC">
+    <class id="PC" _delta="define">
+      <parent>Device</parent>
       <properties>
         <category>bizmodel,searchable,configmgmt</category>
-        <parent>Device</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>pc</db_table>
@@ -2975,10 +2975,10 @@
         </list>
       </presentation>
     </class>
-    <class id="MobileCI">
+    <class id="MobileCI" _delta="define">
+      <parent>Device</parent>
       <properties>
         <category>bizmodel,searchable,configmgmt</category>
-        <parent>Device</parent>
         <abstract>true</abstract>
         <key_type>autoincrement</key_type>
         <db_table>mobileci</db_table>
@@ -3044,10 +3044,10 @@
         </list>
       </presentation>
     </class>
-    <class id="MobilePhone">
+    <class id="MobilePhone" _delta="define">
+      <parent>MobileCI</parent>
       <properties>
         <category>bizmodel,searchable,configmgmt</category>
-        <parent>MobileCI</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>mobilephone</db_table>
@@ -3134,10 +3134,10 @@
         </list>
       </presentation>
     </class>
-    <class id="InfrastructureCI">
+    <class id="InfrastructureCI" _delta="define">
+      <parent>Device</parent>
       <properties>
         <category>bizmodel,searchable,configmgmt</category>
-        <parent>Device</parent>
         <abstract>true</abstract>
         <key_type>autoincrement</key_type>
         <db_table>infrastructureci</db_table>
@@ -3250,10 +3250,10 @@
         </list>
       </presentation>
     </class>
-    <class id="NetworkDevice">
+    <class id="NetworkDevice" _delta="define">
+      <parent>InfrastructureCI</parent>
       <properties>
         <category>bizmodel,searchable,configmgmt</category>
-        <parent>InfrastructureCI</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>networkdevice</db_table>
@@ -3372,10 +3372,10 @@
         </list>
       </presentation>
     </class>
-    <class id="Server">
+    <class id="Server" _delta="define">
+      <parent>InfrastructureCI</parent>
       <properties>
         <category>bizmodel,searchable,configmgmt</category>
-        <parent>InfrastructureCI</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>server</db_table>
@@ -3501,10 +3501,10 @@
         </list>
       </presentation>
     </class>
-    <class id="Printer">
+    <class id="Printer" _delta="define">
+      <parent>InfrastructureCI</parent>
       <properties>
         <category>bizmodel,searchable,configmgmt</category>
-        <parent>InfrastructureCI</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>printer</db_table>
@@ -3613,10 +3613,10 @@
         </list>
       </presentation>
     </class>
-    <class id="Group">
+    <class id="Group" _delta="define">
+      <parent>cmdbAbstractObject</parent>
       <properties>
         <category>bizmodel,searchable,configmgmt</category>
-        <parent>cmdbAbstractObject</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>group</db_table>
@@ -3726,11 +3726,11 @@
         </list>
       </presentation>
     </class>
-    <class id="lnkGroupToCI">
+    <class id="lnkGroupToCI" _delta="define">
+      <parent>cmdbAbstractObject</parent>
       <properties>
         <is_link>1</is_link>
         <category>bizmodel,configmgmt</category>
-        <parent>cmdbAbstractObject</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>lnkgrouptoci</db_table>
@@ -3811,11 +3811,11 @@
         </list>
       </presentation>
     </class>
-    <class id="lnkCIToDoc">
+    <class id="lnkCIToDoc" _delta="define">
+      <parent>cmdbAbstractObject</parent>
       <properties>
         <is_link>1</is_link>
         <category>bizmodel,configmgmt</category>
-        <parent>cmdbAbstractObject</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>lnkcitodoc</db_table>
@@ -3900,11 +3900,11 @@
         </list>
       </presentation>
     </class>
-    <class id="lnkCIToContact">
+    <class id="lnkCIToContact" _delta="define">
+      <parent>cmdbAbstractObject</parent>
       <properties>
         <is_link>1</is_link>
         <category>bizmodel,configmgmt</category>
-        <parent>cmdbAbstractObject</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>lnkcitocontact</db_table>
@@ -3991,11 +3991,11 @@
         </list>
       </presentation>
     </class>
-    <class id="lnkSolutionToCI">
+    <class id="lnkSolutionToCI" _delta="define">
+      <parent>cmdbAbstractObject</parent>
       <properties>
         <is_link>1</is_link>
         <category>bizmodel,configmgmt</category>
-        <parent>cmdbAbstractObject</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>lnksolutiontoci</db_table>
@@ -4076,11 +4076,11 @@
         </list>
       </presentation>
     </class>
-    <class id="lnkProcessToSolution">
+    <class id="lnkProcessToSolution" _delta="define">
+      <parent>cmdbAbstractObject</parent>
       <properties>
         <is_link>1</is_link>
         <category>bizmodel,configmgmt</category>
-        <parent>cmdbAbstractObject</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>lnkprocesstosolution</db_table>

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <classes>
-    <class id="Contract">
+    <class id="Contract" _delta="define">
+      <parent>cmdbAbstractObject</parent>
       <properties>
         <comment><![CDATA[/**
  * Persistent classes for a CMDB
@@ -12,7 +13,6 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */]]></comment>
         <category>bizmodel,searchable,servicemgmt</category>
-        <parent>cmdbAbstractObject</parent>
         <abstract>true</abstract>
         <key_type>autoincrement</key_type>
         <db_table>contract</db_table>
@@ -141,10 +141,10 @@
         </list>
       </presentation>
     </class>
-    <class id="ProviderContract">
+    <class id="ProviderContract" _delta="define">
+      <parent>Contract</parent>
       <properties>
         <category>bizmodel,searchable,servicemgmt</category>
-        <parent>Contract</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>providercontract</db_table>
@@ -256,10 +256,10 @@
         </list>
       </presentation>
     </class>
-    <class id="CustomerContract">
+    <class id="CustomerContract" _delta="define">
+      <parent>Contract</parent>
       <properties>
         <category>bizmodel,searchable,servicemgmt</category>
-        <parent>Contract</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>customercontract</db_table>
@@ -382,11 +382,11 @@
         </list>
       </presentation>
     </class>
-    <class id="lnkCustomerContractToProviderContract">
+    <class id="lnkCustomerContractToProviderContract" _delta="define">
+      <parent>cmdbAbstractObject</parent>
       <properties>
         <is_link>1</is_link>
         <category>bizmodel,searchable,servicemgmt,lnkservice</category>
-        <parent>cmdbAbstractObject</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>lnkcustomercontracttoprovider</db_table>
@@ -465,11 +465,11 @@
         </list>
       </presentation>
     </class>
-    <class id="lnkContractToSLA">
+    <class id="lnkContractToSLA" _delta="define">
+      <parent>cmdbAbstractObject</parent>
       <properties>
         <is_link>1</is_link>
         <category>bizmodel,searchable,servicemgmt,lnkservice</category>
-        <parent>cmdbAbstractObject</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>lnkcontracttosla</db_table>
@@ -550,11 +550,11 @@
         </list>
       </presentation>
     </class>
-    <class id="lnkContractToDoc">
+    <class id="lnkContractToDoc" _delta="define">
+      <parent>cmdbAbstractObject</parent>
       <properties>
         <is_link>1</is_link>
         <category>bizmodel,searchable,servicemgmt,lnkservice</category>
-        <parent>cmdbAbstractObject</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>lnkcontracttodoc</db_table>
@@ -635,11 +635,11 @@
         </list>
       </presentation>
     </class>
-    <class id="lnkContractToContact">
+    <class id="lnkContractToContact" _delta="define">
+      <parent>cmdbAbstractObject</parent>
       <properties>
         <is_link>1</is_link>
         <category>bizmodel,searchable,servicemgmt,lnkservice</category>
-        <parent>cmdbAbstractObject</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>lnkcontracttocontact</db_table>
@@ -721,11 +721,11 @@
         </list>
       </presentation>
     </class>
-    <class id="lnkContractToCI">
+    <class id="lnkContractToCI" _delta="define">
+      <parent>cmdbAbstractObject</parent>
       <properties>
         <is_link>1</is_link>
         <category>bizmodel,searchable,servicemgmt,lnkservice</category>
-        <parent>cmdbAbstractObject</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>lnkcontracttoci</db_table>
@@ -799,10 +799,10 @@
         </list>
       </presentation>
     </class>
-    <class id="Service">
+    <class id="Service" _delta="define">
+      <parent>cmdbAbstractObject</parent>
       <properties>
         <category>bizmodel,searchable,servicemgmt</category>
-        <parent>cmdbAbstractObject</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>service</db_table>
@@ -943,10 +943,10 @@
         </list>
       </presentation>
     </class>
-    <class id="ServiceSubcategory">
+    <class id="ServiceSubcategory" _delta="define">
+      <parent>cmdbAbstractObject</parent>
       <properties>
         <category>bizmodel,searchable,servicemgmt</category>
-        <parent>cmdbAbstractObject</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>servicesubcategory</db_table>
@@ -1024,10 +1024,10 @@
         </list>
       </presentation>
     </class>
-    <class id="SLA">
+    <class id="SLA" _delta="define">
+      <parent>cmdbAbstractObject</parent>
       <properties>
         <category>bizmodel,searchable,servicemgmt</category>
-        <parent>cmdbAbstractObject</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>sla</db_table>
@@ -1095,10 +1095,10 @@
         </list>
       </presentation>
     </class>
-    <class id="SLT">
+    <class id="SLT" _delta="define">
+      <parent>cmdbAbstractObject</parent>
       <properties>
         <category>bizmodel,searchable,servicemgmt</category>
-        <parent>cmdbAbstractObject</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>slt</db_table>
@@ -1197,11 +1197,11 @@
         </list>
       </presentation>
     </class>
-    <class id="lnkSLTToSLA">
+    <class id="lnkSLTToSLA" _delta="define">
+      <parent>cmdbAbstractObject</parent>
       <properties>
         <is_link>1</is_link>
         <category>bizmodel,searchable,servicemgmt,lnkservice</category>
-        <parent>cmdbAbstractObject</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>lnkslttosla</db_table>
@@ -1296,11 +1296,11 @@
         </list>
       </presentation>
     </class>
-    <class id="lnkServiceToDoc">
+    <class id="lnkServiceToDoc" _delta="define">
+      <parent>cmdbAbstractObject</parent>
       <properties>
         <is_link>1</is_link>
         <category>bizmodel,searchable,servicemgmt,lnkservice</category>
-        <parent>cmdbAbstractObject</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>lnkservicetodoc</db_table>
@@ -1381,11 +1381,11 @@
         </list>
       </presentation>
     </class>
-    <class id="lnkServiceToContact">
+    <class id="lnkServiceToContact" _delta="define">
+      <parent>cmdbAbstractObject</parent>
       <properties>
         <is_link>1</is_link>
         <category>bizmodel,searchable,servicemgmt,lnkservice</category>
-        <parent>cmdbAbstractObject</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>lnkservicetocontact</db_table>
@@ -1467,10 +1467,10 @@
         </list>
       </presentation>
     </class>
-    <class id="lnkServiceToCI">
+    <class id="lnkServiceToCI" _delta="define">
+      <parent>cmdbAbstractObject</parent>
       <properties>
         <category>bizmodel,searchable,servicemgmt,lnkservice</category>
-        <parent>cmdbAbstractObject</parent>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>lnkservicetoci</db_table>
