@@ -257,8 +257,7 @@ class ModelFactory
 	public function __construct($sRootDir)
 	{
 		$this->sRootDir = $sRootDir;
-		$this->oDOMDocument = new DOMDocument('1.0', 'UTF-8');
-		$this->oDOMDocument->registerNodeClass('DOMElement', 'MFElement');
+		$this->oDOMDocument = new MFDocument();
 		$this->oRoot = $this->oDOMDocument->CreateElement('itop_design');
 		$this->oDOMDocument->AppendChild($this->oRoot);
 		$this->oClasses = $this->oDOMDocument->CreateElement('classes');
@@ -291,9 +290,7 @@ class ModelFactory
 		{
 			$oNode = $this->oRoot;
 		}
-		$this->oDOMDocument->formatOutput = true; // indent (must by loaded with option LIBXML_NOBLANKS)
-		$this->oDOMDocument->preserveWhiteSpace = true; // otherwise the formatOutput option would have no effect
-		echo htmlentities($this->oDOMDocument->saveXML($oNode));
+		$oNode->Dump();
 	}
 
 	/**
@@ -306,11 +303,8 @@ class ModelFactory
 		//echo "Load $oSourceNode->tagName::".$oSourceNode->getAttribute('id')." (".$oSourceNode->getAttribute('_delta').")<br/>\n";
 		$oTarget = $this->oDOMDocument;
 
-		$sSearchId = $oSourceNode->hasAttribute('_rename_from') ? $oSourceNode->getAttribute('_rename_from') : null;
-
 		if (($oSourceNode->tagName == 'class') && ($oSourceNode->parentNode->tagName == 'classes') && ($oSourceNode->getAttribute('_delta') != 'delete'))
 		{
-//echo 'class id:'.$oSourceNode->getAttribute('id')."\n";
 			// This tag is organized in hierarchy: determine the real parent node (as a subnode of the current node)
 			$oXPath = new DOMXPath($oTarget);
 
@@ -331,31 +325,14 @@ class ModelFactory
 		switch ($oSourceNode->getAttribute('_delta'))
 		{
 		case 'must_exist':
-			// Find it and go deeper
-			$oTargetNode = $this->_priv_FindExistingNode($oTargetParentNode, $oSourceNode, $sSearchId);
-			if (!$oTargetNode)
-			{
-				echo "Dumping parent node<br/>\n";
-				$oTargetParentNode->Dump();
-				throw new Exception("XML datamodel loader: could not find $oSourceNode->tagName/".$oSourceNode->getAttribute('id')." in $oTargetParentNode->tagName");
-			}			
-			foreach($oSourceNode->childNodes as $oSourceChild)
-			{
-				$this->LoadDelta($oDeltaDoc, $oSourceChild, $oTargetNode);
-			}			
-			break;
-
 		case 'merge':
 		case '':
-			// Structural node, add it if not already present and go deeper
-			$oTargetNode = $this->_priv_FindExistingNode($oTargetParentNode, $oSourceNode);
-			if (!$oTargetNode)
-			{
-				$oTargetNode = $oTarget->CreateElement($oSourceNode->tagName);
-				$oTargetParentNode->appendChild($oTargetNode);
-			}
+			$bMustExist = ($oSourceNode->getAttribute('_delta') == 'must_exist');
+			$sSearchId = $oSourceNode->hasAttribute('_rename_from') ? $oSourceNode->getAttribute('_rename_from') : $oSourceNode->getAttribute('id');
+			$oTargetNode = $oSourceNode->MergeInto($oTargetParentNode, $sSearchId, $bMustExist);
 			foreach($oSourceNode->childNodes as $oSourceChild)
 			{
+				// Continue deeper
 				$this->LoadDelta($oDeltaDoc, $oSourceChild, $oTargetNode);
 			}			
 			break;
@@ -363,13 +340,13 @@ class ModelFactory
 		case 'define':
 			// New node - copy child nodes as well
 			$oTargetNode = $oTarget->ImportNode($oSourceNode, true);
-			$this->_priv_AddNode($oTargetParentNode, $oTargetNode);
+			$oTargetParentNode->AddChildNode($oTargetNode);
 			break;
 
 		case 'redefine':
 			// Replace the existing node by the given node - copy child nodes as well
 			$oTargetNode = $oTarget->ImportNode($oSourceNode, true);
-			$this->_priv_ModifyNode($oTargetParentNode, $oTargetNode);
+			$oTargetParentNode->RedefineChildNode($oTargetNode);
 			break;
 
 		case 'delete':
@@ -385,14 +362,14 @@ class ModelFactory
 			}
 			$oTargetParentNode = $oTargetNode->parentNode;
 			
-			$oTargetNode = $this->_priv_FindExistingNode($oTargetParentNode, $oSourceNode);
-			$this->_priv_RemoveNode($oTargetNode);
+			$oTargetNode = $oTargetParentNode->FindExistingChildNode($oSourceNode);
+			$oTargetNode->Delete();
 			break;
 		}
 
 		if ($oSourceNode->hasAttribute('_rename_from'))
 		{
-			$this->_priv_RenameNode($oTargetNode, $oSourceNode->getAttribute('id'));
+			$oTargetNode->Rename($oSourceNode->getAttribute('id'));
 		}
 		if ($oTargetNode->hasAttribute('_delta'))
 		{
@@ -412,10 +389,9 @@ class ModelFactory
 		self::$aLoadedModules[] = $oModule;
 		foreach($aDataModels as $sXmlFile)
 		{
-			$oDocument = new DOMDocument('1.0', 'UTF-8');
-			$oDocument->registerNodeClass('DOMElement', 'MFElement');
+			$oDocument = new MFDocument();
 			libxml_clear_errors();
-			$oDocument->load($sXmlFile, LIBXML_NOBLANKS);
+			$oDocument->load($sXmlFile);
 			//$bValidated = $oDocument->schemaValidate(APPROOT.'setup/itop_design.xsd');
 			$aErrors = libxml_get_errors();
 			if (count($aErrors) > 0)
@@ -543,7 +519,7 @@ class ModelFactory
 			{
 				$oClassNode->SetAttribute('_created_in', $sModuleName);
 			}
-			$this->_priv_AddNode($oParentNode, $this->oDOMDocument->importNode($oClassNode, true));
+			$oParentNode->AddChildNode($this->oDOMDocument->importNode($oClassNode, true));
 		}
 	}
 	
@@ -560,9 +536,8 @@ class ModelFactory
 			throw new Exception("ModelFactory::RemoveClass: Cannot remove the non existing class $sClass");
 		}
 
-		//TODO: also mark as removed the child classes
-
-		$this->_priv_RemoveNode($oClassNode);
+		// Note: the child classes are removed entirely
+		$oClassNode->Delete();
 	}
 
 	/**
@@ -651,98 +626,6 @@ class ModelFactory
 		// Todo - implement... do we have to handle menu renaming ???
 	}
 
-
-	protected function _priv_AlterNode(DOMNode $oNode, DOMNode $oDeltaNode)
-	{
-		foreach ($oDeltaNode->attributes as $sName => $oAttrNode)
-		{
-			$sCurrentValue = $oNode->getAttribute($sName);
-			$sNewValue = $oAttrNode->value;
-			$oNode->setAttribute($sName, $oAttrNode->value);
-		}
-		
-		$aSrcChildNodes = $oNode->childNodes;
-		foreach($oDeltaNode->childNodes as $index => $oChildNode)
-		{
-			if (!$oChildNode instanceof DOMElement)
-			{
-				// Text or CData nodes are treated by position
-				$sOperation = $oChildNode->parentNode->getAttribute('_operation');
-				switch($sOperation)
-				{
-					case 'removed':
-					// ???
-					break;
-					
-					case 'modified':
-					case 'replaced':
-					case 'added':
-					$oNewNode = $this->oDOMDocument->importNode($oChildNode);
-					$oSrcChildNode = $aSrcChildNodes->item($index);
-					if ($oSrcChildNode)
-					{
-						$oNode->replaceChild($oNewNode, $oSrcChildNode);
-					}
-					else
-					{
-						$oNode->appendChild($oNewNode);
-					}
-					
-					break;
-					
-					case '':
-					// Do nothing
-				}
-			}
-			else
-			{
-				$sOperation = $oChildNode->getAttribute('_operation');
-				$sPath = $oChildNode->tagName;
-				$sName = $oChildNode->getAttribute('id');
-				if ($sName != '')
-				{
-					$sPath .= "[@id='$sName']";
-				}
-				switch($sOperation)
-				{
-					case 'removed':
-					$oToRemove = $this->_priv_GetNodes($sPath, $oNode)->item(0);
-					if ($oToRemove != null)
-					{
-						$this->_priv_SetFlag($oToRemove, 'removed');
-					}
-					break;
-					
-					case 'modified':
-					$oToModify = $this->_priv_GetNodes($sPath, $oNode)->item(0);
-					if ($oToModify != null)
-					{
-						$this->_priv_AlterNode($oToModify, $oChildNode);
-					}
-					else
-					{
-						throw new Exception("Cannot modify the non-existing node '$sPath' in '".$oNode->getNodePath()."'");
-					}
-					break;
-					
-					case 'replaced':
-					$oNewNode = $this->oDOMDocument->importNode($oChildNode, true); // Import the node and its child nodes
-					$oToModify = $this->_priv_GetNodes($sPath, $oNode)->item(0);
-					$oNode->replaceChild($oNewNode, $oToModify);	
-					break;
-					
-					case 'added':
-					$oNewNode = $this->oDOMDocument->importNode($oChildNode);
-					$oNode->appendChild($oNewNode);
-					$this->_priv_SetFlag($oNewNode, 'added');
-					break;
-					
-					case '':
-					// Do nothing
-				}
-			}
-		}	
-	}
 	
 	public function GetClassXMLTemplate($sName, $sIcon)
 	{
@@ -784,7 +667,7 @@ EOF
 		{
 			$sXPath = "//class[@_created_in='$sModuleName' and (not(@_alteration) or @_alteration!='removed')]";
 		}
-		return $this->_priv_GetNodes($sXPath);
+		return $this->GetNodes($sXPath);
 	}
 		
 	/**
@@ -800,12 +683,12 @@ EOF
 		{
 			$sXPath = "//class[not(@_alteration) or @_alteration!='removed']";
 		}
-		return $this->_priv_GetNodes($sXPath);
+		return $this->GetNodes($sXPath);
 	}
 	
 	public function GetClass($sClassName, $bFlattenLayers = true)
 	{
-		$oClassNode = $this->_priv_GetNodes("//classes//class[@id='$sClassName']")->item(0);
+		$oClassNode = $this->GetNodes("//classes//class[@id='$sClassName']")->item(0);
 		if ($oClassNode == null)
 		{
 			return null;
@@ -828,7 +711,7 @@ EOF
 		{
 			$sXPath = "class[(@_operation!='removed')]";
 		}
-		return $this->_priv_GetNodes($sXPath, $oClassNode);
+		return $this->GetNodes($sXPath, $oClassNode);
 	}
 		
 	
@@ -852,7 +735,7 @@ EOF
 		{
 			$sXPath = "fields/field[(@id='$sAttCode' and (not(@_operation) or @_operation!='removed'))]";
 		}
-		$oFieldNode = $this->_priv_GetNodes($sXPath, $oClassNode)->item(0);
+		$oFieldNode = $this->GetNodes($sXPath, $oClassNode)->item(0);
 		if (($oFieldNode == null) && ($sParentClass = $oClassNode->GetChildText('parent')))
 		{
 			return $this->GetField($sParentClass, $sAttCode, $bFlattenLayers);
@@ -872,7 +755,7 @@ EOF
 		{
 			$sXPath = "fields/field[not(@_alteration) or @_alteration!='removed']";
 		}
-		return $this->_priv_GetNodes($sXPath, $oClassNode);
+		return $this->GetNodes($sXPath, $oClassNode);
 	}
 	
 	public function AddField(DOMNode $oClassNode, $sFieldCode, $sFieldType, $sSQL, $defaultValue, $bIsNullAllowed, $aExtraParams)
@@ -888,7 +771,7 @@ EOF
 	public function RemoveField(DOMNode $oClassNode, $sFieldCode)
 	{
 		$sXPath = "fields/field[@id='$sFieldCode']";
-		$oFieldNodes = $this->_priv_GetNodes($sXPath, $oClassNode);
+		$oFieldNodes = $this->GetNodes($sXPath, $oClassNode);
 		if (is_object($oFieldNodes) && (is_object($oFieldNodes->item(0))))
 		{
 			$oFieldNode = $oFieldNodes->item(0);
@@ -907,7 +790,7 @@ EOF
 	public function AlterField(DOMNode $oClassNode, $sFieldCode, $sFieldType, $sSQL, $defaultValue, $bIsNullAllowed, $aExtraParams)
 	{
 		$sXPath = "fields/field[@id='$sFieldCode']";
-		$oFieldNodes = $this->_priv_GetNodes($sXPath, $oClassNode);
+		$oFieldNodes = $this->GetNodes($sXPath, $oClassNode);
 		if (is_object($oFieldNodes) && (is_object($oFieldNodes->item(0))))
 		{
 			$oFieldNode = $oFieldNodes->item(0);
@@ -1098,22 +981,6 @@ EOF
 		}
 	}
 	
-	public function _priv_SetFlag($oNode, $sFlagValue)
-	{
-		$sPreviousFlag = $oNode->getAttribute('_operation');
-		if ($sPreviousFlag == 'added')
-		{
-			// Do nothing ??
-		}
-		else
-		{
-			$oNode->setAttribute('_operation', $sFlagValue);
-		}
-		if ($oNode->tagName != 'class')
-		{
-			$this->_priv_SetFlag($oNode->parentNode, 'modified');
-		}
-	}
 	/**
 	 * List all transitions from a given state
 	 * @param DOMNode $oStateNode The state
@@ -1127,7 +994,7 @@ EOF
 		{
 			//$sXPath = "transitions/transition[@_operation!='removed']";
 		}
-		return $this->_priv_GetNodes($sXPath, $oStateNode);
+		return $this->GetNodes($sXPath, $oStateNode);
 	}
 		
 	/**
@@ -1143,7 +1010,7 @@ EOF
 		{
 			//$sXPath = "lifecycle/states/state[@_operation!='removed']";
 		}
-		return $this->_priv_GetNodes($sXPath, $oClassNode);
+		return $this->GetNodes($sXPath, $oClassNode);
 	}
 		
 	/**
@@ -1170,7 +1037,7 @@ EOF
 		{
 			$sXPath = "//menu[@_created_in='$sModuleName' and (not(@_alteration) or @_alteration!='removed')]";
 		}
-		return $this->_priv_GetNodes($sXPath, $this->oMenus);
+		return $this->GetNodes($sXPath, $this->oMenus);
 	}
 		
 	/**
@@ -1228,7 +1095,7 @@ EOF
 	
 	public function ListChanges()
 	{
-		return $this->_priv_GetNodes('//*[@_alteration or @_old_id]', $this->oDOMDocument->firstChild);
+		return $this->GetNodes('//*[@_alteration or @_old_id]');
 	}
 
 
@@ -1313,16 +1180,11 @@ EOF
 	 */	
 	public function GetDelta()
 	{
-		$oDelta = new DOMDocument('1.0', 'UTF-8');
-		$oDelta->registerNodeClass('DOMElement', 'MFElement');
-		
+		$oDelta = new MFDocument();
 		foreach($this->ListChanges() as $oAlteredNode)
 		{
 			$this->ImportNodeAndPathDelta($oDelta, $oAlteredNode);
 		}
-
-		$oDelta->formatOutput = true; // indent (must by loaded with option LIBXML_NOBLANKS)
-		$oDelta->preserveWhiteSpace = true; // otherwise the formatOutput option would have no effect
 		return $oDelta->saveXML();
 	}
 	
@@ -1342,213 +1204,16 @@ EOF
 		return $aResult;
 	}
 	
-	/**
-	 * Replaces a node by another one, making sure that recursive nodes are preserved
-	 * @param MFElement $oNewNode The replacement
-	 * @param MFElement $oOldNode The former node
-	 */	
-	protected function _priv_replaceNode($oNewNode, $oOldNode)
-	{
-		if ($oOldNode->tagName == 'class')
-		{
-		}
-		// Move the classes from the old node into the new one
-		foreach($this->_priv_GetNodes('class', $oOldNode) as $oChild)
-		{
-			$oNewNode->appendChild($oChild);
-		}
-		
-
-		$oParentNode = $oOldNode->parentNode;
-		$oParentNode->replaceChild($oNewNode, $oOldNode);
-	}
-
-
-	/**
-	 * Find the child node matching the given node
-	 * @param mixe      $oParentNode The container
-	 * @param MFElement $oRefNode The node to search for
-	 * @param bool      $sSearchId substitutes to the value of the 'id' attribute 
-	 */	
-	protected function _priv_FindExistingNode($oParentNode, $oRefNode, $sSearchId = null)
-	{
-		$oRes = null;
-		if ($oRefNode->hasAttribute('id'))
-		{
-			// Find the first element having the same tag name and id
-			if (!$sSearchId)
-			{
-				$sSearchId = $oRefNode->getAttribute('id');
-			}
-			foreach($oParentNode->childNodes as $oChildNode)
-			{
-				if (($oChildNode instanceof DOMElement) && ($oChildNode->tagName == $oRefNode->tagName))
-				{
-					if ($oChildNode->hasAttribute('id') && ($oChildNode->getAttribute('id') == $sSearchId))
-					{
-						$oRes = $oChildNode;
-						break;
-					}
-				}
-			}
-		}
-		else
-		{
-			// Get the first one having the same tag name (ignore others)
-			foreach($oParentNode->childNodes as $oChildNode)
-			{
-				if (($oChildNode instanceof DOMElement) && ($oChildNode->tagName == $oRefNode->tagName))
-				{
-					$oRes = $oChildNode;
-					break;
-				}
-			}
-		}
-		return $oRes;
-	}
-
-
-	/**
-	 * Add a node and set the flags that will be used to compute the delta
-	 * @param MFElement $oParentNode The node into which the new node will be attached
-	 * @param MFElement $oNode The node (including all subnodes) to add
-	 */	
-	protected function _priv_AddNode($oParentNode, $oNode)
-	{
-		$sFlag = null;
-
-		$oExisting = $this->_priv_FindExistingNode($oParentNode, $oNode);
-		if ($oExisting)
-		{
-			if ($oExisting->getAttribute('_alteration') != 'removed')
-			{
-				throw new Exception("Attempting to add a node that already exists: $oNode->tagName (id: ".$oNode->getAttribute('id')."");
-			}
-			$sFlag = 'replaced';
-			$this->_priv_replaceNode($oNode, $oExisting);
-		}
-		else
-		{
-			$oParentNode->appendChild($oNode);
-
-			$sFlag = 'added';
-			// Iterate through the parents: reset the flag if any of them has a flag set 
-			for($oParent = $oNode ; $oParent instanceof MFElement ; $oParent = $oParent->parentNode)
-			{
-				if ($oParent->getAttribute('_alteration') != '')
-				{
-					$sFlag = null;
-					break;
-				}
-			}
-		}
-		if ($sFlag)
-		{
-			$oNode->setAttribute('_alteration', $sFlag);
-		}
-	}
-
-	/**
-	 * Modify a node and set the flags that will be used to compute the delta
-	 * @param MFElement $oParentNode The node into which the new node will be changed
-	 * @param MFElement $oNode       The node (including all subnodes) to set
-	 */	
-	protected function _priv_ModifyNode($oParentNode, $oNode)
-	{
-		$oExisting = $this->_priv_FindExistingNode($oParentNode, $oNode);
-		if (!$oExisting)
-		{
-			throw new Exception("Attempting to modify a non existing node: $oNode->tagName (id: ".$oNode->getAttribute('id').")");
-		}
-		if ($oExisting->getAttribute('_alteration') == 'removed')
-		{
-			throw new Exception("Attempting to modify a deleted node: $oNode->tagName (id: ".$oNode->getAttribute('id')."");
-		}
-		$this->_priv_replaceNode($oNode, $oExisting);
-			
-		if ($oNode->getAttribute('_alteration') != '')
-		{
-			// added or modified: leave the flag unchanged
-			$sFlag = null;
-		}
-		else
-		{
-			$sFlag = 'replaced';
-			// Iterate through the parents: reset the flag if any of them has a flag set 
-			for($oParent = $oNode ; $oParent instanceof MFElement ; $oParent = $oParent->parentNode)
-			{
-				if ($oParent->getAttribute('_alteration') != '')
-				{
-					$sFlag = null;
-					break;
-				}
-			}
-		}
-		if ($sFlag)
-		{
-			$oNode->setAttribute('_alteration', $sFlag);
-		}
-	}
-
-	/**
-	 * Remove a node and set the flags that will be used to compute the delta
-	 * @param MFElement $oNode The node to remove
-	 */	
-	protected function _priv_RemoveNode($oNode)
-	{
-		$oParent = $oNode->parentNode;
-		if ($oNode->getAttribute('_alteration') == 'replaced')
-		{
-			$sFlag = 'removed';
-		}
-		elseif ($oNode->getAttribute('_alteration') == 'added')
-		{
-			$sFlag = null;
-		}
-		else
-		{
-			$sFlag = 'removed';
-			// Iterate through the parents: reset the flag if any of them has a flag set 
-			for($oParent = $oNode ; $oParent instanceof MFElement ; $oParent = $oParent->parentNode)
-			{
-				if ($oParent->getAttribute('_alteration') != '')
-				{
-					$sFlag = null;
-					break;
-				}
-			}
-		}
-		if ($sFlag)
-		{
-			$oNode->setAttribute('_alteration', $sFlag);
-			$oNode->DeleteChildren();
-		}
-		else
-		{
-			// Remove the node entirely
-			$oParent->removeChild($oNode);
-		}
-	}
-
-	/**
-	 * Renames a node and set the flags that will be used to compute the delta
-	 * @param MFElement $oNode The node to rename
-	 * @param String    $sNewId The new id	 
-	 */	
-	protected function _priv_RenameNode($oNode, $sId)
-	{
-		$oNode->setAttribute('_old_id', $oNode->getAttribute('id'));
-		$oNode->setAttribute('id', $sId);
-	}
-
-
 	public function TestAlteration()
 	{
-		echo "<h4>Extrait des données chargées</h4>\n";
-		$oRoot = $this->_priv_GetNodes("//class[@id='Contact']")->item(0);
-		$oRoot->Dump();
+		if (false)
+		{
+			echo "<h4>Extrait des données chargées</h4>\n";
+			$oRoot = $this->GetNodes("//class[@id='Contact']")->item(0);
+			$oRoot->Dump();
+			return;
+		}
 
-return;
 		$sHeader = '<?xml version="1.0" encoding="utf-8"?'.'>';
 		$sOriginalXML =
 <<<EOF
@@ -1571,38 +1236,37 @@ $sHeader
 </itop_design>
 EOF;
 
-		$this->oDOMDocument = new DOMDocument('1.0', 'UTF-8');
-		$this->oDOMDocument->registerNodeClass('DOMElement', 'MFElement');
-		$this->oDOMDocument->loadXML($sOriginalXML, LIBXML_NOBLANKS);
+		$this->oDOMDocument = new MFDocument();
+		$this->oDOMDocument->loadXML($sOriginalXML);
 
 		echo "<h4>Données d'origine</h4>\n";
-		$oRoot = $this->_priv_GetNodes('//itop_design')->item(0);
+		$oRoot = $this->GetNodes('//itop_design')->item(0);
 		$oRoot->Dump();
 
-		$oNode = $this->_priv_GetNodes('a/b', $oRoot)->item(0);
+		$oNode = $oRoot->GetNodes('a/b')->item(0);
 		$oNew = $this->oDOMDocument->CreateElement('b', 'New text');
-		$this->_priv_ModifyNode($oNode->parentNode, $oNew);		
+		$oNode->parentNode->RedefineChildNode($oNew);		
 
-		$oNode = $this->_priv_GetNodes('a/c', $oRoot)->item(0);
+		$oNode = $oRoot->GetNodes('a/c')->item(0);
 		$oNew = $this->oDOMDocument->CreateElement('c');
 		$oNew->setAttribute('id', '1');
 		$oNew->appendChild($this->oDOMDocument->CreateElement('d', 'x'));
 		$oNew->appendChild($this->oDOMDocument->CreateElement('d', 'y'));
 		$oNew->appendChild($this->oDOMDocument->CreateElement('d', 'z'));
-		$this->_priv_ModifyNode($oNode->parentNode, $oNew);		
+		$oNode->parentNode->RedefineChildNode($oNew);		
 
-		$oNode = $this->_priv_GetNodes("//a[@id='second a']", $oRoot)->item(0);
-		$this->_priv_RenameNode($oNode, 'el secundo A');		
+		$oNode = $oRoot->GetNodes("//a[@id='second a']")->item(0);
+		$oNode->Rename('el secundo A');		
 		$oNew = $this->oDOMDocument->CreateElement('e', 'Something new here');
-		$this->_priv_AddNode($oNode, $oNew);		
+		$oNode->AddChildNode($oNew);		
 		$oNew = $this->oDOMDocument->CreateElement('a');
 		$oNew->setAttribute('id', 'new a');
 		$oNew->appendChild($this->oDOMDocument->CreateElement('parent', 'el secundo A'));
 		$oNew->appendChild($this->oDOMDocument->CreateElement('f', 'Welcome to the newcomer'));
-		$this->_priv_AddNode($oNode, $oNew);		
+		$oNode->AddChildNode($oNew);		
 
-		$oNode = $this->_priv_GetNodes("//a[@id='third a']", $oRoot)->item(0);
-		$this->_priv_RemoveNode($oNode);		
+		$oNode = $oRoot->GetNodes("//a[@id='third a']")->item(0);
+		$oNode->Delete();		
 
 		echo "<h4>Après modifications (avec les APIs de ModelFactory)</h4>\n";
 		$oRoot->Dump();
@@ -1614,16 +1278,17 @@ EOF;
 		echo "</pre>\n";
 
 		echo "<h4>Réitération: on recharge le modèle épuré</h4>\n";
-		$this->oDOMDocument = new DOMDocument('1.0', 'UTF-8');
-		$this->oDOMDocument->registerNodeClass('DOMElement', 'MFElement');
-		$this->oDOMDocument->loadXML($sOriginalXML, LIBXML_NOBLANKS);
-		$oRoot = $this->_priv_GetNodes('//itop_design')->item(0);
+		$this->oDOMDocument = new MFDocument();
+		$this->oDOMDocument->loadXML($sOriginalXML);
+		$oRoot = $this->GetNodes('//itop_design')->item(0);
 		$oRoot->Dump();
 
 		echo "<h4>On lui applique le delta calculé vu ci-dessus, et on obtient...</h4>\n";
-		$oDeltaDoc = new DOMDocument('1.0', 'UTF-8');
-		$oDeltaDoc->registerNodeClass('DOMElement', 'MFElement');
-		$oDeltaDoc->loadXML($sDeltaXML, LIBXML_NOBLANKS);
+		$oDeltaDoc = new MFDocument();
+		$oDeltaDoc->loadXML($sDeltaXML);
+		
+		$oDeltaDoc->Dump();
+		$this->oDOMDocument->Dump();
 		$oDeltaRoot = $oDeltaDoc->childNodes->item(0);
 		$this->LoadDelta($oDeltaDoc, $oDeltaRoot, $this->oDOMDocument);
 		$oRoot->Dump();
@@ -1635,35 +1300,34 @@ EOF;
 	 * @param string $sXPath A XPath expression
 	 * @return DOMNodeList
 	 */
-	public function _priv_GetNodes($sXPath, $oContextNode = null)
+	protected function GetNodes($sXPath, $oContextNode = null)
 	{
-		$oXPath = new DOMXPath($this->oDOMDocument);
-		
-		if (is_null($oContextNode))
-		{
-			return $oXPath->query($sXPath);
-		}
-		else
-		{
-			return $oXPath->query($sXPath, $oContextNode);
-		}
+		return $this->oDOMDocument->GetNodes($sXPath, $oContextNode);
 	}
 }
 
 
 /**
- * MFElement: helper to read the information from the DOM
+ * MFElement: helper to read/change the DOM
  * @package ModelFactory
  */
 class MFElement extends DOMElement
 {
 	/**
+	 * Extracts some nodes from the DOM
+	 * @param string $sXPath A XPath expression
+	 * @return DOMNodeList
+	 */
+	public function GetNodes($sXPath)
+	{
+		return $this->ownerDocument->GetNodes($sXPath, $this);
+	}
+
+	/**
 	 * For debugging purposes
 	 */
 	public function Dump()
 	{
-		$this->ownerDocument->formatOutput = true; // indent (must by loaded with option LIBXML_NOBLANKS)
-		$this->ownerDocument->preserveWhiteSpace = true; // otherwise the formatOutput option would have no effect
 		echo "<pre>\n";	 	
 		echo htmlentities($this->ownerDocument->saveXML($this));
 		echo "</pre>\n";	 	
@@ -1786,4 +1450,300 @@ class MFElement extends DOMElement
 			$this->removeChild($this->firstChild);
 		}
 	} 
+
+	/**
+	 * Find the child node matching the given node
+	 * @param MFElement $oRefNode The node to search for
+	 * @param bool      $sSearchId substitutes to the value of the 'id' attribute 
+	 */	
+	public function FindExistingChildNode(MFElement $oRefNode, $sSearchId = null)
+	{
+		return self::FindNode($this, $oRefNode, $sSearchId);
+	}
+	/**
+	 * Find the child node matching the given node
+	 * @param DOMNode   $oParent The node to look into (could be DOMDocument, DOMElement...)
+	 * @param MFElement $oRefNode The node to search for
+	 * @param bool      $sSearchId substitutes to the value of the 'id' attribute 
+	 */	
+	public static function FindNode(DOMNode $oParent, MFElement $oRefNode, $sSearchId = null)
+	{
+		$oRes = null;
+		if ($oRefNode->hasAttribute('id'))
+		{
+			// Find the first element having the same tag name and id
+			if (!$sSearchId)
+			{
+				$sSearchId = $oRefNode->getAttribute('id');
+			}
+			foreach($oParent->childNodes as $oChildNode)
+			{
+				if (($oChildNode instanceof DOMElement) && ($oChildNode->tagName == $oRefNode->tagName))
+				{
+					if ($oChildNode->hasAttribute('id') && ($oChildNode->getAttribute('id') == $sSearchId))
+					{
+						$oRes = $oChildNode;
+						break;
+					}
+				}
+			}
+		}
+		else
+		{
+			// Get the first one having the same tag name (ignore others)
+			foreach($oParent->childNodes as $oChildNode)
+			{
+				if (($oChildNode instanceof DOMElement) && ($oChildNode->tagName == $oRefNode->tagName))
+				{
+					$oRes = $oChildNode;
+					break;
+				}
+			}
+		}
+		return $oRes;
+	}
+
+
+	/**
+	 * Add a node and set the flags that will be used to compute the delta
+	 * @param MFElement $oNode The node (including all subnodes) to add
+	 */	
+	public function AddChildNode(MFElement $oNode)
+	{
+		$sFlag = null;
+
+		$oExisting = $this->FindExistingChildNode($oNode);
+		if ($oExisting)
+		{
+			if ($oExisting->getAttribute('_alteration') != 'removed')
+			{
+				throw new Exception("Attempting to add a node that already exists: $oNode->tagName (id: ".$oNode->getAttribute('id')."");
+			}
+			$sFlag = 'replaced';
+			$oExisting->ReplaceWith($oNode);
+		}
+		else
+		{
+			$this->appendChild($oNode);
+
+			$sFlag = 'added';
+			// Iterate through the parents: reset the flag if any of them has a flag set 
+			for($oParent = $oNode ; $oParent instanceof MFElement ; $oParent = $oParent->parentNode)
+			{
+				if ($oParent->getAttribute('_alteration') != '')
+				{
+					$sFlag = null;
+					break;
+				}
+			}
+		}
+		if ($sFlag)
+		{
+			$oNode->setAttribute('_alteration', $sFlag);
+		}
+	}
+
+	/**
+	 * Modify a node and set the flags that will be used to compute the delta
+	 * @param MFElement $oNode       The node (including all subnodes) to set
+	 */	
+	public function RedefineChildNode(MFElement $oNode)
+	{
+		$oExisting = $this->FindExistingChildNode($oNode);
+		if (!$oExisting)
+		{
+			throw new Exception("Attempting to modify a non existing node: $oNode->tagName (id: ".$oNode->getAttribute('id').")");
+		}
+		if ($oExisting->getAttribute('_alteration') == 'removed')
+		{
+			throw new Exception("Attempting to modify a deleted node: $oNode->tagName (id: ".$oNode->getAttribute('id')."");
+		}
+		$oExisting->ReplaceWith($oNode);
+			
+		if ($oNode->getAttribute('_alteration') != '')
+		{
+			// added or modified: leave the flag unchanged
+			$sFlag = null;
+		}
+		else
+		{
+			$sFlag = 'replaced';
+			// Iterate through the parents: reset the flag if any of them has a flag set 
+			for($oParent = $oNode ; $oParent instanceof MFElement ; $oParent = $oParent->parentNode)
+			{
+				if ($oParent->getAttribute('_alteration') != '')
+				{
+					$sFlag = null;
+					break;
+				}
+			}
+		}
+		if ($sFlag)
+		{
+			$oNode->setAttribute('_alteration', $sFlag);
+		}
+	}
+
+	/**
+	 * Replaces a node by another one, making sure that recursive nodes are preserved
+	 * @param MFElement $oNewNode The replacement
+	 */	
+	protected function ReplaceWith($oNewNode)
+	{
+		// Move the classes from the old node into the new one
+		foreach($this->GetNodes('class') as $oChild)
+		{
+			$oNewNode->appendChild($oChild);
+		}
+		
+
+		$oParentNode = $this->parentNode;
+		$oParentNode->replaceChild($oNewNode, $this);
+	}
+
+	/**
+	 * Remove a node and set the flags that will be used to compute the delta
+	 */	
+	public function Delete()
+	{
+		$oParent = $this->parentNode;
+		switch ($this->getAttribute('_alteration'))
+		{
+		case 'replaced':
+			$sFlag = 'removed';
+			break;
+		case 'added':
+			$sFlag = null;
+			break;
+		case 'removed':
+			throw new Exception("Attempting to remove a deleted node: $this->tagName (id: ".$this->getAttribute('id')."");
+
+		default:
+			$sFlag = 'removed';
+			// Iterate through the parents: reset the flag if any of them has a flag set 
+			for($oParent = $this ; $oParent instanceof MFElement ; $oParent = $oParent->parentNode)
+			{
+				if ($oParent->getAttribute('_alteration') != '')
+				{
+					$sFlag = null;
+					break;
+				}
+			}
+		}
+		if ($sFlag)
+		{
+			$this->setAttribute('_alteration', $sFlag);
+			$this->DeleteChildren();
+		}
+		else
+		{
+			// Remove the node entirely
+			$oParent->removeChild($this);
+		}
+	}
+
+	/**
+	 * Merge the current node into the given container
+	 * 	 
+	 * @param DOMNode $oContainer An element or a document	 
+	 * @param string  $sSearchId  The id to consider (could be blank)
+	 * @param bool    $bMustExist Throw an exception if the node must already be found (and not marked as deleted!)
+	 */
+	public function MergeInto($oContainer, $sSearchId, $bMustExist)
+	{
+		$oTargetNode = $oContainer->FindExistingChildNode($this, $sSearchId);
+		if (!$oTargetNode)
+		{
+			if ($bMustExist)
+			{
+				echo "Dumping parent node<br/>\n";
+				$oContainer->Dump();
+				throw new Exception("XML datamodel loader: could not find $this->tagName/$sSearchId in $oContainer->tagName");
+			}
+			$oTargetNode = $oContainer->ownerDocument->ImportNode($this, false);
+			$oContainer->AddChildNode($oTargetNode);
+		}
+		return $oTargetNode;
+	}
+
+	/**
+	 * Renames a node and set the flags that will be used to compute the delta
+	 * @param String    $sNewId The new id	 
+	 */	
+	public function Rename($sId)
+	{
+		$this->setAttribute('_old_id', $this->getAttribute('id'));
+		$this->setAttribute('id', $sId);
+	}
+}
+
+/**
+ * MFDocument - formating rules for XML input/output
+ * @package ModelFactory
+ */
+class MFDocument extends DOMDocument
+{
+	public function __construct()
+	{
+		parent::__construct('1.0', 'UTF-8');
+		$this->registerNodeClass('DOMElement', 'MFElement');
+
+		$this->formatOutput = true; // indent (must by loaded with option LIBXML_NOBLANKS)
+		$this->preserveWhiteSpace = true; // otherwise the formatOutput option would have no effect
+	}
+
+	/**
+	 * Overload of the standard API	
+	 */
+	public function load($filename, $options = 0)
+	{
+		parent::load($filename, LIBXML_NOBLANKS);
+	}
+
+	/**
+	 * Overload of the standard API	
+	 */
+	public function loadXML($source, $options = 0)
+	{
+		parent::loadXML($source, LIBXML_NOBLANKS);
+	}
+
+	/**
+	 * For debugging purposes
+	 */
+	public function Dump()
+	{
+		echo "<pre>\n";	 	
+		echo htmlentities($this->saveXML());
+		echo "</pre>\n";	 	
+	}
+
+	/**
+	 * Find the child node matching the given node
+	 * @param MFElement $oRefNode The node to search for
+	 * @param bool      $sSearchId substitutes to the value of the 'id' attribute 
+	 */	
+	public function FindExistingChildNode(MFElement $oRefNode, $sSearchId = null)
+	{
+		return MFElement::FindNode($this, $oRefNode, $sSearchId);
+	}
+
+	/**
+	 * Extracts some nodes from the DOM
+	 * @param string $sXPath A XPath expression
+	 * @return DOMNodeList
+	 */
+	public function GetNodes($sXPath, $oContextNode = null)
+	{
+		$oXPath = new DOMXPath($this);
+		
+		if (is_null($oContextNode))
+		{
+			return $oXPath->query($sXPath);
+		}
+		else
+		{
+			return $oXPath->query($sXPath, $oContextNode);
+		}
+	}
 }
