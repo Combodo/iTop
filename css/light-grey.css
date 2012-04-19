@@ -786,7 +786,6 @@ td.dashboard {
 /*** New Lacanau layout ***/
 
 .ui-layout-pane { /* all 'panes' */ 
-	background: #FFF;  
 	overflow: auto;
 } 
 
