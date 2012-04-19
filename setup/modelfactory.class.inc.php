@@ -1652,7 +1652,19 @@ class MFElement extends DOMElement
 	public function MergeInto($oContainer, $sSearchId, $bMustExist)
 	{
 		$oTargetNode = $oContainer->FindExistingChildNode($this, $sSearchId);
-		if (!$oTargetNode)
+		if ($oTargetNode)
+		{
+			if ($oTargetNode->getAttribute('_alteration') == 'removed')
+			{
+				if ($bMustExist)
+				{
+					throw new Exception("XML datamodel loader: found mandatory node $this->tagName/$sSearchId marked as deleted in $oContainer->tagName");
+				}
+				$oTargetNode = $oContainer->ownerDocument->ImportNode($this, false);
+				$oContainer->AddChildNode($oTargetNode);
+			}
+		}
+		else
 		{
 			if ($bMustExist)
 			{
