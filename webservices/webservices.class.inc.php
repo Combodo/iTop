@@ -283,11 +283,25 @@ abstract class WebServicesBase
 		$oLog->Set('userinfo', UserRights::GetUser());
 		$oLog->Set('verb', $sVerb);
 		$oLog->Set('result', $oRes->IsOk());
-		$oLog->Set('log_info', $oRes->GetInfoAsText());
-		$oLog->Set('log_warning', $oRes->GetWarningsAsText());
-		$oLog->Set('log_error', $oRes->GetErrorsAsText());
-		$oLog->Set('data', $oRes->GetReturnedDataAsText());
+		$this->TrimAndSetValue($oLog, 'log_info', $oRes->GetInfoAsText());
+		$this->TrimAndSetValue($oLog, 'log_warning', $oRes->GetWarningsAsText());
+		$this->TrimAndSetValue($oLog, 'log_error', $oRes->GetErrorsAsText());
+		$this->TrimAndSetValue($oLog, 'data', $oRes->GetReturnedDataAsText());
 		$oLog->DBInsertNoReload();
+	}
+	
+	protected function TrimAndSetValue($oLog, $sAttCode, $sValue)
+	{
+		$oAttDef = MetaModel::GetAttributeDef(get_class($oLog), $sAttCode);
+		if (is_object($oAttDef))
+		{
+			$iMaxSize = $oAttDef->GetMaxSize();
+			if ($iMaxSize)
+			{
+				$sValue = substr($sValue, 0, $iMaxSize);
+			}
+			$oLog->Set($sAttCode, $sValue);
+		}
 	}
 
 	/**
