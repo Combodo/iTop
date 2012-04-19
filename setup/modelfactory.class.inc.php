@@ -127,34 +127,7 @@ class MFModule extends MFItem
 	}
 }
 
-class MFWorkspace extends MFModule
-{
-	public function __construct($sRootDir)
-	{
-		$this->sId = 'itop-workspace';	
-		
-		$this->sName = 'workspace';
-		$this->sVersion = '1.0';
-
-		$this->sRootDir = $sRootDir;
-		$this->sLabel = 'Workspace';
-		$this->aDataModels = array();
-
-		$this->aDataModels[] = $this->GetWorkspacePath();
-	}
-
-	public function GetWorkspacePath()
-	{
-		return $this->sRootDir.'/workspace.xml';
-	}
-	
-	public function GetName()
-	{
-		return ''; // The workspace itself has no name so that objects created inside it retain their original module's name
-	}
-}
-
- /**
+/**
  * ModelFactoryClass: the representation of a Class (i.e. a PHP class)
  * @package ModelFactory
  */
@@ -316,8 +289,10 @@ class ModelFactory
 	{
 		if (is_null($oNode))
 		{
-			$oNode = $this->oMenus;
+			$oNode = $this->oRoot;
 		}
+		$this->oDOMDocument->formatOutput = true; // indent (must by loaded with option LIBXML_NOBLANKS)
+		$this->oDOMDocument->preserveWhiteSpace = true; // otherwise the formatOutput option would have no effect
 		echo htmlentities($this->oDOMDocument->saveXML($oNode));
 	}
 
@@ -333,15 +308,16 @@ class ModelFactory
 
 		$sSearchId = $oSourceNode->hasAttribute('_rename_from') ? $oSourceNode->getAttribute('_rename_from') : null;
 
-		if (($oSourceNode->tagName == 'class') && ($sParentId = $oSourceNode->GetChildText('parent')))
+		if (($oSourceNode->tagName == 'class') && ($oSourceNode->parentNode->tagName == 'classes') && ($oSourceNode->getAttribute('_delta') != 'delete'))
 		{
+//echo 'class id:'.$oSourceNode->getAttribute('id')."\n";
 			// This tag is organized in hierarchy: determine the real parent node (as a subnode of the current node)
 			$oXPath = new DOMXPath($oTarget);
 
 			//TODO - exclure les noeuds marqués pour effacement
 			//       VOIR AUSSI LES AUTRES CAS DE RECHERCHE (findexistingnode)
 
-
+			$sParentId = $oSourceNode->GetChildText('parent');
 			$sPath = '//'.$oSourceNode->tagName."[@id='$sParentId']";
 			$oTargetParentNode = $oXPath->query($sPath)->item(0);
 			if (!$oTargetParentNode)
@@ -397,6 +373,18 @@ class ModelFactory
 			break;
 
 		case 'delete':
+			// Search the node itself since its parent is not given in case of a delete
+			$oXPath = new DOMXPath($oTarget);
+			$sPath = '//'.$oSourceNode->tagName."[@id='".$oSourceNode->getAttribute('id')."']";
+			$oTargetNode = $oXPath->query($sPath)->item(0);
+			if (!$oTargetNode)
+			{
+				echo "Dumping target doc - looking for '$sPath'<br/>\n";
+				$this->oDOMDocument->firstChild->Dump();
+				throw new Exception("XML datamodel loader: could not find node for $oSourceNode->tagName/".$oSourceNode->getAttribute('id'));
+			}
+			$oTargetParentNode = $oTargetNode->parentNode;
+			
 			$oTargetNode = $this->_priv_FindExistingNode($oTargetParentNode, $oSourceNode);
 			$this->_priv_RemoveNode($oTargetNode);
 			break;
@@ -428,7 +416,7 @@ class ModelFactory
 			$oDocument->registerNodeClass('DOMElement', 'MFElement');
 			libxml_clear_errors();
 			$oDocument->load($sXmlFile, LIBXML_NOBLANKS);
-			$bValidated = $oDocument->schemaValidate(APPROOT.'setup/itop_design.xsd');
+			//$bValidated = $oDocument->schemaValidate(APPROOT.'setup/itop_design.xsd');
 			$aErrors = libxml_get_errors();
 			if (count($aErrors) > 0)
 			{
@@ -440,7 +428,7 @@ class ModelFactory
 			$oNodeList = $oXPath->query('//class');
 			foreach($oNodeList as $oNode)
 			{
-				$oNode->SetAttribute('_source', $sXmlFile);
+				$oNode->SetAttribute('_created_in', $sModuleName);
 			}
 
 			$oDeltaRoot = $oDocument->childNodes->item(0);
@@ -794,7 +782,7 @@ EOF
 		$sXPath = "//class[@_created_in='$sModuleName']";
 		if ($bFlattenLayers)
 		{
-			$sXPath = "//class[@_created_in='$sModuleName' and @_operation!='removed']";
+			$sXPath = "//class[@_created_in='$sModuleName' and (not(@_alteration) or @_alteration!='removed')]";
 		}
 		return $this->_priv_GetNodes($sXPath);
 	}
@@ -810,14 +798,14 @@ EOF
 		$sXPath = "//class";
 		if ($bFlattenLayers)
 		{
-			$sXPath = "//class[@_operation!='removed']";
+			$sXPath = "//class[not(@_alteration) or @_alteration!='removed']";
 		}
 		return $this->_priv_GetNodes($sXPath);
 	}
 	
 	public function GetClass($sClassName, $bFlattenLayers = true)
 	{
-		$oClassNode = $this->_priv_GetNodes("//classes/class[@id='$sClassName']")->item(0);
+		$oClassNode = $this->_priv_GetNodes("//classes//class[@id='$sClassName']")->item(0);
 		if ($oClassNode == null)
 		{
 			return null;
@@ -882,7 +870,7 @@ EOF
 		$sXPath = "fields/field";
 		if ($bFlattenLayers)
 		{
-			$sXPath = "fields/field[not(@_operation) or @_operation!='removed']";
+			$sXPath = "fields/field[not(@_alteration) or @_alteration!='removed']";
 		}
 		return $this->_priv_GetNodes($sXPath, $oClassNode);
 	}
@@ -1180,7 +1168,7 @@ EOF
 		$sXPath = "//menu[@_created_in='$sModuleName']";
 		if ($bFlattenLayers)
 		{
-			$sXPath = "//menu[@_created_in='$sModuleName' and @_operation!='removed']";
+			$sXPath = "//menu[@_created_in='$sModuleName' and (not(@_alteration) or @_alteration!='removed')]";
 		}
 		return $this->_priv_GetNodes($sXPath, $this->oMenus);
 	}
