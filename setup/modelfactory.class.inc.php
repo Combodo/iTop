@@ -20,9 +20,8 @@ require_once(APPROOT.'setup/moduleinstaller.class.inc.php');
  */
 abstract class MFItem
 {
-	public function __construct($sName, $sValue) 
+	public function __construct() 
 	{
-		parent::__construct($sName, $sValue);
 	}
 	
 	/**
@@ -133,12 +132,130 @@ class MFModule extends MFItem
  */
 class MFClass extends MFItem
 {
+	protected $oNode;
+	protected $oProperties;
+	protected $oFields;
+	protected $oMethods;
+	protected $sName;
+	
+	public function __construct(MFElement $oNode)
+	{
+		parent::__construct();
+		$this->oNode = $oNode;
+		$this->sName = $oNode->getAttribute('id');
+		$this->oProperties = $this->oNode->GetOptionalElement('properties');
+		$this->oFields = $this->oNode->GetOptionalElement('fields');
+		$this->oMethods = $this->oNode->GetOptionalElement('methods');
+	}
+	
+	public static function CreateClass(ModelFactory $oFactory, $sClassName, $sModuleName)
+	{
+		$oNode = $oFactory->CreateElement('class');
+		$oNode->setAttribute('id', $sClassName);
+		$oNode->setAttribute('_created_in', $sModuleName);
+		$oDoc = $oNode->ownerDocument;
+		$oProperties = $oDoc->createElement('properties');
+		$oNode->appendChild($oProperties);
+		$oFields = $oDoc->createElement('fields');
+		$oNode->appendChild($oFields);
+		$oMethods = $oDoc->createElement('methods');
+		$oNode->appendChild($oMethods);
+		
+		return new MFClass($oNode);
+	}
+	
+	public function AddToFactory(ModelFactory $oFactory)
+	{
+		$oFactory->AddClass($this->oNode, $this->GetModuleName());
+	}
+	
+	public function GetName()
+	{
+		return $this->sName;
+	}	
+	public function GetModuleName()
+	{
+		return $this->oNode->getAttribute('_created_in');
+	}	
+	public function GetParentName()
+	{
+		return $this->oNode->GetChildText('parent', '');
+	}
+	public function IsRelation()
+	{
+		return $this->GetProperty('is_link', false);
+	}
+	public function GetProperty($sCode, $defaultValue)
+	{
+		$value = $defaultValue;
+		if ($this->oProperties != null)
+		{
+			$value = $this->oProperties->GetChildText($sCode, $defaultValue);
+		}
+		return $value;
+	}
+	public function SetParentName($sNewParent)
+	{
+		$oNewNode = $this->oNode->ownerDocument->createElement('parent', $sNewParent);
+		$oParentElement = $this->oProperties->GetOptionalElement('parent');
+		if ($oParentElement == null)
+		{
+			// The specified property does not exist, let's create it
+			$this->oNode->AddChildNode($oNewNode);
+		}
+		else
+		{
+			// The property already exists, let's replace/redefine its whole content
+			$oParentElement->RedefineChildNode($oNewNode);
+		}
+	}
+	
+	public function SetProperty($sCode, $value)
+	{
+		if ($this->oProperties == null)
+		{
+			throw(new Exception("MFClass: Error: cannot set the property '$sCode' on the class '{$this->sName}', the class has no 'properties' in the DOM"));
+		}
+		
+		$oNewNode = $this->oNode->ownerDocument->createElement($sCode, $value);
+		$oProperty = $this->oProperties->GetOptionalElement($sCode);
+		if ($oProperty == null)
+		{
+			// The specified property does not exist, let's create it
+			$this->oProperties->AddChildNode($oNewNode);
+		}
+		else
+		{
+			// The property already exists, let's replace/redefine its whole content
+			$oProperty->RedefineChildNode($oNewNode);
+		}
+	}
+
 	/**
 	 * List all fields of this class
 	 */
-	public function ListFields()
+	public function ListFields($bIncludeInheritedFields = false)
 	{
-		return array();
+		$aFields = array();
+		if ($bIncludeInheritedFields)
+		{
+			// Recurse to get the parent fields
+			$oParentClass = $this->GetParentClass();
+			if ($oParentClass != null)
+			{
+				$aFields = $oParentClass->ListFields(true);
+			}
+		}
+		if ($this->oFields)
+		{
+			$oList = $this->oFields->getElementsByTagName('field');
+			foreach($oList as $oNode)
+			{
+				$sCode = $oNode->getAttribute('id');
+				$aFields[$sCode] = new MFField($oNode);
+			}
+		}
+		return $aFields;
 	}
 	
 	/**
@@ -192,14 +309,150 @@ class MFClass extends MFItem
 	{
 		return array();
 	}
+	
+	public function GetParentClass()
+	{
+		$oParentClass = null;
+		$sParentName = $this->GetParentName();
+		$oParent = $this->oNode->parentNode;
+		if (($sParentName != '') && ($oParent == null))
+		{
+			// No parent node. Maybe the class is not yet inserted into the DOM
+			// Try to find the parent class by its name ??
+			$oList = $this->oNode->ownerDocument->GetNodeById('/itop_design/classes//class', $this->GetParentName());
+			if ($oList->length == 1)
+			{
+				$oParentClass = $oList->item(0);
+			}
+			else if($oList->length == 0)
+			{
+				throw(new Exception("MFClass: Error: invalid parent class '$sParentName' for the class '{$this->sName}'."));
+			}
+			else
+			{
+				throw(new Exception("MFClass: Error: ambiguous parent class '$sParentName' for the class '{$this->sName}'. There are actually '.$oList->length.' classes named '$sParentName' in the DOM."));
+			}
+		}
+		else
+		{
+			if ($oParent->tagName != 'class')
+			{
+				// We are up to the top of the classes tree, so no parent
+			}
+			else
+			{
+				$oParentClass = new MFClass($oParent);
+			}
+		}
+		return $oParentClass;
+	}
 }
 
  /**
- * ModelFactoryField: the representation of a Field (i.e. a property of a class)
+ * ModelFactoryField: the representation of a Field (i.e. a attribute of a class)
  * @package ModelFactory
  */
 class MFField extends MFItem
 {
+	protected $oNode;
+	protected $sName;
+	
+	public function __construct(MFElement $oNode)
+	{
+		parent::__construct();
+		$this->oNode = $oNode;
+		$this->sName = $oNode->getAttribute('id');
+	}
+	
+	static public function CreateField($oFactory, $sFieldId, $sType)
+	{
+		$oNode = $oFactory->CreateElement('field');
+		$oNode->setAttribute('id', $sClassName);
+		$oNode->setAttribute('xsi:type', $sType);
+		
+		return new MFField($oNode);
+	}
+	
+	public function GetName()
+	{
+		return $this->sName;
+	}
+	
+	public function GetType()
+	{
+		return $this->oNode->getAttribute('xsi:type');
+	}
+	
+	public function GetSourceClassName()
+	{
+		if ($this->oNode->parentNode)
+		{
+			return $this->oNode->parentNode->getAttribute('id');
+		}
+		return '';
+	}
+	
+	public function IsRelation()
+	{
+		$bResult = false;
+		switch($this->oNode->getAttribute('xsi:type'))
+		{
+			case 'AttributeLinkedSet':
+			case 'AttributeLinkedSetIndirect':
+			case 'AttributeHierarchicalKey':
+			case 'AttributeExternalKey':
+			case 'AttributeExternalField':
+			$bResult = true;
+		}
+		return $bResult;		
+	}
+	
+	public function GetProperty($sCode, $defaultValue = '')
+	{
+		$value = $this->oNode->GetChildText($sCode, $defaultValue);
+		return $value;
+	}
+	
+	public function GetArrayProperty($sCode, $defaultValue ='')
+	{
+		return array(); // NOT YET IMPLEMENTED
+	}
+	
+	public function GetTargetClass()
+	{
+		$sTargetClass = '';
+		if ($this->GetType() == 'AttributeLinkedSetIndirect')
+		{
+			$sLinkedClass = $this->GetProperty('linked_class', '');
+			$oLinkedClassNode = $this->oNode->ownerDocument->GetNodeById('/itop_design/classes//class', $sLinkedClass)->item(0);
+			if ($oLinkedClassNode)
+			{
+				$oLinkedClass = new MFClass($oLinkedClassNode);
+				$aLinkedFields = $oLinkedClass->ListFields();
+				$oExtKeyToRemoteField = $aLinkedFields[$this->GetProperty('ext_key_to_remote', '')];
+				$sTargetClass = $oExtKeyToRemoteField->GetProperty('target_class');
+			}
+		}
+		return $sTargetClass;
+	}
+	
+	public function SetProperty($sCode, $value)
+	{
+		$oProperty = $this->oNode->GetOptionalElement($sCode);
+		if ($oProperty == null)
+		{
+			// The specified property does not exist, let's create it
+			$oNewNode = $this->oNode->ownerDocument->createElement($sCode, $value);
+			$this->oNode->appendChild($oNewNode); //TODO use priv_AppendXXXX to cope with the _alertation flags
+		}
+		else
+		{
+			// The property already exists, let's replace/redefine its whole content
+			$oProperty->DeleteChildren();
+			$oNewNode = $this->oNode->ownerDocument->createTextNode($value);
+			$oProperty->appendChild($oNewNode); //TODO use priv_Replace/redefineXXXX to cope with the _alertation flags
+		}
+	}
 }
 
  /**
@@ -306,14 +559,10 @@ class ModelFactory
 		if (($oSourceNode->tagName == 'class') && ($oSourceNode->parentNode->tagName == 'classes') && ($oSourceNode->getAttribute('_delta') != 'delete'))
 		{
 			// This tag is organized in hierarchy: determine the real parent node (as a subnode of the current node)
-			$oXPath = new DOMXPath($oTarget);
-
-			//TODO - exclure les noeuds marqués pour effacement
-			//       VOIR AUSSI LES AUTRES CAS DE RECHERCHE (findexistingnode)
-
 			$sParentId = $oSourceNode->GetChildText('parent');
-			$sPath = '//'.$oSourceNode->tagName."[@id='$sParentId']";
-			$oTargetParentNode = $oXPath->query($sPath)->item(0);
+			
+			$oTargetParentNode = $oTarget->GetNodeById('/itop_design/classes//class', $sParentId)->item(0);
+
 			if (!$oTargetParentNode)
 			{
 				echo "Dumping target doc - looking for '$sPath'<br/>\n";
@@ -454,6 +703,10 @@ class ModelFactory
 		return null;
 	}
 	
+	public function CreateElement($sTagName, $sValue = '')
+	{
+		return $this->oDOMDocument->createElement($sTagName, $sValue);
+	}
 	
 	/**
 	 * Check if the class specified by the given node already exists in the loaded DOM
@@ -502,7 +755,7 @@ class ModelFactory
 		{
 			throw new Exception('ModelFactory::AddClass: Cannot add a class with no name');
 		}
-		if ($this->ClassExists($oClassNode))
+		if ($this->ClassNameExists($oClassNode->getAttribute('id')))
 		{
 			throw new Exception("ModelFactory::AddClass: Cannot add the already existing class $sClassName");
 		}
@@ -511,7 +764,7 @@ class ModelFactory
 		$oParentNode = $this->GetClass($sParentClass);
 		if ($oParentNode == null)
 		{
-			throw new Exception("ModelFactory::AddClass: Cannot find the parent class of $sClassName: $sParentClass");
+			throw new Exception("ModelFactory::AddClass: Cannot find the parent class of '$sClassName': '$sParentClass'");
 		}
 		else
 		{
@@ -662,10 +915,10 @@ EOF
 	 */
 	public function ListClasses($sModuleName, $bFlattenLayers = true)
 	{
-		$sXPath = "//class[@_created_in='$sModuleName']";
+		$sXPath = "/itop_design/classes//class[@_created_in='$sModuleName']";
 		if ($bFlattenLayers)
 		{
-			$sXPath = "//class[@_created_in='$sModuleName' and (not(@_alteration) or @_alteration!='removed')]";
+			$sXPath = "/itop_design/classes//class[@_created_in='$sModuleName' and (not(@_alteration) or @_alteration!='removed')]";
 		}
 		return $this->GetNodes($sXPath);
 	}
@@ -678,17 +931,17 @@ EOF
 	 */
 	public function ListAllClasses($bFlattenLayers = true)
 	{
-		$sXPath = "//class";
+		$sXPath = "/itop_design/classes//class";
 		if ($bFlattenLayers)
 		{
-			$sXPath = "//class[not(@_alteration) or @_alteration!='removed']";
+			$sXPath = "/itop_design/classes//class[not(@_alteration) or @_alteration!='removed']";
 		}
 		return $this->GetNodes($sXPath);
 	}
 	
 	public function GetClass($sClassName, $bFlattenLayers = true)
 	{
-		$oClassNode = $this->GetNodes("//classes//class[@id='$sClassName']")->item(0);
+		$oClassNode = $this->GetNodes("/itop_design/classes//class[@id='$sClassName']")->item(0);
 		if ($oClassNode == null)
 		{
 			return null;
@@ -1748,6 +2001,21 @@ class MFDocument extends DOMDocument
 	public function GetNodes($sXPath, $oContextNode = null)
 	{
 		$oXPath = new DOMXPath($this);
+		
+		if (is_null($oContextNode))
+		{
+			return $oXPath->query($sXPath);
+		}
+		else
+		{
+			return $oXPath->query($sXPath, $oContextNode);
+		}
+	}
+	
+	public function GetNodeById($sXPath, $sId, $oContextNode = null)
+	{
+		$oXPath = new DOMXPath($this);
+		$sXPath .= "[@id='$sId' and(not(@_alteration) or @_alteration!='removed')]";
 		
 		if (is_null($oContextNode))
 		{
