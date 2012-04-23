@@ -36,10 +36,9 @@ class NiceWebPage extends WebPage
     {
         parent::__construct($s_title);
 		$this->m_aReadyScripts = array();
-		$this->add_linked_script("../js/jquery-1.4.2.min.js");
-		$this->add_linked_stylesheet('../css/ui-lightness/jquery-ui-1.8.2.custom.css');
-		$this->add_style('body { overflow: auto; }');
-		$this->add_linked_script('../js/jquery-ui-1.8.2.custom.min.js');
+		$this->add_linked_script("../js/jquery-1.7.1.min.js");
+		$this->add_linked_stylesheet('../css/ui-lightness/jquery-ui-1.8.17.custom.css');
+		$this->add_linked_script('../js/jquery-ui-1.8.17.custom.min.js');
 		$this->add_linked_script("../js/hovertip.js");
 		// table sorting
 		$this->add_linked_script("../js/jquery.tablesorter.min.js");

@@ -307,7 +307,7 @@ EOF
 	 */	 	 	
 	public function add_ready_script($sScript)
 	{
-		$this->m_sReadyScript .= $sScript;
+		$this->m_sReadyScript .= $sScript."\n";
 	}
 	
 	/**
