@@ -346,6 +346,18 @@ class MFClass extends MFItem
 		}
 		return $oParentClass;
 	}
+	
+	public function GetChildClasses()
+	{
+		$aChildClasses = array();
+		$sXPath = "class[(not(@_alteration) or @_alteration!='removed']";
+		$oChildClasses = $this->oNode->GetNodes($sXPath);
+		foreach($oChildClasses as $oClassNode)
+		{
+			$aChildClasses[] = new MFClass($oClassNode);
+		}
+		return $aChildClasses;
+	}
 }
 
  /**
