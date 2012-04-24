@@ -169,6 +169,11 @@ class MFClass extends MFItem
 		$oFactory->AddClass($this->oNode, $this->GetModuleName());
 	}
 	
+	public function Delete()
+	{
+		$this->oNode->Delete();
+	}
+	
 	public function GetName()
 	{
 		return $this->sName;
@@ -248,7 +253,7 @@ class MFClass extends MFItem
 		}
 		if ($this->oFields)
 		{
-			$oList = $this->oFields->getElementsByTagName('field');
+			$oList = $this->oFields->ListActiveChildNodes('field');
 			foreach($oList as $oNode)
 			{
 				$sCode = $oNode->getAttribute('id');
@@ -256,6 +261,20 @@ class MFClass extends MFItem
 			}
 		}
 		return $aFields;
+	}
+	
+	/**
+	 * Get the given field from the class
+	 */
+	public function GetField($sFieldCode, $bIncludeInheritedFields = false)
+	{
+		$aFields = $this->ListFields($bIncludeInheritedFields);
+		$oField = null;
+		if (array_key_exists($sFieldCode, $aFields))
+		{
+			$oField = $aFields[$sFieldCode];
+		}
+		return $oField;
 	}
 	
 	/**
@@ -350,8 +369,7 @@ class MFClass extends MFItem
 	public function GetChildClasses()
 	{
 		$aChildClasses = array();
-		$sXPath = "class[(not(@_alteration) or @_alteration!='removed']";
-		$oChildClasses = $this->oNode->GetNodes($sXPath);
+		$this->oNode->ListActiveChildNodes('class');
 		foreach($oChildClasses as $oClassNode)
 		{
 			$aChildClasses[] = new MFClass($oClassNode);
@@ -385,6 +403,10 @@ class MFField extends MFItem
 		return new MFField($oNode);
 	}
 	
+	public function Delete()
+	{
+		$this->oNode->Delete();
+	}
 	public function GetName()
 	{
 		return $this->sName;
@@ -397,9 +419,9 @@ class MFField extends MFItem
 	
 	public function GetSourceClassName()
 	{
-		if ($this->oNode->parentNode)
+		if ( $this->oNode->parentNode && $this->oNode->parentNode->parentNode)
 		{
-			return $this->oNode->parentNode->getAttribute('id');
+			return $this->oNode->parentNode->parentNode->getAttribute('id');
 		}
 		return '';
 	}
@@ -568,18 +590,36 @@ class ModelFactory
 		//echo "Load $oSourceNode->tagName::".$oSourceNode->getAttribute('id')." (".$oSourceNode->getAttribute('_delta').")<br/>\n";
 		$oTarget = $this->oDOMDocument;
 
-		if (($oSourceNode->tagName == 'class') && ($oSourceNode->parentNode->tagName == 'classes') && ($oSourceNode->getAttribute('_delta') != 'delete'))
+		if (($oSourceNode->tagName == 'class') && ($oSourceNode->parentNode->tagName == 'classes'))
 		{
-			// This tag is organized in hierarchy: determine the real parent node (as a subnode of the current node)
-			$sParentId = $oSourceNode->GetChildText('parent');
-			
-			$oTargetParentNode = $oTarget->GetNodeById('/itop_design/classes//class', $sParentId)->item(0);
-
-			if (!$oTargetParentNode)
+			if ($oSourceNode->getAttribute('_delta') == 'define')
 			{
-				echo "Dumping target doc - looking for '$sPath'<br/>\n";
-				$this->oDOMDocument->firstChild->Dump();
-				throw new Exception("XML datamodel loader: could not find parent node for $oSourceNode->tagName/".$oSourceNode->getAttribute('id')." with parent id $sParentId");
+				// This tag is organized in hierarchy: determine the real parent node (as a subnode of the current node)
+				$sParentId = $oSourceNode->GetChildText('parent');
+				
+				$oTargetParentNode = $oTarget->GetNodeById('/itop_design/classes//class', $sParentId)->item(0);
+	
+				if (!$oTargetParentNode)
+				{
+					echo "Dumping target doc - looking for '$sPath'<br/>\n";
+					$this->oDOMDocument->firstChild->Dump();
+					throw new Exception("XML datamodel loader: could not find parent node for $oSourceNode->tagName/".$oSourceNode->getAttribute('id')." with parent id $sParentId");
+				}
+			}
+			else 
+			{
+				$oTargetNode = $oTarget->GetNodeById('/itop_design/classes//class', $oSourceNode->getAttribute('id'))->item(0);
+				if (!$oTargetNode)
+				{
+					echo "Dumping target doc - looking for '$sPath'<br/>\n";
+					$this->oDOMDocument->firstChild->Dump();
+					throw new Exception("XML datamodel loader: could not find node for $oSourceNode->tagName/".$oSourceNode->getAttribute('id'));
+				}
+				else
+				{
+					$oTargetParentNode = $oTargetNode->parentNode;
+				}				
+								
 			}
 		}
 
@@ -611,18 +651,6 @@ class ModelFactory
 			break;
 
 		case 'delete':
-			// Search the node itself since its parent is not given in case of a delete
-			$oXPath = new DOMXPath($oTarget);
-			$sPath = '//'.$oSourceNode->tagName."[@id='".$oSourceNode->getAttribute('id')."']";
-			$oTargetNode = $oXPath->query($sPath)->item(0);
-			if (!$oTargetNode)
-			{
-				echo "Dumping target doc - looking for '$sPath'<br/>\n";
-				$this->oDOMDocument->firstChild->Dump();
-				throw new Exception("XML datamodel loader: could not find node for $oSourceNode->tagName/".$oSourceNode->getAttribute('id'));
-			}
-			$oTargetParentNode = $oTargetNode->parentNode;
-			
 			$oTargetNode = $oTargetParentNode->FindExistingChildNode($oSourceNode);
 			$oTargetNode->Delete();
 			break;
@@ -1766,6 +1794,12 @@ class MFElement extends DOMElement
 			}
 		}
 		return $oRes;
+	}
+	
+	public function ListActiveChildNodes($sTagName)
+	{
+		$sXPath = $sTagName."[not(@_alteration) or @_alteration!='removed']";
+		return $this->GetNodes($sXPath);
 	}
 
 
