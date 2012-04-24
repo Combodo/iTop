@@ -57,6 +57,19 @@ class MFCompiler
 			$oP = new CompilerEchoPage();
 		} 	
 
+
+		$aMenuNodes = array();
+		$aMenusByModule = array();
+		foreach ($this->oFactory->ListActiveChildNodes('menus', 'menu') as $oMenuNode)
+		{
+			$sMenuId = $oMenuNode->getAttribute('id');
+			$aMenuNodes[$sMenuId] = $oMenuNode;
+
+			$sModuleMenu = $oMenuNode->getAttribute('_created_in');
+			$aMenusByModule[$sModuleMenu][] = $sMenuId;
+		}
+
+
 		$aResultFiles = array();
 		
 		$aModules = $this->oFactory->GetLoadedModules();
@@ -153,9 +166,7 @@ EOF;
 				}
 			}
 
-			$oMenus = $this->oFactory->ListMenus($sModuleName);
-			$iMenuCount = $oMenus->length;
-			if ($iMenuCount == 0)
+			if (!array_key_exists($sModuleName, $aMenusByModule))
 			{
 				$oP->p("Found module without menus declared: $sModuleName");
 			}
@@ -172,27 +183,28 @@ EOF;
 
 				// Preliminary: determine parent menus not defined within the current module
 				$aMenusToLoad = array();
-				foreach($oMenus as $oMenu)
+
+				foreach($aMenusByModule[$sModuleName] as $sMenuId)
 				{
-					if ($sParent = $oMenu->GetChildText('parent', null))
+					$oMenuNode = $aMenuNodes[$sMenuId];
+					if ($sParent = $oMenuNode->GetChildText('parent', null))
 					{
 						$aMenusToLoad[] = $sParent;
 					}
 					// Note: the order matters: the parents must be defined BEFORE
-					$aMenusToLoad[] = $oMenu->GetAttribute('id');
+					$aMenusToLoad[] = $sMenuId;
 				}
 				$aMenusToLoad = array_unique($aMenusToLoad);
 				foreach($aMenusToLoad as $sMenuId)
 				{
-					$oMenu = $this->oFactory->GetMenu($sMenuId);
+					$oMenuNode = $aMenuNodes[$sMenuId];
 					try
 					{
-						$this->CompileMenu($oMenu, $sResultFile, $sRelativeDir, $oP);
+						$this->CompileMenu($oMenuNode, $sResultFile, $sRelativeDir, $oP);
 					}
 					catch (ssDOMFormatException $e)
 					{
-						$sMenu = $oMenu->getAttribute("id");
-						throw new Exception("Failed to process menu '$sMenu', from '$sModuleRootDir': ".$e->getMessage());
+						throw new Exception("Failed to process menu '$sMenuId', from '$sModuleRootDir': ".$e->getMessage());
 					}
 				}
 			}

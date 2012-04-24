@@ -127,402 +127,6 @@ class MFModule extends MFItem
 }
 
 /**
- * ModelFactoryClass: the representation of a Class (i.e. a PHP class)
- * @package ModelFactory
- */
-class MFClass extends MFItem
-{
-	protected $oNode;
-	protected $oProperties;
-	protected $oFields;
-	protected $oMethods;
-	protected $sName;
-	
-	public function __construct(MFElement $oNode)
-	{
-		parent::__construct();
-		$this->oNode = $oNode;
-		$this->sName = $oNode->getAttribute('id');
-		$this->oProperties = $this->oNode->GetOptionalElement('properties');
-		$this->oFields = $this->oNode->GetOptionalElement('fields');
-		$this->oMethods = $this->oNode->GetOptionalElement('methods');
-	}
-	
-	public static function CreateClass(ModelFactory $oFactory, $sClassName, $sModuleName)
-	{
-		$oNode = $oFactory->CreateElement('class');
-		$oNode->setAttribute('id', $sClassName);
-		$oNode->setAttribute('_created_in', $sModuleName);
-		$oDoc = $oNode->ownerDocument;
-		$oProperties = $oDoc->createElement('properties');
-		$oNode->appendChild($oProperties);
-		$oFields = $oDoc->createElement('fields');
-		$oNode->appendChild($oFields);
-		$oMethods = $oDoc->createElement('methods');
-		$oNode->appendChild($oMethods);
-		
-		return new MFClass($oNode);
-	}
-	
-	public function AddToFactory(ModelFactory $oFactory)
-	{
-		$oFactory->AddClass($this->oNode, $this->GetModuleName());
-	}
-	
-	public function Delete()
-	{
-		$this->oNode->Delete();
-	}
-	
-	public function GetName()
-	{
-		return $this->sName;
-	}	
-	public function GetModuleName()
-	{
-		return $this->oNode->getAttribute('_created_in');
-	}	
-	public function GetParentName()
-	{
-		return $this->oNode->GetChildText('parent', '');
-	}
-	public function IsRelation()
-	{
-		return $this->GetProperty('is_link', false);
-	}
-	public function GetProperty($sCode, $defaultValue)
-	{
-		$value = $defaultValue;
-		if ($this->oProperties != null)
-		{
-			$value = $this->oProperties->GetChildText($sCode, $defaultValue);
-		}
-		return $value;
-	}
-	public function SetParentName($sNewParent)
-	{
-		$oNewNode = $this->oNode->ownerDocument->createElement('parent', $sNewParent);
-		$oParentElement = $this->oProperties->GetOptionalElement('parent');
-		if ($oParentElement == null)
-		{
-			// The specified property does not exist, let's create it
-			$this->oNode->AddChildNode($oNewNode);
-		}
-		else
-		{
-			// The property already exists, let's replace/redefine its whole content
-			$oParentElement->RedefineChildNode($oNewNode);
-		}
-	}
-	
-	public function SetProperty($sCode, $value)
-	{
-		if ($this->oProperties == null)
-		{
-			throw(new Exception("MFClass: Error: cannot set the property '$sCode' on the class '{$this->sName}', the class has no 'properties' in the DOM"));
-		}
-		
-		$oNewNode = $this->oNode->ownerDocument->createElement($sCode, $value);
-		$oProperty = $this->oProperties->GetOptionalElement($sCode);
-		if ($oProperty == null)
-		{
-			// The specified property does not exist, let's create it
-			$this->oProperties->AddChildNode($oNewNode);
-		}
-		else
-		{
-			// The property already exists, let's replace/redefine its whole content
-			$oProperty->RedefineChildNode($oNewNode);
-		}
-	}
-
-	/**
-	 * List all fields of this class
-	 */
-	public function ListFields($bIncludeInheritedFields = false)
-	{
-		$aFields = array();
-		if ($bIncludeInheritedFields)
-		{
-			// Recurse to get the parent fields
-			$oParentClass = $this->GetParentClass();
-			if ($oParentClass != null)
-			{
-				$aFields = $oParentClass->ListFields(true);
-			}
-		}
-		if ($this->oFields)
-		{
-			$oList = $this->oFields->ListActiveChildNodes('field');
-			foreach($oList as $oNode)
-			{
-				$sCode = $oNode->getAttribute('id');
-				$aFields[$sCode] = new MFField($oNode);
-			}
-		}
-		return $aFields;
-	}
-	
-	/**
-	 * Get the given field from the class
-	 */
-	public function GetField($sFieldCode, $bIncludeInheritedFields = false)
-	{
-		$aFields = $this->ListFields($bIncludeInheritedFields);
-		$oField = null;
-		if (array_key_exists($sFieldCode, $aFields))
-		{
-			$oField = $aFields[$sFieldCode];
-		}
-		return $oField;
-	}
-	
-	/**
-	 * List all methods of this class
-	 */
-	public function ListMethods()
-	{
-		return array();
-	}
-	
-	/**
-	 * Whether or not the class has a lifecycle
-	 * @return bool
-	 */
-	public function HasLifeCycle()
-	{
-		return true; //TODO implement
-	}
-	
-	/**
-	 * Returns the code of the attribute used to store the lifecycle state
-	 * @return string
-	 */
-	public function GetLifeCycleAttCode()
-	{
-		if ($this->HasLifeCycle())
-		{
-			
-		}
-		return '';
-	}
-	
-	/**
-	 * List all states of this class
-	 */
-	public function ListStates()
-	{
-		return array();
-	}
-	/**
-	 * List all relations of this class
-	 */
-	public function ListRelations()
-	{
-		return array();
-	}
-	/**
-	 * List all transitions of this class
-	 */
-	public function ListTransitions()
-	{
-		return array();
-	}
-	
-	public function GetParentClass()
-	{
-		$oParentClass = null;
-		$sParentName = $this->GetParentName();
-		$oParent = $this->oNode->parentNode;
-		if (($sParentName != '') && ($oParent == null))
-		{
-			// No parent node. Maybe the class is not yet inserted into the DOM
-			// Try to find the parent class by its name ??
-			$oList = $this->oNode->ownerDocument->GetNodeById('/itop_design/classes//class', $this->GetParentName());
-			if ($oList->length == 1)
-			{
-				$oParentClass = $oList->item(0);
-			}
-			else if($oList->length == 0)
-			{
-				throw(new Exception("MFClass: Error: invalid parent class '$sParentName' for the class '{$this->sName}'."));
-			}
-			else
-			{
-				throw(new Exception("MFClass: Error: ambiguous parent class '$sParentName' for the class '{$this->sName}'. There are actually '.$oList->length.' classes named '$sParentName' in the DOM."));
-			}
-		}
-		else
-		{
-			if ($oParent->tagName != 'class')
-			{
-				// We are up to the top of the classes tree, so no parent
-			}
-			else
-			{
-				$oParentClass = new MFClass($oParent);
-			}
-		}
-		return $oParentClass;
-	}
-	
-	public function GetChildClasses()
-	{
-		$aChildClasses = array();
-		$this->oNode->ListActiveChildNodes('class');
-		foreach($oChildClasses as $oClassNode)
-		{
-			$aChildClasses[] = new MFClass($oClassNode);
-		}
-		return $aChildClasses;
-	}
-}
-
- /**
- * ModelFactoryField: the representation of a Field (i.e. a attribute of a class)
- * @package ModelFactory
- */
-class MFField extends MFItem
-{
-	protected $oNode;
-	protected $sName;
-	
-	public function __construct(MFElement $oNode)
-	{
-		parent::__construct();
-		$this->oNode = $oNode;
-		$this->sName = $oNode->getAttribute('id');
-	}
-	
-	static public function CreateField($oFactory, $sFieldId, $sType)
-	{
-		$oNode = $oFactory->CreateElement('field');
-		$oNode->setAttribute('id', $sClassName);
-		$oNode->setAttribute('xsi:type', $sType);
-		
-		return new MFField($oNode);
-	}
-	
-	public function Delete()
-	{
-		$this->oNode->Delete();
-	}
-	public function GetName()
-	{
-		return $this->sName;
-	}
-	
-	public function GetType()
-	{
-		return $this->oNode->getAttribute('xsi:type');
-	}
-	
-	public function GetSourceClassName()
-	{
-		if ( $this->oNode->parentNode && $this->oNode->parentNode->parentNode)
-		{
-			return $this->oNode->parentNode->parentNode->getAttribute('id');
-		}
-		return '';
-	}
-	
-	public function IsRelation()
-	{
-		$bResult = false;
-		switch($this->oNode->getAttribute('xsi:type'))
-		{
-			case 'AttributeLinkedSet':
-			case 'AttributeLinkedSetIndirect':
-			case 'AttributeHierarchicalKey':
-			case 'AttributeExternalKey':
-			case 'AttributeExternalField':
-			$bResult = true;
-		}
-		return $bResult;		
-	}
-	
-	public function GetProperty($sCode, $defaultValue = '')
-	{
-		$value = $this->oNode->GetChildText($sCode, $defaultValue);
-		return $value;
-	}
-	
-	public function GetArrayProperty($sCode, $defaultValue ='')
-	{
-		return array(); // NOT YET IMPLEMENTED
-	}
-	
-	public function GetTargetClass()
-	{
-		$sTargetClass = '';
-		if ($this->GetType() == 'AttributeLinkedSetIndirect')
-		{
-			$sLinkedClass = $this->GetProperty('linked_class', '');
-			$oLinkedClassNode = $this->oNode->ownerDocument->GetNodeById('/itop_design/classes//class', $sLinkedClass)->item(0);
-			if ($oLinkedClassNode)
-			{
-				$oLinkedClass = new MFClass($oLinkedClassNode);
-				$aLinkedFields = $oLinkedClass->ListFields();
-				$oExtKeyToRemoteField = $aLinkedFields[$this->GetProperty('ext_key_to_remote', '')];
-				$sTargetClass = $oExtKeyToRemoteField->GetProperty('target_class');
-			}
-		}
-		return $sTargetClass;
-	}
-	
-	public function SetProperty($sCode, $value)
-	{
-		$oProperty = $this->oNode->GetOptionalElement($sCode);
-		if ($oProperty == null)
-		{
-			// The specified property does not exist, let's create it
-			$oNewNode = $this->oNode->ownerDocument->createElement($sCode, $value);
-			$this->oNode->appendChild($oNewNode); //TODO use priv_AppendXXXX to cope with the _alertation flags
-		}
-		else
-		{
-			// The property already exists, let's replace/redefine its whole content
-			$oProperty->DeleteChildren();
-			$oNewNode = $this->oNode->ownerDocument->createTextNode($value);
-			$oProperty->appendChild($oNewNode); //TODO use priv_Replace/redefineXXXX to cope with the _alertation flags
-		}
-	}
-}
-
- /**
- * ModelFactoryMethod: the representation of a Method (i.e. a method of a class)
- * @package ModelFactory
- */
-class MFMethod extends MFItem
-{
-}
-
- /**
- * ModelFactoryState: the representation of a state in the life cycle of the class
- * @package ModelFactory
- */
-class MFState extends MFItem
-{
-}
-
- /**
- * ModelFactoryRelation: the representation of a n:n relationship between two classes
- * @package ModelFactory
- */
-class MFRelation extends MFItem
-{
-}
-
- /**
- * ModelFactoryTransition: the representation of a transition between two states in the life cycle of the class
- * @package ModelFactory
- */
-class MFTransition extends MFItem
-{
-}
-
-
-/**
  * ModelFactory: the class that manages the in-memory representation of the XML MetaModel
  * @package ModelFactory
  */
@@ -557,12 +161,6 @@ class ModelFactory
 		}
 		$this->oMenus = $this->oDOMDocument->CreateElement('menus');
 		$this->oRoot->AppendChild($this->oMenus);
-//		foreach (self::$aWellKnownMenus as $sWellKnownMenu)
-//		{
-//			$oWKMenu = $this->oDOMDocument->CreateElement('menu');
-//			$oWKMenu->setAttribute('id', $sWellKnownMenu);
-//			$this->oMenus->AppendChild($oWKMenu);
-//		}
 		self::$aLoadedClasses = array();
 		self::$aLoadedMenus = array();
 		self::$aLoadedModules = array();
@@ -690,7 +288,12 @@ class ModelFactory
 			}
 
 			$oXPath = new DOMXPath($oDocument);
-			$oNodeList = $oXPath->query('//class');
+			$oNodeList = $oXPath->query('/itop_design/classes//class');
+			foreach($oNodeList as $oNode)
+			{
+				$oNode->SetAttribute('_created_in', $sModuleName);
+			}
+			$oNodeList = $oXPath->query('/itop_design/menus/menu');
 			foreach($oNodeList as $oNode)
 			{
 				$oNode->SetAttribute('_created_in', $sModuleName);
@@ -867,56 +470,6 @@ class ModelFactory
 			self::$aLoadedClasses[$sClassName] = $oDestNode;
 		}
 		$this->_priv_SetFlag($oDestNode, 'modified');
-	}
-
-	/**
-	 * Add the given menu to the DOM
-	 * @param DOMNode $oMenuNode
-	 * @param string $sModuleName The name of the module in which this class is declared
-	 * @throws Exception
-	 */
-	public function AddMenu($oMenuNode, $sModuleName)
-	{
-		$sMenuId = $oMenuNode->GetAttribute('id');
-
-		self::$aLoadedMenus[$sMenuId] = $this->oDOMDocument->ImportNode($oMenuNode, true /* bDeep */);
-		self::$aLoadedMenus[$sMenuId]->SetAttribute('_operation', 'added');
-		if ($sModuleName != '')
-		{
-			self::$aLoadedMenus[$sMenuId]->SetAttribute('_created_in', $sModuleName);
-		}
-		$this->oMenus->AppendChild(self::$aLoadedMenus[$sMenuId]);
-	}
-	
-	/**
-	 * Remove a menu from the DOM
-	 * @param string $sMenuId
-	 * @throws Exception
-	 */
-	public function RemoveMenu($sMenuId)
-	{
-		$oMenuNode = self::$aLoadedMenus[$sClass];
-		if ($oMenuNode->getAttribute('_operation') == 'added')
-		{
-			$oMenuNode->parentNode->RemoveChild($oMenuNode);
-			unset(self::$aLoadedMenus[$sMenuId]);	
-		}
-		else
-		{
-			self::$aLoadedMenus[$sMenuId]->SetAttribute('_operation', 'removed');
-		}
-		
-	}
-
-	/**
-	 * Modify a menu within the DOM
-	 * @param string $sMenuId
-	 * @param DOMNode $oMenuNode
-	 * @throws Exception
-	 */
-	public function AlterMenu($sMenuId, DOMNode $oMenuNode)
-	{
-		// Todo - implement... do we have to handle menu renaming ???
 	}
 
 	
@@ -1317,47 +870,6 @@ EOF
 		return array();
 	}
 		
-	/**
-	 * List all menus from the DOM, for a given module
-	 * @param string $sModuleName
-	 * @param bool $bFlattenLayers
-	 * @throws Exception
-	 */
-	public function ListMenus($sModuleName, $bFlattenLayers = true)
-	{
-		$sXPath = "//menu[@_created_in='$sModuleName']";
-		if ($bFlattenLayers)
-		{
-			$sXPath = "//menu[@_created_in='$sModuleName' and (not(@_alteration) or @_alteration!='removed')]";
-		}
-		return $this->GetNodes($sXPath, $this->oMenus);
-	}
-		
-	/**
-	 * Get a menu, given its is id
-	 * @param string $sModuleName
-	 * @param bool $bFlattenLayers
-	 * @throws Exception
-	 */
-	public function GetMenu($sMenuId, $bFlattenLayers = true)
-	{
-		if (!array_key_exists($sMenuId, self::$aLoadedMenus))
-		{
-			return null;
-		}
-		$oMenuNode = self::$aLoadedMenus[$sMenuId];
-		if ($bFlattenLayers)
-		{
-			$sOperation = $oMenuNode->getAttribute('_operation');
-			if ($sOperation == 'removed')
-			{
-				$oMenuNode = null;
-			}
-		}
-		return $oMenuNode;
-	}
-	
-
 	public function ApplyChanges()
 	{
 		$oNodes = $this->ListChanges();
@@ -1593,9 +1105,15 @@ EOF;
 	 * @param string $sXPath A XPath expression
 	 * @return DOMNodeList
 	 */
-	protected function GetNodes($sXPath, $oContextNode = null)
+	public function GetNodes($sXPath, $oContextNode = null)
 	{
 		return $this->oDOMDocument->GetNodes($sXPath, $oContextNode);
+	}
+
+	public function ListActiveChildNodes($sContextXPath, $sTagName)
+	{
+		$oContextPath = $this->oRoot->GetNodes($sContextXPath)->item(0);
+		return $oContextPath->ListActiveChildNodes($sTagName);
 	}
 }
 
