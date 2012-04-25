@@ -13,37 +13,11 @@
 
 require_once(APPROOT.'setup/moduleinstaller.class.inc.php');
 
-
- /**
- * ModelFactoryItem: an item managed by the ModuleFactory
- * @package ModelFactory
- */
-abstract class MFItem
-{
-	public function __construct() 
-	{
-	}
-	
-	/**
-	 * List the source files for this item
-	 */
-	public function ListSources()
-	{
-		
-	}
-	/**
-	 * List the rights/restrictions for this item
-	 */
-	public function ListRights()
-	{
-		
-	}
-}
  /**
  * ModelFactoryModule: the representation of a Module (i.e. element that can be selected during the setup)
  * @package ModelFactory
  */
-class MFModule extends MFItem
+class MFModule
 {
 	protected $sId;
 	protected $sName;
@@ -1537,6 +1511,20 @@ class MFDocument extends DOMDocument
 		parent::loadXML($source, LIBXML_NOBLANKS);
 	}
 
+	/**
+	 * Overload the standard API
+	 */
+	public function saveXML(DOMNode $node = null, $options = 0)
+	{
+		$oRootNode = $this->firstChild;
+		if (!$oRootNode)
+		{
+			$oRootNode = $this->createElement('itop_design'); // make sure that the document is not empty
+			$this->appendChild($oRootNode);
+		}
+		$oRootNode->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
+		return parent::saveXML();
+	}
 	/**
 	 * For debugging purposes
 	 */
