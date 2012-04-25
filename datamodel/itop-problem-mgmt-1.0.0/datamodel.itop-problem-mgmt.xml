@@ -657,28 +657,28 @@
     </class>
   </classes>
   <menus>
-    <menu id="Problem:Overview" xsi:type="TemplateMenuNode">
+    <menu id="Problem:Overview" xsi:type="TemplateMenuNode" _delta="define">
       <rank>0</rank>
       <parent>ProblemManagement</parent>
       <template_file>overview.html</template_file>
     </menu>
-    <menu id="NewProblem" xsi:type="NewObjectMenuNode">
+    <menu id="NewProblem" xsi:type="NewObjectMenuNode" _delta="define">
       <rank>1</rank>
       <parent>ProblemManagement</parent>
       <class>Problem</class>
     </menu>
-    <menu id="SearchProblems" xsi:type="SearchMenuNode">
+    <menu id="SearchProblems" xsi:type="SearchMenuNode" _delta="define">
       <rank>2</rank>
       <parent>ProblemManagement</parent>
       <class>Problem</class>
     </menu>
-    <menu id="Problem:MyProblems" xsi:type="OQLMenuNode">
+    <menu id="Problem:MyProblems" xsi:type="OQLMenuNode" _delta="define">
       <rank>1</rank>
       <parent>Problem:Shortcuts</parent>
       <oql><![CDATA[SELECT Problem WHERE agent_id = :current_contact_id AND status NOT IN ("closed", "resolved")]]></oql>
       <do_search></do_search>
     </menu>
-    <menu id="Problem:OpenProblems" xsi:type="OQLMenuNode">
+    <menu id="Problem:OpenProblems" xsi:type="OQLMenuNode" _delta="define">
       <rank>2</rank>
       <parent>Problem:Shortcuts</parent>
       <oql><![CDATA[SELECT Problem WHERE status IN ("new", "assigned", "resolved")]]></oql>

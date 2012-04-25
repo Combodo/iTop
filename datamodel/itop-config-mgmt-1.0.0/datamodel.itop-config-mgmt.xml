@@ -4157,133 +4157,133 @@
     </class>
   </classes>
   <menus>
-    <menu id="DataAdministration" xsi:type="MenuGroup">
+    <menu id="DataAdministration" xsi:type="MenuGroup" _delta="define">
       <rank>70</rank>
       <enable_class>Organization</enable_class>
       <enable_action>UR_ACTION_MODIFY</enable_action>
       <enable_permission>UR_ALLOWED_YES</enable_permission>
       <enable_stimulus/>
     </menu>
-    <menu id="Audit" xsi:type="WebPageMenuNode">
+    <menu id="Audit" xsi:type="WebPageMenuNode" _delta="define">
       <rank>33</rank>
       <parent>DataAdministration</parent>
       <url>$pages/audit.php</url>
     </menu>
-    <menu id="Catalogs" xsi:type="TemplateMenuNode">
+    <menu id="Catalogs" xsi:type="TemplateMenuNode" _delta="define">
       <rank>50</rank>
       <parent>DataAdministration</parent>
       <template_file></template_file>
     </menu>
-    <menu id="Organization" xsi:type="OQLMenuNode">
+    <menu id="Organization" xsi:type="OQLMenuNode" _delta="define">
       <rank>10</rank>
       <parent>Catalogs</parent>
       <oql>SELECT Organization</oql>
       <do_search>1</do_search>
     </menu>
-    <menu id="Application" xsi:type="OQLMenuNode">
+    <menu id="Application" xsi:type="OQLMenuNode" _delta="define">
       <rank>20</rank>
       <parent>Catalogs</parent>
       <oql>SELECT Application</oql>
       <do_search></do_search>
     </menu>
-    <menu id="DBServer" xsi:type="OQLMenuNode">
+    <menu id="DBServer" xsi:type="OQLMenuNode" _delta="define">
       <rank>40</rank>
       <parent>Catalogs</parent>
       <oql>SELECT DBServer</oql>
       <do_search></do_search>
     </menu>
-    <menu id="ConfigManagement" xsi:type="MenuGroup">
+    <menu id="ConfigManagement" xsi:type="MenuGroup" _delta="define">
       <rank>20</rank>
     </menu>
-    <menu id="ConfigManagementOverview" xsi:type="TemplateMenuNode">
+    <menu id="ConfigManagementOverview" xsi:type="TemplateMenuNode" _delta="define">
       <rank>0</rank>
       <parent>ConfigManagement</parent>
       <template_file>overview.html</template_file>
     </menu>
-    <menu id="Contact" xsi:type="TemplateMenuNode">
+    <menu id="Contact" xsi:type="TemplateMenuNode" _delta="define">
       <rank>1</rank>
       <parent>ConfigManagement</parent>
       <template_file>contacts_menu.html</template_file>
     </menu>
-    <menu id="NewContact" xsi:type="NewObjectMenuNode">
+    <menu id="NewContact" xsi:type="NewObjectMenuNode" _delta="define">
       <rank>1</rank>
       <parent>Contact</parent>
       <class>Contact</class>
     </menu>
-    <menu id="SearchContacts" xsi:type="SearchMenuNode">
+    <menu id="SearchContacts" xsi:type="SearchMenuNode" _delta="define">
       <rank>2</rank>
       <parent>Contact</parent>
       <class>Contact</class>
     </menu>
-    <menu id="Document" xsi:type="OQLMenuNode">
+    <menu id="Document" xsi:type="OQLMenuNode" _delta="define">
       <rank>2</rank>
       <parent>ConfigManagement</parent>
       <oql>SELECT Document</oql>
       <do_search>1</do_search>
     </menu>
-    <menu id="Location" xsi:type="OQLMenuNode">
+    <menu id="Location" xsi:type="OQLMenuNode" _delta="define">
       <rank>3</rank>
       <parent>ConfigManagement</parent>
       <oql>SELECT Location</oql>
       <do_search>1</do_search>
     </menu>
-    <menu id="Group" xsi:type="OQLMenuNode">
+    <menu id="Group" xsi:type="OQLMenuNode" _delta="define">
       <rank>4</rank>
       <parent>ConfigManagement</parent>
       <oql>SELECT Group</oql>
       <do_search>1</do_search>
     </menu>
-    <menu id="ConfigManagementCI" xsi:type="TemplateMenuNode">
+    <menu id="ConfigManagementCI" xsi:type="TemplateMenuNode" _delta="define">
       <rank>5</rank>
       <parent>ConfigManagement</parent>
       <template_file>cis_menu.html</template_file>
     </menu>
-    <menu id="NewCI" xsi:type="NewObjectMenuNode">
+    <menu id="NewCI" xsi:type="NewObjectMenuNode" _delta="define">
       <rank>0</rank>
       <parent>ConfigManagementCI</parent>
       <class>FunctionalCI</class>
     </menu>
-    <menu id="SearchCIs" xsi:type="SearchMenuNode">
+    <menu id="SearchCIs" xsi:type="SearchMenuNode" _delta="define">
       <rank>1</rank>
       <parent>ConfigManagementCI</parent>
       <class>FunctionalCI</class>
     </menu>
-    <menu id="ConfigManagement:Shortcuts" xsi:type="TemplateMenuNode">
+    <menu id="ConfigManagement:Shortcuts" xsi:type="TemplateMenuNode" _delta="define">
       <rank>6</rank>
       <parent>ConfigManagement</parent>
       <template_file></template_file>
     </menu>
-    <menu id="Server" xsi:type="OQLMenuNode">
+    <menu id="Server" xsi:type="OQLMenuNode" _delta="define">
       <rank>1</rank>
       <parent>ConfigManagement:Shortcuts</parent>
       <oql>SELECT Server</oql>
       <do_search></do_search>
     </menu>
-    <menu id="NetworkDevice" xsi:type="OQLMenuNode">
+    <menu id="NetworkDevice" xsi:type="OQLMenuNode" _delta="define">
       <rank>2</rank>
       <parent>ConfigManagement:Shortcuts</parent>
       <oql>SELECT NetworkDevice</oql>
       <do_search></do_search>
     </menu>
-    <menu id="Printer" xsi:type="OQLMenuNode">
+    <menu id="Printer" xsi:type="OQLMenuNode" _delta="define">
       <rank>3</rank>
       <parent>ConfigManagement:Shortcuts</parent>
       <oql>SELECT Printer</oql>
       <do_search></do_search>
     </menu>
-    <menu id="PC" xsi:type="OQLMenuNode">
+    <menu id="PC" xsi:type="OQLMenuNode" _delta="define">
       <rank>4</rank>
       <parent>ConfigManagement:Shortcuts</parent>
       <oql>SELECT PC</oql>
       <do_search></do_search>
     </menu>
-    <menu id="BusinessProcess" xsi:type="OQLMenuNode">
+    <menu id="BusinessProcess" xsi:type="OQLMenuNode" _delta="define">
       <rank>5</rank>
       <parent>ConfigManagement:Shortcuts</parent>
       <oql>SELECT BusinessProcess</oql>
       <do_search></do_search>
     </menu>
-    <menu id="ApplicationSolution" xsi:type="OQLMenuNode">
+    <menu id="ApplicationSolution" xsi:type="OQLMenuNode" _delta="define">
       <rank>6</rank>
       <parent>ConfigManagement:Shortcuts</parent>
       <oql>SELECT ApplicationSolution</oql>

@@ -1546,45 +1546,45 @@
     </class>
   </classes>
   <menus>
-    <menu id="ServiceManagement" xsi:type="MenuGroup">
+    <menu id="ServiceManagement" xsi:type="MenuGroup" _delta="define">
       <rank>60</rank>
     </menu>
-    <menu id="Service:Overview" xsi:type="TemplateMenuNode">
+    <menu id="Service:Overview" xsi:type="TemplateMenuNode" _delta="define">
       <rank>0</rank>
       <parent>ServiceManagement</parent>
       <template_file>overview.html</template_file>
     </menu>
-    <menu id="ProviderContract" xsi:type="OQLMenuNode">
+    <menu id="ProviderContract" xsi:type="OQLMenuNode" _delta="define">
       <rank>1</rank>
       <parent>ServiceManagement</parent>
       <oql>SELECT ProviderContract</oql>
       <do_search>1</do_search>
     </menu>
-    <menu id="CustomerContract" xsi:type="OQLMenuNode">
+    <menu id="CustomerContract" xsi:type="OQLMenuNode" _delta="define">
       <rank>2</rank>
       <parent>ServiceManagement</parent>
       <oql>SELECT CustomerContract</oql>
       <do_search>1</do_search>
     </menu>
-    <menu id="Service" xsi:type="OQLMenuNode">
+    <menu id="Service" xsi:type="OQLMenuNode" _delta="define">
       <rank>3</rank>
       <parent>ServiceManagement</parent>
       <oql>SELECT Service</oql>
       <do_search>1</do_search>
     </menu>
-    <menu id="ServiceSubcategory" xsi:type="OQLMenuNode">
+    <menu id="ServiceSubcategory" xsi:type="OQLMenuNode" _delta="define">
       <rank>4</rank>
       <parent>ServiceManagement</parent>
       <oql>SELECT ServiceSubcategory</oql>
       <do_search>1</do_search>
     </menu>
-    <menu id="SLA" xsi:type="OQLMenuNode">
+    <menu id="SLA" xsi:type="OQLMenuNode" _delta="define">
       <rank>5</rank>
       <parent>ServiceManagement</parent>
       <oql>SELECT SLA</oql>
       <do_search>1</do_search>
     </menu>
-    <menu id="SLT" xsi:type="OQLMenuNode">
+    <menu id="SLT" xsi:type="OQLMenuNode" _delta="define">
       <rank>6</rank>
       <parent>ServiceManagement</parent>
       <oql>SELECT SLT</oql>

@@ -4756,51 +4756,51 @@
     </class>
   </classes>
   <menus>
-    <menu id="ChangeManagement" xsi:type="MenuGroup">
+    <menu id="ChangeManagement" xsi:type="MenuGroup" _delta="define">
       <rank>50</rank>
     </menu>
-    <menu id="Change:Overview" xsi:type="TemplateMenuNode">
+    <menu id="Change:Overview" xsi:type="TemplateMenuNode" _delta="define">
       <rank>0</rank>
       <parent>ChangeManagement</parent>
       <template_file>overview.html</template_file>
     </menu>
-    <menu id="NewChange" xsi:type="NewObjectMenuNode">
+    <menu id="NewChange" xsi:type="NewObjectMenuNode" _delta="define">
       <rank>1</rank>
       <parent>ChangeManagement</parent>
       <class>Change</class>
     </menu>
-    <menu id="SearchChanges" xsi:type="SearchMenuNode">
+    <menu id="SearchChanges" xsi:type="SearchMenuNode" _delta="define">
       <rank>2</rank>
       <parent>ChangeManagement</parent>
       <class>Change</class>
     </menu>
-    <menu id="Change:Shortcuts" xsi:type="TemplateMenuNode">
+    <menu id="Change:Shortcuts" xsi:type="TemplateMenuNode" _delta="define">
       <rank>3</rank>
       <parent>ChangeManagement</parent>
       <template_file></template_file>
     </menu>
-    <menu id="MyChanges" xsi:type="OQLMenuNode">
+    <menu id="MyChanges" xsi:type="OQLMenuNode" _delta="define">
       <rank>1</rank>
       <parent>Change:Shortcuts</parent>
       <oql><![CDATA[SELECT Change WHERE agent_id = :current_contact_id AND status NOT IN ("closed", "resolved")]]></oql>
       <do_search></do_search>
       <auto_reload>fast</auto_reload>
     </menu>
-    <menu id="Changes" xsi:type="OQLMenuNode">
+    <menu id="Changes" xsi:type="OQLMenuNode" _delta="define">
       <rank>2</rank>
       <parent>Change:Shortcuts</parent>
       <oql><![CDATA[SELECT Change WHERE status != "closed"]]></oql>
       <do_search></do_search>
       <auto_reload>fast</auto_reload>
     </menu>
-    <menu id="WaitingApproval" xsi:type="OQLMenuNode">
+    <menu id="WaitingApproval" xsi:type="OQLMenuNode" _delta="define">
       <rank>3</rank>
       <parent>Change:Shortcuts</parent>
       <oql><![CDATA[SELECT ApprovedChange WHERE status IN ("plannedscheduled")]]></oql>
       <do_search></do_search>
       <auto_reload>fast</auto_reload>
     </menu>
-    <menu id="WaitingAcceptance" xsi:type="OQLMenuNode">
+    <menu id="WaitingAcceptance" xsi:type="OQLMenuNode" _delta="define">
       <rank>4</rank>
       <parent>Change:Shortcuts</parent>
       <oql><![CDATA[SELECT NormalChange WHERE status IN ("new")]]></oql>

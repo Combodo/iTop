@@ -988,44 +988,44 @@
     </class>
   </classes>
   <menus>
-    <menu id="IncidentManagement" xsi:type="MenuGroup">
+    <menu id="IncidentManagement" xsi:type="MenuGroup" _delta="define">
       <rank>40</rank>
     </menu>
-    <menu id="Incident:Overview" xsi:type="TemplateMenuNode">
+    <menu id="Incident:Overview" xsi:type="TemplateMenuNode" _delta="define">
       <rank>0</rank>
       <parent>IncidentManagement</parent>
       <template_file>overview.html</template_file>
     </menu>
-    <menu id="NewIncident" xsi:type="NewObjectMenuNode">
+    <menu id="NewIncident" xsi:type="NewObjectMenuNode" _delta="define">
       <rank>1</rank>
       <parent>IncidentManagement</parent>
       <class>Incident</class>
     </menu>
-    <menu id="SearchIncidents" xsi:type="SearchMenuNode">
+    <menu id="SearchIncidents" xsi:type="SearchMenuNode" _delta="define">
       <rank>2</rank>
       <parent>IncidentManagement</parent>
       <class>Incident</class>
     </menu>
-    <menu id="Incident:Shortcuts" xsi:type="TemplateMenuNode">
+    <menu id="Incident:Shortcuts" xsi:type="TemplateMenuNode" _delta="define">
       <rank>3</rank>
       <parent>IncidentManagement</parent>
       <template_file></template_file>
     </menu>
-    <menu id="Incident:MyIncidents" xsi:type="OQLMenuNode">
+    <menu id="Incident:MyIncidents" xsi:type="OQLMenuNode" _delta="define">
       <rank>1</rank>
       <parent>Incident:Shortcuts</parent>
       <oql><![CDATA[SELECT Incident WHERE agent_id = :current_contact_id AND status NOT IN ("closed", "resolved")]]></oql>
       <do_search></do_search>
       <auto_reload>fast</auto_reload>
     </menu>
-    <menu id="Incident:EscalatedIncidents" xsi:type="OQLMenuNode">
+    <menu id="Incident:EscalatedIncidents" xsi:type="OQLMenuNode" _delta="define">
       <rank>2</rank>
       <parent>Incident:Shortcuts</parent>
       <oql><![CDATA[SELECT Incident WHERE status IN ("escalated_tto", "escalated_ttr")]]></oql>
       <do_search></do_search>
       <auto_reload>fast</auto_reload>
     </menu>
-    <menu id="Incident:OpenIncidents" xsi:type="OQLMenuNode">
+    <menu id="Incident:OpenIncidents" xsi:type="OQLMenuNode" _delta="define">
       <rank>3</rank>
       <parent>Incident:Shortcuts</parent>
       <oql><![CDATA[SELECT Incident WHERE status IN ("new", "assigned", "escalated_tto", "escalated_ttr", "resolved")]]></oql>
