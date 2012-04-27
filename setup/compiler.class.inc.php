@@ -305,7 +305,11 @@ EOF;
 	 */ 
 	protected function PathToPHP($sPath, $sModuleRelativeDir, $bIsUrl = false)
 	{
-		if (substr($sPath, 0, 2) == '$$')
+		if ($sPath == '')
+		{
+			$sPHP = "''";
+		}
+		elseif (substr($sPath, 0, 2) == '$$')
 		{
 			// Absolute
 			$sPHP = "'".addslashes(substr($sPath, 2))."'";
