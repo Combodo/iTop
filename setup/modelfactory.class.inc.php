@@ -119,7 +119,7 @@ class ModelFactory
 	static protected $aLoadErrors;
 
 	
-	public function __construct($sRootDir)
+	public function __construct($sRootDir, $aRootNodeExtensions = array())
 	{
 		$this->sRootDir = $sRootDir;
 		$this->oDOMDocument = new MFDocument();
@@ -135,6 +135,12 @@ class ModelFactory
 		}
 		$this->oMenus = $this->oDOMDocument->CreateElement('menus');
 		$this->oRoot->AppendChild($this->oMenus);
+		
+		foreach($aRootNodeExtensions as $sElementName)
+		{
+			$oElement = $this->oDOMDocument->CreateElement($sElementName);
+			$this->oRoot->AppendChild($oElement);
+		}
 		self::$aLoadedClasses = array();
 		self::$aLoadedMenus = array();
 		self::$aLoadedModules = array();
@@ -325,6 +331,11 @@ class ModelFactory
 		return $this->oDOMDocument->createElement($sTagName, $sValue);
 	}
 	
+	public function GetNodeById($sXPath, $sId, $oContextNode = null)
+	{
+		return $this->oDOMDocument->GetNodeById($sXPath, $sId, $oContextNode);
+	}
+	
 	/**
 	 * Check if the class specified by the given node already exists in the loaded DOM
 	 * @param DOMNode $oClassNode The node corresponding to the class to load
@@ -356,6 +367,7 @@ class ModelFactory
 	{
 		return !is_null($this->GetClass($sClassName, $bFlattenLayers));
 	}
+
 	/**
 	 * Add the given class to the DOM
 	 * @param DOMNode $oClassNode
