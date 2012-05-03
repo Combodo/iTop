@@ -161,7 +161,7 @@ EOF
 			$container_index = 0;
 			if (count($m_aTabs) > 0)
 			{
-			  $sTabs = "<!-- tabs -->\n<div id=\"tabbedContent_{$sPrefix}{$container_index}\" class=\"light\">\n";
+			  $sTabs = "<!-- tabs -->\n<div id=\"tabbedContent_{$sPrefix}{$sTabContainerName}\" class=\"light\">\n";
 			  $sTabs .= "<ul>\n";
 			  // Display the unordered list that will be rendered as the tabs
 	          $i = 0;
