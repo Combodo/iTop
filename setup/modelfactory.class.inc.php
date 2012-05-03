@@ -1233,6 +1233,43 @@ class MFElement extends DOMElement
 		return $res;
 	}
 
+	public function SetNodeAsArrayOfItems($aList)
+	{
+		$oNewNode = $this->ownerDocument->CreateElement($this->tagName);
+		if ($this->getAttribute('id') != '')
+		{
+			$oNewNode->setAttribute('id', $this->getAttribute('id'));
+		}
+		self::AddItemToNode($this->ownerDocument, $oNewNode, $aList);
+		$this->parentNode->RedefineChildNode($oNewNode);
+	}
+	
+	protected static function AddItemToNode($oXmlDoc, $oXMLNode, $itemValue)
+	{
+		if (is_array($itemValue))
+		{
+			$oXmlItems = $oXmlDoc->CreateElement('items');
+			$oXMLNode->AppendChild($oXmlItems);
+			
+			foreach($itemValue as $key => $item)
+			{
+				$oXmlItem = $oXmlDoc->CreateElement('item');
+				$oXmlItems->AppendChild($oXmlItem);
+	
+				if (is_string($key))
+				{
+					$oXmlItem->SetAttribute('key', $key);
+				}
+				self::AddItemToNode($oXmlDoc, $oXmlItem, $item);
+			}
+		}
+		else
+		{
+			$oXmlText = $oXmlDoc->CreateTextNode((string) $itemValue);
+			$oXMLNode->AppendChild($oXmlText);
+		}
+	}
+
 	/**
 	 * Helper to remove child nodes	
 	 */	
@@ -1263,7 +1300,7 @@ class MFElement extends DOMElement
 	 * @param MFElement $oRefNode The node to search for
 	 * @param bool      $sSearchId substitutes to the value of the 'id' attribute 
 	 */	
-	public static function FindNode(DOMNode $oParent, MFElement $oRefNode, $sSearchId = null)
+	public static function FindNodeSlow(DOMNode $oParent, MFElement $oRefNode, $sSearchId = null)
 	{
 		$oRes = null;
 		if ($oRefNode->hasAttribute('id'))
@@ -1296,6 +1333,49 @@ class MFElement extends DOMElement
 					break;
 				}
 			}
+		}
+		return $oRes;
+	}
+	
+	/**
+	 * Seems to work fine (and is about 10 times faster than above) EXCEPT for menus !!!!
+	 * @param unknown_type $oParent
+	 * @param unknown_type $oRefNode
+	 * @param unknown_type $sSearchId
+	 * @throws Exception
+	 */
+	public static function FindNode(DOMNode $oParent, MFElement $oRefNode, $sSearchId = null)
+	{
+		$oRes = null;
+		if ($oParent instanceof DOMDocument)
+		{
+			$oDoc = $oParent->firstChild->ownerDocument;
+			$oRoot = $oParent;
+		}
+		else
+		{
+			$oDoc = $oParent->ownerDocument;
+			$oRoot = $oParent;
+		}
+
+		$oXPath = new DOMXPath($oDoc);
+		if ($oRefNode->hasAttribute('id'))
+		{
+			// Find the first element having the same tag name and id
+			if (!$sSearchId)
+			{
+				$sSearchId = $oRefNode->getAttribute('id');
+			}
+			$sXPath = './'.$oRefNode->tagName."[@id='$sSearchId']";
+		
+			$oRes = $oXPath->query($sXPath, $oRoot)->item(0);
+		}
+		else
+		{
+			// Get the first one having the same tag name (ignore others)
+			$sXPath = './'.$oRefNode->tagName;
+		
+			$oRes = $oXPath->query($sXPath, $oRoot)->item(0);
 		}
 		return $oRes;
 	}
