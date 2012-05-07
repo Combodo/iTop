@@ -109,10 +109,10 @@ class ModelFactory
 	protected $sRootDir;
 	protected $oDOMDocument;
 	protected $oRoot;
+	protected $oModules;
 	protected $oClasses;
 	protected $oMenus;
 	static protected $aLoadedClasses;
-	static protected $aLoadedMenus;
 	static protected $aWellKnownParents = array('DBObject', 'CMDBObject','cmdbAbstractObject');
 //	static protected $aWellKnownMenus = array('DataAdministration', 'Catalogs', 'ConfigManagement', 'Contact', 'ConfigManagementCI', 'ConfigManagement:Shortcuts', 'ServiceManagement');
 	static protected $aLoadedModules;
@@ -125,6 +125,8 @@ class ModelFactory
 		$this->oDOMDocument = new MFDocument();
 		$this->oRoot = $this->oDOMDocument->CreateElement('itop_design');
 		$this->oDOMDocument->AppendChild($this->oRoot);
+		$this->oModules = $this->oDOMDocument->CreateElement('loaded_modules');
+		$this->oRoot->AppendChild($this->oModules);
 		$this->oClasses = $this->oDOMDocument->CreateElement('classes');
 		$this->oRoot->AppendChild($this->oClasses);
 		foreach (self::$aWellKnownParents as $sWellKnownParent)
@@ -141,8 +143,6 @@ class ModelFactory
 			$oElement = $this->oDOMDocument->CreateElement($sElementName);
 			$this->oRoot->AppendChild($oElement);
 		}
-		self::$aLoadedClasses = array();
-		self::$aLoadedMenus = array();
 		self::$aLoadedModules = array();
 		self::$aLoadErrors = array();
 
@@ -158,6 +158,26 @@ class ModelFactory
 		$oNode->Dump();
 	}
 
+	public function LoadFromFile($sCacheFile)
+	{
+		$this->oDOMDocument->load($sCacheFile);
+		$this->oRoot = $this->oDOMDocument->firstChild;
+		
+		$this->oModules = $this->oRoot->getElementsByTagName('loaded_modules')->item(0);
+		self::$aLoadedModules = array();
+		foreach($this->oModules->getElementsByTagName('module') as $oModuleNode)
+		{
+			$sId = $oModuleNode->getAttribute('id');
+			$sRootDir = $oModuleNode->GetChildText('root_dir');
+			$sLabel = $oModuleNode->GetChildText('label');
+			self::$aLoadedModules[] = new MFModule($sId, $sRootDir, $sLabel);
+		}
+	}
+
+	public function SaveToFile($sCacheFile)
+	{
+		$this->oDOMDocument->save($sCacheFile);
+	}
 	/**
 	 * To progressively replace LoadModule
 	 * @param xxx xxx
@@ -254,6 +274,14 @@ class ModelFactory
 		$sModuleName = $oModule->GetName();
 		$aClasses = array();
 		self::$aLoadedModules[] = $oModule;
+		
+		// For persistence in the cache
+		$oModuleNode = $this->oDOMDocument->CreateElement('module');
+		$oModuleNode->setAttribute('id', $oModule->GetId());
+		$oModuleNode->AppendChild($this->oDOMDocument->CreateElement('root_dir', $oModule->GetRootDir()));
+		$oModuleNode->AppendChild($this->oDOMDocument->CreateElement('label', $oModule->GetLabel()));
+		$this->oModules->AppendChild($oModuleNode);
+		
 		foreach($aDataModels as $sXmlFile)
 		{
 			$oDocument = new MFDocument();
