@@ -42,7 +42,7 @@ class FileUploadException extends Exception
  */
 class utils
 {
-	private static $m_oConfig = null;
+	private static $oConfig = null;
 	private static $m_bCASClient = false;
 
 	// Parameters loaded from a file, parameters of the page/command line still have precedence
@@ -459,13 +459,22 @@ class utils
 	   // http://www.spaweditor.com/scripts/regex/index.php
 	}
 
+	static public function GetConfig()
+	{
+		if (self::$oConfig == null)
+		{
+			$sConfigFile = self::GetConfigFilePath();
+			self::$oConfig = new Config($sConfigFile);
+		}
+		return self::$oConfig;
+	}
     /**
      * Returns the absolute URL to the application root path
      * @return string The absolute URL to the application root, without the first slash
      */                   
 	static public function GetAbsoluteUrlAppRoot()
 	{
-		$sUrl = MetaModel::GetConfig()->Get('app_root_url');
+		$sUrl = self::GetConfig()->Get('app_root_url');
 		if (strpos($sUrl, SERVER_NAME_PLACEHOLDER) > -1)
 		{
 			if (isset($_SERVER['SERVER_NAME']))
@@ -585,10 +594,10 @@ class utils
 	 */
 	 static function InitCASClient()
 	 {
-		$sCASIncludePath =  MetaModel::GetConfig()->Get('cas_include_path');
+		$sCASIncludePath =  self::GetConfig()->Get('cas_include_path');
 		include_once($sCASIncludePath.'/CAS.php');
 		
-		$bCASDebug = MetaModel::GetConfig()->Get('cas_debug');
+		$bCASDebug = self::GetConfig()->Get('cas_debug');
 		if ($bCASDebug)
 		{
 			phpCAS::setDebug(APPROOT.'/error.log');
@@ -597,13 +606,13 @@ class utils
 		if (!self::$m_bCASClient)
 		{
 			// Initialize phpCAS
-			$sCASVersion = MetaModel::GetConfig()->Get('cas_version');
-			$sCASHost = MetaModel::GetConfig()->Get('cas_host');
-			$iCASPort = MetaModel::GetConfig()->Get('cas_port');
-			$sCASContext = MetaModel::GetConfig()->Get('cas_context');
+			$sCASVersion = self::GetConfig()->Get('cas_version');
+			$sCASHost = self::GetConfig()->Get('cas_host');
+			$iCASPort = self::GetConfig()->Get('cas_port');
+			$sCASContext = self::GetConfig()->Get('cas_context');
 			phpCAS::client($sCASVersion, $sCASHost, $iCASPort, $sCASContext, false /* session already started */);
 			self::$m_bCASClient = true;
-			$sCASCACertPath = MetaModel::GetConfig()->Get('cas_server_ca_cert_path');
+			$sCASCACertPath = self::GetConfig()->Get('cas_server_ca_cert_path');
 			if (empty($sCASCACertPath))
 			{
 				// If no certificate authority is provided, do not attempt to validate
@@ -648,7 +657,7 @@ class utils
 			throw new Exception("The PHP exec() function has been disabled on this server");
 		}
 
-		$sPHPExec = trim(MetaModel::GetConfig()->Get('php_path'));
+		$sPHPExec = trim(self::GetConfig()->Get('php_path'));
 		if (strlen($sPHPExec) == 0)
 		{
 			throw new Exception("The path to php must not be empty. Please set a value for 'php_path' in your configuration file.");
