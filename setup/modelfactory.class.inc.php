@@ -1595,7 +1595,15 @@ class MFElement extends DOMElement
 	 */	
 	public function Rename($sId)
 	{
-		$this->setAttribute('_old_id', $this->getAttribute('id'));
+		$sOriginalId = $this->getAttribute('_old_id');
+		if ($sOriginalId == '')
+		{
+			$this->setAttribute('_old_id', $this->getAttribute('id'));
+		}
+		else if($sOriginalId == $sId)
+		{
+			$this->removeAttribute('_old_id');
+		}
 		$this->setAttribute('id', $sId);
 	}
 }
