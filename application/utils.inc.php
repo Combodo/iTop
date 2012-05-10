@@ -464,7 +464,15 @@ class utils
 		if (self::$oConfig == null)
 		{
 			$sConfigFile = self::GetConfigFilePath();
-			self::$oConfig = new Config($sConfigFile);
+			if (file_exists($sConfigFile))
+			{
+				self::$oConfig = new Config($sConfigFile);
+			}
+			else
+			{
+				// When executing the setup, the config file may be still missing
+				self::$oConfig = new Config();
+			}
 		}
 		return self::$oConfig;
 	}

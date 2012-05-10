@@ -227,10 +227,11 @@ try
 		$sModuleDir = Utils::ReadParam('modules_dir', '');
 		$oConfig->UpdateFromParams($aParamValues, $sModuleDir);
 
-		InitDataModel($oConfig, true);  // load data model only
+		$oProductionEnv = new RunTimeEnvironment();
+		$oProductionEnv->InitDataModel($oConfig, true);  // load data model only
 
 		$sMode = Utils::ReadParam('mode', 'install');
-		if(!CreateDatabaseStructure(MetaModel::GetConfig(), $sMode))
+		if(!$oProductionEnv->CreateDatabaseStructure(MetaModel::GetConfig(), $sMode))
 		{
 			throw(new Exception("Failed to create/upgrade the database structure"));		
 		}
@@ -256,7 +257,8 @@ try
 		$sModuleDir = Utils::ReadParam('modules_dir', '');
 		$oConfig->UpdateFromParams($aParamValues, $sModuleDir);
 
-		InitDataModel($oConfig, false);  // load data model and connect to the database
+		$oProductionEnv = new RunTimeEnvironment();
+		$oProductionEnv->InitDataModel($oConfig, false);  // load data model and connect to the database
 
 		$sMode = Utils::ReadParam('mode', 'install');
 		$sSelectedModules = Utils::ReadParam('selected_modules', '', false, 'raw_data');
@@ -264,7 +266,7 @@ try
 		
 		// Perform here additional DB setup... profiles, etc...
 		//
-		$aAvailableModules = AnalyzeInstallation(MetaModel::GetConfig(), $sModuleDir);
+		$aAvailableModules = $oProductionEnv->AnalyzeInstallation(MetaModel::GetConfig(), $sModuleDir);
 		foreach($aAvailableModules as $sModuleId => $aModule)
 		{
 			if (($sModuleId != ROOT_MODULE) && in_array($sModuleId, $aSelectedModules) &&
@@ -278,7 +280,7 @@ try
 			}
 		}
 
-		if (!RecordInstallation($oConfig, $aSelectedModules, $sModuleDir))
+		if (!$oProductionEnv->RecordInstallation($oConfig, $aSelectedModules, $sModuleDir))
 		{
 			throw(new Exception("Failed to record the installation information"));
 		}
@@ -326,7 +328,8 @@ try
 		$sModuleDir = Utils::ReadParam('modules_dir', '');
 		$oConfig->UpdateFromParams($aParamValues, $sModuleDir);
 
-		InitDataModel($oConfig, false);  // load data model and connect to the database
+		$oProductionEnv = new RunTimeEnvironment();
+		$oProductionEnv->InitDataModel($oConfig, false);  // load data model and connect to the database
 
 		$oDataLoader = new XMLDataLoader(); 
 		if ($sSessionStatus == 'start')

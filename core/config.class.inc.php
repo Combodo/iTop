@@ -1462,5 +1462,31 @@ class Config
 		}
 	}
 
+	/**
+	 * Helper: for an array of string, change the prefix when found
+	 */
+	 protected static function ChangePrefix(&$aStrings, $sSearchPrefix, $sNewPrefix)
+	 {	 	
+		foreach ($aStrings as &$sFile)
+		{
+			if (substr($sFile, 0, strlen($sSearchPrefix)) == $sSearchPrefix)
+			{
+				$sFile = $sNewPrefix.substr($sFile, strlen($sSearchPrefix));
+			}
+		}
+	}
+
+	/**
+	 * Quick an dirty way to clone a config file into another environment	
+	 */	
+	public function ChangeModulesPath($sSourceEnv, $sTargetEnv)
+	{
+		$sSearchPrefix = 'env-'.$sSourceEnv.'/';
+		$sNewPrefix = 'env-'.$sTargetEnv.'/';
+		self::ChangePrefix($this->m_aDataModels, $sSearchPrefix, $sNewPrefix);
+		self::ChangePrefix($this->m_aWebServiceCategories, $sSearchPrefix, $sNewPrefix);
+		self::ChangePrefix($this->m_aDictionaries, $sSearchPrefix, $sNewPrefix);
+	}
+
 }
 ?>

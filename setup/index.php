@@ -447,7 +447,8 @@ function PopulateDataFilesList(SetupPage $oP, $aParamValues, $oConfig)
 	$sScript .= "{\n";
 	$sScript .= "if (aFilesToLoad.length > 0)  return;"; // Populate the list only once...
 
-	$aAvailableModules = AnalyzeInstallation($oConfig, $aParamValues['source_dir']);
+	$oProductionEnv = new RunTimeEnvironment();
+	$aAvailableModules = $oProductionEnv->AnalyzeInstallation($oConfig, $aParamValues['source_dir']);
 
 	$sMode = $aParamValues['mode'];
 	$aStructureDataFiles = array();
@@ -595,7 +596,8 @@ function WelcomeAndCheckPrerequisites(SetupPage $oP, $aParamValues, $iCurrentSte
 	{
 		$oConfig = new Config($sConfigFile);
 		
-		$aVersion = AnalyzeInstallation($oConfig, 'datamodel');
+		$oProductionEnv = new RunTimeEnvironment();
+		$aVersion = $oProductionEnv->AnalyzeInstallation($oConfig, 'datamodel');
 		if (!empty($aVersion[ROOT_MODULE]['version_db']))
 		{
 			$aPreviousParams = array('mode', 'db_server', 'db_user', 'db_pwd','db_name', 'new_db_name', 'db_prefix', 'source_dir', 'target_dir');
@@ -826,7 +828,8 @@ function ModulesSelection(SetupPage $oP, $aParamValues, $iCurrentStep, $oConfig)
 	$sRedStar = '<span class="hilite">*</span>';
 	$oP->set_title("iTop modules selection");
 
-	$aAvailableModules = AnalyzeInstallation($oConfig, $aParamValues['source_dir']);
+	$oProductionEnv = new RunTimeEnvironment();
+	$aAvailableModules = $oProductionEnv->AnalyzeInstallation($oConfig, $aParamValues['source_dir']);
 	
 	$sConfigFile = utils::GetConfigFilePath();
 	// Form goes here
@@ -1132,7 +1135,8 @@ function SampleDataSelection(SetupPage $oP, $aParamValues, $iCurrentStep, Config
 function DisplaySummary(SetupPage $oP, $aParamValues, $iCurrentStep, Config $oConfig)
 {
 	$sMode = $aParamValues['mode'];
-	$aAvailableModules = AnalyzeInstallation($oConfig, $aParamValues['source_dir']);
+	$oProductionEnv = new RunTimeEnvironment();
+	$aAvailableModules = $oProductionEnv->AnalyzeInstallation($oConfig, $aParamValues['source_dir']);
 	
 	$aInstall = array();
 	$aUpgrade = array();
@@ -1388,7 +1392,8 @@ function SetupFinished(SetupPage $oP, $aParamValues, $iCurrentStep, Config $oCon
 		$oConfig->WriteToFile($sConfigFile);
 
 		// Start the application
-		InitDataModel($oConfig, false, true); // Load model, startup DB and load the cache
+		$oProductionEnv = new RunTimeEnvironment();
+		$oProductionEnv->InitDataModel($oConfig, false, true); // Load model, startup DB and load the cache
 		if ($aParamValues['mode'] == 'install')
 		{
 			if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd))
@@ -1421,7 +1426,8 @@ function SetupFinished(SetupPage $oP, $aParamValues, $iCurrentStep, Config $oCon
 		$oP->add("<form id=\"theForm\" method=\"get\" action=\"../index.php\">\n");
 
 		// Check if there are some manual steps required:
-		$aAvailableModules = AnalyzeInstallation($oConfig, $aParamValues['target_dir']);
+		$oProductionEnv = new RunTimeEnvironment();
+		$aAvailableModules = $oProductionEnv->AnalyzeInstallation($oConfig, $aParamValues['target_dir']);
 		$aManualSteps = array();
 		$sRootUrl = utils::GetAbsoluteUrlAppRoot();
 		foreach($aParamValues['module'] as $sModuleId)

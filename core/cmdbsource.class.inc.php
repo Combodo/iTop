@@ -24,6 +24,7 @@
  */
 
 require_once('MyHelpers.class.inc.php');
+require_once(APPROOT.'core/kpi.class.inc.php');
 
 class MySQLException extends CoreException
 {

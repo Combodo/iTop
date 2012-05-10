@@ -398,7 +398,15 @@ EOF;
 		$aClassParams['reconc_keys'] = $sReconcKeys;
 	
 		$aClassParams['db_table'] = "'".$oProperties->GetChildText('db_table')."'";
-		$aClassParams['db_key_field'] = "'".$oProperties->GetChildText('db_key_field')."'";
+
+		$sKeyField = $oProperties->GetChildText('db_key_field');
+		if ($sKeyField == '')
+		{
+			$sKeyField = 'id';
+		}
+		$aClassParams['db_key_field'] = "'".$sKeyField."'";
+
+		// TODO: faire automatiquement (pas dans le XML !!!)
 		$aClassParams['db_finalclass_field'] = "'".$oProperties->GetChildText('db_final_class_field')."'";
 	
 		if (($sDisplayTemplate = $oProperties->GetChildText('display_template')) && (strlen($sDisplayTemplate) > 0))

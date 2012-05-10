@@ -124,6 +124,7 @@ class ModelFactory
 		$this->sRootDir = $sRootDir;
 		$this->oDOMDocument = new MFDocument();
 		$this->oRoot = $this->oDOMDocument->CreateElement('itop_design');
+		$this->oRoot->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
 		$this->oDOMDocument->AppendChild($this->oRoot);
 		$this->oModules = $this->oDOMDocument->CreateElement('loaded_modules');
 		$this->oRoot->AppendChild($this->oModules);
@@ -299,12 +300,18 @@ class ModelFactory
 			$oNodeList = $oXPath->query('/itop_design/classes//class');
 			foreach($oNodeList as $oNode)
 			{
-				$oNode->SetAttribute('_created_in', $sModuleName);
+				if ($oNode->getAttribute('_created_in') == '')
+				{
+					$oNode->SetAttribute('_created_in', $sModuleName);
+				}
 			}
 			$oNodeList = $oXPath->query('/itop_design/menus/menu');
 			foreach($oNodeList as $oNode)
 			{
-				$oNode->SetAttribute('_created_in', $sModuleName);
+				if ($oNode->getAttribute('_created_in') == '')
+				{
+					$oNode->SetAttribute('_created_in', $sModuleName);
+				}
 			}
 
 			$oDeltaRoot = $oDocument->childNodes->item(0);
@@ -1648,9 +1655,9 @@ class MFDocument extends DOMDocument
 		if (!$oRootNode)
 		{
 			$oRootNode = $this->createElement('itop_design'); // make sure that the document is not empty
+			$oRootNode->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
 			$this->appendChild($oRootNode);
 		}
-		$oRootNode->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
 		return parent::saveXML();
 	}
 	/**
