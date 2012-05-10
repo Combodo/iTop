@@ -1234,9 +1234,9 @@ class MFElement extends DOMElement
 	 * where value can be the either a text or an array of items... recursively 
 	 * Returns a PHP array 
 	 */ 
-	public function GetNodeAsArrayOfItems()
+	public function GetNodeAsArrayOfItems($sElementName = 'items')
 	{
-		$oItems = $this->GetOptionalElement('items');
+		$oItems = $this->GetOptionalElement($sElementName);
 		if ($oItems)
 		{
 			$res = array();
