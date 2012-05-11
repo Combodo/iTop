@@ -553,6 +553,21 @@ EOF
 		return $this->GetNodes($sXPath);
 	}
 	
+	/**
+	 * List top level (non abstract) classes having child classes
+	 * @param bool $bFlattenLayers
+	 * @throws Exception
+	 */
+	public function ListRootClasses($bFlattenLayers = true)
+	{
+		$sXPath = "/itop_design/classes/class/class/class/..";
+		if ($bFlattenLayers)
+		{
+			$sXPath = "/itop_design/classes/class/class[not(@_alteration) or @_alteration!='removed']/class[not(@_alteration) or @_alteration!='removed']/..";
+		}
+		return $this->GetNodes($sXPath);
+	}
+
 	public function GetClass($sClassName, $bFlattenLayers = true)
 	{
 		$oClassNode = $this->GetNodes("/itop_design/classes//class[@id='$sClassName']")->item(0);

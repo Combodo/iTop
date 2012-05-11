@@ -18,24 +18,6 @@ class DOMFormatException extends Exception
 {
 }
 
-class CompilerEchoPage
-{
-	public function p($s)
-	{
-		echo "<p>\n$s</p>\n";
-	}
-
-	public function add($s)
-	{
-		//echo $s;
-	}
-
-	public function output()
-	{
-	}
-}
-
-
 /**
  * Compiler class
  */ 
@@ -44,20 +26,32 @@ class MFCompiler
 	protected $oFactory;
 	protected $sSourceDir;
 
+	protected $aRootClasses;
+	protected $aLog;
+
 	public function __construct($oModelFactory, $sSourceDir)
 	{
 		$this->oFactory = $oModelFactory;
 		$this->sSourceDir = $sSourceDir;
+
+		$this->aLog = array();
+	}
+
+	protected function Log($sText)
+	{
+		$this->aLog[] = $sText;
+	}
+
+	protected function DumpLog($oPage)
+	{
+		foreach ($this->aLog as $sText)
+		{
+			$oPage->p($sText);
+		}
 	}
 
 	public function Compile($sTargetDir, $oP = null)
 	{
-		if (is_null($oP))
-		{
-			$oP = new CompilerEchoPage();
-		} 	
-
-
 		$aMenuNodes = array();
 		$aMenusByModule = array();
 		foreach ($this->oFactory->ListActiveChildNodes('menus', 'menu') as $oMenuNode)
@@ -69,9 +63,14 @@ class MFCompiler
 			$aMenusByModule[$sModuleMenu][] = $sMenuId;
 		}
 
+		$this->aRootClasses = array();
+		foreach ($this->oFactory->ListRootClasses() as $oClass)
+		{
+			$this->Log("Root class: ".$oClass->getAttribute('id'));
+			$this->aRootClasses[$oClass->getAttribute('id')] = $oClass;
+		}
 
-		$aResultFiles = array();
-		
+
 		$aModules = $this->oFactory->GetLoadedModules();
 		foreach($aModules as $foo => $oModule)
 		{
@@ -88,30 +87,29 @@ class MFCompiler
 			$iClassCount = $oClasses->length;
 			if ($iClassCount == 0)
 			{
-				$oP->p("Found module without classes declared: $sModuleName");
+				$this->Log("Found module without classes declared: $sModuleName");
 			}
 			else
 			{
 				$sResultFile = $sTargetDir.'/'.$sRelativeDir.'/model.'.$sModuleName.'.php';
 				if (is_file($sResultFile))
 				{
-					$oP->p("Updating <a href=\"#$sModuleName\">$sResultFile</a> for module $sModuleName in version $sModuleVersion ($iClassCount classes)");
+					$this->Log("Updating $sResultFile for module $sModuleName in version $sModuleVersion ($iClassCount classes)");
 				}
 				else
 				{
 					$sResultDir = dirname($sResultFile);
 					if (!is_dir($sResultDir))
 					{
-						$oP->p("Creating directory $sResultDir");
+						$this->Log("Creating directory $sResultDir");
 						mkdir($sResultDir, 0777, true);
 					}
-					$oP->p("Creating <a href=\"#$sModuleName\">$sResultFile</a> for module $sModuleName in version $sModuleVersion ($iClassCount classes)");
+					$this->Log("Creating $sResultFile for module $sModuleName in version $sModuleVersion ($iClassCount classes)");
 				}
 		
 				// Compile the module into a single file
 				//
 				$sId = $sModuleName;
-				$aResultFiles[$sId] = $sResultFile;
 				$sCurrDate = date(DATE_ISO8601);
 				$sAuthor = 'Combodo compiler';
 				$sLicence = 'http://www.opensource.org/licenses/gpl-3.0.html LGPL';
@@ -168,7 +166,7 @@ EOF;
 
 			if (!array_key_exists($sModuleName, $aMenusByModule))
 			{
-				$oP->p("Found module without menus declared: $sModuleName");
+				$this->Log("Found module without menus declared: $sModuleName");
 			}
 			else
 			{
@@ -209,21 +207,6 @@ EOF;
 				}
 			}
 		}
-		
-		if (count($aResultFiles))
-		{
-			$oP->add('<h2>Files</h2>');
-			foreach ($aResultFiles as $sModuleName => $sFile)
-			{
-				$oP->add('<h3>'.$sFile.'</h3>');
-				$oP->add('<a name="'.$sModuleName.'"/><div style="border:1;">');
-				$oP->add(highlight_file($sFile, true));
-				$oP->add('</div style="">');
-			}
-		}
-		
-		$oP->output();
-		//$this->oFactory->Dump();
 	}
 
 	/**
@@ -341,6 +324,57 @@ EOF;
 		return $sPHP;
 	}
 
+	protected function GetPropString($oNode, $sTag, $sDefault = null)
+	{
+		$val = $oNode->GetChildText($sTag);
+		if (is_null($val))
+		{
+			if (is_null($sDefault))
+			{
+				return null;
+			}
+			else
+			{
+				$val = $sDefault;
+			}
+		}
+		return "'".$val."'";
+	}
+
+	protected function GetPropBoolean($oNode, $sTag, $bDefault = null)
+	{
+		$val = $oNode->GetChildText($sTag);
+		if (is_null($val))
+		{
+			if (is_null($bDefault))
+			{
+				return null;
+			}
+			else
+			{
+				return $bDefault ? 'true' : 'false';
+			}
+		}
+		return $val == 'true' ? 'true' : 'false';
+	}
+
+	protected function GetPropNumber($oNode, $sTag, $nDefault = null)
+	{
+		$val = $oNode->GetChildText($sTag);
+		if (is_null($val))
+		{
+			if (is_null($nDefault))
+			{
+				return null;
+			}
+			else
+			{
+				$val = $nDefault;
+			}
+		}
+		return (string)$val;
+	}
+
 	protected function CompileClass($oClass, $sResFile, $sModuleRelativeDir, $oP)
 	{
 		$sClass = $oClass->getAttribute('id');
@@ -349,7 +383,7 @@ EOF;
 		// Class caracteristics
 		//
 		$aClassParams = array();
-		$aClassParams['category'] = "'".$oProperties->GetChildText('category')."'";
+		$aClassParams['category'] = $this->GetPropString($oProperties, 'category', '');
 		$aClassParams['key_type'] = "'autoincrement'";
 	
 		$oNaming = $oProperties->GetUniqueElement('naming');
@@ -397,17 +431,18 @@ EOF;
 		$sReconcKeys = "array('".implode("', '", $aReconcAttCodes)."')";
 		$aClassParams['reconc_keys'] = $sReconcKeys;
 	
-		$aClassParams['db_table'] = "'".$oProperties->GetChildText('db_table')."'";
+		$aClassParams['db_table'] = $this->GetPropString($oProperties, 'db_table', '');
+		$aClassParams['db_key_field'] = $this->GetPropString($oProperties, 'db_key_field', 'id');
 
-		$sKeyField = $oProperties->GetChildText('db_key_field');
-		if ($sKeyField == '')
+		if (array_key_exists($sClass, $this->aRootClasses))
 		{
-			$sKeyField = 'id';
+			$sDefaultFinalClass = 'finalclass';
 		}
-		$aClassParams['db_key_field'] = "'".$sKeyField."'";
-
-		// TODO: faire automatiquement (pas dans le XML !!!)
-		$aClassParams['db_finalclass_field'] = "'".$oProperties->GetChildText('db_final_class_field')."'";
+		else
+		{
+			$sDefaultFinalClass = '';
+		}
+		$aClassParams['db_finalclass_field'] = $this->GetPropString($oProperties, 'db_final_class_field', $sDefaultFinalClass);
 	
 		if (($sDisplayTemplate = $oProperties->GetChildText('display_template')) && (strlen($sDisplayTemplate) > 0))
 		{
@@ -476,29 +511,30 @@ EOF;
 	
 			if ($sAttType == 'AttributeLinkedSetIndirect')
 			{
-				$aParameters['linked_class'] = "'".$oField->GetChildText('linked_class')."'";
-				$aParameters['ext_key_to_me'] = "'".$oField->GetChildText('ext_key_to_me')."'";
-				$aParameters['ext_key_to_remote'] = "'".$oField->GetChildText('ext_key_to_remote')."'";
+				$aParameters['linked_class'] = $this->GetPropString($oField, 'linked_class', '');
+				$aParameters['ext_key_to_me'] = $this->GetPropString($oField, 'ext_key_to_me', '');
+				$aParameters['ext_key_to_remote'] = $this->GetPropString($oField, 'ext_key_to_remote', '');
 	// todo - utile ?
 				$aParameters['allowed_values'] = 'null';
-				$aParameters['count_min'] = $oField->GetChildText('count_min');
-				$aParameters['count_max'] = $oField->GetChildText('count_max');
+				$aParameters['count_min'] = $this->GetPropNumber($oField, 'count_min', 0);
+				$aParameters['count_max'] = $this->GetPropNumber($oField, 'count_max', 0);
+				$aParameters['duplicates'] = $this->GetPropBoolean($oField, 'duplicates', false);
 				$aParameters['depends_on'] = $sDependencies;
 			}
 			elseif ($sAttType == 'AttributeLinkedSet')
 			{
-				$aParameters['linked_class'] = "'".$oField->GetChildText('linked_class')."'";
-				$aParameters['ext_key_to_me'] = "'".$oField->GetChildText('ext_key_to_me')."'";
+				$aParameters['linked_class'] = $this->GetPropString($oField, 'linked_class', '');
+				$aParameters['ext_key_to_me'] = $this->GetPropString($oField, 'ext_key_to_me', '');
 	// todo - utile ?
 				$aParameters['allowed_values'] = 'null';
-				$aParameters['count_min'] = $oField->GetChildText('count_min');
-				$aParameters['count_max'] = $oField->GetChildText('count_max');
+				$aParameters['count_min'] = $this->GetPropNumber($oField, 'count_min', 0);
+				$aParameters['count_max'] = $this->GetPropNumber($oField, 'count_max', 0);
 				$aParameters['depends_on'] = $sDependencies;
 			}
 			elseif ($sAttType == 'AttributeExternalKey')
 			{
-				$aParameters['targetclass'] = "'".$oField->GetChildText('target_class')."'";
-				$aParameters['jointype'] = 'null';
+				$aParameters['targetclass'] = $this->GetPropString($oField, 'target_class', '');
+				// deprecated: $aParameters['jointype'] = 'null';
 				if ($sOql = $oField->GetChildText('filter'))
 				{
 					$sEscapedOql = addslashes($sOql);
@@ -508,10 +544,13 @@ EOF;
 				{
 					$aParameters['allowed_values'] = 'null'; // or "new ValueSetObjects('SELECT xxxx')"
 				}
-				$aParameters['sql'] = "'".$oField->GetChildText('sql')."'";
-				$aParameters['is_null_allowed'] = $oField->GetChildText('is_null_allowed') == 'true' ? 'true' : 'false';
+				$aParameters['sql'] = $this->GetPropString($oField, 'sql', '');
+				$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
 				$aParameters['on_target_delete'] = $oField->GetChildText('on_target_delete');
 				$aParameters['depends_on'] = $sDependencies;
+				$aParameters['max_combo_length'] = $this->GetPropNumber($oField, 'max_combo_length');
+				$aParameters['min_auto_complete_chars'] = $this->GetPropNumber($oField, 'min_auto_complete_chars');
+				$aParameters['allow_target_creation'] = $this->GetPropBoolean($oField, 'allow_target_creation');
 			}
 			elseif ($sAttType == 'AttributeHierarchicalKey')
 			{
@@ -524,24 +563,27 @@ EOF;
 				{
 					$aParameters['allowed_values'] = 'null'; // or "new ValueSetObjects('SELECT xxxx')"
 				}
-				$aParameters['sql'] = "'".$oField->GetChildText('sql')."'";
-				$aParameters['is_null_allowed'] = $oField->GetChildText('is_null_allowed') == 'true' ? 'true' : 'false';
+				$aParameters['sql'] = $this->GetPropString($oField, 'sql', '');
+				$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
 				$aParameters['on_target_delete'] = $oField->GetChildText('on_target_delete');
 				$aParameters['depends_on'] = $sDependencies;
+				$aParameters['max_combo_length'] = $this->GetPropNumber($oField, 'max_combo_length');
+				$aParameters['min_auto_complete_chars'] = $this->GetPropNumber($oField, 'min_auto_complete_chars');
+				$aParameters['allow_target_creation'] = $this->GetPropBoolean($oField, 'allow_target_creation');
 			}
 			elseif ($sAttType == 'AttributeExternalField')
 			{
 				$aParameters['allowed_values'] = 'null';
-				$aParameters['extkey_attcode'] = "'".$oField->GetChildText('extkey_attcode')."'";
-				$aParameters['target_attcode'] = "'".$oField->GetChildText('target_attcode')."'";
+				$aParameters['extkey_attcode'] = $this->GetPropString($oField, 'extkey_attcode', '');
+				$aParameters['target_attcode'] = $this->GetPropString($oField, 'target_attcode', '');
 			}
 			elseif ($sAttType == 'AttributeURL')
 			{
-				$aParameters['target'] = "'".$oField->GetChildText('target')."'";
+				$aParameters['target'] = $this->GetPropString($oField, 'target', '');
 				$aParameters['allowed_values'] = 'null';
-				$aParameters['sql'] = "'".$oField->GetChildText('sql')."'";
-				$aParameters['default_value'] = "'".$oField->GetChildText('default_value')."'";
-				$aParameters['is_null_allowed'] = $oField->GetChildText('is_null_allowed') == 'true' ? 'true' : 'false';
+				$aParameters['sql'] = $this->GetPropString($oField, 'sql', '');
+				$aParameters['default_value'] = $this->GetPropString($oField, 'default_value', '');
+				$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
 				$aParameters['depends_on'] = $sDependencies;
 			}
 			elseif ($sAttType == 'AttributeEnum')
@@ -557,9 +599,10 @@ EOF;
 	//	new style... $sValues = 'array('.implode(', ', $aValues).')';
 				$sValues = '"'.implode(',', $aValues).'"';
 				$aParameters['allowed_values'] = "new ValueSetEnum($sValues)";
-				$aParameters['sql'] = "'".$oField->GetChildText('sql')."'";
-				$aParameters['default_value'] = "'".$oField->GetChildText('default_value')."'";
-				$aParameters['is_null_allowed'] = $oField->GetChildText('is_null_allowed') == 'true' ? 'true' : 'false';
+				$aParameters['display_style'] = $this->GetPropString($oField, 'display_style', 'list');
+				$aParameters['sql'] = $this->GetPropString($oField, 'sql', '');
+				$aParameters['default_value'] = $this->GetPropString($oField, 'default_value', '');
+				$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
 				$aParameters['depends_on'] = $sDependencies;
 			}
 			elseif ($sAttType == 'AttributeBlob')
@@ -569,21 +612,28 @@ EOF;
 			else
 			{
 				$aParameters['allowed_values'] = 'null'; // or "new ValueSetEnum('SELECT xxxx')"
-				$aParameters['sql'] = "'".$oField->GetChildText('sql')."'";
-				$aParameters['default_value'] = "'".$oField->GetChildText('default_value')."'";
-				$aParameters['is_null_allowed'] = $oField->GetChildText('is_null_allowed') == 'true' ? 'true' : 'false';
+				$aParameters['sql'] = $this->GetPropString($oField, 'sql', '');
+				$aParameters['default_value'] = $this->GetPropString($oField, 'default_value', '');
+				$aParameters['is_null_allowed'] = $oField->GetChildText('is_null_allowed', false);
 				$aParameters['depends_on'] = $sDependencies;
-				
-				if ($sValidationPattern = $oField->GetChildText('validation_pattern'))
-				{
-					$aParameters['validation_pattern'] = '"'.addslashes($sValidationPattern).'"';
-				}
 			}
+
+			// Optional parameters (more for historical reasons)
+			// Added if present...
+			//
+			$aParameters['validation_pattern'] = $this->GetPropString($oField, 'validation_pattern');
+			$aParameters['width'] = $this->GetPropNumber($oField, 'width');
+			$aParameters['height'] = $this->GetPropNumber($oField, 'height');
+			$aParameters['digits'] = $this->GetPropNumber($oField, 'digits');
+			$aParameters['decimals'] = $this->GetPropNumber($oField, 'decimals');
 	
 			$aParams = array();
 			foreach($aParameters as $sKey => $sValue)
 			{
-				$aParams[] = '"'.$sKey.'"=>'.$sValue;
+				if (!is_null($sValue))
+				{
+					$aParams[] = '"'.$sKey.'"=>'.$sValue;
+				}
 			}
 			$sParams = implode(', ', $aParams);
 			$sAttributes .= "		MetaModel::Init_AddAttribute(new $sAttType(\"$sAttCode\", array($sParams)));\n";
