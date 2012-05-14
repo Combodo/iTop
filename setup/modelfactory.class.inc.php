@@ -1171,11 +1171,11 @@ class MFElement extends DOMElement
 	}
 
 	/**
-	 * For debugging purposes
+	 * For debugging purposes - but this is currently buggy: the whole document is rendered
 	 */
 	public function Dump()
 	{
-		echo "<pre>\n";	 	
+		echo "<pre>\n";
 		echo htmlentities($this->ownerDocument->saveXML($this));
 		echo "</pre>\n";	 	
 	}
@@ -1343,48 +1343,6 @@ class MFElement extends DOMElement
 	public function FindExistingChildNode(MFElement $oRefNode, $sSearchId = null)
 	{
 		return self::FindNode($this, $oRefNode, $sSearchId);
-	}
-	/**
-	 * Find the child node matching the given node
-	 * @param DOMNode   $oParent The node to look into (could be DOMDocument, DOMElement...)
-	 * @param MFElement $oRefNode The node to search for
-	 * @param bool      $sSearchId substitutes to the value of the 'id' attribute 
-	 */	
-	public static function FindNodeSlow(DOMNode $oParent, MFElement $oRefNode, $sSearchId = null)
-	{
-		$oRes = null;
-		if ($oRefNode->hasAttribute('id'))
-		{
-			// Find the first element having the same tag name and id
-			if (!$sSearchId)
-			{
-				$sSearchId = $oRefNode->getAttribute('id');
-			}
-			foreach($oParent->childNodes as $oChildNode)
-			{
-				if (($oChildNode instanceof DOMElement) && ($oChildNode->tagName == $oRefNode->tagName))
-				{
-					if ($oChildNode->hasAttribute('id') && ($oChildNode->getAttribute('id') == $sSearchId))
-					{
-						$oRes = $oChildNode;
-						break;
-					}
-				}
-			}
-		}
-		else
-		{
-			// Get the first one having the same tag name (ignore others)
-			foreach($oParent->childNodes as $oChildNode)
-			{
-				if (($oChildNode instanceof DOMElement) && ($oChildNode->tagName == $oRefNode->tagName))
-				{
-					$oRes = $oChildNode;
-					break;
-				}
-			}
-		}
-		return $oRes;
 	}
 	
 	/**
@@ -1554,7 +1512,7 @@ class MFElement extends DOMElement
 		default:
 			$sFlag = 'removed';
 			// Iterate through the parents: reset the flag if any of them has a flag set 
-			for($oParent = $this ; $oParent instanceof MFElement ; $oParent = $oParent->parentNode)
+			for($oParent = $this ; $oParent instanceof MFElement ; $oParent = $this->parentNode->parentNode)
 			{
 				if ($oParent->getAttribute('_alteration') != '')
 				{
@@ -1571,7 +1529,7 @@ class MFElement extends DOMElement
 		else
 		{
 			// Remove the node entirely
-			$oParent->removeChild($this);
+			$this->parentNode->removeChild($this);
 		}
 	}
 
