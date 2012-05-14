@@ -70,7 +70,6 @@ class MFCompiler
 			$this->aRootClasses[$oClass->getAttribute('id')] = $oClass;
 		}
 
-
 		$aModules = $this->oFactory->GetLoadedModules();
 		foreach($aModules as $foo => $oModule)
 		{
@@ -82,7 +81,9 @@ class MFCompiler
 		
 			// Push the other module files
 			$this->CopyDirectory($sModuleRootDir, $sTargetDir.'/'.$sRelativeDir);
-		
+
+			$sCompiledCode = '';
+
 			$oClasses = $this->oFactory->ListClasses($sModuleName);
 			$iClassCount = $oClasses->length;
 			if ($iClassCount == 0)
@@ -91,6 +92,68 @@ class MFCompiler
 			}
 			else
 			{
+				foreach($oClasses as $oClass)
+				{
+					try
+					{
+						$sCompiledCode .= $this->CompileClass($oClass, $sRelativeDir, $oP);
+					}
+					catch (ssDOMFormatException $e)
+					{
+						$sClass = $oClass->getAttribute("id");
+						throw new Exception("Failed to process class '$sClass', from '$sModuleRootDir': ".$e->getMessage());
+					}
+				}
+			}
+
+			if (!array_key_exists($sModuleName, $aMenusByModule))
+			{
+				$this->Log("Found module without menus declared: $sModuleName");
+			}
+			else
+			{
+				$sCompiledCode .=
+<<<EOF
+
+//
+// Menus
+//
+
+EOF;
+				// Preliminary: determine parent menus not defined within the current module
+				$aMenusToLoad = array();
+
+				foreach($aMenusByModule[$sModuleName] as $sMenuId)
+				{
+					$oMenuNode = $aMenuNodes[$sMenuId];
+					if ($sParent = $oMenuNode->GetChildText('parent', null))
+					{
+						$aMenusToLoad[] = $sParent;
+					}
+					// Note: the order matters: the parents must be defined BEFORE
+					$aMenusToLoad[] = $sMenuId;
+				}
+				$aMenusToLoad = array_unique($aMenusToLoad);
+				foreach($aMenusToLoad as $sMenuId)
+				{
+					$oMenuNode = $aMenuNodes[$sMenuId];
+					try
+					{
+						$sCompiledCode .= $this->CompileMenu($oMenuNode, $sRelativeDir, $oP);
+					}
+					catch (ssDOMFormatException $e)
+					{
+						throw new Exception("Failed to process menu '$sMenuId', from '$sModuleRootDir': ".$e->getMessage());
+					}
+				}
+			}
+
+			// Create (overwrite if existing) the compiled file
+			//
+			if (strlen($sCompiledCode) > 0)
+			{
+				// We have compiled something: write the result file
+				//
 				$sResultFile = $sTargetDir.'/'.$sRelativeDir.'/model.'.$sModuleName.'.php';
 				if (is_file($sResultFile))
 				{
@@ -106,7 +169,7 @@ class MFCompiler
 					}
 					$this->Log("Creating $sResultFile for module $sModuleName in version $sModuleVersion ($iClassCount classes)");
 				}
-		
+
 				// Compile the module into a single file
 				//
 				$sId = $sModuleName;
@@ -140,72 +203,16 @@ class MFCompiler
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 /**
- * Persistent classes for $sModuleName (version $sModuleVersion)
+ * Classes and menus for $sModuleName (version $sModuleVersion)
  *
  * @author      $sAuthor
  * @license     $sLicence
  */
 
 EOF;
-		
-				file_put_contents($sResultFile, $sFileHeader);
-		
-				foreach($oClasses as $oClass)
-				{
-					try
-					{
-						$this->CompileClass($oClass, $sResultFile, $sRelativeDir, $oP);
-					}
-					catch (ssDOMFormatException $e)
-					{
-						$sClass = $oClass->getAttribute("id");
-						throw new Exception("Failed to process class '$sClass', from '$sModuleRootDir': ".$e->getMessage());
-					}
-				}
+				file_put_contents($sResultFile, $sFileHeader.$sCompiledCode);
 			}
-
-			if (!array_key_exists($sModuleName, $aMenusByModule))
-			{
-				$this->Log("Found module without menus declared: $sModuleName");
-			}
-			else
-			{
-				$sMenusHeader =
-<<<EOF
-//
-// Menus
-//
-
-EOF;
-				file_put_contents($sResultFile, $sMenusHeader, FILE_APPEND);
-
-				// Preliminary: determine parent menus not defined within the current module
-				$aMenusToLoad = array();
-
-				foreach($aMenusByModule[$sModuleName] as $sMenuId)
-				{
-					$oMenuNode = $aMenuNodes[$sMenuId];
-					if ($sParent = $oMenuNode->GetChildText('parent', null))
-					{
-						$aMenusToLoad[] = $sParent;
-					}
-					// Note: the order matters: the parents must be defined BEFORE
-					$aMenusToLoad[] = $sMenuId;
-				}
-				$aMenusToLoad = array_unique($aMenusToLoad);
-				foreach($aMenusToLoad as $sMenuId)
-				{
-					$oMenuNode = $aMenuNodes[$sMenuId];
-					try
-					{
-						$this->CompileMenu($oMenuNode, $sResultFile, $sRelativeDir, $oP);
-					}
-					catch (ssDOMFormatException $e)
-					{
-						throw new Exception("Failed to process menu '$sMenuId', from '$sModuleRootDir': ".$e->getMessage());
-					}
-				}
-			}
+			
 		}
 	}
 
@@ -375,7 +382,7 @@ EOF;
 		return (string)$val;
 	}
 
-	protected function CompileClass($oClass, $sResFile, $sModuleRelativeDir, $oP)
+	protected function CompileClass($oClass, $sModuleRelativeDir, $oP)
 	{
 		$sClass = $oClass->getAttribute('id');
 		$oProperties = $oClass->GetUniqueElement('properties');
@@ -782,11 +789,11 @@ $sZlists
 $sMethods
 }
 EOF;
-		file_put_contents($sResFile, $sPHP, FILE_APPEND);
+		return $sPHP;
 	}// function CompileClass()
 
 
-	protected function CompileMenu($oMenu, $sResFile, $sModuleRelativeDir, $oP)
+	protected function CompileMenu($oMenu, $sModuleRelativeDir, $oP)
 	{
 		$sMenuId = $oMenu->getAttribute("id");
 		$sMenuClass = $oMenu->getAttribute("xsi:type");
@@ -883,7 +890,7 @@ EOF;
 			}
 		}
 
-		file_put_contents($sResFile, $sPHP, FILE_APPEND);
+		return $sPHP;
 	}
 }
 
