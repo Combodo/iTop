@@ -1641,7 +1641,7 @@ class MFDocument extends DOMDocument
 		parent::__construct('1.0', 'UTF-8');
 		$this->registerNodeClass('DOMElement', 'MFElement');
 
-		$this->formatOutput = true; // indent (must by loaded with option LIBXML_NOBLANKS)
+		$this->formatOutput = true; // indent (must be loaded with option LIBXML_NOBLANKS)
 		$this->preserveWhiteSpace = true; // otherwise the formatOutput option would have no effect
 	}
 
