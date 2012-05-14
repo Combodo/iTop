@@ -214,12 +214,21 @@ class CreateITILProfilesInstaller extends ModuleInstallerAPI
 			URP_Profiles::DoCreateActionGrant($iNewId, UR_ACTION_BULK_READ, $sClass);
 		}
 		// Can create UserRequests and attach Documents to it
-		URP_Profiles::DoCreateActionGrant($iNewId, UR_ACTION_MODIFY, 'UserRequest');
-		URP_Profiles::DoCreateActionGrant($iNewId, UR_ACTION_MODIFY, 'lnkTicketToDoc');
-		URP_Profiles::DoCreateActionGrant($iNewId, UR_ACTION_DELETE, 'lnkTicketToDoc');
-		URP_Profiles::DoCreateActionGrant($iNewId, UR_ACTION_MODIFY, 'FileDoc');
+		self::SafeCreateActionGrant($iNewId, UR_ACTION_MODIFY, 'UserRequest');
+		self::SafeCreateActionGrant($iNewId, UR_ACTION_MODIFY, 'lnkTicketToDoc');
+		self::SafeCreateActionGrant($iNewId, UR_ACTION_DELETE, 'lnkTicketToDoc');
+		self::SafeCreateActionGrant($iNewId, UR_ACTION_MODIFY, 'FileDoc');
 		// Can close user requests
-		URP_Profiles::DoCreateStimulusGrant($iNewId, 'ev_close', 'UserRequest');
+		self::SafeCreateStimulusGrant($iNewId, 'ev_close', 'UserRequest');
+	}
+	protected static function SafeCreateActionGrant($iProfile, $iAction, $sClass, $bPermission = true)
+	{
+		if (MetaModel::IsValidClass($sClass)) URP_Profiles::DoCreateActionGrant($iProfile, $iAction, $sClass, $bPermission);
+	}
+
+	protected static function SafeCreateStimulusGrant($iProfile, $sStimulusCode, $sClass)
+	{
+		if (MetaModel::IsValidClass($sClass)) URP_Profiles::DoCreateStimulusGrant($iProfile, $sStimulusCode, $sClass);
 	}
 
 	public static function DoCreateProfiles($bFirstInstall = true)
