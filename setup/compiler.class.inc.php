@@ -386,23 +386,29 @@ EOF;
 		$aClassParams['category'] = $this->GetPropString($oProperties, 'category', '');
 		$aClassParams['key_type'] = "'autoincrement'";
 	
-		$oNaming = $oProperties->GetUniqueElement('naming');
-		$oNameAttributes = $oNaming->GetUniqueElement('attributes');
-		$oAttributes = $oNameAttributes->getElementsByTagName('attribute');
-		$aNameAttCodes = array();
-		foreach($oAttributes as $oAttribute)
+		if ($oNaming = $oProperties->GetOptionalElement('naming'))
 		{
-			$aNameAttCodes[] = $oAttribute->getAttribute('id');
-		}
-		if (count($aNameAttCodes) > 1)
-		{
-			// New style...
-			$sNameAttCode = "array('".implode("', '", $aNameAttCodes)."')";
-		}
-		elseif (count($aNameAttCodes) == 1)
-		{
-			// New style...
-			$sNameAttCode = "'$aNameAttCodes[0]'";
+			$oNameAttributes = $oNaming->GetUniqueElement('attributes');
+			$oAttributes = $oNameAttributes->getElementsByTagName('attribute');
+			$aNameAttCodes = array();
+			foreach($oAttributes as $oAttribute)
+			{
+				$aNameAttCodes[] = $oAttribute->getAttribute('id');
+			}
+			if (count($aNameAttCodes) > 1)
+			{
+				// New style...
+				$sNameAttCode = "array('".implode("', '", $aNameAttCodes)."')";
+			}
+			elseif (count($aNameAttCodes) == 1)
+			{
+				// New style...
+				$sNameAttCode = "'$aNameAttCodes[0]'";
+			}
+			else
+			{
+				$sNameAttCode = "''";
+			}
 		}
 		else
 		{
@@ -421,14 +427,20 @@ EOF;
 		}
 		$aClassParams['state_attcode'] = "'$sStateAttCode'";
 	
-		$oReconciliation = $oProperties->GetUniqueElement('reconciliation');
-		$oReconcAttributes = $oReconciliation->getElementsByTagName('attribute');
-		$aReconcAttCodes = array();
-		foreach($oReconcAttributes as $oAttribute)
+		if ($oReconciliation = $oProperties->GetOptionalElement('reconciliation'))
 		{
-			$aReconcAttCodes[] = $oAttribute->getAttribute('id');
+			$oReconcAttributes = $oReconciliation->getElementsByTagName('attribute');
+			$aReconcAttCodes = array();
+			foreach($oReconcAttributes as $oAttribute)
+			{
+				$aReconcAttCodes[] = $oAttribute->getAttribute('id');
+			}
+			$sReconcKeys = "array('".implode("', '", $aReconcAttCodes)."')";
 		}
-		$sReconcKeys = "array('".implode("', '", $aReconcAttCodes)."')";
+		else
+		{
+			$sReconcKeys = "array()";
+		}
 		$aClassParams['reconc_keys'] = $sReconcKeys;
 	
 		$aClassParams['db_table'] = $this->GetPropString($oProperties, 'db_table', '');
