@@ -79,7 +79,7 @@ class RunTimeEnvironment
 		if (!$bUseCache)
 		{
 			// Reset the cache for the first use !
-			MetaModel::ResetCache($oConfig);
+			MetaModel::ResetCache($this->sTargetEnv);
 		}
 	
 		MetaModel::Startup($oConfig, $bModelOnly, $bUseCache);

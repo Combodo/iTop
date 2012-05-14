@@ -4786,15 +4786,15 @@ abstract class MetaModel
 		return $oInstance;
 	}
 
-	public static function GetCacheEntries(Config $oConfig = null)
+	public static function GetCacheEntries($sEnvironment = null)
 	{
 		if (!function_exists('apc_cache_info')) return array();
-		if (is_null($oConfig))
+		if (is_null($sEnvironment))
 		{
-			$oConfig = self::GetConfig();
+			$sEnvironment = MetaModel::GetEnvironmentId();
 		}
 		$aCacheUserData = apc_cache_info('user');  
-		$sPrefix = 'itop-'.MetaModel::GetEnvironmentId().'-';
+		$sPrefix = 'itop-'.$sEnvironment.'-';
 
 		$aEntries = array();
 		foreach($aCacheUserData['cache_list'] as $i => $aEntry)
@@ -4809,18 +4809,18 @@ abstract class MetaModel
 		return $aEntries;
 	}
 
-	public static function ResetCache(Config $oConfig = null)
+	public static function ResetCache($sEnvironment = null)
 	{
 		if (!function_exists('apc_delete')) return;
-		if (is_null($oConfig))
+		if (is_null($sEnvironment))
 		{
-			$oConfig = self::GetConfig();
+			$sEnvironment = MetaModel::GetEnvironmentId();
 		}
 
-		$sAppIdentity = 'itop-'.MetaModel::GetEnvironmentId();
+		$sAppIdentity = 'itop-'.$sEnvironment;
 		Dict::ResetCache($sAppIdentity);
 
-		foreach(self::GetCacheEntries($oConfig) as $sKey => $aAPCInfo)
+		foreach(self::GetCacheEntries($sEnvironment) as $sKey => $aAPCInfo)
 		{
 			$sAPCKey = $aAPCInfo['info'];
 			apc_delete($sAPCKey);
