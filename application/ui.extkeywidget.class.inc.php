@@ -323,7 +323,7 @@ EOF
 	/**
 	 * Search for objects to be selected
 	 * @param WebPage $oP The page used for the output (usually an AjaxWebPage)
-	 * @param string $sRemoteClass Name of the "remote" class to perform the search on, must be a derived class of m_sRemoteClass
+	 * @param string $sRemoteClass Name of the "remote" class to perform the search on, must be a derived class of sTargetClass
 	 * @param Array $aAlreadyLinkedIds List of IDs of objects of "remote" class already linked, to be filtered out of the search
 	 */
 	public function SearchObjectsToSelect(WebPage $oP, $sFilter, $sRemoteClass = '', $oObj = null)
@@ -334,7 +334,22 @@ EOF
 		}
 		try
 		{
-			$oFilter = DBObjectSearch::FromOQL($sFilter);
+			if ($sRemoteClass != $this->sTargetClass)
+			{
+				//$oBaseClassFilter = DBObjectSearch::FromOQL($sFilter);
+				//$oFilter = new DBObjectSearch($sRemoteClass);
+				//$oFilter->AddConditionExpression($oBaseClassFilter->GetCriteria());
+				//$oFilter->TransferConditionExpression($oBaseClassFilter, array());
+				//$oFilter->TransferConditionExpression($oBaseClassFilter, array($this->sTargetClass => array('*' => $sRemoteClass.'_'.strtolower($this->sTargetClass))));
+				$sFilter = str_replace(" $this->sTargetClass ", " $sRemoteClass ", $sFilter);
+				$sFilter = str_replace("`$this->sTargetClass`", "`$sRemoteClass`", $sFilter);
+				$oFilter = DBObjectSearch::FromOQL($sFilter);
+			}
+			else
+			{
+				$oFilter = DBObjectSearch::FromOQL($sFilter);
+			}
+			//$oP->p($oFilter->ToOQL());
 			$oFilter->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', $this->bSearchMode);
 			$oBlock = new DisplayBlock($oFilter, 'list', false, array('query_params' => array('this' => $oObj)));
 			$oBlock->Display($oP, $this->iId.'_results', array('this' => $oObj, 'cssCount'=> '#count_'.$this->iId, 'menu' => false, 'selection_mode' => true, 'selection_type' => 'single')); // Don't display the 'Actions' menu on the results
