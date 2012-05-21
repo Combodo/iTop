@@ -1113,3 +1113,16 @@ div.actions_button a, .actions_button a:hover, .actions_button a:visited {
 select#org_id {
 	max-width: 90%;
 }
+/*********** Dashboards ***********/
+.dragHover {
+	background: url(./ui-lightness/images/ui-bg_diagonals-thick_20_666666_40x40.png);
+}
+.edit_mode .dashlet {
+	background: url(./ui-lightness/images/ui-bg_diagonals-thick_20_666666_40x40.png);
+	padding: 5px;
+	margin:0;
+}
+.dashlet-content {
+	background: #fff;
+	margin:0;
+}
