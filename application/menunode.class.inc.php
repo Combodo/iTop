@@ -771,4 +771,67 @@ class NewObjectMenuNode extends MenuNode
 		assert(false); // Shall never be called, the external web page will handle the display by itself
 	}
 }
-?>
+
+require_once(APPROOT.'application/dashboard.class.inc.php');
+/**
+ * This class defines a menu item which content is based on XML dashboard.
+ */
+class DashboardMenuNode extends MenuNode
+{
+	protected $sDashboardFile;
+	
+	/**
+	 * Create a menu item based on a custom template and inserts it into the application's main menu
+	 * @param string $sMenuId Unique identifier of the menu (used to identify the menu for bookmarking, and for getting the labels from the dictionary)
+	 * @param string $sTemplateFile Path (or URL) to the file that will be used as a template for displaying the page's content
+	 * @param integer $iParentIndex ID of the parent menu
+	 * @param float $fRank Number used to order the list, any number will do, but for a given level (i.e same parent) all menus are sorted based on this value
+	 * @param string $sEnableClass Name of class of object
+	 * @param integer $iActionCode Either UR_ACTION_READ, UR_ACTION_MODIFY, UR_ACTION_DELETE, UR_ACTION_BULKREAD, UR_ACTION_BULKMODIFY or UR_ACTION_BULKDELETE
+	 * @param integer $iAllowedResults Expected "rights" for the action: either UR_ALLOWED_YES, UR_ALLOWED_NO, UR_ALLOWED_DEPENDS or a mix of them...
+	 * @return MenuNode
+	 */
+	public function __construct($sMenuId, $sDashboardFile, $iParentIndex, $fRank = 0, $sEnableClass = null, $iActionCode = null, $iAllowedResults = UR_ALLOWED_YES, $sEnableStimulus = null)
+	{
+		parent::__construct($sMenuId, $iParentIndex, $fRank, $sEnableClass, $iActionCode, $iAllowedResults, $sEnableStimulus);
+		$this->sDashboardFile = $sDashboardFile;
+		$this->aReflectionProperties['dashboard_file'] = $sDashboardFile;
+	}
+	
+	public function GetHyperlink($aExtraParams)
+	{
+		if ($this->sDashboardFile == '') return '';
+		return parent::GetHyperlink($aExtraParams);
+	}
+	
+	public function RenderContent(WebPage $oPage, $aExtraParams = array())
+	{
+		$sDashboardDefinition = @file_get_contents($this->sDashboardFile);
+		if ($sDashboardDefinition !== false)
+		{
+			$oDashboard = new RuntimeDashboard($this->sMenuId);
+			$oDashboard->FromXml($sDashboardDefinition);
+			$oDashboard->Render($oPage, false, $aExtraParams);
+		}
+		else
+		{
+			$oPage->p("Error: failed to load template file: '{$this->sDashboardFile}'"); // No need to translate ?
+		}
+	}
+	
+	public function RenderEditor(WebPage $oPage)
+	{
+		$sDashboardDefinition = @file_get_contents($this->sDashboardFile);
+		if ($sDashboardDefinition !== false)
+		{
+			$oDashboard = new RuntimeDashboard($this->sMenuId);
+			$oDashboard->FromXml($sDashboardDefinition);
+			$oDashboard->RenderEditor($oPage);
+		}
+		else
+		{
+			$oPage->p("Error: failed to load template file: '{$this->sDashboardFile}'"); // No need to translate ?
+		}
+	}
+}
+
