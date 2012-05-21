@@ -1122,6 +1122,11 @@ select#org_id {
 	padding: 5px;
 	margin:0;
 }
+.edit_mode .dashlet-selected {
+	background: #EB8F00 !important;
+	padding: 5px;
+	margin:0;
+}
 .dashlet-content {
 	background: #fff;
 	margin:0;
