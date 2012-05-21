@@ -624,6 +624,13 @@ try
 		}
 		
 		break;
+		
+		case 'dashboard_editor':
+		$sId = utils::ReadParam('id', '');
+		$idx = ApplicationMenu::GetMenuIndexById($sId);
+		$oMenu = ApplicationMenu::GetMenuNode($idx);
+		$oMenu->RenderEditor($oPage);
+		break;
 			
 		default:
 		$oPage->p("Invalid query.");
