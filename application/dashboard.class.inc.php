@@ -35,7 +35,8 @@ abstract class Dashboard
 		foreach($oDashletList as $oDomNode)
 		{
 			$sDashletClass = $oDomNode->getAttribute('xsi:type');
-			$oNewDashlet = new $sDashletClass;
+			$sId = $oDomNode->getAttribute('id');
+			$oNewDashlet = new $sDashletClass($sId);
 			$oNewDashlet->FromDOMNode($oDomNode);
 			$this->aDashlets[] = $oNewDashlet;
 		}
@@ -80,6 +81,10 @@ abstract class Dashboard
 		$oPage->add('<h1>'.$this->sTitle.'</h1>');
 		$oLayout = new $this->sLayoutClass;
 		$oLayout->Render($oPage, $this->aDashlets, $bEditMode, $aExtraParams);
+		if (!$bEditMode)
+		{
+			$oPage->add_linked_script('../js/dashlet.js');
+		}
 	}
 	
 	public function RenderProperties($oPage)
@@ -140,7 +145,10 @@ abstract class Dashboard
 		$oPage->add('<div class="ui-widget-content ui-corner-all"><div class="ui-widget-header ui-corner-all" style="text-align:center; padding: 2px;">Dashlet Properties</div>');
 
 		$oPage->add('<div id="dashlet_properties" style="text-align:center">');
-		$oPage->p('Not yet implemented');
+		foreach($this->aDashlets as $oDashlet)
+		{
+			$oDashlet->RenderProperties($oPage);
+		}
 		$oPage->add('</div>');
 
 		$oPage->add('</div>');
@@ -165,7 +173,6 @@ class RuntimeDashboard extends Dashboard
 <<<EOF
 function EditDashboard(sId)
 {
-	console.log('Ici');
 	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', {operation: 'dashboard_editor', id: sId},
 		function(data)
 		{
@@ -190,6 +197,7 @@ EOF
 		$this->RenderDashletsSelection($oPage);
 		$this->RenderDashletsProperties($oPage);
 		$oPage->add('</div>');
+		$oPage->add('<div id="event_bus"/>'); // For exchanging messages between the panes, same as in the designer
 		$oPage->add('</div>');
 		$sDialogTitle = 'Dashboard Editor';
 		$sOkButtonLabel = Dict::S('UI:Button:Ok');
@@ -209,6 +217,24 @@ $('#dashboard_editor').dialog({
 	],
 	close: function() { $(this).remove(); }
 });
+
+$('#event_bus').bind('dashlet-selected', function(event, data){
+		var sDashletId = data.dashlet_id;
+		var sPropId = 'dashlet_properties_'+sDashletId;
+		$('.dashlet_properties').each(function() {
+			var sId = $(this).attr('id');
+			var bShow = (sId == sPropId);
+			if (bShow)
+			{
+				$(this).show();
+			}
+			else
+			{
+				$(this).hide();
+			}
+		});
+
+	});
 EOF
 		);
 		$oPage->add_ready_script("$('#dashboard_editor').layout();");

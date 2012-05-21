@@ -42,7 +42,7 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 				if ($iDashletIdx <= count($aDashlets))
 				{
 					$oDashlet = $aDashlets[$iDashletIdx];
-					$oDashlet->Render($oPage, $bEditMode, $aExtraParams);
+					$oDashlet->DoRender($oPage, $bEditMode, $aExtraParams);
 				}
 				else
 				{

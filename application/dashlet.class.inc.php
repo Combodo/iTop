@@ -1,9 +1,11 @@
 <?php
 abstract class Dashlet
 {
-	public function __construct()
+	protected $sId;
+	
+	public function __construct($sId)
 	{
-		
+		$this->sId = $sId;
 	}
 	
 	public function FromDOMNode($oDOMNode)
@@ -21,7 +23,46 @@ abstract class Dashlet
 		
 	}
 	
+	public function DoRender($oPage, $bEditMode = false, $aExtraParams = array())
+	{
+		if ($bEditMode)
+		{
+			$sId = $this->GetID();
+			$oPage->add('<div class="dashlet" id="dashlet_'.$sId.'">');
+		}
+		else
+		{
+			$oPage->add('<div class="dashlet">');
+		}
+		$this->Render($oPage, $bEditMode, $aExtraParams);
+		$oPage->add('</div>');
+		if ($bEditMode)
+		{
+			$sClass = get_class($this);
+			$oPage->add_ready_script(
+<<<EOF
+$('#dashlet_$sId').dashlet({dashlet_id: '$sId', dashlet_class: '$sClass'});
+EOF
+			);
+		}
+	}
+	
+	public function GetID()
+	{
+		return $this->sId;
+	}
+	
 	abstract public function Render($oPage, $bEditMode = false, $aExtraParams = array());
+	
+	public function RenderProperties($oPage)
+	{
+		$sId = $this->GetID();
+		$sClass = get_class($this);
+		$oPage->add('<div class="dashlet_properties" id="dashlet_properties_'.$sId.'" style="display:none">');
+		$oPage->add("<p>Properties for $sClass / $sId</p>");
+		$oPage->add('</div>');
+	}
+	
 	
 	public function ToXml(DOMNode $oContainerNode)
 	{
@@ -50,9 +91,9 @@ abstract class Dashlet
 
 class DashletHelloWorld extends Dashlet
 {
-	public function __construct()
+	public function __construct($sId)
 	{
-		
+		parent::__construct($sId);
 	}
 	
 	public function FromDOMNode($oDOMNode)
@@ -72,9 +113,7 @@ class DashletHelloWorld extends Dashlet
 	
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
-		$oPage->add('<div class="dashlet">');
 		$oPage->add('<div style="text-align:center; line-height:5em" class="dashlet-content"><span>Hello World!</span></div>');
-		$oPage->add('</div>');
 	}
 	
 	public function ToXml(DOMNode $oContainerNode)
@@ -110,9 +149,9 @@ class DashletHelloWorld extends Dashlet
 
 class DashletFakeBarChart extends Dashlet
 {
-	public function __construct()
+	public function __construct($sId)
 	{
-		
+		parent::__construct($sId);
 	}
 	
 	public function FromDOMNode($oDOMNode)
@@ -132,9 +171,7 @@ class DashletFakeBarChart extends Dashlet
 	
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
-		$oPage->add('<div class="dashlet">');
 		$oPage->add('<div style="text-align:center" class="dashlet-content"><div>Fake Bar Chart</div><divp><img src="../images/fake-bar-chart.png"/></div></div>');
-		$oPage->add('</div>');
 	}
 	
 	public function ToXml(DOMNode $oContainerNode)
@@ -170,9 +207,9 @@ class DashletFakeBarChart extends Dashlet
 
 class DashletFakePieChart extends Dashlet
 {
-	public function __construct()
+	public function __construct($sId)
 	{
-		
+		parent::__construct($sId);
 	}
 	
 	public function FromDOMNode($oDOMNode)
@@ -192,9 +229,7 @@ class DashletFakePieChart extends Dashlet
 	
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
-		$oPage->add('<div class="dashlet">');
 		$oPage->add('<div style="text-align:center" class="dashlet-content"><div>Fake Pie Chart</div><div><img src="../images/fake-pie-chart.png"/></div></div>');
-		$oPage->add('</div>');
 	}
 	
 	public function ToXml(DOMNode $oContainerNode)
