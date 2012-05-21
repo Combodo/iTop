@@ -25,6 +25,7 @@
 
 require_once(APPROOT.'/application/utils.inc.php');
 require_once(APPROOT.'/application/template.class.inc.php');
+require_once(APPROOT."/application/user.dashboard.class.inc.php");
 
 
 /**
@@ -803,34 +804,57 @@ class DashboardMenuNode extends MenuNode
 		if ($this->sDashboardFile == '') return '';
 		return parent::GetHyperlink($aExtraParams);
 	}
-	
-	public function RenderContent(WebPage $oPage, $aExtraParams = array())
+
+	protected function GetDashboard()
 	{
 		$sDashboardDefinition = @file_get_contents($this->sDashboardFile);
 		if ($sDashboardDefinition !== false)
 		{
+			// Search for an eventual user defined dashboard, overloading the existing one
+			$oUDSearch = new DBObjectSearch('UserDashboard');
+			$oUDSearch->AddCondition('user_id', UserRights::GetUserId(), '=');
+			$oUDSearch->AddCondition('menu_code', $this->sMenuId, '=');
+			$oUDSet = new DBObjectSet($oUDSearch);
+			if ($oUDSet->Count() > 0)
+			{
+				// Assuming there is at most one couple {user, menu}!
+				$oUserDashboard = $oUDSet->Fetch();
+				$sDashboardDefinition = $oUserDashboard->Get('contents');
+			}
+
 			$oDashboard = new RuntimeDashboard($this->sMenuId);
 			$oDashboard->FromXml($sDashboardDefinition);
+		}
+		else
+		{
+			$oDashboard = null;
+		}
+		return $oDashboard;
+	}
+
+	public function RenderContent(WebPage $oPage, $aExtraParams = array())
+	{
+		$oDashboard = $this->GetDashboard();
+		if ($oDashboard != null)
+		{
 			$oDashboard->Render($oPage, false, $aExtraParams);
 		}
 		else
 		{
-			$oPage->p("Error: failed to load template file: '{$this->sDashboardFile}'"); // No need to translate ?
+			$oPage->p("Error: failed to load dashboard file: '{$this->sDashboardFile}'");
 		}
 	}
 	
 	public function RenderEditor(WebPage $oPage)
 	{
-		$sDashboardDefinition = @file_get_contents($this->sDashboardFile);
-		if ($sDashboardDefinition !== false)
+		$oDashboard = $this->GetDashboard();
+		if ($oDashboard != null)
 		{
-			$oDashboard = new RuntimeDashboard($this->sMenuId);
-			$oDashboard->FromXml($sDashboardDefinition);
 			$oDashboard->RenderEditor($oPage);
 		}
 		else
 		{
-			$oPage->p("Error: failed to load template file: '{$this->sDashboardFile}'"); // No need to translate ?
+			$oPage->p("Error: failed to load dashboard file: '{$this->sDashboardFile}'");
 		}
 	}
 }

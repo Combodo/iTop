@@ -648,6 +648,7 @@ class Config
 			'application/transaction.class.inc.php',
 			'application/menunode.class.inc.php',
 			'application/user.preferences.class.inc.php',
+			'application/user.dashboard.class.inc.php',
 			'application/audit.rule.class.inc.php',
 			'application/query.class.inc.php',
 // Romain - That's dirty, because those classes are in fact part of the core

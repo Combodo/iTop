@@ -102,7 +102,8 @@ abstract class Dashboard
 				$oReflection = new ReflectionClass($sLayoutClass);
 				if (!$oReflection->isAbstract())
 				{
-					$aInfo = $sLayoutClass::GetInfo();
+					$aCallSpec = array($sLayoutClass, 'GetInfo');
+					$aInfo = call_user_func($aCallSpec);
 					$oPage->add('<input type="radio" name="layout_class" id="layout_'.$sLayoutClass.'"><label for="layout_'.$sLayoutClass.'"><img src="'.$sUrl.$aInfo['icon'].'" /></label>'); // title="" on either the img or the label does nothing !
 				}
 			}
@@ -127,7 +128,8 @@ abstract class Dashboard
 				$oReflection = new ReflectionClass($sDashletClass);
 				if (!$oReflection->isAbstract())
 				{
-					$aInfo = $sDashletClass::GetInfo();
+					$aCallSpec = array($sDashletClass, 'GetInfo');
+					$aInfo = call_user_func($aCallSpec);
 					$oPage->add('<span class="dashlet_icon ui-widget-content ui-corner-all" id="dashlet_'.$sDashletClass.'" title="'.$aInfo['label'].'" style="width:34px; height:34px; display:inline-block; margin:2px;"><img src="'.$sUrl.$aInfo['icon'].'" /></span>');
 				}
 			}
