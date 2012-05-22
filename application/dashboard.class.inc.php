@@ -1,7 +1,26 @@
 <?php
+// Copyright (C) 2012 Combodo SARL
+//
+//   This program is free software; you can redistribute it and/or modify
+//   it under the terms of the GNU General Public License as published by
+//   the Free Software Foundation; version 3 of the License.
+//
+//   This program is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU General Public License for more details.
+//
+//   You should have received a copy of the GNU General Public License
+//   along with this program; if not, write to the Free Software
+//   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
 require_once(APPROOT.'application/dashboardlayout.class.inc.php');
 require_once(APPROOT.'application/dashlet.class.inc.php');
 
+/**
+ * A user editable dashboard page
+ *
+ */
 abstract class Dashboard
 {
 	protected $sTitle;
@@ -84,6 +103,7 @@ abstract class Dashboard
 		if (!$bEditMode)
 		{
 			$oPage->add_linked_script('../js/dashlet.js');
+			$oPage->add_linked_script('../js/property_field.js');
 		}
 	}
 	
@@ -149,16 +169,29 @@ abstract class Dashboard
 		$oPage->add('<div id="dashlet_properties" style="text-align:center">');
 		foreach($this->aDashlets as $oDashlet)
 		{
-			$oDashlet->RenderProperties($oPage);
+			$sId = $oDashlet->GetID();
+			$sClass = get_class($oDashlet);
+			
+			$oPage->add('<div class="dashlet_properties" id="dashlet_properties_'.$sId.'" style="display:none">');
+			$oForm = $oDashlet->GetForm($oPage);
+			$this->SetFormParams($oForm);
+			$oForm->RenderAsPropertySheet($oPage);		
+			$oPage->add('</div>');
 		}
 		$oPage->add('</div>');
 
 		$oPage->add('</div>');
 	}
+	
+	abstract protected function SetFormParams($oForm);
 }
 
 class RuntimeDashboard extends Dashboard
 {
+	protected function SetFormParams($oForm)
+	{
+		$oForm->SetSubmitParams(utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php', array('operation' => 'update_dashlet_property'));		
+	}
 	public function Save()
 	{
 		

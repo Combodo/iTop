@@ -1,11 +1,37 @@
 <?php
+// Copyright (C) 2012 Combodo SARL
+//
+//   This program is free software; you can redistribute it and/or modify
+//   it under the terms of the GNU General Public License as published by
+//   the Free Software Foundation; version 3 of the License.
+//
+//   This program is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU General Public License for more details.
+//
+//   You should have received a copy of the GNU General Public License
+//   along with this program; if not, write to the Free Software
+//   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+require_once(APPROOT.'application/forms.class.inc.php');
+
+/**
+ * Base class for all 'dashlets' (i.e. widgets to be inserted into a dashboard)
+ *
+ */
 abstract class Dashlet
 {
 	protected $sId;
+	protected $bRedrawNeeded;
+	protected $bFormRedrawNeeded;
+	
 	
 	public function __construct($sId)
 	{
 		$this->sId = $sId;
+		$this->bRedrawNeeded = true; // By default: redraw each time a property changes
+		$this->bFormRedrawNeeded = false; // By default: no need to redraw the form (independent fields)
 	}
 	
 	public function FromDOMNode($oDOMNode)
@@ -53,30 +79,27 @@ EOF
 	}
 	
 	abstract public function Render($oPage, $bEditMode = false, $aExtraParams = array());
-	
-	public function RenderProperties($oPage)
-	{
-		$sId = $this->GetID();
-		$sClass = get_class($this);
-		$oPage->add('<div class="dashlet_properties" id="dashlet_properties_'.$sId.'" style="display:none">');
-		$oPage->add("<p>Properties for $sClass / $sId</p>");
-		$oPage->add('</div>');
-	}
-	
+		
+	abstract public function GetPropertiesFields(DesignerForm $oForm);
 	
 	public function ToXml(DOMNode $oContainerNode)
 	{
 		
 	}
-	
-	public function GetForm()
+
+	public function Update($aValues, $aUpdatedFields)
 	{
 		
 	}
 	
-	public function OnFieldUpdate($aParams, $sUpdatedFieldCode)
+	public function IsRedrawNeeded()
 	{
-		
+		return $this->bRedrawNeeded;
+	}
+	
+	public function IsFormRedrawNeeded()
+	{
+		return $this->bFormRedrawNeeded;
 	}
 	
 	static public function GetInfo()
@@ -87,33 +110,71 @@ EOF
 			'description' => '',
 		);
 	}
+	
+	public function GetForm($oPage, $bReturnHTML = false)
+	{
+		$oForm = new DesignerForm();
+		$oForm->SetPrefix("dashlet_". $this->GetID());
+		$oForm->SetParamsContainer('params');
+		
+		$this->GetPropertiesFields($oForm);
+		
+		$oDashletClassField = new DesignerHiddenField('dashlet_class', '', get_class($this));
+		$oForm->AddField($oDashletClassField);
+		
+		$oDashletIdField = new DesignerHiddenField('dashlet_id', '', $this->GetID());
+		$oForm->AddField($oDashletIdField);
+		
+		return $oForm;
+	}
 }
 
 class DashletHelloWorld extends Dashlet
 {
+	protected $sText;
+	
 	public function __construct($sId)
 	{
 		parent::__construct($sId);
+		$this->sText = 'Hello World';
 	}
 	
 	public function FromDOMNode($oDOMNode)
 	{
-		
+		//$this->sText = 'Hello World!';
 	}
 	
 	public function FromXml($sXml)
 	{
-		
+		//$this->sText = 'Hello World!';
 	}
 	
 	public function FromParams($aParams)
 	{
-		
+		$this->sText = $aParams['text'];
+	}
+	
+	public function Update($aValues, $aUpdatedFields)
+	{
+		foreach($aUpdatedFields as $sProp)
+		{
+			switch($sProp)
+			{
+				case 'text':
+				$this->sText = $aValues['text'];
+				break;
+			}
+		}
 	}
 	
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
-		$oPage->add('<div style="text-align:center; line-height:5em" class="dashlet-content"><span>Hello World!</span></div>');
+		$oPage->add('<div style="text-align:center; line-height:5em" class="dashlet-content"><span>'.$this->sText.'</span></div>');
+	}
+	public function GetPropertiesFields(DesignerForm $oForm)
+	{
+		$oField = new DesignerTextField('text', 'Text', $this->sText);
+		$oForm->AddField($oField);
 	}
 	
 	public function ToXml(DOMNode $oContainerNode)
@@ -121,21 +182,7 @@ class DashletHelloWorld extends Dashlet
 		$oNewNodeNode = $oContainerNode->ownerDocument->createElement('hello_world', 'test');
 		$oContainerNode->appendChild($oNewNodeNode);
 	}
-	
-	public function GetForm()
-	{
-		
-	}
-	
-	public function OnFieldUpdate($aParams, $sUpdatedFieldCode)
-	{
-		return array(
-			'status_ok' => true,
-			'redraw' => false,
-			'fields' => array(),
-		);
-	}
-	
+
 	static public function GetInfo()
 	{
 		return array(
@@ -174,26 +221,16 @@ class DashletFakeBarChart extends Dashlet
 		$oPage->add('<div style="text-align:center" class="dashlet-content"><div>Fake Bar Chart</div><divp><img src="../images/fake-bar-chart.png"/></div></div>');
 	}
 	
+	public function GetPropertiesFields(DesignerForm $oForm, $oDashlet = null)
+	{
+	}
+	
 	public function ToXml(DOMNode $oContainerNode)
 	{
 		$oNewNodeNode = $oContainerNode->ownerDocument->createElement('fake_bar_chart', 'test');
 		$oContainerNode->appendChild($oNewNodeNode);
 	}
-	
-	public function GetForm()
-	{
-		
-	}
-	
-	public function OnFieldUpdate($aParams, $sUpdatedFieldCode)
-	{
-		return array(
-			'status_ok' => true,
-			'redraw' => false,
-			'fields' => array(),
-		);
-	}
-	
+
 	static public function GetInfo()
 	{
 		return array(
@@ -232,24 +269,14 @@ class DashletFakePieChart extends Dashlet
 		$oPage->add('<div style="text-align:center" class="dashlet-content"><div>Fake Pie Chart</div><div><img src="../images/fake-pie-chart.png"/></div></div>');
 	}
 	
+	public function GetPropertiesFields(DesignerForm $oForm, $oDashlet = null)
+	{
+	}
+	
 	public function ToXml(DOMNode $oContainerNode)
 	{
 		$oNewNodeNode = $oContainerNode->ownerDocument->createElement('fake_pie_chart', 'test');
 		$oContainerNode->appendChild($oNewNodeNode);
-	}
-	
-	public function GetForm()
-	{
-		
-	}
-	
-	public function OnFieldUpdate($aParams, $sUpdatedFieldCode)
-	{
-		return array(
-			'status_ok' => true,
-			'redraw' => false,
-			'fields' => array(),
-		);
 	}
 	
 	static public function GetInfo()
