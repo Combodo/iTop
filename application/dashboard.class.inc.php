@@ -61,6 +61,37 @@ abstract class Dashboard
 		}
 	}
 	
+	public function ToXml()
+	{
+		$oDoc = new DOMDocument();
+		$oDoc->formatOutput = true; // indent (must be loaded with option LIBXML_NOBLANKS)
+		$oDoc->preserveWhiteSpace = true; // otherwise the formatOutput option would have no effect
+
+		$oMainNode = $oDoc->createElement('dashboard');
+		$oDoc->appendChild($oMainNode);
+
+		$oNode = $oDoc->createElement('layout', $this->sLayoutClass);
+		$oMainNode->appendChild($oNode);
+
+		$oNode = $oDoc->createElement('title', $this->sTitle);
+		$oMainNode->appendChild($oNode);
+
+		$oDashletsNode = $oDoc->createElement('dashlets');
+		$oMainNode->appendChild($oDashletsNode);
+
+		foreach ($this->aDashlets as $oDashlet)
+		{
+			$oNode = $oDoc->createElement('dashlet');
+			$oDashletsNode->appendChild($oNode);
+			$oNode->setAttribute('id', $oDashlet->GetID());
+			$oNode->setAttribute('xsi:type', get_class($oDashlet));
+			$oDashlet->ToDOMNode($oNode);
+		}
+
+		$sXml = $oDoc->saveXML();
+		return $sXml;
+	}
+
 	public function FromParams($aParams)
 	{
 		

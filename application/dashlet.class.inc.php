@@ -26,6 +26,7 @@ abstract class Dashlet
 	protected $bRedrawNeeded;
 	protected $bFormRedrawNeeded;
 	protected $aProperties; // array of {property => value}
+	protected $aChanges; // array of {property => old value}
 	
 	public function __construct($sId)
 	{
@@ -33,16 +34,68 @@ abstract class Dashlet
 		$this->bRedrawNeeded = true; // By default: redraw each time a property changes
 		$this->bFormRedrawNeeded = false; // By default: no need to redraw the form (independent fields)
 		$this->aProperties = array(); // By default: there is no property
+		$this->aChanges = array();
 	}
-	
+
+	// Assuming that a property has the type of its default value, set in the constructor
+	//
+	public function Str2Prop($sProperty, $sValue)
+	{
+		$refValue = $this->aProperties[$sProperty];
+		$sRefType = gettype($refValue);
+		if ($sRefType == 'boolean')
+		{
+			$ret = ($sValue == 'true');
+		}
+		else
+		{
+			$ret = $sValue;
+			settype($ret, $sRefType);
+		}
+		return $ret;
+	}
+
+	public function Prop2Str($value)
+	{
+		if (gettype($value) == 'boolean')
+		{
+			$sRet = $value ? 'true' : 'false';
+		}
+		else
+		{
+			$sRet = (string) $value;
+		}
+		return $sRet;
+	}
+
 	public function FromDOMNode($oDOMNode)
 	{
-		
+		foreach ($this->aProperties as $sProperty => $value)
+		{
+			$this->oDOMNode = $oDOMNode->getElementsByTagName($sProperty)->item(0);
+			if ($this->oDOMNode != null)
+			{
+				$newvalue = $this->Str2Prop($sProperty, $this->oDOMNode->textContent);
+				$this->aProperties[$sProperty] = $newvalue;
+			}
+		}
+	}
+
+	public function ToDOMNode($oDOMNode)
+	{
+		foreach ($this->aProperties as $sProperty => $value)
+		{
+			$sXmlValue = $this->Prop2Str($value);
+			$oPropNode = $oDoc->createElement($sProperty, $sXmlValue);
+			$oDOMNode->appendChild($oPropNode);
+		}
 	}
 	
 	public function FromXml($sXml)
 	{
-		
+		$oDomDoc = new DOMDocument('1.0', 'UTF-8');
+		$oDomDoc->loadXml($sXml);
+		$this->FromDOMNode($oDomDoc->firstChild);
 	}
 	
 	public function FromParams($aParams)
@@ -51,7 +104,12 @@ abstract class Dashlet
 		{
 			if (array_key_exists($sProperty, $aParams))
 			{
-				$this->aProperties[$sProperty] = $aParams[$sProperty];
+				$newvalue = $aParams[$sProperty];
+				if ($newvalue != $value)
+				{
+					$this->aChanges[$sProperty] = $value;
+				}
+				$this->aProperties[$sProperty] = $newvalue;
 			}
 		}
 	}
@@ -180,21 +238,6 @@ class DashletFakeBarChart extends Dashlet
 		parent::__construct($sId);
 	}
 	
-	public function FromDOMNode($oDOMNode)
-	{
-		
-	}
-	
-	public function FromXml($sXml)
-	{
-		
-	}
-	
-	public function FromParams($aParams)
-	{
-		
-	}
-	
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
 		$oPage->add('<div style="text-align:center" class="dashlet-content"><div>Fake Bar Chart</div><divp><img src="../images/fake-bar-chart.png"/></div></div>');
@@ -226,21 +269,6 @@ class DashletFakePieChart extends Dashlet
 	public function __construct($sId)
 	{
 		parent::__construct($sId);
-	}
-	
-	public function FromDOMNode($oDOMNode)
-	{
-		
-	}
-	
-	public function FromXml($sXml)
-	{
-		
-	}
-	
-	public function FromParams($aParams)
-	{
-		
 	}
 	
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
@@ -275,16 +303,19 @@ class DashletObjectList extends Dashlet
 		parent::__construct($sId);
 		$this->aProperties['title'] = 'Hardcoded list of "my requests"';
 		$this->aProperties['query'] = 'SELECT UserRequest AS i WHERE i.caller_id = :current_contact_id AND status NOT IN ("closed", "resolved")';
+		$this->aProperties['menu'] = false;
 	}
 	
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
 		$sTitle = $this->aProperties['title'];
 		$sQuery = $this->aProperties['query'];
+		$sShowMenu = $this->aProperties['menu'] ? '1' : '0';
+
 
 		$oPage->add('<div style="text-align:center" class="dashlet-content">');
 		// C'est quoi ce paramètre "menu" ?
-		$sXML = '<itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql" parameters="menu:1">'.$sQuery.'</itopblock>';
+		$sXML = '<itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql" parameters="menu:'.$sShowMenu.'">'.$sQuery.'</itopblock>';
 		$aParams = array();
 		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
 		$oBlock = DisplayBlock::FromTemplate($sXML);
@@ -300,8 +331,11 @@ class DashletObjectList extends Dashlet
 
 		$oField = new DesignerTextField('query', 'Query', $this->aProperties['query']);
 		$oForm->AddField($oField);
+
+		$oField = new DesignerBooleanField('menu', 'Menu', $this->aProperties['menu']);
+		$oForm->AddField($oField);
 	}
-	
+
 	static public function GetInfo()
 	{
 		return array(
@@ -320,43 +354,54 @@ class DashletGroupBy extends Dashlet
 		$this->aProperties['title'] = 'Hardcoded list of Contacts grouped by location';
 		$this->aProperties['query'] = 'SELECT Contact';
 		$this->aProperties['group_by'] = 'location_name';
-		$this->aProperties['style'] = 'pie';
+		$this->aProperties['style'] = 'table';
 	}
-	
+
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
 		$sTitle = $this->aProperties['title'];
 		$sQuery = $this->aProperties['query'];
 		$sGroupBy = $this->aProperties['group_by'];
 		$sStyle = $this->aProperties['style'];
-		
-		switch($sStyle)
-		{
-		case 'bars':
-			$sXML = '<itopblock BlockClass="DisplayBlock" type="open_flash_chart" parameters="chart_type:bars;chart_title:'.$sTitle.';group_by:'.$sGroupBy.'" asynchronous="false" encoding="text/oql">'.$sQuery.'</itopblock>';
-			$sHtmlTitle = ''; // done in the itop block
-			break;
-		case 'pie':
-			$sXML = '<itopblock BlockClass="DisplayBlock" type="open_flash_chart" parameters="chart_type:pie;chart_title:'.$sTitle.';group_by:'.$sGroupBy.'" asynchronous="false" encoding="text/oql">'.$sQuery.'</itopblock>';
-			$sHtmlTitle = ''; // done in the itop block
-			break;
-		case 'table':
-		default:
-			$sHtmlTitle = htmlentities($sTitle, ENT_QUOTES, 'UTF-8'); // done in the itop block
-			$sXML = '<itopblock BlockClass="DisplayBlock" type="count" parameters="group_by:'.$sGroupBy.'" asynchronous="false" encoding="text/oql">'.$sQuery.'</itopblock>';
-			break;
-		}
 
-		$oPage->add('<div style="text-align:center" class="dashlet-content">');
-		if ($sHtmlTitle != '')
+		if ($sQuery == '')
 		{
-			$oPage->add('<div>'.$sHtmlTitle.'</div>');
+			$oPage->add('<p>Please enter a valid OQL query</p>');
 		}
-		$aParams = array();
-		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
-		$oBlock = DisplayBlock::FromTemplate($sXML);
-		$oBlock->Display($oPage, $sBlockId, $aParams);
-		$oPage->add('</div>');
+		elseif ($sGroupBy == '')
+		{
+			$oPage->add('<p>Please select the field on which the objects will be grouped together</p>');
+		}
+		else
+		{
+			switch($sStyle)
+			{
+			case 'bars':
+				$sXML = '<itopblock BlockClass="DisplayBlock" type="open_flash_chart" parameters="chart_type:bars;chart_title:'.$sTitle.';group_by:'.$sGroupBy.'" asynchronous="false" encoding="text/oql">'.$sQuery.'</itopblock>';
+				$sHtmlTitle = ''; // done in the itop block
+				break;
+			case 'pie':
+				$sXML = '<itopblock BlockClass="DisplayBlock" type="open_flash_chart" parameters="chart_type:pie;chart_title:'.$sTitle.';group_by:'.$sGroupBy.'" asynchronous="false" encoding="text/oql">'.$sQuery.'</itopblock>';
+				$sHtmlTitle = ''; // done in the itop block
+				break;
+			case 'table':
+			default:
+				$sHtmlTitle = htmlentities($sTitle, ENT_QUOTES, 'UTF-8'); // done in the itop block
+				$sXML = '<itopblock BlockClass="DisplayBlock" type="count" parameters="group_by:'.$sGroupBy.'" asynchronous="false" encoding="text/oql">'.$sQuery.'</itopblock>';
+				break;
+			}
+	
+			$oPage->add('<div style="text-align:center" class="dashlet-content">');
+			if ($sHtmlTitle != '')
+			{
+				$oPage->add('<h1>'.$sHtmlTitle.'</h1>');
+			}
+			$aParams = array();
+			$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
+			$oBlock = DisplayBlock::FromTemplate($sXML);
+			$oBlock->Display($oPage, $sBlockId, $aParams);
+			$oPage->add('</div>');
+		}
 	}
 
 	public function GetPropertiesFields(DesignerForm $oForm)
@@ -367,8 +412,20 @@ class DashletGroupBy extends Dashlet
 		$oField = new DesignerTextField('query', 'Query', $this->aProperties['query']);
 		$oForm->AddField($oField);
 
-		$oField = new DesignerTextField('group_by', 'Group by', $this->aProperties['group_by']);
+		// Group by field: build the list of possible values (attribute codes + ...)
+		$oSearch = DBObjectSearch::FromOQL($this->aProperties['query']);
+		$sClass = $oSearch->GetClass();
+		$aGroupBy = array();
+		foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+		{
+			if (!$oAttDef->IsScalar()) continue; // skip link sets
+			if ($oAttDef->IsExternalKey(EXTKEY_ABSOLUTE)) continue; // skip external keys
+			$aGroupBy[$sAttCode] = $oAttDef->GetLabel();
+		}
+		$oField = new DesignerComboField('group_by', 'Group by', $this->aProperties['group_by']);
+		$oField->SetAllowedValues($aGroupBy);
 		$oForm->AddField($oField);
+
 
 		$aStyles = array(
 			'pie' => 'Pie chart',
@@ -381,6 +438,27 @@ class DashletGroupBy extends Dashlet
 		$oForm->AddField($oField);
 	}
 	
+	public function FromParams($aParams)
+	{
+		parent::FromParams($aParams);
+		if (array_key_exists('query', $this->aChanges))
+		{
+			$sCurrQuery = $this->aProperties['query'];
+			$oCurrSearch = DBObjectSearch::FromOQL($sCurrQuery);
+			$sCurrClass = $oCurrSearch->GetClass();
+
+			$sPrevQuery = $this->aChanges['query'];
+			$oPrevSearch = DBObjectSearch::FromOQL($sPrevQuery);
+			$sPrevClass = $oPrevSearch->GetClass();
+
+			if ($sCurrClass != $sPrevClass)
+			{
+				$this->bFormRedrawNeeded = true;
+				$this->aProperties['group_by'] = '';
+			}
+		}
+	}
+
 	static public function GetInfo()
 	{
 		return array(
