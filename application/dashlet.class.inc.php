@@ -25,13 +25,14 @@ abstract class Dashlet
 	protected $sId;
 	protected $bRedrawNeeded;
 	protected $bFormRedrawNeeded;
-	
+	protected $aProperties; // array of {property => value}
 	
 	public function __construct($sId)
 	{
 		$this->sId = $sId;
 		$this->bRedrawNeeded = true; // By default: redraw each time a property changes
 		$this->bFormRedrawNeeded = false; // By default: no need to redraw the form (independent fields)
+		$this->aProperties = array(); // By default: there is no property
 	}
 	
 	public function FromDOMNode($oDOMNode)
@@ -46,7 +47,13 @@ abstract class Dashlet
 	
 	public function FromParams($aParams)
 	{
-		
+		foreach ($this->aProperties as $sProperty => $value)
+		{
+			if (array_key_exists($sProperty, $aParams))
+			{
+				$this->aProperties[$sProperty] = $aParams[$sProperty];
+			}
+		}
 	}
 	
 	public function DoRender($oPage, $bEditMode = false, $aExtraParams = array())
@@ -89,9 +96,16 @@ EOF
 
 	public function Update($aValues, $aUpdatedFields)
 	{
-		
+		foreach($aUpdatedFields as $sProp)
+		{
+			if (array_key_exists($sProp, $this->aProperties))
+			{
+				$this->aProperties[$sProp] = $aValues[$sProp];
+			}
+		}
 	}
 	
+
 	public function IsRedrawNeeded()
 	{
 		return $this->bRedrawNeeded;
@@ -111,7 +125,7 @@ EOF
 		);
 	}
 	
-	public function GetForm($oPage, $bReturnHTML = false)
+	public function GetForm()
 	{
 		$oForm = new DesignerForm();
 		$oForm->SetPrefix("dashlet_". $this->GetID());
@@ -131,58 +145,23 @@ EOF
 
 class DashletHelloWorld extends Dashlet
 {
-	protected $sText;
-	
 	public function __construct($sId)
 	{
 		parent::__construct($sId);
-		$this->sText = 'Hello World';
-	}
-	
-	public function FromDOMNode($oDOMNode)
-	{
-		//$this->sText = 'Hello World!';
-	}
-	
-	public function FromXml($sXml)
-	{
-		//$this->sText = 'Hello World!';
-	}
-	
-	public function FromParams($aParams)
-	{
-		$this->sText = $aParams['text'];
-	}
-	
-	public function Update($aValues, $aUpdatedFields)
-	{
-		foreach($aUpdatedFields as $sProp)
-		{
-			switch($sProp)
-			{
-				case 'text':
-				$this->sText = $aValues['text'];
-				break;
-			}
-		}
+		$this->aProperties['text'] = 'Hello World';
 	}
 	
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
-		$oPage->add('<div style="text-align:center; line-height:5em" class="dashlet-content"><span>'.$this->sText.'</span></div>');
+		$oPage->add('<div style="text-align:center; line-height:5em" class="dashlet-content"><span>'.$this->aProperties['text'].'</span></div>');
 	}
+
 	public function GetPropertiesFields(DesignerForm $oForm)
 	{
-		$oField = new DesignerTextField('text', 'Text', $this->sText);
+		$oField = new DesignerTextField('text', 'Text', $this->aProperties['text']);
 		$oForm->AddField($oField);
 	}
 	
-	public function ToXml(DOMNode $oContainerNode)
-	{
-		$oNewNodeNode = $oContainerNode->ownerDocument->createElement('hello_world', 'test');
-		$oContainerNode->appendChild($oNewNodeNode);
-	}
-
 	static public function GetInfo()
 	{
 		return array(
@@ -285,6 +264,206 @@ class DashletFakePieChart extends Dashlet
 			'label' => 'Pie Chart',
 			'icon' => 'images/dashlet-pie-chart.png',
 			'description' => 'Fake Pie Chart (for testing)',
+		);
+	}
+}
+
+class DashletObjectList extends Dashlet
+{
+	public function __construct($sId)
+	{
+		parent::__construct($sId);
+		$this->aProperties['title'] = 'Hardcoded list of "my requests"';
+		$this->aProperties['query'] = 'SELECT UserRequest AS i WHERE i.caller_id = :current_contact_id AND status NOT IN ("closed", "resolved")';
+	}
+	
+	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
+	{
+		$sTitle = $this->aProperties['title'];
+		$sQuery = $this->aProperties['query'];
+
+		$oPage->add('<div style="text-align:center" class="dashlet-content">');
+		// C'est quoi ce paramètre "menu" ?
+		$sXML = '<itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql" parameters="menu:1">'.$sQuery.'</itopblock>';
+		$aParams = array();
+		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
+		$oBlock = DisplayBlock::FromTemplate($sXML);
+		$oBlock->Display($oPage, $sBlockId, $aParams);
+
+		$oPage->add('</div>');
+	}
+
+	public function GetPropertiesFields(DesignerForm $oForm)
+	{
+		$oField = new DesignerTextField('title', 'Title', $this->aProperties['title']);
+		$oForm->AddField($oField);
+
+		$oField = new DesignerTextField('query', 'Query', $this->aProperties['query']);
+		$oForm->AddField($oField);
+	}
+	
+	static public function GetInfo()
+	{
+		return array(
+			'label' => 'Object list',
+			'icon' => 'images/dashlet-object-list.png',
+			'description' => 'Object list dashlet',
+		);
+	}
+}
+
+class DashletGroupBy extends Dashlet
+{
+	public function __construct($sId)
+	{
+		parent::__construct($sId);
+		$this->aProperties['title'] = 'Hardcoded list of Contacts grouped by location';
+		$this->aProperties['query'] = 'SELECT Contact';
+		$this->aProperties['group_by'] = 'location_name';
+		$this->aProperties['style'] = 'pie';
+	}
+	
+	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
+	{
+		$sTitle = $this->aProperties['title'];
+		$sQuery = $this->aProperties['query'];
+		$sGroupBy = $this->aProperties['group_by'];
+		$sStyle = $this->aProperties['style'];
+		
+		switch($sStyle)
+		{
+		case 'bars':
+			$sXML = '<itopblock BlockClass="DisplayBlock" type="open_flash_chart" parameters="chart_type:bars;chart_title:'.$sTitle.';group_by:'.$sGroupBy.'" asynchronous="false" encoding="text/oql">'.$sQuery.'</itopblock>';
+			$sHtmlTitle = ''; // done in the itop block
+			break;
+		case 'pie':
+			$sXML = '<itopblock BlockClass="DisplayBlock" type="open_flash_chart" parameters="chart_type:pie;chart_title:'.$sTitle.';group_by:'.$sGroupBy.'" asynchronous="false" encoding="text/oql">'.$sQuery.'</itopblock>';
+			$sHtmlTitle = ''; // done in the itop block
+			break;
+		case 'table':
+		default:
+			$sHtmlTitle = htmlentities($sTitle, ENT_QUOTES, 'UTF-8'); // done in the itop block
+			$sXML = '<itopblock BlockClass="DisplayBlock" type="count" parameters="group_by:'.$sGroupBy.'" asynchronous="false" encoding="text/oql">'.$sQuery.'</itopblock>';
+			break;
+		}
+
+		$oPage->add('<div style="text-align:center" class="dashlet-content">');
+		if ($sHtmlTitle != '')
+		{
+			$oPage->add('<div>'.$sHtmlTitle.'</div>');
+		}
+		$aParams = array();
+		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
+		$oBlock = DisplayBlock::FromTemplate($sXML);
+		$oBlock->Display($oPage, $sBlockId, $aParams);
+		$oPage->add('</div>');
+	}
+
+	public function GetPropertiesFields(DesignerForm $oForm)
+	{
+		$oField = new DesignerTextField('title', 'Title', $this->aProperties['title']);
+		$oForm->AddField($oField);
+
+		$oField = new DesignerTextField('query', 'Query', $this->aProperties['query']);
+		$oForm->AddField($oField);
+
+		$oField = new DesignerTextField('group_by', 'Group by', $this->aProperties['group_by']);
+		$oForm->AddField($oField);
+
+		$aStyles = array(
+			'pie' => 'Pie chart',
+			'bars' => 'Bar chart',
+			'table' => 'Table',
+		);
+		
+		$oField = new DesignerComboField('style', 'Style', $this->aProperties['style']);
+		$oField->SetAllowedValues($aStyles);
+		$oForm->AddField($oField);
+	}
+	
+	static public function GetInfo()
+	{
+		return array(
+			'label' => 'Objects grouped by...',
+			'icon' => 'images/dashlet-object-grouped.png',
+			'description' => 'Grouped objects dashlet',
+		);
+	}
+}
+
+
+class DashletHeader extends Dashlet
+{
+	public function __construct($sId)
+	{
+		parent::__construct($sId);
+		$this->aProperties['title'] = 'Hardcoded header of contacts';
+		$this->aProperties['subtitle'] = 'Contacts';
+		$this->aProperties['class'] = 'Contact';
+	}
+	
+	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
+	{
+		$sTitle = $this->aProperties['title'];
+		$sSubtitle = $this->aProperties['subtitle'];
+		$sClass = $this->aProperties['class'];
+
+		$sTitleReady = str_replace(':', '_', $sTitle);
+		$sSubtitleReady = str_replace(':', '_', $sSubtitle);
+
+		$sStatusAttCode = MetaModel::GetStateAttributeCode($sClass);
+		if (($sStatusAttCode == '') && MetaModel::IsValidAttCode($sClass, 'status'))
+		{
+			// Based on an enum
+			$sStatusAttCode = 'status';
+			$aStates = array_keys(MetaModel::GetAllowedValues_att($sClass, $sStatusAttCode));
+		}
+		else
+		{
+			// Based on a state variable
+			$aStates = array_keys(MetaModel::EnumStates($sClass));
+		}
+		
+		if ($sStatusAttCode == '')
+		{
+			// Simple stats
+			$sXML = '<itopblock BlockClass="DisplayBlock" type="summary" asynchronous="false" encoding="text/oql" parameters="title[block]:'.$sTitleReady.';context_filter:1;label[block]:'.$sSubtitleReady.'">SELECT '.$sClass.'</itopblock>';
+		}
+		else
+		{
+			// Stats grouped by "status"
+
+			$sStatusList = implode(',', $aStates);
+			//$oPage->p('State: '.$sStatusAttCode.' states='.$sStatusList);
+			$sXML = '<itopblock BlockClass="DisplayBlock" type="summary" asynchronous="false" encoding="text/oql" parameters="title[block]:'.$sTitleReady.';context_filter:1;label[block]:'.$sSubtitleReady.';status[block]:status;status_codes[block]:'.$sStatusList.'">SELECT '.$sClass.'</itopblock>';
+		}
+
+		$oPage->add('<div style="text-align:center" class="dashlet-content">');
+		$aParams = array();
+		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
+		$oBlock = DisplayBlock::FromTemplate($sXML);
+		$oBlock->Display($oPage, $sBlockId, $aParams);
+		$oPage->add('</div>');
+	}
+
+	public function GetPropertiesFields(DesignerForm $oForm)
+	{
+		$oField = new DesignerTextField('title', 'Title', $this->aProperties['title']);
+		$oForm->AddField($oField);
+
+		$oField = new DesignerTextField('subtitle', 'Subtitle', $this->aProperties['subtitle']);
+		$oForm->AddField($oField);
+
+		$oField = new DesignerTextField('class', 'Class', $this->aProperties['class']);
+		$oForm->AddField($oField);
+	}
+	
+	static public function GetInfo()
+	{
+		return array(
+			'label' => 'Header with stats',
+			'icon' => 'images/dashlet-header-stats.png',
+			'description' => 'Header with stats (grouped by...)',
 		);
 	}
 }

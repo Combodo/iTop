@@ -659,15 +659,18 @@ try
 				$offset = $oPage->start_capture();
 				$oDashlet->Render($oPage, true);
 				$sHtml = addslashes($oPage->end_capture($offset));
+				$sHtml = str_replace("\n", '', $sHtml);
+				$sHtml = str_replace("\r", '', $sHtml);
 				
 				$oPage->add_script("$('#dashlet_$sDashletId').html('$sHtml')"); // in ajax web page add_script has the same effect as add_ready_script
 																				// but is executed BEFORE all 'ready_scripts'
 			}
 			if ($oDashlet->IsFormRedrawNeeded())
 			{
-				$oForm = $oDashlet->GetForm($oPage, $oDashlet);
 				$oForm->SetSubmitParams(utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php', array('operation' => 'update_dashlet_property'));
 				$sHtml = addslashes($oForm->RenderAsPropertySheet($oPage, true /* bReturnHtml */));
+				$sHtml = str_replace("\n", '', $sHtml);
+				$sHtml = str_replace("\r", '', $sHtml);
 				$oPage->add_script("$('#dashlet_properties_$sDashletId').html('$sHtml')"); // in ajax web page add_script has the same effect as add_ready_script																	   // but is executed BEFORE all 'ready_scripts'
 																						   // but is executed BEFORE all 'ready_scripts'
 			}

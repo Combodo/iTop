@@ -173,7 +173,7 @@ abstract class Dashboard
 			$sClass = get_class($oDashlet);
 			
 			$oPage->add('<div class="dashlet_properties" id="dashlet_properties_'.$sId.'" style="display:none">');
-			$oForm = $oDashlet->GetForm($oPage);
+			$oForm = $oDashlet->GetForm();
 			$this->SetFormParams($oForm);
 			$oForm->RenderAsPropertySheet($oPage);		
 			$oPage->add('</div>');
