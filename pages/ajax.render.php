@@ -631,6 +631,48 @@ try
 		$oMenu = ApplicationMenu::GetMenuNode($idx);
 		$oMenu->RenderEditor($oPage);
 		break;
+		
+		case 'update_dashlet_property':
+		require_once(APPROOT.'application/forms.class.inc.php');
+		require_once(APPROOT.'application/dashlet.class.inc.php');
+		$aParams = utils::ReadParam('params', '', false, 'raw_data');
+		$sDashletClass = $aParams['attr_dashlet_class'];
+		$sDashletId = $aParams['attr_dashlet_id'];
+		$aUpdatedProperties = $aParams['updated'];
+		$aPreviousValues = $aParams['previous_values'];
+		if (is_subclass_of($sDashletClass, 'Dashlet'))
+		{
+			$oDashlet = new $sDashletClass($sDashletId);
+			$oForm = $oDashlet->GetForm();
+			$aValues = $oForm->ReadParams();
+			
+			$aCurrentValues = $aValues;
+			foreach($aUpdatedProperties as $sProp)
+			{
+				$aCurrentValues[$sProp] = $aPreviousValues[$sProp];
+			}
+			
+			$oDashlet->FromParams($aCurrentValues);
+			$oDashlet->Update($aValues, $aUpdatedProperties);
+			if ($oDashlet->IsRedrawNeeded())
+			{
+				$offset = $oPage->start_capture();
+				$oDashlet->Render($oPage, true);
+				$sHtml = addslashes($oPage->end_capture($offset));
+				
+				$oPage->add_script("$('#dashlet_$sDashletId').html('$sHtml')"); // in ajax web page add_script has the same effect as add_ready_script
+																				// but is executed BEFORE all 'ready_scripts'
+			}
+			if ($oDashlet->IsFormRedrawNeeded())
+			{
+				$oForm = $oDashlet->GetForm($oPage, $oDashlet);
+				$oForm->SetSubmitParams(utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php', array('operation' => 'update_dashlet_property'));
+				$sHtml = addslashes($oForm->RenderAsPropertySheet($oPage, true /* bReturnHtml */));
+				$oPage->add_script("$('#dashlet_properties_$sDashletId').html('$sHtml')"); // in ajax web page add_script has the same effect as add_ready_script																	   // but is executed BEFORE all 'ready_scripts'
+																						   // but is executed BEFORE all 'ready_scripts'
+			}
+		}
+		break;
 			
 		default:
 		$oPage->p("Invalid query.");
