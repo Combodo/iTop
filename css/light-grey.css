@@ -1131,3 +1131,8 @@ select#org_id {
 	background: #fff;
 	margin:0;
 }
+table.prop_table {
+    border-bottom: 2px solid #F9F9F1;
+    padding: 1px;
+    width: 100%;
+}
