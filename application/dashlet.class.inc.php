@@ -26,7 +26,6 @@ abstract class Dashlet
 	protected $bRedrawNeeded;
 	protected $bFormRedrawNeeded;
 	protected $aProperties; // array of {property => value}
-	protected $aChanges; // array of {property => old value}
 	
 	public function __construct($sId)
 	{
@@ -34,7 +33,6 @@ abstract class Dashlet
 		$this->bRedrawNeeded = true; // By default: redraw each time a property changes
 		$this->bFormRedrawNeeded = false; // By default: no need to redraw the form (independent fields)
 		$this->aProperties = array(); // By default: there is no property
-		$this->aChanges = array();
 	}
 
 	// Assuming that a property has the type of its default value, set in the constructor
@@ -104,12 +102,7 @@ abstract class Dashlet
 		{
 			if (array_key_exists($sProperty, $aParams))
 			{
-				$newvalue = $aParams[$sProperty];
-				if ($newvalue != $value)
-				{
-					$this->aChanges[$sProperty] = $value;
-				}
-				$this->aProperties[$sProperty] = $newvalue;
+				$this->aProperties[$sProperty] = $aParams[$sProperty];
 			}
 		}
 	}
@@ -401,6 +394,12 @@ class DashletGroupBy extends Dashlet
 			$oBlock = DisplayBlock::FromTemplate($sXML);
 			$oBlock->Display($oPage, $sBlockId, $aParams);
 			$oPage->add('</div>');
+
+			// TEST Group By as SQL!
+			//$oSearch = DBObjectSearch::FromOQL($this->aProperties['query']);
+			//$sSql = MetaModel::MakeSelectQuery($oSearch);
+			//$sHtmlSql = htmlentities($sSql, ENT_QUOTES, 'UTF-8');
+			//$oPage->p($sHtmlSql);
 		}
 	}
 
@@ -421,7 +420,17 @@ class DashletGroupBy extends Dashlet
 			if (!$oAttDef->IsScalar()) continue; // skip link sets
 			if ($oAttDef->IsExternalKey(EXTKEY_ABSOLUTE)) continue; // skip external keys
 			$aGroupBy[$sAttCode] = $oAttDef->GetLabel();
+
+			if ($oAttDef instanceof AttributeDateTime)
+			{
+				//date_format(start_date, '%d')
+				$aGroupBy['date_of_'.$sAttCode] = 'Day of '.$oAttDef->GetLabel();
+			}
+
 		}
+
+		
+
 		$oField = new DesignerComboField('group_by', 'Group by', $this->aProperties['group_by']);
 		$oField->SetAllowedValues($aGroupBy);
 		$oForm->AddField($oField);
@@ -438,25 +447,27 @@ class DashletGroupBy extends Dashlet
 		$oForm->AddField($oField);
 	}
 	
-	public function FromParams($aParams)
+	public function Update($aValues, $aUpdatedFields)
 	{
-		parent::FromParams($aParams);
-		if (array_key_exists('query', $this->aChanges))
+		if (in_array('query', $aUpdatedFields))
 		{
-			$sCurrQuery = $this->aProperties['query'];
+			$sCurrQuery = $aValues['query'];
 			$oCurrSearch = DBObjectSearch::FromOQL($sCurrQuery);
 			$sCurrClass = $oCurrSearch->GetClass();
 
-			$sPrevQuery = $this->aChanges['query'];
+			$sPrevQuery = $this->aProperties['query'];
 			$oPrevSearch = DBObjectSearch::FromOQL($sPrevQuery);
 			$sPrevClass = $oPrevSearch->GetClass();
 
 			if ($sCurrClass != $sPrevClass)
 			{
 				$this->bFormRedrawNeeded = true;
+				// wrong but not necessary - unset($aUpdatedFields['group_by']);
 				$this->aProperties['group_by'] = '';
 			}
 		}
+
+		parent::Update($aValues, $aUpdatedFields);
 	}
 
 	static public function GetInfo()
