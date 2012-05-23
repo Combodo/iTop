@@ -31,7 +31,8 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 	{
 		$oPage->add('<table style="width:100%"><tbody>');
 		$iDashletIdx = 0;
-		$sStyle = $bEditMode ? 'style="border: 1px #ccc dashed;" class="layout_cell edit_mode"' : '';
+		$fColSize = 100 / $this->iNbCols;
+		$sStyle = $bEditMode ? 'style="border: 1px #ccc dashed; width:'.$fColSize.'%;" class="layout_cell edit_mode"' : 'style="width: '.$fColSize.'%;  "';
 		$iNbRows = ceil(count($aDashlets) / $this->iNbCols);
 		for($iRows = 0; $iRows < $iNbRows; $iRows++)
 		{
@@ -39,7 +40,7 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 			for($iCols = 0; $iCols < $this->iNbCols; $iCols++)
 			{
 				$oPage->add("<td $sStyle>");
-				if ($iDashletIdx <= count($aDashlets))
+				if (array_key_exists($iDashletIdx, $aDashlets))
 				{
 					$oDashlet = $aDashlets[$iDashletIdx];
 					$oDashlet->DoRender($oPage, $bEditMode, $aExtraParams);

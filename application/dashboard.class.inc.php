@@ -105,7 +105,7 @@ abstract class Dashboard
 			$oNewDashlet = new $sDashletClass($sId);
 			
 			$oForm = $oNewDashlet->GetForm();
-			$oForm->SetParamsContainer('dashlet_'.$sId);
+			$oForm->SetParamsContainer($sId);
 			$oForm->SetPrefix('');
 			$aValues = $oForm->ReadParams();
 			$oNewDashlet->FromParams($aValues);
@@ -173,14 +173,22 @@ abstract class Dashboard
 				{
 					$aCallSpec = array($sLayoutClass, 'GetInfo');
 					$aInfo = call_user_func($aCallSpec);
-					$oPage->add('<input type="radio" name="layout_class" id="layout_'.$sLayoutClass.'"><label for="layout_'.$sLayoutClass.'"><img src="'.$sUrl.$aInfo['icon'].'" /></label>'); // title="" on either the img or the label does nothing !
+					$oPage->add('<input type="radio" name="layout_class" value="'.$sLayoutClass.'" id="layout_'.$sLayoutClass.'"><label for="layout_'.$sLayoutClass.'"><img src="'.$sUrl.$aInfo['icon'].'" /></label>'); // title="" on either the img or the label does nothing !
 				}
 			}
 		}
 		$oPage->add('</div>');
 		
 		$oPage->add('</div>');
-		$oPage->add_ready_script("$('#select_layout').buttonset();");
+		$oPage->add_ready_script(
+<<<EOF
+	$('#select_layout').buttonset();
+	$('#select_layout input').click( function() {
+		var sLayoutClass = $(this).val();
+		$(':itop-dashboard').dashboard('option', {layout_class: sLayoutClass});
+	} );
+EOF
+		);
 	}
 	
 	public function RenderDashletsSelection($oPage)
@@ -332,7 +340,15 @@ $('#dashboard_editor').dialog({
 	close: function() { $(this).remove(); }
 });
 
-$('#dashboard_editor .ui-layout-center').dashboard({ dashboard_id: '$sId', layout_class: '$sLayoutClass', title: '$sTitle', submit_to: '$sUrl', submit_parameters: {operation: 'save_dashboard'} });
+$('#dashboard_editor .ui-layout-center').dashboard({
+	dashboard_id: '$sId', layout_class: '$sLayoutClass', title: '$sTitle',
+	submit_to: '$sUrl', submit_parameters: {operation: 'save_dashboard'},
+	render_to: '$sUrl', render_parameters: {operation: 'render_dashboard'}
+});
+
+$('#dashboard_editor table').sortable({
+	items: '.dashlet'
+});
 
 $('#event_bus').bind('dashlet-selected', function(event, data){
 		var sDashletId = data.dashlet_id;
