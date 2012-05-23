@@ -74,6 +74,22 @@ $(function()
 				}
 			});
 			this._select();
+		},
+		get_params: function()
+		{
+			var oParams = {};
+			var oProperties = $('#dashlet_properties_'+this.options.dashlet_id);
+			oProperties.find(':itop-property_field').each(function(){
+				var oWidget = $(this).data('property_field');
+				if (oWidget)
+				{
+					var oVal = oWidget._get_committed_value();
+					oParams[oVal.name] = oVal.value;
+				}
+			});
+			oParams.dashlet_id = this.options.dashlet_id;
+			oParams.dashlet_class = this.options.dashlet_class;
+			return oParams;
 		}
 	});	
 });
