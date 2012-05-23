@@ -638,22 +638,25 @@ try
 		$aParams = utils::ReadParam('params', '', false, 'raw_data');
 		$sDashletClass = $aParams['attr_dashlet_class'];
 		$sDashletId = $aParams['attr_dashlet_id'];
-		$aUpdatedProperties = $aParams['updated'];
-		$aPreviousValues = $aParams['previous_values'];
+		$aUpdatedProperties = $aParams['updated']; // Code of the changed properties as an array: 'attr_xxx', 'attr_xxy', etc...
+		$aPreviousValues = $aParams['previous_values']; // hash array: 'attr_xxx' => 'old_value'
 		if (is_subclass_of($sDashletClass, 'Dashlet'))
 		{
 			$oDashlet = new $sDashletClass($sDashletId);
 			$oForm = $oDashlet->GetForm();
-			$aValues = $oForm->ReadParams();
+			$aValues = $oForm->ReadParams(); // hash array: 'xxx' => 'new_value'
 			
 			$aCurrentValues = $aValues;
+			$aUpdatedDecoded = array();
 			foreach($aUpdatedProperties as $sProp)
 			{
-				$aCurrentValues[$sProp] = $aPreviousValues[$sProp];
+				$sDecodedProp = str_replace('attr_', '', $sProp); // Remove the attr_ prefix
+				$aCurrentValues[$sDecodedProp] = $aPreviousValues[$sProp]; // Set the previous value
+				$aUpdatedDecoded[] = $sDecodedProp;
 			}
 			
 			$oDashlet->FromParams($aCurrentValues);
-			$oDashlet->Update($aValues, $aUpdatedProperties);
+			$oDashlet->Update($aValues, $aUpdatedDecoded);
 			if ($oDashlet->IsRedrawNeeded())
 			{
 				$offset = $oPage->start_capture();
@@ -667,6 +670,7 @@ try
 			}
 			if ($oDashlet->IsFormRedrawNeeded())
 			{
+				$oForm = $oDashlet->GetForm(); // Rebuild the form since the values/content changed
 				$oForm->SetSubmitParams(utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php', array('operation' => 'update_dashlet_property'));
 				$sHtml = addslashes($oForm->RenderAsPropertySheet($oPage, true /* bReturnHtml */));
 				$sHtml = str_replace("\n", '', $sHtml);
@@ -675,6 +679,19 @@ try
 																						   // but is executed BEFORE all 'ready_scripts'
 			}
 		}
+		break;
+		
+		case 'save_dashboard':
+		$sDashboardId = utils::ReadParam('dashboard_id', '');
+		$aParams = array();
+		$aParams['layout_class'] = utils::ReadParam('layout_class', '');
+		$aParams['title'] = utils::ReadParam('title', '', false, 'raw_data');
+		$aParams['dashlets'] = utils::ReadParam('dashlets', array(), false, 'raw_data');
+		$oDashboard = new RuntimeDashboard($sDashboardId);
+		$oDashboard->FromParams($aParams);
+		$oDashboard->Save();
+		// trigger a reload of the current page since the dashboard just changed
+		$oPage->add_ready_script("window.location.href=window.location.href;"); // reloads the page, doing a GET even if we arrived via a POST
 		break;
 			
 		default:
