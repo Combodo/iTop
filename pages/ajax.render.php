@@ -626,7 +626,7 @@ try
 		break;
 		
 		case 'dashboard_editor':
-		$sId = utils::ReadParam('id', '');
+		$sId = utils::ReadParam('id', '', false, 'raw_data');
 		$idx = ApplicationMenu::GetMenuIndexById($sId);
 		$oMenu = ApplicationMenu::GetMenuNode($idx);
 		$oMenu->RenderEditor($oPage);
@@ -682,7 +682,7 @@ try
 		break;
 		
 		case 'save_dashboard':
-		$sDashboardId = utils::ReadParam('dashboard_id', '');
+		$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'raw_data');
 		$aParams = array();
 		$aParams['layout_class'] = utils::ReadParam('layout_class', '');
 		$aParams['title'] = utils::ReadParam('title', '', false, 'raw_data');
@@ -695,7 +695,7 @@ try
 		break;
 		
 		case 'render_dashboard':
-		$sDashboardId = utils::ReadParam('dashboard_id', '');
+		$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'raw_data');
 		$aParams = array();
 		$aParams['layout_class'] = utils::ReadParam('layout_class', '');
 		$aParams['title'] = utils::ReadParam('title', '', false, 'raw_data');

@@ -4195,10 +4195,10 @@
     <menu id="ConfigManagement" xsi:type="MenuGroup" _delta="define">
       <rank>20</rank>
     </menu>
-    <menu id="ConfigManagementOverview" xsi:type="TemplateMenuNode" _delta="define">
+    <menu id="ConfigManagementOverview" xsi:type="DashboardMenuNode" _delta="define">
       <rank>0</rank>
       <parent>ConfigManagement</parent>
-      <template_file>overview.html</template_file>
+      <definition_file>config-dashboard.xml</definition_file>
     </menu>
     <menu id="Contact" xsi:type="TemplateMenuNode" _delta="define">
       <rank>1</rank>

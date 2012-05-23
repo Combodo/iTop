@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dashboard xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<title>UI:RequestMgmtMenuOverview:Title</title>
+<layout>DashboardLayoutTwoCols</layout>
+<dashlets>
+ <dashlet id="1" xsi:type="DashletGroupBy">
+  <title>UI-RequestManagementOverview-RequestByService</title>
+  <query>SELECT UserRequest</query>
+  <group_by>service_name</group_by>
+  <style>bars</style>
+ </dashlet>
+ <dashlet id="2" xsi:type="DashletGroupBy">
+  <title>UI-RequestManagementOverview-RequestByPriority</title>
+  <query>SELECT UserRequest</query>
+  <group_by>priority</group_by>
+  <style>pie</style>
+ </dashlet>
+ <dashlet id="3" xsi:type="DashletObjectList">
+  <title>UI-RequestManagementOverview-RequestUnassigned</title>
+  <query>SELECT UserRequest WHERE status IN ("new", "escalated_tto")</query>
+ </dashlet>
+</dashlets>
+</dashboard>

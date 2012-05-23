@@ -961,10 +961,10 @@
     <menu id="RequestManagement" xsi:type="MenuGroup" _delta="define">
       <rank>30</rank>
     </menu>
-    <menu id="UserRequest:Overview" xsi:type="TemplateMenuNode" _delta="define">
+    <menu id="UserRequest:Overview" xsi:type="DashboardMenuNode" _delta="define">
       <rank>0</rank>
       <parent>RequestManagement</parent>
-      <template_file>overview.html</template_file>
+      <definition_file>request-dashboard.xml</definition_file>
     </menu>
     <menu id="NewUserRequest" xsi:type="NewObjectMenuNode" _delta="define">
       <rank>1</rank>

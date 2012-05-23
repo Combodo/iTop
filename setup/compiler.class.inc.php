@@ -817,6 +817,12 @@ EOF;
 			$sNewMenu = "new WebPageMenuNode('$sMenuId', $sUrlSpec, $sParentSpec, $fRank);";
 			break;
 
+		case 'DashboardMenuNode':
+			$sTemplateFile = $oMenu->GetChildText('definition_file');
+			$sTemplateSpec = $this->PathToPHP($sTemplateFile, $sModuleRelativeDir);
+			$sNewMenu = "new DashboardMenuNode('$sMenuId', $sTemplateSpec, $sParentSpec, $fRank);";
+			break;
+
 		case 'TemplateMenuNode':
 			$sTemplateFile = $oMenu->GetChildText('template_file');
 			$sTemplateSpec = $this->PathToPHP($sTemplateFile, $sModuleRelativeDir);

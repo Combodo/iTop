@@ -379,7 +379,7 @@ class DashletGroupBy extends Dashlet
 				break;
 			case 'table':
 			default:
-				$sHtmlTitle = htmlentities($sTitle, ENT_QUOTES, 'UTF-8'); // done in the itop block
+				$sHtmlTitle = htmlentities(Dict::S($sTitle), ENT_QUOTES, 'UTF-8'); // done in the itop block
 				$sXML = '<itopblock BlockClass="DisplayBlock" type="count" parameters="group_by:'.$sGroupBy.'" asynchronous="false" encoding="text/oql">'.$sQuery.'</itopblock>';
 				break;
 			}

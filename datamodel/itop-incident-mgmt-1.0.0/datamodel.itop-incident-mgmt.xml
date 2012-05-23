@@ -991,10 +991,10 @@
     <menu id="IncidentManagement" xsi:type="MenuGroup" _delta="define">
       <rank>40</rank>
     </menu>
-    <menu id="Incident:Overview" xsi:type="TemplateMenuNode" _delta="define">
+    <menu id="Incident:Overview" xsi:type="DashboardMenuNode" _delta="define">
       <rank>0</rank>
       <parent>IncidentManagement</parent>
-      <template_file>overview.html</template_file>
+      <definition_file>incident-dashboard.xml</definition_file>
     </menu>
     <menu id="NewIncident" xsi:type="NewObjectMenuNode" _delta="define">
       <rank>1</rank>

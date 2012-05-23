@@ -145,7 +145,7 @@ abstract class Dashboard
 	
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
-		$oPage->add('<h1>'.$this->sTitle.'</h1>');
+		$oPage->add('<h1>'.Dict::S($this->sTitle).'</h1>');
 		$oLayout = new $this->sLayoutClass;
 		$oLayout->Render($oPage, $this->aDashlets, $bEditMode, $aExtraParams);
 		if (!$bEditMode)
