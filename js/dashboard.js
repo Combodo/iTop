@@ -12,7 +12,9 @@ $(function()
 			layout_class: '',
 			title: '',
 			submit_to: 'index.php',
-			submit_parameters: {operation: 'async_action'}
+			submit_parameters: {},
+			render_to: 'index.php',
+			render_parameters: {}
 		},
 	
 		// the constructor
@@ -24,13 +26,16 @@ $(function()
 			.addClass('itop-dashboard');
 
 			this.ajax_div = $('<div></div>').appendTo(this.element);
-			
-
 		},
 	
 		// called when created, and later when changing options
 		_refresh: function()
 		{
+			var oParams = this._get_state(this.options.render_parameters);
+			var me = this;
+			$.post(this.options.render_to, oParams, function(data){
+				me.element.html(data);
+			});
 		},
 		// events bound via _bind are removed automatically
 		// revert other modifications here
@@ -56,24 +61,34 @@ $(function()
 		{
 			// in 1.9 would use _super
 			$.Widget.prototype._setOption.call( this, key, value );
+			if (key == 'layout')
+			{
+				_refresh();
+			}
 		},
-		save: function()
+		_get_state: function(oMergeInto)
 		{
-			var oParams = this.options.submit_parameters;
-			oParams.dashlets = [];
+			var oState = oMergeInto;
+			oState.dashlets = [];
 			this.element.find(':itop-dashlet').each(function() {
 				var oDashlet = $(this).data('dashlet');
 				if(oDashlet)
 				{
-					var sId = $(this).attr('id');
 					var oDashletParams = oDashlet.get_params();
-					oParams['dashlet_'+sId] = oDashletParams;				
-					oParams.dashlets.push({dashlet_id: sId, dashlet_class: oDashletParams['dashlet_class']} );
+					var sId = oDashletParams.dashlet_id;
+					oState[sId] = oDashletParams;				
+					oState.dashlets.push({dashlet_id: sId, dashlet_class: oDashletParams.dashlet_class} );
 				}
 			});
-			oParams.dashboard_id = this.options.dashboard_id;
-			oParams.layout_class = this.options.layout_class;
-			oParams.title = this.options.title;
+			oState.dashboard_id = this.options.dashboard_id;
+			oState.layout_class = this.options.layout_class;
+			oState.title = this.options.title;
+			
+			return oState;
+		},
+		save: function()
+		{
+			var oParams = this._get_state(this.options.submit_parameters);
 			var me = this;
 			$.post(this.options.submit_to, oParams, function(data){
 				me.ajax_div.html(data);
