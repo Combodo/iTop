@@ -693,7 +693,18 @@ try
 		// trigger a reload of the current page since the dashboard just changed
 		$oPage->add_ready_script("window.location.href=window.location.href;"); // reloads the page, doing a GET even if we arrived via a POST
 		break;
-			
+		
+		case 'render_dashboard':
+		$sDashboardId = utils::ReadParam('dashboard_id', '');
+		$aParams = array();
+		$aParams['layout_class'] = utils::ReadParam('layout_class', '');
+		$aParams['title'] = utils::ReadParam('title', '', false, 'raw_data');
+		$aParams['dashlets'] = utils::ReadParam('dashlets', array(), false, 'raw_data');
+		$oDashboard = new RuntimeDashboard($sDashboardId);
+		$oDashboard->FromParams($aParams);
+		$oDashboard->Render($oPage, true /* bEditMode */);
+		break;
+		
 		default:
 		$oPage->p("Invalid query.");
 	}
