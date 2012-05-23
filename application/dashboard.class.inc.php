@@ -68,8 +68,9 @@ abstract class Dashboard
 		$oDoc->preserveWhiteSpace = true; // otherwise the formatOutput option would have no effect
 
 		$oMainNode = $oDoc->createElement('dashboard');
+		$oMainNode->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
 		$oDoc->appendChild($oMainNode);
-
+		
 		$oNode = $oDoc->createElement('layout', $this->sLayoutClass);
 		$oMainNode->appendChild($oNode);
 
@@ -94,6 +95,22 @@ abstract class Dashboard
 
 	public function FromParams($aParams)
 	{
+		$this->sLayoutClass = $aParams['layout_class'];
+		$this->sTitle = $aParams['title'];
+		
+		foreach($aParams['dashlets'] as $aDashletParams)
+		{
+			$sDashletClass = $aDashletParams['dashlet_class'];
+			$sId = $aDashletParams['dashlet_id'];
+			$oNewDashlet = new $sDashletClass($sId);
+			
+			$oForm = $oNewDashlet->GetForm();
+			$oForm->SetParamsContainer('dashlet_'.$sId);
+			$oForm->SetPrefix('');
+			$aValues = $oForm->ReadParams();
+			$oNewDashlet->FromParams($aValues);
+			$this->aDashlets[] = $oNewDashlet;
+		}
 		
 	}
 	
@@ -134,6 +151,7 @@ abstract class Dashboard
 		if (!$bEditMode)
 		{
 			$oPage->add_linked_script('../js/dashlet.js');
+			$oPage->add_linked_script('../js/dashboard.js');
 			$oPage->add_linked_script('../js/property_field.js');
 		}
 	}
@@ -223,9 +241,32 @@ class RuntimeDashboard extends Dashboard
 	{
 		$oForm->SetSubmitParams(utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php', array('operation' => 'update_dashlet_property'));		
 	}
+	
 	public function Save()
 	{
-		
+		$sXml = $this->ToXml();
+		$oUDSearch = new DBObjectSearch('UserDashboard');
+		$oUDSearch->AddCondition('user_id', UserRights::GetUserId(), '=');
+		$oUDSearch->AddCondition('menu_code', $this->sId, '=');
+		$oUDSet = new DBObjectSet($oUDSearch);
+		if ($oUDSet->Count() > 0)
+		{
+			// Assuming there is at most one couple {user, menu}!
+			$oUserDashboard = $oUDSet->Fetch();
+			$oUserDashboard->Set('contents', $sXml);
+			
+			$oUserDashboard->DBUpdate();
+		}
+		else
+		{
+			// No such customized dasboard for the current user, let's create a new record
+			$oUserDashboard = new UserDashboard();
+			$oUserDashboard->Set('user_id', UserRights::GetUserId());
+			$oUserDashboard->Set('menu_code', $this->sId);
+			$oUserDashboard->Set('contents', $sXml);
+			
+			$oUserDashboard->DBInsert();
+		}		
 	}
 	
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
@@ -265,9 +306,16 @@ EOF
 		$oPage->add('</div>');
 		$oPage->add('<div id="event_bus"/>'); // For exchanging messages between the panes, same as in the designer
 		$oPage->add('</div>');
+		
 		$sDialogTitle = 'Dashboard Editor';
 		$sOkButtonLabel = Dict::S('UI:Button:Ok');
 		$sCancelButtonLabel = Dict::S('UI:Button:Cancel');
+		
+		$sId = addslashes($this->sId);
+		$sLayoutClass = addslashes($this->sLayoutClass);
+		$sTitle = addslashes($this->sTitle);
+		$sUrl = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php';
+		
 		$oPage->add_ready_script(
 <<<EOF
 $('#dashboard_editor').dialog({
@@ -277,12 +325,14 @@ $('#dashboard_editor').dialog({
 	title: '$sDialogTitle',
 	buttons: [
 	{ text: "$sOkButtonLabel", click: function() {
-		$(this).dialog( "close" ); $(this).remove();
+		$('#dashboard_editor .ui-layout-center').dashboard('save'); /* $(this).dialog( "close" ); $(this).remove(); */
 	} },
 	{ text: "$sCancelButtonLabel", click: function() { $(this).dialog( "close" ); $(this).remove(); } },
 	],
 	close: function() { $(this).remove(); }
 });
+
+$('#dashboard_editor .ui-layout-center').dashboard({ dashboard_id: '$sId', layout_class: '$sLayoutClass', title: '$sTitle', submit_to: '$sUrl', submit_parameters: {operation: 'save_dashboard'} });
 
 $('#event_bus').bind('dashlet-selected', function(event, data){
 		var sDashletId = data.dashlet_id;
@@ -303,6 +353,6 @@ $('#event_bus').bind('dashlet-selected', function(event, data){
 	});
 EOF
 		);
-		$oPage->add_ready_script("$('#dashboard_editor').layout();");
+		$oPage->add_ready_script("$('#dashboard_editor').layout({ east__size: 300 });");
 	}
 }

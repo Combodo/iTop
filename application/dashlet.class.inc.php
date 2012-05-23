@@ -84,7 +84,7 @@ abstract class Dashlet
 		foreach ($this->aProperties as $sProperty => $value)
 		{
 			$sXmlValue = $this->Prop2Str($value);
-			$oPropNode = $oDoc->createElement($sProperty, $sXmlValue);
+			$oPropNode = $oDOMNode->ownerDocument->createElement($sProperty, $sXmlValue);
 			$oDOMNode->appendChild($oPropNode);
 		}
 	}
