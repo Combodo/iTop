@@ -3,13 +3,13 @@
 <title>UI:RequestMgmtMenuOverview:Title</title>
 <layout>DashboardLayoutTwoCols</layout>
 <dashlets>
- <dashlet id="1" xsi:type="DashletGroupBy">
+ <dashlet id="1" xsi:type="DashletGroupByBars">
   <title>UI-RequestManagementOverview-RequestByService</title>
   <query>SELECT UserRequest</query>
   <group_by>service_name</group_by>
   <style>bars</style>
  </dashlet>
- <dashlet id="2" xsi:type="DashletGroupBy">
+ <dashlet id="2" xsi:type="DashletGroupByPie">
   <title>UI-RequestManagementOverview-RequestByPriority</title>
   <query>SELECT UserRequest</query>
   <group_by>priority</group_by>
