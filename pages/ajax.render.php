@@ -681,7 +681,13 @@ try
 			}
 			
 			$oDashlet->FromParams($aCurrentValues);
-			$oDashlet->Update($aValues, $aUpdatedDecoded);
+			$sPrevClass = get_class($oDashlet);
+			$oDashlet = $oDashlet->Update($aValues, $aUpdatedDecoded);
+			$sNewClass = get_class($oDashlet);
+			if ($sNewClass != $sPrevClass)
+			{
+				$oPage->add_ready_script("$('#dashlet_$sDashletId').dashlet('option', {dashlet_class: '$sNewClass'});");
+			}
 			if ($oDashlet->IsRedrawNeeded())
 			{
 				$offset = $oPage->start_capture();
