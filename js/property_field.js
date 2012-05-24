@@ -214,7 +214,7 @@ function ValidateForm(sFormId, bValidateAll)
 function ReadFormParams(sFormId)
 {
 	var oMap = { };
-	$('#'+sFormId+' :input').each( function() {
+	$('#'+sFormId+' :input:visible').each( function() {
 		var sName = $(this).attr('name');
 		if (sName && sName != '')
 		{
@@ -239,7 +239,7 @@ function SubmitForm(sFormId, onSubmitResult)
 	{
 		var oMap = ReadFormParams(sFormId);
 		oMap.module_name = sCurrentModule;
-		$('#'+sFormId+' :input').each( function() {
+		$('#'+sFormId+' :input:visible').each( function() {
 			var sName = $(this).attr('name');
 			if (sName && sName != '')
 			{
