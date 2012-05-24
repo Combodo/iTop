@@ -632,6 +632,31 @@ try
 		$oMenu->RenderEditor($oPage);
 		break;
 		
+		case 'new_dashlet':
+		require_once(APPROOT.'application/forms.class.inc.php');
+		require_once(APPROOT.'application/dashlet.class.inc.php');
+		$sDashletClass = utils::ReadParam('dashlet_class', '');
+		$sDashletId =  utils::ReadParam('dashlet_id', '', false, 'raw_data');
+		if (is_subclass_of($sDashletClass, 'Dashlet'))
+		{
+			$oDashlet = new $sDashletClass($sDashletId);
+			$offset = $oPage->start_capture();
+			$oDashlet->Render($oPage, true);
+			$sHtml = addslashes($oPage->end_capture($offset));
+			$sHtml = str_replace("\n", '', $sHtml);
+			$sHtml = str_replace("\r", '', $sHtml);
+			
+			$oPage->add_script("$('#dashlet_$sDashletId').html('$sHtml')"); // in ajax web page add_script has the same effect as add_ready_script
+																			// but is executed BEFORE all 'ready_scripts'
+			$oForm = $oDashlet->GetForm(); // Rebuild the form since the values/content changed
+			$oForm->SetSubmitParams(utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php', array('operation' => 'update_dashlet_property'));
+			$sHtml = addslashes($oForm->RenderAsPropertySheet($oPage, true /* bReturnHtml */));
+			$sHtml = str_replace("\n", '', $sHtml);
+			$sHtml = str_replace("\r", '', $sHtml);
+			$oPage->add_script("$('#dashlet_properties_$sDashletId').html('$sHtml')"); // in ajax web page add_script has the same effect as add_ready_script																	   // but is executed BEFORE all 'ready_scripts'
+		}
+		break;
+			
 		case 'update_dashlet_property':
 		require_once(APPROOT.'application/forms.class.inc.php');
 		require_once(APPROOT.'application/dashlet.class.inc.php');
