@@ -29,6 +29,24 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 	
 	public function Render($oPage, $aDashlets, $bEditMode = false, $aExtraParams = array())
 	{
+		// Trim the list of dashlets to remove the invisible ones at the end of the array
+		$aKeys = array_reverse(array_keys($aDashlets));
+		$idx = 0;
+		$bNoVisibleFound = true;
+		while($idx < count($aKeys) && $bNoVisibleFound)
+		{
+			$oDashlet = $aDashlets[$aKeys[$idx]];
+			if ($oDashlet->IsVisible())
+			{
+				$bNoVisibleFound = false;
+			}
+			else
+			{
+				unset($aDashlets[$aKeys[$idx]]);
+			}
+			$idx++;
+		}
+		
 		$oPage->add('<table style="width:100%"><tbody>');
 		$iDashletIdx = 0;
 		$fColSize = 100 / $this->iNbCols;
@@ -43,7 +61,14 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 				if (array_key_exists($iDashletIdx, $aDashlets))
 				{
 					$oDashlet = $aDashlets[$iDashletIdx];
-					$oDashlet->DoRender($oPage, $bEditMode, $aExtraParams);
+					if ($oDashlet->IsVisible())
+					{
+						$oDashlet->DoRender($oPage, $bEditMode, $aExtraParams);
+					}
+					else
+					{
+						$oPage->add('&nbsp;');
+					}
 				}
 				else
 				{

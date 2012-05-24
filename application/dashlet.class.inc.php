@@ -192,6 +192,42 @@ EOF
 		
 		return $oForm;
 	}
+	
+	static public function IsVisible()
+	{
+		return true;
+	}
+}
+
+class DashletEmptyCell extends Dashlet
+{
+	public function __construct($sId)
+	{
+		parent::__construct($sId);
+	}
+	
+	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
+	{
+		$oPage->add('&nbsp;');
+	}
+
+	public function GetPropertiesFields(DesignerForm $oForm)
+	{
+	}
+	
+	static public function GetInfo()
+	{
+		return array(
+			'label' => 'Empty Cell',
+			'icon' => 'images/dashlet-text.png',
+			'description' => 'Empty Cell Dashlet Placeholder',
+		);
+	}
+	
+	static public function IsVisible()
+	{
+		return false;
+	}
 }
 
 class DashletHelloWorld extends Dashlet

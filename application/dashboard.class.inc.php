@@ -205,9 +205,14 @@ EOF
 				$oReflection = new ReflectionClass($sDashletClass);
 				if (!$oReflection->isAbstract())
 				{
-					$aCallSpec = array($sDashletClass, 'GetInfo');
-					$aInfo = call_user_func($aCallSpec);
-					$oPage->add('<span class="dashlet_icon ui-widget-content ui-corner-all" id="dashlet_'.$sDashletClass.'" title="'.$aInfo['label'].'" style="width:34px; height:34px; display:inline-block; margin:2px;"><img src="'.$sUrl.$aInfo['icon'].'" /></span>');
+					$aCallSpec = array($sDashletClass, 'IsVisible');
+					$bVisible = call_user_func($aCallSpec);
+					if ($bVisible)
+					{
+						$aCallSpec = array($sDashletClass, 'GetInfo');
+						$aInfo = call_user_func($aCallSpec);
+						$oPage->add('<span dashlet_class="'.$sDashletClass.'" class="dashlet_icon ui-widget-content ui-corner-all" id="dashlet_'.$sDashletClass.'" title="'.$aInfo['label'].'" style="width:34px; height:34px; display:inline-block; margin:2px;"><img src="'.$sUrl.$aInfo['icon'].'" /></span>');
+					}
 				}
 			}
 		}
@@ -228,12 +233,14 @@ EOF
 		{
 			$sId = $oDashlet->GetID();
 			$sClass = get_class($oDashlet);
-			
-			$oPage->add('<div class="dashlet_properties" id="dashlet_properties_'.$sId.'" style="display:none">');
-			$oForm = $oDashlet->GetForm();
-			$this->SetFormParams($oForm);
-			$oForm->RenderAsPropertySheet($oPage);		
-			$oPage->add('</div>');
+			if ($oDashlet->IsVisible())
+			{
+				$oPage->add('<div class="dashlet_properties" id="dashlet_properties_'.$sId.'" style="display:none">');
+				$oForm = $oDashlet->GetForm();
+				$this->SetFormParams($oForm);
+				$oForm->RenderAsPropertySheet($oPage);		
+				$oPage->add('</div>');
+			}
 		}
 		$oPage->add('</div>');
 
@@ -343,11 +350,17 @@ $('#dashboard_editor').dialog({
 $('#dashboard_editor .ui-layout-center').dashboard({
 	dashboard_id: '$sId', layout_class: '$sLayoutClass', title: '$sTitle',
 	submit_to: '$sUrl', submit_parameters: {operation: 'save_dashboard'},
-	render_to: '$sUrl', render_parameters: {operation: 'render_dashboard'}
+	render_to: '$sUrl', render_parameters: {operation: 'render_dashboard'},
+	new_dashlet_parameters: {operation: 'new_dashlet'}
 });
 
-$('#dashboard_editor table').sortable({
-	items: '.dashlet'
+$('#select_dashlet').droppable({
+	accept: '.dashlet',
+	drop: function(event, ui) {
+		$( this ).find( ".placeholder" ).remove();
+		var oDashlet = ui.draggable;
+		oDashlet.remove();
+	},
 });
 
 $('#event_bus').bind('dashlet-selected', function(event, data){
