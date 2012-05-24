@@ -14,7 +14,8 @@ $(function()
 			submit_to: 'index.php',
 			submit_parameters: {},
 			render_to: 'index.php',
-			render_parameters: {}
+			render_parameters: {},
+			new_dashlet_parameters: {}
 		},
 	
 		// the constructor
@@ -26,6 +27,8 @@ $(function()
 			.addClass('itop-dashboard');
 
 			this.ajax_div = $('<div></div>').appendTo(this.element);
+			$('.itop-dashboard').bind('keyup.dashboard_editor', function(event) { me._on_keyup(event); } );
+			this._make_draggable();
 		},
 	
 		// called when created, and later when changing options
@@ -35,6 +38,7 @@ $(function()
 			var me = this;
 			$.post(this.options.render_to, oParams, function(data){
 				me.element.html(data);
+				me._make_draggable();
 			});
 		},
 		// events bound via _bind are removed automatically
@@ -45,6 +49,7 @@ $(function()
 			.removeClass('itop-dashboard');
 
 			this.ajax_div.remove();
+			$(document).unbind('keyup.dashboard_editor');
 			
 			// call the original destroy method since we overwrote it
 			$.Widget.prototype.destroy.call( this );			
@@ -70,14 +75,30 @@ $(function()
 		{
 			var oState = oMergeInto;
 			oState.dashlets = [];
-			this.element.find(':itop-dashlet').each(function() {
-				var oDashlet = $(this).data('dashlet');
-				if(oDashlet)
+			this.element.find('.layout_cell').each(function() {
+				var aList = { dashlets: [] };
+				$(this).find(':itop-dashlet').each(function() {
+					var oDashlet = $(this).data('dashlet');
+					if(oDashlet)
+					{
+						var oDashletParams = oDashlet.get_params();
+						var sId = oDashletParams.dashlet_id;
+						aList[sId] = oDashletParams;				
+						aList.dashlets.push({dashlet_id: sId, dashlet_class: oDashletParams.dashlet_class} );
+					}
+				});
+				if (aList.dashlets.length == 0)
 				{
-					var oDashletParams = oDashlet.get_params();
-					var sId = oDashletParams.dashlet_id;
-					oState[sId] = oDashletParams;				
-					oState.dashlets.push({dashlet_id: sId, dashlet_class: oDashletParams.dashlet_class} );
+					oState.dashlets.push({dashlet_id: 0, dashlet_class: 'DashletEmptyCell'});
+				}
+				else
+				{
+					for(var idx in aList.dashlets)
+					{
+						var sId = aList.dashlets[idx].dashlet_id;
+						oState[sId] = aList[sId];				
+						oState.dashlets.push(aList.dashlets[idx]);
+					}
 				}
 			});
 			oState.dashboard_id = this.options.dashboard_id;
@@ -93,6 +114,85 @@ $(function()
 			$.post(this.options.submit_to, oParams, function(data){
 				me.ajax_div.html(data);
 			});
+		},
+		add_dashlet: function(options)
+		{
+			var sDashletId = this._get_new_id();
+			var oDashlet = $('<div class="dashlet" id="dashlet_'+sDashletId+'"/>');
+			oDashlet.appendTo(options.container);
+			var oDashletProperties = $('<div class="dashlet_properties" id="dashlet_properties_'+sDashletId+'"/>');
+			oDashletProperties.appendTo($('#dashlet_properties'));
+			
+			var oParams = this.options.new_dashlet_parameters;
+			var sDashletClass = options.dashlet_class;
+			oParams.dashlet_class = sDashletClass;
+			oParams.dashlet_id = sDashletId;
+			var me = this;
+			$.post(this.options.render_to, oParams, function(data){
+				me.ajax_div.html(data);
+				$('#dashlet_'+sDashletId)
+				.dashlet({dashlet_id: sDashletId, dashlet_class: sDashletClass})
+				.dashlet('deselect_all')
+				.dashlet('select')
+				.draggable({
+					revert: 'invalid', appendTo: 'body', zIndex: 9999,
+					helper: function() {
+						var oDragItem = $(this).dashlet('get_drag_icon');
+						return oDragItem;
+					},
+					cursorAt: { top: 16, left: 16 },
+				});
+			});
+		},
+		_get_new_id: function()
+		{
+			var iMaxId = 0;
+			this.element.find(':itop-dashlet').each(function() {
+				var oDashlet = $(this).data('dashlet');
+				if(oDashlet)
+				{
+					var oDashletParams = oDashlet.get_params();
+					var id = parseInt(oDashletParams.dashlet_id, 10);
+					if (id > iMaxId) iMaxId = id;
+				}
+			});
+			return 1 + iMaxId;			
+		},
+		_make_draggable: function()
+		{
+			
+			this.element.find('.dashlet').draggable({
+				revert: 'invalid', appendTo: 'body', zIndex: 9999,
+				helper: function() {
+					var oDragItem = $(this).dashlet('get_drag_icon');
+					return oDragItem;
+				},
+				cursorAt: { top: 16, left: 16 },
+			});
+			this.element.find('table td').droppable({
+				accept: '.dashlet,.dashlet_icon',
+				drop: function(event, ui) {
+					$( this ).find( ".placeholder" ).remove();
+					var oDashlet = ui.draggable;
+					if (oDashlet.hasClass('dashlet'))
+					{
+						// moving around a dashlet
+						oDashlet.detach();
+						oDashlet.css({top: 0, left: 0});
+						oDashlet.appendTo($(this));
+					}
+					else
+					{
+						// inserting a new dashlet
+						var sDashletClass = ui.draggable.attr('dashlet_class');
+						$(':itop-dashboard').dashboard('add_dashlet', {dashlet_class: sDashletClass, container: $(this) })
+					}
+				},
+			});	
+		},
+		_on_keyup: function(event)
+		{
+			console.log('Key pressed in Dashlet');
 		}
 	});	
 });

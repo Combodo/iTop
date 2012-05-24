@@ -20,6 +20,9 @@ $(function()
 			this.element
 			.addClass('itop-dashlet')
 			.bind('click.itop-dashlet', function(event) { me._on_click(event); } );
+			
+			this.closeBox = $('<div class="close-box"/>');
+			this.closeBox.click(function() { me._remove_dashlet(); }).hide().prependTo(this.element);
 		},
 	
 		// called when created, and later when changing options
@@ -33,6 +36,8 @@ $(function()
 			this.element
 			.removeClass('itop-dashlet')
 			.unbind('click.itop-dashlet');
+			
+			this.closeBox.remove();
 
 			// call the original destroy method since we overwrote it
 			$.Widget.prototype.destroy.call( this );			
@@ -49,31 +54,32 @@ $(function()
 			// in 1.9 would use _super
 			$.Widget.prototype._setOption.call( this, key, value );
 		},
-		_select: function()
+		select: function()
 		{
 			this.element.addClass('dashlet-selected');
+			this.closeBox.fadeIn(500);
 			$('#event_bus').trigger('dashlet-selected', {'dashlet_id': this.options.dashlet_id, 'dashlet_class': this.options.dashlet_class})
 		},
-		_deselect: function()
+		deselect: function()
 		{
-			this.element.removeClass('dashlet-selected');			
+			this.element.removeClass('dashlet-selected');
+			this.closeBox.hide();
 		},
-		_on_click: function(event)
+		deselect_all: function()
 		{
-			var sCurrentId = this.element.attr('id');
-			
 			$(':itop-dashlet').each(function(){
 				var sId = $(this).attr('id');
 				var oWidget = $(this).data('dashlet');
 				if (oWidget)
 				{
-					if (sCurrentId != sId)
-					{
-						oWidget._deselect();
-					}
+					oWidget.deselect();
 				}
 			});
-			this._select();
+		},
+		_on_click: function(event)
+		{
+			this.deselect_all();
+			this.select();
 		},
 		get_params: function()
 		{
@@ -90,6 +96,18 @@ $(function()
 			oParams.dashlet_id = this.options.dashlet_id;
 			oParams.dashlet_class = this.options.dashlet_class;
 			return oParams;
+		},
+		get_drag_icon: function()
+		{
+			var oDragItem = $('#dashlet_'+this.options.dashlet_class).clone();
+			oDragItem.css({zIndex: 999});
+			oDragItem.appendTo('body');
+			return oDragItem;
+		},
+		_remove_dashlet: function()
+		{
+			$('#dashlet_properties_'+this.options.dashlet_id).remove();
+			this.element.remove();
 		}
 	});	
 });
