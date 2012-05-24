@@ -3,13 +3,13 @@
 <title>UI:IncidentMgmtMenuOverview:Title</title>
 <layout>DashboardLayoutTwoCols</layout>
 <dashlets>
- <dashlet id="1" xsi:type="DashletGroupBy">
+ <dashlet id="1" xsi:type="DashletGroupByBars">
   <title>UI-IncidentManagementOverview-IncidentByService</title>
   <query>SELECT Incident</query>
   <group_by>service_name</group_by>
   <style>bars</style>
  </dashlet>
- <dashlet id="2" xsi:type="DashletGroupBy">
+ <dashlet id="2" xsi:type="DashletGroupByPie">
   <title>UI-IncidentManagementOverview-IncidentByPriority</title>
   <query>SELECT Incident</query>
   <group_by>priority</group_by>
