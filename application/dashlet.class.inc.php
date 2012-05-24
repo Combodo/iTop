@@ -154,6 +154,7 @@ EOF
 				$this->aProperties[$sProp] = $aValues[$sProp];
 			}
 		}
+		return $this;
 	}
 	
 
@@ -259,72 +260,6 @@ class DashletHelloWorld extends Dashlet
 	}
 }
 
-
-class DashletFakeBarChart extends Dashlet
-{
-	public function __construct($sId)
-	{
-		parent::__construct($sId);
-	}
-	
-	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
-	{
-		$oPage->add('<div style="text-align:center" class="dashlet-content"><div>Fake Bar Chart</div><divp><img src="../images/fake-bar-chart.png"/></div></div>');
-	}
-	
-	public function GetPropertiesFields(DesignerForm $oForm, $oDashlet = null)
-	{
-	}
-	
-	public function ToXml(DOMNode $oContainerNode)
-	{
-		$oNewNodeNode = $oContainerNode->ownerDocument->createElement('fake_bar_chart', 'test');
-		$oContainerNode->appendChild($oNewNodeNode);
-	}
-
-	static public function GetInfo()
-	{
-		return array(
-			'label' => 'Bar Chart',
-			'icon' => 'images/dashlet-bar-chart.png',
-			'description' => 'Fake Bar Chart (for testing)',
-		);
-	}
-}
-
-
-class DashletFakePieChart extends Dashlet
-{
-	public function __construct($sId)
-	{
-		parent::__construct($sId);
-	}
-	
-	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
-	{
-		$oPage->add('<div style="text-align:center" class="dashlet-content"><div>Fake Pie Chart</div><div><img src="../images/fake-pie-chart.png"/></div></div>');
-	}
-	
-	public function GetPropertiesFields(DesignerForm $oForm, $oDashlet = null)
-	{
-	}
-	
-	public function ToXml(DOMNode $oContainerNode)
-	{
-		$oNewNodeNode = $oContainerNode->ownerDocument->createElement('fake_pie_chart', 'test');
-		$oContainerNode->appendChild($oNewNodeNode);
-	}
-	
-	static public function GetInfo()
-	{
-		return array(
-			'label' => 'Pie Chart',
-			'icon' => 'images/dashlet-pie-chart.png',
-			'description' => 'Fake Pie Chart (for testing)',
-		);
-	}
-}
-
 class DashletObjectList extends Dashlet
 {
 	public function __construct($sId)
@@ -375,7 +310,7 @@ class DashletObjectList extends Dashlet
 	}
 }
 
-class DashletGroupBy extends Dashlet
+abstract class DashletGroupBy extends Dashlet
 {
 	public function __construct($sId)
 	{
@@ -502,8 +437,30 @@ class DashletGroupBy extends Dashlet
 				$this->aProperties['group_by'] = '';
 			}
 		}
-
-		parent::Update($aValues, $aUpdatedFields);
+		$oDashlet = parent::Update($aValues, $aUpdatedFields);
+		
+		if (in_array('style', $aUpdatedFields))
+		{
+			switch($aValues['style'])
+			{
+				// Style changed, mutate to the specified type of chart
+				case 'pie':
+				$oDashlet = new DashletGroupByPie($this->sId);
+				break;
+					
+				case 'bars':
+				$oDashlet = new DashletGroupByBars($this->sId);
+				break;
+					
+				case 'table':
+				$oDashlet = new DashletGroupByTable($this->sId);
+				break;
+			}
+			$oDashlet->FromParams($aValues);
+			$oDashlet->bRedrawNeeded = true;
+			$oDashlet->bFormRedrawNeeded = true;
+		}
+		return $oDashlet;
 	}
 
 	static public function GetInfo()
@@ -512,6 +469,60 @@ class DashletGroupBy extends Dashlet
 			'label' => 'Objects grouped by...',
 			'icon' => 'images/dashlet-object-grouped.png',
 			'description' => 'Grouped objects dashlet',
+		);
+	}
+}
+
+class DashletGroupByPie extends DashletGroupBy
+{
+	public function __construct($sId)
+	{
+		parent::__construct($sId);
+		$this->aProperties['style'] = 'pie';
+	}
+	
+	static public function GetInfo()
+	{
+		return array(
+			'label' => 'Pie Chart',
+			'icon' => 'images/dashlet-pie-chart.png',
+			'description' => 'Pie Chart',
+		);
+	}
+}
+
+class DashletGroupByBars extends DashletGroupBy
+{
+	public function __construct($sId)
+	{
+		parent::__construct($sId);
+		$this->aProperties['style'] = 'bars';
+	}
+	
+	static public function GetInfo()
+	{
+		return array(
+			'label' => 'Bar Chart',
+			'icon' => 'images/dashlet-bar-chart.png',
+			'description' => 'Bar Chart',
+		);
+	}
+}
+
+class DashletGroupByTable extends DashletGroupBy
+{
+	public function __construct($sId)
+	{
+		parent::__construct($sId);
+		$this->aProperties['style'] = 'table';
+	}
+	
+	static public function GetInfo()
+	{
+		return array(
+			'label' => 'Group By (table)',
+			'icon' => 'images/dashlet-group-by-table.png',
+			'description' => 'List (Grouped by a field)',
 		);
 	}
 }
