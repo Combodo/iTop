@@ -1121,11 +1121,15 @@ select#org_id {
 	background: url(./ui-lightness/images/ui-bg_diagonals-thick_20_666666_40x40.png);
 	padding: 5px;
 	margin:0;
+	position:relative;
 }
 .edit_mode .dashlet-selected {
 	background: #EB8F00 !important;
 	padding: 5px;
 	margin:0;
+}
+td.layout_cell {
+	height: 50px; /* min-height does not work */
 }
 .dashlet-content {
 	background: #fff;
@@ -1135,4 +1139,14 @@ table.prop_table {
     border-bottom: 2px solid #F9F9F1;
     padding: 1px;
     width: 100%;
+}
+.close-box {
+	margin: 5px;
+	width: 20px;
+	height: 20px;
+	position: absolute;
+	top: 0;
+	right: 0;
+	z-index: 10;
+	background: transparent url(../images/delete.png) no-repeat center;
 }
