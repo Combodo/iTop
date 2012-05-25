@@ -232,32 +232,9 @@ function ValidateForm(sFormId, bValidateAll)
 function ReadFormParams(sFormId)
 {
 	var oMap = { };
-	$('#'+sFormId+' :input:visible').each( function() {
-		var sName = $(this).attr('name');
-		if (sName && sName != '')
+	$('#'+sFormId+' :input').each( function() {
+		if ($(this).parent().is(':visible'))
 		{
-			if (this.type == 'checkbox')
-			{
-				oMap[sName] = ($(this).attr('checked') == 'checked');
-			}
-			else
-			{
-				oMap[sName] = $(this).val();
-			}
-			
-		}
-	});
-	return oMap;
-}
-
-function SubmitForm(sFormId, onSubmitResult)
-{
-	var aErrors = ValidateForm(sFormId, false);
-	if (aErrors.length == 0)
-	{
-		var oMap = ReadFormParams(sFormId);
-		oMap.module_name = sCurrentModule;
-		$('#'+sFormId+' :input:visible').each( function() {
 			var sName = $(this).attr('name');
 			if (sName && sName != '')
 			{
@@ -270,6 +247,35 @@ function SubmitForm(sFormId, onSubmitResult)
 					oMap[sName] = $(this).val();
 				}
 				
+			}
+		}
+	});
+	return oMap;
+}
+
+function SubmitForm(sFormId, onSubmitResult)
+{
+	var aErrors = ValidateForm(sFormId, false);
+	if (aErrors.length == 0)
+	{
+		var oMap = ReadFormParams(sFormId);
+		oMap.module_name = sCurrentModule;
+		$('#'+sFormId+' :input').each( function() {
+			if ($(this).parent().is(':visible'))
+			{
+				var sName = $(this).attr('name');
+				if (sName && sName != '')
+				{
+					if (this.type == 'checkbox')
+					{
+						oMap[sName] = ($(this).attr('checked') == 'checked');
+					}
+					else
+					{
+						oMap[sName] = $(this).val();
+					}
+					
+				}
 			}
 		});
 		$.post(GetAbsoluteUrlAppRoot()+'designer/module.php', oMap, function(data)

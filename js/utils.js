@@ -301,3 +301,11 @@ function FixTableSorter(table)
 		}
 	}
 }
+
+function DashletCreationDlg(sOQL)
+{
+	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', {operation: 'dashlet_creation_dlg', oql: sOQL}, function(data){
+		$('body').append(data);
+	});
+	return false;
+}
