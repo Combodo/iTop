@@ -722,7 +722,7 @@ try
 		$oDashboard->FromParams($aParams);
 		$oDashboard->Save();
 		// trigger a reload of the current page since the dashboard just changed
-		$oPage->add_ready_script("window.location.href=window.location.href;"); // reloads the page, doing a GET even if we arrived via a POST
+		$oPage->add_ready_script("sLocation = new String(window.location.href); window.location.href=sLocation.replace('&edit=1', '');"); // reloads the page, doing a GET even if we arrived via a POST
 		break;
 
 		case 'revert_dashboard':
@@ -743,6 +743,34 @@ try
 		$oDashboard = new RuntimeDashboard($sDashboardId);
 		$oDashboard->FromParams($aParams);
 		$oDashboard->Render($oPage, true /* bEditMode */);
+		break;
+		
+		case 'dashlet_creation_dlg':
+		$sOQL = utils::ReadParam('oql', '', false, 'raw_data');
+		RuntimeDashboard::GetDashletCreationDlgFromOQL($oPage, $sOQL);
+		break;
+		
+		case 'add_dashlet':
+		$oForm = RuntimeDashboard::GetDashletCreationForm('');
+		$aValues = $oForm->ReadParams();
+		
+		$sDashletClass = $aValues['dashlet_class'];
+		$sMenuId = $aValues['menu_id'];
+		
+		if (is_subclass_of($sDashletClass, 'Dashlet'))
+		{
+			$oDashlet = new $sDashletClass(0);
+			$oDashlet->FromParams($aValues);
+
+			$index = ApplicationMenu::GetMenuIndexById($sMenuId);
+			$oMenu = ApplicationMenu::GetMenuNode($index);
+			$oMenu->AddDashlet($oDashlet);
+			// navigate to the dashboard page
+			if ($aValues['open_editor'])
+			{
+				$oPage->add_ready_script("window.location.href='".addslashes(utils::GetAbsoluteUrlAppRoot().'pages/UI.php?c[menu]='.$index)."&edit=1';"); // reloads the page, doing a GET even if we arrived via a POST
+			}
+		}
 		break;
 		
 		default:
