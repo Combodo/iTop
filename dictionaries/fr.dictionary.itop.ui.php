@@ -801,5 +801,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:NavigateAwayConfirmationMessage' => 'Toute modification sera perdue.',
 	'UI:Create_Class_InState' => 'Créer l\'objet %1$s dans l\'état: ',
 	'UI:OrderByHint_Values' => 'Ordre de tri: %1$s',
+	'UI:Menu:AddToDashboard' => 'Ajouter au Tableau de Bord...',
+
 ));
 ?>

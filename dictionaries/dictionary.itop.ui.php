@@ -956,6 +956,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 								   'Note that this is not a security setting, objects from any organization are still visible and can be accessed by selecting "All Organizations" in the drop-down list.',
 	'UI:NavigateAwayConfirmationMessage' => 'Any modification will be discarded.',
 	'UI:Create_Class_InState' => 'Create the %1$s in state: ',
+	'UI:Login:About' => '',
 	'UI:OrderByHint_Values' => 'Sort order: %1$s',
+	'UI:Menu:AddToDashboard' => 'Add To Dashboard...',
 ));
 ?>
