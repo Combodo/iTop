@@ -2,24 +2,30 @@
 <dashboard xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 <title>UI:ConfigMgmtMenuOverview:Title</title>
 <layout>DashboardLayoutTwoCols</layout>
-<dashlets>
- <dashlet id="1" xsi:type="DashletGroupByPie">
-  <title>UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus</title>
-  <query>SELECT FunctionalCI</query>
-  <group_by>status</group_by>
-  <style>pie</style>
- </dashlet>
- <dashlet id="2" xsi:type="DashletGroupByBars">
-  <title>UI-ConfigMgmtMenuOverview-FunctionalCIByType</title>
-  <query>SELECT FunctionalCI</query>
-  <group_by>finalclass</group_by>
-  <style>bars</style>
- </dashlet>
- <dashlet id="3" xsi:type="DashletGroupByTable">
-  <title>UI-ConfigMgmtMenuOverview-FunctionalCIByType</title>
-  <query>SELECT FunctionalCI</query>
-  <group_by>finalclass</group_by>
-  <style>table</style>
- </dashlet>
-</dashlets>
+<cells>
+ <cell>
+  <dashlet id="1" xsi:type="DashletGroupByPie">
+   <title>UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus</title>
+   <query>SELECT FunctionalCI</query>
+   <group_by>status</group_by>
+   <style>pie</style>
+  </dashlet>
+ </cell>
+ <cell>
+  <dashlet id="2" xsi:type="DashletGroupByBars">
+   <title>UI-ConfigMgmtMenuOverview-FunctionalCIByType</title>
+   <query>SELECT FunctionalCI</query>
+   <group_by>finalclass</group_by>
+   <style>bars</style>
+  </dashlet>
+ </cell>
+ <cell>
+  <dashlet id="3" xsi:type="DashletGroupByTable">
+   <title>UI-ConfigMgmtMenuOverview-FunctionalCIByType</title>
+   <query>SELECT FunctionalCI</query>
+   <group_by>finalclass</group_by>
+   <style>table</style>
+  </dashlet>
+ </cell>
+</cells>
 </dashboard>
