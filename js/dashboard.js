@@ -74,32 +74,26 @@ $(function()
 		_get_state: function(oMergeInto)
 		{
 			var oState = oMergeInto;
-			oState.dashlets = [];
+			oState.cells = [];
 			this.element.find('.layout_cell').each(function() {
-				var aList = { dashlets: [] };
+				var aList = [];
 				$(this).find(':itop-dashlet').each(function() {
 					var oDashlet = $(this).data('dashlet');
 					if(oDashlet)
 					{
 						var oDashletParams = oDashlet.get_params();
 						var sId = oDashletParams.dashlet_id;
-						aList[sId] = oDashletParams;				
-						aList.dashlets.push({dashlet_id: sId, dashlet_class: oDashletParams.dashlet_class} );
+						oState[sId] = oDashletParams;				
+						aList.push({dashlet_id: sId, dashlet_class: oDashletParams.dashlet_class} );
 					}
 				});
-				if (aList.dashlets.length == 0)
+				
+				if (aList.length == 0)
 				{
-					oState.dashlets.push({dashlet_id: 0, dashlet_class: 'DashletEmptyCell'});
+					oState[0] = {dashlet_id: 0, dashlet_class: 'DashletEmptyCell'};
+					aList.push({dashlet_id: 0, dashlet_class: 'DashletEmptyCell'});
 				}
-				else
-				{
-					for(var idx in aList.dashlets)
-					{
-						var sId = aList.dashlets[idx].dashlet_id;
-						oState[sId] = aList[sId];				
-						oState.dashlets.push(aList.dashlets[idx]);
-					}
-				}
+				oState.cells.push(aList);
 			});
 			oState.dashboard_id = this.options.dashboard_id;
 			oState.layout_class = this.options.layout_class;
