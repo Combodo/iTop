@@ -951,18 +951,25 @@ class QueryBuilderExpressions
 {
 	protected $m_oConditionExpr;
 	protected $m_aSelectExpr;
+	protected $m_aGroupByExpr;
 	protected $m_aJoinFields;
 
-	public function __construct($oCondition)
+	public function __construct($oCondition, $aGroupByExpr = null)
 	{
 		$this->m_oConditionExpr = $oCondition;
 		$this->m_aSelectExpr = array();
+		$this->m_aGroupByExpr = $aGroupByExpr;
 		$this->m_aJoinFields = array();
 	}
 
 	public function GetSelect()
 	{
 		return $this->m_aSelectExpr;
+	}
+
+	public function GetGroupBy()
+	{
+		return $this->m_aGroupByExpr;
 	}
 
 	public function GetCondition()
@@ -998,6 +1005,13 @@ class QueryBuilderExpressions
 		{
 			$oExpr->GetUnresolvedFields($sAlias, $aUnresolved);
 		}
+		if ($this->m_aGroupByExpr)
+		{
+			foreach($this->m_aGroupByExpr as $sColAlias => $oExpr)
+			{
+				$oExpr->GetUnresolvedFields($sAlias, $aUnresolved);
+			}
+		}
 		foreach($this->m_aJoinFields as $oExpression)
 		{
 			$oExpression->GetUnresolvedFields($sAlias, $aUnresolved);
@@ -1011,6 +1025,13 @@ class QueryBuilderExpressions
 		{
 			$this->m_aSelectExpr[$sColAlias] = $oExpr->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
 		}
+		if ($this->m_aGroupByExpr)
+		{
+			foreach($this->m_aGroupByExpr as $sColAlias => $oExpr)
+			{
+				$this->m_aGroupByExpr[$sColAlias] = $oExpr->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
+			}
+		}
 		foreach($this->m_aJoinFields as $index => $oExpression)
 		{
 			$this->m_aJoinFields[$index] = $oExpression->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
@@ -1023,6 +1044,13 @@ class QueryBuilderExpressions
 		foreach($this->m_aSelectExpr as $sColAlias => $oExpr)
 		{
 			$this->m_aSelectExpr[$sColAlias] = $oExpr->RenameParam($sOldName, $sNewName);
+		}
+		if ($this->m_aGroupByExpr)
+		{
+			foreach($this->m_aGroupByExpr as $sColAlias => $oExpr)
+			{
+				$this->m_aGroupByExpr[$sColAlias] = $oExpr->RenameParam($sOldName, $sNewName);
+			}
 		}
 		foreach($this->m_aJoinFields as $index => $oExpression)
 		{

@@ -1933,7 +1933,81 @@ abstract class MetaModel
 		return $aScalarArgs;
 	}
 
+	public static function MakeGroupByQuery(DBObjectSearch $oFilter, $aArgs, $aGroupByExpr)
+	{
+		$aAttToLoad = array();
+		$oSelect = self::MakeSelectStructure($oFilter, array(), $aArgs, $aAttToLoad, null, 0, 0, false, $aGroupByExpr);
+
+		$aScalarArgs = array_merge(self::PrepareQueryArguments($aArgs), $oFilter->GetInternalParams());
+		try
+		{
+			$sRes = $oSelect->RenderGroupBy($aScalarArgs);
+		}
+		catch (MissingQueryArgument $e)
+		{
+			// Add some information...
+			$e->addInfo('OQL', $sOqlQuery);
+			throw $e;
+		}
+		return $sRes;
+	}
+
+
 	public static function MakeSelectQuery(DBObjectSearch $oFilter, $aOrderBy = array(), $aArgs = array(), $aAttToLoad = null, $aExtendedDataSpec = null, $iLimitCount = 0, $iLimitStart = 0, $bGetCount = false)
+	{
+		// Check the order by specification, and prefix with the class alias
+		// and make sure that the ordering columns are going to be selected
+		//
+		$aOrderSpec = array();
+		foreach ($aOrderBy as $sFieldAlias => $bAscending)
+		{
+			if ($sFieldAlias != 'id')
+			{
+				MyHelpers::CheckValueInArray('field name in ORDER BY spec', $sFieldAlias, self::GetAttributesList($oFilter->GetFirstJoinedClass()));
+			}
+			if (!is_bool($bAscending))
+			{
+				throw new CoreException("Wrong direction in ORDER BY spec, found '$bAscending' and expecting a boolean value");
+			}
+			$sFirstClassAlias = $oFilter->GetFirstJoinedClassAlias();
+			if (self::IsValidAttCode($oFilter->GetClass(), $sFieldAlias))
+			{
+				$oAttDef = self::GetAttributeDef($oFilter->GetClass(), $sFieldAlias);
+				foreach($oAttDef->GetOrderBySQLExpressions($sFirstClassAlias) as $sSQLExpression)
+				{
+					$aOrderSpec[$sSQLExpression] = $bAscending;
+				}
+			}
+			else
+			{
+				$aOrderSpec['`'.$sFirstClassAlias.$sFieldAlias.'`'] = $bAscending;
+			}
+
+			// Make sure that the columns used for sorting are present in the loaded columns
+			if (!is_null($aAttToLoad) && !isset($aAttToLoad[$sFirstClassAlias][$sFieldAlias]))
+			{
+				$aAttToLoad[$sFirstClassAlias][$sFieldAlias] = MetaModel::GetAttributeDef($oFilter->GetFirstJoinedClass(), $sFieldAlias);
+			}			
+		}
+
+		$oSelect = self::MakeSelectStructure($oFilter, $aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount);
+
+		$aScalarArgs = array_merge(self::PrepareQueryArguments($aArgs), $oFilter->GetInternalParams());
+		try
+		{
+			$sRes = $oSelect->RenderSelect($aOrderSpec, $aScalarArgs, $iLimitCount, $iLimitStart, $bGetCount);
+		}
+		catch (MissingQueryArgument $e)
+		{
+			// Add some information...
+			$e->addInfo('OQL', $sOqlQuery);
+			throw $e;
+		}
+		return $sRes;
+	}
+
+
+	protected static function MakeSelectStructure(DBObjectSearch $oFilter, $aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount, $aGroupByExpr = null)
 	{
 		// Hide objects that are not visible to the current user
 		//
@@ -1984,6 +2058,13 @@ abstract class MetaModel
 					$sRawId = $sOqlQuery.'|'.implode(',', array_keys($aAttributes));
 				}
 			}
+			if (!is_null($aGroupByExpr))
+			{
+				foreach($aGroupByExpr as $sAlias => $oExpr)
+				{
+					$sRawId = 'g:'.$sAlias.'!'.$oExpr->Render();
+				}
+			}
 			$sOqlId = md5($sRawId);
 		}
 		else
@@ -2029,48 +2110,25 @@ abstract class MetaModel
 			}
 		}
 
-		// Check the order by specification, and prefix with the class alias
-		// and make sure that the ordering columns are going to be selected
-		//
-		$aOrderSpec = array();
-		foreach ($aOrderBy as $sFieldAlias => $bAscending)
-		{
-			if ($sFieldAlias != 'id')
-			{
-				MyHelpers::CheckValueInArray('field name in ORDER BY spec', $sFieldAlias, self::GetAttributesList($oFilter->GetFirstJoinedClass()));
-			}
-			if (!is_bool($bAscending))
-			{
-				throw new CoreException("Wrong direction in ORDER BY spec, found '$bAscending' and expecting a boolean value");
-			}
-			$sFirstClassAlias = $oFilter->GetFirstJoinedClassAlias();
-			if (self::IsValidAttCode($oFilter->GetClass(), $sFieldAlias))
-			{
-				$oAttDef = self::GetAttributeDef($oFilter->GetClass(), $sFieldAlias);
-				foreach($oAttDef->GetOrderBySQLExpressions($sFirstClassAlias) as $sSQLExpression)
-				{
-					$aOrderSpec[$sSQLExpression] = $bAscending;
-				}
-			}
-			else
-			{
-				$aOrderSpec['`'.$sFirstClassAlias.$sFieldAlias.'`'] = $bAscending;
-			}
-
-			// Make sure that the columns used for sorting are present in the loaded columns
-			if (!is_null($aAttToLoad) && !isset($aAttToLoad[$sFirstClassAlias][$sFieldAlias]))
-			{
-				$aAttToLoad[$sFirstClassAlias][$sFieldAlias] = MetaModel::GetAttributeDef($oFilter->GetFirstJoinedClass(), $sFieldAlias);
-			}			
-		}
-
 		if (!isset($oSelect))
 		{
-			$oBuild = new QueryBuilderContext($oFilter, $aModifierProperties);
+			$oBuild = new QueryBuilderContext($oFilter, $aModifierProperties, $aGroupByExpr);
 
 			$oKPI = new ExecutionKPI();
 			$oSelect = self::MakeQuery($oBuild, $oFilter, $aAttToLoad, array(), true /* main query */);
+			$oSelect->SetCondition($oBuild->m_oQBExpressions->GetCondition());
 			$oSelect->SetSourceOQL($sOqlQuery);
+			if ($aGroupByExpr)
+			{
+				$aCols = $oBuild->m_oQBExpressions->GetGroupBy();
+				$oSelect->SetGroupBy($aCols);
+				$oSelect->SetSelect($aCols);
+			}
+			else
+			{
+				$oSelect->SetSelect($oBuild->m_oQBExpressions->GetSelect());
+			}
+
 			$oKPI->ComputeStats('MakeQuery (select)', $sOqlQuery);
 
 			if (self::$m_bQueryCacheEnabled)
@@ -2101,22 +2159,6 @@ abstract class MetaModel
 			$oSelect->AddInnerJoin($oSelectExt, 'id', $aExtendedDataSpec['join_key'] /*, $sTableAlias*/);
 		}
 		
-		// Go
-		//
-		$aScalarArgs = array_merge(self::PrepareQueryArguments($aArgs), $oFilter->GetInternalParams());
-
-		try
-		{
-			$sRes = $oSelect->RenderSelect($aOrderSpec, $aScalarArgs, $iLimitCount, $iLimitStart, $bGetCount);
-//echo "<p>MakeQuery: $sRes</p>";
-		}
-		catch (MissingQueryArgument $e)
-		{
-			// Add some information...
-			$e->addInfo('OQL', $sOqlQuery);
-			throw $e;
-		}
-
 		if (self::$m_bTraceQueries)
 		{
 			$sQueryId = md5($sRes);
@@ -2140,7 +2182,7 @@ abstract class MetaModel
 			}
 		}
 
-		return $sRes;
+		return $oSelect;
 	}
 
 	public static function ShowQueryTrace()
@@ -2205,6 +2247,8 @@ abstract class MetaModel
 		$aModifierProperties = self::MakeModifierProperties($oFilter);
 		$oBuild = new QueryBuilderContext($oFilter, $aModifierProperties);
 		$oSelect = self::MakeQuery($oBuild, $oFilter, null, array(), true /* main query */);
+		$oSelect->SetCondition($oBuild->m_oQBExpressions->GetCondition());
+		$oSelect->SetSelect($oBuild->m_oQBExpressions->GetSelect());
 		$aScalarArgs = array_merge(self::PrepareQueryArguments($aArgs), $oFilter->GetInternalParams());
 		return $oSelect->RenderDelete($aScalarArgs);
 	}
@@ -2215,11 +2259,13 @@ abstract class MetaModel
 		$aModifierProperties = self::MakeModifierProperties($oFilter);
 		$oBuild = new QueryBuilderContext($oFilter, $aModifierProperties);
 		$oSelect = self::MakeQuery($oBuild, $oFilter, null, $aValues, true /* main query */);
+		$oSelect->SetCondition($oBuild->m_oQBExpressions->GetCondition());
+		$oSelect->SetSelect($oBuild->m_oQBExpressions->GetSelect());
 		$aScalarArgs = array_merge(self::PrepareQueryArguments($aArgs), $oFilter->GetInternalParams());
 		return $oSelect->RenderUpdate($aScalarArgs);
 	}
 
-	private static function MakeQuery(&$oBuild, DBObjectSearch $oFilter, $aAttToLoad = null, $aValues = array(), $bIsMainQuery = false)
+	private static function MakeQuery(&$oBuild, DBObjectSearch $oFilter, $aAttToLoad = null, $aValues = array(), $bIsMainQueryUNUSED = false)
 	{
 		// Note: query class might be different than the class of the filter
 		// -> this occurs when we are linking our class to an external class (referenced by, or pointing to)
@@ -2440,14 +2486,6 @@ abstract class MetaModel
 				// Quick N'dirty -> generate an empty set
 				$oSelectBase->AddCondition('false');
 			}
-		}
-
-		// Translate the conditions... and go
-		//
-		if ($bIsMainQuery)
-		{
-			$oSelectBase->SetCondition($oBuild->m_oQBExpressions->GetCondition());
-			$oSelectBase->SetSelect($oBuild->m_oQBExpressions->GetSelect());
 		}
 
 		// That's all... cross fingers and we'll get some working query

@@ -32,10 +32,10 @@ class QueryBuilderContext
 
 	public $m_oQBExpressions;
 
-	public function __construct($oFilter, $aModifierProperties)
+	public function __construct($oFilter, $aModifierProperties, $aGroupByExpr = null)
 	{
 		$this->m_oRootFilter = $oFilter;
-		$this->m_oQBExpressions = new QueryBuilderExpressions($oFilter->GetCriteria());
+		$this->m_oQBExpressions = new QueryBuilderExpressions($oFilter->GetCriteria(), $aGroupByExpr);
 
 		$this->m_aClassAliases = $oFilter->GetJoinedClasses();
 		$this->m_aTableAliases = array();

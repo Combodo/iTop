@@ -347,34 +347,51 @@ class DisplayBlock
 			case 'count':
 			if (isset($aExtraParams['group_by']))
 			{
-				$sGroupByField = $aExtraParams['group_by'];
+				if (isset($aExtraParams['group_by_label']))
+				{
+					$oGroupByExp = Expression::FromOQL($aExtraParams['group_by']);
+					$sGroupByLabel = $aExtraParams['group_by_label'];
+				}
+				else
+				{
+					// Backward compatibility: group_by is simply a field id
+					$sAlias = $this->m_oFilter->GetClassAlias();
+					$oGroupByExp = new FieldExpression($aExtraParams['group_by'], $sAlias);
+					$sGroupByLabel = MetaModel::GetLabel($this->m_oFilter->GetClass(), $aExtraParams['group_by']);
+				}
+
+				$aGroupBy = array();
+				$aGroupBy['grouped_by_1'] = $oGroupByExp;
+				$sSql = MetaModel::MakeGroupByQuery($this->m_oFilter, $aQueryParams, $aGroupBy);
+				$aRes = CMDBSource::QueryToArray($sSql);
+
 				$aGroupBy = array();
 				$sLabels = array();
-				$iTotalCount = $this->m_oSet->Count();
-				while($oObj = $this->m_oSet->Fetch())
+				$iTotalCount = 0;
+				foreach ($aRes as $aRow)
 				{
-					if (isset($aExtraParams['group_by_expr']))
-					{
-						eval("\$sValue = ".sprintf($aExtraParams['group_by_expr'],  $oObj->Get($sGroupByField)).';');
-					}
-					else
-					{
-						$sValue = $oObj->Get($sGroupByField);
-					}
-					$aGroupBy[$sValue] = isset($aGroupBy[$sValue]) ? $aGroupBy[$sValue]+1 : 1;
-					$sLabels[$sValue] = $oObj->GetAsHtml($sGroupByField);
+					$sValue = $aRow['grouped_by_1'];
+					$sLabels[$sValue] = htmlentities($sValue, ENT_QUOTES, 'UTF-8');
+					$aGroupBy[$sValue] = (int) $aRow['_itop_count_'];
+					$iTotalCount += $aRow['_itop_count_'];
 				}
-				$sFilter = urlencode($this->m_oFilter->serialize());
+
 				$aData = array();
 				$oAppContext = new ApplicationContext();
 				$sParams = $oAppContext->GetForLink();
 				foreach($aGroupBy as $sValue => $iCount)
 				{
+					// Build the search for this subset
+					$oSubsetSearch = clone $this->m_oFilter;
+					$oCondition = new BinaryExpression($oGroupByExp, '=', new ScalarExpression($sValue));
+					$oSubsetSearch->AddConditionExpression($oCondition);
+					$sFilter = urlencode($oSubsetSearch->serialize());
+
 					$aData[] = array ( 'group' => $sLabels[$sValue],
-									  'value' => "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&dosearch=1&$sParams&filter=$sFilter&$sGroupByField=".urlencode($sValue)."\">$iCount</a>"); // TO DO: add the context information
+									  'value' => "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&dosearch=1&$sParams&filter=$sFilter\">$iCount</a>"); // TO DO: add the context information
 				}
 				$aAttribs =array(
-					'group' => array('label' => MetaModel::GetLabel($this->m_oFilter->GetClass(), $sGroupByField), 'description' => ''),
+					'group' => array('label' => $sGroupByLabel, 'description' => ''),
 					'value' => array('label'=> Dict::S('UI:GroupBy:Count'), 'description' => Dict::S('UI:GroupBy:Count+'))
 				);
 				$sFormat = isset($aExtraParams['format']) ? $aExtraParams['format'] : 'UI:Pagination:HeaderNoSelection';
@@ -748,35 +765,60 @@ EOF
 			$sFilter = $this->m_oFilter->serialize();
 			$sHtml .= "<div id=\"my_chart_$sId{$iChartCounter}\">If the chart does not display, <a href=\"http://get.adobe.com/flash/\" target=\"_blank\">install Flash</a></div>\n";
 			$oPage->add_script("function ofc_resize(left, width, top, height) { /* do nothing special */ }");
+			if (isset($aExtraParams['group_by_label']))
+			{
+				$sUrl = urlencode(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=open_flash_chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[group_by_label]={$aExtraParams['group_by_label']}&params[chart_type]=$sChartType&params[chart_title]=$sTitle&params[currentId]=$sId&id=$sId&filter=".$sFilter);
+			}
+			else
+			{
+				$sUrl = urlencode(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=open_flash_chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[chart_type]=$sChartType&params[chart_title]=$sTitle&params[currentId]=$sId&id=$sId&filter=".$sFilter);
+			}
+
 			$oPage->add_ready_script("swfobject.embedSWF(\"../images/open-flash-chart.swf\", \"my_chart_$sId{$iChartCounter}\", \"100%\", \"300\",\"9.0.0\", \"expressInstall.swf\",
-			{\"data-file\":\"".urlencode(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=open_flash_chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[chart_type]=$sChartType&params[chart_title]=$sTitle&params[currentId]=$sId&id=$sId&filter=".$sFilter)."\"}, {wmode: 'transparent'} );\n");
+				{\"data-file\":\"".$sUrl."\"}, {wmode: 'transparent'} );\n");
 			$iChartCounter++;
 			if (isset($aExtraParams['group_by']))
 			{
-				$sGroupByField = $aExtraParams['group_by'];
-				$aGroupBy = array();
-				while($oObj = $this->m_oSet->Fetch())
+				if (isset($aExtraParams['group_by_label']))
 				{
-					if (isset($aExtraParams['group_by_expr']))
-					{
-						eval("\$sValue = ".sprintf($aExtraParams['group_by_expr'],  $oObj->Get($sGroupByField)).';');
-					}
-					else
-					{
-						$sValue = $oObj->Get($sGroupByField);
-					}
-					$aGroupBy[$sValue] = isset($aGroupBy[$sValue]) ? $aGroupBy[$sValue]+1 : 1;
+					$oGroupByExp = Expression::FromOQL($aExtraParams['group_by']);
+					$sGroupByLabel = $aExtraParams['group_by_label'];
 				}
-				$sFilter = urlencode($this->m_oFilter->serialize());
+				else
+				{
+					// Backward compatibility: group_by is simply a field id
+					$sAlias = $this->m_oFilter->GetClassAlias();
+					$oGroupByExp = new FieldExpression($aExtraParams['group_by'], $sAlias);
+					$sGroupByLabel = MetaModel::GetLabel($this->m_oFilter->GetClass(), $aExtraParams['group_by']);
+				}
+
+				$aGroupBy = array();
+				$aGroupBy['grouped_by_1'] = $oGroupByExp;
+				$sSql = MetaModel::MakeGroupByQuery($this->m_oFilter, $aQueryParams, $aGroupBy);
+				$aRes = CMDBSource::QueryToArray($sSql);
+
+				$aGroupBy = array();
+				$sLabels = array();
+				$iTotalCount = 0;
+				foreach ($aRes as $aRow)
+				{
+					$sValue = $aRow['grouped_by_1'];
+					$sLabels[$sValue] = htmlentities($sValue, ENT_QUOTES, 'UTF-8');
+					$aGroupBy[$sValue] = (int) $aRow['_itop_count_'];
+					$iTotalCount += $aRow['_itop_count_'];
+				}
+
 				$aData = array();
 				$aLabels = array();
 				$idx = 0;
 				$aURLs = array();
 				foreach($aGroupBy as $sValue => $iValue)
 				{
-					$oDrillDownFilter = clone $this->m_oFilter;
-					$oDrillDownFilter->AddCondition($sGroupByField, $sValue, '=');
-					$aURLs[$idx] = $oDrillDownFilter->serialize();
+					// Build the search for this subset
+					$oSubsetSearch = clone $this->m_oFilter;
+					$oCondition = new BinaryExpression($oGroupByExp, '=', new ScalarExpression($sValue));
+					$oSubsetSearch->AddConditionExpression($oCondition);
+					$aURLs[$idx] = $oSubsetSearch->serialize();
 					$idx++;
 				}
 				$sURLList = '';
@@ -810,21 +852,35 @@ EOF
 
 				if (isset($aExtraParams['group_by']))
 				{
-					$sGroupByField = $aExtraParams['group_by'];
-					$aGroupBy = array();
-					while($oObj = $this->m_oSet->Fetch())
+					if (isset($aExtraParams['group_by_label']))
 					{
-						if (isset($aExtraParams['group_by_expr']))
-						{
-							eval("\$sValue = ".sprintf($aExtraParams['group_by_expr'],  $oObj->Get($sGroupByField)).';');
-						}
-						else
-						{
-							$sValue = $oObj->Get($sGroupByField);
-						}
-						$aGroupBy[$sValue] = isset($aGroupBy[$sValue]) ? $aGroupBy[$sValue]+1 : 1;
+						$oGroupByExp = Expression::FromOQL($aExtraParams['group_by']);
+						$sGroupByLabel = $aExtraParams['group_by_label'];
 					}
-					$sFilter = urlencode($this->m_oFilter->serialize());
+					else
+					{
+						// Backward compatibility: group_by is simply a field id
+						$sAlias = $this->m_oFilter->GetClassAlias();
+						$oGroupByExp = new FieldExpression($aExtraParams['group_by'], $sAlias);
+						$sGroupByLabel = MetaModel::GetLabel($this->m_oFilter->GetClass(), $aExtraParams['group_by']);
+					}
+	
+					$aGroupBy = array();
+					$aGroupBy['grouped_by_1'] = $oGroupByExp;
+					$sSql = MetaModel::MakeGroupByQuery($this->m_oFilter, $aQueryParams, $aGroupBy);
+					$aRes = CMDBSource::QueryToArray($sSql);
+	
+					$aGroupBy = array();
+					$sLabels = array();
+					$iTotalCount = 0;
+					foreach ($aRes as $aRow)
+					{
+						$sValue = $aRow['grouped_by_1'];
+						$sLabels[$sValue] = htmlentities($sValue, ENT_QUOTES, 'UTF-8');
+						$aGroupBy[$sValue] = (int) $aRow['_itop_count_'];
+						$iTotalCount += $aRow['_itop_count_'];
+					}
+	
 					$aData = array();
 					$aLabels = array();
 					$maxValue = 0;
@@ -876,21 +932,35 @@ EOF
 				$oChartElement->set_colours( array('#FF8A00', '#909980', '#2C2B33', '#CCC08D', '#596664') );
 				if (isset($aExtraParams['group_by']))
 				{
-					$sGroupByField = $aExtraParams['group_by'];
-					$aGroupBy = array();
-					while($oObj = $this->m_oSet->Fetch())
+					if (isset($aExtraParams['group_by_label']))
 					{
-						if (isset($aExtraParams['group_by_expr']))
-						{
-							eval("\$sValue = ".sprintf($aExtraParams['group_by_expr'],  $oObj->Get($sGroupByField)).';');
-						}
-						else
-						{
-							$sValue = $oObj->Get($sGroupByField);
-						}
-						$aGroupBy[$sValue] = isset($aGroupBy[$sValue]) ? $aGroupBy[$sValue]+1 : 1;
+						$oGroupByExp = Expression::FromOQL($aExtraParams['group_by']);
+						$sGroupByLabel = $aExtraParams['group_by_label'];
 					}
-					$sFilter = urlencode($this->m_oFilter->serialize());
+					else
+					{
+						// Backward compatibility: group_by is simply a field id
+						$sAlias = $this->m_oFilter->GetClassAlias();
+						$oGroupByExp = new FieldExpression($aExtraParams['group_by'], $sAlias);
+						$sGroupByLabel = MetaModel::GetLabel($this->m_oFilter->GetClass(), $aExtraParams['group_by']);
+					}
+	
+					$aGroupBy = array();
+					$aGroupBy['grouped_by_1'] = $oGroupByExp;
+					$sSql = MetaModel::MakeGroupByQuery($this->m_oFilter, $aQueryParams, $aGroupBy);
+					$aRes = CMDBSource::QueryToArray($sSql);
+	
+					$aGroupBy = array();
+					$sLabels = array();
+					$iTotalCount = 0;
+					foreach ($aRes as $aRow)
+					{
+						$sValue = $aRow['grouped_by_1'];
+						$sLabels[$sValue] = htmlentities($sValue, ENT_QUOTES, 'UTF-8');
+						$aGroupBy[$sValue] = (int) $aRow['_itop_count_'];
+						$iTotalCount += $aRow['_itop_count_'];
+					}
+
 					$aData = array();
 					foreach($aGroupBy as $sValue => $iValue)
 					{

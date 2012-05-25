@@ -41,6 +41,7 @@ class SQLQuery
 	private $m_sTable = '';
 	private $m_sTableAlias = '';
 	private $m_aFields = array();
+	private $m_aGroupBy = array();
 	private $m_oConditionExpr = null;
 	private $m_bToDelete = true; // The current table must be listed for deletion ?
 	private $m_aValues = array(); // Values to set in case of an update query
@@ -62,6 +63,7 @@ class SQLQuery
 		$this->m_sTable = $sTable;
 		$this->m_sTableAlias = $sTableAlias;
 		$this->m_aFields = $aFields;
+		$this->m_aGroupBy = null;
 		$this->m_oConditionExpr = null;
 		$this->m_bToDelete = $bToDelete;
 		$this->m_aValues = $aValues;
@@ -125,11 +127,12 @@ class SQLQuery
 		}
 		$aFrom = array();
 		$aFields = array();
+		$aGroupBy = array();
 		$oCondition = null;
 		$aDelTables = array();
 		$aSetValues = array();
 		$aSelectedIdFields = array();
-		$this->privRender($aFrom, $aFields, $oCondition, $aDelTables, $aSetValues, $aSelectedIdFields);
+		$this->privRender($aFrom, $aFields, $aGroupBy, $oCondition, $aDelTables, $aSetValues, $aSelectedIdFields);
 		echo "From ...<br/>\n";
 		echo "<pre style=\"font-size: smaller;\">\n";
 		print_r($aFrom);
@@ -139,6 +142,11 @@ class SQLQuery
 	public function SetSelect($aExpressions)
 	{
 		$this->m_aFields = $aExpressions;
+	}
+
+	public function SetGroupBy($aExpressions)
+	{
+		$this->m_aGroupBy = $aExpressions;
 	}
 
 	public function SetCondition($oConditionExpr)
@@ -235,11 +243,12 @@ class SQLQuery
 		// The goal will be to complete the list as we build the Joins
 		$aFrom = array();
 		$aFields = array();
+		$aGroupBy = arry();
 		$oCondition = null;
 		$aDelTables = array();
 		$aSetValues = array();
 		$aSelectedIdFields = array();
-		$this->privRender($aFrom, $aFields, $oCondition, $aDelTables, $aSetValues, $aSelectedIdFields);
+		$this->privRender($aFrom, $aFields, $aGroupBy, $oCondition, $aDelTables, $aSetValues, $aSelectedIdFields);
 
 		// Target: DELETE myAlias1, myAlias2 FROM t1 as myAlias1, t2 as myAlias2, t3 as topreserve WHERE ...
 
@@ -270,11 +279,12 @@ class SQLQuery
 		// The goal will be to complete the list as we build the Joins
 		$aFrom = array();
 		$aFields = array();
+		$aGroupBy = array();
 		$oCondition = null;
 		$aDelTables = array();
 		$aSetValues = array();
 		$aSelectedIdFields = array();
-		$this->privRender($aFrom, $aFields, $oCondition, $aDelTables, $aSetValues, $aSelectedIdFields);
+		$this->privRender($aFrom, $aFields, $aGroupBy, $oCondition, $aDelTables, $aSetValues, $aSelectedIdFields);
 		$sFrom   = self::ClauseFrom($aFrom);
 		$sValues = self::ClauseValues($aSetValues);
 		$sWhere  = self::ClauseWhere($oCondition, $aArgs);
@@ -287,11 +297,12 @@ class SQLQuery
 		// The goal will be to complete the lists as we build the Joins
 		$aFrom = array();
 		$aFields = array();
+		$aGroupBy = array();
 		$oCondition = null;
 		$aDelTables = array();
 		$aSetValues = array();
 		$aSelectedIdFields = array();
-		$this->privRender($aFrom, $aFields, $oCondition, $aDelTables, $aSetValues, $aSelectedIdFields);
+		$this->privRender($aFrom, $aFields, $aGroupBy, $oCondition, $aDelTables, $aSetValues, $aSelectedIdFields);
 
 		$sFrom   = self::ClauseFrom($aFrom);
 		$sWhere  = self::ClauseWhere($oCondition, $aArgs);
@@ -328,6 +339,27 @@ class SQLQuery
 		return $sSQL;
 	}
 
+	// Interface, build the SQL query
+	public function RenderGroupBy($aArgs = array())
+	{
+		// The goal will be to complete the lists as we build the Joins
+		$aFrom = array();
+		$aFields = array();
+		$aGroupBy = array();
+		$oCondition = null;
+		$aDelTables = array();
+		$aSetValues = array();
+		$aSelectedIdFields = array();
+		$this->privRender($aFrom, $aFields, $aGroupBy, $oCondition, $aDelTables, $aSetValues, $aSelectedIdFields);
+
+		$sSelect = self::ClauseSelect($aFields);
+		$sFrom   = self::ClauseFrom($aFrom);
+		$sWhere  = self::ClauseWhere($oCondition, $aArgs);
+		$sGroupBy = self::ClauseGroupBy($aGroupBy);
+		$sSQL = "SELECT $sSelect, COUNT(*) AS _itop_count_ FROM $sFrom WHERE $sWhere GROUP BY $sGroupBy";
+		return $sSQL;
+	}
+
 	private static function ClauseSelect($aFields)
 	{
 		$aSelect = array();
@@ -337,6 +369,12 @@ class SQLQuery
 		}
 		$sSelect = implode(', ', $aSelect);
 		return $sSelect;
+	}
+
+	private static function ClauseGroupBy($aGroupBy)
+	{
+		$sRes = implode(', ', $aGroupBy);
+		return $sRes;
 	}
 
 	private static function ClauseDelete($aDelTableAliases)
@@ -415,14 +453,14 @@ class SQLQuery
 	}
 
 	// Purpose: prepare the query data, once for all
-	private function privRender(&$aFrom, &$aFields, &$oCondition, &$aDelTables, &$aSetValues, &$aSelectedIdFields)
+	private function privRender(&$aFrom, &$aFields, &$aGroupBy, &$oCondition, &$aDelTables, &$aSetValues, &$aSelectedIdFields)
 	{
-		$sTableAlias = $this->privRenderSingleTable($aFrom, $aFields, $aDelTables, $aSetValues, $aSelectedIdFields, '', array('jointype' => 'first'));
+		$sTableAlias = $this->privRenderSingleTable($aFrom, $aFields, $aGroupBy, $aDelTables, $aSetValues, $aSelectedIdFields, '', array('jointype' => 'first'));
 		$oCondition = $this->m_oConditionExpr;
 		return $sTableAlias; 
 	}
 
-	private function privRenderSingleTable(&$aFrom, &$aFields, &$aDelTables, &$aSetValues, &$aSelectedIdFields, $sCallerAlias = '', $aJoinData)
+	private function privRenderSingleTable(&$aFrom, &$aFields, &$aGroupBy, &$aDelTables, &$aSetValues, &$aSelectedIdFields, $sCallerAlias = '', $aJoinData)
 	{
 		$aActualTableFields = CMDBSource::GetTableFieldsList($this->m_sTable);
 
@@ -506,6 +544,13 @@ class SQLQuery
 		{
 			$aFields["`$sAlias`"] = $oExpression->Render();
 		}
+		if ($this->m_aGroupBy)
+		{
+			foreach($this->m_aGroupBy as $sAlias => $oExpression)
+			{
+				$aGroupBy["`$sAlias`"] = $oExpression->Render();
+			}
+		}
 		if ($this->m_bToDelete)
 		{
 			$aDelTables[] = "`{$this->m_sTableAlias}`";
@@ -528,7 +573,7 @@ class SQLQuery
 		{
 			$oRightSelect = $aJoinData["select"];
 
-			$sJoinTableAlias = $oRightSelect->privRenderSingleTable($aTempFrom, $aFields, $aDelTables, $aSetValues, $aSelectedIdFields, $this->m_sTableAlias, $aJoinData);
+			$sJoinTableAlias = $oRightSelect->privRenderSingleTable($aTempFrom, $aFields, $aGroupBy, $aDelTables, $aSetValues, $aSelectedIdFields, $this->m_sTableAlias, $aJoinData);
 		}
 		$aFrom[$this->m_sTableAlias]['subfrom'] = $aTempFrom;
 

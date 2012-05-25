@@ -373,20 +373,63 @@ abstract class DashletGroupBy extends Dashlet
 		}
 		else
 		{
+			$oFilter = DBObjectSearch::FromOQL($sQuery);
+			$sClassAlias = $oFilter->GetClassAlias();
+
+			if (preg_match('/^(.*):(.*)$/', $sGroupBy, $aMatches))
+			{
+				$sAttCode = $aMatches[1];
+				$sFunction = $aMatches[2];
+
+				switch($sFunction)
+				{
+				case 'hour':
+					$sGroupByLabel = 'Hour of '.$sAttCode. ' (0-23)';
+					$sGroupByExpr = "DATE_FORMAT($sClassAlias.$sAttCode, '%H')"; // 0 -> 31
+					break;
+
+				case 'month':
+					$sGroupByLabel = 'Month of '.$sAttCode. ' (1 - 12)';
+					$sGroupByExpr = "DATE_FORMAT($sClassAlias.$sAttCode, '%m')"; // 0 -> 31
+					break;
+
+				case 'day_of_week':
+					$sGroupByLabel = 'Day of week for '.$sAttCode. ' (sunday to saturday)';
+					$sGroupByExpr = "DATE_FORMAT($sClassAlias.$sAttCode, '%w')";
+					break;
+
+				case 'day_of_month':
+					$sGroupByLabel = 'Day of month for'.$sAttCode;
+					$sGroupByExpr = "DATE_FORMAT($sClassAlias.$sAttCode, '%e')"; // 0 -> 31
+					break;
+
+				default:
+					$sGroupByLabel = 'Unknown group by function '.$sFunction;
+					$sGroupByExpr = $sClassAlias.'.'.$sAttCode;
+				}
+			}
+			else
+			{
+				$sAttCode = $sGroupBy;
+
+				$sGroupByExpr = $sClassAlias.'.'.$sAttCode;
+				$sGroupByLabel = MetaModel::GetLabel($oFilter->GetClass(), $sAttCode);
+			}
+
 			switch($sStyle)
 			{
 			case 'bars':
-				$sXML = '<itopblock BlockClass="DisplayBlock" type="open_flash_chart" parameters="chart_type:bars;chart_title:'.$sTitle.';group_by:'.$sGroupBy.'" asynchronous="false" encoding="text/oql">'.$sQuery.'</itopblock>';
+				$sXML = '<itopblock BlockClass="DisplayBlock" type="open_flash_chart" parameters="chart_type:bars;chart_title:'.$sGroupByLabel.';group_by:'.$sGroupByExpr.';group_by_label:'.$sGroupByLabel.'" asynchronous="false" encoding="text/oql">'.$sQuery.'</itopblock>';
 				$sHtmlTitle = ''; // done in the itop block
 				break;
 			case 'pie':
-				$sXML = '<itopblock BlockClass="DisplayBlock" type="open_flash_chart" parameters="chart_type:pie;chart_title:'.$sTitle.';group_by:'.$sGroupBy.'" asynchronous="false" encoding="text/oql">'.$sQuery.'</itopblock>';
+				$sXML = '<itopblock BlockClass="DisplayBlock" type="open_flash_chart" parameters="chart_type:pie;chart_title:'.$sGroupByLabel.';group_by:'.$sGroupByExpr.';group_by_label:'.$sGroupByLabel.'" asynchronous="false" encoding="text/oql">'.$sQuery.'</itopblock>';
 				$sHtmlTitle = ''; // done in the itop block
 				break;
 			case 'table':
 			default:
 				$sHtmlTitle = htmlentities(Dict::S($sTitle), ENT_QUOTES, 'UTF-8'); // done in the itop block
-				$sXML = '<itopblock BlockClass="DisplayBlock" type="count" parameters="group_by:'.$sGroupBy.'" asynchronous="false" encoding="text/oql">'.$sQuery.'</itopblock>';
+				$sXML = '<itopblock BlockClass="DisplayBlock" type="count" parameters="group_by:'.$sGroupByExpr.';group_by_label:'.$sGroupByLabel.'" asynchronous="false" encoding="text/oql">'.$sQuery.'</itopblock>';
 				break;
 			}
 	
@@ -429,10 +472,11 @@ abstract class DashletGroupBy extends Dashlet
 
 			if ($oAttDef instanceof AttributeDateTime)
 			{
-				//date_format(start_date, '%d')
-				$aGroupBy['date_of_'.$sAttCode] = 'Day of '.$oAttDef->GetLabel();
+				$aGroupBy[$sAttCode.':hour'] = $oAttDef->GetLabel().' (hour)';
+				$aGroupBy[$sAttCode.':month'] = $oAttDef->GetLabel().' (month)';
+				$aGroupBy[$sAttCode.':day_of_week'] = $oAttDef->GetLabel().' (day of week)';
+				$aGroupBy[$sAttCode.':day_of_month'] = $oAttDef->GetLabel().' (day of month)';
 			}
-
 		}
 
 		
@@ -719,3 +763,92 @@ class DashletBadge extends Dashlet
 	}
 }
 
+
+class DashletProto extends Dashlet
+{
+	public function __construct($sId)
+	{
+		parent::__construct($sId);
+		$this->aProperties['class'] = 'Foo';
+	}
+	
+	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
+	{
+		$sClass = $this->aProperties['class'];
+
+		$oFilter = DBObjectSearch::FromOQL('SELECT FunctionalCI AS fci');
+		$sGroupBy1 = 'status';
+		$sGroupBy2 = 'org_id_friendlyname';
+		$sHtmlTitle = "Hardcoded on $sGroupBy1 and $sGroupBy2...";
+
+		$sAlias = $oFilter->GetClassAlias();
+
+		$oGroupByExp1 = new FieldExpression($sGroupBy1, $sAlias);
+		$sGroupByLabel1 = MetaModel::GetLabel($oFilter->GetClass(), $sGroupBy1);
+		
+		$oGroupByExp2 = new FieldExpression($sGroupBy2, $sAlias);
+		$sGroupByLabel2 = MetaModel::GetLabel($oFilter->GetClass(), $sGroupBy2);
+		
+		$aGroupBy = array();
+		$aGroupBy['grouped_by_1'] = $oGroupByExp1;
+		$aGroupBy['grouped_by_2'] = $oGroupByExp2;
+		$sSql = MetaModel::MakeGroupByQuery($oFilter, array(), $aGroupBy);
+		$aRes = CMDBSource::QueryToArray($sSql);
+		
+		$iTotalCount = 0;
+		$aData = array();
+		$oAppContext = new ApplicationContext();
+		$sParams = $oAppContext->GetForLink();
+		foreach ($aRes as $aRow)
+		{
+			$iCount = $aRow['_itop_count_'];
+			$iTotalCount += $iCount;
+
+			$sValue1 = $aRow['grouped_by_1'];
+			$sValue2 = $aRow['grouped_by_2'];
+
+			// Build the search for this subset
+			$oSubsetSearch = clone $oFilter;
+			$oCondition = new BinaryExpression($oGroupByExp1, '=', new ScalarExpression($sValue1));
+			$oSubsetSearch->AddConditionExpression($oCondition);
+			$oCondition = new BinaryExpression($oGroupByExp2, '=', new ScalarExpression($sValue2));
+			$oSubsetSearch->AddConditionExpression($oCondition);
+		
+			$sFilter = urlencode($oSubsetSearch->serialize());
+			$aData[] = array (
+				'group1' => htmlentities($sValue1, ENT_QUOTES, 'UTF-8'),
+				'group2' => htmlentities($sValue2, ENT_QUOTES, 'UTF-8'),
+				'value' => "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&dosearch=1&$sParams&filter=$sFilter\">$iCount</a>"
+			); // TO DO: add the context information
+		}
+		$aAttribs =array(
+			'group1' => array('label' => $sGroupByLabel1, 'description' => ''),
+			'group2' => array('label' => $sGroupByLabel2, 'description' => ''),
+			'value' => array('label'=> Dict::S('UI:GroupBy:Count'), 'description' => Dict::S('UI:GroupBy:Count+'))
+		);
+
+
+		$oPage->add('<div style="text-align:center" class="dashlet-content">');
+
+		$oPage->add('<h1>'.$sHtmlTitle.'</h1>');
+		$oPage->p(Dict::Format('UI:Pagination:HeaderNoSelection', $iTotalCount));
+		$oPage->table($aAttribs, $aData);
+
+		$oPage->add('</div>');
+	}
+
+	public function GetPropertiesFields(DesignerForm $oForm)
+	{
+		$oField = new DesignerTextField('class', 'Class', $this->aProperties['class']);
+		$oForm->AddField($oField);
+	}
+	
+	static public function GetInfo()
+	{
+		return array(
+			'label' => 'Test3D',
+			'icon' => 'images/xxxxxx.png',
+			'description' => 'Group by on two dimensions',
+		);
+	}
+}
