@@ -26,6 +26,7 @@ abstract class Dashlet
 	protected $bRedrawNeeded;
 	protected $bFormRedrawNeeded;
 	protected $aProperties; // array of {property => value}
+	protected $aCSSClasses;
 	
 	public function __construct($sId)
 	{
@@ -33,6 +34,7 @@ abstract class Dashlet
 		$this->bRedrawNeeded = true; // By default: redraw each time a property changes
 		$this->bFormRedrawNeeded = false; // By default: no need to redraw the form (independent fields)
 		$this->aProperties = array(); // By default: there is no property
+		$this->aCSSClasses = array('dashlet');
 	}
 
 	// Assuming that a property has the type of its default value, set in the constructor
@@ -109,14 +111,15 @@ abstract class Dashlet
 	
 	public function DoRender($oPage, $bEditMode = false, $aExtraParams = array())
 	{
+		$sCSSClasses = implode(' ', $this->aCSSClasses);
 		if ($bEditMode)
 		{
 			$sId = $this->GetID();
-			$oPage->add('<div class="dashlet" id="dashlet_'.$sId.'">');
+			$oPage->add('<div class="'.$sCSSClasses.'" id="dashlet_'.$sId.'">');
 		}
 		else
 		{
-			$oPage->add('<div class="dashlet">');
+			$oPage->add('<div class="'.$sCSSClasses.'">');
 		}
 		$this->Render($oPage, $bEditMode, $aExtraParams);
 		$oPage->add('</div>');
@@ -293,7 +296,7 @@ class DashletObjectList extends Dashlet
 		$oField = new DesignerTextField('title', 'Title', $this->aProperties['title']);
 		$oForm->AddField($oField);
 
-		$oField = new DesignerTextField('query', 'Query', $this->aProperties['query']);
+		$oField = new DesignerLongTextField('query', 'Query', $this->aProperties['query']);
 		$oForm->AddField($oField);
 
 		$oField = new DesignerBooleanField('menu', 'Menu', $this->aProperties['menu']);
@@ -379,7 +382,7 @@ abstract class DashletGroupBy extends Dashlet
 		$oField = new DesignerTextField('title', 'Title', $this->aProperties['title']);
 		$oForm->AddField($oField);
 
-		$oField = new DesignerTextField('query', 'Query', $this->aProperties['query']);
+		$oField = new DesignerLongTextField('query', 'Query', $this->aProperties['query']);
 		$oForm->AddField($oField);
 
 		// Group by field: build the list of possible values (attribute codes + ...)
@@ -575,10 +578,12 @@ class DashletHeader extends Dashlet
 		}
 
 		$oPage->add('<div style="text-align:center" class="dashlet-content">');
+		$oPage->add('<div class="main_header">');
 		$aParams = array();
 		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
 		$oBlock = DisplayBlock::FromTemplate($sXML);
 		$oBlock->Display($oPage, $sBlockId, $aParams);
+		$oPage->add('</div>');
 		$oPage->add('</div>');
 	}
 
@@ -603,3 +608,43 @@ class DashletHeader extends Dashlet
 		);
 	}
 }
+
+
+class DashletBadge extends Dashlet
+{
+	public function __construct($sId)
+	{
+		parent::__construct($sId);
+		$this->aProperties['class'] = 'Contact';
+		$this->aCSSClasses[] = 'dashlet-inline';
+		$this->aCSSClasses[] = 'dashlet-badge';
+	}
+	
+	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
+	{
+		$sClass = $this->aProperties['class'];
+
+		$oPage->add('<div style="text-align:center" class="dashlet-content">');
+		$sXml = "<itopblock BlockClass=\"DisplayBlock\" type=\"actions\" asynchronous=\"false\" encoding=\"text/oql\" parameters=\"context_filter:1\">SELECT $sClass</itopblock>";
+		$oBlock = DisplayBlock::FromTemplate($sXml);
+		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
+		$oBlock->Display($oPage, $sBlockId, $aExtraParams);
+		$oPage->add('</div>');
+	}
+
+	public function GetPropertiesFields(DesignerForm $oForm)
+	{
+		$oField = new DesignerTextField('class', 'Class', $this->aProperties['class']);
+		$oForm->AddField($oField);
+	}
+	
+	static public function GetInfo()
+	{
+		return array(
+			'label' => 'Badge',
+			'icon' => 'images/dashlet-badge.png',
+			'description' => 'Object Icon with new/search',
+		);
+	}
+}
+

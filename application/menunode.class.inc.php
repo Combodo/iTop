@@ -807,9 +807,11 @@ class DashboardMenuNode extends MenuNode
 
 	protected function GetDashboard()
 	{
-		$sDashboardDefinition = @file_get_contents($this->sDashboardFile);
+		$sDashboardDefinition = @file_get_contents($this->sDashboardFile);		
 		if ($sDashboardDefinition !== false)
 		{
+			$bCustomized = false;
+			
 			// Search for an eventual user defined dashboard, overloading the existing one
 			$oUDSearch = new DBObjectSearch('UserDashboard');
 			$oUDSearch->AddCondition('user_id', UserRights::GetUserId(), '=');
@@ -820,10 +822,12 @@ class DashboardMenuNode extends MenuNode
 				// Assuming there is at most one couple {user, menu}!
 				$oUserDashboard = $oUDSet->Fetch();
 				$sDashboardDefinition = $oUserDashboard->Get('contents');
+				$bCustomized = true;
+				
 			}
-
 			$oDashboard = new RuntimeDashboard($this->sMenuId);
 			$oDashboard->FromXml($sDashboardDefinition);
+			$oDashboard->SetCustomFlag($bCustomized);
 		}
 		else
 		{

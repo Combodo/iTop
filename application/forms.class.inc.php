@@ -150,7 +150,7 @@ class DesignerForm
 		if ($this->oParentForm == null)
 		{
 			$sFormId = $this->sFormId;
-			$sReturn = '<form id="'.$sFormId.'">';
+			$sReturn = '<form id="'.$sFormId.'" onsubmit="return false;">';
 			$sReturn .= '<table class="prop_table">';
 			$sReturn .= '<thead><tr><th class="prop_header">Property</th><th class="prop_header">Value</th><th colspan="2" class="prop_header">&nbsp;</th></tr></thead><tbody>';
 		}
@@ -624,6 +624,29 @@ EOF
 		{
 			$aValues[$this->sCode] = $this->defaultValue;
 		}
+	}
+}
+
+class DesignerLongTextField extends DesignerTextField
+{
+	public function Render(WebPage $oP, $sFormId, $sRenderMode='dialog')
+	{
+		$sId = $this->oForm->GetFieldId($this->sCode);
+		$sName = $this->oForm->GetFieldName($this->sCode);
+		$sValidation = $this->oForm->GetValidationArea($this->sCode);
+		$sPattern = addslashes($this->sValidationPattern);
+		$sMandatory = $this->bMandatory ? 'true' :  'false';
+		$sReadOnly = $this->IsReadOnly() ? 'readonly' :  '';
+		$oP->add_ready_script(
+<<<EOF
+$('#$sId').bind('change keyup validate', function() { ValidateWithPattern('$sId', $sMandatory, '$sPattern', '$sFormId'); } );
+{
+	var myTimer = null;
+	$('#$sId').bind('keyup', function() { clearTimeout(myTimer); myTimer = setTimeout(function() { $('#$sId').trigger('change', {} ); }, 100); });
+}
+EOF
+);
+		return array('label' => $this->sLabel, 'value' => "<textarea id=\"$sId\" $sReadOnly name=\"$sName\">".htmlentities($this->defaultValue, ENT_QUOTES, 'UTF-8')."</textarea>".$sValidation);
 	}
 }
 

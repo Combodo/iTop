@@ -27,9 +27,8 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 		$this->iNbCols = 1;
 	}
 	
-	public function Render($oPage, $aDashlets, $bEditMode = false, $aExtraParams = array())
+	protected function TrimCell($aDashlets)
 	{
-		// Trim the list of dashlets to remove the invisible ones at the end of the array
 		$aKeys = array_reverse(array_keys($aDashlets));
 		$idx = 0;
 		$bNoVisibleFound = true;
@@ -46,24 +45,63 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 			}
 			$idx++;
 		}
+		return $aDashlets;
+	}
+	
+	protected function TrimCellsArray($aCells)
+	{
+		foreach($aCells as $key => $aDashlets)
+		{
+			$aCells[$key] = $this->TrimCell($aDashlets);
+		}
+		$aKeys = array_reverse(array_keys($aCells));
+		$idx = 0;
+		$bNoVisibleFound = true;
+		while($idx < count($aKeys) && $bNoVisibleFound)
+		{
+			$aDashlets = $aCells[$aKeys[$idx]];
+			if (count($aDashlets) > 0)
+			{
+				$bNoVisibleFound = false;
+			}
+			else
+			{
+				unset($aCells[$aKeys[$idx]]);
+			}
+			$idx++;
+		}
+		return $aCells;		
+		
+	}
+	
+	public function Render($oPage, $aCells, $bEditMode = false, $aExtraParams = array())
+	{
+		// Trim the list of cells to remove the invisible/empty ones at the end of the array
+		$aCells = $this->TrimCellsArray($aCells);
 		
 		$oPage->add('<table style="width:100%"><tbody>');
-		$iDashletIdx = 0;
+		$iCellIdx = 0;
 		$fColSize = 100 / $this->iNbCols;
-		$sStyle = $bEditMode ? 'style="border: 1px #ccc dashed; width:'.$fColSize.'%;" class="layout_cell edit_mode"' : 'style="width: '.$fColSize.'%;  "';
-		$iNbRows = ceil(count($aDashlets) / $this->iNbCols);
+		$sStyle = $bEditMode ? 'style="border: 1px #ccc dashed; width:'.$fColSize.'%;" class="layout_cell edit_mode"' : 'style="width: '.$fColSize.'%;" class="dashboard"';
+		$iNbRows = ceil(count($aCells) / $this->iNbCols);
 		for($iRows = 0; $iRows < $iNbRows; $iRows++)
 		{
 			$oPage->add('<tr>');
 			for($iCols = 0; $iCols < $this->iNbCols; $iCols++)
 			{
 				$oPage->add("<td $sStyle>");
-				if (array_key_exists($iDashletIdx, $aDashlets))
+				if (array_key_exists($iCellIdx, $aCells))
 				{
-					$oDashlet = $aDashlets[$iDashletIdx];
-					if ($oDashlet->IsVisible())
+					$aDashlets = $aCells[$iCellIdx];
+					if (count($aDashlets) > 0)
 					{
-						$oDashlet->DoRender($oPage, $bEditMode, $aExtraParams);
+						foreach($aDashlets as $oDashlet)
+						{
+							if ($oDashlet->IsVisible())
+							{
+								$oDashlet->DoRender($oPage, $bEditMode, $aExtraParams);
+							}
+						}
 					}
 					else
 					{
@@ -75,7 +113,7 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 					$oPage->add('&nbsp;');
 				}
 				$oPage->add('</td>');
-				$iDashletIdx++;
+				$iCellIdx++;
 			}
 			$oPage->add('</tr>');
 		}

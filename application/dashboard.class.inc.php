@@ -28,11 +28,12 @@ abstract class Dashboard
 	protected $aWidgetsData;
 	protected $oDOMNode;
 	protected $sId;
+	protected $aCells;
 	
 	public function __construct($sId)
 	{
 		$this->sLayoutClass = null;
-		$this->aDashlets = array();
+		$this->aCells = array();
 		$this->oDOMNode = null;
 		$this->sId = $sId;
 	}
@@ -49,15 +50,21 @@ abstract class Dashboard
 		$oTitleNode = $this->oDOMNode->getElementsByTagName('title')->item(0);
 		$this->sTitle = $oTitleNode->textContent;
 		
-		$oDashletsNode = $this->oDOMNode->getElementsByTagName('dashlets')->item(0);
-		$oDashletList = $oDashletsNode->getElementsByTagName('dashlet');
-		foreach($oDashletList as $oDomNode)
+		$oCellsNode = $this->oDOMNode->getElementsByTagName('cells')->item(0);
+		$oCellsList = $oCellsNode->getElementsByTagName('cell');
+		foreach($oCellsList as $oCellNode)
 		{
-			$sDashletClass = $oDomNode->getAttribute('xsi:type');
-			$sId = $oDomNode->getAttribute('id');
-			$oNewDashlet = new $sDashletClass($sId);
-			$oNewDashlet->FromDOMNode($oDomNode);
-			$this->aDashlets[] = $oNewDashlet;
+			$aDashletList = array();
+			$oDashletList = $oCellNode->getElementsByTagName('dashlet');
+			foreach($oDashletList as $oDomNode)
+			{
+				$sDashletClass = $oDomNode->getAttribute('xsi:type');
+				$sId = $oDomNode->getAttribute('id');
+				$oNewDashlet = new $sDashletClass($sId);
+				$oNewDashlet->FromDOMNode($oDomNode);
+				$aDashletList[] = $oNewDashlet;
+			}
+			$this->aCells[] = $aDashletList;
 		}
 	}
 	
@@ -77,16 +84,21 @@ abstract class Dashboard
 		$oNode = $oDoc->createElement('title', $this->sTitle);
 		$oMainNode->appendChild($oNode);
 
-		$oDashletsNode = $oDoc->createElement('dashlets');
-		$oMainNode->appendChild($oDashletsNode);
+		$oCellsNode = $oDoc->createElement('cells');
+		$oMainNode->appendChild($oCellsNode);
 
-		foreach ($this->aDashlets as $oDashlet)
+		foreach ($this->aCells as $aCell)
 		{
-			$oNode = $oDoc->createElement('dashlet');
-			$oDashletsNode->appendChild($oNode);
-			$oNode->setAttribute('id', $oDashlet->GetID());
-			$oNode->setAttribute('xsi:type', get_class($oDashlet));
-			$oDashlet->ToDOMNode($oNode);
+			$oCellNode = $oDoc->createElement('cell');
+			$oCellsNode->appendChild($oCellNode);
+			foreach ($aCell as $oDashlet)
+			{
+				$oNode = $oDoc->createElement('dashlet');
+				$oCellNode->appendChild($oNode);
+				$oNode->setAttribute('id', $oDashlet->GetID());
+				$oNode->setAttribute('xsi:type', get_class($oDashlet));
+				$oDashlet->ToDOMNode($oNode);
+			}
 		}
 
 		$sXml = $oDoc->saveXML();
@@ -98,18 +110,23 @@ abstract class Dashboard
 		$this->sLayoutClass = $aParams['layout_class'];
 		$this->sTitle = $aParams['title'];
 		
-		foreach($aParams['dashlets'] as $aDashletParams)
+		foreach($aParams['cells'] as $aCell)
 		{
-			$sDashletClass = $aDashletParams['dashlet_class'];
-			$sId = $aDashletParams['dashlet_id'];
-			$oNewDashlet = new $sDashletClass($sId);
-			
-			$oForm = $oNewDashlet->GetForm();
-			$oForm->SetParamsContainer($sId);
-			$oForm->SetPrefix('');
-			$aValues = $oForm->ReadParams();
-			$oNewDashlet->FromParams($aValues);
-			$this->aDashlets[] = $oNewDashlet;
+			$aCellDashlets = array();
+			foreach($aCell as $aDashletParams)
+			{
+				$sDashletClass = $aDashletParams['dashlet_class'];
+				$sId = $aDashletParams['dashlet_id'];
+				$oNewDashlet = new $sDashletClass($sId);
+				
+				$oForm = $oNewDashlet->GetForm();
+				$oForm->SetParamsContainer($sId);
+				$oForm->SetPrefix('');
+				$aValues = $oForm->ReadParams();
+				$oNewDashlet->FromParams($aValues);
+				$aCellDashlets[] = $oNewDashlet;
+			}
+			$this->aCells[] = $aCellDashlets;
 		}
 		
 	}
@@ -138,7 +155,7 @@ abstract class Dashboard
 	{
 		$this->sTitle = $sTitle;
 	}
-	
+		
 	public function AddDashlet()
 	{
 	}
@@ -147,7 +164,7 @@ abstract class Dashboard
 	{
 		$oPage->add('<h1>'.Dict::S($this->sTitle).'</h1>');
 		$oLayout = new $this->sLayoutClass;
-		$oLayout->Render($oPage, $this->aDashlets, $bEditMode, $aExtraParams);
+		$oLayout->Render($oPage, $this->aCells, $bEditMode, $aExtraParams);
 		if (!$bEditMode)
 		{
 			$oPage->add_linked_script('../js/dashlet.js');
@@ -173,7 +190,8 @@ abstract class Dashboard
 				{
 					$aCallSpec = array($sLayoutClass, 'GetInfo');
 					$aInfo = call_user_func($aCallSpec);
-					$oPage->add('<input type="radio" name="layout_class" value="'.$sLayoutClass.'" id="layout_'.$sLayoutClass.'"><label for="layout_'.$sLayoutClass.'"><img src="'.$sUrl.$aInfo['icon'].'" /></label>'); // title="" on either the img or the label does nothing !
+					$sChecked = ($this->sLayoutClass == $sLayoutClass) ? 'checked' : '';
+					$oPage->add('<input type="radio" name="layout_class" '.$sChecked.' value="'.$sLayoutClass.'" id="layout_'.$sLayoutClass.'"><label for="layout_'.$sLayoutClass.'"><img src="'.$sUrl.$aInfo['icon'].'" /></label>'); // title="" on either the img or the label does nothing !
 				}
 			}
 		}
@@ -229,17 +247,20 @@ EOF
 		$oPage->add('<div class="ui-widget-content ui-corner-all"><div class="ui-widget-header ui-corner-all" style="text-align:center; padding: 2px;">Dashlet Properties</div>');
 
 		$oPage->add('<div id="dashlet_properties" style="text-align:center">');
-		foreach($this->aDashlets as $oDashlet)
+		foreach($this->aCells as $aCell)
 		{
-			$sId = $oDashlet->GetID();
-			$sClass = get_class($oDashlet);
-			if ($oDashlet->IsVisible())
+			foreach($aCell as $oDashlet)
 			{
-				$oPage->add('<div class="dashlet_properties" id="dashlet_properties_'.$sId.'" style="display:none">');
-				$oForm = $oDashlet->GetForm();
-				$this->SetFormParams($oForm);
-				$oForm->RenderAsPropertySheet($oPage);		
-				$oPage->add('</div>');
+				$sId = $oDashlet->GetID();
+				$sClass = get_class($oDashlet);
+				if ($oDashlet->IsVisible())
+				{
+					$oPage->add('<div class="dashlet_properties" id="dashlet_properties_'.$sId.'" style="display:none">');
+					$oForm = $oDashlet->GetForm();
+					$this->SetFormParams($oForm);
+					$oForm->RenderAsPropertySheet($oPage);		
+					$oPage->add('</div>');
+				}
 			}
 		}
 		$oPage->add('</div>');
@@ -252,6 +273,19 @@ EOF
 
 class RuntimeDashboard extends Dashboard
 {
+	protected $bCustomized;
+	
+	public function __construct($sId)
+	{
+		parent::__construct($sId);
+		$this->bCustomized = false;
+	}
+		
+	public function SetCustomFlag($bCustomized)
+	{
+		$this->bCustomized = $bCustomized;
+	}
+	
 	protected function SetFormParams($oForm)
 	{
 		$oForm->SetSubmitParams(utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php', array('operation' => 'update_dashlet_property'));		
@@ -284,18 +318,56 @@ class RuntimeDashboard extends Dashboard
 		}		
 	}
 	
+	public function Revert()
+	{
+		$oUDSearch = new DBObjectSearch('UserDashboard');
+		$oUDSearch->AddCondition('user_id', UserRights::GetUserId(), '=');
+		$oUDSearch->AddCondition('menu_code', $this->sId, '=');
+		$oUDSet = new DBObjectSet($oUDSearch);
+		if ($oUDSet->Count() > 0)
+		{
+			// Assuming there is at most one couple {user, menu}!
+			$oUserDashboard = $oUDSet->Fetch();
+			$oUserDashboard->DBDelete();
+		}
+	}
+	
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
 		parent::Render($oPage, $bEditMode, $aExtraParams);
 		if (!$bEditMode)
 		{
-			$sEditBtn = addslashes('<div style="display: inline-block; height: 55px; width:200px;vertical-align:center;line-height:60px;text-align:left;"><button onclick="EditDashboard(\''.$this->sId.'\');">Edit This Page</button></div>');
-			$oPage->add_ready_script("$('#top-bar').prepend('$sEditBtn');");
+			$sEditMenu = "<td><span id=\"DashboardMenu\"><ul><li><img src=\"../images/edit.png\"><ul>";
+			$sEditMenu .= "<li><a href=\"#\" onclick=\"return EditDashboard('{$this->sId}')\">Edit This Page</a></li>";
+			if ($this->bCustomized)
+			{
+				$sEditMenu .= "<li><a href=\"#\" onclick=\"return RevertDashboard('{$this->sId}')\">Revert To Original Version</a></li>";
+			}
+			$sEditMenu .= "</ul></li></ul></span></td>";
+			$sEditMenu = addslashes($sEditMenu);
+			//$sEditBtn = addslashes('<div style="display: inline-block; height: 55px; width:200px;vertical-align:center;line-height:60px;text-align:left;"><button onclick="EditDashboard(\''.$this->sId.'\');">Edit This Page</button></div>');
+			$oPage->add_ready_script(
+<<<EOF
+	$('#logOffBtn').parent().before('$sEditMenu');
+	$('#DashboardMenu>ul').popupmenu();
+	
+EOF
+			);
 			$oPage->add_script(
 <<<EOF
 function EditDashboard(sId)
 {
 	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', {operation: 'dashboard_editor', id: sId},
+		function(data)
+		{
+			$('body').append(data);
+		}
+	);
+	return false;
+}
+function RevertDashboard(sId)
+{
+	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', {operation: 'revert_dashboard', dashboard_id: sId},
 		function(data)
 		{
 			$('body').append(data);
@@ -380,8 +452,24 @@ $('#event_bus').bind('dashlet-selected', function(event, data){
 		});
 
 	});
+	
+dashboard_prop_size = GetUserPreference('dashboard_prop_size', 300);
+$('#dashboard_editor').layout({
+	east: {
+		minSize: 150,
+		size: dashboard_prop_size,
+		onresize_end: function(name, elt, state, options, layout)
+		{
+			if (state.isSliding == false)
+			{
+				SetUserPreference('dashboard_prop_size', state.size, true);
+			}
+		},
+	}
+});
+	
 EOF
 		);
-		$oPage->add_ready_script("$('#dashboard_editor').layout({ east__size: 300 });");
+		$oPage->add_ready_script("");
 	}
 }
