@@ -197,6 +197,12 @@ abstract class Dashboard
 		}
 		$oPage->add('</div>');
 		
+		$oForm = new DesignerForm();
+		$oField = new DesignerLongTextField('dashboard_title', 'Title', $this->sTitle);
+		$oForm->AddField($oField);
+		$this->SetFormParams($oForm);
+		$oForm->RenderAsPropertySheet($oPage);	
+		
 		$oPage->add('</div>');
 		$oPage->add_ready_script(
 <<<EOF
@@ -205,6 +211,11 @@ abstract class Dashboard
 		var sLayoutClass = $(this).val();
 		$(':itop-dashboard').dashboard('option', {layout_class: sLayoutClass});
 	} );
+	$('#row_attr_dashboard_title').property_field('option', {'do_apply': function() {
+			var sTitle = $('#attr_dashboard_title').val();
+			$(':itop-dashboard').dashboard('option', {title: sTitle});
+		}
+	});
 EOF
 		);
 	}
@@ -338,7 +349,7 @@ class RuntimeDashboard extends Dashboard
 		if (!$bEditMode)
 		{
 			$sEditMenu = "<td><span id=\"DashboardMenu\"><ul><li><img src=\"../images/edit.png\"><ul>";
-			$sEditMenu .= "<li><a href=\"#\" onclick=\"return EditDashboard('{$this->sId}')\">Edit This Page</a></li>";
+			$sEditMenu .= "<li><a href=\"#\" onclick=\"return EditDashboard('{$this->sId}')\">Edit This Page...</a></li>";
 			if ($this->bCustomized)
 			{
 				$sEditMenu .= "<li><a href=\"#\" onclick=\"return RevertDashboard('{$this->sId}')\">Revert To Original Version</a></li>";
