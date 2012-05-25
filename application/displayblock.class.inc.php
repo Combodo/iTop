@@ -1067,7 +1067,7 @@ class MenuBlock extends DisplayBlock
 		$sClass = $this->m_oFilter->GetClass();
 		$oSet = new CMDBObjectSet($this->m_oFilter);
 		$sFilter = $this->m_oFilter->serialize();
-		$sFilterDesc = $this->m_oFilter->ToOql();
+		$sFilterDesc = $this->m_oFilter->ToOql(true);
 		$aActions = array();
 		$sUIPage = cmdbAbstractObject::ComputeStandardUIPage($sClass);
 		$sRootUrl = utils::GetAbsoluteUrlAppRoot();
@@ -1140,6 +1140,8 @@ class MenuBlock extends DisplayBlock
 				$sUrl = ApplicationContext::MakeObjectUrl($sClass, $id);
 				$aActions['UI:Menu:EMail'] = array ('label' => Dict::S('UI:Menu:EMail'), 'url' => "mailto:?subject=".urlencode($oObj->GetRawName())."&body=".urlencode($sUrl));
 				$aActions['UI:Menu:CSVExport'] = array ('label' => Dict::S('UI:Menu:CSVExport'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=search&filter=$sFilter&format=csv{$sContext}");
+				$sOQL = addslashes($sFilterDesc);
+				$aActions['UI:Menu:AddToDashboard'] = array ('label' => Dict::S('UI:Menu:AddToDashboard'), 'url' => "#", 'onclick' => "return DashletCreationDlg('$sOQL')");
 			}
 			$this->AddMenuSeparator($aActions);
 			foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
@@ -1219,6 +1221,8 @@ class MenuBlock extends DisplayBlock
 				$sUrl = utils::GetAbsoluteUrlAppRoot();
 				$aActions['UI:Menu:EMail'] = array ('label' => Dict::S('UI:Menu:EMail'), 'url' => "mailto:?subject=$sFilterDesc&body=".urlencode("{$sUrl}pages/$sUIPage?operation=search&filter=$sFilter{$sContext}"));
 				$aActions['UI:Menu:CSVExport'] = array ('label' => Dict::S('UI:Menu:CSVExport'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=search&filter=$sFilter&format=csv{$sContext}");
+				$sOQL = addslashes($sFilterDesc);
+				$aActions['UI:Menu:AddToDashboard'] = array ('label' => Dict::S('UI:Menu:AddToDashboard'), 'url' => "#", 'onclick' => "return DashletCreationDlg('$sOQL')");
 			}
 			$this->AddMenuSeparator($aActions);
 			foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
@@ -1267,6 +1271,7 @@ class MenuBlock extends DisplayBlock
 			else
 			{
 				$sClass = isset($aAction['class']) ? " class=\"{$aAction['class']}\"" : "";
+				$sOnClick = isset($aAction['onclick']) ? " onclick=\"{$aAction['onclick']}\"" : "";
 				if (empty($aAction['url']))
 				{
 					if ($sPrevUrl != '') // Don't output consecutively two separators...
@@ -1277,7 +1282,7 @@ class MenuBlock extends DisplayBlock
 				}
 				else
 				{
-					$sHtml .= "<li><a href=\"{$aAction['url']}\"$sClass>{$aAction['label']}</a></li>\n";
+					$sHtml .= "<li><a href=\"{$aAction['url']}\"$sClass $sOnClick>{$aAction['label']}</a></li>\n";
 					$sPrevUrl = $aAction['url'];
 				}
 			}

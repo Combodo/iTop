@@ -156,8 +156,11 @@ abstract class Dashboard
 		$this->sTitle = $sTitle;
 	}
 		
-	public function AddDashlet()
+	public function AddDashlet($oDashlet)
 	{
+		$sId = $this->GetNewDashletId();
+		$oDashlet->SetId($sId);
+		$this->aCells[] = array($oDashlet);
 	}
 	
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
@@ -169,7 +172,6 @@ abstract class Dashboard
 		{
 			$oPage->add_linked_script('../js/dashlet.js');
 			$oPage->add_linked_script('../js/dashboard.js');
-			$oPage->add_linked_script('../js/property_field.js');
 		}
 	}
 	
@@ -277,6 +279,11 @@ EOF
 		$oPage->add('</div>');
 
 		$oPage->add('</div>');
+	}
+	
+	protected function GetNewDashletId()
+	{
+		return 999;
 	}
 	
 	abstract protected function SetFormParams($oForm);
@@ -482,5 +489,113 @@ $('#dashboard_editor').layout({
 EOF
 		);
 		$oPage->add_ready_script("");
+	}
+	
+	public static function GetDashletCreationForm($sOQL)
+	{
+		$oForm = new DesignerForm();
+	
+		// Get the list of all 'dashboard' menus in which we can insert a dashlet
+		$aAllMenus = ApplicationMenu::ReflectionMenuNodes();
+		$aAllowedDashboards = array();
+		foreach($aAllMenus as $idx => $aMenu)
+		{
+			$oMenu = $aMenu['node'];
+			if ($oMenu instanceof DashboardMenuNode)
+			{
+				$aAllowedDashboards[$oMenu->GetMenuId()] = Dict::S($oMenu->GetMenuId());
+			}
+		}
+		
+		$aKeys = array_keys($aAllowedDashboards); // Select the first one by default
+		$sDefaultDashboard = $aKeys[0];
+		$oField = new DesignerComboField('menu_id', 'Dashboard', $sDefaultDashboard);
+		$oField->SetAllowedValues($aAllowedDashboards);
+		$oField->SetMandatory(true);
+		$oForm->AddField($oField);
+				
+		// Get the list of possible dashlets that support a creation from
+		// an OQL
+		$aDashlets = array();
+		foreach( get_declared_classes() as $sDashletClass)
+		{
+			if (is_subclass_of($sDashletClass, 'Dashlet'))
+			{
+				$oReflection = new ReflectionClass($sDashletClass);
+				if (!$oReflection->isAbstract())
+				{
+					$aCallSpec = array($sDashletClass, 'CanCreateFromOQL');
+					$bShorcutMode = call_user_func($aCallSpec);
+					if ($bShorcutMode)
+					{
+						$aCallSpec = array($sDashletClass, 'GetInfo');
+						$aInfo = call_user_func($aCallSpec);
+						$aDashlets[$sDashletClass] = array('label' => $aInfo['label'], 'class' => $sDashletClass, 'icon' => $aInfo['icon']);
+					}
+				}
+			}
+		}
+		
+		$oSelectorField = new DesignerFormSelectorField('dashlet_class', 'Dashlet Type', '');
+		$oForm->AddField($oSelectorField);
+		foreach($aDashlets as $sDashletClass => $aDashletInfo)
+		{
+			$oSubForm = new DesignerForm();
+			$oDashlet = new $sDashletClass(0);
+			$oDashlet->GetPropertiesFieldsFromOQL($oSubForm, $sOQL);
+			
+			$oSelectorField->AddSubForm($oSubForm, $aDashletInfo['label'], $aDashletInfo['class']);
+		}
+		$oField = new DesignerBooleanField('open_editor', 'Edit the Dashboard', true);
+		$oForm->AddField($oField);
+		
+		return $oForm;
+	}
+	
+	public static function GetDashletCreationDlgFromOQL($oPage, $sOQL)
+	{
+		$oPage->add('<div id="dashlet_creation_dlg">');
+
+		$oForm = self::GetDashletCreationForm($sOQL);
+		
+		$oForm->Render($oPage);
+		$oPage->add('</div>');
+		
+		$sDialogTitle = 'Create a new Dashlet';
+		$sOkButtonLabel = Dict::S('UI:Button:Ok');
+		$sCancelButtonLabel = Dict::S('UI:Button:Cancel');
+		
+		$oPage->add_ready_script(
+<<<EOF
+$('#dashlet_creation_dlg').dialog({
+	width: 400,
+	modal: true,
+	title: '$sDialogTitle',
+	buttons: [
+	{ text: "$sOkButtonLabel", click: function() {
+		var oForm = $(this).find('form');
+		var sFormId = oForm.attr('id');
+		var oParams = null;
+		var aErrors = ValidateForm(sFormId, false);
+		if (aErrors.length == 0)
+		{
+			oParams = ReadFormParams(sFormId);
+		}
+		oParams.operation = 'add_dashlet';
+		var me = $(this);
+		$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', oParams, function(data) {
+			me.dialog( "close" );
+			me.remove();
+			$('body').append(data);
+		});
+	} },
+	{ text: "$sCancelButtonLabel", click: function() {
+		$(this).dialog( "close" ); $(this).remove();
+	} },
+	],
+	close: function() { $(this).remove(); }
+});
+EOF
+		);
 	}
 }

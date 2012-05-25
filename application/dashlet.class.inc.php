@@ -134,6 +134,11 @@ EOF
 		}
 	}
 	
+	public function SetID($sId)
+	{
+		$this->sId = $sId;
+	}
+	
 	public function GetID()
 	{
 		return $this->sId;
@@ -200,6 +205,16 @@ EOF
 	static public function IsVisible()
 	{
 		return true;
+	}
+	
+	static public function CanCreateFromOQL()
+	{
+		return false;
+	}
+	
+	public function GetPropertiesFieldsFromOQL(DesignerForm $oForm, $sOQL)
+	{
+		// Default: do nothing since it's not supported
 	}
 }
 
@@ -310,6 +325,23 @@ class DashletObjectList extends Dashlet
 			'icon' => 'images/dashlet-object-list.png',
 			'description' => 'Object list dashlet',
 		);
+	}
+	
+	static public function CanCreateFromOQL()
+	{
+		return true;
+	}
+	
+	public function GetPropertiesFieldsFromOQL(DesignerForm $oForm, $sOQL)
+	{
+		$oField = new DesignerTextField('title', 'Title', '');
+		$oForm->AddField($oField);
+
+		$oField = new DesignerHiddenField('query', 'Query', $sOQL);
+		$oForm->AddField($oField);
+
+		$oField = new DesignerBooleanField('menu', 'Menu', $this->aProperties['menu']);
+		$oForm->AddField($oField);
 	}
 }
 
@@ -473,6 +505,45 @@ abstract class DashletGroupBy extends Dashlet
 			'icon' => 'images/dashlet-object-grouped.png',
 			'description' => 'Grouped objects dashlet',
 		);
+	}
+	
+	static public function CanCreateFromOQL()
+	{
+		return true;
+	}
+	
+	public function GetPropertiesFieldsFromOQL(DesignerForm $oForm, $sOQL)
+	{
+		$oField = new DesignerTextField('title', 'Title', '');
+		$oForm->AddField($oField);
+
+		$oField = new DesignerHiddenField('query', 'Query', $sOQL);
+		$oForm->AddField($oField);
+
+		// Group by field: build the list of possible values (attribute codes + ...)
+		$oSearch = DBObjectSearch::FromOQL($this->aProperties['query']);
+		$sClass = $oSearch->GetClass();
+		$aGroupBy = array();
+		foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+		{
+			if (!$oAttDef->IsScalar()) continue; // skip link sets
+			if ($oAttDef->IsExternalKey(EXTKEY_ABSOLUTE)) continue; // skip external keys
+			$aGroupBy[$sAttCode] = $oAttDef->GetLabel();
+
+			if ($oAttDef instanceof AttributeDateTime)
+			{
+				//date_format(start_date, '%d')
+				$aGroupBy['date_of_'.$sAttCode] = 'Day of '.$oAttDef->GetLabel();
+			}
+
+		}
+
+		$oField = new DesignerComboField('group_by', 'Group by', $this->aProperties['group_by']);
+		$oField->SetAllowedValues($aGroupBy);
+		$oForm->AddField($oField);
+
+		$oField = new DesignerHiddenField('style', '', $this->aProperties['style']);
+		$oForm->AddField($oField);
 	}
 }
 

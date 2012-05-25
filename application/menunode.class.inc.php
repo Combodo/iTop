@@ -842,6 +842,13 @@ class DashboardMenuNode extends MenuNode
 		if ($oDashboard != null)
 		{
 			$oDashboard->Render($oPage, false, $aExtraParams);
+			
+			$bEdit = utils::ReadParam('edit', false);
+			if ($bEdit)
+			{
+				$sId = addslashes($this->sMenuId);
+				$oPage->add_ready_script("EditDashboard('$sId');");
+			}
 		}
 		else
 		{
@@ -861,5 +868,20 @@ class DashboardMenuNode extends MenuNode
 			$oPage->p("Error: failed to load dashboard file: '{$this->sDashboardFile}'");
 		}
 	}
+	
+	public function AddDashlet($oDashlet)
+	{
+		$oDashboard = $this->GetDashboard();
+		if ($oDashboard != null)
+		{
+			$oDashboard->AddDashlet($oDashlet);
+			$oDashboard->Save();
+		}
+		else
+		{
+			$oPage->p("Error: failed to load dashboard file: '{$this->sDashboardFile}'");
+		}
+	}
+	
 }
 
