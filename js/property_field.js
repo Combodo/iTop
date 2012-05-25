@@ -10,7 +10,9 @@ $(function()
 		{
 			field_id: '',
 			submit_to: 'index.php',
-			submit_parameters: {operation: 'async_action'}
+			submit_parameters: {operation: 'async_action'},
+			do_apply: null,
+			do_cancel: null
 			
 		},
 	
@@ -98,41 +100,57 @@ $(function()
 		},
 		_do_apply: function()
 		{
-			// Validate the field
-			sFormId = this.element.closest('form').attr('id');
-			var oField = $('#'+this.options.field_id);
-			oField.trigger('validate');
-			if ( $.inArray(this.options.field_id, oFormValidation[sFormId]) == -1)
+			if (this.options.do_apply)
 			{
-				this.bModified = false;
-				this.previous_value = this.value;
-				this.value = this._get_field_value();
-				this._do_submit();
-				this._refresh();
+				// specific behavior...
+				this.options.do_apply();
+			}
+			else
+			{
+				// Validate the field
+				sFormId = this.element.closest('form').attr('id');
+				var oField = $('#'+this.options.field_id);
+				oField.trigger('validate');
+				if ( $.inArray(this.options.field_id, oFormValidation[sFormId]) == -1)
+				{
+					this.bModified = false;
+					this.previous_value = this.value;
+					this.value = this._get_field_value();
+					this._do_submit();
+					this._refresh();
+				}
 			}
 		},
 		_do_cancel: function()
 		{
-			this.bModified = false;
-			var oField = $('#'+this.options.field_id);
-			if (oField.attr('type') == 'checkbox')
+			if (this.options.do_cancel)
 			{
-				if (this.value)
-				{
-					oField.attr('checked', true);					
-				}
-				else
-				{
-					oField.removeAttr('checked');										
-				}
+				// specific behavior...
+				this.options.do_cancel();
 			}
 			else
 			{
-				oField.val(this.value);				
+				this.bModified = false;
+				var oField = $('#'+this.options.field_id);
+				if (oField.attr('type') == 'checkbox')
+				{
+					if (this.value)
+					{
+						oField.attr('checked', true);					
+					}
+					else
+					{
+						oField.removeAttr('checked');										
+					}
+				}
+				else
+				{
+					oField.val(this.value);				
+				}
+				this._refresh();
+				oField.trigger('reverted', {type: 'designer', previous_value: this.value });
+				oField.trigger('validate');
 			}
-			this._refresh();
-			oField.trigger('reverted', {type: 'designer', previous_value: this.value });
-			oField.trigger('validate');
 		},
 		_do_submit: function()
 		{

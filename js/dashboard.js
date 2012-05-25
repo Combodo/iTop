@@ -66,10 +66,6 @@ $(function()
 		{
 			// in 1.9 would use _super
 			$.Widget.prototype._setOption.call( this, key, value );
-			if (key == 'layout')
-			{
-				_refresh();
-			}
 		},
 		_get_state: function(oMergeInto)
 		{
