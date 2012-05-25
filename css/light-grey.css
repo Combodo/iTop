@@ -1226,6 +1226,7 @@ a.summary {
 	text-decoration: none;
 	color: #000;
 	font-weight: bold;
+	text-align: left;
 	white-space: nowrap;
 	background: #fff;
 }
