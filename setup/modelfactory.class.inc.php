@@ -150,13 +150,13 @@ class ModelFactory
 		libxml_use_internal_errors(true);
 	}
 	
-	public function Dump($oNode = null)
+	public function Dump($oNode = null, $bReturnRes = false)
 	{
 		if (is_null($oNode))
 		{
 			$oNode = $this->oRoot;
 		}
-		$oNode->Dump();
+		return $oNode->Dump($bReturnRes);
 	}
 
 	public function LoadFromFile($sCacheFile)
@@ -246,7 +246,8 @@ class ModelFactory
 		case 'redefine':
 			// Replace the existing node by the given node - copy child nodes as well
 			$oTargetNode = $oTarget->ImportNode($oSourceNode, true);
-			$oTargetParentNode->RedefineChildNode($oTargetNode);
+			$sSearchId = $oSourceNode->hasAttribute('_rename_from') ? $oSourceNode->getAttribute('_rename_from') : $oSourceNode->getAttribute('id');
+			$oTargetParentNode->RedefineChildNode($oTargetNode, $sSearchId);
 			break;
 
 		case 'delete':
@@ -1047,16 +1048,10 @@ EOF
 	
 	public function TestAlteration()
 	{
-		if (false)
+		try
 		{
-			echo "<h4>Extrait des données chargées</h4>\n";
-			$oRoot = $this->GetNodes("//class[@id='Contact']")->item(0);
-			$oRoot->Dump();
-			return;
-		}
-
-		$sHeader = '<?xml version="1.0" encoding="utf-8"?'.'>';
-		$sOriginalXML =
+			$sHeader = '<?xml version="1.0" encoding="utf-8"?'.'>';
+			$sOriginalXML =
 <<<EOF
 $sHeader
 <itop_design>
@@ -1077,62 +1072,129 @@ $sHeader
 </itop_design>
 EOF;
 
-		$this->oDOMDocument = new MFDocument();
-		$this->oDOMDocument->loadXML($sOriginalXML);
+			$this->oDOMDocument = new MFDocument();
+			$this->oDOMDocument->loadXML($sOriginalXML);
+	
+			// DOM Get the original values, then modify its contents by the mean of the API
+			$oRoot = $this->GetNodes('//itop_design')->item(0);
+			//$oRoot->Dump();
+			$sDOMOriginal = $oRoot->Dump(true);
+	
+			$oNode = $oRoot->GetNodes('a/b')->item(0);
+			$oNew = $this->oDOMDocument->CreateElement('b', 'New text');
+			$oNode->parentNode->RedefineChildNode($oNew);		
+	
+			$oNode = $oRoot->GetNodes('a/c')->item(0);
+			$oNewC = $this->oDOMDocument->CreateElement('c');
+			$oNewC->setAttribute('id', '1');
+			$oNode->parentNode->RedefineChildNode($oNewC);		
 
-		echo "<h4>Données d'origine</h4>\n";
-		$oRoot = $this->GetNodes('//itop_design')->item(0);
-		$oRoot->Dump();
+			$oNewC->appendChild($this->oDOMDocument->CreateElement('d', 'x'));
+			$oNewC->appendChild($this->oDOMDocument->CreateElement('d', 'y'));
+			$oNewC->appendChild($this->oDOMDocument->CreateElement('d', 'z'));
+			$oNamedNode = $this->oDOMDocument->CreateElement('z');
+			$oNamedNode->setAttribute('id', 'abc');
+			$oNewC->AddChildNode($oNamedNode);
+			$oNewC->AddChildNode($this->oDOMDocument->CreateElement('r', 'to be replaced'));
 
-		$oNode = $oRoot->GetNodes('a/b')->item(0);
-		$oNew = $this->oDOMDocument->CreateElement('b', 'New text');
-		$oNode->parentNode->RedefineChildNode($oNew);		
+			// Alter this "modified node", no flag should be set in its subnodes
+			$oNewC->Rename('blah');
+			$oNewC->Rename('foo');
+			$oNewC->AddChildNode($this->oDOMDocument->CreateElement('y', '(no flag)'));
+			$oNewC->AddChildNode($this->oDOMDocument->CreateElement('x', 'To delete programatically'));
+			$oSubNode = $oNewC->GetUniqueElement('z');
+			$oSubNode->Rename('abcdef');
+			$oSubNode = $oNewC->GetUniqueElement('x');
+			$oSubNode->Delete();
+			$oNewC->RedefineChildNode($this->oDOMDocument->CreateElement('r', 'replacement'));		
 
-		$oNode = $oRoot->GetNodes('a/c')->item(0);
-		$oNew = $this->oDOMDocument->CreateElement('c');
-		$oNew->setAttribute('id', '1');
-		$oNew->appendChild($this->oDOMDocument->CreateElement('d', 'x'));
-		$oNew->appendChild($this->oDOMDocument->CreateElement('d', 'y'));
-		$oNew->appendChild($this->oDOMDocument->CreateElement('d', 'z'));
-		$oNode->parentNode->RedefineChildNode($oNew);		
+			$oNode = $oRoot->GetNodes("//a[@id='second a']")->item(0);
+			$oNode->Rename('el 2o A');		
+			$oNode->Rename('el secundo A');		
+			$oNew = $this->oDOMDocument->CreateElement('e', 'Something new here');
+			$oNode->AddChildNode($oNew);		
+			$oNewA = $this->oDOMDocument->CreateElement('a');
+			$oNewA->setAttribute('id', 'new a');
+			$oNode->AddChildNode($oNewA);		
+			$oSubnode = $this->oDOMDocument->CreateElement('parent', 'el secundo A');
+			$oSubnode->setAttribute('id', 'to be changed');
+			$oNewA->AddChildNode($oSubnode);
+			$oNewA->AddChildNode($this->oDOMDocument->CreateElement('f', 'Welcome to the newcomer'));
+			$oNewA->AddChildNode($this->oDOMDocument->CreateElement('x', 'To delete programatically'));
+	
+			// Alter this "new a", as it is new, no flag should be set
+			$oNewA->Rename('new_a');
+			$oSubNode = $oNewA->GetUniqueElement('parent');
+			$oSubNode->Rename('alter ego');
+			$oNewA->RedefineChildNode($this->oDOMDocument->CreateElement('f', 'dummy data'));
+			$oSubNode = $oNewA->GetUniqueElement('x');
+			$oSubNode->Delete();
+	
+			$oNode = $oRoot->GetNodes("//a[@id='third a']")->item(0);
+			$oNode->Delete();		
+	
+			//$oRoot->Dump();
+			$sDOMModified = $oRoot->Dump(true);
 
-		$oNode = $oRoot->GetNodes("//a[@id='second a']")->item(0);
-		$oNode->Rename('el secundo A');		
-		$oNew = $this->oDOMDocument->CreateElement('e', 'Something new here');
-		$oNode->AddChildNode($oNew);		
-		$oNew = $this->oDOMDocument->CreateElement('a');
-		$oNew->setAttribute('id', 'new a');
-		$oNew->appendChild($this->oDOMDocument->CreateElement('parent', 'el secundo A'));
-		$oNew->appendChild($this->oDOMDocument->CreateElement('f', 'Welcome to the newcomer'));
-		$oNode->AddChildNode($oNew);		
-
-		$oNode = $oRoot->GetNodes("//a[@id='third a']")->item(0);
-		$oNode->Delete();		
-
-		echo "<h4>Après modifications (avec les APIs de ModelFactory)</h4>\n";
-		$oRoot->Dump();
-		
-		echo "<h4>Delta calculé</h4>\n";
-		$sDeltaXML = $this->GetDelta();
-		echo "<pre>\n";
-		echo htmlentities($sDeltaXML);
-		echo "</pre>\n";
-
-		echo "<h4>Réitération: on recharge le modèle épuré</h4>\n";
-		$this->oDOMDocument = new MFDocument();
-		$this->oDOMDocument->loadXML($sOriginalXML);
-		$oRoot = $this->GetNodes('//itop_design')->item(0);
-		$oRoot->Dump();
-
-		echo "<h4>On lui applique le delta calculé vu ci-dessus, et on obtient...</h4>\n";
-		$oDeltaDoc = new MFDocument();
-		$oDeltaDoc->loadXML($sDeltaXML);
-		
-		$oDeltaDoc->Dump();
-		$this->oDOMDocument->Dump();
-		$oDeltaRoot = $oDeltaDoc->childNodes->item(0);
-		$this->LoadDelta($oDeltaDoc, $oDeltaRoot, $this->oDOMDocument);
-		$oRoot->Dump();
+			// Compute the delta
+			//
+			$sDeltaXML = $this->GetDelta();
+			//echo "<pre>\n";
+			//echo htmlentities($sDeltaXML);
+			//echo "</pre>\n";
+	
+			// Reiterating - try to remake the DOM by applying the computed delta
+			//
+			$this->oDOMDocument = new MFDocument();
+			$this->oDOMDocument->loadXML($sOriginalXML);
+			$oRoot = $this->GetNodes('//itop_design')->item(0);
+			//$oRoot->Dump();
+			echo "<h4>Rebuild the DOM - Delta applied...</h4>\n";
+			$oDeltaDoc = new MFDocument();
+			$oDeltaDoc->loadXML($sDeltaXML);
+			
+			//$oDeltaDoc->Dump();
+			//$this->oDOMDocument->Dump();
+			$oDeltaRoot = $oDeltaDoc->childNodes->item(0);
+			$this->LoadDelta($oDeltaDoc, $oDeltaRoot, $this->oDOMDocument);
+			//$oRoot->Dump();
+			$sDOMRebuilt = $oRoot->Dump(true);
+		}
+		catch (Exception $e)
+		{
+			echo "<h1>Exception: ".$e->getMessage()."</h1>\n";
+			echo "<pre>\n";
+			debug_print_backtrace();
+			echo "</pre>\n";
+		}
+		$sArrStyle = "font-size: 40;";
+		echo "<table>\n";
+		echo " <tr>\n";
+		echo "  <td width=\"50%\">\n";
+		echo "   <h4>DOM - Original values</h4>\n";
+		echo "   <pre>".htmlentities($sDOMOriginal)."</pre>\n";
+		echo "  </td>\n";
+		echo "  <td width=\"50%\" align=\"left\" valign=\"center\"><span style=\"$sArrStyle\">&rArr; &rArr; &rArr;</span></td>\n";
+		echo " </tr>\n";
+		echo " <tr><td align=\"center\"><span style=\"$sArrStyle\">&dArr;</div></td><td align=\"center\"><span style=\"$sArrStyle\"><span style=\"$sArrStyle\">&dArr;</div></div></td></tr>\n";
+		echo " <tr>\n";
+		echo "  <td width=\"50%\">\n";
+		echo "   <h4>DOM - Altered with various changes</h4>\n";
+		echo "   <pre>".htmlentities($sDOMModified)."</pre>\n";
+		echo "  </td>\n";
+		echo "  <td width=\"50%\">\n";
+		echo "   <h4>DOM - Rebuilt from the Delta</h4>\n";
+		echo "   <pre>".htmlentities($sDOMRebuilt)."</pre>\n";
+		echo "  </td>\n";
+		echo " </tr>\n";
+		echo " <tr><td align=\"center\"><span style=\"$sArrStyle\">&dArr;</div></td><td align=\"center\"><span style=\"$sArrStyle\">&uArr;</div></td></tr>\n";
+		echo "  <td width=\"50%\">\n";
+		echo "   <h4>Delta (Computed by ModelFactory)</h4>\n";
+		echo "   <pre>".htmlentities($sDeltaXML)."</pre>\n";
+		echo "  </td>\n";
+		echo "  <td width=\"50%\" align=\"left\" valign=\"center\"><span style=\"$sArrStyle\">&rArr; &rArr; &rArr;</span></td>\n";
+		echo " </tr>\n";
+		echo "</table>\n";
 	} // TEST !
 
 
@@ -1173,11 +1235,19 @@ class MFElement extends DOMElement
 	/**
 	 * For debugging purposes - but this is currently buggy: the whole document is rendered
 	 */
-	public function Dump()
+	public function Dump($bReturnRes = false)
 	{
-		echo "<pre>\n";
-		echo htmlentities($this->ownerDocument->saveXML($this));
-		echo "</pre>\n";	 	
+		$sXml = $this->ownerDocument->saveXML($this);
+		if ($bReturnRes)
+		{
+			return $sXml;
+		}
+		else
+		{
+			echo "<pre>\n";
+			echo htmlentities($sXml);
+			echo "</pre>\n";	 	
+		}
 	}
 
 	/**
@@ -1396,13 +1466,29 @@ class MFElement extends DOMElement
 
 
 	/**
+	 * Check if the current node is under a node 'added' or 'altered'
+	 * Usage: In such a case, the change must not be tracked	 	
+	 */
+	 protected function IsInDefinition()
+	 {
+		// Iterate through the parents: reset the flag if any of them has a flag set 
+		for($oParent = $this ; $oParent instanceof MFElement ; $oParent = $oParent->parentNode)
+		{
+			if ($oParent->getAttribute('_alteration') != '')
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
+
+	/**
 	 * Add a node and set the flags that will be used to compute the delta
 	 * @param MFElement $oNode The node (including all subnodes) to add
 	 */	
 	public function AddChildNode(MFElement $oNode)
 	{
-		$sFlag = null;
-
 		$oExisting = $this->FindExistingChildNode($oNode);
 		if ($oExisting)
 		{
@@ -1410,25 +1496,15 @@ class MFElement extends DOMElement
 			{
 				throw new Exception("Attempting to add a node that already exists: $oNode->tagName (id: ".$oNode->getAttribute('id')."");
 			}
-			$sFlag = 'replaced';
 			$oExisting->ReplaceWith($oNode);
+			$sFlag = 'replaced';
 		}
 		else
 		{
 			$this->appendChild($oNode);
-
 			$sFlag = 'added';
-			// Iterate through the parents: reset the flag if any of them has a flag set 
-			for($oParent = $oNode ; $oParent instanceof MFElement ; $oParent = $oParent->parentNode)
-			{
-				if ($oParent->getAttribute('_alteration') != '')
-				{
-					$sFlag = null;
-					break;
-				}
-			}
 		}
-		if ($sFlag)
+		if (!$this->IsInDefinition())
 		{
 			$oNode->setAttribute('_alteration', $sFlag);
 		}
@@ -1438,9 +1514,9 @@ class MFElement extends DOMElement
 	 * Modify a node and set the flags that will be used to compute the delta
 	 * @param MFElement $oNode       The node (including all subnodes) to set
 	 */	
-	public function RedefineChildNode(MFElement $oNode)
+	public function RedefineChildNode(MFElement $oNode, $sSearchId = null)
 	{
-		$oExisting = $this->FindExistingChildNode($oNode);
+		$oExisting = $this->FindExistingChildNode($oNode, $sSearchId);
 		if (!$oExisting)
 		{
 			throw new Exception("Attempting to modify a non existing node: $oNode->tagName (id: ".$oNode->getAttribute('id').")");
@@ -1450,28 +1526,9 @@ class MFElement extends DOMElement
 			throw new Exception("Attempting to modify a deleted node: $oNode->tagName (id: ".$oNode->getAttribute('id')."");
 		}
 		$oExisting->ReplaceWith($oNode);
-			
-		if ($oNode->getAttribute('_alteration') != '')
+		if (!$this->IsInDefinition())
 		{
-			// added or modified: leave the flag unchanged
-			$sFlag = null;
-		}
-		else
-		{
-			$sFlag = 'replaced';
-			// Iterate through the parents: reset the flag if any of them has a flag set 
-			for($oParent = $oNode ; $oParent instanceof MFElement ; $oParent = $oParent->parentNode)
-			{
-				if ($oParent->getAttribute('_alteration') != '')
-				{
-					$sFlag = null;
-					break;
-				}
-			}
-		}
-		if ($sFlag)
-		{
-			$oNode->setAttribute('_alteration', $sFlag);
+			$oNode->setAttribute('_alteration', 'replaced');
 		}
 	}
 
@@ -1511,14 +1568,10 @@ class MFElement extends DOMElement
 
 		default:
 			$sFlag = 'removed';
-			// Iterate through the parents: reset the flag if any of them has a flag set 
-			for($oParent = $this ; $oParent instanceof MFElement ; $oParent = $this->parentNode->parentNode)
+			if ($this->IsInDefinition())
 			{
-				if ($oParent->getAttribute('_alteration') != '')
-				{
-					$sFlag = null;
-					break;
-				}
+				$sFlag = null;
+				break;
 			}
 		}
 		if ($sFlag)
@@ -1575,14 +1628,17 @@ class MFElement extends DOMElement
 	 */	
 	public function Rename($sId)
 	{
-		$sOriginalId = $this->getAttribute('_old_id');
-		if ($sOriginalId == '')
+		if (($this->getAttribute('_alteration') == 'replaced') || !$this->IsInDefinition())
 		{
-			$this->setAttribute('_old_id', $this->getAttribute('id'));
-		}
-		else if($sOriginalId == $sId)
-		{
-			$this->removeAttribute('_old_id');
+			$sOriginalId = $this->getAttribute('_old_id');
+			if ($sOriginalId == '')
+			{
+				$this->setAttribute('_old_id', $this->getAttribute('id'));
+			}
+			else if($sOriginalId == $sId)
+			{
+				$this->removeAttribute('_old_id');
+			}
 		}
 		$this->setAttribute('id', $sId);
 	}
@@ -1636,11 +1692,19 @@ class MFDocument extends DOMDocument
 	/**
 	 * For debugging purposes
 	 */
-	public function Dump()
+	public function Dump($bReturnRes = false)
 	{
-		echo "<pre>\n";	 	
-		echo htmlentities($this->saveXML());
-		echo "</pre>\n";	 	
+		$sXml = $this->saveXML();
+		if ($bReturnRes)
+		{
+			return $sXml;
+		}
+		else
+		{
+			echo "<pre>\n";
+			echo htmlentities($sXml);
+			echo "</pre>\n";	 	
+		}
 	}
 
 	/**
