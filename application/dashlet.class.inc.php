@@ -294,15 +294,14 @@ class DashletObjectList extends Dashlet
 		$sQuery = $this->aProperties['query'];
 		$sShowMenu = $this->aProperties['menu'] ? '1' : '0';
 
-
 		$oPage->add('<div style="text-align:center" class="dashlet-content">');
-		// C'est quoi ce paramètre "menu" ?
-		$sXML = '<itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql" parameters="menu:'.$sShowMenu.'">'.$sQuery.'</itopblock>';
-		$aParams = array();
+		$oFilter = DBObjectSearch::FromOQL($sQuery);
+		$oBlock = new DisplayBlock($oFilter, 'list');
+		$aExtraParams = array(
+			'menu' => $sShowMenu,
+		);
 		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
-		$oBlock = DisplayBlock::FromTemplate($sXML);
-		$oBlock->Display($oPage, $sBlockId, $aParams);
-
+		$oBlock->Display($oPage, $sBlockId, $aExtraParams);
 		$oPage->add('</div>');
 	}
 
@@ -419,17 +418,35 @@ abstract class DashletGroupBy extends Dashlet
 			switch($sStyle)
 			{
 			case 'bars':
-				$sXML = '<itopblock BlockClass="DisplayBlock" type="open_flash_chart" parameters="chart_type:bars;chart_title:'.$sGroupByLabel.';group_by:'.$sGroupByExpr.';group_by_label:'.$sGroupByLabel.'" asynchronous="false" encoding="text/oql">'.$sQuery.'</itopblock>';
+				$sType = 'open_flash_chart';
+				$aExtraParams = array(
+					'chart_type' => 'bars',
+					'chart_title' => $sTitle,
+					'group_by' => $sGroupByExpr,
+					'group_by_label' => $sGroupByLabel,
+				);
 				$sHtmlTitle = ''; // done in the itop block
 				break;
+
 			case 'pie':
-				$sXML = '<itopblock BlockClass="DisplayBlock" type="open_flash_chart" parameters="chart_type:pie;chart_title:'.$sGroupByLabel.';group_by:'.$sGroupByExpr.';group_by_label:'.$sGroupByLabel.'" asynchronous="false" encoding="text/oql">'.$sQuery.'</itopblock>';
+				$sType = 'open_flash_chart';
+				$aExtraParams = array(
+					'chart_type' => 'pie',
+					'chart_title' => $sTitle,
+					'group_by' => $sGroupByExpr,
+					'group_by_label' => $sGroupByLabel,
+				);
 				$sHtmlTitle = ''; // done in the itop block
 				break;
+
 			case 'table':
 			default:
 				$sHtmlTitle = htmlentities(Dict::S($sTitle), ENT_QUOTES, 'UTF-8'); // done in the itop block
-				$sXML = '<itopblock BlockClass="DisplayBlock" type="count" parameters="group_by:'.$sGroupByExpr.';group_by_label:'.$sGroupByLabel.'" asynchronous="false" encoding="text/oql">'.$sQuery.'</itopblock>';
+				$sType = 'count';
+				$aExtraParams = array(
+					'group_by' => $sGroupByExpr,
+					'group_by_label' => $sGroupByLabel,
+				);
 				break;
 			}
 	
@@ -438,17 +455,10 @@ abstract class DashletGroupBy extends Dashlet
 			{
 				$oPage->add('<h1>'.$sHtmlTitle.'</h1>');
 			}
-			$aParams = array();
 			$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
-			$oBlock = DisplayBlock::FromTemplate($sXML);
-			$oBlock->Display($oPage, $sBlockId, $aParams);
+			$oBlock = new DisplayBlock($oFilter, $sType);
+			$oBlock->Display($oPage, $sBlockId, $aExtraParams);
 			$oPage->add('</div>');
-
-			// TEST Group By as SQL!
-			//$oSearch = DBObjectSearch::FromOQL($this->aProperties['query']);
-			//$sSql = MetaModel::MakeSelectQuery($oSearch);
-			//$sHtmlSql = htmlentities($sSql, ENT_QUOTES, 'UTF-8');
-			//$oPage->p($sHtmlSql);
 		}
 	}
 
@@ -684,23 +694,35 @@ class DashletHeader extends Dashlet
 		if ($sStatusAttCode == '')
 		{
 			// Simple stats
-			$sXML = '<itopblock BlockClass="DisplayBlock" type="summary" asynchronous="false" encoding="text/oql" parameters="title[block]:'.$sTitleReady.';context_filter:1;label[block]:'.$sSubtitleReady.'">SELECT '.$sClass.'</itopblock>';
+			$aExtraParams = array(
+				'title[block]' => $sTitleReady,
+				'label[block]' => $sSubtitleReady,
+				'context_filter' => 1,
+			);
 		}
 		else
 		{
 			// Stats grouped by "status"
 
 			$sStatusList = implode(',', $aStates);
-			//$oPage->p('State: '.$sStatusAttCode.' states='.$sStatusList);
-			$sXML = '<itopblock BlockClass="DisplayBlock" type="summary" asynchronous="false" encoding="text/oql" parameters="title[block]:'.$sTitleReady.';context_filter:1;label[block]:'.$sSubtitleReady.';status[block]:status;status_codes[block]:'.$sStatusList.'">SELECT '.$sClass.'</itopblock>';
+
+			$aExtraParams = array(
+				'title[block]' => $sTitleReady,
+				'label[block]' => $sSubtitleReady,
+				'status[block]' => 'status',
+				'status_codes[block]' => $sStatusList,
+				'context_filter' => 1,
+			);
 		}
 
 		$oPage->add('<div style="text-align:center" class="dashlet-content">');
 		$oPage->add('<div class="main_header">');
-		$aParams = array();
+
+		$oFilter = new DBObjectSearch($sClass);
+		$oBlock = new DisplayBlock($oFilter, 'summary');
 		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
-		$oBlock = DisplayBlock::FromTemplate($sXML);
-		$oBlock->Display($oPage, $sBlockId, $aParams);
+		$oBlock->Display($oPage, $sBlockId, $aExtraParams);
+
 		$oPage->add('</div>');
 		$oPage->add('</div>');
 	}
@@ -743,10 +765,15 @@ class DashletBadge extends Dashlet
 		$sClass = $this->aProperties['class'];
 
 		$oPage->add('<div style="text-align:center" class="dashlet-content">');
-		$sXml = "<itopblock BlockClass=\"DisplayBlock\" type=\"actions\" asynchronous=\"false\" encoding=\"text/oql\" parameters=\"context_filter:1\">SELECT $sClass</itopblock>";
-		$oBlock = DisplayBlock::FromTemplate($sXml);
+
+		$oFilter = new DBObjectSearch($sClass);
+		$oBlock = new DisplayBlock($oFilter, 'actions');
+		$aExtraParams = array(
+			'context_filter' => 1,
+		);
 		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
 		$oBlock->Display($oPage, $sBlockId, $aExtraParams);
+
 		$oPage->add('</div>');
 	}
 
