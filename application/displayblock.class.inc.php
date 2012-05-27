@@ -366,28 +366,32 @@ class DisplayBlock
 				$aRes = CMDBSource::QueryToArray($sSql);
 
 				$aGroupBy = array();
-				$sLabels = array();
+				$aLabels = array();
+				$aValues = array();
 				$iTotalCount = 0;
-				foreach ($aRes as $aRow)
+				foreach ($aRes as $iRow => $aRow)
 				{
 					$sValue = $aRow['grouped_by_1'];
-					$sLabels[$sValue] = htmlentities($sValue, ENT_QUOTES, 'UTF-8');
-					$aGroupBy[$sValue] = (int) $aRow['_itop_count_'];
+					$aValues[$iRow] = $sValue;
+					$sHtmlValue = $oGroupByExp->MakeValueLabel($this->m_oFilter, $sValue, $sValue);
+					$aLabels[$iRow] = $sHtmlValue;
+					$aGroupBy[$iRow] = (int) $aRow['_itop_count_'];
 					$iTotalCount += $aRow['_itop_count_'];
 				}
+
 
 				$aData = array();
 				$oAppContext = new ApplicationContext();
 				$sParams = $oAppContext->GetForLink();
-				foreach($aGroupBy as $sValue => $iCount)
+				foreach($aGroupBy as $iRow => $iCount)
 				{
 					// Build the search for this subset
 					$oSubsetSearch = clone $this->m_oFilter;
-					$oCondition = new BinaryExpression($oGroupByExp, '=', new ScalarExpression($sValue));
+					$oCondition = new BinaryExpression($oGroupByExp, '=', new ScalarExpression($aValues[$iRow]));
 					$oSubsetSearch->AddConditionExpression($oCondition);
 					$sFilter = urlencode($oSubsetSearch->serialize());
 
-					$aData[] = array ( 'group' => $sLabels[$sValue],
+					$aData[] = array ( 'group' => $aLabels[$iRow],
 									  'value' => "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&dosearch=1&$sParams&filter=$sFilter\">$iCount</a>"); // TO DO: add the context information
 				}
 				$aAttribs =array(
@@ -798,25 +802,27 @@ EOF
 				$aRes = CMDBSource::QueryToArray($sSql);
 
 				$aGroupBy = array();
-				$sLabels = array();
+				$aLabels = array();
+				$aValues = array();
 				$iTotalCount = 0;
-				foreach ($aRes as $aRow)
+				foreach ($aRes as $iRow => $aRow)
 				{
 					$sValue = $aRow['grouped_by_1'];
-					$sLabels[$sValue] = htmlentities($sValue, ENT_QUOTES, 'UTF-8');
-					$aGroupBy[$sValue] = (int) $aRow['_itop_count_'];
+					$aValues[$iRow] = $sValue;
+					$sHtmlValue = $oGroupByExp->MakeValueLabel($this->m_oFilter, $sValue, $sValue);
+					$aLabels[$iRow] = $sHtmlValue;
+					$aGroupBy[$iRow] = (int) $aRow['_itop_count_'];
 					$iTotalCount += $aRow['_itop_count_'];
 				}
 
 				$aData = array();
-				$aLabels = array();
 				$idx = 0;
 				$aURLs = array();
-				foreach($aGroupBy as $sValue => $iValue)
+				foreach($aGroupBy as $iRow => $iCount)
 				{
 					// Build the search for this subset
 					$oSubsetSearch = clone $this->m_oFilter;
-					$oCondition = new BinaryExpression($oGroupByExp, '=', new ScalarExpression($sValue));
+					$oCondition = new BinaryExpression($oGroupByExp, '=', new ScalarExpression($aValues[$iRow]));
 					$oSubsetSearch->AddConditionExpression($oCondition);
 					$aURLs[$idx] = $oSubsetSearch->serialize();
 					$idx++;
@@ -871,26 +877,27 @@ EOF
 					$aRes = CMDBSource::QueryToArray($sSql);
 	
 					$aGroupBy = array();
-					$sLabels = array();
+					$aLabels = array();
 					$iTotalCount = 0;
-					foreach ($aRes as $aRow)
+					foreach ($aRes as $iRow => $aRow)
 					{
 						$sValue = $aRow['grouped_by_1'];
-						$sLabels[$sValue] = htmlentities($sValue, ENT_QUOTES, 'UTF-8');
-						$aGroupBy[$sValue] = (int) $aRow['_itop_count_'];
+						$sHtmlValue = $oGroupByExp->MakeValueLabel($this->m_oFilter, $sValue, $sValue);
+						$aLabels[$iRow] = strip_tags($sHtmlValue);
+						$aGroupBy[$iRow] = (int) $aRow['_itop_count_'];
 						$iTotalCount += $aRow['_itop_count_'];
 					}
 	
 					$aData = array();
-					$aLabels = array();
+					$aChartLabels = array();
 					$maxValue = 0;
-					foreach($aGroupBy as $sValue => $iValue)
+					foreach($aGroupBy as $iRow => $iCount)
 					{
-						$oBarValue = new bar_value($iValue);
+						$oBarValue = new bar_value($iCount);
 						$oBarValue->on_click("ofc_drill_down_$sId");
 						$aData[] = $oBarValue;
-						if ($iValue > $maxValue) $maxValue = $iValue;
-						$aLabels[] = $sValue;
+						if ($iCount > $maxValue) $maxValue = $iCount;
+						$aChartLabels[] = $aLabels[$iRow];
 					}
 					$oYAxis = new y_axis();
 					$aMagicValues = array(1,2,5,10);
@@ -916,7 +923,7 @@ EOF
 					// set them vertical
 					$oXLabels->set_vertical();
 					// set the label text
-					$oXLabels->set_labels($aLabels);
+					$oXLabels->set_labels($aChartLabels);
 					// Add the X Axis Labels to the X Axis
 					$oXAxis->set_labels( $oXLabels );
 					$oChart->set_x_axis( $oXAxis );
@@ -951,24 +958,24 @@ EOF
 					$aRes = CMDBSource::QueryToArray($sSql);
 	
 					$aGroupBy = array();
-					$sLabels = array();
+					$aLabels = array();
 					$iTotalCount = 0;
-					foreach ($aRes as $aRow)
+					foreach ($aRes as $iRow => $aRow)
 					{
 						$sValue = $aRow['grouped_by_1'];
-						$sLabels[$sValue] = htmlentities($sValue, ENT_QUOTES, 'UTF-8');
-						$aGroupBy[$sValue] = (int) $aRow['_itop_count_'];
+						$sHtmlValue = $oGroupByExp->MakeValueLabel($this->m_oFilter, $sValue, $sValue);
+						$aLabels[$iRow] = strip_tags($sHtmlValue);
+						$aGroupBy[$iRow] = (int) $aRow['_itop_count_'];
 						$iTotalCount += $aRow['_itop_count_'];
 					}
 
 					$aData = array();
-					foreach($aGroupBy as $sValue => $iValue)
+					foreach($aGroupBy as $iRow => $iCount)
 					{
-						$PieValue = new pie_value($iValue, $sValue); //@@ BUG: not passed via ajax !!!
+						$PieValue = new pie_value($iCount, $aLabels[$iRow]); //@@ BUG: not passed via ajax !!!
 						$PieValue->on_click("ofc_drill_down_$sId");
 						$aData[] = $PieValue;
 					}
-	
 	
 					$oChartElement->set_values( $aData );
 					$oChart->x_axis = null;

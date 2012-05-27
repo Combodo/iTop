@@ -91,6 +91,19 @@ abstract class Expression
 	}
 	
 	abstract public function RenameParam($sOldName, $sNewName);
+
+	/**
+	 * Make the most relevant label, given the value of the expression
+	 * 	 
+	 * @param DBObjectSearch oFilter The context in which this expression has been used	 	
+	 * @param string sValue The value returned by the query, for this expression	 	
+	 * @param string sDefault The default value if no relevant label could be computed	 	
+	 * @return The label
+	 */	
+	public function MakeValueLabel($oFilter, $sValue, $sDefault)
+	{
+		return $sDefault;
+	}
 }
 
 class SQLExpression extends Expression
@@ -464,6 +477,36 @@ class FieldExpression extends UnaryExpression
 			$oRet = $aTranslationData[$this->m_sParent][$this->m_sName];
 		}
 		return $oRet;
+	}
+
+	/**
+	 * Make the most relevant label, given the value of the expression
+	 * 	 
+	 * @param DBObjectSearch oFilter The context in which this expression has been used	 	
+	 * @param string sValue The value returned by the query, for this expression	 	
+	 * @param string sDefault The default value if no relevant label could be computed	 	
+	 * @return The label
+	 */	
+	public function MakeValueLabel($oFilter, $sValue, $sDefault)
+	{
+		$sAttCode = $this->GetName();
+		$sParentAlias = $this->GetParent();
+
+		$aSelectedClasses = $oFilter->GetSelectedClasses();
+		$sClass = $aSelectedClasses[$sParentAlias];
+
+		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+		if ($oAttDef->IsExternalKey())
+		{
+			$sTargetClass = $oAttDef->GetTargetClass();
+			$oObject = MetaModel::GetObject($sTargetClass, (int)$sValue);
+			$sRes = $oObject->GetHyperlink();
+		}
+		else
+		{
+			$sRes = $oAttDef->GetAsHtml($sValue);
+		}
+		return $sRes;
 	}
 }
 

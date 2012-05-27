@@ -467,8 +467,14 @@ abstract class DashletGroupBy extends Dashlet
 		foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
 		{
 			if (!$oAttDef->IsScalar()) continue; // skip link sets
-			if ($oAttDef->IsExternalKey(EXTKEY_ABSOLUTE)) continue; // skip external keys
-			$aGroupBy[$sAttCode] = $oAttDef->GetLabel();
+
+			$sLabel = $oAttDef->GetLabel();
+			if ($oAttDef->IsExternalKey(EXTKEY_ABSOLUTE))
+			{
+				$sLabel = $oAttDef->GetLabel().' (strict)';
+			}
+
+			$aGroupBy[$sAttCode] = $sLabel;
 
 			if ($oAttDef instanceof AttributeDateTime)
 			{
@@ -479,12 +485,9 @@ abstract class DashletGroupBy extends Dashlet
 			}
 		}
 
-		
-
 		$oField = new DesignerComboField('group_by', 'Group by', $this->aProperties['group_by']);
 		$oField->SetAllowedValues($aGroupBy);
 		$oForm->AddField($oField);
-
 
 		$aStyles = array(
 			'pie' => 'Pie chart',
@@ -778,7 +781,8 @@ class DashletProto extends Dashlet
 
 		$oFilter = DBObjectSearch::FromOQL('SELECT FunctionalCI AS fci');
 		$sGroupBy1 = 'status';
-		$sGroupBy2 = 'org_id_friendlyname';
+		//$sGroupBy2 = 'org_id_friendlyname';
+		$sGroupBy2 = 'org_id';
 		$sHtmlTitle = "Hardcoded on $sGroupBy1 and $sGroupBy2...";
 
 		$sAlias = $oFilter->GetClassAlias();
@@ -807,6 +811,9 @@ class DashletProto extends Dashlet
 			$sValue1 = $aRow['grouped_by_1'];
 			$sValue2 = $aRow['grouped_by_2'];
 
+			$sDisplayValue1 = $aGroupBy['grouped_by_1']->MakeValueLabel($oFilter, $sValue1, $sValue1); // default to the raw value
+			$sDisplayValue2 = $aGroupBy['grouped_by_2']->MakeValueLabel($oFilter, $sValue2, $sValue2); // default to the raw value
+
 			// Build the search for this subset
 			$oSubsetSearch = clone $oFilter;
 			$oCondition = new BinaryExpression($oGroupByExp1, '=', new ScalarExpression($sValue1));
@@ -816,8 +823,8 @@ class DashletProto extends Dashlet
 		
 			$sFilter = urlencode($oSubsetSearch->serialize());
 			$aData[] = array (
-				'group1' => htmlentities($sValue1, ENT_QUOTES, 'UTF-8'),
-				'group2' => htmlentities($sValue2, ENT_QUOTES, 'UTF-8'),
+				'group1' => $sDisplayValue1,
+				'group2' => $sDisplayValue2,
 				'value' => "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&dosearch=1&$sParams&filter=$sFilter\">$iCount</a>"
 			); // TO DO: add the context information
 		}
