@@ -949,11 +949,14 @@ EOF
 	protected function ImportNodeAndPathDelta($oTargetDoc, $oNode)
 	{
 		// Preliminary: skip the parent if this node is organized hierarchically into the DOM
-		// The criteria to detect a hierarchy is: same tag + have an id
+		// Only class nodes are organized this way
 		$oParent = $oNode->parentNode;
-		while (($oParent instanceof DOMElement) && ($oParent->tagName == $oNode->tagName) && $oParent->hasAttribute('id'))
+		if ($oNode->tagName == 'class')
 		{
-			$oParent = $oParent->parentNode;
+			while (($oParent instanceof DOMElement) && ($oParent->tagName == $oNode->tagName) && $oParent->hasAttribute('id'))
+			{
+				$oParent = $oParent->parentNode;
+			}
 		}
 		// Recursively create the path for the parent
 		if ($oParent instanceof DOMElement)
