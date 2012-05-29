@@ -209,7 +209,7 @@ abstract class AttributeDefinition
 	 */
 	public function GetValueLabel($sValue)
 	{
-		return GetAsHTML($sValue);
+		return $this->GetAsHTML($sValue);
 	}
 
 	public function GetLabel_Obsolete()

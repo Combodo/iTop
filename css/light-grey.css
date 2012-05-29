@@ -1195,6 +1195,11 @@ td.prop_value {
     padding-bottom: 10px;
     padding-top: 10px;
 }
+.main_header img {
+	margin-top: 10px;
+	margin-right: 10px;
+	float:left;
+}
 a.summary {
     background: none repeat scroll 0 0 transparent;
     color: #666666;

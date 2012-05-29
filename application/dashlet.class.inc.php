@@ -721,39 +721,112 @@ class DashletGroupByTable extends DashletGroupBy
 }
 
 
-class DashletHeader extends Dashlet
+class DashletHeaderStatic extends Dashlet
 {
 	public function __construct($sId)
 	{
 		parent::__construct($sId);
-		$this->aProperties['title'] = 'Hardcoded header of contacts';
-		$this->aProperties['subtitle'] = 'Contacts';
-		$this->aProperties['class'] = 'Contact';
+		$this->aProperties['title'] = 'Contacts';
+		$this->aProperties['icon'] = 'itop-config-mgmt-1.0.0/images/contact.png';
 	}
 	
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
 		$sTitle = $this->aProperties['title'];
+		$sIcon = $this->aProperties['icon'];
+
+		$sTitleReady = str_replace(':', '_', $sTitle);
+		$sIconPath = utils::GetAbsoluteUrlModulesRoot().$sIcon;
+
+		$oPage->add('<div class="dashlet-content">');
+		$oPage->add('<div class="main_header">');
+
+		$oPage->add('<img src="'.$sIconPath.'">');
+		$oPage->add('<h1>'.Dict::S($sTitleReady).'</h1>');
+
+		$oPage->add('</div>');
+		$oPage->add('</div>');
+	}
+
+	public function GetPropertiesFields(DesignerForm $oForm)
+	{
+		$oField = new DesignerTextField('title', 'Title', $this->aProperties['title']);
+		$oForm->AddField($oField);
+
+		$oField = new DesignerTextField('icon', 'Icon', $this->aProperties['icon']);
+		$oForm->AddField($oField);
+	}
+	
+	static public function GetInfo()
+	{
+		return array(
+			'label' => 'Header',
+			'icon' => 'images/dashlet-header.png',
+			'description' => 'Header with stats (grouped by...)',
+		);
+	}
+}
+
+
+class DashletHeaderDynamic extends Dashlet
+{
+	public function __construct($sId)
+	{
+		parent::__construct($sId);
+		$this->aProperties['title'] = 'Contacts';
+		$this->aProperties['icon'] = 'itop-config-mgmt-1.0.0/images/contact.png';
+		$this->aProperties['subtitle'] = 'Contacts';
+		$this->aProperties['query'] = 'SELECT Contact';
+		$this->aProperties['group_by'] = 'status';
+		$this->aProperties['values'] = 'active,inactive,terminated';
+	}
+	
+	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
+	{
+		$sTitle = $this->aProperties['title'];
+		$sIcon = $this->aProperties['icon'];
 		$sSubtitle = $this->aProperties['subtitle'];
-		$sClass = $this->aProperties['class'];
+		$sQuery = $this->aProperties['query'];
+		$sGroupBy = $this->aProperties['group_by'];
+		$sValues = $this->aProperties['values'];
+
+		$oFilter = DBObjectSearch::FromOQL($sQuery);
+		$sClass = $oFilter->GetClass();
 
 		$sTitleReady = str_replace(':', '_', $sTitle);
 		$sSubtitleReady = str_replace(':', '_', $sSubtitle);
+		$sIconPath = utils::GetAbsoluteUrlModulesRoot().$sIcon;
 
-		$sStatusAttCode = MetaModel::GetStateAttributeCode($sClass);
-		if (($sStatusAttCode == '') && MetaModel::IsValidAttCode($sClass, 'status'))
+		$aValues = null;
+		if (MetaModel::IsValidAttCode($sClass, $sGroupBy))
 		{
-			// Based on an enum
-			$sStatusAttCode = 'status';
-			$aStates = array_keys(MetaModel::GetAllowedValues_att($sClass, $sStatusAttCode));
+			if ($sValues == '')
+			{
+				$aAllowed = MetaModel::GetAllowedValues_att($sClass, $sGroupBy);
+				if (is_array($aAllowed))
+				{
+					$aValues = array_keys($aAllowed);
+				}
+			}
+			else
+			{
+				$aValues = explode(',', $sValues);
+			}
+		}
+
+		if (is_array($aValues))
+		{
+			// Stats grouped by <group_by>
+			$aCSV = implode(',', $aValues);
+			$aExtraParams = array(
+				'title[block]' => $sTitleReady,
+				'label[block]' => $sSubtitleReady,
+				'status[block]' => $sGroupBy,
+				'status_codes[block]' => $aCSV,
+				'context_filter' => 1,
+			);
 		}
 		else
-		{
-			// Based on a state variable
-			$aStates = array_keys(MetaModel::EnumStates($sClass));
-		}
-		
-		if ($sStatusAttCode == '')
 		{
 			// Simple stats
 			$aExtraParams = array(
@@ -762,25 +835,12 @@ class DashletHeader extends Dashlet
 				'context_filter' => 1,
 			);
 		}
-		else
-		{
-			// Stats grouped by "status"
 
-			$sStatusList = implode(',', $aStates);
-
-			$aExtraParams = array(
-				'title[block]' => $sTitleReady,
-				'label[block]' => $sSubtitleReady,
-				'status[block]' => 'status',
-				'status_codes[block]' => $sStatusList,
-				'context_filter' => 1,
-			);
-		}
-
-		$oPage->add('<div style="text-align:center" class="dashlet-content">');
+		$oPage->add('<div class="dashlet-content">');
 		$oPage->add('<div class="main_header">');
 
-		$oFilter = new DBObjectSearch($sClass);
+		$oPage->add('<img src="'.$sIconPath.'">');
+
 		$oBlock = new DisplayBlock($oFilter, 'summary');
 		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
 		$oBlock->Display($oPage, $sBlockId, $aExtraParams);
@@ -794,17 +854,43 @@ class DashletHeader extends Dashlet
 		$oField = new DesignerTextField('title', 'Title', $this->aProperties['title']);
 		$oForm->AddField($oField);
 
+		$oField = new DesignerTextField('icon', 'Icon', $this->aProperties['icon']);
+		$oForm->AddField($oField);
+
 		$oField = new DesignerTextField('subtitle', 'Subtitle', $this->aProperties['subtitle']);
 		$oForm->AddField($oField);
 
-		$oField = new DesignerTextField('class', 'Class', $this->aProperties['class']);
+		$oField = new DesignerTextField('query', 'Query', $this->aProperties['query']);
+		$oForm->AddField($oField);
+
+		// Group by field: build the list of possible values (attribute codes + ...)
+		$oSearch = DBObjectSearch::FromOQL($this->aProperties['query']);
+		$sClass = $oSearch->GetClass();
+		$aGroupBy = array();
+		foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+		{
+			if (!$oAttDef->IsScalar()) continue; // skip link sets
+
+			$sLabel = $oAttDef->GetLabel();
+			if ($oAttDef->IsExternalKey(EXTKEY_ABSOLUTE))
+			{
+				$sLabel = $oAttDef->GetLabel().' (strict)';
+			}
+
+			$aGroupBy[$sAttCode] = $sLabel;
+		}
+		$oField = new DesignerComboField('group_by', 'Group by', $this->aProperties['group_by']);
+		$oField->SetAllowedValues($aGroupBy);
+		$oForm->AddField($oField);
+
+		$oField = new DesignerTextField('values', 'Values (CSV list)', $this->aProperties['values']);
 		$oForm->AddField($oField);
 	}
 	
 	static public function GetInfo()
 	{
 		return array(
-			'label' => 'Header with stats',
+			'label' => 'Header with statistics',
 			'icon' => 'images/dashlet-header-stats.png',
 			'description' => 'Header with stats (grouped by...)',
 		);
@@ -826,7 +912,7 @@ class DashletBadge extends Dashlet
 	{
 		$sClass = $this->aProperties['class'];
 
-		$oPage->add('<div style="text-align:center" class="dashlet-content">');
+		$oPage->add('<div class="dashlet-content">');
 
 		$oFilter = new DBObjectSearch($sClass);
 		$oBlock = new DisplayBlock($oFilter, 'actions');
