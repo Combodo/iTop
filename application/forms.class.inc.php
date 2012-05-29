@@ -984,7 +984,7 @@ class DesignerSubFormField extends DesignerFormField
 	public function Render(WebPage $oP, $sFormId, $sRenderMode='dialog')
 	{
 		$this->oSubForm->SetParentForm($this->oForm);
-		$oSubForm->CopySubmitParams($this->oForm);
+		$this->oSubForm->CopySubmitParams($this->oForm);
 		
 		if ($sRenderMode == 'property')
 		{
