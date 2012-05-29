@@ -132,6 +132,10 @@ $(function()
 					},
 					cursorAt: { top: 16, left: 16 },
 				});
+				if (options.refresh)
+				{
+					me._refresh();
+				}
 			});
 		},
 		_get_new_id: function()
@@ -150,7 +154,7 @@ $(function()
 		},
 		_make_draggable: function()
 		{
-			
+			var me = this;
 			this.element.find('.dashlet').draggable({
 				revert: 'invalid', appendTo: 'body', zIndex: 9999,
 				helper: function() {
@@ -163,6 +167,7 @@ $(function()
 				accept: '.dashlet,.dashlet_icon',
 				drop: function(event, ui) {
 					$( this ).find( ".placeholder" ).remove();
+					var bRefresh = $(this).hasClass('layout_extension');
 					var oDashlet = ui.draggable;
 					if (oDashlet.hasClass('dashlet'))
 					{
@@ -170,12 +175,17 @@ $(function()
 						oDashlet.detach();
 						oDashlet.css({top: 0, left: 0});
 						oDashlet.appendTo($(this));
+						if( bRefresh )
+						{
+							// The layout was extended... refresh the whole dashboard
+							me._refresh();
+						}
 					}
 					else
 					{
 						// inserting a new dashlet
 						var sDashletClass = ui.draggable.attr('dashlet_class');
-						$(':itop-dashboard').dashboard('add_dashlet', {dashlet_class: sDashletClass, container: $(this) })
+						$(':itop-dashboard').dashboard('add_dashlet', {dashlet_class: sDashletClass, container: $(this), refresh: bRefresh });
 					}
 				},
 			});	
