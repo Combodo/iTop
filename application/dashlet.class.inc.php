@@ -259,7 +259,9 @@ class DashletHelloWorld extends Dashlet
 	
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
-		$oPage->add('<div style="text-align:center; line-height:5em" class="dashlet-content"><span>'.$this->aProperties['text'].'</span></div>');
+		$sId = 'chart_'.($bEditMode? 'edit_' : '').$this->sId;
+		$oPage->add('<div id="chart_'.$sId.'" class="dashlet-content"></div>');
+		$oPage->add_ready_script("$('#chart_{$sId}').pie_chart();");
 	}
 
 	public function GetPropertiesFields(DesignerForm $oForm)
@@ -321,7 +323,7 @@ class DashletObjectList extends Dashlet
 	{
 		return array(
 			'label' => 'Object list',
-			'icon' => 'images/dashlet-object-list.png',
+			'icon' => 'images/dashlet-list.png',
 			'description' => 'Object list dashlet',
 		);
 	}
@@ -621,6 +623,66 @@ class DashletGroupByPie extends DashletGroupBy
 		);
 	}
 }
+class DashletGroupByPie2 extends DashletGroupByPie
+{
+	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
+	{
+		$sTitle = addslashes($this->aProperties['title']);
+		
+		$sQuery = $this->aProperties['query'];
+		$sGroupBy = $this->aProperties['group_by'];
+
+		$oSearch = DBObjectSearch::FromOQL($sQuery);
+		$sClassAlias = $oSearch->GetClassAlias();
+		$aQueryParams = array();
+		
+		$aGroupBy = array();
+		$oGroupByExp = Expression::FromOQL($sClassAlias.'.'.$sGroupBy);
+		$aGroupBy['grouped_by_1'] = $oGroupByExp;
+		$sSql = MetaModel::MakeGroupByQuery($oSearch, $aQueryParams, $aGroupBy);
+		$aRes = CMDBSource::QueryToArray($sSql);
+
+		$aGroupBy = array();
+		$aLabels = array();
+		$iTotalCount = 0;
+		foreach ($aRes as $aRow)
+		{
+			$sValue = $aRow['grouped_by_1'];
+			$aLabels[] = ($sValue == '') ? 'Empty (%%.%%)' : $sValue.' (%%.%%)'; //TODO: localize
+			$aGroupBy[] = (int) $aRow['_itop_count_'];
+			$iTotalCount += $aRow['_itop_count_'];
+		}
+
+		$aURLs = array();
+		$sContext = ''; //TODO get the context ??
+		foreach($aGroupBy as $sValue => $iValue)
+		{
+			// Build the search for this subset
+			$oSubsetSearch = clone $oSearch;
+			$oCondition = new BinaryExpression($oGroupByExp, '=', new ScalarExpression($sValue));
+			$oSubsetSearch->AddConditionExpression($oCondition);
+			$aURLs[] = 'http://www.combodo.com/itop'; //utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&format=html{$sContext}&filter=".addslashes($oSubsetSearch->serialize());
+		}
+
+		$sJSValues = json_encode($aGroupBy);
+		$sJSHrefs = json_encode($aURLs);
+		$sJSLabels = json_encode($aLabels);
+		
+		$sId = 'chart_'.($bEditMode? 'edit_' : '').$this->sId;
+		$oPage->add('<div id="chart_'.$sId.'" class="dashlet-content"></div>');
+		$oPage->add_ready_script("$('#chart_{$sId}').pie_chart({chart_label: '$sTitle', values: $sJSValues, labels: $sJSLabels, hrefs: $sJSHrefs });");
+	}
+
+	static public function GetInfo()
+	{
+		return array(
+			'label' => 'Pie (Raphael)',
+			'icon' => 'images/dashlet-pie-chart.png',
+			'description' => 'Pure JS Pie Chart',
+		);
+	}
+}
+
 
 class DashletGroupByBars extends DashletGroupBy
 {
@@ -652,7 +714,7 @@ class DashletGroupByTable extends DashletGroupBy
 	{
 		return array(
 			'label' => 'Group By (table)',
-			'icon' => 'images/dashlet-group-by-table.png',
+			'icon' => 'images/dashlet-groupby-table.png',
 			'description' => 'List (Grouped by a field)',
 		);
 	}
@@ -881,8 +943,45 @@ class DashletProto extends Dashlet
 	{
 		return array(
 			'label' => 'Test3D',
-			'icon' => 'images/xxxxxx.png',
+			'icon' => 'images/dashlet-groupby2-table.png',
 			'description' => 'Group by on two dimensions',
+		);
+	}
+}
+
+class DashletHeatMap extends Dashlet
+{
+	public function __construct($sId)
+	{
+		parent::__construct($sId);
+		$this->aProperties['class'] = 'Contact';
+		$this->aProperties['title'] = 'Test';
+	}
+	
+	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
+	{
+		$sTitle = addslashes($this->aProperties['title']);
+	
+		$sId = 'chart_'.($bEditMode? 'edit_' : '').$this->sId;
+		$oPage->add('<div id="chart_'.$sId.'" class="dashlet-content"></div>');
+		$oPage->add_ready_script("$('#chart_{$sId}').heatmap_chart({chart_label: '$sTitle'});");
+	}
+	
+	public function GetPropertiesFields(DesignerForm $oForm)
+	{
+		$oField = new DesignerTextField('title', 'Title', $this->aProperties['title']);
+		$oForm->AddField($oField);
+		
+		$oField = new DesignerTextField('class', 'Class', $this->aProperties['class']);
+		$oForm->AddField($oField);
+	}
+	
+	static public function GetInfo()
+	{
+		return array(
+			'label' => 'Heatmap (Raphael)',
+			'icon' => 'images/dashlet-heatmap.png',
+			'description' => 'Pure JS Heat Map Chart',
 		);
 	}
 }

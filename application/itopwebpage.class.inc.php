@@ -69,6 +69,11 @@ class iTopWebPage extends NiceWebPage
 		$this->add_linked_script("../js/ckeditor/adapters/jquery.js");
 		$this->add_linked_script("../js/jquery.qtip-1.0.min.js");
 		$this->add_linked_script('../js/property_field.js');
+		$this->add_linked_script('../js/raphael-min.js');
+		$this->add_linked_script('../js/g.raphael.js');
+		$this->add_linked_script('../js/g.pie.js');
+		$this->add_linked_script('../js/g.dot.js');
+		$this->add_linked_script('../js/charts.js');
 		
 		$this->m_sInitScript =
 <<< EOF
@@ -122,7 +127,7 @@ class iTopWebPage extends NiceWebPage
 		});
 		myLayout.addPinBtn( "#tPinMenu", "west" );
 		//myLayout.open( "west" );
-		$('.ui-layout-resizer-west').html('<img src="../images/splitter-top-corner.png"/>');
+		$('.ui-layout-resizer-west .ui-layout-toggler').css({background: 'transparent'});
 		if (GetUserPreference('menu_pane', 'open') == 'closed')
 		{
 			myLayout.close('west');
@@ -478,7 +483,7 @@ EOF
 	{
 		$sAbsURLAppRoot = addslashes($this->m_sRootUrl);
 
-		$this->set_base($this->m_sRootUrl.'pages/');
+		//$this->set_base($this->m_sRootUrl.'pages/');
 		$sForm = $this->GetSiloSelectionForm();
 		$this->DisplayMenu(); // Compute the menu
 
