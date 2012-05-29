@@ -119,6 +119,7 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 		}
 		if ($bEditMode) // Add one row for extensibility
 		{
+			$sStyle = 'style="border: 1px #ccc dashed; width:'.$fColSize.'%;" class="layout_cell edit_mode layout_extension"';
 			$oPage->add('<tr>');
 			for($iCols = 0; $iCols < $this->iNbCols; $iCols++)
 			{
