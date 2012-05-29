@@ -366,11 +366,25 @@ class ScalarExpression extends UnaryExpression
 {
 	public function __construct($value)
 	{
-		if (!is_scalar($value))
+		if (!is_scalar($value) && !is_null($value))
 		{
 			throw new CoreException('Attempt to create a scalar expression from a non scalar', array('var_type'=>gettype($value)));
 		}
 		parent::__construct($value);
+	}
+
+	// recursive rendering
+	public function Render(&$aArgs = null, $bRetrofitParams = false)
+	{
+		if (is_null($this->m_value))
+		{
+			$sRet = 'NULL';
+		}
+		else
+		{
+			$sRet = CMDBSource::Quote($this->m_value);
+		}
+		return $sRet;
 	}
 }
 
@@ -496,15 +510,31 @@ class FieldExpression extends UnaryExpression
 		$sClass = $aSelectedClasses[$sParentAlias];
 
 		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+		// Set a default value for the general case
+		$sRes = $oAttDef->GetAsHtml($sValue);
+
+		// Exceptions...
 		if ($oAttDef->IsExternalKey())
 		{
-			$sTargetClass = $oAttDef->GetTargetClass();
-			$oObject = MetaModel::GetObject($sTargetClass, (int)$sValue);
-			$sRes = $oObject->GetHyperlink();
+			$sObjClass = $oAttDef->GetTargetClass();
+			$iObjKey = (int)$sValue;
+			if ($iObjKey > 0)
+			{
+				$oObject = MetaModel::GetObject($sObjClass, $iObjKey);
+				$sRes = $oObject->GetHyperlink();
+			}
+			else
+			{
+				// Undefined
+				$sRes = DBObject::MakeHyperLink($sObjClass, 0);
+			}
 		}
-		else
+		elseif ($oAttDef->IsExternalField())
 		{
-			$sRes = $oAttDef->GetAsHtml($sValue);
+			if (is_null($sValue))
+			{
+				$sRes = Dict::S('UI:UndefinedObject');
+			}
 		}
 		return $sRes;
 	}

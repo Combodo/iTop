@@ -615,7 +615,7 @@ abstract class DBObject
 		return $oAtt->GetAsCSV($this->GetOriginal($sAttCode), $sSeparator, $sTextQualifier, $this);
 	}
 
-	protected static function MakeHyperLink($sObjClass, $sObjKey, $sLabel = '', $sUrlMakerClass = null, $bWithNavigationContext = true)
+	public static function MakeHyperLink($sObjClass, $sObjKey, $sLabel = '', $sUrlMakerClass = null, $bWithNavigationContext = true)
 	{
 		if ($sObjKey <= 0) return '<em>'.Dict::S('UI:UndefinedObject').'</em>'; // Objects built in memory have negative IDs
 
