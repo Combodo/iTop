@@ -163,7 +163,7 @@ $(function()
 			this.element.closest('form').find('.itop-property-field').each(function()
 			{
 				var oWidget = $(this).data('property_field');
-				if (oWidget)
+				if (oWidget && oWidget._is_visible())
 				{
 					var oVal = oWidget._get_committed_value();
 					oData[oVal.name] = oVal.value;
@@ -178,6 +178,10 @@ $(function()
 			{
 				$('#prop_submit_result').html(data);
 			});
+		},
+		_is_visible: function()
+		{
+			return this.element.parent().is(':visible');
 		}
 	});
 });
