@@ -740,14 +740,13 @@ class DashletHeaderStatic extends Dashlet
 		$sTitle = $this->aProperties['title'];
 		$sIcon = $this->aProperties['icon'];
 
-		$sTitleReady = str_replace(':', '_', $sTitle);
 		$sIconPath = utils::GetAbsoluteUrlModulesRoot().$sIcon;
 
 		$oPage->add('<div class="dashlet-content">');
 		$oPage->add('<div class="main_header">');
 
 		$oPage->add('<img src="'.$sIconPath.'">');
-		$oPage->add('<h1>'.Dict::S($sTitleReady).'</h1>');
+		$oPage->add('<h1>'.Dict::S($sTitle).'</h1>');
 
 		$oPage->add('</div>');
 		$oPage->add('</div>');
@@ -830,8 +829,6 @@ class DashletHeaderDynamic extends Dashlet
 		$oFilter = DBObjectSearch::FromOQL($sQuery);
 		$sClass = $oFilter->GetClass();
 
-		$sTitleReady = str_replace(':', '_', $sTitle);
-		$sSubtitleReady = str_replace(':', '_', $sSubtitle);
 		$sIconPath = utils::GetAbsoluteUrlModulesRoot().$sIcon;
 
 		$aValues = null;
@@ -856,8 +853,8 @@ class DashletHeaderDynamic extends Dashlet
 			// Stats grouped by <group_by>
 			$aCSV = implode(',', $aValues);
 			$aExtraParams = array(
-				'title[block]' => $sTitleReady,
-				'label[block]' => $sSubtitleReady,
+				'title[block]' => $sTitle,
+				'label[block]' => $sSubtitle,
 				'status[block]' => $sGroupBy,
 				'status_codes[block]' => $aCSV,
 				'context_filter' => 1,
@@ -867,8 +864,8 @@ class DashletHeaderDynamic extends Dashlet
 		{
 			// Simple stats
 			$aExtraParams = array(
-				'title[block]' => $sTitleReady,
-				'label[block]' => $sSubtitleReady,
+				'title[block]' => $sTitle,
+				'label[block]' => $sSubtitle,
 				'context_filter' => 1,
 			);
 		}
