@@ -1946,7 +1946,7 @@ abstract class MetaModel
 		catch (MissingQueryArgument $e)
 		{
 			// Add some information...
-			$e->addInfo('OQL', $sOqlQuery);
+			$e->addInfo('OQL', $oFilter->ToOQL());
 			throw $e;
 		}
 		return $sRes;
