@@ -657,10 +657,10 @@
     </class>
   </classes>
   <menus>
-    <menu id="Problem:Overview" xsi:type="TemplateMenuNode" _delta="define">
+    <menu id="Problem:Overview" xsi:type="DashboardMenuNode" _delta="define">
       <rank>0</rank>
       <parent>ProblemManagement</parent>
-      <template_file>overview.html</template_file>
+      <template_file>overview.xml</template_file>
     </menu>
     <menu id="NewProblem" xsi:type="NewObjectMenuNode" _delta="define">
       <rank>1</rank>
