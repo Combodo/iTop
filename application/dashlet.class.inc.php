@@ -249,33 +249,34 @@ class DashletEmptyCell extends Dashlet
 	}
 }
 
-class DashletHelloWorld extends Dashlet
+class DashletRichText extends Dashlet
 {
 	public function __construct($sId)
 	{
 		parent::__construct($sId);
-		$this->aProperties['text'] = 'Hello World';
+		$this->aProperties['text'] = "<h1>Lorem ipsum</h1>\n<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper.</p><p>Duis arcu massa, scelerisque vitae, consequat in, pretium a, enim. Pellentesque congue. Ut in risus volutpat libero pharetra tempor. Cras vestibulum bibendum augue. Praesent egestas leo in pede. Praesent blandit odio eu enim. Pellentesque sed dui ut augue blandit sodales. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aliquam nibh. Mauris ac mauris sed pede pellentesque fermentum. Maecenas adipiscing ante non diam sodales hendrerit. Ut velit mauris, egestas sed, gravida nec, ornare ut, mi. Aenean ut orci vel massa suscipit pulvinar. Nulla sollicitudin. Fusce varius, ligula non tempus aliquam, nunc turpis ullamcorper nibh, in tempus sapien eros vitae ligula. Pellentesque rhoncus nunc et augue.</p><p>Integer id felis. Curabitur aliquet pellentesque diam. Integer quis metus vitae elit lobortis egestas. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi vel erat non mauris convallis vehicula. Nulla et sapien. Integer tortor tellus, aliquam faucibus, convallis id, congue eu, quam. Mauris ullamcorper felis vitae erat. Proin feugiat, augue non elementum posuere, metus purus iaculis lectus, et tristique ligula justo vitae magna. Aliquam convallis sollicitudin purus. Praesent aliquam, enim at fermentum mollis, ligula massa adipiscing nisl, ac euismod nibh nisl eu lectus. Fusce vulputate sem at sapien. Vivamus leo. Aliquam euismod libero eu enim. Nulla nec felis sed leo placerat imperdiet.</p><p>Aenean suscipit nulla in justo. Suspendisse cursus rutrum augue. Nulla tincidunt tincidunt mi. Curabitur iaculis, lorem vel rhoncus faucibus, felis magna fermentum augue, et ultricies lacus lorem varius purus. Curabitur eu amet.</p>";
 	}
 	
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
-		$sId = 'chart_'.($bEditMode? 'edit_' : '').$this->sId;
-		$oPage->add('<div id="chart_'.$sId.'" class="dashlet-content"></div>');
-		$oPage->add_ready_script("$('#chart_{$sId}').pie_chart();");
+		$sText = $this->aProperties['text'];
+
+		$sId = 'richtext_'.($bEditMode? 'edit_' : '').$this->sId;
+		$oPage->add('<div id='.$sId.'" class="dashlet-content">'.$sText.'</div>');
 	}
 
 	public function GetPropertiesFields(DesignerForm $oForm)
 	{
-		$oField = new DesignerTextField('text', 'Text', $this->aProperties['text']);
+		$oField = new DesignerLongTextField('text', 'Text', $this->aProperties['text']);
 		$oForm->AddField($oField);
 	}
 	
 	static public function GetInfo()
 	{
 		return array(
-			'label' => 'Hello World',
+			'label' => 'Rich text',
 			'icon' => 'images/dashlet-text.png',
-			'description' => 'Hello World test Dashlet',
+			'description' => 'Text formatted with HTML tags',
 		);
 	}
 }
@@ -1032,63 +1033,51 @@ class DashletProto extends Dashlet
 		parent::__construct($sId);
 		$this->aProperties['class'] = 'Foo';
 	}
-	
+
+	protected $aValues1;
+	protected $aValues2;
+	protected $aStats;
+	protected $sGroupByLabel1;
+	protected $sGroupByLabel2;
+	protected $iTotalCount;
+
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
-		$sClass = $this->aProperties['class'];
+		$this->Compute();
 
-		$oFilter = DBObjectSearch::FromOQL('SELECT FunctionalCI AS fci');
-		$sGroupBy1 = 'status';
-		//$sGroupBy2 = 'org_id_friendlyname';
-		$sGroupBy2 = 'org_id';
-		$sHtmlTitle = "Hardcoded on $sGroupBy1 and $sGroupBy2...";
+		//$sHtmlTitle = $this->aProperties['title'];
+		$sHtmlTitle = "Group by made on two dimensions";
 
-		$sAlias = $oFilter->GetClassAlias();
-
-		$oGroupByExp1 = new FieldExpression($sGroupBy1, $sAlias);
-		$sGroupByLabel1 = MetaModel::GetLabel($oFilter->GetClass(), $sGroupBy1);
-		
-		$oGroupByExp2 = new FieldExpression($sGroupBy2, $sAlias);
-		$sGroupByLabel2 = MetaModel::GetLabel($oFilter->GetClass(), $sGroupBy2);
-		
-		$aGroupBy = array();
-		$aGroupBy['grouped_by_1'] = $oGroupByExp1;
-		$aGroupBy['grouped_by_2'] = $oGroupByExp2;
-		$sSql = MetaModel::MakeGroupByQuery($oFilter, array(), $aGroupBy);
-		$aRes = CMDBSource::QueryToArray($sSql);
-		
-		$iTotalCount = 0;
-		$aData = array();
-		$oAppContext = new ApplicationContext();
-		$sParams = $oAppContext->GetForLink();
-		foreach ($aRes as $aRow)
+		// Build the output
+		$aDisplayData = array();
+		foreach ($this->aValues1 as $sValue1 => $sDisplayValue1)
 		{
-			$iCount = $aRow['_itop_count_'];
-			$iTotalCount += $iCount;
-
-			$sValue1 = $aRow['grouped_by_1'];
-			$sValue2 = $aRow['grouped_by_2'];
-
-			$sDisplayValue1 = $aGroupBy['grouped_by_1']->MakeValueLabel($oFilter, $sValue1, $sValue1); // default to the raw value
-			$sDisplayValue2 = $aGroupBy['grouped_by_2']->MakeValueLabel($oFilter, $sValue2, $sValue2); // default to the raw value
-
-			// Build the search for this subset
-			$oSubsetSearch = clone $oFilter;
-			$oCondition = new BinaryExpression($oGroupByExp1, '=', new ScalarExpression($sValue1));
-			$oSubsetSearch->AddConditionExpression($oCondition);
-			$oCondition = new BinaryExpression($oGroupByExp2, '=', new ScalarExpression($sValue2));
-			$oSubsetSearch->AddConditionExpression($oCondition);
-		
-			$sFilter = urlencode($oSubsetSearch->serialize());
-			$aData[] = array (
-				'group1' => $sDisplayValue1,
-				'group2' => $sDisplayValue2,
-				'value' => "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&dosearch=1&$sParams&filter=$sFilter\">$iCount</a>"
-			); // TO DO: add the context information
+			foreach ($this->aValues2 as $sValue2 => $sDisplayValue2)
+			{
+				@$aResData = $this->aStats[$sValue1][$sValue2];
+				if (is_array($aResData))
+				{
+					$aDisplayData[] = array (
+						'group1' => $sDisplayValue1,
+						'group2' => $sDisplayValue2,
+						'value' => $aResData['digurl']
+					);
+				}
+				else
+				{
+					// Missing result => 0
+					$aDisplayData[] = array (
+						'group1' => $sDisplayValue1,
+						'group2' => $sDisplayValue2,
+						'value' => "-"
+					);
+				}
+			}
 		}
+
 		$aAttribs =array(
-			'group1' => array('label' => $sGroupByLabel1, 'description' => ''),
-			'group2' => array('label' => $sGroupByLabel2, 'description' => ''),
+			'group1' => array('label' => $this->sGroupByLabel1, 'description' => ''),
+			'group2' => array('label' => $this->sGroupByLabel2, 'description' => ''),
 			'value' => array('label'=> Dict::S('UI:GroupBy:Count'), 'description' => Dict::S('UI:GroupBy:Count+'))
 		);
 
@@ -1096,10 +1085,134 @@ class DashletProto extends Dashlet
 		$oPage->add('<div style="text-align:center" class="dashlet-content">');
 
 		$oPage->add('<h1>'.$sHtmlTitle.'</h1>');
-		$oPage->p(Dict::Format('UI:Pagination:HeaderNoSelection', $iTotalCount));
-		$oPage->table($aAttribs, $aData);
+		$oPage->p(Dict::Format('UI:Pagination:HeaderNoSelection', $this->iTotalCount));
+		$oPage->table($aAttribs, $aDisplayData);
 
 		$oPage->add('</div>');
+	}
+
+	protected function Compute()
+	{
+		// Read and interpret parameters
+		//
+		//$sFoo = $this->aProperties['foo'];
+
+		if (true)
+		{
+			$oFilter = DBObjectSearch::FromOQL('SELECT FunctionalCI');
+			$sGroupBy1 = 'FunctionalCI.status';
+			$this->sGroupByLabel1 = MetaModel::GetLabel('FunctionalCI', 'status');
+			$aFill1 = array(
+				'implementation',
+				'production',
+				'obsolete',
+			);
+			//$aFill1 = null;
+			//$sGroupBy2 = 'org_id_friendlyname';
+			$sGroupBy2 = 'FunctionalCI.org_id';
+			$this->sGroupByLabel2 = MetaModel::GetLabel('FunctionalCI', 'org_id');
+			$aFill2 = array(
+				'2',
+				'1',
+			);
+			//$aFill2 = null;
+		}
+		else
+		{
+			$oFilter = DBObjectSearch::FromOQL('SELECT Incident AS i');
+			$sGroupBy1 = "DATE_FORMAT(i.start_date, '%H')";
+			$this->sGroupByLabel1 = 'Hour of '.MetaModel::GetLabel('Incident', 'start_date');
+			$aFill1 = array(9, 10, 11, 12, 13, 14, 15, 16, 17, 18);
+			//$aFill1 = null;
+
+			$sGroupBy2 = "DATE_FORMAT(i.start_date, '%w')";
+			$this->sGroupByLabel2 = 'Week day of '.MetaModel::GetLabel('Incident', 'start_date');
+			$aFill2 = null;
+		}
+
+		// Do compute the statistics
+		//
+		$this->aValues1 = array();
+		$this->aValues2 = array();
+		$this->aStats = array();
+		$this->iTotalCount = 0;
+
+		$sAlias = $oFilter->GetClassAlias();
+
+		//$oGroupByExp1 = new FieldExpression($sGroupBy1, $sAlias);
+		$oGroupByExp1 = Expression::FromOQL($sGroupBy1);
+		
+		//$oGroupByExp2 = new FieldExpression($sGroupBy2, $sAlias);
+		$oGroupByExp2 = Expression::FromOQL($sGroupBy2);
+		
+		$aGroupBy = array();
+		$aGroupBy['grouped_by_1'] = $oGroupByExp1;
+		$aGroupBy['grouped_by_2'] = $oGroupByExp2;
+		$sSql = MetaModel::MakeGroupByQuery($oFilter, array(), $aGroupBy);
+		$aRes = CMDBSource::QueryToArray($sSql);
+
+		// Prepare a blank and ordered grid
+		if (is_array($aFill1))
+		{
+			foreach ($aFill1 as $sValue1)
+			{
+				$sDisplayValue1 = $aGroupBy['grouped_by_1']->MakeValueLabel($oFilter, $sValue1, $sValue1); // default to the raw value
+				$this->aValues1[$sValue1] = $sDisplayValue1;
+			}
+		}
+		if (is_array($aFill2))
+		{
+			foreach ($aFill2 as $sValue2)
+			{
+				$sDisplayValue2 = $aGroupBy['grouped_by_2']->MakeValueLabel($oFilter, $sValue2, $sValue2); // default to the raw value
+				$aValues2[$sValue2] = $sDisplayValue2;
+			}
+		}
+		
+		$oAppContext = new ApplicationContext();
+		$sParams = $oAppContext->GetForLink();
+		foreach ($aRes as $aRow)
+		{
+			$iCount = $aRow['_itop_count_'];
+			$this->iTotalCount += $iCount;
+
+			$sValue1 = $aRow['grouped_by_1'];
+			$sValue2 = $aRow['grouped_by_2'];
+
+			$bValidResult = true;
+			if (is_array($aFill1) && !in_array($sValue1, $aFill1))
+			{
+				$bValidResult = false;
+			}
+			if (is_array($aFill2) && !in_array($sValue2, $aFill2))
+			{
+				$bValidResult = false;
+			}
+			if ($bValidResult)
+			{
+				// Build the search for this subset
+				$oSubsetSearch = clone $oFilter;
+				$oCondition = new BinaryExpression($oGroupByExp1, '=', new ScalarExpression($sValue1));
+				$oSubsetSearch->AddConditionExpression($oCondition);
+				$oCondition = new BinaryExpression($oGroupByExp2, '=', new ScalarExpression($sValue2));
+				$oSubsetSearch->AddConditionExpression($oCondition);
+				$sFilter = urlencode($oSubsetSearch->serialize());
+
+				$this->aStats[$sValue1][$sValue2] = array (
+					'digurl' => "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&dosearch=1&$sParams&filter=$sFilter\">$iCount</a>"
+				);
+				if (!array_key_exists($sValue1, $this->aValues1))
+				{
+					$sDisplayValue1 = $aGroupBy['grouped_by_1']->MakeValueLabel($oFilter, $sValue1, $sValue1); // default to the raw value
+					$this->aValues1[$sValue1] = $sDisplayValue1;
+				}
+				if (!array_key_exists($sValue2, $this->aValues2))
+				{
+					$sDisplayValue2 = $aGroupBy['grouped_by_2']->MakeValueLabel($oFilter, $sValue2, $sValue2); // default to the raw value
+					$this->aValues2[$sValue2] = $sDisplayValue2;
+				}
+			}
+		}
 	}
 
 	public function GetPropertiesFields(DesignerForm $oForm)
