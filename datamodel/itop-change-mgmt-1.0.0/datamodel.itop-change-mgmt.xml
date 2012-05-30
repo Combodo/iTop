@@ -4762,7 +4762,7 @@
     <menu id="Change:Overview" xsi:type="DashboardMenuNode" _delta="define">
       <rank>0</rank>
       <parent>ChangeManagement</parent>
-      <template_file>overview.xml</template_file>
+      <definition_file>overview.xml</definition_file>
     </menu>
     <menu id="NewChange" xsi:type="NewObjectMenuNode" _delta="define">
       <rank>1</rank>
