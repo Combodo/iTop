@@ -823,7 +823,41 @@ class FunctionExpression extends Expression
 		{
 			$this->m_aArgs[$key] = $oExpr->RenameParam($sOldName, $sNewName);
 		}
-	}	
+	}
+
+	/**
+	 * Make the most relevant label, given the value of the expression
+	 * 	 
+	 * @param DBObjectSearch oFilter The context in which this expression has been used	 	
+	 * @param string sValue The value returned by the query, for this expression	 	
+	 * @param string sDefault The default value if no relevant label could be computed	 	
+	 * @return The label
+	 */	
+	public function MakeValueLabel($oFilter, $sValue, $sDefault)
+	{
+		$sRes = $sDefault;
+		if (strtolower($this->m_sVerb) == 'date_format')
+		{
+			$oFormatExpr = $this->m_aArgs[1];
+			if ($oFormatExpr->Render() == "'%w'")
+			{
+				static $aWeekDayToString = array(
+					0 => 'Sunday',
+					1 => 'Monday',
+					2 => 'Tuesday',
+					3 => 'Wednesday',
+					4 => 'Thursday',
+					5 => 'Friday',
+					6 => 'Saturday',
+				);
+				if (isset($aWeekDayToString[(int)$sValue]))
+				{
+					$sRes = $aWeekDayToString[(int)$sValue];
+				}
+			}
+		}
+		return $sRes;
+	}
 }
 
 class IntervalExpression extends Expression

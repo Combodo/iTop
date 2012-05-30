@@ -47,6 +47,10 @@ abstract class Dashlet
 		{
 			$ret = ($sValue == 'true');
 		}
+		elseif ($sRefType == 'array')
+		{
+			$ret = explode(',', $sValue);
+		}
 		else
 		{
 			$ret = $sValue;
@@ -57,9 +61,14 @@ abstract class Dashlet
 
 	public function Prop2Str($value)
 	{
-		if (gettype($value) == 'boolean')
+		$sType = gettype($value);
+		if ($sType == 'boolean')
 		{
 			$sRet = $value ? 'true' : 'false';
+		}
+		elseif ($sType == 'array')
+		{
+			$sRet = implode(',', $value);
 		}
 		else
 		{
@@ -863,7 +872,7 @@ class DashletHeaderDynamic extends Dashlet
 		$this->aProperties['subtitle'] = 'Contacts';
 		$this->aProperties['query'] = 'SELECT Contact';
 		$this->aProperties['group_by'] = 'status';
-		$this->aProperties['values'] = 'active,inactive,terminated';
+		$this->aProperties['values'] = array('active', 'inactive');
 	}
 	
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
@@ -873,17 +882,16 @@ class DashletHeaderDynamic extends Dashlet
 		$sSubtitle = $this->aProperties['subtitle'];
 		$sQuery = $this->aProperties['query'];
 		$sGroupBy = $this->aProperties['group_by'];
-		$sValues = $this->aProperties['values'];
+		$aValues = $this->aProperties['values'];
 
 		$oFilter = DBObjectSearch::FromOQL($sQuery);
 		$sClass = $oFilter->GetClass();
 
 		$sIconPath = utils::GetAbsoluteUrlModulesRoot().$sIcon;
 
-		$aValues = null;
 		if (MetaModel::IsValidAttCode($sClass, $sGroupBy))
 		{
-			if ($sValues == '')
+			if (count($aValues) == 0)
 			{
 				$aAllowed = MetaModel::GetAllowedValues_att($sClass, $sGroupBy);
 				if (is_array($aAllowed))
@@ -891,21 +899,16 @@ class DashletHeaderDynamic extends Dashlet
 					$aValues = array_keys($aAllowed);
 				}
 			}
-			else
-			{
-				$aValues = explode(',', $sValues);
-			}
 		}
-
-		if (is_array($aValues))
+		if (count($aValues) > 0)
 		{
 			// Stats grouped by <group_by>
-			$aCSV = implode(',', $aValues);
+			$sCSV = implode(',', $aValues);
 			$aExtraParams = array(
 				'title[block]' => $sTitle,
 				'label[block]' => $sSubtitle,
 				'status[block]' => $sGroupBy,
-				'status_codes[block]' => $aCSV,
+				'status_codes[block]' => $sCSV,
 				'context_filter' => 1,
 			);
 		}
@@ -962,14 +965,8 @@ class DashletHeaderDynamic extends Dashlet
 			$aGroupBy = array();
 			foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
 			{
-				if (!$oAttDef->IsScalar()) continue; // skip link sets
-	
+				if (!$oAttDef instanceof AttributeEnum && (!$oAttDef instanceof AttributeFinalClass || !MetaModel::HasChildrenClasses($sClass))) continue;
 				$sLabel = $oAttDef->GetLabel();
-				if ($oAttDef->IsExternalKey(EXTKEY_ABSOLUTE))
-				{
-					$sLabel = $oAttDef->GetLabel().' (strict)';
-				}
-	
 				$aGroupBy[$sAttCode] = $sLabel;
 			}
 			$oField = new DesignerComboField('group_by', 'Group by', $this->aProperties['group_by']);
@@ -981,7 +978,17 @@ class DashletHeaderDynamic extends Dashlet
 		}
 		$oForm->AddField($oField);
 
-		$oField = new DesignerTextField('values', 'Values (CSV list)', $this->aProperties['values']);
+		$oField = new DesignerComboField('values', 'Values (CSV list)', $this->aProperties['values']);
+		$oField->MultipleSelection(true);
+		if (MetaModel::IsValidAttCode($sClass, $this->aProperties['group_by']))
+		{
+			$aValues = MetaModel::GetAllowedValues_att($sClass, $this->aProperties['group_by']);
+			$oField->SetAllowedValues($aValues);
+		}
+		else
+		{
+			$oField->SetReadOnly();
+		}
 		$oForm->AddField($oField);
 	}
 	
@@ -1004,12 +1011,18 @@ class DashletHeaderDynamic extends Dashlet
 					$this->bFormRedrawNeeded = true;
 					// wrong but not necessary - unset($aUpdatedFields['group_by']);
 					$this->aProperties['group_by'] = '';
+					$this->aProperties['values'] = array();
 				}
 			}
 			catch(Exception $e)
 			{
 				$this->bFormRedrawNeeded = true;
 			}
+		}
+		if (in_array('group_by', $aUpdatedFields))
+		{
+			$this->bFormRedrawNeeded = true;
+			$this->aProperties['values'] = array();
 		}
 		return parent::Update($aValues, $aUpdatedFields);
 	}
@@ -1133,45 +1146,42 @@ class DashletProto extends Dashlet
 		$sHtmlTitle = "Group by made on two dimensions";
 
 		// Build the output
-		$aDisplayData = array();
+		$oPage->add('<div style="text-align:center" class="dashlet-content">');
+
+		$oPage->add('<h1>'.$sHtmlTitle.'</h1>');
+		$oPage->p(Dict::Format('UI:Pagination:HeaderNoSelection', $this->iTotalCount));
+
+		$oPage->add('<table>');
+		// Header
+		$oPage->add('<tr>');
+		$oPage->add('<td></td>');
+		foreach ($this->aValues2 as $sValue2 => $sDisplayValue2)
+		{
+			$oPage->add('<td><b>'.$sDisplayValue2.'</b></td>');
+		}
+		$oPage->add('</tr>');
+		// Contents		
 		foreach ($this->aValues1 as $sValue1 => $sDisplayValue1)
 		{
+			$oPage->add('<tr>');
+			$oPage->add('<td><b>'.$sDisplayValue1.'</b></td>');
 			foreach ($this->aValues2 as $sValue2 => $sDisplayValue2)
 			{
 				@$aResData = $this->aStats[$sValue1][$sValue2];
 				if (is_array($aResData))
 				{
-					$aDisplayData[] = array (
-						'group1' => $sDisplayValue1,
-						'group2' => $sDisplayValue2,
-						'value' => $aResData['digurl']
-					);
+					$sRes = $aResData['digurl'];
 				}
 				else
 				{
 					// Missing result => 0
-					$aDisplayData[] = array (
-						'group1' => $sDisplayValue1,
-						'group2' => $sDisplayValue2,
-						'value' => "-"
-					);
+					$sRes = '-';
 				}
+				$oPage->add('<td>'.$sRes.'</td>');
 			}
+			$oPage->add('</tr>');
 		}
-
-		$aAttribs =array(
-			'group1' => array('label' => $this->sGroupByLabel1, 'description' => ''),
-			'group2' => array('label' => $this->sGroupByLabel2, 'description' => ''),
-			'value' => array('label'=> Dict::S('UI:GroupBy:Count'), 'description' => Dict::S('UI:GroupBy:Count+'))
-		);
-
-
-		$oPage->add('<div style="text-align:center" class="dashlet-content">');
-
-		$oPage->add('<h1>'.$sHtmlTitle.'</h1>');
-		$oPage->p(Dict::Format('UI:Pagination:HeaderNoSelection', $this->iTotalCount));
-		$oPage->table($aAttribs, $aDisplayData);
-
+		$oPage->add('</table>');
 		$oPage->add('</div>');
 	}
 
@@ -1181,17 +1191,16 @@ class DashletProto extends Dashlet
 		//
 		//$sFoo = $this->aProperties['foo'];
 
-		if (true)
+		if (false)
 		{
 			$oFilter = DBObjectSearch::FromOQL('SELECT FunctionalCI');
 			$sGroupBy1 = 'FunctionalCI.status';
 			$this->sGroupByLabel1 = MetaModel::GetLabel('FunctionalCI', 'status');
 			$aFill1 = array(
-				'implementation',
 				'production',
-				'obsolete',
+				'implementation',
 			);
-			//$aFill1 = null;
+			$aFill1 = null;
 			//$sGroupBy2 = 'org_id_friendlyname';
 			$sGroupBy2 = 'FunctionalCI.org_id';
 			$this->sGroupByLabel2 = MetaModel::GetLabel('FunctionalCI', 'org_id');
@@ -1211,7 +1220,8 @@ class DashletProto extends Dashlet
 
 			$sGroupBy2 = "DATE_FORMAT(i.start_date, '%w')";
 			$this->sGroupByLabel2 = 'Week day of '.MetaModel::GetLabel('Incident', 'start_date');
-			$aFill2 = null;
+			$aFill2 = array(1, 2, 3, 4, 5);
+			//$aFill2 = null;
 		}
 
 		// Do compute the statistics
@@ -1249,10 +1259,10 @@ class DashletProto extends Dashlet
 			foreach ($aFill2 as $sValue2)
 			{
 				$sDisplayValue2 = $aGroupBy['grouped_by_2']->MakeValueLabel($oFilter, $sValue2, $sValue2); // default to the raw value
-				$aValues2[$sValue2] = $sDisplayValue2;
+				$this->aValues2[$sValue2] = $sDisplayValue2;
 			}
 		}
-		
+
 		$oAppContext = new ApplicationContext();
 		$sParams = $oAppContext->GetForLink();
 		foreach ($aRes as $aRow)

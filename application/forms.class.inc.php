@@ -724,6 +724,15 @@ EOF
 );
 		return array('label' => $this->sLabel, 'value' => $sHtml.$sValidation);
 	}
+
+	public function ReadParam(&$aValues)
+	{
+		parent::ReadParam($aValues);
+		if ($aValues[$this->sCode] == 'null')
+		{
+			$aValues[$this->sCode] = array();
+		}
+	}
 }
 
 class DesignerBooleanField extends DesignerFormField

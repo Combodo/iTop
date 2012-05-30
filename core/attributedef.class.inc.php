@@ -1391,6 +1391,17 @@ class AttributeFinalClass extends AttributeString
 		if (empty($sValue)) return '';
 		return MetaModel::GetName($sValue);
 	}
+
+	public function GetAllowedValues($aArgs = array(), $sContains = '')
+	{
+		$aRawValues = MetaModel::EnumChildClasses($this->GetHostClass());
+		$aLocalizedValues = array();
+		foreach ($aRawValues as $sClass)
+		{
+			$aLocalizedValues[$sClass] = MetaModel::GetName($sClass);
+		}
+  		return $aLocalizedValues;
+  	}
 }
 
 
