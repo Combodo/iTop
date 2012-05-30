@@ -1131,7 +1131,7 @@ class DBObjectSearch
 
 		if (!MetaModel::IsValidClass($sClass))
 		{
-			throw new OqlNormalizeException('Unknown class', $sQuery, $oOqlQuery->GetClassDetails(), MetaModel::GetClasses());
+			throw new UnknownClassOqlException($sQuery, $oOqlQuery->GetClassDetails(), MetaModel::GetClasses());
 		}
 
 		$oResultFilter = new DBObjectSearch($sClass, $sClassAlias);
@@ -1151,7 +1151,7 @@ class DBObjectSearch
 				$sJoinClassAlias = $oJoinSpec->GetClassAlias();
 				if (!MetaModel::IsValidClass($sJoinClass))
 				{
-					throw new OqlNormalizeException('Unknown class', $sQuery, $oJoinSpec->GetClassDetails(), MetaModel::GetClasses());
+					throw new UnknownClassOqlException($sQuery, $oJoinSpec->GetClassDetails(), MetaModel::GetClasses());
 				}
 				if (array_key_exists($sJoinClassAlias, $aAliases))
 				{

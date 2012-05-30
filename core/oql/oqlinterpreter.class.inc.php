@@ -31,6 +31,13 @@ class OqlNormalizeException extends OQLException
 		parent::__construct($sIssue, $sInput, 0, $oName->GetPos(), $oName->GetValue(), $aExpecting);
 	}
 }
+class UnknownClassOqlException extends OqlNormalizeException
+{
+	public function __construct($sInput, OqlName $oName, $aExpecting = null)
+	{
+		parent::__construct('Unknown class', $sInput, $oName, $aExpecting);
+	}
+}
 
 class OqlInterpreterException extends OQLException
 {
