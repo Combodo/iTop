@@ -4203,7 +4203,7 @@
     <menu id="Contact" xsi:type="DashboardMenuNode" _delta="define">
       <rank>1</rank>
       <parent>ConfigManagement</parent>
-      <template_file>contacts_menu.xml</template_file>
+      <definition_file>ccontacts_menu.xml</definition_file>
     </menu>
     <menu id="NewContact" xsi:type="NewObjectMenuNode" _delta="define">
       <rank>1</rank>
@@ -4236,7 +4236,7 @@
     <menu id="ConfigManagementCI" xsi:type="DashboardMenuNode" _delta="define">
       <rank>5</rank>
       <parent>ConfigManagement</parent>
-      <template_file>cis_menu.xml</template_file>
+      <definition_file>cis_menu.xml</definition_file>
     </menu>
     <menu id="NewCI" xsi:type="NewObjectMenuNode" _delta="define">
       <rank>0</rank>
