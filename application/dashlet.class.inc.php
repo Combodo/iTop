@@ -109,20 +109,47 @@ abstract class Dashlet
 		}
 	}
 	
-	public function DoRender($oPage, $bEditMode = false, $aExtraParams = array())
+	public function DoRender($oPage, $bEditMode = false, $bEnclosingDiv = true, $aExtraParams = array())
 	{
 		$sCSSClasses = implode(' ', $this->aCSSClasses);
-		if ($bEditMode)
+		$sId = $this->GetID();
+		if ($bEnclosingDiv)
 		{
-			$sId = $this->GetID();
-			$oPage->add('<div class="'.$sCSSClasses.'" id="dashlet_'.$sId.'">');
+			if ($bEditMode)
+			{
+				$oPage->add('<div class="'.$sCSSClasses.'" id="dashlet_'.$sId.'">');
+			}
+			else
+			{
+				$oPage->add('<div class="'.$sCSSClasses.'">');
+			}
 		}
-		else
+		
+		try
 		{
-			$oPage->add('<div class="'.$sCSSClasses.'">');
+			$this->Render($oPage, $bEditMode, $aExtraParams);
 		}
-		$this->Render($oPage, $bEditMode, $aExtraParams);
-		$oPage->add('</div>');
+		catch(UnknownClassOqlException $e)
+		{
+			// Maybe the class is part of a non-installed module, fail silently
+			// Except in Edit mode
+			if ($bEditMode)
+			{
+				$oPage->add('<div class="dashlet-content">');
+				$oPage->add('<h2>Unknown Class: '.$e->GetWrongWord().', did you mean '.OqlException::FindClosestString($e->GetWrongWord(), $e->GetSuggestions()).'?</h2>'); //TODO localize and 
+				$oPage->add('</div>');
+			}
+		}
+		catch(Exception $e)
+		{
+			$oPage->p($e->getMessage());
+		}
+		
+		if ($bEnclosingDiv)
+		{
+			$oPage->add('</div>');
+		}
+		
 		if ($bEditMode)
 		{
 			$sClass = get_class($this);
@@ -478,33 +505,40 @@ abstract class DashletGroupBy extends Dashlet
 		$oField = new DesignerLongTextField('query', 'Query', $this->aProperties['query']);
 		$oForm->AddField($oField);
 
-		// Group by field: build the list of possible values (attribute codes + ...)
-		$oSearch = DBObjectSearch::FromOQL($this->aProperties['query']);
-		$sClass = $oSearch->GetClass();
-		$aGroupBy = array();
-		foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+		try
 		{
-			if (!$oAttDef->IsScalar()) continue; // skip link sets
-
-			$sLabel = $oAttDef->GetLabel();
-			if ($oAttDef->IsExternalKey(EXTKEY_ABSOLUTE))
+			// Group by field: build the list of possible values (attribute codes + ...)
+			$oSearch = DBObjectSearch::FromOQL($this->aProperties['query']);
+			$sClass = $oSearch->GetClass();
+			$aGroupBy = array();
+			foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
 			{
-				$sLabel = $oAttDef->GetLabel().' (strict)';
+				if (!$oAttDef->IsScalar()) continue; // skip link sets
+	
+				$sLabel = $oAttDef->GetLabel();
+				if ($oAttDef->IsExternalKey(EXTKEY_ABSOLUTE))
+				{
+					$sLabel = $oAttDef->GetLabel().' (strict)';
+				}
+	
+				$aGroupBy[$sAttCode] = $sLabel;
+	
+				if ($oAttDef instanceof AttributeDateTime)
+				{
+					$aGroupBy[$sAttCode.':hour'] = $oAttDef->GetLabel().' (hour)';
+					$aGroupBy[$sAttCode.':month'] = $oAttDef->GetLabel().' (month)';
+					$aGroupBy[$sAttCode.':day_of_week'] = $oAttDef->GetLabel().' (day of week)';
+					$aGroupBy[$sAttCode.':day_of_month'] = $oAttDef->GetLabel().' (day of month)';
+				}
 			}
-
-			$aGroupBy[$sAttCode] = $sLabel;
-
-			if ($oAttDef instanceof AttributeDateTime)
-			{
-				$aGroupBy[$sAttCode.':hour'] = $oAttDef->GetLabel().' (hour)';
-				$aGroupBy[$sAttCode.':month'] = $oAttDef->GetLabel().' (month)';
-				$aGroupBy[$sAttCode.':day_of_week'] = $oAttDef->GetLabel().' (day of week)';
-				$aGroupBy[$sAttCode.':day_of_month'] = $oAttDef->GetLabel().' (day of month)';
-			}
+	
+			$oField = new DesignerComboField('group_by', 'Group by', $this->aProperties['group_by']);
+			$oField->SetAllowedValues($aGroupBy);
 		}
-
-		$oField = new DesignerComboField('group_by', 'Group by', $this->aProperties['group_by']);
-		$oField->SetAllowedValues($aGroupBy);
+		catch(Exception $e)
+		{
+			$oField = new DesignerTextField('group_by', 'Group by', $this->aProperties['group_by']);
+		}
 		$oForm->AddField($oField);
 
 		$aStyles = array(
@@ -522,19 +556,26 @@ abstract class DashletGroupBy extends Dashlet
 	{
 		if (in_array('query', $aUpdatedFields))
 		{
-			$sCurrQuery = $aValues['query'];
-			$oCurrSearch = DBObjectSearch::FromOQL($sCurrQuery);
-			$sCurrClass = $oCurrSearch->GetClass();
-
-			$sPrevQuery = $this->aProperties['query'];
-			$oPrevSearch = DBObjectSearch::FromOQL($sPrevQuery);
-			$sPrevClass = $oPrevSearch->GetClass();
-
-			if ($sCurrClass != $sPrevClass)
+			try
+			{
+				$sCurrQuery = $aValues['query'];
+				$oCurrSearch = DBObjectSearch::FromOQL($sCurrQuery);
+				$sCurrClass = $oCurrSearch->GetClass();
+	
+				$sPrevQuery = $this->aProperties['query'];
+				$oPrevSearch = DBObjectSearch::FromOQL($sPrevQuery);
+				$sPrevClass = $oPrevSearch->GetClass();
+	
+				if ($sCurrClass != $sPrevClass)
+				{
+					$this->bFormRedrawNeeded = true;
+					// wrong but not necessary - unset($aUpdatedFields['group_by']);
+					$this->aProperties['group_by'] = '';
+				}
+			}
+			catch(Exception $e)
 			{
 				$this->bFormRedrawNeeded = true;
-				// wrong but not necessary - unset($aUpdatedFields['group_by']);
-				$this->aProperties['group_by'] = '';
 			}
 		}
 		$oDashlet = parent::Update($aValues, $aUpdatedFields);
@@ -584,27 +625,34 @@ abstract class DashletGroupBy extends Dashlet
 
 		$oField = new DesignerHiddenField('query', 'Query', $sOQL);
 		$oForm->AddField($oField);
-
-		// Group by field: build the list of possible values (attribute codes + ...)
-		$oSearch = DBObjectSearch::FromOQL($this->aProperties['query']);
-		$sClass = $oSearch->GetClass();
-		$aGroupBy = array();
-		foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+		
+		try
 		{
-			if (!$oAttDef->IsScalar()) continue; // skip link sets
-			if ($oAttDef->IsExternalKey(EXTKEY_ABSOLUTE)) continue; // skip external keys
-			$aGroupBy[$sAttCode] = $oAttDef->GetLabel();
-
-			if ($oAttDef instanceof AttributeDateTime)
+			// Group by field: build the list of possible values (attribute codes + ...)
+			$oSearch = DBObjectSearch::FromOQL($this->aProperties['query']);
+			$sClass = $oSearch->GetClass();
+			$aGroupBy = array();
+			foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
 			{
-				//date_format(start_date, '%d')
-				$aGroupBy['date_of_'.$sAttCode] = 'Day of '.$oAttDef->GetLabel();
+				if (!$oAttDef->IsScalar()) continue; // skip link sets
+				if ($oAttDef->IsExternalKey(EXTKEY_ABSOLUTE)) continue; // skip external keys
+				$aGroupBy[$sAttCode] = $oAttDef->GetLabel();
+	
+				if ($oAttDef instanceof AttributeDateTime)
+				{
+					//date_format(start_date, '%d')
+					$aGroupBy['date_of_'.$sAttCode] = 'Day of '.$oAttDef->GetLabel();
+				}
+	
 			}
-
+			$oField = new DesignerComboField('group_by', 'Group by', $this->aProperties['group_by']);
+			$oField->SetAllowedValues($aGroupBy);
+		}
+		catch(Exception $e)
+		{
+			$oField = new DesignerTextField('group_by', 'Group by', $this->aProperties['group_by']);
 		}
 
-		$oField = new DesignerComboField('group_by', 'Group by', $this->aProperties['group_by']);
-		$oField->SetAllowedValues($aGroupBy);
 		$oForm->AddField($oField);
 
 		$oField = new DesignerHiddenField('style', '', $this->aProperties['style']);
@@ -906,28 +954,64 @@ class DashletHeaderDynamic extends Dashlet
 		$oField = new DesignerTextField('query', 'Query', $this->aProperties['query']);
 		$oForm->AddField($oField);
 
-		// Group by field: build the list of possible values (attribute codes + ...)
-		$oSearch = DBObjectSearch::FromOQL($this->aProperties['query']);
-		$sClass = $oSearch->GetClass();
-		$aGroupBy = array();
-		foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+		try
 		{
-			if (!$oAttDef->IsScalar()) continue; // skip link sets
-
-			$sLabel = $oAttDef->GetLabel();
-			if ($oAttDef->IsExternalKey(EXTKEY_ABSOLUTE))
+			// Group by field: build the list of possible values (attribute codes + ...)
+			$oSearch = DBObjectSearch::FromOQL($this->aProperties['query']);
+			$sClass = $oSearch->GetClass();
+			$aGroupBy = array();
+			foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
 			{
-				$sLabel = $oAttDef->GetLabel().' (strict)';
+				if (!$oAttDef->IsScalar()) continue; // skip link sets
+	
+				$sLabel = $oAttDef->GetLabel();
+				if ($oAttDef->IsExternalKey(EXTKEY_ABSOLUTE))
+				{
+					$sLabel = $oAttDef->GetLabel().' (strict)';
+				}
+	
+				$aGroupBy[$sAttCode] = $sLabel;
 			}
-
-			$aGroupBy[$sAttCode] = $sLabel;
+			$oField = new DesignerComboField('group_by', 'Group by', $this->aProperties['group_by']);
+			$oField->SetAllowedValues($aGroupBy);
 		}
-		$oField = new DesignerComboField('group_by', 'Group by', $this->aProperties['group_by']);
-		$oField->SetAllowedValues($aGroupBy);
+		catch(Exception $e)
+		{
+			$oField = new DesignerTextField('group_by', 'Group by', $this->aProperties['group_by']);
+		}
 		$oForm->AddField($oField);
 
 		$oField = new DesignerTextField('values', 'Values (CSV list)', $this->aProperties['values']);
 		$oForm->AddField($oField);
+	}
+	
+	public function Update($aValues, $aUpdatedFields)
+	{
+		if (in_array('query', $aUpdatedFields))
+		{
+			try
+			{
+				$sCurrQuery = $aValues['query'];
+				$oCurrSearch = DBObjectSearch::FromOQL($sCurrQuery);
+				$sCurrClass = $oCurrSearch->GetClass();
+	
+				$sPrevQuery = $this->aProperties['query'];
+				$oPrevSearch = DBObjectSearch::FromOQL($sPrevQuery);
+				$sPrevClass = $oPrevSearch->GetClass();
+	
+				if ($sCurrClass != $sPrevClass)
+				{
+					$this->bFormRedrawNeeded = true;
+					// wrong but not necessary - unset($aUpdatedFields['group_by']);
+					$this->aProperties['group_by'] = '';
+				}
+			}
+			catch(Exception $e)
+			{
+				$this->bFormRedrawNeeded = true;
+			}
+		}
+		return parent::Update($aValues, $aUpdatedFields);
 	}
 	
 	static public function GetInfo()

@@ -99,7 +99,7 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 						{
 							if ($oDashlet->IsVisible())
 							{
-								$oDashlet->DoRender($oPage, $bEditMode, $aExtraParams);
+								$oDashlet->DoRender($oPage, $bEditMode, true /* bEnclosingDiv */, $aExtraParams);
 							}
 						}
 					}
