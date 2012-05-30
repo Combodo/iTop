@@ -357,7 +357,7 @@ abstract class DashletGroupBy extends Dashlet
 	public function __construct($sId)
 	{
 		parent::__construct($sId);
-		$this->aProperties['title'] = 'Hardcoded list of Contacts grouped by location';
+		$this->aProperties['title'] = 'Contacts grouped by location';
 		$this->aProperties['query'] = 'SELECT Contact';
 		$this->aProperties['group_by'] = 'location_name';
 		$this->aProperties['style'] = 'table';
