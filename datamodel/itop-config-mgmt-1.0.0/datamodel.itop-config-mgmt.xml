@@ -4200,10 +4200,10 @@
       <parent>ConfigManagement</parent>
       <definition_file>config-dashboard.xml</definition_file>
     </menu>
-    <menu id="Contact" xsi:type="TemplateMenuNode" _delta="define">
+    <menu id="Contact" xsi:type="DashboardMenuNode" _delta="define">
       <rank>1</rank>
       <parent>ConfigManagement</parent>
-      <template_file>contacts_menu.html</template_file>
+      <template_file>contacts_menu.xml</template_file>
     </menu>
     <menu id="NewContact" xsi:type="NewObjectMenuNode" _delta="define">
       <rank>1</rank>
@@ -4233,10 +4233,10 @@
       <oql>SELECT Group</oql>
       <do_search>1</do_search>
     </menu>
-    <menu id="ConfigManagementCI" xsi:type="TemplateMenuNode" _delta="define">
+    <menu id="ConfigManagementCI" xsi:type="DashboardMenuNode" _delta="define">
       <rank>5</rank>
       <parent>ConfigManagement</parent>
-      <template_file>cis_menu.html</template_file>
+      <template_file>cis_menu.xml</template_file>
     </menu>
     <menu id="NewCI" xsi:type="NewObjectMenuNode" _delta="define">
       <rank>0</rank>

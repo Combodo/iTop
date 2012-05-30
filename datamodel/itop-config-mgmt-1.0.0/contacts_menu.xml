@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<dashboard xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <layout>DashboardLayoutOneCol</layout>
+  <title></title>
+  <cells>
+    <cell>
+      <dashlet id="1" xsi:type="DashletHeaderDynamic">
+        <title>Menu_Contact</title>
+        <icon>itop-config-mgmt-1.0.0/images/team.png</icon>
+        <subtitle>Contacts</subtitle>
+        <query>SELECT Contact</query>
+        <group_by>status</group_by>
+        <values>active,inactive</values>
+      </dashlet>
+      <dashlet id="2" xsi:type="DashletBadge">
+        <class>Team</class>
+      </dashlet>
+      <dashlet id="3" xsi:type="DashletBadge">
+        <class>Person</class>
+      </dashlet>
+    </cell>
+    <cell>
+      <dashlet id="4" xsi:type="DashletGroupByPie">
+        <title>UI-ContactsMenu-ContactsByLocation</title>
+        <query>SELECT Contact</query>
+        <group_by>location_name</group_by>
+        <style>pie</style>
+      </dashlet>
+    </cell>
+  </cells>
+</dashboard>
+
