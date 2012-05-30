@@ -4203,7 +4203,7 @@
     <menu id="Contact" xsi:type="DashboardMenuNode" _delta="define">
       <rank>1</rank>
       <parent>ConfigManagement</parent>
-      <definition_file>ccontacts_menu.xml</definition_file>
+      <definition_file>contacts_menu.xml</definition_file>
     </menu>
     <menu id="NewContact" xsi:type="NewObjectMenuNode" _delta="define">
       <rank>1</rank>
