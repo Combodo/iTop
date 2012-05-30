@@ -1170,7 +1170,7 @@ class DashletProto extends Dashlet
 				@$aResData = $this->aStats[$sValue1][$sValue2];
 				if (is_array($aResData))
 				{
-					$sRes = $aResData['digurl'];
+					$sRes = '<a href="'.$aResData['href'].'">'.$aResData['count'].'</a>';
 				}
 				else
 				{
@@ -1183,6 +1183,39 @@ class DashletProto extends Dashlet
 		}
 		$oPage->add('</table>');
 		$oPage->add('</div>');
+		
+		$sId = 'chart_'.($bEditMode? 'edit_' : '').$this->sId;
+		$oPage->add('<div id="chart_'.$sId.'" class="dashlet-content"></div>');
+		$aAxisX = $this->aValues1;
+		$aAxisY = $this->aValues2;
+		$aData = array();
+		$aHref = array();
+		foreach ($this->aValues1 as $sValue1 => $sDisplayValue1)
+		{
+			foreach ($this->aValues2 as $sValue2 => $sDisplayValue2)
+			{
+				@$aResData = $this->aStats[$sValue1][$sValue2];
+				if (is_array($aResData))
+				{
+					$aData[$sValue1][$sValue2] = $aResData['count'];
+					$aHref[$sValue1][$sValue2] = $aResData['href'];
+				}
+				else
+				{
+					// Missing result => 0
+					$aData[$sValue1][$sValue2] = 0;
+					$aHref[$sValue1][$sValue2] = '';
+				}
+			}
+		}
+		
+		$sJSAxisX = json_encode($aAxisX);
+		$sJSAxisY = json_encode($aAxisY);
+		$sJSData = json_encode($aData);
+		$sJSHref = json_encode($aHref);
+		$sTitle = addslashes($sHtmlTitle);
+		$oPage->add_ready_script("$('#chart_{$sId}').heatmap_chart({chart_label: '$sTitle', values: $sJSData, hrefs: $sJSHref, axis_x: $sJSAxisX, axis_y: $sJSAxisY});");
+		
 	}
 
 	protected function Compute()
@@ -1293,7 +1326,8 @@ class DashletProto extends Dashlet
 				$sFilter = urlencode($oSubsetSearch->serialize());
 
 				$this->aStats[$sValue1][$sValue2] = array (
-					'digurl' => "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&dosearch=1&$sParams&filter=$sFilter\">$iCount</a>"
+					'href' => utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&dosearch=1&$sParams&filter=$sFilter\">",
+					'count' => $iCount,
 				);
 				if (!array_key_exists($sValue1, $this->aValues1))
 				{
@@ -1340,7 +1374,16 @@ class DashletHeatMap extends Dashlet
 	
 		$sId = 'chart_'.($bEditMode? 'edit_' : '').$this->sId;
 		$oPage->add('<div id="chart_'.$sId.'" class="dashlet-content"></div>');
-		$oPage->add_ready_script("$('#chart_{$sId}').heatmap_chart({chart_label: '$sTitle'});");
+		$aAxisX = array(0 => 'Lun', 1 => 'Ma');
+		$aAxisY = array(0 => '12h', 1 => '13h');
+		$aData = array(
+			0 => array(1, 2),
+			1 => array(3, 4),
+		);
+		$sJSAxisX = json_encode($aAxisX);
+		$sJSAxisY = json_encode($aAxisY);
+		$sJSData = json_encode($aData);
+		$oPage->add_ready_script("$('#chart_{$sId}').heatmap_chart({chart_label: '$sTitle', values: $sJSData, axis_x: $sJSAxisX, axis_y: $sJSAxisY});");
 	}
 	
 	public function GetPropertiesFields(DesignerForm $oForm)
