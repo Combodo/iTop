@@ -216,6 +216,7 @@ abstract class Dashboard
 	$('#row_attr_dashboard_title').property_field('option', {'do_apply': function() {
 			var sTitle = $('#attr_dashboard_title').val();
 			$(':itop-dashboard').dashboard('option', {title: sTitle});
+			return true;
 		}
 	});
 EOF

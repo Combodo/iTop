@@ -296,7 +296,12 @@ class DashletObjectList extends Dashlet
 		$sQuery = $this->aProperties['query'];
 		$sShowMenu = $this->aProperties['menu'] ? '1' : '0';
 
-		$oPage->add('<div style="text-align:center" class="dashlet-content">');
+		$oPage->add('<div class="dashlet-content">');
+		$sHtmlTitle = htmlentities(Dict::S($sTitle), ENT_QUOTES, 'UTF-8'); // done in the itop block
+		if ($sHtmlTitle != '')
+		{
+			$oPage->add('<h1>'.$sHtmlTitle.'</h1>');
+		}
 		$oFilter = DBObjectSearch::FromOQL($sQuery);
 		$oBlock = new DisplayBlock($oFilter, 'list');
 		$aExtraParams = array(
@@ -752,8 +757,16 @@ class DashletHeaderStatic extends Dashlet
 	{
 		$oField = new DesignerTextField('title', 'Title', $this->aProperties['title']);
 		$oForm->AddField($oField);
-
-		$oField = new DesignerTextField('icon', 'Icon', $this->aProperties['icon']);
+		
+		$oField = new DesignerIconSelectionField('icon', 'Icon', $this->aProperties['icon']);
+		$aAllIcons = self::FindIcons(APPROOT.'env-'.utils::GetCurrentEnvironment());
+		ksort($aAllIcons);
+		$aValues = array();
+		foreach($aAllIcons as $sFilePath)
+		{
+			$aValues[] = array('value' => $sFilePath, 'label' => basename($sFilePath), 'icon' => utils::GetAbsoluteUrlModulesRoot().$sFilePath);
+		}
+		$oField->SetAllowedValues($aValues);
 		$oForm->AddField($oField);
 	}
 	
@@ -764,6 +777,30 @@ class DashletHeaderStatic extends Dashlet
 			'icon' => 'images/dashlet-header.png',
 			'description' => 'Header with stats (grouped by...)',
 		);
+	}
+	
+	static public function FindIcons($sBaseDir, $sDir = '')
+	{
+		$aResult = array();
+		// Populate automatically the list of icon files
+		if ($hDir = @opendir($sBaseDir.'/'.$sDir))
+		{
+			while (($sFile = readdir($hDir)) !== false)
+			{
+				$aMatches = array();
+				if (($sFile != '.') && ($sFile != '..') && is_dir($sBaseDir.'/'.$sDir.'/'.$sFile))
+				{
+					$sDirSubPath = ($sDir == '') ? $sFile : $sDir.'/'.$sFile;
+					$aResult = array_merge($aResult, self::FindIcons($sBaseDir, $sDirSubPath));
+				}
+				if (preg_match("/\.(png|jpg|jpeg|gif)$/i", $sFile, $aMatches)) // png, jp(e)g and gif are considered valid
+				{
+					$aResult[$sFile.'_'.$sDir] = $sDir.'/'.$sFile;
+				}
+			}
+			closedir($hDir);
+		}
+		return $aResult;
 	}
 }
 
@@ -854,7 +891,15 @@ class DashletHeaderDynamic extends Dashlet
 		$oField = new DesignerTextField('title', 'Title', $this->aProperties['title']);
 		$oForm->AddField($oField);
 
-		$oField = new DesignerTextField('icon', 'Icon', $this->aProperties['icon']);
+		$oField = new DesignerIconSelectionField('icon', 'Icon', $this->aProperties['icon']);
+		$aAllIcons = DashletHeaderStatic::FindIcons(APPROOT.'env-'.utils::GetCurrentEnvironment());
+		ksort($aAllIcons);
+		$aValues = array();
+		foreach($aAllIcons as $sFilePath)
+		{
+			$aValues[] = array('value' => $sFilePath, 'label' => basename($sFilePath), 'icon' => utils::GetAbsoluteUrlModulesRoot().$sFilePath);
+		}
+		$oField->SetAllowedValues($aValues);
 		$oForm->AddField($oField);
 
 		$oField = new DesignerTextField('subtitle', 'Subtitle', $this->aProperties['subtitle']);
@@ -923,11 +968,52 @@ class DashletBadge extends Dashlet
 		$oBlock->Display($oPage, $sBlockId, $aExtraParams);
 
 		$oPage->add('</div>');
+		if ($bEditMode)
+		{
+			// Since the container div is not rendered the same way in edit mode, add the 'inline' style to it
+			$oPage->add_ready_script("$('#dashlet_".$this->sId."').addClass('dashlet-inline');");
+		}
 	}
 
 	public function GetPropertiesFields(DesignerForm $oForm)
 	{
-		$oField = new DesignerTextField('class', 'Class', $this->aProperties['class']);
+
+		$oClassesSet = new ValueSetEnumClasses('bizmodel', array());
+		$aClasses = $oClassesSet->GetValues(array());
+		
+		$aLinkClasses = array();
+	
+		foreach(MetaModel::GetClasses('bizmodel') as $sClass)
+		{	
+			foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+			{
+				if ($oAttDef instanceof AttributeLinkedSetIndirect)
+				{
+					$aLinkClasses[$oAttDef->GetLinkedClass()] = true;
+				}
+			}
+		}
+			
+		
+		$oField = new DesignerIconSelectionField('class', 'Class', $this->aProperties['class']);
+		ksort($aClasses);
+		$aValues = array();
+		foreach($aClasses as $sClass => $sClass)
+		{
+			if (!array_key_exists($sClass, $aLinkClasses))
+			{
+				$sIconUrl = MetaModel::GetClassIcon($sClass, false);
+				$sIconFilePath = str_replace(utils::GetAbsoluteUrlAppRoot(), APPROOT, $sIconUrl);
+				if (($sIconUrl == '') || !file_exists($sIconFilePath))
+				{
+					// The icon does not exist, leet's use a transparent one of the same size.
+					$sIconUrl = utils::GetAbsoluteUrlAppRoot().'images/transparent_32_32.png';
+				}
+				$aValues[] = array('value' => $sClass, 'label' => $sClass, 'icon' => $sIconUrl);
+			}
+		}
+		$oField->SetAllowedValues($aValues);
+		
 		$oForm->AddField($oField);
 	}
 	

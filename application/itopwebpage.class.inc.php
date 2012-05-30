@@ -55,6 +55,7 @@ class iTopWebPage extends NiceWebPage
 		$this->add_header("Cache-control: no-cache");
 		$this->add_linked_stylesheet("../css/jquery.treeview.css");
 		$this->add_linked_stylesheet("../css/jquery.autocomplete.css");
+		$this->add_linked_stylesheet("../css/fg.menu.css");
 		$this->add_linked_script('../js/jquery.layout.min.js');
 		$this->add_linked_script('../js/jquery.ba-bbq.min.js');
 		$this->add_linked_script("../js/jquery.treeview.js");
@@ -69,6 +70,8 @@ class iTopWebPage extends NiceWebPage
 		$this->add_linked_script("../js/ckeditor/adapters/jquery.js");
 		$this->add_linked_script("../js/jquery.qtip-1.0.min.js");
 		$this->add_linked_script('../js/property_field.js');
+		$this->add_linked_script('../js/fg.menu.js');
+		$this->add_linked_script('../js/icon_select.js');
 		$this->add_linked_script('../js/raphael-min.js');
 		$this->add_linked_script('../js/g.raphael.js');
 		$this->add_linked_script('../js/g.pie.js');
