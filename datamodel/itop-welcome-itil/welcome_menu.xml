@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<dashboard xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <layout>DashboardLayoutOneCol</layout>
+  <title></title>
+  <cells>
+    <cell>
+      <dashlet id="1" xsi:type="DashletHeaderDynamic">
+        <title>Configuration Management</title>
+        <icon>itop-config-mgmt-1.0.0/images/database.png</icon>
+        <subtitle>Configuration Items</subtitle>
+        <query>SELECT FunctionalCI</query>
+        <group_by>status</group_by>
+        <values>implementation,production,obsolete</values>
+      </dashlet>
+      <dashlet id="2" xsi:type="DashletBadge">
+        <class>BusinessProcess</class>
+      </dashlet>
+      <dashlet id="3" xsi:type="DashletBadge">
+        <class>Contact</class>
+      </dashlet>
+      <dashlet id="4" xsi:type="DashletBadge">
+        <class>Location</class>
+      </dashlet>
+      <dashlet id="5" xsi:type="DashletBadge">
+        <class>Server</class>
+      </dashlet>
+      <dashlet id="6" xsi:type="DashletBadge">
+        <class>DatabaseInstance</class>
+      </dashlet>
+      <dashlet id="7" xsi:type="DashletBadge">
+        <class>NetworkDevice</class>
+      </dashlet>
+    </cell>
+    <cell>
+      <dashlet id="8" xsi:type="DashletHeaderDynamic">
+        <title>Helpdesk</title>
+        <icon>itop-request-mgmt-1.0.0/images/user-request-deadline.png</icon>
+        <subtitle>Open Requests</subtitle>
+        <query>SELECT UserRequest WHERE status != "closed"</query>
+        <group_by>status</group_by>
+        <values>new,assigned,escalated_tto,escalated_ttr,resolved</values>
+      </dashlet>
+      <dashlet id="9" xsi:type="DashletObjectList">
+        <title>My Open Requests</title>
+        <query>SELECT UserRequest AS i WHERE i.caller_id = :current_contact_id AND status NOT IN ("closed", "resolved")</query>
+        <menu>true</menu>
+      </dashlet>
+    </cell>
+    <cell>
+      <dashlet id="10" xsi:type="DashletHeaderDynamic">
+        <title>Incident Management</title>
+        <icon>itop-incident-mgmt-1.0.0/images/incident-escalated.png</icon>
+        <subtitle>Open incidents</subtitle>
+        <query>SELECT Incident WHERE status != "closed"</query>
+        <group_by>status</group_by>
+        <values>new,assigned,escalated_tto,escalated_ttr,resolved</values>
+      </dashlet>
+      <dashlet id="11" xsi:type="DashletObjectList">
+        <title>My Open incidents</title>
+        <query>SELECT Incident AS i WHERE i.agent_id = :current_contact_id AND status NOT IN ("closed", "resolved")</query>
+        <menu>true</menu>
+      </dashlet>
+    </cell>
+  </cells>
+</dashboard>
+
