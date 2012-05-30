@@ -103,7 +103,13 @@ $(function()
 			if (this.options.do_apply)
 			{
 				// specific behavior...
-				this.options.do_apply();
+				if (this.options.do_apply())
+				{
+					this.bModified = false;
+					this.previous_value = this.value;
+					this.value = this._get_field_value();
+					this._refresh();
+				}
 			}
 			else
 			{

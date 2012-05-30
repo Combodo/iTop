@@ -27,7 +27,6 @@ $(function()
 			.addClass('itop-dashboard');
 
 			this.ajax_div = $('<div></div>').appendTo(this.element);
-			$('.itop-dashboard').bind('keyup.dashboard_editor', function(event) { me._on_keyup(event); } );
 			this._make_draggable();
 		},
 	
@@ -189,10 +188,6 @@ $(function()
 					}
 				},
 			});	
-		},
-		_on_keyup: function(event)
-		{
-			console.log('Key pressed in Dashlet');
 		}
 	});	
 });
