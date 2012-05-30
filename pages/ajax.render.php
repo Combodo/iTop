@@ -627,6 +627,18 @@ try
 		
 		case 'dashboard_editor':
 		$sId = utils::ReadParam('id', '', false, 'raw_data');
+		
+		// Before searching for the menus make sure that all of them exist
+		// Build menus from module handlers
+		//
+		foreach(get_declared_classes() as $sPHPClass)
+		{
+			if (is_subclass_of($sPHPClass, 'ModuleHandlerAPI'))
+			{
+				$aCallSpec = array($sPHPClass, 'OnMenuCreation');
+				call_user_func($aCallSpec);
+			}
+		}
 		$idx = ApplicationMenu::GetMenuIndexById($sId);
 		$oMenu = ApplicationMenu::GetMenuNode($idx);
 		$oMenu->RenderEditor($oPage);
