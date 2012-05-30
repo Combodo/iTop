@@ -641,7 +641,7 @@ try
 		{
 			$oDashlet = new $sDashletClass($sDashletId);
 			$offset = $oPage->start_capture();
-			$oDashlet->Render($oPage, true);
+			$oDashlet->DoRender($oPage, true /* bEditMode */, false /* bEnclosingDiv */);
 			$sHtml = addslashes($oPage->end_capture($offset));
 			$sHtml = str_replace("\n", '', $sHtml);
 			$sHtml = str_replace("\r", '', $sHtml);
@@ -691,7 +691,7 @@ try
 			if ($oDashlet->IsRedrawNeeded())
 			{
 				$offset = $oPage->start_capture();
-				$oDashlet->Render($oPage, true);
+				$oDashlet->DoRender($oPage, true /* bEditMode */, false /* bEnclosingDiv */);
 				$sHtml = addslashes($oPage->end_capture($offset));
 				$sHtml = str_replace("\n", '', $sHtml);
 				$sHtml = str_replace("\r", '', $sHtml);
