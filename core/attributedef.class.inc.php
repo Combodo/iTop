@@ -116,6 +116,8 @@ abstract class AttributeDefinition
 		$this->m_aParams = $aParams;
 		$this->ConsistencyCheck();
 	}
+
+	// Left here for backward compatibility, deprecated in 2.0
 	public function OverloadParams($aParams)
 	{
 		foreach ($aParams as $sParam => $value)
@@ -130,6 +132,12 @@ abstract class AttributeDefinition
 			}
 		}
 	}
+
+	public function GetParams()
+	{
+		return $this->m_aParams;
+	}
+
 	public function SetHostClass($sHostClass)
 	{
 		$this->m_sHostClass = $sHostClass;
@@ -141,7 +149,7 @@ abstract class AttributeDefinition
 
 	// Note: I could factorize this code with the parameter management made for the AttributeDef class
 	// to be overloaded
-	static protected function ListExpectedParams()
+	static public function ListExpectedParams()
 	{
 		return array();
 	}
@@ -444,7 +452,7 @@ abstract class AttributeDefinition
  */
 class AttributeLinkedSet extends AttributeDefinition
 {
-	static protected function ListExpectedParams()
+	static public function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("allowed_values", "depends_on", "linked_class", "ext_key_to_me", "count_min", "count_max"));
 	}
@@ -754,7 +762,7 @@ class AttributeLinkedSet extends AttributeDefinition
  */
 class AttributeLinkedSetIndirect extends AttributeLinkedSet
 {
-	static protected function ListExpectedParams()
+	static public function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("ext_key_to_remote"));
 	}
@@ -771,7 +779,7 @@ class AttributeLinkedSetIndirect extends AttributeLinkedSet
  */
 class AttributeDBFieldVoid extends AttributeDefinition
 {	
-	static protected function ListExpectedParams()
+	static public function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("allowed_values", "depends_on", "sql"));
 	}
@@ -857,7 +865,7 @@ class AttributeDBFieldVoid extends AttributeDefinition
  */
 class AttributeDBField extends AttributeDBFieldVoid
 {	
-	static protected function ListExpectedParams()
+	static public function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("default_value", "is_null_allowed"));
 	}
@@ -872,7 +880,7 @@ class AttributeDBField extends AttributeDBFieldVoid
  */
 class AttributeInteger extends AttributeDBField
 {
-	static protected function ListExpectedParams()
+	static public function ListExpectedParams()
 	{
 		return parent::ListExpectedParams();
 		//return array_merge(parent::ListExpectedParams(), array());
@@ -968,7 +976,7 @@ class AttributeInteger extends AttributeDBField
  */
 class AttributeDecimal extends AttributeDBField
 {
-	static protected function ListExpectedParams()
+	static public function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array('digits', 'decimals' /* including precision */));
 	}
@@ -1063,7 +1071,7 @@ class AttributeDecimal extends AttributeDBField
  */
 class AttributeBoolean extends AttributeInteger
 {
-	static protected function ListExpectedParams()
+	static public function ListExpectedParams()
 	{
 		return parent::ListExpectedParams();
 		//return array_merge(parent::ListExpectedParams(), array());
@@ -1094,7 +1102,7 @@ class AttributeBoolean extends AttributeInteger
  */
 class AttributeString extends AttributeDBField
 {
-	static protected function ListExpectedParams()
+	static public function ListExpectedParams()
 	{
 		return parent::ListExpectedParams();
 		//return array_merge(parent::ListExpectedParams(), array());
@@ -1220,7 +1228,7 @@ class AttributeString extends AttributeDBField
  */
 class AttributeClass extends AttributeString
 {
-	static protected function ListExpectedParams()
+	static public function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("class_category", "more_values"));
 	}
@@ -1272,7 +1280,7 @@ class AttributeClass extends AttributeString
  */
 class AttributeApplicationLanguage extends AttributeString
 {
-	static protected function ListExpectedParams()
+	static public function ListExpectedParams()
 	{
 		return parent::ListExpectedParams();
 	}
@@ -1362,7 +1370,7 @@ class AttributeFinalClass extends AttributeString
  */
 class AttributePassword extends AttributeString
 {
-	static protected function ListExpectedParams()
+	static public function ListExpectedParams()
 	{
 		return parent::ListExpectedParams();
 		//return array_merge(parent::ListExpectedParams(), array());
@@ -1924,7 +1932,7 @@ class AttributeTemplateHTML extends AttributeText
  */
 class AttributeEnum extends AttributeString
 {
-	static protected function ListExpectedParams()
+	static public function ListExpectedParams()
 	{
 		return parent::ListExpectedParams();
 		//return array_merge(parent::ListExpectedParams(), array());
@@ -2094,7 +2102,7 @@ class AttributeDateTime extends AttributeDBField
 		return "Y-m-d H:i:s";
 	}
 
-	static protected function ListExpectedParams()
+	static public function ListExpectedParams()
 	{
 		return parent::ListExpectedParams();
 		//return array_merge(parent::ListExpectedParams(), array());
@@ -2405,7 +2413,7 @@ class AttributeDate extends AttributeDateTime
 		return "Y-m-d";
 	}
 
-	static protected function ListExpectedParams()
+	static public function ListExpectedParams()
 	{
 		return parent::ListExpectedParams();
 		//return array_merge(parent::ListExpectedParams(), array());
@@ -2491,7 +2499,7 @@ class AttributeDeadline extends AttributeDateTime
  */
 class AttributeExternalKey extends AttributeDBFieldVoid
 {
-	static protected function ListExpectedParams()
+	static public function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("targetclass", "is_null_allowed", "on_target_delete"));
 	}
@@ -2608,7 +2616,7 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 {
 	protected $m_sTargetClass;
 
-	static protected function ListExpectedParams()
+	static public function ListExpectedParams()
 	{
 		$aParams = parent::ListExpectedParams();
 		$idx = array_search('targetclass', $aParams);
@@ -2732,7 +2740,7 @@ class AttributeHierarchicalKey extends AttributeExternalKey
  */
 class AttributeExternalField extends AttributeDefinition
 {
-	static protected function ListExpectedParams()
+	static public function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("extkey_attcode", "target_attcode"));
 	}
@@ -2959,7 +2967,7 @@ class AttributeExternalField extends AttributeDefinition
  */
 class AttributeURL extends AttributeString
 {
-	static protected function ListExpectedParams()
+	static public function ListExpectedParams()
 	{
 		//return parent::ListExpectedParams();
 		return array_merge(parent::ListExpectedParams(), array("target"));
@@ -2993,7 +3001,7 @@ class AttributeURL extends AttributeString
  */
 class AttributeBlob extends AttributeDefinition
 {
-	static protected function ListExpectedParams()
+	static public function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("depends_on"));
 	}
@@ -3140,7 +3148,7 @@ class AttributeBlob extends AttributeDefinition
  */
 class AttributeOneWayPassword extends AttributeDefinition
 {
-	static protected function ListExpectedParams()
+	static public function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("depends_on"));
 	}
@@ -3413,7 +3421,7 @@ class AttributePropertySet extends AttributeTable
  */
 class AttributeComputedFieldVoid extends AttributeDefinition
 {	
-	static protected function ListExpectedParams()
+	static public function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array());
 	}

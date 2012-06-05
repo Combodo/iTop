@@ -87,22 +87,31 @@ class ApplicationMenu
 	 * Main function to add a menu entry into the application, can be called during the definition
 	 * of the data model objects
 	 */
-	static public function InsertMenu(MenuNode $oMenuNode, $iParentIndex = -1, $fRank)
+	static public function InsertMenu(MenuNode $oMenuNode, $iParentIndex, $fRank)
 	{
 		$index = self::GetMenuIndexById($oMenuNode->GetMenuId());
 		if ($index == -1)
 		{
 			// The menu does not already exist, insert it
 			$index = count(self::$aMenusIndex);
-			self::$aMenusIndex[$index] = array( 'node' => $oMenuNode, 'children' => array());
+
 			if ($iParentIndex == -1)
 			{
+				$sParentId = '';
 				self::$aRootMenus[] = array ('rank' => $fRank, 'index' => $index);
 			}
 			else
 			{
+				$sParentId = self::$aMenusIndex[$iParentIndex]['node']->GetMenuId();
 				self::$aMenusIndex[$iParentIndex]['children'][] = array ('rank' => $fRank, 'index' => $index);
 			}
+
+			// Note: At the time when 'parent', 'rank' and 'source_file' have been added for the reflection API,
+			//       they were not used to display the menus (redundant or unused)
+			//
+			$aBacktrace = debug_backtrace();
+			$sFile = $aBacktrace[2]["file"];
+			self::$aMenusIndex[$index] = array('node' => $oMenuNode, 'children' => array(), 'parent' => $sParentId, 'rank' => $fRank, 'source_file' => $sFile);
 		}
 		else
 		{
@@ -110,6 +119,14 @@ class ApplicationMenu
 			self::$aMenusIndex[$index]['node']->AddCondition($oMenuNode);
 		}
 		return $index;
+	}
+
+	/**
+	 * Reflection API - Get menu entries
+	 */
+	static public function ReflectionMenuNodes()
+	{
+		return self::$aMenusIndex;
 	}
 	
 	/**
@@ -290,6 +307,11 @@ abstract class MenuNode
 	protected $index;
 
 	/**
+	 * Properties reflecting how the node has been declared
+	 */
+	protected $aReflectionProperties;
+
+	/**
 	 * Class of objects to check if the menu is enabled, null if none
 	 */
 	protected $m_aEnableClasses;
@@ -323,11 +345,24 @@ abstract class MenuNode
 	public function __construct($sMenuId, $iParentIndex = -1, $fRank = 0, $sEnableClass = null, $iActionCode = null, $iAllowedResults = UR_ALLOWED_YES, $sEnableStimulus = null)
 	{
 		$this->sMenuId = $sMenuId;
+		$this->aReflectionProperties = array();
+		if (strlen($sEnableClass) > 0)
+		{
+			$this->aReflectionProperties['enable_class'] = $sEnableClass;
+			$this->aReflectionProperties['enable_action'] = $iActionCode;
+			$this->aReflectionProperties['enable_permission'] = $iAllowedResults;
+			$this->aReflectionProperties['enable_stimulus'] = $sEnableStimulus;
+		}
 		$this->m_aEnableClasses = array($sEnableClass);
 		$this->m_aEnableActions = array($iActionCode);
 		$this->m_aEnableActionResults = array($iAllowedResults);
 		$this->m_aEnableStimuli = array($sEnableStimulus);
 		$this->index = ApplicationMenu::InsertMenu($this, $iParentIndex, $fRank);
+	}
+
+	public function ReflectionProperties()
+	{
+		return $this->aReflectionProperties;
 	}
 	
 	public function GetMenuId()
@@ -479,6 +514,7 @@ class TemplateMenuNode extends MenuNode
 	{
 		parent::__construct($sMenuId, $iParentIndex, $fRank, $sEnableClass, $iActionCode, $iAllowedResults, $sEnableStimulus);
 		$this->sTemplateFile = $sTemplateFile;
+		$this->aReflectionProperties['template_file'] = $sTemplateFile;
 	}
 	
 	public function GetHyperlink($aExtraParams)
@@ -537,6 +573,8 @@ class OQLMenuNode extends MenuNode
 		$this->sOQL = $sOQL;
 		$this->bSearch = $bSearch;
 		$this->m_aParams = array();
+		$this->aReflectionProperties['oql'] = $sOQL;
+		$this->aReflectionProperties['do_search'] = $bSearch;
 		// Enhancement: we could set as the "enable" condition that the user has enough rights to "read" the objects
 		// of the class specified by the OQL...
 	}
@@ -548,6 +586,10 @@ class OQLMenuNode extends MenuNode
 	public function SetParameters($aParams)
 	{
 		$this->m_aParams = $aParams;
+		foreach($aParams as $sKey => $value)
+		{
+			$this->aReflectionProperties[$sKey] = $value;
+		}
 	}
 	
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())
@@ -614,6 +656,7 @@ class SearchMenuNode extends MenuNode
 		parent::__construct($sMenuId, $iParentIndex, $fRank, $sEnableClass, $iActionCode, $iAllowedResults, $sEnableStimulus);
 		$this->sPageTitle = "Menu:$sMenuId+";
 		$this->sClass = $sClass;
+		$this->aReflectionProperties['class'] = $sClass;
 	}
 	
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())
@@ -653,6 +696,7 @@ class WebPageMenuNode extends MenuNode
 	{
 		parent::__construct($sMenuId, $iParentIndex, $fRank, $sEnableClass, $iActionCode, $iAllowedResults, $sEnableStimulus);
 		$this->sHyperlink = $sHyperlink;
+		$this->aReflectionProperties['url'] = $sHyperlink;
 	}
 
 	public function GetHyperlink($aExtraParams)
@@ -690,6 +734,7 @@ class NewObjectMenuNode extends MenuNode
 	{
 		parent::__construct($sMenuId, $iParentIndex, $fRank);
 		$this->sClass = $sClass;
+		$this->aReflectionProperties['class'] = $sClass;
 	}
 
 	public function GetHyperlink($aExtraParams)

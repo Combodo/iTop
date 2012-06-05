@@ -208,6 +208,11 @@ class ValueSetObjects extends ValueSetDefinition
 	{
 		return 'Filter: '.$this->m_sFilterExpr;
 	}
+
+	public function GetFilterExpression()
+	{
+		return $this->m_sFilterExpr;
+	}
 }
 
 
@@ -297,6 +302,13 @@ class ValueSetEnum extends ValueSetDefinition
 	public function __construct($Values)
 	{
 		$this->m_values = $Values;
+	}
+
+	// Helper to export the datat model
+	public function GetValueList()
+	{
+		$this->LoadValues($aArgs = array());
+		return $this->m_aValues;
 	}
 
 	protected function LoadValues($aArgs)

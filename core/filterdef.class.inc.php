@@ -50,6 +50,7 @@ abstract class FilterDefinition
 		$this->ConsistencyCheck();
 	}
 
+	// Left here for backward compatibility, deprecated in 2.0
 	public function OverloadParams($aParams)
 	{
 		foreach ($aParams as $sParam => $value)

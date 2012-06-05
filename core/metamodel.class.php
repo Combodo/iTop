@@ -1549,6 +1549,8 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 			self::$m_aChildClasses[$sAncestorClass][] = $sTargetClass;
 		}
 	}
+
+	// Left here for backward compatibility, deprecated in 2.0
 	public static function Init_OverloadAttributeParams($sAttCode, $aParams)
 	{
 		$sTargetClass = self::GetCallersPHPClass("Init");
