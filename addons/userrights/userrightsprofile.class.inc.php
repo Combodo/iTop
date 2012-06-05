@@ -597,12 +597,12 @@ class UserRightsProfile extends UserRightsAddOnAPI
 	}
 
 
-	protected $m_aAdmins; // id of users being linked to the well-known admin profile
-	protected $m_aPortalUsers; // id of users being linked to the well-known admin profile
+	protected $m_aAdmins = array(); // id -> bool, true if the user has the well-known admin profile
+	protected $m_aPortalUsers = array(); // id -> bool, true if the user has the well-known portal user profile
 
 	protected $m_aProfiles; // id -> object
-	protected $m_aUserProfiles; // userid,profileid -> object
-	protected $m_aUserOrgs; // userid -> orgid
+	protected $m_aUserProfiles = array(); // userid,profileid -> object
+	protected $m_aUserOrgs = array(); // userid -> array of orgid
 
 	// Those arrays could be completed on demand (inheriting parent permissions)
 	protected $m_aClassActionGrants = null; // profile, class, action -> actiongrantid (or false if NO, or null/missing if undefined)
@@ -611,17 +611,57 @@ class UserRightsProfile extends UserRightsAddOnAPI
 	// Built on demand, could be optimized if necessary (doing a query for each attribute that needs to be read)
 	protected $m_aObjectActionGrants = array();
 
-	protected function GetUserOrgs($oUser, $sClass)
+	/**
+	 * Read and cache organizations allowed to the given user
+	 */
+	protected function GetUserOrgs($iUser)
 	{
-		return @$this->m_aUserOrgs[$oUser->GetKey()];
+		if (!array_key_exists($iUser, $this->m_aUserOrgs))
+		{
+			$oSearch = new DBObjectSearch('URP_UserOrg');
+			$oSearch->AllowAllData();
+			$oCondition = new BinaryExpression(new FieldExpression('userid'), '=', new VariableExpression('userid'));
+			$oSearch->AddConditionExpression($oCondition);
+			
+			$this->m_aUserOrgs[$iUser] = array();
+			$oUserOrgSet = new DBObjectSet($oSearch, array(), array('userid' => $iUser));
+			while ($oUserOrg = $oUserOrgSet->Fetch())
+			{
+				$this->m_aUserOrgs[$iUser][] = $oUserOrg->Get('allowed_org_id');
+			}
+		}
+		return $this->m_aUserOrgs[$iUser];
+	}
+
+	/**
+	 * Read and cache profiles of the given user
+	 */
+	protected function GetUserProfiles($iUser)
+	{
+		if (!array_key_exists($iUser, $this->m_aUserProfiles))
+		{
+			$oSearch = new DBObjectSearch('URP_UserProfile');
+			$oSearch->AllowAllData();
+			$oCondition = new BinaryExpression(new FieldExpression('userid'), '=', new VariableExpression('userid'));
+			$oSearch->AddConditionExpression($oCondition);
+			
+			$this->m_aUserProfiles[$iUser] = array();
+			$oUserProfileSet = new DBObjectSet($oSearch, array(), array('userid' => $iUser));
+			while ($oUserProfile = $oUserProfileSet->Fetch())
+			{
+				$this->m_aUserProfiles[$iUser][$oUserProfile->Get('profileid')] = $oUserProfile;
+			}
+		}
+		return $this->m_aUserProfiles[$iUser];
+
 	}
 
 	public function ResetCache()
 	{
 		// Loaded by Load cache
 		$this->m_aProfiles = null; 
-		$this->m_aUserProfiles = null;
-		$this->m_aUserOrgs = null;
+		$this->m_aUserProfiles = array();
+		$this->m_aUserOrgs = array();
 
 		$this->m_aAdmins = null;
 		$this->m_aPortalUsers = null;
@@ -666,30 +706,6 @@ class UserRightsProfile extends UserRightsAddOnAPI
 			$this->m_aProfiles[$oProfile->GetKey()] = $oProfile; 
 		}
 
-		$oUserProfileSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData("SELECT URP_UserProfile"));
-		$this->m_aUserProfiles = array();
-		$this->m_aAdmins = array();
-		$this->m_aPortalUsers = array();
-		while ($oUserProfile = $oUserProfileSet->Fetch())
-		{
-			$this->m_aUserProfiles[$oUserProfile->Get('userid')][$oUserProfile->Get('profileid')] = $oUserProfile;
-			if ($oUserProfile->Get('profile') == ADMIN_PROFILE_NAME)
-			{
-				$this->m_aAdmins[] = $oUserProfile->Get('userid');
-			}
-			elseif ($oUserProfile->Get('profile') == PORTAL_PROFILE_NAME)
-			{
-				$this->m_aPortalUsers[] = $oUserProfile->Get('userid');
-			}
-		}
-
-		$oUserOrgSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData("SELECT URP_UserOrg"));
-		$this->m_aUserOrgs = array();
-		while ($oUserOrg = $oUserOrgSet->Fetch())
-		{
-			$this->m_aUserOrgs[$oUserOrg->Get('userid')][] = $oUserOrg->Get('allowed_org_id');
-		}
-
 		$this->m_aClassStimulusGrants = array();
 		$oStimGrantSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData("SELECT URP_StimulusGrant"));
 		$this->m_aStimGrants = array();
@@ -716,31 +732,44 @@ exit;
 
 	public function IsAdministrator($oUser)
 	{
-		$this->LoadCache();
-
-		if (in_array($oUser->GetKey(), $this->m_aAdmins))
+		//$this->LoadCache();
+		$iUser = $oUser->GetKey();
+		if (!array_key_exists($iUser, $this->m_aAdmins))
 		{
-			return true;
+			$bIsAdmin = false;
+			foreach($this->GetUserProfiles($iUser) as $oUserProfile)
+			{
+				if ($oUserProfile->Get('profile') == ADMIN_PROFILE_NAME)
+				{
+					$bIsAdmin = true;
+					break;
+				}
+			}
+			$this->m_aAdmins[$iUser] = $bIsAdmin;
 		}
-		else
-		{
-			return false;
-		}
+		return $this->m_aAdmins[$iUser];
 	}
 
 	public function IsPortalUser($oUser)
 	{
-		$this->LoadCache();
-
-		if (in_array($oUser->GetKey(), $this->m_aPortalUsers))
+		//$this->LoadCache();
+		$iUser = $oUser->GetKey();
+		if (!array_key_exists($iUser, $this->m_aPortalUsers))
 		{
-			return true;
+			$bIsPortalUser = false;
+			foreach($this->GetUserProfiles($iUser) as $oUserProfile)
+			{
+				if ($oUserProfile->Get('profile') == PORTAL_PROFILE_NAME)
+				{
+					$bIsPortalUser = true;
+					break;
+				}
+			}
+			$this->m_aPortalUsers[$iUser] = $bIsPortalUser;
 		}
-		else
-		{
-			return false;
-		}
+		return $this->m_aPortalUsers[$iUser];
 	}
+
 
 	public function GetSelectFilter($oUser, $sClass)
 	{
@@ -785,10 +814,10 @@ exit;
 		}
 		// Position the user
 		//
-		$aUserOrgs = $this->GetUserOrgs($oUser, $sClass);
-		if (is_null($aUserOrgs) || count($aUserOrgs) == 0)
+		$aUserOrgs = $this->GetUserOrgs($oUser->GetKey());
+		if (count($aUserOrgs) == 0)
 		{
-			// No position means 'Everywhere'
+			// No org means 'any org'
 			return true;
 		}
 
@@ -883,33 +912,30 @@ exit;
 
 		$iPermission = UR_ALLOWED_NO;
 		$aAttributes = array();
-		if (isset($this->m_aUserProfiles[$iUser]))
+		foreach($this->GetUserProfiles($iUser) as $iProfile => $oProfile)
 		{
-			foreach($this->m_aUserProfiles[$iUser] as $iProfile => $oProfile)
+			$iGrant = $this->GetProfileActionGrant($iProfile, $sClass, $sAction);
+			if (is_null($iGrant) || !$iGrant)
 			{
-				$iGrant = $this->GetProfileActionGrant($iProfile, $sClass, $sAction);
-				if (is_null($iGrant) || !$iGrant)
+				continue; // loop to the next profile
+			}
+			else
+			{
+				$iPermission = UR_ALLOWED_YES;
+
+				// update the list of attributes with those allowed for this profile
+				//
+				$oSearch = DBObjectSearch::FromOQL_AllData("SELECT URP_AttributeGrant WHERE actiongrantid = :actiongrantid");
+				$oSet = new DBObjectSet($oSearch, array(), array('actiongrantid' => $iGrant));
+				$aProfileAttributes = $oSet->GetColumnAsArray('attcode', false);
+				if (count($aProfileAttributes) == 0)
 				{
-					continue; // loop to the next profile
+					$aAllAttributes = array_keys(MetaModel::ListAttributeDefs($sClass));
+					$aAttributes = array_merge($aAttributes, $aAllAttributes);
 				}
 				else
 				{
-					$iPermission = UR_ALLOWED_YES;
-	
-					// update the list of attributes with those allowed for this profile
-					//
-					$oSearch = DBObjectSearch::FromOQL_AllData("SELECT URP_AttributeGrant WHERE actiongrantid = :actiongrantid");
-					$oSet = new DBObjectSet($oSearch, array(), array('actiongrantid' => $iGrant));
-					$aProfileAttributes = $oSet->GetColumnAsArray('attcode', false);
-					if (count($aProfileAttributes) == 0)
-					{
-						$aAllAttributes = array_keys(MetaModel::ListAttributeDefs($sClass));
-						$aAttributes = array_merge($aAttributes, $aAllAttributes);
-					}
-					else
-					{
-						$aAttributes = array_merge($aAttributes, $aProfileAttributes);
-					}
+					$aAttributes = array_merge($aAttributes, $aProfileAttributes);
 				}
 			}
 		}
@@ -974,16 +1000,13 @@ exit;
 		// Note: The object set is ignored because it was interesting to optimize for huge data sets
 		//       and acceptable to consider only the root class of the object set
 		$iPermission = UR_ALLOWED_NO;
-		if (isset($this->m_aUserProfiles[$iUser]))
+		foreach($this->GetUserProfiles($iUser) as $iProfile => $oProfile)
 		{
-			foreach($this->m_aUserProfiles[$iUser] as $iProfile => $oProfile)
+			$oGrantRecord = $this->GetClassStimulusGrant($iProfile, $sClass, $sStimulusCode);
+			if (!is_null($oGrantRecord))
 			{
-				$oGrantRecord = $this->GetClassStimulusGrant($iProfile, $sClass, $sStimulusCode);
-				if (!is_null($oGrantRecord))
-				{
-					// no need to fetch the record, we've requested the records having permission = 'yes'
-					$iPermission = UR_ALLOWED_YES;
-				}
+				// no need to fetch the record, we've requested the records having permission = 'yes'
+				$iPermission = UR_ALLOWED_YES;
 			}
 		}
 		return $iPermission;
