@@ -663,8 +663,8 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		$this->m_aUserProfiles = array();
 		$this->m_aUserOrgs = array();
 
-		$this->m_aAdmins = null;
-		$this->m_aPortalUsers = null;
+		$this->m_aAdmins = array();
+		$this->m_aPortalUsers = array();
 
 		// Loaded on demand (time consuming as compared to the others)
 		$this->m_aClassActionGrants = null;
