@@ -872,6 +872,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Portal:ErrorNoContactForThisUser' => 'Ошибка: текющий пользователь не ассоциирован с Контактом/Человеком. Пожалуйста свяжитесь с вашим администратором.',
 	
 	'Enum:Undefined' => 'Неопределён',
+	'UI:Button:Refresh' => 'Обновить',
 ));
 
 

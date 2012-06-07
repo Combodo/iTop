@@ -788,5 +788,6 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:FavoriteOrganizations+' => '',
 	'UI:NavigateAwayConfirmationMessage' => 'Alle Änderungen werden verworfen.',
 	'UI:Create_Class_InState' => 'Lege %1$s an in Status: ',
+	'UI:Button:Refresh' => 'Neu laden',
 ));
 ?>

@@ -907,6 +907,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Portal:RemoveAttachment' => ' 添付を除去する ', // ' Remove Attachment ',
 	'Portal:Attachment_No_To_Ticket_Name' => '#%1$d を$2$s ($3$s)に添付する', // 'Attachment #%1$d to %2$s (%3$s)',
 	'Enum:Undefined' => '定義されていません', // 'Undefined',
+	'UI:Button:Refresh' => '更新', // 'Refresh',
 ));
 
 

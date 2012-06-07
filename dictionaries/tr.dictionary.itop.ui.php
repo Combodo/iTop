@@ -871,8 +871,6 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'Portal:ErrorNoContactForThisUser' => 'Hata: mevcut kullanıcının irtibat bilgisi yok. Sistem yöneticisi ile irtibata geçiniz.',
 
 	'Enum:Undefined' => 'Tanımsız',
+	'UI:Button:Refresh' => 'Yenile',
 ));
-
-
-
 ?>

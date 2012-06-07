@@ -2056,10 +2056,11 @@ EOF
 		$idx = 0;
 		foreach($aSortedElements as $sSubClass => $sClassName)
 		{
-			$oP->add("<span style=\"padding-right:2em; white-space:nowrap;\"><input type=\"checkbox\" id=\"exclude_$idx\" name=\"excluded[]\" value=\"$sSubClass\" checked onChange=\"DoReload()\"><label for=\"exclude_$idx\">&nbsp;".MetaModel::GetClassIcon($sSubClass)."&nbsp;$sClassName</label></span> ");
+			$oP->add("<span style=\"padding-right:2em; white-space:nowrap;\"><input type=\"checkbox\" id=\"exclude_$idx\" name=\"excluded[]\" value=\"$sSubClass\" checked onChange=\"$('#ReloadMovieBtn').button('enable')\"><label for=\"exclude_$idx\">&nbsp;".MetaModel::GetClassIcon($sSubClass)."&nbsp;$sClassName</label></span> ");
 			$idx++;	
 		}
- 		$oP->add("</div>\n");
+		$oP->add("<p style=\"text-align:right\"><button type=\"button\" id=\"ReloadMovieBtn\" onClick=\"DoReload()\">".Dict::S('UI:Button:Refresh')."</button></p>");
+		$oP->add("</div>\n");
  		$oP->add("<div class=\"HRDrawer\"></div>\n");
  		$oP->add("<div id=\"dh_flash\" class=\"DrawerHandle\">".Dict::S('UI:ElementsDisplayed')."</div>\n");
 		
@@ -2123,6 +2124,8 @@ EOF
 <<<EOF
 	var ajax_request = null;
 
+	$('#ReloadMovieBtn').button().button('disable');
+	
 	function UpdateImpactedObjects(sClass, iId, sRelation)
 	{
 		var class_name = sClass; //$('select[name=class_name]').val();
