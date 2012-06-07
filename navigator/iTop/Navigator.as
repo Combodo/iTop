@@ -48,6 +48,7 @@
 			m_aNodes = new Array();
 			m_sExclude = '';
 			m_fZoom = 1;
+			m_oLoader = null;
 			initParameters();
 			var success = true;
 			if (ExternalInterface.available) 
@@ -168,6 +169,10 @@
 			var myString:String = m_sDataUrl+sSeparator+'relation='+m_sRelation+'&class='+m_sObjClass+'&id='+m_sObjId+'&exclude='+m_sExclude;
 			trace("Requesting:"+myString);
 			var myXMLURL:URLRequest = new URLRequest(myString);
+			if (m_oLoader != null)
+			{
+				m_oLoader.close();
+			}
 			m_oLoader = new URLLoader();
 			m_oLoader.addEventListener(Event.COMPLETE, onXMLLoadComplete);
 			m_oLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onXMLLoadError);
