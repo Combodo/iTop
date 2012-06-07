@@ -952,5 +952,6 @@ Quando associada a um gatilho, cada ação é dada um número "ordem", especific
 								   'Note-se que esta não é uma configuração de segurança, objetos de qualquer organização ainda são visíveis e podem ser acessadas selecionando a opção "Todas as Organizações" na lista drop-down.',
 	'UI:NavigateAwayConfirmationMessage' => 'Qualquer modificação será descartada.',
 	'UI:Create_Class_InState' => 'Criar o %1$s em estado: ',
+	'UI:Button:Refresh' => 'Atualizar',
 ));
 ?>

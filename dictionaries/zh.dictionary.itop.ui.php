@@ -861,6 +861,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Portal:ErrorNoContactForThisUser' => '错误: 当前用户没有和一个联系人或人员关联. 请联系您的系统管理员.',
 	
 	'Enum:Undefined' => '未定义',
+	'UI:Button:Refresh' => '刷新',
 ));
 
 

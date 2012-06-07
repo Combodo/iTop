@@ -901,5 +901,6 @@ Quando è associata a un trigger, ad ogni azione è assegnato un numero "ordine"
 	'UI:ActionNotAllowed' => 'Non hai i permessi per eseguire questa azione su questi oggetti.',
 	'UI:BulkAction:NoObjectSelected' => 'Si prega di selezionare almeno un oggetto per eseguire questa operazione',
 	'UI:AttemptingToChangeASlaveAttribute_Name' => 'Il campo %1$s on è scrivibile, perché è comandato dalla sincronizzazione dei dati. Valore rimane invariato.',
+	'UI:Button:Refresh' => 'Ricarica',
 ));
 ?>

@@ -765,5 +765,6 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 	'UI:ActionNotAllowed' => 'Ennek a műveletnek a végrehajtása nem engedélyezett ezen az objektumon.',
 	'UI:BulkAction:NoObjectSelected' => 'Válasszon ki legalább egy objketumot a művelet végrehajtásához',
 	'UI:AttemptingToChangeASlaveAttribute_Name' => '%1$s mező nem írható, mert a szinkronizációnál használt kulcs. Érték változatlan maradt.',
+	'UI:Button:Refresh' => 'Frissítés',
 ));
 ?>

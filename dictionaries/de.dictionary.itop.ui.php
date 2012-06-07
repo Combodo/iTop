@@ -905,6 +905,7 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'Portal:ErrorNoContactForThisUser' => 'Fehler: der derzeitige Benutzer wurde nicht einem Kontakt oder einer Person zugewiesen. Bitte kontaktieren Sie Ihren Administrator.',
 
 	'Enum:Undefined' => 'Nicht definiert',
+	'UI:Button:Refresh' => 'Neu laden',
 ));
 
 
