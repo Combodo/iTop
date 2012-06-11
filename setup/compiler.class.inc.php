@@ -122,13 +122,14 @@ class MFCompiler
 EOF;
 				// Preliminary: determine parent menus not defined within the current module
 				$aMenusToLoad = array();
-
+				$aParentMenus = array();
 				foreach($aMenusByModule[$sModuleName] as $sMenuId)
 				{
 					$oMenuNode = $aMenuNodes[$sMenuId];
 					if ($sParent = $oMenuNode->GetChildText('parent', null))
 					{
 						$aMenusToLoad[] = $sParent;
+						$aParentMenus[] = $sParent;
 					}
 					// Note: the order matters: the parents must be defined BEFORE
 					$aMenusToLoad[] = $sMenuId;
@@ -137,6 +138,14 @@ EOF;
 				foreach($aMenusToLoad as $sMenuId)
 				{
 					$oMenuNode = $aMenuNodes[$sMenuId];
+					if ($oMenuNode->getAttribute("xsi:type") == 'MenuGroup')
+					{
+						if (!in_array($oMenuNode->getAttribute("id"), $aParentMenus))
+						{
+							// Discard empty menu groups
+							continue;
+						}
+					}
 					try
 					{
 						$sCompiledCode .= $this->CompileMenu($oMenuNode, $sRelativeDir, $oP);
