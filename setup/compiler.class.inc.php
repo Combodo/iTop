@@ -830,7 +830,7 @@ EOF;
 			break;
 
 		case 'OQLMenuNode':
-			$sOQL = $oMenu->GetChildText('oql');
+			$sOQL = addslashes($oMenu->GetChildText('oql'));
 			$bSearch = ($oMenu->GetChildText('do_search') == '1') ? 'true' : 'false';
 			$sNewMenu = "new OQLMenuNode('$sMenuId', '$sOQL', $sParentSpec, $fRank, $bSearch);";
 			break;
