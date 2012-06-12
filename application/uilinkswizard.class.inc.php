@@ -104,7 +104,7 @@ class UILinksWizard
 			var nbChecked = $('.selection:checked').length;
 			if (nbChecked > 0)
 			{
-				$('#btnRemove').attr('disabled','');
+				$('#btnRemove').removeAttr('disabled');
 			}
 			else
 			{

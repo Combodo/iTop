@@ -970,18 +970,20 @@ oTable.tablesorter( { $sHeaders widgets: ['myZebra', 'truncatedList'] $sSortList
 EOF
 		);
 		
-		if (isset($aExtraParams['cssCount']))
+		if ($iNbPages == 1)
 		{
-			$sCssCount = $aExtraParams['cssCount'];
-			if ($bSingleSelectMode)
+			if (isset($aExtraParams['cssCount']))
 			{
-				$sSelectSelector = ":radio[name^=selectObj]";
-			}
-			else
-			{
-				$sSelectSelector = ":checkbox[name^=selectObj]";
-			}
-			$oPage->add_ready_script(
+				$sCssCount = $aExtraParams['cssCount'];
+				if ($bSingleSelectMode)
+				{
+					$sSelectSelector = ":radio[name^=selectObj]";
+				}
+				else
+				{
+					$sSelectSelector = ":checkbox[name^=selectObj]";
+				}
+				$oPage->add_ready_script(
 <<<EOF
 	$('#{$iListId} table.listResults $sSelectSelector').change(function() {
 		var c = $('{$sCssCount}');							
@@ -991,7 +993,8 @@ EOF
 		c.trigger('change');	
 	});
 EOF
-			);
+				);
+			}
 		}
 
 		return $sHtml;
