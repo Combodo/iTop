@@ -450,6 +450,7 @@ function sprintf(format, etc) {
 					
 					//$(this).trigger("appendCache"); // Load the data
 					//console.log($.tablesorterPager);
+					applySelection(table);
 
 					$('.gotopage',pager).click(function() {
 						var idx = $(this).attr('page');

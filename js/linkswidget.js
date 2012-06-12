@@ -54,7 +54,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 		var nbChecked = $('#linkedset_'+me.id+' .selection:checked').length;
 		if (nbChecked > 0)
 		{
-			$('#'+me.id+'_btnRemove').attr('disabled','');
+			$('#'+me.id+'_btnRemove').removeAttr('disabled');
 		}
 		else
 		{
