@@ -815,6 +815,7 @@ div#right {
 }
 div#menu {
 	width: 100%;
+	overflow: auto;
 }
 .header-menu {
 	padding-left: 24px;
