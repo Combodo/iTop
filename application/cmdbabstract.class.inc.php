@@ -894,6 +894,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		$sPagesLinks = implode('', $aPagesToDisplay);
 		$sPagesList = '['.implode(',', array_keys($aPagesToDisplay)).']';
 
+		$sSelectionMode = ($iNbPages == 1) ? '' : 'positive';
 		$sHtml =
 <<<EOF
 <div id="pager{$iListId}" class="pager" $sPagerStyle>
@@ -908,7 +909,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		</tr>
 		</table>
 		
-		<input type="hidden" name="selectionMode" value="positive"></input>
+		<input type="hidden" name="selectionMode" value="$sSelectionMode"></input>
 </div>
 EOF
 .$sHtml;
@@ -968,6 +969,30 @@ var oTable = $('#{$iListId} table.listResults');
 oTable.tablesorter( { $sHeaders widgets: ['myZebra', 'truncatedList'] $sSortList} ).tablesorterPager({container: $('#pager{$iListId}'), totalRows:$iCount, size: $iPageSize, filter: '$sOQL', extra_params: '$sExtraParams', select_mode: '$sSelectMode', displayKey: $sDisplayKey, displayList: $sDisplayList $sCssCount});
 EOF
 		);
+		
+		if (isset($aExtraParams['cssCount']))
+		{
+			$sCssCount = $aExtraParams['cssCount'];
+			if ($bSingleSelectMode)
+			{
+				$sSelectSelector = ":radio[name^=selectObj]";
+			}
+			else
+			{
+				$sSelectSelector = ":checkbox[name^=selectObj]";
+			}
+			$oPage->add_ready_script(
+<<<EOF
+	$('#{$iListId} table.listResults $sSelectSelector').change(function() {
+		var c = $('{$sCssCount}');							
+		var v = $('#{$iListId} table.listResults $sSelectSelector:checked').length;
+		c.val(v);
+		$('#{$iListId} .selectedCount').text(v);
+		c.trigger('change');	
+	});
+EOF
+			);
+		}
 
 		return $sHtml;
 	}
