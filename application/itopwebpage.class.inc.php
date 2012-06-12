@@ -135,6 +135,8 @@ class iTopWebPage extends NiceWebPage
 		{
 			myLayout.close('west');
 		}
+		
+		$('#left-pane').layout({ resizable: false, spacing_open: 0, south: { size: 94 }});
 	
 		// Accordion Menu
 		$("#accordion").accordion({ header: "h3", navigation: true, autoHeight: false, collapsible: false, icons: false }); // collapsible will be enabled once the item will be selected
@@ -717,6 +719,7 @@ EOF
 
 			$sHtml .= '<div id="left-pane" class="ui-layout-west">';
 			$sHtml .= '<!-- Beginning of the left pane -->';
+			$sHtml .= ' <div class="ui-layout-north">';
 			$sHtml .= ' <div id="header-logo">';
 			$sHtml .= ' <div id="top-left"></div><div id="logo"><a href="http://www.combodo.com/itop"><img src="../images/itop-logo.png" title="'.htmlentities($sVersionString, ENT_QUOTES, 'UTF-8').'" style="border:0; margin-top:16px; margin-right:40px;"/></a></div>';
 			$sHtml .= ' </div>';
@@ -724,7 +727,8 @@ EOF
 			$sHtml .= '		<div class="icon ui-state-default ui-corner-all"><span id="tPinMenu" class="ui-icon ui-icon-pin-w">pin</span></div>';
 			$sHtml .= '		<div style="text-align:center;">'.self::FilterXSS($sForm).'</div>';
 			$sHtml .= ' </div>';
-			$sHtml .= ' <div id="menu" class="ui-layout-content">';
+			$sHtml .= ' </div>';
+			$sHtml .= ' <div id="menu" class="ui-layout-center">';
 			$sHtml .= '		<div id="inner_menu">';
 			$sHtml .= '			<div id="accordion">';
 			$sHtml .= self::FilterXSS($this->m_sMenu);
@@ -733,7 +737,7 @@ EOF
 			$sHtml .= '			</div>';
 			$sHtml .= '		</div> <!-- /inner menu -->';
 			$sHtml .= ' </div> <!-- /menu -->';
-			$sHtml .= ' <div class="footer"><a href="http://www.combodo.com" title="www.combodo.com" target="_blank"><img src="../images/logo-combodo.png"/></a></div>';
+			$sHtml .= ' <div class="footer ui-layout-south"><a href="http://www.combodo.com" title="www.combodo.com" target="_blank"><img src="../images/logo-combodo.png"/></a></div>';
 			$sHtml .= '<!-- End of the left pane -->';
 			$sHtml .= '</div>';
 
