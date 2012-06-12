@@ -146,7 +146,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 		var okBtn = $('#btn_ok_'+me.id);
 		if (iCount > 0)
 		{
-			okBtn.attr('disabled', '');
+			okBtn.removeAttr('disabled');
 		}
 		else
 		{
