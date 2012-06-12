@@ -212,7 +212,8 @@ $(function()
 					xs.push(iX);
 					ys.push(iY);
 					data.push(this.options.values[x][y]);
-					hrefs.push(this.options.hrefs[x][y]);
+					// Not working yet
+					//hrefs.push(this.options.hrefs[x][y]);
 					iY = iY + 1;
 				}
 				iX = iX + 1;
