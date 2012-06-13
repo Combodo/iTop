@@ -140,6 +140,13 @@ EOF;
 					$oMenuNode = $aMenuNodes[$sMenuId];
 					if ($oMenuNode->getAttribute("xsi:type") == 'MenuGroup')
 					{
+						// Note: this algorithm is wrong
+						// 1 - the module may appear empty in the current module, while children are defined in other modules
+						// 2 - check recursively that child nodes are not empty themselves
+						// Future algorithm:
+						// a- browse the modules and build the menu tree
+						// b- browse the tree and blacklist empty menus
+						// c- before compiling, discard if blacklisted
 						if (!in_array($oMenuNode->getAttribute("id"), $aParentMenus))
 						{
 							// Discard empty menu groups
@@ -311,18 +318,18 @@ EOF;
 		elseif (substr($sPath, 0, 2) == '$$')
 		{
 			// Absolute
-			$sPHP = "'".addslashes(substr($sPath, 2))."'";
+			$sPHP = self::QuoteForPHP(substr($sPath, 2));
 		}
 		elseif (substr($sPath, 0, 1) == '$')
 		{
 			// Relative to the application
 			if ($bIsUrl)
 			{
-				$sPHP = "utils::GetAbsoluteUrlAppRoot().'".addslashes(substr($sPath, 1))."'";
+				$sPHP = "utils::GetAbsoluteUrlAppRoot().".self::QuoteForPHP(substr($sPath, 1));
 			}
 			else
 			{
-				$sPHP = "APPROOT.'".addslashes(substr($sPath, 1))."'";
+				$sPHP = "APPROOT.".self::QuoteForPHP(substr($sPath, 1));
 			}
 		}
 		else
@@ -330,7 +337,7 @@ EOF;
 			// Relative to the module
 			if ($bIsUrl)
 			{
-				$sPHP = "utils::GetAbsoluteUrlAppRoot().'".addslashes($sModuleRelativeDir.''.$sPath)."'";
+				$sPHP = "utils::GetAbsoluteUrlAppRoot().".self::QuoteForPHP($sModuleRelativeDir.''.$sPath);
 			}
 			else
 			{
@@ -389,6 +396,16 @@ EOF;
 			}
 		}
 		return (string)$val;
+	}
+
+	/**
+	 * Adds quotes and escape characters
+	 */	 	
+	protected function QuoteForPHP($sStr)
+	{
+		$sEscaped = str_replace(array('\\', '"', "\n"), array('\\\\', '\\"', '\\n'), $sStr);
+		$sRet = '"'.$sEscaped.'"';
+		return $sRet;
 	}
 
 	protected function CompileClass($oClass, $sModuleRelativeDir, $oP)
@@ -565,8 +582,8 @@ EOF;
 				// deprecated: $aParameters['jointype'] = 'null';
 				if ($sOql = $oField->GetChildText('filter'))
 				{
-					$sEscapedOql = addslashes($sOql);
-					$aParameters['allowed_values'] = "new ValueSetObjects('$sEscapedOql')"; // or "new ValueSetObjects('SELECT xxxx')"
+					$sEscapedOql = self::QuoteForPHP($sOql);
+					$aParameters['allowed_values'] = "new ValueSetObjects($sEscapedOql)"; // or "new ValueSetObjects('SELECT xxxx')"
 				}
 				else
 				{
@@ -584,8 +601,8 @@ EOF;
 			{
 				if ($sOql = $oField->GetChildText('filter'))
 				{
-					$sEscapedOql = addslashes($sOql);
-					$aParameters['allowed_values'] = "new ValueSetObjects('$sEscapedOql')"; // or "new ValueSetObjects('SELECT xxxx')"
+					$sEscapedOql = self::QuoteForPHP($sOql);
+					$aParameters['allowed_values'] = "new ValueSetObjects($sEscapedOql)"; // or "new ValueSetObjects('SELECT xxxx')"
 				}
 				else
 				{
@@ -621,7 +638,7 @@ EOF;
 				$aValues = array();
 				foreach($oValueNodes as $oValue)
 				{
-	//	new style...			$aValues[] = "'".addslashes($oValue->textContent)."'";
+	//	new style...			$aValues[] = self::QuoteForPHP($oValue->textContent);
 					$aValues[] = $oValue->textContent;
 				}
 	//	new style... $sValues = 'array('.implode(', ', $aValues).')';
@@ -839,9 +856,9 @@ EOF;
 			break;
 
 		case 'OQLMenuNode':
-			$sOQL = addslashes($oMenu->GetChildText('oql'));
+			$sOQL = self::QuoteForPHP($oMenu->GetChildText('oql'));
 			$bSearch = ($oMenu->GetChildText('do_search') == '1') ? 'true' : 'false';
-			$sNewMenu = "new OQLMenuNode('$sMenuId', '$sOQL', $sParentSpec, $fRank, $bSearch);";
+			$sNewMenu = "new OQLMenuNode('$sMenuId', $sOQL, $sParentSpec, $fRank, $bSearch);";
 			break;
 
 		case 'NewObjectMenuNode':
@@ -881,8 +898,8 @@ EOF;
 		$aPHPMenu = array("\$__comp_menus__['$sMenuId'] = $sNewMenu");
 		if ($sAutoReload = $oMenu->GetChildText('auto_reload'))
 		{
-			$sAutoReload = addslashes($sAutoReload);
-			$aPHPMenu[] = "\$__comp_menus__['$sMenuId']->SetParameters(array('auto_reload' => '$sAutoReload'));";
+			$sAutoReload = self::QuoteForPHP($sAutoReload);
+			$aPHPMenu[] = "\$__comp_menus__['$sMenuId']->SetParameters(array('auto_reload' => $sAutoReload));";
 		}
 
 		$sAdminOnly = $oMenu->GetChildText('enable_admin_only');
