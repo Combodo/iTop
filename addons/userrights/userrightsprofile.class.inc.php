@@ -613,9 +613,13 @@ class UserRightsProfile extends UserRightsAddOnAPI
 
 	/**
 	 * Read and cache organizations allowed to the given user
+	 * 
+	 * @param oUser
+	 * @param sClass -not used here but can be used in overloads
 	 */
-	protected function GetUserOrgs($iUser)
+	protected function GetUserOrgs($oUser, $sClass)
 	{
+		$iUser = $oUser->GetKey();
 		if (!array_key_exists($iUser, $this->m_aUserOrgs))
 		{
 			$oSearch = new DBObjectSearch('URP_UserOrg');
@@ -814,7 +818,7 @@ exit;
 		}
 		// Position the user
 		//
-		$aUserOrgs = $this->GetUserOrgs($oUser->GetKey());
+		$aUserOrgs = $this->GetUserOrgs($oUser, $sClass);
 		if (count($aUserOrgs) == 0)
 		{
 			// No org means 'any org'
