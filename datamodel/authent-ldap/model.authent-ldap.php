@@ -120,7 +120,7 @@ class UserLDAP extends UserInternal
 				$aEntry = ldap_get_entries($hDS, $hSearchResult);
 				$sUserDN = $aEntry[0]['dn'];
 				$bUserBind =  @ldap_bind($hDS, $sUserDN, $sPassword);
-				if ($bUserBind !== false)
+				if (($bUserBind !== false) && !empty($sPassword))
 				{
 					ldap_unbind($hDS);
 					return true; // Password Ok
