@@ -1479,8 +1479,11 @@ EOF
 					{
 						if ($oAttDef->IsWritable())
 						{
-							$sValue = $oObj->GetAsXML($sAttCode);
-							$oPage->add("<$sAttCode>$sValue</$sAttCode>\n");
+							if (!$oAttDef->IsLinkSet())
+							{
+								$sValue = $oObj->GetAsXML($sAttCode);
+								$oPage->add("<$sAttCode>$sValue</$sAttCode>\n");
+							}
 						}
 					}
 				}
