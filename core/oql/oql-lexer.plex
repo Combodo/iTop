@@ -140,7 +140,23 @@ above            = "ABOVE"
 above_strict     = "ABOVE STRICT"
 not_above        = "NOT ABOVE"
 not_above_strict = "NOT ABOVE STRICT"
-numval     = /[0-9]+|0x[0-9a-fA-F]+/
+//
+// WARNING: there seems to be a bug in the Lexer about matching the longest pattern
+//          when there are alternates in the regexp.
+//
+// For instance:
+// numval     = /[0-9]+|0x[0-9a-fA-F]+/
+// Does not work: SELECT Toto WHERE name = 'Text0xCTest' => Fails because 0xC is recongnized as a numval (inside the string) instead of a strval !!
+//
+// Inserting a ^ after the alternate (see comment at the top of this file) does not work either
+// numval     = /[0-9]+|'.chr(94).'0x[0-9a-fA-F]+/
+// SELECT Toto WHERE name = 'Text0xCTest' => works but
+// SELECT Toto WHERE id = 0xC => does not work, 'xC' is found as a name (apparently 0 is recognized as a numval and the remaining is a name !)
+//
+// numval     = /([0-9]+|0x[0-9a-fA-F]+)/
+// Does not work either, the hexadecimal numbers are not matched properly
+// The following seems to work...
+numval     = /(0x[0-9a-fA-F]+|[0-9]+)/
 strval     = /"([^\\"]|\\"|\\\\)*"|'.chr(94).chr(39).'([^\\'.chr(39).']|\\'.chr(39).'|\\\\)*'.chr(39).'/
 name       = /([_a-zA-Z][_a-zA-Z0-9]*|`[^`]+`)/
 varname    = /:([_a-zA-Z][_a-zA-Z0-9]*->[_a-zA-Z][_a-zA-Z0-9]*|[_a-zA-Z][_a-zA-Z0-9]*)/
