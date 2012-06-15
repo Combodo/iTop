@@ -34,7 +34,7 @@ class LoginWebPage extends NiceWebPage
 	
     public function __construct()
     {
-        parent::__construct("iTop Login");
+        parent::__construct(Dict::S("UI:iTopLogin"));
         $this->add_style(<<<EOF
 body {
 	background: #eee;
