@@ -964,5 +964,6 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:NavigateAwayConfirmationMessage' => 'Any modification will be discarded.',
 	'UI:Create_Class_InState' => 'Create the %1$s in state: ',
 	'UI:Button:Refresh' => 'Refresh',
+	'UI:iTopLogin' => 'iTop Login',
 ));
 ?>
