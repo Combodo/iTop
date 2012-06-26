@@ -385,7 +385,6 @@ class ModelFactory
 			{
 				foreach($this->GetNodes($sSelector) as $oNode)
 				{
-					echo "Adding rules (".print_r($aRestriction['rules'], true)." to ".$oNode->getAttribute('id')."\n";
 					$oNode->RestrictExtensibility($aRestriction['rules']);
 				}
 			}
