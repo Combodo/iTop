@@ -371,6 +371,26 @@ class ModelFactory
 	{
 		return $this->oDOMDocument->GetNodeById($sXPath, $sId, $oContextNode);
 	}
+
+	/**
+	 * Apply extensibility rules into the DOM
+	 * @param array aRestrictionRules Array of array ('selectors' => array of XPaths, 'rules' => array of rules)
+	 * @return void
+	 */
+	public function RestrictExtensibility($aRestrictionRules)
+	{
+		foreach ($aRestrictionRules as $aRestriction)
+		{
+			foreach ($aRestriction['selectors'] as $sSelector)
+			{
+				foreach($this->GetNodes($sSelector) as $oNode)
+				{
+					echo "Adding rules (".print_r($aRestriction['rules'], true)." to ".$oNode->getAttribute('id')."\n";
+					$oNode->RestrictExtensibility($aRestriction['rules']);
+				}
+			}
+		}
+	}
 	
 	/**
 	 * Check if the class specified by the given node already exists in the loaded DOM
@@ -1645,6 +1665,43 @@ class MFElement extends DOMElement
 		}
 		$this->setAttribute('id', $sId);
 	}
+
+	/**
+	 * Apply extensibility rules onto this node
+	 * @param array aRules Array of rules (strings)
+	 * @return void
+	 */
+	 public function RestrictExtensibility($aRules)
+	 {
+	 	$oRulesNode = $this->GetOptionalElement('rules');
+	 	if ($oRulesNode)
+	 	{
+	 		$aCurrentRules = $oRulesNode->GetNodeAsArrayOfItems();
+	 		$aCurrentRules = array_merge($aCurrentRules, $aRules);
+	 		$oRulesNode->SetNodeAsArrayOfItems($aCurrentRules);
+	 	}
+	 	else
+	 	{
+	 		$oNewNode = $this->ownerDocument->CreateElement('rules');
+	 		$this->appendChild($oNewNode);
+	 		$oNewNode->SetNodeAsArrayOfItems($aRules);
+	 	}
+	 }	 	
+
+	/**
+	 * Read extensibility rules for this node
+	 * @return Array of rules (strings)
+	 */
+	 public function GetExtensibilityRules()
+	 {
+		$aCurrentRules = array();
+		$oRulesNode = $this->GetOptionalElement('rules');
+		if ($oRulesNode)
+		{
+			$aCurrentRules = $oRulesNode->GetNodeAsArrayOfItems();
+		}
+		return $aCurrentRules;
+	 }	 	
 }
 
 /**
