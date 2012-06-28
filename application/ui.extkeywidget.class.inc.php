@@ -120,7 +120,7 @@ class UIExtKeyWidget
 		else
 		{
 			$sWizHelper = 'oWizardHelper'.$sFormPrefix;
-			$sWizHelperJSON = $sWizHelper.'.ToJSON()';
+			$sWizHelperJSON = $sWizHelper.'.UpdateWizardToJSON()';
 		}
 		if (is_null($oAllowedValues))
 		{
