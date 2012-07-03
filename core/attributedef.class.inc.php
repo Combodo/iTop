@@ -1829,7 +1829,7 @@ class AttributeCaseLog extends AttributeLongText
  *
  * @package     iTopORM
  */
-class AttributeHTML extends AttributeText
+class AttributeHTML extends AttributeLongText
 {
 	public function GetEditClass() {return "HTML";}
 
@@ -2308,6 +2308,7 @@ class AttributeDateTime extends AttributeDBField
 						
 			default:
 			$oNewCondition = parent::GetSmartConditionExpression($sSearchText, $oField, $aParams);
+
 		}
 
 		return $oNewCondition;
