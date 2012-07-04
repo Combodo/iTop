@@ -1837,7 +1837,7 @@ class AttributeCaseLog extends AttributeLongText
  *
  * @package     iTopORM
  */
-class AttributeHTML extends AttributeText
+class AttributeHTML extends AttributeLongText
 {
 	public function GetEditClass() {return "HTML";}
 
@@ -2316,6 +2316,7 @@ class AttributeDateTime extends AttributeDBField
 						
 			default:
 			$oNewCondition = parent::GetSmartConditionExpression($sSearchText, $oField, $aParams);
+
 		}
 
 		return $oNewCondition;
@@ -3298,15 +3299,25 @@ class AttributeOneWayPassword extends AttributeDefinition
 }
 
 // Indexed array having two dimensions
-class AttributeTable extends AttributeText
+class AttributeTable extends AttributeDBField
 {
-	public function GetEditClass() {return "Text";}
-	protected function GetSQLCol() {return "TEXT";}
+	public function GetEditClass() {return "Table";}
+	protected function GetSQLCol() {return "LONGTEXT";}
 
 	public function GetMaxSize()
 	{
 		return null;
 	}
+
+	public function GetNullValue()
+	{
+		return array();
+	} 
+
+	public function IsNull($proposedValue)
+	{
+		return (count($proposedValue) == 0);
+	} 
 
 	// Facilitate things: allow the user to Set the value from a string
 	public function MakeRealValue($proposedValue, $oHostObj)
@@ -3370,13 +3381,39 @@ class AttributeTable extends AttributeText
 		$sRes .= "</TABLE>";
 		return $sRes;
 	}
+
+	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null)
+	{
+		// Not implemented
+		return '';
+	}
+
+	public function GetAsXML($value, $oHostObject = null)
+	{
+		if (count($value) == 0)
+		{
+			return "";
+		}
+
+		$sRes = "";
+		foreach($value as $iRow => $aRawData)
+		{
+			$sRes .= "<row>";
+			foreach ($aRawData as $iCol => $cell)
+			{
+				$sCell = Str::pure2xml((string)$cell);
+				$sRes .= "<cell icol=\"$iCol\">$sCell</cell>";
+			}
+			$sRes .= "</row>";
+		}
+		return $sRes;
+	}
 }
 
 // The PHP value is a hash array, it is stored as a TEXT column
 class AttributePropertySet extends AttributeTable
 {
-	public function GetEditClass() {return "Text";}
-	protected function GetSQLCol() {return "TEXT";}
+	public function GetEditClass() {return "PropertySet";}
 
 	// Facilitate things: allow the user to Set the value from a string
 	public function MakeRealValue($proposedValue, $oHostObj)
@@ -3403,6 +3440,10 @@ class AttributePropertySet extends AttributeTable
 		$sRes .= "<TBODY>";
 		foreach($value as $sProperty => $sValue)
 		{
+			if ($sProperty == 'auth_pwd')
+			{
+				$sValue = '*****';
+			}
 			$sRes .= "<TR>";
 			$sCell = str_replace("\n", "<br>\n", Str::pure2html((string)$sValue));
 			$sRes .= "<TD class=\"label\">$sProperty</TD><TD>$sCell</TD>";
@@ -3410,6 +3451,53 @@ class AttributePropertySet extends AttributeTable
 		}
 		$sRes .= "</TBODY>";
 		$sRes .= "</TABLE>";
+		return $sRes;
+	}
+
+	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null)
+	{
+		if (count($value) == 0)
+		{
+			return "";
+		}
+
+		$aRes = array();
+		foreach($value as $sProperty => $sValue)
+		{
+			if ($sProperty == 'auth_pwd')
+			{
+				$sValue = '*****';
+			}
+			$sFrom = array(',', '=');
+			$sTo = array('\,', '\=');
+			$aRes[] = $sProperty.'='.str_replace($sFrom, $sTo, (string)$sValue);
+		}
+		$sRaw = implode(',', $aRes);
+
+		$sFrom = array("\r\n", $sTextQualifier);
+		$sTo = array("\n", $sTextQualifier.$sTextQualifier);
+		$sEscaped = str_replace($sFrom, $sTo, $sRaw);
+		return $sTextQualifier.$sEscaped.$sTextQualifier;
+	}
+
+	public function GetAsXML($value, $oHostObject = null)
+	{
+		if (count($value) == 0)
+		{
+			return "";
+		}
+
+		$sRes = "";
+		foreach($value as $sProperty => $sValue)
+		{
+			if ($sProperty == 'auth_pwd')
+			{
+				$sValue = '*****';
+			}
+			$sRes .= "<property id=\"$sProperty\">";
+			$sRes .= Str::pure2xml((string)$sValue);
+			$sRes .= "</property>";
+		}
 		return $sRes;
 	}
 }
