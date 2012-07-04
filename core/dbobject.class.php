@@ -1719,7 +1719,7 @@ abstract class DBObject
 					// #@# Note: This has been proven to be quite slow, this can slow down bulk load
 					$sAsHtml = $this->GetAsHtml($sAttCode);
 					$aScalarArgs[$sArgName.'->html('.$sAttCode.')'] = $sAsHtml;
-					$aScalarArgs[$sArgName.'->label('.$sAttCode.')'] = strip_tags($sAsHtml);
+					$aScalarArgs[$sArgName.'->label('.$sAttCode.')'] = $this->GetEditValue($sAttCode); // "Nice" display value, but without HTML tags and entities
 				}
 				// Do something for case logs... quick N' dirty...
 				if ($aScalarArgs[$sArgName.'->'.$sAttCode] instanceof ormCaseLog)
