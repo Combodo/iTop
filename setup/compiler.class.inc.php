@@ -654,6 +654,51 @@ EOF;
 			{
 				$aParameters['depends_on'] = $sDependencies;
 			}
+			elseif ($sAttType == 'AttributeStopWatch')
+			{
+				$oStates = $oField->GetUniqueElement('states');
+				$oStateNodes = $oStates->getElementsByTagName('state');
+				$aStates = array();
+				foreach($oStateNodes as $oState)
+				{
+					$aStates[] = '"'.$oState->GetAttribute('id').'"';
+				}
+				$aParameters['states'] = 'array('.implode(', ', $aStates).')';
+
+				$aParameters['goal_computing'] = $this->GetPropString($oField, 'goal', 'DefaultMetricComputer'); // Optional, no deadline by default
+				$aParameters['working_time_computing'] = $this->GetPropString($oField, 'working_time', 'DefaultWorkingTimeComputer'); // Optional, defaults to 24x7
+
+				$oThresholds = $oField->GetUniqueElement('thresholds');
+				$oThresholdNodes = $oThresholds->getElementsByTagName('threshold');
+				$aThresholds = array();
+				foreach($oThresholdNodes as $oThreshold)
+				{
+					$iPercent = $this->GetPropNumber($oThreshold, 'percent');
+
+					$oActions = $oThreshold->GetUniqueElement('actions');
+					$oActionNodes = $oActions->getElementsByTagName('action');
+					$aActions = array();
+					foreach($oActionNodes as $oAction)
+					{
+						$oParams = $oAction->GetOptionalElement('params');
+						$aActionParams = array();
+						if ($oParams)
+						{
+							$oParamNodes = $oParams->getElementsByTagName('param');
+							foreach($oParamNodes as $oParam)
+							{
+								$aActionParams[] = self::QuoteForPHP($oParam->textContent);
+							}
+						}
+						$sActionParams = 'array('.implode(', ', $aActionParams).')';
+						$sVerb = $this->GetPropString($oAction, 'verb');
+						$aActions[] = "array('verb' => $sVerb, 'params' => $sActionParams)";
+					}
+					$sActions = 'array('.implode(', ', $aActions).')';
+					$aThresholds[] = $iPercent." => array('percent' => $iPercent, 'actions' => $sActions)";
+				}
+				$aParameters['thresholds'] = 'array('.implode(', ', $aThresholds).')';
+			}
 			else
 			{
 				$aParameters['allowed_values'] = 'null'; // or "new ValueSetEnum('SELECT xxxx')"

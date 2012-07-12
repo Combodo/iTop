@@ -1875,6 +1875,10 @@ EOF
 					$sHTMLValue .= "<input title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}[fcontents]\" type=\"file\" id=\"file_$iId\" onChange=\"UpdateFileName('$iId', this.value)\"/>&nbsp;{$sValidationField}\n";
 				break;
 				
+				case 'StopWatch':
+					$sHTMLValue = "The edition of a stopwatch is not allowed!!!";
+				break;
+
 				case 'List':
 					// Not editable for now...
 					$sHTMLValue = '';

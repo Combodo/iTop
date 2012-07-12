@@ -259,7 +259,14 @@ abstract class DBObject
 				$value = $oAttDef->FromSQLToValue($aRow, $sAttRef);
 
 				$this->m_aCurrValues[$sAttCode] = $value;
-				$this->m_aOrigValues[$sAttCode] = $value;
+				if (is_object($value))
+				{
+					$this->m_aOrigValues[$sAttCode] = clone $value;
+				}
+				else
+				{
+					$this->m_aOrigValues[$sAttCode] = $value;
+				}
 				$this->m_aLoadedAtt[$sAttCode] = true;
 			}
 			else
@@ -357,6 +364,7 @@ abstract class DBObject
 		}
 
 		$realvalue = $oAttDef->MakeRealValue($value, $this);
+
 		$this->m_aCurrValues[$sAttCode] = $realvalue;
 
 		// The object has changed, reset caches
@@ -1313,6 +1321,26 @@ abstract class DBObject
 			throw new CoreException("Object not following integrity rules", array('issues' => $sIssues, 'class' => get_class($this), 'id' => $this->GetKey()));
 		}
 
+		// Stop watches
+		$sState = $this->GetState();
+		if ($sState != '')
+		{
+			foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+			{
+				if ($oAttDef instanceof AttributeStopWatch)
+				{
+					if (in_array($sState, $oAttDef->GetStates()))
+					{
+						// Start the stop watch and compute the deadlines
+						$oSW = $this->Get($sAttCode);
+						$oSW->Start($this, $oAttDef);
+						$oSW->ComputeDeadlines($this, $oAttDef);
+						$this->Set($sAttCode, $oSW);
+					}
+				}
+			}
+		}
+
 		// First query built upon on the root class, because the ID must be created first
 		$this->m_iKey = $this->DBInsertSingleTable($sRootClass);
 
@@ -1394,6 +1422,25 @@ abstract class DBObject
 		if (!$this->m_bIsInDB)
 		{
 			throw new CoreException("DBUpdate: could not update a newly created object, please call DBInsert instead");
+		}
+
+		// Stop watches
+		$sState = $this->GetState();
+		if ($sState != '')
+		{
+			foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef)
+			{
+				if ($oAttDef instanceof AttributeStopWatch)
+				{
+					if (in_array($sState, $oAttDef->GetStates()))
+					{
+						// Compute or recompute the deadlines
+						$oSW = $this->Get($sAttCode);
+						$oSW->ComputeDeadlines($this, $oAttDef);
+						$this->Set($sAttCode, $oSW);
+					}
+				}
+			}
 		}
 
 		$this->DoComputeValues();
@@ -1637,6 +1684,10 @@ abstract class DBObject
 		return MetaModel::EnumTransitions(get_class($this), $sState);
 	}
 
+	/**
+	* Designed as an action to be called when a stop watch threshold times out
+	* or from within the framework	
+	*/	
 	public function ApplyStimulus($sStimulusCode)
 	{
 		$sStateAttCode = MetaModel::GetStateAttributeCode(get_class($this));
@@ -1687,10 +1738,43 @@ abstract class DBObject
 			{
 				$oTrigger->DoActivate($this->ToArgs('this'));
 			}
+
+			// Stop watches
+			foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+			{
+				if ($oAttDef instanceof AttributeStopWatch)
+				{
+					$oSW = $this->Get($sAttCode);
+					if (in_array($sNewState, $oAttDef->GetStates()))
+					{
+						$oSW->Start($this, $oAttDef);
+					}
+					else
+					{
+						$oSW->Stop($this, $oAttDef);
+					}
+					$this->Set($sAttCode, $oSW);
+				}
+			}
 		}
 
 		return $bSuccess;
 	}
+
+	/**
+	* Designed as an action to be called when a stop watch threshold times out
+	*/	
+	public function ResetStopWatch($sAttCode)
+	{
+		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+		if (!$oAttDef instanceof AttributeStopWatch)
+		{
+			throw new CoreException("Invalid stop watch id: '$sAttCode'");
+		}
+		$oSW = $this->Get($sAttCode);
+		$oSW->Reset($this, $oAttDef);
+		$this->Set($sAttCode, $oSW);
+	}	 	
 
 	// Make standard context arguments
 	// Note: Needs to be reviewed because it is currently called once per attribute when an object is written (CheckToWrite / CheckValue)

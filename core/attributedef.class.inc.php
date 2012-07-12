@@ -26,6 +26,7 @@
 
 require_once('MyHelpers.class.inc.php');
 require_once('ormdocument.class.inc.php');
+require_once('ormstopwatch.class.inc.php');
 require_once('ormpassword.class.inc.php');
 require_once('ormcaselog.class.inc.php');
 
@@ -95,7 +96,7 @@ abstract class AttributeDefinition
 	protected $m_sCode;
 	private $m_aParams = array();
 	protected $m_sHostClass = '!undefined!';
-	protected function Get($sParamName) {return $this->m_aParams[$sParamName];}
+	public function Get($sParamName) {return $this->m_aParams[$sParamName];}
 	protected function IsParam($sParamName) {return (array_key_exists($sParamName, $this->m_aParams));}
 
 	protected function GetOptional($sParamName, $default)
@@ -3199,6 +3200,243 @@ class AttributeBlob extends AttributeDefinition
 		return ''; // Not exportable in XML, or as CDATA + some subtags ??
 	}
 }
+
+/**
+ * A stop watch is an ormStopWatch object, it is stored as several columns in the database  
+ *
+ * @package     iTopORM
+ */
+class AttributeStopWatch extends AttributeDefinition
+{
+	static public function ListExpectedParams()
+	{
+		// The list of thresholds must be an array of iPercent => array of 'option' => value
+		return array_merge(parent::ListExpectedParams(), array("states", "goal_computing", "working_time_computing", "thresholds"));
+	}
+
+	public function GetEditClass() {return "StopWatch";}
+	
+	public function IsDirectField() {return true;} 
+	public function IsScalar() {return true;} 
+	public function IsWritable() {return false;} 
+	public function GetDefaultValue() {return $this->NewStopWatch();}
+	//public function IsNullAllowed() {return $this->GetOptional("is_null_allowed", false);}
+
+	public function GetStates()
+	{
+		return $this->Get('states');
+	}
+
+	/**
+	 * Construct a brand new (but configured) stop watch
+	 */	 	
+	public function NewStopWatch()
+	{
+		$oSW = new ormStopWatch();
+		foreach ($this->ListThresholds() as $iThreshold => $aFoo)
+		{
+			$oSW->DefineThreshold($iThreshold);
+		}
+		return $oSW;
+	}
+
+	// Facilitate things: allow the user to Set the value from a string
+	public function MakeRealValue($proposedValue, $oHostObj)
+	{
+		if (!$proposedValue instanceof ormStopWatch)
+		{
+			return $this->NewStopWatch();
+		}
+		return $proposedValue;
+	}
+
+	public function GetSQLExpressions($sPrefix = '')
+	{
+		if ($sPrefix == '')
+		{
+			$sPrefix = $this->GetCode();
+		}
+		$aColumns = array();
+		// Note: to optimize things, the existence of the attribute is determined by the existence of one column with an empty suffix
+		$aColumns[''] = $sPrefix.'_timespent';
+		$aColumns['_started'] = $sPrefix.'_started';
+		$aColumns['_laststart'] = $sPrefix.'_laststart';
+		$aColumns['_stopped'] = $sPrefix.'_stopped';
+		foreach ($this->ListThresholds() as $iThreshold => $aFoo)
+		{
+			$sThPrefix = '_'.$iThreshold;
+			$aColumns[$sThPrefix.'_deadline'] = $sPrefix.$sThPrefix.'_deadline';
+			$aColumns[$sThPrefix.'_passed'] = $sPrefix.$sThPrefix.'_passed';
+			$aColumns[$sThPrefix.'_overrun'] = $sPrefix.$sThPrefix.'_overrun';
+		}
+		return $aColumns;
+	}
+
+	public static function DateToSeconds($sDate)
+	{
+		if (is_null($sDate))
+		{
+			return null;
+		}
+		$oDateTime = new DateTime($sDate);
+		$iSeconds = $oDateTime->format('U');
+		return $iSeconds;
+	}
+
+	public static function SecondsToDate($iSeconds)
+	{
+		if (is_null($iSeconds))
+		{
+			return null;
+		}
+		return date("Y-m-d H:i:s", $iSeconds);
+	}
+
+	public function FromSQLToValue($aCols, $sPrefix = '')
+	{
+		$aExpectedCols = array($sPrefix, $sPrefix.'_started', $sPrefix.'_laststart', $sPrefix.'_stopped');
+		foreach ($this->ListThresholds() as $iThreshold => $aFoo)
+		{
+			$sThPrefix = '_'.$iThreshold;
+			$aExpectedCols[] = $sPrefix.$sThPrefix.'_deadline';
+			$aExpectedCols[] = $sPrefix.$sThPrefix.'_passed';
+			$aExpectedCols[] = $sPrefix.$sThPrefix.'_overrun';
+		}
+		foreach ($aExpectedCols as $sExpectedCol)
+		{
+			if (!array_key_exists($sExpectedCol, $aCols))
+			{
+				$sAvailable = implode(', ', array_keys($aCols));
+				throw new MissingColumnException("Missing column '$sExpectedCol' from {$sAvailable}");
+			} 
+		}
+
+		$value = new ormStopWatch(
+			$aCols[$sPrefix],
+			self::DateToSeconds($aCols[$sPrefix.'_started']),
+			self::DateToSeconds($aCols[$sPrefix.'_laststart']),
+			self::DateToSeconds($aCols[$sPrefix.'_stopped'])
+		);
+
+		$aThresholds = array();
+		foreach ($this->ListThresholds() as $iThreshold => $aFoo)
+		{
+			$sThPrefix = '_'.$iThreshold;
+			$value->DefineThreshold(
+				$iThreshold,
+				self::DateToSeconds($aCols[$sPrefix.$sThPrefix.'_deadline']),
+				(bool)($aCols[$sPrefix.$sThPrefix.'_passed'] == 1),
+				$aCols[$sPrefix.$sThPrefix.'_overrun']
+			);
+		}
+
+		return $value;
+	}
+
+	public function GetSQLValues($value)
+	{
+		if ($value instanceOf ormStopWatch)
+		{
+			$aValues = array();
+			$aValues[$this->GetCode().'_timespent'] = $value->GetTimeSpent();
+			$aValues[$this->GetCode().'_started'] = self::SecondsToDate($value->GetStartDate());
+			$aValues[$this->GetCode().'_laststart'] = self::SecondsToDate($value->GetLastStartDate());
+			$aValues[$this->GetCode().'_stopped'] = self::SecondsToDate($value->GetStopDate());
+
+			foreach ($this->ListThresholds() as $iThreshold => $aFoo)
+			{
+				$sPrefix = $this->GetCode().'_'.$iThreshold;
+				$aValues[$sPrefix.'_deadline'] = self::SecondsToDate($value->GetThresholdDate($iThreshold));
+				$aValues[$sPrefix.'_passed'] = $value->IsThresholdPassed($iThreshold) ? '1' : '0';
+				$aValues[$sPrefix.'_overrun'] = $value->GetOverrun($iThreshold);
+			}
+		}
+		else
+		{
+			$aValues = array();
+			$aValues[$this->GetCode().'_timespent'] = '';
+			$aValues[$this->GetCode().'_started'] = '';
+			$aValues[$this->GetCode().'_laststart'] = '';
+			$aValues[$this->GetCode().'_stopped'] = '';
+		}
+		return $aValues;
+	}
+
+	public function GetSQLColumns()
+	{
+		$aColumns = array();
+		$aColumns[$this->GetCode().'_timespent'] = 'INT(11) UNSIGNED DEFAULT 0';
+		$aColumns[$this->GetCode().'_started'] = 'DATETIME NULL';
+		$aColumns[$this->GetCode().'_laststart'] = 'DATETIME NULL';
+		$aColumns[$this->GetCode().'_stopped'] = 'DATETIME NULL';
+		foreach ($this->ListThresholds() as $iThreshold => $aFoo)
+		{
+			$sPrefix = $this->GetCode().'_'.$iThreshold;
+			$aColumns[$sPrefix.'_deadline'] = 'DATETIME NULL';
+			$aColumns[$sPrefix.'_passed'] = 'TINYINT(1) NULL';
+			$aColumns[$sPrefix.'_overrun'] = 'INT(11) UNSIGNED NULL';
+		}
+		return $aColumns;
+	}
+
+	public function GetFilterDefinitions()
+	{
+		//return array();
+		// still not working... see later...
+		$aRes = array(
+			$this->GetCode() => new FilterFromAttribute($this),
+			$this->GetCode().'_started' => new FilterFromAttribute($this, '_started'),
+			$this->GetCode().'_laststart' => new FilterFromAttribute($this, '_laststart'),
+			$this->GetCode().'_stopped' => new FilterFromAttribute($this, '_stopped')
+		);
+		foreach ($this->ListThresholds() as $iThreshold => $aFoo)
+		{
+			$sPrefix = $this->GetCode().'_'.$iThreshold;
+			$aRes[$sPrefix.'_deadline'] = new FilterFromAttribute($this, '_deadline');
+			$aRes[$sPrefix.'_passed'] = new FilterFromAttribute($this, '_passed');
+			$aRes[$sPrefix.'_overrun'] = new FilterFromAttribute($this, '_overrun');
+		}
+		return $aRes;
+	}
+
+	public function GetBasicFilterOperators()
+	{
+		return array();
+	}
+	public function GetBasicFilterLooseOperator()
+	{
+		return '=';
+	}
+
+	public function GetBasicFilterSQLExpr($sOpCode, $value)
+	{
+		return 'true';
+	} 
+
+	public function GetAsHTML($value, $oHostObject = null)
+	{
+		if (is_object($value))
+		{
+			return $value->GetAsHTML($this, $oHostObject);
+		}
+	}
+
+	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null)
+	{
+		return $value->GetTimeSpent();
+	}
+	
+	public function GetAsXML($value, $oHostObject = null)
+	{
+		return $value->GetTimeSpent();
+	}
+
+	public function ListThresholds()
+	{
+		return $this->Get('thresholds');
+	}
+}
+
 /**
  * One way encrypted (hashed) password
  */

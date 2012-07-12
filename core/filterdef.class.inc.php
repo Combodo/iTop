@@ -155,12 +155,13 @@ class FilterFromAttribute extends FilterDefinition
 		return array_merge(parent::ListExpectedParams(), array("refattribute"));
 	}
 
-	public function __construct($oRefAttribute, $aParam = array())
+	public function __construct($oRefAttribute, $sSuffix = '')
 	{
 		// In this very specific case, the code is the one of the attribute
 		 // (this to get a very very simple syntax upon declaration)
+		$aParam = array();
 		$aParam["refattribute"] = $oRefAttribute;
-		parent::__construct($oRefAttribute->GetCode(), $aParam);
+		parent::__construct($oRefAttribute->GetCode().$sSuffix, $aParam);
 	}
 
 	public function GetType() {return "Basic";}

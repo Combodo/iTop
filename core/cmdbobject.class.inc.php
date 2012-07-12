@@ -195,6 +195,29 @@ abstract class CMDBObject extends DBObject
 				$oMyChangeOp->Set("prevdata", $original);
 				$iId = $oMyChangeOp->DBInsertNoReload();
 			}
+			elseif ($oAttDef instanceOf AttributeStopWatch)
+			{
+				// Stop watches
+				// TEMPORARY IMPLEMENTATION
+				$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeScalar");
+				$oMyChangeOp->Set("change", $oChange->GetKey());
+				$oMyChangeOp->Set("objclass", get_class($this));
+				$oMyChangeOp->Set("objkey", $this->GetKey());
+				$oMyChangeOp->Set("attcode", $sAttCode);
+
+				// Temporary - working thanks to ormStopWatch::__toString()
+				if (array_key_exists($sAttCode, $aOrigValues))
+				{
+					$sOriginalValue = $aOrigValues[$sAttCode];
+				}
+				else
+				{
+					$sOriginalValue = 'undefined';
+				}
+				$oMyChangeOp->Set("oldvalue", $sOriginalValue);
+				$oMyChangeOp->Set("newvalue", $value);
+				$iId = $oMyChangeOp->DBInsertNoReload();
+			}
 			elseif ($oAttDef instanceOf AttributeCaseLog)
 			{
 				$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeCaseLog");

@@ -18,6 +18,7 @@ require_once(APPROOT.'core/modulehandler.class.inc.php');
 require_once(APPROOT.'core/querybuildercontext.class.inc.php');
 require_once(APPROOT.'core/querymodifier.class.inc.php');
 require_once(APPROOT.'core/metamodelmodifier.inc.php');
+require_once(APPROOT.'core/computing.inc.php');
 
 /**
  * Metamodel
@@ -2591,7 +2592,7 @@ abstract class MetaModel
 				// add it to the output
 				foreach ($oAttDef->GetSQLExpressions() as $sColId => $sSQLExpr)
 				{
-					if (array_key_exists($sAttCode, $aExpectedAtts))
+					if (array_key_exists($sAttCode.$sColId, $aExpectedAtts))
 					{
 						$oFieldSQLExp = new FieldExpressionResolved($sSQLExpr, $sTableAlias);
 						foreach (MetaModel::EnumPlugins('iQueryModifier') as $sPluginClass => $oQueryModifier)
