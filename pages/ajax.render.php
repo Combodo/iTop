@@ -30,6 +30,7 @@ require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
 require_once(APPROOT.'/application/wizardhelper.class.inc.php');
 require_once(APPROOT.'/application/ui.linkswidget.class.inc.php');
 require_once(APPROOT.'/application/ui.extkeywidget.class.inc.php');
+require_once(APPROOT.'/application/datatable.class.inc.php');
 
 try
 {
@@ -51,13 +52,22 @@ try
 
 	switch($operation)
 	{
+		case 'datatable':
 		case 'pagination':
 		$oPage->SetContentType('text/html');
-		$sExtraParams = stripslashes(utils::ReadParam('extra_param', '', false, 'raw_data'));
-		$aExtraParams = array();
-		if (!empty($sExtraParams))
+		$extraParams = utils::ReadParam('extra_param', '', false, 'raw_data');
+		if (is_array($extraParams))
 		{
-			$aExtraParams = json_decode(str_replace("'", '"', $sExtraParams), true /* associative array */);
+			$aExtraParams = $extraParams;
+		}
+		else
+		{
+			$sExtraParams = stripslashes($extraParams);
+			$aExtraParams = array();
+			if (!empty($sExtraParams))
+			{
+				$aExtraParams = json_decode(str_replace("'", '"', $sExtraParams), true /* associative array */);
+			}
 		}
 		if ($sEncoding == 'oql')
 		{
@@ -72,91 +82,124 @@ try
 		$iSortCol = utils::ReadParam('sort_col','null');
 		$sSelectMode = utils::ReadParam('select_mode', '');
 		$bDisplayKey = utils::ReadParam('display_key', 'true') == 'true';
-		$aList = utils::ReadParam('display_list', array());
-		$sClassName = $oFilter->GetClass();
+		$aColumns = utils::ReadParam('columns', array(), false, 'raw_data');
+		$aClassAliases = utils::ReadParam('class_aliases', array());
+		$iListId = utils::ReadParam('list_id', 0);
 		//$aList = cmdbAbstractObject::FlattenZList(MetaModel::GetZListItems($sClassName, 'list'));
 
 		// Filter the list to removed linked set since we are not able to display them here
 		$aOrderBy = array();
-		$aConfig = array();
 		$iSortIndex = 0;
-		if ($sSelectMode != '')
+		
+		$aColumnsLoad = array();
+		foreach($aClassAliases as $sAlias => $sClassName)
 		{
-			$aConfig['form::select'] = array();
-			$iSortIndex++; // Take into account the extra (non-sortable) column for the checkbox/radio button.
-		}
-		if ($bDisplayKey)
-		{
-			$aConfig['key'] = array();
-			if (($iSortCol != 'null') && ($iSortIndex == $iSortCol))
+			$aColumnsLoad[$sAlias] = array();
+			foreach($aColumns[$sAlias] as $sAttCode => $aData)
 			{
-				$aOrderBy['friendlyname'] = (utils::ReadParam('sort_order', 'asc') == 'asc');
-			}
-			$iSortIndex++;
-		}
-		foreach($aList as $sAttCode)
-		{
-			$aConfig[$sAttCode] = array();
-		}
-
-		foreach($aList as $index => $sAttCode)
-		{
-			$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
-			if ($oAttDef instanceof AttributeLinkedSet)
-			{
-				// Removed from the display list
-				unset($aList[$index]);
-			}
-			if ($iSortCol == $iSortIndex)
-			{
-				if ($oAttDef->IsExternalKey())
+				if ($aData['checked'] == 'true')
 				{
-					$sSortCol = $sAttCode.'_friendlyname';
+					$aColumns[$sAlias][$sAttCode]['checked'] = true;
+					if ($sAttCode == '_key_')
+					{
+						if ($iSortCol == $iSortIndex)
+						{
+							$aOrderBy['friendlyname'] = (utils::ReadParam('sort_order', 'asc') == 'asc');
+						}
+					}
+					else
+					{
+						$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
+						if ($oAttDef instanceof AttributeLinkedSet)
+						{
+							// Removed from the display list
+							unset($aColumns[$sAlias][$sAttCode]);
+						}
+						else
+						{
+							$aColumnsLoad[$sAlias][] = $sAttCode;
+						}
+						if ($iSortCol == $iSortIndex)
+						{
+							if ($oAttDef->IsExternalKey())
+							{
+								$sSortCol = $sAttCode.'_friendlyname';
+							}
+							else
+							{
+								$sSortCol = $sAttCode;
+							}
+							$aOrderBy[$sSortCol] = (utils::ReadParam('sort_order', 'asc') == 'asc');
+						}
+					}
+					$iSortIndex++;
 				}
 				else
 				{
-					$sSortCol = $sAttCode;
+					$aColumns[$sAlias][$sAttCode]['checked'] = false;
 				}
-				$aOrderBy[$sSortCol] = (utils::ReadParam('sort_order', 'asc') == 'asc');
 			}
-			$iSortIndex++;
+
 		}
 		
 		// Load only the requested columns
 		$oSet = new DBObjectSet($oFilter, $aOrderBy, $aExtraParams, null, $iEnd-$iStart, $iStart);
-		$sClassAlias = $oSet->GetFilter()->GetClassAlias();
-		$oSet->OptimizeColumnLoad(array($sClassAlias => $aList));
-		
-		while($oObj = $oSet->Fetch())
+		$oSet->OptimizeColumnLoad($aColumnsLoad);
+
+		$oDataTable = new DataTable($iListId, $oSet, $oSet->GetSelectedClasses());
+		if ($operation == 'datatable')
 		{
-			$aRow = array();
-			$sDisabled = '';
-			switch ($sSelectMode)
-			{
-				case 'single':
-				$aRow['form::select'] = "<input type=\"radio\" $sDisabled name=\"selectObject\" value=\"".$oObj->GetKey()."\"></input>";
-				break;
-				
-				case 'multiple':
-				$aRow['form::select'] = "<input type=\"checkBox\" $sDisabled name=\"selectObject[]\" value=\"".$oObj->GetKey()."\"></input>";
-				break;
-			}
-			if ($bDisplayKey)
-			{
-				$aRow['key'] = $oObj->GetHyperLink();
-			}
-			$sHilightClass = $oObj->GetHilightClass();
-			if ($sHilightClass != '')
-			{
-				$aRow['@class'] = $sHilightClass;	
-			}
-			foreach($aList as $sAttCode)
-			{
-				$aRow[$sAttCode] = $oObj->GetAsHTML($sAttCode);
-			}
-			$sRow = $oPage->GetTableRow($aRow, $aConfig);
-			$oPage->add($sRow);
+			// Redraw the whole table
+			$sHtml = $oDataTable->UpdatePager($oPage, $iEnd-$iStart, $iStart); // Set the default page size
+			$sHtml .= $oDataTable->GetHTMLTable($oPage, $aColumns, $sSelectMode, $iEnd-$iStart, $bDisplayKey, $aExtraParams);
 		}
+		else
+		{
+			// redraw just the needed rows
+			$sHtml = $oDataTable->GetAsHTMLTableRows($oPage, $iEnd-$iStart, $aColumns, $sSelectMode, $bDisplayKey, $aExtraParams);
+		}
+		$oPage->add($sHtml);
+		break;
+		
+		case 'datatable_save_settings':
+		$iPageSize = utils::ReadParam('page_size', 10);
+		$sTableId = utils::ReadParam('table_id', null, false, 'raw_data');
+		$bSaveAsDefaults = (utils::ReadParam('defaults', 'true') == 'true');
+		$aClassAliases = utils::ReadParam('class_aliases', array(), false, 'raw_data');
+		$aColumns = utils::ReadParam('columns', array(), false, 'raw_data');
+		
+		foreach($aColumns as $sAlias => $aList)
+		{
+			foreach($aList as $sAttCode => $aData)
+			{
+				$aColumns[$sAlias][$sAttCode]['checked'] = ($aData['checked'] == 'true');
+				$aColumns[$sAlias][$sAttCode]['disabled'] = ($aData['disabled'] == 'true');
+			}
+		}
+		
+		$oSettings = new DataTableSettings($aClassAliases, $sTableId);
+		$oSettings->iDefaultPageSize = $iPageSize;
+		$oSettings->aColumns = $aColumns;
+
+		if ($bSaveAsDefaults)
+		{
+			$bRet = $oSettings->SaveAsDefault();
+		}
+		else
+		{
+			$bRet = $oSettings->Save();
+		}
+		$oPage->add($bRet ? 'Ok' : 'KO');
+		break;
+		
+		case 'datatable_reset_settings':
+		$sTableId = utils::ReadParam('table_id', null, false, 'raw_data');
+		$aClassAliases = utils::ReadParam('class_aliases', array(), false, 'raw_data');
+		$bResetAll = (utils::ReadParam('defaults', 'true') == 'true');
+		
+		$oSettings = new DataTableSettings($aClassAliases, $sTableId);
+		$bRet = $oSettings->ResetToDefault($bResetAll);
+		$oPage->add($bRet ? 'Ok' : 'KO');
 		break;
 		
 		// ui.linkswidget

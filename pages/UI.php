@@ -503,15 +503,7 @@ function DisplayMultipleSelectionForm($oP, $oFilter, $sNextOperation, $oChecker,
 		$oBlock->Display($oP, 1, $aExtraParams);
 		$oP->add("<input type=\"button\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"window.history.back()\">&nbsp;&nbsp;<input type=\"submit\" value=\"".Dict::S('UI:Button:Next')."\">\n");
 		$oP->add("</form>\n");
-		$oP->add_ready_script(
-<<<EOF
-	$(':checkbox[name^=selectObject]').change(function() {					
-		var v = $('#1 table.listResults :checkbox[name^=selectObject]:checked').length;
-		$('#1 .selectedCount').text(v);
-	});
-	CheckAll('.selectList1:not(:disabled)', true);
-EOF
-);
+		$oP->add_ready_script("$('#1 table.listResults').trigger('check_all');");
 }
 
 /***********************************************************************************
@@ -743,7 +735,7 @@ try
 							$oP->add("</div>\n");
 							$oLeafsFilter->AddCondition('id', $aLeafs, 'IN');
 							$oBlock = new DisplayBlock($oLeafsFilter, 'list', false);
-							$oBlock->Display($oP, $iBlock++);
+							$oBlock->Display($oP, $iBlock++, array('table_id' => 'global_search'));
 							$oP->P('&nbsp;'); // Some space ?
 						}
 					}
