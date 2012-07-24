@@ -290,6 +290,11 @@ class DBObjectSet
 		return $this->m_oFilter->GetClass();
 	}
 
+	public function GetClassAlias()
+	{
+		return $this->m_oFilter->GetClassAlias();
+	}
+
 	public function GetSelectedClasses()
 	{
 		return $this->m_oFilter->GetSelectedClasses();
