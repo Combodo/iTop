@@ -40,6 +40,14 @@ h3 {
     color: #EB8F00;
     text-decoration: none;
 }
+table.datatable {
+	width: 100%;
+	border: 0;
+	padding: 0;
+}
+td.menucontainer {
+	text-align: right;
+}
 table.listResults {
     padding: 0px;
 	border-top: 3px solid #f6f6f1;
@@ -58,7 +66,7 @@ table.listContainer {
     border: 0;
 	padding: 0;
 	margin:0;
-	width: 97%;
+	width: 100%;
 	clear: both;
 }
 
@@ -175,6 +183,13 @@ legend {
 	-moz-border-radius: 6px;
 	-webkit-border-radius: 6px;
 	border-radius: 6px;
+}
+legend.transparent {
+	background: transparent;
+	color: #333333;
+	font-size: 1em;
+	font-weight: normal;
+	padding: 0;
 }
 .ui-widget-content td legend a, .ui-widget-content td legend a:hover, .ui-widget-content td legend a:visited {
 	color: #fff;
@@ -403,8 +418,12 @@ div.itop_popup {
 	padding: 0;
 	float:right;
 }
+div.itop_popup > ul > li {
+	list-style: none;
+	cursor: pointer;
+}
 
-div.itop_popup > ul {
+div.actions_menu > ul {
 	height:19px;
 	line-height: 17px;
 	vertical-align: middle;
@@ -415,7 +434,7 @@ div.itop_popup > ul {
 	cursor: pointer;
 }
 
-div.itop_popup > ul > li {
+div.actions_menu > ul > li {
 	float: left;
 	list-style: none;
 	font-size: 11px;
@@ -1271,4 +1290,37 @@ a.summary {
 	color: #fff;
 	font-weight: bold;
 	list-style: none;
+}
+.sortable_field_list {
+	display: inline-block;
+	width: 250px;
+	height: 150px;
+	border: 1px #333 solid;
+	overflow: auto;
+	padding-left: 0;
+	margin: 0;
+}
+.sortable_field_list li {
+	list-style: none;
+	font-size: 11px;
+}
+.sort_order {
+	display: inline-block;
+	width: 16px;
+	height: 12px;
+}
+.sort_none {
+	background: url(../images/bg.gif) no-repeat center;
+}
+.sort_asc {
+	background: url(../images/desc.gif) no-repeat center;
+}
+.sort_desc {
+	background: url(../images/asc.gif) no-repeat center;
+}
+.sort_hidden {
+	display: none;
+}
+.sortable_field_list > li.selected {
+	background: #F6A828;
 }
