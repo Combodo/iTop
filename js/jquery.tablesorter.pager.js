@@ -151,7 +151,7 @@ function sprintf(format, etc) {
 				{
 					s = table.config.totalRows - ex;
 				}
-				$('.selectedCount',pager).text(s);
+				pager.closest('table').find('.selectedCount').text(s);
 				if (table.config.cssCount != '')
 				{
 					$(table.config.cssCount).val(s);
@@ -187,7 +187,8 @@ function sprintf(format, etc) {
 						  sort_order: s_order,
 						  select_mode: c.select_mode,
 						  display_key: c.displayKey,
-						  display_list: c.displayList
+						  columns: c.columns,
+						  class_aliases: c.class_aliases
 						},
 					    function(data)
 					    {
@@ -431,7 +432,8 @@ function sprintf(format, etc) {
 				totalSelected: 0,
 				selectionMode: 'positive',
 				displayKey: true,
-				displayList: []
+				columns: {},
+				class_aliases: {}
 			};
 			
 			this.construct = function(settings) {
@@ -481,10 +483,13 @@ function sprintf(format, etc) {
 					$(table).find(':checkbox.checkAll').removeAttr('onclick').click(function() {
 						return checkAll(table, pager, this.checked);
 					});
-
+					
 					$(table).bind('load_selection', function() {
 						loadSelection(table, pager);
 						applySelection(table);
+					});
+					$(table).bind('check_all', function() {
+						checkAll(table, pager, true);
 					});
 				});
 			};
