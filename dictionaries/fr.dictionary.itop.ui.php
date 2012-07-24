@@ -803,5 +803,21 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:OrderByHint_Values' => 'Ordre de tri: %1$s',
 	'UI:Menu:AddToDashboard' => 'Ajouter au Tableau de Bord...',
 	'UI:Button:Refresh' => 'Rafraîchir',
+
+	'UI:ConfigureThisList' => 'Configurer Cette Liste...',
+	'UI:ListConfigurationTitle' => 'Configuration de la liste',
+	'UI:ColumnsAndSortOrder' => 'Colonnes et ordre de tri:',
+	'UI:UseDefaultSettings' => 'Utiliser les réglages par défaut',
+	'UI:UseSpecificSettings' => 'Utiliser les réglages suivants:',
+	'UI:Display_X_ItemsPerPage' => 'Afficher %1$s éléments par page',
+	'UI:UseSavetheSettings' => 'Enregistrer ces réglages',
+	'UI:OnlyForThisList' => 'Seulement pour cette liste',
+	'UI:ForAllLists' => 'Pour toutes les listes',
+	'UI:ExtKey_AsLink' => '%1$s (Lien)',
+	'UI:ExtKey_AsFriendlyName' => '%1$s (Nom)',
+	'UI:ExtField_AsRemoteField' => '%1$s (%2$s)',
+	'UI:Button:MoveUp' => 'Monter',
+	'UI:Button:MoveDown' => 'Descendre',
+
 ));
 ?>
