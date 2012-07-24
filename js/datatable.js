@@ -127,7 +127,7 @@ $(function()
 				var iSortIdx = 0;
 				var sSortDirection = 'asc';
 				var oColumns = $('#datatable_dlg_'+sListId).find(':itop-fieldsorter').fieldsorter('get_params');
-				var iPageSize = $('#datatable_dlg_'+sListId+' input[name=page_size]').val();
+				var iPageSize = parseInt($('#datatable_dlg_'+sListId+' input[name=page_size]').val(), 10);
 				
 				oOptions = {oColumns: oColumns, iPageSize: iPageSize };
 			}
