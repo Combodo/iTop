@@ -78,6 +78,42 @@ class appUserPreferences extends DBObject
 	}
 	
 	/**
+	 * Clears the value for a given preference (or list of preferences that matches a pattern), and updates the database
+	 * @param string $sPattern Code/Pattern of the properties/preferences to reset
+	 * @param boolean $bPattern Whether or not the supplied code is a PCRE pattern
+	 */
+	static function UnsetPref($sCodeOrPattern, $bPattern = false)
+	{
+		if (self::$oUserPrefs == null)
+		{
+			self::Load();
+		}
+		$aPrefs = self::$oUserPrefs->Get('preferences');
+		if ($bPattern)
+		{
+			// the supplied code is a pattern, clear all preferences that match
+			foreach($aPrefs as $sKey => $void)
+			{
+				if (preg_match($sCodeOrPattern, $sKey))
+				{
+					unset($aPrefs[$sKey]);
+				}
+			}
+			self::$oUserPrefs->Set('preferences', $aPrefs);
+		}
+		else
+		{
+			unset($aPrefs[$sCode]);
+			self::$oUserPrefs->Set('preferences', $aPrefs);
+		}
+		// Save only if needed
+		if (self::$oUserPrefs->IsModified())
+		{
+			self::Save();
+		}
+	}
+	
+	/**
 	 * Call this function to get all the preferences for the user, packed as a JSON object
 	 * @return string JSON representation of the preferences
 	 */

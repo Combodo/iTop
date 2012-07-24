@@ -77,6 +77,8 @@ class iTopWebPage extends NiceWebPage
 		$this->add_linked_script('../js/g.pie.js');
 		$this->add_linked_script('../js/g.dot.js');
 		$this->add_linked_script('../js/charts.js');
+		$this->add_linked_script('../js/field_sorter.js');
+		$this->add_linked_script('../js/datatable.js');
 		
 		$this->m_sInitScript =
 <<< EOF

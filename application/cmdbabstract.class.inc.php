@@ -39,6 +39,7 @@ require_once(APPROOT.'/application/ui.linkswidget.class.inc.php');
 require_once(APPROOT.'/application/ui.passwordwidget.class.inc.php');
 require_once(APPROOT.'/application/ui.extkeywidget.class.inc.php');
 require_once(APPROOT.'/application/ui.htmleditorwidget.class.inc.php');
+require_once(APPROOT.'/application/datatable.class.inc.php');
 
 /**
  * All objects to be displayed in the application (either as a list or as details)
@@ -244,7 +245,8 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 			// Display mode
 			if (!$oAttDef->IsLinkset()) continue; // Process only linkset attributes...
 			
-			$oSet = new DBObjectSet($this->Get($sAttCode)->GetFilter());
+			// $oSet = new DBObjectSet($this->Get($sAttCode)->GetFilter()); // Why do something so useless ?
+			$oSet = $this->Get($sAttCode);
 			$iCount = $oSet->Count();
 			$sCount = '';
 			if ($iCount != 0)
@@ -679,7 +681,6 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		$sHtml = '';
 		$oAppContext = new ApplicationContext();
 		$sClassName = $oSet->GetFilter()->GetClass();
-		$aAttribs = array();
 		$sZListName = isset($aExtraParams['zlist']) ? ($aExtraParams['zlist']) : 'list';
 		if ($sZListName !== false)
 		{
@@ -702,9 +703,6 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 			}
 		}
 
-		// Load only the requested columns
-		$sClassAlias = $oSet->GetFilter()->GetClassAlias();
-		$oSet->OptimizeColumnLoad(array($sClassAlias => $aList));
 
 		if (!empty($sLinkageAttribute))
 		{
@@ -740,270 +738,45 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 			// Then display all the attributes linked to the other end of the relationship
 			$aList = $aDisplayList;
 		}
-		if ($bSelectMode)
-		{
-			if (!$bSingleSelectMode)
-			{
-				$aAttribs['form::select'] = array('label' => "<input type=\"checkbox\" onClick=\"CheckAll('.selectList{$iListId}:not(:disabled)', this.checked);\" class=\"checkAll\"></input>", 'description' => Dict::S('UI:SelectAllToggle+'));
-			}
-			else
-			{
-				$aAttribs['form::select'] = array('label' => "", 'description' => '');
-			}
-		}
-		if ($bViewLink)
-		{
-			$aAttribs['key'] = array('label' => MetaModel::GetName($sClassName), 'description' => '');
-		}
-		foreach($aList as $sAttCode)
-		{
-			$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
-			$aAttribs[$sAttCode] = array('label' => MetaModel::GetLabel($sClassName, $sAttCode), 'description' => $oAttDef->GetOrderByHint());
-		}
-		$aValues = array();
-		$bDisplayLimit = isset($aExtraParams['display_limit']) ? $aExtraParams['display_limit'] : true;
-		$iMaxObjects = -1;
-		if ($bDisplayLimit && ($oSet->Count() > MetaModel::GetConfig()->GetMaxDisplayLimit()))
-		{
-			$iMaxObjects = MetaModel::GetConfig()->GetMinDisplayLimit();
-			$oSet->SetLimit($iMaxObjects);
-		}
-		$oSet->Seek(0);
-		while (($oObj = $oSet->Fetch()) && ($iMaxObjects != 0))
-		{
-			$aRow = array();
-			$sHilightClass = $oObj->GetHilightClass();
-			if ($sHilightClass != '')
-			{
-				$aRow['@class'] = $sHilightClass;	
-			}
-			if ($bViewLink)
-			{
-				$aRow['key'] = $oObj->GetHyperLink();
-			}
-			if ($bSelectMode)
-			{
-				if (array_key_exists('selection_enabled', $aExtraParams) && isset($aExtraParams['selection_enabled'][$oObj->GetKey()]))
-				{
-					$sDisabled = ($aExtraParams['selection_enabled'][$oObj->GetKey()]) ? '' : ' disabled="disabled"';
-				}
-				else
-				{
-					$sDisabled = '';
-				}
-				if ($bSingleSelectMode)
-				{
-					$aRow['form::select'] = "<input type=\"radio\" $sDisabled class=\"selectList{$iListId}\" name=\"selectObject\" value=\"".$oObj->GetKey()."\"></input>";
-				}
-				else
-				{
-				$aRow['form::select'] = "<input type=\"checkBox\" $sDisabled class=\"selectList{$iListId}\" name=\"selectObject[]\" value=\"".$oObj->GetKey()."\"></input>";
-				}
-			}
-			foreach($aList as $sAttCode)
-			{
-				$aRow[$sAttCode] = $oObj->GetAsHTML($sAttCode);
-			}
-			$aValues[] = $aRow;
-			$iMaxObjects--;
-		}
-		$sHtml .= '<table class="listContainer">';
-		$sColspan = '';
-
-		$sFilter = $oSet->GetFilter()->serialize();
-		$iMinDisplayLimit = MetaModel::GetConfig()->GetMinDisplayLimit();
-		$sCollapsedLabel = Dict::Format('UI:TruncatedResults', $iMinDisplayLimit, $oSet->Count());
-		$sLinkLabel = Dict::S('UI:DisplayAll');
-		foreach($oSet->GetFilter()->GetInternalParams() as $sName => $sValue)
-		{
-			$aExtraParams['query_params'][$sName] = $sValue;
-		}
-
-		if ($bDisplayMenu)
-		{
-			$oMenuBlock = new MenuBlock($oSet->GetFilter());
-			$sColspan = 'colspan="2"';
-			$aMenuExtraParams = $aExtraParams;
-			if (!empty($sLinkageAttribute))
-			{
-				//$aMenuExtraParams['linkage'] = $sLinkageAttribute;
-				$aMenuExtraParams = $aExtraParams;
-			}
-			$sHtml .= $oMenuBlock->GetRenderContent($oPage, $aMenuExtraParams, $iListId);
-			$sHtml .= '</td></tr>';
-		}
-		$sHtml .= "<tr><td $sColspan>";
-		$sHtml .= $oPage->GetTable($aAttribs, $aValues);
-		$sHtml .= '</td></tr>';
-		$sHtml .= '</table>';
-		$iCount = $oSet->Count();
-		if ($bSelectMode)
-		{
-			$sHeader = Dict::Format('UI:Pagination:HeaderSelection', '<span id="total">'.$iCount.'</span>', '<span class="selectedCount">0</span>');
-		}
-		else
-		{
-			$sHeader = Dict::Format('UI:Pagination:HeaderNoSelection', '<span id="total">'.$iCount.'</span>');
-		}
-
-		// All lists are now paginated in order to benefit from the SQL sort order
-
-		if (!$bDisplayLimit)
-		{
-			$sPagerStyle = 'style="display:none"'; // no limit: display the full table, so hide the "pager" UI
-			$iPageSize = -1; // Display all
-		}
-		else
-		{
-			$sPagerStyle = '';
-			$iPageSize = MetaModel::GetConfig()->GetMinDisplayLimit();
-		}
-		$iDefaultPageSize =  MetaModel::GetConfig()->GetMinDisplayLimit();
-		$sCombo = '<select class="pagesize">';
-		for($iPage = 1; $iPage < 5; $iPage++)
-		{
-			$sSelected = ($iPage == $iPageSize) ? 'selected="selected"' : '';
-			$iNbItems = $iPage * $iDefaultPageSize;
-			$sCombo .= "<option  $sSelected value=\"$iNbItems\">$iNbItems</option>";
-		}
-		$sSelected = (-1 == $iPageSize) ? 'selected="selected"' : '';
-		$sCombo .= "<option  $sSelected value=\"-1\">".Dict::S('UI:Pagination:All')."</option>";
-		$sCombo .= '</select>';
-		$sPages = Dict::S('UI:Pagination:PagesLabel');
-		$sPageSizeCombo = Dict::Format('UI:Pagination:PageSize', $sCombo);
 		
-		$iNbPages = ($iPageSize == -1) ? 1 : ceil($iCount / $iPageSize);
-		$aPagesToDisplay = array();
-		for($idx = 0; $idx <= min(4, $iNbPages-1); $idx++)
-		{
-			if ($idx == 0)
-			{
-				$aPagesToDisplay[$idx] = '<span page="0" class="curr_page">1</span>';
-			}
-			else
-			{
-				$aPagesToDisplay[$idx] = "<span id=\"gotopage_$idx\" class=\"gotopage\" page=\"$idx\">".(1+$idx)."</span>";
-			}
-		}
-		$iLastPageIdx = $iNbPages - 1;
-		if (!isset($aPagesToDisplay[$iLastPageIdx]))
-		{
-			unset($aPagesToDisplay[$idx - 1]); // remove the last page added to make room for the very last page
-			$aPagesToDisplay[$iLastPageIdx] = "<span id=\"gotopage_$iLastPageIdx\" class=\"gotopage\" page=\"$iLastPageIdx\">... $iNbPages</span>";
-		}
-		$sPagesLinks = implode('', $aPagesToDisplay);
-		$sPagesList = '['.implode(',', array_keys($aPagesToDisplay)).']';
-
-		$sSelectionMode = ($iNbPages == 1) ? '' : 'positive';
-		$sHtml =
-<<<EOF
-<div id="pager{$iListId}" class="pager" $sPagerStyle>
-		<p>$sHeader</p>
-		<p><table class="pagination"><tr><td>$sPages</td><td><img src="../images/first.png" class="first"/></td>
-		<td><img src="../images/prev.png" class="prev"/></td>
-		<td><span id="index">$sPagesLinks</span></td>
-		<td><img src="../images/next.png" class="next"/></td>
-		<td><img src="../images/last.png" class="last"/></td>
-		<td>$sPageSizeCombo</td>
-		<td><span id="loading">&nbsp;</span></td>
-		</tr>
-		</table>
-		
-		<input type="hidden" name="selectionMode" value="$sSelectionMode"></input>
-</div>
-EOF
-.$sHtml;
-		$aArgs = $oSet->GetArgs();
-		$sExtraParams = addslashes(str_replace('"', "'", json_encode(array_merge($aExtraParams, $aArgs)))); // JSON encode, change the style of the quotes and escape them
-		$sSelectMode = '';
-		$sHeaders = '';
+		$sSelectMode = 'none';
 		if ($bSelectMode)
 		{
 			$sSelectMode = $bSingleSelectMode ? 'single' : 'multiple';
-			$sHeaders = 'headers: { 0: {sorter: false}},';
 		}
-		$sDisplayKey = ($bViewLink) ? 'true' : 'false';
-		// Protect against duplicate elements in the Zlist
-		$aUniqueOrderedList = array();
-		foreach($aList as $sAttCode)
-		{
-			$aUniqueOrderedList[$sAttCode] = true;
-		}
-		$aUniqueOrderedList = array_keys($aUniqueOrderedList);
-		$sDisplayList = json_encode($aUniqueOrderedList);
-		$sCssCount = isset($aExtraParams['cssCount']) ? ", cssCount: '{$aExtraParams['cssCount']}'" : '';
-		$oSet->ApplyParameters();
-		// Display the actual sort order of the table
-		$aRealSortOrder = $oSet->GetRealSortOrder();
-		$aDefaultSort = array();
-		$iColOffset = 0;
-		if ($bSelectMode)
-		{
-			$iColOffset += 1;
-		}
-		if ($bViewLink)
-		{
-			$iColOffset += 1;
-		}
-		foreach($aRealSortOrder as $sColCode => $bAscending)
-		{
-			$iPos = array_search($sColCode, $aUniqueOrderedList);
-			if ($iPos !== false)
-			{
-				$aDefaultSort[] = "[".($iColOffset+$iPos).",".($bAscending ? '0' : '1')."]";
-			}
-			else if($sColCode == 'friendlyname' && $bViewLink)
-			{
-				$aDefaultSort[] = "[".($iColOffset-1).",".($bAscending ? '0' : '1')."]";
-			}
-		}
-		$sSortList = '';
-		if (count($aDefaultSort) > 0)
-		{
-			$sSortList = ', sortList: ['.implode(',', $aDefaultSort).']';
-		}
-		$sOQL = addslashes($oSet->GetFilter()->serialize());
-		$oPage->add_ready_script(
-<<<EOF
-var oTable = $('#{$iListId} table.listResults');
-oTable.tablesorter( { $sHeaders widgets: ['myZebra', 'truncatedList'] $sSortList} ).tablesorterPager({container: $('#pager{$iListId}'), totalRows:$iCount, size: $iPageSize, filter: '$sOQL', extra_params: '$sExtraParams', select_mode: '$sSelectMode', displayKey: $sDisplayKey, displayList: $sDisplayList $sCssCount});
-EOF
-		);
 		
-		if ($iNbPages == 1)
+		$sClassAlias = $oSet->GetClassAlias();
+		$bDisplayLimit = isset($aExtraParams['display_limit']) ? $aExtraParams['display_limit'] : true;
+		
+		// Load only the requested columns
+		$oSet->OptimizeColumnLoad(array($sClassAlias => $aList));
+		
+		$sTableId = isset($aExtraParams['table_id']) ? $aExtraParams['table_id'] : null;
+		$aClassAliases = array( $sClassAlias => $sClassName);
+		$oDataTable = new DataTable($iListId, $oSet, $aClassAliases, $sTableId);
+		$oSettings = DataTableSettings::GetDataModelSettings($aClassAliases, $bViewLink, array($sClassAlias => $aList));
+		
+		if ($bDisplayLimit)
 		{
-			if (isset($aExtraParams['cssCount']))
-			{
-				$sCssCount = $aExtraParams['cssCount'];
-				if ($bSingleSelectMode)
-				{
-					$sSelectSelector = ":radio[name^=selectObj]";
-				}
-				else
-				{
-					$sSelectSelector = ":checkbox[name^=selectObj]";
-				}
-				$oPage->add_ready_script(
-<<<EOF
-	$('#{$iListId} table.listResults $sSelectSelector').change(function() {
-		var c = $('{$sCssCount}');							
-		var v = $('#{$iListId} table.listResults $sSelectSelector:checked').length;
-		c.val(v);
-		$('#{$iListId} .selectedCount').text(v);
-		c.trigger('change');	
-	});
-EOF
-				);
-			}
+			$iDefaultPageSize = MetaModel::GetConfig()->GetMinDisplayLimit(); //TODO use user's prefs instead if any
+			$oSettings->iDefaultPageSize = $iDefaultPageSize;
 		}
-
-		return $sHtml;
+		
+		$oSettings->aSortOrder = MetaModel::GetOrderByDefault($sClassName);
+		
+		return $oDataTable->Display($oPage, $oSettings, $bDisplayMenu, $sSelectMode, $bViewLink, $aExtraParams);
 	}
 	
 	public static function GetDisplayExtendedSet(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
-		static $iListId = 0;
-		$iListId++;
+		if (empty($aExtraParams['currentId']))
+		{
+			$iListId = $oPage->GetUniqueId(); // Works only if not in an Ajax page !!
+		}
+		else
+		{
+			$iListId = $aExtraParams['currentId'];
+		}
 		$aList = array();
 		
 		// Initialize and check the parameters
@@ -1046,7 +819,7 @@ EOF
 			}
 		}
 		$aAttribs = array();
-		foreach($aAuthorizedClasses as $sAlias => $sClassName) // TO DO: check if the user has enough rights to view the classes of the list...
+		foreach($aAuthorizedClasses as $sAlias => $sClassName)
 		{
 			if (array_key_exists($sAlias, $aExtraFields))
 			{
@@ -1073,14 +846,8 @@ EOF
 					unset($aList[$sAlias][$index]);
 				}
 			}
-			if ($bViewLink)
-			{
-				$aAttribs['key_'.$sAlias] = array('label' => MetaModel::GetName($sClassName), 'description' => '');
-			}
-			foreach($aList[$sAlias] as $sAttCode)
-			{
-				$aAttribs[$sAttCode.'_'.$sAlias] = array('label' => MetaModel::GetLabel($sClassName, $sAttCode), 'description' => MetaModel::GetDescription($sClassName, $sAttCode));
-			}
+		$iDefaultPageSize =  MetaModel::GetConfig()->GetMinDisplayLimit();
+			
 		}
 		// Load only the requested columns
 		$aAttToLoad = array(); // attributes to load
@@ -1093,83 +860,25 @@ EOF
 		}
 		$oSet->OptimizeColumnLoad($aAttToLoad);
 
-		$aValues = array();
-		$oSet->Seek(0);
+		$iDefaultPageSize =  MetaModel::GetConfig()->GetMinDisplayLimit();
+		$iPageSize = MetaModel::GetConfig()->GetMinDisplayLimit();
+		$sSelectMode = 'none';
+				
+		$sClassAlias = $oSet->GetClassAlias();
+		$oDataTable = new DataTable($iListId, $oSet, $aAuthorizedClasses);
+
+		$oSettings = DataTableSettings::GetDataModelSettings($aAuthorizedClasses, $bViewLink, $aList);
+		
 		$bDisplayLimit = isset($aExtraParams['display_limit']) ? $aExtraParams['display_limit'] : true;
-		$iMaxObjects = -1;
 		if ($bDisplayLimit)
 		{
-			if ($oSet->Count() > MetaModel::GetConfig()->GetMaxDisplayLimit())
-			{
-				$iMaxObjects = MetaModel::GetConfig()->GetMinDisplayLimit();
-			}
+			$iDefaultPageSize = MetaModel::GetConfig()->GetMinDisplayLimit(); //TODO use user's prefs instead if any
+			$oSettings->iDefaultPageSize = $iDefaultPageSize;
 		}
-		while (($aObjects = $oSet->FetchAssoc()) && ($iMaxObjects != 0))
-		{
-			$aRow = array();
-			foreach($aAuthorizedClasses as $sAlias => $sClassName) // TO DO: check if the user has enough rights to view the classes of the list...
-			{
-				if ($bViewLink)
-				{
-					if (is_null($aObjects[$sAlias]))
-					{
-						$aRow['key_'.$sAlias] = '';
-					}
-					else
-					{
-						$aRow['key_'.$sAlias] = $aObjects[$sAlias]->GetHyperLink();
-					}
-				}
-				foreach($aList[$sAlias] as $sAttCode)
-				{
-					if (is_null($aObjects[$sAlias]))
-					{
-						$aRow[$sAttCode.'_'.$sAlias] = '';
-					}
-					else
-					{
-						$aRow[$sAttCode.'_'.$sAlias] = $aObjects[$sAlias]->GetAsHTML($sAttCode);
-					}
-				}
-			}
-			$aValues[] = $aRow;
-			$iMaxObjects--;
-		}
-		$sHtml .= '<table class="listContainer">';
-		$sColspan = '';
-		if ($bDisplayMenu)
-		{
-			$oMenuBlock = new MenuBlock($oSet->GetFilter());
-			$sColspan = 'colspan="2"';
-			$aMenuExtraParams = $aExtraParams;
-			if (!empty($sLinkageAttribute))
-			{
-				$aMenuExtraParams = $aExtraParams;
-			}
-			if ($bDisplayLimit && ($oSet->Count() > MetaModel::GetConfig()->GetMaxDisplayLimit()))
-			{
-				// list truncated
-				$divId = $aExtraParams['block_id'];
-				$sFilter = $oSet->GetFilter()->serialize();
-				$aExtraParams['display_limit'] = false; // To expand the full list
-				$sExtraParams = addslashes(str_replace('"', "'", json_encode($aExtraParams))); // JSON encode, change the style of the quotes and escape them
-				$sHtml .= '<tr class="containerHeader"><td>'.Dict::Format('UI:TruncatedResults', MetaModel::GetConfig()->GetMinDisplayLimit(), $oSet->Count()).'&nbsp;&nbsp;<span style=\"cursor:pointer;\" onClick="Javascript:ReloadTruncatedList(\''.$divId.'\', \''.$sFilter.'\', \''.$sExtraParams.'\');">'.Dict::S('UI:DisplayAll').'</span></td><td>';
-				$oPage->add_ready_script("$('#{$divId} table.listResults').addClass('truncated');");
-				$oPage->add_ready_script("$('#{$divId} table.listResults tr:last td').addClass('truncated');");
-			}
-			else
-			{
-				// Full list
-				$sHtml .= '<tr class="containerHeader"><td>&nbsp;'.Dict::Format('UI:CountOfResults', $oSet->Count()).'</td><td>';
-			}
-			$sHtml .= $oMenuBlock->GetRenderContent($oPage, $aMenuExtraParams, $aMenuExtraParams['currentId']);
-			$sHtml .= '</td></tr>';
-		}
-		$sHtml .= "<tr><td $sColspan>";
-		$sHtml .= $oPage->GetTable($aAttribs, $aValues);
-		$sHtml .= '</td></tr>';
-		$sHtml .= '</table>';
-		return $sHtml;
+		
+		$oSettings->aSortOrder = MetaModel::GetOrderByDefault($sClassName);
+		
+		return $oDataTable->Display($oPage, $oSettings, $bDisplayMenu, $sSelectMode, $bViewLink, $aExtraParams);
 	}
 	
 	static function DisplaySetAsCSV(WebPage $oPage, CMDBObjectSet $oSet, $aParams = array())
