@@ -343,6 +343,7 @@ class DashletObjectList extends Dashlet
 		$oBlock = new DisplayBlock($oFilter, 'list');
 		$aExtraParams = array(
 			'menu' => $sShowMenu,
+			'table_id' => 'Dashlet'.$this->sId,
 		);
 		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
 		$oBlock->Display($oPage, $sBlockId, $aExtraParams);

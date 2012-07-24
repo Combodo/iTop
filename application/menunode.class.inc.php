@@ -529,6 +529,7 @@ class TemplateMenuNode extends MenuNode
 		$sTemplate = @file_get_contents($this->sTemplateFile);
 		if ($sTemplate !== false)
 		{
+			$aExtraParams['table_id'] = 'Menu_'.$this->GetMenuId();
 			$oTemplate = new DisplayTemplate($sTemplate);
 			$oTemplate->Render($oPage, $aExtraParams);
 		}
@@ -605,31 +606,19 @@ class OQLMenuNode extends MenuNode
 		{
 			$sIcon = '';
 		}
-		// The standard template used for all such pages: a (closed) search form at the top and a list of results at the bottom
-		$sTemplate = '';
 
 		if ($this->bSearch)
 		{
-			$sTemplate .= <<<EOF
-<itopblock BlockClass="DisplayBlock" type="search" asynchronous="false" encoding="text/oql">$this->sOQL</itopblock>
-EOF;
+			$aParams = array_merge(array('open' => true, 'table_id' => 'Menu_'.$this->GetMenuId()), $aExtraParams);
+			$oBlock = new DisplayBlock($oSearch, 'search', false /* Asynchronous */, $aParams);
+			$oBlock->Display($oPage, 0);
 		}
-		$sParams = '';
-		if (!empty($this->m_aParams))
-		{
-			$sParams = 'parameters="';
-			foreach($this->m_aParams as $sName => $sValue)
-			{
-				$sParams .= $sName.':'.$sValue.';';
-			}
-			$sParams .= '"';
-		}
-		$sTemplate .= <<<EOF
-<p class="page-header">$sIcon<itopstring>$this->sPageTitle</itopstring></p>
-<itopblock BlockClass="DisplayBlock" type="list" asynchronous="false" encoding="text/oql" $sParams>$this->sOQL</itopblock>
-EOF;
-		$oTemplate = new DisplayTemplate($sTemplate);
-		$oTemplate->Render($oPage, $aExtraParams);
+		
+		$oPage->add("<p class=\"page-header\">$sIcon ".Dict::S($this->sPageTitle)."</p>");
+		
+		$aParams = array_merge(array('table_id' => 'Menu_'.$this->GetMenuId()), $aExtraParams);
+		$oBlock = new DisplayBlock($oSearch, 'list', false /* Asynchronous */, $aParams);
+		$oBlock->Display($oPage, 1);
 	}
 }
 /**
@@ -662,12 +651,10 @@ class SearchMenuNode extends MenuNode
 	
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())
 	{
-		// The standard template used for all such pages: an open search form at the top
-		$sTemplate = <<<EOF
-<itopblock BlockClass="DisplayBlock" type="search" asynchronous="false" encoding="text/oql" parameters="open:true">SELECT $this->sClass</itopblock>
-EOF;
-		$oTemplate = new DisplayTemplate($sTemplate);
-		$oTemplate->Render($oPage, $aExtraParams);
+		$oSearch = new DBObjectSearch($this->sClass);
+		$aParams = array_merge(array('open' => true, 'table_id' => 'Menu_'.$this->GetMenuId()), $aExtraParams);
+		$oBlock = new DisplayBlock($oSearch, 'search', false /* Asynchronous */, $aParams);
+		$oBlock->Display($oPage, 0);
 	}
 }
 

@@ -95,7 +95,7 @@ class DataTable
 			$sToolkitMenu = $this->GetToolkitMenu($oPage, $aExtraParams);
 		}
 		$sDataTable = $this->GetHTMLTable($oPage, $aColumns, $sSelectMode, $iPageSize, $bViewLink, $aExtraParams);
-		$sConfigDlg = $this->GetTableConfigDlg($oPage, $aColumns, $bViewLink);
+		$sConfigDlg = $this->GetTableConfigDlg($oPage, $aColumns, $bViewLink, $iDefaultPageSize);
 		
 		$sHtml = "<table id=\"datatable_{$this->iListId}\" class=\"datatable\">\n";
 		$sHtml .= "<tr><td>$sObjectsCount</td><td class=\"menucontainer\">$sActionsMenu</td></tr>\n";
@@ -244,7 +244,7 @@ EOF;
 		return $sHtml;
 	}
 	
-	protected function GetTableConfigDlg(WebPage $oPage, $aColumns, $bViewLink)
+	protected function GetTableConfigDlg(WebPage $oPage, $aColumns, $bViewLink, $iDefaultPageSize)
 	{
 		$sHtml = "<div id=\"datatable_dlg_{$this->iListId}\" style=\"display: none;\">";
 		$sHtml .= "<form onsubmit=\"return false\">";
@@ -255,7 +255,7 @@ EOF;
 		$sHtml .= "<legend class=\"transparent\"><input type=\"radio\" class=\"specific_settings\" name=\"settings\" $sChecked value=\"specific\">&nbsp;".Dict::S('UI:UseSpecificSettings')."</legend>";
 		$sHtml .= Dict::S('UI:ColumnsAndSortOrder').'<br/><ul class="sortable_field_list" id="sfl_'.$this->iListId.'"></ul>';
 		
-		$sHtml .= '<p>'.Dict::Format('UI:Display_X_ItemsPerPage', '<input type="text" size="4" name="page_size" value="10">').'</p>';
+		$sHtml .= '<p>'.Dict::Format('UI:Display_X_ItemsPerPage', '<input type="text" size="4" name="page_size" value="'.$iDefaultPageSize.'">').'</p>';
 		$sHtml .= "</fieldset>";
 		$sHtml .= "<fieldset>";
 		$sSaveChecked = ($this->sTableId != null) ? 'checked' : '';

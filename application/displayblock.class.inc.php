@@ -317,6 +317,15 @@ class DisplayBlock
 						$this->AddCondition($sFilterCode, $condition);
 					}
 				}
+				if ($bDoSearch)
+				{
+					// Keep the table_id identifying this table if we're performing a search
+					$sTableId = utils::ReadParam('_table_id_', null, false, 'raw_data');
+					if ($sTableId != null)
+					{
+						$aExtraParams['table_id'] = $sTableId;
+					}
+				}
 			}
 			$aOrderBy = array();
 			if (isset($aExtraParams['order_by']))

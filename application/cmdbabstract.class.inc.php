@@ -296,7 +296,8 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 							'object_id' => $this->GetKey(),
 							'menu' => true,
 							'default' => $aDefaults,
-							);
+							'table_id' => $sClass.'_'.$sAttCode,
+						);
 	
 						$oBlock = new DisplayBlock($oFilter, 'list', false);
 						$oBlock->Display($oPage, $sInputId, $aParams);
@@ -341,7 +342,8 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 						'object_id' => $this->GetKey(),
 						'menu' => false,
 						'default' => $aDefaults,
-						);
+						'table_id' => $sClass.'_'.$sAttCode,
+					);
 				}
 				else
 				{
@@ -357,6 +359,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 							'view_link' => false,
 							'menu' => false,
 							'display_limit' => true, // By default limit the list to speed up the initial load & display
+							'table_id' => $sClass.'_'.$sAttCode,
 						);
 				}
 				$oPage->p(MetaModel::GetClassIcon($sTargetClass)."&nbsp;".$oAttDef->GetDescription());
@@ -1369,6 +1372,12 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		}
 		$sHtml .= "</p>\n";
 		$sHtml .= "<p align=\"right\"><input type=\"submit\" value=\"".Dict::S('UI:Button:Search')."\"></p>\n";
+		if (isset($aExtraParams['table_id']))
+		{
+			// Rename to avoid collisions...
+			$aExtraParams['_table_id_'] = $aExtraParams['table_id'];
+			unset($aExtraParams['table_id']);
+		}
 		foreach($aExtraParams as $sName => $sValue)
 		{
 			$sHtml .= "<input type=\"hidden\" name=\"$sName\" value=\"$sValue\" />\n";
