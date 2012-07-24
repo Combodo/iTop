@@ -439,7 +439,6 @@ function DisplayDetails($oP, $sClass, $oObj, $id)
  */
 function DisplaySearchSet($oP, $oFilter, $bSearchForm = true, $sBaseClass = '', $sFormat = '')
 {
-	$oSet = new DBObjectSet($oFilter);
 	if ($bSearchForm)
 	{
 		$aParams = array('open' => true);

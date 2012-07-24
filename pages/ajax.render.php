@@ -638,10 +638,11 @@ try
 		$sClass = utils::ReadParam('className', '', false, 'class');
 		$sRootClass = utils::ReadParam('baseClass', '', false, 'class');
 		$currentId = utils::ReadParam('currentId', '');
+		$sTableId = utils::ReadParam('_table_id_', null, false, 'raw_data');
 		$sAction = utils::ReadParam('action', '');
 		$oFilter = new DBObjectSearch($sClass);
 		$oSet = new CMDBObjectSet($oFilter); 
-		$sHtml = cmdbAbstractObject::GetSearchForm($oPage, $oSet, array('currentId' => $currentId, 'baseClass' => $sRootClass, 'action' => $sAction));
+		$sHtml = cmdbAbstractObject::GetSearchForm($oPage, $oSet, array('currentId' => $currentId, 'baseClass' => $sRootClass, 'action' => $sAction, 'table_id' => $sTableId));
 		$oPage->add($sHtml);
 		break;
 		
