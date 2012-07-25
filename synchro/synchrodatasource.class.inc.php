@@ -54,7 +54,8 @@ class SynchroDataSource extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("user_id", array("targetclass"=>"User", "jointype"=>null, "allowed_values"=>null, "sql"=>"user_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("notify_contact_id", array("targetclass"=>"Contact", "jointype"=>null, "allowed_values"=>null, "sql"=>"notify_contact_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeClass("scope_class", array("class_category"=>"bizmodel,addon/authentication", "more_values"=>"", "sql"=>"scope_class", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		
+		MetaModel::Init_AddAttribute(new AttributeString("database_table_name", array("allowed_values"=>null, "sql"=>"database_table_name", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array(), "validation_pattern" => "^[A-Za-z0-9_]*$")));
+				
 		// Declared here for a future usage, but ignored so far
 		MetaModel::Init_AddAttribute(new AttributeString("scope_restriction", array("allowed_values"=>null, "sql"=>"scope_restriction", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		
@@ -86,7 +87,7 @@ class SynchroDataSource extends cmdbAbstractObject
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array(
 			'col:0'=> array(
-				'fieldset:SynchroDataSource:Description' => array('name','description','status','scope_class','user_id','notify_contact_id','url_icon','url_application')),
+				'fieldset:SynchroDataSource:Description' => array('name','description','status','scope_class','user_id','notify_contact_id','url_icon','url_application', 'database_table_name')),
 			'col:1'=> array(
 				'fieldset:SynchroDataSource:Reconciliation' => array('reconciliation_policy','action_on_zero','action_on_one','action_on_multiple'),
 				'fieldset:SynchroDataSource:Deletion' => array('user_delete_policy','full_load_periodicity','delete_policy','delete_policy_update','delete_policy_retention'))
@@ -98,6 +99,15 @@ class SynchroDataSource extends cmdbAbstractObject
 //		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
 	}
 
+	public function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '', $aExtraParams = array())
+	{
+		if (!$this->IsNew())
+		{
+			$this->Set('database_table_name', $this->GetDataTable());
+		}
+		parent::DisplayBareProperties($oPage, $bEditMode, $sPrefix, $aExtraParams);
+	}
+		
 	public function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
 	{
 		if (!$this->IsNew())
@@ -476,7 +486,7 @@ EOF
 	
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
 	{
-		if (($sAttCode == 'scope_class') && (!$this->IsNew()))
+		if ( (($sAttCode == 'scope_class') || ($sAttCode == 'database_table_name')) && (!$this->IsNew()))
 		{
 			return OPT_ATT_READONLY;
 		}
@@ -574,6 +584,13 @@ EOF
 
 		if ($this->IsNew())
 		{
+			// Compute the database_table_name
+			$sDataTable = $this->Get('database_table_name');
+			if (!empty($sDataTable))
+			{
+				$this->Set('database_table_name', $this->ComputeDataTableName());
+			}
+			
 			// When inserting a new datasource object, also create the SynchroAttribute objects
 			// for each field of the target class
 			// Create all the SynchroAttribute records
@@ -659,6 +676,17 @@ EOF
 		{
 			$this->m_aCheckIssues[] = Dict::Format('Class:SynchroDataSource/Error:DeletePolicyUpdateMustBeSpecified');			
 		}
+		
+		// When creating the data source with a specified database_table_name, this table must NOT exist
+		if ($this->IsNew())
+		{
+			$sDataTable = $this->GetDataTable();
+			if (!empty($sDataTable) && CMDBSource::IsTable($this->GetDataTable()))
+			{
+				// Hmm, the synchro_data_xxx table already exists !!
+				$this->m_aCheckIssues[] = Dict::Format('Class:SynchroDataSource/Error:DataTableAlreadyExists', $this->GetDataTable());			
+			}
+		}
 	}
 	
 	public function GetTargetClass()
@@ -668,11 +696,33 @@ EOF
 
 	public function GetDataTable()
 	{
-		$sName = strtolower($this->GetTargetClass());
-		$sName = str_replace('\'"&@|\\/ ', '_', $sName); // Remove forbidden characters from the table name
-		$sName .= '_'.$this->GetKey(); // Add a suffix for unicity
-		$sTable = MetaModel::GetConfig()->GetDBSubName()."synchro_data_$sName"; // Add the prefix if any
+		$sTable = $this->Get('database_table_name');
+		if (empty($sTable))
+		{
+			$sTable = $this->ComputeDataTableName();
+		}
 		return $sTable;
+	}
+	
+	protected function ComputeDataTableName()
+	{
+		$sDBTableName = $this->Get('database_table_name');
+		if (empty($sDBTableName))
+		{
+			$sDBTableName = strtolower($this->GetTargetClass());
+			$sDBTableName = preg_replace('/[^A-za-z0-9_]/', '_', $sDBTableName); // Remove forbidden characters from the table name
+			$sDBTableName .= '_'.$this->GetKey(); // Add a suffix for unicity
+		}
+		else
+		{
+			$sDBTableName = preg_replace('/[^A-za-z0-9_]/', '_', $sDBTableName); // Remove forbidden characters from the table name
+		}
+		$sPrefix = MetaModel::GetConfig()->GetDBSubName()."synchro_data_";
+		if (strpos($sDBTableName, $sPrefix) !== 0)
+		{
+			$sDBTableName = $sPrefix.$sDBTableName;
+		}
+		return $sDBTableName;		
 	}
 
 	/**
