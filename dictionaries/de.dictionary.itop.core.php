@@ -624,6 +624,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:administrators' => 'nur Administratoren',
 	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:everybody' => 'Jeder darf solche Objekte löschen',
 	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:nobody' => 'Niemand',
+	'Class:SynchroDataSource/Attribute:database_table_name' => 'Datenbanktabelle',
+	'Class:SynchroDataSource/Attribute:database_table_name+' => 'Name der Tabelle, die Speicherung der Daten aus dieser Datenquelle. Ein Default-Name wird automatisch berechnet, wenn dieses Feld leer gelassen wird.',
+	'Class:SynchroDataSource/Error:DataTableAlreadyExists' => 'Tabelle %1$s existiert bereits in der Datenbank. Bitte benutzen Sie einen anderen Namen für die Datenbanktabelle aus dieser Datenquelle.',
+
 	'Class:SynchroAttribute' => 'Synchronisations-Attribut',
 	'Class:SynchroAttribute/Attribute:sync_source_id' => 'Synchronisations-Datenquelle',
 	'Class:SynchroAttribute/Attribute:attcode' => 'Attributs-Code',
