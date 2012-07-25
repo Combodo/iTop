@@ -401,7 +401,13 @@ class BulkChange
 			if ($sAttCode == 'id') continue;
 
 			$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
-			if ($oAttDef->IsLinkSet() && $oAttDef->IsIndirect())
+			$aReasons = array();
+			$iFlags = $oTargetObj->GetAttributeFlags($sAttCode, $aReasons);
+			if ( (($iFlags & OPT_ATT_READONLY) == OPT_ATT_READONLY) && ( $oTargetObj->Get($sAttCode) != $aRowData[$iCol]) )
+			{
+					$aErrors[$sAttCode] = "the attribute '$sAttCode' is read-only and cannot be modified (current value: ".$oTargetObj->Get($sAttCode).", proposed value: {$aRowData[$iCol]}).";
+			}
+			else if ($oAttDef->IsLinkSet() && $oAttDef->IsIndirect())
 			{
 				try
 				{
